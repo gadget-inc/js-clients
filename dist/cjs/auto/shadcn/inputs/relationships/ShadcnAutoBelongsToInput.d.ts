@@ -1,0 +1,3 @@
+import type { AutoRelationshipInputProps } from "../../../interfaces/AutoRelationshipInputProps.js";
+import type { ShadcnElements } from "../../elements.js";
+export declare const makeShadcnAutoBelongsToInput: ({ Badge, Button, Command, CommandItem, CommandInput, Label, CommandList, CommandEmpty, CommandLoading, CommandGroup, Checkbox, ScrollArea, }: Pick<ShadcnElements, "Badge" | "Button" | "Command" | "CommandItem" | "CommandList" | "CommandLoading" | "CommandEmpty" | "CommandGroup" | "CommandInput" | "Label" | "Checkbox" | "ScrollArea">) => import("../../../AutoInput.js").AutoInputComponent<AutoRelationshipInputProps>;
