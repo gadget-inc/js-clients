@@ -1,0 +1,22 @@
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.useView = exports.useQuery = exports.useMutation = exports.useMaybeFindOne = exports.useMaybeFindFirst = exports.useGlobalAction = exports.useGet = exports.useFindOne = exports.useFindMany = exports.useFindFirst = exports.useFindBy = exports.useFetch = exports.useEnqueue = exports.useConnection = exports.useBulkAction = exports.useApi = exports.useAction = void 0;
+var client_hooks_1 = require("@gadgetinc/client-hooks");
+Object.defineProperty(exports, "useAction", { enumerable: true, get: function () { return client_hooks_1.useAction; } });
+Object.defineProperty(exports, "useApi", { enumerable: true, get: function () { return client_hooks_1.useApi; } });
+Object.defineProperty(exports, "useBulkAction", { enumerable: true, get: function () { return client_hooks_1.useBulkAction; } });
+Object.defineProperty(exports, "useConnection", { enumerable: true, get: function () { return client_hooks_1.useConnection; } });
+Object.defineProperty(exports, "useEnqueue", { enumerable: true, get: function () { return client_hooks_1.useEnqueue; } });
+Object.defineProperty(exports, "useFetch", { enumerable: true, get: function () { return client_hooks_1.useFetch; } });
+Object.defineProperty(exports, "useFindBy", { enumerable: true, get: function () { return client_hooks_1.useFindBy; } });
+Object.defineProperty(exports, "useFindFirst", { enumerable: true, get: function () { return client_hooks_1.useFindFirst; } });
+Object.defineProperty(exports, "useFindMany", { enumerable: true, get: function () { return client_hooks_1.useFindMany; } });
+Object.defineProperty(exports, "useFindOne", { enumerable: true, get: function () { return client_hooks_1.useFindOne; } });
+Object.defineProperty(exports, "useGet", { enumerable: true, get: function () { return client_hooks_1.useGet; } });
+Object.defineProperty(exports, "useGlobalAction", { enumerable: true, get: function () { return client_hooks_1.useGlobalAction; } });
+Object.defineProperty(exports, "useMaybeFindFirst", { enumerable: true, get: function () { return client_hooks_1.useMaybeFindFirst; } });
+Object.defineProperty(exports, "useMaybeFindOne", { enumerable: true, get: function () { return client_hooks_1.useMaybeFindOne; } });
+Object.defineProperty(exports, "useMutation", { enumerable: true, get: function () { return client_hooks_1.useMutation; } });
+Object.defineProperty(exports, "useQuery", { enumerable: true, get: function () { return client_hooks_1.useQuery; } });
+Object.defineProperty(exports, "useView", { enumerable: true, get: function () { return client_hooks_1.useView; } });
+//# sourceMappingURL=hooks.js.map
