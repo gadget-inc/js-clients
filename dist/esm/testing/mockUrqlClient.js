@@ -1,0 +1,227 @@
+import { jest } from "@jest/globals";
+import { createRequest, makeErrorResult } from "@urql/core";
+import pRetry from "p-retry";
+import { filter, makeSubject, pipe, subscribe, take, toPromise } from "wonka";
+let act = async (fn) => {
+    return await fn();
+};
+const findLast = (array, predicate) => {
+    for (let i = array.length - 1; i >= 0; i--) {
+        if (predicate(array[i])) {
+            return array[i];
+        }
+    }
+};
+const find = (array, predicate) => {
+    for (let i = 0; i < array.length; i++) {
+        if (predicate(array[i])) {
+            return array[i];
+        }
+    }
+};
+export const setAct = (actFn) => {
+    act = actFn;
+};
+/** Patches a `toPromise` method onto the `Source` passed to it.
+ * @param source$ - the Wonka {@link Source} to patch.
+ * @returns The passed `source$` with a patched `toPromise` method as a {@link PromisifiedSource}.
+ * copied from https://github.com/urql-graphql/urql/blob/656495100ea3861075b70b48516b10914efbcfd6/packages/core/src/utils/streamUtils.ts#L10
+ */
+export function withPromise(_source$) {
+    const source$ = ((sink) => _source$(sink));
+    source$.toPromise = () => pipe(source$, filter((result) => !result.stale && !result.hasNext), take(1), toPromise);
+    source$.then = (onResolve, onReject) => source$.toPromise().then(onResolve, onReject);
+    source$.subscribe = (onResult) => subscribe(onResult)(source$);
+    return source$;
+}
+const $gadgetConnection = Symbol.for("gadget/connection");
+export const graphqlDocumentName = (doc) => {
+    const lastDefinition = findLast(doc.definitions, (d) => d.kind === "OperationDefinition");
+    if (lastDefinition) {
+        if (lastDefinition.name) {
+            return lastDefinition.name.value;
+        }
+        const firstSelection = find(lastDefinition.selectionSet.selections, (s) => s.kind === "Field");
+        return firstSelection.name.value;
+    }
+};
+/**
+ * Create a new function for reading/writing to a mock graphql backend
+ */
+const newMockOperationFn = (assertions) => {
+    const subjects = {};
+    const fn = jest.fn((request, options) => {
+        var _a, _b;
+        const { query } = request;
+        const fetchOptions = options === null || options === void 0 ? void 0 : options.fetchOptions;
+        const key = (_a = graphqlDocumentName(query)) !== null && _a !== void 0 ? _a : "unknown";
+        (_b = subjects[key]) !== null && _b !== void 0 ? _b : (subjects[key] = makeSubject());
+        if (fetchOptions && typeof fetchOptions != "function") {
+            const signal = fetchOptions.signal;
+            if (signal) {
+                signal.addEventListener("abort", () => {
+                    subjects[key].next(makeErrorResult(null, new Error("AbortError")));
+                });
+            }
+        }
+        if (assertions) {
+            assertions(request);
+        }
+        return withPromise(subjects[key].source);
+    });
+    fn.subjects = subjects;
+    fn.pushResponse = (key, response) => {
+        if (!subjects[key]) {
+            throw new Error(`No mock client subject started for key ${key}, options are ${Object.keys(subjects).join(", ")}`);
+        }
+        act(() => {
+            subjects[key].next({
+                operation: null,
+                ...response,
+            });
+            if (!response.hasNext) {
+                subjects[key].complete();
+                delete subjects[key];
+            }
+        });
+    };
+    fn.waitForSubject = async (key, options) => {
+        var _a, _b, _c;
+        await pRetry(() => {
+            if (subjects[key]) {
+                return;
+            }
+            throw new Error(`No mock client subject started for key ${key}, options are ${Object.keys(subjects).join(", ")}`);
+        }, {
+            ...options,
+            retries: (_a = options === null || options === void 0 ? void 0 : options.retries) !== null && _a !== void 0 ? _a : 20,
+            minTimeout: (_b = options === null || options === void 0 ? void 0 : options.minTimeout) !== null && _b !== void 0 ? _b : 10,
+            maxTimeout: (_c = options === null || options === void 0 ? void 0 : options.maxTimeout) !== null && _c !== void 0 ? _c : 250,
+        });
+    };
+    return fn;
+};
+/**
+ * Create a new function for reading/writing to a mock graphql backend
+ */
+const newMockFetchFn = () => {
+    const requests = [];
+    const fn = jest.fn((...args) => {
+        return new Promise((resolve, reject) => {
+            var _a;
+            const signal = (_a = args[1]) === null || _a === void 0 ? void 0 : _a.signal;
+            const request = {
+                args,
+                resolve,
+                reject,
+            };
+            if (signal) {
+                signal.addEventListener("abort", () => {
+                    const idx = requests.findIndex((r) => r === request);
+                    if (idx !== -1) {
+                        request.reject(new Error("AbortError: The user aborted a request."));
+                        requests.splice(idx, 1);
+                    }
+                });
+            }
+            requests.push(request);
+        });
+    });
+    fn.requests = requests;
+    fn.pushResponse = async (response) => {
+        await act(async () => {
+            var _a;
+            const request = requests.shift();
+            if (!request) {
+                throw new Error("no requests started for response pushing");
+            }
+            const signal = (_a = request.args[1]) === null || _a === void 0 ? void 0 : _a.signal;
+            if (signal && signal.aborted) {
+                throw new Error("signal on request has been aborted, can't respond to a mock fetch that has been aborted");
+            }
+            await request.resolve(response);
+        });
+    };
+    fn.waitForRequest = async (options) => {
+        const requestCount = requests.length;
+        await act(async () => {
+            var _a, _b, _c;
+            await pRetry(async () => {
+                if (requests.length > requestCount) {
+                    return;
+                }
+                throw new Error("request not found");
+            }, {
+                ...options,
+                retries: (_a = options === null || options === void 0 ? void 0 : options.retries) !== null && _a !== void 0 ? _a : 20,
+                minTimeout: (_b = options === null || options === void 0 ? void 0 : options.minTimeout) !== null && _b !== void 0 ? _b : 10,
+                maxTimeout: (_c = options === null || options === void 0 ? void 0 : options.maxTimeout) !== null && _c !== void 0 ? _c : 250,
+            });
+        });
+    };
+    return fn;
+};
+export const createMockUrqlClient = (assertions) => {
+    const fetch = newMockFetchFn();
+    return {
+        executeQuery: newMockOperationFn(assertions === null || assertions === void 0 ? void 0 : assertions.queryAssertions),
+        executeMutation: newMockOperationFn(assertions === null || assertions === void 0 ? void 0 : assertions.mutationAssertions),
+        executeSubscription: newMockOperationFn(),
+        [$gadgetConnection]: {
+            fetch,
+        },
+        mockFetch: fetch,
+        suspense: true,
+        query(query, variables, context) {
+            return this.executeQuery(createRequest(query, variables), context);
+        },
+        subscription(query, variables, context) {
+            return this.executeSubscription(createRequest(query, variables), context);
+        },
+        mutation(query, variables, context) {
+            return this.executeMutation(createRequest(query, variables), context);
+        },
+    };
+};
+/**
+ * Create a new function for mocking subscriptions passed to graphql-ws
+ */
+function newMockSubscribeFn() {
+    const subscriptions = [];
+    const fn = (payload, sink) => {
+        const subscription = {
+            payload,
+            sink,
+            disposed: false,
+            push: (result) => {
+                act(() => {
+                    sink.next(result);
+                });
+            },
+        };
+        subscriptions.push(subscription);
+        return () => {
+            subscription.disposed = true;
+        };
+    };
+    return Object.assign(fn, { subscriptions });
+}
+export const mockUrqlClient = createMockUrqlClient();
+export const mockGraphQLWSClient = {};
+beforeEach(() => {
+    const fetch = newMockFetchFn();
+    mockUrqlClient.executeQuery = newMockOperationFn();
+    mockUrqlClient.executeMutation = newMockOperationFn();
+    mockUrqlClient.executeSubscription = newMockOperationFn();
+    mockUrqlClient[$gadgetConnection] = {
+        fetch,
+    };
+    mockUrqlClient.mockFetch = fetch;
+    mockGraphQLWSClient.subscribe = newMockSubscribeFn();
+});
+afterEach(() => {
+    // force clear _react, which useQuery sets on the client if not present
+    mockUrqlClient._react = undefined;
+    jest.clearAllMocks();
+});
+//# sourceMappingURL=mockUrqlClient.js.map
