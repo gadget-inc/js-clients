@@ -1,0 +1,3 @@
+import { type AutoRelationshipFormProps } from "../../../interfaces/AutoRelationshipInputProps.js";
+import type { ShadcnElements } from "../../elements.js";
+export declare const makeShadcnAutoHasManyForm: ({ Accordion, AccordionContent, AccordionItem, Badge, Button, Label, }: Pick<ShadcnElements, "Accordion" | "AccordionContent" | "AccordionItem" | "Badge" | "Button" | "Label">) => import("../../../AutoInput.js").AutoInputComponent<Omit<AutoRelationshipFormProps, "recordFilter">>;
