@@ -1,0 +1,16 @@
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.PolarisAutoEncryptedStringInput = void 0;
+const tslib_1 = require("tslib");
+const polaris_1 = require("@shopify/polaris");
+const polaris_icons_1 = require("@shopify/polaris-icons");
+const react_1 = tslib_1.__importStar(require("react"));
+const PolarisAutoTextInput_js_1 = require("./PolarisAutoTextInput.js");
+const PolarisAutoEncryptedStringInput = (props) => {
+    const [isShown, setIsShown] = (0, react_1.useState)(false);
+    const showHideToggleButton = (react_1.default.createElement("div", { style: { display: "flex" } },
+        react_1.default.createElement(polaris_1.Button, { variant: "plain", size: "slim", icon: isShown ? polaris_icons_1.HideIcon : polaris_icons_1.ViewIcon, onClick: () => setIsShown(!isShown), role: `${props.field}ToggleShowHideButton` })));
+    return react_1.default.createElement(PolarisAutoTextInput_js_1.PolarisAutoTextInput, { type: isShown ? "text" : "password", suffix: showHideToggleButton, ...props });
+};
+exports.PolarisAutoEncryptedStringInput = PolarisAutoEncryptedStringInput;
+//# sourceMappingURL=PolarisAutoEncryptedStringInput.js.map
