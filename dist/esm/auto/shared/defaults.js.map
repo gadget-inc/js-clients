@@ -1,0 +1,1 @@
+{"version":3,"file":"defaults.js","sourceRoot":"","sources":["../../../../src/auto/shared/defaults.ts"],"names":[],"mappings":"AAAA,MAAM,CAAC,MAAM,4BAA4B,GAAG,GAAG,CAAC,MAAM,CAAC,EAAE,CAAC,CAAC","sourcesContent":["export const defaultPlaceholderHiddenText = \"•\".repeat(10);\n"]}
