@@ -1,0 +1,80 @@
+{
+  "name": "@gadgetinc/shopify-extensions",
+  "version": "0.8.0",
+  "files": [
+    "README.md",
+    "dist/**/*",
+    "react/**/*",
+    "preact/**/*"
+  ],
+  "license": "MIT",
+  "repository": "github:gadget-inc/js-clients",
+  "homepage": "https://github.com/gadget-inc/js-clients/tree/main/packages/shopify-extensions",
+  "type": "module",
+  "exports": {
+    ".": {
+      "import": "./dist/esm/index.js",
+      "require": "./dist/cjs/index.js",
+      "default": "./dist/esm/index.js"
+    },
+    "./react": {
+      "import": "./dist/esm/react/index.js",
+      "require": "./dist/cjs/react/index.js",
+      "default": "./dist/esm/react/index.js"
+    },
+    "./preact": {
+      "import": "./dist/esm/preact/index.js",
+      "require": "./dist/cjs/preact/index.js",
+      "default": "./dist/esm/preact/index.js"
+    },
+    "./package.json": "./package.json"
+  },
+  "source": "src/index.ts",
+  "main": "dist/cjs/index.js",
+  "scripts": {
+    "typecheck": "tsc --noEmit",
+    "build": "rm -rf dist && rm -rf react && rm -rf preact && tsc -b tsconfig.cjs.json tsconfig.esm.json && echo '{\"type\": \"commonjs\"}' > dist/cjs/package.json && echo '{\"type\": \"module\"}' > dist/esm/package.json && mkdir -p react && echo '{\"main\": \"../dist/cjs/react/index.js\"}' > react/package.json && mkdir -p preact && echo '{\"main\": \"../dist/cjs/preact/index.js\"}' > preact/package.json",
+    "watch": "tsc --watch --preserveWatchOutput",
+    "prepublishOnly": "pnpm build",
+    "prerelease": "gitpkg publish"
+  },
+  "dependencies": {
+    "@gadgetinc/core": ">=0.12.0"
+  },
+  "devDependencies": {
+    "@gadgetinc/core": "workspace:*",
+    "@gadgetinc/preact": "workspace:*",
+    "@gadgetinc/react": "workspace:*",
+    "@testing-library/preact": "^3.2.4",
+    "@types/react": "^19.1.1",
+    "@types/react-dom": "^19.1.1",
+    "conditional-type-checks": "^1.0.6",
+    "react": "^19.1.1",
+    "react-dom": "^19.1.1",
+    "preact": "^10.27.2"
+  },
+  "peerDependencies": {
+    "@gadgetinc/preact": "^0.1.0",
+    "@gadgetinc/react": "^0.23.1",
+    "preact": "^10.0.0",
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0"
+  },
+  "peerDependenciesMeta": {
+    "@gadgetinc/preact": {
+      "optional": true
+    },
+    "@gadgetinc/react": {
+      "optional": true
+    },
+    "preact": {
+      "optional": true
+    },
+    "react": {
+      "optional": true
+    },
+    "react-dom": {
+      "optional": true
+    }
+  }
+}
