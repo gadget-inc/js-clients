@@ -1,0 +1,57 @@
+{
+  "name": "@gadgetinc/react-shopify-app-bridge",
+  "version": "0.13.3",
+  "files": [
+    "README.md",
+    "dist/**/*"
+  ],
+  "license": "MIT",
+  "repository": "github:gadget-inc/js-clients",
+  "homepage": "https://github.com/gadget-inc/js-clients/tree/main/packages/react-shopify-app-bridge",
+  "type": "module",
+  "exports": {
+    ".": {
+      "import": "./dist/esm/index.js",
+      "require": "./dist/cjs/index.js",
+      "default": "./dist/esm/index.js"
+    },
+    "./package.json": "./package.json"
+  },
+  "source": "src/index.ts",
+  "main": "dist/cjs/index.js",
+  "scripts": {
+    "typecheck": "tsc --noEmit",
+    "build": "rm -rf dist && tsc -b tsconfig.cjs.json tsconfig.esm.json && echo '{\"type\": \"commonjs\"}' > dist/cjs/package.json && echo '{\"type\": \"module\"}' > dist/esm/package.json",
+    "watch": "tsc --watch --preserveWatchOutput",
+    "prepublishOnly": "pnpm build",
+    "prerelease": "gitpkg publish"
+  },
+  "dependencies": {
+    "@gadgetinc/api-client-core": "^0.15.11",
+    "@shopify/app-bridge-utils": "^3.1.1",
+    "crypto-js": "^4.1.1"
+  },
+  "devDependencies": {
+    "@gadgetinc/api-client-core": "workspace:*",
+    "@gadgetinc/react": "workspace:*",
+    "@shopify/app-bridge": "^3.1.0",
+    "@shopify/app-bridge-react": "^3.0.0",
+    "@types/crypto-js": "^4.1.1",
+    "@types/lodash": "^4.14.191",
+    "@types/node": "^16.11.7",
+    "@types/react": "^18.2.9",
+    "@types/react-dom": "^18.2.4",
+    "conditional-type-checks": "^1.0.6",
+    "cross-fetch": "^3.1.5",
+    "nock": "^13.2.9",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0"
+  },
+  "peerDependencies": {
+    "@gadgetinc/react": "^0.14.1",
+    "@shopify/app-bridge": "^2.0.0 || ^3.0.0",
+    "@shopify/app-bridge-react": "^2.0.0 || ^3.0.0",
+    "react": "^18.0.0",
+    "react-dom": "^18.0.0"
+  }
+}
