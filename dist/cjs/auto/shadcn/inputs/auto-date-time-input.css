@@ -1,0 +1,5 @@
+/* This conceals the dropdown hour/minute selector. It is bright blue and cannot be styled to match the rest of an app */
+.shadcn-auto-form-time-input::-webkit-calendar-picker-indicator {
+  display: none;
+  -webkit-appearance: none;
+}
