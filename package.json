@@ -1,0 +1,71 @@
+{
+  "name": "@gadgetinc/react",
+  "version": "0.15.2",
+  "files": [
+    "README.md",
+    "dist/**/*"
+  ],
+  "license": "MIT",
+  "repository": "github:gadget-inc/js-clients",
+  "homepage": "https://github.com/gadget-inc/js-clients/tree/main/packages/react",
+  "type": "module",
+  "exports": {
+    ".": {
+      "import": "./dist/esm/index.js",
+      "require": "./dist/cjs/index.js",
+      "default": "./dist/esm/index.js"
+    },
+    "./package.json": "./package.json"
+  },
+  "source": "src/index.ts",
+  "main": "dist/cjs/index.js",
+  "sideEffects": false,
+  "scripts": {
+    "typecheck": "tsc --noEmit",
+    "build": "rm -rf dist && tsc -b tsconfig.cjs.json tsconfig.esm.json && echo '{\"type\": \"commonjs\"}' > dist/cjs/package.json && echo '{\"type\": \"module\"}' > dist/esm/package.json",
+    "watch": "tsc -b tsconfig.esm.json --watch --preserveWatchOutput",
+    "prepublishOnly": "pnpm build",
+    "prerelease": "gitpkg publish"
+  },
+  "dependencies": {
+    "@gadgetinc/api-client-core": "^0.15.16",
+    "react-fast-compare": "^3.2.2",
+    "react-hook-form": "~7.48.2",
+    "tslib": "^2.6.2",
+    "urql": "^4.0.4"
+  },
+  "resolutions": {
+    "regexp.prototype.flags": "1.5.0"
+  },
+  "devDependencies": {
+    "@gadgetinc/api-client-core": "workspace:*",
+    "@n1ru4l/json-patch-plus": "^0.2.0",
+    "@pollyjs/adapter-fetch": "^6.0.6",
+    "@pollyjs/adapter-node-http": "^6.0.6",
+    "@pollyjs/adapter-xhr": "^6.0.6",
+    "@pollyjs/core": "^6.0.6",
+    "@pollyjs/persister-fs": "^6.0.6",
+    "@testing-library/jest-dom": "^5.16.5",
+    "@testing-library/react": "^13.4.0",
+    "@testing-library/user-event": "^14.5.1",
+    "@types/jest": "^29.5.5",
+    "@types/lodash": "^4.14.191",
+    "@types/node": "^18.0.0",
+    "@types/react": "^18.2.9",
+    "@types/react-dom": "^18.2.4",
+    "@types/setup-polly-jest": "^0.5.5",
+    "@urql/core": "^4.0.10",
+    "conditional-type-checks": "^1.0.6",
+    "graphql": "^16.8.1",
+    "graphql-ws": "^5.13.1",
+    "lodash": "^4.17.21",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
+    "setup-polly-jest": "^0.11.0",
+    "wonka": "^6.3.2"
+  },
+  "peerDependencies": {
+    "react": "^18.0.0",
+    "react-dom": "^18.0.0"
+  }
+}
