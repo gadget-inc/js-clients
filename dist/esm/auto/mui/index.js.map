@@ -1,0 +1,1 @@
+{"version":3,"file":"index.js","sourceRoot":"","sources":["../../../../src/auto/mui/index.ts"],"names":[],"mappings":"AAAA,cAAc,kBAAkB,CAAC;AACjC,OAAO,EAAE,WAAW,IAAI,QAAQ,EAAE,MAAM,kBAAkB,CAAC","sourcesContent":["export * from \"./MUIAutoForm.js\";\nexport { MUIAutoForm as AutoForm } from \"./MUIAutoForm.js\";\n"]}
