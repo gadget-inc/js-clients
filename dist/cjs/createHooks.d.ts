@@ -1,0 +1,10 @@
+import type { RuntimeAdapter } from "./adapter.js";
+import type { CoreHooks, UseApi, UseConnection, UseCoreImplementation, UseGadgetMutation, UseGadgetQuery } from "./types.js";
+export declare const hookErrorMessage: (hook: string) => string;
+export declare const createHookStub: (hook: string, registerFn?: (adapter: RuntimeAdapter, coreHooks: CoreHooks) => void) => () => never;
+export declare let useApi: UseApi;
+export declare let useConnection: UseConnection;
+export declare let useCoreImplementation: UseCoreImplementation;
+export declare let useQuery: UseGadgetQuery;
+export declare let useMutation: UseGadgetMutation;
+export declare const createHooks: (adapter: RuntimeAdapter) => void;

@@ -1,0 +1,45 @@
+{
+  "name": "@gadgetinc/client-hooks",
+  "version": "0.1.1",
+  "files": [
+    "README.md",
+    "dist/**/*"
+  ],
+  "license": "MIT",
+  "repository": "github:gadget-inc/js-clients",
+  "homepage": "https://github.com/gadget-inc/js-clients/tree/main/packages/client-hooks",
+  "type": "module",
+  "exports": {
+    "./package.json": "./package.json",
+    ".": {
+      "import": "./dist/esm/index.js",
+      "require": "./dist/cjs/index.js",
+      "default": "./dist/esm/index.js"
+    }
+  },
+  "source": "src/index.ts",
+  "main": "dist/cjs/index.js",
+  "sideEffects": false,
+  "scripts": {
+    "test": "NODE_OPTIONS=--experimental-vm-modules jest",
+    "test:watch": "NODE_OPTIONS=--experimental-vm-modules jest --watch",
+    "typecheck:main": "tsc --noEmit",
+    "typecheck": "tsc --noEmit",
+    "clean": "rimraf dist/ *.tsbuildinfo **/*.tsbuildinfo",
+    "prebuild": "mkdir -p dist/cjs dist/esm && echo '{\"type\": \"commonjs\"}' > dist/cjs/package.json && echo '{\"type\": \"module\"}' > dist/esm/package.json",
+    "build": "pnpm clean && pnpm prebuild && tsc -b tsconfig.cjs.json tsconfig.esm.json",
+    "prepublishOnly": "pnpm build",
+    "prerelease": "gitpkg publish"
+  },
+  "dependencies": {
+    "@gadgetinc/core": ">=0.12.0",
+    "@urql/core": "^6.0.1"
+  },
+  "devDependencies": {
+    "@gadgetinc/core": "workspace:*",
+    "@jest/globals": "*",
+    "@swc/jest": "*",
+    "@types/jest": "*",
+    "jest": "*"
+  }
+}
