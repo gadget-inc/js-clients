@@ -1,0 +1,25 @@
+{
+  "name": "test-bundles",
+  "version": "0.1.0",
+  "private": true,
+  "source": "src/index.ts",
+  "repository": "github:gadget-inc/js-clients",
+  "type": "module",
+  "scripts": {
+    "typecheck": "tsc --noEmit",
+    "test-build": "tsx build.ts",
+    "prepublishOnly": "pnpm build",
+    "prerelease": "gitpkg publish"
+  },
+  "dependencies": {
+    "@gadgetinc/api-client-core": "workspace:*",
+    "@gadgetinc/react": "workspace:*",
+    "@gadgetinc/react-shopify-app-bridge": "workspace:*",
+    "@vitejs/plugin-react-swc": "^3.3.2",
+    "vite": "^4.4.7"
+  },
+  "devDependencies": {
+    "rollup-plugin-visualizer": "^5.9.2",
+    "rollup-plugin-webpack-stats": "^0.2.1"
+  }
+}
