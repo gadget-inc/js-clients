@@ -1,0 +1,32 @@
+{
+  "name": "blog-example",
+  "version": "0.1.0",
+  "source": "src/index.ts",
+  "private": "true",
+  "files": [
+    "README.md",
+    "dist/src/**/*"
+  ],
+  "license": "MIT",
+  "repository": "github:gadget-inc/js-clients",
+  "homepage": "https://github.com/gadget-inc/js-clients/tree/main/packages/blog-example",
+  "scripts": {
+    "typecheck": "tsc --noEmit",
+    "dev": "rm -rf node_modules/.vite && vite --clearScreen=false",
+    "preview": "vite preview",
+    "build-vite": "vite build"
+  },
+  "dependencies": {
+    "@gadget-client/blog": "^1.42.0",
+    "@gadgetinc/react": "workspace:*",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0"
+  },
+  "devDependencies": {
+    "@types/react": "^18.2.9",
+    "@types/react-dom": "^18.2.4",
+    "@vitejs/plugin-react-swc": "^3.0.0",
+    "typescript": "5.0.4",
+    "vite": "^4.2.0"
+  }
+}

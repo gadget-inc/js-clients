@@ -1,0 +1,16 @@
+{
+  "recommendations": [
+    "dbaeumer.vscode-eslint",
+    "esbenp.prettier-vscode",
+    "arcanis.vscode-zipfs",
+    "orta.vscode-jest",
+    "uber.baseweb",
+    "kumar-harsh.graphql-for-vscode",
+    "bierner.jsdoc-markdown-highlighting",
+    "christian-kohler.npm-intellisense",
+    "christian-kohler.path-intellisense",
+    "wix.glean",
+    "bbenoist.nix",
+    "jnoortheen.nix-ide"
+  ]
+}

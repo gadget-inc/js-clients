@@ -1,0 +1,16 @@
+{
+  "extends": "../tsconfig.json",
+  "compilerOptions": {
+    "module": "es2022",
+    "lib": ["es2020"],
+    "moduleResolution": "node",
+    "types": ["node"]
+  },
+  "include": ["."],
+  "ts-node": {
+    "esm": true,
+    "moduleTypes": {
+      "*": "esm"
+    }
+  }
+}

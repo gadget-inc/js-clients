@@ -1,0 +1,40 @@
+{
+  "name": "tiny-graphql-query-compiler",
+  "version": "0.2.2",
+  "type": "module",
+  "exports": {
+    ".": {
+      "import": "./dist/esm/index.js",
+      "require": "./dist/cjs/index.js",
+      "default": "./dist/esm/index.js"
+    },
+    "./package.json": "./package.json"
+  },
+  "source": "src/index.ts",
+  "main": "dist/cjs/index.js",
+  "files": [
+    "README.md",
+    "dist/**/*"
+  ],
+  "license": "MIT",
+  "repository": "github:gadget-inc/js-clients",
+  "homepage": "https://github.com/gadget-inc/js-clients/tree/main/packages/tiny-graphql-query-builder",
+  "scripts": {
+    "typecheck": "tsc --noEmit",
+    "build": "rm -rf dist && tsc -b tsconfig.cjs.json tsconfig.esm.json && echo '{\"type\": \"commonjs\"}' > dist/cjs/package.json && echo '{\"type\": \"module\"}' > dist/esm/package.json",
+    "watch": "rm -rf dist && tsc --watch --preserveWatchOutput",
+    "prepublishOnly": "pnpm build",
+    "prerelease": "gitpkg publish"
+  },
+  "dependencies": {},
+  "devDependencies": {
+    "@testing-library/jest-dom": "^5.16.5",
+    "@testing-library/react": "^13.4.0",
+    "@types/jest": "^29.5.2",
+    "conditional-type-checks": "^1.0.6",
+    "graphql": "16.5.0",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
+    "prettier": "^2.8.8"
+  }
+}

@@ -1,0 +1,44 @@
+name: Release
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - "packages/**/package.json"
+  workflow_dispatch:
+
+jobs:
+  test:
+    uses: ./.github/workflows/test.yml
+  release:
+    needs: test
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: ./.github/actions/setup-test-env
+      - name: Build all packages
+        run: pnpm build
+      - name: Publish @gadgetinc/api-client-core
+        uses: JS-DevTools/npm-publish@v1
+        with:
+          token: ${{ secrets.NPM_TOKEN }}
+          package: ./packages/api-client-core/package.json
+          access: public
+      - name: Publish @gadgetinc/react
+        uses: JS-DevTools/npm-publish@v1
+        with:
+          token: ${{ secrets.NPM_TOKEN }}
+          package: ./packages/react/package.json
+          access: public
+      - name: Publish @gadgetinc/react-shopify-app-bridge
+        uses: JS-DevTools/npm-publish@v1
+        with:
+          token: ${{ secrets.NPM_TOKEN }}
+          package: ./packages/react-shopify-app-bridge/package.json
+          access: public
+      - name: Publish tiny-graphql-query-compiler
+        uses: JS-DevTools/npm-publish@v1
+        with:
+          token: ${{ secrets.NPM_TOKEN }}
+          package: ./packages/tiny-graphql-query-compiler/package.json
+          access: public

@@ -1,0 +1,52 @@
+{
+  "name": "@gadgetinc/api-client-core",
+  "version": "0.15.4",
+  "files": [
+    "Readme.md",
+    "dist/**/*"
+  ],
+  "license": "MIT",
+  "repository": "github:gadget-inc/js-clients",
+  "homepage": "https://github.com/gadget-inc/js-clients/tree/main/packages/api-client-core",
+  "type": "module",
+  "exports": {
+    ".": {
+      "import": "./dist/esm/index.js",
+      "require": "./dist/cjs/index.js",
+      "default": "./dist/esm/index.js"
+    },
+    "./package.json": "./package.json"
+  },
+  "source": "src/index.ts",
+  "main": "dist/cjs/index.js",
+  "scripts": {
+    "typecheck": "tsc --noEmit",
+    "build": "rm -rf dist && tsc -b tsconfig.cjs.json tsconfig.esm.json && echo '{\"type\": \"commonjs\"}' > dist/cjs/package.json && echo '{\"type\": \"module\"}' > dist/esm/package.json",
+    "watch": "rm -rf dist && tsc --watch --preserveWatchOutput",
+    "prepublishOnly": "pnpm build",
+    "prerelease": "gitpkg publish"
+  },
+  "dependencies": {
+    "@opentelemetry/api": "^1.4.0",
+    "@urql/core": "^4.0.10",
+    "cross-fetch": "^3.1.5",
+    "tiny-graphql-query-compiler": "^0.2.2",
+    "graphql": "~16.6.0",
+    "graphql-ws": "^5.13.1",
+    "isomorphic-ws": "^5.0.0",
+    "lodash.clonedeep": "^4.5.0",
+    "lodash.isequal": "^4.5.0",
+    "ws": "^8.13.0"
+  },
+  "devDependencies": {
+    "tiny-graphql-query-compiler": "workspace:*",
+    "@types/lodash.clonedeep": "^4.5.6",
+    "@types/lodash.isequal": "^4.5.5",
+    "@types/node": "^16.11.7",
+    "conditional-type-checks": "^1.0.6",
+    "gql-tag": "^1.0.1",
+    "nock": "^13.3.1",
+    "type-fest": "^3.3.0",
+    "typescript": "5.0.4"
+  }
+}
