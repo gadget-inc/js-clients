@@ -1,0 +1,1 @@
+{"version":3,"file":"AnyGadgetTransaction.js","sourceRoot":"","sources":["../../src/AnyGadgetTransaction.ts"],"names":[],"mappings":"","sourcesContent":["export interface AnyGadgetTransaction {\n  open: boolean;\n  close(): void;\n  rollback(): Promise<void>;\n}\n\nexport type TransactionRun<T extends AnyGadgetTransaction> = (transaction: T) => Promise<T>;\n"]}
