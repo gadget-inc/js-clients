@@ -1,0 +1,37 @@
+import React, { useCallback } from "react";
+import { useFocus } from "../../../useFocus.js";
+import { autoInput } from "../../AutoInput.js";
+import { useJSONInputController } from "../../hooks/useJSONInputController.js";
+/**
+ * A JSON editor within AutoForm using Polaris Web Components.
+ * @example
+ * ```tsx
+ * <AutoForm action={api.modelA.create}>
+ *   <AutoJSONInput field="fieldA" label="Field A" />
+ * </AutoForm>
+ * ```
+ * @param props.field - The JSON field API identifier.
+ * @param props.label - Label of the JSON editor.
+ * @returns The AutoJSONInput component
+ */
+export const PolarisWCAutoJSONInput = autoInput((props) => {
+    const { placeholder, disabled, label: _label, ...restProps } = props;
+    const [isFocused, focusProps] = useFocus();
+    const { type: _type, id, errorMessage, label: controllerLabel, metadata, value, onChange } = useJSONInputController(restProps);
+    const handleChange = useCallback((event) => {
+        const target = event.currentTarget;
+        onChange(target.value ?? "");
+    }, [onChange]);
+    // Ensure label is always a string
+    const label = (props.label ?? String(controllerLabel ?? ""));
+    const displayError = !isFocused && errorMessage ? `Invalid JSON: ${errorMessage}` : undefined;
+    const { onFocus, onBlur } = focusProps;
+    const handleFocus = useCallback((event) => {
+        onFocus?.(event);
+    }, [onFocus]);
+    const handleBlur = useCallback((event) => {
+        onBlur?.(event);
+    }, [onBlur]);
+    return (React.createElement("s-text-area", { id: id, label: label, value: value ?? "", rows: 4, placeholder: placeholder, disabled: disabled, required: metadata.requiredArgumentForInput, error: displayError, onChange: handleChange, onFocus: handleFocus, onBlur: handleBlur, ...restProps }));
+});
+//# sourceMappingURL=PolarisWCAutoJSONInput.js.map
