@@ -1,0 +1,52 @@
+{
+  "name": "@gadgetinc/core",
+  "version": "0.13.0",
+  "files": [
+    "README.md",
+    "dist/**/*",
+    "testing/**/*"
+  ],
+  "license": "MIT",
+  "repository": "github:gadget-inc/js-clients",
+  "homepage": "https://github.com/gadget-inc/js-clients/tree/main/packages/core",
+  "type": "module",
+  "exports": {
+    "./package.json": "./package.json",
+    ".": {
+      "import": "./dist/esm/index.js",
+      "require": "./dist/cjs/index.js",
+      "default": "./dist/esm/index.js"
+    },
+    "./testing": {
+      "import": "./dist/esm/testing/index.js",
+      "require": "./dist/cjs/testing/index.js",
+      "default": "./dist/esm/testing/index.js"
+    }
+  },
+  "source": "src/index.ts",
+  "main": "dist/cjs/index.js",
+  "sideEffects": false,
+  "scripts": {
+    "typecheck:main": "tsc --noEmit",
+    "typecheck": "tsc --noEmit",
+    "clean": "rimraf dist/ *.tsbuildinfo **/*.tsbuildinfo",
+    "prebuild": "mkdir -p dist/cjs dist/esm testing/ && echo '{\"type\": \"commonjs\"}' > dist/cjs/package.json && echo '{\"type\": \"module\"}' > dist/esm/package.json && echo '{\"main\": \"../dist/cjs/testing/index.js\"}' > testing/package.json",
+    "build": "pnpm clean && pnpm prebuild && tsc -b tsconfig.cjs.json tsconfig.esm.json",
+    "prepublishOnly": "pnpm build",
+    "prerelease": "gitpkg publish"
+  },
+  "devDependencies": {
+    "@urql/core": "^6.0.1",
+    "conditional-type-checks": ">=1.0.0",
+    "graphql": ">=16.0.0",
+    "graphql-ws": ">=5.0.0",
+    "p-retry": ">=4.0.0",
+    "tiny-graphql-query-compiler": "workspace:*",
+    "type-fest": ">=3.0.0",
+    "typescript": "5.4.5",
+    "wonka": ">=6.0.0"
+  },
+  "peerDependencies": {
+    "@urql/core": ">=4.0.0"
+  }
+}
