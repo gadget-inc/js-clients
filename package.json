@@ -1,0 +1,140 @@
+{
+  "name": "@gadgetinc/react",
+  "version": "0.15.13",
+  "files": [
+    "README.md",
+    "dist/**/*",
+    "auto/**/*"
+  ],
+  "license": "MIT",
+  "repository": "github:gadget-inc/js-clients",
+  "homepage": "https://github.com/gadget-inc/js-clients/tree/main/packages/react",
+  "type": "module",
+  "exports": {
+    "./package.json": "./package.json",
+    ".": {
+      "import": "./dist/esm/index.js",
+      "require": "./dist/cjs/index.js",
+      "default": "./dist/esm/index.js"
+    },
+    "./auto/polaris": {
+      "import": "./dist/esm/auto/polaris/index.js",
+      "require": "./dist/cjs/auto/polaris/index.js",
+      "default": "./dist/esm/auto/polaris/index.js"
+    },
+    "./auto/mui": {
+      "import": "./dist/esm/auto/mui/index.js",
+      "require": "./dist/cjs/auto/mui/index.js",
+      "default": "./dist/esm/auto/mui/index.js"
+    }
+  },
+  "source": "src/index.ts",
+  "main": "dist/cjs/index.js",
+  "sideEffects": false,
+  "scripts": {
+    "typecheck": "tsc --noEmit",
+    "build": "rm -rf dist && mkdir -p dist/cjs dist/esm auto/polaris auto/mui && echo '{\"type\": \"commonjs\"}' > dist/cjs/package.json && echo '{\"main\": \"../../dist/cjs/auto/polaris/index.js\"}' > auto/polaris/package.json && echo '{\"main\": \"../../dist/cjs/auto/mui/index.js\"}' > auto/mui/package.json && echo '{\"type\": \"module\"}' > dist/esm/package.json && tsc -b tsconfig.cjs.json tsconfig.esm.json ",
+    "watch": "tsc -b tsconfig.esm.json --watch --preserveWatchOutput",
+    "gql-gen": "graphql-codegen",
+    "prepublishOnly": "pnpm build",
+    "prerelease": "gitpkg publish",
+    "storybook": "storybook dev -p 6006",
+    "build-storybook": "storybook build",
+    "cypress:open": "cypress open",
+    "cypress:run": "cypress run"
+  },
+  "dependencies": {
+    "@0no-co/graphql.web": "^1.0.4",
+    "@gadgetinc/api-client-core": "^0.15.24",
+    "@graphql-typed-document-node/core": "^3.2.0",
+    "@hookform/resolvers": "^3.3.1",
+    "date-fns": "^2.30.0",
+    "date-fns-tz": "^2.0.0",
+    "filesize": "^10.1.2",
+    "pluralize": "^8.0.0",
+    "react-fast-compare": "^3.2.2",
+    "react-hook-form": "~7.48.2",
+    "tslib": "^2.6.2",
+    "urql": "^4.0.4",
+    "yup": "^1.2.0"
+  },
+  "devDependencies": {
+    "@chromatic-com/storybook": "^1.5.0",
+    "@emotion/react": "^11.11.1",
+    "@emotion/styled": "^11.11.0",
+    "@gadgetinc/api-client-core": "workspace:*",
+    "@graphql-codegen/cli": "^5.0.0",
+    "@graphql-codegen/client-preset": "^4.1.0",
+    "@mui/material": "^5.14.8",
+    "@n1ru4l/json-patch-plus": "^0.2.0",
+    "@pollyjs/adapter-fetch": "^6.0.6",
+    "@pollyjs/adapter-node-http": "^6.0.6",
+    "@pollyjs/adapter-xhr": "^6.0.6",
+    "@pollyjs/core": "^6.0.6",
+    "@pollyjs/persister-fs": "^6.0.6",
+    "@shopify/polaris": "^12.0.0",
+    "@shopify/polaris-icons": "^8.1.0",
+    "@storybook/addon-essentials": "^8.1.6",
+    "@storybook/addon-interactions": "^8.1.6",
+    "@storybook/addon-links": "^8.1.6",
+    "@storybook/addon-onboarding": "^8.1.6",
+    "@storybook/blocks": "^8.1.6",
+    "@storybook/react": "^8.1.6",
+    "@storybook/react-vite": "^8.1.6",
+    "@storybook/test": "^8.1.6",
+    "@testing-library/jest-dom": "^5.17.0",
+    "@testing-library/react": "^13.4.0",
+    "@testing-library/user-event": "^14.5.2",
+    "@types/jest": "^29.5.12",
+    "@types/lodash": "^4.17.1",
+    "@types/node": "^18.0.0",
+    "@types/pluralize": "^0.0.31",
+    "@types/react": "^18.2.9",
+    "@types/react-dom": "^18.2.4",
+    "@types/setup-polly-jest": "^0.5.5",
+    "@urql/core": "^4.0.10",
+    "conditional-type-checks": "^1.0.6",
+    "cypress": "^13.2.0",
+    "cypress-each": "^1.13.3",
+    "execa": "^5.1.1",
+    "graphql": "^16.8.1",
+    "graphql-ws": "^5.13.1",
+    "lodash": "^4.17.21",
+    "prop-types": "^15.8.1",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
+    "setup-polly-jest": "^0.11.0",
+    "storybook": "^8.1.6",
+    "wonka": "^6.3.2"
+  },
+  "peerDependencies": {
+    "@mui/lab": "5.0.0-alpha.145",
+    "@mui/material": "^5.14.8",
+    "@mui/x-data-grid": "^6.12.1",
+    "@mui/x-date-pickers": "^6.14.0",
+    "@shopify/polaris": "^11.14.0",
+    "@shopify/polaris-icons": "^8.1.0",
+    "react": "^18.0.0",
+    "react-dom": "^18.0.0"
+  },
+  "peerDependenciesMeta": {
+    "@mui/lab": {
+      "optional": true
+    },
+    "@mui/material": {
+      "optional": true
+    },
+    "@mui/x-data-grid": {
+      "optional": true
+    },
+    "@mui/x-date-pickers": {
+      "optional": true
+    },
+    "@shopify/polaris": {
+      "optional": true
+    },
+    "@shopify/polaris-icons": {
+      "optional": true
+    }
+  }
+}
