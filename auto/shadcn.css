@@ -1,0 +1,5 @@
+/*
+ * This file ensures all Tailwind class names we need are available in the build.
+ * No actual CSS should ever be added here - it's purely for Tailwind class name extraction.
+ */
+@source "./GadgetShadcnTailwindSafelist.js";
