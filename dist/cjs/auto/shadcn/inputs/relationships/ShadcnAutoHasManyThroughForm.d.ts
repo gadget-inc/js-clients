@@ -1,0 +1,3 @@
+import type { AutoRelationshipFormProps } from "../../../interfaces/AutoRelationshipInputProps.js";
+import type { ShadcnElements } from "../../elements.js";
+export declare const makeShadcnAutoHasManyThroughForm: ({ Badge, Button, Label, Command, CommandInput, CommandItem, CommandList, CommandEmpty, CommandGroup, Checkbox, Popover, PopoverContent, PopoverTrigger, }: Pick<ShadcnElements, "Badge" | "Button" | "Label" | "Command" | "CommandInput" | "CommandItem" | "CommandList" | "CommandEmpty" | "CommandGroup" | "Checkbox" | "Popover" | "PopoverContent" | "PopoverTrigger">) => import("../../../AutoInput.js").AutoInputComponent<AutoRelationshipFormProps>;
