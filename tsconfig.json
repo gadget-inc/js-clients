@@ -1,0 +1,15 @@
+{
+  "extends": "../../tsconfig.json",
+  "compilerOptions": {
+    "target": "es2020",
+    "baseUrl": "./",
+    "moduleResolution": "node",
+    "module": "ES2022",
+    "lib": ["es2020", "DOM"],
+    "jsx": "react-jsx",
+    "noEmit": true,
+    "skipLibCheck": true,
+    "declaration": false
+  },
+  "include": ["./build.ts", "./bundles"]
+}
