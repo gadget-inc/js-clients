@@ -1,0 +1,23 @@
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+const tslib_1 = require("tslib");
+const polaris_1 = require("@shopify/polaris");
+const react_1 = tslib_1.__importDefault(require("react"));
+const AutoInput_js_1 = require("../../AutoInput.js");
+const useStringInputController_js_1 = require("../../hooks/useStringInputController.js");
+// import AutoRichTextInput from "../../shared/AutoRichTextInput.js";
+const AutoEagerLoadedRichTextInput_js_1 = tslib_1.__importDefault(require("../../shared/AutoEagerLoadedRichTextInput.js"));
+require("../styles/rich-text.css");
+/**
+ * Prefer using the LazyLoadedMUIAutoRichTextInput.tsx variant of this component to reduce the bundle size by default.
+ */
+const PolarisAutoRichTextInput = (0, AutoInput_js_1.autoInput)((props) => {
+    const controller = (0, useStringInputController_js_1.useStringInputController)({ field: props.field, control: props.control });
+    return (react_1.default.createElement("div", { className: "Polaris-FormLayout__Item" },
+        react_1.default.createElement("div", { className: "Polaris-Labelled__LabelWrapper" },
+            react_1.default.createElement(polaris_1.Label, { id: controller.id, requiredIndicator: controller.metadata.requiredArgumentForInput }, props.label ?? controller.metadata.name)),
+        react_1.default.createElement("div", { className: "Autoform-RichTextInput" },
+            react_1.default.createElement(AutoEagerLoadedRichTextInput_js_1.default, { ...props }))));
+});
+exports.default = PolarisAutoRichTextInput;
+//# sourceMappingURL=PolarisAutoRichTextInput.js.map

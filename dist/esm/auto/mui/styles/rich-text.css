@@ -1,0 +1,49 @@
+.autoform-prose {
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    margin-top: 32px; /* 2rem */
+    margin-bottom: 16px; /* 1rem */
+  }
+
+  h1 {
+    font-size: 35.2px; /* 2.2rem */
+    font-weight: 300; /* Light */
+    letter-spacing: -0.01562em;
+    line-height: 1.167;
+  }
+
+  h2 {
+    font-size: 29.4px; /* 1.8375rem */
+    font-weight: 300; /* Light */
+    letter-spacing: -0.00833em;
+    line-height: 1.2;
+  }
+
+  h3 {
+    font-size: 24.5px; /* 1.53125rem */
+    font-weight: 400; /* Regular */
+    letter-spacing: 0em;
+    line-height: 1.167;
+  }
+
+  h4 {
+    font-size: 20.5px; /* 1.28125rem */
+    font-weight: 400; /* Regular */
+    letter-spacing: 0.00735em;
+    line-height: 1.235;
+  }
+
+  h5 {
+    font-size: 16.4px; /* 1.025rem */
+    font-weight: 400; /* Regular */
+  }
+
+  h6 {
+    font-size: 14px; /* 0.875rem */
+    font-weight: 500; /* Medium */
+  }
+}
