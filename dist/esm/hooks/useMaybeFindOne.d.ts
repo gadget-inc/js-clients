@@ -1,0 +1,35 @@
+import { FindOneFunction } from "../GadgetFunctions.js";
+import { GadgetRecord } from "../GadgetRecord.js";
+import { RuntimeAdapter } from "../adaptors/types.js";
+import { CoreHooks } from "../createHooks.js";
+import { DefaultSelection, LimitToKnownKeys, Select } from "../types.js";
+import { OptionsType, ReadHookResult, ReadOperationOptions } from "./utils.js";
+export declare const createUseMaybeFindOne: (adapter: RuntimeAdapter, coreHooks: CoreHooks) => {
+    /**
+     * Hook to fetch a Gadget record using the `maybeFindOne` method of a given manager.
+     *
+     * @param manager Gadget model manager to use
+     * @param id id of the record to fetch
+     * @param options options for selecting the fields in the result
+     *
+     * @example
+     * ```
+     * export function User(props: { id: string }) {
+     *   const [result, refresh] = useMaybeFindOne(Client.user, props.id, {
+     *     select: {
+     *       name: true,
+     *     },
+     *   });
+     *
+     *   if (result.error) return <>Error: {result.error.toString()}</>;
+     *   if (result.fetching && !result.data) return <>Fetching...</>;
+     *   if (!result.data) return <>No user found with id={props.id}</>;
+     *
+     *   return <div>{result.data.name}</div>;
+     * }
+     * ```
+     */
+    useMaybeFindOne: <GivenOptions extends OptionsType, SchemaT, F extends FindOneFunction<GivenOptions, any, SchemaT, any>, Options extends F["optionsType"] & ReadOperationOptions>(manager: {
+        findOne: F;
+    }, id: string, options?: LimitToKnownKeys<Options, F["optionsType"] & ReadOperationOptions>) => ReadHookResult<GadgetRecord<Select<Exclude<F["schemaType"], null | undefined>, DefaultSelection<F["selectionType"], Options, F["defaultSelection"]>>> | null>;
+};

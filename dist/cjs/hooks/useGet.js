@@ -1,0 +1,59 @@
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.createUseGet = void 0;
+const index_js_1 = require("../index.js");
+const support_js_1 = require("../support.js");
+const utils_js_1 = require("./utils.js");
+const createUseGet = (adapter, coreHooks) => {
+    const useGet = (manager, options) => {
+        const memoizedOptions = coreHooks.useStructuralMemo(options);
+        const plan = adapter.framework.useMemo(() => {
+            return (0, index_js_1.findOneOperation)(manager.get.operationName, undefined, manager.get.defaultSelection, manager.get.modelApiIdentifier, memoizedOptions);
+        }, [manager, memoizedOptions]);
+        const [rawResult, refresh] = coreHooks.useGadgetQuery((0, utils_js_1.useQueryArgs)(plan, options));
+        const dataPath = (0, index_js_1.namespaceDataPath)([manager.get.operationName], manager.get.namespace);
+        const result = adapter.framework.useMemo(() => {
+            let data = null;
+            const rawRecord = rawResult.data && (0, support_js_1.get)(rawResult.data, dataPath);
+            if (rawRecord) {
+                data = (0, support_js_1.hydrateRecord)(rawResult, rawRecord);
+            }
+            const error = utils_js_1.ErrorWrapper.forMaybeCombinedError(rawResult.error);
+            return {
+                ...rawResult,
+                error,
+                data,
+            };
+        }, [rawResult, manager]);
+        return [result, refresh];
+    };
+    return {
+        /**
+         * Hook that fetches a singleton record for an `api.currentSomething` style model manager. `useGet` fetches one global record, which is most often the current session. `useGet` doesn't require knowing the record's ID in order to fetch it, and instead returns the one current record for the current context.
+         *
+         * @param manager Gadget model manager to use, like `api.currentSomething`
+         * @param options options for selecting the fields in the result
+         *
+         * @example
+         * ```
+         * export function CurrentSession() {
+         *   const [{error, data, fetching}, refresh] = useGet(api.currentSession, {
+         *     select: {
+         *       id: true,
+         *       userId: true,
+         *     },
+         *   });
+         *
+         *   if (error) return <>Error: {error.toString()}</>;
+         *   if (fetching && !data) return <>Fetching...</>;
+         *   if (!data) return <>No current session found</>;
+         *
+         *   return <div>Current session ID={data.id} and userId={data.userId}</div>;
+         * }
+         * ```
+         */
+        useGet,
+    };
+};
+exports.createUseGet = createUseGet;
+//# sourceMappingURL=useGet.js.map
