@@ -1,0 +1,47 @@
+{
+  "name": "@gadgetinc/preact",
+  "version": "0.1.1",
+  "files": [
+    "README.md",
+    "dist/**/*"
+  ],
+  "license": "MIT",
+  "repository": "github:gadget-inc/js-clients",
+  "homepage": "https://github.com/gadget-inc/js-clients/tree/main/packages/preact",
+  "type": "module",
+  "exports": {
+    "./package.json": "./package.json",
+    ".": {
+      "import": "./dist/esm/index.js",
+      "require": "./dist/cjs/index.js",
+      "default": "./dist/esm/index.js"
+    }
+  },
+  "source": "src/index.ts",
+  "main": "dist/cjs/index.js",
+  "sideEffects": false,
+  "scripts": {
+    "typecheck:main": "tsc --noEmit",
+    "typecheck": "tsc --noEmit",
+    "clean": "rimraf dist/ *.tsbuildinfo **/*.tsbuildinfo",
+    "prebuild": "mkdir -p dist/cjs dist/esm && echo '{\"type\": \"commonjs\"}' > dist/cjs/package.json && echo '{\"type\": \"module\"}' > dist/esm/package.json",
+    "build": "pnpm clean && pnpm prebuild && tsc -b tsconfig.cjs.json tsconfig.esm.json",
+    "prepublishOnly": "pnpm build",
+    "prerelease": "gitpkg publish"
+  },
+  "dependencies": {
+    "@gadgetinc/client-hooks": "^0.1.2",
+    "@gadgetinc/core": ">=0.13.0",
+    "@urql/preact": "^5.0.0",
+    "fast-deep-equal": "^3.1.3"
+  },
+  "devDependencies": {
+    "@testing-library/jest-dom": "^6.8.0",
+    "@testing-library/preact": "^3.2.4",
+    "@gadgetinc/core": "workspace:*",
+    "preact": "^10.27.2"
+  },
+  "peerDependencies": {
+    "preact": "^10.0.0"
+  }
+}
