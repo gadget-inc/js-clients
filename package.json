@@ -1,0 +1,57 @@
+{
+  "name": "@gadgetinc/api-client-core",
+  "version": "0.15.16",
+  "files": [
+    "Readme.md",
+    "dist/**/*"
+  ],
+  "license": "MIT",
+  "repository": "github:gadget-inc/js-clients",
+  "homepage": "https://github.com/gadget-inc/js-clients/tree/main/packages/api-client-core",
+  "type": "module",
+  "exports": {
+    ".": {
+      "import": "./dist/esm/index.js",
+      "require": "./dist/cjs/index.js",
+      "default": "./dist/esm/index.js"
+    },
+    "./package.json": "./package.json"
+  },
+  "source": "src/index.ts",
+  "main": "dist/cjs/index.js",
+  "sideEffects": false,
+  "scripts": {
+    "typecheck": "tsc --noEmit",
+    "build": "rm -rf dist && tsc -b tsconfig.cjs.json tsconfig.esm.json && echo '{\"type\": \"commonjs\"}' > dist/cjs/package.json && echo '{\"type\": \"module\"}' > dist/esm/package.json && node --loader ts-node/esm build/replace-version-constant.ts",
+    "watch": "tsc --watch --preserveWatchOutput",
+    "prepublishOnly": "pnpm build",
+    "prerelease": "gitpkg publish"
+  },
+  "dependencies": {
+    "@n1ru4l/graphql-live-query": "^0.10.0",
+    "@n1ru4l/graphql-live-query-patch-jsondiffpatch": "^0.8.0",
+    "@n1ru4l/push-pull-async-iterable-iterator": "^3.2.0",
+    "@urql/core": "^4.0.10",
+    "cross-fetch": "^3.1.5",
+    "graphql": "^16.8.1",
+    "graphql-ws": "^5.13.1",
+    "isomorphic-ws": "^5.0.0",
+    "klona": "^2.0.6",
+    "tiny-graphql-query-compiler": "^0.2.2",
+    "tslib": "^2.6.2",
+    "ws": "^8.13.0"
+  },
+  "devDependencies": {
+    "@types/node": "^16.11.7",
+    "conditional-type-checks": "^1.0.6",
+    "globby": "^11.0.4",
+    "gql-tag": "^1.0.1",
+    "nock": "^13.3.1",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
+    "tiny-graphql-query-compiler": "workspace:*",
+    "ts-node": "^10.9.1",
+    "type-fest": "^3.3.0",
+    "typescript": "5.0.4"
+  }
+}
