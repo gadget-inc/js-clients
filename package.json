@@ -1,0 +1,52 @@
+{
+  "name": "@gadgetinc/shopify-extensions",
+  "version": "0.3.4",
+  "files": [
+    "README.md",
+    "dist/**/*",
+    "react/**/*"
+  ],
+  "license": "MIT",
+  "repository": "github:gadget-inc/js-clients",
+  "homepage": "https://github.com/gadget-inc/js-clients/tree/main/packages/shopify-extensions",
+  "type": "module",
+  "exports": {
+    ".": {
+      "import": "./dist/esm/index.js",
+      "require": "./dist/cjs/index.js",
+      "default": "./dist/esm/index.js"
+    },
+    "./react": {
+      "import": "./dist/esm/react/index.js",
+      "require": "./dist/cjs/react/index.js",
+      "default": "./dist/esm/react/index.js"
+    },
+    "./package.json": "./package.json"
+  },
+  "source": "src/index.ts",
+  "main": "dist/cjs/index.js",
+  "scripts": {
+    "typecheck": "tsc --noEmit",
+    "build": "rm -rf dist && rm -rf react && tsc -b tsconfig.cjs.json tsconfig.esm.json && echo '{\"type\": \"commonjs\"}' > dist/cjs/package.json && echo '{\"type\": \"module\"}' > dist/esm/package.json && mkdir -p react && echo '{\"main\": \"../dist/cjs/react/index.js\"}' > react/package.json",
+    "watch": "tsc --watch --preserveWatchOutput",
+    "prepublishOnly": "pnpm build",
+    "prerelease": "gitpkg publish"
+  },
+  "dependencies": {
+    "@gadgetinc/api-client-core": "^0.15.35"
+  },
+  "devDependencies": {
+    "@gadgetinc/api-client-core": "workspace:*",
+    "@gadgetinc/react": "workspace:*",
+    "@types/react": "^18.2.79",
+    "@types/react-dom": "^18.2.25",
+    "conditional-type-checks": "^1.0.6",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0"
+  },
+  "peerDependencies": {
+    "react": "^18.0.0",
+    "react-dom": "^18.0.0",
+    "@gadgetinc/react": "^0.18.3"
+  }
+}
