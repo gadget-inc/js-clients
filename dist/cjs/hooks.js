@@ -1,0 +1,25 @@
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.useView = exports.useMaybeFindOne = exports.useMaybeFindFirst = exports.useGlobalAction = exports.useGet = exports.useFindFirst = exports.useFindBy = exports.useFindOne = exports.useFindMany = exports.useFetch = exports.useEnqueue = exports.useBulkAction = exports.useAction = exports.useQuery = exports.useMutation = exports.useConnection = exports.useApi = void 0;
+const api_client_core_1 = require("@gadgetinc/api-client-core");
+const adaptor_js_1 = require("./adaptor.js");
+const coreHooks = (0, api_client_core_1.createHooks)(adaptor_js_1.reactAdapter);
+const { useGadgetQuery, useGadgetMutation, useConnection, useApi } = coreHooks;
+exports.useQuery = useGadgetQuery;
+exports.useMutation = useGadgetMutation;
+exports.useConnection = useConnection;
+exports.useApi = useApi;
+exports.useAction = (0, api_client_core_1.createUseAction)(adaptor_js_1.reactAdapter, coreHooks).useAction;
+exports.useBulkAction = (0, api_client_core_1.createUseBulkAction)(adaptor_js_1.reactAdapter, coreHooks).useBulkAction;
+exports.useEnqueue = (0, api_client_core_1.createUseEnqueue)(adaptor_js_1.reactAdapter, coreHooks).useEnqueue;
+exports.useFetch = (0, api_client_core_1.createUseFetch)(adaptor_js_1.reactAdapter, coreHooks).useFetch;
+exports.useFindMany = (0, api_client_core_1.createUseFindMany)(adaptor_js_1.reactAdapter, coreHooks).useFindMany;
+exports.useFindOne = (0, api_client_core_1.createUseFindOne)(adaptor_js_1.reactAdapter, coreHooks).useFindOne;
+exports.useFindBy = (0, api_client_core_1.createUseFindBy)(adaptor_js_1.reactAdapter, coreHooks).useFindBy;
+exports.useFindFirst = (0, api_client_core_1.createUseFindFirst)(adaptor_js_1.reactAdapter, coreHooks).useFindFirst;
+exports.useGet = (0, api_client_core_1.createUseGet)(adaptor_js_1.reactAdapter, coreHooks).useGet;
+exports.useGlobalAction = (0, api_client_core_1.createUseGlobalAction)(adaptor_js_1.reactAdapter, coreHooks).useGlobalAction;
+exports.useMaybeFindFirst = (0, api_client_core_1.createUseMaybeFindFirst)(adaptor_js_1.reactAdapter, coreHooks).useMaybeFindFirst;
+exports.useMaybeFindOne = (0, api_client_core_1.createUseMaybeFindOne)(adaptor_js_1.reactAdapter, coreHooks).useMaybeFindOne;
+exports.useView = (0, api_client_core_1.createUseView)(adaptor_js_1.reactAdapter, coreHooks).useView;
+//# sourceMappingURL=hooks.js.map
