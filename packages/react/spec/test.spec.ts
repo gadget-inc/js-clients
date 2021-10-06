@@ -1,5 +1,5 @@
 describe("the world", () => {
   test("a test", () => {
-    expect(true).toBeTruthy()
-  })
-})
+    expect(true).toBeTruthy();
+  });
+});
