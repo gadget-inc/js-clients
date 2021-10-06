@@ -10,7 +10,8 @@
     "typecheck": "tsc --noEmit",
     "build": "rm -rf dist && tsc",
     "watch": "rm -rf dist && tsc --watch --preserveWatchOutput",
-    "prepublishOnly": "yarn run build"
+    "prepublishOnly": "yarn run build",
+    "prerelease": "gitpkg publish"
   },
   "dependencies": {
     "@gadgetinc/api-client-core": "*",
