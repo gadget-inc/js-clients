@@ -7,7 +7,10 @@
   "license": "MIT",
   "repository": "github:gadget-inc/js-clients",
   "scripts": {
-    "typecheck": "tsc --noEmit"
+    "typecheck": "tsc --noEmit",
+    "build": "rm -rf dist && tsc",
+    "watch": "rm -rf dist && tsc --watch --preserveWatchOutput",
+    "prepublishOnly": "yarn run build"
   },
   "dependencies": {
     "@gadgetinc/api-client-core": "*",
