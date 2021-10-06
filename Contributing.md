@@ -17,13 +17,13 @@ It can be annoying to work with these packages via `yarn link` sometimes, so we 
 Right now we release through yarn. Run
 
 ```
-yarn workspace @gadgetinc/api-client-core publish --access=public
+yarn workspace @gadgetinc/api-client-core publish --access=public --no-git-tag-version
 ```
 
 or
 
 ```
-yarn workspace @gadgetinc/react publish --access=public
+yarn workspace @gadgetinc/react publish --access=public --no-git-tag-version
 ```
 
 to push a new version to NPM.
