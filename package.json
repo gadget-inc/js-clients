@@ -18,7 +18,8 @@
     "build": "yarn workspaces run build",
     "watch": "run-p --print-label watch:*",
     "watch:client": "yarn workspace @gadgetinc/api-client-core run watch",
-    "watch:react": "yarn workspace @gadgetinc/react run watch"
+    "watch:react": "yarn workspace @gadgetinc/react run watch",
+    "test": "node --max-old-space-size=4096 --stack-trace-limit=1000 node_modules/.bin/jest"
   },
   "devDependencies": {
     "@gadgetinc/eslint-config": "^0.4.0",
