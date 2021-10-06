@@ -1,0 +1,14 @@
+{
+  "name": "@gadgetinc/react",
+  "version": "0.1.0",
+  "private": true,
+  "source": "src/index.ts",
+  "main": "src/index.ts",
+  "license": "MIT",
+  "scripts": {
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@gadgetinc/api-client-core": "*"
+  }
+}

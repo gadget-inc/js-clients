@@ -1,0 +1,26 @@
+{
+  "name": "@gadgetinc/js-clients",
+  "version": "0.1.0",
+  "main": "index.js",
+  "author": "Gadget Authors",
+  "license": "MIT",
+  "private": true,
+  "workspaces": [
+    "packages/api-client-core",
+    "packages/react"
+  ],
+  "scripts": {
+    "lint": "yarn run lint:prettier && yarn run lint:eslint",
+    "lint:prettier": "node --max-old-space-size=4096 node_modules/.bin/prettier --check \"packages/**/*.{js,ts,tsx}\"",
+    "lint:eslint": "node --max-old-space-size=4096 node_modules/.bin/eslint --quiet --ext ts,tsx packages",
+    "lint:fix": "node --max-old-space-size=4096 node_modules/.bin/prettier --write --check \"packages/**/*.{js,ts,tsx}\" && eslint --ext ts,tsx --fix packages",
+    "typecheck": "yarn workspaces run tsc --noEmit"
+  },
+  "devDependencies": {
+    "@gadgetinc/eslint-config": "*",
+    "@gadgetinc/prettier-config": "*",
+    "eslint": "^7.32.0",
+    "jest-junit": "^12.0.0",
+    "prettier": "^2.4.1"
+  }
+}
