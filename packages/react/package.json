@@ -5,6 +5,7 @@
   "source": "src/index.ts",
   "main": "src/index.ts",
   "license": "MIT",
+  "repository": "github:gadget-inc/js-clients",
   "scripts": {
     "typecheck": "tsc --noEmit"
   },
