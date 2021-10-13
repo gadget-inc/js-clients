@@ -1,0 +1,68 @@
+import {
+  findOneByFieldOperation,
+  GadgetNonUniqueDataError,
+  GadgetRecord,
+  get,
+  hydrateConnection,
+  LimitToKnownKeys,
+  Select,
+} from "@gadgetinc/api-client-core";
+import { useMemo } from "react";
+import { CombinedError, useQuery, UseQueryResponse } from "urql";
+import { FindOneFunction } from "./GadgetFunctions";
+import { OptionsType } from "./OptionsType";
+import { useStructuralMemo } from "./useStructuralMemo";
+
+/**
+ * React hook to fetch a Gadget record using the `findByXYZ` method of a given manager.
+ *
+ * @param finder `findByXYZ` function from a Gadget manager that will be used
+ * @param value field value of the record to fetch
+ * @param options options for selecting the fields in the result
+ */
+export const useFindBy = <
+  OptionsT extends OptionsType, // currently necessary for Options to be a narrow type (e.g., `true` instead of `boolean`)
+  F extends FindOneFunction<OptionsT, any, any, any>,
+  Options extends F["optionsType"]
+>(
+  finder: F,
+  value: string,
+  options?: LimitToKnownKeys<Options, F["optionsType"]>
+): UseQueryResponse<GadgetRecord<Select<Exclude<F["schemaType"], null | undefined>, Options["select"]>>> => {
+  const memoizedOptions = useStructuralMemo(options);
+  const plan = useMemo(() => {
+    return findOneByFieldOperation(
+      finder.operationName,
+      finder.findByVariableName,
+      value,
+      finder.defaultSelection,
+      finder.modelApiIdentifier,
+      memoizedOptions
+    );
+  }, [finder, value, memoizedOptions]);
+
+  const [result, refresh] = useQuery({ query: plan.query, variables: plan.variables });
+
+  let records = [];
+  let data = result.data;
+  if (data) {
+    const connection = get(result.data, [finder.operationName]);
+    if (connection) {
+      records = hydrateConnection(result, connection);
+      data = records[0];
+    }
+  }
+
+  let error = result.error;
+  if (!error && records.length > 1) {
+    error = new CombinedError({
+      graphQLErrors: [
+        new GadgetNonUniqueDataError(
+          `More than one record found for ${finder.modelApiIdentifier}.${finder.findByVariableName} = ${value}. Please confirm your unique validation is not reporting an error.`
+        ),
+      ],
+    });
+  }
+
+  return [{ ...result, error, data }, refresh];
+};
