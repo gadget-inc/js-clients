@@ -139,13 +139,16 @@ export const assertMutationSuccess = (response: OperationResult<any>, dataPath: 
   return operationResponse;
 };
 
-export const getHydrator = (response: OperationResult<any>) => {
+// All of these functions only need the data bit, so narrow the type to make it easier to use these functions
+type Result = Pick<OperationResult<any>, "data">;
+
+export const getHydrator = (response: Result) => {
   if (response.data?.gadgetMeta?.hydrations) {
     return new DataHydrator(response.data?.gadgetMeta?.hydrations);
   }
 };
 
-export const hydrateRecord = <Shape = any>(response: OperationResult<any>, record: any) => {
+export const hydrateRecord = <Shape = any>(response: Result, record: any): Shape => {
   let hydrator;
   if ((hydrator = getHydrator(response))) {
     record = hydrator.apply(record);
@@ -153,7 +156,7 @@ export const hydrateRecord = <Shape = any>(response: OperationResult<any>, recor
   return new GadgetRecord<Shape>(record);
 };
 
-export const hydrateRecordArray = <Shape = any>(response: OperationResult<any>, records: Array<any>) => {
+export const hydrateRecordArray = <Shape = any>(response: Result, records: Array<any>) => {
   const hydrator = getHydrator(response);
   if (hydrator) {
     records = hydrator.apply(records) as any;
@@ -161,7 +164,7 @@ export const hydrateRecordArray = <Shape = any>(response: OperationResult<any>, 
   return records?.map((record) => new GadgetRecord<Shape>(record));
 };
 
-export const hydrateConnection = <Shape = any>(response: OperationResult<any>, connection: { edges: { node: Node }[] }) => {
+export const hydrateConnection = <Shape = any>(response: Result, connection: { edges: { node: Node }[] }) => {
   const nodes = connection.edges.map((edge) => edge.node);
   return hydrateRecordArray<Shape>(response, nodes);
 };
