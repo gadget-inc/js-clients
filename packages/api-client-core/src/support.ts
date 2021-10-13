@@ -44,6 +44,7 @@ export class GadgetValidationError extends Error {
     super(message);
   }
 }
+
 /**
  * A Gadget API error that represents an error from the server. Thrown when the server enounters data that is not unique despite the existence of unique validation on a field. If you receive this error, it is likely that you added a unique validation to a field that has duplicate data.
  */
@@ -112,30 +113,28 @@ export const assertOperationSuccess = (response: OperationResult<any>, dataPath:
   return result;
 };
 
+export const gadgetErrorFor = (error: Record<string, any>) => {
+  if (error.code == "GGT_INVALID_RECORD") {
+    return new GadgetValidationError(error.message, error.validationErrors);
+  } else if (error.code == "GGT_UNKNOWN" && error.message.includes("duplicate key value violates unique constraint")) {
+    return new GadgetNonUniqueDataError(error.message);
+  } else {
+    return new GadgetOperationError(error.message, error.code);
+  }
+};
+
 export const assertMutationSuccess = (response: OperationResult<any>, dataPath: string[]) => {
   const operationResponse = assertOperationSuccess(response, dataPath);
 
-  if (!operationResponse.success) {
+  if (operationResponse.success) {
     const firstErrorBlob = operationResponse.errors && operationResponse.errors[0];
-    let error;
     if (firstErrorBlob) {
-      if (firstErrorBlob.code == "GGT_INVALID_RECORD") {
-        error = new GadgetValidationError(operationResponse.errors[0].message, operationResponse.errors[0].validationErrors);
-      } else {
-        if (
-          operationResponse.errors[0].code == "GGT_UNKNOWN" &&
-          operationResponse.errors[0].message.includes("duplicate key value violates unique constraint")
-        ) {
-          error = new GadgetNonUniqueDataError(operationResponse.errors[0].message);
-        } else {
-          error = new GadgetOperationError(operationResponse.errors[0].message, operationResponse.errors[0].code);
-        }
-      }
+      throw gadgetErrorFor(firstErrorBlob);
     } else {
-      error = new GadgetOperationError(`Gadget API operation not successful.`, "GGT_UNKNOWN");
+      throw new GadgetOperationError(`Gadget API operation not successful.`, "GGT_UNKNOWN");
     }
-    throw error;
   }
+
   return operationResponse;
 };
 

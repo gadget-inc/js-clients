@@ -1,5 +1,11 @@
-import VariableOptions from "gql-query-builder/build/VariableOptions";
-import { actionOperation, findManyOperation, findOneByFieldOperation, GadgetNonUniqueDataError, globalActionOperation } from ".";
+import {
+  actionOperation,
+  findManyOperation,
+  findOneByFieldOperation,
+  GadgetNonUniqueDataError,
+  globalActionOperation,
+  VariableOptions,
+} from ".";
 import { FieldSelection } from "./FieldSelection";
 import { GadgetConnection } from "./GadgetConnection";
 import { GadgetRecord } from "./GadgetRecord";
