@@ -44,6 +44,7 @@ export class GadgetValidationError extends Error {
     super(message);
   }
 }
+
 /**
  * A Gadget API error that represents an error from the server. Thrown when the server enounters data that is not unique despite the existence of unique validation on a field. If you receive this error, it is likely that you added a unique validation to a field that has duplicate data.
  */
@@ -112,40 +113,41 @@ export const assertOperationSuccess = (response: OperationResult<any>, dataPath:
   return result;
 };
 
+export const gadgetErrorFor = (error: Record<string, any>) => {
+  if (error.code == "GGT_INVALID_RECORD") {
+    return new GadgetValidationError(error.message, error.validationErrors);
+  } else if (error.code == "GGT_UNKNOWN" && error.message.includes("duplicate key value violates unique constraint")) {
+    return new GadgetNonUniqueDataError(error.message);
+  } else {
+    return new GadgetOperationError(error.message, error.code);
+  }
+};
+
 export const assertMutationSuccess = (response: OperationResult<any>, dataPath: string[]) => {
   const operationResponse = assertOperationSuccess(response, dataPath);
 
   if (!operationResponse.success) {
     const firstErrorBlob = operationResponse.errors && operationResponse.errors[0];
-    let error;
     if (firstErrorBlob) {
-      if (firstErrorBlob.code == "GGT_INVALID_RECORD") {
-        error = new GadgetValidationError(operationResponse.errors[0].message, operationResponse.errors[0].validationErrors);
-      } else {
-        if (
-          operationResponse.errors[0].code == "GGT_UNKNOWN" &&
-          operationResponse.errors[0].message.includes("duplicate key value violates unique constraint")
-        ) {
-          error = new GadgetNonUniqueDataError(operationResponse.errors[0].message);
-        } else {
-          error = new GadgetOperationError(operationResponse.errors[0].message, operationResponse.errors[0].code);
-        }
-      }
+      throw gadgetErrorFor(firstErrorBlob);
     } else {
-      error = new GadgetOperationError(`Gadget API operation not successful.`, "GGT_UNKNOWN");
+      throw new GadgetOperationError(`Gadget API operation not successful.`, "GGT_UNKNOWN");
     }
-    throw error;
   }
+
   return operationResponse;
 };
 
-export const getHydrator = (response: OperationResult<any>) => {
+// All of these functions only need the data bit, so narrow the type to make it easier to use these functions
+type Result = Pick<OperationResult<any>, "data">;
+
+export const getHydrator = (response: Result) => {
   if (response.data?.gadgetMeta?.hydrations) {
     return new DataHydrator(response.data?.gadgetMeta?.hydrations);
   }
 };
 
-export const hydrateRecord = <Shape = any>(response: OperationResult<any>, record: any) => {
+export const hydrateRecord = <Shape = any>(response: Result, record: any): Shape => {
   let hydrator;
   if ((hydrator = getHydrator(response))) {
     record = hydrator.apply(record);
@@ -153,7 +155,7 @@ export const hydrateRecord = <Shape = any>(response: OperationResult<any>, recor
   return new GadgetRecord<Shape>(record);
 };
 
-export const hydrateRecordArray = <Shape = any>(response: OperationResult<any>, records: Array<any>) => {
+export const hydrateRecordArray = <Shape = any>(response: Result, records: Array<any>) => {
   const hydrator = getHydrator(response);
   if (hydrator) {
     records = hydrator.apply(records) as any;
@@ -161,7 +163,7 @@ export const hydrateRecordArray = <Shape = any>(response: OperationResult<any>, 
   return records?.map((record) => new GadgetRecord<Shape>(record));
 };
 
-export const hydrateConnection = <Shape = any>(response: OperationResult<any>, connection: { edges: { node: Node }[] }) => {
+export const hydrateConnection = <Shape = any>(response: Result, connection: { edges: { node: Node }[] }) => {
   const nodes = connection.edges.map((edge) => edge.node);
   return hydrateRecordArray<Shape>(response, nodes);
 };

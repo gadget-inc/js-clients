@@ -1,9 +1,9 @@
 /* eslint-disable no-throw-literal */
 /* eslint-disable @typescript-eslint/require-await */
 import { GadgetRecord } from "./GadgetRecord";
-import { InternalModelManager } from "./InternalModelManager";
-import { ModelManager } from "./ModelManager";
-import type { PaginationOptions } from "./operationRunners";
+import type { InternalModelManager } from "./InternalModelManager";
+import type { AnyModelManager } from "./ModelManager";
+import type { PaginationOptions } from "./operationBuilders";
 import { GadgetClientError, GadgetOperationError } from "./support";
 
 type PaginationConfig = {
@@ -13,11 +13,11 @@ type PaginationConfig = {
 
 /** Represents a list of objects returned from the API. Facilitates iterating and paginating. */
 export class GadgetRecordList<Shape> extends Array<GadgetRecord<Shape>> {
-  modelManager!: ModelManager | InternalModelManager;
+  modelManager!: AnyModelManager | InternalModelManager;
   pagination!: PaginationConfig;
 
   /** Internal method used to create a list. Should not be used by applications. */
-  static boot<Shape>(modelManager: ModelManager | InternalModelManager, nodes: GadgetRecord<Shape>[], pagination: PaginationConfig) {
+  static boot<Shape>(modelManager: AnyModelManager | InternalModelManager, nodes: GadgetRecord<Shape>[], pagination: PaginationConfig) {
     const list = new GadgetRecordList<Shape>();
     list.push(...nodes);
     list.modelManager = modelManager;
