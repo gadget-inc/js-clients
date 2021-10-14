@@ -126,7 +126,7 @@ export const gadgetErrorFor = (error: Record<string, any>) => {
 export const assertMutationSuccess = (response: OperationResult<any>, dataPath: string[]) => {
   const operationResponse = assertOperationSuccess(response, dataPath);
 
-  if (operationResponse.success) {
+  if (!operationResponse.success) {
     const firstErrorBlob = operationResponse.errors && operationResponse.errors[0];
     if (firstErrorBlob) {
       throw gadgetErrorFor(firstErrorBlob);
