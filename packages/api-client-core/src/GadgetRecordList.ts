@@ -1,9 +1,9 @@
 /* eslint-disable no-throw-literal */
 /* eslint-disable @typescript-eslint/require-await */
 import { GadgetRecord } from "./GadgetRecord";
-import { InternalModelManager } from "./InternalModelManager";
-import { AnyModelManager } from "./ModelManager";
-import { PaginationOptions } from "./operationBuilders";
+import type { InternalModelManager } from "./InternalModelManager";
+import type { AnyModelManager } from "./ModelManager";
+import type { PaginationOptions } from "./operationBuilders";
 import { GadgetClientError, GadgetOperationError } from "./support";
 
 type PaginationConfig = {
