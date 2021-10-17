@@ -6,6 +6,7 @@ export * from "./GadgetConnection";
 export * from "./GadgetRecord";
 export * from "./GadgetRecordList";
 export * from "./GadgetTransaction";
+export * from "./InMemoryStorage";
 export * from "./InternalModelManager";
 export * from "./ModelManager";
 export * from "./operationBuilders";
