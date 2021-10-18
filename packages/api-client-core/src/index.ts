@@ -3,6 +3,7 @@ export * from "./ClientOptions";
 export * from "./DataHydrator";
 export * from "./FieldSelection";
 export * from "./GadgetConnection";
+export * from "./GadgetFunctions";
 export * from "./GadgetRecord";
 export * from "./GadgetRecordList";
 export * from "./GadgetTransaction";
