@@ -15,10 +15,9 @@ import { OptionsType } from "./OptionsType";
 import { useStructuralMemo } from "./useStructuralMemo";
 
 /**
- * React hook to fetch a Gadget record using the `findByXYZ` method of a given manager.
+ * React hook to run a Gadget model action.
  *
- * @param action `findByXYZ` function from a Gadget manager that will be used
- * @param params input params to the Gadget action
+ * @param action any action function from a Gadget manager
  * @param options options for selecting the fields in the result
  */
 export const useAction = <
