@@ -71,3 +71,15 @@ export type ActionFunction<OptionsT, VariablesT, SelectionT, SchemaT, DefaultsT>
     | ActionWithNoIdAndVariables<OptionsT, VariablesT>
     | ActionWithNoIdAndNoVariables<OptionsT>
   );
+
+export interface GetFunction<OptionsT, SelectionT, SchemaT, DefaultsT> {
+  <Options extends OptionsT>(options?: LimitToKnownKeys<Options, OptionsT>): AsyncRecord<GadgetRecord<any>>;
+
+  type: "get";
+  operationName: string;
+  modelApiIdentifier: string;
+  defaultSelection: DefaultsT;
+  selectionType: SelectionT;
+  optionsType: OptionsT;
+  schemaType: SchemaT | null;
+}
