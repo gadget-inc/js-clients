@@ -12,8 +12,8 @@ import { useStructuralMemo } from "./useStructuralMemo";
  * @param options options for filtering and searching records, and selecting the fields in each record of the result
  */
 export const useFindMany = <
-  OptionsT extends OptionsType, // currently necessary for Options to be a narrow type (e.g., `true` instead of `boolean`)
-  F extends FindManyFunction<OptionsT, any, any, any>,
+  GivenOptions extends OptionsType, // currently necessary for Options to be a narrow type (e.g., `true` instead of `boolean`)
+  F extends FindManyFunction<GivenOptions, any, any, any>,
   Options extends F["optionsType"]
 >(
   manager: { findMany: F },

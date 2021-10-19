@@ -13,8 +13,8 @@ import { useStructuralMemo } from "./useStructuralMemo";
  * @param options options for selecting the fields in the result
  */
 export const useFindOne = <
-  OptionsT extends OptionsType, // currently necessary for Options to be a narrow type (e.g., `true` instead of `boolean`)
-  F extends FindOneFunction<OptionsT, any, any, any>,
+  GivenOptions extends OptionsType, // currently necessary for Options to be a narrow type (e.g., `true` instead of `boolean`)
+  F extends FindOneFunction<GivenOptions, any, any, any>,
   Options extends F["optionsType"]
 >(
   manager: { findOne: F },
