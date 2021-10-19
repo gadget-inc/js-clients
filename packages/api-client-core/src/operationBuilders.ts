@@ -3,7 +3,7 @@ import IQueryBuilderOptions from "gql-query-builder/build/IQueryBuilderOptions";
 import VariableOptions from "gql-query-builder/build/VariableOptions";
 import { FieldSelection, fieldSelectionToGQLBuilderFields, filterTypeName, sortTypeName } from ".";
 
-export { default as VariableOptions } from "gql-query-builder/build/VariableOptions";
+export type { default as VariableOptions } from "gql-query-builder/build/VariableOptions";
 
 const hydrationOptions = (modelApiIdentifier: string): IQueryBuilderOptions => {
   return {

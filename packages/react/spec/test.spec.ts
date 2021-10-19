@@ -1,5 +1,6 @@
+import path from 'path'
 describe("the world", () => {
   test("a test", () => {
-    expect(true).toBeTruthy();
+    expect(path).toBeTruthy();
   });
 });
