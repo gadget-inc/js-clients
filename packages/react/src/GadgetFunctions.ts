@@ -84,3 +84,13 @@ export interface GetFunction<OptionsT, SelectionT, SchemaT, DefaultsT> {
   optionsType: OptionsT;
   schemaType: SchemaT | null;
 }
+
+export interface GlobalActionFunction<VariablesT> {
+  (variables: VariablesT): Promise<any>;
+
+  type: "globalAction";
+  operationName: string;
+  namespace: string | null;
+  variables: VariableOptions;
+  variablesType: VariablesT;
+}

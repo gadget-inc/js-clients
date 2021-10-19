@@ -4,3 +4,4 @@ export * from "./useFindBy";
 export * from "./useFindMany";
 export * from "./useFindOne";
 export * from "./useGet";
+export * from "./useGlobalAction";
