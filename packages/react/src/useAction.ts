@@ -59,7 +59,14 @@ export const useAction = <
 > => {
   const memoizedOptions = useStructuralMemo(options);
   const plan = useMemo(() => {
-    return actionOperation(action.operationName, action.defaultSelection, action.modelApiIdentifier, action.variables, memoizedOptions);
+    return actionOperation(
+      action.operationName,
+      action.defaultSelection,
+      action.modelApiIdentifier,
+      action.variables,
+      memoizedOptions,
+      action.namespace
+    );
   }, [action, memoizedOptions]);
 
   const [result, runMutation] = useMutation<

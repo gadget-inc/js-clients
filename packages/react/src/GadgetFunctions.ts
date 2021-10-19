@@ -49,6 +49,7 @@ interface ActionWithNoIdAndNoVariables<OptionsT> {
 interface ActionFunctionMetadata<OptionsT, VariablesT, SelectionT, SchemaT, DefaultsT> {
   type: "action";
   operationName: string;
+  namespace: string | null;
   modelApiIdentifier: string;
   defaultSelection: DefaultsT;
   selectionType: SelectionT;
