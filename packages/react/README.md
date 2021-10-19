@@ -40,33 +40,35 @@ import { useAction, useFindMany } from "@gadgetinc/react";
 import React from "react";
 import { Client } from "@gadget-client/my-gadget-app";
 
-const [_, deleteWidget] = useAction(Client.widget.delete);
+export function MyComponent() => {
+  const [_, deleteWidget] = useAction(Client.widget.delete);
 
-// if id or _all weren't fields on a widget, this would be a type error
-const [result, refresh] = useFindMany(Client.widget, {
-  select: {
-    id: true,
-    name: true,
-  },
-});
+  // if id or _all weren't fields on a widget, this would be a type error
+  const [result, refresh] = useFindMany(Client.widget, {
+    select: {
+      id: true,
+      name: true,
+    },
+  });
 
-if (result.error) return <>Error: {result.error.toString()}</>;
-if (result.fetching && !result.data) return <>Fetching...</>;
-if (!result.data) return <>No widgets found</>;
+  if (result.error) return <>Error: {result.error.toString()}</>;
+  if (result.fetching && !result.data) return <>Fetching...</>;
+  if (!result.data) return <>No widgets found</>;
 
-// If id/name weren't selected above, they wouldn't typecheck below
-return (
-  <>
-    {result.map((widget) => (
-      <button
-        onClick={(event) => {
-          event.preventDefault();
-          void deleteWidget({ id: widget.id }).then(() => refresh());
-        }}
-      >
-        Delete {widget.name}
-      </button>
-    ))}
-  </>
-);
+  // If id/name weren't selected above, they wouldn't typecheck below
+  return (
+    <>
+      {result.map((widget) => (
+        <button
+          onClick={(event) => {
+            event.preventDefault();
+            void deleteWidget({ id: widget.id }).then(() => refresh());
+          }}
+        >
+          Delete {widget.name}
+        </button>
+      ))}
+    </>
+  );
+}
 ```
