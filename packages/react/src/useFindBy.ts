@@ -19,6 +19,22 @@ import { useStructuralMemo } from "./useStructuralMemo";
  * @param finder `findByXYZ` function from a Gadget manager that will be used
  * @param value field value of the record to fetch
  * @param options options for selecting the fields in the result
+ *
+ * @example
+ * ```
+ * export function UserByEmail(props: { email: string }) {
+ *   const [result, refresh] = useFindBy(Client.user.findByEmail, props.email, {
+ *     select: {
+ *       name: true,
+ *     },
+ *   });
+ *
+ *   if (result.error) return <>Error: {result.error}</>;
+ *   if (result.fetching && !result.data) return <>Fetching...</>;
+ *   if (!result.data) return <>No user found with id={props.id}</>;
+ *
+ *   return <div>{result.data.name}</div>;
+ * }
  */
 export const useFindBy = <
   GivenOptions extends OptionsType, // currently necessary for Options to be a narrow type (e.g., `true` instead of `boolean`)

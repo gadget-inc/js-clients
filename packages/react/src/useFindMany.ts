@@ -10,6 +10,23 @@ import { useStructuralMemo } from "./useStructuralMemo";
  *
  * @param manager Gadget model manager to use
  * @param options options for filtering and searching records, and selecting the fields in each record of the result
+ *
+ * @example
+ * ```
+ * export function Users() {
+ *   const [result, refresh] = useFindMany(Client.user, {
+ *     select: {
+ *       name: true,
+ *     },
+ *   });
+ *
+ *   if (result.error) return <>Error: {result.error}</>;
+ *   if (result.fetching && !result.data) return <>Fetching...</>;
+ *   if (!result.data) return <>No users found</>;
+ *
+ *   return <>{result.data.map((user) => <div>{user.name}</div>)}</>;
+ * }
+ * ```
  */
 export const useFindMany = <
   GivenOptions extends OptionsType, // currently necessary for Options to be a narrow type (e.g., `true` instead of `boolean`)

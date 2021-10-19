@@ -18,7 +18,33 @@ import { useStructuralMemo } from "./useStructuralMemo";
  * React hook to run a Gadget model action.
  *
  * @param action any action function from a Gadget manager
- * @param options options for selecting the fields in the result
+ * @param options action options, like selecting the fields in the result
+ *
+ * @example
+ * ```
+ * export function CreateUserButton(props: { name: string; email: string }) {
+ *   const [result, createUser] = useAction(Client.user.create, props.email, {
+ *     select: {
+ *       id: true,
+ *     },
+ *   });
+ *
+ *   const onClick = () => createUser({
+ *     widget: {
+ *       name: props.name,
+ *       email: props.email,
+ *     }
+ *   });
+ *
+ *   return (
+ *     <>
+ *       {result.error && <>Failed to create user: {result.error}</>}
+ *       {result.fetching && <>Creating user...</>}
+ *       {result.data && <>Created user with id={result.data.id}</>}
+ *       <button onClick={onClick}>Create user</button>
+ *     </>
+ *   );
+ * }
  */
 export const useAction = <
   GivenOptions extends OptionsType, // currently necessary for Options to be a narrow type (e.g., `true` instead of `boolean`)
