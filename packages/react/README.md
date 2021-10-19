@@ -27,6 +27,21 @@ the same [features](https://github.com/FormidableLabs/urql/blob/main/README.md#-
 
 ## Installation
 
+This is a companion package to the JavaScript client package generated for your Gadget app, so you must install the JS client for your app, and then install this package.
+
+To install the JS client for your app, you must set up the Gadget NPM registry, and then install the client:
+
+```
+npm config set @gadget-client:registry https://registry.gadget.dev/npm
+yarn add @gadget-client/my-app-slug
+# or
+npm install @gadget-client/product-tagger-8000
+```
+
+Full installation instructions can be found in the Gadget docs at `https://docs.gadget.dev/api/<my-app-slug>/installing`.
+
+Once you have your JS client installed, you can install the React hooks library with yarn or npm:
+
 ```
 yarn add @gadgetinc/react react
 # or
