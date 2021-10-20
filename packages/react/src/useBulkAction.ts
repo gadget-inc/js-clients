@@ -1,60 +1,46 @@
-import {
-  actionOperation,
-  capitalize,
-  gadgetErrorFor,
-  GadgetRecord,
-  get,
-  hydrateRecord,
-  LimitToKnownKeys,
-  Select,
-} from "@gadgetinc/api-client-core";
+import { actionOperation, capitalize, GadgetRecord, get, hydrateRecordArray, LimitToKnownKeys, Select } from "@gadgetinc/api-client-core";
 import { useMemo } from "react";
-import { CombinedError, useMutation, UseMutationResponse } from "urql";
-import { ActionFunction } from "./GadgetFunctions";
+import { useMutation, UseMutationResponse } from "urql";
+import { BulkActionFunction } from "./GadgetFunctions";
 import { OptionsType } from "./OptionsType";
 import { useStructuralMemo } from "./useStructuralMemo";
 
 /**
- * React hook to run a Gadget model action.
+ * React hook to run a Gadget model bulk action.
  *
- * @param action any action function from a Gadget manager
+ * @param action any bulk action function from a Gadget manager
  * @param options action options, like selecting the fields in the result
  *
  * @example
  * ```
- * export function CreateUserButton(props: { name: string; email: string }) {
- *   const [result, createUser] = useAction(Client.user.create, props.email, {
+ * export function BulkFinish(props: { ids: string[]; }) {
+ *   const [result, bulkFinish] = useBulkAction(Client.todo.bulkFinish, {
  *     select: {
  *       id: true,
  *     },
  *   });
  *
- *   const onClick = () => createUser({
- *     widget: {
- *       name: props.name,
- *       email: props.email,
- *     }
- *   });
+ *   const onClick = () => ;
  *
  *   return (
  *     <>
  *       {result.error && <>Failed to create user: {result.error}</>}
  *       {result.fetching && <>Creating user...</>}
- *       {result.data && <>Created user with id={result.data.id}</>}
- *       <button onClick={onClick}>Create user</button>
+ *       {result.data && <>Finished TODOs with ids={props.ids}</>}
+ *       <button onClick={() => bulkFinish(ids))}>Bulk finish</button>
  *     </>
  *   );
  * }
  */
-export const useAction = <
+export const useBulkAction = <
   GivenOptions extends OptionsType, // currently necessary for Options to be a narrow type (e.g., `true` instead of `boolean`)
-  F extends ActionFunction<GivenOptions, any, any, any, any>,
+  F extends BulkActionFunction<GivenOptions, any, any, any, any>,
   Options extends F["optionsType"]
 >(
   action: F,
   options?: LimitToKnownKeys<Options, F["optionsType"]>
 ): UseMutationResponse<
-  GadgetRecord<Select<Exclude<F["schemaType"], null | undefined>, Options["select"]>>,
+  GadgetRecord<Select<Exclude<F["schemaType"], null | undefined>, Options["select"]>>[],
   Exclude<F["variablesType"], null | undefined>
 > => {
   const memoizedOptions = useStructuralMemo(options);
@@ -71,34 +57,25 @@ export const useAction = <
   }, [action, memoizedOptions]);
 
   const [result, runMutation] = useMutation<
-    GadgetRecord<Select<Exclude<F["schemaType"], null | undefined>, Options["select"]>>,
+    GadgetRecord<Select<Exclude<F["schemaType"], null | undefined>, Options["select"]>>[],
     F["variablesType"]
   >(plan.query);
 
-  let error = result.error;
   let data = result.data;
   if (data) {
-    const dataPath = [action.operationName, action.modelSelectionField];
-    if (action.namespace) {
-      dataPath.unshift(action.namespace);
-    }
-
-    data = hydrateRecord(result, get(result.data, dataPath));
-
-    if (data) {
-      const errors = data.getField("errors");
-      if (errors && errors[0]) {
-        error = new CombinedError({
-          graphQLErrors: [gadgetErrorFor(errors[0])],
-        });
+    // TODO deal with deletion better than checking selectionType
+    if (action.defaultSelection != null) {
+      const dataPath = [action.operationName, action.modelSelectionField];
+      if (action.namespace) {
+        dataPath.unshift(action.namespace);
       }
+      data = hydrateRecordArray(result, get(result.data, dataPath));
     }
   }
 
   return [
     {
       ...result,
-      error,
       data,
     },
     (variables, context) => {
