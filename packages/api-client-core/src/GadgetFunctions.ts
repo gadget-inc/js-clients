@@ -46,16 +46,23 @@ interface ActionWithNoIdAndNoVariables<OptionsT> {
   <Options extends OptionsT>(options?: LimitToKnownKeys<Options, OptionsT>): AsyncRecord<any>;
 }
 
-interface ActionFunctionMetadata<OptionsT, VariablesT, SelectionT, SchemaT, DefaultsT> {
+interface BulkActionWithIdsAndNoVariables<OptionsT> {
+  <Options extends OptionsT>(ids: string[], options?: LimitToKnownKeys<Options, OptionsT>): AsyncRecord<any>;
+}
+
+interface ActionFunctionMetadata<OptionsT, VariablesT, SelectionT, SchemaT, DefaultsT, IsBulk> {
   type: "action";
   operationName: string;
+  namespace: string | null;
   modelApiIdentifier: string;
+  modelSelectionField: string;
   defaultSelection: DefaultsT;
   selectionType: SelectionT;
   optionsType: OptionsT;
   schemaType: SchemaT | null;
   variables: VariableOptions;
   variablesType: VariablesT;
+  isBulk: IsBulk;
 }
 
 export type ActionFunction<OptionsT, VariablesT, SelectionT, SchemaT, DefaultsT> = ActionFunctionMetadata<
@@ -63,7 +70,8 @@ export type ActionFunction<OptionsT, VariablesT, SelectionT, SchemaT, DefaultsT>
   VariablesT,
   SelectionT,
   SchemaT,
-  DefaultsT
+  DefaultsT,
+  false
 > &
   (
     | ActionWithIdAndVariables<OptionsT, VariablesT>
@@ -71,3 +79,35 @@ export type ActionFunction<OptionsT, VariablesT, SelectionT, SchemaT, DefaultsT>
     | ActionWithNoIdAndVariables<OptionsT, VariablesT>
     | ActionWithNoIdAndNoVariables<OptionsT>
   );
+
+export type BulkActionFunction<OptionsT, VariablesT, SelectionT, SchemaT, DefaultsT> = ActionFunctionMetadata<
+  OptionsT,
+  VariablesT,
+  SelectionT,
+  SchemaT,
+  DefaultsT,
+  true
+> &
+  BulkActionWithIdsAndNoVariables<OptionsT>;
+
+export interface GetFunction<OptionsT, SelectionT, SchemaT, DefaultsT> {
+  <Options extends OptionsT>(options?: LimitToKnownKeys<Options, OptionsT>): AsyncRecord<GadgetRecord<any>>;
+
+  type: "get";
+  operationName: string;
+  modelApiIdentifier: string;
+  defaultSelection: DefaultsT;
+  selectionType: SelectionT;
+  optionsType: OptionsT;
+  schemaType: SchemaT | null;
+}
+
+export interface GlobalActionFunction<VariablesT> {
+  (variables: VariablesT): Promise<any>;
+
+  type: "globalAction";
+  operationName: string;
+  namespace: string | null;
+  variables: VariableOptions;
+  variablesType: VariablesT;
+}
