@@ -100,6 +100,7 @@ export const actionOperation = (
   operation: string,
   defaultSelection: FieldSelection | null,
   modelApiIdentifier: string,
+  modelSelectionField: string,
   variables: VariableOptions,
   options?: SelectionOptions | null,
   namespace?: string | null
@@ -115,7 +116,7 @@ export const actionOperation = (
 
   const selection = options?.select || defaultSelection;
   if (selection) {
-    actionOperation.fields!.push({ [modelApiIdentifier]: fieldSelectionToGQLBuilderFields(selection) });
+    actionOperation.fields!.push({ [modelSelectionField]: fieldSelectionToGQLBuilderFields(selection) });
   }
 
   if (namespace) {

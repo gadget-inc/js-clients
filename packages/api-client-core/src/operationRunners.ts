@@ -71,6 +71,7 @@ export interface ActionRunner {
     operation: string,
     defaultSelection: FieldSelection | null,
     modelApiIdentifier: string,
+    modelSelectionField: string,
     isBulkAction: false,
     variables: VariableOptions,
     options?: SelectionOptions | null,
@@ -82,11 +83,12 @@ export interface ActionRunner {
     operation: string,
     defaultSelection: FieldSelection | null,
     modelApiIdentifier: string,
+    modelSelectionField: string,
     isBulkAction: true,
     variables: VariableOptions,
     options?: SelectionOptions | null,
     namespace?: string | null
-  ): Promise<Shape extends void ? void : GadgetRecordList<Shape>>;
+  ): Promise<Shape extends void ? void : GadgetRecord<Shape>[]>;
 }
 
 export const actionRunner: ActionRunner = async <Shape = any>(
@@ -94,12 +96,13 @@ export const actionRunner: ActionRunner = async <Shape = any>(
   operation: string,
   defaultSelection: FieldSelection | null,
   modelApiIdentifier: string,
+  modelSelectionField: string,
   isBulkAction: boolean,
   variables: VariableOptions,
   options?: SelectionOptions | null,
   namespace?: string | null
 ) => {
-  const plan = actionOperation(operation, defaultSelection, modelApiIdentifier, variables, options, namespace);
+  const plan = actionOperation(operation, defaultSelection, modelApiIdentifier, modelSelectionField, variables, options, namespace);
   const response = await modelManager.connection.currentClient.mutation(plan.query, plan.variables).toPromise();
 
   // pass bulk responses through without any assertions since we can have a success: false response but still want
@@ -107,11 +110,17 @@ export const actionRunner: ActionRunner = async <Shape = any>(
   const dataPath = namespace ? [namespace, operation] : [operation];
   const mutationResult = isBulkAction ? get(response.data, dataPath) : assertMutationSuccess(response, dataPath);
 
+  // Currently, delete actions have a null selection. We do an early return for this because `hydrateRecordArray` will fail
+  // if there's nothing at `mutationResult[modelSelectionField]`, but the caller isn't expecting a return (void).
+  if (defaultSelection == null) {
+    return;
+  }
+
   // todo this does not support pagination params right now, we'll need to add it to bulk action Results
   if (isBulkAction) {
-    return hydrateRecordArray<Shape>(response, mutationResult[modelApiIdentifier]);
+    return hydrateRecordArray<Shape>(response, mutationResult[modelSelectionField]);
   } else {
-    return hydrateRecord<Shape>(response, mutationResult[modelApiIdentifier]);
+    return hydrateRecord<Shape>(response, mutationResult[modelSelectionField]);
   }
 };
 
