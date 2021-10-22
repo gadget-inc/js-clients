@@ -78,21 +78,22 @@ export const useAction = <
   let error = result.error;
   let data = result.data;
   if (data) {
-    const dataPath = [action.operationName, action.modelSelectionField];
+    const dataPath = [action.operationName];
     if (action.namespace) {
       dataPath.unshift(action.namespace);
     }
 
-    data = hydrateRecord(result, get(result.data, dataPath));
-
-    if (data) {
-      const errors = data.getField("errors");
+    const mutationData = get(result.data, dataPath);
+    if (mutationData) {
+      const errors = mutationData["errors"];
       if (errors && errors[0]) {
         error = new CombinedError({
           graphQLErrors: [gadgetErrorFor(errors[0])],
         });
       }
     }
+
+    data = hydrateRecord(result, mutationData[action.modelSelectionField]);
   }
 
   return [
