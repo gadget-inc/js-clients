@@ -1,6 +1,6 @@
-import { capitalize, findManyOperation, GadgetRecord, get, hydrateConnection, LimitToKnownKeys, Select } from "@gadgetinc/api-client-core";
+import { findManyOperation, GadgetRecord, get, hydrateConnection, LimitToKnownKeys, Select } from "@gadgetinc/api-client-core";
 import { useMemo } from "react";
-import { OperationContext, useQuery, UseQueryResponse } from "urql";
+import { useQuery, UseQueryArgs, UseQueryResponse } from "urql";
 import { FindManyFunction } from "./GadgetFunctions";
 import { OptionsType } from "./OptionsType";
 import { useStructuralMemo } from "./useStructuralMemo";
@@ -31,10 +31,10 @@ import { useStructuralMemo } from "./useStructuralMemo";
 export const useFindMany = <
   GivenOptions extends OptionsType, // currently necessary for Options to be a narrow type (e.g., `true` instead of `boolean`)
   F extends FindManyFunction<GivenOptions, any, any, any>,
-  Options extends F["optionsType"]
+  Options extends F["optionsType"] & Omit<UseQueryArgs, "query" | "variables">
 >(
   manager: { findMany: F },
-  options?: LimitToKnownKeys<Options, F["optionsType"]>
+  options?: LimitToKnownKeys<Options, F["optionsType"]> & Omit<UseQueryArgs, "query" | "variables">
 ): UseQueryResponse<GadgetRecord<Select<Exclude<F["schemaType"], null | undefined>, Options["select"]>>[]> => {
   const memoizedOptions = useStructuralMemo(options);
   const plan = useMemo(() => {
@@ -46,17 +46,12 @@ export const useFindMany = <
     );
   }, [manager, memoizedOptions]);
 
-  const context = useMemo<Partial<OperationContext>>(
-    () => ({
-      additionalTypenames: [capitalize(manager.findMany.modelApiIdentifier)],
-    }),
-    [manager]
-  );
-
   const [result, refresh] = useQuery({
     query: plan.query,
     variables: plan.variables,
-    context,
+    context: options?.context,
+    pause: options?.pause,
+    requestPolicy: options?.requestPolicy,
   });
 
   let data = result.data;

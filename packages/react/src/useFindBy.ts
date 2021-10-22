@@ -8,7 +8,7 @@ import {
   Select,
 } from "@gadgetinc/api-client-core";
 import { useMemo } from "react";
-import { CombinedError, useQuery, UseQueryResponse } from "urql";
+import { CombinedError, useQuery, UseQueryArgs, UseQueryResponse } from "urql";
 import { FindOneFunction } from "./GadgetFunctions";
 import { OptionsType } from "./OptionsType";
 import { useStructuralMemo } from "./useStructuralMemo";
@@ -39,11 +39,11 @@ import { useStructuralMemo } from "./useStructuralMemo";
 export const useFindBy = <
   GivenOptions extends OptionsType, // currently necessary for Options to be a narrow type (e.g., `true` instead of `boolean`)
   F extends FindOneFunction<GivenOptions, any, any, any>,
-  Options extends F["optionsType"]
+  Options extends F["optionsType"] & Omit<UseQueryArgs, "query" | "variables">
 >(
   finder: F,
   value: string,
-  options?: LimitToKnownKeys<Options, F["optionsType"]>
+  options?: LimitToKnownKeys<Options, F["optionsType"]> & Omit<UseQueryArgs, "query" | "variables">
 ): UseQueryResponse<GadgetRecord<Select<Exclude<F["schemaType"], null | undefined>, Options["select"]>>> => {
   const memoizedOptions = useStructuralMemo(options);
   const plan = useMemo(() => {
@@ -57,7 +57,13 @@ export const useFindBy = <
     );
   }, [finder, value, memoizedOptions]);
 
-  const [result, refresh] = useQuery({ query: plan.query, variables: plan.variables });
+  const [result, refresh] = useQuery({
+    query: plan.query,
+    variables: plan.variables,
+    context: options?.context,
+    pause: options?.pause,
+    requestPolicy: options?.requestPolicy,
+  });
 
   let records = [];
   let data = result.data;
