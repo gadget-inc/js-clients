@@ -1,7 +1,6 @@
-import { gadgetErrorFor, get, globalActionOperation, hydrateRecord } from "@gadgetinc/api-client-core";
+import { gadgetErrorFor, get, GlobalActionFunction, globalActionOperation, hydrateRecord } from "@gadgetinc/api-client-core";
 import { useMemo } from "react";
 import { CombinedError, useMutation, UseMutationResponse } from "urql";
-import { GlobalActionFunction } from "./GadgetFunctions";
 
 /**
  * React hook to run a Gadget model action.

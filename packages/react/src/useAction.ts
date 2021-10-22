@@ -1,4 +1,5 @@
 import {
+  ActionFunction,
   actionOperation,
   capitalize,
   gadgetErrorFor,
@@ -10,7 +11,6 @@ import {
 } from "@gadgetinc/api-client-core";
 import { useMemo } from "react";
 import { CombinedError, useMutation, UseMutationResponse } from "urql";
-import { ActionFunction } from "./GadgetFunctions";
 import { OptionsType } from "./OptionsType";
 import { useStructuralMemo } from "./useStructuralMemo";
 

@@ -1,7 +1,6 @@
-import { findOneOperation, GadgetRecord, get, hydrateRecord, LimitToKnownKeys, Select } from "@gadgetinc/api-client-core";
+import { FindOneFunction, findOneOperation, GadgetRecord, get, hydrateRecord, LimitToKnownKeys, Select } from "@gadgetinc/api-client-core";
 import { useMemo } from "react";
 import { useQuery, UseQueryArgs, UseQueryResponse } from "urql";
-import { FindOneFunction } from "./GadgetFunctions";
 import { OptionsType } from "./OptionsType";
 import { useStructuralMemo } from "./useStructuralMemo";
 

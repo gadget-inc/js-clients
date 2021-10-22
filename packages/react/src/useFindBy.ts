@@ -1,5 +1,6 @@
 import {
   findOneByFieldOperation,
+  FindOneFunction,
   GadgetNonUniqueDataError,
   GadgetRecord,
   get,
@@ -9,7 +10,6 @@ import {
 } from "@gadgetinc/api-client-core";
 import { useMemo } from "react";
 import { CombinedError, useQuery, UseQueryArgs, UseQueryResponse } from "urql";
-import { FindOneFunction } from "./GadgetFunctions";
 import { OptionsType } from "./OptionsType";
 import { useStructuralMemo } from "./useStructuralMemo";
 

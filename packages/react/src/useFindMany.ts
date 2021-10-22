@@ -1,7 +1,14 @@
-import { findManyOperation, GadgetRecord, get, hydrateConnection, LimitToKnownKeys, Select } from "@gadgetinc/api-client-core";
+import {
+  FindManyFunction,
+  findManyOperation,
+  GadgetRecord,
+  get,
+  hydrateConnection,
+  LimitToKnownKeys,
+  Select,
+} from "@gadgetinc/api-client-core";
 import { useMemo } from "react";
 import { useQuery, UseQueryArgs, UseQueryResponse } from "urql";
-import { FindManyFunction } from "./GadgetFunctions";
 import { OptionsType } from "./OptionsType";
 import { useStructuralMemo } from "./useStructuralMemo";
 

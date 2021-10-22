@@ -1,7 +1,15 @@
-import { actionOperation, capitalize, GadgetRecord, get, hydrateRecordArray, LimitToKnownKeys, Select } from "@gadgetinc/api-client-core";
+import {
+  actionOperation,
+  BulkActionFunction,
+  capitalize,
+  GadgetRecord,
+  get,
+  hydrateRecordArray,
+  LimitToKnownKeys,
+  Select,
+} from "@gadgetinc/api-client-core";
 import { useMemo } from "react";
 import { useMutation, UseMutationResponse } from "urql";
-import { BulkActionFunction } from "./GadgetFunctions";
 import { OptionsType } from "./OptionsType";
 import { useStructuralMemo } from "./useStructuralMemo";
 
