@@ -20,7 +20,7 @@ import { useStructuralMemo } from "./useStructuralMemo";
  *     },
  *   });
  *
- *   if (result.error) return <>Error: {result.error}</>;
+ *   if (result.error) return <>Error: {result.error.toString()}</>;
  *   if (result.fetching && !result.data) return <>Fetching...</>;
  *   if (!result.data) return <>No users found</>;
  *

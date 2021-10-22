@@ -24,7 +24,7 @@ import { useStructuralMemo } from "./useStructuralMemo";
  *
  *   return (
  *     <>
- *       {result.error && <>Failed to create user: {result.error}</>}
+ *       {result.error && <>Failed to create user: {result.error.toString()}</>}
  *       {result.fetching && <>Creating user...</>}
  *       {result.data && <>Finished TODOs with ids={props.ids}</>}
  *       <button onClick={() => bulkFinish(ids))}>Bulk finish</button>

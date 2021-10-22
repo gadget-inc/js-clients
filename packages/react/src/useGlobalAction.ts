@@ -16,7 +16,7 @@ import { GlobalActionFunction } from "./GadgetFunctions";
  *
  *   return (
  *     <>
- *       {result.error && <>Failed to flip all widgets: {result.error}</>}
+ *       {result.error && <>Failed to flip all widgets: {result.error.toString()}</>}
  *       {result.fetching && <>Flipping all widgets...</>}
  *       {result.data && <>Flipped all widgets</>}
  *       <button onClick={() => flipAllWidgets()}>Flip all widgets</button>

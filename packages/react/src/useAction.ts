@@ -38,7 +38,7 @@ import { useStructuralMemo } from "./useStructuralMemo";
  *
  *   return (
  *     <>
- *       {result.error && <>Failed to create user: {result.error}</>}
+ *       {result.error && <>Failed to create user: {result.error.toString()}</>}
  *       {result.fetching && <>Creating user...</>}
  *       {result.data && <>Created user with id={result.data.id}</>}
  *       <button onClick={onClick}>Create user</button>
