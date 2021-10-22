@@ -51,11 +51,19 @@ npm install --save @gadgetinc/react react
 ## Example usage
 
 ```typescript
-import { useAction, useFindMany } from "@gadgetinc/react";
+import { useAction, useFindMany, Provider } from "@gadgetinc/react";
 import React from "react";
 import { Client } from "@gadget-client/my-gadget-app";
 
-export function MyComponent() => {
+export function MyComponent() {
+  return (
+    <Provider value={Client.connection.currentClient}>
+      <WidgetDeleter />
+    </Provider>
+  );
+}
+
+function WidgetDeleter() => {
   const [_, deleteWidget] = useAction(Client.widget.delete);
 
   // if id or _all weren't fields on a widget, this would be a type error
