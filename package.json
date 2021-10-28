@@ -1,0 +1,43 @@
+{
+  "name": "@gadgetinc/api-client-core",
+  "version": "0.4.0",
+  "source": "src/index.ts",
+  "main": "dist/src/index.js",
+  "types": "dist/src/index.d.ts",
+  "files": [
+    "Readme.md",
+    "dist/src/**/*"
+  ],
+  "license": "MIT",
+  "repository": "github:gadget-inc/js-clients",
+  "scripts": {
+    "typecheck": "tsc --noEmit",
+    "build": "rm -rf dist && tsc",
+    "watch": "rm -rf dist && tsc --watch --preserveWatchOutput",
+    "prepublishOnly": "yarn run build",
+    "prerelease": "gitpkg publish"
+  },
+  "dependencies": {
+    "@urql/core": "^2.1.5",
+    "cross-fetch": "^3.0.6",
+    "gql-query-builder": "^3.5.5",
+    "graphql": "^15.5.0",
+    "graphql-ws": "^5.1.2",
+    "isomorphic-ws": "^4.0.1",
+    "lodash.clonedeep": "^4.5.0",
+    "lodash.isequal": "^4.5.0",
+    "ws": "^7.4.6"
+  },
+  "devDependencies": {
+    "@babel/core": "^7.15.5",
+    "@babel/preset-env": "^7.15.6",
+    "@babel/preset-typescript": "^7.15.0",
+    "@types/jest": "^26.0.24",
+    "@types/lodash.clonedeep": "^4.5.6",
+    "@types/lodash.isequal": "^4.5.5",
+    "@types/node": "^14.14.41",
+    "conditional-type-checks": "^1.0.5",
+    "jest": "^27.2.4",
+    "typescript": "4.4.3"
+  }
+}
