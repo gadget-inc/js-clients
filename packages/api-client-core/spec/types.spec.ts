@@ -7,7 +7,11 @@ type TestSchema = {
   obj: {
     test: "test";
     bool: boolean;
-  };
+  } | null;
+  list: ({
+    title: "listy";
+    stuff: number[] | null;
+  } | null)[];
 };
 
 type TestSchemaSelection = {
@@ -16,6 +20,9 @@ type TestSchemaSelection = {
   obj?: {
     test?: boolean | null | undefined;
     bool?: boolean | null | undefined;
+  };
+  list?: {
+    title: boolean | null | undefined;
   };
 };
 
@@ -28,7 +35,10 @@ const TestDefaultSelection = {
 };
 
 type _SchemaSelect = AssertTrue<
-  IsExact<Select<TestSchema, { num: true; str: undefined; obj: { test: true; bool: false } }>, { num: number; obj: { test: "test" } }>
+  IsExact<
+    Select<TestSchema, { num: true; str: undefined; obj: { test: true; bool: false }; list: { stuff: true } }>,
+    { num: number; obj: { test: "test" } | null; list: ({ stuff: number[] | null } | null)[] }
+  >
 >;
 
 type _TestDefaultSelectionIsValidSelection = AssertTrue<Has<typeof TestDefaultSelection, TestSchemaSelection>>;

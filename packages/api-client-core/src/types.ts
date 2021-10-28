@@ -55,6 +55,10 @@ export type FilterNever<T extends Record<string, unknown>> = NonNeverKeys<T> ext
  */
 export type Select<Schema, Selection extends FieldSelection | null | undefined> = Selection extends null | undefined
   ? never
+  : Schema extends (infer T)[]
+  ? Select<T, Selection>[]
+  : Schema extends null
+  ? Select<Exclude<Schema, null>, Selection> | null
   : FilterNever<{
       [Key in keyof Selection & keyof Schema]: Selection[Key] extends true
         ? Schema[Key]
