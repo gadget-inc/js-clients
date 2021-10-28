@@ -69,6 +69,7 @@ export enum AuthenticationMode {
   BrowserSession = "browser-session",
   APIKey = "api-key",
   InternalAuthToken = "internal-auth-token",
+  Anonymous = "anonymous",
 }
 
 /**
@@ -92,7 +93,7 @@ export class GadgetConnection {
   private currentTransaction: GadgetTransaction | null = null;
 
   // How this client will authenticate (if at all) against the Gadget backed
-  private authenticationMode: AuthenticationMode;
+  authenticationMode: AuthenticationMode;
   private sessionTokenStore?: BrowserStorage;
 
   constructor(readonly options: GadgetConnectionOptions) {
@@ -109,10 +110,12 @@ export class GadgetConnection {
         this.enableSessionMode(options.authenticationMode.browserSession);
       } else if (options.authenticationMode.internalAuthToken) {
         this.authenticationMode = AuthenticationMode.InternalAuthToken;
+      } else if (options.authenticationMode.apiKey) {
+        this.authenticationMode = AuthenticationMode.APIKey;
       }
     }
 
-    this.authenticationMode ??= AuthenticationMode.APIKey;
+    this.authenticationMode ??= AuthenticationMode.Anonymous;
 
     // the base client for subscriptions is lazy so we don't open unnecessary connections to the backend, and it reconnects to deal with network issues
     this.baseSubscriptionClient = this.newSubscriptionClient({ lazy: true });
@@ -278,7 +281,7 @@ export class GadgetConnection {
       auth.key = this.options.authenticationMode!.apiKey!;
     } else if (this.authenticationMode == AuthenticationMode.InternalAuthToken) {
       auth.token = this.options.authenticationMode!.internalAuthToken!;
-    } else {
+    } else if (this.authenticationMode == AuthenticationMode.BrowserSession) {
       auth.sessionToken = this.sessionTokenStore!.getItem(sessionStorageKey);
     }
 
@@ -320,7 +323,7 @@ export class GadgetConnection {
       headers.authorization = "Basic " + base64("gadget-internal" + ":" + this.options.authenticationMode!.internalAuthToken!);
     } else if (this.authenticationMode == AuthenticationMode.APIKey) {
       headers.authorization = `Bearer ${this.options.authenticationMode?.apiKey}`;
-    } else {
+    } else if (this.authenticationMode == AuthenticationMode.BrowserSession) {
       const val = this.sessionTokenStore!.getItem(sessionStorageKey);
       if (val) {
         headers.authorization = `Session ${val}`;

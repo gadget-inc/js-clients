@@ -41,6 +41,9 @@ export interface AuthenticationModeOptions {
   // This allows a web user to log in and keep their sessiontheir cookie (containing their credentials) will be sent.
   browserSession?: boolean | BrowserSessionAuthenticationModeOptions;
 
+  // Use no authentication at all, and get access only to the data that the Unauthenticated backend role has access to.
+  anonymous?: true;
+
   // @private Use an internal platform auth token for authentication
   // This is used to communicate within Gadget itself and shouldn't be used to connect to Gadget from other systems
   internalAuthToken?: string;
