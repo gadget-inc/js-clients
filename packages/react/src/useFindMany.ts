@@ -19,6 +19,7 @@ import { useStructuralMemo } from "./useStructuralMemo";
  * @param options options for filtering and searching records, and selecting the fields in each record of the result
  *
  * @example
+ *
  * ```
  * export function Users() {
  *   const [result, refresh] = useFindMany(Client.user, {
@@ -37,7 +38,8 @@ import { useStructuralMemo } from "./useStructuralMemo";
  */
 export const useFindMany = <
   GivenOptions extends OptionsType, // currently necessary for Options to be a narrow type (e.g., `true` instead of `boolean`)
-  F extends FindManyFunction<GivenOptions, any, any, any>,
+  SchemaT,
+  F extends FindManyFunction<GivenOptions, any, SchemaT, any>,
   Options extends F["optionsType"] & Omit<UseQueryArgs, "query" | "variables">
 >(
   manager: { findMany: F },
