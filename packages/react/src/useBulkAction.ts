@@ -42,7 +42,8 @@ import { useStructuralMemo } from "./useStructuralMemo";
  */
 export const useBulkAction = <
   GivenOptions extends OptionsType, // currently necessary for Options to be a narrow type (e.g., `true` instead of `boolean`)
-  F extends BulkActionFunction<GivenOptions, any, any, any, any>,
+  SchemaT,
+  F extends BulkActionFunction<GivenOptions, any, any, SchemaT, any>,
   Options extends F["optionsType"]
 >(
   action: F,

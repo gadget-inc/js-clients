@@ -48,7 +48,8 @@ import { useStructuralMemo } from "./useStructuralMemo";
  */
 export const useAction = <
   GivenOptions extends OptionsType, // currently necessary for Options to be a narrow type (e.g., `true` instead of `boolean`)
-  F extends ActionFunction<GivenOptions, any, any, any, any>,
+  SchemaT,
+  F extends ActionFunction<GivenOptions, any, any, SchemaT, any>,
   Options extends F["optionsType"]
 >(
   action: F,

@@ -30,7 +30,8 @@ import { useStructuralMemo } from "./useStructuralMemo";
  */
 export const useFindOne = <
   GivenOptions extends OptionsType, // currently necessary for Options to be a narrow type (e.g., `true` instead of `boolean`)
-  F extends FindOneFunction<GivenOptions, any, any, any>,
+  SchemaT,
+  F extends FindOneFunction<GivenOptions, any, SchemaT, any>,
   Options extends F["optionsType"] & Omit<UseQueryArgs, "query" | "variables">
 >(
   manager: { findOne: F },

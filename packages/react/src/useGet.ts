@@ -29,7 +29,8 @@ import { useStructuralMemo } from "./useStructuralMemo";
  */
 export const useGet = <
   GivenOptions extends OptionsType, // currently necessary for Options to be a narrow type (e.g., `true` instead of `boolean`)
-  F extends GetFunction<GivenOptions, any, any, any>,
+  SchemaT,
+  F extends GetFunction<GivenOptions, any, SchemaT, any>,
   Options extends F["optionsType"]
 >(
   manager: { get: F },
