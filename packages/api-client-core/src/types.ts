@@ -1,13 +1,6 @@
 import { FieldSelection } from "./FieldSelection";
 
 /**
- * Get the truthy keys from a `FieldSelection`
- */
-export type SelectedKeys<Selection> = {
-  [Key in keyof Selection]: Selection[Key] extends false | undefined | null ? never : Key;
-}[keyof Selection];
-
-/**
  * Limit the keys in T to only those that also exist in U. AKA Subset or Intersection.
  */
 export type LimitToKnownKeys<T, U> = {
@@ -28,7 +21,7 @@ export type DefaultSelection<
  */
 export interface Selectable<SelectionType> {
   /** Select fields other than the defaults of the record to return */
-  select?: SelectionType;
+  select?: SelectionType | null;
 }
 
 /**
