@@ -38,7 +38,7 @@ export type TestSchema = {
   };
 };
 
-export type TestSchemaSelection = {
+export type AvailableTestSchemaSelection = {
   num?: boolean | null | undefined;
   str?: boolean | null | undefined;
   obj?: {
