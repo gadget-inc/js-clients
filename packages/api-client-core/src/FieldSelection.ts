@@ -15,8 +15,9 @@ export interface FieldSelection {
  *
  * __Note__: It's important that any output objects have only one key -- `gql-query-builder` only looks at the first one. To add multiple fields with subselections, return multiple objects in the array.
  **/
-export const fieldSelectionToGQLBuilderFields = (selection: FieldSelection) => {
+export const fieldSelectionToGQLBuilderFields = (selection: FieldSelection, includeTypename = false) => {
   const fields: Fields = [];
+  if (includeTypename) fields.push("__typename");
 
   for (const [key, value] of Object.entries(selection)) {
     if (typeof value === "object" && value !== null) {
