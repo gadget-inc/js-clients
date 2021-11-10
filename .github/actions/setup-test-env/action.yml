@@ -13,6 +13,9 @@ runs:
           experimental-features = nix-command flakes
     - run: nix flake check
       shell: bash
+    - name: Add Gadget yarn registry
+      shell: nix develop -c bash -eo pipefail -l {0}
+      run: npm config set @gadget-client:registry https://registry.gadget.dev/npm
     - name: Install dependencies with yarn install
       shell: nix develop -c bash -eo pipefail -l {0}
       run: yarn install
