@@ -1,4 +1,5 @@
 import {
+  DefaultSelection,
   findOneByFieldOperation,
   FindOneFunction,
   GadgetNonUniqueDataError,
@@ -45,7 +46,9 @@ export const useFindBy = <
   finder: F,
   value: string,
   options?: LimitToKnownKeys<Options, F["optionsType"]> & Omit<UseQueryArgs, "query" | "variables">
-): UseQueryResponse<GadgetRecord<Select<Exclude<F["schemaType"], null | undefined>, Options["select"]>>> => {
+): UseQueryResponse<
+  GadgetRecord<Select<Exclude<F["schemaType"], null | undefined>, DefaultSelection<F["selectionType"], Options, F["defaultSelection"]>>>
+> => {
   const memoizedOptions = useStructuralMemo(options);
   const plan = useMemo(() => {
     return findOneByFieldOperation(

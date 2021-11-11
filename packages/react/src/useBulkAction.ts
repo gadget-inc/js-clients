@@ -2,6 +2,7 @@ import {
   actionOperation,
   BulkActionFunction,
   capitalize,
+  DefaultSelection,
   GadgetRecord,
   get,
   hydrateRecordArray,
@@ -49,7 +50,7 @@ export const useBulkAction = <
   action: F,
   options?: LimitToKnownKeys<Options, F["optionsType"]>
 ): UseMutationResponse<
-  GadgetRecord<Select<Exclude<F["schemaType"], null | undefined>, Options["select"]>>[],
+  GadgetRecord<Select<Exclude<F["schemaType"], null | undefined>, DefaultSelection<F["selectionType"], Options, F["defaultSelection"]>>>[],
   Exclude<F["variablesType"], null | undefined>
 > => {
   const memoizedOptions = useStructuralMemo(options);
@@ -66,7 +67,9 @@ export const useBulkAction = <
   }, [action, memoizedOptions]);
 
   const [result, runMutation] = useMutation<
-    GadgetRecord<Select<Exclude<F["schemaType"], null | undefined>, Options["select"]>>[],
+    GadgetRecord<
+      Select<Exclude<F["schemaType"], null | undefined>, DefaultSelection<F["selectionType"], Options, F["defaultSelection"]>>
+    >[],
     F["variablesType"]
   >(plan.query);
 

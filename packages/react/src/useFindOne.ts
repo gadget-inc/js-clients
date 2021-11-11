@@ -1,4 +1,13 @@
-import { FindOneFunction, findOneOperation, GadgetRecord, get, hydrateRecord, LimitToKnownKeys, Select } from "@gadgetinc/api-client-core";
+import {
+  DefaultSelection,
+  FindOneFunction,
+  findOneOperation,
+  GadgetRecord,
+  get,
+  hydrateRecord,
+  LimitToKnownKeys,
+  Select,
+} from "@gadgetinc/api-client-core";
 import { useMemo } from "react";
 import { useQuery, UseQueryArgs, UseQueryResponse } from "urql";
 import { OptionsType } from "./OptionsType";
@@ -37,7 +46,9 @@ export const useFindOne = <
   manager: { findOne: F },
   id: string,
   options?: LimitToKnownKeys<Options, F["optionsType"] & Omit<UseQueryArgs, "query" | "variables">>
-): UseQueryResponse<GadgetRecord<Select<Exclude<F["schemaType"], null | undefined>, Options["select"]>>> => {
+): UseQueryResponse<
+  GadgetRecord<Select<Exclude<F["schemaType"], null | undefined>, DefaultSelection<F["selectionType"], Options, F["defaultSelection"]>>>
+> => {
   const memoizedOptions = useStructuralMemo(options);
   const plan = useMemo(() => {
     return findOneOperation(
