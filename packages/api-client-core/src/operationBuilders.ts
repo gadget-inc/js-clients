@@ -39,7 +39,7 @@ export const findOneOperation = (
   return query([
     {
       operation,
-      fields: fieldSelectionToGQLBuilderFields(options?.select || defaultSelection),
+      fields: fieldSelectionToGQLBuilderFields(options?.select || defaultSelection, true),
       variables,
     },
     hydrationOptions(modelApiIdentifier),
@@ -79,7 +79,7 @@ export const findManyOperation = (
           pageInfo: ["hasNextPage", "hasPreviousPage", "startCursor", "endCursor"],
         },
         {
-          edges: ["cursor", { node: fieldSelectionToGQLBuilderFields(options?.select || defaultSelection) }],
+          edges: ["cursor", { node: fieldSelectionToGQLBuilderFields(options?.select || defaultSelection, true) }],
         },
       ],
       variables: {
@@ -116,7 +116,7 @@ export const actionOperation = (
 
   const selection = options?.select || defaultSelection;
   if (selection) {
-    actionOperation.fields!.push({ [modelSelectionField]: fieldSelectionToGQLBuilderFields(selection) });
+    actionOperation.fields!.push({ [modelSelectionField]: fieldSelectionToGQLBuilderFields(selection, true) });
   }
 
   if (namespace) {
