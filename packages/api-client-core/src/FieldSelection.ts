@@ -27,5 +27,5 @@ export const fieldSelectionToGQLBuilderFields = (selection: FieldSelection, incl
     }
   }
 
-  return fields;
+  return [...new Set(fields)];
 };
