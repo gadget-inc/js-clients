@@ -22,7 +22,7 @@ export class GadgetClientError extends Error {}
  **/
 export class GadgetOperationError extends Error {
   constructor(message: string, readonly errorCode: string) {
-    super(message);
+    super(errorCode + ": " + message);
   }
 }
 
@@ -151,8 +151,8 @@ export const getHydrator = (response: Result) => {
 };
 
 export const hydrateRecord = <Shape = any>(response: Result, record: any): Shape => {
-  let hydrator;
-  if ((hydrator = getHydrator(response))) {
+  const hydrator = getHydrator(response);
+  if (hydrator) {
     record = hydrator.apply(record);
   }
   return new GadgetRecord<Shape>(record);
