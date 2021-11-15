@@ -1,4 +1,4 @@
-import { OperationResult } from "@urql/core";
+import { CombinedError, OperationResult } from "@urql/core";
 import { DataHydrator } from "./DataHydrator";
 import { GadgetRecord } from "./GadgetRecord";
 
@@ -100,7 +100,10 @@ export const filterTypeName = (modelApiIdentifier: string) => `${camelize(modelA
 
 export const assertOperationSuccess = (response: OperationResult<any>, dataPath: string[]) => {
   if (response.error) {
-    throw response.error.message;
+    if (response.error instanceof CombinedError && (response.error.networkError as any as Error[])?.length) {
+      response.error.message = (response.error.networkError as any as Error[]).map((error) => "[Network] " + error.message).join("\n");
+    }
+    throw response.error;
   }
 
   const result = get(response.data, dataPath);
