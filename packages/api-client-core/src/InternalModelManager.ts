@@ -133,6 +133,28 @@ export const internalDeleteMutation = (apiIdentifier: string) => {
   `;
 };
 
+export const internalDeleteManyMutation = (apiIdentifier: string) => {
+  const capitalizedApiIdentifier = capitalize(apiIdentifier);
+  return `
+    ${internalErrorsDetails}
+    
+    mutation InternalDeleteMany${capitalizedApiIdentifier}(
+      $search: String
+      $filter: [${capitalizedApiIdentifier}Filter!]
+    ) {
+      ${internalHydrationPlan(apiIdentifier)}
+      internal {
+        deleteMany${capitalizedApiIdentifier}(search: $search, filter: $filter) {
+          success
+          errors {
+            ... InternalErrorsDetails
+          }
+        }
+      }
+    }
+  `;
+};
+
 export type RecordData = Record<string, any>;
 
 /**
@@ -190,6 +212,13 @@ export class InternalModelManager {
     return await this.transaction(async (transaction) => {
       const response = await transaction.client.mutation(internalDeleteMutation(this.apiIdentifier), { id }).toPromise();
       assertMutationSuccess(response, ["internal", `delete${this.capitalizedApiIdentifier}`]);
+    });
+  }
+
+  async deleteMany(options?: { search?: string; filter?: Record<string, any> }): Promise<void> {
+    return await this.transaction(async (transaction) => {
+      const response = await transaction.client.mutation(internalDeleteManyMutation(this.apiIdentifier), options).toPromise();
+      assertMutationSuccess(response, ["internal", `deleteMany${this.capitalizedApiIdentifier}`]);
     });
   }
 

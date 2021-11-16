@@ -1,4 +1,4 @@
-import { OperationResult } from "@urql/core";
+import { CombinedError, OperationResult } from "@urql/core";
 import { DataHydrator } from "./DataHydrator";
 import { GadgetRecord } from "./GadgetRecord";
 
@@ -22,7 +22,7 @@ export class GadgetClientError extends Error {}
  **/
 export class GadgetOperationError extends Error {
   constructor(message: string, readonly errorCode: string) {
-    super(message);
+    super(errorCode + ": " + message);
   }
 }
 
@@ -100,7 +100,10 @@ export const filterTypeName = (modelApiIdentifier: string) => `${camelize(modelA
 
 export const assertOperationSuccess = (response: OperationResult<any>, dataPath: string[]) => {
   if (response.error) {
-    throw response.error.message;
+    if (response.error instanceof CombinedError && (response.error.networkError as any as Error[])?.length) {
+      response.error.message = (response.error.networkError as any as Error[]).map((error) => "[Network] " + error.message).join("\n");
+    }
+    throw response.error;
   }
 
   const result = get(response.data, dataPath);
@@ -148,8 +151,8 @@ export const getHydrator = (response: Result) => {
 };
 
 export const hydrateRecord = <Shape = any>(response: Result, record: any): Shape => {
-  let hydrator;
-  if ((hydrator = getHydrator(response))) {
+  const hydrator = getHydrator(response);
+  if (hydrator) {
     record = hydrator.apply(record);
   }
   return new GadgetRecord<Shape>(record);
