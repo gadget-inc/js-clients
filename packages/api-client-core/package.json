@@ -19,6 +19,7 @@
   },
   "dependencies": {
     "@urql/core": "^2.1.5",
+    "@urql/exchange-multipart-fetch": "^0.1.13",
     "cross-fetch": "^3.0.6",
     "gql-query-builder": "^3.5.5",
     "graphql": "^15.5.0",

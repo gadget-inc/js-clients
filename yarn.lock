@@ -1494,12 +1494,29 @@
     "@typescript-eslint/types" "4.33.0"
     eslint-visitor-keys "^2.0.0"
 
+"@urql/core@>=2.1.0":
+  version "2.3.5"
+  resolved "https://registry.yarnpkg.com/@urql/core/-/core-2.3.5.tgz#eb1cbbfe23236615ecb8e65850bb772d4f61b6b5"
+  integrity sha512-kM/um4OjXmuN6NUS/FSm7dESEKWT7By1kCRCmjvU4+4uEoF1cd4TzIhQ7J1I3zbDAFhZzmThq9X0AHpbHAn3bA==
+  dependencies:
+    "@graphql-typed-document-node/core" "^3.1.0"
+    wonka "^4.0.14"
+
 "@urql/core@^2.1.5", "@urql/core@^2.3.2":
   version "2.3.3"
   resolved "https://registry.yarnpkg.com/@urql/core/-/core-2.3.3.tgz#e4777b95c31d8ad0ba21ea1f5c851cbbe1d0ac17"
   integrity sha512-Bi9mafTFu0O1XZmI7/HrEk12LHZW+Fs/V1FqSJoUDgYIhARIJW6cCh3Havy1dJJ0FETxYmmQQXPf6kst+IP2qQ==
   dependencies:
     "@graphql-typed-document-node/core" "^3.1.0"
+    wonka "^4.0.14"
+
+"@urql/exchange-multipart-fetch@^0.1.13":
+  version "0.1.13"
+  resolved "https://registry.yarnpkg.com/@urql/exchange-multipart-fetch/-/exchange-multipart-fetch-0.1.13.tgz#21c48826636ddc215684c6f9acbf355ae9159fad"
+  integrity sha512-doyIbIGEDW1MQhNmQBkt07WfesQ8iBld9TvuUQJCxQtnhDfa/bt6Ovxm+WYHpUTm4OH0j+9QecMiGEx2at51yQ==
+  dependencies:
+    "@urql/core" ">=2.1.0"
+    extract-files "^11.0.0"
     wonka "^4.0.14"
 
 abab@^2.0.3, abab@^2.0.5:
@@ -2645,6 +2662,11 @@ expect@^27.2.4:
     jest-matcher-utils "^27.2.4"
     jest-message-util "^27.2.4"
     jest-regex-util "^27.0.6"
+
+extract-files@^11.0.0:
+  version "11.0.0"
+  resolved "https://registry.yarnpkg.com/extract-files/-/extract-files-11.0.0.tgz#b72d428712f787eef1f5193aff8ab5351ca8469a"
+  integrity sha512-FuoE1qtbJ4bBVvv94CC7s0oTnKUGvQs+Rjf1L2SJFfS+HTVVjhPFtehPdQ0JiGPqVNfSSZvL5yzHHQq2Z4WNhQ==
 
 fast-deep-equal@^3.1.1, fast-deep-equal@^3.1.3:
   version "3.1.3"
