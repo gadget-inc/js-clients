@@ -1,4 +1,5 @@
-import { Client, dedupExchange, fetchExchange, subscriptionExchange } from "@urql/core";
+import { Client, dedupExchange, subscriptionExchange } from "@urql/core";
+import { multipartFetchExchange } from "@urql/exchange-multipart-fetch";
 import fetch from "cross-fetch";
 import { ExecutionResult } from "graphql";
 import {
@@ -257,7 +258,7 @@ export class GadgetConnection {
       fetch: this.fetch,
       exchanges: [
         dedupExchange,
-        fetchExchange,
+        multipartFetchExchange,
         subscriptionExchange({
           forwardSubscription: (operation) => {
             return {
