@@ -57,6 +57,7 @@ export const connectionOpen = async (subscriptionClient: SubscriptionClient) => 
 
     unsubscribes.push(subscriptionClient.on("connected", wrappedResolve));
     unsubscribes.push(subscriptionClient.on("closed", wrappedReject));
+    unsubscribes.push(subscriptionClient.on("error", wrappedReject));
   }).finally(clearListeners);
 };
 
