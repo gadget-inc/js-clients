@@ -13,6 +13,7 @@ import type { AuthenticationModeOptions, BrowserSessionAuthenticationModeOptions
 import { BrowserSessionStorageType } from "./ClientOptions";
 import { GadgetTransaction, TransactionRolledBack } from "./GadgetTransaction";
 import { BrowserStorage, InMemoryStorage } from "./InMemoryStorage";
+import { traceFunction } from "./support";
 
 export type TransactionRun<T> = (transaction: GadgetTransaction) => Promise<T>;
 export interface GadgetSubscriptionClientOptions extends Partial<SubscriptionClientOptions> {
@@ -35,8 +36,8 @@ export interface GadgetConnectionOptions {
 
 const isCloseEvent = (event: any): event is CloseEvent => event?.type == "close";
 
-/** Helper function to await the setup dance on a graphql-ws Client object. */
-export const connectionOpen = async (subscriptionClient: SubscriptionClient) => {
+/** Helper function to await the setup dance on a graphql-ws Client object before we start using it. */
+export const connectionOpened = traceFunction("api-client.await-websocket-open", async (subscriptionClient: SubscriptionClient) => {
   const unsubscribes: Function[] = []; // eslint-disable-line @typescript-eslint/ban-types
   const clearListeners = () => unsubscribes.forEach((fn) => fn());
   await new Promise<void>((resolve, reject) => {
@@ -52,14 +53,14 @@ export const connectionOpen = async (subscriptionClient: SubscriptionClient) => 
 
     const timeout = setTimeout(() => {
       void subscriptionClient.dispose();
-      wrappedReject(new Error("Timeout opening batch connection to Gadget API"));
+      wrappedReject(new Error("Timeout opening websocket connection to Gadget API"));
     }, 5000);
 
     unsubscribes.push(subscriptionClient.on("connected", wrappedResolve));
     unsubscribes.push(subscriptionClient.on("closed", wrappedReject));
     unsubscribes.push(subscriptionClient.on("error", wrappedReject));
   }).finally(clearListeners);
-};
+});
 
 /**
  * Represents the current strategy for authenticating with the Gadget platform.
@@ -143,84 +144,87 @@ export class GadgetConnection {
   transaction: {
     <T>(options: GadgetSubscriptionClientOptions, run: TransactionRun<T>): Promise<T>;
     <T>(run: TransactionRun<T>): Promise<T>;
-  } = async <T>(optionsOrRun: GadgetSubscriptionClientOptions | TransactionRun<T>, maybeRun?: TransactionRun<T>): Promise<T> => {
-    let run: TransactionRun<T>;
-    let options: GadgetSubscriptionClientOptions;
+  } = traceFunction(
+    "api-client.transaction",
+    async <T>(optionsOrRun: GadgetSubscriptionClientOptions | TransactionRun<T>, maybeRun?: TransactionRun<T>): Promise<T> => {
+      let run: TransactionRun<T>;
+      let options: GadgetSubscriptionClientOptions;
 
-    if (maybeRun) {
-      run = maybeRun;
-      options = optionsOrRun as GadgetSubscriptionClientOptions;
-    } else {
-      run = optionsOrRun as TransactionRun<T>;
-      options = {};
-    }
+      if (maybeRun) {
+        run = maybeRun;
+        options = optionsOrRun as GadgetSubscriptionClientOptions;
+      } else {
+        run = optionsOrRun as TransactionRun<T>;
+        options = {};
+      }
 
-    if (this.currentTransaction) {
-      return await run(this.currentTransaction);
-    }
+      if (this.currentTransaction) {
+        return await run(this.currentTransaction);
+      }
 
-    // the transaction subscription client is not lazy because we know we need it immediately, and it doesn't reconnect so it is clear to calling code the transaction errored out.
-    const subscriptionClient = this.newSubscriptionClient({
-      isFatalConnectionProblem(errorOrCloseEvent) {
-        // any interruption of the transaction is fatal to the transaction
-        console.warn("Transport error encountered during transaction processing", errorOrCloseEvent);
-        return true;
-      },
-      ...options,
-      lazy: false,
-      // super ultra critical option that ensures graphql-ws doesn't automatically close the websocket connection when there are no outstanding operations. this is key so we can start a transaction then make mutations within it
-      lazyCloseTimeout: 100000,
-      retryAttempts: 0,
-    });
-
-    let transaction;
-    try {
-      // The server will error if it receives any operations before the auth dance has been completed, so we block on that happening before sending our first operation. It's important that this happens synchronously after instantiating the client so we don't miss any messages
-      await connectionOpen(subscriptionClient);
-
-      const client = new Client({
-        url: "/-", // not used because there's no fetch exchange, set for clarity
-        exchanges: [
-          subscriptionExchange({
-            forwardSubscription(operation) {
-              return {
-                subscribe: (sink) => {
-                  const dispose = subscriptionClient.subscribe(operation, sink as Sink<ExecutionResult>);
-                  return {
-                    unsubscribe: dispose,
-                  };
-                },
-              };
-            },
-            enableAllOperations: true,
-          }),
-        ],
+      // the transaction subscription client is not lazy because we know we need it immediately, and it doesn't reconnect so it is clear to calling code the transaction errored out.
+      const subscriptionClient = this.newSubscriptionClient({
+        isFatalConnectionProblem(errorOrCloseEvent) {
+          // any interruption of the transaction is fatal to the transaction
+          console.warn("Transport error encountered during transaction processing", errorOrCloseEvent);
+          return true;
+        },
+        ...options,
+        lazy: false,
+        // super ultra critical option that ensures graphql-ws doesn't automatically close the websocket connection when there are no outstanding operations. this is key so we can start a transaction then make mutations within it
+        lazyCloseTimeout: 100000,
+        retryAttempts: 0,
       });
 
-      transaction = new GadgetTransaction(client, subscriptionClient);
-      this.currentTransaction = transaction;
-      await transaction.start();
-      const result = await run(transaction);
-      await transaction.commit();
-      return result;
-    } catch (error) {
+      let transaction;
       try {
-        if (transaction?.open) await transaction.rollback();
-      } catch (rollbackError) {
-        if (!(rollbackError instanceof TransactionRolledBack)) {
-          console.warn("Encountered another error while rolling back a Gadget transaction that errored. The other error:", rollbackError);
+        // The server will error if it receives any operations before the auth dance has been completed, so we block on that happening before sending our first operation. It's important that this happens synchronously after instantiating the client so we don't miss any messages
+        await connectionOpened(subscriptionClient);
+
+        const client = new Client({
+          url: "/-", // not used because there's no fetch exchange, set for clarity
+          exchanges: [
+            subscriptionExchange({
+              forwardSubscription(operation) {
+                return {
+                  subscribe: (sink) => {
+                    const dispose = subscriptionClient.subscribe(operation, sink as Sink<ExecutionResult>);
+                    return {
+                      unsubscribe: dispose,
+                    };
+                  },
+                };
+              },
+              enableAllOperations: true,
+            }),
+          ],
+        });
+
+        transaction = new GadgetTransaction(client, subscriptionClient);
+        this.currentTransaction = transaction;
+        await transaction.start();
+        const result = await run(transaction);
+        await transaction.commit();
+        return result;
+      } catch (error) {
+        try {
+          if (transaction?.open) await transaction.rollback();
+        } catch (rollbackError) {
+          if (!(rollbackError instanceof TransactionRolledBack)) {
+            console.warn("Encountered another error while rolling back a Gadget transaction that errored. The other error:", rollbackError);
+          }
         }
+        if (isCloseEvent(error)) {
+          throw new Error(`GraphQL websocket closed unexpectedly by the server with error code ${error.code} and reason "${error.reason}"`);
+        } else {
+          throw error;
+        }
+      } finally {
+        await subscriptionClient.dispose();
+        this.currentTransaction = null;
       }
-      if (isCloseEvent(error)) {
-        throw new Error(`GraphQL websocket closed unexpectedly by the server with error code ${error.code} and reason "${error.reason}"`);
-      } else {
-        throw error;
-      }
-    } finally {
-      await subscriptionClient.dispose();
-      this.currentTransaction = null;
     }
-  };
+  );
 
   close() {
     void this.baseSubscriptionClient.dispose();
@@ -230,7 +234,7 @@ export class GadgetConnection {
   }
 
   /** `fetch` wrapper that applies Gadget's session token logic on the request and retrieves it from the reply */
-  fetch = async (input: RequestInfo, init: RequestInit = {}) => {
+  fetch = traceFunction("api-client.fetch", async (input: RequestInfo, init: RequestInit = {}) => {
     init.headers = { ...this.requestHeaders(), ...init.headers };
 
     const response = await this.fetchImplementation(input, init);
@@ -242,7 +246,7 @@ export class GadgetConnection {
       }
     }
     return response;
-  };
+  });
 
   private resetClients() {
     if (this.currentTransaction) {

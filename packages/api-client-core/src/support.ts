@@ -1,3 +1,4 @@
+import { context, SpanOptions, SpanStatusCode, trace } from "@opentelemetry/api";
 import { CombinedError, OperationResult } from "@urql/core";
 import { DataHydrator } from "./DataHydrator";
 import { GadgetRecord } from "./GadgetRecord";
@@ -200,4 +201,38 @@ export const toPrimitiveObject = (value: any): any => {
       return obj;
     }
   }
+};
+
+export const tracer = trace.getTracer("gadget-api-client");
+
+/**
+ * Get a string representing an error that is an `Error` object or anything else that might be `throw`n
+ */
+export const errorMessage = (error: unknown) => {
+  if (typeof error == "string") {
+    return error;
+  } else if (error && (error as any)?.message) {
+    return (error as any).message;
+  } else {
+    return String(error);
+  }
+};
+
+/** Wrap a function in tracing, and return it  */
+export const traceFunction = <T extends (...args: any[]) => any>(name: string, func: T, options?: SpanOptions): T => {
+  return async function (this: any, ...args: Parameters<T>) {
+    const span = tracer.startSpan(name, options, context.active());
+    return await context.with(trace.setSpan(context.active(), span), async () => {
+      try {
+        // eslint-disable-next-line @typescript-eslint/await-thenable
+        const result = await func.call(this, ...args);
+        span.end();
+        return result;
+      } catch (err) {
+        span.setStatus({ code: SpanStatusCode.ERROR, message: errorMessage(err) });
+        span.end();
+        throw err;
+      }
+    });
+  } as T;
 };
