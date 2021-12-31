@@ -1,6 +1,6 @@
 import { CombinedError } from "@urql/core";
 import { GraphQLError } from "graphql";
-import { assertOperationSuccess } from "../src";
+import { assertOperationSuccess, GadgetOperationError } from "../src";
 
 describe("support utilities", () => {
   describe("assertOperationSuccess", () => {
@@ -122,6 +122,17 @@ describe("support utilities", () => {
           ["foo", "bar"]
         )
       ).toThrowErrorMatchingInlineSnapshot(`""`);
+    });
+  });
+
+  describe("GagetOperationError", () => {
+    test("adds the error code to messages that don't have it already", () => {
+      const error = new GadgetOperationError("some message", "GGT_SOMETHING");
+      expect(error.message).toEqual("GGT_SOMETHING: some message");
+    });
+    test("doesn't add the error code to messages that have it already", () => {
+      const error = new GadgetOperationError("GGT_SOMETHING: some message", "GGT_SOMETHING");
+      expect(error.message).toEqual("GGT_SOMETHING: some message");
     });
   });
 });

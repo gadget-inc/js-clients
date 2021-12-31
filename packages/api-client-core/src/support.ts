@@ -22,8 +22,8 @@ export class GadgetClientError extends Error {}
  * A Gadget API error with an `errorCode` and `message` describing the error. Most often these errors are caused by invalid input data or by misconfigured Gadget models. Consult the documentation for the specific `errorCode` to learn more.
  **/
 export class GadgetOperationError extends Error {
-  constructor(message: string, readonly errorCode: string) {
-    super(errorCode + ": " + message);
+  constructor(incomingMessage: string, readonly errorCode: string) {
+    super(incomingMessage.startsWith("GGT_") ? incomingMessage : `${errorCode}: ${incomingMessage}`);
   }
 }
 
