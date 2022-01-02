@@ -1,5 +1,6 @@
 import { context, SpanOptions, SpanStatusCode, trace } from "@opentelemetry/api";
 import { CombinedError, OperationResult } from "@urql/core";
+import { ClientOptions } from "graphql-ws";
 import { DataHydrator } from "./DataHydrator";
 import { GadgetRecord } from "./GadgetRecord";
 
@@ -236,3 +237,42 @@ export const traceFunction = <T extends (...args: any[]) => any>(name: string, f
     });
   } as T;
 };
+
+/** Helps manage waiting for a graphql-ws connection to be opened explicitly */
+export class ConnectionOpenAwaiter {
+  private _opened: Promise<void>;
+  private _resolve!: () => void;
+  private _reject!: (err: any) => void;
+
+  constructor() {
+    this._opened = new Promise((resolve, reject) => {
+      this._resolve = resolve;
+      this._reject = reject;
+    });
+  }
+
+  get listeners(): ClientOptions["on"] {
+    const timeout = setTimeout(() => {
+      this._reject(new Error("Timeout opening websocket connection to Gadget API"));
+    }, 5000);
+
+    return {
+      connected: () => {
+        clearTimeout(timeout);
+        this._resolve();
+      },
+      closed: (reason) => {
+        clearTimeout(timeout);
+        this._reject(reason);
+      },
+      error: (reason) => {
+        clearTimeout(timeout);
+        this._reject(reason);
+      },
+    };
+  }
+
+  opened = traceFunction("api-client.await-websocket-open", async () => {
+    await this._opened;
+  });
+}

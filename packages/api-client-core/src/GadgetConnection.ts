@@ -9,6 +9,7 @@ import {
   Sink,
 } from "graphql-ws";
 import WebSocket from "isomorphic-ws";
+import { ConnectionOpenAwaiter } from ".";
 import type { AuthenticationModeOptions, BrowserSessionAuthenticationModeOptions } from "./ClientOptions";
 import { BrowserSessionStorageType } from "./ClientOptions";
 import { GadgetTransaction, TransactionRolledBack } from "./GadgetTransaction";
@@ -35,32 +36,6 @@ export interface GadgetConnectionOptions {
 }
 
 const isCloseEvent = (event: any): event is CloseEvent => event?.type == "close";
-
-/** Helper function to await the setup dance on a graphql-ws Client object before we start using it. */
-export const connectionOpened = traceFunction("api-client.await-websocket-open", async (subscriptionClient: SubscriptionClient) => {
-  const unsubscribes: Function[] = []; // eslint-disable-line @typescript-eslint/ban-types
-  const clearListeners = () => unsubscribes.forEach((fn) => fn());
-  await new Promise<void>((resolve, reject) => {
-    const wrappedReject = (err: unknown) => {
-      clearTimeout(timeout);
-      reject(err);
-    };
-
-    const wrappedResolve = () => {
-      clearTimeout(timeout);
-      resolve();
-    };
-
-    const timeout = setTimeout(() => {
-      void subscriptionClient.dispose();
-      wrappedReject(new Error("Timeout opening websocket connection to Gadget API"));
-    }, 5000);
-
-    unsubscribes.push(subscriptionClient.on("connected", wrappedResolve));
-    unsubscribes.push(subscriptionClient.on("closed", wrappedReject));
-    unsubscribes.push(subscriptionClient.on("error", wrappedReject));
-  }).finally(clearListeners);
-});
 
 /**
  * Represents the current strategy for authenticating with the Gadget platform.
@@ -162,6 +137,8 @@ export class GadgetConnection {
         return await run(this.currentTransaction);
       }
 
+      const openedWatcher = new ConnectionOpenAwaiter();
+
       // the transaction subscription client is not lazy because we know we need it immediately, and it doesn't reconnect so it is clear to calling code the transaction errored out.
       const subscriptionClient = this.newSubscriptionClient({
         isFatalConnectionProblem(errorOrCloseEvent) {
@@ -170,6 +147,7 @@ export class GadgetConnection {
           return true;
         },
         ...options,
+        on: openedWatcher.listeners,
         lazy: false,
         // super ultra critical option that ensures graphql-ws doesn't automatically close the websocket connection when there are no outstanding operations. this is key so we can start a transaction then make mutations within it
         lazyCloseTimeout: 100000,
@@ -179,7 +157,7 @@ export class GadgetConnection {
       let transaction;
       try {
         // The server will error if it receives any operations before the auth dance has been completed, so we block on that happening before sending our first operation. It's important that this happens synchronously after instantiating the client so we don't miss any messages
-        await connectionOpened(subscriptionClient);
+        await openedWatcher.opened();
 
         const client = new Client({
           url: "/-", // not used because there's no fetch exchange, set for clarity
