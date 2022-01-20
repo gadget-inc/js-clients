@@ -1,4 +1,4 @@
-import { Client, dedupExchange, subscriptionExchange } from "@urql/core";
+import { cacheExchange, Client, dedupExchange, subscriptionExchange } from "@urql/core";
 import { multipartFetchExchange } from "@urql/exchange-multipart-fetch";
 import fetch from "cross-fetch";
 import { ExecutionResult } from "graphql";
@@ -258,26 +258,30 @@ export class GadgetConnection {
   }
 
   private newBaseClient() {
-    return new Client({
-      url: this.endpoint,
-      fetch: this.fetch,
-      exchanges: [
-        dedupExchange,
-        multipartFetchExchange,
-        subscriptionExchange({
-          forwardSubscription: (operation) => {
-            return {
-              subscribe: (sink) => {
-                const dispose = this.baseSubscriptionClient.subscribe(operation, sink as Sink<ExecutionResult>);
-                return {
-                  unsubscribe: dispose,
-                };
-              },
-            };
-          },
-        }),
-      ],
-    });
+    const exchanges = [dedupExchange];
+
+    // apply urql's default caching behaviour when client side (but skip it server side)
+    if (typeof window != "undefined") {
+      exchanges.push(cacheExchange);
+    }
+
+    exchanges.push(
+      multipartFetchExchange,
+      subscriptionExchange({
+        forwardSubscription: (operation) => {
+          return {
+            subscribe: (sink) => {
+              const dispose = this.baseSubscriptionClient.subscribe(operation, sink as Sink<ExecutionResult>);
+              return {
+                unsubscribe: dispose,
+              };
+            },
+          };
+        },
+      })
+    );
+
+    return new Client({ url: this.endpoint, fetch: this.fetch, exchanges });
   }
 
   private newSubscriptionClient(overrides: GadgetSubscriptionClientOptions) {
