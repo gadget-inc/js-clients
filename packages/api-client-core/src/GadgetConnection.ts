@@ -5,6 +5,7 @@ import { ExecutionResult } from "graphql";
 import {
   Client as SubscriptionClient,
   ClientOptions as SubscriptionClientOptions,
+  CloseCode,
   createClient as createSubscriptionClient,
   Sink,
 } from "graphql-ws";
@@ -36,35 +37,6 @@ export interface GadgetConnectionOptions {
 }
 
 const isCloseEvent = (event: any): event is CloseEvent => event?.type == "close";
-
-/** Helper function to await the setup dance on a graphql-ws Client object before we start using it. */
-export const connectionOpened = traceFunction(
-  "api-client.await-websocket-open",
-  async (subscriptionClient: SubscriptionClient, timeoutMs: number) => {
-    const unsubscribes: Function[] = []; // eslint-disable-line @typescript-eslint/ban-types
-    const clearListeners = () => unsubscribes.forEach((fn) => fn());
-    await new Promise<void>((resolve, reject) => {
-      const wrappedReject = (err: unknown) => {
-        clearTimeout(timeout);
-        reject(err);
-      };
-
-      const wrappedResolve = () => {
-        clearTimeout(timeout);
-        resolve();
-      };
-
-      const timeout = setTimeout(() => {
-        void subscriptionClient.dispose();
-        wrappedReject(new Error("Timeout opening websocket connection to Gadget API"));
-      }, timeoutMs);
-
-      unsubscribes.push(subscriptionClient.on("connected", wrappedResolve));
-      unsubscribes.push(subscriptionClient.on("closed", wrappedReject));
-      unsubscribes.push(subscriptionClient.on("error", wrappedReject));
-    }).finally(clearListeners);
-  }
-);
 
 /**
  * Represents the current strategy for authenticating with the Gadget platform.
@@ -166,24 +138,23 @@ export class GadgetConnection {
         return await run(this.currentTransaction);
       }
 
-      // the transaction subscription client is not lazy because we know we need it immediately, and it doesn't reconnect so it is clear to calling code the transaction errored out.
-      const subscriptionClient = this.newSubscriptionClient({
-        isFatalConnectionProblem(errorOrCloseEvent) {
-          // any interruption of the transaction is fatal to the transaction
-          console.warn("Transport error encountered during transaction processing", errorOrCloseEvent);
-          return true;
-        },
-        ...options,
-        lazy: false,
-        // super ultra critical option that ensures graphql-ws doesn't automatically close the websocket connection when there are no outstanding operations. this is key so we can start a transaction then make mutations within it
-        lazyCloseTimeout: 100000,
-        retryAttempts: 0,
-      });
-
+      let subscriptionClient: SubscriptionClient | null = null;
       let transaction;
       try {
         // The server will error if it receives any operations before the auth dance has been completed, so we block on that happening before sending our first operation. It's important that this happens synchronously after instantiating the client so we don't miss any messages
-        await connectionOpened(subscriptionClient, options.connectionTimeoutMs ?? 10000);
+        subscriptionClient = await this.waitForOpenedConnection(3, options.connectionTimeoutMs ?? 10000, {
+          isFatalConnectionProblem(errorOrCloseEvent) {
+            // any interruption of the transaction is fatal to the transaction
+            console.warn("Transport error encountered during transaction processing", errorOrCloseEvent);
+            return true;
+          },
+          ...options,
+          lazy: false,
+          // super ultra critical option that ensures graphql-ws doesn't automatically close the websocket connection when there are no outstanding operations. this is key so we can start a transaction then make mutations within it
+          lazyCloseTimeout: 100000,
+          retryAttempts: 0,
+          connectionAckWaitTimeout: 1000,
+        });
 
         const client = new Client({
           url: "/-", // not used because there's no fetch exchange, set for clarity
@@ -192,7 +163,7 @@ export class GadgetConnection {
               forwardSubscription(operation) {
                 return {
                   subscribe: (sink) => {
-                    const dispose = subscriptionClient.subscribe(operation, sink as Sink<ExecutionResult>);
+                    const dispose = subscriptionClient!.subscribe(operation, sink as Sink<ExecutionResult>);
                     return {
                       unsubscribe: dispose,
                     };
@@ -224,7 +195,7 @@ export class GadgetConnection {
           throw error;
         }
       } finally {
-        await subscriptionClient.dispose();
+        await subscriptionClient?.dispose();
         this.currentTransaction = null;
       }
     }
@@ -349,5 +320,52 @@ export class GadgetConnection {
     headers["x-gadget-environment"] = this.environment;
 
     return headers;
+  }
+
+  private async waitForOpenedConnection(
+    attempts: number,
+    timeoutMs: number,
+    overrides: GadgetSubscriptionClientOptions
+  ): Promise<SubscriptionClient> {
+    let subscriptionClient = this.newSubscriptionClient(overrides);
+    let unsubscribes: Function[] = []; // eslint-disable-line @typescript-eslint/ban-types
+
+    const clearListeners = () => {
+      unsubscribes.forEach((fn) => fn());
+      unsubscribes = [];
+    };
+
+    return await new Promise<SubscriptionClient>((resolve, reject) => {
+      const wrappedReject = (err: any) => {
+        if (err && err.code == CloseCode.ConnectionAcknowledgementTimeout && attempts > 0) {
+          attempts -= 1;
+          void subscriptionClient.dispose();
+          subscriptionClient = this.newSubscriptionClient(overrides);
+          resetListeners();
+          return;
+        }
+        clearTimeout(timeout);
+        reject(err);
+      };
+
+      const wrappedResolve = () => {
+        clearTimeout(timeout);
+        resolve(subscriptionClient);
+      };
+
+      const timeout = setTimeout(() => {
+        void subscriptionClient.dispose();
+        wrappedReject(new Error("Timeout opening websocket connection to Gadget API"));
+      }, timeoutMs);
+
+      const resetListeners = () => {
+        clearListeners();
+        unsubscribes.push(subscriptionClient.on("connected", wrappedResolve));
+        unsubscribes.push(subscriptionClient.on("closed", wrappedReject));
+        unsubscribes.push(subscriptionClient.on("error", wrappedReject));
+      };
+
+      resetListeners();
+    }).finally(clearListeners);
   }
 }
