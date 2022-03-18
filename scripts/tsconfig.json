@@ -1,0 +1,15 @@
+{
+  "extends": "../tsconfig.json",
+  "compilerOptions": {
+    "lib": ["es2020"],
+    "moduleResolution": "node",
+    "types": ["node"]
+  },
+  "include": ["."],
+  "ts-node": {
+    "esm": true,
+    "moduleTypes": {
+      "*": "esm"
+    }
+  }
+}

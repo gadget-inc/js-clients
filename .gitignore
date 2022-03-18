@@ -9,3 +9,4 @@ tsconfig.tsbuildinfo
 TODO
 .direnv
 packages/*/dist
+.idea
