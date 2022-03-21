@@ -982,10 +982,10 @@
     minimatch "^3.0.4"
     strip-json-comments "^3.1.1"
 
-"@gadget-client/bulk-actions-example@^1.45.0":
-  version "1.63.0"
-  resolved "https://registry.gadget.dev/npm/_/tarball/1356/1537/397#053e4a2101178ecc3d572d9fbf8cf93a64314f83"
-  integrity sha1-BT5KIQEXjsw9Vy2fv4z5OmQxT4M=
+"@gadget-client/bulk-actions-example@^1.65.0":
+  version "1.65.0"
+  resolved "https://registry.gadget.dev/npm/_/tarball/2162/3149/415#9931629627f27dd27ecc2231ca0c7236d104d2a5"
+  integrity sha1-mTFilifyfdJ+zCIxygxyNtEE0qU=
   dependencies:
     "@gadgetinc/api-client-core" "0.5.1"
 
