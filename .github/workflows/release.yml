@@ -1,8 +1,8 @@
 name: Release
 on:
   push:
-#    branches:
-#      - main
+    branches:
+      - main
 jobs:
   test:
     uses: ./.github/workflows/test.yml
@@ -20,10 +20,8 @@ jobs:
         with:
           token: ${{ secrets.NPM_TOKEN }}
           package: ./packages/api-client-core/package.json
-          dry-run: true
       - name: Publish @gadgetinc/react
         uses: JS-DevTools/npm-publish@v1
         with:
           token: ${{ secrets.NPM_TOKEN }}
           package: ./packages/react/package.json
-          dry-run: true
