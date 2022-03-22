@@ -18,7 +18,9 @@ It can be annoying to work with these packages via `yarn link` sometimes, so we 
 
 # Releasing
 
-Right now we release through yarn. Run
+Releasing is done automatically via [our release workflow](.github/workflows/release.yml). Any commits to the main branch that changes one of our `packages/**/package.json` versions will automatically be published.
+
+If you need to release manually for some reason you can do the following
 
 ```
 yarn workspace @gadgetinc/api-client-core publish --access=public --no-git-tag-version
