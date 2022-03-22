@@ -3,6 +3,8 @@ on:
   push:
     branches:
       - main
+    paths:
+      - 'packages/**/package.json'
 jobs:
   test:
     uses: ./.github/workflows/test.yml
