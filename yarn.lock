@@ -996,6 +996,23 @@
   dependencies:
     "@gadgetinc/api-client-core" "0.5.1"
 
+"@gadgetinc/api-client-core@0.5.1":
+  version "0.5.1"
+  resolved "https://registry.yarnpkg.com/@gadgetinc/api-client-core/-/api-client-core-0.5.1.tgz#daece9c0e3b7d892e0ef81581d72cee56ec1cc9d"
+  integrity sha512-U9PQ7yx3FCjmgUVLbPqWvHG8JIpzGoAFso+iWohYx6Cn0xOlwBNZUfKWtTxh4szVPmUJpscZhztxaHl9hYYovw==
+  dependencies:
+    "@opentelemetry/api" "^1.0.4"
+    "@urql/core" "^2.1.5"
+    "@urql/exchange-multipart-fetch" "^0.1.13"
+    cross-fetch "^3.0.6"
+    gql-query-builder "^3.5.5"
+    graphql "^15.5.0"
+    graphql-ws "^5.5.5"
+    isomorphic-ws "^4.0.1"
+    lodash.clonedeep "^4.5.0"
+    lodash.isequal "^4.5.0"
+    ws "^8.2.2"
+
 "@gadgetinc/eslint-config@^0.4.0":
   version "0.4.0"
   resolved "https://registry.yarnpkg.com/@gadgetinc/eslint-config/-/eslint-config-0.4.0.tgz#bc831659717affcee7bc59556e7ee8ea8646bc37"
@@ -3110,7 +3127,7 @@ globby@^7.1.1:
     pify "^3.0.0"
     slash "^1.0.0"
 
-gql-query-builder@^3.6.0:
+gql-query-builder@^3.5.5, gql-query-builder@^3.6.0:
   version "3.6.0"
   resolved "https://registry.yarnpkg.com/gql-query-builder/-/gql-query-builder-3.6.0.tgz#e4f17cc26478259b9ac55e5505f3a6239a64e9c6"
   integrity sha512-++OiouUz5OQDgNVY/rmfNfud/uTZUQV961b9Zp9IBq5B+PIJb2Y3iq3iaZchAtjg5h31x646zZYT18BlgQQAjQ==
