@@ -1,0 +1,1 @@
+{"version":3,"file":"OptionsType.js","sourceRoot":"","sources":["../../src/OptionsType.ts"],"names":[],"mappings":"","sourcesContent":["import { FieldSelection } from \"@gadgetinc/api-client-core\";\n\nexport type OptionsType = {\n  [key: string]: any;\n  select?: FieldSelection;\n};\n"]}
