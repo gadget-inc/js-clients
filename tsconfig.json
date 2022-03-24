@@ -5,6 +5,7 @@
     "allowJs": true,
     "noImplicitAny": true,
     "sourceMap": true,
+    "inlineSources": true,
     "experimentalDecorators": true,
     "emitDecoratorMetadata": true,
     "forceConsistentCasingInFileNames": true,
