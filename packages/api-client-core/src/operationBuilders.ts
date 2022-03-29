@@ -27,6 +27,8 @@ export type PaginationOptions = {
   last?: number | null;
 } & SelectionOptions;
 
+export type FindFirstPaginationOptions = Exclude<PaginationOptions, "first" | "last">;
+
 export const findOneOperation = (
   operation: string,
   id: string | undefined,
@@ -45,6 +47,8 @@ export const findOneOperation = (
     hydrationOptions(modelApiIdentifier),
   ]);
 };
+
+export const maybeFindOneOperation = findOneOperation;
 
 export const findOneByFieldOperation = (
   operation: string,
@@ -95,6 +99,38 @@ export const findManyOperation = (
     hydrationOptions(modelApiIdentifier),
   ]);
 };
+
+export const findFirstOperation = (
+  operation: string,
+  defaultSelection: FieldSelection,
+  modelApiIdentifier: string,
+  options?: FindFirstPaginationOptions
+) => {
+  return query([
+    {
+      operation,
+      fields: [
+        {
+          pageInfo: ["hasNextPage", "hasPreviousPage", "startCursor", "endCursor"],
+        },
+        {
+          edges: ["cursor", { node: fieldSelectionToGQLBuilderFields(options?.select || defaultSelection, true) }],
+        },
+      ],
+      variables: {
+        after: { value: options?.after, type: "String", required: false },
+        first: { value: 1, type: "String" },
+        before: { value: options?.before, type: "String", required: false },
+        sort: { value: options?.sort, type: sortTypeName(modelApiIdentifier) + "!", list: true },
+        filter: { value: options?.filter, type: filterTypeName(modelApiIdentifier) + "!", list: true },
+        search: { value: options?.search, type: "String", required: false },
+      },
+    },
+    hydrationOptions(modelApiIdentifier),
+  ]);
+};
+
+export const maybeFindFirstOperation = findFirstOperation;
 
 export const actionOperation = (
   operation: string,

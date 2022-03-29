@@ -74,6 +74,42 @@ export const internalFindManyQuery = (apiIdentifier: string) => {
     `;
 };
 
+export const internalFindFirstQuery = (apiIdentifier: string) => {
+  const capitalizedApiIdentifier = capitalize(apiIdentifier);
+  return `
+    query InternalFindFirst${capitalizedApiIdentifier}(
+      $after: String
+      $before: String
+      $search: String
+      $sort: [${capitalizedApiIdentifier}Sort!]
+      $filter: [${capitalizedApiIdentifier}Filter!]
+    ) {
+      ${internalHydrationPlan(apiIdentifier)}
+      internal {
+        list${capitalizedApiIdentifier}(
+          after: $after
+          before: $before
+          first: 1
+          search: $search
+          sort: $sort
+          filter: $filter
+        ) {
+          edges {
+            cursor
+            node
+          }
+          pageInfo {
+            hasNextPage
+            hasPreviousPage
+            startCursor
+            endCursor
+          }
+        }
+      }
+    }
+    `;
+};
+
 export const internalCreateMutation = (apiIdentifier: string) => {
   const capitalizedApiIdentifier = capitalize(apiIdentifier);
   return `

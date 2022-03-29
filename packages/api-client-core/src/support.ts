@@ -99,6 +99,15 @@ export const camelize = (term: string, uppercaseFirstLetter = true) => {
 export const sortTypeName = (modelApiIdentifier: string) => `${camelize(modelApiIdentifier)}Sort`;
 export const filterTypeName = (modelApiIdentifier: string) => `${camelize(modelApiIdentifier)}Filter`;
 
+export const getNonNullableError = (response: Result, dataPath: string[]) => {
+  const result = get(response.data, dataPath);
+  if (result === undefined) {
+    return new GadgetInternalError(`Internal Error: Gadget API didn't return expected data. Nothing found in response at ${dataPath}`);
+  } else if (result === null) {
+    return new GadgetInternalError(`Internal Error: Gadget API returned no data at ${dataPath}`);
+  }
+};
+
 export const assertOperationSuccess = (response: OperationResult<any>, dataPath: string[]) => {
   if (response.error) {
     if (response.error instanceof CombinedError && (response.error.networkError as any as Error[])?.length) {
@@ -115,6 +124,18 @@ export const assertOperationSuccess = (response: OperationResult<any>, dataPath:
   }
 
   return result;
+};
+
+export const assertNullableOperationSuccess = (response: OperationResult<any>, dataPath: string[]) => {
+  if (response.error) {
+    if (response.error instanceof CombinedError && (response.error.networkError as any as Error[])?.length) {
+      response.error.message = (response.error.networkError as any as Error[]).map((error) => "[Network] " + error.message).join("\n");
+    }
+    throw response.error;
+  }
+
+  const result = get(response.data, dataPath);
+  return result ?? null;
 };
 
 export const gadgetErrorFor = (error: Record<string, any>) => {
