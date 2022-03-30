@@ -2,7 +2,16 @@ import { GadgetConnection } from "./GadgetConnection";
 import { GadgetRecord } from "./GadgetRecord";
 import { GadgetRecordList } from "./GadgetRecordList";
 import { GadgetTransaction } from "./GadgetTransaction";
-import { assert, assertMutationSuccess, assertOperationSuccess, camelize, capitalize, hydrateConnection, hydrateRecord } from "./support";
+import {
+  assert,
+  assertMutationSuccess,
+  assertNullableOperationSuccess,
+  assertOperationSuccess,
+  camelize,
+  capitalize,
+  hydrateConnection,
+  hydrateRecord,
+} from "./support";
 
 const internalErrorsDetails = `
 fragment InternalErrorsDetails on ExecutionError {
@@ -78,8 +87,6 @@ export const internalFindFirstQuery = (apiIdentifier: string) => {
   const capitalizedApiIdentifier = capitalize(apiIdentifier);
   return `
     query InternalFindFirst${capitalizedApiIdentifier}(
-      $after: String
-      $before: String
       $search: String
       $sort: [${capitalizedApiIdentifier}Sort!]
       $filter: [${capitalizedApiIdentifier}Filter!]
@@ -87,22 +94,13 @@ export const internalFindFirstQuery = (apiIdentifier: string) => {
       ${internalHydrationPlan(apiIdentifier)}
       internal {
         list${capitalizedApiIdentifier}(
-          after: $after
-          before: $before
           first: 1
           search: $search
           sort: $sort
           filter: $filter
         ) {
           edges {
-            cursor
             node
-          }
-          pageInfo {
-            hasNextPage
-            hasPreviousPage
-            startCursor
-            endCursor
           }
         }
       }
@@ -209,11 +207,34 @@ export class InternalModelManager {
     return hydrateRecord(response, result);
   }
 
+  async maybeFindOne(id: string): Promise<GadgetRecord<any> | null> {
+    const response = await this.connection.currentClient.query(internalFindOneQuery(this.apiIdentifier), { id }).toPromise();
+    const result = assertNullableOperationSuccess(response, ["internal", this.apiIdentifier]);
+    return result ? hydrateRecord(response, result) : null;
+  }
+
   async findMany(options?: Record<string, any>): Promise<GadgetRecordList<any>> {
     const response = await this.connection.currentClient.query(internalFindManyQuery(this.apiIdentifier), options).toPromise();
     const connection = assertOperationSuccess(response, ["internal", `list${this.capitalizedApiIdentifier}`]);
     const records = hydrateConnection(response, connection);
     return GadgetRecordList.boot(this, records, { options, pageInfo: connection.pageInfo });
+  }
+
+  private async findFirstList(options?: Record<string, any>): Promise<GadgetRecordList<any>> {
+    const response = await this.connection.currentClient.query(internalFindFirstQuery(this.apiIdentifier), options).toPromise();
+    const connection = assertOperationSuccess(response, ["internal", `list${this.capitalizedApiIdentifier}`]);
+    const records = hydrateConnection(response, connection);
+    return GadgetRecordList.boot(this, records, { options, pageInfo: connection.pageInfo });
+  }
+
+  async findFirst(options?: Record<string, any>): Promise<GadgetRecord<any>> {
+    const list = await this.findFirstList(options);
+    return list.firstOrThrow();
+  }
+
+  async maybeFindFirst(options?: Record<string, any>): Promise<GadgetRecord<any> | null> {
+    const list = await this.findFirstList(options);
+    return list.firstOrNull();
   }
 
   async create(record: RecordData): Promise<GadgetRecord<any>> {

@@ -4,12 +4,13 @@ import {
   findOneOperation,
   GadgetRecord,
   get,
+  getNonNullableError,
   hydrateRecord,
   LimitToKnownKeys,
   Select,
 } from "@gadgetinc/api-client-core";
 import { useMemo } from "react";
-import { useQuery, UseQueryArgs, UseQueryResponse } from "urql";
+import { CombinedError, useQuery, UseQueryArgs, UseQueryResponse } from "urql";
 import { OptionsType } from "./OptionsType";
 import { useStructuralMemo } from "./useStructuralMemo";
 
@@ -68,16 +69,19 @@ export const useFindOne = <
     requestPolicy: options?.requestPolicy,
   });
 
+  const dataPath = [manager.findOne.operationName];
   let data = result.data;
   if (data) {
-    data = hydrateRecord(result, get(result.data, [manager.findOne.operationName]));
+    data = hydrateRecord(result, get(result.data, dataPath));
   }
 
-  return [
-    {
-      ...result,
-      data,
-    },
-    refresh,
-  ];
+  const nonNullableError = getNonNullableError(result, dataPath);
+  let error = result.error;
+  if (!error && nonNullableError) {
+    error = new CombinedError({
+      graphQLErrors: [nonNullableError],
+    });
+  }
+
+  return [{ ...result, data, error }, refresh];
 };

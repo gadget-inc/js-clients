@@ -99,7 +99,10 @@ export const camelize = (term: string, uppercaseFirstLetter = true) => {
 export const sortTypeName = (modelApiIdentifier: string) => `${camelize(modelApiIdentifier)}Sort`;
 export const filterTypeName = (modelApiIdentifier: string) => `${camelize(modelApiIdentifier)}Filter`;
 
-export const getNonNullableError = (response: Result, dataPath: string[]) => {
+export const getNonNullableError = (response: Result & { fetching: boolean }, dataPath: string[]) => {
+  if (response.fetching) {
+    return;
+  }
   const result = get(response.data, dataPath);
   if (result === undefined) {
     return new GadgetInternalError(`Internal Error: Gadget API didn't return expected data. Nothing found in response at ${dataPath}`);

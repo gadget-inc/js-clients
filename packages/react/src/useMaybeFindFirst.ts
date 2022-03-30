@@ -4,18 +4,17 @@ import {
   findFirstOperation,
   GadgetRecord,
   get,
-  getNonNullableError,
   hydrateConnection,
   LimitToKnownKeys,
   Select,
 } from "@gadgetinc/api-client-core";
 import { useMemo } from "react";
-import { CombinedError, useQuery, UseQueryArgs, UseQueryResponse } from "urql";
+import { useQuery, UseQueryArgs, UseQueryResponse } from "urql";
 import { OptionsType } from "./OptionsType";
 import { useStructuralMemo } from "./useStructuralMemo";
 
 /**
- * React hook to fetch many Gadget records using the `findFirst` method of a given manager.
+ * React hook to fetch many Gadget records using the `maybeFindFirst` method of a given manager.
  *
  * @param manager Gadget model manager to use
  * @param options options for filtering and searching records, and selecting the fields in each record of the result
@@ -24,7 +23,7 @@ import { useStructuralMemo } from "./useStructuralMemo";
  *
  * ```
  * export function Users() {
- *   const [result, refresh] = useFindFirst(Client.user, {
+ *   const [result, refresh] = useMaybeFindFirst(Client.user, {
  *     select: {
  *       name: true,
  *     },
@@ -38,7 +37,7 @@ import { useStructuralMemo } from "./useStructuralMemo";
  * }
  * ```
  */
-export const useFindFirst = <
+export const useMaybeFindFirst = <
   GivenOptions extends OptionsType, // currently necessary for Options to be a narrow type (e.g., `true` instead of `boolean`)
   SchemaT,
   F extends FindFirstFunction<GivenOptions, any, SchemaT, any>,
@@ -46,9 +45,9 @@ export const useFindFirst = <
 >(
   manager: { findFirst: F },
   options?: LimitToKnownKeys<Options, F["optionsType"]> & Omit<UseQueryArgs, "query" | "variables">
-): UseQueryResponse<
-  GadgetRecord<Select<Exclude<F["schemaType"], null | undefined>, DefaultSelection<F["selectionType"], Options, F["defaultSelection"]>>>
-> => {
+): UseQueryResponse<null | GadgetRecord<
+  Select<Exclude<F["schemaType"], null | undefined>, DefaultSelection<F["selectionType"], Options, F["defaultSelection"]>>
+>> => {
   const memoizedOptions = useStructuralMemo(options);
   const plan = useMemo(() => {
     return findFirstOperation(
@@ -68,23 +67,15 @@ export const useFindFirst = <
   });
 
   const dataPath = [manager.findFirst.operationName];
-  let data = result.data;
+  let data = result.data ?? null;
   if (data) {
     const connection = get(result.data, dataPath);
     if (connection) {
-      data = hydrateConnection(result, connection)[0];
+      data = hydrateConnection(result, connection)[0] ?? null;
     } else {
-      data = data[0];
+      data = data[0] ?? null;
     }
   }
 
-  const nonNullableError = getNonNullableError(result, dataPath);
-  let error = result.error;
-  if (!error && nonNullableError) {
-    error = new CombinedError({
-      graphQLErrors: [nonNullableError],
-    });
-  }
-
-  return [{ ...result, data, error }, refresh];
+  return [{ ...result, data }, refresh];
 };

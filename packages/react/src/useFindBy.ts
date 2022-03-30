@@ -5,6 +5,7 @@ import {
   GadgetNonUniqueDataError,
   GadgetRecord,
   get,
+  getNonNullableError,
   hydrateConnection,
   LimitToKnownKeys,
   Select,
@@ -69,6 +70,7 @@ export const useFindBy = <
     requestPolicy: options?.requestPolicy,
   });
 
+  const dataPath = [finder.operationName];
   let records = [];
   let data = result.data;
   if (data) {
@@ -87,6 +89,12 @@ export const useFindBy = <
           `More than one record found for ${finder.modelApiIdentifier}.${finder.findByVariableName} = ${value}. Please confirm your unique validation is not reporting an error.`
         ),
       ],
+    });
+  }
+  const nonNullableError = getNonNullableError(result, dataPath);
+  if (!error && nonNullableError) {
+    error = new CombinedError({
+      graphQLErrors: [nonNullableError],
     });
   }
 

@@ -30,6 +30,10 @@ export class GadgetRecordList<Shape> extends Array<GadgetRecord<Shape>> {
     return Array;
   }
 
+  firstOrNull() {
+    return this[0] ?? null;
+  }
+
   firstOrThrow() {
     if (!this[0]) {
       throw new GadgetOperationError("No records found.", "GGT_RECORD_NOT_FOUND");

@@ -10,3 +10,4 @@ TODO
 .direnv
 packages/*/dist
 .idea
+packages/sample-app

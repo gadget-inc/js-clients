@@ -1,11 +1,11 @@
 import {
   DefaultSelection,
+  FindOneFunction,
+  findOneOperation,
   GadgetRecord,
   get,
   hydrateRecord,
   LimitToKnownKeys,
-  MaybeFindOneFunction,
-  maybeFindOneOperation,
   Select,
 } from "@gadgetinc/api-client-core";
 import { useMemo } from "react";
@@ -40,22 +40,22 @@ import { useStructuralMemo } from "./useStructuralMemo";
 export const useMaybeFindOne = <
   GivenOptions extends OptionsType, // currently necessary for Options to be a narrow type (e.g., `true` instead of `boolean`)
   SchemaT,
-  F extends MaybeFindOneFunction<GivenOptions, any, SchemaT, any>,
+  F extends FindOneFunction<GivenOptions, any, SchemaT, any>,
   Options extends F["optionsType"] & Omit<UseQueryArgs, "query" | "variables">
 >(
-  manager: { maybeFindOne: F },
+  manager: { findOne: F },
   id: string,
   options?: LimitToKnownKeys<Options, F["optionsType"] & Omit<UseQueryArgs, "query" | "variables">>
-): UseQueryResponse<
-  GadgetRecord<Select<Exclude<F["schemaType"], null | undefined>, DefaultSelection<F["selectionType"], Options, F["defaultSelection"]>>>
-> => {
+): UseQueryResponse<null | GadgetRecord<
+  Select<Exclude<F["schemaType"], null | undefined>, DefaultSelection<F["selectionType"], Options, F["defaultSelection"]>>
+>> => {
   const memoizedOptions = useStructuralMemo(options);
   const plan = useMemo(() => {
-    return maybeFindOneOperation(
-      manager.maybeFindOne.operationName,
+    return findOneOperation(
+      manager.findOne.operationName,
       id,
-      manager.maybeFindOne.defaultSelection,
-      manager.maybeFindOne.modelApiIdentifier,
+      manager.findOne.defaultSelection,
+      manager.findOne.modelApiIdentifier,
       memoizedOptions
     );
   }, [manager, id, memoizedOptions]);
@@ -68,9 +68,10 @@ export const useMaybeFindOne = <
     requestPolicy: options?.requestPolicy,
   });
 
-  let data = result.data;
+  let data = result.data ?? null;
   if (data) {
-    data = hydrateRecord(result, get(result.data, [manager.maybeFindOne.operationName]));
+    const value = get(result.data, [manager.findOne.operationName]);
+    data = value ? hydrateRecord(result, value) : null;
   }
 
   return [

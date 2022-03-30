@@ -27,7 +27,7 @@ export type PaginationOptions = {
   last?: number | null;
 } & SelectionOptions;
 
-export type FindFirstPaginationOptions = Exclude<PaginationOptions, "first" | "last">;
+export type FindFirstPaginationOptions = Omit<PaginationOptions, "first" | "last" | "before" | "after">;
 
 export const findOneOperation = (
   operation: string,
@@ -47,8 +47,6 @@ export const findOneOperation = (
     hydrationOptions(modelApiIdentifier),
   ]);
 };
-
-export const maybeFindOneOperation = findOneOperation;
 
 export const findOneByFieldOperation = (
   operation: string,
@@ -111,16 +109,11 @@ export const findFirstOperation = (
       operation,
       fields: [
         {
-          pageInfo: ["hasNextPage", "hasPreviousPage", "startCursor", "endCursor"],
-        },
-        {
-          edges: ["cursor", { node: fieldSelectionToGQLBuilderFields(options?.select || defaultSelection, true) }],
+          edges: [{ node: fieldSelectionToGQLBuilderFields(options?.select || defaultSelection, true) }],
         },
       ],
       variables: {
-        after: { value: options?.after, type: "String", required: false },
-        first: { value: 1, type: "String" },
-        before: { value: options?.before, type: "String", required: false },
+        first: { value: 1, type: "Int" },
         sort: { value: options?.sort, type: sortTypeName(modelApiIdentifier) + "!", list: true },
         filter: { value: options?.filter, type: filterTypeName(modelApiIdentifier) + "!", list: true },
         search: { value: options?.search, type: "String", required: false },
@@ -129,8 +122,6 @@ export const findFirstOperation = (
     hydrationOptions(modelApiIdentifier),
   ]);
 };
-
-export const maybeFindFirstOperation = findFirstOperation;
 
 export const actionOperation = (
   operation: string,

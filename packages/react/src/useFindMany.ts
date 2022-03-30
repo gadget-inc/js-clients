@@ -4,12 +4,13 @@ import {
   findManyOperation,
   GadgetRecord,
   get,
+  getNonNullableError,
   hydrateConnection,
   LimitToKnownKeys,
   Select,
 } from "@gadgetinc/api-client-core";
 import { useMemo } from "react";
-import { useQuery, UseQueryArgs, UseQueryResponse } from "urql";
+import { CombinedError, useQuery, UseQueryArgs, UseQueryResponse } from "urql";
 import { OptionsType } from "./OptionsType";
 import { useStructuralMemo } from "./useStructuralMemo";
 
@@ -66,13 +67,22 @@ export const useFindMany = <
     requestPolicy: options?.requestPolicy,
   });
 
+  const dataPath = [manager.findMany.operationName];
   let data = result.data;
   if (data) {
-    const connection = get(result.data, [manager.findMany.operationName]);
+    const connection = get(result.data, dataPath);
     if (connection) {
       data = hydrateConnection(result, connection);
     }
   }
 
-  return [{ ...result, data }, refresh];
+  const nonNullableError = getNonNullableError(result, dataPath);
+  let error = result.error;
+  if (!error && nonNullableError) {
+    error = new CombinedError({
+      graphQLErrors: [nonNullableError],
+    });
+  }
+
+  return [{ ...result, data, error }, refresh];
 };
