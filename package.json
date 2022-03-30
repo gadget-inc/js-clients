@@ -1,13 +1,14 @@
 {
   "name": "@gadgetinc/js-clients",
-  "version": "0.1.0",
+  "version": "1.22.17",
   "main": "index.js",
   "author": "Gadget Authors",
   "license": "MIT",
   "private": true,
   "workspaces": [
     "packages/api-client-core",
-    "packages/react"
+    "packages/react",
+    "packages/sample-app"
   ],
   "scripts": {
     "lint": "yarn run lint:prettier && yarn run lint:eslint",
