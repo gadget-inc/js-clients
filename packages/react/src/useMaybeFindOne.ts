@@ -4,13 +4,13 @@ import {
   findOneOperation,
   GadgetRecord,
   get,
+  getQueryArgs,
   hydrateRecord,
   LimitToKnownKeys,
   Select,
 } from "@gadgetinc/api-client-core";
 import { useMemo } from "react";
 import { useQuery, UseQueryArgs, UseQueryResponse } from "urql";
-import { getQueryArgs } from "./helpers";
 import { OptionsType } from "./OptionsType";
 import { useStructuralMemo } from "./useStructuralMemo";
 

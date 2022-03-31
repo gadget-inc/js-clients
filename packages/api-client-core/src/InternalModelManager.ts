@@ -176,32 +176,33 @@ export class InternalModelManager {
     this.capitalizedApiIdentifier = camelize(apiIdentifier);
   }
 
-  async findOne(id: string): Promise<GadgetRecord<any>> {
+  async findOne(id: string, throwOnEmptyData = true): Promise<GadgetRecord<any>> {
     const response = await this.connection.currentClient.query(internalFindOneQuery(this.apiIdentifier), { id }).toPromise();
-    const result = assertOperationSuccess(response, ["internal", this.apiIdentifier]);
+    const assertSuccess = throwOnEmptyData ? assertOperationSuccess : assertNullableOperationSuccess;
+    const result = assertSuccess(response, ["internal", this.apiIdentifier]);
     return hydrateRecord(response, result);
   }
 
   async maybeFindOne(id: string): Promise<GadgetRecord<any> | null> {
-    const response = await this.connection.currentClient.query(internalFindOneQuery(this.apiIdentifier), { id }).toPromise();
-    const result = assertNullableOperationSuccess(response, ["internal", this.apiIdentifier]);
-    return result ? hydrateRecord(response, result) : null;
+    const list = await this.findOne(id, false);
+    return list[0] ?? null;
   }
 
-  async findMany(options?: Record<string, any>): Promise<GadgetRecordList<any>> {
+  async findMany(options?: Record<string, any>, throwOnEmptyData = true): Promise<GadgetRecordList<any>> {
     const response = await this.connection.currentClient.query(internalFindManyQuery(this.apiIdentifier), options).toPromise();
-    const connection = assertOperationSuccess(response, ["internal", `list${this.capitalizedApiIdentifier}`]);
+    const assertSuccess = throwOnEmptyData ? assertOperationSuccess : assertNullableOperationSuccess;
+    const connection = assertSuccess(response, ["internal", `list${this.capitalizedApiIdentifier}`]);
     const records = hydrateConnection(response, connection);
     return GadgetRecordList.boot(this, records, { options, pageInfo: connection.pageInfo });
   }
 
   async findFirst(options?: Record<string, any>): Promise<GadgetRecord<any>> {
-    const list = await this.findMany(options);
-    return list.firstOrThrow();
+    const list = await this.findMany({ ...options, first: 1 });
+    return list[0];
   }
 
   async maybeFindFirst(options?: Record<string, any>): Promise<GadgetRecord<any> | null> {
-    const list = await this.findMany(options);
+    const list = await this.findMany({ ...options, first: 1 }, false);
     return list[0] ?? null;
   }
 

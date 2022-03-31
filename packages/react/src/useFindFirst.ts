@@ -1,17 +1,17 @@
 import {
   DefaultSelection,
   FindFirstFunction,
-  findFirstOperation,
+  findManyOperation,
   GadgetRecord,
   get,
   getNonNullableError,
+  getQueryArgs,
   hydrateConnection,
   LimitToKnownKeys,
   Select,
 } from "@gadgetinc/api-client-core";
 import { useMemo } from "react";
 import { CombinedError, useQuery, UseQueryArgs, UseQueryResponse } from "urql";
-import { getQueryArgs } from "./helpers";
 import { OptionsType } from "./OptionsType";
 import { useStructuralMemo } from "./useStructuralMemo";
 
@@ -50,9 +50,10 @@ export const useFindFirst = <
 ): UseQueryResponse<
   GadgetRecord<Select<Exclude<F["schemaType"], null | undefined>, DefaultSelection<F["selectionType"], Options, F["defaultSelection"]>>>
 > => {
-  const memoizedOptions = useStructuralMemo(options);
+  const firstOptions = { ...options, first: 1 };
+  const memoizedOptions = useStructuralMemo(firstOptions);
   const plan = useMemo(() => {
-    return findFirstOperation(
+    return findManyOperation(
       manager.findFirst.operationName,
       manager.findFirst.defaultSelection,
       manager.findFirst.modelApiIdentifier,
@@ -60,7 +61,7 @@ export const useFindFirst = <
     );
   }, [manager, memoizedOptions]);
 
-  const [result, refresh] = useQuery(getQueryArgs(plan, options));
+  const [result, refresh] = useQuery(getQueryArgs(plan, firstOptions));
 
   const dataPath = [manager.findFirst.operationName];
   let data = result.data;

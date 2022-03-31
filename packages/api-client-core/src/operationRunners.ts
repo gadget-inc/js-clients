@@ -1,12 +1,4 @@
-import {
-  actionOperation,
-  findFirstOperation,
-  FindFirstPaginationOptions,
-  findManyOperation,
-  findOneByFieldOperation,
-  globalActionOperation,
-  VariableOptions,
-} from ".";
+import { actionOperation, findManyOperation, findOneByFieldOperation, globalActionOperation, VariableOptions } from ".";
 import { FieldSelection } from "./FieldSelection";
 import { GadgetConnection } from "./GadgetConnection";
 import { GadgetRecord } from "./GadgetRecord";
@@ -30,26 +22,14 @@ export const findOneRunner = async <Shape = any>(
   id: string | undefined,
   defaultSelection: FieldSelection,
   modelApiIdentifier: string,
-  options?: SelectionOptions | null
+  options?: SelectionOptions | null,
+  throwOnEmptyData = true
 ) => {
   const plan = findOneOperation(operation, id, defaultSelection, modelApiIdentifier, options);
   const response = await modelManager.connection.currentClient.query(plan.query, plan.variables).toPromise();
-  const record = assertOperationSuccess(response, [operation]);
+  const assertSuccess = throwOnEmptyData ? assertOperationSuccess : assertNullableOperationSuccess;
+  const record = assertSuccess(response, [operation]);
   return hydrateRecord<Shape>(response, record);
-};
-
-export const maybeFindOneRunner = async <Shape = any>(
-  modelManager: { connection: GadgetConnection },
-  operation: string,
-  id: string | undefined,
-  defaultSelection: FieldSelection,
-  modelApiIdentifier: string,
-  options?: SelectionOptions | null
-) => {
-  const plan = findOneOperation(operation, id, defaultSelection, modelApiIdentifier, options);
-  const response = await modelManager.connection.currentClient.query(plan.query, plan.variables).toPromise();
-  const record = assertNullableOperationSuccess(response, [operation]);
-  return record ? hydrateRecord<Shape>(response, record) : null;
 };
 
 export const findOneByFieldRunner = async <Shape = any>(
@@ -73,56 +53,20 @@ export const findOneByFieldRunner = async <Shape = any>(
   return records[0];
 };
 
-interface QueryPlan {
-  variables: any;
-  query: string;
-}
-
-const getRecordList = async <Shape = any, Plan extends QueryPlan = QueryPlan>(
-  modelManager: AnyModelManager,
-  operation: string,
-  plan: Plan,
-  options?: PaginationOptions
-) => {
-  const response = await modelManager.connection.currentClient.query(plan.query, plan.variables).toPromise();
-  const connectionObject = assertOperationSuccess(response, [operation]);
-  const records = hydrateConnection<Shape>(response, connectionObject);
-  return GadgetRecordList.boot<Shape>(modelManager, records, { options, pageInfo: connectionObject.pageInfo });
-};
-
 export const findManyRunner = async <Shape = any>(
   modelManager: AnyModelManager,
   operation: string,
   defaultSelection: FieldSelection,
   modelApiIdentifier: string,
-  options?: PaginationOptions
+  options?: PaginationOptions,
+  throwOnEmptyData = true
 ) => {
   const plan = findManyOperation(operation, defaultSelection, modelApiIdentifier, options);
-  return await getRecordList<Shape>(modelManager, operation, plan, options);
-};
-
-export const findFirstRunner = async <Shape = any>(
-  modelManager: AnyModelManager,
-  operation: string,
-  defaultSelection: FieldSelection,
-  modelApiIdentifier: string,
-  options?: FindFirstPaginationOptions
-) => {
-  const plan = findFirstOperation(operation, defaultSelection, modelApiIdentifier, options);
-  const list = await getRecordList<Shape>(modelManager, operation, plan, options);
-  return list.firstOrThrow();
-};
-
-export const maybeFindFirstRunner = async <Shape = any>(
-  modelManager: AnyModelManager,
-  operation: string,
-  defaultSelection: FieldSelection,
-  modelApiIdentifier: string,
-  options?: FindFirstPaginationOptions
-) => {
-  const plan = findFirstOperation(operation, defaultSelection, modelApiIdentifier, options);
-  const list = await getRecordList<Shape>(modelManager, operation, plan, options);
-  return list[0] ?? null;
+  const response = await modelManager.connection.currentClient.query(plan.query, plan.variables).toPromise();
+  const assertSuccess = throwOnEmptyData ? assertOperationSuccess : assertNullableOperationSuccess;
+  const connectionObject = assertSuccess(response, [operation]);
+  const records = hydrateConnection<Shape>(response, connectionObject);
+  return GadgetRecordList.boot<Shape>(modelManager, records, { options, pageInfo: connectionObject.pageInfo });
 };
 
 export interface ActionRunner {

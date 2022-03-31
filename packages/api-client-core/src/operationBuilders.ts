@@ -98,18 +98,6 @@ export const findManyOperation = (
   ]);
 };
 
-export const findFirstOperation = (
-  operation: string,
-  defaultSelection: FieldSelection,
-  modelApiIdentifier: string,
-  options?: FindFirstPaginationOptions
-) => {
-  return findManyOperation(operation, defaultSelection, modelApiIdentifier, {
-    ...options,
-    first: 1,
-  });
-};
-
 export const actionOperation = (
   operation: string,
   defaultSelection: FieldSelection | null,

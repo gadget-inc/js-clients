@@ -5,13 +5,13 @@ import {
   GadgetRecord,
   get,
   getNonNullableError,
+  getQueryArgs,
   hydrateRecord,
   LimitToKnownKeys,
   Select,
 } from "@gadgetinc/api-client-core";
 import { useMemo } from "react";
 import { CombinedError, useQuery, UseQueryArgs, UseQueryResponse } from "urql";
-import { getQueryArgs } from "./helpers";
 import { OptionsType } from "./OptionsType";
 import { useStructuralMemo } from "./useStructuralMemo";
 

@@ -1,4 +1,4 @@
-import { actionOperation, findFirstOperation, findManyOperation, findOneByFieldOperation, findOneOperation } from "../src";
+import { actionOperation, findManyOperation, findOneByFieldOperation, findOneOperation } from "../src";
 
 describe("operation builders", () => {
   describe("findOneOperation", () => {
@@ -102,43 +102,6 @@ describe("operation builders", () => {
               },
             },
             "first": 2,
-            "last": undefined,
-            "search": undefined,
-            "sort": undefined,
-          },
-        }
-      `);
-    });
-  });
-
-  describe("findFirstOperation", () => {
-    test("findFirstOperation should build a findFirst query for a model", () => {
-      expect(findFirstOperation("widgets", { __typename: true, id: true, state: true }, "widget")).toMatchInlineSnapshot(`
-        Object {
-          "query": "query ($after: String, $first: Int, $before: String, $last: Int, $sort: [WidgetSort!], $filter: [WidgetFilter!], $search: String) { widgets (after: $after, first: $first, before: $before, last: $last, sort: $sort, filter: $filter, search: $search) { pageInfo { hasNextPage, hasPreviousPage, startCursor, endCursor }, edges { cursor, node { __typename, id, state } } } gadgetMeta  { hydrations(modelName: \\"widget\\") } }",
-          "variables": Object {
-            "after": undefined,
-            "before": undefined,
-            "filter": undefined,
-            "first": 1,
-            "last": undefined,
-            "search": undefined,
-            "sort": undefined,
-          },
-        }
-      `);
-    });
-
-    test("findFirstOperation should build a findFirst query for a model with the select option", () => {
-      expect(findFirstOperation("widgets", { __typename: true, id: true, state: true }, "widget", { select: { id: true, name: true } }))
-        .toMatchInlineSnapshot(`
-        Object {
-          "query": "query ($after: String, $first: Int, $before: String, $last: Int, $sort: [WidgetSort!], $filter: [WidgetFilter!], $search: String) { widgets (after: $after, first: $first, before: $before, last: $last, sort: $sort, filter: $filter, search: $search) { pageInfo { hasNextPage, hasPreviousPage, startCursor, endCursor }, edges { cursor, node { __typename, id, name } } } gadgetMeta  { hydrations(modelName: \\"widget\\") } }",
-          "variables": Object {
-            "after": undefined,
-            "before": undefined,
-            "filter": undefined,
-            "first": 1,
             "last": undefined,
             "search": undefined,
             "sort": undefined,
