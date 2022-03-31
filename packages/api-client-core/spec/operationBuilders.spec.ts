@@ -30,15 +30,12 @@ describe("operation builders", () => {
     test("findManyOperation should build a findMany query for a model", () => {
       expect(findManyOperation("widgets", { __typename: true, id: true, state: true }, "widget")).toMatchInlineSnapshot(`
         Object {
-          "query": "query ($after: String, $first: Int, $before: String, $last: Int, $sort: [WidgetSort!], $filter: [WidgetFilter!], $search: String) { widgets (after: $after, first: $first, before: $before, last: $last, sort: $sort, filter: $filter, search: $search) { pageInfo { hasNextPage, hasPreviousPage, startCursor, endCursor }, edges { cursor, node { __typename, id, state } } } gadgetMeta  { hydrations(modelName: \\"widget\\") } }",
+          "query": "query ($after: String, $first: Int, $before: String, $last: Int) { widgets (after: $after, first: $first, before: $before, last: $last) { pageInfo { hasNextPage, hasPreviousPage, startCursor, endCursor }, edges { cursor, node { __typename, id, state } } } gadgetMeta  { hydrations(modelName: \\"widget\\") } }",
           "variables": Object {
             "after": undefined,
             "before": undefined,
-            "filter": undefined,
             "first": undefined,
             "last": undefined,
-            "search": undefined,
-            "sort": undefined,
           },
         }
       `);
@@ -48,15 +45,70 @@ describe("operation builders", () => {
       expect(findManyOperation("widgets", { __typename: true, id: true, state: true }, "widget", { select: { id: true, name: true } }))
         .toMatchInlineSnapshot(`
         Object {
-          "query": "query ($after: String, $first: Int, $before: String, $last: Int, $sort: [WidgetSort!], $filter: [WidgetFilter!], $search: String) { widgets (after: $after, first: $first, before: $before, last: $last, sort: $sort, filter: $filter, search: $search) { pageInfo { hasNextPage, hasPreviousPage, startCursor, endCursor }, edges { cursor, node { __typename, id, name } } } gadgetMeta  { hydrations(modelName: \\"widget\\") } }",
+          "query": "query ($after: String, $first: Int, $before: String, $last: Int) { widgets (after: $after, first: $first, before: $before, last: $last) { pageInfo { hasNextPage, hasPreviousPage, startCursor, endCursor }, edges { cursor, node { __typename, id, name } } } gadgetMeta  { hydrations(modelName: \\"widget\\") } }",
           "variables": Object {
             "after": undefined,
             "before": undefined,
-            "filter": undefined,
             "first": undefined,
             "last": undefined,
-            "search": undefined,
-            "sort": undefined,
+          },
+        }
+      `);
+    });
+
+    test("findManyOperation should build a findMany query with search if option provided", () => {
+      expect(findManyOperation("widgets", { __typename: true, id: true, state: true }, "widget", { search: "Search Term" }))
+        .toMatchInlineSnapshot(`
+        Object {
+          "query": "query ($after: String, $first: Int, $before: String, $last: Int, $search: String) { widgets (after: $after, first: $first, before: $before, last: $last, search: $search) { pageInfo { hasNextPage, hasPreviousPage, startCursor, endCursor }, edges { cursor, node { __typename, id, state } } } gadgetMeta  { hydrations(modelName: \\"widget\\") } }",
+          "variables": Object {
+            "after": undefined,
+            "before": undefined,
+            "first": undefined,
+            "last": undefined,
+            "search": "Search Term",
+          },
+        }
+      `);
+    });
+
+    test("findManyOperation should build a findMany query with sort if option provided", () => {
+      expect(findManyOperation("widgets", { __typename: true, id: true, state: true }, "widget", { sort: [{ id: "Ascending" }] }))
+        .toMatchInlineSnapshot(`
+        Object {
+          "query": "query ($after: String, $first: Int, $before: String, $last: Int, $sort: [WidgetSort!]) { widgets (after: $after, first: $first, before: $before, last: $last, sort: $sort) { pageInfo { hasNextPage, hasPreviousPage, startCursor, endCursor }, edges { cursor, node { __typename, id, state } } } gadgetMeta  { hydrations(modelName: \\"widget\\") } }",
+          "variables": Object {
+            "after": undefined,
+            "before": undefined,
+            "first": undefined,
+            "last": undefined,
+            "sort": Array [
+              Object {
+                "id": "Ascending",
+              },
+            ],
+          },
+        }
+      `);
+    });
+
+    test("findManyOperation should build a findMany query with filter if option provided", () => {
+      expect(findManyOperation("widgets", { __typename: true, id: true, state: true }, "widget", { filter: [{ id: { equals: "1" } }] }))
+        .toMatchInlineSnapshot(`
+        Object {
+          "query": "query ($after: String, $first: Int, $before: String, $last: Int, $filter: [WidgetFilter!]) { widgets (after: $after, first: $first, before: $before, last: $last, filter: $filter) { pageInfo { hasNextPage, hasPreviousPage, startCursor, endCursor }, edges { cursor, node { __typename, id, state } } } gadgetMeta  { hydrations(modelName: \\"widget\\") } }",
+          "variables": Object {
+            "after": undefined,
+            "before": undefined,
+            "filter": Array [
+              Object {
+                "id": Object {
+                  "equals": "1",
+                },
+              },
+            ],
+            "first": undefined,
+            "last": undefined,
           },
         }
       `);
@@ -67,7 +119,7 @@ describe("operation builders", () => {
     test("findOneByFieldOperation should build a find by field query for a model", () => {
       expect(findOneByFieldOperation("widget", "foo", "bar", { __typename: true, id: true, state: true }, "widget")).toMatchInlineSnapshot(`
         Object {
-          "query": "query ($after: String, $first: Int, $before: String, $last: Int, $sort: [WidgetSort!], $filter: [WidgetFilter!], $search: String) { widget (after: $after, first: $first, before: $before, last: $last, sort: $sort, filter: $filter, search: $search) { pageInfo { hasNextPage, hasPreviousPage, startCursor, endCursor }, edges { cursor, node { __typename, id, state } } } gadgetMeta  { hydrations(modelName: \\"widget\\") } }",
+          "query": "query ($after: String, $first: Int, $before: String, $last: Int, $filter: [WidgetFilter!]) { widget (after: $after, first: $first, before: $before, last: $last, filter: $filter) { pageInfo { hasNextPage, hasPreviousPage, startCursor, endCursor }, edges { cursor, node { __typename, id, state } } } gadgetMeta  { hydrations(modelName: \\"widget\\") } }",
           "variables": Object {
             "after": undefined,
             "before": undefined,
@@ -78,8 +130,6 @@ describe("operation builders", () => {
             },
             "first": 2,
             "last": undefined,
-            "search": undefined,
-            "sort": undefined,
           },
         }
       `);
@@ -92,7 +142,7 @@ describe("operation builders", () => {
         })
       ).toMatchInlineSnapshot(`
         Object {
-          "query": "query ($after: String, $first: Int, $before: String, $last: Int, $sort: [WidgetSort!], $filter: [WidgetFilter!], $search: String) { widget (after: $after, first: $first, before: $before, last: $last, sort: $sort, filter: $filter, search: $search) { pageInfo { hasNextPage, hasPreviousPage, startCursor, endCursor }, edges { cursor, node { __typename, id, name } } } gadgetMeta  { hydrations(modelName: \\"widget\\") } }",
+          "query": "query ($after: String, $first: Int, $before: String, $last: Int, $filter: [WidgetFilter!]) { widget (after: $after, first: $first, before: $before, last: $last, filter: $filter) { pageInfo { hasNextPage, hasPreviousPage, startCursor, endCursor }, edges { cursor, node { __typename, id, name } } } gadgetMeta  { hydrations(modelName: \\"widget\\") } }",
           "variables": Object {
             "after": undefined,
             "before": undefined,
@@ -103,8 +153,6 @@ describe("operation builders", () => {
             },
             "first": 2,
             "last": undefined,
-            "search": undefined,
-            "sort": undefined,
           },
         }
       `);
