@@ -110,9 +110,11 @@ export const getNonNullableError = (response: Result & { fetching: boolean }, da
   }
   const result = get(response.data, dataPath);
   if (result === undefined) {
-    return new GadgetInternalError(`Internal Error: Gadget API didn't return expected data. Nothing found in response at ${dataPath}`);
+    return new GadgetInternalError(
+      `Internal Error: Gadget API didn't return expected data. Nothing found in response at ${dataPath.join(".")}`
+    );
   } else if (result === null) {
-    return new GadgetInternalError(`Internal Error: Gadget API returned no data at ${dataPath}`);
+    return new GadgetInternalError(`Internal Error: Gadget API returned no data at ${dataPath.join(".")}`);
   }
 };
 

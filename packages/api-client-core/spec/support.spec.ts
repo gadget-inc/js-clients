@@ -1,6 +1,6 @@
 import { CombinedError } from "@urql/core";
 import { GraphQLError } from "graphql";
-import { assertOperationSuccess, GadgetOperationError } from "../src";
+import { assertNullableOperationSuccess, assertOperationSuccess, GadgetOperationError, getNonNullableError } from "../src";
 
 describe("support utilities", () => {
   describe("assertOperationSuccess", () => {
@@ -125,6 +125,33 @@ describe("support utilities", () => {
     });
   });
 
+  describe("assertNullableOperationSuccess", () => {
+    test("throws the operation error if there's a graphql error on the operation", () => {
+      expect(() =>
+        assertNullableOperationSuccess(
+          {
+            operation: null as any,
+            data: null,
+            error: new CombinedError({ graphQLErrors: [new GraphQLError("inner graphql error")] }),
+          },
+          ["foo", "bar"]
+        )
+      ).toThrowErrorMatchingInlineSnapshot(`"[GraphQL] inner graphql error"`);
+    });
+
+    test("returns null if data is missing", () => {
+      const result = assertNullableOperationSuccess(
+        {
+          operation: null as any,
+          data: undefined,
+          error: undefined,
+        },
+        ["foo", "bar"]
+      );
+      expect(result).toBeNull();
+    });
+  });
+
   describe("GagetOperationError", () => {
     test("adds the error code to messages that don't have it already", () => {
       const error = new GadgetOperationError("some message", "GGT_SOMETHING");
@@ -133,6 +160,25 @@ describe("support utilities", () => {
     test("doesn't add the error code to messages that have it already", () => {
       const error = new GadgetOperationError("GGT_SOMETHING: some message", "GGT_SOMETHING");
       expect(error.message).toEqual("GGT_SOMETHING: some message");
+    });
+  });
+
+  describe("getNonNullableError", () => {
+    test("returns an error if data is undefined", () => {
+      const error = getNonNullableError({ fetching: false, data: undefined }, ["foo"]);
+      expect(error?.message).toEqual("Internal Error: Gadget API didn't return expected data. Nothing found in response at foo");
+    });
+    test("returns an error if data is null", () => {
+      const error = getNonNullableError({ fetching: false, data: { foo: null } }, ["foo"]);
+      expect(error?.message).toEqual("Internal Error: Gadget API returned no data at foo");
+    });
+    test("returns void if fetch is in progress", () => {
+      const error = getNonNullableError({ fetching: true, data: null }, [""]);
+      expect(error).toBeUndefined();
+    });
+    test("returns void if data is valid", () => {
+      const error = getNonNullableError({ fetching: false, data: { foo: { bar: "valid" } } }, ["foo", "bar"]);
+      expect(error).toBeUndefined();
     });
   });
 });
