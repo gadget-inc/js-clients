@@ -83,31 +83,6 @@ export const internalFindManyQuery = (apiIdentifier: string) => {
     `;
 };
 
-export const internalFindFirstQuery = (apiIdentifier: string) => {
-  const capitalizedApiIdentifier = capitalize(apiIdentifier);
-  return `
-    query InternalFindFirst${capitalizedApiIdentifier}(
-      $search: String
-      $sort: [${capitalizedApiIdentifier}Sort!]
-      $filter: [${capitalizedApiIdentifier}Filter!]
-    ) {
-      ${internalHydrationPlan(apiIdentifier)}
-      internal {
-        list${capitalizedApiIdentifier}(
-          first: 1
-          search: $search
-          sort: $sort
-          filter: $filter
-        ) {
-          edges {
-            node
-          }
-        }
-      }
-    }
-    `;
-};
-
 export const internalCreateMutation = (apiIdentifier: string) => {
   const capitalizedApiIdentifier = capitalize(apiIdentifier);
   return `
@@ -220,21 +195,14 @@ export class InternalModelManager {
     return GadgetRecordList.boot(this, records, { options, pageInfo: connection.pageInfo });
   }
 
-  private async findFirstList(options?: Record<string, any>): Promise<GadgetRecordList<any>> {
-    const response = await this.connection.currentClient.query(internalFindFirstQuery(this.apiIdentifier), options).toPromise();
-    const connection = assertOperationSuccess(response, ["internal", `list${this.capitalizedApiIdentifier}`]);
-    const records = hydrateConnection(response, connection);
-    return GadgetRecordList.boot(this, records, { options, pageInfo: connection.pageInfo });
-  }
-
   async findFirst(options?: Record<string, any>): Promise<GadgetRecord<any>> {
-    const list = await this.findFirstList(options);
+    const list = await this.findMany(options);
     return list.firstOrThrow();
   }
 
   async maybeFindFirst(options?: Record<string, any>): Promise<GadgetRecord<any> | null> {
-    const list = await this.findFirstList(options);
-    return list.firstOrNull();
+    const list = await this.findMany(options);
+    return list[0] ?? null;
   }
 
   async create(record: RecordData): Promise<GadgetRecord<any>> {

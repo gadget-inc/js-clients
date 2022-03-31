@@ -104,23 +104,10 @@ export const findFirstOperation = (
   modelApiIdentifier: string,
   options?: FindFirstPaginationOptions
 ) => {
-  return query([
-    {
-      operation,
-      fields: [
-        {
-          edges: [{ node: fieldSelectionToGQLBuilderFields(options?.select || defaultSelection, true) }],
-        },
-      ],
-      variables: {
-        first: { value: 1, type: "Int" },
-        sort: { value: options?.sort, type: sortTypeName(modelApiIdentifier) + "!", list: true },
-        filter: { value: options?.filter, type: filterTypeName(modelApiIdentifier) + "!", list: true },
-        search: { value: options?.search, type: "String", required: false },
-      },
-    },
-    hydrationOptions(modelApiIdentifier),
-  ]);
+  return findManyOperation(operation, defaultSelection, modelApiIdentifier, {
+    ...options,
+    first: 1,
+  });
 };
 
 export const actionOperation = (

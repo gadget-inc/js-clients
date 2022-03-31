@@ -99,6 +99,11 @@ export const camelize = (term: string, uppercaseFirstLetter = true) => {
 export const sortTypeName = (modelApiIdentifier: string) => `${camelize(modelApiIdentifier)}Sort`;
 export const filterTypeName = (modelApiIdentifier: string) => `${camelize(modelApiIdentifier)}Filter`;
 
+export const getNonUniqueDataError = (modelApiIdentifier: string, fieldName: string, fieldValue: string) =>
+  new GadgetNonUniqueDataError(
+    `More than one record found for ${modelApiIdentifier}.${fieldName} = ${fieldValue}. Please confirm your unique validation is not reporting an error.`
+  );
+
 export const getNonNullableError = (response: Result & { fetching: boolean }, dataPath: string[]) => {
   if (response.fetching) {
     return;

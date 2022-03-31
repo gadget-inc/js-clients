@@ -4,7 +4,6 @@ import {
   FindFirstPaginationOptions,
   findManyOperation,
   findOneByFieldOperation,
-  GadgetNonUniqueDataError,
   globalActionOperation,
   VariableOptions,
 } from ".";
@@ -19,6 +18,7 @@ import {
   assertNullableOperationSuccess,
   assertOperationSuccess,
   get,
+  getNonUniqueDataError,
   hydrateConnection,
   hydrateRecord,
   hydrateRecordArray,
@@ -67,12 +67,27 @@ export const findOneByFieldRunner = async <Shape = any>(
   const records = hydrateConnection<Shape>(response, connectionObject);
 
   if (records.length > 1) {
-    throw new GadgetNonUniqueDataError(
-      `More than one record found for ${modelApiIdentifier}.${fieldName} = ${fieldValue}. Please confirm your unique validation is not reporting an error.`
-    );
+    throw getNonUniqueDataError(modelApiIdentifier, fieldName, fieldValue);
   }
 
   return records[0];
+};
+
+interface QueryPlan {
+  variables: any;
+  query: string;
+}
+
+const getRecordList = async <Shape = any, Plan extends QueryPlan = QueryPlan>(
+  modelManager: AnyModelManager,
+  operation: string,
+  plan: Plan,
+  options?: PaginationOptions
+) => {
+  const response = await modelManager.connection.currentClient.query(plan.query, plan.variables).toPromise();
+  const connectionObject = assertOperationSuccess(response, [operation]);
+  const records = hydrateConnection<Shape>(response, connectionObject);
+  return GadgetRecordList.boot<Shape>(modelManager, records, { options, pageInfo: connectionObject.pageInfo });
 };
 
 export const findManyRunner = async <Shape = any>(
@@ -83,24 +98,7 @@ export const findManyRunner = async <Shape = any>(
   options?: PaginationOptions
 ) => {
   const plan = findManyOperation(operation, defaultSelection, modelApiIdentifier, options);
-  const response = await modelManager.connection.currentClient.query(plan.query, plan.variables).toPromise();
-  const connectionObject = assertOperationSuccess(response, [operation]);
-  const records = hydrateConnection<Shape>(response, connectionObject);
-  return GadgetRecordList.boot<Shape>(modelManager, records, { options, pageInfo: connectionObject.pageInfo });
-};
-
-const getFindFirstList = async <Shape = any>(
-  modelManager: AnyModelManager,
-  operation: string,
-  defaultSelection: FieldSelection,
-  modelApiIdentifier: string,
-  options?: FindFirstPaginationOptions
-) => {
-  const plan = findFirstOperation(operation, defaultSelection, modelApiIdentifier, options);
-  const response = await modelManager.connection.currentClient.query(plan.query, plan.variables).toPromise();
-  const connectionObject = assertOperationSuccess(response, [operation]);
-  const records = hydrateConnection<Shape>(response, connectionObject);
-  return GadgetRecordList.boot<Shape>(modelManager, records, { options, pageInfo: connectionObject.pageInfo });
+  return await getRecordList<Shape>(modelManager, operation, plan, options);
 };
 
 export const findFirstRunner = async <Shape = any>(
@@ -110,7 +108,8 @@ export const findFirstRunner = async <Shape = any>(
   modelApiIdentifier: string,
   options?: FindFirstPaginationOptions
 ) => {
-  const list = await getFindFirstList<Shape>(modelManager, operation, defaultSelection, modelApiIdentifier, options);
+  const plan = findFirstOperation(operation, defaultSelection, modelApiIdentifier, options);
+  const list = await getRecordList<Shape>(modelManager, operation, plan, options);
   return list.firstOrThrow();
 };
 
@@ -121,8 +120,9 @@ export const maybeFindFirstRunner = async <Shape = any>(
   modelApiIdentifier: string,
   options?: FindFirstPaginationOptions
 ) => {
-  const list = await getFindFirstList<Shape>(modelManager, operation, defaultSelection, modelApiIdentifier, options);
-  return list.firstOrNull();
+  const plan = findFirstOperation(operation, defaultSelection, modelApiIdentifier, options);
+  const list = await getRecordList<Shape>(modelManager, operation, plan, options);
+  return list[0] ?? null;
 };
 
 export interface ActionRunner {

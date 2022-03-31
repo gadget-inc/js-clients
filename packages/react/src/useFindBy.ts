@@ -2,16 +2,17 @@ import {
   DefaultSelection,
   findOneByFieldOperation,
   FindOneFunction,
-  GadgetNonUniqueDataError,
   GadgetRecord,
   get,
   getNonNullableError,
+  getNonUniqueDataError,
   hydrateConnection,
   LimitToKnownKeys,
   Select,
 } from "@gadgetinc/api-client-core";
 import { useMemo } from "react";
 import { CombinedError, useQuery, UseQueryArgs, UseQueryResponse } from "urql";
+import { getQueryArgs } from "./helpers";
 import { OptionsType } from "./OptionsType";
 import { useStructuralMemo } from "./useStructuralMemo";
 
@@ -62,19 +63,13 @@ export const useFindBy = <
     );
   }, [finder, value, memoizedOptions]);
 
-  const [result, refresh] = useQuery({
-    query: plan.query,
-    variables: plan.variables,
-    context: options?.context,
-    pause: options?.pause,
-    requestPolicy: options?.requestPolicy,
-  });
+  const [result, refresh] = useQuery(getQueryArgs(plan, options));
 
   const dataPath = [finder.operationName];
   let records = [];
   let data = result.data;
   if (data) {
-    const connection = get(result.data, [finder.operationName]);
+    const connection = get(result.data, dataPath);
     if (connection) {
       records = hydrateConnection(result, connection);
       data = records[0];
@@ -82,20 +77,18 @@ export const useFindBy = <
   }
 
   let error = result.error;
-  if (!error && records.length > 1) {
-    error = new CombinedError({
-      graphQLErrors: [
-        new GadgetNonUniqueDataError(
-          `More than one record found for ${finder.modelApiIdentifier}.${finder.findByVariableName} = ${value}. Please confirm your unique validation is not reporting an error.`
-        ),
-      ],
-    });
-  }
-  const nonNullableError = getNonNullableError(result, dataPath);
-  if (!error && nonNullableError) {
-    error = new CombinedError({
-      graphQLErrors: [nonNullableError],
-    });
+  if (!error) {
+    const nonNullableError = getNonNullableError(result, dataPath);
+
+    if (records.length > 1) {
+      error = new CombinedError({
+        graphQLErrors: [getNonUniqueDataError(finder.modelApiIdentifier, finder.findByVariableName, value)],
+      });
+    } else if (nonNullableError) {
+      error = new CombinedError({
+        graphQLErrors: [nonNullableError],
+      });
+    }
   }
 
   return [{ ...result, error, data }, refresh];
