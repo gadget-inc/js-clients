@@ -4,19 +4,18 @@ import {
   findOneOperation,
   GadgetRecord,
   get,
-  getNonNullableError,
   getQueryArgs,
   hydrateRecord,
   LimitToKnownKeys,
   Select,
 } from "@gadgetinc/api-client-core";
 import { useMemo } from "react";
-import { CombinedError, useQuery, UseQueryArgs, UseQueryResponse } from "urql";
+import { useQuery, UseQueryArgs, UseQueryResponse } from "urql";
 import { OptionsType } from "./OptionsType";
 import { useStructuralMemo } from "./useStructuralMemo";
 
 /**
- * React hook to fetch a Gadget record using the `findOne` method of a given manager.
+ * React hook to fetch a Gadget record using the `maybeFindOne` method of a given manager.
  *
  * @param manager Gadget model manager to use
  * @param id id of the record to fetch
@@ -25,7 +24,7 @@ import { useStructuralMemo } from "./useStructuralMemo";
  * @example
  * ```
  * export function User(props: { id: string }) {
- *   const [result, refresh] = useFindOne(Client.user, props.id, {
+ *   const [result, refresh] = useMaybeFindOne(Client.user, props.id, {
  *     select: {
  *       name: true,
  *     },
@@ -39,7 +38,7 @@ import { useStructuralMemo } from "./useStructuralMemo";
  * }
  * ```
  */
-export const useFindOne = <
+export const useMaybeFindOne = <
   GivenOptions extends OptionsType, // currently necessary for Options to be a narrow type (e.g., `true` instead of `boolean`)
   SchemaT,
   F extends FindOneFunction<GivenOptions, any, SchemaT, any>,
@@ -48,9 +47,9 @@ export const useFindOne = <
   manager: { findOne: F },
   id: string,
   options?: LimitToKnownKeys<Options, F["optionsType"] & Omit<UseQueryArgs, "query" | "variables">>
-): UseQueryResponse<
-  GadgetRecord<Select<Exclude<F["schemaType"], null | undefined>, DefaultSelection<F["selectionType"], Options, F["defaultSelection"]>>>
-> => {
+): UseQueryResponse<null | GadgetRecord<
+  Select<Exclude<F["schemaType"], null | undefined>, DefaultSelection<F["selectionType"], Options, F["defaultSelection"]>>
+>> => {
   const memoizedOptions = useStructuralMemo(options);
   const plan = useMemo(() => {
     return findOneOperation(
@@ -64,19 +63,17 @@ export const useFindOne = <
 
   const [result, refresh] = useQuery(getQueryArgs(plan, options));
 
-  const dataPath = [manager.findOne.operationName];
-  let data = result.data;
+  let data = result.data ?? null;
   if (data) {
-    data = hydrateRecord(result, get(result.data, dataPath));
+    const value = get(result.data, [manager.findOne.operationName]);
+    data = value ? hydrateRecord(result, value) : null;
   }
 
-  const nonNullableError = getNonNullableError(result, dataPath);
-  let error = result.error;
-  if (!error && nonNullableError) {
-    error = new CombinedError({
-      graphQLErrors: [nonNullableError],
-    });
-  }
-
-  return [{ ...result, data, error }, refresh];
+  return [
+    {
+      ...result,
+      data,
+    },
+    refresh,
+  ];
 };

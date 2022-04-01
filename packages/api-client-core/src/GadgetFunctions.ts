@@ -1,6 +1,7 @@
 import { GadgetRecord, GadgetRecordList, LimitToKnownKeys, VariableOptions } from ".";
 
 export type AsyncRecord<T> = Promise<GadgetRecord<T>>;
+export type AsyncNullableRecord<T> = Promise<GadgetRecord<T> | null>;
 export type AsyncRecordList<T> = Promise<GadgetRecordList<T>>;
 
 export interface FindOneFunction<OptionsT, SelectionT, SchemaT, DefaultsT> {
@@ -16,10 +17,47 @@ export interface FindOneFunction<OptionsT, SelectionT, SchemaT, DefaultsT> {
   schemaType: SchemaT | null;
 }
 
+export interface MaybeFindOneFunction<OptionsT, SelectionT, SchemaT, DefaultsT> {
+  <Options extends OptionsT>(fieldValue: string, options?: LimitToKnownKeys<Options, OptionsT>): AsyncNullableRecord<any>;
+
+  type: "maybeFindOne";
+  findByVariableName: string;
+  operationName: string;
+  modelApiIdentifier: string;
+  defaultSelection: DefaultsT;
+  selectionType: SelectionT;
+  optionsType: OptionsT;
+  schemaType: SchemaT | null;
+}
+
 export interface FindManyFunction<OptionsT, SelectionT, SchemaT, DefaultsT> {
   <Options extends OptionsT>(options?: LimitToKnownKeys<Options, OptionsT>): AsyncRecordList<any>;
 
   type: "findMany";
+  operationName: string;
+  modelApiIdentifier: string;
+  defaultSelection: DefaultsT;
+  selectionType: SelectionT;
+  optionsType: OptionsT;
+  schemaType: SchemaT | null;
+}
+
+export interface FindFirstFunction<OptionsT, SelectionT, SchemaT, DefaultsT> {
+  <Options extends OptionsT>(options?: LimitToKnownKeys<Options, OptionsT>): AsyncRecord<any>;
+
+  type: "findFirst";
+  operationName: string;
+  modelApiIdentifier: string;
+  defaultSelection: DefaultsT;
+  selectionType: SelectionT;
+  optionsType: OptionsT;
+  schemaType: SchemaT | null;
+}
+
+export interface MaybeFindFirstFunction<OptionsT, SelectionT, SchemaT, DefaultsT> {
+  <Options extends OptionsT>(options?: LimitToKnownKeys<Options, OptionsT>): AsyncNullableRecord<any>;
+
+  type: "maybeFindFirst";
   operationName: string;
   modelApiIdentifier: string;
   defaultSelection: DefaultsT;

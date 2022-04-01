@@ -1,6 +1,6 @@
 import {
   DefaultSelection,
-  FindManyFunction,
+  FindFirstFunction,
   findManyOperation,
   GadgetRecord,
   get,
@@ -16,7 +16,7 @@ import { OptionsType } from "./OptionsType";
 import { useStructuralMemo } from "./useStructuralMemo";
 
 /**
- * React hook to fetch many Gadget records using the `findMany` method of a given manager.
+ * React hook to fetch many Gadget records using the `findFirst` method of a given manager.
  *
  * @param manager Gadget model manager to use
  * @param options options for filtering and searching records, and selecting the fields in each record of the result
@@ -25,7 +25,7 @@ import { useStructuralMemo } from "./useStructuralMemo";
  *
  * ```
  * export function Users() {
- *   const [result, refresh] = useFindMany(Client.user, {
+ *   const [result, refresh] = useFindFirst(Client.user, {
  *     select: {
  *       name: true,
  *     },
@@ -33,41 +33,44 @@ import { useStructuralMemo } from "./useStructuralMemo";
  *
  *   if (result.error) return <>Error: {result.error.toString()}</>;
  *   if (result.fetching && !result.data) return <>Fetching...</>;
- *   if (!result.data) return <>No users found</>;
+ *   if (!result.data) return <>No user found</>;
  *
- *   return <>{result.data.map((user) => <div>{user.name}</div>)}</>;
+ *   return <div>{result.data.name}</div>;
  * }
  * ```
  */
-export const useFindMany = <
+export const useFindFirst = <
   GivenOptions extends OptionsType, // currently necessary for Options to be a narrow type (e.g., `true` instead of `boolean`)
   SchemaT,
-  F extends FindManyFunction<GivenOptions, any, SchemaT, any>,
+  F extends FindFirstFunction<GivenOptions, any, SchemaT, any>,
   Options extends F["optionsType"] & Omit<UseQueryArgs, "query" | "variables">
 >(
-  manager: { findMany: F },
+  manager: { findFirst: F },
   options?: LimitToKnownKeys<Options, F["optionsType"]> & Omit<UseQueryArgs, "query" | "variables">
 ): UseQueryResponse<
-  GadgetRecord<Select<Exclude<F["schemaType"], null | undefined>, DefaultSelection<F["selectionType"], Options, F["defaultSelection"]>>>[]
+  GadgetRecord<Select<Exclude<F["schemaType"], null | undefined>, DefaultSelection<F["selectionType"], Options, F["defaultSelection"]>>>
 > => {
-  const memoizedOptions = useStructuralMemo(options);
+  const firstOptions = { ...options, first: 1 };
+  const memoizedOptions = useStructuralMemo(firstOptions);
   const plan = useMemo(() => {
     return findManyOperation(
-      manager.findMany.operationName,
-      manager.findMany.defaultSelection,
-      manager.findMany.modelApiIdentifier,
+      manager.findFirst.operationName,
+      manager.findFirst.defaultSelection,
+      manager.findFirst.modelApiIdentifier,
       memoizedOptions
     );
   }, [manager, memoizedOptions]);
 
-  const [result, refresh] = useQuery(getQueryArgs(plan, options));
+  const [result, refresh] = useQuery(getQueryArgs(plan, firstOptions));
 
-  const dataPath = [manager.findMany.operationName];
+  const dataPath = [manager.findFirst.operationName];
   let data = result.data;
   if (data) {
     const connection = get(result.data, dataPath);
     if (connection) {
-      data = hydrateConnection(result, connection);
+      data = hydrateConnection(result, connection)[0];
+    } else {
+      data = data[0];
     }
   }
 

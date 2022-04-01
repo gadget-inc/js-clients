@@ -8,5 +8,8 @@ import { GadgetRecordList } from "./GadgetRecordList";
 export interface AnyModelManager {
   connection: GadgetConnection;
   findOne(id: string, options: any): Promise<GadgetRecord<any>>;
+  maybeFindOne(id: string, options: any): Promise<GadgetRecord<any> | null>;
   findMany(options: any): Promise<GadgetRecordList<any>>;
+  findFirst(options: any): Promise<GadgetRecord<any>>;
+  maybeFindFirst(options: any): Promise<GadgetRecord<any> | null>;
 }

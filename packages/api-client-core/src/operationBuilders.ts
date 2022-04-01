@@ -27,6 +27,8 @@ export type PaginationOptions = {
   last?: number | null;
 } & SelectionOptions;
 
+export type FindFirstPaginationOptions = Omit<PaginationOptions, "first" | "last" | "before" | "after">;
+
 export const findOneOperation = (
   operation: string,
   id: string | undefined,

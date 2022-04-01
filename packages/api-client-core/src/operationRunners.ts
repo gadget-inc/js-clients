@@ -1,18 +1,20 @@
-import {
-  actionOperation,
-  findManyOperation,
-  findOneByFieldOperation,
-  GadgetNonUniqueDataError,
-  globalActionOperation,
-  VariableOptions,
-} from ".";
+import { actionOperation, findManyOperation, findOneByFieldOperation, globalActionOperation, VariableOptions } from ".";
 import { FieldSelection } from "./FieldSelection";
 import { GadgetConnection } from "./GadgetConnection";
 import { GadgetRecord } from "./GadgetRecord";
 import { GadgetRecordList } from "./GadgetRecordList";
 import { AnyModelManager } from "./ModelManager";
 import { findOneOperation, PaginationOptions, SelectionOptions } from "./operationBuilders";
-import { assertMutationSuccess, assertOperationSuccess, get, hydrateConnection, hydrateRecord, hydrateRecordArray } from "./support";
+import {
+  assertMutationSuccess,
+  assertNullableOperationSuccess,
+  assertOperationSuccess,
+  get,
+  getNonUniqueDataError,
+  hydrateConnection,
+  hydrateRecord,
+  hydrateRecordArray,
+} from "./support";
 
 export const findOneRunner = async <Shape = any>(
   modelManager: { connection: GadgetConnection },
@@ -20,11 +22,13 @@ export const findOneRunner = async <Shape = any>(
   id: string | undefined,
   defaultSelection: FieldSelection,
   modelApiIdentifier: string,
-  options?: SelectionOptions | null
+  options?: SelectionOptions | null,
+  throwOnEmptyData = true
 ) => {
   const plan = findOneOperation(operation, id, defaultSelection, modelApiIdentifier, options);
   const response = await modelManager.connection.currentClient.query(plan.query, plan.variables).toPromise();
-  const record = assertOperationSuccess(response, [operation]);
+  const assertSuccess = throwOnEmptyData ? assertOperationSuccess : assertNullableOperationSuccess;
+  const record = assertSuccess(response, [operation]);
   return hydrateRecord<Shape>(response, record);
 };
 
@@ -43,9 +47,7 @@ export const findOneByFieldRunner = async <Shape = any>(
   const records = hydrateConnection<Shape>(response, connectionObject);
 
   if (records.length > 1) {
-    throw new GadgetNonUniqueDataError(
-      `More than one record found for ${modelApiIdentifier}.${fieldName} = ${fieldValue}. Please confirm your unique validation is not reporting an error.`
-    );
+    throw getNonUniqueDataError(modelApiIdentifier, fieldName, fieldValue);
   }
 
   return records[0];
@@ -56,11 +58,13 @@ export const findManyRunner = async <Shape = any>(
   operation: string,
   defaultSelection: FieldSelection,
   modelApiIdentifier: string,
-  options?: PaginationOptions
+  options?: PaginationOptions,
+  throwOnEmptyData = true
 ) => {
   const plan = findManyOperation(operation, defaultSelection, modelApiIdentifier, options);
   const response = await modelManager.connection.currentClient.query(plan.query, plan.variables).toPromise();
-  const connectionObject = assertOperationSuccess(response, [operation]);
+  const assertSuccess = throwOnEmptyData ? assertOperationSuccess : assertNullableOperationSuccess;
+  const connectionObject = assertSuccess(response, [operation]);
   const records = hydrateConnection<Shape>(response, connectionObject);
   return GadgetRecordList.boot<Shape>(modelManager, records, { options, pageInfo: connectionObject.pageInfo });
 };

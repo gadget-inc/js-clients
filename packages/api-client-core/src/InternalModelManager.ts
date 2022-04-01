@@ -2,7 +2,16 @@ import { GadgetConnection } from "./GadgetConnection";
 import { GadgetRecord } from "./GadgetRecord";
 import { GadgetRecordList } from "./GadgetRecordList";
 import { GadgetTransaction } from "./GadgetTransaction";
-import { assert, assertMutationSuccess, assertOperationSuccess, camelize, capitalize, hydrateConnection, hydrateRecord } from "./support";
+import {
+  assert,
+  assertMutationSuccess,
+  assertNullableOperationSuccess,
+  assertOperationSuccess,
+  camelize,
+  capitalize,
+  hydrateConnection,
+  hydrateRecord,
+} from "./support";
 
 const internalErrorsDetails = `
 fragment InternalErrorsDetails on ExecutionError {
@@ -35,14 +44,19 @@ export const internalFindOneQuery = (apiIdentifier: string) => {
     `;
 };
 
-export const internalFindManyQuery = (apiIdentifier: string) => {
+export const internalFindManyQuery = (apiIdentifier: string, isFirstQuery = false) => {
   const capitalizedApiIdentifier = capitalize(apiIdentifier);
   return `
     query InternalFindMany${capitalizedApiIdentifier}(
+      ${
+        isFirstQuery
+          ? ""
+          : `
       $after: String
       $before: String
       $first: Int
-      $last: Int
+      $last: Int`
+      }
       $search: String
       $sort: [${capitalizedApiIdentifier}Sort!]
       $filter: [${capitalizedApiIdentifier}Filter!]
@@ -50,23 +64,35 @@ export const internalFindManyQuery = (apiIdentifier: string) => {
       ${internalHydrationPlan(apiIdentifier)}
       internal {
         list${capitalizedApiIdentifier}(
+          ${
+            isFirstQuery
+              ? `
+          first: 1`
+              : `
           after: $after
           before: $before
           first: $first
           last: $last
+          `
+          }    
           search: $search
           sort: $sort
           filter: $filter
         ) {
           edges {
-            cursor
+            ${isFirstQuery ? "" : "cursor"}
             node
           }
+          ${
+            isFirstQuery
+              ? ""
+              : `
           pageInfo {
             hasNextPage
             hasPreviousPage
             startCursor
             endCursor
+          }`
           }
         }
       }
@@ -167,17 +193,36 @@ export class InternalModelManager {
     this.capitalizedApiIdentifier = camelize(apiIdentifier);
   }
 
-  async findOne(id: string): Promise<GadgetRecord<any>> {
+  async findOne(id: string, throwOnEmptyData = true): Promise<GadgetRecord<any>> {
     const response = await this.connection.currentClient.query(internalFindOneQuery(this.apiIdentifier), { id }).toPromise();
-    const result = assertOperationSuccess(response, ["internal", this.apiIdentifier]);
+    const assertSuccess = throwOnEmptyData ? assertOperationSuccess : assertNullableOperationSuccess;
+    const result = assertSuccess(response, ["internal", this.apiIdentifier]);
     return hydrateRecord(response, result);
   }
 
-  async findMany(options?: Record<string, any>): Promise<GadgetRecordList<any>> {
-    const response = await this.connection.currentClient.query(internalFindManyQuery(this.apiIdentifier), options).toPromise();
-    const connection = assertOperationSuccess(response, ["internal", `list${this.capitalizedApiIdentifier}`]);
+  async maybeFindOne(id: string): Promise<GadgetRecord<any> | null> {
+    const list = await this.findOne(id, false);
+    return list[0] ?? null;
+  }
+
+  async findMany(options?: Record<string, any>, throwOnEmptyData = true, isFirstQuery = false): Promise<GadgetRecordList<any>> {
+    const response = await this.connection.currentClient
+      .query(internalFindManyQuery(this.apiIdentifier, isFirstQuery), options)
+      .toPromise();
+    const assertSuccess = throwOnEmptyData ? assertOperationSuccess : assertNullableOperationSuccess;
+    const connection = assertSuccess(response, ["internal", `list${this.capitalizedApiIdentifier}`]);
     const records = hydrateConnection(response, connection);
     return GadgetRecordList.boot(this, records, { options, pageInfo: connection.pageInfo });
+  }
+
+  async findFirst(options?: Record<string, any>): Promise<GadgetRecord<any>> {
+    const list = await this.findMany({ ...options, first: 1, last: undefined, before: undefined, after: undefined }, true, true);
+    return list[0];
+  }
+
+  async maybeFindFirst(options?: Record<string, any>): Promise<GadgetRecord<any> | null> {
+    const list = await this.findMany({ ...options, first: 1, last: undefined, before: undefined, after: undefined }, false, true);
+    return list[0] ?? null;
   }
 
   async create(record: RecordData): Promise<GadgetRecord<any>> {

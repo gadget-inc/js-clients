@@ -1,5 +1,5 @@
 import { context, SpanOptions, SpanStatusCode, trace } from "@opentelemetry/api";
-import { CombinedError, OperationResult } from "@urql/core";
+import { CombinedError, OperationContext, OperationResult, RequestPolicy } from "@urql/core";
 import { DataHydrator } from "./DataHydrator";
 import { GadgetRecord } from "./GadgetRecord";
 
@@ -99,6 +99,25 @@ export const camelize = (term: string, uppercaseFirstLetter = true) => {
 export const sortTypeName = (modelApiIdentifier: string) => `${camelize(modelApiIdentifier)}Sort`;
 export const filterTypeName = (modelApiIdentifier: string) => `${camelize(modelApiIdentifier)}Filter`;
 
+export const getNonUniqueDataError = (modelApiIdentifier: string, fieldName: string, fieldValue: string) =>
+  new GadgetNonUniqueDataError(
+    `More than one record found for ${modelApiIdentifier}.${fieldName} = ${fieldValue}. Please confirm your unique validation is not reporting an error.`
+  );
+
+export const getNonNullableError = (response: Result & { fetching: boolean }, dataPath: string[]) => {
+  if (response.fetching) {
+    return;
+  }
+  const result = get(response.data, dataPath);
+  if (result === undefined) {
+    return new GadgetInternalError(
+      `Internal Error: Gadget API didn't return expected data. Nothing found in response at ${dataPath.join(".")}`
+    );
+  } else if (result === null) {
+    return new GadgetInternalError(`Internal Error: Gadget API returned no data at ${dataPath.join(".")}`);
+  }
+};
+
 export const assertOperationSuccess = (response: OperationResult<any>, dataPath: string[]) => {
   if (response.error) {
     if (response.error instanceof CombinedError && (response.error.networkError as any as Error[])?.length) {
@@ -109,12 +128,26 @@ export const assertOperationSuccess = (response: OperationResult<any>, dataPath:
 
   const result = get(response.data, dataPath);
   if (result === undefined) {
-    throw new GadgetInternalError(`Internal Error: Gadget API didn't return expected data. Nothing found in response at ${dataPath}`);
+    throw new GadgetInternalError(
+      `Internal Error: Gadget API didn't return expected data. Nothing found in response at ${dataPath.join(".")}`
+    );
   } else if (result === null) {
-    throw new GadgetInternalError(`Internal Error: Gadget API returned no data at ${dataPath}`);
+    throw new GadgetInternalError(`Internal Error: Gadget API returned no data at ${dataPath.join(".")}`);
   }
 
   return result;
+};
+
+export const assertNullableOperationSuccess = (response: OperationResult<any>, dataPath: string[]) => {
+  if (response.error) {
+    if (response.error instanceof CombinedError && (response.error.networkError as any as Error[])?.length) {
+      response.error.message = (response.error.networkError as any as Error[]).map((error) => "[Network] " + error.message).join("\n");
+    }
+    throw response.error;
+  }
+
+  const result = get(response.data, dataPath);
+  return result ?? null;
 };
 
 export const gadgetErrorFor = (error: Record<string, any>) => {
@@ -236,3 +269,23 @@ export const traceFunction = <T extends (...args: any[]) => any>(name: string, f
     });
   } as T;
 };
+
+interface QueryPlan {
+  variables: any;
+  query: string;
+}
+
+interface QueryOptions {
+  context?: Partial<OperationContext>;
+  pause?: boolean;
+  requestPolicy?: RequestPolicy;
+}
+
+/** Generate `urql` query argument object, for `useQuery` hook */
+export const getQueryArgs = <Plan extends QueryPlan, Options extends QueryOptions>(plan: Plan, options?: Options) => ({
+  query: plan.query,
+  variables: plan.variables,
+  context: options?.context,
+  pause: options?.pause,
+  requestPolicy: options?.requestPolicy,
+});
