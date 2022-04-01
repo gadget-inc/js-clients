@@ -46,8 +46,9 @@ export const internalFindOneQuery = (apiIdentifier: string) => {
 
 export const internalFindManyQuery = (apiIdentifier: string, isFirstQuery = false) => {
   const capitalizedApiIdentifier = capitalize(apiIdentifier);
+  const namePrefix = isFirstQuery ? "InternalFindFirst" : "InternalFindMany";
   return `
-    query InternalFindMany${capitalizedApiIdentifier}(
+    query ${namePrefix}${capitalizedApiIdentifier}(
       ${
         isFirstQuery
           ? ""
