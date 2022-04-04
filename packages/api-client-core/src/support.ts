@@ -104,7 +104,7 @@ export const getNonUniqueDataError = (modelApiIdentifier: string, fieldName: str
     `More than one record found for ${modelApiIdentifier}.${fieldName} = ${fieldValue}. Please confirm your unique validation is not reporting an error.`
   );
 
-export const getNonNullableError = (response: Result & { fetching: boolean }, dataPath: string[], throwOnEmptyData = true) => {
+export const getNonNullableError = (response: Result & { fetching: boolean }, dataPath: string[], throwOnEmptyData = false) => {
   if (response.fetching) {
     return;
   }
@@ -120,7 +120,7 @@ export const getNonNullableError = (response: Result & { fetching: boolean }, da
   }
 };
 
-export const assertOperationSuccess = (response: OperationResult<any>, dataPath: string[], throwOnEmptyData = true) => {
+export const assertOperationSuccess = (response: OperationResult<any>, dataPath: string[], throwOnEmptyData = false) => {
   if (response.error) {
     if (response.error instanceof CombinedError && (response.error.networkError as any as Error[])?.length) {
       response.error.message = (response.error.networkError as any as Error[]).map((error) => "[Network] " + error.message).join("\n");
