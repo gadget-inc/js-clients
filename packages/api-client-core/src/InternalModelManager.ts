@@ -202,8 +202,8 @@ export class InternalModelManager {
   }
 
   async maybeFindOne(id: string): Promise<GadgetRecord<any> | null> {
-    const list = await this.findOne(id, false);
-    return list[0] ?? null;
+    const record = await this.findOne(id, false);
+    return record ?? null;
   }
 
   async findMany(options?: Record<string, any>, throwOnEmptyData = true, isFirstQuery = false): Promise<GadgetRecordList<any>> {
