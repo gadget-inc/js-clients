@@ -206,12 +206,21 @@ export class InternalModelManager {
     return record ?? null;
   }
 
-  async findMany(options?: Record<string, any>, throwOnEmptyData = true, isFirstQuery = false): Promise<GadgetRecordList<any>> {
+  async findMany(options?: Record<string, any>, throwOnEmptyData?: boolean, isFirstQuery = false): Promise<GadgetRecordList<any>> {
     const response = await this.connection.currentClient
       .query(internalFindManyQuery(this.apiIdentifier, isFirstQuery), options)
       .toPromise();
-    const assertSuccess = throwOnEmptyData ? assertOperationSuccess : assertNullableOperationSuccess;
-    const connection = assertSuccess(response, ["internal", `list${this.capitalizedApiIdentifier}`]);
+
+    let connection;
+    if (throwOnEmptyData === false) {
+      // If this is a nullable operation, don't throw errors on empty
+      connection = assertNullableOperationSuccess(response, ["internal", `list${this.capitalizedApiIdentifier}`]);
+    } else {
+      // Otherwise, passthrough the `throwOnEmptyData` flag, to account for
+      // `findMany` (allows empty arrays) vs `findFirst` (no empty result) usage.
+      connection = assertOperationSuccess(response, ["internal", `list${this.capitalizedApiIdentifier}`], throwOnEmptyData);
+    }
+
     const records = hydrateConnection(response, connection);
     return GadgetRecordList.boot(this, records, { options, pageInfo: connection.pageInfo });
   }

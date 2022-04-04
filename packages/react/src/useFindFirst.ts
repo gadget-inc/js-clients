@@ -74,7 +74,7 @@ export const useFindFirst = <
     }
   }
 
-  const nonNullableError = getNonNullableError(result, dataPath);
+  const nonNullableError = getNonNullableError(result, dataPath, true);
   let error = result.error;
   if (!error && nonNullableError) {
     error = new CombinedError({
