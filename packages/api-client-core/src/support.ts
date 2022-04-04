@@ -104,21 +104,23 @@ export const getNonUniqueDataError = (modelApiIdentifier: string, fieldName: str
     `More than one record found for ${modelApiIdentifier}.${fieldName} = ${fieldValue}. Please confirm your unique validation is not reporting an error.`
   );
 
-export const getNonNullableError = (response: Result & { fetching: boolean }, dataPath: string[]) => {
+export const getNonNullableError = (response: Result & { fetching: boolean }, dataPath: string[], throwOnEmptyData = true) => {
   if (response.fetching) {
     return;
   }
   const result = get(response.data, dataPath);
+  const edges = get(result, ["edges"]);
+  const dataArray = edges ?? result;
   if (result === undefined) {
     return new GadgetInternalError(
       `Internal Error: Gadget API didn't return expected data. Nothing found in response at ${dataPath.join(".")}`
     );
-  } else if (result === null) {
+  } else if (result === null || (throwOnEmptyData && Array.isArray(dataArray) && dataArray.length === 0)) {
     return new GadgetInternalError(`Internal Error: Gadget API returned no data at ${dataPath.join(".")}`);
   }
 };
 
-export const assertOperationSuccess = (response: OperationResult<any>, dataPath: string[]) => {
+export const assertOperationSuccess = (response: OperationResult<any>, dataPath: string[], throwOnEmptyData = true) => {
   if (response.error) {
     if (response.error instanceof CombinedError && (response.error.networkError as any as Error[])?.length) {
       response.error.message = (response.error.networkError as any as Error[]).map((error) => "[Network] " + error.message).join("\n");
@@ -127,11 +129,13 @@ export const assertOperationSuccess = (response: OperationResult<any>, dataPath:
   }
 
   const result = get(response.data, dataPath);
+  const edges = get(result, ["edges"]);
+  const dataArray = edges ?? result;
   if (result === undefined) {
     throw new GadgetInternalError(
       `Internal Error: Gadget API didn't return expected data. Nothing found in response at ${dataPath.join(".")}`
     );
-  } else if (result === null) {
+  } else if (result === null || (throwOnEmptyData && Array.isArray(dataArray) && dataArray.length === 0)) {
     throw new GadgetInternalError(`Internal Error: Gadget API returned no data at ${dataPath.join(".")}`);
   }
 

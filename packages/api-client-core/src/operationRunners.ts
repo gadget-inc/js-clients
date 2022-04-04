@@ -59,12 +59,21 @@ export const findManyRunner = async <Shape = any>(
   defaultSelection: FieldSelection,
   modelApiIdentifier: string,
   options?: PaginationOptions,
-  throwOnEmptyData = true
+  throwOnEmptyData?: boolean
 ) => {
   const plan = findManyOperation(operation, defaultSelection, modelApiIdentifier, options);
   const response = await modelManager.connection.currentClient.query(plan.query, plan.variables).toPromise();
-  const assertSuccess = throwOnEmptyData ? assertOperationSuccess : assertNullableOperationSuccess;
-  const connectionObject = assertSuccess(response, [operation]);
+
+  let connectionObject;
+  if (throwOnEmptyData === false) {
+    // If this is a nullable operation, don't throw errors on empty
+    connectionObject = assertNullableOperationSuccess(response, [operation]);
+  } else {
+    // Otherwise, passthrough the `throwOnEmptyData` flag, to account for
+    // `findMany` (allows empty arrays) vs `findFirst` (no empty result) usage.
+    connectionObject = assertOperationSuccess(response, [operation], throwOnEmptyData);
+  }
+
   const records = hydrateConnection<Shape>(response, connectionObject);
   return GadgetRecordList.boot<Shape>(modelManager, records, { options, pageInfo: connectionObject.pageInfo });
 };
