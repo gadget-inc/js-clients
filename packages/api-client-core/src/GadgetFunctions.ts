@@ -1,8 +1,8 @@
-import { GadgetRecord, GadgetRecordList, LimitToKnownKeys, VariableOptions } from ".";
+import { GadgetRecord, GadgetRecordList, LimitToKnownKeys, RecordShape, VariableOptions } from ".";
 
-export type AsyncRecord<T> = Promise<GadgetRecord<T>>;
-export type AsyncNullableRecord<T> = Promise<GadgetRecord<T> | null>;
-export type AsyncRecordList<T> = Promise<GadgetRecordList<T>>;
+export type AsyncRecord<T extends RecordShape> = Promise<GadgetRecord<T>>;
+export type AsyncNullableRecord<T extends RecordShape> = Promise<GadgetRecord<T> | null>;
+export type AsyncRecordList<T extends RecordShape> = Promise<GadgetRecordList<T>>;
 
 export interface FindOneFunction<OptionsT, SelectionT, SchemaT, DefaultsT> {
   <Options extends OptionsT>(fieldValue: string, options?: LimitToKnownKeys<Options, OptionsT>): AsyncRecord<any>;

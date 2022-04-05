@@ -7,8 +7,10 @@ export enum ChangeTracking {
   SinceLastPersisted,
 }
 
+export type RecordShape = Record<string, any> | null | undefined | void;
+
 /** Represents one record returned from a high level Gadget API call */
-export class GadgetRecordImplementation<Shape> {
+export class GadgetRecordImplementation<Shape extends RecordShape> {
   private __gadget = {
     fields: {} as any,
     instantiatedFields: {} as any,
@@ -130,5 +132,6 @@ export class GadgetRecordImplementation<Shape> {
  */
 
 /** Instantiate a `GadgetRecord` with the attributes of your model. A `GadgetRecord` can be used to track changes to your model and persist those changes via Gadget actions. */
-export const GadgetRecord: new <Shape>(data: Shape) => GadgetRecordImplementation<Shape> & Shape = GadgetRecordImplementation as any;
-export type GadgetRecord<Shape> = GadgetRecordImplementation<Shape> & Shape;
+export const GadgetRecord: new <Shape extends RecordShape>(data: Shape) => GadgetRecordImplementation<Shape> & Shape =
+  GadgetRecordImplementation as any;
+export type GadgetRecord<Shape extends RecordShape> = GadgetRecordImplementation<Shape> & Shape;
