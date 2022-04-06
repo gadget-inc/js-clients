@@ -194,21 +194,19 @@ export class InternalModelManager {
     this.capitalizedApiIdentifier = camelize(apiIdentifier);
   }
 
-  async findOne(id: string, throwOnEmptyData: true): Promise<GadgetRecord<RecordShape>>;
-  async findOne(id: string, throwOnEmptyData: false): Promise<GadgetRecord<RecordShape> | null>;
-  async findOne(id: string, throwOnEmptyData = true): Promise<GadgetRecord<RecordShape> | null> {
+  async findOne(id: string, throwOnEmptyData = true): Promise<GadgetRecord<RecordData>> {
     const response = await this.connection.currentClient.query(internalFindOneQuery(this.apiIdentifier), { id }).toPromise();
     const assertSuccess = throwOnEmptyData ? assertOperationSuccess : assertNullableOperationSuccess;
     const result = assertSuccess(response, ["internal", this.apiIdentifier]);
-    return result ? hydrateRecord<RecordShape>(response, result) : null;
+    return await hydrateRecord(response, result);
   }
 
-  async maybeFindOne(id: string): Promise<GadgetRecord<RecordShape> | null> {
+  async maybeFindOne(id: string): Promise<GadgetRecord<RecordData> | null> {
     const record = await this.findOne(id, false);
-    return record ?? null;
+    return record.isEmpty() ? null : record;
   }
 
-  async findMany(options?: Record<string, any>, throwOnEmptyData?: boolean, isFirstQuery = false): Promise<GadgetRecordList<any>> {
+  async findMany(options?: RecordData, throwOnEmptyData?: boolean, isFirstQuery = false): Promise<GadgetRecordList<any>> {
     const response = await this.connection.currentClient
       .query(internalFindManyQuery(this.apiIdentifier, isFirstQuery), options)
       .toPromise();
@@ -227,12 +225,12 @@ export class InternalModelManager {
     return GadgetRecordList.boot(this, records, { options, pageInfo: connection.pageInfo });
   }
 
-  async findFirst(options?: Record<string, any>): Promise<GadgetRecord<RecordShape>> {
+  async findFirst(options?: RecordData): Promise<GadgetRecord<RecordShape>> {
     const list = await this.findMany({ ...options, first: 1, last: undefined, before: undefined, after: undefined }, true, true);
     return list[0];
   }
 
-  async maybeFindFirst(options?: Record<string, any>): Promise<GadgetRecord<RecordShape> | null> {
+  async maybeFindFirst(options?: RecordData): Promise<GadgetRecord<RecordShape> | null> {
     const list = await this.findMany({ ...options, first: 1, last: undefined, before: undefined, after: undefined }, false, true);
     return list[0] ?? null;
   }
@@ -272,7 +270,7 @@ export class InternalModelManager {
     });
   }
 
-  async deleteMany(options?: { search?: string; filter?: Record<string, any> }): Promise<void> {
+  async deleteMany(options?: { search?: string; filter?: RecordData }): Promise<void> {
     return await this.transaction(async (transaction) => {
       const response = await transaction.client.mutation(internalDeleteManyMutation(this.apiIdentifier), options).toPromise();
       assertMutationSuccess(response, ["internal", `deleteMany${this.capitalizedApiIdentifier}`]);

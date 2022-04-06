@@ -17,10 +17,16 @@ export class GadgetRecordImplementation<Shape extends RecordShape> {
     persistedFields: {} as any,
   };
 
+  private empty = false;
+
   constructor(data: Shape) {
     this.__gadget.instantiatedFields = cloneDeep(data);
     this.__gadget.persistedFields = cloneDeep(data);
     Object.assign(this.__gadget.fields, data);
+
+    if (!data || Object.keys(data).length === 0) {
+      this.empty = true;
+    }
 
     const handler = {
       get: (obj: any, prop: string | symbol) => {
@@ -40,6 +46,11 @@ export class GadgetRecordImplementation<Shape extends RecordShape> {
     };
 
     return new Proxy(this.__gadget.fields, handler);
+  }
+
+  /** Checks if the original constructor data was empty or not */
+  isEmpty(): boolean {
+    return this.empty;
   }
 
   /** Returns the value of the field for the given `apiIdentifier`. These properties may also be accessed on this record directly. This method can be used if your model field `apiIdentifier` conflicts with the `GadgetRecord` helper functions. */
