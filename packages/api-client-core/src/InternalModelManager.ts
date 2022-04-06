@@ -194,18 +194,16 @@ export class InternalModelManager {
     this.capitalizedApiIdentifier = camelize(apiIdentifier);
   }
 
-  async findOne(id: string, throwOnEmptyData: true): Promise<GadgetRecord<RecordShape>>;
-  async findOne(id: string, throwOnEmptyData: false): Promise<GadgetRecord<RecordShape> | null>;
-  async findOne(id: string, throwOnEmptyData = true): Promise<GadgetRecord<RecordShape> | null> {
+  async findOne(id: string, throwOnEmptyData = true): Promise<GadgetRecord<Record<string, any> & ({ id: string } | { id: never })>> {
     const response = await this.connection.currentClient.query(internalFindOneQuery(this.apiIdentifier), { id }).toPromise();
     const assertSuccess = throwOnEmptyData ? assertOperationSuccess : assertNullableOperationSuccess;
     const result = assertSuccess(response, ["internal", this.apiIdentifier]);
-    return result ? hydrateRecord<RecordShape>(response, result) : null;
+    return await hydrateRecord(response, result);
   }
 
   async maybeFindOne(id: string): Promise<GadgetRecord<RecordShape> | null> {
     const record = await this.findOne(id, false);
-    return record ?? null;
+    return record.id ? record : null;
   }
 
   async findMany(options?: Record<string, any>, throwOnEmptyData?: boolean, isFirstQuery = false): Promise<GadgetRecordList<any>> {

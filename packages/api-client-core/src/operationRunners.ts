@@ -29,7 +29,7 @@ export const findOneRunner = async <Shape extends RecordShape = any>(
   const response = await modelManager.connection.currentClient.query(plan.query, plan.variables).toPromise();
   const assertSuccess = throwOnEmptyData ? assertOperationSuccess : assertNullableOperationSuccess;
   const record = assertSuccess(response, [operation]);
-  return record ? hydrateRecord<Shape>(response, record) : null;
+  return hydrateRecord<Shape>(response, record);
 };
 
 export const findOneByFieldRunner = async <Shape extends RecordShape = any>(
