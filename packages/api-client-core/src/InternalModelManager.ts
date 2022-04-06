@@ -1,5 +1,5 @@
 import { GadgetConnection } from "./GadgetConnection";
-import { GadgetRecord } from "./GadgetRecord";
+import { GadgetRecord, RecordShape } from "./GadgetRecord";
 import { GadgetRecordList } from "./GadgetRecordList";
 import { GadgetTransaction } from "./GadgetTransaction";
 import {
@@ -194,14 +194,16 @@ export class InternalModelManager {
     this.capitalizedApiIdentifier = camelize(apiIdentifier);
   }
 
-  async findOne(id: string, throwOnEmptyData = true): Promise<GadgetRecord<any>> {
+  async findOne(id: string, throwOnEmptyData: true): Promise<GadgetRecord<RecordShape>>;
+  async findOne(id: string, throwOnEmptyData: false): Promise<GadgetRecord<RecordShape> | null>;
+  async findOne(id: string, throwOnEmptyData = true): Promise<GadgetRecord<RecordShape> | null> {
     const response = await this.connection.currentClient.query(internalFindOneQuery(this.apiIdentifier), { id }).toPromise();
     const assertSuccess = throwOnEmptyData ? assertOperationSuccess : assertNullableOperationSuccess;
     const result = assertSuccess(response, ["internal", this.apiIdentifier]);
-    return hydrateRecord(response, result);
+    return result ? hydrateRecord<RecordShape>(response, result) : null;
   }
 
-  async maybeFindOne(id: string): Promise<GadgetRecord<any> | null> {
+  async maybeFindOne(id: string): Promise<GadgetRecord<RecordShape> | null> {
     const record = await this.findOne(id, false);
     return record ?? null;
   }
@@ -225,17 +227,17 @@ export class InternalModelManager {
     return GadgetRecordList.boot(this, records, { options, pageInfo: connection.pageInfo });
   }
 
-  async findFirst(options?: Record<string, any>): Promise<GadgetRecord<any>> {
+  async findFirst(options?: Record<string, any>): Promise<GadgetRecord<RecordShape>> {
     const list = await this.findMany({ ...options, first: 1, last: undefined, before: undefined, after: undefined }, true, true);
     return list[0];
   }
 
-  async maybeFindFirst(options?: Record<string, any>): Promise<GadgetRecord<any> | null> {
+  async maybeFindFirst(options?: Record<string, any>): Promise<GadgetRecord<RecordShape> | null> {
     const list = await this.findMany({ ...options, first: 1, last: undefined, before: undefined, after: undefined }, false, true);
     return list[0] ?? null;
   }
 
-  async create(record: RecordData): Promise<GadgetRecord<any>> {
+  async create(record: RecordData): Promise<GadgetRecord<RecordShape>> {
     return await this.transaction(async (transaction) => {
       const response = await transaction.client
         .mutation(internalCreateMutation(this.apiIdentifier), {
@@ -247,7 +249,7 @@ export class InternalModelManager {
     });
   }
 
-  async update(id: string, record: RecordData): Promise<GadgetRecord<any>> {
+  async update(id: string, record: RecordData): Promise<GadgetRecord<RecordShape>> {
     assert(id, `Can't update a record without an ID passed`);
     return await this.transaction(async (transaction) => {
       const response = await transaction.client

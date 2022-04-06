@@ -1,7 +1,7 @@
 import { context, SpanOptions, SpanStatusCode, trace } from "@opentelemetry/api";
 import { CombinedError, OperationContext, OperationResult, RequestPolicy } from "@urql/core";
 import { DataHydrator } from "./DataHydrator";
-import { GadgetRecord } from "./GadgetRecord";
+import { GadgetRecord, RecordShape } from "./GadgetRecord";
 
 /**
  * Generic type of the state of any record of a Gadget model
@@ -188,7 +188,7 @@ export const getHydrator = (response: Result) => {
   }
 };
 
-export const hydrateRecord = <Shape = any>(response: Result, record: any): Shape => {
+export const hydrateRecord = <Shape extends RecordShape = RecordShape>(response: Result, record: any): GadgetRecord<Shape> => {
   const hydrator = getHydrator(response);
   if (hydrator) {
     record = hydrator.apply(record);
@@ -196,7 +196,7 @@ export const hydrateRecord = <Shape = any>(response: Result, record: any): Shape
   return new GadgetRecord<Shape>(record);
 };
 
-export const hydrateRecordArray = <Shape = any>(response: Result, records: Array<any>) => {
+export const hydrateRecordArray = <Shape extends RecordShape = any>(response: Result, records: Array<any>) => {
   const hydrator = getHydrator(response);
   if (hydrator) {
     records = hydrator.apply(records) as any;
@@ -204,7 +204,7 @@ export const hydrateRecordArray = <Shape = any>(response: Result, records: Array
   return records?.map((record) => new GadgetRecord<Shape>(record));
 };
 
-export const hydrateConnection = <Shape = any>(response: Result, connection: { edges: { node: Node }[] }) => {
+export const hydrateConnection = <Shape extends RecordShape = any>(response: Result, connection: { edges: { node: Node }[] }) => {
   const nodes = connection.edges.map((edge) => edge.node);
   return hydrateRecordArray<Shape>(response, nodes);
 };

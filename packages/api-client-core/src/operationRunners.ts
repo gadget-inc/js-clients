@@ -1,7 +1,7 @@
 import { actionOperation, findManyOperation, findOneByFieldOperation, globalActionOperation, VariableOptions } from ".";
 import { FieldSelection } from "./FieldSelection";
 import { GadgetConnection } from "./GadgetConnection";
-import { GadgetRecord } from "./GadgetRecord";
+import { GadgetRecord, RecordShape } from "./GadgetRecord";
 import { GadgetRecordList } from "./GadgetRecordList";
 import { AnyModelManager } from "./ModelManager";
 import { findOneOperation, PaginationOptions, SelectionOptions } from "./operationBuilders";
@@ -16,7 +16,7 @@ import {
   hydrateRecordArray,
 } from "./support";
 
-export const findOneRunner = async <Shape = any>(
+export const findOneRunner = async <Shape extends RecordShape = any>(
   modelManager: { connection: GadgetConnection },
   operation: string,
   id: string | undefined,
@@ -29,10 +29,10 @@ export const findOneRunner = async <Shape = any>(
   const response = await modelManager.connection.currentClient.query(plan.query, plan.variables).toPromise();
   const assertSuccess = throwOnEmptyData ? assertOperationSuccess : assertNullableOperationSuccess;
   const record = assertSuccess(response, [operation]);
-  return hydrateRecord<Shape>(response, record);
+  return record ? hydrateRecord<Shape>(response, record) : null;
 };
 
-export const findOneByFieldRunner = async <Shape = any>(
+export const findOneByFieldRunner = async <Shape extends RecordShape = any>(
   modelManager: { connection: GadgetConnection },
   operation: string,
   fieldName: string,
@@ -53,7 +53,7 @@ export const findOneByFieldRunner = async <Shape = any>(
   return records[0];
 };
 
-export const findManyRunner = async <Shape = any>(
+export const findManyRunner = async <Shape extends RecordShape = any>(
   modelManager: AnyModelManager,
   operation: string,
   defaultSelection: FieldSelection,
@@ -79,7 +79,7 @@ export const findManyRunner = async <Shape = any>(
 };
 
 export interface ActionRunner {
-  <Shape = any>(
+  <Shape extends RecordShape = any>(
     modelManager: { connection: GadgetConnection },
     operation: string,
     defaultSelection: FieldSelection | null,
@@ -91,7 +91,7 @@ export interface ActionRunner {
     namespace?: string | null
   ): Promise<Shape extends void ? void : GadgetRecord<Shape>>;
 
-  <Shape = any>(
+  <Shape extends RecordShape = any>(
     modelManager: { connection: GadgetConnection },
     operation: string,
     defaultSelection: FieldSelection | null,
@@ -104,7 +104,7 @@ export interface ActionRunner {
   ): Promise<Shape extends void ? void : GadgetRecord<Shape>[]>;
 }
 
-export const actionRunner: ActionRunner = async <Shape = any>(
+export const actionRunner: ActionRunner = async <Shape extends RecordShape = any>(
   modelManager: { connection: GadgetConnection },
   operation: string,
   defaultSelection: FieldSelection | null,

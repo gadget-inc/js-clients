@@ -66,7 +66,7 @@ export const useMaybeFindOne = <
   let data = result.data ?? null;
   if (data) {
     const value = get(result.data, [manager.findOne.operationName]);
-    data = value ? hydrateRecord(result, value) : null;
+    data = value && "id" in value ? hydrateRecord(result, value) : null;
   }
 
   return [
