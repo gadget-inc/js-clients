@@ -1,3 +1,4 @@
+import { query } from "gql-query-builder";
 import { GadgetConnection } from "./GadgetConnection";
 import { GadgetRecord, RecordShape } from "./GadgetRecord";
 import { GadgetRecordList } from "./GadgetRecordList";
@@ -44,61 +45,78 @@ export const internalFindOneQuery = (apiIdentifier: string) => {
     `;
 };
 
-export const internalFindManyQuery = (apiIdentifier: string, isFirstQuery = false) => {
+export const internalFindFirstQuery = (apiIdentifier: string, options?: RecordData) => {
   const capitalizedApiIdentifier = capitalize(apiIdentifier);
-  const namePrefix = isFirstQuery ? "InternalFindFirst" : "InternalFindMany";
-  return `
-    query ${namePrefix}${capitalizedApiIdentifier}(
-      ${
-        isFirstQuery
-          ? ""
-          : `
-      $after: String
-      $before: String
-      $first: Int
-      $last: Int`
-      }
-      $search: String
-      $sort: [${capitalizedApiIdentifier}Sort!]
-      $filter: [${capitalizedApiIdentifier}Filter!]
-    ) {
-      ${internalHydrationPlan(apiIdentifier)}
-      internal {
-        list${capitalizedApiIdentifier}(
-          ${
-            isFirstQuery
-              ? `
-          first: 1`
-              : `
-          after: $after
-          before: $before
-          first: $first
-          last: $last
-          `
-          }    
-          search: $search
-          sort: $sort
-          filter: $filter
-        ) {
-          edges {
-            ${isFirstQuery ? "" : "cursor"}
-            node
-          }
-          ${
-            isFirstQuery
-              ? ""
-              : `
-          pageInfo {
-            hasNextPage
-            hasPreviousPage
-            startCursor
-            endCursor
-          }`
-          }
-        }
-      }
-    }
-    `;
+
+  const defaultVariables = {
+    ...(options?.search && { search: { value: options?.search, type: "String", required: false } }),
+    ...(options?.sort && { sort: { value: options?.sort, type: `${capitalizedApiIdentifier}Sort!`, list: true } }),
+    ...(options?.filter && { filter: { value: options?.filter, type: `${capitalizedApiIdentifier}Filter!`, list: true } }),
+  };
+
+  return query(
+    [
+      {
+        operation: "internal",
+        fields: [
+          {
+            operation: `list${capitalizedApiIdentifier}`,
+            fields: [
+              {
+                edges: ["node"],
+              },
+            ],
+            variables: {
+              ...defaultVariables,
+              first: { value: 1, type: "Int" },
+            },
+          },
+        ],
+      },
+    ],
+    null,
+    { operationName: `InternalFindFirst${capitalizedApiIdentifier}` }
+  );
+};
+
+export const internalFindManyQuery = (apiIdentifier: string, options?: RecordData) => {
+  const capitalizedApiIdentifier = capitalize(apiIdentifier);
+
+  const defaultVariables = {
+    ...(options?.search && { search: { value: options?.search, type: "String", required: false } }),
+    ...(options?.sort && { sort: { value: options?.sort, type: `${capitalizedApiIdentifier}Sort!`, list: true } }),
+    ...(options?.filter && { filter: { value: options?.filter, type: `${capitalizedApiIdentifier}Filter!`, list: true } }),
+  };
+
+  return query(
+    [
+      {
+        operation: "internal",
+        fields: [
+          {
+            operation: `list${capitalizedApiIdentifier}`,
+            fields: [
+              {
+                pageInfo: ["hasNextPage", "hasPreviousPage", "startCursor", "endCursor"],
+              },
+              {
+                edges: ["cursor", "node"],
+              },
+            ],
+            variables: {
+              ...defaultVariables,
+              after: { value: options?.after, type: "String" },
+              before: { value: options?.before, type: "String" },
+              first: { value: options?.first, type: "Int" },
+              last: { value: options?.last, type: "Int" },
+            },
+          },
+        ],
+      },
+    ],
+    null,
+    { operationName: `InternalFindMany${capitalizedApiIdentifier}` }
+  );
 };
 
 export const internalCreateMutation = (apiIdentifier: string) => {
@@ -207,9 +225,8 @@ export class InternalModelManager {
   }
 
   async findMany(options?: RecordData, throwOnEmptyData?: boolean, isFirstQuery = false): Promise<GadgetRecordList<any>> {
-    const response = await this.connection.currentClient
-      .query(internalFindManyQuery(this.apiIdentifier, isFirstQuery), options)
-      .toPromise();
+    const plan = isFirstQuery ? internalFindFirstQuery(this.apiIdentifier, options) : internalFindManyQuery(this.apiIdentifier, options);
+    const response = await this.connection.currentClient.query(plan.query, plan.variables).toPromise();
 
     let connection;
     if (throwOnEmptyData === false) {
