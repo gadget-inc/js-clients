@@ -10,6 +10,7 @@ import {
   Sink,
 } from "graphql-ws";
 import WebSocket from "isomorphic-ws";
+import { getCurrentSpan } from ".";
 import type { AuthenticationModeOptions, BrowserSessionAuthenticationModeOptions } from "./ClientOptions";
 import { BrowserSessionStorageType } from "./ClientOptions";
 import { GadgetTransaction, TransactionRolledBack } from "./GadgetTransaction";
@@ -39,6 +40,7 @@ export interface GadgetConnectionOptions {
   websocketImplementation?: any;
   fetchImplementation?: typeof fetch;
   environment?: "Development" | "Production";
+  applicationId?: string;
 }
 
 const isCloseEvent = (event: any): event is CloseEvent => event?.type == "close";
@@ -142,6 +144,8 @@ export class GadgetConnection {
       if (this.currentTransaction) {
         return await run(this.currentTransaction);
       }
+
+      getCurrentSpan()?.setAttributes({ applicationId: this.options.applicationId, environmentName: this.environment });
 
       let subscriptionClient: SubscriptionClient | null = null;
       let transaction;

@@ -274,6 +274,8 @@ export const traceFunction = <T extends (...args: any[]) => any>(name: string, f
   } as T;
 };
 
+export const getCurrentSpan = () => trace.getSpan(context.active());
+
 interface QueryPlan {
   variables: any;
   query: string;
