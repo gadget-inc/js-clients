@@ -224,8 +224,17 @@ export class InternalModelManager {
     return record.isEmpty() ? null : record;
   }
 
-  async findMany(options?: RecordData, throwOnEmptyData?: boolean, isFirstQuery = false): Promise<GadgetRecordList<any>> {
-    const plan = isFirstQuery ? internalFindFirstQuery(this.apiIdentifier, options) : internalFindManyQuery(this.apiIdentifier, options);
+  async findMany(options?: RecordData): Promise<GadgetRecordList<any>> {
+    const plan = internalFindManyQuery(this.apiIdentifier, options);
+    const response = await this.connection.currentClient.query(plan.query, plan.variables).toPromise();
+    const connection = assertNullableOperationSuccess(response, ["internal", `list${this.capitalizedApiIdentifier}`]);
+    const records = hydrateConnection(response, connection);
+
+    return GadgetRecordList.boot(this, records, { options, pageInfo: connection.pageInfo });
+  }
+
+  async findFirst(options?: RecordData, throwOnEmptyData = true): Promise<GadgetRecord<RecordShape>> {
+    const plan = internalFindFirstQuery(this.apiIdentifier, options);
     const response = await this.connection.currentClient.query(plan.query, plan.variables).toPromise();
 
     let connection;
@@ -239,17 +248,12 @@ export class InternalModelManager {
     }
 
     const records = hydrateConnection(response, connection);
-    return GadgetRecordList.boot(this, records, { options, pageInfo: connection.pageInfo });
-  }
-
-  async findFirst(options?: RecordData): Promise<GadgetRecord<RecordShape>> {
-    const list = await this.findMany({ ...options, first: 1, last: undefined, before: undefined, after: undefined }, true, true);
-    return list[0];
+    const recordList = GadgetRecordList.boot(this, records, { options, pageInfo: connection.pageInfo });
+    return recordList[0];
   }
 
   async maybeFindFirst(options?: RecordData): Promise<GadgetRecord<RecordShape> | null> {
-    const list = await this.findMany({ ...options, first: 1, last: undefined, before: undefined, after: undefined }, false, true);
-    return list[0] ?? null;
+    return await this.findFirst(options, false);
   }
 
   async create(record: RecordData): Promise<GadgetRecord<RecordShape>> {
