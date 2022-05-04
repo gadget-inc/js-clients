@@ -10,6 +10,15 @@ export interface ClientOptions {
 
 /** Options to configure a specific browser-based authentication mode */
 export interface BrowserSessionAuthenticationModeOptions {
+  /**
+   * The initial token to set for browser authentication.
+   * This is useful when your session is initialized by some external authentication system, like OAuth.
+   */
+  initialToken?: string;
+
+  /**
+   * Configures how the authentication token is persisted. See `BrowserSessionStorageType`.
+   */
   storageType: BrowserSessionStorageType;
 }
 

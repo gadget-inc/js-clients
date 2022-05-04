@@ -10,6 +10,7 @@ import {
   Sink,
 } from "graphql-ws";
 import WebSocket from "isomorphic-ws";
+import { isObject } from "lodash";
 import { getCurrentSpan } from ".";
 import type { AuthenticationModeOptions, BrowserSessionAuthenticationModeOptions } from "./ClientOptions";
 import { BrowserSessionStorageType } from "./ClientOptions";
@@ -114,13 +115,21 @@ export class GadgetConnection {
 
   enableSessionMode(options?: true | BrowserSessionAuthenticationModeOptions) {
     this.authenticationMode = AuthenticationMode.BrowserSession;
+
+    let sessionTokenStore;
     if (!options || typeof options == "boolean" || options.storageType == BrowserSessionStorageType.Durable) {
-      this.sessionTokenStore = window.localStorage;
+      sessionTokenStore = window.localStorage;
     } else if (options.storageType == BrowserSessionStorageType.Session) {
-      this.sessionTokenStore = window.sessionStorage;
+      sessionTokenStore = window.sessionStorage;
     } else {
-      this.sessionTokenStore = new InMemoryStorage();
+      sessionTokenStore = new InMemoryStorage();
     }
+
+    if (isObject(options) && "initialToken" in options && options.initialToken) {
+      sessionTokenStore.setItem(sessionStorageKey, options.initialToken);
+    }
+
+    this.sessionTokenStore = sessionTokenStore;
     this.resetClients();
   }
 
