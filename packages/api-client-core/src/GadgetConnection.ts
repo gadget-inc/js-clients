@@ -310,7 +310,12 @@ export class GadgetConnection {
         connected: (socket, payload) => {
           // If we're using session token authorization, we don't use request headers to exchange the session token, we use graphql-ws' ConnectionAck payload to persist the token. When the subscription client first starts, the server will send us session token identifying this client, and we persist it to the session token store
           if (this.authenticationMode == AuthenticationMode.BrowserSession && payload?.sessionToken) {
-            this.sessionTokenStore!.setItem(sessionStorageKey, payload.sessionToken as string);
+            const initialToken = isObject(this.options.authenticationMode?.browserSession)
+              ? this.options.authenticationMode?.browserSession.initialToken
+              : null;
+            if (!initialToken) {
+              this.sessionTokenStore!.setItem(sessionStorageKey, payload.sessionToken as string);
+            }
           }
           this.subscriptionClientOptions?.on?.connected?.(socket, payload);
           overrides?.on?.connected?.(socket, payload);
