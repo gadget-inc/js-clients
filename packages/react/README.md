@@ -51,23 +51,29 @@ npm install --save @gadgetinc/react react
 ## Example usage
 
 ```typescript
-import { useAction, useFindMany, Provider } from "@gadgetinc/react";
-import React from "react";
 import { Client } from "@gadget-client/my-gadget-app";
+import { Provider, useAction, useFindMany } from "@gadgetinc/react";
+import React from "react";
+
+const api = new Client({
+  authenticationMode: {
+    browserSession: true,
+  },
+});
 
 export function MyComponent() {
   return (
-    <Provider value={Client.connection.currentClient}>
+    <Provider value={api.connection.currentClient}>
       <WidgetDeleter />
     </Provider>
   );
 }
 
-function WidgetDeleter() => {
-  const [_, deleteWidget] = useAction(Client.widget.delete);
+function WidgetDeleter() {
+  const [_, deleteWidget] = useAction(api.widget.delete);
 
   // if id or _all weren't fields on a widget, this would be a type error
-  const [result, refresh] = useFindMany(Client.widget, {
+  const [result, refresh] = useFindMany(api.widget, {
     select: {
       id: true,
       name: true,
@@ -81,7 +87,7 @@ function WidgetDeleter() => {
   // If id/name weren't selected above, they wouldn't typecheck below
   return (
     <>
-      {result.map((widget) => (
+      {result.data.map((widget) => (
         <button
           onClick={(event) => {
             event.preventDefault();
