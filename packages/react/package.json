@@ -1,6 +1,6 @@
 {
   "name": "@gadgetinc/react",
-  "version": "0.4.2",
+  "version": "0.4.3",
   "source": "src/index.ts",
   "main": "dist/src/index.js",
   "types": "dist/src/index.d.ts",
@@ -34,7 +34,7 @@
     "react-dom": "^17.0.2"
   },
   "peerDependencies": {
-    "react": "^17.0.2",
-    "react-dom": "^17.0.2"
+    "react": "^17.0.2 || ^18.0.0",
+    "react-dom": "^17.0.2 || ^18.0.0"
   }
 }
