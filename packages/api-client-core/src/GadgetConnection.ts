@@ -10,7 +10,6 @@ import {
   Sink,
 } from "graphql-ws";
 import WebSocket from "isomorphic-ws";
-import { isObject } from "lodash";
 import { getCurrentSpan } from ".";
 import type { AuthenticationModeOptions, BrowserSessionAuthenticationModeOptions } from "./ClientOptions";
 import { BrowserSessionStorageType } from "./ClientOptions";
@@ -125,7 +124,7 @@ export class GadgetConnection {
       sessionTokenStore = new InMemoryStorage();
     }
 
-    if (isObject(options) && "initialToken" in options && options.initialToken) {
+    if (options !== null && typeof options === "object" && "initialToken" in options && options.initialToken) {
       sessionTokenStore.setItem(sessionStorageKey, options.initialToken);
     }
 
@@ -310,9 +309,8 @@ export class GadgetConnection {
         connected: (socket, payload) => {
           // If we're using session token authorization, we don't use request headers to exchange the session token, we use graphql-ws' ConnectionAck payload to persist the token. When the subscription client first starts, the server will send us session token identifying this client, and we persist it to the session token store
           if (this.authenticationMode == AuthenticationMode.BrowserSession && payload?.sessionToken) {
-            const initialToken = isObject(this.options.authenticationMode?.browserSession)
-              ? this.options.authenticationMode?.browserSession.initialToken
-              : null;
+            const browserSession = this.options.authenticationMode?.browserSession;
+            const initialToken = browserSession !== null && typeof browserSession === "object" ? browserSession.initialToken : null;
             if (!initialToken) {
               this.sessionTokenStore!.setItem(sessionStorageKey, payload.sessionToken as string);
             }
