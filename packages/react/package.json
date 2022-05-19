@@ -1,6 +1,6 @@
 {
   "name": "@gadgetinc/react",
-  "version": "0.4.3",
+  "version": "0.4.4",
   "source": "src/index.ts",
   "main": "dist/src/index.js",
   "types": "dist/src/index.d.ts",
@@ -18,7 +18,7 @@
     "prerelease": "gitpkg publish"
   },
   "dependencies": {
-    "@gadgetinc/api-client-core": "^0.6",
+    "@gadgetinc/api-client-core": "^0.6.8",
     "deep-equal": "^2.0.5",
     "urql": "^2.0.5"
   },
