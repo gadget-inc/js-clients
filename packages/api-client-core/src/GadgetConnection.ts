@@ -68,7 +68,7 @@ export class GadgetConnection {
   private subscriptionClientOptions?: SubscriptionClientOptions;
   private websocketsEndpoint: string;
   private websocketImplementation: any;
-  private fetchImplementation: typeof fetch;
+  private _fetchImplementation: typeof fetch;
   private environment: "Development" | "Production";
 
   // the base client using HTTP requests that non-transactional operations will use
@@ -79,29 +79,19 @@ export class GadgetConnection {
   private currentTransaction: GadgetTransaction | null = null;
 
   // How this client will authenticate (if at all) against the Gadget backed
-  authenticationMode: AuthenticationMode;
+  authenticationMode: AuthenticationMode = AuthenticationMode.Anonymous;
   private sessionTokenStore?: BrowserStorage;
 
   constructor(readonly options: GadgetConnectionOptions) {
     if (!options.endpoint) throw new Error("Must provide an `endpoint` option for a GadgetConnection to connect to");
     this.endpoint = options.endpoint;
-    this.fetchImplementation = options.fetchImplementation ?? fetch;
+    this._fetchImplementation = options.fetchImplementation ?? fetch;
     this.websocketImplementation = options.websocketImplementation ?? WebSocket;
     this.websocketsEndpoint = options.websocketsEndpoint ?? options.endpoint + "/batch";
     this.websocketsEndpoint = this.websocketsEndpoint.replace(/^http/, "ws");
     this.environment = options.environment ?? "Development";
 
-    if (options.authenticationMode) {
-      if (options.authenticationMode.browserSession) {
-        this.enableSessionMode(options.authenticationMode.browserSession);
-      } else if (options.authenticationMode.internalAuthToken) {
-        this.authenticationMode = AuthenticationMode.InternalAuthToken;
-      } else if (options.authenticationMode.apiKey) {
-        this.authenticationMode = AuthenticationMode.APIKey;
-      }
-    }
-
-    this.authenticationMode ??= AuthenticationMode.Anonymous;
+    this.setAuthenticationMode(options.authenticationMode);
 
     // the base client for subscriptions is lazy so we don't open unnecessary connections to the backend, and it reconnects to deal with network issues
     this.baseSubscriptionClient = this.newSubscriptionClient({ lazy: true });
@@ -110,6 +100,25 @@ export class GadgetConnection {
 
   get currentClient() {
     return this.currentTransaction?.client || this.baseClient;
+  }
+
+  set fetchImplementation(implementation: typeof fetch) {
+    this._fetchImplementation = implementation;
+    this.resetClients();
+  }
+
+  setAuthenticationMode(options?: AuthenticationModeOptions) {
+    if (options) {
+      if (options.browserSession) {
+        this.enableSessionMode(options.browserSession);
+      } else if (options.internalAuthToken) {
+        this.authenticationMode = AuthenticationMode.InternalAuthToken;
+      } else if (options.apiKey) {
+        this.authenticationMode = AuthenticationMode.APIKey;
+      }
+    }
+
+    this.authenticationMode ??= AuthenticationMode.Anonymous;
   }
 
   enableSessionMode(options?: true | BrowserSessionAuthenticationModeOptions) {
@@ -229,7 +238,7 @@ export class GadgetConnection {
   fetch = traceFunction("api-client.fetch", async (input: RequestInfo, init: RequestInit = {}) => {
     init.headers = { ...this.requestHeaders(), ...init.headers };
 
-    const response = await this.fetchImplementation(input, init);
+    const response = await this._fetchImplementation(input, init);
     if (this.authenticationMode == AuthenticationMode.BrowserSession) {
       const headerValue = response.headers.get("x-set-authorization");
       const sessionToken = headerValue?.startsWith("Session ") ? headerValue.replace("Session ", "") : null;
