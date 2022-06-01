@@ -2,7 +2,7 @@ import Crypto from "crypto-js";
 
 export const generateCodeVerifier = () => {
   const bytes = Crypto.lib.WordArray.random(32);
-  return bytes.toString(Crypto.enc.Hex);
+  return bytes.toString(Crypto.enc.Base64url);
 };
 
 export const generateCodeChallenge = (verifier: string) => Crypto.SHA256(verifier).toString(Crypto.enc.Base64url);
