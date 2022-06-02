@@ -4,7 +4,7 @@ on:
     branches:
       - main
     paths:
-      - 'packages/**/package.json'
+      - "packages/**/package.json"
 jobs:
   test:
     uses: ./.github/workflows/test.yml
@@ -28,4 +28,10 @@ jobs:
         with:
           token: ${{ secrets.NPM_TOKEN }}
           package: ./packages/react/package.json
+          access: public
+      - name: Publish @gadgetinc/react-shopify-app-bridge
+        uses: JS-DevTools/npm-publish@v1
+        with:
+          token: ${{ secrets.NPM_TOKEN }}
+          package: ./packages/react-shopify-app-bridge/package.json
           access: public

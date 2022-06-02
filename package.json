@@ -7,7 +7,8 @@
   "private": true,
   "workspaces": [
     "packages/api-client-core",
-    "packages/react"
+    "packages/react",
+    "packages/react-shopify-app-bridge"
   ],
   "scripts": {
     "lint": "yarn run lint:prettier && yarn run lint:eslint",
@@ -39,6 +40,7 @@
     "zx": "^6.0.3"
   },
   "resolutions": {
-    "@gadgetinc/api-client-core": "*"
+    "@gadgetinc/api-client-core": "*",
+    "@gadgetinc/react": "*"
   }
 }
