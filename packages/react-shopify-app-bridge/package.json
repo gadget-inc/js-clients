@@ -27,13 +27,15 @@
     "@types/react": "^17.0.1",
     "@types/lodash": "^4.14.182",
     "@types/crypto-js": "^4.1.1",
+    "@types/jest": "^26.0.24",
     "react": "^17.0.2",
     "react-dom": "^17.0.2",
     "@gadgetinc/react": "^0.4.4",
     "@shopify/app-bridge-react": "^2.0.25",
     "nock": "^13.2.4",
     "cross-fetch": "^3.1.5",
-    "ts-jest": "^28.0.3"
+    "ts-jest": "^28.0.3",
+    "jest": "^27.5.1"
   },
   "peerDependencies": {
     "react": "^17.0.2 || ^18.0.0",
