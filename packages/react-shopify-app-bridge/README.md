@@ -6,8 +6,8 @@
     <a href="">
       <img alt="GitHub CI status" src="https://badgen.net/github/checks/gadget-inc/js-clients/main/Test?label=CI" />
     </a>
-    <a href="https://www.npmjs.com/package/@gadgetinc/shopify-react">
-      <img alt="npm version" src="https://badgen.net/npm/dw/@gadgetinc/shopify-react?color=4148f2" />
+    <a href="https://www.npmjs.com/package/@gadgetinc/react-shopify-app-bridge">
+      <img alt="npm version" src="https://badgen.net/npm/dw/@gadgetinc/react-shopify-app-bridge?color=4148f2" />
     </a>
   </p>
   <p>
@@ -43,16 +43,16 @@ Full installation instructions can be found in the Gadget docs at `https://docs.
 Once you have your JS client installed, you can install the React hooks library and the Shopify library with yarn or npm:
 
 ```
-yarn add @gadgetinc/shopify-react @gadgetinc/react @shopify/app-bridge-react react
+yarn add @gadgetinc/react-shopify-app-bridge @gadgetinc/react @shopify/app-bridge-react react
 # or
-npm install --save @gadgetinc/shopify-react @gadgetinc/react @shopify/app-bridge-react react
+npm install --save @gadgetinc/react-shopify-app-bridge @gadgetinc/react @shopify/app-bridge-react react
 ```
 
-While exploring Shopify embedded app development, you may have come across [documentation](https://shopify.dev/apps/tools/app-bridge/getting-started) on how to set up Shopify App Bridge. Steps involving OAuth and initializing app bridge can be skipped when using the `@gadgetinc/shopify-react` package. The OAuth steps as well as initializing the App Bridge will be taken care of by the `Provider`. The initialized instance of App Bridge is accessible via the `appBridge` key returned from `useGadgetContext`. See the following example:
+While exploring Shopify embedded app development, you may have come across [documentation](https://shopify.dev/apps/tools/app-bridge/getting-started) on how to set up Shopify App Bridge. Steps involving OAuth and initializing app bridge can be skipped when using the `@gadgetinc/react-shopify-app-bridge` package. The OAuth steps as well as initializing the App Bridge will be taken care of by the `Provider`. The initialized instance of App Bridge is accessible via the `appBridge` key returned from `useGadgetContext`. See the following example:
 
 ## Example usage
 
-NOTE: This example is very similar to that found in [@gadgetinc/react](https://github.com/gadget-inc/js-clients/tree/main/packages/react). This example should be followed if you're using the `@gadgetinc/shopify-react` package.
+NOTE: This example is very similar to that found in [@gadgetinc/react](https://github.com/gadget-inc/js-clients/tree/main/packages/react). This example should be followed if you're using the `@gadgetinc/react-shopify-app-bridge` package.
 
 `src/api.ts`
 
@@ -70,7 +70,7 @@ export const api = new Client({
 
 ```typescript
 import { Client, BrowserSessionStorageType } from "@gadget-client/my-gadget-app";
-import { Provider, AppType, useGadgetContext } from "@gadgetinc/shopify-react";
+import { Provider, AppType, useGadgetContext } from "@gadgetinc/react-shopify-app-bridge";
 import { useFindMany, useAction } from "@gadgetinc/react";
 import { TitleBar, Button, Redirect } from "@shopify/app-bridge/actions";
 import React from "react";

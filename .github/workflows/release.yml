@@ -29,9 +29,9 @@ jobs:
           token: ${{ secrets.NPM_TOKEN }}
           package: ./packages/react/package.json
           access: public
-      - name: Publish @gadgetinc/shopify-react
+      - name: Publish @gadgetinc/react-shopify-app-bridge
         uses: JS-DevTools/npm-publish@v1
         with:
           token: ${{ secrets.NPM_TOKEN }}
-          package: ./packages/shopify-react/package.json
+          package: ./packages/react-shopify-app-bridge/package.json
           access: public
