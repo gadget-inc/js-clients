@@ -48,7 +48,7 @@ yarn add @gadgetinc/react-shopify-app-bridge @gadgetinc/react @shopify/app-bridg
 npm install --save @gadgetinc/react-shopify-app-bridge @gadgetinc/react @shopify/app-bridge-react react
 ```
 
-While exploring Shopify embedded app development, you may have come across [documentation](https://shopify.dev/apps/tools/app-bridge/getting-started) on how to set up Shopify App Bridge. Steps involving OAuth and initializing app bridge can be skipped when using the `@gadgetinc/react-shopify-app-bridge` package. The OAuth steps as well as initializing the App Bridge will be taken care of by the `Provider`. The initialized instance of App Bridge is accessible via the `appBridge` key returned from `useGadgetContext`. See the following example:
+While exploring Shopify embedded app development, you may have come across [documentation](https://shopify.dev/apps/tools/app-bridge/getting-started) on how to set up Shopify App Bridge. Steps involving OAuth and initializing app bridge can be skipped when using the `@gadgetinc/react-shopify-app-bridge` package. The OAuth steps as well as initializing the App Bridge will be taken care of by the `Provider`. The initialized instance of App Bridge is accessible via the `appBridge` key returned from `useGadget`. See the following example:
 
 ## Example usage
 
@@ -70,7 +70,7 @@ export const api = new Client({
 
 ```typescript
 import { Client, BrowserSessionStorageType } from "@gadget-client/my-gadget-app";
-import { Provider, AppType, useGadgetContext } from "@gadgetinc/react-shopify-app-bridge";
+import { Provider, AppType, useGadget } from "@gadgetinc/react-shopify-app-bridge";
 import { useFindMany, useAction } from "@gadgetinc/react";
 import { TitleBar, Button, Redirect } from "@shopify/app-bridge/actions";
 import React from "react";
@@ -86,7 +86,7 @@ export function MyComponent() {
 }
 
 function ProductManager() {
-  const { loading, appBridge } = useGadgetContext<Client>();
+  const { loading, appBridge } = useGadget<Client>();
 
   const [, deleteProduct] = useAction(api.shopifyProduct.delete);
 

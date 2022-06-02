@@ -18,4 +18,4 @@ export const GadgetAuthContext = createContext({
   canAuth: false,
 });
 
-export const useGadgetContext = () => useContext<GadgetContext>(GadgetAuthContext);
+export const useGadget = () => useContext<GadgetContext>(GadgetAuthContext);
