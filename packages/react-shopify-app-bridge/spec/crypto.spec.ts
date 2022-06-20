@@ -2,6 +2,7 @@ import fetch, { Headers } from "cross-fetch";
 import Crypto from "crypto-js";
 import { isEmpty } from "lodash";
 import nock from "nock";
+import { getTokenKey } from "../src/utils";
 import { generateCodeChallenge, generateCodeVerifier, getGadgetAccessToken } from "../src/crypto";
 import { hasMoreThanAscii } from "./utils";
 
@@ -50,5 +51,26 @@ describe("crypto services", () => {
     const tokenWithSlash = await getGadgetAccessToken("https://test-app.gadget.dev/", "", "");
 
     expect(tokenWithSlash).toBe("foo");
+  });
+
+  test("getTokenKey generates matching key for host and gadget app url", () => {
+    const testHost = "dGhlLW9yYW5nZS1zdG9yZS04OS5teXNob3BpZnkuY29tL2FkbWlu";
+    const testGadgetAppUrl = "https://test.gadget.app";
+    const differentTestGadgetAppUrl = "https://random.gadget.app";
+    const differentTestHost = "YXBwbGUtZnJ1aXQtc3RvcmUubXlzaG9waWZ5LmNvbS9hZG1pbg";
+
+    const key = getTokenKey(testGadgetAppUrl, testHost);
+
+    expect(isEmpty(String(key))).toBeFalsy();
+    expect(key).toBe(6718366616961859);
+
+    // a different app url should generate a different key
+    expect(getTokenKey(differentTestGadgetAppUrl, testHost)).not.toBe(key);
+
+    // a different host should generate a different key
+    expect(getTokenKey(testGadgetAppUrl, differentTestHost)).not.toBe(key);
+
+    // different host and different app url should generate a different key
+    expect(getTokenKey(differentTestGadgetAppUrl, differentTestHost)).not.toBe(key);
   });
 });
