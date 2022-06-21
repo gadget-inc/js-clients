@@ -16,6 +16,7 @@ import {
   useLocalStorage,
   useSessionStorage,
 } from "./index";
+import { getTokenKey } from "./utils";
 
 export enum AppType {
   Standalone,
@@ -166,7 +167,7 @@ export const Provider = <T extends AnyClient>({
   const forceRedirect = isReady && !isUndefined(host) && !inDestinationContext;
   const canAuth = isReady && !isUndefined(host) && inDestinationContext;
   // We use isReady to force run this logic only on browsers and not server side
-  const token = useMemo(() => (canAuth ? shopifySessions[host] : undefined), [isReady, shopifySessions]);
+  const token = useMemo(() => (canAuth ? shopifySessions[getTokenKey(host, shopifyApiKey)] : undefined), [isReady, shopifySessions]);
   const runningGadgetAuth = canAuth && !isUndefined(authorizationCode) && auth != null;
   const runningShopifyAuth = canAuth && !runningGadgetAuth && isUndefined(token);
   const gadgetAppUrl = new URL(api.connection.options.endpoint).origin;
@@ -176,7 +177,7 @@ export const Provider = <T extends AnyClient>({
       const result = await fetch(input, init);
       if (shouldReauth && [401, 403].includes(result.status)) {
         if (host) {
-          delete shopifySessions[host.toString()];
+          delete shopifySessions[getTokenKey(host, shopifyApiKey)];
           setShopifySessions({ ...shopifySessions });
         }
       }
@@ -199,7 +200,7 @@ export const Provider = <T extends AnyClient>({
       const { codeVerifier } = JSON.parse(auth);
       assert(isString(codeVerifier));
       const token = await getGadgetAccessToken(gadgetAppUrl, codeVerifier, authorizationCode);
-      setShopifySessions({ ...shopifySessions, [host]: token });
+      setShopifySessions({ ...shopifySessions, [getTokenKey(host, shopifyApiKey)]: token });
     })()
       .catch((e) => {
         // couldn't successfully run our exchange so the code verifier/challenge is not valid
