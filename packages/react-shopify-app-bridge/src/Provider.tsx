@@ -98,7 +98,7 @@ const InnerGadgetProvider = memo(
     useEffect(() => {
       if (!runningShopifyAuth || isRootFrameRequest) return;
       // redirect to gadget app root pages url with oauth params
-      const redirectURL = new URL(gadgetAppUrl);
+      const redirectURL = new URL("/api/connections/auth/shopify", gadgetAppUrl);
       redirectURL.search = originalQueryParams?.toString() ?? "";
       const redirectURLWithOAuthParams = redirectURL.toString();
 
