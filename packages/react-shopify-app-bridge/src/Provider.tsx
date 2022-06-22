@@ -63,7 +63,7 @@ const InnerGadgetProvider = memo(
       if (!runningShopifyAuth) return;
 
       // redirect to gadget app root pages url with oauth params
-      const redirectURL = new URL(gadgetAppUrl);
+      const redirectURL = new URL("/api/connections/auth/shopify", gadgetAppUrl);
       const searchParams = new URLSearchParams(originalQueryParams?.toString());
 
       // generate verifier and challenge
