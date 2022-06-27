@@ -34,6 +34,7 @@ type GadgetProviderProps = {
   gadgetAppUrl: string;
   token?: string;
   originalQueryParams?: URLSearchParams;
+  inDestinationContext?: boolean;
 };
 
 const gadgetAuthParams = ["authorizationCode"];
@@ -50,6 +51,7 @@ const InnerGadgetProvider = memo(
     gadgetAppUrl,
     token,
     originalQueryParams,
+    inDestinationContext,
   }: GadgetProviderProps) => {
     const [context, setContext] = useState<GadgetContext>({
       isAuthenticated: false,
@@ -67,11 +69,14 @@ const InnerGadgetProvider = memo(
       const searchParams = new URLSearchParams(originalQueryParams?.toString());
 
       // generate verifier and challenge
-      const codeVerifier = generateCodeVerifier();
-      const codeChallenge = generateCodeChallenge(codeVerifier);
-      setAuth(JSON.stringify({ codeVerifier, codeChallenge }));
-      searchParams.set("codeChallenge", codeChallenge);
-      searchParams.set("mode", "offline");
+      if (inDestinationContext) {
+        const codeVerifier = generateCodeVerifier();
+        const codeChallenge = generateCodeChallenge(codeVerifier);
+        setAuth(JSON.stringify({ codeVerifier, codeChallenge }));
+        searchParams.set("codeChallenge", codeChallenge);
+        searchParams.set("mode", "offline");
+      }
+
       redirectURL.search = searchParams.toString();
       const redirectURLWithOAuthParams = redirectURL.toString();
 
@@ -162,10 +167,11 @@ export const Provider = <T extends AnyClient>({
   // On a browser that this policy enabled, we'll just re-run the auth process after redirecting to the embedded app.
   const isInstallRequest = query?.has("hmac") && query?.has("shop");
   const isEmbedded = typeof window !== "undefined" ? window.top !== window.self : false;
-  const inDestinationContext = isInstallRequest || isEmbedded == ((type ?? AppType.Embedded) == AppType.Embedded);
+  const inDestinationContext = isEmbedded == ((type ?? AppType.Embedded) == AppType.Embedded);
+  const inDestinationContextOrInstall = isInstallRequest || inDestinationContext;
 
-  const forceRedirect = isReady && !isUndefined(host) && !inDestinationContext;
-  const canAuth = isReady && !isUndefined(host) && inDestinationContext;
+  const forceRedirect = isReady && !isUndefined(host) && !inDestinationContextOrInstall;
+  const canAuth = isReady && !isUndefined(host) && inDestinationContextOrInstall;
   // We use isReady to force run this logic only on browsers and not server side
   const token = useMemo(() => (canAuth ? shopifySessions[getTokenKey(host, shopifyApiKey)] : undefined), [isReady, shopifySessions]);
   const runningGadgetAuth = canAuth && !isUndefined(authorizationCode) && auth != null;
@@ -250,6 +256,7 @@ export const Provider = <T extends AnyClient>({
         gadgetAppUrl={gadgetAppUrl}
         token={token}
         originalQueryParams={originalQueryParams}
+        inDestinationContext={inDestinationContext}
       >
         {children}
       </AppBridgeWrapper>
@@ -264,6 +271,7 @@ export const Provider = <T extends AnyClient>({
       gadgetAppUrl={gadgetAppUrl}
       token={token}
       originalQueryParams={originalQueryParams}
+      inDestinationContext={inDestinationContext}
     >
       {children}
     </InnerGadgetProvider>
