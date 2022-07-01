@@ -993,9 +993,7 @@
     "@gadgetinc/api-client-core" "0.6.8"
 
 "@gadgetinc/api-client-core@0.6.8":
-  version "0.6.8"
-  resolved "https://registry.yarnpkg.com/@gadgetinc/api-client-core/-/api-client-core-0.6.8.tgz#7c8791ac3a8c69cb5a39f6fbd7cb6a58d6f337aa"
-  integrity sha512-3WzDkg8bVisTjzTXsF+WhAsfdEMdpPISBR7KHFip80arqrGbOYfuY19NzQbjGcmadghcMbLozujQpwfViiqU6g==
+  version "0.6.9"
   dependencies:
     "@opentelemetry/api" "^1.0.4"
     "@urql/core" "^2.1.5"
@@ -1358,10 +1356,24 @@
   dependencies:
     "@shopify/app-bridge" "^2.1.0"
 
+"@shopify/app-bridge-utils@^3.1.1":
+  version "3.1.1"
+  resolved "https://registry.yarnpkg.com/@shopify/app-bridge-utils/-/app-bridge-utils-3.1.1.tgz#cee566f983b60f96a848998a3ad3b0ba5c7bc4e3"
+  integrity sha512-le1/A62naIj5yq2o/G8htECvYTiAbVzOo9Ue3/gGqlJJC6w7+Uu4ppDHdkg6yfZCmkPUXCIr7+yU3kZHYV5z0g==
+  dependencies:
+    "@shopify/app-bridge" "^3.1.1"
+
 "@shopify/app-bridge@^2.1.0":
   version "2.1.0"
   resolved "https://registry.yarnpkg.com/@shopify/app-bridge/-/app-bridge-2.1.0.tgz#c349459d2b4b33c274c2c6af005732b91a32ceb1"
   integrity sha512-qpMOoi6teCzkwmGwhxgOZIi8b8L+I8xzWAdqMZEXX/5V3uxDxYkt4dZoihxICdV05Hgcs1IFvEdMeKloymjGBA==
+  dependencies:
+    base64url "^3.0.1"
+
+"@shopify/app-bridge@^3.1.1":
+  version "3.1.1"
+  resolved "https://registry.yarnpkg.com/@shopify/app-bridge/-/app-bridge-3.1.1.tgz#40106efb23edf3b209da7f8aae37759e023561ad"
+  integrity sha512-RyjKDFfdytcDu3hcHIjBXvpXKDKMlsvpWshuE5lv5H4WEF+7IQomxmmJSXOJJIYnXv3COIamUml3WP/qVMak5A==
   dependencies:
     base64url "^3.0.1"
 
