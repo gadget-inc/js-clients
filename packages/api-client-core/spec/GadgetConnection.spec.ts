@@ -279,5 +279,207 @@ describe("GadgetConnection", () => {
         expect(secondResult.data).toEqual({ currentSession: { id: 1 } });
       });
     });
+
+    it("should support a custom auth mode that can set arbitrary fetch headers", async () => {
+      nock("https://someapp.gadget.app")
+        .post("/api/graphql", { query: "{\n  meta {\n    appName\n  }\n}\n", variables: {} })
+        .reply(200, function () {
+          expect(this.req.headers["authorization"]).toEqual([`FancyMode whatever`]);
+
+          return {
+            data: {
+              meta: {
+                appName: "some app",
+              },
+            },
+          };
+        });
+
+      const connection = new GadgetConnection({
+        endpoint: "https://someapp.gadget.app/api/graphql",
+        authenticationMode: {
+          custom: {
+            processFetch: async (_input, init) => {
+              init.headers ??= {};
+              (init.headers as any).authorization = `FancyMode whatever`;
+            },
+            // eslint-disable-next-line @typescript-eslint/no-empty-function
+            processTransactionConnectionParams: async (params) => {},
+          },
+        },
+      });
+
+      const result = await connection.currentClient
+        .query(
+          gql`
+            {
+              meta {
+                appName
+              }
+            }
+          `
+        )
+        .toPromise();
+
+      expect(result.data).toEqual({ meta: { appName: "some app" } });
+    });
+
+    it("custom auth mode requests shouldn't send back x-set-authorization headers on subsequent requests", async () => {
+      nock("https://someapp.gadget.app")
+        .post("/api/graphql", { query: "{\n  meta {\n    appName\n  }\n}\n", variables: {} })
+        .reply(
+          200,
+          function () {
+            expect(this.req.headers["x-whatever"]).toEqual(["FancyMode whatever"]);
+            expect(this.req.headers["authorization"]).toBeFalsy();
+            return {
+              data: {
+                meta: {
+                  appName: "some app",
+                },
+              },
+            };
+          },
+          {
+            "x-set-authorization": "Session token-123",
+          }
+        )
+        .post("/api/graphql", { query: "{\n  currentSession {\n    id\n  }\n}\n", variables: {} })
+        .reply(
+          200,
+          function () {
+            expect(this.req.headers["x-whatever"]).toEqual(["FancyMode whatever"]);
+            expect(this.req.headers["authorization"]).toBeFalsy();
+            return {
+              data: {
+                currentSession: {
+                  id: 1,
+                },
+              },
+            };
+          },
+          {
+            "x-set-authorization": "Session token-123",
+          }
+        );
+
+      const connection = new GadgetConnection({
+        endpoint: "https://someapp.gadget.app/api/graphql",
+        authenticationMode: {
+          custom: {
+            processFetch: async (_input, init) => {
+              init.headers ??= {};
+              (init.headers as any)["x-whatever"] = `FancyMode whatever`;
+            },
+            // eslint-disable-next-line @typescript-eslint/no-empty-function
+            processTransactionConnectionParams: async (params) => {},
+          },
+        },
+      });
+
+      const firstResult = await connection.currentClient
+        .query(
+          gql`
+            {
+              meta {
+                appName
+              }
+            }
+          `
+        )
+        .toPromise();
+
+      expect(firstResult.data).toEqual({ meta: { appName: "some app" } });
+
+      const secondResult = await connection.currentClient
+        .query(
+          gql`
+            {
+              currentSession {
+                id
+              }
+            }
+          `
+        )
+        .toPromise();
+
+      expect(secondResult.data).toEqual({ currentSession: { id: 1 } });
+    });
+
+    it("custom auth modes can be activated after client construction with .setAuthentication mode", async () => {
+      const connection = new GadgetConnection({
+        endpoint: "https://someapp.gadget.app/api/graphql",
+        authenticationMode: { browserSession: { storageType: BrowserSessionStorageType.Temporary } },
+      });
+
+      nock("https://someapp.gadget.app")
+        .post("/api/graphql", { query: "{\n  meta {\n    appName\n  }\n}\n", variables: {} })
+        .reply(
+          200,
+          {
+            data: {
+              meta: {
+                appName: "some app",
+              },
+            },
+          },
+          {
+            "x-set-authorization": "Session token-123",
+          }
+        );
+
+      const result = await connection.currentClient
+        .query(
+          gql`
+            {
+              meta {
+                appName
+              }
+            }
+          `
+        )
+        .toPromise();
+
+      expect(result.data).toEqual({ meta: { appName: "some app" } });
+
+      connection.setAuthenticationMode({
+        custom: {
+          processFetch: async (_input, init) => {
+            init.headers ??= {};
+            (init.headers as any).authorization = `FancyMode whatever`;
+          },
+          // eslint-disable-next-line @typescript-eslint/no-empty-function
+          processTransactionConnectionParams: async (params) => {},
+        },
+      });
+
+      nock("https://someapp.gadget.app")
+        .post("/api/graphql", { query: "{\n  meta {\n    appName\n  }\n}\n", variables: {} })
+        .reply(200, function () {
+          expect(this.req.headers["authorization"]).toEqual([`FancyMode whatever`]);
+
+          return {
+            data: {
+              meta: {
+                appName: "some app",
+              },
+            },
+          };
+        });
+
+      const customResult = await connection.currentClient
+        .query(
+          gql`
+            {
+              meta {
+                appName
+              }
+            }
+          `
+        )
+        .toPromise();
+
+      expect(customResult.data).toEqual({ meta: { appName: "some app" } });
+    });
   });
 });

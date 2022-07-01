@@ -56,6 +56,7 @@ export enum AuthenticationMode {
   APIKey = "api-key",
   InternalAuthToken = "internal-auth-token",
   Anonymous = "anonymous",
+  Custom = "custom",
 }
 
 /**
@@ -107,6 +108,10 @@ export class GadgetConnection {
     this.resetClients();
   }
 
+  /**
+   * Change the authentication mode settings for this connection imperatively.
+   * @private This function is generally not required for use by external developers, but is useful for those building integrations against the Gadget API to configure passed in `api` objects.
+   */
   setAuthenticationMode(options?: AuthenticationModeOptions) {
     if (options) {
       if (options.browserSession) {
@@ -115,7 +120,10 @@ export class GadgetConnection {
         this.authenticationMode = AuthenticationMode.InternalAuthToken;
       } else if (options.apiKey) {
         this.authenticationMode = AuthenticationMode.APIKey;
+      } else if (options.custom) {
+        this.authenticationMode = AuthenticationMode.Custom;
       }
+      this.options.authenticationMode = options;
     }
 
     this.authenticationMode ??= AuthenticationMode.Anonymous;
@@ -238,6 +246,10 @@ export class GadgetConnection {
   fetch = traceFunction("api-client.fetch", async (input: RequestInfo, init: RequestInit = {}) => {
     init.headers = { ...this.requestHeaders(), ...init.headers };
 
+    if (this.authenticationMode == AuthenticationMode.Custom) {
+      await this.options.authenticationMode!.custom!.processFetch(input, init);
+    }
+
     const response = await this._fetchImplementation(input, init);
     if (this.authenticationMode == AuthenticationMode.BrowserSession) {
       const headerValue = response.headers.get("x-set-authorization");
@@ -246,6 +258,7 @@ export class GadgetConnection {
         this.sessionTokenStore!.setItem(sessionStorageKey, sessionToken);
       }
     }
+
     return response;
   });
 
@@ -287,13 +300,15 @@ export class GadgetConnection {
 
   private newSubscriptionClient(overrides: GadgetSubscriptionClientOptions) {
     // In the browser, we can't set arbitrary headers on the websocket request, so we don't use the same auth mechanism that we use for normal HTTP requests. Instead we use graphql-ws' connectionParams to send the auth information in the connection setup message to the server.
-    const auth: any = { type: this.authenticationMode };
+    const connectionParams: Record<string, any> = { environment: this.environment, auth: { type: this.authenticationMode } };
     if (this.authenticationMode == AuthenticationMode.APIKey) {
-      auth.key = this.options.authenticationMode!.apiKey!;
+      connectionParams.auth.key = this.options.authenticationMode!.apiKey!;
     } else if (this.authenticationMode == AuthenticationMode.InternalAuthToken) {
-      auth.token = this.options.authenticationMode!.internalAuthToken!;
+      connectionParams.auth.token = this.options.authenticationMode!.internalAuthToken!;
     } else if (this.authenticationMode == AuthenticationMode.BrowserSession) {
-      auth.sessionToken = this.sessionTokenStore!.getItem(sessionStorageKey);
+      connectionParams.auth.sessionToken = this.sessionTokenStore!.getItem(sessionStorageKey);
+    } else if (this.authenticationMode == AuthenticationMode.Custom) {
+      this.options.authenticationMode?.custom?.processTransactionConnectionParams(connectionParams);
     }
 
     let url = this.websocketsEndpoint;
@@ -310,7 +325,7 @@ export class GadgetConnection {
     return createSubscriptionClient({
       url,
       webSocketImpl: this.websocketImplementation,
-      connectionParams: { auth, environment: this.environment },
+      connectionParams,
       onNonLazyError: () => {
         // we catch this outside in the runner function
       },
