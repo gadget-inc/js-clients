@@ -152,7 +152,7 @@ export const Provider = ({
   // On a browser that this policy enabled, we'll just re-run the auth process after redirecting to the embedded app.
   const isInstallRequest = query?.has("hmac") && query?.has("shop");
   const isEmbedded = typeof window !== "undefined" ? window.top !== window.self : false;
-  const inDestinationContext = isInstallRequest || isEmbedded == ((type ?? AppType.Embedded) == AppType.Embedded);
+  const inDestinationContext = isEmbedded == ((type ?? AppType.Embedded) == AppType.Embedded);
 
   const forceRedirect = isReady && !isUndefined(host) && !inDestinationContext;
 
@@ -179,7 +179,8 @@ export const Provider = ({
     </GadgetUrqlProvider>
   );
 
-  if (host) {
+  // app bridge provider seems to prevent urql from sending graphql requests when it cannot communicate using postMessage when not embedded so we must skip using the app bridge provider on the very first redirect from shopify
+  if (host && (!isInstallRequest || inDestinationContext)) {
     app = (
       <AppBridgeProvider
         config={{
