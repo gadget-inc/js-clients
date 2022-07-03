@@ -11,7 +11,7 @@ const TestUseGadgetReturnsAppropriateTypes = () => {
   assert<IsExact<typeof canAuth, boolean>>(true);
   assert<IsExact<typeof isAuthenticated, boolean>>(true);
   assert<IsExact<typeof appType, AppType | undefined>>(true);
-  assert<IsExact<typeof appBridge, ClientApplication<AppBridgeState> | undefined>>(true);
+  assert<IsExact<typeof appBridge, ClientApplication<AppBridgeState> | null>>(true);
 };
 
 test("true", () => undefined);
