@@ -59,6 +59,9 @@ NOTE: This example is very similar to that found in [@gadgetinc/react](https://g
 `src/api.ts`
 
 ```typescript
+// replace `my-app-slug` with your app slug from your Gadget app's domain
+import { Client, BrowserSessionStorageType } from "@gadget-client/my-app-slug";
+
 export const api = new Client({
   authenticationMode: {
     browserSession: {
@@ -71,21 +74,27 @@ export const api = new Client({
 `src/app.tsx`
 
 ```tsx
+// import Gadget's react hooks for accessing data from your Gadget app
 import { useAction, useFindMany } from "@gadgetinc/react";
+// import the Gadget<->Shopify bindings that manage the auth process with Shopify
 import { AppType, Provider as GadgetProvider, useGadget } from "@gadgetinc/react-shopify-app-bridge";
+// import and use Shopify's react components like you might in other Shopify app
 import { Button, Redirect, TitleBar } from "@shopify/app-bridge/actions";
 import React from "react";
-import { api } from "./api.ts";
+// import the instance of the Gadget API client for this app constructed in the other file
+import { api } from "./api";
 
-export function MyComponent() {
+export default function App() {
   return (
-    // type can be omitted. Defaults to AppType.Embedded
-    <GadgetProvider type={AppType.Embedded} shopifyApiKey={apiKey} api={api}>
+    // Wrap our main application's react components in the `<GadgetProvider/>` component to interface with Shopify
+    // This wrapper sets up the Shopify App Bridge, and will automatically redirect to perform the OAuth authentication if the shopify shop doesn't yet have the store installed.
+    <GadgetProvider type={AppType.Embedded} shopifyApiKey="REPLACE ME with api key from Shopify partners dashboard" api={api}>
       <ProductManager />
     </GadgetProvider>
   );
 }
 
+// An example component that uses the Gadget React hooks to work with data in the Shopify backend
 function ProductManager() {
   const { loading, appBridge } = useGadget();
   const [, deleteProduct] = useAction(api.shopifyProduct.delete);
@@ -93,7 +102,7 @@ function ProductManager() {
 
   if (error) return <>Error: {error.toString()}</>;
   if (fetching) return <>Fetching...</>;
-  if (!data) return <>No widgets found</>;
+  if (!data) return <>No products found</>;
 
   // Set up a title bar for my embedded app
   const breadcrumb = Button.create(appBridge, { label: "My breadcrumb" });
@@ -111,14 +120,14 @@ function ProductManager() {
     <>
       {loading && <span>Loading...</span>}
       {!loading &&
-        result.data.map((widget) => (
+        result.data.map((product) => (
           <button
             onClick={(event) => {
               event.preventDefault();
-              void deleteProduct({ id: widget.id }).then(() => refresh());
+              void deleteProduct({ id: product.id }).then(() => refresh());
             }}
           >
-            Delete {widget.name}
+            Delete {product.name}
           </button>
         ))}
     </>
