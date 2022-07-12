@@ -32,6 +32,9 @@ const GetCurrentSessionQuery = `
         id
       }
     }
+    shopifyConnection {
+      requiresReauthentication
+    }
   }
 `;
 
@@ -80,7 +83,12 @@ const InnerGadgetProvider = memo(({ children, forceRedirect, isEmbedded, gadgetA
       if (!currentSessionData.currentSession.shop) {
         runningShopifyAuth = true;
       } else {
-        isAuthenticated = true;
+        // we need to re-authenticate because we're missing scopes so let's force redirect
+        if (currentSessionData.shopifyConnection?.requiresReauthentication) {
+          runningShopifyAuth = true;
+        } else {
+          isAuthenticated = true;
+        }
       }
     } else {
       console.warn(
