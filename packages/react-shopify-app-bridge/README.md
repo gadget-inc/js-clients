@@ -120,7 +120,7 @@ function ProductManager() {
     <>
       {loading && <span>Loading...</span>}
       {!loading &&
-        result.data.map((product) => (
+        data.map((product) => (
           <button
             onClick={(event) => {
               event.preventDefault();
