@@ -10,6 +10,7 @@
   ],
   "license": "MIT",
   "repository": "github:gadget-inc/js-clients",
+  "homepage": "https://github.com/gadget-inc/js-clients/tree/main/packages/react-shopify-app-bridge",
   "scripts": {
     "typecheck": "tsc --noEmit",
     "build": "rm -rf dist && tsc",
