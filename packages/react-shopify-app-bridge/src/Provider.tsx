@@ -22,6 +22,7 @@ type GadgetProviderProps = {
   gadgetAppUrl: string;
   originalQueryParams?: URLSearchParams;
   api: AnyClient;
+  isInstallRequest: boolean;
 };
 
 const GetCurrentSessionQuery = `
@@ -39,94 +40,105 @@ const GetCurrentSessionQuery = `
 `;
 
 // inner component that exists in order to ask for the app bridge
-const InnerGadgetProvider = memo(({ children, forceRedirect, isEmbedded, gadgetAppUrl, originalQueryParams, api }: GadgetProviderProps) => {
-  const appBridge = useContext(AppBridgeContext);
+const InnerGadgetProvider = memo(
+  ({ children, forceRedirect, isEmbedded, gadgetAppUrl, originalQueryParams, api, isInstallRequest }: GadgetProviderProps) => {
+    const appBridge = useContext(AppBridgeContext);
 
-  const [context, setContext] = useState<GadgetAuthContextValue>({
-    isAuthenticated: false,
-    isEmbedded: false,
-    canAuth: false,
-    loading: false,
-    appBridge,
-  });
-
-  useEffect(() => {
-    if (!appBridge) return;
-    // setup the api client to always query using the custom shopify auth implementation
-    api.connection.setAuthenticationMode({
-      custom: {
-        processFetch: async (_input, init) => {
-          const headers = new Headers(init.headers);
-          headers.append("Authorization", `ShopifySessionToken ${await getSessionToken(appBridge)}`);
-          init.headers ??= {};
-          headers.forEach(function (value, key) {
-            (init.headers as Record<string, string>)[key] = value;
-          });
-        },
-        processTransactionConnectionParams(_params) {
-          throw new Error("client side transactions yet not supported in Shopify Gadget provider");
-        },
-      },
+    const [context, setContext] = useState<GadgetAuthContextValue>({
+      isAuthenticated: false,
+      isEmbedded: false,
+      canAuth: false,
+      loading: false,
+      appBridge,
     });
-  }, [api.connection, appBridge]);
 
-  let runningShopifyAuth = false;
-  let isAuthenticated = false;
+    useEffect(() => {
+      if (!appBridge) return;
+      // setup the api client to always query using the custom shopify auth implementation
+      api.connection.setAuthenticationMode({
+        custom: {
+          processFetch: async (_input, init) => {
+            const headers = new Headers(init.headers);
+            headers.append("Authorization", `ShopifySessionToken ${await getSessionToken(appBridge)}`);
+            init.headers ??= {};
+            headers.forEach(function (value, key) {
+              (init.headers as Record<string, string>)[key] = value;
+            });
+          },
+          processTransactionConnectionParams(_params) {
+            throw new Error("client side transactions yet not supported in Shopify Gadget provider");
+          },
+        },
+      });
+    }, [api.connection, appBridge]);
 
-  // always run one session fetch to the gadget backend on boot to discover if this app is installed
-  const [{ data: currentSessionData, fetching: sessionFetching, error }] = useQuery({
-    query: GetCurrentSessionQuery,
-  });
+    let runningShopifyAuth = false;
+    let isAuthenticated = false;
 
-  if (currentSessionData) {
-    if (currentSessionData.currentSession) {
-      if (!currentSessionData.currentSession.shop) {
-        runningShopifyAuth = true;
-      } else {
-        // we need to re-authenticate because we're missing scopes so let's force redirect
-        if (currentSessionData.shopifyConnection?.requiresReauthentication) {
+    // always run one session fetch to the gadget backend on boot to discover if this app is installed
+    const [{ data: currentSessionData, fetching: sessionFetching, error }, getSession] = useQuery({
+      query: GetCurrentSessionQuery,
+      pause: true,
+    });
+
+    // only fetch session once we have an app bridge or if it's an install request (on installs we don't start in an embedded context)
+    useEffect(() => {
+      if (appBridge || isInstallRequest) {
+        getSession();
+      }
+    }, [appBridge, isInstallRequest]);
+
+    if (currentSessionData) {
+      if (currentSessionData.currentSession) {
+        if (!currentSessionData.currentSession.shop) {
           runningShopifyAuth = true;
         } else {
-          isAuthenticated = true;
+          // we need to re-authenticate because we're missing scopes so let's force redirect
+          if (currentSessionData.shopifyConnection?.requiresReauthentication) {
+            runningShopifyAuth = true;
+          } else {
+            isAuthenticated = true;
+          }
         }
+      } else {
+        console.warn(
+          "Unexpected response from Gadget backend trying to bootstrap session -- no session returned for valid Shopify Session Token. Is the Gadget Connection configured properly?"
+        );
       }
-    } else {
-      console.warn(
-        "Unexpected response from Gadget backend trying to bootstrap session -- no session returned for valid Shopify Session Token. Is the Gadget Connection configured properly?"
-      );
     }
+
+    // redirect to Gadget to initiate the oauth process if we need to.
+    useEffect(() => {
+      if (!runningShopifyAuth) return;
+      // redirect to gadget app root pages url with oauth params
+      const redirectURL = new URL(gadgetAppUrl);
+      redirectURL.search = originalQueryParams?.toString() ?? "";
+      const redirectURLWithOAuthParams = redirectURL.toString();
+
+      if (isEmbedded && appBridge) {
+        Redirect.create(appBridge).dispatch(Redirect.Action.REMOTE, redirectURLWithOAuthParams);
+      } else {
+        // TODO this might no longer be valid since we require a session token from app bridge to be authenticated
+        window.location.assign(redirectURLWithOAuthParams);
+      }
+    }, [appBridge, gadgetAppUrl, isEmbedded, originalQueryParams, runningShopifyAuth]);
+
+    const loading = forceRedirect || runningShopifyAuth || sessionFetching;
+
+    useEffect(() => {
+      return setContext({
+        isAuthenticated,
+        isEmbedded,
+        canAuth: !!appBridge,
+        loading,
+        appBridge,
+        error,
+      });
+    }, [loading, isEmbedded, appBridge, isAuthenticated, error]);
+
+    return <GadgetAuthContext.Provider value={context}>{children}</GadgetAuthContext.Provider>;
   }
-
-  // redirect to Gadget to initiate the oauth process if we need to.
-  useEffect(() => {
-    if (!runningShopifyAuth) return;
-    // redirect to gadget app root pages url with oauth params
-    const redirectURL = new URL(gadgetAppUrl);
-    redirectURL.search = originalQueryParams?.toString() ?? "";
-    const redirectURLWithOAuthParams = redirectURL.toString();
-
-    if (isEmbedded && appBridge) {
-      Redirect.create(appBridge).dispatch(Redirect.Action.REMOTE, redirectURLWithOAuthParams);
-    } else {
-      window.location.assign(redirectURLWithOAuthParams);
-    }
-  }, [appBridge, gadgetAppUrl, isEmbedded, originalQueryParams, runningShopifyAuth]);
-
-  const loading = forceRedirect || runningShopifyAuth || sessionFetching;
-
-  useEffect(() => {
-    return setContext({
-      isAuthenticated,
-      isEmbedded,
-      canAuth: !!appBridge,
-      loading,
-      appBridge,
-      error,
-    });
-  }, [loading, isEmbedded, appBridge, isAuthenticated, error]);
-
-  return <GadgetAuthContext.Provider value={context}>{children}</GadgetAuthContext.Provider>;
-});
+);
 
 type ProviderLocation = {
   query?: URLSearchParams;
@@ -181,6 +193,7 @@ export const Provider = ({
         gadgetAppUrl={gadgetAppUrl}
         api={api}
         originalQueryParams={originalQueryParams}
+        isInstallRequest={!!isInstallRequest}
       >
         {children}
       </InnerGadgetProvider>
