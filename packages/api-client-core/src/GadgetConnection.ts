@@ -172,16 +172,15 @@ export class GadgetConnection {
       try {
         // The server will error if it receives any operations before the auth dance has been completed, so we block on that happening before sending our first operation. It's important that this happens synchronously after instantiating the client so we don't miss any messages
         subscriptionClient = await this.waitForOpenedConnection({
-          isFatalConnectionProblem(errorOrCloseEvent) {
-            // any interruption of the transaction is fatal to the transaction
-            console.warn("Transport error encountered during transaction processing", errorOrCloseEvent);
-            return true;
-          },
           connectionAckWaitTimeout: DEFAULT_CONN_ACK_TIMEOUT,
           ...options,
           // super ultra critical option that ensures graphql-ws doesn't automatically close the websocket connection when there are no outstanding operations. this is key so we can start a transaction then make mutations within it
           lazyCloseTimeout: 100000,
-          retryAttempts: 0,
+          // any interruption of the transaction is fatal to the transaction
+          shouldRetry(errorOrCloseEvent) {
+            console.warn("Transport error encountered during transaction processing", errorOrCloseEvent);
+            return false;
+          },
         });
 
         const client = new Client({
