@@ -236,7 +236,7 @@ export class GadgetConnection {
   );
 
   close() {
-    void this.baseSubscriptionClient.dispose();
+    this.disposeClient(this.baseSubscriptionClient);
     if (this.currentTransaction) {
       this.currentTransaction.close();
     }
@@ -267,7 +267,7 @@ export class GadgetConnection {
       throw new Error("Can't reset clients while a transaction is open");
     }
 
-    void this.baseSubscriptionClient?.dispose();
+    if (this.baseSubscriptionClient) this.disposeClient(this.baseSubscriptionClient);
     if (this.baseClient) this.baseClient = this.newBaseClient();
   }
 
@@ -381,7 +381,7 @@ export class GadgetConnection {
 
     return await new Promise<SubscriptionClient>((resolve, reject) => {
       const timeout = setTimeout(() => {
-        void subscriptionClient.dispose();
+        this.disposeClient(subscriptionClient);
         wrappedReject(new Error("Timeout opening websocket connection to Gadget API"));
       }, globalTimeout);
 
@@ -391,7 +391,7 @@ export class GadgetConnection {
         if (isCloseEvent(event)) {
           if (event.code == CloseCode.ConnectionAcknowledgementTimeout && attempts > 0) {
             attempts -= 1;
-            void subscriptionClient.dispose();
+            this.disposeClient(subscriptionClient);
             subscriptionClient = this.newSubscriptionClient(options);
             resetListeners();
             return;
@@ -422,5 +422,12 @@ export class GadgetConnection {
 
       resetListeners();
     }).finally(clearListeners);
+  }
+
+  private disposeClient(client: SubscriptionClient) {
+    const maybePromise = client.dispose();
+    if (maybePromise) {
+      maybePromise.catch((err) => console.error(`Error closing SubscriptionClient: ${err}`));
+    }
   }
 }
