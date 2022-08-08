@@ -427,7 +427,7 @@ export class GadgetConnection {
   private disposeClient(client: SubscriptionClient) {
     const maybePromise = client.dispose();
     if (maybePromise) {
-      maybePromise.catch((err) => console.error(`Error closing SubscriptionClient: ${err}`));
+      maybePromise.catch((err: any) => console.error(`Error closing SubscriptionClient: ${err.message}`));
     }
   }
 }
