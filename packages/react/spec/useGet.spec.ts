@@ -1,7 +1,7 @@
 import { GadgetRecord } from "@gadgetinc/api-client-core";
-import { CombinedError } from "@urql/core";
 import { assert, Has, IsExact } from "conditional-type-checks";
 import { useGet } from "../src/useGet";
+import { ErrorWrapper } from "../src/utils";
 import { relatedProductsApi } from "./apis";
 
 // these functions are typechecked but never run to avoid actually making API calls
@@ -10,7 +10,7 @@ const TestGetReturnsTypedDataWithExplicitSelection = () => {
 
   assert<IsExact<typeof fetching, boolean>>(true);
   assert<Has<typeof data, undefined | GadgetRecord<{ id: string; state: any }>>>(true);
-  assert<IsExact<typeof error, CombinedError | undefined>>(true);
+  assert<IsExact<typeof error, ErrorWrapper | undefined>>(true);
 
   // data is accessible via dot access
   if (data) {

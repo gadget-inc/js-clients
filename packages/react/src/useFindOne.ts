@@ -4,16 +4,16 @@ import {
   findOneOperation,
   GadgetRecord,
   get,
-  getNonNullableError,
   getQueryArgs,
   hydrateRecord,
   LimitToKnownKeys,
   Select,
 } from "@gadgetinc/api-client-core";
 import { useMemo } from "react";
-import { CombinedError, useQuery, UseQueryArgs, UseQueryResponse } from "urql";
+import { useQuery, UseQueryArgs } from "urql";
 import { OptionsType } from "./OptionsType";
 import { useStructuralMemo } from "./useStructuralMemo";
+import { ErrorWrapper, ReadHookResult } from "./utils";
 
 /**
  * React hook to fetch a Gadget record using the `findOne` method of a given manager.
@@ -48,7 +48,7 @@ export const useFindOne = <
   manager: { findOne: F },
   id: string,
   options?: LimitToKnownKeys<Options, F["optionsType"] & Omit<UseQueryArgs, "query" | "variables">>
-): UseQueryResponse<
+): ReadHookResult<
   GadgetRecord<Select<Exclude<F["schemaType"], null | undefined>, DefaultSelection<F["selectionType"], Options, F["defaultSelection"]>>>
 > => {
   const memoizedOptions = useStructuralMemo(options);
@@ -69,14 +69,7 @@ export const useFindOne = <
   if (data) {
     data = hydrateRecord(result, get(result.data, dataPath));
   }
-
-  const nonNullableError = getNonNullableError(result, dataPath);
-  let error = result.error;
-  if (!error && nonNullableError) {
-    error = new CombinedError({
-      graphQLErrors: [nonNullableError],
-    });
-  }
+  const error = ErrorWrapper.errorIfDataAbsent(result, dataPath);
 
   return [{ ...result, data, error }, refresh];
 };

@@ -9,9 +9,10 @@ import {
   Select,
 } from "@gadgetinc/api-client-core";
 import { useMemo } from "react";
-import { useQuery, UseQueryResponse } from "urql";
+import { useQuery } from "urql";
 import { OptionsType } from "./OptionsType";
 import { useStructuralMemo } from "./useStructuralMemo";
+import { ErrorWrapper, ReadHookResult } from "./utils";
 
 /**
  * React hook to fetch a Gadget record using the `get` method of a given "singleton" manager.
@@ -44,7 +45,7 @@ export const useGet = <
 >(
   manager: { get: F },
   options?: LimitToKnownKeys<Options, F["optionsType"]>
-): UseQueryResponse<
+): ReadHookResult<
   GadgetRecord<Select<Exclude<F["schemaType"], null | undefined>, DefaultSelection<F["selectionType"], Options, F["defaultSelection"]>>>
 > => {
   const memoizedOptions = useStructuralMemo(options);
@@ -68,6 +69,7 @@ export const useGet = <
   return [
     {
       ...result,
+      error: ErrorWrapper.forMaybeCombinedError(result.error),
       data,
     },
     refresh,

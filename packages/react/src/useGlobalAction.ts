@@ -1,6 +1,7 @@
-import { gadgetErrorFor, get, GlobalActionFunction, globalActionOperation, hydrateRecord } from "@gadgetinc/api-client-core";
+import { get, GlobalActionFunction, globalActionOperation } from "@gadgetinc/api-client-core";
 import { useMemo } from "react";
-import { CombinedError, useMutation, UseMutationResponse } from "urql";
+import { useMutation } from "urql";
+import { ActionHookResult, ErrorWrapper } from "./utils";
 
 /**
  * React hook to run a Gadget model action.
@@ -25,24 +26,22 @@ import { CombinedError, useMutation, UseMutationResponse } from "urql";
  */
 export const useGlobalAction = <F extends GlobalActionFunction<any>>(
   action: F
-): UseMutationResponse<any, Exclude<F["variablesType"], null | undefined>> => {
+): ActionHookResult<any, Exclude<F["variablesType"], null | undefined>> => {
   const plan = useMemo(() => {
     return globalActionOperation(action.operationName, action.variables, action.namespace);
   }, [action]);
 
   const [result, runMutation] = useMutation<any, F["variablesType"]>(plan.query);
 
-  let error = result.error;
+  let error = ErrorWrapper.forMaybeCombinedError(result.error);
   let data = result.data;
   if (data) {
-    data = hydrateRecord(result, get(result.data, [action.operationName]));
+    data = get(result.data, [action.operationName]);
 
     if (data) {
-      const errors = data.getField("errors");
+      const errors = data.errors;
       if (errors && errors[0]) {
-        error = new CombinedError({
-          graphQLErrors: [gadgetErrorFor(errors[0])],
-        });
+        error = ErrorWrapper.forErrorsResponse(errors);
       }
     }
   }

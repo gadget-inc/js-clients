@@ -1,7 +1,7 @@
 import { GadgetRecord } from "@gadgetinc/api-client-core";
-import { CombinedError } from "@urql/core";
 import { assert, IsExact } from "conditional-type-checks";
 import { useBulkAction } from "../src";
+import { ErrorWrapper } from "../src/utils";
 import { bulkExampleApi } from "./apis";
 
 // these functions are typechecked but never run to avoid actually making API calls
@@ -28,7 +28,7 @@ const _TestUseBulkActionReturnsTypedDataWithExplicitSelection = () => {
 
   assert<IsExact<typeof fetching, boolean>>(true);
   assert<IsExact<typeof data, undefined | GadgetRecord<{ id: string; name: string | null }>[]>>(true);
-  assert<IsExact<typeof error, CombinedError | undefined>>(true);
+  assert<IsExact<typeof error, ErrorWrapper | undefined>>(true);
 
   if (data) {
     data[0].id;
