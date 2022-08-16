@@ -15,25 +15,26 @@ import { useStructuralMemo } from "./useStructuralMemo";
 import { ErrorWrapper, ReadHookResult } from "./utils";
 
 /**
- * React hook to fetch a Gadget record using the `get` method of a given "singleton" manager.
+ * React hook that fetches a singleton record for an `api.currentSomething` style model manager. `useGet` fetches one global record, which is most often the current session. `useGet` doesn't require knowing the record's ID in order to fetch it, and instead returns the one current record for the current context.
  *
- * @param manager Gadget model manager to use
+ * @param manager Gadget model manager to use, like `api.currentSomething`
  * @param options options for selecting the fields in the result
  *
  * @example
  * ```
- * export function CurrentSession(props: { id: string }) {
- *   const [result, refresh] = useGet(Client.currentSession, {
+ * export function CurrentSession() {
+ *   const [{error, data, fetching}, refresh] = useGet(api.currentSession, {
  *     select: {
+ *       id: true,
  *       userId: true,
  *     },
  *   });
  *
- *   if (result.error) return <>Error: {result.error.toString()}</>;
- *   if (result.fetching && !result.data) return <>Fetching...</>;
- *   if (!result.data) return <>No current session found</>;
+ *   if (error) return <>Error: {error.toString()}</>;
+ *   if (fetching && !data) return <>Fetching...</>;
+ *   if (!data) return <>No current session found</>;
  *
- *   return <div>Current session user id: {result.data.userId}</div>;
+ *   return <div>Current session ID={data.id} and userId={data.userId}</div>;
  * }
  * ```
  */

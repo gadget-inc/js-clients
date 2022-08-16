@@ -53,6 +53,14 @@ export class GadgetRecordList<Shape extends RecordShape> extends Array<GadgetRec
     return this.pagination.pageInfo.hasPreviousPage;
   }
 
+  get startCursor() {
+    return this.pagination.pageInfo.startCursor;
+  }
+
+  get endCursor() {
+    return this.pagination.pageInfo.endCursor;
+  }
+
   async nextPage() {
     if (!this.hasNextPage)
       throw new GadgetClientError("Cannot request next page because there isn't one, should check 'hasNextPage' to see if it exists");
