@@ -19,7 +19,7 @@
     "prerelease": "gitpkg publish"
   },
   "dependencies": {
-    "@gadgetinc/api-client-core": "^0.7.0",
+    "@gadgetinc/api-client-core": "^0.7.3",
     "deep-equal": "^2.0.5",
     "urql": "^2.0.5"
   },

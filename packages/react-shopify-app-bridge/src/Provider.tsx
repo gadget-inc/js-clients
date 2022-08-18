@@ -82,21 +82,15 @@ const InnerGadgetProvider = memo(
     });
 
     if (currentSessionData) {
+      runningShopifyAuth = currentSessionData.shopifyConnection?.requiresReauthentication;
+
       if (currentSessionData.currentSession) {
         if (!currentSessionData.currentSession.shop) {
           runningShopifyAuth = true;
         } else {
-          // we need to re-authenticate because we're missing scopes so let's force redirect
-          if (currentSessionData.shopifyConnection?.requiresReauthentication) {
-            runningShopifyAuth = true;
-          } else {
-            isAuthenticated = true;
-          }
+          // we may be missing scopes, if so, we aren't fully authenticated
+          isAuthenticated = !currentSessionData.shopifyConnection?.requiresReauthentication;
         }
-      } else {
-        console.warn(
-          "Unexpected response from Gadget backend trying to bootstrap session -- no session returned for valid Shopify Session Token. Is the Gadget Connection configured properly?"
-        );
       }
     }
 
