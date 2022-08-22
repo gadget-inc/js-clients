@@ -993,11 +993,11 @@
     "@gadgetinc/api-client-core" "0.6.8"
 
 "@gadgetinc/api-client-core@0.6.8":
-  version "0.7.0"
+  version "0.8.0"
   dependencies:
     "@opentelemetry/api" "^1.0.4"
-    "@urql/core" "^2.1.5"
-    "@urql/exchange-multipart-fetch" "^0.1.13"
+    "@urql/core" "^3.0.1"
+    "@urql/exchange-multipart-fetch" "^1.0.0"
     cross-fetch "^3.0.6"
     gql-query-builder "^3.6.0"
     graphql "^15.5.0"
@@ -1032,6 +1032,13 @@
   integrity sha512-s58zjpPLymKIkcpoxzFdtIW6+kGYkB9HOIucS9wbApmfXS/JOHlXpgqv6cje0rOOvaXTI7SmecaXv5t8I28a8w==
   dependencies:
     prettier-plugin-organize-imports "^1.0.4"
+
+"@gadgetinc/react@^0.5.0":
+  version "0.6.0"
+  dependencies:
+    "@gadgetinc/api-client-core" "^0.8.0"
+    deep-equal "^2.0.5"
+    urql "^3.0.1"
 
 "@graphql-typed-document-node/core@^3.1.1":
   version "3.1.1"
@@ -1709,22 +1716,22 @@
     "@typescript-eslint/types" "4.33.0"
     eslint-visitor-keys "^2.0.0"
 
-"@urql/core@>=2.3.6", "@urql/core@^2.1.5", "@urql/core@^2.4.3":
-  version "2.5.0"
-  resolved "https://registry.yarnpkg.com/@urql/core/-/core-2.5.0.tgz#6b7e736dc9d3e9e9d7ea3e711ae8dc52be443b1b"
-  integrity sha512-xXdcgb0H3nNTP4OfC+5T3CHJ0iz7Jj0QQYSYhN/hvKrzFnisPz2n6WXmvsHmMXk5bJHsr39kx4eOHcpsJuyCew==
+"@urql/core@>=3.0.0", "@urql/core@^3.0.0", "@urql/core@^3.0.1":
+  version "3.0.1"
+  resolved "https://registry.yarnpkg.com/@urql/core/-/core-3.0.1.tgz#76be27b0ac0b0e3ca02c5240fc1c19735b63df75"
+  integrity sha512-VMnAx1JsV32XjuCQVHHeq2BAn39XBSr6qEJd3xSE3Gwrc2NGndTZeFd6loZKmYF9XTHmvj8YbY2BFfHW7nGbmg==
   dependencies:
     "@graphql-typed-document-node/core" "^3.1.1"
-    wonka "^4.0.14"
+    wonka "^6.0.0"
 
-"@urql/exchange-multipart-fetch@^0.1.13":
-  version "0.1.14"
-  resolved "https://registry.yarnpkg.com/@urql/exchange-multipart-fetch/-/exchange-multipart-fetch-0.1.14.tgz#c34294895be03ed9f0677d587c54c0a6d0f3af26"
-  integrity sha512-JdffZtfsJHQ4v0IevimPWbteXT1C5OH3PPbNJrbLigC9aCZB9dp2ZOjMXTvpP+3SIjJRFRguuRaL7hAGB04vgw==
+"@urql/exchange-multipart-fetch@^1.0.0":
+  version "1.0.0"
+  resolved "https://registry.yarnpkg.com/@urql/exchange-multipart-fetch/-/exchange-multipart-fetch-1.0.0.tgz#e166708c8795267eeccb989f9421b9cb3ab6723a"
+  integrity sha512-hPSrGjzfjhexUbvZOkwKk9G8b06PHHCbo0J2PFyA+yy0tNxRACX4/pSHfztcaRS3VyfbTQtWRQ/QSuUlYMVvzg==
   dependencies:
-    "@urql/core" ">=2.3.6"
+    "@urql/core" ">=3.0.0"
     extract-files "^11.0.0"
-    wonka "^4.0.14"
+    wonka "^6.0.0"
 
 abab@^2.0.3, abab@^2.0.5:
   version "2.0.6"
@@ -5748,13 +5755,13 @@ uri-js@^4.2.2:
   dependencies:
     punycode "^2.1.0"
 
-urql@^2.0.5:
-  version "2.2.0"
-  resolved "https://registry.yarnpkg.com/urql/-/urql-2.2.0.tgz#5eade2813f5b61497086a5038ecc7c6e7cbd7153"
-  integrity sha512-36wnWqDrpXqhwT5r2/qRSZXhb7Y4sXA0nLlYEd3uLgvfIdOA8kUaPdfTujzfrvfCcfiVVFxhzqVAhc8r17NMwQ==
+urql@^3.0.1:
+  version "3.0.1"
+  resolved "https://registry.yarnpkg.com/urql/-/urql-3.0.1.tgz#e937e2c4e08c0e6f2af6a2277d8cad2b156a4a0e"
+  integrity sha512-mAV3qKMp84i8U/bq5DIXjfyeRVyOfF6+iNT2DlLUNsd3w5UKfJHmvYfEPUuV5MJxekT911yoIc4za+/Qq2TPHA==
   dependencies:
-    "@urql/core" "^2.4.3"
-    wonka "^4.0.14"
+    "@urql/core" "^3.0.0"
+    wonka "^6.0.0"
 
 util-deprecate@^1.0.1:
   version "1.0.2"
@@ -5922,10 +5929,10 @@ which@^2.0.1, which@^2.0.2:
   dependencies:
     isexe "^2.0.0"
 
-wonka@^4.0.14:
-  version "4.0.15"
-  resolved "https://registry.yarnpkg.com/wonka/-/wonka-4.0.15.tgz#9aa42046efa424565ab8f8f451fcca955bf80b89"
-  integrity sha512-U0IUQHKXXn6PFo9nqsHphVCE5m3IntqZNB9Jjn7EB1lrR7YTDY3YWgFvEvwniTzXSvOH/XMzAZaIfJF/LvHYXg==
+wonka@^6.0.0:
+  version "6.0.0"
+  resolved "https://registry.yarnpkg.com/wonka/-/wonka-6.0.0.tgz#38cd39a517fc3ff721ea3bf353642b353bf48860"
+  integrity sha512-TEiIOqkhQXbcmL1RrjxPCzTX15V5FSyJvZRSiTxvgTgrJMaOVKmzGTdRVh349CfaNo9dsIhWDyg1/GNq4NWrEg==
 
 word-wrap@^1.2.3, word-wrap@~1.2.3:
   version "1.2.3"

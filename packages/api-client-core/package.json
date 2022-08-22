@@ -1,6 +1,6 @@
 {
   "name": "@gadgetinc/api-client-core",
-  "version": "0.7.3",
+  "version": "0.8.0",
   "source": "src/index.ts",
   "main": "dist/src/index.js",
   "types": "dist/src/index.d.ts",
@@ -20,8 +20,8 @@
   },
   "dependencies": {
     "@opentelemetry/api": "^1.0.4",
-    "@urql/core": "^2.1.5",
-    "@urql/exchange-multipart-fetch": "^0.1.13",
+    "@urql/core": "^3.0.1",
+    "@urql/exchange-multipart-fetch": "^1.0.0",
     "cross-fetch": "^3.0.6",
     "gql-query-builder": "^3.6.0",
     "graphql": "^15.5.0",

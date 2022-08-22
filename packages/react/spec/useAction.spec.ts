@@ -8,14 +8,14 @@ import { relatedProductsApi } from "./apis";
 const TestUseActionCanRunActionsWithVariables = () => {
   const [_, mutate] = useAction(relatedProductsApi.user.update);
 
-  // hook return value includes the urql mutation function
-  void mutate();
-
   // can call with variables
   void mutate({ id: "123", user: { email: "foo@bar.com" } });
 
   // can call with no model variables
   void mutate({ id: "123" });
+
+  // @ts-expect-error can't call with no arguments
+  void mutate();
 
   // @ts-expect-error can't call with no id
   void mutate({});
