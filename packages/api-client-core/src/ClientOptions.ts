@@ -59,7 +59,7 @@ export interface AuthenticationModeOptions {
 
   // @private Use a passed custom function for managing authentication. For some fancy integrations that the API client supports, like embedded Shopify apps, we use platform native features to authenticate with the Gadget backend.
   custom?: {
-    processFetch(input: RequestInfo, init: RequestInit): Promise<void>;
+    processFetch(input: RequestInfo | URL, init: RequestInit): Promise<void>;
     processTransactionConnectionParams(params: Record<string, any>): Promise<void>;
   };
 }

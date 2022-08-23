@@ -43,6 +43,6 @@
     "gql-tag": "^1.0.1",
     "jest": "^27.5.1",
     "nock": "^13.2.8",
-    "typescript": "4.4.3"
+    "typescript": "4.7.4"
   }
 }

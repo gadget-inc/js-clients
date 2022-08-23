@@ -243,7 +243,7 @@ export class GadgetConnection {
   }
 
   /** `fetch` wrapper that applies Gadget's session token logic on the request and retrieves it from the reply */
-  fetch = traceFunction("api-client.fetch", async (input: RequestInfo, init: RequestInit = {}) => {
+  fetch = traceFunction("api-client.fetch", async (input: RequestInfo | URL, init: RequestInit = {}) => {
     init.headers = { ...this.requestHeaders(), ...init.headers };
 
     if (this.authenticationMode == AuthenticationMode.Custom) {
