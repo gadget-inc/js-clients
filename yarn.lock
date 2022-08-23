@@ -1007,6 +1007,21 @@
     lodash.isequal "^4.5.0"
     ws "^8.2.2"
 
+"@gadgetinc/api-client-core@^0.7.0":
+  version "0.8.0"
+  dependencies:
+    "@opentelemetry/api" "^1.0.4"
+    "@urql/core" "^3.0.1"
+    "@urql/exchange-multipart-fetch" "^1.0.0"
+    cross-fetch "^3.0.6"
+    gql-query-builder "^3.6.0"
+    graphql "^15.5.0"
+    graphql-ws "^5.5.5"
+    isomorphic-ws "^4.0.1"
+    lodash.clonedeep "^4.5.0"
+    lodash.isequal "^4.5.0"
+    ws "^8.2.2"
+
 "@gadgetinc/eslint-config@^0.4.0":
   version "0.4.0"
   resolved "https://registry.yarnpkg.com/@gadgetinc/eslint-config/-/eslint-config-0.4.0.tgz#bc831659717affcee7bc59556e7ee8ea8646bc37"
@@ -1034,11 +1049,13 @@
     prettier-plugin-organize-imports "^1.0.4"
 
 "@gadgetinc/react@^0.5.0":
-  version "0.6.0"
+  version "0.5.0"
+  resolved "https://registry.yarnpkg.com/@gadgetinc/react/-/react-0.5.0.tgz#7b3f3371786cec017e846d4c9b5e1c3a899f4845"
+  integrity sha512-ag16uEHCm6+yDPeZ2gH43LkMzx9Wdf11k65Zpno/uBi26TuT/ZrcpG511qGNNufCmxLAu2q/xXwXvRc3EvSGCA==
   dependencies:
-    "@gadgetinc/api-client-core" "^0.8.0"
+    "@gadgetinc/api-client-core" "^0.7.0"
     deep-equal "^2.0.5"
-    urql "^3.0.1"
+    urql "^2.0.5"
 
 "@graphql-typed-document-node/core@^3.1.1":
   version "3.1.1"
@@ -1605,10 +1622,10 @@
   resolved "https://registry.yarnpkg.com/@types/scheduler/-/scheduler-0.16.2.tgz#1a62f89525723dde24ba1b01b092bf5df8ad4d39"
   integrity sha512-hppQEBDmlwhFAXKJX2KnWLYu5yMfi91yazPb2l+lbJiwW+wdo1gNeRA+3RgNSO39WYX2euey41KEwnqesU2Jew==
 
-"@types/semver@^7.3.9":
-  version "7.3.9"
-  resolved "https://registry.yarnpkg.com/@types/semver/-/semver-7.3.9.tgz#152c6c20a7688c30b967ec1841d31ace569863fc"
-  integrity sha512-L/TMpyURfBkf+o/526Zb6kd/tchUP3iBDEPjqjb+U2MAJhVRxxrmr2fwpe08E7QsV7YLcpq0tUaQ9O9x97ZIxQ==
+"@types/semver@^7.3.12":
+  version "7.3.12"
+  resolved "https://registry.yarnpkg.com/@types/semver/-/semver-7.3.12.tgz#920447fdd78d76b19de0438b7f60df3c4a80bf1c"
+  integrity sha512-WwA1MW0++RfXmCr12xeYOOC5baSC9mSb0ZqCquFzKhcoF4TvHu5MKOuXsncgZcpVFhB1pXd5hZmM0ryAoCp12A==
 
 "@types/stack-utils@^2.0.0":
   version "2.0.1"
@@ -1723,6 +1740,14 @@
   dependencies:
     "@graphql-typed-document-node/core" "^3.1.1"
     wonka "^6.0.0"
+
+"@urql/core@^2.6.1":
+  version "2.6.1"
+  resolved "https://registry.yarnpkg.com/@urql/core/-/core-2.6.1.tgz#c10ee972c5e81df6d7bf1e778ef1b5d30e2906e5"
+  integrity sha512-gYrEHy3tViJhwIhauK6MIf2Qp09QTsgNHZRd0n71rS+hF6gdwjspf1oKljl4m25+272cJF7fPjBUGmjaiEr7Kg==
+  dependencies:
+    "@graphql-typed-document-node/core" "^3.1.1"
+    wonka "^4.0.14"
 
 "@urql/exchange-multipart-fetch@^1.0.0":
   version "1.0.0"
@@ -5755,6 +5780,14 @@ uri-js@^4.2.2:
   dependencies:
     punycode "^2.1.0"
 
+urql@^2.0.5:
+  version "2.2.3"
+  resolved "https://registry.yarnpkg.com/urql/-/urql-2.2.3.tgz#84c6ad962d771235106f24de56b5dc6bd85a2c3a"
+  integrity sha512-XMkSYJKW9s4ZlbSuxcUz3fTBIykOn0sGileRXQeyZpaRBXJPVz5saSY05k7jdefNxShZtTI+/nr7PYUWQertfg==
+  dependencies:
+    "@urql/core" "^2.6.1"
+    wonka "^4.0.14"
+
 urql@^3.0.1:
   version "3.0.1"
   resolved "https://registry.yarnpkg.com/urql/-/urql-3.0.1.tgz#e937e2c4e08c0e6f2af6a2277d8cad2b156a4a0e"
@@ -5928,6 +5961,11 @@ which@^2.0.1, which@^2.0.2:
   integrity sha512-BLI3Tl1TW3Pvl70l3yq3Y64i+awpwXqsGBYWkkqMtnbXgrMD+yj7rhW0kuEDxzJaYXGjEW5ogapKNMEKNMjibA==
   dependencies:
     isexe "^2.0.0"
+
+wonka@^4.0.14:
+  version "4.0.15"
+  resolved "https://registry.yarnpkg.com/wonka/-/wonka-4.0.15.tgz#9aa42046efa424565ab8f8f451fcca955bf80b89"
+  integrity sha512-U0IUQHKXXn6PFo9nqsHphVCE5m3IntqZNB9Jjn7EB1lrR7YTDY3YWgFvEvwniTzXSvOH/XMzAZaIfJF/LvHYXg==
 
 wonka@^6.0.0:
   version "6.0.0"
