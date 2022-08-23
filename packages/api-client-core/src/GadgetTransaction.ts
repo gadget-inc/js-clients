@@ -20,7 +20,7 @@ export class GadgetTransaction {
 
   /** Explicitly roll back this transaction, preventing any of the changes made during it from being committed. */
   async rollback() {
-    assertOperationSuccess(await this.client.mutation(`mutation RollbackTransaction { internal { rollbackTransaction }}`).toPromise(), [
+    assertOperationSuccess(await this.client.mutation(`mutation RollbackTransaction { internal { rollbackTransaction }}`, {}).toPromise(), [
       "internal",
       "rollbackTransaction",
     ]);
@@ -32,7 +32,7 @@ export class GadgetTransaction {
    * @private
    */
   async start() {
-    assertOperationSuccess(await this.client.mutation(`mutation StartTransaction { internal { startTransaction }}`).toPromise(), [
+    assertOperationSuccess(await this.client.mutation(`mutation StartTransaction { internal { startTransaction }}`, {}).toPromise(), [
       "internal",
       "startTransaction",
     ]);
@@ -43,7 +43,7 @@ export class GadgetTransaction {
    * @private
    */
   async commit() {
-    assertOperationSuccess(await this.client.mutation(`mutation CommitTransaction { internal { commitTransaction }}`).toPromise(), [
+    assertOperationSuccess(await this.client.mutation(`mutation CommitTransaction { internal { commitTransaction }}`, {}).toPromise(), [
       "internal",
       "commitTransaction",
     ]);

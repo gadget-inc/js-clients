@@ -5,14 +5,14 @@ import { useBulkAction } from "../src";
 import { bulkExampleApi } from "./apis";
 
 // these functions are typechecked but never run to avoid actually making API calls
-const TestUseBulkActionCanRunActionsWithVariables = () => {
+const _TestUseBulkActionCanRunActionsWithVariables = () => {
   const [_, mutate] = useBulkAction(bulkExampleApi.widget.bulkFlipDown);
-
-  // hook return value includes the urql mutation function
-  void mutate();
 
   // can call with variables
   void mutate({ ids: ["123", "124"] });
+
+  // @ts-expect-error can't call with no arguments
+  void mutate();
 
   // @ts-expect-error can't call with no ids
   void mutate({});
@@ -21,8 +21,8 @@ const TestUseBulkActionCanRunActionsWithVariables = () => {
   void mutate({ foo: "123" });
 };
 
-const TestUseBulkActionReturnsTypedDataWithExplicitSelection = () => {
-  const [{ data, fetching, error }, mutate] = useBulkAction(bulkExampleApi.widget.bulkFlipDown, {
+const _TestUseBulkActionReturnsTypedDataWithExplicitSelection = () => {
+  const [{ data, fetching, error }, _mutate] = useBulkAction(bulkExampleApi.widget.bulkFlipDown, {
     select: { id: true, name: true },
   });
 
@@ -36,7 +36,7 @@ const TestUseBulkActionReturnsTypedDataWithExplicitSelection = () => {
   }
 };
 
-const TestUseActionReturnsTypedDataWithNoSelection = () => {
+const _TestUseActionReturnsTypedDataWithNoSelection = () => {
   const [{ data }] = useBulkAction(bulkExampleApi.widget.bulkFlipDown);
 
   if (data) {

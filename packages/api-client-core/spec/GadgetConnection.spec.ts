@@ -52,7 +52,8 @@ describe("GadgetConnection", () => {
                 appName
               }
             }
-          `
+          `,
+          {}
         )
         .toPromise();
 
@@ -88,7 +89,8 @@ describe("GadgetConnection", () => {
                 appName
               }
             }
-          `
+          `,
+          {}
         )
         .toPromise();
 
@@ -123,7 +125,8 @@ describe("GadgetConnection", () => {
                 appName
               }
             }
-          `
+          `,
+          {}
         )
         .toPromise();
 
@@ -161,7 +164,8 @@ describe("GadgetConnection", () => {
                   appName
                 }
               }
-            `
+            `,
+            {}
           )
           .toPromise();
 
@@ -201,7 +205,8 @@ describe("GadgetConnection", () => {
                   appName
                 }
               }
-            `
+            `,
+            {}
           )
           .toPromise();
 
@@ -258,7 +263,8 @@ describe("GadgetConnection", () => {
                   appName
                 }
               }
-            `
+            `,
+            {}
           )
           .toPromise();
 
@@ -272,7 +278,8 @@ describe("GadgetConnection", () => {
                   id
                 }
               }
-            `
+            `,
+            {}
           )
           .toPromise();
 
@@ -317,7 +324,8 @@ describe("GadgetConnection", () => {
                 appName
               }
             }
-          `
+          `,
+          {}
         )
         .toPromise();
 
@@ -385,7 +393,8 @@ describe("GadgetConnection", () => {
                 appName
               }
             }
-          `
+          `,
+          {}
         )
         .toPromise();
 
@@ -399,7 +408,8 @@ describe("GadgetConnection", () => {
                 id
               }
             }
-          `
+          `,
+          {}
         )
         .toPromise();
 
@@ -436,7 +446,8 @@ describe("GadgetConnection", () => {
                 appName
               }
             }
-          `
+          `,
+          {}
         )
         .toPromise();
 
@@ -475,7 +486,8 @@ describe("GadgetConnection", () => {
                 appName
               }
             }
-          `
+          `,
+          {}
         )
         .toPromise();
 

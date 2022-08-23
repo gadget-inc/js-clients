@@ -107,7 +107,7 @@ const InnerGadgetProvider = memo(
       } else {
         window.location.assign(redirectURLWithOAuthParams);
       }
-    }, [appBridge, gadgetAppUrl, isEmbedded, originalQueryParams, runningShopifyAuth]);
+    }, [appBridge, gadgetAppUrl, isEmbedded, isRootFrameRequest, originalQueryParams, runningShopifyAuth]);
 
     const loading = (forceRedirect || runningShopifyAuth || sessionFetching) && !isRootFrameRequest;
 
@@ -121,7 +121,7 @@ const InnerGadgetProvider = memo(
         error,
         isRootFrameRequest,
       });
-    }, [loading, isEmbedded, appBridge, isAuthenticated, error]);
+    }, [loading, isEmbedded, appBridge, isAuthenticated, error, isRootFrameRequest]);
 
     return <GadgetAuthContext.Provider value={context}>{children}</GadgetAuthContext.Provider>;
   }
