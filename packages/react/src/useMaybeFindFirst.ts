@@ -10,9 +10,10 @@ import {
   Select,
 } from "@gadgetinc/api-client-core";
 import { useMemo } from "react";
-import { useQuery, UseQueryArgs, UseQueryResponse } from "urql";
+import { useQuery, UseQueryArgs } from "urql";
 import { OptionsType } from "./OptionsType";
 import { useStructuralMemo } from "./useStructuralMemo";
+import { ErrorWrapper, ReadHookResult } from "./utils";
 
 /**
  * React hook to fetch many Gadget records using the `maybeFindFirst` method of a given manager.
@@ -46,7 +47,7 @@ export const useMaybeFindFirst = <
 >(
   manager: { findFirst: F },
   options?: LimitToKnownKeys<Options, F["optionsType"]> & Omit<UseQueryArgs, "query" | "variables">
-): UseQueryResponse<null | GadgetRecord<
+): ReadHookResult<null | GadgetRecord<
   Select<Exclude<F["schemaType"], null | undefined>, DefaultSelection<F["selectionType"], Options, F["defaultSelection"]>>
 >> => {
   const firstOptions = { ...options, first: 1 };
@@ -73,5 +74,12 @@ export const useMaybeFindFirst = <
     }
   }
 
-  return [{ ...result, data }, refresh];
+  return [
+    {
+      ...result,
+      error: ErrorWrapper.forMaybeCombinedError(result.error),
+      data,
+    },
+    refresh,
+  ];
 };

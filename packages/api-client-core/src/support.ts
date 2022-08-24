@@ -95,6 +95,9 @@ export class GadgetNonUniqueDataError extends Error {
   code = "GGT_NON_UNIQUE_DATA";
 }
 
+/** All the errors a Gadget operation can throw */
+export type GadgetError = GadgetOperationError | GadgetInternalError | InvalidRecordError | GadgetNonUniqueDataError;
+
 export function assert<T>(value: T | undefined | null, message?: string): T {
   if (!value) {
     throw new Error("assertion error" + (message ? `: ${message}` : ""));

@@ -10,9 +10,10 @@ import {
   Select,
 } from "@gadgetinc/api-client-core";
 import { useMemo } from "react";
-import { useQuery, UseQueryArgs, UseQueryResponse } from "urql";
+import { useQuery, UseQueryArgs } from "urql";
 import { OptionsType } from "./OptionsType";
 import { useStructuralMemo } from "./useStructuralMemo";
+import { ErrorWrapper, ReadHookResult } from "./utils";
 
 /**
  * React hook to fetch a Gadget record using the `maybeFindOne` method of a given manager.
@@ -47,7 +48,7 @@ export const useMaybeFindOne = <
   manager: { findOne: F },
   id: string,
   options?: LimitToKnownKeys<Options, F["optionsType"] & Omit<UseQueryArgs, "query" | "variables">>
-): UseQueryResponse<null | GadgetRecord<
+): ReadHookResult<null | GadgetRecord<
   Select<Exclude<F["schemaType"], null | undefined>, DefaultSelection<F["selectionType"], Options, F["defaultSelection"]>>
 >> => {
   const memoizedOptions = useStructuralMemo(options);
@@ -72,6 +73,7 @@ export const useMaybeFindOne = <
   return [
     {
       ...result,
+      error: ErrorWrapper.forMaybeCombinedError(result.error),
       data,
     },
     refresh,

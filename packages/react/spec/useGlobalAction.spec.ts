@@ -1,6 +1,6 @@
-import { CombinedError } from "@urql/core";
 import { assert, IsExact } from "conditional-type-checks";
 import { useGlobalAction } from "../src";
+import { ErrorWrapper } from "../src/utils";
 import { bulkExampleApi } from "./apis";
 
 // these functions are typechecked but never run to avoid actually making API calls
@@ -9,7 +9,7 @@ const TestUseGlobalActionCanRunGlobalActionsWithVariables = () => {
 
   assert<IsExact<typeof fetching, boolean>>(true);
   assert<IsExact<typeof data, any>>(true);
-  assert<IsExact<typeof error, CombinedError | undefined>>(true);
+  assert<IsExact<typeof error, ErrorWrapper | undefined>>(true);
 
   // can call with variables
   void mutate({ why: "foobar" });

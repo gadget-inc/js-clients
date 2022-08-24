@@ -3,7 +3,6 @@ import {
   actionOperation,
   capitalize,
   DefaultSelection,
-  gadgetErrorFor,
   GadgetRecord,
   get,
   hydrateRecord,
@@ -11,9 +10,10 @@ import {
   Select,
 } from "@gadgetinc/api-client-core";
 import { useMemo } from "react";
-import { CombinedError, useMutation, UseMutationResponse } from "urql";
+import { useMutation } from "urql";
 import { OptionsType } from "./OptionsType";
 import { useStructuralMemo } from "./useStructuralMemo";
+import { ActionHookResult, ErrorWrapper } from "./utils";
 
 /**
  * React hook to run a Gadget model action.
@@ -55,7 +55,7 @@ export const useAction = <
 >(
   action: F,
   options?: LimitToKnownKeys<Options, F["optionsType"]>
-): UseMutationResponse<
+): ActionHookResult<
   GadgetRecord<Select<Exclude<F["schemaType"], null | undefined>, DefaultSelection<F["selectionType"], Options, F["defaultSelection"]>>>,
   Exclude<F["variablesType"], null | undefined>
 > => {
@@ -77,7 +77,7 @@ export const useAction = <
     F["variablesType"]
   >(plan.query);
 
-  let error = result.error;
+  let error = ErrorWrapper.forMaybeCombinedError(result.error);
   let data = result.data;
   if (data) {
     const dataPath = [action.operationName];
@@ -89,9 +89,7 @@ export const useAction = <
     if (mutationData) {
       const errors = mutationData["errors"];
       if (errors && errors[0]) {
-        error = new CombinedError({
-          graphQLErrors: [gadgetErrorFor(errors[0])],
-        });
+        error = ErrorWrapper.forErrorsResponse(errors, error?.response);
       }
     }
 

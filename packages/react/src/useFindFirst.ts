@@ -4,16 +4,16 @@ import {
   findManyOperation,
   GadgetRecord,
   get,
-  getNonNullableError,
   getQueryArgs,
   hydrateConnection,
   LimitToKnownKeys,
   Select,
 } from "@gadgetinc/api-client-core";
 import { useMemo } from "react";
-import { CombinedError, useQuery, UseQueryArgs, UseQueryResponse } from "urql";
+import { useQuery, UseQueryArgs } from "urql";
 import { OptionsType } from "./OptionsType";
 import { useStructuralMemo } from "./useStructuralMemo";
+import { ErrorWrapper, ReadHookResult } from "./utils";
 
 /**
  * React hook to fetch many Gadget records using the `findFirst` method of a given manager.
@@ -47,7 +47,7 @@ export const useFindFirst = <
 >(
   manager: { findFirst: F },
   options?: LimitToKnownKeys<Options, F["optionsType"]> & Omit<UseQueryArgs, "query" | "variables">
-): UseQueryResponse<
+): ReadHookResult<
   GadgetRecord<Select<Exclude<F["schemaType"], null | undefined>, DefaultSelection<F["selectionType"], Options, F["defaultSelection"]>>>
 > => {
   const firstOptions = { ...options, first: 1 };
@@ -74,13 +74,6 @@ export const useFindFirst = <
     }
   }
 
-  const nonNullableError = getNonNullableError(result, dataPath, true);
-  let error = result.error;
-  if (!error && nonNullableError) {
-    error = new CombinedError({
-      graphQLErrors: [nonNullableError],
-    });
-  }
-
+  const error = ErrorWrapper.errorIfDataAbsent(result, dataPath);
   return [{ ...result, data, error }, refresh];
 };

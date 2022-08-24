@@ -12,9 +12,10 @@ import {
   Select,
 } from "@gadgetinc/api-client-core";
 import { useMemo } from "react";
-import { CombinedError, useQuery, UseQueryArgs, UseQueryResponse } from "urql";
+import { useQuery, UseQueryArgs } from "urql";
 import { OptionsType } from "./OptionsType";
 import { useStructuralMemo } from "./useStructuralMemo";
+import { ErrorWrapper, ReadHookResult } from "./utils";
 
 /**
  * React hook to fetch a Gadget record using the `findByXYZ` method of a given manager.
@@ -48,7 +49,7 @@ export const useFindBy = <
   finder: F,
   value: string,
   options?: LimitToKnownKeys<Options, F["optionsType"]> & Omit<UseQueryArgs, "query" | "variables">
-): UseQueryResponse<
+): ReadHookResult<
   GadgetRecord<Select<Exclude<F["schemaType"], null | undefined>, DefaultSelection<F["selectionType"], Options, F["defaultSelection"]>>>
 > => {
   const memoizedOptions = useStructuralMemo(options);
@@ -76,18 +77,14 @@ export const useFindBy = <
     }
   }
 
-  let error = result.error;
+  let error = ErrorWrapper.forMaybeCombinedError(result.error);
   if (!error) {
     const nonNullableError = getNonNullableError(result, dataPath);
 
     if (records.length > 1) {
-      error = new CombinedError({
-        graphQLErrors: [getNonUniqueDataError(finder.modelApiIdentifier, finder.findByVariableName, value)],
-      });
+      error = ErrorWrapper.forClientSideError(getNonUniqueDataError(finder.modelApiIdentifier, finder.findByVariableName, value));
     } else if (nonNullableError) {
-      error = new CombinedError({
-        graphQLErrors: [nonNullableError],
-      });
+      error = ErrorWrapper.forClientSideError(nonNullableError);
     }
   }
 
