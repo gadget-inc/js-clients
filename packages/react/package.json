@@ -24,8 +24,8 @@
     "urql": "^3.0.1"
   },
   "devDependencies": {
-    "@babel/core": "^7.15.5",
-    "@babel/preset-env": "^7.15.6",
+    "@babel/core": "^7.18.10",
+    "@babel/preset-env": "^7.18.10",
     "@babel/preset-typescript": "^7.15.0",
     "@types/deep-equal": "^1.0.1",
     "@types/react": "^17.0.48",

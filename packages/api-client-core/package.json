@@ -32,8 +32,8 @@
     "ws": "^8.2.2"
   },
   "devDependencies": {
-    "@babel/core": "^7.15.5",
-    "@babel/preset-env": "^7.15.6",
+    "@babel/core": "^7.18.10",
+    "@babel/preset-env": "^7.18.10",
     "@babel/preset-typescript": "^7.15.0",
     "@types/jest": "^26.0.24",
     "@types/lodash.clonedeep": "^4.5.6",
