@@ -1,6 +1,13 @@
+/* eslint-disable jest/no-try-expect */
 import { CombinedError } from "@urql/core";
 import { GraphQLError } from "graphql";
-import { assertNullableOperationSuccess, assertOperationSuccess, GadgetOperationError, getNonNullableError } from "../src";
+import {
+  assertMutationSuccess,
+  assertNullableOperationSuccess,
+  assertOperationSuccess,
+  GadgetOperationError,
+  getNonNullableError,
+} from "../src";
 
 describe("support utilities", () => {
   describe("assertOperationSuccess", () => {
@@ -179,6 +186,137 @@ describe("support utilities", () => {
     test("returns void if data is valid", () => {
       const error = getNonNullableError({ fetching: false, data: { foo: { bar: "valid" } } }, ["foo", "bar"]);
       expect(error).toBeUndefined();
+    });
+  });
+
+  describe("assertMutationSuccess", () => {
+    test("returns the result at the datapath if the operation was successful", () => {
+      expect(
+        assertMutationSuccess(
+          {
+            operation: null as any,
+            data: { createWidget: { success: true, errors: null, widget: { bar: "baz" } } },
+          },
+          ["createWidget"]
+        )
+      ).toEqual({ success: true, errors: null, widget: { bar: "baz" } });
+    });
+
+    test("throws an error if success is false but no errors are returned", () => {
+      expect(() =>
+        assertMutationSuccess(
+          {
+            operation: null as any,
+            data: {
+              createWidget: {
+                success: false,
+                errors: null,
+                widget: null,
+              },
+            },
+          },
+
+          ["createWidget"]
+        )
+      ).toThrowErrorMatchingInlineSnapshot(`"GGT_UNKNOWN: Gadget API operation not successful."`);
+    });
+
+    test("throws the first error from the mutation errors if present", () => {
+      expect(() =>
+        assertMutationSuccess(
+          {
+            operation: null as any,
+            data: {
+              createWidget: {
+                success: false,
+                errors: [{ code: "GGT_SOMETHING", message: "some message" }],
+                widget: null,
+              },
+            },
+          },
+
+          ["createWidget"]
+        )
+      ).toThrowErrorMatchingInlineSnapshot(`"GGT_SOMETHING: some message"`);
+    });
+
+    test("throws a rich error representing a validation error if encountered", () => {
+      let threw = false;
+      try {
+        assertMutationSuccess(
+          {
+            operation: null as any,
+            data: {
+              createWidget: {
+                success: false,
+                errors: [
+                  {
+                    code: "GGT_INVALID_RECORD",
+                    message: "widget record is invalid and can't be saved. foo is not present, bar is not present.",
+                    model: { apiIdentifier: "widget" },
+                    validationErrors: [
+                      { apiIdentifier: "foo", message: "is not present" },
+                      { apiIdentifier: "bar", message: "is not present" },
+                    ],
+                    record: {
+                      id: 10,
+                      foo: null,
+                      bar: null,
+                    },
+                  },
+                ],
+                widget: null,
+              },
+            },
+          },
+          ["createWidget"]
+        );
+      } catch (error: any) {
+        threw = true;
+        expect(error).toBeTruthy();
+        expect(error.validationErrors).toHaveLength(2);
+        expect(error.validationErrors[0].apiIdentifier).toEqual("foo");
+        expect(error.validationErrors[0].message).toEqual("is not present");
+        expect(error.modelApiIdentifier).toEqual("widget");
+        expect(error.record.id).toEqual(10);
+      }
+      expect(threw).toBeTruthy();
+    });
+
+    test("throws a rich error representing a validation error if encountered where the extra context is missing", () => {
+      let threw = false;
+      try {
+        assertMutationSuccess(
+          {
+            operation: null as any,
+            data: {
+              createWidget: {
+                success: false,
+                errors: [
+                  {
+                    code: "GGT_INVALID_RECORD",
+                    message: "Record has one invalid error",
+                    validationErrors: [{ apiIdentifier: "foo", message: "is not present" }],
+                    model: null,
+                    record: null,
+                  },
+                ],
+                widget: null,
+              },
+            },
+          },
+          ["createWidget"]
+        );
+      } catch (error: any) {
+        threw = true;
+        expect(error).toBeTruthy();
+        expect(error.validationErrors).toHaveLength(1);
+        expect(error.validationErrors[0].apiIdentifier).toEqual("foo");
+        expect(error.validationErrors[0].message).toEqual("is not present");
+        expect(error.modelApiIdentifier).toBeFalsy();
+        expect(error.record).toBeFalsy();
+      }
+      expect(threw).toBeTruthy();
     });
   });
 });

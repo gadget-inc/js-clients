@@ -23,6 +23,10 @@ fragment InternalErrorsDetails on ExecutionError {
       apiIdentifier
       message
     }
+    model {
+      apiIdentifier
+    }
+    record
   }
 }
 `;

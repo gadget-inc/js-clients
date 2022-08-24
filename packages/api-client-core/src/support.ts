@@ -19,38 +19,80 @@ export class GadgetInternalError extends Error {}
 export class GadgetClientError extends Error {}
 
 /**
- * A Gadget API error with an `errorCode` and `message` describing the error. Most often these errors are caused by invalid input data or by misconfigured Gadget models. Consult the documentation for the specific `errorCode` to learn more.
+ * A Gadget API error with an `code` and `message` describing the error. Most often these errors are caused by invalid input data or by misconfigured Gadget models. Consult the documentation for the specific `code` to learn more.
  **/
 export class GadgetOperationError extends Error {
-  constructor(incomingMessage: string, readonly errorCode: string) {
-    super(incomingMessage.startsWith("GGT_") ? incomingMessage : `${errorCode}: ${incomingMessage}`);
+  constructor(incomingMessage: string, readonly code: string) {
+    super(incomingMessage.startsWith("GGT_") ? incomingMessage : `${code}: ${incomingMessage}`);
   }
 }
 
 /**
- * Interface representing one message on one invalid field for a `GadgetValidationError`
+ * Interface representing one message on one invalid field for a `InvalidRecordError`
  */
 export interface InvalidFieldError {
+  /** Which field of a record this error is for */
   apiIdentifier: string;
+  /** Human facing string representing the error */
   message: string;
 }
 
 /**
  * A Gadget API error representing a backend validation error on the input data for an action. Thrown when any of the validations configured on a model fail for the given input data. Has a `validationErrors` property describing which fields failed validation, with messages for each.
  **/
-export class GadgetValidationError extends Error {
-  errorCode = "GGT_INVALID_RECORD";
+export class InvalidRecordError extends Error {
+  code = "GGT_INVALID_RECORD";
+  name = "InvalidRecordError";
 
-  constructor(message: string, readonly validationErrors: InvalidFieldError[]) {
-    super(message);
+  /** @private */
+  statusCode = 422;
+  /** @private */
+  causedByClient = true;
+  /**
+   * A list of validation errors for each field that failed validation.
+   */
+  readonly validationErrors: InvalidFieldError[];
+  /**
+   * The API identifier of the model for this record which failed to validate
+   */
+  readonly modelApiIdentifier?: string;
+  /**
+   * The record that failed to validate, if available
+   */
+  readonly record?: Record<string, any>;
+
+  constructor(message: string | null, validationErrors: InvalidFieldError[], modelApiIdentifier?: string, record?: Record<string, any>) {
+    const firstErrors = validationErrors.slice(0, 3);
+    const extraErrorMessage =
+      validationErrors.length > 3
+        ? `, and ${validationErrors.length - 3} more error${validationErrors.length > 4 ? "s" : ""} need${
+            validationErrors.length > 4 ? "" : "s"
+          } to be corrected`
+        : "";
+
+    super(
+      message ??
+        `GGT_INVALID_RECORD: ${modelApiIdentifier ?? "Record"} is invalid and can't be saved. ${firstErrors
+          .map(({ apiIdentifier, message }) => `${apiIdentifier} ${message}`)
+          .join(", ")}${extraErrorMessage}.`
+    );
+
+    this.validationErrors = validationErrors;
+    this.modelApiIdentifier = modelApiIdentifier;
+    this.record = record;
   }
 }
 
 /**
- * A Gadget API error that represents an error from the server. Thrown when the server enounters data that is not unique despite the existence of unique validation on a field. If you receive this error, it is likely that you added a unique validation to a field that has duplicate data.
+ * @deprecated Use `InvalidRecordError` instead, here for backwards compatability
+ */
+export const GadgetValidationError = InvalidRecordError;
+
+/**
+ * A Gadget API error that represents an error from the server. Thrown when the server encounters data that is not unique despite the existence of unique validation on a field. If you receive this error, it is likely that you added a unique validation to a field that has duplicate data.
  */
 export class GadgetNonUniqueDataError extends Error {
-  errorCode = "GGT_NON_UNIQUE_DATA";
+  code = "GGT_NON_UNIQUE_DATA";
 }
 
 export function assert<T>(value: T | undefined | null, message?: string): T {
@@ -156,7 +198,7 @@ export const assertNullableOperationSuccess = (response: OperationResult<any>, d
 
 export const gadgetErrorFor = (error: Record<string, any>) => {
   if (error.code == "GGT_INVALID_RECORD") {
-    return new GadgetValidationError(error.message, error.validationErrors);
+    return new InvalidRecordError(error.message, error.validationErrors, error.model?.apiIdentifier, error.record);
   } else if (error.code == "GGT_UNKNOWN" && error.message.includes("duplicate key value violates unique constraint")) {
     return new GadgetNonUniqueDataError(error.message);
   } else {
