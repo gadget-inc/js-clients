@@ -1647,12 +1647,12 @@
   dependencies:
     "@shopify/app-bridge" "^2.1.0"
 
-"@shopify/app-bridge-utils@^3.1.1":
-  version "3.1.1"
-  resolved "https://registry.yarnpkg.com/@shopify/app-bridge-utils/-/app-bridge-utils-3.1.1.tgz#cee566f983b60f96a848998a3ad3b0ba5c7bc4e3"
-  integrity sha512-le1/A62naIj5yq2o/G8htECvYTiAbVzOo9Ue3/gGqlJJC6w7+Uu4ppDHdkg6yfZCmkPUXCIr7+yU3kZHYV5z0g==
+"@shopify/app-bridge-utils@^3.2.3":
+  version "3.2.3"
+  resolved "https://registry.yarnpkg.com/@shopify/app-bridge-utils/-/app-bridge-utils-3.2.3.tgz#86ecb8993461ff00e68c40cf102a74bc6871d957"
+  integrity sha512-+HldPG+DnTb0pL7m4uE7CEc+Ez8TMT5EP7VwInbrZP79mRQfcHARMnnUhLyxXAFxNo9CBWh19/TBcNKXfYUiYQ==
   dependencies:
-    "@shopify/app-bridge" "^3.1.1"
+    "@shopify/app-bridge" "^3.2.3"
 
 "@shopify/app-bridge@^2.1.0":
   version "2.1.0"
@@ -1661,12 +1661,13 @@
   dependencies:
     base64url "^3.0.1"
 
-"@shopify/app-bridge@^3.1.1":
-  version "3.1.1"
-  resolved "https://registry.yarnpkg.com/@shopify/app-bridge/-/app-bridge-3.1.1.tgz#40106efb23edf3b209da7f8aae37759e023561ad"
-  integrity sha512-RyjKDFfdytcDu3hcHIjBXvpXKDKMlsvpWshuE5lv5H4WEF+7IQomxmmJSXOJJIYnXv3COIamUml3WP/qVMak5A==
+"@shopify/app-bridge@^3.2.3":
+  version "3.2.3"
+  resolved "https://registry.yarnpkg.com/@shopify/app-bridge/-/app-bridge-3.2.3.tgz#9a82895f4a2047660078df3b1421cdc6f1fdaef1"
+  integrity sha512-5EZ7u2eSpqSqgB/fJUaAI/uS0zrM7WObE+2IDxr8CuepffKRjDu7ZTJTcL/Y1OGwvlTvC7O/nme7NihVpkIwFw==
   dependencies:
     base64url "^3.0.1"
+    web-vitals "^2.1.4"
 
 "@sinclair/typebox@^0.23.3":
   version "0.23.5"
@@ -6143,6 +6144,11 @@ web-streams-polyfill@^3.0.3:
   version "3.2.1"
   resolved "https://registry.yarnpkg.com/web-streams-polyfill/-/web-streams-polyfill-3.2.1.tgz#71c2718c52b45fd49dbeee88634b3a60ceab42a6"
   integrity sha512-e0MO3wdXWKrLbL0DgGnUV7WHVuw9OUvL4hjgnPkIeEvESk74gAITi5G606JtZPp39cd8HA9VQzCIvA49LpPN5Q==
+
+web-vitals@^2.1.4:
+  version "2.1.4"
+  resolved "https://registry.yarnpkg.com/web-vitals/-/web-vitals-2.1.4.tgz#76563175a475a5e835264d373704f9dde718290c"
+  integrity sha512-sVWcwhU5mX6crfI5Vd2dC4qchyTqxV8URinzt25XqVh+bHEPGH4C3NPrNionCP7Obx59wrYEbNlw4Z8sjALzZg==
 
 webidl-conversions@^3.0.0:
   version "3.0.1"
