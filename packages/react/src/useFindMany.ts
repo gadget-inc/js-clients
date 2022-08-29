@@ -16,7 +16,7 @@ import { useStructuralMemo } from "./useStructuralMemo";
 import { ErrorWrapper, ReadHookResult } from "./utils";
 
 /**
- * React hook to fetch many Gadget records using the `findMany` method of a given manager.
+ * React hook to fetch a page of Gadget records from the backend, optionally sorted, filtered, searched, and selected from. Returns a standard hook result set with a tuple of the result object with `data`, `fetching`, and `error` keys, and a `refetch` function. `data` will be a `GadgetRecordList` object holding the list of returned records and pagination info.
  *
  * @param manager Gadget model manager to use
  * @param options options for filtering and searching records, and selecting the fields in each record of the result
@@ -25,7 +25,7 @@ import { ErrorWrapper, ReadHookResult } from "./utils";
  *
  * ```
  * export function Users() {
- *   const [result, refresh] = useFindMany(Client.user, {
+ *   const [result, refresh] = useFindMany(api.user, {
  *     select: {
  *       name: true,
  *     },

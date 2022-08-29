@@ -16,7 +16,7 @@ import { useStructuralMemo } from "./useStructuralMemo";
 import { ErrorWrapper, ReadHookResult } from "./utils";
 
 /**
- * React hook to fetch a Gadget record using the `findOne` method of a given manager.
+ * React hook to fetch one Gadget record by `id` from the backend. Returns a standard hook result set with a tuple of the result object with `data`, `fetching`, and `error` keys, and a `refetch` function. `data` will be the record if it was found, and `null` otherwise.
  *
  * @param manager Gadget model manager to use
  * @param id id of the record to fetch
@@ -25,7 +25,7 @@ import { ErrorWrapper, ReadHookResult } from "./utils";
  * @example
  * ```
  * export function User(props: { id: string }) {
- *   const [result, refresh] = useFindOne(Client.user, props.id, {
+ *   const [result, refresh] = useFindOne(api.user, props.id, {
  *     select: {
  *       name: true,
  *     },

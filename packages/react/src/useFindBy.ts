@@ -18,7 +18,7 @@ import { useStructuralMemo } from "./useStructuralMemo";
 import { ErrorWrapper, ReadHookResult } from "./utils";
 
 /**
- * React hook to fetch a Gadget record using the `findByXYZ` method of a given manager.
+ * React hook to fetch a Gadget record using the `findByXYZ` method of a given model manager. Useful for finding records by key fields which are used for looking up records by. Gadget autogenerates the `findByXYZ` methods on your model managers, and `useFindBy` can only be used with models that have these generated finder functions.
  *
  * @param finder `findByXYZ` function from a Gadget manager that will be used
  * @param value field value of the record to fetch
@@ -27,7 +27,7 @@ import { ErrorWrapper, ReadHookResult } from "./utils";
  * @example
  * ```
  * export function UserByEmail(props: { email: string }) {
- *   const [result, refresh] = useFindBy(Client.user.findByEmail, props.email, {
+ *   const [result, refresh] = useFindBy(api.user.findByEmail, props.email, {
  *     select: {
  *       name: true,
  *     },
