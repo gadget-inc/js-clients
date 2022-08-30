@@ -96,10 +96,11 @@ export default function App() {
 
 // An example component that uses the Gadget React hooks to work with data in the Shopify backend
 function ProductManager() {
-  const { loading, appBridge, isRootFrameRequest, isAuthenticated } = useGadget();
+  const { loading, appBridge, isRootFrameRequest, isAuthenticated, isReady } = useGadget();
   const [, deleteProduct] = useAction(api.shopifyProduct.delete);
   const [{ data, fetching, error }, refresh] = useFindMany(api.shopifyProduct);
 
+  if (!isReady) return <>Initializing app...</>;
   if (error) return <>Error: {error.toString()}</>;
   if (fetching) return <>Fetching...</>;
   if (!data) return <>No products found</>;

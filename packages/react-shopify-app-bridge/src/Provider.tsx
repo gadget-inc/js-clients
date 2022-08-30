@@ -7,7 +7,7 @@ import { Redirect } from "@shopify/app-bridge/actions";
 import { isUndefined } from "lodash";
 import React, { memo, useContext, useEffect, useMemo, useState } from "react";
 import { useQuery } from "urql";
-import { GadgetAuthContext, GadgetAuthContextValue } from "./index";
+import { GadgetAuthContext } from "./index";
 
 export enum AppType {
   Standalone,
@@ -16,13 +16,14 @@ export enum AppType {
 
 /** Internal props used to create the right structure of providers */
 type GadgetProviderProps = {
-  children: JSX.Element | JSX.Element[];
+  children: React.ReactNode;
   forceRedirect: boolean;
   isEmbedded: boolean;
   gadgetAppUrl: string;
   originalQueryParams?: URLSearchParams;
   api: AnyClient;
   isRootFrameRequest: boolean;
+  isReady: boolean;
 };
 
 const GetCurrentSessionQuery = `
@@ -41,17 +42,8 @@ const GetCurrentSessionQuery = `
 
 // inner component that exists in order to ask for the app bridge
 const InnerGadgetProvider = memo(
-  ({ children, forceRedirect, isEmbedded, gadgetAppUrl, originalQueryParams, api, isRootFrameRequest }: GadgetProviderProps) => {
+  ({ children, forceRedirect, isEmbedded, gadgetAppUrl, originalQueryParams, api, isRootFrameRequest, isReady }: GadgetProviderProps) => {
     const appBridge = useContext(AppBridgeContext);
-
-    const [context, setContext] = useState<GadgetAuthContextValue>({
-      isAuthenticated: false,
-      isEmbedded: false,
-      canAuth: false,
-      loading: false,
-      appBridge,
-      isRootFrameRequest: false,
-    });
 
     useEffect(() => {
       if (!appBridge) return;
@@ -111,19 +103,22 @@ const InnerGadgetProvider = memo(
 
     const loading = (forceRedirect || runningShopifyAuth || sessionFetching) && !isRootFrameRequest;
 
-    useEffect(() => {
-      return setContext({
-        isAuthenticated,
-        isEmbedded,
-        canAuth: !!appBridge,
-        loading,
-        appBridge,
-        error,
-        isRootFrameRequest,
-      });
-    }, [loading, isEmbedded, appBridge, isAuthenticated, error, isRootFrameRequest]);
-
-    return <GadgetAuthContext.Provider value={context}>{children}</GadgetAuthContext.Provider>;
+    return (
+      <GadgetAuthContext.Provider
+        value={{
+          isAuthenticated,
+          isEmbedded,
+          canAuth: !!appBridge,
+          loading,
+          appBridge,
+          error,
+          isRootFrameRequest,
+          isReady,
+        }}
+      >
+        {children}
+      </GadgetAuthContext.Provider>
+    );
   }
 );
 
@@ -184,6 +179,7 @@ export const Provider = ({
         api={api}
         originalQueryParams={originalQueryParams}
         isRootFrameRequest={isRootFrameRequest}
+        isReady={isReady}
       >
         {children}
       </InnerGadgetProvider>
