@@ -19,15 +19,28 @@ export type GadgetAuthContextValue = {
   isAuthenticated: boolean;
   /** Is the app being rendered outside of a Shopify admin flow, this only applies if type is set to AppType.Embedded. e.g. navigating to this page through a link */
   isRootFrameRequest: boolean;
+  /** The provider must run some initialization code to determine its embedded state and this flag will be true once those are complete. */
+  isReady: boolean;
 };
 
-export const GadgetAuthContext = createContext<GadgetAuthContextValue>({
+const DefaultContext = {
   loading: false,
   isEmbedded: false,
   isAuthenticated: false,
   canAuth: false,
   appBridge: null,
   isRootFrameRequest: false,
-});
+  isReady: false,
+};
 
-export const useGadget = () => useContext<GadgetAuthContextValue>(GadgetAuthContext);
+export const GadgetAuthContext = createContext<GadgetAuthContextValue>(DefaultContext);
+
+export const useGadget = () => {
+  const context = useContext<GadgetAuthContextValue>(GadgetAuthContext);
+
+  if (context === DefaultContext) {
+    throw new Error("useGadget must be used within a Gadget Provider");
+  }
+
+  return context;
+};
