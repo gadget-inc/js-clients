@@ -753,3 +753,77 @@ export const ShowWidgetNames = () => {
   );
 };
 ```
+
+### `urql` exports
+
+Since this library uses `urql` behind the scenes, it provides a few useful exports directly from `urql` so that it does not need to be installed as a peer dependency should you need to write custom queries or mutations.
+
+The following are exported from `urql`:
+
+- Provider
+- Consumer
+- Context
+- useQuery
+- useMutation
+
+Example usage:
+
+```javascript
+import React from "react";
+import { api } from "../api"; // some file that instantiates @gadget-client/your-app-slug
+import { Provider, useQuery } from "@gadgetinc/react";
+
+export const ShowWidgetNames = () => {
+  // find all widgets and the most recently created gizmo related to the widget
+  const [{ data, fetching, error }, refetch] = useQuery({
+    query: `
+query GetWidgets {
+  widgets {
+    edges {
+      node {
+        id
+        name
+        gizmos(first: 1, sort:{ createdAt: Descending }) {
+          edges {
+            node {
+              createdAt
+            }
+          }
+        }
+      }
+    }
+  }
+}
+    `
+  });
+
+  if (fetching) return "Loading...";
+  if (error) return `Error loading data: ${error}`;
+
+  return (
+    <table>
+      <tr>
+        <th>ID</th>
+        <th>Name</th>
+        <th>Last Gizmo Created</th>
+      </tr>
+      {data.widgets.edges.map(({ node: widget }) => (
+        <tr key={widget.id}>
+          <td>{widget.id}</td>
+          <td>{widget.name}</td>
+          <td>{widget.gizmos.edges.length > 0 ? widget.gizmos.edges[0].node.createdAt : "Does not have Gizmos"}</td>
+        </tr>
+      ))}
+      <tr colspan="2">
+        <button onClick={() => void refetch()}>Refresh</button>
+      </tr>
+    </table>
+  );
+};
+
+export const App = () => (
+  <Provider value={api.connection.currentClient}>
+    <ShowWidgetNames />
+  </Provider>
+);
+```

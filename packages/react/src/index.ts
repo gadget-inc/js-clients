@@ -1,4 +1,4 @@
-export { Consumer, Context, Provider } from "urql";
+export { Consumer, Context, Provider, useMutation, useQuery } from "urql";
 export * from "./useAction";
 export * from "./useBulkAction";
 export * from "./useFindBy";
