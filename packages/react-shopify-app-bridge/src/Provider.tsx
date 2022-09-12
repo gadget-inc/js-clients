@@ -1,12 +1,11 @@
 import { AnyClient } from "@gadgetinc/api-client-core";
-import { Provider as GadgetUrqlProvider } from "@gadgetinc/react";
+import { Provider as GadgetUrqlProvider, useQuery } from "@gadgetinc/react";
 import { Provider as AppBridgeProvider } from "@shopify/app-bridge-react";
 import { AppBridgeContext } from "@shopify/app-bridge-react/context";
 import { getSessionToken } from "@shopify/app-bridge-utils";
 import { Redirect } from "@shopify/app-bridge/actions";
 import { isUndefined } from "lodash";
 import React, { memo, useContext, useEffect, useMemo, useState } from "react";
-import { useQuery } from "urql";
 import { GadgetAuthContext, GadgetAuthContextValue } from "./index";
 
 export enum AppType {
