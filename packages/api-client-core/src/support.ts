@@ -95,8 +95,15 @@ export class GadgetNonUniqueDataError extends Error {
   code = "GGT_NON_UNIQUE_DATA";
 }
 
+/**
+ * A Gadget API error that represents an error where the client asked the server for data that doesn't exist server side.
+ */
+export class GadgetNotFoundError extends Error {
+  code = "GGT_RECORD_NOT_FOUND";
+}
+
 /** All the errors a Gadget operation can throw */
-export type GadgetError = GadgetOperationError | GadgetInternalError | InvalidRecordError | GadgetNonUniqueDataError;
+export type GadgetError = GadgetOperationError | GadgetInternalError | InvalidRecordError | GadgetNonUniqueDataError | GadgetNotFoundError;
 
 export function assert<T>(value: T | undefined | null, message?: string): T {
   if (!value) {
