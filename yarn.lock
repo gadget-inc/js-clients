@@ -1344,34 +1344,19 @@
     minimatch "^3.0.4"
     strip-json-comments "^3.1.1"
 
-"@gadget-client/bulk-actions-example@^1.65.0":
-  version "1.66.0"
-  resolved "https://registry.gadget.dev/npm/_/tarball/2162/3149/573#74285baf187fa9a99e79870dd79352cba559e184"
-  integrity sha1-dChbrxh/qameeYcN15NSy6VZ4YQ=
+"@gadget-client/bulk-actions-example@^1.75.0":
+  version "1.75.0"
+  resolved "https://registry.gadget.dev/npm/_/tarball/2162/3149/1484#ff0299018fc613acf76c8270bd4aca4ac4ec690e"
+  integrity sha1-/wKZAY/GE6z3bIJwvUrKSsTsaQ4=
   dependencies:
-    "@gadgetinc/api-client-core" "0.6.8"
+    "@gadgetinc/api-client-core" "0.9.0"
 
-"@gadget-client/related-products-example@^1.213.0":
-  version "1.769.0"
-  resolved "https://registry.gadget.dev/npm/_/tarball/1268/1361/549#42ad3513ed380218fd1f1feff6ad58f5bcf2108d"
-  integrity sha1-Qq01E+04Ahj9Hx/v9q1Y9bzyEI0=
+"@gadget-client/related-products-example@^1.783.0":
+  version "1.783.0"
+  resolved "https://registry.gadget.dev/npm/_/tarball/1268/1361/1486#fddfba4e201f4d30478c7a03de30ca14185d687d"
+  integrity sha1-/d+6TiAfTTBHjHoD3jDKFBhdaH0=
   dependencies:
-    "@gadgetinc/api-client-core" "0.6.8"
-
-"@gadgetinc/api-client-core@0.6.8":
-  version "0.9.0"
-  dependencies:
-    "@opentelemetry/api" "^1.0.4"
-    "@urql/core" "^3.0.1"
-    "@urql/exchange-multipart-fetch" "^1.0.0"
-    cross-fetch "^3.0.6"
-    gql-query-builder "^3.6.0"
-    graphql "^15.5.0"
-    graphql-ws "^5.5.5"
-    isomorphic-ws "^4.0.1"
-    lodash.clonedeep "^4.5.0"
-    lodash.isequal "^4.5.0"
-    ws "^8.2.2"
+    "@gadgetinc/api-client-core" "0.9.0"
 
 "@gadgetinc/eslint-config@^0.4.0":
   version "0.4.0"
