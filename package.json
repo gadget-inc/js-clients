@@ -23,8 +23,8 @@
     "test": "node --max-old-space-size=4096 --stack-trace-limit=1000 node_modules/.bin/jest"
   },
   "devDependencies": {
-    "@gadget-client/bulk-actions-example": "^1.65.0",
-    "@gadget-client/related-products-example": "^1.213.0",
+    "@gadget-client/bulk-actions-example": "^1.75.0",
+    "@gadget-client/related-products-example": "^1.783.0",
     "@gadgetinc/eslint-config": "^0.4.0",
     "@gadgetinc/prettier-config": "*",
     "@swc/core": "^1.3.1",
