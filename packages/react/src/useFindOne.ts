@@ -65,9 +65,9 @@ export const useFindOne = <
   const [result, refresh] = useQuery(getQueryArgs(plan, options));
 
   const dataPath = [manager.findOne.operationName];
-  let data = result.data;
+  let data = result.data && get(result.data, dataPath);
   if (data) {
-    data = hydrateRecord(result, get(result.data, dataPath));
+    data = hydrateRecord(result, data);
   }
   const error = ErrorWrapper.errorIfDataAbsent(result, dataPath);
 

@@ -63,7 +63,7 @@ const generateErrorMessage = (networkErr?: Error, graphQlErrs?: GraphQLError[]) 
 const rehydrateGraphQlError = (error: any): GraphQLError => {
   if (typeof error === "string") {
     return new GraphQLError(error);
-  } else if (error?.message) {
+  } else if (error?.message && !error.code) {
     return new GraphQLError(error.message, error.nodes, error.source, error.positions, error.path, error, error.extensions || {});
   } else {
     return error;
@@ -172,7 +172,9 @@ export class ErrorWrapper extends Error {
    **/
   public get validationErrors(): InvalidFieldError[] | null {
     // eslint-disable-next-line @typescript-eslint/no-unnecessary-type-assertion
-    const firstInvalidRecordError = this.executionErrors.find((err) => err instanceof InvalidRecordError) as InvalidRecordError | undefined;
+    const firstInvalidRecordError = this.executionErrors.find((err) => (err as any).code == "GGT_INVALID_RECORD") as
+      | InvalidRecordError
+      | undefined;
 
     return firstInvalidRecordError?.validationErrors ?? null;
   }

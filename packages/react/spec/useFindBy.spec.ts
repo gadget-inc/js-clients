@@ -1,36 +1,97 @@
 import { GadgetRecord } from "@gadgetinc/api-client-core";
+import { renderHook } from "@testing-library/react";
 import { assert, IsExact } from "conditional-type-checks";
 import { useFindBy } from "../src";
 import { ErrorWrapper } from "../src/utils";
 import { relatedProductsApi } from "./apis";
+import { mockClient, TestWrapper } from "./testWrapper";
 
-// these functions are typechecked but never run to avoid actually making API calls
-const TestFindByReturnsTypedDataWithExplicitSelection = () => {
-  const [{ data, fetching, error }, refresh] = useFindBy(relatedProductsApi.user.findByEmail, "hello@gadget.dev", {
-    select: { id: true, email: true },
+describe("useFindBy", () => {
+  // these functions are typechecked but never run to avoid actually making API calls
+  const _TestFindByReturnsTypedDataWithExplicitSelection = () => {
+    const [{ data, fetching, error }, refresh] = useFindBy(relatedProductsApi.user.findByEmail, "hello@gadget.dev", {
+      select: { id: true, email: true },
+    });
+
+    assert<IsExact<typeof fetching, boolean>>(true);
+    assert<IsExact<typeof data, undefined | GadgetRecord<{ id: string; email: string | null }>>>(true);
+    assert<IsExact<typeof error, ErrorWrapper | undefined>>(true);
+
+    // data is accessible via dot access
+    if (data) {
+      data.id;
+      data.email;
+    }
+
+    // hook return value includes the urql refresh function
+    refresh();
+  };
+
+  const _TestFindByReturnsTypedDataWithNoSelection = () => {
+    const [{ data }] = useFindBy(relatedProductsApi.user.findByEmail, "hello@gadget.dev");
+
+    if (data) {
+      data.id;
+      data.email;
+    }
+  };
+
+  test("it can find one record by a field value", async () => {
+    const { result } = renderHook(() => useFindBy(relatedProductsApi.user.findByEmail, "test@test.com"), { wrapper: TestWrapper });
+
+    expect(result.current[0].data).toBeFalsy();
+    expect(result.current[0].fetching).toBe(true);
+    expect(result.current[0].error).toBeFalsy();
+
+    expect(mockClient.executeQuery).toBeCalledTimes(1);
+
+    mockClient.executeQuery.pushResponse("users", {
+      data: {
+        users: {
+          edges: [{ cursor: "123", node: { id: "123", email: "test@test.com" } }],
+          pageInfo: {
+            startCursor: "123",
+            endCursor: "123",
+            hasNextPage: false,
+            hasPreviousPage: false,
+          },
+        },
+      },
+    });
+
+    expect(result.current[0].data!.id).toEqual("123");
+    expect(result.current[0].data!.email).toEqual("test@test.com");
+    expect(result.current[0].fetching).toBe(false);
+    expect(result.current[0].error).toBeFalsy();
   });
 
-  assert<IsExact<typeof fetching, boolean>>(true);
-  assert<IsExact<typeof data, undefined | GadgetRecord<{ id: string; email: string | null }>>>(true);
-  assert<IsExact<typeof error, ErrorWrapper | undefined>>(true);
+  test("it return null if the record with the given field value can't be found", async () => {
+    const { result } = renderHook(() => useFindBy(relatedProductsApi.user.findByEmail, "test@test.com"), { wrapper: TestWrapper });
 
-  // data is accessible via dot access
-  if (data) {
-    data.id;
-    data.email;
-  }
+    expect(result.current[0].data).toBeFalsy();
+    expect(result.current[0].fetching).toBe(true);
+    expect(result.current[0].error).toBeFalsy();
 
-  // hook return value includes the urql refresh function
-  refresh();
-};
+    expect(mockClient.executeQuery).toBeCalledTimes(1);
 
-const TestFindByReturnsTypedDataWithNoSelection = () => {
-  const [{ data }] = useFindBy(relatedProductsApi.user.findByEmail, "hello@gadget.dev");
+    mockClient.executeQuery.pushResponse("users", {
+      data: {
+        users: {
+          edges: [],
+          pageInfo: {
+            startCursor: null,
+            endCursor: null,
+            hasNextPage: false,
+            hasPreviousPage: false,
+          },
+        },
+      },
+    });
 
-  if (data) {
-    data.id;
-    data.email;
-  }
-};
-
-test("true", () => undefined);
+    expect(result.current[0].data).toBeFalsy();
+    expect(result.current[0].fetching).toBe(false);
+    const error = result.current[0].error;
+    expect(error).toBeTruthy();
+    expect(error!.message).toMatchInlineSnapshot(`"[GraphQL] user record with email=test@test.com not found"`);
+  });
+});
