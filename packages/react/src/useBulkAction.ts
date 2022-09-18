@@ -9,8 +9,8 @@ import {
   LimitToKnownKeys,
   Select,
 } from "@gadgetinc/api-client-core";
-import { useMemo } from "react";
-import { useMutation } from "urql";
+import { useCallback, useMemo } from "react";
+import { useMutation, UseMutationState } from "urql";
 import { OptionsType } from "./OptionsType";
 import { useStructuralMemo } from "./useStructuralMemo";
 import { ActionHookResult, ErrorWrapper } from "./utils";
@@ -74,8 +74,27 @@ export const useBulkAction = <
     F["variablesType"]
   >(plan.query);
 
+  return [
+    processResult(result, action),
+    useCallback(
+      async (variables, context) => {
+        // Adding the model's additional typename ensures document cache will properly refresh, regardless of whether __typename was
+        // selected (and sometimes we can't even select it, like delete actions!)
+        const result = await runMutation(variables, {
+          ...context,
+          additionalTypenames: [...(context?.additionalTypenames ?? []), capitalize(action.modelApiIdentifier)],
+        });
+        return processResult({ fetching: false, stale: false, ...result }, action);
+      },
+      [action, runMutation]
+    ),
+  ];
+};
+
+const processResult = (result: UseMutationState<any, any>, action: BulkActionFunction<any, any, any, any, any>) => {
+  const error = ErrorWrapper.forMaybeCombinedError(result.error);
   let data = result.data;
-  if (data) {
+  if (data && !error) {
     // TODO deal with deletion better than checking selectionType
     if (action.defaultSelection != null) {
       const dataPath = [action.operationName, action.modelSelectionField];
@@ -85,20 +104,5 @@ export const useBulkAction = <
       data = hydrateRecordArray(result, get(result.data, dataPath));
     }
   }
-
-  return [
-    {
-      ...result,
-      error: ErrorWrapper.forMaybeCombinedError(result.error),
-      data,
-    },
-    (variables, context) => {
-      // Adding the model's additional typename ensures document cache will properly refresh, regardless of whether __typename was
-      // selected (and sometimes we can't even select it, like delete actions!)
-      return runMutation(variables, {
-        ...context,
-        additionalTypenames: [...(context?.additionalTypenames ?? []), capitalize(action.modelApiIdentifier)],
-      });
-    },
-  ];
+  return { ...result, error, data };
 };

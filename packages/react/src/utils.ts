@@ -1,5 +1,5 @@
 import { GadgetError, gadgetErrorFor, getNonNullableError, InvalidFieldError, InvalidRecordError } from "@gadgetinc/api-client-core";
-import type { CombinedError, OperationResult } from "@urql/core";
+import type { CombinedError } from "@urql/core";
 import { GraphQLError } from "graphql";
 import { AnyVariables, Operation, OperationContext, UseQueryState } from "urql";
 
@@ -42,7 +42,7 @@ export interface ActionHookState<Data = any, Variables = Record<string, any>> {
  **/
 export declare type ActionHookResult<Data = any, Variables extends AnyVariables = AnyVariables> = [
   ActionHookState<Data, Variables>,
-  (variables: Variables, context?: Partial<OperationContext>) => Promise<OperationResult<Data, Variables>>
+  (variables: Variables, context?: Partial<OperationContext>) => Promise<ActionHookState<Data, Variables>>
 ];
 
 const generateErrorMessage = (networkErr?: Error, graphQlErrs?: GraphQLError[]) => {
