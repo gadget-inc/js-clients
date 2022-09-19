@@ -15,6 +15,8 @@ export class GadgetRecordImplementation<Shape extends RecordShape> {
     fields: {} as any,
     instantiatedFields: {} as any,
     persistedFields: {} as any,
+    fieldKeys: [] as string[],
+    fieldKeysTracker: {} as Record<string, boolean>,
   };
 
   private empty = false;
@@ -26,6 +28,9 @@ export class GadgetRecordImplementation<Shape extends RecordShape> {
 
     if (!data || Object.keys(data).length === 0) {
       this.empty = true;
+    } else {
+      this.__gadget.fieldKeys = Object.keys(this.__gadget.fields);
+      this.__gadget.fieldKeys.forEach((k) => (this.__gadget.fieldKeysTracker[k] = true));
     }
 
     const handler = {
@@ -40,12 +45,28 @@ export class GadgetRecordImplementation<Shape extends RecordShape> {
         }
       },
       set: (obj: Record<string, any>, prop: string | symbol, value: any) => {
+        this.trackKey(prop);
         obj[prop.toString()] = value;
         return true;
       },
     };
 
     return new Proxy(this.__gadget.fields, handler);
+  }
+
+  /** Makes sure our data keys are all tracked, to avoid repeated runtime object-to-array conversions */
+  private trackKey(key: string | symbol) {
+    const trackingKey = key.toString();
+    if (!this.__gadget.fieldKeysTracker[trackingKey]) {
+      this.__gadget.fieldKeysTracker[trackingKey] = true;
+      this.__gadget.fieldKeys.push(trackingKey);
+    }
+  }
+
+  /** Returns true if even a single field has changed */
+  private hasChanges(tracking = ChangeTracking.SinceLoaded) {
+    const diffFields = tracking == ChangeTracking.SinceLoaded ? this.__gadget.instantiatedFields : this.__gadget.persistedFields;
+    return this.__gadget.fieldKeys.some((key) => !isEqual(diffFields[key], this.__gadget.fields[key]));
   }
 
   /** Checks if the original constructor data was empty or not */
@@ -59,6 +80,7 @@ export class GadgetRecordImplementation<Shape extends RecordShape> {
   }
   /** Sets the value of the field for the given `apiIdentifier`. These properties may also be accessed on this record directly. This method can be used if your model field `apiIdentifier` conflicts with the `GadgetRecord` helper functions. */
   setField(apiIdentifier: string, value: any) {
+    this.trackKey(apiIdentifier);
     return (this.__gadget.fields[apiIdentifier] = value);
   }
 
@@ -80,12 +102,14 @@ export class GadgetRecordImplementation<Shape extends RecordShape> {
 
       return changed ? { changed, current, previous } : { changed };
     } else {
-      return Object.keys(this.__gadget.fields).reduce((diff, key) => {
+      const diff = {} as Record<string, { current: any; previous: any }>;
+      for (let index = 0; index < this.__gadget.fieldKeys.length; index++) {
+        const key = this.__gadget.fieldKeys[index];
         if (!isEqual(diffFields[key], this.__gadget.fields[key])) {
           diff[key] = { current: this.__gadget.fields[key], previous: diffFields[key] };
         }
-        return diff;
-      }, {} as any);
+      }
+      return diff;
     }
   }
 
@@ -98,7 +122,7 @@ export class GadgetRecordImplementation<Shape extends RecordShape> {
   changed(prop?: string | ChangeTracking, tracking = ChangeTracking.SinceLoaded) {
     return prop && typeof prop == "string"
       ? this.changes(prop, tracking).changed
-      : Object.keys(this.changes(prop === undefined ? tracking : (prop as ChangeTracking))).length > 0;
+      : this.hasChanges(prop === undefined ? tracking : (prop as ChangeTracking));
   }
 
   /** Flushes all `changes` and starts tracking new changes from the current state of the record. */
@@ -120,7 +144,7 @@ export class GadgetRecordImplementation<Shape extends RecordShape> {
       persistedKeys = Object.keys(this.__gadget.persistedFields);
     }
 
-    for (const key of Object.keys(this.__gadget.fields)) {
+    for (const key of this.__gadget.fieldKeys) {
       if (!persistedKeys.includes(key)) delete this.__gadget.fields[key];
     }
 
@@ -139,7 +163,7 @@ export class GadgetRecordImplementation<Shape extends RecordShape> {
 
 /**
  * TypeScript hijinx to make the generic Record class include all the members of the wrapped generic Shape object
- * We want to use the `GadgetRecord` class to represent objects returned from the API to add some useful stuff to them because it's convienient for callers to use that useful stuff. `GadgetRecord`s are generic because they can hold data of an arbitrary shape from the API, but TypeScript doesn't let us have the class extend or implement anything without statically known members. So we fake TypeScript out and create this pair of constructor and instance types that
+ * We want to use the `GadgetRecord` class to represent objects returned from the API to add some useful stuff to them because it's convenient for callers to use that useful stuff. `GadgetRecord`s are generic because they can hold data of an arbitrary shape from the API, but TypeScript doesn't let us have the class extend or implement anything without statically known members. So we fake TypeScript out and create this pair of constructor and instance types that
  */
 
 /** Instantiate a `GadgetRecord` with the attributes of your model. A `GadgetRecord` can be used to track changes to your model and persist those changes via Gadget actions. */
