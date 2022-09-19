@@ -113,6 +113,21 @@ export class GadgetRecordImplementation<Shape extends RecordShape> {
     }
   }
 
+  /** Returns all current values for fields that have changed */
+  toChangedJSON(tracking = ChangeTracking.SinceLoaded): { [prop: string]: any } {
+    const diffFields = tracking == ChangeTracking.SinceLoaded ? this.__gadget.instantiatedFields : this.__gadget.persistedFields;
+    const current = {} as Record<string, any>;
+
+    for (let index = 0; index < this.__gadget.fieldKeys.length; index++) {
+      const key = this.__gadget.fieldKeys[index];
+      if (!isEqual(diffFields[key], this.__gadget.fields[key])) {
+        current[key] = this.__gadget.fields[key];
+      }
+    }
+
+    return current;
+  }
+
   /** Returns `true` if any field has changed on this record. */
   changed(): boolean;
   changed(tracking: ChangeTracking): boolean;
