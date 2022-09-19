@@ -1,6 +1,6 @@
 import { get, GlobalActionFunction, globalActionOperation } from "@gadgetinc/api-client-core";
-import { useMemo } from "react";
-import { useMutation } from "urql";
+import { useCallback, useMemo } from "react";
+import { useMutation, UseMutationState } from "urql";
 import { ActionHookResult, ErrorWrapper } from "./utils";
 
 /**
@@ -33,11 +33,23 @@ export const useGlobalAction = <F extends GlobalActionFunction<any>>(
 
   const [result, runMutation] = useMutation<any, F["variablesType"]>(plan.query);
 
-  let error = ErrorWrapper.forMaybeCombinedError(result.error);
-  let data = result.data;
-  if (data) {
-    data = get(result.data, [action.operationName]);
+  return [
+    processResult(result, action),
+    useCallback(
+      async (variables, context) => {
+        const result = await runMutation(variables, context);
+        return processResult({ fetching: false, stale: false, ...result }, action);
+      },
+      [action, runMutation]
+    ),
+  ];
+};
 
+const processResult = (result: UseMutationState<any, any>, action: GlobalActionFunction<any>) => {
+  let error = ErrorWrapper.forMaybeCombinedError(result.error);
+  let data = undefined;
+  if (result.data) {
+    data = get(result.data, [action.operationName]);
     if (data) {
       const errors = data.errors;
       if (errors && errors[0]) {
@@ -45,13 +57,5 @@ export const useGlobalAction = <F extends GlobalActionFunction<any>>(
       }
     }
   }
-
-  return [
-    {
-      ...result,
-      error,
-      data,
-    },
-    runMutation,
-  ];
+  return { ...result, error, data };
 };

@@ -56,7 +56,7 @@ describe("useAction", () => {
   test("returns no data, not fetching, and no error when the component is first mounted", () => {
     const { result } = renderHook(() => useAction(relatedProductsApi.user.update), { wrapper: TestWrapper });
 
-    expect(result.current[0].data).toBe(null);
+    expect(result.current[0].data).toBeFalsy();
     expect(result.current[0].fetching).toBe(false);
     expect(result.current[0].error).toBeFalsy();
   });
@@ -88,7 +88,11 @@ describe("useAction", () => {
     });
 
     await act(async () => {
-      await mutationPromise;
+      const promiseResult = await mutationPromise;
+      expect(promiseResult.data!.id).toEqual("123");
+      expect(promiseResult.data!.email).toEqual("test@test.com");
+      expect(promiseResult.fetching).toBe(false);
+      expect(promiseResult.error).toBeFalsy();
     });
 
     expect(result.current[0].data!.id).toEqual("123");
@@ -136,7 +140,10 @@ describe("useAction", () => {
     });
 
     await act(async () => {
-      await mutationPromise;
+      const promiseResult = await mutationPromise;
+      expect(promiseResult.fetching).toBe(false);
+      expect(promiseResult.error).toBeTruthy();
+      expect(promiseResult.data).toBeFalsy();
     });
 
     expect(result.current[0].fetching).toBe(false);

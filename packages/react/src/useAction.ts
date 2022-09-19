@@ -9,11 +9,11 @@ import {
   LimitToKnownKeys,
   Select,
 } from "@gadgetinc/api-client-core";
-import { useMemo } from "react";
-import { useMutation } from "urql";
+import { useCallback, useMemo } from "react";
+import { useMutation, UseMutationState } from "urql";
 import { OptionsType } from "./OptionsType";
 import { useStructuralMemo } from "./useStructuralMemo";
-import { ActionHookResult, ErrorWrapper } from "./utils";
+import { ActionHookResult, ActionHookState, ErrorWrapper } from "./utils";
 
 /**
  * React hook to run a Gadget model action. `useAction` must be passed an action function from an instance of your generated API client library, like `api.user.create` or `api.blogPost.publish`. `useAction` doesn't actually run the action when invoked, but instead returns an action function as the second result for running the action in response to an event.
@@ -77,6 +77,28 @@ export const useAction = <
     F["variablesType"]
   >(plan.query);
 
+  return [
+    processResult(result, action),
+    useCallback(
+      async (variables, context) => {
+        // Adding the model's additional typename ensures document cache will properly refresh, regardless of whether __typename was
+        // selected (and sometimes we can't even select it, like delete actions!)
+        const result = await runMutation(variables, {
+          ...context,
+          additionalTypenames: [...(context?.additionalTypenames ?? []), capitalize(action.modelApiIdentifier)],
+        });
+        return processResult({ fetching: false, stale: false, ...result }, action);
+      },
+      [action, runMutation]
+    ),
+  ];
+};
+
+/** Processes urql's result object into the fancier Gadget result object */
+const processResult = <Data, Variables>(
+  result: UseMutationState<Data, Variables>,
+  action: ActionFunction<any, any, any, any, any>
+): ActionHookState<any, any> => {
   let error = ErrorWrapper.forMaybeCombinedError(result.error);
   let data = null;
   if (result.data) {
@@ -96,19 +118,5 @@ export const useAction = <
     }
   }
 
-  return [
-    {
-      ...result,
-      error,
-      data,
-    },
-    (variables, context) => {
-      // Adding the model's additional typename ensures document cache will properly refresh, regardless of whether __typename was
-      // selected (and sometimes we can't even select it, like delete actions!)
-      return runMutation(variables, {
-        ...context,
-        additionalTypenames: [...(context?.additionalTypenames ?? []), capitalize(action.modelApiIdentifier)],
-      });
-    },
-  ];
+  return { ...result, error, data };
 };
