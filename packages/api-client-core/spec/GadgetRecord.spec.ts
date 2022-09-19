@@ -138,6 +138,23 @@ describe("GadgetRecord", () => {
     });
   });
 
+  it("should allow you to ask for CURRENT values of changed props on the entire object", () => {
+    const product = new GadgetRecord<SampleBaseRecord>(productBaseRecord);
+    expectNoChanges(product, "name", "body", "count");
+
+    product.name = "A newer name";
+    product.count = 123;
+
+    expect(product.changed("name")).toEqual(true);
+    expect(product.changed("count")).toEqual(true);
+    expect(product.changed("body")).toEqual(false);
+    expect(product.changed()).toEqual(true);
+    expect(product.toChangedJSON()).toEqual({
+      name: "A newer name",
+      count: 123,
+    });
+  });
+
   it("should allow dirty tracking on array fields", () => {
     const product = new GadgetRecord<SampleBaseRecord>({ ...productBaseRecord, anArray: [1, 2, 3] });
     expectNoChanges(product, "anArray");
