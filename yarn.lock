@@ -1365,6 +1365,21 @@
   dependencies:
     "@gadgetinc/api-client-core" "0.9.0"
 
+"@gadgetinc/api-client-core@0.9.0":
+  version "0.10.0"
+  dependencies:
+    "@opentelemetry/api" "^1.0.4"
+    "@urql/core" "^3.0.1"
+    "@urql/exchange-multipart-fetch" "1.0.1"
+    cross-fetch "^3.0.6"
+    gql-query-builder "^3.6.0"
+    graphql "^16.5.0"
+    graphql-ws "^5.5.5"
+    isomorphic-ws "^4.0.1"
+    lodash.clonedeep "^4.5.0"
+    lodash.isequal "^4.5.0"
+    ws "^8.2.2"
+
 "@gadgetinc/eslint-config@^0.4.0":
   version "0.4.0"
   resolved "https://registry.yarnpkg.com/@gadgetinc/eslint-config/-/eslint-config-0.4.0.tgz#bc831659717affcee7bc59556e7ee8ea8646bc37"
@@ -2310,10 +2325,10 @@
     "@graphql-typed-document-node/core" "^3.1.1"
     wonka "^6.0.0"
 
-"@urql/exchange-multipart-fetch@^1.0.0":
-  version "1.0.0"
-  resolved "https://registry.yarnpkg.com/@urql/exchange-multipart-fetch/-/exchange-multipart-fetch-1.0.0.tgz#e166708c8795267eeccb989f9421b9cb3ab6723a"
-  integrity sha512-hPSrGjzfjhexUbvZOkwKk9G8b06PHHCbo0J2PFyA+yy0tNxRACX4/pSHfztcaRS3VyfbTQtWRQ/QSuUlYMVvzg==
+"@urql/exchange-multipart-fetch@^1.0.1":
+  version "1.0.1"
+  resolved "https://registry.yarnpkg.com/@urql/exchange-multipart-fetch/-/exchange-multipart-fetch-1.0.1.tgz#83d0b892897bb95d436a03af615442f635af22c5"
+  integrity sha512-fjxRrKR/D9Rs52L8wJMvqsGQBC/mjFcg/VdkSkU5IXmqCb5KmicXl2208hoCnaBl/QLA6NDpCNnG3zjDniMOTg==
   dependencies:
     "@urql/core" ">=3.0.0"
     extract-files "^11.0.0"
