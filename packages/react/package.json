@@ -21,7 +21,7 @@
   "dependencies": {
     "@gadgetinc/api-client-core": "^0.10.0",
     "deep-equal": "^2.0.5",
-    "urql": "^3.0.1"
+    "urql": "^3.0.3"
   },
   "devDependencies": {
     "@babel/core": "^7.18.10",
