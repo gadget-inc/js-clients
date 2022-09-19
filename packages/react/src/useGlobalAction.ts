@@ -47,10 +47,9 @@ export const useGlobalAction = <F extends GlobalActionFunction<any>>(
 
 const processResult = (result: UseMutationState<any, any>, action: GlobalActionFunction<any>) => {
   let error = ErrorWrapper.forMaybeCombinedError(result.error);
-  let data = result.data;
-  if (data) {
+  let data = undefined;
+  if (result.data) {
     data = get(result.data, [action.operationName]);
-
     if (data) {
       const errors = data.errors;
       if (errors && errors[0]) {

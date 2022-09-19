@@ -61,7 +61,7 @@ const newMockOperationFn = () => {
   fn.subjects = subjects;
   fn.pushResponse = (key, response) => {
     if (!subjects[key]) {
-      throw new Error(`No mock client subject started for key ${key}`);
+      throw new Error(`No mock client subject started for key ${key}, options are ${Object.keys(subjects).join(", ")}`);
     }
     act(() => {
       subjects[key].next({

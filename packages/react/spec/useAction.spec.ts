@@ -56,7 +56,7 @@ describe("useAction", () => {
   test("returns no data, not fetching, and no error when the component is first mounted", () => {
     const { result } = renderHook(() => useAction(relatedProductsApi.user.update), { wrapper: TestWrapper });
 
-    expect(result.current[0].data).toBe(null);
+    expect(result.current[0].data).toBeFalsy();
     expect(result.current[0].fetching).toBe(false);
     expect(result.current[0].error).toBeFalsy();
   });
