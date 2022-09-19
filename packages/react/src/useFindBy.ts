@@ -2,9 +2,9 @@ import {
   DefaultSelection,
   findOneByFieldOperation,
   FindOneFunction,
+  GadgetNotFoundError,
   GadgetRecord,
   get,
-  getNonNullableError,
   getNonUniqueDataError,
   getQueryArgs,
   hydrateConnection,
@@ -79,12 +79,12 @@ export const useFindBy = <
 
   let error = ErrorWrapper.forMaybeCombinedError(result.error);
   if (!error) {
-    const nonNullableError = getNonNullableError(result, dataPath);
-
     if (records.length > 1) {
       error = ErrorWrapper.forClientSideError(getNonUniqueDataError(finder.modelApiIdentifier, finder.findByVariableName, value));
-    } else if (nonNullableError) {
-      error = ErrorWrapper.forClientSideError(nonNullableError);
+    } else if (result.data && !records[0]) {
+      error = ErrorWrapper.forClientSideError(
+        new GadgetNotFoundError(`${finder.modelApiIdentifier} record with ${finder.findByVariableName}=${value} not found`)
+      );
     }
   }
 

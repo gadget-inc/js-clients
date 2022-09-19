@@ -62,9 +62,10 @@ export const useGet = <
 
   const [result, refresh] = useQuery({ query: plan.query, variables: plan.variables });
 
-  let data = result.data;
-  if (data) {
-    data = hydrateRecord(result, get(result.data, [manager.get.operationName]));
+  let data = null;
+  const rawRecord = result.data && get(result.data, [manager.get.operationName]);
+  if (rawRecord) {
+    data = hydrateRecord(result, rawRecord);
   }
 
   return [

@@ -76,6 +76,13 @@ describe("ErrorWrapper", () => {
     expect(error.executionErrors).toHaveLength(1);
     expect(error.networkError).toBeUndefined();
     expect(error.message).toMatchInlineSnapshot(`"[GraphQL] widget record is invalid and can't be saved. name is not unique."`);
-    expect(error.validationErrors).toMatchInlineSnapshot(`null`);
+    expect(error.validationErrors).toMatchInlineSnapshot(`
+      [
+        {
+          "apiIdentifier": "name",
+          "message": "is not unique",
+        },
+      ]
+    `);
   });
 });

@@ -78,8 +78,8 @@ export const useAction = <
   >(plan.query);
 
   let error = ErrorWrapper.forMaybeCombinedError(result.error);
-  let data = result.data;
-  if (data) {
+  let data = null;
+  if (result.data) {
     const dataPath = [action.operationName];
     if (action.namespace) {
       dataPath.unshift(action.namespace);
@@ -90,10 +90,10 @@ export const useAction = <
       const errors = mutationData["errors"];
       if (errors && errors[0]) {
         error = ErrorWrapper.forErrorsResponse(errors, error?.response);
+      } else {
+        data = hydrateRecord(result, mutationData[action.modelSelectionField]);
       }
     }
-
-    data = hydrateRecord(result, mutationData[action.modelSelectionField]);
   }
 
   return [
