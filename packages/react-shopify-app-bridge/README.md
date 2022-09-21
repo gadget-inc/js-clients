@@ -136,3 +136,55 @@ function ProductManager() {
   );
 }
 ```
+
+## Custom router
+
+`@shopify/app-bridge-react` allows you to specify a custom router configuration to manage client-side routing. Similarly, the Gadget provider will allow you to specify a custom router which will be forwarded to the App Bridge.
+
+```tsx
+// import Gadget's react hooks for accessing data from your Gadget app
+import { useAction, useFindMany } from "@gadgetinc/react";
+// import the Gadget<->Shopify bindings that manage the auth process with Shopify
+import { AppType, Provider as GadgetProvider, useGadget } from "@gadgetinc/react-shopify-app-bridge";
+// import and use Shopify's react components like you might in other Shopify app
+import { Button, Redirect, TitleBar } from "@shopify/app-bridge/actions";
+import React, { useMemo } from "react";
+// import the instance of the Gadget API client for this app constructed in the other file
+import { api } from "./api";
+import { useLocation, useNavigate, BrowserRouter } from 'react-router-dom';
+// import your app's custom routes
+import Routes from './Routes';
+
+function App() {
+  const navigate = useNavigate();
+  const location = useLocation();
+  const history = useMemo(
+    () => ({replace: (path) => navigate(path, {replace: true})}),
+    [navigate],
+  );
+
+  const router = useMemo(
+    () => ({
+      location,
+      history,
+    }),
+    [location, history],
+  );
+
+  return (
+    // Wrap our main application's react components in the `<GadgetProvider/>` component to interface with Shopify
+    // This wrapper sets up the Shopify App Bridge, and will automatically redirect to perform the OAuth authentication if the shopify shop doesn't yet have the store installed.
+    <GadgetProvider type={AppType.Embedded} shopifyApiKey="REPLACE ME with api key from Shopify partners dashboard" api={api} router={router}>
+      <Routes />
+    </GadgetProvider>
+  );
+}
+
+export default function AppWrapper() {
+  return (
+    <BrowserRouter>
+      <App />
+    </BrowserRouter>
+  );
+}
+```

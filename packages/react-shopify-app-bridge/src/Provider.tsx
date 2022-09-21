@@ -1,6 +1,6 @@
 import { AnyClient } from "@gadgetinc/api-client-core";
 import { Provider as GadgetUrqlProvider, useQuery } from "@gadgetinc/react";
-import { Provider as AppBridgeProvider } from "@shopify/app-bridge-react";
+import { History, LocationOrHref, Provider as AppBridgeProvider } from "@shopify/app-bridge-react";
 import { AppBridgeContext } from "@shopify/app-bridge-react/context";
 import { getSessionToken } from "@shopify/app-bridge-utils";
 import { Redirect } from "@shopify/app-bridge/actions";
@@ -136,11 +136,16 @@ export const Provider = ({
   children,
   shopifyApiKey,
   api,
+  router,
 }: {
   type?: AppType;
   children: JSX.Element | JSX.Element[];
   shopifyApiKey: string;
   api: AnyClient;
+  router?: {
+    location: LocationOrHref;
+    history: History;
+  };
 }) => {
   const [location, setLocation] = useState<ProviderLocation | null>(null);
   const isReady = !!location;
@@ -198,6 +203,7 @@ export const Provider = ({
           host,
           forceRedirect,
         }}
+        router={router}
       >
         {app}
       </AppBridgeProvider>
