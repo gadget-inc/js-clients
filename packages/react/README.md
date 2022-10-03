@@ -17,17 +17,19 @@
   </p>
 </div>
 
-## Features
+`@gadgetinc/react` is a set of React hooks for connecting to a Gadget backend application from a React application. There's a few key features:
 
-1. An **auto-suggested** `select` option for all hooks, showing all of the available fields on various models
-2. A **typed** and **hydrated** result based on any given `select` option
+1. Rule-obeying hooks for reading and writing data from a backend that handle all request lifecycle and auth like `useFindOne` and `useAction`
+2. A full featured, GraphQL-powered nested object selection system using the `select` option
+3. Full type safety for inputs and outputs driven by each Gadget app's backend schema, including over dynamic selections
+4. Data hydrations that return useful objects like `Date`s
 
 This library wraps [urql](https://github.com/FormidableLabs/urql) to communicate with a Gadget-generated API, so it benefits from all of
-the same [features](https://github.com/FormidableLabs/urql/blob/main/README.md#-features) as `urql`.
+the same [features](https://github.com/FormidableLabs/urql/blob/main/README.md#-features) as `urql` as well!
 
 ## Installation
 
-This is a companion package to the JavaScript client package generated for your Gadget app, so you must install the JS client for your app, and then install this package.
+`@gadgetinc/react` is a companion package to the JavaScript client package generated for your Gadget app, so you must install the JS client for your app, and then install this package.
 
 To install the JS client for your app, you must set up the Gadget NPM registry, and then install the client:
 
@@ -36,12 +38,12 @@ npm config set @gadget-client:registry https://registry.gadget.dev/npm
 
 # then
 
-yarn add @gadget-client/my-app-slug
+yarn add @gadget-client/example-app-slug
 # or
-npm install @gadget-client/product-tagger-8000
+npm install @gadget-client/example-app-slug
 ```
 
-Full installation instructions can be found in the Gadget docs at `https://docs.gadget.dev/api/<my-app-slug>/installing`.
+Full installation instructions can be found in the Gadget docs at `https://docs.gadget.dev/api/example-app-slug/installing`.
 
 Once you have your JS client installed, you can install the React hooks library with yarn or npm:
 
@@ -54,8 +56,8 @@ npm install --save @gadgetinc/react react
 And finally, you must instantiate an instance of your API client, and then wrap your application in the `Provider` component exported from this library. In your root-most React component, you can add a `Provider` around the other components of your application:
 
 ```javascript
-// import the API client for your specific application from your client package, see your app's installing instructions
-import { Client } from "@gadget-client/my-gadget-app";
+// import the API client for your specific application from your client package, be sure to replace this package name with your own
+import { Client } from "@gadget-client/example-app-slug";
 // import the required Provider object and some example hooks from this package
 import { Provider } from "@gadgetinc/react";
 
@@ -794,7 +796,7 @@ query GetWidgets {
     }
   }
 }
-    `
+    `,
   });
 
   if (fetching) return "Loading...";
