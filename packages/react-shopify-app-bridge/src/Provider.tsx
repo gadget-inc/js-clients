@@ -147,7 +147,26 @@ export const Provider = ({
     history: History;
   };
 }) => {
-  const [location, setLocation] = useState<ProviderLocation | null>(null);
+  const [_location, setLocation] = useState<ProviderLocation | null>(null);
+  const routerParamLocation = router?.location
+    ? typeof router.location === "string"
+      ? router.location
+      : `${router.location.pathname}${router.location.search}`
+    : "";
+  const location = useMemo(() => {
+    if (router) {
+      const url = typeof router.location === "string" ? new URL(router.location) : router.location;
+
+      return {
+        query: new URLSearchParams(url),
+        asPath: `${url.pathname}${url.search}`,
+      };
+    }
+
+    return _location;
+    // don't subscribe to router as the pointer is likely to change on every render
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [routerParamLocation, _location]);
   const isReady = !!location;
   const { query } = location ?? {};
   const host = query?.get("host") ?? undefined;
