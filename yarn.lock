@@ -1366,7 +1366,7 @@
     "@gadgetinc/api-client-core" "0.9.0"
 
 "@gadgetinc/api-client-core@0.9.0":
-  version "0.10.0"
+  version "0.10.1"
   dependencies:
     "@opentelemetry/api" "^1.0.4"
     "@urql/core" "^3.0.1"
@@ -1407,9 +1407,9 @@
     prettier-plugin-organize-imports "^1.0.4"
 
 "@gadgetinc/react@^0.7.2":
-  version "0.8.0"
+  version "0.8.1"
   dependencies:
-    "@gadgetinc/api-client-core" "^0.10.0"
+    "@gadgetinc/api-client-core" "^0.10.1"
     deep-equal "^2.0.5"
     urql "^3.0.1"
 
