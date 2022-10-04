@@ -15,7 +15,7 @@ import type { AuthenticationModeOptions, BrowserSessionAuthenticationModeOptions
 import { BrowserSessionStorageType } from "./ClientOptions";
 import { GadgetTransaction, TransactionRolledBack } from "./GadgetTransaction";
 import { BrowserStorage, InMemoryStorage } from "./InMemoryStorage";
-import { traceFunction } from "./support";
+import { GadgetUnexpectedCloseError, isCloseEvent, traceFunction } from "./support";
 
 export type TransactionRun<T> = (transaction: GadgetTransaction) => Promise<T>;
 export interface GadgetSubscriptionClientOptions extends Partial<SubscriptionClientOptions> {
@@ -42,8 +42,6 @@ export interface GadgetConnectionOptions {
   environment?: "Development" | "Production";
   applicationId?: string;
 }
-
-const isCloseEvent = (event: any): event is CloseEvent => event?.type == "close";
 
 /**
  * Represents the current strategy for authenticating with the Gadget platform.
@@ -224,7 +222,7 @@ export class GadgetConnection {
           }
         }
         if (isCloseEvent(error)) {
-          throw new Error(`GraphQL websocket closed unexpectedly by the server with error code ${error.code} and reason "${error.reason}"`);
+          throw new GadgetUnexpectedCloseError(error);
         } else {
           throw error;
         }
@@ -386,8 +384,6 @@ export class GadgetConnection {
       }, globalTimeout);
 
       const retryOnClose = (event: unknown) => {
-        let message = "unknown close event";
-
         if (isCloseEvent(event)) {
           if (event.code == CloseCode.ConnectionAcknowledgementTimeout && attempts > 0) {
             attempts -= 1;
@@ -396,11 +392,10 @@ export class GadgetConnection {
             resetListeners();
             return;
           }
-          message = `CloseEvent: ${event.reason}`;
         }
 
         clearTimeout(timeout);
-        reject(new Error(message));
+        reject(new GadgetUnexpectedCloseError(event));
       };
 
       const wrappedReject = (err: any) => {

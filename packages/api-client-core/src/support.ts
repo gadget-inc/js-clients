@@ -38,6 +38,34 @@ export interface InvalidFieldError {
 }
 
 /**
+ * A client error when the Gadget API closes the connection unexpectedly.
+ */
+export class GadgetUnexpectedCloseError extends Error {
+  code = "GGT_UNKNOWN";
+  name = "UnexpectedCloseError";
+
+  /** @private */
+  statusCode = 500;
+  /** @private */
+  causedByClient = false;
+
+  /** The event that caused the unexpected close */
+  readonly event: unknown;
+
+  constructor(event: unknown) {
+    let message: string;
+    if (isCloseEvent(event)) {
+      message = `GraphQL websocket closed unexpectedly by the server with error code ${event.code} and reason "${event.reason}"`;
+    } else {
+      message = "GraphQL websocket closed unexpectedly by the server";
+    }
+
+    super(message);
+    this.event = event;
+  }
+}
+
+/**
  * A Gadget API error representing a backend validation error on the input data for an action. Thrown when any of the validations configured on a model fail for the given input data. Has a `validationErrors` property describing which fields failed validation, with messages for each.
  **/
 export class InvalidRecordError extends Error {
@@ -103,7 +131,13 @@ export class GadgetNotFoundError extends Error {
 }
 
 /** All the errors a Gadget operation can throw */
-export type GadgetError = GadgetOperationError | GadgetInternalError | InvalidRecordError | GadgetNonUniqueDataError | GadgetNotFoundError;
+export type GadgetError =
+  | GadgetOperationError
+  | GadgetInternalError
+  | InvalidRecordError
+  | GadgetNonUniqueDataError
+  | GadgetNotFoundError
+  | GadgetUnexpectedCloseError;
 
 export function assert<T>(value: T | undefined | null, message?: string): T {
   if (!value) {
@@ -121,6 +155,8 @@ export const get = (object: Record<string, any> | null | undefined, path: string
 
   return index && index == length ? object : undefined;
 };
+
+export const isCloseEvent = (event: any): event is CloseEvent => event?.type == "close";
 
 export const capitalize = (str: string | undefined | null) => {
   const result = str === null || str === undefined ? "" : String(str);
