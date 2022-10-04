@@ -158,7 +158,7 @@ export const Provider = ({
       const url = typeof router.location === "string" ? new URL(router.location) : router.location;
 
       return {
-        query: new URLSearchParams(url),
+        query: new URLSearchParams(url.search),
         asPath: `${url.pathname}${url.search}`,
       };
     }
