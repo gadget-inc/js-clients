@@ -1,4 +1,5 @@
-export { Consumer, Context, Provider, useMutation, useQuery } from "urql";
+export { Consumer, Context, useMutation, useQuery } from "urql";
+export { GadgetProvider as Provider } from "./GadgetProvider";
 export * from "./useAction";
 export * from "./useBulkAction";
 export * from "./useFindBy";
