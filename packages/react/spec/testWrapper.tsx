@@ -3,9 +3,10 @@ import { find, findLast } from "lodash";
 import React, { ReactNode } from "react";
 import { act } from "react-dom/test-utils";
 import type { Client, GraphQLRequest, OperationContext, OperationResult } from "urql";
-import { makeErrorResult, Provider } from "urql";
+import { makeErrorResult } from "urql";
 import type { Subject } from "wonka";
 import { makeSubject } from "wonka";
+import { GadgetProvider as Provider } from "../src/GadgetProvider";
 
 export type MockOperationFn = jest.Mock & {
   subjects: Record<string, Subject<OperationResult>>;
