@@ -20,7 +20,7 @@
   },
   "dependencies": {
     "@opentelemetry/api": "^1.0.4",
-    "@urql/core": "^3.0.1",
+    "@urql/core": "^3.0.4",
     "@urql/exchange-multipart-fetch": "^1.0.1",
     "cross-fetch": "^3.0.6",
     "gql-query-builder": "^3.6.0",
