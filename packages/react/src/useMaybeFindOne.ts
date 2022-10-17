@@ -10,8 +10,9 @@ import {
   Select,
 } from "@gadgetinc/api-client-core";
 import { useMemo } from "react";
-import { useQuery, UseQueryArgs } from "urql";
+import { UseQueryArgs } from "urql";
 import { OptionsType } from "./OptionsType";
+import { useGadgetQuery } from "./useGadgetQuery";
 import { useStructuralMemo } from "./useStructuralMemo";
 import { ErrorWrapper, ReadHookResult } from "./utils";
 
@@ -62,7 +63,7 @@ export const useMaybeFindOne = <
     );
   }, [manager, id, memoizedOptions]);
 
-  const [result, refresh] = useQuery(getQueryArgs(plan, options));
+  const [result, refresh] = useGadgetQuery(getQueryArgs(plan, options));
 
   let data = result.data ?? null;
   if (data) {

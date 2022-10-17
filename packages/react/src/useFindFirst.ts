@@ -10,8 +10,9 @@ import {
   Select,
 } from "@gadgetinc/api-client-core";
 import { useMemo } from "react";
-import { useQuery, UseQueryArgs } from "urql";
+import { UseQueryArgs } from "urql";
 import { OptionsType } from "./OptionsType";
+import { useGadgetQuery } from "./useGadgetQuery";
 import { useStructuralMemo } from "./useStructuralMemo";
 import { ErrorWrapper, ReadHookResult } from "./utils";
 
@@ -61,7 +62,7 @@ export const useFindFirst = <
     );
   }, [manager, memoizedOptions]);
 
-  const [result, refresh] = useQuery(getQueryArgs(plan, firstOptions));
+  const [result, refresh] = useGadgetQuery(getQueryArgs(plan, firstOptions));
 
   const dataPath = [manager.findFirst.operationName];
   let data = result.data;

@@ -10,8 +10,9 @@ import {
   Select,
 } from "@gadgetinc/api-client-core";
 import { useCallback, useMemo } from "react";
-import { useMutation, UseMutationState } from "urql";
+import { UseMutationState } from "urql";
 import { OptionsType } from "./OptionsType";
+import { useGadgetMutation } from "./useGadgetMutation";
 import { useStructuralMemo } from "./useStructuralMemo";
 import { ActionHookResult, ErrorWrapper } from "./utils";
 
@@ -67,7 +68,7 @@ export const useBulkAction = <
     );
   }, [action, memoizedOptions]);
 
-  const [result, runMutation] = useMutation<
+  const [result, runMutation] = useGadgetMutation<
     GadgetRecord<
       Select<Exclude<F["schemaType"], null | undefined>, DefaultSelection<F["selectionType"], Options, F["defaultSelection"]>>
     >[],

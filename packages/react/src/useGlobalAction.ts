@@ -1,6 +1,7 @@
 import { get, GlobalActionFunction, globalActionOperation } from "@gadgetinc/api-client-core";
 import { useCallback, useMemo } from "react";
-import { useMutation, UseMutationState } from "urql";
+import { UseMutationState } from "urql";
+import { useGadgetMutation } from "./useGadgetMutation";
 import { ActionHookResult, ErrorWrapper } from "./utils";
 
 /**
@@ -31,7 +32,7 @@ export const useGlobalAction = <F extends GlobalActionFunction<any>>(
     return globalActionOperation(action.operationName, action.variables, action.namespace);
   }, [action]);
 
-  const [result, runMutation] = useMutation<any, F["variablesType"]>(plan.query);
+  const [result, runMutation] = useGadgetMutation<any, F["variablesType"]>(plan.query);
 
   return [
     processResult(result, action),

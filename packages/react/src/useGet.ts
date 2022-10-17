@@ -9,8 +9,8 @@ import {
   Select,
 } from "@gadgetinc/api-client-core";
 import { useMemo } from "react";
-import { useQuery } from "urql";
 import { OptionsType } from "./OptionsType";
+import { useGadgetQuery } from "./useGadgetQuery";
 import { useStructuralMemo } from "./useStructuralMemo";
 import { ErrorWrapper, ReadHookResult } from "./utils";
 
@@ -60,7 +60,7 @@ export const useGet = <
     );
   }, [manager, memoizedOptions]);
 
-  const [result, refresh] = useQuery({ query: plan.query, variables: plan.variables });
+  const [result, refresh] = useGadgetQuery({ query: plan.query, variables: plan.variables });
 
   let data = null;
   const rawRecord = result.data && get(result.data, [manager.get.operationName]);

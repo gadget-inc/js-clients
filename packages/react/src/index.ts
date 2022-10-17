@@ -1,4 +1,4 @@
-export { Consumer, Context, useMutation, useQuery } from "urql";
+export { Consumer, Context } from "urql";
 export { GadgetProvider as Provider } from "./GadgetProvider";
 export * from "./useAction";
 export * from "./useBulkAction";
@@ -6,6 +6,8 @@ export * from "./useFindBy";
 export * from "./useFindFirst";
 export * from "./useFindMany";
 export * from "./useFindOne";
+export { useGadgetMutation as useMutation } from "./useGadgetMutation";
+export { useGadgetQuery as useQuery } from "./useGadgetQuery";
 export * from "./useGet";
 export * from "./useGlobalAction";
 export * from "./useMaybeFindFirst";
