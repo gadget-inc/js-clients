@@ -9,11 +9,13 @@ import {
   LimitToKnownKeys,
   Select,
 } from "@gadgetinc/api-client-core";
-import { useCallback, useMemo } from "react";
-import { useMutation, UseMutationState } from "urql";
+import { useCallback, useContext, useMemo } from "react";
+import { UseMutationState } from "urql";
+import { GadgetContext } from "./GadgetProvider";
 import { OptionsType } from "./OptionsType";
+import { useGadgetMutation } from "./useGadgetMutation";
 import { useStructuralMemo } from "./useStructuralMemo";
-import { ActionHookResult, ActionHookState, ErrorWrapper } from "./utils";
+import { ActionHookResult, ActionHookState, ErrorWrapper, noProviderErrorMessage } from "./utils";
 
 /**
  * React hook to run a Gadget model action. `useAction` must be passed an action function from an instance of your generated API client library, like `api.user.create` or `api.blogPost.publish`. `useAction` doesn't actually run the action when invoked, but instead returns an action function as the second result for running the action in response to an event.
@@ -59,6 +61,8 @@ export const useAction = <
   GadgetRecord<Select<Exclude<F["schemaType"], null | undefined>, DefaultSelection<F["selectionType"], Options, F["defaultSelection"]>>>,
   Exclude<F["variablesType"], null | undefined>
 > => {
+  if (!useContext(GadgetContext)) throw new Error(noProviderErrorMessage);
+
   const memoizedOptions = useStructuralMemo(options);
   const plan = useMemo(() => {
     return actionOperation(
@@ -72,7 +76,7 @@ export const useAction = <
     );
   }, [action, memoizedOptions]);
 
-  const [result, runMutation] = useMutation<
+  const [result, runMutation] = useGadgetMutation<
     GadgetRecord<Select<Exclude<F["schemaType"], null | undefined>, DefaultSelection<F["selectionType"], Options, F["defaultSelection"]>>>,
     F["variablesType"]
   >(plan.query);

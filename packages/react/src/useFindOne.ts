@@ -10,8 +10,9 @@ import {
   Select,
 } from "@gadgetinc/api-client-core";
 import { useMemo } from "react";
-import { useQuery, UseQueryArgs } from "urql";
+import { UseQueryArgs } from "urql";
 import { OptionsType } from "./OptionsType";
+import { useGadgetQuery } from "./useGadgetQuery";
 import { useStructuralMemo } from "./useStructuralMemo";
 import { ErrorWrapper, ReadHookResult } from "./utils";
 
@@ -62,7 +63,7 @@ export const useFindOne = <
     );
   }, [manager, id, memoizedOptions]);
 
-  const [result, refresh] = useQuery(getQueryArgs(plan, options));
+  const [result, refresh] = useGadgetQuery(getQueryArgs(plan, options));
 
   const dataPath = [manager.findOne.operationName];
   let data = result.data && get(result.data, dataPath);
