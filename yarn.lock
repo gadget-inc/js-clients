@@ -1351,12 +1351,12 @@
     minimatch "^3.0.4"
     strip-json-comments "^3.1.1"
 
-"@gadget-client/bulk-actions-example@^1.75.0":
-  version "1.75.0"
-  resolved "https://registry.gadget.dev/npm/_/tarball/2162/3149/1484#ff0299018fc613acf76c8270bd4aca4ac4ec690e"
-  integrity sha1-/wKZAY/GE6z3bIJwvUrKSsTsaQ4=
+"@gadget-client/bulk-actions-test@^1.18.0":
+  version "1.18.0"
+  resolved "https://registry.gadget.dev/npm/_/tarball/5532/9779/1877#4e52c798664280704a650fed46352d7f0fd80612"
+  integrity sha1-TlLHmGZCgHBKZQ/tRjUtfw/YBhI=
   dependencies:
-    "@gadgetinc/api-client-core" "0.9.0"
+    "@gadgetinc/api-client-core" "0.10.1"
 
 "@gadget-client/related-products-example@^1.783.0":
   version "1.783.0"
