@@ -1378,7 +1378,7 @@
     isomorphic-ws "^4.0.1"
     lodash.clonedeep "^4.5.0"
     lodash.isequal "^4.5.0"
-    ws "^8.2.2"
+    ws "8.11.0"
 
 "@gadgetinc/eslint-config@^0.4.0":
   version "0.4.0"
@@ -1405,13 +1405,6 @@
   integrity sha512-s58zjpPLymKIkcpoxzFdtIW6+kGYkB9HOIucS9wbApmfXS/JOHlXpgqv6cje0rOOvaXTI7SmecaXv5t8I28a8w==
   dependencies:
     prettier-plugin-organize-imports "^1.0.4"
-
-"@gadgetinc/react@^0.7.2":
-  version "0.8.1"
-  dependencies:
-    "@gadgetinc/api-client-core" "^0.10.1"
-    deep-equal "^2.0.5"
-    urql "^3.0.1"
 
 "@graphql-typed-document-node/core@^3.1.1":
   version "3.1.1"
@@ -6546,10 +6539,10 @@ write-file-atomic@^4.0.1:
     imurmurhash "^0.1.4"
     signal-exit "^3.0.7"
 
-ws@^8.2.2:
-  version "8.7.0"
-  resolved "https://registry.yarnpkg.com/ws/-/ws-8.7.0.tgz#eaf9d874b433aa00c0e0d8752532444875db3957"
-  integrity sha512-c2gsP0PRwcLFzUiA8Mkr37/MI7ilIlHQxaEAtd0uNMbVMoy8puJyafRlm0bV9MbGSabUPeLrRRaqIBcFcA2Pqg==
+ws@^8.11.0:
+  version "8.11.0"
+  resolved "https://registry.yarnpkg.com/ws/-/ws-8.11.0.tgz#6a0d36b8edfd9f96d8b25683db2f8d7de6e8e143"
+  integrity sha512-HPG3wQd9sNQoT9xHyNCXoDUa+Xw/VevmY9FoHyQ+g+rrMn4j6FB4np7Z0OhdTgjx6MgQLK7jwSy1YecU1+4Asg==
 
 ws@^8.8.0:
   version "8.8.1"
