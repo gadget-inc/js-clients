@@ -1351,10 +1351,10 @@
     minimatch "^3.0.4"
     strip-json-comments "^3.1.1"
 
-"@gadget-client/bulk-actions-test@^1.42.0":
-  version "1.42.0"
-  resolved "https://registry.gadget.dev/npm/_/tarball/5532/9779/1885#28ccf578b2c67f64e9a183267e72479aab77c111"
-  integrity sha1-KMz1eLLGf2TpoYMmfnJHmqt3wRE=
+"@gadget-client/bulk-actions-test@^1.100.0":
+  version "1.100.0"
+  resolved "https://registry.gadget.dev/npm/_/tarball/6681/12076/2373#8b0a175087af466d58ac0e15ada4dd12c2436f2b"
+  integrity sha1-iwoXUIevRm1YrA4VraTdEsJDbys=
   dependencies:
     "@gadgetinc/api-client-core" "0.10.1"
 
@@ -1372,13 +1372,13 @@
     "@urql/core" "^3.0.1"
     "@urql/exchange-multipart-fetch" "^1.0.1"
     cross-fetch "^3.0.6"
-    gql-query-builder "3.7.2"
+    gql-query-builder "^3.7.2"
     graphql "^16.5.0"
     graphql-ws "^5.5.5"
     isomorphic-ws "^4.0.1"
     lodash.clonedeep "^4.5.0"
     lodash.isequal "^4.5.0"
-    ws "8.11.0"
+    ws "^8.11.0"
 
 "@gadgetinc/eslint-config@^0.4.0":
   version "0.4.0"
