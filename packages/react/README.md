@@ -210,7 +210,7 @@ See [the `refetch` function](#the-refetch-function) docs for more information on
 
 `useFindMany` returns two values: a result object with the `data`, `fetching`, and `error` keys for use in your React component's output, and a [`refetch` function](#the-refetch-function) to trigger a refresh of the hook's data.
 
-- `data: GadgetRecord[] | null`: The resulting page of records fetched from the backend for your model, once they've arrived
+- `data: GadgetRecordList | null`: The resulting page of records fetched from the backend for your model, once they've arrived
 - `fetching: boolean`: A boolean describing if the hook is currently making a request to the backend.
 - `error: Error | null`: An error from the client or server side, if encountered during the request. See the [Errors](#errors-from-the-returned-error-object) section.
 
@@ -298,9 +298,13 @@ const [{ data, fetching, error }, _refetch] = useFindMany(api.widget, {
   after: "some-cursor-value",
 });
 
+// data is a GadgetRecordList object, which has extra properties for inquiring about the pagination state
 // the current page's start and end cursor are available for use to then make later requests for different pages
-data.endCursor; // used for forward pagination, pass to the `after:` variable
-data.startCursor; // used for backwards pagination, pass to the `before:` variable
+data.endCursor; // => string, used for forward pagination, pass to the `after:` variable
+data.startCursor; // => string, used for backwards pagination, pass to the `before:` variable
+// data also reports if there are more pages for fetching
+data.hasNextPage; // => boolean, true if there is another page to fetch after the `endCursor`
+data.hasPreviousPage; // => boolean, true if there is another page to fetch before the `startCursor`
 ```
 
 An easy way to do pagination is using React state, or for a better user experience, using the URL with whatever router system works for your application. We use React state to demonstrate pagination in this example:

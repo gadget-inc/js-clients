@@ -1,8 +1,9 @@
 import {
+  AnyModelManager,
   DefaultSelection,
   FindManyFunction,
   findManyOperation,
-  GadgetRecord,
+  GadgetRecordList,
   get,
   getQueryArgs,
   hydrateConnection,
@@ -49,7 +50,7 @@ export const useFindMany = <
   manager: { findMany: F },
   options?: LimitToKnownKeys<Options, F["optionsType"]> & Omit<UseQueryArgs, "query" | "variables">
 ): ReadHookResult<
-  GadgetRecord<Select<Exclude<F["schemaType"], null | undefined>, DefaultSelection<F["selectionType"], Options, F["defaultSelection"]>>>[]
+  GadgetRecordList<Select<Exclude<F["schemaType"], null | undefined>, DefaultSelection<F["selectionType"], Options, F["defaultSelection"]>>>
 > => {
   const memoizedOptions = useStructuralMemo(options);
   const plan = useMemo(() => {
@@ -68,7 +69,8 @@ export const useFindMany = <
   if (data) {
     const connection = get(result.data, dataPath);
     if (connection) {
-      data = hydrateConnection(result, connection);
+      const records = hydrateConnection(result, connection);
+      data = GadgetRecordList.boot(manager as unknown as AnyModelManager, records, connection);
     }
   }
 
