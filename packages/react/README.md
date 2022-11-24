@@ -129,9 +129,9 @@ Find more examples in the **https://github.com/gadget-inc/examples** repo.
 
 ## Request caching
 
-Under the hood, your Gadget app's API client and `@gadgetinc/react` use a powerful, production-grade GraphQL client called [urql](https://formidable.com/open-source/urql/docs/). urql has an great client-side data caching feature built in called [Document Caching](https://formidable.com/open-source/urql/docs/basics/document-caching/), which allows React components issuing GraphQL requests for the same data to de-duplicate requests and share client side state. `@gadgetinc/react` enables this functionality by default.
+Under the hood, your Gadget app's API client and `@gadgetinc/react` use a powerful, production-grade GraphQL client called [urql](https://formidable.com/open-source/urql/docs/). urql has a great client-side data caching feature built-in called [Document Caching](https://formidable.com/open-source/urql/docs/basics/document-caching/) which allows React components issuing GraphQL requests for the same data to de-duplicate requests and share client-side state. `@gadgetinc/react` enables this functionality by default.
 
-`@gadgetinc/react` runs urql's Document Caching with a default [`requestPolicy`](https://formidable.com/open-source/urql/docs/basics/document-caching/#request-policies) of `cache-and-network`, which means your React hooks will re-render data with any cached results from the in memory store, and then make an underlying HTTP request to fetch the most up to date data.
+`@gadgetinc/react` runs urql's Document Caching with a default [`requestPolicy`](https://formidable.com/open-source/urql/docs/basics/document-caching/#request-policies) of `cache-and-network`, which means your React hooks will re-render data with any cached results from the in-memory store, and then make an underlying HTTP request to fetch the most up to date data.
 
 If you want to change the default `requestPolicy` that your Gadget API client and React hooks use, you can pass the `requestPolicy` option to your API client constructor.
 
