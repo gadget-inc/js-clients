@@ -19,11 +19,11 @@ export class GadgetRecordList<Shape extends RecordShape> extends Array<GadgetRec
   /** Internal method used to create a list. Should not be used by applications. */
   static boot<Shape extends RecordShape>(
     modelManager: AnyModelManager | InternalModelManager,
-    nodes: GadgetRecord<Shape>[],
+    records: GadgetRecord<Shape>[],
     pagination: PaginationConfig
   ) {
     const list = new GadgetRecordList<Shape>();
-    list.push(...nodes);
+    list.push(...records);
     list.modelManager = modelManager;
     list.pagination = pagination;
     Object.freeze(list);

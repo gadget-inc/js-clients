@@ -70,6 +70,7 @@ const newMockOperationFn = () => {
         ...response,
       });
       subjects[key].complete();
+      delete subjects[key];
     });
   };
 
