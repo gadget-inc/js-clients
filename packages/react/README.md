@@ -127,6 +127,30 @@ function WidgetDeleter() {
 
 Find more examples in the **https://github.com/gadget-inc/examples** repo.
 
+## Request caching
+
+Under the hood, your Gadget app's API client and `@gadgetinc/react` use a powerful, production-grade GraphQL client called [urql](https://formidable.com/open-source/urql/docs/). urql has an great client-side data caching feature built in called [Document Caching](https://formidable.com/open-source/urql/docs/basics/document-caching/), which allows React components issuing GraphQL requests for the same data to de-duplicate requests and share client side state. `@gadgetinc/react` enables this functionality by default.
+
+`@gadgetinc/react` runs urql's Document Caching with a default [`requestPolicy`](https://formidable.com/open-source/urql/docs/basics/document-caching/#request-policies) of `cache-and-network`, which means your React hooks will re-render data with any cached results from the in memory store, and then make an underlying HTTP request to fetch the most up to date data.
+
+If you want to change the default `requestPolicy` that your Gadget API client and React hooks use, you can pass the `requestPolicy` option to your API client constructor.
+
+```javascript
+// instantiate the API client for our app that will make network calls for every query, regardless of cache state
+const api = new Client({
+  requestPolicy: "network-only",
+});
+```
+
+There are four different request policies that you can use:
+
+- `cache-first` prefers cached results and falls back to sending an API request when no prior result is cached.
+- `cache-and-network` (the default) returns cached results but also always sends an API request, which is perfect for displaying data quickly while keeping it up-to-date.
+- `network-only` will always send an API request and will ignore cached results.
+- `cache-only` will always return cached results or null.
+
+For more information on `urql`'s built-in client-side caching, see [`urql`'s docs](https://formidable.com/open-source/urql/docs/basics/document-caching/).
+
 ### API Documentation
 
 `@gadgetinc/react` contains a variety of React hooks for working with your Gadget application's API from a React application. Specific code examples for your application's API can be found within your application's docs at https://docs.gadget.dev/api/<your-application-slug>
