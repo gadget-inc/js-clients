@@ -27,6 +27,14 @@ describe("GadgetConnection", () => {
     expect(connection.authenticationMode).toEqual(AuthenticationMode.Anonymous);
   });
 
+  it("should default to the cache-and-network request policy for urql clients", () => {
+    let connection = new GadgetConnection({ endpoint: "https://someapp.gadget.app" });
+    expect((connection as any).requestPolicy).toEqual("cache-and-network");
+
+    connection = new GadgetConnection({ endpoint: "https://someapp.gadget.app", requestPolicy: "network-only" });
+    expect((connection as any).requestPolicy).toEqual("network-only");
+  });
+
   describe("authorization", () => {
     it("should allow connecting with anonymous authentication", async () => {
       nock("https://someapp.gadget.app")

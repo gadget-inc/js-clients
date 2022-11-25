@@ -1,4 +1,4 @@
-import { cacheExchange, Client, dedupExchange, subscriptionExchange } from "@urql/core";
+import { cacheExchange, Client, ClientOptions, dedupExchange, RequestPolicy, subscriptionExchange } from "@urql/core";
 import { multipartFetchExchange } from "@urql/exchange-multipart-fetch";
 import fetch from "cross-fetch";
 import { ExecutionResult } from "graphql";
@@ -41,6 +41,7 @@ export interface GadgetConnectionOptions {
   fetchImplementation?: typeof fetch;
   environment?: "Development" | "Production";
   applicationId?: string;
+  requestPolicy?: ClientOptions["requestPolicy"];
 }
 
 /**
@@ -80,6 +81,7 @@ export class GadgetConnection {
   // How this client will authenticate (if at all) against the Gadget backed
   authenticationMode: AuthenticationMode = AuthenticationMode.Anonymous;
   private sessionTokenStore?: BrowserStorage;
+  private requestPolicy: RequestPolicy;
 
   constructor(readonly options: GadgetConnectionOptions) {
     if (!options.endpoint) throw new Error("Must provide an `endpoint` option for a GadgetConnection to connect to");
@@ -89,6 +91,7 @@ export class GadgetConnection {
     this.websocketsEndpoint = options.websocketsEndpoint ?? options.endpoint + "/batch";
     this.websocketsEndpoint = this.websocketsEndpoint.replace(/^http/, "ws");
     this.environment = options.environment ?? "Development";
+    this.requestPolicy = options.requestPolicy ?? "cache-and-network";
 
     this.setAuthenticationMode(options.authenticationMode);
 
@@ -190,6 +193,7 @@ export class GadgetConnection {
 
         const client = new Client({
           url: "/-", // not used because there's no fetch exchange, set for clarity
+          requestPolicy: "network-only", // skip any cached data during transactions
           exchanges: [
             subscriptionExchange({
               forwardSubscription(operation) {
@@ -293,7 +297,12 @@ export class GadgetConnection {
       })
     );
 
-    return new Client({ url: this.endpoint, fetch: this.fetch, exchanges });
+    return new Client({
+      url: this.endpoint,
+      fetch: this.fetch,
+      exchanges,
+      requestPolicy: this.requestPolicy,
+    });
   }
 
   private newSubscriptionClient(overrides: GadgetSubscriptionClientOptions) {
