@@ -11,3 +11,4 @@ TODO
 packages/*/dist
 .idea
 packages/sample-app
+*.orig

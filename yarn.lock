@@ -1351,12 +1351,12 @@
     minimatch "^3.0.4"
     strip-json-comments "^3.1.1"
 
-"@gadget-client/bulk-actions-test@^1.100.0":
-  version "1.100.0"
-  resolved "https://registry.gadget.dev/npm/_/tarball/6681/12076/2373#8b0a175087af466d58ac0e15ada4dd12c2436f2b"
-  integrity sha1-iwoXUIevRm1YrA4VraTdEsJDbys=
+"@gadget-client/bulk-actions-test@^1.101.0":
+  version "1.101.0"
+  resolved "https://registry.gadget.dev/npm/_/tarball/6681/12076/2621#f2e72156c15aa4ca82a85be3431798798626c1ee"
+  integrity sha1-8uchVsFapMqCqFvjQxeYeYYmwe4=
   dependencies:
-    "@gadgetinc/api-client-core" "0.10.1"
+    "@gadgetinc/api-client-core" "0.11.0"
 
 "@gadget-client/related-products-example@^1.783.0":
   version "1.783.0"
@@ -1364,6 +1364,21 @@
   integrity sha1-/d+6TiAfTTBHjHoD3jDKFBhdaH0=
   dependencies:
     "@gadgetinc/api-client-core" "0.9.0"
+
+"@gadgetinc/api-client-core@0.11.0":
+  version "0.10.1"
+  dependencies:
+    "@opentelemetry/api" "^1.0.4"
+    "@urql/core" "^3.0.1"
+    "@urql/exchange-multipart-fetch" "^1.0.1"
+    cross-fetch "^3.0.6"
+    gql-query-builder "^3.6.0"
+    graphql "^16.5.0"
+    graphql-ws "^5.5.5"
+    isomorphic-ws "^4.0.1"
+    lodash.clonedeep "^4.5.0"
+    lodash.isequal "^4.5.0"
+    ws "^8.2.2"
 
 "@gadgetinc/api-client-core@0.9.0":
   version "0.10.1"

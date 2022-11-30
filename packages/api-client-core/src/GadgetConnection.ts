@@ -100,6 +100,10 @@ export class GadgetConnection {
     this.baseClient = this.newBaseClient();
   }
 
+  private get sessionStorageKey() {
+    return `${sessionStorageKey}-${this.endpoint}`;
+  }
+
   get currentClient() {
     return this.currentTransaction?.client || this.baseClient;
   }
@@ -143,7 +147,7 @@ export class GadgetConnection {
     }
 
     if (options !== null && typeof options === "object" && "initialToken" in options && options.initialToken) {
-      sessionTokenStore.setItem(sessionStorageKey, options.initialToken);
+      sessionTokenStore.setItem(this.sessionStorageKey, options.initialToken);
     }
 
     this.sessionTokenStore = sessionTokenStore;
@@ -257,7 +261,7 @@ export class GadgetConnection {
       const headerValue = response.headers.get("x-set-authorization");
       const sessionToken = headerValue?.startsWith("Session ") ? headerValue.replace("Session ", "") : null;
       if (sessionToken) {
-        this.sessionTokenStore!.setItem(sessionStorageKey, sessionToken);
+        this.sessionTokenStore!.setItem(this.sessionStorageKey, sessionToken);
       }
     }
 
@@ -313,7 +317,7 @@ export class GadgetConnection {
     } else if (this.authenticationMode == AuthenticationMode.InternalAuthToken) {
       connectionParams.auth.token = this.options.authenticationMode!.internalAuthToken!;
     } else if (this.authenticationMode == AuthenticationMode.BrowserSession) {
-      connectionParams.auth.sessionToken = this.sessionTokenStore!.getItem(sessionStorageKey);
+      connectionParams.auth.sessionToken = this.sessionTokenStore!.getItem(this.sessionStorageKey);
     } else if (this.authenticationMode == AuthenticationMode.Custom) {
       this.options.authenticationMode?.custom?.processTransactionConnectionParams(connectionParams);
     }
@@ -343,7 +347,7 @@ export class GadgetConnection {
             const browserSession = this.options.authenticationMode?.browserSession;
             const initialToken = browserSession !== null && typeof browserSession === "object" ? browserSession.initialToken : null;
             if (!initialToken) {
-              this.sessionTokenStore!.setItem(sessionStorageKey, payload.sessionToken as string);
+              this.sessionTokenStore!.setItem(this.sessionStorageKey, payload.sessionToken as string);
             }
           }
           this.subscriptionClientOptions?.on?.connected?.(socket, payload);
@@ -363,7 +367,7 @@ export class GadgetConnection {
     } else if (this.authenticationMode == AuthenticationMode.APIKey) {
       headers.authorization = `Bearer ${this.options.authenticationMode?.apiKey}`;
     } else if (this.authenticationMode == AuthenticationMode.BrowserSession) {
-      const val = this.sessionTokenStore!.getItem(sessionStorageKey);
+      const val = this.sessionTokenStore!.getItem(this.sessionStorageKey);
       if (val) {
         headers.authorization = `Session ${val}`;
       }
