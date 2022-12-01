@@ -1,13 +1,12 @@
 import gql from "gql-tag";
 import nock from "nock";
-import { BrowserSessionStorageType } from "../src";
-import { AuthenticationMode, GadgetConnection } from "../src/GadgetConnection";
+import { AuthenticationMode, BrowserSessionStorageType, GadgetConnection } from "../src";
+import { base64 } from "./helpers";
 
-const base64 = (str: string) => Buffer.from(str).toString("base64");
 nock.disableNetConnect();
 
-describe("GadgetConnection", () => {
-  // this object is integration tested within Gadget itself also
+// eslint-disable-next-line jest/no-export
+export const GadgetConnectionSharedSuite = (queryExtra = "") => {
   beforeEach(() => {
     nock.cleanAll();
   });
@@ -37,8 +36,8 @@ describe("GadgetConnection", () => {
 
   describe("authorization", () => {
     it("should allow connecting with anonymous authentication", async () => {
-      nock("https://someapp.gadget.app")
-        .post("/api/graphql", { query: "{\n  meta {\n    appName\n  }\n}", variables: {} })
+      nock("http://someapp.gadget.app")
+        .post("/api/graphql", { query: `{\n  meta {\n    appName\n${queryExtra}  }\n}`, variables: {} })
         .reply(200, {
           data: {
             meta: {
@@ -48,7 +47,7 @@ describe("GadgetConnection", () => {
         });
 
       const connection = new GadgetConnection({
-        endpoint: "https://someapp.gadget.app/api/graphql",
+        endpoint: "http://someapp.gadget.app/api/graphql",
         authenticationMode: { anonymous: true },
       });
 
@@ -65,13 +64,13 @@ describe("GadgetConnection", () => {
         )
         .toPromise();
 
+      expect(result.error).toBeUndefined();
       expect(result.data).toEqual({ meta: { appName: "some app" } });
     });
 
     it("should allow connecting with internal auth token authentication", async () => {
       nock("https://someapp.gadget.app")
-        .post("/api/graphql", { query: "{\n  meta {\n    appName\n  }\n}", variables: {} })
-        // .basicAuth({ user: "gadget", pass: "opaque-token-thing" })
+        .post("/api/graphql", { query: `{\n  meta {\n    appName\n${queryExtra}  }\n}`, variables: {} })
         .reply(200, function () {
           expect(this.req.headers["authorization"]).toEqual([`Basic ${base64("gadget-internal:opaque-token-thing")}`]);
 
@@ -102,12 +101,13 @@ describe("GadgetConnection", () => {
         )
         .toPromise();
 
+      expect(result.error).toBeUndefined();
       expect(result.data).toEqual({ meta: { appName: "some app" } });
     });
 
     it("should allow connecting with a gadget API Key", async () => {
       nock("https://someapp.gadget.app")
-        .post("/api/graphql", { query: "{\n  meta {\n    appName\n  }\n}", variables: {} })
+        .post("/api/graphql", { query: `{\n  meta {\n    appName\n${queryExtra}  }\n}`, variables: {} })
         .reply(200, function () {
           expect(this.req.headers["authorization"]).toEqual([`Bearer gsk-abcde`]);
 
@@ -138,13 +138,14 @@ describe("GadgetConnection", () => {
         )
         .toPromise();
 
+      expect(result.error).toBeUndefined();
       expect(result.data).toEqual({ meta: { appName: "some app" } });
     });
 
     describe("session token storage", () => {
       it("should allow connecting with no session in a session storage mode", async () => {
         nock("https://someapp.gadget.app")
-          .post("/api/graphql", { query: "{\n  meta {\n    appName\n  }\n}", variables: {} })
+          .post("/api/graphql", { query: `{\n  meta {\n    appName\n${queryExtra}  }\n}`, variables: {} })
           .reply(
             200,
             {
@@ -177,12 +178,13 @@ describe("GadgetConnection", () => {
           )
           .toPromise();
 
+        expect(result.error).toBeUndefined();
         expect(result.data).toEqual({ meta: { appName: "some app" } });
       });
 
       it("should allow connecting with an initial session token in session storage mode", async () => {
         nock("https://someapp.gadget.app")
-          .post("/api/graphql", { query: "{\n  meta {\n    appName\n  }\n}", variables: {} })
+          .post("/api/graphql", { query: `{\n  meta {\n    appName\n${queryExtra}  }\n}`, variables: {} })
           .reply(
             200,
             function () {
@@ -218,12 +220,13 @@ describe("GadgetConnection", () => {
           )
           .toPromise();
 
+        expect(result.error).toBeUndefined();
         expect(result.data).toEqual({ meta: { appName: "some app" } });
       });
 
       it("should store a x-set-authorization header and reuse it for subsequent requests", async () => {
         nock("https://someapp.gadget.app")
-          .post("/api/graphql", { query: "{\n  meta {\n    appName\n  }\n}", variables: {} })
+          .post("/api/graphql", { query: `{\n  meta {\n    appName\n${queryExtra}  }\n}`, variables: {} })
           .reply(
             200,
             function () {
@@ -240,7 +243,7 @@ describe("GadgetConnection", () => {
               "x-set-authorization": "Session token-123",
             }
           )
-          .post("/api/graphql", { query: "{\n  currentSession {\n    id\n  }\n}", variables: {} })
+          .post("/api/graphql", { query: `{\n  currentSession {\n    id\n${queryExtra}  }\n}`, variables: {} })
           .reply(
             200,
             function () {
@@ -276,6 +279,7 @@ describe("GadgetConnection", () => {
           )
           .toPromise();
 
+        expect(firstResult.error).toBeUndefined();
         expect(firstResult.data).toEqual({ meta: { appName: "some app" } });
 
         const secondResult = await connection.currentClient
@@ -291,13 +295,14 @@ describe("GadgetConnection", () => {
           )
           .toPromise();
 
+        expect(secondResult.error).toBeUndefined();
         expect(secondResult.data).toEqual({ currentSession: { id: 1 } });
       });
     });
 
     it("should support a custom auth mode that can set arbitrary fetch headers", async () => {
       nock("https://someapp.gadget.app")
-        .post("/api/graphql", { query: "{\n  meta {\n    appName\n  }\n}", variables: {} })
+        .post("/api/graphql", { query: `{\n  meta {\n    appName\n${queryExtra}  }\n}`, variables: {} })
         .reply(200, function () {
           expect(this.req.headers["authorization"]).toEqual([`FancyMode whatever`]);
 
@@ -337,12 +342,13 @@ describe("GadgetConnection", () => {
         )
         .toPromise();
 
+      expect(result.error).toBeUndefined();
       expect(result.data).toEqual({ meta: { appName: "some app" } });
     });
 
     it("custom auth mode requests shouldn't send back x-set-authorization headers on subsequent requests", async () => {
       nock("https://someapp.gadget.app")
-        .post("/api/graphql", { query: "{\n  meta {\n    appName\n  }\n}", variables: {} })
+        .post("/api/graphql", { query: `{\n  meta {\n    appName\n${queryExtra}  }\n}`, variables: {} })
         .reply(
           200,
           function () {
@@ -360,7 +366,7 @@ describe("GadgetConnection", () => {
             "x-set-authorization": "Session token-123",
           }
         )
-        .post("/api/graphql", { query: "{\n  currentSession {\n    id\n  }\n}", variables: {} })
+        .post("/api/graphql", { query: `{\n  currentSession {\n    id\n${queryExtra}  }\n}`, variables: {} })
         .reply(
           200,
           function () {
@@ -431,7 +437,7 @@ describe("GadgetConnection", () => {
       });
 
       nock("https://someapp.gadget.app")
-        .post("/api/graphql", { query: "{\n  meta {\n    appName\n  }\n}", variables: {} })
+        .post("/api/graphql", { query: `{\n  meta {\n    appName\n${queryExtra}  }\n}`, variables: {} })
         .reply(
           200,
           {
@@ -459,6 +465,7 @@ describe("GadgetConnection", () => {
         )
         .toPromise();
 
+      expect(result.error).toBeUndefined();
       expect(result.data).toEqual({ meta: { appName: "some app" } });
 
       connection.setAuthenticationMode({
@@ -473,7 +480,7 @@ describe("GadgetConnection", () => {
       });
 
       nock("https://someapp.gadget.app")
-        .post("/api/graphql", { query: "{\n  meta {\n    appName\n  }\n}", variables: {} })
+        .post("/api/graphql", { query: `{\n  meta {\n    appName\n${queryExtra}  }\n}`, variables: {} })
         .reply(200, function () {
           expect(this.req.headers["authorization"]).toEqual([`FancyMode whatever`]);
 
@@ -499,7 +506,8 @@ describe("GadgetConnection", () => {
         )
         .toPromise();
 
+      expect(customResult.error).toBeUndefined();
       expect(customResult.data).toEqual({ meta: { appName: "some app" } });
     });
   });
-});
+};

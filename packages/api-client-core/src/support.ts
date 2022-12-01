@@ -383,3 +383,18 @@ export const getQueryArgs = <Plan extends QueryPlan, Options extends QueryOption
   pause: options?.pause,
   requestPolicy: options?.requestPolicy,
 });
+
+// Gadget Storage Test Key that minifies well
+const key = "gstk";
+
+/** Detect if the window object and window.localStorage or window.sessionStorage objects are functional */
+export const storageAvailable = (type: "localStorage" | "sessionStorage") => {
+  try {
+    const storage = window[type];
+    storage.setItem(key, key);
+    storage.removeItem(key);
+    return true;
+  } catch (e) {
+    return false;
+  }
+};
