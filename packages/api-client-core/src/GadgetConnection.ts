@@ -15,7 +15,7 @@ import type { AuthenticationModeOptions, BrowserSessionAuthenticationModeOptions
 import { BrowserSessionStorageType } from "./ClientOptions";
 import { GadgetTransaction, TransactionRolledBack } from "./GadgetTransaction";
 import { BrowserStorage, InMemoryStorage } from "./InMemoryStorage";
-import { GadgetUnexpectedCloseError, isCloseEvent, traceFunction } from "./support";
+import { GadgetUnexpectedCloseError, isCloseEvent, storageAvailable, traceFunction } from "./support";
 
 export type TransactionRun<T> = (transaction: GadgetTransaction) => Promise<T>;
 export interface GadgetSubscriptionClientOptions extends Partial<SubscriptionClientOptions> {
@@ -137,10 +137,11 @@ export class GadgetConnection {
   enableSessionMode(options?: true | BrowserSessionAuthenticationModeOptions) {
     this.authenticationMode = AuthenticationMode.BrowserSession;
 
+    const desiredMode = !options || typeof options == "boolean" ? BrowserSessionStorageType.Durable : options.storageType;
     let sessionTokenStore;
-    if (!options || typeof options == "boolean" || options.storageType == BrowserSessionStorageType.Durable) {
+    if (desiredMode == BrowserSessionStorageType.Durable && storageAvailable("localStorage")) {
       sessionTokenStore = window.localStorage;
-    } else if (options.storageType == BrowserSessionStorageType.Session) {
+    } else if (desiredMode == BrowserSessionStorageType.Session && storageAvailable("sessionStorage")) {
       sessionTokenStore = window.sessionStorage;
     } else {
       sessionTokenStore = new InMemoryStorage();
