@@ -127,7 +127,7 @@ export const internalCreateMutation = (apiIdentifier: string) => {
   const capitalizedApiIdentifier = capitalize(apiIdentifier);
   return `
     ${internalErrorsDetails}
-    
+
     mutation InternalCreate${capitalizedApiIdentifier}($record: Internal${capitalizedApiIdentifier}Input) {
       ${internalHydrationPlan(apiIdentifier)}
       internal {
@@ -147,7 +147,7 @@ export const internalUpdateMutation = (apiIdentifier: string) => {
   const capitalizedApiIdentifier = capitalize(apiIdentifier);
   return `
     ${internalErrorsDetails}
-    
+
     mutation InternalUpdate${capitalizedApiIdentifier}($id: GadgetID!, $record: Internal${capitalizedApiIdentifier}Input) {
       ${internalHydrationPlan(apiIdentifier)}
       internal {
@@ -167,7 +167,7 @@ export const internalDeleteMutation = (apiIdentifier: string) => {
   const capitalizedApiIdentifier = capitalize(apiIdentifier);
   return `
     ${internalErrorsDetails}
-    
+
     mutation InternalDelete${capitalizedApiIdentifier}($id: GadgetID!) {
       ${internalHydrationPlan(apiIdentifier)}
       internal {
@@ -186,7 +186,7 @@ export const internalDeleteManyMutation = (apiIdentifier: string) => {
   const capitalizedApiIdentifier = capitalize(apiIdentifier);
   return `
     ${internalErrorsDetails}
-    
+
     mutation InternalDeleteMany${capitalizedApiIdentifier}(
       $search: String
       $filter: [${capitalizedApiIdentifier}Filter!]
@@ -220,7 +220,7 @@ export class InternalModelManager {
     const response = await this.connection.currentClient.query(internalFindOneQuery(this.apiIdentifier), { id }).toPromise();
     const assertSuccess = throwOnEmptyData ? assertOperationSuccess : assertNullableOperationSuccess;
     const result = assertSuccess(response, ["internal", this.apiIdentifier]);
-    return await hydrateRecord(response, result);
+    return hydrateRecord(response, result);
   }
 
   async maybeFindOne(id: string): Promise<GadgetRecord<RecordData> | null> {
@@ -268,7 +268,7 @@ export class InternalModelManager {
         })
         .toPromise();
       const result = assertMutationSuccess(response, ["internal", `create${this.capitalizedApiIdentifier}`]);
-      return await hydrateRecord(response, result[this.apiIdentifier]);
+      return hydrateRecord(response, result[this.apiIdentifier]);
     });
   }
 
@@ -283,7 +283,7 @@ export class InternalModelManager {
         .toPromise();
       const result = assertMutationSuccess(response, ["internal", `update${this.capitalizedApiIdentifier}`]);
 
-      return await hydrateRecord(response, result[this.apiIdentifier]);
+      return hydrateRecord(response, result[this.apiIdentifier]);
     });
   }
 
