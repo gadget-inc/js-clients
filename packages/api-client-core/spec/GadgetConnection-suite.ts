@@ -36,7 +36,7 @@ export const GadgetConnectionSharedSuite = (queryExtra = "") => {
 
   describe("authorization", () => {
     it("should allow connecting with anonymous authentication", async () => {
-      nock("http://someapp.gadget.app")
+      nock("https://someapp.gadget.app")
         .post("/api/graphql", { query: `{\n  meta {\n    appName\n${queryExtra}  }\n}`, variables: {} })
         .reply(200, {
           data: {
@@ -47,7 +47,7 @@ export const GadgetConnectionSharedSuite = (queryExtra = "") => {
         });
 
       const connection = new GadgetConnection({
-        endpoint: "http://someapp.gadget.app/api/graphql",
+        endpoint: "https://someapp.gadget.app/api/graphql",
         authenticationMode: { anonymous: true },
       });
 
