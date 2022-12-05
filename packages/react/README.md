@@ -359,7 +359,7 @@ export const WidgetPaginator = () => {
           // update the cursor, which will trigger a refetch of the next page and rerender with a new `data` object
           setCursor(data.endCursor);
         }}
-        disabled={data.hasNextPage}
+        disabled={!data.hasNextPage}
       >
         Next page
       </button>
