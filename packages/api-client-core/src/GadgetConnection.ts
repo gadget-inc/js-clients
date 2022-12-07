@@ -32,6 +32,9 @@ export const $transaction = Symbol.for("gadget/transaction");
 const sessionStorageKey = "token";
 const base64 = typeof btoa !== "undefined" ? btoa : (str: string) => Buffer.from(str).toString("base64");
 
+const environments = ["development", "production"] as const;
+type Environments = typeof environments[number];
+
 export interface GadgetConnectionOptions {
   endpoint: string;
   authenticationMode?: AuthenticationModeOptions;
@@ -39,7 +42,7 @@ export interface GadgetConnectionOptions {
   subscriptionClientOptions?: GadgetSubscriptionClientOptions;
   websocketImplementation?: any;
   fetchImplementation?: typeof fetch;
-  environment?: "Development" | "Production";
+  environment?: string;
   applicationId?: string;
   requestPolicy?: ClientOptions["requestPolicy"];
 }
@@ -69,7 +72,7 @@ export class GadgetConnection {
   private websocketsEndpoint: string;
   private websocketImplementation: any;
   private _fetchImplementation: typeof fetch;
-  private environment: "Development" | "Production";
+  private environment: Environments;
 
   // the base client using HTTP requests that non-transactional operations will use
   private baseClient: Client;
@@ -90,7 +93,14 @@ export class GadgetConnection {
     this.websocketImplementation = options.websocketImplementation ?? WebSocket;
     this.websocketsEndpoint = options.websocketsEndpoint ?? options.endpoint + "/batch";
     this.websocketsEndpoint = this.websocketsEndpoint.replace(/^http/, "ws");
-    this.environment = options.environment ?? "Development";
+    const environment = options.environment ?? process.env["NODE_ENV"] ?? "development";
+    const parsedEnvironment = this.parseEnvironment(environment);
+    if (parsedEnvironment) {
+      this.environment = parsedEnvironment;
+    } else {
+      console.warn("Invalid environment", environment, "defaulting to development");
+      this.environment = "development";
+    }
     this.requestPolicy = options.requestPolicy ?? "cache-and-network";
 
     this.setAuthenticationMode(options.authenticationMode);
@@ -98,6 +108,13 @@ export class GadgetConnection {
     // the base client for subscriptions is lazy so we don't open unnecessary connections to the backend, and it reconnects to deal with network issues
     this.baseSubscriptionClient = this.newSubscriptionClient({ lazy: true });
     this.baseClient = this.newBaseClient();
+  }
+
+  private parseEnvironment(environment: string): Environments | undefined {
+    const env = environment.toLocaleLowerCase();
+    if (environments.find((e) => e === env)) {
+      return env as Environments;
+    }
   }
 
   private get sessionStorageKey() {
@@ -374,7 +391,7 @@ export class GadgetConnection {
       }
     }
 
-    headers["x-gadget-environment"] = this.environment;
+    headers["x-gadget-environment"] = this.environment == "production" ? "Production" : "Development";
 
     return headers;
   }
