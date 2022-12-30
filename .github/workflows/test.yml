@@ -32,4 +32,4 @@ jobs:
       - uses: ./.github/actions/setup-test-env
       - name: Check dependency versions
         shell: nix develop -c bash -eo pipefail -l {0}
-        run: yarn ts-node ./scripts/check-dependency-versions.ts
+        run: yarn check-dependency-versions

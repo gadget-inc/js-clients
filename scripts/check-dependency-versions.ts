@@ -1,19 +1,27 @@
 /**
- * This script makes sure that packages depending on @gadgetinc/api-client-core specify a version range that includes the current version.
+ * This script makes sure that packages in this monorepo with interdependencies depend on the latest version
  */
+
+const targets = {
+  "@gadgetinc/api-client-core": (await fs.readJSON("packages/api-client-core/package.json")).version,
+  "@gadgetinc/react": (await fs.readJSON("packages/react/package.json")).version,
+};
 
 import semver from "semver";
 import { fs, globby } from "zx";
 
-const { version } = await fs.readJSON("packages/api-client-core/package.json");
-
-for (const filepath of await globby("packages/!(api-client-core)*/package.json")) {
-  const { name, dependencies } = await fs.readJSON(filepath);
-  const dependencyVersion = dependencies["@gadgetinc/api-client-core"];
-
-  if (!semver.satisfies(version, dependencyVersion)) {
-    console.error(`${name} has an invalid version for dependency @gadgetinc/api-client-core`);
-    console.error(`${dependencyVersion} does not satisfy ${version}`);
-    process.exit(1);
+for (const filepath of await globby("packages/*/package.json")) {
+  const manifest = await fs.readJSON(filepath);
+  for (const key of ["dependencies", "peerDependencies"]) {
+    for (const [target, requiredVersion] of Object.entries(targets)) {
+      const dependencyVersion = manifest[key]?.[target];
+      if (dependencyVersion) {
+        if (!semver.satisfies(requiredVersion, dependencyVersion)) {
+          console.error(`${manifest.name} has an invalid version for ${key} on ${target}`);
+          console.error(`${dependencyVersion} does not satisfy ${requiredVersion}`);
+          process.exitCode = 1;
+        }
+      }
+    }
   }
 }
