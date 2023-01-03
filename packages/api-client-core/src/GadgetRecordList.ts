@@ -64,10 +64,12 @@ export class GadgetRecordList<Shape extends RecordShape> extends Array<GadgetRec
   async nextPage() {
     if (!this.hasNextPage)
       throw new GadgetClientError("Cannot request next page because there isn't one, should check 'hasNextPage' to see if it exists");
+    // Our current implementation of paging determines paging direction based on if "first" is defined. We can pass both "before" and "after" as options but only after is respected if first is sent. One of "before" or "after" is ignored depending on whether "first" is defined.
+    const { first, last, before: _before, ...options } = this.pagination.options ?? {};
     const nextPage = this.modelManager.findMany({
-      ...this.pagination.options,
+      ...options,
       after: this.pagination.pageInfo.endCursor,
-      first: this.pagination.options?.first || this.pagination.options?.last,
+      first: first || last,
     }) as Promise<GadgetRecordList<Shape>>;
     return await nextPage;
   }
@@ -77,10 +79,12 @@ export class GadgetRecordList<Shape extends RecordShape> extends Array<GadgetRec
       throw new GadgetClientError(
         "Cannot request previous page because there isn't one, should check 'hasPreviousPage' to see if it exists"
       );
+    // Our current implementation of paging determines paging direction based on if "first" is defined. We can pass both "before" and "after" as options but only after is respected if first is sent. One of "before" or "after" is ignored depending on whether "first" is defined.
+    const { first, last, after: _after, ...options } = this.pagination.options ?? {};
     const prevPage = this.modelManager.findMany({
-      ...this.pagination.options,
+      ...options,
       before: this.pagination.pageInfo.startCursor,
-      last: this.pagination.options?.last || this.pagination.options?.first,
+      last: last || first,
     }) as Promise<GadgetRecordList<Shape>>;
     return await prevPage;
   }
