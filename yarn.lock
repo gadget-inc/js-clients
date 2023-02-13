@@ -551,7 +551,7 @@
 "@gadgetinc/api-client-core@0.11.0":
   version "0.12.0"
   dependencies:
-    "@opentelemetry/api" "^1.0.4"
+    "@opentelemetry/api" "1.4.0"
     "@urql/core" "^3.0.1"
     "@urql/exchange-multipart-fetch" "^1.0.1"
     cross-fetch "^3.0.6"
@@ -566,7 +566,7 @@
 "@gadgetinc/api-client-core@0.9.0":
   version "0.12.0"
   dependencies:
-    "@opentelemetry/api" "^1.0.4"
+    "@opentelemetry/api" "1.4.0"
     "@urql/core" "^3.0.1"
     "@urql/exchange-multipart-fetch" "^1.0.1"
     cross-fetch "^3.0.6"
@@ -948,10 +948,10 @@
     "@nodelib/fs.scandir" "2.1.5"
     fastq "^1.6.0"
 
-"@opentelemetry/api@^1.0.4":
-  version "1.1.0"
-  resolved "https://registry.yarnpkg.com/@opentelemetry/api/-/api-1.1.0.tgz#563539048255bbe1a5f4f586a4a10a1bb737f44a"
-  integrity sha512-hf+3bwuBwtXsugA2ULBc95qxrOqP2pOekLz34BJhcAKawt94vfeNyUKpYc0lZQ/3sCP6LqRa7UAdHA7i5UODzQ==
+"@opentelemetry/api@^1.4.0":
+  version "1.4.0"
+  resolved "https://registry.yarnpkg.com/@opentelemetry/api/-/api-1.4.0.tgz#2c91791a9ba6ca0a0f4aaac5e45d58df13639ac8"
+  integrity sha512-IgMK9i3sFGNUqPMbjABm0G26g0QCKCUBfglhQ7rQq6WcxbKfEHRcmwsoER4hZcuYqJgkYn2OeuoJIv7Jsftp7g==
 
 "@shopify/app-bridge-react@^2.0.25":
   version "2.1.0"
