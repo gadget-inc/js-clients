@@ -15,7 +15,13 @@ import type { AuthenticationModeOptions, BrowserSessionAuthenticationModeOptions
 import { BrowserSessionStorageType } from "./ClientOptions";
 import { GadgetTransaction, TransactionRolledBack } from "./GadgetTransaction";
 import { BrowserStorage, InMemoryStorage } from "./InMemoryStorage";
-import { GadgetUnexpectedCloseError, isCloseEvent, storageAvailable, traceFunction } from "./support";
+import {
+  GadgetUnexpectedCloseError,
+  GadgetWebsocketConnectionTimeoutError,
+  isCloseEvent,
+  storageAvailable,
+  traceFunction,
+} from "./support";
 
 export type TransactionRun<T> = (transaction: GadgetTransaction) => Promise<T>;
 export interface GadgetSubscriptionClientOptions extends Partial<SubscriptionClientOptions> {
@@ -394,7 +400,7 @@ export class GadgetConnection {
     return await new Promise<SubscriptionClient>((resolve, reject) => {
       const timeout = setTimeout(() => {
         this.disposeClient(subscriptionClient);
-        wrappedReject(new Error("Timeout opening websocket connection to Gadget API"));
+        wrappedReject(new GadgetWebsocketConnectionTimeoutError("Timeout opening websocket connection to Gadget API"));
       }, globalTimeout);
 
       const retryOnClose = (event: unknown) => {

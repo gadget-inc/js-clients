@@ -66,6 +66,19 @@ export class GadgetUnexpectedCloseError extends Error {
 }
 
 /**
+ * A client error when the client times out waiting for the Gadget API to open websocket connection.
+ */
+export class GadgetWebsocketConnectionTimeoutError extends Error {
+  code = "GGT_WEBSOCKET_CONNECTION_TIMEOUT";
+  name = "WebsocketConnectionTimeoutError";
+
+  /** @private */
+  statusCode = 500;
+  /** @private */
+  causedByClient = false;
+}
+
+/**
  * A Gadget API error representing a backend validation error on the input data for an action. Thrown when any of the validations configured on a model fail for the given input data. Has a `validationErrors` property describing which fields failed validation, with messages for each.
  **/
 export class InvalidRecordError extends Error {
@@ -137,7 +150,8 @@ export type GadgetError =
   | InvalidRecordError
   | GadgetNonUniqueDataError
   | GadgetNotFoundError
-  | GadgetUnexpectedCloseError;
+  | GadgetUnexpectedCloseError
+  | GadgetWebsocketConnectionTimeoutError;
 
 export function assert<T>(value: T | undefined | null, message?: string): T {
   if (!value) {
