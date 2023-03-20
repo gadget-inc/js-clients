@@ -3,7 +3,6 @@ import type { GadgetConnection } from "./GadgetConnection.js";
 import type { GadgetRecord, RecordShape } from "./GadgetRecord.js";
 import { GadgetRecordList } from "./GadgetRecordList.js";
 import type { AnyModelManager } from "./ModelManager.js";
-import type { PaginationOptions, SelectionOptions } from "./operationBuilders.js";
 import {
   actionOperation,
   findManyOperation,
@@ -23,7 +22,7 @@ import {
   hydrateRecord,
   hydrateRecordArray,
 } from "./support.js";
-import type { VariablesOptions } from "./types.js";
+import type { FindManyOptions, SelectionOptions, VariablesOptions } from "./types.js";
 
 export const findOneRunner = async <Shape extends RecordShape = any>(
   modelManager: { connection: GadgetConnection },
@@ -67,7 +66,7 @@ export const findManyRunner = async <Shape extends RecordShape = any>(
   operation: string,
   defaultSelection: FieldSelection,
   modelApiIdentifier: string,
-  options?: PaginationOptions,
+  options?: FindManyOptions,
   throwOnEmptyData?: boolean
 ) => {
   const plan = findManyOperation(operation, defaultSelection, modelApiIdentifier, options);

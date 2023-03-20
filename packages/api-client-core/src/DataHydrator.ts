@@ -6,6 +6,7 @@ export const Hydrators = {
 
 export type Hydration = keyof typeof Hydrators;
 
+/** Instructions for a client to turn raw transport types (like strings) into useful client side types (like Dates). Unstable and not intended for developer use. */
 export interface HydrationPlan {
   [key: string]: Hydration;
 }

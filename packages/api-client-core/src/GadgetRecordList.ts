@@ -4,12 +4,12 @@ import type { Jsonify } from "type-fest";
 import type { GadgetRecord, RecordShape } from "./GadgetRecord.js";
 import type { InternalModelManager } from "./InternalModelManager.js";
 import type { AnyModelManager } from "./ModelManager.js";
-import type { PaginationOptions } from "./operationBuilders.js";
 import { GadgetClientError, GadgetOperationError } from "./support.js";
+import { PaginateOptions } from "./types.js";
 
 type PaginationConfig = {
   pageInfo: { hasNextPage: boolean; hasPreviousPage: boolean; startCursor: string; endCursor: string };
-  options?: PaginationOptions;
+  options?: PaginateOptions;
 };
 
 /** Represents a list of objects returned from the API. Facilitates iterating and paginating. */

@@ -15,6 +15,7 @@ import {
   hydrateRecord,
   hydrateRecordArray,
 } from "./support.js";
+import type { InternalFieldSelection, InternalFindListOptions, InternalFindManyOptions, InternalFindOneOptions } from "./types";
 
 const internalErrorsDetails = `
 fragment InternalErrorsDetails on ExecutionError {
@@ -50,87 +51,6 @@ export const internalFindOneQuery = (apiIdentifier: string) => {
     }
     `;
 };
-
-/**
- * A list of fields to select from the internal API
- * Matches the format of the Public API `select` option, but only allows going one level deep -- no relationships can be selected using the internal API.
- *
- * Supports passing a list of strings as a shorthand.
- *
- * @example
- * { fieldA: true, fieldB: true, fieldC: false }
- *
- * @example
- * ['fieldA', 'fieldB']
- */
-export type InternalFieldSelection = string[] | { [field: string]: boolean | null | undefined };
-
-/** Options for the api functions that return one record on an InternalModelManager */
-export interface InternalFindOneOptions {
-  /**
-   * What fields to retrieve from the API for this API call
-   **/
-  select?: InternalFieldSelection;
-}
-
-/** Options for functions that query a list of records on an InternalModelManager */
-export interface InternalFindListOptions {
-  /**
-   * A string to search for within all the stringlike fields of the records
-   * Matches the behavior of the Public API `search` option
-   **/
-  search?: string;
-  /**
-   * How to sort the returned records
-   * Matches the format and behavior of the Public API `sort` option
-   *
-   * @example
-   * {
-   *   sort: { publishedAt: "Descending" }
-   * }
-   **/
-  sort?: Record<string, "Ascending" | "Descending"> | Record<string, "Ascending" | "Descending">[];
-  /**
-   * Only return records matching this filter
-   * Matches the format and behavior of the Public API `filter` option
-   *
-   * @example
-   * {
-   *   filter: { published: { equals: true } }
-   * }
-   * */
-  filter?: Record<string, any>;
-  /**
-   * What fields to retrieve from the API for this API call
-   **/
-  select?: InternalFieldSelection;
-}
-
-/** Options for functions that return a paginated list of records from an InternalModelManager */
-export interface InternalFindManyOptions extends InternalFindListOptions {
-  /**
-   * A count of records to return
-   * Often used in tandem with the `after` option for GraphQL relay-style cursor pagination
-   * Matches the pagination style and behavior of the Public API
-   **/
-  first?: number;
-  /**
-   * The `after` cursor from the GraphQL Relay pagination spec
-   * Matches the pagination style and behavior of the Public API
-   **/
-  after?: string;
-  /**
-   * A count of records to return
-   * Often used in tandem with the `before` option for GraphQL relay-style cursor pagination
-   * Matches the pagination style and behavior of the Public API
-   **/
-  last?: number;
-  /**
-   * The `before` cursor from the GraphQL Relay pagination spec
-   * Matches the pagination style and behavior of the Public API
-   **/
-  before?: string;
-}
 
 const internalFindListVariables = (capitalizedApiIdentifier: string, options?: InternalFindListOptions) => {
   return {
