@@ -34,6 +34,8 @@ const DEFAULT_CONN_ATTEMPTS = 2;
 const DEFAULT_CONN_ACK_TIMEOUT = 4_800;
 const DEFAULT_CONN_GLOBAL_TIMEOUT = 10_000;
 
+const RETRYABLE_CLOSE_CODES = [CloseCode.ConnectionAcknowledgementTimeout, CloseCode.ConnectionInitialisationTimeout];
+
 export const $transaction = Symbol.for("gadget/transaction");
 const sessionStorageKey = "token";
 const base64 = typeof btoa !== "undefined" ? btoa : (str: string) => Buffer.from(str).toString("base64");
@@ -405,7 +407,7 @@ export class GadgetConnection {
 
       const retryOnClose = (event: unknown) => {
         if (isCloseEvent(event)) {
-          if (event.code == CloseCode.ConnectionAcknowledgementTimeout && attempts > 0) {
+          if (RETRYABLE_CLOSE_CODES.includes(event.code) && attempts > 0) {
             attempts -= 1;
             this.disposeClient(subscriptionClient);
             subscriptionClient = this.newSubscriptionClient(options);
