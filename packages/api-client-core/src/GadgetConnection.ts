@@ -257,9 +257,19 @@ export class GadgetConnection {
     }
   }
 
-  /** `fetch` wrapper that applies Gadget's session token logic on the request and retrieves it from the reply */
+  /**
+   * `fetch` function that works the same as the built-in `fetch` function, but automatically passes authentication information for this API client.
+   *
+   * @example
+   * await api.connection.fetch("https://myapp--development.gadget.app/foo/bar");
+   *
+   * @example
+   * // fetch a relative URL from the endpoint this API client is configured to fetch from
+   * await api.connection.fetch("/foo/bar");
+   **/
   fetch = traceFunction("api-client.fetch", async (input: RequestInfo | URL, init: RequestInit = {}) => {
     init.headers = { ...this.requestHeaders(), ...init.headers };
+    input = processMaybeRelativeInput(input, this.options.endpoint);
 
     if (this.authenticationMode == AuthenticationMode.Custom) {
       await this.options.authenticationMode!.custom!.processFetch(input, init);
@@ -447,4 +457,14 @@ export class GadgetConnection {
       maybePromise.catch((err: any) => console.error(`Error closing SubscriptionClient: ${err.message}`));
     }
   }
+}
+
+function processMaybeRelativeInput(input: RequestInfo | URL, endpoint: string): RequestInfo | URL {
+  if (typeof input != "string") return input;
+  if (input.startsWith("/") && !input.startsWith("//")) {
+    const url = new URL(endpoint);
+    url.pathname = input;
+    return url;
+  }
+  return input;
 }
