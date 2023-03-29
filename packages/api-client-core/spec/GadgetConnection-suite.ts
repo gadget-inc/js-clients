@@ -300,6 +300,85 @@ export const GadgetConnectionSharedSuite = (queryExtra = "") => {
       });
     });
 
+    it("should not re-use session tokens across apps", async () => {
+      nock("https://someapp.gadget.app")
+        .post("/api/graphql")
+        .reply(
+          200,
+          function () {
+            expect(this.req.headers["authorization"]).toBeUndefined();
+            return {
+              data: {
+                meta: {
+                  appName: "some app",
+                },
+              },
+            };
+          },
+          {
+            "x-set-authorization": "Session token-123",
+          }
+        );
+      nock("https://anotherapp.gadget.app")
+        .post("/api/graphql")
+        .reply(
+          200,
+          function () {
+            expect(this.req.headers["authorization"]).toBeUndefined();
+            return {
+              data: {
+                meta: {
+                  appName: "another app",
+                },
+              },
+            };
+          },
+          {
+            "x-set-authorization": "Session token-456",
+          }
+        );
+
+      let connection = new GadgetConnection({
+        endpoint: "https://someapp.gadget.app/api/graphql",
+        authenticationMode: { browserSession: { storageType: BrowserSessionStorageType.Durable } },
+      });
+
+      const firstResult = await connection.currentClient
+        .query(
+          gql`
+            {
+              meta {
+                appName
+              }
+            }
+          `,
+          {}
+        )
+        .toPromise();
+
+      expect(firstResult.data).toEqual({ meta: { appName: "some app" } });
+
+      connection = new GadgetConnection({
+        endpoint: "https://anotherapp.gadget.app/api/graphql",
+        authenticationMode: { browserSession: { storageType: BrowserSessionStorageType.Durable } },
+      });
+
+      const secondResult = await connection.currentClient
+        .query(
+          gql`
+            {
+              meta {
+                appName
+              }
+            }
+          `,
+          {}
+        )
+        .toPromise();
+
+      expect(secondResult.data).toEqual({ meta: { appName: "another app" } });
+    });
+
     it("should support a custom auth mode that can set arbitrary fetch headers", async () => {
       nock("https://someapp.gadget.app")
         .post("/api/graphql", { query: `{\n  meta {\n    appName\n${queryExtra}  }\n}`, variables: {} })
