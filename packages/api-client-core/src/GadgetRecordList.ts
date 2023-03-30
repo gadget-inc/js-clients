@@ -1,5 +1,6 @@
 /* eslint-disable no-throw-literal */
 /* eslint-disable @typescript-eslint/require-await */
+import type { Jsonify } from "type-fest";
 import { GadgetRecord, RecordShape } from "./GadgetRecord";
 import type { InternalModelManager } from "./InternalModelManager";
 import type { AnyModelManager } from "./ModelManager";
@@ -41,7 +42,7 @@ export class GadgetRecordList<Shape extends RecordShape> extends Array<GadgetRec
     return this[0];
   }
 
-  toJSON() {
+  toJSON(): Jsonify<Shape>[] {
     return this.map((record) => record.toJSON());
   }
 

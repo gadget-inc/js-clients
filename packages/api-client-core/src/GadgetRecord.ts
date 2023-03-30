@@ -1,5 +1,6 @@
 import cloneDeep from "lodash.clonedeep";
 import isEqual from "lodash.isequal";
+import type { Jsonify } from "type-fest";
 import { toPrimitiveObject } from "./support";
 
 export enum ChangeTracking {
@@ -171,7 +172,7 @@ export class GadgetRecordImplementation<Shape extends RecordShape> {
   }
 
   /** Returns a JSON representation of all fields on this record. */
-  toJSON() {
+  toJSON(): Jsonify<Shape> {
     return toPrimitiveObject({ ...this.__gadget.fields });
   }
 }
