@@ -300,6 +300,85 @@ export const GadgetConnectionSharedSuite = (queryExtra = "") => {
       });
     });
 
+    it("should not re-use session tokens across apps", async () => {
+      nock("https://someapp.gadget.app")
+        .post("/api/graphql")
+        .reply(
+          200,
+          function () {
+            expect(this.req.headers["authorization"]).toBeUndefined();
+            return {
+              data: {
+                meta: {
+                  appName: "some app",
+                },
+              },
+            };
+          },
+          {
+            "x-set-authorization": "Session token-123",
+          }
+        );
+      nock("https://anotherapp.gadget.app")
+        .post("/api/graphql")
+        .reply(
+          200,
+          function () {
+            expect(this.req.headers["authorization"]).toBeUndefined();
+            return {
+              data: {
+                meta: {
+                  appName: "another app",
+                },
+              },
+            };
+          },
+          {
+            "x-set-authorization": "Session token-456",
+          }
+        );
+
+      let connection = new GadgetConnection({
+        endpoint: "https://someapp.gadget.app/api/graphql",
+        authenticationMode: { browserSession: { storageType: BrowserSessionStorageType.Durable } },
+      });
+
+      const firstResult = await connection.currentClient
+        .query(
+          gql`
+            {
+              meta {
+                appName
+              }
+            }
+          `,
+          {}
+        )
+        .toPromise();
+
+      expect(firstResult.data).toEqual({ meta: { appName: "some app" } });
+
+      connection = new GadgetConnection({
+        endpoint: "https://anotherapp.gadget.app/api/graphql",
+        authenticationMode: { browserSession: { storageType: BrowserSessionStorageType.Durable } },
+      });
+
+      const secondResult = await connection.currentClient
+        .query(
+          gql`
+            {
+              meta {
+                appName
+              }
+            }
+          `,
+          {}
+        )
+        .toPromise();
+
+      expect(secondResult.data).toEqual({ meta: { appName: "another app" } });
+    });
+
     it("should support a custom auth mode that can set arbitrary fetch headers", async () => {
       nock("https://someapp.gadget.app")
         .post("/api/graphql", { query: `{\n  meta {\n    appName\n${queryExtra}  }\n}`, variables: {} })
@@ -508,6 +587,132 @@ export const GadgetConnectionSharedSuite = (queryExtra = "") => {
 
       expect(customResult.error).toBeUndefined();
       expect(customResult.data).toEqual({ meta: { appName: "some app" } });
+    });
+  });
+
+  describe("raw fetching", () => {
+    test("developers can use the built in fetch function to make requests to gadget", async () => {
+      const connection = new GadgetConnection({
+        endpoint: "https://someapp.gadget.app/api/graphql",
+        authenticationMode: { apiKey: "gsk-abcde" },
+      });
+
+      nock("https://someapp.gadget.app")
+        .get("/foo/bar")
+        .reply(200, function () {
+          expect(this.req.headers["authorization"]).toEqual([`Bearer gsk-abcde`]);
+          return "hello";
+        });
+
+      const result = await connection.fetch("https://someapp.gadget.app/foo/bar");
+      expect(result.status).toEqual(200);
+      expect(await result.text()).toEqual("hello");
+    });
+
+    test("fetch can pass relative string urls", async () => {
+      const connection = new GadgetConnection({
+        endpoint: "https://someapp.gadget.app/api/graphql",
+        authenticationMode: { apiKey: "gsk-abcde" },
+      });
+
+      nock("https://someapp.gadget.app")
+        .get("/foo/bar")
+        .reply(200, function () {
+          expect(this.req.headers["authorization"]).toEqual([`Bearer gsk-abcde`]);
+          return "hello";
+        });
+
+      const result = await connection.fetch("/foo/bar");
+      expect(result.status).toEqual(200);
+      expect(await result.text()).toEqual("hello");
+    });
+
+    test("fetch can pass protocol-less string urls", async () => {
+      const connection = new GadgetConnection({
+        endpoint: "https://someapp.gadget.app/api/graphql",
+        authenticationMode: { apiKey: "gsk-abcde" },
+      });
+
+      nock("https://someapp.gadget.app")
+        .get("/foo/bar")
+        .reply(200, function () {
+          expect(this.req.headers["authorization"]).toEqual([`Bearer gsk-abcde`]);
+          return "hello";
+        });
+
+      const result = await connection.fetch("//someapp.gadget.app/foo/bar");
+      expect(result.status).toEqual(200);
+      expect(await result.text()).toEqual("hello");
+    });
+
+    test("fetch can accept URL objects", async () => {
+      const connection = new GadgetConnection({
+        endpoint: "https://someapp.gadget.app/api/graphql",
+        authenticationMode: { apiKey: "gsk-abcde" },
+      });
+
+      nock("https://someapp.gadget.app")
+        .get("/foo/bar")
+        .reply(200, function () {
+          expect(this.req.headers["authorization"]).toEqual([`Bearer gsk-abcde`]);
+          return "hello";
+        });
+
+      const result = await connection.fetch(new URL("https://someapp.gadget.app/foo/bar"));
+      expect(result.status).toEqual(200);
+      expect(await result.text()).toEqual("hello");
+    });
+
+    test("fetches can specify a desired content type", async () => {
+      const connection = new GadgetConnection({
+        endpoint: "https://someapp.gadget.app/api/graphql",
+        authenticationMode: { apiKey: "gsk-abcde" },
+      });
+
+      nock("https://someapp.gadget.app")
+        .post("/foo/bar")
+        .reply(200, function () {
+          expect(this.req.headers["content-type"]).toEqual([`application/json`]);
+          expect(this.req.headers["authorization"]).toEqual([`Bearer gsk-abcde`]);
+          return { response: true };
+        });
+
+      const result = await connection.fetch("https://someapp.gadget.app/foo/bar", {
+        method: "POST",
+        headers: {
+          "content-type": "application/json",
+          accept: "application/json",
+        },
+        body: JSON.stringify({ foo: "bar" }),
+      });
+      expect(result.status).toEqual(200);
+      expect(await result.json()).toEqual({ response: true });
+    });
+
+    test("fetch can use uppercased header names", async () => {
+      const connection = new GadgetConnection({
+        endpoint: "https://someapp.gadget.app/api/graphql",
+        authenticationMode: { apiKey: "gsk-abcde" },
+      });
+
+      nock("https://someapp.gadget.app")
+        .post("/foo/bar")
+        .reply(200, function () {
+          expect(this.req.headers["content-type"]).toEqual([`application/json`]);
+          expect(this.req.headers["authorization"]).toEqual([`Bearer gsk-abcde`]);
+          return { response: true };
+        });
+
+      const result = await connection.fetch("https://someapp.gadget.app/foo/bar", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Accept: "application/json",
+        },
+        body: JSON.stringify({ foo: "bar" }),
+      });
+      expect(result.status).toEqual(200);
+      expect(await result.json()).toEqual({ response: true });
     });
   });
 };
