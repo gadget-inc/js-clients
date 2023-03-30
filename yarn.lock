@@ -549,7 +549,7 @@
     "@gadgetinc/api-client-core" "0.9.0"
 
 "@gadgetinc/api-client-core@0.11.0":
-  version "0.13.0"
+  version "0.13.1"
   dependencies:
     "@opentelemetry/api" "^1.4.0"
     "@urql/core" "^3.0.1"
@@ -557,14 +557,14 @@
     cross-fetch "^3.0.6"
     gql-query-builder "^3.7.2"
     graphql "^16.5.0"
-    graphql-ws "^5.5.5"
+    graphql-ws "5.12.0"
     isomorphic-ws "^4.0.1"
     lodash.clonedeep "^4.5.0"
     lodash.isequal "^4.5.0"
     ws "^8.11.0"
 
 "@gadgetinc/api-client-core@0.9.0":
-  version "0.13.0"
+  version "0.13.1"
   dependencies:
     "@opentelemetry/api" "^1.4.0"
     "@urql/core" "^3.0.1"
@@ -572,14 +572,14 @@
     cross-fetch "^3.0.6"
     gql-query-builder "^3.7.2"
     graphql "^16.5.0"
-    graphql-ws "^5.5.5"
+    graphql-ws "5.12.0"
     isomorphic-ws "^4.0.1"
     lodash.clonedeep "^4.5.0"
     lodash.isequal "^4.5.0"
     ws "^8.11.0"
 
 "@gadgetinc/api-client-core@^0.12.0":
-  version "0.13.0"
+  version "0.13.1"
   dependencies:
     "@opentelemetry/api" "^1.4.0"
     "@urql/core" "^3.0.1"
@@ -587,7 +587,7 @@
     cross-fetch "^3.0.6"
     gql-query-builder "^3.7.2"
     graphql "^16.5.0"
-    graphql-ws "^5.5.5"
+    graphql-ws "5.12.0"
     isomorphic-ws "^4.0.1"
     lodash.clonedeep "^4.5.0"
     lodash.isequal "^4.5.0"
@@ -3054,10 +3054,10 @@ graceful-fs@^4.1.2, graceful-fs@^4.1.6, graceful-fs@^4.2.0, graceful-fs@^4.2.2, 
   resolved "https://registry.yarnpkg.com/graceful-fs/-/graceful-fs-4.2.10.tgz#147d3a006da4ca3ce14728c7aefc287c367d7a6c"
   integrity sha512-9ByhssR2fPVsNZj478qUUbKfmL0+t5BDVyjShtyZZLiK7ZDAArFFfopyOTj0M05wE2tJPisA4iTnnXl2YoPvOA==
 
-graphql-ws@^5.5.5:
-  version "5.8.2"
-  resolved "https://registry.yarnpkg.com/graphql-ws/-/graphql-ws-5.8.2.tgz#800184b1addb20b3010dc06cb70877703a5fff20"
-  integrity sha512-hYo8kTGzxePFJtMGC7Y4cbypwifMphIJJ7n4TDcVUAfviRwQBnmZAbfZlC+XFwWDUaR7raEDQPxWctpccmE0JQ==
+graphql-ws@^5.12.0:
+  version "5.12.0"
+  resolved "https://registry.yarnpkg.com/graphql-ws/-/graphql-ws-5.12.0.tgz#d06fe38916334b4a4c827f73268cbf4359a32ed7"
+  integrity sha512-PA3ImUp8utrpEjoxBMhvxsjkStvFEdU0E1gEBREt8HZIWkxOUymwJBhFnBL7t/iHhUq1GVPeZevPinkZFENxTw==
 
 graphql@16.5.0:
   version "16.5.0"
