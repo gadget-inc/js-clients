@@ -555,7 +555,7 @@
     "@urql/core" "^3.0.1"
     "@urql/exchange-multipart-fetch" "^1.0.1"
     cross-fetch "^3.0.6"
-    gql-query-builder "^3.7.2"
+    gql-query-builder "3.8.0"
     graphql "^16.5.0"
     graphql-ws "^5.5.5"
     isomorphic-ws "^4.0.1"
@@ -570,7 +570,7 @@
     "@urql/core" "^3.0.1"
     "@urql/exchange-multipart-fetch" "^1.0.1"
     cross-fetch "^3.0.6"
-    gql-query-builder "^3.7.2"
+    gql-query-builder "3.8.0"
     graphql "^16.5.0"
     graphql-ws "^5.5.5"
     isomorphic-ws "^4.0.1"
@@ -3015,10 +3015,10 @@ gopd@^1.0.1:
   dependencies:
     get-intrinsic "^1.1.3"
 
-gql-query-builder@^3.7.2:
-  version "3.7.2"
-  resolved "https://registry.yarnpkg.com/gql-query-builder/-/gql-query-builder-3.7.2.tgz#1bf4db2b304deab1e7e5a84800ec1e057519e353"
-  integrity sha512-lMsr2OEaknicOfB59fODuPM9p5B9gx9McVFA+xwsCEtNiJEwVCVdSwwt/SJb/IjOfOTtDJ/3rs+jZ7X7sBzU0A==
+gql-query-builder@^3.8.0:
+  version "3.8.0"
+  resolved "https://registry.yarnpkg.com/gql-query-builder/-/gql-query-builder-3.8.0.tgz#d182d127f88abb7d39f7bec2c64f8b4570812e2f"
+  integrity sha512-q0PncZTrLDeyiH4R7YH1ISM+XGB4NvQ8eTm/Wr/sHSuquFZvqvDpGyMhbgoCZDc8kNAK8GOdfh3nI2GCLREFvw==
 
 gql-tag@^1.0.1:
   version "1.0.1"
