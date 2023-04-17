@@ -1,6 +1,5 @@
 import type { ClientOptions, RequestPolicy } from "@urql/core";
-import { Client, cacheExchange, dedupExchange, subscriptionExchange } from "@urql/core";
-import { multipartFetchExchange } from "@urql/exchange-multipart-fetch";
+import { Client, cacheExchange, fetchExchange, subscriptionExchange } from "@urql/core";
 import fetchPolyfill from "cross-fetch";
 import type { ExecutionResult } from "graphql";
 import type { Sink, Client as SubscriptionClient, ClientOptions as SubscriptionClientOptions } from "graphql-ws";
@@ -101,7 +100,7 @@ export class GadgetConnection {
     } else {
       this._fetchImplementation = fetchPolyfill;
     }
-    this.websocketImplementation = options.websocketImplementation ?? WebSocket;
+    this.websocketImplementation = options.websocketImplementation ?? globalThis?.WebSocket ?? WebSocket;
     this.websocketsEndpoint = options.websocketsEndpoint ?? options.endpoint + "/batch";
     this.websocketsEndpoint = this.websocketsEndpoint.replace(/^http/, "ws");
     this.environment = options.environment ?? "Development";
@@ -215,10 +214,11 @@ export class GadgetConnection {
           requestPolicy: "network-only", // skip any cached data during transactions
           exchanges: [
             subscriptionExchange({
-              forwardSubscription(operation) {
+              forwardSubscription(request) {
+                const input = { ...request, query: request.query || "" };
                 return {
                   subscribe: (sink) => {
-                    const dispose = subscriptionClient!.subscribe(operation, sink as Sink<ExecutionResult>);
+                    const dispose = subscriptionClient!.subscribe(input, sink as Sink<ExecutionResult>);
                     return {
                       unsubscribe: dispose,
                     };
@@ -329,7 +329,7 @@ export class GadgetConnection {
   }
 
   private newBaseClient() {
-    const exchanges = [dedupExchange, urlParamExchange];
+    const exchanges = [urlParamExchange];
 
     // apply urql's default caching behaviour when client side (but skip it server side)
     if (typeof window != "undefined") {
@@ -337,12 +337,13 @@ export class GadgetConnection {
     }
 
     exchanges.push(
-      multipartFetchExchange,
+      fetchExchange,
       subscriptionExchange({
-        forwardSubscription: (operation) => {
+        forwardSubscription: (request) => {
           return {
             subscribe: (sink) => {
-              const dispose = this.baseSubscriptionClient.subscribe(operation, sink as Sink<ExecutionResult>);
+              const input = { ...request, query: request.query || "" };
+              const dispose = this.baseSubscriptionClient.subscribe(input, sink as Sink<ExecutionResult>);
               return {
                 unsubscribe: dispose,
               };

@@ -58,6 +58,8 @@ describe("useFindBy", () => {
           },
         },
       },
+      stale: false,
+      hasNext: false,
     });
 
     expect(result.current[0].data!.id).toEqual("123");
@@ -87,6 +89,8 @@ describe("useFindBy", () => {
           },
         },
       },
+      stale: false,
+      hasNext: false,
     });
 
     expect(result.current[0].data).toBeFalsy();
@@ -115,6 +119,8 @@ describe("useFindBy", () => {
           },
         },
       },
+      stale: false,
+      hasNext: false,
     });
 
     const data = result.current[0].data;

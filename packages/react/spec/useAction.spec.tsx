@@ -121,6 +121,8 @@ describe("useAction", () => {
           },
         },
       },
+      stale: false,
+      hasNext: false,
     });
 
     await act(async () => {
@@ -173,6 +175,8 @@ describe("useAction", () => {
           },
         },
       },
+      stale: false,
+      hasNext: false,
     });
 
     await act(async () => {
@@ -216,6 +220,8 @@ describe("useAction", () => {
           },
         },
       },
+      stale: false,
+      hasNext: false,
     });
 
     await act(async () => {
@@ -254,6 +260,8 @@ describe("useAction", () => {
           },
         },
       },
+      stale: false,
+      hasNext: false,
     });
 
     await act(async () => {
@@ -289,6 +297,8 @@ describe("useAction", () => {
           },
         },
       },
+      stale: false,
+      hasNext: false,
     });
 
     await act(async () => {
@@ -336,6 +346,8 @@ describe("useAction", () => {
           },
         },
       },
+      stale: false,
+      hasNext: false,
     });
 
     await act(async () => {
@@ -364,6 +376,8 @@ describe("useAction", () => {
           },
         },
       },
+      stale: false,
+      hasNext: false,
     });
 
     await act(async () => {

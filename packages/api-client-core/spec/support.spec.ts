@@ -16,6 +16,8 @@ describe("support utilities", () => {
           {
             operation: null as any,
             data: { foo: { bar: "baz" } },
+            stale: false,
+            hasNext: false,
           },
           ["foo", "bar"]
         )
@@ -29,6 +31,8 @@ describe("support utilities", () => {
             operation: null as any,
             data: null,
             error: new CombinedError({ networkError: new Error("foobar") }),
+            stale: false,
+            hasNext: false,
           },
 
           ["foo", "bar"]
@@ -43,6 +47,8 @@ describe("support utilities", () => {
             operation: null as any,
             data: null,
             error: new CombinedError({ networkError: new Error("foobar") }),
+            stale: false,
+            hasNext: false,
           },
 
           ["foo", "bar"]
@@ -60,6 +66,8 @@ describe("support utilities", () => {
             data: null,
             // @ts-expect-error an array of network errors doesn't match urql's types, but we've observed it at runtime
             error: new CombinedError({ networkError: [new Error("foo"), new Error("foo")] }),
+            stale: false,
+            hasNext: false,
           },
 
           ["foo", "bar"]
@@ -77,6 +85,8 @@ describe("support utilities", () => {
             operation: null as any,
             data: null,
             error: new CombinedError({ graphQLErrors: [new Error("foo")] }),
+            stale: false,
+            hasNext: false,
           },
 
           ["foo", "bar"]
@@ -91,6 +101,8 @@ describe("support utilities", () => {
             operation: null as any,
             data: null,
             error: new CombinedError({ graphQLErrors: [new Error("foo"), "bar"] }),
+            stale: false,
+            hasNext: false,
           },
 
           ["foo", "bar"]
@@ -108,6 +120,8 @@ describe("support utilities", () => {
             operation: null as any,
             data: null,
             error: new CombinedError({ graphQLErrors: [new GraphQLError("inner graphql error")] }),
+            stale: false,
+            hasNext: false,
           },
 
           ["foo", "bar"]
@@ -122,6 +136,8 @@ describe("support utilities", () => {
             operation: null as any,
             data: null,
             error: new CombinedError({ response: { whatever: true } }),
+            stale: false,
+            hasNext: false,
           },
 
           ["foo", "bar"]
@@ -138,6 +154,8 @@ describe("support utilities", () => {
             operation: null as any,
             data: null,
             error: new CombinedError({ graphQLErrors: [new GraphQLError("inner graphql error")] }),
+            stale: false,
+            hasNext: false,
           },
           ["foo", "bar"]
         )
@@ -150,6 +168,8 @@ describe("support utilities", () => {
           operation: null as any,
           data: undefined,
           error: undefined,
+          stale: false,
+          hasNext: false,
         },
         ["foo", "bar"]
       );
@@ -194,6 +214,8 @@ describe("support utilities", () => {
           {
             operation: null as any,
             data: { createWidget: { success: true, errors: null, widget: { bar: "baz" } } },
+            stale: false,
+            hasNext: false,
           },
           ["createWidget"]
         )
@@ -212,6 +234,8 @@ describe("support utilities", () => {
                 widget: null,
               },
             },
+            stale: false,
+            hasNext: false,
           },
 
           ["createWidget"]
@@ -231,6 +255,8 @@ describe("support utilities", () => {
                 widget: null,
               },
             },
+            stale: false,
+            hasNext: false,
           },
 
           ["createWidget"]
@@ -266,6 +292,8 @@ describe("support utilities", () => {
                 widget: null,
               },
             },
+            stale: false,
+            hasNext: false,
           },
           ["createWidget"]
         );
@@ -302,6 +330,8 @@ describe("support utilities", () => {
                 widget: null,
               },
             },
+            stale: false,
+            hasNext: false,
           },
           ["createWidget"]
         );

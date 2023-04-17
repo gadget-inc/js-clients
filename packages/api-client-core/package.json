@@ -1,6 +1,6 @@
 {
   "name": "@gadgetinc/api-client-core",
-  "version": "0.13.13",
+  "version": "0.13.14",
   "source": "src/index.ts",
   "main": "dist/src/index.js",
   "types": "dist/src/index.d.ts",
@@ -20,16 +20,15 @@
   },
   "dependencies": {
     "@opentelemetry/api": "^1.4.0",
-    "@urql/core": "^3.0.1",
-    "@urql/exchange-multipart-fetch": "^1.0.1",
-    "cross-fetch": "^3.0.6",
+    "@urql/core": "^4.0.10",
+    "cross-fetch": "^3.1.5",
     "gql-query-builder": "^3.7.2",
     "graphql": "~16.6.0",
-    "graphql-ws": "^5.5.5",
-    "isomorphic-ws": "^4.0.1",
+    "graphql-ws": "^5.13.1",
+    "isomorphic-ws": "^5.0.0",
     "lodash.clonedeep": "^4.5.0",
     "lodash.isequal": "^4.5.0",
-    "ws": "^8.11.0"
+    "ws": "^8.13.0"
   },
   "devDependencies": {
     "@types/lodash.clonedeep": "^4.5.6",

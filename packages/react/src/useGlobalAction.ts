@@ -43,7 +43,7 @@ export const useGlobalAction = <F extends GlobalActionFunction<any>>(
     useCallback(
       async (variables, context) => {
         const result = await runMutation(variables, context);
-        return processResult({ fetching: false, stale: false, ...result }, action);
+        return processResult({ fetching: false, ...result }, action);
       },
       [action, runMutation]
     ),

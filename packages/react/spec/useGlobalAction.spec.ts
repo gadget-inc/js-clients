@@ -52,6 +52,8 @@ describe("useGlobalAction", () => {
           result: { flipped: true },
         },
       },
+      stale: false,
+      hasNext: false,
     });
 
     await act(async () => {
@@ -92,6 +94,8 @@ describe("useGlobalAction", () => {
           ],
         },
       },
+      stale: false,
+      hasNext: false,
     });
 
     await act(async () => {
@@ -122,6 +126,8 @@ describe("useGlobalAction", () => {
           result: { flipped: true },
         },
       },
+      stale: false,
+      hasNext: false,
     });
 
     await act(async () => {
