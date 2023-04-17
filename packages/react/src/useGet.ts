@@ -60,20 +60,22 @@ export const useGet = <
     );
   }, [manager, memoizedOptions]);
 
-  const [result, refresh] = useGadgetQuery({ query: plan.query, variables: plan.variables });
+  const [rawResult, refresh] = useGadgetQuery({ query: plan.query, variables: plan.variables });
 
-  let data = null;
-  const rawRecord = result.data && get(result.data, [manager.get.operationName]);
-  if (rawRecord) {
-    data = hydrateRecord(result, rawRecord);
-  }
+  const result = useMemo(() => {
+    let data = null;
+    const rawRecord = rawResult.data && get(rawResult.data, [manager.get.operationName]);
+    if (rawRecord) {
+      data = hydrateRecord(rawResult, rawRecord);
+    }
+    const error = ErrorWrapper.forMaybeCombinedError(rawResult.error);
 
-  return [
-    {
-      ...result,
-      error: ErrorWrapper.forMaybeCombinedError(result.error),
+    return {
+      ...rawResult,
+      error,
       data,
-    },
-    refresh,
-  ];
+    };
+  }, [rawResult, manager]);
+
+  return [result, refresh];
 };

@@ -62,19 +62,24 @@ export const useFindFirst = <
     );
   }, [manager, memoizedOptions]);
 
-  const [result, refresh] = useGadgetQuery(getQueryArgs(plan, firstOptions));
+  const [rawResult, refresh] = useGadgetQuery(getQueryArgs(plan, firstOptions));
 
-  const dataPath = [manager.findFirst.operationName];
-  let data = result.data;
-  if (data) {
-    const connection = get(result.data, dataPath);
-    if (connection) {
-      data = hydrateConnection(result, connection)[0];
-    } else {
-      data = data[0];
+  const result = useMemo(() => {
+    const dataPath = [manager.findFirst.operationName];
+    let data = rawResult.data;
+    if (data) {
+      const connection = get(rawResult.data, dataPath);
+      if (connection) {
+        data = hydrateConnection(rawResult, connection)[0];
+      } else {
+        data = data[0];
+      }
     }
-  }
 
-  const error = ErrorWrapper.errorIfDataAbsent(result, dataPath);
-  return [{ ...result, data, error }, refresh];
+    const error = ErrorWrapper.errorIfDataAbsent(rawResult, dataPath);
+
+    return { ...rawResult, data, error };
+  }, [manager, rawResult]);
+
+  return [result, refresh];
 };

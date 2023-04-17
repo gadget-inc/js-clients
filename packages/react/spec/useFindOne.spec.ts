@@ -59,7 +59,7 @@ describe("useFindOne", () => {
   });
 
   test("returns an error if the record isn't found", async () => {
-    const { result } = renderHook(() => useFindOne(relatedProductsApi.user, "123"), { wrapper: TestWrapper });
+    const { result, rerender } = renderHook(() => useFindOne(relatedProductsApi.user, "123"), { wrapper: TestWrapper });
 
     expect(result.current[0].data).toBeFalsy();
     expect(result.current[0].fetching).toBe(true);
@@ -78,5 +78,31 @@ describe("useFindOne", () => {
     const error = result.current[0].error;
     expect(error).toBeTruthy();
     expect(error!.message).toMatchInlineSnapshot(`"[GraphQL] Internal Error: Gadget API returned no data at user"`);
+
+    // ensure the error is the same after rerendering
+    rerender();
+
+    expect(result.current[0].error).toBe(error);
+  });
+
+  test("returns the same data on rerender", async () => {
+    const { result, rerender } = renderHook(() => useFindOne(relatedProductsApi.user, "123"), { wrapper: TestWrapper });
+
+    expect(mockClient.executeQuery).toBeCalledTimes(1);
+
+    mockClient.executeQuery.pushResponse("user", {
+      data: {
+        user: {
+          id: "123",
+          email: "test@test.com",
+        },
+      },
+    });
+
+    const beforeObject = result.current[0];
+
+    rerender();
+
+    expect(result.current[0]).toBe(beforeObject);
   });
 });

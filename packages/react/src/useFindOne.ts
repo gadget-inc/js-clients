@@ -63,14 +63,18 @@ export const useFindOne = <
     );
   }, [manager, id, memoizedOptions]);
 
-  const [result, refresh] = useGadgetQuery(getQueryArgs(plan, options));
+  const [rawResult, refresh] = useGadgetQuery(getQueryArgs(plan, options));
 
-  const dataPath = [manager.findOne.operationName];
-  let data = result.data && get(result.data, dataPath);
-  if (data) {
-    data = hydrateRecord(result, data);
-  }
-  const error = ErrorWrapper.errorIfDataAbsent(result, dataPath);
+  const result = useMemo(() => {
+    const dataPath = [manager.findOne.operationName];
+    let data = rawResult.data && get(rawResult.data, dataPath);
+    if (data) {
+      data = hydrateRecord(rawResult, data);
+    }
+    const error = ErrorWrapper.errorIfDataAbsent(rawResult, dataPath);
 
-  return [{ ...result, data, error }, refresh];
+    return { ...rawResult, data, error };
+  }, [rawResult, manager]);
+
+  return [result, refresh];
 };

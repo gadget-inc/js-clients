@@ -75,4 +75,24 @@ describe("useGet", () => {
     expect(result.current[0].fetching).toBe(false);
     expect(result.current[0].error).toBeFalsy();
   });
+
+  test("it returns the same data on rerender", async () => {
+    const { result, rerender } = renderHook(() => useGet(relatedProductsApi.currentSession), { wrapper: TestWrapper });
+
+    expect(mockClient.executeQuery).toBeCalledTimes(1);
+
+    mockClient.executeQuery.pushResponse("currentSession", {
+      data: {
+        currentSession: {
+          id: "123",
+        },
+      },
+    });
+
+    const beforeObject = result.current[0];
+
+    rerender();
+
+    expect(result.current[0]).toBe(beforeObject);
+  });
 });

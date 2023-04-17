@@ -62,19 +62,23 @@ export const useFindMany = <
     );
   }, [manager, memoizedOptions]);
 
-  const [result, refresh] = useGadgetQuery(getQueryArgs(plan, options));
+  const [rawResult, refresh] = useGadgetQuery(getQueryArgs(plan, options));
 
-  const dataPath = [manager.findMany.operationName];
-  let data = result.data;
-  if (data) {
-    const connection = get(result.data, dataPath);
-    if (connection) {
-      const records = hydrateConnection(result, connection);
-      data = GadgetRecordList.boot(manager as unknown as AnyModelManager, records, connection);
+  const result = useMemo(() => {
+    const dataPath = [manager.findMany.operationName];
+    let data = rawResult.data;
+    if (data) {
+      const connection = get(rawResult.data, dataPath);
+      if (connection) {
+        const records = hydrateConnection(rawResult, connection);
+        data = GadgetRecordList.boot(manager as unknown as AnyModelManager, records, connection);
+      }
     }
-  }
 
-  const error = ErrorWrapper.errorIfDataAbsent(result, dataPath);
+    const error = ErrorWrapper.errorIfDataAbsent(rawResult, dataPath);
 
-  return [{ ...result, data, error }, refresh];
+    return { ...rawResult, data, error };
+  }, [manager, rawResult]);
+
+  return [result, refresh];
 };

@@ -81,8 +81,10 @@ export const useAction = <
     F["variablesType"]
   >(plan.query);
 
+  const transformedResult = useMemo(() => processResult(result, action), [result, action]);
+
   return [
-    processResult(result, action),
+    transformedResult,
     useCallback(
       async (variables, context) => {
         // Adding the model's additional typename ensures document cache will properly refresh, regardless of whether __typename was

@@ -62,25 +62,28 @@ export const useMaybeFindFirst = <
     );
   }, [manager, memoizedOptions]);
 
-  const [result, refresh] = useGadgetQuery(getQueryArgs(plan, firstOptions));
+  const [rawResult, refresh] = useGadgetQuery(getQueryArgs(plan, firstOptions));
 
-  const dataPath = [manager.findFirst.operationName];
-  let data = result.data ?? null;
-  if (data) {
-    const connection = get(result.data, dataPath);
-    if (connection) {
-      data = hydrateConnection(result, connection)[0] ?? null;
-    } else {
-      data = data[0] ?? null;
+  const result = useMemo(() => {
+    const dataPath = [manager.findFirst.operationName];
+    let data = rawResult.data ?? null;
+    if (data) {
+      const connection = get(rawResult.data, dataPath);
+      if (connection) {
+        data = hydrateConnection(rawResult, connection)[0] ?? null;
+      } else {
+        data = data[0] ?? null;
+      }
     }
-  }
 
-  return [
-    {
-      ...result,
-      error: ErrorWrapper.forMaybeCombinedError(result.error),
+    const error = ErrorWrapper.forMaybeCombinedError(rawResult.error);
+
+    return {
+      ...rawResult,
+      error,
       data,
-    },
-    refresh,
-  ];
+    };
+  }, [rawResult, manager]);
+
+  return [result, refresh];
 };

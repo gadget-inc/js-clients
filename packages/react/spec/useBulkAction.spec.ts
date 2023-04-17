@@ -145,4 +145,40 @@ describe("useBulkAction", () => {
     expect(error).toBeTruthy();
     expect(result.current[0].data).toBeFalsy();
   });
+
+  test("returns the same data on successive rerenders after a mutation", async () => {
+    const { result, rerender } = renderHook(() => useBulkAction(bulkExampleApi.widget.bulkFlipDown), { wrapper: TestWrapper });
+
+    let mutationPromise: any;
+    act(() => {
+      mutationPromise = result.current[1]({ ids: ["123", "124"] });
+    });
+
+    expect(mockClient.executeMutation).toBeCalledTimes(1);
+
+    mockClient.executeMutation.pushResponse("bulkFlipDownWidgets", {
+      data: {
+        bulkFlipDownWidgets: {
+          success: true,
+          widgets: [
+            {
+              id: "123",
+            },
+            { id: "124" },
+          ],
+        },
+      },
+    });
+
+    await act(async () => {
+      const promiseResult = await mutationPromise;
+    });
+
+    const beforeObject = result.current[0];
+
+    // rerender
+    rerender();
+
+    expect(result.current[0]).toBe(beforeObject);
+  });
 });
