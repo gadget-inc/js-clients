@@ -462,9 +462,13 @@ export class GadgetConnection {
 function processMaybeRelativeInput(input: RequestInfo | URL, endpoint: string): RequestInfo | URL {
   if (typeof input != "string") return input;
   if (input.startsWith("/") && !input.startsWith("//")) {
-    const url = new URL(endpoint);
-    url.pathname = input;
-    return url;
+    try {
+      const url = new URL(endpoint);
+      url.pathname = input;
+      return url;
+    } catch (err) {
+      return input;
+    }
   }
   return input;
 }

@@ -1,3 +1,4 @@
+import { Response } from "cross-fetch";
 import gql from "gql-tag";
 import nock from "nock";
 import { AuthenticationMode, BrowserSessionStorageType, GadgetConnection } from "../src";
@@ -609,7 +610,7 @@ export const GadgetConnectionSharedSuite = (queryExtra = "") => {
       expect(await result.text()).toEqual("hello");
     });
 
-    test("fetch can pass relative string urls", async () => {
+    test("fetch can pass relative string paths", async () => {
       const connection = new GadgetConnection({
         endpoint: "https://someapp.gadget.app/api/graphql",
         authenticationMode: { apiKey: "gsk-abcde" },
@@ -625,6 +626,20 @@ export const GadgetConnectionSharedSuite = (queryExtra = "") => {
       const result = await connection.fetch("/foo/bar");
       expect(result.status).toEqual(200);
       expect(await result.text()).toEqual("hello");
+    });
+
+    test("fetch can pass relative string paths when used with a relative base endpoint", async () => {
+      const fetch = jest.fn().mockResolvedValue(new Response("hello")) as any;
+      const connection = new GadgetConnection({
+        endpoint: "/api/graphql",
+        authenticationMode: { apiKey: "gsk-abcde" },
+        fetchImplementation: fetch,
+      });
+
+      const result = await connection.fetch("/foo/bar");
+      expect(result.status).toEqual(200);
+      expect(await result.text()).toEqual("hello");
+      expect(fetch).toHaveBeenCalledWith("/foo/bar", expect.anything());
     });
 
     test("fetch can pass protocol-less string urls", async () => {
