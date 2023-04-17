@@ -604,13 +604,6 @@
   dependencies:
     prettier-plugin-organize-imports "^1.0.4"
 
-"@gadgetinc/react@^0.10.0":
-  version "0.11.0"
-  dependencies:
-    "@gadgetinc/api-client-core" "^0.13.0"
-    deep-equal "^2.2.0"
-    urql "^3.0.3"
-
 "@graphql-typed-document-node/core@^3.1.1":
   version "3.1.1"
   resolved "https://registry.yarnpkg.com/@graphql-typed-document-node/core/-/core-3.1.1.tgz#076d78ce99822258cf813ecc1e7fa460fa74d052"
