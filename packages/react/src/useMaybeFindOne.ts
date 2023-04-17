@@ -63,20 +63,21 @@ export const useMaybeFindOne = <
     );
   }, [manager, id, memoizedOptions]);
 
-  const [result, refresh] = useGadgetQuery(getQueryArgs(plan, options));
+  const [rawResult, refresh] = useGadgetQuery(getQueryArgs(plan, options));
 
-  let data = result.data ?? null;
-  if (data) {
-    const value = get(result.data, [manager.findOne.operationName]);
-    data = value && "id" in value ? hydrateRecord(result, value) : null;
-  }
-
-  return [
-    {
-      ...result,
-      error: ErrorWrapper.forMaybeCombinedError(result.error),
+  const result = useMemo(() => {
+    let data = rawResult.data ?? null;
+    if (data) {
+      const value = get(rawResult.data, [manager.findOne.operationName]);
+      data = value && "id" in value ? hydrateRecord(rawResult, value) : null;
+    }
+    const error = ErrorWrapper.forMaybeCombinedError(rawResult.error);
+    return {
+      ...rawResult,
+      error,
       data,
-    },
-    refresh,
-  ];
+    };
+  }, [rawResult, manager]);
+
+  return [result, refresh];
 };

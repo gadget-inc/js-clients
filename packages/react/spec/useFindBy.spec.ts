@@ -94,4 +94,33 @@ describe("useFindBy", () => {
     expect(error).toBeTruthy();
     expect(error!.message).toMatchInlineSnapshot(`"[GraphQL] user record with email=test@test.com not found"`);
   });
+
+  test("returns the same data object on rerender", async () => {
+    const { result, rerender } = renderHook(() => useFindBy(relatedProductsApi.user.findByEmail, "test@test.com"), {
+      wrapper: TestWrapper,
+    });
+
+    expect(mockClient.executeQuery).toBeCalledTimes(1);
+
+    mockClient.executeQuery.pushResponse("users", {
+      data: {
+        users: {
+          edges: [{ cursor: "123", node: { id: "123", email: "test@test.com" } }],
+          pageInfo: {
+            startCursor: "123",
+            endCursor: "123",
+            hasNextPage: false,
+            hasPreviousPage: false,
+          },
+        },
+      },
+    });
+
+    const data = result.current[0].data;
+    expect(data).toBeTruthy();
+
+    rerender();
+
+    expect(result.current[0].data).toBe(data);
+  });
 });

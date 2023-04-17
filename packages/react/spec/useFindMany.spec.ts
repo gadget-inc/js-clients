@@ -166,4 +166,37 @@ describe("useFindMany", () => {
     expect(result.current[0].fetching).toBe(false);
     expect(result.current[0].error).toBeFalsy();
   });
+
+  test("returns the same data object on rerender if nothing changes about the result", async () => {
+    const { result, rerender } = renderHook(() => useFindMany(relatedProductsApi.user), { wrapper: TestWrapper });
+
+    expect(result.current[0].data).toBeFalsy();
+    expect(result.current[0].fetching).toBe(true);
+    expect(result.current[0].error).toBeFalsy();
+
+    expect(mockClient.executeQuery).toBeCalledTimes(1);
+
+    mockClient.executeQuery.pushResponse("users", {
+      data: {
+        users: {
+          edges: [
+            { cursor: "123", node: { id: "123", email: "test@test.com" } },
+            { cursor: "abc", node: { id: "124", email: "test@test.com" } },
+          ],
+          pageInfo: {
+            startCursor: "123",
+            endCursor: "abc",
+            hasNextPage: false,
+            hasPreviousPage: false,
+          },
+        },
+      },
+    });
+
+    const beforeObject = result.current[0];
+
+    rerender();
+
+    expect(result.current[0]).toBe(beforeObject);
+  });
 });

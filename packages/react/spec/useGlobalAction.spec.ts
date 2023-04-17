@@ -48,16 +48,19 @@ describe("useGlobalAction", () => {
       data: {
         flipAll: {
           success: true,
+          result: { flipped: true },
         },
       },
     });
 
     await act(async () => {
       const promiseResult = await mutationPromise;
+      expect(promiseResult.data).toEqual({ flipped: true });
       expect(promiseResult.fetching).toBe(false);
       expect(promiseResult.error).toBeFalsy();
     });
 
+    expect(result.current[0].data).toEqual({ flipped: true });
     expect(result.current[0].fetching).toBe(false);
     expect(result.current[0].error).toBeFalsy();
   });
@@ -99,5 +102,35 @@ describe("useGlobalAction", () => {
     expect(result.current[0].fetching).toBe(false);
     const error = result.current[0].error;
     expect(error).toBeTruthy();
+  });
+
+  test("returns the same data after executing the mutation and rerendering", async () => {
+    const { result, rerender } = renderHook(() => useGlobalAction(bulkExampleApi.flipAll), { wrapper: TestWrapper });
+
+    let mutationPromise: any;
+    act(() => {
+      mutationPromise = result.current[1]({ why: "foobar" });
+    });
+
+    expect(mockClient.executeMutation).toBeCalledTimes(1);
+
+    mockClient.executeMutation.pushResponse("flipAll", {
+      data: {
+        flipAll: {
+          success: true,
+          result: { flipped: true },
+        },
+      },
+    });
+
+    await act(async () => {
+      await mutationPromise;
+    });
+
+    const beforeObject = result.current[0];
+
+    rerender();
+
+    expect(result.current[0]).toBe(beforeObject);
   });
 });

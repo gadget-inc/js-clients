@@ -34,8 +34,10 @@ export const useGlobalAction = <F extends GlobalActionFunction<any>>(
 
   const [result, runMutation] = useGadgetMutation<any, F["variablesType"]>(plan.query);
 
+  const transformedResult = useMemo(() => processResult(result, action), [result, action]);
+
   return [
-    processResult(result, action),
+    transformedResult,
     useCallback(
       async (variables, context) => {
         const result = await runMutation(variables, context);
@@ -53,6 +55,7 @@ const processResult = (result: UseMutationState<any, any>, action: GlobalActionF
     data = get(result.data, [action.operationName]);
     if (data) {
       const errors = data.errors;
+      data = data.result;
       if (errors && errors[0]) {
         error = ErrorWrapper.forErrorsResponse(errors);
       }

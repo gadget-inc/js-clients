@@ -65,29 +65,34 @@ export const useFindBy = <
     );
   }, [finder, value, memoizedOptions]);
 
-  const [result, refresh] = useGadgetQuery(getQueryArgs(plan, options));
+  const [rawResult, refresh] = useGadgetQuery(getQueryArgs(plan, options));
 
-  const dataPath = [finder.operationName];
-  let records = [];
-  let data = result.data;
-  if (data) {
-    const connection = get(result.data, dataPath);
-    if (connection) {
-      records = hydrateConnection(result, connection);
-      data = records[0];
+  const result = useMemo(() => {
+    const dataPath = [finder.operationName];
+
+    let data = rawResult.data;
+    let records = [];
+    if (data) {
+      const connection = get(rawResult.data, dataPath);
+      if (connection) {
+        records = hydrateConnection(rawResult, connection);
+        data = records[0];
+      }
     }
-  }
 
-  let error = ErrorWrapper.forMaybeCombinedError(result.error);
-  if (!error) {
-    if (records.length > 1) {
-      error = ErrorWrapper.forClientSideError(getNonUniqueDataError(finder.modelApiIdentifier, finder.findByVariableName, value));
-    } else if (result.data && !records[0]) {
-      error = ErrorWrapper.forClientSideError(
-        new GadgetNotFoundError(`${finder.modelApiIdentifier} record with ${finder.findByVariableName}=${value} not found`)
-      );
+    let error = ErrorWrapper.forMaybeCombinedError(rawResult.error);
+    if (!error) {
+      if (records.length > 1) {
+        error = ErrorWrapper.forClientSideError(getNonUniqueDataError(finder.modelApiIdentifier, finder.findByVariableName, value));
+      } else if (rawResult.data && !records[0]) {
+        error = ErrorWrapper.forClientSideError(
+          new GadgetNotFoundError(`${finder.modelApiIdentifier} record with ${finder.findByVariableName}=${value} not found`)
+        );
+      }
     }
-  }
 
-  return [{ ...result, error, data }, refresh];
+    return { ...rawResult, data, error };
+  }, [rawResult, finder, value]);
+
+  return [result, refresh];
 };
