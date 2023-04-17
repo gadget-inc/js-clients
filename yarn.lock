@@ -953,12 +953,12 @@
   resolved "https://registry.yarnpkg.com/@opentelemetry/api/-/api-1.4.0.tgz#2c91791a9ba6ca0a0f4aaac5e45d58df13639ac8"
   integrity sha512-IgMK9i3sFGNUqPMbjABm0G26g0QCKCUBfglhQ7rQq6WcxbKfEHRcmwsoER4hZcuYqJgkYn2OeuoJIv7Jsftp7g==
 
-"@shopify/app-bridge-react@^2.0.25":
-  version "2.1.0"
-  resolved "https://registry.yarnpkg.com/@shopify/app-bridge-react/-/app-bridge-react-2.1.0.tgz#4911e95542f04b5d827cd3ba3193cc1d09cc95b0"
-  integrity sha512-KL+8ib6BdcEw3EzrXvoQgB22o11uKir7MTi9EgsmjvT0qRAywuVBDXgsKbmjyqr6DrnU5FQX5Lty0sA55NzTRA==
+"@shopify/app-bridge-react@^2.2.0":
+  version "2.2.0"
+  resolved "https://registry.yarnpkg.com/@shopify/app-bridge-react/-/app-bridge-react-2.2.0.tgz#71e66baa7ccd68b4f9983b40df8ceea02ce9ee04"
+  integrity sha512-xq61U+4efzFlYrXV4wReYI1PZA6xUy1GwTrlBKlsTlwS5oqbdWXATya0NwKSMBNuzy2PLHOw8v+z6wwFQlfPNw==
   dependencies:
-    "@shopify/app-bridge" "^2.1.0"
+    "@shopify/app-bridge" "^2.2.0"
 
 "@shopify/app-bridge-utils@^3.1.1":
   version "3.1.1"
@@ -967,12 +967,13 @@
   dependencies:
     "@shopify/app-bridge" "^3.1.1"
 
-"@shopify/app-bridge@^2.1.0":
-  version "2.1.0"
-  resolved "https://registry.yarnpkg.com/@shopify/app-bridge/-/app-bridge-2.1.0.tgz#c349459d2b4b33c274c2c6af005732b91a32ceb1"
-  integrity sha512-qpMOoi6teCzkwmGwhxgOZIi8b8L+I8xzWAdqMZEXX/5V3uxDxYkt4dZoihxICdV05Hgcs1IFvEdMeKloymjGBA==
+"@shopify/app-bridge@^2.2.0":
+  version "2.3.1"
+  resolved "https://registry.yarnpkg.com/@shopify/app-bridge/-/app-bridge-2.3.1.tgz#efa16a45a20b9e75460a51fe4439118216202223"
+  integrity sha512-Oq7EYEypvzUFUNoG0nHxUUIooiml3NMB2AdsNxbIutY//3byFXqx1bxhh3QfO1SCa/EZCl7pcKLouGh14ETiVg==
   dependencies:
     base64url "^3.0.1"
+    web-vitals "^3.0.1"
 
 "@shopify/app-bridge@^3.1.1":
   version "3.1.1"
@@ -5426,6 +5427,11 @@ web-streams-polyfill@^3.0.3:
   version "3.2.1"
   resolved "https://registry.yarnpkg.com/web-streams-polyfill/-/web-streams-polyfill-3.2.1.tgz#71c2718c52b45fd49dbeee88634b3a60ceab42a6"
   integrity sha512-e0MO3wdXWKrLbL0DgGnUV7WHVuw9OUvL4hjgnPkIeEvESk74gAITi5G606JtZPp39cd8HA9VQzCIvA49LpPN5Q==
+
+web-vitals@^3.0.1:
+  version "3.3.1"
+  resolved "https://registry.yarnpkg.com/web-vitals/-/web-vitals-3.3.1.tgz#f80e4fd01784476c023c8b2c4219075bbe96f64d"
+  integrity sha512-LTfY5GjcY3ngFzNsYFSYL+AmVmlWrzPTUxSMDis2rZbf+SzT7HH3NH4Y/l45XOlrAIunOBeURN9qtBHkRskAiA==
 
 webidl-conversions@^3.0.0:
   version "3.0.1"
