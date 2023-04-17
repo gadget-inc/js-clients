@@ -21,7 +21,7 @@
   "dependencies": {
     "@gadgetinc/api-client-core": "^0.13.0",
     "deep-equal": "^2.2.0",
-    "urql": "^3.0.3"
+    "urql": "^3.0.4"
   },
   "devDependencies": {
     "@testing-library/react": "^13.4.0",
