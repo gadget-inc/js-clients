@@ -2,6 +2,7 @@ export { Consumer, Context } from "urql";
 export { GadgetProvider as Provider } from "./GadgetProvider";
 export * from "./useAction";
 export * from "./useBulkAction";
+export * from "./useFetch";
 export * from "./useFindBy";
 export * from "./useFindFirst";
 export * from "./useFindMany";

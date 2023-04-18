@@ -19,10 +19,18 @@ export type MockOperationFn = jest.Mock & {
   pushResponse: (key: string, response: Omit<OperationResult, "operation">) => void;
 };
 
+export type MockFetchFn = jest.Mock & {
+  requests: { args: any[]; resolve: (response: Response) => void; reject: (error: Error) => void }[];
+  pushResponse: (response: Response) => Promise<void>;
+};
+
 export interface MockUrqlClient extends Client {
   executeQuery: MockOperationFn;
   executeMutation: MockOperationFn;
   executeSubscription: MockOperationFn;
+  gadgetConnection: {
+    fetch: MockFetchFn;
+  };
 }
 
 export const graphqlDocumentName = (doc: DocumentNode) => {
@@ -77,11 +85,44 @@ const newMockOperationFn = () => {
   return fn;
 };
 
+/**
+ * Create a new function for reading/writing to a mock graphql backend
+ */
+const newMockFetchFn = () => {
+  const requests: any[] = [];
+
+  const fn = jest.fn((...args) => {
+    return new Promise<Response>((resolve, reject) => {
+      requests.push({
+        args,
+        resolve,
+        reject,
+      });
+    });
+  }) as unknown as MockFetchFn;
+
+  fn.requests = requests;
+  fn.pushResponse = async (response) => {
+    await act(async () => {
+      const request = requests.shift();
+      if (!request) {
+        throw new Error("no requests started for response pushing");
+      }
+      await request.resolve(response);
+    });
+  };
+
+  return fn;
+};
+
 export const mockClient = {} as MockUrqlClient;
 beforeEach(() => {
   mockClient.executeQuery = newMockOperationFn();
   mockClient.executeMutation = newMockOperationFn();
   mockClient.executeSubscription = newMockOperationFn();
+  mockClient.gadgetConnection = {
+    fetch: newMockFetchFn(),
+  };
 });
 
 export const TestWrapper = (props: { children: ReactNode }) => {

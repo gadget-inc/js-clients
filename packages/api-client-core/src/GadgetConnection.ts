@@ -223,6 +223,7 @@ export class GadgetConnection {
             }),
           ],
         });
+        (client as any).gadgetConnection = this;
 
         transaction = new GadgetTransaction(client, subscriptionClient);
         this.currentTransaction = transaction;
@@ -320,12 +321,14 @@ export class GadgetConnection {
       })
     );
 
-    return new Client({
+    const client = new Client({
       url: this.endpoint,
       fetch: this.fetch,
       exchanges,
       requestPolicy: this.requestPolicy,
     });
+    (client as any).gadgetConnection = this;
+    return client;
   }
 
   private newSubscriptionClient(overrides: GadgetSubscriptionClientOptions) {
