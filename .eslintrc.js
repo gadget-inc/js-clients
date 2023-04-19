@@ -6,5 +6,6 @@ module.exports = {
   },
   rules: {
     "lodash/import-scope": "off",
+    "react/react-in-jsx-scope": "off",
   },
 };

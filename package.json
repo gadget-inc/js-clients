@@ -8,7 +8,8 @@
   "workspaces": [
     "packages/api-client-core",
     "packages/react",
-    "packages/react-shopify-app-bridge"
+    "packages/react-shopify-app-bridge",
+    "packages/blog-example"
   ],
   "scripts": {
     "lint": "yarn run lint:prettier && yarn run lint:eslint",
