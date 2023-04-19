@@ -47,7 +47,7 @@ const InnerGadgetProvider = memo(
       isAuthenticated: false,
       isEmbedded: false,
       canAuth: false,
-      loading: false,
+      loading: true,
       appBridge,
       isRootFrameRequest: false,
     });
