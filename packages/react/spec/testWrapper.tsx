@@ -1,3 +1,4 @@
+import { $gadgetConnection } from "@gadgetinc/api-client-core";
 import type { DocumentNode, OperationDefinitionNode } from "graphql";
 import { find, findLast } from "lodash";
 import React, { ReactNode } from "react";
@@ -28,7 +29,7 @@ export interface MockUrqlClient extends Client {
   executeQuery: MockOperationFn;
   executeMutation: MockOperationFn;
   executeSubscription: MockOperationFn;
-  gadgetConnection: {
+  [$gadgetConnection]: {
     fetch: MockFetchFn;
   };
 }
@@ -120,7 +121,7 @@ beforeEach(() => {
   mockClient.executeQuery = newMockOperationFn();
   mockClient.executeMutation = newMockOperationFn();
   mockClient.executeSubscription = newMockOperationFn();
-  mockClient.gadgetConnection = {
+  mockClient[$gadgetConnection] = {
     fetch: newMockFetchFn(),
   };
 });

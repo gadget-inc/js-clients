@@ -99,16 +99,23 @@ export function useFetch<T = string>(path: string, options?: FetchHookOptions): 
       let data: any;
       let response: Response | undefined = undefined;
 
+      const mergedOptions = { ...memoizedOptions, ...sendOptions };
+      if (mergedOptions.json) {
+        mergedOptions.headers ??= {};
+        (mergedOptions.headers as any)["accept"] ??= "application/json";
+      }
+
       try {
+        const { json: _json, stream: _stream, ...fetchOptions } = mergedOptions;
         // make the fetch call using GadgetConnection to pass along auth and other headers
-        response = await connection.fetch(path, { ...memoizedOptions, ...sendOptions });
+        response = await connection.fetch(path, fetchOptions);
         if (!response.ok) {
           throw new Error(response.statusText);
         }
 
-        if (memoizedOptions?.json) {
+        if (mergedOptions.json) {
           data = await response.json();
-        } else if (memoizedOptions?.stream) {
+        } else if (mergedOptions.stream) {
           data = response.body;
         } else {
           data = await response.text();

@@ -1,3 +1,4 @@
+import { $gadgetConnection } from "@gadgetinc/api-client-core";
 import { act, renderHook } from "@testing-library/react";
 import { assert, IsExact } from "conditional-type-checks";
 import { Response } from "cross-fetch";
@@ -63,14 +64,14 @@ describe("useFetch", () => {
     expect(result.current[0].fetching).toBe(true);
     expect(result.current[0].error).toBeFalsy();
 
-    expect(mockClient.gadgetConnection.fetch.requests[0].args).toEqual(["/foo/bar", {}]);
-    await mockClient.gadgetConnection.fetch.pushResponse(new Response("hello world"));
+    expect(mockClient[$gadgetConnection].fetch.requests[0].args).toEqual(["/foo/bar", {}]);
+    await mockClient[$gadgetConnection].fetch.pushResponse(new Response("hello world"));
 
     expect(result.current[0].fetching).toBe(false);
     expect(result.current[0].data).toEqual("hello world");
     expect(result.current[0].error).toBeFalsy();
 
-    expect(mockClient.gadgetConnection.fetch).toBeCalledTimes(1);
+    expect(mockClient[$gadgetConnection].fetch).toBeCalledTimes(1);
   });
 
   test("it can fetch json from the backend", async () => {
@@ -80,13 +81,14 @@ describe("useFetch", () => {
     expect(result.current[0].fetching).toBe(true);
     expect(result.current[0].error).toBeFalsy();
 
-    await mockClient.gadgetConnection.fetch.pushResponse(new Response('{"hello": 1}'));
+    expect(mockClient[$gadgetConnection].fetch.requests[0].args).toEqual(["/foo/bar", { headers: { accept: "application/json" } }]);
+    await mockClient[$gadgetConnection].fetch.pushResponse(new Response('{"hello": 1}'));
 
     expect(result.current[0].fetching).toBe(false);
     expect(result.current[0].data).toEqual({ hello: 1 });
     expect(result.current[0].error).toBeFalsy();
 
-    expect(mockClient.gadgetConnection.fetch).toBeCalledTimes(1);
+    expect(mockClient[$gadgetConnection].fetch).toBeCalledTimes(1);
   });
 
   test("it reports response errors from the backend", async () => {
@@ -96,7 +98,7 @@ describe("useFetch", () => {
     expect(result.current[0].fetching).toBe(true);
     expect(result.current[0].error).toBeFalsy();
 
-    await mockClient.gadgetConnection.fetch.pushResponse(new Response("error response", { status: 500 }));
+    await mockClient[$gadgetConnection].fetch.pushResponse(new Response("error response", { status: 500 }));
 
     expect(result.current[0].fetching).toBe(false);
     expect(result.current[0].data).toBeUndefined();
@@ -105,15 +107,15 @@ describe("useFetch", () => {
     expect(result.current[0].error!.response).toBeTruthy();
     expect(result.current[0].error!.response.status).toEqual(500);
 
-    expect(mockClient.gadgetConnection.fetch).toBeCalledTimes(1);
+    expect(mockClient[$gadgetConnection].fetch).toBeCalledTimes(1);
   });
 
   test("it can rexecute to fetch a new string from the backend", async () => {
     const { result } = renderHook(() => useFetch("/foo/bar"), { wrapper: TestWrapper });
 
-    await mockClient.gadgetConnection.fetch.pushResponse(new Response("hello world"));
+    await mockClient[$gadgetConnection].fetch.pushResponse(new Response("hello world"));
     expect(result.current[0].data).toEqual("hello world");
-    expect(mockClient.gadgetConnection.fetch).toBeCalledTimes(1);
+    expect(mockClient[$gadgetConnection].fetch).toBeCalledTimes(1);
 
     let reexecutePromise: Promise<string>;
     act(() => {
@@ -123,7 +125,7 @@ describe("useFetch", () => {
     expect(result.current[0].fetching).toBe(true);
     expect(result.current[0].error).toBeFalsy();
 
-    await mockClient.gadgetConnection.fetch.pushResponse(new Response("hello canada"));
+    await mockClient[$gadgetConnection].fetch.pushResponse(new Response("hello canada"));
 
     const reexecuteResult = await reexecutePromise!;
 
@@ -140,12 +142,12 @@ describe("useFetch", () => {
     expect(result.current[0].fetching).toBe(true);
     expect(result.current[0].error).toBeFalsy();
 
-    await mockClient.gadgetConnection.fetch.pushResponse(new Response("error response", { status: 500 }));
+    await mockClient[$gadgetConnection].fetch.pushResponse(new Response("error response", { status: 500 }));
 
     expect(result.current[0].fetching).toBe(false);
     expect(result.current[0].error).toBeTruthy();
 
-    expect(mockClient.gadgetConnection.fetch).toBeCalledTimes(1);
+    expect(mockClient[$gadgetConnection].fetch).toBeCalledTimes(1);
 
     let reexecutePromise: Promise<string>;
     act(() => {
@@ -155,7 +157,7 @@ describe("useFetch", () => {
     expect(result.current[0].fetching).toBe(true);
     expect(result.current[0].error).toBeFalsy();
 
-    await mockClient.gadgetConnection.fetch.pushResponse(new Response("fixed"));
+    await mockClient[$gadgetConnection].fetch.pushResponse(new Response("fixed"));
 
     const reexecuteResult = await reexecutePromise!;
 
@@ -169,7 +171,7 @@ describe("useFetch", () => {
   test("it doesn't automatically start sending POST requests", async () => {
     const { result } = renderHook(() => useFetch("/foo/bar", { method: "POST" }), { wrapper: TestWrapper });
 
-    expect(mockClient.gadgetConnection.fetch).toBeCalledTimes(0);
+    expect(mockClient[$gadgetConnection].fetch).toBeCalledTimes(0);
     expect(result.current[0].data).toBeFalsy();
     expect(result.current[0].fetching).toBe(false);
     expect(result.current[0].error).toBeFalsy();
@@ -183,52 +185,52 @@ describe("useFetch", () => {
     expect(result.current[0].fetching).toBe(true);
     expect(result.current[0].error).toBeFalsy();
 
-    expect(mockClient.gadgetConnection.fetch.requests[0].args).toEqual(["/foo/bar", { method: "POST" }]);
-    await mockClient.gadgetConnection.fetch.pushResponse(new Response("hello world"));
+    expect(mockClient[$gadgetConnection].fetch.requests[0].args).toEqual(["/foo/bar", { method: "POST" }]);
+    await mockClient[$gadgetConnection].fetch.pushResponse(new Response("hello world"));
 
     expect(result.current[0].fetching).toBe(false);
     expect(result.current[0].data).toEqual("hello world");
     expect(result.current[0].error).toBeFalsy();
 
-    expect(mockClient.gadgetConnection.fetch).toBeCalledTimes(1);
+    expect(mockClient[$gadgetConnection].fetch).toBeCalledTimes(1);
   });
 
   test("POST requests can be given options when executed", async () => {
     const { result } = renderHook(() => useFetch("/foo/bar", { method: "POST" }), { wrapper: TestWrapper });
 
-    expect(mockClient.gadgetConnection.fetch).toBeCalledTimes(0);
+    expect(mockClient[$gadgetConnection].fetch).toBeCalledTimes(0);
 
     let reexecutePromise: Promise<string>;
     act(() => {
       reexecutePromise = result.current[1]({ headers: { "X-Test": "hello" }, body: JSON.stringify({ test: true }) });
     });
 
-    expect(mockClient.gadgetConnection.fetch.requests[0].args).toEqual([
+    expect(mockClient[$gadgetConnection].fetch.requests[0].args).toEqual([
       "/foo/bar",
       { method: "POST", headers: { "X-Test": "hello" }, body: JSON.stringify({ test: true }) },
     ]);
-    await mockClient.gadgetConnection.fetch.pushResponse(new Response("hello world"));
+    await mockClient[$gadgetConnection].fetch.pushResponse(new Response("hello world"));
 
     expect(result.current[0].fetching).toBe(false);
     expect(result.current[0].data).toEqual("hello world");
     expect(result.current[0].error).toBeFalsy();
 
-    expect(mockClient.gadgetConnection.fetch).toBeCalledTimes(1);
+    expect(mockClient[$gadgetConnection].fetch).toBeCalledTimes(1);
 
     act(() => {
       reexecutePromise = result.current[1]({ headers: { "X-Test": "other" }, body: "other body" });
     });
 
-    expect(mockClient.gadgetConnection.fetch.requests[0].args).toEqual([
+    expect(mockClient[$gadgetConnection].fetch.requests[0].args).toEqual([
       "/foo/bar",
       { method: "POST", headers: { "X-Test": "other" }, body: "other body" },
     ]);
-    await mockClient.gadgetConnection.fetch.pushResponse(new Response("second response"));
+    await mockClient[$gadgetConnection].fetch.pushResponse(new Response("second response"));
 
     expect(result.current[0].fetching).toBe(false);
     expect(result.current[0].data).toEqual("second response");
     expect(result.current[0].error).toBeFalsy();
 
-    expect(mockClient.gadgetConnection.fetch).toBeCalledTimes(2);
+    expect(mockClient[$gadgetConnection].fetch).toBeCalledTimes(2);
   });
 });

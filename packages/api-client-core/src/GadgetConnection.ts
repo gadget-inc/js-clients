@@ -37,6 +37,8 @@ const DEFAULT_CONN_GLOBAL_TIMEOUT = 10_000;
 const RETRYABLE_CLOSE_CODES = [CloseCode.ConnectionAcknowledgementTimeout, CloseCode.ConnectionInitialisationTimeout];
 
 export const $transaction = Symbol.for("gadget/transaction");
+export const $gadgetConnection = Symbol.for("gadget/connection");
+
 const sessionStorageKey = "token";
 const base64 = typeof btoa !== "undefined" ? btoa : (str: string) => Buffer.from(str).toString("base64");
 
@@ -223,7 +225,7 @@ export class GadgetConnection {
             }),
           ],
         });
-        (client as any).gadgetConnection = this;
+        (client as any)[$gadgetConnection] = this;
 
         transaction = new GadgetTransaction(client, subscriptionClient);
         this.currentTransaction = transaction;
@@ -327,7 +329,7 @@ export class GadgetConnection {
       exchanges,
       requestPolicy: this.requestPolicy,
     });
-    (client as any).gadgetConnection = this;
+    (client as any)[$gadgetConnection] = this;
     return client;
   }
 

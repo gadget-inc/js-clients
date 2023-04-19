@@ -1,4 +1,5 @@
 import type { GadgetConnection } from "@gadgetinc/api-client-core";
+import { $gadgetConnection } from "@gadgetinc/api-client-core";
 import React from "react";
 import { Client, Provider } from "urql";
 
@@ -16,10 +17,15 @@ export const useConnection = () => {
   if (!urqlClient) {
     throw new Error("No urql client object in React context, have you added the GadgetProvider wrapper?");
   }
-  const connection = (urqlClient as any).gadgetConnection as GadgetConnection | undefined;
+  const connection = (urqlClient as any)[$gadgetConnection] as GadgetConnection | undefined;
   if (!connection) {
     throw new Error(
-      "urql client found in context was not set up by the Gadget API client, are you passing api.connection.currentClient to the urql context?"
+      `urql client found in context was not set up by the Gadget API client. Please ensure you are wrapping this hook with the <Provider/> component from @gadgetinc/react. 
+      
+      Possible remedies: 
+       - ensuring you have the <Provider/> component wrapped around your hook invocation
+       - ensuring you are passing a value to the provider, usually <Provider value={api.connection.currentClient}>
+       - ensuring your @gadget-client/<your-app> package and your @gadgetinc/react package are up to date`
     );
   }
 
