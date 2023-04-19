@@ -22,7 +22,7 @@ export type GadgetAuthContextValue = {
 };
 
 export const GadgetAuthContext = createContext<GadgetAuthContextValue>({
-  loading: false,
+  loading: true,
   isEmbedded: false,
   isAuthenticated: false,
   canAuth: false,
