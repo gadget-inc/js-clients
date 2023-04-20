@@ -8,7 +8,8 @@ function ExampleFindMany() {
   const [result, send] = useFindMany(api.post);
 
   useEffect(() => {
-    setHistory([...history, result]);
+    const { operation, ...keep } = result;
+    setHistory([...history, keep]);
   }, [result]);
 
   return (
