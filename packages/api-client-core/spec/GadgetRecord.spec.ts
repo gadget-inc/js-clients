@@ -48,6 +48,19 @@ describe("GadgetRecord", () => {
     };
   });
 
+  it("can be constructed with base data", () => {
+    const product = new GadgetRecord<SampleBaseRecord>(productBaseRecord);
+    expect(product).toBeTruthy();
+  });
+
+  it("can be constructed with null or undefined to create a new instance", () => {
+    let product = new GadgetRecord<SampleBaseRecord>(null);
+    expect(product).toBeTruthy();
+
+    product = new GadgetRecord<SampleBaseRecord>();
+    expect(product).toBeTruthy();
+  });
+
   it("should respond toJSON, which returns the inner __gadget.fields properties", () => {
     const product = new GadgetRecord<SampleBaseRecord>(productBaseRecord);
     expect(product.toJSON()).toEqual({
