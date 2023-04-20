@@ -1,3 +1,4 @@
+import { omit } from "lodash";
 import { ChangeTracking, GadgetRecord } from "../src/GadgetRecord";
 interface SampleBaseRecord {
   id?: string;
@@ -42,6 +43,7 @@ describe("GadgetRecord", () => {
   let productBaseRecord: SampleBaseRecord;
   beforeAll(() => {
     productBaseRecord = {
+      __typename: "Product",
       id: "123",
       name: "A cool product",
       body: "A description of why it's cool",
@@ -51,7 +53,7 @@ describe("GadgetRecord", () => {
   it("should respond toJSON, which returns the inner __gadget.fields properties", () => {
     const product = new GadgetRecord<SampleBaseRecord>(productBaseRecord);
     expect(product.toJSON()).toEqual({
-      ...productBaseRecord,
+      ...omit(productBaseRecord, "__typename"),
     });
   });
 
@@ -402,5 +404,23 @@ describe("GadgetRecord", () => {
     expect(product.getField("changed")).toEqual(false);
     product.setField("changed", true);
     expect(product.getField("changed")).toEqual(true);
+  });
+
+  test("the typename should be accessible on the object if passed when constructing", () => {
+    const product = new GadgetRecord<SampleBaseRecord>(productBaseRecord);
+    expect(product.typename).toEqual("Product");
+  });
+
+  test("the typename should be undefined on the object if not passed when constructing", () => {
+    const product = new GadgetRecord<SampleBaseRecord>({});
+    expect(product.typename).toBeUndefined();
+  });
+
+  test("the typename should not be included in the toJSON output", () => {
+    let instance = new GadgetRecord<{ __typename: "foo" }>({ __typename: "foo" });
+    expect(instance.toJSON()).toEqual({});
+
+    instance = new GadgetRecord<{ __typename: "foo"; bar: number }>({ __typename: "foo", bar: 1 });
+    expect(instance.toJSON()).toEqual({ bar: 1 });
   });
 });
