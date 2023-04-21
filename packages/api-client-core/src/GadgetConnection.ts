@@ -37,6 +37,8 @@ const DEFAULT_CONN_GLOBAL_TIMEOUT = 10_000;
 const RETRYABLE_CLOSE_CODES = [CloseCode.ConnectionAcknowledgementTimeout, CloseCode.ConnectionInitialisationTimeout];
 
 export const $transaction = Symbol.for("gadget/transaction");
+export const $gadgetConnection = Symbol.for("gadget/connection");
+
 const sessionStorageKey = "token";
 const base64 = typeof btoa !== "undefined" ? btoa : (str: string) => Buffer.from(str).toString("base64");
 
@@ -223,6 +225,7 @@ export class GadgetConnection {
             }),
           ],
         });
+        (client as any)[$gadgetConnection] = this;
 
         transaction = new GadgetTransaction(client, subscriptionClient);
         this.currentTransaction = transaction;
@@ -268,11 +271,14 @@ export class GadgetConnection {
    * await api.connection.fetch("/foo/bar");
    **/
   fetch = traceFunction("api-client.fetch", async (input: RequestInfo | URL, init: RequestInit = {}) => {
-    init.headers = { ...this.requestHeaders(), ...init.headers };
     input = processMaybeRelativeInput(input, this.options.endpoint);
 
-    if (this.authenticationMode == AuthenticationMode.Custom) {
-      await this.options.authenticationMode!.custom!.processFetch(input, init);
+    if (this.isGadgetRequest(input)) {
+      init.headers = { ...this.requestHeaders(), ...init.headers };
+
+      if (this.authenticationMode == AuthenticationMode.Custom) {
+        await this.options.authenticationMode!.custom!.processFetch(input, init);
+      }
     }
 
     const response = await this._fetchImplementation(input, init);
@@ -286,6 +292,28 @@ export class GadgetConnection {
 
     return response;
   });
+
+  private isGadgetRequest(input: RequestInfo | URL) {
+    let requestUrl;
+
+    if (typeof input === "string") {
+      requestUrl = input;
+    } else if (typeof input === "object" && "url" in input) {
+      requestUrl = input.url;
+    } else {
+      requestUrl = String(input);
+    }
+    if (isRelativeUrl(this.options.endpoint)) {
+      if (isRelativeUrl(requestUrl)) {
+        return true;
+      } else {
+        return false;
+      }
+    }
+
+    const host = new URL(this.options.endpoint).host;
+    return requestUrl.includes(host);
+  }
 
   private resetClients() {
     if (this.currentTransaction) {
@@ -320,12 +348,14 @@ export class GadgetConnection {
       })
     );
 
-    return new Client({
+    const client = new Client({
       url: this.endpoint,
       fetch: this.fetch,
       exchanges,
       requestPolicy: this.requestPolicy,
     });
+    (client as any)[$gadgetConnection] = this;
+    return client;
   }
 
   private newSubscriptionClient(overrides: GadgetSubscriptionClientOptions) {
@@ -461,7 +491,7 @@ export class GadgetConnection {
 
 function processMaybeRelativeInput(input: RequestInfo | URL, endpoint: string): RequestInfo | URL {
   if (typeof input != "string") return input;
-  if (input.startsWith("/") && !input.startsWith("//")) {
+  if (isRelativeUrl(input)) {
     try {
       const url = new URL(endpoint);
       url.pathname = input;
@@ -471,4 +501,8 @@ function processMaybeRelativeInput(input: RequestInfo | URL, endpoint: string): 
     }
   }
   return input;
+}
+
+function isRelativeUrl(url: string) {
+  return url.startsWith("/") && !url.startsWith("//");
 }

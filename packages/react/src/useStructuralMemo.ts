@@ -4,7 +4,7 @@ import { useRef } from "react";
 /**
  * Memoize and ensure a stable identity on a given value as long as it remains the same, structurally.
  */
-export const useStructuralMemo = <T>(value: T): T | undefined => {
+export const useStructuralMemo = <T>(value: T): T => {
   const ref = useRef<T>();
   if (value) {
     if (ref.current === undefined || !deepEqual(value, ref.current)) {
@@ -14,5 +14,5 @@ export const useStructuralMemo = <T>(value: T): T | undefined => {
     ref.current = undefined;
   }
 
-  return ref.current;
+  return ref.current as T;
 };

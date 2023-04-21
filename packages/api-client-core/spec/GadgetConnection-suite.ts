@@ -729,5 +729,103 @@ export const GadgetConnectionSharedSuite = (queryExtra = "") => {
       expect(result.status).toEqual(200);
       expect(await result.json()).toEqual({ response: true });
     });
+
+    test("fetch can fetch URLs other than the configured endpoint, and doesn't send authentication headers there", async () => {
+      const connection = new GadgetConnection({
+        endpoint: "https://someapp.gadget.app/api/graphql",
+        authenticationMode: { apiKey: "gsk-abcde" },
+      });
+
+      nock("https://third-party.com")
+        .post("/foo/bar")
+        .reply(200, function () {
+          expect(this.req.headers["authorization"]).toBeUndefined();
+          return { response: true };
+        });
+
+      const result = await connection.fetch("https://third-party.com/foo/bar", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Accept: "application/json",
+        },
+        body: JSON.stringify({ foo: "bar" }),
+      });
+      expect(result.status).toEqual(200);
+      expect(await result.json()).toEqual({ response: true });
+    });
+
+    test("fetch can fetch from other gadget apps, and doesn't send authentication headers there", async () => {
+      const connection = new GadgetConnection({
+        endpoint: "https://someapp.gadget.app/api/graphql",
+        authenticationMode: { apiKey: "gsk-abcde" },
+      });
+
+      nock("https://different-app.gadget.app")
+        .post("/foo/bar")
+        .reply(200, function () {
+          expect(this.req.headers["authorization"]).toBeUndefined();
+          return { response: true };
+        });
+
+      const result = await connection.fetch("https://different-app.gadget.app/foo/bar", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ foo: "bar" }),
+      });
+      expect(result.status).toEqual(200);
+      expect(await result.json()).toEqual({ response: true });
+    });
+
+    test("fetch can fetch from other environments for the same app, and doesn't send authentication headers there", async () => {
+      const connection = new GadgetConnection({
+        endpoint: "https://someapp.gadget.app/api/graphql",
+        authenticationMode: { apiKey: "gsk-abcde" },
+      });
+
+      nock("https://someapp--development.gadget.app")
+        .post("/foo/bar")
+        .reply(200, function () {
+          expect(this.req.headers["authorization"]).toBeUndefined();
+          return { response: true };
+        });
+
+      const result = await connection.fetch("https://someapp--development.gadget.app/foo/bar", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ foo: "bar" }),
+      });
+      expect(result.status).toEqual(200);
+      expect(await result.json()).toEqual({ response: true });
+    });
+
+    test("fetch can fetch URLs other than the configured endpoint when the configured endpoint is relative", async () => {
+      const connection = new GadgetConnection({
+        endpoint: "/api/graphql",
+        authenticationMode: { apiKey: "gsk-abcde" },
+      });
+
+      nock("https://third-party.com")
+        .post("/foo/bar")
+        .reply(200, function () {
+          expect(this.req.headers["authorization"]).toBeUndefined();
+          return { response: true };
+        });
+
+      const result = await connection.fetch("https://third-party.com/foo/bar", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Accept: "application/json",
+        },
+        body: JSON.stringify({ foo: "bar" }),
+      });
+      expect(result.status).toEqual(200);
+      expect(await result.json()).toEqual({ response: true });
+    });
   });
 };
