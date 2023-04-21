@@ -233,4 +233,24 @@ describe("useFetch", () => {
 
     expect(mockClient[$gadgetConnection].fetch).toBeCalledTimes(2);
   });
+
+  test("it can fetch json from third party apis", async () => {
+    const { result } = renderHook(() => useFetch("https://dummyjson.com/products", { json: true }), { wrapper: TestWrapper });
+
+    expect(result.current[0].data).toBeFalsy();
+    expect(result.current[0].fetching).toBe(true);
+    expect(result.current[0].error).toBeFalsy();
+
+    expect(mockClient[$gadgetConnection].fetch.requests[0].args).toEqual([
+      "https://dummyjson.com/products",
+      { headers: { accept: "application/json" } },
+    ]);
+    await mockClient[$gadgetConnection].fetch.pushResponse(new Response('{"hello": 1}'));
+
+    expect(result.current[0].fetching).toBe(false);
+    expect(result.current[0].data).toEqual({ hello: 1 });
+    expect(result.current[0].error).toBeFalsy();
+
+    expect(mockClient[$gadgetConnection].fetch).toBeCalledTimes(1);
+  });
 });

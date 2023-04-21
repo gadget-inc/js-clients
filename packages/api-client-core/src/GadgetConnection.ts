@@ -271,11 +271,14 @@ export class GadgetConnection {
    * await api.connection.fetch("/foo/bar");
    **/
   fetch = traceFunction("api-client.fetch", async (input: RequestInfo | URL, init: RequestInit = {}) => {
-    init.headers = { ...this.requestHeaders(), ...init.headers };
     input = processMaybeRelativeInput(input, this.options.endpoint);
 
-    if (this.authenticationMode == AuthenticationMode.Custom) {
-      await this.options.authenticationMode!.custom!.processFetch(input, init);
+    if (this.isGadgetRequest(input)) {
+      init.headers = { ...this.requestHeaders(), ...init.headers };
+
+      if (this.authenticationMode == AuthenticationMode.Custom) {
+        await this.options.authenticationMode!.custom!.processFetch(input, init);
+      }
     }
 
     const response = await this._fetchImplementation(input, init);
@@ -289,6 +292,28 @@ export class GadgetConnection {
 
     return response;
   });
+
+  private isGadgetRequest(input: RequestInfo | URL) {
+    let requestUrl;
+
+    if (typeof input === "string") {
+      requestUrl = input;
+    } else if (typeof input === "object" && "url" in input) {
+      requestUrl = input.url;
+    } else {
+      requestUrl = String(input);
+    }
+    if (isRelativeUrl(this.options.endpoint)) {
+      if (isRelativeUrl(requestUrl)) {
+        return true;
+      } else {
+        return false;
+      }
+    }
+
+    const host = new URL(this.options.endpoint).host;
+    return requestUrl.includes(host);
+  }
 
   private resetClients() {
     if (this.currentTransaction) {
@@ -466,7 +491,7 @@ export class GadgetConnection {
 
 function processMaybeRelativeInput(input: RequestInfo | URL, endpoint: string): RequestInfo | URL {
   if (typeof input != "string") return input;
-  if (input.startsWith("/") && !input.startsWith("//")) {
+  if (isRelativeUrl(input)) {
     try {
       const url = new URL(endpoint);
       url.pathname = input;
@@ -476,4 +501,8 @@ function processMaybeRelativeInput(input: RequestInfo | URL, endpoint: string): 
     }
   }
   return input;
+}
+
+function isRelativeUrl(url: string) {
+  return url.startsWith("/") && !url.startsWith("//");
 }

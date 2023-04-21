@@ -5,7 +5,7 @@ import "./styles/App.css";
 
 function ExampleFetch() {
   const [history, setHistory] = useState<any[]>([]);
-  const [result, send] = useFetch("/whoami", { json: true });
+  const [result, send] = useFetch("https://dummyjson.com/products");
 
   useEffect(() => {
     setHistory([...history, result]);
