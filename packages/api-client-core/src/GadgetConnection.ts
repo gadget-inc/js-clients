@@ -1,6 +1,6 @@
 import { cacheExchange, Client, ClientOptions, dedupExchange, RequestPolicy, subscriptionExchange } from "@urql/core";
 import { multipartFetchExchange } from "@urql/exchange-multipart-fetch";
-import fetch from "cross-fetch";
+import fetchPolyfill from "cross-fetch";
 import { ExecutionResult } from "graphql";
 import {
   Client as SubscriptionClient,
@@ -48,7 +48,7 @@ export interface GadgetConnectionOptions {
   websocketsEndpoint?: string;
   subscriptionClientOptions?: GadgetSubscriptionClientOptions;
   websocketImplementation?: any;
-  fetchImplementation?: typeof fetch;
+  fetchImplementation?: typeof fetchPolyfill;
   environment?: "Development" | "Production";
   applicationId?: string;
   requestPolicy?: ClientOptions["requestPolicy"];
@@ -78,7 +78,7 @@ export class GadgetConnection {
   private subscriptionClientOptions?: SubscriptionClientOptions;
   private websocketsEndpoint: string;
   private websocketImplementation: any;
-  private _fetchImplementation: typeof fetch;
+  private _fetchImplementation: typeof fetchPolyfill;
   private environment: "Development" | "Production";
 
   // the base client using HTTP requests that non-transactional operations will use
@@ -96,7 +96,13 @@ export class GadgetConnection {
   constructor(readonly options: GadgetConnectionOptions) {
     if (!options.endpoint) throw new Error("Must provide an `endpoint` option for a GadgetConnection to connect to");
     this.endpoint = options.endpoint;
-    this._fetchImplementation = options.fetchImplementation ?? fetch;
+    if (options.fetchImplementation) {
+      this._fetchImplementation = options.fetchImplementation;
+    } else if (typeof window != "undefined" && window.fetch) {
+      this._fetchImplementation = window.fetch.bind(window);
+    } else {
+      this._fetchImplementation = fetchPolyfill;
+    }
     this.websocketImplementation = options.websocketImplementation ?? WebSocket;
     this.websocketsEndpoint = options.websocketsEndpoint ?? options.endpoint + "/batch";
     this.websocketsEndpoint = this.websocketsEndpoint.replace(/^http/, "ws");
@@ -118,7 +124,7 @@ export class GadgetConnection {
     return this.currentTransaction?.client || this.baseClient;
   }
 
-  set fetchImplementation(implementation: typeof fetch) {
+  set fetchImplementation(implementation: typeof fetchPolyfill) {
     this._fetchImplementation = implementation;
     this.resetClients();
   }
