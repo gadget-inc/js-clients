@@ -15,6 +15,32 @@ type _SelectingNestedProperties = AssertTrue<
   >
 >;
 
+type _SelectingCircularProperties = AssertTrue<
+  IsExact<
+    Select<
+      TestSchema,
+      {
+        num: true;
+        nested: {
+          bool: true;
+          nested: {
+            bool: true;
+          };
+        };
+      }
+    >,
+    {
+      num: number;
+      nested: {
+        bool: boolean;
+        nested: {
+          bool: boolean;
+        };
+      };
+    }
+  >
+>;
+
 type _optionalNestedPropertySelection = Select<TestSchema, { optionalObj: { test: true } }>;
 type _TestSelectingOptionalNestedProperties = AssertTrue<
   IsExact<_optionalNestedPropertySelection, { optionalObj: { test: "test" } | null }>

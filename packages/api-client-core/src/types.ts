@@ -36,6 +36,27 @@ export type NonNeverKeys<Selection> = {
  */
 export type FilterNever<T extends Record<string, unknown>> = NonNeverKeys<T> extends never ? never : { [Key in NonNeverKeys<T>]: T[Key] };
 
+type InnerSelect<Schema, Selection extends FieldSelection | null | undefined> = Selection extends null | undefined
+  ? never
+  : Schema extends (infer T)[]
+  ? Select<T, Selection>[]
+  : Schema extends null
+  ? Select<Exclude<Schema, null>, Selection> | null
+  : {
+      [Key in keyof Selection & keyof Schema]: Selection[Key] extends true
+        ? Schema[Key]
+        : Selection[Key] extends FieldSelection
+        ? Select<Schema[Key], Selection[Key]>
+        : never;
+    };
+
+/**
+ * Filter out any keys in `T` that are mapped to `never` recursively.
+ */
+export type DeepFilterNever<T> = T extends Record<string, unknown> ? FilterNever<{
+  [Key in keyof T]: T[Key] extends Record<string, unknown> ? DeepFilterNever<T[Key]> : T[Key];
+}> : T;
+
 /**
  * Extract a subset of a schema given a selection
  *
@@ -46,16 +67,4 @@ export type FilterNever<T extends Record<string, unknown>> = NonNeverKeys<T> ext
  * >;  // { apple: "red" }
  * ```
  */
-export type Select<Schema, Selection extends FieldSelection | null | undefined> = Selection extends null | undefined
-  ? never
-  : Schema extends (infer T)[]
-  ? Select<T, Selection>[]
-  : Schema extends null
-  ? Select<Exclude<Schema, null>, Selection> | null
-  : FilterNever<{
-      [Key in keyof Selection & keyof Schema]: Selection[Key] extends true
-        ? Schema[Key]
-        : Selection[Key] extends FieldSelection
-        ? Select<Schema[Key], Selection[Key]>
-        : never;
-    }>;
+export type Select<Schema, Selection extends FieldSelection | null | undefined> = DeepFilterNever<InnerSelect<Schema, Selection>>;
