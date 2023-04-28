@@ -1,5 +1,5 @@
 import { AssertTrue, IsExact } from "conditional-type-checks";
-import { Select } from "../src/types";
+import { DeepFilterNever, Select } from "../src/types";
 import { TestSchema } from "./TestSchema";
 
 type _SelectingProperties = AssertTrue<IsExact<Select<TestSchema, { num: true }>, { num: number }>>;
@@ -13,6 +13,36 @@ type _SelectingNestedProperties = AssertTrue<
     Select<TestSchema, { num: true; obj: { test: true; bool: false; deep: { property: true } } }>,
     { num: number; obj: { test: "test"; deep: { property: string } } }
   >
+>;
+
+type _SelectingCircularProperties = AssertTrue<
+  IsExact<
+    Select<
+      TestSchema,
+      {
+        num: true;
+        nested: {
+          bool: true;
+          nested: {
+            bool: true;
+          };
+        };
+      }
+    >,
+    {
+      num: number;
+      nested: {
+        bool: boolean;
+        nested: {
+          bool: boolean;
+        };
+      };
+    }
+  >
+>;
+
+type _FilteredNever = AssertTrue<
+  IsExact<DeepFilterNever<{ a: { b: never }; c: string; d: { e: boolean; f: never } }>, { c: string; d: { e: boolean } }>
 >;
 
 type _optionalNestedPropertySelection = Select<TestSchema, { optionalObj: { test: true } }>;

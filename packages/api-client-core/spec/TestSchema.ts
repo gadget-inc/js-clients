@@ -1,6 +1,13 @@
+export type NestedThing = {
+  bool: boolean;
+  string: string;
+  nested: NestedThing;
+};
+
 export type TestSchema = {
   num: number;
   str: string;
+  nested: NestedThing;
   obj: {
     test: "test";
     bool: boolean;
@@ -55,6 +62,7 @@ export type AvailableTestSchemaSelection = {
   optionalList?: {
     title: boolean | null | undefined;
   };
+  nested?: NestedThing;
   someConnection?: {
     edges?: {
       node?: {

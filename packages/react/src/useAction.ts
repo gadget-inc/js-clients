@@ -10,7 +10,7 @@ import {
   Select,
 } from "@gadgetinc/api-client-core";
 import { useCallback, useContext, useMemo } from "react";
-import { UseMutationState } from "urql";
+import { AnyVariables, UseMutationState } from "urql";
 import { GadgetContext } from "./GadgetProvider";
 import { OptionsType } from "./OptionsType";
 import { useGadgetMutation } from "./useGadgetMutation";
@@ -101,7 +101,7 @@ export const useAction = <
 };
 
 /** Processes urql's result object into the fancier Gadget result object */
-const processResult = <Data, Variables>(
+const processResult = <Data, Variables extends AnyVariables>(
   result: UseMutationState<Data, Variables>,
   action: ActionFunction<any, any, any, any, any>
 ): ActionHookState<any, any> => {

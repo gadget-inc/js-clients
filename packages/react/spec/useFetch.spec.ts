@@ -1,10 +1,10 @@
 import { $gadgetConnection } from "@gadgetinc/api-client-core";
 import { act, renderHook } from "@testing-library/react";
-import { assert, IsExact } from "conditional-type-checks";
+import { IsExact, assert } from "conditional-type-checks";
 import { Response } from "cross-fetch";
 import { useFetch } from "../src/useFetch";
 import { ErrorWrapper } from "../src/utils";
-import { mockClient, TestWrapper } from "./testWrapper";
+import { TestWrapper, mockClient } from "./testWrapper";
 
 describe("useFetch", () => {
   // these functions are typechecked but never run to avoid actually making API calls
