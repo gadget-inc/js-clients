@@ -3,11 +3,11 @@ import { multipartFetchExchange } from "@urql/exchange-multipart-fetch";
 import fetchPolyfill from "cross-fetch";
 import { ExecutionResult } from "graphql";
 import {
-  Client as SubscriptionClient,
-  ClientOptions as SubscriptionClientOptions,
   CloseCode,
   createClient as createSubscriptionClient,
   Sink,
+  Client as SubscriptionClient,
+  ClientOptions as SubscriptionClientOptions,
 } from "graphql-ws";
 import WebSocket from "isomorphic-ws";
 import { getCurrentSpan } from ".";

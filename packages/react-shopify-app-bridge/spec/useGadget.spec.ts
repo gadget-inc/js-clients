@@ -1,5 +1,5 @@
 import { AppBridgeState, ClientApplication } from "@shopify/app-bridge";
-import { assert, IsExact } from "conditional-type-checks";
+import { IsExact, assert } from "conditional-type-checks";
 import { AppType, useGadget } from "../src";
 
 // these functions are typechecked but never run to avoid actually making API calls
