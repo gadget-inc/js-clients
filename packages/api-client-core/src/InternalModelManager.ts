@@ -143,6 +143,28 @@ export const internalCreateMutation = (apiIdentifier: string) => {
   `;
 };
 
+export const internalBulkCreateMutation = (apiIdentifier: string) => {
+  const capitalizedApiIdentifier = capitalize(apiIdentifier);
+  return `
+    ${internalErrorsDetails}
+
+    mutation InternalBulkCreate${capitalizedApiIdentifier}($records: [Internal${capitalizedApiIdentifier}Input)] {
+      ${internalHydrationPlan(apiIdentifier)}
+      internal {
+        bulkCreate${capitalizedApiIdentifier}(${apiIdentifier + "s"}: $records) {
+          success
+          errors {
+            ... InternalErrorsDetails
+          }
+          ${apiIdentifier + "s"} {
+            ${apiIdentifier}
+          }
+        }
+      }
+    }
+  `;
+};
+
 export const internalUpdateMutation = (apiIdentifier: string) => {
   const capitalizedApiIdentifier = capitalize(apiIdentifier);
   return `
@@ -264,11 +286,23 @@ export class InternalModelManager {
     return await this.transaction(async (transaction) => {
       const response = await transaction.client
         .mutation(internalCreateMutation(this.apiIdentifier), {
-          record: record[this.apiIdentifier],
+          record: record[this.apiIdentifier], // record: record[modelA] = { name: 'jenny' }
         })
         .toPromise();
       const result = assertMutationSuccess(response, ["internal", `create${this.capitalizedApiIdentifier}`]);
       return hydrateRecord(response, result[this.apiIdentifier]);
+    });
+  }
+
+  async bulkCreate(records: RecordData[]): Promise<GadgetRecordList<GadgetRecord<RecordShape>>> {
+    return await this.transaction(async (transaction) => {
+      const response = await transaction.client
+        .mutation(internalBulkCreateMutation(this.apiIdentifier + "s"), {
+          records, // records: [ record[modelA], record[modelA] ] // [ { name: "bob"}, {name: "joe"}, ...]
+        })
+        .toPromise();
+      const result = assertMutationSuccess(response, ["internal", `bulkCreate${this.capitalizedApiIdentifier}`]);
+      return await hydrateRecord(response, result[this.apiIdentifier + "s"]);
     });
   }
 
