@@ -11,12 +11,28 @@ export type AnyState = string | { [key: string]: AnyState };
 /**
  * Error caused by a violated internal expectation that isn't the users fault, but the Gadget platform's. Often the best way to handle is to just retry.
  **/
-export class GadgetInternalError extends Error {}
+export class GadgetInternalError extends Error {
+  code = "GGT_INTERNAL_ERROR";
+  name = "InternalError";
+
+  /** @private */
+  statusCode = 500;
+  /** @private */
+  causedByClient = false;
+}
 
 /**
  * An error representing misuse or a violation of the assumptions of the Gadget Client.
  */
-export class GadgetClientError extends Error {}
+export class GadgetClientError extends Error {
+  code = "GGT_CLIENT_ERROR";
+  name = "ClientError";
+
+  /** @private */
+  statusCode = 500;
+  /** @private */
+  causedByClient = true;
+}
 
 /**
  * A Gadget API error with an `code` and `message` describing the error. Most often these errors are caused by invalid input data or by misconfigured Gadget models. Consult the documentation for the specific `code` to learn more.
@@ -134,6 +150,12 @@ export const GadgetValidationError = InvalidRecordError;
  */
 export class GadgetNonUniqueDataError extends Error {
   code = "GGT_NON_UNIQUE_DATA";
+  name = "NonUniqueDataError";
+
+  /** @private */
+  statusCode = 417;
+  /** @private */
+  causedByClient = false;
 }
 
 /**
@@ -141,6 +163,12 @@ export class GadgetNonUniqueDataError extends Error {
  */
 export class GadgetNotFoundError extends Error {
   code = "GGT_RECORD_NOT_FOUND";
+  name = "RecordNotFoundError";
+
+  /** @private */
+  statusCode = 404;
+  /** @private */
+  causedByClient = false;
 }
 
 /** All the errors a Gadget operation can throw */
@@ -206,19 +234,17 @@ export const getNonUniqueDataError = (modelApiIdentifier: string, fieldName: str
     `More than one record found for ${modelApiIdentifier}.${fieldName} = ${fieldValue}. Please confirm your unique validation is not reporting an error.`
   );
 
-export const getNonNullableError = (response: Result & { fetching: boolean }, dataPath: string[], throwOnEmptyData = false) => {
+export const getNonNullableError = (response: Result & { fetching: boolean }, dataPath: string[]) => {
   if (response.fetching) {
     return;
   }
   const result = get(response.data, dataPath);
-  const edges = get(result, ["edges"]);
-  const dataArray = edges ?? result;
   if (result === undefined) {
     return new GadgetInternalError(
       `Internal Error: Gadget API didn't return expected data. Nothing found in response at ${dataPath.join(".")}`
     );
-  } else if (result === null || (throwOnEmptyData && Array.isArray(dataArray) && dataArray.length === 0)) {
-    return new GadgetInternalError(`Internal Error: Gadget API returned no data at ${dataPath.join(".")}`);
+  } else if (result === null) {
+    return new GadgetNotFoundError(`Record Not Found Error: Gadget API returned no data at ${dataPath.join(".")}`);
   }
 };
 
@@ -238,7 +264,7 @@ export const assertOperationSuccess = (response: OperationResult<any>, dataPath:
       `Internal Error: Gadget API didn't return expected data. Nothing found in response at ${dataPath.join(".")}`
     );
   } else if (result === null || (throwOnEmptyData && Array.isArray(dataArray) && dataArray.length === 0)) {
-    throw new GadgetInternalError(`Internal Error: Gadget API returned no data at ${dataPath.join(".")}`);
+    throw new GadgetNotFoundError(`Record Not Found Error: Gadget API returned no data at ${dataPath.join(".")}`);
   }
 
   return result;
