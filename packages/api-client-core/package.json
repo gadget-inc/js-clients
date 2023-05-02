@@ -1,6 +1,6 @@
 {
   "name": "@gadgetinc/api-client-core",
-  "version": "0.13.6",
+  "version": "0.14.2",
   "source": "src/index.ts",
   "main": "dist/src/index.js",
   "types": "dist/src/index.d.ts",
@@ -26,14 +26,12 @@
     "gql-query-builder": "^3.7.2",
     "graphql": "^16.5.0",
     "graphql-ws": "^5.5.5",
-    "inflected": "^2.1.0",
     "isomorphic-ws": "^4.0.1",
     "lodash.clonedeep": "^4.5.0",
     "lodash.isequal": "^4.5.0",
     "ws": "^8.11.0"
   },
   "devDependencies": {
-    "@types/inflected": "^1.1.29",
     "@types/lodash.clonedeep": "^4.5.6",
     "@types/lodash.isequal": "^4.5.5",
     "@types/node": "^14.18.26",

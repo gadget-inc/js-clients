@@ -1,5 +1,4 @@
 import { query } from "gql-query-builder";
-import { pluralize } from "inflected";
 import { GadgetConnection } from "./GadgetConnection";
 import { GadgetRecord, RecordShape } from "./GadgetRecord";
 import { GadgetRecordList } from "./GadgetRecordList";
@@ -13,6 +12,7 @@ import {
   capitalize,
   hydrateConnection,
   hydrateRecord,
+  hydrateRecordArray,
 } from "./support";
 
 const internalErrorsDetails = `
@@ -144,22 +144,20 @@ export const internalCreateMutation = (apiIdentifier: string) => {
   `;
 };
 
-export const internalBulkCreateMutation = (apiIdentifier: string) => {
+export const internalBulkCreateMutation = (apiIdentifier: string, pluralApiIdentifier: string) => {
   const capitalizedApiIdentifier = capitalize(apiIdentifier);
   return `
     ${internalErrorsDetails}
 
-    mutation InternalBulkCreate${capitalizedApiIdentifier}($records: [Internal${capitalizedApiIdentifier}Input]) {
+    mutation InternalBulkCreate${capitalizedApiIdentifier}(${pluralApiIdentifier}: [Internal${capitalizedApiIdentifier}Input]) {
       ${internalHydrationPlan(apiIdentifier)}
       internal {
-        bulkCreate${capitalizedApiIdentifier}(${pluralize(apiIdentifier)}: $records) {
+        bulkCreate${capitalizedApiIdentifier}(${pluralApiIdentifier}: $records) {
           success
           errors {
             ... InternalErrorsDetails
           }
-          ${pluralize(apiIdentifier)} {
-            ${apiIdentifier}
-          }
+          ${pluralApiIdentifier}
         }
       }
     }
@@ -235,7 +233,7 @@ export type RecordData = Record<string, any>;
 export class InternalModelManager {
   private readonly capitalizedApiIdentifier: string;
 
-  constructor(private readonly apiIdentifier: string, readonly connection: GadgetConnection) {
+  constructor(private readonly apiIdentifier: string, readonly pluralApiIdentifier: string, readonly connection: GadgetConnection) {
     this.capitalizedApiIdentifier = camelize(apiIdentifier);
   }
 
@@ -295,15 +293,15 @@ export class InternalModelManager {
     });
   }
 
-  async bulkCreate(records: RecordData[]): Promise<GadgetRecordList<GadgetRecord<RecordShape>>> {
+  async bulkCreate(records: RecordData[]): Promise<GadgetRecord<RecordShape>[]> {
     return await this.transaction(async (transaction) => {
       const response = await transaction.client
-        .mutation(internalBulkCreateMutation(this.apiIdentifier), {
+        .mutation(internalBulkCreateMutation(this.apiIdentifier, this.pluralApiIdentifier), {
           records,
         })
         .toPromise();
       const result = assertMutationSuccess(response, ["internal", `bulkCreate${this.capitalizedApiIdentifier}`]);
-      return await hydrateRecord(response, result[pluralize(this.apiIdentifier)]);
+      return hydrateRecordArray(response, result[this.pluralApiIdentifier]);
     });
   }
 
