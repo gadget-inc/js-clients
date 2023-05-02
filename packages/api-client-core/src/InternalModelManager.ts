@@ -1,4 +1,5 @@
 import { query } from "gql-query-builder";
+import { pluralize } from "inflected";
 import { GadgetConnection } from "./GadgetConnection";
 import { GadgetRecord, RecordShape } from "./GadgetRecord";
 import { GadgetRecordList } from "./GadgetRecordList";
@@ -148,15 +149,15 @@ export const internalBulkCreateMutation = (apiIdentifier: string) => {
   return `
     ${internalErrorsDetails}
 
-    mutation InternalBulkCreate${capitalizedApiIdentifier}($records: [Internal${capitalizedApiIdentifier}Input)] {
+    mutation InternalBulkCreate${capitalizedApiIdentifier}($records: [Internal${capitalizedApiIdentifier}Input]) {
       ${internalHydrationPlan(apiIdentifier)}
       internal {
-        bulkCreate${capitalizedApiIdentifier}(${apiIdentifier + "s"}: $records) {
+        bulkCreate${capitalizedApiIdentifier}(${pluralize(apiIdentifier)}: $records) {
           success
           errors {
             ... InternalErrorsDetails
           }
-          ${apiIdentifier + "s"} {
+          ${pluralize(apiIdentifier)} {
             ${apiIdentifier}
           }
         }
@@ -286,7 +287,7 @@ export class InternalModelManager {
     return await this.transaction(async (transaction) => {
       const response = await transaction.client
         .mutation(internalCreateMutation(this.apiIdentifier), {
-          record: record[this.apiIdentifier], // record: record[modelA] = { name: 'jenny' }
+          record: record[this.apiIdentifier],
         })
         .toPromise();
       const result = assertMutationSuccess(response, ["internal", `create${this.capitalizedApiIdentifier}`]);
@@ -297,12 +298,12 @@ export class InternalModelManager {
   async bulkCreate(records: RecordData[]): Promise<GadgetRecordList<GadgetRecord<RecordShape>>> {
     return await this.transaction(async (transaction) => {
       const response = await transaction.client
-        .mutation(internalBulkCreateMutation(this.apiIdentifier + "s"), {
-          records, // records: [ record[modelA], record[modelA] ] // [ { name: "bob"}, {name: "joe"}, ...]
+        .mutation(internalBulkCreateMutation(this.apiIdentifier), {
+          records,
         })
         .toPromise();
       const result = assertMutationSuccess(response, ["internal", `bulkCreate${this.capitalizedApiIdentifier}`]);
-      return await hydrateRecord(response, result[this.apiIdentifier + "s"]);
+      return await hydrateRecord(response, result[pluralize(this.apiIdentifier)]);
     });
   }
 
