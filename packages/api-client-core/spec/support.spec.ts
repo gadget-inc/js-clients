@@ -177,7 +177,7 @@ describe("support utilities", () => {
     });
     test("returns an error if data is null", () => {
       const error = getNonNullableError({ fetching: false, data: { foo: null } }, ["foo"]);
-      expect(error?.message).toEqual("Internal Error: Gadget API returned no data at foo");
+      expect(error?.message).toEqual("Record Not Found Error: Gadget API returned no data at foo");
     });
     test("returns void if fetch is in progress", () => {
       const error = getNonNullableError({ fetching: true, data: null }, [""]);
