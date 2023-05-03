@@ -666,7 +666,7 @@
     "@gadgetinc/api-client-core" "0.13.3"
 
 "@gadgetinc/api-client-core@0.11.0":
-  version "0.13.4"
+  version "0.13.5"
   dependencies:
     "@opentelemetry/api" "^1.4.0"
     "@urql/core" "^3.0.1"
@@ -681,7 +681,7 @@
     ws "^8.11.0"
 
 "@gadgetinc/api-client-core@0.13.3":
-  version "0.13.4"
+  version "0.13.5"
   dependencies:
     "@opentelemetry/api" "^1.4.0"
     "@urql/core" "^3.0.1"
@@ -696,7 +696,7 @@
     ws "^8.11.0"
 
 "@gadgetinc/api-client-core@0.9.0":
-  version "0.13.4"
+  version "0.13.5"
   dependencies:
     "@opentelemetry/api" "^1.4.0"
     "@urql/core" "^3.0.1"
@@ -729,7 +729,14 @@
     eslint-plugin-react-hooks "^4.2.0"
     eslint-plugin-workspaces "^0.6.2"
 
-"@gadgetinc/prettier-config@*", "@gadgetinc/prettier-config@>=0":
+"@gadgetinc/prettier-config@*":
+  version "0.4.0"
+  resolved "https://registry.yarnpkg.com/@gadgetinc/prettier-config/-/prettier-config-0.4.0.tgz#9fb95395b238b568c9749e61b129ea7e733ce0b5"
+  integrity sha512-a5jSbHlFjg3WojaDONSGPPvwJdToqpSAixHpLOJ55xMqnfOTRxY2Qr41lPDmLryfch0vD8v/Fnue3/pkwZKVdQ==
+  dependencies:
+    prettier-plugin-organize-imports "^3.2.1"
+
+"@gadgetinc/prettier-config@>=0":
   version "0.3.0"
   resolved "https://registry.yarnpkg.com/@gadgetinc/prettier-config/-/prettier-config-0.3.0.tgz#8ffc03e368ee028fc624d77c9453a3f0838bd4bf"
   integrity sha512-s58zjpPLymKIkcpoxzFdtIW6+kGYkB9HOIucS9wbApmfXS/JOHlXpgqv6cje0rOOvaXTI7SmecaXv5t8I28a8w==
@@ -4787,10 +4794,15 @@ prettier-plugin-organize-imports@^1.0.4:
   resolved "https://registry.yarnpkg.com/prettier-plugin-organize-imports/-/prettier-plugin-organize-imports-1.1.1.tgz#7f1ac1a13d4d1752dc16881894dde1c10ccbf3c0"
   integrity sha512-rFA1lnek1FYkMGthm4xBKME41qUKItTovuo24bCGZu/Vu1n3gW71UPLAkIdwewwkZCe29gRVweSOPXvAdckFuw==
 
+prettier-plugin-organize-imports@^3.2.1:
+  version "3.2.2"
+  resolved "https://registry.yarnpkg.com/prettier-plugin-organize-imports/-/prettier-plugin-organize-imports-3.2.2.tgz#91993365e017daa5d0d28d8183179834224d8dd1"
+  integrity sha512-e97lE6odGSiHonHJMTYC0q0iLXQyw0u5z/PJpvP/3vRy6/Zi9kLBwFAbEGjDzIowpjQv8b+J04PDamoUSQbzGA==
+
 prettier@^2.7.1:
-  version "2.7.1"
-  resolved "https://registry.yarnpkg.com/prettier/-/prettier-2.7.1.tgz#e235806850d057f97bb08368a4f7d899f7760c64"
-  integrity sha512-ujppO+MkdPqoVINuDFDRLClm7D78qbDt0/NR+wp5FqEZOoTNAjPHWj17QRhu7geIHJfcNhRk1XVQmF8Bp3ye+g==
+  version "2.8.8"
+  resolved "https://registry.yarnpkg.com/prettier/-/prettier-2.8.8.tgz#e8c5d7e98a4305ffe3de2e1fc4aca1a71c28b1da"
+  integrity sha512-tdN8qQGvNjw4CHbY+XXk0JgCXn9QiF21a55rBe5LJAU+kDyC4WQn4+awm2Xfk2lQMk5fKup9XgzTZtGkjBdP9Q==
 
 pretty-format@^27.0.2:
   version "27.5.1"
@@ -5534,15 +5546,10 @@ type-fest@^3.3.0:
   resolved "https://registry.yarnpkg.com/type-fest/-/type-fest-3.3.0.tgz#3378c9664eecfd1eb4f0522b13cb0630bc1ec044"
   integrity sha512-gezeeOIZyQLGW5uuCeEnXF1aXmtt2afKspXz3YqoOcZ3l/YMJq1pujvgT+cz/Nw1O/7q/kSav5fihJHsC/AOUg==
 
-typescript@4.7.4:
-  version "4.7.4"
-  resolved "https://registry.yarnpkg.com/typescript/-/typescript-4.7.4.tgz#1a88596d1cf47d59507a1bcdfb5b9dfe4d488235"
-  integrity sha512-C0WQT0gezHuw6AdY1M2jxUO83Rjf0HP7Sk1DtXj6j1EwkQNZrHAg2XPWlq62oqEhYvONq5pkC2Y9oPljWToLmQ==
-
-typescript@^4.9.3:
-  version "4.9.5"
-  resolved "https://registry.yarnpkg.com/typescript/-/typescript-4.9.5.tgz#095979f9bcc0d09da324d58d03ce8f8374cbe65a"
-  integrity sha512-1FXk9E2Hm+QzZQ7z+McJiHL4NW1F2EzMu9Nq9i3zAaGqibafqYwCVU6WyWAuyQRRzOlxou8xZSyXLEN8oKj24g==
+typescript@5.0.4:
+  version "5.0.4"
+  resolved "https://registry.yarnpkg.com/typescript/-/typescript-5.0.4.tgz#b217fd20119bd61a94d4011274e0ab369058da3b"
+  integrity sha512-cW9T5W9xY37cc+jfEnaUvX91foxtHkza3Nw3wkoF4sSlKn0MONdkdEndig/qPBWXNkmplh3NzayQzCiHM4/hqw==
 
 unbox-primitive@^1.0.2:
   version "1.0.2"

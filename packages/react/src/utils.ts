@@ -6,7 +6,7 @@ import { AnyVariables, Operation, OperationContext, UseQueryState } from "urql";
 /**
  * The inner result object returned from a query result
  **/
-export interface ReadHookState<Data = any, Variables = Record<string, any>> {
+export interface ReadHookState<Data = any, Variables extends AnyVariables = Record<string, any>> {
   fetching: boolean;
   stale: boolean;
   data?: Data;
@@ -27,7 +27,7 @@ export declare type ReadHookResult<Data = any, Variables extends AnyVariables = 
 /**
  * The inner result object returned from a mutation result
  */
-export interface ActionHookState<Data = any, Variables = Record<string, any>> {
+export interface ActionHookState<Data = any, Variables extends AnyVariables = Record<string, any>> {
   fetching: boolean;
   stale: boolean;
   data?: Data;

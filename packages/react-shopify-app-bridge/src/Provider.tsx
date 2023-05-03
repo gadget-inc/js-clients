@@ -1,6 +1,6 @@
 import { AnyClient } from "@gadgetinc/api-client-core";
 import { Provider as GadgetUrqlProvider, useQuery } from "@gadgetinc/react";
-import { History, LocationOrHref, Provider as AppBridgeProvider } from "@shopify/app-bridge-react";
+import { Provider as AppBridgeProvider, History, LocationOrHref } from "@shopify/app-bridge-react";
 import { AppBridgeContext } from "@shopify/app-bridge-react/context";
 import { getSessionToken } from "@shopify/app-bridge-utils";
 import { Redirect } from "@shopify/app-bridge/actions";
@@ -22,6 +22,8 @@ type GadgetProviderProps = {
   originalQueryParams?: URLSearchParams;
   api: AnyClient;
   isRootFrameRequest: boolean;
+  isInstallRequest: boolean;
+  type: AppType;
 };
 
 const GetCurrentSessionQuery = `
@@ -40,7 +42,17 @@ const GetCurrentSessionQuery = `
 
 // inner component that exists in order to ask for the app bridge
 const InnerGadgetProvider = memo(
-  ({ children, forceRedirect, isEmbedded, gadgetAppUrl, originalQueryParams, api, isRootFrameRequest }: GadgetProviderProps) => {
+  ({
+    children,
+    forceRedirect,
+    isEmbedded,
+    gadgetAppUrl,
+    originalQueryParams,
+    api,
+    isRootFrameRequest,
+    type,
+    isInstallRequest,
+  }: GadgetProviderProps) => {
     const appBridge = useContext(AppBridgeContext);
 
     const [context, setContext] = useState<GadgetAuthContextValue>({
@@ -78,6 +90,8 @@ const InnerGadgetProvider = memo(
     // always run one session fetch to the gadget backend on boot to discover if this app is installed
     const [{ data: currentSessionData, fetching: sessionFetching, error }] = useQuery({
       query: GetCurrentSessionQuery,
+      // for now don't fetch a session's shop in standalone mode since it leverages session tokens which aren't available if standalone
+      pause: type == AppType.Standalone,
     });
 
     if (currentSessionData) {
@@ -91,6 +105,8 @@ const InnerGadgetProvider = memo(
           isAuthenticated = !currentSessionData.shopifyConnection?.requiresReauthentication;
         }
       }
+    } else if (type == AppType.Standalone && isInstallRequest) {
+      runningShopifyAuth = true;
     }
 
     // redirect to Gadget to initiate the oauth process if we need to.
@@ -151,6 +167,7 @@ export const Provider = ({
   const isReady = !!location;
   const { query } = location ?? {};
   const host = query?.get("host") ?? undefined;
+  const coalescedType = type ?? AppType.Embedded;
 
   // We store the original query params as that is what shopify uses to generate the HMAC in embedded apps
   // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -163,10 +180,11 @@ export const Provider = ({
   // On a browser that this policy enabled, we'll just re-run the auth process after redirecting to the embedded app.
   const isInstallRequest = query?.has("hmac") && query?.has("shop");
   const isEmbedded = typeof window !== "undefined" ? window.top !== window.self : false;
-  const inDestinationContext = isEmbedded == ((type ?? AppType.Embedded) == AppType.Embedded);
+  const inDestinationContext =
+    isEmbedded == (coalescedType == AppType.Embedded) && (coalescedType == AppType.Standalone ? !isInstallRequest : true);
 
   // We need to inform developers if the component is being rendered in a non embedded context when it should be AND we're not in an interstitial installation state. This is determined for now by the absence of both hmac and shop. This will generally occur when someone visits the app url while not in the Shopify admin.
-  const isRootFrameRequest = !query?.has("hmac") && !query?.has("shop") && (type ?? AppType.Embedded) == AppType.Embedded;
+  const isRootFrameRequest = !query?.has("hmac") && !query?.has("shop") && coalescedType == AppType.Embedded;
 
   const forceRedirect = isReady && !isUndefined(host) && !inDestinationContext;
 
@@ -188,6 +206,8 @@ export const Provider = ({
         api={api}
         originalQueryParams={originalQueryParams}
         isRootFrameRequest={isRootFrameRequest}
+        type={coalescedType}
+        isInstallRequest={!!isInstallRequest}
       >
         {children}
       </InnerGadgetProvider>
@@ -195,7 +215,7 @@ export const Provider = ({
   );
 
   // app bridge provider seems to prevent urql from sending graphql requests when it cannot communicate using postMessage when not embedded so we must skip using the app bridge provider on the very first redirect from shopify
-  if (host && (!isInstallRequest || inDestinationContext)) {
+  if (host && coalescedType != AppType.Standalone && (!isInstallRequest || inDestinationContext)) {
     app = (
       <AppBridgeProvider
         config={{
