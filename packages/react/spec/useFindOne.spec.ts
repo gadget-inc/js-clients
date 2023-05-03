@@ -77,7 +77,7 @@ describe("useFindOne", () => {
     expect(result.current[0].fetching).toBe(false);
     const error = result.current[0].error;
     expect(error).toBeTruthy();
-    expect(error!.message).toMatchInlineSnapshot(`"[GraphQL] Internal Error: Gadget API returned no data at user"`);
+    expect(error!.message).toMatchInlineSnapshot(`"[GraphQL] Record Not Found Error: Gadget API returned no data at user"`);
 
     // ensure the error is the same after rerendering
     rerender();
