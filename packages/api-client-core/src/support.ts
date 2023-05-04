@@ -1,7 +1,10 @@
-import { context, SpanOptions, SpanStatusCode, trace } from "@opentelemetry/api";
-import { CombinedError, OperationContext, OperationResult, RequestPolicy } from "@urql/core";
+import type { SpanOptions } from "@opentelemetry/api";
+import { context, SpanStatusCode, trace } from "@opentelemetry/api";
+import type { OperationContext, OperationResult, RequestPolicy } from "@urql/core";
+import { CombinedError } from "@urql/core";
 import { DataHydrator } from "./DataHydrator";
-import { GadgetRecord, RecordShape } from "./GadgetRecord";
+import type { RecordShape } from "./GadgetRecord";
+import { GadgetRecord } from "./GadgetRecord";
 
 /**
  * Generic type of the state of any record of a Gadget model

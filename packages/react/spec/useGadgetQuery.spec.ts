@@ -1,4 +1,3 @@
-/* eslint-disable jest/no-try-expect */
 import { renderHook } from "@testing-library/react";
 import { useGadgetQuery } from "../src/useGadgetQuery";
 import { noProviderErrorMessage } from "../src/utils";

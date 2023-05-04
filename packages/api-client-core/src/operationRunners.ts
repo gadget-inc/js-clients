@@ -1,10 +1,12 @@
-import { actionOperation, findManyOperation, findOneByFieldOperation, globalActionOperation, VariableOptions } from ".";
-import { FieldSelection } from "./FieldSelection";
-import { GadgetConnection } from "./GadgetConnection";
-import { GadgetRecord, RecordShape } from "./GadgetRecord";
+import type { VariableOptions } from ".";
+import { actionOperation, findManyOperation, findOneByFieldOperation, globalActionOperation } from ".";
+import type { FieldSelection } from "./FieldSelection";
+import type { GadgetConnection } from "./GadgetConnection";
+import type { GadgetRecord, RecordShape } from "./GadgetRecord";
 import { GadgetRecordList } from "./GadgetRecordList";
-import { AnyModelManager } from "./ModelManager";
-import { findOneOperation, PaginationOptions, SelectionOptions } from "./operationBuilders";
+import type { AnyModelManager } from "./ModelManager";
+import type { PaginationOptions, SelectionOptions } from "./operationBuilders";
+import { findOneOperation } from "./operationBuilders";
 import {
   assertMutationSuccess,
   assertNullableOperationSuccess,

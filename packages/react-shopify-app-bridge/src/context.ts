@@ -1,4 +1,4 @@
-import { AppBridgeState, ClientApplication } from "@shopify/app-bridge";
+import type { AppBridgeState, ClientApplication } from "@shopify/app-bridge";
 import { createContext, useContext } from "react";
 import type { AppType } from "./Provider";
 

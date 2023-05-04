@@ -1,21 +1,12 @@
-import {
-  AnyModelManager,
-  DefaultSelection,
-  FindManyFunction,
-  findManyOperation,
-  GadgetRecordList,
-  get,
-  getQueryArgs,
-  hydrateConnection,
-  LimitToKnownKeys,
-  Select,
-} from "@gadgetinc/api-client-core";
+import type { AnyModelManager, DefaultSelection, FindManyFunction, LimitToKnownKeys, Select } from "@gadgetinc/api-client-core";
+import { GadgetRecordList, findManyOperation, get, getQueryArgs, hydrateConnection } from "@gadgetinc/api-client-core";
 import { useMemo } from "react";
-import { UseQueryArgs } from "urql";
-import { OptionsType } from "./OptionsType";
+import type { UseQueryArgs } from "urql";
+import type { OptionsType } from "./OptionsType";
 import { useGadgetQuery } from "./useGadgetQuery";
 import { useStructuralMemo } from "./useStructuralMemo";
-import { ErrorWrapper, ReadHookResult } from "./utils";
+import type { ReadHookResult } from "./utils";
+import { ErrorWrapper } from "./utils";
 
 /**
  * React hook to fetch a page of Gadget records from the backend, optionally sorted, filtered, searched, and selected from. Returns a standard hook result set with a tuple of the result object with `data`, `fetching`, and `error` keys, and a `refetch` function. `data` will be a `GadgetRecordList` object holding the list of returned records and pagination info.
