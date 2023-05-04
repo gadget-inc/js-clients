@@ -1,4 +1,3 @@
-/* eslint-disable jest/no-try-expect */
 import { CombinedError } from "@urql/core";
 import { GraphQLError } from "graphql";
 import {
@@ -49,7 +48,6 @@ describe("support utilities", () => {
           ["foo", "bar"]
         );
       } catch (error: any) {
-        // eslint-disable-next-line jest/no-try-expect
         expect(error).toBeInstanceOf(Error);
       }
     });

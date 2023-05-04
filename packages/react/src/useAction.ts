@@ -1,21 +1,13 @@
-import {
-  ActionFunction,
-  actionOperation,
-  capitalize,
-  DefaultSelection,
-  GadgetRecord,
-  get,
-  hydrateRecord,
-  LimitToKnownKeys,
-  Select,
-} from "@gadgetinc/api-client-core";
+import type { ActionFunction, DefaultSelection, GadgetRecord, LimitToKnownKeys, Select } from "@gadgetinc/api-client-core";
+import { actionOperation, capitalize, get, hydrateRecord } from "@gadgetinc/api-client-core";
 import { useCallback, useContext, useMemo } from "react";
-import { AnyVariables, UseMutationState } from "urql";
+import type { AnyVariables, UseMutationState } from "urql";
 import { GadgetContext } from "./GadgetProvider";
-import { OptionsType } from "./OptionsType";
+import type { OptionsType } from "./OptionsType";
 import { useGadgetMutation } from "./useGadgetMutation";
 import { useStructuralMemo } from "./useStructuralMemo";
-import { ActionHookResult, ActionHookState, ErrorWrapper, noProviderErrorMessage } from "./utils";
+import type { ActionHookResult, ActionHookState } from "./utils";
+import { ErrorWrapper, noProviderErrorMessage } from "./utils";
 
 /**
  * React hook to run a Gadget model action. `useAction` must be passed an action function from an instance of your generated API client library, like `api.user.create` or `api.blogPost.publish`. `useAction` doesn't actually run the action when invoked, but instead returns an action function as the second result for running the action in response to an event.

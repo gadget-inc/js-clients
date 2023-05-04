@@ -1,20 +1,12 @@
-import {
-  DefaultSelection,
-  FindFirstFunction,
-  findManyOperation,
-  GadgetRecord,
-  get,
-  getQueryArgs,
-  hydrateConnection,
-  LimitToKnownKeys,
-  Select,
-} from "@gadgetinc/api-client-core";
+import type { DefaultSelection, FindFirstFunction, GadgetRecord, LimitToKnownKeys, Select } from "@gadgetinc/api-client-core";
+import { findManyOperation, get, getQueryArgs, hydrateConnection } from "@gadgetinc/api-client-core";
 import { useMemo } from "react";
-import { UseQueryArgs } from "urql";
-import { OptionsType } from "./OptionsType";
+import type { UseQueryArgs } from "urql";
+import type { OptionsType } from "./OptionsType";
 import { useGadgetQuery } from "./useGadgetQuery";
 import { useStructuralMemo } from "./useStructuralMemo";
-import { ErrorWrapper, ReadHookResult } from "./utils";
+import type { ReadHookResult } from "./utils";
+import { ErrorWrapper } from "./utils";
 
 /**
  * React hook to fetch many Gadget records using the `maybeFindFirst` method of a given manager.

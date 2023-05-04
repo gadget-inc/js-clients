@@ -1,4 +1,5 @@
-import { Reducer, useCallback, useEffect, useReducer, useRef } from "react";
+import type { Reducer } from "react";
+import { useCallback, useEffect, useReducer, useRef } from "react";
 import { useConnection } from "./GadgetProvider";
 import { useStructuralMemo } from "./useStructuralMemo";
 import { ErrorWrapper } from "./utils";

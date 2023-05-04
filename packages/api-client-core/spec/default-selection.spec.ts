@@ -1,6 +1,6 @@
-import { AssertTrue, IsExact } from "conditional-type-checks";
-import { DefaultSelection } from "../src/types";
-import { AvailableTestSchemaSelection } from "./TestSchema";
+import type { AssertTrue, IsExact } from "conditional-type-checks";
+import type { DefaultSelection } from "../src/types";
+import type { AvailableTestSchemaSelection } from "./TestSchema";
 
 type _NullDefault = DefaultSelection<AvailableTestSchemaSelection, { select: null }, { num: true }>;
 type _TestDefaultsNullToTheDefault = AssertTrue<IsExact<_NullDefault, { num: true }>>;

@@ -1,7 +1,8 @@
 import { mutation, query } from "gql-query-builder";
-import IQueryBuilderOptions from "gql-query-builder/build/IQueryBuilderOptions";
-import VariableOptions from "gql-query-builder/build/VariableOptions";
-import { FieldSelection, fieldSelectionToGQLBuilderFields, filterTypeName, sortTypeName } from ".";
+import type IQueryBuilderOptions from "gql-query-builder/build/IQueryBuilderOptions";
+import type VariableOptions from "gql-query-builder/build/VariableOptions";
+import type { FieldSelection } from ".";
+import { fieldSelectionToGQLBuilderFields, filterTypeName, sortTypeName } from ".";
 
 export type { default as VariableOptions } from "gql-query-builder/build/VariableOptions";
 

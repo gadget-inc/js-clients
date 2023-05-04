@@ -1,20 +1,17 @@
-import { cacheExchange, Client, ClientOptions, dedupExchange, RequestPolicy, subscriptionExchange } from "@urql/core";
+import type { ClientOptions, RequestPolicy } from "@urql/core";
+import { Client, cacheExchange, dedupExchange, subscriptionExchange } from "@urql/core";
 import { multipartFetchExchange } from "@urql/exchange-multipart-fetch";
 import fetchPolyfill from "cross-fetch";
-import { ExecutionResult } from "graphql";
-import {
-  CloseCode,
-  createClient as createSubscriptionClient,
-  Sink,
-  Client as SubscriptionClient,
-  ClientOptions as SubscriptionClientOptions,
-} from "graphql-ws";
+import type { ExecutionResult } from "graphql";
+import type { Sink, Client as SubscriptionClient, ClientOptions as SubscriptionClientOptions } from "graphql-ws";
+import { CloseCode, createClient as createSubscriptionClient } from "graphql-ws";
 import WebSocket from "isomorphic-ws";
 import { getCurrentSpan } from ".";
 import type { AuthenticationModeOptions, BrowserSessionAuthenticationModeOptions } from "./ClientOptions";
 import { BrowserSessionStorageType } from "./ClientOptions";
 import { GadgetTransaction, TransactionRolledBack } from "./GadgetTransaction";
-import { BrowserStorage, InMemoryStorage } from "./InMemoryStorage";
+import type { BrowserStorage } from "./InMemoryStorage";
+import { InMemoryStorage } from "./InMemoryStorage";
 import {
   GadgetUnexpectedCloseError,
   GadgetWebsocketConnectionTimeoutError,
@@ -365,18 +362,6 @@ export class GadgetConnection {
   }
 
   private newSubscriptionClient(overrides: GadgetSubscriptionClientOptions) {
-    // In the browser, we can't set arbitrary headers on the websocket request, so we don't use the same auth mechanism that we use for normal HTTP requests. Instead we use graphql-ws' connectionParams to send the auth information in the connection setup message to the server.
-    const connectionParams: Record<string, any> = { environment: this.environment, auth: { type: this.authenticationMode } };
-    if (this.authenticationMode == AuthenticationMode.APIKey) {
-      connectionParams.auth.key = this.options.authenticationMode!.apiKey!;
-    } else if (this.authenticationMode == AuthenticationMode.InternalAuthToken) {
-      connectionParams.auth.token = this.options.authenticationMode!.internalAuthToken!;
-    } else if (this.authenticationMode == AuthenticationMode.BrowserSession) {
-      connectionParams.auth.sessionToken = this.sessionTokenStore!.getItem(this.sessionStorageKey);
-    } else if (this.authenticationMode == AuthenticationMode.Custom) {
-      this.options.authenticationMode?.custom?.processTransactionConnectionParams(connectionParams);
-    }
-
     let url = this.websocketsEndpoint;
     if (overrides?.urlParams) {
       const params = new URLSearchParams();
@@ -391,7 +376,20 @@ export class GadgetConnection {
     return createSubscriptionClient({
       url,
       webSocketImpl: this.websocketImplementation,
-      connectionParams,
+      connectionParams: async () => {
+        // In the browser, we can't set arbitrary headers on the websocket request, so we don't use the same auth mechanism that we use for normal HTTP requests. Instead we use graphql-ws' connectionParams to send the auth information in the connection setup message to the server.
+        const connectionParams: Record<string, any> = { environment: this.environment, auth: { type: this.authenticationMode } };
+        if (this.authenticationMode == AuthenticationMode.APIKey) {
+          connectionParams.auth.key = this.options.authenticationMode!.apiKey!;
+        } else if (this.authenticationMode == AuthenticationMode.InternalAuthToken) {
+          connectionParams.auth.token = this.options.authenticationMode!.internalAuthToken!;
+        } else if (this.authenticationMode == AuthenticationMode.BrowserSession) {
+          connectionParams.auth.sessionToken = this.sessionTokenStore!.getItem(this.sessionStorageKey);
+        } else if (this.authenticationMode == AuthenticationMode.Custom) {
+          await this.options.authenticationMode?.custom?.processTransactionConnectionParams(connectionParams);
+        }
+        return connectionParams;
+      },
       onNonLazyError: () => {
         // we catch this outside in the runner function
       },

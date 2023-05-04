@@ -1,7 +1,7 @@
 /* eslint-disable no-throw-literal */
 /* eslint-disable @typescript-eslint/require-await */
 import type { Jsonify } from "type-fest";
-import { GadgetRecord, RecordShape } from "./GadgetRecord";
+import type { GadgetRecord, RecordShape } from "./GadgetRecord";
 import type { InternalModelManager } from "./InternalModelManager";
 import type { AnyModelManager } from "./ModelManager";
 import type { PaginationOptions } from "./operationBuilders";

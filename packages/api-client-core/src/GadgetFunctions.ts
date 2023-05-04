@@ -1,4 +1,4 @@
-import { GadgetRecord, GadgetRecordList, LimitToKnownKeys, RecordShape, VariableOptions } from ".";
+import type { GadgetRecord, GadgetRecordList, LimitToKnownKeys, RecordShape, VariableOptions } from ".";
 
 export type AsyncRecord<T extends RecordShape> = Promise<GadgetRecord<T>>;
 export type AsyncNullableRecord<T extends RecordShape> = Promise<GadgetRecord<T> | null>;

@@ -18,7 +18,8 @@
         in
         rec {
           packages = rec {
-            nodejs = pkgs.nodejs-16_x;
+            nodejs = pkgs.nodejs-18_x;
+
             yarn = pkgs.yarn.override {
               inherit nodejs;
             };

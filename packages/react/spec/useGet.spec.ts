@@ -1,10 +1,11 @@
-import { GadgetRecord } from "@gadgetinc/api-client-core";
+import type { GadgetRecord } from "@gadgetinc/api-client-core";
 import { renderHook } from "@testing-library/react";
-import { assert, Has, IsExact } from "conditional-type-checks";
+import type { Has, IsExact } from "conditional-type-checks";
+import { assert } from "conditional-type-checks";
 import { useGet } from "../src/useGet";
-import { ErrorWrapper } from "../src/utils";
+import type { ErrorWrapper } from "../src/utils";
 import { relatedProductsApi } from "./apis";
-import { mockClient, TestWrapper } from "./testWrapper";
+import { TestWrapper, mockClient } from "./testWrapper";
 
 describe("useGet", () => {
   // these functions are typechecked but never run to avoid actually making API calls

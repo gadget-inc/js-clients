@@ -1,6 +1,6 @@
-import { GadgetConnection } from "./GadgetConnection";
-import { GadgetTransaction } from "./GadgetTransaction";
-import { InternalModelManager } from "./InternalModelManager";
+import type { GadgetConnection } from "./GadgetConnection";
+import type { GadgetTransaction } from "./GadgetTransaction";
+import type { InternalModelManager } from "./InternalModelManager";
 
 export interface AnyClient {
   connection: GadgetConnection;

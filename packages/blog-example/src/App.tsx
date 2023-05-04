@@ -17,7 +17,7 @@ function ExampleFetch() {
       <code>
         <pre>{JSON.stringify(history, null, 2)}</pre>
       </code>
-      <button onClick={() => send()}>Refetch</button>
+      <button onClick={() => void send()}>Refetch</button>
     </section>
   );
 }

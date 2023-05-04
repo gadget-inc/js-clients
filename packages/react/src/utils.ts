@@ -1,7 +1,8 @@
-import { GadgetError, gadgetErrorFor, getNonNullableError, InvalidFieldError, InvalidRecordError } from "@gadgetinc/api-client-core";
+import type { GadgetError, InvalidFieldError, InvalidRecordError } from "@gadgetinc/api-client-core";
+import { gadgetErrorFor, getNonNullableError } from "@gadgetinc/api-client-core";
 import type { CombinedError } from "@urql/core";
 import { GraphQLError } from "graphql";
-import { AnyVariables, Operation, OperationContext, UseQueryState } from "urql";
+import type { AnyVariables, Operation, OperationContext, UseQueryState } from "urql";
 
 /**
  * The inner result object returned from a query result

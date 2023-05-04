@@ -1,8 +1,9 @@
-import { GadgetRecordList } from "@gadgetinc/api-client-core";
+import type { GadgetRecordList } from "@gadgetinc/api-client-core";
 import { renderHook } from "@testing-library/react";
-import { assert, IsExact } from "conditional-type-checks";
+import type { IsExact } from "conditional-type-checks";
+import { assert } from "conditional-type-checks";
 import { useFindMany } from "../src/useFindMany";
-import { ErrorWrapper } from "../src/utils";
+import type { ErrorWrapper } from "../src/utils";
 import { relatedProductsApi } from "./apis";
 import { mockClient, TestWrapper } from "./testWrapper";
 
