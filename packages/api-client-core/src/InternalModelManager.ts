@@ -146,20 +146,20 @@ export const internalCreateMutation = (apiIdentifier: string) => {
 
 export const internalBulkCreateMutation = (apiIdentifier: string, pluralApiIdentifier: string) => {
   const capitalizedApiIdentifier = capitalize(apiIdentifier);
+  const capitalizedPluralApiIdentifier = capitalize(pluralApiIdentifier);
+
   return `
     ${internalErrorsDetails}
 
-    mutation InternalBulkCreate${capitalizedApiIdentifier}($records: [Internal${capitalizedApiIdentifier}Input]) {
+    mutation InternalBulkCreate${capitalizedPluralApiIdentifier}($records: [Internal${capitalizedApiIdentifier}Input]) {
       ${internalHydrationPlan(apiIdentifier)}
       internal {
-        bulkCreate${capitalizedApiIdentifier}(${pluralApiIdentifier}: $records) {
+        bulkCreate${capitalizedPluralApiIdentifier}(${pluralApiIdentifier}: $records) {
           success
           errors {
             ... InternalErrorsDetails
           }
-          ${pluralApiIdentifier} {
-            ${apiIdentifier}
-          }
+          ${pluralApiIdentifier}
         }
       }
     }
@@ -297,12 +297,13 @@ export class InternalModelManager {
 
   async bulkCreate(records: RecordData[]): Promise<GadgetRecord<RecordShape>[]> {
     return await this.transaction(async (transaction) => {
+      const capitalizedPluralApiIdentifier = capitalize(this.pluralApiIdentifier);
       const response = await transaction.client
         .mutation(internalBulkCreateMutation(this.apiIdentifier, this.pluralApiIdentifier), {
           records,
         })
         .toPromise();
-      const result = assertMutationSuccess(response, ["internal", `bulkCreate${this.capitalizedApiIdentifier}`]);
+      const result = assertMutationSuccess(response, ["internal", `bulkCreate${capitalizedPluralApiIdentifier}`]);
       return hydrateRecordArray(response, result[this.pluralApiIdentifier]);
     });
   }

@@ -150,7 +150,7 @@ describe("InternalModelManager", () => {
       const result = internalBulkCreateMutation("widget", "widgets");
 
       expect(result).toMatch(
-        /mutation InternalBulkCreateWidget\(\$records: \[InternalWidgetInput\]\) {\s*gadgetMeta {\s*hydrations\(modelName: "widget"\)\s*}\s*internal {\s*bulkCreateWidget\(widgets: \$records\) {\s*success\s*errors {\s*... InternalErrorsDetails\s*}\s*widgets {\s*widget\s*}\s*}\s*}\s*}/
+        /mutation InternalBulkCreateWidgets\(\$records: \[InternalWidgetInput\]\) {\s*gadgetMeta {\s*hydrations\(modelName: "widget"\)\s*}\s*internal {\s*bulkCreateWidgets\(widgets: \$records\) {\s*success\s*errors {\s*... InternalErrorsDetails\s*}\s*widgets\s*}\s*}\s*}/
       );
     });
 
