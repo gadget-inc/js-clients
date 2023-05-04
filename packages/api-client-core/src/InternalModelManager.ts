@@ -151,7 +151,7 @@ export const internalBulkCreateMutation = (apiIdentifier: string, pluralApiIdent
   return `
     ${internalErrorsDetails}
 
-    mutation InternalBulkCreate${capitalizedPluralApiIdentifier}($records: [Internal${capitalizedApiIdentifier}Input]) {
+    mutation InternalBulkCreate${capitalizedPluralApiIdentifier}($records: [Internal${capitalizedApiIdentifier}Input]!) {
       ${internalHydrationPlan(apiIdentifier)}
       internal {
         bulkCreate${capitalizedPluralApiIdentifier}(${pluralApiIdentifier}: $records) {
