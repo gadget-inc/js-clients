@@ -1,8 +1,8 @@
 import { query } from "gql-query-builder";
-import { GadgetConnection } from "./GadgetConnection";
-import { GadgetRecord, RecordShape } from "./GadgetRecord";
+import type { GadgetConnection } from "./GadgetConnection";
+import type { GadgetRecord, RecordShape } from "./GadgetRecord";
 import { GadgetRecordList } from "./GadgetRecordList";
-import { GadgetTransaction } from "./GadgetTransaction";
+import type { GadgetTransaction } from "./GadgetTransaction";
 import {
   assert,
   assertMutationSuccess,

@@ -1,9 +1,10 @@
 import { $gadgetConnection } from "@gadgetinc/api-client-core";
 import { act, renderHook } from "@testing-library/react";
-import { IsExact, assert } from "conditional-type-checks";
+import type { IsExact} from "conditional-type-checks";
+import { assert } from "conditional-type-checks";
 import { Response } from "cross-fetch";
 import { useFetch } from "../src/useFetch";
-import { ErrorWrapper } from "../src/utils";
+import type { ErrorWrapper } from "../src/utils";
 import { TestWrapper, mockClient } from "./testWrapper";
 
 describe("useFetch", () => {

@@ -1,20 +1,22 @@
-import {
+import type {
   DefaultSelection,
   FindFirstFunction,
-  findManyOperation,
   GadgetRecord,
+  LimitToKnownKeys,
+  Select} from "@gadgetinc/api-client-core";
+import {
+  findManyOperation,
   get,
   getQueryArgs,
-  hydrateConnection,
-  LimitToKnownKeys,
-  Select,
+  hydrateConnection
 } from "@gadgetinc/api-client-core";
 import { useMemo } from "react";
-import { UseQueryArgs } from "urql";
-import { OptionsType } from "./OptionsType";
+import type { UseQueryArgs } from "urql";
+import type { OptionsType } from "./OptionsType";
 import { useGadgetQuery } from "./useGadgetQuery";
 import { useStructuralMemo } from "./useStructuralMemo";
-import { ErrorWrapper, ReadHookResult } from "./utils";
+import type { ReadHookResult } from "./utils";
+import { ErrorWrapper } from "./utils";
 
 /**
  * React hook to fetch the first backend record matching a given filter and sort. Returns a standard hook result set with a tuple of the result object with `data`, `fetching`, and `error` keys, and a `refetch` function. `data` will be the first record found if there is one, and null otherwise.

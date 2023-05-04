@@ -1,7 +1,8 @@
 import { $gadgetConnection } from "@gadgetinc/api-client-core";
 import type { DocumentNode, OperationDefinitionNode } from "graphql";
 import { find, findLast } from "lodash";
-import React, { ReactNode } from "react";
+import type { ReactNode } from "react";
+import React from "react";
 import { act } from "react-dom/test-utils";
 import type { Client, GraphQLRequest, OperationContext, OperationResult } from "urql";
 import { makeErrorResult } from "urql";

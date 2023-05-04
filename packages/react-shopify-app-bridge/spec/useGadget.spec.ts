@@ -1,6 +1,8 @@
-import { AppBridgeState, ClientApplication } from "@shopify/app-bridge";
-import { IsExact, assert } from "conditional-type-checks";
-import { AppType, useGadget } from "../src";
+import type { AppBridgeState, ClientApplication } from "@shopify/app-bridge";
+import type { IsExact} from "conditional-type-checks";
+import { assert } from "conditional-type-checks";
+import type { AppType} from "../src";
+import { useGadget } from "../src";
 
 // these functions are typechecked but never run to avoid actually making API calls
 const TestUseGadgetReturnsAppropriateTypes = () => {

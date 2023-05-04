@@ -1,7 +1,8 @@
 import type { GadgetConnection } from "@gadgetinc/api-client-core";
 import { $gadgetConnection } from "@gadgetinc/api-client-core";
 import React from "react";
-import { Client, Provider } from "urql";
+import type { Client} from "urql";
+import { Provider } from "urql";
 
 export const GadgetContext = React.createContext<Client | undefined>(undefined);
 export const GadgetProvider: React.FC<React.PropsWithChildren<{ value: Client }>> = ({ children, value }) => {

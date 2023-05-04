@@ -1,4 +1,4 @@
-import { Client } from "@urql/core";
+import type { Client } from "@urql/core";
 import type { Client as SubscriptionClient } from "graphql-ws";
 import { assertOperationSuccess } from "./support";
 

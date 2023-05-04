@@ -1,6 +1,6 @@
-import { AssertTrue, IsExact } from "conditional-type-checks";
-import { DeepFilterNever, Select } from "../src/types";
-import { TestSchema } from "./TestSchema";
+import type { AssertTrue, IsExact } from "conditional-type-checks";
+import type { DeepFilterNever, Select } from "../src/types";
+import type { TestSchema } from "./TestSchema";
 
 type _SelectingProperties = AssertTrue<IsExact<Select<TestSchema, { num: true }>, { num: number }>>;
 

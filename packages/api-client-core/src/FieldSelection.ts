@@ -1,4 +1,4 @@
-import Fields from "gql-query-builder/build/Fields";
+import type Fields from "gql-query-builder/build/Fields";
 
 /**
  * Represents a list of fields selected from a GraphQL API call. Allows nesting, conditional selection.
