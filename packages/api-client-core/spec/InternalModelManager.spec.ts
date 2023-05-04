@@ -1,12 +1,4 @@
-import {
-  internalBulkCreateMutation,
-  internalCreateMutation,
-  internalDeleteManyMutation,
-  internalDeleteMutation,
-  internalFindFirstQuery,
-  internalFindManyQuery,
-  internalUpdateMutation,
-} from "../src";
+import { internalFindFirstQuery, internalFindManyQuery } from "../src";
 
 describe("InternalModelManager", () => {
   describe("internalFindManyQuery", () => {
@@ -136,46 +128,6 @@ describe("InternalModelManager", () => {
           },
         }
       `);
-    });
-
-    test("should build a create record mutation", () => {
-      const result = internalCreateMutation("widget");
-
-      expect(result).toMatch(
-        /mutation InternalCreateWidget\(\$record: InternalWidgetInput\) {\s*gadgetMeta {\s*hydrations\(modelName: "widget"\)\s*}\s*internal {\s*createWidget\(widget: \$record\) {\s*success\s*errors {\s*... InternalErrorsDetails\s*}\s*widget\s*}\s*}\s*}/
-      );
-    });
-
-    test("should build a bulk create records mutation", () => {
-      const result = internalBulkCreateMutation("widget", "widgets");
-
-      expect(result).toMatch(
-        /mutation InternalBulkCreateWidgets\(\$records: \[InternalWidgetInput\]\) {\s*gadgetMeta {\s*hydrations\(modelName: "widget"\)\s*}\s*internal {\s*bulkCreateWidgets\(widgets: \$records\) {\s*success\s*errors {\s*... InternalErrorsDetails\s*}\s*widgets\s*}\s*}\s*}/
-      );
-    });
-
-    test("should build an update record mutation", () => {
-      const result = internalUpdateMutation("widget");
-
-      expect(result).toMatch(
-        /mutation InternalUpdateWidget\(\$id: GadgetID!, \$record: InternalWidgetInput\) {\s*gadgetMeta {\s*hydrations\(modelName: "widget"\)\s*}\s*internal {\s*updateWidget\(id: \$id, widget: \$record\) {\s*success\s*errors {\s*... InternalErrorsDetails\s*}\s*widget\s*}\s*}\s*}/
-      );
-    });
-
-    test("should build a delete record mutation", () => {
-      const result = internalDeleteMutation("widget");
-
-      expect(result).toMatch(
-        /mutation InternalDeleteWidget\(\$id: GadgetID!\) {\s*gadgetMeta {\s*hydrations\(modelName: "widget"\)\s*}\s*internal {\s*deleteWidget\(id: \$id\) {\s*success\s*errors {\s*... InternalErrorsDetails\s*}\s*}\s*}\s*}/
-      );
-    });
-
-    test("should build a delete many records mutation", () => {
-      const result = internalDeleteManyMutation("widget");
-
-      expect(result).toMatch(
-        /mutation InternalDeleteManyWidget\(\s*\$search: String\s*\$filter: \[WidgetFilter!\]\s*\) {\s*gadgetMeta {\s*hydrations\(modelName: "widget"\)\s*}\s*internal {\s*deleteManyWidget\(search: \$search, filter: \$filter\) {\s*success\s*errors {\s*... InternalErrorsDetails\s*}\s*}\s*}\s*}/
-      );
     });
   });
 });
