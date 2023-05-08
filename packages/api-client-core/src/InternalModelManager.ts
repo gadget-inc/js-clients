@@ -4,13 +4,13 @@ import { GadgetRecord, RecordShape } from "./GadgetRecord";
 import { GadgetRecordList } from "./GadgetRecordList";
 import { GadgetTransaction } from "./GadgetTransaction";
 import {
+  GadgetClientError,
   assert,
   assertMutationSuccess,
   assertNullableOperationSuccess,
   assertOperationSuccess,
   camelize,
   capitalize,
-  GadgetClientError,
   hydrateConnection,
   hydrateRecord,
   hydrateRecordArray,
