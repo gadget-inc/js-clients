@@ -235,7 +235,7 @@ export type RecordData = Record<string, any>;
 export class InternalModelManager {
   private readonly capitalizedApiIdentifier: string;
 
-  constructor(private readonly apiIdentifier: string, readonly pluralApiIdentifier: string, readonly connection: GadgetConnection) {
+  constructor(private readonly apiIdentifier: string, readonly connection: GadgetConnection, readonly options?: { pluralApiIdentifier: string }) {
     this.capitalizedApiIdentifier = camelize(apiIdentifier);
   }
 
@@ -297,14 +297,14 @@ export class InternalModelManager {
 
   async bulkCreate(records: RecordData[]): Promise<GadgetRecord<RecordShape>[]> {
     return await this.transaction(async (transaction) => {
-      const capitalizedPluralApiIdentifier = capitalize(this.pluralApiIdentifier);
+      const capitalizedPluralApiIdentifier = capitalize(this.options.pluralApiIdentifier);
       const response = await transaction.client
-        .mutation(internalBulkCreateMutation(this.apiIdentifier, this.pluralApiIdentifier), {
+        .mutation(internalBulkCreateMutation(this.apiIdentifier, this.options.pluralApiIdentifier), {
           records,
         })
         .toPromise();
       const result = assertMutationSuccess(response, ["internal", `bulkCreate${capitalizedPluralApiIdentifier}`]);
-      return hydrateRecordArray(response, result[this.pluralApiIdentifier]);
+      return hydrateRecordArray(response, result[this.options.pluralApiIdentifier]);
     });
   }
 
