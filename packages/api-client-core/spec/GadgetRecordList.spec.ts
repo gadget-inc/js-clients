@@ -31,9 +31,7 @@ describe("GadgetRecordList", () => {
   ];
   test("sends correct page info when paging forward", async () => {
     let startIndex = 0;
-    const modelManager = new InternalModelManager("foo", new GadgetConnection({ endpoint: "https://fake-app.gadget.app" }), {
-      pluralApiIdentifier: "foos",
-    });
+    const modelManager = new InternalModelManager("foo", new GadgetConnection({ endpoint: "https://fake-app.gadget.app" }));
     let recordList = GadgetRecordList.boot(modelManager, [], { pageInfo: pages[startIndex], options: { first: 10 } });
     jest.spyOn(modelManager, "findMany").mockImplementation(async (options) => {
       if (!options) {
@@ -53,9 +51,7 @@ describe("GadgetRecordList", () => {
 
   test("sends correct page info when paging backward", async () => {
     let startIndex = 3;
-    const modelManager = new InternalModelManager("foo", new GadgetConnection({ endpoint: "https://fake-app.gadget.app" }), {
-      pluralApiIdentifier: "foos",
-    });
+    const modelManager = new InternalModelManager("foo", new GadgetConnection({ endpoint: "https://fake-app.gadget.app" }));
     let recordList = GadgetRecordList.boot(modelManager, [], { pageInfo: pages[startIndex], options: { last: 10 } });
     jest.spyOn(modelManager, "findMany").mockImplementation(async (options) => {
       if (!options) {
@@ -75,9 +71,7 @@ describe("GadgetRecordList", () => {
 
   test("does not send both first/last when paging forward and backward", async () => {
     let startIndex = 0;
-    const modelManager = new InternalModelManager("foo", new GadgetConnection({ endpoint: "https://fake-app.gadget.app" }), {
-      pluralApiIdentifier: "foos",
-    });
+    const modelManager = new InternalModelManager("foo", new GadgetConnection({ endpoint: "https://fake-app.gadget.app" }));
     let recordList = GadgetRecordList.boot(modelManager, [], { pageInfo: pages[startIndex], options: { first: 10 } });
     jest.spyOn(modelManager, "findMany").mockImplementation(async (options) => {
       if (!options) {
@@ -106,9 +100,7 @@ describe("GadgetRecordList", () => {
   });
 
   test("throws if paging backward is not possible", async () => {
-    const modelManager = new InternalModelManager("foo", new GadgetConnection({ endpoint: "https://fake-app.gadget.app" }), {
-      pluralApiIdentifier: "foos",
-    });
+    const modelManager = new InternalModelManager("foo", new GadgetConnection({ endpoint: "https://fake-app.gadget.app" }));
     const recordList = GadgetRecordList.boot(modelManager, [], { pageInfo: pages[0], options: { first: 10 } });
 
     await expect(recordList.previousPage()).rejects.toThrow(
@@ -117,9 +109,7 @@ describe("GadgetRecordList", () => {
   });
 
   test("throws if paging forward is not possible", async () => {
-    const modelManager = new InternalModelManager("foo", new GadgetConnection({ endpoint: "https://fake-app.gadget.app" }), {
-      pluralApiIdentifier: "foos",
-    });
+    const modelManager = new InternalModelManager("foo", new GadgetConnection({ endpoint: "https://fake-app.gadget.app" }));
     const recordList = GadgetRecordList.boot(modelManager, [], { pageInfo: pages[3], options: { last: 10 } });
 
     await expect(recordList.nextPage()).rejects.toThrow(
