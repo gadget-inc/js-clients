@@ -4,13 +4,13 @@ import { GadgetRecord, RecordShape } from "./GadgetRecord";
 import { GadgetRecordList } from "./GadgetRecordList";
 import { GadgetTransaction } from "./GadgetTransaction";
 import {
-  GadgetClientError,
   assert,
   assertMutationSuccess,
   assertNullableOperationSuccess,
   assertOperationSuccess,
   camelize,
   capitalize,
+  GadgetClientError,
   hydrateConnection,
   hydrateRecord,
   hydrateRecordArray,
@@ -302,10 +302,10 @@ export class InternalModelManager {
 
   async bulkCreate(records: RecordData[]): Promise<GadgetRecord<RecordShape>[]> {
     return await this.transaction(async (transaction) => {
-      if(!this.options?.pluralApiIdentifier){
-        throw new GadgetClientError("Cannot perform bulkCreate without a pluralApiIdentifier")
+      if (!this.options?.pluralApiIdentifier) {
+        throw new GadgetClientError("Cannot perform bulkCreate without a pluralApiIdentifier");
       }
-      
+
       const capitalizedPluralApiIdentifier = capitalize(this.options.pluralApiIdentifier);
       const response = await transaction.client
         .mutation(internalBulkCreateMutation(this.apiIdentifier, this.options.pluralApiIdentifier), {
