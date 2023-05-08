@@ -235,7 +235,7 @@ export type RecordData = Record<string, any>;
 export class InternalModelManager {
   private readonly capitalizedApiIdentifier: string;
 
-  constructor(private readonly apiIdentifier: string, readonly connection: GadgetConnection, readonly options?: { pluralApiIdentifier: string }) {
+  constructor(private readonly apiIdentifier: string, readonly connection: GadgetConnection, readonly options: { pluralApiIdentifier: string } ) {
     this.capitalizedApiIdentifier = camelize(apiIdentifier);
   }
 
