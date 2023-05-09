@@ -335,6 +335,37 @@ describe("GadgetRecord", () => {
     expect(product.newField).toEqual("foo");
   });
 
+  test("should allow touching, which marks the record as changed without changing field values", () => {
+    const product = new GadgetRecord<SampleBaseRecord>(productBaseRecord);
+    expect(product.changed()).toBe(false);
+    product.touch();
+    expect(product.changed()).toBe(true);
+    expect(product.changed(ChangeTracking.SinceLastPersisted)).toBe(true);
+    expect(product.changed(ChangeTracking.SinceLoaded)).toBe(true);
+    expect(product.changes()).toEqual({});
+    expect(product.toChangedJSON()).toEqual({});
+  });
+
+  test("reverting changes clears touched status", () => {
+    const product = new GadgetRecord<SampleBaseRecord>(productBaseRecord);
+    expect(product.changed()).toBe(false);
+    product.touch();
+    expect(product.changed()).toBe(true);
+    product.revertChanges();
+    expect(product.changed()).toBe(false);
+  });
+
+  test("should allow touching and changing fields together", () => {
+    const product = new GadgetRecord<SampleBaseRecord>(productBaseRecord);
+    expect(product.changed()).toBe(false);
+    product.name = "A new name";
+    expect(product.changed()).toBe(true);
+    product.touch();
+    expect(product.changed()).toBe(true);
+    product.revertChanges();
+    expect(product.changed()).toBe(false);
+  });
+
   test("arrays and objects stored in the instantiated and persisted fields should be independent of each other and active fields", () => {
     const nestedObject = { foo: "bar", subArray: [1, 2, 3] };
     const anArray = [1, 2, 3];
