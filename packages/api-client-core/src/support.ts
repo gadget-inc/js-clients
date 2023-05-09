@@ -204,10 +204,13 @@ export const get = (object: Record<string, any> | null | undefined, path: string
 export const isCloseEvent = (event: any): event is CloseEvent => event?.type == "close";
 
 export const capitalize = (str: string | undefined | null): string => {
-  if(typeof str !== "string") return "";
-  return str.split("_").map((substr) => {
-    return substr.charAt(0).toUpperCase() + substr.slice(1);
-  }).join("");
+  if (typeof str !== "string") return "";
+  return str
+    .split("_")
+    .map((substr) => {
+      return substr.charAt(0).toUpperCase() + substr.slice(1);
+    })
+    .join("");
 };
 
 export const camelize = (term: string, uppercaseFirstLetter = true) => {
