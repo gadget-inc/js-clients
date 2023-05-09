@@ -1,6 +1,5 @@
-import type { ClientOptions, Exchange, RequestPolicy } from "@urql/core";
-import { Client, cacheExchange, dedupExchange, subscriptionExchange } from "@urql/core";
-import { fetchExchange } from "@urql/core";
+import type { ClientOptions, RequestPolicy } from "@urql/core";
+import { Client, cacheExchange, dedupExchange, fetchExchange, subscriptionExchange } from "@urql/core";
 import fetchPolyfill from "cross-fetch";
 import type { ExecutionResult } from "graphql";
 import type { Sink, Client as SubscriptionClient, ClientOptions as SubscriptionClientOptions } from "graphql-ws";
