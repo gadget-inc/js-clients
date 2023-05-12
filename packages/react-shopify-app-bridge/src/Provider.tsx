@@ -71,7 +71,7 @@ const InnerGadgetProvider = memo(
       // setup the api client to always query using the custom shopify auth implementation
       api.connection.setAuthenticationMode({
         custom: {
-          processFetch: async (_input, init) => {
+          processFetch: async (_input: any, init: any) => {
             const headers = new Headers(init.headers);
             headers.append("Authorization", `ShopifySessionToken ${await getSessionToken(appBridge)}`);
             init.headers ??= {};
@@ -79,7 +79,7 @@ const InnerGadgetProvider = memo(
               (init.headers as Record<string, string>)[key] = value;
             });
           },
-          processTransactionConnectionParams(_params) {
+          processTransactionConnectionParams(_params: any) {
             throw new Error("client side transactions yet not supported in Shopify Gadget provider");
           },
         },
