@@ -676,11 +676,10 @@
     "@gadgetinc/api-client-core" "0.13.3"
 
 "@gadgetinc/api-client-core@0.11.0":
-  version "0.13.6"
+  version "0.13.8"
   dependencies:
     "@opentelemetry/api" "^1.4.0"
     "@urql/core" "^3.0.1"
-    "@urql/exchange-multipart-fetch" "^1.0.1"
     cross-fetch "^3.0.6"
     gql-query-builder "^3.7.2"
     graphql "^16.5.0"
@@ -691,11 +690,10 @@
     ws "^8.11.0"
 
 "@gadgetinc/api-client-core@0.13.3":
-  version "0.13.6"
+  version "0.13.8"
   dependencies:
     "@opentelemetry/api" "^1.4.0"
     "@urql/core" "^3.0.1"
-    "@urql/exchange-multipart-fetch" "^1.0.1"
     cross-fetch "^3.0.6"
     gql-query-builder "^3.7.2"
     graphql "^16.5.0"
@@ -706,11 +704,10 @@
     ws "^8.11.0"
 
 "@gadgetinc/api-client-core@0.9.0":
-  version "0.13.6"
+  version "0.13.8"
   dependencies:
     "@opentelemetry/api" "^1.4.0"
     "@urql/core" "^3.0.1"
-    "@urql/exchange-multipart-fetch" "^1.0.1"
     cross-fetch "^3.0.6"
     gql-query-builder "^3.7.2"
     graphql "^16.5.0"
@@ -1099,19 +1096,17 @@
   resolved "https://registry.yarnpkg.com/@opentelemetry/api/-/api-1.4.0.tgz#2c91791a9ba6ca0a0f4aaac5e45d58df13639ac8"
   integrity sha512-IgMK9i3sFGNUqPMbjABm0G26g0QCKCUBfglhQ7rQq6WcxbKfEHRcmwsoER4hZcuYqJgkYn2OeuoJIv7Jsftp7g==
 
+"@shopify/app-bridge-core@1.0.2":
+  version "1.0.2"
+  resolved "https://registry.yarnpkg.com/@shopify/app-bridge-core/-/app-bridge-core-1.0.2.tgz#083835998082c1577f30c34224ab0750d9bee204"
+  integrity sha512-lI+nZHMDqBJSqTBQiI1GY3Xs7YjPuZ83/sW7TIvWtTsxQZyoanAVXloo63sGEd58t1KvKFnDtVFN1NJYe/zouQ==
+
 "@shopify/app-bridge-react@^2.0.25":
   version "2.1.0"
   resolved "https://registry.yarnpkg.com/@shopify/app-bridge-react/-/app-bridge-react-2.1.0.tgz#4911e95542f04b5d827cd3ba3193cc1d09cc95b0"
   integrity sha512-KL+8ib6BdcEw3EzrXvoQgB22o11uKir7MTi9EgsmjvT0qRAywuVBDXgsKbmjyqr6DrnU5FQX5Lty0sA55NzTRA==
   dependencies:
     "@shopify/app-bridge" "^2.1.0"
-
-"@shopify/app-bridge-utils@^3.1.1":
-  version "3.1.1"
-  resolved "https://registry.yarnpkg.com/@shopify/app-bridge-utils/-/app-bridge-utils-3.1.1.tgz#cee566f983b60f96a848998a3ad3b0ba5c7bc4e3"
-  integrity sha512-le1/A62naIj5yq2o/G8htECvYTiAbVzOo9Ue3/gGqlJJC6w7+Uu4ppDHdkg6yfZCmkPUXCIr7+yU3kZHYV5z0g==
-  dependencies:
-    "@shopify/app-bridge" "^3.1.1"
 
 "@shopify/app-bridge@^2.1.0":
   version "2.1.0"
@@ -1120,12 +1115,14 @@
   dependencies:
     base64url "^3.0.1"
 
-"@shopify/app-bridge@^3.1.1":
-  version "3.1.1"
-  resolved "https://registry.yarnpkg.com/@shopify/app-bridge/-/app-bridge-3.1.1.tgz#40106efb23edf3b209da7f8aae37759e023561ad"
-  integrity sha512-RyjKDFfdytcDu3hcHIjBXvpXKDKMlsvpWshuE5lv5H4WEF+7IQomxmmJSXOJJIYnXv3COIamUml3WP/qVMak5A==
+"@shopify/app-bridge@^3.7.6":
+  version "3.7.6"
+  resolved "https://registry.yarnpkg.com/@shopify/app-bridge/-/app-bridge-3.7.6.tgz#2f2925f54da2a9c2d04807f93e96828e292d9bf9"
+  integrity sha512-5VC+7/WLUdkSjWvfUzGa9mx2UIQ2fqaxfrMBTerImnYHnj7a0x4rUAdQsPdaGR+bEquD7eOD0hKGqAVOXaGR9g==
   dependencies:
+    "@shopify/app-bridge-core" "1.0.2"
     base64url "^3.0.1"
+    web-vitals "^3.0.1"
 
 "@sinclair/typebox@^0.24.1":
   version "0.24.41"
@@ -1633,7 +1630,7 @@
     "@typescript-eslint/types" "5.59.2"
     eslint-visitor-keys "^3.3.0"
 
-"@urql/core@>=3.0.0", "@urql/core@^3.0.1":
+"@urql/core@^3.0.1":
   version "3.0.1"
   resolved "https://registry.yarnpkg.com/@urql/core/-/core-3.0.1.tgz#76be27b0ac0b0e3ca02c5240fc1c19735b63df75"
   integrity sha512-VMnAx1JsV32XjuCQVHHeq2BAn39XBSr6qEJd3xSE3Gwrc2NGndTZeFd6loZKmYF9XTHmvj8YbY2BFfHW7nGbmg==
@@ -1647,15 +1644,6 @@
   integrity sha512-raQP51ERNtg5BvlN8x8mHVRvk4K0ugWQ69n53BdkjKpXVV5kuWp7trnwriGv1fQKa8HuiGNSCfyslUucc0OVQg==
   dependencies:
     "@graphql-typed-document-node/core" "^3.1.1"
-    wonka "^6.0.0"
-
-"@urql/exchange-multipart-fetch@^1.0.1":
-  version "1.0.1"
-  resolved "https://registry.yarnpkg.com/@urql/exchange-multipart-fetch/-/exchange-multipart-fetch-1.0.1.tgz#83d0b892897bb95d436a03af615442f635af22c5"
-  integrity sha512-fjxRrKR/D9Rs52L8wJMvqsGQBC/mjFcg/VdkSkU5IXmqCb5KmicXl2208hoCnaBl/QLA6NDpCNnG3zjDniMOTg==
-  dependencies:
-    "@urql/core" ">=3.0.0"
-    extract-files "^11.0.0"
     wonka "^6.0.0"
 
 "@vitejs/plugin-react-swc@^3.0.0":
@@ -2935,11 +2923,6 @@ expect@^29.0.0, expect@^29.3.1:
     jest-matcher-utils "^29.3.1"
     jest-message-util "^29.3.1"
     jest-util "^29.3.1"
-
-extract-files@^11.0.0:
-  version "11.0.0"
-  resolved "https://registry.yarnpkg.com/extract-files/-/extract-files-11.0.0.tgz#b72d428712f787eef1f5193aff8ab5351ca8469a"
-  integrity sha512-FuoE1qtbJ4bBVvv94CC7s0oTnKUGvQs+Rjf1L2SJFfS+HTVVjhPFtehPdQ0JiGPqVNfSSZvL5yzHHQq2Z4WNhQ==
 
 fast-deep-equal@^3.1.1, fast-deep-equal@^3.1.3:
   version "3.1.3"
@@ -5792,6 +5775,11 @@ web-streams-polyfill@^3.0.3:
   version "3.2.1"
   resolved "https://registry.yarnpkg.com/web-streams-polyfill/-/web-streams-polyfill-3.2.1.tgz#71c2718c52b45fd49dbeee88634b3a60ceab42a6"
   integrity sha512-e0MO3wdXWKrLbL0DgGnUV7WHVuw9OUvL4hjgnPkIeEvESk74gAITi5G606JtZPp39cd8HA9VQzCIvA49LpPN5Q==
+
+web-vitals@^3.0.1:
+  version "3.3.1"
+  resolved "https://registry.yarnpkg.com/web-vitals/-/web-vitals-3.3.1.tgz#f80e4fd01784476c023c8b2c4219075bbe96f64d"
+  integrity sha512-LTfY5GjcY3ngFzNsYFSYL+AmVmlWrzPTUxSMDis2rZbf+SzT7HH3NH4Y/l45XOlrAIunOBeURN9qtBHkRskAiA==
 
 webidl-conversions@^3.0.0:
   version "3.0.1"

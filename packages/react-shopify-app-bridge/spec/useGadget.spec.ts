@@ -3,6 +3,7 @@ import type { IsExact } from "conditional-type-checks";
 import { assert } from "conditional-type-checks";
 import type { AppType } from "../src";
 import { useGadget } from "../src";
+import { IAppBridgeContext } from "@shopify/app-bridge-react/context";
 
 // these functions are typechecked but never run to avoid actually making API calls
 const TestUseGadgetReturnsAppropriateTypes = () => {
@@ -13,7 +14,7 @@ const TestUseGadgetReturnsAppropriateTypes = () => {
   assert<IsExact<typeof canAuth, boolean>>(true);
   assert<IsExact<typeof isAuthenticated, boolean>>(true);
   assert<IsExact<typeof appType, AppType | undefined>>(true);
-  assert<IsExact<typeof appBridge, ClientApplication<AppBridgeState> | null>>(true);
+  assert<IsExact<typeof appBridge, IAppBridgeContext | null>>(true);
   assert<IsExact<typeof isRootFrameRequest, boolean>>(true);
 };
 

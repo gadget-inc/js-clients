@@ -1,6 +1,7 @@
 import type { AppBridgeState, ClientApplication } from "@shopify/app-bridge";
 import { createContext, useContext } from "react";
 import type { AppType } from "./Provider";
+import { IAppBridgeContext } from "@shopify/app-bridge-react/context";
 
 export type GadgetAuthContextValue = {
   /** Is the AppBridge provider or the Gadget auth system loading or redirecting the user to make requests elsewhere */
@@ -12,7 +13,7 @@ export type GadgetAuthContextValue = {
   /** The current embedding state of this JS context. Will return true if running inside the iframe in the Shopify Admin, false otherwise */
   isEmbedded: boolean;
   /** An instance of the AppBridge object. Only available in embedded contexts. */
-  appBridge: ClientApplication<AppBridgeState> | null;
+  appBridge: IAppBridgeContext | null;
   /** Is this browser window ready to authenticate in the current state */
   canAuth: boolean;
   /** Is this browser window authenticated and ready to make requests to the Gadget backend */
