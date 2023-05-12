@@ -678,6 +678,27 @@ export const GadgetConnectionSharedSuite = (queryExtra = "") => {
       expect(await result.text()).toEqual("hello");
     });
 
+    test("fetch can pass relative string paths with query params", async () => {
+      const connection = new GadgetConnection({
+        endpoint: "https://someapp.gadget.app/api/graphql",
+        authenticationMode: { apiKey: "gsk-abcde" },
+      });
+
+      nock("https://someapp.gadget.app")
+        .get("/foo/bar")
+        .query({
+          query: "baz",
+        })
+        .reply(200, function () {
+          expect(this.req.headers["authorization"]).toEqual([`Bearer gsk-abcde`]);
+          return "hello";
+        });
+
+      const result = await connection.fetch("/foo/bar?query=baz");
+      expect(result.status).toEqual(200);
+      expect(await result.text()).toEqual("hello");
+    });
+
     test("fetches can specify a desired content type", async () => {
       const connection = new GadgetConnection({
         endpoint: "https://someapp.gadget.app/api/graphql",
