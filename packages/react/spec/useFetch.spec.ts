@@ -169,7 +169,29 @@ describe("useFetch", () => {
     expect(reexecuteResult).toEqual("fixed");
   });
 
-  test("it doesn't automatically start sending POST requests", async () => {
+  test("it automatically starts sending requests with no method specified", async () => {
+    const { result } = renderHook(() => useFetch("/foo/bar"), { wrapper: TestWrapper });
+
+    expect(result.current[0].fetching).toBe(true);
+    expect(mockClient[$gadgetConnection].fetch).toBeCalledTimes(1);
+    expect(mockClient[$gadgetConnection].fetch.requests[0].args).toEqual(["/foo/bar", {}]);
+  });
+
+  test("it automatically starts sending requests with the GET method specified", async () => {
+    const { result } = renderHook(() => useFetch("/foo/bar", { method: "GET" }), { wrapper: TestWrapper });
+
+    expect(result.current[0].fetching).toBe(true);
+    expect(mockClient[$gadgetConnection].fetch).toBeCalledTimes(1);
+  });
+
+  test("it does not automatically start sending requests with the GET method specified but sendImmediately: false", async () => {
+    const { result } = renderHook(() => useFetch("/foo/bar", { method: "GET", sendImmediately: false }), { wrapper: TestWrapper });
+
+    expect(result.current[0].fetching).toBe(false);
+    expect(mockClient[$gadgetConnection].fetch).toBeCalledTimes(0);
+  });
+
+  test("it doesn't automatically start sending POST requests by default", async () => {
     const { result } = renderHook(() => useFetch("/foo/bar", { method: "POST" }), { wrapper: TestWrapper });
 
     expect(mockClient[$gadgetConnection].fetch).toBeCalledTimes(0);
@@ -193,6 +215,13 @@ describe("useFetch", () => {
     expect(result.current[0].data).toEqual("hello world");
     expect(result.current[0].error).toBeFalsy();
 
+    expect(mockClient[$gadgetConnection].fetch).toBeCalledTimes(1);
+  });
+
+  test("it automatically starts sending requests with the POST method specified and sendImmediately: true", async () => {
+    const { result } = renderHook(() => useFetch("/foo/bar", { method: "GET", sendImmediately: true }), { wrapper: TestWrapper });
+
+    expect(result.current[0].fetching).toBe(true);
     expect(mockClient[$gadgetConnection].fetch).toBeCalledTimes(1);
   });
 
