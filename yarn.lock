@@ -676,7 +676,7 @@
     "@gadgetinc/api-client-core" "0.13.3"
 
 "@gadgetinc/api-client-core@0.11.0":
-  version "0.13.6"
+  version "0.13.9"
   dependencies:
     "@opentelemetry/api" "^1.4.0"
     "@urql/core" "^3.0.1"
@@ -684,14 +684,14 @@
     cross-fetch "^3.0.6"
     gql-query-builder "^3.7.2"
     graphql "^16.5.0"
-    graphql-ws "^5.5.5"
+    graphql-ws "5.13.0"
     isomorphic-ws "^4.0.1"
     lodash.clonedeep "^4.5.0"
     lodash.isequal "^4.5.0"
     ws "^8.11.0"
 
 "@gadgetinc/api-client-core@0.13.3":
-  version "0.13.6"
+  version "0.13.9"
   dependencies:
     "@opentelemetry/api" "^1.4.0"
     "@urql/core" "^3.0.1"
@@ -699,14 +699,14 @@
     cross-fetch "^3.0.6"
     gql-query-builder "^3.7.2"
     graphql "^16.5.0"
-    graphql-ws "^5.5.5"
+    graphql-ws "5.13.0"
     isomorphic-ws "^4.0.1"
     lodash.clonedeep "^4.5.0"
     lodash.isequal "^4.5.0"
     ws "^8.11.0"
 
 "@gadgetinc/api-client-core@0.9.0":
-  version "0.13.6"
+  version "0.13.9"
   dependencies:
     "@opentelemetry/api" "^1.4.0"
     "@urql/core" "^3.0.1"
@@ -714,7 +714,7 @@
     cross-fetch "^3.0.6"
     gql-query-builder "^3.7.2"
     graphql "^16.5.0"
-    graphql-ws "^5.5.5"
+    graphql-ws "5.13.0"
     isomorphic-ws "^4.0.1"
     lodash.clonedeep "^4.5.0"
     lodash.isequal "^4.5.0"
@@ -3319,10 +3319,10 @@ grapheme-splitter@^1.0.4:
   resolved "https://registry.yarnpkg.com/grapheme-splitter/-/grapheme-splitter-1.0.4.tgz#9cf3a665c6247479896834af35cf1dbb4400767e"
   integrity sha512-bzh50DW9kTPM00T8y4o8vQg89Di9oLJVLW/KaOGIXJWP/iqCN6WKYkbNOF04vFLJhwcpYUh9ydh/+5vpOqV4YQ==
 
-graphql-ws@^5.5.5:
-  version "5.8.2"
-  resolved "https://registry.yarnpkg.com/graphql-ws/-/graphql-ws-5.8.2.tgz#800184b1addb20b3010dc06cb70877703a5fff20"
-  integrity sha512-hYo8kTGzxePFJtMGC7Y4cbypwifMphIJJ7n4TDcVUAfviRwQBnmZAbfZlC+XFwWDUaR7raEDQPxWctpccmE0JQ==
+graphql-ws@^5.13.0:
+  version "5.13.0"
+  resolved "https://registry.yarnpkg.com/graphql-ws/-/graphql-ws-5.13.0.tgz#92f90858a70112ef8114eaa5e9e50792c3746449"
+  integrity sha512-2VwsecxYZsIZrHDzNOS2R8pIK5kTBRbrV8EVfE0J3pCESx75q+rILxx8oDNYC+HkKU1k6huRcol/vl4C9Co0mA==
 
 graphql@16.5.0:
   version "16.5.0"
