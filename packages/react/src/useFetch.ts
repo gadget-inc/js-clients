@@ -32,9 +32,16 @@ const reducer = <T>(state: FetchHookState<T>, action: FetchAction<T>): FetchHook
 export interface FetchHookOptions extends RequestInit {
   stream?: boolean;
   json?: boolean;
+  sendImmediately?: boolean;
 }
 
-const startRequestByDefault = (options?: FetchHookOptions) => !options || !options.method || options.method === "GET";
+const startRequestByDefault = (options?: FetchHookOptions) => {
+  if (typeof options?.sendImmediately != "undefined") {
+    return options.sendImmediately;
+  } else {
+    return !options?.method || options.method === "GET";
+  }
+};
 
 /**
  * React hook to make an HTTP request to a Gadget backend HTTP route. Preserves client side session information and ensures it's passed along to the backend.
@@ -84,12 +91,13 @@ export function useFetch<T = string>(path: string, options?: FetchHookOptions): 
   const mounted = useRef<boolean>(true);
   const memoizedOptions = useStructuralMemo<FetchHookOptions>(options ?? {});
   const connection = useConnection();
+  const startRequestOnMount = startRequestByDefault(memoizedOptions);
 
   const [state, dispatch] = useReducer<Reducer<FetchHookState<T>, FetchAction<T>>, FetchHookOptions>(
     reducer,
     memoizedOptions,
     (memoizedOptions) => {
-      return { fetching: startRequestByDefault(memoizedOptions), options: memoizedOptions };
+      return { fetching: startRequestOnMount, options: memoizedOptions };
     }
   );
 
@@ -139,7 +147,7 @@ export function useFetch<T = string>(path: string, options?: FetchHookOptions): 
 
   useEffect(() => {
     mounted.current = true;
-    if (startRequestByDefault(memoizedOptions)) {
+    if (startRequestOnMount) {
       void send().catch(() => {
         // report error via return state
       });
@@ -148,7 +156,7 @@ export function useFetch<T = string>(path: string, options?: FetchHookOptions): 
     return () => {
       mounted.current = false;
     };
-  }, [path, memoizedOptions]);
+  }, [path, startRequestOnMount, send]);
 
   return [state, send];
 }
