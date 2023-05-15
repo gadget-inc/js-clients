@@ -80,7 +80,7 @@ import { Provider, useAction, useFindMany } from "@gadgetinc/react";
 import React from "react";
 
 // instantiate the API client for our app
-const api = new Client({ authenticationMode: { browserSession: true, }});
+const api = new Client({ authenticationMode: { browserSession: true } });
 
 export function MyComponent() {
   // ensure any components which use the @gadgetinc/react hooks are wrapped with the provider, and passed the current api client
@@ -676,6 +676,7 @@ The `refetch` function returned as the second element can be executed in order t
   - `body`: the request body to send to the server, like `"hello"` or `JSON.stringify({foo: "bar"})`
   - `json`: If true, expects the response to be returned as JSON, and parses it for convenience
   - `stream`: If true, expects the response to be returned as JSON, and parses it for convenience
+  - `sendImmediately`: If true, sends the first fetch on component mount. If false, waits for the `send` function to be called to send a request. Defaults to `true` for GET requests and `false` for any other HTTP verbs.
   - See all the `fetch` options on [MDN](https://developer.mozilla.org/en-US/docs/Web/API/fetch)
 
 `useFetch` returns a tuple with the current state of the request and a function to send or re-send the request. The state is an object with the following fields:
@@ -749,7 +750,7 @@ For example, we can call a third-party JSON API at `dummyjson.com`:
 
 ```javascript
 export function DummyProducts(props) {
-  const [{ data, fetching, error }, refresh] = useFetch("https://dummyjson.com/products", {
+  const [{ data, fetching, error }, resend] = useFetch("https://dummyjson.com/products", {
     method: "GET",
     json: true,
   });
@@ -762,6 +763,48 @@ export function DummyProducts(props) {
 ```
 
 `useFetch` will **not** send your Gadget API client's authentication headers to third party APIs. It will behave like a normal browser `fetch` call, just with the added React wrapper and `json: true` option for easy JSON parsing.
+
+#### When the request gets sent
+
+By default, `useFetch` will immediately issue HTTP requests for `GET`s when run. This makes it easy to use `useFetch` to retrieve data for use rendering your component right away.
+
+```javascript
+export function GetRequest(props) {
+  // will automatically send the request when the component renders the first time, as it is a GET
+  const [{ data, fetching, error }, resend] = useFetch("/products");
+  // fetching will be `true`
+}
+```
+
+`useFetch` will _not_ immediately issue HTTP requests for HTTP verbs other than `GET`, like `POST`, `PUT`, etc. The HTTP request will only be sent when you call the returned `send` function.
+
+```javascript
+export function PostRequest(props) {
+  // will not automatically send the request when the component renders, call `send` to issue the request
+  const [{ data, fetching, error }, send] = useFetch("/products", { method: "POST" });
+  // fetching will be `false`
+}
+```
+
+This behavior can be overridden with the `sendImmediately` option. You can avoid sending GET requests on render by passing `sendImmediately: false`:
+
+```javascript
+export function DelayedGetRequest(props) {
+  // will not automatically send the request when the component renders, call `send` to issue the request
+  const [{ data, fetching, error }, send] = useFetch("/products", { sendImmediately: false });
+  // fetching will be `false`
+}
+```
+
+You can also have `POST` or `PUT` requests immediately issued by passing `sendImmediately: true`:
+
+```javascript
+export function ImmediatePutRequest(props) {
+  // will automatically send the request when the component renders the first time
+  const [{ data, fetching, error }, send] = useFetch("/products", { method: "POST", sendImmediately: true });
+  // fetching will be `true`
+}
+```
 
 ### The `select` option
 

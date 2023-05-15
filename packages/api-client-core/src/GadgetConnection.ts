@@ -497,9 +497,7 @@ function processMaybeRelativeInput(input: RequestInfo | URL, endpoint: string): 
   if (typeof input != "string") return input;
   if (isRelativeUrl(input)) {
     try {
-      const url = new URL(endpoint);
-      url.pathname = input;
-      return url;
+      return String(new URL(input, endpoint));
     } catch (err) {
       return input;
     }

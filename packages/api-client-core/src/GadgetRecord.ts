@@ -18,6 +18,7 @@ export class GadgetRecordImplementation<Shape extends RecordShape> {
     persistedFields: {} as any,
     fieldKeys: [] as string[],
     fieldKeysTracker: {} as Record<string, boolean>,
+    touched: false,
   };
 
   private empty = false;
@@ -66,6 +67,7 @@ export class GadgetRecordImplementation<Shape extends RecordShape> {
 
   /** Returns true if even a single field has changed */
   private hasChanges(tracking = ChangeTracking.SinceLoaded) {
+    if (this.__gadget.touched) return true;
     const diffFields = tracking == ChangeTracking.SinceLoaded ? this.__gadget.instantiatedFields : this.__gadget.persistedFields;
     return this.__gadget.fieldKeys.some((key) => !isEqual(diffFields[key], this.__gadget.fields[key]));
   }
@@ -136,9 +138,11 @@ export class GadgetRecordImplementation<Shape extends RecordShape> {
   changed(prop: string): boolean;
   changed(prop: string, tracking: ChangeTracking): boolean;
   changed(prop?: string | ChangeTracking, tracking = ChangeTracking.SinceLoaded) {
-    return prop && typeof prop == "string"
-      ? this.changes(prop, tracking).changed
-      : this.hasChanges(prop === undefined ? tracking : (prop as ChangeTracking));
+    if (prop && typeof prop == "string") {
+      return this.changes(prop, tracking).changed;
+    } else {
+      return this.hasChanges(prop === undefined ? tracking : (prop as ChangeTracking));
+    }
   }
 
   /** Flushes all `changes` and starts tracking new changes from the current state of the record. */
@@ -148,6 +152,7 @@ export class GadgetRecordImplementation<Shape extends RecordShape> {
     } else if (tracking == ChangeTracking.SinceLastPersisted) {
       this.__gadget.persistedFields = cloneDeep(this.__gadget.fields);
     }
+    this.__gadget.touched = false;
   }
 
   /** Reverts all `changes` on the record, and returns to either the values this record were instantiated with, or the values at the time of the last `flushChanges` call. */
@@ -169,11 +174,16 @@ export class GadgetRecordImplementation<Shape extends RecordShape> {
     } else {
       Object.assign(this.__gadget.fields, cloneDeep(this.__gadget.persistedFields));
     }
+    this.__gadget.touched = false;
   }
 
   /** Returns a JSON representation of all fields on this record. */
   toJSON(): Jsonify<Shape> {
     return toPrimitiveObject({ ...this.__gadget.fields });
+  }
+
+  touch(): void {
+    this.__gadget.touched = true;
   }
 }
 
