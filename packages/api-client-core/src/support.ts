@@ -205,15 +205,16 @@ export const isCloseEvent = (event: any): event is CloseEvent => event?.type == 
 
 export const capitalize = (str: string | undefined | null): string => {
   if (typeof str !== "string") return "";
-  return str
-    .split("_")
-    .map((substr) => {
-      return substr.charAt(0).toUpperCase() + substr.slice(1);
-    })
-    .join("");
+  return camelize(str, true);
 };
 
 export const camelize = (term: string, uppercaseFirstLetter = true) => {
+
+  const capitalize = (str: string) => {
+    const result = str === null || str === undefined ? "" : String(str);
+    return result.charAt(0).toUpperCase() + result.slice(1);
+  }
+  
   let result = "" + term;
 
   if (uppercaseFirstLetter) {
