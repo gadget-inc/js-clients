@@ -211,10 +211,9 @@ export const capitalizeIdentifier = (str: string | undefined | null): string => 
 const capitalizeFirstCharacter = (str: string) => {
   const result = str === null || str === undefined ? "" : String(str);
   return result.charAt(0).toUpperCase() + result.slice(1);
-}
+};
 
 export const camelize = (term: string, uppercaseFirstLetter = true) => {
-
   let result = "" + term;
 
   if (uppercaseFirstLetter) {
