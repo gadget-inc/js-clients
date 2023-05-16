@@ -1,5 +1,5 @@
 import type { ActionFunction, DefaultSelection, GadgetRecord, LimitToKnownKeys, Select } from "@gadgetinc/api-client-core";
-import { actionOperation, capitalize, get, hydrateRecord } from "@gadgetinc/api-client-core";
+import { actionOperation, capitalizeIdentifier, get, hydrateRecord } from "@gadgetinc/api-client-core";
 import { useCallback, useContext, useMemo } from "react";
 import type { AnyVariables, UseMutationState } from "urql";
 import { GadgetContext } from "./GadgetProvider";
@@ -83,7 +83,7 @@ export const useAction = <
         // selected (and sometimes we can't even select it, like delete actions!)
         const result = await runMutation(variables, {
           ...context,
-          additionalTypenames: [...(context?.additionalTypenames ?? []), capitalize(action.modelApiIdentifier)],
+          additionalTypenames: [...(context?.additionalTypenames ?? []), capitalizeIdentifier(action.modelApiIdentifier)],
         });
         return processResult({ fetching: false, stale: false, ...result }, action);
       },

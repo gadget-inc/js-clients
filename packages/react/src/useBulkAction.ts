@@ -1,5 +1,5 @@
 import type { BulkActionFunction, DefaultSelection, GadgetRecord, LimitToKnownKeys, Select } from "@gadgetinc/api-client-core";
-import { actionOperation, capitalize, get, hydrateRecordArray } from "@gadgetinc/api-client-core";
+import { actionOperation, capitalizeIdentifier, get, hydrateRecordArray } from "@gadgetinc/api-client-core";
 import { useCallback, useMemo } from "react";
 import type { UseMutationState } from "urql";
 import type { OptionsType } from "./OptionsType";
@@ -77,7 +77,7 @@ export const useBulkAction = <
         // selected (and sometimes we can't even select it, like delete actions!)
         const result = await runMutation(variables, {
           ...context,
-          additionalTypenames: [...(context?.additionalTypenames ?? []), capitalize(action.modelApiIdentifier)],
+          additionalTypenames: [...(context?.additionalTypenames ?? []), capitalizeIdentifier(action.modelApiIdentifier)],
         });
         return processResult({ fetching: false, stale: false, ...result }, action);
       },
