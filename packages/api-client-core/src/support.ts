@@ -203,23 +203,23 @@ export const get = (object: Record<string, any> | null | undefined, path: string
 
 export const isCloseEvent = (event: any): event is CloseEvent => event?.type == "close";
 
-export const capitalize = (str: string | undefined | null): string => {
+export const capitalizeIdentifier = (str: string | undefined | null): string => {
   if (typeof str !== "string") return "";
   return camelize(str, true);
 };
 
+const capitalizeFirstCharacter = (str: string) => {
+  const result = str === null || str === undefined ? "" : String(str);
+  return result.charAt(0).toUpperCase() + result.slice(1);
+}
+
 export const camelize = (term: string, uppercaseFirstLetter = true) => {
 
-  const capitalize = (str: string) => {
-    const result = str === null || str === undefined ? "" : String(str);
-    return result.charAt(0).toUpperCase() + result.slice(1);
-  }
-  
   let result = "" + term;
 
   if (uppercaseFirstLetter) {
     result = result.replace(/^[a-z\d]*/, (a) => {
-      return capitalize(a);
+      return capitalizeFirstCharacter(a);
     });
   } else {
     result = result.replace(new RegExp("^(?:(?=\\b|[A-Z_])|\\w)"), (a) => {
@@ -229,7 +229,7 @@ export const camelize = (term: string, uppercaseFirstLetter = true) => {
 
   result = result.replace(/(?:_|(\/))([a-z\d]*)/gi, (_match, a, b, _idx, _string) => {
     a || (a = "");
-    return "" + a + capitalize(b);
+    return "" + a + capitalizeFirstCharacter(b);
   });
 
   return result;
