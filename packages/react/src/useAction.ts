@@ -79,9 +79,43 @@ export const useAction = <
     transformedResult,
     useCallback(
       async (variables, context) => {
+        if (action.hasAmbiguousIdentifier) {
+          if (Object.keys(variables).some((key) => !action.paramOnlyVariables?.includes(key) && key !== action.modelApiIdentifier)) {
+            throw Error(`Invalid arguments found in variables. Did you mean to use ({ ${action.modelApiIdentifier}: { ... } })?`);
+          }
+        }
+
+        let newVariables: Exclude<F["variablesType"], null | undefined>;
+        if (action.hasCreateOrUpdateEffect) {
+          if (
+            action.modelApiIdentifier in variables &&
+            typeof variables[action.modelApiIdentifier] === "object" &&
+            variables[action.modelApiIdentifier] !== null
+          ) {
+            newVariables = variables;
+          } else {
+            newVariables = {
+              [action.modelApiIdentifier]: {},
+            } as Exclude<F["variablesType"], null | undefined>;
+            for (const [key, value] of Object.entries(variables)) {
+              if (action.paramOnlyVariables?.includes(key)) {
+                newVariables[key] = value;
+              } else {
+                if (key === "id") {
+                  newVariables.id = value;
+                } else {
+                  newVariables[action.modelApiIdentifier][key] = value;
+                }
+              }
+            }
+          }
+        } else {
+          newVariables = variables;
+        }
+
         // Adding the model's additional typename ensures document cache will properly refresh, regardless of whether __typename was
         // selected (and sometimes we can't even select it, like delete actions!)
-        const result = await runMutation(variables, {
+        const result = await runMutation(newVariables, {
           ...context,
           additionalTypenames: [...(context?.additionalTypenames ?? []), capitalize(action.modelApiIdentifier)],
         });

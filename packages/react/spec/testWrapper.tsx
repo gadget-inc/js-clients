@@ -49,10 +49,11 @@ export const graphqlDocumentName = (doc: DocumentNode) => {
 /**
  * Create a new function for reading/writing to a mock graphql backend
  */
-const newMockOperationFn = () => {
+const newMockOperationFn = (assertions?: (request: GraphQLRequest) => void) => {
   const subjects: Record<string, Subject<OperationResult>> = {};
 
-  const fn = jest.fn(({ query }: GraphQLRequest, options?: Partial<OperationContext>) => {
+  const fn = jest.fn((request: GraphQLRequest, options?: Partial<OperationContext>) => {
+    const { query } = request;
     const fetchOptions = options?.fetchOptions;
     const key = graphqlDocumentName(query) ?? "unknown";
     subjects[key] ??= makeSubject();
@@ -64,6 +65,10 @@ const newMockOperationFn = () => {
           subjects[key].next(makeErrorResult(null as any, new Error("AbortError")));
         });
       }
+    }
+
+    if (assertions) {
+      assertions(request);
     }
 
     return subjects[key].source;
@@ -126,6 +131,20 @@ beforeEach(() => {
     fetch: newMockFetchFn(),
   };
 });
+
+export const createMockCLient = (assertions?: {
+  mutationAssertions?: (request: GraphQLRequest) => void;
+  queryAssertions?: (request: GraphQLRequest) => void;
+}) => {
+  return {
+    executeQuery: newMockOperationFn(assertions?.queryAssertions),
+    executeMutation: newMockOperationFn(assertions?.mutationAssertions),
+    executeSubscription: newMockOperationFn(),
+    [$gadgetConnection]: {
+      fetch: newMockFetchFn(),
+    },
+  } as MockUrqlClient;
+};
 
 export const TestWrapper = (props: { children: ReactNode }) => {
   return <Provider value={mockClient}>{props.children}</Provider>;
