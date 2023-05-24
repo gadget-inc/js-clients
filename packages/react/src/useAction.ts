@@ -25,10 +25,8 @@ import { ErrorWrapper, noProviderErrorMessage } from "./utils";
  *   });
  *
  *   const onClick = () => createUser({
- *     user: {
- *       name: props.name,
- *       email: props.email,
- *     }
+ *     name: props.name,
+ *     email: props.email,
  *   });
  *
  *   return (
@@ -86,6 +84,8 @@ export const useAction = <
         }
 
         let newVariables: Exclude<F["variablesType"], null | undefined>;
+        const idVariable = Object.entries(action.variables).find(([key, value]) => key === "id" && value.type === "GadgetID");
+
         if (action.hasCreateOrUpdateEffect) {
           if (
             action.modelApiIdentifier in variables &&
@@ -101,7 +101,7 @@ export const useAction = <
               if (action.paramOnlyVariables?.includes(key)) {
                 newVariables[key] = value;
               } else {
-                if (key === "id") {
+                if (idVariable && key === idVariable[0]) {
                   newVariables.id = value;
                 } else {
                   newVariables[action.modelApiIdentifier][key] = value;
