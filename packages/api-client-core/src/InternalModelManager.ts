@@ -11,7 +11,7 @@ import {
   assertNullableOperationSuccess,
   assertOperationSuccess,
   camelize,
-  capitalize,
+  capitalizeIdentifier,
   hydrateConnection,
   hydrateRecord,
   hydrateRecordArray,
@@ -41,7 +41,7 @@ const internalHydrationPlan = (modelApiIdentifer: string) => `
 `;
 
 export const internalFindOneQuery = (apiIdentifier: string) => {
-  const capitalizedApiIdentifier = capitalize(apiIdentifier);
+  const capitalizedApiIdentifier = capitalizeIdentifier(apiIdentifier);
   return `
     query InternalFind${capitalizedApiIdentifier}($id: GadgetID!) {
       ${internalHydrationPlan(apiIdentifier)}
@@ -53,7 +53,7 @@ export const internalFindOneQuery = (apiIdentifier: string) => {
 };
 
 export const internalFindFirstQuery = (apiIdentifier: string, options?: RecordData) => {
-  const capitalizedApiIdentifier = capitalize(apiIdentifier);
+  const capitalizedApiIdentifier = capitalizeIdentifier(apiIdentifier);
 
   const defaultVariables = {
     ...(options?.search && { search: { value: options?.search, type: "String", required: false } }),
@@ -87,7 +87,7 @@ export const internalFindFirstQuery = (apiIdentifier: string, options?: RecordDa
 };
 
 export const internalFindManyQuery = (apiIdentifier: string, options?: RecordData) => {
-  const capitalizedApiIdentifier = capitalize(apiIdentifier);
+  const capitalizedApiIdentifier = capitalizeIdentifier(apiIdentifier);
 
   const defaultVariables = {
     ...(options?.search && { search: { value: options?.search, type: "String", required: false } }),
@@ -127,7 +127,7 @@ export const internalFindManyQuery = (apiIdentifier: string, options?: RecordDat
 };
 
 export const internalCreateMutation = (apiIdentifier: string) => {
-  const capitalizedApiIdentifier = capitalize(apiIdentifier);
+  const capitalizedApiIdentifier = capitalizeIdentifier(apiIdentifier);
   return `
     ${internalErrorsDetails}
 
@@ -147,8 +147,8 @@ export const internalCreateMutation = (apiIdentifier: string) => {
 };
 
 export const internalBulkCreateMutation = (apiIdentifier: string, pluralApiIdentifier: string) => {
-  const capitalizedApiIdentifier = capitalize(apiIdentifier);
-  const capitalizedPluralApiIdentifier = capitalize(pluralApiIdentifier);
+  const capitalizedApiIdentifier = capitalizeIdentifier(apiIdentifier);
+  const capitalizedPluralApiIdentifier = capitalizeIdentifier(pluralApiIdentifier);
 
   return `
     ${internalErrorsDetails}
@@ -169,7 +169,7 @@ export const internalBulkCreateMutation = (apiIdentifier: string, pluralApiIdent
 };
 
 export const internalUpdateMutation = (apiIdentifier: string) => {
-  const capitalizedApiIdentifier = capitalize(apiIdentifier);
+  const capitalizedApiIdentifier = capitalizeIdentifier(apiIdentifier);
   return `
     ${internalErrorsDetails}
 
@@ -189,7 +189,7 @@ export const internalUpdateMutation = (apiIdentifier: string) => {
 };
 
 export const internalDeleteMutation = (apiIdentifier: string) => {
-  const capitalizedApiIdentifier = capitalize(apiIdentifier);
+  const capitalizedApiIdentifier = capitalizeIdentifier(apiIdentifier);
   return `
     ${internalErrorsDetails}
 
@@ -208,7 +208,7 @@ export const internalDeleteMutation = (apiIdentifier: string) => {
 };
 
 export const internalDeleteManyMutation = (apiIdentifier: string) => {
-  const capitalizedApiIdentifier = capitalize(apiIdentifier);
+  const capitalizedApiIdentifier = capitalizeIdentifier(apiIdentifier);
   return `
     ${internalErrorsDetails}
 
@@ -334,7 +334,7 @@ export class InternalModelManager {
         throw new GadgetClientError("Cannot perform bulkCreate without a pluralApiIdentifier");
       }
 
-      const capitalizedPluralApiIdentifier = capitalize(this.options.pluralApiIdentifier);
+      const capitalizedPluralApiIdentifier = capitalizeIdentifier(this.options.pluralApiIdentifier);
       const response = await transaction.client
         .mutation(internalBulkCreateMutation(this.apiIdentifier, this.options.pluralApiIdentifier), {
           records,
