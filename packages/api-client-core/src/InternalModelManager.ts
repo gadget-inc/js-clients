@@ -5,6 +5,7 @@ import { GadgetRecordList } from "./GadgetRecordList";
 import type { GadgetTransaction } from "./GadgetTransaction";
 import {
   GadgetClientError,
+  GadgetOperationError,
   assert,
   assertMutationSuccess,
   assertNullableOperationSuccess,
@@ -239,9 +240,36 @@ export class InternalModelManager {
   constructor(
     private readonly apiIdentifier: string,
     readonly connection: GadgetConnection,
-    readonly options?: { pluralApiIdentifier: string }
+    readonly options?: { pluralApiIdentifier: string; hasAmbiguousIdentifiers?: boolean }
   ) {
     this.capitalizedApiIdentifier = camelize(apiIdentifier);
+  }
+
+  private validateRecord(record: RecordData) {
+    if (!this.options || !this.options.hasAmbiguousIdentifiers) {
+      return true;
+    }
+    const keys = Object.keys(record);
+
+    // any keys that aren't the apiIdentifier are invalid
+    return keys.every((key) => key === this.apiIdentifier);
+  }
+
+  private getRecordFromData(record: RecordData, functionName: string) {
+    let recordData = record;
+
+    if (!this.validateRecord(record)) {
+      throw new GadgetOperationError(
+        `Invalid arguments found in variables. Did you mean to use ${functionName}({ ${this.apiIdentifier}: { ... } })?`,
+        "GGT_INVALID_RECORD_DATA"
+      );
+    }
+
+    if (this.apiIdentifier in record) {
+      recordData = recordData[this.apiIdentifier];
+    }
+
+    return recordData;
   }
 
   async findOne(id: string, throwOnEmptyData = true): Promise<GadgetRecord<RecordData>> {
@@ -292,7 +320,7 @@ export class InternalModelManager {
     return await this.transaction(async (transaction) => {
       const response = await transaction.client
         .mutation(internalCreateMutation(this.apiIdentifier), {
-          record: record[this.apiIdentifier],
+          record: this.getRecordFromData(record, "create"),
         })
         .toPromise();
       const result = assertMutationSuccess(response, ["internal", `create${this.capitalizedApiIdentifier}`]);
@@ -323,7 +351,7 @@ export class InternalModelManager {
       const response = await transaction.client
         .mutation(internalUpdateMutation(this.apiIdentifier), {
           id,
-          record: record[this.apiIdentifier],
+          record: this.getRecordFromData(record, "update"),
         })
         .toPromise();
       const result = assertMutationSuccess(response, ["internal", `update${this.capitalizedApiIdentifier}`]);
