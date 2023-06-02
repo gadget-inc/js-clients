@@ -508,9 +508,7 @@ export const CreatePost = () => {
           // run the action when the button is clicked
           // the action runner function accepts action inputs in the same format as api.blogPost.create, and the GraphQL API
           createBlogPost({
-            blogPost: {
-              title: "New post created from React",
-            },
+            title: "New post created from React",
           });
         }}
       >
@@ -549,9 +547,7 @@ export const UpdatePost = (props: { id: string }) => {
         // pass the id of the blog post we're updating as one parameter, and the new post attributes as another
         updateBlogPost({
           id: props.id,
-          post: {
-            title,
-          },
+          title,
         });
       }}
     >
@@ -574,7 +570,7 @@ const [{ data, fetching, error }, _refetch] = useFindBy(api.blogPost.findBySlug,
 
 ### `useGlobalAction(actionFunction: GlobalActionFunction, options: UseGlobalActionOptions = {}): [{data, fetching, error}, refetch]`
 
-`useGlobalAction` is a hook for running a backend Global Action. `useGlobalAction(api.widget.create)` is the React equivalent of `await api.someGlobalAction({...})`. `useGlobalAction` doesn't immediately dispatch a request to run an action server side, but instead returns a result object and a function which runs the action, similar to [`urql`'s `useMutation` hook](https://formidable.com/open-source/urql/docs/api/urql/#usemutation). `useGlobalAction` must be passed one of the global action functions from an instance of your application's generated API client. Options:
+`useGlobalAction` is a hook for running a backend Global Action. `useGlobalAction(api.someGlobalAction)` is the React equivalent of `await api.someGlobalAction({...})`. `useGlobalAction` doesn't immediately dispatch a request to run an action server side, but instead returns a result object and a function which runs the action, similar to [`urql`'s `useMutation` hook](https://formidable.com/open-source/urql/docs/api/urql/#usemutation). `useGlobalAction` must be passed one of the global action functions from an instance of your application's generated API client. Options:
 
 - `globalActionFunction`: The action function from your application's API client. Gadget generates these global action functions for each global action defined in your Gadget backend. Required. Example: `api.runSync`, or `api.purgeData` (corresponding to Global Actions named `Run Sync` or `Purge Data`).
 - `options`: Options for making the call to the backend. Not required and all keys are optional.

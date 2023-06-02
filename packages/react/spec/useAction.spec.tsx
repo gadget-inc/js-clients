@@ -3,10 +3,13 @@ import { act, renderHook } from "@testing-library/react";
 
 import type { IsExact } from "conditional-type-checks";
 import { assert } from "conditional-type-checks";
+import React from "react";
+import type { AnyVariables } from "urql";
 import { useAction } from "../src";
+import { GadgetProvider as Provider } from "../src/GadgetProvider";
 import type { ErrorWrapper } from "../src/utils";
 import { relatedProductsApi } from "./apis";
-import { mockClient, TestWrapper } from "./testWrapper";
+import { TestWrapper, createMockCLient, mockClient } from "./testWrapper";
 
 describe("useAction", () => {
   // these functions are typechecked but never run to avoid actually making API calls
@@ -27,6 +30,38 @@ describe("useAction", () => {
 
     // @ts-expect-error can't call with variables that don't belong to the model
     void mutate({ foo: "123" });
+  };
+
+  const TestUseActionCanRunWithoutModelApiIdentifier = () => {
+    const [_, mutate] = useAction(relatedProductsApi.unambiguous.update);
+
+    // can call using flat style
+    void mutate({ id: "123", numberField: 654, stringField: "foo" });
+
+    // can call using old style
+    void mutate({ id: "123", unambiguous: { numberField: 321, stringField: "bar" } });
+
+    // @ts-expect-error can't call with no arguments
+    void mutate();
+
+    // @ts-expect-error can't call with no id
+    void mutate({});
+  };
+
+  const TestUseActionCannotRunWithoutModelApiIdentifier = () => {
+    const [_, mutate] = useAction(relatedProductsApi.ambiguous.update);
+
+    // @ts-expect-error models with ambigous identifiers can't be called with flat style signature
+    void mutate({ id: "123", booleanField: true });
+
+    // old style signature is always valid
+    void mutate({ id: "123", ambiguous: { booleanField: true } });
+
+    // @ts-expect-error can't call with no arguments
+    void mutate();
+
+    // @ts-expect-error can't call with no id
+    void mutate({});
   };
 
   const TestUseActionReturnsTypedDataWithExplicitSelection = () => {
@@ -268,5 +303,104 @@ describe("useAction", () => {
     expect(result.current[0].data!.email).toEqual("another@test.com");
     expect(result.current[0].fetching).toBe(false);
     expect(result.current[0].error).toBeFalsy();
+  });
+
+  test("generates correct mutation and variables for a mutation without model api identifier", async () => {
+    let variables: AnyVariables;
+
+    const client = createMockCLient({
+      mutationAssertions: (request) => {
+        variables = request.variables;
+      },
+    });
+
+    const wrapper = (props: { children: React.ReactNode }) => <Provider value={client}>{props.children}</Provider>;
+
+    const { result } = renderHook(() => useAction(relatedProductsApi.unambiguous.update), {
+      wrapper,
+    });
+
+    let mutationPromise: any;
+    act(() => {
+      mutationPromise = result.current[1]({ id: "123", stringField: "hello world", numberField: 21 });
+    });
+
+    client.executeMutation.pushResponse("updateUnambiguous", {
+      data: {
+        updateUnambiguous: {
+          success: true,
+          unambiguous: {
+            id: "123",
+            stringField: "hello world",
+            numberField: 21,
+          },
+        },
+      },
+    });
+
+    await act(async () => {
+      const promiseResult = await mutationPromise;
+      expect(promiseResult.data!.id).toEqual("123");
+      expect(promiseResult.fetching).toBe(false);
+      expect(promiseResult.error).toBeFalsy();
+    });
+
+    const flatVariables = {
+      ...variables,
+    };
+
+    act(() => {
+      mutationPromise = result.current[1]({ id: "123", unambiguous: { stringField: "hello world", numberField: 21 } });
+    });
+
+    client.executeMutation.pushResponse("updateUnambiguous", {
+      data: {
+        updateUnambiguous: {
+          success: true,
+          unambiguous: {
+            id: "123",
+            stringField: "hello world",
+            numberField: 21,
+          },
+        },
+      },
+    });
+
+    await act(async () => {
+      const promiseResult = await mutationPromise;
+      expect(promiseResult.data!.id).toEqual("123");
+      expect(promiseResult.fetching).toBe(false);
+      expect(promiseResult.error).toBeFalsy();
+    });
+
+    expect(flatVariables).toEqual(variables);
+    expect(variables).toMatchInlineSnapshot(`
+      {
+        "id": "123",
+        "unambiguous": {
+          "numberField": 21,
+          "stringField": "hello world",
+        },
+      }
+    `);
+  });
+
+  test("should throw if called without a model api identifier and there is an ambiguous field", async () => {
+    let caughtError = null;
+
+    const { result } = renderHook(() => useAction(relatedProductsApi.ambiguous.update), {
+      wrapper: TestWrapper,
+    });
+
+    try {
+      // @ts-expect-error intentionally calling with wrong type
+      await result.current[1]({ id: "123", booleanField: true });
+    } catch (e) {
+      caughtError = e;
+    }
+
+    expect(caughtError).toMatchInlineSnapshot(
+      `[Error: Invalid arguments found in variables. Did you mean to use ({ ambiguous: { ... } })?]`
+    );
   });
 });

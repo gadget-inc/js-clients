@@ -101,6 +101,9 @@ interface ActionFunctionMetadata<OptionsT, VariablesT, SelectionT, SchemaT, Defa
   variables: VariableOptions;
   variablesType: VariablesT;
   isBulk: IsBulk;
+  hasAmbiguousIdentifier?: boolean;
+  hasCreateOrUpdateEffect?: boolean;
+  paramOnlyVariables?: readonly string[];
 }
 
 export type ActionFunction<OptionsT, VariablesT, SelectionT, SchemaT, DefaultsT> = ActionFunctionMetadata<
