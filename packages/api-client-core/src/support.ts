@@ -203,9 +203,16 @@ export const get = (object: Record<string, any> | null | undefined, path: string
 
 export const isCloseEvent = (event: any): event is CloseEvent => event?.type == "close";
 
-export const capitalizeIdentifier = (str: string | undefined | null): string => {
+/**
+ * Converts a string to camel case, optionally capitalizing the first character.
+ * Defaults to capitalizing the first character.
+ * @param str 
+ * @param capitalizeFirstCharacter 
+ * @returns Camelize string
+ */
+export const capitalizeIdentifier = (str: string | undefined | null, capitalizeFirstCharacter?: boolean): string => {
   if (typeof str !== "string") return "";
-  return camelize(str, true);
+  return camelize(str, capitalizeFirstCharacter);
 };
 
 const capitalizeFirstCharacter = (str: string) => {
