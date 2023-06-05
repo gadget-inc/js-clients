@@ -206,8 +206,8 @@ export const isCloseEvent = (event: any): event is CloseEvent => event?.type == 
 /**
  * Converts a string to camel case, optionally capitalizing the first character.
  * Defaults to capitalizing the first character.
- * @param str 
- * @param capitalizeFirstCharacter 
+ * @param str
+ * @param capitalizeFirstCharacter
  * @returns Camelize string
  */
 export const capitalizeIdentifier = (str: string | undefined | null, capitalizeFirstCharacter?: boolean): string => {
