@@ -3,6 +3,7 @@ node_modules
 .envrc.local
 yarn-error.log
 .yarn
+.pnpm
 tsconfig.tsbuildinfo
 .vscode/settings.json
 .DS_Store

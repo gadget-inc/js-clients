@@ -20,9 +20,8 @@
           packages = rec {
             nodejs = pkgs.nodejs-18_x;
 
-            yarn = pkgs.yarn.override {
-              inherit nodejs;
-            };
+            pnpm = pkgs.nodePackages.pnpm;
+
             git = pkgs.git;
           };
 
