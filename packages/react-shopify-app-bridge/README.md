@@ -33,6 +33,7 @@ To install the JS client for your app, you must set up the Gadget NPM registry, 
 
 ```bash
 npm config set @gadget-client:registry https://registry.gadget.dev/npm
+
 yarn add @gadget-client/my-app-slug
 # or
 npm install @gadget-client/my-app-slug
@@ -121,7 +122,8 @@ function ProductManager() {
       {loading && <span>Loading...</span>}
       {/* A user is viewing this page from a direct link so show them the home page! */}
       {!loading && isRootFrameRequest && <div>Welcome to my cool app's webpage!</div>}
-      {!loading && isAuthenticated &&
+      {!loading &&
+        isAuthenticated &&
         data.map((product) => (
           <button
             onClick={(event) => {
@@ -151,30 +153,32 @@ import { Button, Redirect, TitleBar } from "@shopify/app-bridge/actions";
 import React, { useMemo } from "react";
 // import the instance of the Gadget API client for this app constructed in the other file
 import { api } from "./api";
-import { useLocation, useNavigate, BrowserRouter } from 'react-router-dom';
+import { useLocation, useNavigate, BrowserRouter } from "react-router-dom";
 // import your app's custom routes
-import Routes from './Routes';
+import Routes from "./Routes";
 
 function App() {
   const navigate = useNavigate();
   const location = useLocation();
-  const history = useMemo(
-    () => ({replace: (path) => navigate(path, {replace: true})}),
-    [navigate],
-  );
+  const history = useMemo(() => ({ replace: (path) => navigate(path, { replace: true }) }), [navigate]);
 
   const router = useMemo(
     () => ({
       location,
       history,
     }),
-    [location, history],
+    [location, history]
   );
 
   return (
     // Wrap our main application's react components in the `<GadgetProvider/>` component to interface with Shopify
     // This wrapper sets up the Shopify App Bridge, and will automatically redirect to perform the OAuth authentication if the shopify shop doesn't yet have the store installed.
-    <GadgetProvider type={AppType.Embedded} shopifyApiKey="REPLACE ME with api key from Shopify partners dashboard" api={api} router={router}>
+    <GadgetProvider
+      type={AppType.Embedded}
+      shopifyApiKey="REPLACE ME with api key from Shopify partners dashboard"
+      api={api}
+      router={router}
+    >
       <Routes />
     </GadgetProvider>
   );

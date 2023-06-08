@@ -1,28 +1,17 @@
 # Developing a Gadget client
 
-When developing a Gadget client, or the core, it is helpful to be able to have another project reference your local version. There are two
-options one can do so:
+When developing a Gadget client, or the core, it is helpful to be able to have another project reference your local version. Because we need the in-development version to run in CI, we use `gitpkg` for vendoring in-development versions of these packages within Gadget proper.
 
-## Option 1: yarn link
-
-You can use [`yarn link`](https://classic.yarnpkg.com/en/docs/cli/link) so that yarn installs symbolic links in your `node_modules` to the
-local directory. This means changes should be immediately available. You only need two steps:
-
-1. `yarn link` in the appropriate package's directory, so that yarn understands which directory is associated with a given package.
-2. `yarn link <package>` in the other project using the client you're working on, to set up the symbolic link.
-
-After that, everything should be working!
-
-## Option 2: gitpkg
+## gitpkg
 
 [`gitpkg`](https://github.com/ramasilveyra/gitpkg) is a way to publish an NPM-compatible tarball to a git repository. First, run
 
 ```
 # if able to write to `gadget-inc/js-clients` repo
-yarn prerelease
+pnpm --filter=@gadgetinc/api-client-core prerelease
 
 # to an arbitrary repo
-yarn run gitpkg publish --registry git@mygit.server:org/private-registry.git
+pnpm --filter=@gadgetinc/api-client-core gitpkg publish --registry git@mygit.server:org/private-registry.git
 ```
 
 Once you've released a package, you can add a resolution in your other project's `package.json`:
