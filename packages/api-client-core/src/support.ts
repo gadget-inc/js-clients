@@ -331,25 +331,34 @@ export const getHydrator = (response: Result) => {
   }
 };
 
-export const hydrateRecord = <Shape extends RecordShape = RecordShape>(response: Result, record: any): GadgetRecord<Shape> => {
+export const hydrateRecord = <Shape extends RecordShape = RecordShape>(
+  response: Result,
+  record: any,
+  modelApiIdentifier?: string
+): GadgetRecord<Shape> => {
   const hydrator = getHydrator(response);
   if (hydrator) {
     record = hydrator.apply(record);
   }
-  return new GadgetRecord<Shape>(record);
+
+  return new GadgetRecord<Shape>(record, modelApiIdentifier);
 };
 
-export const hydrateRecordArray = <Shape extends RecordShape = any>(response: Result, records: Array<any>) => {
+export const hydrateRecordArray = <Shape extends RecordShape = any>(response: Result, records: Array<any>, modelApiIdentifier?: string) => {
   const hydrator = getHydrator(response);
   if (hydrator) {
     records = hydrator.apply(records) as any;
   }
-  return records?.map((record) => new GadgetRecord<Shape>(record));
+  return records?.map((record) => new GadgetRecord<Shape>(record, modelApiIdentifier));
 };
 
-export const hydrateConnection = <Shape extends RecordShape = any>(response: Result, connection: { edges: { node: Node }[] }) => {
+export const hydrateConnection = <Shape extends RecordShape = any>(
+  response: Result,
+  connection: { edges: { node: Node }[] },
+  modelApiIdentifier?: string
+) => {
   const nodes = connection.edges.map((edge) => edge.node);
-  return hydrateRecordArray<Shape>(response, nodes);
+  return hydrateRecordArray<Shape>(response, nodes, modelApiIdentifier);
 };
 
 export const toPrimitiveObject = (value: any): any => {

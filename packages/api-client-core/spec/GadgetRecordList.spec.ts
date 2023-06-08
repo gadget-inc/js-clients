@@ -32,7 +32,7 @@ describe("GadgetRecordList", () => {
   test("sends correct page info when paging forward", async () => {
     let startIndex = 0;
     const modelManager = new InternalModelManager("foo", new GadgetConnection({ endpoint: "https://fake-app.gadget.app" }));
-    let recordList = GadgetRecordList.boot(modelManager, [], { pageInfo: pages[startIndex], options: { first: 10 } });
+    let recordList = GadgetRecordList.boot(modelManager, [], { pageInfo: pages[startIndex], options: { first: 10 } }, "foo");
     jest.spyOn(modelManager, "findMany").mockImplementation(async (options) => {
       if (!options) {
         throw new Error("Expected options to be defined");
@@ -115,5 +115,17 @@ describe("GadgetRecordList", () => {
     await expect(recordList.nextPage()).rejects.toThrow(
       "Cannot request next page because there isn't one, should check 'hasNextPage' to see if it exists"
     );
+  });
+
+  test("throws if model api identifier is modified after boot", () => {
+    const startIndex = 0;
+
+    const modelManager = new InternalModelManager("foo", new GadgetConnection({ endpoint: "https://fake-app.gadget.app" }));
+    const recordList = GadgetRecordList.boot(modelManager, [], { pageInfo: pages[startIndex], options: { first: 10 } }, "foo");
+
+    expect(() => {
+      recordList.modelApiIdentifier = "bar";
+    }).toThrowErrorMatchingInlineSnapshot(`"Cannot assign to read only property 'modelApiIdentifier' of object '[object Array]'"`);
+    expect(recordList.modelApiIdentifier).toBe("foo");
   });
 });

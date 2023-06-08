@@ -16,17 +16,20 @@ type PaginationConfig = {
 export class GadgetRecordList<Shape extends RecordShape> extends Array<GadgetRecord<Shape>> {
   modelManager!: AnyModelManager | InternalModelManager;
   pagination!: PaginationConfig;
+  modelApiIdentifier?: string;
 
   /** Internal method used to create a list. Should not be used by applications. */
   static boot<Shape extends RecordShape>(
     modelManager: AnyModelManager | InternalModelManager,
     records: GadgetRecord<Shape>[],
-    pagination: PaginationConfig
+    pagination: PaginationConfig,
+    modelApiIdentifier?: string
   ) {
     const list = new GadgetRecordList<Shape>();
     list.push(...records);
     list.modelManager = modelManager;
     list.pagination = pagination;
+    list.modelApiIdentifier = modelApiIdentifier;
     Object.freeze(list);
     return list;
   }

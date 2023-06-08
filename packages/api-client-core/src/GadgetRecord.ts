@@ -23,9 +23,12 @@ export class GadgetRecordImplementation<Shape extends RecordShape> {
 
   private empty = false;
 
-  constructor(data: Shape) {
+  modelApiIdentifier?: string;
+
+  constructor(data: Shape, modelApiIdentifier?: string) {
     this.__gadget.instantiatedFields = cloneDeep(data);
     this.__gadget.persistedFields = cloneDeep(data);
+    this.modelApiIdentifier = modelApiIdentifier;
     Object.assign(this.__gadget.fields, data);
 
     if (!data || Object.keys(data).length === 0) {
@@ -47,6 +50,10 @@ export class GadgetRecordImplementation<Shape extends RecordShape> {
         }
       },
       set: (obj: Record<string, any>, prop: string | symbol, value: any) => {
+        if (prop === "modelApiIdentifier") {
+          return false;
+        }
+
         this.trackKey(prop);
         obj[prop.toString()] = value;
         return true;
@@ -193,6 +200,6 @@ export class GadgetRecordImplementation<Shape extends RecordShape> {
  */
 
 /** Instantiate a `GadgetRecord` with the attributes of your model. A `GadgetRecord` can be used to track changes to your model and persist those changes via Gadget actions. */
-export const GadgetRecord: new <Shape extends RecordShape>(data: Shape) => GadgetRecordImplementation<Shape> & Shape =
-  GadgetRecordImplementation as any;
+export const GadgetRecord: new <Shape extends RecordShape>(data: Shape, modelApiIdentifier?: string) => GadgetRecordImplementation<Shape> &
+  Shape = GadgetRecordImplementation as any;
 export type GadgetRecord<Shape extends RecordShape> = GadgetRecordImplementation<Shape> & Shape;

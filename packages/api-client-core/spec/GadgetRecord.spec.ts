@@ -7,6 +7,7 @@ interface SampleBaseRecord {
 }
 
 const _expectNoChanges = (record: GadgetRecord<SampleBaseRecord>, tracking: ChangeTracking, ...properties: string[]) => {
+  expect(record.modelApiIdentifier).toEqual("product");
   for (const property of properties) {
     expect(record.changed(property, tracking)).toEqual(false);
     expect(record.changes(property, tracking)).toEqual({ changed: false });
@@ -23,6 +24,7 @@ const expectNoPersistedChanges = (record: GadgetRecord<SampleBaseRecord>, ...pro
 };
 
 const _expectChanges = (record: GadgetRecord<SampleBaseRecord>, tracking: ChangeTracking, ...properties: string[]) => {
+  expect(record.modelApiIdentifier).toEqual("product");
   for (const property of properties) {
     expect(record.changed(property, tracking)).toEqual(true);
     expect(record.changes(property, tracking).changed).toEqual(true);
@@ -49,24 +51,43 @@ describe("GadgetRecord", () => {
   });
 
   it("should respond toJSON, which returns the inner __gadget.fields properties", () => {
-    const product = new GadgetRecord<SampleBaseRecord>(productBaseRecord);
+    const product = new GadgetRecord<SampleBaseRecord>(productBaseRecord, "product");
     expect(product.toJSON()).toEqual({
       ...productBaseRecord,
     });
   });
 
+  it("should allow setting the model API identifier to the GadgetRecord", () => {
+    const product = new GadgetRecord<SampleBaseRecord>(productBaseRecord, "product");
+
+    // The model API identifier should not be visible in the JSON representation
+    expect(product.toJSON()).toEqual({
+      ...productBaseRecord,
+    });
+
+    expect(product.modelApiIdentifier).toEqual("product");
+  });
+
+  it("should not allow modifying the model API identifier after instantiation", () => {
+    const product = new GadgetRecord<SampleBaseRecord>(productBaseRecord, "product");
+    expect(() => {
+      product.modelApiIdentifier = "foo";
+    }).toThrowErrorMatchingInlineSnapshot(`"'set' on proxy: trap returned falsish for property 'modelApiIdentifier'"`);
+    expect(product.modelApiIdentifier).toEqual("product");
+  });
+
   it("should proxy properties to the inner __gadget.fields object", () => {
-    const product = new GadgetRecord<SampleBaseRecord>(productBaseRecord);
+    const product = new GadgetRecord<SampleBaseRecord>(productBaseRecord, "product");
     expect(product.id).toEqual("123");
   });
 
   it("should return undefined for any property that doesn't exist on the __gadget.fields object", () => {
-    const product = new GadgetRecord<SampleBaseRecord>(productBaseRecord);
+    const product = new GadgetRecord<SampleBaseRecord>(productBaseRecord, "product");
     expect(product.foo).toBeUndefined();
   });
 
   it("should allow you to set properties that were instantiated with the record", () => {
-    const product = new GadgetRecord<SampleBaseRecord>(productBaseRecord);
+    const product = new GadgetRecord<SampleBaseRecord>(productBaseRecord, "product");
     expect(product.name).toEqual("A cool product");
 
     product.name = "An even cooler product";
@@ -74,14 +95,14 @@ describe("GadgetRecord", () => {
   });
 
   it("should allow you to set new properties on the __gadget.fields object", () => {
-    const product = new GadgetRecord<SampleBaseRecord>(productBaseRecord);
+    const product = new GadgetRecord<SampleBaseRecord>(productBaseRecord, "product");
 
     product.state = "created";
     expect(product.state).toEqual("created");
   });
 
   it("should allow you to ask for changes on a specific property", () => {
-    const product = new GadgetRecord<SampleBaseRecord>(productBaseRecord);
+    const product = new GadgetRecord<SampleBaseRecord>(productBaseRecord, "product");
     expectNoChanges(product, "name");
 
     product.name = "A newer name";
@@ -90,7 +111,7 @@ describe("GadgetRecord", () => {
   });
 
   it("should only look at the most recent change to a property", () => {
-    const product = new GadgetRecord<SampleBaseRecord>(productBaseRecord);
+    const product = new GadgetRecord<SampleBaseRecord>(productBaseRecord, "product");
     expectNoChanges(product, "name");
 
     product.name = "A newer name";
@@ -101,7 +122,7 @@ describe("GadgetRecord", () => {
   });
 
   it("should treat null as a dirty value", () => {
-    const product = new GadgetRecord<SampleBaseRecord>(productBaseRecord);
+    const product = new GadgetRecord<SampleBaseRecord>(productBaseRecord, "product");
     expectNoChanges(product, "name");
 
     product.name = null;
@@ -111,7 +132,7 @@ describe("GadgetRecord", () => {
   });
 
   it("should treat undefined as a dirty value", () => {
-    const product = new GadgetRecord<SampleBaseRecord>(productBaseRecord);
+    const product = new GadgetRecord<SampleBaseRecord>(productBaseRecord, "product");
     expectNoChanges(product, "name");
 
     product.name = undefined;
@@ -120,7 +141,7 @@ describe("GadgetRecord", () => {
   });
 
   it("should allow you to ask for changes on the entire object", () => {
-    const product = new GadgetRecord<SampleBaseRecord>(productBaseRecord);
+    const product = new GadgetRecord<SampleBaseRecord>(productBaseRecord, "product");
     expectNoChanges(product, "name", "body", "count");
 
     product.name = "A newer name";
@@ -139,7 +160,7 @@ describe("GadgetRecord", () => {
   });
 
   it("should allow you to ask for CURRENT values of changed props on the entire object", () => {
-    const product = new GadgetRecord<SampleBaseRecord>(productBaseRecord);
+    const product = new GadgetRecord<SampleBaseRecord>(productBaseRecord, "product");
     expectNoChanges(product, "name", "body", "count");
 
     product.name = "A newer name";
@@ -156,7 +177,7 @@ describe("GadgetRecord", () => {
   });
 
   it("should allow dirty tracking on array fields", () => {
-    const product = new GadgetRecord<SampleBaseRecord>({ ...productBaseRecord, anArray: [1, 2, 3] });
+    const product = new GadgetRecord<SampleBaseRecord>({ ...productBaseRecord, anArray: [1, 2, 3] }, "product");
     expectNoChanges(product, "anArray");
 
     product.anArray.push(4);
@@ -170,7 +191,7 @@ describe("GadgetRecord", () => {
 
   it("should allow dirty tracking on nested objects", () => {
     const nestedObject = { foo: "bar", subArray: [1, 2, 3] };
-    const product = new GadgetRecord<SampleBaseRecord>({ ...productBaseRecord, nestedObject });
+    const product = new GadgetRecord<SampleBaseRecord>({ ...productBaseRecord, nestedObject }, "product");
     expectNoChanges(product, "nestedObject");
 
     product.nestedObject.subArray.push(4);
@@ -185,7 +206,7 @@ describe("GadgetRecord", () => {
   it("should allow an object to become dirty, then return to a non dirty state", () => {
     const nestedObject = { foo: "bar", subArray: [1, 2, 3] };
     const anArray = [1, 2, 3];
-    const product = new GadgetRecord<SampleBaseRecord>({ ...productBaseRecord, nestedObject, anArray });
+    const product = new GadgetRecord<SampleBaseRecord>({ ...productBaseRecord, nestedObject, anArray }, "product");
     expectNoChanges(product, "name", "description", "nestedObject", "anArray");
 
     product.name = "A dirty name";
@@ -206,7 +227,7 @@ describe("GadgetRecord", () => {
   it("should allow dirty changes to be flushed", () => {
     const nestedObject = { foo: "bar", subArray: [1, 2, 3] };
     const anArray = [1, 2, 3];
-    const product = new GadgetRecord<SampleBaseRecord>({ ...productBaseRecord, nestedObject, anArray });
+    const product = new GadgetRecord<SampleBaseRecord>({ ...productBaseRecord, nestedObject, anArray }, "product");
     expectNoChanges(product, "name", "description", "nestedObject", "anArray");
 
     product.name = "A dirty name";
@@ -223,7 +244,7 @@ describe("GadgetRecord", () => {
   it("should allow persisted dirty changes to be flushed", () => {
     const nestedObject = { foo: "bar", subArray: [1, 2, 3] };
     const anArray = [1, 2, 3];
-    const product = new GadgetRecord<SampleBaseRecord>({ ...productBaseRecord, nestedObject, anArray });
+    const product = new GadgetRecord<SampleBaseRecord>({ ...productBaseRecord, nestedObject, anArray }, "product");
     expectNoChanges(product, "name", "description", "nestedObject", "anArray");
 
     product.name = "A dirty name";
@@ -241,7 +262,7 @@ describe("GadgetRecord", () => {
   it("should allow dirty changes to be reverted", () => {
     const nestedObject = { foo: "bar", subArray: [1, 2, 3] };
     const anArray = [1, 2, 3];
-    const product = new GadgetRecord<SampleBaseRecord>({ ...productBaseRecord, nestedObject, anArray });
+    const product = new GadgetRecord<SampleBaseRecord>({ ...productBaseRecord, nestedObject, anArray }, "product");
     expectNoChanges(product, "name", "description", "nestedObject", "anArray");
 
     product.name = "A dirty name";
@@ -264,7 +285,7 @@ describe("GadgetRecord", () => {
   it("should allow dirty changes to be reverted to the persisted state", () => {
     const nestedObject = { foo: "bar", subArray: [1, 2, 3] };
     const anArray = [1, 2, 3];
-    const product = new GadgetRecord<SampleBaseRecord>({ ...productBaseRecord, nestedObject, anArray });
+    const product = new GadgetRecord<SampleBaseRecord>({ ...productBaseRecord, nestedObject, anArray }, "product");
     expectNoChanges(product, "name", "description", "nestedObject", "anArray");
 
     product.name = "A dirty name";
@@ -306,7 +327,7 @@ describe("GadgetRecord", () => {
   test("should allow reverting of ChangeTracking.SinceLoaded changes without affect ChangeTracking.SincePersisted changes", () => {
     const nestedObject = { foo: "bar", subArray: [1, 2, 3] };
     const anArray = [1, 2, 3];
-    const product = new GadgetRecord<SampleBaseRecord>({ ...productBaseRecord, nestedObject, anArray });
+    const product = new GadgetRecord<SampleBaseRecord>({ ...productBaseRecord, nestedObject, anArray }, "product");
     expectNoChanges(product, "name", "description", "nestedObject", "anArray");
 
     product.name = "A dirty name";
@@ -336,7 +357,7 @@ describe("GadgetRecord", () => {
   });
 
   test("should allow touching, which marks the record as changed without changing field values", () => {
-    const product = new GadgetRecord<SampleBaseRecord>(productBaseRecord);
+    const product = new GadgetRecord<SampleBaseRecord>(productBaseRecord, "product");
     expect(product.changed()).toBe(false);
     product.touch();
     expect(product.changed()).toBe(true);
@@ -347,7 +368,7 @@ describe("GadgetRecord", () => {
   });
 
   test("reverting changes clears touched status", () => {
-    const product = new GadgetRecord<SampleBaseRecord>(productBaseRecord);
+    const product = new GadgetRecord<SampleBaseRecord>(productBaseRecord, "product");
     expect(product.changed()).toBe(false);
     product.touch();
     expect(product.changed()).toBe(true);
@@ -356,7 +377,7 @@ describe("GadgetRecord", () => {
   });
 
   test("should allow touching and changing fields together", () => {
-    const product = new GadgetRecord<SampleBaseRecord>(productBaseRecord);
+    const product = new GadgetRecord<SampleBaseRecord>(productBaseRecord, "product");
     expect(product.changed()).toBe(false);
     product.name = "A new name";
     expect(product.changed()).toBe(true);
