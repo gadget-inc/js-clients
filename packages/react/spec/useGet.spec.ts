@@ -5,7 +5,7 @@ import { assert } from "conditional-type-checks";
 import { useGet } from "../src/useGet";
 import type { ErrorWrapper } from "../src/utils";
 import { relatedProductsApi } from "./apis";
-import { TestWrapper, mockClient } from "./testWrapper";
+import { TestWrapper, mockUrqlClient } from "./testWrapper";
 
 describe("useGet", () => {
   // these functions are typechecked but never run to avoid actually making API calls
@@ -42,9 +42,9 @@ describe("useGet", () => {
     expect(result.current[0].fetching).toBe(true);
     expect(result.current[0].error).toBeFalsy();
 
-    expect(mockClient.executeQuery).toBeCalledTimes(1);
+    expect(mockUrqlClient.executeQuery).toBeCalledTimes(1);
 
-    mockClient.executeQuery.pushResponse("currentSession", {
+    mockUrqlClient.executeQuery.pushResponse("currentSession", {
       data: {
         currentSession: {
           id: "123",
@@ -64,9 +64,9 @@ describe("useGet", () => {
     expect(result.current[0].fetching).toBe(true);
     expect(result.current[0].error).toBeFalsy();
 
-    expect(mockClient.executeQuery).toBeCalledTimes(1);
+    expect(mockUrqlClient.executeQuery).toBeCalledTimes(1);
 
-    mockClient.executeQuery.pushResponse("currentSession", {
+    mockUrqlClient.executeQuery.pushResponse("currentSession", {
       data: {
         currentSession: null,
       },
@@ -80,9 +80,9 @@ describe("useGet", () => {
   test("it returns the same data on rerender", async () => {
     const { result, rerender } = renderHook(() => useGet(relatedProductsApi.currentSession), { wrapper: TestWrapper });
 
-    expect(mockClient.executeQuery).toBeCalledTimes(1);
+    expect(mockUrqlClient.executeQuery).toBeCalledTimes(1);
 
-    mockClient.executeQuery.pushResponse("currentSession", {
+    mockUrqlClient.executeQuery.pushResponse("currentSession", {
       data: {
         currentSession: {
           id: "123",

@@ -2,7 +2,7 @@ import type { ActionFunction, DefaultSelection, GadgetRecord, LimitToKnownKeys, 
 import { actionOperation, capitalizeIdentifier, get, hydrateRecord } from "@gadgetinc/api-client-core";
 import { useCallback, useContext, useMemo } from "react";
 import type { AnyVariables, UseMutationState } from "urql";
-import { GadgetContext } from "./GadgetProvider";
+import { GadgetUrqlClientContext } from "./GadgetProvider";
 import type { OptionsType } from "./OptionsType";
 import { useGadgetMutation } from "./useGadgetMutation";
 import { useStructuralMemo } from "./useStructuralMemo";
@@ -51,7 +51,7 @@ export const useAction = <
   GadgetRecord<Select<Exclude<F["schemaType"], null | undefined>, DefaultSelection<F["selectionType"], Options, F["defaultSelection"]>>>,
   Exclude<F["variablesType"], null | undefined>
 > => {
-  if (!useContext(GadgetContext)) throw new Error(noProviderErrorMessage);
+  if (!useContext(GadgetUrqlClientContext)) throw new Error(noProviderErrorMessage);
 
   const memoizedOptions = useStructuralMemo(options);
   const plan = useMemo(() => {

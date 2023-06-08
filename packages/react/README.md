@@ -66,7 +66,7 @@ const api = new Client({ authenticationMode: { browserSession: true } });
 
 export const MyApp = (props) => {
   // wrapp the application in the <Provider> so the hooks can find the current client
-  return <Provider value={api.connection.currentClient}>{props.children}</Provider>;
+  return <Provider api={api}>{props.children}</Provider>;
 };
 ```
 
@@ -85,7 +85,7 @@ const api = new Client({ authenticationMode: { browserSession: true } });
 export function MyComponent() {
   // ensure any components which use the @gadgetinc/react hooks are wrapped with the provider, and passed the current api client
   return (
-    <Provider value={api.connection.currentClient}>
+    <Provider api={api}>
       <WidgetDeleter />
     </Provider>
   );
@@ -991,7 +991,7 @@ query GetWidgets {
 };
 
 export const App = () => (
-  <Provider value={api.connection.currentClient}>
+  <Provider api={api}>
     <ShowWidgetNames />
   </Provider>
 );
