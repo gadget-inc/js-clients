@@ -15,7 +15,6 @@ jobs:
       - uses: actions/checkout@v3
       - uses: ./.github/actions/setup-test-env
       - name: Build all packages
-        shell: nix develop -c bash -eo pipefail -l {0}
         run: pnpm build
       - name: Publish @gadgetinc/api-client-core
         uses: JS-DevTools/npm-publish@v1
