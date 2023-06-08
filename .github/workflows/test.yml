@@ -9,10 +9,8 @@ jobs:
       - uses: actions/checkout@v3
       - uses: ./.github/actions/setup-test-env
       - name: Build all packages (so they can require each other)
-        shell: nix develop -c bash -eo pipefail -l {0}
         run: pnpm build
       - name: Test
-        shell: nix develop -c bash -eo pipefail -l {0}
         run: pnpm test
   lint:
     runs-on: ubuntu-latest
@@ -20,10 +18,8 @@ jobs:
       - uses: actions/checkout@v3
       - uses: ./.github/actions/setup-test-env
       - name: Build all packages (so they can require each other)
-        shell: nix develop -c bash -eo pipefail -l {0}
         run: pnpm build
       - name: Lint
-        shell: nix develop -c bash -eo pipefail -l {0}
         run: pnpm lint
   versions:
     runs-on: ubuntu-latest
@@ -31,5 +27,4 @@ jobs:
       - uses: actions/checkout@v3
       - uses: ./.github/actions/setup-test-env
       - name: Check dependency versions
-        shell: nix develop -c bash -eo pipefail -l {0}
         run: pnpm check-dependency-versions
