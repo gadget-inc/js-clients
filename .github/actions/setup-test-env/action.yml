@@ -27,7 +27,9 @@ runs:
                 echo "${name}=${value//\"/}" >> $output_file
             fi
         done < <(env -0)
-        cat nix-env.txt
+
+        # useful for debugging what env is exported
+        # cat nix-env.txt
       shell: bash
     - run: cat nix-env.txt >> "$GITHUB_ENV"
       shell: bash

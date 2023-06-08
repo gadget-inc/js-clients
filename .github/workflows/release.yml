@@ -5,6 +5,8 @@ on:
       - main
     paths:
       - "packages/**/package.json"
+  workflow_dispatch:
+
 jobs:
   test:
     uses: ./.github/workflows/test.yml
