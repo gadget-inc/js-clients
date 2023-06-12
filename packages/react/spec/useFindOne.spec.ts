@@ -5,7 +5,7 @@ import { assert } from "conditional-type-checks";
 import { useFindOne } from "../src";
 import type { ErrorWrapper } from "../src/utils";
 import { relatedProductsApi } from "./apis";
-import { mockClient, TestWrapper } from "./testWrapper";
+import { mockUrqlClient, TestWrapper } from "./testWrapper";
 
 describe("useFindOne", () => {
   // these functions are typechecked but never run to avoid actually making API calls
@@ -42,9 +42,9 @@ describe("useFindOne", () => {
     expect(result.current[0].fetching).toBe(true);
     expect(result.current[0].error).toBeFalsy();
 
-    expect(mockClient.executeQuery).toBeCalledTimes(1);
+    expect(mockUrqlClient.executeQuery).toBeCalledTimes(1);
 
-    mockClient.executeQuery.pushResponse("user", {
+    mockUrqlClient.executeQuery.pushResponse("user", {
       data: {
         user: {
           id: "123",
@@ -66,9 +66,9 @@ describe("useFindOne", () => {
     expect(result.current[0].fetching).toBe(true);
     expect(result.current[0].error).toBeFalsy();
 
-    expect(mockClient.executeQuery).toBeCalledTimes(1);
+    expect(mockUrqlClient.executeQuery).toBeCalledTimes(1);
 
-    mockClient.executeQuery.pushResponse("user", {
+    mockUrqlClient.executeQuery.pushResponse("user", {
       data: {
         user: null,
       },
@@ -89,9 +89,9 @@ describe("useFindOne", () => {
   test("returns the same data on rerender", async () => {
     const { result, rerender } = renderHook(() => useFindOne(relatedProductsApi.user, "123"), { wrapper: TestWrapper });
 
-    expect(mockClient.executeQuery).toBeCalledTimes(1);
+    expect(mockUrqlClient.executeQuery).toBeCalledTimes(1);
 
-    mockClient.executeQuery.pushResponse("user", {
+    mockUrqlClient.executeQuery.pushResponse("user", {
       data: {
         user: {
           id: "123",

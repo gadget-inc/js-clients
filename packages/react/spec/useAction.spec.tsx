@@ -6,10 +6,10 @@ import { assert } from "conditional-type-checks";
 import React from "react";
 import type { AnyVariables } from "urql";
 import { useAction } from "../src";
-import { GadgetProvider as Provider } from "../src/GadgetProvider";
+import { Provider } from "../src/GadgetProvider";
 import type { ErrorWrapper } from "../src/utils";
 import { relatedProductsApi } from "./apis";
-import { TestWrapper, createMockCLient, mockClient } from "./testWrapper";
+import { TestWrapper, createMockUrqlCient, mockUrqlClient } from "./testWrapper";
 
 describe("useAction", () => {
   // these functions are typechecked but never run to avoid actually making API calls
@@ -109,9 +109,9 @@ describe("useAction", () => {
     expect(result.current[0].fetching).toBe(true);
     expect(result.current[0].error).toBeFalsy();
 
-    expect(mockClient.executeMutation).toBeCalledTimes(1);
+    expect(mockUrqlClient.executeMutation).toBeCalledTimes(1);
 
-    mockClient.executeMutation.pushResponse("updateUser", {
+    mockUrqlClient.executeMutation.pushResponse("updateUser", {
       data: {
         updateUser: {
           success: true,
@@ -154,9 +154,9 @@ describe("useAction", () => {
     expect(result.current[0].fetching).toBe(true);
     expect(result.current[0].error).toBeFalsy();
 
-    expect(mockClient.executeMutation).toBeCalledTimes(1);
+    expect(mockUrqlClient.executeMutation).toBeCalledTimes(1);
 
-    mockClient.executeMutation.pushResponse("updateUser", {
+    mockUrqlClient.executeMutation.pushResponse("updateUser", {
       data: {
         updateUser: {
           success: false,
@@ -204,9 +204,9 @@ describe("useAction", () => {
       mutationPromise = result.current[1]({ id: "123", user: { email: "test@test.com" } });
     });
 
-    expect(mockClient.executeMutation).toBeCalledTimes(1);
+    expect(mockUrqlClient.executeMutation).toBeCalledTimes(1);
 
-    mockClient.executeMutation.pushResponse("updateUser", {
+    mockUrqlClient.executeMutation.pushResponse("updateUser", {
       data: {
         updateUser: {
           success: true,
@@ -242,9 +242,9 @@ describe("useAction", () => {
     expect(result.current[0].fetching).toBe(true);
     expect(result.current[0].error).toBeFalsy();
 
-    expect(mockClient.executeMutation).toBeCalledTimes(1);
+    expect(mockUrqlClient.executeMutation).toBeCalledTimes(1);
 
-    mockClient.executeMutation.pushResponse("updateUser", {
+    mockUrqlClient.executeMutation.pushResponse("updateUser", {
       data: {
         updateUser: {
           success: true,
@@ -277,9 +277,9 @@ describe("useAction", () => {
     expect(result.current[0].fetching).toBe(true);
     expect(result.current[0].error).toBeFalsy();
 
-    expect(mockClient.executeMutation).toBeCalledTimes(2);
+    expect(mockUrqlClient.executeMutation).toBeCalledTimes(2);
 
-    mockClient.executeMutation.pushResponse("updateUser", {
+    mockUrqlClient.executeMutation.pushResponse("updateUser", {
       data: {
         updateUser: {
           success: true,
@@ -308,7 +308,7 @@ describe("useAction", () => {
   test("generates correct mutation and variables for a mutation without model api identifier", async () => {
     let variables: AnyVariables;
 
-    const client = createMockCLient({
+    const client = createMockUrqlCient({
       mutationAssertions: (request) => {
         variables = request.variables;
       },

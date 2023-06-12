@@ -5,7 +5,7 @@ import { act } from "react-dom/test-utils";
 import { useGlobalAction } from "../src";
 import type { ErrorWrapper } from "../src/utils";
 import { bulkExampleApi } from "./apis";
-import { mockClient, TestWrapper } from "./testWrapper";
+import { mockUrqlClient, TestWrapper } from "./testWrapper";
 
 describe("useGlobalAction", () => {
   // these functions are typechecked but never run to avoid actually making API calls
@@ -43,9 +43,9 @@ describe("useGlobalAction", () => {
     expect(result.current[0].fetching).toBe(true);
     expect(result.current[0].error).toBeFalsy();
 
-    expect(mockClient.executeMutation).toBeCalledTimes(1);
+    expect(mockUrqlClient.executeMutation).toBeCalledTimes(1);
 
-    mockClient.executeMutation.pushResponse("flipAll", {
+    mockUrqlClient.executeMutation.pushResponse("flipAll", {
       data: {
         flipAll: {
           success: true,
@@ -78,9 +78,9 @@ describe("useGlobalAction", () => {
     expect(result.current[0].fetching).toBe(true);
     expect(result.current[0].error).toBeFalsy();
 
-    expect(mockClient.executeMutation).toBeCalledTimes(1);
+    expect(mockUrqlClient.executeMutation).toBeCalledTimes(1);
 
-    mockClient.executeMutation.pushResponse("flipAll", {
+    mockUrqlClient.executeMutation.pushResponse("flipAll", {
       data: {
         flipAll: {
           success: false,
@@ -113,9 +113,9 @@ describe("useGlobalAction", () => {
       mutationPromise = result.current[1]({ why: "foobar" });
     });
 
-    expect(mockClient.executeMutation).toBeCalledTimes(1);
+    expect(mockUrqlClient.executeMutation).toBeCalledTimes(1);
 
-    mockClient.executeMutation.pushResponse("flipAll", {
+    mockUrqlClient.executeMutation.pushResponse("flipAll", {
       data: {
         flipAll: {
           success: true,

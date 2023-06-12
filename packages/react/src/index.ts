@@ -1,5 +1,5 @@
 export { Consumer, Context } from "urql";
-export { GadgetProvider as Provider } from "./GadgetProvider";
+export { Provider } from "./GadgetProvider";
 export * from "./useAction";
 export * from "./useBulkAction";
 export * from "./useFetch";

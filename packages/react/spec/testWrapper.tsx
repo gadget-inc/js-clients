@@ -8,7 +8,7 @@ import type { Client, GraphQLRequest, OperationContext, OperationResult } from "
 import { makeErrorResult } from "urql";
 import type { Subject } from "wonka";
 import { makeSubject } from "wonka";
-import { GadgetProvider as Provider } from "../src/GadgetProvider";
+import { Provider } from "../src/GadgetProvider";
 
 export type MockOperationFn = jest.Mock & {
   subjects: Record<string, Subject<OperationResult>>;
@@ -122,17 +122,17 @@ const newMockFetchFn = () => {
   return fn;
 };
 
-export const mockClient = {} as MockUrqlClient;
+export const mockUrqlClient = {} as MockUrqlClient;
 beforeEach(() => {
-  mockClient.executeQuery = newMockOperationFn();
-  mockClient.executeMutation = newMockOperationFn();
-  mockClient.executeSubscription = newMockOperationFn();
-  mockClient[$gadgetConnection] = {
+  mockUrqlClient.executeQuery = newMockOperationFn();
+  mockUrqlClient.executeMutation = newMockOperationFn();
+  mockUrqlClient.executeSubscription = newMockOperationFn();
+  mockUrqlClient[$gadgetConnection] = {
     fetch: newMockFetchFn(),
   };
 });
 
-export const createMockCLient = (assertions?: {
+export const createMockUrqlCient = (assertions?: {
   mutationAssertions?: (request: GraphQLRequest) => void;
   queryAssertions?: (request: GraphQLRequest) => void;
 }) => {
@@ -147,5 +147,5 @@ export const createMockCLient = (assertions?: {
 };
 
 export const TestWrapper = (props: { children: ReactNode }) => {
-  return <Provider value={mockClient}>{props.children}</Provider>;
+  return <Provider value={mockUrqlClient}>{props.children}</Provider>;
 };

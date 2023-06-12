@@ -5,7 +5,7 @@ import { assert } from "conditional-type-checks";
 import { useFindMany } from "../src/useFindMany";
 import type { ErrorWrapper } from "../src/utils";
 import { relatedProductsApi } from "./apis";
-import { mockClient, TestWrapper } from "./testWrapper";
+import { mockUrqlClient, TestWrapper } from "./testWrapper";
 
 describe("useFindMany", () => {
   // all these functions are typechecked but never run to avoid actually making API calls
@@ -40,9 +40,9 @@ describe("useFindMany", () => {
     expect(result.current[0].fetching).toBe(true);
     expect(result.current[0].error).toBeFalsy();
 
-    expect(mockClient.executeQuery).toBeCalledTimes(1);
+    expect(mockUrqlClient.executeQuery).toBeCalledTimes(1);
 
-    mockClient.executeQuery.pushResponse("users", {
+    mockUrqlClient.executeQuery.pushResponse("users", {
       data: {
         users: {
           edges: [
@@ -79,9 +79,9 @@ describe("useFindMany", () => {
     expect(result.current[0].fetching).toBe(true);
     expect(result.current[0].error).toBeFalsy();
 
-    expect(mockClient.executeQuery).toBeCalledTimes(1);
+    expect(mockUrqlClient.executeQuery).toBeCalledTimes(1);
 
-    mockClient.executeQuery.pushResponse("users", {
+    mockUrqlClient.executeQuery.pushResponse("users", {
       data: {
         users: {
           edges: [
@@ -113,9 +113,9 @@ describe("useFindMany", () => {
     expect(result.current[0].fetching).toBe(true);
     expect(result.current[0].error).toBeFalsy();
 
-    expect(mockClient.executeQuery).toBeCalledTimes(2);
+    expect(mockUrqlClient.executeQuery).toBeCalledTimes(2);
 
-    mockClient.executeQuery.pushResponse("users", {
+    mockUrqlClient.executeQuery.pushResponse("users", {
       data: {
         users: {
           edges: [
@@ -147,9 +147,9 @@ describe("useFindMany", () => {
     expect(result.current[0].fetching).toBe(true);
     expect(result.current[0].error).toBeFalsy();
 
-    expect(mockClient.executeQuery).toBeCalledTimes(1);
+    expect(mockUrqlClient.executeQuery).toBeCalledTimes(1);
 
-    mockClient.executeQuery.pushResponse("users", {
+    mockUrqlClient.executeQuery.pushResponse("users", {
       data: {
         users: {
           edges: [],
@@ -175,9 +175,9 @@ describe("useFindMany", () => {
     expect(result.current[0].fetching).toBe(true);
     expect(result.current[0].error).toBeFalsy();
 
-    expect(mockClient.executeQuery).toBeCalledTimes(1);
+    expect(mockUrqlClient.executeQuery).toBeCalledTimes(1);
 
-    mockClient.executeQuery.pushResponse("users", {
+    mockUrqlClient.executeQuery.pushResponse("users", {
       data: {
         users: {
           edges: [

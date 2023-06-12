@@ -6,7 +6,7 @@ import { act } from "react-dom/test-utils";
 import { useBulkAction } from "../src";
 import type { ErrorWrapper } from "../src/utils";
 import { bulkExampleApi } from "./apis";
-import { mockClient, TestWrapper } from "./testWrapper";
+import { mockUrqlClient, TestWrapper } from "./testWrapper";
 
 describe("useBulkAction", () => {
   // these functions are typechecked but never run to avoid actually making API calls
@@ -70,9 +70,9 @@ describe("useBulkAction", () => {
     expect(result.current[0].fetching).toBe(true);
     expect(result.current[0].error).toBeFalsy();
 
-    expect(mockClient.executeMutation).toBeCalledTimes(1);
+    expect(mockUrqlClient.executeMutation).toBeCalledTimes(1);
 
-    mockClient.executeMutation.pushResponse("bulkFlipDownWidgets", {
+    mockUrqlClient.executeMutation.pushResponse("bulkFlipDownWidgets", {
       data: {
         bulkFlipDownWidgets: {
           success: true,
@@ -117,9 +117,9 @@ describe("useBulkAction", () => {
     expect(result.current[0].fetching).toBe(true);
     expect(result.current[0].error).toBeFalsy();
 
-    expect(mockClient.executeMutation).toBeCalledTimes(1);
+    expect(mockUrqlClient.executeMutation).toBeCalledTimes(1);
 
-    mockClient.executeMutation.pushResponse("bulkFlipDownWidgets", {
+    mockUrqlClient.executeMutation.pushResponse("bulkFlipDownWidgets", {
       data: {
         bulkFlipDownWidgets: {
           success: false,
@@ -155,9 +155,9 @@ describe("useBulkAction", () => {
       mutationPromise = result.current[1]({ ids: ["123", "124"] });
     });
 
-    expect(mockClient.executeMutation).toBeCalledTimes(1);
+    expect(mockUrqlClient.executeMutation).toBeCalledTimes(1);
 
-    mockClient.executeMutation.pushResponse("bulkFlipDownWidgets", {
+    mockUrqlClient.executeMutation.pushResponse("bulkFlipDownWidgets", {
       data: {
         bulkFlipDownWidgets: {
           success: true,
