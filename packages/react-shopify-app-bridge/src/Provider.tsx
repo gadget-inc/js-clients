@@ -181,7 +181,11 @@ export const Provider = ({
   // We make an exception for install requests since in that scenario there's no embedded app that we can redirect to.
   // On a browser that this policy enabled, we'll just re-run the auth process after redirecting to the embedded app.
   const isInstallRequest = query?.has("hmac") && query?.has("shop");
-  const isEmbedded = typeof window !== "undefined" ? window.top !== window.self : false;
+  // detect if we're in an iframe by looking if this window object has a reference to a different top window
+  const inIframe = typeof window !== "undefined" ? window.top !== window.self : false;
+  // detect if we're in the shopify mobile app by looking for the injected global context the app bridge uses
+  const inShopifyMobileApp = typeof window !== "undefined" && !!window.MobileWebView;
+  const isEmbedded = inIframe || inShopifyMobileApp;
   const inDestinationContext =
     isEmbedded == (coalescedType == AppType.Embedded) && (coalescedType == AppType.Standalone ? !isInstallRequest : true);
 
