@@ -83,10 +83,10 @@ importers:
         version: 1.4.0
       '@urql/core':
         specifier: ^3.0.1
-        version: 3.0.1(graphql@16.5.0)
+        version: 3.0.1(graphql@16.6.0)
       '@urql/exchange-multipart-fetch':
         specifier: ^1.0.1
-        version: 1.0.1(graphql@16.5.0)
+        version: 1.0.1(graphql@16.6.0)
       cross-fetch:
         specifier: ^3.0.6
         version: 3.1.5
@@ -94,11 +94,11 @@ importers:
         specifier: ^3.7.2
         version: 3.7.2
       graphql:
-        specifier: ^16.5.0
-        version: 16.5.0
+        specifier: ~16.6.0
+        version: 16.6.0
       graphql-ws:
         specifier: ^5.5.5
-        version: 5.8.2(graphql@16.5.0)
+        version: 5.8.2(graphql@16.6.0)
       isomorphic-ws:
         specifier: ^4.0.1
         version: 4.0.1(ws@8.11.0)
@@ -939,6 +939,14 @@ packages:
       graphql: ^0.8.0 || ^0.9.0 || ^0.10.0 || ^0.11.0 || ^0.12.0 || ^0.13.0 || ^14.0.0 || ^15.0.0 || ^16.0.0
     dependencies:
       graphql: 16.5.0
+
+  /@graphql-typed-document-node/core@3.1.1(graphql@16.6.0):
+    resolution: {integrity: sha512-NQ17ii0rK1b34VZonlmT2QMJFI70m0TRwbknO/ihlbatXyaktDhN/98vBiUU6kNBPljqGqyIrl2T4nY2RpFANg==}
+    peerDependencies:
+      graphql: ^0.8.0 || ^0.9.0 || ^0.10.0 || ^0.11.0 || ^0.12.0 || ^0.13.0 || ^14.0.0 || ^15.0.0 || ^16.0.0
+    dependencies:
+      graphql: 16.6.0
+    dev: false
 
   /@humanwhocodes/config-array@0.11.8:
     resolution: {integrity: sha512-UybHIJzJnR5Qc/MsD9Kr+RpO2h+/P1GhOwdiLPXK5TWk5sgTdu88bTD9UP+CKbPPh5Rni1u0GjAdYQLemG8g+g==}
@@ -1817,13 +1825,13 @@ packages:
       eslint-visitor-keys: 3.4.0
     dev: true
 
-  /@urql/core@3.0.1(graphql@16.5.0):
+  /@urql/core@3.0.1(graphql@16.6.0):
     resolution: {integrity: sha512-VMnAx1JsV32XjuCQVHHeq2BAn39XBSr6qEJd3xSE3Gwrc2NGndTZeFd6loZKmYF9XTHmvj8YbY2BFfHW7nGbmg==}
     peerDependencies:
       graphql: ^0.11.0 || ^0.12.0 || ^0.13.0 || ^14.0.0 || ^15.0.0 || ^16.0.0
     dependencies:
-      '@graphql-typed-document-node/core': 3.1.1(graphql@16.5.0)
-      graphql: 16.5.0
+      '@graphql-typed-document-node/core': 3.1.1(graphql@16.6.0)
+      graphql: 16.6.0
       wonka: 6.3.2
     dev: false
 
@@ -1836,15 +1844,25 @@ packages:
       graphql: 16.5.0
       wonka: 6.3.2
 
-  /@urql/exchange-multipart-fetch@1.0.1(graphql@16.5.0):
+  /@urql/core@3.0.3(graphql@16.6.0):
+    resolution: {integrity: sha512-raQP51ERNtg5BvlN8x8mHVRvk4K0ugWQ69n53BdkjKpXVV5kuWp7trnwriGv1fQKa8HuiGNSCfyslUucc0OVQg==}
+    peerDependencies:
+      graphql: ^0.11.0 || ^0.12.0 || ^0.13.0 || ^14.0.0 || ^15.0.0 || ^16.0.0
+    dependencies:
+      '@graphql-typed-document-node/core': 3.1.1(graphql@16.6.0)
+      graphql: 16.6.0
+      wonka: 6.3.2
+    dev: false
+
+  /@urql/exchange-multipart-fetch@1.0.1(graphql@16.6.0):
     resolution: {integrity: sha512-fjxRrKR/D9Rs52L8wJMvqsGQBC/mjFcg/VdkSkU5IXmqCb5KmicXl2208hoCnaBl/QLA6NDpCNnG3zjDniMOTg==}
     deprecated: This package is now obsolete and `@urql/core` now supports GraphQL Multipart Requests (File Uploads) natively.
     peerDependencies:
       graphql: ^0.11.0 || ^0.12.0 || ^0.13.0 || ^14.0.0 || ^15.0.0 || ^16.0.0
     dependencies:
-      '@urql/core': 3.0.3(graphql@16.5.0)
+      '@urql/core': 3.0.3(graphql@16.6.0)
       extract-files: 11.0.0
-      graphql: 16.5.0
+      graphql: 16.6.0
       wonka: 6.3.2
     dev: false
 
@@ -3468,18 +3486,23 @@ packages:
     resolution: {integrity: sha512-bzh50DW9kTPM00T8y4o8vQg89Di9oLJVLW/KaOGIXJWP/iqCN6WKYkbNOF04vFLJhwcpYUh9ydh/+5vpOqV4YQ==}
     dev: true
 
-  /graphql-ws@5.8.2(graphql@16.5.0):
+  /graphql-ws@5.8.2(graphql@16.6.0):
     resolution: {integrity: sha512-hYo8kTGzxePFJtMGC7Y4cbypwifMphIJJ7n4TDcVUAfviRwQBnmZAbfZlC+XFwWDUaR7raEDQPxWctpccmE0JQ==}
     engines: {node: '>=10'}
     peerDependencies:
       graphql: '>=0.11 <=16'
     dependencies:
-      graphql: 16.5.0
+      graphql: 16.6.0
     dev: false
 
   /graphql@16.5.0:
     resolution: {integrity: sha512-qbHgh8Ix+j/qY+a/ZcJnFQ+j8ezakqPiHwPiZhV/3PgGlgf96QMBB5/f2rkiC9sgLoy/xvT6TSiaf2nTHJh5iA==}
     engines: {node: ^12.22.0 || ^14.16.0 || ^16.0.0 || >=17.0.0}
+
+  /graphql@16.6.0:
+    resolution: {integrity: sha512-KPIBPDlW7NxrbT/eh4qPXz5FiFdL5UbaA0XUNz2Rp3Z3hqBSkbj0GVjwFDztsWVauZUWsbKHgMg++sk8UX0bkw==}
+    engines: {node: ^12.22.0 || ^14.16.0 || ^16.0.0 || >=17.0.0}
+    dev: false
 
   /has-bigints@1.0.2:
     resolution: {integrity: sha512-tSvCKtBr9lkF0Ex0aQiP9N+OpV4zi2r/Nee5VkRDbaqv35RLYMzbwQfFSZZH0kR+Rd6302UJZ2p/bJCEoR3VoQ==}
