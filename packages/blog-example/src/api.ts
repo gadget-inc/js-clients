@@ -1,3 +1,3 @@
-import { Client } from "@gadget-client/simple-blog";
+import { Client } from "@gadget-client/blog";
 
-export const api = new Client();
+export const api = new Client({ environment: "Development" });

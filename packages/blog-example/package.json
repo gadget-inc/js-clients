@@ -2,6 +2,7 @@
   "name": "blog-example",
   "version": "0.1.0",
   "source": "src/index.ts",
+  "private": "true",
   "files": [
     "README.md",
     "dist/src/**/*"
@@ -11,13 +12,13 @@
   "homepage": "https://github.com/gadget-inc/js-clients/tree/main/packages/blog-example",
   "scripts": {
     "typecheck": "tsc --noEmit",
-    "dev": "vite",
-    "build": "true",
-    "preview": "vite preview"
+    "dev": "rm -rf node_modules/.vite && vite --clearScreen=false",
+    "preview": "vite preview",
+    "build-vite": "vite build"
   },
   "dependencies": {
-    "@gadget-client/simple-blog": "^1.130.0",
-    "@gadgetinc/react": "*",
+    "@gadget-client/blog": "^1.42.0",
+    "@gadgetinc/react": "workspace:*",
     "react": "^18.2.0",
     "react-dom": "^18.2.0"
   },
