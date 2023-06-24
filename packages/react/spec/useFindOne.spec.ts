@@ -112,4 +112,40 @@ describe("useFindOne", () => {
 
     expect(result.current[0]).toBe(beforeObject);
   });
+
+  test("suspends when loading data", async () => {
+    const { result, rerender } = renderHook(
+      () => {
+        return useFindOne(relatedProductsApi.user, "123", { suspense: true });
+      },
+      { wrapper: TestWrapper }
+    );
+
+    // first render never completes as the component suspends
+    expect(result.current).toBeFalsy();
+    expect(mockUrqlClient.executeQuery).toBeCalledTimes(1);
+
+    mockUrqlClient.executeQuery.pushResponse("user", {
+      data: {
+        user: {
+          id: "123",
+          email: "test@test.com",
+        },
+      },
+      stale: false,
+      hasNext: false,
+    });
+
+    // rerender as react would do when the suspense promise resolves
+    rerender();
+    expect(result.current).toBeTruthy();
+
+    expect(result.current[0].data!.id).toEqual("123");
+    expect(result.current[0].data!.email).toEqual("test@test.com");
+    expect(result.current[0].error).toBeFalsy();
+
+    const beforeObject = result.current[0];
+    rerender();
+    expect(result.current[0]).toBe(beforeObject);
+  });
 });

@@ -3,10 +3,9 @@ import { actionOperation, capitalizeIdentifier, get, hydrateRecord } from "@gadg
 import { useCallback, useContext, useMemo } from "react";
 import type { AnyVariables, UseMutationState } from "urql";
 import { GadgetUrqlClientContext } from "./GadgetProvider";
-import type { OptionsType } from "./OptionsType";
 import { useGadgetMutation } from "./useGadgetMutation";
 import { useStructuralMemo } from "./useStructuralMemo";
-import type { ActionHookResult, ActionHookState } from "./utils";
+import type { ActionHookResult, ActionHookState, OptionsType } from "./utils";
 import { ErrorWrapper, noProviderErrorMessage } from "./utils";
 
 /**

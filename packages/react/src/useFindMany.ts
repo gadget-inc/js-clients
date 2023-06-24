@@ -1,12 +1,10 @@
 import type { AnyModelManager, DefaultSelection, FindManyFunction, LimitToKnownKeys, Select } from "@gadgetinc/api-client-core";
-import { GadgetRecordList, findManyOperation, get, getQueryArgs, hydrateConnection } from "@gadgetinc/api-client-core";
+import { GadgetRecordList, findManyOperation, get, hydrateConnection } from "@gadgetinc/api-client-core";
 import { useMemo } from "react";
-import type { UseQueryArgs } from "urql";
-import type { OptionsType } from "./OptionsType";
 import { useGadgetQuery } from "./useGadgetQuery";
 import { useStructuralMemo } from "./useStructuralMemo";
-import type { ReadHookResult } from "./utils";
-import { ErrorWrapper } from "./utils";
+import type { ReadHookResult, ReadOperationOptions } from "./utils";
+import { ErrorWrapper, OptionsType, useMemoizedQueryArgs } from "./utils";
 
 /**
  * React hook to fetch a page of Gadget records from the backend, optionally sorted, filtered, searched, and selected from. Returns a standard hook result set with a tuple of the result object with `data`, `fetching`, and `error` keys, and a `refetch` function. `data` will be a `GadgetRecordList` object holding the list of returned records and pagination info.
@@ -36,10 +34,10 @@ export const useFindMany = <
   GivenOptions extends OptionsType, // currently necessary for Options to be a narrow type (e.g., `true` instead of `boolean`)
   SchemaT,
   F extends FindManyFunction<GivenOptions, any, SchemaT, any>,
-  Options extends F["optionsType"] & Omit<UseQueryArgs, "query" | "variables">
+  Options extends F["optionsType"] & ReadOperationOptions
 >(
   manager: { findMany: F },
-  options?: LimitToKnownKeys<Options, F["optionsType"]> & Omit<UseQueryArgs, "query" | "variables">
+  options?: LimitToKnownKeys<Options, F["optionsType"] & ReadOperationOptions>
 ): ReadHookResult<
   GadgetRecordList<Select<Exclude<F["schemaType"], null | undefined>, DefaultSelection<F["selectionType"], Options, F["defaultSelection"]>>>
 > => {
@@ -53,7 +51,7 @@ export const useFindMany = <
     );
   }, [manager, memoizedOptions]);
 
-  const [rawResult, refresh] = useGadgetQuery(getQueryArgs(plan, options));
+  const [rawResult, refresh] = useGadgetQuery(useMemoizedQueryArgs(plan, options));
 
   const result = useMemo(() => {
     const dataPath = [manager.findMany.operationName];

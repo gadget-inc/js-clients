@@ -1,6 +1,6 @@
 import type { SpanOptions } from "@opentelemetry/api";
 import { context, SpanStatusCode, trace } from "@opentelemetry/api";
-import type { OperationContext, OperationResult, RequestPolicy } from "@urql/core";
+import type { OperationResult } from "@urql/core";
 import { CombinedError } from "@urql/core";
 import { DataHydrator } from "./DataHydrator";
 import type { RecordShape } from "./GadgetRecord";
@@ -418,26 +418,6 @@ export const traceFunction = <T extends (...args: any[]) => any>(name: string, f
 };
 
 export const getCurrentSpan = () => trace.getSpan(context.active());
-
-interface QueryPlan {
-  variables: any;
-  query: string;
-}
-
-interface QueryOptions {
-  context?: Partial<OperationContext>;
-  pause?: boolean;
-  requestPolicy?: RequestPolicy;
-}
-
-/** Generate `urql` query argument object, for `useQuery` hook */
-export const getQueryArgs = <Plan extends QueryPlan, Options extends QueryOptions>(plan: Plan, options?: Options) => ({
-  query: plan.query,
-  variables: plan.variables,
-  context: options?.context,
-  pause: options?.pause,
-  requestPolicy: options?.requestPolicy,
-});
 
 // Gadget Storage Test Key that minifies well
 const key = "gstk";

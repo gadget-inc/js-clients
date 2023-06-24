@@ -151,6 +151,10 @@ There are four different request policies that you can use:
 
 For more information on `urql`'s built-in client-side caching, see [`urql`'s docs](https://formidable.com/open-source/urql/docs/basics/document-caching/).
 
+
+
+`suspense: true` uses `urql`'s Suspense support under the hood.
+
 ### API Documentation
 
 `@gadgetinc/react` contains a variety of React hooks for working with your Gadget application's API from a React application. Specific code examples for your application's API can be found within your application's docs at https://docs.gadget.dev/api/<your-application-slug>
@@ -167,8 +171,9 @@ Your React application must be wrapped in the `Provider` component from this lib
 - `id`: The backend id of the record you want to find. Required.
 - `options`: Options for making the call to the backend. Not required, and all keys are optional.
   - `select`: A list of fields and subfields to select. See the [Select option](#the-select-option) docs.
-  - `requestPolicy`: The `urql` request policy to make the request with. See [`urql`'s docs](https://formidable.com/open-source/urql/docs/api/urql/);
+  - `requestPolicy`: The `urql` request policy to make the request with. See [`urql`'s docs](https://formidable.com/open-source/urql/docs/api/urql/)
   - `pause`: Should the hook make a request right now or not. See [`urql`'s docs](https://formidable.com/open-source/urql/docs/api/urql/)
+  - `suspense`: Should this hook suspend when fetching data. See [Suspense](#suspense) for more info
 
 `useFindOne` returns two values: a result object with the `data`, `fetching`, and `error` keys for inspecting in your React component's output, and a [`refetch` function](#the-refetch-function) to trigger a refresh of the hook's data.
 
@@ -229,8 +234,9 @@ See [the `refetch` function](#the-refetch-function) docs for more information on
   - `sort`: A sort order to return backend records by. Optional. See the Sorting section in your application's API documentation for more info.
   - `first` & `after`: Pagination arguments to pass to fetch a subsequent page of records from the backend. `first` should hold a record count and `after` should hold a string cursor retrieved from the `pageInfo` of the previous page of results. See the Model Pagination section in your application's API documentation for more info.
   - `last` & `before`: Pagination arguments to pass to fetch a subsequent page of records from the backend. `last` should hold a record count and `before` should hold a string cursor retrieved from the `pageInfo` of the previous page of results. See the Model Pagination section in your application's API documentation for more info.
-  - `requestPolicy`: The `urql` request policy to make the request with. See [`urql`'s docs](https://formidable.com/open-source/urql/docs/api/urql/);
+  - `requestPolicy`: The `urql` request policy to make the request with. See [`urql`'s docs](https://formidable.com/open-source/urql/docs/api/urql/)
   - `pause`: Should the hook make a request right now or not. See [`urql`'s docs](https://formidable.com/open-source/urql/docs/api/urql/)
+  - `suspense`: Should this hook suspend when fetching data. See [Suspense](#suspense) for more info
 
 `useFindMany` returns two values: a result object with the `data`, `fetching`, and `error` keys for use in your React component's output, and a [`refetch` function](#the-refetch-function) to trigger a refresh of the hook's data.
 
@@ -378,8 +384,9 @@ export const WidgetPaginator = () => {
   - `filter`: A list of filters to find a record matching. Optional. See the Model Filtering section in your application's API documentation to see the available filters for your models.
   - `search`: A search string to find a record matching. Optional. See the Model Searching section in your application's API documentation to see the available search syntax.
   - `sort`: A sort order to order the backend records by. `useFindFirst` will only return the first record matching the given `search` and `filter`, so `sort` can be used to break ties and select a specific record. Optional. See the Sorting section in your application's API documentation for more info.
-  - `requestPolicy`: The `urql` request policy to make the request with. See [`urql`'s docs](https://formidable.com/open-source/urql/docs/api/urql/);
+  - `requestPolicy`: The `urql` request policy to make the request with. See [`urql`'s docs](https://formidable.com/open-source/urql/docs/api/urql/)
   - `pause`: Should the hook make a request right now or not. See [`urql`'s docs](https://formidable.com/open-source/urql/docs/api/urql/)
+  - `suspense`: Should this hook suspend when fetching data. See [Suspense](#suspense) for more info
 
 `useFindFirst` returns two values: a result object with the `data`, `fetching`, and `error` keys for inspecting in your React component's output, and a [`refetch` function](#the-refetch-function) to trigger a refresh of the hook's data.
 
@@ -428,8 +435,9 @@ const [_result, _refetch] = useFindOne(api.widget, props.id, {
 - `fieldValue`: The value of the field to search for a record using. This is which slug or email you'd pass to `api.widget.findBySlug` or `api.user.findByEmail`.
 - `options`: Options for making the call to the backend. Not required and all keys are optional.
   - `select`: A list of fields and subfields to select. See the [Select option](#the-select-option) docs.
-  - `requestPolicy`: The `urql` request policy to make the request with. See [`urql`'s docs](https://formidable.com/open-source/urql/docs/api/urql/);
+  - `requestPolicy`: The `urql` request policy to make the request with. See [`urql`'s docs](https://formidable.com/open-source/urql/docs/api/urql/)
   - `pause`: Should the hook make a request right now or not. See [`urql`'s docs](https://formidable.com/open-source/urql/docs/api/urql/)
+  - `suspense`: Should this hook suspend when fetching data. See [Suspense](#suspense) for more info
 
 `useFindBy` returns two values: a result object with the `data`, `fetching`, and `error` keys for inspecting in your React component's output, and a [`refetch` function](#the-refetch-function) to trigger a refresh of the hook's data.
 
@@ -478,8 +486,9 @@ The `refetch` function returned as the second element can be executed in order t
 - `actionFunction`: The model action function from your application's API client for acting on records. Gadget generates these action functions for each action defined on backend Gadget models. Required. Example: `api.widget.create`, or `api.user.update` or `api.blogPost.publish`.
 - `options`: Options for making the call to the backend. Not required and all keys are optional.
   - `select`: A list of fields and subfields to select. See the [Select option](#the-select-option) docs.
-  - `requestPolicy`: The `urql` request policy to make the request with. See [`urql`'s docs](https://formidable.com/open-source/urql/docs/api/urql/);
+  - `requestPolicy`: The `urql` request policy to make the request with. See [`urql`'s docs](https://formidable.com/open-source/urql/docs/api/urql/)
   - `pause`: Should the hook make a request right now or not. See [`urql`'s docs](https://formidable.com/open-source/urql/docs/api/urql/)
+  - `suspense`: Should this hook suspend when fetching data. See [Suspense](#suspense) for more info
 
 `useAction` returns two values: a result object with the `data`, `fetching`, and `error` keys for inspecting in your React component's output, and a `act` function to actually run the backend action. `useAction` is a rule-following React hook that wraps action execution, which means it doesn't just run the action as soon as the hook is invoked. Instead, `useAction` returns a configured function that will actually run the action, which you need to call in response to some user event. The `act` function accepts the action inputs as arguments -- not `useAction` itself. `useAction`'s result will return the `data`, `fetching`, and `error` details for the most recent execution of the action.
 
@@ -574,7 +583,7 @@ const [{ data, fetching, error }, _refetch] = useFindBy(api.blogPost.findBySlug,
 
 - `globalActionFunction`: The action function from your application's API client. Gadget generates these global action functions for each global action defined in your Gadget backend. Required. Example: `api.runSync`, or `api.purgeData` (corresponding to Global Actions named `Run Sync` or `Purge Data`).
 - `options`: Options for making the call to the backend. Not required and all keys are optional.
-  - `requestPolicy`: The `urql` request policy to make the request with. See [`urql`'s docs](https://formidable.com/open-source/urql/docs/api/urql/);
+  - `requestPolicy`: The `urql` request policy to make the request with. See [`urql`'s docs](https://formidable.com/open-source/urql/docs/api/urql/)
   - `pause`: Should the hook make a request right now or not. See [`urql`'s docs](https://formidable.com/open-source/urql/docs/api/urql/)
 
 `useGlobalAction` returns two values: a result object with the `data`, `fetching`, and `error` keys for inspecting in your React component's output, and a `act` function to actually run the backend global action. `useGlobalAction` is a rule-following React hook that wraps action execution, which means it doesn't just run the action as soon as the hook is invoked. Instead, `useGlobalAction` returns a configured function which you need to call in response to some event. This `act` function accepts the action inputs as arguments. `useGlobalAction`'s result will return the `data`, `fetching`, and `error` details for the most recent execution of the action.
@@ -622,8 +631,9 @@ export const PurgeData = () => {
 - `singletonModelManager`: The singleton model manager available on the generated API client for your application. The passed model manager _must_ be one of the `currentSomething` model managers. `useGet` can't be used with other model managers that don't have a `.get` function. Example: `api.currentSession`.
 - `options`: Options for making the call to the backend. Not required and all keys are optional.
   - `select`: A list of fields and subfields to select. See the [Select option](#the-select-option) docs.
-  - `requestPolicy`: The `urql` request policy to make the request with. See [`urql`'s docs](https://formidable.com/open-source/urql/docs/api/urql/);
+  - `requestPolicy`: The `urql` request policy to make the request with. See [`urql`'s docs](https://formidable.com/open-source/urql/docs/api/urql/)
   - `pause`: Should the hook make a request right now or not. See [`urql`'s docs](https://formidable.com/open-source/urql/docs/api/urql/)
+  - `suspense`: Should this hook suspend when fetching data. See [Suspense](#suspense) for more info
 
 `useGet` returns two values: a result object with the `data`, `fetching`, and `error` keys for inspecting in your React component's output, and a [`refetch` function](#the-refetch-function) to trigger a refresh of the hook's data.
 
@@ -923,17 +933,49 @@ export const ShowWidgetNames = () => {
 };
 ```
 
+### Suspense
+
+`@gadgetinc/react` supports two modes for managing loading states: the `fetching` return value, which will be true when making requests under the hood, as well as using `<Suspense/>`, React's next generation tool for managing asynchrony. Read more about `<Suspense/>` in the [React docs](https://react.dev/reference/react/Suspense).
+
+To suspend rendering when fetching data, pass the `suspense: true` option to the `useFind*` hooks.
+
+```javascript
+const Posts = () => {
+  // pass suspense: true, and the component will only render once data has been returned
+  const [{data, error}, refresh] = useFindMany(api.post, { suspense: true });
+
+  // note: no need to inspect the fetching prop
+  return <>{data.map(
+    //...
+  )}</>
+}
+```
+
+All the read hooks support suspense: `useFindOne`, `useMaybeFindOne`, `useFindMany`, `useFindFirst`, `useMaybeFindFirst`, and `useGet`.
+
+`suspense: true` is most useful when a parent component wraps a suspending-child with the `<Suspense/>` component for rendering a fallback UI while the child component is suspended:
+
+```javascript
+<Suspense fallback={"loading..."}>
+  <Posts/>
+</Suspense>
+```
+
+With this wrapper in place, the fallback prop will be rendered while the data is being fetched, and once it's available, the `<Posts/>` component will render with data.
+
+Read more about `<Suspense/>` in the [React docs](https://react.dev/reference/react/Suspense).
+
 ### `urql` exports
 
 Since this library uses `urql` behind the scenes, it provides a few useful exports directly from `urql` so that it does not need to be installed as a peer dependency should you need to write custom queries or mutations.
 
 The following are exported from `urql`:
 
-- Provider
-- Consumer
-- Context
-- useQuery
-- useMutation
+- `Provider`
+- `Consumer`
+- `Context`
+- `useQuery`
+- `useMutation`
 
 Example usage:
 

@@ -358,6 +358,7 @@ export class GadgetConnection {
       fetch: this.fetch,
       exchanges,
       requestPolicy: this.requestPolicy,
+      suspense: true,
     });
     (client as any)[$gadgetConnection] = this;
     return client;

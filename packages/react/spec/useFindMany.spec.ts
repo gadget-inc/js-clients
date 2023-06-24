@@ -210,4 +210,46 @@ describe("useFindMany", () => {
 
     expect(result.current[0]).toBe(beforeObject);
   });
+
+  test("suspends when loading data", async () => {
+    const { result, rerender } = renderHook(() => useFindMany(relatedProductsApi.user, { suspense: true }), { wrapper: TestWrapper });
+
+    // first render never completes as the component suspends
+    expect(result.current).toBeFalsy();
+    expect(mockUrqlClient.executeQuery).toBeCalledTimes(1);
+
+    mockUrqlClient.executeQuery.pushResponse("users", {
+      data: {
+        users: {
+          edges: [
+            { cursor: "123", node: { id: "123", email: "test@test.com" } },
+            { cursor: "abc", node: { id: "124", email: "test@test.com" } },
+          ],
+          pageInfo: {
+            startCursor: "123",
+            endCursor: "abc",
+            hasNextPage: false,
+            hasPreviousPage: false,
+          },
+        },
+      },
+      stale: false,
+      hasNext: false,
+    });
+
+    // rerender as react would do when the suspense promise resolves
+    rerender();
+    expect(result.current).toBeTruthy();
+    expect(result.current[0].data![0].id).toEqual("123");
+    expect(result.current[0].data![1].id).toEqual("124");
+    expect(result.current[0].data!.hasNextPage).toEqual(false);
+    expect(result.current[0].data!.hasPreviousPage).toEqual(false);
+    expect(result.current[0].data!.startCursor).toEqual("123");
+    expect(result.current[0].data!.endCursor).toEqual("abc");
+    expect(result.current[0].error).toBeFalsy();
+
+    const beforeObject = result.current[0];
+    rerender();
+    expect(result.current[0]).toBe(beforeObject);
+  });
 });

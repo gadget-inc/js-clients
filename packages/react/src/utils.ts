@@ -1,8 +1,66 @@
 import type { GadgetError, InvalidFieldError, InvalidRecordError } from "@gadgetinc/api-client-core";
-import { gadgetErrorFor, getNonNullableError } from "@gadgetinc/api-client-core";
-import type { CombinedError } from "@urql/core";
+import { FieldSelection, gadgetErrorFor, getNonNullableError } from "@gadgetinc/api-client-core";
+import type { CombinedError, RequestPolicy } from "@urql/core";
 import { GraphQLError } from "graphql";
-import type { AnyVariables, Operation, OperationContext, UseQueryState } from "urql";
+import { useMemo } from "react";
+import type { AnyVariables, Operation, OperationContext, UseQueryArgs, UseQueryState } from "urql";
+
+/**
+ * All the options controlling how this query will be managed by urql
+ * */
+export declare type ReadOperationOptions = {
+  /** Updates the {@link RequestPolicy} for the executed GraphQL query operation.
+   *
+   * @remarks
+   * `requestPolicy` modifies the {@link RequestPolicy} of the GraphQL query operation
+   * that `useQuery` executes, and indicates a caching strategy for cache exchanges.
+   *
+   * For example, when set to `'cache-and-network'`, {@link useQuery} will
+   * receive a cached result with `stale: true` and an API request will be
+   * sent in the background.
+   *
+   * @see {@link OperationContext.requestPolicy} for where this value is set.
+   */
+  requestPolicy?: RequestPolicy;
+  /** Updates the {@link OperationContext} for the executed GraphQL query operation.
+   *
+   * @remarks
+   * `context` may be passed to {@link useQuery}, to update the {@link OperationContext}
+   * of a query operation. This may be used to update the `context` that exchanges
+   * will receive for a single hook.
+   *
+   * Hint: This should be wrapped in a `useMemo` hook, to make sure that your
+   * component doesn’t infinitely update.
+   *
+   * @example
+   * ```ts
+   * const [result, reexecute] = useQuery({
+   *   query,
+   *   context: useMemo(() => ({
+   *     additionalTypenames: ['Item'],
+   *   }), [])
+   * });
+   * ```
+   */
+  context?: Partial<OperationContext>;
+  /** Prevents {@link useQuery} from automatically executing GraphQL query operations.
+   *
+   * @remarks
+   * `pause` may be set to `true` to stop {@link useQuery} from executing
+   * automatically. The hook will stop receiving updates from the {@link Client}
+   * and won’t execute the query operation, until either it’s set to `false`
+   * or the {@link UseQueryExecute} function is called.
+   *
+   * @see {@link https://urql.dev/goto/docs/basics/react-preact/#pausing-usequery} for
+   * documentation on the `pause` option.
+   */
+  pause?: boolean;
+  /**
+   * Marks this query as one that should suspend the react component rendering while executing, instead of returning `{fetching: true}` to the caller.
+   * Useful if you want to allow components higher in the tree to show spinners instead of having every component manage its own loading state.
+   */
+  suspense?: boolean;
+};
 
 /**
  * The inner result object returned from a query result
@@ -182,3 +240,38 @@ export class ErrorWrapper extends Error {
     return firstInvalidRecordError?.validationErrors ?? null;
   }
 }
+
+interface QueryPlan {
+  variables: any;
+  query: string;
+}
+
+interface QueryOptions {
+  context?: Partial<OperationContext>;
+  pause?: boolean;
+  requestPolicy?: RequestPolicy;
+  suspense?: boolean;
+}
+
+/** Generate `urql` query argument object, for `useQuery` hook */
+export const useMemoizedQueryArgs = <Plan extends QueryPlan, Options extends QueryOptions>(plan: Plan, options?: Options): UseQueryArgs => {
+  // use a memo as urql rerenders on context identity changes
+  const context = useMemo(() => {
+    return {
+      suspense: !!options?.suspense,
+      ...options?.context,
+    };
+  }, [options?.suspense, options?.context]);
+
+  return {
+    query: plan.query,
+    variables: plan.variables,
+    ...options,
+    context,
+  };
+};
+
+export type OptionsType = {
+  [key: string]: any;
+  select?: FieldSelection;
+};

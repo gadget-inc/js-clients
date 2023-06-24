@@ -102,4 +102,35 @@ describe("useGet", () => {
 
     expect(result.current[0]).toBe(beforeObject);
   });
+
+  test("it can find the current session with suspense", async () => {
+    const { result, rerender } = renderHook(() => useGet(relatedProductsApi.currentSession, { suspense: true }), { wrapper: TestWrapper });
+
+    // first render never completes as the component suspends
+    expect(result.current).toBeFalsy();
+    expect(mockUrqlClient.executeQuery).toBeCalledTimes(1);
+
+    mockUrqlClient.executeQuery.pushResponse("currentSession", {
+      data: {
+        currentSession: {
+          id: "123",
+        },
+      },
+      stale: false,
+      hasNext: false,
+    });
+
+    // rerender as react would do when the suspense promise resolves
+    rerender();
+    expect(result.current).toBeTruthy();
+
+    expect(result.current[0].data!.id).toEqual("123");
+    expect(result.current[0].error).toBeFalsy();
+
+    const beforeObject = result.current[0];
+
+    rerender();
+
+    expect(result.current[0]).toBe(beforeObject);
+  });
 });
