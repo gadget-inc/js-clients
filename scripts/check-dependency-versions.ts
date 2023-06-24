@@ -12,6 +12,7 @@ import { fs, globby } from "zx";
 
 for (const filepath of await globby("packages/*/package.json")) {
   const manifest = await fs.readJSON(filepath);
+  if (manifest.private) continue;
   for (const key of ["dependencies", "peerDependencies"]) {
     for (const [target, requiredVersion] of Object.entries(targets)) {
       const dependencyVersion = manifest[key]?.[target];

@@ -12,6 +12,8 @@ jobs:
         run: pnpm build
       - name: Test
         run: pnpm test
+      - name: Build example package
+        run: pnpm --filter=blog-example build-vite
   lint:
     runs-on: ubuntu-latest
     steps:
