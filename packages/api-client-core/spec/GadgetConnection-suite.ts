@@ -38,7 +38,7 @@ export const GadgetConnectionSharedSuite = (queryExtra = "") => {
   describe("authorization", () => {
     it("should allow connecting with anonymous authentication", async () => {
       nock("https://someapp.gadget.app")
-        .post("/api/graphql", { query: `{\n  meta {\n    appName\n${queryExtra}  }\n}`, variables: {} })
+        .post("/api/graphql?operation=meta", { query: `{\n  meta {\n    appName\n${queryExtra}  }\n}`, variables: {} })
         .reply(200, {
           data: {
             meta: {
@@ -71,7 +71,7 @@ export const GadgetConnectionSharedSuite = (queryExtra = "") => {
 
     it("should allow connecting with internal auth token authentication", async () => {
       nock("https://someapp.gadget.app")
-        .post("/api/graphql", { query: `{\n  meta {\n    appName\n${queryExtra}  }\n}`, variables: {} })
+        .post("/api/graphql?operation=meta", { query: `{\n  meta {\n    appName\n${queryExtra}  }\n}`, variables: {} })
         .reply(200, function () {
           expect(this.req.headers["authorization"]).toEqual([`Basic ${base64("gadget-internal:opaque-token-thing")}`]);
 
@@ -108,7 +108,7 @@ export const GadgetConnectionSharedSuite = (queryExtra = "") => {
 
     it("should allow connecting with a gadget API Key", async () => {
       nock("https://someapp.gadget.app")
-        .post("/api/graphql", { query: `{\n  meta {\n    appName\n${queryExtra}  }\n}`, variables: {} })
+        .post("/api/graphql?operation=meta", { query: `{\n  meta {\n    appName\n${queryExtra}  }\n}`, variables: {} })
         .reply(200, function () {
           expect(this.req.headers["authorization"]).toEqual([`Bearer gsk-abcde`]);
 
@@ -146,7 +146,7 @@ export const GadgetConnectionSharedSuite = (queryExtra = "") => {
     describe("session token storage", () => {
       it("should allow connecting with no session in a session storage mode", async () => {
         nock("https://someapp.gadget.app")
-          .post("/api/graphql", { query: `{\n  meta {\n    appName\n${queryExtra}  }\n}`, variables: {} })
+          .post("/api/graphql?operation=meta", { query: `{\n  meta {\n    appName\n${queryExtra}  }\n}`, variables: {} })
           .reply(
             200,
             {
@@ -185,7 +185,7 @@ export const GadgetConnectionSharedSuite = (queryExtra = "") => {
 
       it("should allow connecting with an initial session token in session storage mode", async () => {
         nock("https://someapp.gadget.app")
-          .post("/api/graphql", { query: `{\n  meta {\n    appName\n${queryExtra}  }\n}`, variables: {} })
+          .post("/api/graphql?operation=meta", { query: `{\n  meta {\n    appName\n${queryExtra}  }\n}`, variables: {} })
           .reply(
             200,
             function () {
@@ -227,7 +227,7 @@ export const GadgetConnectionSharedSuite = (queryExtra = "") => {
 
       it("should store a x-set-authorization header and reuse it for subsequent requests", async () => {
         nock("https://someapp.gadget.app")
-          .post("/api/graphql", { query: `{\n  meta {\n    appName\n${queryExtra}  }\n}`, variables: {} })
+          .post("/api/graphql?operation=meta", { query: `{\n  meta {\n    appName\n${queryExtra}  }\n}`, variables: {} })
           .reply(
             200,
             function () {
@@ -244,7 +244,7 @@ export const GadgetConnectionSharedSuite = (queryExtra = "") => {
               "x-set-authorization": "Session token-123",
             }
           )
-          .post("/api/graphql", { query: `{\n  currentSession {\n    id\n${queryExtra}  }\n}`, variables: {} })
+          .post("/api/graphql?operation=currentSession", { query: `{\n  currentSession {\n    id\n${queryExtra}  }\n}`, variables: {} })
           .reply(
             200,
             function () {
@@ -303,7 +303,7 @@ export const GadgetConnectionSharedSuite = (queryExtra = "") => {
 
     it("should not re-use session tokens across apps", async () => {
       nock("https://someapp.gadget.app")
-        .post("/api/graphql")
+        .post("/api/graphql?operation=meta")
         .reply(
           200,
           function () {
@@ -321,7 +321,7 @@ export const GadgetConnectionSharedSuite = (queryExtra = "") => {
           }
         );
       nock("https://anotherapp.gadget.app")
-        .post("/api/graphql")
+        .post("/api/graphql?operation=meta")
         .reply(
           200,
           function () {
@@ -382,7 +382,7 @@ export const GadgetConnectionSharedSuite = (queryExtra = "") => {
 
     it("should support a custom auth mode that can set arbitrary fetch headers", async () => {
       nock("https://someapp.gadget.app")
-        .post("/api/graphql", { query: `{\n  meta {\n    appName\n${queryExtra}  }\n}`, variables: {} })
+        .post("/api/graphql?operation=meta", { query: `{\n  meta {\n    appName\n${queryExtra}  }\n}`, variables: {} })
         .reply(200, function () {
           expect(this.req.headers["authorization"]).toEqual([`FancyMode whatever`]);
 
@@ -428,7 +428,7 @@ export const GadgetConnectionSharedSuite = (queryExtra = "") => {
 
     it("custom auth mode requests shouldn't send back x-set-authorization headers on subsequent requests", async () => {
       nock("https://someapp.gadget.app")
-        .post("/api/graphql", { query: `{\n  meta {\n    appName\n${queryExtra}  }\n}`, variables: {} })
+        .post("/api/graphql?operation=meta", { query: `{\n  meta {\n    appName\n${queryExtra}  }\n}`, variables: {} })
         .reply(
           200,
           function () {
@@ -446,7 +446,7 @@ export const GadgetConnectionSharedSuite = (queryExtra = "") => {
             "x-set-authorization": "Session token-123",
           }
         )
-        .post("/api/graphql", { query: `{\n  currentSession {\n    id\n${queryExtra}  }\n}`, variables: {} })
+        .post("/api/graphql?operation=currentSession", { query: `{\n  currentSession {\n    id\n${queryExtra}  }\n}`, variables: {} })
         .reply(
           200,
           function () {
@@ -517,7 +517,7 @@ export const GadgetConnectionSharedSuite = (queryExtra = "") => {
       });
 
       nock("https://someapp.gadget.app")
-        .post("/api/graphql", { query: `{\n  meta {\n    appName\n${queryExtra}  }\n}`, variables: {} })
+        .post("/api/graphql?operation=meta", { query: `{\n  meta {\n    appName\n${queryExtra}  }\n}`, variables: {} })
         .reply(
           200,
           {
@@ -560,7 +560,7 @@ export const GadgetConnectionSharedSuite = (queryExtra = "") => {
       });
 
       nock("https://someapp.gadget.app")
-        .post("/api/graphql", { query: `{\n  meta {\n    appName\n${queryExtra}  }\n}`, variables: {} })
+        .post("/api/graphql?operation=meta", { query: `{\n  meta {\n    appName\n${queryExtra}  }\n}`, variables: {} })
         .reply(200, function () {
           expect(this.req.headers["authorization"]).toEqual([`FancyMode whatever`]);
 
@@ -631,7 +631,7 @@ export const GadgetConnectionSharedSuite = (queryExtra = "") => {
     test("fetch can pass relative string paths when used with a relative base endpoint", async () => {
       const fetch = jest.fn().mockResolvedValue(new Response("hello")) as any;
       const connection = new GadgetConnection({
-        endpoint: "/api/graphql",
+        endpoint: "/api/graphql?operation=meta",
         authenticationMode: { apiKey: "gsk-abcde" },
         fetchImplementation: fetch,
       });
@@ -826,7 +826,7 @@ export const GadgetConnectionSharedSuite = (queryExtra = "") => {
 
     test("fetch can fetch URLs other than the configured endpoint when the configured endpoint is relative", async () => {
       const connection = new GadgetConnection({
-        endpoint: "/api/graphql",
+        endpoint: "/api/graphql?operation=meta",
         authenticationMode: { apiKey: "gsk-abcde" },
       });
 

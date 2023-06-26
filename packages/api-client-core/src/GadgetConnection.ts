@@ -19,6 +19,7 @@ import {
   storageAvailable,
   traceFunction,
 } from "./support";
+import { urlParamExchange } from "./urlParamExchange";
 
 export type TransactionRun<T> = (transaction: GadgetTransaction) => Promise<T>;
 export interface GadgetSubscriptionClientOptions extends Partial<SubscriptionClientOptions> {
@@ -328,7 +329,7 @@ export class GadgetConnection {
   }
 
   private newBaseClient() {
-    const exchanges = [dedupExchange];
+    const exchanges = [dedupExchange, urlParamExchange];
 
     // apply urql's default caching behaviour when client side (but skip it server side)
     if (typeof window != "undefined") {
