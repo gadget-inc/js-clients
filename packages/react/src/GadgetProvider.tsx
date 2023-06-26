@@ -1,7 +1,6 @@
 import type { AnyClient, GadgetConnection } from "@gadgetinc/api-client-core";
 import { $gadgetConnection, isGadgetClient } from "@gadgetinc/api-client-core";
-import type { ReactNode } from "react";
-import React from "react";
+import React, { ReactNode, useContext } from "react";
 import type { Client as UrqlClient } from "urql";
 import { Provider as UrqlProvider } from "urql";
 
@@ -89,8 +88,12 @@ export function Provider(props: ProviderProps | DeprecatedProviderProps) {
   );
 }
 
+/**
+ * Get the current `GadgetConnection` object from React context.
+ * Must be called within a component wrapped by the `<Provider api={...} />` component.
+ **/
 export const useConnection = () => {
-  const urqlClient = React.useContext(GadgetUrqlClientContext);
+  const urqlClient = useContext(GadgetUrqlClientContext);
   if (!urqlClient) {
     throw new Error("No urql client object in React context, have you added the <Provider/> wrapper component from @gadgetinc/react?");
   }
@@ -107,4 +110,32 @@ export const useConnection = () => {
   }
 
   return connection;
+};
+
+/**
+ * Get the current `api` object from React context
+ * Must be called within a component wrapped by the `<Provider api={...} />` component.
+ **/
+export const useApi = () => {
+  const api = useContext(GadgetClientContext);
+  const urqlClient = useContext(GadgetUrqlClientContext);
+  if (!api) {
+    if (urqlClient) {
+      throw new Error(
+        `useApi hook called in context with deprecated <Provider/> convention. Please ensure you are wrapping this hook with the <Provider/> component from @gadgetinc/react and passing it an instance of your api client, like <Provider api={api} />.
+
+        The <Provider /> component is currently being passed a value, like <Provider value={api.connection.currentClient}/>. Please update this to <Provider api={api} />.`
+      );
+    } else {
+      throw new Error(
+        `useApi hook called in context where no Gadget API client is available. Please ensure you are wrapping this hook with the <Provider/> component from @gadgetinc/react.
+      
+      Possible remedies:
+       - ensuring you have the <Provider/> component wrapped around your hook invocation
+       - ensuring you are passing an api client instance to the provider, usually <Provider api={api}>
+       - ensuring your @gadget-client/<your-app> package and your @gadgetinc/react package are up to date`
+      );
+    }
+  }
+  return api;
 };
