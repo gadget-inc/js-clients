@@ -10,6 +10,7 @@ import {
   internalFindManyQuery,
   internalUpdateMutation,
 } from "../src";
+import { expectValidGraphQLQuery } from "./helpers";
 
 describe("InternalModelManager", () => {
   describe("getRecordFromData", () => {
@@ -130,7 +131,8 @@ describe("InternalModelManager", () => {
 
   describe("internalFindManyQuery", () => {
     test("should build a find many query with no options", () => {
-      expect(internalFindManyQuery("widget", undefined)).toMatchInlineSnapshot(`
+      const plan = internalFindManyQuery("widget", undefined);
+      expect(plan).toMatchInlineSnapshot(`
         {
           "query": "query InternalFindManyWidget ($after: String, $before: String, $first: Int, $last: Int) { internal  { listWidget (after: $after, before: $before, first: $first, last: $last) { pageInfo { hasNextPage, hasPreviousPage, startCursor, endCursor }, edges { cursor, node } } } }",
           "variables": {
@@ -141,10 +143,12 @@ describe("InternalModelManager", () => {
           },
         }
       `);
+      expectValidGraphQLQuery(plan.query);
     });
 
     test("should build a find many query with sort", () => {
-      expect(internalFindManyQuery("widget", { sort: [{ id: "Ascending" }] })).toMatchInlineSnapshot(`
+      const plan = internalFindManyQuery("widget", { sort: [{ id: "Ascending" }] });
+      expect(plan).toMatchInlineSnapshot(`
         {
           "query": "query InternalFindManyWidget ($sort: [WidgetSort!], $after: String, $before: String, $first: Int, $last: Int) { internal  { listWidget (sort: $sort, after: $after, before: $before, first: $first, last: $last) { pageInfo { hasNextPage, hasPreviousPage, startCursor, endCursor }, edges { cursor, node } } } }",
           "variables": {
@@ -160,10 +164,12 @@ describe("InternalModelManager", () => {
           },
         }
       `);
+      expectValidGraphQLQuery(plan.query);
     });
 
     test("should build a find many query with search", () => {
-      expect(internalFindManyQuery("widget", { search: "term" })).toMatchInlineSnapshot(`
+      const plan = internalFindManyQuery("widget", { search: "term" });
+      expect(plan).toMatchInlineSnapshot(`
         {
           "query": "query InternalFindManyWidget ($search: String, $after: String, $before: String, $first: Int, $last: Int) { internal  { listWidget (search: $search, after: $after, before: $before, first: $first, last: $last) { pageInfo { hasNextPage, hasPreviousPage, startCursor, endCursor }, edges { cursor, node } } } }",
           "variables": {
@@ -175,10 +181,12 @@ describe("InternalModelManager", () => {
           },
         }
       `);
+      expectValidGraphQLQuery(plan.query);
     });
 
     test("should build a find many query with filter", () => {
-      expect(internalFindManyQuery("widget", { filter: [{ id: { equals: "1" } }] })).toMatchInlineSnapshot(`
+      const plan = internalFindManyQuery("widget", { filter: [{ id: { equals: "1" } }] });
+      expect(plan).toMatchInlineSnapshot(`
         {
           "query": "query InternalFindManyWidget ($filter: [WidgetFilter!], $after: String, $before: String, $first: Int, $last: Int) { internal  { listWidget (filter: $filter, after: $after, before: $before, first: $first, last: $last) { pageInfo { hasNextPage, hasPreviousPage, startCursor, endCursor }, edges { cursor, node } } } }",
           "variables": {
@@ -196,12 +204,26 @@ describe("InternalModelManager", () => {
           },
         }
       `);
+      expectValidGraphQLQuery(plan.query);
+    });
+
+    test("should build a find many query with a select", () => {
+      const plan = internalFindManyQuery("widget", { select: { id: true, foo: true, bar: true, baz: false } });
+      expect(plan.variables.select).toEqual(["id", "foo", "bar"]);
+      expectValidGraphQLQuery(plan.query);
+    });
+
+    test("should build a find many query with a select using the shorthand", () => {
+      const plan = internalFindManyQuery("widget", { select: ["id", "foo", "bar"] });
+      expect(plan.variables.select).toEqual(["id", "foo", "bar"]);
+      expectValidGraphQLQuery(plan.query);
     });
   });
 
   describe("internalFindFirstQuery", () => {
     test("should build a find first query with no options", () => {
-      expect(internalFindFirstQuery("widget", undefined)).toMatchInlineSnapshot(`
+      const plan = internalFindFirstQuery("widget", undefined);
+      expect(plan).toMatchInlineSnapshot(`
         {
           "query": "query InternalFindFirstWidget ($first: Int) { internal  { listWidget (first: $first) { edges { node } } } }",
           "variables": {
@@ -209,10 +231,12 @@ describe("InternalModelManager", () => {
           },
         }
       `);
+      expectValidGraphQLQuery(plan.query);
     });
 
     test("should build a find first query with sort", () => {
-      expect(internalFindFirstQuery("widget", { sort: [{ id: "Ascending" }] })).toMatchInlineSnapshot(`
+      const plan = internalFindFirstQuery("widget", { sort: [{ id: "Ascending" }] });
+      expect(plan).toMatchInlineSnapshot(`
         {
           "query": "query InternalFindFirstWidget ($sort: [WidgetSort!], $first: Int) { internal  { listWidget (sort: $sort, first: $first) { edges { node } } } }",
           "variables": {
@@ -225,10 +249,12 @@ describe("InternalModelManager", () => {
           },
         }
       `);
+      expectValidGraphQLQuery(plan.query);
     });
 
     test("should build a find first query with search", () => {
-      expect(internalFindFirstQuery("widget", { search: "term" })).toMatchInlineSnapshot(`
+      const plan = internalFindFirstQuery("widget", { search: "term" });
+      expect(plan).toMatchInlineSnapshot(`
         {
           "query": "query InternalFindFirstWidget ($search: String, $first: Int) { internal  { listWidget (search: $search, first: $first) { edges { node } } } }",
           "variables": {
@@ -237,10 +263,12 @@ describe("InternalModelManager", () => {
           },
         }
       `);
+      expectValidGraphQLQuery(plan.query);
     });
 
     test("should build a find first query with filter", () => {
-      expect(internalFindFirstQuery("widget", { filter: [{ id: { equals: "1" } }] })).toMatchInlineSnapshot(`
+      const plan = internalFindFirstQuery("widget", { filter: [{ id: { equals: "1" } }] });
+      expect(plan).toMatchInlineSnapshot(`
         {
           "query": "query InternalFindFirstWidget ($filter: [WidgetFilter!], $first: Int) { internal  { listWidget (filter: $filter, first: $first) { edges { node } } } }",
           "variables": {
@@ -255,12 +283,32 @@ describe("InternalModelManager", () => {
           },
         }
       `);
+      expectValidGraphQLQuery(plan.query);
+    });
+
+    test("should build a find first query with select", () => {
+      const plan = internalFindFirstQuery("widget", { select: { foo: true, bar: true } });
+      expect(plan.variables.select).toEqual(["foo", "bar"]);
+      expect(plan).toMatchInlineSnapshot(`
+        {
+          "query": "query InternalFindFirstWidget ($select: [String!], $first: Int) { internal  { listWidget (select: $select, first: $first) { edges { node } } } }",
+          "variables": {
+            "first": 1,
+            "select": [
+              "foo",
+              "bar",
+            ],
+          },
+        }
+      `);
+      expectValidGraphQLQuery(plan.query);
     });
 
     describe("properly handles apiIdentifiers styled with Snake Case", () => {
       // snake case example: "api_identifier"
       test("should build a find first query with no options", () => {
-        expect(internalFindFirstQuery("widget_model", undefined)).toMatchInlineSnapshot(`
+        const plan = internalFindFirstQuery("widget_model", undefined);
+        expect(plan).toMatchInlineSnapshot(`
           {
             "query": "query InternalFindFirstWidgetModel ($first: Int) { internal  { listWidgetModel (first: $first) { edges { node } } } }",
             "variables": {
@@ -268,10 +316,12 @@ describe("InternalModelManager", () => {
             },
           }
         `);
+        expectValidGraphQLQuery(plan.query);
       });
 
       test("should build a find first query with sort", () => {
-        expect(internalFindFirstQuery("widget_model", { sort: [{ id: "Ascending" }] })).toMatchInlineSnapshot(`
+        const plan = internalFindFirstQuery("widget_model", { sort: [{ id: "Ascending" }] });
+        expect(plan).toMatchInlineSnapshot(`
           {
             "query": "query InternalFindFirstWidgetModel ($sort: [WidgetModelSort!], $first: Int) { internal  { listWidgetModel (sort: $sort, first: $first) { edges { node } } } }",
             "variables": {
@@ -284,10 +334,12 @@ describe("InternalModelManager", () => {
             },
           }
         `);
+        expectValidGraphQLQuery(plan.query);
       });
 
       test("should build a find first query with search", () => {
-        expect(internalFindFirstQuery("widget_model", { search: "term" })).toMatchInlineSnapshot(`
+        const plan = internalFindFirstQuery("widget_model", { search: "term" });
+        expect(plan).toMatchInlineSnapshot(`
           {
             "query": "query InternalFindFirstWidgetModel ($search: String, $first: Int) { internal  { listWidgetModel (search: $search, first: $first) { edges { node } } } }",
             "variables": {
@@ -296,10 +348,12 @@ describe("InternalModelManager", () => {
             },
           }
         `);
+        expectValidGraphQLQuery(plan.query);
       });
 
       test("should build a find first query with filter", () => {
-        expect(internalFindFirstQuery("widget_model", { filter: [{ id: { equals: "1" } }] })).toMatchInlineSnapshot(`
+        const plan = internalFindFirstQuery("widget_model", { filter: [{ id: { equals: "1" } }] });
+        expect(plan).toMatchInlineSnapshot(`
           {
             "query": "query InternalFindFirstWidgetModel ($filter: [WidgetModelFilter!], $first: Int) { internal  { listWidgetModel (filter: $filter, first: $first) { edges { node } } } }",
             "variables": {
@@ -314,6 +368,7 @@ describe("InternalModelManager", () => {
             },
           }
         `);
+        expectValidGraphQLQuery(plan.query);
       });
 
       test("should build a create record mutation", () => {
@@ -356,6 +411,7 @@ describe("InternalModelManager", () => {
               }
             "
         `);
+        expectValidGraphQLQuery(result);
       });
 
       test("should build a bulk create records mutation", () => {
@@ -398,6 +454,7 @@ describe("InternalModelManager", () => {
               }
             "
         `);
+        expectValidGraphQLQuery(result);
       });
 
       test("should build an update record mutation", () => {
@@ -440,6 +497,7 @@ describe("InternalModelManager", () => {
               }
             "
         `);
+        expectValidGraphQLQuery(result);
       });
 
       test("should build a delete record mutation", () => {
@@ -481,6 +539,7 @@ describe("InternalModelManager", () => {
               }
             "
         `);
+        expectValidGraphQLQuery(result);
       });
 
       test("should build a delete many records mutation", () => {
@@ -525,47 +584,226 @@ describe("InternalModelManager", () => {
               }
             "
         `);
+        expectValidGraphQLQuery(result);
       });
     });
+  });
 
+  describe("internal actions", () => {
     test("should build a create record mutation", () => {
       const result = internalCreateMutation("widget");
 
-      expect(result).toMatch(
-        /mutation InternalCreateWidget\(\$record: InternalWidgetInput\) {\s*gadgetMeta {\s*hydrations\(modelName: "widget"\)\s*}\s*internal {\s*createWidget\(widget: \$record\) {\s*success\s*errors {\s*... InternalErrorsDetails\s*}\s*widget\s*}\s*}\s*}/
-      );
+      expect(result).toMatchInlineSnapshot(`
+        "
+            
+        fragment InternalErrorsDetails on ExecutionError {
+          code
+          message
+          ...on InvalidRecordError {
+            validationErrors {
+              apiIdentifier
+              message
+            }
+            model {
+              apiIdentifier
+            }
+            record
+          }
+        }
+
+
+            mutation InternalCreateWidget($record: InternalWidgetInput) {
+              
+          gadgetMeta {
+            hydrations(modelName: "widget")
+          }
+
+              internal {
+                createWidget(widget: $record) {
+                  success
+                  errors {
+                    ... InternalErrorsDetails
+                  }
+                  widget
+                }
+              }
+            }
+          "
+      `);
+      expectValidGraphQLQuery(result);
     });
 
     test("should build a bulk create records mutation", () => {
       const result = internalBulkCreateMutation("widget", "widgets");
 
-      expect(result).toMatch(
-        /mutation InternalBulkCreateWidgets\(\$records: \[InternalWidgetInput\]!\) {\s*gadgetMeta {\s*hydrations\(modelName: "widget"\)\s*}\s*internal {\s*bulkCreateWidgets\(widgets: \$records\) {\s*success\s*errors {\s*... InternalErrorsDetails\s*}\s*widgets\s*}\s*}\s*}/
-      );
+      expect(result).toMatchInlineSnapshot(`
+        "
+            
+        fragment InternalErrorsDetails on ExecutionError {
+          code
+          message
+          ...on InvalidRecordError {
+            validationErrors {
+              apiIdentifier
+              message
+            }
+            model {
+              apiIdentifier
+            }
+            record
+          }
+        }
+
+
+            mutation InternalBulkCreateWidgets($records: [InternalWidgetInput]!) {
+              
+          gadgetMeta {
+            hydrations(modelName: "widget")
+          }
+
+              internal {
+                bulkCreateWidgets(widgets: $records) {
+                  success
+                  errors {
+                    ... InternalErrorsDetails
+                  }
+                  widgets
+                }
+              }
+            }
+          "
+      `);
+      expectValidGraphQLQuery(result);
     });
 
     test("should build an update record mutation", () => {
       const result = internalUpdateMutation("widget");
 
-      expect(result).toMatch(
-        /mutation InternalUpdateWidget\(\$id: GadgetID!, \$record: InternalWidgetInput\) {\s*gadgetMeta {\s*hydrations\(modelName: "widget"\)\s*}\s*internal {\s*updateWidget\(id: \$id, widget: \$record\) {\s*success\s*errors {\s*... InternalErrorsDetails\s*}\s*widget\s*}\s*}\s*}/
-      );
+      expect(result).toMatchInlineSnapshot(`
+        "
+            
+        fragment InternalErrorsDetails on ExecutionError {
+          code
+          message
+          ...on InvalidRecordError {
+            validationErrors {
+              apiIdentifier
+              message
+            }
+            model {
+              apiIdentifier
+            }
+            record
+          }
+        }
+
+
+            mutation InternalUpdateWidget($id: GadgetID!, $record: InternalWidgetInput) {
+              
+          gadgetMeta {
+            hydrations(modelName: "widget")
+          }
+
+              internal {
+                updateWidget(id: $id, widget: $record) {
+                  success
+                  errors {
+                    ... InternalErrorsDetails
+                  }
+                  widget
+                }
+              }
+            }
+          "
+      `);
+      expectValidGraphQLQuery(result);
     });
 
     test("should build a delete record mutation", () => {
       const result = internalDeleteMutation("widget");
 
-      expect(result).toMatch(
-        /mutation InternalDeleteWidget\(\$id: GadgetID!\) {\s*gadgetMeta {\s*hydrations\(modelName: "widget"\)\s*}\s*internal {\s*deleteWidget\(id: \$id\) {\s*success\s*errors {\s*... InternalErrorsDetails\s*}\s*}\s*}\s*}/
-      );
+      expect(result).toMatchInlineSnapshot(`
+        "
+            
+        fragment InternalErrorsDetails on ExecutionError {
+          code
+          message
+          ...on InvalidRecordError {
+            validationErrors {
+              apiIdentifier
+              message
+            }
+            model {
+              apiIdentifier
+            }
+            record
+          }
+        }
+
+
+            mutation InternalDeleteWidget($id: GadgetID!) {
+              
+          gadgetMeta {
+            hydrations(modelName: "widget")
+          }
+
+              internal {
+                deleteWidget(id: $id) {
+                  success
+                  errors {
+                    ... InternalErrorsDetails
+                  }
+                }
+              }
+            }
+          "
+      `);
+      expectValidGraphQLQuery(result);
     });
 
     test("should build a delete many records mutation", () => {
       const result = internalDeleteManyMutation("widget");
 
-      expect(result).toMatch(
-        /mutation InternalDeleteManyWidget\(\s*\$search: String\s*\$filter: \[WidgetFilter!\]\s*\) {\s*gadgetMeta {\s*hydrations\(modelName: "widget"\)\s*}\s*internal {\s*deleteManyWidget\(search: \$search, filter: \$filter\) {\s*success\s*errors {\s*... InternalErrorsDetails\s*}\s*}\s*}\s*}/
-      );
+      expect(result).toMatchInlineSnapshot(`
+        "
+            
+        fragment InternalErrorsDetails on ExecutionError {
+          code
+          message
+          ...on InvalidRecordError {
+            validationErrors {
+              apiIdentifier
+              message
+            }
+            model {
+              apiIdentifier
+            }
+            record
+          }
+        }
+
+
+            mutation InternalDeleteManyWidget(
+              $search: String
+              $filter: [WidgetFilter!]
+            ) {
+              
+          gadgetMeta {
+            hydrations(modelName: "widget")
+          }
+
+              internal {
+                deleteManyWidget(search: $search, filter: $filter) {
+                  success
+                  errors {
+                    ... InternalErrorsDetails
+                  }
+                }
+              }
+            }
+          "
+      `);
+      expectValidGraphQLQuery(result);
     });
   });
 });

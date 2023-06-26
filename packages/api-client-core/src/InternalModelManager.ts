@@ -43,23 +43,108 @@ const internalHydrationPlan = (modelApiIdentifer: string) => `
 export const internalFindOneQuery = (apiIdentifier: string) => {
   const capitalizedApiIdentifier = capitalizeIdentifier(apiIdentifier);
   return `
-    query InternalFind${capitalizedApiIdentifier}($id: GadgetID!) {
+    query InternalFind${capitalizedApiIdentifier}($id: GadgetID!, $select: [String!]) {
       ${internalHydrationPlan(apiIdentifier)}
       internal {
-        ${apiIdentifier}(id: $id)
+        ${apiIdentifier}(id: $id, select: $select)
       }
     }
     `;
 };
 
-export const internalFindFirstQuery = (apiIdentifier: string, options?: RecordData) => {
-  const capitalizedApiIdentifier = capitalizeIdentifier(apiIdentifier);
+/**
+ * A list of fields to select from the internal API
+ * Matches the format of the Public API `select` option, but only allows going one level deep -- no relationships can be selected using the internal API.
+ *
+ * Supports passing a list of strings as a shorthand.
+ *
+ * @example
+ * { fieldA: true, fieldB: true, fieldC: false }
+ *
+ * @example
+ * ['fieldA', 'fieldB']
+ */
+export type InternalFieldSelection = string[] | { [field: string]: boolean | null | undefined };
 
-  const defaultVariables = {
+/** Options for the api functions that return one record on an InternalModelManager */
+export interface InternalFindOneOptions {
+  /**
+   * What fields to retrieve from the API for this API call
+   **/
+  select?: InternalFieldSelection;
+}
+
+/** Options for functions that query a list of records on an InternalModelManager */
+export interface InternalFindListOptions {
+  /**
+   * A string to search for within all the stringlike fields of the records
+   * Matches the behavior of the Public API `search` option
+   **/
+  search?: string;
+  /**
+   * How to sort the returned records
+   * Matches the format and behavior of the Public API `sort` option
+   *
+   * @example
+   * {
+   *   sort: { publishedAt: "Descending" }
+   * }
+   **/
+  sort?: Record<string, "Ascending" | "Descending"> | Record<string, "Ascending" | "Descending">[];
+  /**
+   * Only return records matching this filter
+   * Matches the format and behavior of the Public API `filter` option
+   *
+   * @example
+   * {
+   *   filter: { published: { equals: true } }
+   * }
+   * */
+  filter?: Record<string, any>;
+  /**
+   * What fields to retrieve from the API for this API call
+   **/
+  select?: InternalFieldSelection;
+}
+
+/** Options for functions that return a paginated list of records from an InternalModelManager */
+export interface InternalFindManyOptions extends InternalFindListOptions {
+  /**
+   * A count of records to return
+   * Often used in tandem with the `after` option for GraphQL relay-style cursor pagination
+   * Matches the pagination style and behavior of the Public API
+   **/
+  first?: number;
+  /**
+   * The `after` cursor from the GraphQL Relay pagination spec
+   * Matches the pagination style and behavior of the Public API
+   **/
+  after?: string;
+  /**
+   * A count of records to return
+   * Often used in tandem with the `before` option for GraphQL relay-style cursor pagination
+   * Matches the pagination style and behavior of the Public API
+   **/
+  last?: number;
+  /**
+   * The `before` cursor from the GraphQL Relay pagination spec
+   * Matches the pagination style and behavior of the Public API
+   **/
+  before?: string;
+}
+
+const internalFindListVariables = (capitalizedApiIdentifier: string, options?: InternalFindListOptions) => {
+  return {
     ...(options?.search && { search: { value: options?.search, type: "String", required: false } }),
     ...(options?.sort && { sort: { value: options?.sort, type: `${capitalizedApiIdentifier}Sort!`, list: true } }),
     ...(options?.filter && { filter: { value: options?.filter, type: `${capitalizedApiIdentifier}Filter!`, list: true } }),
+    ...(options?.select && { select: { value: formatInternalSelectVariable(options?.select), type: `String!`, list: true } }),
   };
+};
+
+export const internalFindFirstQuery = (apiIdentifier: string, options?: InternalFindListOptions) => {
+  const capitalizedApiIdentifier = capitalizeIdentifier(apiIdentifier);
+  const defaultVariables = internalFindListVariables(capitalizedApiIdentifier, options);
 
   return query(
     [
@@ -86,14 +171,9 @@ export const internalFindFirstQuery = (apiIdentifier: string, options?: RecordDa
   );
 };
 
-export const internalFindManyQuery = (apiIdentifier: string, options?: RecordData) => {
+export const internalFindManyQuery = (apiIdentifier: string, options?: InternalFindManyOptions) => {
   const capitalizedApiIdentifier = capitalizeIdentifier(apiIdentifier);
-
-  const defaultVariables = {
-    ...(options?.search && { search: { value: options?.search, type: "String", required: false } }),
-    ...(options?.sort && { sort: { value: options?.sort, type: `${capitalizedApiIdentifier}Sort!`, list: true } }),
-    ...(options?.filter && { filter: { value: options?.filter, type: `${capitalizedApiIdentifier}Filter!`, list: true } }),
-  };
+  const defaultVariables = internalFindListVariables(capitalizedApiIdentifier, options);
 
   return query(
     [
@@ -229,6 +309,7 @@ export const internalDeleteManyMutation = (apiIdentifier: string) => {
   `;
 };
 
+/** The fields for a given record to send to the backend */
 export type RecordData = Record<string, any>;
 
 /**
@@ -272,19 +353,54 @@ export class InternalModelManager {
     return recordData;
   }
 
-  async findOne(id: string, throwOnEmptyData = true): Promise<GadgetRecord<RecordData>> {
-    const response = await this.connection.currentClient.query(internalFindOneQuery(this.apiIdentifier), { id }).toPromise();
+  /**
+   * Find a single record by ID. Throws an error by default if the record with the given ID is not found.
+   *
+   * @example
+   * // returns post with id 10
+   * const post = await api.internal.post.findOne(10);
+   *
+   * @param id The ID of the record to find
+   * @param options Options for the find operation
+   * @param throwOnEmptyData Whether or not to throw an error if the record is not found
+   * @returns The record, if found
+   */
+  async findOne(id: string, options?: InternalFindOneOptions, throwOnEmptyData = true): Promise<GadgetRecord<RecordData>> {
+    const response = await this.connection.currentClient
+      .query(internalFindOneQuery(this.apiIdentifier), { id, select: formatInternalSelectVariable(options?.select) })
+      .toPromise();
     const assertSuccess = throwOnEmptyData ? assertOperationSuccess : assertNullableOperationSuccess;
     const result = assertSuccess(response, ["internal", this.apiIdentifier]);
     return hydrateRecord(response, result);
   }
 
-  async maybeFindOne(id: string): Promise<GadgetRecord<RecordData> | null> {
-    const record = await this.findOne(id, false);
+  /**
+   * Find a single record by ID. Returns null if the record doesn't exist.
+   *
+   * @example
+   * // returns post with id 10 if it exists, null otherwise
+   * const post = await api.internal.post.maybeFindOne(10);
+   *
+   * @param id The ID of the record to find
+   * @param options Options for the find operation
+   * @returns The record, if found, null otherwise
+   */
+  async maybeFindOne(id: string, options?: InternalFindOneOptions): Promise<GadgetRecord<RecordData> | null> {
+    const record = await this.findOne(id, options, false);
     return record.isEmpty() ? null : record;
   }
 
-  async findMany(options?: RecordData): Promise<GadgetRecordList<any>> {
+  /**
+   * Find a list of records matching the given options
+   *
+   * @example
+   * // returns the first page of published posts
+   * const posts = await api.internal.post.findMany({ filter: { published: { equals: true }}});
+   *
+   * @param options Options for the find operation, like sorts, filters, and pagination
+   * @returns The record, if found, null otherwise
+   */
+  async findMany(options?: InternalFindManyOptions): Promise<GadgetRecordList<any>> {
     const plan = internalFindManyQuery(this.apiIdentifier, options);
     const response = await this.connection.currentClient.query(plan.query, plan.variables).toPromise();
     const connection = assertNullableOperationSuccess(response, ["internal", `list${this.capitalizedApiIdentifier}`]);
@@ -293,7 +409,17 @@ export class InternalModelManager {
     return GadgetRecordList.boot(this, records, { options, pageInfo: connection.pageInfo });
   }
 
-  async findFirst(options?: RecordData, throwOnEmptyData = true): Promise<GadgetRecord<RecordShape>> {
+  /**
+   * Find the first record matching the given options. Throws an error by default if no records matching the options are found.
+   *
+   * @example
+   * // returns the first published post or throws if none found
+   * const post = await api.internal.post.findFirst({ filter: { published: { equals: true }}});
+   *
+   * @param options Options for the find operation, like sorts, filters, and pagination
+   * @returns The first record matching the options
+   */
+  async findFirst(options?: InternalFindListOptions, throwOnEmptyData = true): Promise<GadgetRecord<RecordShape>> {
     const plan = internalFindFirstQuery(this.apiIdentifier, options);
     const response = await this.connection.currentClient.query(plan.query, plan.variables).toPromise();
 
@@ -312,10 +438,32 @@ export class InternalModelManager {
     return recordList[0];
   }
 
-  async maybeFindFirst(options?: RecordData): Promise<GadgetRecord<RecordShape> | null> {
+  /**
+   * Find the first record matching the given options. Returns null if no records matching the options are found.
+   *
+   * @example
+   * // returns the first published post or null if none are published
+   * const post = await api.internal.post.maybeFindFirst({ filter: { published: { equals: true }}});
+   *
+   * @param options Options for the find operation, like sorts, filters, and pagination
+   * @returns The first record matching the options, null otherwise
+   */
+  async maybeFindFirst(options?: InternalFindListOptions): Promise<GadgetRecord<RecordShape> | null> {
     return await this.findFirst(options, false);
   }
 
+  /**
+   * Creates a new record in the backend datastore for this model using the Internal API
+   *
+   * Does *not* run actions -- use the Public API for that.
+   *
+   * @example
+   * // creates a new post record in the database
+   * const post = await api.internal.post.create({ title: "A new post" });
+   *
+   * @param record The data for the record to create
+   * @returns The created record
+   */
   async create(record: RecordData): Promise<GadgetRecord<RecordShape>> {
     return await this.transaction(async (transaction) => {
       const response = await transaction.client
@@ -328,6 +476,21 @@ export class InternalModelManager {
     });
   }
 
+  /**
+   * Creates a set of new records in the backend datastore for this model using the Internal API. Creates in bulk within the same database transaction for performance.
+   *
+   * Does *not* run actions -- use the Public API for that.
+   *
+   * @example
+   * // creates 2 new post records in the database
+   * const posts = await api.internal.post.bulkCreate([
+   *   { title: "A new post" },
+   *   { title: "Another new post" }
+   * ]);
+   *
+   * @param record An array of data for the records to create
+   * @returns The created records
+   */
   async bulkCreate(records: RecordData[]): Promise<GadgetRecord<RecordShape>[]> {
     return await this.transaction(async (transaction) => {
       if (!this.options?.pluralApiIdentifier) {
@@ -345,6 +508,18 @@ export class InternalModelManager {
     });
   }
 
+  /**
+   * Updates an existing record in the backend datastore for this model using the Internal API
+   *
+   * Does *not* run actions -- use the Public API for that.
+   *
+   * @example
+   * // updates post with id 10 in the database
+   * const post = await api.internal.post.update(10, { title: "A new post title" });
+   *
+   * @param record The data for the record to update
+   * @returns The updated record
+   */
   async update(id: string, record: RecordData): Promise<GadgetRecord<RecordShape>> {
     assert(id, `Can't update a record without an ID passed`);
     return await this.transaction(async (transaction) => {
@@ -360,6 +535,17 @@ export class InternalModelManager {
     });
   }
 
+  /**
+   * Deletes an existing record in the backend datastore for this model using the Internal API
+   *
+   * Does *not* run actions -- use the Public API for that.
+   *
+   * @example
+   * // removes the post with id 10 in the database
+   * await api.internal.post.delete(10);
+   *
+   * @param id The id of the record to delete
+   */
   async delete(id: string): Promise<void> {
     assert(id, `Can't delete a record without an ID`);
     return await this.transaction(async (transaction) => {
@@ -368,6 +554,17 @@ export class InternalModelManager {
     });
   }
 
+  /**
+   * Deletes the records in the backend datastore that match the given filter criteria. Uses the Internal API.
+   *
+   * Does *not* run actions -- use the Public API for that.
+   *
+   * @example
+   * // removes all unpublished posts from the database
+   * await api.internal.post.deleteMany({filter: { published: { equals: false } } });
+   *
+   * @param options Search and filter options for the records to delete
+   */
   async deleteMany(options?: { search?: string; filter?: RecordData }): Promise<void> {
     return await this.transaction(async (transaction) => {
       const response = await transaction.client.mutation(internalDeleteManyMutation(this.apiIdentifier), options).toPromise();
@@ -375,7 +572,20 @@ export class InternalModelManager {
     });
   }
 
+  /** @private */
   async transaction<T>(callback: (transaction: GadgetTransaction) => Promise<T>): Promise<T> {
     return await this.connection.transaction(callback);
   }
+}
+
+function formatInternalSelectVariable(select: InternalFieldSelection | undefined): undefined | string[] {
+  if (!select) return;
+  if (Array.isArray(select)) return select;
+  const result: string[] = [];
+  for (const [key, value] of Object.entries(select)) {
+    if (value) {
+      result.push(key);
+    }
+  }
+  return result;
 }
