@@ -84,6 +84,8 @@ describe("useBulkAction", () => {
           ],
         },
       },
+      stale: false,
+      hasNext: false,
     });
 
     await act(async () => {
@@ -132,6 +134,8 @@ describe("useBulkAction", () => {
           widgets: null,
         },
       },
+      stale: false,
+      hasNext: false,
     });
 
     await act(async () => {
@@ -169,6 +173,8 @@ describe("useBulkAction", () => {
           ],
         },
       },
+      stale: false,
+      hasNext: false,
     });
 
     await act(async () => {

@@ -51,6 +51,8 @@ describe("useFindOne", () => {
           email: "test@test.com",
         },
       },
+      stale: false,
+      hasNext: false,
     });
 
     expect(result.current[0].data!.id).toEqual("123");
@@ -72,6 +74,8 @@ describe("useFindOne", () => {
       data: {
         user: null,
       },
+      stale: false,
+      hasNext: false,
     });
 
     expect(result.current[0].data).toBeFalsy();
@@ -98,6 +102,8 @@ describe("useFindOne", () => {
           email: "test@test.com",
         },
       },
+      stale: false,
+      hasNext: false,
     });
 
     const beforeObject = result.current[0];

@@ -50,6 +50,8 @@ describe("useGet", () => {
           id: "123",
         },
       },
+      stale: false,
+      hasNext: false,
     });
 
     expect(result.current[0].data!.id).toEqual("123");
@@ -70,6 +72,8 @@ describe("useGet", () => {
       data: {
         currentSession: null,
       },
+      stale: false,
+      hasNext: false,
     });
 
     expect(result.current[0].data).toBe(null);
@@ -88,6 +92,8 @@ describe("useGet", () => {
           id: "123",
         },
       },
+      stale: false,
+      hasNext: false,
     });
 
     const beforeObject = result.current[0];

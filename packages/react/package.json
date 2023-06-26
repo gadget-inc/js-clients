@@ -1,6 +1,6 @@
 {
   "name": "@gadgetinc/react",
-  "version": "0.12.5",
+  "version": "0.12.6",
   "source": "src/index.ts",
   "main": "dist/src/index.js",
   "types": "dist/src/index.d.ts",
@@ -19,9 +19,9 @@
     "prerelease": "gitpkg publish"
   },
   "dependencies": {
-    "@gadgetinc/api-client-core": "^0.13.10",
+    "@gadgetinc/api-client-core": "^0.13.14",
     "deep-equal": "^2.2.0",
-    "urql": "^3.0.3"
+    "urql": "^4.0.4"
   },
   "devDependencies": {
     "@gadgetinc/api-client-core": "workspace:*",
@@ -30,7 +30,7 @@
     "@types/lodash": "^4.14.191",
     "@types/react": "^18.2.9",
     "@types/react-dom": "^18.2.4",
-    "@urql/core": "^3.0.1",
+    "@urql/core": "^4.0.10",
     "conditional-type-checks": "^1.0.6",
     "graphql": "16.5.0",
     "lodash": "^4.17.21",

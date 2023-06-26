@@ -57,6 +57,8 @@ describe("useFindMany", () => {
           },
         },
       },
+      stale: false,
+      hasNext: false,
     });
 
     expect(result.current[0].data![0].id).toEqual("123");
@@ -96,6 +98,8 @@ describe("useFindMany", () => {
           },
         },
       },
+      stale: false,
+      hasNext: false,
     });
 
     expect(result.current[0].data![0].id).toEqual("123");
@@ -130,6 +134,8 @@ describe("useFindMany", () => {
           },
         },
       },
+      stale: false,
+      hasNext: false,
     });
 
     expect(result.current[0].data![0].id).toEqual("def");
@@ -161,6 +167,8 @@ describe("useFindMany", () => {
           },
         },
       },
+      stale: false,
+      hasNext: false,
     });
 
     expect(result.current[0].data!.length).toEqual(0);
@@ -192,6 +200,8 @@ describe("useFindMany", () => {
           },
         },
       },
+      stale: false,
+      hasNext: false,
     });
 
     const beforeObject = result.current[0];

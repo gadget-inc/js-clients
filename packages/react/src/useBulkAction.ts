@@ -79,7 +79,7 @@ export const useBulkAction = <
           ...context,
           additionalTypenames: [...(context?.additionalTypenames ?? []), capitalizeIdentifier(action.modelApiIdentifier)],
         });
-        return processResult({ fetching: false, stale: false, ...result }, action);
+        return processResult({ fetching: false, ...result }, action);
       },
       [action, runMutation]
     ),
