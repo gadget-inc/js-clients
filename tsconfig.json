@@ -10,11 +10,12 @@
     "emitDecoratorMetadata": true,
     "forceConsistentCasingInFileNames": true,
     "useDefineForClassFields": true,
-    "isolatedModules":true,
+    "isolatedModules": true,
     "target": "es2020",
     "lib": ["es2020", "DOM"],
     "skipLibCheck": true,
-    "declaration": true
+    "declaration": true,
+    "composite": true
   },
   "include": ["./packages"],
   "exclude": ["**/node_modules", "**/.*/"]
