@@ -13,8 +13,8 @@
   "homepage": "https://github.com/gadget-inc/js-clients/tree/main/packages/react",
   "scripts": {
     "typecheck": "tsc --noEmit",
-    "build": "rm -rf dist && tsc",
-    "watch": "rm -rf dist && tsc --watch --preserveWatchOutput",
+    "build": "tsc",
+    "watch": "tsc --watch --preserveWatchOutput",
     "prepublishOnly": "pnpm build",
     "prerelease": "gitpkg publish"
   },
