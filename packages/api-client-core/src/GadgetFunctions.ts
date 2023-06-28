@@ -1,3 +1,4 @@
+import type { AnyPublicModelManager, AnyPublicSingletonModelManager } from "./AnyModelManager.js";
 import type { GadgetRecord, RecordShape } from "./GadgetRecord.js";
 import type { GadgetRecordList } from "./GadgetRecordList.js";
 import type { LimitToKnownKeys, VariablesOptions } from "./types.js";
@@ -17,6 +18,7 @@ export interface FindOneFunction<OptionsT, SelectionT, SchemaT, DefaultsT> {
   selectionType: SelectionT;
   optionsType: OptionsT;
   schemaType: SchemaT | null;
+  modelManager?: AnyPublicModelManager;
 }
 
 export interface MaybeFindOneFunction<OptionsT, SelectionT, SchemaT, DefaultsT> {
@@ -30,6 +32,7 @@ export interface MaybeFindOneFunction<OptionsT, SelectionT, SchemaT, DefaultsT> 
   selectionType: SelectionT;
   optionsType: OptionsT;
   schemaType: SchemaT | null;
+  modelManager?: AnyPublicModelManager;
 }
 
 export interface FindManyFunction<OptionsT, SelectionT, SchemaT, DefaultsT> {
@@ -42,6 +45,7 @@ export interface FindManyFunction<OptionsT, SelectionT, SchemaT, DefaultsT> {
   selectionType: SelectionT;
   optionsType: OptionsT;
   schemaType: SchemaT | null;
+  modelManager?: AnyPublicModelManager;
 }
 
 export interface FindFirstFunction<OptionsT, SelectionT, SchemaT, DefaultsT> {
@@ -54,6 +58,7 @@ export interface FindFirstFunction<OptionsT, SelectionT, SchemaT, DefaultsT> {
   selectionType: SelectionT;
   optionsType: OptionsT;
   schemaType: SchemaT | null;
+  modelManager?: AnyPublicModelManager;
 }
 
 export interface MaybeFindFirstFunction<OptionsT, SelectionT, SchemaT, DefaultsT> {
@@ -66,6 +71,7 @@ export interface MaybeFindFirstFunction<OptionsT, SelectionT, SchemaT, DefaultsT
   selectionType: SelectionT;
   optionsType: OptionsT;
   schemaType: SchemaT | null;
+  modelManager?: AnyPublicModelManager;
 }
 
 interface ActionWithIdAndVariables<OptionsT, VariablesT> {
@@ -113,6 +119,7 @@ interface ActionFunctionMetadata<OptionsT, VariablesT, SelectionT, SchemaT, Defa
   acceptsModelInput?: boolean;
   paramOnlyVariables?: readonly string[];
   hasReturnType?: boolean;
+  modelManager?: AnyPublicModelManager;
 }
 
 export type ActionFunction<OptionsT, VariablesT, SelectionT, SchemaT, DefaultsT> = ActionFunctionMetadata<
@@ -150,6 +157,7 @@ export interface GetFunction<OptionsT, SelectionT, SchemaT, DefaultsT> {
   selectionType: SelectionT;
   optionsType: OptionsT;
   schemaType: SchemaT | null;
+  modelManager?: AnyPublicSingletonModelManager;
 }
 
 export interface GlobalActionFunction<VariablesT> {

@@ -116,7 +116,9 @@ const processResult = (result: UseMutationState<any, any>, action: BulkActionFun
         if (errors && errors[0]) {
           error = ErrorWrapper.forErrorsResponse(errors, (error as any)?.response);
         } else {
-          data = action.hasReturnType ? mutationData.results : hydrateRecordArray(result, mutationData[action.modelSelectionField]);
+          data = action.hasReturnType
+            ? mutationData.results
+            : hydrateRecordArray(result, mutationData[action.modelSelectionField], action.modelManager);
         }
       }
     }

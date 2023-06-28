@@ -1,5 +1,5 @@
 import nock from "nock";
-import type { GadgetErrorGroup } from "../src/index.js";
+import type { AnyPublicModelManager, GadgetErrorGroup } from "../src/index.js";
 import { GadgetConnection, actionRunner } from "../src/index.js";
 import { mockUrqlClient } from "./mockUrqlClient.js";
 
@@ -8,17 +8,17 @@ nock.disableNetConnect();
 // eslint-disable-next-line jest/no-export
 describe("operationRunners", () => {
   let connection: GadgetConnection;
+  let manager: AnyPublicModelManager;
   beforeEach(() => {
     connection = new GadgetConnection({ endpoint: "https://someapp.gadget.app" });
     jest.spyOn(connection, "currentClient", "get").mockReturnValue(mockUrqlClient as any);
+    manager = { connection } as AnyPublicModelManager;
   });
 
   describe("actionRunner", () => {
     test("can run a single create action", async () => {
       const promise = actionRunner<{ id: string; name: string }>(
-        {
-          connection,
-        },
+        manager,
         "createWidget",
         { id: true, name: true },
         "widget",
@@ -58,9 +58,7 @@ describe("operationRunners", () => {
 
     test("can run a single update action", async () => {
       const promise = actionRunner<{ id: string; name: string }>(
-        {
-          connection,
-        },
+        manager,
         "updateWidget",
         { id: true, name: true },
         "widget",
@@ -105,9 +103,7 @@ describe("operationRunners", () => {
 
     test("can throw the error returned by the server for a single action", async () => {
       const promise = actionRunner<{ id: string; name: string }>(
-        {
-          connection,
-        },
+        manager,
         "updateWidget",
         { id: true, name: true },
         "widget",
@@ -152,9 +148,7 @@ describe("operationRunners", () => {
 
     test("can run a bulk action by ids", async () => {
       const promise = actionRunner<{ id: string; name: string }>(
-        {
-          connection,
-        },
+        manager,
         "bulkFlipWidgets",
         { id: true, name: true },
         "widget",
@@ -202,9 +196,7 @@ describe("operationRunners", () => {
 
     test("can run a bulk action with params", async () => {
       const promise = actionRunner<{ id: string; name: string }>(
-        {
-          connection,
-        },
+        manager,
         "bulkCreateWidgets",
         { id: true, name: true },
         "widget",
@@ -252,9 +244,7 @@ describe("operationRunners", () => {
 
     test("throws a nice error when a bulk action returns errors", async () => {
       const promise = actionRunner<{ id: string; name: string }>(
-        {
-          connection,
-        },
+        manager,
         "bulkCreateWidgets",
         { id: true, name: true },
         "widget",
@@ -292,9 +282,7 @@ describe("operationRunners", () => {
 
     test("throws a nice error when a bulk action returns errors and data", async () => {
       const promise = actionRunner<{ id: string; name: string }>(
-        {
-          connection,
-        },
+        manager,
         "bulkCreateWidgets",
         { id: true, name: true },
         "widget",
@@ -339,9 +327,7 @@ describe("operationRunners", () => {
 
     test("returns undefined when bulk action does not have a result", async () => {
       const promise = actionRunner<{ id: string; name: string }>(
-        {
-          connection,
-        },
+        manager,
         "bulkDeleteWidgets",
         { id: true, name: true },
         "widget",

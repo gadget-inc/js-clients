@@ -226,7 +226,7 @@ export class InternalModelManager {
   private readonly capitalizedApiIdentifier: string;
 
   constructor(
-    private readonly apiIdentifier: string,
+    readonly apiIdentifier: string,
     readonly connection: GadgetConnection,
     readonly options?: { pluralApiIdentifier: string; hasAmbiguousIdentifiers?: boolean }
   ) {
@@ -278,7 +278,7 @@ export class InternalModelManager {
       .toPromise();
     const assertSuccess = throwOnEmptyData ? assertOperationSuccess : assertNullableOperationSuccess;
     const result = assertSuccess(response, ["internal", this.apiIdentifier]);
-    return hydrateRecord(response, result);
+    return hydrateRecord(response, result, this);
   }
 
   /**
@@ -311,7 +311,7 @@ export class InternalModelManager {
     const plan = internalFindManyQuery(this.apiIdentifier, options);
     const response = await this.connection.currentClient.query(plan.query, plan.variables).toPromise();
     const connection = assertNullableOperationSuccess(response, ["internal", `list${this.capitalizedApiIdentifier}`]);
-    const records = hydrateConnection(response, connection);
+    const records = hydrateConnection(response, connection, this);
 
     return GadgetRecordList.boot(this, records, { options, pageInfo: connection.pageInfo });
   }
@@ -340,7 +340,7 @@ export class InternalModelManager {
       connection = assertOperationSuccess(response, ["internal", `list${this.capitalizedApiIdentifier}`], throwOnEmptyData);
     }
 
-    const records = hydrateConnection(response, connection);
+    const records = hydrateConnection(response, connection, this);
     const recordList = GadgetRecordList.boot(this, records, { options, pageInfo: connection.pageInfo });
     return recordList[0];
   }
@@ -378,7 +378,7 @@ export class InternalModelManager {
       })
       .toPromise();
     const result = assertMutationSuccess(response, ["internal", `create${this.capitalizedApiIdentifier}`]);
-    return hydrateRecord(response, result[this.apiIdentifier]);
+    return hydrateRecord(response, result[this.apiIdentifier], this);
   }
 
   /**
@@ -408,7 +408,7 @@ export class InternalModelManager {
       })
       .toPromise();
     const result = assertMutationSuccess(response, ["internal", `bulkCreate${capitalizedPluralApiIdentifier}`]);
-    return hydrateRecordArray(response, result[this.options.pluralApiIdentifier]);
+    return hydrateRecordArray(response, result[this.options.pluralApiIdentifier], this);
   }
 
   /**
@@ -433,7 +433,7 @@ export class InternalModelManager {
       .toPromise();
     const result = assertMutationSuccess(response, ["internal", `update${this.capitalizedApiIdentifier}`]);
 
-    return hydrateRecord(response, result[this.apiIdentifier]);
+    return hydrateRecord(response, result[this.apiIdentifier], this);
   }
 
   /**
