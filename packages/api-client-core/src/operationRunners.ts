@@ -1,8 +1,8 @@
+import type { AnyPublicModelManager, AnyPublicSingletonModelManager } from "./AnyModelManager.js";
 import type { FieldSelection } from "./FieldSelection.js";
 import type { GadgetConnection } from "./GadgetConnection.js";
 import type { GadgetRecord, RecordShape } from "./GadgetRecord.js";
 import { GadgetRecordList } from "./GadgetRecordList.js";
-import type { AnyModelManager } from "./ModelManager.js";
 import type { PaginationOptions, SelectionOptions } from "./operationBuilders.js";
 import {
   actionOperation,
@@ -24,7 +24,7 @@ import {
 import type { VariablesOptions } from "./types.js";
 
 export const findOneRunner = async <Shape extends RecordShape = any>(
-  modelManager: { connection: GadgetConnection },
+  modelManager: AnyPublicModelManager | AnyPublicSingletonModelManager,
   operation: string,
   id: string | undefined,
   defaultSelection: FieldSelection,
@@ -36,11 +36,11 @@ export const findOneRunner = async <Shape extends RecordShape = any>(
   const response = await modelManager.connection.currentClient.query(plan.query, plan.variables).toPromise();
   const assertSuccess = throwOnEmptyData ? assertOperationSuccess : assertNullableOperationSuccess;
   const record = assertSuccess(response, [operation]);
-  return hydrateRecord<Shape>(response, record);
+  return hydrateRecord<Shape>(response, record, modelManager);
 };
 
 export const findOneByFieldRunner = async <Shape extends RecordShape = any>(
-  modelManager: { connection: GadgetConnection },
+  modelManager: AnyPublicModelManager,
   operation: string,
   fieldName: string,
   fieldValue: string,
@@ -51,7 +51,7 @@ export const findOneByFieldRunner = async <Shape extends RecordShape = any>(
   const plan = findOneByFieldOperation(operation, fieldName, fieldValue, defaultSelection, modelApiIdentifier, options);
   const response = await modelManager.connection.currentClient.query(plan.query, plan.variables).toPromise();
   const connectionObject = assertOperationSuccess(response, [operation]);
-  const records = hydrateConnection<Shape>(response, connectionObject);
+  const records = hydrateConnection<Shape>(response, connectionObject, modelManager);
 
   if (records.length > 1) {
     throw getNonUniqueDataError(modelApiIdentifier, fieldName, fieldValue);
@@ -61,7 +61,7 @@ export const findOneByFieldRunner = async <Shape extends RecordShape = any>(
 };
 
 export const findManyRunner = async <Shape extends RecordShape = any>(
-  modelManager: AnyModelManager,
+  modelManager: AnyPublicModelManager,
   operation: string,
   defaultSelection: FieldSelection,
   modelApiIdentifier: string,
@@ -81,13 +81,13 @@ export const findManyRunner = async <Shape extends RecordShape = any>(
     connectionObject = assertOperationSuccess(response, [operation], throwOnEmptyData);
   }
 
-  const records = hydrateConnection<Shape>(response, connectionObject);
+  const records = hydrateConnection<Shape>(response, connectionObject, modelManager);
   return GadgetRecordList.boot<Shape>(modelManager, records, { options, pageInfo: connectionObject.pageInfo });
 };
 
 export interface ActionRunner {
   <Shape extends RecordShape = any>(
-    modelManager: { connection: GadgetConnection },
+    modelManager: AnyPublicModelManager,
     operation: string,
     defaultSelection: FieldSelection | null,
     modelApiIdentifier: string,
@@ -99,7 +99,7 @@ export interface ActionRunner {
   ): Promise<Shape extends void ? void : GadgetRecord<Shape>>;
 
   <Shape extends RecordShape = any>(
-    modelManager: { connection: GadgetConnection },
+    modelManager: AnyPublicModelManager,
     operation: string,
     defaultSelection: FieldSelection | null,
     modelApiIdentifier: string,
@@ -112,7 +112,7 @@ export interface ActionRunner {
 }
 
 export const actionRunner: ActionRunner = async <Shape extends RecordShape = any>(
-  modelManager: { connection: GadgetConnection },
+  modelManager: AnyPublicModelManager | AnyPublicSingletonModelManager,
   operation: string,
   defaultSelection: FieldSelection | null,
   modelApiIdentifier: string,
@@ -138,9 +138,9 @@ export const actionRunner: ActionRunner = async <Shape extends RecordShape = any
 
   // todo this does not support pagination params right now, we'll need to add it to bulk action Results
   if (isBulkAction) {
-    return hydrateRecordArray<Shape>(response, mutationResult[modelSelectionField]);
+    return hydrateRecordArray<Shape>(response, mutationResult[modelSelectionField], modelManager);
   } else {
-    return hydrateRecord<Shape>(response, mutationResult[modelSelectionField]);
+    return hydrateRecord<Shape>(response, mutationResult[modelSelectionField], modelManager);
   }
 };
 

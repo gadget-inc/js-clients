@@ -144,7 +144,7 @@ const processResult = <Data, Variables extends AnyVariables>(
       if (errors && errors[0]) {
         error = ErrorWrapper.forErrorsResponse(errors, error?.response);
       } else {
-        data = hydrateRecord(result, mutationData[action.modelSelectionField]);
+        data = hydrateRecord(result, mutationData[action.modelSelectionField], action.modelManager);
       }
     }
   }
