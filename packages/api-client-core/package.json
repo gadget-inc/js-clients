@@ -13,8 +13,8 @@
   "homepage": "https://github.com/gadget-inc/js-clients/tree/main/packages/api-client-core",
   "scripts": {
     "typecheck": "tsc --noEmit",
-    "build": "tsc",
-    "watch": "tsc --watch --preserveWatchOutput",
+    "build": "rm -rf dist && tsc",
+    "watch": "rm -rf dist && tsc --watch --preserveWatchOutput",
     "prepublishOnly": "pnpm build",
     "prerelease": "gitpkg publish"
   },
@@ -38,6 +38,6 @@
     "gql-tag": "^1.0.1",
     "nock": "^13.3.1",
     "type-fest": "^3.3.0",
-    "typescript": "5.1.3"
+    "typescript": "5.0.4"
   }
 }
