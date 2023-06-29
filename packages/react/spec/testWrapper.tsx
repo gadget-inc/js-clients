@@ -8,7 +8,8 @@ import type { Client, GraphQLRequest, OperationContext, OperationResult } from "
 import { makeErrorResult } from "urql";
 import type { Subject } from "wonka";
 import { makeSubject } from "wonka";
-import { Provider } from "../src/GadgetProvider";
+import { GadgetClientContext, GadgetProviderContext, Provider } from "../src/GadgetProvider";
+import { relatedProductsApi } from "./apis";
 
 export type MockOperationFn = jest.Mock & {
   subjects: Record<string, Subject<OperationResult>>;
@@ -149,5 +150,12 @@ export const createMockUrqlCient = (assertions?: {
 };
 
 export const TestWrapper = (props: { children: ReactNode }) => {
-  return <Provider value={mockUrqlClient}>{props.children}</Provider>;
+  console.log({relatedProductsApi, mockUrqlClient})
+  return (
+      <Provider api={{connection: { currentClient: mockUrqlClient, endpoint: "https://myapp.gadget.app/api/graphql" }}}>
+        <GadgetProviderContext.Provider value={{signInPath: '/auth/signin', signOutPath: '/auth/signout'}}>
+          {props.children}
+        </GadgetProviderContext.Provider>
+      </Provider>
+  );
 };

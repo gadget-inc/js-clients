@@ -104,7 +104,7 @@ export declare type ActionHookResult<Data = any, Variables extends AnyVariables 
   (variables: Variables, context?: Partial<OperationContext>) => Promise<ActionHookState<Data, Variables>>
 ];
 
-export const noProviderErrorMessage = `Could not find a client in the conext of Provider. Please ensure you wrap the root component in a <Provider>`;
+export const noProviderErrorMessage = `Could not find a client in the context of Provider. Please ensure you wrap the root component in a <Provider>`;
 
 const generateErrorMessage = (networkErr?: Error, graphQlErrs?: GraphQLError[]) => {
   let error = "";

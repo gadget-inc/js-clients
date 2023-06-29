@@ -179,6 +179,9 @@ importers:
       deep-equal:
         specifier: ^2.2.0
         version: 2.2.0
+      react:
+        specifier: ^18.2.0
+        version: 18.2.0
       urql:
         specifier: ^4.0.4
         version: 4.0.4(graphql@16.5.0)(react@18.2.0)
@@ -189,6 +192,9 @@ importers:
       '@types/deep-equal':
         specifier: ^1.0.1
         version: 1.0.1
+      '@types/jest':
+        specifier: ^29.5.2
+        version: 29.5.2
       '@types/lodash':
         specifier: ^4.14.191
         version: 4.14.191
@@ -210,9 +216,6 @@ importers:
       lodash:
         specifier: ^4.17.21
         version: 4.17.21
-      react:
-        specifier: ^18.2.0
-        version: 18.2.0
       react-dom:
         specifier: ^18.2.0
         version: 18.2.0(react@18.2.0)
@@ -1589,6 +1592,13 @@ packages:
 
   /@types/jest@29.2.3:
     resolution: {integrity: sha512-6XwoEbmatfyoCjWRX7z0fKMmgYKe9+/HrviJ5k0X/tjJWHGAezZOfYaxqQKuzG/TvQyr+ktjm4jgbk0s4/oF2w==}
+    dependencies:
+      expect: 29.3.1
+      pretty-format: 29.3.1
+    dev: true
+
+  /@types/jest@29.5.2:
+    resolution: {integrity: sha512-mSoZVJF5YzGVCk+FsDxzDuH7s+SCkzrgKZzf0Z0T2WudhBUPoF6ktoTPC4R0ZoCPCV5xUvuU6ias5NvxcBcMMg==}
     dependencies:
       expect: 29.3.1
       pretty-format: 29.3.1
