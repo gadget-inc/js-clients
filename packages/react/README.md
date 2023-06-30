@@ -151,10 +151,6 @@ There are four different request policies that you can use:
 
 For more information on `urql`'s built-in client-side caching, see [`urql`'s docs](https://formidable.com/open-source/urql/docs/basics/document-caching/).
 
-
-
-`suspense: true` uses `urql`'s Suspense support under the hood.
-
 ### API Documentation
 
 `@gadgetinc/react` contains a variety of React hooks for working with your Gadget application's API from a React application. Specific code examples for your application's API can be found within your application's docs at https://docs.gadget.dev/api/<your-application-slug>
@@ -942,13 +938,18 @@ To suspend rendering when fetching data, pass the `suspense: true` option to the
 ```javascript
 const Posts = () => {
   // pass suspense: true, and the component will only render once data has been returned
-  const [{data, error}, refresh] = useFindMany(api.post, { suspense: true });
+  const [{ data, error }, refresh] = useFindMany(api.post, { suspense: true });
 
   // note: no need to inspect the fetching prop
-  return <>{data.map(
-    //...
-  )}</>
-}
+  return (
+    <>
+      {data
+        .map
+        //...
+        ()}
+    </>
+  );
+};
 ```
 
 All the read hooks support suspense: `useFindOne`, `useMaybeFindOne`, `useFindMany`, `useFindFirst`, `useMaybeFindFirst`, and `useGet`.
@@ -957,13 +958,13 @@ All the read hooks support suspense: `useFindOne`, `useMaybeFindOne`, `useFindMa
 
 ```javascript
 <Suspense fallback={"loading..."}>
-  <Posts/>
+  <Posts />
 </Suspense>
 ```
 
 With this wrapper in place, the fallback prop will be rendered while the data is being fetched, and once it's available, the `<Posts/>` component will render with data.
 
-Read more about `<Suspense/>` in the [React docs](https://react.dev/reference/react/Suspense).
+Read more about `<Suspense/>` in the [React docs](https://react.dev/reference/react/Suspense). `suspense: true` uses `urql`'s suspense support under the hood.
 
 ### `urql` exports
 
