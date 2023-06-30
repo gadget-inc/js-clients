@@ -34,7 +34,7 @@ describe("useFindMany", () => {
   };
 
   test("can find a list of records", async () => {
-    const { result } = renderHook(() => useFindMany(relatedProductsApi.user), { wrapper: TestWrapper });
+    const { result } = renderHook(() => useFindMany(relatedProductsApi.user), { wrapper: TestWrapper(relatedProductsApi) });
 
     expect(result.current[0].data).toBeFalsy();
     expect(result.current[0].fetching).toBe(true);
@@ -74,7 +74,7 @@ describe("useFindMany", () => {
 
   test("can find a list of records and query for the next page", async () => {
     const { result, rerender } = renderHook((after?: string) => useFindMany(relatedProductsApi.user, { first: 2, after }), {
-      wrapper: TestWrapper,
+      wrapper: TestWrapper(relatedProductsApi),
     });
 
     expect(result.current[0].data).toBeFalsy();
@@ -147,7 +147,7 @@ describe("useFindMany", () => {
   });
 
   test("can find an empty list of records", async () => {
-    const { result } = renderHook(() => useFindMany(relatedProductsApi.user), { wrapper: TestWrapper });
+    const { result } = renderHook(() => useFindMany(relatedProductsApi.user), { wrapper: TestWrapper(relatedProductsApi) });
 
     expect(result.current[0].data).toBeFalsy();
     expect(result.current[0].fetching).toBe(true);
@@ -177,7 +177,7 @@ describe("useFindMany", () => {
   });
 
   test("returns the same data object on rerender if nothing changes about the result", async () => {
-    const { result, rerender } = renderHook(() => useFindMany(relatedProductsApi.user), { wrapper: TestWrapper });
+    const { result, rerender } = renderHook(() => useFindMany(relatedProductsApi.user), { wrapper: TestWrapper(relatedProductsApi) });
 
     expect(result.current[0].data).toBeFalsy();
     expect(result.current[0].fetching).toBe(true);
@@ -212,7 +212,9 @@ describe("useFindMany", () => {
   });
 
   test("suspends when loading data", async () => {
-    const { result, rerender } = renderHook(() => useFindMany(relatedProductsApi.user, { suspense: true }), { wrapper: TestWrapper });
+    const { result, rerender } = renderHook(() => useFindMany(relatedProductsApi.user, { suspense: true }), {
+      wrapper: TestWrapper(relatedProductsApi),
+    });
 
     // first render never completes as the component suspends
     expect(result.current).toBeFalsy();

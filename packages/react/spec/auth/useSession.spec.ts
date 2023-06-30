@@ -1,10 +1,11 @@
 import { renderHook } from "@testing-library/react";
-import { TestWrapperWithAuth, mockUrqlClient } from "../testWrapper";
+import { superAuthApi } from "../../spec/apis";
 import { useSession } from "../../src/auth/useSession";
+import { TestWrapper, mockUrqlClient } from "../testWrapper";
 
 describe("useSession", () => {
   test("it returns the current session when the user is logged in", async () => {
-    const { result, rerender } = renderHook(() => useSession(), { wrapper: TestWrapperWithAuth });
+    const { result, rerender } = renderHook(() => useSession(), { wrapper: TestWrapper(superAuthApi) });
 
     expect(mockUrqlClient.executeQuery).toBeCalledTimes(1);
     mockUrqlClient.executeQuery.pushResponse("currentSession", {
@@ -16,7 +17,7 @@ describe("useSession", () => {
             id: "321",
             firstName: "Jane",
             lastName: "Doe",
-          }
+          },
         },
       },
       stale: false,
@@ -33,7 +34,7 @@ describe("useSession", () => {
   });
 
   test("it returns the current session when the user is logged out", async () => {
-    const { result } = renderHook(() => useSession(), { wrapper: TestWrapperWithAuth });
+    const { result } = renderHook(() => useSession(), { wrapper: TestWrapper(superAuthApi) });
 
     expect(mockUrqlClient.executeQuery).toBeCalledTimes(1);
     mockUrqlClient.executeQuery.pushResponse("currentSession", {
@@ -41,7 +42,7 @@ describe("useSession", () => {
         currentSession: {
           id: "123",
           userId: null,
-          user: null
+          user: null,
         },
       },
       stale: false,

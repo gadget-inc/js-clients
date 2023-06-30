@@ -3,8 +3,8 @@ import { GadgetRecordList, findManyOperation, get, hydrateConnection } from "@ga
 import { useMemo } from "react";
 import { useGadgetQuery } from "./useGadgetQuery";
 import { useStructuralMemo } from "./useStructuralMemo";
-import type { ReadHookResult, ReadOperationOptions } from "./utils";
-import { ErrorWrapper, OptionsType, useMemoizedQueryArgs } from "./utils";
+import type { OptionsType, ReadHookResult, ReadOperationOptions } from "./utils";
+import { ErrorWrapper, useMemoizedQueryArgs } from "./utils";
 
 /**
  * React hook to fetch a page of Gadget records from the backend, optionally sorted, filtered, searched, and selected from. Returns a standard hook result set with a tuple of the result object with `data`, `fetching`, and `error` keys, and a `refetch` function. `data` will be a `GadgetRecordList` object holding the list of returned records and pagination info.

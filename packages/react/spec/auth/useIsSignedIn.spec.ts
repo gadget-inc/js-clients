@@ -1,10 +1,11 @@
 import { renderHook } from "@testing-library/react";
-import { TestWrapperWithAuth, mockUrqlClient } from "../testWrapper";
+import { superAuthApi } from "../../spec/apis";
 import { useIsSignedIn } from "../../src/auth/useIsSignedIn";
+import { TestWrapper, mockUrqlClient } from "../testWrapper";
 
 describe("useIsSignedIn", () => {
   test("returns true if the user is signed in", async () => {
-    const { result, rerender } = renderHook(() => useIsSignedIn(), { wrapper: TestWrapperWithAuth });
+    const { result, rerender } = renderHook(() => useIsSignedIn(), { wrapper: TestWrapper(superAuthApi) });
 
     expect(mockUrqlClient.executeQuery).toBeCalledTimes(1);
     mockUrqlClient.executeQuery.pushResponse("currentSession", {
@@ -16,7 +17,7 @@ describe("useIsSignedIn", () => {
             id: "321",
             firstName: "Jane",
             lastName: "Doe",
-          }
+          },
         },
       },
       stale: false,
@@ -28,7 +29,7 @@ describe("useIsSignedIn", () => {
   });
 
   test("returns false if the user is signed out", async () => {
-    const { result, rerender } = renderHook(() => useIsSignedIn(), { wrapper: TestWrapperWithAuth });
+    const { result, rerender } = renderHook(() => useIsSignedIn(), { wrapper: TestWrapper(superAuthApi) });
 
     expect(mockUrqlClient.executeQuery).toBeCalledTimes(1);
     mockUrqlClient.executeQuery.pushResponse("currentSession", {
@@ -36,7 +37,7 @@ describe("useIsSignedIn", () => {
         currentSession: {
           id: "123",
           userId: null,
-          user: null
+          user: null,
         },
       },
       stale: false,

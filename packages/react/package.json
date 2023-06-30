@@ -24,8 +24,8 @@
     "urql": "^4.0.4"
   },
   "devDependencies": {
-    "@gadget-client/super-auth": "^1.13139.0",
     "@gadgetinc/api-client-core": "workspace:*",
+    "@testing-library/jest-dom": "^5.16.5",
     "@testing-library/react": "^13.4.0",
     "@types/deep-equal": "^1.0.1",
     "@types/jest": "^29.5.2",

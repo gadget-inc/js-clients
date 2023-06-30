@@ -36,7 +36,7 @@ describe("useFindOne", () => {
   };
 
   test("can find one record by id", async () => {
-    const { result } = renderHook(() => useFindOne(relatedProductsApi.user, "123"), { wrapper: TestWrapper });
+    const { result } = renderHook(() => useFindOne(relatedProductsApi.user, "123"), { wrapper: TestWrapper(relatedProductsApi) });
 
     expect(result.current[0].data).toBeFalsy();
     expect(result.current[0].fetching).toBe(true);
@@ -62,7 +62,7 @@ describe("useFindOne", () => {
   });
 
   test("returns an error if the record isn't found", async () => {
-    const { result, rerender } = renderHook(() => useFindOne(relatedProductsApi.user, "123"), { wrapper: TestWrapper });
+    const { result, rerender } = renderHook(() => useFindOne(relatedProductsApi.user, "123"), { wrapper: TestWrapper(relatedProductsApi) });
 
     expect(result.current[0].data).toBeFalsy();
     expect(result.current[0].fetching).toBe(true);
@@ -91,7 +91,7 @@ describe("useFindOne", () => {
   });
 
   test("returns the same data on rerender", async () => {
-    const { result, rerender } = renderHook(() => useFindOne(relatedProductsApi.user, "123"), { wrapper: TestWrapper });
+    const { result, rerender } = renderHook(() => useFindOne(relatedProductsApi.user, "123"), { wrapper: TestWrapper(relatedProductsApi) });
 
     expect(mockUrqlClient.executeQuery).toBeCalledTimes(1);
 
@@ -118,7 +118,7 @@ describe("useFindOne", () => {
       () => {
         return useFindOne(relatedProductsApi.user, "123", { suspense: true });
       },
-      { wrapper: TestWrapper }
+      { wrapper: TestWrapper(relatedProductsApi) }
     );
 
     // first render never completes as the component suspends

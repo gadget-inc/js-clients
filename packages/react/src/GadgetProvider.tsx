@@ -1,6 +1,6 @@
 import type { AnyClient, GadgetConnection } from "@gadgetinc/api-client-core";
 import { $gadgetConnection, isGadgetClient } from "@gadgetinc/api-client-core";
-import type { ReactNode} from "react";
+import type { ReactNode } from "react";
 import React, { useContext } from "react";
 import type { Client as UrqlClient } from "urql";
 import { Provider as UrqlProvider } from "urql";
@@ -70,10 +70,10 @@ export interface DeprecatedProviderProps {
  *   <MyApp />
  * </Provider>
  *
-* @example the Provider accepts option sign in and sign out paths.
-* <Provider api={api.connection.currentClient} signInPath="/auth/signin" signOutPath="/auth/signout">
-*   <MyApp />
-* </Provider>
+ * @example the Provider accepts option sign in and sign out paths.
+ * <Provider api={api.connection.currentClient} signInPath="/auth/signin" signOutPath="/auth/signout">
+ *   <MyApp />
+ * </Provider>
  */
 export function Provider(props: ProviderProps | DeprecatedProviderProps) {
   let gadgetClient: AnyClient | undefined = undefined;
@@ -95,20 +95,22 @@ export function Provider(props: ProviderProps | DeprecatedProviderProps) {
   }
 
   // default sign in and sign out paths to those used in the @gadgetinc/auth package
-  let signInPath = '/auth/signin';
-  let signOutPath = '/auth/signout';
-  if("signInPath" in props && "signOutPath" in props) {
+  let signInPath = "/auth/signin";
+  let signOutPath = "/auth/signout";
+  if ("signInPath" in props && "signOutPath" in props) {
     signInPath = props.signInPath ?? signInPath;
     signOutPath = props.signOutPath ?? signOutPath;
   }
 
   return (
     <GadgetUrqlClientContext.Provider value={urqlClient}>
-      <GadgetClientContext.Provider value={{
-        api: gadgetClient,
-        signInPath,
-        signOutPath
-      }}>
+      <GadgetClientContext.Provider
+        value={{
+          api: gadgetClient,
+          signInPath,
+          signOutPath,
+        }}
+      >
         <UrqlProvider value={urqlClient}>{props.children}</UrqlProvider>
       </GadgetClientContext.Provider>
     </GadgetUrqlClientContext.Provider>

@@ -1,5 +1,5 @@
-import type { AnyClient} from "@gadgetinc/api-client-core";
-import { $gadgetConnection, GadgetConnection } from "@gadgetinc/api-client-core";
+import type { AnyClient } from "@gadgetinc/api-client-core";
+import { $gadgetConnection } from "@gadgetinc/api-client-core";
 import type { DocumentNode, OperationDefinitionNode } from "graphql";
 import { find, findLast } from "lodash";
 import type { ReactNode } from "react";
@@ -10,7 +10,7 @@ import { makeErrorResult } from "urql";
 import type { Subject } from "wonka";
 import { makeSubject } from "wonka";
 import { Provider } from "../src/GadgetProvider";
-import { relatedProductsApi, superAuthApi } from "./apis";
+import { bulkExampleApi, relatedProductsApi, superAuthApi } from "./apis";
 
 export type MockOperationFn = jest.Mock & {
   subjects: Record<string, Subject<OperationResult>>;
@@ -149,25 +149,15 @@ export const createMockUrqlCient = (assertions?: {
   } as MockUrqlClient;
 };
 
-export const TestWrapper = (props: { children: ReactNode }) => {
-  // mimic a barebones api client that will allow us to make mocked requests
-  const mockApiClient = {...relatedProductsApi, connection: { currentClient: mockUrqlClient, endpoint: "https://myapp.gadget.app/api/graphql" }} as unknown as AnyClient;
-  return (
-    <Provider api={mockApiClient}>
-      {props.children}
-    </Provider>
-  );
-};
+export const TestWrapper = (api: AnyClient) => (props: { children: ReactNode }) => {
+  // any individual test will only use one of those, but mock them all out for simplicity
+  jest.spyOn(relatedProductsApi.connection, "currentClient", "get").mockReturnValue(mockUrqlClient);
+  jest.spyOn(bulkExampleApi.connection, "currentClient", "get").mockReturnValue(mockUrqlClient);
+  jest.spyOn(superAuthApi.connection, "currentClient", "get").mockReturnValue(mockUrqlClient);
 
-
-export const TestWrapperWithAuth = (props: { children: ReactNode }) => {
-  // mimic a barebones api client with auth that will allow us to make mocked requests
-  jest.spyOn(GadgetConnection.prototype, "currentClient", "get").mockReturnValue(mockUrqlClient);
   return (
-    <Provider api={superAuthApi}>
-      {/* <Suspense fallback={<div>Loading...</div>}> */}
-        {props.children}
-      {/* </Suspense> */}
+    <Provider api={api}>
+      <Suspense fallback={<div>Loading...</div>}>{props.children}</Suspense>
     </Provider>
   );
 };

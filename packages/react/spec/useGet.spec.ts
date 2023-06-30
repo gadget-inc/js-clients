@@ -1,5 +1,5 @@
 import type { GadgetRecord } from "@gadgetinc/api-client-core";
-import { render, renderHook } from "@testing-library/react";
+import { renderHook } from "@testing-library/react";
 import type { Has, IsExact } from "conditional-type-checks";
 import { assert } from "conditional-type-checks";
 import { useGet } from "../src/useGet";
@@ -36,7 +36,7 @@ describe("useGet", () => {
   };
 
   test("it can find the current session", async () => {
-    const { result } = renderHook(() => useGet(relatedProductsApi.currentSession), { wrapper: TestWrapper });
+    const { result } = renderHook(() => useGet(relatedProductsApi.currentSession), { wrapper: TestWrapper(relatedProductsApi) });
 
     expect(result.current[0].data).toBeFalsy();
     expect(result.current[0].fetching).toBe(true);
@@ -60,7 +60,7 @@ describe("useGet", () => {
   });
 
   test("it can not find the current session if the server doesn't have one", async () => {
-    const { result } = renderHook(() => useGet(relatedProductsApi.currentSession), { wrapper: TestWrapper });
+    const { result } = renderHook(() => useGet(relatedProductsApi.currentSession), { wrapper: TestWrapper(relatedProductsApi) });
 
     expect(result.current[0].data).toBeFalsy();
     expect(result.current[0].fetching).toBe(true);
@@ -82,7 +82,7 @@ describe("useGet", () => {
   });
 
   test("it returns the same data on rerender", async () => {
-    const { result, rerender } = renderHook(() => useGet(relatedProductsApi.currentSession), { wrapper: TestWrapper });
+    const { result, rerender } = renderHook(() => useGet(relatedProductsApi.currentSession), { wrapper: TestWrapper(relatedProductsApi) });
 
     expect(mockUrqlClient.executeQuery).toBeCalledTimes(1);
 
@@ -104,7 +104,9 @@ describe("useGet", () => {
   });
 
   test("it can find the current session with suspense", async () => {
-    const { result, rerender } = renderHook(() => useGet(relatedProductsApi.currentSession, { suspense: true }), { wrapper: TestWrapper });
+    const { result, rerender } = renderHook(() => useGet(relatedProductsApi.currentSession, { suspense: true }), {
+      wrapper: TestWrapper(relatedProductsApi),
+    });
 
     // first render never completes as the component suspends
     expect(result.current).toBeFalsy();
