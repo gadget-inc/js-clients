@@ -1,5 +1,5 @@
 import type { GadgetRecord } from "@gadgetinc/api-client-core";
-import { renderHook } from "@testing-library/react";
+import { render, renderHook } from "@testing-library/react";
 import type { Has, IsExact } from "conditional-type-checks";
 import { assert } from "conditional-type-checks";
 import { useGet } from "../src/useGet";

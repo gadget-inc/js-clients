@@ -1,13 +1,12 @@
 import { renderHook } from "@testing-library/react";
-import { TestWrapper, mockUrqlClient } from "../testWrapper";
-import { useUser } from "../../src/auth/useUser";
+import { TestWrapperWithAuth, mockUrqlClient } from "../testWrapper";
+import { useIsSignedIn } from "../../src/auth/useIsSignedIn";
 
 describe("useIsSignedIn", () => {
   test("returns true if the user is signed in", async () => {
-    const { result } = renderHook(() => useUser(), { wrapper: TestWrapper });
-    expect(result.current).toBe(true);
-    expect(mockUrqlClient.executeQuery).toBeCalledTimes(1);
+    const { result, rerender } = renderHook(() => useIsSignedIn(), { wrapper: TestWrapperWithAuth });
 
+    expect(mockUrqlClient.executeQuery).toBeCalledTimes(1);
     mockUrqlClient.executeQuery.pushResponse("currentSession", {
       data: {
         currentSession: {
@@ -23,13 +22,15 @@ describe("useIsSignedIn", () => {
       stale: false,
       hasNext: false,
     });
+
+    rerender();
+    expect(result.current).toBe(true);
   });
 
   test("returns false if the user is signed out", async () => {
-    const { result } = renderHook(() => useUser(), { wrapper: TestWrapper });
-    expect(result.current).toBe(true);
-    expect(mockUrqlClient.executeQuery).toBeCalledTimes(1);
+    const { result, rerender } = renderHook(() => useIsSignedIn(), { wrapper: TestWrapperWithAuth });
 
+    expect(mockUrqlClient.executeQuery).toBeCalledTimes(1);
     mockUrqlClient.executeQuery.pushResponse("currentSession", {
       data: {
         currentSession: {
@@ -41,5 +42,8 @@ describe("useIsSignedIn", () => {
       stale: false,
       hasNext: false,
     });
+
+    rerender();
+    expect(result.current).toBe(false);
   });
 });

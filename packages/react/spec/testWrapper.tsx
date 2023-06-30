@@ -53,7 +53,6 @@ export const graphqlDocumentName = (doc: DocumentNode) => {
  */
 const newMockOperationFn = (assertions?: (request: GraphQLRequest) => void) => {
   const subjects: Record<string, Subject<OperationResult>> = {};
-  const operations: Record<string, Partial<OperationContext>> = {};
 
   const fn = jest.fn((request: GraphQLRequest, options?: Partial<OperationContext>) => {
     const { query } = request;
@@ -166,7 +165,9 @@ export const TestWrapperWithAuth = (props: { children: ReactNode }) => {
   jest.spyOn(GadgetConnection.prototype, "currentClient", "get").mockReturnValue(mockUrqlClient);
   return (
     <Provider api={superAuthApi}>
-      {props.children}
+      {/* <Suspense fallback={<div>Loading...</div>}> */}
+        {props.children}
+      {/* </Suspense> */}
     </Provider>
   );
 };

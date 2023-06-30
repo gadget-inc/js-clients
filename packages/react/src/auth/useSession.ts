@@ -19,11 +19,11 @@ const useGetSessionAndUser = () => {
     return useGet(api.currentSession as any, {
       suspense: true,
       select: {
-      ...(api.session as any).findMany.defaultSelection,
-      userId: true,
-      user: {
-          ...(api.user as any).findMany.defaultSelection
-      }
+        ...(api.session as any).findMany.defaultSelection,
+        userId: true,
+        user: {
+            ...(api.user as any).findMany.defaultSelection
+        }
       }
     });
   } else {
