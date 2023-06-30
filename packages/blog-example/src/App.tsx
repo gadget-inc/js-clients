@@ -1,5 +1,5 @@
 import { useFetch, useFindMany } from "@gadgetinc/react";
-import { useEffect, useState } from "react";
+import { Suspense, useEffect, useState } from "react";
 import { api } from "./api";
 import "./styles/App.css";
 
@@ -42,12 +42,49 @@ function ExampleFindMany() {
   );
 }
 
+let suspended = false;
+function SuspenseFallback() {
+  suspended = true;
+  return <div>suspended...</div>;
+}
+function ExampleSuspense() {
+  return (
+    <section className="card">
+      <h2>Example Suspense</h2>
+      <p>Ever suspended: {String(suspended)}</p>
+      <Suspense fallback={<SuspenseFallback />}>
+        <ExampleSuspenseInner />
+      </Suspense>
+    </section>
+  );
+}
+
+function ExampleSuspenseInner() {
+  const [history, setHistory] = useState<any[]>([]);
+  const [result, send] = useFindMany(api.post, { suspense: true, sort: { id: "Descending" } });
+
+  useEffect(() => {
+    const { operation, ...keep } = result;
+    setHistory([...history, keep]);
+  }, [result]);
+
+  return (
+    <>
+      <code>
+        <pre>{JSON.stringify(history, null, 2)}</pre>
+      </code>
+      <button onClick={() => send()}>Refetch</button>
+    </>
+  );
+}
+
 function App() {
   return (
     <div className="App">
       <h1>Vite + Gadget</h1>
       <ExampleFetch />
       <ExampleFindMany />
+      <ExampleSuspense />
     </div>
   );
 }

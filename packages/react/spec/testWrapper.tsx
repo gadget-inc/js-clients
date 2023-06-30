@@ -51,6 +51,7 @@ export const graphqlDocumentName = (doc: DocumentNode) => {
  */
 const newMockOperationFn = (assertions?: (request: GraphQLRequest) => void) => {
   const subjects: Record<string, Subject<OperationResult>> = {};
+  const operations: Record<string, Partial<OperationContext>> = {};
 
   const fn = jest.fn((request: GraphQLRequest, options?: Partial<OperationContext>) => {
     const { query } = request;
@@ -122,7 +123,7 @@ const newMockFetchFn = () => {
   return fn;
 };
 
-export const mockUrqlClient = {} as MockUrqlClient;
+export const mockUrqlClient = { suspense: true } as MockUrqlClient;
 beforeEach(() => {
   mockUrqlClient.executeQuery = newMockOperationFn();
   mockUrqlClient.executeMutation = newMockOperationFn();
@@ -143,6 +144,7 @@ export const createMockUrqlCient = (assertions?: {
     [$gadgetConnection]: {
       fetch: newMockFetchFn(),
     },
+    suspense: true,
   } as MockUrqlClient;
 };
 

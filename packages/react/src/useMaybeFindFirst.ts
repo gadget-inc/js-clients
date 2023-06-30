@@ -1,12 +1,10 @@
 import type { DefaultSelection, FindFirstFunction, GadgetRecord, LimitToKnownKeys, Select } from "@gadgetinc/api-client-core";
-import { findManyOperation, get, getQueryArgs, hydrateConnection } from "@gadgetinc/api-client-core";
+import { findManyOperation, get, hydrateConnection } from "@gadgetinc/api-client-core";
 import { useMemo } from "react";
-import type { UseQueryArgs } from "urql";
-import type { OptionsType } from "./OptionsType";
 import { useGadgetQuery } from "./useGadgetQuery";
 import { useStructuralMemo } from "./useStructuralMemo";
-import type { ReadHookResult } from "./utils";
-import { ErrorWrapper } from "./utils";
+import type { OptionsType, ReadHookResult, ReadOperationOptions } from "./utils";
+import { ErrorWrapper, useMemoizedQueryArgs } from "./utils";
 
 /**
  * React hook to fetch many Gadget records using the `maybeFindFirst` method of a given manager.
@@ -36,10 +34,10 @@ export const useMaybeFindFirst = <
   GivenOptions extends OptionsType, // currently necessary for Options to be a narrow type (e.g., `true` instead of `boolean`)
   SchemaT,
   F extends FindFirstFunction<GivenOptions, any, SchemaT, any>,
-  Options extends F["optionsType"] & Omit<UseQueryArgs, "query" | "variables">
+  Options extends F["optionsType"] & ReadOperationOptions
 >(
   manager: { findFirst: F },
-  options?: LimitToKnownKeys<Options, F["optionsType"]> & Omit<UseQueryArgs, "query" | "variables">
+  options?: LimitToKnownKeys<Options, F["optionsType"] & ReadOperationOptions>
 ): ReadHookResult<null | GadgetRecord<
   Select<Exclude<F["schemaType"], null | undefined>, DefaultSelection<F["selectionType"], Options, F["defaultSelection"]>>
 >> => {
@@ -54,7 +52,7 @@ export const useMaybeFindFirst = <
     );
   }, [manager, memoizedOptions]);
 
-  const [rawResult, refresh] = useGadgetQuery(getQueryArgs(plan, firstOptions));
+  const [rawResult, refresh] = useGadgetQuery(useMemoizedQueryArgs(plan, firstOptions));
 
   const result = useMemo(() => {
     const dataPath = [manager.findFirst.operationName];

@@ -1,19 +1,10 @@
 import type { DefaultSelection, FindOneFunction, GadgetRecord, LimitToKnownKeys, Select } from "@gadgetinc/api-client-core";
-import {
-  GadgetNotFoundError,
-  findOneByFieldOperation,
-  get,
-  getNonUniqueDataError,
-  getQueryArgs,
-  hydrateConnection,
-} from "@gadgetinc/api-client-core";
+import { GadgetNotFoundError, findOneByFieldOperation, get, getNonUniqueDataError, hydrateConnection } from "@gadgetinc/api-client-core";
 import { useMemo } from "react";
-import type { UseQueryArgs } from "urql";
-import type { OptionsType } from "./OptionsType";
 import { useGadgetQuery } from "./useGadgetQuery";
 import { useStructuralMemo } from "./useStructuralMemo";
-import type { ReadHookResult } from "./utils";
-import { ErrorWrapper } from "./utils";
+import type { OptionsType, ReadHookResult, ReadOperationOptions } from "./utils";
+import { ErrorWrapper, useMemoizedQueryArgs } from "./utils";
 
 /**
  * React hook to fetch a Gadget record using the `findByXYZ` method of a given model manager. Useful for finding records by key fields which are used for looking up records by. Gadget autogenerates the `findByXYZ` methods on your model managers, and `useFindBy` can only be used with models that have these generated finder functions.
@@ -42,11 +33,11 @@ export const useFindBy = <
   GivenOptions extends OptionsType, // currently necessary for Options to be a narrow type (e.g., `true` instead of `boolean`)
   SchemaT,
   F extends FindOneFunction<GivenOptions, any, SchemaT, any>,
-  Options extends F["optionsType"] & Omit<UseQueryArgs, "query" | "variables">
+  Options extends F["optionsType"] & ReadOperationOptions
 >(
   finder: F,
   value: string,
-  options?: LimitToKnownKeys<Options, F["optionsType"]> & Omit<UseQueryArgs, "query" | "variables">
+  options?: LimitToKnownKeys<Options, F["optionsType"] & ReadOperationOptions>
 ): ReadHookResult<
   GadgetRecord<Select<Exclude<F["schemaType"], null | undefined>, DefaultSelection<F["selectionType"], Options, F["defaultSelection"]>>>
 > => {
@@ -62,7 +53,7 @@ export const useFindBy = <
     );
   }, [finder, value, memoizedOptions]);
 
-  const [rawResult, refresh] = useGadgetQuery(getQueryArgs(plan, options));
+  const [rawResult, refresh] = useGadgetQuery(useMemoizedQueryArgs(plan, options));
 
   const result = useMemo(() => {
     const dataPath = [finder.operationName];

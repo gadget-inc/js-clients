@@ -2,10 +2,9 @@ import type { BulkActionFunction, DefaultSelection, GadgetRecord, LimitToKnownKe
 import { actionOperation, capitalizeIdentifier, get, hydrateRecordArray } from "@gadgetinc/api-client-core";
 import { useCallback, useMemo } from "react";
 import type { UseMutationState } from "urql";
-import type { OptionsType } from "./OptionsType";
 import { useGadgetMutation } from "./useGadgetMutation";
 import { useStructuralMemo } from "./useStructuralMemo";
-import type { ActionHookResult } from "./utils";
+import type { ActionHookResult, OptionsType } from "./utils";
 import { ErrorWrapper } from "./utils";
 
 /**
