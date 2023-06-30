@@ -12,11 +12,17 @@ import { Provider as UrqlProvider } from "urql";
  **/
 export const GadgetUrqlClientContext = React.createContext<UrqlClient | undefined>(undefined);
 
+/** Provides the api client instance, if present, as well as the signIn and signOut paths to be used in the auth hooks. */
+export interface GadgetProviderContextConfiguration {
+  api: AnyClient | undefined;
+  signInPath: string;
+  signOutPath: string;
+}
+
 /**
  * React context that stores an instance of the JS Client for an app (AKA the `api` object)
  */
-export const GadgetClientContext = React.createContext<AnyClient | undefined>(undefined);
-
+export const GadgetClientContext = React.createContext<GadgetProviderContextConfiguration | undefined>(undefined);
 
 export interface ProviderProps {
   /**
@@ -46,16 +52,6 @@ export interface DeprecatedProviderProps {
   value: UrqlClient;
   children: ReactNode;
 }
-
-/**
- * React context that stores configuration properties of the GadgetProvider
- */
-export const GadgetProviderContext = React.createContext<{
-    signInPath: string;
-    signOutPath: string;
-  }
-  | undefined
->(undefined);
 
 /**
  * Provider wrapper component that passes an api client instance to the other hooks.
@@ -108,10 +104,12 @@ export function Provider(props: ProviderProps | DeprecatedProviderProps) {
 
   return (
     <GadgetUrqlClientContext.Provider value={urqlClient}>
-      <GadgetClientContext.Provider value={gadgetClient}>
-        <GadgetProviderContext.Provider value={{signInPath, signOutPath}}>
-          <UrqlProvider value={urqlClient}>{props.children}</UrqlProvider>
-        </GadgetProviderContext.Provider>
+      <GadgetClientContext.Provider value={{
+        api: gadgetClient,
+        signInPath,
+        signOutPath
+      }}>
+        <UrqlProvider value={urqlClient}>{props.children}</UrqlProvider>
       </GadgetClientContext.Provider>
     </GadgetUrqlClientContext.Provider>
   );
@@ -146,10 +144,9 @@ export const useConnection = () => {
  * Must be called within a component wrapped by the `<Provider api={...} />` component.
  **/
 export const useApi = () => {
-  const api = useContext(GadgetClientContext);
+  const gadgetContext = useContext(GadgetClientContext);
   const urqlClient = useContext(GadgetUrqlClientContext);
-  console.log({api, urqlClient}, 'in useApi')
-  if (!api) {
+  if (!gadgetContext || !gadgetContext.api) {
     if (urqlClient) {
       throw new Error(
         `useApi hook called in context with deprecated <Provider/> convention. Please ensure you are wrapping this hook with the <Provider/> component from @gadgetinc/react and passing it an instance of your api client, like <Provider api={api} />.
@@ -167,5 +164,5 @@ export const useApi = () => {
       );
     }
   }
-  return api;
+  return gadgetContext.api;
 };

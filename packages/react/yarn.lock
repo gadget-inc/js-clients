@@ -35,7 +35,14 @@
   dependencies:
     regenerator-runtime "^0.13.11"
 
-"@gadgetinc/api-client-core@^0.13.14":
+"@gadget-client/super-auth@^1.13139.0":
+  version "1.13139.0"
+  resolved "https://registry.gadget.dev/npm/_/tarball/40146/78973/4903#e02c119156253891b770122fe8c6ec814cfa646c"
+  integrity sha1-4CwRkVYlOJG3cBIv6MbsgUz6ZGw=
+  dependencies:
+    "@gadgetinc/api-client-core" "0.13.14"
+
+"@gadgetinc/api-client-core@0.13.14", "@gadgetinc/api-client-core@^0.13.14":
   version "0.13.14"
   resolved "https://registry.yarnpkg.com/@gadgetinc/api-client-core/-/api-client-core-0.13.14.tgz#7a2e1c59e21c7627049ae5b8ea080c3286ec95d7"
   integrity sha512-W4DwaI2xei5xp3FCxZgB4sY1egZppFegEbIEPZq9lte4rAXNCtr1wbMn1wSEWIpL/KVMnFtWtZPBsdlcoJtibQ==

@@ -179,13 +179,13 @@ importers:
       deep-equal:
         specifier: ^2.2.0
         version: 2.2.0
-      react:
-        specifier: ^18.2.0
-        version: 18.2.0
       urql:
         specifier: ^4.0.4
         version: 4.0.4(graphql@16.5.0)(react@18.2.0)
     devDependencies:
+      '@gadget-client/super-auth':
+        specifier: ^1.13139.0
+        version: 1.13139.0
       '@testing-library/react':
         specifier: ^13.4.0
         version: 13.4.0(react-dom@18.2.0)(react@18.2.0)
@@ -216,6 +216,9 @@ importers:
       lodash:
         specifier: ^4.17.21
         version: 4.17.21
+      react:
+        specifier: ^18.2.0
+        version: 18.2.0
       react-dom:
         specifier: ^18.2.0
         version: 18.2.0(react@18.2.0)
@@ -912,6 +915,12 @@ packages:
 
   /@gadget-client/related-products-example@1.848.0:
     resolution: {integrity: sha1-BPOBUF9tSsu1woidZ+hU55/Cz5c=, tarball: https://registry.gadget.dev/npm/_/tarball/1268/1361/4809}
+    dependencies:
+      '@gadgetinc/api-client-core': link:packages/api-client-core
+    dev: true
+
+  /@gadget-client/super-auth@1.13139.0:
+    resolution: {integrity: sha1-4CwRkVYlOJG3cBIv6MbsgUz6ZGw=, tarball: https://registry.gadget.dev/npm/_/tarball/40146/78973/4903}
     dependencies:
       '@gadgetinc/api-client-core': link:packages/api-client-core
     dev: true

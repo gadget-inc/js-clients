@@ -3,7 +3,7 @@ import { TestWrapper, mockUrqlClient } from "../testWrapper";
 import { useUser } from "../../src/auth/useUser";
 
 describe("useUser", () => {
-  test("it can find the current user", async () => {
+  test("it returns the current user when the user is logged in", async () => {
     const { result } = renderHook(() => useUser(), { wrapper: TestWrapper });
     expect(result.current).toBeDefined();
     expect(result.current!.id).toEqual("321");

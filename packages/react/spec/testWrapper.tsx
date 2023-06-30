@@ -1,15 +1,16 @@
-import { $gadgetConnection } from "@gadgetinc/api-client-core";
+import type { AnyClient} from "@gadgetinc/api-client-core";
+import { $gadgetConnection, GadgetConnection } from "@gadgetinc/api-client-core";
 import type { DocumentNode, OperationDefinitionNode } from "graphql";
 import { find, findLast } from "lodash";
 import type { ReactNode } from "react";
-import React from "react";
+import React, { Suspense } from "react";
 import { act } from "react-dom/test-utils";
 import type { Client, GraphQLRequest, OperationContext, OperationResult } from "urql";
 import { makeErrorResult } from "urql";
 import type { Subject } from "wonka";
 import { makeSubject } from "wonka";
-import { GadgetClientContext, GadgetProviderContext, Provider } from "../src/GadgetProvider";
-import { relatedProductsApi } from "./apis";
+import { Provider } from "../src/GadgetProvider";
+import { relatedProductsApi, superAuthApi } from "./apis";
 
 export type MockOperationFn = jest.Mock & {
   subjects: Record<string, Subject<OperationResult>>;
@@ -150,12 +151,22 @@ export const createMockUrqlCient = (assertions?: {
 };
 
 export const TestWrapper = (props: { children: ReactNode }) => {
-  console.log({relatedProductsApi, mockUrqlClient})
+  // mimic a barebones api client that will allow us to make mocked requests
+  const mockApiClient = {...relatedProductsApi, connection: { currentClient: mockUrqlClient, endpoint: "https://myapp.gadget.app/api/graphql" }} as unknown as AnyClient;
   return (
-      <Provider api={{connection: { currentClient: mockUrqlClient, endpoint: "https://myapp.gadget.app/api/graphql" }}}>
-        <GadgetProviderContext.Provider value={{signInPath: '/auth/signin', signOutPath: '/auth/signout'}}>
-          {props.children}
-        </GadgetProviderContext.Provider>
-      </Provider>
+    <Provider api={mockApiClient}>
+      {props.children}
+    </Provider>
+  );
+};
+
+
+export const TestWrapperWithAuth = (props: { children: ReactNode }) => {
+  // mimic a barebones api client with auth that will allow us to make mocked requests
+  jest.spyOn(GadgetConnection.prototype, "currentClient", "get").mockReturnValue(mockUrqlClient);
+  return (
+    <Provider api={superAuthApi}>
+      {props.children}
+    </Provider>
   );
 };

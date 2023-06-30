@@ -16,13 +16,13 @@ export interface GadgetUser {
 const useGetSessionAndUser = () => {
   const api = useApi();
   if("currentSession" in api && "session" in api && "user" in api) {
-    return useGet(api.currentSession as unknown as any, {
+    return useGet(api.currentSession as any, {
       suspense: true,
       select: {
-      ...(api.session as unknown as any).findMany.defaultSelection,
+      ...(api.session as any).findMany.defaultSelection,
       userId: true,
       user: {
-          ...(api.user as unknown as any).findMany.defaultSelection
+          ...(api.user as any).findMany.defaultSelection
       }
       }
     });
@@ -32,8 +32,8 @@ const useGetSessionAndUser = () => {
 }
 
 export const useSession = (): GadgetSession | undefined => {
-  const [{ data }] = useGetSessionAndUser();
-  return data;
+  const [{ data: session }] = useGetSessionAndUser();
+  return session;
 }
 
 export const isSessionSignedOut = (session: GadgetSession) => {
