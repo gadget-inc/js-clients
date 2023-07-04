@@ -1,15 +1,14 @@
 import { renderHook } from "@testing-library/react";
 import { superAuthApi } from "../../spec/apis";
+import { expectMockSignedInUser, expectMockSignedOutUser } from "../../spec/utils";
 import { useSession } from "../../src/auth/useSession";
 import { TestWrapper } from "../testWrapper";
-import { expectMockSignedInUser, expectMockSignedOutUser } from "../../spec/utils";
 
 describe("useSession", () => {
   test("it returns the current session when the user is logged in", async () => {
     const { result, rerender } = renderHook(() => useSession(), { wrapper: TestWrapper(superAuthApi) });
 
     expectMockSignedInUser();
-
     rerender();
 
     expect(result.current!.id).toEqual("123");
@@ -20,9 +19,10 @@ describe("useSession", () => {
   });
 
   test("it returns the current session when the user is logged out", async () => {
-    const { result } = renderHook(() => useSession(), { wrapper: TestWrapper(superAuthApi) });
+    const { result, rerender } = renderHook(() => useSession(), { wrapper: TestWrapper(superAuthApi) });
 
     expectMockSignedOutUser();
+    rerender();
 
     expect(result.current).toBeDefined();
     expect(result.current!.id).toEqual("123");

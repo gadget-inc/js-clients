@@ -1,8 +1,8 @@
 import { renderHook } from "@testing-library/react";
 import { superAuthApi } from "../../spec/apis";
+import { expectMockSignedInUser, expectMockSignedOutUser } from "../../spec/utils";
 import { useIsSignedIn } from "../../src/auth/useIsSignedIn";
 import { TestWrapper } from "../testWrapper";
-import { expectMockSignedInUser, expectMockSignedOutUser } from "../../spec/utils";
 
 describe("useIsSignedIn", () => {
   test("returns true if the user is signed in", async () => {

@@ -10,7 +10,6 @@ import { makeErrorResult } from "urql";
 import type { Subject } from "wonka";
 import { makeSubject } from "wonka";
 import { Provider } from "../src/GadgetProvider";
-import { bulkExampleApi, relatedProductsApi, superAuthApi } from "./apis";
 
 export type MockOperationFn = jest.Mock & {
   subjects: Record<string, Subject<OperationResult>>;
@@ -35,6 +34,7 @@ export interface MockUrqlClient extends Client {
   [$gadgetConnection]: {
     fetch: MockFetchFn;
   };
+  _react?: any;
 }
 
 export const graphqlDocumentName = (doc: DocumentNode) => {
@@ -134,6 +134,12 @@ beforeEach(() => {
   };
 });
 
+afterEach(() => {
+  // force clear _react, which useQuery sets on the client if not present
+  mockUrqlClient._react = undefined;
+  jest.clearAllMocks();
+});
+
 export const createMockUrqlCient = (assertions?: {
   mutationAssertions?: (request: GraphQLRequest) => void;
   queryAssertions?: (request: GraphQLRequest) => void;
@@ -154,9 +160,7 @@ export const TestWrapper = (api: AnyClient) => (props: { children: ReactNode }) 
 
   return (
     <Provider api={api}>
-      <Suspense fallback={<div>Loading...</div>}>
-        {props.children}
-      </Suspense>
+      <Suspense fallback={<div>Loading...</div>}>{props.children}</Suspense>
     </Provider>
   );
 };

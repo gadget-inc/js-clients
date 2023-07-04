@@ -33,9 +33,10 @@ describe("SignedInOrRedirectOrRedirect", () => {
     );
 
     const { rerender } = render(component, { wrapper: TestWrapper(superAuthApi) });
-    expectMockSignedOutUser();
 
+    expectMockSignedOutUser();
     rerender(component);
+
     expect(mockAssign).toHaveBeenCalledTimes(1);
     expect(mockAssign).toHaveBeenCalledWith("/auth/signin");
   });
@@ -50,7 +51,6 @@ describe("SignedInOrRedirectOrRedirect", () => {
     const { container, rerender } = render(component, { wrapper: TestWrapper(superAuthApi) });
 
     expectMockSignedInUser();
-
     rerender(component);
 
     expect(mockAssign).not.toBeCalled();

@@ -1,9 +1,8 @@
 import type { ReactNode } from "react";
-import { useContext, useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { GadgetClientContext } from "../../src/GadgetProvider";
 import { useSession } from "../../src/auth/useSession";
 import { isSessionSignedIn } from "../../src/auth/utils";
-import React from "react";
 
 export const SignedInOrRedirect = (props: { children: ReactNode }) => {
   const [redirected, setRedirected] = useState(false);

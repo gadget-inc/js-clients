@@ -2,6 +2,7 @@ import type { FieldSelection, GadgetError, InvalidFieldError, InvalidRecordError
 import { gadgetErrorFor, getNonNullableError } from "@gadgetinc/api-client-core";
 import type { CombinedError, RequestPolicy } from "@urql/core";
 import { GraphQLError } from "graphql";
+import { omit } from "lodash";
 import { useMemo } from "react";
 import type { AnyVariables, Operation, OperationContext, UseQueryArgs, UseQueryState } from "urql";
 
@@ -266,7 +267,7 @@ export const useMemoizedQueryArgs = <Plan extends QueryPlan, Options extends Que
   return {
     query: plan.query,
     variables: plan.variables,
-    ...options,
+    ...omit(options, ["context", "suspense"]),
     context,
   };
 };
