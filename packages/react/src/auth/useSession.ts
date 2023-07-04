@@ -35,4 +35,3 @@ export const useSession = (): GadgetSession | undefined => {
   const [{ data: session }] = useGetSessionAndUser();
   return session;
 };
-

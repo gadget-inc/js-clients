@@ -150,14 +150,13 @@ export const createMockUrqlCient = (assertions?: {
 };
 
 export const TestWrapper = (api: AnyClient) => (props: { children: ReactNode }) => {
-  // any individual test will only use one of those, but mock them all out for simplicity
-  jest.spyOn(relatedProductsApi.connection, "currentClient", "get").mockReturnValue(mockUrqlClient);
-  jest.spyOn(bulkExampleApi.connection, "currentClient", "get").mockReturnValue(mockUrqlClient);
-  jest.spyOn(superAuthApi.connection, "currentClient", "get").mockReturnValue(mockUrqlClient);
+  jest.spyOn(api.connection, "currentClient", "get").mockReturnValue(mockUrqlClient);
 
   return (
     <Provider api={api}>
-      <Suspense fallback={<div>Loading...</div>}>{props.children}</Suspense>
+      <Suspense fallback={<div>Loading...</div>}>
+        {props.children}
+      </Suspense>
     </Provider>
   );
 };

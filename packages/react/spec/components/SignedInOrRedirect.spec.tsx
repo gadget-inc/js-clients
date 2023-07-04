@@ -2,7 +2,8 @@ import "@testing-library/jest-dom";
 import { render } from "@testing-library/react";
 import React from "react";
 import { superAuthApi } from "../../spec/apis";
-import { TestWrapper, mockUrqlClient } from "../../spec/testWrapper";
+import { TestWrapper } from "../../spec/testWrapper";
+import { expectMockSignedInUser, expectMockSignedOutUser } from "../../spec/utils";
 import { SignedInOrRedirect } from "../../src/components/SignedInOrRedirect";
 
 describe("SignedInOrRedirectOrRedirect", () => {
@@ -10,7 +11,9 @@ describe("SignedInOrRedirectOrRedirect", () => {
   const mockAssign = jest.fn();
 
   beforeAll(() => {
+    // @ts-expect-error mock
     delete window.location;
+    // @ts-expect-error mock
     window.location = { assign: mockAssign };
   });
 
@@ -30,19 +33,7 @@ describe("SignedInOrRedirectOrRedirect", () => {
     );
 
     const { rerender } = render(component, { wrapper: TestWrapper(superAuthApi) });
-
-    expect(mockUrqlClient.executeQuery).toBeCalledTimes(1);
-    mockUrqlClient.executeQuery.pushResponse("currentSession", {
-      data: {
-        currentSession: {
-          id: "123",
-          userId: null,
-          user: null,
-        },
-      },
-      stale: false,
-      hasNext: false,
-    });
+    expectMockSignedOutUser();
 
     rerender(component);
     expect(mockAssign).toHaveBeenCalledTimes(1);
@@ -58,22 +49,7 @@ describe("SignedInOrRedirectOrRedirect", () => {
 
     const { container, rerender } = render(component, { wrapper: TestWrapper(superAuthApi) });
 
-    expect(mockUrqlClient.executeQuery).toBeCalledTimes(1);
-    mockUrqlClient.executeQuery.pushResponse("currentSession", {
-      data: {
-        currentSession: {
-          id: "123",
-          userId: "321",
-          user: {
-            id: "321",
-            firstName: "Jane",
-            lastName: "Doe",
-          },
-        },
-      },
-      stale: false,
-      hasNext: false,
-    });
+    expectMockSignedInUser();
 
     rerender(component);
 
