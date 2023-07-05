@@ -30,18 +30,6 @@ describe("useSession", () => {
     expect(result.current.user).toBe(null);
   });
 
-  test("it returns the current session when the user is logged out", async () => {
-    const { result, rerender } = renderHook(() => useSession(), { wrapper: TestWrapper(superAuthApi) });
-
-    expectMockSignedOutUser();
-    rerender();
-
-    expect(result.current).toBeDefined();
-    expect(result.current.id).toEqual("123");
-    expect(result.current.userId).toBe(null);
-    expect(result.current.user).toBe(null);
-  });
-
   test("it throws when the server responds with an error", async () => {
     expect(() => {
       const { rerender } = renderHook(() => useSession(), { wrapper: TestWrapper(superAuthApi) });

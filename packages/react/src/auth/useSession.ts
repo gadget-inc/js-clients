@@ -13,10 +13,14 @@ export interface GadgetUser {
   [key: string]: any;
 }
 
-const useGetSessionAndUser = () => {
+/**
+ * Used for fetching the current `Session` record from Gadget. Will suspend while the user is being fetched.
+ * @returns The current session
+ */
+export const useSession = (): GadgetSession => {
   const api = useApi();
   if ("currentSession" in api && "session" in api && "user" in api) {
-    return useGet(api.currentSession as any, {
+    const [{ data: session, error }] = useGet(api.currentSession as any, {
       suspense: true,
       select: {
         ...(api.session as any).findMany.defaultSelection,
@@ -26,18 +30,10 @@ const useGetSessionAndUser = () => {
         },
       },
     });
+    if (error) throw error;
+    if (!session) throw new Error("currentSession not found but should be present");
+    return session;
   } else {
     throw new Error("api client does not have a Session or User model");
   }
-};
-
-/**
- * Used for fetching the current `Session` record from Gadget. Will suspend while the user is being fetched.
- * @returns The current session
- */
-export const useSession = (): GadgetSession => {
-  const [{ data: session, error }] = useGetSessionAndUser();
-  if (error) throw error;
-  if (!session) throw new Error("currentSession not found but should be present");
-  return session;
 };
