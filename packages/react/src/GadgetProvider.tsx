@@ -29,7 +29,7 @@ export interface GadgetConfigurationContext {
 /**
  * React context that stores an instance of the JS Client for an app (AKA the `api` object)
  */
-export const GadgetClientContext = React.createContext<GadgetConfigurationContext | undefined>(undefined);
+export const GadgetConfigurationContext = React.createContext<GadgetConfigurationContext | undefined>(undefined);
 
 export interface ProviderProps {
   /**
@@ -115,7 +115,7 @@ export function Provider(props: ProviderProps | DeprecatedProviderProps) {
 
   return (
     <GadgetUrqlClientContext.Provider value={urqlClient}>
-      <GadgetClientContext.Provider
+      <GadgetConfigurationContext.Provider
         value={{
           api: gadgetClient,
           auth: {
@@ -125,7 +125,7 @@ export function Provider(props: ProviderProps | DeprecatedProviderProps) {
         }}
       >
         <UrqlProvider value={urqlClient}>{props.children}</UrqlProvider>
-      </GadgetClientContext.Provider>
+      </GadgetConfigurationContext.Provider>
     </GadgetUrqlClientContext.Provider>
   );
 }
@@ -159,7 +159,7 @@ export const useConnection = () => {
  * Must be called within a component wrapped by the `<Provider api={...} />` component.
  **/
 export const useApi = () => {
-  const gadgetContext = useContext(GadgetClientContext);
+  const gadgetContext = useContext(GadgetConfigurationContext);
   const urqlClient = useContext(GadgetUrqlClientContext);
   if (!gadgetContext || !gadgetContext.api) {
     if (urqlClient) {
