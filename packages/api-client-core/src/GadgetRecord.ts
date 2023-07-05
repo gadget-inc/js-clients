@@ -22,16 +22,11 @@ export class GadgetRecordImplementation<Shape extends RecordShape> {
   };
 
   private empty = false;
-  __typename?: string;
 
-  constructor(data?: Shape | null) {
-    if (data) {
-      const { __typename, ...fields } = data;
-      this.__typename = __typename;
-      this.__gadget.instantiatedFields = cloneDeep(fields);
-      this.__gadget.persistedFields = cloneDeep(fields);
-      Object.assign(this.__gadget.fields, fields);
-    }
+  constructor(data: Shape) {
+    this.__gadget.instantiatedFields = cloneDeep(data);
+    this.__gadget.persistedFields = cloneDeep(data);
+    Object.assign(this.__gadget.fields, data);
 
     if (!data || Object.keys(data).length === 0) {
       this.empty = true;
@@ -80,10 +75,6 @@ export class GadgetRecordImplementation<Shape extends RecordShape> {
   /** Checks if the original constructor data was empty or not */
   isEmpty(): boolean {
     return this.empty;
-  }
-
-  get typename(): string | undefined {
-    return this.__typename;
   }
 
   /** Returns the value of the field for the given `apiIdentifier`. These properties may also be accessed on this record directly. This method can be used if your model field `apiIdentifier` conflicts with the `GadgetRecord` helper functions. */
