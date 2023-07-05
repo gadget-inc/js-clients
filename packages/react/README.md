@@ -72,7 +72,7 @@ export const MyApp = (props) => {
 
 ## Example usage
 
-```typescript
+```tsx
 // import the API client for your specific application from your client package, see your app's installing instructions
 import { Client } from "@gadget-client/my-gadget-app";
 // import the required Provider object and some example hooks from this package
@@ -1038,4 +1038,95 @@ export const App = () => (
     <ShowWidgetNames />
   </Provider>
 );
+```
+## Authentication
+
+When working with Gadget auth, there are several hooks and components that can help you manage the authentication state of your application.
+
+The `Provider` component exported from this library accepts an `auth` prop which can be used to configure the relative paths to your app's sign in and sign out endpoints. If you do not provide these paths, the default values of `/auth/signin` and `/auth/signout` will be used.
+
+The hooks use the Gadget client's `suspense: true` option, making it easier to manage the async nature of the hooks without having to deal with loading state.
+
+```tsx
+import { Client } from "@gadget-client/my-gadget-app";
+import { Provider } from "@gadgetinc/react";
+import React, { Suspense } from "react";
+import App from "./App";
+
+// instantiate the API client for our app
+const api = new Client({ authenticationMode: { browserSession: true } });
+
+export function main() {
+  // ensure any components which use the @gadgetinc/react hooks are wrapped with the Provider and a Suspense component
+  return (
+    <Provider api={api} auth={{ signInPath: '/auth/signin', signOutPath: '/auth/signout' }}>
+      <Suspense fallback={<>Loading...</>}>
+        <App />
+      </Suspense>
+    </Provider>
+  );
+}
+```
+
+### Hooks
+
+React hooks are available to help you manage the authentication state of your application.
+
+### `useSession()`
+Returns the current session, equivalent to `await api.currentSession.get()` or `useGet(api.currentSession)`, but uses Promises for an easier interface. Throws a Suspense promise while the session is being loaded
+
+### `useUser()`
+Returns the current user of the session, if present. For unauthenticated sessions, returns `null`. Throws a Suspense promise while the session/user are loading
+
+### `useIsSignedIn()`
+Returns true if the session is logged in (has a user associated with it), and false otherwise. Throws a Suspense promise while the session/user is loading
+
+```tsx
+export default function App() {
+  const user = useUser();
+  const isSignedIn = useIsSignedIn();
+  const gadgetContext = useGadgetContext();
+
+  return (
+    <>
+      { isSignedIn ? <p>Hello, {user.firstName} {user.lastName}}</p> : <a href={gadgetContext.auth.signInPath}>Please sign in</a> }
+    </>
+  );
+}
+```
+
+### Components
+
+If you are trying to control the layout of your application based on authentication state, it may be helpful to use the Gadget auth React components instead of, or in addition to, the hooks.
+
+### `<SignedIn />`
+Conditionally renders its children if the current session has a user associated with it, similar to the `useIsSignedIn()` hook.
+
+```tsx
+<h1>Hello<SignedIn>, human</SignedIn>!</h1>
+```
+
+### `<SignedOut />`
+Conditionally renders its children if the current session has a user associated with it, similar to the `useIsSignedIn()` hook.
+
+```tsx
+<SignedOut><a href="/auth/signin">Sign In!</a></SignedOut>
+```
+
+### <SignedInOrRedirect />
+Conditionally renders its children if the current session has a user associated with it, or redirects the browser via `window.location.assign` if the user is not currently signed in. This component is helpful for protecting front-end routes.
+
+```tsx
+ <BrowserRouter>
+  <Routes>
+    <Route path="/" element={<Layout />}>
+      <Route index element={<Home />} />
+      <Route path="my-profile" element={
+        <SignedInOrRedirect>
+          <MyProfile />
+        </SignedInOrRedirect>
+      } />
+    </Route>
+  </Routes>
+</BrowserRouter>
 ```

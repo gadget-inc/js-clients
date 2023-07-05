@@ -6,7 +6,7 @@ import { TestWrapper } from "../../spec/testWrapper";
 import { expectMockSignedInUser, expectMockSignedOutUser } from "../../spec/utils";
 import { SignedInOrRedirect } from "../../src/components/SignedInOrRedirect";
 
-describe("SignedInOrRedirectOrRedirect", () => {
+describe("SignedInOrRedirect", () => {
   const { location } = window;
   const mockAssign = jest.fn();
 

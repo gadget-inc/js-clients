@@ -31,6 +31,10 @@ const useGetSessionAndUser = () => {
   }
 };
 
+/**
+ * Used for fetching the current `Session` record from Gadget. Will suspend while the user is being fetched.
+ * @returns The current session
+ */
 export const useSession = (): GadgetSession | undefined => {
   const [{ data: session }] = useGetSessionAndUser();
   return session;

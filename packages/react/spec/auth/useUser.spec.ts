@@ -24,4 +24,24 @@ describe("useUser", () => {
     rerender();
     expect(result.current).toBe(null);
   });
+
+  test("it does something when the user fails to fetch", async () => {
+    const { result, rerender } = renderHook(() => useUser(), { wrapper: TestWrapper(superAuthApi) });
+
+    expect(mockUrqlClient.executeQuery).toBeCalledTimes(1);
+    mockUrqlClient.executeQuery.pushResponse("currentSession", {
+      data: {
+        currentSession: {
+          id: "123",
+          userId: null,
+          user: null,
+        },
+      },
+      stale: false,
+      hasNext: false,
+    });
+
+    rerender();
+    expect(result.current).toBe(null);
+  })
 });

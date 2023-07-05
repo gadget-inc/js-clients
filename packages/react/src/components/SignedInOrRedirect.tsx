@@ -4,6 +4,10 @@ import { GadgetClientContext } from "../../src/GadgetProvider";
 import { useSession } from "../../src/auth/useSession";
 import { isSessionSignedIn } from "../../src/auth/utils";
 
+/**
+/**
+ * Renders its `children` if the current `Session` is signed in, otherwise redirects the browser to the `signInPath` configured in the `Provider`. Uses `window.location.assign` to perform the redirect.
+ */
 export const SignedInOrRedirect = (props: { children: ReactNode }) => {
   const [redirected, setRedirected] = useState(false);
   const session = useSession();
