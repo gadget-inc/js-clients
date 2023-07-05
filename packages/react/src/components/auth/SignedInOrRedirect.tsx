@@ -13,13 +13,14 @@ export const SignedInOrRedirect = (props: { children: ReactNode }) => {
   const session = useSession();
   const isSignedIn = session && isSessionSignedIn(session);
   const context = useContext(GadgetClientContext);
+  const { auth } = context ?? {};
 
   useEffect(() => {
-    if (context?.signInPath && !redirected && !isSignedIn) {
+    if (auth && !redirected && !isSignedIn) {
       setRedirected(true);
-      window.location.assign(context.signInPath);
+      window.location.assign(auth.signInPath);
     }
-  }, [redirected, isSignedIn, context?.signInPath]);
+  }, [redirected, isSignedIn, auth]);
 
   if (isSignedIn) {
     return <>{props.children}</>;

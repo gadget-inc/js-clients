@@ -12,17 +12,24 @@ import { Provider as UrqlProvider } from "urql";
  **/
 export const GadgetUrqlClientContext = React.createContext<UrqlClient | undefined>(undefined);
 
-/** Provides the api client instance, if present, as well as the signIn and signOut paths to be used in the auth hooks. */
-export interface GadgetProviderContextConfiguration {
-  api: AnyClient | undefined;
+/** Provides the Gadget auth configuration used in the auth hooks */
+export interface GadgetAuthConfiguration {
+  /** The path that should be used for all Sign In buttons, and redirected to when the `User` is signed out */
   signInPath: string;
+  /** The path that should be POSTed to to make sign the user out of their current `Session` */
   signOutPath: string;
+}
+
+/** Provides the api client instance, if present, as well as the Gadget auth configuration for the application. */
+export interface GadgetConfigurationContext {
+  api: AnyClient | undefined;
+  auth: GadgetAuthConfiguration;
 }
 
 /**
  * React context that stores an instance of the JS Client for an app (AKA the `api` object)
  */
-export const GadgetClientContext = React.createContext<GadgetProviderContextConfiguration | undefined>(undefined);
+export const GadgetClientContext = React.createContext<GadgetConfigurationContext | undefined>(undefined);
 
 export interface ProviderProps {
   /**
@@ -38,8 +45,7 @@ export interface ProviderProps {
    * }
    */
   api: AnyClient;
-  signInPath?: string;
-  signOutPath?: string;
+  auth?: Partial<GadgetAuthConfiguration>;
   children: ReactNode;
 }
 
@@ -52,6 +58,10 @@ export interface DeprecatedProviderProps {
   value: UrqlClient;
   children: ReactNode;
 }
+
+// default Gadgte auth signIn and signOut paths
+const defaultSignInPath = "/auth/signin";
+const defaultSignOutPath = "/auth/signout";
 
 /**
  * Provider wrapper component that passes an api client instance to the other hooks.
@@ -94,12 +104,13 @@ export function Provider(props: ProviderProps | DeprecatedProviderProps) {
     );
   }
 
-  // default sign in and sign out paths to those used in the @gadgetinc/auth package
-  let signInPath = "/auth/signin";
-  let signOutPath = "/auth/signout";
-  if ("signInPath" in props && "signOutPath" in props) {
-    signInPath = props.signInPath ?? signInPath;
-    signOutPath = props.signOutPath ?? signOutPath;
+  let signInPath = defaultSignInPath;
+  let signOutPath = defaultSignOutPath;
+
+  if ("auth" in props) {
+    const { auth } = props;
+    if (auth?.signInPath) signInPath = auth.signInPath;
+    if (auth?.signOutPath) signOutPath = auth.signOutPath;
   }
 
   return (
@@ -107,8 +118,10 @@ export function Provider(props: ProviderProps | DeprecatedProviderProps) {
       <GadgetClientContext.Provider
         value={{
           api: gadgetClient,
-          signInPath,
-          signOutPath,
+          auth: {
+            signInPath,
+            signOutPath,
+          },
         }}
       >
         <UrqlProvider value={urqlClient}>{props.children}</UrqlProvider>
