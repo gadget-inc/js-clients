@@ -1,10 +1,10 @@
 import "@testing-library/jest-dom";
 import { render } from "@testing-library/react";
 import React from "react";
-import { superAuthApi } from "../../spec/apis";
-import { TestWrapper } from "../../spec/testWrapper";
-import { expectMockSignedInUser, expectMockSignedOutUser } from "../../spec/utils";
-import { SignedInOrRedirect } from "../../src/components/SignedInOrRedirect";
+import { superAuthApi } from "../../../spec/apis";
+import { TestWrapper } from "../../../spec/testWrapper";
+import { expectMockSignedInUser, expectMockSignedOutUser } from "../../../spec/utils";
+import { SignedInOrRedirect } from "../../../src/components/auth/SignedInOrRedirect";
 
 describe("SignedInOrRedirect", () => {
   const { location } = window;

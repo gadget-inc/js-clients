@@ -2,7 +2,7 @@ import { renderHook } from "@testing-library/react";
 import { superAuthApi } from "../../spec/apis";
 import { expectMockSignedInUser, expectMockSignedOutUser } from "../../spec/utils";
 import { useUser } from "../../src/auth/useUser";
-import { TestWrapper } from "../testWrapper";
+import { TestWrapper, mockUrqlClient } from "../testWrapper";
 
 describe("useUser", () => {
   test("it returns the current user when the user is logged in", async () => {
@@ -43,5 +43,5 @@ describe("useUser", () => {
 
     rerender();
     expect(result.current).toBe(null);
-  })
+  });
 });

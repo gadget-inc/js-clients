@@ -1,10 +1,10 @@
 import "@testing-library/jest-dom";
 import { render } from "@testing-library/react";
 import React from "react";
-import { superAuthApi } from "../../spec/apis";
-import { expectMockSignedInUser, expectMockSignedOutUser } from "../../spec/utils";
-import { SignedIn } from "../../src/components/SignedIn";
-import { TestWrapper } from "../testWrapper";
+import { SignedIn } from "../../../src/components/auth/SignedIn";
+import { superAuthApi } from "../../apis";
+import { TestWrapper } from "../../testWrapper";
+import { expectMockSignedInUser, expectMockSignedOutUser } from "../../utils";
 
 describe("SignedIn", () => {
   test("renders children when signed in", () => {
@@ -20,7 +20,6 @@ describe("SignedIn", () => {
 
     rerender(component);
 
-    // return session
     expect(container.outerHTML).toMatchInlineSnapshot(`"<div><h1>Hello, Jane!</h1></div>"`);
   });
 
