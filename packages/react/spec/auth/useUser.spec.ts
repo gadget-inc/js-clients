@@ -1,8 +1,8 @@
 import { renderHook } from "@testing-library/react";
 import { superAuthApi } from "../../spec/apis";
-import { expectMockSignedInUser, expectMockSignedOutUser } from "../../spec/utils";
+import { expectMockSignedInUser, expectMockSignedOutUser, mockInternalServerError, mockNetworkError } from "../../spec/utils";
 import { useUser } from "../../src/auth/useUser";
-import { TestWrapper, mockUrqlClient } from "../testWrapper";
+import { TestWrapper } from "../testWrapper";
 
 describe("useUser", () => {
   test("it returns the current user when the user is logged in", async () => {
@@ -25,23 +25,26 @@ describe("useUser", () => {
     expect(result.current).toBe(null);
   });
 
-  test("it does something when the user fails to fetch", async () => {
-    const { result, rerender } = renderHook(() => useUser(), { wrapper: TestWrapper(superAuthApi) });
+  test("it throws when the server responds with an error", async () => {
+    expect(() => {
+      const { rerender } = renderHook(() => useUser(), { wrapper: TestWrapper(superAuthApi) });
 
-    expect(mockUrqlClient.executeQuery).toBeCalledTimes(1);
-    mockUrqlClient.executeQuery.pushResponse("currentSession", {
-      data: {
-        currentSession: {
-          id: "123",
-          userId: null,
-          user: null,
-        },
-      },
-      stale: false,
-      hasNext: false,
-    });
+      mockInternalServerError();
 
-    rerender();
-    expect(result.current).toBe(null);
+      rerender();
+    }).toThrowErrorMatchingInlineSnapshot(`
+      "[GraphQL] GGT_INTERNAL_SERVER_ERROR
+      [GraphQL] An error occurred"
+    `);
+  });
+
+  test("it throws when request fails to complete", async () => {
+    expect(() => {
+      const { rerender } = renderHook(() => useUser(), { wrapper: TestWrapper(superAuthApi) });
+
+      mockNetworkError();
+
+      rerender();
+    }).toThrowErrorMatchingInlineSnapshot(`"[Network] Network error"`);
   });
 });

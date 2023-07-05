@@ -36,6 +36,7 @@ const useGetSessionAndUser = () => {
  * @returns The current session
  */
 export const useSession = (): GadgetSession | undefined => {
-  const [{ data: session }] = useGetSessionAndUser();
+  const [{ data: session, error }] = useGetSessionAndUser();
+  if (error) throw error;
   return session;
 };

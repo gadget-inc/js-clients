@@ -1,3 +1,4 @@
+import { CombinedError } from "urql";
 import { mockUrqlClient } from "./testWrapper";
 
 export const expectMockSignedInUser = () => {
@@ -29,6 +30,26 @@ export const expectMockSignedOutUser = () => {
         user: null,
       },
     },
+    stale: false,
+    hasNext: false,
+  });
+};
+
+export const mockInternalServerError = () => {
+  expect(mockUrqlClient.executeQuery).toBeCalledTimes(1);
+  mockUrqlClient.executeQuery.pushResponse("currentSession", {
+    data: null,
+    error: new CombinedError({ graphQLErrors: [new Error("GGT_INTERNAL_SERVER_ERROR"), "An error occurred"] }),
+    stale: false,
+    hasNext: false,
+  });
+};
+
+export const mockNetworkError = () => {
+  expect(mockUrqlClient.executeQuery).toBeCalledTimes(1);
+  mockUrqlClient.executeQuery.pushResponse("currentSession", {
+    data: null,
+    error: new CombinedError({ networkError: new Error("Network error") }),
     stale: false,
     hasNext: false,
   });

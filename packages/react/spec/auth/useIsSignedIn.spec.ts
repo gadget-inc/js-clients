@@ -1,6 +1,6 @@
 import { renderHook } from "@testing-library/react";
 import { superAuthApi } from "../../spec/apis";
-import { expectMockSignedInUser, expectMockSignedOutUser } from "../../spec/utils";
+import { expectMockSignedInUser, expectMockSignedOutUser, mockInternalServerError, mockNetworkError } from "../../spec/utils";
 import { useIsSignedIn } from "../../src/auth/useIsSignedIn";
 import { TestWrapper } from "../testWrapper";
 
@@ -21,5 +21,28 @@ describe("useIsSignedIn", () => {
 
     rerender();
     expect(result.current).toBe(false);
+  });
+
+  test("it throws when the server responds with an error", async () => {
+    expect(() => {
+      const { rerender } = renderHook(() => useIsSignedIn(), { wrapper: TestWrapper(superAuthApi) });
+
+      mockInternalServerError();
+
+      rerender();
+    }).toThrowErrorMatchingInlineSnapshot(`
+      "[GraphQL] GGT_INTERNAL_SERVER_ERROR
+      [GraphQL] An error occurred"
+    `);
+  });
+
+  test("it throws when request fails to complete", async () => {
+    expect(() => {
+      const { rerender } = renderHook(() => useIsSignedIn(), { wrapper: TestWrapper(superAuthApi) });
+
+      mockNetworkError();
+
+      rerender();
+    }).toThrowErrorMatchingInlineSnapshot(`"[Network] Network error"`);
   });
 });
