@@ -1,6 +1,6 @@
 export { Consumer, Context } from "urql";
 export { Provider } from "./GadgetProvider";
-export * from "./auth/useIsSignedIn";
+export * from "./auth/useAuth";
 export * from "./auth/useSession";
 export * from "./auth/useUser";
 export * from "./components/auth/SignedIn";

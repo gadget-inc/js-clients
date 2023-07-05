@@ -11,11 +11,11 @@ describe("useSession", () => {
     expectMockSignedInUser();
     rerender();
 
-    expect(result.current!.id).toEqual("123");
-    expect(result.current!.userId).toEqual("321");
-    expect(result.current!.user!.id).toEqual("321");
-    expect(result.current!.user!.firstName).toEqual("Jane");
-    expect(result.current!.user!.lastName).toEqual("Doe");
+    expect(result.current.id).toEqual("123");
+    expect(result.current.userId).toEqual("321");
+    expect(result.current.user!.id).toEqual("321");
+    expect(result.current.user!.firstName).toEqual("Jane");
+    expect(result.current.user!.lastName).toEqual("Doe");
   });
 
   test("it returns the current session when the user is logged out", async () => {
@@ -25,9 +25,21 @@ describe("useSession", () => {
     rerender();
 
     expect(result.current).toBeDefined();
-    expect(result.current!.id).toEqual("123");
-    expect(result.current!.userId).toBe(null);
-    expect(result.current!.user).toBe(null);
+    expect(result.current.id).toEqual("123");
+    expect(result.current.userId).toBe(null);
+    expect(result.current.user).toBe(null);
+  });
+
+  test("it returns the current session when the user is logged out", async () => {
+    const { result, rerender } = renderHook(() => useSession(), { wrapper: TestWrapper(superAuthApi) });
+
+    expectMockSignedOutUser();
+    rerender();
+
+    expect(result.current).toBeDefined();
+    expect(result.current.id).toEqual("123");
+    expect(result.current.userId).toBe(null);
+    expect(result.current.user).toBe(null);
   });
 
   test("it throws when the server responds with an error", async () => {

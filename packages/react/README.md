@@ -1078,13 +1078,19 @@ Returns the current session, equivalent to `await api.currentSession.get()` or `
 ### `useUser()`
 Returns the current user of the session, if present. For unauthenticated sessions, returns `null`. Throws a Suspense promise while the session/user are loading
 
-### `useIsSignedIn()`
-Returns true if the session is logged in (has a user associated with it), and false otherwise. Throws a Suspense promise while the session/user is loading
+### `useAuth()`
+Returns an object representing the current authentication state of the session. Throws a Suspense promise while the session is being loaded.
+
+`user` - the current `User`, if signed in. similar to `useUser`
+
+`session` - the current `Session`. similar to `useSession`
+
+`isSignedIn` - set to `true` if the session has a user associated with it (signed in), `false` otherwise
 
 ```tsx
 export default function App() {
   const user = useUser();
-  const isSignedIn = useIsSignedIn();
+  const { isSignedIn } = useAuth();
   const gadgetContext = useGadgetContext();
 
   return (
@@ -1100,20 +1106,20 @@ export default function App() {
 If you are trying to control the layout of your application based on authentication state, it may be helpful to use the Gadget auth React components instead of, or in addition to, the hooks.
 
 ### `<SignedIn />`
-Conditionally renders its children if the current session has a user associated with it, similar to the `useIsSignedIn()` hook.
+Conditionally renders its children if the current session has a user associated with it, similar to the `isSignedIn` property of the `useAuth()` hook.
 
 ```tsx
 <h1>Hello<SignedIn>, human</SignedIn>!</h1>
 ```
 
 ### `<SignedOut />`
-Conditionally renders its children if the current session has a user associated with it, similar to the `useIsSignedIn()` hook.
+Conditionally renders its children if the current session has a user associated with it.
 
 ```tsx
 <SignedOut><a href="/auth/signin">Sign In!</a></SignedOut>
 ```
 
-### <SignedInOrRedirect />
+### `<SignedInOrRedirect />`
 Conditionally renders its children if the current session has a user associated with it, or redirects the browser via `window.location.assign` if the user is not currently signed in. This component is helpful for protecting front-end routes.
 
 ```tsx
