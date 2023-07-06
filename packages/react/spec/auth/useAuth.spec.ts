@@ -1,6 +1,6 @@
 import { renderHook } from "@testing-library/react";
 import { useAuth } from "../../src/auth/useAuth";
-import { superAuthApi } from "../apis";
+import { noUserModelApi, superAuthApi } from "../apis";
 import { TestWrapper } from "../testWrapper";
 import { expectMockSignedInUser, expectMockSignedOutUser, mockInternalServerError, mockNetworkError } from "../utils";
 
@@ -48,5 +48,15 @@ describe("useAuth", () => {
 
       rerender();
     }).toThrowErrorMatchingInlineSnapshot(`"[Network] Network error"`);
+  });
+
+  test("it throws when the api client does not have a User model", async () => {
+    expect(() => {
+      const { rerender } = renderHook(() => useAuth(), { wrapper: TestWrapper(noUserModelApi) });
+
+      expectMockSignedOutUser();
+
+      rerender();
+    }).toThrowErrorMatchingInlineSnapshot(`"api client does not have a User model"`);
   });
 });
