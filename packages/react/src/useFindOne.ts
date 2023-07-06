@@ -4,7 +4,7 @@ import { useMemo } from "react";
 import { useGadgetQuery } from "./useGadgetQuery";
 import { useStructuralMemo } from "./useStructuralMemo";
 import type { OptionsType, ReadHookResult, ReadOperationOptions } from "./utils";
-import { ErrorWrapper, useMemoizedQueryArgs } from "./utils";
+import { ErrorWrapper, useQueryArgs } from "./utils";
 
 /**
  * React hook to fetch one Gadget record by `id` from the backend. Returns a standard hook result set with a tuple of the result object with `data`, `fetching`, and `error` keys, and a `refetch` function. `data` will be the record if it was found, and `null` otherwise.
@@ -53,7 +53,7 @@ export const useFindOne = <
     );
   }, [manager, id, memoizedOptions]);
 
-  const [rawResult, refresh] = useGadgetQuery(useMemoizedQueryArgs(plan, options));
+  const [rawResult, refresh] = useGadgetQuery(useQueryArgs(plan, options));
 
   const result = useMemo(() => {
     const dataPath = [manager.findOne.operationName];

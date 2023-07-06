@@ -4,7 +4,7 @@ import { useMemo } from "react";
 import { useGadgetQuery } from "./useGadgetQuery";
 import { useStructuralMemo } from "./useStructuralMemo";
 import type { OptionsType, ReadHookResult, ReadOperationOptions } from "./utils";
-import { ErrorWrapper, useMemoizedQueryArgs } from "./utils";
+import { ErrorWrapper, useQueryArgs } from "./utils";
 
 /**
  * React hook to fetch many Gadget records using the `maybeFindFirst` method of a given manager.
@@ -52,7 +52,7 @@ export const useMaybeFindFirst = <
     );
   }, [manager, memoizedOptions]);
 
-  const [rawResult, refresh] = useGadgetQuery(useMemoizedQueryArgs(plan, firstOptions));
+  const [rawResult, refresh] = useGadgetQuery(useQueryArgs(plan, firstOptions));
 
   const result = useMemo(() => {
     const dataPath = [manager.findFirst.operationName];
