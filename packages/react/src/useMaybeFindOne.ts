@@ -4,7 +4,7 @@ import { useMemo } from "react";
 import { useGadgetQuery } from "./useGadgetQuery";
 import { useStructuralMemo } from "./useStructuralMemo";
 import type { OptionsType, ReadHookResult, ReadOperationOptions } from "./utils";
-import { ErrorWrapper, useMemoizedQueryArgs } from "./utils";
+import { ErrorWrapper, useQueryArgs } from "./utils";
 
 /**
  * React hook to fetch a Gadget record using the `maybeFindOne` method of a given manager.
@@ -53,7 +53,7 @@ export const useMaybeFindOne = <
     );
   }, [manager, id, memoizedOptions]);
 
-  const [rawResult, refresh] = useGadgetQuery(useMemoizedQueryArgs(plan, options));
+  const [rawResult, refresh] = useGadgetQuery(useQueryArgs(plan, options));
 
   const result = useMemo(() => {
     let data = rawResult.data ?? null;

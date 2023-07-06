@@ -4,7 +4,7 @@ import { useMemo } from "react";
 import { useGadgetQuery } from "./useGadgetQuery";
 import { useStructuralMemo } from "./useStructuralMemo";
 import type { OptionsType, ReadHookResult, ReadOperationOptions } from "./utils";
-import { ErrorWrapper, useMemoizedQueryArgs } from "./utils";
+import { ErrorWrapper, useQueryArgs } from "./utils";
 
 /**
  * React hook to fetch the first backend record matching a given filter and sort. Returns a standard hook result set with a tuple of the result object with `data`, `fetching`, and `error` keys, and a `refetch` function. `data` will be the first record found if there is one, and null otherwise.
@@ -52,7 +52,7 @@ export const useFindFirst = <
     );
   }, [manager, memoizedOptions]);
 
-  const [rawResult, refresh] = useGadgetQuery(useMemoizedQueryArgs(plan, firstOptions));
+  const [rawResult, refresh] = useGadgetQuery(useQueryArgs(plan, firstOptions));
 
   const result = useMemo(() => {
     const dataPath = [manager.findFirst.operationName];

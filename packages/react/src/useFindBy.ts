@@ -4,7 +4,7 @@ import { useMemo } from "react";
 import { useGadgetQuery } from "./useGadgetQuery";
 import { useStructuralMemo } from "./useStructuralMemo";
 import type { OptionsType, ReadHookResult, ReadOperationOptions } from "./utils";
-import { ErrorWrapper, useMemoizedQueryArgs } from "./utils";
+import { ErrorWrapper, useQueryArgs } from "./utils";
 
 /**
  * React hook to fetch a Gadget record using the `findByXYZ` method of a given model manager. Useful for finding records by key fields which are used for looking up records by. Gadget autogenerates the `findByXYZ` methods on your model managers, and `useFindBy` can only be used with models that have these generated finder functions.
@@ -53,7 +53,7 @@ export const useFindBy = <
     );
   }, [finder, value, memoizedOptions]);
 
-  const [rawResult, refresh] = useGadgetQuery(useMemoizedQueryArgs(plan, options));
+  const [rawResult, refresh] = useGadgetQuery(useQueryArgs(plan, options));
 
   const result = useMemo(() => {
     const dataPath = [finder.operationName];

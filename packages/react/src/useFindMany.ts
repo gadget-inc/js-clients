@@ -4,7 +4,7 @@ import { useMemo } from "react";
 import { useGadgetQuery } from "./useGadgetQuery";
 import { useStructuralMemo } from "./useStructuralMemo";
 import type { OptionsType, ReadHookResult, ReadOperationOptions } from "./utils";
-import { ErrorWrapper, useMemoizedQueryArgs } from "./utils";
+import { ErrorWrapper, useQueryArgs } from "./utils";
 
 /**
  * React hook to fetch a page of Gadget records from the backend, optionally sorted, filtered, searched, and selected from. Returns a standard hook result set with a tuple of the result object with `data`, `fetching`, and `error` keys, and a `refetch` function. `data` will be a `GadgetRecordList` object holding the list of returned records and pagination info.
@@ -51,7 +51,7 @@ export const useFindMany = <
     );
   }, [manager, memoizedOptions]);
 
-  const [rawResult, refresh] = useGadgetQuery(useMemoizedQueryArgs(plan, options));
+  const [rawResult, refresh] = useGadgetQuery(useQueryArgs(plan, options));
 
   const result = useMemo(() => {
     const dataPath = [manager.findMany.operationName];

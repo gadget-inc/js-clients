@@ -254,8 +254,12 @@ interface QueryOptions {
   suspense?: boolean;
 }
 
-/** Generate `urql` query argument object, for `useQuery` hook */
-export const useMemoizedQueryArgs = <Plan extends QueryPlan, Options extends QueryOptions>(plan: Plan, options?: Options): UseQueryArgs => {
+/**
+ * Generate the args for an `urql` useQuery hook, applying Gadget's defaults
+ *
+ * Gadget's React hooks support using the `suspense: true` option to enable React Suspense selectively per query. This means suspense is on at the client level, and then disabled by default for each hook until you opt in with `suspense: true`. This differs from urql, which has suspense on for hooks by default when it is enabled at the client level. So, this hook applies Gadget's (we think better) default to turn suspense off for each hook until you opt in, even when enabled at the client level.
+ */
+export const useMemoizedQueryOptions = <Options extends QueryOptions>(options?: Options): Options => {
   // use a memo as urql rerenders on context identity changes
   const context = useMemo(() => {
     return {
@@ -265,12 +269,19 @@ export const useMemoizedQueryArgs = <Plan extends QueryPlan, Options extends Que
   }, [options?.suspense, options?.context]);
 
   return {
-    query: plan.query,
-    variables: plan.variables,
     ...omit(options, ["context", "suspense"]),
     context,
-  };
+  } as unknown as Options;
 };
+
+/**
+ * Given a plan from a gadget query plan generator, create the query options object to pass to `urql`'s `useQuery` hook
+ **/
+export const useQueryArgs = <Plan extends QueryPlan, Options extends QueryOptions>(plan: Plan, options?: Options): UseQueryArgs => ({
+  query: plan.query,
+  variables: plan.variables,
+  ...options,
+});
 
 export type OptionsType = {
   [key: string]: any;
