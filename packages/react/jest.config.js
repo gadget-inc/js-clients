@@ -4,7 +4,7 @@ const path = require("path");
 // https://jestjs.io/docs/en/configuration.html
 
 module.exports = {
-  displayName: "api-client-core",
+  displayName: "react",
   // All imported modules in your tests should be mocked automatically
   // automock: false,
 
@@ -139,7 +139,7 @@ module.exports = {
   // testLocationInResults: false,
 
   // The glob patterns Jest uses to detect test files
-  testMatch: [path.join(__dirname, "spec/(*.)+(spec|test).[tj]s?(x)")],
+  testMatch: [path.join(__dirname, "spec/**/(*.)+(spec|test).[tj]s?(x)")],
 
   // An array of regexp pattern strings that are matched against all test paths, matched tests are skipped
   testPathIgnorePatterns: ["/node_modules/"],

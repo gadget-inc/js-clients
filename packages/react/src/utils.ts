@@ -1,7 +1,8 @@
-import type { GadgetError, InvalidFieldError, InvalidRecordError } from "@gadgetinc/api-client-core";
-import { FieldSelection, gadgetErrorFor, getNonNullableError } from "@gadgetinc/api-client-core";
+import type { FieldSelection, GadgetError, InvalidFieldError, InvalidRecordError } from "@gadgetinc/api-client-core";
+import { gadgetErrorFor, getNonNullableError } from "@gadgetinc/api-client-core";
 import type { CombinedError, RequestPolicy } from "@urql/core";
 import { GraphQLError } from "graphql";
+import { omit } from "lodash";
 import { useMemo } from "react";
 import type { AnyVariables, Operation, OperationContext, UseQueryArgs, UseQueryState } from "urql";
 
@@ -104,7 +105,7 @@ export declare type ActionHookResult<Data = any, Variables extends AnyVariables 
   (variables: Variables, context?: Partial<OperationContext>) => Promise<ActionHookState<Data, Variables>>
 ];
 
-export const noProviderErrorMessage = `Could not find a client in the conext of Provider. Please ensure you wrap the root component in a <Provider>`;
+export const noProviderErrorMessage = `Could not find a client in the context of Provider. Please ensure you wrap the root component in a <Provider>`;
 
 const generateErrorMessage = (networkErr?: Error, graphQlErrs?: GraphQLError[]) => {
   let error = "";
@@ -266,7 +267,7 @@ export const useMemoizedQueryArgs = <Plan extends QueryPlan, Options extends Que
   return {
     query: plan.query,
     variables: plan.variables,
-    ...options,
+    ...omit(options, ["context", "suspense"]),
     context,
   };
 };

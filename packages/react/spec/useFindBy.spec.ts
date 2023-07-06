@@ -38,7 +38,9 @@ describe("useFindBy", () => {
   };
 
   test("it can find one record by a field value", async () => {
-    const { result } = renderHook(() => useFindBy(relatedProductsApi.user.findByEmail, "test@test.com"), { wrapper: TestWrapper });
+    const { result } = renderHook(() => useFindBy(relatedProductsApi.user.findByEmail, "test@test.com"), {
+      wrapper: TestWrapper(relatedProductsApi),
+    });
 
     expect(result.current[0].data).toBeFalsy();
     expect(result.current[0].fetching).toBe(true);
@@ -69,7 +71,9 @@ describe("useFindBy", () => {
   });
 
   test("it return null if the record with the given field value can't be found", async () => {
-    const { result } = renderHook(() => useFindBy(relatedProductsApi.user.findByEmail, "test@test.com"), { wrapper: TestWrapper });
+    const { result } = renderHook(() => useFindBy(relatedProductsApi.user.findByEmail, "test@test.com"), {
+      wrapper: TestWrapper(relatedProductsApi),
+    });
 
     expect(result.current[0].data).toBeFalsy();
     expect(result.current[0].fetching).toBe(true);
@@ -102,7 +106,7 @@ describe("useFindBy", () => {
 
   test("returns the same data object on rerender", async () => {
     const { result, rerender } = renderHook(() => useFindBy(relatedProductsApi.user.findByEmail, "test@test.com"), {
-      wrapper: TestWrapper,
+      wrapper: TestWrapper(relatedProductsApi),
     });
 
     expect(mockUrqlClient.executeQuery).toBeCalledTimes(1);
@@ -133,7 +137,7 @@ describe("useFindBy", () => {
 
   test("it can suspend when finding data", async () => {
     const { result, rerender } = renderHook(() => useFindBy(relatedProductsApi.user.findByEmail, "test@test.com", { suspense: true }), {
-      wrapper: TestWrapper,
+      wrapper: TestWrapper(relatedProductsApi),
     });
 
     // first render never completes as the component suspends

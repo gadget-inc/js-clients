@@ -23,6 +23,7 @@
   "devDependencies": {
     "@gadget-client/bulk-actions-test": "^1.102.0",
     "@gadget-client/related-products-example": "^1.848.0",
+    "@gadget-client/super-auth": "^1.13738.0",
     "@gadgetinc/eslint-config": "^0.6.1",
     "@gadgetinc/prettier-config": "^0.4.0",
     "@swc/core": "^1.3.42",

@@ -25,8 +25,10 @@
   },
   "devDependencies": {
     "@gadgetinc/api-client-core": "workspace:*",
+    "@testing-library/jest-dom": "^5.16.5",
     "@testing-library/react": "^13.4.0",
     "@types/deep-equal": "^1.0.1",
+    "@types/jest": "^29.5.2",
     "@types/lodash": "^4.14.191",
     "@types/react": "^18.2.9",
     "@types/react-dom": "^18.2.4",
@@ -39,7 +41,7 @@
     "wonka": "^6.3.2"
   },
   "peerDependencies": {
-    "react": "^17.0.2 || ^18.0.0",
-    "react-dom": "^17.0.2 || ^18.0.0"
+    "react": "^18.0.0",
+    "react-dom": "^18.0.0"
   }
 }

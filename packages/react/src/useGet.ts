@@ -3,8 +3,8 @@ import { findOneOperation, get, hydrateRecord } from "@gadgetinc/api-client-core
 import { useMemo } from "react";
 import { useGadgetQuery } from "./useGadgetQuery";
 import { useStructuralMemo } from "./useStructuralMemo";
-import type { ReadHookResult } from "./utils";
-import { ErrorWrapper, OptionsType, ReadOperationOptions, useMemoizedQueryArgs } from "./utils";
+import type { OptionsType, ReadHookResult, ReadOperationOptions } from "./utils";
+import { ErrorWrapper, useMemoizedQueryArgs } from "./utils";
 
 /**
  * React hook that fetches a singleton record for an `api.currentSomething` style model manager. `useGet` fetches one global record, which is most often the current session. `useGet` doesn't require knowing the record's ID in order to fetch it, and instead returns the one current record for the current context.

@@ -1,8 +1,9 @@
+import type { AnyClient } from "@gadgetinc/api-client-core";
 import { $gadgetConnection } from "@gadgetinc/api-client-core";
 import type { DocumentNode, OperationDefinitionNode } from "graphql";
 import { find, findLast } from "lodash";
 import type { ReactNode } from "react";
-import React from "react";
+import React, { Suspense } from "react";
 import { act } from "react-dom/test-utils";
 import type { Client, GraphQLRequest, OperationContext, OperationResult } from "urql";
 import { makeErrorResult } from "urql";
@@ -33,6 +34,7 @@ export interface MockUrqlClient extends Client {
   [$gadgetConnection]: {
     fetch: MockFetchFn;
   };
+  _react?: any;
 }
 
 export const graphqlDocumentName = (doc: DocumentNode) => {
@@ -51,7 +53,6 @@ export const graphqlDocumentName = (doc: DocumentNode) => {
  */
 const newMockOperationFn = (assertions?: (request: GraphQLRequest) => void) => {
   const subjects: Record<string, Subject<OperationResult>> = {};
-  const operations: Record<string, Partial<OperationContext>> = {};
 
   const fn = jest.fn((request: GraphQLRequest, options?: Partial<OperationContext>) => {
     const { query } = request;
@@ -133,6 +134,12 @@ beforeEach(() => {
   };
 });
 
+afterEach(() => {
+  // force clear _react, which useQuery sets on the client if not present
+  mockUrqlClient._react = undefined;
+  jest.clearAllMocks();
+});
+
 export const createMockUrqlCient = (assertions?: {
   mutationAssertions?: (request: GraphQLRequest) => void;
   queryAssertions?: (request: GraphQLRequest) => void;
@@ -148,6 +155,12 @@ export const createMockUrqlCient = (assertions?: {
   } as MockUrqlClient;
 };
 
-export const TestWrapper = (props: { children: ReactNode }) => {
-  return <Provider value={mockUrqlClient}>{props.children}</Provider>;
+export const TestWrapper = (api: AnyClient) => (props: { children: ReactNode }) => {
+  jest.spyOn(api.connection, "currentClient", "get").mockReturnValue(mockUrqlClient);
+
+  return (
+    <Provider api={api}>
+      <Suspense fallback={<div>Loading...</div>}>{props.children}</Suspense>
+    </Provider>
+  );
 };

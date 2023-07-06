@@ -51,7 +51,7 @@ describe("useBulkAction", () => {
   };
 
   test("returns no data, not fetching, and no error when the component is first mounted", () => {
-    const { result } = renderHook(() => useBulkAction(bulkExampleApi.widget.bulkFlipDown), { wrapper: TestWrapper });
+    const { result } = renderHook(() => useBulkAction(bulkExampleApi.widget.bulkFlipDown), { wrapper: TestWrapper(bulkExampleApi) });
 
     expect(result.current[0].data).toBeFalsy();
     expect(result.current[0].fetching).toBe(false);
@@ -59,7 +59,7 @@ describe("useBulkAction", () => {
   });
 
   test("returns no data, fetching=true, and no error when the mutation is run, and then the successful data if the mutation succeeds", async () => {
-    const { result } = renderHook(() => useBulkAction(bulkExampleApi.widget.bulkFlipDown), { wrapper: TestWrapper });
+    const { result } = renderHook(() => useBulkAction(bulkExampleApi.widget.bulkFlipDown), { wrapper: TestWrapper(bulkExampleApi) });
 
     let mutationPromise: any;
     act(() => {
@@ -107,7 +107,7 @@ describe("useBulkAction", () => {
       () => {
         return useBulkAction(bulkExampleApi.widget.bulkFlipDown);
       },
-      { wrapper: TestWrapper }
+      { wrapper: TestWrapper(bulkExampleApi) }
     );
 
     let mutationPromise: any;
@@ -152,7 +152,9 @@ describe("useBulkAction", () => {
   });
 
   test("returns the same data on successive rerenders after a mutation", async () => {
-    const { result, rerender } = renderHook(() => useBulkAction(bulkExampleApi.widget.bulkFlipDown), { wrapper: TestWrapper });
+    const { result, rerender } = renderHook(() => useBulkAction(bulkExampleApi.widget.bulkFlipDown), {
+      wrapper: TestWrapper(bulkExampleApi),
+    });
 
     let mutationPromise: any;
     act(() => {
