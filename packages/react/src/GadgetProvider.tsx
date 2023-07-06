@@ -87,6 +87,7 @@ const defaultSignOutPath = "/auth/signout";
  */
 export function Provider(props: ProviderProps | DeprecatedProviderProps) {
   let gadgetClient: AnyClient | undefined = undefined;
+
   let urqlClient: UrqlClient;
   if ("api" in props) {
     if (!isGadgetClient(props.api)) {
@@ -103,6 +104,9 @@ export function Provider(props: ProviderProps | DeprecatedProviderProps) {
       "No Gadget API client passed to <Provider /> component -- please pass an instance of your generated client, like <Provider api={api} />!"
     );
   }
+  // hack: make the client support suspending some queries when used by the react provider
+  // this flag is safe to mutably set here because it just serves as a flag for the urql react hooks, and doesn't affect imperative api client functioning
+  urqlClient.suspense = true;
 
   let signInPath = defaultSignInPath;
   let signOutPath = defaultSignOutPath;
