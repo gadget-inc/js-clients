@@ -1,5 +1,5 @@
 import { renderHook } from "@testing-library/react";
-import { superAuthApi } from "../../spec/apis";
+import { noUserModelApi, superAuthApi } from "../../spec/apis";
 import { expectMockSignedInUser, expectMockSignedOutUser, mockInternalServerError, mockNetworkError } from "../../spec/utils";
 import { useSession } from "../../src/auth/useSession";
 import { TestWrapper } from "../testWrapper";
@@ -51,5 +51,14 @@ describe("useSession", () => {
 
       rerender();
     }).toThrowErrorMatchingInlineSnapshot(`"[Network] Network error"`);
+  });
+
+  test("it returns the current session when the client does not have a user model", () => {
+    const { result, rerender } = renderHook(() => useSession(), { wrapper: TestWrapper(noUserModelApi) });
+
+    expectMockSignedOutUser();
+    rerender();
+
+    expect(result.current.id).toEqual("123");
   });
 });

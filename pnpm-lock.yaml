@@ -12,6 +12,9 @@ importers:
 
   .:
     devDependencies:
+      '@gadget-client/app-with-no-user-model':
+        specifier: ^1.3.0
+        version: 1.3.0
       '@gadget-client/bulk-actions-test':
         specifier: ^1.102.0
         version: 1.102.0
@@ -906,6 +909,12 @@ packages:
   /@eslint/js@8.39.0:
     resolution: {integrity: sha512-kf9RB0Fg7NZfap83B3QOqOGg9QmD9yBudqQXzzOtn3i4y7ZUXe5ONeW34Gwi+TxhH4mvj72R1Zc300KUMa9Bng==}
     engines: {node: ^12.22.0 || ^14.17.0 || >=16.0.0}
+    dev: true
+
+  /@gadget-client/app-with-no-user-model@1.3.0:
+    resolution: {integrity: sha1-3qq8qWwxzldnPwWkZ9C6u44piFA=, tarball: https://registry.gadget.dev/npm/_/tarball/45852/90385/4930}
+    dependencies:
+      '@gadgetinc/api-client-core': link:packages/api-client-core
     dev: true
 
   /@gadget-client/blog@1.42.0:

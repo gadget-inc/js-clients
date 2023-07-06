@@ -19,21 +19,24 @@ export interface GadgetUser {
  */
 export const useSession = (): GadgetSession => {
   const api = useApi();
-  if ("currentSession" in api && "session" in api && "user" in api) {
+  if ("currentSession" in api && "session" in api) {
+    const select = (api as any).session.findMany.defaultSelection;
+    if ("user" in api) {
+      select.userId = true;
+      select.user = {
+        ...(api.user as any).findMany.defaultSelection,
+      };
+    }
+
     const [{ data: session, error }] = useGet(api.currentSession as any, {
       suspense: true,
-      select: {
-        ...(api.session as any).findMany.defaultSelection,
-        userId: true,
-        user: {
-          ...(api.user as any).findMany.defaultSelection,
-        },
-      },
+      select,
     });
+
     if (error) throw error;
     if (!session) throw new Error("currentSession not found but should be present");
     return session;
   } else {
-    throw new Error("api client does not have a Session or User model");
+    throw new Error("api client does not have a Session model");
   }
 };
