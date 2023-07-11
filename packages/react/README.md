@@ -27,6 +27,39 @@
 This library wraps [urql](https://github.com/FormidableLabs/urql) to communicate with a Gadget-generated API, so it benefits from all of
 the same [features](https://github.com/FormidableLabs/urql/blob/main/README.md#-features) as `urql` as well!
 
+### Table of Contents
+
+ - [Installation](#installation)
+ - [Example usage](#example-usage)
+ - [Request caching](#request-caching)
+ - [API Documentation](#fastify-v1x-and-v2x)
+   - [Setup](#setup)
+   - [useFindOne()](#usefindonemanager-modelfinder-id-string-options-singlefinderoptions---data-fetching-error-refetch)
+   - [useMaybeFindOne()](#usemaybefindonemanager-modelfinder-id-string-options-singlefinderoptions---data-fetching-error-refetch)
+   - [useFindMany()](#usefindmanymanager-modelfinder-options-manyfinderoptions---data-fetching-error-refetch)
+   - [useFindFirst()](#usefindfirstmanager-modelfinder-options-findmanyoptions---data-fetching-error-refetch)
+   - [useFindBy()](#usefindbyfindfunction-modelfindfunction-fieldvalue-any-options-findbyoptions---data-fetching-error-refetch)
+   - [useMaybeFindFirst()](#usemaybefindfirstmanager-modelfinder-options-findmanyoptions---data-fetching-error-refetch)
+   - [useAction()](#useactionactionfunction-modelactionfunction-options-useactionoptions---data-fetching-error-refetch)
+   - [useGlobalAction()](#useglobalactionactionfunction-globalactionfunction-options-useglobalactionoptions---data-fetching-error-refetch)
+   - [useGet()](#usegetsingletonmodelmanager-singletonmodelmanager-options-getoptions---data-fetching-error-refetch)
+   - [useFetch()](#usefetchpath-string-options-requestinit--)
+   - [The `select` option](#the-select-option)
+   - [Errors from the returned `error` object](#errors-from-the-returned-error-object)
+   - [Default selections](#default-selections)
+   - [The `refetch` function](#the-refetch-function)
+   - [Suspense](#suspense)
+   - [`urql` exports](#urql-exports)
+ - [Authentication](#authentication)
+   - [Hooks](#hooks)
+     - [useSession()](#usesession)
+     - [useUser()](#useuser)
+     - [useAuth()](#useauth)
+   - [Components](#components)
+     - [SignedIn](#signedin-)
+     - [SignedOut](#signedout-)
+     - [SignedInOrRedirect](#signedinorredirect-)
+
 ## Installation
 
 `@gadgetinc/react` is a companion package to the JavaScript client package generated for your Gadget app, so you must install the JS client for your app, and then install this package.
