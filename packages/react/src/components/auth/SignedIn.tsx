@@ -8,7 +8,7 @@ import { isSessionSignedIn } from "../../auth/utils";
  */
 export const SignedIn = (props: { children: ReactNode }) => {
   const session = useSession();
-  if (session && isSessionSignedIn(session)) {
+  if (session.user && isSessionSignedIn(session)) {
     return <>{props.children}</>;
   } else {
     return null;
