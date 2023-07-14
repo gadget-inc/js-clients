@@ -14,7 +14,7 @@ export const SignedInOrRedirect = (props: { children: ReactNode }) => {
   const { auth } = context ?? {};
 
   useEffect(() => {
-    if (auth && !redirected && !isSignedIn ) {
+    if (auth && !redirected && !isSignedIn) {
       setRedirected(true);
       window.location.assign(auth.signInPath);
     }
