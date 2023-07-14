@@ -14,7 +14,7 @@ describe("SignedInOrRedirect", () => {
     // @ts-expect-error mock
     delete window.location;
     // @ts-expect-error mock
-    window.location = { assign: mockAssign };
+    window.location = { assign: mockAssign, origin: "https://test-app.gadget.app", pathname: "/" };
   });
 
   afterEach(() => {
@@ -38,7 +38,7 @@ describe("SignedInOrRedirect", () => {
     rerender(component);
 
     expect(mockAssign).toHaveBeenCalledTimes(1);
-    expect(mockAssign).toHaveBeenCalledWith("/");
+    expect(mockAssign).toHaveBeenCalledWith("https://test-app.gadget.app/auth/signin?redirectTo=%2F");
   });
 
   test("redirects when signed in but has no associated user", () => {
@@ -54,7 +54,7 @@ describe("SignedInOrRedirect", () => {
     rerender(component);
 
     expect(mockAssign).toHaveBeenCalledTimes(1);
-    expect(mockAssign).toHaveBeenCalledWith("/");
+    expect(mockAssign).toHaveBeenCalledWith("https://test-app.gadget.app/auth/signin?redirectTo=%2F");
   });
 
   test("renders when signed in", () => {
@@ -72,4 +72,5 @@ describe("SignedInOrRedirect", () => {
     expect(mockAssign).not.toBeCalled();
     expect(container.outerHTML).toMatchInlineSnapshot(`"<div><h1>Hello, Jane!</h1></div>"`);
   });
+
 });
