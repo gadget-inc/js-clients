@@ -72,5 +72,4 @@ describe("SignedInOrRedirect", () => {
     expect(mockAssign).not.toBeCalled();
     expect(container.outerHTML).toMatchInlineSnapshot(`"<div><h1>Hello, Jane!</h1></div>"`);
   });
-
 });
