@@ -59,7 +59,7 @@ export interface DeprecatedProviderProps {
   children: ReactNode;
 }
 
-// default Gadgte auth signIn and signOut paths
+// default Gadget auth signIn and signOut paths
 const defaultSignInPath = "/";
 const defaultSignOutPath = "/signed-in";
 
