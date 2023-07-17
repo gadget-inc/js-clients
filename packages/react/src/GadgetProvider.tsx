@@ -60,8 +60,8 @@ export interface DeprecatedProviderProps {
 }
 
 // default Gadgte auth signIn and signOut paths
-const defaultSignInPath = "/auth/signin";
-const defaultSignOutPath = "/auth/signout";
+const defaultSignInPath = "/";
+const defaultSignOutPath = "/signed-in";
 
 /**
  * Provider wrapper component that passes an api client instance to the other hooks.
