@@ -35,6 +35,21 @@ export const expectMockSignedOutUser = () => {
   });
 };
 
+export const expectMockDeletedUser = () => {
+  expect(mockUrqlClient.executeQuery).toBeCalledTimes(1);
+  mockUrqlClient.executeQuery.pushResponse("currentSession", {
+    data: {
+      currentSession: {
+        id: "123",
+        userId: 1,
+        user: null,
+      },
+    },
+    stale: false,
+    hasNext: false,
+  });
+};
+
 export const mockInternalServerError = () => {
   expect(mockUrqlClient.executeQuery).toBeCalledTimes(1);
   mockUrqlClient.executeQuery.pushResponse("currentSession", {

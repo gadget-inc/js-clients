@@ -3,7 +3,7 @@ import { render } from "@testing-library/react";
 import React from "react";
 import { superAuthApi } from "../../../spec/apis";
 import { TestWrapper } from "../../../spec/testWrapper";
-import { expectMockSignedInUser, expectMockSignedOutUser } from "../../../spec/utils";
+import { expectMockDeletedUser, expectMockSignedInUser, expectMockSignedOutUser } from "../../../spec/utils";
 import { SignedInOrRedirect } from "../../../src/components/auth/SignedInOrRedirect";
 
 describe("SignedInOrRedirect", () => {
@@ -38,7 +38,23 @@ describe("SignedInOrRedirect", () => {
     rerender(component);
 
     expect(mockAssign).toHaveBeenCalledTimes(1);
-    expect(mockAssign).toHaveBeenCalledWith("/auth/signin");
+    expect(mockAssign).toHaveBeenCalledWith("/");
+  });
+
+  test("redirects when signed in but has no associated user", () => {
+    const component = (
+      <h1>
+        <SignedInOrRedirect>Hello, Jane!</SignedInOrRedirect>
+      </h1>
+    );
+
+    const { rerender } = render(component, { wrapper: TestWrapper(superAuthApi) });
+
+    expectMockDeletedUser();
+    rerender(component);
+
+    expect(mockAssign).toHaveBeenCalledTimes(1);
+    expect(mockAssign).toHaveBeenCalledWith("/");
   });
 
   test("renders when signed in", () => {
