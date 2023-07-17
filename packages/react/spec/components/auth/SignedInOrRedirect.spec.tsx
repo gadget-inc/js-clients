@@ -38,7 +38,7 @@ describe("SignedInOrRedirect", () => {
     rerender(component);
 
     expect(mockAssign).toHaveBeenCalledTimes(1);
-    expect(mockAssign).toHaveBeenCalledWith("https://test-app.gadget.app/auth/signin?redirectTo=%2F");
+    expect(mockAssign).toHaveBeenCalledWith("https://test-app.gadget.app/?redirectTo=%2F");
   });
 
   test("redirects when signed in but has no associated user", () => {
@@ -54,7 +54,7 @@ describe("SignedInOrRedirect", () => {
     rerender(component);
 
     expect(mockAssign).toHaveBeenCalledTimes(1);
-    expect(mockAssign).toHaveBeenCalledWith("https://test-app.gadget.app/auth/signin?redirectTo=%2F");
+    expect(mockAssign).toHaveBeenCalledWith("https://test-app.gadget.app/?redirectTo=%2F");
   });
 
   test("renders when signed in", () => {
