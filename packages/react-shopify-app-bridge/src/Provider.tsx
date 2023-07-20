@@ -67,7 +67,10 @@ const InnerGadgetProvider = memo(
     });
 
     useEffect(() => {
-      if (!appBridge) return;
+      if (!appBridge) {
+        console.debug("[gadget-rsab] no app bridge, skipping client auth setup");
+        return;
+      }
       // setup the api client to always query using the custom shopify auth implementation
       api.connection.setAuthenticationMode({
         custom: {
@@ -84,6 +87,8 @@ const InnerGadgetProvider = memo(
           },
         },
       });
+
+      console.debug("[gadget-rsab] set up client auth for session tokens");
     }, [api.connection, appBridge]);
 
     let runningShopifyAuth = false;
@@ -119,6 +124,14 @@ const InnerGadgetProvider = memo(
       redirectURL.search = originalQueryParams?.toString() ?? "";
       const redirectURLWithOAuthParams = redirectURL.toString();
 
+      console.debug("[gadget-rsab] redirecting to gadget to initiate oauth process", {
+        appType: type,
+        isInstallRequest,
+        isEmbedded,
+        redirectURL: redirectURLWithOAuthParams,
+        gadgetAppUrl,
+      });
+
       if (isEmbedded && appBridge) {
         Redirect.create(appBridge).dispatch(Redirect.Action.REMOTE, redirectURLWithOAuthParams);
       } else {
@@ -129,7 +142,7 @@ const InnerGadgetProvider = memo(
     const loading = (forceRedirect || runningShopifyAuth || sessionFetching) && !isRootFrameRequest;
 
     useEffect(() => {
-      return setContext({
+      const context = {
         isAuthenticated,
         isEmbedded,
         canAuth: !!appBridge,
@@ -137,7 +150,11 @@ const InnerGadgetProvider = memo(
         appBridge,
         error,
         isRootFrameRequest,
-      });
+      };
+
+      console.debug("[gadget-rsab] context changed", context);
+
+      return setContext(context);
     }, [loading, isEmbedded, appBridge, isAuthenticated, error, isRootFrameRequest]);
 
     return <GadgetAuthContext.Provider value={context}>{children}</GadgetAuthContext.Provider>;
@@ -220,8 +237,21 @@ export const Provider = ({
     </GadgetUrqlProvider>
   );
 
+  const shouldMountAppBridge = host && coalescedType != AppType.Standalone && (!isInstallRequest || inDestinationContext);
+
+  console.debug("[gadget-rsab] provider rendering", {
+    host,
+    coalescedType,
+    isInstallRequest,
+    isReady,
+    isEmbedded,
+    isRootFrameRequest,
+    inDestinationContext,
+    shouldMountAppBridge,
+  });
+
   // app bridge provider seems to prevent urql from sending graphql requests when it cannot communicate using postMessage when not embedded so we must skip using the app bridge provider on the very first redirect from shopify
-  if (host && coalescedType != AppType.Standalone && (!isInstallRequest || inDestinationContext)) {
+  if (shouldMountAppBridge) {
     app = (
       <AppBridgeProvider
         config={{
