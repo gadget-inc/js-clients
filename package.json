@@ -1,0 +1,47 @@
+{
+  "name": "@gadgetinc/react",
+  "version": "0.13.0",
+  "source": "src/index.ts",
+  "main": "dist/src/index.js",
+  "types": "dist/src/index.d.ts",
+  "files": [
+    "README.md",
+    "dist/src/**/*"
+  ],
+  "license": "MIT",
+  "repository": "github:gadget-inc/js-clients",
+  "homepage": "https://github.com/gadget-inc/js-clients/tree/main/packages/react",
+  "scripts": {
+    "typecheck": "tsc --noEmit",
+    "build": "rm -rf dist && tsc",
+    "watch": "rm -rf dist && tsc --watch --preserveWatchOutput",
+    "prepublishOnly": "pnpm build",
+    "prerelease": "gitpkg publish"
+  },
+  "dependencies": {
+    "@gadgetinc/api-client-core": "^0.14.0",
+    "deep-equal": "^2.2.0",
+    "urql": "^4.0.4"
+  },
+  "devDependencies": {
+    "@gadgetinc/api-client-core": "workspace:*",
+    "@testing-library/jest-dom": "^5.16.5",
+    "@testing-library/react": "^13.4.0",
+    "@types/deep-equal": "^1.0.1",
+    "@types/jest": "^29.5.2",
+    "@types/lodash": "^4.14.191",
+    "@types/react": "^18.2.9",
+    "@types/react-dom": "^18.2.4",
+    "@urql/core": "^4.0.10",
+    "conditional-type-checks": "^1.0.6",
+    "graphql": "16.5.0",
+    "lodash": "^4.17.21",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
+    "wonka": "^6.3.2"
+  },
+  "peerDependencies": {
+    "react": "^18.0.0",
+    "react-dom": "^18.0.0"
+  }
+}
