@@ -161,10 +161,10 @@ describe("operation builders", () => {
 
   describe("actionOperation", () => {
     test("actionOperation should build a mutation query for a model action", () => {
-      expect(actionOperation("update", { __typename: true, id: true, state: true }, "widget", "widget", {})).toMatchInlineSnapshot(`
+      expect(actionOperation("updateWidget", { __typename: true, id: true, state: true }, "widget", "widget", {})).toMatchInlineSnapshot(`
         {
           "query": "mutation  {
-          update  {
+          updateWidget  {
             success, errors { message, code, ... on InvalidRecordError { validationErrors { message, apiIdentifier } } }, widget { __typename, id, state }
           }
           gadgetMeta  {
@@ -177,20 +177,34 @@ describe("operation builders", () => {
     });
 
     test("actionOperation should build a mutation query for a model action given a select option", () => {
-      expect(actionOperation("update", { __typename: true, id: true, state: true }, "widget", "widget", { select: { id: true } }))
+      expect(actionOperation("updateWidget", { __typename: true, id: true, state: true }, "widget", "widget", {}, { select: { id: true } }))
         .toMatchInlineSnapshot(`
         {
-          "query": "mutation ($select: String) {
-          update (select: $select) {
-            success, errors { message, code, ... on InvalidRecordError { validationErrors { message, apiIdentifier } } }, widget { __typename, id, state }
+          "query": "mutation  {
+          updateWidget  {
+            success, errors { message, code, ... on InvalidRecordError { validationErrors { message, apiIdentifier } } }, widget { __typename, id }
           }
           gadgetMeta  {
             hydrations(modelName: "widget")
           }
         }",
-          "variables": {
-            "select": undefined,
-          },
+          "variables": {},
+        }
+      `);
+    });
+
+    test("actionOperation should build a mutation query for a delete model action", () => {
+      expect(actionOperation("deleteWidget", null, "widget", "widget", {})).toMatchInlineSnapshot(`
+        {
+          "query": "mutation  {
+          deleteWidget  {
+            success, errors { message, code, ... on InvalidRecordError { validationErrors { message, apiIdentifier } } }
+          }
+          gadgetMeta  {
+            hydrations(modelName: "widget")
+          }
+        }",
+          "variables": {},
         }
       `);
     });
