@@ -1,7 +1,6 @@
 import type { GadgetRecord, RecordShape } from "./GadgetRecord.js";
 import type { GadgetRecordList } from "./GadgetRecordList.js";
-import type { VariableOptions } from "./operationBuilders.js";
-import type { LimitToKnownKeys } from "./types.js";
+import type { LimitToKnownKeys, VariablesOptions } from "./types.js";
 
 export type AsyncRecord<T extends RecordShape> = Promise<GadgetRecord<T>>;
 export type AsyncNullableRecord<T extends RecordShape> = Promise<GadgetRecord<T> | null>;
@@ -101,7 +100,7 @@ interface ActionFunctionMetadata<OptionsT, VariablesT, SelectionT, SchemaT, Defa
   selectionType: SelectionT;
   optionsType: OptionsT;
   schemaType: SchemaT | null;
-  variables: VariableOptions;
+  variables: VariablesOptions;
   variablesType: VariablesT;
   isBulk: IsBulk;
   hasAmbiguousIdentifier?: boolean;
@@ -152,6 +151,6 @@ export interface GlobalActionFunction<VariablesT> {
   type: "globalAction";
   operationName: string;
   namespace: string | null;
-  variables: VariableOptions;
+  variables: VariablesOptions;
   variablesType: VariablesT;
 }

@@ -1,17 +1,30 @@
-import { mutation, query } from "gql-query-builder";
-import type IQueryBuilderOptions from "gql-query-builder/build/IQueryBuilderOptions.js";
-import type VariableOptions from "gql-query-builder/build/VariableOptions.js";
+import {
+  FieldSelection as BuilderFieldSelection,
+  BuilderOperation,
+  Call,
+  Var,
+  Variable,
+  compileWithVariableValues,
+} from "tiny-graphql-query-compiler";
 import type { FieldSelection } from "./FieldSelection.js";
-import { fieldSelectionToGQLBuilderFields } from "./FieldSelection.js";
 import { filterTypeName, sortTypeName } from "./support.js";
+import type { VariablesOptions } from "./types.js";
 
-export type { default as VariableOptions } from "gql-query-builder/build/VariableOptions.js";
-
-const hydrationOptions = (modelApiIdentifier: string): IQueryBuilderOptions => {
+const hydrationOptions = (modelApiIdentifier: string): BuilderFieldSelection => {
   return {
-    operation: "gadgetMeta",
-    fields: [`hydrations(modelName: "${modelApiIdentifier}")`],
+    gadgetMeta: {
+      [`hydrations(modelName: "${modelApiIdentifier}")`]: true,
+    },
   };
+};
+
+/**
+ * Converts Selection nested object format to the tiny-graphql-query-compiler shape
+ **/
+const fieldSelectionToQueryCompilerFields = (selection: FieldSelection, includeTypename = false): BuilderFieldSelection => {
+  const output: BuilderFieldSelection = { ...selection };
+  if (includeTypename) output.__typename = true;
+  return output;
 };
 
 type AnySort = any;
@@ -38,16 +51,16 @@ export const findOneOperation = (
   modelApiIdentifier: string,
   options?: SelectionOptions | null
 ) => {
-  const variables: IQueryBuilderOptions["variables"] = {};
-  if (typeof id !== "undefined") variables.id = { type: "GadgetID", required: true, value: id };
-  return query([
-    {
-      operation,
-      fields: fieldSelectionToGQLBuilderFields(options?.select || defaultSelection, true),
-      variables,
+  const variables: Record<string, Variable> = {};
+  if (typeof id !== "undefined") variables.id = Var({ type: "GadgetID", required: true, value: id });
+  return compileWithVariableValues({
+    type: "query",
+    name: operation,
+    fields: {
+      [operation]: Call(variables, fieldSelectionToQueryCompilerFields(options?.select || defaultSelection, true)),
+      ...hydrationOptions(modelApiIdentifier),
     },
-    hydrationOptions(modelApiIdentifier),
-  ]);
+  });
 };
 
 export const findOneByFieldOperation = (
@@ -75,29 +88,46 @@ export const findManyOperation = (
   modelApiIdentifier: string,
   options?: PaginationOptions
 ) => {
-  return query([
-    {
-      operation,
-      fields: [
+  return compileWithVariableValues({
+    type: "query",
+    name: operation,
+    fields: {
+      [operation]: Call(
         {
-          pageInfo: ["hasNextPage", "hasPreviousPage", "startCursor", "endCursor"],
+          after: Var({ value: options?.after, type: "String" }),
+          first: Var({ value: options?.first, type: "Int" }),
+          before: Var({ value: options?.before, type: "String" }),
+          last: Var({ value: options?.last, type: "Int" }),
+          sort: options?.sort ? Var({ value: options.sort, type: `[${sortTypeName(modelApiIdentifier)}!]` }) : undefined,
+          filter: options?.filter ? Var({ value: options.filter, type: `[${filterTypeName(modelApiIdentifier)}!]` }) : undefined,
+          search: options?.search ? Var({ value: options.search, type: "String" }) : undefined,
         },
         {
-          edges: ["cursor", { node: fieldSelectionToGQLBuilderFields(options?.select || defaultSelection, true) }],
-        },
-      ],
-      variables: {
-        after: { value: options?.after, type: "String", required: false },
-        first: { value: options?.first, type: "Int", required: false },
-        before: { value: options?.before, type: "String", required: false },
-        last: { value: options?.last, type: "Int", required: false },
-        ...(options?.sort && { sort: { value: options?.sort, type: sortTypeName(modelApiIdentifier) + "!", list: true } }),
-        ...(options?.filter && { filter: { value: options?.filter, type: filterTypeName(modelApiIdentifier) + "!", list: true } }),
-        ...(options?.search && { search: { value: options?.search, type: "String", required: false } }),
-      },
+          pageInfo: { hasNextPage: true, hasPreviousPage: true, startCursor: true, endCursor: true },
+          edges: {
+            cursor: true,
+            node: fieldSelectionToQueryCompilerFields(options?.select || defaultSelection, true),
+          },
+        }
+      ),
+      ...hydrationOptions(modelApiIdentifier),
     },
-    hydrationOptions(modelApiIdentifier),
-  ]);
+  });
+};
+
+const ErrorsSelection: BuilderFieldSelection = {
+  message: true,
+  code: true,
+  "... on InvalidRecordError": {
+    validationErrors: {
+      message: true,
+      apiIdentifier: true,
+    },
+  },
+};
+
+const variableOptionsToVariables = (variables: VariablesOptions) => {
+  return Object.fromEntries(Object.entries(variables).map(([name, options]) => [name, Var(options)]));
 };
 
 export const actionOperation = (
@@ -105,53 +135,58 @@ export const actionOperation = (
   defaultSelection: FieldSelection | null,
   modelApiIdentifier: string,
   modelSelectionField: string,
-  variables: VariableOptions,
+  variables: VariablesOptions,
   options?: SelectionOptions | null,
   namespace?: string | null
 ) => {
-  let actionOperation: IQueryBuilderOptions = {
-    operation,
-    fields: [
-      "success",
-      { errors: ["message", "code", { "... on InvalidRecordError": [{ validationErrors: ["message", "apiIdentifier"] }] }] },
-    ],
-    variables,
+  const selection = options?.select || defaultSelection;
+
+  let fields: BuilderFieldSelection = {
+    [operation]: Call(variableOptionsToVariables(variables), {
+      success: true,
+      errors: ErrorsSelection,
+      [modelSelectionField]: selection ? fieldSelectionToQueryCompilerFields(selection, true) : false,
+    }),
   };
 
-  const selection = options?.select || defaultSelection;
-  if (selection) {
-    actionOperation.fields!.push({ [modelSelectionField]: fieldSelectionToGQLBuilderFields(selection, true) });
-  }
-
   if (namespace) {
-    actionOperation = {
-      operation: namespace,
-      fields: [actionOperation],
+    fields = {
+      [namespace]: fields,
     };
   }
 
-  return mutation([actionOperation, hydrationOptions(modelApiIdentifier)]);
+  const actionOperation: BuilderOperation = {
+    type: "mutation",
+    name: operation,
+    fields: {
+      ...fields,
+      ...hydrationOptions(modelApiIdentifier),
+    },
+  };
+
+  return compileWithVariableValues(actionOperation);
 };
 
-export const globalActionOperation = (operation: string, variables: VariableOptions, namespace?: string | null) => {
-  let actionOperation: IQueryBuilderOptions = {
-    operation,
-    fields: [
-      "success",
-      { errors: ["message", "code", { "... on InvalidRecordError": [{ validationErrors: ["message", "apiIdentifier"] }] }] },
-      "result",
-    ],
-    variables,
+export const globalActionOperation = (operation: string, variables: VariablesOptions, namespace?: string | null) => {
+  let fields: BuilderFieldSelection = {
+    [operation]: Call(variableOptionsToVariables(variables), {
+      success: true,
+      errors: ErrorsSelection,
+      result: true,
+    }),
   };
 
   const dataPath = [operation];
   if (namespace) {
-    actionOperation = {
-      operation: namespace,
-      fields: [actionOperation],
+    fields = {
+      [namespace]: fields,
     };
     dataPath.unshift(namespace);
   }
 
-  return mutation([actionOperation]);
+  return compileWithVariableValues({
+    type: "mutation",
+    name: operation,
+    fields,
+  });
 };

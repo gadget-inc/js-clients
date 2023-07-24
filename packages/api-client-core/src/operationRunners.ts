@@ -3,7 +3,7 @@ import type { GadgetConnection } from "./GadgetConnection.js";
 import type { GadgetRecord, RecordShape } from "./GadgetRecord.js";
 import { GadgetRecordList } from "./GadgetRecordList.js";
 import type { AnyModelManager } from "./ModelManager.js";
-import type { PaginationOptions, SelectionOptions, VariableOptions } from "./operationBuilders.js";
+import type { PaginationOptions, SelectionOptions } from "./operationBuilders.js";
 import {
   actionOperation,
   findManyOperation,
@@ -21,6 +21,7 @@ import {
   hydrateRecord,
   hydrateRecordArray,
 } from "./support.js";
+import type { VariablesOptions } from "./types.js";
 
 export const findOneRunner = async <Shape extends RecordShape = any>(
   modelManager: { connection: GadgetConnection },
@@ -92,7 +93,7 @@ export interface ActionRunner {
     modelApiIdentifier: string,
     modelSelectionField: string,
     isBulkAction: false,
-    variables: VariableOptions,
+    variables: VariablesOptions,
     options?: SelectionOptions | null,
     namespace?: string | null
   ): Promise<Shape extends void ? void : GadgetRecord<Shape>>;
@@ -104,7 +105,7 @@ export interface ActionRunner {
     modelApiIdentifier: string,
     modelSelectionField: string,
     isBulkAction: true,
-    variables: VariableOptions,
+    variables: VariablesOptions,
     options?: SelectionOptions | null,
     namespace?: string | null
   ): Promise<Shape extends void ? void : GadgetRecord<Shape>[]>;
@@ -117,7 +118,7 @@ export const actionRunner: ActionRunner = async <Shape extends RecordShape = any
   modelApiIdentifier: string,
   modelSelectionField: string,
   isBulkAction: boolean,
-  variables: VariableOptions,
+  variables: VariablesOptions,
   options?: SelectionOptions | null,
   namespace?: string | null
 ) => {
@@ -146,7 +147,7 @@ export const actionRunner: ActionRunner = async <Shape extends RecordShape = any
 export const globalActionRunner = async (
   connection: GadgetConnection,
   operation: string,
-  variables: VariableOptions,
+  variables: VariablesOptions,
   namespace?: string | null
 ) => {
   const plan = globalActionOperation(operation, variables, namespace);

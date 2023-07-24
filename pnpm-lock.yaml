@@ -99,9 +99,6 @@ importers:
       cross-fetch:
         specifier: ^3.1.5
         version: 3.1.5
-      gql-query-builder:
-        specifier: ^3.7.2
-        version: 3.7.2
       graphql:
         specifier: ~16.6.0
         version: 16.6.0
@@ -117,6 +114,9 @@ importers:
       lodash.isequal:
         specifier: ^4.5.0
         version: 4.5.0
+      tiny-graphql-query-compiler:
+        specifier: ^0.1.0
+        version: link:../tiny-graphql-query-compiler
       ws:
         specifier: ^8.13.0
         version: 8.13.0
@@ -311,6 +311,33 @@ importers:
       rollup-plugin-visualizer:
         specifier: ^5.9.2
         version: 5.9.2
+
+  packages/tiny-graphql-query-compiler:
+    devDependencies:
+      '@testing-library/jest-dom':
+        specifier: ^5.16.5
+        version: 5.16.5
+      '@testing-library/react':
+        specifier: ^13.4.0
+        version: 13.4.0(react-dom@18.2.0)(react@18.2.0)
+      '@types/jest':
+        specifier: ^29.5.2
+        version: 29.5.2
+      conditional-type-checks:
+        specifier: ^1.0.6
+        version: 1.0.6
+      graphql:
+        specifier: 16.5.0
+        version: 16.5.0
+      prettier:
+        specifier: ^2.8.8
+        version: 2.8.8
+      react:
+        specifier: ^18.2.0
+        version: 18.2.0
+      react-dom:
+        specifier: ^18.2.0
+        version: 18.2.0(react@18.2.0)
 
 packages:
 
@@ -3828,10 +3855,6 @@ packages:
     resolution: {integrity: sha512-d65bNlIadxvpb/A2abVdlqKqV563juRnZ1Wtk6s1sIR8uNsXR70xqIzVqxVf1eTqDunwT2MkczEeaezCKTZhwA==}
     dependencies:
       get-intrinsic: 1.2.0
-
-  /gql-query-builder@3.7.2:
-    resolution: {integrity: sha512-lMsr2OEaknicOfB59fODuPM9p5B9gx9McVFA+xwsCEtNiJEwVCVdSwwt/SJb/IjOfOTtDJ/3rs+jZ7X7sBzU0A==}
-    dev: false
 
   /gql-tag@1.0.1:
     resolution: {integrity: sha512-eVxldTiOtJJ3ySNgYbfRwyIyDDMATJ/ykojlQng5ihX1V0Xpr4C7ZXSZuWo7tg+kf+GS8lzhlbZmKSDjbYGhyA==}

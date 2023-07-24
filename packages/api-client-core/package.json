@@ -30,7 +30,7 @@
     "@opentelemetry/api": "^1.4.0",
     "@urql/core": "^4.0.10",
     "cross-fetch": "^3.1.5",
-    "gql-query-builder": "^3.7.2",
+    "tiny-graphql-query-compiler": "^0.1.0",
     "graphql": "~16.6.0",
     "graphql-ws": "^5.13.1",
     "isomorphic-ws": "^5.0.0",
@@ -39,6 +39,7 @@
     "ws": "^8.13.0"
   },
   "devDependencies": {
+    "tiny-graphql-query-compiler": "workspace:*",
     "@types/lodash.clonedeep": "^4.5.6",
     "@types/lodash.isequal": "^4.5.5",
     "@types/node": "^16.11.7",
