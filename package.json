@@ -52,5 +52,6 @@
       "@gadgetinc/api-client-core": "workspace:*",
       "@gadgetinc/react": "workspace:*"
     }
-  }
+  },
+  "dependencies": {}
 }
