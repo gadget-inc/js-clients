@@ -1,6 +1,6 @@
 import type { ReactNode } from "react";
 import React, { useEffect, useState } from "react";
-import { useAuth } from "../../auth/useAuth";
+import { useAuth } from "../../auth/useAuth.js";
 
 /**
  * Renders its `children` if the current `Session` is signed out, otherwise redirects the browser to the `path` prop. Uses `window.location.assign` to perform the redirect.

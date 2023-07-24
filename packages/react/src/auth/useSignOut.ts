@@ -1,7 +1,7 @@
 import { useCallback, useContext } from "react";
-import { GadgetConfigurationContext, useApi } from "../../src/GadgetProvider";
-import { useAction } from "../../src/useAction";
-import { useUser } from "./useUser";
+import { GadgetConfigurationContext, useApi } from "../GadgetProvider.js";
+import { useAction } from "../useAction.js";
+import { useUser } from "./useUser.js";
 
 /**
  * Returns a callback that will call the configured `signOutActionApiIdentifier` on the `User` model and optionally redirect (by default). Throws an `error` if one occurs while performing the `signOut` action, or if the `User` is not signed in.

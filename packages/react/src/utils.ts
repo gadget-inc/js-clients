@@ -2,7 +2,6 @@ import type { FieldSelection, GadgetError, InvalidFieldError, InvalidRecordError
 import { gadgetErrorFor, getNonNullableError } from "@gadgetinc/api-client-core";
 import type { CombinedError, RequestPolicy } from "@urql/core";
 import { GraphQLError } from "graphql";
-import { omit } from "lodash";
 import { useMemo } from "react";
 import type { AnyVariables, Operation, OperationContext, UseQueryArgs, UseQueryState } from "urql";
 
@@ -260,6 +259,8 @@ interface QueryOptions {
  * Gadget's React hooks support using the `suspense: true` option to enable React Suspense selectively per query. This means suspense is on at the client level, and then disabled by default for each hook until you opt in with `suspense: true`. This differs from urql, which has suspense on for hooks by default when it is enabled at the client level. So, this hook applies Gadget's (we think better) default to turn suspense off for each hook until you opt in, even when enabled at the client level.
  */
 export const useMemoizedQueryOptions = <Options extends QueryOptions>(options?: Options): Options => {
+  const { context: _context, suspense: _suspense, ...rest } = options ?? {};
+
   // use a memo as urql rerenders on context identity changes
   const context = useMemo(() => {
     return {
@@ -269,7 +270,7 @@ export const useMemoizedQueryOptions = <Options extends QueryOptions>(options?: 
   }, [options?.suspense, options?.context]);
 
   return {
-    ...omit(options, ["context", "suspense"]),
+    ...rest,
     context,
   } as unknown as Options;
 };

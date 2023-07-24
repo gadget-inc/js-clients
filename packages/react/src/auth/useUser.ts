@@ -1,5 +1,5 @@
-import { useApi } from "../../src/GadgetProvider";
-import { useSession } from "./useSession";
+import { useApi } from "../GadgetProvider.js";
+import { useSession } from "./useSession.js";
 
 /**
  * Used for fetching the current `User` record from Gadget. Will return `null` if the session is unauthenticated. Will suspend while the user is being fetched.

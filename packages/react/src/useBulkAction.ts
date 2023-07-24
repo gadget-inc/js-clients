@@ -2,10 +2,10 @@ import type { BulkActionFunction, DefaultSelection, GadgetRecord, LimitToKnownKe
 import { actionOperation, capitalizeIdentifier, get, hydrateRecordArray } from "@gadgetinc/api-client-core";
 import { useCallback, useMemo } from "react";
 import type { UseMutationState } from "urql";
-import { useGadgetMutation } from "./useGadgetMutation";
-import { useStructuralMemo } from "./useStructuralMemo";
-import type { ActionHookResult, OptionsType } from "./utils";
-import { ErrorWrapper } from "./utils";
+import { useGadgetMutation } from "./useGadgetMutation.js";
+import { useStructuralMemo } from "./useStructuralMemo.js";
+import type { ActionHookResult, OptionsType } from "./utils.js";
+import { ErrorWrapper } from "./utils.js";
 
 /**
  * React hook to run a Gadget model bulk action.

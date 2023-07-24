@@ -3,10 +3,10 @@ import { renderHook } from "@testing-library/react";
 import type { IsExact } from "conditional-type-checks";
 import { assert } from "conditional-type-checks";
 import { act } from "react-dom/test-utils";
-import { useBulkAction } from "../src";
-import type { ErrorWrapper } from "../src/utils";
-import { bulkExampleApi } from "./apis";
-import { mockUrqlClient, TestWrapper } from "./testWrapper";
+import { useBulkAction } from "../src.js";
+import type { ErrorWrapper } from "../src/utils.js";
+import { bulkExampleApi } from "./apis.js";
+import { mockUrqlClient, TestWrapper } from "./testWrapper.js";
 
 describe("useBulkAction", () => {
   // these functions are typechecked but never run to avoid actually making API calls

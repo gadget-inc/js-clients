@@ -1,8 +1,8 @@
 import { renderHook } from "@testing-library/react";
-import { useAuth } from "../../src/auth/useAuth";
-import { noUserModelApi, superAuthApi } from "../apis";
-import { TestWrapper } from "../testWrapper";
-import { expectMockSignedInUser, expectMockSignedOutUser, mockInternalServerError, mockNetworkError } from "../utils";
+import { useAuth } from "../../src/auth/useAuth.js";
+import { noUserModelApi, superAuthApi } from "../apis.js";
+import { TestWrapper } from "../testWrapper.js";
+import { expectMockSignedInUser, expectMockSignedOutUser, mockInternalServerError, mockNetworkError } from "../utils.js";
 
 describe("useAuth", () => {
   test("returns the correct auth state if the user is signed in", async () => {

@@ -1,5 +1,5 @@
-import { useApi } from "../../src/GadgetProvider";
-import { useGet } from "../../src/useGet";
+import { useApi } from "../GadgetProvider.js";
+import { useGet } from "../useGet.js";
 
 export interface GadgetSession {
   id: string;

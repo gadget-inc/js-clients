@@ -1,10 +1,10 @@
 import type { DefaultSelection, FindOneFunction, GadgetRecord, LimitToKnownKeys, Select } from "@gadgetinc/api-client-core";
 import { findOneOperation, get, hydrateRecord } from "@gadgetinc/api-client-core";
 import { useMemo } from "react";
-import { useGadgetQuery } from "./useGadgetQuery";
-import { useStructuralMemo } from "./useStructuralMemo";
-import type { OptionsType, ReadHookResult, ReadOperationOptions } from "./utils";
-import { ErrorWrapper, useQueryArgs } from "./utils";
+import { useGadgetQuery } from "./useGadgetQuery.js";
+import { useStructuralMemo } from "./useStructuralMemo.js";
+import type { OptionsType, ReadHookResult, ReadOperationOptions } from "./utils.js";
+import { ErrorWrapper, useQueryArgs } from "./utils.js";
 
 /**
  * React hook to fetch a Gadget record using the `maybeFindOne` method of a given manager.

@@ -2,9 +2,9 @@ import type { GlobalActionFunction } from "@gadgetinc/api-client-core";
 import { get, globalActionOperation } from "@gadgetinc/api-client-core";
 import { useCallback, useMemo } from "react";
 import type { UseMutationState } from "urql";
-import { useGadgetMutation } from "./useGadgetMutation";
-import type { ActionHookResult } from "./utils";
-import { ErrorWrapper } from "./utils";
+import { useGadgetMutation } from "./useGadgetMutation.js";
+import type { ActionHookResult } from "./utils.js";
+import { ErrorWrapper } from "./utils.js";
 
 /**
  * React hook to run a Gadget model action.

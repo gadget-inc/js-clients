@@ -1,8 +1,8 @@
 import { renderHook } from "@testing-library/react";
-import { noUserModelApi, superAuthApi } from "../../spec/apis";
-import { expectMockSignedInUser, expectMockSignedOutUser, mockInternalServerError, mockNetworkError } from "../../spec/utils";
-import { useUser } from "../../src/auth/useUser";
-import { TestWrapper } from "../testWrapper";
+import { noUserModelApi, superAuthApi } from "../../spec/apis.js";
+import { expectMockSignedInUser, expectMockSignedOutUser, mockInternalServerError, mockNetworkError } from "../../spec/utils.js";
+import { useUser } from "../../src/auth/useUser.js";
+import { TestWrapper } from "../testWrapper.js";
 
 describe("useUser", () => {
   test("it returns the current user when the user is logged in", async () => {

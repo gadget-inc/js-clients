@@ -1,10 +1,10 @@
 import type { DefaultSelection, FindOneFunction, GadgetRecord, LimitToKnownKeys, Select } from "@gadgetinc/api-client-core";
 import { GadgetNotFoundError, findOneByFieldOperation, get, getNonUniqueDataError, hydrateConnection } from "@gadgetinc/api-client-core";
 import { useMemo } from "react";
-import { useGadgetQuery } from "./useGadgetQuery";
-import { useStructuralMemo } from "./useStructuralMemo";
-import type { OptionsType, ReadHookResult, ReadOperationOptions } from "./utils";
-import { ErrorWrapper, useQueryArgs } from "./utils";
+import { useGadgetQuery } from "./useGadgetQuery.js";
+import { useStructuralMemo } from "./useStructuralMemo.js";
+import type { OptionsType, ReadHookResult, ReadOperationOptions } from "./utils.js";
+import { ErrorWrapper, useQueryArgs } from "./utils.js";
 
 /**
  * React hook to fetch a Gadget record using the `findByXYZ` method of a given model manager. Useful for finding records by key fields which are used for looking up records by. Gadget autogenerates the `findByXYZ` methods on your model managers, and `useFindBy` can only be used with models that have these generated finder functions.

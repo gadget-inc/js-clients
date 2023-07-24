@@ -1,10 +1,10 @@
 import "@testing-library/jest-dom";
 import { render } from "@testing-library/react";
 import React from "react";
-import { superAuthApi } from "../../../spec/apis";
-import { TestWrapper } from "../../../spec/testWrapper";
-import { expectMockDeletedUser, expectMockSignedInUser, expectMockSignedOutUser } from "../../../spec/utils";
 import { SignedOut } from "../../../src/components/auth/SignedOut";
+import { superAuthApi } from "../../apis.js";
+import { TestWrapper } from "../../testWrapper.js";
+import { expectMockDeletedUser, expectMockSignedInUser, expectMockSignedOutUser } from "../../utils.js";
 
 describe("SignedOut", () => {
   test("renders children when signed out", () => {

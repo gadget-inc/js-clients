@@ -5,11 +5,11 @@ import type { IsExact } from "conditional-type-checks";
 import { assert } from "conditional-type-checks";
 import React from "react";
 import type { AnyVariables } from "urql";
-import { useAction } from "../src";
-import { Provider } from "../src/GadgetProvider";
-import type { ErrorWrapper } from "../src/utils";
-import { relatedProductsApi } from "./apis";
-import { TestWrapper, createMockUrqlCient, mockUrqlClient } from "./testWrapper";
+import { Provider } from "../src/GadgetProvider.js";
+import { useAction } from "../src/index.js";
+import type { ErrorWrapper } from "../src/utils.js";
+import { relatedProductsApi } from "./apis.js";
+import { TestWrapper, createMockUrqlCient, mockUrqlClient } from "./testWrapper.js";
 
 describe("useAction", () => {
   // these functions are typechecked but never run to avoid actually making API calls
