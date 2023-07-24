@@ -1,6 +1,6 @@
 import type { Client } from "@urql/core";
 import type { Client as SubscriptionClient } from "graphql-ws";
-import { assertOperationSuccess } from "./support";
+import { assertOperationSuccess } from "./support.js";
 
 /** Represents the error thrown when a transaction is explicity rolled back, sometimes due to another inner error */
 export class TransactionRolledBack extends Error {}

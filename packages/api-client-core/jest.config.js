@@ -1,9 +1,7 @@
-const path = require("path");
-
 // For a detailed explanation regarding each configuration property, visit:
 // https://jestjs.io/docs/en/configuration.html
 
-module.exports = {
+export default {
   displayName: "api-client-core",
   // All imported modules in your tests should be mocked automatically
   // automock: false,
@@ -48,6 +46,8 @@ module.exports = {
   // Make calling deprecated APIs throw helpful error messages
   // errorOnDeprecated: false,
 
+  extensionsToTreatAsEsm: [".ts", ".tsx"],
+
   // Force coverage collection from ignored files using an array of glob patterns
   // forceCoverageMatch: [],
 
@@ -79,7 +79,9 @@ module.exports = {
   // ],
 
   // A map from regular expressions to module names or to arrays of module names that allow to stub out resources with a single module
-  // moduleNameMapper: {},
+  moduleNameMapper: {
+    "^(\\.{1,2}/.*)\\.js$": "$1",
+  },
 
   // An array of regexp pattern strings, matched against all module paths before considered 'visible' to the module loader
   // modulePathIgnorePatterns: [],
@@ -139,7 +141,10 @@ module.exports = {
   // testLocationInResults: false,
 
   // The glob patterns Jest uses to detect test files
-  testMatch: [path.join(__dirname, "spec/(*.)+(spec|test).[tj]s?(x)")],
+  // testMatch: [
+  //   "**/__tests__/**/*.[jt]s?(x)",
+  //   "**/?(*.)+(spec|test).[tj]s?(x)"
+  // ]
 
   // An array of regexp pattern strings that are matched against all test paths, matched tests are skipped
   testPathIgnorePatterns: ["/node_modules/"],

@@ -1,6 +1,6 @@
-import type { GadgetConnection } from "./GadgetConnection";
-import type { GadgetTransaction } from "./GadgetTransaction";
-import type { InternalModelManager } from "./InternalModelManager";
+import type { GadgetConnection } from "./GadgetConnection.js"
+import type { GadgetTransaction } from "./GadgetTransaction.js"
+import type { InternalModelManager } from "./InternalModelManager.js"
 
 /**
  * An instance of any Gadget app's API client object

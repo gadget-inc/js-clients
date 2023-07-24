@@ -9,8 +9,8 @@ import {
   internalFindFirstQuery,
   internalFindManyQuery,
   internalUpdateMutation,
-} from "../src";
-import { expectValidGraphQLQuery } from "./helpers";
+} from "../src/index.js";
+import { expectValidGraphQLQuery } from "./helpers.js";
 
 describe("InternalModelManager", () => {
   describe("getRecordFromData", () => {

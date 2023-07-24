@@ -1,11 +1,11 @@
 /* eslint-disable no-throw-literal */
 /* eslint-disable @typescript-eslint/require-await */
 import type { Jsonify } from "type-fest";
-import type { GadgetRecord, RecordShape } from "./GadgetRecord";
-import type { InternalModelManager } from "./InternalModelManager";
-import type { AnyModelManager } from "./ModelManager";
-import type { PaginationOptions } from "./operationBuilders";
-import { GadgetClientError, GadgetOperationError } from "./support";
+import type { GadgetRecord, RecordShape } from "./GadgetRecord.js";
+import type { InternalModelManager } from "./InternalModelManager.js";
+import type { AnyModelManager } from "./ModelManager.js";
+import type { PaginationOptions } from "./operationBuilders.js";
+import { GadgetClientError, GadgetOperationError } from "./support.js";
 
 type PaginationConfig = {
   pageInfo: { hasNextPage: boolean; hasPreviousPage: boolean; startCursor: string; endCursor: string };

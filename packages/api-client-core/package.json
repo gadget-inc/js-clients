@@ -1,19 +1,27 @@
 {
   "name": "@gadgetinc/api-client-core",
   "version": "0.14.0",
-  "source": "src/index.ts",
-  "main": "dist/src/index.js",
-  "types": "dist/src/index.d.ts",
   "files": [
     "Readme.md",
-    "dist/src/**/*"
+    "dist/**/*"
   ],
   "license": "MIT",
   "repository": "github:gadget-inc/js-clients",
   "homepage": "https://github.com/gadget-inc/js-clients/tree/main/packages/api-client-core",
+  "type": "module",
+  "exports": {
+    ".": {
+      "import": "./dist/esm/index.js",
+      "require": "./dist/cjs/index.js",
+      "default": "./dist/esm/index.js"
+    },
+    "./package.json": "./package.json"
+  },
+  "source": "src/index.ts",
+  "main": "dist/cjs/index.js",
   "scripts": {
     "typecheck": "tsc --noEmit",
-    "build": "rm -rf dist && tsc",
+    "build": "rm -rf dist && tsc -b tsconfig.cjs.json tsconfig.esm.json && echo '{\"type\": \"commonjs\"}' > dist/cjs/package.json && echo '{\"type\": \"module\"}' > dist/esm/package.json",
     "watch": "rm -rf dist && tsc --watch --preserveWatchOutput",
     "prepublishOnly": "pnpm build",
     "prerelease": "gitpkg publish"
