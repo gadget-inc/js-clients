@@ -242,7 +242,7 @@ describe("compiling queries with field calls", () => {
         "query  {
           id
           name
-          truncatedHTML 
+          truncatedHTML(length: $length) 
         }"
       `);
       expect(variables).toEqual({});

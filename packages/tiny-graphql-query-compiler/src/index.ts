@@ -6,6 +6,7 @@ export interface BuilderOperation {
   type: "query" | "subscription" | "mutation";
   fields: FieldSelection;
   name?: string;
+  directives?: string[];
 }
 
 const indent = (str: string, depth: number) => {
@@ -80,15 +81,12 @@ const compileVariables = (operation: BuilderOperation, onlyPresentValues = false
     }
   }
 
-  if (Object.keys(variables).length === 0) return { variables, signature: "" };
+  if (Object.keys(variables).length === 0) return "";
   const signatures = Object.entries(variables).map(([name, variable]) => {
     return `$${name}: ${variable.type}${variable.required ? "!" : ""}`;
   });
 
-  return {
-    variables,
-    signature: `(${signatures.join(", ")})`,
-  };
+  return `(${signatures.join(", ")})`;
 };
 
 class FieldCall {
@@ -102,6 +100,7 @@ export interface VariableOptions {
   value?: any;
 }
 
+/** Represents one reference to a variable somewhere in a selection */
 export class Variable {
   constructor(readonly type: string, readonly required = false, readonly name?: string, readonly value?: any) {}
 }
@@ -113,20 +112,21 @@ export const Call = (args: Record<string, Variable | any>, subselection?: FieldS
 export const Var = (options: VariableOptions) => new Variable(options.type, options.required, options.name, options.value);
 
 /** Compiles one JS object describing a query into a GraphQL string */
-export const compile = (operation: BuilderOperation): string => {
-  const { signature } = compileVariables(operation);
-  return `${operation.type} ${operation.name ?? ""}${signature} {
+export const compile = (operation: BuilderOperation, onlyPresentVariableValues = false): string => {
+  const signature = compileVariables(operation, onlyPresentVariableValues);
+  const directives = operation.directives && operation.directives.length > 0 ? ` ${operation.directives.join(" ")}` : "";
+
+  return `${operation.type} ${operation.name ?? ""}${signature}${directives} {
 ${compileFieldSelection(operation.fields)}
 }`;
 };
 
 /** Compiles one JS object describing a query into a GraphQL string and set of variable values for passing alongside the query */
 export const compileWithVariableValues = (operation: BuilderOperation): { query: string; variables: Record<string, any> } => {
-  const { signature, variables } = compileVariables(operation, true);
+  const variables = extractVariables(operation.fields);
+
   return {
-    query: `${operation.type} ${operation.name ?? ""}${signature} {
-${compileFieldSelection(operation.fields, true)}
-}`,
+    query: compile(operation, true),
     variables: Object.entries(variables ?? {}).reduce((acc, [name, variable]) => {
       acc[name] = variable.value;
       return acc;

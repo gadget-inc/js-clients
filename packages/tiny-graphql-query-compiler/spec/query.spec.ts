@@ -1,4 +1,4 @@
-import { compile } from "../src";
+import { Call, Var, compile } from "../src";
 import { expectValidGraphQLQuery } from "./helpers";
 
 describe("compiling queries", () => {
@@ -153,6 +153,53 @@ describe("compiling queries", () => {
         id
         name
         age
+      }"
+    `);
+  });
+
+  test("it should compile a query with a live directives", () => {
+    const result = compile({
+      type: "query",
+      name: "GetUsers",
+      fields: {
+        id: true,
+        name: true,
+        age: true,
+      },
+      directives: ["@live"],
+    });
+
+    expectValidGraphQLQuery(result);
+    expect(result).toMatchInlineSnapshot(`
+      "query GetUsers @live {
+        id
+        name
+        age
+      }"
+    `);
+  });
+
+  test("it should compile a query with variables and a live directives", () => {
+    const result = compile({
+      type: "query",
+      name: "GetUsers",
+      fields: {
+        user: Call(
+          { id: Var({ type: "ID" }) },
+          {
+            id: true,
+          }
+        ),
+      },
+      directives: ["@live"],
+    });
+
+    expectValidGraphQLQuery(result);
+    expect(result).toMatchInlineSnapshot(`
+      "query GetUsers($id: ID) @live {
+        user(id: $id) { 
+          id 
+        }
       }"
     `);
   });
