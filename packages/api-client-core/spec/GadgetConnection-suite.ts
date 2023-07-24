@@ -2,7 +2,7 @@ import { Response } from "cross-fetch";
 import gql from "gql-tag";
 import nock from "nock";
 import { AuthenticationMode, BrowserSessionStorageType, GadgetConnection } from "../src";
-import { base64 } from "./helpers";
+import { base64 } from "./helpers.js";
 
 nock.disableNetConnect();
 

@@ -1,4 +1,7 @@
-import type { GadgetRecord, GadgetRecordList, LimitToKnownKeys, RecordShape, VariableOptions } from ".";
+import type { GadgetRecord, RecordShape } from "./GadgetRecord.js";
+import type { GadgetRecordList } from "./GadgetRecordList.js";
+import type { VariableOptions } from "./operationBuilders.js";
+import type { LimitToKnownKeys } from "./types.js";
 
 export type AsyncRecord<T extends RecordShape> = Promise<GadgetRecord<T>>;
 export type AsyncNullableRecord<T extends RecordShape> = Promise<GadgetRecord<T> | null>;

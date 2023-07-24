@@ -1,4 +1,4 @@
-import { actionOperation, findManyOperation, findOneByFieldOperation, findOneOperation } from "../src";
+import { actionOperation, findManyOperation, findOneByFieldOperation, findOneOperation } from "../src/index.js";
 
 describe("operation builders", () => {
   describe("findOneOperation", () => {

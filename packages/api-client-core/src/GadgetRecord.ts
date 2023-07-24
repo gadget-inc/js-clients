@@ -1,7 +1,7 @@
 import cloneDeep from "lodash.clonedeep";
 import isEqual from "lodash.isequal";
 import type { Jsonify } from "type-fest";
-import { toPrimitiveObject } from "./support";
+import { toPrimitiveObject } from "./support.js";
 
 export enum ChangeTracking {
   SinceLoaded,

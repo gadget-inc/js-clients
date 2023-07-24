@@ -1,5 +1,5 @@
-import { AuthenticationMode, BrowserSessionStorageType, GadgetConnection, InMemoryStorage } from "../src";
-import { GadgetConnectionSharedSuite } from "./GadgetConnection-suite";
+import { AuthenticationMode, BrowserSessionStorageType, GadgetConnection, InMemoryStorage } from "../src/index.js";
+import { GadgetConnectionSharedSuite } from "./GadgetConnection-suite.js";
 
 describe("GadgetConnection in node", () => {
   GadgetConnectionSharedSuite();

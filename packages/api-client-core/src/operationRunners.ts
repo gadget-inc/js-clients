@@ -1,12 +1,16 @@
-import type { VariableOptions } from ".";
-import { actionOperation, findManyOperation, findOneByFieldOperation, globalActionOperation } from ".";
-import type { FieldSelection } from "./FieldSelection";
-import type { GadgetConnection } from "./GadgetConnection";
-import type { GadgetRecord, RecordShape } from "./GadgetRecord";
-import { GadgetRecordList } from "./GadgetRecordList";
-import type { AnyModelManager } from "./ModelManager";
-import type { PaginationOptions, SelectionOptions } from "./operationBuilders";
-import { findOneOperation } from "./operationBuilders";
+import type { FieldSelection } from "./FieldSelection.js";
+import type { GadgetConnection } from "./GadgetConnection.js";
+import type { GadgetRecord, RecordShape } from "./GadgetRecord.js";
+import { GadgetRecordList } from "./GadgetRecordList.js";
+import type { AnyModelManager } from "./ModelManager.js";
+import type { PaginationOptions, SelectionOptions, VariableOptions } from "./operationBuilders.js";
+import {
+  actionOperation,
+  findManyOperation,
+  findOneByFieldOperation,
+  findOneOperation,
+  globalActionOperation,
+} from "./operationBuilders.js";
 import {
   assertMutationSuccess,
   assertNullableOperationSuccess,
@@ -16,7 +20,7 @@ import {
   hydrateConnection,
   hydrateRecord,
   hydrateRecordArray,
-} from "./support";
+} from "./support.js";
 
 export const findOneRunner = async <Shape extends RecordShape = any>(
   modelManager: { connection: GadgetConnection },
