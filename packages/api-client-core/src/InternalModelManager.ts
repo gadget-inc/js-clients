@@ -2,7 +2,6 @@ import { query } from "gql-query-builder";
 import type { GadgetConnection } from "./GadgetConnection";
 import type { GadgetRecord, RecordShape } from "./GadgetRecord";
 import { GadgetRecordList } from "./GadgetRecordList";
-import type { GadgetTransaction } from "./GadgetTransaction";
 import {
   GadgetClientError,
   GadgetOperationError,
@@ -465,15 +464,13 @@ export class InternalModelManager {
    * @returns The created record
    */
   async create(record: RecordData): Promise<GadgetRecord<RecordShape>> {
-    return await this.transaction(async (transaction) => {
-      const response = await transaction.client
-        .mutation(internalCreateMutation(this.apiIdentifier), {
-          record: this.getRecordFromData(record, "create"),
-        })
-        .toPromise();
-      const result = assertMutationSuccess(response, ["internal", `create${this.capitalizedApiIdentifier}`]);
-      return hydrateRecord(response, result[this.apiIdentifier]);
-    });
+    const response = await this.connection.currentClient
+      .mutation(internalCreateMutation(this.apiIdentifier), {
+        record: this.getRecordFromData(record, "create"),
+      })
+      .toPromise();
+    const result = assertMutationSuccess(response, ["internal", `create${this.capitalizedApiIdentifier}`]);
+    return hydrateRecord(response, result[this.apiIdentifier]);
   }
 
   /**
@@ -492,20 +489,18 @@ export class InternalModelManager {
    * @returns The created records
    */
   async bulkCreate(records: RecordData[]): Promise<GadgetRecord<RecordShape>[]> {
-    return await this.transaction(async (transaction) => {
-      if (!this.options?.pluralApiIdentifier) {
-        throw new GadgetClientError("Cannot perform bulkCreate without a pluralApiIdentifier");
-      }
+    if (!this.options?.pluralApiIdentifier) {
+      throw new GadgetClientError("Cannot perform bulkCreate without a pluralApiIdentifier");
+    }
 
-      const capitalizedPluralApiIdentifier = capitalizeIdentifier(this.options.pluralApiIdentifier);
-      const response = await transaction.client
-        .mutation(internalBulkCreateMutation(this.apiIdentifier, this.options.pluralApiIdentifier), {
-          records,
-        })
-        .toPromise();
-      const result = assertMutationSuccess(response, ["internal", `bulkCreate${capitalizedPluralApiIdentifier}`]);
-      return hydrateRecordArray(response, result[this.options.pluralApiIdentifier]);
-    });
+    const capitalizedPluralApiIdentifier = capitalizeIdentifier(this.options.pluralApiIdentifier);
+    const response = await this.connection.currentClient
+      .mutation(internalBulkCreateMutation(this.apiIdentifier, this.options.pluralApiIdentifier), {
+        records,
+      })
+      .toPromise();
+    const result = assertMutationSuccess(response, ["internal", `bulkCreate${capitalizedPluralApiIdentifier}`]);
+    return hydrateRecordArray(response, result[this.options.pluralApiIdentifier]);
   }
 
   /**
@@ -522,17 +517,15 @@ export class InternalModelManager {
    */
   async update(id: string, record: RecordData): Promise<GadgetRecord<RecordShape>> {
     assert(id, `Can't update a record without an ID passed`);
-    return await this.transaction(async (transaction) => {
-      const response = await transaction.client
-        .mutation(internalUpdateMutation(this.apiIdentifier), {
-          id,
-          record: this.getRecordFromData(record, "update"),
-        })
-        .toPromise();
-      const result = assertMutationSuccess(response, ["internal", `update${this.capitalizedApiIdentifier}`]);
+    const response = await this.connection.currentClient
+      .mutation(internalUpdateMutation(this.apiIdentifier), {
+        id,
+        record: this.getRecordFromData(record, "update"),
+      })
+      .toPromise();
+    const result = assertMutationSuccess(response, ["internal", `update${this.capitalizedApiIdentifier}`]);
 
-      return hydrateRecord(response, result[this.apiIdentifier]);
-    });
+    return hydrateRecord(response, result[this.apiIdentifier]);
   }
 
   /**
@@ -548,10 +541,8 @@ export class InternalModelManager {
    */
   async delete(id: string): Promise<void> {
     assert(id, `Can't delete a record without an ID`);
-    return await this.transaction(async (transaction) => {
-      const response = await transaction.client.mutation(internalDeleteMutation(this.apiIdentifier), { id }).toPromise();
-      assertMutationSuccess(response, ["internal", `delete${this.capitalizedApiIdentifier}`]);
-    });
+    const response = await this.connection.currentClient.mutation(internalDeleteMutation(this.apiIdentifier), { id }).toPromise();
+    assertMutationSuccess(response, ["internal", `delete${this.capitalizedApiIdentifier}`]);
   }
 
   /**
@@ -566,15 +557,8 @@ export class InternalModelManager {
    * @param options Search and filter options for the records to delete
    */
   async deleteMany(options?: { search?: string; filter?: RecordData }): Promise<void> {
-    return await this.transaction(async (transaction) => {
-      const response = await transaction.client.mutation(internalDeleteManyMutation(this.apiIdentifier), options).toPromise();
-      assertMutationSuccess(response, ["internal", `deleteMany${this.capitalizedApiIdentifier}`]);
-    });
-  }
-
-  /** @private */
-  async transaction<T>(callback: (transaction: GadgetTransaction) => Promise<T>): Promise<T> {
-    return await this.connection.transaction(callback);
+    const response = await this.connection.currentClient.mutation(internalDeleteManyMutation(this.apiIdentifier), options).toPromise();
+    assertMutationSuccess(response, ["internal", `deleteMany${this.capitalizedApiIdentifier}`]);
   }
 }
 
