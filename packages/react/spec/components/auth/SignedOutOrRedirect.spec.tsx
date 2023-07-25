@@ -38,7 +38,7 @@ describe("SignedOutOrRedirect", () => {
     rerender(component);
 
     expect(mockAssign).toHaveBeenCalledTimes(1);
-    expect(mockAssign).toHaveBeenCalledWith("https://test-app.gadget.app/?redirectTo=%2F");
+    expect(mockAssign).toHaveBeenCalledWith("https://test-app.gadget.app/signed-in?redirectTo=%2F");
   });
 
   test("renders when signed out", () => {

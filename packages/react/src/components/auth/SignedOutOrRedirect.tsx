@@ -16,7 +16,7 @@ export const SignedOutOrRedirect = (props: { children: ReactNode }) => {
   useEffect(() => {
     if (auth && !redirected && (isSignedIn || user)) {
       setRedirected(true);
-      const redirectUrl = new URL(auth.signInPath, window.location.origin);
+      const redirectUrl = new URL(auth.signOutPath, window.location.origin);
       redirectUrl.searchParams.set("redirectTo", window.location.pathname);
       window.location.assign(redirectUrl.toString());
     }
