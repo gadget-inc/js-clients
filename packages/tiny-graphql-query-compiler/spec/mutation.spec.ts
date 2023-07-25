@@ -7,7 +7,7 @@ describe("compiling mutation", () => {
       type: "mutation",
       fields: {
         createPost: Call(
-          { post: Var({ type: "PostInput", required: true }) },
+          { post: Var({ type: "PostInput" }) },
           {
             id: true,
             title: true,
@@ -18,7 +18,7 @@ describe("compiling mutation", () => {
 
     expectValidGraphQLQuery(result);
     expect(result).toMatchInlineSnapshot(`
-      "mutation ($post: PostInput!) {
+      "mutation ($post: PostInput) {
         createPost(post: $post) { 
           id
           title 

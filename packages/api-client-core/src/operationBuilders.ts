@@ -1,11 +1,5 @@
-import {
-  FieldSelection as BuilderFieldSelection,
-  BuilderOperation,
-  Call,
-  Var,
-  Variable,
-  compileWithVariableValues,
-} from "tiny-graphql-query-compiler";
+import type { FieldSelection as BuilderFieldSelection, BuilderOperation, Variable } from "tiny-graphql-query-compiler";
+import { Call, Var, compileWithVariableValues } from "tiny-graphql-query-compiler";
 import type { FieldSelection } from "./FieldSelection.js";
 import { filterTypeName, sortTypeName } from "./support.js";
 import type { VariablesOptions } from "./types.js";
@@ -52,7 +46,7 @@ export const findOneOperation = (
   options?: SelectionOptions | null
 ) => {
   const variables: Record<string, Variable> = {};
-  if (typeof id !== "undefined") variables.id = Var({ type: "GadgetID", required: true, value: id });
+  if (typeof id !== "undefined") variables.id = Var({ type: "GadgetID!", value: id });
   return compileWithVariableValues({
     type: "query",
     name: operation,

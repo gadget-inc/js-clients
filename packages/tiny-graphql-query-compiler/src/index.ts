@@ -26,8 +26,9 @@ const compileFieldSelection = (fields: FieldSelection, onlyPresentVariableValues
         let entries = Object.entries(value.args).filter(([_, value]) => value !== null && value !== undefined);
 
         if (onlyPresentVariableValues) {
-          entries = entries.filter(([_, value]) => !(value instanceof Variable && value.value === undefined));
+          entries = entries.filter(([_, value]) => (value instanceof Variable ? value.hasValue() : true));
         }
+
         const signatures = entries.map(([name, value]) => {
           return `${name}: ${value instanceof Variable ? `$${value.name ?? name}` : JSON.stringify(value)}`;
         });
@@ -54,7 +55,7 @@ ${compileFieldSelection(value as FieldSelection, onlyPresentVariableValues)}
   return indent(result, 2);
 };
 
-const extractVariables = (fields: FieldSelection): Record<string, Variable> => {
+const extractVariables = (fields: FieldSelection, onlyPresentVariableValues = false): Record<string, Variable> => {
   const variables: Record<string, Variable> = {};
   Object.entries(fields).forEach(([field, value]) => {
     if (value instanceof FieldCall) {
@@ -68,22 +69,23 @@ const extractVariables = (fields: FieldSelection): Record<string, Variable> => {
     }
   });
 
-  return variables;
-};
-
-const compileVariables = (operation: BuilderOperation, onlyPresentValues = false) => {
-  const variables = extractVariables(operation.fields);
-  if (onlyPresentValues) {
+  if (onlyPresentVariableValues) {
     for (const [name, variable] of Object.entries(variables)) {
-      if (variable.value === undefined) {
+      if (variable.value == null) {
         delete variables[name];
       }
     }
   }
 
+  return variables;
+};
+
+const compileVariables = (operation: BuilderOperation, onlyPresentVariableValues = false) => {
+  const variables = extractVariables(operation.fields, onlyPresentVariableValues);
+
   if (Object.keys(variables).length === 0) return "";
   const signatures = Object.entries(variables).map(([name, variable]) => {
-    return `$${name}: ${variable.type}${variable.required ? "!" : ""}`;
+    return `$${name}: ${variable.type}`;
   });
 
   return `(${signatures.join(", ")})`;
@@ -96,20 +98,22 @@ class FieldCall {
 export interface VariableOptions {
   type: string;
   name?: string;
-  required?: boolean;
   value?: any;
 }
 
 /** Represents one reference to a variable somewhere in a selection */
 export class Variable {
-  constructor(readonly type: string, readonly required = false, readonly name?: string, readonly value?: any) {}
+  constructor(readonly type: string, readonly name?: string, readonly value?: any) {}
+  hasValue() {
+    return this.value != null;
+  }
 }
 
 /** Used for calling a field with arguments within the main body of a query */
 export const Call = (args: Record<string, Variable | any>, subselection?: FieldSelection) => new FieldCall(args, subselection);
 
 /** Used for calling a field with a variable within the args to a field */
-export const Var = (options: VariableOptions) => new Variable(options.type, options.required, options.name, options.value);
+export const Var = (options: VariableOptions) => new Variable(options.type, options.name, options.value);
 
 /** Compiles one JS object describing a query into a GraphQL string */
 export const compile = (operation: BuilderOperation, onlyPresentVariableValues = false): string => {
@@ -117,13 +121,13 @@ export const compile = (operation: BuilderOperation, onlyPresentVariableValues =
   const directives = operation.directives && operation.directives.length > 0 ? ` ${operation.directives.join(" ")}` : "";
 
   return `${operation.type} ${operation.name ?? ""}${signature}${directives} {
-${compileFieldSelection(operation.fields)}
+${compileFieldSelection(operation.fields, onlyPresentVariableValues)}
 }`;
 };
 
 /** Compiles one JS object describing a query into a GraphQL string and set of variable values for passing alongside the query */
 export const compileWithVariableValues = (operation: BuilderOperation): { query: string; variables: Record<string, any> } => {
-  const variables = extractVariables(operation.fields);
+  const variables = extractVariables(operation.fields, true);
 
   return {
     query: compile(operation, true),
