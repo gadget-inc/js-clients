@@ -61,7 +61,7 @@ export interface DeprecatedProviderProps {
 
 // default Gadget auth signIn and signOut paths
 const defaultSignInPath = "/";
-const defaultSignOutPath = "/signed-in";
+const defaultSignOutPath = "/auth/signout";
 
 /**
  * Provider wrapper component that passes an api client instance to the other hooks.
