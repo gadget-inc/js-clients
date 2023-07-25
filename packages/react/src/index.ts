@@ -6,6 +6,7 @@ export * from "./auth/useUser";
 export * from "./components/auth/SignedIn";
 export * from "./components/auth/SignedInOrRedirect";
 export * from "./components/auth/SignedOut";
+export * from "./components/auth/SignedOutOrRedirect";
 export * from "./useAction";
 export * from "./useBulkAction";
 export * from "./useFetch";
