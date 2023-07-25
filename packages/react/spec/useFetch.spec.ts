@@ -6,7 +6,7 @@ import { Readable } from "stream";
 import { useFetch } from "../src/useFetch.js";
 import type { ErrorWrapper } from "../src/utils.js";
 import { relatedProductsApi } from "./apis.js";
-import { TestWrapper, mockUrqlClient } from "./testWrapper.js";
+import { MockClientWrapper, mockUrqlClient } from "./testWrappers.js";
 
 describe("useFetch", () => {
   // these functions are typechecked but never run to avoid actually making API calls
@@ -72,7 +72,7 @@ describe("useFetch", () => {
   };
 
   test("it can fetch a string from the backend", async () => {
-    const { result } = renderHook(() => useFetch("/foo/bar"), { wrapper: TestWrapper(relatedProductsApi) });
+    const { result } = renderHook(() => useFetch("/foo/bar"), { wrapper: MockClientWrapper(relatedProductsApi) });
 
     expect(result.current[0].data).toBeFalsy();
     expect(result.current[0].fetching).toBe(true);
@@ -91,7 +91,7 @@ describe("useFetch", () => {
   });
 
   test("it can fetch json from the backend", async () => {
-    const { result } = renderHook(() => useFetch("/foo/bar", { json: true }), { wrapper: TestWrapper(relatedProductsApi) });
+    const { result } = renderHook(() => useFetch("/foo/bar", { json: true }), { wrapper: MockClientWrapper(relatedProductsApi) });
 
     expect(result.current[0].data).toBeFalsy();
     expect(result.current[0].fetching).toBe(true);
@@ -113,7 +113,7 @@ describe("useFetch", () => {
   });
 
   test("it can fetch stream from the backend", async () => {
-    const { result } = renderHook(() => useFetch("/foo/bar", { stream: true }), { wrapper: TestWrapper(relatedProductsApi) });
+    const { result } = renderHook(() => useFetch("/foo/bar", { stream: true }), { wrapper: MockClientWrapper(relatedProductsApi) });
 
     expect(result.current[0].data).toBeFalsy();
     expect(result.current[0].fetching).toBe(true);
@@ -176,7 +176,7 @@ describe("useFetch", () => {
           },
         }),
       {
-        wrapper: TestWrapper(relatedProductsApi),
+        wrapper: MockClientWrapper(relatedProductsApi),
       }
     );
 
@@ -265,7 +265,7 @@ describe("useFetch", () => {
 
   test("it can fetch a string stream from the backend with a custom encoding", async () => {
     const { result } = renderHook(() => useFetch("/foo/bar", { stream: "windows-1251", sendImmediately: false }), {
-      wrapper: TestWrapper(relatedProductsApi),
+      wrapper: MockClientWrapper(relatedProductsApi),
     });
 
     expect(result.current[0].data).toBeFalsy();
@@ -338,7 +338,7 @@ describe("useFetch", () => {
 
   test("it can when a string stream is requested a second time in the middle of processing", async () => {
     const { result } = renderHook(() => useFetch("/foo/bar", { stream: "string", sendImmediately: false }), {
-      wrapper: TestWrapper(relatedProductsApi),
+      wrapper: MockClientWrapper(relatedProductsApi),
     });
 
     expect(result.current[0].data).toBeFalsy();
@@ -475,7 +475,7 @@ describe("useFetch", () => {
   });
 
   test("it reports response errors from the backend", async () => {
-    const { result } = renderHook(() => useFetch("/foo/bar"), { wrapper: TestWrapper(relatedProductsApi) });
+    const { result } = renderHook(() => useFetch("/foo/bar"), { wrapper: MockClientWrapper(relatedProductsApi) });
 
     expect(result.current[0].data).toBeFalsy();
     expect(result.current[0].fetching).toBe(true);
@@ -496,7 +496,7 @@ describe("useFetch", () => {
   });
 
   test("it can rexecute to fetch a new string from the backend", async () => {
-    const { result } = renderHook(() => useFetch("/foo/bar"), { wrapper: TestWrapper(relatedProductsApi) });
+    const { result } = renderHook(() => useFetch("/foo/bar"), { wrapper: MockClientWrapper(relatedProductsApi) });
 
     await mockUrqlClient[$gadgetConnection].fetch.pushResponse(new Response("hello world"));
     expect(result.current[0].data).toEqual("hello world");
@@ -522,7 +522,7 @@ describe("useFetch", () => {
   });
 
   test("it can recover from response errors if the next request succeeds", async () => {
-    const { result } = renderHook(() => useFetch("/foo/bar"), { wrapper: TestWrapper(relatedProductsApi) });
+    const { result } = renderHook(() => useFetch("/foo/bar"), { wrapper: MockClientWrapper(relatedProductsApi) });
 
     expect(result.current[0].fetching).toBe(true);
     expect(result.current[0].error).toBeFalsy();
@@ -554,7 +554,7 @@ describe("useFetch", () => {
   });
 
   test("it automatically starts sending requests with no method specified", async () => {
-    const { result } = renderHook(() => useFetch("/foo/bar"), { wrapper: TestWrapper(relatedProductsApi) });
+    const { result } = renderHook(() => useFetch("/foo/bar"), { wrapper: MockClientWrapper(relatedProductsApi) });
 
     expect(result.current[0].fetching).toBe(true);
     expect(mockUrqlClient[$gadgetConnection].fetch).toBeCalledTimes(1);
@@ -562,7 +562,7 @@ describe("useFetch", () => {
   });
 
   test("it automatically starts sending requests with the GET method specified", async () => {
-    const { result } = renderHook(() => useFetch("/foo/bar", { method: "GET" }), { wrapper: TestWrapper(relatedProductsApi) });
+    const { result } = renderHook(() => useFetch("/foo/bar", { method: "GET" }), { wrapper: MockClientWrapper(relatedProductsApi) });
 
     expect(result.current[0].fetching).toBe(true);
     expect(mockUrqlClient[$gadgetConnection].fetch).toBeCalledTimes(1);
@@ -570,7 +570,7 @@ describe("useFetch", () => {
 
   test("it does not automatically start sending requests with the GET method specified but sendImmediately: false", async () => {
     const { result } = renderHook(() => useFetch("/foo/bar", { method: "GET", sendImmediately: false }), {
-      wrapper: TestWrapper(relatedProductsApi),
+      wrapper: MockClientWrapper(relatedProductsApi),
     });
 
     expect(result.current[0].fetching).toBe(false);
@@ -578,7 +578,7 @@ describe("useFetch", () => {
   });
 
   test("it doesn't automatically start sending POST requests by default", async () => {
-    const { result } = renderHook(() => useFetch("/foo/bar", { method: "POST" }), { wrapper: TestWrapper(relatedProductsApi) });
+    const { result } = renderHook(() => useFetch("/foo/bar", { method: "POST" }), { wrapper: MockClientWrapper(relatedProductsApi) });
 
     expect(mockUrqlClient[$gadgetConnection].fetch).toBeCalledTimes(0);
     expect(result.current[0].data).toBeFalsy();
@@ -606,7 +606,7 @@ describe("useFetch", () => {
 
   test("it automatically starts sending requests with the POST method specified and sendImmediately: true", async () => {
     const { result } = renderHook(() => useFetch("/foo/bar", { method: "GET", sendImmediately: true }), {
-      wrapper: TestWrapper(relatedProductsApi),
+      wrapper: MockClientWrapper(relatedProductsApi),
     });
 
     expect(result.current[0].fetching).toBe(true);
@@ -614,7 +614,7 @@ describe("useFetch", () => {
   });
 
   test("POST requests can be given options when executed", async () => {
-    const { result } = renderHook(() => useFetch("/foo/bar", { method: "POST" }), { wrapper: TestWrapper(relatedProductsApi) });
+    const { result } = renderHook(() => useFetch("/foo/bar", { method: "POST" }), { wrapper: MockClientWrapper(relatedProductsApi) });
 
     expect(mockUrqlClient[$gadgetConnection].fetch).toBeCalledTimes(0);
 
@@ -654,7 +654,7 @@ describe("useFetch", () => {
 
   test("it can fetch json from third party apis", async () => {
     const { result } = renderHook(() => useFetch("https://dummyjson.com/products", { json: true }), {
-      wrapper: TestWrapper(relatedProductsApi),
+      wrapper: MockClientWrapper(relatedProductsApi),
     });
 
     expect(result.current[0].data).toBeFalsy();

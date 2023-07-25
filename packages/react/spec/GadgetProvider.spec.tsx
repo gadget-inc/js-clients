@@ -5,7 +5,7 @@ import { renderHook } from "@testing-library/react";
 import type { ReactNode } from "react";
 import React from "react";
 import { Provider, useApi, useConnection } from "../src/GadgetProvider.js";
-import { mockUrqlClient } from "./testWrapper.js";
+import { mockUrqlClient } from "./testWrappers.js";
 
 describe("GadgetProvider", () => {
   let mockApiClient: AnyClient;

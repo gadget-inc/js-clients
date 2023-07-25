@@ -5,7 +5,7 @@ import { assert } from "conditional-type-checks";
 import { useFindBy } from "../src/index.js";
 import type { ErrorWrapper } from "../src/utils.js";
 import { relatedProductsApi } from "./apis.js";
-import { mockUrqlClient, TestWrapper } from "./testWrapper.js";
+import { MockClientWrapper, mockUrqlClient } from "./testWrappers.js";
 
 describe("useFindBy", () => {
   // these functions are typechecked but never run to avoid actually making API calls
@@ -39,7 +39,7 @@ describe("useFindBy", () => {
 
   test("it can find one record by a field value", async () => {
     const { result } = renderHook(() => useFindBy(relatedProductsApi.user.findByEmail, "test@test.com"), {
-      wrapper: TestWrapper(relatedProductsApi),
+      wrapper: MockClientWrapper(relatedProductsApi),
     });
 
     expect(result.current[0].data).toBeFalsy();
@@ -72,7 +72,7 @@ describe("useFindBy", () => {
 
   test("it return null if the record with the given field value can't be found", async () => {
     const { result } = renderHook(() => useFindBy(relatedProductsApi.user.findByEmail, "test@test.com"), {
-      wrapper: TestWrapper(relatedProductsApi),
+      wrapper: MockClientWrapper(relatedProductsApi),
     });
 
     expect(result.current[0].data).toBeFalsy();
@@ -106,7 +106,7 @@ describe("useFindBy", () => {
 
   test("returns the same data object on rerender", async () => {
     const { result, rerender } = renderHook(() => useFindBy(relatedProductsApi.user.findByEmail, "test@test.com"), {
-      wrapper: TestWrapper(relatedProductsApi),
+      wrapper: MockClientWrapper(relatedProductsApi),
     });
 
     expect(mockUrqlClient.executeQuery).toBeCalledTimes(1);
@@ -137,7 +137,7 @@ describe("useFindBy", () => {
 
   test("it can suspend when finding data", async () => {
     const { result, rerender } = renderHook(() => useFindBy(relatedProductsApi.user.findByEmail, "test@test.com", { suspense: true }), {
-      wrapper: TestWrapper(relatedProductsApi),
+      wrapper: MockClientWrapper(relatedProductsApi),
     });
 
     // first render never completes as the component suspends

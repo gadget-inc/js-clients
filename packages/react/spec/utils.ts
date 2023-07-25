@@ -1,5 +1,5 @@
 import { CombinedError } from "urql";
-import { mockUrqlClient } from "./testWrapper.js";
+import { mockUrqlClient } from "./testWrappers.js";
 
 export const expectMockSignedInUser = () => {
   expect(mockUrqlClient.executeQuery).toBeCalledTimes(1);

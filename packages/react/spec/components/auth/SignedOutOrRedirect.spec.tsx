@@ -1,10 +1,10 @@
 import "@testing-library/jest-dom";
 import { render } from "@testing-library/react";
 import React from "react";
-import { SignedOutOrRedirect } from "../../../src/components/auth/SignedOutOrRedirect";
-import { superAuthApi } from "../../apis";
-import { TestWrapper } from "../../testWrapper";
-import { expectMockSignedInUser, expectMockSignedOutUser } from "../../utils";
+import { SignedOutOrRedirect } from "../../../src/components/auth/SignedOutOrRedirect.js";
+import { superAuthApi } from "../../apis.js";
+import { MockClientWrapper } from "../../testWrappers.js";
+import { expectMockSignedInUser, expectMockSignedOutUser } from "../../utils.js";
 
 describe("SignedOutOrRedirect", () => {
   const { location } = window;
@@ -32,7 +32,7 @@ describe("SignedOutOrRedirect", () => {
       </h1>
     );
 
-    const { rerender } = render(component, { wrapper: TestWrapper(superAuthApi) });
+    const { rerender } = render(component, { wrapper: MockClientWrapper(superAuthApi) });
 
     expectMockSignedInUser();
     rerender(component);
@@ -48,7 +48,7 @@ describe("SignedOutOrRedirect", () => {
       </h1>
     );
 
-    const { container, rerender } = render(component, { wrapper: TestWrapper(superAuthApi) });
+    const { container, rerender } = render(component, { wrapper: MockClientWrapper(superAuthApi) });
 
     expectMockSignedOutUser();
     rerender(component);

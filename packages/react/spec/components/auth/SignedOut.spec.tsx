@@ -3,7 +3,7 @@ import { render } from "@testing-library/react";
 import React from "react";
 import { SignedOut } from "../../../src/components/auth/SignedOut";
 import { superAuthApi } from "../../apis.js";
-import { TestWrapper } from "../../testWrapper.js";
+import { MockClientWrapper } from "../../testWrappers.js";
 import { expectMockDeletedUser, expectMockSignedInUser, expectMockSignedOutUser } from "../../utils.js";
 
 describe("SignedOut", () => {
@@ -14,7 +14,7 @@ describe("SignedOut", () => {
       </h1>
     );
 
-    const { container, rerender } = render(component, { wrapper: TestWrapper(superAuthApi) });
+    const { container, rerender } = render(component, { wrapper: MockClientWrapper(superAuthApi) });
 
     expectMockSignedOutUser();
 
@@ -29,7 +29,7 @@ describe("SignedOut", () => {
       </h1>
     );
 
-    const { container, rerender } = render(component, { wrapper: TestWrapper(superAuthApi) });
+    const { container, rerender } = render(component, { wrapper: MockClientWrapper(superAuthApi) });
 
     expectMockDeletedUser();
 
@@ -44,7 +44,7 @@ describe("SignedOut", () => {
       </h1>
     );
 
-    const { container, rerender } = render(component, { wrapper: TestWrapper(superAuthApi) });
+    const { container, rerender } = render(component, { wrapper: MockClientWrapper(superAuthApi) });
 
     expectMockSignedInUser();
 

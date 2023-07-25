@@ -3,7 +3,7 @@ import { render } from "@testing-library/react";
 import React from "react";
 import { SignedInOrRedirect } from "../../../src/components/auth/SignedInOrRedirect.js";
 import { superAuthApi } from "../../apis.js";
-import { TestWrapper } from "../../testWrapper.js";
+import { MockClientWrapper } from "../../testWrappers.js";
 import { expectMockDeletedUser, expectMockSignedInUser, expectMockSignedOutUser } from "../../utils.js";
 
 describe("SignedInOrRedirect", () => {
@@ -32,7 +32,7 @@ describe("SignedInOrRedirect", () => {
       </h1>
     );
 
-    const { rerender } = render(component, { wrapper: TestWrapper(superAuthApi) });
+    const { rerender } = render(component, { wrapper: MockClientWrapper(superAuthApi) });
 
     expectMockSignedOutUser();
     rerender(component);
@@ -48,7 +48,7 @@ describe("SignedInOrRedirect", () => {
       </h1>
     );
 
-    const { rerender } = render(component, { wrapper: TestWrapper(superAuthApi) });
+    const { rerender } = render(component, { wrapper: MockClientWrapper(superAuthApi) });
 
     expectMockDeletedUser();
     rerender(component);
@@ -64,7 +64,7 @@ describe("SignedInOrRedirect", () => {
       </h1>
     );
 
-    const { container, rerender } = render(component, { wrapper: TestWrapper(superAuthApi) });
+    const { container, rerender } = render(component, { wrapper: MockClientWrapper(superAuthApi) });
 
     expectMockSignedInUser();
     rerender(component);

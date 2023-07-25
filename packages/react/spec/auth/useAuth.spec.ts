@@ -1,12 +1,12 @@
 import { renderHook } from "@testing-library/react";
 import { useAuth } from "../../src/auth/useAuth.js";
 import { noUserModelApi, superAuthApi } from "../apis.js";
-import { TestWrapper } from "../testWrapper.js";
+import { MockClientWrapper } from "../testWrappers.js";
 import { expectMockSignedInUser, expectMockSignedOutUser, mockInternalServerError, mockNetworkError } from "../utils.js";
 
 describe("useAuth", () => {
   test("returns the correct auth state if the user is signed in", async () => {
-    const { result, rerender } = renderHook(() => useAuth(), { wrapper: TestWrapper(superAuthApi) });
+    const { result, rerender } = renderHook(() => useAuth(), { wrapper: MockClientWrapper(superAuthApi) });
 
     expectMockSignedInUser();
 
@@ -17,7 +17,7 @@ describe("useAuth", () => {
   });
 
   test("returns the correct auth state if the user is signed out", async () => {
-    const { result, rerender } = renderHook(() => useAuth(), { wrapper: TestWrapper(superAuthApi) });
+    const { result, rerender } = renderHook(() => useAuth(), { wrapper: MockClientWrapper(superAuthApi) });
 
     expectMockSignedOutUser();
 
@@ -29,7 +29,7 @@ describe("useAuth", () => {
 
   test("it throws when the server responds with an error", async () => {
     expect(() => {
-      const { rerender } = renderHook(() => useAuth(), { wrapper: TestWrapper(superAuthApi) });
+      const { rerender } = renderHook(() => useAuth(), { wrapper: MockClientWrapper(superAuthApi) });
 
       mockInternalServerError();
 
@@ -42,7 +42,7 @@ describe("useAuth", () => {
 
   test("it throws when request fails to complete", async () => {
     expect(() => {
-      const { rerender } = renderHook(() => useAuth(), { wrapper: TestWrapper(superAuthApi) });
+      const { rerender } = renderHook(() => useAuth(), { wrapper: MockClientWrapper(superAuthApi) });
 
       mockNetworkError();
 
@@ -52,7 +52,7 @@ describe("useAuth", () => {
 
   test("it throws when the api client does not have a User model", async () => {
     expect(() => {
-      const { rerender } = renderHook(() => useAuth(), { wrapper: TestWrapper(noUserModelApi) });
+      const { rerender } = renderHook(() => useAuth(), { wrapper: MockClientWrapper(noUserModelApi) });
 
       expectMockSignedOutUser();
 
