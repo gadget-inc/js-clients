@@ -77,7 +77,6 @@ export const MyApp = (props) => {
 import { Client } from "@gadget-client/my-gadget-app";
 // import the required Provider object and some example hooks from this package
 import { Provider, useAction, useFindMany } from "@gadgetinc/react";
-import React from "react";
 
 // instantiate the API client for our app
 const api = new Client({ authenticationMode: { browserSession: true } });
@@ -1039,6 +1038,7 @@ export const App = () => (
   </Provider>
 );
 ```
+
 ## Authentication
 
 When working with Gadget auth, there are several hooks and components that can help you manage the authentication state of your application.
@@ -1050,7 +1050,7 @@ The hooks use the Gadget client's `suspense: true` option, making it easier to m
 ```tsx
 import { Client } from "@gadget-client/my-gadget-app";
 import { Provider } from "@gadgetinc/react";
-import React, { Suspense } from "react";
+import { Suspense } from "react";
 import App from "./App";
 
 // instantiate the API client for our app
@@ -1059,7 +1059,7 @@ const api = new Client({ authenticationMode: { browserSession: true } });
 export function main() {
   // ensure any components which use the @gadgetinc/react hooks are wrapped with the Provider and a Suspense component
   return (
-    <Provider api={api} auth={{ signInPath: '/auth/signin', signOutPath: '/auth/signout' }}>
+    <Provider api={api} auth={{ signInPath: "/auth/signin", signOutPath: "/auth/signout" }}>
       <Suspense fallback={<>Loading...</>}>
         <App />
       </Suspense>
@@ -1073,12 +1073,15 @@ export function main() {
 React hooks are available to help you manage the authentication state of your application.
 
 ### `useSession()`
+
 Returns the current session, equivalent to `await api.currentSession.get()` or `useGet(api.currentSession)`, but uses Promises for an easier interface. Throws a Suspense promise while the session is being loaded.
 
 ### `useUser()`
+
 Returns the current user of the session, if present. For unauthenticated sessions, returns `null`. Throws a Suspense promise while the session/user are loading.
 
 ### `useAuth()`
+
 Returns an object representing the current authentication state of the session. Throws a Suspense promise while the session is being loaded.
 
 `user` - the current `User`, if signed in. Similar to `useUser`.
@@ -1106,32 +1109,62 @@ export default function App() {
 If you are trying to control the layout of your application based on authentication state, it may be helpful to use the Gadget auth React components instead of, or in addition to, the hooks.
 
 ### `<SignedIn />`
+
 Conditionally renders its children if the current session has a user associated with it, similar to the `isSignedIn` property of the `useAuth()` hook.
 
 ```tsx
-<h1>Hello<SignedIn>, human</SignedIn>!</h1>
+<h1>
+  Hello<SignedIn>, human</SignedIn>!
+</h1>
 ```
 
 ### `<SignedOut />`
+
 Conditionally renders its children if the current session has a user associated with it.
 
 ```tsx
-<SignedOut><a href="/auth/signin">Sign In!</a></SignedOut>
+<SignedOut>
+  <a href="/auth/signin">Sign In!</a>
+</SignedOut>
 ```
 
 ### `<SignedInOrRedirect />`
+
 Conditionally renders its children if the current session has a user associated with it, or redirects the browser via `window.location.assign` if the user is not currently signed in. This component is helpful for protecting front-end routes.
 
 ```tsx
- <BrowserRouter>
+<BrowserRouter>
   <Routes>
     <Route path="/" element={<Layout />}>
       <Route index element={<Home />} />
-      <Route path="my-profile" element={
-        <SignedInOrRedirect>
-          <MyProfile />
-        </SignedInOrRedirect>
-      } />
+      <Route
+        path="my-profile"
+        element={
+          <SignedInOrRedirect>
+            <MyProfile />
+          </SignedInOrRedirect>
+        }
+      />
+    </Route>
+  </Routes>
+</BrowserRouter>
+```
+
+### `<SignedOutOrRedirect />`
+
+Conditionally renders its children if the current session has no user associated with it, or redirects the browser via `window.location.assign` if the user is not currently signed out. This component is helpful for redirecting front-end routes.
+
+```tsx
+<BrowserRouter>
+  <Routes>
+    <Route path="/" element={<Layout />}>
+      <Route index element={
+        <SignedOutOrRedirect>
+          <Home />
+        </SignedOutOrRedirect>
+      }>
+      <Route path="my-profile" element={<MyProfile />}
+      />
     </Route>
   </Routes>
 </BrowserRouter>
