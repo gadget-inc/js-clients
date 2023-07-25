@@ -37,6 +37,7 @@
   },
   "devDependencies": {
     "@gadgetinc/api-client-core": "workspace:*",
+    "@n1ru4l/json-patch-plus": "^0.2.0",
     "@testing-library/jest-dom": "^5.16.5",
     "@testing-library/react": "^13.4.0",
     "@types/jest": "^29.5.5",
@@ -47,6 +48,7 @@
     "@urql/core": "^4.0.10",
     "conditional-type-checks": "^1.0.6",
     "graphql": "^16.8.1",
+    "graphql-ws": "^5.13.1",
     "lodash": "^4.17.21",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
