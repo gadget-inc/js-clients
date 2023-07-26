@@ -12,9 +12,13 @@ export interface FetchHookState<T> {
   options: FetchHookOptions;
 }
 
-export type FetchHookResult<T> = [FetchHookState<T>, (opts?: Partial<FetchHookOptions>) => Promise<T>];
+export type FetchHookResult<T, U = T> = [FetchHookState<T>, (opts?: Partial<FetchHookOptions>) => Promise<U>];
 
-type FetchAction<T> = { type: "fetching" } | { type: "fetched"; payload: T } | { type: "error"; payload: ErrorWrapper };
+type FetchAction<T> =
+  | { type: "fetching" }
+  | { type: "fetched"; payload: T }
+  | { type: "update"; payload: T }
+  | { type: "error"; payload: ErrorWrapper };
 
 const reducer = <T>(state: FetchHookState<T>, action: FetchAction<T>): FetchHookState<T> => {
   switch (action.type) {
@@ -22,6 +26,8 @@ const reducer = <T>(state: FetchHookState<T>, action: FetchAction<T>): FetchHook
       return { ...state, fetching: true, error: undefined };
     case "fetched":
       return { ...state, fetching: false, data: action.payload, error: undefined };
+    case "update":
+      return { ...state, data: action.payload };
     case "error":
       return { ...state, fetching: false, error: action.payload };
     default:
@@ -30,7 +36,7 @@ const reducer = <T>(state: FetchHookState<T>, action: FetchAction<T>): FetchHook
 };
 
 export interface FetchHookOptions extends RequestInit {
-  stream?: boolean;
+  stream?: boolean | string;
   json?: boolean;
   sendImmediately?: boolean;
 }
@@ -41,6 +47,20 @@ const startRequestByDefault = (options?: FetchHookOptions) => {
   } else {
     return !options?.method || options.method === "GET";
   }
+};
+
+const dispatchError = (
+  mounted: React.MutableRefObject<boolean>,
+  dispatch: React.Dispatch<FetchAction<any>>,
+  error: any,
+  response?: Response
+) => {
+  if (!mounted.current) return null;
+
+  const wrapped = ErrorWrapper.forClientSideError(error, response);
+  dispatch({ type: "error", payload: wrapped });
+
+  return wrapped;
 };
 
 /**
@@ -57,7 +77,9 @@ const startRequestByDefault = (options?: FetchHookOptions) => {
  *
  * Pass the `{ json: true }` option to expect a JSON response from the server, and to automatically parse the response as JSON. Otherwise, the response will be returned as a `string` object.
  *
- * Pass the `{ stream: true }` to get a `ReadableStream` object as a response from the server, allowing you to work with the response as it arrives. Otherwise, the response will be returned as a `string` object.
+ * Pass the `{ stream: true }` to get a `ReadableStream` object as a response from the server, allowing you to work with the response as it arrives.
+ *
+ * Pass the `{ stream: "string" }` to decode the `ReadableStream` as a string and update data as it arrives. If the stream is in an encoding other than utf8 use i.e. `{ stream: "utf-16" }`.
  *
  * If you want to read model data, see the `useFindMany` function and similar. If you want to invoke a backend Action, use the `useAction` hook instead.
  *
@@ -83,6 +105,7 @@ const startRequestByDefault = (options?: FetchHookOptions) => {
  *   return <div>{result.data.name}</div>;
  * }
  */
+export function useFetch(path: string, options: { stream: string } & FetchHookOptions): FetchHookResult<string, ReadableStream<string>>;
 export function useFetch(path: string, options: { stream: true } & FetchHookOptions): FetchHookResult<ReadableStream<Uint8Array>>;
 export function useFetch<T extends Record<string, any>>(url: string, options: { json: true } & FetchHookOptions): FetchHookResult<T>;
 export function useFetch(path: string, options?: FetchHookOptions): FetchHookResult<string>;
@@ -92,6 +115,7 @@ export function useFetch<T = string>(path: string, options?: FetchHookOptions): 
   const memoizedOptions = useStructuralMemo<FetchHookOptions>(options ?? {});
   const connection = useConnection();
   const startRequestOnMount = startRequestByDefault(memoizedOptions);
+  const controller = useRef<AbortController | null>(null);
 
   const [state, dispatch] = useReducer<Reducer<FetchHookState<T>, FetchAction<T>>, FetchHookOptions>(
     reducer,
@@ -103,6 +127,11 @@ export function useFetch<T = string>(path: string, options?: FetchHookOptions): 
 
   const send = useCallback(
     async (sendOptions?: Partial<FetchHookOptions>): Promise<T> => {
+      controller.current?.abort("useFetch is starting a new request");
+
+      const abortContoller = new AbortController();
+      controller.current = abortContoller;
+
       dispatch({ type: "fetching" });
 
       let data: any;
@@ -117,27 +146,67 @@ export function useFetch<T = string>(path: string, options?: FetchHookOptions): 
       try {
         const { json: _json, stream: _stream, ...fetchOptions } = mergedOptions;
         // make the fetch call using GadgetConnection to pass along auth and other headers
-        response = await connection.fetch(path, fetchOptions);
+        response = await connection.fetch(path, { signal: abortContoller.signal, ...fetchOptions });
         if (!response.ok) {
           throw new Error(response.statusText);
         }
 
+        let dispatchData = true;
+
         if (mergedOptions.json) {
           data = await response.json();
+        } else if (typeof mergedOptions.stream === "string") {
+          dispatchData = false;
+          const decodedStream = response.body!.pipeThrough(
+            new TextDecoderStream(mergedOptions.stream === "string" ? "utf8" : mergedOptions.stream)
+          );
+
+          const [responseStream, updateStream] = decodedStream.tee();
+
+          data = responseStream;
+          const decodedStreamReader = updateStream.getReader();
+
+          decodedStreamReader.closed.catch((error) => {
+            if (!abortContoller.signal.aborted) {
+              dispatchError(mounted, dispatch, error, response);
+            }
+          });
+
+          dispatch({ type: "fetched", payload: "" as any });
+
+          (async () => {
+            let responseText = "";
+            let done = false;
+
+            while (!done) {
+              const { value, done: _done } = await decodedStreamReader.read();
+              done = _done;
+
+              if (value) {
+                responseText += value;
+
+                if (!abortContoller.signal.aborted) {
+                  dispatch({ type: "update", payload: responseText as any });
+                }
+              }
+            }
+          })().catch((error) => {
+            if (!abortContoller.signal.aborted) {
+              dispatchError(mounted, dispatch, error, response);
+            }
+          });
         } else if (mergedOptions.stream) {
           data = response.body;
         } else {
           data = await response.text();
         }
 
-        if (!mounted.current) return data;
+        if (!mounted.current || !dispatchData) return data;
 
         dispatch({ type: "fetched", payload: data });
       } catch (error: any) {
-        if (!mounted.current) return null as any;
-
-        const wrapped = ErrorWrapper.forClientSideError(error, response);
-        dispatch({ type: "error", payload: wrapped });
+        const wrapped = dispatchError(mounted, dispatch, error, response);
+        if (!wrapped) return null as any;
         throw wrapped;
       }
       return data;
@@ -155,6 +224,7 @@ export function useFetch<T = string>(path: string, options?: FetchHookOptions): 
 
     return () => {
       mounted.current = false;
+      controller.current?.abort();
     };
   }, [path, startRequestOnMount, send]);
 

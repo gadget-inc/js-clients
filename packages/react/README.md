@@ -676,7 +676,7 @@ The `refetch` function returned as the second element can be executed in order t
   - `headers`: the request headers, like `{ "content-type": "application/json" }`
   - `body`: the request body to send to the server, like `"hello"` or `JSON.stringify({foo: "bar"})`
   - `json`: If true, expects the response to be returned as JSON, and parses it for convenience
-  - `stream`: If true, expects the response to be returned as JSON, and parses it for convenience
+  - `stream`: If true, responds with a `ReadableStream` allowing you to work with the response as it arrives. If "string" or any [valid encoding label](https://developer.mozilla.org/en-US/docs/Web/API/Encoding_API/Encodings) it will update the response `data` as a string as it arrives. This last option is ideal when working with response streams from LLMs.
   - `sendImmediately`: If true, sends the first fetch on component mount. If false, waits for the `send` function to be called to send a request. Defaults to `true` for GET requests and `false` for any other HTTP verbs.
   - See all the `fetch` options on [MDN](https://developer.mozilla.org/en-US/docs/Web/API/fetch)
 
