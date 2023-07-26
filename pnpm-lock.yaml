@@ -22,8 +22,8 @@ importers:
         specifier: ^1.848.0
         version: 1.848.0
       '@gadget-client/super-auth':
-        specifier: ^1.13738.0
-        version: 1.13738.0
+        specifier: ^1.13754.0
+        version: 1.13754.0
       '@gadgetinc/api-client-core':
         specifier: workspace:*
         version: link:packages/api-client-core
@@ -935,8 +935,8 @@ packages:
       '@gadgetinc/api-client-core': link:packages/api-client-core
     dev: true
 
-  /@gadget-client/super-auth@1.13738.0:
-    resolution: {integrity: sha1-fdtEGt4ImE5QXsKW8AysEPv+VpQ=, tarball: https://registry.gadget.dev/npm/_/tarball/40146/78973/4916}
+  /@gadget-client/super-auth@1.13754.0:
+    resolution: {integrity: sha1-C4C/KIhrlK6vq4vUbwmJkdNA7U4=, tarball: https://registry.gadget.dev/npm/_/tarball/40146/78973/5001}
     dependencies:
       '@gadgetinc/api-client-core': link:packages/api-client-core
     dev: true
