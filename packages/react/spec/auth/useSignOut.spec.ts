@@ -1,8 +1,7 @@
-import { $gadgetConnection } from "@gadgetinc/api-client-core";
-import { renderHook } from "@testing-library/react";
-import { Response } from "cross-fetch";
+import { act, renderHook } from "@testing-library/react";
 import { superAuthApi } from "../../spec/apis";
 import { TestWrapper, mockUrqlClient } from "../../spec/testWrapper";
+import { expectMockSignedInUser } from "../../spec/utils";
 import { useSignOut } from "../../src/auth/useSignOut";
 
 describe("useSignOut", () => {
@@ -24,18 +23,148 @@ describe("useSignOut", () => {
     window.location = location;
   });
 
-  test("it redirects the browser when called", async () => {
-    const { result } = renderHook(() => useSignOut(), { wrapper: TestWrapper(superAuthApi) });
+  test("it redirects to the provider signInPath when the user is signed in", async () => {
+    const { result, rerender } = renderHook(() => useSignOut(), { wrapper: TestWrapper(superAuthApi) });
 
-    const promise = result.current();
+    expectMockSignedInUser();
+    rerender();
 
-    expect(mockUrqlClient[$gadgetConnection].fetch.requests[0].args).toEqual(["/auth/signout", { method: "POST" }]);
-    await mockUrqlClient[$gadgetConnection].fetch.pushResponse(
-      new Response(null, { status: 302, headers: { location: "https://test-app.gadget.app/signed-out" } })
-    );
+    let mutationPromise: any;
+    await act(async () => {
+      mutationPromise = result.current();
+    });
 
-    await Promise.resolve(promise);
+    expect(mockUrqlClient.executeMutation).toBeCalledTimes(1);
+
+    mockUrqlClient.executeMutation.pushResponse("signOutUser", {
+      data: {
+        success: true,
+        signOutUser: {
+          success: true,
+          user: {
+            id: "123",
+          },
+        },
+      },
+      stale: false,
+      hasNext: false,
+    });
+
+    await act(async () => {
+      await mutationPromise;
+    });
+
     expect(mockAssign).toHaveBeenCalledTimes(1);
-    expect(mockAssign).toHaveBeenCalledWith("https://test-app.gadget.app/signed-out");
+    expect(mockAssign).toHaveBeenCalledWith("https://test-app.gadget.app/");
+  });
+
+  test("it redirects to the optional redirectToPath when the user is signed in", async () => {
+    const { result, rerender } = renderHook(() => useSignOut({ redirectToPath: "/somewhere-special" }), {
+      wrapper: TestWrapper(superAuthApi),
+    });
+
+    expectMockSignedInUser();
+    rerender();
+
+    let mutationPromise: any;
+    await act(async () => {
+      mutationPromise = result.current();
+    });
+
+    expect(mockUrqlClient.executeMutation).toBeCalledTimes(1);
+    mockUrqlClient.executeMutation.pushResponse("signOutUser", {
+      data: {
+        success: true,
+        signOutUser: {
+          success: true,
+          user: {
+            id: "123",
+          },
+        },
+      },
+      stale: false,
+      hasNext: false,
+    });
+
+    await act(async () => {
+      await mutationPromise;
+    });
+
+    expect(mockAssign).toHaveBeenCalledTimes(1);
+    expect(mockAssign).toHaveBeenCalledWith("https://test-app.gadget.app/somewhere-special");
+  });
+
+  test("it does not redirect when the redirectOnSuccess option is false", async () => {
+    const { result, rerender } = renderHook(() => useSignOut({ redirectOnSuccess: false }), { wrapper: TestWrapper(superAuthApi) });
+
+    expectMockSignedInUser();
+    rerender();
+
+    let mutationPromise: any;
+    await act(async () => {
+      mutationPromise = result.current();
+    });
+
+    expect(mockUrqlClient.executeMutation).toBeCalledTimes(1);
+
+    mockUrqlClient.executeMutation.pushResponse("signOutUser", {
+      data: {
+        success: true,
+        signOutUser: {
+          success: true,
+          user: {
+            id: "123",
+          },
+        },
+      },
+      stale: false,
+      hasNext: false,
+    });
+
+    await act(async () => {
+      await mutationPromise;
+    });
+
+    expect(mockAssign).toHaveBeenCalledTimes(0);
+  });
+
+  test("it does not redirect and throws when an error occurs during signOut", async () => {
+    let caughtError = null;
+    try {
+      const { result, rerender } = renderHook(() => useSignOut(), { wrapper: TestWrapper(superAuthApi) });
+
+      expectMockSignedInUser();
+      rerender();
+
+      let mutationPromise: any;
+      await act(async () => {
+        mutationPromise = result.current();
+      });
+
+      expect(mockUrqlClient.executeMutation).toBeCalledTimes(1);
+      mockUrqlClient.executeMutation.pushResponse("signOutUser", {
+        data: {
+          success: false,
+          signOutUser: {
+            success: false,
+            errors: [
+              {
+                message: "User could not be signed out.",
+                code: "GGT_INTERNAL_ERROR",
+              },
+            ],
+          },
+        },
+        stale: false,
+        hasNext: false,
+      });
+
+      await act(async () => {
+        await mutationPromise;
+      });
+    } catch (e) {
+      caughtError = e;
+    }
+    expect(caughtError).toMatchInlineSnapshot(`[ErrorWrapper: [GraphQL] GGT_INTERNAL_ERROR: User could not be signed out.]`);
   });
 });
