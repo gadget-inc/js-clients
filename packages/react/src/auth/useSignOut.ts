@@ -1,4 +1,4 @@
-import { useContext, useEffect, useMemo } from "react";
+import { useCallback, useContext, useEffect } from "react";
 import { GadgetConfigurationContext, useApi } from "../../src/GadgetProvider";
 import { useAction } from "../../src/useAction";
 import { useUser } from "./useUser";
@@ -19,25 +19,20 @@ export const useSignOut = (opts?: { redirectOnSuccess?: boolean; redirectToPath?
     // eslint-disable-next-line @typescript-eslint/ban-ts-comment
     // @ts-ignore
     const [{ fetching, error, data }, signOutAction] = useAction((api as any).user[signOutActionApiIdentifier]);
-    // const [redirected, setRedirected] = useState(false);
     useEffect(() => {
       if (!user || fetching) return;
 
       if (error) throw error;
       else if (redirectOnSuccess && data) {
-        // setRedirected(true);
         const redirectUrl = new URL(redirectToPath ?? signInPath, window.location.origin);
         window.location.assign(redirectUrl.toString());
       }
     }, [data, fetching, error, redirectToPath, redirectOnSuccess, signInPath, signOutAction, user]);
     // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-    return useMemo(
-      () => async () => {
-        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-        await signOutAction({ id: user!.id });
-      },
-      [user, signOutAction]
-    );
+    return useCallback(async () => {
+      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+      await signOutAction({ id: user!.id });
+    }, [user, signOutAction]);
   } else {
     throw new Error(`missing configured signOutActionApiIdentifier '${signOutActionApiIdentifier}' on the \`api.user\` model manager.`);
   }
