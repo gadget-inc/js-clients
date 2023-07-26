@@ -3,6 +3,7 @@ export { Provider } from "./GadgetProvider";
 export * from "./auth/useAuth";
 export * from "./auth/useSession";
 export * from "./auth/useUser";
+export * from "./auth/useSignOut";
 export * from "./components/auth/SignedIn";
 export * from "./components/auth/SignedInOrRedirect";
 export * from "./components/auth/SignedOut";

@@ -1059,7 +1059,7 @@ const api = new Client({ authenticationMode: { browserSession: true } });
 export function main() {
   // ensure any components which use the @gadgetinc/react hooks are wrapped with the Provider and a Suspense component
   return (
-    <Provider api={api} auth={{ signInPath: "/auth/signin", signOutPath: "/auth/signout" }}>
+    <Provider api={api} auth={{ signInPath: "/auth/signin", signOutActionApiIdentifier: "signOut" }}>
       <Suspense fallback={<>Loading...</>}>
         <App />
       </Suspense>
