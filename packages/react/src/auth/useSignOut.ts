@@ -30,8 +30,9 @@ export const useSignOut = (opts?: { redirectOnSuccess?: boolean; redirectToPath?
     }, [data, fetching, error, redirectToPath, redirectOnSuccess, signInPath, signOutAction, user]);
     // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
     return useCallback(async () => {
+      if (!user) throw new Error("attempting to sign out when the user is not signed in");
       // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-      await signOutAction({ id: user!.id });
+      await signOutAction({ id: user.id });
     }, [user, signOutAction]);
   } else {
     throw new Error(`missing configured signOutActionApiIdentifier '${signOutActionApiIdentifier}' on the \`api.user\` model manager.`);

@@ -1,7 +1,7 @@
 import { act, renderHook } from "@testing-library/react";
 import { superAuthApi } from "../../spec/apis";
 import { TestWrapper, mockUrqlClient } from "../../spec/testWrapper";
-import { expectMockSignedInUser } from "../../spec/utils";
+import { expectMockSignedInUser, expectMockSignedOutUser } from "../../spec/utils";
 import { useSignOut } from "../../src/auth/useSignOut";
 
 describe("useSignOut", () => {
@@ -165,6 +165,23 @@ describe("useSignOut", () => {
     } catch (e) {
       caughtError = e;
     }
+
+    expect(mockAssign).toHaveBeenCalledTimes(0);
     expect(caughtError).toMatchInlineSnapshot(`[ErrorWrapper: [GraphQL] GGT_INTERNAL_ERROR: User could not be signed out.]`);
+  });
+
+  test("it throws an error when there is no signed in user", async () => {
+    let caughtError = null;
+    try {
+      const { result, rerender } = renderHook(() => useSignOut(), { wrapper: TestWrapper(superAuthApi) });
+      expectMockSignedOutUser();
+      rerender();
+
+      await result.current();
+    } catch (e) {
+      caughtError = e;
+    }
+
+    expect(caughtError).toMatchInlineSnapshot(`[Error: attempting to sign out when the user is not signed in]`);
   });
 });
