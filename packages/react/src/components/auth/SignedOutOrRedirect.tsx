@@ -1,29 +1,26 @@
 import type { ReactNode } from "react";
-import React, { useContext, useEffect, useState } from "react";
-import { GadgetConfigurationContext } from "../../../src/GadgetProvider";
+import React, { useEffect, useState } from "react";
 import { useAuth } from "../../auth/useAuth";
 
 /**
- * Renders its `children` if the current `Session` is signed out, otherwise redirects the browser to the `signOutPath` configured in the `Provider`. Uses `window.location.assign` to perform the redirect.
+ * Renders its `children` if the current `Session` is signed out, otherwise redirects the browser to the `path` prop. Uses `window.location.assign` to perform the redirect.
  */
-export const SignedOutOrRedirect = (props: { children: ReactNode }) => {
+export const SignedOutOrRedirect = (props: { path: string; children: ReactNode }) => {
   const [redirected, setRedirected] = useState(false);
+  const { path, children } = props;
 
   const { user, isSignedIn } = useAuth();
-  const context = useContext(GadgetConfigurationContext);
-  const { auth } = context ?? {};
 
   useEffect(() => {
-    if (auth && !redirected && (isSignedIn || user)) {
+    if (!redirected && (isSignedIn || user)) {
       setRedirected(true);
-      const redirectUrl = new URL(auth.signOutPath, window.location.origin);
-      redirectUrl.searchParams.set("redirectTo", window.location.pathname);
+      const redirectUrl = new URL(path, window.location.origin);
       window.location.assign(redirectUrl.toString());
     }
-  }, [redirected, isSignedIn, auth]);
+  }, [redirected, isSignedIn, path, user]);
 
   if (!user && !isSignedIn) {
-    return <>{props.children}</>;
+    return <>{children}</>;
   } else {
     return null;
   }

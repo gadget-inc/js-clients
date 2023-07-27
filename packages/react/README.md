@@ -1059,7 +1059,7 @@ const api = new Client({ authenticationMode: { browserSession: true } });
 export function main() {
   // ensure any components which use the @gadgetinc/react hooks are wrapped with the Provider and a Suspense component
   return (
-    <Provider api={api} auth={{ signInPath: "/auth/signin", signOutPath: "/auth/signout" }}>
+    <Provider api={api} auth={{ signInPath: "/auth/signin", signOutActionApiIdentifier: "signOut" }}>
       <Suspense fallback={<>Loading...</>}>
         <App />
       </Suspense>
@@ -1103,6 +1103,21 @@ export default function App() {
   );
 }
 ```
+
+### `useSignOut()`
+
+Returns a callback that you can call to sign out your current Gadget `User` from the current `Session`. This calls the configured `signOutActionApiIdentifier` action, which is the `User` `signOut` action by default.
+
+```tsx
+const signOut = useSignOut();
+
+<button onClick={signOut}>Sign Out</button>
+```
+
+It has two options:
+
+- `redirectOnSuccess` - configured `true` by default, will redirect the current via `window.location.assign` to the `signInPath`.
+- `redirectToPath` - When `redirectOnSuccess` is `true`, will redirect to this path instead of the `signInPath`.
 
 ### Components
 

@@ -28,7 +28,7 @@ describe("SignedOutOrRedirect", () => {
   test("redirects when signed in", () => {
     const component = (
       <h1>
-        <SignedOutOrRedirect>Hello, Jane!</SignedOutOrRedirect>
+        <SignedOutOrRedirect path="/signed-in">Hello, Jane!</SignedOutOrRedirect>
       </h1>
     );
 
@@ -38,13 +38,13 @@ describe("SignedOutOrRedirect", () => {
     rerender(component);
 
     expect(mockAssign).toHaveBeenCalledTimes(1);
-    expect(mockAssign).toHaveBeenCalledWith("https://test-app.gadget.app/signed-in?redirectTo=%2F");
+    expect(mockAssign).toHaveBeenCalledWith("https://test-app.gadget.app/signed-in");
   });
 
   test("renders when signed out", () => {
     const component = (
       <h1>
-        <SignedOutOrRedirect>Hello, Jane!</SignedOutOrRedirect>
+        <SignedOutOrRedirect path="/signed-in">Hello, Jane!</SignedOutOrRedirect>
       </h1>
     );
 

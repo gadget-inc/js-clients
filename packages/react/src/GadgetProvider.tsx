@@ -16,8 +16,8 @@ export const GadgetUrqlClientContext = React.createContext<UrqlClient | undefine
 export interface GadgetAuthConfiguration {
   /** The path that should be used for all Sign In buttons, and redirected to when the `User` is signed out */
   signInPath: string;
-  /** The path that should be POSTed to to make sign the user out of their current `Session` */
-  signOutPath: string;
+  /** The API identifier of the `User` `signOut` action. Defaults to `signOut` */
+  signOutActionApiIdentifier: string;
 }
 
 /** Provides the api client instance, if present, as well as the Gadget auth configuration for the application. */
@@ -59,9 +59,8 @@ export interface DeprecatedProviderProps {
   children: ReactNode;
 }
 
-// default Gadget auth signIn and signOut paths
 const defaultSignInPath = "/";
-const defaultSignOutPath = "/signed-in";
+const defaultSignOutApiIdentifier = "signOut";
 
 /**
  * Provider wrapper component that passes an api client instance to the other hooks.
@@ -81,7 +80,7 @@ const defaultSignOutPath = "/signed-in";
  * </Provider>
  *
  * @example the Provider accepts option sign in and sign out paths.
- * <Provider api={api.connection.currentClient} signInPath="/auth/signin" signOutPath="/auth/signout">
+ * <Provider api={api.connection.currentClient} signInPath="/auth/signin" signOutActionApiIdentifier="signOut">
  *   <MyApp />
  * </Provider>
  */
@@ -109,12 +108,12 @@ export function Provider(props: ProviderProps | DeprecatedProviderProps) {
   urqlClient.suspense = true;
 
   let signInPath = defaultSignInPath;
-  let signOutPath = defaultSignOutPath;
+  let signOutActionApiIdentifier = defaultSignOutApiIdentifier;
 
   if ("auth" in props) {
     const { auth } = props;
     if (auth?.signInPath) signInPath = auth.signInPath;
-    if (auth?.signOutPath) signOutPath = auth.signOutPath;
+    if (auth?.signOutActionApiIdentifier) signOutActionApiIdentifier = auth.signOutActionApiIdentifier;
   }
 
   return (
@@ -124,7 +123,7 @@ export function Provider(props: ProviderProps | DeprecatedProviderProps) {
           api: gadgetClient,
           auth: {
             signInPath,
-            signOutPath,
+            signOutActionApiIdentifier,
           },
         }}
       >
