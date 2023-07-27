@@ -1,11 +1,12 @@
-import { useCallback, useContext, useEffect } from "react";
+import { useCallback, useContext } from "react";
 import { GadgetConfigurationContext, useApi } from "../../src/GadgetProvider";
 import { useAction } from "../../src/useAction";
 import { useUser } from "./useUser";
 
 /**
- * Returns a callback that will call the configured `signOutActionApiIdentifier` on the `User` model and optionally redirect (by default).
- * @returns The `Promise` to call to execute the `signOut` action. Will automatically redirect to the configured `signInPath` unless the `redirect: false` option is provided.
+ * Returns a callback that will call the configured `signOutActionApiIdentifier` on the `User` model and optionally redirect (by default). Throws an `error` if one occurs while performing the `signOut` action, or if the `User` is not signed in.
+ * @param opts - `redirectOnSuccess` defaults to `true` and will redirect the browser via `window.location.assign` if the sign out action is successful. Setting it to `false` will call the action but will not return. Defaults to `true`.
+ * @param opts - `redirectToPath` defaults to the `signInPath` configured in the `GadgetConfigurationContext` and will be used as the redirect path if `redirectOnSuccess` is `true`.
  */
 export const useSignOut = (opts?: { redirectOnSuccess?: boolean; redirectToPath?: string }) => {
   const redirectOnSuccess = opts?.redirectOnSuccess ?? true;
@@ -18,16 +19,15 @@ export const useSignOut = (opts?: { redirectOnSuccess?: boolean; redirectToPath?
   if (signOutActionApiIdentifier && (api as any).user[signOutActionApiIdentifier]) {
     // eslint-disable-next-line @typescript-eslint/ban-ts-comment
     // @ts-ignore
-    const [{ fetching, error, data }, signOutAction] = useAction((api as any).user[signOutActionApiIdentifier]);
-    useEffect(() => {
-      if (!user || fetching) return;
+    const [{ error, data }, signOutAction] = useAction((api as any).user[signOutActionApiIdentifier], { suspense: true });
 
-      if (error) throw error;
-      else if (redirectOnSuccess && data) {
-        const redirectUrl = new URL(redirectToPath ?? signInPath, window.location.origin);
-        window.location.assign(redirectUrl.toString());
-      }
-    }, [data, fetching, error, redirectToPath, redirectOnSuccess, signInPath, signOutAction, user]);
+    if (error) throw error;
+
+    if (redirectOnSuccess && data) {
+      const redirectUrl = new URL(redirectToPath ?? signInPath, window.location.origin);
+      window.location.assign(redirectUrl.toString());
+    }
+
     // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
     return useCallback(async () => {
       if (!user) throw new Error("attempting to sign out when the user is not signed in");
