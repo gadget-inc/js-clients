@@ -1104,6 +1104,21 @@ export default function App() {
 }
 ```
 
+### `useSignOut()`
+
+Returns a callback that you can call to sign out your current Gadget `User` from the current `Session`. This calls the configured `signOutActionApiIdentifier` action, which is the `User` `signOut` action by default.
+
+```tsx
+const signOut = useSignOut();
+
+<button onClick={signOut}>Sign Out</button>
+```
+
+It has two options:
+
+- `redirectOnSuccess` - configured `true` by default, will redirect the current via `window.location.assign` to the `signInPath`.
+- `redirectToPath` - When `redirectOnSuccess` is `true`, will redirect to this path instead of the `signInPath`.
+
 ### Components
 
 If you are trying to control the layout of your application based on authentication state, it may be helpful to use the Gadget auth React components instead of, or in addition to, the hooks.
