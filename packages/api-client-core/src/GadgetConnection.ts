@@ -47,8 +47,9 @@ export interface GadgetConnectionOptions {
   websocketImplementation?: any;
   fetchImplementation?: typeof fetchPolyfill;
   environment?: "Development" | "Production";
-  applicationId?: string;
   requestPolicy?: ClientOptions["requestPolicy"];
+  applicationId?: string;
+  baseRouteURL?: string;
 }
 
 /**
@@ -275,7 +276,7 @@ export class GadgetConnection {
    * await api.connection.fetch("/foo/bar");
    **/
   fetch = traceFunction("api-client.fetch", async (input: RequestInfo | URL, init: RequestInit = {}) => {
-    input = processMaybeRelativeInput(input, this.options.endpoint);
+    input = processMaybeRelativeInput(input, this.options.baseRouteURL ?? this.options.endpoint);
 
     if (this.isGadgetRequest(input)) {
       init.headers = { ...this.requestHeaders(), ...init.headers };

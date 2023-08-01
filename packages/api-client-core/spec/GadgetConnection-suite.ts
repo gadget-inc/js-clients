@@ -699,6 +699,21 @@ export const GadgetConnectionSharedSuite = (queryExtra = "") => {
       expect(await result.text()).toEqual("hello");
     });
 
+    test("fetch can pass relative string paths when used with a baseRouteURL", async () => {
+      const fetch = jest.fn().mockResolvedValue(new Response("hello")) as any;
+      const connection = new GadgetConnection({
+        endpoint: "https://api.internal.net/api/graphql?operation=meta",
+        authenticationMode: { apiKey: "gsk-abcde" },
+        fetchImplementation: fetch,
+        baseRouteURL: "https://example.gadget.app",
+      });
+
+      const result = await connection.fetch("/foo/bar");
+      expect(result.status).toEqual(200);
+      expect(await result.text()).toEqual("hello");
+      expect(fetch).toHaveBeenCalledWith("https://example.gadget.app/foo/bar", expect.anything());
+    });
+
     test("fetches can specify a desired content type", async () => {
       const connection = new GadgetConnection({
         endpoint: "https://someapp.gadget.app/api/graphql",
