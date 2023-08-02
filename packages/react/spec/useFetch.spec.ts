@@ -77,6 +77,7 @@ describe("useFetch", () => {
     expect(result.current[0].data).toBeFalsy();
     expect(result.current[0].fetching).toBe(true);
     expect(result.current[0].error).toBeFalsy();
+    expect(result.current[0].streaming).toBe(false);
 
     expect(mockUrqlClient[$gadgetConnection].fetch.requests[0].args).toEqual(["/foo/bar", expect.objectContaining({})]);
     await mockUrqlClient[$gadgetConnection].fetch.pushResponse(new Response("hello world"));
@@ -84,6 +85,7 @@ describe("useFetch", () => {
     expect(result.current[0].fetching).toBe(false);
     expect(result.current[0].data).toEqual("hello world");
     expect(result.current[0].error).toBeFalsy();
+    expect(result.current[0].streaming).toBe(false);
 
     expect(mockUrqlClient[$gadgetConnection].fetch).toBeCalledTimes(1);
   });
@@ -94,6 +96,7 @@ describe("useFetch", () => {
     expect(result.current[0].data).toBeFalsy();
     expect(result.current[0].fetching).toBe(true);
     expect(result.current[0].error).toBeFalsy();
+    expect(result.current[0].streaming).toBe(false);
 
     expect(mockUrqlClient[$gadgetConnection].fetch.requests[0].args).toEqual([
       "/foo/bar",
@@ -104,6 +107,7 @@ describe("useFetch", () => {
     expect(result.current[0].fetching).toBe(false);
     expect(result.current[0].data).toEqual({ hello: 1 });
     expect(result.current[0].error).toBeFalsy();
+    expect(result.current[0].streaming).toBe(false);
 
     expect(mockUrqlClient[$gadgetConnection].fetch).toBeCalledTimes(1);
   });
@@ -114,6 +118,7 @@ describe("useFetch", () => {
     expect(result.current[0].data).toBeFalsy();
     expect(result.current[0].fetching).toBe(true);
     expect(result.current[0].error).toBeFalsy();
+    expect(result.current[0].streaming).toBe(false);
 
     // eslint-disable-next-line @typescript-eslint/no-empty-function
     const responseStream = new Readable({ read() {} });
@@ -123,6 +128,7 @@ describe("useFetch", () => {
 
     expect(result.current[0].fetching).toBe(false);
     expect(result.current[0].error).toBeFalsy();
+    expect(result.current[0].streaming).toBe(false);
 
     const stream = result.current[0].data;
     const reader = stream!.getReader();
@@ -159,13 +165,26 @@ describe("useFetch", () => {
   });
 
   test("it can fetch a string stream from the backend", async () => {
-    const { result } = renderHook(() => useFetch("/foo/bar", { stream: "string", sendImmediately: false }), {
-      wrapper: TestWrapper(relatedProductsApi),
-    });
+    let onStreamCompleteCalled = false;
+    const { result } = renderHook(
+      () =>
+        useFetch("/foo/bar", {
+          stream: "string",
+          sendImmediately: false,
+          onStreamComplete: () => {
+            onStreamCompleteCalled = true;
+          },
+        }),
+      {
+        wrapper: TestWrapper(relatedProductsApi),
+      }
+    );
 
     expect(result.current[0].data).toBeFalsy();
     expect(result.current[0].fetching).toBe(false);
     expect(result.current[0].error).toBeFalsy();
+    expect(result.current[0].streaming).toBe(false);
+    expect(onStreamCompleteCalled).toBe(false);
 
     let sendPromise: Promise<ReadableStream<string>>;
     act(() => {
@@ -175,6 +194,8 @@ describe("useFetch", () => {
     expect(result.current[0].data).toBeFalsy();
     expect(result.current[0].fetching).toBe(true);
     expect(result.current[0].error).toBeFalsy();
+    expect(result.current[0].streaming).toBe(false);
+    expect(onStreamCompleteCalled).toBe(false);
 
     // eslint-disable-next-line @typescript-eslint/no-empty-function
     const responseStream = new Readable({ read() {} });
@@ -195,6 +216,8 @@ describe("useFetch", () => {
 
     expect(result.current[0].fetching).toBe(false);
     expect(result.current[0].error).toBeFalsy();
+    expect(result.current[0].streaming).toBe(true);
+    expect(onStreamCompleteCalled).toBe(false);
 
     expect(result.current[0].data).toEqual("");
 
@@ -208,6 +231,8 @@ describe("useFetch", () => {
       `);
     });
     expect(result.current[0].data).toEqual("hello");
+    expect(result.current[0].streaming).toBe(true);
+    expect(onStreamCompleteCalled).toBe(false);
 
     await act(async () => {
       responseStream.push(" world");
@@ -219,6 +244,8 @@ describe("useFetch", () => {
       `);
     });
     expect(result.current[0].data).toEqual("hello world");
+    expect(result.current[0].streaming).toBe(true);
+    expect(onStreamCompleteCalled).toBe(false);
 
     await act(async () => {
       responseStream.push(null);
@@ -230,6 +257,8 @@ describe("useFetch", () => {
       `);
     });
     expect(result.current[0].data).toEqual("hello world");
+    expect(result.current[0].streaming).toBe(false);
+    expect(onStreamCompleteCalled).toBe(true);
 
     expect(mockUrqlClient[$gadgetConnection].fetch).toBeCalledTimes(1);
   });
@@ -242,6 +271,7 @@ describe("useFetch", () => {
     expect(result.current[0].data).toBeFalsy();
     expect(result.current[0].fetching).toBe(false);
     expect(result.current[0].error).toBeFalsy();
+    expect(result.current[0].streaming).toBe(false);
 
     let sendPromise: Promise<ReadableStream<string>>;
     act(() => {
@@ -251,6 +281,7 @@ describe("useFetch", () => {
     expect(result.current[0].data).toBeFalsy();
     expect(result.current[0].fetching).toBe(true);
     expect(result.current[0].error).toBeFalsy();
+    expect(result.current[0].streaming).toBe(false);
 
     // eslint-disable-next-line @typescript-eslint/no-empty-function
     const responseStream = new Readable({ read() {} });
@@ -271,6 +302,7 @@ describe("useFetch", () => {
 
     expect(result.current[0].fetching).toBe(false);
     expect(result.current[0].error).toBeFalsy();
+    expect(result.current[0].streaming).toBe(true);
 
     expect(result.current[0].data).toEqual("");
 
@@ -287,6 +319,7 @@ describe("useFetch", () => {
     });
 
     expect(result.current[0].data).toEqual("Привет, мир!");
+    expect(result.current[0].streaming).toBe(true);
 
     await act(async () => {
       responseStream.push(null);
@@ -298,6 +331,7 @@ describe("useFetch", () => {
       `);
     });
     expect(result.current[0].data).toEqual("Привет, мир!");
+    expect(result.current[0].streaming).toBe(false);
 
     expect(mockUrqlClient[$gadgetConnection].fetch).toBeCalledTimes(1);
   });
@@ -310,6 +344,7 @@ describe("useFetch", () => {
     expect(result.current[0].data).toBeFalsy();
     expect(result.current[0].fetching).toBe(false);
     expect(result.current[0].error).toBeFalsy();
+    expect(result.current[0].streaming).toBe(false);
 
     let firstSendPromise: Promise<ReadableStream<string>>;
     act(() => {
@@ -319,6 +354,7 @@ describe("useFetch", () => {
     expect(result.current[0].data).toBeFalsy();
     expect(result.current[0].fetching).toBe(true);
     expect(result.current[0].error).toBeFalsy();
+    expect(result.current[0].streaming).toBe(false);
 
     // eslint-disable-next-line @typescript-eslint/no-empty-function
     const firstResponseStream = new Readable({ read() {} });
@@ -341,6 +377,7 @@ describe("useFetch", () => {
     expect(result.current[0].error).toBeFalsy();
 
     expect(result.current[0].data).toEqual("");
+    expect(result.current[0].streaming).toBe(true);
 
     await act(async () => {
       firstResponseStream.push("hello");
@@ -352,6 +389,7 @@ describe("useFetch", () => {
       `);
     });
     expect(result.current[0].data).toEqual("hello");
+    expect(result.current[0].streaming).toBe(true);
 
     let secondSendPromise: Promise<ReadableStream<string>>;
     act(() => {
@@ -361,6 +399,7 @@ describe("useFetch", () => {
     expect(result.current[0].data).toEqual("hello");
     expect(result.current[0].fetching).toBe(true);
     expect(result.current[0].error).toBeFalsy();
+    expect(result.current[0].streaming).toBe(false);
 
     await act(async () => {
       firstResponseStream.push(" world");
@@ -392,6 +431,7 @@ describe("useFetch", () => {
 
     expect(result.current[0].fetching).toBe(false);
     expect(result.current[0].error).toBeFalsy();
+    expect(result.current[0].streaming).toBe(true);
 
     expect(result.current[0].data).toEqual("");
 
@@ -405,6 +445,7 @@ describe("useFetch", () => {
       `);
     });
     expect(result.current[0].data).toEqual("hey");
+    expect(result.current[0].streaming).toBe(true);
 
     await act(async () => {
       secondResponseStream.push(" there!");
@@ -416,6 +457,7 @@ describe("useFetch", () => {
       `);
     });
     expect(result.current[0].data).toEqual("hey there!");
+    expect(result.current[0].streaming).toBe(true);
 
     await act(async () => {
       secondResponseStream.push(null);
@@ -427,6 +469,7 @@ describe("useFetch", () => {
       `);
     });
     expect(result.current[0].data).toEqual("hey there!");
+    expect(result.current[0].streaming).toBe(false);
 
     expect(mockUrqlClient[$gadgetConnection].fetch).toBeCalledTimes(2);
   });
