@@ -1,11 +1,45 @@
+import type { GadgetSubscriptionClientOptions } from "./GadgetConnection";
+
 /** All the options for a Gadget client */
 export interface ClientOptions {
-  endpoint?: string; // The Gadget API endpoint this client should connect to, default "<%= defaultEndpoint %>"
-  authenticationMode?: AuthenticationModeOptions; // The way in which we will authenticate with Gadget
-  websocketsEndpoint?: string; // The Gadget API endpoint this client should connect to for batched websocket operations, default "<%= defaultEndpoint %>-ws"
-  websocketImplementation?: any; // What object to use as `WebSocket`, useful for overriding in tests
-  fetchImplementation?: typeof fetch; // What object to use to fetch, useful for overriding in tests
+  /**
+   *  The HTTP GraphQL endpoint this connection should connect to
+   **/
+  endpoint?: string;
+  /**
+   * The authentication strategy for connecting to the upstream API
+   **/
+  authenticationMode?: AuthenticationModeOptions;
+  /**
+   * The Websockets GraphQL endpoint this connection should connect to for transactional processing
+   **/
+  websocketsEndpoint?: string;
+  /**
+   * Custom options to pass along to the WS clients when creating them
+   **/
+  subscriptionClientOptions?: GadgetSubscriptionClientOptions;
+  /**
+   * The `WebSocket` constructor to use for building websockets. Defaults to `globalThis.WebSocket`.
+   **/
+  websocketImplementation?: any;
+  /**
+   * The `fetch` function to use for making HTTP requests. Defaults to `globalThis.fetch`.
+   **/
+  fetchImplementation?: typeof fetch;
+  /**
+   * Which of the Gadget application's environments this connection should connect to
+   **/
   environment?: "Development" | "Production";
+  /**
+   * The ID of the application. Not required -- only used for emitting telemetry
+   **/
+  applicationId?: string;
+  /**
+   * The root URL of the app's public HTTP surface. Used for building fully-qualified URLs when `api.fetch` is called with relative paths.
+   *
+   * This only needs to be passed if you are overriding the `endpoint` parameter to something that can't be used for building fully-qualified URLs from relative imports.
+   **/
+  baseRouteURL?: string;
 }
 
 /** Options to configure a specific browser-based authentication mode */
