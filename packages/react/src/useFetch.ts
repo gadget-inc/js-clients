@@ -9,6 +9,7 @@ export interface FetchHookState<T> {
   response?: Response;
   error?: ErrorWrapper;
   fetching: boolean;
+  streaming: boolean;
   options: FetchHookOptions;
 }
 
@@ -16,14 +17,20 @@ export type FetchHookResult<T, U = T> = [FetchHookState<T>, (opts?: Partial<Fetc
 
 type FetchAction<T> =
   | { type: "fetching" }
+  | { type: "streaming" }
   | { type: "fetched"; payload: T }
+  | { type: "streamed" }
   | { type: "update"; payload: T }
   | { type: "error"; payload: ErrorWrapper };
 
 const reducer = <T>(state: FetchHookState<T>, action: FetchAction<T>): FetchHookState<T> => {
   switch (action.type) {
     case "fetching":
-      return { ...state, fetching: true, error: undefined };
+      return { ...state, fetching: true, streaming: false, error: undefined };
+    case "streaming":
+      return { ...state, streaming: true };
+    case "streamed":
+      return { ...state, streaming: false };
     case "fetched":
       return { ...state, fetching: false, data: action.payload, error: undefined };
     case "update":
@@ -39,6 +46,7 @@ export interface FetchHookOptions extends RequestInit {
   stream?: boolean | string;
   json?: boolean;
   sendImmediately?: boolean;
+  onStreamComplete?: () => void;
 }
 
 const startRequestByDefault = (options?: FetchHookOptions) => {
@@ -69,6 +77,7 @@ const dispatchError = (
  * Returns a tuple with the current state of the request and a function to send or re-send the request. The state is an object with the following fields:
  * - `data`: the response data, if the request was successful
  * - `fetching`: a boolean describing if the fetch request is currently in progress
+ * - `streaming`: a boolean describing if the fetch request is currently streaming. This is only set when the option `{ stream: "string" }` is passed
  * - `error`: an error object if the request failed in any way
  *
  * The second return value is a function for executing the fetch request. It returns a promise for the response body.
@@ -80,6 +89,9 @@ const dispatchError = (
  * Pass the `{ stream: true }` to get a `ReadableStream` object as a response from the server, allowing you to work with the response as it arrives.
  *
  * Pass the `{ stream: "string" }` to decode the `ReadableStream` as a string and update data as it arrives. If the stream is in an encoding other than utf8 use i.e. `{ stream: "utf-16" }`.
+ *
+ * When `{ stream: "string" }` is used, the `streaming` field in the state will be set to `true` while the stream is active, and `false` when the stream is complete. You can use this to show a loading indicator while the stream is active.
+ * You can also pass an `onStreamComplete` callback to be notified when the stream is complete.
  *
  * If you want to read model data, see the `useFindMany` function and similar. If you want to invoke a backend Action, use the `useAction` hook instead.
  *
@@ -112,7 +124,8 @@ export function useFetch(path: string, options?: FetchHookOptions): FetchHookRes
 export function useFetch<T = string>(path: string, options?: FetchHookOptions): FetchHookResult<T> {
   // Used to prevent state update if the component is unmounted
   const mounted = useRef<boolean>(true);
-  const memoizedOptions = useStructuralMemo<FetchHookOptions>(options ?? {});
+  const { onStreamComplete, ...optionsToMemoize } = options ?? {};
+  const memoizedOptions = useStructuralMemo<FetchHookOptions>(optionsToMemoize);
   const connection = useConnection();
   const startRequestOnMount = startRequestByDefault(memoizedOptions);
   const controller = useRef<AbortController | null>(null);
@@ -121,7 +134,7 @@ export function useFetch<T = string>(path: string, options?: FetchHookOptions): 
     reducer,
     memoizedOptions,
     (memoizedOptions) => {
-      return { fetching: startRequestOnMount, options: memoizedOptions };
+      return { fetching: startRequestOnMount, streaming: false, options: memoizedOptions };
     }
   );
 
@@ -137,14 +150,15 @@ export function useFetch<T = string>(path: string, options?: FetchHookOptions): 
       let data: any;
       let response: Response | undefined = undefined;
 
-      const mergedOptions = { ...memoizedOptions, ...sendOptions };
+      const mergedOptions = { ...memoizedOptions, onStreamComplete, ...sendOptions };
+
       if (mergedOptions.json) {
         mergedOptions.headers ??= {};
         (mergedOptions.headers as any)["accept"] ??= "application/json";
       }
 
       try {
-        const { json: _json, stream: _stream, ...fetchOptions } = mergedOptions;
+        const { json: _json, stream: _stream, onStreamComplete: _onStreamComplete, ...fetchOptions } = mergedOptions;
         // make the fetch call using GadgetConnection to pass along auth and other headers
         response = await connection.fetch(path, { signal: abortContoller.signal, ...fetchOptions });
         if (!response.ok) {
@@ -178,6 +192,8 @@ export function useFetch<T = string>(path: string, options?: FetchHookOptions): 
             let responseText = "";
             let done = false;
 
+            dispatch({ type: "streaming" });
+
             while (!done) {
               const { value, done: _done } = await decodedStreamReader.read();
               done = _done;
@@ -190,11 +206,17 @@ export function useFetch<T = string>(path: string, options?: FetchHookOptions): 
                 }
               }
             }
-          })().catch((error) => {
-            if (!abortContoller.signal.aborted) {
-              dispatchError(mounted, dispatch, error, response);
-            }
-          });
+
+            mergedOptions.onStreamComplete?.();
+          })()
+            .catch((error) => {
+              if (!abortContoller.signal.aborted) {
+                dispatchError(mounted, dispatch, error, response);
+              }
+            })
+            .finally(() => {
+              dispatch({ type: "streamed" });
+            });
         } else if (mergedOptions.stream) {
           data = response.body;
         } else {
