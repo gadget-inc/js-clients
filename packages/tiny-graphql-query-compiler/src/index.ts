@@ -44,11 +44,22 @@ const compileFieldSelection = (fields: FieldSelection, onlyPresentVariableValues
 
 const extractVariables = (fields: FieldSelection, onlyPresentVariableValues = false): Record<string, Variable> => {
   const variables: Record<string, Variable> = {};
+  const nextName = (name: string) => {
+    let count = 1;
+    if (variables[name]) {
+      while (variables[`${name}${count}`]) {
+        count++;
+      }
+      return `${name}${count}`;
+    }
+    return name;
+  };
+
   Object.entries(fields).forEach(([_field, value]) => {
     if (value instanceof FieldCall) {
       Object.entries(value.args).forEach(([name, value]) => {
         if (value instanceof Variable) {
-          variables[value.name ?? name] = value;
+          variables[value.name ?? nextName(name)] = value;
         }
       });
     } else if (typeof value === "object" && value !== null) {

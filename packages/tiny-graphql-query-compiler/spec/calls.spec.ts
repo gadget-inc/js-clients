@@ -430,7 +430,7 @@ describe("compiling queries with field calls", () => {
 
       expectValidGraphQLQuery(query);
       expect(query).toMatchInlineSnapshot(`
-        "query ($length: Int!) {
+        "query ($length: Int, $length1: Int!) {
           something(length: $length)
           another(length: $length)
         }"
@@ -454,5 +454,47 @@ describe("compiling queries with field calls", () => {
         }"
       `);
     });
+  });
+
+  test("anonymous variables passed to the same argument without values should get different names", () => {
+    const query = compile({
+      type: "query",
+      fields: {
+        something: Call({ length: Var({ type: "Int" }) }),
+        another: Call({ length: Var({ type: "Int!" }) }),
+      },
+    });
+
+    expectValidGraphQLQuery(query);
+    expect(query).toMatchInlineSnapshot(`
+      "query ($length: Int, $length1: Int!) {
+        something(length: $length)
+        another(length: $length)
+      }"
+    `);
+  });
+
+  test("anonymous variables passed to the same argument with values should get different names", () => {
+    const { query, variables } = compileWithVariableValues({
+      type: "query",
+      fields: {
+        something: Call({ length: Var({ type: "Int", value: 10 }) }),
+        another: Call({ length: Var({ type: "Int!", value: 20 }) }),
+      },
+    });
+
+    expectValidGraphQLQuery(query);
+    expect(query).toMatchInlineSnapshot(`
+      "query ($length: Int, $length1: Int!) {
+        something(length: $length)
+        another(length: $length)
+      }"
+    `);
+    expect(variables).toMatchInlineSnapshot(`
+      {
+        "length": 10,
+        "length1": 20,
+      }
+    `);
   });
 });
