@@ -1,10 +1,11 @@
 import { mutation, query } from "gql-query-builder";
-import type IQueryBuilderOptions from "gql-query-builder/build/IQueryBuilderOptions";
-import type VariableOptions from "gql-query-builder/build/VariableOptions";
-import type { FieldSelection } from ".";
-import { fieldSelectionToGQLBuilderFields, filterTypeName, sortTypeName } from ".";
+import type IQueryBuilderOptions from "gql-query-builder/build/IQueryBuilderOptions.js";
+import type VariableOptions from "gql-query-builder/build/VariableOptions.js";
+import type { FieldSelection } from "./FieldSelection.js";
+import { fieldSelectionToGQLBuilderFields } from "./FieldSelection.js";
+import { filterTypeName, sortTypeName } from "./support.js";
 
-export type { default as VariableOptions } from "gql-query-builder/build/VariableOptions";
+export type { default as VariableOptions } from "gql-query-builder/build/VariableOptions.js";
 
 const hydrationOptions = (modelApiIdentifier: string): IQueryBuilderOptions => {
   return {

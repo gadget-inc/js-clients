@@ -3,10 +3,10 @@ import { act, renderHook } from "@testing-library/react";
 import type { IsExact } from "conditional-type-checks";
 import { assert } from "conditional-type-checks";
 import { Readable } from "stream";
-import { useFetch } from "../src/useFetch";
-import type { ErrorWrapper } from "../src/utils";
-import { relatedProductsApi } from "./apis";
-import { TestWrapper, mockUrqlClient } from "./testWrapper";
+import { useFetch } from "../src/useFetch.js";
+import type { ErrorWrapper } from "../src/utils.js";
+import { relatedProductsApi } from "./apis.js";
+import { TestWrapper, mockUrqlClient } from "./testWrapper.js";
 
 describe("useFetch", () => {
   // these functions are typechecked but never run to avoid actually making API calls

@@ -1,4 +1,4 @@
-import { ChangeTracking, GadgetRecord } from "../src/GadgetRecord";
+import { ChangeTracking, GadgetRecord } from "../src/GadgetRecord.js";
 interface SampleBaseRecord {
   id?: string;
   state?: any;

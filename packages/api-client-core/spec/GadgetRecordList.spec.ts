@@ -1,4 +1,4 @@
-import { GadgetConnection, GadgetRecordList, InternalModelManager } from "../src";
+import { GadgetConnection, GadgetRecordList, InternalModelManager } from "../src/index.js";
 
 describe("GadgetRecordList", () => {
   afterEach(() => jest.clearAllMocks());

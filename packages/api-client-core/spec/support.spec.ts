@@ -6,7 +6,7 @@ import {
   assertOperationSuccess,
   GadgetOperationError,
   getNonNullableError,
-} from "../src";
+} from "../src/index.js";
 
 describe("support utilities", () => {
   describe("assertOperationSuccess", () => {
@@ -64,7 +64,6 @@ describe("support utilities", () => {
           {
             operation: null as any,
             data: null,
-            // @ts-expect-error an array of network errors doesn't match urql's types, but we've observed it at runtime
             error: new CombinedError({ networkError: [new Error("foo"), new Error("foo")] }),
             stale: false,
             hasNext: false,

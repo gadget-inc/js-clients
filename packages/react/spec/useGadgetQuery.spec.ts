@@ -1,9 +1,9 @@
 import { renderHook } from "@testing-library/react";
 import { gql } from "urql";
-import { useGadgetQuery } from "../src/useGadgetQuery";
-import { noProviderErrorMessage } from "../src/utils";
-import { relatedProductsApi } from "./apis";
-import { TestWrapper, mockUrqlClient } from "./testWrapper";
+import { useGadgetQuery } from "../src/useGadgetQuery.js";
+import { noProviderErrorMessage } from "../src/utils.js";
+import { relatedProductsApi } from "./apis.js";
+import { TestWrapper, mockUrqlClient } from "./testWrapper.js";
 
 describe("useGadgetQuery", () => {
   test("throw error when no provider included", () => {

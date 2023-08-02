@@ -5,20 +5,20 @@ import type { ExecutionResult } from "graphql";
 import type { Sink, Client as SubscriptionClient, ClientOptions as SubscriptionClientOptions } from "graphql-ws";
 import { CloseCode, createClient as createSubscriptionClient } from "graphql-ws";
 import WebSocket from "isomorphic-ws";
-import { getCurrentSpan } from ".";
-import type { AuthenticationModeOptions, BrowserSessionAuthenticationModeOptions } from "./ClientOptions";
-import { BrowserSessionStorageType } from "./ClientOptions";
-import { GadgetTransaction, TransactionRolledBack } from "./GadgetTransaction";
-import type { BrowserStorage } from "./InMemoryStorage";
-import { InMemoryStorage } from "./InMemoryStorage";
+import type { AuthenticationModeOptions, BrowserSessionAuthenticationModeOptions } from "./ClientOptions.js";
+import { BrowserSessionStorageType } from "./ClientOptions.js";
+import { GadgetTransaction, TransactionRolledBack } from "./GadgetTransaction.js";
+import type { BrowserStorage } from "./InMemoryStorage.js";
+import { InMemoryStorage } from "./InMemoryStorage.js";
 import {
   GadgetUnexpectedCloseError,
   GadgetWebsocketConnectionTimeoutError,
+  getCurrentSpan,
   isCloseEvent,
   storageAvailable,
   traceFunction,
-} from "./support";
-import { urlParamExchange } from "./urlParamExchange";
+} from "./support.js";
+import { urlParamExchange } from "./urlParamExchange.js";
 
 export type TransactionRun<T> = (transaction: GadgetTransaction) => Promise<T>;
 export interface GadgetSubscriptionClientOptions extends Partial<SubscriptionClientOptions> {

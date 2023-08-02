@@ -2,10 +2,10 @@ import type { GadgetRecordList } from "@gadgetinc/api-client-core";
 import { renderHook } from "@testing-library/react";
 import type { IsExact } from "conditional-type-checks";
 import { assert } from "conditional-type-checks";
-import { useFindMany } from "../src/useFindMany";
-import type { ErrorWrapper } from "../src/utils";
-import { relatedProductsApi } from "./apis";
-import { mockUrqlClient, TestWrapper } from "./testWrapper";
+import { useFindMany } from "../src/useFindMany.js";
+import type { ErrorWrapper } from "../src/utils.js";
+import { relatedProductsApi } from "./apis.js";
+import { mockUrqlClient, TestWrapper } from "./testWrapper.js";
 
 describe("useFindMany", () => {
   // all these functions are typechecked but never run to avoid actually making API calls

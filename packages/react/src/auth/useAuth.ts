@@ -1,5 +1,5 @@
-import { useSession } from "./useSession";
-import { useUser } from "./useUser";
+import { useSession } from "./useSession.js";
+import { useUser } from "./useUser.js";
 
 /**
  * Used for fetching the current authentication state of the session

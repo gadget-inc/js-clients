@@ -1,8 +1,8 @@
 import { useContext } from "react";
 import type { AnyVariables, UseQueryArgs, UseQueryResponse } from "urql";
 import { useQuery } from "urql";
-import { GadgetUrqlClientContext } from "./GadgetProvider";
-import { noProviderErrorMessage, useMemoizedQueryOptions } from "./utils";
+import { GadgetUrqlClientContext } from "./GadgetProvider.js";
+import { noProviderErrorMessage, useMemoizedQueryOptions } from "./utils.js";
 
 export type UseGadgetQueryArgs<Variables extends AnyVariables, Data = any> = UseQueryArgs<Variables, Data> & {
   /**

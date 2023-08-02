@@ -5,7 +5,7 @@
     "jsx": "react",
     "baseUrl": "./",
     "moduleResolution": "node",
-    "module": "commonjs",
+    "module": "ES2022",
     "target": "es2020",
     "types": ["jest", "node"],
     "outDir": "./dist"
