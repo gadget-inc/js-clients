@@ -9,16 +9,9 @@ export interface BuilderOperation {
   directives?: string[];
 }
 
-const indent = (str: string, depth: number) => {
-  return str
-    .split("\n")
-    .map((line) => " ".repeat(depth) + line)
-    .join("\n");
-};
-
-const compileFieldSelection = (fields: FieldSelection, onlyPresentVariableValues = false): string => {
-  const result = Object.entries(fields)
-    .map(([field, value]) => {
+const compileFieldSelection = (fields: FieldSelection, onlyPresentVariableValues = false): string[] => {
+  return Object.entries(fields)
+    .flatMap(([field, value]) => {
       if (typeof value === "boolean") {
         return value ? field : false;
       } else if (value instanceof FieldCall) {
@@ -26,7 +19,7 @@ const compileFieldSelection = (fields: FieldSelection, onlyPresentVariableValues
         let entries = Object.entries(value.args).filter(([_, value]) => value !== null && value !== undefined);
 
         if (onlyPresentVariableValues) {
-          entries = entries.filter(([_, value]) => (value instanceof Variable ? value.hasValue() : true));
+          entries = entries.filter(([_, value]) => (value instanceof Variable ? value.present() : true));
         }
 
         const signatures = entries.map(([name, value]) => {
@@ -36,28 +29,22 @@ const compileFieldSelection = (fields: FieldSelection, onlyPresentVariableValues
           args = `(${signatures.join(", ")})`;
         }
 
-        const subselection = value.subselection
-          ? `{ 
-${compileFieldSelection(value.subselection, onlyPresentVariableValues)} 
-}`
-          : "";
-
-        return `${field}${args} ${subselection}`;
+        if (value.subselection) {
+          return [`${field}${args} {`, ...compileFieldSelection(value.subselection, onlyPresentVariableValues), `}`];
+        } else {
+          return `${field}${args}`;
+        }
       } else {
-        return `${field} {
-${compileFieldSelection(value as FieldSelection, onlyPresentVariableValues)}
-}`;
+        return [`${field} {`, ...compileFieldSelection(value as FieldSelection, onlyPresentVariableValues), `}`];
       }
     })
     .filter((value) => !!value)
-    .join("\n");
-
-  return indent(result, 2);
+    .map((line) => "  " + line);
 };
 
 const extractVariables = (fields: FieldSelection, onlyPresentVariableValues = false): Record<string, Variable> => {
   const variables: Record<string, Variable> = {};
-  Object.entries(fields).forEach(([field, value]) => {
+  Object.entries(fields).forEach(([_field, value]) => {
     if (value instanceof FieldCall) {
       Object.entries(value.args).forEach(([name, value]) => {
         if (value instanceof Variable) {
@@ -104,7 +91,7 @@ export interface VariableOptions {
 /** Represents one reference to a variable somewhere in a selection */
 export class Variable {
   constructor(readonly type: string, readonly name?: string, readonly value?: any) {}
-  hasValue() {
+  present() {
     return this.value != null;
   }
 }
@@ -121,7 +108,7 @@ export const compile = (operation: BuilderOperation, onlyPresentVariableValues =
   const directives = operation.directives && operation.directives.length > 0 ? ` ${operation.directives.join(" ")}` : "";
 
   return `${operation.type} ${operation.name ?? ""}${signature}${directives} {
-${compileFieldSelection(operation.fields, onlyPresentVariableValues)}
+${compileFieldSelection(operation.fields, onlyPresentVariableValues).join("\n")}
 }`;
 };
 

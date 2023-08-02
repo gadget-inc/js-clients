@@ -17,7 +17,7 @@ describe("compiling queries with field calls", () => {
       "query  {
         id
         name
-        truncatedHTML(length: 100) 
+        truncatedHTML(length: 100)
       }"
     `);
   });
@@ -37,7 +37,7 @@ describe("compiling queries with field calls", () => {
       "query ($length: Int!) {
         id
         name
-        truncatedHTML(length: $length) 
+        truncatedHTML(length: $length)
       }"
     `);
   });
@@ -60,12 +60,12 @@ describe("compiling queries with field calls", () => {
     expectValidGraphQLQuery(result);
     expect(result).toMatchInlineSnapshot(`
       "query ($first: Int, $after: String) {
-        users(first: $first, after: $after) { 
+        users(first: $first, after: $after) {
           edges {
             node {
               id
             }
-          } 
+          }
         }
       }"
     `);
@@ -91,12 +91,12 @@ describe("compiling queries with field calls", () => {
     expect(result).toContain("first: $count");
     expect(result).toMatchInlineSnapshot(`
       "query ($count: Int) {
-        users(first: $count) { 
+        users(first: $count) {
           edges {
             node {
               id
             }
-          } 
+          }
         }
       }"
     `);
@@ -118,7 +118,7 @@ describe("compiling queries with field calls", () => {
       "query  {
         id
         name
-        truncatedHTML(length: "$length") 
+        truncatedHTML(length: "$length")
       }"
     `);
   });
@@ -139,7 +139,7 @@ describe("compiling queries with field calls", () => {
       "query  {
         id
         name
-        truncatedHTML 
+        truncatedHTML
       }"
     `);
   });
@@ -160,7 +160,7 @@ describe("compiling queries with field calls", () => {
       "query  {
         id
         name
-        truncatedHTML 
+        truncatedHTML
       }"
     `);
   });
@@ -180,7 +180,7 @@ describe("compiling queries with field calls", () => {
       "query ($length: String) {
         id
         name
-        truncatedHTML(length: $length) 
+        truncatedHTML(length: $length)
       }"
     `);
   });
@@ -200,7 +200,7 @@ describe("compiling queries with field calls", () => {
       "query ($length: String) {
         id
         name
-        truncatedHTML(length: $length) 
+        truncatedHTML(length: $length)
       }"
     `);
   });
@@ -225,12 +225,12 @@ describe("compiling queries with field calls", () => {
     expectValidGraphQLQuery(result);
     expect(result).toMatchInlineSnapshot(`
       "query  {
-        users(first: 10) { 
+        users(first: 10) {
           edges {
             node {
               id
             }
-          } 
+          }
         }
       }"
     `);
@@ -282,7 +282,7 @@ describe("compiling queries with field calls", () => {
         "query  {
           id
           name
-          truncatedHTML 
+          truncatedHTML
         }"
       `);
       expect(variables).toEqual({});
@@ -306,12 +306,12 @@ describe("compiling queries with field calls", () => {
       expectValidGraphQLQuery(query);
       expect(query).toMatchInlineSnapshot(`
         "query ($first: Int, $after: String) {
-          users(first: $first, after: $after) { 
+          users(first: $first, after: $after) {
             edges {
               node {
                 id
               }
-            } 
+            }
           }
         }"
       `);
@@ -355,7 +355,7 @@ describe("compiling queries with field calls", () => {
         "query  {
           id
           name
-          truncatedHTML 
+          truncatedHTML
         }"
       `);
       expect(variables).toMatchInlineSnapshot(`{}`);
@@ -377,7 +377,7 @@ describe("compiling queries with field calls", () => {
         "query  {
           id
           name
-          truncatedHTML 
+          truncatedHTML
         }"
       `);
       expect(variables).toMatchInlineSnapshot(`{}`);
@@ -405,9 +405,9 @@ describe("compiling queries with field calls", () => {
       expectValidGraphQLQuery(query);
       expect(query).toMatchInlineSnapshot(`
         "query ($first: Int, $after: String) {
-          users(first: $first, after: $after, filter: "bar") { 
+          users(first: $first, after: $after, filter: "bar") {
             id
-            name 
+            name
           }
         }"
       `);
@@ -431,8 +431,8 @@ describe("compiling queries with field calls", () => {
       expectValidGraphQLQuery(query);
       expect(query).toMatchInlineSnapshot(`
         "query ($length: Int!) {
-          something(length: $length) 
-          another(length: $length) 
+          something(length: $length)
+          another(length: $length)
         }"
       `);
     });
@@ -449,8 +449,8 @@ describe("compiling queries with field calls", () => {
       expectValidGraphQLQuery(query);
       expect(query).toMatchInlineSnapshot(`
         "query ($a: Int, $b: Int!) {
-          something(length: $a) 
-          another(length: $b) 
+          something(length: $a)
+          another(length: $b)
         }"
       `);
     });

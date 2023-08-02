@@ -19,9 +19,9 @@ describe("compiling mutation", () => {
     expectValidGraphQLQuery(result);
     expect(result).toMatchInlineSnapshot(`
       "mutation ($post: PostInput) {
-        createPost(post: $post) { 
+        createPost(post: $post) {
           id
-          title 
+          title
         }
       }"
     `);

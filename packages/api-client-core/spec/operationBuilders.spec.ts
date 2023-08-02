@@ -6,10 +6,10 @@ describe("operation builders", () => {
       expect(findOneOperation("widget", "123", { __typename: true, id: true, state: true }, "widget")).toMatchInlineSnapshot(`
         {
           "query": "query widget($id: GadgetID!) {
-          widget(id: $id) { 
+          widget(id: $id) {
             __typename
             id
-            state 
+            state
           }
           gadgetMeta {
             hydrations(modelName: "widget")
@@ -27,10 +27,10 @@ describe("operation builders", () => {
         .toMatchInlineSnapshot(`
         {
           "query": "query widget($id: GadgetID!) {
-          widget(id: $id) { 
+          widget(id: $id) {
             id
             name
-            __typename 
+            __typename
           }
           gadgetMeta {
             hydrations(modelName: "widget")
@@ -49,7 +49,7 @@ describe("operation builders", () => {
       expect(findManyOperation("widgets", { __typename: true, id: true, state: true }, "widget")).toMatchInlineSnapshot(`
         {
           "query": "query widgets {
-          widgets { 
+          widgets {
             pageInfo {
               hasNextPage
               hasPreviousPage
@@ -63,7 +63,7 @@ describe("operation builders", () => {
                 id
                 state
               }
-            } 
+            }
           }
           gadgetMeta {
             hydrations(modelName: "widget")
@@ -79,7 +79,7 @@ describe("operation builders", () => {
         .toMatchInlineSnapshot(`
         {
           "query": "query widgets {
-          widgets { 
+          widgets {
             pageInfo {
               hasNextPage
               hasPreviousPage
@@ -93,7 +93,7 @@ describe("operation builders", () => {
                 name
                 __typename
               }
-            } 
+            }
           }
           gadgetMeta {
             hydrations(modelName: "widget")
@@ -109,7 +109,7 @@ describe("operation builders", () => {
         .toMatchInlineSnapshot(`
         {
           "query": "query widgets($search: String) {
-          widgets(search: $search) { 
+          widgets(search: $search) {
             pageInfo {
               hasNextPage
               hasPreviousPage
@@ -123,7 +123,7 @@ describe("operation builders", () => {
                 id
                 state
               }
-            } 
+            }
           }
           gadgetMeta {
             hydrations(modelName: "widget")
@@ -141,7 +141,7 @@ describe("operation builders", () => {
         .toMatchInlineSnapshot(`
         {
           "query": "query widgets($sort: [WidgetSort!]) {
-          widgets(sort: $sort) { 
+          widgets(sort: $sort) {
             pageInfo {
               hasNextPage
               hasPreviousPage
@@ -155,7 +155,7 @@ describe("operation builders", () => {
                 id
                 state
               }
-            } 
+            }
           }
           gadgetMeta {
             hydrations(modelName: "widget")
@@ -177,7 +177,7 @@ describe("operation builders", () => {
         .toMatchInlineSnapshot(`
         {
           "query": "query widgets($filter: [WidgetFilter!]) {
-          widgets(filter: $filter) { 
+          widgets(filter: $filter) {
             pageInfo {
               hasNextPage
               hasPreviousPage
@@ -191,7 +191,7 @@ describe("operation builders", () => {
                 id
                 state
               }
-            } 
+            }
           }
           gadgetMeta {
             hydrations(modelName: "widget")
@@ -216,7 +216,7 @@ describe("operation builders", () => {
       expect(findOneByFieldOperation("widget", "foo", "bar", { __typename: true, id: true, state: true }, "widget")).toMatchInlineSnapshot(`
         {
           "query": "query widget($first: Int, $filter: [WidgetFilter!]) {
-          widget(first: $first, filter: $filter) { 
+          widget(first: $first, filter: $filter) {
             pageInfo {
               hasNextPage
               hasPreviousPage
@@ -230,7 +230,7 @@ describe("operation builders", () => {
                 id
                 state
               }
-            } 
+            }
           }
           gadgetMeta {
             hydrations(modelName: "widget")
@@ -256,7 +256,7 @@ describe("operation builders", () => {
       ).toMatchInlineSnapshot(`
         {
           "query": "query widget($first: Int, $filter: [WidgetFilter!]) {
-          widget(first: $first, filter: $filter) { 
+          widget(first: $first, filter: $filter) {
             pageInfo {
               hasNextPage
               hasPreviousPage
@@ -270,7 +270,7 @@ describe("operation builders", () => {
                 name
                 __typename
               }
-            } 
+            }
           }
           gadgetMeta {
             hydrations(modelName: "widget")
@@ -294,7 +294,7 @@ describe("operation builders", () => {
       expect(actionOperation("createWidget", { __typename: true, id: true, state: true }, "widget", "widget", {})).toMatchInlineSnapshot(`
         {
           "query": "mutation createWidget {
-          createWidget { 
+          createWidget {
             success
             errors {
               message
@@ -310,7 +310,7 @@ describe("operation builders", () => {
               __typename
               id
               state
-            } 
+            }
           }
           gadgetMeta {
             hydrations(modelName: "widget")
@@ -326,7 +326,7 @@ describe("operation builders", () => {
         .toMatchInlineSnapshot(`
         {
           "query": "mutation createWidget {
-          createWidget { 
+          createWidget {
             success
             errors {
               message
@@ -341,7 +341,7 @@ describe("operation builders", () => {
             widget {
               id
               __typename
-            } 
+            }
           }
           gadgetMeta {
             hydrations(modelName: "widget")
@@ -356,7 +356,7 @@ describe("operation builders", () => {
       expect(actionOperation("deleteWidget", null, "widget", "widget", {})).toMatchInlineSnapshot(`
         {
           "query": "mutation deleteWidget {
-          deleteWidget { 
+          deleteWidget {
             success
             errors {
               message
@@ -367,7 +367,7 @@ describe("operation builders", () => {
                   apiIdentifier
                 }
               }
-            } 
+            }
           }
           gadgetMeta {
             hydrations(modelName: "widget")
@@ -385,7 +385,7 @@ describe("operation builders", () => {
         {
           "query": "mutation logInViaEmail {
           currentSession {
-            logInViaEmail { 
+            logInViaEmail {
               success
               errors {
                 message
@@ -401,7 +401,7 @@ describe("operation builders", () => {
                 __typename
                 id
                 state
-              } 
+              }
             }
           }
           gadgetMeta {

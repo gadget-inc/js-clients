@@ -136,7 +136,7 @@ describe("InternalModelManager", () => {
         {
           "query": "query InternalFindManyWidget {
           internal {
-            listWidget { 
+            listWidget {
               pageInfo {
                 hasNextPage
                 hasPreviousPage
@@ -146,7 +146,7 @@ describe("InternalModelManager", () => {
               edges {
                 cursor
                 node
-              } 
+              }
             }
           }
         }",
@@ -162,7 +162,7 @@ describe("InternalModelManager", () => {
         {
           "query": "query InternalFindManyWidget($sort: [WidgetSort!]) {
           internal {
-            listWidget(sort: $sort) { 
+            listWidget(sort: $sort) {
               pageInfo {
                 hasNextPage
                 hasPreviousPage
@@ -172,7 +172,7 @@ describe("InternalModelManager", () => {
               edges {
                 cursor
                 node
-              } 
+              }
             }
           }
         }",
@@ -194,7 +194,7 @@ describe("InternalModelManager", () => {
         {
           "query": "query InternalFindManyWidget($search: String) {
           internal {
-            listWidget(search: $search) { 
+            listWidget(search: $search) {
               pageInfo {
                 hasNextPage
                 hasPreviousPage
@@ -204,7 +204,7 @@ describe("InternalModelManager", () => {
               edges {
                 cursor
                 node
-              } 
+              }
             }
           }
         }",
@@ -222,7 +222,7 @@ describe("InternalModelManager", () => {
         {
           "query": "query InternalFindManyWidget($filter: [WidgetFilter!]) {
           internal {
-            listWidget(filter: $filter) { 
+            listWidget(filter: $filter) {
               pageInfo {
                 hasNextPage
                 hasPreviousPage
@@ -232,7 +232,7 @@ describe("InternalModelManager", () => {
               edges {
                 cursor
                 node
-              } 
+              }
             }
           }
         }",
@@ -270,10 +270,10 @@ describe("InternalModelManager", () => {
         {
           "query": "query InternalFindFirstWidget($first: Int) {
           internal {
-            listWidget(first: $first) { 
+            listWidget(first: $first) {
               edges {
                 node
-              } 
+              }
             }
           }
         }",
@@ -291,10 +291,10 @@ describe("InternalModelManager", () => {
         {
           "query": "query InternalFindFirstWidget($sort: [WidgetSort!], $first: Int) {
           internal {
-            listWidget(sort: $sort, first: $first) { 
+            listWidget(sort: $sort, first: $first) {
               edges {
                 node
-              } 
+              }
             }
           }
         }",
@@ -317,10 +317,10 @@ describe("InternalModelManager", () => {
         {
           "query": "query InternalFindFirstWidget($search: String, $first: Int) {
           internal {
-            listWidget(search: $search, first: $first) { 
+            listWidget(search: $search, first: $first) {
               edges {
                 node
-              } 
+              }
             }
           }
         }",
@@ -339,10 +339,10 @@ describe("InternalModelManager", () => {
         {
           "query": "query InternalFindFirstWidget($filter: [WidgetFilter!], $first: Int) {
           internal {
-            listWidget(filter: $filter, first: $first) { 
+            listWidget(filter: $filter, first: $first) {
               edges {
                 node
-              } 
+              }
             }
           }
         }",
@@ -368,10 +368,10 @@ describe("InternalModelManager", () => {
         {
           "query": "query InternalFindFirstWidget($select: [String!], $first: Int) {
           internal {
-            listWidget(select: $select, first: $first) { 
+            listWidget(select: $select, first: $first) {
               edges {
                 node
-              } 
+              }
             }
           }
         }",
@@ -395,10 +395,10 @@ describe("InternalModelManager", () => {
           {
             "query": "query InternalFindFirstWidgetModel($first: Int) {
             internal {
-              listWidgetModel(first: $first) { 
+              listWidgetModel(first: $first) {
                 edges {
                   node
-                } 
+                }
               }
             }
           }",
@@ -416,10 +416,10 @@ describe("InternalModelManager", () => {
           {
             "query": "query InternalFindFirstWidgetModel($sort: [WidgetModelSort!], $first: Int) {
             internal {
-              listWidgetModel(sort: $sort, first: $first) { 
+              listWidgetModel(sort: $sort, first: $first) {
                 edges {
                   node
-                } 
+                }
               }
             }
           }",
@@ -442,10 +442,10 @@ describe("InternalModelManager", () => {
           {
             "query": "query InternalFindFirstWidgetModel($search: String, $first: Int) {
             internal {
-              listWidgetModel(search: $search, first: $first) { 
+              listWidgetModel(search: $search, first: $first) {
                 edges {
                   node
-                } 
+                }
               }
             }
           }",
@@ -464,10 +464,10 @@ describe("InternalModelManager", () => {
           {
             "query": "query InternalFindFirstWidgetModel($filter: [WidgetModelFilter!], $first: Int) {
             internal {
-              listWidgetModel(filter: $filter, first: $first) { 
+              listWidgetModel(filter: $filter, first: $first) {
                 edges {
                   node
-                } 
+                }
               }
             }
           }",

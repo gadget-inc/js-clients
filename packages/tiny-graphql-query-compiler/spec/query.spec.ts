@@ -107,7 +107,7 @@ describe("compiling queries", () => {
     // not valid GraphQL, but compiles anyways
     expect(result).toMatchInlineSnapshot(`
       "query  {
-        
+
       }"
     `);
   });
@@ -197,8 +197,8 @@ describe("compiling queries", () => {
     expectValidGraphQLQuery(result);
     expect(result).toMatchInlineSnapshot(`
       "query GetUsers($id: ID) @live {
-        user(id: $id) { 
-          id 
+        user(id: $id) {
+          id
         }
       }"
     `);
