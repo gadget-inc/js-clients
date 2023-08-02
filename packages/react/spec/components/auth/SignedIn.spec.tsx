@@ -1,10 +1,10 @@
 import "@testing-library/jest-dom";
 import { render } from "@testing-library/react";
 import React from "react";
-import { SignedIn } from "../../../src/components/auth/SignedIn";
-import { superAuthApi } from "../../apis";
-import { TestWrapper } from "../../testWrapper";
-import { expectMockDeletedUser, expectMockSignedInUser, expectMockSignedOutUser } from "../../utils";
+import { SignedIn } from "../../../src/components/auth/SignedIn.js";
+import { superAuthApi } from "../../apis.js";
+import { TestWrapper } from "../../testWrapper.js";
+import { expectMockDeletedUser, expectMockSignedInUser, expectMockSignedOutUser } from "../../utils.js";
 
 describe("SignedIn", () => {
   test("renders children when signed in", () => {

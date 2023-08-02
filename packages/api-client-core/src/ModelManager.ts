@@ -1,6 +1,6 @@
-import type { GadgetConnection } from "./GadgetConnection";
-import type { GadgetRecord } from "./GadgetRecord";
-import type { GadgetRecordList } from "./GadgetRecordList";
+import type { GadgetConnection } from "./GadgetConnection.js";
+import type { GadgetRecord } from "./GadgetRecord.js";
+import type { GadgetRecordList } from "./GadgetRecordList.js";
 
 /**
  * Object representing one model's API in a high level way

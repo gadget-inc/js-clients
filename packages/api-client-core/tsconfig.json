@@ -1,13 +1,8 @@
 {
-  "extends": "../../tsconfig.json",
+  "extends": "./tsconfig.base.json",
   "compilerOptions": {
-    "lib": ["es2020", "DOM"],
-    "baseUrl": "./",
-    "moduleResolution": "node",
-    "module": "commonjs",
-    "target": "es2019",
-    "types": ["jest", "node"],
-    "outDir": "./dist",
+    "module": "ES2022",
+    "noEmit": true
   },
   "include": ["./src", "./spec"]
 }

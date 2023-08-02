@@ -1,9 +1,9 @@
 /**
  * @jest-environment jsdom
  */
-import { AuthenticationMode, BrowserSessionStorageType, GadgetConnection, InMemoryStorage } from "../src";
-import { GadgetConnectionSharedSuite } from "./GadgetConnection-suite";
-import { withWindowMissingSupport } from "./helpers";
+import { AuthenticationMode, BrowserSessionStorageType, GadgetConnection, InMemoryStorage } from "../src/index.js";
+import { GadgetConnectionSharedSuite } from "./GadgetConnection-suite.js";
+import { withWindowMissingSupport } from "./helpers.js";
 
 describe("GadgetConnection in the browser", () => {
   GadgetConnectionSharedSuite("    __typename\n");

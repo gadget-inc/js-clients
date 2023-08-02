@@ -1,4 +1,4 @@
-import { InvalidRecordError } from "../src";
+import { InvalidRecordError } from "../src/index.js";
 
 describe("InvalidRecordError", () => {
   test("it should compute a message with no validation errors", () => {

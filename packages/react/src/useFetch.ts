@@ -1,8 +1,8 @@
 import type { Reducer } from "react";
 import { useCallback, useEffect, useReducer, useRef } from "react";
-import { useConnection } from "./GadgetProvider";
-import { useStructuralMemo } from "./useStructuralMemo";
-import { ErrorWrapper } from "./utils";
+import { useConnection } from "./GadgetProvider.js";
+import { useStructuralMemo } from "./useStructuralMemo.js";
+import { ErrorWrapper } from "./utils.js";
 
 export interface FetchHookState<T> {
   data?: T;

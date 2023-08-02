@@ -1,4 +1,4 @@
-import { fieldSelectionToGQLBuilderFields } from "../src";
+import { fieldSelectionToGQLBuilderFields } from "../src/FieldSelection.js";
 
 describe("fieldSelectionToGQLBuilderFields", () => {
   it("should convert a select parameter into an output suitable for gql-query-builder", () => {

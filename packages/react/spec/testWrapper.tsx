@@ -9,7 +9,7 @@ import type { Client, GraphQLRequest, OperationContext, OperationResult } from "
 import { makeErrorResult } from "urql";
 import type { Subject } from "wonka";
 import { makeSubject } from "wonka";
-import { Provider } from "../src/GadgetProvider";
+import { Provider } from "../src/GadgetProvider.js";
 
 export type MockOperationFn = jest.Mock & {
   subjects: Record<string, Subject<OperationResult>>;

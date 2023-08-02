@@ -1,7 +1,7 @@
 import type { ReactNode } from "react";
 import React, { useContext, useEffect, useState } from "react";
-import { GadgetConfigurationContext } from "../../../src/GadgetProvider";
-import { useAuth } from "../../auth/useAuth";
+import { GadgetConfigurationContext } from "../../GadgetProvider.js";
+import { useAuth } from "../../auth/useAuth.js";
 
 /**
  * Renders its `children` if the current `Session` is signed in, otherwise redirects the browser to the `signInPath` configured in the `Provider`. Uses `window.location.assign` to perform the redirect.

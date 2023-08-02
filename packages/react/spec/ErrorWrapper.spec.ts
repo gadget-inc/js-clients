@@ -1,5 +1,5 @@
 import { CombinedError } from "@urql/core";
-import { ErrorWrapper } from "../src/utils";
+import { ErrorWrapper } from "../src/utils.js";
 
 describe("ErrorWrapper", () => {
   test("errorDataIfAbsent should return an error wrapper if data isn't found at a datapath", () => {

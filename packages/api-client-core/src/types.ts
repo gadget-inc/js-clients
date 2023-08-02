@@ -1,4 +1,4 @@
-import type { FieldSelection } from "./FieldSelection";
+import type { FieldSelection } from "./FieldSelection.js";
 
 /**
  * Limit the keys in T to only those that also exist in U. AKA Subset or Intersection.

@@ -1,7 +1,7 @@
 import type { ReactNode } from "react";
 import React from "react";
-import { useAuth } from "../../../src/auth/useAuth";
-import { isSessionSignedOut } from "../../../src/auth/utils";
+import { useAuth } from "../../auth/useAuth.js";
+import { isSessionSignedOut } from "../../auth/utils.js";
 
 /**
  * Renders its `children` if the current `Session` is signed out (no associated `User`), otherwise renders nothing.

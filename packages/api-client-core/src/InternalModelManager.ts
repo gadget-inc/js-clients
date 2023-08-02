@@ -1,7 +1,7 @@
 import { query } from "gql-query-builder";
-import type { GadgetConnection } from "./GadgetConnection";
-import type { GadgetRecord, RecordShape } from "./GadgetRecord";
-import { GadgetRecordList } from "./GadgetRecordList";
+import type { GadgetConnection } from "./GadgetConnection.js";
+import type { GadgetRecord, RecordShape } from "./GadgetRecord.js";
+import { GadgetRecordList } from "./GadgetRecordList.js";
 import {
   GadgetClientError,
   GadgetOperationError,
@@ -14,7 +14,7 @@ import {
   hydrateConnection,
   hydrateRecord,
   hydrateRecordArray,
-} from "./support";
+} from "./support.js";
 
 const internalErrorsDetails = `
 fragment InternalErrorsDetails on ExecutionError {
