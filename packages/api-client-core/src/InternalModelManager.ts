@@ -1,4 +1,4 @@
-import { query } from "gql-query-builder";
+import { Call, Var, compileWithVariableValues } from "tiny-graphql-query-compiler";
 import type { GadgetConnection } from "./GadgetConnection.js";
 import type { GadgetRecord, RecordShape } from "./GadgetRecord.js";
 import { GadgetRecordList } from "./GadgetRecordList.js";
@@ -134,10 +134,10 @@ export interface InternalFindManyOptions extends InternalFindListOptions {
 
 const internalFindListVariables = (capitalizedApiIdentifier: string, options?: InternalFindListOptions) => {
   return {
-    ...(options?.search && { search: { value: options?.search, type: "String", required: false } }),
-    ...(options?.sort && { sort: { value: options?.sort, type: `${capitalizedApiIdentifier}Sort!`, list: true } }),
-    ...(options?.filter && { filter: { value: options?.filter, type: `${capitalizedApiIdentifier}Filter!`, list: true } }),
-    ...(options?.select && { select: { value: formatInternalSelectVariable(options?.select), type: `String!`, list: true } }),
+    search: options?.search ? Var({ value: options?.search, type: "String" }) : undefined,
+    sort: options?.sort ? Var({ value: options?.sort, type: `[${capitalizedApiIdentifier}Sort!]` }) : undefined,
+    filter: options?.filter ? Var({ value: options?.filter, type: `[${capitalizedApiIdentifier}Filter!]` }) : undefined,
+    select: options?.select ? Var({ value: formatInternalSelectVariable(options?.select), type: `[String!]` }) : undefined,
   };
 };
 
@@ -145,64 +145,52 @@ export const internalFindFirstQuery = (apiIdentifier: string, options?: Internal
   const capitalizedApiIdentifier = capitalizeIdentifier(apiIdentifier);
   const defaultVariables = internalFindListVariables(capitalizedApiIdentifier, options);
 
-  return query(
-    [
-      {
-        operation: "internal",
-        fields: [
+  return compileWithVariableValues({
+    type: "query",
+    name: `InternalFindFirst${capitalizedApiIdentifier}`,
+    fields: {
+      internal: {
+        [`list${capitalizedApiIdentifier}`]: Call(
           {
-            operation: `list${capitalizedApiIdentifier}`,
-            fields: [
-              {
-                edges: ["node"],
-              },
-            ],
-            variables: {
-              ...defaultVariables,
-              first: { value: 1, type: "Int" },
-            },
+            ...defaultVariables,
+            first: Var({ value: 1, type: "Int" }),
           },
-        ],
+          {
+            edges: {
+              node: true,
+            },
+          }
+        ),
       },
-    ],
-    null,
-    { operationName: `InternalFindFirst${capitalizedApiIdentifier}` }
-  );
+    },
+  });
 };
 
 export const internalFindManyQuery = (apiIdentifier: string, options?: InternalFindManyOptions) => {
   const capitalizedApiIdentifier = capitalizeIdentifier(apiIdentifier);
   const defaultVariables = internalFindListVariables(capitalizedApiIdentifier, options);
 
-  return query(
-    [
-      {
-        operation: "internal",
-        fields: [
+  return compileWithVariableValues({
+    type: "query",
+    name: `InternalFindMany${capitalizedApiIdentifier}`,
+    fields: {
+      internal: {
+        [`list${capitalizedApiIdentifier}`]: Call(
           {
-            operation: `list${capitalizedApiIdentifier}`,
-            fields: [
-              {
-                pageInfo: ["hasNextPage", "hasPreviousPage", "startCursor", "endCursor"],
-              },
-              {
-                edges: ["cursor", "node"],
-              },
-            ],
-            variables: {
-              ...defaultVariables,
-              after: { value: options?.after, type: "String" },
-              before: { value: options?.before, type: "String" },
-              first: { value: options?.first, type: "Int" },
-              last: { value: options?.last, type: "Int" },
-            },
+            ...defaultVariables,
+            after: Var({ value: options?.after, type: "String" }),
+            before: Var({ value: options?.before, type: "String" }),
+            first: Var({ value: options?.first, type: "Int" }),
+            last: Var({ value: options?.last, type: "Int" }),
           },
-        ],
+          {
+            pageInfo: { hasNextPage: true, hasPreviousPage: true, startCursor: true, endCursor: true },
+            edges: { cursor: true, node: true },
+          }
+        ),
       },
-    ],
-    null,
-    { operationName: `InternalFindMany${capitalizedApiIdentifier}` }
-  );
+    },
+  });
 };
 
 export const internalCreateMutation = (apiIdentifier: string) => {

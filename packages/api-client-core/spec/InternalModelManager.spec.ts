@@ -134,13 +134,23 @@ describe("InternalModelManager", () => {
       const plan = internalFindManyQuery("widget", undefined);
       expect(plan).toMatchInlineSnapshot(`
         {
-          "query": "query InternalFindManyWidget ($after: String, $before: String, $first: Int, $last: Int) { internal  { listWidget (after: $after, before: $before, first: $first, last: $last) { pageInfo { hasNextPage, hasPreviousPage, startCursor, endCursor }, edges { cursor, node } } } }",
-          "variables": {
-            "after": undefined,
-            "before": undefined,
-            "first": undefined,
-            "last": undefined,
-          },
+          "query": "query InternalFindManyWidget {
+          internal {
+            listWidget {
+              pageInfo {
+                hasNextPage
+                hasPreviousPage
+                startCursor
+                endCursor
+              }
+              edges {
+                cursor
+                node
+              }
+            }
+          }
+        }",
+          "variables": {},
         }
       `);
       expectValidGraphQLQuery(plan.query);
@@ -150,12 +160,23 @@ describe("InternalModelManager", () => {
       const plan = internalFindManyQuery("widget", { sort: [{ id: "Ascending" }] });
       expect(plan).toMatchInlineSnapshot(`
         {
-          "query": "query InternalFindManyWidget ($sort: [WidgetSort!], $after: String, $before: String, $first: Int, $last: Int) { internal  { listWidget (sort: $sort, after: $after, before: $before, first: $first, last: $last) { pageInfo { hasNextPage, hasPreviousPage, startCursor, endCursor }, edges { cursor, node } } } }",
+          "query": "query InternalFindManyWidget($sort: [WidgetSort!]) {
+          internal {
+            listWidget(sort: $sort) {
+              pageInfo {
+                hasNextPage
+                hasPreviousPage
+                startCursor
+                endCursor
+              }
+              edges {
+                cursor
+                node
+              }
+            }
+          }
+        }",
           "variables": {
-            "after": undefined,
-            "before": undefined,
-            "first": undefined,
-            "last": undefined,
             "sort": [
               {
                 "id": "Ascending",
@@ -171,12 +192,23 @@ describe("InternalModelManager", () => {
       const plan = internalFindManyQuery("widget", { search: "term" });
       expect(plan).toMatchInlineSnapshot(`
         {
-          "query": "query InternalFindManyWidget ($search: String, $after: String, $before: String, $first: Int, $last: Int) { internal  { listWidget (search: $search, after: $after, before: $before, first: $first, last: $last) { pageInfo { hasNextPage, hasPreviousPage, startCursor, endCursor }, edges { cursor, node } } } }",
+          "query": "query InternalFindManyWidget($search: String) {
+          internal {
+            listWidget(search: $search) {
+              pageInfo {
+                hasNextPage
+                hasPreviousPage
+                startCursor
+                endCursor
+              }
+              edges {
+                cursor
+                node
+              }
+            }
+          }
+        }",
           "variables": {
-            "after": undefined,
-            "before": undefined,
-            "first": undefined,
-            "last": undefined,
             "search": "term",
           },
         }
@@ -188,10 +220,23 @@ describe("InternalModelManager", () => {
       const plan = internalFindManyQuery("widget", { filter: [{ id: { equals: "1" } }] });
       expect(plan).toMatchInlineSnapshot(`
         {
-          "query": "query InternalFindManyWidget ($filter: [WidgetFilter!], $after: String, $before: String, $first: Int, $last: Int) { internal  { listWidget (filter: $filter, after: $after, before: $before, first: $first, last: $last) { pageInfo { hasNextPage, hasPreviousPage, startCursor, endCursor }, edges { cursor, node } } } }",
+          "query": "query InternalFindManyWidget($filter: [WidgetFilter!]) {
+          internal {
+            listWidget(filter: $filter) {
+              pageInfo {
+                hasNextPage
+                hasPreviousPage
+                startCursor
+                endCursor
+              }
+              edges {
+                cursor
+                node
+              }
+            }
+          }
+        }",
           "variables": {
-            "after": undefined,
-            "before": undefined,
             "filter": [
               {
                 "id": {
@@ -199,8 +244,6 @@ describe("InternalModelManager", () => {
                 },
               },
             ],
-            "first": undefined,
-            "last": undefined,
           },
         }
       `);
@@ -225,7 +268,15 @@ describe("InternalModelManager", () => {
       const plan = internalFindFirstQuery("widget", undefined);
       expect(plan).toMatchInlineSnapshot(`
         {
-          "query": "query InternalFindFirstWidget ($first: Int) { internal  { listWidget (first: $first) { edges { node } } } }",
+          "query": "query InternalFindFirstWidget($first: Int) {
+          internal {
+            listWidget(first: $first) {
+              edges {
+                node
+              }
+            }
+          }
+        }",
           "variables": {
             "first": 1,
           },
@@ -238,7 +289,15 @@ describe("InternalModelManager", () => {
       const plan = internalFindFirstQuery("widget", { sort: [{ id: "Ascending" }] });
       expect(plan).toMatchInlineSnapshot(`
         {
-          "query": "query InternalFindFirstWidget ($sort: [WidgetSort!], $first: Int) { internal  { listWidget (sort: $sort, first: $first) { edges { node } } } }",
+          "query": "query InternalFindFirstWidget($sort: [WidgetSort!], $first: Int) {
+          internal {
+            listWidget(sort: $sort, first: $first) {
+              edges {
+                node
+              }
+            }
+          }
+        }",
           "variables": {
             "first": 1,
             "sort": [
@@ -256,7 +315,15 @@ describe("InternalModelManager", () => {
       const plan = internalFindFirstQuery("widget", { search: "term" });
       expect(plan).toMatchInlineSnapshot(`
         {
-          "query": "query InternalFindFirstWidget ($search: String, $first: Int) { internal  { listWidget (search: $search, first: $first) { edges { node } } } }",
+          "query": "query InternalFindFirstWidget($search: String, $first: Int) {
+          internal {
+            listWidget(search: $search, first: $first) {
+              edges {
+                node
+              }
+            }
+          }
+        }",
           "variables": {
             "first": 1,
             "search": "term",
@@ -270,7 +337,15 @@ describe("InternalModelManager", () => {
       const plan = internalFindFirstQuery("widget", { filter: [{ id: { equals: "1" } }] });
       expect(plan).toMatchInlineSnapshot(`
         {
-          "query": "query InternalFindFirstWidget ($filter: [WidgetFilter!], $first: Int) { internal  { listWidget (filter: $filter, first: $first) { edges { node } } } }",
+          "query": "query InternalFindFirstWidget($filter: [WidgetFilter!], $first: Int) {
+          internal {
+            listWidget(filter: $filter, first: $first) {
+              edges {
+                node
+              }
+            }
+          }
+        }",
           "variables": {
             "filter": [
               {
@@ -291,7 +366,15 @@ describe("InternalModelManager", () => {
       expect(plan.variables.select).toEqual(["foo", "bar"]);
       expect(plan).toMatchInlineSnapshot(`
         {
-          "query": "query InternalFindFirstWidget ($select: [String!], $first: Int) { internal  { listWidget (select: $select, first: $first) { edges { node } } } }",
+          "query": "query InternalFindFirstWidget($select: [String!], $first: Int) {
+          internal {
+            listWidget(select: $select, first: $first) {
+              edges {
+                node
+              }
+            }
+          }
+        }",
           "variables": {
             "first": 1,
             "select": [
@@ -310,7 +393,15 @@ describe("InternalModelManager", () => {
         const plan = internalFindFirstQuery("widget_model", undefined);
         expect(plan).toMatchInlineSnapshot(`
           {
-            "query": "query InternalFindFirstWidgetModel ($first: Int) { internal  { listWidgetModel (first: $first) { edges { node } } } }",
+            "query": "query InternalFindFirstWidgetModel($first: Int) {
+            internal {
+              listWidgetModel(first: $first) {
+                edges {
+                  node
+                }
+              }
+            }
+          }",
             "variables": {
               "first": 1,
             },
@@ -323,7 +414,15 @@ describe("InternalModelManager", () => {
         const plan = internalFindFirstQuery("widget_model", { sort: [{ id: "Ascending" }] });
         expect(plan).toMatchInlineSnapshot(`
           {
-            "query": "query InternalFindFirstWidgetModel ($sort: [WidgetModelSort!], $first: Int) { internal  { listWidgetModel (sort: $sort, first: $first) { edges { node } } } }",
+            "query": "query InternalFindFirstWidgetModel($sort: [WidgetModelSort!], $first: Int) {
+            internal {
+              listWidgetModel(sort: $sort, first: $first) {
+                edges {
+                  node
+                }
+              }
+            }
+          }",
             "variables": {
               "first": 1,
               "sort": [
@@ -341,7 +440,15 @@ describe("InternalModelManager", () => {
         const plan = internalFindFirstQuery("widget_model", { search: "term" });
         expect(plan).toMatchInlineSnapshot(`
           {
-            "query": "query InternalFindFirstWidgetModel ($search: String, $first: Int) { internal  { listWidgetModel (search: $search, first: $first) { edges { node } } } }",
+            "query": "query InternalFindFirstWidgetModel($search: String, $first: Int) {
+            internal {
+              listWidgetModel(search: $search, first: $first) {
+                edges {
+                  node
+                }
+              }
+            }
+          }",
             "variables": {
               "first": 1,
               "search": "term",
@@ -355,7 +462,15 @@ describe("InternalModelManager", () => {
         const plan = internalFindFirstQuery("widget_model", { filter: [{ id: { equals: "1" } }] });
         expect(plan).toMatchInlineSnapshot(`
           {
-            "query": "query InternalFindFirstWidgetModel ($filter: [WidgetModelFilter!], $first: Int) { internal  { listWidgetModel (filter: $filter, first: $first) { edges { node } } } }",
+            "query": "query InternalFindFirstWidgetModel($filter: [WidgetModelFilter!], $first: Int) {
+            internal {
+              listWidgetModel(filter: $filter, first: $first) {
+                edges {
+                  node
+                }
+              }
+            }
+          }",
             "variables": {
               "filter": [
                 {

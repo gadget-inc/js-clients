@@ -1,3 +1,4 @@
+import type { VariableOptions } from "tiny-graphql-query-compiler";
 import type { FieldSelection } from "./FieldSelection.js";
 
 /**
@@ -6,6 +7,8 @@ import type { FieldSelection } from "./FieldSelection.js";
 export type LimitToKnownKeys<T, U> = {
   [Key in keyof T]: Key extends keyof U ? T[Key] : never;
 };
+
+export type VariablesOptions = Record<string, VariableOptions>;
 
 /**
  * Given an options object from a find method, default the type of the selection to a default if no selection is passed

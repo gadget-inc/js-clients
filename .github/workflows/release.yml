@@ -36,3 +36,9 @@ jobs:
           token: ${{ secrets.NPM_TOKEN }}
           package: ./packages/react-shopify-app-bridge/package.json
           access: public
+      - name: Publish tiny-graphql-query-compiler
+        uses: JS-DevTools/npm-publish@v1
+        with:
+          token: ${{ secrets.NPM_TOKEN }}
+          package: ./packages/tiny-graphql-query-compiler/package.json
+          access: public

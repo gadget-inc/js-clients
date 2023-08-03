@@ -1,0 +1,14 @@
+{
+  "extends": "../../tsconfig.json",
+  "compilerOptions": {
+    "lib": ["es2020", "DOM"],
+    "jsx": "react",
+    "baseUrl": "./",
+    "moduleResolution": "node",
+    "module": "ESNext",
+    "target": "es2020",
+    "types": ["jest", "node"],
+    "outDir": "./dist"
+  },
+  "include": ["./src", "./spec"]
+}

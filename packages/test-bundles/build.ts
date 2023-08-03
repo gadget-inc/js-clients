@@ -7,7 +7,6 @@ import { build } from "vite";
 
 const bundleDir = fileURLToPath(new URL("bundles", import.meta.url));
 const entrypoints = fs.readdirSync(bundleDir);
-console.log({ bundleDir, entrypoints });
 
 for (const entrypoint of entrypoints) {
   const parsed = parse(entrypoint);
