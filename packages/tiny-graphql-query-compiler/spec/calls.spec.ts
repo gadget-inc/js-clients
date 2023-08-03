@@ -279,10 +279,10 @@ describe("compiling queries with field calls", () => {
 
       expectValidGraphQLQuery(query);
       expect(query).toMatchInlineSnapshot(`
-        "query  {
+        "query ($length: Int!) {
           id
           name
-          truncatedHTML
+          truncatedHTML(length: $length)
         }"
       `);
       expect(variables).toEqual({});
@@ -350,15 +350,18 @@ describe("compiling queries with field calls", () => {
       });
 
       expectValidGraphQLQuery(query);
-      expect(query).not.toContain("length:");
       expect(query).toMatchInlineSnapshot(`
-        "query  {
+        "query ($length: String) {
           id
           name
-          truncatedHTML
+          truncatedHTML(length: $length)
         }"
       `);
-      expect(variables).toMatchInlineSnapshot(`{}`);
+      expect(variables).toMatchInlineSnapshot(`
+        {
+          "length": null,
+        }
+      `);
     });
 
     test("it should compile a query and variables with an undefined variable", () => {
@@ -372,12 +375,11 @@ describe("compiling queries with field calls", () => {
       });
 
       expectValidGraphQLQuery(query);
-      expect(query).not.toContain("length:");
       expect(query).toMatchInlineSnapshot(`
-        "query  {
+        "query ($length: String) {
           id
           name
-          truncatedHTML
+          truncatedHTML(length: $length)
         }"
       `);
       expect(variables).toMatchInlineSnapshot(`{}`);
@@ -404,8 +406,8 @@ describe("compiling queries with field calls", () => {
 
       expectValidGraphQLQuery(query);
       expect(query).toMatchInlineSnapshot(`
-        "query ($first: Int, $after: String) {
-          users(first: $first, after: $after, filter: "bar") {
+        "query ($first: Int, $after: String, $before: String) {
+          users(first: $first, after: $after, before: $before, filter: "bar") {
             id
             name
           }
@@ -414,6 +416,7 @@ describe("compiling queries with field calls", () => {
       expect(variables).toMatchInlineSnapshot(`
         {
           "after": "cursor",
+          "before": null,
           "first": 10,
         }
       `);

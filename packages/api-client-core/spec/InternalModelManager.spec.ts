@@ -134,9 +134,9 @@ describe("InternalModelManager", () => {
       const plan = internalFindManyQuery("widget", undefined);
       expect(plan).toMatchInlineSnapshot(`
         {
-          "query": "query InternalFindManyWidget {
+          "query": "query InternalFindManyWidget($after: String, $before: String, $first: Int, $last: Int) {
           internal {
-            listWidget {
+            listWidget(after: $after, before: $before, first: $first, last: $last) {
               pageInfo {
                 hasNextPage
                 hasPreviousPage
@@ -160,9 +160,9 @@ describe("InternalModelManager", () => {
       const plan = internalFindManyQuery("widget", { sort: [{ id: "Ascending" }] });
       expect(plan).toMatchInlineSnapshot(`
         {
-          "query": "query InternalFindManyWidget($sort: [WidgetSort!]) {
+          "query": "query InternalFindManyWidget($sort: [WidgetSort!], $after: String, $before: String, $first: Int, $last: Int) {
           internal {
-            listWidget(sort: $sort) {
+            listWidget(sort: $sort, after: $after, before: $before, first: $first, last: $last) {
               pageInfo {
                 hasNextPage
                 hasPreviousPage
@@ -192,9 +192,9 @@ describe("InternalModelManager", () => {
       const plan = internalFindManyQuery("widget", { search: "term" });
       expect(plan).toMatchInlineSnapshot(`
         {
-          "query": "query InternalFindManyWidget($search: String) {
+          "query": "query InternalFindManyWidget($search: String, $after: String, $before: String, $first: Int, $last: Int) {
           internal {
-            listWidget(search: $search) {
+            listWidget(search: $search, after: $after, before: $before, first: $first, last: $last) {
               pageInfo {
                 hasNextPage
                 hasPreviousPage
@@ -220,9 +220,9 @@ describe("InternalModelManager", () => {
       const plan = internalFindManyQuery("widget", { filter: [{ id: { equals: "1" } }] });
       expect(plan).toMatchInlineSnapshot(`
         {
-          "query": "query InternalFindManyWidget($filter: [WidgetFilter!]) {
+          "query": "query InternalFindManyWidget($filter: [WidgetFilter!], $after: String, $before: String, $first: Int, $last: Int) {
           internal {
-            listWidget(filter: $filter) {
+            listWidget(filter: $filter, after: $after, before: $before, first: $first, last: $last) {
               pageInfo {
                 hasNextPage
                 hasPreviousPage

@@ -48,8 +48,8 @@ describe("operation builders", () => {
     test("findManyOperation should build a findMany query for a model", () => {
       expect(findManyOperation("widgets", { __typename: true, id: true, state: true }, "widget")).toMatchInlineSnapshot(`
         {
-          "query": "query widgets {
-          widgets {
+          "query": "query widgets($after: String, $first: Int, $before: String, $last: Int) {
+          widgets(after: $after, first: $first, before: $before, last: $last) {
             pageInfo {
               hasNextPage
               hasPreviousPage
@@ -78,8 +78,8 @@ describe("operation builders", () => {
       expect(findManyOperation("widgets", { __typename: true, id: true, state: true }, "widget", { select: { id: true, name: true } }))
         .toMatchInlineSnapshot(`
         {
-          "query": "query widgets {
-          widgets {
+          "query": "query widgets($after: String, $first: Int, $before: String, $last: Int) {
+          widgets(after: $after, first: $first, before: $before, last: $last) {
             pageInfo {
               hasNextPage
               hasPreviousPage
@@ -108,8 +108,8 @@ describe("operation builders", () => {
       expect(findManyOperation("widgets", { __typename: true, id: true, state: true }, "widget", { search: "Search Term" }))
         .toMatchInlineSnapshot(`
         {
-          "query": "query widgets($search: String) {
-          widgets(search: $search) {
+          "query": "query widgets($after: String, $first: Int, $before: String, $last: Int, $search: String) {
+          widgets(after: $after, first: $first, before: $before, last: $last, search: $search) {
             pageInfo {
               hasNextPage
               hasPreviousPage
@@ -140,8 +140,8 @@ describe("operation builders", () => {
       expect(findManyOperation("widgets", { __typename: true, id: true, state: true }, "widget", { sort: [{ id: "Ascending" }] }))
         .toMatchInlineSnapshot(`
         {
-          "query": "query widgets($sort: [WidgetSort!]) {
-          widgets(sort: $sort) {
+          "query": "query widgets($after: String, $first: Int, $before: String, $last: Int, $sort: [WidgetSort!]) {
+          widgets(after: $after, first: $first, before: $before, last: $last, sort: $sort) {
             pageInfo {
               hasNextPage
               hasPreviousPage
@@ -176,8 +176,8 @@ describe("operation builders", () => {
       expect(findManyOperation("widgets", { __typename: true, id: true, state: true }, "widget", { filter: [{ id: { equals: "1" } }] }))
         .toMatchInlineSnapshot(`
         {
-          "query": "query widgets($filter: [WidgetFilter!]) {
-          widgets(filter: $filter) {
+          "query": "query widgets($after: String, $first: Int, $before: String, $last: Int, $filter: [WidgetFilter!]) {
+          widgets(after: $after, first: $first, before: $before, last: $last, filter: $filter) {
             pageInfo {
               hasNextPage
               hasPreviousPage
@@ -215,8 +215,8 @@ describe("operation builders", () => {
     test("findOneByFieldOperation should build a find by field query for a model", () => {
       expect(findOneByFieldOperation("widget", "foo", "bar", { __typename: true, id: true, state: true }, "widget")).toMatchInlineSnapshot(`
         {
-          "query": "query widget($first: Int, $filter: [WidgetFilter!]) {
-          widget(first: $first, filter: $filter) {
+          "query": "query widget($after: String, $first: Int, $before: String, $last: Int, $filter: [WidgetFilter!]) {
+          widget(after: $after, first: $first, before: $before, last: $last, filter: $filter) {
             pageInfo {
               hasNextPage
               hasPreviousPage
@@ -255,8 +255,8 @@ describe("operation builders", () => {
         })
       ).toMatchInlineSnapshot(`
         {
-          "query": "query widget($first: Int, $filter: [WidgetFilter!]) {
-          widget(first: $first, filter: $filter) {
+          "query": "query widget($after: String, $first: Int, $before: String, $last: Int, $filter: [WidgetFilter!]) {
+          widget(after: $after, first: $first, before: $before, last: $last, filter: $filter) {
             pageInfo {
               hasNextPage
               hasPreviousPage
