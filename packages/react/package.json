@@ -1,6 +1,6 @@
 {
   "name": "@gadgetinc/react",
-  "version": "0.13.5",
+  "version": "0.14.0",
   "files": [
     "README.md",
     "dist/**/*"
@@ -27,7 +27,7 @@
     "prerelease": "gitpkg publish"
   },
   "dependencies": {
-    "@gadgetinc/api-client-core": "^0.14.0",
+    "@gadgetinc/api-client-core": "^0.15.0",
     "deep-equal": "^2.2.0",
     "urql": "^4.0.4"
   },
