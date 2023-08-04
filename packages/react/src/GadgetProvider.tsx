@@ -75,12 +75,12 @@ const defaultSignOutApiIdentifier = "signOut";
  * </Provider>
  *
  * @example the Provider accepts the deprecated form of passing an urql client object right in -- this is deprecated and will be removed in a future version. Instead, just pass the whole api instance.
- * <Provider api={api.connection.currentClient}>
+ * <Provider value={api.connection.currentClient}>
  *   <MyApp />
  * </Provider>
  *
  * @example the Provider accepts option sign in and sign out paths.
- * <Provider api={api.connection.currentClient} signInPath="/auth/signin" signOutActionApiIdentifier="signOut">
+ * <Provider api={api} signInPath="/auth/signin" signOutActionApiIdentifier="signOut">
  *   <MyApp />
  * </Provider>
  */
