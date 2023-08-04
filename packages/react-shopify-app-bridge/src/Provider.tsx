@@ -1,14 +1,13 @@
 import type { AnyClient } from "@gadgetinc/api-client-core";
 import { Provider as GadgetUrqlProvider, useQuery } from "@gadgetinc/react";
 import type { History, LocationOrHref } from "@shopify/app-bridge-react";
-import { Provider as AppBridgeProvider } from "@shopify/app-bridge-react";
-import { AppBridgeContext } from "@shopify/app-bridge-react/context";
+import AppBridgeReact from "@shopify/app-bridge-react";
+import { AppBridgeContext } from "@shopify/app-bridge-react/context.js";
 import { getSessionToken } from "@shopify/app-bridge-utils";
-import { Redirect } from "@shopify/app-bridge/actions";
-import { isUndefined } from "lodash";
+import { Redirect } from "@shopify/app-bridge/actions/index.js";
 import React, { memo, useContext, useEffect, useMemo, useState } from "react";
-import type { GadgetAuthContextValue } from "./index";
-import { GadgetAuthContext } from "./index";
+import type { GadgetAuthContextValue } from "./index.js";
+import { GadgetAuthContext } from "./index.js";
 
 export enum AppType {
   Standalone,
@@ -209,7 +208,7 @@ export const Provider = ({
   // We need to inform developers if the component is being rendered in a non embedded context when it should be AND we're not in an interstitial installation state. This is determined for now by the absence of both hmac and shop. This will generally occur when someone visits the app url while not in the Shopify admin.
   const isRootFrameRequest = !query?.has("hmac") && !query?.has("shop") && coalescedType == AppType.Embedded;
 
-  const forceRedirect = isReady && !isUndefined(host) && !inDestinationContext;
+  const forceRedirect = isReady && typeof host !== "undefined" && !inDestinationContext;
 
   const gadgetAppUrl = new URL(api.connection.options.endpoint).origin;
 
@@ -253,7 +252,7 @@ export const Provider = ({
   // app bridge provider seems to prevent urql from sending graphql requests when it cannot communicate using postMessage when not embedded so we must skip using the app bridge provider on the very first redirect from shopify
   if (shouldMountAppBridge) {
     app = (
-      <AppBridgeProvider
+      <AppBridgeReact.Provider
         config={{
           apiKey: shopifyApiKey,
           host,
@@ -262,7 +261,7 @@ export const Provider = ({
         router={router}
       >
         {app}
-      </AppBridgeProvider>
+      </AppBridgeReact.Provider>
     );
   }
 

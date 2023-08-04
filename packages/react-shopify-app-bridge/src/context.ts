@@ -1,6 +1,6 @@
 import type { AppBridgeState, ClientApplication } from "@shopify/app-bridge";
 import { createContext, useContext } from "react";
-import type { AppType } from "./Provider";
+import type { AppType } from "./Provider.js";
 
 export type GadgetAuthContextValue = {
   /** Is the AppBridge provider or the Gadget auth system loading or redirecting the user to make requests elsewhere */
