@@ -220,7 +220,7 @@ export const Provider = ({
   }, []);
 
   let app = (
-    <GadgetUrqlProvider value={api.connection.currentClient}>
+    <GadgetUrqlProvider api={api}>
       <InnerGadgetProvider
         forceRedirect={forceRedirect}
         isEmbedded={isEmbedded}
