@@ -165,14 +165,14 @@ describe("useFetch", () => {
   });
 
   test("it can fetch a string stream from the backend", async () => {
-    let onStreamCompleteCalled = false;
+    let onStreamCompleteCalled: boolean | string = false;
     const { result } = renderHook(
       () =>
         useFetch("/foo/bar", {
           stream: "string",
           sendImmediately: false,
-          onStreamComplete: () => {
-            onStreamCompleteCalled = true;
+          onStreamComplete: (value) => {
+            onStreamCompleteCalled = value;
           },
         }),
       {
@@ -258,7 +258,7 @@ describe("useFetch", () => {
     });
     expect(result.current[0].data).toEqual("hello world");
     expect(result.current[0].streaming).toBe(false);
-    expect(onStreamCompleteCalled).toBe(true);
+    expect(onStreamCompleteCalled).toBe("hello world");
 
     expect(mockUrqlClient[$gadgetConnection].fetch).toBeCalledTimes(1);
   });
