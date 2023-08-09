@@ -2,11 +2,11 @@ import { renderHook } from "@testing-library/react";
 import { noUserModelApi, superAuthApi } from "../../spec/apis.js";
 import { expectMockSignedInUser, expectMockSignedOutUser, mockInternalServerError, mockNetworkError } from "../../spec/utils.js";
 import { useSession } from "../../src/auth/useSession.js";
-import { TestWrapper } from "../testWrapper.js";
+import { MockClientWrapper } from "../testWrappers.js";
 
 describe("useSession", () => {
   test("it returns the current session when the user is logged in", async () => {
-    const { result, rerender } = renderHook(() => useSession(), { wrapper: TestWrapper(superAuthApi) });
+    const { result, rerender } = renderHook(() => useSession(), { wrapper: MockClientWrapper(superAuthApi) });
 
     expectMockSignedInUser();
     rerender();
@@ -19,7 +19,7 @@ describe("useSession", () => {
   });
 
   test("it returns the current session when the user is logged out", async () => {
-    const { result, rerender } = renderHook(() => useSession(), { wrapper: TestWrapper(superAuthApi) });
+    const { result, rerender } = renderHook(() => useSession(), { wrapper: MockClientWrapper(superAuthApi) });
 
     expectMockSignedOutUser();
     rerender();
@@ -32,7 +32,7 @@ describe("useSession", () => {
 
   test("it throws when the server responds with an error", async () => {
     expect(() => {
-      const { rerender } = renderHook(() => useSession(), { wrapper: TestWrapper(superAuthApi) });
+      const { rerender } = renderHook(() => useSession(), { wrapper: MockClientWrapper(superAuthApi) });
 
       mockInternalServerError();
 
@@ -45,7 +45,7 @@ describe("useSession", () => {
 
   test("it throws when request fails to complete", async () => {
     expect(() => {
-      const { rerender } = renderHook(() => useSession(), { wrapper: TestWrapper(superAuthApi) });
+      const { rerender } = renderHook(() => useSession(), { wrapper: MockClientWrapper(superAuthApi) });
 
       mockNetworkError();
 
@@ -54,7 +54,7 @@ describe("useSession", () => {
   });
 
   test("it returns the current session when the client does not have a user model", () => {
-    const { result, rerender } = renderHook(() => useSession(), { wrapper: TestWrapper(noUserModelApi) });
+    const { result, rerender } = renderHook(() => useSession(), { wrapper: MockClientWrapper(noUserModelApi) });
 
     expectMockSignedOutUser();
     rerender();

@@ -5,7 +5,7 @@ import { act } from "react-dom/test-utils";
 import { useGlobalAction } from "../src.js";
 import type { ErrorWrapper } from "../src/utils.js";
 import { bulkExampleApi } from "./apis.js";
-import { mockUrqlClient, TestWrapper } from "./testWrapper.js";
+import { MockClientWrapper, mockUrqlClient } from "./testWrappers.js";
 
 describe("useGlobalAction", () => {
   // these functions are typechecked but never run to avoid actually making API calls
@@ -24,7 +24,7 @@ describe("useGlobalAction", () => {
   };
 
   test("returns no data, not fetching, and no error when the component is first mounted", () => {
-    const { result } = renderHook(() => useGlobalAction(bulkExampleApi.flipAll), { wrapper: TestWrapper(bulkExampleApi) });
+    const { result } = renderHook(() => useGlobalAction(bulkExampleApi.flipAll), { wrapper: MockClientWrapper(bulkExampleApi) });
 
     expect(result.current[0].data).toBeFalsy();
     expect(result.current[0].fetching).toBe(false);
@@ -32,7 +32,7 @@ describe("useGlobalAction", () => {
   });
 
   test("returns no data, fetching=true, and no error when the mutation is run, and then the successful data if the mutation succeeds", async () => {
-    const { result } = renderHook(() => useGlobalAction(bulkExampleApi.flipAll), { wrapper: TestWrapper(bulkExampleApi) });
+    const { result } = renderHook(() => useGlobalAction(bulkExampleApi.flipAll), { wrapper: MockClientWrapper(bulkExampleApi) });
 
     let mutationPromise: any;
     act(() => {
@@ -69,7 +69,7 @@ describe("useGlobalAction", () => {
   });
 
   test("returns an error when the mutation is run and the server responds with success: false", async () => {
-    const { result } = renderHook(() => useGlobalAction(bulkExampleApi.flipAll), { wrapper: TestWrapper(bulkExampleApi) });
+    const { result } = renderHook(() => useGlobalAction(bulkExampleApi.flipAll), { wrapper: MockClientWrapper(bulkExampleApi) });
 
     let mutationPromise: any;
     act(() => {
@@ -110,7 +110,7 @@ describe("useGlobalAction", () => {
   });
 
   test("returns the same data after executing the mutation and rerendering", async () => {
-    const { result, rerender } = renderHook(() => useGlobalAction(bulkExampleApi.flipAll), { wrapper: TestWrapper(bulkExampleApi) });
+    const { result, rerender } = renderHook(() => useGlobalAction(bulkExampleApi.flipAll), { wrapper: MockClientWrapper(bulkExampleApi) });
 
     let mutationPromise: any;
     act(() => {

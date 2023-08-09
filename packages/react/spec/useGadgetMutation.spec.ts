@@ -3,7 +3,7 @@ import { gql } from "urql";
 import { useGadgetMutation } from "../src/useGadgetMutation.js";
 import { noProviderErrorMessage } from "../src/utils.js";
 import { relatedProductsApi } from "./apis.js";
-import { TestWrapper, mockUrqlClient } from "./testWrapper.js";
+import { MockClientWrapper, mockUrqlClient } from "./testWrappers.js";
 
 describe("useGadgetMutation", () => {
   test("throw error when no provider included", () => {
@@ -30,7 +30,7 @@ describe("useGadgetMutation", () => {
             }
           `
         ),
-      { wrapper: TestWrapper(relatedProductsApi) }
+      { wrapper: MockClientWrapper(relatedProductsApi) }
     );
 
     expect(result.current[0].data).toBeFalsy();
@@ -83,7 +83,7 @@ describe("useGadgetMutation", () => {
             }
           `
         ),
-      { wrapper: TestWrapper(relatedProductsApi) }
+      { wrapper: MockClientWrapper(relatedProductsApi) }
     );
 
     expect(result.current[0].data).toBeFalsy();

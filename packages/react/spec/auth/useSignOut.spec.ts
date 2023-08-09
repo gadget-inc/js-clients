@@ -1,8 +1,8 @@
 import { act, renderHook } from "@testing-library/react";
-import { superAuthApi } from "../../spec/apis";
-import { TestWrapper, mockUrqlClient } from "../../spec/testWrapper";
-import { expectMockSignedInUser, expectMockSignedOutUser } from "../../spec/utils";
-import { useSignOut } from "../../src/auth/useSignOut";
+import { useSignOut } from "../../src/auth/useSignOut.js";
+import { superAuthApi } from "../apis.js";
+import { MockClientWrapper, mockUrqlClient } from "../testWrappers.js";
+import { expectMockSignedInUser, expectMockSignedOutUser } from "../utils.js";
 
 describe("useSignOut", () => {
   const { location } = window;
@@ -24,7 +24,7 @@ describe("useSignOut", () => {
   });
 
   test("it redirects to the provider signInPath when the user is signed in", async () => {
-    const { result, rerender } = renderHook(() => useSignOut(), { wrapper: TestWrapper(superAuthApi) });
+    const { result, rerender } = renderHook(() => useSignOut(), { wrapper: MockClientWrapper(superAuthApi) });
 
     expectMockSignedInUser();
     rerender();
@@ -60,7 +60,7 @@ describe("useSignOut", () => {
 
   test("it redirects to the optional redirectToPath when the user is signed in", async () => {
     const { result, rerender } = renderHook(() => useSignOut({ redirectToPath: "/somewhere-special" }), {
-      wrapper: TestWrapper(superAuthApi),
+      wrapper: MockClientWrapper(superAuthApi),
     });
 
     expectMockSignedInUser();
@@ -95,7 +95,7 @@ describe("useSignOut", () => {
   });
 
   test("it does not redirect when the redirectOnSuccess option is false", async () => {
-    const { result, rerender } = renderHook(() => useSignOut({ redirectOnSuccess: false }), { wrapper: TestWrapper(superAuthApi) });
+    const { result, rerender } = renderHook(() => useSignOut({ redirectOnSuccess: false }), { wrapper: MockClientWrapper(superAuthApi) });
 
     expectMockSignedInUser();
     rerender();
@@ -131,7 +131,7 @@ describe("useSignOut", () => {
   test("it does not redirect and throws when an error occurs during signOut", async () => {
     let caughtError = null;
     try {
-      const { result, rerender } = renderHook(() => useSignOut(), { wrapper: TestWrapper(superAuthApi) });
+      const { result, rerender } = renderHook(() => useSignOut(), { wrapper: MockClientWrapper(superAuthApi) });
 
       expectMockSignedInUser();
       rerender();
@@ -173,7 +173,7 @@ describe("useSignOut", () => {
   test("it throws an error when there is no signed in user", async () => {
     let caughtError = null;
     try {
-      const { result, rerender } = renderHook(() => useSignOut(), { wrapper: TestWrapper(superAuthApi) });
+      const { result, rerender } = renderHook(() => useSignOut(), { wrapper: MockClientWrapper(superAuthApi) });
       expectMockSignedOutUser();
       rerender();
 

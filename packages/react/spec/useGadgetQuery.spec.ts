@@ -3,7 +3,7 @@ import { gql } from "urql";
 import { useGadgetQuery } from "../src/useGadgetQuery.js";
 import { noProviderErrorMessage } from "../src/utils.js";
 import { relatedProductsApi } from "./apis.js";
-import { TestWrapper, mockUrqlClient } from "./testWrapper.js";
+import { MockClientWrapper, mockUrqlClient } from "./testWrappers.js";
 
 describe("useGadgetQuery", () => {
   test("throw error when no provider included", () => {
@@ -27,7 +27,7 @@ describe("useGadgetQuery", () => {
             }
           `,
         }),
-      { wrapper: TestWrapper(relatedProductsApi) }
+      { wrapper: MockClientWrapper(relatedProductsApi) }
     );
 
     expect(result.current[0].data).toBeFalsy();
@@ -64,7 +64,7 @@ describe("useGadgetQuery", () => {
           `,
           suspense: true,
         }),
-      { wrapper: TestWrapper(relatedProductsApi) }
+      { wrapper: MockClientWrapper(relatedProductsApi) }
     );
 
     // first render never completes as the component suspends

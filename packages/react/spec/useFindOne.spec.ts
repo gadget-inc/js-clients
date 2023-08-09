@@ -5,7 +5,7 @@ import { assert } from "conditional-type-checks";
 import { useFindOne } from "../src/index.js";
 import type { ErrorWrapper } from "../src/utils.js";
 import { relatedProductsApi } from "./apis.js";
-import { mockUrqlClient, TestWrapper } from "./testWrapper.js";
+import { MockClientWrapper, mockUrqlClient } from "./testWrappers.js";
 
 describe("useFindOne", () => {
   // these functions are typechecked but never run to avoid actually making API calls
@@ -36,7 +36,7 @@ describe("useFindOne", () => {
   };
 
   test("can find one record by id", async () => {
-    const { result } = renderHook(() => useFindOne(relatedProductsApi.user, "123"), { wrapper: TestWrapper(relatedProductsApi) });
+    const { result } = renderHook(() => useFindOne(relatedProductsApi.user, "123"), { wrapper: MockClientWrapper(relatedProductsApi) });
 
     expect(result.current[0].data).toBeFalsy();
     expect(result.current[0].fetching).toBe(true);
@@ -62,7 +62,9 @@ describe("useFindOne", () => {
   });
 
   test("returns an error if the record isn't found", async () => {
-    const { result, rerender } = renderHook(() => useFindOne(relatedProductsApi.user, "123"), { wrapper: TestWrapper(relatedProductsApi) });
+    const { result, rerender } = renderHook(() => useFindOne(relatedProductsApi.user, "123"), {
+      wrapper: MockClientWrapper(relatedProductsApi),
+    });
 
     expect(result.current[0].data).toBeFalsy();
     expect(result.current[0].fetching).toBe(true);
@@ -91,7 +93,9 @@ describe("useFindOne", () => {
   });
 
   test("returns the same data on rerender", async () => {
-    const { result, rerender } = renderHook(() => useFindOne(relatedProductsApi.user, "123"), { wrapper: TestWrapper(relatedProductsApi) });
+    const { result, rerender } = renderHook(() => useFindOne(relatedProductsApi.user, "123"), {
+      wrapper: MockClientWrapper(relatedProductsApi),
+    });
 
     expect(mockUrqlClient.executeQuery).toBeCalledTimes(1);
 
@@ -118,7 +122,7 @@ describe("useFindOne", () => {
       () => {
         return useFindOne(relatedProductsApi.user, "123", { suspense: true });
       },
-      { wrapper: TestWrapper(relatedProductsApi) }
+      { wrapper: MockClientWrapper(relatedProductsApi) }
     );
 
     // first render never completes as the component suspends

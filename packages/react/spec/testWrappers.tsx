@@ -155,7 +155,7 @@ export const createMockUrqlCient = (assertions?: {
   } as MockUrqlClient;
 };
 
-export const TestWrapper = (api: AnyClient) => (props: { children: ReactNode }) => {
+export const MockClientWrapper = (api: AnyClient) => (props: { children: ReactNode }) => {
   jest.spyOn(api.connection, "currentClient", "get").mockReturnValue(mockUrqlClient);
 
   return (

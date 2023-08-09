@@ -5,7 +5,7 @@ import { assert } from "conditional-type-checks";
 import { useGet } from "../src/useGet.js";
 import type { ErrorWrapper } from "../src/utils.js";
 import { relatedProductsApi } from "./apis.js";
-import { TestWrapper, mockUrqlClient } from "./testWrapper.js";
+import { MockClientWrapper, mockUrqlClient } from "./testWrappers.js";
 
 describe("useGet", () => {
   // these functions are typechecked but never run to avoid actually making API calls
@@ -36,7 +36,7 @@ describe("useGet", () => {
   };
 
   test("it can find the current session", async () => {
-    const { result } = renderHook(() => useGet(relatedProductsApi.currentSession), { wrapper: TestWrapper(relatedProductsApi) });
+    const { result } = renderHook(() => useGet(relatedProductsApi.currentSession), { wrapper: MockClientWrapper(relatedProductsApi) });
 
     expect(result.current[0].data).toBeFalsy();
     expect(result.current[0].fetching).toBe(true);
@@ -60,7 +60,7 @@ describe("useGet", () => {
   });
 
   test("it can not find the current session if the server doesn't have one", async () => {
-    const { result } = renderHook(() => useGet(relatedProductsApi.currentSession), { wrapper: TestWrapper(relatedProductsApi) });
+    const { result } = renderHook(() => useGet(relatedProductsApi.currentSession), { wrapper: MockClientWrapper(relatedProductsApi) });
 
     expect(result.current[0].data).toBeFalsy();
     expect(result.current[0].fetching).toBe(true);
@@ -82,7 +82,9 @@ describe("useGet", () => {
   });
 
   test("it returns the same data on rerender", async () => {
-    const { result, rerender } = renderHook(() => useGet(relatedProductsApi.currentSession), { wrapper: TestWrapper(relatedProductsApi) });
+    const { result, rerender } = renderHook(() => useGet(relatedProductsApi.currentSession), {
+      wrapper: MockClientWrapper(relatedProductsApi),
+    });
 
     expect(mockUrqlClient.executeQuery).toBeCalledTimes(1);
 
@@ -105,7 +107,7 @@ describe("useGet", () => {
 
   test("it can find the current session with suspense", async () => {
     const { result, rerender } = renderHook(() => useGet(relatedProductsApi.currentSession, { suspense: true }), {
-      wrapper: TestWrapper(relatedProductsApi),
+      wrapper: MockClientWrapper(relatedProductsApi),
     });
 
     // first render never completes as the component suspends

@@ -9,7 +9,7 @@ import { Provider } from "../src/GadgetProvider.js";
 import { useAction } from "../src/index.js";
 import type { ErrorWrapper } from "../src/utils.js";
 import { relatedProductsApi } from "./apis.js";
-import { TestWrapper, createMockUrqlCient, mockUrqlClient } from "./testWrapper.js";
+import { MockClientWrapper, createMockUrqlCient, mockUrqlClient } from "./testWrappers.js";
 
 describe("useAction", () => {
   // these functions are typechecked but never run to avoid actually making API calls
@@ -90,7 +90,7 @@ describe("useAction", () => {
   };
 
   test("returns no data, not fetching, and no error when the component is first mounted", () => {
-    const { result } = renderHook(() => useAction(relatedProductsApi.user.update), { wrapper: TestWrapper(relatedProductsApi) });
+    const { result } = renderHook(() => useAction(relatedProductsApi.user.update), { wrapper: MockClientWrapper(relatedProductsApi) });
 
     expect(result.current[0].data).toBeFalsy();
     expect(result.current[0].fetching).toBe(false);
@@ -98,7 +98,7 @@ describe("useAction", () => {
   });
 
   test("returns no data, fetching=true, and no error when the mutation is run, and then the successful data if the mutation succeeds", async () => {
-    const { result } = renderHook(() => useAction(relatedProductsApi.user.update), { wrapper: TestWrapper(relatedProductsApi) });
+    const { result } = renderHook(() => useAction(relatedProductsApi.user.update), { wrapper: MockClientWrapper(relatedProductsApi) });
 
     let mutationPromise: any;
     act(() => {
@@ -144,7 +144,7 @@ describe("useAction", () => {
       () => {
         return useAction(relatedProductsApi.user.update);
       },
-      { wrapper: TestWrapper(relatedProductsApi) }
+      { wrapper: MockClientWrapper(relatedProductsApi) }
     );
 
     let mutationPromise: any;
@@ -201,7 +201,9 @@ describe("useAction", () => {
   });
 
   test("returns the same data after executing the mutation and rerendering", async () => {
-    const { result, rerender } = renderHook(() => useAction(relatedProductsApi.user.update), { wrapper: TestWrapper(relatedProductsApi) });
+    const { result, rerender } = renderHook(() => useAction(relatedProductsApi.user.update), {
+      wrapper: MockClientWrapper(relatedProductsApi),
+    });
 
     let mutationPromise: any;
     act(() => {
@@ -237,7 +239,7 @@ describe("useAction", () => {
   });
 
   test("returns a second mutation response if called a second time", async () => {
-    const { result } = renderHook(() => useAction(relatedProductsApi.user.update), { wrapper: TestWrapper(relatedProductsApi) });
+    const { result } = renderHook(() => useAction(relatedProductsApi.user.update), { wrapper: MockClientWrapper(relatedProductsApi) });
 
     let mutationPromise: any;
     act(() => {
@@ -403,7 +405,7 @@ describe("useAction", () => {
     let caughtError = null;
 
     const { result } = renderHook(() => useAction(relatedProductsApi.ambiguous.update), {
-      wrapper: TestWrapper(relatedProductsApi),
+      wrapper: MockClientWrapper(relatedProductsApi),
     });
 
     try {
