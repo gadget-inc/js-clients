@@ -46,7 +46,7 @@ export interface FetchHookOptions extends RequestInit {
   stream?: boolean | string;
   json?: boolean;
   sendImmediately?: boolean;
-  onStreamComplete?: () => void;
+  onStreamComplete?: (value: string) => void;
 }
 
 const startRequestByDefault = (options?: FetchHookOptions) => {
@@ -91,7 +91,7 @@ const dispatchError = (
  * Pass the `{ stream: "string" }` to decode the `ReadableStream` as a string and update data as it arrives. If the stream is in an encoding other than utf8 use i.e. `{ stream: "utf-16" }`.
  *
  * When `{ stream: "string" }` is used, the `streaming` field in the state will be set to `true` while the stream is active, and `false` when the stream is complete. You can use this to show a loading indicator while the stream is active.
- * You can also pass an `onStreamComplete` callback to be notified when the stream is complete.
+ * You can also pass an `onStreamComplete` callback that will be called with the value of the streamed string once it has completed.
  *
  * If you want to read model data, see the `useFindMany` function and similar. If you want to invoke a backend Action, use the `useAction` hook instead.
  *
@@ -207,7 +207,7 @@ export function useFetch<T = string>(path: string, options?: FetchHookOptions): 
               }
             }
 
-            mergedOptions.onStreamComplete?.();
+            mergedOptions.onStreamComplete?.(responseText);
           })()
             .catch((error) => {
               if (!abortContoller.signal.aborted) {
