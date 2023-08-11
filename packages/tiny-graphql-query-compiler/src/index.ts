@@ -86,6 +86,7 @@ export interface VariableOptions {
   type: string;
   name?: string;
   value?: any;
+  required?: string;
 }
 
 /** Represents one reference to a variable somewhere in a selection */
@@ -100,7 +101,7 @@ export class Variable {
 export const Call = (args: Record<string, Variable | any>, subselection?: FieldSelection) => new FieldCall(args, subselection);
 
 /** Used for calling a field with a variable within the args to a field */
-export const Var = (options: VariableOptions) => new Variable(options.type, options.name, options.value);
+export const Var = (options: VariableOptions) => new Variable(options.type + (options.required ? "!" : ""), options.name, options.value);
 
 /** Compiles one JS object describing a query into a GraphQL string */
 export const compile = (operation: BuilderOperation): string => {

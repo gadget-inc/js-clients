@@ -42,6 +42,46 @@ describe("compiling queries with field calls", () => {
     `);
   });
 
+  test("it should compile a query that calls a field with a required variable value", () => {
+    const result = compile({
+      type: "query",
+      fields: {
+        id: true,
+        name: true,
+        truncatedHTML: Call({ length: Var({ type: "Int", required: true }) }),
+      },
+    });
+
+    expectValidGraphQLQuery(result);
+    expect(result).toMatchInlineSnapshot(`
+      "query ($length: Int!) {
+        id
+        name
+        truncatedHTML(length: $length)
+      }"
+    `);
+  });
+
+  test("it should compile a query that calls a field with an explicitly non-required variable value", () => {
+    const result = compile({
+      type: "query",
+      fields: {
+        id: true,
+        name: true,
+        truncatedHTML: Call({ length: Var({ type: "Int", required: false }) }),
+      },
+    });
+
+    expectValidGraphQLQuery(result);
+    expect(result).toMatchInlineSnapshot(`
+      "query ($length: Int) {
+        id
+        name
+        truncatedHTML(length: $length)
+      }"
+    `);
+  });
+
   test("it should compile a query that calls fields with multiple variable values", () => {
     const result = compile({
       type: "query",
