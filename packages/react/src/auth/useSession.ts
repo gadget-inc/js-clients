@@ -7,16 +7,11 @@ import type {
   LimitToKnownKeys,
   Select,
 } from "@gadgetinc/api-client-core";
-import type { OptionsType, ReadOperationOptions } from "src/utils";
+import { useApi } from "../../src/GadgetProvider";
 import { useGet } from "../../src/useGet";
-import { useApi } from "src/GadgetProvider";
+import type { OptionsType, ReadOperationOptions } from "../../src/utils";
 
-export interface GadgetSession {
-  id: string;
-  userId: string | null;
-  user: GadgetUser | null;
-  [key: string]: any;
-}
+export type GadgetSession = GadgetRecord<Record<string, any>>;
 
 export interface GadgetUser {
   id: string;
@@ -27,43 +22,36 @@ export type ClientWithSessionAndUserManagers<SessionGivenOptions, SessionSchemaT
   currentSession: { get: GetFunction<SessionGivenOptions, any, SessionSchemaT, any> };
   user: { findMany: FindManyFunction<UserGivenOptions, any, UserSchemaT, any> };
 };
+
 /**
  * Used for fetching the current `Session` record from Gadget. Will suspend while the user is being fetched.
  * @returns The current session
  */
-export function useSession(): GadgetRecord<any>;
 export function useSession<
   SessionGivenOptions extends OptionsType,
   SessionSchemaT,
   UserGivenOptions extends OptionsType,
   UserSchemaT,
   Client extends ClientWithSessionAndUserManagers<SessionGivenOptions, SessionSchemaT, UserGivenOptions, UserSchemaT>,
-  Options extends Client["currentSession"]["get"]["optionsType"] & ReadOperationOptions
+  Options extends Client["currentSession"]["get"]["optionsType"] & ReadOperationOptions,
+  ClientType extends Client | undefined
 >(
-  client: Client,
+  client?: ClientType,
   options?: LimitToKnownKeys<Options, Client["currentSession"]["get"]["optionsType"] & ReadOperationOptions>
-): GadgetRecord<
-  Select<
-    Exclude<Client["currentSession"]["get"]["schemaType"], null | undefined>,
-    DefaultSelection<Client["currentSession"]["get"]["selectionType"], Options, Client["currentSession"]["get"]["defaultSelection"] & { user: Client["user"]["findMany"]["defaultSelection"]}>
-  >
->;
-export function useSession<
-  SessionGivenOptions extends OptionsType,
-  SessionSchemaT,
-  UserGivenOptions extends OptionsType,
-  UserSchemaT,
-  Client extends ClientWithSessionAndUserManagers<SessionGivenOptions, SessionSchemaT, UserGivenOptions, UserSchemaT>,
-  Options extends Client["currentSession"]["get"]["optionsType"] & ReadOperationOptions
->(
-  client?: Client,
-  options?: LimitToKnownKeys<Options, Client["currentSession"]["get"]["optionsType"] & ReadOperationOptions>
-): GadgetRecord<
-  Select<
-    Exclude<Client["currentSession"]["get"]["schemaType"], null | undefined>,
-    DefaultSelection<Client["currentSession"]["get"]["selectionType"], Options, Client["currentSession"]["get"]["defaultSelection"] & { user: Client["user"]["findMany"]["defaultSelection"]}>
-  >
-> {
+): undefined extends ClientType
+  ? GadgetSession
+  : GadgetRecord<
+      Select<
+        Exclude<Exclude<ClientType, undefined>["currentSession"]["get"]["schemaType"], null | undefined>,
+        DefaultSelection<
+          Exclude<ClientType, undefined>["currentSession"]["get"]["selectionType"],
+          Options,
+          Exclude<ClientType, undefined>["currentSession"]["get"]["defaultSelection"] & {
+            user: Exclude<ClientType, undefined>["user"]["findMany"]["defaultSelection"];
+          }
+        >
+      >
+    > {
   const fallbackApi = useApi() as any;
 
   const api = client ?? fallbackApi;
@@ -76,10 +64,10 @@ export function useSession<
     ...(options ?? {}),
   } as any;
 
-const [{ data: session, error }] = useGet(api.currentSession, opts);
+  const [{ data: session, error }] = useGet(api.currentSession, opts);
 
   if (error) throw error;
   if (!session) throw new Error("currentSession not found but should be present");
-  return typeof client == "undefined" ? session : session as any;
-  // return client ? session : session as any;
-};
+
+  return session as any;
+}
