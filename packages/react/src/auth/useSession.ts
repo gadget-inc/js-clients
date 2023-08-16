@@ -13,10 +13,7 @@ import type { OptionsType, ReadOperationOptions } from "../utils";
 
 export type GadgetSession = GadgetRecord<Record<string, any>>;
 
-export interface GadgetUser {
-  id: string;
-  [key: string]: any;
-}
+export type GadgetUser = GadgetRecord<Record<string, any>>;
 
 export type ClientWithSessionAndUserManagers<SessionGivenOptions, SessionSchemaT, UserGivenOptions, UserSchemaT> = AnyClient & {
   currentSession: { get: GetFunction<SessionGivenOptions, any, SessionSchemaT, any> };
