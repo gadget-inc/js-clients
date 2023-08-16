@@ -9,7 +9,6 @@ export const expectMockSignedInUser = (urqlClient?: MockUrqlClient) => {
     data: {
       currentSession: {
         id: "123",
-        userId: "321",
         user: {
           id: "321",
           firstName: "Jane",
@@ -29,7 +28,6 @@ export const expectMockSignedOutUser = (urqlClient?: MockUrqlClient) => {
     data: {
       currentSession: {
         id: "123",
-        userId: null,
         user: null,
       },
     },
@@ -45,7 +43,6 @@ export const expectMockDeletedUser = (urqlClient?: MockUrqlClient) => {
     data: {
       currentSession: {
         id: "123",
-        userId: 1,
         user: null,
       },
     },

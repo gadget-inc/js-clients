@@ -101,10 +101,9 @@ describe("useSession", () => {
   });
 
   test("it returns the current session when the user is logged in and api client with options is passed", async () => {
-    const { result, rerender } = renderHook(
-      () => useSession(superAuthApi, { select: { id: true, userId: true, user: { id: true, firstName: true } } }),
-      { wrapper: MockClientWrapper(superAuthApi, client) }
-    );
+    const { result, rerender } = renderHook(() => useSession(superAuthApi, { select: { id: true, user: { id: true, firstName: true } } }), {
+      wrapper: MockClientWrapper(superAuthApi, client),
+    });
 
     expectMockSignedInUser(client);
     rerender();
@@ -113,7 +112,6 @@ describe("useSession", () => {
       "query currentSession {
         currentSession {
           id
-          userId
           user {
             id
             firstName
@@ -127,7 +125,6 @@ describe("useSession", () => {
       }"
     `);
     expect(result.current.id).toEqual("123");
-    expect(result.current.userId).toEqual("321");
     expect(result.current.user?.id).toEqual("321");
     expect(result.current.user?.firstName).toEqual("Jane");
 
@@ -147,7 +144,6 @@ describe("useSession", () => {
 
     expect(result.current).toBeDefined();
     expect(result.current.id).toEqual("123");
-    expect(result.current.userId).toBe(null);
     expect(result.current.user).toBe(null);
   });
 
@@ -159,7 +155,6 @@ describe("useSession", () => {
 
     expect(result.current).toBeDefined();
     expect(result.current.id).toEqual("123");
-    expect(result.current.userId).toBe(null);
     expect(result.current.user).toBe(null);
   });
 
@@ -171,7 +166,6 @@ describe("useSession", () => {
 
     expect(result.current).toBeDefined();
     expect(result.current.id).toEqual("123");
-    expect(result.current.userId).toBe(null);
     expect(result.current.user).toBe(null);
   });
 
@@ -206,6 +200,5 @@ describe("useSession", () => {
 
     expect(result.current.id).toEqual("123");
     expect(result.current.user).toBeNull();
-    expect(result.current.userId).toBeNull();
   });
 });
