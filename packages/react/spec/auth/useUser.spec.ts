@@ -6,14 +6,14 @@ import { MockClientWrapper } from "../testWrappers.js";
 
 describe("useUser", () => {
   test("it returns the current user when the user is logged in", async () => {
-    const { result, rerender } = renderHook(() => useUser(), { wrapper: MockClientWrapper(superAuthApi) });
+    const { result, rerender } = renderHook(() => useUser(superAuthApi), { wrapper: MockClientWrapper(superAuthApi) });
 
     expectMockSignedInUser();
 
     rerender();
-    expect(result.current!.id).toEqual("321");
-    expect(result.current!.firstName).toEqual("Jane");
-    expect(result.current!.lastName).toEqual("Doe");
+    expect(result.current.id).toEqual("321");
+    expect(result.current.firstName).toEqual("Jane");
+    expect(result.current.lastName).toEqual("Doe");
   });
 
   test("it returns null when the user is logged out", async () => {
