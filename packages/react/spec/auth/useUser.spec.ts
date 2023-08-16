@@ -2,26 +2,83 @@ import { renderHook } from "@testing-library/react";
 import { noUserModelApi, superAuthApi } from "../../spec/apis.js";
 import { expectMockSignedInUser, expectMockSignedOutUser, mockInternalServerError, mockNetworkError } from "../../spec/utils.js";
 import { useUser } from "../../src/auth/useUser.js";
-import { MockClientWrapper } from "../testWrappers.js";
+import type { MockUrqlClient } from "../testWrappers.js";
+import { MockClientWrapper, createMockUrqlCient } from "../testWrappers.js";
 
 describe("useUser", () => {
-  test("it returns the current user when the user is logged in with no options passed", async () => {
-    const { result, rerender } = renderHook(() => useUser(), { wrapper: MockClientWrapper(superAuthApi) });
+  let client: MockUrqlClient;
+  let query: string | undefined;
 
-    expectMockSignedInUser();
+  beforeEach(() => {
+    query = undefined;
+    client = createMockUrqlCient({
+      queryAssertions: (request) => {
+        query = request.query.loc?.source.body;
+      },
+    });
+  });
+
+  test("it returns the current user when the user is logged in with no options passed", async () => {
+    const { result, rerender } = renderHook(() => useUser(), { wrapper: MockClientWrapper(superAuthApi, client) });
+
+    expectMockSignedInUser(client);
 
     rerender();
+
+    expect(query).toMatchInlineSnapshot(`
+      "query currentSession {
+        currentSession {
+          user {
+            id
+            __typename
+            createdAt
+            updatedAt
+            lastName
+            firstName
+            email
+            googleImageUrl
+          }
+          __typename
+        }
+        gadgetMeta {
+          hydrations(modelName: 
+      "session")
+        }
+      }"
+    `);
     expect(result.current.id).toEqual("321");
     expect(result.current.firstName).toEqual("Jane");
     expect(result.current.lastName).toEqual("Doe");
   });
 
   test("it returns the current user when the user is logged in with an api client passed", async () => {
-    const { result, rerender } = renderHook(() => useUser(superAuthApi), { wrapper: MockClientWrapper(superAuthApi) });
+    const { result, rerender } = renderHook(() => useUser(superAuthApi), { wrapper: MockClientWrapper(superAuthApi, client) });
 
-    expectMockSignedInUser();
+    expectMockSignedInUser(client);
 
     rerender();
+
+    expect(query).toMatchInlineSnapshot(`
+      "query currentSession {
+        currentSession {
+          user {
+            id
+            __typename
+            createdAt
+            updatedAt
+            lastName
+            firstName
+            email
+            googleImageUrl
+          }
+          __typename
+        }
+        gadgetMeta {
+          hydrations(modelName: 
+      "session")
+        }
+      }"
+    `);
     expect(result.current.id).toEqual("321");
     expect(result.current.firstName).toEqual("Jane");
     expect(result.current.lastName).toEqual("Doe");
@@ -29,15 +86,35 @@ describe("useUser", () => {
 
   test("it returns the current user when the user is logged in with an api client and options passed", async () => {
     const { result, rerender } = renderHook(() => useUser(superAuthApi, { select: { firstName: true } }), {
-      wrapper: MockClientWrapper(superAuthApi),
+      wrapper: MockClientWrapper(superAuthApi, client),
     });
 
-    expectMockSignedInUser();
+    expectMockSignedInUser(client);
 
     rerender();
 
+    expect(query).toMatchInlineSnapshot(`
+      "query currentSession {
+        currentSession {
+          user {
+            firstName
+          }
+          __typename
+        }
+        gadgetMeta {
+          hydrations(modelName: 
+      "session")
+        }
+      }"
+    `);
     expect(result.current.firstName).toEqual("Jane");
-    expect(result.current).toMatchInlineSnapshot("{}"); //we get the full user object back
+    expect(result.current).toMatchInlineSnapshot(`
+      {
+        "firstName": "Jane",
+        "id": "321",
+        "lastName": "Doe",
+      }
+    `); //we get the full user object back because we mock the return value
   });
 
   test("it returns null when the user is logged out", async () => {
