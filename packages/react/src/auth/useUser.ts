@@ -38,14 +38,14 @@ export function useUser<
     throw new Error("api client does not have a User model");
   }
 
-  const { select, ...opts } = options ?? {};
-  const defaultOpts = {
+  const { select, ...baseOpts } = options ?? ({} as any);
+  const opts = {
     suspense: true,
-    ...opts,
-    select: {
-      user: select ?? api.user.findMany.defaultSelection,
-    },
+    ...baseOpts,
   };
-  const session = useSession(api, defaultOpts);
+  if (select) {
+    opts.select = select;
+  }
+  const session = useSession(api, opts);
   return session && session.getField("user");
 }

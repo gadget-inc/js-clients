@@ -53,13 +53,15 @@ export function useSession<
   const api = client ?? (fallbackApi as ClientType);
 
   if (api && "currentSession" in api && "session" in api) {
-    const defaultSelection = api.currentSession.get.defaultSelection;
-    const userSelection = api.user?.findMany.defaultSelection;
+    const selection = options?.select ?? ({} as any);
+    const { user: userSelect, ...sessionSelect } = selection;
+    const sessionSelection = Object.keys(sessionSelect).length > 0 ? sessionSelect : api.currentSession.get.defaultSelection;
+    const userSelection = userSelect ? userSelect : api.user?.findMany.defaultSelection;
 
     const opts: any = {
       suspense: true,
       select: {
-        ...defaultSelection,
+        ...sessionSelection,
         ...(userSelection && { user: userSelection }),
       },
       ...(options ?? {}),

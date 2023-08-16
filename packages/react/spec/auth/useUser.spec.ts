@@ -28,6 +28,14 @@ describe("useUser", () => {
     expect(query).toMatchInlineSnapshot(`
       "query currentSession {
         currentSession {
+          id
+          __typename
+          createdAt
+          updatedAt
+          roles {
+            key
+            name
+          }
           user {
             id
             __typename
@@ -38,7 +46,6 @@ describe("useUser", () => {
             email
             googleImageUrl
           }
-          __typename
         }
         gadgetMeta {
           hydrations(modelName: 
@@ -61,6 +68,14 @@ describe("useUser", () => {
     expect(query).toMatchInlineSnapshot(`
       "query currentSession {
         currentSession {
+          id
+          __typename
+          createdAt
+          updatedAt
+          roles {
+            key
+            name
+          }
           user {
             id
             __typename
@@ -71,7 +86,6 @@ describe("useUser", () => {
             email
             googleImageUrl
           }
-          __typename
         }
         gadgetMeta {
           hydrations(modelName: 
@@ -96,9 +110,7 @@ describe("useUser", () => {
     expect(query).toMatchInlineSnapshot(`
       "query currentSession {
         currentSession {
-          user {
-            firstName
-          }
+          firstName
           __typename
         }
         gadgetMeta {

@@ -13,7 +13,7 @@ describe("useAuth", () => {
     expect(result.current.isSignedIn).toBe(true);
     expect(result.current.session.id).toBe("123");
     expect(result.current.user.id).toBe("321");
-  })
+  });
 
   test("returns the correct auth state if the user is signed in", async () => {
     const { result, rerender } = renderHook(() => useAuth(superAuthApi), { wrapper: MockClientWrapper(superAuthApi) });
@@ -62,7 +62,7 @@ describe("useAuth", () => {
 
   test("it throws when the api client does not have a User model", async () => {
     expect(() => {
-      const { rerender } = renderHook(() => useAuth(superAuthApi), { wrapper: MockClientWrapper(noUserModelApi) });
+      const { rerender } = renderHook(() => useAuth(), { wrapper: MockClientWrapper(noUserModelApi) });
 
       expectMockSignedOutUser();
 
