@@ -23,6 +23,15 @@ jobs:
         run: pnpm build
       - name: Lint
         run: pnpm lint
+  typecheck:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: ./.github/actions/setup-test-env
+      - name: Build all packages (so they can require each other)
+        run: pnpm build
+      - name: Typecheck
+        run: pnpm typecheck
   versions:
     runs-on: ubuntu-latest
     steps:

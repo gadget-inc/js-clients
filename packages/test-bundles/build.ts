@@ -2,7 +2,7 @@ import react from "@vitejs/plugin-react-swc";
 import fs from "fs";
 import { join, parse } from "path";
 import { visualizer } from "rollup-plugin-visualizer";
-import { fileURLToPath } from "url";
+import { URL, fileURLToPath } from "url";
 import { build } from "vite";
 
 const bundleDir = fileURLToPath(new URL("bundles", import.meta.url));
@@ -18,7 +18,8 @@ for (const entrypoint of entrypoints) {
     template: "treemap",
     brotliSize: true,
     gzipSize: true,
-  });
+  }) as any;
+
   const plugins = parsed.ext.endsWith("x") ? [react(), visualizerPlugin] : [visualizerPlugin];
 
   await build({

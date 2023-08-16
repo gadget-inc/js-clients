@@ -64,7 +64,7 @@ describe("support utilities", () => {
           {
             operation: null as any,
             data: null,
-            error: new CombinedError({ networkError: [new Error("foo"), new Error("foo")] }),
+            error: new CombinedError({ networkError: [new Error("foo"), new Error("foo")] as any }),
             stale: false,
             hasNext: false,
           },

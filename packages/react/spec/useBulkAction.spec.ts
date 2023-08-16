@@ -3,7 +3,7 @@ import { renderHook } from "@testing-library/react";
 import type { IsExact } from "conditional-type-checks";
 import { assert } from "conditional-type-checks";
 import { act } from "react-dom/test-utils";
-import { useBulkAction } from "../src.js";
+import { useBulkAction } from "../src/index.js";
 import type { ErrorWrapper } from "../src/utils.js";
 import { bulkExampleApi } from "./apis.js";
 import { MockClientWrapper, mockUrqlClient } from "./testWrappers.js";

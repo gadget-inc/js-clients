@@ -2,7 +2,7 @@ import { renderHook } from "@testing-library/react";
 import type { IsExact } from "conditional-type-checks";
 import { assert } from "conditional-type-checks";
 import { act } from "react-dom/test-utils";
-import { useGlobalAction } from "../src.js";
+import { useGlobalAction } from "../src/index.js";
 import type { ErrorWrapper } from "../src/utils.js";
 import { bulkExampleApi } from "./apis.js";
 import { MockClientWrapper, mockUrqlClient } from "./testWrappers.js";
