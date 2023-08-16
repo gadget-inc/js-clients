@@ -44,7 +44,9 @@ export function useUser<
     ...baseOpts,
   };
   if (select) {
-    opts.select = select;
+    opts.select = {
+      user: select,
+    };
   }
   const session = useSession(api, opts);
   return session && session.getField("user");

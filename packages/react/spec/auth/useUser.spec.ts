@@ -110,8 +110,17 @@ describe("useUser", () => {
     expect(query).toMatchInlineSnapshot(`
       "query currentSession {
         currentSession {
-          firstName
+          id
           __typename
+          createdAt
+          updatedAt
+          roles {
+            key
+            name
+          }
+          user {
+            firstName
+          }
         }
         gadgetMeta {
           hydrations(modelName: 
