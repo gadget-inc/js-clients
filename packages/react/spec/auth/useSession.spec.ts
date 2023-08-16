@@ -111,5 +111,7 @@ describe("useSession", () => {
     rerender();
 
     expect(result.current.id).toEqual("123");
+    expect(result.current.user).toBeNull();
+    expect(result.current.userId).toBeNull();
   });
 });

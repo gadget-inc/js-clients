@@ -2,11 +2,11 @@ import { renderHook } from "@testing-library/react";
 import { noUserModelApi, superAuthApi } from "../../spec/apis.js";
 import { expectMockSignedInUser, expectMockSignedOutUser, mockInternalServerError, mockNetworkError } from "../../spec/utils.js";
 import { useUser } from "../../src/auth/useUser.js";
-import { MockClientWrapper } from "../testWrappers.js";
+import { MockClientWrapper, mockUrqlClient } from "../testWrappers.js";
 
 describe("useUser", () => {
   test("it returns the current user when the user is logged in with no options passed", async () => {
-    const { result, rerender } = renderHook(() => useUser(superAuthApi), { wrapper: MockClientWrapper(superAuthApi) });
+    const { result, rerender } = renderHook(() => useUser(), { wrapper: MockClientWrapper(superAuthApi) });
 
     expectMockSignedInUser();
 
@@ -31,11 +31,12 @@ describe("useUser", () => {
     const { result, rerender } = renderHook(() => useUser(superAuthApi, {select: {firstName: true}}), { wrapper: MockClientWrapper(superAuthApi) });
 
     expectMockSignedInUser();
+    
 
     rerender();
   
     expect(result.current.firstName).toEqual("Jane");
-    expect(result.current).toMatchInlineSnapshot("{}")
+    expect(result.current).toMatchInlineSnapshot("{}") //we get the full user object back
   });
 
   test("it returns null when the user is logged out", async () => {
