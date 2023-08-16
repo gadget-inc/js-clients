@@ -1,6 +1,6 @@
 import type { DefaultSelection, GadgetRecord, LimitToKnownKeys, Select } from "@gadgetinc/api-client-core";
-import { useApi } from "../../src/GadgetProvider";
-import type { OptionsType, ReadOperationOptions } from "../../src/utils";
+import { useApi } from "../GadgetProvider";
+import type { OptionsType, ReadOperationOptions } from "../utils";
 import type { ClientWithSessionAndUserManagers } from "./useSession";
 import { useSession } from "./useSession";
 

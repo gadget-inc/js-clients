@@ -7,9 +7,9 @@ import type {
   LimitToKnownKeys,
   Select,
 } from "@gadgetinc/api-client-core";
-import { useGet } from "../../src/useGet";
-import type { OptionsType, ReadOperationOptions } from "../../src/utils";
-import { useApi } from "../../src/GadgetProvider";
+import { useGet } from "../useGet";
+import type { OptionsType, ReadOperationOptions } from "../utils";
+import { useApi } from "../GadgetProvider";
 
 export type GadgetSession = GadgetRecord<Record<string, any>>;
 
@@ -52,11 +52,10 @@ export function useSession<
         >
       >
     > {
-  const fallbackApi = useApi() as any;
-  const api = client ?? fallbackApi;
+  const fallbackApi = useApi();
+  const api = client ?? (fallbackApi as ClientType);
 
-  if("currentSession" in api && "session" in api){
-    console.log('[jenny] here')
+  if(api && "currentSession" in api && "session" in api){
     const opts:any = {
       suspense: true,
       select: {
@@ -65,13 +64,15 @@ export function useSession<
       },
       ...(options ?? {}),
     };
-  
-    console.log('[jenny] the opts', opts)
+
   const [{ data: session, error }] = useGet(api.currentSession, opts);
-  
+
     if (error) throw error;
     if (!session) throw new Error("currentSession not found but should be present");
+    // eslint-disable-next-line @typescript-eslint/no-unnecessary-type-assertion
     return typeof client == "undefined" ? session : session as any;
+
+    // return typeof client == "undefined" ? session : session;
   }else{
     throw new Error("api client does not have a Session model");
   }

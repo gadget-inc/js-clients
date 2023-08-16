@@ -2,7 +2,7 @@ import { renderHook } from "@testing-library/react";
 import { noUserModelApi, superAuthApi } from "../../spec/apis.js";
 import { expectMockSignedInUser, expectMockSignedOutUser, mockInternalServerError, mockNetworkError } from "../../spec/utils.js";
 import { useSession } from "../../src/auth/useSession.js";
-import { MockClientWrapper, mockUrqlClient } from "../testWrappers.js";
+import { MockClientWrapper } from "../testWrappers.js";
 
 describe("useSession", () => {
   test("it returns the current session when the user is logged in and no options are passed", async () => {
@@ -30,26 +30,19 @@ describe("useSession", () => {
   });
 
   test("it returns the current session when the user is logged in and api client with options is passed", async () => {
-    const { result:userResult, rerender } = renderHook(() => useSession(superAuthApi, {select: {user: { firstName: true}}}), { wrapper: MockClientWrapper(superAuthApi) });
-  
-    // {
-    //   id: '123',
-    //   userId: '321',
-    //   user: { id: '321', firstName: 'Jane', lastName: 'Doe' }
-    // } but we shouldnt be getting back lastname and id from user
+    const { result, rerender } = renderHook(() => useSession(superAuthApi, {select: {id: true, userId: true, user: { id: true, firstName: true}}}), { wrapper: MockClientWrapper(superAuthApi) });
 
-    expect(userResult.current.id).toEqual("123");
-    expect(userResult.current.userId).toEqual("321");
+    expectMockSignedInUser();
+    rerender();
 
-    expect(userResult.current.user?.id).toEqual("321");
-    expect(userResult.current.user?.firstName).toEqual("Jane");
-    expect(userResult.current.user?.lastName).toEqual("Doe");
-
+    expect(result.current.id).toEqual("123");
+    expect(result.current.userId).toEqual("321");
+    expect(result.current.user?.id).toEqual("321");
+    expect(result.current.user?.firstName).toEqual("Jane");
 
     const { result: noUserResult, rerender: _noUserRerender } = renderHook(() => useSession(superAuthApi, {filter: {user: {firstName: {equals: "Bob"}}}}), { wrapper: MockClientWrapper(superAuthApi) });
-  
+
     expect(noUserResult.current).toBeNull();
-    
   });
 
   test("it returns the current session when the user is logged out", async () => {
