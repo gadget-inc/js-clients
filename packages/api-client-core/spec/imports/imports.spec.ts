@@ -1,5 +1,5 @@
 import { spawnSync } from "child_process";
-import { fileURLToPath } from "url";
+import { URL, fileURLToPath } from "url";
 
 describe("importing from different contexts", () => {
   test("can be imported from cjs code", () => {

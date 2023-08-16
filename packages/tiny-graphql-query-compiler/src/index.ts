@@ -86,7 +86,7 @@ export interface VariableOptions {
   type: string;
   name?: string;
   value?: any;
-  required?: string;
+  required?: boolean;
 }
 
 /** Represents one reference to a variable somewhere in a selection */

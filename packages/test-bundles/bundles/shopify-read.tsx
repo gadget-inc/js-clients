@@ -10,7 +10,7 @@ export const Reader = () => {
 
 export const App = () => {
   return (
-    <Provider>
+    <Provider api={api} shopifyApiKey="deadbeef">
       <Reader />
     </Provider>
   );
