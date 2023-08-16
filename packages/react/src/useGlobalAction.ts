@@ -1,7 +1,7 @@
 import type { GlobalActionFunction } from "@gadgetinc/api-client-core";
 import { get, globalActionOperation } from "@gadgetinc/api-client-core";
 import { useCallback, useMemo } from "react";
-import type { UseMutationState } from "urql";
+import type { OperationContext, UseMutationState } from "urql";
 import { useGadgetMutation } from "./useGadgetMutation.js";
 import type { ActionHookResult } from "./utils.js";
 import { ErrorWrapper } from "./utils.js";
@@ -41,7 +41,7 @@ export const useGlobalAction = <F extends GlobalActionFunction<any>>(
   return [
     transformedResult,
     useCallback(
-      async (variables, context) => {
+      async (variables: F["variablesType"], context?: Partial<OperationContext>) => {
         const result = await runMutation(variables, context);
         return processResult({ fetching: false, ...result }, action);
       },
