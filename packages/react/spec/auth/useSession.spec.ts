@@ -2,15 +2,58 @@ import { renderHook } from "@testing-library/react";
 import { noUserModelApi, superAuthApi } from "../../spec/apis.js";
 import { expectMockSignedInUser, expectMockSignedOutUser, mockInternalServerError, mockNetworkError } from "../../spec/utils.js";
 import { useSession } from "../../src/auth/useSession.js";
-import { MockClientWrapper } from "../testWrappers.js";
+import type { MockUrqlClient } from "../testWrappers.js";
+import { MockClientWrapper, createMockUrqlCient } from "../testWrappers.js";
 
 describe("useSession", () => {
-  test("it returns the current session when the user is logged in and no options are passed", async () => {
-    const { result, rerender } = renderHook(() => useSession(), { wrapper: MockClientWrapper(superAuthApi) });
+  let client: MockUrqlClient;
+  let query: string | undefined;
 
-    expectMockSignedInUser();
+  beforeEach(() => {
+    query = undefined;
+    client = createMockUrqlCient({
+      queryAssertions: (request) => {
+        query = request.query.loc?.source.body;
+      },
+    });
+  });
+
+  test("it returns the current session when the user is logged in and no options are passed", async () => {
+    const { result, rerender } = renderHook(() => useSession(), {
+      wrapper: MockClientWrapper(superAuthApi, client),
+    });
+
+    expectMockSignedInUser(client);
     rerender();
 
+    expect(query).toMatchInlineSnapshot(`
+      "query currentSession {
+        currentSession {
+          id
+          __typename
+          createdAt
+          updatedAt
+          roles {
+            key
+            name
+          }
+          user {
+            id
+            __typename
+            createdAt
+            updatedAt
+            lastName
+            firstName
+            email
+            googleImageUrl
+          }
+        }
+        gadgetMeta {
+          hydrations(modelName: 
+      "session")
+        }
+      }"
+    `);
     expect(result.current.id).toEqual("123");
     expect(result.current.user!.id).toEqual("321");
     expect(result.current.user!.firstName).toEqual("Jane");
@@ -18,11 +61,39 @@ describe("useSession", () => {
   });
 
   test("it returns the current session when the user is logged in and api client is passed", async () => {
-    const { result, rerender } = renderHook(() => useSession(superAuthApi), { wrapper: MockClientWrapper(superAuthApi) });
+    const { result, rerender } = renderHook(() => useSession(superAuthApi), { wrapper: MockClientWrapper(superAuthApi, client) });
 
-    expectMockSignedInUser();
+    expectMockSignedInUser(client);
     rerender();
 
+    expect(query).toMatchInlineSnapshot(`
+      "query currentSession {
+        currentSession {
+          id
+          __typename
+          createdAt
+          updatedAt
+          roles {
+            key
+            name
+          }
+          user {
+            id
+            __typename
+            createdAt
+            updatedAt
+            lastName
+            firstName
+            email
+            googleImageUrl
+          }
+        }
+        gadgetMeta {
+          hydrations(modelName: 
+      "session")
+        }
+      }"
+    `);
     expect(result.current.id).toEqual("123");
     expect(result.current.user!.id).toEqual("321");
     expect(result.current.user!.firstName).toEqual("Jane");
@@ -30,17 +101,40 @@ describe("useSession", () => {
   });
 
   test("it returns the current session when the user is logged in and api client with options is passed", async () => {
-    const { result, rerender } = renderHook(() => useSession(superAuthApi, {select: {id: true, userId: true, user: { id: true, firstName: true}}}), { wrapper: MockClientWrapper(superAuthApi) });
+    const { result, rerender } = renderHook(
+      () => useSession(superAuthApi, { select: { id: true, userId: true, user: { id: true, firstName: true } } }),
+      { wrapper: MockClientWrapper(superAuthApi, client) }
+    );
 
-    expectMockSignedInUser();
+    expectMockSignedInUser(client);
     rerender();
 
+    expect(query).toMatchInlineSnapshot(`
+      "query currentSession {
+        currentSession {
+          id
+          userId
+          user {
+            id
+            firstName
+          }
+          __typename
+        }
+        gadgetMeta {
+          hydrations(modelName: 
+      "session")
+        }
+      }"
+    `);
     expect(result.current.id).toEqual("123");
     expect(result.current.userId).toEqual("321");
     expect(result.current.user?.id).toEqual("321");
     expect(result.current.user?.firstName).toEqual("Jane");
 
-    const { result: noUserResult, rerender: _noUserRerender } = renderHook(() => useSession(superAuthApi, {filter: {user: {firstName: {equals: "Bob"}}}}), { wrapper: MockClientWrapper(superAuthApi) });
+    const { result: noUserResult, rerender: _noUserRerender } = renderHook(
+      () => useSession(superAuthApi, { filter: { user: { firstName: { equals: "Bob" } } } }),
+      { wrapper: MockClientWrapper(superAuthApi) }
+    );
 
     expect(noUserResult.current).toBeNull();
   });

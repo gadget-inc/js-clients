@@ -1,9 +1,11 @@
 import { CombinedError } from "urql";
+import type { MockUrqlClient } from "./testWrappers.js";
 import { mockUrqlClient } from "./testWrappers.js";
 
-export const expectMockSignedInUser = () => {
-  expect(mockUrqlClient.executeQuery).toBeCalledTimes(1);
-  mockUrqlClient.executeQuery.pushResponse("currentSession", {
+export const expectMockSignedInUser = (urqlClient?: MockUrqlClient) => {
+  const urql = urqlClient || mockUrqlClient;
+  expect(urql.executeQuery).toBeCalledTimes(1);
+  urql.executeQuery.pushResponse("currentSession", {
     data: {
       currentSession: {
         id: "123",
@@ -20,9 +22,10 @@ export const expectMockSignedInUser = () => {
   });
 };
 
-export const expectMockSignedOutUser = () => {
-  expect(mockUrqlClient.executeQuery).toBeCalledTimes(1);
-  mockUrqlClient.executeQuery.pushResponse("currentSession", {
+export const expectMockSignedOutUser = (urqlClient?: MockUrqlClient) => {
+  const urql = urqlClient || mockUrqlClient;
+  expect(urql.executeQuery).toBeCalledTimes(1);
+  urql.executeQuery.pushResponse("currentSession", {
     data: {
       currentSession: {
         id: "123",
@@ -35,9 +38,10 @@ export const expectMockSignedOutUser = () => {
   });
 };
 
-export const expectMockDeletedUser = () => {
-  expect(mockUrqlClient.executeQuery).toBeCalledTimes(1);
-  mockUrqlClient.executeQuery.pushResponse("currentSession", {
+export const expectMockDeletedUser = (urqlClient?: MockUrqlClient) => {
+  const urql = urqlClient || mockUrqlClient;
+  expect(urql.executeQuery).toBeCalledTimes(1);
+  urql.executeQuery.pushResponse("currentSession", {
     data: {
       currentSession: {
         id: "123",

@@ -13,7 +13,7 @@ describe("useAuth", () => {
     rerender();
     expect(result.current.isSignedIn).toBe(true);
     expect(result.current.session.id).toBe("123");
-    expect(result.current.user!.id).toBe("321");
+    expect(result.current.user.id).toBe("321");
   });
 
   test("returns the correct auth state if the user is signed out", async () => {
