@@ -5,7 +5,7 @@ import { useUser } from "../../src/auth/useUser.js";
 import { MockClientWrapper } from "../testWrappers.js";
 
 describe("useUser", () => {
-  test("it returns the current user when the user is logged in", async () => {
+  test("it returns the current user when the user is logged in with no options passed", async () => {
     const { result, rerender } = renderHook(() => useUser(superAuthApi), { wrapper: MockClientWrapper(superAuthApi) });
 
     expectMockSignedInUser();
@@ -14,6 +14,28 @@ describe("useUser", () => {
     expect(result.current.id).toEqual("321");
     expect(result.current.firstName).toEqual("Jane");
     expect(result.current.lastName).toEqual("Doe");
+  });
+
+  test("it returns the current user when the user is logged in with an api client passed", async () => {
+    const { result, rerender } = renderHook(() => useUser(superAuthApi), { wrapper: MockClientWrapper(superAuthApi) });
+
+    expectMockSignedInUser();
+
+    rerender();
+    expect(result.current.id).toEqual("321");
+    expect(result.current.firstName).toEqual("Jane");
+    expect(result.current.lastName).toEqual("Doe");
+  });
+
+  test("it returns the current user when the user is logged in with an api client and options passed", async () => {
+    const { result, rerender } = renderHook(() => useUser(superAuthApi, {select: {firstName: true}}), { wrapper: MockClientWrapper(superAuthApi) });
+
+    expectMockSignedInUser();
+
+    rerender();
+  
+    expect(result.current.firstName).toEqual("Jane");
+    expect(result.current).toMatchInlineSnapshot("{}")
   });
 
   test("it returns null when the user is logged out", async () => {

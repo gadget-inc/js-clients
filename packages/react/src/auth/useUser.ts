@@ -34,6 +34,10 @@ export function useUser<
   const fallbackApi = useApi() as any;
   const api = client ?? fallbackApi;
 
+  if(!("user" in api)){
+    throw new Error("api client does not have a User model");
+  }
+
   const { select, ...opts } = options ?? {};
   const defaultOpts = {
     suspense: true,
