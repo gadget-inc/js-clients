@@ -1,8 +1,8 @@
 import type { DefaultSelection, GadgetRecord, LimitToKnownKeys, Select } from "@gadgetinc/api-client-core";
-import { useApi } from "../GadgetProvider";
-import type { OptionsType, ReadOperationOptions } from "../utils";
-import type { ClientWithSessionAndUserManagers } from "./useSession";
-import { useSession } from "./useSession";
+import { useApi } from "../GadgetProvider.js";
+import type { OptionsType, ReadOperationOptions } from "../utils.js";
+import type { ClientWithSessionAndUserManagers } from "./useSession.js";
+import { useSession } from "./useSession.js";
 
 /**
  * Used for fetching the current `User` record from Gadget. Will return `null` if the session is unauthenticated. Will suspend while the user is being fetched.
