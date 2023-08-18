@@ -1072,15 +1072,19 @@ export function main() {
 
 React hooks are available to help you manage the authentication state of your application.
 
-### `useSession()`
+### `useSession(api: Client, options?: GetOptions = {})`
+
+Takes your apps API client as well as an optional `GetOptions` object to specify things like custom `select` or `filter` criteria.
 
 Returns the current session, equivalent to `await api.currentSession.get()` or `useGet(api.currentSession)`, but uses Promises for an easier interface. Throws a Suspense promise while the session is being loaded.
 
-### `useUser()`
+### `useUser(api: Client, options?: GetOptions = {})`
+
+Takes your apps API client as well as an optional `GetOptions` object to specify things like custom `select` or `filter` criteria.
 
 Returns the current user of the session, if present. For unauthenticated sessions, returns `null`. Throws a Suspense promise while the session/user are loading.
 
-### `useAuth()`
+### `useAuth(api: Client)`
 
 Returns an object representing the current authentication state of the session. Throws a Suspense promise while the session is being loaded.
 
@@ -1091,9 +1095,11 @@ Returns an object representing the current authentication state of the session. 
 `isSignedIn` - set to `true` if the session has a user associated with it (signed in), `false` otherwise.
 
 ```tsx
+import { api } from "./api";
+
 export default function App() {
-  const user = useUser();
-  const { isSignedIn } = useAuth();
+  const user = useUser(api);
+  const { isSignedIn } = useAuth(api);
   const gadgetContext = useGadgetContext();
 
   return (
