@@ -29,8 +29,8 @@
     "@gadgetinc/eslint-config": "^0.6.1",
     "@gadgetinc/prettier-config": "^0.4.0",
     "@gadgetinc/react": "workspace:*",
-    "@swc/core": "^1.3.42",
-    "@swc/jest": "^0.2.26",
+    "@swc/core": "^1.3.78",
+    "@swc/jest": "^0.2.29",
     "@types/jest": "^29.2.3",
     "@types/node": "^16.11.7",
     "@types/semver": "^7.3.13",
@@ -52,6 +52,5 @@
       "@gadgetinc/api-client-core": "workspace:*",
       "@gadgetinc/react": "workspace:*"
     }
-  },
-  "dependencies": {}
+  }
 }
