@@ -412,5 +412,83 @@ describe("operation builders", () => {
         }
       `);
     });
+
+    test("actionOperation should build a mutation query for an action that has a return type", () => {
+      expect(
+        actionOperation(
+          "createWidget",
+          { __typename: true, id: true, state: true },
+          "widget",
+          "widget",
+          {},
+          { select: { id: true } },
+          undefined,
+          false,
+          true
+        )
+      ).toMatchInlineSnapshot(`
+        {
+          "query": "mutation createWidget {
+          createWidget {
+            success
+            errors {
+              message
+              code
+              ... on InvalidRecordError {
+                validationErrors {
+                  message
+                  apiIdentifier
+                }
+              }
+            }
+            result
+          }
+          gadgetMeta {
+            hydrations(modelName: "widget")
+          }
+        }",
+          "variables": {},
+        }
+      `);
+    });
+
+    test("actionOperation should build a bulk mutation query for an action that has a return type", () => {
+      expect(
+        actionOperation(
+          "bulkCreateWidgets",
+          { __typename: true, id: true, state: true },
+          "widget",
+          "widget",
+          {},
+          { select: { id: true } },
+          undefined,
+          true,
+          true
+        )
+      ).toMatchInlineSnapshot(`
+        {
+          "query": "mutation bulkCreateWidgets {
+          bulkCreateWidgets {
+            success
+            errors {
+              message
+              code
+              ... on InvalidRecordError {
+                validationErrors {
+                  message
+                  apiIdentifier
+                }
+              }
+            }
+            results
+          }
+          gadgetMeta {
+            hydrations(modelName: "widget")
+          }
+        }",
+          "variables": {},
+        }
+      `);
+    });
   });
 });
