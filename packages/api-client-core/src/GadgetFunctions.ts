@@ -104,7 +104,9 @@ interface ActionFunctionMetadata<OptionsT, VariablesT, SelectionT, SchemaT, Defa
   variablesType: VariablesT;
   isBulk: IsBulk;
   hasAmbiguousIdentifier?: boolean;
+  /** @deprecated */
   hasCreateOrUpdateEffect?: boolean;
+  acceptsModelInput?: boolean;
   paramOnlyVariables?: readonly string[];
 }
 

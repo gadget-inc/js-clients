@@ -85,7 +85,7 @@ export const useAction = <
         let newVariables: Exclude<F["variablesType"], null | undefined>;
         const idVariable = Object.entries(action.variables).find(([key, value]) => key === "id" && value.type === "GadgetID");
 
-        if (action.hasCreateOrUpdateEffect) {
+        if (action.acceptsModelInput || action.hasCreateOrUpdateEffect) {
           if (
             action.modelApiIdentifier in variables &&
             typeof variables[action.modelApiIdentifier] === "object" &&
