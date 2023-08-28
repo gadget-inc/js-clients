@@ -86,6 +86,32 @@ export const findManyRunner = async <Shape extends RecordShape = any>(
 };
 
 export interface ActionRunner {
+  (
+    modelManager: { connection: GadgetConnection },
+    operation: string,
+    defaultSelection: FieldSelection | null,
+    modelApiIdentifier: string,
+    modelSelectionField: string,
+    isBulkAction: false,
+    variables: VariablesOptions,
+    options?: SelectionOptions | null,
+    namespace?: string | null,
+    hasReturnType?: true
+  ): Promise<any>;
+
+  <Shape extends RecordShape = any>(
+    modelManager: { connection: GadgetConnection },
+    operation: string,
+    defaultSelection: FieldSelection | null,
+    modelApiIdentifier: string,
+    modelSelectionField: string,
+    isBulkAction: false,
+    variables: VariablesOptions,
+    options?: SelectionOptions | null,
+    namespace?: string | null,
+    hasReturnType?: false
+  ): Promise<Shape extends void ? void : GadgetRecord<Shape>>;
+
   <Shape extends RecordShape = any>(
     modelManager: { connection: GadgetConnection },
     operation: string,
@@ -109,6 +135,32 @@ export interface ActionRunner {
     options?: SelectionOptions | null,
     namespace?: string | null
   ): Promise<Shape extends void ? void : GadgetRecord<Shape>[]>;
+
+  (
+    modelManager: { connection: GadgetConnection },
+    operation: string,
+    defaultSelection: FieldSelection | null,
+    modelApiIdentifier: string,
+    modelSelectionField: string,
+    isBulkAction: true,
+    variables: VariablesOptions,
+    options?: SelectionOptions | null,
+    namespace?: string | null,
+    hasReturnType?: true
+  ): Promise<any[]>;
+
+  <Shape extends RecordShape = any>(
+    modelManager: { connection: GadgetConnection },
+    operation: string,
+    defaultSelection: FieldSelection | null,
+    modelApiIdentifier: string,
+    modelSelectionField: string,
+    isBulkAction: true,
+    variables: VariablesOptions,
+    options?: SelectionOptions | null,
+    namespace?: string | null,
+    hasReturnType?: false
+  ): Promise<Shape extends void ? void : GadgetRecord<Shape>[]>;
 }
 
 export const actionRunner: ActionRunner = async <Shape extends RecordShape = any>(
@@ -120,9 +172,20 @@ export const actionRunner: ActionRunner = async <Shape extends RecordShape = any
   isBulkAction: boolean,
   variables: VariablesOptions,
   options?: SelectionOptions | null,
-  namespace?: string | null
+  namespace?: string | null,
+  hasReturnType?: boolean | null
 ) => {
-  const plan = actionOperation(operation, defaultSelection, modelApiIdentifier, modelSelectionField, variables, options, namespace);
+  const plan = actionOperation(
+    operation,
+    defaultSelection,
+    modelApiIdentifier,
+    modelSelectionField,
+    variables,
+    options,
+    namespace,
+    isBulkAction,
+    hasReturnType
+  );
   const response = await modelManager.connection.currentClient.mutation(plan.query, plan.variables).toPromise();
 
   // pass bulk responses through without any assertions since we can have a success: false response but still want
@@ -138,9 +201,9 @@ export const actionRunner: ActionRunner = async <Shape extends RecordShape = any
 
   // todo this does not support pagination params right now, we'll need to add it to bulk action Results
   if (isBulkAction) {
-    return hydrateRecordArray<Shape>(response, mutationResult[modelSelectionField]);
+    return !hasReturnType ? hydrateRecordArray<Shape>(response, mutationResult[modelSelectionField]) : mutationResult.results;
   } else {
-    return hydrateRecord<Shape>(response, mutationResult[modelSelectionField]);
+    return !hasReturnType ? hydrateRecord<Shape>(response, mutationResult[modelSelectionField]) : mutationResult.result;
   }
 };
 

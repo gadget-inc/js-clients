@@ -108,6 +108,7 @@ interface ActionFunctionMetadata<OptionsT, VariablesT, SelectionT, SchemaT, Defa
   hasCreateOrUpdateEffect?: boolean;
   acceptsModelInput?: boolean;
   paramOnlyVariables?: readonly string[];
+  hasReturnType?: boolean;
 }
 
 export type ActionFunction<OptionsT, VariablesT, SelectionT, SchemaT, DefaultsT> = ActionFunctionMetadata<

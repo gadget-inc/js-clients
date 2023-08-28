@@ -131,7 +131,9 @@ export const actionOperation = (
   modelSelectionField: string,
   variables: VariablesOptions,
   options?: SelectionOptions | null,
-  namespace?: string | null
+  namespace?: string | null,
+  isBulkAction?: boolean | null,
+  hasReturnType?: boolean | null
 ) => {
   const selection = options?.select || defaultSelection;
 
@@ -139,7 +141,8 @@ export const actionOperation = (
     [operation]: Call(variableOptionsToVariables(variables), {
       success: true,
       errors: ErrorsSelection,
-      [modelSelectionField]: selection ? fieldSelectionToQueryCompilerFields(selection, true) : false,
+      [modelSelectionField]: selection && !hasReturnType ? fieldSelectionToQueryCompilerFields(selection, true) : false,
+      [isBulkAction ? "results" : "result"]: !!hasReturnType,
     }),
   };
 

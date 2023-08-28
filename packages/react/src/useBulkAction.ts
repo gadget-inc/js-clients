@@ -43,7 +43,11 @@ export const useBulkAction = <
   action: F,
   options?: LimitToKnownKeys<Options, F["optionsType"]>
 ): ActionHookResult<
-  GadgetRecord<Select<Exclude<F["schemaType"], null | undefined>, DefaultSelection<F["selectionType"], Options, F["defaultSelection"]>>>[],
+  F["hasReturnType"] extends true
+    ? any[]
+    : GadgetRecord<
+        Select<Exclude<F["schemaType"], null | undefined>, DefaultSelection<F["selectionType"], Options, F["defaultSelection"]>>
+      >[],
   Exclude<F["variablesType"], null | undefined>
 > => {
   const memoizedOptions = useStructuralMemo(options);
@@ -55,7 +59,9 @@ export const useBulkAction = <
       action.modelSelectionField,
       action.variables,
       memoizedOptions,
-      action.namespace
+      action.namespace,
+      action.isBulk,
+      action.hasReturnType
     );
   }, [action, memoizedOptions]);
 
@@ -101,7 +107,7 @@ const processResult = (result: UseMutationState<any, any>, action: BulkActionFun
         if (errors && errors[0]) {
           error = ErrorWrapper.forErrorsResponse(errors, (error as any)?.response);
         } else {
-          data = hydrateRecordArray(result, mutationData[action.modelSelectionField]);
+          data = action.hasReturnType ? mutationData.results : hydrateRecordArray(result, mutationData[action.modelSelectionField]);
         }
       }
     }

@@ -47,7 +47,11 @@ export const useAction = <
   action: F,
   options?: LimitToKnownKeys<Options, F["optionsType"]>
 ): ActionHookResult<
-  GadgetRecord<Select<Exclude<F["schemaType"], null | undefined>, DefaultSelection<F["selectionType"], Options, F["defaultSelection"]>>>,
+  F["hasReturnType"] extends true
+    ? any
+    : GadgetRecord<
+        Select<Exclude<F["schemaType"], null | undefined>, DefaultSelection<F["selectionType"], Options, F["defaultSelection"]>>
+      >,
   Exclude<F["variablesType"], null | undefined>
 > => {
   if (!useContext(GadgetUrqlClientContext)) throw new Error(noProviderErrorMessage);
@@ -61,7 +65,9 @@ export const useAction = <
       action.modelSelectionField,
       action.variables,
       memoizedOptions,
-      action.namespace
+      action.namespace,
+      action.isBulk,
+      action.hasReturnType
     );
   }, [action, memoizedOptions]);
 
@@ -144,7 +150,7 @@ const processResult = <Data, Variables extends AnyVariables>(
       if (errors && errors[0]) {
         error = ErrorWrapper.forErrorsResponse(errors, error?.response);
       } else {
-        data = hydrateRecord(result, mutationData[action.modelSelectionField]);
+        data = action.hasReturnType ? mutationData.result : hydrateRecord(result, mutationData[action.modelSelectionField]);
       }
     }
   }
