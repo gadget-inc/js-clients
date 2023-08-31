@@ -6,7 +6,11 @@ import {
   assertOperationSuccess,
   GadgetOperationError,
   getNonNullableError,
+  PQueue,
+  sleep,
+  TokenBucket,
 } from "../src/index.js";
+import { expectDurationMs } from "./helpers.js";
 
 describe("support utilities", () => {
   describe("assertOperationSuccess", () => {
@@ -344,6 +348,155 @@ describe("support utilities", () => {
         expect(error.record).toBeFalsy();
       }
       expect(threw).toBeTruthy();
+    });
+  });
+
+  describe("PQueue", () => {
+    it("executes enqueued functions in order", async () => {
+      const results: number[] = [];
+      const queue = new PQueue();
+
+      void queue.enqueue(async () => {
+        await sleep(100);
+        results.push(1);
+      });
+
+      void queue.enqueue(async () => {
+        await sleep(50);
+        results.push(2);
+      });
+
+      void queue.enqueue(async () => {
+        await sleep(10);
+        results.push(3);
+      });
+
+      void queue.enqueue(async () => {
+        await sleep(1);
+        results.push(4);
+      });
+
+      await queue.enqueue(() => {
+        results.push(5);
+        return Promise.resolve();
+      });
+
+      expect(results).toEqual([1, 2, 3, 4, 5]);
+    });
+
+    it("executes enqueued functions in order even if they throw", async () => {
+      const results: number[] = [];
+      const errors: Error[] = [];
+      const queue = new PQueue();
+
+      void queue.enqueue(async () => {
+        await sleep(100);
+        results.push(1);
+      });
+
+      void queue
+        .enqueue(() => {
+          throw new Error("sync throw");
+        })
+        .catch((error) => errors.push(error));
+
+      void queue
+        .enqueue(async () => {
+          await sleep(50);
+          throw new Error("async throw");
+        })
+        .catch((error) => errors.push(error));
+
+      await queue.enqueue(() => {
+        results.push(2);
+        return Promise.resolve();
+      });
+
+      expect(results).toEqual([1, 2]);
+      expect(errors).toHaveLength(2);
+      expect(errors[0].message).toEqual("sync throw");
+      expect(errors[1].message).toEqual("async throw");
+    });
+
+    it("returns the result of the enqueued function", async () => {
+      const queue = new PQueue();
+
+      for (let i = 0; i < 10; i++) {
+        void queue.enqueue(async () => {
+          await sleep(10);
+        });
+      }
+
+      const start = Date.now();
+      const result = await queue.enqueue(() => Promise.resolve(42));
+
+      expect(result).toEqual(42);
+      expect(Date.now() - start).toBeGreaterThan(100);
+    });
+  });
+
+  describe("TokenBucket", () => {
+    it("expects options to be valid", () => {
+      expect(() => new TokenBucket({ bucketSize: 0, tokensPerInterval: 1, intervalMS: 1000 })).toThrowErrorMatchingInlineSnapshot(
+        `"assertion error: bucketSize must be greater than 0"`
+      );
+      expect(() => new TokenBucket({ bucketSize: 1, tokensPerInterval: 0, intervalMS: 1000 })).toThrowErrorMatchingInlineSnapshot(
+        `"assertion error: tokensPerInterval must be greater than 0"`
+      );
+      expect(() => new TokenBucket({ bucketSize: 1, tokensPerInterval: 1, intervalMS: 0 })).toThrowErrorMatchingInlineSnapshot(
+        `"assertion error: intervalMS must be greater than 0"`
+      );
+    });
+
+    it("uses the correct defaults", () => {
+      const bucket = new TokenBucket();
+      expect(bucket.options.bucketSize).toEqual(100);
+      expect(bucket.options.tokensPerInterval).toEqual(1);
+      expect(bucket.options.intervalMS).toEqual(10);
+    });
+
+    it("immediately allows bucketSize tokens to be consumed", async () => {
+      const bucket = new TokenBucket({
+        bucketSize: 10,
+        tokensPerInterval: 1,
+        intervalMS: 1000,
+      });
+
+      await expectDurationMs(0, async () => {
+        for (let i = 0; i < bucket.options.bucketSize; i++) {
+          await bucket.consume();
+        }
+      });
+    });
+
+    it("waits intervalMS to pass before adding tokensPerInterval into the bucket", async () => {
+      const bucket = new TokenBucket({
+        bucketSize: 10,
+        tokensPerInterval: 3,
+        intervalMS: 1000,
+      });
+
+      await expectDurationMs(0, async () => {
+        for (let i = 0; i < bucket.options.bucketSize; i++) {
+          await bucket.consume();
+        }
+      });
+
+      await expectDurationMs(bucket.options.intervalMS, () => bucket.consume());
+      await expectDurationMs(0, () => bucket.consume());
+      await expectDurationMs(0, () => bucket.consume());
+
+      await expectDurationMs(bucket.options.intervalMS, () => bucket.consume());
+      await expectDurationMs(0, () => bucket.consume());
+      await expectDurationMs(0, () => bucket.consume());
+
+      await expectDurationMs(bucket.options.intervalMS, () => bucket.consume());
+      await expectDurationMs(0, () => bucket.consume());
+      await expectDurationMs(0, () => bucket.consume());
+
+      await expectDurationMs(bucket.options.intervalMS, () => bucket.consume());
+      await expectDurationMs(0, () => bucket.consume());
+      await expectDurationMs(0, () => bucket.consume());
     });
   });
 });

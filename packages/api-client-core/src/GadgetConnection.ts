@@ -1,4 +1,4 @@
-import type { ClientOptions, RequestPolicy } from "@urql/core";
+import type { ClientOptions, Exchange, RequestPolicy } from "@urql/core";
 import { Client, cacheExchange, fetchExchange, subscriptionExchange } from "@urql/core";
 import fetchPolyfill from "cross-fetch";
 import type { ExecutionResult } from "graphql";
@@ -12,6 +12,8 @@ import type { BrowserStorage } from "./InMemoryStorage.js";
 import { InMemoryStorage } from "./InMemoryStorage.js";
 import { operationNameExchange } from "./exchanges/operationNameExchange.js";
 import { otelExchange } from "./exchanges/otelExchange.js";
+import type { RateLimitExchangeOptions } from "./exchanges/rateLimitExchange.js";
+import { rateLimitExchange } from "./exchanges/rateLimitExchange.js";
 import { urlParamExchange } from "./exchanges/urlParamExchange.js";
 import {
   GadgetUnexpectedCloseError,
@@ -52,6 +54,7 @@ export interface GadgetConnectionOptions {
   requestPolicy?: ClientOptions["requestPolicy"];
   applicationId?: string;
   baseRouteURL?: string;
+  rateLimitExchangeOptions?: Partial<RateLimitExchangeOptions>;
 }
 
 /**
@@ -73,13 +76,14 @@ export enum AuthenticationMode {
  * Manages transactions and the connection to a Gadget API
  */
 export class GadgetConnection {
-  // Options used when generating new GraphQL clients for the base connection and for for transactions
+  // Options used when generating new GraphQL clients for the base connection and for transactions
   private endpoint: string;
   private subscriptionClientOptions?: SubscriptionClientOptions;
   private websocketsEndpoint: string;
   private websocketImplementation: any;
   private _fetchImplementation: typeof fetchPolyfill;
   private environment: "Development" | "Production";
+  private rateLimitExchange: Exchange;
 
   // the base client using HTTP requests that non-transactional operations will use
   private baseClient: Client;
@@ -108,6 +112,10 @@ export class GadgetConnection {
     this.websocketsEndpoint = this.websocketsEndpoint.replace(/^http/, "ws");
     this.environment = options.environment ?? "Development";
     this.requestPolicy = options.requestPolicy ?? "cache-and-network";
+    this.rateLimitExchange = rateLimitExchange({
+      enabled: false,
+      ...options.rateLimitExchangeOptions,
+    });
 
     this.setAuthenticationMode(options.authenticationMode);
 
@@ -218,6 +226,7 @@ export class GadgetConnection {
           exchanges: [
             operationNameExchange,
             otelExchange,
+            this.rateLimitExchange,
             subscriptionExchange({
               forwardSubscription(request) {
                 const input = { ...request, query: request.query || "" };
@@ -342,6 +351,7 @@ export class GadgetConnection {
     }
 
     exchanges.push(
+      this.rateLimitExchange,
       fetchExchange,
       subscriptionExchange({
         forwardSubscription: (request) => {

@@ -495,3 +495,193 @@ export const storageAvailable = (type: "localStorage" | "sessionStorage") => {
     return false;
   }
 };
+
+export const sleep = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
+
+/**
+ * A FIFO queue that executes functions in order, waiting for each to finish before executing the next.
+ */
+export class PQueue {
+  /**
+   * The number of functions waiting to be executed.
+   */
+  get length(): number {
+    return this.queue.length;
+  }
+
+  /**
+   * A queue of functions waiting to be executed.
+   */
+  private queue: (() => unknown | Promise<unknown>)[] = [];
+
+  /**
+   * Whether the queue is currently being dequeued.
+   */
+  private isDequeuing = false;
+
+  /**
+   * Dequeue and execute all the functions in the queue in order.
+   */
+  private dequeue(): void {
+    if (this.isDequeuing) {
+      return;
+    }
+
+    void (async () => {
+      this.isDequeuing = true;
+
+      let fn = this.queue.shift();
+      while (fn) {
+        try {
+          await fn();
+        } catch {
+          // swallow errors to avoid unhandled promise rejections and continue draining the queue
+        }
+        fn = this.queue.shift();
+      }
+
+      this.isDequeuing = false;
+    })();
+  }
+
+  /**
+   * @param fn The function to enqueue
+   * @returns A promise that resolves when the function is dequeued and finished executing
+   */
+  enqueue<T>(fn: () => T | PromiseLike<T>): Promise<T> {
+    return new Promise((resolve, reject) => {
+      this.queue.push(async () => {
+        try {
+          resolve(await fn());
+        } catch (error) {
+          reject(error);
+        }
+      });
+
+      this.dequeue();
+    });
+  }
+}
+
+export interface TokenBucketOptions {
+  /**
+   * The capacity of the bucket
+   *
+   * @default 100
+   */
+  bucketSize: number;
+
+  /**
+   * How many tokens to add to the bucket per {@linkcode intervalMS}
+   *
+   * @default 1
+   */
+  tokensPerInterval: number;
+
+  /**
+   * The interval in ms at which tokens are added to the bucket
+   *
+   * @default 10
+   */
+  intervalMS: number;
+}
+
+/**
+ * A token bucket based on [`stopcock`](https://github.com/lpinca/stopcock)
+ *
+ * @see https://github.com/lpinca/stopcock/blob/26aa34c38bf7892e343f6f77a3dfb4c792e54d2f/index.js
+ * @license
+ * Copyright (c) 2017 Luigi Pinca
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in
+ * all copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+ * THE SOFTWARE.
+ */
+export class TokenBucket {
+  /**
+   * The options used to construct the bucket.
+   *
+   * @readonly This property is frozen and cannot be changed.
+   */
+  options: TokenBucketOptions;
+
+  /**
+   * The number of tokens currently in the bucket.
+   */
+  private tokens: number;
+
+  /**
+   * A `Date.now()` of the last time the bucket was refilled.
+   */
+  private lastRefill: number;
+
+  /**
+   * A queue of attempts to consume a token.
+   */
+  private queue = new PQueue();
+
+  constructor(options?: Partial<TokenBucketOptions>) {
+    this.options = Object.freeze({
+      bucketSize: 100,
+      tokensPerInterval: 1,
+      intervalMS: 10,
+      ...options,
+    });
+
+    this.tokens = this.options.bucketSize;
+    this.lastRefill = Date.now();
+
+    assert(this.options.bucketSize > 0, "bucketSize must be greater than 0");
+    assert(this.options.tokensPerInterval > 0, "tokensPerInterval must be greater than 0");
+    assert(this.options.intervalMS > 0, "intervalMS must be greater than 0");
+  }
+
+  /**
+   * Refill the bucket with the proper amount of tokens.
+   */
+  private refill(): void {
+    const intervalsSinceLastRefill = Math.floor((Date.now() - this.lastRefill) / this.options.intervalMS);
+    const newTokens = intervalsSinceLastRefill * this.options.tokensPerInterval;
+
+    this.tokens += newTokens;
+
+    // only add the time required by `newTokens`
+    const newTokenIntervals = newTokens / this.options.tokensPerInterval;
+    this.lastRefill += Math.ceil(newTokenIntervals * this.options.intervalMS);
+
+    if (this.tokens > this.options.bucketSize) {
+      this.tokens = this.options.bucketSize;
+    }
+  }
+
+  /**
+   * Remove a token from the bucket, waiting if necessary until one is available.
+   */
+  async consume(): Promise<void> {
+    await this.queue.enqueue(async () => {
+      this.refill();
+
+      while (!this.tokens) {
+        const msUntilNextInterval = this.lastRefill + this.options.intervalMS - Date.now();
+        await sleep(msUntilNextInterval);
+        this.refill();
+      }
+
+      this.tokens--;
+    });
+  }
+}

@@ -1,8 +1,8 @@
 import { Response } from "cross-fetch";
 import gql from "gql-tag";
 import nock from "nock";
-import { AuthenticationMode, BrowserSessionStorageType, GadgetConnection } from "../src";
-import { base64 } from "./helpers.js";
+import { AuthenticationMode, BrowserSessionStorageType, GadgetConnection, InternalModelManager, TokenBucket } from "../src/index.js";
+import { base64, expectDurationMs } from "./helpers.js";
 
 nock.disableNetConnect();
 
@@ -862,6 +862,71 @@ export const GadgetConnectionSharedSuite = (queryExtra = "") => {
       });
       expect(result.status).toEqual(200);
       expect(await result.json()).toEqual({ response: true });
+    });
+  });
+
+  describe("rate limiting", () => {
+    let bucket: TokenBucket;
+    let connection: GadgetConnection;
+    let internalModelManager: InternalModelManager;
+
+    beforeEach(() => {
+      bucket = new TokenBucket({
+        bucketSize: 10,
+        tokensPerInterval: 3,
+        intervalMS: 1000,
+      });
+
+      connection = new GadgetConnection({
+        endpoint: "https://someapp.gadget.app",
+        authenticationMode: { apiKey: "gsk-abcde" },
+        rateLimitExchangeOptions: { enabled: true, bucket },
+      });
+
+      internalModelManager = new InternalModelManager("someModel", connection, {
+        hasAmbiguousIdentifiers: false,
+        pluralApiIdentifier: "someModels",
+      });
+    });
+
+    it("is applied to graphql HTTP operations", async () => {
+      nock(connection.options.endpoint)
+        .post("/")
+        .query({ operation: "InternalFindSomeModel" })
+        .reply(200, () => {
+          return { data: { internal: { someModel: { id: "1" } } } };
+        })
+        .persist();
+
+      await expectDurationMs(0, async () => {
+        for (let i = 0; i < bucket.options.bucketSize; i++) {
+          await internalModelManager.findOne("1");
+        }
+      });
+
+      await expectDurationMs(bucket.options.intervalMS, () => internalModelManager.findOne("1"));
+      await expectDurationMs(0, () => internalModelManager.findOne("1"));
+      await expectDurationMs(0, () => internalModelManager.findOne("1"));
+
+      await expectDurationMs(bucket.options.intervalMS, () => internalModelManager.findOne("1"));
+      await expectDurationMs(0, () => internalModelManager.findOne("1"));
+      await expectDurationMs(0, () => internalModelManager.findOne("1"));
+    });
+
+    // TODO: implement this when we can test websocket requests
+    it.todo("is applied to graphql WS operations");
+
+    // TODO: implement this when we can test websocket requests
+    it.todo("is shared between graphql HTTP and WS operations");
+
+    it("is not applied to fetch requests", async () => {
+      nock(connection.options.endpoint).get("/foo/bar").reply(200).persist();
+
+      await expectDurationMs(0, async () => {
+        for (let i = 0; i < bucket.options.bucketSize + 1; i++) {
+          await connection.fetch("/foo/bar");
+        }
+      });
     });
   });
 };
