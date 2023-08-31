@@ -10,6 +10,9 @@ import { BrowserSessionStorageType } from "./ClientOptions.js";
 import { GadgetTransaction, TransactionRolledBack } from "./GadgetTransaction.js";
 import type { BrowserStorage } from "./InMemoryStorage.js";
 import { InMemoryStorage } from "./InMemoryStorage.js";
+import { operationNameExchange } from "./exchanges/operationNameExchange.js";
+import { otelExchange } from "./exchanges/otelExchange.js";
+import { urlParamExchange } from "./exchanges/urlParamExchange.js";
 import {
   GadgetUnexpectedCloseError,
   GadgetWebsocketConnectionTimeoutError,
@@ -18,7 +21,6 @@ import {
   storageAvailable,
   traceFunction,
 } from "./support.js";
-import { urlParamExchange } from "./urlParamExchange.js";
 
 export type TransactionRun<T> = (transaction: GadgetTransaction) => Promise<T>;
 export interface GadgetSubscriptionClientOptions extends Partial<SubscriptionClientOptions> {
@@ -214,6 +216,8 @@ export class GadgetConnection {
           url: "/-", // not used because there's no fetch exchange, set for clarity
           requestPolicy: "network-only", // skip any cached data during transactions
           exchanges: [
+            operationNameExchange,
+            otelExchange,
             subscriptionExchange({
               forwardSubscription(request) {
                 const input = { ...request, query: request.query || "" };
@@ -330,7 +334,7 @@ export class GadgetConnection {
   }
 
   private newBaseClient() {
-    const exchanges = [urlParamExchange];
+    const exchanges = [operationNameExchange, otelExchange, urlParamExchange];
 
     // apply urql's default caching behaviour when client side (but skip it server side)
     if (typeof window != "undefined") {
