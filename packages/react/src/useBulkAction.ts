@@ -1,7 +1,7 @@
 import type { BulkActionFunction, DefaultSelection, GadgetRecord, LimitToKnownKeys, Select } from "@gadgetinc/api-client-core";
 import { actionOperation, capitalizeIdentifier, get, hydrateRecordArray } from "@gadgetinc/api-client-core";
 import { useCallback, useMemo } from "react";
-import type { UseMutationState } from "urql";
+import type { OperationContext, UseMutationState } from "urql";
 import { useGadgetMutation } from "./useGadgetMutation.js";
 import { useStructuralMemo } from "./useStructuralMemo.js";
 import type { ActionHookResult, OptionsType } from "./utils.js";
@@ -77,7 +77,7 @@ export const useBulkAction = <
   return [
     transformedResult,
     useCallback(
-      async (variables, context) => {
+      async (variables: F["variablesType"], context?: Partial<OperationContext>) => {
         // Adding the model's additional typename ensures document cache will properly refresh, regardless of whether __typename was
         // selected (and sometimes we can't even select it, like delete actions!)
         const result = await runMutation(variables, {

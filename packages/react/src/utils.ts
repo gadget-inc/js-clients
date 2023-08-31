@@ -95,14 +95,26 @@ export interface ActionHookState<Data = any, Variables extends AnyVariables = Re
   operation?: Operation<Data, Variables>;
 }
 
+export type RequiredKeysOf<BaseType> = Exclude<
+  {
+    [Key in keyof BaseType]: BaseType extends Record<Key, BaseType[Key]> ? Key : never;
+  }[keyof BaseType],
+  undefined
+>;
+
 /**
  * The return value of a `useAction`, `useGlobalAction`, `useBulkAction` etc hook.
  * Includes the data result object and a function for running the mutation.
  **/
-export declare type ActionHookResult<Data = any, Variables extends AnyVariables = AnyVariables> = [
-  ActionHookState<Data, Variables>,
-  (variables: Variables, context?: Partial<OperationContext>) => Promise<ActionHookState<Data, Variables>>
-];
+export type ActionHookResult<Data = any, Variables extends AnyVariables = AnyVariables> = RequiredKeysOf<Variables> extends never
+  ? [
+      ActionHookState<Data, Variables>,
+      (variables?: Variables, context?: Partial<OperationContext>) => Promise<ActionHookState<Data, Variables>>
+    ]
+  : [
+      ActionHookState<Data, Variables>,
+      (variables: Variables, context?: Partial<OperationContext>) => Promise<ActionHookState<Data, Variables>>
+    ];
 
 export const noProviderErrorMessage = `Could not find a client in the context of Provider. Please ensure you wrap the root component in a <Provider>`;
 

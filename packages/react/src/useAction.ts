@@ -1,7 +1,7 @@
 import type { ActionFunction, DefaultSelection, GadgetRecord, LimitToKnownKeys, Select } from "@gadgetinc/api-client-core";
 import { actionOperation, capitalizeIdentifier, get, hydrateRecord } from "@gadgetinc/api-client-core";
 import { useCallback, useContext, useMemo } from "react";
-import type { AnyVariables, UseMutationState } from "urql";
+import type { AnyVariables, OperationContext, UseMutationState } from "urql";
 import { GadgetUrqlClientContext } from "./GadgetProvider.js";
 import { useGadgetMutation } from "./useGadgetMutation.js";
 import { useStructuralMemo } from "./useStructuralMemo.js";
@@ -81,7 +81,8 @@ export const useAction = <
   return [
     transformedResult,
     useCallback(
-      async (variables, context) => {
+      async (variables: F["variablesType"], context?: Partial<OperationContext>) => {
+        variables ??= {};
         if (action.hasAmbiguousIdentifier) {
           if (Object.keys(variables).some((key) => !action.paramOnlyVariables?.includes(key) && key !== action.modelApiIdentifier)) {
             throw Error(`Invalid arguments found in variables. Did you mean to use ({ ${action.modelApiIdentifier}: { ... } })?`);

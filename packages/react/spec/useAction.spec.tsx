@@ -13,7 +13,7 @@ import { MockClientWrapper, createMockUrqlCient, mockUrqlClient } from "./testWr
 
 describe("useAction", () => {
   // these functions are typechecked but never run to avoid actually making API calls
-  const TestUseActionCanRunActionsWithVariables = () => {
+  const TestUseActionCanRunUpdateActionsWithVariables = () => {
     const [_, mutate] = useAction(relatedProductsApi.user.update);
 
     // can call with variables
@@ -27,6 +27,22 @@ describe("useAction", () => {
 
     // @ts-expect-error can't call with no id
     void mutate({});
+
+    // @ts-expect-error can't call with variables that don't belong to the model
+    void mutate({ foo: "123" });
+  };
+
+  const TestUseActionCanRunCreateActionsWithVariables = () => {
+    const [_, mutate] = useAction(relatedProductsApi.user.create);
+
+    // can call with variables
+    void mutate({ user: { email: "foo@bar.com" } });
+
+    // can call with no model variables
+    void mutate({});
+
+    // can call with no variables at all
+    void mutate();
 
     // @ts-expect-error can't call with variables that don't belong to the model
     void mutate({ foo: "123" });
@@ -418,5 +434,43 @@ describe("useAction", () => {
     expect(caughtError).toMatchInlineSnapshot(
       `[Error: Invalid arguments found in variables. Did you mean to use ({ ambiguous: { ... } })?]`
     );
+  });
+
+  test("can run a mutation which takes no variables without passing any", async () => {
+    const { result, rerender } = renderHook(() => useAction(relatedProductsApi.user.create), {
+      wrapper: MockClientWrapper(relatedProductsApi),
+    });
+
+    let mutationPromise: any;
+    act(() => {
+      mutationPromise = result.current[1]();
+    });
+
+    expect(mockUrqlClient.executeMutation).toBeCalledTimes(1);
+
+    mockUrqlClient.executeMutation.pushResponse("createUser", {
+      data: {
+        updateUser: {
+          success: true,
+          user: {
+            id: "123",
+            email: "test@test.com",
+          },
+        },
+      },
+      stale: false,
+      hasNext: false,
+    });
+
+    await act(async () => {
+      await mutationPromise;
+    });
+
+    const beforeObject = result.current[0]!;
+    expect(beforeObject).toBeTruthy();
+
+    rerender();
+
+    expect(result.current[0]).toBe(beforeObject);
   });
 });
