@@ -10,7 +10,6 @@ import {
   sleep,
   TokenBucket,
 } from "../src/index.js";
-import { expectDurationMs } from "./helpers.js";
 
 describe("support utilities", () => {
   describe("assertOperationSuccess", () => {
@@ -436,6 +435,14 @@ describe("support utilities", () => {
   });
 
   describe("TokenBucket", () => {
+    beforeEach(() => {
+      jest.useFakeTimers();
+    });
+
+    afterEach(() => {
+      jest.useRealTimers();
+    });
+
     it("expects options to be valid", () => {
       expect(() => new TokenBucket({ bucketSize: 0, tokensPerInterval: 1, intervalMS: 1000 })).toThrowErrorMatchingInlineSnapshot(
         `"assertion error: bucketSize must be greater than 0"`
@@ -456,47 +463,43 @@ describe("support utilities", () => {
     });
 
     it("immediately allows bucketSize tokens to be consumed", async () => {
-      const bucket = new TokenBucket({
-        bucketSize: 10,
-        tokensPerInterval: 1,
-        intervalMS: 1000,
-      });
+      const bucket = new TokenBucket({ bucketSize: 5 });
 
-      await expectDurationMs(0, async () => {
-        for (let i = 0; i < bucket.options.bucketSize; i++) {
-          await bucket.consume();
-        }
-      });
+      const results: number[] = [];
+      for (let i = 0; i < bucket.options.bucketSize; i++) {
+        void bucket.consume().then(() => results.push(i + 1));
+      }
+
+      await jest.advanceTimersByTimeAsync(0);
+      expect(results).toEqual([1, 2, 3, 4, 5]);
     });
 
     it("waits intervalMS to pass before adding tokensPerInterval into the bucket", async () => {
       const bucket = new TokenBucket({
-        bucketSize: 10,
-        tokensPerInterval: 3,
+        bucketSize: 3,
+        tokensPerInterval: 2,
         intervalMS: 1000,
       });
 
-      await expectDurationMs(0, async () => {
-        for (let i = 0; i < bucket.options.bucketSize; i++) {
-          await bucket.consume();
-        }
-      });
+      const results: number[] = [];
+      for (let i = 0; i < bucket.options.bucketSize + bucket.options.tokensPerInterval + 1; i++) {
+        void bucket.consume().then(() => results.push(i + 1));
+      }
 
-      await expectDurationMs(bucket.options.intervalMS, () => bucket.consume());
-      await expectDurationMs(0, () => bucket.consume());
-      await expectDurationMs(0, () => bucket.consume());
+      await jest.advanceTimersByTimeAsync(0);
+      expect(results).toEqual([1, 2, 3]);
 
-      await expectDurationMs(bucket.options.intervalMS, () => bucket.consume());
-      await expectDurationMs(0, () => bucket.consume());
-      await expectDurationMs(0, () => bucket.consume());
+      await jest.advanceTimersByTimeAsync(bucket.options.intervalMS - 1);
+      expect(results).toEqual([1, 2, 3]);
 
-      await expectDurationMs(bucket.options.intervalMS, () => bucket.consume());
-      await expectDurationMs(0, () => bucket.consume());
-      await expectDurationMs(0, () => bucket.consume());
+      await jest.advanceTimersByTimeAsync(1);
+      expect(results).toEqual([1, 2, 3, 4, 5]);
 
-      await expectDurationMs(bucket.options.intervalMS, () => bucket.consume());
-      await expectDurationMs(0, () => bucket.consume());
-      await expectDurationMs(0, () => bucket.consume());
+      await jest.advanceTimersByTimeAsync(bucket.options.intervalMS - 1);
+      expect(results).toEqual([1, 2, 3, 4, 5]);
+
+      await jest.advanceTimersByTimeAsync(1);
+      expect(results).toEqual([1, 2, 3, 4, 5, 6]);
     });
   });
 });
