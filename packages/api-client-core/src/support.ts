@@ -498,6 +498,16 @@ export const storageAvailable = (type: "localStorage" | "sessionStorage") => {
 
 export const sleep = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
 
+export const safelyRunAsyncOutOfBand = (fn: () => PromiseLike<unknown>) => {
+  void (async () => {
+    try {
+      await fn();
+    } catch (e) {
+      console.error(e);
+    }
+  })();
+};
+
 /**
  * A FIFO queue that executes functions in order, waiting for each to finish before executing the next.
  */
@@ -527,7 +537,7 @@ export class PQueue {
       return;
     }
 
-    void (async () => {
+    safelyRunAsyncOutOfBand(async () => {
       this.isDequeuing = true;
 
       let fn = this.queue.shift();
@@ -541,7 +551,7 @@ export class PQueue {
       }
 
       this.isDequeuing = false;
-    })();
+    });
   }
 
   /**
