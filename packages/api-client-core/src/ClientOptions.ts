@@ -1,3 +1,4 @@
+import type { Exchange } from "@urql/core";
 import type { GadgetSubscriptionClientOptions } from "./GadgetConnection";
 
 /** All the options for a Gadget client */
@@ -40,6 +41,10 @@ export interface ClientOptions {
    * This only needs to be passed if you are overriding the `endpoint` parameter to something that can't be used for building fully-qualified URLs from relative imports.
    **/
   baseRouteURL?: string;
+  /**
+   * A list of exchanges to merge into the default exchanges used by the client.
+   */
+  exchanges?: Exchanges;
 }
 
 /** Options to configure a specific browser-based authentication mode */
@@ -96,4 +101,19 @@ export interface AuthenticationModeOptions {
     processFetch(input: RequestInfo | URL, init: RequestInit): Promise<void>;
     processTransactionConnectionParams(params: Record<string, any>): Promise<void>;
   };
+}
+
+export interface Exchanges {
+  /**
+   * Exchanges to add before all other exchanges.
+   */
+  beforeAll?: Exchange[];
+  /**
+   * Exchanges to add before any async exchanges.
+   */
+  beforeAsync?: Exchange[];
+  /**
+   * Exchanges to add after all other exchanges.
+   */
+  afterAll?: Exchange[];
 }
