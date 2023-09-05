@@ -87,6 +87,7 @@ export class GadgetConnection {
 
   // the transactional websocket client that will be used inside a transaction block
   private currentTransaction: GadgetTransaction | null = null;
+  private waitingForTransaction: Promise<SubscriptionClient> | null = null;
 
   // How this client will authenticate (if at all) against the Gadget backed
   authenticationMode: AuthenticationMode = AuthenticationMode.Anonymous;
@@ -188,7 +189,15 @@ export class GadgetConnection {
         options = {};
       }
 
+      const id = Math.floor(Math.random() * 100);
+      console.log(`[${id}] start tx call`);
+
+      if (this.waitingForTransaction) {
+        await this.waitingForTransaction;
+      }
+
       if (this.currentTransaction) {
+        console.log(`[${id}] tx already exists`);
         return await run(this.currentTransaction);
       }
 
@@ -197,8 +206,9 @@ export class GadgetConnection {
       let subscriptionClient: SubscriptionClient | null = null;
       let transaction;
       try {
+        console.log(`[${id}] wait for subscription client v2`);
         // The server will error if it receives any operations before the auth dance has been completed, so we block on that happening before sending our first operation. It's important that this happens synchronously after instantiating the client so we don't miss any messages
-        subscriptionClient = await this.waitForOpenedConnection({
+        this.waitingForTransaction = this.waitForOpenedConnection({
           isFatalConnectionProblem(errorOrCloseEvent) {
             // any interruption of the transaction is fatal to the transaction
             console.warn("Transport error encountered during transaction processing", errorOrCloseEvent);
@@ -211,6 +221,9 @@ export class GadgetConnection {
           lazyCloseTimeout: 100000,
           retryAttempts: 0,
         });
+
+        subscriptionClient = await this.waitingForTransaction;
+        this.waitingForTransaction = null;
 
         const client = new Client({
           url: "/-", // not used because there's no fetch exchange, set for clarity
@@ -237,6 +250,7 @@ export class GadgetConnection {
         (client as any)[$gadgetConnection] = this;
 
         transaction = new GadgetTransaction(client, subscriptionClient);
+        console.log(`[${id}] assign current tx`);
         this.currentTransaction = transaction;
         await transaction.start();
         const result = await run(transaction);
