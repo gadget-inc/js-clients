@@ -174,6 +174,33 @@ export class GadgetNotFoundError extends Error {
   causedByClient = false;
 }
 
+/**
+ * Represents a group of errors that occurred when running a number of operations at once */
+export class GadgetErrorGroup<Result> extends Error {
+  constructor(
+    /** The list of inner errors that occurred */
+    public readonly errors: GadgetError[],
+    /* Any objects that were successfully processed during the bulk operation (the ones that didn't throw errors) */
+    public readonly results: Result[]
+  ) {
+    super(errors.length > 1 ? "Multiple errors occurred" : errors[0].message);
+  }
+
+  get code(): string {
+    return `GGT_ERROR_GROUP(${this.errors
+      .slice(0, 10)
+      .map((error) => error.code ?? "GGT_UNKNOWN")
+      .join(",")})`;
+  }
+
+  name = "ErrorGroup";
+
+  /** @private */
+  get statusCode() {
+    return Math.max(...this.errors.map((error) => (error as any).statusCode ?? 500));
+  }
+}
+
 /** All the errors a Gadget operation can throw */
 export type GadgetError =
   | GadgetOperationError
@@ -182,7 +209,8 @@ export type GadgetError =
   | GadgetNonUniqueDataError
   | GadgetNotFoundError
   | GadgetUnexpectedCloseError
-  | GadgetWebsocketConnectionTimeoutError;
+  | GadgetWebsocketConnectionTimeoutError
+  | GadgetErrorGroup<any>;
 
 export function assert<T>(value: T | undefined | null, message?: string): T {
   if (!value) {
