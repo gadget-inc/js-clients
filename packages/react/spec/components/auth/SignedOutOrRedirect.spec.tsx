@@ -1,7 +1,7 @@
 import "@testing-library/jest-dom";
 import { render } from "@testing-library/react";
 import React from "react";
-import { SignedOutOrRedirect } from "../../../src/components/auth/SignedOutOrRedirect.js";
+import { SignedOutOrRedirect } from "../../../src/auth/SignedOutOrRedirect.js";
 import { superAuthApi } from "../../apis.js";
 import { MockClientWrapper } from "../../testWrappers.js";
 import { expectMockSignedInUser, expectMockSignedOutUser } from "../../utils.js";

@@ -1,13 +1,13 @@
 export { Consumer, Context } from "urql";
 export { Provider, useApi, useConnection } from "./GadgetProvider.js";
+export * from "./auth/SignedIn.js";
+export * from "./auth/SignedInOrRedirect.js";
+export * from "./auth/SignedOut.js";
+export * from "./auth/SignedOutOrRedirect.js";
 export * from "./auth/useAuth.js";
 export * from "./auth/useSession.js";
 export * from "./auth/useSignOut.js";
 export * from "./auth/useUser.js";
-export * from "./components/auth/SignedIn.js";
-export * from "./components/auth/SignedInOrRedirect.js";
-export * from "./components/auth/SignedOut.js";
-export * from "./components/auth/SignedOutOrRedirect.js";
 export * from "./useAction.js";
 export * from "./useBulkAction.js";
 export * from "./useFetch.js";
