@@ -3,7 +3,7 @@ import { noUserModelApi, superAuthApi } from "../../spec/apis.js";
 import { expectMockSignedInUser, expectMockSignedOutUser, mockInternalServerError, mockNetworkError } from "../../spec/utils.js";
 import { useUser } from "../../src/auth/useUser.js";
 import type { MockUrqlClient } from "../testWrappers.js";
-import { MockClientWrapper, createMockUrqlCient } from "../testWrappers.js";
+import { MockClientWrapper, createMockUrqlClient } from "../testWrappers.js";
 
 describe("useUser", () => {
   let client: MockUrqlClient;
@@ -11,7 +11,7 @@ describe("useUser", () => {
 
   beforeEach(() => {
     query = undefined;
-    client = createMockUrqlCient({
+    client = createMockUrqlClient({
       queryAssertions: (request) => {
         query = request.query.loc?.source.body;
       },

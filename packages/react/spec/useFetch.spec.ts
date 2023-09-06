@@ -1,4 +1,3 @@
-import { $gadgetConnection } from "@gadgetinc/api-client-core";
 import { act, renderHook } from "@testing-library/react";
 import type { IsExact } from "conditional-type-checks";
 import { assert } from "conditional-type-checks";
@@ -79,15 +78,15 @@ describe("useFetch", () => {
     expect(result.current[0].error).toBeFalsy();
     expect(result.current[0].streaming).toBe(false);
 
-    expect(mockUrqlClient[$gadgetConnection].fetch.requests[0].args).toEqual(["/foo/bar", expect.objectContaining({})]);
-    await mockUrqlClient[$gadgetConnection].fetch.pushResponse(new Response("hello world"));
+    expect(mockUrqlClient.mockFetch.requests[0].args).toEqual(["/foo/bar", expect.objectContaining({})]);
+    await mockUrqlClient.mockFetch.pushResponse(new Response("hello world"));
 
     expect(result.current[0].fetching).toBe(false);
     expect(result.current[0].data).toEqual("hello world");
     expect(result.current[0].error).toBeFalsy();
     expect(result.current[0].streaming).toBe(false);
 
-    expect(mockUrqlClient[$gadgetConnection].fetch).toBeCalledTimes(1);
+    expect(mockUrqlClient.mockFetch).toBeCalledTimes(1);
   });
 
   test("it can fetch json from the backend", async () => {
@@ -98,18 +97,18 @@ describe("useFetch", () => {
     expect(result.current[0].error).toBeFalsy();
     expect(result.current[0].streaming).toBe(false);
 
-    expect(mockUrqlClient[$gadgetConnection].fetch.requests[0].args).toEqual([
+    expect(mockUrqlClient.mockFetch.requests[0].args).toEqual([
       "/foo/bar",
       expect.objectContaining({ headers: { accept: "application/json" } }),
     ]);
-    await mockUrqlClient[$gadgetConnection].fetch.pushResponse(new Response('{"hello": 1}'));
+    await mockUrqlClient.mockFetch.pushResponse(new Response('{"hello": 1}'));
 
     expect(result.current[0].fetching).toBe(false);
     expect(result.current[0].data).toEqual({ hello: 1 });
     expect(result.current[0].error).toBeFalsy();
     expect(result.current[0].streaming).toBe(false);
 
-    expect(mockUrqlClient[$gadgetConnection].fetch).toBeCalledTimes(1);
+    expect(mockUrqlClient.mockFetch).toBeCalledTimes(1);
   });
 
   test("it can fetch stream from the backend", async () => {
@@ -123,8 +122,8 @@ describe("useFetch", () => {
     // eslint-disable-next-line @typescript-eslint/no-empty-function
     const responseStream = new Readable({ read() {} });
 
-    expect(mockUrqlClient[$gadgetConnection].fetch.requests[0].args).toEqual(["/foo/bar", expect.objectContaining({})]);
-    await mockUrqlClient[$gadgetConnection].fetch.pushResponse(new Response(Readable.toWeb(responseStream) as any));
+    expect(mockUrqlClient.mockFetch.requests[0].args).toEqual(["/foo/bar", expect.objectContaining({})]);
+    await mockUrqlClient.mockFetch.pushResponse(new Response(Readable.toWeb(responseStream) as any));
 
     expect(result.current[0].fetching).toBe(false);
     expect(result.current[0].error).toBeFalsy();
@@ -161,7 +160,7 @@ describe("useFetch", () => {
       }
     `);
 
-    expect(mockUrqlClient[$gadgetConnection].fetch).toBeCalledTimes(1);
+    expect(mockUrqlClient.mockFetch).toBeCalledTimes(1);
   });
 
   test("it can fetch a string stream from the backend", async () => {
@@ -200,11 +199,8 @@ describe("useFetch", () => {
     // eslint-disable-next-line @typescript-eslint/no-empty-function
     const responseStream = new Readable({ read() {} });
 
-    expect(mockUrqlClient[$gadgetConnection].fetch.requests[0].args).toEqual([
-      "/foo/bar",
-      expect.objectContaining({ sendImmediately: false }),
-    ]);
-    await mockUrqlClient[$gadgetConnection].fetch.pushResponse(new Response(Readable.toWeb(responseStream) as any));
+    expect(mockUrqlClient.mockFetch.requests[0].args).toEqual(["/foo/bar", expect.objectContaining({ sendImmediately: false })]);
+    await mockUrqlClient.mockFetch.pushResponse(new Response(Readable.toWeb(responseStream) as any));
 
     let stream: ReadableStream<string>;
 
@@ -260,7 +256,7 @@ describe("useFetch", () => {
     expect(result.current[0].streaming).toBe(false);
     expect(onStreamCompleteCalled).toBe("hello world");
 
-    expect(mockUrqlClient[$gadgetConnection].fetch).toBeCalledTimes(1);
+    expect(mockUrqlClient.mockFetch).toBeCalledTimes(1);
   });
 
   test("it can fetch a string stream from the backend with a custom encoding", async () => {
@@ -286,11 +282,8 @@ describe("useFetch", () => {
     // eslint-disable-next-line @typescript-eslint/no-empty-function
     const responseStream = new Readable({ read() {} });
 
-    expect(mockUrqlClient[$gadgetConnection].fetch.requests[0].args).toEqual([
-      "/foo/bar",
-      expect.objectContaining({ sendImmediately: false }),
-    ]);
-    await mockUrqlClient[$gadgetConnection].fetch.pushResponse(new Response(Readable.toWeb(responseStream) as any));
+    expect(mockUrqlClient.mockFetch.requests[0].args).toEqual(["/foo/bar", expect.objectContaining({ sendImmediately: false })]);
+    await mockUrqlClient.mockFetch.pushResponse(new Response(Readable.toWeb(responseStream) as any));
 
     let stream: ReadableStream<string>;
 
@@ -333,7 +326,7 @@ describe("useFetch", () => {
     expect(result.current[0].data).toEqual("Привет, мир!");
     expect(result.current[0].streaming).toBe(false);
 
-    expect(mockUrqlClient[$gadgetConnection].fetch).toBeCalledTimes(1);
+    expect(mockUrqlClient.mockFetch).toBeCalledTimes(1);
   });
 
   test("it can when a string stream is requested a second time in the middle of processing", async () => {
@@ -359,11 +352,8 @@ describe("useFetch", () => {
     // eslint-disable-next-line @typescript-eslint/no-empty-function
     const firstResponseStream = new Readable({ read() {} });
 
-    expect(mockUrqlClient[$gadgetConnection].fetch.requests[0].args).toEqual([
-      "/foo/bar",
-      expect.objectContaining({ sendImmediately: false }),
-    ]);
-    await mockUrqlClient[$gadgetConnection].fetch.pushResponse(new Response(Readable.toWeb(firstResponseStream) as any));
+    expect(mockUrqlClient.mockFetch.requests[0].args).toEqual(["/foo/bar", expect.objectContaining({ sendImmediately: false })]);
+    await mockUrqlClient.mockFetch.pushResponse(new Response(Readable.toWeb(firstResponseStream) as any));
 
     let firstStream: ReadableStream<string>;
 
@@ -415,11 +405,8 @@ describe("useFetch", () => {
     // eslint-disable-next-line @typescript-eslint/no-empty-function
     const secondResponseStream = new Readable({ read() {} });
 
-    expect(mockUrqlClient[$gadgetConnection].fetch.requests[0].args).toEqual([
-      "/foo/bar",
-      expect.objectContaining({ sendImmediately: false }),
-    ]);
-    await mockUrqlClient[$gadgetConnection].fetch.pushResponse(new Response(Readable.toWeb(secondResponseStream) as any));
+    expect(mockUrqlClient.mockFetch.requests[0].args).toEqual(["/foo/bar", expect.objectContaining({ sendImmediately: false })]);
+    await mockUrqlClient.mockFetch.pushResponse(new Response(Readable.toWeb(secondResponseStream) as any));
 
     let secondStream: ReadableStream<string>;
 
@@ -471,7 +458,7 @@ describe("useFetch", () => {
     expect(result.current[0].data).toEqual("hey there!");
     expect(result.current[0].streaming).toBe(false);
 
-    expect(mockUrqlClient[$gadgetConnection].fetch).toBeCalledTimes(2);
+    expect(mockUrqlClient.mockFetch).toBeCalledTimes(2);
   });
 
   test("it reports response errors from the backend", async () => {
@@ -481,9 +468,7 @@ describe("useFetch", () => {
     expect(result.current[0].fetching).toBe(true);
     expect(result.current[0].error).toBeFalsy();
 
-    await mockUrqlClient[$gadgetConnection].fetch.pushResponse(
-      new Response("error response", { status: 500, statusText: "Internal Server Error" })
-    );
+    await mockUrqlClient.mockFetch.pushResponse(new Response("error response", { status: 500, statusText: "Internal Server Error" }));
 
     expect(result.current[0].fetching).toBe(false);
     expect(result.current[0].data).toBeUndefined();
@@ -492,15 +477,15 @@ describe("useFetch", () => {
     expect(result.current[0].error!.response).toBeTruthy();
     expect(result.current[0].error!.response.status).toEqual(500);
 
-    expect(mockUrqlClient[$gadgetConnection].fetch).toBeCalledTimes(1);
+    expect(mockUrqlClient.mockFetch).toBeCalledTimes(1);
   });
 
   test("it can rexecute to fetch a new string from the backend", async () => {
     const { result } = renderHook(() => useFetch("/foo/bar"), { wrapper: MockClientWrapper(relatedProductsApi) });
 
-    await mockUrqlClient[$gadgetConnection].fetch.pushResponse(new Response("hello world"));
+    await mockUrqlClient.mockFetch.pushResponse(new Response("hello world"));
     expect(result.current[0].data).toEqual("hello world");
-    expect(mockUrqlClient[$gadgetConnection].fetch).toBeCalledTimes(1);
+    expect(mockUrqlClient.mockFetch).toBeCalledTimes(1);
 
     let reexecutePromise: Promise<string>;
     act(() => {
@@ -510,7 +495,7 @@ describe("useFetch", () => {
     expect(result.current[0].fetching).toBe(true);
     expect(result.current[0].error).toBeFalsy();
 
-    await mockUrqlClient[$gadgetConnection].fetch.pushResponse(new Response("hello canada"));
+    await mockUrqlClient.mockFetch.pushResponse(new Response("hello canada"));
 
     const reexecuteResult = await reexecutePromise!;
 
@@ -527,12 +512,12 @@ describe("useFetch", () => {
     expect(result.current[0].fetching).toBe(true);
     expect(result.current[0].error).toBeFalsy();
 
-    await mockUrqlClient[$gadgetConnection].fetch.pushResponse(new Response("error response", { status: 500 }));
+    await mockUrqlClient.mockFetch.pushResponse(new Response("error response", { status: 500 }));
 
     expect(result.current[0].fetching).toBe(false);
     expect(result.current[0].error).toBeTruthy();
 
-    expect(mockUrqlClient[$gadgetConnection].fetch).toBeCalledTimes(1);
+    expect(mockUrqlClient.mockFetch).toBeCalledTimes(1);
 
     let reexecutePromise: Promise<string>;
     act(() => {
@@ -542,7 +527,7 @@ describe("useFetch", () => {
     expect(result.current[0].fetching).toBe(true);
     expect(result.current[0].error).toBeFalsy();
 
-    await mockUrqlClient[$gadgetConnection].fetch.pushResponse(new Response("fixed"));
+    await mockUrqlClient.mockFetch.pushResponse(new Response("fixed"));
 
     const reexecuteResult = await reexecutePromise!;
 
@@ -557,15 +542,15 @@ describe("useFetch", () => {
     const { result } = renderHook(() => useFetch("/foo/bar"), { wrapper: MockClientWrapper(relatedProductsApi) });
 
     expect(result.current[0].fetching).toBe(true);
-    expect(mockUrqlClient[$gadgetConnection].fetch).toBeCalledTimes(1);
-    expect(mockUrqlClient[$gadgetConnection].fetch.requests[0].args).toEqual(["/foo/bar", expect.objectContaining({})]);
+    expect(mockUrqlClient.mockFetch).toBeCalledTimes(1);
+    expect(mockUrqlClient.mockFetch.requests[0].args).toEqual(["/foo/bar", expect.objectContaining({})]);
   });
 
   test("it automatically starts sending requests with the GET method specified", async () => {
     const { result } = renderHook(() => useFetch("/foo/bar", { method: "GET" }), { wrapper: MockClientWrapper(relatedProductsApi) });
 
     expect(result.current[0].fetching).toBe(true);
-    expect(mockUrqlClient[$gadgetConnection].fetch).toBeCalledTimes(1);
+    expect(mockUrqlClient.mockFetch).toBeCalledTimes(1);
   });
 
   test("it does not automatically start sending requests with the GET method specified but sendImmediately: false", async () => {
@@ -574,13 +559,13 @@ describe("useFetch", () => {
     });
 
     expect(result.current[0].fetching).toBe(false);
-    expect(mockUrqlClient[$gadgetConnection].fetch).toBeCalledTimes(0);
+    expect(mockUrqlClient.mockFetch).toBeCalledTimes(0);
   });
 
   test("it doesn't automatically start sending POST requests by default", async () => {
     const { result } = renderHook(() => useFetch("/foo/bar", { method: "POST" }), { wrapper: MockClientWrapper(relatedProductsApi) });
 
-    expect(mockUrqlClient[$gadgetConnection].fetch).toBeCalledTimes(0);
+    expect(mockUrqlClient.mockFetch).toBeCalledTimes(0);
     expect(result.current[0].data).toBeFalsy();
     expect(result.current[0].fetching).toBe(false);
     expect(result.current[0].error).toBeFalsy();
@@ -594,14 +579,14 @@ describe("useFetch", () => {
     expect(result.current[0].fetching).toBe(true);
     expect(result.current[0].error).toBeFalsy();
 
-    expect(mockUrqlClient[$gadgetConnection].fetch.requests[0].args).toEqual(["/foo/bar", expect.objectContaining({ method: "POST" })]);
-    await mockUrqlClient[$gadgetConnection].fetch.pushResponse(new Response("hello world"));
+    expect(mockUrqlClient.mockFetch.requests[0].args).toEqual(["/foo/bar", expect.objectContaining({ method: "POST" })]);
+    await mockUrqlClient.mockFetch.pushResponse(new Response("hello world"));
 
     expect(result.current[0].fetching).toBe(false);
     expect(result.current[0].data).toEqual("hello world");
     expect(result.current[0].error).toBeFalsy();
 
-    expect(mockUrqlClient[$gadgetConnection].fetch).toBeCalledTimes(1);
+    expect(mockUrqlClient.mockFetch).toBeCalledTimes(1);
   });
 
   test("it automatically starts sending requests with the POST method specified and sendImmediately: true", async () => {
@@ -610,46 +595,46 @@ describe("useFetch", () => {
     });
 
     expect(result.current[0].fetching).toBe(true);
-    expect(mockUrqlClient[$gadgetConnection].fetch).toBeCalledTimes(1);
+    expect(mockUrqlClient.mockFetch).toBeCalledTimes(1);
   });
 
   test("POST requests can be given options when executed", async () => {
     const { result } = renderHook(() => useFetch("/foo/bar", { method: "POST" }), { wrapper: MockClientWrapper(relatedProductsApi) });
 
-    expect(mockUrqlClient[$gadgetConnection].fetch).toBeCalledTimes(0);
+    expect(mockUrqlClient.mockFetch).toBeCalledTimes(0);
 
     let reexecutePromise: Promise<string>;
     act(() => {
       reexecutePromise = result.current[1]({ headers: { "X-Test": "hello" }, body: JSON.stringify({ test: true }) });
     });
 
-    expect(mockUrqlClient[$gadgetConnection].fetch.requests[0].args).toEqual([
+    expect(mockUrqlClient.mockFetch.requests[0].args).toEqual([
       "/foo/bar",
       expect.objectContaining({ method: "POST", headers: { "X-Test": "hello" }, body: JSON.stringify({ test: true }) }),
     ]);
-    await mockUrqlClient[$gadgetConnection].fetch.pushResponse(new Response("hello world"));
+    await mockUrqlClient.mockFetch.pushResponse(new Response("hello world"));
 
     expect(result.current[0].fetching).toBe(false);
     expect(result.current[0].data).toEqual("hello world");
     expect(result.current[0].error).toBeFalsy();
 
-    expect(mockUrqlClient[$gadgetConnection].fetch).toBeCalledTimes(1);
+    expect(mockUrqlClient.mockFetch).toBeCalledTimes(1);
 
     act(() => {
       reexecutePromise = result.current[1]({ headers: { "X-Test": "other" }, body: "other body" });
     });
 
-    expect(mockUrqlClient[$gadgetConnection].fetch.requests[0].args).toEqual([
+    expect(mockUrqlClient.mockFetch.requests[0].args).toEqual([
       "/foo/bar",
       expect.objectContaining({ method: "POST", headers: { "X-Test": "other" }, body: "other body" }),
     ]);
-    await mockUrqlClient[$gadgetConnection].fetch.pushResponse(new Response("second response"));
+    await mockUrqlClient.mockFetch.pushResponse(new Response("second response"));
 
     expect(result.current[0].fetching).toBe(false);
     expect(result.current[0].data).toEqual("second response");
     expect(result.current[0].error).toBeFalsy();
 
-    expect(mockUrqlClient[$gadgetConnection].fetch).toBeCalledTimes(2);
+    expect(mockUrqlClient.mockFetch).toBeCalledTimes(2);
   });
 
   test("it can fetch json from third party apis", async () => {
@@ -661,16 +646,16 @@ describe("useFetch", () => {
     expect(result.current[0].fetching).toBe(true);
     expect(result.current[0].error).toBeFalsy();
 
-    expect(mockUrqlClient[$gadgetConnection].fetch.requests[0].args).toEqual([
+    expect(mockUrqlClient.mockFetch.requests[0].args).toEqual([
       "https://dummyjson.com/products",
       expect.objectContaining({ headers: { accept: "application/json" } }),
     ]);
-    await mockUrqlClient[$gadgetConnection].fetch.pushResponse(new Response('{"hello": 1}'));
+    await mockUrqlClient.mockFetch.pushResponse(new Response('{"hello": 1}'));
 
     expect(result.current[0].fetching).toBe(false);
     expect(result.current[0].data).toEqual({ hello: 1 });
     expect(result.current[0].error).toBeFalsy();
 
-    expect(mockUrqlClient[$gadgetConnection].fetch).toBeCalledTimes(1);
+    expect(mockUrqlClient.mockFetch).toBeCalledTimes(1);
   });
 });

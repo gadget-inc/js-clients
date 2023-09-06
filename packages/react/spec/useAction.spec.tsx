@@ -9,7 +9,7 @@ import { Provider } from "../src/GadgetProvider.js";
 import { useAction } from "../src/index.js";
 import type { ErrorWrapper } from "../src/utils.js";
 import { relatedProductsApi } from "./apis.js";
-import { MockClientWrapper, createMockUrqlCient, mockUrqlClient } from "./testWrappers.js";
+import { MockClientWrapper, createMockUrqlClient, mockUrqlClient } from "./testWrappers.js";
 
 describe("useAction", () => {
   // these functions are typechecked but never run to avoid actually making API calls
@@ -336,7 +336,7 @@ describe("useAction", () => {
   test("generates correct mutation and variables for a mutation without model api identifier", async () => {
     let variables: AnyVariables;
 
-    const client = createMockUrqlCient({
+    const client = createMockUrqlClient({
       mutationAssertions: (request) => {
         variables = request.variables;
       },

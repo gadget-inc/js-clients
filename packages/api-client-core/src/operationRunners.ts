@@ -12,9 +12,11 @@ import {
   globalActionOperation,
 } from "./operationBuilders.js";
 import {
+  GadgetErrorGroup,
   assertMutationSuccess,
   assertNullableOperationSuccess,
   assertOperationSuccess,
+  gadgetErrorFor,
   get,
   getNonUniqueDataError,
   hydrateConnection,
@@ -191,19 +193,29 @@ export const actionRunner: ActionRunner = async <Shape extends RecordShape = any
   // pass bulk responses through without any assertions since we can have a success: false response but still want
   // to process it in a similar fashion since some of the records could have been processed
   const dataPath = namespace ? [namespace, operation] : [operation];
-  const mutationResult = isBulkAction ? get(response.data, dataPath) : assertMutationSuccess(response, dataPath);
 
-  // Currently, delete actions have a null selection. We do an early return for this because `hydrateRecordArray` will fail
-  // if there's nothing at `mutationResult[modelSelectionField]`, but the caller isn't expecting a return (void).
-  if (defaultSelection == null) {
-    return;
-  }
-
-  // todo this does not support pagination params right now, we'll need to add it to bulk action Results
-  if (isBulkAction) {
-    return !hasReturnType ? hydrateRecordArray<Shape>(response, mutationResult[modelSelectionField]) : mutationResult.results;
+  if (!isBulkAction) {
+    const mutationTriple = assertMutationSuccess(response, dataPath);
+    // Delete actions have a null selection. We do an early return for this because `hydrateRecordArray` will fail
+    // if there's nothing at `mutationResult[modelSelectionField]`, but the caller isn't expecting a return (void).
+    if (defaultSelection == null) return;
+    if (!hasReturnType) {
+      return hydrateRecord<Shape>(response, mutationTriple[modelSelectionField]);
+    } else {
+      return mutationTriple.result;
+    }
   } else {
-    return !hasReturnType ? hydrateRecord<Shape>(response, mutationResult[modelSelectionField]) : mutationResult.result;
+    const mutationTriple = get(response.data, dataPath);
+    const results =
+      mutationTriple[modelSelectionField] && defaultSelection
+        ? hydrateRecordArray<Shape>(response, mutationTriple[modelSelectionField])
+        : [];
+    if (mutationTriple.errors) {
+      const errors = mutationTriple.errors.map((error: any) => gadgetErrorFor(error));
+      throw new GadgetErrorGroup(errors, results);
+    }
+
+    return results;
   }
 };
 
