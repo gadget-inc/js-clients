@@ -5,7 +5,7 @@ import type { ExecutionResult } from "graphql";
 import type { Sink, Client as SubscriptionClient, ClientOptions as SubscriptionClientOptions } from "graphql-ws";
 import { CloseCode, createClient as createSubscriptionClient } from "graphql-ws";
 import WebSocket from "isomorphic-ws";
-import type { AuthenticationModeOptions, BrowserSessionAuthenticationModeOptions } from "./ClientOptions.js";
+import type { AuthenticationModeOptions, BrowserSessionAuthenticationModeOptions, Exchanges } from "./ClientOptions.js";
 import { BrowserSessionStorageType } from "./ClientOptions.js";
 import { GadgetTransaction, TransactionRolledBack } from "./GadgetTransaction.js";
 import type { BrowserStorage } from "./InMemoryStorage.js";
@@ -52,6 +52,7 @@ export interface GadgetConnectionOptions {
   requestPolicy?: ClientOptions["requestPolicy"];
   applicationId?: string;
   baseRouteURL?: string;
+  exchanges?: Exchanges;
 }
 
 /**
@@ -80,6 +81,7 @@ export class GadgetConnection {
   private websocketImplementation: any;
   private _fetchImplementation: typeof fetchPolyfill;
   private environment: "Development" | "Production";
+  private exchanges: Required<Exchanges>;
 
   // the base client using HTTP requests that non-transactional operations will use
   private baseClient: Client;
@@ -108,6 +110,12 @@ export class GadgetConnection {
     this.websocketsEndpoint = this.websocketsEndpoint.replace(/^http/, "ws");
     this.environment = options.environment ?? "Development";
     this.requestPolicy = options.requestPolicy ?? "cache-and-network";
+    this.exchanges = {
+      beforeAll: [],
+      beforeAsync: [],
+      afterAll: [],
+      ...options.exchanges,
+    };
 
     this.setAuthenticationMode(options.authenticationMode);
 
@@ -216,8 +224,10 @@ export class GadgetConnection {
           url: "/-", // not used because there's no fetch exchange, set for clarity
           requestPolicy: "network-only", // skip any cached data during transactions
           exchanges: [
+            ...this.exchanges.beforeAll,
             operationNameExchange,
             otelExchange,
+            ...this.exchanges.beforeAsync,
             subscriptionExchange({
               forwardSubscription(request) {
                 const input = { ...request, query: request.query || "" };
@@ -232,6 +242,7 @@ export class GadgetConnection {
               },
               enableAllOperations: true,
             }),
+            ...this.exchanges.afterAll,
           ],
         });
         (client as any)[$gadgetConnection] = this;
@@ -334,7 +345,7 @@ export class GadgetConnection {
   }
 
   private newBaseClient() {
-    const exchanges = [operationNameExchange, otelExchange, urlParamExchange];
+    const exchanges = [...this.exchanges.beforeAll, operationNameExchange, otelExchange, urlParamExchange];
 
     // apply urql's default caching behaviour when client side (but skip it server side)
     if (typeof window != "undefined") {
@@ -342,6 +353,7 @@ export class GadgetConnection {
     }
 
     exchanges.push(
+      ...this.exchanges.beforeAsync,
       fetchExchange,
       subscriptionExchange({
         forwardSubscription: (request) => {
@@ -355,7 +367,8 @@ export class GadgetConnection {
             },
           };
         },
-      })
+      }),
+      ...this.exchanges.afterAll
     );
 
     const client = new Client({
