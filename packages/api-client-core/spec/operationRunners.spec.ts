@@ -334,7 +334,44 @@ describe("operationRunners", () => {
       expect(error!).toBeTruthy();
       expect(error!.errors.length).toBe(2);
       expect(error!.code).toMatchInlineSnapshot(`"GGT_ERROR_GROUP(GGT_ERROR_CODE_A,GGT_ERROR_CODE_B)"`);
-      expect(error!.results[0].id).toBeTruthy();
+      expect(error!.results?.[0].id).toBeTruthy();
+    });
+
+    test("returns undefined when bulk action does not have a result", async () => {
+      const promise = actionRunner<{ id: string; name: string }>(
+        {
+          connection,
+        },
+        "bulkDeleteWidgets",
+        { id: true, name: true },
+        "widget",
+        "widgets",
+        true,
+        {
+          ids: {
+            value: ["123", "234"],
+            required: true,
+            type: "[GadgetID!]",
+          },
+        },
+        {},
+        null,
+        false
+      );
+
+      mockUrqlClient.executeMutation.pushResponse("bulkDeleteWidgets", {
+        data: {
+          bulkDeleteWidgets: {
+            success: true,
+            errors: null,
+          },
+        },
+        stale: false,
+        hasNext: false,
+      });
+
+      const result = await promise;
+      expect(result).toBeUndefined();
     });
   });
 });

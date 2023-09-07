@@ -209,7 +209,7 @@ export const actionRunner: ActionRunner = async <Shape extends RecordShape = any
     const results =
       mutationTriple[modelSelectionField] && defaultSelection
         ? hydrateRecordArray<Shape>(response, mutationTriple[modelSelectionField])
-        : [];
+        : undefined;
     if (mutationTriple.errors) {
       const errors = mutationTriple.errors.map((error: any) => gadgetErrorFor(error));
       throw new GadgetErrorGroup(errors, results);
