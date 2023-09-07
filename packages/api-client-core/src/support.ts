@@ -181,7 +181,7 @@ export class GadgetErrorGroup<Result> extends Error {
     /** The list of inner errors that occurred */
     public readonly errors: GadgetError[],
     /* Any objects that were successfully processed during the bulk operation (the ones that didn't throw errors) */
-    public readonly results: Result[]
+    public readonly results: Result[] | undefined
   ) {
     super(errors.length > 1 ? "Multiple errors occurred" : errors[0].message);
   }
