@@ -19,6 +19,7 @@
   },
   "source": "src/index.ts",
   "main": "dist/cjs/index.js",
+  "sideEffects": false,
   "scripts": {
     "typecheck": "tsc --noEmit",
     "build": "rm -rf dist && tsc -b tsconfig.cjs.json tsconfig.esm.json && echo '{\"type\": \"commonjs\"}' > dist/cjs/package.json && echo '{\"type\": \"module\"}' > dist/esm/package.json",
