@@ -170,4 +170,16 @@ describe("useFindFirst", () => {
     rerender();
     expect(result.current[0]).toBe(beforeObject);
   });
+
+  test("doesn't issue a request if paused", async () => {
+    const { result } = renderHook(() => useFindFirst(relatedProductsApi.user, { pause: true }), {
+      wrapper: MockClientWrapper(relatedProductsApi),
+    });
+
+    expect(result.current[0].data).toBeFalsy();
+    expect(result.current[0].fetching).toBe(false);
+    expect(result.current[0].error).toBeFalsy();
+
+    expect(mockUrqlClient.executeQuery).toBeCalledTimes(0);
+  });
 });
