@@ -35,13 +35,11 @@
     "graphql-ws": "^5.13.1",
     "isomorphic-ws": "^5.0.0",
     "lodash.clonedeep": "^4.5.0",
-    "lodash.isequal": "^4.5.0",
     "ws": "^8.13.0"
   },
   "devDependencies": {
     "tiny-graphql-query-compiler": "*",
     "@types/lodash.clonedeep": "^4.5.6",
-    "@types/lodash.isequal": "^4.5.5",
     "@types/node": "^16.11.7",
     "conditional-type-checks": "^1.0.6",
     "gql-tag": "^1.0.1",

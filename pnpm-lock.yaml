@@ -108,9 +108,6 @@ importers:
       lodash.clonedeep:
         specifier: ^4.5.0
         version: 4.5.0
-      lodash.isequal:
-        specifier: ^4.5.0
-        version: 4.5.0
       tiny-graphql-query-compiler:
         specifier: ^0.2.2
         version: link:../tiny-graphql-query-compiler
@@ -121,9 +118,6 @@ importers:
       '@types/lodash.clonedeep':
         specifier: ^4.5.6
         version: 4.5.7
-      '@types/lodash.isequal':
-        specifier: ^4.5.5
-        version: 4.5.6
       '@types/node':
         specifier: ^16.11.7
         version: 16.11.7
@@ -1894,12 +1888,6 @@ packages:
 
   /@types/lodash.clonedeep@4.5.7:
     resolution: {integrity: sha512-ccNqkPptFIXrpVqUECi60/DFxjNKsfoQxSQsgcBJCX/fuX1wgyQieojkcWH/KpE3xzLoWN/2k+ZeGqIN3paSvw==}
-    dependencies:
-      '@types/lodash': 4.14.191
-    dev: true
-
-  /@types/lodash.isequal@4.5.6:
-    resolution: {integrity: sha512-Ww4UGSe3DmtvLLJm2F16hDwEQSv7U0Rr8SujLUA2wHI2D2dm8kPu6Et+/y303LfjTIwSBKXB/YTUcAKpem/XEg==}
     dependencies:
       '@types/lodash': 4.14.191
     dev: true
@@ -4831,10 +4819,6 @@ packages:
 
   /lodash.clonedeep@4.5.0:
     resolution: {integrity: sha512-H5ZhCF25riFd9uB5UCkVKo61m3S/xZk1x4wA6yp/L3RFP6Z/eHH1ymQcGLo7J3GMPfm0V/7m1tryHuGVxpqEBQ==}
-    dev: false
-
-  /lodash.isequal@4.5.0:
-    resolution: {integrity: sha512-pDo3lu8Jhfjqls6GkMgpahsF9kCyayhgykjyLMNFTKWrpVdAQtYyB4muAMWozBB4ig/dtWAmsMxLEI8wuz+DYQ==}
     dev: false
 
   /lodash.merge@4.6.2:
