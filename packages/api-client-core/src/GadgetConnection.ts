@@ -11,16 +11,8 @@ import { GadgetTransaction, TransactionRolledBack } from "./GadgetTransaction.js
 import type { BrowserStorage } from "./InMemoryStorage.js";
 import { InMemoryStorage } from "./InMemoryStorage.js";
 import { operationNameExchange } from "./exchanges/operationNameExchange.js";
-import { otelExchange } from "./exchanges/otelExchange.js";
 import { urlParamExchange } from "./exchanges/urlParamExchange.js";
-import {
-  GadgetUnexpectedCloseError,
-  GadgetWebsocketConnectionTimeoutError,
-  getCurrentSpan,
-  isCloseEvent,
-  storageAvailable,
-  traceFunction,
-} from "./support.js";
+import { GadgetUnexpectedCloseError, GadgetWebsocketConnectionTimeoutError, isCloseEvent, storageAvailable } from "./support.js";
 
 export type TransactionRun<T> = (transaction: GadgetTransaction) => Promise<T>;
 export interface GadgetSubscriptionClientOptions extends Partial<SubscriptionClientOptions> {
@@ -182,96 +174,90 @@ export class GadgetConnection {
   transaction: {
     <T>(options: GadgetSubscriptionClientOptions, run: TransactionRun<T>): Promise<T>;
     <T>(run: TransactionRun<T>): Promise<T>;
-  } = traceFunction(
-    "api-client.transaction",
-    async <T>(optionsOrRun: GadgetSubscriptionClientOptions | TransactionRun<T>, maybeRun?: TransactionRun<T>): Promise<T> => {
-      let run: TransactionRun<T>;
-      let options: GadgetSubscriptionClientOptions;
+  } = async <T>(optionsOrRun: GadgetSubscriptionClientOptions | TransactionRun<T>, maybeRun?: TransactionRun<T>): Promise<T> => {
+    let run: TransactionRun<T>;
+    let options: GadgetSubscriptionClientOptions;
 
-      if (maybeRun) {
-        run = maybeRun;
-        options = optionsOrRun as GadgetSubscriptionClientOptions;
-      } else {
-        run = optionsOrRun as TransactionRun<T>;
-        options = {};
-      }
-
-      if (this.currentTransaction) {
-        return await run(this.currentTransaction);
-      }
-
-      getCurrentSpan()?.setAttributes({ applicationId: this.options.applicationId, environmentName: this.environment });
-
-      let subscriptionClient: SubscriptionClient | null = null;
-      let transaction;
-      try {
-        // The server will error if it receives any operations before the auth dance has been completed, so we block on that happening before sending our first operation. It's important that this happens synchronously after instantiating the client so we don't miss any messages
-        subscriptionClient = await this.waitForOpenedConnection({
-          isFatalConnectionProblem(errorOrCloseEvent) {
-            // any interruption of the transaction is fatal to the transaction
-            console.warn("Transport error encountered during transaction processing", errorOrCloseEvent);
-            return true;
-          },
-          connectionAckWaitTimeout: DEFAULT_CONN_ACK_TIMEOUT,
-          ...options,
-          lazy: false,
-          // super ultra critical option that ensures graphql-ws doesn't automatically close the websocket connection when there are no outstanding operations. this is key so we can start a transaction then make mutations within it
-          lazyCloseTimeout: 100000,
-          retryAttempts: 0,
-        });
-
-        const client = new Client({
-          url: "/-", // not used because there's no fetch exchange, set for clarity
-          requestPolicy: "network-only", // skip any cached data during transactions
-          exchanges: [
-            ...this.exchanges.beforeAll,
-            operationNameExchange,
-            otelExchange,
-            ...this.exchanges.beforeAsync,
-            subscriptionExchange({
-              forwardSubscription(request) {
-                const input = { ...request, query: request.query || "" };
-                return {
-                  subscribe: (sink) => {
-                    const dispose = subscriptionClient!.subscribe(input, sink as Sink<ExecutionResult>);
-                    return {
-                      unsubscribe: dispose,
-                    };
-                  },
-                };
-              },
-              enableAllOperations: true,
-            }),
-            ...this.exchanges.afterAll,
-          ],
-        });
-        (client as any)[$gadgetConnection] = this;
-
-        transaction = new GadgetTransaction(client, subscriptionClient);
-        this.currentTransaction = transaction;
-        await transaction.start();
-        const result = await run(transaction);
-        await transaction.commit();
-        return result;
-      } catch (error) {
-        try {
-          if (transaction?.open) await transaction.rollback();
-        } catch (rollbackError) {
-          if (!(rollbackError instanceof TransactionRolledBack)) {
-            console.warn("Encountered another error while rolling back a Gadget transaction that errored. The other error:", rollbackError);
-          }
-        }
-        if (isCloseEvent(error)) {
-          throw new GadgetUnexpectedCloseError(error);
-        } else {
-          throw error;
-        }
-      } finally {
-        await subscriptionClient?.dispose();
-        this.currentTransaction = null;
-      }
+    if (maybeRun) {
+      run = maybeRun;
+      options = optionsOrRun as GadgetSubscriptionClientOptions;
+    } else {
+      run = optionsOrRun as TransactionRun<T>;
+      options = {};
     }
-  );
+
+    if (this.currentTransaction) {
+      return await run(this.currentTransaction);
+    }
+
+    let subscriptionClient: SubscriptionClient | null = null;
+    let transaction;
+    try {
+      // The server will error if it receives any operations before the auth dance has been completed, so we block on that happening before sending our first operation. It's important that this happens synchronously after instantiating the client so we don't miss any messages
+      subscriptionClient = await this.waitForOpenedConnection({
+        isFatalConnectionProblem(errorOrCloseEvent) {
+          // any interruption of the transaction is fatal to the transaction
+          console.warn("Transport error encountered during transaction processing", errorOrCloseEvent);
+          return true;
+        },
+        connectionAckWaitTimeout: DEFAULT_CONN_ACK_TIMEOUT,
+        ...options,
+        lazy: false,
+        // super ultra critical option that ensures graphql-ws doesn't automatically close the websocket connection when there are no outstanding operations. this is key so we can start a transaction then make mutations within it
+        lazyCloseTimeout: 100000,
+        retryAttempts: 0,
+      });
+
+      const client = new Client({
+        url: "/-", // not used because there's no fetch exchange, set for clarity
+        requestPolicy: "network-only", // skip any cached data during transactions
+        exchanges: [
+          ...this.exchanges.beforeAll,
+          operationNameExchange,
+          ...this.exchanges.beforeAsync,
+          subscriptionExchange({
+            forwardSubscription(request) {
+              const input = { ...request, query: request.query || "" };
+              return {
+                subscribe: (sink) => {
+                  const dispose = subscriptionClient!.subscribe(input, sink as Sink<ExecutionResult>);
+                  return {
+                    unsubscribe: dispose,
+                  };
+                },
+              };
+            },
+            enableAllOperations: true,
+          }),
+          ...this.exchanges.afterAll,
+        ],
+      });
+      (client as any)[$gadgetConnection] = this;
+
+      transaction = new GadgetTransaction(client, subscriptionClient);
+      this.currentTransaction = transaction;
+      await transaction.start();
+      const result = await run(transaction);
+      await transaction.commit();
+      return result;
+    } catch (error) {
+      try {
+        if (transaction?.open) await transaction.rollback();
+      } catch (rollbackError) {
+        if (!(rollbackError instanceof TransactionRolledBack)) {
+          console.warn("Encountered another error while rolling back a Gadget transaction that errored. The other error:", rollbackError);
+        }
+      }
+      if (isCloseEvent(error)) {
+        throw new GadgetUnexpectedCloseError(error);
+      } else {
+        throw error;
+      }
+    } finally {
+      await subscriptionClient?.dispose();
+      this.currentTransaction = null;
+    }
+  };
 
   close() {
     this.disposeClient(this.baseSubscriptionClient);
@@ -290,7 +276,7 @@ export class GadgetConnection {
    * // fetch a relative URL from the endpoint this API client is configured to fetch from
    * await api.connection.fetch("/foo/bar");
    **/
-  fetch = traceFunction("api-client.fetch", async (input: RequestInfo | URL, init: RequestInit = {}) => {
+  fetch = async (input: RequestInfo | URL, init: RequestInit = {}) => {
     input = processMaybeRelativeInput(input, this.options.baseRouteURL ?? this.options.endpoint);
 
     if (this.isGadgetRequest(input)) {
@@ -311,7 +297,7 @@ export class GadgetConnection {
     }
 
     return response;
-  });
+  };
 
   private isGadgetRequest(input: RequestInfo | URL) {
     let requestUrl;
@@ -345,7 +331,7 @@ export class GadgetConnection {
   }
 
   private newBaseClient() {
-    const exchanges = [...this.exchanges.beforeAll, operationNameExchange, otelExchange, urlParamExchange];
+    const exchanges = [...this.exchanges.beforeAll, operationNameExchange, urlParamExchange];
 
     // apply urql's default caching behaviour when client side (but skip it server side)
     if (typeof window != "undefined") {

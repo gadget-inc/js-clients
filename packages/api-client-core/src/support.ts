@@ -1,5 +1,3 @@
-import type { Span, SpanOptions } from "@opentelemetry/api";
-import { SpanStatusCode, context as contextApi, trace as traceApi } from "@opentelemetry/api";
 import type { OperationResult } from "@urql/core";
 import { CombinedError } from "@urql/core";
 import { DataHydrator } from "./DataHydrator.js";
@@ -423,91 +421,6 @@ export const errorMessage = (error: unknown) => {
     return String(error);
   }
 };
-
-export const tracer = traceApi.getTracer("gadget-api-client");
-
-export const onSpanError = (span: Span, error: any) => {
-  span.recordException(error);
-  span.setStatus({ code: SpanStatusCode.ERROR, message: errorMessage(error) });
-};
-
-export function withSpan<T>(name: string, fn: (span: Span) => T): T;
-export function withSpan<T>(name: string, options: SpanOptions, fn: (span: Span) => T): T;
-export function withSpan<T>(name: string, fnOrOptions: SpanOptions | ((span: Span) => T), fn?: (span: Span) => T): T {
-  let func: (span: Span) => T;
-  let options: SpanOptions | undefined;
-
-  if (fn) {
-    func = fn;
-    options = fnOrOptions as SpanOptions;
-  } else {
-    func = fnOrOptions as typeof func;
-    options = {};
-  }
-
-  return tracer.startActiveSpan(name, options, (span) => func(span));
-}
-
-export async function trace<T extends Promise<any>>(name: string, fn: (span: Span) => T): Promise<Awaited<T>>;
-export async function trace<T extends Promise<any>>(name: string, options: SpanOptions, fn: (span: Span) => T): Promise<Awaited<T>>;
-export async function trace<T extends Promise<any>>(
-  name: string,
-  fnOrOptions: SpanOptions | ((span: Span) => T),
-  fn?: (span: Span) => T
-): Promise<Awaited<T>> {
-  let func: (span: Span) => T;
-  let options: SpanOptions | undefined;
-
-  if (fn) {
-    func = fn;
-    options = fnOrOptions as SpanOptions;
-  } else {
-    func = fnOrOptions as typeof func;
-    options = {};
-  }
-
-  return await withSpan(name, options, async (span) => {
-    try {
-      const result = await func(span);
-      span.end();
-      return result;
-    } catch (error) {
-      onSpanError(span, error);
-      span.end();
-      throw error;
-    }
-  });
-}
-
-/** Wrap a function in tracing, and return it  */
-export function traceFunction<This, Fn extends (this: This, ...args: any[]) => Promise<any>>(name: string, fn: Fn): Fn;
-export function traceFunction<This, Fn extends (this: This, ...args: any[]) => Promise<any>>(
-  name: string,
-  options: SpanOptions,
-  fn: Fn
-): Fn;
-export function traceFunction<This, Fn extends (this: This, ...args: any[]) => Promise<any>>(
-  name: string,
-  fnOrOptions: SpanOptions | Fn,
-  fn?: Fn
-): Fn {
-  let func: Fn;
-  let options: SpanOptions;
-
-  if (fn) {
-    func = fn;
-    options = fnOrOptions as SpanOptions;
-  } else {
-    func = fnOrOptions as Fn;
-    options = {};
-  }
-
-  return async function (this: any, ...args: Parameters<Fn>) {
-    return await trace(name, options, () => func.apply(this, args));
-  } as Fn;
-}
-
-export const getCurrentSpan = () => traceApi.getSpan(contextApi.active());
 
 // Gadget Storage Test Key that minifies well
 const key = "gstk";

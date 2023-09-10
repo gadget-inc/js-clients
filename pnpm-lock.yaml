@@ -90,9 +90,6 @@ importers:
 
   packages/api-client-core:
     dependencies:
-      '@opentelemetry/api':
-        specifier: ^1.4.0
-        version: 1.4.0
       '@urql/core':
         specifier: ^4.0.10
         version: 4.0.10(graphql@16.6.0)
@@ -1577,11 +1574,6 @@ packages:
       '@nodelib/fs.scandir': 2.1.5
       fastq: 1.13.0
     dev: true
-
-  /@opentelemetry/api@1.4.0:
-    resolution: {integrity: sha512-IgMK9i3sFGNUqPMbjABm0G26g0QCKCUBfglhQ7rQq6WcxbKfEHRcmwsoER4hZcuYqJgkYn2OeuoJIv7Jsftp7g==}
-    engines: {node: '>=8.0.0'}
-    dev: false
 
   /@shopify/app-bridge-core@1.0.2:
     resolution: {integrity: sha512-lI+nZHMDqBJSqTBQiI1GY3Xs7YjPuZ83/sW7TIvWtTsxQZyoanAVXloo63sGEd58t1KvKFnDtVFN1NJYe/zouQ==}
