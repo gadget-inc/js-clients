@@ -180,10 +180,10 @@ export class ErrorWrapper extends Error {
     });
   }
   /** @private */
-  static errorIfDataAbsent(result: UseQueryState<any>, dataPath: string[]) {
+  static errorIfDataAbsent(result: UseQueryState<any>, dataPath: string[], paused = false) {
     const nonNullableError = getNonNullableError(result, dataPath);
     let error = ErrorWrapper.forMaybeCombinedError(result.error);
-    if (!error && nonNullableError) {
+    if (!error && nonNullableError && !paused) {
       error = ErrorWrapper.forClientSideError(nonNullableError);
     }
     return error;
