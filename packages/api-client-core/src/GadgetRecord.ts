@@ -1,4 +1,4 @@
-import cloneDeep from "lodash.clonedeep";
+import { klona as cloneDeep } from "klona";
 import type { Jsonify } from "type-fest";
 import { isEqual, toPrimitiveObject } from "./support.js";
 
