@@ -1,6 +1,6 @@
 import type { ClientOptions, RequestPolicy } from "@urql/core";
 import { Client, cacheExchange, fetchExchange, subscriptionExchange } from "@urql/core";
-import fetchPolyfill from "cross-fetch";
+
 import type { ExecutionResult } from "graphql";
 import type { Sink, Client as SubscriptionClient, ClientOptions as SubscriptionClientOptions } from "graphql-ws";
 import { CloseCode, createClient as createSubscriptionClient } from "graphql-ws";
@@ -39,7 +39,7 @@ export interface GadgetConnectionOptions {
   websocketsEndpoint?: string;
   subscriptionClientOptions?: GadgetSubscriptionClientOptions;
   websocketImplementation?: any;
-  fetchImplementation?: typeof fetchPolyfill;
+  fetchImplementation?: typeof globalThis.fetch;
   environment?: "Development" | "Production";
   requestPolicy?: ClientOptions["requestPolicy"];
   applicationId?: string;
@@ -71,7 +71,7 @@ export class GadgetConnection {
   private subscriptionClientOptions?: SubscriptionClientOptions;
   private websocketsEndpoint: string;
   private websocketImplementation: any;
-  private _fetchImplementation: typeof fetchPolyfill;
+  private _fetchImplementation: typeof globalThis.fetch;
   private environment: "Development" | "Production";
   private exchanges: Required<Exchanges>;
 
@@ -95,7 +95,10 @@ export class GadgetConnection {
     } else if (typeof window != "undefined" && window.fetch) {
       this._fetchImplementation = window.fetch.bind(window);
     } else {
-      this._fetchImplementation = fetchPolyfill;
+      this._fetchImplementation = async (...args: [any]) => {
+        const { fetch } = await import("cross-fetch");
+        return await fetch(...args);
+      };
     }
     this.websocketImplementation = options.websocketImplementation ?? globalThis?.WebSocket ?? WebSocket;
     this.websocketsEndpoint = options.websocketsEndpoint ?? options.endpoint + "/batch";
@@ -124,7 +127,7 @@ export class GadgetConnection {
     return this.currentTransaction?.client || this.baseClient;
   }
 
-  set fetchImplementation(implementation: typeof fetchPolyfill) {
+  set fetchImplementation(implementation: typeof globalThis.fetch) {
     this._fetchImplementation = implementation;
     this.resetClients();
   }
