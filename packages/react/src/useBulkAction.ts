@@ -77,7 +77,10 @@ export const useBulkAction = <
   return [
     transformedResult,
     useCallback(
-      async (variables: F["variablesType"], context?: Partial<OperationContext>) => {
+      async (inputs: F["variablesType"], context?: Partial<OperationContext>) => {
+        // accept the old style of {ids: ["1", "2", "3"]} as well as the new style of [{id: 1, foo: "bar"}, {id: 2, foo: "baz"}]
+        const variables = inputs && "ids" in inputs ? inputs : { inputs };
+
         // Adding the model's additional typename ensures document cache will properly refresh, regardless of whether __typename was
         // selected (and sometimes we can't even select it, like delete actions!)
         const result = await runMutation(variables, {

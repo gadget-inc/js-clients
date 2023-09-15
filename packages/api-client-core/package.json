@@ -1,6 +1,6 @@
 {
   "name": "@gadgetinc/api-client-core",
-  "version": "0.15.6",
+  "version": "0.15.7",
   "files": [
     "Readme.md",
     "dist/**/*"
@@ -39,7 +39,7 @@
     "ws": "^8.13.0"
   },
   "devDependencies": {
-    "tiny-graphql-query-compiler": "workspace:*",
+    "tiny-graphql-query-compiler": "*",
     "@types/lodash.clonedeep": "^4.5.6",
     "@types/lodash.isequal": "^4.5.5",
     "@types/node": "^16.11.7",

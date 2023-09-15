@@ -90,6 +90,10 @@ interface BulkActionWithIdsAndNoVariables<OptionsT> {
   <Options extends OptionsT>(ids: string[], options?: LimitToKnownKeys<Options, OptionsT>): AsyncRecord<any>;
 }
 
+interface BulkActionWithInputs<OptionsT, VariablesT> {
+  <Options extends OptionsT>(inputs: VariablesT, options?: LimitToKnownKeys<Options, OptionsT>): AsyncRecord<any>;
+}
+
 interface ActionFunctionMetadata<OptionsT, VariablesT, SelectionT, SchemaT, DefaultsT, IsBulk> {
   type: "action";
   operationName: string;
@@ -134,7 +138,7 @@ export type BulkActionFunction<OptionsT, VariablesT, SelectionT, SchemaT, Defaul
   DefaultsT,
   true
 > &
-  BulkActionWithIdsAndNoVariables<OptionsT>;
+  (BulkActionWithIdsAndNoVariables<OptionsT> | BulkActionWithInputs<OptionsT, VariablesT>);
 
 export interface GetFunction<OptionsT, SelectionT, SchemaT, DefaultsT> {
   <Options extends OptionsT>(options?: LimitToKnownKeys<Options, OptionsT>): AsyncRecord<GadgetRecord<any>>;
