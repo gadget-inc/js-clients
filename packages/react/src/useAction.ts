@@ -5,8 +5,14 @@ import type { AnyVariables, OperationContext, UseMutationState } from "urql";
 import { GadgetUrqlClientContext } from "./GadgetProvider.js";
 import { useGadgetMutation } from "./useGadgetMutation.js";
 import { useStructuralMemo } from "./useStructuralMemo.js";
-import type { ActionHookResult, ActionHookState, OptionsType } from "./utils.js";
-import { ErrorWrapper, noProviderErrorMessage } from "./utils.js";
+import {
+  ActionHookResult,
+  ActionHookState,
+  ErrorWrapper,
+  OptionsType,
+  disambiguateActionVariables,
+  noProviderErrorMessage,
+} from "./utils.js";
 
 /**
  * React hook to run a Gadget model action. `useAction` must be passed an action function from an instance of your generated API client library, like `api.user.create` or `api.blogPost.publish`. `useAction` doesn't actually run the action when invoked, but instead returns an action function as the second result for running the action in response to an event.
@@ -81,48 +87,12 @@ export const useAction = <
   return [
     transformedResult,
     useCallback(
-      async (variables: F["variablesType"], context?: Partial<OperationContext>) => {
-        variables ??= {};
-        if (action.hasAmbiguousIdentifier) {
-          if (Object.keys(variables).some((key) => !action.paramOnlyVariables?.includes(key) && key !== action.modelApiIdentifier)) {
-            throw Error(`Invalid arguments found in variables. Did you mean to use ({ ${action.modelApiIdentifier}: { ... } })?`);
-          }
-        }
+      async (input: F["variablesType"], context?: Partial<OperationContext>) => {
+        const variables = disambiguateActionVariables(action, input);
 
-        let newVariables: Exclude<F["variablesType"], null | undefined>;
-        const idVariable = Object.entries(action.variables).find(([key, value]) => key === "id" && value.type === "GadgetID");
-
-        if (action.acceptsModelInput || action.hasCreateOrUpdateEffect) {
-          if (
-            action.modelApiIdentifier in variables &&
-            typeof variables[action.modelApiIdentifier] === "object" &&
-            variables[action.modelApiIdentifier] !== null
-          ) {
-            newVariables = variables;
-          } else {
-            newVariables = {
-              [action.modelApiIdentifier]: {},
-            } as Exclude<F["variablesType"], null | undefined>;
-            for (const [key, value] of Object.entries(variables)) {
-              if (action.paramOnlyVariables?.includes(key)) {
-                newVariables[key] = value;
-              } else {
-                if (idVariable && key === idVariable[0]) {
-                  newVariables.id = value;
-                } else {
-                  newVariables[action.modelApiIdentifier][key] = value;
-                }
-              }
-            }
-          }
-        } else {
-          newVariables = variables;
-        }
-
-        // Adding the model's additional typename ensures document cache will properly refresh, regardless of whether __typename was
-        // selected (and sometimes we can't even select it, like delete actions!)
-        const result = await runMutation(newVariables, {
+        const result = await runMutation(variables, {
           ...context,
+          // Adding the model's additional typename ensures document cache will properly refresh, regardless of whether __typename was selected (and sometimes we can't even select it, like delete actions!)
           additionalTypenames: [...(context?.additionalTypenames ?? []), capitalizeIdentifier(action.modelApiIdentifier)],
         });
         return processResult({ fetching: false, ...result }, action);

@@ -4,8 +4,7 @@ import { useCallback, useMemo } from "react";
 import type { OperationContext, UseMutationState } from "urql";
 import { useGadgetMutation } from "./useGadgetMutation.js";
 import { useStructuralMemo } from "./useStructuralMemo.js";
-import type { ActionHookResult, OptionsType } from "./utils.js";
-import { ErrorWrapper } from "./utils.js";
+import { ActionHookResult, ErrorWrapper, OptionsType, disambiguateActionVariables } from "./utils.js";
 
 /**
  * React hook to run a Gadget model bulk action.
@@ -78,13 +77,19 @@ export const useBulkAction = <
     transformedResult,
     useCallback(
       async (inputs: F["variablesType"], context?: Partial<OperationContext>) => {
+        let variables;
         // accept the old style of {ids: ["1", "2", "3"]} as well as the new style of [{id: 1, foo: "bar"}, {id: 2, foo: "baz"}]
-        const variables = inputs && "ids" in inputs ? inputs : { inputs };
+        if (inputs && "ids" in inputs) {
+          variables = inputs;
+        } else {
+          variables = {
+            inputs: ((inputs as any[]) ?? []).map((input: any) => disambiguateActionVariables(action, input)),
+          };
+        }
 
-        // Adding the model's additional typename ensures document cache will properly refresh, regardless of whether __typename was
-        // selected (and sometimes we can't even select it, like delete actions!)
         const result = await runMutation(variables, {
           ...context,
+          // Adding the model's additional typename ensures document cache will properly refresh, regardless of whether __typename was selected (and sometimes we can't even select it, like delete actions!)
           additionalTypenames: [...(context?.additionalTypenames ?? []), capitalizeIdentifier(action.modelApiIdentifier)],
         });
         return processResult({ fetching: false, ...result }, action);
