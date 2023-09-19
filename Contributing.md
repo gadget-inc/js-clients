@@ -16,6 +16,16 @@ It can be annoying to work with these packages via `pnpm link` sometimes, so we 
 - push that to the remote git repo
 - and log out a version you can then refer to from other repos
 
+# Checking test bundle sizes
+
+We have a small project setup for evaluating what the bundled size of these dependencies might be together. Run:
+
+```shell
+pnpm -F=test-bundles test-build
+```
+
+to build the test bundles
+
 # Releasing
 
 Releasing is done automatically via [our release workflow](.github/workflows/release.yml). Any commits to the main branch that changes one of our `packages/**/package.json` versions will automatically be published.

@@ -1,5 +1,3 @@
-import type { Span, SpanOptions } from "@opentelemetry/api";
-import { SpanStatusCode, context as contextApi, trace as traceApi } from "@opentelemetry/api";
 import type { OperationResult } from "@urql/core";
 import { CombinedError } from "@urql/core";
 import { DataHydrator } from "./DataHydrator.js";
@@ -424,91 +422,6 @@ export const errorMessage = (error: unknown) => {
   }
 };
 
-export const tracer = traceApi.getTracer("gadget-api-client");
-
-export const onSpanError = (span: Span, error: any) => {
-  span.recordException(error);
-  span.setStatus({ code: SpanStatusCode.ERROR, message: errorMessage(error) });
-};
-
-export function withSpan<T>(name: string, fn: (span: Span) => T): T;
-export function withSpan<T>(name: string, options: SpanOptions, fn: (span: Span) => T): T;
-export function withSpan<T>(name: string, fnOrOptions: SpanOptions | ((span: Span) => T), fn?: (span: Span) => T): T {
-  let func: (span: Span) => T;
-  let options: SpanOptions | undefined;
-
-  if (fn) {
-    func = fn;
-    options = fnOrOptions as SpanOptions;
-  } else {
-    func = fnOrOptions as typeof func;
-    options = {};
-  }
-
-  return tracer.startActiveSpan(name, options, (span) => func(span));
-}
-
-export async function trace<T extends Promise<any>>(name: string, fn: (span: Span) => T): Promise<Awaited<T>>;
-export async function trace<T extends Promise<any>>(name: string, options: SpanOptions, fn: (span: Span) => T): Promise<Awaited<T>>;
-export async function trace<T extends Promise<any>>(
-  name: string,
-  fnOrOptions: SpanOptions | ((span: Span) => T),
-  fn?: (span: Span) => T
-): Promise<Awaited<T>> {
-  let func: (span: Span) => T;
-  let options: SpanOptions | undefined;
-
-  if (fn) {
-    func = fn;
-    options = fnOrOptions as SpanOptions;
-  } else {
-    func = fnOrOptions as typeof func;
-    options = {};
-  }
-
-  return await withSpan(name, options, async (span) => {
-    try {
-      const result = await func(span);
-      span.end();
-      return result;
-    } catch (error) {
-      onSpanError(span, error);
-      span.end();
-      throw error;
-    }
-  });
-}
-
-/** Wrap a function in tracing, and return it  */
-export function traceFunction<This, Fn extends (this: This, ...args: any[]) => Promise<any>>(name: string, fn: Fn): Fn;
-export function traceFunction<This, Fn extends (this: This, ...args: any[]) => Promise<any>>(
-  name: string,
-  options: SpanOptions,
-  fn: Fn
-): Fn;
-export function traceFunction<This, Fn extends (this: This, ...args: any[]) => Promise<any>>(
-  name: string,
-  fnOrOptions: SpanOptions | Fn,
-  fn?: Fn
-): Fn {
-  let func: Fn;
-  let options: SpanOptions;
-
-  if (fn) {
-    func = fn;
-    options = fnOrOptions as SpanOptions;
-  } else {
-    func = fnOrOptions as Fn;
-    options = {};
-  }
-
-  return async function (this: any, ...args: Parameters<Fn>) {
-    return await trace(name, options, () => func.apply(this, args));
-  } as Fn;
-}
-
-export const getCurrentSpan = () => traceApi.getSpan(contextApi.active());
-
 // Gadget Storage Test Key that minifies well
 const key = "gstk";
 
@@ -523,3 +436,97 @@ export const storageAvailable = (type: "localStorage" | "sessionStorage") => {
     return false;
   }
 };
+
+// smaller implementation of lodash's isEqual from https://github.com/NickGard/tiny-isequal but made a bit more performant and typesafe
+const toString = Object.prototype.toString,
+  getPrototypeOf = Object.getPrototypeOf,
+  getOwnProperties = Object.getOwnPropertySymbols
+    ? (c: any) => (Object.keys(c) as any[]).concat(Object.getOwnPropertySymbols(c))
+    : Object.keys;
+
+const checkEquality = (a: any, b: any, refs: any[]): boolean => {
+  // trivial case: primitives and referentially equal objects
+  if (a === b) return true;
+
+  // if both are null/undefined, the above check would have returned true
+  if (a == null || b == null) return false;
+
+  // check to see if we've seen this reference before; if yes, return true
+  // eslint-disable-next-line lodash/prefer-includes
+  if (refs.indexOf(a) > -1 && refs.indexOf(b) > -1) return true;
+
+  const aType = toString.call(a);
+  const bType = toString.call(b);
+
+  let aElements, bElements, element;
+
+  // save results for circular checks
+  refs.push(a, b);
+
+  if (aType != bType) return false; // not the same type of objects
+
+  // for non-null objects, check all custom properties
+  aElements = getOwnProperties(a);
+  bElements = getOwnProperties(b);
+  if (
+    aElements.length != bElements.length ||
+    aElements.some(function (key) {
+      return !checkEquality(a[key], b[key], refs);
+    })
+  ) {
+    return false;
+  }
+
+  switch (aType.slice(8, -1)) {
+    case "Symbol":
+      return a.valueOf() == b.valueOf();
+    case "Date":
+    case "Number":
+      return +a == +b || (+a != +a && +b != +b); // convert Dates to ms, check for NaN
+    case "RegExp":
+    case "Function":
+    case "String":
+    case "Boolean":
+      return "" + a == "" + b;
+    case "Set":
+    case "Map": {
+      aElements = a.entries();
+      bElements = b.entries();
+      do {
+        element = aElements.next();
+        if (!checkEquality(element.value, bElements.next().value, refs)) {
+          return false;
+        }
+      } while (!element.done);
+      return true;
+    }
+    case "ArrayBuffer":
+      (a = new Uint8Array(a)), (b = new Uint8Array(b)); // fall through to be handled as an Array
+    case "DataView":
+      (a = new Uint8Array(a.buffer)), (b = new Uint8Array(b.buffer)); // fall through to be handled as an Array
+    case "Float32Array":
+    case "Float64Array":
+    case "Int8Array":
+    case "Int16Array":
+    case "Int32Array":
+    case "Uint8Array":
+    case "Uint16Array":
+    case "Uint32Array":
+    case "Uint8ClampedArray":
+    case "Arguments":
+    case "Array":
+      if (a.length != b.length) return false;
+      for (element = 0; element < a.length; element++) {
+        if (!(element in a) && !(element in b)) continue; // empty slots are equal
+        // either one slot is empty but not both OR the elements are not equal
+        if (element in a != element in b || !checkEquality(a[element], b[element], refs)) return false;
+      }
+      return true;
+    case "Object":
+      return checkEquality(getPrototypeOf(a), getPrototypeOf(b), refs);
+    default:
+      return false;
+  }
+};
+
+export const isEqual = (a: any, b: any) => checkEquality(a, b, []);

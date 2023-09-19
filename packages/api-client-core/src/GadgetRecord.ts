@@ -1,7 +1,6 @@
-import cloneDeep from "lodash.clonedeep";
-import isEqual from "lodash.isequal";
+import { klona as cloneDeep } from "klona";
 import type { Jsonify } from "type-fest";
-import { toPrimitiveObject } from "./support.js";
+import { isEqual, toPrimitiveObject } from "./support.js";
 
 export enum ChangeTracking {
   SinceLoaded,
