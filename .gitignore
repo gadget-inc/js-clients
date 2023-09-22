@@ -15,3 +15,7 @@ packages/sample-app
 *.orig
 cypress.env.json
 packages/shopify-extensions/react
+# generated graphql queries
+packages/react/src/internal/gql
+
+*storybook.log
