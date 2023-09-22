@@ -5,14 +5,8 @@ import type { AnyVariables, OperationContext, UseMutationState } from "urql";
 import { GadgetUrqlClientContext } from "./GadgetProvider.js";
 import { useGadgetMutation } from "./useGadgetMutation.js";
 import { useStructuralMemo } from "./useStructuralMemo.js";
-import {
-  ActionHookResult,
-  ActionHookState,
-  ErrorWrapper,
-  OptionsType,
-  disambiguateActionVariables,
-  noProviderErrorMessage,
-} from "./utils.js";
+import type { ActionHookResult, ActionHookState, OptionsType } from "./utils.js";
+import { ErrorWrapper, disambiguateActionVariables, noProviderErrorMessage } from "./utils.js";
 
 /**
  * React hook to run a Gadget model action. `useAction` must be passed an action function from an instance of your generated API client library, like `api.user.create` or `api.blogPost.publish`. `useAction` doesn't actually run the action when invoked, but instead returns an action function as the second result for running the action in response to an event.

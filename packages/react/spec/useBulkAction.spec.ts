@@ -429,7 +429,7 @@ describe("useBulkAction", () => {
     });
 
     await act(async () => {
-      const promiseResult = await mutationPromise;
+      await mutationPromise;
     });
 
     const beforeObject = result.current[0];

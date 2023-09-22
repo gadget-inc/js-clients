@@ -9,7 +9,7 @@ import { MockClientWrapper, mockUrqlClient } from "./testWrappers.js";
 
 describe("useGlobalAction", () => {
   // these functions are typechecked but never run to avoid actually making API calls
-  const TestUseGlobalActionCanRunGlobalActionsWithVariables = () => {
+  const _TestUseGlobalActionCanRunGlobalActionsWithVariables = () => {
     const [{ data, fetching, error }, mutate] = useGlobalAction(bulkExampleApi.flipAll);
 
     assert<IsExact<typeof fetching, boolean>>(true);

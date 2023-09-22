@@ -1,5 +1,5 @@
 import type { DefaultSelection, GadgetRecord, Select } from "@gadgetinc/api-client-core";
-import type { OptionsType, ReadOperationOptions } from "src/utils.js";
+import type { OptionsType, ReadOperationOptions } from "src/utils";
 import type { ClientWithSessionAndUserManagers, GadgetSession, GadgetUser } from "./useSession.js";
 import { useSession } from "./useSession.js";
 import { useUser } from "./useUser.js";
