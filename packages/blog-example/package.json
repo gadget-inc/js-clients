@@ -18,6 +18,7 @@
   },
   "dependencies": {
     "@gadget-client/blog": "^1.46.0",
+    "@gadget-client/js-clients-test": "^1.464.0",
     "@gadgetinc/react": "workspace:*",
     "react": "^18.2.0",
     "react-dom": "^18.2.0"
