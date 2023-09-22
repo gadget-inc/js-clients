@@ -697,3 +697,30 @@ export type PaginateOptions = {
   last?: number | null;
   select?: AnySelection | InternalFieldSelection | null;
 };
+
+/**
+ * Convert a schema type into the type that a selection of it must extend
+ *
+ * Example Schema:
+ *
+ * {
+ *   foo: boolean;
+ *   bar?: string;
+ *   nested?: {
+ *     count: number
+ *   }
+ * }
+ *
+ * Example available selection:
+ *
+ * {
+ *   foo?: boolean | null | undefined;
+ *   bar?: boolean | null | undefined;
+ *   nested?: {
+ *     count: boolean | null | undefined
+ *   }
+ * }
+ */
+export type AvailableSelection<Schema> = Schema extends string | number | bigint | null | undefined
+  ? boolean | null | undefined
+  : { [key in keyof Schema]?: AvailableSelection<Schema[key]> };
