@@ -1,5 +1,5 @@
-import { Call, Var, compile } from "../src";
-import { expectValidGraphQLQuery } from "./helpers";
+import { Call, Var, compile } from "../src/index.js";
+import { expectValidGraphQLQuery } from "./helpers.js";
 
 describe("compiling queries", () => {
   test("it should compile a query for some fields", () => {

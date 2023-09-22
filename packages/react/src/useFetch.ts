@@ -171,6 +171,7 @@ export function useFetch<T = string>(path: string, options?: FetchHookOptions): 
           data = await response.json();
         } else if (typeof mergedOptions.stream === "string") {
           dispatchData = false;
+          // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
           const decodedStream = response.body!.pipeThrough(
             new TextDecoderStream(mergedOptions.stream === "string" ? "utf8" : mergedOptions.stream)
           );
@@ -233,7 +234,7 @@ export function useFetch<T = string>(path: string, options?: FetchHookOptions): 
       }
       return data;
     },
-    [memoizedOptions, path]
+    [connection, memoizedOptions, onStreamComplete, path]
   );
 
   useEffect(() => {

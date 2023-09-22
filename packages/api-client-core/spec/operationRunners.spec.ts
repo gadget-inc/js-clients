@@ -1,7 +1,7 @@
 import nock from "nock";
 import type { GadgetErrorGroup } from "../src/index.js";
 import { GadgetConnection, actionRunner } from "../src/index.js";
-import { mockUrqlClient } from "./mockUrqlClient";
+import { mockUrqlClient } from "./mockUrqlClient.js";
 
 nock.disableNetConnect();
 

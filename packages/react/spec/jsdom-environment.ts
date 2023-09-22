@@ -2,6 +2,7 @@ import JSDOMEnvironment from "jest-environment-jsdom";
 import { ReadableStream, TextDecoderStream } from "stream/web";
 import { TextDecoder, TextEncoder } from "util";
 
+// eslint-disable-next-line jsdoc/require-jsdoc
 export default class extends JSDOMEnvironment {
   constructor(...args: ConstructorParameters<typeof JSDOMEnvironment>) {
     super(...args);

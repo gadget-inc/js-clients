@@ -570,9 +570,8 @@ describe("useFetch", () => {
     expect(result.current[0].fetching).toBe(false);
     expect(result.current[0].error).toBeFalsy();
 
-    let reexecutePromise: Promise<string>;
     act(() => {
-      reexecutePromise = result.current[1]();
+      void result.current[1]();
     });
 
     expect(result.current[0].data).toBeFalsy();
@@ -603,9 +602,8 @@ describe("useFetch", () => {
 
     expect(mockUrqlClient.mockFetch).toBeCalledTimes(0);
 
-    let reexecutePromise: Promise<string>;
     act(() => {
-      reexecutePromise = result.current[1]({ headers: { "X-Test": "hello" }, body: JSON.stringify({ test: true }) });
+      void result.current[1]({ headers: { "X-Test": "hello" }, body: JSON.stringify({ test: true }) });
     });
 
     expect(mockUrqlClient.mockFetch.requests[0].args).toEqual([
@@ -621,7 +619,7 @@ describe("useFetch", () => {
     expect(mockUrqlClient.mockFetch).toBeCalledTimes(1);
 
     act(() => {
-      reexecutePromise = result.current[1]({ headers: { "X-Test": "other" }, body: "other body" });
+      void result.current[1]({ headers: { "X-Test": "other" }, body: "other body" });
     });
 
     expect(mockUrqlClient.mockFetch.requests[0].args).toEqual([

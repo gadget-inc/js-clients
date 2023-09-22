@@ -1,5 +1,5 @@
-import { Call, Var, compile, compileWithVariableValues } from "../src";
-import { expectValidGraphQLQuery } from "./helpers";
+import { Call, Var, compile, compileWithVariableValues } from "../src/index.js";
+import { expectValidGraphQLQuery } from "./helpers.js";
 
 describe("compiling queries with field calls", () => {
   test("it should compile a query that calls a field with a hardcoded value", () => {

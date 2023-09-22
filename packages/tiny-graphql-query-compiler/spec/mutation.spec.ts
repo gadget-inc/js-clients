@@ -1,5 +1,5 @@
-import { Call, Var, compile } from "../src";
-import { expectValidGraphQLQuery } from "./helpers";
+import { Call, Var, compile } from "../src/index.js";
+import { expectValidGraphQLQuery } from "./helpers.js";
 
 describe("compiling mutation", () => {
   test("it should compile a mutation for some fields", () => {
