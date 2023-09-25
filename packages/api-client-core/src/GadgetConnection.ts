@@ -73,14 +73,14 @@ export class GadgetConnection {
   private endpoint: string;
   private subscriptionClientOptions?: SubscriptionClientOptions;
   private websocketsEndpoint: string;
-  private websocketImplementation: any;
+  private websocketImplementation?: WebSocket;
   private _fetchImplementation: typeof globalThis.fetch;
   private environment: "Development" | "Production";
   private exchanges: Required<Exchanges>;
 
   // the base client using HTTP requests that non-transactional operations will use
   private baseClient: Client;
-  private baseSubscriptionClient: SubscriptionClient;
+  private baseSubscriptionClient?: SubscriptionClient;
 
   // the transactional websocket client that will be used inside a transaction block
   private currentTransaction: GadgetTransaction | null = null;
@@ -117,8 +117,6 @@ export class GadgetConnection {
 
     this.setAuthenticationMode(options.authenticationMode);
 
-    // the base client for subscriptions is lazy so we don't open unnecessary connections to the backend, and it reconnects to deal with network issues
-    this.baseSubscriptionClient = this.newSubscriptionClient({ lazy: true });
     this.baseClient = this.newBaseClient();
   }
 
@@ -266,7 +264,7 @@ export class GadgetConnection {
   };
 
   close() {
-    this.disposeClient(this.baseSubscriptionClient);
+    if (this.baseSubscriptionClient) this.disposeClient(this.baseSubscriptionClient);
     if (this.currentTransaction) {
       this.currentTransaction.close();
     }
@@ -352,7 +350,8 @@ export class GadgetConnection {
           return {
             subscribe: (sink) => {
               const input = { ...request, query: request.query || "" };
-              const dispose = this.baseSubscriptionClient.subscribe(input, sink as Sink<ExecutionResult>);
+
+              const dispose = this.getBaseSubscriptionClient().subscribe(input, sink as Sink<ExecutionResult>);
               return {
                 unsubscribe: dispose,
               };
@@ -374,6 +373,12 @@ export class GadgetConnection {
   }
 
   private newSubscriptionClient(overrides: GadgetSubscriptionClientOptions) {
+    if (!this.websocketImplementation) {
+      throw new Error(
+        "Can't use this GadgetClient for this subscription-based operation as there's no global WebSocket implementation available. Please pass one as the `websocketImplementation` option to the GadgetClient constructor."
+      );
+    }
+
     let url = this.websocketsEndpoint;
     if (overrides?.urlParams) {
       const params = new URLSearchParams();
@@ -502,6 +507,13 @@ export class GadgetConnection {
     if (maybePromise) {
       maybePromise.catch((err: any) => console.error(`Error closing SubscriptionClient: ${err.message}`));
     }
+  }
+
+  private getBaseSubscriptionClient() {
+    if (!this.baseSubscriptionClient) {
+      this.baseSubscriptionClient = this.newSubscriptionClient({ lazy: true });
+    }
+    return this.baseSubscriptionClient;
   }
 }
 
