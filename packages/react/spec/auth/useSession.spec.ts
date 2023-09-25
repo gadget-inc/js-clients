@@ -29,23 +29,23 @@ describe("useSession", () => {
     expect(query).toMatchInlineSnapshot(`
       "query currentSession {
         currentSession {
-          id
           __typename
           createdAt
-          updatedAt
+          id
           roles {
             key
             name
           }
+          updatedAt
           user {
-            id
             __typename
             createdAt
-            updatedAt
-            lastName
-            firstName
             email
+            firstName
             googleImageUrl
+            id
+            lastName
+            updatedAt
           }
         }
         gadgetMeta {
@@ -69,23 +69,23 @@ describe("useSession", () => {
     expect(query).toMatchInlineSnapshot(`
       "query currentSession {
         currentSession {
-          id
           __typename
           createdAt
-          updatedAt
+          id
           roles {
             key
             name
           }
+          updatedAt
           user {
-            id
             __typename
             createdAt
-            updatedAt
-            lastName
-            firstName
             email
+            firstName
             googleImageUrl
+            id
+            lastName
+            updatedAt
           }
         }
         gadgetMeta {
