@@ -5,7 +5,7 @@ import type { AppType } from "../src/index.js";
 import { useGadget } from "../src/index.js";
 
 // these functions are typechecked but never run to avoid actually making API calls
-const TestUseGadgetReturnsAppropriateTypes = () => {
+const _TestUseGadgetReturnsAppropriateTypes = () => {
   const { loading, appType, isEmbedded, appBridge, canAuth, isAuthenticated, isRootFrameRequest } = useGadget();
 
   assert<IsExact<typeof loading, boolean>>(true);

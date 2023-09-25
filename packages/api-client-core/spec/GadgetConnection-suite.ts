@@ -1,7 +1,7 @@
 import { Response } from "cross-fetch";
 import gql from "gql-tag";
 import nock from "nock";
-import { AuthenticationMode, BrowserSessionStorageType, GadgetConnection } from "../src";
+import { AuthenticationMode, BrowserSessionStorageType, GadgetConnection } from "../src/index.js";
 import { base64 } from "./helpers.js";
 
 nock.disableNetConnect();
@@ -404,7 +404,7 @@ export const GadgetConnectionSharedSuite = (queryExtra = "") => {
               (init.headers as any).authorization = `FancyMode whatever`;
             },
             // eslint-disable-next-line @typescript-eslint/no-empty-function
-            processTransactionConnectionParams: async (params) => {},
+            processTransactionConnectionParams: async (_params) => {},
           },
         },
       });
@@ -474,7 +474,7 @@ export const GadgetConnectionSharedSuite = (queryExtra = "") => {
               (init.headers as any)["x-whatever"] = `FancyMode whatever`;
             },
             // eslint-disable-next-line @typescript-eslint/no-empty-function
-            processTransactionConnectionParams: async (params) => {},
+            processTransactionConnectionParams: async (_params) => {},
           },
         },
       });
@@ -555,7 +555,7 @@ export const GadgetConnectionSharedSuite = (queryExtra = "") => {
             (init.headers as any).authorization = `FancyMode whatever`;
           },
           // eslint-disable-next-line @typescript-eslint/no-empty-function
-          processTransactionConnectionParams: async (params) => {},
+          processTransactionConnectionParams: async (_params) => {},
         },
       });
 

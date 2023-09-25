@@ -4,7 +4,8 @@ import { useCallback, useMemo } from "react";
 import type { OperationContext, UseMutationState } from "urql";
 import { useGadgetMutation } from "./useGadgetMutation.js";
 import { useStructuralMemo } from "./useStructuralMemo.js";
-import { ActionHookResult, ErrorWrapper, OptionsType, disambiguateActionVariables } from "./utils.js";
+import type { ActionHookResult, OptionsType } from "./utils.js";
+import { ErrorWrapper, disambiguateActionVariables } from "./utils.js";
 
 /**
  * React hook to run a Gadget model bulk action.

@@ -13,7 +13,7 @@ import { MockClientWrapper, createMockUrqlClient, mockUrqlClient } from "./testW
 
 describe("useAction", () => {
   // these functions are typechecked but never run to avoid actually making API calls
-  const TestUseActionCanRunUpdateActionsWithVariables = () => {
+  const _TestUseActionCanRunUpdateActionsWithVariables = () => {
     const [_, mutate] = useAction(relatedProductsApi.user.update);
 
     // can call with variables
@@ -32,7 +32,7 @@ describe("useAction", () => {
     void mutate({ foo: "123" });
   };
 
-  const TestUseActionCanRunCreateActionsWithVariables = () => {
+  const _TestUseActionCanRunCreateActionsWithVariables = () => {
     const [_, mutate] = useAction(relatedProductsApi.user.create);
 
     // can call with variables
@@ -48,7 +48,7 @@ describe("useAction", () => {
     void mutate({ foo: "123" });
   };
 
-  const TestUseActionCanRunWithoutModelApiIdentifier = () => {
+  const _TestUseActionCanRunWithoutModelApiIdentifier = () => {
     const [_, mutate] = useAction(relatedProductsApi.unambiguous.update);
 
     // can call using flat style
@@ -64,7 +64,7 @@ describe("useAction", () => {
     void mutate({});
   };
 
-  const TestUseActionCannotRunWithoutModelApiIdentifier = () => {
+  const _TestUseActionCannotRunWithoutModelApiIdentifier = () => {
     const [_, mutate] = useAction(relatedProductsApi.ambiguous.update);
 
     // @ts-expect-error models with ambigous identifiers can't be called with flat style signature
@@ -80,8 +80,8 @@ describe("useAction", () => {
     void mutate({});
   };
 
-  const TestUseActionReturnsTypedDataWithExplicitSelection = () => {
-    const [{ data, fetching, error }, mutate] = useAction(relatedProductsApi.user.update, {
+  const _TestUseActionReturnsTypedDataWithExplicitSelection = () => {
+    const [{ data, fetching, error }, _mutate] = useAction(relatedProductsApi.user.update, {
       select: { id: true, email: true },
     });
 
@@ -96,7 +96,7 @@ describe("useAction", () => {
     }
   };
 
-  const TestUseActionReturnsTypedDataWithNoSelection = () => {
+  const _TestUseActionReturnsTypedDataWithNoSelection = () => {
     const [{ data }] = useAction(relatedProductsApi.user.update);
 
     if (data) {

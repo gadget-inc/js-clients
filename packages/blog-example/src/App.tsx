@@ -1,6 +1,6 @@
 import { useFetch, useFindMany } from "@gadgetinc/react";
 import { Suspense, useEffect, useState } from "react";
-import { api } from "./api";
+import { api } from "./api.js";
 import "./styles/App.css";
 
 function ExampleFetch() {
@@ -9,6 +9,7 @@ function ExampleFetch() {
 
   useEffect(() => {
     setHistory([...history, result]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [result]);
 
   return (
@@ -27,8 +28,9 @@ function ExampleFindMany() {
   const [result, send] = useFindMany(api.post);
 
   useEffect(() => {
-    const { operation, ...keep } = result;
+    const { operation: _operation, ...keep } = result;
     setHistory([...history, keep]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [result]);
 
   return (
@@ -64,8 +66,9 @@ function ExampleSuspenseInner() {
   const [result, send] = useFindMany(api.post, { suspense: true, sort: { id: "Descending" } });
 
   useEffect(() => {
-    const { operation, ...keep } = result;
+    const { operation: _operation, ...keep } = result;
     setHistory([...history, keep]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [result]);
 
   return (
