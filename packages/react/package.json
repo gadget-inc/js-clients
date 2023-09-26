@@ -29,7 +29,7 @@
   },
   "dependencies": {
     "@gadgetinc/api-client-core": "^0.15.0",
-    "deep-equal": "^2.2.0",
+    "react-fast-compare": "^3.2.2",
     "urql": "^4.0.4"
   },
   "resolutions": {
@@ -39,7 +39,6 @@
     "@gadgetinc/api-client-core": "workspace:*",
     "@testing-library/jest-dom": "^5.16.5",
     "@testing-library/react": "^13.4.0",
-    "@types/deep-equal": "^1.0.1",
     "@types/jest": "^29.5.2",
     "@types/lodash": "^4.14.191",
     "@types/node": "^18.0.0",

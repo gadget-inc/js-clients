@@ -1,5 +1,5 @@
-import deepEqual from "deep-equal";
 import { useRef } from "react";
+import deepEqual from "react-fast-compare";
 
 /**
  * Memoize and ensure a stable identity on a given value as long as it remains the same, structurally.
