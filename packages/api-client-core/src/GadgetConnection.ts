@@ -67,7 +67,7 @@ export enum AuthenticationMode {
  * Manages transactions and the connection to a Gadget API
  */
 export class GadgetConnection {
-  version = "<prerelease>" as const;
+  static version = "<prerelease>" as const;
 
   // Options used when generating new GraphQL clients for the base connection and for for transactions
   private endpoint: string;
