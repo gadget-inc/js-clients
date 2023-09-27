@@ -417,7 +417,7 @@ describe("useAction", () => {
     `);
   });
 
-  test("generates correct mutation and variables for fat trigger", async () => {
+  test("generates correct mutation and variables for trigger that contributes inputs", async () => {
     let variables: AnyVariables;
 
     const client = createMockUrqlClient({
