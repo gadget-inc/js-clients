@@ -457,12 +457,10 @@ describe("useAction", () => {
       expect(promiseResult.error).toBeFalsy();
     });
 
-    expect(variables).toMatchInlineSnapshot(`
-      {
-        "email": "bob@test.com",
-        "password": "password123!",
-      }
-    `);
+    expect(variables).toEqual({
+      email: "bob@test.com",
+      password: "password123!",
+    });
   });
 
   test("should throw if called without a model api identifier and there is an ambiguous field", async () => {

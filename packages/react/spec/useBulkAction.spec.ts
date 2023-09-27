@@ -102,31 +102,7 @@ describe("useBulkAction", () => {
     expect(result.current[0].error).toBeFalsy();
   });
 
-  test("can execute a bulk create with params", async () => {
-    const mockBulkCreate = {
-      type: "action",
-      operationName: "bulkCreateWidgets",
-      namespace: null,
-      modelApiIdentifier: "widget",
-      modelSelectionField: "widgets",
-      isBulk: true,
-      defaultSelection: {
-        id: true,
-        name: true,
-      },
-      selectionType: {},
-      optionsType: {},
-      schemaType: null,
-      variablesType: void 0,
-      variables: {
-        inputs: {
-          required: true,
-          type: "[BulkCreateWidgetsInput!]",
-        },
-      },
-      hasReturnType: false,
-    } as any;
-
+  test("can execute a bulk create with flattened params", async () => {
     // eslint-disable-next-line @typescript-eslint/ban-ts-comment
     // @ts-ignore waiting for bulk params to be released gadget side
     const { result } = renderHook(() => useBulkAction<any, any, any, any>(mockBulkCreate), { wrapper: MockClientWrapper(bulkExampleApi) });
@@ -141,18 +117,20 @@ describe("useBulkAction", () => {
     expect(result.current[0].error).toBeFalsy();
 
     expect(mockUrqlClient.executeMutation).toBeCalledTimes(1);
-    expect(mockUrqlClient.executeMutation.mock.calls[0][0].variables).toMatchInlineSnapshot(`
-      {
-        "inputs": [
-          {
-            "name": "foo",
+    expect(mockUrqlClient.executeMutation.mock.calls[0][0].variables).toEqual({
+      inputs: [
+        {
+          widget: {
+            name: "foo",
           },
-          {
-            "name": "bar",
+        },
+        {
+          widget: {
+            name: "bar",
           },
-        ],
-      }
-    `);
+        },
+      ],
+    });
 
     mockUrqlClient.executeMutation.pushResponse("bulkCreateWidgets", {
       data: {
@@ -183,30 +161,6 @@ describe("useBulkAction", () => {
   });
 
   test("can execute a bulk create with fully qualified params", async () => {
-    const mockBulkCreate = {
-      type: "action",
-      operationName: "bulkCreateWidgets",
-      namespace: null,
-      modelApiIdentifier: "widget",
-      modelSelectionField: "widgets",
-      isBulk: true,
-      defaultSelection: {
-        id: true,
-        name: true,
-      },
-      selectionType: {},
-      optionsType: {},
-      schemaType: null,
-      variablesType: void 0,
-      variables: {
-        inputs: {
-          required: true,
-          type: "[BulkCreateWidgetsInput!]",
-        },
-      },
-      hasReturnType: false,
-    } as any;
-
     // eslint-disable-next-line @typescript-eslint/ban-ts-comment
     // @ts-ignore waiting for bulk params to be released gadget side
     const { result } = renderHook(() => useBulkAction<any, any, any, any>(mockBulkCreate), { wrapper: MockClientWrapper(bulkExampleApi) });
@@ -221,22 +175,20 @@ describe("useBulkAction", () => {
     expect(result.current[0].error).toBeFalsy();
 
     expect(mockUrqlClient.executeMutation).toBeCalledTimes(1);
-    expect(mockUrqlClient.executeMutation.mock.calls[0][0].variables).toMatchInlineSnapshot(`
-      {
-        "inputs": [
-          {
-            "widget": {
-              "name": "foo",
-            },
+    expect(mockUrqlClient.executeMutation.mock.calls[0][0].variables).toEqual({
+      inputs: [
+        {
+          widget: {
+            name: "foo",
           },
-          {
-            "widget": {
-              "name": "bar",
-            },
+        },
+        {
+          widget: {
+            name: "bar",
           },
-        ],
-      }
-    `);
+        },
+      ],
+    });
 
     mockUrqlClient.executeMutation.pushResponse("bulkCreateWidgets", {
       data: {
@@ -266,31 +218,7 @@ describe("useBulkAction", () => {
     expect(result.current[0].error).toBeFalsy();
   });
 
-  test("can execute a bulk update with params", async () => {
-    const mockBulkUpdate = {
-      type: "action",
-      operationName: "bulkUpdateWidgets",
-      namespace: null,
-      modelApiIdentifier: "widget",
-      modelSelectionField: "widgets",
-      isBulk: true,
-      defaultSelection: {
-        id: true,
-        name: true,
-      },
-      selectionType: {},
-      optionsType: {},
-      schemaType: null,
-      variablesType: void 0,
-      variables: {
-        inputs: {
-          required: true,
-          type: "[BulkUpdateWidgetsInput!]",
-        },
-      },
-      hasReturnType: false,
-    } as any;
-
+  test("can execute a bulk update with flattened params", async () => {
     // eslint-disable-next-line @typescript-eslint/ban-ts-comment
     // @ts-ignore waiting for bulk params to be released gadget side
     const { result } = renderHook(() => useBulkAction<any, any, any, any>(mockBulkUpdate), { wrapper: MockClientWrapper(bulkExampleApi) });
@@ -308,20 +236,85 @@ describe("useBulkAction", () => {
     expect(result.current[0].error).toBeFalsy();
 
     expect(mockUrqlClient.executeMutation).toBeCalledTimes(1);
-    expect(mockUrqlClient.executeMutation.mock.calls[0][0].variables).toMatchInlineSnapshot(`
-      {
-        "inputs": [
-          {
-            "id": "123",
-            "name": "foo",
+    expect(mockUrqlClient.executeMutation.mock.calls[0][0].variables).toEqual({
+      inputs: [
+        {
+          id: "123",
+          widget: {
+            name: "foo",
           },
-          {
-            "id": "124",
-            "name": "bar",
+        },
+        {
+          id: "124",
+          widget: {
+            name: "bar",
           },
-        ],
-      }
-    `);
+        },
+      ],
+    });
+
+    mockUrqlClient.executeMutation.pushResponse("bulkUpdateWidgets", {
+      data: {
+        bulkUpdateWidgets: {
+          success: true,
+          widgets: [
+            { id: "123", name: "foo" },
+            { id: "124", name: "bar" },
+          ],
+        },
+      },
+      stale: false,
+      hasNext: false,
+    });
+
+    await act(async () => {
+      const promiseResult = await mutationPromise;
+      expect(promiseResult.data!.length).toEqual(2);
+      expect(promiseResult.data![0].id).toEqual("123");
+      expect(promiseResult.data![1].id).toEqual("124");
+    });
+
+    expect(result.current[0].data!.length).toEqual(2);
+    expect(result.current[0].data![0].id).toEqual("123");
+    expect(result.current[0].data![1].id).toEqual("124");
+    expect(result.current[0].fetching).toBe(false);
+    expect(result.current[0].error).toBeFalsy();
+  });
+
+  test("can execute a bulk update with fully qualified params", async () => {
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+    // @ts-ignore waiting for bulk params to be released gadget side
+    const { result } = renderHook(() => useBulkAction<any, any, any, any>(mockBulkUpdate), { wrapper: MockClientWrapper(bulkExampleApi) });
+
+    let mutationPromise: any;
+    act(() => {
+      mutationPromise = result.current[1]([
+        { id: "123", widget: { name: "foo" } },
+        { id: "124", widget: { name: "bar" } },
+      ]);
+    });
+
+    expect(result.current[0].data).toBeFalsy();
+    expect(result.current[0].fetching).toBe(true);
+    expect(result.current[0].error).toBeFalsy();
+
+    expect(mockUrqlClient.executeMutation).toBeCalledTimes(1);
+    expect(mockUrqlClient.executeMutation.mock.calls[0][0].variables).toEqual({
+      inputs: [
+        {
+          id: "123",
+          widget: {
+            name: "foo",
+          },
+        },
+        {
+          id: "124",
+          widget: {
+            name: "bar",
+          },
+        },
+      ],
+    });
 
     mockUrqlClient.executeMutation.pushResponse("bulkUpdateWidgets", {
       data: {
@@ -440,3 +433,53 @@ describe("useBulkAction", () => {
     expect(result.current[0]).toBe(beforeObject);
   });
 });
+
+const mockBulkCreate = {
+  type: "action",
+  operationName: "bulkCreateWidgets",
+  namespace: null,
+  modelApiIdentifier: "widget",
+  modelSelectionField: "widgets",
+  isBulk: true,
+  defaultSelection: {
+    id: true,
+    name: true,
+  },
+  selectionType: {},
+  optionsType: {},
+  schemaType: null,
+  variablesType: void 0,
+  variables: {
+    inputs: {
+      required: true,
+      type: "[BulkCreateWidgetsInput!]",
+    },
+  },
+  acceptsModelInput: true,
+  hasReturnType: false,
+} as any;
+
+const mockBulkUpdate = {
+  type: "action",
+  operationName: "bulkUpdateWidgets",
+  namespace: null,
+  modelApiIdentifier: "widget",
+  modelSelectionField: "widgets",
+  isBulk: true,
+  defaultSelection: {
+    id: true,
+    name: true,
+  },
+  selectionType: {},
+  optionsType: {},
+  schemaType: null,
+  variablesType: void 0,
+  variables: {
+    inputs: {
+      required: true,
+      type: "[BulkUpdateWidgetsInput!]",
+    },
+  },
+  acceptsModelInput: true,
+  hasReturnType: false,
+} as any;
