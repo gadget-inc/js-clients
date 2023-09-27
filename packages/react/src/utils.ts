@@ -327,9 +327,10 @@ export const disambiguateActionVariables = (
 
   if (action.acceptsModelInput || action.hasCreateOrUpdateEffect) {
     if (
-      action.modelApiIdentifier in variables &&
-      typeof variables[action.modelApiIdentifier] === "object" &&
-      variables[action.modelApiIdentifier] !== null
+      (action.modelApiIdentifier in variables &&
+        typeof variables[action.modelApiIdentifier] === "object" &&
+        variables[action.modelApiIdentifier] !== null) ||
+      !action.variables[action.modelApiIdentifier]
     ) {
       newVariables = variables;
     } else {

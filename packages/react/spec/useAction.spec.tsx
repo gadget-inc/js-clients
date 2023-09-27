@@ -8,7 +8,7 @@ import type { AnyVariables } from "urql";
 import { Provider } from "../src/GadgetProvider.js";
 import { useAction } from "../src/index.js";
 import type { ErrorWrapper } from "../src/utils.js";
-import { relatedProductsApi } from "./apis.js";
+import { relatedProductsApi, superAuthApi } from "./apis.js";
 import { MockClientWrapper, createMockUrqlClient, mockUrqlClient } from "./testWrappers.js";
 
 describe("useAction", () => {
@@ -413,6 +413,54 @@ describe("useAction", () => {
           "numberField": 21,
           "stringField": "hello world",
         },
+      }
+    `);
+  });
+
+  test("generates correct mutation and variables for trigger that contributes inputs", async () => {
+    let variables: AnyVariables;
+
+    const client = createMockUrqlClient({
+      mutationAssertions: (request) => {
+        variables = request.variables;
+      },
+    });
+
+    const wrapper = (props: { children: React.ReactNode }) => <Provider value={client}>{props.children}</Provider>;
+
+    const { result } = renderHook(() => useAction(superAuthApi.user.signUp), {
+      wrapper,
+    });
+
+    let mutationPromise: any;
+    act(() => {
+      mutationPromise = result.current[1]({ email: "bob@test.com", password: "password123!" });
+    });
+
+    client.executeMutation.pushResponse("signUpUser", {
+      data: {
+        signUpUser: {
+          result: {
+            result: "ok",
+          },
+          success: true,
+        },
+      },
+      stale: false,
+      hasNext: false,
+    });
+
+    await act(async () => {
+      const promiseResult = await mutationPromise;
+      expect(promiseResult.data).toEqual({ result: "ok" });
+      expect(promiseResult.fetching).toBe(false);
+      expect(promiseResult.error).toBeFalsy();
+    });
+
+    expect(variables).toMatchInlineSnapshot(`
+      {
+        "email": "bob@test.com",
+        "password": "password123!",
       }
     `);
   });
