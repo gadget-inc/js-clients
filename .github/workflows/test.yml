@@ -39,3 +39,18 @@ jobs:
       - uses: ./.github/actions/setup-test-env
       - name: Check dependency versions
         run: pnpm check-dependency-versions
+  bundle-sizes:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: ./.github/actions/setup-test-env
+      - name: Build all packages (so they can require each other)
+        run: pnpm build
+      - name: Build test bundles
+        run: pnpm -F=test-bundles test-build
+      - name: Send bundle stats to RelativeCI
+        uses: relative-ci/agent-action@v2
+        with:
+          webpackStatsFile: ./packages/test-bundles/dist/react-read-webpack-stats.json
+          key: ${{ secrets.RELATIVE_CI_KEY }}
+          token: ${{ secrets.GITHUB_TOKEN }}
