@@ -13,17 +13,17 @@ importers:
   .:
     devDependencies:
       '@gadget-client/app-with-no-user-model':
-        specifier: ^1.3.0
-        version: 1.3.0
+        specifier: ^1.5.0
+        version: 1.5.0
       '@gadget-client/bulk-actions-test':
-        specifier: ^1.102.0
-        version: 1.102.0
+        specifier: ^1.104.0
+        version: 1.104.0
       '@gadget-client/related-products-example':
-        specifier: ^1.848.0
-        version: 1.848.0
+        specifier: ^1.853.0
+        version: 1.853.0
       '@gadget-client/super-auth':
-        specifier: ^1.27.0
-        version: 1.27.0
+        specifier: ^1.37.0
+        version: 1.37.0
       '@gadgetinc/api-client-core':
         specifier: workspace:*
         version: link:packages/api-client-core
@@ -149,8 +149,8 @@ importers:
   packages/blog-example:
     dependencies:
       '@gadget-client/blog':
-        specifier: ^1.42.0
-        version: 1.42.0
+        specifier: ^1.46.0
+        version: 1.46.0
       '@gadgetinc/react':
         specifier: workspace:*
         version: link:../react
@@ -1150,32 +1150,32 @@ packages:
     engines: {node: ^12.22.0 || ^14.17.0 || >=16.0.0}
     dev: true
 
-  /@gadget-client/app-with-no-user-model@1.3.0:
-    resolution: {integrity: sha1-3qq8qWwxzldnPwWkZ9C6u44piFA=, tarball: https://registry.gadget.dev/npm/_/tarball/45852/90385/4930}
+  /@gadget-client/app-with-no-user-model@1.5.0:
+    resolution: {integrity: sha1-d5IrGFX84chk/GT66IJTpSji5ts=, tarball: https://registry.gadget.dev/npm/_/tarball/45852/90385/5457}
     dependencies:
       '@gadgetinc/api-client-core': link:packages/api-client-core
     dev: true
 
-  /@gadget-client/blog@1.42.0:
-    resolution: {integrity: sha1-D6c1trEJX9V3JInnV/Pl1YEPbRA=, tarball: https://registry.gadget.dev/npm/_/tarball/6679/12072/4891}
+  /@gadget-client/blog@1.46.0:
+    resolution: {integrity: sha1-F+WvBN9jVqaQXlSInFTC865VADQ=, tarball: https://registry.gadget.dev/npm/_/tarball/6679/12072/5461}
     dependencies:
       '@gadgetinc/api-client-core': link:packages/api-client-core
     dev: false
 
-  /@gadget-client/bulk-actions-test@1.102.0:
-    resolution: {integrity: sha1-kQ7bYUcqKhQFJDl6ZR1DfFRqtCE=, tarball: https://registry.gadget.dev/npm/_/tarball/6681/12076/3597}
+  /@gadget-client/bulk-actions-test@1.104.0:
+    resolution: {integrity: sha1-93pd5nm57sBs7Y2gRA0/YAHM8TM=, tarball: https://registry.gadget.dev/npm/_/tarball/6681/12076/5459}
     dependencies:
       '@gadgetinc/api-client-core': link:packages/api-client-core
     dev: true
 
-  /@gadget-client/related-products-example@1.848.0:
-    resolution: {integrity: sha1-BPOBUF9tSsu1woidZ+hU55/Cz5c=, tarball: https://registry.gadget.dev/npm/_/tarball/1268/1361/4809}
+  /@gadget-client/related-products-example@1.853.0:
+    resolution: {integrity: sha1-sVae38NnlyRsaj7WzQvH7kfyQHY=, tarball: https://registry.gadget.dev/npm/_/tarball/1268/1361/5460}
     dependencies:
       '@gadgetinc/api-client-core': link:packages/api-client-core
     dev: true
 
-  /@gadget-client/super-auth@1.27.0:
-    resolution: {integrity: sha1-gbvjTId/sQnsYBACEc93yEyw18g=, tarball: https://registry.gadget.dev/npm/_/tarball/50045/98771/5428}
+  /@gadget-client/super-auth@1.37.0:
+    resolution: {integrity: sha1-VE4TFObMZD4e0Lh/Wd03J6AOpX4=, tarball: https://registry.gadget.dev/npm/_/tarball/50045/98771/5458}
     dependencies:
       '@gadgetinc/api-client-core': link:packages/api-client-core
     dev: true
