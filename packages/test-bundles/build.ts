@@ -1,4 +1,6 @@
 import react from "@vitejs/plugin-react-swc";
+import { webpackStats } from "rollup-plugin-webpack-stats";
+
 import fs from "fs";
 import { join, parse } from "path";
 import { visualizer } from "rollup-plugin-visualizer";
@@ -7,20 +9,27 @@ import { build } from "vite";
 
 const bundleDir = fileURLToPath(new URL("bundles", import.meta.url));
 const entrypoints = fs.readdirSync(bundleDir);
-
+console.log(entrypoints);
 for (const entrypoint of entrypoints) {
   const parsed = parse(entrypoint);
   const name = parsed.name;
 
-  const visualizerPlugin = visualizer({
-    emitFile: true,
-    filename: `${name}-stats.html`,
-    template: "treemap",
-    brotliSize: true,
-    gzipSize: true,
-  }) as any;
+  const plugins = [
+    // Output webpack-stats.json file
+    webpackStats({ fileName: `${name}-webpack-stats.json` }),
+    // Output visualized bundle stats for developers
+    visualizer({
+      emitFile: true,
+      filename: `${name}-stats.html`,
+      template: "treemap",
+      brotliSize: true,
+      gzipSize: true,
+    }) as any,
+  ];
 
-  const plugins = parsed.ext.endsWith("x") ? [react(), visualizerPlugin] : [visualizerPlugin];
+  if (parsed.ext.endsWith("x")) {
+    plugins.push(react());
+  }
 
   await build({
     plugins,

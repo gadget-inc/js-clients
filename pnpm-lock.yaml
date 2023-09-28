@@ -304,7 +304,10 @@ importers:
     devDependencies:
       rollup-plugin-visualizer:
         specifier: ^5.9.2
-        version: 5.9.2
+        version: 5.9.2(rollup@3.26.3)
+      rollup-plugin-webpack-stats:
+        specifier: ^0.2.1
+        version: 0.2.1(rollup@3.26.3)
 
   packages/tiny-graphql-query-compiler:
     devDependencies:
@@ -5693,7 +5696,7 @@ packages:
       glob: 7.2.3
     dev: true
 
-  /rollup-plugin-visualizer@5.9.2:
+  /rollup-plugin-visualizer@5.9.2(rollup@3.26.3):
     resolution: {integrity: sha512-waHktD5mlWrYFrhOLbti4YgQCn1uR24nYsNuXxg7LkPH8KdTXVWR9DNY1WU0QqokyMixVXJS4J04HNrVTMP01A==}
     engines: {node: '>=14'}
     hasBin: true
@@ -5705,8 +5708,18 @@ packages:
     dependencies:
       open: 8.4.2
       picomatch: 2.3.1
+      rollup: 3.26.3
       source-map: 0.7.4
       yargs: 17.5.1
+    dev: true
+
+  /rollup-plugin-webpack-stats@0.2.1(rollup@3.26.3):
+    resolution: {integrity: sha512-vKCIbX2DQMyxC7KFsrqgAwzk49I7Nt8b+4sHJ0Z3JT9FyPyb2OlcqxNykQshTGtMrx9H5dKNjZGuA4FaMs3Txw==}
+    engines: {node: '>=14'}
+    peerDependencies:
+      rollup: ^3.0.0
+    dependencies:
+      rollup: 3.26.3
     dev: true
 
   /rollup@3.20.6:
@@ -5723,7 +5736,6 @@ packages:
     hasBin: true
     optionalDependencies:
       fsevents: 2.3.2
-    dev: false
 
   /run-parallel@1.2.0:
     resolution: {integrity: sha512-5l4VyZR86LZ/lDxZTR6jqL8AFE2S0IFLMP26AbjsLVADxHdhB/c0GUsH+y39UfCi3dzz8OlQuPmnaJOMoDHQBA==}
