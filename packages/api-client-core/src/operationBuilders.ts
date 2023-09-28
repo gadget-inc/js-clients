@@ -2,7 +2,7 @@ import type { FieldSelection as BuilderFieldSelection, BuilderOperation, Variabl
 import { Call, Var, compileWithVariableValues } from "tiny-graphql-query-compiler";
 import type { FieldSelection } from "./FieldSelection.js";
 import { filterTypeName, sortTypeName } from "./support.js";
-import type { VariablesOptions } from "./types.js";
+import type { FindManyOptions, SelectionOptions, VariablesOptions } from "./types.js";
 
 const hydrationOptions = (modelApiIdentifier: string): BuilderFieldSelection => {
   return {
@@ -21,22 +21,7 @@ const fieldSelectionToQueryCompilerFields = (selection: FieldSelection, includeT
   return output;
 };
 
-type AnySort = any;
-type AnyFilter = any;
-
-export type SelectionOptions = { select?: any };
-
-export type PaginationOptions = {
-  sort?: AnySort | null;
-  filter?: AnyFilter | null;
-  search?: string | null;
-  after?: string | null;
-  first?: number | null;
-  before?: string | null;
-  last?: number | null;
-} & SelectionOptions;
-
-export type FindFirstPaginationOptions = Omit<PaginationOptions, "first" | "last" | "before" | "after">;
+export type FindFirstPaginationOptions = Omit<FindManyOptions, "first" | "last" | "before" | "after">;
 
 export const findOneOperation = (
   operation: string,
@@ -80,7 +65,7 @@ export const findManyOperation = (
   operation: string,
   defaultSelection: FieldSelection,
   modelApiIdentifier: string,
-  options?: PaginationOptions
+  options?: FindManyOptions
 ) => {
   return compileWithVariableValues({
     type: "query",
