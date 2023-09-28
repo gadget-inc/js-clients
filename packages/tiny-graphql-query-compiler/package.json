@@ -26,15 +26,15 @@
     "prepublishOnly": "pnpm build",
     "prerelease": "gitpkg publish"
   },
-  "dependencies": {},
   "devDependencies": {
     "@testing-library/jest-dom": "^5.16.5",
     "@testing-library/react": "^13.4.0",
-    "@types/jest": "^29.5.2",
+    "@types/jest": "^29.5.5",
+    "@types/prettier": "^2.7.3",
     "conditional-type-checks": "^1.0.6",
     "graphql": "16.5.0",
+    "prettier": "^2.8.8",
     "react": "^18.2.0",
-    "react-dom": "^18.2.0",
-    "prettier": "^2.8.8"
+    "react-dom": "^18.2.0"
   }
 }
