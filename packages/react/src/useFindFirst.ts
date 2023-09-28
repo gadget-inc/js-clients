@@ -66,7 +66,7 @@ export const useFindFirst = <
       }
     }
 
-    const error = ErrorWrapper.errorIfDataAbsent(rawResult, dataPath);
+    const error = ErrorWrapper.errorIfDataAbsent(rawResult, dataPath, options?.pause);
 
     return { ...rawResult, data, error };
   }, [manager, rawResult]);

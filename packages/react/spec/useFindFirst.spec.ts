@@ -2,15 +2,18 @@ import type { GadgetRecord } from "@gadgetinc/api-client-core";
 import { renderHook } from "@testing-library/react";
 import type { IsExact } from "conditional-type-checks";
 import { assert } from "conditional-type-checks";
-import { useFindOne } from "../src/index.js";
+import { useFindFirst } from "../src/index.js";
 import type { ErrorWrapper } from "../src/utils.js";
 import { relatedProductsApi } from "./apis.js";
 import { MockClientWrapper, mockUrqlClient } from "./testWrappers.js";
 
-describe("useFindOne", () => {
+describe("useFindFirst", () => {
   // these functions are typechecked but never run to avoid actually making API calls
-  const _TestFindOneReturnsTypedDataWithExplicitSelection = () => {
-    const [{ data, fetching, error }, refresh] = useFindOne(relatedProductsApi.user, "10", { select: { id: true, email: true } });
+  const _TestFindFirstReturnsTypedDataWithExplicitSelection = () => {
+    const [{ data, fetching, error }, refresh] = useFindFirst(relatedProductsApi.user, {
+      filter: { email: { equals: "hello@gello.com" } },
+      select: { id: true, email: true },
+    });
 
     assert<IsExact<typeof fetching, boolean>>(true);
     assert<IsExact<typeof data, undefined | GadgetRecord<{ id: string; email: string | null }>>>(true);
@@ -26,8 +29,8 @@ describe("useFindOne", () => {
     refresh();
   };
 
-  const _TestFindOneReturnsTypedDataWithNoSelection = () => {
-    const [{ data }] = useFindOne(relatedProductsApi.user, "10");
+  const _TestFindFirstReturnsTypedDataWithNoSelection = () => {
+    const [{ data }] = useFindFirst(relatedProductsApi.user);
 
     if (data) {
       data.id;
@@ -35,8 +38,10 @@ describe("useFindOne", () => {
     }
   };
 
-  test("can find one record by id", async () => {
-    const { result } = renderHook(() => useFindOne(relatedProductsApi.user, "123"), { wrapper: MockClientWrapper(relatedProductsApi) });
+  test("it can find the first record", async () => {
+    const { result } = renderHook(() => useFindFirst(relatedProductsApi.user), {
+      wrapper: MockClientWrapper(relatedProductsApi),
+    });
 
     expect(result.current[0].data).toBeFalsy();
     expect(result.current[0].fetching).toBe(true);
@@ -44,11 +49,16 @@ describe("useFindOne", () => {
 
     expect(mockUrqlClient.executeQuery).toBeCalledTimes(1);
 
-    mockUrqlClient.executeQuery.pushResponse("user", {
+    mockUrqlClient.executeQuery.pushResponse("users", {
       data: {
-        user: {
-          id: "123",
-          email: "test@test.com",
+        users: {
+          edges: [{ cursor: "123", node: { id: "123", email: "test@test.com" } }],
+          pageInfo: {
+            startCursor: "123",
+            endCursor: "123",
+            hasNextPage: false,
+            hasPreviousPage: false,
+          },
         },
       },
       stale: false,
@@ -61,8 +71,8 @@ describe("useFindOne", () => {
     expect(result.current[0].error).toBeFalsy();
   });
 
-  test("returns an error if the record isn't found", async () => {
-    const { result, rerender } = renderHook(() => useFindOne(relatedProductsApi.user, "123"), {
+  test("it return null if the record with the given field value can't be found", async () => {
+    const { result } = renderHook(() => useFindFirst(relatedProductsApi.user), {
       wrapper: MockClientWrapper(relatedProductsApi),
     });
 
@@ -72,9 +82,17 @@ describe("useFindOne", () => {
 
     expect(mockUrqlClient.executeQuery).toBeCalledTimes(1);
 
-    mockUrqlClient.executeQuery.pushResponse("user", {
+    mockUrqlClient.executeQuery.pushResponse("users", {
       data: {
-        user: null,
+        users: {
+          edges: [],
+          pageInfo: {
+            startCursor: null,
+            endCursor: null,
+            hasNextPage: false,
+            hasPreviousPage: false,
+          },
+        },
       },
       stale: false,
       hasNext: false,
@@ -82,58 +100,59 @@ describe("useFindOne", () => {
 
     expect(result.current[0].data).toBeFalsy();
     expect(result.current[0].fetching).toBe(false);
-    const error = result.current[0].error;
-    expect(error).toBeTruthy();
-    expect(error!.message).toMatchInlineSnapshot(`"[GraphQL] Record Not Found Error: Gadget API returned no data at user"`);
-
-    // ensure the error is the same after rerendering
-    rerender();
-
-    expect(result.current[0].error).toBe(error);
+    expect(result.current[0].error).toBeUndefined();
   });
 
-  test("returns the same data on rerender", async () => {
-    const { result, rerender } = renderHook(() => useFindOne(relatedProductsApi.user, "123"), {
+  test("returns the same data object on rerender", async () => {
+    const { result, rerender } = renderHook(() => useFindFirst(relatedProductsApi.user), {
       wrapper: MockClientWrapper(relatedProductsApi),
     });
 
     expect(mockUrqlClient.executeQuery).toBeCalledTimes(1);
 
-    mockUrqlClient.executeQuery.pushResponse("user", {
+    mockUrqlClient.executeQuery.pushResponse("users", {
       data: {
-        user: {
-          id: "123",
-          email: "test@test.com",
+        users: {
+          edges: [{ cursor: "123", node: { id: "123", email: "test@test.com" } }],
+          pageInfo: {
+            startCursor: "123",
+            endCursor: "123",
+            hasNextPage: false,
+            hasPreviousPage: false,
+          },
         },
       },
       stale: false,
       hasNext: false,
     });
 
-    const beforeObject = result.current[0];
+    const data = result.current[0].data;
+    expect(data).toBeTruthy();
 
     rerender();
 
-    expect(result.current[0]).toBe(beforeObject);
+    expect(result.current[0].data).toBe(data);
   });
 
-  test("suspends when loading data", async () => {
-    const { result, rerender } = renderHook(
-      () => {
-        return useFindOne(relatedProductsApi.user, "123", { suspense: true });
-      },
-      { wrapper: MockClientWrapper(relatedProductsApi) }
-    );
+  test("it can suspend when finding data", async () => {
+    const { result, rerender } = renderHook(() => useFindFirst(relatedProductsApi.user, { suspense: true }), {
+      wrapper: MockClientWrapper(relatedProductsApi),
+    });
 
     // first render never completes as the component suspends
     expect(result.current).toBeFalsy();
     expect(mockUrqlClient.executeQuery).toBeCalledTimes(1);
 
-    mockUrqlClient.executeQuery.pushResponse("user", {
+    mockUrqlClient.executeQuery.pushResponse("users", {
       data: {
-        user: {
-          id: "123",
-          email: "test@test.com",
+        users: {
+          edges: [{ cursor: "123", node: { id: "123", email: "test@test.com" } }],
+          pageInfo: {
+            startCursor: "123",
+            endCursor: "123",
+            hasNextPage: false,
+            hasPreviousPage: false,
+          },
         },
       },
       stale: false,
@@ -143,7 +162,6 @@ describe("useFindOne", () => {
     // rerender as react would do when the suspense promise resolves
     rerender();
     expect(result.current).toBeTruthy();
-
     expect(result.current[0].data!.id).toEqual("123");
     expect(result.current[0].data!.email).toEqual("test@test.com");
     expect(result.current[0].error).toBeFalsy();
@@ -154,7 +172,7 @@ describe("useFindOne", () => {
   });
 
   test("doesn't issue a request if paused", async () => {
-    const { result } = renderHook(() => useFindOne(relatedProductsApi.user, "123", { pause: true }), {
+    const { result } = renderHook(() => useFindFirst(relatedProductsApi.user, { pause: true }), {
       wrapper: MockClientWrapper(relatedProductsApi),
     });
 
