@@ -1,3 +1,4 @@
+import type { AnyPublicModelManager } from "../src/AnyModelManager.js";
 import { ChangeTracking, GadgetRecord } from "../src/GadgetRecord.js";
 interface SampleBaseRecord {
   id?: string;
@@ -38,6 +39,8 @@ const expectPersistedChanges = (record: GadgetRecord<SampleBaseRecord>, ...prope
   return _expectChanges(record, ChangeTracking.SinceLastPersisted, ...properties);
 };
 
+const mockModelManager: AnyPublicModelManager = {} as any;
+
 describe("GadgetRecord", () => {
   let productBaseRecord: SampleBaseRecord;
   beforeAll(() => {
@@ -46,6 +49,18 @@ describe("GadgetRecord", () => {
       name: "A cool product",
       body: "A description of why it's cool",
     };
+  });
+
+  it("can be constructed with a base record and no model manager for backwards compatibility", () => {
+    const product = new GadgetRecord<SampleBaseRecord>(productBaseRecord);
+    expect(product.id).toEqual("123");
+    expect(product.name).toEqual("A cool product");
+    expect(product.modelManager).toEqual(null);
+  });
+
+  it("can be constructed with a base record and a model manager", () => {
+    const product = new GadgetRecord<SampleBaseRecord>(productBaseRecord, mockModelManager);
+    expect(product.modelManager).toEqual(mockModelManager);
   });
 
   it("should respond toJSON, which returns the inner __gadget.fields properties", () => {

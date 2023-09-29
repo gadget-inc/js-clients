@@ -115,7 +115,9 @@ const processResult = <Data, Variables extends AnyVariables>(
       if (errors && errors[0]) {
         error = ErrorWrapper.forErrorsResponse(errors, error?.response);
       } else {
-        data = action.hasReturnType ? mutationData.result : hydrateRecord(result, mutationData[action.modelSelectionField]);
+        data = action.hasReturnType
+          ? mutationData.result
+          : hydrateRecord(result, mutationData[action.modelSelectionField], action.modelManager);
       }
     }
   }

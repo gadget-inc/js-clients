@@ -11,7 +11,7 @@
     "lint:eslint": "NODE_OPTIONS=\"--max-old-space-size=4096\" eslint --quiet --ext ts,tsx packages scripts",
     "lint:fix": "NODE_OPTIONS=\"--max-old-space-size=4096\" prettier --write --check \"(packages|scripts)/**/*.{js,ts,tsx}\" && eslint --ext ts,tsx --fix packages scripts",
     "typecheck": "pnpm -r --no-bail run --if-present typecheck",
-    "build": "pnpm -r --no-bail run --if-present build",
+    "build": "pnpm -r run --if-present build",
     "prerelease": "pnpm -r --no-bail run --if-present prerelease",
     "watch": "run-p --print-label watch:*",
     "watch:client": "pnpm --filter=@gadgetinc/api-client-core watch",
