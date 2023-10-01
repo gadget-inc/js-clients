@@ -13,3 +13,4 @@ packages/*/dist
 .idea
 packages/sample-app
 *.orig
+cypress.env.json
