@@ -67,7 +67,7 @@ export const useFindMany = <
     const error = ErrorWrapper.errorIfDataAbsent(rawResult, dataPath, options?.pause);
 
     return { ...rawResult, data, error };
-  }, [manager, rawResult]);
+  }, [manager, options?.pause, rawResult]);
 
   return [result, refresh];
 };

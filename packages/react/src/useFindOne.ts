@@ -64,7 +64,7 @@ export const useFindOne = <
     const error = ErrorWrapper.errorIfDataAbsent(rawResult, dataPath, options?.pause);
 
     return { ...rawResult, data, error };
-  }, [rawResult, manager]);
+  }, [manager.findOne.operationName, rawResult, options?.pause]);
 
   return [result, refresh];
 };

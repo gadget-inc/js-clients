@@ -69,7 +69,7 @@ export const useFindFirst = <
     const error = ErrorWrapper.errorIfDataAbsent(rawResult, dataPath, options?.pause);
 
     return { ...rawResult, data, error };
-  }, [manager, rawResult]);
+  }, [manager.findFirst.operationName, options?.pause, rawResult]);
 
   return [result, refresh];
 };

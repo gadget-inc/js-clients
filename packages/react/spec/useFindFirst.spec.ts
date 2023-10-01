@@ -182,4 +182,43 @@ describe("useFindFirst", () => {
 
     expect(mockUrqlClient.executeQuery).toBeCalledTimes(0);
   });
+
+  test("issues a request once unpaused", async () => {
+    let paused = true;
+    const { result, rerender } = renderHook(() => useFindFirst(relatedProductsApi.user, { pause: paused }), {
+      wrapper: MockClientWrapper(relatedProductsApi),
+    });
+
+    expect(result.current[0].data).toBeFalsy();
+    expect(result.current[0].fetching).toBe(false);
+    expect(result.current[0].error).toBeFalsy();
+
+    expect(mockUrqlClient.executeQuery).toBeCalledTimes(0);
+
+    paused = false;
+    rerender();
+    expect(result.current[0].fetching).toBe(true);
+
+    expect(mockUrqlClient.executeQuery).toBeCalledTimes(1);
+
+    mockUrqlClient.executeQuery.pushResponse("users", {
+      data: {
+        users: {
+          edges: [{ cursor: "123", node: { id: "123", email: "test@test.com" } }],
+          pageInfo: {
+            startCursor: "123",
+            endCursor: "123",
+            hasNextPage: false,
+            hasPreviousPage: false,
+          },
+        },
+      },
+      stale: false,
+      hasNext: false,
+    });
+
+    expect(result.current[0].data!.id).toEqual("123");
+    expect(result.current[0].data!.email).toEqual("test@test.com");
+    expect(result.current[0].fetching).toBe(false);
+  });
 });
