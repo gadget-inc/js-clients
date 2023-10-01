@@ -1,3 +1,5 @@
+import type { AvailableSelection } from "../src/types.js";
+
 export type NestedThing = {
   bool: boolean;
   string: string;
@@ -45,34 +47,4 @@ export type TestSchema = {
   };
 };
 
-export type AvailableTestSchemaSelection = {
-  num?: boolean | null | undefined;
-  str?: boolean | null | undefined;
-  obj?: {
-    test?: boolean | null | undefined;
-    bool?: boolean | null | undefined;
-  };
-  optionalObj?: {
-    test?: boolean | null | undefined;
-    bool?: boolean | null | undefined;
-  };
-  list?: {
-    title: boolean | null | undefined;
-  };
-  optionalList?: {
-    title: boolean | null | undefined;
-  };
-  nested?: NestedThing;
-  someConnection?: {
-    edges?: {
-      node?: {
-        id: boolean | null | undefined;
-        state: boolean | null | undefined;
-      };
-    };
-    pageInfo?: {
-      hasNextPage?: boolean | null | undefined;
-      hasPreviousPage?: boolean | null | undefined;
-    };
-  };
-};
+export type AvailableTestSchemaSelection = AvailableSelection<TestSchema>;
