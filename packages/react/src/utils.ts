@@ -323,14 +323,12 @@ export const disambiguateActionVariables = (
   }
 
   let newVariables: Record<string, any>;
-  const idVariable = Object.entries(action.variables).find(([key, value]) => key === "id" && value.type === "GadgetID");
 
-  if (action.acceptsModelInput || action.hasCreateOrUpdateEffect) {
+  if (action.acceptsModelInput ?? action.hasCreateOrUpdateEffect) {
     if (
-      (action.modelApiIdentifier in variables &&
-        typeof variables[action.modelApiIdentifier] === "object" &&
-        variables[action.modelApiIdentifier] !== null) ||
-      !action.variables[action.modelApiIdentifier]
+      action.modelApiIdentifier in variables &&
+      typeof variables[action.modelApiIdentifier] === "object" &&
+      variables[action.modelApiIdentifier] != null
     ) {
       newVariables = variables;
     } else {
@@ -341,7 +339,7 @@ export const disambiguateActionVariables = (
         if (action.paramOnlyVariables?.includes(key)) {
           newVariables[key] = value;
         } else {
-          if (idVariable && key === idVariable[0]) {
+          if (key == "id") {
             newVariables.id = value;
           } else {
             newVariables[action.modelApiIdentifier][key] = value;
