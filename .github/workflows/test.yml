@@ -48,9 +48,21 @@ jobs:
         run: pnpm build
       - name: Build test bundles
         run: pnpm -F=test-bundles test-build
-      - name: Send bundle stats to RelativeCI
+      - name: Send imperative bundle stats to RelativeCI
+        uses: relative-ci/agent-action@v2
+        with:
+          webpackStatsFile: ./packages/test-bundles/dist/api-read-webpack-stats.json
+          key: ${{ secrets.RELATIVE_CI_IMPERATIVE_CLIENT_BUNDLE_KEY }}
+          token: ${{ secrets.GITHUB_TOKEN }}
+      - name: Send react bundle stats to RelativeCI
         uses: relative-ci/agent-action@v2
         with:
           webpackStatsFile: ./packages/test-bundles/dist/react-read-webpack-stats.json
-          key: ${{ secrets.RELATIVE_CI_KEY }}
+          key: ${{ secrets.RELATIVE_CI_REACT_BUNDLE_KEY }}
+          token: ${{ secrets.GITHUB_TOKEN }}
+      - name: Send shopify bundle stats to RelativeCI
+        uses: relative-ci/agent-action@v2
+        with:
+          webpackStatsFile: ./packages/test-bundles/dist/shopify-read-webpack-stats.json
+          key: ${{ secrets.RELATIVE_CI_SHOPIFY_BUNDLE_KEY }}
           token: ${{ secrets.GITHUB_TOKEN }}
