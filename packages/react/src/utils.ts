@@ -67,6 +67,10 @@ export declare type ReadOperationOptions = {
    * Useful if you want to allow components higher in the tree to show spinners instead of having every component manage its own loading state.
    */
   suspense?: boolean;
+  /**
+   * Marks this query as a live query that will subscribe to changes from the backend and re-render when backend data changes with the newest data.
+   */
+  live?: boolean;
 };
 
 /**
@@ -305,7 +309,10 @@ export const useQueryArgs = <Plan extends QueryPlan, Options extends QueryOption
 
 export type OptionsType = {
   [key: string]: any;
+  /** What fields to select from the resulting object */
   select?: FieldSelection;
+  /** Subscribe to changes from the backend and return a new result as it changes */
+  live?: boolean;
 };
 
 /**

@@ -1,7 +1,9 @@
 /* eslint-disable @typescript-eslint/no-non-null-assertion */
+import { isLiveQueryOperationDefinitionNode } from "@n1ru4l/graphql-live-query";
+import { applyLiveQueryJSONDiffPatch } from "@n1ru4l/graphql-live-query-patch-jsondiffpatch";
+import { applyAsyncIterableIteratorToSink, makeAsyncIterableIteratorFromSink } from "@n1ru4l/push-pull-async-iterable-iterator";
 import type { ClientOptions, RequestPolicy } from "@urql/core";
 import { Client, cacheExchange, fetchExchange, subscriptionExchange } from "@urql/core";
-
 import type { ExecutionResult } from "graphql";
 import type { Sink, Client as SubscriptionClient, ClientOptions as SubscriptionClientOptions } from "graphql-ws";
 import { CloseCode, createClient as createSubscriptionClient } from "graphql-ws";
@@ -80,7 +82,9 @@ export class GadgetConnection {
 
   // the base client using HTTP requests that non-transactional operations will use
   private baseClient: Client;
-  private baseSubscriptionClient?: SubscriptionClient;
+
+  /** @private (but accessible for testing purposes) */
+  baseSubscriptionClient?: SubscriptionClient;
 
   // the transactional websocket client that will be used inside a transaction block
   private currentTransaction: GadgetTransaction | null = null;
@@ -341,10 +345,9 @@ export class GadgetConnection {
     if (typeof window != "undefined") {
       exchanges.push(cacheExchange);
     }
-
     exchanges.push(
       ...this.exchanges.beforeAsync,
-      fetchExchange,
+      // standard subscriptions for normal GraphQL subscriptions
       subscriptionExchange({
         forwardSubscription: (request) => {
           return {
@@ -359,6 +362,31 @@ export class GadgetConnection {
           };
         },
       }),
+      // another subscription exchange for live queries
+      // live queries pass through the same WS client, but use jsondiffs for patching in results
+      subscriptionExchange({
+        isSubscriptionOperation: (request) => {
+          return request.query.definitions.some((definition) => isLiveQueryOperationDefinitionNode(definition, request.variables as any));
+        },
+        forwardSubscription: (request) => {
+          return {
+            subscribe: (sink) => {
+              const input = { ...request, query: request.query || "" };
+              return {
+                unsubscribe: applyAsyncIterableIteratorToSink(
+                  applyLiveQueryJSONDiffPatch(
+                    makeAsyncIterableIteratorFromSink<ExecutionResult>((sink) =>
+                      this.getBaseSubscriptionClient().subscribe(input, sink as Sink<ExecutionResult>)
+                    )
+                  ),
+                  sink
+                ),
+              };
+            },
+          };
+        },
+      }),
+      fetchExchange,
       ...this.exchanges.afterAll
     );
 

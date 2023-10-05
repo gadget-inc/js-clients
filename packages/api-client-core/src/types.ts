@@ -15,16 +15,18 @@ export type VariablesOptions = Record<string, VariableOptions>;
  */
 export type DefaultSelection<
   SelectionType,
-  Options extends Selectable<SelectionType>,
+  Options extends { select?: SelectionType | null },
   Defaults extends SelectionType
 > = Options["select"] extends SelectionType ? Options["select"] : Defaults;
 
 /**
- * Describes any object that can have a selection specified
+ * Describes the base options that many record finders accept
  */
-export interface Selectable<SelectionType> {
+export interface BaseFindOptions<SelectionType = any> {
   /** Select fields other than the defaults of the record to return */
   select?: SelectionType | null;
+  /** Turn on live query mode, where the query will trigger re-renders when data changes on the backend */
+  live?: boolean;
 }
 
 /**
@@ -552,11 +554,8 @@ export interface AnySelection {
 export type SelectionOptions = { select?: AnySelection };
 
 /** The options a record find operation takes that can return many records */
-export type FindManyOptions = {
-  /** Return only the given fields on the backend record (and related records) */
-  select?: AnySelection;
-
-  /** Sort the returned records by the given critera */
+export interface FindManyOptions extends BaseFindOptions {
+  /** Sort the returned records by the given criteria */
   sort?: AnySort | null;
   /** Only return records which match the given set of filters */
   filter?: AnyFilter | AnyFilter[] | null;
@@ -579,7 +578,7 @@ export type FindManyOptions = {
    * Return this number of records. Useful in tandem with the `before` cursor option for pagination.
    **/
   last?: number | null;
-};
+}
 
 /** The options a record find operation takes that can return many records */
 export type FindFilteredOptions = {

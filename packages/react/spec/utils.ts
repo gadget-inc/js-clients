@@ -70,3 +70,8 @@ export const mockNetworkError = () => {
     hasNext: false,
   });
 };
+export const sleep = (delay: number) => {
+  return new Promise((resolve) => {
+    setTimeout(resolve, delay);
+  });
+};

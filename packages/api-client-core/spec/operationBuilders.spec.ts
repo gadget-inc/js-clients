@@ -42,6 +42,27 @@ describe("operation builders", () => {
         }
       `);
     });
+
+    test("findOneOperation should build a live query for a model", () => {
+      expect(findOneOperation("widget", "123", { __typename: true, id: true, state: true }, "widget", { live: true }))
+        .toMatchInlineSnapshot(`
+        {
+          "query": "query widget($id: GadgetID!) @live {
+          widget(id: $id) {
+            __typename
+            id
+            state
+          }
+          gadgetMeta {
+            hydrations(modelName: "widget")
+          }
+        }",
+          "variables": {
+            "id": "123",
+          },
+        }
+      `);
+    });
   });
 
   describe("findManyOperation", () => {
@@ -209,6 +230,35 @@ describe("operation builders", () => {
         }
       `);
     });
+
+    test("findManyOperation should build a live findMany query for a model", () => {
+      expect(findManyOperation("widgets", { __typename: true, id: true, state: true }, "widget", { live: true })).toMatchInlineSnapshot(`
+        {
+          "query": "query widgets($after: String, $first: Int, $before: String, $last: Int) @live {
+          widgets(after: $after, first: $first, before: $before, last: $last) {
+            pageInfo {
+              hasNextPage
+              hasPreviousPage
+              startCursor
+              endCursor
+            }
+            edges {
+              cursor
+              node {
+                __typename
+                id
+                state
+              }
+            }
+          }
+          gadgetMeta {
+            hydrations(modelName: "widget")
+          }
+        }",
+          "variables": {},
+        }
+      `);
+    });
   });
 
   describe("findOneByFieldOperation", () => {
@@ -269,6 +319,43 @@ describe("operation builders", () => {
                 id
                 name
                 __typename
+              }
+            }
+          }
+          gadgetMeta {
+            hydrations(modelName: "widget")
+          }
+        }",
+          "variables": {
+            "filter": {
+              "foo": {
+                "equals": "bar",
+              },
+            },
+            "first": 2,
+          },
+        }
+      `);
+    });
+
+    test("findOneByFieldOperation should build a live query", () => {
+      expect(findOneByFieldOperation("widget", "foo", "bar", { __typename: true, id: true, state: true }, "widget", { live: true }))
+        .toMatchInlineSnapshot(`
+        {
+          "query": "query widget($after: String, $first: Int, $before: String, $last: Int, $filter: [WidgetFilter!]) @live {
+          widget(after: $after, first: $first, before: $before, last: $last, filter: $filter) {
+            pageInfo {
+              hasNextPage
+              hasPreviousPage
+              startCursor
+              endCursor
+            }
+            edges {
+              cursor
+              node {
+                __typename
+                id
+                state
               }
             }
           }
