@@ -29,6 +29,13 @@ describe("InternalModelManager", () => {
       });
     });
 
+    // type tests
+    const _TestCanFilterByScalars = async () => {
+      await internalModelManager.findMany({ filter: [{ id: { equals: "foo" } }] });
+      await internalModelManager.findMany({ filter: [{ id: { equals: BigInt(1) } }] });
+      await internalModelManager.findMany({ filter: [{ createdAt: { equals: new Date() } }] });
+    };
+
     test("can unwrap params nested under api identifier", () => {
       const result = (internalModelManager as any).getRecordFromData({
         someModel: {

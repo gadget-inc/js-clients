@@ -165,10 +165,10 @@ export interface IDFilter {
  **/
 export interface IntFilter {
   /** Filter to where the backend value is equal to this value */
-  equals?: number | null;
+  equals?: number | bigint | null;
 
   /** Filter to where the backend value is not equal to this value */
-  notEquals?: number | null;
+  notEquals?: number | bigint | null;
 
   /**
    * Filter to where the backend value is set to any value at all.
@@ -178,22 +178,22 @@ export interface IntFilter {
   isSet?: boolean | null;
 
   /** Filter to where the backend value is within this set of numbers */
-  in?: (number | null)[];
+  in?: (number | bigint | null)[];
 
   /** Filter to where the backend value is not within this set of numbers */
-  notIn?: (number | null)[];
+  notIn?: (number | bigint | null)[];
 
   /** Filter to where the backend value is lower than this number */
-  lessThan?: number | null;
+  lessThan?: number | bigint | null;
 
   /** Filter to where the backend value is lower than or equal to this number */
-  lessThanOrEqual?: number | null;
+  lessThanOrEqual?: number | bigint | null;
 
   /** Filter to where the backend value is greater than to this number */
-  greaterThan?: number | null;
+  greaterThan?: number | bigint | null;
 
   /** Filter to where the backend value is greater than or equal to this number */
-  greaterThanOrEqual?: number | null;
+  greaterThanOrEqual?: number | bigint | null;
 }
 
 /**
@@ -210,10 +210,10 @@ export interface IntFilter {
  * */
 export interface FloatFilter {
   /** Filter to where the backend value is equal to this value */
-  equals?: number | null;
+  equals?: number | bigint | null;
 
   /** Filter to where the backend value is not equal to this value */
-  notEquals?: number | null;
+  notEquals?: number | bigint | null;
 
   /**
    * Filter to where the backend value is set to any value at all.
@@ -223,22 +223,22 @@ export interface FloatFilter {
   isSet?: boolean | null;
 
   /** Filter to where the backend value is within this set of numbers */
-  in?: (number | null)[];
+  in?: (number | bigint | null)[];
 
   /** Filter to where the backend value is not within this set of numbers */
-  notIn?: (number | null)[];
+  notIn?: (number | bigint | null)[];
 
   /** Filter to where the backend value is lower than this number */
-  lessThan?: number | null;
+  lessThan?: number | bigint | null;
 
   /** Filter to where the backend value is lower than or equal to this number */
-  lessThanOrEqual?: number | null;
+  lessThanOrEqual?: number | bigint | null;
 
   /** Filter to where the backend value is greater than to this number */
-  greaterThan?: number | null;
+  greaterThan?: number | bigint | null;
 
   /** Filter to where the backend value is greater than or equal to this number */
-  greaterThanOrEqual?: number | null;
+  greaterThanOrEqual?: number | bigint | null;
 }
 
 /**
