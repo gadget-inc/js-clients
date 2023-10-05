@@ -1,10 +1,9 @@
 import { Client } from "@gadget-client/related-products-example";
 import { diff } from "@n1ru4l/json-patch-plus";
-import { render, renderHook } from "@testing-library/react";
+import { render, renderHook, waitFor } from "@testing-library/react";
 import React from "react";
 import { useFindMany } from "../src/useFindMany.js";
 import { MockGraphQLWSClientWrapper, mockGraphQLWSClient } from "./testWrappers.js";
-import { sleep } from "./utils.js";
 
 describe("live queries", () => {
   let api: Client;
@@ -37,9 +36,7 @@ describe("live queries", () => {
       revision: 1,
     } as any);
 
-    await sleep(100);
-
-    expect(result.current[0].data!.length).toEqual(0);
+    await waitFor(() => expect(result.current[0].data!.length).toEqual(0));
     expect(result.current[0].fetching).toBe(false);
     expect(result.current[0].error).toBeFalsy();
 
@@ -61,10 +58,9 @@ describe("live queries", () => {
       revision: 2,
     } as any);
 
-    await sleep(100);
+    await waitFor(() => expect(result.current[0].data![0].email).toEqual("a-new-email@test.com"));
 
     expect(result.current[0].data![0].id).toEqual("123");
-    expect(result.current[0].data![0].email).toEqual("a-new-email@test.com");
     expect(result.current[0].fetching).toBe(false);
     expect(result.current[0].error).toBeFalsy();
   });
@@ -101,10 +97,9 @@ describe("live queries", () => {
       revision: 1,
     } as any);
 
-    await sleep(100);
+    await waitFor(() => expect(result.current[0].fetching).toBe(false));
 
     expect(result.current[0].data!.length).toEqual(1);
-    expect(result.current[0].fetching).toBe(false);
     expect(result.current[0].error).toBeFalsy();
 
     const next = {
@@ -118,9 +113,7 @@ describe("live queries", () => {
       revision: 2,
     } as any);
 
-    await sleep(100);
-
-    expect(result.current[0].data!.length).toEqual(0);
+    await waitFor(() => expect(result.current[0].data!.length).toEqual(0));
     expect(result.current[0].fetching).toBe(false);
     expect(result.current[0].error).toBeFalsy();
   });
@@ -185,9 +178,7 @@ describe("live queries", () => {
       revision: 1,
     } as any);
 
-    await sleep(100);
-
-    expect(container).toHaveTextContent("Users: 2, Products: 1");
+    await waitFor(() => expect(container).toHaveTextContent("Users: 2, Products: 1"));
 
     products.push({
       data: {
@@ -198,8 +189,6 @@ describe("live queries", () => {
       revision: 1,
     } as any);
 
-    await sleep(100);
-
-    expect(container).toHaveTextContent("Users: 2, Products: 0");
+    await waitFor(() => expect(container).toHaveTextContent("Users: 2, Products: 0"));
   });
 });

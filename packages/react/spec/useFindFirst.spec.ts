@@ -1,13 +1,12 @@
 import type { GadgetRecord } from "@gadgetinc/api-client-core";
 import { diff } from "@n1ru4l/json-patch-plus";
-import { renderHook } from "@testing-library/react";
+import { renderHook, waitFor } from "@testing-library/react";
 import type { IsExact } from "conditional-type-checks";
 import { assert } from "conditional-type-checks";
 import { useFindFirst } from "../src/index.js";
 import type { ErrorWrapper } from "../src/utils.js";
 import { relatedProductsApi } from "./apis.js";
 import { MockClientWrapper, MockGraphQLWSClientWrapper, mockGraphQLWSClient, mockUrqlClient } from "./testWrappers.js";
-import { sleep } from "./utils.js";
 
 describe("useFindFirst", () => {
   // these functions are typechecked but never run to avoid actually making API calls
@@ -255,11 +254,10 @@ describe("useFindFirst", () => {
       revision: 1,
     } as any);
 
-    await sleep(30);
+    await waitFor(() => expect(result.current[0].fetching).toBe(false));
 
     expect(result.current[0].data!.id).toEqual("123");
     expect(result.current[0].data!.email).toEqual("test@test.com");
-    expect(result.current[0].fetching).toBe(false);
     expect(result.current[0].error).toBeFalsy();
 
     const next = {
@@ -279,10 +277,9 @@ describe("useFindFirst", () => {
       revision: 2,
     } as any);
 
-    await sleep(50);
+    await waitFor(() => expect(result.current[0].data!.email).toEqual("a-new-email@test.com"));
 
     expect(result.current[0].data!.id).toEqual("123");
-    expect(result.current[0].data!.email).toEqual("a-new-email@test.com");
     expect(result.current[0].fetching).toBe(false);
     expect(result.current[0].error).toBeFalsy();
   });

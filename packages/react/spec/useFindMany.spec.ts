@@ -1,13 +1,12 @@
 import type { GadgetRecordList } from "@gadgetinc/api-client-core";
 import { diff } from "@n1ru4l/json-patch-plus";
-import { renderHook } from "@testing-library/react";
+import { renderHook, waitFor } from "@testing-library/react";
 import type { IsExact } from "conditional-type-checks";
 import { assert } from "conditional-type-checks";
 import { useFindMany } from "../src/useFindMany.js";
 import type { ErrorWrapper } from "../src/utils.js";
 import { relatedProductsApi } from "./apis.js";
 import { MockClientWrapper, MockGraphQLWSClientWrapper, mockGraphQLWSClient, mockUrqlClient } from "./testWrappers.js";
-import { sleep } from "./utils.js";
 
 describe("useFindMany", () => {
   // all these functions are typechecked but never run to avoid actually making API calls
@@ -308,13 +307,12 @@ describe("useFindMany", () => {
         revision: 1,
       } as any);
 
-      await sleep(30);
+      await waitFor(() => expect(result.current[0].fetching).toBe(false));
 
       expect(result.current[0].data![0].id).toEqual("123");
       expect(result.current[0].data![0].email).toEqual("test@test.com");
       expect(result.current[0].data![1].id).toEqual("456");
       expect(result.current[0].data![1].email).toEqual("test@gadget.dev");
-      expect(result.current[0].fetching).toBe(false);
       expect(result.current[0].error).toBeFalsy();
 
       const next = {
@@ -347,7 +345,7 @@ describe("useFindMany", () => {
         revision: 2,
       } as any);
 
-      await sleep(50);
+      await waitFor(() => expect(result.current[0].data![2]).toBeDefined());
 
       expect(result.current[0].data![0].id).toEqual("123");
       expect(result.current[0].data![0].email).toEqual("a-new-email@test.com");
