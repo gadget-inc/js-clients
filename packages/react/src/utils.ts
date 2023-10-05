@@ -69,6 +69,10 @@ export declare type ReadOperationOptions = {
   suspense?: boolean;
   /**
    * Marks this query as a live query that will subscribe to changes from the backend and re-render when backend data changes with the newest data.
+   *
+   * This option is currently only available for Gadget apps in the Realtime Queries beta!
+   * Please contact Gadget for access to this beta in order to use Realtime queries.
+   * @experimental
    */
   live?: boolean;
 };
