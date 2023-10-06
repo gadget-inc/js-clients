@@ -20,6 +20,14 @@ export type DefaultSelection<
 > = Options["select"] extends SelectionType ? Options["select"] : Defaults;
 
 /**
+ * Describes an option set that accepts a selection
+ */
+export interface Selectable<SelectionType = any> {
+  /** Select fields other than the defaults of the record to return */
+  select?: SelectionType | null;
+}
+
+/**
  * Describes the base options that many record finders accept
  */
 export interface BaseFindOptions<SelectionType = any> {
@@ -488,11 +496,41 @@ export interface BooleanFilter {
   isSet?: boolean | null;
 }
 
+/**
+ * Filters available for filtering record state type fields on the backend
+ *
+ * @example
+ * { inState: { created: "installed "} }
+ *
+ * @example
+ * { isSet: false }
+ */
+export interface StateFilter {
+  /** Filter to where the backend value is equal to this state string or nested state set. */
+  inState?: string | Record<string, any> | null;
+
+  /**
+   * Filter to where the backend value is set to any value at all.
+   *  - if true, will exclude records where this field is null.
+   *  - if false, will only return records where this field is null.
+   **/
+  isSet?: boolean | null;
+}
+
 /** The order to sort records by when returning from the backend */
 export type SortOrder = "Ascending" | "Descending";
 
+/** How order to sort records by a vector field when returning from the backend */
+export type VectorSortOrder = {
+  /** Sort by the cosine similarity between the stored vector and this given vector. Defaults the sort order to Ascending, which will return the most similar vectors first. */
+  cosineSimilarityTo?: (number | null)[] | null;
+  /** Sort by the L2 distance between the stored vector and this given vector */
+  l2DistanceTo?: (number | null)[] | null;
+  order?: SortOrder | null;
+};
+
 /** A sort for one field by a particular order. Can only include one key for one field to be valid. */
-export type FieldSort = { [field: string]: SortOrder };
+export type FieldSort = { [field: string]: SortOrder | VectorSortOrder | null | undefined };
 
 /**
  * A sort to return backend records by
@@ -514,18 +552,21 @@ export type AnyFieldFilter =
   | MultiEnumFilter
   | IntFilter
   | FloatFilter
-  | BooleanFilter;
+  | BooleanFilter
+  | StateFilter;
 
-export type FilterElement = {
-  /** A list of filter conditions that all must be matched for the record to be returned */
-  AND?: FilterElement[] | null;
-  /** A list of filter conditions where any one within can be matched for the record to be returned */
-  OR?: FilterElement[] | null;
-  /** A list of filter conditions to invert for matching */
-  NOT?: FilterElement[] | null;
+export type FilterElement =
+  | {
+      /** A list of filter conditions that all must be matched for the record to be returned */
+      AND?: FilterElement[] | null;
+      /** A list of filter conditions where any one within can be matched for the record to be returned */
+      OR?: FilterElement[] | null;
+      /** A list of filter conditions to invert for matching */
+      NOT?: FilterElement[] | null;
+    }
+  | Record<string, AnyFieldFilter | FilterElement[] | undefined | null>
+  | null;
 
-  [field: string]: AnyFieldFilter | FilterElement[] | undefined | null;
-};
 /**
  * A filter for filtering the records returned by the backed.
  * Is not specific to any backend model. Look for the backend specific types in the generated API client if you need strong type safety.
@@ -623,7 +664,7 @@ export interface InternalFindListOptions {
    * A string to search for within all the stringlike fields of the records
    * Matches the behavior of the Public API `search` option
    **/
-  search?: string;
+  search?: string | null;
   /**
    * How to sort the returned records
    * Matches the format and behavior of the Public API `sort` option
@@ -633,7 +674,7 @@ export interface InternalFindListOptions {
    *   sort: { publishedAt: "Descending" }
    * }
    **/
-  sort?: AnySort;
+  sort?: AnySort | null;
   /**
    * Only return records matching this filter
    * Matches the format and behavior of the Public API `filter` option
@@ -643,7 +684,7 @@ export interface InternalFindListOptions {
    *   filter: { published: { equals: true } }
    * }
    * */
-  filter?: AnyFilter;
+  filter?: AnyFilter | null;
   /**
    * What fields to retrieve from the API for this API call
    * __Note__: This selection is different than the top level select option -- it just accepts a list of string fields, and not a nested selection. To use a nested selection, use the top level API.
@@ -658,23 +699,23 @@ export interface InternalFindManyOptions extends InternalFindListOptions {
    * Often used in tandem with the `after` option for GraphQL relay-style cursor pagination
    * Matches the pagination style and behavior of the Public API
    **/
-  first?: number;
+  first?: number | null;
   /**
    * The `after` cursor from the GraphQL Relay pagination spec
    * Matches the pagination style and behavior of the Public API
    **/
-  after?: string;
+  after?: string | null;
   /**
    * A count of records to return
    * Often used in tandem with the `before` option for GraphQL relay-style cursor pagination
    * Matches the pagination style and behavior of the Public API
    **/
-  last?: number;
+  last?: number | null;
   /**
    * The `before` cursor from the GraphQL Relay pagination spec
    * Matches the pagination style and behavior of the Public API
    **/
-  before?: string;
+  before?: string | null;
 }
 
 /** The options an internal record mutation takes */
