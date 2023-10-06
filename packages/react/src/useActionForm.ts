@@ -1,7 +1,7 @@
 import type { ActionFunction, AnyModelManager, GadgetRecord } from "@gadgetinc/api-client-core";
 import { camelize } from "@gadgetinc/api-client-core";
 import { useCallback, useEffect, useRef } from "react";
-import type { FieldErrors, UseFormProps } from "react-hook-form";
+import type { FieldErrors, UseFormProps, UseFormReturn } from "react-hook-form";
 import { useForm } from "react-hook-form";
 import { useApi } from "./GadgetProvider.js";
 import { useAction } from "./useAction.js";
@@ -10,6 +10,7 @@ import { useFindOne } from "./useFindOne.js";
 import type { ErrorWrapper, OptionsType } from "./utils.js";
 import { get, set } from "./utils.js";
 
+/** Finds a given record from the backend database by either id or a `{[field: string]: value}` slug */
 const useFindExistingRecord = (
   modelManager: AnyModelManager,
   findBy: string | { [key: string]: any },
@@ -33,9 +34,7 @@ const useFindExistingRecord = (
  * The identity of a record to build a form for
  *
  * - Pass the ID of a record as a string to look up a record by id
- *
  * - Pass a {<fieldValue>: <value>} object to look up a record by some other field. __Note__: a `findBy` function must exist for the field you wish to find the record by.
- *
  *
  * @example
  * // find the user record with ID=123
@@ -47,12 +46,54 @@ const useFindExistingRecord = (
  */
 export type RecordIdentifier = string | { [key: string]: any };
 
+export type UseActionFormResult<
+  GivenOptions extends OptionsType,
+  SchemaT,
+  ActionFunc extends ActionFunction<GivenOptions, any, any, SchemaT, any>,
+  FormContext = any
+> = Omit<UseFormReturn<ActionFunc["variablesType"], FormContext>, "handleSubmit"> & {
+  /**
+   * The model manager used for finding record
+   */
+  modelManager: AnyModelManager;
+  /**
+   * Are any request outstanding, either to fetch the initial data or to submit the action data
+   */
+  fetching: boolean;
+  /**
+   * Is the initial data currently being fetched
+   */
+  fetchingInitialData: boolean;
+  /**
+   * Is the action currently sending data
+   */
+  fetchingActionData: boolean;
+  /**
+   * Any error that occurred during initial data fetching or action submission
+   */
+  error?: ErrorWrapper | Error | null;
+  /**
+   * Function to call to submit the form
+   */
+  submit: () => Promise<void>;
+  /**
+   * Is the form ready for user input
+   */
+  isReady: boolean;
+  /**
+   * Has the submission been sent to the server successfully or not
+   */
+  submissionCompleted: boolean;
+};
+
 /**
  * React hook to manage state for a form that calls a Gadget action. `useActionForm` must be passed an action function from an instance of your generated API client library, like `api.user.create`, `api.blogPost.publish` or `api.someGlobalAction`. `useActionForm` returns a `Form` object from `react-hook-form` which can be used to build great form experiences.
  *
  * `useActionForm` manages the Gadget API calls for the form, and handling validation errors returned by the Gadget backend. If your form is for an existing record, `useActionForm` will also fetch the record from the backend and populate the form with the existing values.
  *
- * `useActionForm` doesn't run the action wne called. To actually submit the form, call the `submit` function on the returned `Form` object.
+ * `useActionForm` doesn't run the action when called. To actually submit the form, call the `submit` function on the returned `Form` object.
+ *
+ * @see https://react-hook-form.com/
  *
  * @param action an action function from a model manager in your application's client, like `api.user.create`
  * @param options action options, like selecting the fields in the result
@@ -61,7 +102,6 @@ export const useActionForm = <
   GivenOptions extends OptionsType, // currently necessary for Options to be a narrow type (e.g., `true` instead of `boolean`)
   SchemaT,
   ActionFunc extends ActionFunction<GivenOptions, any, any, SchemaT, any>,
-  Options extends ActionFunc["optionsType"],
   FormContext = any
 >(
   action: ActionFunc,
@@ -92,7 +132,7 @@ export const useActionForm = <
      */
     onError?: (error: Error | FieldErrors<ActionFunc["variablesType"]>) => void;
   }
-) => {
+): UseActionFormResult<GivenOptions, SchemaT, ActionFunc, FormContext> => {
   const api = useApi();
   const isForExistingRecord = !!options?.record;
   const hasSetInitialValues = useRef<boolean>(!isForExistingRecord);
@@ -188,6 +228,8 @@ export const useActionForm = <
     ...formHook,
     modelManager,
     fetching: findResult.fetching || actionResult.fetching,
+    fetchingInitialData: findResult.fetching,
+    fetchingActionData: actionResult.fetching,
     error: findResult.error || actionResult.error,
     submit,
     isReady,

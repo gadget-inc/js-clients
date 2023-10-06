@@ -1,16 +1,16 @@
 import type { GadgetRecord } from "@gadgetinc/api-client-core";
-import { act, renderHook } from "@testing-library/react";
+import { act, fireEvent, render, renderHook, screen } from "@testing-library/react";
 import type { IsExact } from "conditional-type-checks";
 import { assert } from "conditional-type-checks";
 import React from "react";
 import type { AnyVariables } from "urql";
-import { Provider } from "../src/GadgetProvider.js";
 import { useAction } from "../src/index.js";
+import { useActionForm } from "../src/useActionForm.js";
 import type { ErrorWrapper } from "../src/utils.js";
 import { relatedProductsApi, superAuthApi } from "./apis.js";
 import { MockClientWrapper, createMockUrqlClient, mockUrqlClient } from "./testWrappers.js";
 
-describe("useAction", () => {
+describe("useActionForm", () => {
   // these functions are typechecked but never run to avoid actually making API calls
   const _TestUseActionCanRunUpdateActionsWithVariables = () => {
     const [_, mutate] = useAction(relatedProductsApi.user.update);
@@ -104,29 +104,48 @@ describe("useAction", () => {
     }
   };
 
-  test("returns no data, not fetching, and no error when the component is first mounted", () => {
-    const { result } = renderHook(() => useAction(relatedProductsApi.user.update), { wrapper: MockClientWrapper(relatedProductsApi) });
+  const ExampleUserCreateForm = () => {
+    const {
+      register,
+      submit,
+      fetching,
+      submissionCompleted,
+      formState: { errors },
+    } = useActionForm(relatedProductsApi.user.create);
 
-    expect(result.current[0].data).toBeFalsy();
-    expect(result.current[0].fetching).toBe(false);
-    expect(result.current[0].error).toBeFalsy();
+    return (
+      <>
+        {submissionCompleted ? (
+          <span data-testid="success">Successfully submitted</span>
+        ) : (
+          <form onSubmit={() => void submit()} data-testid="form">
+            {Object.keys(errors).length > 0 && <span data-testid="errors">{JSON.stringify(errors)}</span>}
+            <input {...register("user.email")} data-testid="email" />
+            {fetching && <span data-testid="email">Saving...</span>}
+            <button type="submit">Submit</button>
+          </form>
+        )}
+      </>
+    );
+  };
+
+  test("returns no data, not fetching, and no error when the component is first mounted", () => {
+    const { result } = renderHook(() => useActionForm(relatedProductsApi.user.create), { wrapper: MockClientWrapper(relatedProductsApi) });
+
+    expect(result.current.isReady).toBe(true);
+    expect(result.current.fetching).toBe(false);
+    expect(result.current.error).toBeFalsy();
   });
 
-  test("returns no data, fetching=true, and no error when the mutation is run, and then the successful data if the mutation succeeds", async () => {
-    const { result } = renderHook(() => useAction(relatedProductsApi.user.update), { wrapper: MockClientWrapper(relatedProductsApi) });
+  test("allows mounting within a component, filling in form values, and submitting to the server", async () => {
+    render(<ExampleUserCreateForm />, { wrapper: MockClientWrapper(relatedProductsApi) });
 
-    let mutationPromise: any;
-    act(() => {
-      mutationPromise = result.current[1]({ id: "123", user: { email: "test@test.com" } });
-    });
+    await act(() => fireEvent.change(screen.getByTestId("email"), { target: { value: "foo@foobar.com" } }));
+    await act(() => fireEvent.submit(screen.getByTestId("form")));
 
-    expect(result.current[0].data).toBeFalsy();
-    expect(result.current[0].fetching).toBe(true);
-    expect(result.current[0].error).toBeFalsy();
+    expect(screen.getByTestId("loading")).toBeDefined();
 
-    expect(mockUrqlClient.executeMutation).toBeCalledTimes(1);
-
-    mockUrqlClient.executeMutation.pushResponse("updateUser", {
+    mockUrqlClient.executeMutation.pushResponse("createUser", {
       data: {
         updateUser: {
           success: true,
@@ -140,18 +159,7 @@ describe("useAction", () => {
       hasNext: false,
     });
 
-    await act(async () => {
-      const promiseResult = await mutationPromise;
-      expect(promiseResult.data!.id).toEqual("123");
-      expect(promiseResult.data!.email).toEqual("test@test.com");
-      expect(promiseResult.fetching).toBe(false);
-      expect(promiseResult.error).toBeFalsy();
-    });
-
-    expect(result.current[0].data!.id).toEqual("123");
-    expect(result.current[0].data!.email).toEqual("test@test.com");
-    expect(result.current[0].fetching).toBe(false);
-    expect(result.current[0].error).toBeFalsy();
+    expect(screen.getByTestId("success")).toBeDefined();
   });
 
   test("returns an error when the mutation is run and the server responds with success: false", async () => {

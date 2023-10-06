@@ -163,6 +163,9 @@ importers:
       '@gadget-client/blog':
         specifier: ^1.46.0
         version: 1.46.0
+      '@gadget-client/js-clients-test':
+        specifier: ^1.464.0
+        version: 1.464.0
       '@gadgetinc/react':
         specifier: workspace:*
         version: link:../react
@@ -197,6 +200,9 @@ importers:
       react-fast-compare:
         specifier: ^3.2.2
         version: 3.2.2
+      react-hook-form:
+        specifier: ^7.47.0
+        version: 7.47.0(react@18.2.0)
       urql:
         specifier: ^4.0.4
         version: 4.0.4(graphql@16.8.1)(react@18.2.0)
@@ -1185,6 +1191,12 @@ packages:
     dependencies:
       '@gadgetinc/api-client-core': link:packages/api-client-core
     dev: true
+
+  /@gadget-client/js-clients-test@1.464.0:
+    resolution: {integrity: sha1-zDBzQ/rJ6KAqEG4lfqQz9qsJZ10=, tarball: https://registry.gadget.dev/npm/_/tarball/57882/114412/5395}
+    dependencies:
+      '@gadgetinc/api-client-core': link:packages/api-client-core
+    dev: false
 
   /@gadget-client/related-products-example@1.853.0:
     resolution: {integrity: sha1-sVae38NnlyRsaj7WzQvH7kfyQHY=, tarball: https://registry.gadget.dev/npm/_/tarball/1268/1361/5460}
@@ -5624,6 +5636,15 @@ packages:
 
   /react-fast-compare@3.2.2:
     resolution: {integrity: sha512-nsO+KSNgo1SbJqJEYRE9ERzo7YtYbou/OqjSQKxV7jcKox7+usiUVZOAC+XnDOABXggQTno0Y1CpVnuWEc1boQ==}
+    dev: false
+
+  /react-hook-form@7.47.0(react@18.2.0):
+    resolution: {integrity: sha512-F/TroLjTICipmHeFlMrLtNLceO2xr1jU3CyiNla5zdwsGUGu2UOxxR4UyJgLlhMwLW/Wzp4cpJ7CPfgJIeKdSg==}
+    engines: {node: '>=12.22.0'}
+    peerDependencies:
+      react: ^16.8.0 || ^17 || ^18
+    dependencies:
+      react: 18.2.0
     dev: false
 
   /react-is@16.13.1:
