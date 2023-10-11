@@ -22,7 +22,7 @@
   "scripts": {
     "typecheck": "tsc --noEmit",
     "build": "rm -rf dist && tsc -b tsconfig.cjs.json tsconfig.esm.json && echo '{\"type\": \"commonjs\"}' > dist/cjs/package.json && echo '{\"type\": \"module\"}' > dist/esm/package.json",
-    "watch": "rm -rf dist && tsc --watch --preserveWatchOutput",
+    "watch": "tsc --watch --preserveWatchOutput",
     "prepublishOnly": "pnpm build",
     "prerelease": "gitpkg publish"
   },
