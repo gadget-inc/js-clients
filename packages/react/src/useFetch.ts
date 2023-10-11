@@ -140,7 +140,8 @@ export function useFetch<T = string>(path: string, options?: FetchHookOptions): 
 
   const send = useCallback(
     async (sendOptions?: Partial<FetchHookOptions>): Promise<T> => {
-      controller.current?.abort("useFetch is starting a new request, aborting the previous one");
+      controller.current?.abort("useFetch is starting a new request");
+
       const abortContoller = new AbortController();
       controller.current = abortContoller;
 
@@ -151,9 +152,8 @@ export function useFetch<T = string>(path: string, options?: FetchHookOptions): 
 
       const mergedOptions = { ...memoizedOptions, onStreamComplete, ...sendOptions };
 
-      // add implicit headers from options, being careful not to mutate any inputs
       if (mergedOptions.json) {
-        mergedOptions.headers = { ...mergedOptions.headers };
+        mergedOptions.headers ??= {};
         (mergedOptions.headers as any)["accept"] ??= "application/json";
       }
 
@@ -238,25 +238,16 @@ export function useFetch<T = string>(path: string, options?: FetchHookOptions): 
     [connection, memoizedOptions, path]
   );
 
-  // track if we're mounted or not
   useEffect(() => {
     mounted.current = true;
-
-    return () => {
-      mounted.current = false;
-    };
-  }, []);
-
-  // execute the initial request on mount if needed
-  useEffect(() => {
     if (startRequestOnMount) {
       void send().catch(() => {
-        // error will be reported via the return value of the hook
+        // report error via return state
       });
     }
 
-    // abort if the component is unmounted, or if one of the key elements of the request changes such that we don't want an outstanding request's result anymore
     return () => {
+      mounted.current = false;
       controller.current?.abort();
     };
   }, [path, startRequestOnMount, send]);

@@ -41,7 +41,6 @@ export type MockOperationFn = jest.Mock & {
 export type MockFetchFn = jest.Mock & {
   requests: { args: any[]; resolve: (response: Response) => void; reject: (error: Error) => void }[];
   pushResponse: (response: Response) => Promise<void>;
-  reportAbort: () => Promise<void>;
 };
 
 export interface MockUrqlClient extends Client {
@@ -135,28 +134,7 @@ const newMockFetchFn = () => {
       if (!request) {
         throw new Error("no requests started for response pushing");
       }
-      const signal = request.args[1]?.signal;
-      if (signal && signal.aborted) {
-        throw new Error("signal on request has been aborted, can't respond to a mock fetch that has been aborted");
-      }
-
       await request.resolve(response);
-    });
-  };
-  fn.reportAbort = async () => {
-    await act(async () => {
-      const request = requests.shift();
-      if (!request) {
-        throw new Error("no requests started for response pushing");
-      }
-      const signal = request.args[1]?.signal;
-      if (!signal) {
-        throw new Error("no signal on request, can't report an abort that has happened");
-      }
-      if (!signal.aborted) {
-        throw new Error("signal on request has not been aborted, can't report an abort that has happened");
-      }
-      await request.reject(new Error("AbortError: The user aborted a request."));
     });
   };
 
