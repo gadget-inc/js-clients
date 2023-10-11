@@ -19,8 +19,8 @@ importers:
         specifier: ^1.104.0
         version: 1.104.0
       '@gadget-client/related-products-example':
-        specifier: ^1.853.0
-        version: 1.853.0
+        specifier: ^1.854.0
+        version: 1.854.0
       '@gadget-client/super-auth':
         specifier: ^1.37.0
         version: 1.37.0
@@ -210,6 +210,9 @@ importers:
       '@testing-library/react':
         specifier: ^13.4.0
         version: 13.4.0(react-dom@18.2.0)(react@18.2.0)
+      '@testing-library/user-event':
+        specifier: ^14.5.1
+        version: 14.5.1(@testing-library/dom@8.17.1)
       '@types/jest':
         specifier: ^29.5.5
         version: 29.5.5
@@ -1186,8 +1189,8 @@ packages:
       '@gadgetinc/api-client-core': link:packages/api-client-core
     dev: true
 
-  /@gadget-client/related-products-example@1.853.0:
-    resolution: {integrity: sha1-sVae38NnlyRsaj7WzQvH7kfyQHY=, tarball: https://registry.gadget.dev/npm/_/tarball/1268/1361/5460}
+  /@gadget-client/related-products-example@1.854.0:
+    resolution: {integrity: sha1-yEytaM9x8otBV06i0Cw/F6zsglo=, tarball: https://registry.gadget.dev/npm/_/tarball/1268/1361/5562}
     dependencies:
       '@gadgetinc/api-client-core': link:packages/api-client-core
     dev: true
@@ -1949,6 +1952,15 @@ packages:
       '@types/react-dom': 18.2.4
       react: 18.2.0
       react-dom: 18.2.0(react@18.2.0)
+    dev: true
+
+  /@testing-library/user-event@14.5.1(@testing-library/dom@8.17.1):
+    resolution: {integrity: sha512-UCcUKrUYGj7ClomOo2SpNVvx4/fkd/2BbIHDCle8A0ax+P3bU7yJwDBDrS6ZwdTMARWTGODX1hEsCcO+7beJjg==}
+    engines: {node: '>=12', npm: '>=6'}
+    peerDependencies:
+      '@testing-library/dom': '>=7.21.4'
+    dependencies:
+      '@testing-library/dom': 8.17.1
     dev: true
 
   /@tootallnate/once@2.0.0:

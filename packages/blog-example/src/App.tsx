@@ -23,6 +23,33 @@ function ExampleFetch() {
   );
 }
 
+function ExampleFetchInUseEffect() {
+  const [history, setHistory] = useState<any[]>([]);
+  const [result, send] = useFetch("https://dummyjson.com/products/add", {
+    method: "POST",
+    body: JSON.stringify({ title: "BMW Pencil" }),
+    headers: {
+      "content-type": "application/json",
+    },
+    json: true,
+  });
+
+  useEffect(() => {
+    setHistory([...history, result]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [result]);
+
+  return (
+    <section className="card">
+      <h2>Example Fetch from useEffect</h2>
+      <code>
+        <pre>{JSON.stringify(history, null, 2)}</pre>
+      </code>
+      <button onClick={() => void send()}>Fetch</button>
+    </section>
+  );
+}
+
 function ExampleFindMany() {
   const [history, setHistory] = useState<any[]>([]);
   const [result, send] = useFindMany(api.post);
@@ -83,12 +110,15 @@ function ExampleSuspenseInner() {
 
 function App() {
   return (
-    <div className="App">
-      <h1>Vite + Gadget</h1>
-      <ExampleFetch />
-      <ExampleFindMany />
-      <ExampleSuspense />
-    </div>
+    <Suspense fallback={<>Suspended...</>}>
+      <div className="App">
+        <h1>Vite + Gadget</h1>
+        <ExampleFetch />
+        <ExampleFindMany />
+        <ExampleSuspense />
+        <ExampleFetchInUseEffect />
+      </div>
+    </Suspense>
   );
 }
 
