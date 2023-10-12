@@ -89,6 +89,7 @@ export const useAction = <
           // Adding the model's additional typename ensures document cache will properly refresh, regardless of whether __typename was selected (and sometimes we can't even select it, like delete actions!)
           additionalTypenames: [...(context?.additionalTypenames ?? []), capitalizeIdentifier(action.modelApiIdentifier)],
         });
+
         return processResult({ fetching: false, ...result }, action);
       },
       [action, runMutation]
