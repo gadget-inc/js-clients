@@ -15,3 +15,7 @@ export const base64 = (str: string) => Buffer.from(str).toString("base64");
 export function expectValidGraphQLQuery(query: string) {
   parse(query);
 }
+
+export const asyncIterableToIterator = <T>(iterator: AsyncIterable<T>) => {
+  return iterator[Symbol.asyncIterator]();
+};
