@@ -463,6 +463,67 @@ describe("useAction", () => {
     });
   });
 
+  test("generates correct mutation and variables if there is an ambiguous field", async () => {
+    let variables: AnyVariables;
+
+    const client = createMockUrqlClient({
+      mutationAssertions: (request) => {
+        variables = request.variables;
+      },
+    });
+
+    const wrapper = (props: { children: React.ReactNode }) => <Provider value={client}>{props.children}</Provider>;
+
+    const { result } = renderHook(() => useAction(relatedProductsApi.ambiguous.update), {
+      wrapper,
+    });
+
+    let mutationPromise: any;
+    act(() => {
+      mutationPromise = result.current[1]({ id: "123", ambiguous: { ambiguous: "foo", booleanField: true } });
+    });
+
+    expect(client.executeMutation).toBeCalledTimes(1);
+
+    client.executeMutation.pushResponse("updateAmbiguous", {
+      data: {
+        updateAmbiguous: {
+          success: true,
+          ambiguous: {
+            id: "123",
+            ambiguous: "foo",
+            booleanField: true,
+          },
+        },
+      },
+      stale: false,
+      hasNext: false,
+    });
+
+    await act(async () => {
+      const promiseResult = await mutationPromise;
+      expect(promiseResult.data).toMatchInlineSnapshot(`
+        {
+          "ambiguous": "foo",
+          "booleanField": true,
+          "id": "123",
+        }
+      `);
+      expect(promiseResult.fetching).toBe(false);
+      expect(promiseResult.error).toBeFalsy();
+    });
+
+    expect(variables).toMatchInlineSnapshot(`
+      {
+        "ambiguous": {
+          "ambiguous": "foo",
+          "booleanField": true,
+        },
+        "id": "123",
+      }
+    `);
+  });
+
   test("should throw if called without a model api identifier and there is an ambiguous field", async () => {
     let caughtError = null;
 

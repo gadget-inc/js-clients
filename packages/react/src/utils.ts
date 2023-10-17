@@ -328,7 +328,9 @@ export const disambiguateActionVariables = (
 ) => {
   variables ??= {};
   if (action.hasAmbiguousIdentifier) {
-    if (Object.keys(variables).some((key) => !action.paramOnlyVariables?.includes(key) && key !== action.modelApiIdentifier)) {
+    if (
+      Object.keys(variables).some((key) => key !== "id" && !action.paramOnlyVariables?.includes(key) && key !== action.modelApiIdentifier)
+    ) {
       throw Error(`Invalid arguments found in variables. Did you mean to use ({ ${action.modelApiIdentifier}: { ... } })?`);
     }
   }
@@ -363,4 +365,36 @@ export const disambiguateActionVariables = (
   }
 
   return newVariables;
+};
+
+/**
+ * Get a list of path segments from a dot-separated path
+ */
+const pathToPathArray = (path: string | string[]) => {
+  // Check if path is string or array. Regex : ensure that we do not have '.' and brackets.
+  // Regex explained: https://regexr.com/58j0k
+  // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+  return Array.isArray(path) ? path : path.match(/([^[.\]])+/g)!;
+};
+
+/**
+ * Get a dot-separated path from an object
+ * From https://youmightnotneed.com/lodash
+ */
+export const get = (obj: any, path: string | string[]) => {
+  if (!path) return undefined;
+  return pathToPathArray(path).reduce((prevObj, key) => prevObj && prevObj[key], obj);
+};
+
+/**
+ * Set a dot-separated path to a value on an object
+ * From https://youmightnotneed.com/lodash
+ */
+export const set = (obj: any, path: string, value: any) => {
+  const pathArray = pathToPathArray(path);
+  pathArray.reduce((acc, key, i) => {
+    if (acc[key] === undefined) acc[key] = {};
+    if (i === pathArray.length - 1) acc[key] = value;
+    return acc[key];
+  }, obj);
 };

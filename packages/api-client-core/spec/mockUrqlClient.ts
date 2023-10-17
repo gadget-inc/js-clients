@@ -74,8 +74,10 @@ const newMockOperationFn = (assertions?: (request: GraphQLRequest) => void) => {
 
   const fn = jest.fn((request: GraphQLRequest, options?: Partial<OperationContext>) => {
     const { query } = request;
+
     const fetchOptions = options?.fetchOptions;
     const key = graphqlDocumentName(query) ?? "unknown";
+
     subjects[key] ??= makeSubject<OperationResult>();
 
     if (fetchOptions && typeof fetchOptions != "function") {
@@ -99,6 +101,7 @@ const newMockOperationFn = (assertions?: (request: GraphQLRequest) => void) => {
     if (!subjects[key]) {
       throw new Error(`No mock client subject started for key ${key}, options are ${Object.keys(subjects).join(", ")}`);
     }
+
     act(() => {
       subjects[key].next({
         operation: null as any,

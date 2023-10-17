@@ -1,6 +1,6 @@
 {
   "name": "@gadgetinc/react",
-  "version": "0.14.11",
+  "version": "0.14.12",
   "files": [
     "README.md",
     "dist/**/*"
@@ -30,6 +30,7 @@
   "dependencies": {
     "@gadgetinc/api-client-core": "^0.15.11",
     "react-fast-compare": "^3.2.2",
+    "react-hook-form": "^7.46.1",
     "urql": "^4.0.4"
   },
   "resolutions": {
