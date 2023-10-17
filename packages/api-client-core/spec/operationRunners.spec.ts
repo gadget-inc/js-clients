@@ -1,17 +1,21 @@
+import { diff } from "@n1ru4l/json-patch-plus";
 import { CombinedError } from "@urql/core";
+import { GraphQLError } from "graphql";
 import nock from "nock";
 import { BackgroundActionHandle } from "../src/BackgroundActionHandle.js";
-import type { GadgetErrorGroup } from "../src/index.js";
+import type { AnyModelManager, GadgetErrorGroup } from "../src/index.js";
 import {
   GadgetConnection,
   actionRunner,
   backgroundActionResultRunner,
   enqueueActionRunner,
+  findManyRunner,
   findOneByFieldRunner,
   findOneRunner,
 } from "../src/index.js";
+import { asyncIterableToIterator, waitForExpectationToPass } from "./helpers.js";
 import { MockBulkFlipDownWidgetsAction, MockBulkUpdateWidgetAction, MockGlobalAction, MockWidgetCreateAction } from "./mockActions.js";
-import { mockUrqlClient } from "./mockUrqlClient.js";
+import { mockGraphQLWSClient, mockUrqlClient } from "./mockUrqlClient.js";
 
 nock.disableNetConnect();
 
@@ -1181,6 +1185,224 @@ describe("operationRunners", () => {
       await expect(promise).rejects.toThrowErrorMatchingInlineSnapshot(
         `"[GraphQL] GGT_PERMISSION_DENIED: Permission denied to access this resource."`
       );
+    });
+  });
+
+  describe("live", () => {
+    beforeEach(() => {
+      connection = new GadgetConnection({ endpoint: "https://someapp.gadget.app" });
+      jest.replaceProperty(connection, "baseSubscriptionClient", mockGraphQLWSClient as any);
+    });
+
+    describe("findOneRunner", () => {
+      test("can run a live findOne find", async () => {
+        const iterator = asyncIterableToIterator(
+          findOneRunner<{ id: string; name: string }, { live: true }>(
+            {
+              connection,
+            },
+            "widget",
+            "123",
+            { id: true, name: true },
+            "widget",
+            { live: true },
+            true
+          )
+        );
+
+        const firstValuePromise = iterator.next();
+
+        await waitForExpectationToPass(() => expect(mockGraphQLWSClient.subscribe.subscriptions).toHaveLength(1));
+
+        const subscription = mockGraphQLWSClient.subscribe.subscriptions[0];
+        expect(subscription.payload.query).toContain("@live");
+
+        subscription.push({
+          data: {
+            widget: {
+              id: "123",
+              name: "test widget",
+            },
+          },
+          revision: 1,
+        } as any);
+
+        let { value } = await firstValuePromise;
+        expect(value.id).toEqual("123");
+        expect(value.name).toEqual("test widget");
+
+        subscription.push({
+          patch: {
+            widget: {
+              name: [null, "a new name"],
+            },
+          },
+          revision: 2,
+        } as any);
+
+        ({ value } = await iterator.next());
+        expect(value.id).toEqual("123");
+        expect(value.name).toEqual("a new name");
+      });
+
+      test("can run a live findOne find that returns an error", async () => {
+        const iterator = asyncIterableToIterator(
+          findOneRunner<{ id: string; name: string }, { live: true }>(
+            {
+              connection,
+            },
+            "widget",
+            "123",
+            { id: true, name: true },
+            "widget",
+            { live: true },
+            true
+          )
+        );
+
+        const firstValuePromise = iterator.next();
+
+        await waitForExpectationToPass(() => expect(mockGraphQLWSClient.subscribe.subscriptions).toHaveLength(1));
+
+        const subscription = mockGraphQLWSClient.subscribe.subscriptions[0];
+        expect(subscription.payload.query).toContain("@live");
+
+        subscription.push({
+          errors: [{ message: "backend error encountered processing" }],
+        } as any);
+
+        await expect(firstValuePromise).rejects.toThrowErrorMatchingInlineSnapshot(`"[GraphQL] backend error encountered processing"`);
+      });
+
+      test("can run a live findOne that starts with working data then later returns an error", async () => {
+        const iterator = asyncIterableToIterator(
+          findOneRunner<{ id: string; name: string }, { live: true }>(
+            {
+              connection,
+            },
+            "widget",
+            "123",
+            { id: true, name: true },
+            "widget",
+            { live: true },
+            true
+          )
+        );
+
+        const firstValuePromise = iterator.next();
+
+        await waitForExpectationToPass(() => expect(mockGraphQLWSClient.subscribe.subscriptions).toHaveLength(1));
+
+        const subscription = mockGraphQLWSClient.subscribe.subscriptions[0];
+        expect(subscription.payload.query).toContain("@live");
+
+        subscription.push({
+          data: {
+            widget: {
+              id: "123",
+              name: "test widget",
+            },
+          },
+          revision: 1,
+        } as any);
+
+        expect(await firstValuePromise).toBeTruthy();
+
+        const nextValuePromise = iterator.next();
+
+        subscription.push({
+          data: null,
+          errors: [new GraphQLError("backend exploded")],
+        });
+
+        await expect(nextValuePromise).rejects.toThrowErrorMatchingInlineSnapshot(`"[GraphQL] backend exploded"`);
+      });
+    });
+
+    describe("findManyRunner", () => {
+      test("can run a live findMany", async () => {
+        const iterator = asyncIterableToIterator(
+          findManyRunner<{ id: string; name: string }, { live: true }>(
+            { connection } as AnyModelManager,
+            "widgets",
+            { id: true, name: true },
+            "widget",
+            { live: true },
+            true
+          )
+        );
+
+        const firstValuePromise = iterator.next();
+        await waitForExpectationToPass(() => expect(mockGraphQLWSClient.subscribe.subscriptions).toHaveLength(1));
+
+        const subscription = mockGraphQLWSClient.subscribe.subscriptions[0];
+        expect(subscription.payload.query).toContain("@live");
+
+        const initial = {
+          widgets: {
+            edges: [
+              {
+                node: {
+                  id: "123",
+                  name: "test 1",
+                },
+              },
+              {
+                node: {
+                  id: "456",
+                  name: "test 2",
+                },
+              },
+            ],
+          },
+        };
+
+        subscription.push({
+          data: initial,
+          revision: 1,
+        } as any);
+
+        let { value } = await firstValuePromise;
+        expect(value[0].id).toEqual("123");
+        expect(value[1].id).toEqual("456");
+
+        const next = {
+          widgets: {
+            edges: [
+              {
+                node: {
+                  id: "123",
+                  name: "a new name",
+                },
+              },
+              {
+                node: {
+                  id: "456",
+                  name: "test 2",
+                },
+              },
+              {
+                node: {
+                  id: "789",
+                  name: null,
+                },
+              },
+            ],
+          },
+        };
+
+        subscription.push({
+          patch: diff({ left: initial, right: next }),
+          revision: 2,
+        } as any);
+
+        ({ value } = await iterator.next());
+        expect(value[0].id).toEqual("123");
+        expect(value[0].name).toEqual("a new name");
+        expect(value[1].name).toEqual("test 2");
+        expect(value[2].id).toEqual("789");
+        expect(value[2].name).toEqual(null);
+      });
     });
   });
 });

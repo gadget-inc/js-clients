@@ -2,9 +2,10 @@ import type { GadgetRecord, RecordShape } from "./GadgetRecord.js";
 import type { GadgetRecordList } from "./GadgetRecordList.js";
 import type { LimitToKnownKeys, VariablesOptions } from "./types.js";
 
-export type AsyncRecord<T extends RecordShape> = Promise<GadgetRecord<T>>;
-export type AsyncNullableRecord<T extends RecordShape> = Promise<GadgetRecord<T> | null>;
-export type AsyncRecordList<T extends RecordShape> = Promise<GadgetRecordList<T>>;
+export type PromiseOrLiveIterator<T> = Promise<T> | AsyncIterable<T>;
+export type AsyncRecord<T extends RecordShape> = PromiseOrLiveIterator<GadgetRecord<T>>;
+export type AsyncNullableRecord<T extends RecordShape> = PromiseOrLiveIterator<GadgetRecord<T> | null>;
+export type AsyncRecordList<T extends RecordShape> = PromiseOrLiveIterator<GadgetRecordList<T>>;
 
 export interface FindOneFunction<OptionsT, SelectionT, SchemaT, DefaultsT> {
   <Options extends OptionsT>(fieldValue: string, options?: LimitToKnownKeys<Options, OptionsT>): AsyncRecord<any>;

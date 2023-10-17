@@ -40,6 +40,7 @@
     "tiny-graphql-query-compiler": "^0.2.2",
     "tslib": "^2.6.2",
     "type-fest": "^3.3.0",
+    "wonka": "^6.3.2",
     "ws": "^8.17.0"
   },
   "devDependencies": {
@@ -51,7 +52,6 @@
     "p-retry": "^4.5.0",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
-    "tiny-graphql-query-compiler": "workspace:*",
     "typescript": "5.4.5"
   }
 }

@@ -1,4 +1,6 @@
 import { parse } from "graphql";
+import { defaults } from "lodash";
+import pRetry from "p-retry";
 
 export const withWindowMissingSupport = (key: keyof typeof window, run: () => void) => {
   const old = window[key];
@@ -27,3 +29,21 @@ export function delayPromise<T>(wait: number, value?: T, error?: Error): Promise
     }, wait);
   });
 }
+
+export const asyncIterableToIterator = <T>(iterator: AsyncIterable<T>) => {
+  return iterator[Symbol.asyncIterator]();
+};
+
+/**
+ * Wait for a given expectation to pass
+ * Useful as a more robust alternative to `sleep` in tests, where we want to wait for something to happen, but we don't know how long it will take
+ */
+export const waitForExpectationToPass = async (run: () => void | Promise<void>, options?: pRetry.Options) => {
+  await pRetry(
+    run,
+    defaults(options, {
+      attempts: 10,
+      maxTimeout: 1000,
+    })
+  );
+};
