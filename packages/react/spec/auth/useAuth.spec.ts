@@ -1,12 +1,12 @@
 import { renderHook } from "@testing-library/react";
 import { useAuth } from "../../src/auth/useAuth.js";
-import { noUserModelApi, superAuthApi } from "../apis.js";
+import { fullAuthApi, noUserModelApi } from "../apis.js";
 import { MockClientWrapper } from "../testWrappers.js";
 import { expectMockSignedInUser, expectMockSignedOutUser, mockInternalServerError, mockNetworkError } from "../utils.js";
 
 describe("useAuth", () => {
   test("returns the correct auth state as generic GadgetRecords if no api client is provided", () => {
-    const { result, rerender } = renderHook(() => useAuth(), { wrapper: MockClientWrapper(superAuthApi) });
+    const { result, rerender } = renderHook(() => useAuth(), { wrapper: MockClientWrapper(fullAuthApi) });
     expectMockSignedInUser();
 
     rerender();
@@ -16,7 +16,7 @@ describe("useAuth", () => {
   });
 
   test("returns the correct auth state if the user is signed in", async () => {
-    const { result, rerender } = renderHook(() => useAuth(superAuthApi), { wrapper: MockClientWrapper(superAuthApi) });
+    const { result, rerender } = renderHook(() => useAuth(fullAuthApi), { wrapper: MockClientWrapper(fullAuthApi) });
 
     expectMockSignedInUser();
 
@@ -27,7 +27,7 @@ describe("useAuth", () => {
   });
 
   test("returns the correct auth state if the user is signed out", async () => {
-    const { result, rerender } = renderHook(() => useAuth(superAuthApi), { wrapper: MockClientWrapper(superAuthApi) });
+    const { result, rerender } = renderHook(() => useAuth(fullAuthApi), { wrapper: MockClientWrapper(fullAuthApi) });
 
     expectMockSignedOutUser();
 
@@ -39,7 +39,7 @@ describe("useAuth", () => {
 
   test("it throws when the server responds with an error", async () => {
     expect(() => {
-      const { rerender } = renderHook(() => useAuth(superAuthApi), { wrapper: MockClientWrapper(superAuthApi) });
+      const { rerender } = renderHook(() => useAuth(fullAuthApi), { wrapper: MockClientWrapper(fullAuthApi) });
 
       mockInternalServerError();
 
@@ -52,7 +52,7 @@ describe("useAuth", () => {
 
   test("it throws when request fails to complete", async () => {
     expect(() => {
-      const { rerender } = renderHook(() => useAuth(superAuthApi), { wrapper: MockClientWrapper(superAuthApi) });
+      const { rerender } = renderHook(() => useAuth(fullAuthApi), { wrapper: MockClientWrapper(fullAuthApi) });
 
       mockNetworkError();
 

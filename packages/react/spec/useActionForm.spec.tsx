@@ -2,7 +2,7 @@ import { act, renderHook } from "@testing-library/react";
 import { assert, type IsExact } from "conditional-type-checks";
 import { CombinedError } from "urql";
 import { useActionForm } from "../src/useActionForm.js";
-import { bulkExampleApi, relatedProductsApi } from "./apis.js";
+import { bulkExampleApi, fullAuthApi, relatedProductsApi } from "./apis.js";
 import { MockClientWrapper, mockUrqlClient } from "./testWrappers.js";
 
 describe("useActionForm", () => {
@@ -76,7 +76,11 @@ describe("useActionForm", () => {
   };
 
   const _TestUseActionFormCanTypeGlobalActions = async () => {
-    const { submit, setValue } = useActionForm(bulkExampleApi.flipAll, {
+    const {
+      submit,
+      setValue,
+      formState: { errors },
+    } = useActionForm(bulkExampleApi.flipAll, {
       onSuccess: (data) => {
         data.foo;
         data.bar;
@@ -98,6 +102,44 @@ describe("useActionForm", () => {
     }
 
     assert<IsExact<typeof fetching, boolean>>(true);
+
+    errors?.why?.message;
+  };
+
+  const _TestUseActionFormTypesWhenDefaultValuesDifferFromTriggerInputs = async () => {
+    const {
+      register,
+      formState: { errors },
+    } = useActionForm(fullAuthApi.user.changePassword, {
+      defaultValues: { id: "123", email: "test@test.com" },
+    });
+
+    register("currentPassword");
+    register("newPassword");
+    errors.user?.password?.message;
+  };
+
+  const _TestUseActionFormTypesWhenAdditionalFields = async () => {
+    const {
+      register,
+      watch,
+      formState: { errors },
+    } = useActionForm<
+      (typeof fullAuthApi.user.resetPassword)["optionsType"],
+      (typeof fullAuthApi.user.resetPassword)["schemaType"],
+      typeof fullAuthApi.user.resetPassword,
+      { confirmPassword?: string }
+    >(fullAuthApi.user.resetPassword, {
+      defaultValues: { code: "abc123" },
+    });
+
+    register("password");
+    register("confirmPassword", {
+      validate: (value) => value === watch("password") || "The passwords do not match",
+    });
+
+    errors?.user?.password?.message;
+    errors?.confirmPassword;
   };
 
   test("can be used with a create action", async () => {

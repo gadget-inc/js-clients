@@ -106,13 +106,41 @@ type UseActionFormSubmit<F extends ActionFunction<any, any, any, any, any> | Glo
   event?: React.BaseSyntheticEvent<object, any, any> | undefined
 ) => Promise<UseActionFormHookState<F>>;
 
+type ExcludeUndefined<T> = T extends undefined ? never : T;
+
+type ServerSideError<F extends ActionFunction<any, any, any, any, any> | GlobalActionFunction<any>> = F extends ActionFunction<
+  any,
+  any,
+  any,
+  any,
+  any
+>
+  ? {
+      [key in F["modelApiIdentifier"]]?: {
+        [key in
+          | keyof F["selectionType"]
+          | keyof ExcludeUndefined<F["variablesType"]>
+          | ExcludeUndefined<F["modelApiIdentifier"] extends "user" ? "password" : never>]?: { message: string };
+      };
+    }
+  : { [key in keyof ExcludeUndefined<F["variablesType"]>]: { message: string } };
+
+type UseActionFormState<
+  F extends ActionFunction<any, any, any, any, any> | GlobalActionFunction<any>,
+  FormVariables extends FieldValues,
+  FormContext
+> = Omit<UseFormReturn<FormVariables, FormContext>["formState"], "errors"> & {
+  errors: UseFormReturn<FormVariables, FormContext>["formState"]["errors"] & ServerSideError<F>;
+};
+
 export type UseActionFormResult<
   GivenOptions extends OptionsType,
   SchemaT,
   ActionFunc extends ActionFunction<GivenOptions, any, any, SchemaT, any> | GlobalActionFunction<any>,
   FormVariables extends FieldValues,
   FormContext = any
-> = Omit<UseFormReturn<FormVariables, FormContext>, "handleSubmit"> & {
+> = Omit<UseFormReturn<FormVariables, FormContext>, "handleSubmit" | "formState"> & {
+  formState: UseActionFormState<ActionFunc, FormVariables, FormContext>;
   /**
    * Any error that occurred during initial data fetching or action submission
    */
@@ -148,12 +176,12 @@ export const useActionForm = <
   // eslint-disable-next-line @typescript-eslint/ban-types
   ExtraFormVariables = {},
   FormContext = any,
-  FormVariables extends FieldValues = ActionFunc["variablesType"] & ExtraFormVariables,
-  ActionResultData = UseActionFormHookStateData<ActionFunc>
+  ActionResultData = UseActionFormHookStateData<ActionFunc>,
+  DefaultValues = ActionFunc["variablesType"] & ExtraFormVariables
 >(
   action: ActionFunc,
-  options?: Omit<UseFormProps<FormVariables, FormContext>, "defaultValues"> & {
-    defaultValues?: DeepPartial<FormVariables> & { [key in OmittedKey]?: any };
+  options?: Omit<UseFormProps<ActionFunc["variablesType"] & ExtraFormVariables, FormContext>, "defaultValues"> & {
+    defaultValues?: DeepPartial<DefaultValues & { [key in OmittedKey]?: any }>;
     /**
      * The record identifier to run this action on, if it already exists.
      * Should be undefined for create actions, or a record ID (or finder) for update / etc actions
@@ -180,7 +208,7 @@ export const useActionForm = <
      */
     onError?: (error: Error | FieldErrors<ActionFunc["variablesType"]>) => void;
   }
-): UseActionFormResult<GivenOptions, SchemaT, ActionFunc, FormVariables, FormContext> => {
+): UseActionFormResult<GivenOptions, SchemaT, ActionFunc, ActionFunc["variablesType"] & ExtraFormVariables, FormContext> => {
   const api = useApi();
   const findExistingRecord = !!options?.findBy;
   const hasSetInitialValues = useRef<boolean>(!findExistingRecord);
@@ -205,8 +233,8 @@ export const useActionForm = <
     existingRecordId = findResult.data.id;
   } else if (defaultValues?.id) {
     existingRecordId = defaultValues.id;
-  } else if ("modelApiIdentifier" in action && defaultValues?.[action.modelApiIdentifier]?.id) {
-    existingRecordId = defaultValues?.[action.modelApiIdentifier]?.id;
+  } else if ("modelApiIdentifier" in action && (defaultValues as any)?.[action.modelApiIdentifier]?.id) {
+    existingRecordId = (defaultValues as any)?.[action.modelApiIdentifier]?.id;
   }
 
   // setup the react-hook-form object, passing any options from the props
@@ -320,7 +348,7 @@ export const useActionForm = <
         return (target as any)[prop];
       }
     },
-  });
+  }) as unknown as UseActionFormState<ActionFunc, ActionFunc["variablesType"] & ExtraFormVariables, FormContext>;
 
   return {
     ...formHook,

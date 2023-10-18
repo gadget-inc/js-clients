@@ -18,12 +18,12 @@ importers:
       '@gadget-client/bulk-actions-test':
         specifier: ^1.104.0
         version: 1.104.0
+      '@gadget-client/full-auth':
+        specifier: ^1.4.0
+        version: 1.4.0
       '@gadget-client/related-products-example':
         specifier: ^1.854.0
         version: 1.854.0
-      '@gadget-client/super-auth':
-        specifier: ^1.37.0
-        version: 1.37.0
       '@gadgetinc/api-client-core':
         specifier: workspace:*
         version: link:packages/api-client-core
@@ -1192,14 +1192,14 @@ packages:
       '@gadgetinc/api-client-core': link:packages/api-client-core
     dev: true
 
-  /@gadget-client/related-products-example@1.854.0:
-    resolution: {integrity: sha1-yEytaM9x8otBV06i0Cw/F6zsglo=, tarball: https://registry.gadget.dev/npm/_/tarball/1268/1361/5562}
+  /@gadget-client/full-auth@1.4.0:
+    resolution: {integrity: sha1-npUnTWStWGH5v2nmd5hPrLQBZwA=, tarball: https://registry.gadget.dev/npm/_/tarball/66538/131724/5610}
     dependencies:
       '@gadgetinc/api-client-core': link:packages/api-client-core
     dev: true
 
-  /@gadget-client/super-auth@1.37.0:
-    resolution: {integrity: sha1-VE4TFObMZD4e0Lh/Wd03J6AOpX4=, tarball: https://registry.gadget.dev/npm/_/tarball/50045/98771/5458}
+  /@gadget-client/related-products-example@1.854.0:
+    resolution: {integrity: sha1-yEytaM9x8otBV06i0Cw/F6zsglo=, tarball: https://registry.gadget.dev/npm/_/tarball/1268/1361/5562}
     dependencies:
       '@gadgetinc/api-client-core': link:packages/api-client-core
     dev: true
