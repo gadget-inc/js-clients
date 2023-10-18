@@ -6,7 +6,7 @@ import { useAuth } from "./useAuth.js";
 /**
  * Renders its `children` if the current `Session` is signed in, otherwise redirects the browser to the `signInPath` configured in the `Provider`. Uses `window.location.assign` to perform the redirect.
  */
-export const SignedInOrRedirect = (props: { children: ReactNode }) => {
+export const SignedInOrRedirect = (props: { path?: string; children: ReactNode }) => {
   const [redirected, setRedirected] = useState(false);
 
   const { user, isSignedIn } = useAuth();
@@ -16,11 +16,12 @@ export const SignedInOrRedirect = (props: { children: ReactNode }) => {
   useEffect(() => {
     if (auth && !redirected && (!isSignedIn || !user)) {
       setRedirected(true);
-      const redirectUrl = new URL(auth.signInPath, window.location.origin);
+      const redirectPath = props.path ?? auth.signInPath;
+      const redirectUrl = new URL(redirectPath, window.location.origin);
       redirectUrl.searchParams.set("redirectTo", window.location.pathname);
       window.location.assign(redirectUrl.toString());
     }
-  }, [redirected, isSignedIn, auth]);
+  }, [props.path, redirected, isSignedIn, auth, user]);
 
   if (user && isSignedIn) {
     return <>{props.children}</>;

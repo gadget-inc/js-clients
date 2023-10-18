@@ -18,6 +18,8 @@ export interface GadgetAuthConfiguration {
   signInPath: string;
   /** The API identifier of the `User` `signOut` action. Defaults to `signOut` */
   signOutActionApiIdentifier: string;
+  /** The path that users are redirected to after they sign in successfully. */
+  redirectOnSuccessfulSignInPath: string;
 }
 
 /** Provides the api client instance, if present, as well as the Gadget auth configuration for the application. */
@@ -61,6 +63,7 @@ export interface DeprecatedProviderProps {
 
 const defaultSignInPath = "/";
 const defaultSignOutApiIdentifier = "signOut";
+const defaultRedirectOnSuccessfulSignInPath = "/";
 
 /**
  * Provider wrapper component that passes an api client instance to the other hooks.
@@ -109,11 +112,13 @@ export function Provider(props: ProviderProps | DeprecatedProviderProps) {
 
   let signInPath = defaultSignInPath;
   let signOutActionApiIdentifier = defaultSignOutApiIdentifier;
+  let redirectOnSuccessfulSignInPath = defaultRedirectOnSuccessfulSignInPath;
 
   if ("auth" in props) {
     const { auth } = props;
     if (auth?.signInPath) signInPath = auth.signInPath;
     if (auth?.signOutActionApiIdentifier) signOutActionApiIdentifier = auth.signOutActionApiIdentifier;
+    if (auth?.redirectOnSuccessfulSignInPath) redirectOnSuccessfulSignInPath = auth.redirectOnSuccessfulSignInPath;
   }
 
   return (
@@ -124,6 +129,7 @@ export function Provider(props: ProviderProps | DeprecatedProviderProps) {
           auth: {
             signInPath,
             signOutActionApiIdentifier,
+            redirectOnSuccessfulSignInPath,
           },
         }}
       >

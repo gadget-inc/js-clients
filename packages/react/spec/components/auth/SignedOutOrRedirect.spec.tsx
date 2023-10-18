@@ -14,7 +14,7 @@ describe("SignedOutOrRedirect", () => {
     // @ts-expect-error mock
     delete window.location;
     // @ts-expect-error mock
-    window.location = { assign: mockAssign, origin: "https://test-app.gadget.app", pathname: "/" };
+    window.location = { assign: mockAssign, origin: "https://test-app.gadget.app", pathname: "/sign-in" };
   });
 
   afterEach(() => {
@@ -28,7 +28,7 @@ describe("SignedOutOrRedirect", () => {
   test("redirects when signed in", () => {
     const component = (
       <h1>
-        <SignedOutOrRedirect path="/signed-in">Hello, Jane!</SignedOutOrRedirect>
+        <SignedOutOrRedirect>Hello, Jane!</SignedOutOrRedirect>
       </h1>
     );
 
@@ -38,13 +38,68 @@ describe("SignedOutOrRedirect", () => {
     rerender(component);
 
     expect(mockAssign).toHaveBeenCalledTimes(1);
+    expect(mockAssign).toHaveBeenCalledWith("https://test-app.gadget.app/");
+  });
+
+  test("redirects when signed in and a redirectOnSuccessfulSignInPath has been provided", () => {
+    const component = (
+      <h1>
+        <SignedOutOrRedirect>Hello, Jane!</SignedOutOrRedirect>
+      </h1>
+    );
+
+    const { rerender } = render(component, {
+      wrapper: MockClientWrapper(fullAuthApi, undefined, { redirectOnSuccessfulSignInPath: "/signed-in" }),
+    });
+
+    expectMockSignedInUser();
+    rerender(component);
+
+    expect(mockAssign).toHaveBeenCalledTimes(1);
     expect(mockAssign).toHaveBeenCalledWith("https://test-app.gadget.app/signed-in");
+  });
+
+  test("redirects when signed in and a redirectOnSuccessfulSignInPath has been provided and has been overriden", () => {
+    const component = (
+      <h1>
+        <SignedOutOrRedirect path="/my-custom-path">Hello, Jane!</SignedOutOrRedirect>
+      </h1>
+    );
+
+    const { rerender } = render(component, {
+      wrapper: MockClientWrapper(fullAuthApi, undefined, { redirectOnSuccessfulSignInPath: "/signed-in" }),
+    });
+
+    expectMockSignedInUser();
+    rerender(component);
+
+    expect(mockAssign).toHaveBeenCalledTimes(1);
+    expect(mockAssign).toHaveBeenCalledWith("https://test-app.gadget.app/my-custom-path");
+  });
+
+  test("redirects after signing in to the redirect path", () => {
+    window.location.search = "?redirectTo=%2Fredirect-me";
+    const component = (
+      <h1>
+        <SignedOutOrRedirect>Hello, Jane!</SignedOutOrRedirect>
+      </h1>
+    );
+
+    const { rerender } = render(component, {
+      wrapper: MockClientWrapper(fullAuthApi, undefined, { redirectOnSuccessfulSignInPath: "/signed-in" }),
+    });
+
+    expectMockSignedInUser();
+    rerender(component);
+
+    expect(mockAssign).toHaveBeenCalledTimes(1);
+    expect(mockAssign).toHaveBeenCalledWith("https://test-app.gadget.app/redirect-me");
   });
 
   test("renders when signed out", () => {
     const component = (
       <h1>
-        <SignedOutOrRedirect path="/signed-in">Hello, Jane!</SignedOutOrRedirect>
+        <SignedOutOrRedirect>Hello, Jane!</SignedOutOrRedirect>
       </h1>
     );
 

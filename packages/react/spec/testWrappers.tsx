@@ -3,25 +3,26 @@ import type { ReactNode } from "react";
 import React, { Suspense } from "react";
 import type { MockUrqlClient } from "../../api-client-core/spec/mockUrqlClient.js";
 import { createMockUrqlClient, mockGraphQLWSClient, mockUrqlClient } from "../../api-client-core/spec/mockUrqlClient.js";
-import { Provider } from "../src/GadgetProvider.js";
+import { Provider, type GadgetAuthConfiguration } from "../src/GadgetProvider.js";
 
-export const MockClientWrapper = (api: AnyClient, urqlClient?: MockUrqlClient) => (props: { children: ReactNode }) => {
-  const urql = urqlClient ?? mockUrqlClient;
+export const MockClientWrapper =
+  (api: AnyClient, urqlClient?: MockUrqlClient, auth?: Partial<GadgetAuthConfiguration>) => (props: { children: ReactNode }) => {
+    const urql = urqlClient ?? mockUrqlClient;
 
-  jest.spyOn(api.connection, "currentClient", "get").mockReturnValue(urql);
+    jest.spyOn(api.connection, "currentClient", "get").mockReturnValue(urql);
 
-  return (
-    <Provider api={api}>
-      <Suspense fallback={<div>Loading...</div>}>{props.children}</Suspense>
-    </Provider>
-  );
-};
+    return (
+      <Provider api={api} auth={auth}>
+        <Suspense fallback={<div>Loading...</div>}>{props.children}</Suspense>
+      </Provider>
+    );
+  };
 
-export const MockGraphQLWSClientWrapper = (api: AnyClient) => (props: { children: ReactNode }) => {
+export const MockGraphQLWSClientWrapper = (api: AnyClient, auth?: Partial<GadgetAuthConfiguration>) => (props: { children: ReactNode }) => {
   jest.replaceProperty(api.connection, "baseSubscriptionClient", mockGraphQLWSClient as any);
 
   return (
-    <Provider api={api}>
+    <Provider api={api} auth={auth}>
       <Suspense fallback={<div>Loading...</div>}>{props.children}</Suspense>
     </Provider>
   );
