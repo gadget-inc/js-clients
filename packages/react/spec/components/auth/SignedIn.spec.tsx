@@ -2,7 +2,7 @@ import "@testing-library/jest-dom";
 import { render } from "@testing-library/react";
 import React from "react";
 import { SignedIn } from "../../../src/auth/SignedIn.js";
-import { superAuthApi } from "../../apis.js";
+import { fullAuthApi } from "../../apis.js";
 import { MockClientWrapper } from "../../testWrappers.js";
 import { expectMockDeletedUser, expectMockSignedInUser, expectMockSignedOutUser } from "../../utils.js";
 
@@ -14,7 +14,7 @@ describe("SignedIn", () => {
       </h1>
     );
 
-    const { container, rerender } = render(component, { wrapper: MockClientWrapper(superAuthApi) });
+    const { container, rerender } = render(component, { wrapper: MockClientWrapper(fullAuthApi) });
 
     expectMockSignedInUser();
 
@@ -30,7 +30,7 @@ describe("SignedIn", () => {
       </h1>
     );
 
-    const { container, rerender } = render(component, { wrapper: MockClientWrapper(superAuthApi) });
+    const { container, rerender } = render(component, { wrapper: MockClientWrapper(fullAuthApi) });
 
     expectMockSignedOutUser();
     rerender(component);
@@ -44,7 +44,7 @@ describe("SignedIn", () => {
       </h1>
     );
 
-    const { container, rerender } = render(component, { wrapper: MockClientWrapper(superAuthApi) });
+    const { container, rerender } = render(component, { wrapper: MockClientWrapper(fullAuthApi) });
 
     expectMockDeletedUser();
     rerender(component);

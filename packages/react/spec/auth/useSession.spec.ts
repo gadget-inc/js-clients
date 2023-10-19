@@ -1,5 +1,5 @@
 import { renderHook } from "@testing-library/react";
-import { noUserModelApi, superAuthApi } from "../../spec/apis.js";
+import { fullAuthApi, noUserModelApi } from "../../spec/apis.js";
 import { expectMockSignedInUser, expectMockSignedOutUser, mockInternalServerError, mockNetworkError } from "../../spec/utils.js";
 import { useSession } from "../../src/auth/useSession.js";
 import type { MockUrqlClient } from "../testWrappers.js";
@@ -20,7 +20,7 @@ describe("useSession", () => {
 
   test("it returns the current session when the user is logged in and no options are passed", async () => {
     const { result, rerender } = renderHook(() => useSession(), {
-      wrapper: MockClientWrapper(superAuthApi, client),
+      wrapper: MockClientWrapper(fullAuthApi, client),
     });
 
     expectMockSignedInUser(client);
@@ -32,19 +32,27 @@ describe("useSession", () => {
           __typename
           createdAt
           id
-          roles {
-            key
-            name
-          }
+          state
           updatedAt
           user {
             __typename
             createdAt
             email
+            emailVerificationToken
+            emailVerificationTokenExpiration
+            emailVerified
             firstName
             googleImageUrl
+            googleProfileId
             id
             lastName
+            lastSignedIn
+            resetPasswordToken
+            resetPasswordTokenExpiration
+            roles {
+              key
+              name
+            }
             updatedAt
           }
         }
@@ -61,7 +69,7 @@ describe("useSession", () => {
   });
 
   test("it returns the current session when the user is logged in and api client is passed", async () => {
-    const { result, rerender } = renderHook(() => useSession(superAuthApi), { wrapper: MockClientWrapper(superAuthApi, client) });
+    const { result, rerender } = renderHook(() => useSession(fullAuthApi), { wrapper: MockClientWrapper(fullAuthApi, client) });
 
     expectMockSignedInUser(client);
     rerender();
@@ -72,19 +80,27 @@ describe("useSession", () => {
           __typename
           createdAt
           id
-          roles {
-            key
-            name
-          }
+          state
           updatedAt
           user {
             __typename
             createdAt
             email
+            emailVerificationToken
+            emailVerificationTokenExpiration
+            emailVerified
             firstName
             googleImageUrl
+            googleProfileId
             id
             lastName
+            lastSignedIn
+            resetPasswordToken
+            resetPasswordTokenExpiration
+            roles {
+              key
+              name
+            }
             updatedAt
           }
         }
@@ -101,8 +117,8 @@ describe("useSession", () => {
   });
 
   test("it returns the current session when the user is logged in and api client with options is passed", async () => {
-    const { result, rerender } = renderHook(() => useSession(superAuthApi, { select: { id: true, user: { id: true, firstName: true } } }), {
-      wrapper: MockClientWrapper(superAuthApi, client),
+    const { result, rerender } = renderHook(() => useSession(fullAuthApi, { select: { id: true, user: { id: true, firstName: true } } }), {
+      wrapper: MockClientWrapper(fullAuthApi, client),
     });
 
     expectMockSignedInUser(client);
@@ -129,15 +145,15 @@ describe("useSession", () => {
     expect(result.current.user?.firstName).toEqual("Jane");
 
     const { result: noUserResult, rerender: _noUserRerender } = renderHook(
-      () => useSession(superAuthApi, { filter: { user: { firstName: { equals: "Bob" } } } }),
-      { wrapper: MockClientWrapper(superAuthApi) }
+      () => useSession(fullAuthApi, { filter: { user: { firstName: { equals: "Bob" } } } }),
+      { wrapper: MockClientWrapper(fullAuthApi) }
     );
 
     expect(noUserResult.current).toBeNull();
   });
 
   test("it returns the current session when the user is logged out", async () => {
-    const { result, rerender } = renderHook(() => useSession(), { wrapper: MockClientWrapper(superAuthApi) });
+    const { result, rerender } = renderHook(() => useSession(), { wrapper: MockClientWrapper(fullAuthApi) });
 
     expectMockSignedOutUser();
     rerender();
@@ -148,7 +164,7 @@ describe("useSession", () => {
   });
 
   test("it returns the current session when the user is logged out and no options are passed", async () => {
-    const { result, rerender } = renderHook(() => useSession(), { wrapper: MockClientWrapper(superAuthApi) });
+    const { result, rerender } = renderHook(() => useSession(), { wrapper: MockClientWrapper(fullAuthApi) });
 
     expectMockSignedOutUser();
     rerender();
@@ -159,7 +175,7 @@ describe("useSession", () => {
   });
 
   test("it returns the current session when the user is logged out and an api client with options is passed", async () => {
-    const { result, rerender } = renderHook(() => useSession(), { wrapper: MockClientWrapper(superAuthApi) });
+    const { result, rerender } = renderHook(() => useSession(), { wrapper: MockClientWrapper(fullAuthApi) });
 
     expectMockSignedOutUser();
     rerender();
@@ -171,7 +187,7 @@ describe("useSession", () => {
 
   test("it throws when the server responds with an error", async () => {
     expect(() => {
-      const { rerender } = renderHook(() => useSession(), { wrapper: MockClientWrapper(superAuthApi) });
+      const { rerender } = renderHook(() => useSession(), { wrapper: MockClientWrapper(fullAuthApi) });
 
       mockInternalServerError();
 
@@ -184,7 +200,7 @@ describe("useSession", () => {
 
   test("it throws when request fails to complete", async () => {
     expect(() => {
-      const { rerender } = renderHook(() => useSession(), { wrapper: MockClientWrapper(superAuthApi) });
+      const { rerender } = renderHook(() => useSession(), { wrapper: MockClientWrapper(fullAuthApi) });
 
       mockNetworkError();
 

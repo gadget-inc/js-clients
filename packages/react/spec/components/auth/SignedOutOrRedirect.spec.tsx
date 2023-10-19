@@ -2,7 +2,7 @@ import "@testing-library/jest-dom";
 import { render } from "@testing-library/react";
 import React from "react";
 import { SignedOutOrRedirect } from "../../../src/auth/SignedOutOrRedirect.js";
-import { superAuthApi } from "../../apis.js";
+import { fullAuthApi } from "../../apis.js";
 import { MockClientWrapper } from "../../testWrappers.js";
 import { expectMockSignedInUser, expectMockSignedOutUser } from "../../utils.js";
 
@@ -32,7 +32,7 @@ describe("SignedOutOrRedirect", () => {
       </h1>
     );
 
-    const { rerender } = render(component, { wrapper: MockClientWrapper(superAuthApi) });
+    const { rerender } = render(component, { wrapper: MockClientWrapper(fullAuthApi) });
 
     expectMockSignedInUser();
     rerender(component);
@@ -48,7 +48,7 @@ describe("SignedOutOrRedirect", () => {
       </h1>
     );
 
-    const { container, rerender } = render(component, { wrapper: MockClientWrapper(superAuthApi) });
+    const { container, rerender } = render(component, { wrapper: MockClientWrapper(fullAuthApi) });
 
     expectMockSignedOutUser();
     rerender(component);

@@ -8,7 +8,7 @@ import type { AnyVariables } from "urql";
 import { Provider } from "../src/GadgetProvider.js";
 import { useAction } from "../src/index.js";
 import type { ErrorWrapper } from "../src/utils.js";
-import { relatedProductsApi, superAuthApi } from "./apis.js";
+import { fullAuthApi, relatedProductsApi } from "./apis.js";
 import { MockClientWrapper, createMockUrqlClient, mockUrqlClient } from "./testWrappers.js";
 
 describe("useAction", () => {
@@ -428,7 +428,7 @@ describe("useAction", () => {
 
     const wrapper = (props: { children: React.ReactNode }) => <Provider value={client}>{props.children}</Provider>;
 
-    const { result } = renderHook(() => useAction(superAuthApi.user.signUp), {
+    const { result } = renderHook(() => useAction(fullAuthApi.user.signUp), {
       wrapper,
     });
 
