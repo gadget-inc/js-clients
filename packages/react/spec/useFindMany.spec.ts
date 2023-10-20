@@ -1,8 +1,10 @@
+import { Client } from "@gadget-client/related-products-example";
 import type { GadgetRecordList } from "@gadgetinc/api-client-core";
 import { diff } from "@n1ru4l/json-patch-plus";
 import { renderHook, waitFor } from "@testing-library/react";
 import type { IsExact } from "conditional-type-checks";
 import { assert } from "conditional-type-checks";
+import { GraphQLError } from "graphql";
 import { useFindMany } from "../src/useFindMany.js";
 import type { ErrorWrapper } from "../src/utils.js";
 import { relatedProductsApi } from "./apis.js";
@@ -269,6 +271,12 @@ describe("useFindMany", () => {
   });
 
   describe("live queries", () => {
+    let relatedProductsApi: Client;
+
+    beforeEach(() => {
+      relatedProductsApi = new Client({ environment: "Development" });
+    });
+
     test("can query for live data", async () => {
       const { result } = renderHook(() => useFindMany(relatedProductsApi.user, { live: true }), {
         wrapper: MockGraphQLWSClientWrapper(relatedProductsApi),
@@ -355,6 +363,30 @@ describe("useFindMany", () => {
       expect(result.current[0].data![2].email).toBe(null);
       expect(result.current[0].fetching).toBe(false);
       expect(result.current[0].error).toBeFalsy();
+    });
+
+    test("live queries return server errors", async () => {
+      const { result } = renderHook(() => useFindMany(relatedProductsApi.user, { live: true }), {
+        wrapper: MockGraphQLWSClientWrapper(relatedProductsApi),
+      });
+
+      expect(result.current[0].data).toBeFalsy();
+      expect(result.current[0].fetching).toBe(true);
+      expect(result.current[0].error).toBeFalsy();
+
+      await Promise.resolve();
+      expect(mockGraphQLWSClient.subscribe.subscriptions).toHaveLength(1);
+      const subscription = mockGraphQLWSClient.subscribe.subscriptions[0];
+
+      subscription.push({
+        data: null,
+        errors: [new GraphQLError("backend exploded")],
+      });
+
+      await waitFor(() => expect(result.current[0].fetching).toBe(false));
+
+      expect(result.current[0].data).toBeFalsy();
+      expect(result.current[0].error!.message).toMatchInlineSnapshot(`"[GraphQL] backend exploded"`);
     });
   });
 });
