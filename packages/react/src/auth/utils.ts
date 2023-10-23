@@ -7,3 +7,7 @@ export const isSessionSignedOut = (session: GadgetSession) => {
 export const isSessionSignedIn = (session: GadgetSession) => {
   return !isSessionSignedOut(session);
 };
+
+export function windowNavigate(path: string) {
+  return window.location.assign(path);
+}
