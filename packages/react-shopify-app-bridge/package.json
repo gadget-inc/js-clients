@@ -29,7 +29,7 @@
   "dependencies": {
     "@gadgetinc/api-client-core": "^0.15.11",
     "@shopify/app-bridge-utils": "^3.1.1",
-    "crypto-js": "^4.1.1"
+    "crypto-js": "^4.2.0"
   },
   "devDependencies": {
     "@gadgetinc/api-client-core": "workspace:*",
