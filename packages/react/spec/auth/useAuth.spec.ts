@@ -73,9 +73,11 @@ describe("useAuth", () => {
   test("returns the correct auth config when signed out", () => {
     const { result, rerender } = renderHook(() => useAuth(), {
       wrapper: MockClientWrapper(fullAuthApi, undefined, {
-        signInPath: "/foo-sign-in",
-        signOutActionApiIdentifier: "newSignOut",
-        redirectOnSuccessfulSignInPath: "/bar-signed-in",
+        auth: {
+          signInPath: "/foo-sign-in",
+          signOutActionApiIdentifier: "newSignOut",
+          redirectOnSuccessfulSignInPath: "/bar-signed-in",
+        },
       }),
     });
 
@@ -93,9 +95,11 @@ describe("useAuth", () => {
   test("returns the correct auth config when signed in", () => {
     const { result, rerender } = renderHook(() => useAuth(), {
       wrapper: MockClientWrapper(fullAuthApi, undefined, {
-        signInPath: "/foo-sign-in",
-        signOutActionApiIdentifier: "newSignOut",
-        redirectOnSuccessfulSignInPath: "/bar-signed-in",
+        auth: {
+          signInPath: "/foo-sign-in",
+          signOutActionApiIdentifier: "newSignOut",
+          redirectOnSuccessfulSignInPath: "/bar-signed-in",
+        },
       }),
     });
 

@@ -36,6 +36,7 @@ export const GadgetConfigurationContext = React.createContext<GadgetConfiguratio
 
 interface BaseProviderProps {
   children: ReactNode;
+  /** By default components/hooks will use `window.location` to load new URLs. If you have your own routing provider, the `navigate` prop can be used to push new routes.  */
   navigate?: (path: string) => void;
 }
 
