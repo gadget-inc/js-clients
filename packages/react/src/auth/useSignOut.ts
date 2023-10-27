@@ -1,7 +1,8 @@
-import { useCallback, useContext } from "react";
+import { useCallback, useContext, useEffect } from "react";
 import { GadgetConfigurationContext, useApi } from "../GadgetProvider.js";
 import { useAction } from "../useAction.js";
 import { useUser } from "./useUser.js";
+import { windowNavigate } from "./utils.js";
 
 /**
  * Returns a callback that will call the configured `signOutActionApiIdentifier` on the `User` model and optionally redirect (by default). Throws an `error` if one occurs while performing the `signOut` action, or if the `User` is not signed in.
@@ -23,10 +24,14 @@ export const useSignOut = (opts?: { redirectOnSuccess?: boolean; redirectToPath?
 
     if (error) throw error;
 
-    if (redirectOnSuccess && data) {
-      const redirectUrl = new URL(redirectToPath ?? signInPath, window.location.origin);
-      window.location.assign(redirectUrl.toString());
-    }
+    // eslint-disable-next-line
+    useEffect(() => {
+      if (redirectOnSuccess && data) {
+        const redirectUrl = new URL(redirectToPath ?? signInPath, window.location.origin);
+        const navigate = context?.navigate ?? windowNavigate;
+        navigate(`${redirectUrl.pathname}${redirectUrl.search}`);
+      }
+    }, [data]);
 
     // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
     return useCallback(async () => {
