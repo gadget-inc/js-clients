@@ -69,4 +69,44 @@ describe("useAuth", () => {
       rerender();
     }).toThrowErrorMatchingInlineSnapshot(`"api client does not have a User model"`);
   });
+
+  test("returns the correct auth config when signed out", () => {
+    const { result, rerender } = renderHook(() => useAuth(), {
+      wrapper: MockClientWrapper(fullAuthApi, undefined, {
+        signInPath: "/foo-sign-in",
+        signOutActionApiIdentifier: "newSignOut",
+        redirectOnSuccessfulSignInPath: "/bar-signed-in",
+      }),
+    });
+
+    expectMockSignedOutUser();
+    rerender();
+
+    expect(result.current.configuration).toEqual({
+      signInPath: "/foo-sign-in",
+      signOutActionApiIdentifier: "newSignOut",
+      redirectOnSuccessfulSignInPath: "/bar-signed-in",
+    });
+    expect(result.current.isSignedIn).toBe(false);
+  });
+
+  test("returns the correct auth config when signed in", () => {
+    const { result, rerender } = renderHook(() => useAuth(), {
+      wrapper: MockClientWrapper(fullAuthApi, undefined, {
+        signInPath: "/foo-sign-in",
+        signOutActionApiIdentifier: "newSignOut",
+        redirectOnSuccessfulSignInPath: "/bar-signed-in",
+      }),
+    });
+
+    expectMockSignedInUser();
+    rerender();
+
+    expect(result.current.configuration).toEqual({
+      signInPath: "/foo-sign-in",
+      signOutActionApiIdentifier: "newSignOut",
+      redirectOnSuccessfulSignInPath: "/bar-signed-in",
+    });
+    expect(result.current.isSignedIn).toBe(true);
+  });
 });
