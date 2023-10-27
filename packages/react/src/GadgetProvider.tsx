@@ -26,6 +26,7 @@ export interface GadgetAuthConfiguration {
 export interface GadgetConfigurationContext {
   api: AnyClient | undefined;
   auth: GadgetAuthConfiguration;
+  navigate?: (path: string) => void;
 }
 
 /**
@@ -33,7 +34,12 @@ export interface GadgetConfigurationContext {
  */
 export const GadgetConfigurationContext = React.createContext<GadgetConfigurationContext | undefined>(undefined);
 
-export interface ProviderProps {
+interface BaseProviderProps {
+  children: ReactNode;
+  navigate?: (path: string) => void;
+}
+
+export interface ProviderProps extends BaseProviderProps {
   /**
    * An instance of your app's api client, often named `api`. This is the object that contains all of your generated query/mutation/subscription functions.
    *
@@ -48,17 +54,15 @@ export interface ProviderProps {
    */
   api: AnyClient;
   auth?: Partial<GadgetAuthConfiguration>;
-  children: ReactNode;
 }
 
 /** @deprecated -- pass an instance of your app's api client instead with the `api` prop */
-export interface DeprecatedProviderProps {
+export interface DeprecatedProviderProps extends BaseProviderProps {
   /**
    * an urql client object from your current Gadget client, like `api.connection.currentClient`
    * @deprecated -- pass an instance of your app's api client instead with the `api` prop
    */
   value: UrqlClient;
-  children: ReactNode;
 }
 
 const defaultSignInPath = "/";
@@ -126,6 +130,7 @@ export function Provider(props: ProviderProps | DeprecatedProviderProps) {
       <GadgetConfigurationContext.Provider
         value={{
           api: gadgetClient,
+          navigate: props.navigate,
           auth: {
             signInPath,
             signOutActionApiIdentifier,

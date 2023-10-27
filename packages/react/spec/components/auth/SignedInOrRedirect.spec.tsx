@@ -7,101 +7,133 @@ import { MockClientWrapper } from "../../testWrappers.js";
 import { expectMockDeletedUser, expectMockSignedInUser, expectMockSignedOutUser } from "../../utils.js";
 
 describe("SignedInOrRedirect", () => {
-  const { location } = window;
-  const mockAssign = jest.fn();
+  describe.each([true, false])("using custom navigate: %s", (customNavigate) => {
+    const { location } = window;
+    const mockNavigate = jest.fn();
 
-  beforeAll(() => {
-    // @ts-expect-error mock
-    delete window.location;
-    // @ts-expect-error mock
-    window.location = { assign: mockAssign, origin: "https://test-app.gadget.app", pathname: "/" };
-  });
+    beforeAll(() => {
+      // @ts-expect-error mock
+      delete window.location;
 
-  afterEach(() => {
-    mockAssign.mockClear();
-  });
+      if (!customNavigate) {
+        // @ts-expect-error mock
+        window.location = { assign: mockNavigate, origin: "https://test-app.gadget.app", pathname: "/" };
+      } else {
+        // @ts-expect-error mock
+        window.location = { origin: "https://test-app.gadget.app", pathname: "/" };
+      }
+    });
 
-  afterAll(() => {
-    window.location = location;
-  });
+    afterEach(() => {
+      mockNavigate.mockClear();
+    });
 
-  test("redirects when signed out", () => {
-    const component = (
-      <h1>
-        <SignedInOrRedirect>Hello, Jane!</SignedInOrRedirect>
-      </h1>
-    );
+    afterAll(() => {
+      if (!customNavigate) {
+        window.location = location;
+      }
+    });
 
-    const { rerender } = render(component, { wrapper: MockClientWrapper(fullAuthApi) });
+    test("redirects when signed out", () => {
+      const component = (
+        <h1>
+          <SignedInOrRedirect>Hello, Jane!</SignedInOrRedirect>
+        </h1>
+      );
 
-    expectMockSignedOutUser();
-    rerender(component);
+      const { rerender } = render(component, {
+        wrapper: MockClientWrapper(fullAuthApi, undefined, {
+          navigate: customNavigate ? mockNavigate : undefined,
+        }),
+      });
 
-    expect(mockAssign).toHaveBeenCalledTimes(1);
-    expect(mockAssign).toHaveBeenCalledWith("https://test-app.gadget.app/?redirectTo=%2F");
-  });
+      expectMockSignedOutUser();
+      rerender(component);
 
-  test("redirects when signed out and a signInPath is provided in the auth context", () => {
-    const component = (
-      <h1>
-        <SignedInOrRedirect>Hello, Jane!</SignedInOrRedirect>
-      </h1>
-    );
+      expect(mockNavigate).toHaveBeenCalledTimes(1);
+      expect(mockNavigate).toHaveBeenCalledWith("/?redirectTo=%2F");
+    });
 
-    const { rerender } = render(component, { wrapper: MockClientWrapper(fullAuthApi, undefined, { signInPath: "sign-in" }) });
+    test("redirects when signed out and a signInPath is provided in the auth context", () => {
+      const component = (
+        <h1>
+          <SignedInOrRedirect>Hello, Jane!</SignedInOrRedirect>
+        </h1>
+      );
 
-    expectMockSignedOutUser();
-    rerender(component);
+      const { rerender } = render(component, {
+        wrapper: MockClientWrapper(fullAuthApi, undefined, {
+          auth: { signInPath: "sign-in" },
+          navigate: customNavigate ? mockNavigate : undefined,
+        }),
+      });
 
-    expect(mockAssign).toHaveBeenCalledTimes(1);
-    expect(mockAssign).toHaveBeenCalledWith("https://test-app.gadget.app/sign-in?redirectTo=%2F");
-  });
+      expectMockSignedOutUser();
+      rerender(component);
 
-  test("redirects when signed out and a signInPath is provided in the auth context and an override path is provided", () => {
-    const component = (
-      <h1>
-        <SignedInOrRedirect path="custom-sign-in">Hello, Jane!</SignedInOrRedirect>
-      </h1>
-    );
+      expect(mockNavigate).toHaveBeenCalledTimes(1);
+      expect(mockNavigate).toHaveBeenCalledWith("/sign-in?redirectTo=%2F");
+    });
 
-    const { rerender } = render(component, { wrapper: MockClientWrapper(fullAuthApi, undefined, { signInPath: "sign-in" }) });
+    test("redirects when signed out and a signInPath is provided in the auth context and an override path is provided", () => {
+      const component = (
+        <h1>
+          <SignedInOrRedirect path="custom-sign-in">Hello, Jane!</SignedInOrRedirect>
+        </h1>
+      );
 
-    expectMockSignedOutUser();
-    rerender(component);
+      const { rerender } = render(component, {
+        wrapper: MockClientWrapper(fullAuthApi, undefined, {
+          auth: { signInPath: "sign-in" },
+          navigate: customNavigate ? mockNavigate : undefined,
+        }),
+      });
 
-    expect(mockAssign).toHaveBeenCalledTimes(1);
-    expect(mockAssign).toHaveBeenCalledWith("https://test-app.gadget.app/custom-sign-in?redirectTo=%2F");
-  });
+      expectMockSignedOutUser();
+      rerender(component);
 
-  test("redirects when signed in but has no associated user", () => {
-    const component = (
-      <h1>
-        <SignedInOrRedirect>Hello, Jane!</SignedInOrRedirect>
-      </h1>
-    );
+      expect(mockNavigate).toHaveBeenCalledTimes(1);
+      expect(mockNavigate).toHaveBeenCalledWith("/custom-sign-in?redirectTo=%2F");
+    });
 
-    const { rerender } = render(component, { wrapper: MockClientWrapper(fullAuthApi) });
+    test("redirects when signed in but has no associated user", () => {
+      const component = (
+        <h1>
+          <SignedInOrRedirect>Hello, Jane!</SignedInOrRedirect>
+        </h1>
+      );
 
-    expectMockDeletedUser();
-    rerender(component);
+      const { rerender } = render(component, {
+        wrapper: MockClientWrapper(fullAuthApi, undefined, {
+          navigate: customNavigate ? mockNavigate : undefined,
+        }),
+      });
 
-    expect(mockAssign).toHaveBeenCalledTimes(1);
-    expect(mockAssign).toHaveBeenCalledWith("https://test-app.gadget.app/?redirectTo=%2F");
-  });
+      expectMockDeletedUser();
+      rerender(component);
 
-  test("renders when signed in", () => {
-    const component = (
-      <h1>
-        <SignedInOrRedirect>Hello, Jane!</SignedInOrRedirect>
-      </h1>
-    );
+      expect(mockNavigate).toHaveBeenCalledTimes(1);
+      expect(mockNavigate).toHaveBeenCalledWith("/?redirectTo=%2F");
+    });
 
-    const { container, rerender } = render(component, { wrapper: MockClientWrapper(fullAuthApi) });
+    test("renders when signed in", () => {
+      const component = (
+        <h1>
+          <SignedInOrRedirect>Hello, Jane!</SignedInOrRedirect>
+        </h1>
+      );
 
-    expectMockSignedInUser();
-    rerender(component);
+      const { container, rerender } = render(component, {
+        wrapper: MockClientWrapper(fullAuthApi, undefined, {
+          navigate: customNavigate ? mockNavigate : undefined,
+        }),
+      });
 
-    expect(mockAssign).not.toBeCalled();
-    expect(container.outerHTML).toMatchInlineSnapshot(`"<div><h1>Hello, Jane!</h1></div>"`);
+      expectMockSignedInUser();
+      rerender(component);
+
+      expect(mockNavigate).not.toBeCalled();
+      expect(container.outerHTML).toMatchInlineSnapshot(`"<div><h1>Hello, Jane!</h1></div>"`);
+    });
   });
 });

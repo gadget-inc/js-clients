@@ -6,13 +6,21 @@ import { createMockUrqlClient, mockGraphQLWSClient, mockUrqlClient } from "../..
 import { Provider, type GadgetAuthConfiguration } from "../src/GadgetProvider.js";
 
 export const MockClientWrapper =
-  (api: AnyClient, urqlClient?: MockUrqlClient, auth?: Partial<GadgetAuthConfiguration>) => (props: { children: ReactNode }) => {
+  (
+    api: AnyClient,
+    urqlClient?: MockUrqlClient,
+    propOverrides?: {
+      auth?: Partial<GadgetAuthConfiguration>;
+      navigate?: (url: string) => void;
+    }
+  ) =>
+  (props: { children: ReactNode }) => {
     const urql = urqlClient ?? mockUrqlClient;
 
     jest.spyOn(api.connection, "currentClient", "get").mockReturnValue(urql);
 
     return (
-      <Provider api={api} auth={auth}>
+      <Provider api={api} navigate={propOverrides?.navigate} auth={propOverrides?.auth}>
         <Suspense fallback={<div>Loading...</div>}>{props.children}</Suspense>
       </Provider>
     );
