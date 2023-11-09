@@ -30,7 +30,7 @@ export interface ClientOptions {
   /**
    * Which of the Gadget application's environments this connection should connect to
    **/
-  environment?: "Development" | "Production";
+  environment?: string;
   /**
    * The ID of the application. Not required -- only used for emitting telemetry
    **/
