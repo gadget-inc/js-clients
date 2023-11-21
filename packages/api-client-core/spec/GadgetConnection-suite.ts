@@ -35,6 +35,39 @@ export const GadgetConnectionSharedSuite = (queryExtra = "") => {
     expect((connection as any).requestPolicy).toEqual("network-only");
   });
 
+  it("should allow connecting to an endpoint with existing query params", async () => {
+    nock("https://someapp.gadget.app")
+      .post("/api/graphql?foo=bar&operation=meta", { query: `{\n  meta {\n    appName\n${queryExtra}  }\n}`, variables: {} })
+      .reply(200, {
+        data: {
+          meta: {
+            appName: "some app",
+          },
+        },
+      });
+
+    const connection = new GadgetConnection({
+      endpoint: "https://someapp.gadget.app/api/graphql?foo=bar",
+      authenticationMode: { anonymous: true },
+    });
+
+    const result = await connection.currentClient
+      .query(
+        gql`
+          {
+            meta {
+              appName
+            }
+          }
+        `,
+        {}
+      )
+      .toPromise();
+
+    expect(result.error).toBeUndefined();
+    expect(result.data).toEqual({ meta: { appName: "some app" } });
+  });
+
   describe("authorization", () => {
     it("should allow connecting with anonymous authentication", async () => {
       nock("https://someapp.gadget.app")
