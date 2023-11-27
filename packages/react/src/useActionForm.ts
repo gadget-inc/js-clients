@@ -67,6 +67,40 @@ const toDefaultValues = (modelApiIdentifier: string | undefined, data: any) => {
   return data;
 };
 
+const disambiguateDefaultValues = (data: any, initialData: any, action: any) => {
+  const initialKeys = Object.keys(initialData).filter((key) => !OmittedKeys.includes(key as OmittedKey));
+
+  const result = Object.fromEntries(
+    Object.entries(data).flatMap(([key, value]) => {
+      if (initialKeys.includes(key)) {
+        return [];
+      }
+
+      return [[key, value]];
+    })
+  );
+
+  const modelData = { ...data[action.modelApiIdentifier] };
+
+  for (const key of Object.keys(modelData)) {
+    const initialValue = initialData[key];
+
+    if (
+      !!data[action.modelApiIdentifier] &&
+      typeof data[action.modelApiIdentifier] === "object" &&
+      key in data[action.modelApiIdentifier] &&
+      initialValue !== data[action.modelApiIdentifier][key]
+    ) {
+      modelData[key] = data[action.modelApiIdentifier][key];
+    } else if (key in data && initialValue !== data[key]) {
+      modelData[key] = data[key];
+    }
+  }
+
+  result[action.modelApiIdentifier] = modelData;
+  return result;
+};
+
 /**
  * The identity of a record to build a form for
  *
@@ -212,9 +246,10 @@ export const useActionForm = <
   const api = useApi();
   const findExistingRecord = !!options?.findBy;
   const hasSetInitialValues = useRef<boolean>(!findExistingRecord);
+  const isModelAction = "modelApiIdentifier" in action;
 
   // find the existing record if there is one
-  const modelManager = "modelApiIdentifier" in action ? ((api as any)[action.modelApiIdentifier] as AnyModelManager) : undefined;
+  const modelManager = isModelAction ? ((api as any)[action.modelApiIdentifier] as AnyModelManager) : undefined;
   const [findResult] = useFindExistingRecord(modelManager, options?.findBy || "1", {
     pause: !findExistingRecord,
     select: options?.select,
@@ -223,8 +258,11 @@ export const useActionForm = <
   const isReady = !findExistingRecord || !!findResult.data;
 
   let defaultValues = options?.defaultValues;
-  if (!defaultValues && "modelApiIdentifier" in action && findResult.data) {
-    defaultValues = { [action.modelApiIdentifier]: { ...toDefaultValues(action.modelApiIdentifier, findResult.data) } } as any;
+  if (isModelAction && findResult.data) {
+    const modelDefaultValues = toDefaultValues(action.modelApiIdentifier, findResult.data);
+    defaultValues = action.hasAmbiguousIdentifier
+      ? { ...options?.defaultValues, [action.modelApiIdentifier]: modelDefaultValues }
+      : { ...options?.defaultValues, ...modelDefaultValues, [action.modelApiIdentifier]: modelDefaultValues };
   }
 
   let existingRecordId: string | undefined = undefined;
@@ -233,14 +271,14 @@ export const useActionForm = <
     existingRecordId = findResult.data.id;
   } else if (defaultValues?.id) {
     existingRecordId = defaultValues.id;
-  } else if ("modelApiIdentifier" in action && (defaultValues as any)?.[action.modelApiIdentifier]?.id) {
+  } else if (isModelAction && (defaultValues as any)?.[action.modelApiIdentifier]?.id) {
     existingRecordId = (defaultValues as any)?.[action.modelApiIdentifier]?.id;
   }
 
   // setup the react-hook-form object, passing any options from the props
   const { handleSubmit, formState, ...formHook } = useForm<ActionFunc["variablesType"], FormContext>({
     ...options,
-    defaultValues: toDefaultValues("modelApiIdentifier" in action ? action.modelApiIdentifier : undefined, defaultValues),
+    defaultValues: toDefaultValues(isModelAction ? action.modelApiIdentifier : undefined, defaultValues),
   });
 
   // when the default values arrive from the record find later, reset them into the form. react-hook-form doesn't watch the default values after the first render
@@ -254,7 +292,7 @@ export const useActionForm = <
   // get the action runner to run on submit
   const [actionResult, runAction] =
     // eslint-disable-next-line react-hooks/rules-of-hooks
-    "modelApiIdentifier" in action ? useAction(action, { select: options?.select }) : useGlobalAction(action);
+    isModelAction ? useAction(action, { select: options?.select }) : useGlobalAction(action);
 
   const handleSubmissionError = useCallback(
     (error: Error | FieldErrors<ActionFunc["variablesType"]>) => {
@@ -266,10 +304,9 @@ export const useActionForm = <
           for (const executionError of executionErrors) {
             if ("validationErrors" in executionError) {
               for (const validationError of executionError.validationErrors) {
-                const errorKey =
-                  "modelApiIdentifier" in action
-                    ? `${action.modelApiIdentifier}.${validationError.apiIdentifier}`
-                    : validationError.apiIdentifier;
+                const errorKey = isModelAction
+                  ? `${action.modelApiIdentifier}.${validationError.apiIdentifier}`
+                  : validationError.apiIdentifier;
                 formHook.setError(errorKey as any, {
                   message: validationError.message,
                 });
@@ -288,7 +325,7 @@ export const useActionForm = <
 
       options?.onError?.(error);
     },
-    [action, formHook, options]
+    [action, formHook, options, isModelAction]
   );
 
   const submit = useCallback(
@@ -302,6 +339,10 @@ export const useActionForm = <
           let variables: ActionFunc["variablesType"] = {
             ...data,
           };
+
+          if (isModelAction && !action.hasAmbiguousIdentifier && findResult.data) {
+            variables = disambiguateDefaultValues(data, findResult.data, action);
+          }
 
           if (existingRecordId) {
             variables.id = existingRecordId;
@@ -333,7 +374,7 @@ export const useActionForm = <
 
       return result;
     },
-    [handleSubmit, formHook, handleSubmissionError, existingRecordId, options, runAction]
+    [handleSubmit, formHook, handleSubmissionError, existingRecordId, options, runAction, findResult.data, isModelAction, action]
   );
 
   const proxiedFormState = new Proxy(formState, {

@@ -46,6 +46,30 @@ describe("useActionForm", () => {
     setValue("user.email", "test@test.com");
   };
 
+  const _TestUseActionFormCanTypeNestedRecordWhenAmbiguous = () => {
+    const { setValue } = useActionForm(relatedProductsApi.ambiguous.create, {
+      defaultValues: { id: "123", user: { email: "test@test.com" } },
+    });
+
+    // @ts-expect-error Argument of type '"foo"' is not assignable to parameter
+    setValue("foo", "1");
+
+    setValue("ambiguous.ambiguous", "test@test.com");
+    setValue("ambiguous.booleanField", true);
+  };
+
+  const _TestUseActionFormCantTypFlatRecordWhenAmbiguous = () => {
+    const { setValue } = useActionForm(relatedProductsApi.ambiguous.create, {
+      defaultValues: { id: "123", user: { email: "test@test.com" } },
+    });
+
+    // @ts-expect-error Argument of type '"foo"' is not assignable to parameter
+    setValue("foo", "1");
+
+    // @ts-expect-error Type '"test@test.com"' has no properties in common with type 'CreateAmbiguousInput'.
+    setValue("ambiguous", "test@test.com");
+  };
+
   const _TestUseActionFormCanTypeExtraArguments = async () => {
     const { submit, setValue } = useActionForm<
       (typeof relatedProductsApi.user.update)["optionsType"],
@@ -1499,6 +1523,296 @@ describe("useActionForm", () => {
     expect(result.current.getValues("user.password")).toBe("secret");
   });
 
+  test("can be used with an update action when finding record by id and registering flat fields", async () => {
+    let submitted = false;
+    let success = false;
+    let error = false;
+
+    const { result } = renderHook(
+      () =>
+        useActionForm(relatedProductsApi.user.update, {
+          findBy: "123",
+          onSubmit: () => {
+            submitted = true;
+          },
+          onSuccess: () => {
+            success = true;
+          },
+          onError: () => {
+            error = true;
+          },
+        }),
+      { wrapper: MockClientWrapper(relatedProductsApi) }
+    );
+
+    expect(submitted).toBe(false);
+    expect(success).toBe(false);
+    expect(error).toBe(false);
+    expect(result.current.formState.isLoading).toBe(true);
+    expect(result.current.formState.isSubmitted).toBe(false);
+    expect(result.current.formState.isSubmitSuccessful).toBe(false);
+    expect(result.current.formState.isSubmitting).toBe(false);
+    expect(result.current.error).toBeFalsy();
+    expect(result.current.actionData).toBeFalsy();
+    expect(result.current.getValues("email")).toBeUndefined();
+    expect(result.current.getValues("password")).toBeUndefined();
+
+    expect(mockUrqlClient.executeQuery).toBeCalledTimes(1);
+
+    mockUrqlClient.executeQuery.pushResponse("user", {
+      data: {
+        user: {
+          id: "123",
+          email: "test@test.com",
+          password: "secret",
+          __typename: "User",
+          createdAt: "2023-10-13T18:38:06.676Z",
+          updatedAt: "2023-10-13T18:40:36.741Z",
+        },
+      },
+      stale: false,
+      hasNext: false,
+    });
+
+    expect(submitted).toBe(false);
+    expect(success).toBe(false);
+    expect(error).toBe(false);
+    expect(result.current.formState.isLoading).toBe(false);
+    expect(result.current.formState.isSubmitted).toBe(false);
+    expect(result.current.formState.isSubmitSuccessful).toBe(false);
+    expect(result.current.formState.isSubmitting).toBe(false);
+    expect(result.current.error).toBeFalsy();
+    expect(result.current.actionData).toBeFalsy();
+    expect(result.current.getValues("email")).toBe("test@test.com");
+    expect(result.current.getValues("password")).toBe("secret");
+
+    let submitPromise: Promise<any>;
+
+    await act(async () => {
+      (result.current as any).setValue("email", "new@test.com");
+      (result.current as any).setValue("password", "newsecret");
+      submitPromise = result.current.submit();
+    });
+
+    expect(submitted).toBe(true);
+    expect(success).toBe(false);
+    expect(error).toBe(false);
+    expect(result.current.formState.isLoading).toBe(false);
+    expect(result.current.formState.isSubmitted).toBe(false);
+    expect(result.current.formState.isSubmitSuccessful).toBe(false);
+    expect(result.current.formState.isSubmitting).toBe(true);
+    expect(result.current.error).toBeFalsy();
+    expect(result.current.actionData).toBeFalsy();
+    expect(result.current.getValues("email")).toBe("new@test.com");
+    expect(result.current.getValues("password")).toBe("newsecret");
+
+    expect(mockUrqlClient.executeMutation.mock.calls[0][0].variables).toEqual({
+      id: "123",
+      user: {
+        email: "new@test.com",
+        password: "newsecret",
+      },
+    });
+
+    mockUrqlClient.executeMutation.pushResponse("updateUser", {
+      data: {
+        updateUser: {
+          success: true,
+          user: {
+            id: "123",
+            email: "new@test.com",
+            password: "newsecret",
+          },
+        },
+      },
+      stale: false,
+      hasNext: false,
+    });
+
+    await act(async () => {
+      const result = await submitPromise;
+      expect(result).toMatchInlineSnapshot(`
+        {
+          "data": {
+            "email": "new@test.com",
+            "id": "123",
+            "password": "newsecret",
+          },
+          "error": undefined,
+          "fetching": false,
+          "hasNext": false,
+          "operation": null,
+          "stale": false,
+        }
+      `);
+    });
+
+    expect(submitted).toBe(true);
+    expect(success).toBe(true);
+    expect(error).toBe(false);
+    expect(result.current.formState.isLoading).toBe(false);
+    expect(result.current.formState.isSubmitted).toBe(true);
+    expect(result.current.formState.isSubmitSuccessful).toBe(true);
+    expect(result.current.formState.isSubmitting).toBe(false);
+    expect(result.current.error).toBeFalsy();
+    expect(result.current.actionData).toEqual({ id: "123", email: "new@test.com", password: "newsecret" });
+    expect(result.current.getValues("email")).toBe("new@test.com");
+    expect(result.current.getValues("password")).toBe("newsecret");
+
+    await act(async () => {
+      result.current.reset();
+    });
+
+    expect(submitted).toBe(true);
+    expect(success).toBe(true);
+    expect(error).toBe(false);
+    expect(result.current.formState.isLoading).toBe(false);
+    expect(result.current.formState.isSubmitted).toBe(false);
+    expect(result.current.formState.isSubmitSuccessful).toBe(false);
+    expect(result.current.formState.isSubmitting).toBe(false);
+    expect(result.current.error).toBeFalsy();
+    expect(result.current.actionData).toEqual({ id: "123", email: "new@test.com", password: "newsecret" });
+    expect(result.current.getValues("user.email")).toBe("test@test.com");
+    expect(result.current.getValues("user.password")).toBe("secret");
+  });
+
+  test("when registering and changing both nested and flat values for a field the nested value takes precedence", async () => {
+    let submitted = false;
+    let success = false;
+    let error = false;
+
+    const { result } = renderHook(
+      () =>
+        useActionForm(relatedProductsApi.user.update, {
+          findBy: "123",
+          onSubmit: () => {
+            submitted = true;
+          },
+          onSuccess: () => {
+            success = true;
+          },
+          onError: () => {
+            error = true;
+          },
+        }),
+      { wrapper: MockClientWrapper(relatedProductsApi) }
+    );
+
+    expect(submitted).toBe(false);
+    expect(success).toBe(false);
+    expect(error).toBe(false);
+    expect(result.current.formState.isLoading).toBe(true);
+    expect(result.current.formState.isSubmitted).toBe(false);
+    expect(result.current.formState.isSubmitSuccessful).toBe(false);
+    expect(result.current.formState.isSubmitting).toBe(false);
+    expect(result.current.error).toBeFalsy();
+    expect(result.current.actionData).toBeFalsy();
+    expect(result.current.getValues("email")).toBeUndefined();
+    expect(result.current.getValues("user.email")).toBeUndefined();
+
+    expect(mockUrqlClient.executeQuery).toBeCalledTimes(1);
+
+    mockUrqlClient.executeQuery.pushResponse("user", {
+      data: {
+        user: {
+          id: "123",
+          email: "test@test.com",
+          password: "secret",
+          __typename: "User",
+          createdAt: "2023-10-13T18:38:06.676Z",
+          updatedAt: "2023-10-13T18:40:36.741Z",
+        },
+      },
+      stale: false,
+      hasNext: false,
+    });
+
+    expect(submitted).toBe(false);
+    expect(success).toBe(false);
+    expect(error).toBe(false);
+    expect(result.current.formState.isLoading).toBe(false);
+    expect(result.current.formState.isSubmitted).toBe(false);
+    expect(result.current.formState.isSubmitSuccessful).toBe(false);
+    expect(result.current.formState.isSubmitting).toBe(false);
+    expect(result.current.error).toBeFalsy();
+    expect(result.current.actionData).toBeFalsy();
+    expect(result.current.getValues("email")).toBe("test@test.com");
+    expect(result.current.getValues("user.email")).toBe("test@test.com");
+
+    let submitPromise: Promise<any>;
+
+    await act(async () => {
+      (result.current as any).setValue("email", "new@test.com");
+      (result.current as any).setValue("user.email", "even-newer@test.com");
+      submitPromise = result.current.submit();
+    });
+
+    expect(submitted).toBe(true);
+    expect(success).toBe(false);
+    expect(error).toBe(false);
+    expect(result.current.formState.isLoading).toBe(false);
+    expect(result.current.formState.isSubmitted).toBe(false);
+    expect(result.current.formState.isSubmitSuccessful).toBe(false);
+    expect(result.current.formState.isSubmitting).toBe(true);
+    expect(result.current.error).toBeFalsy();
+    expect(result.current.actionData).toBeFalsy();
+    expect(result.current.getValues("email")).toBe("new@test.com");
+    expect(result.current.getValues("user.email")).toBe("even-newer@test.com");
+
+    expect(mockUrqlClient.executeMutation.mock.calls[0][0].variables).toEqual({
+      id: "123",
+      user: {
+        email: "even-newer@test.com",
+        password: "secret",
+      },
+    });
+
+    mockUrqlClient.executeMutation.pushResponse("updateUser", {
+      data: {
+        updateUser: {
+          success: true,
+          user: {
+            id: "123",
+            email: "even-newer@test.com",
+            password: "secret",
+          },
+        },
+      },
+      stale: false,
+      hasNext: false,
+    });
+
+    await act(async () => {
+      const result = await submitPromise;
+      expect(result).toMatchInlineSnapshot(`
+        {
+          "data": {
+            "email": "even-newer@test.com",
+            "id": "123",
+            "password": "secret",
+          },
+          "error": undefined,
+          "fetching": false,
+          "hasNext": false,
+          "operation": null,
+          "stale": false,
+        }
+      `);
+    });
+
+    expect(submitted).toBe(true);
+    expect(success).toBe(true);
+    expect(error).toBe(false);
+    expect(result.current.formState.isLoading).toBe(false);
+    expect(result.current.formState.isSubmitted).toBe(true);
+    expect(result.current.formState.isSubmitSuccessful).toBe(true);
+    expect(result.current.formState.isSubmitting).toBe(false);
+    expect(result.current.error).toBeFalsy();
+    expect(result.current.actionData).toEqual({ id: "123", email: "even-newer@test.com", password: "secret" });
+    expect(result.current.getValues("email")).toBe("new@test.com");
+    expect(result.current.getValues("user.email")).toBe("even-newer@test.com");
+  });
+
   test("can be used with an update action when finding record by id on an ambiguous model", async () => {
     let submitted = false;
     let success = false;
@@ -1941,5 +2255,156 @@ describe("useActionForm", () => {
     expect(result.current.actionData).toEqual({ id: "123", email: "new@test.com", password: "newsecret" });
     expect(result.current.getValues("user.email")).toBe("new@test.com");
     expect(result.current.getValues("user.password")).toBe("newsecret");
+  });
+
+  test("can be used with an update action when finding record by id and supplying a default value for an additional field", async () => {
+    let submitted = false;
+    let success = false;
+    let error = false;
+
+    const { result } = renderHook(
+      () =>
+        useActionForm<
+          (typeof relatedProductsApi.user.update)["optionsType"],
+          (typeof relatedProductsApi.user.update)["schemaType"],
+          typeof relatedProductsApi.user.update,
+          { foo?: string }
+        >(relatedProductsApi.user.update, {
+          findBy: "123",
+          defaultValues: {
+            foo: "bar",
+          },
+          onSubmit: () => {
+            submitted = true;
+          },
+          onSuccess: () => {
+            success = true;
+          },
+          onError: () => {
+            error = true;
+          },
+        }),
+      { wrapper: MockClientWrapper(relatedProductsApi) }
+    );
+
+    expect(submitted).toBe(false);
+    expect(success).toBe(false);
+    expect(error).toBe(false);
+    expect(result.current.formState.isLoading).toBe(true);
+    expect(result.current.formState.isSubmitted).toBe(false);
+    expect(result.current.formState.isSubmitSuccessful).toBe(false);
+    expect(result.current.formState.isSubmitting).toBe(false);
+    expect(result.current.error).toBeFalsy();
+    expect(result.current.actionData).toBeFalsy();
+    expect(result.current.getValues("user.email")).toBeUndefined();
+    expect(result.current.getValues("user.password")).toBeUndefined();
+    expect(result.current.getValues("foo")).toBe("bar");
+
+    expect(mockUrqlClient.executeQuery).toBeCalledTimes(1);
+
+    mockUrqlClient.executeQuery.pushResponse("user", {
+      data: {
+        user: {
+          id: "123",
+          email: "test@test.com",
+          password: "secret",
+          __typename: "User",
+          createdAt: "2023-10-13T18:38:06.676Z",
+          updatedAt: "2023-10-13T18:40:36.741Z",
+        },
+      },
+      stale: false,
+      hasNext: false,
+    });
+
+    expect(submitted).toBe(false);
+    expect(success).toBe(false);
+    expect(error).toBe(false);
+    expect(result.current.formState.isLoading).toBe(false);
+    expect(result.current.formState.isSubmitted).toBe(false);
+    expect(result.current.formState.isSubmitSuccessful).toBe(false);
+    expect(result.current.formState.isSubmitting).toBe(false);
+    expect(result.current.error).toBeFalsy();
+    expect(result.current.actionData).toBeFalsy();
+    expect(result.current.getValues("user.email")).toBe("test@test.com");
+    expect(result.current.getValues("user.password")).toBe("secret");
+    expect(result.current.getValues("foo")).toBe("bar");
+
+    let submitPromise: Promise<any>;
+
+    await act(async () => {
+      (result.current as any).setValue("user.email", "new@test.com");
+      (result.current as any).setValue("user.password", "newsecret");
+      (result.current as any).setValue("foo", "baz");
+      submitPromise = result.current.submit();
+    });
+
+    expect(submitted).toBe(true);
+    expect(success).toBe(false);
+    expect(error).toBe(false);
+    expect(result.current.formState.isLoading).toBe(false);
+    expect(result.current.formState.isSubmitted).toBe(false);
+    expect(result.current.formState.isSubmitSuccessful).toBe(false);
+    expect(result.current.formState.isSubmitting).toBe(true);
+    expect(result.current.error).toBeFalsy();
+    expect(result.current.actionData).toBeFalsy();
+    expect(result.current.getValues("user.email")).toBe("new@test.com");
+    expect(result.current.getValues("user.password")).toBe("newsecret");
+    expect(result.current.getValues("foo")).toBe("baz");
+
+    expect(mockUrqlClient.executeMutation.mock.calls[0][0].variables).toEqual({
+      id: "123",
+      foo: "baz",
+      user: {
+        email: "new@test.com",
+        password: "newsecret",
+      },
+    });
+
+    mockUrqlClient.executeMutation.pushResponse("updateUser", {
+      data: {
+        updateUser: {
+          success: true,
+          user: {
+            id: "123",
+            email: "new@test.com",
+            password: "newsecret",
+          },
+        },
+      },
+      stale: false,
+      hasNext: false,
+    });
+
+    await act(async () => {
+      const result = await submitPromise;
+      expect(result).toMatchInlineSnapshot(`
+        {
+          "data": {
+            "email": "new@test.com",
+            "id": "123",
+            "password": "newsecret",
+          },
+          "error": undefined,
+          "fetching": false,
+          "hasNext": false,
+          "operation": null,
+          "stale": false,
+        }
+      `);
+    });
+
+    expect(submitted).toBe(true);
+    expect(success).toBe(true);
+    expect(error).toBe(false);
+    expect(result.current.formState.isLoading).toBe(false);
+    expect(result.current.formState.isSubmitted).toBe(true);
+    expect(result.current.formState.isSubmitSuccessful).toBe(true);
+    expect(result.current.formState.isSubmitting).toBe(false);
+    expect(result.current.error).toBeFalsy();
+    expect(result.current.actionData).toEqual({ id: "123", email: "new@test.com", password: "newsecret" });
+    expect(result.current.getValues("user.email")).toBe("new@test.com");
+    expect(result.current.getValues("user.password")).toBe("newsecret");
+    expect(result.current.getValues("foo")).toBe("baz");
   });
 });
