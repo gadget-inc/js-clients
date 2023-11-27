@@ -1,4 +1,5 @@
 import type { AssertTrue, IsExact } from "conditional-type-checks";
+import { Call } from "../src/FieldSelection.js";
 import type { DeepFilterNever, Select } from "../src/types.js";
 import type { TestSchema } from "./TestSchema.js";
 
@@ -74,6 +75,112 @@ describe("Select<>", () => {
       }
     >
   >;
+
+  const argsSelection = {
+    someConnection: Call({ first: 5 }, { pageInfo: { hasNextPage: true }, edges: { node: { id: true, state: true } } }),
+  } as const;
+
+  type _withArgsSelection = Select<TestSchema, typeof argsSelection>;
+
+  type _TestSelectingConnectionWithArgs = AssertTrue<
+    IsExact<
+      _withArgsSelection,
+      {
+        someConnection: {
+          pageInfo: { hasNextPage: boolean };
+          edges: ({ node: { id: string; state: string } | null } | null)[] | null;
+        };
+      }
+    >
+  >;
+
+  const emptyArgsSelection = {
+    someConnection: Call({}, { pageInfo: { hasNextPage: true }, edges: { node: { id: true, state: true } } }),
+  } as const;
+
+  type _withEmptyArgsSelection = Select<TestSchema, typeof emptyArgsSelection>;
+
+  type _TestSelectingConnectionWithEmptyArgs = AssertTrue<
+    IsExact<
+      _withEmptyArgsSelection,
+      {
+        someConnection: {
+          pageInfo: { hasNextPage: boolean };
+          edges: ({ node: { id: string; state: string } | null } | null)[] | null;
+        };
+      }
+    >
+  >;
+
+  const wrongArgsSelection = {
+    someConnection: Call({ first: "wrong type" }, { pageInfo: { hasNextPage: true }, edges: { node: { id: true, state: true } } }),
+  } as const;
+  type _withWrongArgsSelection = Select<TestSchema, typeof wrongArgsSelection>;
+  type _TestSelectingConnectionWithWrongArgs = AssertTrue<
+    IsExact<_withWrongArgsSelection, { someConnection: { $error: "incorrectly typed args passed when calling field" } }>
+  >;
+
+  const doesntAcceptArgsSelection = {
+    optionalObj: Call({ first: "wrong type" }, { test: true }),
+  } as const;
+  type _withDoesntAcceptArgsSelection = Select<TestSchema, typeof doesntAcceptArgsSelection>;
+  type _TestSelectingFieldWhichDoesntAcceptArgs = AssertTrue<
+    IsExact<_withDoesntAcceptArgsSelection, { optionalObj: { $error: "field does not accept args" } }>
+  >;
+
+  const doesntAcceptArgsScalarSelection = {
+    num: Call({ first: "wrong type" }, { test: true }),
+  } as const;
+  type _withDoesntAcceptArgsScalarSelection = Select<TestSchema, typeof doesntAcceptArgsScalarSelection>;
+  type _TestSelectingScalarFieldWhichDoesntAcceptArgs = AssertTrue<
+    IsExact<_withDoesntAcceptArgsScalarSelection, { num: { $error: "field does not accept args" } }>
+  >;
+
+  const nestedCallSelection = {
+    someConnection: Call(
+      { first: 5 },
+      {
+        edges: {
+          node: {
+            id: true,
+            state: true,
+            children: Call(
+              { first: 10 },
+              {
+                edges: {
+                  node: {
+                    id: true,
+                  },
+                },
+              }
+            ),
+          },
+        },
+      }
+    ),
+  } as const;
+  const nestedCallNoSelection = {
+    someConnection: {
+      edges: {
+        node: {
+          id: true,
+          state: true,
+          children: {
+            edges: {
+              node: {
+                id: true,
+              },
+            },
+          },
+        },
+      },
+    },
+  } as const;
+
+  type _withNestedNoCallSelection = Select<TestSchema, typeof nestedCallNoSelection>;
+  type _withNestedCallSelection = Select<TestSchema, typeof nestedCallSelection>;
+
+  type _TestSelectingWithNestedCalls = AssertTrue<IsExact<_withNestedCallSelection, _withNestedNoCallSelection>>;
 
   test("true", () => undefined);
 });

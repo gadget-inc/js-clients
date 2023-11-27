@@ -32,11 +32,37 @@ export type TestSchema = {
       }[]
     | null;
   someConnection: {
+    ["$args"]: {
+      first?: number;
+      last?: number;
+      before?: string;
+      after?: string;
+    };
     edges:
       | ({
           node: {
             id: string;
             state: string;
+            children: {
+              ["$args"]: {
+                first?: number;
+                last?: number;
+                before?: string;
+                after?: string;
+              };
+              pageInfo: {
+                hasNextPage: boolean;
+                hasPreviousPage: boolean;
+              };
+              edges:
+                | ({
+                    node: {
+                      id: string;
+                      state: string;
+                    };
+                  } | null)[]
+                | null;
+            };
           } | null;
         } | null)[]
       | null;

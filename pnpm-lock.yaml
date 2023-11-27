@@ -118,7 +118,7 @@ importers:
         specifier: ^2.0.6
         version: 2.0.6
       tiny-graphql-query-compiler:
-        specifier: ^0.2.2
+        specifier: ^0.2.3
         version: link:../tiny-graphql-query-compiler
       tslib:
         specifier: ^2.6.2

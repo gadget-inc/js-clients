@@ -1,5 +1,5 @@
 import type { VariableOptions } from "tiny-graphql-query-compiler";
-import type { FieldSelection } from "./FieldSelection.js";
+import type { FieldCall, FieldSelection } from "./FieldSelection.js";
 
 /**
  * Limit the keys in T to only those that also exist in U. AKA Subset or Intersection.
@@ -49,6 +49,15 @@ export type NonNeverKeys<Selection> = {
  */
 export type FilterNever<T extends Record<string, unknown>> = NonNeverKeys<T> extends never ? never : { [Key in NonNeverKeys<T>]: T[Key] };
 
+type InnerSelectWithCall<Schema, Args, Selection extends FieldSelection | null | undefined> = Schema extends {
+  ["$args"]: Record<string, any>;
+}
+  ? Args extends Schema["$args"]
+    ? InnerSelect<Schema, Selection>
+    : { $error: `incorrectly typed args passed when calling field` }
+  : { $error: `field does not accept args` };
+
+/** Helper type for recursing through the selection to build the result type */
 type InnerSelect<Schema, Selection extends FieldSelection | null | undefined> = Selection extends null | undefined
   ? never
   : Schema extends (infer T)[]
@@ -58,6 +67,8 @@ type InnerSelect<Schema, Selection extends FieldSelection | null | undefined> = 
   : {
       [Key in keyof Selection & keyof Schema]: Selection[Key] extends true
         ? Schema[Key]
+        : Selection[Key] extends FieldCall<infer Args, infer Subselection, any>
+        ? InnerSelectWithCall<Schema[Key], Args, Subselection>
         : Selection[Key] extends FieldSelection
         ? InnerSelect<Schema[Key], Selection[Key]>
         : never;

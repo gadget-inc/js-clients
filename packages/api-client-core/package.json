@@ -1,6 +1,6 @@
 {
   "name": "@gadgetinc/api-client-core",
-  "version": "0.15.11",
+  "version": "0.15.12",
   "files": [
     "Readme.md",
     "dist/**/*"
@@ -37,7 +37,7 @@
     "graphql-ws": "^5.13.1",
     "isomorphic-ws": "^5.0.0",
     "klona": "^2.0.6",
-    "tiny-graphql-query-compiler": "^0.2.2",
+    "tiny-graphql-query-compiler": "^0.2.3",
     "tslib": "^2.6.2",
     "ws": "^8.13.0"
   },
