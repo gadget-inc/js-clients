@@ -72,7 +72,7 @@ export class GadgetConnection {
   static version = "<prerelease>" as const;
 
   // Options used when generating new GraphQL clients for the base connection and for for transactions
-  private endpoint: string;
+  readonly endpoint: string;
   private subscriptionClientOptions?: SubscriptionClientOptions;
   private websocketsEndpoint: string;
   private websocketImplementation?: WebSocket;
