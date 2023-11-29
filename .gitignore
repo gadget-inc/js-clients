@@ -13,4 +13,7 @@ packages/*/dist
 .idea
 packages/sample-app
 *.orig
+# cypress environment variables for each developer
 cypress.env.json
+# generated graphql queries
+packages/react/src/internal/gql

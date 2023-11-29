@@ -5,7 +5,7 @@ import type { GadgetRecord, RecordShape } from "./GadgetRecord.js";
 import type { InternalModelManager } from "./InternalModelManager.js";
 import type { AnyModelManager } from "./ModelManager.js";
 import { GadgetClientError, GadgetOperationError } from "./support.js";
-import { PaginateOptions } from "./types.js";
+import type { PaginateOptions } from "./types.js";
 
 type PaginationConfig = {
   pageInfo: { hasNextPage: boolean; hasPreviousPage: boolean; startCursor: string; endCursor: string };

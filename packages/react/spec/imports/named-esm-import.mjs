@@ -1,1 +1,1 @@
-import { Provider } from "../../dist/esm/index.js";
+import { Provider } from "@gadgetinc/react";

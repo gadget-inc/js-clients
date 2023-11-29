@@ -10,12 +10,17 @@
   "homepage": "https://github.com/gadget-inc/js-clients/tree/main/packages/react",
   "type": "module",
   "exports": {
+    "./package.json": "./package.json",
     ".": {
       "import": "./dist/esm/index.js",
       "require": "./dist/cjs/index.js",
       "default": "./dist/esm/index.js"
     },
-    "./package.json": "./package.json"
+    "./auto/polaris": {
+      "import": "./dist/esm/auto/polaris/index.js",
+      "require": "./dist/cjs/auto/polaris/index.js",
+      "default": "./dist/esm/auto/polaris/index.js"
+    }
   },
   "source": "src/index.ts",
   "main": "dist/cjs/index.js",
@@ -24,31 +29,49 @@
     "typecheck": "tsc --noEmit",
     "build": "rm -rf dist && tsc -b tsconfig.cjs.json tsconfig.esm.json && echo '{\"type\": \"commonjs\"}' > dist/cjs/package.json && echo '{\"type\": \"module\"}' > dist/esm/package.json",
     "watch": "tsc -b tsconfig.esm.json --watch --preserveWatchOutput",
+    "gql-gen": "graphql-codegen",
     "prepublishOnly": "pnpm build",
     "prerelease": "gitpkg publish"
   },
   "dependencies": {
     "@gadgetinc/api-client-core": "^0.15.11",
+    "@graphql-typed-document-node/core": "^3.2.0",
+    "@hookform/resolvers": "^3.3.1",
+    "date-fns": "^2.30.0",
+    "date-fns-tz": "^2.0.0",
+    "pluralize": "^8.0.0",
     "react-fast-compare": "^3.2.2",
     "react-hook-form": "^7.46.1",
-    "urql": "^4.0.4"
+    "urql": "^4.0.4",
+    "yup": "^1.2.0"
   },
   "resolutions": {
     "regexp.prototype.flags": "1.5.0"
   },
   "devDependencies": {
+    "@emotion/react": "^11.11.1",
+    "@emotion/styled": "^11.11.0",
+    "@gadget-client/js-clients-test": "^1.464.0",
     "@gadgetinc/api-client-core": "workspace:*",
+    "@graphql-codegen/cli": "^5.0.0",
+    "@graphql-codegen/client-preset": "^4.1.0",
     "@n1ru4l/json-patch-plus": "^0.2.0",
+    "@shopify/polaris": "^12.0.0",
+    "@shopify/polaris-icons": "^7.9.0",
     "@testing-library/jest-dom": "^5.16.5",
     "@testing-library/react": "^13.4.0",
     "@testing-library/user-event": "^14.5.1",
     "@types/jest": "^29.5.5",
     "@types/lodash": "^4.14.191",
     "@types/node": "^18.0.0",
+    "@types/pluralize": "^0.0.31",
     "@types/react": "^18.2.9",
     "@types/react-dom": "^18.2.4",
     "@urql/core": "^4.0.10",
     "conditional-type-checks": "^1.0.6",
+    "cypress": "^13.2.0",
+    "cypress-each": "^1.13.3",
+    "execa": "^5.1.1",
     "graphql": "^16.8.1",
     "graphql-ws": "^5.13.1",
     "lodash": "^4.17.21",
@@ -57,7 +80,17 @@
     "wonka": "^6.3.2"
   },
   "peerDependencies": {
+    "@shopify/polaris": "^11.14.0",
+    "@shopify/polaris-icons": "^7.9.0",
     "react": "^18.0.0",
     "react-dom": "^18.0.0"
+  },
+  "peerDependenciesMeta": {
+    "@shopify/polaris": {
+      "optional": true
+    },
+    "@shopify/polaris-icons": {
+      "optional": true
+    }
   }
 }
