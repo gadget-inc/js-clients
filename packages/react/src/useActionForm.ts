@@ -64,8 +64,34 @@ const toDefaultValues = (modelApiIdentifier: string | undefined, data: any) => {
     data[modelApiIdentifier] = omitKeys(data[modelApiIdentifier]);
   }
 
-  return data;
+  return unwindEdges(data);
 };
+
+const unwindEdges = (input: any): any => {
+  if (Array.isArray(input)) {
+    return input.map(unwindEdges);
+  }
+
+  if (input !== null || input !== undefined && typeof input === 'object') {
+      if (Array.isArray(input)) {
+        return input.map(unwindEdges);
+    }
+
+    if (input !== null && typeof input === 'object') {
+        if (input.edges && Array.isArray(input.edges)) {
+            return input.edges.map((edge: any) => unwindEdges(edge.node));
+        }
+
+        const result: any = {};
+        for (const key of Object.keys(input)) {
+            result[key] = unwindEdges(input[key]);
+        }
+        return result;
+    }
+
+    return input;
+  }
+}
 
 /**
  * The identity of a record to build a form for
@@ -207,6 +233,10 @@ export const useActionForm = <
      * Called when the form submission errors before sending, during the API call, or if the API call returns an error.
      */
     onError?: (error: Error | FieldErrors<ActionFunc["variablesType"]>) => void;
+    /**
+     * Testing purposes
+     */
+    isNested?: boolean;
   }
 ): UseActionFormResult<GivenOptions, SchemaT, ActionFunc, ActionFunc["variablesType"] & ExtraFormVariables, FormContext> => {
   const api = useApi();
@@ -315,6 +345,12 @@ export const useActionForm = <
             }
           }
 
+          if (options?.isNested) {
+            console.log("variables", JSON.stringify(variables, null, 2));
+            variables = transformNested(variables);
+            console.log("transformedVariables", JSON.stringify(variables, null, 2));
+          }
+
           options?.onSubmit?.();
 
           result = await runAction(variables);
@@ -335,6 +371,30 @@ export const useActionForm = <
     },
     [handleSubmit, formHook, handleSubmissionError, existingRecordId, options, runAction]
   );
+
+  function transformNested(input: ActionFunc["variablesType"], depth = 0): ActionFunc["variablesType"] {
+    if (Array.isArray(input)) {
+      return input.map(item => transformNested(item, depth + 1));
+    } else if (input !== undefined && typeof input === 'object') {
+      const result: any = {};
+
+      for (const key of Object.keys(input)) {
+        result[key] = transformNested(input[key], depth + 1);
+      }
+
+      if (depth > 1) {
+        if ('id' in input) {
+          return { update: { ...result } };
+        } else {
+          return { create: { ...result} };
+        }
+      }
+
+      return result;
+    } 
+
+    return input;
+  }
 
   const proxiedFormState = new Proxy(formState, {
     get: (target, prop) => {
