@@ -1,12 +1,13 @@
 import type {
   ActionFunction,
+  AnyClient,
   AnyModelManager,
   DefaultSelection,
   GadgetRecord,
   GlobalActionFunction,
   Select,
 } from "@gadgetinc/api-client-core";
-import { camelize } from "@gadgetinc/api-client-core";
+import { $modelRelationships, camelize } from "@gadgetinc/api-client-core";
 import { useCallback, useEffect, useRef } from "react";
 import type { DeepPartial, FieldErrors, FieldValues, UseFormProps, UseFormReturn } from "react-hook-form";
 import { useForm } from "react-hook-form";
@@ -46,7 +47,7 @@ const useFindExistingRecord = (
   }
 };
 
-const OmittedKeys = ["__typename", "id", "createdAt", "updatedAt"] as const;
+const OmittedKeys = ["id", "createdAt", "updatedAt", "__typename"] as const;
 type OmittedKey = (typeof OmittedKeys)[number];
 
 const omitKeys = (data: any) => {
@@ -64,7 +65,29 @@ const toDefaultValues = (modelApiIdentifier: string | undefined, data: any) => {
     data[modelApiIdentifier] = omitKeys(data[modelApiIdentifier]);
   }
 
-  return data;
+  return unwindEdges(data);
+};
+
+const unwindEdges = (input: any): any => {
+  if (input !== null || (input !== undefined && typeof input === "object")) {
+    if (Array.isArray(input)) {
+      return input.map(unwindEdges);
+    }
+
+    if (input !== null && typeof input === "object") {
+      if (input.edges && Array.isArray(input.edges)) {
+        return input.edges.map((edge: any) => unwindEdges(edge.node));
+      }
+
+      const result: any = {};
+      for (const key of Object.keys(input)) {
+        result[key] = unwindEdges(input[key]);
+      }
+      return result;
+    }
+
+    return input;
+  }
 };
 
 const disambiguateDefaultValues = (data: any, initialData: any, action: any) => {
@@ -98,6 +121,200 @@ const disambiguateDefaultValues = (data: any, initialData: any, action: any) => 
   }
 
   result[action.modelApiIdentifier] = modelData;
+  return result;
+};
+
+function getUpdates(data: any): Record<string, number[]> {
+  const updateList: Record<string, number[]> = {};
+
+  function traverse(input: any, path: string | undefined = undefined, depth = 0): any {
+    if (Array.isArray(input)) {
+      return input.map((item: any, index) => {
+        const currentPath = path ? `${path}.${index}` : index.toString();
+        return traverse(item, currentPath, depth + 1);
+      });
+    } else if (input !== undefined && input !== null && typeof input === "object") {
+      const result: any = {};
+
+      for (const key of Object.keys(input)) {
+        const currentPath = path ? `${path}.${key}` : key;
+        result[key] = traverse(input[key], currentPath, depth + 1);
+      }
+
+      if (depth > 1) {
+        const newPath = path?.substring(0, path.length - 2);
+
+        if ("id" in input) {
+          if (!updateList[newPath!]) {
+            updateList[newPath!] = [];
+          }
+
+          updateList[newPath!].push(input["id"]);
+        }
+      }
+
+      return result;
+    }
+
+    return input;
+  }
+
+  traverse(data);
+  return updateList;
+}
+
+export const reshapeDataForGraphqlApi = async (client: AnyClient, defaultValues: any, data: any) => {
+  const referencedTypes = client[$modelRelationships];
+
+  if (!referencedTypes) {
+    throw new Error("No Gadget model metadata found -- please ensure you are using the latest version of the API client for your app");
+  }
+
+  const updates = getUpdates(defaultValues); // grab the updates from default values to see what needs to be created, updated, or deleted
+
+  function transform(
+    input: any,
+    depth = 0,
+    path: string | undefined = undefined,
+    fieldType: { type: string; model: string } | null = null,
+    fieldRelationships: Record<string, { type: string; model: string }> | null = null
+  ): any {
+    if (Array.isArray(input)) {
+      // If the input is an array, we need to handle it differently
+      const results: any[] = [];
+      const edge = updates[path!]; // grab the list of ids from the updates object, based on the path
+      const handled: number[] = [];
+
+      if (edge) {
+        // if there are ids in the updates object, we need to handle them first
+        results.push(
+          edge.map((nodeId: any, nodeIndex: number) => {
+            // for each id, find the corresponding item in the input array
+            const item = input.find((item: any) => item.id == nodeId); // find the item in the input array that matches the id
+
+            if (!item) {
+              // if the item is not found, we need to delete it from the updates object as well as anything that references it
+              const updateEntries = Object.entries(updates); // grab all the entries from the updates object
+              const updateEntry = updateEntries.find(([key, _ids]) => key.includes(path! + "." + nodeIndex));
+
+              if (updateEntry) {
+                // if we find an entry that matches the path, we need to delete it from the updates object
+                const { 0: updatePath, 1: _ } = updateEntry;
+                delete updates[updatePath];
+              }
+
+              return { delete: { id: nodeId } };
+            } else {
+              const index = input.findIndex((item: any) => item.id == nodeId);
+              delete updates[path!][nodeIndex]; // delete the id from the updates object so it's not handled again
+
+              handled.push(index);
+
+              const currentPath = path ? `${path}.${index}` : index.toString();
+              return transform(item, depth + 1, currentPath, fieldType, fieldRelationships); // transform the item
+            }
+          })
+        );
+      }
+
+      // handle the rest of the array - anything that wasn't in the updates object
+      results.push(
+        input
+          .filter((_item, index) => !handled.includes(index))
+          .map((item: any, index) => {
+            const currentPath = path ? `${path}.${index}` : index.toString();
+            return transform(item, depth + 1, currentPath, fieldType, fieldRelationships);
+          })
+      );
+
+      return results.flatMap((result) => result);
+    } else if (input != null && typeof input === "object") {
+      // if the input is an object, we need to handle it differently
+      const result: any = {};
+
+      for (const key of Object.keys(input)) {
+        const currentPath = path ? `${path}.${key}` : key;
+
+        const fieldType = fieldRelationships ? fieldRelationships[key] : null;
+        const relationships = fieldType ? referencedTypes?.[fieldType.model] : referencedTypes?.[key]; //
+
+        result[key] = transform(input[key], depth + 1, currentPath, fieldType, relationships);
+      }
+
+      const { __typename, ...rest } = result;
+
+      let belongsTo = null;
+      const belongsToRelationships: Record<string, { type: string; model: string }> | null = fieldRelationships // grab the belongsTo relationships from the fieldRelationships object
+        ? Object.entries(fieldRelationships)
+            .filter(([_key, value]) => value.type === "BelongsTo")
+            .reduce((obj, [key, value]) => {
+              obj[key] = value;
+              return obj;
+            }, {} as Record<string, { type: string; model: string }>)
+        : null;
+
+      for (const key of Object.keys(belongsToRelationships ?? {})) {
+        // for each belongsTo relationship, check if the input has a key that matches the relationship
+        if (`${key}Id` in input) {
+          if (belongsTo == null) {
+            belongsTo = {};
+          }
+
+          belongsTo = { ...belongsTo, [key]: { _link: input[`${key}Id`] } };
+          delete rest[`${key}Id`]; // delete the key from the rest object so it's not handled again
+        }
+      }
+
+      if (belongsTo) {
+        return depth <= 1 ? { ...rest, ...belongsTo } : { ...rest, create: { ...belongsTo } }; // when we're in the root, we need to return the belongsTo object as part of the result otherwise wrap it in a create
+      }
+
+      if (depth <= 1) {
+        return { ...rest };
+      }
+
+      if (fieldType == null) {
+        throw new Error(
+          `Can't transform input, no field type found. ${JSON.stringify(
+            {
+              input,
+              path,
+              referencedTypes,
+            },
+            null,
+            2
+          )}`
+        );
+      }
+
+      const inputHasId = "id" in input;
+
+      switch (fieldType.type) {
+        case "HasMany":
+        case "HasOne":
+          return inputHasId ? { update: { ...rest } } : { create: { ...rest } };
+        case "BelongsTo":
+          return inputHasId ? { _link: input["id"] } : { create: { ...rest } };
+        default:
+          throw new Error(
+            `Can't transform input, Unknown field type ${fieldType}. ${JSON.stringify(
+              {
+                input,
+                path,
+                referencedTypes,
+              },
+              null,
+              2
+            )}`
+          );
+      }
+    }
+
+    return input;
+  }
+
+  const result = transform(data);
+
   return result;
 };
 
@@ -167,13 +384,29 @@ type UseActionFormState<
   errors: UseFormReturn<FormVariables, FormContext>["formState"]["errors"] & ServerSideError<F>;
 };
 
+type Increment<A extends number[]> = [...A, 0];
+
+type IsAny<T> = 0 extends 1 & T ? true : false;
+
+export type FormInput<InputT, Depth extends number = 9, CurrentDepth extends number[] = []> = CurrentDepth["length"] extends Depth
+  ? any
+  : IsAny<InputT> extends true
+  ? any
+  : InputT extends (infer Element)[]
+  ? FormInput<Element, Depth, CurrentDepth>[]
+  : InputT extends { create?: unknown; update?: unknown }
+  ? FormInput<InputT["create"], Depth, Increment<CurrentDepth>> | FormInput<InputT["update"], Depth, Increment<CurrentDepth>>
+  : InputT extends object
+  ? { [K in keyof InputT]: FormInput<InputT[K], Depth, Increment<CurrentDepth>> }
+  : InputT | null | undefined;
+
 export type UseActionFormResult<
   GivenOptions extends OptionsType,
   SchemaT,
   ActionFunc extends ActionFunction<GivenOptions, any, any, SchemaT, any> | GlobalActionFunction<any>,
   FormVariables extends FieldValues,
   FormContext = any
-> = Omit<UseFormReturn<FormVariables, FormContext>, "handleSubmit" | "formState"> & {
+> = Omit<UseFormReturn<FormVariables & FormInput<ActionFunc["variablesType"]>, FormContext>, "handleSubmit" | "formState"> & {
   formState: UseActionFormState<ActionFunc, FormVariables, FormContext>;
   /**
    * Any error that occurred during initial data fetching or action submission
@@ -208,7 +441,7 @@ export const useActionForm = <
   SchemaT,
   ActionFunc extends ActionFunction<GivenOptions, any, any, SchemaT, any> | GlobalActionFunction<any>,
   // eslint-disable-next-line @typescript-eslint/ban-types
-  ExtraFormVariables = {},
+  ExtraFormVariables extends FieldValues = {},
   FormContext = any,
   ActionResultData = UseActionFormHookStateData<ActionFunc>,
   DefaultValues = ActionFunc["variablesType"] & ExtraFormVariables
@@ -242,7 +475,7 @@ export const useActionForm = <
      */
     onError?: (error: Error | FieldErrors<ActionFunc["variablesType"]>) => void;
   }
-): UseActionFormResult<GivenOptions, SchemaT, ActionFunc, ActionFunc["variablesType"] & ExtraFormVariables, FormContext> => {
+): UseActionFormResult<GivenOptions, SchemaT, ActionFunc, ExtraFormVariables, FormContext> => {
   const api = useApi();
   const findExistingRecord = !!options?.findBy;
   const hasSetInitialValues = useRef<boolean>(!findExistingRecord);
@@ -336,13 +569,17 @@ export const useActionForm = <
 
       await handleSubmit(
         async (data) => {
+          if (isModelAction) {
+            if (!action.hasAmbiguousIdentifier && findResult.data) {
+              data = disambiguateDefaultValues(data, findResult.data, action);
+            }
+
+            data = await reshapeDataForGraphqlApi(api, defaultValues, data);
+          }
+
           let variables: ActionFunc["variablesType"] = {
             ...data,
           };
-
-          if (isModelAction && !action.hasAmbiguousIdentifier && findResult.data) {
-            variables = disambiguateDefaultValues(data, findResult.data, action);
-          }
 
           if (existingRecordId) {
             variables.id = existingRecordId;
@@ -374,7 +611,19 @@ export const useActionForm = <
 
       return result;
     },
-    [handleSubmit, formHook, handleSubmissionError, existingRecordId, options, runAction, findResult.data, isModelAction, action]
+    [
+      formHook,
+      handleSubmit,
+      action,
+      isModelAction,
+      findResult.data,
+      existingRecordId,
+      options,
+      runAction,
+      api,
+      defaultValues,
+      handleSubmissionError,
+    ]
   );
 
   const proxiedFormState = new Proxy(formState, {
