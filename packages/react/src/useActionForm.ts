@@ -16,7 +16,7 @@ import { useFindBy } from "./useFindBy.js";
 import { useFindOne } from "./useFindOne.js";
 import { useGlobalAction } from "./useGlobalAction.js";
 import type { ActionHookState, ErrorWrapper, OptionsType } from "./utils.js";
-import { get, set } from "./utils.js";
+import { get, set, transformData } from "./utils.js";
 
 export * from "react-hook-form";
 
@@ -329,6 +329,11 @@ export const useActionForm = <
 
       await handleSubmit(
         async (data) => {
+
+          if (options?.isNested) {
+            data = transformData(defaultValues, data);
+          }
+
           let variables: ActionFunc["variablesType"] = {
             ...data,
           };
@@ -343,12 +348,6 @@ export const useActionForm = <
             for (const key of options.send) {
               set(variables, key, get(unmasked, key));
             }
-          }
-
-          if (options?.isNested) {
-            console.log("variables", JSON.stringify(variables, null, 2));
-            variables = transformNested(variables);
-            console.log("transformedVariables", JSON.stringify(variables, null, 2));
           }
 
           options?.onSubmit?.();
@@ -371,30 +370,6 @@ export const useActionForm = <
     },
     [handleSubmit, formHook, handleSubmissionError, existingRecordId, options, runAction]
   );
-
-  function transformNested(input: ActionFunc["variablesType"], depth = 0): ActionFunc["variablesType"] {
-    if (Array.isArray(input)) {
-      return input.map(item => transformNested(item, depth + 1));
-    } else if (input !== undefined && typeof input === 'object') {
-      const result: any = {};
-
-      for (const key of Object.keys(input)) {
-        result[key] = transformNested(input[key], depth + 1);
-      }
-
-      if (depth > 1) {
-        if ('id' in input) {
-          return { update: { ...result } };
-        } else {
-          return { create: { ...result} };
-        }
-      }
-
-      return result;
-    } 
-
-    return input;
-  }
 
   const proxiedFormState = new Proxy(formState, {
     get: (target, prop) => {

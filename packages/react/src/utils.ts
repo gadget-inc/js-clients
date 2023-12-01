@@ -9,6 +9,7 @@ import type {
 import { gadgetErrorFor, getNonNullableError } from "@gadgetinc/api-client-core";
 import type { CombinedError, RequestPolicy } from "@urql/core";
 import { GraphQLError } from "graphql";
+import { update } from "lodash";
 import { useMemo } from "react";
 import type { AnyVariables, Operation, OperationContext, UseQueryArgs, UseQueryState } from "urql";
 
@@ -398,3 +399,104 @@ export const set = (obj: any, path: string, value: any) => {
     return acc[key];
   }, obj);
 };
+
+export function transformData(defaultValues: any, data: any) {
+  console.log("defaultValues", JSON.stringify(defaultValues, null, 2));
+  console.log("data", JSON.stringify(data, null, 2));
+  const updates = getUpdates(defaultValues);
+
+  console.log("updates", updates);
+
+  function transform(input: any, updates: Record<string, number[]>, depth = 0, path: string | undefined = undefined): any {
+    if (Array.isArray(input)) {
+      const edge = updates[path!];
+      if (edge) {
+        return edge.map((nodeId: any, nodeIndex: number) => {
+          console.log("info", { edge, nodeId, path, input});
+          const item = input.find((item: any) => item.id === nodeId);
+
+          if (!item) { // BROKEN PART HERE IF QUESTIONS INDEX 0 IS DELETED THEN IT WILL NOT WORK
+            const updateEntries = Object.entries(updates);
+            if (updateEntries.find(([key, ids]) => key.includes(path! + "." + nodeIndex))) {
+              delete updates[path! + "." + nodeIndex];
+            }
+            return { delete: { id: nodeId } };
+          } else {
+            const index = input.findIndex((item: any) => item.id === nodeId);
+            const currentPath = path ? `${path}.${index}` : index.toString();
+            return transform(item, updates, depth + 1, currentPath);
+          }
+        });
+      } else {
+        return input.map((item: any, index) => {
+          const currentPath = path ? `${path}.${index}` : index.toString();
+          return transform(item, updates, depth + 1, currentPath);
+        });
+      }
+    } else if (input !== undefined && typeof input === 'object') {
+      const result: any = {};
+
+      for (const key of Object.keys(input)) {
+        const currentPath = path ? `${path}.${key}` : key;
+        result[key] = transform(input[key], updates, depth + 1, currentPath);
+      }
+
+      if (depth > 1) {
+        if ('id' in input) {
+          return { update: { ...result } };
+        } else {
+          return { create: { ...result} };
+        }
+      }
+
+      return result;
+    } 
+
+    return input;
+  }
+
+  const result = transform(data, updates);
+
+  console.log('transformedData', JSON.stringify(result, null, 2));
+
+  return result;
+}
+
+function getUpdates(data: any): Record<string, number[]> {
+  const updateList: Record<string, number[]> = {};
+
+  function go(input: any, path: string | undefined = undefined, depth = 0): any {
+    if (Array.isArray(input)) {
+      return input.map((item: any, index) => {
+      const currentPath = path ? `${path}.${index}` : index.toString();
+        return go(item, currentPath, depth + 1);
+      });
+    } else if (input !== undefined && typeof input === 'object') {
+      const result: any = {};
+
+      for (const key of Object.keys(input)) {
+        const currentPath = path ? `${path}.${key}` : key;
+        result[key] = go(input[key], currentPath, depth + 1);
+      }
+
+      if (depth > 1){
+        const newPath = path?.substring(0, path.length - 2);
+
+        if ('id' in input) {
+          if (!updateList[newPath!]) {
+            updateList[newPath!] = [];
+          }
+
+          updateList[newPath!].push(input['id']);
+        } 
+      }
+
+      return result;
+    } 
+
+    return input
+  }
+  
+  go(data);
+  return updateList;
+}
