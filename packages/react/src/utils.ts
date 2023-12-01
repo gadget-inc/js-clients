@@ -400,12 +400,17 @@ export const set = (obj: any, path: string, value: any) => {
   }, obj);
 };
 
-export function transformData(defaultValues: any, data: any) {
-  console.log("defaultValues", JSON.stringify(defaultValues, null, 2));
-  console.log("data", JSON.stringify(data, null, 2));
-  const updates = getUpdates(defaultValues);
+export function hasNested(data: any) {
+  return Object.values(data).some((value) => {
+    return typeof value === "object" && value !== undefined && !Array.isArray(value);
+  });
+}
 
-  console.log("updates", updates);
+export function transformData(defaultValues: any, data: any) {
+  console.log('defaultValues', JSON.stringify(defaultValues, null, 2));
+  console.log('data', JSON.stringify(data, null, 2));
+
+  const updates = getUpdates(defaultValues);
 
   function transform(input: any, updates: Record<string, number[]>, depth = 0, path: string | undefined = undefined): any {
     if (Array.isArray(input)) {
@@ -415,10 +420,12 @@ export function transformData(defaultValues: any, data: any) {
           console.log("info", { edge, nodeId, path, input});
           const item = input.find((item: any) => item.id === nodeId);
 
-          if (!item) { // BROKEN PART HERE IF QUESTIONS INDEX 0 IS DELETED THEN IT WILL NOT WORK
+          if (!item) {
             const updateEntries = Object.entries(updates);
-            if (updateEntries.find(([key, ids]) => key.includes(path! + "." + nodeIndex))) {
-              delete updates[path! + "." + nodeIndex];
+            const updateEntry = updateEntries.find(([key, _ids]) => key.includes(path! + "." + nodeIndex));
+            if (updateEntry) {
+              const { 0: updatePath, 1: _ } = updateEntry;
+              delete updates[updatePath];
             }
             return { delete: { id: nodeId } };
           } else {

@@ -1,666 +1,895 @@
 import { act, renderHook } from "@testing-library/react";
 import { useActionForm, useFieldArray } from "../src/useActionForm.js";
-import { transformData, findDifferences, getDeletes, transformNested } from "../src/utils.js";
 import { nestedExampleApi } from "./apis.js";
 import { MockClientWrapper, mockUrqlClient } from "./testWrappers.js";
 
 describe("useActionFormNested", () => {
-  test("simple nested variables transform", async () => {
-    const { result } = renderHook(
-      () =>
-        useActionForm(nestedExampleApi.quiz.update, {
-          isNested: true,
-          findBy: "123",
-          select: {
-            id: true,
-            title: true,
-            questions: {
-              edges: {
-                node: {
-                  id: true,
-                  text: true,
-                },
-              },
-            },
-          },
-        }),
-      { wrapper: MockClientWrapper(nestedExampleApi) }
-    );
+  describe("create", () => {
+    test("create still works", async () => {
+      const { result: useActionFormHook } = renderHook(() => useActionForm(nestedExampleApi.quiz.create), {
+        wrapper: MockClientWrapper(nestedExampleApi),
+      });
 
-    const { result: fieldArray } = renderHook(() => useFieldArray({ control: result.current.control, name: "quiz.questions" }));
+      expect(mockUrqlClient.executeQuery).toBeCalledTimes(0);
 
-    expect(mockUrqlClient.executeQuery).toBeCalledTimes(1);
+      await act(async () => {
+        useActionFormHook.current.setValue("quiz.text", "test quiz");
+      });
 
-    mockUrqlClient.executeQuery.pushResponse("quiz", {
-      data: {
-        quiz: {
-          id: "123",
-          title: "test quiz",
-          questions: {
-            edges: [
-              {
-                node: {
-                  id: "1",
-                  text: "test question",
-                },
-              },
-              {
-                node: {
-                  id: "2",
-                  text: "test question 2",
-                },
-              },
-            ],
+      let submitPromise: Promise<any>;
+
+      await act(async () => {
+        submitPromise = useActionFormHook.current.submit();
+      });
+
+      mockUrqlClient.executeMutation.pushResponse("createQuiz", {
+        data: {
+          updateQuiz: {
+            success: true,
           },
         },
-      },
-      stale: false,
-      hasNext: false,
-    });
+        hasNext: false,
+        stale: false,
+      });
 
-    let submitPromise: Promise<any>;
+      await act(async () => {
+        await submitPromise;
+      });
 
-    await act(async () => {
-      fieldArray.current.append({ text: "test question 3" });
-      submitPromise = result.current.submit();
-    });
-
-    mockUrqlClient.executeMutation.pushResponse("updateQuiz", {
-      data: {
-        updateQuiz: {
-          success: true,
-        },
-      },
-      hasNext: false,
-      stale: false,
-    });
-
-    await act(async () => {
-      await submitPromise;
-    });
-  });
-
-  test("humanize form keys", async () => {
-    const { result } = renderHook(
-      () =>
-        useActionForm(nestedExampleApi.quiz.update, {
-          isNested: true,
-          findBy: "123",
-          select: {
-            id: true,
-            title: true,
-            questions: {
-              edges: {
-                node: {
-                  id: true,
-                  text: true,
-                  answers: {
-                    edges: {
-                      node: {
-                        id: true,
-                        text: true,
-                      },
-                    },
-                  },
-                },
-              },
-            },
+      expect(mockUrqlClient.executeMutation.mock.calls[0][0].variables).toMatchInlineSnapshot(`
+        {
+          "quiz": {
+            "text": "test quiz",
           },
-        }),
-      { wrapper: MockClientWrapper(nestedExampleApi) }
-    );
+        }
+      `);
+    });
 
-    expect(mockUrqlClient.executeQuery).toBeCalledTimes(1);
+    test("create works with a single nested child", async () => {
+      const { result: useActionFormHook } = renderHook(() => useActionForm(nestedExampleApi.quiz.create), {
+        wrapper: MockClientWrapper(nestedExampleApi),
+      });
 
-    mockUrqlClient.executeQuery.pushResponse("quiz", {
-      data: {
-        quiz: {
-          id: "123",
-          title: "test quiz",
-          questions: {
-            edges: [
+      const { result: questionsFieldArrayHook } = renderHook(() =>
+        useFieldArray({ control: useActionFormHook.current.control, name: "quiz.questions" })
+      );
+
+      expect(mockUrqlClient.executeQuery).toBeCalledTimes(0);
+
+      await act(async () => {
+        useActionFormHook.current.setValue("quiz.text", "test quiz");
+        questionsFieldArrayHook.current.append({ text: "test question" });
+        // questionsFieldArrayHook.current.append({ create: { text: "test question 2"} });
+      });
+
+      let submitPromise: Promise<any>;
+
+      await act(async () => {
+        submitPromise = useActionFormHook.current.submit();
+      });
+
+      mockUrqlClient.executeMutation.pushResponse("createQuiz", {
+        data: {
+          updateQuiz: {
+            success: true,
+          },
+        },
+        hasNext: false,
+        stale: false,
+      });
+
+      await act(async () => {
+        await submitPromise;
+      });
+
+      expect(mockUrqlClient.executeMutation.mock.calls[0][0].variables).toMatchInlineSnapshot(`
+        {
+          "quiz": {
+            "questions": [
               {
-                node: {
-                  id: "1",
-                  text: "test question",
-                  answers: {
-                    edges: [
-                      {
-                        node: {
-                          id: "1",
-                          text: "test answer",
-                        },
-                      },
-                      {
-                        node: {
-                          id: "2",
-                          text: "test answer 2",
-                        },
-                      },
-                    ],
-                  },
-                },
-              },
-              {
-                node: {
-                  id: "2",
-                  text: "test question 2",
-                  answers: {
-                    edges: [
-                      {
-                        node: {
-                          id: "3",
-                          text: "test answer 3",
-                        },
-                      },
-                      {
-                        node: {
-                          id: "4",
-                          text: "test answer 4",
-                        },
-                      },
-                    ],
-                  },
+                "create": {
+                  "text": "test question",
                 },
               },
             ],
+            "text": "test quiz",
           },
-        },
-      },
-      stale: false,
-      hasNext: false,
+        }
+      `);
     });
 
-    let submitPromise: Promise<any>;
+    test("create nested children", async () => {
+      const { result: useActionFormHook } = renderHook(() => useActionForm(nestedExampleApi.quiz.create), {
+        wrapper: MockClientWrapper(nestedExampleApi),
+      });
 
-    await act(async () => {
-      // console.log(JSON.stringify((result.current as any).getValues(), null, 2));
-      submitPromise = result.current.submit();
-    });
+      expect(mockUrqlClient.executeQuery).toBeCalledTimes(0);
 
-    // console.log("mutation", JSON.stringify(mockUrqlClient.executeMutation.mock.calls[0][0].variables, null, 2));
-
-    mockUrqlClient.executeMutation.pushResponse("updateQuiz", {
-      data: {
-        updateQuiz: {
-          success: true,
-        },
-      },
-      hasNext: false,
-      stale: false,
-    });
-
-    await act(async () => {
-      await submitPromise;
-    });
-
-    expect((result.current as any).getValues("quiz.questions.0.id")).toBe("1");
-    expect((result.current as any).getValues("quiz.questions.0.answers.0.id")).toBe("1");
-    expect((result.current as any).getValues("quiz.questions.0.answers.1.id")).toBe("2");
-
-    expect((result.current as any).getValues("quiz.questions.1.id")).toBe("2");
-    expect((result.current as any).getValues("quiz.questions.1.answers.0.id")).toBe("3");
-    expect((result.current as any).getValues("quiz.questions.1.answers.1.id")).toBe("4");
-  });
-
-  test("compare objects", () => {
-    const objectA = {
-      id: 1,
-      quiz: {
-        questions: [
-          {
-            id: 1,
-            text: "test",
-            answers: [
-              {
-                id: 1,
-                text: "test answer",
-              },
-              {
-                id: 2,
-                text: "test answer 2",
-              },
-            ],
-          },
-          {
-            id: 2,
-            text: "test 2",
-            answers: [
-              {
-                id: 3,
-                text: "test answer 3",
-              },
-              {
-                id: 4,
-                text: "test answer 4",
-              },
-            ],
-          },
-        ],
-      },
-    };
-
-    const objectB = {
-      id: 1,
-      quiz: {
-        questions: [
-          {
-            id: 1,
-            text: "test",
-            answers: [
-              {
-                id: 1,
-                text: "test answer",
-              },
-              {
-                id: 2,
-                text: "test answer 2",
-              },
-            ],
-          },
-          {
-            id: 2,
-            answers: [
-              {
-                id: 3,
-                text: "test answer 3",
-              },
-              {
-                id: 4,
-                text: "test answer 4",
-              },
-            ],
-          },
-        ],
-      },
-    };
-
-    const result = findDifferences(objectA, objectB);
-    console.log(JSON.stringify(result, null, 2));
-  });
-
-  test("create children", async () => {
-    const { result: useActionFormHook } = renderHook(() => useActionForm(nestedExampleApi.quiz.update, { isNested: true, findBy: "123" }), {
-      wrapper: MockClientWrapper(nestedExampleApi),
-    });
-
-    const { result: questionsFieldArrayHook } = renderHook(() =>
-      useFieldArray({ control: useActionFormHook.current.control, name: "quiz.questions" })
-    );
-
-    await act(async () => {
-      questionsFieldArrayHook.current.append({ text: "test question" });
-      questionsFieldArrayHook.current.append({ text: "test question 2" });
-    });
-
-    const conrol = useActionFormHook.current.control;
-
-    for (const [index, _question] of questionsFieldArrayHook.current.fields.entries()) {
-      const { result: answersFieldArrayHook } = renderHook(() =>
-        useFieldArray({ control: conrol, name: `quiz.questions.${index}.answers` })
+      const { result: questionsFieldArrayHook } = renderHook(() =>
+        useFieldArray({ control: useActionFormHook.current.control, name: "quiz.questions" })
       );
 
       await act(async () => {
-        answersFieldArrayHook.current.append({ text: "test answer" });
-        answersFieldArrayHook.current.append({ text: "test answer" });
+        questionsFieldArrayHook.current.append({ text: "test question" });
+        questionsFieldArrayHook.current.append({ text: "test question 2" });
       });
-    }
 
-    let submitPromise: Promise<any>;
+      const conrol = useActionFormHook.current.control;
 
-    await act(async () => {
-      submitPromise = useActionFormHook.current.submit();
-    });
+      for (const [index, _question] of questionsFieldArrayHook.current.fields.entries()) {
+        const { result: answersFieldArrayHook } = renderHook(() =>
+          useFieldArray({ control: conrol, name: `quiz.questions.${index}.answers` })
+        );
 
-    mockUrqlClient.executeMutation.pushResponse("updateQuiz", {
-      data: {
-        updateQuiz: {
-          success: true,
+        await act(async () => {
+          answersFieldArrayHook.current.append({ text: "test answer" });
+          answersFieldArrayHook.current.append({ text: "test answer" });
+        });
+      }
+
+      let submitPromise: Promise<any>;
+
+      await act(async () => {
+        submitPromise = useActionFormHook.current.submit();
+      });
+
+      mockUrqlClient.executeMutation.pushResponse("createQuiz", {
+        data: {
+          updateQuiz: {
+            success: true,
+          },
         },
-      },
-      hasNext: false,
-      stale: false,
-    });
+        hasNext: false,
+        stale: false,
+      });
 
-    await act(async () => {
-      await submitPromise;
-    });
+      await act(async () => {
+        await submitPromise;
+      });
 
-    console.log(JSON.stringify(useActionFormHook.current.getValues(), null, 2));
-  });
-
-  test("default values and variables differences", async () => {
-    const { result: useActionFormHook } = renderHook(() => useActionForm(nestedExampleApi.quiz.update, { isNested: true, findBy: "123" }), {
-      wrapper: MockClientWrapper(nestedExampleApi),
-    });
-
-    mockUrqlClient.executeQuery.pushResponse("quiz", {
-      data: {
-        quiz: {
-          id: "123",
-          title: "test quiz",
-          questions: {
-            edges: [
+      expect(mockUrqlClient.executeMutation.mock.calls[0][0].variables).toMatchInlineSnapshot(`
+        {
+          "quiz": {
+            "questions": [
               {
-                node: {
-                  id: "1",
-                  text: "test question",
+                "create": {
+                  "answers": [
+                    {
+                      "create": {
+                        "text": "test answer",
+                      },
+                    },
+                    {
+                      "create": {
+                        "text": "test answer",
+                      },
+                    },
+                  ],
+                  "text": "test question",
                 },
               },
               {
-                node: {
-                  id: "2",
-                  text: "test question 2",
+                "create": {
+                  "answers": [
+                    {
+                      "create": {
+                        "text": "test answer",
+                      },
+                    },
+                    {
+                      "create": {
+                        "text": "test answer",
+                      },
+                    },
+                  ],
+                  "text": "test question 2",
                 },
               },
             ],
           },
-        },
-      },
-      stale: false,
-      hasNext: false,
-    });
-
-    const { result: questionsFieldArrayHook } = renderHook(() =>
-      useFieldArray({ control: useActionFormHook.current.control, name: "quiz.questions" })
-    );
-
-    let submitPromise: Promise<any>;
-
-    await act(async () => {
-      questionsFieldArrayHook.current.remove(0);
-      submitPromise = useActionFormHook.current.submit();
-    });
-
-    mockUrqlClient.executeMutation.pushResponse("updateQuiz", {
-      data: {
-        updateQuiz: {
-          success: true,
-        },
-      },
-      hasNext: false,
-      stale: false,
-    });
-
-    await act(async () => {
-      await submitPromise;
+        }
+      `);
     });
   });
 
-  test("default values and variables differences more nesting", async () => {
-    const { result: useActionFormHook } = renderHook(() => useActionForm(nestedExampleApi.quiz.update, { isNested: true, findBy: "123" }), {
-      wrapper: MockClientWrapper(nestedExampleApi),
+  describe("update", () => {
+    test("update works with a single nested create child", async () => {
+      const { result: useActionFormHook } = renderHook(() => useActionForm(nestedExampleApi.quiz.update, { findBy: "123" }), {
+        wrapper: MockClientWrapper(nestedExampleApi),
+      });
+
+      expect(mockUrqlClient.executeQuery).toBeCalledTimes(1);
+
+      mockUrqlClient.executeQuery.pushResponse("quiz", {
+        data: {
+          quiz: {
+            id: "123",
+            text: "test quiz",
+          },
+        },
+        hasNext: false,
+        stale: false,
+      });
+
+      const { result: questionsFieldArrayHook } = renderHook(() =>
+        useFieldArray({ control: useActionFormHook.current.control, name: "quiz.questions" })
+      );
+
+      await act(async () => {
+        useActionFormHook.current.setValue("quiz.text", "test quiz - changed");
+        questionsFieldArrayHook.current.append({ text: "new test question" });
+      });
+
+      let submitPromise: Promise<any>;
+
+      await act(async () => {
+        submitPromise = useActionFormHook.current.submit();
+      });
+
+      mockUrqlClient.executeMutation.pushResponse("updateQuiz", {
+        data: {
+          updateQuiz: {
+            success: true,
+          },
+        },
+        hasNext: false,
+        stale: false,
+      });
+
+      await act(async () => {
+        await submitPromise;
+      });
+
+      expect(mockUrqlClient.executeMutation.mock.calls[0][0].variables).toMatchInlineSnapshot(`
+        {
+          "id": "123",
+          "quiz": {
+            "questions": [
+              {
+                "create": {
+                  "text": "new test question",
+                },
+              },
+            ],
+            "text": "test quiz - changed",
+          },
+        }
+      `);
     });
 
-    mockUrqlClient.executeQuery.pushResponse("quiz", {
-      data: {
-        quiz: {
-          id: "123",
-          title: "test quiz",
-          questions: {
-            edges: [
+    test("update works with multiple nested create children", async () => {
+      const { result: useActionFormHook } = renderHook(() => useActionForm(nestedExampleApi.quiz.update, { findBy: "123" }), {
+        wrapper: MockClientWrapper(nestedExampleApi),
+      });
+
+      expect(mockUrqlClient.executeQuery).toBeCalledTimes(1);
+
+      mockUrqlClient.executeQuery.pushResponse("quiz", {
+        data: {
+          quiz: {
+            id: "123",
+            text: "test quiz",
+          },
+        },
+        hasNext: false,
+        stale: false,
+      });
+
+      const { result: questionsFieldArrayHook } = renderHook(() =>
+        useFieldArray({ control: useActionFormHook.current.control, name: "quiz.questions" })
+      );
+
+      await act(async () => {
+        useActionFormHook.current.setValue("quiz.text", "test quiz - changed again");
+        questionsFieldArrayHook.current.append({ text: "new test question 1" });
+        questionsFieldArrayHook.current.append({ text: "new test question 2" });
+      });
+
+      let submitPromise: Promise<any>;
+
+      await act(async () => {
+        submitPromise = useActionFormHook.current.submit();
+      });
+
+      mockUrqlClient.executeMutation.pushResponse("updateQuiz", {
+        data: {
+          updateQuiz: {
+            success: true,
+          },
+        },
+        hasNext: false,
+        stale: false,
+      });
+
+      await act(async () => {
+        await submitPromise;
+      });
+
+      expect(mockUrqlClient.executeMutation.mock.calls[0][0].variables).toMatchInlineSnapshot(`
+        {
+          "id": "123",
+          "quiz": {
+            "questions": [
               {
-                node: {
-                  id: "1",
-                  text: "test question",
-                  answers: {
-                    edges: [
-                      {
-                        node: {
-                          id: "1",
-                          text: "test answer",
-                        },
-                      },
-                      {
-                        node: {
-                          id: "2",
-                          text: "test answer 2",
-                        },
-                      },
-                    ],
+                "create": {
+                  "text": "new test question 1",
+                },
+              },
+              {
+                "create": {
+                  "text": "new test question 2",
+                },
+              },
+            ],
+            "text": "test quiz - changed again",
+          },
+        }
+      `);
+    });
+
+    test("update works with a single nested update child", async () => {
+      const { result: useActionFormHook } = renderHook(() => useActionForm(nestedExampleApi.quiz.update, { findBy: "123" }), {
+        wrapper: MockClientWrapper(nestedExampleApi),
+      });
+
+      expect(mockUrqlClient.executeQuery).toBeCalledTimes(1);
+
+      mockUrqlClient.executeQuery.pushResponse("quiz", {
+        data: {
+          quiz: {
+            id: "123",
+            text: "test quiz",
+            questions: {
+              edges: [
+                {
+                  node: {
+                    id: "1",
+                    text: "existing test question",
                   },
                 },
-              },
+              ],
+            },
+          },
+        },
+        hasNext: false,
+        stale: false,
+      });
+
+      const { result: questionsFieldArrayHook } = renderHook(() =>
+        useFieldArray({ control: useActionFormHook.current.control, name: "quiz.questions" })
+      );
+
+      await act(async () => {
+        useActionFormHook.current.setValue("quiz.text", "test quiz - changed again");
+        questionsFieldArrayHook.current.update(0, { id: "1", text: "updated test question" });
+      });
+
+      let submitPromise: Promise<any>;
+
+      await act(async () => {
+        submitPromise = useActionFormHook.current.submit();
+      });
+
+      mockUrqlClient.executeMutation.pushResponse("updateQuiz", {
+        data: {
+          updateQuiz: {
+            success: true,
+          },
+        },
+        hasNext: false,
+        stale: false,
+      });
+
+      await act(async () => {
+        await submitPromise;
+      });
+
+      expect(mockUrqlClient.executeMutation.mock.calls[0][0].variables).toMatchInlineSnapshot(`
+        {
+          "id": "123",
+          "quiz": {
+            "questions": [
               {
-                node: {
-                  id: "2",
-                  text: "test question 2",
-                  answers: {
-                    edges: [],
-                  },
+                "update": {
+                  "id": "1",
+                  "text": "updated test question",
                 },
               },
             ],
+            "text": "test quiz - changed again",
+          },
+        }
+      `);
+    });
+
+    test("update works with multiple nested update children", async () => {
+      const { result: useActionFormHook } = renderHook(() => useActionForm(nestedExampleApi.quiz.update, { findBy: "123" }), {
+        wrapper: MockClientWrapper(nestedExampleApi),
+      });
+
+      expect(mockUrqlClient.executeQuery).toBeCalledTimes(1);
+
+      mockUrqlClient.executeQuery.pushResponse("quiz", {
+        data: {
+          quiz: {
+            id: "123",
+            text: "test quiz",
+            questions: {
+              edges: [
+                {
+                  node: {
+                    id: "1",
+                    text: "existing test question 1",
+                  },
+                },
+                {
+                  node: {
+                    id: "2",
+                    text: "existing test question 2",
+                  },
+                },
+              ],
+            },
           },
         },
-      },
-      stale: false,
-      hasNext: false,
-    });
+        hasNext: false,
+        stale: false,
+      });
 
-    const { result: questionsFieldArrayHook } = renderHook(() =>
-      useFieldArray({ control: useActionFormHook.current.control, name: "quiz.questions" })
-    );
+      const { result: questionsFieldArrayHook } = renderHook(() =>
+        useFieldArray({ control: useActionFormHook.current.control, name: "quiz.questions" })
+      );
 
-    let submitPromise: Promise<any>;
+      await act(async () => {
+        useActionFormHook.current.setValue("quiz.text", "test quiz - changed again");
+        questionsFieldArrayHook.current.update(0, { id: "1", text: "updated test question 1" });
+        questionsFieldArrayHook.current.update(1, { id: "2", text: "updated test question 2" });
+      });
 
-    await act(async () => {
-      questionsFieldArrayHook.current.remove(0);
-      submitPromise = useActionFormHook.current.submit();
-    });
+      let submitPromise: Promise<any>;
 
-    mockUrqlClient.executeMutation.pushResponse("updateQuiz", {
-      data: {
-        updateQuiz: {
-          success: true,
+      await act(async () => {
+        submitPromise = useActionFormHook.current.submit();
+      });
+
+      mockUrqlClient.executeMutation.pushResponse("updateQuiz", {
+        data: {
+          updateQuiz: {
+            success: true,
+          },
         },
-      },
-      hasNext: false,
-      stale: false,
+        hasNext: false,
+        stale: false,
+      });
+
+      await act(async () => {
+        await submitPromise;
+      });
+
+      expect(mockUrqlClient.executeMutation.mock.calls[0][0].variables).toMatchInlineSnapshot(`
+        {
+          "id": "123",
+          "quiz": {
+            "questions": [
+              {
+                "update": {
+                  "id": "1",
+                  "text": "updated test question 1",
+                },
+              },
+              {
+                "update": {
+                  "id": "2",
+                  "text": "updated test question 2",
+                },
+              },
+            ],
+            "text": "test quiz - changed again",
+          },
+        }
+      `);
     });
 
-    await act(async () => {
-      await submitPromise;
+    test("update works with deeply nested create children", async () => {
+      const { result: useActionFormHook } = renderHook(() => useActionForm(nestedExampleApi.quiz.update, { findBy: "123" }), {
+        wrapper: MockClientWrapper(nestedExampleApi),
+      });
+
+      expect(mockUrqlClient.executeQuery).toBeCalledTimes(1);
+
+      mockUrqlClient.executeQuery.pushResponse("quiz", {
+        data: {
+          quiz: {
+            id: "123",
+            text: "test quiz",
+            questions: {
+              edges: [
+                {
+                  node: {
+                    id: "1",
+                    text: "existing test question 1",
+                  },
+                },
+                {
+                  node: {
+                    id: "2",
+                    text: "existing test question 2",
+                  },
+                },
+              ],
+            },
+          },
+        },
+        hasNext: false,
+        stale: false,
+      });
+
+      await act(async () => {
+        useActionFormHook.current.setValue("quiz.text", "test quiz - changed again");
+      });
+
+      const { result: questionsFieldArrayHook } = renderHook(() =>
+        useFieldArray({ control: useActionFormHook.current.control, name: "quiz.questions" })
+      );
+
+      for (const [index, _question] of questionsFieldArrayHook.current.fields.entries()) {
+        const { result: answersFieldArrayHook } = renderHook(() =>
+          useFieldArray({ control: useActionFormHook.current.control, name: `quiz.questions.${index}.answers` })
+        );
+
+        await act(async () => {
+          answersFieldArrayHook.current.append({ text: `new test answer ${index + 1}` });
+        });
+      }
+
+      let submitPromise: Promise<any>;
+
+      await act(async () => {
+        submitPromise = useActionFormHook.current.submit();
+      });
+
+      mockUrqlClient.executeMutation.pushResponse("updateQuiz", {
+        data: {
+          updateQuiz: {
+            success: true,
+          },
+        },
+        hasNext: false,
+        stale: false,
+      });
+
+      await act(async () => {
+        await submitPromise;
+      });
+
+      expect(mockUrqlClient.executeMutation.mock.calls[0][0].variables).toMatchInlineSnapshot(`
+        {
+          "id": "123",
+          "quiz": {
+            "questions": [
+              {
+                "update": {
+                  "answers": [
+                    {
+                      "create": {
+                        "text": "new test answer 1",
+                      },
+                    },
+                  ],
+                  "id": "1",
+                  "text": "existing test question 1",
+                },
+              },
+              {
+                "update": {
+                  "answers": [
+                    {
+                      "create": {
+                        "text": "new test answer 2",
+                      },
+                    },
+                  ],
+                  "id": "2",
+                  "text": "existing test question 2",
+                },
+              },
+            ],
+            "text": "test quiz - changed again",
+          },
+        }
+      `);
     });
-  });
 
-  test("create object map", async () => {
-    const defaultValues = {
-      id: 1,
-      quiz: {
-        questions: [
-          {
-            id: 1,
-            text: "test",
-            answers: [
-              {
-                id: 1,
-                text: "test answer",
-              },
-              {
-                id: 2,
-                text: "test answer 2",
-              },
-            ],
+    test("update works with deeply nested update children", async () => {
+      const { result: useActionFormHook } = renderHook(() => useActionForm(nestedExampleApi.quiz.update, { findBy: "123" }), {
+        wrapper: MockClientWrapper(nestedExampleApi),
+      });
+
+      expect(mockUrqlClient.executeQuery).toBeCalledTimes(1);
+
+      mockUrqlClient.executeQuery.pushResponse("quiz", {
+        data: {
+          quiz: {
+            id: "123",
+            text: "test quiz",
+            questions: {
+              edges: [
+                {
+                  node: {
+                    id: "1",
+                    text: "existing test question 1",
+                    answers: {
+                      edges: [
+                        {
+                          node: {
+                            id: "1",
+                            text: "existing test answer 1",
+                          },
+                        },
+                      ],
+                    },
+                  },
+                },
+                {
+                  node: {
+                    id: "2",
+                    text: "existing test question 2",
+                    answers: {
+                      edges: [
+                        {
+                          node: {
+                            id: "2",
+                            text: "existing test answer 2",
+                          },
+                        },
+                      ],
+                    },
+                  },
+                },
+              ],
+            },
           },
-          {
-            id: 2,
-            text: "test 2",
-            answers: [
-              {
-                id: 3,
-                text: "test answer 3",
-              },
-              {
-                id: 4,
-                text: "test answer 4",
-              },
-            ],
+        },
+        hasNext: false,
+        stale: false,
+      });
+
+      await act(async () => {
+        useActionFormHook.current.setValue("quiz.text", "test quiz - changed again");
+      });
+
+      const { result: questionsFieldArrayHook } = renderHook(() =>
+        useFieldArray({ control: useActionFormHook.current.control, name: "quiz.questions" })
+      );
+
+      for (const [questionIndex, _question] of questionsFieldArrayHook.current.fields.entries()) {
+        const { result: answersFieldArrayHook } = renderHook(() =>
+          useFieldArray({ control: useActionFormHook.current.control, name: `quiz.questions.${questionIndex}.answers` })
+        );
+
+        for (const [answerIndex, _answer] of answersFieldArrayHook.current.fields.entries()) {
+          const currentAnswerId = useActionFormHook.current.getValues(`quiz.questions.${questionIndex}.answers.${answerIndex}.id`);
+
+          await act(async () => {
+            answersFieldArrayHook.current.update(answerIndex, { id: currentAnswerId, text: `new test answer ${questionIndex + 1}` });
+          });
+        }
+      }
+
+      let submitPromise: Promise<any>;
+
+      await act(async () => {
+        submitPromise = useActionFormHook.current.submit();
+      });
+
+      mockUrqlClient.executeMutation.pushResponse("updateQuiz", {
+        data: {
+          updateQuiz: {
+            success: true,
           },
-        ],
-      },
-    };
+        },
+        hasNext: false,
+        stale: false,
+      });
 
-    const variables = {
-      id: 1,
-      quiz: {
-        questions: [
-          {
-            id: 1,
-            text: "test",
-            answers: [
+      await act(async () => {
+        await submitPromise;
+      });
+
+      expect(mockUrqlClient.executeMutation.mock.calls[0][0].variables).toMatchInlineSnapshot(`
+        {
+          "id": "123",
+          "quiz": {
+            "questions": [
               {
-                id: 1,
-                text: "test answer",
+                "update": {
+                  "answers": [
+                    {
+                      "update": {
+                        "id": "1",
+                        "text": "new test answer 1",
+                      },
+                    },
+                  ],
+                  "id": "1",
+                  "text": "existing test question 1",
+                },
               },
               {
-                id: 2,
-                text: "test answer 2",
+                "update": {
+                  "answers": [
+                    {
+                      "update": {
+                        "id": "2",
+                        "text": "new test answer 2",
+                      },
+                    },
+                  ],
+                  "id": "2",
+                  "text": "existing test question 2",
+                },
               },
             ],
+            "text": "test quiz - changed again",
           },
-          {
-            id: 2,
-            text: "test 2",
-            answers: [
-              {
-                id: 3,
-                text: "test answer 3",
-              },
-            ],
+        }
+      `);
+    });
+
+    test("update works with deeply nested update children that are reordered", async () => {
+      const { result: useActionFormHook } = renderHook(() => useActionForm(nestedExampleApi.quiz.update, { findBy: "123" }), {
+        wrapper: MockClientWrapper(nestedExampleApi),
+      });
+
+      expect(mockUrqlClient.executeQuery).toBeCalledTimes(1);
+
+      mockUrqlClient.executeQuery.pushResponse("quiz", {
+        data: {
+          quiz: {
+            id: "123",
+            text: "test quiz",
+            questions: {
+              edges: [
+                {
+                  node: {
+                    id: "1",
+                    text: "existing test question 1",
+                    answers: {
+                      edges: [
+                        {
+                          node: {
+                            id: "1",
+                            text: "existing test answer 1",
+                          },
+                        },
+                        {
+                          node: {
+                            id: "2",
+                            text: "existing test answer 2",
+                          },
+                        },
+                      ],
+                    },
+                  },
+                },
+                {
+                  node: {
+                    id: "2",
+                    text: "existing test question 2",
+                    answers: {
+                      edges: [
+                        {
+                          node: {
+                            id: "3",
+                            text: "existing test answer 3",
+                          },
+                        },
+                        {
+                          node: {
+                            id: "4",
+                            text: "existing test answer 4",
+                          },
+                        },
+                      ],
+                    },
+                  },
+                },
+              ],
+            },
           },
-        ],
-      },
-    };
+        },
+        hasNext: false,
+        stale: false,
+      });
 
-    const crudObjs = {};
-    transformNested(variables, crudObjs);
+      await act(async () => {
+        useActionFormHook.current.setValue("quiz.text", "test quiz - changed again");
+      });
 
-    console.log("crudObjs", JSON.stringify(crudObjs, null, 2));
+      const { result: questionsFieldArrayHook } = renderHook(() =>
+        useFieldArray({ control: useActionFormHook.current.control, name: "quiz.questions" })
+      );
 
-    getDeletes(defaultValues, variables, crudObjs);
+      for (const [questionIndex, _question] of questionsFieldArrayHook.current.fields.entries()) {
+        const { result: answersFieldArrayHook } = renderHook(() =>
+          useFieldArray({ control: useActionFormHook.current.control, name: `quiz.questions.${questionIndex}.answers` })
+        );
 
-    console.log("lookthroughResult", JSON.stringify(variables, null, 2));
-  });
+        await act(async () => {
+          answersFieldArrayHook.current.move(0, 1);
+        });
+      }
 
-  test("extract cruds", () => {
-    // const defaultValues = {
-    //   quiz: {
-    //     questions: [
-    //       {
-    //         id: 1,
-    //         text: "test",
-    //         answers: [
-    //           {
-    //             id: 1,
-    //             text: "test answer",
-    //           },
-    //           {
-    //             id: 2,
-    //             text: "test answer 2",
-    //           },
-    //         ],
-    //       },
-    //       {
-    //         id: 2,
-    //         text: "test 2",
-    //         answers: [
-    //           {
-    //             id: 3,
-    //             text: "test answer 3",
-    //           },
-    //           {
-    //             id: 4,
-    //             text: "test answer 4",
-    //           },
-    //         ],
-    //       },
-    //       {
-    //         id: 3,
-    //         text: "test 3",
-    //       }
-    //     ],
-    //   },
-    // };
+      let submitPromise: Promise<any>;
 
-    // const data = {
-    //   quiz: {
-    //     questions: [
-    //       {
-    //         id: 1,
-    //         text: "test",
-    //         answers: [
-    //           {
-    //             id: 1,
-    //             text: "test answer",
-    //           },
-    //           { 
-    //             id: 2,
-    //             text: "test answer 2",
-    //           },
-    //           {
-    //             text: "test answer 6",
-    //           }
-    //         ],
-    //       },
-    //       {
-    //         id: 2,
-    //         text: "test 2",
-    //         answers: [
-    //           {
-    //             text: "test answer 5",
-    //           },
-    //           {
-    //             id: 4,
-    //             text: "test answer 4",
-    //           }
-    //         ],
-    //       },
-    //     ],
-    //   },
-    // };
+      await act(async () => {
+        submitPromise = useActionFormHook.current.submit();
+      });
 
-    const defaultValues = {
-      quiz: {
-        questions: [
-          {
-            id: 1,
-            text: "test",
-            answers: [
-              {
-                id: 1,
-                text: "test answer",
-              },
-              {
-                id: 2,
-                text: "test answer 2",
-              },
-            ],
-          }
-        ],
-      },
-    };
-
-    const data = {
-      quiz: {
-        questions: [
-          {
-            id: 1,
-            text: "test",
-            answers: [
-              {
-                id: 1,
-                text: "test answer",
-              }
-            ],
+      mockUrqlClient.executeMutation.pushResponse("updateQuiz", {
+        data: {
+          updateQuiz: {
+            success: true,
           },
-        ],
-      },
-    };
+        },
+        hasNext: false,
+        stale: false,
+      });
 
-    console.log("defaultValues", JSON.stringify(defaultValues, null, 2));
-    console.log("data", JSON.stringify(data, null, 2));
+      await act(async () => {
+        await submitPromise;
+      });
 
-    transformData(defaultValues, data);
+      expect(mockUrqlClient.executeMutation.mock.calls[0][0].variables).toMatchInlineSnapshot(`
+        {
+          "id": "123",
+          "quiz": {
+            "questions": [
+              {
+                "update": {
+                  "answers": [
+                    {
+                      "update": {
+                        "id": "1",
+                        "text": "existing test answer 1",
+                      },
+                    },
+                    {
+                      "update": {
+                        "id": "2",
+                        "text": "existing test answer 2",
+                      },
+                    },
+                  ],
+                  "id": "1",
+                  "text": "existing test question 1",
+                },
+              },
+              {
+                "update": {
+                  "answers": [
+                    {
+                      "update": {
+                        "id": "3",
+                        "text": "existing test answer 3",
+                      },
+                    },
+                    {
+                      "update": {
+                        "id": "4",
+                        "text": "existing test answer 4",
+                      },
+                    },
+                  ],
+                  "id": "2",
+                  "text": "existing test question 2",
+                },
+              },
+            ],
+            "text": "test quiz - changed again",
+          },
+        }
+      `);
+    });
   });
 });

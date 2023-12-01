@@ -18,15 +18,15 @@ importers:
       '@gadget-client/bulk-actions-test':
         specifier: ^1.104.0
         version: 1.104.0
-      '@gadget-client/deeply-nested-example':
-        specifier: ^1.26.0
-        version: 1.26.0
       '@gadget-client/full-auth':
         specifier: ^1.4.0
         version: 1.4.0
       '@gadget-client/related-products-example':
         specifier: ^1.854.0
         version: 1.854.0
+      '@gadget-client/zxcv-deeply-nested':
+        specifier: ^1.13.0
+        version: 1.13.0
       '@gadgetinc/api-client-core':
         specifier: workspace:*
         version: link:packages/api-client-core
@@ -1192,12 +1192,6 @@ packages:
       '@gadgetinc/api-client-core': link:packages/api-client-core
     dev: true
 
-  /@gadget-client/deeply-nested-example@1.26.0:
-    resolution: {integrity: sha1-uYiWUwoXa81wo3lmqnRMt5Cx+kY=, tarball: https://registry.gadget.dev/npm/_/tarball/75615/149812/6011}
-    dependencies:
-      '@gadgetinc/api-client-core': link:packages/api-client-core
-    dev: true
-
   /@gadget-client/full-auth@1.4.0:
     resolution: {integrity: sha1-npUnTWStWGH5v2nmd5hPrLQBZwA=, tarball: https://registry.gadget.dev/npm/_/tarball/66538/131724/5610}
     dependencies:
@@ -1206,6 +1200,12 @@ packages:
 
   /@gadget-client/related-products-example@1.854.0:
     resolution: {integrity: sha1-yEytaM9x8otBV06i0Cw/F6zsglo=, tarball: https://registry.gadget.dev/npm/_/tarball/1268/1361/5562}
+    dependencies:
+      '@gadgetinc/api-client-core': link:packages/api-client-core
+    dev: true
+
+  /@gadget-client/zxcv-deeply-nested@1.13.0:
+    resolution: {integrity: sha1-T3jaZzKYQdbDIjKZQkzvsthyaAs=, tarball: https://registry.gadget.dev/npm/_/tarball/76013/150608/6021}
     dependencies:
       '@gadgetinc/api-client-core': link:packages/api-client-core
     dev: true

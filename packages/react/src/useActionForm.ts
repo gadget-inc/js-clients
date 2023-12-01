@@ -16,7 +16,7 @@ import { useFindBy } from "./useFindBy.js";
 import { useFindOne } from "./useFindOne.js";
 import { useGlobalAction } from "./useGlobalAction.js";
 import type { ActionHookState, ErrorWrapper, OptionsType } from "./utils.js";
-import { get, set, transformData } from "./utils.js";
+import { get, hasNested, set, transformData } from "./utils.js";
 
 export * from "react-hook-form";
 
@@ -330,7 +330,7 @@ export const useActionForm = <
       await handleSubmit(
         async (data) => {
 
-          if (options?.isNested) {
+          if (hasNested(data)) {
             data = transformData(defaultValues, data);
           }
 
