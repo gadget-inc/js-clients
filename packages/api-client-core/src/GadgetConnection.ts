@@ -489,6 +489,9 @@ export class GadgetConnection {
     };
 
     return await new Promise<SubscriptionClient>((resolve, reject) => {
+      console.log("we are trying to talk to the client");
+      console.log(subscriptionClient, "whats happening in the client");
+
       const timeout = setTimeout(() => {
         this.disposeClient(subscriptionClient);
         wrappedReject(new GadgetWebsocketConnectionTimeoutError("Timeout opening websocket connection to Gadget API"));
