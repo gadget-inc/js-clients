@@ -435,7 +435,8 @@ export class GadgetConnection {
         }
         return connectionParams;
       },
-      onNonLazyError: () => {
+      onNonLazyError: (err) => {
+        console.log("we are nonlazy err", err);
         // we catch this outside in the runner function
       },
       on: {
@@ -498,6 +499,7 @@ export class GadgetConnection {
       }, globalTimeout);
 
       const retryOnClose = (event: unknown) => {
+        console.log("this is the event", event);
         if (isCloseEvent(event)) {
           if (RETRYABLE_CLOSE_CODES.includes(event.code) && attempts > 0) {
             attempts -= 1;
