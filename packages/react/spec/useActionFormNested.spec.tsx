@@ -4,6 +4,91 @@ import { nestedExampleApi } from "./apis.js";
 import { MockClientWrapper, mockUrqlClient } from "./testWrappers.js";
 
 describe("useActionFormNested", () => {
+  describe("utils", () => {
+    const queryResponse = {
+      "data": {
+        "quiz": {
+          "__typename": "Quiz",
+          "id": "8",
+          "text": "quiz title",
+          "questions": {
+            "edges": [
+              {
+                "node": {
+                  "id": "7",
+                  "text": "how",
+                  "answers": {
+                    "edges": [
+                      {
+                        "node": {
+                          "id": "11",
+                          "text": "i don't know",
+                          "__typename": "Answer"
+                        },
+                        "__typename": "AnswerEdge"
+                      }
+                    ],
+                    "__typename": "AnswerConnection"
+                  },
+                  "__typename": "Question"
+                },
+                "__typename": "QuestionEdge"
+              }
+            ],
+            "__typename": "QuestionConnection"
+          }
+        },
+        "gadgetMeta": {
+          "hydrations": {
+            "createdAt": "DateTime",
+            "updatedAt": "DateTime"
+          },
+          "__typename": "GadgetApplicationMeta"
+        }
+      },
+      "extensions": {
+        "logs": "https://ggt.link/logs/150682/3e644b1fd6f63a46648a6718854f4e6e",
+        "traceId": "3e644b1fd6f63a46648a6718854f4e6e"
+      }
+    }
+
+    test("typenames aren't in submit", async () => {
+      const { result } = renderHook(() => useActionForm(nestedExampleApi.quiz.update, { findBy: "123" }), {
+        wrapper: MockClientWrapper(nestedExampleApi),
+      });
+
+      expect(mockUrqlClient.executeQuery).toBeCalledTimes(1);
+
+      mockUrqlClient.executeQuery.pushResponse("quiz", {
+        stale: false,
+        hasNext: false,
+        data: queryResponse.data,
+      });
+
+      let submitPromise: Promise<any>;
+
+      await act(async () => {
+        submitPromise = result.current.submit();
+      });
+
+      mockUrqlClient.executeMutation.pushResponse("updateQuiz", {
+        data: {
+          updateQuiz: {
+            success: true,
+          },
+        },
+        stale: false,
+        hasNext: false,
+      });
+
+      await act(async () => {
+        await submitPromise;
+      });
+
+      console.log(JSON.stringify(mockUrqlClient.executeMutation.mock.calls[0][0].variables, null, 2));
+    })
+  })
+
   describe("create", () => {
     test("create still works", async () => {
       const { result: useActionFormHook } = renderHook(() => useActionForm(nestedExampleApi.quiz.create), {

@@ -9,7 +9,7 @@ import type {
 import { gadgetErrorFor, getNonNullableError } from "@gadgetinc/api-client-core";
 import type { CombinedError, RequestPolicy } from "@urql/core";
 import { GraphQLError } from "graphql";
-import { update } from "lodash";
+import { rest, update } from "lodash";
 import { useMemo } from "react";
 import type { AnyVariables, Operation, OperationContext, UseQueryArgs, UseQueryState } from "urql";
 
@@ -449,15 +449,17 @@ export function transformData(defaultValues: any, data: any) {
       }
 
       if (depth > 1) {
+        const { __typename, ...rest } = result;
+
         if ('id' in input) {
-          return { update: { ...result } };
+          return { update: { ...rest } };
         } else {
-          return { create: { ...result} };
+          return { create: { ...rest} };
         }
       }
 
       return result;
-    } 
+    }
 
     return input;
   }
