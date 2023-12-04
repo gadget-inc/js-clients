@@ -407,18 +407,17 @@ export function hasNested(data: any) {
 }
 
 export function transformData(defaultValues: any, data: any) {
-  console.log('defaultValues', JSON.stringify(defaultValues, null, 2));
-  console.log('data', JSON.stringify(data, null, 2));
-
   const updates = getUpdates(defaultValues);
 
   function transform(input: any, updates: Record<string, number[]>, depth = 0, path: string | undefined = undefined): any {
     if (Array.isArray(input)) {
+      const results: any[] = [];
       const edge = updates[path!];
+      const handled: number[] = [];
+
       if (edge) {
-        return edge.map((nodeId: any, nodeIndex: number) => {
-          console.log("info", { edge, nodeId, path, input});
-          const item = input.find((item: any) => item.id === nodeId);
+        results.push(edge.map((nodeId: any, nodeIndex: number) => {
+          const item = input.find((item: any) => item.id == nodeId);
 
           if (!item) {
             const updateEntries = Object.entries(updates);
@@ -429,17 +428,23 @@ export function transformData(defaultValues: any, data: any) {
             }
             return { delete: { id: nodeId } };
           } else {
-            const index = input.findIndex((item: any) => item.id === nodeId);
+            const index = input.findIndex((item: any) => item.id == nodeId);
+
+            handled.push(index);
+
             const currentPath = path ? `${path}.${index}` : index.toString();
             return transform(item, updates, depth + 1, currentPath);
           }
-        });
-      } else {
-        return input.map((item: any, index) => {
-          const currentPath = path ? `${path}.${index}` : index.toString();
-          return transform(item, updates, depth + 1, currentPath);
-        });
-      }
+        }));
+      } 
+
+      // handle the rest of the array
+      results.push(input.filter((_item, index) => !handled.includes(index)).map((item: any, index) => {
+        const currentPath = path ? `${path}.${index}` : index.toString();
+        return transform(item, updates, depth + 1, currentPath);
+      }));
+
+      return results.flatMap((result) => result);
     } else if (input !== undefined && typeof input === 'object') {
       const result: any = {};
 
@@ -453,9 +458,9 @@ export function transformData(defaultValues: any, data: any) {
 
         if ('id' in input) {
           return { update: { ...rest } };
-        } else {
-          return { create: { ...rest} };
-        }
+        } 
+
+        return '_link' in input ? {...rest} : { create: { ...rest} };
       }
 
       return result;
