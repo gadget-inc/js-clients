@@ -25,8 +25,8 @@ importers:
         specifier: ^1.854.0
         version: 1.854.0
       '@gadget-client/zxcv-deeply-nested':
-        specifier: ^1.13.0
-        version: 1.13.0
+        specifier: ^1.17.0
+        version: 1.17.0
       '@gadgetinc/api-client-core':
         specifier: workspace:*
         version: link:packages/api-client-core
@@ -1204,8 +1204,8 @@ packages:
       '@gadgetinc/api-client-core': link:packages/api-client-core
     dev: true
 
-  /@gadget-client/zxcv-deeply-nested@1.13.0:
-    resolution: {integrity: sha1-T3jaZzKYQdbDIjKZQkzvsthyaAs=, tarball: https://registry.gadget.dev/npm/_/tarball/76013/150608/6021}
+  /@gadget-client/zxcv-deeply-nested@1.17.0:
+    resolution: {integrity: sha1-cfOm/brRkZAi1eL1NKypRZWhzWs=, tarball: https://registry.gadget.dev/npm/_/tarball/76013/150608/6033}
     dependencies:
       '@gadgetinc/api-client-core': link:packages/api-client-core
     dev: true
