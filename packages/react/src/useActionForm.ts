@@ -374,7 +374,7 @@ export const useActionForm = <
 
       return result;
     },
-    [handleSubmit, formHook, handleSubmissionError, existingRecordId, options, runAction]
+    [formHook, handleSubmit, existingRecordId, options, runAction, defaultValues, handleSubmissionError]
   );
 
   const proxiedFormState = new Proxy(formState, {
