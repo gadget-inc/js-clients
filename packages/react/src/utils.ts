@@ -409,7 +409,7 @@ export function hasNested(data: any) {
 export function transformData(defaultValues: any, data: any) {
   const updates = getUpdates(defaultValues);
 
-  function transform(input: any, updates: Record<string, number[]>, depth = 0, path: string | undefined = undefined): any {
+  function transform(input: any, updates: Record<string, number[]>, depth = 0, path: string | undefined = undefined, isInArray = false, isParentAnObject = false): any {
     if (Array.isArray(input)) {
       const results: any[] = [];
       const edge = updates[path!];
@@ -433,7 +433,7 @@ export function transformData(defaultValues: any, data: any) {
             handled.push(index);
 
             const currentPath = path ? `${path}.${index}` : index.toString();
-            return transform(item, updates, depth + 1, currentPath);
+            return transform(item, updates, depth + 1, currentPath, true, false);
           }
         }));
       } 
@@ -441,7 +441,7 @@ export function transformData(defaultValues: any, data: any) {
       // handle the rest of the array
       results.push(input.filter((_item, index) => !handled.includes(index)).map((item: any, index) => {
         const currentPath = path ? `${path}.${index}` : index.toString();
-        return transform(item, updates, depth + 1, currentPath);
+        return transform(item, updates, depth + 1, currentPath, true, false);
       }));
 
       return results.flatMap((result) => result);
@@ -450,17 +450,21 @@ export function transformData(defaultValues: any, data: any) {
 
       for (const key of Object.keys(input)) {
         const currentPath = path ? `${path}.${key}` : key;
-        result[key] = transform(input[key], updates, depth + 1, currentPath);
+        result[key] = transform(input[key], updates, depth + 1, currentPath, isInArray, true);
       }
 
       if (depth > 1) {
         const { __typename, ...rest } = result;
 
         if ('id' in input) {
+          if (isInArray && isParentAnObject) {
+            return { _link: input['id'] };
+          } 
+
           return { update: { ...rest } };
         } 
 
-        return '_link' in input ? {...rest} : { create: { ...rest} };
+        return { create: { ...rest} };
       }
 
       return result;

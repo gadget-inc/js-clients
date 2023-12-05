@@ -1206,7 +1206,7 @@ describe("useActionFormNested", () => {
       expect(mockUrqlClient.executeQuery).toBeCalledTimes(0);
 
       await act(async () => {
-        useActionFormHook.current.setValue("quiz.questions.0.answers.0.question._link", "3");
+        useActionFormHook.current.setValue("quiz.questions.0.answers.0.question.id", "3");
       });
 
       let submitPromise: Promise<any>;
@@ -1287,8 +1287,8 @@ describe("useActionFormNested", () => {
       expect(mockUrqlClient.executeQuery).toBeCalledTimes(0);
 
       await act(async () => {
-        useActionFormHook.current.setValue("quiz.questions.0.quiz._link", "123");
-        useActionFormHook.current.setValue("quiz.questions.0.answers.0.question._link", "3");
+        useActionFormHook.current.setValue("quiz.questions.0.quiz.id", "123");
+        useActionFormHook.current.setValue("quiz.questions.0.answers.0.question.id", "3");
       });
 
       let submitPromise: Promise<any>;
@@ -2756,7 +2756,7 @@ describe("useActionFormNested", () => {
       });
 
       await act(async () => {
-        useActionFormHook.current.setValue("quiz.questions.0.answers.0.question._link", "2");
+        useActionFormHook.current.setValue("quiz.questions.0.answers.0.question.id", "2");
       });
 
       let submitPromise: Promise<any>;
@@ -2847,8 +2847,8 @@ describe("useActionFormNested", () => {
       });
 
       await act(async () => {
-        useActionFormHook.current.setValue("quiz.questions.0.quiz._link", "123");
-        useActionFormHook.current.setValue("quiz.questions.0.answers.0.question._link", "2");
+        useActionFormHook.current.setValue("quiz.questions.0.quiz.id", "123");
+        useActionFormHook.current.setValue("quiz.questions.0.answers.0.question.id", "2");
       });
 
       let submitPromise: Promise<any>;
