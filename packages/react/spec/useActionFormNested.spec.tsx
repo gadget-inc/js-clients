@@ -1341,8 +1341,6 @@ describe("useActionFormNested", () => {
         }
       );
 
-      console.log("start", JSON.stringify(useActionFormHook.current.getValues(), null, 2));
-
       expect(mockUrqlClient.executeQuery).toBeCalledTimes(0);
 
       await act(async () => {
@@ -2864,33 +2862,64 @@ describe("useActionFormNested", () => {
 
       expect(mockUrqlClient.executeQuery).toBeCalledTimes(1);
 
-      mockUrqlClient.executeQuery.pushResponse("quiz", {
+      const queryResponse = {
         data: {
           quiz: {
-            id: "123",
-            text: "test quiz",
+            title: "test 2",
+            body: "test 2",
             questions: {
               edges: [
                 {
                   node: {
-                    id: "1",
-                    text: "existing test question 1",
+                    id: "4",
+                    text: "test 2",
                     answers: {
                       edges: [
                         {
                           node: {
-                            id: "1",
-                            text: "existing test answer 1",
+                            id: "4",
+                            text: "test answer 2",
+                            recommendedProduct: {
+                              id: "4",
+                              image: null, // <-- RANDOM NULL
+                              productSuggestion: {
+                                id: "8746652729619",
+                                __typename: "ShopifyProduct",
+                              },
+                              __typename: "RecommendedProduct",
+                            },
+                            __typename: "Answer",
                           },
+                          __typename: "AnswerEdge",
                         },
                       ],
+                      __typename: "AnswerConnection",
                     },
+                    __typename: "Question",
                   },
+                  __typename: "QuestionEdge",
                 },
               ],
+              __typename: "QuestionConnection",
             },
+            __typename: "Quiz",
+          },
+          gadgetMeta: {
+            hydrations: {
+              createdAt: "DateTime",
+              updatedAt: "DateTime",
+            },
+            __typename: "GadgetApplicationMeta",
           },
         },
+        extensions: {
+          logs: "https://ggt.link/logs/151832/4b3293993a1f7532808045e3246d5326",
+          traceId: "4b3293993a1f7532808045e3246d5326",
+        },
+      };
+
+      mockUrqlClient.executeQuery.pushResponse("quiz", {
+        data: queryResponse.data,
         hasNext: false,
         stale: false,
       });
@@ -2921,28 +2950,31 @@ describe("useActionFormNested", () => {
 
       expect(mockUrqlClient.executeMutation.mock.calls[0][0].variables).toMatchInlineSnapshot(`
         {
-          "id": "123",
           "quiz": {
+            "body": "test 2",
             "questions": [
               {
                 "update": {
                   "answers": [
                     {
                       "update": {
-                        "id": "1",
+                        "id": "4",
                         "question": {
                           "_link": "2",
                         },
-                        "text": "existing test answer 1",
+                        "recommendedProduct": {
+                          "_link": "4",
+                        },
+                        "text": "test answer 2",
                       },
                     },
                   ],
-                  "id": "1",
-                  "text": "existing test question 1",
+                  "id": "4",
+                  "text": "test 2",
                 },
               },
             ],
-            "text": "test quiz",
+            "title": "test 2",
           },
         }
       `);
