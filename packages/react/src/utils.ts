@@ -407,6 +407,8 @@ export function hasNested(data: any) {
 }
 
 export function transformData(defaultValues: any, data: any) {
+  console.log('defaultValues', JSON.stringify(defaultValues, null, 2));
+  console.log('data', JSON.stringify(data, null, 2));
   const updates = getUpdates(defaultValues);
 
   function transform(input: any, updates: Record<string, number[]>, depth = 0, path: string | undefined = undefined, isInArray = false, isParentAnObject = false): any {
