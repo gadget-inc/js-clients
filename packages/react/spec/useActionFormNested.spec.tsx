@@ -5,54 +5,53 @@ import { MockClientWrapper, mockUrqlClient } from "./testWrappers.js";
 
 describe("useActionFormNested", () => {
   describe("utils", () => {
-    const queryResponse = {
-      data: {
-        quiz: {
-          __typename: "Quiz",
-          id: "8",
-          text: "quiz title",
-          questions: {
-            edges: [
-              {
-                node: {
-                  id: "7",
-                  text: "how",
-                  answers: {
-                    edges: [
-                      {
-                        node: {
-                          id: "11",
-                          text: "i don't know",
-                          __typename: "Answer",
-                        },
-                        __typename: "AnswerEdge",
-                      },
-                    ],
-                    __typename: "AnswerConnection",
-                  },
-                  __typename: "Question",
-                },
-                __typename: "QuestionEdge",
-              },
-            ],
-            __typename: "QuestionConnection",
-          },
-        },
-        gadgetMeta: {
-          hydrations: {
-            createdAt: "DateTime",
-            updatedAt: "DateTime",
-          },
-          __typename: "GadgetApplicationMeta",
-        },
-      },
-      extensions: {
-        logs: "https://ggt.link/logs/150682/3e644b1fd6f63a46648a6718854f4e6e",
-        traceId: "3e644b1fd6f63a46648a6718854f4e6e",
-      },
-    };
-
     test("typenames aren't in submit", async () => {
+      const queryResponse = {
+        data: {
+          quiz: {
+            __typename: "Quiz",
+            id: "8",
+            text: "quiz title",
+            questions: {
+              edges: [
+                {
+                  node: {
+                    id: "7",
+                    text: "how",
+                    answers: {
+                      edges: [
+                        {
+                          node: {
+                            id: "11",
+                            text: "i don't know",
+                            __typename: "Answer",
+                          },
+                          __typename: "AnswerEdge",
+                        },
+                      ],
+                      __typename: "AnswerConnection",
+                    },
+                    __typename: "Question",
+                  },
+                  __typename: "QuestionEdge",
+                },
+              ],
+              __typename: "QuestionConnection",
+            },
+          },
+          gadgetMeta: {
+            hydrations: {
+              createdAt: "DateTime",
+              updatedAt: "DateTime",
+            },
+            __typename: "GadgetApplicationMeta",
+          },
+        },
+        extensions: {
+          logs: "https://ggt.link/logs/150682/3e644b1fd6f63a46648a6718854f4e6e",
+          traceId: "3e644b1fd6f63a46648a6718854f4e6e",
+        },
+      };
       const { result } = renderHook(() => useActionForm(nestedExampleApi.quiz.update, { findBy: "123" }), {
         wrapper: MockClientWrapper(nestedExampleApi),
       });
@@ -85,7 +84,148 @@ describe("useActionFormNested", () => {
         await submitPromise;
       });
 
-      console.log(JSON.stringify(mockUrqlClient.executeMutation.mock.calls[0][0].variables, null, 2));
+      expect(mockUrqlClient.executeMutation.mock.calls[0][0].variables).toMatchInlineSnapshot(`
+        {
+          "id": "8",
+          "quiz": {
+            "questions": [
+              {
+                "update": {
+                  "answers": [
+                    {
+                      "update": {
+                        "id": "11",
+                        "text": "i don't know",
+                      },
+                    },
+                  ],
+                  "id": "7",
+                  "text": "how",
+                },
+              },
+            ],
+            "text": "quiz title",
+          },
+        }
+      `);
+    });
+
+    test("null or undefined doesn't break transform", async () => {
+      const queryResponse = {
+        data: {
+          quiz: {
+            title: "test 2 ",
+            body: "test 2",
+            questions: {
+              edges: [
+                {
+                  node: {
+                    id: "4",
+                    text: "test 2",
+                    answers: {
+                      edges: [
+                        {
+                          node: {
+                            id: "4",
+                            text: "test answer 2",
+                            recommendedProduct: {
+                              id: "4",
+                              image: null, // <-- RANDOM NULL
+                              productSuggestion: {
+                                id: "8746652729619",
+                                __typename: "ShopifyProduct",
+                              },
+                              __typename: "RecommendedProduct",
+                            },
+                            __typename: "Answer",
+                          },
+                          __typename: "AnswerEdge",
+                        },
+                      ],
+                      __typename: "AnswerConnection",
+                    },
+                    __typename: "Question",
+                  },
+                  __typename: "QuestionEdge",
+                },
+              ],
+              __typename: "QuestionConnection",
+            },
+            __typename: "Quiz",
+          },
+          gadgetMeta: {
+            hydrations: {
+              createdAt: "DateTime",
+              updatedAt: "DateTime",
+            },
+            __typename: "GadgetApplicationMeta",
+          },
+        },
+        extensions: {
+          logs: "https://ggt.link/logs/151832/4b3293993a1f7532808045e3246d5326",
+          traceId: "4b3293993a1f7532808045e3246d5326",
+        },
+      };
+
+      const { result } = renderHook(() => useActionForm(nestedExampleApi.quiz.update, { findBy: "123" }), {
+        wrapper: MockClientWrapper(nestedExampleApi),
+      });
+
+      expect(mockUrqlClient.executeQuery).toBeCalledTimes(1);
+
+      mockUrqlClient.executeQuery.pushResponse("quiz", {
+        stale: false,
+        hasNext: false,
+        data: queryResponse.data,
+      });
+
+      let submitPromise: Promise<any>;
+
+      await act(async () => {
+        submitPromise = result.current.submit();
+      });
+
+      mockUrqlClient.executeMutation.pushResponse("updateQuiz", {
+        data: {
+          updateQuiz: {
+            success: true,
+          },
+        },
+        stale: false,
+        hasNext: false,
+      });
+
+      await act(async () => {
+        await submitPromise;
+      });
+
+      expect(mockUrqlClient.executeMutation.mock.calls[0][0].variables).toMatchInlineSnapshot(`
+        {
+          "quiz": {
+            "body": "test 2",
+            "questions": [
+              {
+                "update": {
+                  "answers": [
+                    {
+                      "update": {
+                        "id": "4",
+                        "recommendedProduct": {
+                          "_link": "4",
+                        },
+                        "text": "test answer 2",
+                      },
+                    },
+                  ],
+                  "id": "4",
+                  "text": "test 2",
+                },
+              },
+            ],
+            "title": "test 2 ",
+          },
+        }
+      `);
     });
   });
 

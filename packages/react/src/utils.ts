@@ -9,7 +9,6 @@ import type {
 import { gadgetErrorFor, getNonNullableError } from "@gadgetinc/api-client-core";
 import type { CombinedError, RequestPolicy } from "@urql/core";
 import { GraphQLError } from "graphql";
-import { rest, update } from "lodash";
 import { useMemo } from "react";
 import type { AnyVariables, Operation, OperationContext, UseQueryArgs, UseQueryState } from "urql";
 
@@ -407,47 +406,60 @@ export function hasNested(data: any) {
 }
 
 export function transformData(defaultValues: any, data: any) {
-  console.log('defaultValues', JSON.stringify(defaultValues, null, 2));
-  console.log('data', JSON.stringify(data, null, 2));
+  console.log("defaultValues", JSON.stringify(defaultValues, null, 2));
+  console.log("data", JSON.stringify(data, null, 2));
   const updates = getUpdates(defaultValues);
 
-  function transform(input: any, updates: Record<string, number[]>, depth = 0, path: string | undefined = undefined, isInArray = false, isParentAnObject = false): any {
+  function transform(
+    input: any,
+    updates: Record<string, number[]>,
+    depth = 0,
+    path: string | undefined = undefined,
+    isInArray = false,
+    isParentAnObject = false
+  ): any {
     if (Array.isArray(input)) {
       const results: any[] = [];
       const edge = updates[path!];
       const handled: number[] = [];
 
       if (edge) {
-        results.push(edge.map((nodeId: any, nodeIndex: number) => {
-          const item = input.find((item: any) => item.id == nodeId);
+        results.push(
+          edge.map((nodeId: any, nodeIndex: number) => {
+            const item = input.find((item: any) => item.id == nodeId);
 
-          if (!item) {
-            const updateEntries = Object.entries(updates);
-            const updateEntry = updateEntries.find(([key, _ids]) => key.includes(path! + "." + nodeIndex));
-            if (updateEntry) {
-              const { 0: updatePath, 1: _ } = updateEntry;
-              delete updates[updatePath];
+            if (!item) {
+              const updateEntries = Object.entries(updates);
+              const updateEntry = updateEntries.find(([key, _ids]) => key.includes(path! + "." + nodeIndex));
+              if (updateEntry) {
+                const { 0: updatePath, 1: _ } = updateEntry;
+                delete updates[updatePath];
+              }
+              return { delete: { id: nodeId } };
+            } else {
+              const index = input.findIndex((item: any) => item.id == nodeId);
+
+              handled.push(index);
+
+              const currentPath = path ? `${path}.${index}` : index.toString();
+              return transform(item, updates, depth + 1, currentPath, true, false);
             }
-            return { delete: { id: nodeId } };
-          } else {
-            const index = input.findIndex((item: any) => item.id == nodeId);
-
-            handled.push(index);
-
-            const currentPath = path ? `${path}.${index}` : index.toString();
-            return transform(item, updates, depth + 1, currentPath, true, false);
-          }
-        }));
-      } 
+          })
+        );
+      }
 
       // handle the rest of the array
-      results.push(input.filter((_item, index) => !handled.includes(index)).map((item: any, index) => {
-        const currentPath = path ? `${path}.${index}` : index.toString();
-        return transform(item, updates, depth + 1, currentPath, true, false);
-      }));
+      results.push(
+        input
+          .filter((_item, index) => !handled.includes(index))
+          .map((item: any, index) => {
+            const currentPath = path ? `${path}.${index}` : index.toString();
+            return transform(item, updates, depth + 1, currentPath, true, false);
+          })
+      );
 
       return results.flatMap((result) => result);
-    } else if (input !== undefined && typeof input === 'object') {
+    } else if (input !== undefined && input !== null && typeof input === "object") {
       const result: any = {};
 
       for (const key of Object.keys(input)) {
@@ -458,15 +470,15 @@ export function transformData(defaultValues: any, data: any) {
       if (depth > 1) {
         const { __typename, ...rest } = result;
 
-        if ('id' in input) {
+        if ("id" in input) {
           if (isInArray && isParentAnObject && __typename !== "jsonb") {
-            return { _link: input['id'] };
-          } 
+            return { _link: input["id"] };
+          }
 
           return { update: { ...rest } };
-        } 
+        }
 
-        return { create: { ...rest} };
+        return { create: { ...rest } };
       }
 
       return result;
@@ -477,7 +489,7 @@ export function transformData(defaultValues: any, data: any) {
 
   const result = transform(data, updates);
 
-  console.log('transformedData', JSON.stringify(result, null, 2));
+  console.log("transformedData", JSON.stringify(result, null, 2));
 
   return result;
 }
@@ -488,10 +500,10 @@ function getUpdates(data: any): Record<string, number[]> {
   function go(input: any, path: string | undefined = undefined, depth = 0): any {
     if (Array.isArray(input)) {
       return input.map((item: any, index) => {
-      const currentPath = path ? `${path}.${index}` : index.toString();
+        const currentPath = path ? `${path}.${index}` : index.toString();
         return go(item, currentPath, depth + 1);
       });
-    } else if (input !== undefined && typeof input === 'object') {
+    } else if (input !== undefined && input !== null && typeof input === "object") {
       const result: any = {};
 
       for (const key of Object.keys(input)) {
@@ -499,24 +511,24 @@ function getUpdates(data: any): Record<string, number[]> {
         result[key] = go(input[key], currentPath, depth + 1);
       }
 
-      if (depth > 1){
+      if (depth > 1) {
         const newPath = path?.substring(0, path.length - 2);
 
-        if ('id' in input) {
+        if ("id" in input) {
           if (!updateList[newPath!]) {
             updateList[newPath!] = [];
           }
 
-          updateList[newPath!].push(input['id']);
-        } 
+          updateList[newPath!].push(input["id"]);
+        }
       }
 
       return result;
-    } 
+    }
 
-    return input
+    return input;
   }
-  
+
   go(data);
   return updateList;
 }
