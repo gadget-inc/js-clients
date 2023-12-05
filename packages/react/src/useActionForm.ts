@@ -162,7 +162,7 @@ type UseActionFormState<
 export type FormInput<InputT> = InputT extends (infer Element)[]
   ? FormInput<Element>[]
   : InputT extends { create?: unknown; update?: unknown }
-  ? InputT["create"] | InputT["update"]
+  ? FormInput<InputT["create"]> | FormInput<InputT["update"]>
   : InputT extends object ? { [K in keyof InputT]: FormInput<InputT[K]> } : InputT;
 
 export type UseActionFormResult<
@@ -274,7 +274,7 @@ export const useActionForm = <
   }
 
   // setup the react-hook-form object, passing any options from the props
-  const { handleSubmit, formState, ...formHook } = useForm<FormInput<ActionFunc["variablesType"]>, FormContext>({
+  const { handleSubmit, formState, ...formHook } = useForm<ActionFunc["variablesType"], FormContext>({
     ...options,
     defaultValues: toDefaultValues("modelApiIdentifier" in action ? action.modelApiIdentifier : undefined, defaultValues),
   });
