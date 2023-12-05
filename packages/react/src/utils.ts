@@ -457,7 +457,7 @@ export function transformData(defaultValues: any, data: any) {
         const { __typename, ...rest } = result;
 
         if ('id' in input) {
-          if (isInArray && isParentAnObject) {
+          if (isInArray && isParentAnObject && __typename !== "jsonb") {
             return { _link: input['id'] };
           } 
 
