@@ -31,7 +31,7 @@ export class DataHydrator {
     const hydrated = { ...object };
     for (const [key, hydrator] of Object.entries(this.plan)) {
       const value = hydrated[key];
-      if (value != null) {
+      if (value != null && Hydrators[hydrator]) {
         hydrated[key] = Hydrators[hydrator](value);
       }
     }

@@ -352,8 +352,8 @@ export const assertMutationSuccess = (response: OperationResult<any>, dataPath: 
 type Result = Pick<OperationResult<any>, "data">;
 
 export const getHydrator = (response: Result) => {
-  if (response.data?.gadgetMeta?.hydrations) {
-    return new DataHydrator(response.data?.gadgetMeta?.hydrations);
+  if (response.data?.gadgetMeta?.referencedHydrations) {
+    return new DataHydrator(response.data?.gadgetMeta?.referencedHydrations);
   }
 };
 

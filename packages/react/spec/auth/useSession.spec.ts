@@ -57,8 +57,7 @@ describe("useSession", () => {
           }
         }
         gadgetMeta {
-          hydrations(modelName: 
-      "session")
+          referencedHydrations
         }
       }"
     `);
@@ -105,8 +104,7 @@ describe("useSession", () => {
           }
         }
         gadgetMeta {
-          hydrations(modelName: 
-      "session")
+          referencedHydrations
         }
       }"
     `);
@@ -135,8 +133,7 @@ describe("useSession", () => {
           __typename
         }
         gadgetMeta {
-          hydrations(modelName: 
-      "session")
+          referencedHydrations
         }
       }"
     `);

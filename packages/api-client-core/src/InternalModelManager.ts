@@ -34,9 +34,9 @@ fragment InternalErrorsDetails on ExecutionError {
 }
 `;
 
-const internalHydrationPlan = (modelApiIdentifer: string) => `
+const internalHydrations = `
   gadgetMeta {
-    hydrations(modelName: "${modelApiIdentifer}")
+    referencedHydrations
   }
 `;
 
@@ -44,7 +44,7 @@ export const internalFindOneQuery = (apiIdentifier: string) => {
   const capitalizedApiIdentifier = capitalizeIdentifier(apiIdentifier);
   return `
     query InternalFind${capitalizedApiIdentifier}($id: GadgetID!, $select: [String!]) {
-      ${internalHydrationPlan(apiIdentifier)}
+      ${internalHydrations}
       internal {
         ${apiIdentifier}(id: $id, select: $select)
       }
@@ -119,7 +119,7 @@ export const internalCreateMutation = (apiIdentifier: string) => {
     ${internalErrorsDetails}
 
     mutation InternalCreate${capitalizedApiIdentifier}($record: Internal${capitalizedApiIdentifier}Input) {
-      ${internalHydrationPlan(apiIdentifier)}
+      ${internalHydrations}
       internal {
         create${capitalizedApiIdentifier}(${apiIdentifier}: $record) {
           success
@@ -141,7 +141,7 @@ export const internalBulkCreateMutation = (apiIdentifier: string, pluralApiIdent
     ${internalErrorsDetails}
 
     mutation InternalBulkCreate${capitalizedPluralApiIdentifier}($records: [Internal${capitalizedApiIdentifier}Input]!) {
-      ${internalHydrationPlan(apiIdentifier)}
+      ${internalHydrations}
       internal {
         bulkCreate${capitalizedPluralApiIdentifier}(${pluralApiIdentifier}: $records) {
           success
@@ -161,7 +161,7 @@ export const internalUpdateMutation = (apiIdentifier: string) => {
     ${internalErrorsDetails}
 
     mutation InternalUpdate${capitalizedApiIdentifier}($id: GadgetID!, $record: Internal${capitalizedApiIdentifier}Input) {
-      ${internalHydrationPlan(apiIdentifier)}
+      ${internalHydrations}
       internal {
         update${capitalizedApiIdentifier}(id: $id, ${apiIdentifier}: $record) {
           success
@@ -181,7 +181,7 @@ export const internalDeleteMutation = (apiIdentifier: string) => {
     ${internalErrorsDetails}
 
     mutation InternalDelete${capitalizedApiIdentifier}($id: GadgetID!) {
-      ${internalHydrationPlan(apiIdentifier)}
+      ${internalHydrations}
       internal {
         delete${capitalizedApiIdentifier}(id: $id) {
           success
@@ -203,7 +203,7 @@ export const internalDeleteManyMutation = (apiIdentifier: string) => {
       $search: String
       $filter: [${capitalizedApiIdentifier}Filter!]
     ) {
-      ${internalHydrationPlan(apiIdentifier)}
+      ${internalHydrations}
       internal {
         deleteMany${capitalizedApiIdentifier}(search: $search, filter: $filter) {
           success

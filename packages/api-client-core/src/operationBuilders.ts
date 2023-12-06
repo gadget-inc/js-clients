@@ -4,12 +4,10 @@ import type { FieldSelection } from "./FieldSelection.js";
 import { filterTypeName, sortTypeName } from "./support.js";
 import type { BaseFindOptions, FindManyOptions, VariablesOptions } from "./types.js";
 
-const hydrationOptions = (modelApiIdentifier: string): BuilderFieldSelection => {
-  return {
-    gadgetMeta: {
-      [`hydrations(modelName: "${modelApiIdentifier}")`]: true,
-    },
-  };
+const hydrationOptions = {
+  gadgetMeta: {
+    referencedHydrations: true,
+  },
 };
 
 /**
@@ -42,7 +40,7 @@ export const findOneOperation = (
     name: operation,
     fields: {
       [operation]: Call(variables, fieldSelectionToQueryCompilerFields(options?.select || defaultSelection, true)),
-      ...hydrationOptions(modelApiIdentifier),
+      ...hydrationOptions,
     },
     directives: directivesForOptions(options),
   });
@@ -95,7 +93,7 @@ export const findManyOperation = (
           },
         }
       ),
-      ...hydrationOptions(modelApiIdentifier),
+      ...hydrationOptions,
     },
     directives: directivesForOptions(options),
   });
@@ -149,7 +147,7 @@ export const actionOperation = (
     name: operation,
     fields: {
       ...fields,
-      ...hydrationOptions(modelApiIdentifier),
+      ...hydrationOptions,
     },
     directives: directivesForOptions(options),
   };

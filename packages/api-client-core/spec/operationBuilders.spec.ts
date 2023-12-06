@@ -12,7 +12,7 @@ describe("operation builders", () => {
             state
           }
           gadgetMeta {
-            hydrations(modelName: "widget")
+            referencedHydrations
           }
         }",
           "variables": {
@@ -33,7 +33,7 @@ describe("operation builders", () => {
             __typename
           }
           gadgetMeta {
-            hydrations(modelName: "widget")
+            referencedHydrations
           }
         }",
           "variables": {
@@ -54,7 +54,7 @@ describe("operation builders", () => {
             state
           }
           gadgetMeta {
-            hydrations(modelName: "widget")
+            referencedHydrations
           }
         }",
           "variables": {
@@ -87,7 +87,7 @@ describe("operation builders", () => {
             }
           }
           gadgetMeta {
-            hydrations(modelName: "widget")
+            referencedHydrations
           }
         }",
           "variables": {},
@@ -117,7 +117,7 @@ describe("operation builders", () => {
             }
           }
           gadgetMeta {
-            hydrations(modelName: "widget")
+            referencedHydrations
           }
         }",
           "variables": {},
@@ -147,7 +147,7 @@ describe("operation builders", () => {
             }
           }
           gadgetMeta {
-            hydrations(modelName: "widget")
+            referencedHydrations
           }
         }",
           "variables": {
@@ -179,7 +179,7 @@ describe("operation builders", () => {
             }
           }
           gadgetMeta {
-            hydrations(modelName: "widget")
+            referencedHydrations
           }
         }",
           "variables": {
@@ -215,7 +215,7 @@ describe("operation builders", () => {
             }
           }
           gadgetMeta {
-            hydrations(modelName: "widget")
+            referencedHydrations
           }
         }",
           "variables": {
@@ -252,7 +252,7 @@ describe("operation builders", () => {
             }
           }
           gadgetMeta {
-            hydrations(modelName: "widget")
+            referencedHydrations
           }
         }",
           "variables": {},
@@ -283,7 +283,7 @@ describe("operation builders", () => {
             }
           }
           gadgetMeta {
-            hydrations(modelName: "widget")
+            referencedHydrations
           }
         }",
           "variables": {
@@ -323,7 +323,7 @@ describe("operation builders", () => {
             }
           }
           gadgetMeta {
-            hydrations(modelName: "widget")
+            referencedHydrations
           }
         }",
           "variables": {
@@ -360,7 +360,7 @@ describe("operation builders", () => {
             }
           }
           gadgetMeta {
-            hydrations(modelName: "widget")
+            referencedHydrations
           }
         }",
           "variables": {
@@ -400,7 +400,7 @@ describe("operation builders", () => {
             }
           }
           gadgetMeta {
-            hydrations(modelName: "widget")
+            referencedHydrations
           }
         }",
           "variables": {},
@@ -431,7 +431,7 @@ describe("operation builders", () => {
             }
           }
           gadgetMeta {
-            hydrations(modelName: "widget")
+            referencedHydrations
           }
         }",
           "variables": {},
@@ -457,7 +457,7 @@ describe("operation builders", () => {
             }
           }
           gadgetMeta {
-            hydrations(modelName: "widget")
+            referencedHydrations
           }
         }",
           "variables": {},
@@ -492,7 +492,7 @@ describe("operation builders", () => {
             }
           }
           gadgetMeta {
-            hydrations(modelName: "session")
+            referencedHydrations
           }
         }",
           "variables": {},
@@ -531,7 +531,7 @@ describe("operation builders", () => {
             result
           }
           gadgetMeta {
-            hydrations(modelName: "widget")
+            referencedHydrations
           }
         }",
           "variables": {},
@@ -570,7 +570,7 @@ describe("operation builders", () => {
             results
           }
           gadgetMeta {
-            hydrations(modelName: "widget")
+            referencedHydrations
           }
         }",
           "variables": {},

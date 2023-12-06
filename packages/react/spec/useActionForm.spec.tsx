@@ -2155,8 +2155,7 @@ describe("useActionForm", () => {
           __typename
         }
         gadgetMeta {
-          hydrations(modelName: 
-      "user")
+          referencedHydrations
         }
       }"
     `);

@@ -518,7 +518,7 @@ describe("InternalModelManager", () => {
               mutation InternalCreateWidgetModel($record: InternalWidgetModelInput) {
                 
             gadgetMeta {
-              hydrations(modelName: "widget_model")
+              referencedHydrations
             }
 
                 internal {
@@ -561,7 +561,7 @@ describe("InternalModelManager", () => {
               mutation InternalBulkCreateWidgetModels($records: [InternalWidgetModelInput]!) {
                 
             gadgetMeta {
-              hydrations(modelName: "widget_model")
+              referencedHydrations
             }
 
                 internal {
@@ -604,7 +604,7 @@ describe("InternalModelManager", () => {
               mutation InternalUpdateWidgetModel($id: GadgetID!, $record: InternalWidgetModelInput) {
                 
             gadgetMeta {
-              hydrations(modelName: "widget_model")
+              referencedHydrations
             }
 
                 internal {
@@ -647,7 +647,7 @@ describe("InternalModelManager", () => {
               mutation InternalDeleteWidgetModel($id: GadgetID!) {
                 
             gadgetMeta {
-              hydrations(modelName: "widget_model")
+              referencedHydrations
             }
 
                 internal {
@@ -692,7 +692,7 @@ describe("InternalModelManager", () => {
               ) {
                 
             gadgetMeta {
-              hydrations(modelName: "widget_model")
+              referencedHydrations
             }
 
                 internal {
@@ -737,7 +737,7 @@ describe("InternalModelManager", () => {
             mutation InternalCreateWidget($record: InternalWidgetInput) {
               
           gadgetMeta {
-            hydrations(modelName: "widget")
+            referencedHydrations
           }
 
               internal {
@@ -780,7 +780,7 @@ describe("InternalModelManager", () => {
             mutation InternalBulkCreateWidgets($records: [InternalWidgetInput]!) {
               
           gadgetMeta {
-            hydrations(modelName: "widget")
+            referencedHydrations
           }
 
               internal {
@@ -823,7 +823,7 @@ describe("InternalModelManager", () => {
             mutation InternalUpdateWidget($id: GadgetID!, $record: InternalWidgetInput) {
               
           gadgetMeta {
-            hydrations(modelName: "widget")
+            referencedHydrations
           }
 
               internal {
@@ -866,7 +866,7 @@ describe("InternalModelManager", () => {
             mutation InternalDeleteWidget($id: GadgetID!) {
               
           gadgetMeta {
-            hydrations(modelName: "widget")
+            referencedHydrations
           }
 
               internal {
@@ -911,7 +911,7 @@ describe("InternalModelManager", () => {
             ) {
               
           gadgetMeta {
-            hydrations(modelName: "widget")
+            referencedHydrations
           }
 
               internal {
