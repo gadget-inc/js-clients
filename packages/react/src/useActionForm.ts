@@ -72,26 +72,26 @@ const unwindEdges = (input: any): any => {
     return input.map(unwindEdges);
   }
 
-  if (input !== null || input !== undefined && typeof input === 'object') {
-      if (Array.isArray(input)) {
-        return input.map(unwindEdges);
+  if (input !== null || (input !== undefined && typeof input === "object")) {
+    if (Array.isArray(input)) {
+      return input.map(unwindEdges);
     }
 
-    if (input !== null && typeof input === 'object') {
-        if (input.edges && Array.isArray(input.edges)) {
-            return input.edges.map((edge: any) => unwindEdges(edge.node));
-        }
+    if (input !== null && typeof input === "object") {
+      if (input.edges && Array.isArray(input.edges)) {
+        return input.edges.map((edge: any) => unwindEdges(edge.node));
+      }
 
-        const result: any = {};
-        for (const key of Object.keys(input)) {
-            result[key] = unwindEdges(input[key]);
-        }
-        return result;
+      const result: any = {};
+      for (const key of Object.keys(input)) {
+        result[key] = unwindEdges(input[key]);
+      }
+      return result;
     }
 
     return input;
   }
-}
+};
 
 /**
  * The identity of a record to build a form for
@@ -163,7 +163,9 @@ export type FormInput<InputT> = InputT extends (infer Element)[]
   ? FormInput<Element>[]
   : InputT extends { create?: unknown; update?: unknown }
   ? FormInput<InputT["create"]> | FormInput<InputT["update"]>
-  : InputT extends object ? { [K in keyof InputT]: FormInput<InputT[K]> } : InputT;
+  : InputT extends object
+  ? { [K in keyof InputT]: FormInput<InputT[K]> }
+  : InputT;
 
 export type UseActionFormResult<
   GivenOptions extends OptionsType,
@@ -335,7 +337,6 @@ export const useActionForm = <
 
       await handleSubmit(
         async (data) => {
-
           if (hasNested(data)) {
             data = transformData(defaultValues, data);
           }

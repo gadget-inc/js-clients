@@ -1533,6 +1533,214 @@ describe("useActionFormNested", () => {
       `);
     });
 
+    test("update works with a one to one single nested update child", async () => {
+      const { result: useActionFormHook } = renderHook(() => useActionForm(nestedExampleApi.quiz.update, { findBy: "123" }), {
+        wrapper: MockClientWrapper(nestedExampleApi),
+      });
+
+      expect(mockUrqlClient.executeQuery).toBeCalledTimes(1);
+
+      mockUrqlClient.executeQuery.pushResponse("quiz", {
+        data: {
+          quiz: {
+            id: "123",
+            text: "test quiz",
+
+            question: {
+              id: "456",
+              text: "test question",
+            },
+          },
+        },
+        hasNext: false,
+        stale: false,
+      });
+
+      await act(async () => {
+        useActionFormHook.current.setValue("quiz.text", "test quiz - changed");
+        useActionFormHook.current.setValue("quiz.question.text", "test question - changed");
+      });
+
+      let submitPromise: Promise<any>;
+
+      await act(async () => {
+        submitPromise = useActionFormHook.current.submit();
+      });
+
+      mockUrqlClient.executeMutation.pushResponse("updateQuiz", {
+        data: {
+          updateQuiz: {
+            success: true,
+          },
+        },
+        hasNext: false,
+        stale: false,
+      });
+
+      await act(async () => {
+        await submitPromise;
+      });
+
+      expect(mockUrqlClient.executeMutation.mock.calls[0][0].variables).toMatchInlineSnapshot(`
+        {
+          "id": "123",
+          "quiz": {
+            "question": {
+              "update": {
+                "id": "456",
+                "text": "test question - changed",
+              },
+            },
+            "text": "test quiz - changed",
+          },
+        }
+      `);
+    });
+
+    test("update works with a one to one multiple update children", async () => {
+      const { result: useActionFormHook } = renderHook(() => useActionForm(nestedExampleApi.quiz.update, { findBy: "123" }), {
+        wrapper: MockClientWrapper(nestedExampleApi),
+      });
+
+      expect(mockUrqlClient.executeQuery).toBeCalledTimes(1);
+
+      mockUrqlClient.executeQuery.pushResponse("quiz", {
+        data: {
+          quiz: {
+            id: "123",
+            text: "test quiz",
+
+            question: {
+              id: "456",
+              text: "test question",
+              answer: {
+                id: "789",
+                text: "test answer",
+              },
+            },
+          },
+        },
+        hasNext: false,
+        stale: false,
+      });
+
+      await act(async () => {
+        useActionFormHook.current.setValue("quiz.text", "test quiz - changed");
+        useActionFormHook.current.setValue("quiz.question.text", "test question - changed");
+        useActionFormHook.current.setValue("quiz.question.answer.text", "test answer - changed");
+      });
+
+      let submitPromise: Promise<any>;
+
+      await act(async () => {
+        submitPromise = useActionFormHook.current.submit();
+      });
+
+      mockUrqlClient.executeMutation.pushResponse("updateQuiz", {
+        data: {
+          updateQuiz: {
+            success: true,
+          },
+        },
+        hasNext: false,
+        stale: false,
+      });
+
+      await act(async () => {
+        await submitPromise;
+      });
+
+      expect(mockUrqlClient.executeMutation.mock.calls[0][0].variables).toMatchInlineSnapshot(`
+        {
+          "id": "123",
+          "quiz": {
+            "question": {
+              "update": {
+                "answer": {
+                  "update": {
+                    "id": "789",
+                    "text": "test answer - changed",
+                  },
+                },
+                "id": "456",
+                "text": "test question - changed",
+              },
+            },
+            "text": "test quiz - changed",
+          },
+        }
+      `);
+    });
+
+    test("update works with a one to one multiple nested update -> create children", async () => {
+      const { result: useActionFormHook } = renderHook(() => useActionForm(nestedExampleApi.quiz.update, { findBy: "123" }), {
+        wrapper: MockClientWrapper(nestedExampleApi),
+      });
+
+      expect(mockUrqlClient.executeQuery).toBeCalledTimes(1);
+
+      mockUrqlClient.executeQuery.pushResponse("quiz", {
+        data: {
+          quiz: {
+            id: "123",
+            text: "test quiz",
+            question: {
+              id: "456",
+              text: "test question",
+            },
+          },
+        },
+        hasNext: false,
+        stale: false,
+      });
+
+      await act(async () => {
+        useActionFormHook.current.setValue("quiz.text", "test quiz - changed");
+        useActionFormHook.current.setValue("quiz.question.text", "test question - changed");
+        useActionFormHook.current.setValue("quiz.question.answer.text", "test answer - changed");
+      });
+
+      let submitPromise: Promise<any>;
+
+      await act(async () => {
+        submitPromise = useActionFormHook.current.submit();
+      });
+
+      mockUrqlClient.executeMutation.pushResponse("updateQuiz", {
+        data: {
+          updateQuiz: {
+            success: true,
+          },
+        },
+        hasNext: false,
+        stale: false,
+      });
+
+      await act(async () => {
+        await submitPromise;
+      });
+
+      expect(mockUrqlClient.executeMutation.mock.calls[0][0].variables).toMatchInlineSnapshot(`
+        {
+          "id": "123",
+          "quiz": {
+            "question": {
+              "update": {
+                "answer": {
+                  "create": {
+                    "text": "test answer - changed",
+                  },
+                },
+                "id": "456",
+                "text": "test question - changed",
+              },
+            },
+            "text": "test quiz - changed",
+          },
+        }
+      `);
+    });
+
     test("update works with a single nested create child", async () => {
       const { result: useActionFormHook } = renderHook(() => useActionForm(nestedExampleApi.quiz.update, { findBy: "123" }), {
         wrapper: MockClientWrapper(nestedExampleApi),
@@ -2856,9 +3064,30 @@ describe("useActionFormNested", () => {
     });
 
     test("update works with a nested child that updates it's parent", async () => {
-      const { result: useActionFormHook } = renderHook(() => useActionForm(nestedExampleApi.quiz.update, { findBy: "123" }), {
-        wrapper: MockClientWrapper(nestedExampleApi),
-      });
+      const { result: useActionFormHook } = renderHook(
+        () =>
+          useActionForm(nestedExampleApi.quiz.update, {
+            findBy: "123",
+            select: {
+              questions: {
+                edges: {
+                  node: {
+                    answers: {
+                      edges: {
+                        node: {
+                          question: {},
+                        },
+                      },
+                    },
+                  },
+                },
+              },
+            },
+          }),
+        {
+          wrapper: MockClientWrapper(nestedExampleApi),
+        }
+      );
 
       expect(mockUrqlClient.executeQuery).toBeCalledTimes(1);
 
@@ -2883,8 +3112,8 @@ describe("useActionFormNested", () => {
                               id: "4",
                               image: null, // <-- RANDOM NULL
                               productSuggestion: {
-                                id: "8746652729619",
                                 __typename: "ShopifyProduct",
+                                id: "8746652729619",
                               },
                               __typename: "RecommendedProduct",
                             },
