@@ -24,6 +24,10 @@ import {
 } from "./support.js";
 
 export type TransactionRun<T> = (transaction: GadgetTransaction) => Promise<T>;
+
+export enum GadgetGraphQLCloseCode {
+  TooManyRequests = 4294,
+}
 export interface GadgetSubscriptionClientOptions extends Partial<SubscriptionClientOptions> {
   urlParams?: Record<string, string | null | undefined>;
   connectionAttempts?: number;
@@ -502,8 +506,8 @@ export class GadgetConnection {
 
       const retryOnClose = (event: unknown) => {
         if (isCloseEvent(event)) {
-          if (event.code == 4294) {
-            resetListeners();
+          if (event.code == GadgetGraphQLCloseCode.TooManyRequests) {
+            clearListeners();
             return wrappedReject(new GadgetTooManyRequestsError(event.reason));
           }
 
