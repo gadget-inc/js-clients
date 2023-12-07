@@ -502,7 +502,8 @@ export class GadgetConnection {
 
       const retryOnClose = (event: unknown) => {
         if (isCloseEvent(event)) {
-          if (event.code == 4429) {
+          if (event.code == 4294) {
+            resetListeners();
             return wrappedReject(new GadgetTooManyRequestsError(event.reason));
           }
 
