@@ -16,7 +16,7 @@ import { useFindBy } from "./useFindBy.js";
 import { useFindOne } from "./useFindOne.js";
 import { useGlobalAction } from "./useGlobalAction.js";
 import type { ActionHookState, ErrorWrapper, OptionsType } from "./utils.js";
-import { get, hasNested, set, transformData } from "./utils.js";
+import { get, hasNested, set, transformDataRedux } from "./utils.js";
 
 export * from "react-hook-form";
 
@@ -46,7 +46,7 @@ const useFindExistingRecord = (
   }
 };
 
-const OmittedKeys = ["__typename", "id", "createdAt", "updatedAt"] as const;
+const OmittedKeys = ["id", "createdAt", "updatedAt"] as const;
 type OmittedKey = (typeof OmittedKeys)[number];
 
 const omitKeys = (data: any) => {
@@ -265,6 +265,24 @@ export const useActionForm = <
     defaultValues = { [action.modelApiIdentifier]: { ...toDefaultValues(action.modelApiIdentifier, findResult.data) } } as any;
   }
 
+  const referencedTypes: Record<string, any> = {
+    Quiz: {
+      questions: "HasMany",
+    },
+    Question: {
+      answers: "HasMany",
+      quiz: "BelongsTo",
+    },
+    Answer: {
+      recommendedProduct: "HasOne",
+      question: "BelongsTo",
+    },
+    RecommendedProduct: {
+      productSuggestion: "BelongsTo",
+    },
+    ShopifyProduct: {},
+  };
+
   let existingRecordId: string | undefined = undefined;
 
   if (findResult.data?.id) {
@@ -338,7 +356,7 @@ export const useActionForm = <
       await handleSubmit(
         async (data) => {
           if (hasNested(data)) {
-            data = transformData(defaultValues, data);
+            data = transformDataRedux(referencedTypes, defaultValues, data);
           }
 
           let variables: ActionFunc["variablesType"] = {

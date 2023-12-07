@@ -494,6 +494,108 @@ export function transformData(defaultValues: any, data: any) {
   return result;
 }
 
+export function transformDataRedux(referencedTypes: Record<string, any>, defaultValues: any, data: any) {
+  console.log("referencedTypes", JSON.stringify(referencedTypes, null, 2));
+  console.log("defaultValues", JSON.stringify(defaultValues, null, 2));
+  console.log("data", JSON.stringify(data, null, 2));
+  const updates = getUpdates(defaultValues);
+
+  function transform(
+    input: any,
+    updates: Record<string, number[]>,
+    depth = 0,
+    path: string | undefined = undefined,
+    fieldType: string | null = null
+  ): any {
+    if (Array.isArray(input)) {
+      const results: any[] = [];
+      const edge = updates[path!];
+      const handled: number[] = [];
+
+      if (edge) {
+        results.push(
+          edge.map((nodeId: any, nodeIndex: number) => {
+            const item = input.find((item: any) => item.id == nodeId);
+
+            if (!item) {
+              const updateEntries = Object.entries(updates);
+              const updateEntry = updateEntries.find(([key, _ids]) => key.includes(path! + "." + nodeIndex));
+              if (updateEntry) {
+                const { 0: updatePath, 1: _ } = updateEntry;
+                delete updates[updatePath];
+              }
+              return { delete: { id: nodeId } };
+            } else {
+              const index = input.findIndex((item: any) => item.id == nodeId);
+
+              handled.push(index);
+
+              const currentPath = path ? `${path}.${index}` : index.toString();
+              return transform(item, updates, depth + 1, currentPath, fieldType);
+            }
+          })
+        );
+      }
+
+      // handle the rest of the array
+      results.push(
+        input
+          .filter((_item, index) => !handled.includes(index))
+          .map((item: any, index) => {
+            const relationships = referencedTypes[item["__typename"]];
+            const currentPath = path ? `${path}.${index}` : index.toString();
+            return transform(item, updates, depth + 1, currentPath, fieldType);
+          })
+      );
+
+      return results.flatMap((result) => result);
+    } else if (input != null && typeof input === "object") {
+      const result: any = {};
+
+      const inputRelationships = referencedTypes[input["__typename"]];
+
+      for (const key of Object.keys(input)) {
+        const currentPath = path ? `${path}.${key}` : key;
+
+        const fieldType = inputRelationships ? inputRelationships[key] : null;
+
+        result[key] = transform(input[key], updates, depth + 1, currentPath, fieldType);
+      }
+
+      const { __typename, ...rest } = result;
+
+      if (depth > 1) {
+        if ("id" in input) {
+          switch (fieldType) {
+            case "HasMany":
+            case "HasOne":
+              return { update: { ...rest } };
+            case "BelongsTo":
+              return { _link: input["id"] };
+          }
+        }
+
+        switch (fieldType) {
+          case "BelongsTo":
+          case "HasOne":
+          case "HasMany":
+            return { create: { ...rest } };
+        }
+      }
+
+      return { ...rest };
+    }
+
+    return input;
+  }
+
+  const result = transform(data, updates);
+
+  console.log("transformedData", JSON.stringify(result, null, 2));
+
+  return result;
+}
+
 function getUpdates(data: any): Record<string, number[]> {
   const updateList: Record<string, number[]> = {};
 
