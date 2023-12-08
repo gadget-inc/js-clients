@@ -20,6 +20,7 @@ const referencedHydrations = {
     answer: "BelongsTo",
   },
 };
+
 describe("useActionFormNested", () => {
   describe("utils", () => {
     test("typenames aren't in submit", async () => {
@@ -1984,6 +1985,100 @@ describe("useActionFormNested", () => {
           },
         }
       `);
+    });
+
+    test("update HasMany -> HasMany -> HasOne -> HasOne -> BelongsTo", async () => {
+      const { result: useActionFormHook } = renderHook(() => useActionForm(nestedExampleApi.quiz.update, { findBy: "123" }), {
+        wrapper: MockClientWrapper(nestedExampleApi),
+      });
+
+      expect(mockUrqlClient.executeQuery).toBeCalledTimes(1);
+
+      const queryResponse = {
+        data: {
+          quiz: {
+            __typename: "Quiz",
+            id: "1",
+            text: "Test Quiz",
+            questions: {
+              __typename: "QuestionConnection",
+              edges: [
+                {
+                  __typename: "QuestionEdge",
+                  node: {
+                    __typename: "Question",
+                    id: "1",
+                    text: "Test question",
+                    answers: {
+                      __typename: "AnswerConnection",
+                      edges: [
+                        {
+                          __typename: "AnswerEdge",
+                          node: {
+                            __typename: "Answer",
+                            notification: {
+                              __typename: "Notification",
+                              id: "1",
+                              enabled: true,
+                              notificationMessage: {
+                                __typename: "NotificationMessage",
+                                id: "1",
+                                text: "example value for text",
+                                notificationMetaData: {
+                                  __typename: "NotificationMetadata",
+                                  id: "1",
+                                  text: "My metadata"
+                                }
+                              },
+                            },
+                          },
+                        },
+                      ],
+                    },
+                  },
+                },
+              ],
+            },
+          },
+        },
+        extensions: {
+          logs: "https://ggt.link/logs/150608/7a62ba815889f63948c51cd41ee3021d",
+          traceId: "7a62ba815889f63948c51cd41ee3021d",
+        },
+      };
+
+      mockUrqlClient.executeQuery.pushResponse("quiz", {
+        data: queryResponse.data,
+        hasNext: false,
+        stale: false,
+      });
+
+      await act(async () => {
+        useActionFormHook.current.setValue("quiz.text", "test quiz - changed");
+        useActionFormHook.current.setValue("quiz.questions.0.answers.0.notification.notificationMessage.notificationMetadata.id", "2");
+      });
+
+      let submitPromise: Promise<any>;
+
+      await act(async () => {
+        submitPromise = useActionFormHook.current.submit();
+      });
+
+      mockUrqlClient.executeMutation.pushResponse("updateQuiz", {
+        data: {
+          updateQuiz: {
+            success: true,
+          },
+        },
+        hasNext: false,
+        stale: false,
+      });
+
+      await act(async () => {
+        await submitPromise;
+      });
+
+      expect(mockUrqlClient.executeMutation.mock.calls[0][0].variables).toMatchInlineSnapshot();
     });
 
     test("update works with a one to one single nested update child", async () => {

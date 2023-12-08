@@ -274,11 +274,18 @@ export const useActionForm = <
       quiz: "BelongsTo",
     },
     Answer: {
+      notification: "HasOne",
       recommendedProduct: "HasOne",
       question: "BelongsTo",
     },
     RecommendedProduct: {
       productSuggestion: "BelongsTo",
+    },
+    Notification: {
+      notificationMessage: "HasOne",
+    },
+    NotificationMessage: {
+      notificationMetadata: "BelongsTo",
     },
     ShopifyProduct: {},
   };
