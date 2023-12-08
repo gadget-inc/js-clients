@@ -26,6 +26,22 @@ export const MockClientWrapper =
     );
   };
 
+export const LiveClientWrapper =
+  (
+    api: AnyClient,
+    propOverrides?: {
+      auth?: Partial<GadgetAuthConfiguration>;
+      navigate?: (url: string) => void;
+    }
+  ) =>
+  (props: { children: ReactNode }) => {
+    return (
+      <Provider api={api} navigate={propOverrides?.navigate} auth={propOverrides?.auth}>
+        <Suspense fallback={<div>Loading...</div>}>{props.children}</Suspense>
+      </Provider>
+    );
+  };
+
 export const MockGraphQLWSClientWrapper = (api: AnyClient, auth?: Partial<GadgetAuthConfiguration>) => (props: { children: ReactNode }) => {
   jest.replaceProperty(api.connection, "baseSubscriptionClient", mockGraphQLWSClient as any);
 

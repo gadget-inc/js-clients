@@ -542,7 +542,6 @@ export function transformDataRedux(referencedTypes: Record<string, any>, default
         input
           .filter((_item, index) => !handled.includes(index))
           .map((item: any, index) => {
-            const relationships = referencedTypes[item["__typename"]];
             const currentPath = path ? `${path}.${index}` : index.toString();
             return transform(item, updates, depth + 1, currentPath, fieldType);
           })
@@ -553,6 +552,13 @@ export function transformDataRedux(referencedTypes: Record<string, any>, default
       const result: any = {};
 
       const inputRelationships = referencedTypes[input["__typename"]];
+      if (!inputRelationships && depth > 1) {
+        throw new Error(`Can't transform input, Unknown __typename. ${JSON.stringify({
+          input,
+          path: path ?? "root",
+          referencedTypes
+        }, null, 2)}`);
+      }
 
       for (const key of Object.keys(input)) {
         const currentPath = path ? `${path}.${key}` : key;
@@ -572,6 +578,12 @@ export function transformDataRedux(referencedTypes: Record<string, any>, default
               return { update: { ...rest } };
             case "BelongsTo":
               return { _link: input["id"] };
+            default:
+              throw new Error(`Can't transform input with id, Unknown field type ${fieldType} for for __typename ${input["__typename"]}. ${JSON.stringify({
+                input,
+                path,
+                referencedTypes
+              }, null, 2)}`);
           }
         }
 
@@ -580,6 +592,12 @@ export function transformDataRedux(referencedTypes: Record<string, any>, default
           case "HasOne":
           case "HasMany":
             return { create: { ...rest } };
+          default:
+            throw new Error(`Can't transform input, Unknown field type ${fieldType} for for __typename ${input["__typename"]}. ${JSON.stringify({
+              input,
+              path,
+              referencedTypes
+            }, null, 2)}`);
         }
       }
 

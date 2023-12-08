@@ -265,29 +265,38 @@ export const useActionForm = <
     defaultValues = { [action.modelApiIdentifier]: { ...toDefaultValues(action.modelApiIdentifier, findResult.data) } } as any;
   }
 
-  const referencedTypes: Record<string, any> = {
+  const referencedTypes: Record<string, Record<string, string>> = {
     Quiz: {
       questions: "HasMany",
     },
     Question: {
-      answers: "HasMany",
       quiz: "BelongsTo",
+      answers: "HasMany",
     },
     Answer: {
-      notification: "HasOne",
-      recommendedProduct: "HasOne",
       question: "BelongsTo",
+      recommendedProduct: "HasOne",
+      // notification: "HasOne",
     },
     RecommendedProduct: {
       productSuggestion: "BelongsTo",
+      answer: "BelongsTo",
+    },
+    ShopifyProduct: {
+      shop: "BelongsTo",
+      recommendedProduct: "HasOne",
     },
     Notification: {
+      answer: "BelongsTo",
       notificationMessage: "HasOne",
     },
     NotificationMessage: {
       notificationMetadata: "BelongsTo",
+      notification: "BelongsTo",
     },
-    ShopifyProduct: {},
+    NotificationMetadata: {
+      notificationMessages: "HasMany",
+    },
   };
 
   let existingRecordId: string | undefined = undefined;
