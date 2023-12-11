@@ -198,8 +198,8 @@ importers:
         specifier: ^3.2.2
         version: 3.2.2
       react-hook-form:
-        specifier: ^7.46.1
-        version: 7.46.1(react@18.2.0)
+        specifier: ~7.48.2
+        version: 7.48.2(react@18.2.0)
       urql:
         specifier: ^4.0.4
         version: 4.0.4(graphql@16.8.1)(react@18.2.0)
@@ -5638,8 +5638,8 @@ packages:
     resolution: {integrity: sha512-nsO+KSNgo1SbJqJEYRE9ERzo7YtYbou/OqjSQKxV7jcKox7+usiUVZOAC+XnDOABXggQTno0Y1CpVnuWEc1boQ==}
     dev: false
 
-  /react-hook-form@7.46.1(react@18.2.0):
-    resolution: {integrity: sha512-0GfI31LRTBd5tqbXMGXT1Rdsv3rnvy0FjEk8Gn9/4tp6+s77T7DPZuGEpBRXOauL+NhyGT5iaXzdIM2R6F/E+w==}
+  /react-hook-form@7.48.2(react@18.2.0):
+    resolution: {integrity: sha512-H0T2InFQb1hX7qKtDIZmvpU1Xfn/bdahWBN1fH19gSe4bBEqTfmlr7H3XWTaVtiK4/tpPaI1F3355GPMZYge+A==}
     engines: {node: '>=12.22.0'}
     peerDependencies:
       react: ^16.8.0 || ^17 || ^18
