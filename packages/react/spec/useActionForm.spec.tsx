@@ -1175,6 +1175,7 @@ describe("useActionForm", () => {
     expect(mockUrqlClient.executeMutation.mock.calls[0][0].variables).toEqual({
       id: "123",
       user: {
+        __typename: "User",
         email: "new@test.com",
         password: "newsecret",
       },
