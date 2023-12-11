@@ -1,36 +1,11 @@
-import NodeHttpAdapter from "@pollyjs/adapter-node-http";
-import XHRAdapter from "@pollyjs/adapter-xhr";
-import FSPersister from "@pollyjs/persister-fs";
-import { renderHook, waitFor } from "@testing-library/react";
-import { setupPolly } from "setup-polly-jest";
+import { act, renderHook, waitFor } from "@testing-library/react";
 import { useActionForm } from "../src/useActionForm.js";
 import { nestedExampleApi } from "./apis.js";
+import { startPolly } from "./polly.js";
 import { LiveClientWrapper } from "./testWrappers.js";
 
-const referencedHydrations = {
-  quiz: {
-    questions: "HasMany",
-  },
-  question: {
-    answers: "HasMany",
-    quiz: "BelongsTo",
-  },
-  answer: {
-    recommendedProduct: "HasOne",
-    question: "BelongsTo",
-  },
-  recommendedProduct: {
-    productSuggestion: "BelongsTo",
-    answer: "BelongsTo",
-  },
-};
-
 describe("useActionFormNested", () => {
-  const context = setupPolly({
-    recordIfMissing: true,
-    adapters: [XHRAdapter, NodeHttpAdapter],
-    persister: FSPersister,
-  });
+  startPolly({});
 
   it("should record", async () => {
     const results = await nestedExampleApi.quiz.findMany();
@@ -119,9 +94,41 @@ describe("useActionFormNested", () => {
   });
 
   test("update HasMany -> HasMany -> HasOne -> HasOne -> BelongsTo", async () => {
-    const { result: useActionFormHook } = renderHook(() => useActionForm(nestedExampleApi.quiz.update, { findBy: "12" }), {
-      wrapper: LiveClientWrapper(nestedExampleApi),
-    });
+    let returnedData: any;
+
+    const { result: useActionFormHook } = renderHook(
+      () =>
+        useActionForm(nestedExampleApi.quiz.update, {
+          findBy: "12",
+          select: {
+            id: true,
+            text: true,
+            questions: {
+              edges: {
+                node: {
+                  id: true,
+                  text: true,
+                  answers: {
+                    edges: {
+                      node: {
+                        id: true,
+                        text: true,
+                      },
+                    },
+                  },
+                },
+              },
+            },
+          },
+
+          onSuccess: (actionResult) => {
+            returnedData = actionResult;
+          },
+        }),
+      {
+        wrapper: LiveClientWrapper(nestedExampleApi),
+      }
+    );
 
     await waitFor(() => expect(useActionFormHook.current.formState.isLoading).toBe(false));
 
@@ -129,26 +136,76 @@ describe("useActionFormNested", () => {
       {
         "quiz": {
           "__typename": "Quiz",
+          "questions": [
+            {
+              "__typename": "Question",
+              "answers": [
+                {
+                  "__typename": "Answer",
+                  "id": "8",
+                  "text": "Test answer - 1",
+                },
+              ],
+              "id": "9",
+              "text": "test",
+            },
+          ],
           "text": "Test Quiz",
         },
       }
     `);
 
-    // await act(async () => {
-    //   // useActionFormHook.current.setValue("quiz.text", "test quiz - changed");
-    //   // useActionFormHook.current.setValue("quiz.questions.0.answers.0.notification.notificationMessage.notificationMetadata.id", "2");
-    // });
+    await act(async () => {
+      // useActionFormHook.current.setValue("quiz.text", "test quiz - changed");
+      // useActionFormHook.current.setValue("quiz.questions.0.answers.0.notification.notificationMessage.notificationMetadata.id", "2");
+    });
 
-    // let submitPromise: Promise<any>;
+    let submitPromise: Promise<any>;
 
-    // await act(async () => {
-    //   submitPromise = useActionFormHook.current.submit();
-    // });
+    await act(async () => {
+      submitPromise = useActionFormHook.current.submit();
+    });
 
-    // await act(async () => {
-    //   await submitPromise;
-    // });
+    expect(useActionFormHook.current.formState.isSubmitting).toBe(true);
 
-    // expect(mockUrqlClient.executeMutation.mock.calls[0][0].variables).toMatchInlineSnapshot();
+    await waitFor(() => {
+      expect(useActionFormHook.current.formState.isSubmitting).toBe(false);
+    });
+
+    expect(useActionFormHook.current.formState.errors).toEqual({});
+    expect(useActionFormHook.current.formState.isSubmitSuccessful).toBe(true);
+    expect(returnedData).toMatchInlineSnapshot(`
+      {
+        "__typename": "Quiz",
+        "id": "12",
+        "questions": {
+          "__typename": "QuestionConnection",
+          "edges": [
+            {
+              "__typename": "QuestionEdge",
+              "node": {
+                "__typename": "Question",
+                "answers": {
+                  "__typename": "AnswerConnection",
+                  "edges": [
+                    {
+                      "__typename": "AnswerEdge",
+                      "node": {
+                        "__typename": "Answer",
+                        "id": "8",
+                        "text": "Test answer - 1",
+                      },
+                    },
+                  ],
+                },
+                "id": "9",
+                "text": "test",
+              },
+            },
+          ],
+        },
+        "text": "Test Quiz",
+      }
+    `);
   });
 });

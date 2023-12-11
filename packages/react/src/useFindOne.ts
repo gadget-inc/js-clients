@@ -1,10 +1,11 @@
-import type { DefaultSelection, FindOneFunction, GadgetRecord, LimitToKnownKeys, Select } from "@gadgetinc/api-client-core";
+import type { DefaultSelection, FindOneFunction, GadgetConnection, GadgetRecord, LimitToKnownKeys, Select } from "@gadgetinc/api-client-core";
 import { findOneOperation, get, hydrateRecord } from "@gadgetinc/api-client-core";
 import { useMemo } from "react";
 import { useGadgetQuery } from "./useGadgetQuery.js";
 import { useStructuralMemo } from "./useStructuralMemo.js";
 import type { OptionsType, ReadHookResult, ReadOperationOptions } from "./utils.js";
 import { ErrorWrapper, useQueryArgs } from "./utils.js";
+import { hydrateClientReferencedModels } from "@gadgetinc/api-client-core";
 
 /**
  * React hook to fetch one Gadget record by `id` from the backend. Returns a standard hook result set with a tuple of the result object with `data`, `fetching`, and `error` keys, and a `refetch` function. `data` will be the record if it was found, and `null` otherwise.
@@ -36,7 +37,7 @@ export const useFindOne = <
   F extends FindOneFunction<GivenOptions, any, SchemaT, any>,
   Options extends F["optionsType"] & ReadOperationOptions
 >(
-  manager: { findOne: F },
+  manager: { findOne: F, connection: GadgetConnection },
   id: string,
   options?: LimitToKnownKeys<Options, F["optionsType"] & ReadOperationOptions>
 ): ReadHookResult<
@@ -57,14 +58,17 @@ export const useFindOne = <
 
   const result = useMemo(() => {
     const dataPath = [manager.findOne.operationName];
+    const currentReferencedModels = manager.connection.currentReferencedModels;
+
     let data = rawResult.data && get(rawResult.data, dataPath);
     if (data) {
       data = hydrateRecord(rawResult, data);
+      manager.connection.currentReferencedModels = hydrateClientReferencedModels(rawResult, currentReferencedModels);
     }
     const error = ErrorWrapper.errorIfDataAbsent(rawResult, dataPath, options?.pause);
 
     return { ...rawResult, data, error };
-  }, [manager.findOne.operationName, rawResult, options?.pause]);
+  }, [manager.findOne.operationName, rawResult, options?.pause, manager.connection]);
 
   return [result, refresh];
 };

@@ -6,6 +6,8 @@ import {
   assertOperationSuccess,
   GadgetOperationError,
   getNonNullableError,
+  hydrateClientReferencedModels,
+  hydrateRecord,
 } from "../src/index.js";
 
 describe("support utilities", () => {
@@ -344,6 +346,180 @@ describe("support utilities", () => {
         expect(error.record).toBeFalsy();
       }
       expect(threw).toBeTruthy();
+    });
+  });
+
+  describe("hydrating", () => {
+    describe("hydrateClientReferencedModels", () => {
+      test("hydrates an empty referecedModels", async () => {
+        const modelManager = {
+          connection: {
+            referencedModels: {},
+          },
+        };
+
+        const result = hydrateClientReferencedModels(
+          {
+            data: {
+              gadgetMeta: {
+                referencedHydrations: {
+                  Quiz: {
+                    questions: "HasMany",
+                  },
+                  Questions: {
+                    quiz: "BelongsTo",
+                    answers: "HasMany",
+                  },
+                  Answers: {
+                    question: "BelongsTo",
+                  },
+                },
+              },
+            },
+          },
+          modelManager.connection.referencedModels
+        );
+
+        expect(result).toMatchInlineSnapshot(`
+                  {
+                    "Answers": {
+                      "question": "BelongsTo",
+                    },
+                    "Questions": {
+                      "answers": "HasMany",
+                      "quiz": "BelongsTo",
+                    },
+                    "Quiz": {
+                      "questions": "HasMany",
+                    },
+                  }
+              `);
+      });
+
+      test("hydrates a non-empty referencedModels", async () => {
+        const modelManager = {
+          connection: {
+            referencedModels: {
+              Quiz: {
+                oldQuestions: "HasMany",
+              },
+            },
+          },
+        };
+
+        const result = hydrateClientReferencedModels(
+          {
+            data: {
+              gadgetMeta: {
+                referencedHydrations: {
+                  Quiz: {
+                    questions: "HasMany",
+                  },
+                  Questions: {
+                    quiz: "BelongsTo",
+                    answers: "HasMany",
+                  },
+                  Answers: {
+                    question: "BelongsTo",
+                  },
+                },
+              },
+            },
+          },
+          modelManager.connection.referencedModels
+        );
+
+        expect(result).toMatchInlineSnapshot(`
+                  {
+                    "Answers": {
+                      "question": "BelongsTo",
+                    },
+                    "Questions": {
+                      "answers": "HasMany",
+                      "quiz": "BelongsTo",
+                    },
+                    "Quiz": {
+                      "questions": "HasMany",
+                    },
+                  }
+              `);
+      });
+
+      test("hydrates with datetimes", async () => {
+        const modelManager = {
+          connection: {
+            referencedModels: {},
+          },
+        };
+
+        const result = hydrateClientReferencedModels(
+          {
+            data: {
+              gadgetMeta: {
+                referencedHydrations: {
+                  Quiz: {
+                    questions: "HasMany",
+                    createdAt: "DateTime",
+                    updatedAt: "DateTime",
+                  },
+                  Questions: {
+                    quiz: "BelongsTo",
+                    answers: "HasMany",
+                  },
+                  Answers: {
+                    question: "BelongsTo",
+                  },
+                },
+              },
+            },
+          },
+          modelManager.connection.referencedModels
+        );
+
+        expect(result).toMatchInlineSnapshot(`
+          {
+            "Answers": {
+              "question": "BelongsTo",
+            },
+            "Questions": {
+              "answers": "HasMany",
+              "quiz": "BelongsTo",
+            },
+            "Quiz": {
+              "createdAt": "DateTime",
+              "questions": "HasMany",
+              "updatedAt": "DateTime",
+            },
+          }
+        `);
+      });
+    });
+
+    describe("hydrateRecord", () => {
+      test("hydrates a record", async () => {
+        const response = {
+          data: {
+            Quiz: {
+              createdAt: "2023-12-07T19:48:02.418Z",
+              updatedAt: "2023-12-07T19:48:02.418Z",
+            },
+            gadgetMeta: {
+              hydrations: {
+                createdAt: "DateTime",
+                updatedAt: "DateTime",
+              },
+            },
+          },
+        };
+        const result = hydrateRecord(response, response.data.Quiz);
+
+        expect(result).toMatchInlineSnapshot(`
+                  {
+                    "createdAt": "2023-12-07T19:48:02.418Z",
+                    "updatedAt": "2023-12-07T19:48:02.418Z",
+                  }
+              `);
+      });
     });
   });
 });

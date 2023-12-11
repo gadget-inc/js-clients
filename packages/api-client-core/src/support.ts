@@ -3,6 +3,7 @@ import { CombinedError } from "@urql/core";
 import { DataHydrator } from "./DataHydrator.js";
 import type { RecordShape } from "./GadgetRecord.js";
 import { GadgetRecord } from "./GadgetRecord.js";
+import { AnyModelManager } from "./ModelManager.js";
 
 /**
  * Generic type of the state of any record of a Gadget model
@@ -377,6 +378,19 @@ export const hydrateConnection = <Shape extends RecordShape = any>(response: Res
   const nodes = connection.edges.map((edge) => edge.node);
   return hydrateRecordArray<Shape>(response, nodes);
 };
+
+export const hydrateClientReferencedModels = (response: Result, referencedModels: Record<string, Record<string, string>>) => {
+  const hydrator = response.data?.gadgetMeta?.referencedHydrations as Record<string, Record<string, string>>;
+  if (!hydrator) {
+    return referencedModels;
+  }
+
+  for (const [modelName, hydration] of Object.entries(hydrator)) {
+    referencedModels[modelName] = hydration;
+  }
+
+  return referencedModels;
+}
 
 export const toPrimitiveObject = (value: any): any => {
   if (value != null && typeof value.toJSON === "function") value = value.toJSON();

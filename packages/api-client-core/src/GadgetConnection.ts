@@ -79,6 +79,7 @@ export class GadgetConnection {
   private _fetchImplementation: typeof globalThis.fetch;
   private environment: "Development" | "Production";
   private exchanges: Required<Exchanges>;
+  private referencedModels: Record<string, Record<string, string>> = {};
 
   // the base client using HTTP requests that non-transactional operations will use
   private baseClient: Client;
@@ -130,6 +131,14 @@ export class GadgetConnection {
 
   get currentClient() {
     return this.currentTransaction?.client || this.baseClient;
+  }
+
+  get currentReferencedModels() {
+    return this.referencedModels;
+  }
+
+  set currentReferencedModels(models: Record<string, Record<string, string>>) {
+    this.referencedModels = models;
   }
 
   set fetchImplementation(implementation: typeof globalThis.fetch) {

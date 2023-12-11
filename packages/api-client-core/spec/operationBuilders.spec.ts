@@ -13,6 +13,7 @@ describe("operation builders", () => {
           }
           gadgetMeta {
             hydrations(modelName: "widget")
+            referencedHydrations
           }
         }",
           "variables": {
@@ -34,6 +35,7 @@ describe("operation builders", () => {
           }
           gadgetMeta {
             hydrations(modelName: "widget")
+            referencedHydrations
           }
         }",
           "variables": {
@@ -55,6 +57,7 @@ describe("operation builders", () => {
           }
           gadgetMeta {
             hydrations(modelName: "widget")
+            referencedHydrations
           }
         }",
           "variables": {
@@ -88,6 +91,7 @@ describe("operation builders", () => {
           }
           gadgetMeta {
             hydrations(modelName: "widget")
+            referencedHydrations
           }
         }",
           "variables": {},
@@ -118,6 +122,7 @@ describe("operation builders", () => {
           }
           gadgetMeta {
             hydrations(modelName: "widget")
+            referencedHydrations
           }
         }",
           "variables": {},
@@ -148,6 +153,7 @@ describe("operation builders", () => {
           }
           gadgetMeta {
             hydrations(modelName: "widget")
+            referencedHydrations
           }
         }",
           "variables": {
@@ -180,6 +186,7 @@ describe("operation builders", () => {
           }
           gadgetMeta {
             hydrations(modelName: "widget")
+            referencedHydrations
           }
         }",
           "variables": {
@@ -216,6 +223,7 @@ describe("operation builders", () => {
           }
           gadgetMeta {
             hydrations(modelName: "widget")
+            referencedHydrations
           }
         }",
           "variables": {
@@ -253,6 +261,7 @@ describe("operation builders", () => {
           }
           gadgetMeta {
             hydrations(modelName: "widget")
+            referencedHydrations
           }
         }",
           "variables": {},
@@ -284,6 +293,7 @@ describe("operation builders", () => {
           }
           gadgetMeta {
             hydrations(modelName: "widget")
+            referencedHydrations
           }
         }",
           "variables": {
@@ -324,6 +334,7 @@ describe("operation builders", () => {
           }
           gadgetMeta {
             hydrations(modelName: "widget")
+            referencedHydrations
           }
         }",
           "variables": {
@@ -361,6 +372,7 @@ describe("operation builders", () => {
           }
           gadgetMeta {
             hydrations(modelName: "widget")
+            referencedHydrations
           }
         }",
           "variables": {
@@ -401,6 +413,7 @@ describe("operation builders", () => {
           }
           gadgetMeta {
             hydrations(modelName: "widget")
+            referencedHydrations
           }
         }",
           "variables": {},
@@ -432,6 +445,7 @@ describe("operation builders", () => {
           }
           gadgetMeta {
             hydrations(modelName: "widget")
+            referencedHydrations
           }
         }",
           "variables": {},
@@ -458,6 +472,7 @@ describe("operation builders", () => {
           }
           gadgetMeta {
             hydrations(modelName: "widget")
+            referencedHydrations
           }
         }",
           "variables": {},
@@ -493,6 +508,7 @@ describe("operation builders", () => {
           }
           gadgetMeta {
             hydrations(modelName: "session")
+            referencedHydrations
           }
         }",
           "variables": {},
@@ -532,6 +548,7 @@ describe("operation builders", () => {
           }
           gadgetMeta {
             hydrations(modelName: "widget")
+            referencedHydrations
           }
         }",
           "variables": {},
@@ -571,6 +588,7 @@ describe("operation builders", () => {
           }
           gadgetMeta {
             hydrations(modelName: "widget")
+            referencedHydrations
           }
         }",
           "variables": {},

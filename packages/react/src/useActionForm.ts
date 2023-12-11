@@ -265,40 +265,6 @@ export const useActionForm = <
     defaultValues = { [action.modelApiIdentifier]: { ...toDefaultValues(action.modelApiIdentifier, findResult.data) } } as any;
   }
 
-  const referencedTypes: Record<string, Record<string, string>> = {
-    Quiz: {
-      questions: "HasMany",
-    },
-    Question: {
-      quiz: "BelongsTo",
-      answers: "HasMany",
-    },
-    Answer: {
-      question: "BelongsTo",
-      recommendedProduct: "HasOne",
-      // notification: "HasOne",
-    },
-    RecommendedProduct: {
-      productSuggestion: "BelongsTo",
-      answer: "BelongsTo",
-    },
-    ShopifyProduct: {
-      shop: "BelongsTo",
-      recommendedProduct: "HasOne",
-    },
-    Notification: {
-      answer: "BelongsTo",
-      notificationMessage: "HasOne",
-    },
-    NotificationMessage: {
-      notificationMetadata: "BelongsTo",
-      notification: "BelongsTo",
-    },
-    NotificationMetadata: {
-      notificationMessages: "HasMany",
-    },
-  };
-
   let existingRecordId: string | undefined = undefined;
 
   if (findResult.data?.id) {
@@ -372,7 +338,7 @@ export const useActionForm = <
       await handleSubmit(
         async (data) => {
           if (hasNested(data)) {
-            data = transformDataRedux(referencedTypes, defaultValues, data);
+            data = transformDataRedux(modelManager!.connection.currentReferencedModels, defaultValues, data);
           }
 
           let variables: ActionFunc["variablesType"] = {
@@ -409,7 +375,7 @@ export const useActionForm = <
 
       return result;
     },
-    [formHook, handleSubmit, existingRecordId, options, runAction, defaultValues, handleSubmissionError]
+    [formHook, handleSubmit, existingRecordId, options, runAction, defaultValues, handleSubmissionError, modelManager]
   );
 
   const proxiedFormState = new Proxy(formState, {
