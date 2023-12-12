@@ -4,6 +4,7 @@ import { applyLiveQueryJSONDiffPatch } from "@n1ru4l/graphql-live-query-patch-js
 import { applyAsyncIterableIteratorToSink, makeAsyncIterableIteratorFromSink } from "@n1ru4l/push-pull-async-iterable-iterator";
 import type { ClientOptions, RequestPolicy } from "@urql/core";
 import { Client, cacheExchange, fetchExchange, subscriptionExchange } from "@urql/core";
+import gql from "gql-tag";
 import type { ExecutionResult } from "graphql";
 import type { Sink, Client as SubscriptionClient, ClientOptions as SubscriptionClientOptions } from "graphql-ws";
 import { CloseCode, createClient as createSubscriptionClient } from "graphql-ws";
@@ -15,7 +16,7 @@ import type { BrowserStorage } from "./InMemoryStorage.js";
 import { InMemoryStorage } from "./InMemoryStorage.js";
 import { operationNameExchange } from "./exchanges/operationNameExchange.js";
 import { urlParamExchange } from "./exchanges/urlParamExchange.js";
-import { GadgetUnexpectedCloseError, GadgetWebsocketConnectionTimeoutError, isCloseEvent, storageAvailable } from "./support.js";
+import { GadgetUnexpectedCloseError, GadgetWebsocketConnectionTimeoutError, hydrateAllModels, hydrateClientReferencedModels, isCloseEvent, storageAvailable } from "./support.js";
 
 export type TransactionRun<T> = (transaction: GadgetTransaction) => Promise<T>;
 export interface GadgetSubscriptionClientOptions extends Partial<SubscriptionClientOptions> {
@@ -80,6 +81,7 @@ export class GadgetConnection {
   private environment: "Development" | "Production";
   private exchanges: Required<Exchanges>;
   private referencedModels: Record<string, Record<string, string>> = {};
+  private allModels: Record<string, Record<string, string>> = {};
 
   // the base client using HTTP requests that non-transactional operations will use
   private baseClient: Client;
@@ -139,6 +141,24 @@ export class GadgetConnection {
 
   set currentReferencedModels(models: Record<string, Record<string, string>>) {
     this.referencedModels = models;
+  }
+
+  async getCurrentModels() {
+    if (Object.keys(this.allModels).length > 0) return this.allModels;
+
+    try {
+      const result = await this.currentClient.query(gql`{
+        gadgetMeta {
+          allHydrations
+        }
+      }`, {});
+      this.allModels = hydrateAllModels(result, this.allModels);
+
+      return this.allModels;
+    } catch (err) {
+      console.error(err);
+      return this.allModels;
+    }
   }
 
   set fetchImplementation(implementation: typeof globalThis.fetch) {

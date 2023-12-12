@@ -392,6 +392,19 @@ export const hydrateClientReferencedModels = (response: Result, referencedModels
   return referencedModels;
 }
 
+export const hydrateAllModels = (response: Result, allModels: Record<string, Record<string, string>>) => {
+  const hydrator = response.data?.gadgetMeta?.allHydrations as Record<string, Record<string, string>>;
+  if (!hydrator) {
+    return allModels;
+  }
+
+  for (const [modelName, hydration] of Object.entries(hydrator)) {
+    allModels[modelName] = hydration;
+  }
+
+  return allModels;
+}
+
 export const toPrimitiveObject = (value: any): any => {
   if (value != null && typeof value.toJSON === "function") value = value.toJSON();
   if (value === undefined) return undefined;

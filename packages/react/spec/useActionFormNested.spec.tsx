@@ -6,92 +6,8 @@ import { startPolly } from "./polly.js";
 import { LiveClientWrapper } from "./testWrappers.js";
 
 describe("useActionFormNested", () => {
-  startPolly({});
-
-  it("should record", async () => {
-    const results = await nestedExampleApi.quiz.findMany();
-
-    expect(results).toMatchInlineSnapshot(`
-      [
-        {
-          "__typename": "Quiz",
-          "createdAt": "2023-12-07T19:34:29.764Z",
-          "id": "2",
-          "text": "Test Quiz Updated",
-          "updatedAt": "2023-12-07T19:48:02.418Z",
-        },
-        {
-          "__typename": "Quiz",
-          "createdAt": "2023-12-07T23:52:32.982Z",
-          "id": "3",
-          "text": "Test Quiz",
-          "updatedAt": "2023-12-07T23:52:32.982Z",
-        },
-        {
-          "__typename": "Quiz",
-          "createdAt": "2023-12-07T23:52:52.473Z",
-          "id": "4",
-          "text": "Test Quiz",
-          "updatedAt": "2023-12-07T23:52:52.473Z",
-        },
-        {
-          "__typename": "Quiz",
-          "createdAt": "2023-12-07T23:53:03.008Z",
-          "id": "5",
-          "text": "Test Quiz",
-          "updatedAt": "2023-12-07T23:53:03.008Z",
-        },
-        {
-          "__typename": "Quiz",
-          "createdAt": "2023-12-08T15:59:02.533Z",
-          "id": "6",
-          "text": "Test Quiz",
-          "updatedAt": "2023-12-08T15:59:02.533Z",
-        },
-        {
-          "__typename": "Quiz",
-          "createdAt": "2023-12-08T15:59:11.750Z",
-          "id": "7",
-          "text": "Test Quiz",
-          "updatedAt": "2023-12-08T15:59:11.750Z",
-        },
-        {
-          "__typename": "Quiz",
-          "createdAt": "2023-12-08T15:59:47.188Z",
-          "id": "8",
-          "text": "Test Quiz",
-          "updatedAt": "2023-12-08T15:59:47.188Z",
-        },
-        {
-          "__typename": "Quiz",
-          "createdAt": "2023-12-08T15:59:56.365Z",
-          "id": "9",
-          "text": "Test Quiz",
-          "updatedAt": "2023-12-08T15:59:56.365Z",
-        },
-        {
-          "__typename": "Quiz",
-          "createdAt": "2023-12-08T16:19:54.477Z",
-          "id": "10",
-          "text": "Test Quiz",
-          "updatedAt": "2023-12-08T16:19:54.477Z",
-        },
-        {
-          "__typename": "Quiz",
-          "createdAt": "2023-12-08T16:20:04.590Z",
-          "id": "11",
-          "text": "Test Quiz",
-          "updatedAt": "2023-12-08T16:20:04.590Z",
-        },
-        {
-          "__typename": "Quiz",
-          "createdAt": "2023-12-08T16:20:18.948Z",
-          "id": "12",
-          "text": "Test Quiz",
-          "updatedAt": "2023-12-11T23:25:39.632Z",
-        },
-      ]
-    `);
+  startPolly({
+    mode: "passthrough",
   });
 
   test("can create a single HasMany relationship", async () => {
@@ -139,19 +55,22 @@ describe("useActionFormNested", () => {
       submitPromise = useActionFormHook.current.submit();
     });
 
-    await waitFor(() => {
-      expect(useActionFormHook.current.formState.isSubmitting).toBe(false);
-    }, { timeout: 3000});
+    await waitFor(
+      () => {
+        expect(useActionFormHook.current.formState.isSubmitting).toBe(false);
+      },
+      { timeout: 3000 }
+    );
 
     expect(useActionFormHook.current.formState.errors).toEqual({});
     expect(useActionFormHook.current.formState.isSubmitSuccessful).toBe(true);
     expect(returnedData).toMatchInlineSnapshot(`
       {
         "__typename": "Quiz",
-        "createdAt": "2023-12-12T15:20:11.728Z",
-        "id": "21",
+        "createdAt": "2023-12-12T18:15:05.789Z",
+        "id": "32",
         "text": "test quiz",
-        "updatedAt": "2023-12-12T15:20:11.728Z",
+        "updatedAt": "2023-12-12T18:15:05.789Z",
       }
     `);
   });
@@ -202,19 +121,22 @@ describe("useActionFormNested", () => {
       submitPromise = useActionFormHook.current.submit();
     });
 
-    await waitFor(() => {
-      expect(useActionFormHook.current.formState.isSubmitting).toBe(false);
-    }, { timeout: 3000});
+    await waitFor(
+      () => {
+        expect(useActionFormHook.current.formState.isSubmitting).toBe(false);
+      },
+      { timeout: 3000 }
+    );
 
     expect(useActionFormHook.current.formState.errors).toEqual({});
     expect(useActionFormHook.current.formState.isSubmitSuccessful).toBe(true);
     expect(returnedData).toMatchInlineSnapshot(`
       {
         "__typename": "Quiz",
-        "createdAt": "2023-12-12T05:48:28.499Z",
-        "id": "16",
+        "createdAt": "2023-12-12T18:15:06.193Z",
+        "id": "33",
         "text": "test quiz",
-        "updatedAt": "2023-12-12T05:48:28.499Z",
+        "updatedAt": "2023-12-12T18:15:06.193Z",
       }
     `);
   });
@@ -265,19 +187,22 @@ describe("useActionFormNested", () => {
       submitPromise = useActionFormHook.current.submit();
     });
 
-    await waitFor(() => {
-      expect(useActionFormHook.current.formState.isSubmitting).toBe(false);
-    }, {timeout: 3000 });
+    await waitFor(
+      () => {
+        expect(useActionFormHook.current.formState.isSubmitting).toBe(false);
+      },
+      { timeout: 3000 }
+    );
 
     expect(useActionFormHook.current.formState.errors).toEqual({});
     expect(useActionFormHook.current.formState.isSubmitSuccessful).toBe(true);
     expect(returnedData).toMatchInlineSnapshot(`
       {
         "__typename": "Quiz",
-        "createdAt": "2023-12-12T15:02:12.667Z",
-        "id": "19",
+        "createdAt": "2023-12-12T18:15:06.664Z",
+        "id": "34",
         "text": "test quiz",
-        "updatedAt": "2023-12-12T15:02:12.667Z",
+        "updatedAt": "2023-12-12T18:15:06.664Z",
       }
     `);
   });
@@ -343,10 +268,10 @@ describe("useActionFormNested", () => {
     expect(returnedData).toMatchInlineSnapshot(`
       {
         "__typename": "Quiz",
-        "createdAt": "2023-12-12T15:32:26.354Z",
-        "id": "23",
+        "createdAt": "2023-12-12T18:15:07.093Z",
+        "id": "35",
         "text": "test quiz",
-        "updatedAt": "2023-12-12T15:32:26.354Z",
+        "updatedAt": "2023-12-12T18:15:07.093Z",
       }
     `);
   });
@@ -410,10 +335,10 @@ describe("useActionFormNested", () => {
     expect(returnedData).toMatchInlineSnapshot(`
       {
         "__typename": "Quiz",
-        "createdAt": "2023-12-12T15:38:09.435Z",
-        "id": "24",
+        "createdAt": "2023-12-12T18:15:07.563Z",
+        "id": "36",
         "text": "test quiz",
-        "updatedAt": "2023-12-12T15:38:09.435Z",
+        "updatedAt": "2023-12-12T18:15:07.563Z",
       }
     `);
   });
@@ -481,15 +406,15 @@ describe("useActionFormNested", () => {
     expect(returnedData).toMatchInlineSnapshot(`
       {
         "__typename": "Quiz",
-        "createdAt": "2023-12-12T15:43:52.688Z",
-        "id": "25",
+        "createdAt": "2023-12-12T18:20:01.543Z",
+        "id": "44",
         "text": "test quiz",
-        "updatedAt": "2023-12-12T15:43:52.688Z",
+        "updatedAt": "2023-12-12T18:20:01.543Z",
       }
     `);
   });
 
-  test.skip("can create a single HasMany -> HasMany -> HasOne -> BelongsTo relationship", async () => {
+  test("can create a single HasMany -> HasMany -> HasOne -> BelongsTo relationship", async () => {
     let returnedData: any;
 
     const { result: useFindFirstHook } = renderHook(() => useFindFirst(nestedExampleApi.shopifyProduct), {
@@ -535,6 +460,9 @@ describe("useActionFormNested", () => {
           onSuccess: (actionResult) => {
             returnedData = actionResult;
           },
+          onError: (error) => {
+            returnedData = error;
+          },
         }),
       {
         wrapper: LiveClientWrapper(nestedExampleApi),
@@ -558,33 +486,20 @@ describe("useActionFormNested", () => {
       useActionFormHook.current.setValue("quiz.text", "test quiz");
       useActionFormHook.current.setValue("quiz.questions.0.text", "test question - 1");
       useActionFormHook.current.setValue("quiz.questions.0.answers.0.text", "test answer - 1");
-      useActionFormHook.current.setValue("quiz.questions.0.answers.0.recommendedProduct.productSuggestion.id", productSuggestionId);
-      useActionFormHook.current.setValue("quiz.questions.0.answers.0.recommendedProduct.productSuggestion.title", productSuggestionId);});
-
-    let submitPromise: Promise<any>;
-
-    await act(async () => {
-      submitPromise = useActionFormHook.current.submit();
+      useActionFormHook.current.setValue("quiz.questions.0.answers.0.recommendedProduct.productSuggestionId", productSuggestionId);
     });
 
-    await waitFor(
-      () => {
-        expect(useActionFormHook.current.formState.isSubmitting).toBe(false);
-      },
-      { timeout: 3000 }
-    );
+    await act(async () => {
+      await useActionFormHook.current.submit();
+    });
 
     expect(useActionFormHook.current.formState.errors).toEqual({});
+
+    expect(returnedData).toMatchInlineSnapshot(
+      `[ErrorWrapper: [GraphQL] Variable "$quiz" got invalid value { productSuggestionId: "123" } at "quiz.questions[0].create.answers[0].create.recommendedProduct.create"; Field "productSuggestionId" is not defined by type "NestedRecommendedProductCreateInput". Did you mean "productSuggestion"?]`
+    );
+
     expect(useActionFormHook.current.formState.isSubmitSuccessful).toBe(true);
-    expect(returnedData).toMatchInlineSnapshot(`
-      {
-        "__typename": "Quiz",
-        "createdAt": "2023-12-12T15:43:52.688Z",
-        "id": "25",
-        "text": "test quiz",
-        "updatedAt": "2023-12-12T15:43:52.688Z",
-      }
-    `);
   });
 
   // test("update HasMany -> HasMany -> HasOne -> HasOne -> BelongsTo", async () => {

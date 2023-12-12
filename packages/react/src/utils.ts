@@ -416,7 +416,8 @@ export function transformDataRedux(referencedTypes: Record<string, Record<string
     updates: Record<string, number[]>,
     depth = 0,
     path: string | undefined = undefined,
-    fieldType: string | null = null
+    fieldType: string | null = null,
+    objectRelationships: Record<string, string> | null = null
   ): any {
     if (Array.isArray(input)) {
       const results: any[] = [];

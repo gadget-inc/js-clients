@@ -338,7 +338,8 @@ export const useActionForm = <
       await handleSubmit(
         async (data) => {
           if (hasNested(data)) {
-            data = transformDataRedux(modelManager!.connection.currentReferencedModels, defaultValues, data);
+            const modelReferences = await modelManager!.connection.getCurrentModels();
+            data = transformDataRedux(modelReferences, defaultValues, data);
           }
 
           let variables: ActionFunc["variablesType"] = {
