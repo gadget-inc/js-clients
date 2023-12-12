@@ -15,9 +15,19 @@ import type { BrowserStorage } from "./InMemoryStorage.js";
 import { InMemoryStorage } from "./InMemoryStorage.js";
 import { operationNameExchange } from "./exchanges/operationNameExchange.js";
 import { urlParamExchange } from "./exchanges/urlParamExchange.js";
-import { GadgetUnexpectedCloseError, GadgetWebsocketConnectionTimeoutError, isCloseEvent, storageAvailable } from "./support.js";
+import {
+  GadgetTooManyRequestsError,
+  GadgetUnexpectedCloseError,
+  GadgetWebsocketConnectionTimeoutError,
+  isCloseEvent,
+  storageAvailable,
+} from "./support.js";
 
 export type TransactionRun<T> = (transaction: GadgetTransaction) => Promise<T>;
+
+export enum GadgetGraphQLCloseCode {
+  TooManyRequests = 4294,
+}
 export interface GadgetSubscriptionClientOptions extends Partial<SubscriptionClientOptions> {
   urlParams?: Record<string, string | null | undefined>;
   connectionAttempts?: number;
@@ -496,6 +506,11 @@ export class GadgetConnection {
 
       const retryOnClose = (event: unknown) => {
         if (isCloseEvent(event)) {
+          if (event.code == GadgetGraphQLCloseCode.TooManyRequests) {
+            clearListeners();
+            return wrappedReject(new GadgetTooManyRequestsError(event.reason));
+          }
+
           if (RETRYABLE_CLOSE_CODES.includes(event.code) && attempts > 0) {
             attempts -= 1;
             this.disposeClient(subscriptionClient);
