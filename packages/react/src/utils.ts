@@ -405,7 +405,7 @@ export function hasNested(data: any) {
   });
 }
 
-export function transformDataRedux(referencedTypes: Record<string, any>, defaultValues: any, data: any) {
+export function transformDataRedux(referencedTypes: Record<string, Record<string, string>>, defaultValues: any, data: any) {
   console.log("referencedTypes", JSON.stringify(referencedTypes, null, 2));
   console.log("defaultValues", JSON.stringify(defaultValues, null, 2));
   console.log("data", JSON.stringify(data, null, 2));
@@ -463,13 +463,6 @@ export function transformDataRedux(referencedTypes: Record<string, any>, default
       const result: any = {};
 
       const inputRelationships = referencedTypes[input["__typename"]];
-      if (!inputRelationships && depth > 1) {
-        throw new Error(`Can't transform input, Unknown __typename. ${JSON.stringify({
-          input,
-          path: path ?? "root",
-          referencedTypes
-        }, null, 2)}`);
-      }
 
       for (const key of Object.keys(input)) {
         const currentPath = path ? `${path}.${key}` : key;
@@ -481,38 +474,54 @@ export function transformDataRedux(referencedTypes: Record<string, any>, default
 
       const { __typename, ...rest } = result;
 
-      if (depth > 1) {
-        if ("id" in input) {
-          switch (fieldType) {
-            case "HasMany":
-            case "HasOne":
-              return { update: { ...rest } };
-            case "BelongsTo":
-              return { _link: input["id"] };
-            default:
-              throw new Error(`Can't transform input with id, Unknown field type ${fieldType} for for __typename ${input["__typename"]}. ${JSON.stringify({
-                input,
-                path,
-                referencedTypes
-              }, null, 2)}`);
-          }
-        }
+      if (depth <= 1) {
+        return { ...rest };
+      }
 
+      if ("id" in input) {
         switch (fieldType) {
-          case "BelongsTo":
-          case "HasOne":
           case "HasMany":
-            return { create: { ...rest } };
+          case "HasOne":
+            return { update: { ...rest } };
+          case "BelongsTo":
+            return { _link: input["id"] };
           default:
-            throw new Error(`Can't transform input, Unknown field type ${fieldType} for for __typename ${input["__typename"]}. ${JSON.stringify({
-              input,
-              path,
-              referencedTypes
-            }, null, 2)}`);
+            throw new Error(
+              `Can't transform input with id, Unknown field type ${fieldType} for for __typename ${input["__typename"]}. ${JSON.stringify(
+                {
+                  input,
+                  path,
+                  referencedTypes,
+                },
+                null,
+                2
+              )}`
+            );
         }
       }
 
-      return { ...rest };
+      if (fieldType == null) {
+        return { create: { ...rest } };
+      }
+
+      switch (fieldType) {
+        case "BelongsTo":
+        case "HasOne":
+        case "HasMany":
+          return { create: { ...rest } };
+        default:
+          throw new Error(
+            `Can't transform input, Unknown field type ${fieldType} for for __typename ${input["__typename"]}. ${JSON.stringify(
+              {
+                input,
+                path,
+                referencedTypes,
+              },
+              null,
+              2
+            )}`
+          );
+      }
     }
 
     return input;

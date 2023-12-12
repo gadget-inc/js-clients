@@ -87,9 +87,136 @@ describe("useActionFormNested", () => {
           "createdAt": "2023-12-08T16:20:18.948Z",
           "id": "12",
           "text": "Test Quiz",
-          "updatedAt": "2023-12-08T16:20:18.948Z",
+          "updatedAt": "2023-12-11T23:25:39.632Z",
         },
       ]
+    `);
+  });
+
+  test("can create a single HasMany relationship", async () => {
+    let returnedData: any;
+
+    const { result: useActionFormHook } = renderHook(
+      () =>
+        useActionForm(nestedExampleApi.quiz.create, {
+          defaultValues: {
+            quiz: {
+              text: "",
+              questions: [{}],
+            },
+          },
+          onSuccess: (actionResult) => {
+            returnedData = actionResult;
+          },
+        }),
+      {
+        wrapper: LiveClientWrapper(nestedExampleApi),
+      }
+    );
+
+    await waitFor(() => expect(useActionFormHook.current.formState.isLoading).toBe(false));
+
+    expect(useActionFormHook.current.getValues()).toMatchInlineSnapshot(`
+      {
+        "quiz": {
+          "questions": [
+            {},
+          ],
+          "text": "",
+        },
+      }
+    `);
+
+    await act(async () => {
+      useActionFormHook.current.setValue("quiz.text", "test quiz");
+      useActionFormHook.current.setValue("quiz.questions.0.text", "test question");
+    });
+
+    let submitPromise: Promise<any>;
+
+    await act(async () => {
+      submitPromise = useActionFormHook.current.submit();
+    });
+
+    expect(useActionFormHook.current.formState.isSubmitting).toBe(true);
+
+    await waitFor(() => {
+      expect(useActionFormHook.current.formState.isSubmitting).toBe(false);
+    });
+
+    expect(useActionFormHook.current.formState.errors).toEqual({});
+    expect(useActionFormHook.current.formState.isSubmitSuccessful).toBe(true);
+    expect(returnedData).toMatchInlineSnapshot(`
+      {
+        "__typename": "Quiz",
+        "createdAt": "2023-12-12T05:27:26.088Z",
+        "id": "14",
+        "text": "test quiz",
+        "updatedAt": "2023-12-12T05:27:26.088Z",
+      }
+    `);
+  });
+
+  test("can create multiple HasMany relationships", async () => {
+    let returnedData: any;
+
+    const { result: useActionFormHook } = renderHook(
+      () =>
+        useActionForm(nestedExampleApi.quiz.create, {
+          defaultValues: {
+            quiz: {
+              text: "",
+              questions: [{}],
+            },
+          },
+          onSuccess: (actionResult) => {
+            returnedData = actionResult;
+          },
+        }),
+      {
+        wrapper: LiveClientWrapper(nestedExampleApi),
+      }
+    );
+
+    await waitFor(() => expect(useActionFormHook.current.formState.isLoading).toBe(false));
+
+    expect(useActionFormHook.current.getValues()).toMatchInlineSnapshot(`
+      {
+        "quiz": {
+          "questions": [
+            {},
+          ],
+          "text": "",
+        },
+      }
+    `);
+
+    await act(async () => {
+      useActionFormHook.current.setValue("quiz.text", "test quiz");
+      useActionFormHook.current.setValue("quiz.questions.0.text", "test question - 1");
+      useActionFormHook.current.setValue("quiz.questions.1.text", "test question - 2");
+    });
+
+    let submitPromise: Promise<any>;
+
+    await act(async () => {
+      submitPromise = useActionFormHook.current.submit();
+    });
+
+    await waitFor(() => {
+      expect(useActionFormHook.current.formState.isSubmitting).toBe(false);
+    });
+
+    expect(useActionFormHook.current.formState.errors).toEqual({});
+    expect(useActionFormHook.current.formState.isSubmitSuccessful).toBe(true);
+    expect(returnedData).toMatchInlineSnapshot(`
+      {
+        "__typename": "Quiz",
+        "createdAt": "2023-12-12T05:48:28.499Z",
+        "id": "16",
+        "text": "test quiz",
+        "updatedAt": "2023-12-12T05:48:28.499Z",
+      }
     `);
   });
 
