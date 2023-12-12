@@ -1,5 +1,5 @@
-import type { DefaultSelection, FindFirstFunction, GadgetRecord, LimitToKnownKeys, Select } from "@gadgetinc/api-client-core";
-import { findManyOperation, get, hydrateConnection } from "@gadgetinc/api-client-core";
+import type { DefaultSelection, FindFirstFunction, GadgetConnection, GadgetRecord, LimitToKnownKeys, Select } from "@gadgetinc/api-client-core";
+import { findManyOperation, get, hydrateClientReferencedModels, hydrateConnection } from "@gadgetinc/api-client-core";
 import { useMemo } from "react";
 import { useGadgetQuery } from "./useGadgetQuery.js";
 import { useStructuralMemo } from "./useStructuralMemo.js";
@@ -36,7 +36,7 @@ export const useFindFirst = <
   F extends FindFirstFunction<GivenOptions, any, SchemaT, any>,
   Options extends F["optionsType"] & ReadOperationOptions
 >(
-  manager: { findFirst: F },
+  manager: { findFirst: F, connection: GadgetConnection },
   options?: LimitToKnownKeys<Options, F["optionsType"] & ReadOperationOptions>
 ): ReadHookResult<
   GadgetRecord<Select<Exclude<F["schemaType"], null | undefined>, DefaultSelection<F["selectionType"], Options, F["defaultSelection"]>>>
@@ -53,12 +53,14 @@ export const useFindFirst = <
   }, [manager, memoizedOptions]);
 
   const [rawResult, refresh] = useGadgetQuery(useQueryArgs(plan, firstOptions));
+  const currentReferencedModels = manager.connection.currentReferencedModels;
 
   const result = useMemo(() => {
     const dataPath = [manager.findFirst.operationName];
     let data = rawResult.data;
     if (data) {
       const connection = get(rawResult.data, dataPath);
+      manager.connection.currentReferencedModels = hydrateClientReferencedModels(rawResult, currentReferencedModels);
       if (connection) {
         data = hydrateConnection(rawResult, connection)[0];
       } else {
