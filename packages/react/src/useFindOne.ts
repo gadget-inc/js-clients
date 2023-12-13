@@ -5,7 +5,6 @@ import { useGadgetQuery } from "./useGadgetQuery.js";
 import { useStructuralMemo } from "./useStructuralMemo.js";
 import type { OptionsType, ReadHookResult, ReadOperationOptions } from "./utils.js";
 import { ErrorWrapper, useQueryArgs } from "./utils.js";
-import { hydrateClientReferencedModels } from "@gadgetinc/api-client-core";
 
 /**
  * React hook to fetch one Gadget record by `id` from the backend. Returns a standard hook result set with a tuple of the result object with `data`, `fetching`, and `error` keys, and a `refetch` function. `data` will be the record if it was found, and `null` otherwise.
@@ -58,12 +57,10 @@ export const useFindOne = <
 
   const result = useMemo(() => {
     const dataPath = [manager.findOne.operationName];
-    const currentReferencedModels = manager.connection.currentReferencedModels;
 
     let data = rawResult.data && get(rawResult.data, dataPath);
     if (data) {
       data = hydrateRecord(rawResult, data);
-      manager.connection.currentReferencedModels = hydrateClientReferencedModels(rawResult, currentReferencedModels);
     }
     const error = ErrorWrapper.errorIfDataAbsent(rawResult, dataPath, options?.pause);
 

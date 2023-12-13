@@ -16,7 +16,7 @@ import type { BrowserStorage } from "./InMemoryStorage.js";
 import { InMemoryStorage } from "./InMemoryStorage.js";
 import { operationNameExchange } from "./exchanges/operationNameExchange.js";
 import { urlParamExchange } from "./exchanges/urlParamExchange.js";
-import { GadgetUnexpectedCloseError, GadgetWebsocketConnectionTimeoutError, hydrateAllModels, hydrateClientReferencedModels, isCloseEvent, storageAvailable } from "./support.js";
+import { GadgetUnexpectedCloseError, GadgetWebsocketConnectionTimeoutError, hydrateAllModels, isCloseEvent, storageAvailable } from "./support.js";
 
 export type TransactionRun<T> = (transaction: GadgetTransaction) => Promise<T>;
 export interface GadgetSubscriptionClientOptions extends Partial<SubscriptionClientOptions> {
@@ -80,7 +80,6 @@ export class GadgetConnection {
   private _fetchImplementation: typeof globalThis.fetch;
   private environment: "Development" | "Production";
   private exchanges: Required<Exchanges>;
-  private referencedModels: Record<string, Record<string, string>> = {};
   private allModels: Record<string, Record<string, string>> = {};
 
   // the base client using HTTP requests that non-transactional operations will use
@@ -133,14 +132,6 @@ export class GadgetConnection {
 
   get currentClient() {
     return this.currentTransaction?.client || this.baseClient;
-  }
-
-  get currentReferencedModels() {
-    return this.referencedModels;
-  }
-
-  set currentReferencedModels(models: Record<string, Record<string, string>>) {
-    this.referencedModels = models;
   }
 
   async getCurrentModels() {

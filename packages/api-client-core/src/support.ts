@@ -379,19 +379,6 @@ export const hydrateConnection = <Shape extends RecordShape = any>(response: Res
   return hydrateRecordArray<Shape>(response, nodes);
 };
 
-export const hydrateClientReferencedModels = (response: Result, referencedModels: Record<string, Record<string, string>>) => {
-  const hydrator = response.data?.gadgetMeta?.referencedHydrations as Record<string, Record<string, string>>;
-  if (!hydrator) {
-    return referencedModels;
-  }
-
-  for (const [modelName, hydration] of Object.entries(hydrator)) {
-    referencedModels[modelName] = hydration;
-  }
-
-  return referencedModels;
-}
-
 export const hydrateAllModels = (response: Result, allModels: Record<string, Record<string, string>>) => {
   const hydrator = response.data?.gadgetMeta?.allHydrations as Record<string, Record<string, string>>;
   if (!hydrator) {
