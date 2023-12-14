@@ -479,13 +479,13 @@ export function transformDataRedux(referencedTypes: Record<string, Record<string
       const { __typename, ...rest } = result;
 
       let belongsTo = null;
-      const belongsToRelationships = fieldRelationships 
+      const belongsToRelationships: Record<string, { type: string, model: string }> | null = fieldRelationships 
       ? Object.entries(fieldRelationships)
         .filter(([_key, value]) => value.type === "BelongsTo")
         .reduce((obj, [key, value]) => {
           obj[key] = value;
           return obj
-        }, {}) 
+        }, {} as Record<string, { type: string, model: string }>) 
       : null;
 
       for (const key of Object.keys(belongsToRelationships ?? {})) { // TODO - handle multiple ambiguous identifiers
