@@ -215,7 +215,7 @@ export const useActionForm = <
 >(
   action: ActionFunc,
   options?: Omit<UseFormProps<ActionFunc["variablesType"] & ExtraFormVariables, FormContext>, "defaultValues"> & {
-    defaultValues?: DeepPartial<DefaultValues & { [key in OmittedKey]?: any }>;
+    defaultValues?: DeepPartial<DefaultValues & { [key in OmittedKey]?: any } & { id?: any }>;
     /**
      * The record identifier to run this action on, if it already exists.
      * Should be undefined for create actions, or a record ID (or finder) for update / etc actions
