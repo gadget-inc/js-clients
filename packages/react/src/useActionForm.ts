@@ -338,8 +338,13 @@ export const useActionForm = <
       await handleSubmit(
         async (data) => {
           if (hasNested(data)) {
-            const modelReferences = await modelManager!.connection.getCurrentModels();
-            data = transformDataRedux(modelReferences, defaultValues, data);
+            try {
+              const modelReferences = await modelManager!.connection.getCurrentModels();
+              data = transformDataRedux(modelReferences, defaultValues, data);
+            } catch (e: any) {
+              handleSubmissionError(e);
+              return; // TODO - should we return here? or call options?.onSubmit?.() anyway?
+            }
           }
 
           let variables: ActionFunc["variablesType"] = {
@@ -360,6 +365,7 @@ export const useActionForm = <
 
           options?.onSubmit?.();
 
+          console.log("runAction Variables", JSON.stringify(variables, null, 2));
           result = await runAction(variables);
           if (!result.error) {
             options?.onSuccess?.(result.data);
