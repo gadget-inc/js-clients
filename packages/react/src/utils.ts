@@ -405,7 +405,7 @@ export function hasNested(data: any) {
   });
 }
 
-export function transformDataRedux(referencedTypes: Record<string, Record<string, string>>, defaultValues: any, data: any) {
+export function transformDataRedux(referencedTypes: Record<string, Record<string, any>>, defaultValues: any, data: any) {
   console.log("referencedTypes", JSON.stringify(referencedTypes, null, 2));
   if (Object.keys(referencedTypes).length === 0) {
     throw new Error("No referenced types found");
@@ -420,14 +420,13 @@ export function transformDataRedux(referencedTypes: Record<string, Record<string
     updates: Record<string, number[]>,
     depth = 0,
     path: string | undefined = undefined,
-    fieldType: string | null = null,
-    fieldRelationships: Record<string, string> | null = null
+    fieldType: { type: string, model: string } | null = null,
+    fieldRelationships: Record<string, {type: string, model: string}> | null = null
   ): any {
     if (Array.isArray(input)) {
       const results: any[] = [];
       const edge = updates[path!];
       const handled: number[] = [];
-      const referencedTypeEntries = Object.entries(referencedTypes);
 
       if (edge) {
         results.push(
@@ -447,25 +446,8 @@ export function transformDataRedux(referencedTypes: Record<string, Record<string
 
               handled.push(index);
 
-              let objectRelationships: Record<string, string> | null = null;
-
-              for (const key of Object.keys(item)) {
-                const foundType = referencedTypeEntries.find(([_, typeValues]) => {
-                  for (const type of Object.keys(typeValues)) {
-                    if (type == key) {
-                      return true;
-                    }
-                  }
-                });
-
-                if (foundType) {
-                  objectRelationships = referencedTypes[foundType[0]];
-                  break;
-                }
-              }
-
               const currentPath = path ? `${path}.${index}` : index.toString();
-              return transform(item, updates, depth + 1, currentPath, fieldType, objectRelationships);
+              return transform(item, updates, depth + 1, currentPath, fieldType, fieldRelationships);
             }
           })
         );
@@ -476,25 +458,8 @@ export function transformDataRedux(referencedTypes: Record<string, Record<string
         input
           .filter((_item, index) => !handled.includes(index))
           .map((item: any, index) => {
-            let objectRelationships: Record<string, string> | null = null;
-
-            for (const key of Object.keys(item)) {
-              const foundType = referencedTypeEntries.find(([_, typeValues]) => {
-                for (const type of Object.keys(typeValues)) {
-                  if (type == key) {
-                    return true;
-                  }
-                }
-              });
-
-              if (foundType) {
-                objectRelationships = referencedTypes[foundType[0]];
-                break;
-              }
-            }
-
             const currentPath = path ? `${path}.${index}` : index.toString();
-            return transform(item, updates, depth + 1, currentPath, fieldType, objectRelationships);
+            return transform(item, updates, depth + 1, currentPath, fieldType, fieldRelationships);
           })
       );
 
@@ -505,21 +470,25 @@ export function transformDataRedux(referencedTypes: Record<string, Record<string
       for (const key of Object.keys(input)) {
         const currentPath = path ? `${path}.${key}` : key;
 
-        const objectRelationships = referencedTypes[key];
         const fieldType = fieldRelationships ? fieldRelationships[key] : null;
+        const relationships = fieldType ? referencedTypes[fieldType.model] : referencedTypes[key];
 
-        result[key] = transform(input[key], updates, depth + 1, currentPath, fieldType, objectRelationships);
+        result[key] = transform(input[key], updates, depth + 1, currentPath, fieldType, relationships);
       }
 
       const { __typename, ...rest } = result;
 
-      if (depth <= 1) {
-        return { ...rest };
-      }
-
       let belongsTo = null;
+      const belongsToRelationships = fieldRelationships 
+      ? Object.entries(fieldRelationships)
+        .filter(([_key, value]) => value.type === "BelongsTo")
+        .reduce((obj, [key, value]) => {
+          obj[key] = value;
+          return obj
+        }, {}) 
+      : null;
 
-      for (const key of Object.keys(fieldRelationships ?? {})) { // TODO - handle multiple ambiguous identifiers
+      for (const key of Object.keys(belongsToRelationships ?? {})) { // TODO - handle multiple ambiguous identifiers
         if (`${key}Id` in input) {
           if (belongsTo == null) {
             belongsTo = {};
@@ -531,43 +500,32 @@ export function transformDataRedux(referencedTypes: Record<string, Record<string
       }
 
       if (belongsTo) {
-        return { ...rest, create: {...belongsTo} };
+        return depth <= 1 ? { ...rest, ...belongsTo } : { ...rest, create: {...belongsTo} };
       }
 
-      if ("id" in input) {
-        switch (fieldType) {
-          case "HasMany":
-          case "HasOne":
-            return { update: { ...rest } };
-          case "BelongsTo":
-            return { _link: input["id"] };
-          default:
-            throw new Error(
-              `Can't transform input with id, Unknown field type ${fieldType} for __typename ${input["__typename"]}. ${JSON.stringify(
-                {
-                  input,
-                  path,
-                  referencedTypes,
-                },
-                null,
-                2
-              )}`
-            );
-        }
+      if (depth <= 1) {
+        return { ...rest };
       }
 
       if (fieldType == null) {
-        return { create: { ...rest } };
+        throw new Error(`Can't transform input, no field type found. ${JSON.stringify({
+          input,
+          path,
+          referencedTypes,
+        }, null, 2)}`)
       }
 
-      switch (fieldType) {
-        case "BelongsTo":
-        case "HasOne":
+      const inputHasId = "id" in input;
+
+      switch (fieldType.type) {
         case "HasMany":
-          return { create: { ...rest } };
+        case "HasOne":
+          return inputHasId ? { update: { ...rest } } : { create: { ...rest } };
+        case "BelongsTo":
+          return inputHasId ? { _link: input["id"] } : { create: { ...rest } };
         default:
           throw new Error(
-            `Can't transform input, Unknown field type ${fieldType} for for __typename ${input["__typename"]}. ${JSON.stringify(
+            `Can't transform input, Unknown field type ${fieldType}. ${JSON.stringify(
               {
                 input,
                 path,

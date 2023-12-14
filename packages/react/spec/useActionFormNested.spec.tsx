@@ -7,114 +7,38 @@ import { startPolly } from "./polly.js";
 import { LiveClientWrapper, MockClientWrapper, mockUrqlClient } from "./testWrappers.js";
 
 describe("useActionFormNested", () => {
-  startPolly({
-    mode: process.env.POLLY_MODE ?? "replay",
-  });
+  
 
-  const mockAllModelsReference = {
-    session: {
-      shop: "BelongsTo",
-      createdAt: "DateTime",
-      updatedAt: "DateTime",
-    },
-    quiz: {
-      createdAt: "DateTime",
-      updatedAt: "DateTime",
-      questions: "HasMany",
-    },
-    question: {
-      answers: "HasMany",
-      createdAt: "DateTime",
-      updatedAt: "DateTime",
-      quiz: "BelongsTo",
-    },
-    answer: {
-      question: "BelongsTo",
-      createdAt: "DateTime",
-      updatedAt: "DateTime",
-      notification: "HasOne",
-      recommendedProduct: "HasOne",
-    },
-    recommendedProduct: {
-      productSuggestion: "BelongsTo",
-      createdAt: "DateTime",
-      updatedAt: "DateTime",
-      answer: "BelongsTo",
-      anotherProductSuggestion: "BelongsTo",
-    },
-    notification: {
-      sendOutDate: "DateTime",
-      createdAt: "DateTime",
-      updatedAt: "DateTime",
-      notificationMessage: "HasOne",
-      answer: "BelongsTo",
-    },
-    notificationMessage: {
-      createdAt: "DateTime",
-      updatedAt: "DateTime",
-      notificationMetadata: "BelongsTo",
-      notification: "BelongsTo",
-    },
-    notificationMetadata: {
-      createdAt: "DateTime",
-      updatedAt: "DateTime",
-      notificationMessages: "HasMany",
-    },
-    shopifyGdprRequest: {
-      createdAt: "DateTime",
-      updatedAt: "DateTime",
-      shop: "BelongsTo",
-    },
-    shopifyProduct: {
-      shopifyCreatedAt: "DateTime",
-      publishedAt: "DateTime",
-      createdAt: "DateTime",
-      updatedAt: "DateTime",
-      shopifyUpdatedAt: "DateTime",
-      shop: "BelongsTo",
-    },
-    shopifyShop: {
-      syncs: "HasMany",
-      products: "HasMany",
-      shopifyCreatedAt: "DateTime",
-      gdprRequests: "HasMany",
-      createdAt: "DateTime",
-      updatedAt: "DateTime",
-      shopifyUpdatedAt: "DateTime",
-      recommendedProducts: "HasMany",
-    },
-    shopifySync: {
-      syncSince: "DateTime",
-      createdAt: "DateTime",
-      updatedAt: "DateTime",
-      shop: "BelongsTo",
-    },
-  };
+  describe("with polly", () => {
+    startPolly({
+      mode: process.env.POLLY_MODE ?? "replay",
+      recordFailedRequests: true,
+    });
 
-  test("when no referenceTypes are provided/fetched it should throw an error", async () => {
-    jest.spyOn(GadgetConnection.prototype, "getCurrentModels").mockReturnValue(async () => {});
+    test("when no referenceTypes are provided/fetched it should throw an error", async () => {
+      jest.spyOn(GadgetConnection.prototype, "getCurrentModels").mockReturnValue(async () => {});
 
-    const { result: useActionFormHook } = renderHook(
-      () =>
-        useActionForm(nestedExampleApi.quiz.create, {
-          defaultValues: {
-            quiz: {
-              text: "",
-              questions: [{}],
+      const { result: useActionFormHook } = renderHook(
+        () =>
+          useActionForm(nestedExampleApi.quiz.create, {
+            defaultValues: {
+              quiz: {
+                text: "",
+                questions: [{}],
+              },
             },
-          },
-          onError: (error) => {
-            expect(error).toBeDefined();
-          },
-        }),
-      {
-        wrapper: LiveClientWrapper(nestedExampleApi),
-      }
-    );
+            onError: (error) => {
+              expect(error).toBeDefined();
+            },
+          }),
+        {
+          wrapper: LiveClientWrapper(nestedExampleApi),
+        }
+      );
 
-    await waitFor(() => expect(useActionFormHook.current.formState.isLoading).toBe(false));
+      await waitFor(() => expect(useActionFormHook.current.formState.isLoading).toBe(false));
 
-    expect(useActionFormHook.current.getValues()).toMatchInlineSnapshot(`
+      expect(useActionFormHook.current.getValues()).toMatchInlineSnapshot(`
       {
         "quiz": {
           "questions": [
@@ -125,43 +49,43 @@ describe("useActionFormNested", () => {
       }
     `);
 
-    await act(async () => {
-      useActionFormHook.current.setValue("quiz.text", "test quiz");
-      useActionFormHook.current.setValue("quiz.questions.0.text", "test question");
+      await act(async () => {
+        useActionFormHook.current.setValue("quiz.text", "test quiz");
+        useActionFormHook.current.setValue("quiz.questions.0.text", "test question");
+      });
+
+      await act(async () => {
+        await useActionFormHook.current.submit();
+      });
     });
 
-    await act(async () => {
-      await useActionFormHook.current.submit();
-    });
-  });
+    test("can create a single HasMany relationship", async () => {
+      let returnedData: any;
 
-  test("can create a single HasMany relationship", async () => {
-    let returnedData: any;
-
-    const { result: useActionFormHook } = renderHook(
-      () =>
-        useActionForm(nestedExampleApi.quiz.create, {
-          defaultValues: {
-            quiz: {
-              text: "",
-              questions: [{}],
+      const { result: useActionFormHook } = renderHook(
+        () =>
+          useActionForm(nestedExampleApi.quiz.create, {
+            defaultValues: {
+              quiz: {
+                text: "",
+                questions: [{}],
+              },
             },
-          },
-          onSuccess: (actionResult) => {
-            expect(actionResult.id).toBeDefined();
-          },
-          onError: (error) => {
-            expect(error).toBeUndefined();
-          },
-        }),
-      {
-        wrapper: LiveClientWrapper(nestedExampleApi),
-      }
-    );
+            onSuccess: (actionResult) => {
+              expect(actionResult.id).toBeDefined();
+            },
+            onError: (error) => {
+              expect(error).toBeUndefined();
+            },
+          }),
+        {
+          wrapper: LiveClientWrapper(nestedExampleApi),
+        }
+      );
 
-    await waitFor(() => expect(useActionFormHook.current.formState.isLoading).toBe(false));
+      await waitFor(() => expect(useActionFormHook.current.formState.isLoading).toBe(false));
 
-    expect(useActionFormHook.current.getValues()).toMatchInlineSnapshot(`
+      expect(useActionFormHook.current.getValues()).toMatchInlineSnapshot(`
       {
         "quiz": {
           "questions": [
@@ -172,42 +96,42 @@ describe("useActionFormNested", () => {
       }
     `);
 
-    await act(async () => {
-      useActionFormHook.current.setValue("quiz.text", "test quiz");
-      useActionFormHook.current.setValue("quiz.questions.0.text", "test question");
+      await act(async () => {
+        useActionFormHook.current.setValue("quiz.text", "test quiz");
+        useActionFormHook.current.setValue("quiz.questions.0.text", "test question");
+      });
+
+      expect(useActionFormHook.current.formState.errors).toEqual({});
+
+      await act(async () => {
+        await useActionFormHook.current.submit();
+      });
     });
 
-    expect(useActionFormHook.current.formState.errors).toEqual({});
+    test("can create multiple HasMany relationships", async () => {
+      let returnedData: any;
 
-    await act(async () => {
-      await useActionFormHook.current.submit();
-    });
-  });
-
-  test("can create multiple HasMany relationships", async () => {
-    let returnedData: any;
-
-    const { result: useActionFormHook } = renderHook(
-      () =>
-        useActionForm(nestedExampleApi.quiz.create, {
-          defaultValues: {
-            quiz: {
-              text: "",
-              questions: [{}],
+      const { result: useActionFormHook } = renderHook(
+        () =>
+          useActionForm(nestedExampleApi.quiz.create, {
+            defaultValues: {
+              quiz: {
+                text: "",
+                questions: [{}],
+              },
             },
-          },
-          onSuccess: (actionResult) => {
-            returnedData = actionResult;
-          },
-        }),
-      {
-        wrapper: LiveClientWrapper(nestedExampleApi),
-      }
-    );
+            onSuccess: (actionResult) => {
+              returnedData = actionResult;
+            },
+          }),
+        {
+          wrapper: LiveClientWrapper(nestedExampleApi),
+        }
+      );
 
-    await waitFor(() => expect(useActionFormHook.current.formState.isLoading).toBe(false));
+      await waitFor(() => expect(useActionFormHook.current.formState.isLoading).toBe(false));
 
-    expect(useActionFormHook.current.getValues()).toMatchInlineSnapshot(`
+      expect(useActionFormHook.current.getValues()).toMatchInlineSnapshot(`
       {
         "quiz": {
           "questions": [
@@ -218,44 +142,44 @@ describe("useActionFormNested", () => {
       }
     `);
 
-    await act(async () => {
-      useActionFormHook.current.setValue("quiz.text", "test quiz");
-      useActionFormHook.current.setValue("quiz.questions.0.text", "test question - 1");
-      useActionFormHook.current.setValue("quiz.questions.1.text", "test question - 2");
+      await act(async () => {
+        useActionFormHook.current.setValue("quiz.text", "test quiz");
+        useActionFormHook.current.setValue("quiz.questions.0.text", "test question - 1");
+        useActionFormHook.current.setValue("quiz.questions.1.text", "test question - 2");
+      });
+
+      expect(useActionFormHook.current.formState.errors).toEqual({});
+
+      await act(async () => {
+        await useActionFormHook.current.submit();
+      });
     });
 
-    expect(useActionFormHook.current.formState.errors).toEqual({});
-
-    await act(async () => {
-      await useActionFormHook.current.submit();
-    });
-  });
-
-  test("can create a single HasMany -> HasMany relationship", async () => {
-    const { result: useActionFormHook } = renderHook(
-      () =>
-        useActionForm(nestedExampleApi.quiz.create, {
-          defaultValues: {
-            quiz: {
-              text: "",
-              questions: [{}],
+    test("can create a single HasMany -> HasMany relationship", async () => {
+      const { result: useActionFormHook } = renderHook(
+        () =>
+          useActionForm(nestedExampleApi.quiz.create, {
+            defaultValues: {
+              quiz: {
+                text: "",
+                questions: [{}],
+              },
             },
-          },
-          onSuccess: (actionResult) => {
-            expect(actionResult.id).toBeDefined();
-          },
-          onError: (error) => {
-            expect(error).toBeUndefined();
-          },
-        }),
-      {
-        wrapper: LiveClientWrapper(nestedExampleApi),
-      }
-    );
+            onSuccess: (actionResult) => {
+              expect(actionResult.id).toBeDefined();
+            },
+            onError: (error) => {
+              expect(error).toBeUndefined();
+            },
+          }),
+        {
+          wrapper: LiveClientWrapper(nestedExampleApi),
+        }
+      );
 
-    await waitFor(() => expect(useActionFormHook.current.formState.isLoading).toBe(false));
+      await waitFor(() => expect(useActionFormHook.current.formState.isLoading).toBe(false));
 
-    expect(useActionFormHook.current.getValues()).toMatchInlineSnapshot(`
+      expect(useActionFormHook.current.getValues()).toMatchInlineSnapshot(`
       {
         "quiz": {
           "questions": [
@@ -266,44 +190,44 @@ describe("useActionFormNested", () => {
       }
     `);
 
-    await act(async () => {
-      useActionFormHook.current.setValue("quiz.text", "test quiz");
-      useActionFormHook.current.setValue("quiz.questions.0.text", "test question - 1");
-      useActionFormHook.current.setValue("quiz.questions.0.answers.0.text", "test answer - 1");
+      await act(async () => {
+        useActionFormHook.current.setValue("quiz.text", "test quiz");
+        useActionFormHook.current.setValue("quiz.questions.0.text", "test question - 1");
+        useActionFormHook.current.setValue("quiz.questions.0.answers.0.text", "test answer - 1");
+      });
+
+      expect(useActionFormHook.current.formState.errors).toEqual({});
+
+      await act(async () => {
+        await useActionFormHook.current.submit();
+      });
     });
 
-    expect(useActionFormHook.current.formState.errors).toEqual({});
-
-    await act(async () => {
-      await useActionFormHook.current.submit();
-    });
-  });
-
-  test("can create multiple HasMany -> HasMany relationships", async () => {
-    const { result: useActionFormHook } = renderHook(
-      () =>
-        useActionForm(nestedExampleApi.quiz.create, {
-          defaultValues: {
-            quiz: {
-              text: "",
-              questions: [{}],
+    test("can create multiple HasMany -> HasMany relationships", async () => {
+      const { result: useActionFormHook } = renderHook(
+        () =>
+          useActionForm(nestedExampleApi.quiz.create, {
+            defaultValues: {
+              quiz: {
+                text: "",
+                questions: [{}],
+              },
             },
-          },
-          onSuccess: (actionResult) => {
-            expect(actionResult.id).toBeDefined();
-          },
-          onError: (error) => {
-            expect(error).toBeUndefined();
-          },
-        }),
-      {
-        wrapper: LiveClientWrapper(nestedExampleApi),
-      }
-    );
+            onSuccess: (actionResult) => {
+              expect(actionResult.id).toBeDefined();
+            },
+            onError: (error) => {
+              expect(error).toBeUndefined();
+            },
+          }),
+        {
+          wrapper: LiveClientWrapper(nestedExampleApi),
+        }
+      );
 
-    await waitFor(() => expect(useActionFormHook.current.formState.isLoading).toBe(false));
+      await waitFor(() => expect(useActionFormHook.current.formState.isLoading).toBe(false));
 
-    expect(useActionFormHook.current.getValues()).toMatchInlineSnapshot(`
+      expect(useActionFormHook.current.getValues()).toMatchInlineSnapshot(`
       {
         "quiz": {
           "questions": [
@@ -314,47 +238,47 @@ describe("useActionFormNested", () => {
       }
     `);
 
-    await act(async () => {
-      useActionFormHook.current.setValue("quiz.text", "test quiz");
-      useActionFormHook.current.setValue("quiz.questions.0.text", "test question - 1");
-      useActionFormHook.current.setValue("quiz.questions.0.answers.0.text", "test answer - 1");
+      await act(async () => {
+        useActionFormHook.current.setValue("quiz.text", "test quiz");
+        useActionFormHook.current.setValue("quiz.questions.0.text", "test question - 1");
+        useActionFormHook.current.setValue("quiz.questions.0.answers.0.text", "test answer - 1");
 
-      useActionFormHook.current.setValue("quiz.questions.1.text", "test question - 2");
-      useActionFormHook.current.setValue("quiz.questions.1.answers.0.text", "test answer - 2");
+        useActionFormHook.current.setValue("quiz.questions.1.text", "test question - 2");
+        useActionFormHook.current.setValue("quiz.questions.1.answers.0.text", "test answer - 2");
+      });
+
+      expect(useActionFormHook.current.formState.errors).toEqual({});
+
+      await act(async () => {
+        await useActionFormHook.current.submit();
+      });
     });
 
-    expect(useActionFormHook.current.formState.errors).toEqual({});
-
-    await act(async () => {
-      await useActionFormHook.current.submit();
-    });
-  });
-
-  test("can create a single HasMany -> HasMany -> HasOne relationship", async () => {
-    const { result: useActionFormHook } = renderHook(
-      () =>
-        useActionForm(nestedExampleApi.quiz.create, {
-          defaultValues: {
-            quiz: {
-              text: "",
-              questions: [{}],
+    test("can create a single HasMany -> HasMany -> HasOne relationship", async () => {
+      const { result: useActionFormHook } = renderHook(
+        () =>
+          useActionForm(nestedExampleApi.quiz.create, {
+            defaultValues: {
+              quiz: {
+                text: "",
+                questions: [{}],
+              },
             },
-          },
-          onSuccess: (actionResult) => {
-            expect(actionResult.id).toBeDefined();
-          },
-          onError: (error) => {
-            expect(error).toBeUndefined();
-          },
-        }),
-      {
-        wrapper: LiveClientWrapper(nestedExampleApi),
-      }
-    );
+            onSuccess: (actionResult) => {
+              expect(actionResult.id).toBeDefined();
+            },
+            onError: (error) => {
+              expect(error).toBeUndefined();
+            },
+          }),
+        {
+          wrapper: LiveClientWrapper(nestedExampleApi),
+        }
+      );
 
-    await waitFor(() => expect(useActionFormHook.current.formState.isLoading).toBe(false));
+      await waitFor(() => expect(useActionFormHook.current.formState.isLoading).toBe(false));
 
-    expect(useActionFormHook.current.getValues()).toMatchInlineSnapshot(`
+      expect(useActionFormHook.current.getValues()).toMatchInlineSnapshot(`
       {
         "quiz": {
           "questions": [
@@ -365,45 +289,45 @@ describe("useActionFormNested", () => {
       }
     `);
 
-    await act(async () => {
-      useActionFormHook.current.setValue("quiz.text", "test quiz");
-      useActionFormHook.current.setValue("quiz.questions.0.text", "test question - 1");
-      useActionFormHook.current.setValue("quiz.questions.0.answers.0.text", "test answer - 1");
-      useActionFormHook.current.setValue("quiz.questions.0.answers.0.notification.enabled", true);
+      await act(async () => {
+        useActionFormHook.current.setValue("quiz.text", "test quiz");
+        useActionFormHook.current.setValue("quiz.questions.0.text", "test question - 1");
+        useActionFormHook.current.setValue("quiz.questions.0.answers.0.text", "test answer - 1");
+        useActionFormHook.current.setValue("quiz.questions.0.answers.0.notification.enabled", true);
+      });
+
+      expect(useActionFormHook.current.formState.errors).toEqual({});
+
+      await act(async () => {
+        await useActionFormHook.current.submit();
+      });
     });
 
-    expect(useActionFormHook.current.formState.errors).toEqual({});
-
-    await act(async () => {
-      await useActionFormHook.current.submit();
-    });
-  });
-
-  test("can create multiple HasMany -> HasMany -> HasOne relationships", async () => {
-    const { result: useActionFormHook } = renderHook(
-      () =>
-        useActionForm(nestedExampleApi.quiz.create, {
-          defaultValues: {
-            quiz: {
-              text: "",
-              questions: [{}],
+    test("can create multiple HasMany -> HasMany -> HasOne relationships", async () => {
+      const { result: useActionFormHook } = renderHook(
+        () =>
+          useActionForm(nestedExampleApi.quiz.create, {
+            defaultValues: {
+              quiz: {
+                text: "",
+                questions: [{}],
+              },
             },
-          },
-          onSuccess: (actionResult) => {
-            expect(actionResult.id).toBeDefined();
-          },
-          onError: (error) => {
-            expect(error).toBeUndefined();
-          },
-        }),
-      {
-        wrapper: LiveClientWrapper(nestedExampleApi),
-      }
-    );
+            onSuccess: (actionResult) => {
+              expect(actionResult.id).toBeDefined();
+            },
+            onError: (error) => {
+              expect(error).toBeUndefined();
+            },
+          }),
+        {
+          wrapper: LiveClientWrapper(nestedExampleApi),
+        }
+      );
 
-    await waitFor(() => expect(useActionFormHook.current.formState.isLoading).toBe(false));
+      await waitFor(() => expect(useActionFormHook.current.formState.isLoading).toBe(false));
 
-    expect(useActionFormHook.current.getValues()).toMatchInlineSnapshot(`
+      expect(useActionFormHook.current.getValues()).toMatchInlineSnapshot(`
       {
         "quiz": {
           "questions": [
@@ -414,30 +338,30 @@ describe("useActionFormNested", () => {
       }
     `);
 
-    await act(async () => {
-      useActionFormHook.current.setValue("quiz.text", "test quiz");
-      useActionFormHook.current.setValue("quiz.questions.0.text", "test question - 1");
-      useActionFormHook.current.setValue("quiz.questions.0.answers.0.text", "test answer - 1");
-      useActionFormHook.current.setValue("quiz.questions.0.answers.0.notification.enabled", true);
+      await act(async () => {
+        useActionFormHook.current.setValue("quiz.text", "test quiz");
+        useActionFormHook.current.setValue("quiz.questions.0.text", "test question - 1");
+        useActionFormHook.current.setValue("quiz.questions.0.answers.0.text", "test answer - 1");
+        useActionFormHook.current.setValue("quiz.questions.0.answers.0.notification.enabled", true);
 
-      useActionFormHook.current.setValue("quiz.questions.1.text", "test question - 1");
-      useActionFormHook.current.setValue("quiz.questions.1.answers.0.text", "test answer - 1");
-      useActionFormHook.current.setValue("quiz.questions.1.answers.0.notification.enabled", true);
+        useActionFormHook.current.setValue("quiz.questions.1.text", "test question - 1");
+        useActionFormHook.current.setValue("quiz.questions.1.answers.0.text", "test answer - 1");
+        useActionFormHook.current.setValue("quiz.questions.1.answers.0.notification.enabled", true);
+      });
+
+      await act(async () => {
+        await useActionFormHook.current.submit();
+      });
     });
 
-    await act(async () => {
-      await useActionFormHook.current.submit();
-    });
-  });
+    test("can create a single HasMany -> HasMany -> HasOne -> BelongsTo relationship", async () => {
+      const { result: useFindFirstHook } = renderHook(() => useFindFirst(nestedExampleApi.shopifyProduct), {
+        wrapper: LiveClientWrapper(nestedExampleApi),
+      });
 
-  test("can create a single HasMany -> HasMany -> HasOne -> BelongsTo relationship", async () => {
-    const { result: useFindFirstHook } = renderHook(() => useFindFirst(nestedExampleApi.shopifyProduct), {
-      wrapper: LiveClientWrapper(nestedExampleApi),
-    });
+      await waitFor(() => expect(useFindFirstHook.current[0].fetching).toBe(false), { timeout: 3000 });
 
-    await waitFor(() => expect(useFindFirstHook.current[0].fetching).toBe(false), { timeout: 3000 });
-
-    expect(useFindFirstHook.current[0].data).toMatchInlineSnapshot(`
+      expect(useFindFirstHook.current[0].data).toMatchInlineSnapshot(`
       {
         "__typename": "ShopifyProduct",
         "body": "example value for body",
@@ -460,32 +384,32 @@ describe("useActionFormNested", () => {
       }
     `);
 
-    const productSuggestionId = useFindFirstHook.current[0].data.id;
+      const productSuggestionId = useFindFirstHook.current[0].data.id;
 
-    const { result: useActionFormHook } = renderHook(
-      () =>
-        useActionForm(nestedExampleApi.quiz.create, {
-          defaultValues: {
-            quiz: {
-              text: "",
-              questions: [{}],
+      const { result: useActionFormHook } = renderHook(
+        () =>
+          useActionForm(nestedExampleApi.quiz.create, {
+            defaultValues: {
+              quiz: {
+                text: "",
+                questions: [{}],
+              },
             },
-          },
-          onSuccess: (actionResult) => {
-            expect(actionResult.id).toBeDefined();
-          },
-          onError: (error) => {
-            expect(error).toBeUndefined();
-          },
-        }),
-      {
-        wrapper: LiveClientWrapper(nestedExampleApi),
-      }
-    );
+            onSuccess: (actionResult) => {
+              expect(actionResult.id).toBeDefined();
+            },
+            onError: (error) => {
+              expect(error).toBeUndefined();
+            },
+          }),
+        {
+          wrapper: LiveClientWrapper(nestedExampleApi),
+        }
+      );
 
-    await waitFor(() => expect(useActionFormHook.current.formState.isLoading).toBe(false));
+      await waitFor(() => expect(useActionFormHook.current.formState.isLoading).toBe(false));
 
-    expect(useActionFormHook.current.getValues()).toMatchInlineSnapshot(`
+      expect(useActionFormHook.current.getValues()).toMatchInlineSnapshot(`
       {
         "quiz": {
           "questions": [
@@ -496,28 +420,28 @@ describe("useActionFormNested", () => {
       }
     `);
 
-    await act(async () => {
-      useActionFormHook.current.setValue("quiz.text", "test quiz");
-      useActionFormHook.current.setValue("quiz.questions.0.text", "test question - 1");
-      useActionFormHook.current.setValue("quiz.questions.0.answers.0.text", "test answer - 1");
-      useActionFormHook.current.setValue("quiz.questions.0.answers.0.recommendedProduct.productSuggestion.id", productSuggestionId);
+      await act(async () => {
+        useActionFormHook.current.setValue("quiz.text", "test quiz");
+        useActionFormHook.current.setValue("quiz.questions.0.text", "test question - 1");
+        useActionFormHook.current.setValue("quiz.questions.0.answers.0.text", "test answer - 1");
+        useActionFormHook.current.setValue("quiz.questions.0.answers.0.recommendedProduct.productSuggestion.id", productSuggestionId);
+      });
+
+      expect(useActionFormHook.current.formState.errors).toEqual({});
+
+      await act(async () => {
+        await useActionFormHook.current.submit();
+      });
     });
 
-    expect(useActionFormHook.current.formState.errors).toEqual({});
+    test("can create a single HasMany -> HasMany -> HasOne -> multiple BelongsTo relationship", async () => {
+      const { result: useFindFirstHook } = renderHook(() => useFindFirst(nestedExampleApi.shopifyProduct), {
+        wrapper: LiveClientWrapper(nestedExampleApi),
+      });
 
-    await act(async () => {
-      await useActionFormHook.current.submit();
-    });
-  });
+      await waitFor(() => expect(useFindFirstHook.current[0].fetching).toBe(false), { timeout: 3000 });
 
-  test("can create a single HasMany -> HasMany -> HasOne -> multiple BelongsTo relationship", async () => {
-    const { result: useFindFirstHook } = renderHook(() => useFindFirst(nestedExampleApi.shopifyProduct), {
-      wrapper: LiveClientWrapper(nestedExampleApi),
-    });
-
-    await waitFor(() => expect(useFindFirstHook.current[0].fetching).toBe(false), { timeout: 3000 });
-
-    expect(useFindFirstHook.current[0].data).toMatchInlineSnapshot(`
+      expect(useFindFirstHook.current[0].data).toMatchInlineSnapshot(`
       {
         "__typename": "ShopifyProduct",
         "body": "example value for body",
@@ -540,32 +464,32 @@ describe("useActionFormNested", () => {
       }
     `);
 
-    const productSuggestionId = useFindFirstHook.current[0].data.id;
+      const productSuggestionId = useFindFirstHook.current[0].data.id;
 
-    const { result: useActionFormHook } = renderHook(
-      () =>
-        useActionForm(nestedExampleApi.quiz.create, {
-          defaultValues: {
-            quiz: {
-              text: "",
-              questions: [{}],
+      const { result: useActionFormHook } = renderHook(
+        () =>
+          useActionForm(nestedExampleApi.quiz.create, {
+            defaultValues: {
+              quiz: {
+                text: "",
+                questions: [{}],
+              },
             },
-          },
-          onSuccess: (actionResult) => {
-            expect(actionResult.id).toBeDefined();
-          },
-          onError: (error) => {
-            expect(error).toBeUndefined();
-          },
-        }),
-      {
-        wrapper: LiveClientWrapper(nestedExampleApi),
-      }
-    );
+            onSuccess: (actionResult) => {
+              expect(actionResult.id).toBeDefined();
+            },
+            onError: (error) => {
+              expect(error).toBeUndefined();
+            },
+          }),
+        {
+          wrapper: LiveClientWrapper(nestedExampleApi),
+        }
+      );
 
-    await waitFor(() => expect(useActionFormHook.current.formState.isLoading).toBe(false));
+      await waitFor(() => expect(useActionFormHook.current.formState.isLoading).toBe(false));
 
-    expect(useActionFormHook.current.getValues()).toMatchInlineSnapshot(`
+      expect(useActionFormHook.current.getValues()).toMatchInlineSnapshot(`
       {
         "quiz": {
           "questions": [
@@ -576,29 +500,32 @@ describe("useActionFormNested", () => {
       }
     `);
 
-    await act(async () => {
-      useActionFormHook.current.setValue("quiz.text", "test quiz");
-      useActionFormHook.current.setValue("quiz.questions.0.text", "test question - 1");
-      useActionFormHook.current.setValue("quiz.questions.0.answers.0.text", "test answer - 1");
-      useActionFormHook.current.setValue("quiz.questions.0.answers.0.recommendedProduct.productSuggestion.id", productSuggestionId);
-      useActionFormHook.current.setValue("quiz.questions.0.answers.0.recommendedProduct.anotherProductSuggestion.id", productSuggestionId);
+      await act(async () => {
+        useActionFormHook.current.setValue("quiz.text", "test quiz");
+        useActionFormHook.current.setValue("quiz.questions.0.text", "test question - 1");
+        useActionFormHook.current.setValue("quiz.questions.0.answers.0.text", "test answer - 1");
+        useActionFormHook.current.setValue("quiz.questions.0.answers.0.recommendedProduct.productSuggestion.id", productSuggestionId);
+        useActionFormHook.current.setValue(
+          "quiz.questions.0.answers.0.recommendedProduct.anotherProductSuggestion.id",
+          productSuggestionId
+        );
+      });
+
+      expect(useActionFormHook.current.formState.errors).toEqual({});
+
+      await act(async () => {
+        await useActionFormHook.current.submit();
+      });
     });
 
-    expect(useActionFormHook.current.formState.errors).toEqual({});
+    test("can create a single HasMany -> HasMany -> HasOne -> BelongsTo relationship with support for Id prefix", async () => {
+      const { result: useFindFirstHook } = renderHook(() => useFindFirst(nestedExampleApi.shopifyProduct), {
+        wrapper: LiveClientWrapper(nestedExampleApi),
+      });
 
-    await act(async () => {
-      await useActionFormHook.current.submit();
-    });
-  });
+      await waitFor(() => expect(useFindFirstHook.current[0].fetching).toBe(false), { timeout: 3000 });
 
-  test("can create a single HasMany -> HasMany -> HasOne -> BelongsTo relationship with support for Id prefix", async () => {
-    const { result: useFindFirstHook } = renderHook(() => useFindFirst(nestedExampleApi.shopifyProduct), {
-      wrapper: LiveClientWrapper(nestedExampleApi),
-    });
-
-    await waitFor(() => expect(useFindFirstHook.current[0].fetching).toBe(false), { timeout: 3000 });
-
-    expect(useFindFirstHook.current[0].data).toMatchInlineSnapshot(`
+      expect(useFindFirstHook.current[0].data).toMatchInlineSnapshot(`
       {
         "__typename": "ShopifyProduct",
         "body": "example value for body",
@@ -621,32 +548,32 @@ describe("useActionFormNested", () => {
       }
     `);
 
-    const productSuggestionId = useFindFirstHook.current[0].data.id;
+      const productSuggestionId = useFindFirstHook.current[0].data.id;
 
-    const { result: useActionFormHook } = renderHook(
-      () =>
-        useActionForm(nestedExampleApi.quiz.create, {
-          defaultValues: {
-            quiz: {
-              text: "",
-              questions: [{}],
+      const { result: useActionFormHook } = renderHook(
+        () =>
+          useActionForm(nestedExampleApi.quiz.create, {
+            defaultValues: {
+              quiz: {
+                text: "",
+                questions: [{}],
+              },
             },
-          },
-          onSuccess: (actionResult) => {
-            expect(actionResult.id).toBeDefined();
-          },
-          onError: (error) => {
-            expect(error).toBeUndefined();
-          },
-        }),
-      {
-        wrapper: LiveClientWrapper(nestedExampleApi),
-      }
-    );
+            onSuccess: (actionResult) => {
+              expect(actionResult.id).toBeDefined();
+            },
+            onError: (error) => {
+              expect(error).toBeUndefined();
+            },
+          }),
+        {
+          wrapper: LiveClientWrapper(nestedExampleApi),
+        }
+      );
 
-    await waitFor(() => expect(useActionFormHook.current.formState.isLoading).toBe(false));
+      await waitFor(() => expect(useActionFormHook.current.formState.isLoading).toBe(false));
 
-    expect(useActionFormHook.current.getValues()).toMatchInlineSnapshot(`
+      expect(useActionFormHook.current.getValues()).toMatchInlineSnapshot(`
       {
         "quiz": {
           "questions": [
@@ -657,28 +584,28 @@ describe("useActionFormNested", () => {
       }
     `);
 
-    await act(async () => {
-      useActionFormHook.current.setValue("quiz.text", "test quiz");
-      useActionFormHook.current.setValue("quiz.questions.0.text", "test question - 1");
-      useActionFormHook.current.setValue("quiz.questions.0.answers.0.text", "test answer - 1");
-      useActionFormHook.current.setValue("quiz.questions.0.answers.0.recommendedProduct.productSuggestionId", productSuggestionId);
+      await act(async () => {
+        useActionFormHook.current.setValue("quiz.text", "test quiz");
+        useActionFormHook.current.setValue("quiz.questions.0.text", "test question - 1");
+        useActionFormHook.current.setValue("quiz.questions.0.answers.0.text", "test answer - 1");
+        useActionFormHook.current.setValue("quiz.questions.0.answers.0.recommendedProduct.productSuggestionId", productSuggestionId);
+      });
+
+      expect(useActionFormHook.current.formState.errors).toEqual({});
+
+      await act(async () => {
+        await useActionFormHook.current.submit();
+      });
     });
 
-    expect(useActionFormHook.current.formState.errors).toEqual({});
+    test("can create a single HasMany -> HasMany -> HasOne -> multiple BelongsTo relationship with support for Id prefix", async () => {
+      const { result: useFindFirstHook } = renderHook(() => useFindFirst(nestedExampleApi.shopifyProduct), {
+        wrapper: LiveClientWrapper(nestedExampleApi),
+      });
 
-    await act(async () => {
-      await useActionFormHook.current.submit();
-    });
-  });
+      await waitFor(() => expect(useFindFirstHook.current[0].fetching).toBe(false), { timeout: 3000 });
 
-  test("can create a single HasMany -> HasMany -> HasOne -> multiple BelongsTo relationship with support for Id prefix", async () => {
-    const { result: useFindFirstHook } = renderHook(() => useFindFirst(nestedExampleApi.shopifyProduct), {
-      wrapper: LiveClientWrapper(nestedExampleApi),
-    });
-
-    await waitFor(() => expect(useFindFirstHook.current[0].fetching).toBe(false), { timeout: 3000 });
-
-    expect(useFindFirstHook.current[0].data).toMatchInlineSnapshot(`
+      expect(useFindFirstHook.current[0].data).toMatchInlineSnapshot(`
       {
         "__typename": "ShopifyProduct",
         "body": "example value for body",
@@ -701,33 +628,32 @@ describe("useActionFormNested", () => {
       }
     `);
 
-    const productSuggestionId = useFindFirstHook.current[0].data.id;
+      const productSuggestionId = useFindFirstHook.current[0].data.id;
 
-    const { result: useActionFormHook } = renderHook(
-      () =>
-        useActionForm(nestedExampleApi.quiz.create, {
-          defaultValues: {
-            quiz: {
-              text: "",
-              questions: [{}],
+      const { result: useActionFormHook } = renderHook(
+        () =>
+          useActionForm(nestedExampleApi.quiz.create, {
+            defaultValues: {
+              quiz: {
+                text: "",
+                questions: [{}],
+              },
             },
-          },
-          onSuccess: (actionResult) => {
-            expect(actionResult.id).toBeDefined();
-            onSuccessRan = true;
-          },
-          onError: (error) => {
-            expect(error).toBeUndefined();
-          },
-        }),
-      {
-        wrapper: LiveClientWrapper(nestedExampleApi),
-      }
-    );
+            onSuccess: (actionResult) => {
+              expect(actionResult.id).toBeDefined();
+            },
+            onError: (error) => {
+              expect(error).toBeUndefined();
+            },
+          }),
+        {
+          wrapper: LiveClientWrapper(nestedExampleApi),
+        }
+      );
 
-    await waitFor(() => expect(useActionFormHook.current.formState.isLoading).toBe(false));
+      await waitFor(() => expect(useActionFormHook.current.formState.isLoading).toBe(false));
 
-    expect(useActionFormHook.current.getValues()).toMatchInlineSnapshot(`
+      expect(useActionFormHook.current.getValues()).toMatchInlineSnapshot(`
       {
         "quiz": {
           "questions": [
@@ -738,253 +664,682 @@ describe("useActionFormNested", () => {
       }
     `);
 
-    await act(async () => {
-      useActionFormHook.current.setValue("quiz.text", "test quiz");
-      useActionFormHook.current.setValue("quiz.questions.0.text", "test question - 1");
-      useActionFormHook.current.setValue("quiz.questions.0.answers.0.text", "test answer - 1");
-      useActionFormHook.current.setValue("quiz.questions.0.answers.0.recommendedProduct.productSuggestionId", productSuggestionId);
-      useActionFormHook.current.setValue("quiz.questions.0.answers.0.recommendedProduct.anotherProductSuggestionId", productSuggestionId);
+      await act(async () => {
+        useActionFormHook.current.setValue("quiz.text", "test quiz");
+        useActionFormHook.current.setValue("quiz.questions.0.text", "test question - 1");
+        useActionFormHook.current.setValue("quiz.questions.0.answers.0.text", "test answer - 1");
+        useActionFormHook.current.setValue("quiz.questions.0.answers.0.recommendedProduct.productSuggestionId", productSuggestionId);
+        useActionFormHook.current.setValue("quiz.questions.0.answers.0.recommendedProduct.anotherProductSuggestionId", productSuggestionId);
+      });
+
+      expect(useActionFormHook.current.formState.errors).toEqual({});
+
+      await act(async () => {
+        await useActionFormHook.current.submit();
+      });
     });
 
-    expect(useActionFormHook.current.formState.errors).toEqual({});
+    test("can update root object", async () => {
+      const { result: useActionFormHook } = renderHook(
+        () =>
+          useActionForm(nestedExampleApi.quiz.update, {
+            findBy: "163",
+            select: {
+              id: true,
+              text: true,
+            },
+            onSuccess: (actionResult) => {
+              expect(actionResult.id).toBeDefined();
+            },
+            onError: (error) => {
+              expect(error).toBeUndefined();
+            },
+          }),
+        {
+          wrapper: LiveClientWrapper(nestedExampleApi),
+        }
+      );
 
-    await act(async () => {
-      await useActionFormHook.current.submit();
-    });
-  });
+      await waitFor(() => expect(useActionFormHook.current.formState.isLoading).toBe(false), { timeout: 3000 });
 
-  test("can update root object", async () => {
-    const { result: useActionFormHook } = renderHook(
-      () =>
-        useActionForm(nestedExampleApi.quiz.update, {
-          findBy: "163",
-          select: {
-            id: true,
-            text: true,
-          },
-          onSuccess: (actionResult) => {
-            expect(actionResult.id).toBeDefined();
-          },
-          onError: (error) => {
-            expect(error).toBeUndefined();
-          },
-        }),
-      {
-        wrapper: LiveClientWrapper(nestedExampleApi),
-      }
-    );
+      const formValues = useActionFormHook.current.getValues();
+      expect(formValues.quiz).toBeDefined();
+      expect(formValues.quiz.text).toBeDefined();
 
-    await waitFor(() => expect(useActionFormHook.current.formState.isLoading).toBe(false), { timeout: 3000 });
+      await act(async () => {
+        useActionFormHook.current.setValue("text", "test quiz updated");
+      });
 
-    const formValues = useActionFormHook.current.getValues();
-    expect(formValues.quiz).toBeDefined();
-    expect(formValues.quiz.text).toBeDefined();
+      expect(useActionFormHook.current.formState.errors).toEqual({});
 
-    await act(async () => {
-      useActionFormHook.current.setValue("text", "test quiz updated");
-    });
-
-    expect(useActionFormHook.current.formState.errors).toEqual({});
-
-    await act(async () => {
-      await useActionFormHook.current.submit();
-    });
-  });
-
-  test("can update root even if nested", async () => {
-    const { result: useActionFormHook } = renderHook(
-      () =>
-        useActionForm(nestedExampleApi.quiz.update, {
-          findBy: "163",
-          select: {
-            id: true,
-            text: true,
-          },
-          onSuccess: (actionResult) => {
-            expect(actionResult.id).toBeDefined();
-          },
-          onError: (error) => {
-            expect(error).toBeUndefined();
-          },
-        }),
-      {
-        wrapper: LiveClientWrapper(nestedExampleApi),
-      }
-    );
-
-    await waitFor(() => expect(useActionFormHook.current.formState.isLoading).toBe(false), { timeout: 3000 });
-
-    const formValues = useActionFormHook.current.getValues();
-    expect(formValues.quiz).toBeDefined();
-    expect(formValues.quiz.text).toBeDefined();
-
-    await act(async () => {
-      useActionFormHook.current.setValue("quiz.text", "test quiz updated");
+      await act(async () => {
+        await useActionFormHook.current.submit();
+      });
     });
 
-    expect(useActionFormHook.current.formState.errors).toEqual({});
+    test("can update root even if nested", async () => {
+      const { result: useActionFormHook } = renderHook(
+        () =>
+          useActionForm(nestedExampleApi.quiz.update, {
+            findBy: "163",
+            select: {
+              id: true,
+              text: true,
+            },
+            onSuccess: (actionResult) => {
+              expect(actionResult.id).toBeDefined();
+            },
+            onError: (error) => {
+              expect(error).toBeUndefined();
+            },
+          }),
+        {
+          wrapper: LiveClientWrapper(nestedExampleApi),
+        }
+      );
 
-    await act(async () => {
-      await useActionFormHook.current.submit();
+      await waitFor(() => expect(useActionFormHook.current.formState.isLoading).toBe(false), { timeout: 3000 });
+
+      const formValues = useActionFormHook.current.getValues();
+      expect(formValues.quiz).toBeDefined();
+      expect(formValues.quiz.text).toBeDefined();
+
+      await act(async () => {
+        useActionFormHook.current.setValue("quiz.text", "test quiz updated");
+      });
+
+      expect(useActionFormHook.current.formState.errors).toEqual({});
+
+      await act(async () => {
+        await useActionFormHook.current.submit();
+      });
     });
-  });
 
-  test("can update a single HasMany relationship", async () => {
-    const { result: useActionFormHook } = renderHook(
-      () =>
-        useActionForm(nestedExampleApi.quiz.update, {
-          findBy: "164",
-          select: {
-            id: true,
-            text: true,
-            questions: {
-              edges: {
-                node: {
-                  id: true,
-                  text: true,
+    test("can update a single HasMany relationship", async () => {
+      const { result: useActionFormHook } = renderHook(
+        () =>
+          useActionForm(nestedExampleApi.quiz.update, {
+            findBy: "164",
+            select: {
+              id: true,
+              text: true,
+              questions: {
+                edges: {
+                  node: {
+                    id: true,
+                    text: true,
+                  },
                 },
               },
             },
-          },
-          onSuccess: (actionResult) => {
-            expect(actionResult.id).toBeDefined();
-          },
-          onError: (error) => {
-            expect(error).toBeUndefined();
-          },
-        }),
-      {
-        wrapper: LiveClientWrapper(nestedExampleApi),
-      }
-    );
+            onSuccess: (actionResult) => {
+              expect(actionResult.id).toBeDefined();
+            },
+            onError: (error) => {
+              expect(error).toBeUndefined();
+            },
+          }),
+        {
+          wrapper: LiveClientWrapper(nestedExampleApi),
+        }
+      );
 
-    await waitFor(() => expect(useActionFormHook.current.formState.isLoading).toBe(false), { timeout: 3000 });
+      await waitFor(() => expect(useActionFormHook.current.formState.isLoading).toBe(false), { timeout: 3000 });
 
-    const formValues = useActionFormHook.current.getValues();
-    expect(formValues.quiz).toBeDefined();
-    expect(formValues.quiz.text).toBeDefined();
-    expect(formValues.quiz.questions).toBeDefined();
-    expect(formValues.quiz.questions.length).toBe(1);
+      const formValues = useActionFormHook.current.getValues();
+      expect(formValues.quiz).toBeDefined();
+      expect(formValues.quiz.text).toBeDefined();
+      expect(formValues.quiz.questions).toBeDefined();
+      expect(formValues.quiz.questions.length).toBe(1);
 
-    await act(async () => {
-      useActionFormHook.current.setValue("quiz.text", "test quiz updated");
-      useActionFormHook.current.setValue("quiz.questions.0.text", "test question updated");
+      await act(async () => {
+        useActionFormHook.current.setValue("quiz.text", "test quiz updated");
+        useActionFormHook.current.setValue("quiz.questions.0.text", "test question updated");
+      });
+
+      expect(useActionFormHook.current.formState.errors).toEqual({});
+
+      await act(async () => {
+        await useActionFormHook.current.submit();
+      });
     });
 
-    expect(useActionFormHook.current.formState.errors).toEqual({});
-
-    await act(async () => {
-      await useActionFormHook.current.submit();
-    });
-  });
-
-  test("can update multiple HasMany relationships", async () => {
-    const { result: useActionFormHook } = renderHook(
-      () =>
-        useActionForm(nestedExampleApi.quiz.update, {
-          findBy: "168",
-          select: {
-            id: true,
-            text: true,
-            questions: {
-              edges: {
-                node: {
-                  id: true,
-                  text: true,
+    test("can update multiple HasMany relationships", async () => {
+      const { result: useActionFormHook } = renderHook(
+        () =>
+          useActionForm(nestedExampleApi.quiz.update, {
+            findBy: "168",
+            select: {
+              id: true,
+              text: true,
+              questions: {
+                edges: {
+                  node: {
+                    id: true,
+                    text: true,
+                  },
                 },
               },
             },
-          },
-          onSuccess: (actionResult) => {
-            expect(actionResult.id).toBeDefined();
-          },
-          onError: (error) => {
-            expect(error).toBeUndefined();
-          },
-        }),
-      {
-        wrapper: LiveClientWrapper(nestedExampleApi),
-      }
-    );
+            onSuccess: (actionResult) => {
+              expect(actionResult.id).toBeDefined();
+            },
+            onError: (error) => {
+              expect(error).toBeUndefined();
+            },
+          }),
+        {
+          wrapper: LiveClientWrapper(nestedExampleApi),
+        }
+      );
 
-    await waitFor(() => expect(useActionFormHook.current.formState.isLoading).toBe(false), { timeout: 3000 });
+      await waitFor(() => expect(useActionFormHook.current.formState.isLoading).toBe(false), { timeout: 3000 });
 
-    const formValues = useActionFormHook.current.getValues();
-    expect(formValues.quiz).toBeDefined();
-    expect(formValues.quiz.text).toBeDefined();
-    expect(formValues.quiz.questions).toBeDefined();
-    expect(formValues.quiz.questions.length).toBe(2);
+      const formValues = useActionFormHook.current.getValues();
+      expect(formValues.quiz).toBeDefined();
+      expect(formValues.quiz.text).toBeDefined();
+      expect(formValues.quiz.questions).toBeDefined();
+      expect(formValues.quiz.questions.length).toBe(2);
 
-    await act(async () => {
-      useActionFormHook.current.setValue("quiz.text", "test quiz updated");
-      useActionFormHook.current.setValue("quiz.questions.0.text", "test question updated - 1");
-      useActionFormHook.current.setValue("quiz.questions.1.text", "test question updated - 2");
+      await act(async () => {
+        useActionFormHook.current.setValue("quiz.text", "test quiz updated");
+        useActionFormHook.current.setValue("quiz.questions.0.text", "test question updated - 1");
+        useActionFormHook.current.setValue("quiz.questions.1.text", "test question updated - 2");
+      });
+
+      expect(useActionFormHook.current.formState.errors).toEqual({});
+
+      await act(async () => {
+        await useActionFormHook.current.submit();
+      });
     });
 
-    expect(useActionFormHook.current.formState.errors).toEqual({});
-
-    await act(async () => {
-      await useActionFormHook.current.submit();
-    });
-  });
-
-  test("can update multiple HasMany relationships that are reordered", async () => {
-    const { result: useActionFormHook } = renderHook(
-      () =>
-        useActionForm(nestedExampleApi.quiz.update, {
-          findBy: "168",
-          select: {
-            id: true,
-            text: true,
-            questions: {
-              edges: {
-                node: {
-                  id: true,
-                  text: true,
+    test("can update multiple HasMany relationships that are reordered", async () => {
+      const { result: useActionFormHook } = renderHook(
+        () =>
+          useActionForm(nestedExampleApi.quiz.update, {
+            findBy: "168",
+            select: {
+              id: true,
+              text: true,
+              questions: {
+                edges: {
+                  node: {
+                    id: true,
+                    text: true,
+                  },
                 },
               },
             },
-          },
-          onSuccess: (actionResult) => {
-            expect(actionResult.id).toBeDefined();
-          },
-          onError: (error) => {
-            expect(error).toBeUndefined();
-          },
-        }),
-      {
-        wrapper: LiveClientWrapper(nestedExampleApi),
-      }
-    );
+            onSuccess: (actionResult) => {
+              expect(actionResult.id).toBeDefined();
+            },
+            onError: (error) => {
+              expect(error).toBeUndefined();
+            },
+          }),
+        {
+          wrapper: LiveClientWrapper(nestedExampleApi),
+        }
+      );
 
-    await waitFor(() => expect(useActionFormHook.current.formState.isLoading).toBe(false), { timeout: 3000 });
+      await waitFor(() => expect(useActionFormHook.current.formState.isLoading).toBe(false), { timeout: 3000 });
 
-    const formValues = useActionFormHook.current.getValues();
-    expect(formValues.quiz).toBeDefined();
-    expect(formValues.quiz.text).toBeDefined();
-    expect(formValues.quiz.questions).toBeDefined();
-    expect(formValues.quiz.questions.length).toBe(2);
+      const formValues = useActionFormHook.current.getValues();
+      expect(formValues.quiz).toBeDefined();
+      expect(formValues.quiz.text).toBeDefined();
+      expect(formValues.quiz.questions).toBeDefined();
+      expect(formValues.quiz.questions.length).toBe(2);
 
-    const { result: questionsFieldArrayHook } = renderHook(() =>
-      useFieldArray({ control: useActionFormHook.current.control, name: "quiz.questions" })
-    );
+      const { result: questionsFieldArrayHook } = renderHook(() =>
+        useFieldArray({ control: useActionFormHook.current.control, name: "quiz.questions" })
+      );
 
-    await act(async () => {
-      useActionFormHook.current.setValue("quiz.text", "test quiz updated");
-      useActionFormHook.current.setValue("quiz.questions.0.text", "test question updated - 1");
-      useActionFormHook.current.setValue("quiz.questions.1.text", "test question updated - 2");
+      await act(async () => {
+        useActionFormHook.current.setValue("quiz.text", "test quiz updated");
+        useActionFormHook.current.setValue("quiz.questions.0.text", "test question updated - 1");
+        useActionFormHook.current.setValue("quiz.questions.1.text", "test question updated - 2");
 
-      questionsFieldArrayHook.current.move(0, 1);
+        questionsFieldArrayHook.current.move(0, 1);
+      });
+
+      expect(useActionFormHook.current.formState.errors).toEqual({});
+
+      await act(async () => {
+        await useActionFormHook.current.submit();
+      });
     });
 
-    expect(useActionFormHook.current.formState.errors).toEqual({});
+    test("can update a single HasMany -> Multiple HasMany relationship", async () => {
+      const { result: useActionFormHook } = renderHook(
+        () =>
+          useActionForm(nestedExampleApi.quiz.update, {
+            findBy: "192",
+            select: {
+              id: true,
+              text: true,
+              questions: {
+                edges: {
+                  node: {
+                    id: true,
+                    text: true,
+                    answers: {
+                      edges: {
+                        node: {
+                          id: true,
+                          text: true
+                        }
+                      }
+                    }
+                  },
+                },
+              },
+            },
+            onSuccess: (actionResult) => {
+              expect(actionResult.id).toBeDefined();
+            },
+            onError: (error) => {
+              expect(error).toBeUndefined();
+            },
+          }),
+        {
+          wrapper: LiveClientWrapper(nestedExampleApi),
+        }
+      );
 
-    await act(async () => {
-      await useActionFormHook.current.submit();
+      await waitFor(() => expect(useActionFormHook.current.formState.isLoading).toBe(false), { timeout: 3000 });
+
+      const formValues = useActionFormHook.current.getValues();
+      expect(formValues.quiz).toBeDefined();
+      expect(formValues.quiz.text).toBeDefined();
+      expect(formValues.quiz.questions).toBeDefined();
+      expect(formValues.quiz.questions.length).toBe(1);
+      expect(formValues.quiz.questions[0].answers.length).toBe(2);
+
+      const { result: questionsFieldArrayHook } = renderHook(() =>
+        useFieldArray({ control: useActionFormHook.current.control, name: "quiz.questions" })
+      );
+
+      await act(async () => {
+        useActionFormHook.current.setValue("quiz.text", "test quiz updated");
+        useActionFormHook.current.setValue("quiz.questions.0.text", "test question updated - 1");
+        useActionFormHook.current.setValue("quiz.questions.1.text", "test question updated - 2");
+
+        useActionFormHook.current.setValue("quiz.questions.0.answers.0.text", "test answer updated - 1");
+        useActionFormHook.current.setValue("quiz.questions.0.answers.1.text", "test answer updated - 2");
+      });
+
+      expect(useActionFormHook.current.formState.errors).toEqual({});
+
+      await act(async () => {
+        await useActionFormHook.current.submit();
+      });
+    });
+
+    test("can update multiple HasMany -> HasMany relationships", async () => {
+      const { result: useActionFormHook } = renderHook(
+        () =>
+          useActionForm(nestedExampleApi.quiz.update, {
+            findBy: "193",
+            select: {
+              id: true,
+              text: true,
+              questions: {
+                edges: {
+                  node: {
+                    id: true,
+                    text: true,
+                    answers: {
+                      edges: {
+                        node: {
+                          id: true,
+                          text: true
+                        }
+                      }
+                    }
+                  },
+                },
+              },
+            },
+            onSuccess: (actionResult) => {
+              expect(actionResult.id).toBeDefined();
+            },
+            onError: (error) => {
+              expect(error).toBeUndefined();
+            },
+          }),
+        {
+          wrapper: LiveClientWrapper(nestedExampleApi),
+        }
+      );
+
+      await waitFor(() => expect(useActionFormHook.current.formState.isLoading).toBe(false), { timeout: 3000 });
+
+      const formValues = useActionFormHook.current.getValues();
+      expect(formValues.quiz).toBeDefined();
+      expect(formValues.quiz.text).toBeDefined();
+      expect(formValues.quiz.questions).toBeDefined();
+      expect(formValues.quiz.questions.length).toBe(2);
+      expect(formValues.quiz.questions[0].answers.length).toBe(2);
+      expect(formValues.quiz.questions[1].answers.length).toBe(2);
+
+      const { result: questionsFieldArrayHook } = renderHook(() =>
+        useFieldArray({ control: useActionFormHook.current.control, name: "quiz.questions" })
+      );
+
+      await act(async () => {
+        useActionFormHook.current.setValue("quiz.text", "test quiz updated");
+        useActionFormHook.current.setValue("quiz.questions.0.text", "test question updated - 1");
+        useActionFormHook.current.setValue("quiz.questions.1.text", "test question updated - 2");
+
+        useActionFormHook.current.setValue("quiz.questions.0.answers.0.text", "test answer updated - 1");
+        useActionFormHook.current.setValue("quiz.questions.0.answers.1.text", "test answer updated - 2");
+
+        useActionFormHook.current.setValue("quiz.questions.1.answers.0.text", "test answer updated - 3");
+        useActionFormHook.current.setValue("quiz.questions.1.answers.1.text", "test answer updated - 4");
+      });
+
+      expect(useActionFormHook.current.formState.errors).toEqual({});
+
+      await act(async () => {
+        await useActionFormHook.current.submit();
+      });
+    });
+
+    test("can update a single HasOne relationship", async () => {
+      const { result: useActionFormHook } = renderHook(
+        () =>
+          useActionForm(nestedExampleApi.answer.update, {
+            findBy: "187",
+            select: {
+              id: true,
+              text: true,
+              notification: {
+                id: true,
+                enabled: true
+              }
+            },
+            onSuccess: (actionResult) => {
+              expect(actionResult.id).toBeDefined();
+            },
+            onError: (error) => {
+              expect(error).toBeUndefined();
+            },
+          }),
+        {
+          wrapper: LiveClientWrapper(nestedExampleApi),
+        }
+      );
+
+      await waitFor(() => expect(useActionFormHook.current.formState.isLoading).toBe(false), { timeout: 3000 });
+
+      const formValues = useActionFormHook.current.getValues();
+      expect(formValues.answer).toBeDefined();
+      expect(formValues.answer.notification).toBeDefined();
+
+      await act(async () => {
+        useActionFormHook.current.setValue("answer.text", "test answers updated");
+        useActionFormHook.current.setValue("answer.notification.enabled", false);
+      });
+
+      expect(useActionFormHook.current.formState.errors).toEqual({});
+
+      await act(async () => {
+        await useActionFormHook.current.submit();
+      });
+    });
+
+    test("can update a single BelongsTo relationship", async () => {
+      const { result: useActionFormHook } = renderHook(
+        () =>
+          useActionForm(nestedExampleApi.answer.update, {
+            findBy: "187",
+            select: {
+              id: true,
+              text: true,
+              question: {
+                id: true
+              }
+            },
+            onSuccess: (actionResult) => {
+              expect(actionResult.id).toBeDefined();
+            },
+            onError: (error) => {
+              expect(error).toBeUndefined();
+            },
+          }),
+        {
+          wrapper: LiveClientWrapper(nestedExampleApi),
+        }
+      );
+
+      await waitFor(() => expect(useActionFormHook.current.formState.isLoading).toBe(false), { timeout: 3000 });
+
+      const formValues = useActionFormHook.current.getValues();
+      expect(formValues.answer).toBeDefined();
+      expect(formValues.answer.question).toBeDefined();
+      expect(formValues.answer.question.id).toBeDefined();
+
+      await act(async () => {
+        useActionFormHook.current.setValue("answer.text", "test answers updated");
+        useActionFormHook.current.setValue("answer.question.id", 123);
+      });
+
+      expect(useActionFormHook.current.formState.errors).toEqual({});
+
+      await act(async () => {
+        await useActionFormHook.current.submit();
+      });
+    });
+
+    test("can update a single BelongsTo relationship with support for Id prefix test", async () => {
+      const { result: useActionFormHook } = renderHook(
+        () =>
+          useActionForm(nestedExampleApi.answer.update, {
+            findBy: "187",
+            select: {
+              id: true,
+              text: true,
+              questionId: true,
+            },
+            onSuccess: (actionResult) => {
+              expect(actionResult.id).toBeDefined();
+            },
+            onError: (error) => {
+              expect(error).toBeUndefined();
+            },
+          }),
+        {
+          wrapper: LiveClientWrapper(nestedExampleApi),
+        }
+      );
+
+      await waitFor(() => expect(useActionFormHook.current.formState.isLoading).toBe(false), { timeout: 3000 });
+
+      const formValues = useActionFormHook.current.getValues();
+      expect(formValues.answer).toBeDefined();
+      expect(formValues.answer.questionId).toBeDefined();
+
+      await act(async () => {
+        useActionFormHook.current.setValue("answer.text", "test answers updated");
+        useActionFormHook.current.setValue("answer.questionId", 123);
+      });
+
+      expect(useActionFormHook.current.formState.errors).toEqual({});
+
+      await act(async () => {
+        await useActionFormHook.current.submit();
+      });
     });
   });
 
   describe("with mocking", () => {
+    const mockAllModelsReference = {
+      session: {
+        shop: {
+          type: "BelongsTo",
+          model: "shopifyShop",
+        },
+        createdAt: "DateTime",
+        updatedAt: "DateTime",
+      },
+      quiz: {
+        createdAt: "DateTime",
+        updatedAt: "DateTime",
+        questionables: {
+          type: "HasMany",
+          model: "questionable",
+        },
+        questions: {
+          type: "HasMany",
+          model: "question",
+        },
+      },
+      question: {
+        answers: {
+          type: "HasMany",
+          model: "answer",
+        },
+        createdAt: "DateTime",
+        updatedAt: "DateTime",
+        quiz: {
+          type: "BelongsTo",
+          model: "quiz",
+        },
+      },
+      answer: {
+        question: {
+          type: "BelongsTo",
+          model: "question",
+        },
+        createdAt: "DateTime",
+        updatedAt: "DateTime",
+        notification: {
+          type: "HasOne",
+          model: "notification",
+        },
+        questionable: {
+          type: "BelongsTo",
+          model: "questionable",
+        },
+        recommendedProduct: {
+          type: "HasOne",
+          model: "recommendedProduct",
+        },
+      },
+      recommendedProduct: {
+        productSuggestion: {
+          type: "BelongsTo",
+          model: "shopifyShop",
+        },
+        createdAt: "DateTime",
+        updatedAt: "DateTime",
+        answer: {
+          type: "BelongsTo",
+          model: "answer",
+        },
+        anotherProductSuggestion: {
+          type: "BelongsTo",
+          model: "shopifyShop",
+        },
+      },
+      notification: {
+        sendOutDate: "DateTime",
+        createdAt: "DateTime",
+        updatedAt: "DateTime",
+        notificationMessage: {
+          type: "HasOne",
+          model: "notificationMessage",
+        },
+        answer: {
+          type: "BelongsTo",
+          model: "answer",
+        },
+      },
+      notificationMessage: {
+        createdAt: "DateTime",
+        updatedAt: "DateTime",
+        notificationMetadata: {
+          type: "BelongsTo",
+          model: "notificationMetadata",
+        },
+        notification: {
+          type: "BelongsTo",
+          model: "notification",
+        },
+      },
+      notificationMetadata: {
+        createdAt: "DateTime",
+        updatedAt: "DateTime",
+        notificationMessages: {
+          type: "HasMany",
+          model: "notificationMessage",
+        },
+      },
+      shopifyGdprRequest: {
+        createdAt: "DateTime",
+        updatedAt: "DateTime",
+        shop: {
+          type: "BelongsTo",
+          model: "shopifyShop",
+        },
+      },
+      shopifyProduct: {
+        shopifyCreatedAt: "DateTime",
+        publishedAt: "DateTime",
+        createdAt: "DateTime",
+        updatedAt: "DateTime",
+        shopifyUpdatedAt: "DateTime",
+        shop: {
+          type: "BelongsTo",
+          model: "shopifyShop",
+        },
+      },
+      shopifyShop: {
+        syncs: {
+          type: "HasMany",
+          model: "shopifySync",
+        },
+        products: {
+          type: "HasMany",
+          model: "shopifyProduct",
+        },
+        shopifyCreatedAt: "DateTime",
+        gdprRequests: {
+          type: "HasMany",
+          model: "shopifyGdprRequest",
+        },
+        createdAt: "DateTime",
+        updatedAt: "DateTime",
+        shopifyUpdatedAt: "DateTime",
+        recommendedProducts: {
+          type: "HasMany",
+          model: "recommendedProduct",
+        },
+      },
+      shopifySync: {
+        syncSince: "DateTime",
+        createdAt: "DateTime",
+        updatedAt: "DateTime",
+        shop: {
+          type: "BelongsTo",
+          model: "shopifyShop",
+        },
+      },
+      questionable: {
+        quiz: {
+          type: "BelongsTo",
+          model: "quiz",
+        },
+        createdAt: "DateTime",
+        updatedAt: "DateTime",
+        answers: {
+          type: "HasMany",
+          model: "answer",
+        },
+      },
+    };
+
     beforeEach(() => {
       jest.spyOn(nestedExampleApi.connection, "getCurrentModels").mockReturnValue(mockAllModelsReference);
     });
@@ -1307,16 +1662,16 @@ describe("useActionFormNested", () => {
               id: "1",
               enabled: false,
               answer: {
-                id: "123"
-              }
+                id: "123",
+              },
             },
             recommendedProduct: {
               __typename: "RecommendedProduct",
               id: "1",
               answer: {
-                id: "123"
-              }
-            }
+                id: "123",
+              },
+            },
           },
         },
       };
@@ -1332,15 +1687,15 @@ describe("useActionFormNested", () => {
                 id: true,
                 enabled: true,
                 answer: {
-                  id: true
-                }
+                  id: true,
+                },
               },
               recommendedProduct: {
                 id: true,
                 answer: {
                   id: true,
-                }
-              }
+                },
+              },
             },
             onError: (error) => {
               expect(error).toBeUndefined();
@@ -1399,120 +1754,4 @@ describe("useActionFormNested", () => {
       expect(submitResult.answer.recommendedProduct.update.answer._link).toBe("999");
     });
   });
-
-  // test("update HasMany -> HasMany -> HasOne -> HasOne -> BelongsTo", async () => {
-  //   let returnedData: any;
-
-  //   const { result: useActionFormHook } = renderHook(
-  //     () =>
-  //       useActionForm(nestedExampleApi.quiz.update, {
-  //         findBy: "12",
-  //         select: {
-  //           id: true,
-  //           text: true,
-  //           questions: {
-  //             edges: {
-  //               node: {
-  //                 id: true,
-  //                 text: true,
-  //                 answers: {
-  //                   edges: {
-  //                     node: {
-  //                       id: true,
-  //                       text: true,
-  //                     },
-  //                   },
-  //                 },
-  //               },
-  //             },
-  //           },
-  //         },
-
-  //         onSuccess: (actionResult) => {
-  //           returnedData = actionResult;
-  //         },
-  //       }),
-  //     {
-  //       wrapper: LiveClientWrapper(nestedExampleApi),
-  //     }
-  //   );
-
-  //   await waitFor(() => expect(useActionFormHook.current.formState.isLoading).toBe(false));
-
-  //   expect(useActionFormHook.current.getValues()).toMatchInlineSnapshot(`
-  //     {
-  //       "quiz": {
-  //         "__typename": "Quiz",
-  //         "questions": [
-  //           {
-  //             "__typename": "Question",
-  //             "answers": [
-  //               {
-  //                 "__typename": "Answer",
-  //                 "id": "8",
-  //                 "text": "Test answer - 1",
-  //               },
-  //             ],
-  //             "id": "9",
-  //             "text": "test",
-  //           },
-  //         ],
-  //         "text": "Test Quiz",
-  //       },
-  //     }
-  //   `);
-
-  //   await act(async () => {
-  //     // useActionFormHook.current.setValue("quiz.text", "test quiz - changed");
-  //     // useActionFormHook.current.setValue("quiz.questions.0.answers.0.notification.notificationMessage.notificationMetadata.id", "2");
-  //   });
-
-  //   let submitPromise: Promise<any>;
-
-  //   await act(async () => {
-  //     submitPromise = useActionFormHook.current.submit();
-  //   });
-
-  //   expect(useActionFormHook.current.formState.isSubmitting).toBe(true);
-
-  //   await waitFor(() => {
-  //     expect(useActionFormHook.current.formState.isSubmitting).toBe(false);
-  //   });
-
-  //   expect(useActionFormHook.current.formState.errors).toEqual({});
-  //   expect(useActionFormHook.current.formState.isSubmitSuccessful).toBe(true);
-  //   expect(returnedData).toMatchInlineSnapshot(`
-  //     {
-  //       "__typename": "Quiz",
-  //       "id": "12",
-  //       "questions": {
-  //         "__typename": "QuestionConnection",
-  //         "edges": [
-  //           {
-  //             "__typename": "QuestionEdge",
-  //             "node": {
-  //               "__typename": "Question",
-  //               "answers": {
-  //                 "__typename": "AnswerConnection",
-  //                 "edges": [
-  //                   {
-  //                     "__typename": "AnswerEdge",
-  //                     "node": {
-  //                       "__typename": "Answer",
-  //                       "id": "8",
-  //                       "text": "Test answer - 1",
-  //                     },
-  //                   },
-  //                 ],
-  //               },
-  //               "id": "9",
-  //               "text": "test",
-  //             },
-  //           },
-  //         ],
-  //       },
-  //       "text": "Test Quiz",
-  //     }
-  //   `);
-  // });
 });
