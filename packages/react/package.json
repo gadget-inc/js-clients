@@ -28,7 +28,7 @@
     "prerelease": "gitpkg publish"
   },
   "dependencies": {
-    "@gadgetinc/api-client-core": "^0.15.11",
+    "@gadgetinc/api-client-core": "github:gadget-inc/js-clients#@gadgetinc/api-client-core-v0.15.11-gitpkg-fc007e6",
     "react-fast-compare": "^3.2.2",
     "react-hook-form": "^7.46.1",
     "urql": "^4.0.4"
