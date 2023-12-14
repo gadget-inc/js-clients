@@ -46,7 +46,7 @@ const useFindExistingRecord = (
   }
 };
 
-const OmittedKeys = ["id", "createdAt", "updatedAt"] as const;
+const OmittedKeys = ["createdAt", "updatedAt"] as const;
 type OmittedKey = (typeof OmittedKeys)[number];
 
 const omitKeys = (data: any) => {
