@@ -412,14 +412,14 @@ export function hasNested(data: any) {
 
 export async function transformDataRedux(modelManager: AnyModelManager | undefined, defaultValues: any, data: any) {
   const referencedTypes = await modelManager?.connection.getCurrentModels();
-  // console.log("referencedTypes", JSON.stringify(referencedTypes, null, 2));
+  console.log("referencedTypes", JSON.stringify(referencedTypes, null, 2));
 
   if (!referencedTypes) {
     throw new Error("No referenced types found");
   }
 
-  // console.log("defaultValues", JSON.stringify(defaultValues, null, 2));
-  // console.log("data", JSON.stringify(data, null, 2));
+  console.log("defaultValues", JSON.stringify(defaultValues, null, 2));
+  console.log("data", JSON.stringify(data, null, 2));
   const updates = getUpdates(defaultValues);
 
   function transform(
@@ -427,8 +427,8 @@ export async function transformDataRedux(modelManager: AnyModelManager | undefin
     updates: Record<string, number[]>,
     depth = 0,
     path: string | undefined = undefined,
-    fieldType: { type: string, model: string } | null = null,
-    fieldRelationships: Record<string, {type: string, model: string}> | null = null
+    fieldType: { type: string; model: string } | null = null,
+    fieldRelationships: Record<string, { type: string; model: string }> | null = null
   ): any {
     if (Array.isArray(input)) {
       const results: any[] = [];
@@ -486,16 +486,17 @@ export async function transformDataRedux(modelManager: AnyModelManager | undefin
       const { __typename, ...rest } = result;
 
       let belongsTo = null;
-      const belongsToRelationships: Record<string, { type: string, model: string }> | null = fieldRelationships 
-      ? Object.entries(fieldRelationships)
-        .filter(([_key, value]) => value.type === "BelongsTo")
-        .reduce((obj, [key, value]) => {
-          obj[key] = value;
-          return obj
-        }, {} as Record<string, { type: string, model: string }>) 
-      : null;
+      const belongsToRelationships: Record<string, { type: string; model: string }> | null = fieldRelationships
+        ? Object.entries(fieldRelationships)
+            .filter(([_key, value]) => value.type === "BelongsTo")
+            .reduce((obj, [key, value]) => {
+              obj[key] = value;
+              return obj;
+            }, {} as Record<string, { type: string; model: string }>)
+        : null;
 
-      for (const key of Object.keys(belongsToRelationships ?? {})) { // TODO - handle multiple ambiguous identifiers
+      for (const key of Object.keys(belongsToRelationships ?? {})) {
+        // TODO - handle multiple ambiguous identifiers
         if (`${key}Id` in input) {
           if (belongsTo == null) {
             belongsTo = {};
@@ -507,7 +508,7 @@ export async function transformDataRedux(modelManager: AnyModelManager | undefin
       }
 
       if (belongsTo) {
-        return depth <= 1 ? { ...rest, ...belongsTo } : { ...rest, create: {...belongsTo} };
+        return depth <= 1 ? { ...rest, ...belongsTo } : { ...rest, create: { ...belongsTo } };
       }
 
       if (depth <= 1) {
@@ -515,11 +516,17 @@ export async function transformDataRedux(modelManager: AnyModelManager | undefin
       }
 
       if (fieldType == null) {
-        throw new Error(`Can't transform input, no field type found. ${JSON.stringify({
-          input,
-          path,
-          referencedTypes,
-        }, null, 2)}`)
+        throw new Error(
+          `Can't transform input, no field type found. ${JSON.stringify(
+            {
+              input,
+              path,
+              referencedTypes,
+            },
+            null,
+            2
+          )}`
+        );
       }
 
       const inputHasId = "id" in input;
