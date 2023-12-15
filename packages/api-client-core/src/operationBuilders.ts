@@ -8,7 +8,6 @@ const hydrationOptions = (modelApiIdentifier: string): BuilderFieldSelection => 
   return {
     gadgetMeta: {
       [`hydrations(modelName: "${modelApiIdentifier}")`]: true,
-      [`referencedHydrations`]: true,
     },
   };
 };

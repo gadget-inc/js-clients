@@ -7,7 +7,6 @@ import { startPolly } from "./polly.js";
 import { LiveClientWrapper, MockClientWrapper, mockUrqlClient } from "./testWrappers.js";
 
 describe("useActionFormNested", () => {
-  
 
   describe("with polly", () => {
     startPolly({
@@ -50,8 +49,8 @@ describe("useActionFormNested", () => {
     `);
 
       await act(async () => {
-        useActionFormHook.current.setValue("quiz.text", "test quiz");
-        useActionFormHook.current.setValue("quiz.questions.0.text", "test question");
+        (useActionFormHook.current as any).setValue("quiz.text", "test quiz");
+        (useActionFormHook.current as any).setValue("quiz.questions.0.text", "test question");
       });
 
       await act(async () => {
@@ -60,8 +59,6 @@ describe("useActionFormNested", () => {
     });
 
     test("can create a single HasMany relationship", async () => {
-      let returnedData: any;
-
       const { result: useActionFormHook } = renderHook(
         () =>
           useActionForm(nestedExampleApi.quiz.create, {
@@ -97,8 +94,8 @@ describe("useActionFormNested", () => {
     `);
 
       await act(async () => {
-        useActionFormHook.current.setValue("quiz.text", "test quiz");
-        useActionFormHook.current.setValue("quiz.questions.0.text", "test question");
+        (useActionFormHook.current as any).setValue("quiz.text", "test quiz");
+        (useActionFormHook.current as any).setValue("quiz.questions.0.text", "test question");
       });
 
       expect(useActionFormHook.current.formState.errors).toEqual({});
@@ -143,9 +140,9 @@ describe("useActionFormNested", () => {
     `);
 
       await act(async () => {
-        useActionFormHook.current.setValue("quiz.text", "test quiz");
-        useActionFormHook.current.setValue("quiz.questions.0.text", "test question - 1");
-        useActionFormHook.current.setValue("quiz.questions.1.text", "test question - 2");
+        (useActionFormHook.current as any).setValue("quiz.text", "test quiz");
+        (useActionFormHook.current as any).setValue("quiz.questions.0.text", "test question - 1");
+        (useActionFormHook.current as any).setValue("quiz.questions.1.text", "test question - 2");
       });
 
       expect(useActionFormHook.current.formState.errors).toEqual({});
@@ -191,9 +188,9 @@ describe("useActionFormNested", () => {
     `);
 
       await act(async () => {
-        useActionFormHook.current.setValue("quiz.text", "test quiz");
-        useActionFormHook.current.setValue("quiz.questions.0.text", "test question - 1");
-        useActionFormHook.current.setValue("quiz.questions.0.answers.0.text", "test answer - 1");
+        (useActionFormHook.current as any).setValue("quiz.text", "test quiz");
+        (useActionFormHook.current as any).setValue("quiz.questions.0.text", "test question - 1");
+        (useActionFormHook.current as any).setValue("quiz.questions.0.answers.0.text", "test answer - 1");
       });
 
       expect(useActionFormHook.current.formState.errors).toEqual({});
@@ -239,12 +236,12 @@ describe("useActionFormNested", () => {
     `);
 
       await act(async () => {
-        useActionFormHook.current.setValue("quiz.text", "test quiz");
-        useActionFormHook.current.setValue("quiz.questions.0.text", "test question - 1");
-        useActionFormHook.current.setValue("quiz.questions.0.answers.0.text", "test answer - 1");
+        (useActionFormHook.current as any).setValue("quiz.text", "test quiz");
+        (useActionFormHook.current as any).setValue("quiz.questions.0.text", "test question - 1");
+        (useActionFormHook.current as any).setValue("quiz.questions.0.answers.0.text", "test answer - 1");
 
-        useActionFormHook.current.setValue("quiz.questions.1.text", "test question - 2");
-        useActionFormHook.current.setValue("quiz.questions.1.answers.0.text", "test answer - 2");
+        (useActionFormHook.current as any).setValue("quiz.questions.1.text", "test question - 2");
+        (useActionFormHook.current as any).setValue("quiz.questions.1.answers.0.text", "test answer - 2");
       });
 
       expect(useActionFormHook.current.formState.errors).toEqual({});
@@ -290,10 +287,10 @@ describe("useActionFormNested", () => {
     `);
 
       await act(async () => {
-        useActionFormHook.current.setValue("quiz.text", "test quiz");
-        useActionFormHook.current.setValue("quiz.questions.0.text", "test question - 1");
-        useActionFormHook.current.setValue("quiz.questions.0.answers.0.text", "test answer - 1");
-        useActionFormHook.current.setValue("quiz.questions.0.answers.0.notification.enabled", true);
+        (useActionFormHook.current as any).setValue("quiz.text", "test quiz");
+        (useActionFormHook.current as any).setValue("quiz.questions.0.text", "test question - 1");
+        (useActionFormHook.current as any).setValue("quiz.questions.0.answers.0.text", "test answer - 1");
+        (useActionFormHook.current as any).setValue("quiz.questions.0.answers.0.notification.enabled", true);
       });
 
       expect(useActionFormHook.current.formState.errors).toEqual({});
@@ -339,14 +336,14 @@ describe("useActionFormNested", () => {
     `);
 
       await act(async () => {
-        useActionFormHook.current.setValue("quiz.text", "test quiz");
-        useActionFormHook.current.setValue("quiz.questions.0.text", "test question - 1");
-        useActionFormHook.current.setValue("quiz.questions.0.answers.0.text", "test answer - 1");
-        useActionFormHook.current.setValue("quiz.questions.0.answers.0.notification.enabled", true);
+        (useActionFormHook.current as any).setValue("quiz.text", "test quiz");
+        (useActionFormHook.current as any).setValue("quiz.questions.0.text", "test question - 1");
+        (useActionFormHook.current as any).setValue("quiz.questions.0.answers.0.text", "test answer - 1");
+        (useActionFormHook.current as any).setValue("quiz.questions.0.answers.0.notification.enabled", true);
 
-        useActionFormHook.current.setValue("quiz.questions.1.text", "test question - 1");
-        useActionFormHook.current.setValue("quiz.questions.1.answers.0.text", "test answer - 1");
-        useActionFormHook.current.setValue("quiz.questions.1.answers.0.notification.enabled", true);
+        (useActionFormHook.current as any).setValue("quiz.questions.1.text", "test question - 1");
+        (useActionFormHook.current as any).setValue("quiz.questions.1.answers.0.text", "test answer - 1");
+        (useActionFormHook.current as any).setValue("quiz.questions.1.answers.0.notification.enabled", true);
       });
 
       await act(async () => {
@@ -421,10 +418,10 @@ describe("useActionFormNested", () => {
     `);
 
       await act(async () => {
-        useActionFormHook.current.setValue("quiz.text", "test quiz");
-        useActionFormHook.current.setValue("quiz.questions.0.text", "test question - 1");
-        useActionFormHook.current.setValue("quiz.questions.0.answers.0.text", "test answer - 1");
-        useActionFormHook.current.setValue("quiz.questions.0.answers.0.recommendedProduct.productSuggestion.id", productSuggestionId);
+        (useActionFormHook.current as any).setValue("quiz.text", "test quiz");
+        (useActionFormHook.current as any).setValue("quiz.questions.0.text", "test question - 1");
+        (useActionFormHook.current as any).setValue("quiz.questions.0.answers.0.text", "test answer - 1");
+        (useActionFormHook.current as any).setValue("quiz.questions.0.answers.0.recommendedProduct.productSuggestion.id", productSuggestionId);
       });
 
       expect(useActionFormHook.current.formState.errors).toEqual({});
@@ -501,11 +498,11 @@ describe("useActionFormNested", () => {
     `);
 
       await act(async () => {
-        useActionFormHook.current.setValue("quiz.text", "test quiz");
-        useActionFormHook.current.setValue("quiz.questions.0.text", "test question - 1");
-        useActionFormHook.current.setValue("quiz.questions.0.answers.0.text", "test answer - 1");
-        useActionFormHook.current.setValue("quiz.questions.0.answers.0.recommendedProduct.productSuggestion.id", productSuggestionId);
-        useActionFormHook.current.setValue(
+        (useActionFormHook.current as any).setValue("quiz.text", "test quiz");
+        (useActionFormHook.current as any).setValue("quiz.questions.0.text", "test question - 1");
+        (useActionFormHook.current as any).setValue("quiz.questions.0.answers.0.text", "test answer - 1");
+        (useActionFormHook.current as any).setValue("quiz.questions.0.answers.0.recommendedProduct.productSuggestion.id", productSuggestionId);
+        (useActionFormHook.current as any).setValue(
           "quiz.questions.0.answers.0.recommendedProduct.anotherProductSuggestion.id",
           productSuggestionId
         );
@@ -585,10 +582,10 @@ describe("useActionFormNested", () => {
     `);
 
       await act(async () => {
-        useActionFormHook.current.setValue("quiz.text", "test quiz");
-        useActionFormHook.current.setValue("quiz.questions.0.text", "test question - 1");
-        useActionFormHook.current.setValue("quiz.questions.0.answers.0.text", "test answer - 1");
-        useActionFormHook.current.setValue("quiz.questions.0.answers.0.recommendedProduct.productSuggestionId", productSuggestionId);
+        (useActionFormHook.current as any).setValue("quiz.text", "test quiz");
+        (useActionFormHook.current as any).setValue("quiz.questions.0.text", "test question - 1");
+        (useActionFormHook.current as any).setValue("quiz.questions.0.answers.0.text", "test answer - 1");
+        (useActionFormHook.current as any).setValue("quiz.questions.0.answers.0.recommendedProduct.productSuggestionId", productSuggestionId);
       });
 
       expect(useActionFormHook.current.formState.errors).toEqual({});
@@ -665,11 +662,11 @@ describe("useActionFormNested", () => {
     `);
 
       await act(async () => {
-        useActionFormHook.current.setValue("quiz.text", "test quiz");
-        useActionFormHook.current.setValue("quiz.questions.0.text", "test question - 1");
-        useActionFormHook.current.setValue("quiz.questions.0.answers.0.text", "test answer - 1");
-        useActionFormHook.current.setValue("quiz.questions.0.answers.0.recommendedProduct.productSuggestionId", productSuggestionId);
-        useActionFormHook.current.setValue("quiz.questions.0.answers.0.recommendedProduct.anotherProductSuggestionId", productSuggestionId);
+        (useActionFormHook.current as any).setValue("quiz.text", "test quiz");
+        (useActionFormHook.current as any).setValue("quiz.questions.0.text", "test question - 1");
+        (useActionFormHook.current as any).setValue("quiz.questions.0.answers.0.text", "test answer - 1");
+        (useActionFormHook.current as any).setValue("quiz.questions.0.answers.0.recommendedProduct.productSuggestionId", productSuggestionId);
+        (useActionFormHook.current as any).setValue("quiz.questions.0.answers.0.recommendedProduct.anotherProductSuggestionId", productSuggestionId);
       });
 
       expect(useActionFormHook.current.formState.errors).toEqual({});
@@ -707,7 +704,7 @@ describe("useActionFormNested", () => {
       expect(formValues.quiz.text).toBeDefined();
 
       await act(async () => {
-        useActionFormHook.current.setValue("text", "test quiz updated");
+        (useActionFormHook.current as any).setValue("text", "test quiz updated");
       });
 
       expect(useActionFormHook.current.formState.errors).toEqual({});
@@ -745,7 +742,7 @@ describe("useActionFormNested", () => {
       expect(formValues.quiz.text).toBeDefined();
 
       await act(async () => {
-        useActionFormHook.current.setValue("quiz.text", "test quiz updated");
+        (useActionFormHook.current as any).setValue("quiz.text", "test quiz updated");
       });
 
       expect(useActionFormHook.current.formState.errors).toEqual({});
@@ -793,8 +790,8 @@ describe("useActionFormNested", () => {
       expect(formValues.quiz.questions.length).toBe(1);
 
       await act(async () => {
-        useActionFormHook.current.setValue("quiz.text", "test quiz updated");
-        useActionFormHook.current.setValue("quiz.questions.0.text", "test question updated");
+        (useActionFormHook.current as any).setValue("quiz.text", "test quiz updated");
+        (useActionFormHook.current as any).setValue("quiz.questions.0.text", "test question updated");
       });
 
       expect(useActionFormHook.current.formState.errors).toEqual({});
@@ -842,9 +839,9 @@ describe("useActionFormNested", () => {
       expect(formValues.quiz.questions.length).toBe(2);
 
       await act(async () => {
-        useActionFormHook.current.setValue("quiz.text", "test quiz updated");
-        useActionFormHook.current.setValue("quiz.questions.0.text", "test question updated - 1");
-        useActionFormHook.current.setValue("quiz.questions.1.text", "test question updated - 2");
+        (useActionFormHook.current as any).setValue("quiz.text", "test quiz updated");
+        (useActionFormHook.current as any).setValue("quiz.questions.0.text", "test question updated - 1");
+        (useActionFormHook.current as any).setValue("quiz.questions.1.text", "test question updated - 2");
       });
 
       expect(useActionFormHook.current.formState.errors).toEqual({});
@@ -896,9 +893,9 @@ describe("useActionFormNested", () => {
       );
 
       await act(async () => {
-        useActionFormHook.current.setValue("quiz.text", "test quiz updated");
-        useActionFormHook.current.setValue("quiz.questions.0.text", "test question updated - 1");
-        useActionFormHook.current.setValue("quiz.questions.1.text", "test question updated - 2");
+        (useActionFormHook.current as any).setValue("quiz.text", "test quiz updated");
+        (useActionFormHook.current as any).setValue("quiz.questions.0.text", "test question updated - 1");
+        (useActionFormHook.current as any).setValue("quiz.questions.1.text", "test question updated - 2");
 
         questionsFieldArrayHook.current.move(0, 1);
       });
@@ -953,20 +950,17 @@ describe("useActionFormNested", () => {
       expect(formValues.quiz).toBeDefined();
       expect(formValues.quiz.text).toBeDefined();
       expect(formValues.quiz.questions).toBeDefined();
-      expect(formValues.quiz.questions.length).toBe(1);
+      expect(formValues.quiz.questions.length).toBe(2);
       expect(formValues.quiz.questions[0].answers.length).toBe(2);
-
-      const { result: questionsFieldArrayHook } = renderHook(() =>
-        useFieldArray({ control: useActionFormHook.current.control, name: "quiz.questions" })
-      );
+      expect(formValues.quiz.questions[1].answers.length).toBe(0);
 
       await act(async () => {
-        useActionFormHook.current.setValue("quiz.text", "test quiz updated");
-        useActionFormHook.current.setValue("quiz.questions.0.text", "test question updated - 1");
-        useActionFormHook.current.setValue("quiz.questions.1.text", "test question updated - 2");
+        (useActionFormHook.current as any).setValue("quiz.text", "test quiz updated");
+        (useActionFormHook.current as any).setValue("quiz.questions.0.text", "test question updated - 1");
+        (useActionFormHook.current as any).setValue("quiz.questions.1.text", "test question updated - 2");
 
-        useActionFormHook.current.setValue("quiz.questions.0.answers.0.text", "test answer updated - 1");
-        useActionFormHook.current.setValue("quiz.questions.0.answers.1.text", "test answer updated - 2");
+        (useActionFormHook.current as any).setValue("quiz.questions.0.answers.0.text", "test answer updated - 1");
+        (useActionFormHook.current as any).setValue("quiz.questions.0.answers.1.text", "test answer updated - 2");
       });
 
       expect(useActionFormHook.current.formState.errors).toEqual({});
@@ -1028,15 +1022,15 @@ describe("useActionFormNested", () => {
       );
 
       await act(async () => {
-        useActionFormHook.current.setValue("quiz.text", "test quiz updated");
-        useActionFormHook.current.setValue("quiz.questions.0.text", "test question updated - 1");
-        useActionFormHook.current.setValue("quiz.questions.1.text", "test question updated - 2");
+        (useActionFormHook.current as any).setValue("quiz.text", "test quiz updated");
+        (useActionFormHook.current as any).setValue("quiz.questions.0.text", "test question updated - 1");
+        (useActionFormHook.current as any).setValue("quiz.questions.1.text", "test question updated - 2");
 
-        useActionFormHook.current.setValue("quiz.questions.0.answers.0.text", "test answer updated - 1");
-        useActionFormHook.current.setValue("quiz.questions.0.answers.1.text", "test answer updated - 2");
+        (useActionFormHook.current as any).setValue("quiz.questions.0.answers.0.text", "test answer updated - 1");
+        (useActionFormHook.current as any).setValue("quiz.questions.0.answers.1.text", "test answer updated - 2");
 
-        useActionFormHook.current.setValue("quiz.questions.1.answers.0.text", "test answer updated - 3");
-        useActionFormHook.current.setValue("quiz.questions.1.answers.1.text", "test answer updated - 4");
+        (useActionFormHook.current as any).setValue("quiz.questions.1.answers.0.text", "test answer updated - 3");
+        (useActionFormHook.current as any).setValue("quiz.questions.1.answers.1.text", "test answer updated - 4");
       });
 
       expect(useActionFormHook.current.formState.errors).toEqual({});
@@ -1078,8 +1072,8 @@ describe("useActionFormNested", () => {
       expect(formValues.answer.notification).toBeDefined();
 
       await act(async () => {
-        useActionFormHook.current.setValue("answer.text", "test answers updated");
-        useActionFormHook.current.setValue("answer.notification.enabled", false);
+        (useActionFormHook.current as any).setValue("answer.text", "test answers updated");
+        (useActionFormHook.current as any).setValue("answer.notification.enabled", false);
       });
 
       expect(useActionFormHook.current.formState.errors).toEqual({});
@@ -1121,8 +1115,8 @@ describe("useActionFormNested", () => {
       expect(formValues.answer.question.id).toBeDefined();
 
       await act(async () => {
-        useActionFormHook.current.setValue("answer.text", "test answers updated");
-        useActionFormHook.current.setValue("answer.question.id", 123);
+        (useActionFormHook.current as any).setValue("answer.text", "test answers updated");
+        (useActionFormHook.current as any).setValue("answer.question.id", 123);
       });
 
       expect(useActionFormHook.current.formState.errors).toEqual({});
@@ -1161,8 +1155,8 @@ describe("useActionFormNested", () => {
       expect(formValues.answer.questionId).toBeDefined();
 
       await act(async () => {
-        useActionFormHook.current.setValue("answer.text", "test answers updated");
-        useActionFormHook.current.setValue("answer.questionId", 123);
+        (useActionFormHook.current as any).setValue("answer.text", "test answers updated");
+        (useActionFormHook.current as any).setValue("answer.questionId", 123);
       });
 
       expect(useActionFormHook.current.formState.errors).toEqual({});
@@ -1341,7 +1335,7 @@ describe("useActionFormNested", () => {
     };
 
     beforeEach(() => {
-      jest.spyOn(nestedExampleApi.connection, "getCurrentModels").mockReturnValue(mockAllModelsReference);
+      jest.spyOn(nestedExampleApi.connection, "getCurrentModels").mockResolvedValue(mockAllModelsReference);
     });
 
     test("can update HasMany relationships that are reordered and one is deleted", async () => {
@@ -1430,10 +1424,10 @@ describe("useActionFormNested", () => {
       );
 
       await act(async () => {
-        useActionFormHook.current.setValue("quiz.text", "test quiz updated");
-        useActionFormHook.current.setValue("quiz.questions.0.text", "test question updated - 1");
-        useActionFormHook.current.setValue("quiz.questions.1.text", "test question updated - 2");
-        useActionFormHook.current.setValue("quiz.questions.2.text", "test question updated - 3");
+        (useActionFormHook.current as any).setValue("quiz.text", "test quiz updated");
+        (useActionFormHook.current as any).setValue("quiz.questions.0.text", "test question updated - 1");
+        (useActionFormHook.current as any).setValue("quiz.questions.1.text", "test question updated - 2");
+        (useActionFormHook.current as any).setValue("quiz.questions.2.text", "test question updated - 3");
 
         questionsFieldArrayHook.current.move(0, 1);
         questionsFieldArrayHook.current.remove(2);
@@ -1591,11 +1585,11 @@ describe("useActionFormNested", () => {
       );
 
       await act(async () => {
-        useActionFormHook.current.setValue("quiz.text", "test quiz updated");
-        useActionFormHook.current.setValue("quiz.questions.0.text", "test question updated - 1");
-        useActionFormHook.current.setValue("quiz.questions.0.answers.0.text", "answer updated - 1");
-        useActionFormHook.current.setValue("quiz.questions.0.answers.1.text", "answer updated - 2");
-        useActionFormHook.current.setValue("quiz.questions.0.answers.2.text", "answer updated - 3");
+        (useActionFormHook.current as any).setValue("quiz.text", "test quiz updated");
+        (useActionFormHook.current as any).setValue("quiz.questions.0.text", "test question updated - 1");
+        (useActionFormHook.current as any).setValue("quiz.questions.0.answers.0.text", "answer updated - 1");
+        (useActionFormHook.current as any).setValue("quiz.questions.0.answers.1.text", "answer updated - 2");
+        (useActionFormHook.current as any).setValue("quiz.questions.0.answers.2.text", "answer updated - 3");
 
         questions0AnswersFieldArrayHook.current.move(0, 2);
         questions0AnswersFieldArrayHook.current.remove(2);
@@ -1723,8 +1717,8 @@ describe("useActionFormNested", () => {
       expect(formValues.answer).toBeDefined();
 
       await act(async () => {
-        useActionFormHook.current.setValue("answer.notification.answer.id", "999");
-        useActionFormHook.current.setValue("answer.recommendedProduct.answer.id", "999");
+        (useActionFormHook.current as any).setValue("answer.notification.answer.id", "999");
+        (useActionFormHook.current as any).setValue("answer.recommendedProduct.answer.id", "999");
       });
 
       let submitPromise: Promise<any>;

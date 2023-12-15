@@ -6,6 +6,10 @@ import { bulkExampleApi, fullAuthApi, relatedProductsApi } from "./apis.js";
 import { MockClientWrapper, mockUrqlClient } from "./testWrappers.js";
 
 describe("useActionForm", () => {
+  beforeEach(() => {
+    jest.spyOn(relatedProductsApi.connection, "getCurrentModels").mockResolvedValue({});
+  });
+
   const _TestUseActionFormCanTypeRecordAsDefaultValues = async () => {
     const { submit, setValue } = useActionForm(relatedProductsApi.user.update, {
       defaultValues: { id: "123", email: "test@test.com" },
@@ -145,7 +149,6 @@ describe("useActionForm", () => {
   test("can be used with a create action", async () => {
     let submitted = false;
     let success = false;
-    let error = false;
 
     const { result } = renderHook(
       () =>
@@ -156,8 +159,8 @@ describe("useActionForm", () => {
           onSuccess: () => {
             success = true;
           },
-          onError: () => {
-            error = true;
+          onError: (e) => {
+            expect(e).toBeUndefined();
           },
         }),
       { wrapper: MockClientWrapper(relatedProductsApi) }
@@ -165,7 +168,6 @@ describe("useActionForm", () => {
 
     expect(submitted).toBe(false);
     expect(success).toBe(false);
-    expect(error).toBe(false);
     expect(result.current.formState.isLoading).toBe(false);
     expect(result.current.formState.isSubmitted).toBe(false);
     expect(result.current.formState.isSubmitSuccessful).toBe(false);
@@ -187,7 +189,6 @@ describe("useActionForm", () => {
 
     expect(submitted).toBe(true);
     expect(success).toBe(false);
-    expect(error).toBe(false);
     expect(result.current.formState.isLoading).toBe(false);
     expect(result.current.formState.isSubmitted).toBe(false);
     expect(result.current.formState.isSubmitSuccessful).toBe(false);
@@ -237,7 +238,6 @@ describe("useActionForm", () => {
 
     expect(submitted).toBe(true);
     expect(success).toBe(true);
-    expect(error).toBe(false);
     expect(result.current.formState.isLoading).toBe(false);
     expect(result.current.formState.isSubmitted).toBe(true);
     expect(result.current.formState.isSubmitSuccessful).toBe(true);
@@ -251,7 +251,6 @@ describe("useActionForm", () => {
   test("can be used with a create action with nested fields", async () => {
     let submitted = false;
     let success = false;
-    let error = false;
 
     const { result } = renderHook(
       () =>
@@ -262,8 +261,8 @@ describe("useActionForm", () => {
           onSuccess: () => {
             success = true;
           },
-          onError: () => {
-            error = true;
+          onError: (e) => {
+            expect(e).toBeUndefined();
           },
         }),
       { wrapper: MockClientWrapper(relatedProductsApi) }
@@ -271,7 +270,6 @@ describe("useActionForm", () => {
 
     expect(submitted).toBe(false);
     expect(success).toBe(false);
-    expect(error).toBe(false);
     expect(result.current.formState.isLoading).toBe(false);
     expect(result.current.formState.isSubmitted).toBe(false);
     expect(result.current.formState.isSubmitSuccessful).toBe(false);
@@ -293,7 +291,6 @@ describe("useActionForm", () => {
 
     expect(submitted).toBe(true);
     expect(success).toBe(false);
-    expect(error).toBe(false);
     expect(result.current.formState.isLoading).toBe(false);
     expect(result.current.formState.isSubmitted).toBe(false);
     expect(result.current.formState.isSubmitSuccessful).toBe(false);
@@ -343,7 +340,6 @@ describe("useActionForm", () => {
 
     expect(submitted).toBe(true);
     expect(success).toBe(true);
-    expect(error).toBe(false);
     expect(result.current.formState.isLoading).toBe(false);
     expect(result.current.formState.isSubmitted).toBe(true);
     expect(result.current.formState.isSubmitSuccessful).toBe(true);
@@ -354,10 +350,9 @@ describe("useActionForm", () => {
     expect(result.current.getValues("user.password")).toBe("secret");
   });
 
-  test("can be used with a gloabal action", async () => {
+  test("can be used with a global action", async () => {
     let submitted = false;
     let success = false;
-    let error = false;
 
     const { result } = renderHook(
       () =>
@@ -368,8 +363,8 @@ describe("useActionForm", () => {
           onSuccess: () => {
             success = true;
           },
-          onError: () => {
-            error = true;
+          onError: (e) => {
+            expect(e).toBeUndefined();
           },
         }),
       { wrapper: MockClientWrapper(bulkExampleApi) }
@@ -377,7 +372,6 @@ describe("useActionForm", () => {
 
     expect(submitted).toBe(false);
     expect(success).toBe(false);
-    expect(error).toBe(false);
     expect(result.current.formState.isLoading).toBe(false);
     expect(result.current.formState.isSubmitted).toBe(false);
     expect(result.current.formState.isSubmitSuccessful).toBe(false);
@@ -397,7 +391,6 @@ describe("useActionForm", () => {
 
     expect(submitted).toBe(true);
     expect(success).toBe(false);
-    expect(error).toBe(false);
     expect(result.current.formState.isLoading).toBe(false);
     expect(result.current.formState.isSubmitted).toBe(false);
     expect(result.current.formState.isSubmitSuccessful).toBe(false);
@@ -439,7 +432,6 @@ describe("useActionForm", () => {
 
     expect(submitted).toBe(true);
     expect(success).toBe(true);
-    expect(error).toBe(false);
     expect(result.current.formState.isLoading).toBe(false);
     expect(result.current.formState.isSubmitted).toBe(true);
     expect(result.current.formState.isSubmitSuccessful).toBe(true);
@@ -452,7 +444,6 @@ describe("useActionForm", () => {
   test("can be used with a create action on an ambiguous model", async () => {
     let submitted = false;
     let success = false;
-    let error = false;
 
     const { result } = renderHook(
       () =>
@@ -463,8 +454,8 @@ describe("useActionForm", () => {
           onSuccess: () => {
             success = true;
           },
-          onError: () => {
-            error = true;
+          onError: (e) => {
+            expect(e).toBeUndefined();
           },
         }),
       { wrapper: MockClientWrapper(relatedProductsApi) }
@@ -472,7 +463,6 @@ describe("useActionForm", () => {
 
     expect(submitted).toBe(false);
     expect(success).toBe(false);
-    expect(error).toBe(false);
     expect(result.current.formState.isLoading).toBe(false);
     expect(result.current.formState.isSubmitted).toBe(false);
     expect(result.current.formState.isSubmitSuccessful).toBe(false);
@@ -494,7 +484,6 @@ describe("useActionForm", () => {
 
     expect(submitted).toBe(true);
     expect(success).toBe(false);
-    expect(error).toBe(false);
     expect(result.current.formState.isLoading).toBe(false);
     expect(result.current.formState.isSubmitted).toBe(false);
     expect(result.current.formState.isSubmitSuccessful).toBe(false);
@@ -546,7 +535,6 @@ describe("useActionForm", () => {
 
     expect(submitted).toBe(true);
     expect(success).toBe(true);
-    expect(error).toBe(false);
     expect(result.current.formState.isLoading).toBe(false);
     expect(result.current.formState.isSubmitted).toBe(true);
     expect(result.current.formState.isSubmitSuccessful).toBe(true);
@@ -560,7 +548,7 @@ describe("useActionForm", () => {
   test("can handle errors during a create action", async () => {
     let submitted = false;
     let success = false;
-    let error = false;
+    let error: any = null;
 
     const { result } = renderHook(
       () =>
@@ -571,8 +559,8 @@ describe("useActionForm", () => {
           onSuccess: () => {
             success = true;
           },
-          onError: () => {
-            error = true;
+          onError: (e) => {
+            error = e;
           },
         }),
       { wrapper: MockClientWrapper(relatedProductsApi) }
@@ -580,7 +568,7 @@ describe("useActionForm", () => {
 
     expect(submitted).toBe(false);
     expect(success).toBe(false);
-    expect(error).toBe(false);
+    expect(error).toBeFalsy();
     expect(result.current.formState.isLoading).toBe(false);
     expect(result.current.formState.isSubmitted).toBe(false);
     expect(result.current.formState.isSubmitSuccessful).toBe(false);
@@ -603,7 +591,7 @@ describe("useActionForm", () => {
 
     expect(submitted).toBe(true);
     expect(success).toBe(false);
-    expect(error).toBe(false);
+    expect(error).toBeFalsy();
     expect(result.current.formState.isLoading).toBe(false);
     expect(result.current.formState.isSubmitted).toBe(false);
     expect(result.current.formState.isSubmitSuccessful).toBe(false);
@@ -655,7 +643,9 @@ describe("useActionForm", () => {
 
     expect(submitted).toBe(true);
     expect(success).toBe(false);
-    expect(error).toBe(true);
+    expect(error).toMatchInlineSnapshot(
+      `[ErrorWrapper: [GraphQL] Record is invalid, one error needs to be corrected. Email is not unique.]`
+    );
     expect(result.current.formState.isLoading).toBe(false);
     expect(result.current.formState.isSubmitted).toBe(true);
     expect(result.current.formState.isSubmitSuccessful).toBe(false);
@@ -684,6 +674,7 @@ describe("useActionForm", () => {
     expect(result.current.getValues("user.email")).toBe("test@test.com");
     expect(result.current.getValues("user.password")).toBe("secret");
 
+    error = null;
     await act(async () => {
       (result.current as any).setValue("user.email", "foo@test.com");
       submitPromise = result.current.submit();
@@ -691,7 +682,7 @@ describe("useActionForm", () => {
 
     expect(submitted).toBe(true);
     expect(success).toBe(false);
-    expect(error).toBe(true);
+    expect(error).toBeFalsy();
     expect(result.current.formState.isLoading).toBe(false);
     expect(result.current.formState.isSubmitted).toBe(true);
     expect(result.current.formState.isSubmitSuccessful).toBe(false);
@@ -743,7 +734,8 @@ describe("useActionForm", () => {
 
     expect(submitted).toBe(true);
     expect(success).toBe(false);
-    expect(error).toBe(true);
+    expect(error).toBeTruthy();
+    expect(error).toMatchInlineSnapshot(`[ErrorWrapper: [GraphQL] GGT_INVALID_EMAIL_PASSWORD: Invalid email or password.]`);
     expect(result.current.formState.isLoading).toBe(false);
     expect(result.current.formState.isSubmitted).toBe(true);
     expect(result.current.formState.isSubmitSuccessful).toBe(false);
@@ -765,6 +757,7 @@ describe("useActionForm", () => {
     expect(result.current.getValues("user.email")).toBe("foo@test.com");
     expect(result.current.getValues("user.password")).toBe("secret");
 
+    error = null;
     await act(async () => {
       (result.current as any).setValue("user.password", "Abc123123!");
       submitPromise = result.current.submit();
@@ -772,7 +765,7 @@ describe("useActionForm", () => {
 
     expect(submitted).toBe(true);
     expect(success).toBe(false);
-    expect(error).toBe(true);
+    expect(error).toBeFalsy();
     expect(result.current.formState.isLoading).toBe(false);
     expect(result.current.formState.isSubmitted).toBe(true);
     expect(result.current.formState.isSubmitSuccessful).toBe(false);
@@ -814,7 +807,8 @@ describe("useActionForm", () => {
 
     expect(submitted).toBe(true);
     expect(success).toBe(false);
-    expect(error).toBe(true);
+    expect(error).toBeTruthy();
+    expect(error).toMatchInlineSnapshot(`[ErrorWrapper: [Network] Network error]`);
     expect(result.current.formState.isLoading).toBe(false);
     expect(result.current.formState.isSubmitted).toBe(true);
     expect(result.current.formState.isSubmitSuccessful).toBe(false);
@@ -834,6 +828,7 @@ describe("useActionForm", () => {
     expect(result.current.getValues("user.email")).toBe("foo@test.com");
     expect(result.current.getValues("user.password")).toBe("Abc123123!");
 
+    error = null;
     await act(async () => {
       (result.current as any).setValue("user.password", "Abc123123!");
       submitPromise = result.current.submit();
@@ -841,7 +836,7 @@ describe("useActionForm", () => {
 
     expect(submitted).toBe(true);
     expect(success).toBe(false);
-    expect(error).toBe(true);
+    expect(error).toBeFalsy();
     expect(result.current.formState.isLoading).toBe(false);
     expect(result.current.formState.isSubmitted).toBe(true);
     expect(result.current.formState.isSubmitSuccessful).toBe(false);
@@ -893,7 +888,7 @@ describe("useActionForm", () => {
 
     expect(submitted).toBe(true);
     expect(success).toBe(true);
-    expect(error).toBe(true);
+    expect(error).toBeFalsy();
     expect(result.current.formState.isLoading).toBe(false);
     expect(result.current.formState.isSubmitted).toBe(true);
     expect(result.current.formState.isSubmitSuccessful).toBe(true);
@@ -916,7 +911,7 @@ describe("useActionForm", () => {
 
     expect(submitted).toBe(true);
     expect(success).toBe(true);
-    expect(error).toBe(true);
+    expect(error).toBeFalsy();
     expect(result.current.formState.isLoading).toBe(false);
     expect(result.current.formState.isSubmitted).toBe(false);
     expect(result.current.formState.isSubmitSuccessful).toBe(false);
@@ -937,7 +932,7 @@ describe("useActionForm", () => {
   test("can handle an form error", async () => {
     let submitted = false;
     let success = false;
-    let error = false;
+    let error: any;
 
     const { result } = renderHook(
       () =>
@@ -948,8 +943,8 @@ describe("useActionForm", () => {
           onSuccess: () => {
             success = true;
           },
-          onError: () => {
-            error = true;
+          onError: (e) => {
+            error = e;
           },
         }),
       { wrapper: MockClientWrapper(relatedProductsApi) }
@@ -957,7 +952,6 @@ describe("useActionForm", () => {
 
     expect(submitted).toBe(false);
     expect(success).toBe(false);
-    expect(error).toBe(false);
     expect(result.current.formState.isLoading).toBe(false);
     expect(result.current.formState.isSubmitted).toBe(false);
     expect(result.current.formState.isSubmitSuccessful).toBe(false);
@@ -972,9 +966,9 @@ describe("useActionForm", () => {
       await result.current.submit();
     });
 
+    expect(error).toBeDefined();
     expect(submitted).toBe(false);
     expect(success).toBe(false);
-    expect(error).toBe(true);
     expect(result.current.formState.isLoading).toBe(false);
     expect(result.current.formState.isLoading).toBe(false);
     expect(result.current.formState.isSubmitted).toBe(true);
@@ -1002,7 +996,6 @@ describe("useActionForm", () => {
   test("can only send certain fields in the action", async () => {
     let submitted = false;
     let success = false;
-    let error = false;
 
     const { result } = renderHook(
       () =>
@@ -1013,8 +1006,8 @@ describe("useActionForm", () => {
           onSuccess: () => {
             success = true;
           },
-          onError: () => {
-            error = true;
+          onError: (e) => {
+            expect(e).toBeUndefined();
           },
           send: ["user.email"],
         }),
@@ -1023,7 +1016,6 @@ describe("useActionForm", () => {
 
     expect(submitted).toBe(false);
     expect(success).toBe(false);
-    expect(error).toBe(false);
     expect(result.current.formState.isLoading).toBe(false);
     expect(result.current.formState.isSubmitted).toBe(false);
     expect(result.current.formState.isSubmitSuccessful).toBe(false);
@@ -1045,7 +1037,6 @@ describe("useActionForm", () => {
 
     expect(submitted).toBe(true);
     expect(success).toBe(false);
-    expect(error).toBe(false);
     expect(result.current.formState.isLoading).toBe(false);
     expect(result.current.formState.isSubmitted).toBe(false);
     expect(result.current.formState.isSubmitSuccessful).toBe(false);
@@ -1094,7 +1085,6 @@ describe("useActionForm", () => {
 
     expect(submitted).toBe(true);
     expect(success).toBe(true);
-    expect(error).toBe(false);
     expect(result.current.formState.isLoading).toBe(false);
     expect(result.current.formState.isSubmitted).toBe(true);
     expect(result.current.formState.isSubmitSuccessful).toBe(true);
@@ -1108,7 +1098,6 @@ describe("useActionForm", () => {
   test("can be used with an update action when given an existing record as default values at the root level", async () => {
     let submitted = false;
     let success = false;
-    let error = false;
 
     const { result } = renderHook(
       () =>
@@ -1131,8 +1120,8 @@ describe("useActionForm", () => {
           onSuccess: () => {
             success = true;
           },
-          onError: () => {
-            error = true;
+          onError: (e) => {
+            expect(e).toBeUndefined();
           },
         }),
       { wrapper: MockClientWrapper(relatedProductsApi) }
@@ -1140,7 +1129,6 @@ describe("useActionForm", () => {
 
     expect(submitted).toBe(false);
     expect(success).toBe(false);
-    expect(error).toBe(false);
     expect(result.current.formState.isLoading).toBe(false);
     expect(result.current.formState.isSubmitted).toBe(false);
     expect(result.current.formState.isSubmitSuccessful).toBe(false);
@@ -1162,7 +1150,6 @@ describe("useActionForm", () => {
 
     expect(submitted).toBe(true);
     expect(success).toBe(false);
-    expect(error).toBe(false);
     expect(result.current.formState.isLoading).toBe(false);
     expect(result.current.formState.isSubmitted).toBe(false);
     expect(result.current.formState.isSubmitSuccessful).toBe(false);
@@ -1175,7 +1162,6 @@ describe("useActionForm", () => {
     expect(mockUrqlClient.executeMutation.mock.calls[0][0].variables).toEqual({
       id: "123",
       user: {
-        __typename: "User",
         email: "new@test.com",
         password: "newsecret",
       },
@@ -1216,7 +1202,6 @@ describe("useActionForm", () => {
 
     expect(submitted).toBe(true);
     expect(success).toBe(true);
-    expect(error).toBe(false);
     expect(result.current.formState.isLoading).toBe(false);
     expect(result.current.formState.isSubmitted).toBe(true);
     expect(result.current.formState.isSubmitSuccessful).toBe(true);
@@ -1230,7 +1215,6 @@ describe("useActionForm", () => {
   test("can be used with an update action when given an existing record as default values at the record level", async () => {
     let submitted = false;
     let success = false;
-    let error = false;
 
     const { result } = renderHook(
       () =>
@@ -1252,8 +1236,8 @@ describe("useActionForm", () => {
           onSuccess: () => {
             success = true;
           },
-          onError: () => {
-            error = true;
+          onError: (e) => {
+            expect(e).toBeUndefined();
           },
         }),
       { wrapper: MockClientWrapper(relatedProductsApi) }
@@ -1261,7 +1245,6 @@ describe("useActionForm", () => {
 
     expect(submitted).toBe(false);
     expect(success).toBe(false);
-    expect(error).toBe(false);
     expect(result.current.formState.isLoading).toBe(false);
     expect(result.current.formState.isSubmitted).toBe(false);
     expect(result.current.formState.isSubmitSuccessful).toBe(false);
@@ -1283,7 +1266,6 @@ describe("useActionForm", () => {
 
     expect(submitted).toBe(true);
     expect(success).toBe(false);
-    expect(error).toBe(false);
     expect(result.current.formState.isLoading).toBe(false);
     expect(result.current.formState.isSubmitted).toBe(false);
     expect(result.current.formState.isSubmitSuccessful).toBe(false);
@@ -1336,7 +1318,6 @@ describe("useActionForm", () => {
 
     expect(submitted).toBe(true);
     expect(success).toBe(true);
-    expect(error).toBe(false);
     expect(result.current.formState.isLoading).toBe(false);
     expect(result.current.formState.isSubmitted).toBe(true);
     expect(result.current.formState.isSubmitSuccessful).toBe(true);
@@ -1350,7 +1331,6 @@ describe("useActionForm", () => {
   test("can be used with an update action when finding record by id", async () => {
     let submitted = false;
     let success = false;
-    let error = false;
 
     const { result } = renderHook(
       () =>
@@ -1362,8 +1342,8 @@ describe("useActionForm", () => {
           onSuccess: () => {
             success = true;
           },
-          onError: () => {
-            error = true;
+          onError: (e) => {
+            expect(e).toBeUndefined();
           },
         }),
       { wrapper: MockClientWrapper(relatedProductsApi) }
@@ -1371,7 +1351,6 @@ describe("useActionForm", () => {
 
     expect(submitted).toBe(false);
     expect(success).toBe(false);
-    expect(error).toBe(false);
     expect(result.current.formState.isLoading).toBe(true);
     expect(result.current.formState.isSubmitted).toBe(false);
     expect(result.current.formState.isSubmitSuccessful).toBe(false);
@@ -1400,7 +1379,6 @@ describe("useActionForm", () => {
 
     expect(submitted).toBe(false);
     expect(success).toBe(false);
-    expect(error).toBe(false);
     expect(result.current.formState.isLoading).toBe(false);
     expect(result.current.formState.isSubmitted).toBe(false);
     expect(result.current.formState.isSubmitSuccessful).toBe(false);
@@ -1420,7 +1398,6 @@ describe("useActionForm", () => {
 
     expect(submitted).toBe(true);
     expect(success).toBe(false);
-    expect(error).toBe(false);
     expect(result.current.formState.isLoading).toBe(false);
     expect(result.current.formState.isSubmitted).toBe(false);
     expect(result.current.formState.isSubmitSuccessful).toBe(false);
@@ -1473,7 +1450,6 @@ describe("useActionForm", () => {
 
     expect(submitted).toBe(true);
     expect(success).toBe(true);
-    expect(error).toBe(false);
     expect(result.current.formState.isLoading).toBe(false);
     expect(result.current.formState.isSubmitted).toBe(true);
     expect(result.current.formState.isSubmitSuccessful).toBe(true);
@@ -1489,7 +1465,6 @@ describe("useActionForm", () => {
 
     expect(submitted).toBe(true);
     expect(success).toBe(true);
-    expect(error).toBe(false);
     expect(result.current.formState.isLoading).toBe(false);
     expect(result.current.formState.isSubmitted).toBe(false);
     expect(result.current.formState.isSubmitSuccessful).toBe(false);
@@ -1503,7 +1478,6 @@ describe("useActionForm", () => {
   test("can be used with an update action when finding record by id on an ambiguous model", async () => {
     let submitted = false;
     let success = false;
-    let error = false;
 
     const { result } = renderHook(
       () =>
@@ -1515,8 +1489,8 @@ describe("useActionForm", () => {
           onSuccess: () => {
             success = true;
           },
-          onError: () => {
-            error = true;
+          onError: (e) => {
+            expect(e).toBeUndefined();
           },
         }),
       { wrapper: MockClientWrapper(relatedProductsApi) }
@@ -1524,7 +1498,6 @@ describe("useActionForm", () => {
 
     expect(submitted).toBe(false);
     expect(success).toBe(false);
-    expect(error).toBe(false);
     expect(result.current.formState.isLoading).toBe(true);
     expect(result.current.formState.isSubmitted).toBe(false);
     expect(result.current.formState.isSubmitSuccessful).toBe(false);
@@ -1553,7 +1526,6 @@ describe("useActionForm", () => {
 
     expect(submitted).toBe(false);
     expect(success).toBe(false);
-    expect(error).toBe(false);
     expect(result.current.formState.isLoading).toBe(false);
     expect(result.current.formState.isSubmitted).toBe(false);
     expect(result.current.formState.isSubmitSuccessful).toBe(false);
@@ -1573,7 +1545,6 @@ describe("useActionForm", () => {
 
     expect(submitted).toBe(true);
     expect(success).toBe(false);
-    expect(error).toBe(false);
     expect(result.current.formState.isLoading).toBe(false);
     expect(result.current.formState.isSubmitted).toBe(false);
     expect(result.current.formState.isSubmitSuccessful).toBe(false);
@@ -1632,7 +1603,6 @@ describe("useActionForm", () => {
 
     expect(submitted).toBe(true);
     expect(success).toBe(true);
-    expect(error).toBe(false);
     expect(result.current.formState.isLoading).toBe(false);
     expect(result.current.formState.isSubmitted).toBe(true);
     expect(result.current.formState.isSubmitSuccessful).toBe(true);
@@ -1655,7 +1625,6 @@ describe("useActionForm", () => {
   test("can be used with an update action when finding record by email", async () => {
     let submitted = false;
     let success = false;
-    let error = false;
 
     const { result } = renderHook(
       () =>
@@ -1667,8 +1636,8 @@ describe("useActionForm", () => {
           onSuccess: () => {
             success = true;
           },
-          onError: () => {
-            error = true;
+          onError: (e) => {
+            expect(e).toBeUndefined();
           },
         }),
       { wrapper: MockClientWrapper(relatedProductsApi) }
@@ -1676,7 +1645,6 @@ describe("useActionForm", () => {
 
     expect(submitted).toBe(false);
     expect(success).toBe(false);
-    expect(error).toBe(false);
     expect(result.current.formState.isLoading).toBe(true);
     expect(result.current.formState.isSubmitted).toBe(false);
     expect(result.current.formState.isSubmitSuccessful).toBe(false);
@@ -1717,7 +1685,6 @@ describe("useActionForm", () => {
 
     expect(submitted).toBe(false);
     expect(success).toBe(false);
-    expect(error).toBe(false);
     expect(result.current.formState.isLoading).toBe(false);
     expect(result.current.formState.isSubmitted).toBe(false);
     expect(result.current.formState.isSubmitSuccessful).toBe(false);
@@ -1737,7 +1704,6 @@ describe("useActionForm", () => {
 
     expect(submitted).toBe(true);
     expect(success).toBe(false);
-    expect(error).toBe(false);
     expect(result.current.formState.isLoading).toBe(false);
     expect(result.current.formState.isSubmitted).toBe(false);
     expect(result.current.formState.isSubmitSuccessful).toBe(false);
@@ -1790,7 +1756,6 @@ describe("useActionForm", () => {
 
     expect(submitted).toBe(true);
     expect(success).toBe(true);
-    expect(error).toBe(false);
     expect(result.current.formState.isLoading).toBe(false);
     expect(result.current.formState.isSubmitted).toBe(true);
     expect(result.current.formState.isSubmitSuccessful).toBe(true);
@@ -1804,7 +1769,6 @@ describe("useActionForm", () => {
   test("can be used with an update action when finding record by id and specifying a selection", async () => {
     let submitted = false;
     let success = false;
-    let error = false;
 
     const { result } = renderHook(
       () =>
@@ -1817,8 +1781,8 @@ describe("useActionForm", () => {
           onSuccess: () => {
             success = true;
           },
-          onError: () => {
-            error = true;
+          onError: (e) => {
+            expect(e).toBeUndefined();
           },
         }),
       { wrapper: MockClientWrapper(relatedProductsApi) }
@@ -1826,7 +1790,6 @@ describe("useActionForm", () => {
 
     expect(submitted).toBe(false);
     expect(success).toBe(false);
-    expect(error).toBe(false);
     expect(result.current.formState.isLoading).toBe(true);
     expect(result.current.formState.isSubmitted).toBe(false);
     expect(result.current.formState.isSubmitSuccessful).toBe(false);
@@ -1860,7 +1823,6 @@ describe("useActionForm", () => {
 
     expect(submitted).toBe(false);
     expect(success).toBe(false);
-    expect(error).toBe(false);
     expect(result.current.formState.isLoading).toBe(false);
     expect(result.current.formState.isSubmitted).toBe(false);
     expect(result.current.formState.isSubmitSuccessful).toBe(false);
@@ -1880,7 +1842,6 @@ describe("useActionForm", () => {
 
     expect(submitted).toBe(true);
     expect(success).toBe(false);
-    expect(error).toBe(false);
     expect(result.current.formState.isLoading).toBe(false);
     expect(result.current.formState.isSubmitted).toBe(false);
     expect(result.current.formState.isSubmitSuccessful).toBe(false);
@@ -1933,7 +1894,6 @@ describe("useActionForm", () => {
 
     expect(submitted).toBe(true);
     expect(success).toBe(true);
-    expect(error).toBe(false);
     expect(result.current.formState.isLoading).toBe(false);
     expect(result.current.formState.isSubmitted).toBe(true);
     expect(result.current.formState.isSubmitSuccessful).toBe(true);

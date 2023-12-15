@@ -1,5 +1,6 @@
 import type {
   ActionFunction,
+  AnyModelManager,
   BulkActionFunction,
   FieldSelection,
   GadgetError,
@@ -400,19 +401,25 @@ export const set = (obj: any, path: string, value: any) => {
 };
 
 export function hasNested(data: any) {
+  if (data == null) {
+    return false;
+  }
+
   return Object.values(data).some((value) => {
-    return typeof value === "object" && value !== undefined && !Array.isArray(value);
+    return typeof value === "object" && value !== undefined && Array.isArray(value);
   });
 }
 
-export function transformDataRedux(referencedTypes: Record<string, Record<string, any>>, defaultValues: any, data: any) {
-  console.log("referencedTypes", JSON.stringify(referencedTypes, null, 2));
-  if (Object.keys(referencedTypes).length === 0) {
+export async function transformDataRedux(modelManager: AnyModelManager | undefined, defaultValues: any, data: any) {
+  const referencedTypes = await modelManager?.connection.getCurrentModels();
+  // console.log("referencedTypes", JSON.stringify(referencedTypes, null, 2));
+
+  if (!referencedTypes) {
     throw new Error("No referenced types found");
   }
 
-  console.log("defaultValues", JSON.stringify(defaultValues, null, 2));
-  console.log("data", JSON.stringify(data, null, 2));
+  // console.log("defaultValues", JSON.stringify(defaultValues, null, 2));
+  // console.log("data", JSON.stringify(data, null, 2));
   const updates = getUpdates(defaultValues);
 
   function transform(
@@ -471,7 +478,7 @@ export function transformDataRedux(referencedTypes: Record<string, Record<string
         const currentPath = path ? `${path}.${key}` : key;
 
         const fieldType = fieldRelationships ? fieldRelationships[key] : null;
-        const relationships = fieldType ? referencedTypes[fieldType.model] : referencedTypes[key];
+        const relationships = fieldType ? referencedTypes?.[fieldType.model] : referencedTypes?.[key];
 
         result[key] = transform(input[key], updates, depth + 1, currentPath, fieldType, relationships);
       }
@@ -543,7 +550,7 @@ export function transformDataRedux(referencedTypes: Record<string, Record<string
 
   const result = transform(data, updates);
 
-  console.log("transformedData", JSON.stringify(result, null, 2));
+  // console.log("transformedData", JSON.stringify(result, null, 2));
 
   return result;
 }

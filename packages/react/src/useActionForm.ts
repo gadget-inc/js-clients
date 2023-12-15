@@ -16,7 +16,7 @@ import { useFindBy } from "./useFindBy.js";
 import { useFindOne } from "./useFindOne.js";
 import { useGlobalAction } from "./useGlobalAction.js";
 import type { ActionHookState, ErrorWrapper, OptionsType } from "./utils.js";
-import { get, hasNested, set, transformDataRedux } from "./utils.js";
+import { get, set, transformDataRedux } from "./utils.js";
 
 export * from "react-hook-form";
 
@@ -46,7 +46,7 @@ const useFindExistingRecord = (
   }
 };
 
-const OmittedKeys = ["createdAt", "updatedAt"] as const;
+const OmittedKeys = ["id", "createdAt", "updatedAt", "__typename"] as const;
 type OmittedKey = (typeof OmittedKeys)[number];
 
 const omitKeys = (data: any) => {
@@ -215,7 +215,7 @@ export const useActionForm = <
 >(
   action: ActionFunc,
   options?: Omit<UseFormProps<ActionFunc["variablesType"] & ExtraFormVariables, FormContext>, "defaultValues"> & {
-    defaultValues?: DeepPartial<DefaultValues & { [key in OmittedKey]?: any } & { id?: any }>;
+    defaultValues?: DeepPartial<DefaultValues & { [key in OmittedKey]?: any }>;
     /**
      * The record identifier to run this action on, if it already exists.
      * Should be undefined for create actions, or a record ID (or finder) for update / etc actions
@@ -337,11 +337,11 @@ export const useActionForm = <
 
       await handleSubmit(
         async (data) => {
-          if (hasNested(data)) {
+          if ("modelApiIdentifier" in action) { // Check to make sure it's not a global action
             try {
-              const modelReferences = await modelManager!.connection.getCurrentModels();
-              data = transformDataRedux(modelReferences, defaultValues, data);
+              data = await transformDataRedux(modelManager, defaultValues, data);
             } catch (e: any) {
+              // options?.onSubmit?.();
               handleSubmissionError(e);
               return; // TODO - should we return here? or call options?.onSubmit?.() anyway?
             }
@@ -382,7 +382,7 @@ export const useActionForm = <
 
       return result;
     },
-    [formHook, handleSubmit, existingRecordId, options, runAction, defaultValues, handleSubmissionError, modelManager]
+    [formHook, handleSubmit, existingRecordId, options, runAction, defaultValues, handleSubmissionError, modelManager, action]
   );
 
   const proxiedFormState = new Proxy(formState, {
