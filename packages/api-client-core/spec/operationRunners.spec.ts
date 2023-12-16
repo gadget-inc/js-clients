@@ -1,6 +1,6 @@
 import nock from "nock";
 import type { GadgetErrorGroup } from "../src/index.js";
-import { GadgetConnection, actionRunner } from "../src/index.js";
+import { Call, GadgetConnection, actionRunner, findManyRunner } from "../src/index.js";
 import { mockUrqlClient } from "./mockUrqlClient.js";
 
 nock.disableNetConnect();
@@ -11,6 +11,121 @@ describe("operationRunners", () => {
   beforeEach(() => {
     connection = new GadgetConnection({ endpoint: "https://someapp.gadget.app" });
     jest.spyOn(connection, "currentClient", "get").mockReturnValue(mockUrqlClient as any);
+  });
+
+  describe("findManyRunner", () => {
+    test("it can find many records", async () => {
+      const promise = findManyRunner<{ id: string; name: string }>(
+        {
+          connection,
+        } as any,
+        "widgets",
+        { id: true, name: true },
+        "widget",
+        {
+          select: {
+            id: true,
+            name: true,
+          },
+        },
+        false
+      );
+
+      mockUrqlClient.executeQuery.pushResponse("widgets", {
+        data: {
+          widgets: {
+            pageInfo: {
+              hasNextPage: false,
+              hasPreviousPage: false,
+              startCursor: "123",
+              endCursor: "abc",
+            },
+            edges: [
+              {
+                node: {
+                  id: "123",
+                  name: "test",
+                },
+              },
+              {
+                node: {
+                  id: "456",
+                  name: "test 2",
+                },
+              },
+            ],
+          },
+        },
+        stale: false,
+        hasNext: false,
+      });
+
+      const results = await promise;
+      expect(results[0].id).toBeTruthy();
+      expect(results[0].name).toBeTruthy();
+      expect(results[1].id).toBeTruthy();
+      expect(results[1].name).toBeTruthy();
+    });
+
+    test("it can find many records with a call in the selection", async () => {
+      const promise = findManyRunner<any>(
+        {
+          connection,
+        } as any,
+        "widgets",
+        { id: true, name: true },
+        "widget",
+        {
+          select: {
+            id: true,
+            name: true,
+            gizmos: Call({ first: 5 }, { edges: { node: { id: true, name: true } } }),
+          },
+        },
+        false
+      );
+
+      mockUrqlClient.executeQuery.pushResponse("widgets", {
+        data: {
+          widgets: {
+            pageInfo: {
+              hasNextPage: false,
+              hasPreviousPage: false,
+              startCursor: "123",
+              endCursor: "abc",
+            },
+            edges: [
+              {
+                node: {
+                  id: "123",
+                  name: "test",
+                  gizmos: {
+                    edges: [{ node: { id: "1", name: "gizmo a" } }, { node: { id: "2", name: "gizmo b" } }],
+                  },
+                },
+              },
+              {
+                node: {
+                  id: "456",
+                  name: "test 2",
+                  gizmos: {
+                    edges: [],
+                  },
+                },
+              },
+            ],
+          },
+        },
+        stale: false,
+        hasNext: false,
+      });
+
+      const results = await promise;
+      expect(results[0].id).toBeTruthy();
+      expect(results[0].name).toBeTruthy();
+      expect(results[0].gizmos.edges).toHaveLength(2);
+      expect(results[1].gizmos.edges).toHaveLength(0);
+    });
   });
 
   describe("actionRunner", () => {

@@ -1,4 +1,4 @@
-import { actionOperation, findManyOperation, findOneByFieldOperation, findOneOperation } from "../src/index.js";
+import { Call, actionOperation, findManyOperation, findOneByFieldOperation, findOneOperation } from "../src/index.js";
 
 describe("operation builders", () => {
   describe("findOneOperation", () => {
@@ -52,6 +52,41 @@ describe("operation builders", () => {
             __typename
             id
             state
+          }
+          gadgetMeta {
+            hydrations(modelName: "widget")
+          }
+        }",
+          "variables": {
+            "id": "123",
+          },
+        }
+      `);
+    });
+
+    test("findOneOperation should build a query with a call in it", () => {
+      expect(
+        findOneOperation(
+          "widget",
+          "123",
+          { __typename: true, id: true, state: true, gizmos: Call({ first: 10 }, { edges: { node: { id: true } } }) },
+          "widget",
+          { live: true }
+        )
+      ).toMatchInlineSnapshot(`
+        {
+          "query": "query widget($id: GadgetID!) @live {
+          widget(id: $id) {
+            __typename
+            id
+            state
+            gizmos(first: 10) {
+              edges {
+                node {
+                  id
+                }
+              }
+            }
           }
           gadgetMeta {
             hydrations(modelName: "widget")
@@ -248,6 +283,92 @@ describe("operation builders", () => {
                 __typename
                 id
                 state
+              }
+            }
+          }
+          gadgetMeta {
+            hydrations(modelName: "widget")
+          }
+        }",
+          "variables": {},
+        }
+      `);
+    });
+
+    test("findManyOperation should build a query with arguments in it", () => {
+      expect(
+        findManyOperation(
+          "widgets",
+          { __typename: true, id: true, state: true, gizmos: Call({ first: 10, after: "foobar" }, { edges: { node: { id: true } } }) },
+          "widget",
+          { live: true }
+        )
+      ).toMatchInlineSnapshot(`
+        {
+          "query": "query widgets($after: String, $first: Int, $before: String, $last: Int) @live {
+          widgets(after: $after, first: $first, before: $before, last: $last) {
+            pageInfo {
+              hasNextPage
+              hasPreviousPage
+              startCursor
+              endCursor
+            }
+            edges {
+              cursor
+              node {
+                __typename
+                id
+                state
+                gizmos(first: 10, after: "foobar") {
+                  edges {
+                    node {
+                      id
+                    }
+                  }
+                }
+              }
+            }
+          }
+          gadgetMeta {
+            hydrations(modelName: "widget")
+          }
+        }",
+          "variables": {},
+        }
+      `);
+    });
+
+    test("findManyOperation should build a query with a call but no arguments", () => {
+      expect(
+        findManyOperation(
+          "widgets",
+          { __typename: true, id: true, state: true, gizmos: Call({}, { edges: { node: { id: true } } }) },
+          "widget",
+          { live: true }
+        )
+      ).toMatchInlineSnapshot(`
+        {
+          "query": "query widgets($after: String, $first: Int, $before: String, $last: Int) @live {
+          widgets(after: $after, first: $first, before: $before, last: $last) {
+            pageInfo {
+              hasNextPage
+              hasPreviousPage
+              startCursor
+              endCursor
+            }
+            edges {
+              cursor
+              node {
+                __typename
+                id
+                state
+                gizmos {
+                  edges {
+                    node {
+                      id
+                    }
+                  }
+                }
               }
             }
           }
@@ -568,6 +689,52 @@ describe("operation builders", () => {
               }
             }
             results
+          }
+          gadgetMeta {
+            hydrations(modelName: "widget")
+          }
+        }",
+          "variables": {},
+        }
+      `);
+    });
+
+    test("actionOperation should build a mutation query for a result that has a call in it", () => {
+      expect(
+        actionOperation(
+          "createWidget",
+          { __typename: true, id: true, state: true, gizmos: Call({ first: 10 }, { edges: { node: { id: true } } }) },
+          "widget",
+          "widget",
+          {}
+        )
+      ).toMatchInlineSnapshot(`
+        {
+          "query": "mutation createWidget {
+          createWidget {
+            success
+            errors {
+              message
+              code
+              ... on InvalidRecordError {
+                validationErrors {
+                  message
+                  apiIdentifier
+                }
+              }
+            }
+            widget {
+              __typename
+              id
+              state
+              gizmos(first: 10) {
+                edges {
+                  node {
+                    id
+                  }
+                }
+              }
+            }
           }
           gadgetMeta {
             hydrations(modelName: "widget")

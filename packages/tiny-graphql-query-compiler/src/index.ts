@@ -14,7 +14,7 @@ const compileFieldSelection = (fields: FieldSelection): string[] => {
     .flatMap(([field, value]) => {
       if (typeof value === "boolean") {
         return value ? field : false;
-      } else if (value instanceof FieldCall) {
+      } else if (isFieldCall(value)) {
         let args = "";
         const signatures = Object.entries(value.args)
           .filter(([_, value]) => value !== null && value !== undefined)
@@ -78,9 +78,12 @@ const compileVariables = (operation: BuilderOperation) => {
   return `(${signatures.join(", ")})`;
 };
 
-class FieldCall {
-  constructor(readonly args: Record<string, any>, readonly subselection?: FieldSelection) {}
+const kIsCall = Symbol.for("gadget/isCall");
+export class FieldCall {
+  [kIsCall] = true as const;
+  constructor(readonly args: Record<string, any>, readonly subselection?: FieldSelection | null) {}
 }
+const isFieldCall = (value: any): value is FieldCall => value && value[kIsCall];
 
 export interface VariableOptions {
   type: string;
