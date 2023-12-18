@@ -159,12 +159,12 @@ type UseActionFormState<
   errors: UseFormReturn<FormVariables, FormContext>["formState"]["errors"] & ServerSideError<F>;
 };
 
-export type FormInput<InputT> = InputT extends (infer Element)[]
-  ? FormInput<Element>[]
-  : InputT extends { create?: unknown; update?: unknown }
-  ? FormInput<InputT["create"]> | FormInput<InputT["update"]>
-  : InputT extends object
-  ? { [K in keyof InputT]: FormInput<InputT[K]> }
+type IsAny<T> = 0 extends (1 & T) ? true : false;
+
+export type FormInput<InputT> = IsAny<InputT> extends true ? any :
+  InputT extends (infer Element)[] ? FormInput<Element>[]
+  : InputT extends { create?: unknown; update?: unknown } ? FormInput<InputT["create"]> | FormInput<InputT["update"]>
+  : InputT extends object ? { [K in keyof InputT]: FormInput<InputT[K]> }
   : InputT;
 
 export type UseActionFormResult<
@@ -246,7 +246,7 @@ export const useActionForm = <
      */
     isNested?: boolean;
   }
-): UseActionFormResult<GivenOptions, SchemaT, ActionFunc, ActionFunc["variablesType"] & ExtraFormVariables, FormContext> => {
+): UseActionFormResult<GivenOptions, SchemaT, ActionFunc, FormInput<ActionFunc["variablesType"]> & ExtraFormVariables, FormContext> => {
   const api = useApi();
   const findExistingRecord = !!options?.findBy;
   const hasSetInitialValues = useRef<boolean>(!findExistingRecord);

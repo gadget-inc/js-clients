@@ -26,6 +26,7 @@
     "@gadget-client/full-auth": "^1.4.0",
     "@gadget-client/related-products-example": "^1.854.0",
     "@gadget-client/zxcv-deeply-nested": "^1.177.0",
+    "@gadget-client/zxcv-simple-relationship": "^1.17.0",
     "@gadgetinc/api-client-core": "workspace:*",
     "@gadgetinc/eslint-config": "^0.6.1",
     "@gadgetinc/prettier-config": "^0.4.0",
