@@ -2,12 +2,12 @@ import { GadgetConnection } from "@gadgetinc/api-client-core";
 import { act, renderHook, waitFor } from "@testing-library/react";
 import { useActionForm, useFieldArray } from "../src/useActionForm.js";
 import { useFindFirst } from "../src/useFindFirst.js";
+import { transformDataRedux } from "../src/utils.js";
 import { nestedExampleApi } from "./apis.js";
 import { startPolly } from "./polly.js";
 import { LiveClientWrapper, MockClientWrapper, mockUrqlClient } from "./testWrappers.js";
 
 describe("useActionFormNested", () => {
-
   describe("with polly", () => {
     startPolly({
       mode: process.env.POLLY_MODE ?? "replay",
@@ -38,15 +38,15 @@ describe("useActionFormNested", () => {
       await waitFor(() => expect(useActionFormHook.current.formState.isLoading).toBe(false));
 
       expect(useActionFormHook.current.getValues()).toMatchInlineSnapshot(`
-      {
-        "quiz": {
-          "questions": [
-            {},
-          ],
-          "text": "",
-        },
-      }
-    `);
+              {
+                "quiz": {
+                  "questions": [
+                    {},
+                  ],
+                  "text": "",
+                },
+              }
+          `);
 
       await act(async () => {
         (useActionFormHook.current as any).setValue("quiz.text", "test quiz");
@@ -83,15 +83,15 @@ describe("useActionFormNested", () => {
       await waitFor(() => expect(useActionFormHook.current.formState.isLoading).toBe(false));
 
       expect(useActionFormHook.current.getValues()).toMatchInlineSnapshot(`
-      {
-        "quiz": {
-          "questions": [
-            {},
-          ],
-          "text": "",
-        },
-      }
-    `);
+              {
+                "quiz": {
+                  "questions": [
+                    {},
+                  ],
+                  "text": "",
+                },
+              }
+          `);
 
       await act(async () => {
         (useActionFormHook.current as any).setValue("quiz.text", "test quiz");
@@ -129,15 +129,15 @@ describe("useActionFormNested", () => {
       await waitFor(() => expect(useActionFormHook.current.formState.isLoading).toBe(false));
 
       expect(useActionFormHook.current.getValues()).toMatchInlineSnapshot(`
-      {
-        "quiz": {
-          "questions": [
-            {},
-          ],
-          "text": "",
-        },
-      }
-    `);
+              {
+                "quiz": {
+                  "questions": [
+                    {},
+                  ],
+                  "text": "",
+                },
+              }
+          `);
 
       await act(async () => {
         (useActionFormHook.current as any).setValue("quiz.text", "test quiz");
@@ -177,15 +177,15 @@ describe("useActionFormNested", () => {
       await waitFor(() => expect(useActionFormHook.current.formState.isLoading).toBe(false));
 
       expect(useActionFormHook.current.getValues()).toMatchInlineSnapshot(`
-      {
-        "quiz": {
-          "questions": [
-            {},
-          ],
-          "text": "",
-        },
-      }
-    `);
+              {
+                "quiz": {
+                  "questions": [
+                    {},
+                  ],
+                  "text": "",
+                },
+              }
+          `);
 
       await act(async () => {
         (useActionFormHook.current as any).setValue("quiz.text", "test quiz");
@@ -225,15 +225,15 @@ describe("useActionFormNested", () => {
       await waitFor(() => expect(useActionFormHook.current.formState.isLoading).toBe(false));
 
       expect(useActionFormHook.current.getValues()).toMatchInlineSnapshot(`
-      {
-        "quiz": {
-          "questions": [
-            {},
-          ],
-          "text": "",
-        },
-      }
-    `);
+              {
+                "quiz": {
+                  "questions": [
+                    {},
+                  ],
+                  "text": "",
+                },
+              }
+          `);
 
       await act(async () => {
         (useActionFormHook.current as any).setValue("quiz.text", "test quiz");
@@ -276,15 +276,15 @@ describe("useActionFormNested", () => {
       await waitFor(() => expect(useActionFormHook.current.formState.isLoading).toBe(false));
 
       expect(useActionFormHook.current.getValues()).toMatchInlineSnapshot(`
-      {
-        "quiz": {
-          "questions": [
-            {},
-          ],
-          "text": "",
-        },
-      }
-    `);
+              {
+                "quiz": {
+                  "questions": [
+                    {},
+                  ],
+                  "text": "",
+                },
+              }
+          `);
 
       await act(async () => {
         (useActionFormHook.current as any).setValue("quiz.text", "test quiz");
@@ -325,15 +325,15 @@ describe("useActionFormNested", () => {
       await waitFor(() => expect(useActionFormHook.current.formState.isLoading).toBe(false));
 
       expect(useActionFormHook.current.getValues()).toMatchInlineSnapshot(`
-      {
-        "quiz": {
-          "questions": [
-            {},
-          ],
-          "text": "",
-        },
-      }
-    `);
+              {
+                "quiz": {
+                  "questions": [
+                    {},
+                  ],
+                  "text": "",
+                },
+              }
+          `);
 
       await act(async () => {
         (useActionFormHook.current as any).setValue("quiz.text", "test quiz");
@@ -359,27 +359,27 @@ describe("useActionFormNested", () => {
       await waitFor(() => expect(useFindFirstHook.current[0].fetching).toBe(false), { timeout: 3000 });
 
       expect(useFindFirstHook.current[0].data).toMatchInlineSnapshot(`
-      {
-        "__typename": "ShopifyProduct",
-        "body": "example value for body",
-        "compareAtPriceRange": null,
-        "createdAt": "2023-12-12T16:22:25.001Z",
-        "handle": null,
-        "id": "123",
-        "productCategory": null,
-        "productType": null,
-        "publishedAt": null,
-        "publishedScope": null,
-        "shopifyCreatedAt": "2023-12-01T05:00:00.000Z",
-        "shopifyUpdatedAt": null,
-        "status": null,
-        "tags": null,
-        "templateSuffix": null,
-        "title": null,
-        "updatedAt": "2023-12-12T16:22:25.001Z",
-        "vendor": null,
-      }
-    `);
+              {
+                "__typename": "ShopifyProduct",
+                "body": "example value for body",
+                "compareAtPriceRange": null,
+                "createdAt": "2023-12-12T16:22:25.001Z",
+                "handle": null,
+                "id": "123",
+                "productCategory": null,
+                "productType": null,
+                "publishedAt": null,
+                "publishedScope": null,
+                "shopifyCreatedAt": "2023-12-01T05:00:00.000Z",
+                "shopifyUpdatedAt": null,
+                "status": null,
+                "tags": null,
+                "templateSuffix": null,
+                "title": null,
+                "updatedAt": "2023-12-12T16:22:25.001Z",
+                "vendor": null,
+              }
+          `);
 
       const productSuggestionId = useFindFirstHook.current[0].data.id;
 
@@ -407,21 +407,24 @@ describe("useActionFormNested", () => {
       await waitFor(() => expect(useActionFormHook.current.formState.isLoading).toBe(false));
 
       expect(useActionFormHook.current.getValues()).toMatchInlineSnapshot(`
-      {
-        "quiz": {
-          "questions": [
-            {},
-          ],
-          "text": "",
-        },
-      }
-    `);
+              {
+                "quiz": {
+                  "questions": [
+                    {},
+                  ],
+                  "text": "",
+                },
+              }
+          `);
 
       await act(async () => {
         (useActionFormHook.current as any).setValue("quiz.text", "test quiz");
         (useActionFormHook.current as any).setValue("quiz.questions.0.text", "test question - 1");
         (useActionFormHook.current as any).setValue("quiz.questions.0.answers.0.text", "test answer - 1");
-        (useActionFormHook.current as any).setValue("quiz.questions.0.answers.0.recommendedProduct.productSuggestion.id", productSuggestionId);
+        (useActionFormHook.current as any).setValue(
+          "quiz.questions.0.answers.0.recommendedProduct.productSuggestion.id",
+          productSuggestionId
+        );
       });
 
       expect(useActionFormHook.current.formState.errors).toEqual({});
@@ -439,27 +442,27 @@ describe("useActionFormNested", () => {
       await waitFor(() => expect(useFindFirstHook.current[0].fetching).toBe(false), { timeout: 3000 });
 
       expect(useFindFirstHook.current[0].data).toMatchInlineSnapshot(`
-      {
-        "__typename": "ShopifyProduct",
-        "body": "example value for body",
-        "compareAtPriceRange": null,
-        "createdAt": "2023-12-12T16:22:25.001Z",
-        "handle": null,
-        "id": "123",
-        "productCategory": null,
-        "productType": null,
-        "publishedAt": null,
-        "publishedScope": null,
-        "shopifyCreatedAt": "2023-12-01T05:00:00.000Z",
-        "shopifyUpdatedAt": null,
-        "status": null,
-        "tags": null,
-        "templateSuffix": null,
-        "title": null,
-        "updatedAt": "2023-12-12T16:22:25.001Z",
-        "vendor": null,
-      }
-    `);
+              {
+                "__typename": "ShopifyProduct",
+                "body": "example value for body",
+                "compareAtPriceRange": null,
+                "createdAt": "2023-12-12T16:22:25.001Z",
+                "handle": null,
+                "id": "123",
+                "productCategory": null,
+                "productType": null,
+                "publishedAt": null,
+                "publishedScope": null,
+                "shopifyCreatedAt": "2023-12-01T05:00:00.000Z",
+                "shopifyUpdatedAt": null,
+                "status": null,
+                "tags": null,
+                "templateSuffix": null,
+                "title": null,
+                "updatedAt": "2023-12-12T16:22:25.001Z",
+                "vendor": null,
+              }
+          `);
 
       const productSuggestionId = useFindFirstHook.current[0].data.id;
 
@@ -487,21 +490,24 @@ describe("useActionFormNested", () => {
       await waitFor(() => expect(useActionFormHook.current.formState.isLoading).toBe(false));
 
       expect(useActionFormHook.current.getValues()).toMatchInlineSnapshot(`
-      {
-        "quiz": {
-          "questions": [
-            {},
-          ],
-          "text": "",
-        },
-      }
-    `);
+              {
+                "quiz": {
+                  "questions": [
+                    {},
+                  ],
+                  "text": "",
+                },
+              }
+          `);
 
       await act(async () => {
         (useActionFormHook.current as any).setValue("quiz.text", "test quiz");
         (useActionFormHook.current as any).setValue("quiz.questions.0.text", "test question - 1");
         (useActionFormHook.current as any).setValue("quiz.questions.0.answers.0.text", "test answer - 1");
-        (useActionFormHook.current as any).setValue("quiz.questions.0.answers.0.recommendedProduct.productSuggestion.id", productSuggestionId);
+        (useActionFormHook.current as any).setValue(
+          "quiz.questions.0.answers.0.recommendedProduct.productSuggestion.id",
+          productSuggestionId
+        );
         (useActionFormHook.current as any).setValue(
           "quiz.questions.0.answers.0.recommendedProduct.anotherProductSuggestion.id",
           productSuggestionId
@@ -523,27 +529,27 @@ describe("useActionFormNested", () => {
       await waitFor(() => expect(useFindFirstHook.current[0].fetching).toBe(false), { timeout: 3000 });
 
       expect(useFindFirstHook.current[0].data).toMatchInlineSnapshot(`
-      {
-        "__typename": "ShopifyProduct",
-        "body": "example value for body",
-        "compareAtPriceRange": null,
-        "createdAt": "2023-12-12T16:22:25.001Z",
-        "handle": null,
-        "id": "123",
-        "productCategory": null,
-        "productType": null,
-        "publishedAt": null,
-        "publishedScope": null,
-        "shopifyCreatedAt": "2023-12-01T05:00:00.000Z",
-        "shopifyUpdatedAt": null,
-        "status": null,
-        "tags": null,
-        "templateSuffix": null,
-        "title": null,
-        "updatedAt": "2023-12-12T16:22:25.001Z",
-        "vendor": null,
-      }
-    `);
+              {
+                "__typename": "ShopifyProduct",
+                "body": "example value for body",
+                "compareAtPriceRange": null,
+                "createdAt": "2023-12-12T16:22:25.001Z",
+                "handle": null,
+                "id": "123",
+                "productCategory": null,
+                "productType": null,
+                "publishedAt": null,
+                "publishedScope": null,
+                "shopifyCreatedAt": "2023-12-01T05:00:00.000Z",
+                "shopifyUpdatedAt": null,
+                "status": null,
+                "tags": null,
+                "templateSuffix": null,
+                "title": null,
+                "updatedAt": "2023-12-12T16:22:25.001Z",
+                "vendor": null,
+              }
+          `);
 
       const productSuggestionId = useFindFirstHook.current[0].data.id;
 
@@ -571,21 +577,24 @@ describe("useActionFormNested", () => {
       await waitFor(() => expect(useActionFormHook.current.formState.isLoading).toBe(false));
 
       expect(useActionFormHook.current.getValues()).toMatchInlineSnapshot(`
-      {
-        "quiz": {
-          "questions": [
-            {},
-          ],
-          "text": "",
-        },
-      }
-    `);
+              {
+                "quiz": {
+                  "questions": [
+                    {},
+                  ],
+                  "text": "",
+                },
+              }
+          `);
 
       await act(async () => {
         (useActionFormHook.current as any).setValue("quiz.text", "test quiz");
         (useActionFormHook.current as any).setValue("quiz.questions.0.text", "test question - 1");
         (useActionFormHook.current as any).setValue("quiz.questions.0.answers.0.text", "test answer - 1");
-        (useActionFormHook.current as any).setValue("quiz.questions.0.answers.0.recommendedProduct.productSuggestionId", productSuggestionId);
+        (useActionFormHook.current as any).setValue(
+          "quiz.questions.0.answers.0.recommendedProduct.productSuggestionId",
+          productSuggestionId
+        );
       });
 
       expect(useActionFormHook.current.formState.errors).toEqual({});
@@ -603,27 +612,27 @@ describe("useActionFormNested", () => {
       await waitFor(() => expect(useFindFirstHook.current[0].fetching).toBe(false), { timeout: 3000 });
 
       expect(useFindFirstHook.current[0].data).toMatchInlineSnapshot(`
-      {
-        "__typename": "ShopifyProduct",
-        "body": "example value for body",
-        "compareAtPriceRange": null,
-        "createdAt": "2023-12-12T16:22:25.001Z",
-        "handle": null,
-        "id": "123",
-        "productCategory": null,
-        "productType": null,
-        "publishedAt": null,
-        "publishedScope": null,
-        "shopifyCreatedAt": "2023-12-01T05:00:00.000Z",
-        "shopifyUpdatedAt": null,
-        "status": null,
-        "tags": null,
-        "templateSuffix": null,
-        "title": null,
-        "updatedAt": "2023-12-12T16:22:25.001Z",
-        "vendor": null,
-      }
-    `);
+              {
+                "__typename": "ShopifyProduct",
+                "body": "example value for body",
+                "compareAtPriceRange": null,
+                "createdAt": "2023-12-12T16:22:25.001Z",
+                "handle": null,
+                "id": "123",
+                "productCategory": null,
+                "productType": null,
+                "publishedAt": null,
+                "publishedScope": null,
+                "shopifyCreatedAt": "2023-12-01T05:00:00.000Z",
+                "shopifyUpdatedAt": null,
+                "status": null,
+                "tags": null,
+                "templateSuffix": null,
+                "title": null,
+                "updatedAt": "2023-12-12T16:22:25.001Z",
+                "vendor": null,
+              }
+          `);
 
       const productSuggestionId = useFindFirstHook.current[0].data.id;
 
@@ -651,22 +660,28 @@ describe("useActionFormNested", () => {
       await waitFor(() => expect(useActionFormHook.current.formState.isLoading).toBe(false));
 
       expect(useActionFormHook.current.getValues()).toMatchInlineSnapshot(`
-      {
-        "quiz": {
-          "questions": [
-            {},
-          ],
-          "text": "",
-        },
-      }
-    `);
+              {
+                "quiz": {
+                  "questions": [
+                    {},
+                  ],
+                  "text": "",
+                },
+              }
+          `);
 
       await act(async () => {
         (useActionFormHook.current as any).setValue("quiz.text", "test quiz");
         (useActionFormHook.current as any).setValue("quiz.questions.0.text", "test question - 1");
         (useActionFormHook.current as any).setValue("quiz.questions.0.answers.0.text", "test answer - 1");
-        (useActionFormHook.current as any).setValue("quiz.questions.0.answers.0.recommendedProduct.productSuggestionId", productSuggestionId);
-        (useActionFormHook.current as any).setValue("quiz.questions.0.answers.0.recommendedProduct.anotherProductSuggestionId", productSuggestionId);
+        (useActionFormHook.current as any).setValue(
+          "quiz.questions.0.answers.0.recommendedProduct.productSuggestionId",
+          productSuggestionId
+        );
+        (useActionFormHook.current as any).setValue(
+          "quiz.questions.0.answers.0.recommendedProduct.anotherProductSuggestionId",
+          productSuggestionId
+        );
       });
 
       expect(useActionFormHook.current.formState.errors).toEqual({});
@@ -924,10 +939,10 @@ describe("useActionFormNested", () => {
                       edges: {
                         node: {
                           id: true,
-                          text: true
-                        }
-                      }
-                    }
+                          text: true,
+                        },
+                      },
+                    },
                   },
                 },
               },
@@ -987,10 +1002,10 @@ describe("useActionFormNested", () => {
                       edges: {
                         node: {
                           id: true,
-                          text: true
-                        }
-                      }
-                    }
+                          text: true,
+                        },
+                      },
+                    },
                   },
                 },
               },
@@ -1050,8 +1065,8 @@ describe("useActionFormNested", () => {
               text: true,
               notification: {
                 id: true,
-                enabled: true
-              }
+                enabled: true,
+              },
             },
             onSuccess: (actionResult) => {
               expect(actionResult.id).toBeDefined();
@@ -1092,8 +1107,8 @@ describe("useActionFormNested", () => {
               id: true,
               text: true,
               question: {
-                id: true
-              }
+                id: true,
+              },
             },
             onSuccess: (actionResult) => {
               expect(actionResult.id).toBeDefined();
@@ -1746,6 +1761,308 @@ describe("useActionFormNested", () => {
       const submitResult = mockUrqlClient.executeMutation.mock.calls[0][0].variables;
       expect(submitResult.answer.notification.update.answer._link).toBe("999");
       expect(submitResult.answer.recommendedProduct.update.answer._link).toBe("999");
+    });
+  });
+
+  describe("transformData", () => {
+    const mockAllModelsReference = {
+      session: {
+        shop: {
+          type: "BelongsTo",
+          model: "shopifyShop",
+        },
+        createdAt: "DateTime",
+        updatedAt: "DateTime",
+      },
+      quiz: {
+        createdAt: "DateTime",
+        updatedAt: "DateTime",
+        questionables: {
+          type: "HasMany",
+          model: "questionable",
+        },
+        questions: {
+          type: "HasMany",
+          model: "question",
+        },
+      },
+      question: {
+        answers: {
+          type: "HasMany",
+          model: "answer",
+        },
+        createdAt: "DateTime",
+        updatedAt: "DateTime",
+        quiz: {
+          type: "BelongsTo",
+          model: "quiz",
+        },
+      },
+      answer: {
+        question: {
+          type: "BelongsTo",
+          model: "question",
+        },
+        createdAt: "DateTime",
+        updatedAt: "DateTime",
+        notification: {
+          type: "HasOne",
+          model: "notification",
+        },
+        questionable: {
+          type: "BelongsTo",
+          model: "questionable",
+        },
+        recommendedProduct: {
+          type: "HasOne",
+          model: "recommendedProduct",
+        },
+      },
+      recommendedProduct: {
+        productSuggestion: {
+          type: "BelongsTo",
+          model: "shopifyShop",
+        },
+        createdAt: "DateTime",
+        updatedAt: "DateTime",
+        answer: {
+          type: "BelongsTo",
+          model: "answer",
+        },
+        anotherProductSuggestion: {
+          type: "BelongsTo",
+          model: "shopifyShop",
+        },
+      },
+      notification: {
+        sendOutDate: "DateTime",
+        createdAt: "DateTime",
+        updatedAt: "DateTime",
+        notificationMessage: {
+          type: "HasOne",
+          model: "notificationMessage",
+        },
+        answer: {
+          type: "BelongsTo",
+          model: "answer",
+        },
+      },
+      notificationMessage: {
+        createdAt: "DateTime",
+        updatedAt: "DateTime",
+        notificationMetadata: {
+          type: "BelongsTo",
+          model: "notificationMetadata",
+        },
+        notification: {
+          type: "BelongsTo",
+          model: "notification",
+        },
+      },
+      notificationMetadata: {
+        createdAt: "DateTime",
+        updatedAt: "DateTime",
+        notificationMessages: {
+          type: "HasMany",
+          model: "notificationMessage",
+        },
+      },
+      shopifyGdprRequest: {
+        createdAt: "DateTime",
+        updatedAt: "DateTime",
+        shop: {
+          type: "BelongsTo",
+          model: "shopifyShop",
+        },
+      },
+      shopifyProduct: {
+        shopifyCreatedAt: "DateTime",
+        publishedAt: "DateTime",
+        createdAt: "DateTime",
+        updatedAt: "DateTime",
+        shopifyUpdatedAt: "DateTime",
+        shop: {
+          type: "BelongsTo",
+          model: "shopifyShop",
+        },
+      },
+      shopifyShop: {
+        syncs: {
+          type: "HasMany",
+          model: "shopifySync",
+        },
+        products: {
+          type: "HasMany",
+          model: "shopifyProduct",
+        },
+        shopifyCreatedAt: "DateTime",
+        gdprRequests: {
+          type: "HasMany",
+          model: "shopifyGdprRequest",
+        },
+        createdAt: "DateTime",
+        updatedAt: "DateTime",
+        shopifyUpdatedAt: "DateTime",
+        recommendedProducts: {
+          type: "HasMany",
+          model: "recommendedProduct",
+        },
+      },
+      shopifySync: {
+        syncSince: "DateTime",
+        createdAt: "DateTime",
+        updatedAt: "DateTime",
+        shop: {
+          type: "BelongsTo",
+          model: "shopifyShop",
+        },
+      },
+      questionable: {
+        quiz: {
+          type: "BelongsTo",
+          model: "quiz",
+        },
+        createdAt: "DateTime",
+        updatedAt: "DateTime",
+        answers: {
+          type: "HasMany",
+          model: "answer",
+        },
+      },
+    };
+
+    beforeEach(() => {
+      jest.spyOn(nestedExampleApi.connection, "getCurrentModels").mockResolvedValue(mockAllModelsReference);
+    });
+
+    test("can handle deeply nested deletes", async () => {
+      const defaultValues = {
+        quiz: {
+          title: "new quiz",
+          body: "asdlkjf",
+          questions: [
+            {
+              id: "16",
+              text: "test",
+              answers: [
+                {
+                  id: "22",
+                  text: "estset",
+                  recommendedProduct: {
+                    id: "22",
+                    image: null,
+                    productSuggestion: {
+                      id: "8746652729619",
+                      __typename: "ShopifyProduct",
+                    },
+                    __typename: "RecommendedProduct",
+                  },
+                  __typename: "Answer",
+                },
+              ],
+              __typename: "Question",
+            },
+          ],
+        },
+      };
+
+      const data = {
+        quiz: {
+          title: "new quiz",
+          body: "asdlkjf",
+          questions: [
+            {
+              id: "16",
+              text: "test",
+              answers: [
+                {
+                  id: "22",
+                  text: "estset",
+                  recommendedProduct: {
+                    id: "22",
+                    image: null,
+                    productSuggestion: {
+                      id: "8746652729619",
+                      __typename: "ShopifyProduct",
+                    },
+                    __typename: "RecommendedProduct",
+                  },
+                  __typename: "Answer",
+                },
+              ],
+              __typename: "Question",
+            },
+            {
+              text: "asdf", // New Question
+              answers: [
+                {
+                  text: "answer 1",
+                  recommendedProduct: {
+                    productSuggestion: {
+                      id: "8841987883283",
+                    },
+                  },
+                },
+              ],
+            },
+          ],
+        },
+      };
+
+      const transformedData = await transformDataRedux(nestedExampleApi.quiz, defaultValues, data);
+
+      expect(transformedData).toMatchInlineSnapshot(`
+        {
+          "quiz": {
+            "body": "asdlkjf",
+            "questions": [
+              {
+                "update": {
+                  "answers": [
+                    {
+                      "update": {
+                        "id": "22",
+                        "recommendedProduct": {
+                          "update": {
+                            "id": "22",
+                            "image": null,
+                            "productSuggestion": {
+                              "_link": "8746652729619",
+                            },
+                          },
+                        },
+                        "text": "estset",
+                      },
+                    },
+                  ],
+                  "id": "16",
+                  "text": "test",
+                },
+              },
+              {
+                "create": {
+                  "answers": [
+                    {
+                      "create": {
+                        "recommendedProduct": {
+                          "create": {
+                            "productSuggestion": {
+                              "_link": "8841987883283",
+                            },
+                          },
+                        },
+                        "text": "answer 1",
+                      },
+                    },
+                  ],
+                  "text": "asdf",
+                },
+              },
+            ],
+            "title": "new quiz",
+          },
+        }
+      `);
     });
   });
 });

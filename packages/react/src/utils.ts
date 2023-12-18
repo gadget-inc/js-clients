@@ -424,7 +424,6 @@ export async function transformDataRedux(modelManager: AnyModelManager | undefin
 
   function transform(
     input: any,
-    updates: Record<string, number[]>,
     depth = 0,
     path: string | undefined = undefined,
     fieldType: { type: string; model: string } | null = null,
@@ -450,11 +449,12 @@ export async function transformDataRedux(modelManager: AnyModelManager | undefin
               return { delete: { id: nodeId } };
             } else {
               const index = input.findIndex((item: any) => item.id == nodeId);
+              delete updates[path!][nodeIndex];
 
               handled.push(index);
 
               const currentPath = path ? `${path}.${index}` : index.toString();
-              return transform(item, updates, depth + 1, currentPath, fieldType, fieldRelationships);
+              return transform(item, depth + 1, currentPath, fieldType, fieldRelationships);
             }
           })
         );
@@ -466,7 +466,7 @@ export async function transformDataRedux(modelManager: AnyModelManager | undefin
           .filter((_item, index) => !handled.includes(index))
           .map((item: any, index) => {
             const currentPath = path ? `${path}.${index}` : index.toString();
-            return transform(item, updates, depth + 1, currentPath, fieldType, fieldRelationships);
+            return transform(item, depth + 1, currentPath, fieldType, fieldRelationships);
           })
       );
 
@@ -480,7 +480,7 @@ export async function transformDataRedux(modelManager: AnyModelManager | undefin
         const fieldType = fieldRelationships ? fieldRelationships[key] : null;
         const relationships = fieldType ? referencedTypes?.[fieldType.model] : referencedTypes?.[key];
 
-        result[key] = transform(input[key], updates, depth + 1, currentPath, fieldType, relationships);
+        result[key] = transform(input[key], depth + 1, currentPath, fieldType, relationships as any);
       }
 
       const { __typename, ...rest } = result;
@@ -555,7 +555,7 @@ export async function transformDataRedux(modelManager: AnyModelManager | undefin
     return input;
   }
 
-  const result = transform(data, updates);
+  const result = transform(data);
 
   // console.log("transformedData", JSON.stringify(result, null, 2));
 
