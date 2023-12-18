@@ -16,7 +16,7 @@ import { useFindBy } from "./useFindBy.js";
 import { useFindOne } from "./useFindOne.js";
 import { useGlobalAction } from "./useGlobalAction.js";
 import type { ActionHookState, ErrorWrapper, OptionsType } from "./utils.js";
-import { get, set, transformDataRedux } from "./utils.js";
+import { get, set, transformData } from "./utils.js";
 import { Primitive } from "lodash";
 
 export * from "react-hook-form";
@@ -347,7 +347,7 @@ export const useActionForm = <
         async (data) => {
           if ("modelApiIdentifier" in action) { // Check to make sure it's not a global action
             try {
-              data = await transformDataRedux(modelManager, defaultValues, data);
+              data = await transformData(modelManager, defaultValues, data);
             } catch (e: any) {
               // options?.onSubmit?.();
               handleSubmissionError(e);

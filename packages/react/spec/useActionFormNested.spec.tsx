@@ -2,7 +2,7 @@ import { GadgetConnection } from "@gadgetinc/api-client-core";
 import { act, renderHook, waitFor } from "@testing-library/react";
 import { useActionForm, useFieldArray } from "../src/useActionForm.js";
 import { useFindFirst } from "../src/useFindFirst.js";
-import { transformDataRedux } from "../src/utils.js";
+import { transformData } from "../src/utils.js";
 import { nestedExampleApi } from "./apis.js";
 import { startPolly } from "./polly.js";
 import { LiveClientWrapper, MockClientWrapper, mockUrqlClient } from "./testWrappers.js";
@@ -2009,7 +2009,7 @@ describe("useActionFormNested", () => {
         },
       };
 
-      const transformedData = await transformDataRedux(nestedExampleApi.quiz, defaultValues, data);
+      const transformedData = await transformData(nestedExampleApi.quiz, defaultValues, data);
 
       expect(transformedData).toMatchInlineSnapshot(`
         {

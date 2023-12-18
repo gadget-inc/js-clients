@@ -400,18 +400,8 @@ export const set = (obj: any, path: string, value: any) => {
   }, obj);
 };
 
-export function hasNested(data: any) {
-  if (data == null) {
-    return false;
-  }
-
-  return Object.values(data).some((value) => {
-    return typeof value === "object" && value !== undefined && Array.isArray(value);
-  });
-}
-
-export async function transformDataRedux(modelManager: AnyModelManager | undefined, defaultValues: any, data: any) {
-  const referencedTypes = await modelManager?.connection.getCurrentModels();
+export async function transformData(modelManager: AnyModelManager | undefined, defaultValues: any, data: any) {
+  const referencedTypes = await modelManager?.connection.getCurrentModels(); // TODO - we're going to add the relationship info into the client it's self instead of fetching it
   console.log("referencedTypes", JSON.stringify(referencedTypes, null, 2));
 
   if (!referencedTypes) {
@@ -420,7 +410,7 @@ export async function transformDataRedux(modelManager: AnyModelManager | undefin
 
   console.log("defaultValues", JSON.stringify(defaultValues, null, 2));
   console.log("data", JSON.stringify(data, null, 2));
-  const updates = getUpdates(defaultValues);
+  const updates = getUpdates(defaultValues); // grab the updates from default values to see what needs to be created, updated, or deleted
 
   function transform(
     input: any,
@@ -429,38 +419,38 @@ export async function transformDataRedux(modelManager: AnyModelManager | undefin
     fieldType: { type: string; model: string } | null = null,
     fieldRelationships: Record<string, { type: string; model: string }> | null = null
   ): any {
-    if (Array.isArray(input)) {
+    if (Array.isArray(input)) { // If the input is an array, we need to handle it differently
       const results: any[] = [];
-      const edge = updates[path!];
+      const edge = updates[path!]; // grab the list of ids from the updates object, based on the path
       const handled: number[] = [];
 
-      if (edge) {
+      if (edge) { // if there are ids in the updates object, we need to handle them first
         results.push(
-          edge.map((nodeId: any, nodeIndex: number) => {
-            const item = input.find((item: any) => item.id == nodeId);
+          edge.map((nodeId: any, nodeIndex: number) => { // for each id, find the corresponding item in the input array
+            const item = input.find((item: any) => item.id == nodeId); // find the item in the input array that matches the id
 
-            if (!item) {
-              const updateEntries = Object.entries(updates);
+            if (!item) {  // if the item is not found, we need to delete it from the updates object as well as anything that references it
+              const updateEntries = Object.entries(updates); // grab all the entries from the updates object
               const updateEntry = updateEntries.find(([key, _ids]) => key.includes(path! + "." + nodeIndex));
-              if (updateEntry) {
+              if (updateEntry) { // if we find an entry that matches the path, we need to delete it from the updates object
                 const { 0: updatePath, 1: _ } = updateEntry;
                 delete updates[updatePath];
-              }
+              } // TODO - What if we don't find an entry? Should we throw an error?
               return { delete: { id: nodeId } };
             } else {
               const index = input.findIndex((item: any) => item.id == nodeId);
-              delete updates[path!][nodeIndex];
+              delete updates[path!][nodeIndex]; // delete the id from the updates object so it's not handled again
 
               handled.push(index);
 
               const currentPath = path ? `${path}.${index}` : index.toString();
-              return transform(item, depth + 1, currentPath, fieldType, fieldRelationships);
+              return transform(item, depth + 1, currentPath, fieldType, fieldRelationships); // transform the item
             }
           })
         );
       }
 
-      // handle the rest of the array
+      // handle the rest of the array - anything that wasn't in the updates object
       results.push(
         input
           .filter((_item, index) => !handled.includes(index))
@@ -471,14 +461,14 @@ export async function transformDataRedux(modelManager: AnyModelManager | undefin
       );
 
       return results.flatMap((result) => result);
-    } else if (input != null && typeof input === "object") {
+    } else if (input != null && typeof input === "object") { // if the input is an object, we need to handle it differently
       const result: any = {};
 
       for (const key of Object.keys(input)) {
         const currentPath = path ? `${path}.${key}` : key;
 
         const fieldType = fieldRelationships ? fieldRelationships[key] : null;
-        const relationships = fieldType ? referencedTypes?.[fieldType.model] : referencedTypes?.[key];
+        const relationships = fieldType ? referencedTypes?.[fieldType.model] : referencedTypes?.[key]; //
 
         result[key] = transform(input[key], depth + 1, currentPath, fieldType, relationships as any);
       }
@@ -486,7 +476,7 @@ export async function transformDataRedux(modelManager: AnyModelManager | undefin
       const { __typename, ...rest } = result;
 
       let belongsTo = null;
-      const belongsToRelationships: Record<string, { type: string; model: string }> | null = fieldRelationships
+      const belongsToRelationships: Record<string, { type: string; model: string }> | null = fieldRelationships // grab the belongsTo relationships from the fieldRelationships object
         ? Object.entries(fieldRelationships)
             .filter(([_key, value]) => value.type === "BelongsTo")
             .reduce((obj, [key, value]) => {
@@ -495,20 +485,19 @@ export async function transformDataRedux(modelManager: AnyModelManager | undefin
             }, {} as Record<string, { type: string; model: string }>)
         : null;
 
-      for (const key of Object.keys(belongsToRelationships ?? {})) {
-        // TODO - handle multiple ambiguous identifiers
+      for (const key of Object.keys(belongsToRelationships ?? {})) { // for each belongsTo relationship, check if the input has a key that matches the relationship
         if (`${key}Id` in input) {
           if (belongsTo == null) {
             belongsTo = {};
           }
 
           belongsTo = { ...belongsTo, [key]: { _link: input[`${key}Id`] } };
-          delete rest[`${key}Id`];
+          delete rest[`${key}Id`]; // delete the key from the rest object so it's not handled again
         }
       }
 
       if (belongsTo) {
-        return depth <= 1 ? { ...rest, ...belongsTo } : { ...rest, create: { ...belongsTo } };
+        return depth <= 1 ? { ...rest, ...belongsTo } : { ...rest, create: { ...belongsTo } }; // when we're in the root, we need to return the belongsTo object as part of the result otherwise wrap it in a create
       }
 
       if (depth <= 1) {
@@ -557,12 +546,10 @@ export async function transformDataRedux(modelManager: AnyModelManager | undefin
 
   const result = transform(data);
 
-  // console.log("transformedData", JSON.stringify(result, null, 2));
-
   return result;
 }
 
-function getUpdates(data: any): Record<string, number[]> {
+function getUpdates(data: any): Record<string, number[]> { // TODO - can this be simplified with a reducer?
   const updateList: Record<string, number[]> = {};
 
   function go(input: any, path: string | undefined = undefined, depth = 0): any {
