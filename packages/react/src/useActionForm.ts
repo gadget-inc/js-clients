@@ -17,6 +17,7 @@ import { useFindOne } from "./useFindOne.js";
 import { useGlobalAction } from "./useGlobalAction.js";
 import type { ActionHookState, ErrorWrapper, OptionsType } from "./utils.js";
 import { get, set, transformDataRedux } from "./utils.js";
+import { Primitive } from "lodash";
 
 export * from "react-hook-form";
 
@@ -159,12 +160,19 @@ type UseActionFormState<
   errors: UseFormReturn<FormVariables, FormContext>["formState"]["errors"] & ServerSideError<F>;
 };
 
+type Increment<A extends number[]> = [...A, 0];
+
 type IsAny<T> = 0 extends (1 & T) ? true : false;
 
-export type FormInput<InputT> = IsAny<InputT> extends true ? any :
-  InputT extends (infer Element)[] ? FormInput<Element>[]
-  : InputT extends { create?: unknown; update?: unknown } ? FormInput<InputT["create"]> | FormInput<InputT["update"]>
-  : InputT extends object ? { [K in keyof InputT]: FormInput<InputT[K]> }
+export type FormInput<
+  InputT, 
+  Depth extends number = 10, 
+  CurrentDepth extends number[] = []> = 
+  CurrentDepth["length"] extends Depth ? any
+  : IsAny<InputT> extends true ? any
+  : InputT extends (infer Element)[] ? FormInput<Element, Depth, CurrentDepth>[]
+  : InputT extends { create?: unknown; update?: unknown } ? FormInput<InputT["create"], Depth, Increment<CurrentDepth>> | FormInput<InputT["update"], Depth, Increment<CurrentDepth>>
+  : InputT extends object ? { [K in keyof InputT]: FormInput<InputT[K], Depth, Increment<CurrentDepth>> }
   : InputT;
 
 export type UseActionFormResult<
@@ -173,7 +181,7 @@ export type UseActionFormResult<
   ActionFunc extends ActionFunction<GivenOptions, any, any, SchemaT, any> | GlobalActionFunction<any>,
   FormVariables extends FieldValues,
   FormContext = any
-> = Omit<UseFormReturn<FormVariables, FormContext>, "handleSubmit" | "formState"> & {
+> = Omit<UseFormReturn<FormVariables & FormInput<ActionFunc["variablesType"]>, FormContext>, "handleSubmit" | "formState"> & {
   formState: UseActionFormState<ActionFunc, FormVariables, FormContext>;
   /**
    * Any error that occurred during initial data fetching or action submission
@@ -208,7 +216,7 @@ export const useActionForm = <
   SchemaT,
   ActionFunc extends ActionFunction<GivenOptions, any, any, SchemaT, any> | GlobalActionFunction<any>,
   // eslint-disable-next-line @typescript-eslint/ban-types
-  ExtraFormVariables = {},
+  ExtraFormVariables extends FieldValues = {},
   FormContext = any,
   ActionResultData = UseActionFormHookStateData<ActionFunc>,
   DefaultValues = ActionFunc["variablesType"] & ExtraFormVariables
@@ -246,7 +254,7 @@ export const useActionForm = <
      */
     isNested?: boolean;
   }
-): UseActionFormResult<GivenOptions, SchemaT, ActionFunc, FormInput<ActionFunc["variablesType"]> & ExtraFormVariables, FormContext> => {
+): UseActionFormResult<GivenOptions, SchemaT, ActionFunc, ExtraFormVariables, FormContext> => {
   const api = useApi();
   const findExistingRecord = !!options?.findBy;
   const hasSetInitialValues = useRef<boolean>(!findExistingRecord);

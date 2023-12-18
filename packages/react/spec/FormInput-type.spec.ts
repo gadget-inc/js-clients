@@ -1,11 +1,7 @@
-import type { NestedQuestionCreateInput, NestedQuestionUpdateInput, QuestionHasManyInput } from "@gadget-client/zxcv-deeply-nested";
 import type { AssertTrue, IsExact } from "conditional-type-checks";
-import type { FormInput, UseFormSetValue } from "./../src/useActionForm.js";
-import { FullyQualifiedUpdateQuizVariables } from "@gadget-client/zxcv-deeply-nested/types/models/Quiz.js";
-
+import type { FormInput } from "./../src/useActionForm.js";
 
 describe("FormInput", () => {
-  
   type _scalarFormInput = AssertTrue<IsExact<FormInput<number>, number>>;
   const _scalarForm: FormInput<number> = 1;
 
@@ -24,6 +20,24 @@ describe("FormInput", () => {
       { name?: string; inventoryCount?: number; gizmos?: { name?: string } | { id?: number } | undefined }
     >
   >;
+
+  type _depthGuard1 = AssertTrue<
+    IsExact<FormInput<{ a: { b: { c: { d: { e: { f: { g: { h: { i: { id: string } } } } } } } } } }, 1>, { a: any }>
+  >;
+  type _depthGuard2 = AssertTrue<
+    IsExact<FormInput<{ a: { b: { c: { d: { e: { f: { g: { h: { i: { id: string } } } } } } } } } }, 2>, { a: { b: any } }>
+  >;
+  type _depthGuard3 = AssertTrue<
+    IsExact<FormInput<{ a: { b: { c: { d: { e: { f: { g: { h: { i: { id: string } } } } } } } } } }, 3>, { a: { b: { c: any } } }>
+  >;
+  type _depthGuard4 = AssertTrue<
+    IsExact<FormInput<{ a: { b: { c: { d: { e: { f: { g: { h: { i: { id: string } } } } } } } } } }, 3>, { a: { b: { c: { d: any } } } }>
+  >;
+
+  // const _typeGuardArrays: FormInput<
+  //   { a1: { b: { c: { d: { e: { f: { g: number } } } } } }[]; a2: { b: { c: { d: { e: { f: { g: number } } } } } }[],  a3: { b: { c: { d: number }[] } }[]},
+  //   5
+  // >;
 
   test("true", () => undefined);
 });

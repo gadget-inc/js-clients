@@ -1439,7 +1439,7 @@ describe("useActionFormNested", () => {
       );
 
       await act(async () => {
-        (useActionFormHook.current as any).setValue("quiz.text", "test quiz updated");
+        useActionFormHook.current.setValue("quiz.questions.0.text", "test quiz updated");
         (useActionFormHook.current as any).setValue("quiz.questions.0.text", "test question updated - 1");
         (useActionFormHook.current as any).setValue("quiz.questions.1.text", "test question updated - 2");
         (useActionFormHook.current as any).setValue("quiz.questions.2.text", "test question updated - 3");
