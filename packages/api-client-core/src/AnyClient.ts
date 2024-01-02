@@ -2,6 +2,8 @@ import type { GadgetConnection } from "./GadgetConnection.js";
 import type { GadgetTransaction } from "./GadgetTransaction.js";
 import type { InternalModelManager } from "./InternalModelManager.js";
 
+export const $modelRelationships = Symbol.for("gadget/modelRelationships");
+
 /**
  * An instance of any Gadget app's API client object
  */
@@ -13,6 +15,7 @@ export interface AnyClient {
   internal: {
     [key: string]: InternalModelManager;
   };
+  [$modelRelationships]?: { [modelName: string]: { [apiIdentifier: string]: { type: string; model: string } } };
 }
 
 /**
