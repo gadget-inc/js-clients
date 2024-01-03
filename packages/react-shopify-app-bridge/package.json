@@ -1,6 +1,6 @@
 {
   "name": "@gadgetinc/react-shopify-app-bridge",
-  "version": "0.13.3",
+  "version": "0.13.4",
   "files": [
     "README.md",
     "dist/**/*"
