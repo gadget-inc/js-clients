@@ -57,6 +57,7 @@ export const useFindOne = <
 
   const result = useMemo(() => {
     const dataPath = [manager.findOne.operationName];
+
     let data = rawResult.data && get(rawResult.data, dataPath);
     if (data) {
       data = hydrateRecord(rawResult, data);
