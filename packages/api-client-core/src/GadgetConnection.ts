@@ -53,7 +53,7 @@ export interface GadgetConnectionOptions {
   subscriptionClientOptions?: GadgetSubscriptionClientOptions;
   websocketImplementation?: any;
   fetchImplementation?: typeof globalThis.fetch;
-  environment?: "Development" | "Production";
+  environment?: string;
   requestPolicy?: ClientOptions["requestPolicy"];
   applicationId?: string;
   baseRouteURL?: string;
@@ -87,7 +87,7 @@ export class GadgetConnection {
   private websocketsEndpoint: string;
   private websocketImplementation?: WebSocket;
   private _fetchImplementation: typeof globalThis.fetch;
-  private environment: "Development" | "Production";
+  private environment: string;
   private exchanges: Required<Exchanges>;
 
   // the base client using HTTP requests that non-transactional operations will use
