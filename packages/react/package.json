@@ -31,6 +31,7 @@
     "@gadgetinc/api-client-core": "^0.15.13",
     "react-fast-compare": "^3.2.2",
     "react-hook-form": "~7.48.2",
+    "tslib": "^2.6.2",
     "urql": "^4.0.4"
   },
   "resolutions": {
