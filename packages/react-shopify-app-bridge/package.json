@@ -29,7 +29,8 @@
   "dependencies": {
     "@gadgetinc/api-client-core": "^0.15.13",
     "@shopify/app-bridge-utils": "^3.1.1",
-    "crypto-js": "^4.1.1"
+    "crypto-js": "^4.1.1",
+    "tslib": "^2.6.2"
   },
   "devDependencies": {
     "@gadgetinc/api-client-core": "workspace:*",

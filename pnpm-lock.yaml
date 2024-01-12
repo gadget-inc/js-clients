@@ -206,6 +206,9 @@ importers:
       react-hook-form:
         specifier: ~7.48.2
         version: 7.48.2(react@18.2.0)
+      tslib:
+        specifier: ^2.6.2
+        version: 2.6.2
       urql:
         specifier: ^4.0.4
         version: 4.0.4(graphql@16.8.1)(react@18.2.0)
@@ -294,6 +297,9 @@ importers:
       crypto-js:
         specifier: ^4.1.1
         version: 4.1.1
+      tslib:
+        specifier: ^2.6.2
+        version: 2.6.2
     devDependencies:
       '@gadgetinc/react':
         specifier: workspace:*

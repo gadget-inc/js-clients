@@ -24,7 +24,9 @@ We have a small project setup for evaluating what the bundled size of these depe
 pnpm -F=test-bundles test-build
 ```
 
-to build the test bundles
+to build the test bundles.
+
+You can then view the built test bundle size reports at `packages/test-bundles/dist/<bundle>-stats.html` or import the `<bundle>-webpack-stats.json` file into your favourite bundle size analysis tool.
 
 # Releasing
 
