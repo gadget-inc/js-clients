@@ -1,11 +1,4 @@
-import type {
-  ActionFunction,
-  BulkActionFunction,
-  FieldSelection,
-  GadgetError,
-  InvalidFieldError,
-  InvalidRecordError,
-} from "@gadgetinc/api-client-core";
+import type { FieldSelection, GadgetError, InvalidFieldError, InvalidRecordError } from "@gadgetinc/api-client-core";
 import { gadgetErrorFor, getNonNullableError } from "@gadgetinc/api-client-core";
 import type { CombinedError, RequestPolicy } from "@urql/core";
 import { GraphQLError } from "graphql";
@@ -317,54 +310,6 @@ export type OptionsType = {
   select?: FieldSelection;
   /** Subscribe to changes from the backend and return a new result as it changes */
   live?: boolean;
-};
-
-/**
- * Processes the flexible, convenient JS-land inputs for an action to the fully qualified GraphQL API inputs
- * @internal */
-export const disambiguateActionVariables = (
-  action: ActionFunction<any, any, any, any, any> | BulkActionFunction<any, any, any, any, any>,
-  variables: Record<string, any> | undefined
-) => {
-  variables ??= {};
-  if (action.hasAmbiguousIdentifier) {
-    if (
-      Object.keys(variables).some((key) => key !== "id" && !action.paramOnlyVariables?.includes(key) && key !== action.modelApiIdentifier)
-    ) {
-      throw Error(`Invalid arguments found in variables. Did you mean to use ({ ${action.modelApiIdentifier}: { ... } })?`);
-    }
-  }
-
-  let newVariables: Record<string, any>;
-
-  if (action.acceptsModelInput ?? action.hasCreateOrUpdateEffect) {
-    if (
-      action.modelApiIdentifier in variables &&
-      typeof variables[action.modelApiIdentifier] === "object" &&
-      variables[action.modelApiIdentifier] != null
-    ) {
-      newVariables = variables;
-    } else {
-      newVariables = {
-        [action.modelApiIdentifier]: {},
-      };
-      for (const [key, value] of Object.entries(variables)) {
-        if (action.paramOnlyVariables?.includes(key)) {
-          newVariables[key] = value;
-        } else {
-          if (key == "id") {
-            newVariables.id = value;
-          } else {
-            newVariables[action.modelApiIdentifier][key] = value;
-          }
-        }
-      }
-    }
-  } else {
-    newVariables = variables;
-  }
-
-  return newVariables;
 };
 
 /**

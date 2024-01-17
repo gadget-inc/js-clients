@@ -1,4 +1,4 @@
-import { actionOperation, findManyOperation, findOneByFieldOperation, findOneOperation } from "../src/index.js";
+import { actionOperation, enqueueActionOperation, findManyOperation, findOneByFieldOperation, findOneOperation } from "../src/index.js";
 
 describe("operation builders", () => {
   describe("findOneOperation", () => {
@@ -574,6 +574,32 @@ describe("operation builders", () => {
           }
         }",
           "variables": {},
+        }
+      `);
+    });
+  });
+
+  describe("enqueueActionOperation", () => {
+    test("enqueueActionOperation should build a mutation query for enqueuing model action", () => {
+      expect(enqueueActionOperation("createWidget", {}, undefined)).toMatchInlineSnapshot(`
+        {
+          "query": "mutation enqueueCreateWidget($backgroundOptions: EnqueueBackgroundActionOptions) {
+          background {
+            createWidget(backgroundOptions: $backgroundOptions) {
+              success
+              errors {
+                message
+                code
+              }
+              backgroundAction {
+                id
+              }
+            }
+          }
+        }",
+          "variables": {
+            "backgroundOptions": null,
+          },
         }
       `);
     });

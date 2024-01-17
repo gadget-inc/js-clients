@@ -1,4 +1,5 @@
 export * from "./AnyClient.js";
+export * from "./BackgroundActionHandle.js";
 export * from "./ClientOptions.js";
 export * from "./DataHydrator.js";
 export * from "./FieldSelection.js";

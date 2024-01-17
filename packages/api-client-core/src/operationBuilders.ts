@@ -1,8 +1,8 @@
 import type { FieldSelection as BuilderFieldSelection, BuilderOperation, Variable } from "tiny-graphql-query-compiler";
 import { Call, Var, compileWithVariableValues } from "tiny-graphql-query-compiler";
 import type { FieldSelection } from "./FieldSelection.js";
-import { filterTypeName, sortTypeName } from "./support.js";
-import type { BaseFindOptions, FindManyOptions, VariablesOptions } from "./types.js";
+import { camelize, filterTypeName, sortTypeName } from "./support.js";
+import type { BaseFindOptions, EnqueueBackgroundActionOptions, FindManyOptions, VariablesOptions } from "./types.js";
 
 const hydrationOptions = (modelApiIdentifier: string): BuilderFieldSelection => {
   return {
@@ -184,5 +184,71 @@ export const globalActionOperation = (
     name: operation,
     fields,
     directives: directivesForOptions(options),
+  });
+};
+
+export const graphqlizeBackgroundOptions = (options?: EnqueueBackgroundActionOptions<any> | null) => {
+  if (!options) return null;
+  const obj = { ...options };
+  if (typeof obj.retries == "number") {
+    obj.retries = {
+      retries: obj.retries,
+    };
+  }
+
+  if (typeof obj.queue == "string") {
+    obj.queue = {
+      name: obj.queue,
+    };
+  }
+
+  for (const key of Object.keys(obj)) {
+    if (["id", "retries", "queue", "priority"].includes(key)) continue;
+    delete obj[key];
+  }
+
+  return obj;
+};
+
+export const enqueueActionOperation = (
+  operation: string,
+  variables: VariablesOptions,
+  namespace?: string | null,
+  options?: EnqueueBackgroundActionOptions<any> | null
+) => {
+  let fields: BuilderFieldSelection = {
+    background: {
+      [operation]: Call(
+        {
+          ...variableOptionsToVariables(variables),
+          backgroundOptions: Var({
+            type: "EnqueueBackgroundActionOptions",
+            value: graphqlizeBackgroundOptions(options),
+          }),
+        },
+        {
+          success: true,
+          errors: {
+            message: true,
+            code: true,
+          },
+          backgroundAction: {
+            id: true,
+          },
+        }
+      ),
+    },
+  };
+
+  if (namespace) {
+    fields = {
+      [namespace]: fields,
+    };
+  }
+
+  return compileWithVariableValues({
+    type: "mutation",
+    name: "enqueue" + camelize(operation),
+    fields,
   });
 };

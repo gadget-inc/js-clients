@@ -1,8 +1,10 @@
 import type { OperationResult } from "@urql/core";
 import { CombinedError } from "@urql/core";
 import { DataHydrator } from "./DataHydrator.js";
+import { ActionFunctionMetadata, AnyActionFunction } from "./GadgetFunctions.js";
 import type { RecordShape } from "./GadgetRecord.js";
 import { GadgetRecord } from "./GadgetRecord.js";
+import { VariablesOptions } from "./types.js";
 
 /**
  * Generic type of the state of any record of a Gadget model
@@ -543,3 +545,87 @@ const checkEquality = (a: any, b: any, refs: any[]): boolean => {
 };
 
 export const isEqual = (a: any, b: any) => checkEquality(a, b, []);
+
+/**
+ * Processes the flexible, convenient JS-land inputs for an action to the fully qualified GraphQL API inputs
+ * @internal
+ **/
+export const disambiguateActionVariables = (action: AnyActionFunction, variables: Record<string, any> | undefined) => {
+  variables ??= {};
+  if (!("hasAmbiguousIdentifier" in action) && !("acceptsModelInput" in action)) return variables;
+
+  if (action.hasAmbiguousIdentifier) {
+    if (
+      Object.keys(variables).some((key) => key !== "id" && !action.paramOnlyVariables?.includes(key) && key !== action.modelApiIdentifier)
+    ) {
+      throw Error(`Invalid arguments found in variables. Did you mean to use ({ ${action.modelApiIdentifier}: { ... } })?`);
+    }
+  }
+
+  let newVariables: Record<string, any>;
+
+  if (action.acceptsModelInput ?? action.hasCreateOrUpdateEffect) {
+    if (
+      action.modelApiIdentifier in variables &&
+      typeof variables[action.modelApiIdentifier] === "object" &&
+      variables[action.modelApiIdentifier] != null
+    ) {
+      newVariables = variables;
+    } else {
+      newVariables = {
+        [action.modelApiIdentifier]: {},
+      };
+      for (const [key, value] of Object.entries(variables)) {
+        if (action.paramOnlyVariables?.includes(key)) {
+          newVariables[key] = value;
+        } else {
+          if (key == "id") {
+            newVariables.id = value;
+          } else {
+            newVariables[action.modelApiIdentifier][key] = value;
+          }
+        }
+      }
+    }
+  } else {
+    newVariables = variables;
+  }
+
+  return newVariables;
+};
+
+/**
+ * Normalizes incoming params from JS land into the variable format the GraphQL API is expecting
+ **/
+export const disambiguateBulkActionVariables = (
+  action: ActionFunctionMetadata<any, any, any, any, any, true>,
+  inputs: Record<string, any> = {}
+) => {
+  let variables;
+  // accept the old style of {ids: ["1", "2", "3"]} as well as the new style of [{id: 1, foo: "bar"}, {id: 2, foo: "baz"}]
+  if (action.variables["ids"]) {
+    if (Array.isArray(inputs)) {
+      variables = {
+        ids: inputs,
+      };
+    } else {
+      variables = inputs;
+    }
+  } else {
+    variables = {
+      inputs: ((inputs as any[]) ?? []).map((input: any) => disambiguateActionVariables(action, input)),
+    };
+  }
+  return variables;
+};
+
+/**
+ * Given a set of variables defined with their types and requiredness and whatnot, return the same options with the values for each variable filled in, suitable for passing to one invocation
+ */
+export const setVariableOptionValues = (variableOptions: VariablesOptions, values: Record<string, unknown>) => {
+  const result: VariablesOptions = {};
+  for (const [key, variable] of Object.entries(variableOptions)) {
+    result[key] = { ...variable, value: values[key] };
+  }
+  return result;
+};
