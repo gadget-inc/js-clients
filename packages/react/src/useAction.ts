@@ -15,7 +15,6 @@ import { ErrorWrapper, noProviderErrorMessage } from "./utils.js";
  * @param options action options, like selecting the fields in the result
  *
  * @example
- * ```
  * export function CreateUserButton(props: { name: string; email: string }) {
  *   const [{error, fetching, data}, createUser] = useAction(api.user.create, {
  *     select: {

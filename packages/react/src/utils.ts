@@ -1,5 +1,13 @@
-import type { FieldSelection, GadgetError, InvalidFieldError, InvalidRecordError } from "@gadgetinc/api-client-core";
+import type {
+  AnyActionFunction,
+  EnqueueBackgroundActionOptions,
+  FieldSelection,
+  GadgetError,
+  InvalidFieldError,
+  InvalidRecordError,
+} from "@gadgetinc/api-client-core";
 import { gadgetErrorFor, getNonNullableError } from "@gadgetinc/api-client-core";
+import { BackgroundActionHandle } from "@gadgetinc/api-client-core/dist/cjs/BackgroundActionHandle.js";
 import type { CombinedError, RequestPolicy } from "@urql/core";
 import { GraphQLError } from "graphql";
 import { useMemo } from "react";
@@ -122,6 +130,44 @@ export type ActionHookResult<Data = any, Variables extends AnyVariables = AnyVar
   : [
       ActionHookState<Data, Variables>,
       (variables: Variables, context?: Partial<OperationContext>) => Promise<ActionHookState<Data, Variables>>
+    ];
+
+/**
+ * The inner result object returned from a mutation result
+ */
+export interface EnqueueHookState<Action extends AnyActionFunction> {
+  fetching: boolean;
+  stale: boolean;
+  handle: BackgroundActionHandle<Action> | null;
+  error?: ErrorWrapper;
+  extensions?: Record<string, any>;
+  operation?: Operation<{ backgroundAction: { id: string } }, Action["variablesType"]>;
+}
+
+/**
+ * The return value of a `useEnqueue` hook.
+ * Returns a two-element array:
+ *  - the result object, with the keys like `handle`, `fetching`, and `error`
+ *  - and a function for running the enqueue mutation.
+ **/
+export type EnqueueHookResult<Action extends AnyActionFunction> = RequiredKeysOf<
+  Exclude<Action["variablesType"], null | undefined>
+> extends never
+  ? [
+      EnqueueHookState<Action>,
+      (
+        variables?: Action["variablesType"],
+        backgroundOptions?: EnqueueBackgroundActionOptions<Action>,
+        context?: Partial<OperationContext>
+      ) => Promise<EnqueueHookState<Action>>
+    ]
+  : [
+      EnqueueHookState<Action>,
+      (
+        variables: Action["variablesType"],
+        backgroundOptions?: EnqueueBackgroundActionOptions<Action>,
+        context?: Partial<OperationContext>
+      ) => Promise<EnqueueHookState<Action>>
     ];
 
 export const noProviderErrorMessage = `Could not find a client in the context of Provider. Please ensure you wrap the root component in a <Provider>`;
