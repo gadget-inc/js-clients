@@ -103,9 +103,7 @@ describe("useBulkAction", () => {
   });
 
   test("can execute a bulk create with flattened params", async () => {
-    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-    // @ts-ignore waiting for bulk params to be released gadget side
-    const { result } = renderHook(() => useBulkAction<any, any, any, any>(mockBulkCreate), { wrapper: MockClientWrapper(bulkExampleApi) });
+    const { result } = renderHook(() => useBulkAction(bulkExampleApi.widget.bulkCreate), { wrapper: MockClientWrapper(bulkExampleApi) });
 
     let mutationPromise: any;
     act(() => {
@@ -153,17 +151,15 @@ describe("useBulkAction", () => {
       expect(promiseResult.data![1].id).toEqual("124");
     });
 
-    expect(result.current[0].data!.length).toEqual(2);
-    expect(result.current[0].data![0].id).toEqual("123");
-    expect(result.current[0].data![1].id).toEqual("124");
+    expect(result.current[0].data?.length).toEqual(2);
+    expect(result.current[0].data?.[0].id).toEqual("123");
+    expect(result.current[0].data?.[1].id).toEqual("124");
     expect(result.current[0].fetching).toBe(false);
     expect(result.current[0].error).toBeFalsy();
   });
 
   test("can execute a bulk create with fully qualified params", async () => {
-    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-    // @ts-ignore waiting for bulk params to be released gadget side
-    const { result } = renderHook(() => useBulkAction<any, any, any, any>(mockBulkCreate), { wrapper: MockClientWrapper(bulkExampleApi) });
+    const { result } = renderHook(() => useBulkAction(bulkExampleApi.widget.bulkCreate), { wrapper: MockClientWrapper(bulkExampleApi) });
 
     let mutationPromise: any;
     act(() => {
@@ -211,17 +207,15 @@ describe("useBulkAction", () => {
       expect(promiseResult.data![1].id).toEqual("124");
     });
 
-    expect(result.current[0].data!.length).toEqual(2);
-    expect(result.current[0].data![0].id).toEqual("123");
-    expect(result.current[0].data![1].id).toEqual("124");
+    expect(result.current[0].data?.length).toEqual(2);
+    expect(result.current[0].data?.[0].id).toEqual("123");
+    expect(result.current[0].data?.[1].id).toEqual("124");
     expect(result.current[0].fetching).toBe(false);
     expect(result.current[0].error).toBeFalsy();
   });
 
   test("can execute a bulk update with flattened params", async () => {
-    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-    // @ts-ignore waiting for bulk params to be released gadget side
-    const { result } = renderHook(() => useBulkAction<any, any, any, any>(mockBulkUpdate), { wrapper: MockClientWrapper(bulkExampleApi) });
+    const { result } = renderHook(() => useBulkAction(bulkExampleApi.widget.bulkUpdate), { wrapper: MockClientWrapper(bulkExampleApi) });
 
     let mutationPromise: any;
     act(() => {
@@ -274,17 +268,15 @@ describe("useBulkAction", () => {
       expect(promiseResult.data![1].id).toEqual("124");
     });
 
-    expect(result.current[0].data!.length).toEqual(2);
-    expect(result.current[0].data![0].id).toEqual("123");
-    expect(result.current[0].data![1].id).toEqual("124");
+    expect(result.current[0].data?.length).toEqual(2);
+    expect(result.current[0].data?.[0].id).toEqual("123");
+    expect(result.current[0].data?.[1].id).toEqual("124");
     expect(result.current[0].fetching).toBe(false);
     expect(result.current[0].error).toBeFalsy();
   });
 
   test("can execute a bulk update with fully qualified params", async () => {
-    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-    // @ts-ignore waiting for bulk params to be released gadget side
-    const { result } = renderHook(() => useBulkAction<any, any, any, any>(mockBulkUpdate), { wrapper: MockClientWrapper(bulkExampleApi) });
+    const { result } = renderHook(() => useBulkAction(bulkExampleApi.widget.bulkUpdate), { wrapper: MockClientWrapper(bulkExampleApi) });
 
     let mutationPromise: any;
     act(() => {
@@ -337,9 +329,9 @@ describe("useBulkAction", () => {
       expect(promiseResult.data![1].id).toEqual("124");
     });
 
-    expect(result.current[0].data!.length).toEqual(2);
-    expect(result.current[0].data![0].id).toEqual("123");
-    expect(result.current[0].data![1].id).toEqual("124");
+    expect(result.current[0].data?.length).toEqual(2);
+    expect(result.current[0].data?.[0].id).toEqual("123");
+    expect(result.current[0].data?.[1].id).toEqual("124");
     expect(result.current[0].fetching).toBe(false);
     expect(result.current[0].error).toBeFalsy();
   });
@@ -433,53 +425,3 @@ describe("useBulkAction", () => {
     expect(result.current[0]).toBe(beforeObject);
   });
 });
-
-const mockBulkCreate = {
-  type: "action",
-  operationName: "bulkCreateWidgets",
-  namespace: null,
-  modelApiIdentifier: "widget",
-  modelSelectionField: "widgets",
-  isBulk: true,
-  defaultSelection: {
-    id: true,
-    name: true,
-  },
-  selectionType: {},
-  optionsType: {},
-  schemaType: null,
-  variablesType: void 0,
-  variables: {
-    inputs: {
-      required: true,
-      type: "[BulkCreateWidgetsInput!]",
-    },
-  },
-  acceptsModelInput: true,
-  hasReturnType: false,
-} as any;
-
-const mockBulkUpdate = {
-  type: "action",
-  operationName: "bulkUpdateWidgets",
-  namespace: null,
-  modelApiIdentifier: "widget",
-  modelSelectionField: "widgets",
-  isBulk: true,
-  defaultSelection: {
-    id: true,
-    name: true,
-  },
-  selectionType: {},
-  optionsType: {},
-  schemaType: null,
-  variablesType: void 0,
-  variables: {
-    inputs: {
-      required: true,
-      type: "[BulkUpdateWidgetsInput!]",
-    },
-  },
-  acceptsModelInput: true,
-  hasReturnType: false,
-} as any;

@@ -1,3 +1,4 @@
+import { $modelRelationships } from "@gadgetinc/api-client-core";
 import { MODE } from "@pollyjs/core";
 import { act, renderHook, waitFor } from "@testing-library/react";
 import { useActionForm, useFieldArray } from "../src/useActionForm.js";
@@ -1067,6 +1068,9 @@ describe("useActionFormNested", () => {
 
   describe("with mocking", () => {
     test("when no referenceTypes are provided/fetched it should throw an error", async () => {
+      // mock older clients that are missing this property
+      jest.replaceProperty(bulkExampleApi, $modelRelationships as any, undefined);
+
       const { result: useActionFormHook } = renderHook(() => useActionForm(bulkExampleApi.widget.create), {
         wrapper: MockClientWrapper(bulkExampleApi),
       });
