@@ -13,23 +13,23 @@ importers:
   .:
     devDependencies:
       '@gadget-client/app-with-no-user-model':
-        specifier: ^1.5.0
-        version: 1.5.0
+        specifier: 1.6.0-development.5
+        version: 1.6.0-development.5
       '@gadget-client/bulk-actions-test':
-        specifier: ^1.104.0
-        version: 1.104.0
+        specifier: 1.108.0-development.111
+        version: 1.108.0-development.111
       '@gadget-client/full-auth':
-        specifier: ^1.4.0
-        version: 1.4.0
+        specifier: 1.5.0-development.4
+        version: 1.5.0-development.4
       '@gadget-client/related-products-example':
-        specifier: ^1.859.0
-        version: 1.859.0
+        specifier: 1.860.0-development.859
+        version: 1.860.0-development.859
       '@gadget-client/zxcv-deeply-nested':
-        specifier: ^1.207.0
-        version: 1.207.0
+        specifier: 1.208.0-development.207
+        version: 1.208.0-development.207
       '@gadget-client/zxcv-simple-relationship':
-        specifier: ^1.17.0
-        version: 1.17.0
+        specifier: 1.18.0-development.17
+        version: 1.18.0-development.17
       '@gadgetinc/api-client-core':
         specifier: workspace:*
         version: link:packages/api-client-core
@@ -1204,8 +1204,8 @@ packages:
     engines: {node: ^12.22.0 || ^14.17.0 || >=16.0.0}
     dev: true
 
-  /@gadget-client/app-with-no-user-model@1.5.0:
-    resolution: {integrity: sha1-d5IrGFX84chk/GT66IJTpSji5ts=, tarball: https://registry.gadget.dev/npm/_/tarball/45852/90385/5457}
+  /@gadget-client/app-with-no-user-model@1.6.0-development.5:
+    resolution: {integrity: sha1-/OxvUVxpTmdvtDgNMe8AzyPnOes=, tarball: https://registry.gadget.dev/npm/_/tarball/45852/90385/6423}
     dependencies:
       '@gadgetinc/api-client-core': link:packages/api-client-core
     dev: true
@@ -1216,32 +1216,32 @@ packages:
       '@gadgetinc/api-client-core': link:packages/api-client-core
     dev: false
 
-  /@gadget-client/bulk-actions-test@1.104.0:
-    resolution: {integrity: sha1-93pd5nm57sBs7Y2gRA0/YAHM8TM=, tarball: https://registry.gadget.dev/npm/_/tarball/6681/12076/5459}
+  /@gadget-client/bulk-actions-test@1.108.0-development.111:
+    resolution: {integrity: sha1-mHCySRuSHRkbqHLLvm7G4w2CEek=, tarball: https://registry.gadget.dev/npm/_/tarball/6681/12077/6421}
     dependencies:
       '@gadgetinc/api-client-core': link:packages/api-client-core
     dev: true
 
-  /@gadget-client/full-auth@1.4.0:
-    resolution: {integrity: sha1-npUnTWStWGH5v2nmd5hPrLQBZwA=, tarball: https://registry.gadget.dev/npm/_/tarball/66538/131724/5610}
+  /@gadget-client/full-auth@1.5.0-development.4:
+    resolution: {integrity: sha1-8DlLcM9IjdFvsyi34/v06Iu2u9o=, tarball: https://registry.gadget.dev/npm/_/tarball/66538/131724/6422}
     dependencies:
       '@gadgetinc/api-client-core': link:packages/api-client-core
     dev: true
 
-  /@gadget-client/related-products-example@1.859.0:
-    resolution: {integrity: sha1-nb14pOPLAMiw0Yz7IiLFBLedUu0=, tarball: https://registry.gadget.dev/npm/_/tarball/1268/1362/6228}
+  /@gadget-client/related-products-example@1.860.0-development.859:
+    resolution: {integrity: sha1-AmNJ4SOUtpCatG/+uQxrx+xTkKg=, tarball: https://registry.gadget.dev/npm/_/tarball/1268/1362/6391}
     dependencies:
       '@gadgetinc/api-client-core': link:packages/api-client-core
     dev: true
 
-  /@gadget-client/zxcv-deeply-nested@1.207.0:
-    resolution: {integrity: sha1-bXcspYSq+sVyQiQ3AoqiWT5CSnc=, tarball: https://registry.gadget.dev/npm/_/tarball/76013/150608/6227}
+  /@gadget-client/zxcv-deeply-nested@1.208.0-development.207:
+    resolution: {integrity: sha1-tKrVYctNyiMfb7tsjG8huy1PgTc=, tarball: https://registry.gadget.dev/npm/_/tarball/76013/150608/6424}
     dependencies:
       '@gadgetinc/api-client-core': link:packages/api-client-core
     dev: true
 
-  /@gadget-client/zxcv-simple-relationship@1.17.0:
-    resolution: {integrity: sha1-FRYfc5QiRRNZtlbEI8YO9VVxIo4=, tarball: https://registry.gadget.dev/npm/_/tarball/79412/157406/6169}
+  /@gadget-client/zxcv-simple-relationship@1.18.0-development.17:
+    resolution: {integrity: sha1-FRYfc5QiRRNZtlbEI8YO9VVxIo4=, tarball: https://registry.gadget.dev/npm/_/tarball/79412/157406/6420}
     dependencies:
       '@gadgetinc/api-client-core': link:packages/api-client-core
     dev: true
