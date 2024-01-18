@@ -25,11 +25,11 @@ importers:
         specifier: ^1.860.0-development.859
         version: 1.860.0-development.859
       '@gadget-client/zxcv-deeply-nested':
-        specifier: ^1.207.0
-        version: 1.207.0
+        specifier: ^1.208.0-development.207
+        version: 1.208.0-development.207
       '@gadget-client/zxcv-simple-relationship':
-        specifier: ^1.17.0
-        version: 1.17.0
+        specifier: ^1.18.0-development.17
+        version: 1.18.0-development.17
       '@gadgetinc/api-client-core':
         specifier: workspace:*
         version: link:packages/api-client-core
@@ -1234,14 +1234,14 @@ packages:
       '@gadgetinc/api-client-core': link:packages/api-client-core
     dev: true
 
-  /@gadget-client/zxcv-deeply-nested@1.207.0:
-    resolution: {integrity: sha1-bXcspYSq+sVyQiQ3AoqiWT5CSnc=, tarball: https://registry.gadget.dev/npm/_/tarball/76013/150608/6227}
+  /@gadget-client/zxcv-deeply-nested@1.208.0-development.207:
+    resolution: {integrity: sha1-tKrVYctNyiMfb7tsjG8huy1PgTc=, tarball: https://registry.gadget.dev/npm/_/tarball/76013/150608/6424}
     dependencies:
       '@gadgetinc/api-client-core': link:packages/api-client-core
     dev: true
 
-  /@gadget-client/zxcv-simple-relationship@1.17.0:
-    resolution: {integrity: sha1-FRYfc5QiRRNZtlbEI8YO9VVxIo4=, tarball: https://registry.gadget.dev/npm/_/tarball/79412/157406/6169}
+  /@gadget-client/zxcv-simple-relationship@1.18.0-development.17:
+    resolution: {integrity: sha1-FRYfc5QiRRNZtlbEI8YO9VVxIo4=, tarball: https://registry.gadget.dev/npm/_/tarball/79412/157406/6420}
     dependencies:
       '@gadgetinc/api-client-core': link:packages/api-client-core
     dev: true
