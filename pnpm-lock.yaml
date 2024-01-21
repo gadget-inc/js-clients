@@ -1,4 +1,4 @@
-lockfileVersion: '6.1'
+lockfileVersion: '6.0'
 
 settings:
   autoInstallPeers: true
@@ -96,6 +96,9 @@ importers:
 
   packages/api-client-core:
     dependencies:
+      '@manufac/repeater':
+        specifier: ^4.0.0
+        version: 4.0.0
       '@n1ru4l/graphql-live-query':
         specifier: ^0.10.0
         version: 0.10.0(graphql@16.8.1)
@@ -1618,6 +1621,10 @@ packages:
       '@jridgewell/resolve-uri': 3.0.7
       '@jridgewell/sourcemap-codec': 1.4.13
     dev: true
+
+  /@manufac/repeater@4.0.0:
+    resolution: {integrity: sha512-im4VhgAwq+KPzeHfRepN42VKn0PfJDl/E0yCMx+zk2VXohok0X1h/6PbJDp30tKRr5yjz+MhIBLgrvTIk8fDfg==}
+    dev: false
 
   /@n1ru4l/graphql-live-query-patch-jsondiffpatch@0.8.0(graphql@16.8.1):
     resolution: {integrity: sha512-m5OPdEhBbqQ+pkFz2dQmPl10JW/RB1Qc2zoVn9QTEXvyeSzQmrl+qNtn3nvv87P9rQDiRD/JWlD86BFX0XloBg==}
