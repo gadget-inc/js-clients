@@ -28,7 +28,7 @@
     "prerelease": "gitpkg publish"
   },
   "dependencies": {
-    "@manufac/repeater": "^4.0.1",
+    "@manufac/repeater": "^4.0.6",
     "@n1ru4l/graphql-live-query": "^0.10.0",
     "@n1ru4l/graphql-live-query-patch-jsondiffpatch": "^0.8.0",
     "@n1ru4l/push-pull-async-iterable-iterator": "^3.2.0",
