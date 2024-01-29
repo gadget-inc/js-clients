@@ -1,6 +1,6 @@
 {
-  "name": "@gadgetinc/api-client-core",
-  "version": "0.15.14",
+  "name": "@manufac/api-client-core",
+  "version": "0.15.15",
   "files": [
     "Readme.md",
     "dist/**/*"
@@ -54,5 +54,8 @@
     "ts-node": "^10.9.1",
     "type-fest": "^3.3.0",
     "typescript": "5.0.4"
+  },
+  "publishConfig": {
+    "access": "public"
   }
 }
