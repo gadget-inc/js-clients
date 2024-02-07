@@ -94,7 +94,7 @@ interface BulkActionWithInputs<OptionsT, VariablesT> {
   <Options extends OptionsT>(inputs: VariablesT, options?: LimitToKnownKeys<Options, OptionsT>): AsyncRecord<any>;
 }
 
-interface ActionFunctionMetadata<OptionsT, VariablesT, SelectionT, SchemaT, DefaultsT, IsBulk> {
+export interface ActionFunctionMetadata<OptionsT, VariablesT, SelectionT, SchemaT, DefaultsT, IsBulk> {
   type: "action";
   operationName: string;
   namespace: string | null;
@@ -161,3 +161,5 @@ export interface GlobalActionFunction<VariablesT> {
   variables: VariablesOptions;
   variablesType: VariablesT;
 }
+
+export type AnyActionFunction = ActionFunctionMetadata<any, any, any, any, any, any> | GlobalActionFunction<any>;
