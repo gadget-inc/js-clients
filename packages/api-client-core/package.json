@@ -54,8 +54,5 @@
     "ts-node": "^10.9.1",
     "type-fest": "^3.3.0",
     "typescript": "5.0.4"
-  },
-  "publishConfig": {
-    "access": "public"
   }
 }
