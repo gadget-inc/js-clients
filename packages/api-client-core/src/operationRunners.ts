@@ -1,10 +1,13 @@
+import { BackgroundActionHandle } from "./BackgroundActionHandle.js";
 import type { FieldSelection } from "./FieldSelection.js";
 import type { GadgetConnection } from "./GadgetConnection.js";
+import { AnyActionFunction } from "./GadgetFunctions.js";
 import type { GadgetRecord, RecordShape } from "./GadgetRecord.js";
 import { GadgetRecordList } from "./GadgetRecordList.js";
 import type { AnyModelManager } from "./ModelManager.js";
 import {
   actionOperation,
+  enqueueActionOperation,
   findManyOperation,
   findOneByFieldOperation,
   findOneOperation,
@@ -15,14 +18,17 @@ import {
   assertMutationSuccess,
   assertNullableOperationSuccess,
   assertOperationSuccess,
+  disambiguateActionVariables,
+  disambiguateBulkActionVariables,
   gadgetErrorFor,
   get,
   getNonUniqueDataError,
   hydrateConnection,
   hydrateRecord,
   hydrateRecordArray,
+  setVariableOptionValues,
 } from "./support.js";
-import type { BaseFindOptions, FindManyOptions, VariablesOptions } from "./types.js";
+import type { BaseFindOptions, EnqueueBackgroundActionOptions, FindManyOptions, VariablesOptions } from "./types.js";
 
 export const findOneRunner = async <Shape extends RecordShape = any>(
   modelManager: { connection: GadgetConnection },
@@ -228,4 +234,34 @@ export const globalActionRunner = async (
   const response = await connection.currentClient.mutation(plan.query, plan.variables).toPromise();
   const dataPath = namespace ? [namespace, operation] : [operation];
   return assertMutationSuccess(response, dataPath).result;
+};
+
+export const enqueueActionRunner = async <Action extends AnyActionFunction>(
+  connection: GadgetConnection,
+  action: Action,
+  variables: Action["variablesType"],
+  options: EnqueueBackgroundActionOptions<Action> = {}
+) => {
+  const normalizedVariableValues =
+    "isBulk" in action && action.isBulk
+      ? disambiguateBulkActionVariables(action, variables)
+      : disambiguateActionVariables(action, variables);
+  const variableOptions = setVariableOptionValues(action.variables, normalizedVariableValues);
+
+  const plan = enqueueActionOperation(action.operationName, variableOptions, action.namespace, options);
+  const response = await connection.currentClient.mutation(plan.query, plan.variables, options).toPromise();
+  const dataPath = ["background", action.operationName];
+  if (action.namespace) {
+    dataPath.unshift(action.namespace);
+  }
+
+  try {
+    const result = assertMutationSuccess(response, dataPath);
+    return new BackgroundActionHandle(connection, result.backgroundAction.id, options);
+  } catch (error: any) {
+    if ("code" in error && error.code == "GGT_DUPLICATE_BACKGROUND_ACTION_ID" && options?.id && options.onDuplicateID == "ignore") {
+      return new BackgroundActionHandle(connection, options.id, options);
+    }
+    throw error;
+  }
 };

@@ -1,6 +1,8 @@
 import nock from "nock";
+import { BackgroundActionHandle } from "../src/BackgroundActionHandle.js";
 import type { GadgetErrorGroup } from "../src/index.js";
-import { GadgetConnection, actionRunner } from "../src/index.js";
+import { GadgetConnection, actionRunner, enqueueActionRunner } from "../src/index.js";
+import { MockBulkFlipDownWidgetsAction, MockBulkUpdateWidgetAction, MockGlobalAction, MockWidgetCreateAction } from "./mockActions.js";
 import { mockUrqlClient } from "./mockUrqlClient.js";
 
 nock.disableNetConnect();
@@ -372,6 +374,403 @@ describe("operationRunners", () => {
 
       const result = await promise;
       expect(result).toBeUndefined();
+    });
+  });
+
+  describe("enqueueActionRunner", () => {
+    test("can enqueue an action and return a handle", async () => {
+      const promise = enqueueActionRunner(connection, MockWidgetCreateAction, { widget: { name: "new widget" } });
+
+      expect(mockUrqlClient.executeMutation.mock.calls.length).toEqual(1);
+      expect(mockUrqlClient.executeMutation.mock.calls[0][0].variables).toEqual({
+        backgroundOptions: {},
+        widget: { name: "new widget" },
+      });
+
+      mockUrqlClient.executeMutation.pushResponse("enqueueCreateWidget", {
+        data: {
+          background: {
+            createWidget: {
+              success: true,
+              errors: null,
+              backgroundAction: {
+                id: "widget-createWidget-123",
+              },
+            },
+          },
+        },
+        stale: false,
+        hasNext: false,
+      });
+
+      const handle = await promise;
+      expect(handle).toBeInstanceOf(BackgroundActionHandle);
+      expect(handle.id).toEqual("widget-createWidget-123");
+    });
+
+    test("can pass shorthand retry options", async () => {
+      const promise = enqueueActionRunner(
+        connection,
+        MockWidgetCreateAction,
+        { widget: { name: "new widget" } },
+        {
+          retries: 10,
+        }
+      );
+
+      expect(mockUrqlClient.executeMutation.mock.calls.length).toEqual(1);
+      expect(mockUrqlClient.executeMutation.mock.calls[0][0].variables).toEqual({
+        backgroundOptions: { retries: { retries: 10 } },
+        widget: { name: "new widget" },
+      });
+
+      mockUrqlClient.executeMutation.pushResponse("enqueueCreateWidget", {
+        data: {
+          background: {
+            createWidget: {
+              success: true,
+              errors: null,
+              backgroundAction: {
+                id: "widget-createWidget-123",
+              },
+            },
+          },
+        },
+        stale: false,
+        hasNext: false,
+      });
+
+      await promise;
+    });
+
+    test("can pass urql request policies", async () => {
+      const promise = enqueueActionRunner(
+        connection,
+        MockWidgetCreateAction,
+        { widget: { name: "new widget" } },
+        {
+          retries: 10,
+          requestPolicy: "network-only",
+        }
+      );
+
+      expect(mockUrqlClient.executeMutation.mock.calls.length).toEqual(1);
+      expect(mockUrqlClient.executeMutation.mock.calls[0][1].requestPolicy).toEqual("network-only");
+      expect(mockUrqlClient.executeMutation.mock.calls[0][0].variables).toEqual({
+        backgroundOptions: { retries: { retries: 10 } },
+        widget: { name: "new widget" },
+      });
+
+      mockUrqlClient.executeMutation.pushResponse("enqueueCreateWidget", {
+        data: {
+          background: {
+            createWidget: {
+              success: true,
+              errors: null,
+              backgroundAction: {
+                id: "widget-createWidget-123",
+              },
+            },
+          },
+        },
+        stale: false,
+        hasNext: false,
+      });
+
+      await promise;
+    });
+
+    test("can pass longhand retry options", async () => {
+      const promise = enqueueActionRunner(
+        connection,
+        MockWidgetCreateAction,
+        { widget: { name: "new widget" } },
+        {
+          retries: { retries: 10, factor: 10, minTimeout: 1, maxTimeout: 2 },
+        }
+      );
+
+      expect(mockUrqlClient.executeMutation.mock.calls.length).toEqual(1);
+      expect(mockUrqlClient.executeMutation.mock.calls[0][0].variables).toEqual({
+        backgroundOptions: { retries: { retries: 10, factor: 10, minTimeout: 1, maxTimeout: 2 } },
+        widget: { name: "new widget" },
+      });
+
+      mockUrqlClient.executeMutation.pushResponse("enqueueCreateWidget", {
+        data: {
+          background: {
+            createWidget: {
+              success: true,
+              errors: null,
+              backgroundAction: {
+                id: "widget-createWidget-123",
+              },
+            },
+          },
+        },
+        stale: false,
+        hasNext: false,
+      });
+
+      await promise;
+    });
+
+    test("can pass priority options", async () => {
+      const promise = enqueueActionRunner(
+        connection,
+        MockWidgetCreateAction,
+        { widget: { name: "new widget" } },
+        {
+          priority: "high",
+        }
+      );
+
+      expect(mockUrqlClient.executeMutation.mock.calls.length).toEqual(1);
+      expect(mockUrqlClient.executeMutation.mock.calls[0][0].variables).toEqual({
+        backgroundOptions: { priority: "high" },
+        widget: { name: "new widget" },
+      });
+
+      mockUrqlClient.executeMutation.pushResponse("enqueueCreateWidget", {
+        data: {
+          background: {
+            createWidget: {
+              success: true,
+              errors: null,
+              backgroundAction: {
+                id: "widget-createWidget-123",
+              },
+            },
+          },
+        },
+        stale: false,
+        hasNext: false,
+      });
+
+      await promise;
+    });
+
+    test("can pass shorthand concurrency queue options", async () => {
+      const promise = enqueueActionRunner(
+        connection,
+        MockWidgetCreateAction,
+        { widget: { name: "new widget" } },
+        {
+          queue: "foobar",
+        }
+      );
+
+      expect(mockUrqlClient.executeMutation.mock.calls.length).toEqual(1);
+      expect(mockUrqlClient.executeMutation.mock.calls[0][0].variables).toEqual({
+        backgroundOptions: { queue: { name: "foobar" } },
+        widget: { name: "new widget" },
+      });
+
+      mockUrqlClient.executeMutation.pushResponse("enqueueCreateWidget", {
+        data: {
+          background: {
+            createWidget: {
+              success: true,
+              errors: null,
+              backgroundAction: {
+                id: "widget-createWidget-123",
+              },
+            },
+          },
+        },
+        stale: false,
+        hasNext: false,
+      });
+
+      await promise;
+    });
+
+    test("can pass longhand concurrency queue options", async () => {
+      const promise = enqueueActionRunner(
+        connection,
+        MockWidgetCreateAction,
+        { widget: { name: "new widget" } },
+        {
+          queue: { name: "foobar", maxConcurrency: 10 },
+        }
+      );
+
+      expect(mockUrqlClient.executeMutation.mock.calls.length).toEqual(1);
+      expect(mockUrqlClient.executeMutation.mock.calls[0][0].variables).toEqual({
+        backgroundOptions: { queue: { name: "foobar", maxConcurrency: 10 } },
+        widget: { name: "new widget" },
+      });
+
+      mockUrqlClient.executeMutation.pushResponse("enqueueCreateWidget", {
+        data: {
+          background: {
+            createWidget: {
+              success: true,
+              errors: null,
+              backgroundAction: {
+                id: "widget-createWidget-123",
+              },
+            },
+          },
+        },
+        stale: false,
+        hasNext: false,
+      });
+
+      await promise;
+    });
+
+    test("can enqueue a global action and return a handle", async () => {
+      const promise = enqueueActionRunner(connection, MockGlobalAction, { toState: "whatever" });
+
+      expect(mockUrqlClient.executeMutation.mock.calls.length).toEqual(1);
+      expect(mockUrqlClient.executeMutation.mock.calls[0][0].variables).toEqual({
+        backgroundOptions: {},
+        toState: "whatever",
+      });
+
+      mockUrqlClient.executeMutation.pushResponse("enqueueFlipAllWidgets", {
+        data: {
+          background: {
+            flipAllWidgets: {
+              success: true,
+              errors: null,
+              backgroundAction: {
+                id: "widget-flipAllWidgets-123",
+              },
+            },
+          },
+        },
+        stale: false,
+        hasNext: false,
+      });
+
+      const handle = await promise;
+      expect(handle).toBeInstanceOf(BackgroundActionHandle);
+      expect(handle.id).toEqual("widget-flipAllWidgets-123");
+    });
+
+    test("can enqueue a bulk action with ids only and return a handle", async () => {
+      const promise = enqueueActionRunner(connection, MockBulkFlipDownWidgetsAction, ["123", "456"]);
+
+      expect(mockUrqlClient.executeMutation.mock.calls.length).toEqual(1);
+      expect(mockUrqlClient.executeMutation.mock.calls[0][0].variables).toEqual({
+        backgroundOptions: {},
+        ids: ["123", "456"],
+      });
+
+      mockUrqlClient.executeMutation.pushResponse("enqueueBulkFlipDownWidgets", {
+        data: {
+          background: {
+            bulkFlipDownWidgets: {
+              success: true,
+              errors: null,
+              backgroundAction: {
+                id: "widget-bulkFlipWidgets-123",
+              },
+            },
+          },
+        },
+        stale: false,
+        hasNext: false,
+      });
+
+      const handle = await promise;
+      expect(handle).toBeInstanceOf(BackgroundActionHandle);
+      expect(handle.id).toEqual("widget-bulkFlipWidgets-123");
+    });
+
+    test("can enqueue a bulk action with a list of inputs and return a handle", async () => {
+      const promise = enqueueActionRunner(connection, MockBulkUpdateWidgetAction, [
+        { id: "123", name: "foo" },
+        { id: "124", name: "bar" },
+      ]);
+
+      expect(mockUrqlClient.executeMutation.mock.calls.length).toEqual(1);
+      expect(mockUrqlClient.executeMutation.mock.calls[0][0].variables).toEqual({
+        backgroundOptions: {},
+        inputs: [
+          { id: "123", widget: { name: "foo" } },
+          { id: "124", widget: { name: "bar" } },
+        ],
+      });
+
+      mockUrqlClient.executeMutation.pushResponse("enqueueBulkUpdateWidgets", {
+        data: {
+          background: {
+            bulkUpdateWidgets: {
+              success: true,
+              errors: null,
+              backgroundAction: {
+                id: "background-123",
+              },
+            },
+          },
+        },
+        stale: false,
+        hasNext: false,
+      });
+
+      const handle = await promise;
+      expect(handle).toBeInstanceOf(BackgroundActionHandle);
+      expect(handle.id).toEqual("background-123");
+    });
+
+    test("throws a duplicate ID error by default from the server", async () => {
+      const promise = enqueueActionRunner(connection, MockWidgetCreateAction, { widget: { name: "new widget" } }, { id: "fixed-id" });
+
+      mockUrqlClient.executeMutation.pushResponse("enqueueCreateWidget", {
+        data: {
+          background: {
+            createWidget: {
+              success: false,
+              errors: [
+                {
+                  code: "GGT_DUPLICATE_BACKGROUND_ACTION_ID",
+                  message: "Duplicate ID",
+                },
+              ],
+              backgroundAction: null,
+            },
+          },
+        },
+        stale: false,
+        hasNext: false,
+      });
+
+      await expect(promise).rejects.toThrowErrorMatchingInlineSnapshot(`"GGT_DUPLICATE_BACKGROUND_ACTION_ID: Duplicate ID"`);
+    });
+
+    test("ignores duplicate ID errors when onDuplicateID: ignore is set", async () => {
+      const promise = enqueueActionRunner(
+        connection,
+        MockWidgetCreateAction,
+        { widget: { name: "new widget" } },
+        { id: "fixed-id", onDuplicateID: "ignore" }
+      );
+
+      mockUrqlClient.executeMutation.pushResponse("enqueueCreateWidget", {
+        data: {
+          background: {
+            createWidget: {
+              success: false,
+              errors: [
+                {
+                  code: "GGT_DUPLICATE_BACKGROUND_ACTION_ID",
+                  message: "Duplicate ID",
+                },
+              ],
+              backgroundAction: null,
+            },
+          },
+        },
+        stale: false,
+        hasNext: false,
+      });
+
+      const handle = await promise;
+      expect(handle).toBeInstanceOf(BackgroundActionHandle);
+      expect(handle.id).toEqual("fixed-id");
     });
   });
 });

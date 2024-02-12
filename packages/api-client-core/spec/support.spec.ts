@@ -176,7 +176,7 @@ describe("support utilities", () => {
     });
   });
 
-  describe("GagetOperationError", () => {
+  describe("GadgetOperationError", () => {
     test("adds the error code to messages that don't have it already", () => {
       const error = new GadgetOperationError("some message", "GGT_SOMETHING");
       expect(error.message).toEqual("GGT_SOMETHING: some message");
