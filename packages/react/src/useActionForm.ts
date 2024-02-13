@@ -269,22 +269,8 @@ export const reshapeDataForGraphqlApi = async (client: AnyClient, defaultValues:
         return depth <= 1 ? { ...rest, ...belongsTo } : { ...rest, create: { ...belongsTo } }; // when we're in the root, we need to return the belongsTo object as part of the result otherwise wrap it in a create
       }
 
-      if (depth <= 1) {
+      if (depth <= 1 || fieldType == null) {
         return { ...rest };
-      }
-
-      if (fieldType == null) {
-        throw new Error(
-          `Can't transform input, no field type found. ${JSON.stringify(
-            {
-              input,
-              path,
-              referencedTypes,
-            },
-            null,
-            2
-          )}`
-        );
       }
 
       const inputHasId = "id" in input;

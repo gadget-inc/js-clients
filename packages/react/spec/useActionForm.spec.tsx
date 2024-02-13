@@ -2364,4 +2364,178 @@ describe("useActionForm", () => {
     expect(result.current.getValues("user.password")).toBe("newsecret");
     expect(result.current.getValues("foo")).toBe("baz");
   });
+
+  test("can be used with an action when the default values has a role field", async () => {
+    const { result } = renderHook(
+      () =>
+        useActionForm(fullAuthApi.user.changePassword, {
+          defaultValues: {
+            user: {
+              __typename: "User",
+              id: "1",
+              createdAt: "2024-02-13T03:19:17.573Z",
+              updatedAt: "2024-02-13T03:29:43.667Z",
+              email: "test@gmail.com",
+              emailVerificationToken: null,
+              emailVerificationTokenExpiration: null,
+              emailVerified: true,
+              firstName: null,
+              googleImageUrl: null,
+              googleProfileId: null,
+              lastName: null,
+              lastSignedIn: "2024-02-13T03:29:43.645Z",
+              resetPasswordToken: null,
+              resetPasswordTokenExpiration: null,
+              roles: [{ key: "signed-in", name: "signed-in", __typename: "Role" }],
+            },
+          },
+        }),
+      { wrapper: MockClientWrapper(relatedProductsApi) }
+    );
+
+    expect(result.current.formState.isLoading).toBe(false);
+    expect(result.current.formState.isSubmitted).toBe(false);
+    expect(result.current.formState.isSubmitSuccessful).toBe(false);
+    expect(result.current.formState.isSubmitting).toBe(false);
+    expect(result.current.error).toBeFalsy();
+    expect(result.current.actionData).toBeFalsy();
+    expect(result.current.getValues("currentPassword")).toBeUndefined();
+    expect(result.current.getValues("newPassword")).toBeUndefined();
+
+    expect(mockUrqlClient.executeQuery).toBeCalledTimes(0);
+
+    let submitPromise: Promise<any>;
+
+    await act(async () => {
+      (result.current as any).setValue("currentPassword", "currPass");
+      (result.current as any).setValue("newPassword", "newPass");
+      submitPromise = result.current.submit();
+    });
+
+    expect(result.current.formState.isLoading).toBe(false);
+    expect(result.current.formState.isSubmitted).toBe(false);
+    expect(result.current.formState.isSubmitSuccessful).toBe(false);
+    expect(result.current.formState.isSubmitting).toBe(true);
+    expect(result.current.error).toBeFalsy();
+    expect(result.current.actionData).toBeFalsy();
+    expect(result.current.getValues("currentPassword")).toBe("currPass");
+    expect(result.current.getValues("newPassword")).toBe("newPass");
+
+    expect(mockUrqlClient.executeMutation.mock.calls[0][0].variables).toEqual({
+      id: "1",
+      currentPassword: "currPass",
+      newPassword: "newPass",
+      user: {
+        email: "test@gmail.com",
+        emailVerificationToken: null,
+        emailVerificationTokenExpiration: null,
+        emailVerified: true,
+        firstName: null,
+        googleImageUrl: null,
+        googleProfileId: null,
+        lastName: null,
+        lastSignedIn: "2024-02-13T03:29:43.645Z",
+        resetPasswordToken: null,
+        resetPasswordTokenExpiration: null,
+        roles: [{ key: "signed-in", name: "signed-in" }],
+      },
+    });
+
+    mockUrqlClient.executeMutation.pushResponse("changePasswordUser", {
+      data: {
+        changePasswordUser: {
+          success: true,
+          user: {
+            __typename: "User",
+            id: "1",
+            createdAt: "2024-02-13T03:19:17.573Z",
+            updatedAt: "2024-02-13T03:29:43.667Z",
+            email: "test@gmail.com",
+            emailVerificationToken: null,
+            emailVerificationTokenExpiration: null,
+            emailVerified: true,
+            firstName: null,
+            googleImageUrl: null,
+            googleProfileId: null,
+            lastName: null,
+            lastSignedIn: "2024-02-13T03:29:43.645Z",
+            resetPasswordToken: null,
+            resetPasswordTokenExpiration: null,
+            roles: [{ key: "signed-in", name: "signed-in", __typename: "Role" }],
+          },
+        },
+      },
+      stale: false,
+      hasNext: false,
+    });
+
+    await act(async () => {
+      const result = await submitPromise;
+      expect(result).toMatchInlineSnapshot(`
+        {
+          "data": {
+            "__typename": "User",
+            "createdAt": "2024-02-13T03:19:17.573Z",
+            "email": "test@gmail.com",
+            "emailVerificationToken": null,
+            "emailVerificationTokenExpiration": null,
+            "emailVerified": true,
+            "firstName": null,
+            "googleImageUrl": null,
+            "googleProfileId": null,
+            "id": "1",
+            "lastName": null,
+            "lastSignedIn": "2024-02-13T03:29:43.645Z",
+            "resetPasswordToken": null,
+            "resetPasswordTokenExpiration": null,
+            "roles": [
+              {
+                "__typename": "Role",
+                "key": "signed-in",
+                "name": "signed-in",
+              },
+            ],
+            "updatedAt": "2024-02-13T03:29:43.667Z",
+          },
+          "error": undefined,
+          "fetching": false,
+          "hasNext": false,
+          "operation": null,
+          "stale": false,
+        }
+      `);
+    });
+
+    expect(result.current.formState.isLoading).toBe(false);
+    expect(result.current.formState.isSubmitted).toBe(true);
+    expect(result.current.formState.isSubmitSuccessful).toBe(true);
+    expect(result.current.formState.isSubmitting).toBe(false);
+    expect(result.current.error).toBeFalsy();
+    expect(result.current.actionData).toEqual({
+      __typename: "User",
+      createdAt: "2024-02-13T03:19:17.573Z",
+      email: "test@gmail.com",
+      emailVerificationToken: null,
+      emailVerificationTokenExpiration: null,
+      emailVerified: true,
+      firstName: null,
+      googleImageUrl: null,
+      googleProfileId: null,
+      id: "1",
+      lastName: null,
+      lastSignedIn: "2024-02-13T03:29:43.645Z",
+      resetPasswordToken: null,
+      resetPasswordTokenExpiration: null,
+      roles: [
+        {
+          __typename: "Role",
+          key: "signed-in",
+          name: "signed-in",
+        },
+      ],
+      updatedAt: "2024-02-13T03:29:43.667Z",
+    });
+    expect(result.current.getValues("currentPassword")).toBe("currPass");
+    expect(result.current.getValues("newPassword")).toBe("newPass");
+  });
 });
