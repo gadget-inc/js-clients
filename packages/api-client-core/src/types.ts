@@ -789,6 +789,30 @@ export interface BackgroundActionQueue {
   maxConcurrency?: number;
 }
 
+/** Options for configuring how a background action will retry on failure */
+export interface BackgroundActionRetryPolicy {
+  /**
+   * The maximum number of times to retry the operation if it keeps failing. Default is 10.
+   */
+  retryCount?: number;
+  /**
+   * How long to initially delay the first retry. Default is 1000.
+   */
+  initialInterval?: number;
+  /**
+   * The maximum amount of time to delay a retry while exponentially backing off. Default is not set, so the retry can backoff indefinitely.
+   */
+  maxInterval?: number;
+  /**
+   * Randomizes the delays between attempts by multiplying with a factor between 1 to 2. Default is false.
+   */
+  randomizeInterval?: boolean;
+  /**
+   * The exponential backoff factor to use for calculating the retry delay for successive retries. Set this higher to delay longer. Default is 2.
+   */
+  backoffFactor?: number;
+}
+
 /**
  * Options for governing how a background action is enqueued
  */
@@ -811,45 +835,22 @@ export type EnqueueBackgroundActionOptions<Action extends AnyActionFunction> = {
   queue?: string | BackgroundActionQueue;
 
   /**
-   * How many times, and how fast to retry this action if it fails
-   * Matches the options you might pass to the `retry` module from npm
+   * Configure how many times to retry this action if it fails (and how fast)
    *
-   * Setting `retries` to one means the action will be attempted once, then retried once if it fails. Setting `retries` to 0 means failures won't be retried at all.
+   * Setting `retries` to `1` means the action will be attempted once, and if it fails, retries again once.
+   * Setting `retries` to `0` means failures won't be retried at all.
+   * Setting `retries` to an object allows configuring the count as well as the schedule retries will be attempted on, @see BackgroundActionRetryPolicy
    *
    * @example
    * // retry up to 3 more times after failure (4 attempts total)
-   * retry: 3
+   * retries: 3
    *
    * @example
-   * retry: { retries: 5, minTimeout: 1000, maxTimeout: 60000, randomize: true }
+   * retries: { retryCount: 5, initialInterval: 1000, maxInterval: 60000, randomizeInterval: true }
    *
    * @default 10 retry 10 times with exponential backoff
    **/
-  retries?:
-    | number
-    | {
-        /**
-         * The number of times to retry the operation. Default is 10.
-         */
-        retries?: number;
-        /**
-         * How long to initially delay the first retry. Default is 1000.
-         */
-        minTimeout?: number;
-        /**
-         * The maximum amount of time to delay a retry while exponentially backing off. Default is not set, so the retry can backoff indefinitely.
-         */
-        maxTimeout?: number;
-        /**
-         * Randomizes the timeouts by multiplying with a factor between 1 to 2. Default is false.
-         */
-        randomize?: boolean;
-        /**
-         * The exponential backoff factor to use for calculating the retry delay for successive retries. Set this higher to delay longer. Default is 2.
-         */
-        factor?: number;
-      }
-    | number;
+  retries?: number | BackgroundActionRetryPolicy;
 
   /**
    * Define client behavior when a background action is enqueued with the same ID as an existing action.

@@ -420,7 +420,7 @@ describe("operationRunners", () => {
 
       expect(mockUrqlClient.executeMutation.mock.calls.length).toEqual(1);
       expect(mockUrqlClient.executeMutation.mock.calls[0][0].variables).toEqual({
-        backgroundOptions: { retries: { retries: 10 } },
+        backgroundOptions: { retries: { retryCount: 10 } },
         widget: { name: "new widget" },
       });
 
@@ -457,7 +457,7 @@ describe("operationRunners", () => {
       expect(mockUrqlClient.executeMutation.mock.calls.length).toEqual(1);
       expect(mockUrqlClient.executeMutation.mock.calls[0][1].requestPolicy).toEqual("network-only");
       expect(mockUrqlClient.executeMutation.mock.calls[0][0].variables).toEqual({
-        backgroundOptions: { retries: { retries: 10 } },
+        backgroundOptions: { retries: { retryCount: 10 } },
         widget: { name: "new widget" },
       });
 
@@ -486,13 +486,13 @@ describe("operationRunners", () => {
         MockWidgetCreateAction,
         { widget: { name: "new widget" } },
         {
-          retries: { retries: 10, factor: 10, minTimeout: 1, maxTimeout: 2 },
+          retries: { retryCount: 10, backoffFactor: 10, initialInterval: 1, maxInterval: 2 },
         }
       );
 
       expect(mockUrqlClient.executeMutation.mock.calls.length).toEqual(1);
       expect(mockUrqlClient.executeMutation.mock.calls[0][0].variables).toEqual({
-        backgroundOptions: { retries: { retries: 10, factor: 10, minTimeout: 1, maxTimeout: 2 } },
+        backgroundOptions: { retries: { retryCount: 10, backoffFactor: 10, initialInterval: 1, maxInterval: 2 } },
         widget: { name: "new widget" },
       });
 
