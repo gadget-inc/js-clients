@@ -192,7 +192,7 @@ export const graphqlizeBackgroundOptions = (options?: EnqueueBackgroundActionOpt
   const obj = { ...options };
   if (typeof obj.retries == "number") {
     obj.retries = {
-      retries: obj.retries,
+      retryCount: obj.retries,
     };
   }
 
