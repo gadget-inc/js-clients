@@ -1,4 +1,12 @@
-import { actionOperation, enqueueActionOperation, findManyOperation, findOneByFieldOperation, findOneOperation } from "../src/index.js";
+import {
+  actionOperation,
+  actionResultOperation,
+  enqueueActionOperation,
+  findManyOperation,
+  findOneByFieldOperation,
+  findOneOperation,
+} from "../src/index.js";
+import { MockWidgetCreateAction } from "./mockActions.js";
 
 describe("operation builders", () => {
   describe("findOneOperation", () => {
@@ -599,6 +607,41 @@ describe("operation builders", () => {
         }",
           "variables": {
             "backgroundOptions": null,
+          },
+        }
+      `);
+    });
+  });
+
+  describe("actionResultOperation", () => {
+    test("actionResultOperation builds query", async () => {
+      expect(actionResultOperation("app-job-1234567", MockWidgetCreateAction, { select: { id: true } })).toMatchInlineSnapshot(`
+        {
+          "query": "query createWidget($id: String!) {
+          backgroundAction(id: $id) {
+            id
+            outcome
+            ... on CreateWidgetResult {
+              success
+              errors {
+                message
+                code
+                ... on InvalidRecordError {
+                  validationErrors {
+                    message
+                    apiIdentifier
+                  }
+                }
+              }
+              widget {
+                id
+                __typename
+              }
+            }
+          }
+        }",
+          "variables": {
+            "id": "app-job-1234567",
           },
         }
       `);

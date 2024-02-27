@@ -1,12 +1,13 @@
 import { BackgroundActionHandle } from "./BackgroundActionHandle.js";
 import type { FieldSelection } from "./FieldSelection.js";
 import type { GadgetConnection } from "./GadgetConnection.js";
-import { AnyActionFunction } from "./GadgetFunctions.js";
+import type { AnyActionFunction } from "./GadgetFunctions.js";
 import type { GadgetRecord, RecordShape } from "./GadgetRecord.js";
 import { GadgetRecordList } from "./GadgetRecordList.js";
 import type { AnyModelManager } from "./ModelManager.js";
 import {
   actionOperation,
+  actionResultOperation,
   enqueueActionOperation,
   findManyOperation,
   findOneByFieldOperation,
@@ -28,7 +29,7 @@ import {
   hydrateRecordArray,
   setVariableOptionValues,
 } from "./support.js";
-import type { BaseFindOptions, EnqueueBackgroundActionOptions, FindManyOptions, VariablesOptions } from "./types.js";
+import type { ActionFunctionOptions, BaseFindOptions, EnqueueBackgroundActionOptions, FindManyOptions, VariablesOptions } from "./types.js";
 
 export const findOneRunner = async <Shape extends RecordShape = any>(
   modelManager: { connection: GadgetConnection },
@@ -257,11 +258,23 @@ export const enqueueActionRunner = async <Action extends AnyActionFunction>(
 
   try {
     const result = assertMutationSuccess(response, dataPath);
-    return new BackgroundActionHandle(connection, result.backgroundAction.id, options);
+    return new BackgroundActionHandle(connection, action, result.backgroundAction.id, options);
   } catch (error: any) {
     if ("code" in error && error.code == "GGT_DUPLICATE_BACKGROUND_ACTION_ID" && options?.id && options.onDuplicateID == "ignore") {
-      return new BackgroundActionHandle(connection, options.id, options);
+      return new BackgroundActionHandle(connection, action, options.id, options);
     }
     throw error;
   }
+};
+
+export const actionResultRunner = async <Action extends AnyActionFunction, Options extends ActionFunctionOptions<Action>>(
+  connection: GadgetConnection,
+  id: string,
+  action: Action,
+  options?: Options
+) => {
+  const plan = actionResultOperation(id, action, options);
+  const response = await connection.currentClient.query(plan.query, plan.variables).toPromise();
+
+  return assertOperationSuccess(response, ["backgroundAction"]);
 };

@@ -1,8 +1,9 @@
 import type { FieldSelection as BuilderFieldSelection, BuilderOperation, Variable } from "tiny-graphql-query-compiler";
 import { Call, Var, compileWithVariableValues } from "tiny-graphql-query-compiler";
 import type { FieldSelection } from "./FieldSelection.js";
+import type { AnyActionFunction } from "./index.js";
 import { camelize, filterTypeName, sortTypeName } from "./support.js";
-import type { BaseFindOptions, EnqueueBackgroundActionOptions, FindManyOptions, VariablesOptions } from "./types.js";
+import type { ActionFunctionOptions, BaseFindOptions, EnqueueBackgroundActionOptions, FindManyOptions, VariablesOptions } from "./types.js";
 
 const hydrationOptions = (modelApiIdentifier: string): BuilderFieldSelection => {
   return {
@@ -116,6 +117,20 @@ const variableOptionsToVariables = (variables: VariablesOptions) => {
   return Object.fromEntries(Object.entries(variables).map(([name, options]) => [name, Var(options)]));
 };
 
+const actionResultFieldSelection = (
+  modelSelectionField: string,
+  selection: FieldSelection,
+  isBulkAction?: boolean | null,
+  hasReturnType?: boolean | null
+) => {
+  return {
+    success: true,
+    errors: ErrorsSelection,
+    [modelSelectionField]: selection && !hasReturnType ? fieldSelectionToQueryCompilerFields(selection, true) : false,
+    [isBulkAction ? "results" : "result"]: !!hasReturnType,
+  } as FieldSelection;
+};
+
 export const actionOperation = (
   operation: string,
   defaultSelection: FieldSelection | null,
@@ -130,12 +145,10 @@ export const actionOperation = (
   const selection = options?.select || defaultSelection;
 
   let fields: BuilderFieldSelection = {
-    [operation]: Call(variableOptionsToVariables(variables), {
-      success: true,
-      errors: ErrorsSelection,
-      [modelSelectionField]: selection && !hasReturnType ? fieldSelectionToQueryCompilerFields(selection, true) : false,
-      [isBulkAction ? "results" : "result"]: !!hasReturnType,
-    }),
+    [operation]: Call(
+      variableOptionsToVariables(variables),
+      actionResultFieldSelection(modelSelectionField, selection, isBulkAction, hasReturnType)
+    ),
   };
 
   if (namespace) {
@@ -143,7 +156,6 @@ export const actionOperation = (
       [namespace]: fields,
     };
   }
-
   const actionOperation: BuilderOperation = {
     type: "mutation",
     name: operation,
@@ -155,6 +167,46 @@ export const actionOperation = (
   };
 
   return compileWithVariableValues(actionOperation);
+};
+
+export const actionResultOperation = <Action extends AnyActionFunction, Options extends ActionFunctionOptions<Action>>(
+  id: string,
+  action: Action,
+  options?: Options
+) => {
+  let fields: FieldSelection = {};
+
+  switch (action.type) {
+    case "action": {
+      const selection = options?.select || action.defaultSelection;
+
+      fields = {
+        [`... on ${camelize(action.operationName)}Result`]: actionResultFieldSelection(
+          action.modelApiIdentifier,
+          selection,
+          action.isBulk,
+          action.hasReturnType
+        ),
+      };
+    }
+  }
+
+  const actionResultOperation: BuilderOperation = {
+    type: "query",
+    name: action.operationName,
+    fields: {
+      backgroundAction: Call(
+        { id: Var({ value: id, type: "String!" }) },
+        {
+          id: true,
+          outcome: true,
+          ...fields,
+        }
+      ),
+    },
+  };
+
+  return compileWithVariableValues(actionResultOperation);
 };
 
 export const globalActionOperation = (
@@ -201,7 +253,6 @@ export const graphqlizeBackgroundOptions = (options?: EnqueueBackgroundActionOpt
       name: obj.queue,
     };
   }
-
   for (const key of Object.keys(obj)) {
     if (["id", "retries", "queue", "priority"].includes(key)) continue;
     delete obj[key];
@@ -209,7 +260,6 @@ export const graphqlizeBackgroundOptions = (options?: EnqueueBackgroundActionOpt
 
   return obj;
 };
-
 export const enqueueActionOperation = (
   operation: string,
   variables: VariablesOptions,

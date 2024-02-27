@@ -5,6 +5,7 @@ export const MockWidgetCreateAction = {
   isBulk: false,
   operationName: "createWidget",
   modelApiIdentifier: "widget",
+  modelSelectionField: "widget",
   variables: {
     widget: {
       type: "CreateWidgetInput",
