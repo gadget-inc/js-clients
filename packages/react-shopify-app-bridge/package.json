@@ -1,6 +1,6 @@
 {
   "name": "@gadgetinc/react-shopify-app-bridge",
-  "version": "0.13.4",
+  "version": "0.14.0",
   "files": [
     "README.md",
     "dist/**/*"
@@ -28,15 +28,13 @@
   },
   "dependencies": {
     "@gadgetinc/api-client-core": "^0.15.13",
-    "@shopify/app-bridge-utils": "^3.1.1",
     "crypto-js": "^4.1.1",
     "tslib": "^2.6.2"
   },
   "devDependencies": {
     "@gadgetinc/api-client-core": "workspace:*",
     "@gadgetinc/react": "workspace:*",
-    "@shopify/app-bridge": "^3.1.0",
-    "@shopify/app-bridge-react": "^3.0.0",
+    "@shopify/app-bridge-react": "^4.0.0",
     "@types/crypto-js": "^4.1.1",
     "@types/node": "^16.11.7",
     "@types/react": "^18.2.9",
@@ -49,8 +47,7 @@
   },
   "peerDependencies": {
     "@gadgetinc/react": "^0.15.0",
-    "@shopify/app-bridge": "^2.0.0 || ^3.0.0",
-    "@shopify/app-bridge-react": "^2.0.0 || ^3.0.0",
+    "@shopify/app-bridge-react": "^4.0.0",
     "react": "^18.0.0",
     "react-dom": "^18.0.0"
   }
