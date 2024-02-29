@@ -1,10 +1,11 @@
 import type { AnyClient } from "@gadgetinc/api-client-core";
 import { Provider as GadgetUrqlProvider, useQuery } from "@gadgetinc/react";
 import type { History, LocationOrHref } from "@shopify/app-bridge-react";
-import AppBridgeReact from "@shopify/app-bridge-react";
+import * as AppBridgeReact from "@shopify/app-bridge-react";
 import { AppBridgeContext } from "@shopify/app-bridge-react/context.js";
 import { getSessionToken } from "@shopify/app-bridge-utils";
 import { Redirect } from "@shopify/app-bridge/actions/index.js";
+import type { ReactNode } from "react";
 import React, { memo, useContext, useEffect, useMemo, useState } from "react";
 import type { GadgetAuthContextValue } from "./index.js";
 import { GadgetAuthContext } from "./index.js";
@@ -16,7 +17,7 @@ export enum AppType {
 
 /** Internal props used to create the right structure of providers */
 type GadgetProviderProps = {
-  children: JSX.Element | JSX.Element[];
+  children: ReactNode;
   forceRedirect: boolean;
   isEmbedded: boolean;
   gadgetAppUrl: string;
@@ -173,7 +174,7 @@ export const Provider = ({
   router,
 }: {
   type?: AppType;
-  children: JSX.Element | JSX.Element[];
+  children: ReactNode;
   shopifyApiKey: string;
   api: AnyClient;
   router?: {
