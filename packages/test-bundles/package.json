@@ -7,7 +7,7 @@
   "type": "module",
   "scripts": {
     "typecheck": "tsc --noEmit",
-    "test-build": "ts-node --transpileOnly --esm build.ts",
+    "test-build": "tsx build.ts",
     "prepublishOnly": "pnpm build",
     "prerelease": "gitpkg publish"
   },

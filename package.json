@@ -17,7 +17,7 @@
     "watch:client": "pnpm --filter=@gadgetinc/api-client-core watch",
     "watch:react": "pnpm --filter=@gadgetinc/react watch",
     "test": "NODE_OPTIONS=\"--max-old-space-size=4096 --stack-trace-limit=1000\" jest",
-    "check-dependency-versions": "ts-node --transpile-only ./scripts/check-dependency-versions.ts",
+    "check-dependency-versions": "./scripts/check-dependency-versions.ts",
     "preinstall": "npx only-allow pnpm"
   },
   "devDependencies": {
@@ -45,7 +45,7 @@
     "npm-run-all": "^4.1.5",
     "prettier": "^2.8.8",
     "semver": "^7.3.8",
-    "ts-node": "^10.9.1",
+    "tsx": "^4.7.1",
     "typescript": "5.2.2",
     "zx": "^7.1.1"
   },
@@ -54,5 +54,6 @@
       "@gadgetinc/api-client-core": "workspace:*",
       "@gadgetinc/react": "workspace:*"
     }
-  }
+  },
+  "packageManager": "pnpm@8.15.4+sha256.cea6d0bdf2de3a0549582da3983c70c92ffc577ff4410cbf190817ddc35137c2"
 }

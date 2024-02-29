@@ -34,9 +34,6 @@
     "tslib": "^2.6.2",
     "urql": "^4.0.4"
   },
-  "resolutions": {
-    "regexp.prototype.flags": "1.5.0"
-  },
   "devDependencies": {
     "@gadgetinc/api-client-core": "workspace:*",
     "@n1ru4l/json-patch-plus": "^0.2.0",

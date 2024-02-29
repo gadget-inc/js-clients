@@ -18,9 +18,8 @@
         in
         rec {
           packages = rec {
-            nodejs = pkgs.nodejs-18_x;
-
-            pnpm = pkgs.nodePackages.pnpm;
+            nodejs = pkgs.nodejs_18;
+            corepack = pkgs.corepack;
 
             git = pkgs.git;
           };

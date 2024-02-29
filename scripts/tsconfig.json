@@ -6,11 +6,5 @@
     "moduleResolution": "node",
     "types": ["node"]
   },
-  "include": ["."],
-  "ts-node": {
-    "esm": true,
-    "moduleTypes": {
-      "*": "esm"
-    }
-  }
+  "include": ["."]
 }
