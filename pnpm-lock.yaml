@@ -102,6 +102,9 @@ importers:
       '@n1ru4l/graphql-live-query':
         specifier: ^0.10.0
         version: 0.10.0(graphql@16.8.1)
+      '@n1ru4l/json-patch-plus':
+        specifier: ^0.1.2
+        version: 0.1.4
       '@n1ru4l/push-pull-async-iterable-iterator':
         specifier: ^3.2.0
         version: 3.2.0
@@ -1810,6 +1813,10 @@ packages:
       graphql: ^15.4.0 || ^16.0.0
     dependencies:
       graphql: 16.8.1
+    dev: false
+
+  /@n1ru4l/json-patch-plus@0.1.4:
+    resolution: {integrity: sha512-VJSHZGg0cDud4t0mvfigFtd0fg/PMrTfmXWaJrBK7y6hdCEFT3rFq6Sw7SEb58tP0lveNCDqL14joc+MuZ+bsw==}
     dev: false
 
   /@n1ru4l/json-patch-plus@0.2.0:
