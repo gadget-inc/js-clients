@@ -1,6 +1,15 @@
 import { Repeater } from "@manufac/repeater";
-import type { ExecutionLivePatchResult } from "@n1ru4l/graphql-live-query-patch";
 import type { ExecutionResult } from "graphql";
+
+export type ExecutionLivePatchResult<PatchPayload = unknown> = {
+    errors?: ExecutionResult["errors"];
+    /* data must be included in the first result */
+    data?: ExecutionResult["data"];
+    /* patch must be present in the next results */
+    patch?: PatchPayload;
+    revision?: number;
+    extensions?: ExecutionResult["extensions"];
+};
 
 export type ApplyPatchFunction<PatchPayload = unknown> = (
     previous: Record<string, unknown>,
