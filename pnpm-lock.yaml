@@ -102,6 +102,9 @@ importers:
       '@n1ru4l/graphql-live-query':
         specifier: ^0.10.0
         version: 0.10.0(graphql@16.8.1)
+      '@n1ru4l/graphql-live-query-patch':
+        specifier: ^0.7.0
+        version: 0.7.0(graphql@16.8.1)
       '@n1ru4l/push-pull-async-iterable-iterator':
         specifier: ^3.2.0
         version: 3.2.0
@@ -1804,6 +1807,15 @@ packages:
     resolution: {integrity: sha512-qvSJXgzSjkx13dIqg23pGivfdXY1+fHEZanFqKFzaH9klq1RTUUAi36ryEbCc0Nw099IQt6qZFERnloCWRP0dg==}
     dev: false
 
+  /@n1ru4l/graphql-live-query-patch@0.7.0(graphql@16.8.1):
+    resolution: {integrity: sha512-1q49iNxqEIbmUp+qFAEVEn4ts344Cw72g5OtAuFeTwKtJT3V91kTPGMcRk5Pxb5FPHbvn52q+PCVKOAyVrtPwQ==}
+    peerDependencies:
+      graphql: ^15.4.0 || ^16.0.0
+    dependencies:
+      '@repeaterjs/repeater': 3.0.5
+      graphql: 16.8.1
+    dev: false
+
   /@n1ru4l/graphql-live-query@0.10.0(graphql@16.8.1):
     resolution: {integrity: sha512-qZ7OHH/NB0NcG/Xa7irzgjE63UH0CkofZT0Bw4Ko6iRFagPRHBM8RgFXwTt/6JbFGIEUS4STRtaFoc/Eq/ZtzQ==}
     peerDependencies:
@@ -1943,6 +1955,10 @@ packages:
       qs: 6.11.2
       url-parse: 1.5.10
     dev: true
+
+  /@repeaterjs/repeater@3.0.5:
+    resolution: {integrity: sha512-l3YHBLAol6d/IKnB9LhpD0cEZWAoe3eFKUyTYWmFmCO2Q/WOckxLQAUyMZWwZV2M/m3+4vgRoaolFqaII82/TA==}
+    dev: false
 
   /@shopify/app-bridge-core@1.0.2:
     resolution: {integrity: sha512-lI+nZHMDqBJSqTBQiI1GY3Xs7YjPuZ83/sW7TIvWtTsxQZyoanAVXloo63sGEd58t1KvKFnDtVFN1NJYe/zouQ==}
