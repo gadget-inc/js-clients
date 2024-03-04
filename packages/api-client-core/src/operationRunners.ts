@@ -296,7 +296,7 @@ export const actionResultRunner = async <Action extends AnyActionFunction, Optio
         backgroundAction.result = processActionResponse(
           action.defaultSelection,
           response,
-          get(response, [action.modelSelectionField]),
+          get(backgroundAction.result, [action.modelSelectionField]),
           action.hasReturnType
         )
       }
