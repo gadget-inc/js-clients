@@ -200,7 +200,9 @@ export const actionResultOperation = <Action extends AnyActionFunction, Options 
         {
           id: true,
           outcome: true,
-          ...fields,
+          result: {
+            ...fields
+          }
         }
       ),
     },

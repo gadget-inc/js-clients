@@ -621,21 +621,23 @@ describe("operation builders", () => {
           backgroundAction(id: $id) {
             id
             outcome
-            ... on CreateWidgetResult {
-              success
-              errors {
-                message
-                code
-                ... on InvalidRecordError {
-                  validationErrors {
-                    message
-                    apiIdentifier
+            result {
+              ... on CreateWidgetResult {
+                success
+                errors {
+                  message
+                  code
+                  ... on InvalidRecordError {
+                    validationErrors {
+                      message
+                      apiIdentifier
+                    }
                   }
                 }
-              }
-              widget {
-                id
-                __typename
+                widget {
+                  id
+                  __typename
+                }
               }
             }
           }
