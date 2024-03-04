@@ -97,7 +97,7 @@ const processResult = <Action extends AnyActionFunction>(
       if (errors && errors[0]) {
         error = ErrorWrapper.forErrorsResponse(errors, error?.response);
       } else {
-        handle = new BackgroundActionHandle<Action>(connection, mutationData.backgroundAction.id, {});
+        handle = new BackgroundActionHandle<Action>(connection, action, mutationData.backgroundAction.id, {});
       }
     }
   }
