@@ -1,3 +1,4 @@
+import { OperationResult } from "@urql/core";
 import { BackgroundActionHandle, BackgroundActionResult } from "./BackgroundActionHandle.js";
 import type { FieldSelection } from "./FieldSelection.js";
 import type { GadgetConnection } from "./GadgetConnection.js";
@@ -202,14 +203,8 @@ export const actionRunner: ActionRunner = async <Shape extends RecordShape = any
 
   if (!isBulkAction) {
     const mutationTriple = assertMutationSuccess(response, dataPath);
-    // Delete actions have a null selection. We do an early return for this because `hydrateRecordArray` will fail
-    // if there's nothing at `mutationResult[modelSelectionField]`, but the caller isn't expecting a return (void).
-    if (defaultSelection == null) return;
-    if (!hasReturnType) {
-      return hydrateRecord<Shape>(response, mutationTriple[modelSelectionField]);
-    } else {
-      return mutationTriple.result;
-    }
+
+    return processActionResponse(defaultSelection, response, mutationTriple[modelSelectionField], hasReturnType);
   } else {
     const mutationTriple = get(response.data, dataPath);
     const results =
@@ -224,6 +219,22 @@ export const actionRunner: ActionRunner = async <Shape extends RecordShape = any
     return results;
   }
 };
+
+const processActionResponse = <Shape extends RecordShape = any>(
+  defaultSelection: FieldSelection | null,
+  response: any,
+  record: any,
+  hasReturnType?: boolean | null
+) => {
+  // Delete actions have a null selection. We do an early return for this because `hydrateRecordArray` will fail
+  // if there's nothing at `mutationResult[modelSelectionField]`, but the caller isn't expecting a return (void).
+  if (defaultSelection == null) return;
+  if (!hasReturnType) {
+    return hydrateRecord<Shape>(response, record);
+  } else {
+    return record.result;
+  }
+}
 
 export const globalActionRunner = async (
   connection: GadgetConnection,
@@ -267,7 +278,7 @@ export const enqueueActionRunner = async <Action extends AnyActionFunction>(
   }
 };
 
-export const actionResultRunner = async <Action extends AnyActionFunction, Options extends ActionFunctionOptions<Action>>(
+export const actionResultRunner = async <Action extends AnyActionFunction, Options extends ActionFunctionOptions<Action>, Shape extends RecordShape = any>(
   connection: GadgetConnection,
   id: string,
   action: Action,
@@ -276,5 +287,21 @@ export const actionResultRunner = async <Action extends AnyActionFunction, Optio
   const plan = actionResultOperation(id, action, options);
   const response = await connection.currentClient.query(plan.query, plan.variables).toPromise();
 
-  return assertOperationSuccess(response, ["backgroundAction"]);
+  const backgroundAction = assertOperationSuccess(response, ["backgroundAction"]);
+
+  // If we have an outcome we should process the result accordingly
+  if (backgroundAction.outcome) {
+    switch(action.type) {
+      case "action": {
+        backgroundAction.result = processActionResponse(
+          action.defaultSelection,
+          response,
+          get(response, [action.modelSelectionField]),
+          action.hasReturnType
+        )
+      }
+    }
+  }
+
+  return backgroundAction;
 };
