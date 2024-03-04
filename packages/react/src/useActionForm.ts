@@ -7,7 +7,7 @@ import type {
   GlobalActionFunction,
   Select,
 } from "@gadgetinc/api-client-core";
-import { $modelRelationships, camelize } from "@gadgetinc/api-client-core";
+import { $modelRelationships, camelize, isEqual } from "@gadgetinc/api-client-core";
 import { useCallback, useEffect, useRef } from "react";
 import type { DeepPartial, FieldErrors, FieldValues, UseFormProps, UseFormReturn } from "react-hook-form";
 import { useForm } from "react-hook-form";
@@ -112,7 +112,7 @@ const disambiguateDefaultValues = (data: any, initialData: any, action: any) => 
       !!data[action.modelApiIdentifier] &&
       typeof data[action.modelApiIdentifier] === "object" &&
       key in data[action.modelApiIdentifier] &&
-      initialValue !== data[action.modelApiIdentifier][key]
+      !isEqual(initialValue, data[action.modelApiIdentifier][key])
     ) {
       modelData[key] = data[action.modelApiIdentifier][key];
     } else if (key in data && initialValue !== data[key]) {
@@ -179,10 +179,15 @@ export const reshapeDataForGraphqlApi = async (client: AnyClient, defaultValues:
     fieldType: { type: string; model: string } | null = null,
     fieldRelationships: Record<string, { type: string; model: string }> | null = null
   ): any {
-    if (Array.isArray(input)) {
+    if (path && Array.isArray(input)) {
       // If the input is an array, we need to handle it differently
       const results: any[] = [];
-      const edge = updates[path!]; // grab the list of ids from the updates object, based on the path
+      let edge: number[] | undefined = undefined;
+
+      if (fieldType && fieldType.type == "HasMany") {
+        edge = updates[path]; // grab the list of ids from the updates object, based on the path
+      }
+
       const handled: number[] = [];
 
       if (edge) {
@@ -195,7 +200,7 @@ export const reshapeDataForGraphqlApi = async (client: AnyClient, defaultValues:
             if (!item) {
               // if the item is not found, we need to delete it from the updates object as well as anything that references it
               const updateEntries = Object.entries(updates); // grab all the entries from the updates object
-              const updateEntry = updateEntries.find(([key, _ids]) => key.includes(path! + "." + nodeIndex));
+              const updateEntry = updateEntries.find(([key, _ids]) => key.includes(path + "." + nodeIndex));
 
               if (updateEntry) {
                 // if we find an entry that matches the path, we need to delete it from the updates object
@@ -206,7 +211,7 @@ export const reshapeDataForGraphqlApi = async (client: AnyClient, defaultValues:
               return { delete: { id: nodeId } };
             } else {
               const index = input.findIndex((item: any) => item.id == nodeId);
-              delete updates[path!][nodeIndex]; // delete the id from the updates object so it's not handled again
+              delete updates[path][nodeIndex]; // delete the id from the updates object so it's not handled again
 
               handled.push(index);
 

@@ -23,13 +23,13 @@ importers:
         version: 1.5.0-development.4
       '@gadget-client/related-products-example':
         specifier: ^1.860.0-development.859
-        version: 1.860.0-development.859
+        version: 1.860.0-development.861
       '@gadget-client/zxcv-deeply-nested':
-        specifier: ^1.208.0-development.207
-        version: 1.208.0-development.207
+        specifier: ^1.208.0-development.209
+        version: 1.208.0-development.209
       '@gadget-client/zxcv-simple-relationship':
-        specifier: ^1.18.0-development.17
-        version: 1.18.0-development.17
+        specifier: ^1.18.0-development.19
+        version: 1.18.0-development.19
       '@gadgetinc/api-client-core':
         specifier: workspace:*
         version: link:packages/api-client-core
@@ -168,7 +168,7 @@ importers:
     dependencies:
       '@gadget-client/blog':
         specifier: ^1.46.0
-        version: 1.46.0
+        version: 1.47.0
       '@gadgetinc/react':
         specifier: workspace:*
         version: link:../react
@@ -1410,8 +1410,8 @@ packages:
       '@gadgetinc/api-client-core': link:packages/api-client-core
     dev: true
 
-  /@gadget-client/blog@1.46.0:
-    resolution: {integrity: sha1-F+WvBN9jVqaQXlSInFTC865VADQ=, tarball: https://registry.gadget.dev/npm/_/tarball/6679/12072/5461}
+  /@gadget-client/blog@1.47.0:
+    resolution: {integrity: sha1-sZ1OtqL07EKB/Di4TzmKruadKMk=, tarball: https://registry.gadget.dev/npm/_/tarball/6679/12073/6442}
     dependencies:
       '@gadgetinc/api-client-core': link:packages/api-client-core
     dev: false
@@ -1428,20 +1428,20 @@ packages:
       '@gadgetinc/api-client-core': link:packages/api-client-core
     dev: true
 
-  /@gadget-client/related-products-example@1.860.0-development.859:
-    resolution: {integrity: sha1-AmNJ4SOUtpCatG/+uQxrx+xTkKg=, tarball: https://registry.gadget.dev/npm/_/tarball/1268/1362/6391}
+  /@gadget-client/related-products-example@1.860.0-development.861:
+    resolution: {integrity: sha1-G6rMvo8N8dEjEx9SA9D6Y1gwmbM=, tarball: https://registry.gadget.dev/npm/_/tarball/1268/1362/6834}
     dependencies:
       '@gadgetinc/api-client-core': link:packages/api-client-core
     dev: true
 
-  /@gadget-client/zxcv-deeply-nested@1.208.0-development.207:
-    resolution: {integrity: sha1-tKrVYctNyiMfb7tsjG8huy1PgTc=, tarball: https://registry.gadget.dev/npm/_/tarball/76013/150608/6424}
+  /@gadget-client/zxcv-deeply-nested@1.208.0-development.209:
+    resolution: {integrity: sha1-3VKtfElCC2MQXgccV4Uk8CV/LQM=, tarball: https://registry.gadget.dev/npm/_/tarball/76013/150608/6886}
     dependencies:
       '@gadgetinc/api-client-core': link:packages/api-client-core
     dev: true
 
-  /@gadget-client/zxcv-simple-relationship@1.18.0-development.17:
-    resolution: {integrity: sha1-FRYfc5QiRRNZtlbEI8YO9VVxIo4=, tarball: https://registry.gadget.dev/npm/_/tarball/79412/157406/6420}
+  /@gadget-client/zxcv-simple-relationship@1.18.0-development.19:
+    resolution: {integrity: sha1-gOyNTV0MkD4TT8kSA7EWU8GxUnI=, tarball: https://registry.gadget.dev/npm/_/tarball/79412/157406/6888}
     dependencies:
       '@gadgetinc/api-client-core': link:packages/api-client-core
     dev: true
