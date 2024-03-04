@@ -1,4 +1,4 @@
-import { BackgroundActionHandle } from "./BackgroundActionHandle.js";
+import { BackgroundActionHandle, BackgroundActionResult } from "./BackgroundActionHandle.js";
 import type { FieldSelection } from "./FieldSelection.js";
 import type { GadgetConnection } from "./GadgetConnection.js";
 import type { AnyActionFunction } from "./GadgetFunctions.js";
@@ -272,7 +272,7 @@ export const actionResultRunner = async <Action extends AnyActionFunction, Optio
   id: string,
   action: Action,
   options?: Options
-) => {
+): Promise<BackgroundActionResult> => {
   const plan = actionResultOperation(id, action, options);
   const response = await connection.currentClient.query(plan.query, plan.variables).toPromise();
 
