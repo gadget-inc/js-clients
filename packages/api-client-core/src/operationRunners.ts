@@ -293,7 +293,7 @@ export const actionResultRunner = async <Action extends AnyActionFunction, Optio
   // If we have an outcome we should process the result accordingly
   if (backgroundAction.outcome) {
     // Check for errors in the action result and throw
-    assertResponseSuccess(backgroundAction);
+    assertResponseSuccess(backgroundAction.result);
 
     switch (action.type) {
       case "action": {

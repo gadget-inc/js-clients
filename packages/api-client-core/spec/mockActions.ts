@@ -3,6 +3,10 @@ import type { ActionFunction, BulkActionFunction, GlobalActionFunction } from ".
 export const MockWidgetCreateAction = {
   type: "action",
   isBulk: false,
+  defaultSelection: {
+    id: true,
+    name: true,
+  },
   operationName: "createWidget",
   modelApiIdentifier: "widget",
   modelSelectionField: "widget",
