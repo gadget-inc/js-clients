@@ -6,7 +6,7 @@ import {
   findOneByFieldOperation,
   findOneOperation,
 } from "../src/index.js";
-import { MockWidgetCreateAction } from "./mockActions.js";
+import { MockGlobalAction, MockWidgetCreateAction } from "./mockActions.js";
 
 describe("operation builders", () => {
   describe("findOneOperation", () => {
@@ -614,7 +614,7 @@ describe("operation builders", () => {
   });
 
   describe("actionResultOperation", () => {
-    test("actionResultOperation builds query", async () => {
+    test("builds query for action", async () => {
       expect(actionResultOperation("app-job-1234567", MockWidgetCreateAction, { select: { id: true } })).toMatchInlineSnapshot(`
         {
           "query": "query createWidget($id: String!) {
@@ -638,6 +638,38 @@ describe("operation builders", () => {
                   id
                   __typename
                 }
+              }
+            }
+          }
+        }",
+          "variables": {
+            "id": "app-job-1234567",
+          },
+        }
+      `);
+    });
+
+    test("builds query for globalAction", async () => {
+      expect(actionResultOperation("app-job-1234567", MockGlobalAction)).toMatchInlineSnapshot(`
+        {
+          "query": "query flipAllWidgets($id: String!) {
+          backgroundAction(id: $id) {
+            id
+            outcome
+            result {
+              ... on FlipAllWidgetsResult {
+                success
+                errors {
+                  message
+                  code
+                  ... on InvalidRecordError {
+                    validationErrors {
+                      message
+                      apiIdentifier
+                    }
+                  }
+                }
+                result
               }
             }
           }

@@ -1,5 +1,5 @@
-import { OperationResult } from "@urql/core";
-import { BackgroundActionHandle, BackgroundActionResult } from "./BackgroundActionHandle.js";
+import type { BackgroundActionResult } from "./BackgroundActionHandle.js";
+import { BackgroundActionHandle } from "./BackgroundActionHandle.js";
 import type { FieldSelection } from "./FieldSelection.js";
 import type { GadgetConnection } from "./GadgetConnection.js";
 import type { AnyActionFunction } from "./GadgetFunctions.js";
@@ -234,7 +234,7 @@ const processActionResponse = <Shape extends RecordShape = any>(
   } else {
     return record.result;
   }
-}
+};
 
 export const globalActionRunner = async (
   connection: GadgetConnection,
@@ -278,7 +278,9 @@ export const enqueueActionRunner = async <Action extends AnyActionFunction>(
   }
 };
 
-export const actionResultRunner = async <Action extends AnyActionFunction, Options extends ActionFunctionOptions<Action>, Shape extends RecordShape = any>(
+export const actionResultRunner = async <
+  Action extends AnyActionFunction,
+  Options extends ActionFunctionOptions<Action>>(
   connection: GadgetConnection,
   id: string,
   action: Action,
@@ -291,14 +293,18 @@ export const actionResultRunner = async <Action extends AnyActionFunction, Optio
 
   // If we have an outcome we should process the result accordingly
   if (backgroundAction.outcome) {
-    switch(action.type) {
+    switch (action.type) {
       case "action": {
         backgroundAction.result = processActionResponse(
           action.defaultSelection,
           response,
           get(backgroundAction.result, [action.modelSelectionField]),
           action.hasReturnType
-        )
+        );
+        break;
+      }
+      case "globalAction": {
+        backgroundAction.result = backgroundAction.result.result;
       }
     }
   }

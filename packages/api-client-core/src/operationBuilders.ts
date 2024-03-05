@@ -188,6 +188,12 @@ export const actionResultOperation = <Action extends AnyActionFunction, Options 
           action.hasReturnType
         ),
       };
+      break;
+    }
+    case "globalAction": {
+      fields = {
+        [`... on ${camelize(action.operationName)}Result`]: globalActionFieldSelection(),
+      };
     }
   }
 
@@ -201,14 +207,22 @@ export const actionResultOperation = <Action extends AnyActionFunction, Options 
           id: true,
           outcome: true,
           result: {
-            ...fields
-          }
+            ...fields,
+          },
         }
       ),
     },
   };
 
   return compileWithVariableValues(actionResultOperation);
+};
+
+const globalActionFieldSelection = () => {
+  return {
+    success: true,
+    errors: ErrorsSelection,
+    result: true,
+  } as FieldSelection;
 };
 
 export const globalActionOperation = (
@@ -218,11 +232,7 @@ export const globalActionOperation = (
   options?: { live?: boolean }
 ) => {
   let fields: BuilderFieldSelection = {
-    [operation]: Call(variableOptionsToVariables(variables), {
-      success: true,
-      errors: ErrorsSelection,
-      result: true,
-    }),
+    [operation]: Call(variableOptionsToVariables(variables), globalActionFieldSelection()),
   };
 
   const dataPath = [operation];
