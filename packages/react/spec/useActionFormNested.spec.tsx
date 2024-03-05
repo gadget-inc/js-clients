@@ -1089,6 +1089,109 @@ describe("useActionFormNested", () => {
       });
     });
 
+    test("can update a JSON field that isn't a relationship", async () => {
+      const queryResponse = {
+        data: {
+          recommendedProduct: {
+            __typename: "RecommendedProduct",
+            id: "193",
+            productMetadata: [
+              {
+                id: "1",
+                value: "foo",
+              },
+              {
+                id: "2",
+                value: "bar",
+              },
+            ],
+          },
+        },
+      };
+
+      const { result: useActionFormHook } = renderHook(
+        () =>
+          useActionForm(nestedExampleApi.recommendedProduct.update, {
+            findBy: "193",
+            select: {
+              id: true,
+              productMetadata: true,
+            },
+            onError: (error) => {
+              expect(error).toBeUndefined();
+            },
+          }),
+        {
+          wrapper: MockClientWrapper(nestedExampleApi),
+        }
+      );
+
+      expect(mockUrqlClient.executeQuery).toBeCalledTimes(1);
+
+      mockUrqlClient.executeQuery.pushResponse("recommendedProduct", {
+        stale: false,
+        hasNext: false,
+        data: queryResponse.data,
+      });
+
+      await waitFor(() => expect(useActionFormHook.current.formState.isLoading).toBe(false), { timeout: 3000 });
+
+      const formValues = useActionFormHook.current.getValues("recommendedProduct");
+      expect(formValues).toBeDefined();
+      expect(formValues?.productMetadata).toBeDefined();
+      expect(formValues?.productMetadata?.length).toBe(2);
+      expect(formValues?.productMetadata?.[0]?.id).toBe("1");
+      expect(formValues?.productMetadata?.[0]?.value).toBe("foo");
+      expect(formValues?.productMetadata?.[1]?.id).toBe("2");
+      expect(formValues?.productMetadata?.[1]?.value).toBe("bar");
+
+      const { result: productMetadataFieldArrayHook } = renderHook(() =>
+        useFieldArray({ control: useActionFormHook.current.control, name: "recommendedProduct.productMetadata" })
+      );
+
+      await act(async () => {
+        productMetadataFieldArrayHook.current.remove(0);
+      });
+
+      expect(useActionFormHook.current.formState.errors).toEqual({});
+
+      let submitPromise: Promise<any>;
+
+      await act(async () => {
+        submitPromise = useActionFormHook.current.submit();
+      });
+
+      expect(mockUrqlClient.executeMutation).toBeCalledTimes(1);
+
+      mockUrqlClient.executeMutation.pushResponse("updateRecommendedProduct", {
+        data: {
+          recommendedProduct: {
+            __typename: "RecommendedProduct",
+            createdAt: "2023-12-12T15:20:11.728Z",
+            id: "193",
+            productMetadata: [
+              {
+                id: "2",
+                value: "bar",
+              },
+            ],
+            updatedAt: "2023-12-12T15:20:11.728Z",
+          },
+        },
+        stale: false,
+        hasNext: false,
+      });
+
+      await act(async () => {
+        await submitPromise;
+      });
+
+      const submitCall = mockUrqlClient.executeMutation.mock.calls[0][0].variables;
+      expect(submitCall.recommendedProduct.productMetadata.length).toBe(1);
+      expect(submitCall.recommendedProduct.productMetadata[0].id).toBe("2");
+      expect(submitCall.recommendedProduct.productMetadata[0].value).toBe("bar");
+    });
+
     test("can update multiple HasMany -> HasMany relationships", async () => {
       const queryResponse = {
         data: {
