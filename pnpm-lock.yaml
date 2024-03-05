@@ -288,9 +288,6 @@ importers:
       '@gadgetinc/api-client-core':
         specifier: workspace:*
         version: link:../api-client-core
-      '@shopify/app-bridge-utils':
-        specifier: ^3.1.1
-        version: 3.1.1
       crypto-js:
         specifier: ^4.1.1
         version: 4.1.1
@@ -301,12 +298,9 @@ importers:
       '@gadgetinc/react':
         specifier: workspace:*
         version: link:../react
-      '@shopify/app-bridge':
-        specifier: ^3.1.0
-        version: 3.7.7
       '@shopify/app-bridge-react':
-        specifier: ^3.0.0
-        version: 3.0.0(react@18.2.0)
+        specifier: ^4.0.0
+        version: 4.0.0(react-dom@18.2.0)(react@18.2.0)
       '@types/crypto-js':
         specifier: ^4.1.1
         version: 4.1.1
@@ -1962,31 +1956,20 @@ packages:
     resolution: {integrity: sha512-AW8PKd6iX3vAZ0vA43nOUOnbq/X5ihgU+mSXXqunMkeQADGiqw/PY0JNeYtD5sr0PAy51YPgAPbDoeapv9r8WA==}
     dev: false
 
-  /@shopify/app-bridge-core@1.0.2:
-    resolution: {integrity: sha512-lI+nZHMDqBJSqTBQiI1GY3Xs7YjPuZ83/sW7TIvWtTsxQZyoanAVXloo63sGEd58t1KvKFnDtVFN1NJYe/zouQ==}
-
-  /@shopify/app-bridge-react@3.0.0(react@18.2.0):
-    resolution: {integrity: sha512-tePRKtH/7GV9hZ7Ln2FE5AO5IPehO74Hsffq/4Dtkc65nfbUMekotnNJYu3Bmgcz41dHoM2909mD7yP86F8vlQ==}
+  /@shopify/app-bridge-react@4.0.0(react-dom@18.2.0)(react@18.2.0):
+    resolution: {integrity: sha512-a300DQIyYmNl5jNFHXsAICMfafY6LizXnaG5ElaAumfoIt28owgM8daDm9BwBkHSroHArvJuZS96kpDzTVg1+Q==}
     peerDependencies:
-      react: ^16.0.0 || ^17.0.0 || ^18.0.0
+      react: ^18.0.0
+      react-dom: ^18.0.0
     dependencies:
-      '@shopify/app-bridge': 3.7.7
+      '@shopify/app-bridge-types': 0.0.7
       react: 18.2.0
+      react-dom: 18.2.0(react@18.2.0)
     dev: true
 
-  /@shopify/app-bridge-utils@3.1.1:
-    resolution: {integrity: sha512-le1/A62naIj5yq2o/G8htECvYTiAbVzOo9Ue3/gGqlJJC6w7+Uu4ppDHdkg6yfZCmkPUXCIr7+yU3kZHYV5z0g==}
-    deprecated: Package no longer supported. Contact Support at https://www.npmjs.com/support for more info.
-    dependencies:
-      '@shopify/app-bridge': 3.7.7
-    dev: false
-
-  /@shopify/app-bridge@3.7.7:
-    resolution: {integrity: sha512-8Y3gCur852ATEiLUjen3SEuKV9GGceC7yalLaA99MIuBpefaOUDafCHrdX6Fv+MlaP8vL49cfCeCJZUB7yq0Ig==}
-    dependencies:
-      '@shopify/app-bridge-core': 1.0.2
-      base64url: 3.0.1
-      web-vitals: 3.3.2
+  /@shopify/app-bridge-types@0.0.7:
+    resolution: {integrity: sha512-x2A86xSjBPaB4rDufkY+pGH2UK8gR/rvjeXGwttIjir1l70ELHnZj+eGzHShmBitCbVoN3fkBrDnFLZdjWqyLg==}
+    dev: true
 
   /@sinclair/typebox@0.27.8:
     resolution: {integrity: sha512-+Fj43pSMwJs4KRrH/938Uf+uAELIgVBmQzg/q1YG10djyfA3TnrU8N8XzqCh/okZdszqBQTZf96idMfE5lnwTA==}
@@ -2943,10 +2926,6 @@ packages:
   /base64-js@1.5.1:
     resolution: {integrity: sha512-AKpaYlHn8t4SVbOHCy+b5+KKgvR4vrsD8vbvrbiQJps7fKDTkjkDry6ji0rUJjC0kzbNePLwzxq8iypo41qeWA==}
     dev: true
-
-  /base64url@3.0.1:
-    resolution: {integrity: sha512-ir1UPr3dkwexU7FdV8qBBbNDRUhMmIekYMFZfi+C/sLNnRESKPl23nB9b2pltqfOQNnGzsDdId90AEtG5tCx4A==}
-    engines: {node: '>=6.0.0'}
 
   /basic-auth@2.0.1:
     resolution: {integrity: sha512-NF+epuEdnUYVlGuhaxbbq+dvJttwLnGY+YixlXlME5KpQ5W3CnXA5cVTneY3SPbPDRkcjMbifrwmFYcClgOZeg==}
@@ -7332,9 +7311,6 @@ packages:
     resolution: {integrity: sha512-e0MO3wdXWKrLbL0DgGnUV7WHVuw9OUvL4hjgnPkIeEvESk74gAITi5G606JtZPp39cd8HA9VQzCIvA49LpPN5Q==}
     engines: {node: '>= 8'}
     dev: true
-
-  /web-vitals@3.3.2:
-    resolution: {integrity: sha512-qRkpmSeKfEWAzNhtX541xA8gCJ+pqCqBmUlDVkVDSCSYUvfvNqF+k9g8I+uyreRcDBdfiJrd0/aLbTy5ydo49Q==}
 
   /webidl-conversions@3.0.1:
     resolution: {integrity: sha512-2JAn3z8AR6rjK8Sm8orRC0h/bcl/DqL7tRPdGZ4I1CjdF+EaMLmYxBHyXuKL849eucPFhvBoxMsflfOb8kxaeQ==}
