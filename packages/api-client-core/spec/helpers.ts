@@ -23,7 +23,7 @@ export function delayPromise<T>(
 ): Promise<T | undefined> {
   return new Promise<T | undefined>((resolve, reject) => {
     setTimeout(() => {
-      if (error == null) {
+      if (error === null || error === undefined) {
         resolve(value);
       } else {
         reject(error);
