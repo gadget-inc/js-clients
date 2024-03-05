@@ -20,6 +20,7 @@ import {
   assertMutationSuccess,
   assertNullableOperationSuccess,
   assertOperationSuccess,
+  assertResponseSuccess,
   disambiguateActionVariables,
   disambiguateBulkActionVariables,
   gadgetErrorFor,
@@ -278,9 +279,7 @@ export const enqueueActionRunner = async <Action extends AnyActionFunction>(
   }
 };
 
-export const actionResultRunner = async <
-  Action extends AnyActionFunction,
-  Options extends ActionFunctionOptions<Action>>(
+export const actionResultRunner = async <Action extends AnyActionFunction, Options extends ActionFunctionOptions<Action>>(
   connection: GadgetConnection,
   id: string,
   action: Action,
@@ -293,6 +292,9 @@ export const actionResultRunner = async <
 
   // If we have an outcome we should process the result accordingly
   if (backgroundAction.outcome) {
+    // Check for errors in the action result and throw
+    assertResponseSuccess(backgroundAction);
+
     switch (action.type) {
       case "action": {
         backgroundAction.result = processActionResponse(
