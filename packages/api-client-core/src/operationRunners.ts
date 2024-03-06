@@ -288,12 +288,14 @@ export const actionResultRunner = async <Action extends AnyActionFunction, Optio
 ): Promise<BackgroundActionResult> => {
   const plan = actionResultOperation(id, action, options);
   const subscription = connection.currentClient.subscription(plan.query, plan.variables);
+
   const response = await pipe(
     subscription,
-    filter((operation) => operation.data?.backgroundAction?.outcome),
+    filter((operation) => operation.error || operation.data?.backgroundAction?.outcome),
     take(1),
     toPromise
   );
+
   const backgroundAction = assertOperationSuccess(response, ["backgroundAction"]);
 
   assertResponseSuccess(backgroundAction.result);

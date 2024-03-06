@@ -1,3 +1,4 @@
+import { CombinedError } from "@urql/core";
 import nock from "nock";
 import { BackgroundActionHandle } from "../src/BackgroundActionHandle.js";
 import type { GadgetErrorGroup } from "../src/index.js";
@@ -952,6 +953,38 @@ describe("operationRunners", () => {
 
         await expect(promise).rejects.toThrowErrorMatchingInlineSnapshot(`"GGT_SOMETHING_OR_OTHER: An internal error occurred"`);
       });
+    });
+
+    test("permission error", async () => {
+      const promise = actionResultRunner(connection, "app-job-123456", MockWidgetCreateAction, { widget: { name: "new widget" } });
+
+      expect(mockUrqlClient.executeSubscription.mock.calls.length).toEqual(1);
+      expect(mockUrqlClient.executeSubscription.mock.calls[0][0].variables).toEqual({
+        id: "app-job-123456",
+      });
+
+      mockUrqlClient.executeSubscription.pushResponse("createWidget", {
+        error: new CombinedError({
+          graphQLErrors: [
+            {
+              message: "GGT_PERMISSION_DENIED: Permission denied to access this resource.",
+              locations: [
+                {
+                  line: 2,
+                  column: 3,
+                },
+              ],
+              path: ["backgroundAction"],
+            },
+          ],
+        }),
+        stale: false,
+        hasNext: false,
+      });
+
+      await expect(promise).rejects.toThrowErrorMatchingInlineSnapshot(
+        `"[GraphQL] GGT_PERMISSION_DENIED: Permission denied to access this resource."`
+      );
     });
   });
 });
