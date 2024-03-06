@@ -617,7 +617,7 @@ describe("operation builders", () => {
     test("builds query for action", async () => {
       expect(actionResultOperation("app-job-1234567", MockWidgetCreateAction, { select: { id: true } })).toMatchInlineSnapshot(`
         {
-          "query": "query createWidget($id: String!) {
+          "query": "subscription createWidget($id: String!) {
           backgroundAction(id: $id) {
             id
             outcome
@@ -652,7 +652,7 @@ describe("operation builders", () => {
     test("builds query for globalAction", async () => {
       expect(actionResultOperation("app-job-1234567", MockGlobalAction)).toMatchInlineSnapshot(`
         {
-          "query": "query flipAllWidgets($id: String!) {
+          "query": "subscription flipAllWidgets($id: String!) {
           backgroundAction(id: $id) {
             id
             outcome

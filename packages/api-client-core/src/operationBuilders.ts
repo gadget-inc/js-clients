@@ -198,7 +198,7 @@ export const actionResultOperation = <Action extends AnyActionFunction, Options 
   }
 
   const actionResultOperation: BuilderOperation = {
-    type: "query",
+    type: "subscription",
     name: action.operationName,
     fields: {
       backgroundAction: Call(

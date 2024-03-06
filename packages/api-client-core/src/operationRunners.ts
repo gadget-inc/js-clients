@@ -1,3 +1,4 @@
+import { filter, pipe, take, toPromise } from "wonka";
 import type { BackgroundActionResult } from "./BackgroundActionHandle.js";
 import { BackgroundActionHandle } from "./BackgroundActionHandle.js";
 import type { FieldSelection } from "./FieldSelection.js";
@@ -286,28 +287,30 @@ export const actionResultRunner = async <Action extends AnyActionFunction, Optio
   options?: Options
 ): Promise<BackgroundActionResult> => {
   const plan = actionResultOperation(id, action, options);
-  const response = await connection.currentClient.query(plan.query, plan.variables).toPromise();
-
+  const subscription = connection.currentClient.subscription(plan.query, plan.variables);
+  const response = await pipe(
+    subscription,
+    filter((operation) => operation.data?.backgroundAction?.outcome),
+    take(1),
+    toPromise
+  );
   const backgroundAction = assertOperationSuccess(response, ["backgroundAction"]);
 
-  // If we have an outcome we should process the result accordingly
-  if (backgroundAction.outcome) {
-    // Check for errors in the action result and throw
-    assertResponseSuccess(backgroundAction.result);
+  assertResponseSuccess(backgroundAction.result);
 
-    switch (action.type) {
-      case "action": {
-        backgroundAction.result = processActionResponse(
-          action.defaultSelection,
-          response,
-          get(backgroundAction.result, [action.modelSelectionField]),
-          action.hasReturnType
-        );
-        break;
-      }
-      case "globalAction": {
-        backgroundAction.result = backgroundAction.result.result;
-      }
+  switch (action.type) {
+    case "action": {
+      backgroundAction.result = processActionResponse(
+        action.defaultSelection,
+        response.data,
+        get(backgroundAction.result, [action.modelSelectionField]),
+        action.hasReturnType
+      );
+      break;
+    }
+    case "globalAction": {
+      backgroundAction.result = backgroundAction.result.result;
+      break;
     }
   }
 
