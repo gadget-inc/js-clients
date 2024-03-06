@@ -20,23 +20,6 @@ export class BackgroundActionHandle<Action extends AnyActionFunction> {
 
   /** Wait for this background action to complete and return the result. */
   async result<Options extends ActionFunctionOptions<Action>>(options?: Options) {
-    let result = await this.fetchResult(options);
-
-    while (result.outcome === null || result.outcome === undefined) {
-      await this.sleep(250);
-      result = await this.fetchResult(options);
-    }
-
-    return result.result;
+    return (await actionResultRunner(this.connection, this.id, this.action, options)).result;
   }
-
-  fetchResult = async <Options extends ActionFunctionOptions<Action>>(options?: Options) => {
-    return await actionResultRunner(this.connection, this.id, this.action, options);
-  };
-
-  sleep = (delay: number) => {
-    return new Promise((resolve) => {
-      setTimeout(resolve, delay);
-    });
-  };
 }
