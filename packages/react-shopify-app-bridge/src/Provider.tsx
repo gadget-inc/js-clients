@@ -234,10 +234,15 @@ export const Provider = ({ type, children, api }: { type?: AppType; children: Re
     isReady,
   });
 
-  if (coalescedType == AppType.Embedded && !shopifyGlobalDefined && globalThis.top !== globalThis.self) {
-    throw new Error(
-      "Expected app bridge to be defined in embedded context, but it was not. This is likely due to a missing script tag, see https://shopify.dev/docs/api/app-bridge-library"
-    );
+  if (coalescedType == AppType.Embedded && !shopifyGlobalDefined && globalThis.top && globalThis.top !== globalThis.self) {
+    const topHref = globalThis.top.location.href;
+    const url = new URL(topHref);
+
+    if (url.hostname === "admin.shopify.com") {
+      throw new Error(
+        "Expected app bridge to be defined in embedded context, but it was not. This is likely due to a missing script tag, see https://shopify.dev/docs/api/app-bridge-library"
+      );
+    }
   }
 
   if (coalescedType === AppType.Embedded && globalThis.top === globalThis.self) {

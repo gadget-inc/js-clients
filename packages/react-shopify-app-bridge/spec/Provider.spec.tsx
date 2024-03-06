@@ -214,6 +214,12 @@ describe("GadgetProvider", () => {
     test("should throw if embedded app type is in embedded context and shopify global is not defined", () => {
       // @ts-expect-error mock
       const windowSelf = jest.spyOn(window, "self", "get").mockImplementation(() => ({}));
+      // @ts-expect-error mock
+      const windowTop = jest.spyOn(window, "top", "get").mockImplementation(() => ({
+        location: {
+          href: "https://admin.shopify.com/store/some-test-shop/apps/fake-app",
+        },
+      }));
       // @ts-expect-error reset mock
       window.shopify = undefined;
 
@@ -229,6 +235,7 @@ describe("GadgetProvider", () => {
 
       // resetting the mocked values
       windowSelf.mockRestore();
+      windowTop.mockRestore();
       window.shopify = {
         // @ts-expect-error mock
         environment: {
