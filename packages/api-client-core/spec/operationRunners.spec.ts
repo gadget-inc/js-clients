@@ -1,7 +1,8 @@
+import { CombinedError } from "@urql/core";
 import nock from "nock";
 import { BackgroundActionHandle } from "../src/BackgroundActionHandle.js";
 import type { GadgetErrorGroup } from "../src/index.js";
-import { GadgetConnection, actionRunner, enqueueActionRunner } from "../src/index.js";
+import { GadgetConnection, actionResultRunner, actionRunner, enqueueActionRunner } from "../src/index.js";
 import { MockBulkFlipDownWidgetsAction, MockBulkUpdateWidgetAction, MockGlobalAction, MockWidgetCreateAction } from "./mockActions.js";
 import { mockUrqlClient } from "./mockUrqlClient.js";
 
@@ -771,6 +772,219 @@ describe("operationRunners", () => {
       const handle = await promise;
       expect(handle).toBeInstanceOf(BackgroundActionHandle);
       expect(handle.id).toEqual("fixed-id");
+    });
+  });
+
+  describe("actionResultRunner", () => {
+    describe("action", () => {
+      test("waits for background action with a completed result", async () => {
+        const promise = actionResultRunner(connection, "app-job-123456", MockWidgetCreateAction, { widget: { name: "new widget" } });
+
+        expect(mockUrqlClient.executeSubscription.mock.calls.length).toEqual(1);
+        expect(mockUrqlClient.executeSubscription.mock.calls[0][0].variables).toEqual({
+          id: "app-job-123456",
+        });
+
+        mockUrqlClient.executeSubscription.pushResponse("createWidget", {
+          data: {
+            backgroundAction: {
+              id: "app-job-123456",
+              outcome: null,
+              result: null,
+            },
+          },
+          stale: false,
+          hasNext: true,
+        });
+
+        mockUrqlClient.executeSubscription.pushResponse("createWidget", {
+          data: {
+            backgroundAction: {
+              id: "app-job-123456",
+              outcome: "completed",
+              result: {
+                success: true,
+                errors: null,
+                widget: {
+                  id: "123",
+                  name: "foo",
+                },
+              },
+            },
+          },
+          stale: false,
+          hasNext: false,
+        });
+
+        const result = await promise;
+
+        expect(result.outcome).toEqual("completed");
+        expect(result.result.id).toBeTruthy();
+        expect(result.result.name).toBeTruthy();
+      });
+
+      test("waits for background action with failed result", async () => {
+        const promise = actionResultRunner(connection, "app-job-123456", MockWidgetCreateAction, { widget: { name: "new widget" } });
+
+        expect(mockUrqlClient.executeSubscription.mock.calls.length).toEqual(1);
+        expect(mockUrqlClient.executeSubscription.mock.calls[0][0].variables).toEqual({
+          id: "app-job-123456",
+        });
+
+        mockUrqlClient.executeSubscription.pushResponse("createWidget", {
+          data: {
+            backgroundAction: {
+              id: "app-job-123456",
+              outcome: null,
+              result: null,
+            },
+          },
+          stale: false,
+          hasNext: true,
+        });
+
+        mockUrqlClient.executeSubscription.pushResponse("createWidget", {
+          data: {
+            backgroundAction: {
+              id: "app-job-123456",
+              outcome: "failed",
+              result: {
+                success: false,
+                errors: [
+                  {
+                    code: "GGT_SOMETHING_OR_OTHER",
+                    message: "An internal error occurred",
+                  },
+                ],
+                widget: null,
+              },
+            },
+          },
+          stale: false,
+          hasNext: false,
+        });
+
+        await expect(promise).rejects.toThrowErrorMatchingInlineSnapshot(`"GGT_SOMETHING_OR_OTHER: An internal error occurred"`);
+      });
+    });
+
+    describe("globalAction", () => {
+      test("waits for completed background action response", async () => {
+        const promise = actionResultRunner(connection, "app-job-123456", MockGlobalAction, {});
+
+        expect(mockUrqlClient.executeSubscription.mock.calls.length).toEqual(1);
+        expect(mockUrqlClient.executeSubscription.mock.calls[0][0].variables).toEqual({
+          id: "app-job-123456",
+        });
+
+        mockUrqlClient.executeSubscription.pushResponse("flipAllWidgets", {
+          data: {
+            backgroundAction: {
+              id: "app-job-123456",
+              outcome: null,
+              result: null,
+            },
+          },
+          stale: false,
+          hasNext: true,
+        });
+
+        mockUrqlClient.executeSubscription.pushResponse("flipAllWidgets", {
+          data: {
+            backgroundAction: {
+              id: "app-job-123456",
+              outcome: "completed",
+              result: {
+                success: true,
+                errors: null,
+                result: {},
+              },
+            },
+          },
+          stale: false,
+          hasNext: false,
+        });
+
+        const result = await promise;
+
+        expect(result.outcome).toEqual("completed");
+      });
+
+      test("waits for failed background action response", async () => {
+        const promise = actionResultRunner(connection, "app-job-123456", MockGlobalAction, {});
+
+        expect(mockUrqlClient.executeSubscription.mock.calls.length).toEqual(1);
+        expect(mockUrqlClient.executeSubscription.mock.calls[0][0].variables).toEqual({
+          id: "app-job-123456",
+        });
+
+        mockUrqlClient.executeSubscription.pushResponse("flipAllWidgets", {
+          data: {
+            backgroundAction: {
+              id: "app-job-123456",
+              outcome: null,
+              result: null,
+            },
+          },
+          stale: false,
+          hasNext: true,
+        });
+
+        mockUrqlClient.executeSubscription.pushResponse("flipAllWidgets", {
+          data: {
+            backgroundAction: {
+              id: "app-job-123456",
+              outcome: "failed",
+              result: {
+                success: false,
+                errors: [
+                  {
+                    code: "GGT_SOMETHING_OR_OTHER",
+                    message: "An internal error occurred",
+                  },
+                ],
+                result: null,
+              },
+            },
+          },
+          stale: false,
+          hasNext: false,
+        });
+
+        await expect(promise).rejects.toThrowErrorMatchingInlineSnapshot(`"GGT_SOMETHING_OR_OTHER: An internal error occurred"`);
+      });
+    });
+
+    test("permission error", async () => {
+      const promise = actionResultRunner(connection, "app-job-123456", MockWidgetCreateAction, { widget: { name: "new widget" } });
+
+      expect(mockUrqlClient.executeSubscription.mock.calls.length).toEqual(1);
+      expect(mockUrqlClient.executeSubscription.mock.calls[0][0].variables).toEqual({
+        id: "app-job-123456",
+      });
+
+      mockUrqlClient.executeSubscription.pushResponse("createWidget", {
+        error: new CombinedError({
+          graphQLErrors: [
+            {
+              message: "GGT_PERMISSION_DENIED: Permission denied to access this resource.",
+              locations: [
+                {
+                  line: 2,
+                  column: 3,
+                },
+              ],
+              path: ["backgroundAction"],
+            },
+          ],
+        }),
+        stale: false,
+        hasNext: false,
+      });
+
+      await expect(promise).rejects.toThrowErrorMatchingInlineSnapshot(
+        `"[GraphQL] GGT_PERMISSION_DENIED: Permission denied to access this resource."`
+      );
     });
   });
 });

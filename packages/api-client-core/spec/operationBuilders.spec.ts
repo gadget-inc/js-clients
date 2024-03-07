@@ -1,4 +1,12 @@
-import { actionOperation, enqueueActionOperation, findManyOperation, findOneByFieldOperation, findOneOperation } from "../src/index.js";
+import {
+  actionOperation,
+  actionResultOperation,
+  enqueueActionOperation,
+  findManyOperation,
+  findOneByFieldOperation,
+  findOneOperation,
+} from "../src/index.js";
+import { MockGlobalAction, MockWidgetCreateAction } from "./mockActions.js";
 
 describe("operation builders", () => {
   describe("findOneOperation", () => {
@@ -599,6 +607,75 @@ describe("operation builders", () => {
         }",
           "variables": {
             "backgroundOptions": null,
+          },
+        }
+      `);
+    });
+  });
+
+  describe("actionResultOperation", () => {
+    test("builds query for action", async () => {
+      expect(actionResultOperation("app-job-1234567", MockWidgetCreateAction, { select: { id: true } })).toMatchInlineSnapshot(`
+        {
+          "query": "subscription createWidget($id: String!) {
+          backgroundAction(id: $id) {
+            id
+            outcome
+            result {
+              ... on CreateWidgetResult {
+                success
+                errors {
+                  message
+                  code
+                  ... on InvalidRecordError {
+                    validationErrors {
+                      message
+                      apiIdentifier
+                    }
+                  }
+                }
+                widget {
+                  id
+                  __typename
+                }
+              }
+            }
+          }
+        }",
+          "variables": {
+            "id": "app-job-1234567",
+          },
+        }
+      `);
+    });
+
+    test("builds query for globalAction", async () => {
+      expect(actionResultOperation("app-job-1234567", MockGlobalAction)).toMatchInlineSnapshot(`
+        {
+          "query": "subscription flipAllWidgets($id: String!) {
+          backgroundAction(id: $id) {
+            id
+            outcome
+            result {
+              ... on FlipAllWidgetsResult {
+                success
+                errors {
+                  message
+                  code
+                  ... on InvalidRecordError {
+                    validationErrors {
+                      message
+                      apiIdentifier
+                    }
+                  }
+                }
+                result
+              }
+            }
+          }
+        }",
+          "variables": {
+            "id": "app-job-1234567",
           },
         }
       `);

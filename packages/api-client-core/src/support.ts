@@ -1,10 +1,10 @@
 import type { OperationResult } from "@urql/core";
 import { CombinedError } from "@urql/core";
 import { DataHydrator } from "./DataHydrator.js";
-import { ActionFunctionMetadata, AnyActionFunction } from "./GadgetFunctions.js";
+import type { ActionFunctionMetadata, AnyActionFunction } from "./GadgetFunctions.js";
 import type { RecordShape } from "./GadgetRecord.js";
 import { GadgetRecord } from "./GadgetRecord.js";
-import { VariablesOptions } from "./types.js";
+import type { VariablesOptions } from "./types.js";
 
 /**
  * Generic type of the state of any record of a Gadget model
@@ -351,6 +351,10 @@ export const gadgetErrorFor = (error: Record<string, any>) => {
 export const assertMutationSuccess = (response: OperationResult<any>, dataPath: string[]) => {
   const operationResponse = assertOperationSuccess(response, dataPath);
 
+  return assertResponseSuccess(operationResponse);
+};
+
+export const assertResponseSuccess = (operationResponse: any) => {
   if (!operationResponse.success) {
     const firstErrorBlob = operationResponse.errors && operationResponse.errors[0];
     if (firstErrorBlob) {
