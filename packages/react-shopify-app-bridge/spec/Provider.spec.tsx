@@ -1,7 +1,6 @@
 import type { AnyClient } from "@gadgetinc/api-client-core";
 import { GadgetConnection } from "@gadgetinc/api-client-core";
-import { AppBridgeContext } from "@shopify/app-bridge-react/context.js";
-import { Redirect } from "@shopify/app-bridge/actions/index.js";
+import * as AppBridgeReact from "@shopify/app-bridge-react";
 import "@testing-library/jest-dom";
 import { render } from "@testing-library/react";
 import React from "react";
@@ -12,7 +11,9 @@ describe("GadgetProvider", () => {
   let mockApiClient: AnyClient;
   const { location } = window;
   const mockNavigate = jest.fn();
+  const mockOpen = jest.fn();
   const mockApiKey = "some-api-key";
+  let useAppBridgeMock: jest.SpyInstance;
 
   describe.each([true, false])("as install request: %s", (isInstallRequest) => {
     beforeAll(() => {
@@ -27,15 +28,17 @@ describe("GadgetProvider", () => {
         search: isInstallRequest ? "?shop=example.myshopify.com&hmac=abcdefg&host=abcdfg" : "",
       };
 
-      const originalUseContext = React.useContext;
+      window.open = mockOpen;
 
-      jest.spyOn(React, "useContext").mockImplementation((context) => {
-        if (context === AppBridgeContext) {
-          return {};
-        } else {
-          return originalUseContext(context);
-        }
-      });
+      window.shopify = {
+        // @ts-expect-error mock
+        environment: {
+          embedded: false,
+          mobile: false,
+        },
+      };
+
+      useAppBridgeMock = jest.spyOn(AppBridgeReact, "useAppBridge").mockImplementation(() => window.shopify);
     });
 
     beforeEach(() => {
@@ -50,6 +53,7 @@ describe("GadgetProvider", () => {
 
     afterEach(() => {
       mockNavigate.mockClear();
+      useAppBridgeMock.mockClear();
     });
 
     afterAll(() => {
@@ -93,19 +97,19 @@ describe("GadgetProvider", () => {
       });
 
       if (isInstallRequest) {
-        expect(mockNavigate).toHaveBeenCalledWith(
-          "https://test-app.gadget.app/api/connections/auth/shopify?shop=example.myshopify.com&hmac=abcdefg&host=abcdfg"
+        expect(mockOpen).toHaveBeenCalledWith(
+          "https://test-app.gadget.app/api/connections/auth/shopify?shop=example.myshopify.com&hmac=abcdefg&host=abcdfg",
+          "_top"
         );
+        expect(mockNavigate).not.toHaveBeenCalled();
       } else {
         expect(mockNavigate).not.toHaveBeenCalled();
+        expect(mockOpen).not.toHaveBeenCalled();
         expect(container.outerHTML).toMatchInlineSnapshot(`"<div><span>hello world</span></div>"`);
       }
     });
 
     test("can render a standalone app type in embedded context", () => {
-      // @ts-expect-error mock
-      jest.spyOn(window, "self", "get").mockImplementation(() => ({}));
-
       const { container } = render(
         <Provider api={mockApiClient} shopifyApiKey={mockApiKey} type={AppType.Standalone}>
           <span>hello world</span>
@@ -125,9 +129,7 @@ describe("GadgetProvider", () => {
     });
 
     test("can render a standalone app type in mobile context", () => {
-      window.MobileWebView = {
-        postMessage: jest.fn(),
-      };
+      window.shopify.environment.mobile = true;
 
       const { container } = render(
         <Provider api={mockApiClient} shopifyApiKey={mockApiKey} type={AppType.Standalone}>
@@ -146,17 +148,10 @@ describe("GadgetProvider", () => {
         expect(container.outerHTML).toMatchInlineSnapshot(`"<div><span>hello world</span></div>"`);
       }
 
-      delete window.MobileWebView;
+      window.shopify.environment.mobile = false;
     });
 
     test("can render an embedded app type in embedded context", () => {
-      const mockDispatch = jest.fn();
-      // @ts-expect-error mock
-      jest.spyOn(Redirect, "create").mockImplementation((_appBridge) => {
-        return {
-          dispatch: mockDispatch,
-        };
-      });
       // @ts-expect-error mock
       jest.spyOn(window, "self", "get").mockImplementation(() => ({}));
 
@@ -177,28 +172,20 @@ describe("GadgetProvider", () => {
       });
 
       if (isInstallRequest) {
-        expect(mockDispatch).toHaveBeenCalledWith(
-          "APP::NAVIGATION::REDIRECT::REMOTE",
-          "https://test-app.gadget.app/api/connections/auth/shopify?shop=example.myshopify.com&hmac=abcdefg&host=abcdfg"
+        expect(mockOpen).toHaveBeenCalledWith(
+          "https://test-app.gadget.app/api/connections/auth/shopify?shop=example.myshopify.com&hmac=abcdefg&host=abcdfg",
+          "_top"
         );
+        expect(mockNavigate).not.toHaveBeenCalled();
       } else {
-        expect(mockDispatch).not.toHaveBeenCalled();
         expect(container.outerHTML).toMatchInlineSnapshot(`"<div><span>hello world</span></div>"`);
+        expect(mockNavigate).not.toHaveBeenCalled();
+        expect(mockOpen).not.toHaveBeenCalled();
       }
-
-      expect(mockNavigate).not.toHaveBeenCalled();
     });
 
     test("can render an embedded app type that's already authenticated", () => {
-      const mockDispatch = jest.fn();
-      // @ts-expect-error mock
-      jest.spyOn(Redirect, "create").mockImplementation((_appBridge) => {
-        return {
-          dispatch: mockDispatch,
-        };
-      });
-      // @ts-expect-error mock
-      jest.spyOn(window, "self", "get").mockImplementation(() => ({}));
+      window.shopify.environment.embedded = true;
 
       const { container } = render(
         <Provider api={mockApiClient} shopifyApiKey={mockApiKey} type={AppType.Embedded}>
@@ -218,9 +205,44 @@ describe("GadgetProvider", () => {
         hasNext: false,
       });
 
-      expect(mockDispatch).not.toHaveBeenCalled();
       expect(container.outerHTML).toMatchInlineSnapshot(`"<div><span>hello world</span></div>"`);
       expect(mockNavigate).not.toHaveBeenCalled();
+
+      window.shopify.environment.embedded = false;
+    });
+
+    test("should throw if embedded app type is in embedded context and shopify global is not defined", () => {
+      // @ts-expect-error mock
+      const windowSelf = jest.spyOn(window, "self", "get").mockImplementation(() => ({}));
+      // @ts-expect-error mock
+      const windowTop = jest.spyOn(window, "top", "get").mockImplementation(() => ({
+        location: {
+          href: "https://admin.shopify.com/store/some-test-shop/apps/fake-app",
+        },
+      }));
+      // @ts-expect-error reset mock
+      window.shopify = undefined;
+
+      expect(() =>
+        render(
+          <Provider api={mockApiClient} shopifyApiKey={mockApiKey} type={AppType.Embedded}>
+            <span>hello world</span>
+          </Provider>
+        )
+      ).toThrow(
+        "Expected app bridge to be defined in embedded context, but it was not. This is likely due to a missing script tag, see https://shopify.dev/docs/api/app-bridge-library"
+      );
+
+      // resetting the mocked values
+      windowSelf.mockRestore();
+      windowTop.mockRestore();
+      window.shopify = {
+        // @ts-expect-error mock
+        environment: {
+          embedded: false,
+          mobile: false,
+        },
+      };
     });
   });
 });

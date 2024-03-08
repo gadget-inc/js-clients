@@ -1,12 +1,15 @@
+import { filter, pipe, take, toPromise } from "wonka";
+import type { BackgroundActionResult } from "./BackgroundActionHandle.js";
 import { BackgroundActionHandle } from "./BackgroundActionHandle.js";
 import type { FieldSelection } from "./FieldSelection.js";
 import type { GadgetConnection } from "./GadgetConnection.js";
-import { AnyActionFunction } from "./GadgetFunctions.js";
+import type { AnyActionFunction } from "./GadgetFunctions.js";
 import type { GadgetRecord, RecordShape } from "./GadgetRecord.js";
 import { GadgetRecordList } from "./GadgetRecordList.js";
 import type { AnyModelManager } from "./ModelManager.js";
 import {
   actionOperation,
+  actionResultOperation,
   enqueueActionOperation,
   findManyOperation,
   findOneByFieldOperation,
@@ -18,6 +21,7 @@ import {
   assertMutationSuccess,
   assertNullableOperationSuccess,
   assertOperationSuccess,
+  assertResponseSuccess,
   disambiguateActionVariables,
   disambiguateBulkActionVariables,
   gadgetErrorFor,
@@ -28,7 +32,7 @@ import {
   hydrateRecordArray,
   setVariableOptionValues,
 } from "./support.js";
-import type { BaseFindOptions, EnqueueBackgroundActionOptions, FindManyOptions, VariablesOptions } from "./types.js";
+import type { ActionFunctionOptions, BaseFindOptions, EnqueueBackgroundActionOptions, FindManyOptions, VariablesOptions } from "./types.js";
 
 export const findOneRunner = async <Shape extends RecordShape = any>(
   modelManager: { connection: GadgetConnection },
@@ -201,14 +205,8 @@ export const actionRunner: ActionRunner = async <Shape extends RecordShape = any
 
   if (!isBulkAction) {
     const mutationTriple = assertMutationSuccess(response, dataPath);
-    // Delete actions have a null selection. We do an early return for this because `hydrateRecordArray` will fail
-    // if there's nothing at `mutationResult[modelSelectionField]`, but the caller isn't expecting a return (void).
-    if (defaultSelection == null) return;
-    if (!hasReturnType) {
-      return hydrateRecord<Shape>(response, mutationTriple[modelSelectionField]);
-    } else {
-      return mutationTriple.result;
-    }
+
+    return processActionResponse(defaultSelection, response, mutationTriple[modelSelectionField], hasReturnType);
   } else {
     const mutationTriple = get(response.data, dataPath);
     const results =
@@ -221,6 +219,22 @@ export const actionRunner: ActionRunner = async <Shape extends RecordShape = any
     }
 
     return results;
+  }
+};
+
+const processActionResponse = <Shape extends RecordShape = any>(
+  defaultSelection: FieldSelection | null,
+  response: any,
+  record: any,
+  hasReturnType?: boolean | null
+) => {
+  // Delete actions have a null selection. We do an early return for this because `hydrateRecordArray` will fail
+  // if there's nothing at `mutationResult[modelSelectionField]`, but the caller isn't expecting a return (void).
+  if (defaultSelection == null) return;
+  if (!hasReturnType) {
+    return hydrateRecord<Shape>(response, record);
+  } else {
+    return record.result;
   }
 };
 
@@ -257,11 +271,50 @@ export const enqueueActionRunner = async <Action extends AnyActionFunction>(
 
   try {
     const result = assertMutationSuccess(response, dataPath);
-    return new BackgroundActionHandle(connection, result.backgroundAction.id, options);
+    return new BackgroundActionHandle(connection, action, result.backgroundAction.id, options);
   } catch (error: any) {
     if ("code" in error && error.code == "GGT_DUPLICATE_BACKGROUND_ACTION_ID" && options?.id && options.onDuplicateID == "ignore") {
-      return new BackgroundActionHandle(connection, options.id, options);
+      return new BackgroundActionHandle(connection, action, options.id, options);
     }
     throw error;
   }
+};
+
+export const actionResultRunner = async <Action extends AnyActionFunction, Options extends ActionFunctionOptions<Action>>(
+  connection: GadgetConnection,
+  id: string,
+  action: Action,
+  options?: Options
+): Promise<BackgroundActionResult> => {
+  const plan = actionResultOperation(id, action, options);
+  const subscription = connection.currentClient.subscription(plan.query, plan.variables);
+
+  const response = await pipe(
+    subscription,
+    filter((operation) => operation.error || operation.data?.backgroundAction?.outcome),
+    take(1),
+    toPromise
+  );
+
+  const backgroundAction = assertOperationSuccess(response, ["backgroundAction"]);
+
+  assertResponseSuccess(backgroundAction.result);
+
+  switch (action.type) {
+    case "action": {
+      backgroundAction.result = processActionResponse(
+        action.defaultSelection,
+        response.data,
+        get(backgroundAction.result, [action.modelSelectionField]),
+        action.hasReturnType
+      );
+      break;
+    }
+    case "globalAction": {
+      backgroundAction.result = backgroundAction.result.result;
+      break;
+    }
+  }
+
+  return backgroundAction;
 };

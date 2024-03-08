@@ -107,8 +107,11 @@ const newMockOperationFn = (assertions?: (request: GraphQLRequest) => void) => {
         operation: null as any,
         ...response,
       });
-      subjects[key].complete();
-      delete subjects[key];
+
+      if (!response.hasNext) {
+        subjects[key].complete();
+        delete subjects[key];
+      }
     });
   };
 

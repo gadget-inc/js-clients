@@ -1,6 +1,7 @@
 import type { AnyClient } from "@gadgetinc/api-client-core";
 import { GadgetConnection } from "@gadgetinc/api-client-core";
-import type { AppBridgeState, ClientApplication } from "@shopify/app-bridge";
+import type { ShopifyGlobal } from "@shopify/app-bridge-react";
+import * as AppBridgeReact from "@shopify/app-bridge-react";
 import "@testing-library/jest-dom";
 import { renderHook } from "@testing-library/react";
 import type { IsExact } from "conditional-type-checks";
@@ -20,13 +21,14 @@ const _TestUseGadgetReturnsAppropriateTypes = () => {
   assert<IsExact<typeof canAuth, boolean>>(true);
   assert<IsExact<typeof isAuthenticated, boolean>>(true);
   assert<IsExact<typeof appType, AppType | undefined>>(true);
-  assert<IsExact<typeof appBridge, ClientApplication<AppBridgeState> | null>>(true);
+  assert<IsExact<typeof appBridge, ShopifyGlobal | null>>(true);
   assert<IsExact<typeof isRootFrameRequest, boolean>>(true);
 };
 
 describe("useGadget", () => {
   let mockApiClient: AnyClient;
   const mockApiKey = "some-api-key";
+  let useAppBridgeMock: jest.SpyInstance;
 
   beforeEach(() => {
     mockApiClient = {
@@ -36,6 +38,15 @@ describe("useGadget", () => {
     } as any;
 
     jest.spyOn(mockApiClient.connection, "currentClient", "get").mockReturnValue(mockUrqlClient);
+    window.shopify = {
+      // @ts-expect-error mock
+      environment: {
+        embedded: false,
+        mobile: false,
+      },
+    };
+
+    useAppBridgeMock = jest.spyOn(AppBridgeReact, "useAppBridge").mockImplementation(() => window.shopify);
   });
 
   test("has correct embedded value", () => {
@@ -49,28 +60,25 @@ describe("useGadget", () => {
 
     expect(result.current.isEmbedded).toBeFalsy();
 
-    // @ts-expect-error mock
-    const mock = jest.spyOn(window, "self", "get").mockImplementation(() => ({}));
+    window.shopify.environment.embedded = true;
 
     rerender();
 
     expect(result.current.isEmbedded).toBeTruthy();
 
-    mock.mockRestore();
+    window.shopify.environment.embedded = false;
 
     rerender();
 
     expect(result.current.isEmbedded).toBeFalsy();
 
-    window.MobileWebView = {
-      postMessage: jest.fn(),
-    };
+    window.shopify.environment.mobile = true;
 
     rerender();
 
     expect(result.current.isEmbedded).toBeTruthy();
 
-    delete window.MobileWebView;
+    window.shopify.environment.mobile = false;
   });
 
   test("has correct authenticated value", () => {
