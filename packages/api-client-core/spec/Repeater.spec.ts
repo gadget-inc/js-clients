@@ -6,7 +6,7 @@ import {
     MAX_QUEUE_LENGTH,
     SlidingBuffer,
 } from "@manufac/repeater";
-import { delayPromise } from "./helpers";
+import { delayPromise } from "./helpers.js";
 
 describe("Repeater", () => {
     test("push", async () => {
