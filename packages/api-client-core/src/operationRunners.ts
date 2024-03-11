@@ -271,10 +271,10 @@ export const enqueueActionRunner = async <Action extends AnyActionFunction>(
 
   try {
     const result = assertMutationSuccess(response, dataPath);
-    return new BackgroundActionHandle(connection, action, result.backgroundAction.id, options);
+    return new BackgroundActionHandle(connection, action, result.backgroundAction.id);
   } catch (error: any) {
     if ("code" in error && error.code == "GGT_DUPLICATE_BACKGROUND_ACTION_ID" && options?.id && options.onDuplicateID == "ignore") {
-      return new BackgroundActionHandle(connection, action, options.id, options);
+      return new BackgroundActionHandle(connection, action, options.id);
     }
     throw error;
   }
