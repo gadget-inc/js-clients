@@ -106,6 +106,46 @@ describe("operationRunners", () => {
       expect(result.name).toBeTruthy();
     });
 
+    test("can run an action with hasReturnType", async () => {
+      const promise = actionRunner(
+        {
+          connection,
+        },
+        "createWidget",
+        { id: true, name: true },
+        "widget",
+        "widget",
+        false,
+        {
+          widget: {
+            value: { name: "hello" },
+            required: false,
+            type: "CreateWidgetInput",
+          },
+        },
+        {},
+        null,
+        true
+      );
+
+      mockUrqlClient.executeMutation.pushResponse("createWidget", {
+        data: {
+          createWidget: {
+            success: true,
+            errors: null,
+            result: {
+              result: "ok"
+            }
+          },
+        },
+        stale: false,
+        hasNext: false,
+      });
+
+      const result = await promise;
+      expect(result.result).toEqual("ok");
+    });
+
     test("can throw the error returned by the server for a single action", async () => {
       const promise = actionRunner<{ id: string; name: string }>(
         {
