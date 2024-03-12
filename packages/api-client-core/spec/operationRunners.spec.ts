@@ -134,8 +134,8 @@ describe("operationRunners", () => {
             success: true,
             errors: null,
             result: {
-              result: "ok"
-            }
+              result: "ok",
+            },
           },
         },
         stale: false,
