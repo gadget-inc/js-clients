@@ -206,7 +206,7 @@ export const actionRunner: ActionRunner = async <Shape extends RecordShape = any
   if (!isBulkAction) {
     const mutationTriple = assertMutationSuccess(response, dataPath);
 
-    return processActionResponse(defaultSelection, response, mutationTriple[modelSelectionField], hasReturnType);
+    return processActionResponse(defaultSelection, response, mutationTriple, modelSelectionField, hasReturnType);
   } else {
     const mutationTriple = get(response.data, dataPath);
     const results =
@@ -226,13 +226,14 @@ const processActionResponse = <Shape extends RecordShape = any>(
   defaultSelection: FieldSelection | null,
   response: any,
   record: any,
+  modelSelectionField: string,
   hasReturnType?: boolean | null
 ) => {
   // Delete actions have a null selection. We do an early return for this because `hydrateRecordArray` will fail
   // if there's nothing at `mutationResult[modelSelectionField]`, but the caller isn't expecting a return (void).
   if (defaultSelection == null) return;
   if (!hasReturnType) {
-    return hydrateRecord<Shape>(response, record);
+    return hydrateRecord<Shape>(response, record[modelSelectionField]);
   } else {
     return record.result;
   }
@@ -305,7 +306,8 @@ export const actionResultRunner = async <Action extends AnyActionFunction, Optio
       backgroundAction.result = processActionResponse(
         action.defaultSelection,
         response.data,
-        get(backgroundAction.result, [action.modelSelectionField]),
+        backgroundAction.result,
+        action.modelSelectionField,
         action.hasReturnType
       );
       break;
