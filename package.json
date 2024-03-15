@@ -21,6 +21,7 @@
     "preinstall": "npx only-allow pnpm"
   },
   "devDependencies": {
+    "@arethetypeswrong/cli": "^0.15.1",
     "@gadget-client/app-with-no-user-model": "^1.8.0",
     "@gadget-client/bulk-actions-test": "^1.110.0",
     "@gadget-client/full-auth": "^1.7.0",
@@ -37,6 +38,7 @@
     "@types/node": "^16.11.7",
     "@types/semver": "^7.5.8",
     "eslint": "^8.57.0",
+    "execa": "^5.1.1",
     "gitpkg": "^1.0.0-beta.4",
     "jest": "^29.7.0",
     "jest-environment-jsdom": "^29.7.0",
