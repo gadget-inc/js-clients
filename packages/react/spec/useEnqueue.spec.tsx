@@ -1,4 +1,4 @@
-import { BackgroundActionHandle } from "@gadgetinc/api-client-core";
+import type { BackgroundActionHandle } from "@gadgetinc/api-client-core";
 import { act, renderHook } from "@testing-library/react";
 import type { IsExact } from "conditional-type-checks";
 import { assert } from "conditional-type-checks";
@@ -205,10 +205,13 @@ describe("useEnqueue", () => {
 
   test("can pass background options as a second argument to the enqueue function", async () => {
     const { result } = renderHook(() => useEnqueue(relatedProductsApi.user.update), { wrapper: MockClientWrapper(relatedProductsApi) });
-
+    const startAt = new Date(new Date().getTime() + 1000);
     let mutationPromise: any;
     act(() => {
-      mutationPromise = result.current[1]({ id: "123", user: { email: "test@test.com" } }, { priority: "high", retries: 5 });
+      mutationPromise = result.current[1](
+        { id: "123", user: { email: "test@test.com" } },
+        { priority: "high", retries: 5, startAt: startAt }
+      );
     });
 
     expect(result.current[0].handle).toBeFalsy();
@@ -218,7 +221,7 @@ describe("useEnqueue", () => {
     expect(mockUrqlClient.executeMutation).toBeCalledTimes(1);
 
     expect(mockUrqlClient.executeMutation.mock.calls[0][0].variables).toEqual({
-      backgroundOptions: { priority: "high", retries: { retryCount: 5 } },
+      backgroundOptions: { priority: "high", retries: { retryCount: 5 }, startAt: startAt.toISOString() },
       id: "123",
       user: { email: "test@test.com" },
     });
