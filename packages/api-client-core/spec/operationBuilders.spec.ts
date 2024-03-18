@@ -611,6 +611,59 @@ describe("operation builders", () => {
         }
       `);
     });
+
+    test("enqueueActionOperation with startsAt as string", () => {
+      expect(enqueueActionOperation("createWidget", {}, undefined, { startAt: "2024-03-18T18:14:08.257Z" })).toMatchInlineSnapshot(`
+        {
+          "query": "mutation enqueueCreateWidget($backgroundOptions: EnqueueBackgroundActionOptions) {
+          background {
+            createWidget(backgroundOptions: $backgroundOptions) {
+              success
+              errors {
+                message
+                code
+              }
+              backgroundAction {
+                id
+              }
+            }
+          }
+        }",
+          "variables": {
+            "backgroundOptions": {
+              "startAt": "2024-03-18T18:14:08.257Z",
+            },
+          },
+        }
+      `);
+    });
+
+    test("enqueueActionOperation with startsAt as Date", () => {
+      expect(enqueueActionOperation("createWidget", {}, undefined, { startAt: new Date("2024-03-18T18:14:08.257Z") }))
+        .toMatchInlineSnapshot(`
+        {
+          "query": "mutation enqueueCreateWidget($backgroundOptions: EnqueueBackgroundActionOptions) {
+          background {
+            createWidget(backgroundOptions: $backgroundOptions) {
+              success
+              errors {
+                message
+                code
+              }
+              backgroundAction {
+                id
+              }
+            }
+          }
+        }",
+          "variables": {
+            "backgroundOptions": {
+              "startAt": "2024-03-18T18:14:08.257Z",
+            },
+          },
+        }
+      `);
+    });
   });
 
   describe("actionResultOperation", () => {
