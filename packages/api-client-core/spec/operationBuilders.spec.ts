@@ -613,7 +613,7 @@ describe("operation builders", () => {
     });
 
     test("enqueueActionOperation with startsAt as string", () => {
-      expect(enqueueActionOperation("createWidget", {}, undefined, { startsAt: "2024-03-18T18:14:08.257Z" })).toMatchInlineSnapshot(`
+      expect(enqueueActionOperation("createWidget", {}, undefined, { startAt: "2024-03-18T18:14:08.257Z" })).toMatchInlineSnapshot(`
         {
           "query": "mutation enqueueCreateWidget($backgroundOptions: EnqueueBackgroundActionOptions) {
           background {
@@ -631,7 +631,7 @@ describe("operation builders", () => {
         }",
           "variables": {
             "backgroundOptions": {
-              "startsAt": "2024-03-18T18:14:08.257Z",
+              "startAt": "2024-03-18T18:14:08.257Z",
             },
           },
         }
@@ -639,7 +639,7 @@ describe("operation builders", () => {
     });
 
     test("enqueueActionOperation with startsAt as Date", () => {
-      expect(enqueueActionOperation("createWidget", {}, undefined, { startsAt: new Date("2024-03-18T18:14:08.257Z") }))
+      expect(enqueueActionOperation("createWidget", {}, undefined, { startAt: new Date("2024-03-18T18:14:08.257Z") }))
         .toMatchInlineSnapshot(`
         {
           "query": "mutation enqueueCreateWidget($backgroundOptions: EnqueueBackgroundActionOptions) {
@@ -658,7 +658,7 @@ describe("operation builders", () => {
         }",
           "variables": {
             "backgroundOptions": {
-              "startsAt": "2024-03-18T18:14:08.257Z",
+              "startAt": "2024-03-18T18:14:08.257Z",
             },
           },
         }

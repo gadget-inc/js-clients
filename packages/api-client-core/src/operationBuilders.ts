@@ -266,12 +266,12 @@ export const graphqlizeBackgroundOptions = (options?: EnqueueBackgroundActionOpt
     };
   }
 
-  if (obj.startsAt instanceof Date) {
-    obj.startsAt = obj.startsAt.toISOString();
+  if (obj.startAt instanceof Date) {
+    obj.startAt = obj.startAt.toISOString();
   }
 
   for (const key of Object.keys(obj)) {
-    if (["id", "retries", "queue", "priority", "startsAt"].includes(key)) continue;
+    if (["id", "retries", "queue", "priority", "startAt"].includes(key)) continue;
     delete obj[key];
   }
 

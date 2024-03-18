@@ -869,7 +869,7 @@ export type EnqueueBackgroundActionOptions<Action extends AnyActionFunction> = {
    * // Start in 60 seconds from now
    * startAt: new Date(new Date().getTime() + 60 * 1000)
    */
-  startsAt?: Date | string;
+  startAt?: Date | string;
 } & Partial<OperationContext>;
 
 export type ActionFunctionOptions<Action extends AnyActionFunction> = Action extends ActionFunction<infer Options, any, any, any, any>
