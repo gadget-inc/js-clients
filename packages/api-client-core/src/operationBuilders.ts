@@ -265,8 +265,13 @@ export const graphqlizeBackgroundOptions = (options?: EnqueueBackgroundActionOpt
       name: obj.queue,
     };
   }
+
+  if (obj.startsAt instanceof Date) {
+    obj.startsAt = obj.startsAt.toISOString();
+  }
+
   for (const key of Object.keys(obj)) {
-    if (["id", "retries", "queue", "priority"].includes(key)) continue;
+    if (["id", "retries", "queue", "priority", "startsAt"].includes(key)) continue;
     delete obj[key];
   }
 

@@ -1,4 +1,4 @@
-import { OperationContext } from "@urql/core";
+import type { OperationContext } from "@urql/core";
 import type { VariableOptions } from "tiny-graphql-query-compiler";
 import type { FieldSelection } from "./FieldSelection.js";
 import type { ActionFunction, AnyActionFunction, BulkActionFunction, GlobalActionFunction } from "./GadgetFunctions.js";
@@ -858,6 +858,18 @@ export type EnqueueBackgroundActionOptions<Action extends AnyActionFunction> = {
    * - `error` will throw the GGT_DUPLICATE_BACKGROUND_ACTION_ID error for the caller to handle
    */
   onDuplicateID?: "ignore" | "error";
+
+  /**
+   * Schedules the background action to run in the future after this datetime.
+   *
+   * @example
+   * startAt: "2024-03-18T18:14:08.257Z"
+   *
+   * @example
+   * // Start in 60 seconds from now
+   * startAt: new Date(new Date().getTime() + 60 * 1000)
+   */
+  startsAt?: Date | string;
 } & Partial<OperationContext>;
 
 export type ActionFunctionOptions<Action extends AnyActionFunction> = Action extends ActionFunction<infer Options, any, any, any, any>
