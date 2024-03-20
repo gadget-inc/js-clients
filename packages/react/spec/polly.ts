@@ -7,8 +7,8 @@ import { setupPolly } from "setup-polly-jest";
 
 export const startPolly = (config: PollyConfig) => {
   const context = setupPolly({
-    adapters: [NodeHttpAdapter, XHRAdapter],
-    persister: FSPersister,
+    adapters: [NodeHttpAdapter as any, XHRAdapter as any],
+    persister: FSPersister as any,
 
     persisterOptions: {
       fs: {

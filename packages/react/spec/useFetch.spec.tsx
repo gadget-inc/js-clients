@@ -3,7 +3,7 @@
  */
 
 import { act, render, renderHook, screen } from "@testing-library/react";
-import userEvent from "@testing-library/user-event";
+import { userEvent } from "@testing-library/user-event";
 import type { IsExact } from "conditional-type-checks";
 import { assert } from "conditional-type-checks";
 import type { ReactNode } from "react";

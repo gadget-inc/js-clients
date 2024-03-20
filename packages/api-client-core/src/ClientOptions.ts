@@ -1,5 +1,5 @@
 import type { Exchange } from "@urql/core";
-import type { GadgetSubscriptionClientOptions } from "./GadgetConnection";
+import type { GadgetSubscriptionClientOptions } from "./GadgetConnection.js";
 
 /** All the options for a Gadget client */
 export interface ClientOptions {

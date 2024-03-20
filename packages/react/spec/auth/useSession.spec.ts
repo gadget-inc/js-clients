@@ -30,12 +30,13 @@ describe("useSession", () => {
       "query currentSession {
         currentSession {
           __typename
-          createdAt
           id
           state
+          createdAt
           updatedAt
           user {
             __typename
+            id
             createdAt
             email
             emailVerificationToken
@@ -44,7 +45,6 @@ describe("useSession", () => {
             firstName
             googleImageUrl
             googleProfileId
-            id
             lastName
             lastSignedIn
             resetPasswordToken
@@ -78,12 +78,13 @@ describe("useSession", () => {
       "query currentSession {
         currentSession {
           __typename
-          createdAt
           id
           state
+          createdAt
           updatedAt
           user {
             __typename
+            id
             createdAt
             email
             emailVerificationToken
@@ -92,7 +93,6 @@ describe("useSession", () => {
             firstName
             googleImageUrl
             googleProfileId
-            id
             lastName
             lastSignedIn
             resetPasswordToken
