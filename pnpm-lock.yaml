@@ -8,6 +8,11 @@ overrides:
   '@gadgetinc/api-client-core': workspace:*
   '@gadgetinc/react': workspace:*
 
+patchedDependencies:
+  '@n1ru4l/push-pull-async-iterable-iterator@3.2.0':
+    hash: ucctwfdcmjhobzxki7ytrq6ei4
+    path: patches/@n1ru4l__push-pull-async-iterable-iterator@3.2.0.patch
+
 importers:
 
   .:
@@ -113,7 +118,7 @@ importers:
         version: 0.1.4
       '@n1ru4l/push-pull-async-iterable-iterator':
         specifier: ^3.2.0
-        version: 3.2.0
+        version: 3.2.0(patch_hash=ucctwfdcmjhobzxki7ytrq6ei4)
       '@urql/core':
         specifier: ^4.0.10
         version: 4.0.10(graphql@16.8.1)
@@ -1890,10 +1895,11 @@ packages:
     resolution: {integrity: sha512-pLkJy83/rVfDTyQgDSC8GeXAHEdXNHGNJrB1b7wAyGQu0iv7tpMXntKVSqj0+XKNVQbco40SZffNfVALzIt0SQ==}
     dev: true
 
-  /@n1ru4l/push-pull-async-iterable-iterator@3.2.0:
+  /@n1ru4l/push-pull-async-iterable-iterator@3.2.0(patch_hash=ucctwfdcmjhobzxki7ytrq6ei4):
     resolution: {integrity: sha512-3fkKj25kEjsfObL6IlKPAlHYPq/oYwUkkQ03zsTTiDjD7vg/RxjdiLeCydqtxHZP0JgsXL3D/X5oAkMGzuUp/Q==}
     engines: {node: '>=12'}
     dev: false
+    patched: true
 
   /@nodelib/fs.scandir@2.1.5:
     resolution: {integrity: sha512-vq24Bq3ym5HEQm2NKCr3yXDwjc7vTsEThRDnkp2DK9p1uqLR+DHurm/NOTo0KG7HYHU7eppKZj3MyqYuMBf62g==}

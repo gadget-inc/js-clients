@@ -1,9 +1,10 @@
 import { Response } from "cross-fetch";
-import gql from "gql-tag";
+import gqlTag from "gql-tag";
 import nock from "nock";
 import { AuthenticationMode, BrowserSessionStorageType, GadgetConnection } from "../src/index.js";
 import { base64 } from "./helpers.js";
 
+const gql = gqlTag as any;
 nock.disableNetConnect();
 
 // eslint-disable-next-line jest/no-export

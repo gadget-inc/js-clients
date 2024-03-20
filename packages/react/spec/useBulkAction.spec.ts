@@ -95,9 +95,9 @@ describe("useBulkAction", () => {
       expect(promiseResult.data![1].id).toEqual("124");
     });
 
-    expect(result.current[0].data!.length).toEqual(2);
-    expect(result.current[0].data![0].id).toEqual("123");
-    expect(result.current[0].data![1].id).toEqual("124");
+    expect(result.current[0].data.length).toEqual(2);
+    expect(result.current[0].data[0].id).toEqual("123");
+    expect(result.current[0].data[1].id).toEqual("124");
     expect(result.current[0].fetching).toBe(false);
     expect(result.current[0].error).toBeFalsy();
   });

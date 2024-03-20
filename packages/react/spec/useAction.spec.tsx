@@ -149,8 +149,8 @@ describe("useAction", () => {
       expect(promiseResult.error).toBeFalsy();
     });
 
-    expect(result.current[0].data!.id).toEqual("123");
-    expect(result.current[0].data!.email).toEqual("test@test.com");
+    expect(result.current[0].data.id).toEqual("123");
+    expect(result.current[0].data.email).toEqual("test@test.com");
     expect(result.current[0].fetching).toBe(false);
     expect(result.current[0].error).toBeFalsy();
   });
@@ -290,8 +290,8 @@ describe("useAction", () => {
       expect(promiseResult.error).toBeFalsy();
     });
 
-    expect(result.current[0].data!.id).toEqual("123");
-    expect(result.current[0].data!.email).toEqual("test@test.com");
+    expect(result.current[0].data.id).toEqual("123");
+    expect(result.current[0].data.email).toEqual("test@test.com");
     expect(result.current[0].fetching).toBe(false);
     expect(result.current[0].error).toBeFalsy();
 
@@ -327,8 +327,8 @@ describe("useAction", () => {
       expect(promiseResult.error).toBeFalsy();
     });
 
-    expect(result.current[0].data!.id).toEqual("456");
-    expect(result.current[0].data!.email).toEqual("another@test.com");
+    expect(result.current[0].data.id).toEqual("456");
+    expect(result.current[0].data.email).toEqual("another@test.com");
     expect(result.current[0].fetching).toBe(false);
     expect(result.current[0].error).toBeFalsy();
   });

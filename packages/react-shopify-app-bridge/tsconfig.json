@@ -4,8 +4,8 @@
     "lib": ["es2020", "DOM"],
     "jsx": "react",
     "baseUrl": "./",
-    "moduleResolution": "node",
-    "module": "ES2022",
+    "moduleResolution": "nodenext",
+    "module": "nodenext",
     "target": "es2020",
     "types": ["jest", "node"],
     "outDir": "./dist"

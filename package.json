@@ -55,6 +55,9 @@
     "overrides": {
       "@gadgetinc/api-client-core": "workspace:*",
       "@gadgetinc/react": "workspace:*"
+    },
+    "patchedDependencies": {
+      "@n1ru4l/push-pull-async-iterable-iterator@3.2.0": "patches/@n1ru4l__push-pull-async-iterable-iterator@3.2.0.patch"
     }
   },
   "packageManager": "pnpm@8.15.4+sha256.cea6d0bdf2de3a0549582da3983c70c92ffc577ff4410cbf190817ddc35137c2"
