@@ -1,7 +1,7 @@
 import type { FieldSelection as BuilderFieldSelection, BuilderOperation, Variable } from "tiny-graphql-query-compiler";
 import { Call, Var, compileWithVariableValues } from "tiny-graphql-query-compiler";
-import type { FieldSelection } from "./FieldSelection.js";
-import type { AnyActionFunction } from "./index.js";
+import { isConnectionFieldSelection, isFieldSelection, type ConnectionFieldSelection, type FieldSelection } from "./FieldSelection.js";
+import type { AnyActionFunction, FieldSelectionType } from "./index.js";
 import { camelize, filterTypeName, sortTypeName } from "./support.js";
 import type { ActionFunctionOptions, BaseFindOptions, EnqueueBackgroundActionOptions, FindManyOptions, VariablesOptions } from "./types.js";
 
@@ -16,10 +16,57 @@ const hydrationOptions = (modelApiIdentifier: string): BuilderFieldSelection => 
 /**
  * Converts Selection nested object format to the tiny-graphql-query-compiler shape
  **/
-const fieldSelectionToQueryCompilerFields = (selection: FieldSelection, includeTypename = false): BuilderFieldSelection => {
-  const output: BuilderFieldSelection = { ...selection };
+export const fieldSelectionToQueryCompilerFields = (selection: FieldSelection, includeTypename = false): BuilderFieldSelection => {
+  const output: BuilderFieldSelection = compileSelection(selection);
   if (includeTypename) output.__typename = true;
   return output;
+};
+
+const compileConnectionSelection = (selection: ConnectionFieldSelection) => {
+  if ("before" in selection || "after" in selection || "first" in selection || "last" in selection) {
+    return Call(
+      {
+        before: selection.before,
+        after: selection.after,
+        first: selection.first,
+        last: selection.last,
+      },
+      {
+        ...(selection.pageInfo && { pageInfo: compileSelection(selection.pageInfo) }),
+        edges: {
+          node: compileSelection(selection.edges.node),
+        },
+      }
+    );
+  } else {
+    return {
+      ...(selection.pageInfo && { pageInfo: compileSelection(selection.pageInfo) }),
+      edges: {
+        node: compileSelection(selection.edges.node),
+      },
+    };
+  }
+};
+
+const compileSelect = (selection: FieldSelectionType) => {
+  if (isFieldSelection(selection)) {
+    return compileSelection(selection);
+  } else if (isConnectionFieldSelection(selection)) {
+    return compileConnectionSelection(selection);
+  } else {
+    return selection;
+  }
+};
+const compileSelection = (selection: FieldSelection): BuilderFieldSelection => {
+  return Object.entries(selection).reduce((fields, [key, select]) => {
+    if (isConnectionFieldSelection(select)) {
+      fields[key] = compileConnectionSelection(select);
+    } else {
+      fields[key] = compileSelect(select);
+    }
+
+    return fields;
+  }, {} as BuilderFieldSelection);
 };
 
 export type FindFirstPaginationOptions = Omit<FindManyOptions, "first" | "last" | "before" | "after">;
@@ -147,7 +194,7 @@ export const actionOperation = (
   let fields: BuilderFieldSelection = {
     [operation]: Call(
       variableOptionsToVariables(variables),
-      actionResultFieldSelection(modelSelectionField, selection, isBulkAction, hasReturnType)
+      compileSelection(actionResultFieldSelection(modelSelectionField, selection, isBulkAction, hasReturnType))
     ),
   };
 
@@ -180,6 +227,8 @@ export const actionResultOperation = <Action extends AnyActionFunction, Options 
     case "action": {
       const selection = options?.select || action.defaultSelection;
 
+      console.log(selection);
+
       fields = {
         [`... on ${camelize(action.operationName)}Result`]: actionResultFieldSelection(
           action.modelApiIdentifier,
@@ -203,13 +252,13 @@ export const actionResultOperation = <Action extends AnyActionFunction, Options 
     fields: {
       backgroundAction: Call(
         { id: Var({ value: id, type: "String!" }) },
-        {
+        compileSelection({
           id: true,
           outcome: true,
           result: {
             ...fields,
           },
-        }
+        })
       ),
     },
   };
@@ -232,7 +281,7 @@ export const globalActionOperation = (
   options?: { live?: boolean }
 ) => {
   let fields: BuilderFieldSelection = {
-    [operation]: Call(variableOptionsToVariables(variables), globalActionFieldSelection()),
+    [operation]: Call(variableOptionsToVariables(variables), compileSelection(globalActionFieldSelection())),
   };
 
   const dataPath = [operation];

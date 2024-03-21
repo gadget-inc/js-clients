@@ -71,6 +71,114 @@ describe("operation builders", () => {
         }
       `);
     });
+
+    test("findOneOperation can select connection with pagination arguments", () => {
+      const select = {
+        id: true,
+        state: true,
+        posts: {
+          pageInfo: {
+            hasNextPage: true,
+            hasPreviousPage: true,
+            startCursor: true,
+            endCursor: true,
+          },
+          before: "before_cursor",
+          after: "after_cursor",
+          first: 10,
+          last: 5,
+          edges: {
+            node: {
+              id: true,
+            },
+          },
+        },
+      };
+
+      expect(findOneOperation("widget", "123", { __typename: true, id: true, state: true }, "widget", { select: select }))
+        .toMatchInlineSnapshot(`
+        {
+          "query": "query widget($id: GadgetID!) {
+          widget(id: $id) {
+            id
+            state
+            posts(before: "before_cursor", after: "after_cursor", first: 10, last: 5) {
+              pageInfo {
+                hasNextPage
+                hasPreviousPage
+                startCursor
+                endCursor
+              }
+              edges {
+                node {
+                  id
+                }
+              }
+            }
+            __typename
+          }
+          gadgetMeta {
+            hydrations(modelName: "widget")
+          }
+        }",
+          "variables": {
+            "id": "123",
+          },
+        }
+      `);
+    });
+
+    test("findOneOperation can select connection with no pagination arguments", () => {
+      const select = {
+        id: true,
+        state: true,
+        posts: {
+          pageInfo: {
+            hasNextPage: true,
+            hasPreviousPage: true,
+            startCursor: true,
+            endCursor: true,
+          },
+          edges: {
+            node: {
+              id: true,
+            },
+          },
+        },
+      };
+
+      expect(findOneOperation("widget", "123", { __typename: true, id: true, state: true }, "widget", { select: select }))
+        .toMatchInlineSnapshot(`
+        {
+          "query": "query widget($id: GadgetID!) {
+          widget(id: $id) {
+            id
+            state
+            posts {
+              pageInfo {
+                hasNextPage
+                hasPreviousPage
+                startCursor
+                endCursor
+              }
+              edges {
+                node {
+                  id
+                }
+              }
+            }
+            __typename
+          }
+          gadgetMeta {
+            hydrations(modelName: "widget")
+          }
+        }",
+          "variables": {
+            "id": "123",
+          },
+        }
+      `);
+    });
   });
 
   describe("findManyOperation", () => {
@@ -256,6 +364,181 @@ describe("operation builders", () => {
                 __typename
                 id
                 state
+              }
+            }
+          }
+          gadgetMeta {
+            hydrations(modelName: "widget")
+          }
+        }",
+          "variables": {},
+        }
+      `);
+    });
+
+    test("findManyOperation can select connection with pagination arguments", () => {
+      const select = {
+        id: true,
+        state: true,
+        posts: {
+          before: "before_cursor",
+          after: "after_cursor",
+          first: 10,
+          last: 5,
+          pageInfo: {
+            hasNextPage: true,
+            hasPreviousPage: true,
+            startCursor: true,
+            endCursor: true,
+          },
+          edges: {
+            node: {
+              id: true,
+            },
+          },
+        },
+      };
+
+      expect(findManyOperation("widgets", { __typename: true, id: true, state: true }, "widget", { select: select }))
+        .toMatchInlineSnapshot(`
+        {
+          "query": "query widgets($after: String, $first: Int, $before: String, $last: Int) {
+          widgets(after: $after, first: $first, before: $before, last: $last) {
+            pageInfo {
+              hasNextPage
+              hasPreviousPage
+              startCursor
+              endCursor
+            }
+            edges {
+              cursor
+              node {
+                id
+                state
+                posts(before: "before_cursor", after: "after_cursor", first: 10, last: 5) {
+                  pageInfo {
+                    hasNextPage
+                    hasPreviousPage
+                    startCursor
+                    endCursor
+                  }
+                  edges {
+                    node {
+                      id
+                    }
+                  }
+                }
+                __typename
+              }
+            }
+          }
+          gadgetMeta {
+            hydrations(modelName: "widget")
+          }
+        }",
+          "variables": {},
+        }
+      `);
+    });
+
+    test("findManyOperation can select connection with no pagination arguments", () => {
+      const select = {
+        id: true,
+        state: true,
+        posts: {
+          pageInfo: {
+            hasNextPage: true,
+            hasPreviousPage: true,
+            startCursor: true,
+            endCursor: true,
+          },
+          edges: {
+            node: {
+              id: true,
+            },
+          },
+        },
+      };
+
+      expect(findManyOperation("widgets", { __typename: true, id: true, state: true }, "widget", { select: select }))
+        .toMatchInlineSnapshot(`
+        {
+          "query": "query widgets($after: String, $first: Int, $before: String, $last: Int) {
+          widgets(after: $after, first: $first, before: $before, last: $last) {
+            pageInfo {
+              hasNextPage
+              hasPreviousPage
+              startCursor
+              endCursor
+            }
+            edges {
+              cursor
+              node {
+                id
+                state
+                posts {
+                  pageInfo {
+                    hasNextPage
+                    hasPreviousPage
+                    startCursor
+                    endCursor
+                  }
+                  edges {
+                    node {
+                      id
+                    }
+                  }
+                }
+                __typename
+              }
+            }
+          }
+          gadgetMeta {
+            hydrations(modelName: "widget")
+          }
+        }",
+          "variables": {},
+        }
+      `);
+    });
+
+    test("findManyOperation can select connection without pageInfo", () => {
+      const select = {
+        id: true,
+        state: true,
+        posts: {
+          edges: {
+            node: {
+              id: true,
+            },
+          },
+        },
+      };
+
+      expect(findManyOperation("widgets", { __typename: true, id: true, state: true }, "widget", { select: select }))
+        .toMatchInlineSnapshot(`
+        {
+          "query": "query widgets($after: String, $first: Int, $before: String, $last: Int) {
+          widgets(after: $after, first: $first, before: $before, last: $last) {
+            pageInfo {
+              hasNextPage
+              hasPreviousPage
+              startCursor
+              endCursor
+            }
+            edges {
+              cursor
+              node {
+                id
+                state
+                posts {
+                  edges {
+                    node {
+                      id
+                    }
+                  }
+                }
+                __typename
               }
             }
           }
