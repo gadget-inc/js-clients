@@ -16,7 +16,7 @@ const hydrationOptions = (modelApiIdentifier: string): BuilderFieldSelection => 
 /**
  * Converts Selection nested object format to the tiny-graphql-query-compiler shape
  **/
-export const fieldSelectionToQueryCompilerFields = (selection: FieldSelection, includeTypename = false): BuilderFieldSelection => {
+const fieldSelectionToQueryCompilerFields = (selection: FieldSelection, includeTypename = false): BuilderFieldSelection => {
   const output: BuilderFieldSelection = compileSelection(selection);
   if (includeTypename) output.__typename = true;
   return output;
