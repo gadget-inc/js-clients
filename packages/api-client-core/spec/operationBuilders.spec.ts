@@ -550,6 +550,91 @@ describe("operation builders", () => {
         }
       `);
     });
+
+    test("findManyOperation can select field called edges", () => {
+      const select = {
+        id: true,
+        edges: true,
+      };
+
+      expect(findManyOperation("widgets", { __typename: true, id: true, state: true }, "widget", { select: select }))
+        .toMatchInlineSnapshot(`
+        {
+          "query": "query widgets($after: String, $first: Int, $before: String, $last: Int) {
+          widgets(after: $after, first: $first, before: $before, last: $last) {
+            pageInfo {
+              hasNextPage
+              hasPreviousPage
+              startCursor
+              endCursor
+            }
+            edges {
+              cursor
+              node {
+                id
+                edges
+                __typename
+              }
+            }
+          }
+          gadgetMeta {
+            hydrations(modelName: "widget")
+          }
+        }",
+          "variables": {},
+        }
+      `);
+    });
+    test("findManyOperation can select field called edges on nested connection", () => {
+      const select = {
+        id: true,
+        state: true,
+        posts: {
+          edges: {
+            node: {
+              id: true,
+              edges: true,
+            },
+          },
+        },
+      };
+
+      expect(findManyOperation("widgets", { __typename: true, id: true, state: true }, "widget", { select: select }))
+        .toMatchInlineSnapshot(`
+        {
+          "query": "query widgets($after: String, $first: Int, $before: String, $last: Int) {
+          widgets(after: $after, first: $first, before: $before, last: $last) {
+            pageInfo {
+              hasNextPage
+              hasPreviousPage
+              startCursor
+              endCursor
+            }
+            edges {
+              cursor
+              node {
+                id
+                state
+                posts {
+                  edges {
+                    node {
+                      id
+                      edges
+                    }
+                  }
+                }
+                __typename
+              }
+            }
+          }
+          gadgetMeta {
+            hydrations(modelName: "widget")
+          }
+        }",
+          "variables": {},
+        }
+      `);
+    });
   });
 
   describe("findOneByFieldOperation", () => {
