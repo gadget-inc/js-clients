@@ -21,10 +21,14 @@ export interface EdgeFieldSelection {
   node: FieldSelection;
 }
 
+function isEdgeConnection(selection: FieldSelection | ConnectionFieldSelection): boolean {
+  return ("edges" in selection && typeof selection["edges"] == "object");
+}
+
 export function isFieldSelection(selection: FieldSelectionType): selection is FieldSelection {
-  return !!(selection && typeof selection == "object" && !("edges" in selection));
+  return !!(selection && typeof selection == "object" && !isEdgeConnection(selection));
 }
 
 export function isConnectionFieldSelection(selection: FieldSelectionType): selection is ConnectionFieldSelection {
-  return !!(selection && typeof selection == "object" && "edges" in selection);
+  return !!(selection && typeof selection == "object" && isEdgeConnection(selection));
 }
