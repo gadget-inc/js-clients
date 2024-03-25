@@ -22,7 +22,7 @@ export interface EdgeFieldSelection {
 }
 
 function isEdgeConnection(selection: FieldSelection | ConnectionFieldSelection): boolean {
-  return ("edges" in selection && typeof selection["edges"] == "object");
+  return "edges" in selection && typeof selection["edges"] == "object";
 }
 
 export function isFieldSelection(selection: FieldSelectionType): selection is FieldSelection {

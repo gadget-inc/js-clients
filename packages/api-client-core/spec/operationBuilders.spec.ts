@@ -693,8 +693,8 @@ describe("operation builders", () => {
         id: true,
         state: true,
         child: {
-          edges: true
-        }
+          edges: true,
+        },
       };
 
       expect(findManyOperation("widgets", { __typename: true, id: true, state: true }, "widget", { select: select }))
