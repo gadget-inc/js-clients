@@ -1,4 +1,4 @@
-import type { Delta} from "@n1ru4l/json-patch-plus";
+import type { Delta } from "@n1ru4l/json-patch-plus";
 import { patch } from "@n1ru4l/json-patch-plus";
 import { createApplyLiveQueryPatch } from "./createApplyLiveQueryPatch.js";
 
