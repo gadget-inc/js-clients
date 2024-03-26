@@ -1,6 +1,5 @@
 /* eslint-disable @typescript-eslint/no-non-null-assertion */
 import { isLiveQueryOperationDefinitionNode } from "@n1ru4l/graphql-live-query";
-import { applyLiveQueryJSONDiffPatch } from "./graphql-live-query-utils/index.js";
 import { applyAsyncIterableIteratorToSink, makeAsyncIterableIteratorFromSink } from "@n1ru4l/push-pull-async-iterable-iterator";
 import type { ClientOptions, RequestPolicy } from "@urql/core";
 import { Client, cacheExchange, fetchExchange, subscriptionExchange } from "@urql/core";
@@ -15,6 +14,7 @@ import type { BrowserStorage } from "./InMemoryStorage.js";
 import { InMemoryStorage } from "./InMemoryStorage.js";
 import { operationNameExchange } from "./exchanges/operationNameExchange.js";
 import { urlParamExchange } from "./exchanges/urlParamExchange.js";
+import { applyLiveQueryJSONDiffPatch } from "./graphql-live-query-utils/index.js";
 import {
   GadgetTooManyRequestsError,
   GadgetUnexpectedCloseError,
