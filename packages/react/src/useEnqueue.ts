@@ -1,4 +1,4 @@
-import type { EnqueueBackgroundActionOptions, GadgetConnection } from "@gadgetinc/api-client-core";
+import type { AnyActionFunction, EnqueueBackgroundActionOptions, GadgetConnection } from "@gadgetinc/api-client-core";
 import {
   BackgroundActionHandle,
   disambiguateActionVariables,
@@ -7,7 +7,6 @@ import {
   get,
   graphqlizeBackgroundOptions,
 } from "@gadgetinc/api-client-core";
-import type { AnyActionFunction } from "@gadgetinc/api-client-core/src/GadgetFunctions.js";
 import { useCallback, useContext, useMemo } from "react";
 import type { UseMutationState } from "urql";
 import { GadgetUrqlClientContext, useConnection } from "./GadgetProvider.js";

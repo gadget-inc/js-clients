@@ -1,6 +1,7 @@
+import type { Exchange } from "@urql/core";
 import { mapExchange } from "@urql/core";
 
-export const urlParamExchange = mapExchange({
+export const urlParamExchange: Exchange = mapExchange({
   onOperation: (operation) => {
     if (operation.context.url && operation.context.operationName) {
       try {

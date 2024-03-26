@@ -1,8 +1,8 @@
 import type { DefaultSelection, GadgetRecord, Select } from "@gadgetinc/api-client-core";
 import { useContext } from "react";
-import type { OptionsType, ReadOperationOptions } from "src/utils";
 import type { GadgetAuthConfiguration } from "../GadgetProvider.js";
 import { GadgetConfigurationContext } from "../GadgetProvider.js";
+import type { OptionsType, ReadOperationOptions } from "../utils.js";
 import type { ClientWithSessionAndUserManagers, GadgetSession, GadgetUser } from "./useSession.js";
 import { useSession } from "./useSession.js";
 import { useUser } from "./useUser.js";

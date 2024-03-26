@@ -15,7 +15,7 @@ import {
   hydrateRecord,
   hydrateRecordArray,
 } from "./support.js";
-import type { InternalFieldSelection, InternalFindListOptions, InternalFindManyOptions, InternalFindOneOptions } from "./types";
+import type { InternalFieldSelection, InternalFindListOptions, InternalFindManyOptions, InternalFindOneOptions } from "./types.js";
 
 const internalErrorsDetails = `
 fragment InternalErrorsDetails on ExecutionError {
