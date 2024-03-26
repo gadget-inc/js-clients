@@ -21,12 +21,12 @@
     "preinstall": "npx only-allow pnpm"
   },
   "devDependencies": {
-    "@gadget-client/app-with-no-user-model": "^1.6.0-development.5",
-    "@gadget-client/bulk-actions-test": "^1.108.0-development.111",
-    "@gadget-client/full-auth": "^1.5.0-development.4",
-    "@gadget-client/related-products-example": "^1.860.0-development.859",
-    "@gadget-client/zxcv-deeply-nested": "^1.208.0-development.209",
-    "@gadget-client/zxcv-simple-relationship": "^1.18.0-development.19",
+    "@gadget-client/app-with-no-user-model": "^1.8.0",
+    "@gadget-client/bulk-actions-test": "^1.110.0",
+    "@gadget-client/full-auth": "^1.7.0",
+    "@gadget-client/related-products-example": "^1.862.0",
+    "@gadget-client/zxcv-deeply-nested": "^1.210.0",
+    "@gadget-client/zxcv-simple-relationship": "^1.20.0",
     "@gadgetinc/api-client-core": "workspace:*",
     "@gadgetinc/eslint-config": "^0.6.1",
     "@gadgetinc/prettier-config": "^0.4.0",
