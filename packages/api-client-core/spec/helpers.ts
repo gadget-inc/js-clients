@@ -15,3 +15,19 @@ export const base64 = (str: string) => Buffer.from(str).toString("base64");
 export function expectValidGraphQLQuery(query: string) {
   parse(query);
 }
+
+export function delayPromise<T>(
+  wait: number,
+  value?: T,
+  error?: Error,
+): Promise<T | undefined> {
+  return new Promise<T | undefined>((resolve, reject) => {
+    setTimeout(() => {
+      if (error === null || error === undefined) {
+        resolve(value);
+      } else {
+        reject(error);
+      }
+    }, wait);
+  });
+}

@@ -96,12 +96,15 @@ importers:
 
   packages/api-client-core:
     dependencies:
+      '@manufac/repeater':
+        specifier: ^4.0.6
+        version: 4.0.6
       '@n1ru4l/graphql-live-query':
         specifier: ^0.10.0
         version: 0.10.0(graphql@16.8.1)
-      '@n1ru4l/graphql-live-query-patch-jsondiffpatch':
-        specifier: ^0.8.0
-        version: 0.8.0(graphql@16.8.1)
+      '@n1ru4l/json-patch-plus':
+        specifier: ^0.1.2
+        version: 0.1.4
       '@n1ru4l/push-pull-async-iterable-iterator':
         specifier: ^3.2.0
         version: 3.2.0
@@ -1794,23 +1797,8 @@ packages:
       '@jridgewell/sourcemap-codec': 1.4.15
     dev: true
 
-  /@n1ru4l/graphql-live-query-patch-jsondiffpatch@0.8.0(graphql@16.8.1):
-    resolution: {integrity: sha512-m5OPdEhBbqQ+pkFz2dQmPl10JW/RB1Qc2zoVn9QTEXvyeSzQmrl+qNtn3nvv87P9rQDiRD/JWlD86BFX0XloBg==}
-    peerDependencies:
-      graphql: ^15.4.0 || ^16.0.0
-    dependencies:
-      '@n1ru4l/graphql-live-query-patch': 0.7.0(graphql@16.8.1)
-      '@n1ru4l/json-patch-plus': 0.2.0
-      graphql: 16.8.1
-    dev: false
-
-  /@n1ru4l/graphql-live-query-patch@0.7.0(graphql@16.8.1):
-    resolution: {integrity: sha512-1q49iNxqEIbmUp+qFAEVEn4ts344Cw72g5OtAuFeTwKtJT3V91kTPGMcRk5Pxb5FPHbvn52q+PCVKOAyVrtPwQ==}
-    peerDependencies:
-      graphql: ^15.4.0 || ^16.0.0
-    dependencies:
-      '@repeaterjs/repeater': 3.0.4
-      graphql: 16.8.1
+  /@manufac/repeater@4.0.6:
+    resolution: {integrity: sha512-qvSJXgzSjkx13dIqg23pGivfdXY1+fHEZanFqKFzaH9klq1RTUUAi36ryEbCc0Nw099IQt6qZFERnloCWRP0dg==}
     dev: false
 
   /@n1ru4l/graphql-live-query@0.10.0(graphql@16.8.1):
@@ -1821,8 +1809,13 @@ packages:
       graphql: 16.8.1
     dev: false
 
+  /@n1ru4l/json-patch-plus@0.1.4:
+    resolution: {integrity: sha512-VJSHZGg0cDud4t0mvfigFtd0fg/PMrTfmXWaJrBK7y6hdCEFT3rFq6Sw7SEb58tP0lveNCDqL14joc+MuZ+bsw==}
+    dev: false
+
   /@n1ru4l/json-patch-plus@0.2.0:
     resolution: {integrity: sha512-pLkJy83/rVfDTyQgDSC8GeXAHEdXNHGNJrB1b7wAyGQu0iv7tpMXntKVSqj0+XKNVQbco40SZffNfVALzIt0SQ==}
+    dev: true
 
   /@n1ru4l/push-pull-async-iterable-iterator@3.2.0:
     resolution: {integrity: sha512-3fkKj25kEjsfObL6IlKPAlHYPq/oYwUkkQ03zsTTiDjD7vg/RxjdiLeCydqtxHZP0JgsXL3D/X5oAkMGzuUp/Q==}
@@ -1951,10 +1944,6 @@ packages:
       qs: 6.11.2
       url-parse: 1.5.10
     dev: true
-
-  /@repeaterjs/repeater@3.0.4:
-    resolution: {integrity: sha512-AW8PKd6iX3vAZ0vA43nOUOnbq/X5ihgU+mSXXqunMkeQADGiqw/PY0JNeYtD5sr0PAy51YPgAPbDoeapv9r8WA==}
-    dev: false
 
   /@shopify/app-bridge-react@4.0.0(react-dom@18.2.0)(react@18.2.0):
     resolution: {integrity: sha512-a300DQIyYmNl5jNFHXsAICMfafY6LizXnaG5ElaAumfoIt28owgM8daDm9BwBkHSroHArvJuZS96kpDzTVg1+Q==}
