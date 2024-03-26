@@ -1,5 +1,5 @@
 import { $modelRelationships } from "@gadgetinc/api-client-core";
-import { MODE } from "@pollyjs/core";
+import type { MODE } from "@pollyjs/core";
 import { act, renderHook, waitFor } from "@testing-library/react";
 import { useActionForm, useFieldArray } from "../src/useActionForm.js";
 import { useFindFirst } from "../src/useFindFirst.js";
