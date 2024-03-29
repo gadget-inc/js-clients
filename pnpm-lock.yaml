@@ -96,9 +96,6 @@ importers:
 
   packages/api-client-core:
     dependencies:
-      '@manufac/repeater':
-        specifier: ^4.0.6
-        version: 4.0.6
       '@n1ru4l/graphql-live-query':
         specifier: ^0.10.0
         version: 0.10.0(graphql@16.8.1)
@@ -1826,10 +1823,6 @@ packages:
       '@jridgewell/resolve-uri': 3.1.1
       '@jridgewell/sourcemap-codec': 1.4.15
     dev: true
-
-  /@manufac/repeater@4.0.6:
-    resolution: {integrity: sha512-qvSJXgzSjkx13dIqg23pGivfdXY1+fHEZanFqKFzaH9klq1RTUUAi36ryEbCc0Nw099IQt6qZFERnloCWRP0dg==}
-    dev: false
 
   /@n1ru4l/graphql-live-query@0.10.0(graphql@16.8.1):
     resolution: {integrity: sha512-qZ7OHH/NB0NcG/Xa7irzgjE63UH0CkofZT0Bw4Ko6iRFagPRHBM8RgFXwTt/6JbFGIEUS4STRtaFoc/Eq/ZtzQ==}
