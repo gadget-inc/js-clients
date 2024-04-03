@@ -11,13 +11,11 @@ export class RepeaterOverflowError extends Error {
         } else {
             (this as any).__proto__ = this.constructor.prototype;
         }
-
         if (typeof (Error as any).captureStackTrace === "function") {
             (Error as any).captureStackTrace(this, this.constructor);
         }
     }
 }
-
 /*** BUFFERS ***/
 /** A special queue interface which allow multiple values to be pushed onto a repeater without having pushes wait or throw overflow errors, passed as the second argument to the repeater constructor. */
 export interface RepeaterBuffer<TValue = unknown> {
@@ -109,7 +107,6 @@ export class SlidingBuffer implements RepeaterBuffer {
         return this._q.shift();
     }
 }
-
 /** Dropping buffers allow you to push a set amount of values to the repeater without the push function waiting or throwing errors. If the number of values exceeds the capacity set in the constructor, the buffer will discard the latest values added. */
 export class DroppingBuffer implements RepeaterBuffer {
     // capacity
@@ -158,15 +155,15 @@ function swallow(value: any): void {
 
 /*** TYPES ***/
 /** The type of the first argument passed to the executor callback. */
-export type Push<T, TNext = unknown> = (
+type Push<T, TNext = unknown> = (
     value: PromiseLike<T> | T,
 ) => Promise<TNext | undefined>;
 
 /** The type of the second argument passed to the executor callback. A callable promise. */
-export type Stop = ((err?: unknown) => undefined) & Promise<undefined>;
+type Stop = ((err?: unknown) => undefined) & Promise<undefined>;
 
 /** The type of the callback passed to the Repeater constructor. */
-export type RepeaterExecutor<T, TReturn = any, TNext = unknown> = (
+type RepeaterExecutor<T, TReturn = any, TNext = unknown> = (
     push: Push<T, TNext>,
     stop: Stop,
 ) => PromiseLike<TReturn> | TReturn;
@@ -208,6 +205,7 @@ const Rejected = 4;
 /** The maximum number of push or next operations which may exist on a single repeater. */
 export const MAX_QUEUE_LENGTH = 1024;
 
+// eslint-disable-next-line @typescript-eslint/no-empty-function
 const NOOP = () => { };
 
 /** An interface containing the private data of repeaters, only accessible through a private WeakMap. */
@@ -408,7 +406,7 @@ function push<T, TReturn, TNext>(
     // If an error is thrown into the repeater via the next or throw methods, we give the repeater a chance to handle this by rejecting the promise returned from push. If the push call is not immediately handled we throw the next iteration of the repeater.
     // To check that the promise returned from push is floating, we modify the then and catch methods of the returned promise so that they flip the floating flag. The push function actually does not return a promise, because modern engines do not call the then and catch methods on native promises. By making next a plain old javascript object, we ensure that the then and catch methods will be called.
     let floating = true;
-    let next = {} as Promise<TNext | undefined>;
+    const next = {} as Promise<TNext | undefined>;
     const unhandled = nextP.catch((err) => {
         if (floating) {
             throw err;
@@ -444,8 +442,8 @@ function push<T, TReturn, TNext>(
 function createStop<T, TReturn, TNext>(
     r: RepeaterRecord<T, TReturn, TNext>,
 ): Stop {
-    const stop1 = stop.bind(null, r) as Stop;
-    const stopP = new Promise<undefined>((resolve) => (r.onstop = resolve));
+    const stop1 = stop.bind(null, r as RepeaterRecord<unknown, unknown, unknown>) as Stop;
+    const stopP = new Promise<undefined>((resolve) => (r.onstop = resolve as () => unknown));
     stop1.then = stopP.then.bind(stopP);
     stop1.catch = stopP.catch.bind(stopP);
     stop1.finally = stopP.finally.bind(stopP);
