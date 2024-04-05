@@ -1,3 +1,7 @@
+/**
+ * Tests adopted from https://github.com/repeaterjs/repeater/blob/master/packages/repeater/src/__tests__/repeater.ts.
+ */
+
 import {
     Repeater,
     RepeaterOverflowError,

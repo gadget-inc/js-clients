@@ -1,3 +1,7 @@
+/**
+ * Code adopted from https://github.com/repeaterjs/repeater/blob/master/packages/repeater/src/repeater.ts after removing static classes.
+ */
+
 /** An error subclass which is thrown when there are too many pending push or next operations on a single repeater. */
 export class RepeaterOverflowError extends Error {
     constructor(message: string) {
