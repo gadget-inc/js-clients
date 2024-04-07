@@ -277,11 +277,13 @@ export const graphqlizeBackgroundOptions = (options?: EnqueueBackgroundActionOpt
 
   return obj;
 };
+
 export const enqueueActionOperation = (
   operation: string,
   variables: VariablesOptions,
   namespace?: string | null,
-  options?: EnqueueBackgroundActionOptions<any> | null
+  options?: EnqueueBackgroundActionOptions<any> | null,
+  isBulk?: boolean
 ) => {
   let fields: BuilderFieldSelection = {
     background: {
@@ -299,7 +301,7 @@ export const enqueueActionOperation = (
             message: true,
             code: true,
           },
-          backgroundAction: {
+          [isBulk ? "backgroundActions" : "backgroundAction"]: {
             id: true,
           },
         }

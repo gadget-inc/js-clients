@@ -612,6 +612,30 @@ describe("operation builders", () => {
       `);
     });
 
+    test("enqueueActionOperation should build a mutation query for enqueuing a bulk action action", () => {
+      expect(enqueueActionOperation("bulkCreateWidgets", {}, undefined, null, true)).toMatchInlineSnapshot(`
+        {
+          "query": "mutation enqueueBulkCreateWidgets($backgroundOptions: EnqueueBackgroundActionOptions) {
+          background {
+            bulkCreateWidgets(backgroundOptions: $backgroundOptions) {
+              success
+              errors {
+                message
+                code
+              }
+              backgroundActions {
+                id
+              }
+            }
+          }
+        }",
+          "variables": {
+            "backgroundOptions": null,
+          },
+        }
+      `);
+    });
+
     test("enqueueActionOperation with startsAt as string", () => {
       expect(enqueueActionOperation("createWidget", {}, undefined, { startAt: "2024-03-18T18:14:08.257Z" })).toMatchInlineSnapshot(`
         {

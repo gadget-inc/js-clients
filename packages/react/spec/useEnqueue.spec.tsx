@@ -82,7 +82,7 @@ describe("useEnqueue", () => {
   };
 
   const _TestUseEnqueueCanRunBulkActionsWithIds = () => {
-    const [_, enqueue] = useEnqueue(bulkExampleApi.widget.bulkFlipDown);
+    const [{ handles }, enqueue] = useEnqueue(bulkExampleApi.widget.bulkFlipDown);
 
     // can call with variables
     void enqueue({ ids: ["1", "2", "3"] });
@@ -151,6 +151,19 @@ describe("useEnqueue", () => {
     // data is accessible via dot access
     if (handle) {
       handle.id;
+    }
+  };
+
+  const _TestUseEnqueueBulkReturnsTypedHandle = () => {
+    const [{ handles, fetching, error }, _enqueue] = useEnqueue(relatedProductsApi.user.bulkUpdate);
+
+    assert<IsExact<typeof fetching, boolean>>(true);
+    assert<IsExact<typeof handles, BackgroundActionHandle<typeof relatedProductsApi.user.bulkUpdate>[] | null>>(true);
+    assert<IsExact<typeof error, ErrorWrapper | undefined>>(true);
+
+    // data is accessible via dot access
+    if (handles) {
+      handles[0].id;
     }
   };
 

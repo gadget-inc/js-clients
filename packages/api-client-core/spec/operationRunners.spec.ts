@@ -691,7 +691,7 @@ describe("operationRunners", () => {
       expect(handle.id).toEqual("widget-flipAllWidgets-123");
     });
 
-    test("can enqueue a bulk action with ids only and return a handle", async () => {
+    test("can enqueue a bulk action with ids only and return handles", async () => {
       const promise = enqueueActionRunner(connection, MockBulkFlipDownWidgetsAction, ["123", "456"]);
 
       expect(mockUrqlClient.executeMutation.mock.calls.length).toEqual(1);
@@ -706,9 +706,14 @@ describe("operationRunners", () => {
             bulkFlipDownWidgets: {
               success: true,
               errors: null,
-              backgroundAction: {
-                id: "widget-bulkFlipWidgets-123",
-              },
+              backgroundActions: [
+                {
+                  id: "widget-bulkFlipWidgets-123",
+                },
+                {
+                  id: "widget-bulkFlipWidgets-456",
+                },
+              ],
             },
           },
         },
@@ -716,12 +721,13 @@ describe("operationRunners", () => {
         hasNext: false,
       });
 
-      const handle = await promise;
-      expect(handle).toBeInstanceOf(BackgroundActionHandle);
-      expect(handle.id).toEqual("widget-bulkFlipWidgets-123");
+      const handles = await promise;
+      expect(handles[0]).toBeInstanceOf(BackgroundActionHandle);
+      expect(handles[0].id).toEqual("widget-bulkFlipWidgets-123");
+      expect(handles[1].id).toEqual("widget-bulkFlipWidgets-456");
     });
 
-    test("can enqueue a bulk action with a list of inputs and return a handle", async () => {
+    test("can enqueue a bulk action with a list of inputs and return handles", async () => {
       const promise = enqueueActionRunner(connection, MockBulkUpdateWidgetAction, [
         { id: "123", name: "foo" },
         { id: "124", name: "bar" },
@@ -742,9 +748,14 @@ describe("operationRunners", () => {
             bulkUpdateWidgets: {
               success: true,
               errors: null,
-              backgroundAction: {
-                id: "background-123",
-              },
+              backgroundActions: [
+                {
+                  id: "background-123",
+                },
+                {
+                  id: "background-456",
+                },
+              ],
             },
           },
         },
@@ -752,9 +763,10 @@ describe("operationRunners", () => {
         hasNext: false,
       });
 
-      const handle = await promise;
-      expect(handle).toBeInstanceOf(BackgroundActionHandle);
-      expect(handle.id).toEqual("background-123");
+      const handles = await promise;
+      expect(handles[0]).toBeInstanceOf(BackgroundActionHandle);
+      expect(handles[0].id).toEqual("background-123");
+      expect(handles[1].id).toEqual("background-456");
     });
 
     test("throws a duplicate ID error by default from the server", async () => {

@@ -3,7 +3,7 @@ import type { BackgroundActionResult } from "./BackgroundActionHandle.js";
 import { BackgroundActionHandle } from "./BackgroundActionHandle.js";
 import type { FieldSelection } from "./FieldSelection.js";
 import type { GadgetConnection } from "./GadgetConnection.js";
-import type { AnyActionFunction } from "./GadgetFunctions.js";
+import type { ActionFunctionMetadata, AnyActionFunction, AnyBulkActionFunction } from "./GadgetFunctions.js";
 import type { GadgetRecord, RecordShape } from "./GadgetRecord.js";
 import { GadgetRecordList } from "./GadgetRecordList.js";
 import type { AnyModelManager } from "./ModelManager.js";
@@ -251,19 +251,30 @@ export const globalActionRunner = async (
   return assertMutationSuccess(response, dataPath).result;
 };
 
-export const enqueueActionRunner = async <Action extends AnyActionFunction>(
+export async function enqueueActionRunner<Action extends AnyBulkActionFunction>(
+  connection: GadgetConnection,
+  action: Action,
+  variables: Action["variablesType"],
+  options?: EnqueueBackgroundActionOptions<Action>
+): Promise<BackgroundActionHandle<Action>[]>;
+export async function enqueueActionRunner<Action extends AnyActionFunction>(
+  connection: GadgetConnection,
+  action: Action,
+  variables: Action["variablesType"],
+  options?: EnqueueBackgroundActionOptions<Action>
+): Promise<BackgroundActionHandle<Action>>;
+export async function enqueueActionRunner<Action extends AnyActionFunction>(
   connection: GadgetConnection,
   action: Action,
   variables: Action["variablesType"],
   options: EnqueueBackgroundActionOptions<Action> = {}
-) => {
-  const normalizedVariableValues =
-    "isBulk" in action && action.isBulk
-      ? disambiguateBulkActionVariables(action, variables)
-      : disambiguateActionVariables(action, variables);
+): Promise<BackgroundActionHandle<Action> | BackgroundActionHandle<Action>[]> {
+  const normalizedVariableValues = action.isBulk
+    ? disambiguateBulkActionVariables(action as ActionFunctionMetadata<any, any, any, any, any, true>, variables)
+    : disambiguateActionVariables(action, variables);
   const variableOptions = setVariableOptionValues(action.variables, normalizedVariableValues);
 
-  const plan = enqueueActionOperation(action.operationName, variableOptions, action.namespace, options);
+  const plan = enqueueActionOperation(action.operationName, variableOptions, action.namespace, options, action.isBulk);
   const response = await connection.currentClient.mutation(plan.query, plan.variables, options).toPromise();
   const dataPath = ["background", action.operationName];
   if (action.namespace) {
@@ -272,14 +283,18 @@ export const enqueueActionRunner = async <Action extends AnyActionFunction>(
 
   try {
     const result = assertMutationSuccess(response, dataPath);
-    return new BackgroundActionHandle(connection, action, result.backgroundAction.id);
+    if (action.isBulk) {
+      return result.backgroundActions.map((result: { id: string }) => new BackgroundActionHandle(connection, action, result.id));
+    } else {
+      return new BackgroundActionHandle(connection, action, result.backgroundAction.id);
+    }
   } catch (error: any) {
     if ("code" in error && error.code == "GGT_DUPLICATE_BACKGROUND_ACTION_ID" && options?.id && options.onDuplicateID == "ignore") {
       return new BackgroundActionHandle(connection, action, options.id);
     }
     throw error;
   }
-};
+}
 
 export const actionResultRunner = async <Action extends AnyActionFunction, Options extends ActionFunctionOptions<Action>>(
   connection: GadgetConnection,

@@ -160,6 +160,8 @@ export interface GlobalActionFunction<VariablesT> {
   namespace: string | null;
   variables: VariablesOptions;
   variablesType: VariablesT;
+  isBulk?: undefined;
 }
 
 export type AnyActionFunction = ActionFunctionMetadata<any, any, any, any, any, any> | GlobalActionFunction<any>;
+export type AnyBulkActionFunction = ActionFunctionMetadata<any, any, any, any, any, true>;
