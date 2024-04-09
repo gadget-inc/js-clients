@@ -183,8 +183,8 @@ importers:
         specifier: ^18.2.9
         version: 18.2.9
       '@types/react-dom':
-        specifier: ^18.2.4
-        version: 18.2.4
+        specifier: ^18.2.24
+        version: 18.2.24
       '@vitejs/plugin-react-swc':
         specifier: ^3.0.0
         version: 3.3.0(vite@4.2.2)
@@ -253,8 +253,8 @@ importers:
         specifier: ^18.2.9
         version: 18.2.9
       '@types/react-dom':
-        specifier: ^18.2.4
-        version: 18.2.4
+        specifier: ^18.2.24
+        version: 18.2.24
       '@types/setup-polly-jest':
         specifier: ^0.5.5
         version: 0.5.5
@@ -314,8 +314,8 @@ importers:
         specifier: ^18.2.9
         version: 18.2.9
       '@types/react-dom':
-        specifier: ^18.2.4
-        version: 18.2.4
+        specifier: ^18.2.24
+        version: 18.2.24
       conditional-type-checks:
         specifier: ^1.0.6
         version: 1.0.6
@@ -2309,7 +2309,7 @@ packages:
     dependencies:
       '@babel/runtime': 7.19.0
       '@testing-library/dom': 8.17.1
-      '@types/react-dom': 18.2.4
+      '@types/react-dom': 18.2.24
       react: 18.2.0
       react-dom: 18.2.0(react@18.2.0)
     dev: true
@@ -2447,8 +2447,8 @@ packages:
     resolution: {integrity: sha512-ZREFYlpUmPQJ0esjxoG1fMvB2HNaD3z+mjqdSosZvd3RalncI9NEur73P8ZJz4YQdL64CmV1w0RuqoRUlhQRBw==}
     dev: true
 
-  /@types/react-dom@18.2.4:
-    resolution: {integrity: sha512-G2mHoTMTL4yoydITgOGwWdWMVd8sNgyEP85xVmMKAPUBwQWm9wBPQUmvbeF4V3WBY1P7mmL4BkjQ0SqUpf1snw==}
+  /@types/react-dom@18.2.24:
+    resolution: {integrity: sha512-cN6upcKd8zkGy4HU9F1+/s98Hrp6D4MOcippK4PoE8OZRngohHZpbJn1GsaDLz87MqvHNoT13nHvNqM9ocRHZg==}
     dependencies:
       '@types/react': 18.2.9
     dev: true
