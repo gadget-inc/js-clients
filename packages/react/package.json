@@ -1,6 +1,6 @@
 {
   "name": "@gadgetinc/react",
-  "version": "0.15.4",
+  "version": "0.15.5",
   "files": [
     "README.md",
     "dist/**/*"
@@ -28,7 +28,7 @@
     "prerelease": "gitpkg publish"
   },
   "dependencies": {
-    "@gadgetinc/api-client-core": "^0.15.19",
+    "@gadgetinc/api-client-core": "^0.15.20",
     "react-fast-compare": "^3.2.2",
     "react-hook-form": "~7.48.2",
     "tslib": "^2.6.2",
