@@ -2,7 +2,7 @@ import type { AnyClient } from "@gadgetinc/api-client-core";
 import { GadgetConnection } from "@gadgetinc/api-client-core";
 import * as AppBridgeReact from "@shopify/app-bridge-react";
 import "@testing-library/jest-dom";
-import { render } from "@testing-library/react";
+import { act, render } from "@testing-library/react";
 import React from "react";
 import { mockUrqlClient } from "../../api-client-core/spec/mockUrqlClient.js";
 import { AppType, Provider } from "../src/Provider.js";
@@ -36,6 +36,12 @@ describe("GadgetProvider", () => {
           embedded: false,
           mobile: false,
         },
+        config: {
+          apiKey: mockApiKey,
+          shop: "example.myshopify.com",
+          locale: "en",
+        },
+        idToken: () => Promise.resolve("mock-id-token"),
       };
 
       useAppBridgeMock = jest.spyOn(AppBridgeReact, "useAppBridge").mockImplementation(() => window.shopify);
@@ -79,22 +85,40 @@ describe("GadgetProvider", () => {
       }
     });
 
-    test("can render an embedded app type", () => {
+    test("can render an embedded app type", async () => {
       const { container } = render(
         <Provider api={mockApiClient} shopifyApiKey={mockApiKey} type={AppType.Embedded}>
           <span>hello world</span>
         </Provider>
       );
 
-      mockUrqlClient.executeQuery.pushResponse("GetSessionForShopifyApp", {
-        data: {
-          currentSession: {
-            shop: null,
+      act(() => {
+        mockUrqlClient.executeQuery.pushResponse("GetSessionForShopifyApp", {
+          data: {
+            currentSession: {
+              shop: null,
+            },
           },
-        },
-        stale: false,
-        hasNext: false,
+          stale: false,
+          hasNext: false,
+        });
       });
+
+      if (isInstallRequest) {
+        await act(async () => {
+          await mockUrqlClient.executeMutation.waitForSubject("InstallByTokenExchange");
+
+          mockUrqlClient.executeMutation.pushResponse("InstallByTokenExchange", {
+            data: {
+              shopifyInstallByTokenExchange: {
+                success: false,
+              },
+            },
+            stale: false,
+            hasNext: false,
+          });
+        });
+      }
 
       if (isInstallRequest) {
         expect(mockOpen).toHaveBeenCalledWith(
@@ -151,7 +175,7 @@ describe("GadgetProvider", () => {
       window.shopify.environment.mobile = false;
     });
 
-    test("can render an embedded app type in embedded context", () => {
+    test("can render an embedded app type in embedded context", async () => {
       // @ts-expect-error mock
       jest.spyOn(window, "self", "get").mockImplementation(() => ({}));
 
@@ -161,15 +185,33 @@ describe("GadgetProvider", () => {
         </Provider>
       );
 
-      mockUrqlClient.executeQuery.pushResponse("GetSessionForShopifyApp", {
-        data: {
-          currentSession: {
-            shop: null,
+      act(() => {
+        mockUrqlClient.executeQuery.pushResponse("GetSessionForShopifyApp", {
+          data: {
+            currentSession: {
+              shop: null,
+            },
           },
-        },
-        stale: false,
-        hasNext: false,
+          stale: false,
+          hasNext: false,
+        });
       });
+
+      if (isInstallRequest) {
+        await act(async () => {
+          await mockUrqlClient.executeMutation.waitForSubject("InstallByTokenExchange");
+
+          mockUrqlClient.executeMutation.pushResponse("InstallByTokenExchange", {
+            data: {
+              shopifyInstallByTokenExchange: {
+                success: false,
+              },
+            },
+            stale: false,
+            hasNext: false,
+          });
+        });
+      }
 
       if (isInstallRequest) {
         expect(mockOpen).toHaveBeenCalledWith(
@@ -210,6 +252,155 @@ describe("GadgetProvider", () => {
 
       window.shopify.environment.embedded = false;
     });
+
+    if (isInstallRequest) {
+      test("can render an embedded app type that's already authenticated but needs reauthentication via token exchange", async () => {
+        window.shopify.environment.embedded = true;
+
+        render(
+          <Provider api={mockApiClient} shopifyApiKey={mockApiKey} type={AppType.Embedded}>
+            <span>hello world</span>
+          </Provider>
+        );
+
+        act(() => {
+          mockUrqlClient.executeQuery.pushResponse("GetSessionForShopifyApp", {
+            data: {
+              currentSession: {
+                shop: {
+                  id: "123",
+                },
+              },
+              shopifyConnection: {
+                requiresReauthentication: true,
+              },
+            },
+            stale: false,
+            hasNext: false,
+          });
+        });
+
+        await act(async () => {
+          await mockUrqlClient.executeMutation.waitForSubject("InstallByTokenExchange");
+
+          mockUrqlClient.executeMutation.pushResponse("InstallByTokenExchange", {
+            data: {
+              shopifyInstallByTokenExchange: {
+                success: true,
+              },
+            },
+            stale: false,
+            hasNext: false,
+          });
+        });
+
+        expect(mockOpen).not.toHaveBeenCalled();
+        expect(mockNavigate).not.toHaveBeenCalled();
+
+        window.shopify.environment.embedded = false;
+      });
+
+      test("can render an embedded app type that's already authenticated but needs reauthentication via redirect", async () => {
+        window.shopify.environment.embedded = true;
+
+        render(
+          <Provider api={mockApiClient} shopifyApiKey={mockApiKey} type={AppType.Embedded}>
+            <span>hello world</span>
+          </Provider>
+        );
+
+        act(() => {
+          mockUrqlClient.executeQuery.pushResponse("GetSessionForShopifyApp", {
+            data: {
+              currentSession: {
+                shop: {
+                  id: "123",
+                },
+              },
+              shopifyConnection: {
+                requiresReauthentication: true,
+              },
+            },
+            stale: false,
+            hasNext: false,
+          });
+        });
+
+        await act(async () => {
+          await mockUrqlClient.executeMutation.waitForSubject("InstallByTokenExchange");
+
+          mockUrqlClient.executeMutation.pushResponse("InstallByTokenExchange", {
+            data: {
+              shopifyInstallByTokenExchange: {
+                success: false,
+              },
+            },
+            stale: false,
+            hasNext: false,
+          });
+        });
+
+        expect(mockOpen).toHaveBeenCalledWith(
+          "https://test-app.gadget.app/api/connections/auth/shopify?shop=example.myshopify.com&hmac=abcdefg&host=abcdfg",
+          "_top"
+        );
+        expect(mockNavigate).not.toHaveBeenCalled();
+
+        window.shopify.environment.embedded = false;
+      });
+
+      test("doesn't redirect an shopify managed installation for an embedded app type that's already authenticated but needs reauthentication", async () => {
+        window.shopify.environment.embedded = true;
+
+        render(
+          <Provider api={mockApiClient} shopifyApiKey={mockApiKey} type={AppType.Embedded}>
+            <span>hello world</span>
+          </Provider>
+        );
+
+        act(() => {
+          mockUrqlClient.executeQuery.pushResponse("GetSessionForShopifyApp", {
+            data: {
+              currentSession: {
+                shop: {
+                  id: "123",
+                },
+              },
+              shopifyConnection: {
+                requiresReauthentication: true,
+                connectedApps: [
+                  {
+                    apiKey: mockApiKey,
+                    shopifyManagedInstallation: true,
+                  },
+                ],
+              },
+            },
+            stale: false,
+            hasNext: false,
+          });
+        });
+
+        await act(async () => {
+          await mockUrqlClient.executeMutation.waitForSubject("InstallByTokenExchange");
+
+          mockUrqlClient.executeMutation.pushResponse("InstallByTokenExchange", {
+            data: {
+              shopifyInstallByTokenExchange: {
+                success: false,
+              },
+            },
+            stale: false,
+            hasNext: false,
+          });
+        });
+
+        expect(mockOpen).not.toHaveBeenCalled();
+        expect(mockNavigate).not.toHaveBeenCalled();
+
+        window.shopify.environment.embedded = false;
+      });
+    }
 
     test("should throw if embedded app type is in embedded context and shopify global is not defined", () => {
       // @ts-expect-error mock
