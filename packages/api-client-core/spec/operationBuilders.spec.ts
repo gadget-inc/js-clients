@@ -6,7 +6,7 @@ import {
   findOneByFieldOperation,
   findOneOperation,
 } from "../src/index.js";
-import { MockGlobalAction, MockWidgetCreateAction } from "./mockActions.js";
+import { MockBulkUpdateWidgetAction, MockGlobalAction, MockWidgetCreateAction } from "./mockActions.js";
 
 describe("operation builders", () => {
   describe("findOneOperation", () => {
@@ -575,7 +575,7 @@ describe("operation builders", () => {
                 }
               }
             }
-            results
+            result
           }
           gadgetMeta {
             hydrations(modelName: "widget")
@@ -694,7 +694,7 @@ describe("operation builders", () => {
     test("builds query for action", async () => {
       expect(actionResultOperation("app-job-1234567", MockWidgetCreateAction, { select: { id: true } })).toMatchInlineSnapshot(`
         {
-          "query": "subscription createWidget($id: String!) {
+          "query": "subscription CreateWidgetBackgroundResult($id: String!) {
           backgroundAction(id: $id) {
             id
             outcome
@@ -729,7 +729,7 @@ describe("operation builders", () => {
     test("builds query for globalAction", async () => {
       expect(actionResultOperation("app-job-1234567", MockGlobalAction)).toMatchInlineSnapshot(`
         {
-          "query": "subscription flipAllWidgets($id: String!) {
+          "query": "subscription FlipAllWidgetsBackgroundResult($id: String!) {
           backgroundAction(id: $id) {
             id
             outcome
@@ -747,6 +747,41 @@ describe("operation builders", () => {
                   }
                 }
                 result
+              }
+            }
+          }
+        }",
+          "variables": {
+            "id": "app-job-1234567",
+          },
+        }
+      `);
+    });
+
+    test("builds query for one result of a bulk action", async () => {
+      expect(actionResultOperation("app-job-1234567", MockBulkUpdateWidgetAction, { select: { id: true } })).toMatchInlineSnapshot(`
+        {
+          "query": "subscription UpdateWidgetBackgroundResult($id: String!) {
+          backgroundAction(id: $id) {
+            id
+            outcome
+            result {
+              ... on UpdateWidgetResult {
+                success
+                errors {
+                  message
+                  code
+                  ... on InvalidRecordError {
+                    validationErrors {
+                      message
+                      apiIdentifier
+                    }
+                  }
+                }
+                widget {
+                  id
+                  __typename
+                }
               }
             }
           }

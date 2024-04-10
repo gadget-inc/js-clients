@@ -322,7 +322,7 @@ export const actionResultRunner = async <Action extends AnyActionFunction, Optio
         action.defaultSelection,
         response.data,
         backgroundAction.result,
-        action.modelSelectionField,
+        action.isBulk ? action.modelApiIdentifier : action.modelSelectionField,
         action.hasReturnType
       );
       break;

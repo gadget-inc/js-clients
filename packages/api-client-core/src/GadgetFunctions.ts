@@ -108,11 +108,12 @@ export interface ActionFunctionMetadata<OptionsT, VariablesT, SelectionT, Schema
   variablesType: VariablesT;
   isBulk: IsBulk;
   hasAmbiguousIdentifier?: boolean;
-  /** @deprecated */
-  hasCreateOrUpdateEffect?: boolean;
   acceptsModelInput?: boolean;
   paramOnlyVariables?: readonly string[];
   hasReturnType?: boolean;
+  singleActionFunctionName?: string;
+  /** @deprecated */
+  hasCreateOrUpdateEffect?: boolean;
 }
 
 export type ActionFunction<OptionsT, VariablesT, SelectionT, SchemaT, DefaultsT> = ActionFunctionMetadata<

@@ -830,14 +830,14 @@ describe("operationRunners", () => {
   describe("actionResultRunner", () => {
     describe("action", () => {
       test("waits for background action with a completed result", async () => {
-        const promise = actionResultRunner(connection, "app-job-123456", MockWidgetCreateAction, { widget: { name: "new widget" } });
+        const promise = actionResultRunner(connection, "app-job-123456", MockWidgetCreateAction);
 
         expect(mockUrqlClient.executeSubscription.mock.calls.length).toEqual(1);
         expect(mockUrqlClient.executeSubscription.mock.calls[0][0].variables).toEqual({
           id: "app-job-123456",
         });
 
-        mockUrqlClient.executeSubscription.pushResponse("createWidget", {
+        mockUrqlClient.executeSubscription.pushResponse("CreateWidgetBackgroundResult", {
           data: {
             backgroundAction: {
               id: "app-job-123456",
@@ -849,7 +849,7 @@ describe("operationRunners", () => {
           hasNext: true,
         });
 
-        mockUrqlClient.executeSubscription.pushResponse("createWidget", {
+        mockUrqlClient.executeSubscription.pushResponse("CreateWidgetBackgroundResult", {
           data: {
             backgroundAction: {
               id: "app-job-123456",
@@ -876,14 +876,14 @@ describe("operationRunners", () => {
       });
 
       test("waits for background action with failed result", async () => {
-        const promise = actionResultRunner(connection, "app-job-123456", MockWidgetCreateAction, { widget: { name: "new widget" } });
+        const promise = actionResultRunner(connection, "app-job-123456", MockWidgetCreateAction);
 
         expect(mockUrqlClient.executeSubscription.mock.calls.length).toEqual(1);
         expect(mockUrqlClient.executeSubscription.mock.calls[0][0].variables).toEqual({
           id: "app-job-123456",
         });
 
-        mockUrqlClient.executeSubscription.pushResponse("createWidget", {
+        mockUrqlClient.executeSubscription.pushResponse("CreateWidgetBackgroundResult", {
           data: {
             backgroundAction: {
               id: "app-job-123456",
@@ -895,7 +895,7 @@ describe("operationRunners", () => {
           hasNext: true,
         });
 
-        mockUrqlClient.executeSubscription.pushResponse("createWidget", {
+        mockUrqlClient.executeSubscription.pushResponse("CreateWidgetBackgroundResult", {
           data: {
             backgroundAction: {
               id: "app-job-123456",
@@ -929,7 +929,7 @@ describe("operationRunners", () => {
           id: "app-job-123456",
         });
 
-        mockUrqlClient.executeSubscription.pushResponse("flipAllWidgets", {
+        mockUrqlClient.executeSubscription.pushResponse("FlipAllWidgetsBackgroundResult", {
           data: {
             backgroundAction: {
               id: "app-job-123456",
@@ -941,7 +941,7 @@ describe("operationRunners", () => {
           hasNext: true,
         });
 
-        mockUrqlClient.executeSubscription.pushResponse("flipAllWidgets", {
+        mockUrqlClient.executeSubscription.pushResponse("FlipAllWidgetsBackgroundResult", {
           data: {
             backgroundAction: {
               id: "app-job-123456",
@@ -970,7 +970,7 @@ describe("operationRunners", () => {
           id: "app-job-123456",
         });
 
-        mockUrqlClient.executeSubscription.pushResponse("flipAllWidgets", {
+        mockUrqlClient.executeSubscription.pushResponse("FlipAllWidgetsBackgroundResult", {
           data: {
             backgroundAction: {
               id: "app-job-123456",
@@ -982,7 +982,7 @@ describe("operationRunners", () => {
           hasNext: true,
         });
 
-        mockUrqlClient.executeSubscription.pushResponse("flipAllWidgets", {
+        mockUrqlClient.executeSubscription.pushResponse("FlipAllWidgetsBackgroundResult", {
           data: {
             backgroundAction: {
               id: "app-job-123456",
@@ -1007,15 +1007,63 @@ describe("operationRunners", () => {
       });
     });
 
+    describe("bulk action", () => {
+      test("waits for a background bulk action element with a completed result", async () => {
+        const promise = actionResultRunner(connection, "app-job-123456", MockBulkUpdateWidgetAction);
+
+        expect(mockUrqlClient.executeSubscription.mock.calls.length).toEqual(1);
+        expect(mockUrqlClient.executeSubscription.mock.calls[0][0].variables).toEqual({
+          id: "app-job-123456",
+        });
+
+        mockUrqlClient.executeSubscription.pushResponse("UpdateWidgetBackgroundResult", {
+          data: {
+            backgroundAction: {
+              id: "app-job-123456",
+              outcome: null,
+              result: null,
+            },
+          },
+          stale: false,
+          hasNext: true,
+        });
+
+        mockUrqlClient.executeSubscription.pushResponse("UpdateWidgetBackgroundResult", {
+          data: {
+            backgroundAction: {
+              id: "app-job-123456",
+              outcome: "completed",
+              result: {
+                success: true,
+                errors: null,
+                widget: {
+                  id: "123",
+                  name: "foo",
+                },
+              },
+            },
+          },
+          stale: false,
+          hasNext: false,
+        });
+
+        const result = await promise;
+
+        expect(result.outcome).toEqual("completed");
+        expect(result.result.id).toBeTruthy();
+        expect(result.result.name).toBeTruthy();
+      });
+    });
+
     test("permission error", async () => {
-      const promise = actionResultRunner(connection, "app-job-123456", MockWidgetCreateAction, { widget: { name: "new widget" } });
+      const promise = actionResultRunner(connection, "app-job-123456", MockWidgetCreateAction);
 
       expect(mockUrqlClient.executeSubscription.mock.calls.length).toEqual(1);
       expect(mockUrqlClient.executeSubscription.mock.calls[0][0].variables).toEqual({
         id: "app-job-123456",
       });
 
-      mockUrqlClient.executeSubscription.pushResponse("createWidget", {
+      mockUrqlClient.executeSubscription.pushResponse("CreateWidgetBackgroundResult", {
         error: new CombinedError({
           graphQLErrors: [
             {
