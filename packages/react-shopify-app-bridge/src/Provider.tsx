@@ -1,5 +1,5 @@
 import type { AnyClient } from "@gadgetinc/api-client-core";
-import { Provider as GadgetUrqlProvider, useQuery } from "@gadgetinc/react";
+import { Provider as GadgetUrqlProvider, useMutation, useQuery } from "@gadgetinc/react";
 import { useAppBridge } from "@shopify/app-bridge-react";
 import type { ReactNode } from "react";
 import React, { memo, useEffect, useMemo, useState } from "react";
@@ -37,6 +37,14 @@ const GetCurrentSessionQuery = `
   }
 `;
 
+const InstallByTokenExchangeMutation = `
+  mutation InstallByTokenExchange($shopifySessionToken: String!) {
+    shopifyInstallByTokenExchange(shopifySessionToken: $shopifySessionToken) {
+      success
+    }
+  }
+`;
+
 // inner component that exists in order to ask for the app bridge
 const InnerGadgetProvider = memo(
   ({ children, gadgetAppUrl, originalQueryParams, api, type, host, isReady, isRootFrameRequest }: GadgetProviderProps) => {
@@ -64,6 +72,7 @@ const InnerGadgetProvider = memo(
         console.debug("[gadget-rsab] no app bridge, skipping client auth setup");
         return;
       }
+
       // setup the api client to always query using the custom shopify auth implementation
       api.connection.setAuthenticationMode({
         custom: {
@@ -84,7 +93,7 @@ const InnerGadgetProvider = memo(
       console.debug("[gadget-rsab] set up client auth for session tokens");
     }, [api.connection, appBridge]);
 
-    let runningShopifyAuth = false;
+    let requiresReauthentication = false;
     let isAuthenticated = false;
 
     // always run one session fetch to the gadget backend on boot to discover if this app is installed
@@ -92,22 +101,52 @@ const InnerGadgetProvider = memo(
       query: GetCurrentSessionQuery,
     });
 
+    const [{ data: attemptedInstallResult, fetching: attemptingInstallByTokenExchange }, attemptInstallByTokenExchange] =
+      useMutation(InstallByTokenExchangeMutation);
+
+    const tokenExchangeAttempted = !!attemptedInstallResult;
+
     if (currentSessionData) {
-      runningShopifyAuth = currentSessionData.shopifyConnection?.requiresReauthentication;
+      requiresReauthentication = currentSessionData.shopifyConnection?.requiresReauthentication;
 
       if (currentSessionData.currentSession) {
         if (!currentSessionData.currentSession.shop) {
-          runningShopifyAuth = true;
+          requiresReauthentication = true;
         } else {
           // we may be missing scopes, if so, we aren't fully authenticated
-          isAuthenticated = !currentSessionData.shopifyConnection?.requiresReauthentication;
+          isAuthenticated = !requiresReauthentication;
         }
       }
     }
 
+    if (attemptedInstallResult && attemptedInstallResult.shopifyInstallByTokenExchange?.success) {
+      console.debug("[gadget-rsab] successfully installed by token exchange");
+
+      isAuthenticated = true;
+      requiresReauthentication = false;
+    }
+
+    // if we think reauthentication is required, we should first attempt to install by token exchange
+    useEffect(() => {
+      if (!requiresReauthentication || isRootFrameRequest) return;
+
+      console.debug("[gadget-rsab] attempting install by token exchange");
+
+      appBridge
+        .idToken()
+        .then((shopifySessionToken) => {
+          attemptInstallByTokenExchange({ shopifySessionToken }).catch((err) => {
+            console.debug({ err }, "[gadget-rsab] failed to install by token exchange");
+          });
+        })
+        .catch((err) => {
+          console.debug({ err }, "[gadget-rsab] failed to get shopify session token");
+        });
+    }, [appBridge, requiresReauthentication, isRootFrameRequest, attemptInstallByTokenExchange]);
+
     // redirect to Gadget to initiate the oauth process if we need to.
     useEffect(() => {
-      if (!runningShopifyAuth || isRootFrameRequest) return;
+      if (!requiresReauthentication || !tokenExchangeAttempted || isRootFrameRequest) return;
       // redirect to gadget app root pages url with oauth params
       const redirectURL = new URL("/api/connections/auth/shopify", gadgetAppUrl);
       redirectURL.search = originalQueryParams?.toString() ?? "";
@@ -121,11 +160,12 @@ const InnerGadgetProvider = memo(
         gadgetAppUrl,
       });
 
-      open(redirectURLWithOAuthParams, "_top");
+      //open(redirectURLWithOAuthParams, "_top");
       // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [gadgetAppUrl, isRootFrameRequest, originalQueryParams, runningShopifyAuth]);
+    }, [gadgetAppUrl, isRootFrameRequest, originalQueryParams, requiresReauthentication, tokenExchangeAttempted]);
 
-    const loading = (forceRedirect || runningShopifyAuth || sessionFetching) && !isRootFrameRequest;
+    const loading =
+      (forceRedirect || requiresReauthentication || sessionFetching || attemptingInstallByTokenExchange) && !isRootFrameRequest;
 
     useEffect(() => {
       const context = {
