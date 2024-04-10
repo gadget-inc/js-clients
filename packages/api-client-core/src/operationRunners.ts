@@ -32,7 +32,7 @@ import {
   hydrateRecordArray,
   setVariableOptionValues,
 } from "./support.js";
-import type { ActionFunctionOptions, BaseFindOptions, EnqueueBackgroundActionOptions, FindManyOptions, VariablesOptions } from "./types.js";
+import type { ActionFunctionOptions, ActionResult, BaseFindOptions, EnqueueBackgroundActionOptions, FindManyOptions, VariablesOptions } from "./types.js";
 
 export const findOneRunner = async <Shape extends RecordShape = any>(
   modelManager: { connection: GadgetConnection },
@@ -281,12 +281,12 @@ export const enqueueActionRunner = async <Action extends AnyActionFunction>(
   }
 };
 
-export const actionResultRunner = async <Action extends AnyActionFunction, Options extends ActionFunctionOptions<Action>>(
+export const actionResultRunner = async <Action extends AnyActionFunction, Options extends ActionFunctionOptions<Action>, Result extends ActionResult>(
   connection: GadgetConnection,
   id: string,
   action: Action,
   options?: Options
-): Promise<BackgroundActionResult> => {
+): Promise<BackgroundActionResult<Result>> => {
   const plan = actionResultOperation(id, action, options);
   const subscription = connection.currentClient.subscription(plan.query, plan.variables);
 

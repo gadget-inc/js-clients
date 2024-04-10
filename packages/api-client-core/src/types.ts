@@ -2,6 +2,7 @@ import type { OperationContext } from "@urql/core";
 import type { VariableOptions } from "tiny-graphql-query-compiler";
 import type { FieldSelection } from "./FieldSelection.js";
 import type { ActionFunction, AnyActionFunction, BulkActionFunction, GlobalActionFunction } from "./GadgetFunctions.js";
+import { GadgetRecord, RecordShape } from "./GadgetRecord.js";
 
 /**
  * Limit the keys in T to only those that also exist in U. AKA Subset or Intersection.
@@ -879,3 +880,33 @@ export type ActionFunctionOptions<Action extends AnyActionFunction> = Action ext
   : Action extends GlobalActionFunction<any>
   ? Record<string, never>
   : never;
+
+  export interface ActionResult {
+    (
+      action: { type: "action", hasReturnType?: true, isBulkAction: false }
+    ): Promise<any>;
+
+    <Shape extends RecordShape = any>(
+      action: { type: "action", hasReturnType?: false, isBulkAction: false }
+    ): Promise<Shape extends void ? void : GadgetRecord<Shape>>;
+
+    <Shape extends RecordShape = any>(
+      action: { type: "action", isBulkAction: false }
+    ): Promise<Shape extends void ? void : GadgetRecord<Shape>>;
+
+    <Shape extends RecordShape = any>(
+      action: { type: "action", isBulkAction: true }
+    ): Promise<Shape extends void ? void : GadgetRecord<Shape>[]>;
+
+    (
+      action: { type: "action", isBulkAction: true, hasReturnType: true }
+    ): Promise<any[]>;
+
+    <Shape extends RecordShape = any>(
+      action: { type: "action", isBulkAction: true, hasReturnType: false }
+    ): Promise<Shape extends void ? void : GadgetRecord<Shape>[]>;
+
+    (
+      action: { type: "globalAction" }
+    ): Promise<any>;
+  }
