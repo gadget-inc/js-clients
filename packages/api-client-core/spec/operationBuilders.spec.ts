@@ -71,6 +71,57 @@ describe("operation builders", () => {
         }
       `);
     });
+
+    test("findOneOperation should build a find one query for a model with one namespace", () => {
+      expect(findOneOperation("widget", "123", { __typename: true, id: true, state: true }, "widget", null, ["outer"]))
+        .toMatchInlineSnapshot(`
+        {
+          "query": "query widget($id: GadgetID!) {
+          outer {
+            widget(id: $id) {
+              __typename
+              id
+              state
+            }
+            gadgetMeta {
+              hydrations(modelName: "widget")
+            }
+          }
+        }",
+          "variables": {
+            "id": "123",
+          },
+        }
+      `);
+    });
+
+    test("findOneOperation should build a find one query for a model with multiple namespaces", () => {
+      expect(
+        findOneOperation("widget", "123", { __typename: true, id: true, state: true }, "widget", null, ["outer", "inner", "reallyInner"])
+      ).toMatchInlineSnapshot(`
+        {
+          "query": "query widget($id: GadgetID!) {
+          outer {
+            inner {
+              reallyInner {
+                widget(id: $id) {
+                  __typename
+                  id
+                  state
+                }
+                gadgetMeta {
+                  hydrations(modelName: "widget")
+                }
+              }
+            }
+          }
+        }",
+          "variables": {
+            "id": "123",
+          },
+        }
+      `);
+    });
   });
 
   describe("findManyOperation", () => {
@@ -500,7 +551,7 @@ describe("operation builders", () => {
             }
           }
           gadgetMeta {
-            hydrations(modelName: "session")
+            hydrations(modelName: "currentSession.session")
           }
         }",
           "variables": {},
@@ -579,6 +630,117 @@ describe("operation builders", () => {
           }
           gadgetMeta {
             hydrations(modelName: "widget")
+          }
+        }",
+          "variables": {},
+        }
+      `);
+    });
+
+    test("actionOperation should build a mutation query for a model action with a string namespace", () => {
+      expect(actionOperation("createWidget", { __typename: true, id: true, state: true }, "widget", "widget", {}, undefined, "outer"))
+        .toMatchInlineSnapshot(`
+        {
+          "query": "mutation createWidget {
+          outer {
+            createWidget {
+              success
+              errors {
+                message
+                code
+                ... on InvalidRecordError {
+                  validationErrors {
+                    message
+                    apiIdentifier
+                  }
+                }
+              }
+              widget {
+                __typename
+                id
+                state
+              }
+            }
+          }
+          gadgetMeta {
+            hydrations(modelName: "outer.widget")
+          }
+        }",
+          "variables": {},
+        }
+      `);
+    });
+
+    test("actionOperation should build a mutation query for a model action with a single element string array namespace", () => {
+      expect(actionOperation("createWidget", { __typename: true, id: true, state: true }, "widget", "widget", {}, undefined, ["outer"]))
+        .toMatchInlineSnapshot(`
+        {
+          "query": "mutation createWidget {
+          outer {
+            createWidget {
+              success
+              errors {
+                message
+                code
+                ... on InvalidRecordError {
+                  validationErrors {
+                    message
+                    apiIdentifier
+                  }
+                }
+              }
+              widget {
+                __typename
+                id
+                state
+              }
+            }
+          }
+          gadgetMeta {
+            hydrations(modelName: "outer.widget")
+          }
+        }",
+          "variables": {},
+        }
+      `);
+    });
+
+    test("actionOperation should build a mutation query for a model action with a multi element array namespace", () => {
+      expect(
+        actionOperation("createWidget", { __typename: true, id: true, state: true }, "widget", "widget", {}, undefined, [
+          "outer",
+          "inner",
+          "reallyInner",
+        ])
+      ).toMatchInlineSnapshot(`
+        {
+          "query": "mutation createWidget {
+          outer {
+            inner {
+              reallyInner {
+                createWidget {
+                  success
+                  errors {
+                    message
+                    code
+                    ... on InvalidRecordError {
+                      validationErrors {
+                        message
+                        apiIdentifier
+                      }
+                    }
+                  }
+                  widget {
+                    __typename
+                    id
+                    state
+                  }
+                }
+              }
+            }
+          }
+          gadgetMeta {
+            hydrations(modelName: "reallyInner.inner.outer.widget")
           }
         }",
           "variables": {},

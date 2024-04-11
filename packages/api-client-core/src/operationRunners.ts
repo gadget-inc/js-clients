@@ -41,12 +41,17 @@ export const findOneRunner = async <Shape extends RecordShape = any>(
   defaultSelection: FieldSelection,
   modelApiIdentifier: string,
   options?: BaseFindOptions | null,
-  throwOnEmptyData = true
+  throwOnEmptyData = true,
+  namespace?: string[]
 ) => {
-  const plan = findOneOperation(operation, id, defaultSelection, modelApiIdentifier, options);
+  const plan = findOneOperation(operation, id, defaultSelection, modelApiIdentifier, options, namespace);
   const response = await modelManager.connection.currentClient.query(plan.query, plan.variables).toPromise();
   const assertSuccess = throwOnEmptyData ? assertOperationSuccess : assertNullableOperationSuccess;
-  const record = assertSuccess(response, [operation]);
+  const dataPath = [operation];
+  if (namespace) {
+    dataPath.unshift(...namespace);
+  }
+  const record = assertSuccess(response, dataPath);
   return hydrateRecord<Shape>(response, record);
 };
 

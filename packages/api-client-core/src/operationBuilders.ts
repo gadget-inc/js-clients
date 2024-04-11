@@ -5,10 +5,14 @@ import type { AnyActionFunction } from "./index.js";
 import { camelize, capitalizeIdentifier, filterTypeName, sortTypeName } from "./support.js";
 import type { ActionFunctionOptions, BaseFindOptions, EnqueueBackgroundActionOptions, FindManyOptions, VariablesOptions } from "./types.js";
 
-const hydrationOptions = (modelApiIdentifier: string): BuilderFieldSelection => {
+const hydrationOptions = (modelApiIdentifier: string, namespace?: string | string[] | null): BuilderFieldSelection => {
+  const fullyQualifiedIdentifier = namespace
+    ? [...(Array.isArray(namespace) ? namespace : [namespace]), modelApiIdentifier].join(".")
+    : modelApiIdentifier;
+
   return {
     gadgetMeta: {
-      [`hydrations(modelName: "${modelApiIdentifier}")`]: true,
+      [`hydrations(modelName: "${fullyQualifiedIdentifier}")`]: true,
     },
   };
 };
@@ -34,17 +38,23 @@ export const findOneOperation = (
   id: string | undefined,
   defaultSelection: FieldSelection,
   modelApiIdentifier: string,
-  options?: BaseFindOptions | null
+  options?: BaseFindOptions | null,
+  namespace?: string[]
 ) => {
   const variables: Record<string, Variable> = {};
   if (typeof id !== "undefined") variables.id = Var({ type: "GadgetID!", value: id });
+
+  let fields = {
+    [operation]: Call(variables, fieldSelectionToQueryCompilerFields(options?.select || defaultSelection, true)),
+    ...hydrationOptions(modelApiIdentifier, namespace),
+  };
+
+  fields = namespacify(namespace, fields);
+
   return compileWithVariableValues({
     type: "query",
     name: operation,
-    fields: {
-      [operation]: Call(variables, fieldSelectionToQueryCompilerFields(options?.select || defaultSelection, true)),
-      ...hydrationOptions(modelApiIdentifier),
-    },
+    fields,
     directives: directivesForOptions(options),
   });
 };
@@ -133,7 +143,7 @@ export const actionOperation = (
   modelSelectionField: string,
   variables: VariablesOptions,
   options?: BaseFindOptions | null,
-  namespace?: string | null,
+  namespace?: string | string[] | null,
   isBulkAction?: boolean | null,
   hasReturnType?: boolean | null
 ) => {
@@ -143,17 +153,14 @@ export const actionOperation = (
     [operation]: Call(variableOptionsToVariables(variables), actionResultFieldSelection(modelSelectionField, selection, hasReturnType)),
   };
 
-  if (namespace) {
-    fields = {
-      [namespace]: fields,
-    };
-  }
+  fields = namespacify(namespace, fields);
+
   const actionOperation: BuilderOperation = {
     type: "mutation",
     name: operation,
     fields: {
       ...fields,
-      ...hydrationOptions(modelApiIdentifier),
+      ...hydrationOptions(modelApiIdentifier, namespace),
     },
     directives: directivesForOptions(options),
   };
@@ -317,3 +324,18 @@ export const enqueueActionOperation = (
     fields,
   });
 };
+
+function namespacify(namespace: string[] | string | undefined | null, fields: any) {
+  if (!namespace) return fields;
+  if (!Array.isArray(namespace)) {
+    namespace = [namespace];
+  }
+  if (namespace) {
+    for (const key of namespace.reverse()) {
+      fields = {
+        [key]: fields,
+      };
+    }
+  }
+  return fields;
+}

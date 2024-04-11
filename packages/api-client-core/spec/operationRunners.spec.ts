@@ -16,6 +16,10 @@ describe("operationRunners", () => {
     jest.spyOn(connection, "currentClient", "get").mockReturnValue(mockUrqlClient as any);
   });
 
+  describe("findOneRunner", () => {
+    //todo write tests for non-namespace and namespaced versions
+  });
+
   describe("actionRunner", () => {
     test("can run a single create action", async () => {
       const promise = actionRunner<{ id: string; name: string }>(
