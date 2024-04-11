@@ -8,6 +8,7 @@ import type {
 } from "@gadgetinc/api-client-core";
 import { gadgetErrorFor, getNonNullableError } from "@gadgetinc/api-client-core";
 import type { BackgroundActionHandle } from "@gadgetinc/api-client-core/dist/cjs/BackgroundActionHandle.js";
+import { AnyBulkActionFunction } from "@gadgetinc/api-client-core/src/GadgetFunctions.js";
 import type { CombinedError, RequestPolicy } from "@urql/core";
 import { GraphQLError } from "graphql";
 import { useMemo } from "react";
@@ -135,14 +136,23 @@ export type ActionHookResult<Data = any, Variables extends AnyVariables = AnyVar
 /**
  * The inner result object returned from a mutation result
  */
-export interface EnqueueHookState<Action extends AnyActionFunction> {
-  fetching: boolean;
-  stale: boolean;
-  handle: BackgroundActionHandle<Action> | null;
-  error?: ErrorWrapper;
-  extensions?: Record<string, any>;
-  operation?: Operation<{ backgroundAction: { id: string } }, Action["variablesType"]>;
-}
+export type EnqueueHookState<Action extends AnyActionFunction> = Action extends AnyBulkActionFunction
+  ? {
+      fetching: boolean;
+      stale: boolean;
+      handles: BackgroundActionHandle<Action>[] | null;
+      error?: ErrorWrapper;
+      extensions?: Record<string, any>;
+      operation?: Operation<{ backgroundAction: { id: string } }, Action["variablesType"]>;
+    }
+  : {
+      fetching: boolean;
+      stale: boolean;
+      handle: BackgroundActionHandle<Action> | null;
+      error?: ErrorWrapper;
+      extensions?: Record<string, any>;
+      operation?: Operation<{ backgroundAction: { id: string } }, Action["variablesType"]>;
+    };
 
 /**
  * The return value of a `useEnqueue` hook.

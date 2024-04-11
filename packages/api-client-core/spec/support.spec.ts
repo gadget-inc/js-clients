@@ -4,9 +4,11 @@ import {
   assertMutationSuccess,
   assertNullableOperationSuccess,
   assertOperationSuccess,
+  disambiguateBulkActionVariables,
   GadgetOperationError,
   getNonNullableError,
 } from "../src/index.js";
+import { MockBulkFlipDownWidgetsAction, MockBulkUpdateWidgetAction } from "./mockActions.js";
 
 describe("support utilities", () => {
   describe("assertOperationSuccess", () => {
@@ -344,6 +346,40 @@ describe("support utilities", () => {
         expect(error.record).toBeFalsy();
       }
       expect(threw).toBeTruthy();
+    });
+  });
+
+  describe("disambiguateBulkActionVariables", () => {
+    test("it should leave variables objects with ids alone", () => {
+      expect(disambiguateBulkActionVariables(MockBulkFlipDownWidgetsAction, { ids: ["1", "2", "3"] })).toEqual({ ids: ["1", "2", "3"] });
+    });
+
+    test("it should leave variables objects with fully qualified inputs alone", () => {
+      expect(disambiguateBulkActionVariables(MockBulkUpdateWidgetAction, { inputs: [{ id: "123", widget: { name: "foobar" } }] })).toEqual({
+        inputs: [{ id: "123", widget: { name: "foobar" } }],
+      });
+    });
+
+    test("it should leave the structure of variables objects with inputs alone, but map each input to the fully qualified form", () => {
+      expect(disambiguateBulkActionVariables(MockBulkUpdateWidgetAction, { inputs: [{ id: "123", name: "foobar" }] })).toEqual({
+        inputs: [{ id: "123", widget: { name: "foobar" } }],
+      });
+    });
+
+    test("it should normalize ids arrays for actions which accept ids", () => {
+      expect(disambiguateBulkActionVariables(MockBulkFlipDownWidgetsAction, ["1", "2", "3"])).toEqual({ ids: ["1", "2", "3"] });
+    });
+
+    test("it should normalize input arrays for actions which accept inputs containing shorthand inputs", () => {
+      expect(disambiguateBulkActionVariables(MockBulkUpdateWidgetAction, [{ id: "123", name: "foobar" }])).toEqual({
+        inputs: [{ id: "123", widget: { name: "foobar" } }],
+      });
+    });
+
+    test("it should normalize input arrays for actions which accept inputs containing fully qualified inputs", () => {
+      expect(disambiguateBulkActionVariables(MockBulkUpdateWidgetAction, [{ id: "123", widget: { name: "foobar" } }])).toEqual({
+        inputs: [{ id: "123", widget: { name: "foobar" } }],
+      });
     });
   });
 });

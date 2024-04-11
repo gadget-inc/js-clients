@@ -600,27 +600,22 @@ export const disambiguateActionVariables = (action: AnyActionFunction, variables
 
 /**
  * Normalizes incoming params from JS land into the variable format the GraphQL API is expecting
+ * Some bulk actions take GraphQL variables like `{ids: ["1","2","3"]}`, and others take `{inputs: [{field: "value"}, {field: "value"}]}`. In JS land, we accept the fully qualified variables that look like that, as well as the inner array shorthands.
  **/
 export const disambiguateBulkActionVariables = (
   action: ActionFunctionMetadata<any, any, any, any, any, true>,
-  inputs: Record<string, any> = {}
+  inputs: Record<string, any> | Record<string, any>[] = {}
 ) => {
-  let variables;
-  // accept the old style of {ids: ["1", "2", "3"]} as well as the new style of [{id: 1, foo: "bar"}, {id: 2, foo: "baz"}]
   if (action.variables["ids"]) {
-    if (Array.isArray(inputs)) {
-      variables = {
-        ids: inputs,
-      };
-    } else {
-      variables = inputs;
-    }
+    // for actions which accept ids only, normalize the array shorthand into the full GraphQL variables
+    return Array.isArray(inputs) ? { ids: inputs } : inputs;
   } else {
-    variables = {
-      inputs: ((inputs as any[]) ?? []).map((input: any) => disambiguateActionVariables(action, input)),
+    // for actions which accept inputs, normalize each element of the array of inputs, and then normalize arrays into the object form
+    const inputsArray: Record<string, any>[] = (Array.isArray(inputs) ? inputs : inputs.inputs) ?? [];
+    return {
+      inputs: inputsArray.map((input) => disambiguateActionVariables(action, input)),
     };
   }
-  return variables;
 };
 
 /**

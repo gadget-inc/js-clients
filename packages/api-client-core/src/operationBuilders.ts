@@ -2,7 +2,7 @@ import type { FieldSelection as BuilderFieldSelection, BuilderOperation, Variabl
 import { Call, Var, compileWithVariableValues } from "tiny-graphql-query-compiler";
 import type { FieldSelection } from "./FieldSelection.js";
 import type { AnyActionFunction } from "./index.js";
-import { camelize, filterTypeName, sortTypeName } from "./support.js";
+import { camelize, capitalizeIdentifier, filterTypeName, sortTypeName } from "./support.js";
 import type { ActionFunctionOptions, BaseFindOptions, EnqueueBackgroundActionOptions, FindManyOptions, VariablesOptions } from "./types.js";
 
 const hydrationOptions = (modelApiIdentifier: string): BuilderFieldSelection => {
@@ -117,17 +117,12 @@ const variableOptionsToVariables = (variables: VariablesOptions) => {
   return Object.fromEntries(Object.entries(variables).map(([name, options]) => [name, Var(options)]));
 };
 
-const actionResultFieldSelection = (
-  modelSelectionField: string,
-  selection: FieldSelection,
-  isBulkAction?: boolean | null,
-  hasReturnType?: boolean | null
-) => {
+const actionResultFieldSelection = (modelSelectionField: string, selection: FieldSelection, hasReturnType?: boolean | null) => {
   return {
     success: true,
     errors: ErrorsSelection,
     [modelSelectionField]: selection && !hasReturnType ? fieldSelectionToQueryCompilerFields(selection, true) : false,
-    [isBulkAction ? "results" : "result"]: !!hasReturnType,
+    result: !!hasReturnType,
   } as FieldSelection;
 };
 
@@ -145,10 +140,7 @@ export const actionOperation = (
   const selection = options?.select || defaultSelection;
 
   let fields: BuilderFieldSelection = {
-    [operation]: Call(
-      variableOptionsToVariables(variables),
-      actionResultFieldSelection(modelSelectionField, selection, isBulkAction, hasReturnType)
-    ),
+    [operation]: Call(variableOptionsToVariables(variables), actionResultFieldSelection(modelSelectionField, selection, hasReturnType)),
   };
 
   if (namespace) {
@@ -169,37 +161,38 @@ export const actionOperation = (
   return compileWithVariableValues(actionOperation);
 };
 
-export const actionResultOperation = <Action extends AnyActionFunction, Options extends ActionFunctionOptions<Action>>(
+export const backgroundActionResultOperation = <Action extends AnyActionFunction, Options extends ActionFunctionOptions<Action>>(
   id: string,
   action: Action,
   options?: Options
 ) => {
   let fields: FieldSelection = {};
+  let operationName = action.operationName;
 
   switch (action.type) {
     case "action": {
       const selection = options?.select || action.defaultSelection;
+      // background bulk actions enqueue many of the same action, each returning the result of one element of the bulk. so, the GraphQL result type is the singular result type, not the bulk result type.
+      if (action.isBulk) {
+        operationName = action.operationName.replace(/^bulk/, "").replace(/s$/, "");
+      }
+      const resultType = `${camelize(operationName)}Result`;
 
       fields = {
-        [`... on ${camelize(action.operationName)}Result`]: actionResultFieldSelection(
-          action.modelApiIdentifier,
-          selection,
-          action.isBulk,
-          action.hasReturnType
-        ),
+        [`... on ${resultType}`]: actionResultFieldSelection(action.modelApiIdentifier, selection, action.hasReturnType),
       };
       break;
     }
     case "globalAction": {
       fields = {
-        [`... on ${camelize(action.operationName)}Result`]: globalActionFieldSelection(),
+        [`... on ${camelize(operationName)}Result`]: globalActionFieldSelection(),
       };
     }
   }
 
   const actionResultOperation: BuilderOperation = {
     type: "subscription",
-    name: action.operationName,
+    name: capitalizeIdentifier(operationName) + "BackgroundResult",
     fields: {
       backgroundAction: Call(
         { id: Var({ value: id, type: "String!" }) },
@@ -216,6 +209,9 @@ export const actionResultOperation = <Action extends AnyActionFunction, Options 
 
   return compileWithVariableValues(actionResultOperation);
 };
+
+/** @deprecated previous export name, @see backgroundActionResultOperation */
+export const actionResultOperation = backgroundActionResultOperation;
 
 const globalActionFieldSelection = () => {
   return {
@@ -277,11 +273,13 @@ export const graphqlizeBackgroundOptions = (options?: EnqueueBackgroundActionOpt
 
   return obj;
 };
+
 export const enqueueActionOperation = (
   operation: string,
   variables: VariablesOptions,
   namespace?: string | null,
-  options?: EnqueueBackgroundActionOptions<any> | null
+  options?: EnqueueBackgroundActionOptions<any> | null,
+  isBulk?: boolean
 ) => {
   let fields: BuilderFieldSelection = {
     background: {
@@ -299,7 +297,7 @@ export const enqueueActionOperation = (
             message: true,
             code: true,
           },
-          backgroundAction: {
+          [isBulk ? "backgroundActions" : "backgroundAction"]: {
             id: true,
           },
         }

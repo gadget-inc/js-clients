@@ -1,4 +1,4 @@
-import type { EnqueueBackgroundActionOptions, GadgetConnection } from "@gadgetinc/api-client-core";
+import type { ActionFunctionMetadata, EnqueueBackgroundActionOptions, GadgetConnection } from "@gadgetinc/api-client-core";
 import {
   BackgroundActionHandle,
   disambiguateActionVariables,
@@ -50,7 +50,10 @@ export const useEnqueue = <Action extends AnyActionFunction>(
 ): EnqueueHookResult<Action> => {
   if (!useContext(GadgetUrqlClientContext)) throw new Error(noProviderErrorMessage);
 
-  const plan = useMemo(() => enqueueActionOperation(action.operationName, action.variables, action.namespace), [action]);
+  const plan = useMemo(
+    () => enqueueActionOperation(action.operationName, action.variables, action.namespace, null, action.isBulk),
+    [action]
+  );
   const connection = useConnection();
 
   const [rawState, runMutation] = useGadgetMutation(plan.query);
@@ -61,8 +64,9 @@ export const useEnqueue = <Action extends AnyActionFunction>(
     state,
     useCallback(
       async (input: Action["variablesType"], options?: EnqueueBackgroundActionOptions<Action>) => {
-        const variables =
-          "isBulk" in action && action.isBulk ? disambiguateBulkActionVariables(action, input) : disambiguateActionVariables(action, input);
+        const variables = action.isBulk
+          ? disambiguateBulkActionVariables(action as ActionFunctionMetadata<any, any, any, any, any, true>, input)
+          : disambiguateActionVariables(action, input);
 
         const fullContext = { ...baseBackgroundOptions, ...options };
         variables.backgroundOptions = graphqlizeBackgroundOptions(fullContext);
@@ -84,7 +88,10 @@ const processResult = <Action extends AnyActionFunction>(
 ): EnqueueHookState<Action> => {
   const { data, ...result } = rawResult;
   let error = ErrorWrapper.forMaybeCombinedError(result.error);
-  let handle = null;
+  let handle: BackgroundActionHandle<Action> | null = null;
+  let handles: BackgroundActionHandle<Action>[] | null = null;
+  const isBulk = action.isBulk;
+
   if (data) {
     const dataPath = ["background", action.operationName];
     if (action.namespace) {
@@ -97,10 +104,20 @@ const processResult = <Action extends AnyActionFunction>(
       if (errors && errors[0]) {
         error = ErrorWrapper.forErrorsResponse(errors, error?.response);
       } else {
-        handle = new BackgroundActionHandle<Action>(connection, action, mutationData.backgroundAction.id);
+        if (isBulk) {
+          handles = mutationData.backgroundActions.map(
+            (result: { id: string }) => new BackgroundActionHandle<Action>(connection, action, result.id)
+          );
+        } else {
+          handle = new BackgroundActionHandle<Action>(connection, action, mutationData.backgroundAction.id);
+        }
       }
     }
   }
 
-  return { ...result, error, handle };
+  if (isBulk) {
+    return { ...result, error, handles } as EnqueueHookState<Action>;
+  } else {
+    return { ...result, error, handle } as EnqueueHookState<Action>;
+  }
 };
