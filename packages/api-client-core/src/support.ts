@@ -1,7 +1,7 @@
 import type { OperationResult } from "@urql/core";
 import { CombinedError } from "@urql/core";
 import { DataHydrator } from "./DataHydrator.js";
-import type { ActionFunctionMetadata, AnyActionFunction } from "./GadgetFunctions.js";
+import type { ActionFunctionMetadata, AnyActionFunction, GlobalActionFunction } from "./GadgetFunctions.js";
 import type { RecordShape } from "./GadgetRecord.js";
 import { GadgetRecord } from "./GadgetRecord.js";
 import type { VariablesOptions } from "./types.js";
@@ -602,7 +602,7 @@ export const disambiguateActionVariables = (action: AnyActionFunction, variables
  * Normalizes incoming params from JS land into the variable format the GraphQL API is expecting
  **/
 export const disambiguateBulkActionVariables = (
-  action: ActionFunctionMetadata<any, any, any, any, any, true>,
+  action: ActionFunctionMetadata<any, any, any, any, any, true> | GlobalActionFunction<any>,
   inputs: Record<string, any> = {}
 ) => {
   let variables;

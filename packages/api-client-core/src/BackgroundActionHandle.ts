@@ -1,12 +1,27 @@
 import type { GadgetConnection } from "./GadgetConnection.js";
-import type { AnyActionFunction } from "./GadgetFunctions.js";
+import type { ActionFunction, AnyActionFunction } from "./GadgetFunctions.js";
+import type { GadgetRecord } from "./GadgetRecord.js";
 import { actionResultRunner } from "./operationRunners.js";
-import type { ActionFunctionOptions } from "./types.js";
+import type { ActionFunctionOptions, DefaultSelection, Select } from "./types.js";
 
-export type BackgroundActionResult<R = any> = {
+export type BackgroundActionResultData<
+  Action extends AnyActionFunction,
+  Options extends ActionFunctionOptions<Action>
+> = Action extends ActionFunction<any, any, any, any, any>
+  ? Action["hasReturnType"] extends true
+    ? any
+    : GadgetRecord<
+        Select<
+          Exclude<Action["schemaType"], null | undefined>,
+          DefaultSelection<Action["selectionType"], Options, Action["defaultSelection"]>
+        >
+      >
+  : any;
+
+export type BackgroundActionResult<Action extends AnyActionFunction, Options extends ActionFunctionOptions<Action>> = {
   id: string;
   outcome: string | null;
-  result: R | null;
+  result: BackgroundActionResultData<Action, Options>;
 };
 
 /** Represents a handle to a background action which has been enqueued */
