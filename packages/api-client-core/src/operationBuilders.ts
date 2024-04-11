@@ -5,10 +5,14 @@ import type { AnyActionFunction } from "./index.js";
 import { camelize, capitalizeIdentifier, filterTypeName, sortTypeName } from "./support.js";
 import type { ActionFunctionOptions, BaseFindOptions, EnqueueBackgroundActionOptions, FindManyOptions, VariablesOptions } from "./types.js";
 
-const hydrationOptions = (modelApiIdentifier: string): BuilderFieldSelection => {
+const hydrationOptions = (modelApiIdentifier: string, namespace?: string | string[] | null): BuilderFieldSelection => {
+  const fullyQualifiedIdentifier = namespace
+    ? [...(Array.isArray(namespace) ? namespace : [namespace]), modelApiIdentifier].join(".")
+    : modelApiIdentifier;
+
   return {
     gadgetMeta: {
-      [`hydrations(modelName: "${modelApiIdentifier}")`]: true,
+      [`hydrations(modelName: "${fullyQualifiedIdentifier}")`]: true,
     },
   };
 };
@@ -34,15 +38,23 @@ export const findOneOperation = (
   id: string | undefined,
   defaultSelection: FieldSelection,
   modelApiIdentifier: string,
-  options?: BaseFindOptions | null
+  options?: BaseFindOptions | null,
+  namespace?: string | string[] | null
 ) => {
   const variables: Record<string, Variable> = {};
   if (typeof id !== "undefined") variables.id = Var({ type: "GadgetID!", value: id });
+
+  let fields = {
+    [operation]: Call(variables, fieldSelectionToQueryCompilerFields(options?.select || defaultSelection, true)),
+  };
+
+  fields = namespacify(namespace, fields);
+
   return compileWithVariableValues({
     type: "query",
     name: operation,
     fields: {
-      [operation]: Call(variables, fieldSelectionToQueryCompilerFields(options?.select || defaultSelection, true)),
+      ...fields,
       ...hydrationOptions(modelApiIdentifier),
     },
     directives: directivesForOptions(options),
@@ -55,47 +67,63 @@ export const findOneByFieldOperation = (
   fieldValue: string,
   defaultSelection: FieldSelection,
   modelApiIdentifier: string,
-  options?: BaseFindOptions | null
+  options?: BaseFindOptions | null,
+  namespace?: string | string[] | null
 ) => {
-  return findManyOperation(operation, defaultSelection, modelApiIdentifier, {
-    ...options,
-    first: 2,
-    filter: {
-      [fieldName]: {
-        equals: fieldValue,
+  return findManyOperation(
+    operation,
+    defaultSelection,
+    modelApiIdentifier,
+    {
+      ...options,
+      first: 2,
+      filter: {
+        [fieldName]: {
+          equals: fieldValue,
+        },
       },
     },
-  });
+    namespace
+  );
 };
 
 export const findManyOperation = (
   operation: string,
   defaultSelection: FieldSelection,
   modelApiIdentifier: string,
-  options?: FindManyOptions
+  options?: FindManyOptions,
+  namespace?: string | string[] | null
 ) => {
+  let fields = {
+    [operation]: Call(
+      {
+        after: Var({ value: options?.after, type: "String" }),
+        first: Var({ value: options?.first, type: "Int" }),
+        before: Var({ value: options?.before, type: "String" }),
+        last: Var({ value: options?.last, type: "Int" }),
+        sort: options?.sort ? Var({ value: options.sort, type: `[${sortTypeName(modelApiIdentifier)}!]` }) : undefined,
+        filter: options?.filter ? Var({ value: options.filter, type: `[${filterTypeName(modelApiIdentifier)}!]` }) : undefined,
+        search: options?.search ? Var({ value: options.search, type: "String" }) : undefined,
+      },
+      {
+        pageInfo: { hasNextPage: true, hasPreviousPage: true, startCursor: true, endCursor: true },
+        edges: {
+          cursor: true,
+          node: fieldSelectionToQueryCompilerFields(options?.select || defaultSelection, true),
+        },
+      }
+    ),
+  };
+
+  if (namespace) {
+    fields = namespacify(namespace, fields);
+  }
+
   return compileWithVariableValues({
     type: "query",
     name: operation,
     fields: {
-      [operation]: Call(
-        {
-          after: Var({ value: options?.after, type: "String" }),
-          first: Var({ value: options?.first, type: "Int" }),
-          before: Var({ value: options?.before, type: "String" }),
-          last: Var({ value: options?.last, type: "Int" }),
-          sort: options?.sort ? Var({ value: options.sort, type: `[${sortTypeName(modelApiIdentifier)}!]` }) : undefined,
-          filter: options?.filter ? Var({ value: options.filter, type: `[${filterTypeName(modelApiIdentifier)}!]` }) : undefined,
-          search: options?.search ? Var({ value: options.search, type: "String" }) : undefined,
-        },
-        {
-          pageInfo: { hasNextPage: true, hasPreviousPage: true, startCursor: true, endCursor: true },
-          edges: {
-            cursor: true,
-            node: fieldSelectionToQueryCompilerFields(options?.select || defaultSelection, true),
-          },
-        }
-      ),
+      ...fields,
       ...hydrationOptions(modelApiIdentifier),
     },
     directives: directivesForOptions(options),
@@ -133,7 +161,7 @@ export const actionOperation = (
   modelSelectionField: string,
   variables: VariablesOptions,
   options?: BaseFindOptions | null,
-  namespace?: string | null,
+  namespace?: string | string[] | null,
   isBulkAction?: boolean | null,
   hasReturnType?: boolean | null
 ) => {
@@ -143,17 +171,14 @@ export const actionOperation = (
     [operation]: Call(variableOptionsToVariables(variables), actionResultFieldSelection(modelSelectionField, selection, hasReturnType)),
   };
 
-  if (namespace) {
-    fields = {
-      [namespace]: fields,
-    };
-  }
+  fields = namespacify(namespace, fields);
+
   const actionOperation: BuilderOperation = {
     type: "mutation",
     name: operation,
     fields: {
       ...fields,
-      ...hydrationOptions(modelApiIdentifier),
+      ...hydrationOptions(modelApiIdentifier, namespace),
     },
     directives: directivesForOptions(options),
   };
@@ -224,20 +249,14 @@ const globalActionFieldSelection = () => {
 export const globalActionOperation = (
   operation: string,
   variables: VariablesOptions,
-  namespace?: string | null,
+  namespace?: string | string[] | null,
   options?: { live?: boolean }
 ) => {
   let fields: BuilderFieldSelection = {
     [operation]: Call(variableOptionsToVariables(variables), globalActionFieldSelection()),
   };
 
-  const dataPath = [operation];
-  if (namespace) {
-    fields = {
-      [namespace]: fields,
-    };
-    dataPath.unshift(namespace);
-  }
+  fields = namespacify(namespace, fields);
 
   return compileWithVariableValues({
     type: "mutation",
@@ -284,43 +303,54 @@ export const graphqlizeBackgroundOptions = (options?: EnqueueBackgroundActionOpt
 export const enqueueActionOperation = (
   operation: string,
   variables: VariablesOptions,
-  namespace?: string | null,
+  namespace?: string | string[] | null,
   options?: EnqueueBackgroundActionOptions<any> | null,
   isBulk?: boolean
 ) => {
   let fields: BuilderFieldSelection = {
-    background: {
-      [operation]: Call(
-        {
-          ...variableOptionsToVariables(variables),
-          backgroundOptions: Var({
-            type: "EnqueueBackgroundActionOptions",
-            value: graphqlizeBackgroundOptions(options),
-          }),
+    [operation]: Call(
+      {
+        ...variableOptionsToVariables(variables),
+        backgroundOptions: Var({
+          type: "EnqueueBackgroundActionOptions",
+          value: graphqlizeBackgroundOptions(options),
+        }),
+      },
+      {
+        success: true,
+        errors: {
+          message: true,
+          code: true,
         },
-        {
-          success: true,
-          errors: {
-            message: true,
-            code: true,
-          },
-          [isBulk ? "backgroundActions" : "backgroundAction"]: {
-            id: true,
-          },
-        }
-      ),
-    },
+        [isBulk ? "backgroundActions" : "backgroundAction"]: {
+          id: true,
+        },
+      }
+    ),
   };
 
-  if (namespace) {
-    fields = {
-      [namespace]: fields,
-    };
-  }
+  fields = namespacify(namespace, fields);
 
   return compileWithVariableValues({
     type: "mutation",
     name: "enqueue" + camelize(operation),
-    fields,
+    fields: {
+      background: fields,
+    },
   });
 };
+
+function namespacify(namespace: string[] | string | undefined | null, fields: any) {
+  if (!namespace) return fields;
+  if (!Array.isArray(namespace)) {
+    namespace = [namespace];
+  }
+  if (namespace) {
+    for (let i = namespace.length - 1; i >= 0; i--) {
+      fields = {
+        [namespace[i]]: fields,
+      };
+    }
+  }
+  return fields;
+}

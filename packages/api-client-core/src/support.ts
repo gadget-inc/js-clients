@@ -628,3 +628,10 @@ export const setVariableOptionValues = (variableOptions: VariablesOptions, value
   }
   return result;
 };
+
+export const namespaceDataPath = (dataPath: string[], namespace?: string[] | string | null) => {
+  if (namespace) {
+    dataPath.unshift(...(Array.isArray(namespace) ? namespace : [namespace]));
+  }
+  return dataPath;
+};

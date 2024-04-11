@@ -3,11 +3,19 @@ import type { GadgetRecord } from "./GadgetRecord.js";
 import type { GadgetRecordList } from "./GadgetRecordList.js";
 
 export type AnyModelFinderMetadata = {
+  /** The name of the GraphQL API field that should be called for this operation */
   operationName: string;
+  /** The model's api identifier */
   modelApiIdentifier: string;
+  /** What fields to select from the GraphQL API if no explicit selection is passed */
   defaultSelection: Record<string, any>;
+  /** A namespace this operation is nested in. Absent for old clients or root-namespaced operations */
+  namespace?: string[];
+  /** Type-time only type member used for strong typing of finders  */
   selectionType: any;
+  /** Type-time only type member used for strong typing of finders  */
   optionsType: any;
+  /** Type-time only type member used for strong typing of finders  */
   schemaType: any | null;
 };
 

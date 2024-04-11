@@ -46,6 +46,32 @@ describe("operationRunners", () => {
       expect(result.id).toBeTruthy();
       expect(result.name).toBeTruthy();
     });
+
+    test("can execute a findOne operation against a namespaced model", async () => {
+      const promise = findOneRunner({ connection }, "widget", "123", { id: true, name: true }, "widget", undefined, undefined, [
+        "outer",
+        "inner",
+      ]);
+
+      mockUrqlClient.executeQuery.pushResponse("widget", {
+        data: {
+          outer: {
+            inner: {
+              widget: {
+                id: "123",
+                name: "foo",
+              },
+            },
+          },
+        },
+        stale: false,
+        hasNext: false,
+      });
+
+      const result = await promise;
+      expect(result.id).toBeTruthy();
+      expect(result.name).toBeTruthy();
+    });
   });
 
   describe("findOneByFieldRunner", () => {

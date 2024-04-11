@@ -34,6 +34,7 @@ import {
   hydrateConnection,
   hydrateRecord,
   hydrateRecordArray,
+  namespaceDataPath,
   setVariableOptionValues,
 } from "./support.js";
 import type { ActionFunctionOptions, BaseFindOptions, EnqueueBackgroundActionOptions, FindManyOptions, VariablesOptions } from "./types.js";
@@ -91,7 +92,8 @@ export const findOneRunner = <Shape extends RecordShape = any, Options extends B
   defaultSelection: FieldSelection,
   modelApiIdentifier: string,
   options?: Options | null,
-  throwOnEmptyData = true
+  throwOnEmptyData = true,
+  namespace?: string | string[] | null
 ) => {
   const plan = findOneOperation(operation, id, defaultSelection, modelApiIdentifier, options);
   const $results = modelManager.connection.currentClient.query(plan.query, plan.variables);
@@ -100,7 +102,8 @@ export const findOneRunner = <Shape extends RecordShape = any, Options extends B
     $results,
     (response) => {
       const assertSuccess = throwOnEmptyData ? assertOperationSuccess : assertNullableOperationSuccess;
-      const record = assertSuccess(response, [operation]);
+      const dataPath = namespaceDataPath([operation], namespace);
+      const record = assertSuccess(response, dataPath);
       return hydrateRecord<Shape>(response, record);
     },
     options
@@ -115,15 +118,17 @@ export const findOneByFieldRunner = <Shape extends RecordShape = any, Options ex
   defaultSelection: FieldSelection,
   modelApiIdentifier: string,
   options?: Options | null,
-  throwOnEmptyData = true
+  throwOnEmptyData = true,
+  namespace?: string | string[] | null
 ) => {
   const plan = findOneByFieldOperation(operation, fieldName, fieldValue, defaultSelection, modelApiIdentifier, options);
+  const dataPath = namespaceDataPath([operation], namespace);
   const $results = modelManager.connection.currentClient.query(plan.query, plan.variables);
 
   return maybeLiveStream(
     $results,
     (response) => {
-      const connectionObject = assertOperationSuccess(response, [operation]);
+      const connectionObject = assertOperationSuccess(response, dataPath);
       const records = hydrateConnection<Shape>(response, connectionObject);
 
       if (records.length > 1) {
@@ -145,10 +150,12 @@ export const findManyRunner = <Shape extends RecordShape = any, Options extends 
   defaultSelection: FieldSelection,
   modelApiIdentifier: string,
   options?: Options,
-  throwOnEmptyData?: boolean
+  throwOnEmptyData?: boolean,
+  namespace?: string | string[] | null
 ) => {
   const plan = findManyOperation(operation, defaultSelection, modelApiIdentifier, options);
   const $results = modelManager.connection.currentClient.query(plan.query, plan.variables);
+  const dataPath = namespaceDataPath([operation], namespace);
 
   return maybeLiveStream(
     $results,
@@ -156,11 +163,11 @@ export const findManyRunner = <Shape extends RecordShape = any, Options extends 
       let connectionObject;
       if (throwOnEmptyData === false) {
         // If this is a nullable operation, don't throw errors on empty
-        connectionObject = assertNullableOperationSuccess(response, [operation]);
+        connectionObject = assertNullableOperationSuccess(response, dataPath);
       } else {
         // Otherwise, passthrough the `throwOnEmptyData` flag, to account for
         // `findMany` (allows empty arrays) vs `findFirst` (no empty result) usage.
-        connectionObject = assertOperationSuccess(response, [operation], throwOnEmptyData);
+        connectionObject = assertOperationSuccess(response, dataPath, throwOnEmptyData);
       }
 
       const records = hydrateConnection<Shape>(response, connectionObject);
@@ -180,7 +187,7 @@ export interface ActionRunner {
     isBulkAction: false,
     variables: VariablesOptions,
     options?: BaseFindOptions | null,
-    namespace?: string | null,
+    namespace?: string | string[] | null,
     hasReturnType?: true
   ): Promise<any>;
 
@@ -193,7 +200,7 @@ export interface ActionRunner {
     isBulkAction: false,
     variables: VariablesOptions,
     options?: BaseFindOptions | null,
-    namespace?: string | null,
+    namespace?: string | string[] | null,
     hasReturnType?: false
   ): Promise<Shape extends void ? void : GadgetRecord<Shape>>;
 
@@ -206,7 +213,7 @@ export interface ActionRunner {
     isBulkAction: false,
     variables: VariablesOptions,
     options?: BaseFindOptions | null,
-    namespace?: string | null
+    namespace?: string | string[] | null
   ): Promise<Shape extends void ? void : GadgetRecord<Shape>>;
 
   <Shape extends RecordShape = any>(
@@ -218,7 +225,7 @@ export interface ActionRunner {
     isBulkAction: true,
     variables: VariablesOptions,
     options?: BaseFindOptions | null,
-    namespace?: string | null
+    namespace?: string | string[] | null
   ): Promise<Shape extends void ? void : GadgetRecord<Shape>[]>;
 
   (
@@ -230,7 +237,7 @@ export interface ActionRunner {
     isBulkAction: true,
     variables: VariablesOptions,
     options?: BaseFindOptions | null,
-    namespace?: string | null,
+    namespace?: string | string[] | null,
     hasReturnType?: true
   ): Promise<any[]>;
 
@@ -243,7 +250,7 @@ export interface ActionRunner {
     isBulkAction: true,
     variables: VariablesOptions,
     options?: BaseFindOptions | null,
-    namespace?: string | null,
+    namespace?: string | string[] | null,
     hasReturnType?: false
   ): Promise<Shape extends void ? void : GadgetRecord<Shape>[]>;
 }
@@ -257,7 +264,7 @@ export const actionRunner: ActionRunner = async <Shape extends RecordShape = any
   isBulkAction: boolean,
   variables: VariablesOptions,
   options?: BaseFindOptions | null,
-  namespace?: string | null,
+  namespace?: string | string[] | null,
   hasReturnType?: boolean | null
 ) => {
   const plan = actionOperation(
@@ -272,11 +279,10 @@ export const actionRunner: ActionRunner = async <Shape extends RecordShape = any
     hasReturnType
   );
   const response = await modelManager.connection.currentClient.mutation(plan.query, plan.variables).toPromise();
+  const dataPath = namespaceDataPath([operation], namespace);
 
   // pass bulk responses through without any assertions since we can have a success: false response but still want
   // to process it in a similar fashion since some of the records could have been processed
-  const dataPath = namespace ? [namespace, operation] : [operation];
-
   if (!isBulkAction) {
     const mutationTriple = assertMutationSuccess(response, dataPath);
 
@@ -317,11 +323,11 @@ export const globalActionRunner = async (
   connection: GadgetConnection,
   operation: string,
   variables: VariablesOptions,
-  namespace?: string | null
+  namespace?: string | string[] | null
 ) => {
   const plan = globalActionOperation(operation, variables, namespace);
   const response = await connection.currentClient.mutation(plan.query, plan.variables).toPromise();
-  const dataPath = namespace ? [namespace, operation] : [operation];
+  const dataPath = namespaceDataPath([operation], namespace);
   return assertMutationSuccess(response, dataPath).result;
 };
 
@@ -350,10 +356,7 @@ export async function enqueueActionRunner<Action extends AnyActionFunction>(
 
   const plan = enqueueActionOperation(action.operationName, variableOptions, action.namespace, options, action.isBulk);
   const response = await connection.currentClient.mutation(plan.query, plan.variables, options).toPromise();
-  const dataPath = ["background", action.operationName];
-  if (action.namespace) {
-    dataPath.unshift(action.namespace);
-  }
+  const dataPath = ["background", ...namespaceDataPath([action.operationName], action.namespace)];
 
   try {
     const result = assertMutationSuccess(response, dataPath);

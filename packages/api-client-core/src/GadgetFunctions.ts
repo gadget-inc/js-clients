@@ -15,6 +15,7 @@ export interface FindOneFunction<OptionsT, SelectionT, SchemaT, DefaultsT> {
   operationName: string;
   modelApiIdentifier: string;
   defaultSelection: DefaultsT;
+  namespace?: string | string[] | null;
   selectionType: SelectionT;
   optionsType: OptionsT;
   schemaType: SchemaT | null;
@@ -28,6 +29,7 @@ export interface MaybeFindOneFunction<OptionsT, SelectionT, SchemaT, DefaultsT> 
   operationName: string;
   modelApiIdentifier: string;
   defaultSelection: DefaultsT;
+  namespace?: string | string[] | null;
   selectionType: SelectionT;
   optionsType: OptionsT;
   schemaType: SchemaT | null;
@@ -40,6 +42,7 @@ export interface FindManyFunction<OptionsT, SelectionT, SchemaT, DefaultsT> {
   operationName: string;
   modelApiIdentifier: string;
   defaultSelection: DefaultsT;
+  namespace?: string | string[] | null;
   selectionType: SelectionT;
   optionsType: OptionsT;
   schemaType: SchemaT | null;
@@ -52,6 +55,7 @@ export interface FindFirstFunction<OptionsT, SelectionT, SchemaT, DefaultsT> {
   operationName: string;
   modelApiIdentifier: string;
   defaultSelection: DefaultsT;
+  namespace?: string | string[] | null;
   selectionType: SelectionT;
   optionsType: OptionsT;
   schemaType: SchemaT | null;
@@ -64,6 +68,7 @@ export interface MaybeFindFirstFunction<OptionsT, SelectionT, SchemaT, DefaultsT
   operationName: string;
   modelApiIdentifier: string;
   defaultSelection: DefaultsT;
+  namespace?: string | string[] | null;
   selectionType: SelectionT;
   optionsType: OptionsT;
   schemaType: SchemaT | null;
@@ -98,7 +103,7 @@ interface BulkActionWithInputs<OptionsT, VariablesT> {
 export interface ActionFunctionMetadata<OptionsT, VariablesT, SelectionT, SchemaT, DefaultsT, IsBulk> {
   type: "action";
   operationName: string;
-  namespace: string | null;
+  namespace: string | string[] | null;
   modelApiIdentifier: string;
   modelSelectionField: string;
   defaultSelection: DefaultsT;
@@ -149,6 +154,7 @@ export interface GetFunction<OptionsT, SelectionT, SchemaT, DefaultsT> {
   operationName: string;
   modelApiIdentifier: string;
   defaultSelection: DefaultsT;
+  namespace?: string | string[] | null;
   selectionType: SelectionT;
   optionsType: OptionsT;
   schemaType: SchemaT | null;
@@ -159,7 +165,7 @@ export interface GlobalActionFunction<VariablesT> {
 
   type: "globalAction";
   operationName: string;
-  namespace: string | null;
+  namespace: string | string[] | null;
   variables: VariablesOptions;
   variablesType: VariablesT;
   isBulk?: undefined;
