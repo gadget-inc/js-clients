@@ -9,7 +9,7 @@ import { GadgetRecordList } from "./GadgetRecordList.js";
 import type { AnyModelManager } from "./ModelManager.js";
 import {
   actionOperation,
-  actionResultOperation,
+  backgroundActionResultOperation,
   enqueueActionOperation,
   findManyOperation,
   findOneByFieldOperation,
@@ -296,13 +296,13 @@ export async function enqueueActionRunner<Action extends AnyActionFunction>(
   }
 }
 
-export const actionResultRunner = async <Action extends AnyActionFunction, Options extends ActionFunctionOptions<Action>>(
+export const backgroundActionResultRunner = async <Action extends AnyActionFunction, Options extends ActionFunctionOptions<Action>>(
   connection: GadgetConnection,
   id: string,
   action: Action,
   options?: Options
 ): Promise<BackgroundActionResult> => {
-  const plan = actionResultOperation(id, action, options);
+  const plan = backgroundActionResultOperation(id, action, options);
   const subscription = connection.currentClient.subscription(plan.query, plan.variables);
 
   const response = await pipe(
@@ -335,3 +335,6 @@ export const actionResultRunner = async <Action extends AnyActionFunction, Optio
 
   return backgroundAction;
 };
+
+/** @deprecated previous export name, @see backgroundActionResultRunner */
+export const actionResultRunner = backgroundActionResultRunner;

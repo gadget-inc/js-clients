@@ -2,7 +2,7 @@ import { CombinedError } from "@urql/core";
 import nock from "nock";
 import { BackgroundActionHandle } from "../src/BackgroundActionHandle.js";
 import type { GadgetErrorGroup } from "../src/index.js";
-import { GadgetConnection, actionResultRunner, actionRunner, enqueueActionRunner } from "../src/index.js";
+import { GadgetConnection, actionRunner, backgroundActionResultRunner, enqueueActionRunner } from "../src/index.js";
 import { MockBulkFlipDownWidgetsAction, MockBulkUpdateWidgetAction, MockGlobalAction, MockWidgetCreateAction } from "./mockActions.js";
 import { mockUrqlClient } from "./mockUrqlClient.js";
 
@@ -830,7 +830,7 @@ describe("operationRunners", () => {
   describe("actionResultRunner", () => {
     describe("action", () => {
       test("waits for background action with a completed result", async () => {
-        const promise = actionResultRunner(connection, "app-job-123456", MockWidgetCreateAction);
+        const promise = backgroundActionResultRunner(connection, "app-job-123456", MockWidgetCreateAction);
 
         expect(mockUrqlClient.executeSubscription.mock.calls.length).toEqual(1);
         expect(mockUrqlClient.executeSubscription.mock.calls[0][0].variables).toEqual({
@@ -876,7 +876,7 @@ describe("operationRunners", () => {
       });
 
       test("waits for background action with failed result", async () => {
-        const promise = actionResultRunner(connection, "app-job-123456", MockWidgetCreateAction);
+        const promise = backgroundActionResultRunner(connection, "app-job-123456", MockWidgetCreateAction);
 
         expect(mockUrqlClient.executeSubscription.mock.calls.length).toEqual(1);
         expect(mockUrqlClient.executeSubscription.mock.calls[0][0].variables).toEqual({
@@ -922,7 +922,7 @@ describe("operationRunners", () => {
 
     describe("globalAction", () => {
       test("waits for completed background action response", async () => {
-        const promise = actionResultRunner(connection, "app-job-123456", MockGlobalAction, {});
+        const promise = backgroundActionResultRunner(connection, "app-job-123456", MockGlobalAction, {});
 
         expect(mockUrqlClient.executeSubscription.mock.calls.length).toEqual(1);
         expect(mockUrqlClient.executeSubscription.mock.calls[0][0].variables).toEqual({
@@ -963,7 +963,7 @@ describe("operationRunners", () => {
       });
 
       test("waits for failed background action response", async () => {
-        const promise = actionResultRunner(connection, "app-job-123456", MockGlobalAction, {});
+        const promise = backgroundActionResultRunner(connection, "app-job-123456", MockGlobalAction, {});
 
         expect(mockUrqlClient.executeSubscription.mock.calls.length).toEqual(1);
         expect(mockUrqlClient.executeSubscription.mock.calls[0][0].variables).toEqual({
@@ -1009,7 +1009,7 @@ describe("operationRunners", () => {
 
     describe("bulk action", () => {
       test("waits for a background bulk action element with a completed result", async () => {
-        const promise = actionResultRunner(connection, "app-job-123456", MockBulkUpdateWidgetAction);
+        const promise = backgroundActionResultRunner(connection, "app-job-123456", MockBulkUpdateWidgetAction);
 
         expect(mockUrqlClient.executeSubscription.mock.calls.length).toEqual(1);
         expect(mockUrqlClient.executeSubscription.mock.calls[0][0].variables).toEqual({
@@ -1056,7 +1056,7 @@ describe("operationRunners", () => {
     });
 
     test("permission error", async () => {
-      const promise = actionResultRunner(connection, "app-job-123456", MockWidgetCreateAction);
+      const promise = backgroundActionResultRunner(connection, "app-job-123456", MockWidgetCreateAction);
 
       expect(mockUrqlClient.executeSubscription.mock.calls.length).toEqual(1);
       expect(mockUrqlClient.executeSubscription.mock.calls[0][0].variables).toEqual({

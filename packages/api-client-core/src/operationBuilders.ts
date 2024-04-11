@@ -161,7 +161,7 @@ export const actionOperation = (
   return compileWithVariableValues(actionOperation);
 };
 
-export const actionResultOperation = <Action extends AnyActionFunction, Options extends ActionFunctionOptions<Action>>(
+export const backgroundActionResultOperation = <Action extends AnyActionFunction, Options extends ActionFunctionOptions<Action>>(
   id: string,
   action: Action,
   options?: Options
@@ -209,6 +209,9 @@ export const actionResultOperation = <Action extends AnyActionFunction, Options 
 
   return compileWithVariableValues(actionResultOperation);
 };
+
+/** @deprecated previous export name, @see backgroundActionResultOperation */
+export const actionResultOperation = backgroundActionResultOperation;
 
 const globalActionFieldSelection = () => {
   return {

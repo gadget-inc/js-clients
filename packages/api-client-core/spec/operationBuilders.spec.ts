@@ -1,6 +1,6 @@
 import {
   actionOperation,
-  actionResultOperation,
+  backgroundActionResultOperation,
   enqueueActionOperation,
   findManyOperation,
   findOneByFieldOperation,
@@ -690,9 +690,9 @@ describe("operation builders", () => {
     });
   });
 
-  describe("actionResultOperation", () => {
+  describe("backgroundActionResultOperation", () => {
     test("builds query for action", async () => {
-      expect(actionResultOperation("app-job-1234567", MockWidgetCreateAction, { select: { id: true } })).toMatchInlineSnapshot(`
+      expect(backgroundActionResultOperation("app-job-1234567", MockWidgetCreateAction, { select: { id: true } })).toMatchInlineSnapshot(`
         {
           "query": "subscription CreateWidgetBackgroundResult($id: String!) {
           backgroundAction(id: $id) {
@@ -727,7 +727,7 @@ describe("operation builders", () => {
     });
 
     test("builds query for globalAction", async () => {
-      expect(actionResultOperation("app-job-1234567", MockGlobalAction)).toMatchInlineSnapshot(`
+      expect(backgroundActionResultOperation("app-job-1234567", MockGlobalAction)).toMatchInlineSnapshot(`
         {
           "query": "subscription FlipAllWidgetsBackgroundResult($id: String!) {
           backgroundAction(id: $id) {
@@ -759,7 +759,8 @@ describe("operation builders", () => {
     });
 
     test("builds query for one result of a bulk action", async () => {
-      expect(actionResultOperation("app-job-1234567", MockBulkUpdateWidgetAction, { select: { id: true } })).toMatchInlineSnapshot(`
+      expect(backgroundActionResultOperation("app-job-1234567", MockBulkUpdateWidgetAction, { select: { id: true } }))
+        .toMatchInlineSnapshot(`
         {
           "query": "subscription UpdateWidgetBackgroundResult($id: String!) {
           backgroundAction(id: $id) {
