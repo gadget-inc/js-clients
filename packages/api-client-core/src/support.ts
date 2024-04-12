@@ -282,8 +282,16 @@ export const camelize = (term: string, uppercaseFirstLetter = true) => {
   return result;
 };
 
-export const sortTypeName = (modelApiIdentifier: string) => `${camelize(modelApiIdentifier)}Sort`;
-export const filterTypeName = (modelApiIdentifier: string) => `${camelize(modelApiIdentifier)}Filter`;
+export const combineNamespacesAndApiIdentifier = (givenNamespaces: string[] | string | null | undefined, apiIdentifier: string) => {
+  const namespaces: string[] = Array.isArray(givenNamespaces) ? givenNamespaces : givenNamespaces ? [givenNamespaces] : [];
+  const combinedNamespaces = namespaces.map((segment, index) => (index === 0 ? segment : camelize(segment))).join("");
+  return namespaces.length > 0 ? `${combinedNamespaces}${camelize(apiIdentifier)}` : apiIdentifier;
+};
+
+export const sortTypeName = (modelApiIdentifier: string, namespace: string | string[] | null | undefined) =>
+  `${camelize(combineNamespacesAndApiIdentifier(namespace, modelApiIdentifier))}Sort`;
+export const filterTypeName = (modelApiIdentifier: string, namespace: string | string[] | null | undefined) =>
+  `${camelize(combineNamespacesAndApiIdentifier(namespace, modelApiIdentifier))}Filter`;
 
 export const getNonUniqueDataError = (modelApiIdentifier: string, fieldName: string, fieldValue: string) =>
   new GadgetNonUniqueDataError(

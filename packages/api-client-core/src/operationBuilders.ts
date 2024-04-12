@@ -101,8 +101,8 @@ export const findManyOperation = (
         first: Var({ value: options?.first, type: "Int" }),
         before: Var({ value: options?.before, type: "String" }),
         last: Var({ value: options?.last, type: "Int" }),
-        sort: options?.sort ? Var({ value: options.sort, type: `[${sortTypeName(modelApiIdentifier)}!]` }) : undefined,
-        filter: options?.filter ? Var({ value: options.filter, type: `[${filterTypeName(modelApiIdentifier)}!]` }) : undefined,
+        sort: options?.sort ? Var({ value: options.sort, type: `[${sortTypeName(modelApiIdentifier, namespace)}!]` }) : undefined,
+        filter: options?.filter ? Var({ value: options.filter, type: `[${filterTypeName(modelApiIdentifier, namespace)}!]` }) : undefined,
         search: options?.search ? Var({ value: options.search, type: "String" }) : undefined,
       },
       {

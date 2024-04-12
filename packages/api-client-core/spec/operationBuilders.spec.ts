@@ -292,13 +292,20 @@ describe("operation builders", () => {
     });
 
     test("findManyOperation should build a findMany query for a namespaced model", () => {
-      expect(findManyOperation("widgets", { __typename: true, id: true, state: true }, "widget", undefined, ["outer", "inner"]))
-        .toMatchInlineSnapshot(`
+      expect(
+        findManyOperation(
+          "widgets",
+          { __typename: true, id: true, state: true },
+          "widget",
+          { sort: [{ id: "Ascending" }], filter: [{ foo: { equals: "bar" } }] },
+          ["outer", "inner"]
+        )
+      ).toMatchInlineSnapshot(`
         {
-          "query": "query widgets($after: String, $first: Int, $before: String, $last: Int) {
+          "query": "query widgets($after: String, $first: Int, $before: String, $last: Int, $sort: [OuterInnerWidgetSort!], $filter: [OuterInnerWidgetFilter!]) {
           outer {
             inner {
-              widgets(after: $after, first: $first, before: $before, last: $last) {
+              widgets(after: $after, first: $first, before: $before, last: $last, sort: $sort, filter: $filter) {
                 pageInfo {
                   hasNextPage
                   hasPreviousPage
@@ -320,7 +327,20 @@ describe("operation builders", () => {
             hydrations(modelName: "widget")
           }
         }",
-          "variables": {},
+          "variables": {
+            "filter": [
+              {
+                "foo": {
+                  "equals": "bar",
+                },
+              },
+            ],
+            "sort": [
+              {
+                "id": "Ascending",
+              },
+            ],
+          },
         }
       `);
     });
@@ -448,7 +468,7 @@ describe("operation builders", () => {
         )
       ).toMatchInlineSnapshot(`
         {
-          "query": "query widget($after: String, $first: Int, $before: String, $last: Int, $filter: [WidgetFilter!]) {
+          "query": "query widget($after: String, $first: Int, $before: String, $last: Int, $filter: [OuterInnerWidgetFilter!]) {
           outer {
             inner {
               widget(after: $after, first: $first, before: $before, last: $last, filter: $filter) {

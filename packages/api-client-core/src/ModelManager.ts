@@ -10,7 +10,7 @@ export type AnyModelFinderMetadata = {
   /** What fields to select from the GraphQL API if no explicit selection is passed */
   defaultSelection: Record<string, any>;
   /** A namespace this operation is nested in. Absent for old clients or root-namespaced operations */
-  namespace?: string[];
+  namespace?: string | string[] | null;
   /** Type-time only type member used for strong typing of finders  */
   selectionType: any;
   /** Type-time only type member used for strong typing of finders  */
