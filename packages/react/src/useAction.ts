@@ -1,5 +1,12 @@
 import type { ActionFunction, DefaultSelection, GadgetRecord, LimitToKnownKeys, Select } from "@gadgetinc/api-client-core";
-import { actionOperation, capitalizeIdentifier, disambiguateActionVariables, get, hydrateRecord } from "@gadgetinc/api-client-core";
+import {
+  actionOperation,
+  capitalizeIdentifier,
+  disambiguateActionVariables,
+  get,
+  hydrateRecord,
+  namespaceDataPath,
+} from "@gadgetinc/api-client-core";
 import { useCallback, useContext, useMemo } from "react";
 import type { AnyVariables, OperationContext, UseMutationState } from "urql";
 import { GadgetUrqlClientContext } from "./GadgetProvider.js";
@@ -104,10 +111,7 @@ const processResult = <Data, Variables extends AnyVariables>(
   let error = ErrorWrapper.forMaybeCombinedError(result.error);
   let data = null;
   if (result.data) {
-    const dataPath = [action.operationName];
-    if (action.namespace) {
-      dataPath.unshift(action.namespace);
-    }
+    const dataPath = namespaceDataPath([action.operationName], action.namespace);
 
     const mutationData = get(result.data, dataPath);
     if (mutationData) {

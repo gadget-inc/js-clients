@@ -5,6 +5,7 @@ import {
   disambiguateBulkActionVariables,
   get,
   hydrateRecordArray,
+  namespaceDataPath,
 } from "@gadgetinc/api-client-core";
 import { useCallback, useMemo } from "react";
 import type { OperationContext, UseMutationState } from "urql";
@@ -104,10 +105,7 @@ const processResult = (result: UseMutationState<any, any>, action: BulkActionFun
   if (result.data && !error) {
     // TODO deal with deletion better than checking selectionType
     if (action.defaultSelection != null) {
-      const dataPath = [action.operationName];
-      if (action.namespace) {
-        dataPath.unshift(action.namespace);
-      }
+      const dataPath = namespaceDataPath([action.operationName], action.namespace);
       const mutationData = get(result.data, dataPath);
       if (mutationData) {
         const errors = mutationData["errors"];

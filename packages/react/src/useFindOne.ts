@@ -1,5 +1,5 @@
 import type { DefaultSelection, FindOneFunction, GadgetRecord, LimitToKnownKeys, Select } from "@gadgetinc/api-client-core";
-import { findOneOperation, get, hydrateRecord } from "@gadgetinc/api-client-core";
+import { findOneOperation, get, hydrateRecord, namespaceDataPath } from "@gadgetinc/api-client-core";
 import { useMemo } from "react";
 import { useGadgetQuery } from "./useGadgetQuery.js";
 import { useStructuralMemo } from "./useStructuralMemo.js";
@@ -56,7 +56,7 @@ export const useFindOne = <
   const [rawResult, refresh] = useGadgetQuery(useQueryArgs(plan, options));
 
   const result = useMemo(() => {
-    const dataPath = [manager.findOne.operationName];
+    const dataPath = namespaceDataPath([manager.findOne.operationName], manager.findOne.namespace);
 
     let data = rawResult.data && get(rawResult.data, dataPath);
     if (data) {

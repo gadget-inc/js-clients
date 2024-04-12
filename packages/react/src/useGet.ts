@@ -1,5 +1,5 @@
 import type { DefaultSelection, GadgetRecord, GetFunction, LimitToKnownKeys, Select } from "@gadgetinc/api-client-core";
-import { findOneOperation, get, hydrateRecord } from "@gadgetinc/api-client-core";
+import { findOneOperation, get, hydrateRecord, namespaceDataPath } from "@gadgetinc/api-client-core";
 import { useMemo } from "react";
 import { useGadgetQuery } from "./useGadgetQuery.js";
 import { useStructuralMemo } from "./useStructuralMemo.js";
@@ -53,10 +53,11 @@ export const useGet = <
   }, [manager, memoizedOptions]);
 
   const [rawResult, refresh] = useGadgetQuery(useQueryArgs(plan, options));
+  const dataPath = namespaceDataPath([manager.get.operationName], manager.get.namespace);
 
   const result = useMemo(() => {
     let data = null;
-    const rawRecord = rawResult.data && get(rawResult.data, [manager.get.operationName]);
+    const rawRecord = rawResult.data && get(rawResult.data, dataPath);
     if (rawRecord) {
       data = hydrateRecord(rawResult, rawRecord);
     }

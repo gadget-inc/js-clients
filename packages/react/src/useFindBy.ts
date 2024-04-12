@@ -1,5 +1,12 @@
 import type { DefaultSelection, FindOneFunction, GadgetRecord, LimitToKnownKeys, Select } from "@gadgetinc/api-client-core";
-import { GadgetNotFoundError, findOneByFieldOperation, get, getNonUniqueDataError, hydrateConnection } from "@gadgetinc/api-client-core";
+import {
+  GadgetNotFoundError,
+  findOneByFieldOperation,
+  get,
+  getNonUniqueDataError,
+  hydrateConnection,
+  namespaceDataPath,
+} from "@gadgetinc/api-client-core";
 import { useMemo } from "react";
 import { useGadgetQuery } from "./useGadgetQuery.js";
 import { useStructuralMemo } from "./useStructuralMemo.js";
@@ -56,7 +63,7 @@ export const useFindBy = <
   const [rawResult, refresh] = useGadgetQuery(useQueryArgs(plan, options));
 
   const result = useMemo(() => {
-    const dataPath = [finder.operationName];
+    const dataPath = namespaceDataPath([finder.operationName], finder.namespace);
 
     let data = rawResult.data;
     let records = [];

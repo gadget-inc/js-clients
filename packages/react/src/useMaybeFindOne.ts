@@ -1,5 +1,5 @@
 import type { DefaultSelection, FindOneFunction, GadgetRecord, LimitToKnownKeys, Select } from "@gadgetinc/api-client-core";
-import { findOneOperation, get, hydrateRecord } from "@gadgetinc/api-client-core";
+import { findOneOperation, get, hydrateRecord, namespaceDataPath } from "@gadgetinc/api-client-core";
 import { useMemo } from "react";
 import { useGadgetQuery } from "./useGadgetQuery.js";
 import { useStructuralMemo } from "./useStructuralMemo.js";
@@ -58,7 +58,8 @@ export const useMaybeFindOne = <
   const result = useMemo(() => {
     let data = rawResult.data ?? null;
     if (data) {
-      const value = get(rawResult.data, [manager.findOne.operationName]);
+      const dataPath = namespaceDataPath([manager.findOne.operationName], manager.findOne.namespace);
+      const value = get(rawResult.data, dataPath);
       data = value && "id" in value ? hydrateRecord(rawResult, value) : null;
     }
     const error = ErrorWrapper.forMaybeCombinedError(rawResult.error);

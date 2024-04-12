@@ -11,6 +11,7 @@ import {
   enqueueActionOperation,
   get,
   graphqlizeBackgroundOptions,
+  namespaceDataPath,
 } from "@gadgetinc/api-client-core";
 import { useCallback, useContext, useMemo } from "react";
 import type { UseMutationState } from "urql";
@@ -97,10 +98,7 @@ const processResult = <Action extends AnyActionFunction>(
   const isBulk = action.isBulk;
 
   if (data) {
-    const dataPath = ["background", action.operationName];
-    if (action.namespace) {
-      dataPath.unshift(action.namespace);
-    }
+    const dataPath = ["background", ...namespaceDataPath([action.operationName], action.namespace)];
 
     const mutationData = get(data, dataPath);
     if (mutationData) {
