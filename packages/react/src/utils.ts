@@ -8,7 +8,7 @@ import type {
 } from "@gadgetinc/api-client-core";
 import { gadgetErrorFor, getNonNullableError } from "@gadgetinc/api-client-core";
 import type { BackgroundActionHandle } from "@gadgetinc/api-client-core/dist/cjs/BackgroundActionHandle.js";
-import { AnyBulkActionFunction } from "@gadgetinc/api-client-core/src/GadgetFunctions.js";
+import type { AnyBulkActionFunction } from "@gadgetinc/api-client-core/src/GadgetFunctions.js";
 import type { CombinedError, RequestPolicy } from "@urql/core";
 import { GraphQLError } from "graphql";
 import { useMemo } from "react";
