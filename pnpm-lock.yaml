@@ -177,8 +177,8 @@ importers:
         version: 18.2.0(react@18.2.0)
     devDependencies:
       '@types/react':
-        specifier: ^18.2.9
-        version: 18.2.9
+        specifier: ^18.2.77
+        version: 18.2.77
       '@types/react-dom':
         specifier: ^18.2.4
         version: 18.2.4
@@ -247,8 +247,8 @@ importers:
         specifier: ^18.0.0
         version: 18.11.18
       '@types/react':
-        specifier: ^18.2.9
-        version: 18.2.9
+        specifier: ^18.2.77
+        version: 18.2.77
       '@types/react-dom':
         specifier: ^18.2.4
         version: 18.2.4
@@ -308,8 +308,8 @@ importers:
         specifier: ^16.11.7
         version: 16.11.7
       '@types/react':
-        specifier: ^18.2.9
-        version: 18.2.9
+        specifier: ^18.2.77
+        version: 18.2.77
       '@types/react-dom':
         specifier: ^18.2.4
         version: 18.2.4
@@ -2443,19 +2443,14 @@ packages:
   /@types/react-dom@18.2.4:
     resolution: {integrity: sha512-G2mHoTMTL4yoydITgOGwWdWMVd8sNgyEP85xVmMKAPUBwQWm9wBPQUmvbeF4V3WBY1P7mmL4BkjQ0SqUpf1snw==}
     dependencies:
-      '@types/react': 18.2.9
+      '@types/react': 18.2.77
     dev: true
 
-  /@types/react@18.2.9:
-    resolution: {integrity: sha512-pL3JAesUkF7PEQGxh5XOwdXGV907te6m1/Qe1ERJLgomojS6Ne790QiA7GUl434JEkFA2aAaB6qJ5z4e1zJn/w==}
+  /@types/react@18.2.77:
+    resolution: {integrity: sha512-CUT9KUUF+HytDM7WiXKLF9qUSg4tGImwy4FXTlfEDPEkkNUzJ7rVFolYweJ9fS1ljoIaP7M7Rdjc5eUm/Yu5AA==}
     dependencies:
       '@types/prop-types': 15.7.5
-      '@types/scheduler': 0.16.2
       csstype: 3.1.0
-    dev: true
-
-  /@types/scheduler@0.16.2:
-    resolution: {integrity: sha512-hppQEBDmlwhFAXKJX2KnWLYu5yMfi91yazPb2l+lbJiwW+wdo1gNeRA+3RgNSO39WYX2euey41KEwnqesU2Jew==}
     dev: true
 
   /@types/semver@7.3.13:
