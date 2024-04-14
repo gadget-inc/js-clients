@@ -44,6 +44,12 @@ describe("useGadget", () => {
         embedded: false,
         mobile: false,
       },
+      config: {
+        apiKey: mockApiKey,
+        shop: "example.myshopify.com",
+        locale: "en",
+      },
+      idToken: () => Promise.resolve("mock-id-token"),
     };
 
     useAppBridgeMock = jest.spyOn(AppBridgeReact, "useAppBridge").mockImplementation(() => window.shopify);
