@@ -44,6 +44,12 @@ describe("useGadget", () => {
         embedded: false,
         mobile: false,
       },
+      config: {
+        apiKey: mockApiKey,
+        shop: "example.myshopify.com",
+        locale: "en",
+      },
+      idToken: () => Promise.resolve("mock-id-token"),
     };
 
     useAppBridgeMock = jest.spyOn(AppBridgeReact, "useAppBridge").mockImplementation(() => window.shopify);
@@ -81,7 +87,7 @@ describe("useGadget", () => {
     window.shopify.environment.mobile = false;
   });
 
-  test("has correct authenticated value", () => {
+  test("has correct authenticated value", async () => {
     let { result } = renderHook(() => useGadget(), {
       wrapper: (props: { children: ReactNode }) => (
         <Provider api={mockApiClient} shopifyApiKey={mockApiKey} type={AppType.Embedded}>
@@ -90,10 +96,15 @@ describe("useGadget", () => {
       ),
     });
 
-    mockUrqlClient.executeQuery.pushResponse("GetSessionForShopifyApp", {
+    await mockUrqlClient.executeMutation.waitForSubject("ShopifyFetchOrInstallShop");
+
+    mockUrqlClient.executeMutation.pushResponse("ShopifyFetchOrInstallShop", {
       data: {
-        currentSession: {
-          shop: null,
+        shopifyConnection: {
+          fetchOrInstallShop: {
+            isAuthenticated: false,
+            redirectToOauth: true,
+          },
         },
       },
       stale: false,
@@ -110,11 +121,14 @@ describe("useGadget", () => {
       ),
     }));
 
-    mockUrqlClient.executeQuery.pushResponse("GetSessionForShopifyApp", {
+    await mockUrqlClient.executeMutation.waitForSubject("ShopifyFetchOrInstallShop");
+
+    mockUrqlClient.executeMutation.pushResponse("ShopifyFetchOrInstallShop", {
       data: {
-        currentSession: {
-          shop: {
-            id: "123",
+        shopifyConnection: {
+          fetchOrInstallShop: {
+            isAuthenticated: true,
+            redirectToOauth: false,
           },
         },
       },

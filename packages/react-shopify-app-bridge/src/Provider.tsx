@@ -1,8 +1,8 @@
 import type { AnyClient } from "@gadgetinc/api-client-core";
-import { Provider as GadgetUrqlProvider, useQuery } from "@gadgetinc/react";
+import { Provider as GadgetUrqlProvider, useMutation } from "@gadgetinc/react";
 import { useAppBridge } from "@shopify/app-bridge-react";
 import type { ReactNode } from "react";
-import React, { memo, useEffect, useMemo, useState } from "react";
+import React, { memo, useEffect, useMemo, useRef, useState } from "react";
 import type { GadgetAuthContextValue } from "./index.js";
 import { GadgetAuthContext } from "./index.js";
 
@@ -23,16 +23,14 @@ type GadgetProviderProps = {
   isRootFrameRequest: boolean;
 };
 
-const GetCurrentSessionQuery = `
-  query GetSessionForShopifyApp {
-    currentSession {
-      id
-      shop {
-        id
-      }
-    }
+const FetchOrInstallShopMutation = `
+  mutation ShopifyFetchOrInstallShop($shopifySessionToken: String!) {
     shopifyConnection {
-      requiresReauthentication
+      fetchOrInstallShop(shopifySessionToken: $shopifySessionToken) {
+        isAuthenticated
+        redirectToOauth
+        missingScopes
+      }
     }
   }
 `;
@@ -59,8 +57,17 @@ const InnerGadgetProvider = memo(
       isRootFrameRequest: false,
     });
 
+    const [idToken, setIdToken] = useState<string | null>(null);
+    const [idTokenError, setIdTokenError] = useState<Error | undefined>();
+
     useEffect(() => {
-      if (!appBridge) {
+      if (!appBridge) return;
+
+      appBridge.idToken().then(setIdToken).catch(setIdTokenError);
+    }, [appBridge]);
+
+    useEffect(() => {
+      if (!idToken) {
         console.debug("[gadget-rsab] no app bridge, skipping client auth setup");
         return;
       }
@@ -69,45 +76,53 @@ const InnerGadgetProvider = memo(
         custom: {
           async processFetch(_input, init) {
             const headers = new Headers(init.headers);
-            headers.append("Authorization", `ShopifySessionToken ${await appBridge.idToken()}`);
+            headers.append("Authorization", `ShopifySessionToken ${idToken}`);
             init.headers ??= {};
             headers.forEach(function (value, key) {
               (init.headers as Record<string, string>)[key] = value;
             });
           },
           async processTransactionConnectionParams(params) {
-            params.auth.shopifySessionToken = await appBridge.idToken();
+            params.auth.shopifySessionToken = idToken;
           },
         },
       });
 
       console.debug("[gadget-rsab] set up client auth for session tokens");
-    }, [api.connection, appBridge]);
+    }, [api.connection, idToken]);
 
-    let runningShopifyAuth = false;
+    let redirectToOauth = false;
     let isAuthenticated = false;
+    let missingScopes: string[] = [];
+    const hasFetchedOrInstalledShop = useRef(false);
 
-    // always run one session fetch to the gadget backend on boot to discover if this app is installed
-    const [{ data: currentSessionData, fetching: sessionFetching, error }] = useQuery({
-      query: GetCurrentSessionQuery,
-    });
+    const [{ data: fetchOrInstallShopData, fetching: fetchingOrInstallingShop, error: fetchingOrInstallingShopError }, fetchOrInstallShop] =
+      useMutation<{
+        shopifyConnection: { fetchOrInstallShop: { redirectToOauth: boolean; isAuthenticated: boolean; missingScopes: string[] } };
+      }>(FetchOrInstallShopMutation);
 
-    if (currentSessionData) {
-      runningShopifyAuth = currentSessionData.shopifyConnection?.requiresReauthentication;
-
-      if (currentSessionData.currentSession) {
-        if (!currentSessionData.currentSession.shop) {
-          runningShopifyAuth = true;
-        } else {
-          // we may be missing scopes, if so, we aren't fully authenticated
-          isAuthenticated = !currentSessionData.shopifyConnection?.requiresReauthentication;
-        }
-      }
+    if (fetchOrInstallShopData) {
+      console.debug({ fetchOrInstallShopData }, "[gadget-rsab] fetched or installed shop data");
+      redirectToOauth = fetchOrInstallShopData.shopifyConnection.fetchOrInstallShop.redirectToOauth;
+      isAuthenticated = fetchOrInstallShopData.shopifyConnection.fetchOrInstallShop.isAuthenticated;
+      missingScopes = fetchOrInstallShopData.shopifyConnection.fetchOrInstallShop.missingScopes ?? [];
     }
+
+    // always run one fetch to the gadget backend on boot to discover if this app is installed
+    useEffect(() => {
+      if (hasFetchedOrInstalledShop.current) return;
+      if (!idToken) return;
+
+      hasFetchedOrInstalledShop.current = true;
+
+      fetchOrInstallShop({ shopifySessionToken: idToken }).catch((err) => {
+        console.error({ err }, "[gadget-rsab] error fetching or installing shop");
+      });
+    }, [idToken, fetchOrInstallShop]);
 
     // redirect to Gadget to initiate the oauth process if we need to.
     useEffect(() => {
-      if (!runningShopifyAuth || isRootFrameRequest) return;
+      if (!redirectToOauth || isRootFrameRequest) return;
       // redirect to gadget app root pages url with oauth params
       const redirectURL = new URL("/api/connections/auth/shopify", gadgetAppUrl);
       redirectURL.search = originalQueryParams?.toString() ?? "";
@@ -123,9 +138,9 @@ const InnerGadgetProvider = memo(
 
       open(redirectURLWithOAuthParams, "_top");
       // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [gadgetAppUrl, isRootFrameRequest, originalQueryParams, runningShopifyAuth]);
+    }, [gadgetAppUrl, isRootFrameRequest, originalQueryParams, redirectToOauth]);
 
-    const loading = (forceRedirect || runningShopifyAuth || sessionFetching) && !isRootFrameRequest;
+    const loading = (forceRedirect || redirectToOauth || fetchingOrInstallingShop) && !isRootFrameRequest;
 
     useEffect(() => {
       const context = {
@@ -134,14 +149,25 @@ const InnerGadgetProvider = memo(
         canAuth: !!appBridge,
         loading,
         appBridge,
-        error,
+        error: fetchingOrInstallingShopError || idTokenError,
         isRootFrameRequest,
       };
 
       console.debug("[gadget-rsab] context changed", context);
 
       return setContext(context);
-    }, [loading, isEmbedded, appBridge, isAuthenticated, error, isRootFrameRequest]);
+    }, [loading, isEmbedded, appBridge, isAuthenticated, fetchingOrInstallingShopError, idTokenError, isRootFrameRequest]);
+
+    useEffect(() => {
+      if (missingScopes.length > 0 && !redirectToOauth) {
+        const event = new CustomEvent("gadget:devharness:rsab.shopifyManagedInstallation.missingScopes", {
+          detail: {
+            missingScopes,
+          },
+        });
+        globalThis.dispatchEvent(event);
+      }
+    }, [redirectToOauth, missingScopes]);
 
     return <GadgetAuthContext.Provider value={context}>{children}</GadgetAuthContext.Provider>;
   }

@@ -315,27 +315,27 @@ describe("useActionFormNested", () => {
       await waitFor(() => expect(useFindFirstHook.current[0].fetching).toBe(false), { timeout: 3000 });
 
       expect(useFindFirstHook.current[0].data).toMatchInlineSnapshot(`
-              {
-                "__typename": "ShopifyProduct",
-                "body": "example value for body",
-                "compareAtPriceRange": null,
-                "createdAt": "2023-12-12T16:22:25.001Z",
-                "handle": null,
-                "id": "123",
-                "productCategory": null,
-                "productType": null,
-                "publishedAt": null,
-                "publishedScope": null,
-                "shopifyCreatedAt": "2023-12-01T05:00:00.000Z",
-                "shopifyUpdatedAt": null,
-                "status": null,
-                "tags": null,
-                "templateSuffix": null,
-                "title": null,
-                "updatedAt": "2023-12-12T16:22:25.001Z",
-                "vendor": null,
-              }
-          `);
+        {
+          "__typename": "ShopifyProduct",
+          "body": "example value for body",
+          "compareAtPriceRange": null,
+          "createdAt": "2023-12-12T16:22:25.001Z",
+          "handle": null,
+          "id": "123",
+          "productCategory": null,
+          "productType": null,
+          "publishedAt": null,
+          "publishedScope": null,
+          "shopifyCreatedAt": "2023-12-01T05:00:00.000Z",
+          "shopifyUpdatedAt": null,
+          "status": null,
+          "tags": null,
+          "templateSuffix": null,
+          "title": null,
+          "updatedAt": "2023-12-12T16:22:25.001Z",
+          "vendor": null,
+        }
+      `);
 
       const productSuggestionId = useFindFirstHook?.current[0]?.data?.id;
 
@@ -398,27 +398,27 @@ describe("useActionFormNested", () => {
       await waitFor(() => expect(useFindFirstHook.current[0].fetching).toBe(false), { timeout: 3000 });
 
       expect(useFindFirstHook.current[0].data).toMatchInlineSnapshot(`
-              {
-                "__typename": "ShopifyProduct",
-                "body": "example value for body",
-                "compareAtPriceRange": null,
-                "createdAt": "2023-12-12T16:22:25.001Z",
-                "handle": null,
-                "id": "123",
-                "productCategory": null,
-                "productType": null,
-                "publishedAt": null,
-                "publishedScope": null,
-                "shopifyCreatedAt": "2023-12-01T05:00:00.000Z",
-                "shopifyUpdatedAt": null,
-                "status": null,
-                "tags": null,
-                "templateSuffix": null,
-                "title": null,
-                "updatedAt": "2023-12-12T16:22:25.001Z",
-                "vendor": null,
-              }
-          `);
+        {
+          "__typename": "ShopifyProduct",
+          "body": "example value for body",
+          "compareAtPriceRange": null,
+          "createdAt": "2023-12-12T16:22:25.001Z",
+          "handle": null,
+          "id": "123",
+          "productCategory": null,
+          "productType": null,
+          "publishedAt": null,
+          "publishedScope": null,
+          "shopifyCreatedAt": "2023-12-01T05:00:00.000Z",
+          "shopifyUpdatedAt": null,
+          "status": null,
+          "tags": null,
+          "templateSuffix": null,
+          "title": null,
+          "updatedAt": "2023-12-12T16:22:25.001Z",
+          "vendor": null,
+        }
+      `);
 
       const productSuggestionId = useFindFirstHook?.current[0]?.data?.id;
 
@@ -485,27 +485,27 @@ describe("useActionFormNested", () => {
       await waitFor(() => expect(useFindFirstHook.current[0].fetching).toBe(false), { timeout: 3000 });
 
       expect(useFindFirstHook.current[0].data).toMatchInlineSnapshot(`
-              {
-                "__typename": "ShopifyProduct",
-                "body": "example value for body",
-                "compareAtPriceRange": null,
-                "createdAt": "2023-12-12T16:22:25.001Z",
-                "handle": null,
-                "id": "123",
-                "productCategory": null,
-                "productType": null,
-                "publishedAt": null,
-                "publishedScope": null,
-                "shopifyCreatedAt": "2023-12-01T05:00:00.000Z",
-                "shopifyUpdatedAt": null,
-                "status": null,
-                "tags": null,
-                "templateSuffix": null,
-                "title": null,
-                "updatedAt": "2023-12-12T16:22:25.001Z",
-                "vendor": null,
-              }
-          `);
+        {
+          "__typename": "ShopifyProduct",
+          "body": "example value for body",
+          "compareAtPriceRange": null,
+          "createdAt": "2023-12-12T16:22:25.001Z",
+          "handle": null,
+          "id": "123",
+          "productCategory": null,
+          "productType": null,
+          "publishedAt": null,
+          "publishedScope": null,
+          "shopifyCreatedAt": "2023-12-01T05:00:00.000Z",
+          "shopifyUpdatedAt": null,
+          "status": null,
+          "tags": null,
+          "templateSuffix": null,
+          "title": null,
+          "updatedAt": "2023-12-12T16:22:25.001Z",
+          "vendor": null,
+        }
+      `);
 
       const productSuggestionId = useFindFirstHook?.current[0]?.data?.id;
 
@@ -568,27 +568,27 @@ describe("useActionFormNested", () => {
       await waitFor(() => expect(useFindFirstHook.current[0].fetching).toBe(false), { timeout: 3000 });
 
       expect(useFindFirstHook.current[0].data).toMatchInlineSnapshot(`
-              {
-                "__typename": "ShopifyProduct",
-                "body": "example value for body",
-                "compareAtPriceRange": null,
-                "createdAt": "2023-12-12T16:22:25.001Z",
-                "handle": null,
-                "id": "123",
-                "productCategory": null,
-                "productType": null,
-                "publishedAt": null,
-                "publishedScope": null,
-                "shopifyCreatedAt": "2023-12-01T05:00:00.000Z",
-                "shopifyUpdatedAt": null,
-                "status": null,
-                "tags": null,
-                "templateSuffix": null,
-                "title": null,
-                "updatedAt": "2023-12-12T16:22:25.001Z",
-                "vendor": null,
-              }
-          `);
+        {
+          "__typename": "ShopifyProduct",
+          "body": "example value for body",
+          "compareAtPriceRange": null,
+          "createdAt": "2023-12-12T16:22:25.001Z",
+          "handle": null,
+          "id": "123",
+          "productCategory": null,
+          "productType": null,
+          "publishedAt": null,
+          "publishedScope": null,
+          "shopifyCreatedAt": "2023-12-01T05:00:00.000Z",
+          "shopifyUpdatedAt": null,
+          "status": null,
+          "tags": null,
+          "templateSuffix": null,
+          "title": null,
+          "updatedAt": "2023-12-12T16:22:25.001Z",
+          "vendor": null,
+        }
+      `);
 
       const productSuggestionId = useFindFirstHook?.current[0]?.data?.id;
 
