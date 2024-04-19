@@ -48,7 +48,7 @@
     "@types/jest": "^29.5.5",
     "@types/lodash": "^4.14.191",
     "@types/node": "^18.0.0",
-    "@types/react": "^18.2.9",
+    "@types/react": "^18.2.79",
     "@types/react-dom": "^18.2.4",
     "@types/setup-polly-jest": "^0.5.5",
     "@urql/core": "^4.0.10",
