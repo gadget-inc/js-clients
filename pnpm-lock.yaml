@@ -129,6 +129,9 @@ importers:
       tslib:
         specifier: ^2.6.2
         version: 2.6.2
+      type-fest:
+        specifier: ^3.3.0
+        version: 3.3.0
       ws:
         specifier: ^8.13.0
         version: 8.13.0
@@ -154,9 +157,6 @@ importers:
       react-dom:
         specifier: ^18.2.0
         version: 18.2.0(react@18.2.0)
-      type-fest:
-        specifier: ^3.3.0
-        version: 3.3.0
       typescript:
         specifier: 5.0.4
         version: 5.0.4
@@ -7415,7 +7415,7 @@ packages:
   /type-fest@3.3.0:
     resolution: {integrity: sha512-gezeeOIZyQLGW5uuCeEnXF1aXmtt2afKspXz3YqoOcZ3l/YMJq1pujvgT+cz/Nw1O/7q/kSav5fihJHsC/AOUg==}
     engines: {node: '>=14.16'}
-    dev: true
+    dev: false
 
   /type-is@1.6.18:
     resolution: {integrity: sha512-TkRKr9sUTxEH8MdfuCSP7VizJyzRNMjj2J2do2Jr3Kym598JVdEksuzPQCnlFPW4ky9Q+iA+ma9BGm06XQBy8g==}
