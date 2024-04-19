@@ -109,8 +109,8 @@ importers:
         specifier: ^4.0.10
         version: 4.0.10(graphql@16.8.1)
       cross-fetch:
-        specifier: ^3.1.5
-        version: 3.1.5
+        specifier: ^3.1.8
+        version: 3.1.8
       graphql:
         specifier: ^16.8.1
         version: 16.8.1
@@ -317,8 +317,8 @@ importers:
         specifier: ^1.0.6
         version: 1.0.6
       cross-fetch:
-        specifier: ^3.1.5
-        version: 3.1.5
+        specifier: ^3.1.8
+        version: 3.1.8
       nock:
         specifier: ^13.2.9
         version: 13.2.9
@@ -3309,10 +3309,10 @@ packages:
       - ts-node
     dev: true
 
-  /cross-fetch@3.1.5:
-    resolution: {integrity: sha512-lvb1SBsI0Z7GDwmuid+mU3kWVBwTVUbe7S0H52yaaAdQOXq2YktTCZdlAcNKFzE6QtRz0snpw9bNiPeOIkkQvw==}
+  /cross-fetch@3.1.8:
+    resolution: {integrity: sha512-cvA+JwZoU0Xq+h6WkMvAUqPEYy92Obet6UdKLfW60qn99ftItKjB5T+BkyWOFWe2pUyfQ+IJHmpOTznqk1M6Kg==}
     dependencies:
-      node-fetch: 2.6.7
+      node-fetch: 2.7.0
     transitivePeerDependencies:
       - encoding
 
@@ -6043,8 +6043,8 @@ packages:
     engines: {node: '>=10.5.0'}
     dev: true
 
-  /node-fetch@2.6.7:
-    resolution: {integrity: sha512-ZjMPFEfVx5j+y2yF35Kzx5sF7kDzxuDj6ziH4FFbOp87zKDZNx8yExJIb05OGF4Nlt9IHFIMBkRl41VdvcNdbQ==}
+  /node-fetch@2.7.0:
+    resolution: {integrity: sha512-c4FRfUm/dbcWZ7U+1Wq0AwCyFL+3nt2bEw05wfxSz+DWpWsitgmSgYmy2dQdWyKC1694ELPqMs/YzUSNozLt8A==}
     engines: {node: 4.x || >=6.0.0}
     peerDependencies:
       encoding: ^0.1.0
