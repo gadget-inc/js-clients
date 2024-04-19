@@ -16,7 +16,7 @@
     "@gadgetinc/react": "workspace:*",
     "@gadgetinc/react-shopify-app-bridge": "workspace:*",
     "@vitejs/plugin-react-swc": "^3.3.2",
-    "vite": "^4.4.7"
+    "vite": "^4.5.3"
   },
   "devDependencies": {
     "rollup-plugin-visualizer": "^5.9.2",
