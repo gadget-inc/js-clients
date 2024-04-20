@@ -17,5 +17,5 @@ export const useGadgetQuery = <Data = any, Variables extends AnyVariables = AnyV
 ): UseQueryResponse<Data, Variables> => {
   if (!useContext(GadgetUrqlClientContext)) throw new Error(noProviderErrorMessage);
   const options = useMemoizedQueryOptions(args);
-  return useQuery(options);
+  return useQuery<Data, Variables>(options);
 };

@@ -51,6 +51,6 @@
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "tiny-graphql-query-compiler": "workspace:*",
-    "typescript": "5.0.4"
+    "typescript": "5.4.5"
   }
 }
