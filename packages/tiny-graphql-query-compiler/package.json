@@ -29,7 +29,7 @@
   "devDependencies": {
     "@testing-library/jest-dom": "^5.17.0",
     "@testing-library/react": "^13.4.0",
-    "@types/jest": "^29.5.5",
+    "@types/jest": "^29.5.12",
     "@types/prettier": "^2.7.3",
     "conditional-type-checks": "^1.0.6",
     "graphql": "16.5.0",
