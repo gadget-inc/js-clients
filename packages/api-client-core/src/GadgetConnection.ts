@@ -74,6 +74,8 @@ export enum AuthenticationMode {
   Custom = "custom",
 }
 
+const objectForGlobals = typeof globalThis != "undefined" ? globalThis : typeof window != "undefined" ? window : undefined;
+
 /**
  * Root level database connection that Actions can use to mutate data in a Gadget database.
  * Manages transactions and the connection to a Gadget API
@@ -109,11 +111,17 @@ export class GadgetConnection {
     this.endpoint = options.endpoint;
     if (options.fetchImplementation) {
       this._fetchImplementation = options.fetchImplementation;
-    } else if (typeof window != "undefined" && window.fetch) {
-      this._fetchImplementation = window.fetch.bind(window);
+    } else if (typeof objectForGlobals != "undefined" && objectForGlobals.fetch) {
+      this._fetchImplementation = objectForGlobals.fetch.bind(objectForGlobals);
     } else {
       this._fetchImplementation = async (...args: [any]) => {
-        const { fetch } = await import("cross-fetch");
+        // lazily import cross-fetch to avoid bundling it in the client
+        let fetch: typeof globalThis.fetch = (await import("cross-fetch")) as any;
+
+        // when compiled to CJS, the dynamic import above returns the default export right away. in ESM though, we need to access it ourselves
+        if ((fetch as any).default) {
+          fetch = (fetch as any).default;
+        }
         return await fetch(...args);
       };
     }
