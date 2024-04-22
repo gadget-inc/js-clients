@@ -2,7 +2,7 @@ import { CombinedError } from "@urql/core";
 import nock from "nock";
 import { BackgroundActionHandle } from "../src/BackgroundActionHandle.js";
 import type { GadgetErrorGroup } from "../src/index.js";
-import { GadgetConnection, actionRunner, backgroundActionResultRunner, enqueueActionRunner } from "../src/index.js";
+import { GadgetConnection, actionRunner, backgroundActionResultRunner, enqueueActionRunner, findOneRunner } from "../src/index.js";
 import { MockBulkFlipDownWidgetsAction, MockBulkUpdateWidgetAction, MockGlobalAction, MockWidgetCreateAction } from "./mockActions.js";
 import { mockUrqlClient } from "./mockUrqlClient.js";
 
@@ -14,6 +14,27 @@ describe("operationRunners", () => {
   beforeEach(() => {
     connection = new GadgetConnection({ endpoint: "https://someapp.gadget.app" });
     jest.spyOn(connection, "currentClient", "get").mockReturnValue(mockUrqlClient as any);
+  });
+
+  describe("findOneRunner", () => {
+    test("can execute a findOne operation against a model", async () => {
+      const promise = findOneRunner({ connection }, "widget", "123", { id: true, name: true }, "widget");
+
+      mockUrqlClient.executeQuery.pushResponse("widget", {
+        data: {
+          widget: {
+            id: "123",
+            name: "foo",
+          },
+        },
+        stale: false,
+        hasNext: false,
+      });
+
+      const result = await promise;
+      expect(result.id).toBeTruthy();
+      expect(result.name).toBeTruthy();
+    });
   });
 
   describe("actionRunner", () => {
