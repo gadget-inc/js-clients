@@ -149,8 +149,8 @@ importers:
         specifier: ^1.0.1
         version: 1.0.1
       nock:
-        specifier: ^13.3.1
-        version: 13.3.1
+        specifier: ^13.5.4
+        version: 13.5.4
       react:
         specifier: ^18.2.0
         version: 18.2.0
@@ -320,8 +320,8 @@ importers:
         specifier: ^3.1.8
         version: 3.1.8
       nock:
-        specifier: ^13.2.9
-        version: 13.2.9
+        specifier: ^13.5.4
+        version: 13.5.4
       react:
         specifier: ^18.2.0
         version: 18.2.0
@@ -1651,7 +1651,7 @@ packages:
       '@pollyjs/adapter': 6.0.6
       '@pollyjs/utils': 6.0.6
       lodash-es: 4.17.21
-      nock: 13.3.1
+      nock: 13.5.4
     transitivePeerDependencies:
       - supports-color
     dev: true
@@ -5728,25 +5728,12 @@ packages:
     engines: {node: '>=12.0.0'}
     dev: true
 
-  /nock@13.2.9:
-    resolution: {integrity: sha512-1+XfJNYF1cjGB+TKMWi29eZ0b82QOvQs2YoLNzbpWGqFMtRQHTa57osqdGj4FrFPgkO4D4AZinzUJR9VvW3QUA==}
+  /nock@13.5.4:
+    resolution: {integrity: sha512-yAyTfdeNJGGBFxWdzSKCBYxs5FxLbCg5X5Q4ets974hcQzG1+qCxvIyOo4j2Ry6MUlhWVMX4OoYDefAIIwupjw==}
     engines: {node: '>= 10.13'}
     dependencies:
       debug: 4.3.4
       json-stringify-safe: 5.0.1
-      lodash: 4.17.21
-      propagate: 2.0.1
-    transitivePeerDependencies:
-      - supports-color
-    dev: true
-
-  /nock@13.3.1:
-    resolution: {integrity: sha512-vHnopocZuI93p2ccivFyGuUfzjq2fxNyNurp7816mlT5V5HF4SzXu8lvLrVzBbNqzs+ODooZ6OksuSUNM7Njkw==}
-    engines: {node: '>= 10.13'}
-    dependencies:
-      debug: 4.3.4
-      json-stringify-safe: 5.0.1
-      lodash: 4.17.21
       propagate: 2.0.1
     transitivePeerDependencies:
       - supports-color
