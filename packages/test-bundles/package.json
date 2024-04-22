@@ -19,7 +19,7 @@
     "vite": "^4.5.3"
   },
   "devDependencies": {
-    "rollup-plugin-visualizer": "^5.9.2",
+    "rollup-plugin-visualizer": "^5.12.0",
     "rollup-plugin-webpack-stats": "^0.2.1"
   }
 }
