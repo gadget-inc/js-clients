@@ -1,2 +1,5 @@
 import { GadgetConnection } from "../../dist/esm/index.js";
-new GadgetConnection({ endpoint: "/test" });
+const connection = new GadgetConnection({ endpoint: "/test" });
+void connection.fetch("https://gadget.dev").then(() => {
+  console.log("ok");
+});

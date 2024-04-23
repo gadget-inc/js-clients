@@ -40,7 +40,6 @@
     "@types/react": "^18.2.79",
     "@types/react-dom": "^18.2.25",
     "conditional-type-checks": "^1.0.6",
-    "cross-fetch": "^3.1.8",
     "nock": "^13.5.4",
     "react": "^18.2.0",
     "react-dom": "^18.2.0"
