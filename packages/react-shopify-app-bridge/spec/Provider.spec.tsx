@@ -36,6 +36,12 @@ describe("GadgetProvider", () => {
           embedded: false,
           mobile: false,
         },
+        config: {
+          apiKey: mockApiKey,
+          shop: "example.myshopify.com",
+          locale: "en",
+        },
+        idToken: () => Promise.resolve("mock-id-token"),
       };
 
       useAppBridgeMock = jest.spyOn(AppBridgeReact, "useAppBridge").mockImplementation(() => window.shopify);
@@ -79,17 +85,22 @@ describe("GadgetProvider", () => {
       }
     });
 
-    test("can render an embedded app type", () => {
+    test("can render an embedded app type", async () => {
       const { container } = render(
         <Provider api={mockApiClient} shopifyApiKey={mockApiKey} type={AppType.Embedded}>
           <span>hello world</span>
         </Provider>
       );
 
-      mockUrqlClient.executeQuery.pushResponse("GetSessionForShopifyApp", {
+      await mockUrqlClient.executeMutation.waitForSubject("ShopifyFetchOrInstallShop");
+
+      mockUrqlClient.executeMutation.pushResponse("ShopifyFetchOrInstallShop", {
         data: {
-          currentSession: {
-            shop: null,
+          shopifyConnection: {
+            fetchOrInstallShop: {
+              isAuthenticated: false,
+              redirectToOauth: true,
+            },
           },
         },
         stale: false,
@@ -116,7 +127,7 @@ describe("GadgetProvider", () => {
         </Provider>
       );
 
-      expect(mockUrqlClient.executeQuery).not.toHaveBeenCalled();
+      expect(mockUrqlClient.executeMutation).not.toHaveBeenCalled();
 
       if (isInstallRequest) {
         expect(mockNavigate).toHaveBeenCalledWith(
@@ -137,7 +148,7 @@ describe("GadgetProvider", () => {
         </Provider>
       );
 
-      expect(mockUrqlClient.executeQuery).not.toHaveBeenCalled();
+      expect(mockUrqlClient.executeMutation).not.toHaveBeenCalled();
 
       if (isInstallRequest) {
         expect(mockNavigate).toHaveBeenCalledWith(
@@ -151,7 +162,7 @@ describe("GadgetProvider", () => {
       window.shopify.environment.mobile = false;
     });
 
-    test("can render an embedded app type in embedded context", () => {
+    test("can render an embedded app type in embedded context", async () => {
       // @ts-expect-error mock
       jest.spyOn(window, "self", "get").mockImplementation(() => ({}));
 
@@ -161,10 +172,15 @@ describe("GadgetProvider", () => {
         </Provider>
       );
 
-      mockUrqlClient.executeQuery.pushResponse("GetSessionForShopifyApp", {
+      await mockUrqlClient.executeMutation.waitForSubject("ShopifyFetchOrInstallShop");
+
+      mockUrqlClient.executeMutation.pushResponse("ShopifyFetchOrInstallShop", {
         data: {
-          currentSession: {
-            shop: null,
+          shopifyConnection: {
+            fetchOrInstallShop: {
+              isAuthenticated: false,
+              redirectToOauth: true,
+            },
           },
         },
         stale: false,
@@ -184,7 +200,7 @@ describe("GadgetProvider", () => {
       }
     });
 
-    test("can render an embedded app type that's already authenticated", () => {
+    test("can render an embedded app when is not authenticated and not redirecting to oauth", async () => {
       window.shopify.environment.embedded = true;
 
       const { container } = render(
@@ -193,11 +209,45 @@ describe("GadgetProvider", () => {
         </Provider>
       );
 
-      mockUrqlClient.executeQuery.pushResponse("GetSessionForShopifyApp", {
+      await mockUrqlClient.executeMutation.waitForSubject("ShopifyFetchOrInstallShop");
+
+      mockUrqlClient.executeMutation.pushResponse("ShopifyFetchOrInstallShop", {
         data: {
-          currentSession: {
-            shop: {
-              id: "123",
+          shopifyConnection: {
+            fetchOrInstallShop: {
+              isAuthenticated: false,
+              redirectToOauth: false,
+            },
+          },
+        },
+        stale: false,
+        hasNext: false,
+      });
+
+      expect(container.outerHTML).toMatchInlineSnapshot(`"<div><span>hello world</span></div>"`);
+      expect(mockOpen).not.toHaveBeenCalled();
+      expect(mockNavigate).not.toHaveBeenCalled();
+
+      window.shopify.environment.embedded = false;
+    });
+
+    test("can render an embedded app type that's already authenticated", async () => {
+      window.shopify.environment.embedded = true;
+
+      const { container } = render(
+        <Provider api={mockApiClient} shopifyApiKey={mockApiKey} type={AppType.Embedded}>
+          <span>hello world</span>
+        </Provider>
+      );
+
+      await mockUrqlClient.executeMutation.waitForSubject("ShopifyFetchOrInstallShop");
+
+      mockUrqlClient.executeMutation.pushResponse("ShopifyFetchOrInstallShop", {
+        data: {
+          shopifyConnection: {
+            fetchOrInstallShop: {
+              isAuthenticated: true,
+              redirectToOauth: false,
             },
           },
         },

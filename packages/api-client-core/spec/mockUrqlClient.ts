@@ -2,7 +2,8 @@ import type { Client, GraphQLRequest, OperationContext, OperationResult, Operati
 import { createRequest, makeErrorResult } from "@urql/core";
 import type { DocumentNode, ExecutionResult, OperationDefinitionNode } from "graphql";
 import type { SubscribePayload, Client as SubscriptionClient, Sink as SubscriptionSink } from "graphql-ws";
-import { find, findLast } from "lodash";
+import { defaults, find, findLast } from "lodash";
+import pRetry from "p-retry";
 import { act } from "react-dom/test-utils";
 import type { Sink, Source, Subject } from "wonka";
 import { filter, makeSubject, pipe, subscribe, take, toPromise } from "wonka";
@@ -36,6 +37,11 @@ export type MockOperationFn = jest.Mock & {
    * One should ensure the appropriate `executeXYZ` call has been made by urql, then call this function.
    */
   pushResponse: (key: string, response: Omit<OperationResult, "operation">) => void;
+  /**
+   *
+   * Waits for a subject to be created for a given key. This is useful for ensuring waiting in a test for a query or mutation to be run
+   */
+  waitForSubject: (key: string) => Promise<void>;
 };
 
 export type MockFetchFn = jest.Mock & {
@@ -113,6 +119,22 @@ const newMockOperationFn = (assertions?: (request: GraphQLRequest) => void) => {
         delete subjects[key];
       }
     });
+  };
+
+  fn.waitForSubject = async (key: string, options?: pRetry.Options) => {
+    await pRetry(
+      () => {
+        if (subjects[key]) {
+          return;
+        }
+        throw new Error(`No mock client subject started for key ${key}, options are ${Object.keys(subjects).join(", ")}`);
+      },
+      defaults(options, {
+        attempts: 20,
+        minTimeout: 10,
+        maxTimeout: 250,
+      })
+    );
   };
 
   return fn;
