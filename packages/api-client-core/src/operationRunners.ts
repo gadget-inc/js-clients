@@ -18,6 +18,7 @@ import {
 } from "./operationBuilders.js";
 import {
   GadgetErrorGroup,
+  GadgetNotFoundError,
   assertMutationSuccess,
   assertNullableOperationSuccess,
   assertOperationSuccess,
@@ -57,7 +58,8 @@ export const findOneByFieldRunner = async <Shape extends RecordShape = any>(
   fieldValue: string,
   defaultSelection: FieldSelection,
   modelApiIdentifier: string,
-  options?: BaseFindOptions | null
+  options?: BaseFindOptions | null,
+  throwOnEmptyData = true
 ) => {
   const plan = findOneByFieldOperation(operation, fieldName, fieldValue, defaultSelection, modelApiIdentifier, options);
   const response = await modelManager.connection.currentClient.query(plan.query, plan.variables).toPromise();
@@ -68,7 +70,11 @@ export const findOneByFieldRunner = async <Shape extends RecordShape = any>(
     throw getNonUniqueDataError(modelApiIdentifier, fieldName, fieldValue);
   }
 
-  return records[0];
+  const result = records[0];
+  if (!result && throwOnEmptyData) {
+    throw new GadgetNotFoundError(`${modelApiIdentifier} record with ${fieldName}=${fieldValue} not found`);
+  }
+  return result ?? null;
 };
 
 export const findManyRunner = async <Shape extends RecordShape = any>(

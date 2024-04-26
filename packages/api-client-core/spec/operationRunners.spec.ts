@@ -2,7 +2,14 @@ import { CombinedError } from "@urql/core";
 import nock from "nock";
 import { BackgroundActionHandle } from "../src/BackgroundActionHandle.js";
 import type { GadgetErrorGroup } from "../src/index.js";
-import { GadgetConnection, actionRunner, backgroundActionResultRunner, enqueueActionRunner, findOneRunner } from "../src/index.js";
+import {
+  GadgetConnection,
+  actionRunner,
+  backgroundActionResultRunner,
+  enqueueActionRunner,
+  findOneByFieldRunner,
+  findOneRunner,
+} from "../src/index.js";
 import { MockBulkFlipDownWidgetsAction, MockBulkUpdateWidgetAction, MockGlobalAction, MockWidgetCreateAction } from "./mockActions.js";
 import { mockUrqlClient } from "./mockUrqlClient.js";
 
@@ -34,6 +41,74 @@ describe("operationRunners", () => {
       const result = await promise;
       expect(result.id).toBeTruthy();
       expect(result.name).toBeTruthy();
+    });
+  });
+
+  describe("findOneByFieldRunner", () => {
+    test("can execute a findOneByField operation against a model", async () => {
+      const promise = findOneByFieldRunner({ connection }, "widgets", "email", "test@test.com", { id: true, name: true }, "widget");
+
+      mockUrqlClient.executeQuery.pushResponse("widgets", {
+        data: {
+          widgets: {
+            edges: [
+              {
+                node: {
+                  id: "123",
+                  name: "foo",
+                },
+              },
+            ],
+          },
+        },
+        stale: false,
+        hasNext: false,
+      });
+
+      const result = await promise;
+      expect(result.id).toBeTruthy();
+      expect(result.name).toBeTruthy();
+    });
+
+    test("throws an error if no data is found", async () => {
+      const promise = findOneByFieldRunner({ connection }, "widgets", "email", "test@test.com", { id: true, name: true }, "widget");
+
+      mockUrqlClient.executeQuery.pushResponse("widgets", {
+        data: {
+          widgets: {
+            edges: [],
+          },
+        },
+        stale: false,
+        hasNext: false,
+      });
+
+      await expect(promise).rejects.toThrowErrorMatchingInlineSnapshot(`"widget record with email=test@test.com not found"`);
+    });
+
+    test("does not throw an error if no data is found in the no-throw mode", async () => {
+      const promise = findOneByFieldRunner(
+        { connection },
+        "widgets",
+        "email",
+        "test@test.com",
+        { id: true, name: true },
+        "widget",
+        undefined,
+        false
+      );
+
+      mockUrqlClient.executeQuery.pushResponse("widgets", {
+        data: {
+          widgets: {
+            edges: [],
+          },
+        },
+        stale: false,
+        hasNext: false,
+      });
+
+      expect(await promise).toBeNull();
     });
   });
 
