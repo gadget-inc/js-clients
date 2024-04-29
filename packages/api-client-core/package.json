@@ -40,7 +40,7 @@
     "tiny-graphql-query-compiler": "^0.2.2",
     "tslib": "^2.6.2",
     "type-fest": "^3.3.0",
-    "ws": "^8.13.0"
+    "ws": "^8.17.0"
   },
   "devDependencies": {
     "@types/node": "^16.11.7",
