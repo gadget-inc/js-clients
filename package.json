@@ -21,12 +21,13 @@
     "preinstall": "npx only-allow pnpm"
   },
   "devDependencies": {
-    "@gadget-client/app-with-no-user-model": "^1.8.0",
-    "@gadget-client/bulk-actions-test": "^1.110.0",
-    "@gadget-client/full-auth": "^1.7.0",
-    "@gadget-client/related-products-example": "^1.862.0",
-    "@gadget-client/zxcv-deeply-nested": "^1.210.0",
-    "@gadget-client/zxcv-simple-relationship": "^1.20.0",
+    "@arethetypeswrong/cli": "^0.15.1",
+    "@gadget-client/app-with-no-user-model": "^1.10.0",
+    "@gadget-client/bulk-actions-test": "^1.113.0",
+    "@gadget-client/full-auth": "^1.9.0",
+    "@gadget-client/related-products-example": "^1.865.0",
+    "@gadget-client/zxcv-deeply-nested": "^1.212.0",
+    "@gadget-client/zxcv-simple-relationship": "^1.23.0",
     "@gadgetinc/api-client-core": "workspace:*",
     "@gadgetinc/eslint-config": "^0.6.1",
     "@gadgetinc/prettier-config": "^0.4.0",
@@ -37,6 +38,7 @@
     "@types/node": "^16.11.7",
     "@types/semver": "^7.5.8",
     "eslint": "^8.57.0",
+    "execa": "^5.1.1",
     "gitpkg": "^1.0.0-beta.4",
     "jest": "^29.7.0",
     "jest-environment-jsdom": "^29.7.0",
@@ -53,6 +55,9 @@
     "overrides": {
       "@gadgetinc/api-client-core": "workspace:*",
       "@gadgetinc/react": "workspace:*"
+    },
+    "patchedDependencies": {
+      "@n1ru4l/push-pull-async-iterable-iterator@3.2.0": "patches/@n1ru4l__push-pull-async-iterable-iterator@3.2.0.patch"
     }
   },
   "packageManager": "pnpm@8.15.4+sha256.cea6d0bdf2de3a0549582da3983c70c92ffc577ff4410cbf190817ddc35137c2"

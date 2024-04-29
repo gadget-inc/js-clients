@@ -1,5 +1,7 @@
 import type {
   AnyActionFunction,
+  AnyBulkActionFunction,
+  BackgroundActionHandle,
   EnqueueBackgroundActionOptions,
   FieldSelection,
   GadgetError,
@@ -7,8 +9,6 @@ import type {
   InvalidRecordError,
 } from "@gadgetinc/api-client-core";
 import { gadgetErrorFor, getNonNullableError } from "@gadgetinc/api-client-core";
-import type { BackgroundActionHandle } from "@gadgetinc/api-client-core/dist/cjs/BackgroundActionHandle.js";
-import type { AnyBulkActionFunction } from "@gadgetinc/api-client-core/src/GadgetFunctions.js";
 import type { CombinedError, RequestPolicy } from "@urql/core";
 import { GraphQLError } from "graphql";
 import { useMemo } from "react";

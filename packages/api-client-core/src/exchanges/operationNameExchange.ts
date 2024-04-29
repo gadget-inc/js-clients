@@ -1,3 +1,4 @@
+import type { Exchange } from "@urql/core";
 import { mapExchange } from "@urql/core";
 import type { DocumentNode, OperationDefinitionNode } from "graphql";
 
@@ -14,7 +15,7 @@ const graphqlDocumentName = (doc: DocumentNode) => {
   }
 };
 
-export const operationNameExchange = mapExchange({
+export const operationNameExchange: Exchange = mapExchange({
   onOperation: (operation) => {
     operation.context.operationName ??= graphqlDocumentName(operation.query) || "unknown";
   },
