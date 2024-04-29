@@ -28,7 +28,7 @@ export class BackgroundActionHandle<
   constructor(readonly connection: GadgetConnection, readonly action: Action, readonly id: string) {}
 
   /** Wait for this background action to complete and return the result. */
-  async result(options?: any) {
+  async result(options?: Action extends ActionFunctionMetadata<any, any, any, any, any, any> ? Action["optionsType"] : never) {
     return (await backgroundActionResultRunner<SchemaT, Action, ResultData>(this.connection, this.id, this.action, options)).result;
   }
 }
