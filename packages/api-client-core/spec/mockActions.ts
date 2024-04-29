@@ -18,7 +18,13 @@ export const MockWidgetCreateAction = {
     },
   },
   hasReturnType: false,
-} as unknown as ActionFunction<any, any, any, any, any>;
+} as unknown as ActionFunction<
+  { select?: { id?: boolean; name?: boolean } },
+  any,
+  { id?: boolean; name?: boolean },
+  { id: string; name: string },
+  { id: true; name: true }
+>;
 
 export const MockBulkUpdateWidgetAction = {
   type: "action",
