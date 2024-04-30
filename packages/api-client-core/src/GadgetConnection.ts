@@ -1,6 +1,5 @@
 /* eslint-disable @typescript-eslint/no-non-null-assertion */
 import { isLiveQueryOperationDefinitionNode } from "@n1ru4l/graphql-live-query";
-import { applyAsyncIterableIteratorToSink, makeAsyncIterableIteratorFromSink } from "@n1ru4l/push-pull-async-iterable-iterator";
 import type { ClientOptions, RequestPolicy } from "@urql/core";
 import { Client, cacheExchange, fetchExchange, subscriptionExchange } from "@urql/core";
 import type { ExecutionResult } from "graphql";
@@ -14,7 +13,6 @@ import type { BrowserStorage } from "./InMemoryStorage.js";
 import { InMemoryStorage } from "./InMemoryStorage.js";
 import { operationNameExchange } from "./exchanges/operationNameExchange.js";
 import { urlParamExchange } from "./exchanges/urlParamExchange.js";
-import { applyLiveQueryJSONDiffPatch } from "./graphql-live-query-utils/index.js";
 import {
   GadgetTooManyRequestsError,
   GadgetUnexpectedCloseError,
@@ -389,16 +387,32 @@ export class GadgetConnection {
         forwardSubscription: (request) => {
           return {
             subscribe: (sink) => {
-              const input = { ...request, query: request.query || "" };
+              let unsubscribe: (() => void) | undefined = undefined;
+
+              // dynamic import on first subscription the live utils to keep the base bundle size small
+              const loadAndSubscribe = import("./graphql-live-query-utils/index.js").then(
+                ({ applyAsyncIterableIteratorToSink, applyLiveQueryJSONDiffPatch, makeAsyncIterableIteratorFromSink }) => {
+                  const input = { ...request, query: request.query || "" };
+                  unsubscribe = applyAsyncIterableIteratorToSink(
+                    applyLiveQueryJSONDiffPatch(
+                      makeAsyncIterableIteratorFromSink<ExecutionResult>((sink) =>
+                        this.getBaseSubscriptionClient().subscribe(input, sink as Sink<ExecutionResult>)
+                      )
+                    ),
+                    sink
+                  );
+                  return unsubscribe;
+                }
+              );
+
               return {
-                unsubscribe: applyAsyncIterableIteratorToSink(
-                  applyLiveQueryJSONDiffPatch(
-                    makeAsyncIterableIteratorFromSink<ExecutionResult>((sink) =>
-                      this.getBaseSubscriptionClient().subscribe(input, sink as Sink<ExecutionResult>)
-                    )
-                  ),
-                  sink
-                ),
+                unsubscribe: () => {
+                  if (unsubscribe) {
+                    unsubscribe();
+                  } else {
+                    void loadAndSubscribe.then((unsubscribe) => unsubscribe());
+                  }
+                },
               };
             },
           };

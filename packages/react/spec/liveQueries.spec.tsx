@@ -20,8 +20,8 @@ describe("live queries", () => {
     expect(result.current[0].error).toBeFalsy();
     expect(result.current[0].data).toBeFalsy();
 
-    await Promise.resolve();
-    expect(mockGraphQLWSClient.subscribe.subscriptions).toHaveLength(1);
+    await waitFor(() => expect(mockGraphQLWSClient.subscribe.subscriptions).toHaveLength(1));
+
     const subscription = mockGraphQLWSClient.subscribe.subscriptions[0];
     expect(subscription.payload.query).toContain("@live");
 
@@ -74,8 +74,8 @@ describe("live queries", () => {
     expect(result.current[0].fetching).toBe(true);
     expect(result.current[0].error).toBeFalsy();
 
-    await Promise.resolve();
-    expect(mockGraphQLWSClient.subscribe.subscriptions).toHaveLength(1);
+    await waitFor(() => expect(mockGraphQLWSClient.subscribe.subscriptions).toHaveLength(1));
+
     const subscription = mockGraphQLWSClient.subscribe.subscriptions[0];
     expect(subscription.payload.query).toContain("@live");
 
@@ -136,8 +136,7 @@ describe("live queries", () => {
 
     expect(container).toHaveTextContent("Users: <none>, Products: <none>");
 
-    await Promise.resolve();
-    expect(mockGraphQLWSClient.subscribe.subscriptions).toHaveLength(2);
+    await waitFor(() => expect(mockGraphQLWSClient.subscribe.subscriptions).toHaveLength(2));
     const users = mockGraphQLWSClient.subscribe.subscriptions[0];
     const products = mockGraphQLWSClient.subscribe.subscriptions[1];
 

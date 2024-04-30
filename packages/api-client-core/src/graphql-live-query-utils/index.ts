@@ -14,3 +14,4 @@ export const applyJSONDiffPatch: ApplyPatchFunction<Delta> = (left, delta): Reco
   });
 
 export const applyLiveQueryJSONDiffPatch = createApplyLiveQueryPatch(applyJSONDiffPatch);
+export { applyAsyncIterableIteratorToSink, makeAsyncIterableIteratorFromSink } from "@n1ru4l/push-pull-async-iterable-iterator";
