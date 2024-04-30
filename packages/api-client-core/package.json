@@ -28,6 +28,7 @@
     "prerelease": "gitpkg publish"
   },
   "dependencies": {
+    "@0no-co/graphql.web": "^1.0.4",
     "@n1ru4l/graphql-live-query": "^0.10.0",
     "@n1ru4l/json-patch-plus": "^0.2.0",
     "@n1ru4l/push-pull-async-iterable-iterator": "^3.2.0",

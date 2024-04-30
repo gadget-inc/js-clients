@@ -1,6 +1,6 @@
+import { GraphQLError } from "@0no-co/graphql.web";
 import { diff } from "@n1ru4l/json-patch-plus";
 import { CombinedError } from "@urql/core";
-import { GraphQLError } from "graphql";
 import nock from "nock";
 import { BackgroundActionHandle } from "../src/BackgroundActionHandle.js";
 import type { AnyModelManager, GadgetErrorGroup } from "../src/index.js";

@@ -1,4 +1,4 @@
-import { parse } from "graphql";
+import { parse } from "@0no-co/graphql.web";
 import parserGraphql from "prettier/parser-graphql";
 import prettier from "prettier/standalone";
 
