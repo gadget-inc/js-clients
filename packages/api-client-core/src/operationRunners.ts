@@ -1,6 +1,9 @@
-import { filter, pipe, take, toPromise } from "wonka";
+import { filter, pipe, take, toAsyncIterable, toPromise } from "wonka";
 import type { BackgroundActionResult } from "./BackgroundActionHandle.js";
 import { BackgroundActionHandle } from "./BackgroundActionHandle.js";
+/* eslint-disable @typescript-eslint/ban-types */
+import type { OperationResult } from "@urql/core";
+import type { Source } from "wonka";
 import type { FieldSelection } from "./FieldSelection.js";
 import type { GadgetConnection } from "./GadgetConnection.js";
 import type { ActionFunctionMetadata, AnyActionFunction, AnyBulkActionFunction } from "./GadgetFunctions.js";
@@ -35,71 +38,136 @@ import {
 } from "./support.js";
 import type { ActionFunctionOptions, BaseFindOptions, EnqueueBackgroundActionOptions, FindManyOptions, VariablesOptions } from "./types.js";
 
-export const findOneRunner = async <Shape extends RecordShape = any>(
+type LiveResultForOptions<T, LiveOptions extends { live?: boolean | null }> = LiveOptions extends { live: true }
+  ? AsyncIterable<T>
+  : Promise<T>;
+
+const mapAsyncIterable = <T, U>(source: AsyncIterable<T>, mapper: (item: T) => U): AsyncIterable<U> => {
+  return {
+    [Symbol.asyncIterator]() {
+      const iter = source[Symbol.asyncIterator]();
+
+      return {
+        async next(): Promise<IteratorResult<U>> {
+          const { done, value } = await iter.next();
+
+          return {
+            done,
+            value: typeof value != "undefined" ? mapper(value) : undefined,
+          } as any;
+        },
+        async return(value: any): Promise<IteratorReturnResult<any>> {
+          return (await iter.return?.(value)) as any;
+        },
+      };
+    },
+  };
+};
+
+/** Given a stream, return an async iterable when live querying, and a promise resolving to the last value otherwise */
+function maybeLiveStream<T extends OperationResult, U, LiveOptions extends { live?: boolean | null }>(
+  $result: Source<T>,
+  mapper: (value: T) => U,
+  options?: LiveOptions | null
+): LiveResultForOptions<U, LiveOptions> {
+  if (options?.live) {
+    return mapAsyncIterable<T, U>(toAsyncIterable($result), mapper) as unknown as LiveResultForOptions<U, LiveOptions>;
+  } else {
+    const promise = pipe(
+      $result,
+      filter((result) => !result.stale && !result.hasNext),
+      take(1),
+      toPromise
+    );
+
+    return promise.then((value) => mapper(value)) as LiveResultForOptions<U, LiveOptions>;
+  }
+}
+
+export const findOneRunner = <Shape extends RecordShape = any, Options extends BaseFindOptions = {}>(
   modelManager: { connection: GadgetConnection },
   operation: string,
   id: string | undefined,
   defaultSelection: FieldSelection,
   modelApiIdentifier: string,
-  options?: BaseFindOptions | null,
+  options?: Options | null,
   throwOnEmptyData = true
 ) => {
   const plan = findOneOperation(operation, id, defaultSelection, modelApiIdentifier, options);
-  const response = await modelManager.connection.currentClient.query(plan.query, plan.variables).toPromise();
-  const assertSuccess = throwOnEmptyData ? assertOperationSuccess : assertNullableOperationSuccess;
-  const record = assertSuccess(response, [operation]);
-  return hydrateRecord<Shape>(response, record);
+  const $results = modelManager.connection.currentClient.query(plan.query, plan.variables);
+
+  return maybeLiveStream(
+    $results,
+    (response) => {
+      const assertSuccess = throwOnEmptyData ? assertOperationSuccess : assertNullableOperationSuccess;
+      const record = assertSuccess(response, [operation]);
+      return hydrateRecord<Shape>(response, record);
+    },
+    options
+  );
 };
 
-export const findOneByFieldRunner = async <Shape extends RecordShape = any>(
+export const findOneByFieldRunner = <Shape extends RecordShape = any, Options extends FindManyOptions = {}>(
   modelManager: { connection: GadgetConnection },
   operation: string,
   fieldName: string,
   fieldValue: string,
   defaultSelection: FieldSelection,
   modelApiIdentifier: string,
-  options?: BaseFindOptions | null,
+  options?: Options | null,
   throwOnEmptyData = true
 ) => {
   const plan = findOneByFieldOperation(operation, fieldName, fieldValue, defaultSelection, modelApiIdentifier, options);
-  const response = await modelManager.connection.currentClient.query(plan.query, plan.variables).toPromise();
-  const connectionObject = assertOperationSuccess(response, [operation]);
-  const records = hydrateConnection<Shape>(response, connectionObject);
+  const $results = modelManager.connection.currentClient.query(plan.query, plan.variables);
 
-  if (records.length > 1) {
-    throw getNonUniqueDataError(modelApiIdentifier, fieldName, fieldValue);
-  }
+  return maybeLiveStream(
+    $results,
+    (response) => {
+      const connectionObject = assertOperationSuccess(response, [operation]);
+      const records = hydrateConnection<Shape>(response, connectionObject);
 
-  const result = records[0];
-  if (!result && throwOnEmptyData) {
-    throw new GadgetNotFoundError(`${modelApiIdentifier} record with ${fieldName}=${fieldValue} not found`);
-  }
-  return result ?? null;
+      if (records.length > 1) {
+        throw getNonUniqueDataError(modelApiIdentifier, fieldName, fieldValue);
+      }
+      const result = records[0];
+      if (!result && throwOnEmptyData) {
+        throw new GadgetNotFoundError(`${modelApiIdentifier} record with ${fieldName}=${fieldValue} not found`);
+      }
+      return result ?? null;
+    },
+    options
+  );
 };
 
-export const findManyRunner = async <Shape extends RecordShape = any>(
+export const findManyRunner = <Shape extends RecordShape = any, Options extends FindManyOptions = {}>(
   modelManager: AnyModelManager,
   operation: string,
   defaultSelection: FieldSelection,
   modelApiIdentifier: string,
-  options?: FindManyOptions,
+  options?: Options,
   throwOnEmptyData?: boolean
 ) => {
   const plan = findManyOperation(operation, defaultSelection, modelApiIdentifier, options);
-  const response = await modelManager.connection.currentClient.query(plan.query, plan.variables).toPromise();
+  const $results = modelManager.connection.currentClient.query(plan.query, plan.variables);
 
-  let connectionObject;
-  if (throwOnEmptyData === false) {
-    // If this is a nullable operation, don't throw errors on empty
-    connectionObject = assertNullableOperationSuccess(response, [operation]);
-  } else {
-    // Otherwise, passthrough the `throwOnEmptyData` flag, to account for
-    // `findMany` (allows empty arrays) vs `findFirst` (no empty result) usage.
-    connectionObject = assertOperationSuccess(response, [operation], throwOnEmptyData);
-  }
+  return maybeLiveStream(
+    $results,
+    (response) => {
+      let connectionObject;
+      if (throwOnEmptyData === false) {
+        // If this is a nullable operation, don't throw errors on empty
+        connectionObject = assertNullableOperationSuccess(response, [operation]);
+      } else {
+        // Otherwise, passthrough the `throwOnEmptyData` flag, to account for
+        // `findMany` (allows empty arrays) vs `findFirst` (no empty result) usage.
+        connectionObject = assertOperationSuccess(response, [operation], throwOnEmptyData);
+      }
 
-  const records = hydrateConnection<Shape>(response, connectionObject);
-  return GadgetRecordList.boot<Shape>(modelManager, records, { options, pageInfo: connectionObject.pageInfo });
+      const records = hydrateConnection<Shape>(response, connectionObject);
+      return GadgetRecordList.boot<Shape>(modelManager, records, { options, pageInfo: connectionObject.pageInfo });
+    },
+    options
+  );
 };
 
 export interface ActionRunner {

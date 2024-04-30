@@ -143,6 +143,9 @@ importers:
       type-fest:
         specifier: ^3.3.0
         version: 3.3.0
+      wonka:
+        specifier: ^6.3.2
+        version: 6.3.2
       ws:
         specifier: ^8.17.0
         version: 8.17.0
