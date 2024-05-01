@@ -57,25 +57,20 @@ const InnerGadgetProvider = memo(
       isRootFrameRequest: false,
     });
 
-    const [idToken, setIdToken] = useState<string | null>(null);
     const [idTokenError, setIdTokenError] = useState<Error | undefined>();
 
     useEffect(() => {
-      if (!appBridge) return;
-
-      appBridge.idToken().then(setIdToken).catch(setIdTokenError);
-    }, [appBridge]);
-
-    useEffect(() => {
-      if (!idToken) {
+      if (!appBridge) {
         console.debug("[gadget-rsab] no app bridge, skipping client auth setup");
         return;
       }
+
       // setup the api client to always query using the custom shopify auth implementation
       api.connection.setAuthenticationMode({
         custom: {
           async processFetch(_input, init) {
             const headers = new Headers(init.headers);
+            const idToken = await appBridge.idToken();
             headers.append("Authorization", `ShopifySessionToken ${idToken}`);
             init.headers ??= {};
             headers.forEach(function (value, key) {
@@ -83,17 +78,18 @@ const InnerGadgetProvider = memo(
             });
           },
           async processTransactionConnectionParams(params) {
+            const idToken = await appBridge.idToken();
             params.auth.shopifySessionToken = idToken;
           },
         },
       });
 
       console.debug("[gadget-rsab] set up client auth for session tokens");
-    }, [api.connection, idToken]);
+    }, [api.connection, appBridge]);
 
     let redirectToOauth = false;
     let isAuthenticated = false;
-    let missingScopes: string[] = [];
+    let missingScopes: string[] = useMemo(() => [], []);
     const hasFetchedOrInstalledShop = useRef(false);
 
     const [{ data: fetchOrInstallShopData, fetching: fetchingOrInstallingShop, error: fetchingOrInstallingShopError }, fetchOrInstallShop] =
@@ -111,14 +107,20 @@ const InnerGadgetProvider = memo(
     // always run one fetch to the gadget backend on boot to discover if this app is installed
     useEffect(() => {
       if (hasFetchedOrInstalledShop.current) return;
-      if (!idToken) return;
+      if (!appBridge) return;
 
       hasFetchedOrInstalledShop.current = true;
 
-      fetchOrInstallShop({ shopifySessionToken: idToken }).catch((err) => {
-        console.error({ err }, "[gadget-rsab] error fetching or installing shop");
-      });
-    }, [idToken, fetchOrInstallShop]);
+      console.debug("[gadget-rsab] fetching or installing shop");
+      appBridge
+        .idToken()
+        .then((idToken) => {
+          fetchOrInstallShop({ shopifySessionToken: idToken }).catch((err) => {
+            console.error({ err }, "[gadget-rsab] error fetching or installing shop");
+          });
+        })
+        .catch(setIdTokenError);
+    }, [appBridge, fetchOrInstallShop]);
 
     // redirect to Gadget to initiate the oauth process if we need to.
     useEffect(() => {
