@@ -129,8 +129,8 @@ importers:
         specifier: ^16.8.1
         version: 16.8.1
       graphql-ws:
-        specifier: ^5.13.1
-        version: 5.13.1(graphql@16.8.1)
+        specifier: ^5.16.0
+        version: 5.16.0(graphql@16.8.1)
       isomorphic-ws:
         specifier: ^5.0.0
         version: 5.0.0(ws@8.17.0)
@@ -285,8 +285,8 @@ importers:
         specifier: ^1.0.6
         version: 1.0.6
       graphql-ws:
-        specifier: ^5.13.1
-        version: 5.13.1(graphql@16.8.1)
+        specifier: ^5.16.0
+        version: 5.16.0(graphql@16.8.1)
       lodash:
         specifier: ^4.17.21
         version: 4.17.21
@@ -4590,8 +4590,8 @@ packages:
     resolution: {integrity: sha512-EtKwoO6kxCL9WO5xipiHTZlSzBm7WLT627TqC/uVRd0HKmq8NXyebnNYxDoBi7wt8eTWrUrKXCOVaFq9x1kgag==}
     dev: true
 
-  /graphql-ws@5.13.1(graphql@16.8.1):
-    resolution: {integrity: sha512-eiX7ES/ZQr0q7hSM5UBOEIFfaAUmAY9/CSDyAnsETuybByU7l/v46drRg9DQoTvVABEHp3QnrvwgTRMhqy7zxQ==}
+  /graphql-ws@5.16.0(graphql@16.8.1):
+    resolution: {integrity: sha512-Ju2RCU2dQMgSKtArPbEtsK5gNLnsQyTNIo/T7cZNp96niC1x0KdJNZV0TIoilceBPQwfb5itrGl8pkFeOUMl4A==}
     engines: {node: '>=10'}
     peerDependencies:
       graphql: '>=0.11 <=16'
