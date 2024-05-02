@@ -32,7 +32,8 @@
     "react-fast-compare": "^3.2.2",
     "react-hook-form": "~7.48.2",
     "tslib": "^2.6.2",
-    "urql": "^4.0.4"
+    "urql": "^4.0.4",
+    "@0no-co/graphql.web": "^1.0.4"
   },
   "devDependencies": {
     "@gadgetinc/api-client-core": "workspace:*",
@@ -53,7 +54,6 @@
     "@types/setup-polly-jest": "^0.5.5",
     "@urql/core": "^4.0.10",
     "conditional-type-checks": "^1.0.6",
-    "graphql": "^16.8.1",
     "graphql-ws": "^5.13.1",
     "lodash": "^4.17.21",
     "react": "^18.2.0",

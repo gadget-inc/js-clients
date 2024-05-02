@@ -1,10 +1,10 @@
+import { GraphQLError } from "@0no-co/graphql.web";
 import { Client } from "@gadget-client/related-products-example";
 import type { GadgetRecordList } from "@gadgetinc/api-client-core";
 import { diff } from "@n1ru4l/json-patch-plus";
 import { renderHook, waitFor } from "@testing-library/react";
 import type { IsExact } from "conditional-type-checks";
 import { assert } from "conditional-type-checks";
-import { GraphQLError } from "graphql";
 import { useFindMany } from "../src/useFindMany.js";
 import type { ErrorWrapper } from "../src/utils.js";
 import { relatedProductsApi } from "./apis.js";
@@ -286,8 +286,8 @@ describe("useFindMany", () => {
       expect(result.current[0].fetching).toBe(true);
       expect(result.current[0].error).toBeFalsy();
 
-      await Promise.resolve();
-      expect(mockGraphQLWSClient.subscribe.subscriptions).toHaveLength(1);
+      await waitFor(() => expect(mockGraphQLWSClient.subscribe.subscriptions).toHaveLength(1));
+
       const subscription = mockGraphQLWSClient.subscribe.subscriptions[0];
       expect(subscription.payload.query).toContain("@live");
 
@@ -374,8 +374,8 @@ describe("useFindMany", () => {
       expect(result.current[0].fetching).toBe(true);
       expect(result.current[0].error).toBeFalsy();
 
-      await Promise.resolve();
-      expect(mockGraphQLWSClient.subscribe.subscriptions).toHaveLength(1);
+      await waitFor(() => expect(mockGraphQLWSClient.subscribe.subscriptions).toHaveLength(1));
+
       const subscription = mockGraphQLWSClient.subscribe.subscriptions[0];
 
       subscription.push({

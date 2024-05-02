@@ -1,3 +1,4 @@
+import { GraphQLError } from "@0no-co/graphql.web";
 import type {
   AnyActionFunction,
   AnyBulkActionFunction,
@@ -10,7 +11,6 @@ import type {
 } from "@gadgetinc/api-client-core";
 import { gadgetErrorFor, getNonNullableError } from "@gadgetinc/api-client-core";
 import type { CombinedError, RequestPolicy } from "@urql/core";
-import { GraphQLError } from "graphql";
 import { useMemo } from "react";
 import type { AnyVariables, Operation, OperationContext, UseQueryArgs, UseQueryState } from "urql";
 

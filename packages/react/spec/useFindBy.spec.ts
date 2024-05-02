@@ -182,8 +182,8 @@ describe("useFindBy", () => {
     expect(result.current[0].fetching).toBe(true);
     expect(result.current[0].error).toBeFalsy();
 
-    await Promise.resolve();
-    expect(mockGraphQLWSClient.subscribe.subscriptions).toHaveLength(1);
+    await waitFor(() => expect(mockGraphQLWSClient.subscribe.subscriptions).toHaveLength(1));
+
     const subscription = mockGraphQLWSClient.subscribe.subscriptions[0];
     expect(subscription.payload.query).toContain("@live");
 

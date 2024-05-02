@@ -107,6 +107,9 @@ importers:
 
   packages/api-client-core:
     dependencies:
+      '@0no-co/graphql.web':
+        specifier: ^1.0.4
+        version: 1.0.4(graphql@16.8.1)
       '@n1ru4l/graphql-live-query':
         specifier: ^0.10.0
         version: 0.10.0(graphql@16.8.1)
@@ -211,6 +214,9 @@ importers:
 
   packages/react:
     dependencies:
+      '@0no-co/graphql.web':
+        specifier: ^1.0.4
+        version: 1.0.4(graphql@16.8.1)
       '@gadgetinc/api-client-core':
         specifier: workspace:*
         version: link:../api-client-core
@@ -278,9 +284,6 @@ importers:
       conditional-type-checks:
         specifier: ^1.0.6
         version: 1.0.6
-      graphql:
-        specifier: ^16.8.1
-        version: 16.8.1
       graphql-ws:
         specifier: ^5.13.1
         version: 5.13.1(graphql@16.8.1)
@@ -370,6 +373,9 @@ importers:
 
   packages/tiny-graphql-query-compiler:
     devDependencies:
+      '@0no-co/graphql.web':
+        specifier: ^1.0.4
+        version: 1.0.4(graphql@16.8.1)
       '@testing-library/jest-dom':
         specifier: ^5.17.0
         version: 5.17.0
@@ -385,9 +391,6 @@ importers:
       conditional-type-checks:
         specifier: ^1.0.6
         version: 1.0.6
-      graphql:
-        specifier: 16.5.0
-        version: 16.5.0
       prettier:
         specifier: ^2.8.8
         version: 2.8.8
@@ -4594,11 +4597,6 @@ packages:
       graphql: '>=0.11 <=16'
     dependencies:
       graphql: 16.8.1
-
-  /graphql@16.5.0:
-    resolution: {integrity: sha512-qbHgh8Ix+j/qY+a/ZcJnFQ+j8ezakqPiHwPiZhV/3PgGlgf96QMBB5/f2rkiC9sgLoy/xvT6TSiaf2nTHJh5iA==}
-    engines: {node: ^12.22.0 || ^14.16.0 || ^16.0.0 || >=17.0.0}
-    dev: true
 
   /graphql@16.8.1:
     resolution: {integrity: sha512-59LZHPdGZVh695Ud9lRzPBVTtlX9ZCV150Er2W43ro37wVof0ctenSaskPPjN7lVTIN8mSZt8PHUNKZuNQUuxw==}

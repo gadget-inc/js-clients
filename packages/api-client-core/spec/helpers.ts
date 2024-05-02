@@ -1,4 +1,4 @@
-import { parse } from "graphql";
+import { parse } from "@0no-co/graphql.web";
 import { defaults } from "lodash";
 import pRetry from "p-retry";
 

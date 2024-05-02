@@ -1,5 +1,5 @@
+import { GraphQLError } from "@0no-co/graphql.web";
 import { CombinedError } from "@urql/core";
-import { GraphQLError } from "graphql";
 import {
   assertMutationSuccess,
   assertNullableOperationSuccess,
