@@ -230,8 +230,8 @@ importers:
         specifier: ^2.6.2
         version: 2.6.2
       urql:
-        specifier: ^4.0.4
-        version: 4.0.4(graphql@16.8.1)(react@18.2.0)
+        specifier: ^4.0.7
+        version: 4.0.7(graphql@16.8.1)(react@18.2.0)
     devDependencies:
       '@n1ru4l/json-patch-plus':
         specifier: ^0.2.0
@@ -412,6 +412,17 @@ packages:
         optional: true
     dependencies:
       graphql: 16.8.1
+
+  /@0no-co/graphql.web@1.0.7(graphql@16.8.1):
+    resolution: {integrity: sha512-E3Qku4mTzdrlwVWGPxklDnME5ANrEGetvYw4i2GCRlppWXXE4QD66j7pwb8HelZwS6LnqEChhrSOGCXpbiu6MQ==}
+    peerDependencies:
+      graphql: ^14.0.0 || ^15.0.0 || ^16.0.0
+    peerDependenciesMeta:
+      graphql:
+        optional: true
+    dependencies:
+      graphql: 16.8.1
+    dev: false
 
   /@aashutoshrathi/word-wrap@1.2.6:
     resolution: {integrity: sha512-1Yjs2SvM8TflER/OD3cOjhWWOZb58A2t7wpE2S9XfBYTiIl+XFhQG2bjy4Pu1I+EAlCNUzRDYDdFwFYUKvXcIA==}
@@ -2614,6 +2625,15 @@ packages:
       wonka: 6.3.2
     transitivePeerDependencies:
       - graphql
+
+  /@urql/core@5.0.3(graphql@16.8.1):
+    resolution: {integrity: sha512-NZ3YqRr6IphbpFjGqujJOuVuV8/QegYxfjy1zdmOSWpYYFLpmMBfVtzZ/L8IiqPERVAEAIKjUsryLnVtXJQo4w==}
+    dependencies:
+      '@0no-co/graphql.web': 1.0.7(graphql@16.8.1)
+      wonka: 6.3.2
+    transitivePeerDependencies:
+      - graphql
+    dev: false
 
   /@vitejs/plugin-react-swc@3.6.0(vite@4.5.3):
     resolution: {integrity: sha512-XFRbsGgpGxGzEV5i5+vRiro1bwcIaZDIdBRP16qwm+jP68ue/S8FJTBEgOeojtVDYrbSua3XFp71kC8VJE6v+g==}
@@ -7497,12 +7517,12 @@ packages:
       requires-port: 1.0.0
     dev: true
 
-  /urql@4.0.4(graphql@16.8.1)(react@18.2.0):
-    resolution: {integrity: sha512-C5P4BMnAsk+rbytCWglit5ijXbIKXsa9wofSGPbuMyJKsDdL+9GfipS362Nff/Caag+eYOK5W+sox8fwEILT6Q==}
+  /urql@4.0.7(graphql@16.8.1)(react@18.2.0):
+    resolution: {integrity: sha512-wnOONtZoYEobmamM5ushUBGil6UCUPd7SH5uEAqsz5Y/qBV88/2QG6jq7v6xP+413x5Lqy0h0hCGRB0KIeG6Kg==}
     peerDependencies:
       react: '>= 16.8.0'
     dependencies:
-      '@urql/core': 4.0.10(graphql@16.8.1)
+      '@urql/core': 5.0.3(graphql@16.8.1)
       react: 18.2.0
       wonka: 6.3.2
     transitivePeerDependencies:
