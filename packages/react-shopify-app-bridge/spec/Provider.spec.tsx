@@ -4,6 +4,7 @@ import * as AppBridgeReact from "@shopify/app-bridge-react";
 import "@testing-library/jest-dom";
 import { render } from "@testing-library/react";
 import React from "react";
+import { act } from "react-dom/test-utils";
 import { mockUrqlClient } from "../../api-client-core/spec/mockUrqlClient.js";
 import { AppType, Provider } from "../src/Provider.js";
 
@@ -14,6 +15,7 @@ describe("GadgetProvider", () => {
   const mockOpen = jest.fn();
   const mockApiKey = "some-api-key";
   let useAppBridgeMock: jest.SpyInstance;
+  let resolveIdToken: (value: string) => void;
 
   describe.each([true, false])("as install request: %s", (isInstallRequest) => {
     beforeAll(() => {
@@ -41,7 +43,10 @@ describe("GadgetProvider", () => {
           shop: "example.myshopify.com",
           locale: "en",
         },
-        idToken: () => Promise.resolve("mock-id-token"),
+        idToken: () =>
+          new Promise((resolve) => {
+            resolveIdToken = resolve;
+          }),
       };
 
       useAppBridgeMock = jest.spyOn(AppBridgeReact, "useAppBridge").mockImplementation(() => window.shopify);
@@ -92,7 +97,10 @@ describe("GadgetProvider", () => {
         </Provider>
       );
 
-      await mockUrqlClient.executeMutation.waitForSubject("ShopifyFetchOrInstallShop");
+      await act(async () => {
+        resolveIdToken("mock-id-token");
+        await mockUrqlClient.executeMutation.waitForSubject("ShopifyFetchOrInstallShop");
+      });
 
       mockUrqlClient.executeMutation.pushResponse("ShopifyFetchOrInstallShop", {
         data: {
@@ -172,7 +180,10 @@ describe("GadgetProvider", () => {
         </Provider>
       );
 
-      await mockUrqlClient.executeMutation.waitForSubject("ShopifyFetchOrInstallShop");
+      await act(async () => {
+        resolveIdToken("mock-id-token");
+        await mockUrqlClient.executeMutation.waitForSubject("ShopifyFetchOrInstallShop");
+      });
 
       mockUrqlClient.executeMutation.pushResponse("ShopifyFetchOrInstallShop", {
         data: {
@@ -209,7 +220,10 @@ describe("GadgetProvider", () => {
         </Provider>
       );
 
-      await mockUrqlClient.executeMutation.waitForSubject("ShopifyFetchOrInstallShop");
+      await act(async () => {
+        resolveIdToken("mock-id-token");
+        await mockUrqlClient.executeMutation.waitForSubject("ShopifyFetchOrInstallShop");
+      });
 
       mockUrqlClient.executeMutation.pushResponse("ShopifyFetchOrInstallShop", {
         data: {
@@ -240,7 +254,10 @@ describe("GadgetProvider", () => {
         </Provider>
       );
 
-      await mockUrqlClient.executeMutation.waitForSubject("ShopifyFetchOrInstallShop");
+      await act(async () => {
+        resolveIdToken("mock-id-token");
+        await mockUrqlClient.executeMutation.waitForSubject("ShopifyFetchOrInstallShop");
+      });
 
       mockUrqlClient.executeMutation.pushResponse("ShopifyFetchOrInstallShop", {
         data: {

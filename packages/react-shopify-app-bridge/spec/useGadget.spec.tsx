@@ -8,6 +8,7 @@ import type { IsExact } from "conditional-type-checks";
 import { assert } from "conditional-type-checks";
 import type { ReactNode } from "react";
 import React from "react";
+import { act } from "react-dom/test-utils";
 import { mockUrqlClient } from "../../api-client-core/spec/mockUrqlClient.js";
 import { Provider } from "../src/Provider.js";
 import { AppType, useGadget } from "../src/index.js";
@@ -29,6 +30,7 @@ describe("useGadget", () => {
   let mockApiClient: AnyClient;
   const mockApiKey = "some-api-key";
   let useAppBridgeMock: jest.SpyInstance;
+  let resolveIdToken: (value: string) => void;
 
   beforeEach(() => {
     mockApiClient = {
@@ -49,7 +51,10 @@ describe("useGadget", () => {
         shop: "example.myshopify.com",
         locale: "en",
       },
-      idToken: () => Promise.resolve("mock-id-token"),
+      idToken: () =>
+        new Promise((resolve) => {
+          resolveIdToken = resolve;
+        }),
     };
 
     useAppBridgeMock = jest.spyOn(AppBridgeReact, "useAppBridge").mockImplementation(() => window.shopify);
@@ -96,7 +101,10 @@ describe("useGadget", () => {
       ),
     });
 
-    await mockUrqlClient.executeMutation.waitForSubject("ShopifyFetchOrInstallShop");
+    await act(async () => {
+      resolveIdToken("some-id-token");
+      await mockUrqlClient.executeMutation.waitForSubject("ShopifyFetchOrInstallShop");
+    });
 
     mockUrqlClient.executeMutation.pushResponse("ShopifyFetchOrInstallShop", {
       data: {
@@ -121,7 +129,10 @@ describe("useGadget", () => {
       ),
     }));
 
-    await mockUrqlClient.executeMutation.waitForSubject("ShopifyFetchOrInstallShop");
+    await act(async () => {
+      resolveIdToken("some-id-token");
+      await mockUrqlClient.executeMutation.waitForSubject("ShopifyFetchOrInstallShop");
+    });
 
     mockUrqlClient.executeMutation.pushResponse("ShopifyFetchOrInstallShop", {
       data: {
@@ -195,5 +206,65 @@ describe("useGadget", () => {
 
     // standalone apps are always falsy
     expect(result.current.isRootFrameRequest).toBeFalsy();
+  });
+
+  test("has loading true for embedded apps until ShopifyFetchOrInstallShop resolves", async () => {
+    window.shopify.environment.embedded = true;
+    const location = window.location;
+    // @ts-expect-error mock
+    delete window.location;
+
+    // @ts-expect-error mock
+    window.location = {
+      origin: "https://test-app.gadget.app",
+      pathname: "/",
+      search: "?shop=example.myshopify.com&hmac=abcdefg&host=abcdfg",
+      assign: jest.fn(),
+    };
+
+    const all: { loading: boolean; isAuthenticated: boolean }[] = [];
+
+    const { result } = renderHook(
+      () => {
+        const value = useGadget();
+        all.push(value);
+        return value;
+      },
+      {
+        wrapper: (props: { children: ReactNode }) => (
+          <Provider api={mockApiClient} shopifyApiKey={mockApiKey} type={AppType.Embedded}>
+            {props.children}
+          </Provider>
+        ),
+      }
+    );
+
+    await act(async () => {
+      resolveIdToken("some-id-token");
+      await mockUrqlClient.executeMutation.waitForSubject("ShopifyFetchOrInstallShop");
+    });
+
+    expect(all.every((v) => v.loading)).toBeTruthy();
+    expect(all.every((v) => !v.isAuthenticated)).toBeTruthy();
+
+    mockUrqlClient.executeMutation.pushResponse("ShopifyFetchOrInstallShop", {
+      data: {
+        shopifyConnection: {
+          fetchOrInstallShop: {
+            isAuthenticated: true,
+            redirectToOauth: false,
+          },
+        },
+      },
+      stale: false,
+      hasNext: false,
+    });
+
+    expect(result.current.isRootFrameRequest).toBeFalsy();
+    expect(result.current.loading).toBeFalsy();
+    expect(result.current.isAuthenticated).toBeTruthy();
+
+    window.location = location;
+    window.shopify.environment.embedded = false;
   });
 });

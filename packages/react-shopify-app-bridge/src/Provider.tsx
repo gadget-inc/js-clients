@@ -91,6 +91,7 @@ const InnerGadgetProvider = memo(
     let isAuthenticated = false;
     let missingScopes: string[] = useMemo(() => [], []);
     const hasFetchedOrInstalledShop = useRef(false);
+    const hasStartedFetchingOrInstallingShop = useRef(false);
 
     const [{ data: fetchOrInstallShopData, fetching: fetchingOrInstallingShop, error: fetchingOrInstallingShopError }, fetchOrInstallShop] =
       useMutation<{
@@ -104,6 +105,14 @@ const InnerGadgetProvider = memo(
       missingScopes = fetchOrInstallShopData.shopifyConnection.fetchOrInstallShop.missingScopes ?? [];
     }
 
+    // we want to show the loading state until we've started fetching or installing the shop
+    // or the mutation to fetch or install the shop has completed
+    useEffect(() => {
+      if (fetchingOrInstallingShop) {
+        hasStartedFetchingOrInstallingShop.current = true;
+      }
+    }, [fetchingOrInstallingShop]);
+
     // always run one fetch to the gadget backend on boot to discover if this app is installed
     useEffect(() => {
       if (hasFetchedOrInstalledShop.current) return;
@@ -111,10 +120,11 @@ const InnerGadgetProvider = memo(
 
       hasFetchedOrInstalledShop.current = true;
 
-      console.debug("[gadget-rsab] fetching or installing shop");
+      console.debug("[gadget-rsab] getting sessionToken to fetch or install shop");
       appBridge
         .idToken()
         .then((idToken) => {
+          console.debug("[gadget-rsab] fetching or installing shop");
           fetchOrInstallShop({ shopifySessionToken: idToken }).catch((err) => {
             console.error({ err }, "[gadget-rsab] error fetching or installing shop");
           });
@@ -142,7 +152,7 @@ const InnerGadgetProvider = memo(
       // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [gadgetAppUrl, isRootFrameRequest, originalQueryParams, redirectToOauth]);
 
-    const loading = (forceRedirect || redirectToOauth || fetchingOrInstallingShop) && !isRootFrameRequest;
+    const loading = forceRedirect || redirectToOauth || fetchingOrInstallingShop || !hasStartedFetchingOrInstallingShop.current;
 
     useEffect(() => {
       const context = {
@@ -258,6 +268,7 @@ export const Provider = ({ type, children, api }: { type?: AppType; children: Re
 
   console.debug("[gadget-rsab] provider rendering", {
     host,
+    location,
     coalescedType,
     isReady,
   });
