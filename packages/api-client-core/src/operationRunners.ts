@@ -37,7 +37,7 @@ import {
   namespaceDataPath,
   setVariableOptionValues,
 } from "./support.js";
-import type { BaseFindOptions, EnqueueBackgroundActionOptions, FindManyOptions, VariablesOptions } from "./types.js";
+import type { ActionFunctionOptions, BaseFindOptions, EnqueueBackgroundActionOptions, FindManyOptions, VariablesOptions } from "./types.js";
 
 type LiveResultForOptions<T, LiveOptions extends { live?: boolean | null }> = LiveOptions extends { live: true }
   ? AsyncIterable<T>
@@ -376,12 +376,13 @@ export async function enqueueActionRunner<SchemaT, Action extends AnyActionFunct
 export const backgroundActionResultRunner = async <
   SchemaT,
   Action extends ActionFunctionMetadata<any, any, any, SchemaT, any, any> | GlobalActionFunction<any>,
-  ResultData = BackgroundActionResultData<Action>
+  Options extends ActionFunctionOptions<Action>,
+  ResultData = BackgroundActionResultData<Action, Options>
 >(
   connection: GadgetConnection,
   id: string,
   action: Action,
-  options?: Action extends ActionFunctionMetadata<any, any, any, SchemaT, any, any> ? Action["optionsType"] : never
+  options?: Options
 ): Promise<BackgroundActionResult<ResultData>> => {
   const plan = backgroundActionResultOperation(id, action, options);
   const subscription = connection.currentClient.subscription(plan.query, plan.variables);
