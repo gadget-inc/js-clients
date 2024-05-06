@@ -95,7 +95,7 @@ export const findOneRunner = <Shape extends RecordShape = any, Options extends B
   throwOnEmptyData = true,
   namespace?: string | string[] | null
 ) => {
-  const plan = findOneOperation(operation, id, defaultSelection, modelApiIdentifier, options);
+  const plan = findOneOperation(operation, id, defaultSelection, modelApiIdentifier, options, namespace);
   const $results = modelManager.connection.currentClient.query(plan.query, plan.variables);
 
   return maybeLiveStream(
@@ -153,7 +153,7 @@ export const findManyRunner = <Shape extends RecordShape = any, Options extends 
   throwOnEmptyData?: boolean,
   namespace?: string | string[] | null
 ) => {
-  const plan = findManyOperation(operation, defaultSelection, modelApiIdentifier, options);
+  const plan = findManyOperation(operation, defaultSelection, modelApiIdentifier, options, namespace);
   const $results = modelManager.connection.currentClient.query(plan.query, plan.variables);
   const dataPath = namespaceDataPath([operation], namespace);
 
