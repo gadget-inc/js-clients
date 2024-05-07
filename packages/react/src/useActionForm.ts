@@ -127,11 +127,11 @@ const disambiguateDefaultValues = (data: any, initialData: any, action: any) => 
 function getUpdates(data: any): Record<string, number[]> {
   const updateList: Record<string, number[]> = {};
 
-  function traverse(input: any, path: string | undefined = undefined, depth = 0): any {
+  function traverse(input: any, path: string | undefined = undefined, depth = 0, isInArray?: boolean): any {
     if (Array.isArray(input)) {
       return input.map((item: any, index) => {
         const currentPath = path ? `${path}.${index}` : index.toString();
-        return traverse(item, currentPath, depth + 1);
+        return traverse(item, currentPath, depth + 1, true);
       });
     } else if (input !== undefined && input !== null && typeof input === "object") {
       const result: any = {};
@@ -142,7 +142,7 @@ function getUpdates(data: any): Record<string, number[]> {
       }
 
       if (depth > 1) {
-        const newPath = path?.substring(0, path.length - 2);
+        const newPath = isInArray ? path?.substring(0, path.length - 2) : path;
 
         if ("id" in input) {
           if (!updateList[newPath!]) {
@@ -163,6 +163,16 @@ function getUpdates(data: any): Record<string, number[]> {
   return updateList;
 }
 
+class ReshapeDataContext {
+  constructor(
+    public readonly depth: number,
+    public readonly path?: string,
+    public readonly fieldType?: { type: string; model: string } | null,
+    public readonly fieldRelationships?: Record<string, { type: string; model: string }> | null,
+    public readonly parent?: ReshapeDataContext | null
+  ) {}
+}
+
 export const reshapeDataForGraphqlApi = async (client: AnyClient, defaultValues: any, data: any) => {
   const referencedTypes = client[$modelRelationships];
 
@@ -172,19 +182,15 @@ export const reshapeDataForGraphqlApi = async (client: AnyClient, defaultValues:
 
   const updates = getUpdates(defaultValues); // grab the updates from default values to see what needs to be created, updated, or deleted
 
-  function transform(
-    input: any,
-    depth = 0,
-    path: string | undefined = undefined,
-    fieldType: { type: string; model: string } | null = null,
-    fieldRelationships: Record<string, { type: string; model: string }> | null = null
-  ): any {
+  function transform(input: any, context: ReshapeDataContext): any {
+    const { depth, path, fieldType, fieldRelationships } = context;
+
     if (path && Array.isArray(input)) {
       // If the input is an array, we need to handle it differently
       const results: any[] = [];
       let edge: number[] | undefined = undefined;
 
-      if (fieldType && fieldType.type == "HasMany") {
+      if (fieldType && (fieldType.type == "HasMany" || fieldType.type == "HasManyThrough")) {
         edge = updates[path]; // grab the list of ids from the updates object, based on the path
       }
 
@@ -216,7 +222,7 @@ export const reshapeDataForGraphqlApi = async (client: AnyClient, defaultValues:
               handled.push(index);
 
               const currentPath = path ? `${path}.${index}` : index.toString();
-              return transform(item, depth + 1, currentPath, fieldType, fieldRelationships); // transform the item
+              return transform(item, { depth: depth + 1, path: currentPath, fieldType, fieldRelationships, parent: context }); // transform the item
             }
           })
         );
@@ -228,7 +234,7 @@ export const reshapeDataForGraphqlApi = async (client: AnyClient, defaultValues:
           .filter((_item, index) => !handled.includes(index))
           .map((item: any, index) => {
             const currentPath = path ? `${path}.${index}` : index.toString();
-            return transform(item, depth + 1, currentPath, fieldType, fieldRelationships);
+            return transform(item, { depth: depth + 1, path: currentPath, fieldType, fieldRelationships, parent: context });
           })
       );
 
@@ -241,9 +247,15 @@ export const reshapeDataForGraphqlApi = async (client: AnyClient, defaultValues:
         const currentPath = path ? `${path}.${key}` : key;
 
         const fieldType = fieldRelationships ? fieldRelationships[key] : null;
-        const relationships = fieldType ? referencedTypes?.[fieldType.model] : referencedTypes?.[key]; //
+        const relationships = fieldType ? referencedTypes?.[fieldType.model] : referencedTypes?.[key];
 
-        result[key] = transform(input[key], depth + 1, currentPath, fieldType, relationships);
+        result[key] = transform(input[key], {
+          depth: depth + 1,
+          path: currentPath,
+          fieldType,
+          fieldRelationships: relationships,
+          parent: context,
+        });
       }
 
       const { __typename, ...rest } = result;
@@ -279,16 +291,25 @@ export const reshapeDataForGraphqlApi = async (client: AnyClient, defaultValues:
       }
 
       const inputHasId = "id" in input;
+      const inputHasMoreFields = Object.keys(input).length > 1;
+      const inputUpdateId = updates[path!]?.[0];
 
       switch (fieldType.type) {
         case "HasMany":
         case "HasOne":
+        case "HasManyThrough":
           return inputHasId ? { update: { ...rest } } : { create: { ...rest } };
         case "BelongsTo":
-          return inputHasId ? { _link: input["id"] } : { create: { ...rest } };
+          return inputHasId
+            ? inputHasMoreFields
+              ? { update: { id: input["id"], ...rest } }
+              : { _link: input["id"] }
+            : inputUpdateId // input has no id, but this path was found in the updates object, so we need to delete it
+            ? { delete: { id: inputUpdateId } }
+            : { create: { ...rest } };
         default:
           throw new Error(
-            `Can't transform input, Unknown field type ${fieldType}. ${JSON.stringify(
+            `Can't transform input, Unknown field type ${fieldType?.type}. ${JSON.stringify(
               {
                 input,
                 path,
@@ -304,7 +325,7 @@ export const reshapeDataForGraphqlApi = async (client: AnyClient, defaultValues:
     return input;
   }
 
-  const result = transform(data);
+  const result = transform(data, { depth: 0 });
 
   return result;
 };

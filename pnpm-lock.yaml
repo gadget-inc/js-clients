@@ -38,6 +38,9 @@ importers:
       '@gadget-client/zxcv-deeply-nested':
         specifier: ^1.212.0
         version: 1.212.0
+      '@gadget-client/zxcv-manythrough-example':
+        specifier: 1.3.0-development.40
+        version: 1.3.0-development.40
       '@gadget-client/zxcv-simple-relationship':
         specifier: ^1.23.0
         version: 1.23.0
@@ -1328,6 +1331,12 @@ packages:
 
   /@gadget-client/zxcv-deeply-nested@1.212.0:
     resolution: {integrity: sha1-58djN0ZtSCUxscxlBV93POFqOGQ=, tarball: https://registry.gadget.dev/npm/_/tarball/76013/150609/7460}
+    dependencies:
+      '@gadgetinc/api-client-core': link:packages/api-client-core
+    dev: true
+
+  /@gadget-client/zxcv-manythrough-example@1.3.0-development.40:
+    resolution: {integrity: sha1-XCn9yCwa3uW7VOmjzHweDoV6IfQ=, tarball: https://registry.gadget.dev/npm/_/tarball/114722/228808/7560}
     dependencies:
       '@gadgetinc/api-client-core': link:packages/api-client-core
     dev: true
