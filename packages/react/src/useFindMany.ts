@@ -1,5 +1,5 @@
 import type { AnyModelManager, DefaultSelection, FindManyFunction, LimitToKnownKeys, Select } from "@gadgetinc/api-client-core";
-import { GadgetRecordList, findManyOperation, get, hydrateConnection } from "@gadgetinc/api-client-core";
+import { GadgetRecordList, findManyOperation, get, hydrateConnection, namespaceDataPath } from "@gadgetinc/api-client-core";
 import { useMemo } from "react";
 import { useGadgetQuery } from "./useGadgetQuery.js";
 import { useStructuralMemo } from "./useStructuralMemo.js";
@@ -54,7 +54,7 @@ export const useFindMany = <
   const [rawResult, refresh] = useGadgetQuery(useQueryArgs(plan, options));
 
   const result = useMemo(() => {
-    const dataPath = [manager.findMany.operationName];
+    const dataPath = namespaceDataPath([manager.findMany.operationName], manager.findMany.namespace);
     let data = rawResult.data;
     if (data) {
       const connection = get(rawResult.data, dataPath);

@@ -1,5 +1,5 @@
 import type { GlobalActionFunction } from "@gadgetinc/api-client-core";
-import { get, globalActionOperation } from "@gadgetinc/api-client-core";
+import { get, globalActionOperation, namespaceDataPath } from "@gadgetinc/api-client-core";
 import { useCallback, useMemo } from "react";
 import type { OperationContext, UseMutationState } from "urql";
 import { useGadgetMutation } from "./useGadgetMutation.js";
@@ -54,7 +54,8 @@ const processResult = (result: UseMutationState<any, any>, action: GlobalActionF
   let error = ErrorWrapper.forMaybeCombinedError(result.error);
   let data = undefined;
   if (result.data) {
-    data = get(result.data, [action.operationName]);
+    const dataPath = namespaceDataPath([action.operationName], action.namespace);
+    data = get(result.data, dataPath);
     if (data) {
       const errors = data.errors;
       data = data.result;

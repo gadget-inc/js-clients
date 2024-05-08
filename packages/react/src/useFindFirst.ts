@@ -1,5 +1,5 @@
 import type { DefaultSelection, FindFirstFunction, GadgetRecord, LimitToKnownKeys, Select } from "@gadgetinc/api-client-core";
-import { findManyOperation, get, hydrateConnection } from "@gadgetinc/api-client-core";
+import { findManyOperation, get, hydrateConnection, namespaceDataPath } from "@gadgetinc/api-client-core";
 import { useMemo } from "react";
 import { useGadgetQuery } from "./useGadgetQuery.js";
 import { useStructuralMemo } from "./useStructuralMemo.js";
@@ -55,7 +55,7 @@ export const useFindFirst = <
   const [rawResult, refresh] = useGadgetQuery(useQueryArgs(plan, firstOptions));
 
   const result = useMemo(() => {
-    const dataPath = [manager.findFirst.operationName];
+    const dataPath = namespaceDataPath([manager.findFirst.operationName], manager.findFirst.namespace);
     let data = rawResult.data;
     if (data) {
       const connection = get(rawResult.data, dataPath);

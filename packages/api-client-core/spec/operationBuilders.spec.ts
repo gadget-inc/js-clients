@@ -5,6 +5,7 @@ import {
   findManyOperation,
   findOneByFieldOperation,
   findOneOperation,
+  globalActionOperation,
 } from "../src/index.js";
 import { MockBulkUpdateWidgetAction, MockGlobalAction, MockWidgetCreateAction } from "./mockActions.js";
 
@@ -60,6 +61,57 @@ describe("operation builders", () => {
             __typename
             id
             state
+          }
+          gadgetMeta {
+            hydrations(modelName: "widget")
+          }
+        }",
+          "variables": {
+            "id": "123",
+          },
+        }
+      `);
+    });
+
+    test("findOneOperation should build a find one query for a model with one namespace", () => {
+      expect(findOneOperation("widget", "123", { __typename: true, id: true, state: true }, "widget", null, ["outer"]))
+        .toMatchInlineSnapshot(`
+        {
+          "query": "query widget($id: GadgetID!) {
+          outer {
+            widget(id: $id) {
+              __typename
+              id
+              state
+            }
+          }
+          gadgetMeta {
+            hydrations(modelName: "widget")
+          }
+        }",
+          "variables": {
+            "id": "123",
+          },
+        }
+      `);
+    });
+
+    test("findOneOperation should build a find one query for a model with multiple namespaces", () => {
+      expect(
+        findOneOperation("widget", "123", { __typename: true, id: true, state: true }, "widget", null, ["outer", "inner", "reallyInner"])
+      ).toMatchInlineSnapshot(`
+        {
+          "query": "query widget($id: GadgetID!) {
+          outer {
+            inner {
+              reallyInner {
+                widget(id: $id) {
+                  __typename
+                  id
+                  state
+                }
+              }
+            }
           }
           gadgetMeta {
             hydrations(modelName: "widget")
@@ -239,6 +291,60 @@ describe("operation builders", () => {
       `);
     });
 
+    test("findManyOperation should build a findMany query for a namespaced model", () => {
+      expect(
+        findManyOperation(
+          "widgets",
+          { __typename: true, id: true, state: true },
+          "widget",
+          { sort: [{ id: "Ascending" }], filter: [{ foo: { equals: "bar" } }] },
+          ["outer", "inner"]
+        )
+      ).toMatchInlineSnapshot(`
+        {
+          "query": "query widgets($after: String, $first: Int, $before: String, $last: Int, $sort: [OuterInnerWidgetSort!], $filter: [OuterInnerWidgetFilter!]) {
+          outer {
+            inner {
+              widgets(after: $after, first: $first, before: $before, last: $last, sort: $sort, filter: $filter) {
+                pageInfo {
+                  hasNextPage
+                  hasPreviousPage
+                  startCursor
+                  endCursor
+                }
+                edges {
+                  cursor
+                  node {
+                    __typename
+                    id
+                    state
+                  }
+                }
+              }
+            }
+          }
+          gadgetMeta {
+            hydrations(modelName: "widget")
+          }
+        }",
+          "variables": {
+            "filter": [
+              {
+                "foo": {
+                  "equals": "bar",
+                },
+              },
+            ],
+            "sort": [
+              {
+                "id": "Ascending",
+              },
+            ],
+          },
+        }
+      `);
+    });
+
     test("findManyOperation should build a live findMany query for a model", () => {
       expect(findManyOperation("widgets", { __typename: true, id: true, state: true }, "widget", { live: true })).toMatchInlineSnapshot(`
         {
@@ -327,6 +433,59 @@ describe("operation builders", () => {
                 id
                 name
                 __typename
+              }
+            }
+          }
+          gadgetMeta {
+            hydrations(modelName: "widget")
+          }
+        }",
+          "variables": {
+            "filter": {
+              "foo": {
+                "equals": "bar",
+              },
+            },
+            "first": 2,
+          },
+        }
+      `);
+    });
+
+    test("findOneByFieldOperation should build a findMany query for a namespaced model", () => {
+      expect(
+        findOneByFieldOperation(
+          "widget",
+          "foo",
+          "bar",
+          { __typename: true, id: true, state: true },
+          "widget",
+          {
+            select: { id: true, name: true },
+          },
+
+          ["outer", "inner"]
+        )
+      ).toMatchInlineSnapshot(`
+        {
+          "query": "query widget($after: String, $first: Int, $before: String, $last: Int, $filter: [OuterInnerWidgetFilter!]) {
+          outer {
+            inner {
+              widget(after: $after, first: $first, before: $before, last: $last, filter: $filter) {
+                pageInfo {
+                  hasNextPage
+                  hasPreviousPage
+                  startCursor
+                  endCursor
+                }
+                edges {
+                  cursor
+                  node {
+                    id
+                    name
+                    __typename
+                  }
+                }
               }
             }
           }
@@ -500,7 +659,7 @@ describe("operation builders", () => {
             }
           }
           gadgetMeta {
-            hydrations(modelName: "session")
+            hydrations(modelName: "currentSession.session")
           }
         }",
           "variables": {},
@@ -585,10 +744,121 @@ describe("operation builders", () => {
         }
       `);
     });
+
+    test("actionOperation should build a mutation query for a model action with a string namespace", () => {
+      expect(actionOperation("createWidget", { __typename: true, id: true, state: true }, "widget", "widget", {}, undefined, "outer"))
+        .toMatchInlineSnapshot(`
+        {
+          "query": "mutation createWidget {
+          outer {
+            createWidget {
+              success
+              errors {
+                message
+                code
+                ... on InvalidRecordError {
+                  validationErrors {
+                    message
+                    apiIdentifier
+                  }
+                }
+              }
+              widget {
+                __typename
+                id
+                state
+              }
+            }
+          }
+          gadgetMeta {
+            hydrations(modelName: "outer.widget")
+          }
+        }",
+          "variables": {},
+        }
+      `);
+    });
+
+    test("actionOperation should build a mutation query for a model action with a single element string array namespace", () => {
+      expect(actionOperation("createWidget", { __typename: true, id: true, state: true }, "widget", "widget", {}, undefined, ["outer"]))
+        .toMatchInlineSnapshot(`
+        {
+          "query": "mutation createWidget {
+          outer {
+            createWidget {
+              success
+              errors {
+                message
+                code
+                ... on InvalidRecordError {
+                  validationErrors {
+                    message
+                    apiIdentifier
+                  }
+                }
+              }
+              widget {
+                __typename
+                id
+                state
+              }
+            }
+          }
+          gadgetMeta {
+            hydrations(modelName: "outer.widget")
+          }
+        }",
+          "variables": {},
+        }
+      `);
+    });
+
+    test("actionOperation should build a mutation query for a model action with a multi element array namespace", () => {
+      expect(
+        actionOperation("createWidget", { __typename: true, id: true, state: true }, "widget", "widget", {}, undefined, [
+          "outer",
+          "inner",
+          "reallyInner",
+        ])
+      ).toMatchInlineSnapshot(`
+        {
+          "query": "mutation createWidget {
+          outer {
+            inner {
+              reallyInner {
+                createWidget {
+                  success
+                  errors {
+                    message
+                    code
+                    ... on InvalidRecordError {
+                      validationErrors {
+                        message
+                        apiIdentifier
+                      }
+                    }
+                  }
+                  widget {
+                    __typename
+                    id
+                    state
+                  }
+                }
+              }
+            }
+          }
+          gadgetMeta {
+            hydrations(modelName: "outer.inner.reallyInner.widget")
+          }
+        }",
+          "variables": {},
+        }
+      `);
+    });
   });
 
   describe("enqueueActionOperation", () => {
-    test("enqueueActionOperation should build a mutation query for enqueuing model action", () => {
+    test("enqueueActionOperation should build a mutation query for enqueuing an action", () => {
       expect(enqueueActionOperation("createWidget", {}, undefined)).toMatchInlineSnapshot(`
         {
           "query": "mutation enqueueCreateWidget($backgroundOptions: EnqueueBackgroundActionOptions) {
@@ -612,7 +882,61 @@ describe("operation builders", () => {
       `);
     });
 
-    test("enqueueActionOperation should build a mutation query for enqueuing a bulk action action", () => {
+    test("enqueueActionOperation should build a mutation query for enqueuing a string namespaced action", () => {
+      expect(enqueueActionOperation("createWidget", {}, "outer")).toMatchInlineSnapshot(`
+        {
+          "query": "mutation enqueueCreateWidget($backgroundOptions: EnqueueBackgroundActionOptions) {
+          background {
+            outer {
+              createWidget(backgroundOptions: $backgroundOptions) {
+                success
+                errors {
+                  message
+                  code
+                }
+                backgroundAction {
+                  id
+                }
+              }
+            }
+          }
+        }",
+          "variables": {
+            "backgroundOptions": null,
+          },
+        }
+      `);
+    });
+
+    test("enqueueActionOperation should build a mutation query for enqueuing a namespaced action", () => {
+      expect(enqueueActionOperation("createWidget", {}, ["outer", "inner"])).toMatchInlineSnapshot(`
+        {
+          "query": "mutation enqueueCreateWidget($backgroundOptions: EnqueueBackgroundActionOptions) {
+          background {
+            outer {
+              inner {
+                createWidget(backgroundOptions: $backgroundOptions) {
+                  success
+                  errors {
+                    message
+                    code
+                  }
+                  backgroundAction {
+                    id
+                  }
+                }
+              }
+            }
+          }
+        }",
+          "variables": {
+            "backgroundOptions": null,
+          },
+        }
+      `);
+    });
+
+    test("enqueueActionOperation should build a mutation query for enqueuing a bulk action", () => {
       expect(enqueueActionOperation("bulkCreateWidgets", {}, undefined, null, true)).toMatchInlineSnapshot(`
         {
           "query": "mutation enqueueBulkCreateWidgets($backgroundOptions: EnqueueBackgroundActionOptions) {
@@ -625,6 +949,34 @@ describe("operation builders", () => {
               }
               backgroundActions {
                 id
+              }
+            }
+          }
+        }",
+          "variables": {
+            "backgroundOptions": null,
+          },
+        }
+      `);
+    });
+
+    test("enqueueActionOperation should build a mutation query for enqueuing a namespaced bulk action", () => {
+      expect(enqueueActionOperation("bulkCreateWidgets", {}, ["outer", "inner"], null, true)).toMatchInlineSnapshot(`
+        {
+          "query": "mutation enqueueBulkCreateWidgets($backgroundOptions: EnqueueBackgroundActionOptions) {
+          background {
+            outer {
+              inner {
+                bulkCreateWidgets(backgroundOptions: $backgroundOptions) {
+                  success
+                  errors {
+                    message
+                    code
+                  }
+                  backgroundActions {
+                    id
+                  }
+                }
               }
             }
           }
@@ -790,6 +1142,84 @@ describe("operation builders", () => {
           "variables": {
             "id": "app-job-1234567",
           },
+        }
+      `);
+    });
+  });
+
+  describe("globalActionOperation", () => {
+    test("it can build an operation for a global action", () => {
+      expect(globalActionOperation("flipAllWidgets", {})).toMatchInlineSnapshot(`
+        {
+          "query": "mutation flipAllWidgets {
+          flipAllWidgets {
+            success
+            errors {
+              message
+              code
+              ... on InvalidRecordError {
+                validationErrors {
+                  message
+                  apiIdentifier
+                }
+              }
+            }
+            result
+          }
+        }",
+          "variables": {},
+        }
+      `);
+    });
+
+    test("it can build an operation for a namespaced global action", () => {
+      expect(globalActionOperation("flipAllWidgets", {}, ["outer", "inner"])).toMatchInlineSnapshot(`
+        {
+          "query": "mutation flipAllWidgets {
+          outer {
+            inner {
+              flipAllWidgets {
+                success
+                errors {
+                  message
+                  code
+                  ... on InvalidRecordError {
+                    validationErrors {
+                      message
+                      apiIdentifier
+                    }
+                  }
+                }
+                result
+              }
+            }
+          }
+        }",
+          "variables": {},
+        }
+      `);
+    });
+
+    test("it can build an operation for a live global action", () => {
+      expect(globalActionOperation("flipAllWidgets", {}, null, { live: true })).toMatchInlineSnapshot(`
+        {
+          "query": "mutation flipAllWidgets @live {
+          flipAllWidgets {
+            success
+            errors {
+              message
+              code
+              ... on InvalidRecordError {
+                validationErrors {
+                  message
+                  apiIdentifier
+                }
+              }
+            }
+            result
+          }
+        }",
+          "variables": {},
         }
       `);
     });

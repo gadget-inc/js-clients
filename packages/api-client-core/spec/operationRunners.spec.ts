@@ -15,15 +15,24 @@ import {
 } from "../src/index.js";
 import { asyncIterableToIterator, waitForExpectationToPass } from "./helpers.js";
 import { MockBulkFlipDownWidgetsAction, MockBulkUpdateWidgetAction, MockGlobalAction, MockWidgetCreateAction } from "./mockActions.js";
-import { mockGraphQLWSClient, mockUrqlClient } from "./mockUrqlClient.js";
+import { MockUrqlClient, createMockUrqlClient, mockGraphQLWSClient } from "./mockUrqlClient.js";
 
 nock.disableNetConnect();
 
 // eslint-disable-next-line jest/no-export
 describe("operationRunners", () => {
   let connection: GadgetConnection;
+  let query: string | undefined;
+  let mockUrqlClient: MockUrqlClient;
+
   beforeEach(() => {
+    query = undefined;
     connection = new GadgetConnection({ endpoint: "https://someapp.gadget.app" });
+    mockUrqlClient = createMockUrqlClient({
+      queryAssertions: (request) => {
+        query = request.query.loc?.source.body;
+      },
+    });
     jest.spyOn(connection, "currentClient", "get").mockReturnValue(mockUrqlClient as any);
   });
 
@@ -31,11 +40,69 @@ describe("operationRunners", () => {
     test("can execute a findOne operation against a model", async () => {
       const promise = findOneRunner({ connection }, "widget", "123", { id: true, name: true }, "widget");
 
+      expect(query).toMatchInlineSnapshot(`
+      "query widget($id: GadgetID!) {
+        widget(id: $id) {
+          id
+          name
+          __typename
+        }
+        gadgetMeta {
+          hydrations(modelName: 
+      "widget")
+        }
+      }"
+      `);
+
       mockUrqlClient.executeQuery.pushResponse("widget", {
         data: {
           widget: {
             id: "123",
             name: "foo",
+          },
+        },
+        stale: false,
+        hasNext: false,
+      });
+
+      const result = await promise;
+      expect(result.id).toBeTruthy();
+      expect(result.name).toBeTruthy();
+    });
+
+    test("can execute a findOne operation against a namespaced model", async () => {
+      const promise = findOneRunner({ connection }, "widget", "123", { id: true, name: true }, "widget", undefined, undefined, [
+        "outer",
+        "inner",
+      ]);
+
+      expect(query).toMatchInlineSnapshot(`
+      "query widget($id: GadgetID!) {
+        outer {
+          inner {
+            widget(id: $id) {
+              id
+              name
+              __typename
+            }
+          }
+        }
+        gadgetMeta {
+          hydrations(modelName: 
+      "widget")
+        }
+      }"
+      `);
+
+      mockUrqlClient.executeQuery.pushResponse("widget", {
+        data: {
+          outer: {
+            inner: {
+              widget: {
+                id: "123",
+                name: "foo",
+              },
+            },
           },
         },
         stale: false,
@@ -113,6 +180,191 @@ describe("operationRunners", () => {
       });
 
       expect(await promise).toBeNull();
+    });
+  });
+
+  describe("findManyRunner", () => {
+    test("can execute a findMany operation against a model", async () => {
+      const promise = findManyRunner({ connection } as AnyModelManager, "widgets", { id: true, name: true }, "widget");
+
+      expect(query).toMatchInlineSnapshot(`
+      "query widgets($after: String, $first: Int, $before: String, $last: Int) {
+        widgets(after: $after, first: $first, before: $before, last: $last) {
+          pageInfo {
+            hasNextPage
+            hasPreviousPage
+            startCursor
+            endCursor
+          }
+          edges {
+            cursor
+            node {
+              id
+              name
+              __typename
+            }
+          }
+        }
+        gadgetMeta {
+          hydrations(modelName: 
+      "widget")
+        }
+      }"
+      `);
+
+      mockUrqlClient.executeQuery.pushResponse("widgets", {
+        data: {
+          widgets: {
+            edges: [
+              { cursor: "123", node: { id: "123", name: "foo" } },
+              { cursor: "abc", node: { id: "124", name: "bar" } },
+            ],
+            pageInfo: {
+              startCursor: "123",
+              endCursor: "abc",
+              hasNextPage: false,
+              hasPreviousPage: false,
+            },
+          },
+        },
+        stale: false,
+        hasNext: false,
+      });
+
+      const result = await promise;
+      expect(result[0].id).toBeTruthy();
+      expect(result[0].name).toBeTruthy();
+    });
+
+    test("can execute a findMany operation against a namespaced model", async () => {
+      const promise = findManyRunner(
+        { connection } as AnyModelManager,
+        "widgets",
+        { id: true, name: true },
+        "widget",
+        undefined,
+        undefined,
+        ["outer", "inner"]
+      );
+      expect(query).toMatchInlineSnapshot(`
+      "query widgets($after: String, $first: Int, $before: String, $last: Int) {
+        outer {
+          inner {
+            widgets(after: $after, first: $first, before: $before, last: $last) {
+              pageInfo {
+                hasNextPage
+                hasPreviousPage
+                startCursor
+                endCursor
+              }
+              edges {
+                cursor
+                node {
+                  id
+                  name
+                  __typename
+                }
+              }
+            }
+          }
+        }
+        gadgetMeta {
+          hydrations(modelName: 
+      "widget")
+        }
+      }"
+      `);
+
+      mockUrqlClient.executeQuery.pushResponse("widgets", {
+        data: {
+          outer: {
+            inner: {
+              widgets: {
+                edges: [
+                  { cursor: "123", node: { id: "123", name: "foo" } },
+                  { cursor: "abc", node: { id: "124", name: "bar" } },
+                ],
+                pageInfo: {
+                  startCursor: "123",
+                  endCursor: "abc",
+                  hasNextPage: false,
+                  hasPreviousPage: false,
+                },
+              },
+            },
+          },
+        },
+        stale: false,
+        hasNext: false,
+      });
+
+      const result = await promise;
+      expect(result[0].id).toBeTruthy();
+      expect(result[0].name).toBeTruthy();
+    });
+
+    test("can execute a findMany operation against a namespaced model when the namespace is a string", async () => {
+      const promise = findManyRunner(
+        { connection } as AnyModelManager,
+        "widgets",
+        { id: true, name: true },
+        "widget",
+        undefined,
+        undefined,
+        "outer"
+      );
+
+      expect(query).toMatchInlineSnapshot(`
+      "query widgets($after: String, $first: Int, $before: String, $last: Int) {
+        outer {
+          widgets(after: $after, first: $first, before: $before, last: $last) {
+            pageInfo {
+              hasNextPage
+              hasPreviousPage
+              startCursor
+              endCursor
+            }
+            edges {
+              cursor
+              node {
+                id
+                name
+                __typename
+              }
+            }
+          }
+        }
+        gadgetMeta {
+          hydrations(modelName: 
+      "widget")
+        }
+      }"
+      `);
+
+      mockUrqlClient.executeQuery.pushResponse("widgets", {
+        data: {
+          outer: {
+            widgets: {
+              edges: [
+                { cursor: "123", node: { id: "123", name: "foo" } },
+                { cursor: "abc", node: { id: "124", name: "bar" } },
+              ],
+              pageInfo: {
+                startCursor: "123",
+                endCursor: "abc",
+                hasNextPage: false,
+                hasPreviousPage: false,
+              },
+            },
+          },
+        },
+        stale: false,
+        hasNext: false,
+      });
+
+      const result = await promise;
+      expect(result[0].id).toBeTruthy();
+      expect(result[0].name).toBeTruthy();
     });
   });
 
