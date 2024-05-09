@@ -40,16 +40,21 @@ const internalHydrationPlan = (modelApiIdentifer: string) => `
   }
 `;
 
-export const internalFindOneQuery = (apiIdentifier: string) => {
+const internalFindOneQuery = (apiIdentifier: string, id: string, select?: string[]) => {
   const capitalizedApiIdentifier = capitalizeIdentifier(apiIdentifier);
-  return `
-    query InternalFind${capitalizedApiIdentifier}($id: GadgetID!, $select: [String!]) {
-      ${internalHydrationPlan(apiIdentifier)}
-      internal {
-        ${apiIdentifier}(id: $id, select: $select)
-      }
-    }
-    `;
+
+  return compileWithVariableValues({
+    type: "query",
+    name: `InternalFind${capitalizedApiIdentifier}`,
+    fields: {
+      internal: {
+        [apiIdentifier]: Call({
+          id: Var({ value: id, type: "GadgetID!" }),
+          select: Var({ value: select, type: "[String!]" }),
+        }),
+      },
+    },
+  });
 };
 
 const internalFindListVariables = (capitalizedApiIdentifier: string, options?: InternalFindListOptions) => {
@@ -273,9 +278,8 @@ export class InternalModelManager {
    * @returns The record, if found
    */
   async findOne(id: string, options?: InternalFindOneOptions, throwOnEmptyData = true): Promise<GadgetRecord<RecordData>> {
-    const response = await this.connection.currentClient
-      .query(internalFindOneQuery(this.apiIdentifier), { id, select: formatInternalSelectVariable(options?.select) })
-      .toPromise();
+    const plan = internalFindOneQuery(this.apiIdentifier, id, formatInternalSelectVariable(options?.select));
+    const response = await this.connection.currentClient.query(plan.query, plan.variables).toPromise();
     const assertSuccess = throwOnEmptyData ? assertOperationSuccess : assertNullableOperationSuccess;
     const result = assertSuccess(response, ["internal", this.apiIdentifier]);
     return hydrateRecord(response, result);
