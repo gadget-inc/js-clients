@@ -156,6 +156,9 @@ describe("InternalModelManager", () => {
               }
             }
           }
+          gadgetMeta {
+            hydrations(modelName: "widget")
+          }
         }",
           "variables": {},
         }
@@ -181,6 +184,9 @@ describe("InternalModelManager", () => {
                 node
               }
             }
+          }
+          gadgetMeta {
+            hydrations(modelName: "widget")
           }
         }",
           "variables": {
@@ -214,6 +220,9 @@ describe("InternalModelManager", () => {
               }
             }
           }
+          gadgetMeta {
+            hydrations(modelName: "widget")
+          }
         }",
           "variables": {
             "search": "term",
@@ -241,6 +250,9 @@ describe("InternalModelManager", () => {
                 node
               }
             }
+          }
+          gadgetMeta {
+            hydrations(modelName: "widget")
           }
         }",
           "variables": {
@@ -283,6 +295,9 @@ describe("InternalModelManager", () => {
               }
             }
           }
+          gadgetMeta {
+            hydrations(modelName: "widget")
+          }
         }",
           "variables": {
             "first": 1,
@@ -303,6 +318,9 @@ describe("InternalModelManager", () => {
                 node
               }
             }
+          }
+          gadgetMeta {
+            hydrations(modelName: "widget")
           }
         }",
           "variables": {
@@ -330,6 +348,9 @@ describe("InternalModelManager", () => {
               }
             }
           }
+          gadgetMeta {
+            hydrations(modelName: "widget")
+          }
         }",
           "variables": {
             "first": 1,
@@ -351,6 +372,9 @@ describe("InternalModelManager", () => {
                 node
               }
             }
+          }
+          gadgetMeta {
+            hydrations(modelName: "widget")
           }
         }",
           "variables": {
@@ -381,6 +405,9 @@ describe("InternalModelManager", () => {
               }
             }
           }
+          gadgetMeta {
+            hydrations(modelName: "widget")
+          }
         }",
           "variables": {
             "first": 1,
@@ -393,12 +420,13 @@ describe("InternalModelManager", () => {
       `);
       expectValidGraphQLQuery(plan.query);
     });
+  });
 
-    describe("properly handles apiIdentifiers styled with Snake Case", () => {
-      // snake case example: "api_identifier"
-      test("should build a find first query with no options", () => {
-        const plan = internalFindFirstQuery("widget_model", undefined);
-        expect(plan).toMatchInlineSnapshot(`
+  describe("properly handles apiIdentifiers styled with Snake Case", () => {
+    // snake case example: "api_identifier"
+    test("should build a find first query with no options", () => {
+      const plan = internalFindFirstQuery("widget_model", undefined);
+      expect(plan).toMatchInlineSnapshot(`
           {
             "query": "query InternalFindFirstWidgetModel($first: Int) {
             internal {
@@ -408,18 +436,21 @@ describe("InternalModelManager", () => {
                 }
               }
             }
+            gadgetMeta {
+              hydrations(modelName: "widget_model")
+            }
           }",
             "variables": {
               "first": 1,
             },
           }
         `);
-        expectValidGraphQLQuery(plan.query);
-      });
+      expectValidGraphQLQuery(plan.query);
+    });
 
-      test("should build a find first query with sort", () => {
-        const plan = internalFindFirstQuery("widget_model", { sort: [{ id: "Ascending" }] });
-        expect(plan).toMatchInlineSnapshot(`
+    test("should build a find first query with sort", () => {
+      const plan = internalFindFirstQuery("widget_model", { sort: [{ id: "Ascending" }] });
+      expect(plan).toMatchInlineSnapshot(`
           {
             "query": "query InternalFindFirstWidgetModel($sort: [WidgetModelSort!], $first: Int) {
             internal {
@@ -428,6 +459,9 @@ describe("InternalModelManager", () => {
                   node
                 }
               }
+            }
+            gadgetMeta {
+              hydrations(modelName: "widget_model")
             }
           }",
             "variables": {
@@ -440,12 +474,12 @@ describe("InternalModelManager", () => {
             },
           }
         `);
-        expectValidGraphQLQuery(plan.query);
-      });
+      expectValidGraphQLQuery(plan.query);
+    });
 
-      test("should build a find first query with search", () => {
-        const plan = internalFindFirstQuery("widget_model", { search: "term" });
-        expect(plan).toMatchInlineSnapshot(`
+    test("should build a find first query with search", () => {
+      const plan = internalFindFirstQuery("widget_model", { search: "term" });
+      expect(plan).toMatchInlineSnapshot(`
           {
             "query": "query InternalFindFirstWidgetModel($search: String, $first: Int) {
             internal {
@@ -455,6 +489,9 @@ describe("InternalModelManager", () => {
                 }
               }
             }
+            gadgetMeta {
+              hydrations(modelName: "widget_model")
+            }
           }",
             "variables": {
               "first": 1,
@@ -462,12 +499,12 @@ describe("InternalModelManager", () => {
             },
           }
         `);
-        expectValidGraphQLQuery(plan.query);
-      });
+      expectValidGraphQLQuery(plan.query);
+    });
 
-      test("should build a find first query with filter", () => {
-        const plan = internalFindFirstQuery("widget_model", { filter: [{ id: { equals: "1" } }] });
-        expect(plan).toMatchInlineSnapshot(`
+    test("should build a find first query with filter", () => {
+      const plan = internalFindFirstQuery("widget_model", { filter: [{ id: { equals: "1" } }] });
+      expect(plan).toMatchInlineSnapshot(`
           {
             "query": "query InternalFindFirstWidgetModel($filter: [WidgetModelFilter!], $first: Int) {
             internal {
@@ -476,6 +513,9 @@ describe("InternalModelManager", () => {
                   node
                 }
               }
+            }
+            gadgetMeta {
+              hydrations(modelName: "widget_model")
             }
           }",
             "variables": {
@@ -490,442 +530,326 @@ describe("InternalModelManager", () => {
             },
           }
         `);
-        expectValidGraphQLQuery(plan.query);
-      });
+      expectValidGraphQLQuery(plan.query);
+    });
 
-      test("should build a create record mutation", () => {
-        const result = internalCreateMutation("widget_model");
+    test("should build a create record mutation", () => {
+      const result = internalCreateMutation("widget_model", { title: "foo" });
 
-        expect(result).toMatchInlineSnapshot(`
-          "
-              
-          fragment InternalErrorsDetails on ExecutionError {
-            code
-            message
-            ...on InvalidRecordError {
-              validationErrors {
-                apiIdentifier
+      expect(result.query).toMatchInlineSnapshot(`
+          "mutation InternalCreateWidgetModel($widget_model: InternalWidgetModelInput) {
+            internal {
+              createWidgetModel(widget_model: $widget_model) {
+                success
+                code
                 message
+                ...on InvalidRecordError {
+                  validationErrors {
+                    apiIdentifier
+                    message
+                  }
+                  model {
+                    apiIdentifier
+                  }
+                  record
+                }
+                widget_model
               }
-              model {
-                apiIdentifier
-              }
-              record
             }
-          }
-
-
-              mutation InternalCreateWidgetModel($record: InternalWidgetModelInput) {
-                
             gadgetMeta {
               hydrations(modelName: "widget_model")
             }
-
-                internal {
-                  createWidgetModel(widget_model: $record) {
-                    success
-                    errors {
-                      ... InternalErrorsDetails
-                    }
-                    widget_model
-                  }
-                }
-              }
-            "
+          }"
         `);
-        expectValidGraphQLQuery(result);
-      });
+      expectValidGraphQLQuery(result.query);
+      expect(result.variables.widget_model).toEqual({ title: "foo" });
+    });
 
-      test("should build a bulk create records mutation", () => {
-        const result = internalBulkCreateMutation("widget_model", "widget_models");
+    test("should build a bulk create records mutation", () => {
+      const result = internalBulkCreateMutation("widget_model", "widget_models", [{ foo: "bar" }, { foo: "baz" }]);
 
-        expect(result).toMatchInlineSnapshot(`
-          "
-              
-          fragment InternalErrorsDetails on ExecutionError {
-            code
-            message
-            ...on InvalidRecordError {
-              validationErrors {
-                apiIdentifier
+      expect(result.query).toMatchInlineSnapshot(`
+          "mutation InternalBulkCreateWidgetModels($widget_models: [InternalWidgetModelInput]!) {
+            internal {
+              bulkCreateWidgetModels(widget_models: $widget_models) {
+                success
+                code
                 message
+                ...on InvalidRecordError {
+                  validationErrors {
+                    apiIdentifier
+                    message
+                  }
+                  model {
+                    apiIdentifier
+                  }
+                  record
+                }
+                widget_models
               }
-              model {
-                apiIdentifier
-              }
-              record
             }
-          }
-
-
-              mutation InternalBulkCreateWidgetModels($records: [InternalWidgetModelInput]!) {
-                
             gadgetMeta {
               hydrations(modelName: "widget_model")
             }
-
-                internal {
-                  bulkCreateWidgetModels(widget_models: $records) {
-                    success
-                    errors {
-                      ... InternalErrorsDetails
-                    }
-                    widget_models
-                  }
-                }
-              }
-            "
+          }"
         `);
-        expectValidGraphQLQuery(result);
-      });
+      expectValidGraphQLQuery(result.query);
+      expect(result.variables).toEqual({ widget_models: [{ foo: "bar" }, { foo: "baz" }] });
+    });
 
-      test("should build an update record mutation", () => {
-        const result = internalUpdateMutation("widget_model");
+    test("should build an update record mutation", () => {
+      const result = internalUpdateMutation("widget_model", "123", { title: "foobar" });
 
-        expect(result).toMatchInlineSnapshot(`
-          "
-              
-          fragment InternalErrorsDetails on ExecutionError {
-            code
-            message
-            ...on InvalidRecordError {
-              validationErrors {
-                apiIdentifier
+      expect(result.query).toMatchInlineSnapshot(`
+          "mutation InternalUpdateWidgetModel($id: GadgetID!, $widget_model: InternalWidgetModelInput) {
+            internal {
+              updateWidgetModel(id: $id, widget_model: $widget_model) {
+                success
+                code
                 message
+                ...on InvalidRecordError {
+                  validationErrors {
+                    apiIdentifier
+                    message
+                  }
+                  model {
+                    apiIdentifier
+                  }
+                  record
+                }
+                widget_model
               }
-              model {
-                apiIdentifier
-              }
-              record
             }
-          }
-
-
-              mutation InternalUpdateWidgetModel($id: GadgetID!, $record: InternalWidgetModelInput) {
-                
             gadgetMeta {
               hydrations(modelName: "widget_model")
             }
-
-                internal {
-                  updateWidgetModel(id: $id, widget_model: $record) {
-                    success
-                    errors {
-                      ... InternalErrorsDetails
-                    }
-                    widget_model
-                  }
-                }
-              }
-            "
+          }"
         `);
-        expectValidGraphQLQuery(result);
-      });
+      expectValidGraphQLQuery(result.query);
+      expect(result.variables).toEqual({ id: "123", widget_model: { title: "foobar" } });
+    });
 
-      test("should build a delete record mutation", () => {
-        const result = internalDeleteMutation("widget_model");
+    test("should build a delete record mutation", () => {
+      const result = internalDeleteMutation("widget_model", "123");
 
-        expect(result).toMatchInlineSnapshot(`
-          "
-              
-          fragment InternalErrorsDetails on ExecutionError {
-            code
-            message
-            ...on InvalidRecordError {
-              validationErrors {
-                apiIdentifier
+      expect(result.query).toMatchInlineSnapshot(`
+          "mutation InternalDeleteWidgetModel($id: GadgetID!) {
+            internal {
+              deleteWidgetModel(id: $id) {
+                success
+                code
                 message
-              }
-              model {
-                apiIdentifier
-              }
-              record
-            }
-          }
-
-
-              mutation InternalDeleteWidgetModel($id: GadgetID!) {
-                
-            gadgetMeta {
-              hydrations(modelName: "widget_model")
-            }
-
-                internal {
-                  deleteWidgetModel(id: $id) {
-                    success
-                    errors {
-                      ... InternalErrorsDetails
-                    }
+                ...on InvalidRecordError {
+                  validationErrors {
+                    apiIdentifier
+                    message
                   }
+                  model {
+                    apiIdentifier
+                  }
+                  record
                 }
               }
-            "
+            }
+          }"
         `);
-        expectValidGraphQLQuery(result);
-      });
+      expectValidGraphQLQuery(result.query);
+      expect(result.variables).toEqual({ id: "123" });
+    });
 
-      test("should build a delete many records mutation", () => {
-        const result = internalDeleteManyMutation("widget_model");
+    test("should build a delete many records mutation", () => {
+      const result = internalDeleteManyMutation("widget_model");
 
-        expect(result).toMatchInlineSnapshot(`
-          "
-              
-          fragment InternalErrorsDetails on ExecutionError {
-            code
-            message
-            ...on InvalidRecordError {
-              validationErrors {
-                apiIdentifier
+      expect(result.query).toMatchInlineSnapshot(`
+          "mutation InternalDeleteManyWidgetModel($search: String, $filter: [WidgetModelFilter!]) {
+            internal {
+              deleteManyWidgetModel(search: $search, filter: $filter) {
+                success
+                code
                 message
-              }
-              model {
-                apiIdentifier
-              }
-              record
-            }
-          }
-
-
-              mutation InternalDeleteManyWidgetModel(
-                $search: String
-                $filter: [WidgetModelFilter!]
-              ) {
-                
-            gadgetMeta {
-              hydrations(modelName: "widget_model")
-            }
-
-                internal {
-                  deleteManyWidgetModel(search: $search, filter: $filter) {
-                    success
-                    errors {
-                      ... InternalErrorsDetails
-                    }
+                ...on InvalidRecordError {
+                  validationErrors {
+                    apiIdentifier
+                    message
                   }
+                  model {
+                    apiIdentifier
+                  }
+                  record
                 }
               }
-            "
+            }
+          }"
         `);
-        expectValidGraphQLQuery(result);
+      expectValidGraphQLQuery(result.query);
+      expect(result.variables).toEqual({});
+    });
+
+    test("should build a delete many records mutation with a search and a filter", () => {
+      const result = internalDeleteManyMutation("widget_model", { search: "foobar", filter: [{ title: { equals: "foo" } }] });
+
+      expectValidGraphQLQuery(result.query);
+      expect(result.variables).toEqual({
+        search: "foobar",
+        filter: [{ title: { equals: "foo" } }],
       });
     });
   });
 
   describe("internal actions", () => {
     test("should build a create record mutation", () => {
-      const result = internalCreateMutation("widget");
+      const result = internalCreateMutation("widget", { title: "foo" });
 
-      expect(result).toMatchInlineSnapshot(`
-        "
-            
-        fragment InternalErrorsDetails on ExecutionError {
-          code
-          message
-          ...on InvalidRecordError {
-            validationErrors {
-              apiIdentifier
+      expect(result.query).toMatchInlineSnapshot(`
+        "mutation InternalCreateWidget($widget: InternalWidgetInput) {
+          internal {
+            createWidget(widget: $widget) {
+              success
+              code
               message
+              ...on InvalidRecordError {
+                validationErrors {
+                  apiIdentifier
+                  message
+                }
+                model {
+                  apiIdentifier
+                }
+                record
+              }
+              widget
             }
-            model {
-              apiIdentifier
-            }
-            record
           }
-        }
-
-
-            mutation InternalCreateWidget($record: InternalWidgetInput) {
-              
           gadgetMeta {
             hydrations(modelName: "widget")
           }
-
-              internal {
-                createWidget(widget: $record) {
-                  success
-                  errors {
-                    ... InternalErrorsDetails
-                  }
-                  widget
-                }
-              }
-            }
-          "
+        }"
       `);
-      expectValidGraphQLQuery(result);
+      expectValidGraphQLQuery(result.query);
+      expect(result.variables.widget).toEqual({ title: "foo" });
     });
 
     test("should build a bulk create records mutation", () => {
-      const result = internalBulkCreateMutation("widget", "widgets");
+      const result = internalBulkCreateMutation("widget", "widgets", [{ foo: "bar" }, { foo: "baz" }]);
 
-      expect(result).toMatchInlineSnapshot(`
-        "
-            
-        fragment InternalErrorsDetails on ExecutionError {
-          code
-          message
-          ...on InvalidRecordError {
-            validationErrors {
-              apiIdentifier
+      expect(result.query).toMatchInlineSnapshot(`
+        "mutation InternalBulkCreateWidgets($widgets: [InternalWidgetInput]!) {
+          internal {
+            bulkCreateWidgets(widgets: $widgets) {
+              success
+              code
               message
+              ...on InvalidRecordError {
+                validationErrors {
+                  apiIdentifier
+                  message
+                }
+                model {
+                  apiIdentifier
+                }
+                record
+              }
+              widgets
             }
-            model {
-              apiIdentifier
-            }
-            record
           }
-        }
-
-
-            mutation InternalBulkCreateWidgets($records: [InternalWidgetInput]!) {
-              
           gadgetMeta {
             hydrations(modelName: "widget")
           }
-
-              internal {
-                bulkCreateWidgets(widgets: $records) {
-                  success
-                  errors {
-                    ... InternalErrorsDetails
-                  }
-                  widgets
-                }
-              }
-            }
-          "
+        }"
       `);
-      expectValidGraphQLQuery(result);
+      expectValidGraphQLQuery(result.query);
+      expect(result.variables).toEqual({ widgets: [{ foo: "bar" }, { foo: "baz" }] });
     });
 
     test("should build an update record mutation", () => {
-      const result = internalUpdateMutation("widget");
+      const result = internalUpdateMutation("widget", "123", { foo: "bar" });
 
-      expect(result).toMatchInlineSnapshot(`
-        "
-            
-        fragment InternalErrorsDetails on ExecutionError {
-          code
-          message
-          ...on InvalidRecordError {
-            validationErrors {
-              apiIdentifier
+      expect(result.query).toMatchInlineSnapshot(`
+        "mutation InternalUpdateWidget($id: GadgetID!, $widget: InternalWidgetInput) {
+          internal {
+            updateWidget(id: $id, widget: $widget) {
+              success
+              code
               message
+              ...on InvalidRecordError {
+                validationErrors {
+                  apiIdentifier
+                  message
+                }
+                model {
+                  apiIdentifier
+                }
+                record
+              }
+              widget
             }
-            model {
-              apiIdentifier
-            }
-            record
           }
-        }
-
-
-            mutation InternalUpdateWidget($id: GadgetID!, $record: InternalWidgetInput) {
-              
           gadgetMeta {
             hydrations(modelName: "widget")
           }
-
-              internal {
-                updateWidget(id: $id, widget: $record) {
-                  success
-                  errors {
-                    ... InternalErrorsDetails
-                  }
-                  widget
-                }
-              }
-            }
-          "
+        }"
       `);
-      expectValidGraphQLQuery(result);
+      expectValidGraphQLQuery(result.query);
+      expect(result.variables).toEqual({ id: "123", widget: { foo: "bar" } });
     });
 
     test("should build a delete record mutation", () => {
-      const result = internalDeleteMutation("widget");
+      const result = internalDeleteMutation("widget", "123");
 
-      expect(result).toMatchInlineSnapshot(`
-        "
-            
-        fragment InternalErrorsDetails on ExecutionError {
-          code
-          message
-          ...on InvalidRecordError {
-            validationErrors {
-              apiIdentifier
+      expect(result.query).toMatchInlineSnapshot(`
+        "mutation InternalDeleteWidget($id: GadgetID!) {
+          internal {
+            deleteWidget(id: $id) {
+              success
+              code
               message
-            }
-            model {
-              apiIdentifier
-            }
-            record
-          }
-        }
-
-
-            mutation InternalDeleteWidget($id: GadgetID!) {
-              
-          gadgetMeta {
-            hydrations(modelName: "widget")
-          }
-
-              internal {
-                deleteWidget(id: $id) {
-                  success
-                  errors {
-                    ... InternalErrorsDetails
-                  }
+              ...on InvalidRecordError {
+                validationErrors {
+                  apiIdentifier
+                  message
                 }
+                model {
+                  apiIdentifier
+                }
+                record
               }
             }
-          "
+          }
+        }"
       `);
-      expectValidGraphQLQuery(result);
+      expectValidGraphQLQuery(result.query);
+      expect(result.variables).toEqual({ id: "123" });
     });
 
     test("should build a delete many records mutation", () => {
-      const result = internalDeleteManyMutation("widget");
+      const result = internalDeleteManyMutation("widget", {});
 
       expect(result).toMatchInlineSnapshot(`
-        "
-            
-        fragment InternalErrorsDetails on ExecutionError {
-          code
-          message
-          ...on InvalidRecordError {
-            validationErrors {
-              apiIdentifier
+        {
+          "query": "mutation InternalDeleteManyWidget($search: String, $filter: [WidgetFilter!]) {
+          internal {
+            deleteManyWidget(search: $search, filter: $filter) {
+              success
+              code
               message
-            }
-            model {
-              apiIdentifier
-            }
-            record
-          }
-        }
-
-
-            mutation InternalDeleteManyWidget(
-              $search: String
-              $filter: [WidgetFilter!]
-            ) {
-              
-          gadgetMeta {
-            hydrations(modelName: "widget")
-          }
-
-              internal {
-                deleteManyWidget(search: $search, filter: $filter) {
-                  success
-                  errors {
-                    ... InternalErrorsDetails
-                  }
+              ...on InvalidRecordError {
+                validationErrors {
+                  apiIdentifier
+                  message
                 }
+                model {
+                  apiIdentifier
+                }
+                record
               }
             }
-          "
+          }
+        }",
+          "variables": {},
+        }
       `);
-      expectValidGraphQLQuery(result);
+      expectValidGraphQLQuery(result.query);
+      expect(result.variables).toEqual({});
     });
   });
 });

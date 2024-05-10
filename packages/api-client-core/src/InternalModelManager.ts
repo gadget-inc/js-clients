@@ -17,28 +17,28 @@ import {
 } from "./support.js";
 import type { InternalFieldSelection, InternalFindListOptions, InternalFindManyOptions, InternalFindOneOptions } from "./types.js";
 
-const internalErrorsDetails = `
-fragment InternalErrorsDetails on ExecutionError {
-  code
-  message
-  ...on InvalidRecordError {
-    validationErrors {
-      apiIdentifier
-      message
-    }
-    model {
-      apiIdentifier
-    }
-    record
-  }
-}
-`;
+const internalErrorsDetails = {
+  code: true,
+  message: true,
+  ["...on InvalidRecordError"]: {
+    validationErrors: {
+      apiIdentifier: true,
+      message: true,
+    },
+    model: {
+      apiIdentifier: true,
+    },
+    record: true,
+  },
+};
 
-const internalHydrationPlan = (modelApiIdentifer: string) => `
-  gadgetMeta {
-    hydrations(modelName: "${modelApiIdentifer}")
-  }
-`;
+const internalHydrationPlan = (modelApiIdentifer: string) => ({
+  gadgetMeta: {
+    hydrations: Call({
+      modelName: modelApiIdentifer,
+    }),
+  },
+});
 
 const internalFindOneQuery = (apiIdentifier: string, id: string, select?: string[]) => {
   const capitalizedApiIdentifier = capitalizeIdentifier(apiIdentifier);
@@ -53,6 +53,7 @@ const internalFindOneQuery = (apiIdentifier: string, id: string, select?: string
           select: Var({ value: select, type: "[String!]" }),
         }),
       },
+      ...internalHydrationPlan(apiIdentifier),
     },
   });
 };
@@ -87,6 +88,7 @@ export const internalFindFirstQuery = (apiIdentifier: string, options?: Internal
           }
         ),
       },
+      ...internalHydrationPlan(apiIdentifier),
     },
   });
 };
@@ -114,111 +116,131 @@ export const internalFindManyQuery = (apiIdentifier: string, options?: InternalF
           }
         ),
       },
+      ...internalHydrationPlan(apiIdentifier),
     },
   });
 };
 
-export const internalCreateMutation = (apiIdentifier: string) => {
+export const internalCreateMutation = (apiIdentifier: string, record: RecordData) => {
   const capitalizedApiIdentifier = capitalizeIdentifier(apiIdentifier);
-  return `
-    ${internalErrorsDetails}
 
-    mutation InternalCreate${capitalizedApiIdentifier}($record: Internal${capitalizedApiIdentifier}Input) {
-      ${internalHydrationPlan(apiIdentifier)}
-      internal {
-        create${capitalizedApiIdentifier}(${apiIdentifier}: $record) {
-          success
-          errors {
-            ... InternalErrorsDetails
+  return compileWithVariableValues({
+    type: "mutation",
+    name: `InternalCreate${capitalizedApiIdentifier}`,
+    fields: {
+      internal: {
+        [`create${capitalizedApiIdentifier}`]: Call(
+          {
+            [apiIdentifier]: Var({ value: record, type: `Internal${capitalizedApiIdentifier}Input` }),
+          },
+          {
+            success: true,
+            ...internalErrorsDetails,
+            [apiIdentifier]: true,
           }
-          ${apiIdentifier}
-        }
-      }
-    }
-  `;
+        ),
+      },
+      ...internalHydrationPlan(apiIdentifier),
+    },
+  });
 };
 
-export const internalBulkCreateMutation = (apiIdentifier: string, pluralApiIdentifier: string) => {
+export const internalBulkCreateMutation = (apiIdentifier: string, pluralApiIdentifier: string, records: RecordData[]) => {
   const capitalizedApiIdentifier = capitalizeIdentifier(apiIdentifier);
   const capitalizedPluralApiIdentifier = capitalizeIdentifier(pluralApiIdentifier);
 
-  return `
-    ${internalErrorsDetails}
-
-    mutation InternalBulkCreate${capitalizedPluralApiIdentifier}($records: [Internal${capitalizedApiIdentifier}Input]!) {
-      ${internalHydrationPlan(apiIdentifier)}
-      internal {
-        bulkCreate${capitalizedPluralApiIdentifier}(${pluralApiIdentifier}: $records) {
-          success
-          errors {
-            ... InternalErrorsDetails
+  return compileWithVariableValues({
+    type: "mutation",
+    name: `InternalBulkCreate${capitalizedPluralApiIdentifier}`,
+    fields: {
+      internal: {
+        [`bulkCreate${capitalizedPluralApiIdentifier}`]: Call(
+          {
+            [pluralApiIdentifier]: Var({ value: records, type: `[Internal${capitalizedApiIdentifier}Input]!` }),
+          },
+          {
+            success: true,
+            ...internalErrorsDetails,
+            [pluralApiIdentifier]: true,
           }
-          ${pluralApiIdentifier}
-        }
-      }
-    }
-  `;
+        ),
+      },
+      ...internalHydrationPlan(apiIdentifier),
+    },
+  });
 };
 
-export const internalUpdateMutation = (apiIdentifier: string) => {
+export const internalUpdateMutation = (apiIdentifier: string, id: string, record: RecordData) => {
   const capitalizedApiIdentifier = capitalizeIdentifier(apiIdentifier);
-  return `
-    ${internalErrorsDetails}
 
-    mutation InternalUpdate${capitalizedApiIdentifier}($id: GadgetID!, $record: Internal${capitalizedApiIdentifier}Input) {
-      ${internalHydrationPlan(apiIdentifier)}
-      internal {
-        update${capitalizedApiIdentifier}(id: $id, ${apiIdentifier}: $record) {
-          success
-          errors {
-            ... InternalErrorsDetails
+  return compileWithVariableValues({
+    type: "mutation",
+    name: `InternalUpdate${capitalizedApiIdentifier}`,
+    fields: {
+      internal: {
+        [`update${capitalizedApiIdentifier}`]: Call(
+          {
+            id: Var({ value: id, type: "GadgetID!" }),
+            [apiIdentifier]: Var({ value: record, type: `Internal${capitalizedApiIdentifier}Input` }),
+          },
+          {
+            success: true,
+            ...internalErrorsDetails,
+            [apiIdentifier]: true,
           }
-          ${apiIdentifier}
-        }
-      }
-    }
-  `;
+        ),
+      },
+      ...internalHydrationPlan(apiIdentifier),
+    },
+  });
 };
 
-export const internalDeleteMutation = (apiIdentifier: string) => {
+export const internalDeleteMutation = (apiIdentifier: string, id: string) => {
   const capitalizedApiIdentifier = capitalizeIdentifier(apiIdentifier);
-  return `
-    ${internalErrorsDetails}
 
-    mutation InternalDelete${capitalizedApiIdentifier}($id: GadgetID!) {
-      ${internalHydrationPlan(apiIdentifier)}
-      internal {
-        delete${capitalizedApiIdentifier}(id: $id) {
-          success
-          errors {
-            ... InternalErrorsDetails
+  return compileWithVariableValues({
+    type: "mutation",
+    name: `InternalDelete${capitalizedApiIdentifier}`,
+    fields: {
+      internal: {
+        [`delete${capitalizedApiIdentifier}`]: Call(
+          {
+            id: Var({ value: id, type: "GadgetID!" }),
+          },
+          {
+            success: true,
+            ...internalErrorsDetails,
           }
-        }
-      }
-    }
-  `;
+        ),
+      },
+    },
+  });
 };
 
-export const internalDeleteManyMutation = (apiIdentifier: string) => {
+export const internalDeleteManyMutation = (
+  apiIdentifier: string,
+  options?: { search?: string; filter?: Record<string, any>[] | Record<string, any> }
+) => {
   const capitalizedApiIdentifier = capitalizeIdentifier(apiIdentifier);
-  return `
-    ${internalErrorsDetails}
 
-    mutation InternalDeleteMany${capitalizedApiIdentifier}(
-      $search: String
-      $filter: [${capitalizedApiIdentifier}Filter!]
-    ) {
-      ${internalHydrationPlan(apiIdentifier)}
-      internal {
-        deleteMany${capitalizedApiIdentifier}(search: $search, filter: $filter) {
-          success
-          errors {
-            ... InternalErrorsDetails
+  return compileWithVariableValues({
+    type: "mutation",
+    name: `InternalDeleteMany${capitalizedApiIdentifier}`,
+    fields: {
+      internal: {
+        [`deleteMany${capitalizedApiIdentifier}`]: Call(
+          {
+            search: Var({ value: options?.search, type: "String" }),
+            filter: Var({ value: options?.filter, type: `[${capitalizedApiIdentifier}Filter!]` }),
+          },
+          {
+            success: true,
+            ...internalErrorsDetails,
           }
-        }
-      }
-    }
-  `;
+        ),
+      },
+    },
+  });
 };
 
 /** The fields for a given record to send to the backend */
@@ -376,11 +398,8 @@ export class InternalModelManager {
    * @returns The created record
    */
   async create(record: RecordData): Promise<GadgetRecord<RecordShape>> {
-    const response = await this.connection.currentClient
-      .mutation(internalCreateMutation(this.apiIdentifier), {
-        record: this.getRecordFromData(record, "create"),
-      })
-      .toPromise();
+    const plan = internalCreateMutation(this.apiIdentifier, this.getRecordFromData(record, "create"));
+    const response = await this.connection.currentClient.mutation(plan.query, plan.variables).toPromise();
     const result = assertMutationSuccess(response, ["internal", `create${this.capitalizedApiIdentifier}`]);
     return hydrateRecord(response, result[this.apiIdentifier]);
   }
@@ -406,11 +425,8 @@ export class InternalModelManager {
     }
 
     const capitalizedPluralApiIdentifier = capitalizeIdentifier(this.options.pluralApiIdentifier);
-    const response = await this.connection.currentClient
-      .mutation(internalBulkCreateMutation(this.apiIdentifier, this.options.pluralApiIdentifier), {
-        records,
-      })
-      .toPromise();
+    const plan = internalBulkCreateMutation(this.apiIdentifier, this.options.pluralApiIdentifier, records);
+    const response = await this.connection.currentClient.mutation(plan.query, plan.variables).toPromise();
     const result = assertMutationSuccess(response, ["internal", `bulkCreate${capitalizedPluralApiIdentifier}`]);
     return hydrateRecordArray(response, result[this.options.pluralApiIdentifier]);
   }
@@ -429,12 +445,8 @@ export class InternalModelManager {
    */
   async update(id: string, record: RecordData): Promise<GadgetRecord<RecordShape>> {
     assert(id, `Can't update a record without an ID passed`);
-    const response = await this.connection.currentClient
-      .mutation(internalUpdateMutation(this.apiIdentifier), {
-        id,
-        record: this.getRecordFromData(record, "update"),
-      })
-      .toPromise();
+    const plan = internalUpdateMutation(this.apiIdentifier, id, this.getRecordFromData(record, "update"));
+    const response = await this.connection.currentClient.mutation(plan.query, plan.variables).toPromise();
     const result = assertMutationSuccess(response, ["internal", `update${this.capitalizedApiIdentifier}`]);
 
     return hydrateRecord(response, result[this.apiIdentifier]);
@@ -453,7 +465,8 @@ export class InternalModelManager {
    */
   async delete(id: string): Promise<void> {
     assert(id, `Can't delete a record without an ID`);
-    const response = await this.connection.currentClient.mutation(internalDeleteMutation(this.apiIdentifier), { id }).toPromise();
+    const plan = internalDeleteMutation(this.apiIdentifier, id);
+    const response = await this.connection.currentClient.mutation(plan.query, plan.variables).toPromise();
     assertMutationSuccess(response, ["internal", `delete${this.capitalizedApiIdentifier}`]);
   }
 
@@ -468,8 +481,9 @@ export class InternalModelManager {
    *
    * @param options Search and filter options for the records to delete
    */
-  async deleteMany(options?: { search?: string; filter?: RecordData }): Promise<void> {
-    const response = await this.connection.currentClient.mutation(internalDeleteManyMutation(this.apiIdentifier), options).toPromise();
+  async deleteMany(options?: { search?: string; filter?: Record<string, any> | Record<string, any>[] }): Promise<void> {
+    const plan = internalDeleteManyMutation(this.apiIdentifier, options);
+    const response = await this.connection.currentClient.mutation(plan.query, plan.variables).toPromise();
     assertMutationSuccess(response, ["internal", `deleteMany${this.capitalizedApiIdentifier}`]);
   }
 }
