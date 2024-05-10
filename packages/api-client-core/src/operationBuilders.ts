@@ -2,20 +2,16 @@ import type { FieldSelection as BuilderFieldSelection, BuilderOperation, Variabl
 import { Call, Var, compileWithVariableValues } from "tiny-graphql-query-compiler";
 import type { FieldSelection } from "./FieldSelection.js";
 import type { AnyActionFunction } from "./index.js";
-import { camelize, capitalizeIdentifier, filterTypeName, sortTypeName } from "./support.js";
+import {
+  ErrorsSelection,
+  camelize,
+  capitalizeIdentifier,
+  filterTypeName,
+  hydrationSelection,
+  namespacify,
+  sortTypeName,
+} from "./support.js";
 import type { ActionFunctionOptions, BaseFindOptions, EnqueueBackgroundActionOptions, FindManyOptions, VariablesOptions } from "./types.js";
-
-const hydrationOptions = (modelApiIdentifier: string, namespace?: string | string[] | null): BuilderFieldSelection => {
-  const fullyQualifiedIdentifier = namespace
-    ? [...(Array.isArray(namespace) ? namespace : [namespace]), modelApiIdentifier].join(".")
-    : modelApiIdentifier;
-
-  return {
-    gadgetMeta: {
-      [`hydrations(modelName: "${fullyQualifiedIdentifier}")`]: true,
-    },
-  };
-};
 
 /**
  * Converts Selection nested object format to the tiny-graphql-query-compiler shape
@@ -55,7 +51,7 @@ export const findOneOperation = (
     name: operation,
     fields: {
       ...fields,
-      ...hydrationOptions(modelApiIdentifier),
+      ...hydrationSelection(modelApiIdentifier, namespace),
     },
     directives: directivesForOptions(options),
   });
@@ -124,21 +120,10 @@ export const findManyOperation = (
     name: operation,
     fields: {
       ...fields,
-      ...hydrationOptions(modelApiIdentifier),
+      ...hydrationSelection(modelApiIdentifier, namespace),
     },
     directives: directivesForOptions(options),
   });
-};
-
-const ErrorsSelection: BuilderFieldSelection = {
-  message: true,
-  code: true,
-  "... on InvalidRecordError": {
-    validationErrors: {
-      message: true,
-      apiIdentifier: true,
-    },
-  },
 };
 
 const variableOptionsToVariables = (variables: VariablesOptions) => {
@@ -148,7 +133,7 @@ const variableOptionsToVariables = (variables: VariablesOptions) => {
 const actionResultFieldSelection = (modelSelectionField: string, selection: FieldSelection, hasReturnType?: boolean | null) => {
   return {
     success: true,
-    errors: ErrorsSelection,
+    ...ErrorsSelection,
     [modelSelectionField]: selection && !hasReturnType ? fieldSelectionToQueryCompilerFields(selection, true) : false,
     result: !!hasReturnType,
   } as FieldSelection;
@@ -178,7 +163,7 @@ export const actionOperation = (
     name: operation,
     fields: {
       ...fields,
-      ...hydrationOptions(modelApiIdentifier, namespace),
+      ...hydrationSelection(modelApiIdentifier, namespace),
     },
     directives: directivesForOptions(options),
   };
@@ -247,7 +232,7 @@ export const actionResultOperation = backgroundActionResultOperation;
 const globalActionFieldSelection = () => {
   return {
     success: true,
-    errors: ErrorsSelection,
+    ...ErrorsSelection,
     result: true,
   } as FieldSelection;
 };
@@ -345,18 +330,3 @@ export const enqueueActionOperation = (
     },
   });
 };
-
-function namespacify(namespace: string[] | string | undefined | null, fields: any) {
-  if (!namespace) return fields;
-  if (!Array.isArray(namespace)) {
-    namespace = [namespace];
-  }
-  if (namespace) {
-    for (let i = namespace.length - 1; i >= 0; i--) {
-      fields = {
-        [namespace[i]]: fields,
-      };
-    }
-  }
-  return fields;
-}

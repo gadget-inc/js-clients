@@ -4,6 +4,8 @@ import type { InternalModelManager } from "./InternalModelManager.js";
 
 export const $modelRelationships = Symbol.for("gadget/modelRelationships");
 
+export type InternalModelManagerNamespace = { [key: string]: InternalModelManager | InternalModelManagerNamespace };
+
 /**
  * An instance of any Gadget app's API client object
  */
@@ -12,9 +14,7 @@ export interface AnyClient {
   query(graphQL: string, variables?: Record<string, any>): Promise<any>;
   mutate(graphQL: string, variables?: Record<string, any>): Promise<any>;
   transaction<T>(callback: (transaction: GadgetTransaction) => Promise<T>): Promise<T>;
-  internal: {
-    [key: string]: InternalModelManager;
-  };
+  internal: InternalModelManagerNamespace;
   [$modelRelationships]?: { [modelName: string]: { [apiIdentifier: string]: { type: string; model: string } } };
 }
 

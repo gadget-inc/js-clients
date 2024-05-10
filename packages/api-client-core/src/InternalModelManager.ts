@@ -3,6 +3,7 @@ import type { GadgetConnection } from "./GadgetConnection.js";
 import type { GadgetRecord, RecordShape } from "./GadgetRecord.js";
 import { GadgetRecordList } from "./GadgetRecordList.js";
 import {
+  ErrorsSelection,
   GadgetClientError,
   GadgetOperationError,
   assert,
@@ -11,71 +12,54 @@ import {
   assertOperationSuccess,
   camelize,
   capitalizeIdentifier,
+  filterTypeName,
   hydrateConnection,
   hydrateRecord,
   hydrateRecordArray,
+  hydrationSelection,
+  namespaceDataPath,
+  namespacedGraphQLTypeName,
+  namespacify,
+  sortTypeName,
 } from "./support.js";
 import type { InternalFieldSelection, InternalFindListOptions, InternalFindManyOptions, InternalFindOneOptions } from "./types.js";
 
-const internalErrorsDetails = {
-  code: true,
-  message: true,
-  ["...on InvalidRecordError"]: {
-    validationErrors: {
-      apiIdentifier: true,
-      message: true,
-    },
-    model: {
-      apiIdentifier: true,
-    },
-    record: true,
-  },
-};
-
-const internalHydrationPlan = (modelApiIdentifer: string) => ({
-  gadgetMeta: {
-    hydrations: Call({
-      modelName: modelApiIdentifer,
-    }),
-  },
-});
-
-export const internalFindOneQuery = (apiIdentifier: string, id: string, select?: InternalFieldSelection) => {
+export const internalFindOneQuery = (apiIdentifier: string, id: string, namespace: string[], select?: InternalFieldSelection) => {
   const capitalizedApiIdentifier = capitalizeIdentifier(apiIdentifier);
 
   return compileWithVariableValues({
     type: "query",
     name: `InternalFind${capitalizedApiIdentifier}`,
     fields: {
-      internal: {
+      internal: namespacify(namespace, {
         [apiIdentifier]: Call({
           id: Var({ value: id, type: "GadgetID!" }),
           select: Var({ value: formatInternalSelectVariable(select), type: `[String!]` }),
         }),
-      },
-      ...internalHydrationPlan(apiIdentifier),
+      }),
+      ...hydrationSelection(apiIdentifier, namespace),
     },
   });
 };
 
-const internalFindListVariables = (capitalizedApiIdentifier: string, options?: InternalFindListOptions) => {
+const internalFindListVariables = (apiIdentifier: string, namespace: string[], options?: InternalFindListOptions) => {
   return {
     search: options?.search ? Var({ value: options?.search, type: "String" }) : undefined,
-    sort: options?.sort ? Var({ value: options?.sort, type: `[${capitalizedApiIdentifier}Sort!]` }) : undefined,
-    filter: options?.filter ? Var({ value: options?.filter, type: `[${capitalizedApiIdentifier}Filter!]` }) : undefined,
+    sort: options?.sort ? Var({ value: options?.sort, type: `[${sortTypeName(apiIdentifier, namespace)}!]` }) : undefined,
+    filter: options?.filter ? Var({ value: options?.filter, type: `[${filterTypeName(apiIdentifier, namespace)}!]` }) : undefined,
     select: options?.select ? Var({ value: formatInternalSelectVariable(options?.select), type: `[String!]` }) : undefined,
   };
 };
 
-export const internalFindFirstQuery = (apiIdentifier: string, options?: InternalFindListOptions) => {
+export const internalFindFirstQuery = (apiIdentifier: string, namespace: string[], options?: InternalFindListOptions) => {
   const capitalizedApiIdentifier = capitalizeIdentifier(apiIdentifier);
-  const defaultVariables = internalFindListVariables(capitalizedApiIdentifier, options);
+  const defaultVariables = internalFindListVariables(capitalizedApiIdentifier, namespace, options);
 
   return compileWithVariableValues({
     type: "query",
     name: `InternalFindFirst${capitalizedApiIdentifier}`,
     fields: {
-      internal: {
+      internal: namespacify(namespace, {
         [`list${capitalizedApiIdentifier}`]: Call(
           {
             ...defaultVariables,
@@ -87,21 +71,21 @@ export const internalFindFirstQuery = (apiIdentifier: string, options?: Internal
             },
           }
         ),
-      },
-      ...internalHydrationPlan(apiIdentifier),
+      }),
+      ...hydrationSelection(apiIdentifier, namespace),
     },
   });
 };
 
-export const internalFindManyQuery = (apiIdentifier: string, options?: InternalFindManyOptions) => {
+export const internalFindManyQuery = (apiIdentifier: string, namespace: string[], options?: InternalFindManyOptions) => {
   const capitalizedApiIdentifier = capitalizeIdentifier(apiIdentifier);
-  const defaultVariables = internalFindListVariables(capitalizedApiIdentifier, options);
+  const defaultVariables = internalFindListVariables(capitalizedApiIdentifier, namespace, options);
 
   return compileWithVariableValues({
     type: "query",
     name: `InternalFindMany${capitalizedApiIdentifier}`,
     fields: {
-      internal: {
+      internal: namespacify(namespace, {
         [`list${capitalizedApiIdentifier}`]: Call(
           {
             ...defaultVariables,
@@ -115,37 +99,45 @@ export const internalFindManyQuery = (apiIdentifier: string, options?: InternalF
             edges: { cursor: true, node: true },
           }
         ),
-      },
-      ...internalHydrationPlan(apiIdentifier),
+      }),
+      ...hydrationSelection(apiIdentifier, namespace),
     },
   });
 };
 
-export const internalCreateMutation = (apiIdentifier: string, record: RecordData) => {
+const internalInputTypeName = (apiIdentifier: string, namespace: string[]) =>
+  `Internal${namespacedGraphQLTypeName(apiIdentifier, namespace)}Input`;
+
+export const internalCreateMutation = (apiIdentifier: string, namespace: string[], record: RecordData) => {
   const capitalizedApiIdentifier = capitalizeIdentifier(apiIdentifier);
 
   return compileWithVariableValues({
     type: "mutation",
     name: `InternalCreate${capitalizedApiIdentifier}`,
     fields: {
-      internal: {
+      internal: namespacify(namespace, {
         [`create${capitalizedApiIdentifier}`]: Call(
           {
-            [apiIdentifier]: Var({ value: record, type: `Internal${capitalizedApiIdentifier}Input` }),
+            [apiIdentifier]: Var({ value: record, type: internalInputTypeName(apiIdentifier, namespace) }),
           },
           {
             success: true,
-            ...internalErrorsDetails,
+            ...ErrorsSelection,
             [apiIdentifier]: true,
           }
         ),
-      },
-      ...internalHydrationPlan(apiIdentifier),
+      }),
+      ...hydrationSelection(apiIdentifier, namespace),
     },
   });
 };
 
-export const internalBulkCreateMutation = (apiIdentifier: string, pluralApiIdentifier: string, records: RecordData[]) => {
+export const internalBulkCreateMutation = (
+  apiIdentifier: string,
+  pluralApiIdentifier: string,
+  namespace: string[],
+  records: RecordData[]
+) => {
   const capitalizedApiIdentifier = capitalizeIdentifier(apiIdentifier);
   const capitalizedPluralApiIdentifier = capitalizeIdentifier(pluralApiIdentifier);
 
@@ -153,72 +145,73 @@ export const internalBulkCreateMutation = (apiIdentifier: string, pluralApiIdent
     type: "mutation",
     name: `InternalBulkCreate${capitalizedPluralApiIdentifier}`,
     fields: {
-      internal: {
+      internal: namespacify(namespace, {
         [`bulkCreate${capitalizedPluralApiIdentifier}`]: Call(
           {
-            [pluralApiIdentifier]: Var({ value: records, type: `[Internal${capitalizedApiIdentifier}Input]!` }),
+            [pluralApiIdentifier]: Var({ value: records, type: `[${internalInputTypeName(apiIdentifier, namespace)}]!` }),
           },
           {
             success: true,
-            ...internalErrorsDetails,
+            ...ErrorsSelection,
             [pluralApiIdentifier]: true,
           }
         ),
-      },
-      ...internalHydrationPlan(apiIdentifier),
+      }),
+      ...hydrationSelection(apiIdentifier, namespace),
     },
   });
 };
 
-export const internalUpdateMutation = (apiIdentifier: string, id: string, record: RecordData) => {
+export const internalUpdateMutation = (apiIdentifier: string, namespace: string[], id: string, record: RecordData) => {
   const capitalizedApiIdentifier = capitalizeIdentifier(apiIdentifier);
 
   return compileWithVariableValues({
     type: "mutation",
     name: `InternalUpdate${capitalizedApiIdentifier}`,
     fields: {
-      internal: {
+      internal: namespacify(namespace, {
         [`update${capitalizedApiIdentifier}`]: Call(
           {
             id: Var({ value: id, type: "GadgetID!" }),
-            [apiIdentifier]: Var({ value: record, type: `Internal${capitalizedApiIdentifier}Input` }),
+            [apiIdentifier]: Var({ value: record, type: internalInputTypeName(apiIdentifier, namespace) }),
           },
           {
             success: true,
-            ...internalErrorsDetails,
+            ...ErrorsSelection,
             [apiIdentifier]: true,
           }
         ),
-      },
-      ...internalHydrationPlan(apiIdentifier),
+      }),
+      ...hydrationSelection(apiIdentifier, namespace),
     },
   });
 };
 
-export const internalDeleteMutation = (apiIdentifier: string, id: string) => {
+export const internalDeleteMutation = (apiIdentifier: string, namespace: string[], id: string) => {
   const capitalizedApiIdentifier = capitalizeIdentifier(apiIdentifier);
 
   return compileWithVariableValues({
     type: "mutation",
     name: `InternalDelete${capitalizedApiIdentifier}`,
     fields: {
-      internal: {
+      internal: namespacify(namespace, {
         [`delete${capitalizedApiIdentifier}`]: Call(
           {
             id: Var({ value: id, type: "GadgetID!" }),
           },
           {
             success: true,
-            ...internalErrorsDetails,
+            ...ErrorsSelection,
           }
         ),
-      },
+      }),
     },
   });
 };
 
 export const internalDeleteManyMutation = (
   apiIdentifier: string,
+  namespace: string[],
   options?: { search?: string; filter?: Record<string, any>[] | Record<string, any> }
 ) => {
   const capitalizedApiIdentifier = capitalizeIdentifier(apiIdentifier);
@@ -227,18 +220,18 @@ export const internalDeleteManyMutation = (
     type: "mutation",
     name: `InternalDeleteMany${capitalizedApiIdentifier}`,
     fields: {
-      internal: {
+      internal: namespacify(namespace, {
         [`deleteMany${capitalizedApiIdentifier}`]: Call(
           {
             search: Var({ value: options?.search, type: "String" }),
-            filter: Var({ value: options?.filter, type: `[${capitalizedApiIdentifier}Filter!]` }),
+            filter: Var({ value: options?.filter, type: `[${filterTypeName(apiIdentifier, namespace)}!]` }),
           },
           {
             success: true,
-            ...internalErrorsDetails,
+            ...ErrorsSelection,
           }
         ),
-      },
+      }),
     },
   });
 };
@@ -249,15 +242,17 @@ export type RecordData = Record<string, any>;
 /**
  * Model specific manager for a given model's internal representation. Used to access the inner, raw data in the Gadget database. Use with caution -- it's easy to break stuff, and the Public API should be used when possible!
  */
-export class InternalModelManager {
+export class InternalModelManager<Shape extends RecordShape = RecordData> {
   private readonly capitalizedApiIdentifier: string;
+  private readonly namespace: string[];
 
   constructor(
     private readonly apiIdentifier: string,
     readonly connection: GadgetConnection,
-    readonly options?: { pluralApiIdentifier: string; hasAmbiguousIdentifiers?: boolean }
+    readonly options?: { pluralApiIdentifier: string; hasAmbiguousIdentifiers?: boolean; namespace?: string[] }
   ) {
     this.capitalizedApiIdentifier = camelize(apiIdentifier);
+    this.namespace = options?.namespace || [];
   }
 
   private validateRecord(record: RecordData) {
@@ -299,12 +294,12 @@ export class InternalModelManager {
    * @param throwOnEmptyData Whether or not to throw an error if the record is not found
    * @returns The record, if found
    */
-  async findOne(id: string, options?: InternalFindOneOptions, throwOnEmptyData = true): Promise<GadgetRecord<RecordData>> {
-    const plan = internalFindOneQuery(this.apiIdentifier, id, formatInternalSelectVariable(options?.select));
+  async findOne(id: string, options?: InternalFindOneOptions, throwOnEmptyData = true): Promise<GadgetRecord<Shape>> {
+    const plan = internalFindOneQuery(this.apiIdentifier, id, this.namespace, formatInternalSelectVariable(options?.select));
     const response = await this.connection.currentClient.query(plan.query, plan.variables).toPromise();
     const assertSuccess = throwOnEmptyData ? assertOperationSuccess : assertNullableOperationSuccess;
-    const result = assertSuccess(response, ["internal", this.apiIdentifier]);
-    return hydrateRecord(response, result);
+    const result = assertSuccess(response, this.dataPath(this.apiIdentifier));
+    return hydrateRecord<Shape>(response, result);
   }
 
   /**
@@ -318,7 +313,7 @@ export class InternalModelManager {
    * @param options Options for the find operation
    * @returns The record, if found, null otherwise
    */
-  async maybeFindOne(id: string, options?: InternalFindOneOptions): Promise<GadgetRecord<RecordData> | null> {
+  async maybeFindOne(id: string, options?: InternalFindOneOptions): Promise<GadgetRecord<Shape> | null> {
     const record = await this.findOne(id, options, false);
     return record.isEmpty() ? null : record;
   }
@@ -333,10 +328,10 @@ export class InternalModelManager {
    * @param options Options for the find operation, like sorts, filters, and pagination
    * @returns The record, if found, null otherwise
    */
-  async findMany(options?: InternalFindManyOptions): Promise<GadgetRecordList<any>> {
-    const plan = internalFindManyQuery(this.apiIdentifier, options);
+  async findMany(options?: InternalFindManyOptions): Promise<GadgetRecordList<Shape>> {
+    const plan = internalFindManyQuery(this.apiIdentifier, this.namespace, options);
     const response = await this.connection.currentClient.query(plan.query, plan.variables).toPromise();
-    const connection = assertNullableOperationSuccess(response, ["internal", `list${this.capitalizedApiIdentifier}`]);
+    const connection = assertNullableOperationSuccess(response, this.dataPath(`list${this.capitalizedApiIdentifier}`));
     const records = hydrateConnection(response, connection);
 
     return GadgetRecordList.boot(this, records, { options, pageInfo: connection.pageInfo });
@@ -352,18 +347,19 @@ export class InternalModelManager {
    * @param options Options for the find operation, like sorts, filters, and pagination
    * @returns The first record matching the options
    */
-  async findFirst(options?: InternalFindListOptions, throwOnEmptyData = true): Promise<GadgetRecord<RecordShape>> {
-    const plan = internalFindFirstQuery(this.apiIdentifier, options);
+  async findFirst(options?: InternalFindListOptions, throwOnEmptyData = true): Promise<GadgetRecord<Shape>> {
+    const plan = internalFindFirstQuery(this.apiIdentifier, this.namespace, options);
     const response = await this.connection.currentClient.query(plan.query, plan.variables).toPromise();
+    const dataPath = this.dataPath(`list${this.capitalizedApiIdentifier}`);
 
     let connection;
     if (throwOnEmptyData === false) {
       // If this is a nullable operation, don't throw errors on empty
-      connection = assertNullableOperationSuccess(response, ["internal", `list${this.capitalizedApiIdentifier}`]);
+      connection = assertNullableOperationSuccess(response, dataPath);
     } else {
       // Otherwise, passthrough the `throwOnEmptyData` flag, to account for
       // `findMany` (allows empty arrays) vs `findFirst` (no empty result) usage.
-      connection = assertOperationSuccess(response, ["internal", `list${this.capitalizedApiIdentifier}`], throwOnEmptyData);
+      connection = assertOperationSuccess(response, dataPath, throwOnEmptyData);
     }
 
     const records = hydrateConnection(response, connection);
@@ -381,7 +377,7 @@ export class InternalModelManager {
    * @param options Options for the find operation, like sorts, filters, and pagination
    * @returns The first record matching the options, null otherwise
    */
-  async maybeFindFirst(options?: InternalFindListOptions): Promise<GadgetRecord<RecordShape> | null> {
+  async maybeFindFirst(options?: InternalFindListOptions): Promise<GadgetRecord<Shape> | null> {
     return await this.findFirst(options, false);
   }
 
@@ -397,10 +393,10 @@ export class InternalModelManager {
    * @param record The data for the record to create
    * @returns The created record
    */
-  async create(record: RecordData): Promise<GadgetRecord<RecordShape>> {
-    const plan = internalCreateMutation(this.apiIdentifier, this.getRecordFromData(record, "create"));
+  async create(record: RecordData): Promise<GadgetRecord<Shape>> {
+    const plan = internalCreateMutation(this.apiIdentifier, this.namespace, this.getRecordFromData(record, "create"));
     const response = await this.connection.currentClient.mutation(plan.query, plan.variables).toPromise();
-    const result = assertMutationSuccess(response, ["internal", `create${this.capitalizedApiIdentifier}`]);
+    const result = assertMutationSuccess(response, this.dataPath(`create${this.capitalizedApiIdentifier}`));
     return hydrateRecord(response, result[this.apiIdentifier]);
   }
 
@@ -419,15 +415,15 @@ export class InternalModelManager {
    * @param record An array of data for the records to create
    * @returns The created records
    */
-  async bulkCreate(records: RecordData[]): Promise<GadgetRecord<RecordShape>[]> {
+  async bulkCreate(records: RecordData[]): Promise<GadgetRecord<Shape>[]> {
     if (!this.options?.pluralApiIdentifier) {
       throw new GadgetClientError("Cannot perform bulkCreate without a pluralApiIdentifier");
     }
 
     const capitalizedPluralApiIdentifier = capitalizeIdentifier(this.options.pluralApiIdentifier);
-    const plan = internalBulkCreateMutation(this.apiIdentifier, this.options.pluralApiIdentifier, records);
+    const plan = internalBulkCreateMutation(this.apiIdentifier, this.options.pluralApiIdentifier, this.namespace, records);
     const response = await this.connection.currentClient.mutation(plan.query, plan.variables).toPromise();
-    const result = assertMutationSuccess(response, ["internal", `bulkCreate${capitalizedPluralApiIdentifier}`]);
+    const result = assertMutationSuccess(response, this.dataPath(`bulkCreate${capitalizedPluralApiIdentifier}`));
     return hydrateRecordArray(response, result[this.options.pluralApiIdentifier]);
   }
 
@@ -443,11 +439,11 @@ export class InternalModelManager {
    * @param record The data for the record to update
    * @returns The updated record
    */
-  async update(id: string, record: RecordData): Promise<GadgetRecord<RecordShape>> {
+  async update(id: string, record: RecordData): Promise<GadgetRecord<Shape>> {
     assert(id, `Can't update a record without an ID passed`);
-    const plan = internalUpdateMutation(this.apiIdentifier, id, this.getRecordFromData(record, "update"));
+    const plan = internalUpdateMutation(this.apiIdentifier, this.namespace, id, this.getRecordFromData(record, "update"));
     const response = await this.connection.currentClient.mutation(plan.query, plan.variables).toPromise();
-    const result = assertMutationSuccess(response, ["internal", `update${this.capitalizedApiIdentifier}`]);
+    const result = assertMutationSuccess(response, this.dataPath(`update${this.capitalizedApiIdentifier}`));
 
     return hydrateRecord(response, result[this.apiIdentifier]);
   }
@@ -465,9 +461,9 @@ export class InternalModelManager {
    */
   async delete(id: string): Promise<void> {
     assert(id, `Can't delete a record without an ID`);
-    const plan = internalDeleteMutation(this.apiIdentifier, id);
+    const plan = internalDeleteMutation(this.apiIdentifier, this.namespace, id);
     const response = await this.connection.currentClient.mutation(plan.query, plan.variables).toPromise();
-    assertMutationSuccess(response, ["internal", `delete${this.capitalizedApiIdentifier}`]);
+    assertMutationSuccess(response, this.dataPath(`delete${this.capitalizedApiIdentifier}`));
   }
 
   /**
@@ -482,9 +478,13 @@ export class InternalModelManager {
    * @param options Search and filter options for the records to delete
    */
   async deleteMany(options?: { search?: string; filter?: Record<string, any> | Record<string, any>[] }): Promise<void> {
-    const plan = internalDeleteManyMutation(this.apiIdentifier, options);
+    const plan = internalDeleteManyMutation(this.apiIdentifier, this.namespace, options);
     const response = await this.connection.currentClient.mutation(plan.query, plan.variables).toPromise();
-    assertMutationSuccess(response, ["internal", `deleteMany${this.capitalizedApiIdentifier}`]);
+    assertMutationSuccess(response, this.dataPath(`deleteMany${this.capitalizedApiIdentifier}`));
+  }
+
+  private dataPath(dataPath: string): string[] {
+    return ["internal", ...namespaceDataPath([dataPath], this.namespace)];
   }
 }
 

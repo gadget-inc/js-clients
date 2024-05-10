@@ -86,7 +86,7 @@ describe("operation builders", () => {
             }
           }
           gadgetMeta {
-            hydrations(modelName: "widget")
+            hydrations(modelName: "outer.widget")
           }
         }",
           "variables": {
@@ -114,7 +114,7 @@ describe("operation builders", () => {
             }
           }
           gadgetMeta {
-            hydrations(modelName: "widget")
+            hydrations(modelName: "outer.inner.reallyInner.widget")
           }
         }",
           "variables": {
@@ -324,7 +324,7 @@ describe("operation builders", () => {
             }
           }
           gadgetMeta {
-            hydrations(modelName: "widget")
+            hydrations(modelName: "outer.inner.widget")
           }
         }",
           "variables": {
@@ -490,7 +490,7 @@ describe("operation builders", () => {
             }
           }
           gadgetMeta {
-            hydrations(modelName: "widget")
+            hydrations(modelName: "outer.inner.widget")
           }
         }",
           "variables": {
