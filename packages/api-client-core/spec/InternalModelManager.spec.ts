@@ -8,6 +8,7 @@ import {
   internalDeleteMutation,
   internalFindFirstQuery,
   internalFindManyQuery,
+  internalFindOneQuery,
   internalUpdateMutation,
 } from "../src/index.js";
 import { expectValidGraphQLQuery } from "./helpers.js";
@@ -133,6 +134,41 @@ describe("InternalModelManager", () => {
           },
         },
       });
+    });
+  });
+
+  describe("internalFindOneQuery", () => {
+    test("should build a find one query with an id", () => {
+      const plan = internalFindOneQuery("widget", "123");
+      expect(plan).toMatchInlineSnapshot(`
+        {
+          "query": "query InternalFindWidget($id: GadgetID!, $select: [String!]) {
+          internal {
+            widget(id: $id, select: $select)
+          }
+          gadgetMeta {
+            hydrations(modelName: "widget")
+          }
+        }",
+          "variables": {
+            "id": "123",
+          },
+        }
+      `);
+      expectValidGraphQLQuery(plan.query);
+      expect(plan.variables).toEqual({ id: "123" });
+    });
+
+    test("should build a find one query with a select", () => {
+      const plan = internalFindOneQuery("widget", "123", { id: true, foo: true, bar: true, baz: false });
+      expect(plan.variables.select).toEqual(["id", "foo", "bar"]);
+      expectValidGraphQLQuery(plan.query);
+    });
+
+    test("should build a find one query with a select using the shorthand", () => {
+      const plan = internalFindOneQuery("widget", "123", ["id", "foo", "bar"]);
+      expect(plan.variables.select).toEqual(["id", "foo", "bar"]);
+      expectValidGraphQLQuery(plan.query);
     });
   });
 

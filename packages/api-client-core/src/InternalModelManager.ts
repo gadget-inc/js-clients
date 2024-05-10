@@ -40,7 +40,7 @@ const internalHydrationPlan = (modelApiIdentifer: string) => ({
   },
 });
 
-const internalFindOneQuery = (apiIdentifier: string, id: string, select?: string[]) => {
+export const internalFindOneQuery = (apiIdentifier: string, id: string, select?: InternalFieldSelection) => {
   const capitalizedApiIdentifier = capitalizeIdentifier(apiIdentifier);
 
   return compileWithVariableValues({
@@ -50,7 +50,7 @@ const internalFindOneQuery = (apiIdentifier: string, id: string, select?: string
       internal: {
         [apiIdentifier]: Call({
           id: Var({ value: id, type: "GadgetID!" }),
-          select: Var({ value: select, type: "[String!]" }),
+          select: Var({ value: formatInternalSelectVariable(select), type: `[String!]` }),
         }),
       },
       ...internalHydrationPlan(apiIdentifier),
