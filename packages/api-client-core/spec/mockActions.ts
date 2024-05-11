@@ -8,6 +8,7 @@ export const MockWidgetCreateAction = {
     name: true,
   },
   operationName: "createWidget",
+  operationReturnType: "CreateWidget",
   modelApiIdentifier: "widget",
   modelSelectionField: "widget",
   variables: {
@@ -22,6 +23,7 @@ export const MockWidgetCreateAction = {
 export const MockBulkUpdateWidgetAction = {
   type: "action",
   operationName: "bulkUpdateWidgets",
+  operationReturnType: "UpdateWidget",
   namespace: null,
   modelApiIdentifier: "widget",
   modelSelectionField: "widgets",
@@ -47,6 +49,7 @@ export const MockBulkUpdateWidgetAction = {
 export const MockBulkFlipDownWidgetsAction = {
   type: "action",
   operationName: "bulkFlipDownWidgets",
+  operationReturnType: "FlipDownWidget",
   namespace: null,
   modelApiIdentifier: "widget",
   modelSelectionField: "widgets",
@@ -72,6 +75,7 @@ export const MockGlobalAction = {
   type: "globalAction",
   isBulk: false,
   operationName: "flipAllWidgets",
+  operationReturnType: "FlipAllWidgets",
   variables: {
     toState: {
       type: "String",

@@ -193,15 +193,23 @@ export const backgroundActionResultOperation = <Action extends AnyActionFunction
 ) => {
   let fields: FieldSelection = {};
   let operationName = action.operationName;
+  let resultType: string;
+  let backgroundResultType: string;
+
+  if (!action.operationReturnType) {
+    if (action.isBulk) {
+      operationName = action.operationName.replace(/^bulk/, "").replace(/s$/, "");
+    }
+    resultType = `${camelize(operationName)}Result`;
+    backgroundResultType = capitalizeIdentifier(operationName) + "BackgroundResult";
+  } else {
+    resultType = `${action.operationReturnType}Result`;
+    backgroundResultType = `${action.operationReturnType}BackgroundResult`;
+  }
 
   switch (action.type) {
     case "action": {
       const selection = options?.select || action.defaultSelection;
-      // background bulk actions enqueue many of the same action, each returning the result of one element of the bulk. so, the GraphQL result type is the singular result type, not the bulk result type.
-      if (action.isBulk) {
-        operationName = action.operationName.replace(/^bulk/, "").replace(/s$/, "");
-      }
-      const resultType = `${camelize(operationName)}Result`;
 
       fields = {
         [`... on ${resultType}`]: actionResultFieldSelection(action.modelApiIdentifier, selection, action.hasReturnType),
@@ -210,14 +218,14 @@ export const backgroundActionResultOperation = <Action extends AnyActionFunction
     }
     case "globalAction": {
       fields = {
-        [`... on ${camelize(operationName)}Result`]: globalActionFieldSelection(),
+        [`... on ${resultType}`]: globalActionFieldSelection(),
       };
     }
   }
 
   const actionResultOperation: BuilderOperation = {
     type: "subscription",
-    name: capitalizeIdentifier(operationName) + "BackgroundResult",
+    name: backgroundResultType,
     fields: {
       backgroundAction: Call(
         { id: Var({ value: id, type: "String!" }) },
