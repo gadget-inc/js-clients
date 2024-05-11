@@ -5,7 +5,7 @@ import type { IsExact } from "conditional-type-checks";
 import { assert } from "conditional-type-checks";
 import { useFindBy } from "../src/index.js";
 import type { ErrorWrapper } from "../src/utils.js";
-import { relatedProductsApi } from "./apis.js";
+import { kitchenSinkApi, relatedProductsApi } from "./apis.js";
 import { MockClientWrapper, MockGraphQLWSClientWrapper, mockGraphQLWSClient, mockUrqlClient } from "./testWrappers.js";
 
 describe("useFindBy", () => {
@@ -35,6 +35,15 @@ describe("useFindBy", () => {
     if (data) {
       data.id;
       data.email;
+    }
+  };
+
+  const _TestFindByCanFindNamespacedModels = () => {
+    const [{ data }] = useFindBy(kitchenSinkApi.game.player.findByName, "Caitlin Clark");
+
+    if (data) {
+      data.id;
+      data.name;
     }
   };
 
@@ -103,6 +112,41 @@ describe("useFindBy", () => {
     const error = result.current[0].error;
     expect(error).toBeTruthy();
     expect(error!.message).toMatchInlineSnapshot(`"[GraphQL] user record with email=test@test.com not found"`);
+  });
+
+  test("it can find one record by a field value on a namespaced model", async () => {
+    const { result } = renderHook(() => useFindBy(kitchenSinkApi.game.player.findByName, "Caitlin Clark"), {
+      wrapper: MockClientWrapper(kitchenSinkApi),
+    });
+
+    expect(result.current[0].data).toBeFalsy();
+    expect(result.current[0].fetching).toBe(true);
+    expect(result.current[0].error).toBeFalsy();
+
+    expect(mockUrqlClient.executeQuery).toBeCalledTimes(1);
+
+    mockUrqlClient.executeQuery.pushResponse("players", {
+      data: {
+        game: {
+          players: {
+            edges: [{ cursor: "123", node: { id: "123", name: "Caitlin Clark" } }],
+            pageInfo: {
+              startCursor: "123",
+              endCursor: "123",
+              hasNextPage: false,
+              hasPreviousPage: false,
+            },
+          },
+        },
+      },
+      stale: false,
+      hasNext: false,
+    });
+
+    expect(result.current[0].data!.id).toEqual("123");
+    expect(result.current[0].data!.name).toEqual("Caitlin Clark");
+    expect(result.current[0].fetching).toBe(false);
+    expect(result.current[0].error).toBeFalsy();
   });
 
   test("returns the same data object on rerender", async () => {

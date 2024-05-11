@@ -7,7 +7,7 @@ import { type AnyVariables } from "urql";
 import { Provider } from "../src/index.js";
 import { useEnqueue } from "../src/useEnqueue.js";
 import type { ErrorWrapper } from "../src/utils.js";
-import { bulkExampleApi, relatedProductsApi } from "./apis.js";
+import { bulkExampleApi, kitchenSinkApi, relatedProductsApi } from "./apis.js";
 import { MockClientWrapper, createMockUrqlClient, mockUrqlClient } from "./testWrappers.js";
 
 describe("useEnqueue", () => {
@@ -79,6 +79,22 @@ describe("useEnqueue", () => {
 
     // @ts-expect-error can't call with no id
     void enqueue({});
+  };
+
+  const _TestUseEnqueueCanRunNamespacedActions = () => {
+    const [_, enqueue] = useEnqueue(kitchenSinkApi.game.player.create);
+
+    // can call with variables
+    void enqueue({ player: { name: "Paige Buckets" } });
+
+    // can call with no model variables
+    void enqueue({});
+
+    // can call with no variables at all
+    void enqueue();
+
+    // @ts-expect-error can't call with variables that don't belong to the model
+    void enqueue({ foo: "123" });
   };
 
   const _TestUseEnqueueCanRunBulkActionsWithIds = () => {
@@ -196,6 +212,49 @@ describe("useEnqueue", () => {
             success: true,
             backgroundAction: {
               id: "action-123",
+            },
+          },
+        },
+      },
+      stale: false,
+      hasNext: false,
+    });
+
+    await act(async () => {
+      const promiseResult = await mutationPromise;
+      expect(promiseResult.handle!.id).toEqual("action-123");
+      expect(promiseResult.fetching).toBe(false);
+      expect(promiseResult.error).toBeFalsy();
+    });
+
+    expect(result.current[0].handle!.id).toEqual("action-123");
+    expect(result.current[0].fetching).toBe(false);
+    expect(result.current[0].error).toBeFalsy();
+  });
+
+  test("returns no handle, fetching=true, and no error when the mutation is run, and then the action handle if the mutation succeeds for a namespaced model", async () => {
+    const { result } = renderHook(() => useEnqueue(kitchenSinkApi.game.player.update), { wrapper: MockClientWrapper(kitchenSinkApi) });
+
+    let mutationPromise: any;
+    act(() => {
+      mutationPromise = result.current[1]({ id: "123", player: { name: "Caitlin Clark" } });
+    });
+
+    expect(result.current[0].handle).toBeFalsy();
+    expect(result.current[0].fetching).toBe(true);
+    expect(result.current[0].error).toBeFalsy();
+
+    expect(mockUrqlClient.executeMutation).toBeCalledTimes(1);
+
+    mockUrqlClient.executeMutation.pushResponse("enqueueUpdatePlayer", {
+      data: {
+        background: {
+          game: {
+            updatePlayer: {
+              success: true,
+              backgroundAction: {
+                id: "action-123",
+              },
             },
           },
         },

@@ -5,7 +5,7 @@ import type { IsExact } from "conditional-type-checks";
 import { assert } from "conditional-type-checks";
 import { useFindFirst } from "../src/index.js";
 import type { ErrorWrapper } from "../src/utils.js";
-import { relatedProductsApi } from "./apis.js";
+import { kitchenSinkApi, relatedProductsApi } from "./apis.js";
 import { MockClientWrapper, MockGraphQLWSClientWrapper, mockGraphQLWSClient, mockUrqlClient } from "./testWrappers.js";
 
 describe("useFindFirst", () => {
@@ -39,6 +39,15 @@ describe("useFindFirst", () => {
     }
   };
 
+  const _TestFindFirstOnNamespacedModel = () => {
+    const [{ data }] = useFindFirst(kitchenSinkApi.game.player);
+
+    if (data) {
+      data.id;
+      data.name;
+    }
+  };
+
   test("it can find the first record", async () => {
     const { result } = renderHook(() => useFindFirst(relatedProductsApi.user), {
       wrapper: MockClientWrapper(relatedProductsApi),
@@ -68,6 +77,41 @@ describe("useFindFirst", () => {
 
     expect(result.current[0].data!.id).toEqual("123");
     expect(result.current[0].data!.email).toEqual("test@test.com");
+    expect(result.current[0].fetching).toBe(false);
+    expect(result.current[0].error).toBeFalsy();
+  });
+
+  test("it can find the first record of a namespaced model", async () => {
+    const { result } = renderHook(() => useFindFirst(kitchenSinkApi.game.player), {
+      wrapper: MockClientWrapper(kitchenSinkApi),
+    });
+
+    expect(result.current[0].data).toBeFalsy();
+    expect(result.current[0].fetching).toBe(true);
+    expect(result.current[0].error).toBeFalsy();
+
+    expect(mockUrqlClient.executeQuery).toBeCalledTimes(1);
+
+    mockUrqlClient.executeQuery.pushResponse("players", {
+      data: {
+        game: {
+          players: {
+            edges: [{ cursor: "123", node: { id: "123", name: "Caitlin Clark" } }],
+            pageInfo: {
+              startCursor: "123",
+              endCursor: "123",
+              hasNextPage: false,
+              hasPreviousPage: false,
+            },
+          },
+        },
+      },
+      stale: false,
+      hasNext: false,
+    });
+
+    expect(result.current[0].data!.id).toEqual("123");
+    expect(result.current[0].data!.name).toEqual("Caitlin Clark");
     expect(result.current[0].fetching).toBe(false);
     expect(result.current[0].error).toBeFalsy();
   });

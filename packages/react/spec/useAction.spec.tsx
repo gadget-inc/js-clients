@@ -8,7 +8,7 @@ import type { AnyVariables } from "urql";
 import { Provider } from "../src/GadgetProvider.js";
 import { useAction } from "../src/index.js";
 import type { ErrorWrapper } from "../src/utils.js";
-import { fullAuthApi, relatedProductsApi } from "./apis.js";
+import { fullAuthApi, kitchenSinkApi, relatedProductsApi } from "./apis.js";
 import { MockClientWrapper, createMockUrqlClient, mockUrqlClient } from "./testWrappers.js";
 
 describe("useAction", () => {
@@ -103,6 +103,35 @@ describe("useAction", () => {
       data.id;
       data.email;
     }
+  };
+
+  const _TestUseActionCanRunAgainstNamespacedModel = () => {
+    const [_, mutate] = useAction(kitchenSinkApi.game.player.update);
+
+    // can call with variables
+    void mutate({ id: "123", player: { name: "Caitlin Clark" } });
+
+    // can call with no model variables
+    void mutate({ id: "123" });
+
+    // @ts-expect-error can't call with no arguments
+    void mutate();
+
+    // @ts-expect-error can't call with no id
+    void mutate({});
+
+    // @ts-expect-error can't call with variables that don't belong to the model
+    void mutate({ foo: "123" });
+  };
+
+  const _TestUseActionCanRunAgainstDeeplyNamespacedModel = () => {
+    const [_, mutate] = useAction(kitchenSinkApi.game.inner.test.create);
+
+    // can call with variables
+    void mutate({ test: { foo: "bar" } });
+
+    // @ts-expect-error can't call with variables that don't belong to the model
+    void mutate({ notAProp: "123" });
   };
 
   test("returns no data, not fetching, and no error when the component is first mounted", () => {
@@ -254,6 +283,112 @@ describe("useAction", () => {
     expect(result.current[0]).toBe(beforeObject);
   });
 
+  test("returns no data, fetching=true, and no error when the mutation is run, and then the successful data if the mutation succeeds for a namespaced model", async () => {
+    const { result } = renderHook(() => useAction(kitchenSinkApi.game.player.update), { wrapper: MockClientWrapper(kitchenSinkApi) });
+
+    let mutationPromise: any;
+    act(() => {
+      mutationPromise = result.current[1]({ id: "123", player: { name: "Caitlin Clark" } });
+    });
+
+    expect(result.current[0].data).toBeFalsy();
+    expect(result.current[0].fetching).toBe(true);
+    expect(result.current[0].error).toBeFalsy();
+
+    expect(mockUrqlClient.executeMutation).toHaveBeenCalledTimes(1);
+
+    mockUrqlClient.executeMutation.pushResponse("updatePlayer", {
+      data: {
+        game: {
+          updatePlayer: {
+            success: true,
+            player: {
+              id: "123",
+              name: "Caitlin Clark",
+            },
+          },
+        },
+      },
+      stale: false,
+      hasNext: false,
+    });
+
+    await act(async () => {
+      const promiseResult = await mutationPromise;
+      expect(promiseResult.data!.id).toEqual("123");
+      expect(promiseResult.data!.name).toEqual("Caitlin Clark");
+      expect(promiseResult.fetching).toBe(false);
+      expect(promiseResult.error).toBeFalsy();
+    });
+
+    expect(result.current[0].data!.id).toEqual("123");
+    expect(result.current[0].data!.name).toEqual("Caitlin Clark");
+    expect(result.current[0].fetching).toBe(false);
+    expect(result.current[0].error).toBeFalsy();
+  });
+
+  test("returns an error when the mutation is run and the server responds with success: false for a namespaced model", async () => {
+    const { result } = renderHook(
+      () => {
+        return useAction(kitchenSinkApi.game.player.update);
+      },
+      { wrapper: MockClientWrapper(kitchenSinkApi) }
+    );
+
+    let mutationPromise: any;
+    act(() => {
+      mutationPromise = result.current[1]({ id: "123", player: { name: "Invalid name" } });
+    });
+
+    expect(result.current[0].data).toBeFalsy();
+    expect(result.current[0].fetching).toBe(true);
+    expect(result.current[0].error).toBeFalsy();
+
+    expect(mockUrqlClient.executeMutation).toBeCalledTimes(1);
+
+    mockUrqlClient.executeMutation.pushResponse("updatePlayer", {
+      data: {
+        game: {
+          updatePlayer: {
+            success: false,
+            errors: [
+              {
+                message: "Record is invalid, one error needs to be corrected. Email is not unique.",
+                code: "GGT_INVALID_RECORD",
+                validationErrors: [{ apiIdentifier: "name", message: "is not unique." }],
+              },
+            ],
+            player: {
+              id: "123",
+              name: "Caitlin Clark",
+            },
+          },
+        },
+      },
+      stale: false,
+      hasNext: false,
+    });
+
+    await act(async () => {
+      const promiseResult = await mutationPromise;
+      expect(promiseResult.fetching).toBe(false);
+      expect(promiseResult.error).toBeTruthy();
+      expect(promiseResult.data).toBeFalsy();
+    });
+
+    expect(result.current[0].fetching).toBe(false);
+    const error = result.current[0].error;
+    expect(error).toBeTruthy();
+    expect(error!.validationErrors).toMatchInlineSnapshot(`
+      [
+        {
+          "apiIdentifier": "name",
+          "message": "is not unique.",
+        },
+      ]
+    `);
+    expect(result.current[0].data).toBeFalsy();
+  });
   test("returns a second mutation response if called a second time", async () => {
     const { result } = renderHook(() => useAction(relatedProductsApi.user.update), { wrapper: MockClientWrapper(relatedProductsApi) });
 
