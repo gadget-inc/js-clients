@@ -1,5 +1,6 @@
 import type { OperationResult } from "@urql/core";
 import { CombinedError } from "@urql/core";
+import { Call, type FieldSelection as BuilderFieldSelection } from "tiny-graphql-query-compiler";
 import { DataHydrator } from "./DataHydrator.js";
 import type { ActionFunctionMetadata, AnyActionFunction } from "./GadgetFunctions.js";
 import type { RecordShape } from "./GadgetRecord.js";
@@ -282,16 +283,17 @@ export const camelize = (term: string, uppercaseFirstLetter = true) => {
   return result;
 };
 
-export const combineNamespacesAndApiIdentifier = (givenNamespaces: string[] | string | null | undefined, apiIdentifier: string) => {
+export const namespacedGraphQLTypeName = (modelApiIdentifier: string, givenNamespaces: string | string[] | null | undefined) => {
   const namespaces: string[] = Array.isArray(givenNamespaces) ? givenNamespaces : givenNamespaces ? [givenNamespaces] : [];
-  const combinedNamespaces = namespaces.map((segment, index) => (index === 0 ? segment : camelize(segment))).join("");
-  return namespaces.length > 0 ? `${combinedNamespaces}${camelize(apiIdentifier)}` : apiIdentifier;
+  const segments = [...namespaces, modelApiIdentifier];
+  return segments.map((segment) => camelize(segment)).join("");
 };
 
 export const sortTypeName = (modelApiIdentifier: string, namespace: string | string[] | null | undefined) =>
-  `${camelize(combineNamespacesAndApiIdentifier(namespace, modelApiIdentifier))}Sort`;
+  `${namespacedGraphQLTypeName(modelApiIdentifier, namespace)}Sort`;
+
 export const filterTypeName = (modelApiIdentifier: string, namespace: string | string[] | null | undefined) =>
-  `${camelize(combineNamespacesAndApiIdentifier(namespace, modelApiIdentifier))}Filter`;
+  `${namespacedGraphQLTypeName(modelApiIdentifier, namespace)}Filter`;
 
 export const getNonUniqueDataError = (modelApiIdentifier: string, fieldName: string, fieldValue: string) =>
   new GadgetNonUniqueDataError(
@@ -642,4 +644,50 @@ export const namespaceDataPath = (dataPath: string[], namespace?: string[] | str
     dataPath.unshift(...(Array.isArray(namespace) ? namespace : [namespace]));
   }
   return dataPath;
+};
+
+/**
+ * Build a selection object to retrieve the hydrations for a model from the `gadgetMeta` API
+ **/
+export const hydrationSelection = (modelApiIdentifier: string, namespace?: string | string[] | null): BuilderFieldSelection => {
+  const fullyQualifiedIdentifier = namespace
+    ? [...(Array.isArray(namespace) ? namespace : [namespace]), modelApiIdentifier].join(".")
+    : modelApiIdentifier;
+
+  return {
+    gadgetMeta: {
+      hydrations: Call({ modelName: fullyQualifiedIdentifier }),
+    },
+  };
+};
+
+/**
+ * Wrap a field selection in a set of namespaces
+ **/
+export function namespacify(namespace: string[] | string | undefined | null, fields: any) {
+  if (!namespace) return fields;
+  if (!Array.isArray(namespace)) {
+    namespace = [namespace];
+  }
+  if (namespace) {
+    for (let i = namespace.length - 1; i >= 0; i--) {
+      fields = {
+        [namespace[i]]: fields,
+      };
+    }
+  }
+  return fields;
+}
+
+export const ErrorsSelection: BuilderFieldSelection = {
+  errors: {
+    message: true,
+    code: true,
+    "... on InvalidRecordError": {
+      validationErrors: {
+        message: true,
+        apiIdentifier: true,
+      },
+    },
+  },
 };

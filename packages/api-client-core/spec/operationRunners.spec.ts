@@ -41,18 +41,18 @@ describe("operationRunners", () => {
       const promise = findOneRunner({ connection }, "widget", "123", { id: true, name: true }, "widget");
 
       expect(query).toMatchInlineSnapshot(`
-      "query widget($id: GadgetID!) {
-        widget(id: $id) {
-          id
-          name
-          __typename
-        }
-        gadgetMeta {
-          hydrations(modelName: 
-      "widget")
-        }
-      }"
-      `);
+              "query widget($id: GadgetID!) {
+                widget(id: $id) {
+                  id
+                  name
+                  __typename
+                }
+                gadgetMeta {
+                  hydrations(modelName: 
+              "widget")
+                }
+              }"
+            `);
 
       mockUrqlClient.executeQuery.pushResponse("widget", {
         data: {
@@ -77,21 +77,21 @@ describe("operationRunners", () => {
       ]);
 
       expect(query).toMatchInlineSnapshot(`
-      "query widget($id: GadgetID!) {
-        outer {
-          inner {
-            widget(id: $id) {
-              id
-              name
-              __typename
+        "query widget($id: GadgetID!) {
+          outer {
+            inner {
+              widget(id: $id) {
+                id
+                name
+                __typename
+              }
             }
           }
-        }
-        gadgetMeta {
-          hydrations(modelName: 
-      "widget")
-        }
-      }"
+          gadgetMeta {
+            hydrations(modelName: 
+        "outer.inner.widget")
+          }
+        }"
       `);
 
       mockUrqlClient.executeQuery.pushResponse("widget", {
@@ -188,29 +188,29 @@ describe("operationRunners", () => {
       const promise = findManyRunner({ connection } as AnyModelManager, "widgets", { id: true, name: true }, "widget");
 
       expect(query).toMatchInlineSnapshot(`
-      "query widgets($after: String, $first: Int, $before: String, $last: Int) {
-        widgets(after: $after, first: $first, before: $before, last: $last) {
-          pageInfo {
-            hasNextPage
-            hasPreviousPage
-            startCursor
-            endCursor
-          }
-          edges {
-            cursor
-            node {
-              id
-              name
-              __typename
-            }
-          }
-        }
-        gadgetMeta {
-          hydrations(modelName: 
-      "widget")
-        }
-      }"
-      `);
+              "query widgets($after: String, $first: Int, $before: String, $last: Int) {
+                widgets(after: $after, first: $first, before: $before, last: $last) {
+                  pageInfo {
+                    hasNextPage
+                    hasPreviousPage
+                    startCursor
+                    endCursor
+                  }
+                  edges {
+                    cursor
+                    node {
+                      id
+                      name
+                      __typename
+                    }
+                  }
+                }
+                gadgetMeta {
+                  hydrations(modelName: 
+              "widget")
+                }
+              }"
+            `);
 
       mockUrqlClient.executeQuery.pushResponse("widgets", {
         data: {
@@ -247,32 +247,32 @@ describe("operationRunners", () => {
         ["outer", "inner"]
       );
       expect(query).toMatchInlineSnapshot(`
-      "query widgets($after: String, $first: Int, $before: String, $last: Int) {
-        outer {
-          inner {
-            widgets(after: $after, first: $first, before: $before, last: $last) {
-              pageInfo {
-                hasNextPage
-                hasPreviousPage
-                startCursor
-                endCursor
-              }
-              edges {
-                cursor
-                node {
-                  id
-                  name
-                  __typename
+        "query widgets($after: String, $first: Int, $before: String, $last: Int) {
+          outer {
+            inner {
+              widgets(after: $after, first: $first, before: $before, last: $last) {
+                pageInfo {
+                  hasNextPage
+                  hasPreviousPage
+                  startCursor
+                  endCursor
+                }
+                edges {
+                  cursor
+                  node {
+                    id
+                    name
+                    __typename
+                  }
                 }
               }
             }
           }
-        }
-        gadgetMeta {
-          hydrations(modelName: 
-      "widget")
-        }
-      }"
+          gadgetMeta {
+            hydrations(modelName: 
+        "outer.inner.widget")
+          }
+        }"
       `);
 
       mockUrqlClient.executeQuery.pushResponse("widgets", {
@@ -315,30 +315,30 @@ describe("operationRunners", () => {
       );
 
       expect(query).toMatchInlineSnapshot(`
-      "query widgets($after: String, $first: Int, $before: String, $last: Int) {
-        outer {
-          widgets(after: $after, first: $first, before: $before, last: $last) {
-            pageInfo {
-              hasNextPage
-              hasPreviousPage
-              startCursor
-              endCursor
-            }
-            edges {
-              cursor
-              node {
-                id
-                name
-                __typename
+        "query widgets($after: String, $first: Int, $before: String, $last: Int) {
+          outer {
+            widgets(after: $after, first: $first, before: $before, last: $last) {
+              pageInfo {
+                hasNextPage
+                hasPreviousPage
+                startCursor
+                endCursor
+              }
+              edges {
+                cursor
+                node {
+                  id
+                  name
+                  __typename
+                }
               }
             }
           }
-        }
-        gadgetMeta {
-          hydrations(modelName: 
-      "widget")
-        }
-      }"
+          gadgetMeta {
+            hydrations(modelName: 
+        "outer.widget")
+          }
+        }"
       `);
 
       mockUrqlClient.executeQuery.pushResponse("widgets", {

@@ -14,12 +14,12 @@ type PaginationConfig = {
 
 /** Represents a list of objects returned from the API. Facilitates iterating and paginating. */
 export class GadgetRecordList<Shape extends RecordShape> extends Array<GadgetRecord<Shape>> {
-  modelManager!: AnyModelManager | InternalModelManager;
+  modelManager!: AnyModelManager | InternalModelManager<Shape>;
   pagination!: PaginationConfig;
 
   /** Internal method used to create a list. Should not be used by applications. */
   static boot<Shape extends RecordShape>(
-    modelManager: AnyModelManager | InternalModelManager,
+    modelManager: AnyModelManager | InternalModelManager<Shape>,
     records: GadgetRecord<Shape>[],
     pagination: PaginationConfig
   ) {
