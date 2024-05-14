@@ -103,6 +103,7 @@ interface BulkActionWithInputs<OptionsT, VariablesT> {
 export interface ActionFunctionMetadata<OptionsT, VariablesT, SelectionT, SchemaT, DefaultsT, IsBulk> {
   type: "action";
   operationName: string;
+  operationReturnType?: string;
   namespace: string | string[] | null;
   modelApiIdentifier: string;
   modelSelectionField: string;
@@ -165,6 +166,7 @@ export interface GlobalActionFunction<VariablesT> {
 
   type: "globalAction";
   operationName: string;
+  operationReturnType?: string;
   namespace: string | string[] | null;
   variables: VariablesOptions;
   variablesType: VariablesT;

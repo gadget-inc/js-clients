@@ -193,15 +193,21 @@ export const backgroundActionResultOperation = <Action extends AnyActionFunction
 ) => {
   let fields: FieldSelection = {};
   let operationName = action.operationName;
+  let resultType: string;
+
+  if (action.isBulk) {
+    operationName = action.operationName.replace(/^bulk/, "").replace(/s$/, "");
+  }
+
+  if (!action.operationReturnType) {
+    resultType = `${camelize(operationName)}Result`;
+  } else {
+    resultType = `${action.operationReturnType}Result`;
+  }
 
   switch (action.type) {
     case "action": {
       const selection = options?.select || action.defaultSelection;
-      // background bulk actions enqueue many of the same action, each returning the result of one element of the bulk. so, the GraphQL result type is the singular result type, not the bulk result type.
-      if (action.isBulk) {
-        operationName = action.operationName.replace(/^bulk/, "").replace(/s$/, "");
-      }
-      const resultType = `${camelize(operationName)}Result`;
 
       fields = {
         [`... on ${resultType}`]: actionResultFieldSelection(action.modelApiIdentifier, selection, action.hasReturnType),
@@ -210,7 +216,7 @@ export const backgroundActionResultOperation = <Action extends AnyActionFunction
     }
     case "globalAction": {
       fields = {
-        [`... on ${camelize(operationName)}Result`]: globalActionFieldSelection(),
+        [`... on ${resultType}`]: globalActionFieldSelection(),
       };
     }
   }
