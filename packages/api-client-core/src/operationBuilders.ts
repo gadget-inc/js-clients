@@ -194,17 +194,15 @@ export const backgroundActionResultOperation = <Action extends AnyActionFunction
   let fields: FieldSelection = {};
   let operationName = action.operationName;
   let resultType: string;
-  let backgroundResultType: string;
+
+  if (action.isBulk) {
+    operationName = action.operationName.replace(/^bulk/, "").replace(/s$/, "");
+  }
 
   if (!action.operationReturnType) {
-    if (action.isBulk) {
-      operationName = action.operationName.replace(/^bulk/, "").replace(/s$/, "");
-    }
     resultType = `${camelize(operationName)}Result`;
-    backgroundResultType = capitalizeIdentifier(operationName) + "BackgroundResult";
   } else {
     resultType = `${action.operationReturnType}Result`;
-    backgroundResultType = `${action.operationReturnType}BackgroundResult`;
   }
 
   switch (action.type) {
@@ -225,7 +223,7 @@ export const backgroundActionResultOperation = <Action extends AnyActionFunction
 
   const actionResultOperation: BuilderOperation = {
     type: "subscription",
-    name: backgroundResultType,
+    name: capitalizeIdentifier(operationName) + "BackgroundResult",
     fields: {
       backgroundAction: Call(
         { id: Var({ value: id, type: "String!" }) },
