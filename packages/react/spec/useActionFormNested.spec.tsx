@@ -2222,9 +2222,53 @@ describe("useActionFormNested", () => {
         });
       });
 
-      test("can update HasMany relationships that are reordered and one is deleted", async () => {
+      test("can update sibling through join model and some are reordered and one is deleted", async () => {
+        jest.replaceProperty(hasManyThroughApi, $modelRelationships as any, hasManyThroughMockMetadata);
+
         const queryResponse = {
-          data: {},
+          data: {
+            student: {
+              __typename: "Student",
+              fullName: "cool guy mgee",
+              registrations: {
+                edges: [
+                  {
+                    node: {
+                      __typename: "Registration",
+                      id: "1",
+                      course: {
+                        __typename: "Course",
+                        id: "5",
+                        title: "Science",
+                      },
+                    },
+                  },
+                  {
+                    node: {
+                      __typename: "Registration",
+                      id: "2",
+                      course: {
+                        __typename: "Course",
+                        id: "6",
+                        title: "History",
+                      },
+                    },
+                  },
+                  {
+                    node: {
+                      __typename: "Registration",
+                      id: "3",
+                      course: {
+                        __typename: "Course",
+                        id: "7",
+                        title: "Art",
+                      },
+                    },
+                  },
+                ],
+              },
+            },
+          },
         };
 
         const { result: useActionFormHook } = renderHook(
@@ -2255,7 +2299,7 @@ describe("useActionFormNested", () => {
           }
         );
 
-        expect(mockUrqlClient.executeQuery).toBeCalledTimes(1);
+        expect(mockUrqlClient.executeQuery).toHaveBeenCalledTimes(1);
 
         mockUrqlClient.executeQuery.pushResponse("student", {
           stale: false,
@@ -2269,20 +2313,18 @@ describe("useActionFormNested", () => {
           formValues = useActionFormHook.current.getValues();
         });
 
-        expect(formValues.quiz).toBeDefined();
-        expect(formValues.quiz.text).toBeDefined();
-        expect(formValues.quiz.questions).toBeDefined();
-        expect(formValues.quiz.questions.length).toBe(3);
+        expect(formValues.student).toBeDefined();
+        expect(formValues.student.registrations).toBeDefined();
+        expect(formValues.student.registrations.length).toBe(3);
 
         const { result: questionsFieldArrayHook } = renderHook(() =>
-          useFieldArray({ control: useActionFormHook.current.control, name: "quiz.questions" })
+          useFieldArray({ control: useActionFormHook.current.control, name: "student.registrations" })
         );
 
         await act(async () => {
-          useActionFormHook.current.setValue("quiz.questions.0.text", "test quiz updated");
-          (useActionFormHook.current as any).setValue("quiz.questions.0.text", "test question updated - 1");
-          (useActionFormHook.current as any).setValue("quiz.questions.1.text", "test question updated - 2");
-          (useActionFormHook.current as any).setValue("quiz.questions.2.text", "test question updated - 3");
+          (useActionFormHook.current as any).setValue("student.fullName", "cool guy mgee - updated");
+          (useActionFormHook.current as any).setValue("student.registrations.0.course.title", "Science - updated");
+          (useActionFormHook.current as any).setValue("student.registrations.1.course.title", "History - updated");
 
           questionsFieldArrayHook.current.move(0, 1);
           questionsFieldArrayHook.current.remove(2);
@@ -2294,18 +2336,47 @@ describe("useActionFormNested", () => {
           submitPromise = useActionFormHook.current.submit();
         });
 
-        expect(mockUrqlClient.executeMutation).toBeCalledTimes(1);
-
-        mockUrqlClient.executeMutation.pushResponse("updateQuiz", {
-          data: {
-            quiz: {
-              __typename: "Quiz",
-              createdAt: "2023-12-12T15:20:11.728Z",
-              id: "21",
-              text: "test quiz",
-              updatedAt: "2023-12-12T15:20:11.728Z",
+        expect(mockUrqlClient.executeMutation.mock.calls[0][0].variables).toMatchInlineSnapshot(`
+          {
+            "student": {
+              "fullName": "cool guy mgee - updated",
+              "registrations": [
+                {
+                  "update": {
+                    "course": {
+                      "update": {
+                        "id": "5",
+                        "title": "Science - updated",
+                      },
+                    },
+                    "id": "1",
+                  },
+                },
+                {
+                  "update": {
+                    "course": {
+                      "update": {
+                        "id": "6",
+                        "title": "History - updated",
+                      },
+                    },
+                    "id": "2",
+                  },
+                },
+                {
+                  "delete": {
+                    "id": "3",
+                  },
+                },
+              ],
             },
-          },
+          }
+        `);
+
+        expect(mockUrqlClient.executeMutation).toHaveBeenCalledTimes(1);
+
+        mockUrqlClient.executeMutation.pushResponse("updateStudent", {
+          data: {},
           stale: false,
           hasNext: false,
         });
@@ -2313,31 +2384,144 @@ describe("useActionFormNested", () => {
         await act(async () => {
           await submitPromise;
         });
+      });
 
-        const submitResult = mockUrqlClient.executeMutation.mock.calls[0][0].variables;
+      test("can update sibling directly and some are reordered and one is deleted", async () => {
+        jest.replaceProperty(hasManyThroughApi, $modelRelationships as any, hasManyThroughMockMetadata);
 
-        expect(submitResult.quiz.questions.length).toBe(3);
-        expect(submitResult.quiz.questions).toEqual(
-          expect.arrayContaining([
-            expect.objectContaining({
-              update: {
-                id: "1",
-                text: "test question updated - 1",
+        const queryResponse = {
+          data: {
+            student: {
+              __typename: "Student",
+              courses: {
+                edges: [
+                  {
+                    node: {
+                      __typename: "Course",
+                      id: "5",
+                      title: "Science",
+                    },
+                  },
+                  {
+                    node: {
+                      __typename: "Course",
+                      id: "6",
+                      title: "History",
+                    },
+                  },
+                  {
+                    node: {
+                      __typename: "Course",
+                      id: "7",
+                      title: "Art",
+                    },
+                  },
+                ],
+              },
+            },
+          },
+        };
+
+        const { result: useActionFormHook } = renderHook(
+          () =>
+            useActionForm(hasManyThroughApi.student.update, {
+              findBy: "123",
+              select: {
+                id: true,
+                fullName: true,
+                courses: {
+                  edges: {
+                    node: {
+                      id: true,
+                      title: true,
+                    },
+                  },
+                },
+              },
+              onError: (error) => {
+                expect(error).toBeUndefined();
               },
             }),
-            expect.objectContaining({
-              update: {
-                id: "2",
-                text: "test question updated - 2",
-              },
-            }),
-            expect.objectContaining({
-              delete: {
-                id: "3",
-              },
-            }),
-          ])
+          {
+            wrapper: MockClientWrapper(hasManyThroughApi),
+          }
         );
+
+        expect(mockUrqlClient.executeQuery).toHaveBeenCalledTimes(1);
+
+        mockUrqlClient.executeQuery.pushResponse("student", {
+          stale: false,
+          hasNext: false,
+          data: queryResponse.data,
+        });
+
+        let formValues: any;
+
+        await act(async () => {
+          formValues = useActionFormHook.current.getValues();
+        });
+
+        expect(formValues.student).toBeDefined();
+        expect(formValues.student.courses).toBeDefined();
+        expect(formValues.student.courses.length).toBe(3);
+
+        const { result: questionsFieldArrayHook } = renderHook(() =>
+          useFieldArray({ control: useActionFormHook.current.control, name: "student.courses" })
+        );
+
+        await act(async () => {
+          (useActionFormHook.current as any).setValue("student.fullName", "cool guy mgee - updated");
+          (useActionFormHook.current as any).setValue("student.courses.0.title", "Science - updated");
+          (useActionFormHook.current as any).setValue("student.courses.1.title", "History - updated");
+
+          questionsFieldArrayHook.current.move(0, 1);
+          questionsFieldArrayHook.current.remove(2);
+        });
+
+        let submitPromise: Promise<any>;
+
+        await act(async () => {
+          submitPromise = useActionFormHook.current.submit();
+        });
+
+        expect(mockUrqlClient.executeMutation.mock.calls[0][0].variables).toMatchInlineSnapshot(`
+          {
+            "student": {
+              "courses": [
+                {
+                  "update": {
+                    "id": "5",
+                    "title": "Science - updated",
+                  },
+                },
+                {
+                  "update": {
+                    "id": "6",
+                    "title": "History - updated",
+                  },
+                },
+                {
+                  "delete": {
+                    "id": "7",
+                  },
+                },
+              ],
+              "fullName": "cool guy mgee - updated",
+            },
+          }
+        `);
+
+        expect(mockUrqlClient.executeMutation).toHaveBeenCalledTimes(1);
+
+        mockUrqlClient.executeMutation.pushResponse("updateStudent", {
+          data: {},
+          stale: false,
+          hasNext: false,
+        });
+
+        await act(async () => {
+          await submitPromise;
+        });
       });
     });
 
