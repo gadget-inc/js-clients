@@ -192,7 +192,16 @@ describe("useEnqueue", () => {
   });
 
   test("returns no handle, fetching=true, and no error when the mutation is run, and then the action handle if the mutation succeeds", async () => {
-    const { result } = renderHook(() => useEnqueue(relatedProductsApi.user.update), { wrapper: MockClientWrapper(relatedProductsApi) });
+    let query: string | undefined;
+    const client = createMockUrqlClient({
+      mutationAssertions: (request) => {
+        query = request.query.loc?.source.body;
+      },
+    });
+
+    const { result } = renderHook(() => useEnqueue(relatedProductsApi.user.update), {
+      wrapper: MockClientWrapper(relatedProductsApi, client),
+    });
 
     let mutationPromise: any;
     act(() => {
@@ -203,9 +212,26 @@ describe("useEnqueue", () => {
     expect(result.current[0].fetching).toBe(true);
     expect(result.current[0].error).toBeFalsy();
 
-    expect(mockUrqlClient.executeMutation).toBeCalledTimes(1);
+    expect(query).toMatchInlineSnapshot(`
+      "mutation enqueueUpdateUser($id: GadgetID!, $user: UpdateUserInput, $backgroundOptions: EnqueueBackgroundActionOptions) {
+        background {
+          updateUser(id: $id, user: $user, backgroundOptions: $backgroundOptions) {
+            success
+            errors {
+              message
+              code
+            }
+            backgroundAction {
+              id
+            }
+          }
+        }
+      }"
+    `);
 
-    mockUrqlClient.executeMutation.pushResponse("enqueueUpdateUser", {
+    expect(client.executeMutation).toBeCalledTimes(1);
+
+    client.executeMutation.pushResponse("enqueueUpdateUser", {
       data: {
         background: {
           updateUser: {
@@ -233,7 +259,16 @@ describe("useEnqueue", () => {
   });
 
   test("returns no handle, fetching=true, and no error when the mutation is run, and then the action handle if the mutation succeeds for a namespaced model", async () => {
-    const { result } = renderHook(() => useEnqueue(kitchenSinkApi.game.player.update), { wrapper: MockClientWrapper(kitchenSinkApi) });
+    let query: string | undefined;
+    const client = createMockUrqlClient({
+      mutationAssertions: (request) => {
+        query = request.query.loc?.source.body;
+      },
+    });
+
+    const { result } = renderHook(() => useEnqueue(kitchenSinkApi.game.player.update), {
+      wrapper: MockClientWrapper(kitchenSinkApi, client),
+    });
 
     let mutationPromise: any;
     act(() => {
@@ -244,9 +279,28 @@ describe("useEnqueue", () => {
     expect(result.current[0].fetching).toBe(true);
     expect(result.current[0].error).toBeFalsy();
 
-    expect(mockUrqlClient.executeMutation).toBeCalledTimes(1);
+    expect(query).toMatchInlineSnapshot(`
+      "mutation enqueueUpdatePlayer($id: GadgetID!, $player: UpdateGamePlayerInput, $backgroundOptions: EnqueueBackgroundActionOptions) {
+        background {
+          game {
+            updatePlayer(id: $id, player: $player, backgroundOptions: $backgroundOptions) {
+              success
+              errors {
+                message
+                code
+              }
+              backgroundAction {
+                id
+              }
+            }
+          }
+        }
+      }"
+    `);
 
-    mockUrqlClient.executeMutation.pushResponse("enqueueUpdatePlayer", {
+    expect(client.executeMutation).toBeCalledTimes(1);
+
+    client.executeMutation.pushResponse("enqueueUpdatePlayer", {
       data: {
         background: {
           game: {

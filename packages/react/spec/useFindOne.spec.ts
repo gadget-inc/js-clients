@@ -5,7 +5,13 @@ import { assert } from "conditional-type-checks";
 import { useFindOne } from "../src/index.js";
 import type { ErrorWrapper } from "../src/utils.js";
 import { kitchenSinkApi, relatedProductsApi } from "./apis.js";
-import { MockClientWrapper, MockGraphQLWSClientWrapper, mockGraphQLWSClient, mockUrqlClient } from "./testWrappers.js";
+import {
+  MockClientWrapper,
+  MockGraphQLWSClientWrapper,
+  createMockUrqlClient,
+  mockGraphQLWSClient,
+  mockUrqlClient,
+} from "./testWrappers.js";
 
 describe("useFindOne", () => {
   // these functions are typechecked but never run to avoid actually making API calls
@@ -45,15 +51,45 @@ describe("useFindOne", () => {
   };
 
   test("can find one record by id", async () => {
-    const { result } = renderHook(() => useFindOne(relatedProductsApi.user, "123"), { wrapper: MockClientWrapper(relatedProductsApi) });
+    let query: string | undefined;
+    const client = createMockUrqlClient({
+      queryAssertions: (request) => {
+        query = request.query.loc?.source.body;
+      },
+    });
+
+    const { result } = renderHook(() => useFindOne(relatedProductsApi.user, "123"), {
+      wrapper: MockClientWrapper(relatedProductsApi, client),
+    });
 
     expect(result.current[0].data).toBeFalsy();
     expect(result.current[0].fetching).toBe(true);
     expect(result.current[0].error).toBeFalsy();
 
-    expect(mockUrqlClient.executeQuery).toBeCalledTimes(1);
+    expect(client.executeQuery).toBeCalledTimes(1);
 
-    mockUrqlClient.executeQuery.pushResponse("user", {
+    expect(query).toMatchInlineSnapshot(`
+      "query user($id: GadgetID!) {
+        user(id: $id) {
+          __typename
+          id
+          state
+          createdAt
+          email
+          roles {
+            key
+            name
+          }
+          updatedAt
+        }
+        gadgetMeta {
+          hydrations(modelName: 
+      "user")
+        }
+      }"
+    `);
+
+    client.executeQuery.pushResponse("user", {
       data: {
         user: {
           id: "123",
@@ -102,15 +138,43 @@ describe("useFindOne", () => {
   });
 
   test("can find one record by id for a namespaced model", async () => {
-    const { result } = renderHook(() => useFindOne(kitchenSinkApi.game.player, "123"), { wrapper: MockClientWrapper(kitchenSinkApi) });
+    let query: string | undefined;
+    const client = createMockUrqlClient({
+      queryAssertions: (request) => {
+        query = request.query.loc?.source.body;
+      },
+    });
+
+    const { result } = renderHook(() => useFindOne(kitchenSinkApi.game.player, "123"), {
+      wrapper: MockClientWrapper(kitchenSinkApi, client),
+    });
 
     expect(result.current[0].data).toBeFalsy();
     expect(result.current[0].fetching).toBe(true);
     expect(result.current[0].error).toBeFalsy();
 
-    expect(mockUrqlClient.executeQuery).toBeCalledTimes(1);
+    expect(client.executeQuery).toBeCalledTimes(1);
 
-    mockUrqlClient.executeQuery.pushResponse("player", {
+    expect(query).toMatchInlineSnapshot(`
+      "query player($id: GadgetID!) {
+        game {
+          player(id: $id) {
+            __typename
+            id
+            createdAt
+            name
+            number
+            updatedAt
+          }
+        }
+        gadgetMeta {
+          hydrations(modelName: 
+      "game.player")
+        }
+      }"
+    `);
+
+    client.executeQuery.pushResponse("player", {
       data: {
         game: {
           player: {

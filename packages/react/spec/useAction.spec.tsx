@@ -143,7 +143,16 @@ describe("useAction", () => {
   });
 
   test("returns no data, fetching=true, and no error when the mutation is run, and then the successful data if the mutation succeeds", async () => {
-    const { result } = renderHook(() => useAction(relatedProductsApi.user.update), { wrapper: MockClientWrapper(relatedProductsApi) });
+    let query: string | undefined;
+    const client = createMockUrqlClient({
+      mutationAssertions: (request) => {
+        query = request.query.loc?.source.body;
+      },
+    });
+
+    const { result } = renderHook(() => useAction(relatedProductsApi.user.update), {
+      wrapper: MockClientWrapper(relatedProductsApi, client),
+    });
 
     let mutationPromise: any;
     act(() => {
@@ -154,9 +163,43 @@ describe("useAction", () => {
     expect(result.current[0].fetching).toBe(true);
     expect(result.current[0].error).toBeFalsy();
 
-    expect(mockUrqlClient.executeMutation).toBeCalledTimes(1);
+    expect(query).toMatchInlineSnapshot(`
+      "mutation updateUser($id: GadgetID!, $user: UpdateUserInput) {
+        updateUser(id: $id, user: $user) {
+          success
+          errors {
+            message
+            code
+            ... on InvalidRecordError {
+              validationErrors {
+                message
+                apiIdentifier
+              }
+            }
+          }
+          user {
+            __typename
+            id
+            state
+            createdAt
+            email
+            roles {
+              key
+              name
+            }
+            updatedAt
+          }
+        }
+        gadgetMeta {
+          hydrations(modelName: 
+      "user")
+        }
+      }"
+    `);
 
-    mockUrqlClient.executeMutation.pushResponse("updateUser", {
+    expect(client.executeMutation).toBeCalledTimes(1);
+
+    client.executeMutation.pushResponse("updateUser", {
       data: {
         updateUser: {
           success: true,
@@ -284,7 +327,16 @@ describe("useAction", () => {
   });
 
   test("returns no data, fetching=true, and no error when the mutation is run, and then the successful data if the mutation succeeds for a namespaced model", async () => {
-    const { result } = renderHook(() => useAction(kitchenSinkApi.game.player.update), { wrapper: MockClientWrapper(kitchenSinkApi) });
+    let query: string | undefined;
+    const client = createMockUrqlClient({
+      mutationAssertions: (request) => {
+        query = request.query.loc?.source.body;
+      },
+    });
+
+    const { result } = renderHook(() => useAction(kitchenSinkApi.game.player.update), {
+      wrapper: MockClientWrapper(kitchenSinkApi, client),
+    });
 
     let mutationPromise: any;
     act(() => {
@@ -295,9 +347,41 @@ describe("useAction", () => {
     expect(result.current[0].fetching).toBe(true);
     expect(result.current[0].error).toBeFalsy();
 
-    expect(mockUrqlClient.executeMutation).toHaveBeenCalledTimes(1);
+    expect(query).toMatchInlineSnapshot(`
+      "mutation updatePlayer($id: GadgetID!, $player: UpdateGamePlayerInput) {
+        game {
+          updatePlayer(id: $id, player: $player) {
+            success
+            errors {
+              message
+              code
+              ... on InvalidRecordError {
+                validationErrors {
+                  message
+                  apiIdentifier
+                }
+              }
+            }
+            player {
+              __typename
+              id
+              createdAt
+              name
+              number
+              updatedAt
+            }
+          }
+        }
+        gadgetMeta {
+          hydrations(modelName: 
+      "game.player")
+        }
+      }"
+    `);
 
-    mockUrqlClient.executeMutation.pushResponse("updatePlayer", {
+    expect(client.executeMutation).toHaveBeenCalledTimes(1);
+
+    client.executeMutation.pushResponse("updatePlayer", {
       data: {
         game: {
           updatePlayer: {

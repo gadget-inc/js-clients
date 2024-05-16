@@ -8,7 +8,13 @@ import { assert } from "conditional-type-checks";
 import { useFindMany } from "../src/useFindMany.js";
 import type { ErrorWrapper } from "../src/utils.js";
 import { kitchenSinkApi, relatedProductsApi } from "./apis.js";
-import { MockClientWrapper, MockGraphQLWSClientWrapper, mockGraphQLWSClient, mockUrqlClient } from "./testWrappers.js";
+import {
+  MockClientWrapper,
+  MockGraphQLWSClientWrapper,
+  createMockUrqlClient,
+  mockGraphQLWSClient,
+  mockUrqlClient,
+} from "./testWrappers.js";
 
 describe("useFindMany", () => {
   // all these functions are typechecked but never run to avoid actually making API calls
@@ -46,15 +52,54 @@ describe("useFindMany", () => {
   };
 
   test("can find a list of records", async () => {
-    const { result } = renderHook(() => useFindMany(relatedProductsApi.user), { wrapper: MockClientWrapper(relatedProductsApi) });
+    let query: string | undefined;
+    const client = createMockUrqlClient({
+      queryAssertions: (request) => {
+        query = request.query.loc?.source.body;
+      },
+    });
+
+    const { result } = renderHook(() => useFindMany(relatedProductsApi.user), { wrapper: MockClientWrapper(relatedProductsApi, client) });
 
     expect(result.current[0].data).toBeFalsy();
     expect(result.current[0].fetching).toBe(true);
     expect(result.current[0].error).toBeFalsy();
 
-    expect(mockUrqlClient.executeQuery).toBeCalledTimes(1);
+    expect(client.executeQuery).toBeCalledTimes(1);
 
-    mockUrqlClient.executeQuery.pushResponse("users", {
+    expect(query).toMatchInlineSnapshot(`
+      "query users($after: String, $first: Int, $before: String, $last: Int) {
+        users(after: $after, first: $first, before: $before, last: $last) {
+          pageInfo {
+            hasNextPage
+            hasPreviousPage
+            startCursor
+            endCursor
+          }
+          edges {
+            cursor
+            node {
+              __typename
+              id
+              state
+              createdAt
+              email
+              roles {
+                key
+                name
+              }
+              updatedAt
+            }
+          }
+        }
+        gadgetMeta {
+          hydrations(modelName: 
+      "user")
+        }
+      }"
+    `);
+
+    client.executeQuery.pushResponse("users", {
       data: {
         users: {
           edges: [
@@ -189,15 +234,52 @@ describe("useFindMany", () => {
   });
 
   test("can find a list of records for a namespaced model", async () => {
-    const { result } = renderHook(() => useFindMany(kitchenSinkApi.game.player), { wrapper: MockClientWrapper(kitchenSinkApi) });
+    let query: string | undefined;
+    const client = createMockUrqlClient({
+      queryAssertions: (request) => {
+        query = request.query.loc?.source.body;
+      },
+    });
+
+    const { result } = renderHook(() => useFindMany(kitchenSinkApi.game.player), { wrapper: MockClientWrapper(kitchenSinkApi, client) });
 
     expect(result.current[0].data).toBeFalsy();
     expect(result.current[0].fetching).toBe(true);
     expect(result.current[0].error).toBeFalsy();
 
-    expect(mockUrqlClient.executeQuery).toBeCalledTimes(1);
+    expect(client.executeQuery).toBeCalledTimes(1);
 
-    mockUrqlClient.executeQuery.pushResponse("players", {
+    expect(query).toMatchInlineSnapshot(`
+      "query players($after: String, $first: Int, $before: String, $last: Int) {
+        game {
+          players(after: $after, first: $first, before: $before, last: $last) {
+            pageInfo {
+              hasNextPage
+              hasPreviousPage
+              startCursor
+              endCursor
+            }
+            edges {
+              cursor
+              node {
+                __typename
+                id
+                createdAt
+                name
+                number
+                updatedAt
+              }
+            }
+          }
+        }
+        gadgetMeta {
+          hydrations(modelName: 
+      "game.player")
+        }
+      }"
+    `);
+
+    client.executeQuery.pushResponse("players", {
       data: {
         game: {
           players: {

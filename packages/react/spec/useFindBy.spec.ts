@@ -6,7 +6,13 @@ import { assert } from "conditional-type-checks";
 import { useFindBy } from "../src/index.js";
 import type { ErrorWrapper } from "../src/utils.js";
 import { kitchenSinkApi, relatedProductsApi } from "./apis.js";
-import { MockClientWrapper, MockGraphQLWSClientWrapper, mockGraphQLWSClient, mockUrqlClient } from "./testWrappers.js";
+import {
+  MockClientWrapper,
+  MockGraphQLWSClientWrapper,
+  createMockUrqlClient,
+  mockGraphQLWSClient,
+  mockUrqlClient,
+} from "./testWrappers.js";
 
 describe("useFindBy", () => {
   // these functions are typechecked but never run to avoid actually making API calls
@@ -48,17 +54,62 @@ describe("useFindBy", () => {
   };
 
   test("it can find one record by a field value", async () => {
+    let query: string | undefined;
+    const client = createMockUrqlClient({
+      queryAssertions: (request) => {
+        query = request.query.loc?.source.body;
+      },
+    });
+
     const { result } = renderHook(() => useFindBy(relatedProductsApi.user.findByEmail, "test@test.com"), {
-      wrapper: MockClientWrapper(relatedProductsApi),
+      wrapper: MockClientWrapper(relatedProductsApi, client),
     });
 
     expect(result.current[0].data).toBeFalsy();
     expect(result.current[0].fetching).toBe(true);
     expect(result.current[0].error).toBeFalsy();
 
-    expect(mockUrqlClient.executeQuery).toBeCalledTimes(1);
+    expect(client.executeQuery).toBeCalledTimes(1);
 
-    mockUrqlClient.executeQuery.pushResponse("users", {
+    expect(query).toMatchInlineSnapshot(`
+      "query users($after: String, $first: Int, $before: String, $last: Int, $filter: [UserFilter!]) {
+        users(
+          after: $after
+          first: $first
+          before: $before
+          last: $last
+          filter: $filter
+        ) {
+          pageInfo {
+            hasNextPage
+            hasPreviousPage
+            startCursor
+            endCursor
+          }
+          edges {
+            cursor
+            node {
+              __typename
+              id
+              state
+              createdAt
+              email
+              roles {
+                key
+                name
+              }
+              updatedAt
+            }
+          }
+        }
+        gadgetMeta {
+          hydrations(modelName: 
+      "user")
+        }
+      }"
+    `);
+
+    client.executeQuery.pushResponse("users", {
       data: {
         users: {
           edges: [{ cursor: "123", node: { id: "123", email: "test@test.com" } }],
@@ -115,17 +166,60 @@ describe("useFindBy", () => {
   });
 
   test("it can find one record by a field value on a namespaced model", async () => {
+    let query: string | undefined;
+    const client = createMockUrqlClient({
+      queryAssertions: (request) => {
+        query = request.query.loc?.source.body;
+      },
+    });
+
     const { result } = renderHook(() => useFindBy(kitchenSinkApi.game.player.findByName, "Caitlin Clark"), {
-      wrapper: MockClientWrapper(kitchenSinkApi),
+      wrapper: MockClientWrapper(kitchenSinkApi, client),
     });
 
     expect(result.current[0].data).toBeFalsy();
     expect(result.current[0].fetching).toBe(true);
     expect(result.current[0].error).toBeFalsy();
 
-    expect(mockUrqlClient.executeQuery).toBeCalledTimes(1);
+    expect(client.executeQuery).toBeCalledTimes(1);
 
-    mockUrqlClient.executeQuery.pushResponse("players", {
+    expect(query).toMatchInlineSnapshot(`
+      "query players($after: String, $first: Int, $before: String, $last: Int, $filter: [GamePlayerFilter!]) {
+        game {
+          players(
+            after: $after
+            first: $first
+            before: $before
+            last: $last
+            filter: $filter
+          ) {
+            pageInfo {
+              hasNextPage
+              hasPreviousPage
+              startCursor
+              endCursor
+            }
+            edges {
+              cursor
+              node {
+                __typename
+                id
+                createdAt
+                name
+                number
+                updatedAt
+              }
+            }
+          }
+        }
+        gadgetMeta {
+          hydrations(modelName: 
+      "game.player")
+        }
+      }"
+    `);
+
+    client.executeQuery.pushResponse("players", {
       data: {
         game: {
           players: {

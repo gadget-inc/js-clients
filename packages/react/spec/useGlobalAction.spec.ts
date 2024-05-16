@@ -5,7 +5,7 @@ import { act } from "react-dom/test-utils";
 import { useGlobalAction } from "../src/index.js";
 import type { ErrorWrapper } from "../src/utils.js";
 import { bulkExampleApi, kitchenSinkApi } from "./apis.js";
-import { MockClientWrapper, mockUrqlClient } from "./testWrappers.js";
+import { MockClientWrapper, createMockUrqlClient, mockUrqlClient } from "./testWrappers.js";
 
 describe("useGlobalAction", () => {
   // these functions are typechecked but never run to avoid actually making API calls
@@ -46,7 +46,14 @@ describe("useGlobalAction", () => {
   });
 
   test("returns no data, fetching=true, and no error when the mutation is run, and then the successful data if the mutation succeeds", async () => {
-    const { result } = renderHook(() => useGlobalAction(bulkExampleApi.flipAll), { wrapper: MockClientWrapper(bulkExampleApi) });
+    let query: string | undefined;
+    const client = createMockUrqlClient({
+      mutationAssertions: (request) => {
+        query = request.query.loc?.source.body;
+      },
+    });
+
+    const { result } = renderHook(() => useGlobalAction(bulkExampleApi.flipAll), { wrapper: MockClientWrapper(bulkExampleApi, client) });
 
     let mutationPromise: any;
     act(() => {
@@ -57,9 +64,28 @@ describe("useGlobalAction", () => {
     expect(result.current[0].fetching).toBe(true);
     expect(result.current[0].error).toBeFalsy();
 
-    expect(mockUrqlClient.executeMutation).toBeCalledTimes(1);
+    expect(client.executeMutation).toBeCalledTimes(1);
 
-    mockUrqlClient.executeMutation.pushResponse("flipAll", {
+    expect(query).toMatchInlineSnapshot(`
+      "mutation flipAll($why: String) {
+        flipAll(why: $why) {
+          success
+          errors {
+            message
+            code
+            ... on InvalidRecordError {
+              validationErrors {
+                message
+                apiIdentifier
+              }
+            }
+          }
+          result
+        }
+      }"
+    `);
+
+    client.executeMutation.pushResponse("flipAll", {
       data: {
         flipAll: {
           success: true,
@@ -124,8 +150,15 @@ describe("useGlobalAction", () => {
   });
 
   test("returns no data, fetching=true, and no error when the mutation is run, and then the successful data if the mutation succeeds for a namespaced global action", async () => {
+    let query: string | undefined;
+    const client = createMockUrqlClient({
+      mutationAssertions: (request) => {
+        query = request.query.loc?.source.body;
+      },
+    });
+
     const { result } = renderHook(() => useGlobalAction(kitchenSinkApi.game.calculateScore), {
-      wrapper: MockClientWrapper(kitchenSinkApi),
+      wrapper: MockClientWrapper(kitchenSinkApi, client),
     });
 
     let mutationPromise: any;
@@ -137,9 +170,30 @@ describe("useGlobalAction", () => {
     expect(result.current[0].fetching).toBe(true);
     expect(result.current[0].error).toBeFalsy();
 
-    expect(mockUrqlClient.executeMutation).toBeCalledTimes(1);
+    expect(client.executeMutation).toBeCalledTimes(1);
 
-    mockUrqlClient.executeMutation.pushResponse("calculateScore", {
+    expect(query).toMatchInlineSnapshot(`
+      "mutation calculateScore($why: String) {
+        game {
+          calculateScore(why: $why) {
+            success
+            errors {
+              message
+              code
+              ... on InvalidRecordError {
+                validationErrors {
+                  message
+                  apiIdentifier
+                }
+              }
+            }
+            result
+          }
+        }
+      }"
+    `);
+
+    client.executeMutation.pushResponse("calculateScore", {
       data: {
         game: {
           calculateScore: {

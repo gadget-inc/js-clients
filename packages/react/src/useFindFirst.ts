@@ -48,7 +48,8 @@ export const useFindFirst = <
       manager.findFirst.operationName,
       manager.findFirst.defaultSelection,
       manager.findFirst.modelApiIdentifier,
-      memoizedOptions
+      memoizedOptions,
+      manager.findFirst.namespace
     );
   }, [manager, memoizedOptions]);
 

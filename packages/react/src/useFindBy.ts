@@ -56,7 +56,8 @@ export const useFindBy = <
       value,
       finder.defaultSelection,
       finder.modelApiIdentifier,
-      memoizedOptions
+      memoizedOptions,
+      finder.namespace
     );
   }, [finder, value, memoizedOptions]);
 

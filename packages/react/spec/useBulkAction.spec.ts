@@ -6,7 +6,7 @@ import { act } from "react-dom/test-utils";
 import { useBulkAction } from "../src/index.js";
 import type { ErrorWrapper } from "../src/utils.js";
 import { bulkExampleApi, kitchenSinkApi } from "./apis.js";
-import { MockClientWrapper, mockUrqlClient } from "./testWrappers.js";
+import { MockClientWrapper, createMockUrqlClient, mockUrqlClient } from "./testWrappers.js";
 
 describe("useBulkAction", () => {
   // these functions are typechecked but never run to avoid actually making API calls
@@ -78,7 +78,16 @@ describe("useBulkAction", () => {
   });
 
   test("returns no data, fetching=true, and no error when the mutation is run, and then the successful data if the mutation succeeds for an ids only mutation", async () => {
-    const { result } = renderHook(() => useBulkAction(bulkExampleApi.widget.bulkFlipDown), { wrapper: MockClientWrapper(bulkExampleApi) });
+    let query: string | undefined;
+    const client = createMockUrqlClient({
+      mutationAssertions: (request) => {
+        query = request.query.loc?.source.body;
+      },
+    });
+
+    const { result } = renderHook(() => useBulkAction(bulkExampleApi.widget.bulkFlipDown), {
+      wrapper: MockClientWrapper(bulkExampleApi, client),
+    });
 
     let mutationPromise: any;
     act(() => {
@@ -89,9 +98,38 @@ describe("useBulkAction", () => {
     expect(result.current[0].fetching).toBe(true);
     expect(result.current[0].error).toBeFalsy();
 
-    expect(mockUrqlClient.executeMutation).toBeCalledTimes(1);
+    expect(query).toMatchInlineSnapshot(`
+      "mutation bulkFlipDownWidgets($ids: [GadgetID!]!) {
+        bulkFlipDownWidgets(ids: $ids) {
+          success
+          errors {
+            message
+            code
+            ... on InvalidRecordError {
+              validationErrors {
+                message
+                apiIdentifier
+              }
+            }
+          }
+          widgets {
+            __typename
+            id
+            createdAt
+            name
+            updatedAt
+          }
+        }
+        gadgetMeta {
+          hydrations(modelName: 
+      "widget")
+        }
+      }"
+    `);
 
-    mockUrqlClient.executeMutation.pushResponse("bulkFlipDownWidgets", {
+    expect(client.executeMutation).toBeCalledTimes(1);
+
+    client.executeMutation.pushResponse("bulkFlipDownWidgets", {
       data: {
         bulkFlipDownWidgets: {
           success: true,
@@ -122,8 +160,15 @@ describe("useBulkAction", () => {
   });
 
   test("returns no data, fetching=true, and no error when the mutation is run, and then the successful data if the mutation succeeds for an ids only mutation for a namespaced model", async () => {
+    let query: string | undefined;
+    const client = createMockUrqlClient({
+      mutationAssertions: (request) => {
+        query = request.query.loc?.source.body;
+      },
+    });
+
     const { result } = renderHook(() => useBulkAction(kitchenSinkApi.game.player.bulkCreate), {
-      wrapper: MockClientWrapper(kitchenSinkApi),
+      wrapper: MockClientWrapper(kitchenSinkApi, client),
     });
 
     let mutationPromise: any;
@@ -135,9 +180,41 @@ describe("useBulkAction", () => {
     expect(result.current[0].fetching).toBe(true);
     expect(result.current[0].error).toBeFalsy();
 
-    expect(mockUrqlClient.executeMutation).toHaveBeenCalledTimes(1);
+    expect(query).toMatchInlineSnapshot(`
+      "mutation bulkCreatePlayers($inputs: [BulkCreateGamePlayersInput!]!) {
+        game {
+          bulkCreatePlayers(inputs: $inputs) {
+            success
+            errors {
+              message
+              code
+              ... on InvalidRecordError {
+                validationErrors {
+                  message
+                  apiIdentifier
+                }
+              }
+            }
+            players {
+              __typename
+              id
+              createdAt
+              name
+              number
+              updatedAt
+            }
+          }
+        }
+        gadgetMeta {
+          hydrations(modelName: 
+      "game.player")
+        }
+      }"
+    `);
 
-    mockUrqlClient.executeMutation.pushResponse("bulkCreatePlayers", {
+    expect(client.executeMutation).toHaveBeenCalledTimes(1);
+
+    client.executeMutation.pushResponse("bulkCreatePlayers", {
       data: {
         game: {
           bulkCreatePlayers: {
