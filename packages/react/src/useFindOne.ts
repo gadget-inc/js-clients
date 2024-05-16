@@ -49,7 +49,8 @@ export const useFindOne = <
       id,
       manager.findOne.defaultSelection,
       manager.findOne.modelApiIdentifier,
-      memoizedOptions
+      memoizedOptions,
+      manager.findOne.namespace
     );
   }, [manager, id, memoizedOptions]);
 

@@ -47,7 +47,8 @@ export const useFindMany = <
       manager.findMany.operationName,
       manager.findMany.defaultSelection,
       manager.findMany.modelApiIdentifier,
-      memoizedOptions
+      memoizedOptions,
+      manager.findMany.namespace
     );
   }, [manager, memoizedOptions]);
 

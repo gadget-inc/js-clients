@@ -48,7 +48,8 @@ export const useGet = <
       undefined,
       manager.get.defaultSelection,
       manager.get.modelApiIdentifier,
-      memoizedOptions
+      memoizedOptions,
+      manager.get.namespace
     );
   }, [manager, memoizedOptions]);
 
