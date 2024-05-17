@@ -20,6 +20,9 @@ importers:
       '@arethetypeswrong/cli':
         specifier: ^0.15.1
         version: 0.15.3
+      '@gadget-client/app-with-file-fields':
+        specifier: ^1.4.0
+        version: 1.4.0
       '@gadget-client/app-with-no-user-model':
         specifier: ^1.10.0
         version: 1.10.0
@@ -1260,6 +1263,12 @@ packages:
   /@eslint/js@8.57.0:
     resolution: {integrity: sha512-Ys+3g2TaW7gADOJzPt83SJtCDhMjndcDMFVQ/Tj9iA1BfJzFKD9mAUXT3OenpuPHbI6P/myECxRJrofUsDx/5g==}
     engines: {node: ^12.22.0 || ^14.17.0 || >=16.0.0}
+    dev: true
+
+  /@gadget-client/app-with-file-fields@1.4.0:
+    resolution: {integrity: sha1-XtyW1sPmcTM2QYAmo7Snp2WFHgA=, tarball: https://registry.gadget.dev/npm/_/tarball/121756/243002/7789}
+    dependencies:
+      '@gadgetinc/api-client-core': link:packages/api-client-core
     dev: true
 
   /@gadget-client/app-with-no-user-model@1.10.0:

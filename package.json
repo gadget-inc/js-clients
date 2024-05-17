@@ -28,6 +28,7 @@
     "@gadget-client/related-products-example": "^1.865.0",
     "@gadget-client/zxcv-deeply-nested": "^1.212.0",
     "@gadget-client/zxcv-simple-relationship": "^1.23.0",
+    "@gadget-client/app-with-file-fields": "^1.4.0",
     "@gadgetinc/api-client-core": "workspace:*",
     "@gadgetinc/eslint-config": "^0.6.1",
     "@gadgetinc/prettier-config": "^0.4.0",

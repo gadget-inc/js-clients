@@ -21,6 +21,17 @@ import { get, set } from "./utils.js";
 
 export * from "react-hook-form";
 
+const isPlainObject = (obj: any) => {
+  if (typeof obj !== "object" || obj === null) return false;
+
+  let proto = obj;
+  while (Object.getPrototypeOf(proto) !== null) {
+    proto = Object.getPrototypeOf(proto);
+  }
+
+  return Object.getPrototypeOf(obj) === proto;
+};
+
 /** Finds a given record from the backend database by either id or a `{[field: string]: value}` slug */
 const useFindExistingRecord = (
   modelManager: AnyModelManager | undefined,
@@ -233,7 +244,7 @@ export const reshapeDataForGraphqlApi = async (client: AnyClient, defaultValues:
       );
 
       return results.flatMap((result) => result);
-    } else if (input != null && typeof input === "object") {
+    } else if (isPlainObject(input)) {
       // if the input is an object, we need to handle it differently
       const result: any = {};
 
@@ -246,7 +257,40 @@ export const reshapeDataForGraphqlApi = async (client: AnyClient, defaultValues:
         result[key] = transform(input[key], depth + 1, currentPath, fieldType, relationships);
       }
 
-      const { __typename, ...rest } = result;
+      // eslint-disable-next-line prefer-const
+      let { __typename, ...rest } = result;
+
+      if (__typename == "RichText") {
+        return { markdown: rest.markdown };
+      } else if (__typename == "StoredFile") {
+        if (rest.base64) {
+          return {
+            fileName: rest.fileName,
+            mimeType: rest.mimeType,
+            base64: rest.base64,
+          };
+        } else if (rest.file) {
+          return {
+            fileName: rest.fileName,
+            mimeType: rest.mimeType,
+            file: rest.file,
+          };
+        } else if (rest.copyUrl) {
+          return {
+            fileName: rest.fileName,
+            mimeType: rest.mimeType,
+            copyUrl: rest.copyUrl,
+          };
+        } else if (rest.directUploadToken) {
+          return {
+            fileName: rest.fileName,
+            mimeType: rest.mimeType,
+            directUploadToken: rest.directUploadToken,
+          };
+        } else {
+          return undefined;
+        }
+      }
 
       let belongsTo = null;
       const belongsToRelationships: Record<string, { type: string; model: string }> | null = fieldRelationships // grab the belongsTo relationships from the fieldRelationships object
