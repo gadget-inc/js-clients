@@ -203,4 +203,65 @@ describe("compiling queries", () => {
       }"
     `);
   });
+
+  test("it should compile a query with a sub field call", () => {
+    const result = compile({
+      type: "query",
+      name: "GetUsers",
+      fields: {
+        user: {
+          sub: Call(
+            { id: Var({ type: "ID" }) },
+            {
+              id: true,
+            }
+          ),
+        },
+      },
+    });
+
+    expectValidGraphQLQuery(result);
+    expect(result).toMatchInlineSnapshot(`
+      "query GetUsers($id: ID) {
+        user {
+          sub(id: $id) {
+            id
+          }
+        }
+      }"
+    `);
+  });
+
+  test("it should compile a query with a top level call and a sub field call", () => {
+    const result = compile({
+      type: "query",
+      name: "GetUsers",
+      fields: {
+        user: Call(
+          { id: Var({ type: "ID" }) },
+          {
+            id: true,
+            sub: Call(
+              { subId: Var({ type: "ID" }) },
+              {
+                id: true,
+              }
+            ),
+          }
+        ),
+      },
+    });
+
+    expectValidGraphQLQuery(result);
+    expect(result).toMatchInlineSnapshot(`
+      "query GetUsers($id: ID, $subId: ID) {
+        user(id: $id) {
+          id
+          sub(subId: $subId) {
+            id
+          }
+        }
+      }"
+    `);
+  });
 });

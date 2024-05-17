@@ -59,6 +59,10 @@ const extractVariables = (fields: FieldSelection): Record<string, Variable> => {
           variables[value.name ?? nextName(name)] = value;
         }
       });
+
+      if (value.subselection) {
+        Object.assign(variables, extractVariables(value.subselection));
+      }
     } else if (typeof value === "object" && value !== null) {
       Object.assign(variables, extractVariables(value));
     }
