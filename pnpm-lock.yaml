@@ -29,6 +29,9 @@ importers:
       '@gadget-client/full-auth':
         specifier: ^1.9.0
         version: 1.9.0
+      '@gadget-client/kitchen-sink':
+        specifier: 1.4.0-development.184
+        version: 1.4.0-development.184
       '@gadget-client/related-products-example':
         specifier: ^1.865.0
         version: 1.865.0
@@ -1282,6 +1285,12 @@ packages:
 
   /@gadget-client/full-auth@1.9.0:
     resolution: {integrity: sha1-OwbBpfV6H7znY3DkZB/Vd3ZnQGY=, tarball: https://registry.gadget.dev/npm/_/tarball/66538/131725/7454}
+    dependencies:
+      '@gadgetinc/api-client-core': link:packages/api-client-core
+    dev: true
+
+  /@gadget-client/kitchen-sink@1.4.0-development.184:
+    resolution: {integrity: sha1-i7YwY2AKf+vNQu/xQTJwEOfqors=, tarball: https://registry.gadget.dev/npm/_/tarball/97394/193776/7739}
     dependencies:
       '@gadgetinc/api-client-core': link:packages/api-client-core
     dev: true
