@@ -14,3 +14,4 @@ packages/*/dist
 packages/sample-app
 *.orig
 cypress.env.json
+packages/shopify-extensions/react

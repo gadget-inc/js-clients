@@ -4,7 +4,7 @@
   </p>
   <p>
     <a href="">
-      <img alt="GitHub CI status" src="https://badgen.net/github/checks/gadget-inc/js-clients/main/Test?label=CI" />
+      <img alt="GitHub CI status" src="https://badgen.net/github/checks/gadget-inc/js-clients/main/test?label=CI" />
     </a>
     <a href="https://www.npmjs.com/package/@gadgetinc/react">
       <img alt="npm version" src="https://badgen.net/npm/dw/@gadgetinc/react?color=4148f2" />
@@ -43,7 +43,7 @@ yarn add @gadget-client/example-app-slug
 npm install @gadget-client/example-app-slug
 ```
 
-Full installation instructions can be found in the Gadget docs at `https://docs.gadget.dev/api/example-app-slug/installing`.
+Full installation instructions can be found in the Gadget docs at `https://docs.gadget.dev/api/<my-app-slug>/external-api-calls/installing`.
 
 Once you have your JS client installed, you can install the React hooks library with yarn or npm:
 
@@ -1117,7 +1117,7 @@ Returns a callback that you can call to sign out your current Gadget `User` from
 ```tsx
 const signOut = useSignOut();
 
-<button onClick={signOut}>Sign Out</button>
+<button onClick={signOut}>Sign Out</button>;
 ```
 
 It has two options:

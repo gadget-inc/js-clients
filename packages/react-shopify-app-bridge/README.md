@@ -4,7 +4,7 @@
   </p>
   <p>
     <a href="">
-      <img alt="GitHub CI status" src="https://badgen.net/github/checks/gadget-inc/js-clients/main/Test?label=CI" />
+      <img alt="GitHub CI status" src="https://badgen.net/github/checks/gadget-inc/js-clients/main/test?label=CI" />
     </a>
     <a href="https://www.npmjs.com/package/@gadgetinc/react-shopify-app-bridge">
       <img alt="npm version" src="https://badgen.net/npm/dw/@gadgetinc/react-shopify-app-bridge?color=4148f2" />
@@ -39,7 +39,7 @@ yarn add @gadget-client/my-app-slug
 npm install @gadget-client/my-app-slug
 ```
 
-Full installation instructions can be found in the Gadget docs at `https://docs.gadget.dev/api/<my-app-slug>/installing`.
+Full installation instructions can be found in the Gadget docs at `https://docs.gadget.dev/api/<my-app-slug>/external-api-calls/installing`.
 
 Once you have your JS client installed, you can install the React hooks library and the Shopify App bridge library with `yarn` or `npm`:
 
@@ -81,7 +81,6 @@ import { useAction, useFindMany } from "@gadgetinc/react";
 import { AppType, Provider as GadgetProvider, useGadget } from "@gadgetinc/react-shopify-app-bridge";
 // import and use Shopify's react components like you might in other Shopify app
 import { Button, Redirect, TitleBar } from "@shopify/app-bridge/actions";
-import React from "react";
 // import the instance of the Gadget API client for this app constructed in the other file
 import { api } from "./api";
 
@@ -145,15 +144,13 @@ function ProductManager() {
 
 ```tsx
 // import Gadget's react hooks for accessing data from your Gadget app
-import { useAction, useFindMany } from "@gadgetinc/react";
 // import the Gadget<->Shopify bindings that manage the auth process with Shopify
-import { AppType, Provider as GadgetProvider, useGadget } from "@gadgetinc/react-shopify-app-bridge";
+import { AppType, Provider as GadgetProvider } from "@gadgetinc/react-shopify-app-bridge";
 // import and use Shopify's react components like you might in other Shopify app
-import { Button, Redirect, TitleBar } from "@shopify/app-bridge/actions";
-import React, { useMemo } from "react";
+import { useMemo } from "react";
 // import the instance of the Gadget API client for this app constructed in the other file
+import { BrowserRouter, useLocation, useNavigate } from "react-router-dom";
 import { api } from "./api";
-import { useLocation, useNavigate, BrowserRouter } from "react-router-dom";
 // import your app's custom routes
 import Routes from "./Routes";
 
