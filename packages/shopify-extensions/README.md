@@ -69,7 +69,7 @@ Within a Shopify React extension, you can use `useGadget` to access your api cli
 
 ```tsx
 import { Client } from "@gadget-client/my-app-slug";
-import { Provider } from "@gadgetinc/shopify-extensions/react";
+import { Provider, useGadget } from "@gadgetinc/shopify-extensions/react";
 import { reactExtension, useApi } from "@shopify/ui-extensions-react/customer-account";
 
 const api = new Client();

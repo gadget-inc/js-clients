@@ -354,10 +354,10 @@ importers:
       '@gadgetinc/api-client-core':
         specifier: workspace:*
         version: link:../api-client-core
+    devDependencies:
       '@gadgetinc/react':
         specifier: workspace:*
         version: link:../react
-    devDependencies:
       '@types/react':
         specifier: ^18.2.79
         version: 18.2.79
