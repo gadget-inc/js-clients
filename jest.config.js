@@ -4,5 +4,6 @@ module.exports = {
     "<rootDir>/packages/react/jest.config.js",
     "<rootDir>/packages/react-shopify-app-bridge/jest.config.js",
     "<rootDir>/packages/tiny-graphql-query-compiler/jest.config.js",
+    "<rootDir>/packages/shopify-extensions/jest.config.js",
   ],
 };

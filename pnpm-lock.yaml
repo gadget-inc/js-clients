@@ -349,6 +349,31 @@ importers:
         specifier: ^18.2.0
         version: 18.2.0(react@18.2.0)
 
+  packages/shopify-extensions:
+    dependencies:
+      '@gadgetinc/api-client-core':
+        specifier: workspace:*
+        version: link:../api-client-core
+      '@gadgetinc/react':
+        specifier: workspace:*
+        version: link:../react
+    devDependencies:
+      '@types/react':
+        specifier: ^18.2.79
+        version: 18.2.79
+      '@types/react-dom':
+        specifier: ^18.2.25
+        version: 18.2.25
+      conditional-type-checks:
+        specifier: ^1.0.6
+        version: 1.0.6
+      react:
+        specifier: ^18.2.0
+        version: 18.2.0
+      react-dom:
+        specifier: ^18.2.0
+        version: 18.2.0(react@18.2.0)
+
   packages/test-bundles:
     dependencies:
       '@gadgetinc/api-client-core':
