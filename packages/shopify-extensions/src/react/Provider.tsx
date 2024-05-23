@@ -19,7 +19,7 @@ export const Provider = ({ api, sessionToken, children }: { api: AnyClient; sess
 
   return (
     <GadgetReactProvider api={api}>
-      <GadgetShopifyUIExtensionContext.Provider value={{ api, ready }}>{children}</GadgetShopifyUIExtensionContext.Provider>;
+      <GadgetShopifyUIExtensionContext.Provider value={{ api, ready }}>{children}</GadgetShopifyUIExtensionContext.Provider>
     </GadgetReactProvider>
   );
 };

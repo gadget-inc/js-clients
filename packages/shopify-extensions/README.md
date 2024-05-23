@@ -37,7 +37,7 @@ npm install @gadget-client/my-app-slug
 
 Full installation instructions can be found in the Gadget docs at `https://docs.gadget.dev/api/<my-app-slug>/external-api-calls/installing`.
 
-Once you have your JS client installed, you can install the React hooks library and the Shopify App bridge library with `yarn` or `npm`:
+Once you have your JS client installed, you can install this library with `yarn` or `npm`:
 
 ```
 yarn add @gadgetinc/shopify-extensions
