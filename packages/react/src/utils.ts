@@ -136,11 +136,11 @@ export type ActionHookResult<Data = any, Variables extends AnyVariables = AnyVar
 /**
  * The inner result object returned from a mutation result
  */
-export type EnqueueHookState<Action extends AnyActionFunction> = Action extends AnyBulkActionFunction
+export type EnqueueHookState<SchemaT, Action extends AnyActionFunction> = Action extends AnyBulkActionFunction
   ? {
       fetching: boolean;
       stale: boolean;
-      handles: BackgroundActionHandle<Action>[] | null;
+      handles: BackgroundActionHandle<SchemaT, Action>[] | null;
       error?: ErrorWrapper;
       extensions?: Record<string, any>;
       operation?: Operation<{ backgroundAction: { id: string } }, Action["variablesType"]>;
@@ -148,7 +148,7 @@ export type EnqueueHookState<Action extends AnyActionFunction> = Action extends 
   : {
       fetching: boolean;
       stale: boolean;
-      handle: BackgroundActionHandle<Action> | null;
+      handle: BackgroundActionHandle<SchemaT, Action> | null;
       error?: ErrorWrapper;
       extensions?: Record<string, any>;
       operation?: Operation<{ backgroundAction: { id: string } }, Action["variablesType"]>;
@@ -160,24 +160,24 @@ export type EnqueueHookState<Action extends AnyActionFunction> = Action extends 
  *  - the result object, with the keys like `handle`, `fetching`, and `error`
  *  - and a function for running the enqueue mutation.
  **/
-export type EnqueueHookResult<Action extends AnyActionFunction> = RequiredKeysOf<
+export type EnqueueHookResult<SchemaT, Action extends AnyActionFunction> = RequiredKeysOf<
   Exclude<Action["variablesType"], null | undefined>
 > extends never
   ? [
-      EnqueueHookState<Action>,
+      EnqueueHookState<SchemaT, Action>,
       (
         variables?: Action["variablesType"],
         backgroundOptions?: EnqueueBackgroundActionOptions<Action>,
         context?: Partial<OperationContext>
-      ) => Promise<EnqueueHookState<Action>>
+      ) => Promise<EnqueueHookState<SchemaT, Action>>
     ]
   : [
-      EnqueueHookState<Action>,
+      EnqueueHookState<SchemaT, Action>,
       (
         variables: Action["variablesType"],
         backgroundOptions?: EnqueueBackgroundActionOptions<Action>,
         context?: Partial<OperationContext>
-      ) => Promise<EnqueueHookState<Action>>
+      ) => Promise<EnqueueHookState<SchemaT, Action>>
     ];
 
 export const noProviderErrorMessage = `Could not find a client in the context of Provider. Please ensure you wrap the root component in a <Provider>`;

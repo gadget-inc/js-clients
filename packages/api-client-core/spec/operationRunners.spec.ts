@@ -1182,7 +1182,7 @@ describe("operationRunners", () => {
   describe("actionResultRunner", () => {
     describe("action", () => {
       test("waits for background action with a completed result", async () => {
-        const promise = backgroundActionResultRunner(connection, "app-job-123456", MockWidgetCreateAction);
+        const promise = backgroundActionResultRunner(connection, "app-job-123456", MockWidgetCreateAction, undefined);
 
         expect(mockUrqlClient.executeSubscription.mock.calls.length).toEqual(1);
         expect(mockUrqlClient.executeSubscription.mock.calls[0][0].variables).toEqual({
@@ -1223,12 +1223,12 @@ describe("operationRunners", () => {
         const result = await promise;
 
         expect(result.outcome).toEqual("completed");
-        expect(result.result.id).toBeTruthy();
-        expect(result.result.name).toBeTruthy();
+        expect(result.result?.id).toEqual("123");
+        expect(result.result?.name).toEqual("foo");
       });
 
       test("waits for background action with failed result", async () => {
-        const promise = backgroundActionResultRunner(connection, "app-job-123456", MockWidgetCreateAction);
+        const promise = backgroundActionResultRunner(connection, "app-job-123456", MockWidgetCreateAction, { select: { id: true } });
 
         expect(mockUrqlClient.executeSubscription.mock.calls.length).toEqual(1);
         expect(mockUrqlClient.executeSubscription.mock.calls[0][0].variables).toEqual({
@@ -1274,7 +1274,7 @@ describe("operationRunners", () => {
 
     describe("globalAction", () => {
       test("waits for completed background action response", async () => {
-        const promise = backgroundActionResultRunner(connection, "app-job-123456", MockGlobalAction, {});
+        const promise = backgroundActionResultRunner(connection, "app-job-123456", MockGlobalAction);
 
         expect(mockUrqlClient.executeSubscription.mock.calls.length).toEqual(1);
         expect(mockUrqlClient.executeSubscription.mock.calls[0][0].variables).toEqual({
@@ -1315,7 +1315,7 @@ describe("operationRunners", () => {
       });
 
       test("waits for failed background action response", async () => {
-        const promise = backgroundActionResultRunner(connection, "app-job-123456", MockGlobalAction, {});
+        const promise = backgroundActionResultRunner(connection, "app-job-123456", MockGlobalAction);
 
         expect(mockUrqlClient.executeSubscription.mock.calls.length).toEqual(1);
         expect(mockUrqlClient.executeSubscription.mock.calls[0][0].variables).toEqual({
@@ -1408,7 +1408,7 @@ describe("operationRunners", () => {
     });
 
     test("permission error", async () => {
-      const promise = backgroundActionResultRunner(connection, "app-job-123456", MockWidgetCreateAction);
+      const promise = backgroundActionResultRunner(connection, "app-job-123456", MockWidgetCreateAction, { select: { id: true } });
 
       expect(mockUrqlClient.executeSubscription.mock.calls.length).toEqual(1);
       expect(mockUrqlClient.executeSubscription.mock.calls[0][0].variables).toEqual({

@@ -161,7 +161,12 @@ describe("useEnqueue", () => {
     const [{ handle, fetching, error }, _enqueue] = useEnqueue(relatedProductsApi.user.update);
 
     assert<IsExact<typeof fetching, boolean>>(true);
-    assert<IsExact<typeof handle, null | BackgroundActionHandle<typeof relatedProductsApi.user.update>>>(true);
+    assert<
+      IsExact<
+        typeof handle,
+        null | BackgroundActionHandle<(typeof relatedProductsApi.user.update)["schemaType"], typeof relatedProductsApi.user.update>
+      >
+    >(true);
     assert<IsExact<typeof error, ErrorWrapper | undefined>>(true);
 
     // data is accessible via dot access
@@ -174,7 +179,13 @@ describe("useEnqueue", () => {
     const [{ handles, fetching, error }, _enqueue] = useEnqueue(relatedProductsApi.user.bulkUpdate);
 
     assert<IsExact<typeof fetching, boolean>>(true);
-    assert<IsExact<typeof handles, BackgroundActionHandle<typeof relatedProductsApi.user.bulkUpdate>[] | null>>(true);
+    assert<
+      IsExact<
+        typeof handles,
+        | BackgroundActionHandle<(typeof relatedProductsApi.user.bulkUpdate)["schemaType"], typeof relatedProductsApi.user.bulkUpdate>[]
+        | null
+      >
+    >(true);
     assert<IsExact<typeof error, ErrorWrapper | undefined>>(true);
 
     // data is accessible via dot access

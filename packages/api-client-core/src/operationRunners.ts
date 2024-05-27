@@ -1,12 +1,12 @@
 import { filter, pipe, take, toAsyncIterable, toPromise } from "wonka";
-import type { BackgroundActionResult } from "./BackgroundActionHandle.js";
+import type { BackgroundActionResult, BackgroundActionResultData } from "./BackgroundActionHandle.js";
 import { BackgroundActionHandle } from "./BackgroundActionHandle.js";
 /* eslint-disable @typescript-eslint/ban-types */
 import type { OperationResult } from "@urql/core";
 import type { Source } from "wonka";
 import type { FieldSelection } from "./FieldSelection.js";
 import type { GadgetConnection } from "./GadgetConnection.js";
-import type { ActionFunctionMetadata, AnyActionFunction, AnyBulkActionFunction } from "./GadgetFunctions.js";
+import type { ActionFunctionMetadata, AnyActionFunction, AnyBulkActionFunction, GlobalActionFunction } from "./GadgetFunctions.js";
 import type { GadgetRecord, RecordShape } from "./GadgetRecord.js";
 import { GadgetRecordList } from "./GadgetRecordList.js";
 import type { AnyModelManager } from "./ModelManager.js";
@@ -331,24 +331,24 @@ export const globalActionRunner = async (
   return assertMutationSuccess(response, dataPath).result;
 };
 
-export async function enqueueActionRunner<Action extends AnyBulkActionFunction>(
+export async function enqueueActionRunner<SchemaT, Action extends AnyBulkActionFunction, Result = BackgroundActionHandle<SchemaT, Action>>(
   connection: GadgetConnection,
   action: Action,
   variables: Action["variablesType"],
   options?: EnqueueBackgroundActionOptions<Action>
-): Promise<BackgroundActionHandle<Action>[]>;
-export async function enqueueActionRunner<Action extends AnyActionFunction>(
+): Promise<Result[]>;
+export async function enqueueActionRunner<SchemaT, Action extends AnyActionFunction, Result = BackgroundActionHandle<SchemaT, Action>>(
   connection: GadgetConnection,
   action: Action,
   variables: Action["variablesType"],
   options?: EnqueueBackgroundActionOptions<Action>
-): Promise<BackgroundActionHandle<Action>>;
-export async function enqueueActionRunner<Action extends AnyActionFunction>(
+): Promise<Result>;
+export async function enqueueActionRunner<SchemaT, Action extends AnyActionFunction, Result = BackgroundActionHandle<SchemaT, Action>>(
   connection: GadgetConnection,
   action: Action,
   variables: Action["variablesType"],
   options: EnqueueBackgroundActionOptions<Action> = {}
-): Promise<BackgroundActionHandle<Action> | BackgroundActionHandle<Action>[]> {
+): Promise<Result | Result[]> {
   const normalizedVariableValues = action.isBulk
     ? disambiguateBulkActionVariables(action as ActionFunctionMetadata<any, any, any, any, any, true>, variables)
     : disambiguateActionVariables(action, variables);
@@ -363,22 +363,27 @@ export async function enqueueActionRunner<Action extends AnyActionFunction>(
     if (action.isBulk) {
       return result.backgroundActions.map((result: { id: string }) => new BackgroundActionHandle(connection, action, result.id));
     } else {
-      return new BackgroundActionHandle(connection, action, result.backgroundAction.id);
+      return new BackgroundActionHandle(connection, action, result.backgroundAction.id) as Result;
     }
   } catch (error: any) {
     if ("code" in error && error.code == "GGT_DUPLICATE_BACKGROUND_ACTION_ID" && options?.id && options.onDuplicateID == "ignore") {
-      return new BackgroundActionHandle(connection, action, options.id);
+      return new BackgroundActionHandle(connection, action, options.id) as Result;
     }
     throw error;
   }
 }
 
-export const backgroundActionResultRunner = async <Action extends AnyActionFunction, Options extends ActionFunctionOptions<Action>>(
+export const backgroundActionResultRunner = async <
+  SchemaT,
+  Action extends ActionFunctionMetadata<any, any, any, SchemaT, any, any> | GlobalActionFunction<any>,
+  Options extends ActionFunctionOptions<Action>,
+  ResultData = BackgroundActionResultData<Action, Options>
+>(
   connection: GadgetConnection,
   id: string,
   action: Action,
   options?: Options
-): Promise<BackgroundActionResult> => {
+): Promise<BackgroundActionResult<ResultData>> => {
   const plan = backgroundActionResultOperation(id, action, options);
   const subscription = connection.currentClient.subscription(plan.query, plan.variables);
 
@@ -410,7 +415,7 @@ export const backgroundActionResultRunner = async <Action extends AnyActionFunct
     }
   }
 
-  return backgroundAction;
+  return backgroundAction as BackgroundActionResult<ResultData>;
 };
 
 /** @deprecated previous export name, @see backgroundActionResultRunner */

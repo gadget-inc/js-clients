@@ -49,10 +49,10 @@ import { ErrorWrapper, noProviderErrorMessage } from "./utils.js";
  *   );
  * }
  */
-export const useEnqueue = <Action extends AnyActionFunction>(
+export const useEnqueue = <SchemaT, Action extends AnyActionFunction>(
   action: Action,
   baseBackgroundOptions?: EnqueueBackgroundActionOptions<Action>
-): EnqueueHookResult<Action> => {
+): EnqueueHookResult<SchemaT, Action> => {
   if (!useContext(GadgetUrqlClientContext)) throw new Error(noProviderErrorMessage);
 
   const plan = useMemo(
@@ -63,7 +63,7 @@ export const useEnqueue = <Action extends AnyActionFunction>(
 
   const [rawState, runMutation] = useGadgetMutation(plan.query);
 
-  const state: EnqueueHookState<Action> = useMemo(() => processResult(connection, rawState, action), [rawState, action]);
+  const state: EnqueueHookState<SchemaT, Action> = useMemo(() => processResult(connection, rawState, action), [rawState, action]);
 
   return [
     state,
@@ -86,15 +86,15 @@ export const useEnqueue = <Action extends AnyActionFunction>(
 };
 
 /** Processes urql's result object into the fancier Gadget result object */
-const processResult = <Action extends AnyActionFunction>(
+const processResult = <SchemaT, Action extends AnyActionFunction>(
   connection: GadgetConnection,
   rawResult: UseMutationState<any, any>,
   action: Action
-): EnqueueHookState<Action> => {
+): EnqueueHookState<SchemaT, Action> => {
   const { data, ...result } = rawResult;
   let error = ErrorWrapper.forMaybeCombinedError(result.error);
-  let handle: BackgroundActionHandle<Action> | null = null;
-  let handles: BackgroundActionHandle<Action>[] | null = null;
+  let handle: BackgroundActionHandle<SchemaT, Action> | null = null;
+  let handles: BackgroundActionHandle<SchemaT, Action>[] | null = null;
   const isBulk = action.isBulk;
 
   if (data) {
@@ -108,18 +108,18 @@ const processResult = <Action extends AnyActionFunction>(
       } else {
         if (isBulk) {
           handles = mutationData.backgroundActions.map(
-            (result: { id: string }) => new BackgroundActionHandle<Action>(connection, action, result.id)
+            (result: { id: string }) => new BackgroundActionHandle<SchemaT, Action>(connection, action, result.id)
           );
         } else {
-          handle = new BackgroundActionHandle<Action>(connection, action, mutationData.backgroundAction.id);
+          handle = new BackgroundActionHandle<SchemaT, Action>(connection, action, mutationData.backgroundAction.id);
         }
       }
     }
   }
 
   if (isBulk) {
-    return { ...result, error, handles } as EnqueueHookState<Action>;
+    return { ...result, error, handles } as EnqueueHookState<SchemaT, Action>;
   } else {
-    return { ...result, error, handle } as EnqueueHookState<Action>;
+    return { ...result, error, handle } as EnqueueHookState<SchemaT, Action>;
   }
 };
