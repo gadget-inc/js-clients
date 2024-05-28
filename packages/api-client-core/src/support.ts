@@ -407,6 +407,9 @@ export const hydrateConnection = <Shape extends RecordShape = any>(response: Res
   return hydrateRecordArray<Shape>(response, nodes);
 };
 
+const objObjType = "[object Object]";
+const stringObjType = "[object String]";
+
 export const toPrimitiveObject = (value: any): any => {
   if (value != null && typeof value.toJSON === "function") value = value.toJSON();
   if (value === undefined) return undefined;
@@ -426,7 +429,7 @@ export const toPrimitiveObject = (value: any): any => {
       return arr;
     }
     if (Object.prototype.toString.call(value) === "[object Error]") return {};
-    if (Object.prototype.toString.call(value) === "[object Object]") {
+    if (Object.prototype.toString.call(value) === objObjType) {
       const obj: any = {};
       for (const key of Object.keys(value)) {
         const parsed = toPrimitiveObject(value[key]);
@@ -491,6 +494,13 @@ const checkEquality = (a: any, b: any, refs: any[]): boolean => {
 
   // save results for circular checks
   refs.push(a, b);
+
+  // gadget-specific check for _link equality -- this is a special case for GadgetRecord
+  if (aType == objObjType && bType == stringObjType && "_link" in a && Object.keys(a).length == 1) {
+    return a._link === b;
+  } else if (bType == objObjType && aType == stringObjType && "_link" in b && Object.keys(b).length == 1) {
+    return b._link === a;
+  }
 
   if (aType != bType) return false; // not the same type of objects
 
