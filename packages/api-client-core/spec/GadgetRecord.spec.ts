@@ -119,6 +119,45 @@ describe("GadgetRecord", () => {
     expect(product.changes("name")).toEqual({ changed: true, current: undefined, previous: "A cool product" });
   });
 
+  it("changing a date's timezone shouldn't count as a change, as it is the same moment in time", () => {
+    const product = new GadgetRecord<{ date: Date }>({ date: new Date("2018-10-16T10:02:34+01:00") });
+    expectNoChanges(product, "date");
+
+    product.date = new Date("2018-10-16T09:02:34.000Z");
+    expect(product.changed("date")).toEqual(false);
+
+    product.date = new Date();
+    expect(product.changed("date")).toEqual(true);
+  });
+
+  it("changing a belongsTo field from a string ID to a _link object shouldn't count as a change", () => {
+    const product = new GadgetRecord<{ shop: string | { _link: string } }>({ shop: "123" });
+    expectNoChanges(product, "shop");
+
+    product.shop = { _link: "123" };
+    expect(product.changed("shop")).toEqual(false);
+
+    product.shop = { _link: "124" };
+    expect(product.changed("shop")).toEqual(true);
+
+    product.shop = { _link: "123" };
+    expect(product.changed("shop")).toEqual(false);
+  });
+
+  it("changing a belongsTo field from a _link object to an id string shouldn't count as a change", () => {
+    const product = new GadgetRecord<{ shop: string | { _link: string } }>({ shop: { _link: "123" } });
+    expectNoChanges(product, "shop");
+
+    product.shop = "123";
+    expect(product.changed("shop")).toEqual(false);
+
+    product.shop = "124";
+    expect(product.changed("shop")).toEqual(true);
+
+    product.shop = "123";
+    expect(product.changed("shop")).toEqual(false);
+  });
+
   it("should allow you to ask for changes on the entire object", () => {
     const product = new GadgetRecord<SampleBaseRecord>(productBaseRecord);
     expectNoChanges(product, "name", "body", "count");
