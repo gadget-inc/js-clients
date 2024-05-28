@@ -9,66 +9,75 @@ export enum ChangeTracking {
 
 export type RecordShape = Record<string, any> | null | undefined | void;
 
+const kFields = Symbol.for("g/fields");
+const kInstantiatedFields = Symbol.for("g/if");
+const kPersistedFields = Symbol.for("g/pf");
+const kFieldKeys = Symbol.for("g/fk");
+const kTouched = Symbol.for("g/t");
+
 /** Represents one record returned from a high level Gadget API call */
-export class GadgetRecordImplementation<Shape extends RecordShape> {
-  private __gadget = {
-    fields: {} as any,
-    instantiatedFields: {} as any,
-    persistedFields: {} as any,
-    fieldKeys: [] as string[],
-    fieldKeysTracker: {} as Record<string, boolean>,
-    touched: false,
-  };
+export class GadgetRecord_<Shape extends RecordShape> {
+  /** Storage of the actual keys and values of this record */
+  [kFields]: Record<string, any> = {};
+  /** Storage of the keys and values of this record at the time it was instantiated */
+  [kInstantiatedFields]: Record<string, any> = {};
+  /** Storage of the keys and values of this record at the time it was last persisted */
+  [kPersistedFields]: Record<string, any> = {};
+  /** Storage of the keys and values of this record at the time it was last persisted */
+  [kFieldKeys]: Set<string>;
+  [kTouched] = false;
 
   private empty = false;
 
   constructor(data: Shape) {
-    this.__gadget.instantiatedFields = cloneDeep(data);
-    this.__gadget.persistedFields = cloneDeep(data);
-    Object.assign(this.__gadget.fields, data);
+    this[kInstantiatedFields] = cloneDeep(data) ?? {};
+    this[kPersistedFields] = cloneDeep(data) ?? {};
+    Object.assign(this[kFields], data);
 
     if (!data || Object.keys(data).length === 0) {
       this.empty = true;
+      this[kFieldKeys] = new Set<string>();
     } else {
-      this.__gadget.fieldKeys = Object.keys(this.__gadget.fields);
-      this.__gadget.fieldKeys.forEach((k) => (this.__gadget.fieldKeysTracker[k] = true));
+      this[kFieldKeys] = new Set(Object.keys(this[kFields]));
     }
+    // eslint-disable-next-line @typescript-eslint/no-this-alias
+    const self = this;
 
     const handler = {
       get: (obj: any, prop: string | symbol) => {
-        if (prop in this) {
-          // if the GadgetRecordImplementation responds to the property or function
-          // prioritize that
-          return (this as any)[prop];
+        if (prop in self || typeof prop == "symbol") {
+          // if the GadgetRecord responds to the property or function, call that prioritize that
+          let val = (self as any)[prop];
+          if (typeof val == "function") {
+            val = val.bind(self);
+          }
+          return val;
         } else if (prop in obj) {
-          // otherwise proxy it to the __gadget.fields object
+          // otherwise proxy it to this [kFields] object
           return obj[prop];
         }
       },
       set: (obj: Record<string, any>, prop: string | symbol, value: any) => {
-        this.trackKey(prop);
+        self.trackKey(prop);
         obj[prop.toString()] = value;
         return true;
       },
     };
 
-    return new Proxy(this.__gadget.fields, handler);
+    return new Proxy(this[kFields], handler);
   }
 
   /** Makes sure our data keys are all tracked, to avoid repeated runtime object-to-array conversions */
   private trackKey(key: string | symbol) {
     const trackingKey = key.toString();
-    if (!this.__gadget.fieldKeysTracker[trackingKey]) {
-      this.__gadget.fieldKeysTracker[trackingKey] = true;
-      this.__gadget.fieldKeys.push(trackingKey);
-    }
+    this[kFieldKeys].add(trackingKey);
   }
 
   /** Returns true if even a single field has changed */
   private hasChanges(tracking = ChangeTracking.SinceLoaded) {
-    if (this.__gadget.touched) return true;
-    const diffFields = tracking == ChangeTracking.SinceLoaded ? this.__gadget.instantiatedFields : this.__gadget.persistedFields;
-    return this.__gadget.fieldKeys.some((key) => !isEqual(diffFields[key], this.__gadget.fields[key]));
+    if (this[kTouched]) return true;
+    const diffFields = tracking == ChangeTracking.SinceLoaded ? this[kInstantiatedFields] : this[kPersistedFields];
+    return [...this[kFieldKeys]].some((key) => !isEqual(diffFields[key], this[kFields][key]));
   }
 
   /** Checks if the original constructor data was empty or not */
@@ -78,12 +87,13 @@ export class GadgetRecordImplementation<Shape extends RecordShape> {
 
   /** Returns the value of the field for the given `apiIdentifier`. These properties may also be accessed on this record directly. This method can be used if your model field `apiIdentifier` conflicts with the `GadgetRecord` helper functions. */
   getField(apiIdentifier: string) {
-    return this.__gadget.fields[apiIdentifier];
+    return this[kFields][apiIdentifier];
   }
+
   /** Sets the value of the field for the given `apiIdentifier`. These properties may also be accessed on this record directly. This method can be used if your model field `apiIdentifier` conflicts with the `GadgetRecord` helper functions. */
   setField(apiIdentifier: string, value: any) {
     this.trackKey(apiIdentifier);
-    return (this.__gadget.fields[apiIdentifier] = value);
+    return (this[kFields][apiIdentifier] = value);
   }
 
   /** Returns the `current` and `previous` values for any changed fields, keyed by field `apiIdentifier`.  */
@@ -94,21 +104,20 @@ export class GadgetRecordImplementation<Shape extends RecordShape> {
   changes(prop: string, tracking: ChangeTracking): { changed: true; current: any; previous: any } | { changed: false };
   changes(prop?: string | ChangeTracking, tracking = ChangeTracking.SinceLoaded) {
     const trackChangesSince: ChangeTracking = typeof prop == "string" ? tracking : prop || tracking;
-    const diffFields = trackChangesSince == ChangeTracking.SinceLoaded ? this.__gadget.instantiatedFields : this.__gadget.persistedFields;
+    const diffFields = trackChangesSince == ChangeTracking.SinceLoaded ? this[kInstantiatedFields] : this[kPersistedFields];
 
     if (prop && typeof prop == "string") {
       const previous = diffFields[prop];
-      const current = this.__gadget.fields[prop];
+      const current = this[kFields][prop];
 
       const changed = !isEqual(current, previous);
 
       return changed ? { changed, current, previous } : { changed };
     } else {
       const diff = {} as Record<string, { current: any; previous: any }>;
-      for (let index = 0; index < this.__gadget.fieldKeys.length; index++) {
-        const key = this.__gadget.fieldKeys[index];
-        if (!isEqual(diffFields[key], this.__gadget.fields[key])) {
-          diff[key] = { current: this.__gadget.fields[key], previous: diffFields[key] };
+      for (const key of this[kFieldKeys]) {
+        if (!isEqual(diffFields[key], this[kFields][key])) {
+          diff[key] = { current: this[kFields][key], previous: diffFields[key] };
         }
       }
       return diff;
@@ -117,13 +126,12 @@ export class GadgetRecordImplementation<Shape extends RecordShape> {
 
   /** Returns all current values for fields that have changed */
   toChangedJSON(tracking = ChangeTracking.SinceLoaded): { [prop: string]: any } {
-    const diffFields = tracking == ChangeTracking.SinceLoaded ? this.__gadget.instantiatedFields : this.__gadget.persistedFields;
+    const diffFields = tracking == ChangeTracking.SinceLoaded ? this[kInstantiatedFields] : this[kPersistedFields];
     const current = {} as Record<string, any>;
 
-    for (let index = 0; index < this.__gadget.fieldKeys.length; index++) {
-      const key = this.__gadget.fieldKeys[index];
-      if (!isEqual(diffFields[key], this.__gadget.fields[key])) {
-        current[key] = this.__gadget.fields[key];
+    for (const key of this[kFieldKeys]) {
+      if (!isEqual(diffFields[key], this[kFields][key])) {
+        current[key] = this[kFields][key];
       }
     }
 
@@ -147,11 +155,11 @@ export class GadgetRecordImplementation<Shape extends RecordShape> {
   /** Flushes all `changes` and starts tracking new changes from the current state of the record. */
   flushChanges(tracking = ChangeTracking.SinceLoaded) {
     if (tracking == ChangeTracking.SinceLoaded) {
-      this.__gadget.instantiatedFields = cloneDeep(this.__gadget.fields);
+      this[kInstantiatedFields] = cloneDeep(this[kFields]);
     } else if (tracking == ChangeTracking.SinceLastPersisted) {
-      this.__gadget.persistedFields = cloneDeep(this.__gadget.fields);
+      this[kPersistedFields] = cloneDeep(this[kFields]);
     }
-    this.__gadget.touched = false;
+    this[kTouched] = false;
   }
 
   /** Reverts all `changes` on the record, and returns to either the values this record were instantiated with, or the values at the time of the last `flushChanges` call. */
@@ -159,39 +167,49 @@ export class GadgetRecordImplementation<Shape extends RecordShape> {
     let persistedKeys: string[];
 
     if (tracking == ChangeTracking.SinceLoaded) {
-      persistedKeys = Object.keys(this.__gadget.instantiatedFields);
+      persistedKeys = Object.keys(this[kInstantiatedFields]);
     } else {
-      persistedKeys = Object.keys(this.__gadget.persistedFields);
+      persistedKeys = Object.keys(this[kPersistedFields]);
     }
 
-    for (const key of this.__gadget.fieldKeys) {
-      if (!persistedKeys.includes(key)) delete this.__gadget.fields[key];
+    for (const key of this[kFieldKeys]) {
+      if (!persistedKeys.includes(key)) delete this[kFields][key];
     }
 
     if (tracking == ChangeTracking.SinceLoaded) {
-      Object.assign(this.__gadget.fields, cloneDeep(this.__gadget.instantiatedFields));
+      Object.assign(this[kFields], cloneDeep(this[kInstantiatedFields]));
     } else {
-      Object.assign(this.__gadget.fields, cloneDeep(this.__gadget.persistedFields));
+      Object.assign(this[kFields], cloneDeep(this[kPersistedFields]));
     }
-    this.__gadget.touched = false;
+    this[kTouched] = false;
   }
 
   /** Returns a JSON representation of all fields on this record. */
   toJSON(): Jsonify<Shape> {
-    return toPrimitiveObject({ ...this.__gadget.fields });
+    return toPrimitiveObject({ ...this[kFields] });
   }
 
+  /** Marks this record as changed so that the next save will save it and adjust any `updatedAt` timestamps */
   touch(): void {
-    this.__gadget.touched = true;
+    this[kTouched] = true;
   }
 }
 
 /**
- * TypeScript hijinx to make the generic Record class include all the members of the wrapped generic Shape object
- * We want to use the `GadgetRecord` class to represent objects returned from the API to add some useful stuff to them because it's convenient for callers to use that useful stuff. `GadgetRecord`s are generic because they can hold data of an arbitrary shape from the API, but TypeScript doesn't let us have the class extend or implement anything without statically known members. So we fake TypeScript out and create this pair of constructor and instance types that
+ * The overridden constructor below is TypeScript hijinx to make the generic GadgetRecord class include all the members of the wrapped generic Shape object
+ * `GadgetRecord`s are generic because they can hold data of an arbitrary shape from the API, but TypeScript doesn't let the the class extend or implement anything without statically known members. The parameter is generic, so it's not statically known. So, we fake TypeScript out and create this pair of constructor and instance types that unions the instance of the class with the shape itself, making dot access of properties on the shape typecheck fine.
  */
 
-/** Instantiate a `GadgetRecord` with the attributes of your model. A `GadgetRecord` can be used to track changes to your model and persist those changes via Gadget actions. */
-export const GadgetRecord: new <Shape extends RecordShape>(data: Shape) => GadgetRecordImplementation<Shape> & Shape =
-  GadgetRecordImplementation as any;
-export type GadgetRecord<Shape extends RecordShape> = GadgetRecordImplementation<Shape> & Shape;
+/** One record from the backend of a particular model */
+export type GadgetRecord<Shape extends RecordShape> = GadgetRecord_<Shape> & Shape;
+
+/**
+ * Instantiates a `GadgetRecord` with the attributes of your model. A `GadgetRecord` can be used to track changes to your model and persist those changes via Gadget actions.
+ **/
+export const GadgetRecord: new <Shape extends RecordShape>(data: Shape) => GadgetRecord_<Shape> & Shape = GadgetRecord_ as any;
+
+/**
+ * Legacy export for old generated clients expecting to find the class named this
+ * @hidden
+ */
+export const GadgetRecordImplementation = GadgetRecord_;
