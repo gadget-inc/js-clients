@@ -4,6 +4,7 @@ import { Client as AuthClient } from "@gadget-client/full-auth";
 import { Client as KitchenSinkClient } from "@gadget-client/kitchen-sink";
 import { Client } from "@gadget-client/related-products-example";
 import { Client as NestedClient } from "@gadget-client/zxcv-deeply-nested";
+import { Client as ManyThroughClient } from "@gadget-client/zxcv-manythrough-example";
 import { Client as SimpleClient } from "@gadget-client/zxcv-simple-relationship";
 
 export const relatedProductsApi = new Client({ environment: "Development" });
@@ -13,3 +14,4 @@ export const noUserModelApi = new NoUserClient({ environment: "Development" });
 export const nestedExampleApi = new NestedClient({ environment: "Development" });
 export const simpleExampleApi = new SimpleClient({ environment: "Development" });
 export const kitchenSinkApi = new KitchenSinkClient({ environment: "Development" });
+export const hasManyThroughApi = new ManyThroughClient({ environment: "Development" });
