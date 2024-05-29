@@ -1043,6 +1043,66 @@ describe("operationRunners", () => {
       expect(handle.id).toEqual("widget-flipAllWidgets-123");
     });
 
+    test("can enqueue a global action without passing params and return a handle", async () => {
+      const promise = enqueueActionRunner(connection, MockGlobalAction, {});
+
+      expect(mockUrqlClient.executeMutation.mock.calls.length).toEqual(1);
+      expect(mockUrqlClient.executeMutation.mock.calls[0][0].variables).toEqual({
+        backgroundOptions: {},
+      });
+
+      mockUrqlClient.executeMutation.pushResponse("enqueueFlipAllWidgets", {
+        data: {
+          background: {
+            flipAllWidgets: {
+              success: true,
+              errors: null,
+              backgroundAction: {
+                id: "widget-flipAllWidgets-123",
+              },
+            },
+          },
+        },
+        stale: false,
+        hasNext: false,
+      });
+
+      const handle = await promise;
+      expect(handle).toBeInstanceOf(BackgroundActionHandle);
+      expect(handle.id).toEqual("widget-flipAllWidgets-123");
+    });
+
+    test("can enqueue a global action without passing params and with options and return a handle", async () => {
+      const promise = enqueueActionRunner(connection, MockGlobalAction, {}, { queue: "some-queue" });
+
+      expect(mockUrqlClient.executeMutation.mock.calls.length).toEqual(1);
+      expect(mockUrqlClient.executeMutation.mock.calls[0][0].variables).toEqual({
+        backgroundOptions: {
+          queue: { name: "some-queue" },
+        },
+      });
+
+      mockUrqlClient.executeMutation.pushResponse("enqueueFlipAllWidgets", {
+        data: {
+          background: {
+            flipAllWidgets: {
+              success: true,
+              errors: null,
+              backgroundAction: {
+                id: "widget-flipAllWidgets-123",
+              },
+            },
+          },
+        },
+        stale: false,
+        hasNext: false,
+      });
+
+      const handle = await promise;
+      expect(handle).toBeInstanceOf(BackgroundActionHandle);
+      expect(handle.id).toEqual("widget-flipAllWidgets-123");
+    });
+
     test("can enqueue a bulk action with ids only and return handles", async () => {
       const promise = enqueueActionRunner(connection, MockBulkFlipDownWidgetsAction, ["123", "456"]);
 
