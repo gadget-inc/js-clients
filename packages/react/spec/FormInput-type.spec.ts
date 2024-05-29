@@ -1,5 +1,5 @@
 import type { AssertTrue, IsExact } from "conditional-type-checks";
-import type { FormInput } from "./../src/useActionForm.js";
+import type { FormInput } from "./../src/use-action-form/types.js";
 
 describe("FormInput", () => {
   type _scalarFormInput = AssertTrue<IsExact<FormInput<number>, number | null | undefined>>;
