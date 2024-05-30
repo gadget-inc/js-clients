@@ -1,3 +1,4 @@
+import { Client as FileFieldClient } from "@gadget-client/app-with-file-fields";
 import { Client as NoUserClient } from "@gadget-client/app-with-no-user-model";
 import { Client as BulkClient } from "@gadget-client/bulk-actions-test";
 import { Client as AuthClient } from "@gadget-client/full-auth";
@@ -15,3 +16,4 @@ export const nestedExampleApi = new NestedClient({ environment: "Development" })
 export const simpleExampleApi = new SimpleClient({ environment: "Development" });
 export const kitchenSinkApi = new KitchenSinkClient({ environment: "Development" });
 export const hasManyThroughApi = new ManyThroughClient({ environment: "Development" });
+export const fileFieldApi = new FileFieldClient({ environment: "Development" });

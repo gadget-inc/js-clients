@@ -57,7 +57,7 @@ const unwindEdges = (input: any): any => {
       return input.map(unwindEdges);
     }
 
-    if (input !== null && typeof input === "object") {
+    if (isPlainObject(input)) {
       if (input.edges && Array.isArray(input.edges)) {
         return input.edges.map((edge: any) => unwindEdges(edge.node));
       }
@@ -156,6 +156,40 @@ class ReshapeDataContext {
   ) {}
 }
 
+const richTextToGraphqlApiInput = (input: any) => {
+  return { markdown: input.markdown };
+};
+
+const storedFileToGraphqlApiInput = (input: any) => {
+  if (input.base64) {
+    return {
+      fileName: input.fileName,
+      mimeType: input.mimeType,
+      base64: input.base64,
+    };
+  } else if (input.file) {
+    return {
+      fileName: input.fileName,
+      mimeType: input.mimeType,
+      file: input.file,
+    };
+  } else if (input.copyUrl) {
+    return {
+      fileName: input.fileName,
+      mimeType: input.mimeType,
+      copyUrl: input.copyUrl,
+    };
+  } else if (input.directUploadToken) {
+    return {
+      fileName: input.fileName,
+      mimeType: input.mimeType,
+      directUploadToken: input.directUploadToken,
+    };
+  } else {
+    return undefined;
+  }
+};
+
 export const reshapeDataForGraphqlApi = async (client: AnyClient, defaultValues: any, data: any) => {
   const referencedTypes = client[$modelRelationships];
 
@@ -222,7 +256,7 @@ export const reshapeDataForGraphqlApi = async (client: AnyClient, defaultValues:
       );
 
       return results.flatMap((result) => result);
-    } else if (input != null && typeof input === "object") {
+    } else if (isPlainObject(input)) {
       // if the input is an object, we need to handle it differently
       const result: any = {};
 
@@ -242,6 +276,12 @@ export const reshapeDataForGraphqlApi = async (client: AnyClient, defaultValues:
       }
 
       const { __typename, ...rest } = result;
+
+      if (__typename == "RichText") {
+        return richTextToGraphqlApiInput(rest);
+      } else if (__typename == "StoredFile") {
+        return storedFileToGraphqlApiInput(rest);
+      }
 
       let belongsTo = null;
       const belongsToRelationships: Record<string, { type: string; model: string }> | null = fieldRelationships // grab the belongsTo relationships from the fieldRelationships object
@@ -311,4 +351,15 @@ export const reshapeDataForGraphqlApi = async (client: AnyClient, defaultValues:
   const result = transform(data, { depth: 0 });
 
   return result;
+};
+
+const isPlainObject = (obj: any) => {
+  if (typeof obj !== "object" || obj === null) return false;
+
+  let proto = obj;
+  while (Object.getPrototypeOf(proto) !== null) {
+    proto = Object.getPrototypeOf(proto);
+  }
+
+  return Object.getPrototypeOf(obj) === proto;
 };
