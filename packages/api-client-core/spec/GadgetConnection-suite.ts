@@ -1,5 +1,6 @@
 import { Response } from "cross-fetch";
 import gqlTag from "gql-tag";
+import { createClient } from "graphql-ws";
 import nock from "nock";
 import { AuthenticationMode, BrowserSessionStorageType, GadgetConnection } from "../src/index.js";
 import { base64 } from "./helpers.js";
@@ -897,5 +898,38 @@ export const GadgetConnectionSharedSuite = (queryExtra = "") => {
       expect(result.status).toEqual(200);
       expect(await result.json()).toEqual({ response: true });
     });
+
+    if (globalThis.WebSocket) {
+      test("subscription clients should correctly append url params overrides", () => {
+        const connection = new GadgetConnection({
+          endpoint: "/api/graphql",
+          authenticationMode: { apiKey: "gsk-abcde" },
+        });
+
+        connection.newSubscriptionClient({
+          urlParams: {
+            foo: "bar",
+          },
+        });
+
+        expect((createClient as any).mock.calls[0][0].url).toEqual("/api/graphql/batch?foo=bar");
+      });
+
+      test("subscription clients should correctly append url params to base endpoints that already have them", () => {
+        const connection = new GadgetConnection({
+          endpoint: "/api/graphql?base=whatever",
+          websocketsEndpoint: "/api/graphql/batch?base=whatever",
+          authenticationMode: { apiKey: "gsk-abcde" },
+        });
+
+        connection.newSubscriptionClient({
+          urlParams: {
+            foo: "bar",
+          },
+        });
+
+        expect((createClient as any).mock.calls[0][0].url).toEqual("/api/graphql/batch?base=whatever&foo=bar");
+      });
+    }
   });
 };

@@ -13,7 +13,7 @@ import { GadgetTransaction, TransactionRolledBack } from "./GadgetTransaction.js
 import type { BrowserStorage } from "./InMemoryStorage.js";
 import { InMemoryStorage } from "./InMemoryStorage.js";
 import { operationNameExchange } from "./exchanges/operationNameExchange.js";
-import { urlParamExchange } from "./exchanges/urlParamExchange.js";
+import { addUrlParams, urlParamExchange } from "./exchanges/urlParamExchange.js";
 import {
   GadgetTooManyRequestsError,
   GadgetUnexpectedCloseError,
@@ -437,7 +437,7 @@ export class GadgetConnection {
     return client;
   }
 
-  private newSubscriptionClient(overrides: GadgetSubscriptionClientOptions) {
+  newSubscriptionClient(overrides?: GadgetSubscriptionClientOptions) {
     if (!this.websocketImplementation) {
       throw new Error(
         "Can't use this GadgetClient for this subscription-based operation as there's no global WebSocket implementation available. Please pass one as the `websocketImplementation` option to the GadgetClient constructor."
@@ -446,13 +446,7 @@ export class GadgetConnection {
 
     let url = this.websocketsEndpoint;
     if (overrides?.urlParams) {
-      const params = new URLSearchParams();
-      for (const [key, value] of Object.entries(overrides.urlParams)) {
-        if (value) {
-          params.set(key, value);
-        }
-      }
-      url += "?" + params.toString();
+      url = addUrlParams(url, overrides.urlParams);
     }
 
     return createSubscriptionClient({
