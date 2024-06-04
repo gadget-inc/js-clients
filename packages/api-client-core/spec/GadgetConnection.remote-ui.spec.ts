@@ -2,6 +2,9 @@
  * @jest-environment ./spec/remote-ui-environment.ts
  */
 jest.mock("isomorphic-ws", () => null); // mimic browser environment for remote-ui where the websocket global is not available
+jest.mock("graphql-ws", () => {
+  return { createClient: jest.fn(), CloseCode: { ConnectionAcknowledgementTimeout: 1, ConnectionInitialisationTimeout: 2 } };
+});
 import { GadgetConnection } from "../src/GadgetConnection.js";
 import { GadgetConnectionSharedSuite } from "./GadgetConnection-suite.js";
 
