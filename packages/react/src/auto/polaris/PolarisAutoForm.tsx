@@ -9,6 +9,8 @@ import type { AutoFormProps } from "../AutoForm.js";
 import { useFormFields, useValidationResolver } from "../AutoForm.js";
 import { PolarisErrorDisplay } from "./PolarisErrorDisplay.js";
 import { PolarisFormInput } from "./PolarisFormInput.js";
+import { AutoFormMetadataContext } from "../AutoFormContext.js";
+import { FormProvider } from "react-hook-form";
 
 export const PolarisFormSkeleton = () => (
   <>
@@ -26,7 +28,8 @@ export const PolarisAutoForm = <
   ActionFunc extends ActionFunction<GivenOptions, any, any, SchemaT, any>,
   Options extends ActionFunc["optionsType"]
 >(
-  props: AutoFormProps<GivenOptions, SchemaT, ActionFunc, Options> & Partial<FormProps>
+  //polaris form props also take an 'action' property, which we need to omit here. 
+  props: AutoFormProps<GivenOptions, SchemaT, ActionFunc, Options> & Omit<Partial<FormProps>, 'action'>
 ) => {
   const { action, include: _include, exclude: _exclude, fields: _fields, submitLabel: _submitLabel, record, findBy, ...rest } = props;
 
@@ -39,9 +42,9 @@ export const PolarisAutoForm = <
   // setup the form state for the action
   const {
     submit,
-    control,
     error: formError,
-    formState: { isSubmitSuccessful, isLoading },
+    formState: {isSubmitSuccessful, isLoading},
+    originalFormMethods,
   } = useActionForm(action, {
     defaultValues: { [action.modelApiIdentifier]: record },
     findBy,
@@ -58,17 +61,39 @@ export const PolarisAutoForm = <
     return props.successContent ?? <Banner title={`Saved ${metadata?.name} successfully.`} tone="success" />;
   }
 
-  return (
+  if(fetchingMetadata) return (
     <Form {...rest} onSubmit={submit}>
       <FormLayout>
-        {fetchingMetadata && <PolarisFormSkeleton />}
-        {fields.map(([path, field]) => (
-          <PolarisFormInput key={field.apiIdentifier} path={path} field={field} control={control} />
-        ))}
-        <Button loading={isLoading} submit onClick={submit}>
-          {(props.submitLabel as any) ?? "Submit"}
-        </Button>
+        <PolarisFormSkeleton />;
       </FormLayout>
     </Form>
+  )
+
+  if(props.children) return (
+    <AutoFormMetadataContext.Provider value={{ submit, metadata }}>
+      <FormProvider {...originalFormMethods}>
+        <Form {...rest} onSubmit={submit}>
+          <FormLayout>
+            {props.children}
+          </FormLayout>
+        </Form>
+      </FormProvider>
+    </AutoFormMetadataContext.Provider> 
+  )
+
+
+  return (
+    <AutoFormMetadataContext.Provider value={{ submit, metadata }}>
+      <Form {...rest} onSubmit={submit}>
+        <FormLayout>
+          {fields.map(([path, field]) => (
+            <PolarisFormInput key={field.apiIdentifier} path={path} field={field} control={originalFormMethods.control} />
+          ))}
+          <Button loading={isLoading} submit onClick={submit}>
+            {(props.submitLabel as any) ?? "Submit"}
+          </Button>
+        </FormLayout>
+      </Form>
+    </AutoFormMetadataContext.Provider>
   );
 };

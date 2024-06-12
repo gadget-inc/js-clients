@@ -54,6 +54,8 @@ export type UseActionFormResult<
   actionData?: ActionFunc extends ActionFunction<GivenOptions, any, any, SchemaT, any>
     ? ReturnType<typeof useAction<GivenOptions, SchemaT, ActionFunc, any>>[0]["data"]
     : ReturnType<typeof useGlobalAction<any>>[0]["data"];
+
+  originalFormMethods: UseFormReturn<FormVariables, FormContext>;
 };
 
 export type UseActionFormHookState<F extends ActionFunction<any, any, any, any, any> | GlobalActionFunction<any>> = ActionHookState<

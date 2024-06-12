@@ -23,9 +23,9 @@ export type AutoFormProps<
   /** A record for this form to act on */
   record?: GadgetRecord<any>;
   /** An allowlist of fields to render within the form. Only these fields will be rendered as inputs. */
-  include?: (keyof Options["select"])[];
+  include?: string[];
   /** An allowlist of fields to render within the form. Only these fields will be rendered as inputs. */
-  fields?: (keyof Options["select"])[];
+  fields?: string[];
   /** A denylist of fields to render within the form. Every field except these fields will be rendered as inputs. */
   exclude?: string[];
   /** The label to use for the submit button at the bottom of the form */
@@ -49,7 +49,7 @@ export const useValidationResolver = (metadata: ActionMetadata | undefined) => {
  */
 export const useFormFields = (
   metadata: ActionMetadata | undefined | null,
-  options: AutoFormProps<any, any, any, any>
+  options: { include?: string[]; exclude?: string[]; fields?: string[]; select?: Record<string, any> }
 ): (readonly [string, FieldMetadata])[] => {
   return useMemo(() => {
     if (!metadata) return [];
