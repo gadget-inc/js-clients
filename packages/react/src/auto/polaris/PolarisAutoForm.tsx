@@ -52,6 +52,8 @@ export const PolarisAutoForm = <
     send: fields.map(([path]) => path),
   });
 
+  console.log("form data...", originalFormMethods.getValues())
+
   const error = formError ?? metadataError;
   if (error && !(error as any).valiationErrors) {
     return <PolarisErrorDisplay error={error} />;
@@ -84,16 +86,18 @@ export const PolarisAutoForm = <
 
   return (
     <AutoFormMetadataContext.Provider value={{ submit, metadata }}>
-      <Form {...rest} onSubmit={submit}>
-        <FormLayout>
-          {fields.map(([path, field]) => (
-            <PolarisFormInput key={field.apiIdentifier} path={path} field={field} control={originalFormMethods.control} />
-          ))}
-          <Button loading={isLoading} submit onClick={submit}>
-            {(props.submitLabel as any) ?? "Submit"}
-          </Button>
-        </FormLayout>
-      </Form>
+      <FormProvider {...originalFormMethods}>
+        <Form {...rest} onSubmit={submit}>
+          <FormLayout>
+            {fields.map(([path, field]) => (
+              <PolarisFormInput key={field.apiIdentifier} path={path} field={field} control={originalFormMethods.control} />
+            ))}
+            <Button loading={isLoading} submit onClick={async () => {submit}}>
+              {(props.submitLabel as any) ?? "Submit"}
+            </Button>
+          </FormLayout>
+        </Form>
+      </FormProvider>
     </AutoFormMetadataContext.Provider>
   );
 };

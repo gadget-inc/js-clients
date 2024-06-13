@@ -236,6 +236,8 @@ export const filterFieldList = (
         case FieldType.Enum:
         case FieldType.File:
         case FieldType.RoleAssignments:
+        case FieldType.BelongsTo:
+        case FieldType.HasMany:
           return true;
         default:
           return false;

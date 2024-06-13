@@ -94,11 +94,15 @@ const validatorForField = (field: FieldMetadata) => {
       break;
     }
     case GadgetFieldType.BelongsTo:
-    case GadgetFieldType.HasOne:
+    case GadgetFieldType.HasOne: {
+      // TODO: implement relationship validations
+      validator = object();
+      break;
+    }
     case GadgetFieldType.HasManyThrough:
     case GadgetFieldType.HasMany: {
       // TODO: implement relationship validations
-      validator = object();
+      validator = array();
       break;
     }
     default: {

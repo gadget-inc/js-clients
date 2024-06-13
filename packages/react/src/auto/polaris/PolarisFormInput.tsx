@@ -11,6 +11,8 @@ import { PolarisFileInput } from "./PolarisFileInput.js";
 import { PolarisFixedOptionsCombobox } from "./PolarisFixedOptionsCombobox.js";
 import { PolarisJSONInput } from "./PolarisJSONInput.js";
 import { PolarisRolesCombobox } from "./PolarisRolesCombobox.js";
+import { PolarisBelongsToInput } from "./inputs/PolarisBelongsToInput.js";
+import { PolarisHasManyInput } from "./inputs/PolarisHasManyInput.js";
 
 const FieldTypeToInputType: Partial<Record<GadgetFieldType, TextFieldProps["type"]>> = {
   [FieldType.Number]: "number",
@@ -80,11 +82,13 @@ export const PolarisFormInput = (props: { path: string; field: FieldMetadata; co
       return <PolarisRolesCombobox label={props.field.name} {...field} />;
     }
     case FieldType.HasMany:
-    case FieldType.HasManyThrough:
+    case FieldType.HasManyThrough: {
+      return <PolarisHasManyInput field={props.field.apiIdentifier} />;
+    }
     case FieldType.HasOne:
     case FieldType.BelongsTo: {
       // TODO: implement relationship field inputs
-      return null;
+      return <PolarisBelongsToInput field={props.field.apiIdentifier} />;
     }
     case FieldType.RichText: {
       // TODO: implement rich text input

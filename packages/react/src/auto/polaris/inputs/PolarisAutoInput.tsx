@@ -5,6 +5,7 @@ import type { Control } from "react-hook-form";
 import { useController, useForm, useFormContext } from "react-hook-form";
 import type { GadgetEnumConfig, GadgetFieldType } from "../../../internal/gql/graphql.js";
 import type { FieldMetadata } from "../../../metadata.js";
+import { PolarisBelongsToInput } from "./PolarisBelongsToInput.js";
 import { FieldType } from "../../../metadata.js";
 import { PolarisDateTimePicker } from "../PolarisDateTimePicker.js";
 import { PolarisFileInput } from "../PolarisFileInput.js";
@@ -96,7 +97,7 @@ export const PolarisAutoInput = (props: { field: string }) => {
     case FieldType.HasOne:
     case FieldType.BelongsTo: {
       // TODO: implement relationship field inputs
-      return null;
+      return <PolarisBelongsToInput field={_field.apiIdentifier} />;
     }
     case FieldType.RichText: {
       // TODO: implement rich text input

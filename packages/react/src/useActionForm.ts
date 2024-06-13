@@ -168,15 +168,19 @@ export const useActionForm = <
       let result: any;
 
       formHook.clearErrors();
+      console.log('submit')
 
       await handleSubmit(
         async (data) => {
+          console.log('submitting..., data', data)
           if (isModelAction) {
             if (!action.hasAmbiguousIdentifier && findResult.data) {
               data = disambiguateDefaultValues(data, findResult.data, action);
             }
 
             data = await reshapeDataForGraphqlApi(api, defaultValues, data);
+
+            console.log(data)
           }
 
           let variables: ActionFunc["variablesType"] = {
@@ -203,6 +207,7 @@ export const useActionForm = <
           }
         },
         (errors) => {
+          console.log("errors", errors)
           handleSubmissionError(errors);
         }
       )(event);
