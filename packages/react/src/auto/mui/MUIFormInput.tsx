@@ -5,7 +5,7 @@ import type { ReactElement } from "react";
 import React from "react";
 import type { Control } from "react-hook-form";
 import { useController } from "react-hook-form";
-import type { GadgetEnumConfig, GadgetFieldType } from "../../internal/gql/graphql.js"
+import type { GadgetEnumConfig, GadgetFieldType } from "../../internal/gql/graphql.js";
 import type { FieldMetadata } from "../../metadata.js";
 import { FieldType } from "../../metadata.js";
 import { MUIFileInput } from "./MUIFileInput.js";

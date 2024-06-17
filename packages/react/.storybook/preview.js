@@ -1,5 +1,5 @@
 /** @type { import('@storybook/react').Preview } */
-import '@shopify/polaris/build/esm/styles.css';
+import "@shopify/polaris/build/esm/styles.css";
 
 const preview = {
   parameters: {

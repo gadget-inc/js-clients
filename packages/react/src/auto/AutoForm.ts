@@ -2,10 +2,10 @@ import type { ActionFunction, GadgetRecord } from "@gadgetinc/api-client-core";
 import { yupResolver } from "@hookform/resolvers/yup";
 import type { ReactNode } from "react";
 import { useMemo } from "react";
+import type { RecordIdentifier } from "src/use-action-form/types.js";
 import type { GadgetObjectFieldConfig } from "../internal/gql/graphql.js";
 import type { ActionMetadata, FieldMetadata } from "../metadata.js";
 import { filterFieldList } from "../metadata.js";
-import type { RecordIdentifier } from "src/use-action-form/types.js";
 import type { OptionsType } from "../utils.js";
 import { validationSchema } from "../validationSchema.js";
 

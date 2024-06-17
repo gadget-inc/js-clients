@@ -1,15 +1,12 @@
-import { useAutoFormMetadata } from "../../AutoFormContext.js";
-import { assert } from "@gadgetinc/api-client-core";
+import { AnyModelManager, assert } from "@gadgetinc/api-client-core";
 import { Select } from "@shopify/polaris";
-import { useApi } from "../../../GadgetProvider.js";
 import React from "react";
-import { useFormFields } from "../../AutoForm.js";
-import { useFindMany } from "../../../useFindMany.js";
-import { AnyModelManager } from "@gadgetinc/api-client-core";
 import { useController } from "react-hook-form";
 import { GadgetBelongsToConfig } from "src/internal/gql/graphql.js";
-
-
+import { useApi } from "../../../GadgetProvider.js";
+import { useFindMany } from "../../../useFindMany.js";
+import { useFormFields } from "../../AutoForm.js";
+import { useAutoFormMetadata } from "../../AutoFormContext.js";
 
 export const PolarisBelongsToInput = (props: { field: string }) => {
   const { metadata } = useAutoFormMetadata();
@@ -34,9 +31,9 @@ export const PolarisBelongsToInput = (props: { field: string }) => {
   });
 
   const { ref: _ref, ...field } = fieldProps;
-  const config = _field.configuration as GadgetBelongsToConfig
+  const config = _field.configuration as GadgetBelongsToConfig;
 
-  if(!config || !config.relatedModel) {
+  if (!config || !config.relatedModel) {
     throw new Error(`Field ${props.field} not found in metadata`);
   }
 
@@ -45,20 +42,15 @@ export const PolarisBelongsToInput = (props: { field: string }) => {
     "no model manager found for action function"
   );
 
-  const [{ data, fetching, error }, _refetch] = useFindMany(modelManager as any, {first: 25});
+  const [{ data, fetching, error }, _refetch] = useFindMany(modelManager as any, { first: 25 });
 
-  if(fetching || !data) {
-    return <p>Loading...</p>
+  if (fetching || !data) {
+    return <p>Loading...</p>;
   }
 
-  const options = data.map((record: Record<string, any>) => {return { label: record.name, value: record.id}})
+  const options = data.map((record: Record<string, any>) => {
+    return { label: record.name, value: record.id };
+  });
 
-  return (
-    <Select
-      label={_field.name}
-      options={options}
-      {...field}
-      error={fieldError?.message}
-    />
-  );
+  return <Select label={_field.name} options={options} {...field} error={fieldError?.message} />;
 };

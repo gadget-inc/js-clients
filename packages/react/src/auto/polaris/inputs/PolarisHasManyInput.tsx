@@ -1,15 +1,13 @@
-import { useAutoFormMetadata } from "../../AutoFormContext.js";
+import type { AnyModelManager } from "@gadgetinc/api-client-core";
 import { assert } from "@gadgetinc/api-client-core";
 import { Autocomplete, LegacyStack, Tag } from "@shopify/polaris";
-import { useApi } from "../../../GadgetProvider.js";
 import React, { useCallback, useState } from "react";
-import { useFormFields } from "../../AutoForm.js";
-import { useFindMany } from "../../../useFindMany.js";
-import type { AnyModelManager } from "@gadgetinc/api-client-core";
 import { useFieldArray, useFormContext } from "react-hook-form";
 import type { GadgetBelongsToConfig } from "src/internal/gql/graphql.js";
-
-
+import { useApi } from "../../../GadgetProvider.js";
+import { useFindMany } from "../../../useFindMany.js";
+import { useFormFields } from "../../AutoForm.js";
+import { useAutoFormMetadata } from "../../AutoFormContext.js";
 
 export const PolarisHasManyInput = (props: { field: string }) => {
   const { metadata } = useAutoFormMetadata();
@@ -27,15 +25,13 @@ export const PolarisHasManyInput = (props: { field: string }) => {
 
   const { getValues } = useFormContext();
 
-  const {
-    fields, remove, replace
-  } = useFieldArray({
+  const { fields, remove, replace } = useFieldArray({
     name: path,
   });
 
-  const config = _field.configuration as GadgetBelongsToConfig
+  const config = _field.configuration as GadgetBelongsToConfig;
 
-  if(!config || !config.relatedModel) {
+  if (!config || !config.relatedModel) {
     throw new Error(`Field ${props.field} not found in metadata`);
   }
 
@@ -44,34 +40,36 @@ export const PolarisHasManyInput = (props: { field: string }) => {
     "no model manager found for action function"
   );
 
-  const [{ data, fetching, error }, _refetch] = useFindMany(modelManager as any, {first: 25});
+  const [{ data, fetching, error }, _refetch] = useFindMany(modelManager as any, { first: 25 });
 
-  const [inputValue, setInputValue] = useState('');
+  const [inputValue, setInputValue] = useState("");
 
-  const updateText = useCallback(
-    (value: string) => {
-      setInputValue(value);
-    },
-    [],
-  );
+  const updateText = useCallback((value: string) => {
+    setInputValue(value);
+  }, []);
 
-  if(fetching || !data) {
-    return <p>Loading...</p>
+  if (fetching || !data) {
+    return <p>Loading...</p>;
   }
 
-  const options = data.map((record: Record<string, any>) => {return { label: record.name, value: record.id}})
+  const options = data.map((record: Record<string, any>) => {
+    return { label: record.name, value: record.id };
+  });
 
   const verticalContentMarkup =
     fields.length > 0 ? (
       <LegacyStack spacing="extraTight" alignment="center">
         {fields.map((field, i) => {
-          const id = getValues(path)[i].id
-          const option = options.find((option) => option.value === id)
+          const id = getValues(path)[i].id;
+          const option = options.find((option) => option.value === id);
           return (
-            <Tag key={`option${field.id}`} onRemove={() => {
-              const index = fields.findIndex((entry) => entry.id == field.id)
-              remove(index)
-            }}>
+            <Tag
+              key={`option${field.id}`}
+              onRemove={() => {
+                const index = fields.findIndex((entry) => entry.id == field.id);
+                remove(index);
+              }}
+            >
               {option?.label}
             </Tag>
           );
@@ -91,12 +89,14 @@ export const PolarisHasManyInput = (props: { field: string }) => {
 
   return (
     <Autocomplete
-        allowMultiple
-        options={options}
-        selected={fields.map((field, i) => getValues(path)[i].id)}
-        textField={textField}
-        onSelect={(selection) => { replace(selection.map((id) => ({id: id}))) }}
-        listTitle={_field.name}
-      />
+      allowMultiple
+      options={options}
+      selected={fields.map((field, i) => getValues(path)[i].id)}
+      textField={textField}
+      onSelect={(selection) => {
+        replace(selection.map((id) => ({ id: id })));
+      }}
+      listTitle={_field.name}
+    />
   );
 };

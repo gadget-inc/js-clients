@@ -1,19 +1,17 @@
 import type { TextFieldProps } from "@shopify/polaris";
 import { Checkbox, TextField } from "@shopify/polaris";
 import React from "react";
-import type { Control } from "react-hook-form";
-import { useController, useForm, useFormContext } from "react-hook-form";
+import { useController } from "react-hook-form";
 import type { GadgetEnumConfig, GadgetFieldType } from "../../../internal/gql/graphql.js";
-import type { FieldMetadata } from "../../../metadata.js";
-import { PolarisBelongsToInput } from "./PolarisBelongsToInput.js";
 import { FieldType } from "../../../metadata.js";
+import { useFormFields } from "../../AutoForm.js";
+import { useAutoFormMetadata } from "../../AutoFormContext.js";
 import { PolarisDateTimePicker } from "../PolarisDateTimePicker.js";
 import { PolarisFileInput } from "../PolarisFileInput.js";
 import { PolarisFixedOptionsCombobox } from "../PolarisFixedOptionsCombobox.js";
 import { PolarisJSONInput } from "../PolarisJSONInput.js";
 import { PolarisRolesCombobox } from "../PolarisRolesCombobox.js";
-import { useFormFields } from "../../AutoForm.js";
-import { useAutoFormMetadata } from "../../AutoFormContext.js";
+import { PolarisBelongsToInput } from "./PolarisBelongsToInput.js";
 
 const FieldTypeToInputType: Partial<Record<GadgetFieldType, TextFieldProps["type"]>> = {
   [FieldType.Number]: "number",
@@ -55,22 +53,14 @@ export const PolarisAutoInput = (props: { field: string }) => {
     case FieldType.Color:
     case FieldType.Url: {
       return (
-        <TextField
-          label={_field.name}
-          type={FieldTypeToInputType[_field.fieldType]}
-          autoComplete="off"
-          {...field}
-          error={error?.message}
-        />
+        <TextField label={_field.name} type={FieldTypeToInputType[_field.fieldType]} autoComplete="off" {...field} error={error?.message} />
       );
     }
     case FieldType.Boolean: {
       return <Checkbox label={_field.name} {...field} error={error?.message} />;
     }
     case FieldType.DateTime: {
-      return (
-        <PolarisDateTimePicker dateLabel={_field.name} includeTime={(config as any).includeTime} {...field} error={error?.message} />
-      );
+      return <PolarisDateTimePicker dateLabel={_field.name} includeTime={(config as any).includeTime} {...field} error={error?.message} />;
     }
     case FieldType.Json: {
       return <PolarisJSONInput label={_field.name} multiline={4} monospaced autoComplete="off" {...field} />;

@@ -7,7 +7,6 @@ import type { GadgetFieldType } from "../../../internal/gql/graphql.js";
 import type { FieldMetadata } from "../../../metadata.js";
 import { FieldType } from "../../../metadata.js";
 
-
 const FieldTypeToInputType: Partial<Record<GadgetFieldType, TextFieldProps["type"]>> = {
   [FieldType.Number]: "number",
   [FieldType.Email]: "email",
@@ -28,14 +27,13 @@ export const PolarisStringInput = (props: { path: string; field: FieldMetadata; 
   // omit the ref from the forwarded along props so that we don't get a warning
   const { ref: _ref, ...field } = fieldProps;
 
-      return (
-        <TextField
-        label={props.field.name}
-        type={FieldTypeToInputType[props.field.fieldType]}
-        autoComplete="off"
-        {...field}
-        error={error?.message}
-      />
-      );
-
+  return (
+    <TextField
+      label={props.field.name}
+      type={FieldTypeToInputType[props.field.fieldType]}
+      autoComplete="off"
+      {...field}
+      error={error?.message}
+    />
+  );
 };

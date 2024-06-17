@@ -2,15 +2,15 @@ import type { ActionFunction } from "@gadgetinc/api-client-core";
 import type { FormProps } from "@shopify/polaris";
 import { Banner, Button, Form, FormLayout, SkeletonBodyText, SkeletonDisplayText } from "@shopify/polaris";
 import React from "react";
+import { FormProvider } from "react-hook-form";
 import { useActionMetadata } from "../../metadata.js";
 import { useActionForm } from "../../useActionForm.js";
 import type { OptionsType } from "../../utils.js";
 import type { AutoFormProps } from "../AutoForm.js";
 import { useFormFields, useValidationResolver } from "../AutoForm.js";
+import { AutoFormMetadataContext } from "../AutoFormContext.js";
 import { PolarisErrorDisplay } from "./PolarisErrorDisplay.js";
 import { PolarisFormInput } from "./PolarisFormInput.js";
-import { AutoFormMetadataContext } from "../AutoFormContext.js";
-import { FormProvider } from "react-hook-form";
 
 export const PolarisFormSkeleton = () => (
   <>
@@ -28,8 +28,8 @@ export const PolarisAutoForm = <
   ActionFunc extends ActionFunction<GivenOptions, any, any, SchemaT, any>,
   Options extends ActionFunc["optionsType"]
 >(
-  //polaris form props also take an 'action' property, which we need to omit here. 
-  props: AutoFormProps<GivenOptions, SchemaT, ActionFunc, Options> & Omit<Partial<FormProps>, 'action'>
+  //polaris form props also take an 'action' property, which we need to omit here.
+  props: AutoFormProps<GivenOptions, SchemaT, ActionFunc, Options> & Omit<Partial<FormProps>, "action">
 ) => {
   const { action, include: _include, exclude: _exclude, fields: _fields, submitLabel: _submitLabel, record, findBy, ...rest } = props;
 
@@ -43,7 +43,7 @@ export const PolarisAutoForm = <
   const {
     submit,
     error: formError,
-    formState: {isSubmitSuccessful, isLoading},
+    formState: { isSubmitSuccessful, isLoading },
     originalFormMethods,
   } = useActionForm(action, {
     defaultValues: { [action.modelApiIdentifier]: record },
@@ -51,8 +51,6 @@ export const PolarisAutoForm = <
     resolver: useValidationResolver(metadata),
     send: fields.map(([path]) => path),
   });
-
-  console.log("form data...", originalFormMethods.getValues())
 
   const error = formError ?? metadataError;
   if (error && !(error as any).valiationErrors) {
@@ -63,26 +61,25 @@ export const PolarisAutoForm = <
     return props.successContent ?? <Banner title={`Saved ${metadata?.name} successfully.`} tone="success" />;
   }
 
-  if(fetchingMetadata) return (
-    <Form {...rest} onSubmit={submit}>
-      <FormLayout>
-        <PolarisFormSkeleton />;
-      </FormLayout>
-    </Form>
-  )
+  if (fetchingMetadata)
+    return (
+      <Form {...rest} onSubmit={submit}>
+        <FormLayout>
+          <PolarisFormSkeleton />;
+        </FormLayout>
+      </Form>
+    );
 
-  if(props.children) return (
-    <AutoFormMetadataContext.Provider value={{ submit, metadata }}>
-      <FormProvider {...originalFormMethods}>
-        <Form {...rest} onSubmit={submit}>
-          <FormLayout>
-            {props.children}
-          </FormLayout>
-        </Form>
-      </FormProvider>
-    </AutoFormMetadataContext.Provider> 
-  )
-
+  if (props.children)
+    return (
+      <AutoFormMetadataContext.Provider value={{ submit, metadata }}>
+        <FormProvider {...originalFormMethods}>
+          <Form {...rest} onSubmit={submit}>
+            <FormLayout>{props.children}</FormLayout>
+          </Form>
+        </FormProvider>
+      </AutoFormMetadataContext.Provider>
+    );
 
   return (
     <AutoFormMetadataContext.Provider value={{ submit, metadata }}>
@@ -92,7 +89,13 @@ export const PolarisAutoForm = <
             {fields.map(([path, field]) => (
               <PolarisFormInput key={field.apiIdentifier} path={path} field={field} control={originalFormMethods.control} />
             ))}
-            <Button loading={isLoading} submit onClick={async () => {submit}}>
+            <Button
+              loading={isLoading}
+              submit
+              onClick={async () => {
+                submit;
+              }}
+            >
               {(props.submitLabel as any) ?? "Submit"}
             </Button>
           </FormLayout>

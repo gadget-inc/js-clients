@@ -5,11 +5,13 @@ jest.setTimeout(process.env.CI == "vscode-jest-tests" ? 20 * 60 * 1000 : 5 * 100
 global.fetch = require("cross-fetch");
 
 //Shopify's app provider uses this api which jest does not expose in its jsdom environment
-global.matchMedia = global.matchMedia || function() {
+global.matchMedia =
+  global.matchMedia ||
+  function () {
     return {
-        matches : false,
-        addListener : function() {},
-        removeListener: function() {}
-    }
-}
+      matches: false,
+      addListener: function () {},
+      removeListener: function () {},
+    };
+  };
 export {};

@@ -181,7 +181,7 @@ export const useActionMetadata = (actionFunction: ActionFunction<any, any, any, 
   }
 
   return {
-    metadata: data ? data.gadgetMeta.model as ActionMetadata : data,
+    metadata: data ? (data.gadgetMeta.model as ActionMetadata) : data,
     fetching,
     error: error ? ErrorWrapper.forClientSideError(error) : undefined,
   };
