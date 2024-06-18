@@ -6,8 +6,6 @@ import { utcToZonedTime, zonedTimeToUtc } from "date-fns-tz";
 import React, { useCallback, useEffect, useState } from "react";
 import { useFocus } from "../../useFocus.js";
 
-const localTz = Intl.DateTimeFormat().resolvedOptions().timeZone;
-
 const getTimeString = (date: Date) => format(date, "K:m aa");
 
 // Use a regular expression to extract hours, minutes, and AM/PM
@@ -61,6 +59,7 @@ export const PolarisDateTimePicker = (props: {
   error?: string;
 }) => {
   const { onChange, value } = props;
+  const localTz = Intl.DateTimeFormat().resolvedOptions().timeZone;
   const localTime = value ? utcToZonedTime(value, localTz) : undefined;
   const [{ month, year }, setDate] = useState({ month: (localTime ?? today).getMonth(), year: (localTime ?? today).getFullYear() });
   const [datePopoverActive, setDatePopoverActive] = useState(false);

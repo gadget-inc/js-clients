@@ -86,7 +86,6 @@ export const PolarisAutoInput = (props: { field: string }) => {
     case FieldType.HasManyThrough:
     case FieldType.HasOne:
     case FieldType.BelongsTo: {
-      // TODO: implement relationship field inputs
       return <PolarisBelongsToInput field={_field.apiIdentifier} />;
     }
     case FieldType.RichText: {

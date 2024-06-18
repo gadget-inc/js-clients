@@ -20,7 +20,7 @@ describeForEachAutoAdapter("AutoForm", ({ name, adapter: { AutoForm }, wrapper }
   });
 
   it("can render a form to create model and submit it", () => {
-    cy.mountWithWrapper(<AutoForm action={api.widget.create} />, wrapper);
+    cy.mountWithWrapper(<AutoForm action={api.widget.create} exclude={["gizmos"]} />, wrapper);
 
     cy.contains("Name");
     cy.contains("Inventory count");
@@ -33,7 +33,7 @@ describeForEachAutoAdapter("AutoForm", ({ name, adapter: { AutoForm }, wrapper }
   });
 
   it("can show invalid field errors from the server and recover from them", () => {
-    cy.mountWithWrapper(<AutoForm action={api.widget.create} />, wrapper);
+    cy.mountWithWrapper(<AutoForm action={api.widget.create} exclude={["gizmos"]} />, wrapper);
 
     cy.contains("Name");
     cy.contains("Inventory count");
@@ -56,7 +56,7 @@ describeForEachAutoAdapter("AutoForm", ({ name, adapter: { AutoForm }, wrapper }
     cy.wrap(null)
       .then(async () => await api.widget.create({ name, inventoryCount: 42, anything: "hello" }))
       .then((record) => {
-        cy.mountWithWrapper(<AutoForm action={api.widget.update} record={record.id} />, wrapper);
+        cy.mountWithWrapper(<AutoForm action={api.widget.update} record={record.id} exclude={["gizmos"]} />, wrapper);
         cy.get(`input[name="widget.name"]`).should("have.value", name);
         cy.get(`input[name="widget.inventoryCount"]`).should("have.value", 42);
         cy.get("form [type=submit][aria-hidden!=true]").click();

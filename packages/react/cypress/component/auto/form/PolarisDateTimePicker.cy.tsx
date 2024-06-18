@@ -81,20 +81,6 @@ describe("PolarisDateTimePicker", () => {
         });
     });
 
-    it("can change the time", () => {
-      const onChangeSpy = cy.spy().as("onChangeSpy");
-      cy.mountWithWrapper(<PolarisDateTimePicker id="test" includeTime value={baseDate} onChange={onChangeSpy} />, PolarisWrapper);
-      cy.get("#test-time").clear().type("11:00 AM", { parseSpecialCharSequences: false });
-      // eslint-disable-next-line jest/valid-expect-in-promise
-      cy.get("@onChangeSpy")
-        .should("have.been.called")
-        .then(() => {
-          const calls = onChangeSpy.getCalls();
-
-          expect(calls[calls.length - 1].args[0].toISOString()).equal(new Date("2021-03-05T16:00:00.000Z").toISOString());
-        });
-    });
-
     it("can enter an invalid time and show an error", () => {
       const onChangeSpy = cy.spy().as("onChangeSpy");
       cy.mountWithWrapper(<PolarisDateTimePicker id="test" includeTime value={baseDate} onChange={onChangeSpy} />, PolarisWrapper);

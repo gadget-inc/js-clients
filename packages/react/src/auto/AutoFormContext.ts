@@ -1,5 +1,5 @@
 import React, { useContext } from "react";
-import { UseActionFormSubmit } from "src/use-action-form/types.js";
+import type { UseActionFormSubmit } from "src/use-action-form/types.js";
 import type { ActionMetadata } from "../metadata.js";
 
 /**  */
@@ -9,13 +9,13 @@ export interface AutoFormMetadataContext {
   submit: UseActionFormSubmit<any>;
 }
 /**
- * React context that stores an instance of the JS Client for an app (AKA the `api` object)
+ * React context that stores an instance of the metadata loaded for a particular form action
  */
 
 export const AutoFormMetadataContext = React.createContext<AutoFormMetadataContext | undefined>(undefined);
 /**
- * Get the current `api` object from React context
- * Must be called within a component wrapped by the `<Provider api={...} />` component.
+ * Get the current `metadata` object and `submit` function from React context
+ * Must be called within a component wrapped by the `<AutoForm>` component.
  **/
 
 export const useAutoFormMetadata = () => {

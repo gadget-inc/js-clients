@@ -5,7 +5,11 @@ export default defineConfig({
     devServer: {
       framework: "react",
       bundler: "vite",
-      viteConfig: {},
+      viteConfig: {
+        define: {
+          process: { env: { ...process.env } },
+        },
+      },
     },
   },
 });

@@ -5,6 +5,7 @@ import "@shopify/polaris/build/esm/styles.css";
 import translations from "@shopify/polaris/locales/en.json";
 import type { ComponentType, ReactNode } from "react";
 import React from "react";
+import { FormProvider, useForm } from "react-hook-form";
 import type { AutoAdapter } from "../../src/auto/index.js";
 import * as MUIAdapter from "../../src/auto/mui/index.js";
 import * as PolarisAdapter from "../../src/auto/polaris/index.js";
@@ -21,9 +22,11 @@ export const MUIWrapper = ({ children }: { children: ReactNode }) => (
 
 export const PolarisWrapper = ({ children }: { children: ReactNode }) => (
   <AppProvider i18n={translations}>
-    <Page title="Example app">
-      <Card>{children}</Card>
-    </Page>
+    <FormProvider {...useForm()}>
+      <Page title="Example app">
+        <Card>{children}</Card>
+      </Page>
+    </FormProvider>
   </AppProvider>
 );
 

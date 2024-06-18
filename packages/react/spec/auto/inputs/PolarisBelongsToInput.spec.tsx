@@ -12,6 +12,7 @@ import { MockClientProvider, mockUrqlClient } from "../../testWrappers.js";
 
 const MockForm = (saveData: () => void) => {
   return (props: { children: ReactNode }) => {
+    // eslint-disable-next-line react-hooks/rules-of-hooks
     const methods = useForm();
 
     return (
@@ -19,6 +20,7 @@ const MockForm = (saveData: () => void) => {
         <FormProvider {...methods}>
           <AutoFormMetadataContext.Provider value={{ submit: saveData as any, metadata }}>
             <AppProvider i18n={translations}>
+              {/* eslint-disable-next-line @typescript-eslint/no-misused-promises */}
               <form onSubmit={methods.handleSubmit(saveData)}>
                 {props.children}
                 <button type="submit">Submit</button>
@@ -74,8 +76,6 @@ describe("PolarisBelongsToInput", () => {
     });
   });
 });
-
-const submit = () => {};
 
 const metadata: ActionMetadata = {
   name: "Widget",

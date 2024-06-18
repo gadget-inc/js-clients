@@ -1,5 +1,4 @@
-import { fn } from '@storybook/test';
-import { PolarisStringInput } from '../../src/auto/polaris/inputs/PolarisStringInput.js';
+import { PolarisStringInput } from '../../../src/auto/polaris/inputs/PolarisStringInput.tsx';
 import { AppProvider } from '@shopify/polaris';
 import { FormProvider, useForm } from 'react-hook-form';
 import React from 'react';
