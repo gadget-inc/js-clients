@@ -3,7 +3,8 @@
   "version": "0.15.10",
   "files": [
     "README.md",
-    "dist/**/*"
+    "dist/**/*",
+    "auto/**/*"
   ],
   "license": "MIT",
   "repository": "github:gadget-inc/js-clients",
@@ -32,7 +33,7 @@
   "sideEffects": false,
   "scripts": {
     "typecheck": "tsc --noEmit",
-    "build": "rm -rf dist && mkdir -p dist/cjs dist/esm && echo '{\"type\": \"commonjs\"}' > dist/cjs/package.json && echo '{\"type\": \"module\"}' > dist/esm/package.json && tsc -b tsconfig.cjs.json tsconfig.esm.json ",
+    "build": "rm -rf dist && mkdir -p dist/cjs dist/esm auto/polaris auto/mui && echo '{\"type\": \"commonjs\"}' > dist/cjs/package.json && echo '{\"main\": \"../../dist/cjs/auto/polaris/index.js\"}' > auto/polaris/package.json && echo '{\"main\": \"../../dist/cjs/auto/mui/index.js\"}' > auto/mui/package.json && echo '{\"type\": \"module\"}' > dist/esm/package.json && tsc -b tsconfig.cjs.json tsconfig.esm.json ",
     "watch": "tsc -b tsconfig.esm.json --watch --preserveWatchOutput",
     "gql-gen": "graphql-codegen",
     "prepublishOnly": "pnpm build",
