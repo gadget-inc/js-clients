@@ -26,6 +26,20 @@ export const MockClientWrapper =
     );
   };
 
+export const MockClientProvider = (props: {
+  children: ReactNode;
+  api: AnyClient;
+  urqlClient?: MockUrqlClient;
+  propOverrides?: {
+    auth?: Partial<GadgetAuthConfiguration>;
+    navigate?: (url: string) => void;
+  };
+}) => {
+  const WrapperComponent = MockClientWrapper(props.api, props.urqlClient, props.propOverrides);
+
+  return <WrapperComponent>{props.children}</WrapperComponent>;
+};
+
 export const LiveClientWrapper =
   (
     api: AnyClient,

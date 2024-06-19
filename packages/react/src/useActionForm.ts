@@ -109,10 +109,12 @@ export const useActionForm = <
   }
 
   // setup the react-hook-form object, passing any options from the props
-  const { handleSubmit, formState, ...formHook } = useForm<ActionFunc["variablesType"], FormContext>({
+
+  const originalFormMethods = useForm<ActionFunc["variablesType"], FormContext>({
     ...options,
     defaultValues: toDefaultValues(isModelAction ? action.modelApiIdentifier : undefined, defaultValues),
   });
+  const { handleSubmit, formState, ...formHook } = originalFormMethods;
 
   // when the default values arrive from the record find later, reset them into the form. react-hook-form doesn't watch the default values after the first render
   useEffect(() => {
@@ -246,5 +248,6 @@ export const useActionForm = <
     error: findResult.error || actionResult.error,
     submit: submit as unknown as UseActionFormSubmit<ActionFunc>,
     actionData: actionResult.data,
+    originalFormMethods,
   };
 };
