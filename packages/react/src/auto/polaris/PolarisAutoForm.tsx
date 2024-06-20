@@ -31,7 +31,7 @@ export const PolarisAutoForm = <
   //polaris form props also take an 'action' property, which we need to omit here.
   props: AutoFormProps<GivenOptions, SchemaT, ActionFunc, Options> & Omit<Partial<FormProps>, "action">
 ) => {
-  const { action, include: _include, exclude: _exclude, fields: _fields, submitLabel: _submitLabel, record, findBy, ...rest } = props;
+  const { action, record, findBy, ...rest } = props;
 
   // fetch metadata describing this actions inputs and outputs from the backend
   const { metadata, fetching: fetchingMetadata, error: metadataError } = useActionMetadata(action);
