@@ -5,33 +5,22 @@ import { useController } from "react-hook-form";
 import { GadgetBelongsToConfig } from "src/internal/gql/graphql.js";
 import { useApi } from "../../../GadgetProvider.js";
 import { useFindMany } from "../../../useFindMany.js";
-import { useFormFields } from "../../AutoForm.js";
-import { useAutoFormMetadata } from "../../AutoFormContext.js";
+import { useFieldMetadata } from "../../hooks/useFieldMetadata.js";
 
 export const PolarisBelongsToInput = (props: { field: string }) => {
-  const { metadata } = useAutoFormMetadata();
   const api = useApi();
-  const fields = useFormFields(metadata, {});
-
-  const fieldMetadata = fields.find((field) => field[1].apiIdentifier === props.field);
-
-  if (!fieldMetadata) {
-    throw new Error(`Field ${props.field} not found in metadata`);
-  }
-
-  const path = fieldMetadata[0];
-  const _field = fieldMetadata[1];
+  const { path, fieldMetadata } = useFieldMetadata(props.field);
 
   const {
     field: fieldProps,
     fieldState: { error: fieldError },
   } = useController({
     name: path + ".id",
-    rules: { required: _field.requiredArgumentForInput },
+    rules: { required: fieldMetadata.requiredArgumentForInput },
   });
 
   const { ref: _ref, ...field } = fieldProps;
-  const config = _field.configuration as GadgetBelongsToConfig;
+  const config = fieldMetadata.configuration as GadgetBelongsToConfig;
 
   if (!config || !config.relatedModel) {
     throw new Error(`Field ${props.field} not found in metadata`);
@@ -52,5 +41,5 @@ export const PolarisBelongsToInput = (props: { field: string }) => {
     return { label: record.name, value: record.id };
   });
 
-  return <Select label={_field.name} options={options} {...field} error={fieldError?.message} />;
+  return <Select label={fieldMetadata.name} options={options} {...field} error={fieldError?.message} />;
 };

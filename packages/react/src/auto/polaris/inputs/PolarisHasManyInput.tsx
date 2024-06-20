@@ -6,30 +6,19 @@ import { useFieldArray, useFormContext } from "react-hook-form";
 import type { GadgetBelongsToConfig } from "src/internal/gql/graphql.js";
 import { useApi } from "../../../GadgetProvider.js";
 import { useFindMany } from "../../../useFindMany.js";
-import { useFormFields } from "../../AutoForm.js";
-import { useAutoFormMetadata } from "../../AutoFormContext.js";
+import { useFieldMetadata } from "../../hooks/useFieldMetadata.js";
 
 export const PolarisHasManyInput = (props: { field: string }) => {
-  const { metadata } = useAutoFormMetadata();
+  const { path, fieldMetadata } = useFieldMetadata(props.field);
+
   const api = useApi();
-  const gadgetFields = useFormFields(metadata, {});
-
-  const fieldMetadata = gadgetFields.find((field) => field[1].apiIdentifier === props.field);
-
-  if (!fieldMetadata) {
-    throw new Error(`Field ${props.field} not found in metadata`);
-  }
-
-  const path = fieldMetadata[0];
-  const _field = fieldMetadata[1];
-
   const { getValues } = useFormContext();
 
   const { fields, remove, replace } = useFieldArray({
     name: path,
   });
 
-  const config = _field.configuration as GadgetBelongsToConfig;
+  const config = fieldMetadata.configuration as GadgetBelongsToConfig;
 
   if (!config || !config.relatedModel) {
     throw new Error(`Field ${props.field} not found in metadata`);
@@ -80,7 +69,7 @@ export const PolarisHasManyInput = (props: { field: string }) => {
   const textField = (
     <Autocomplete.TextField
       onChange={updateText}
-      label={_field.name}
+      label={fieldMetadata.name}
       value={inputValue}
       verticalContent={verticalContentMarkup}
       autoComplete="off"
@@ -96,7 +85,7 @@ export const PolarisHasManyInput = (props: { field: string }) => {
       onSelect={(selection) => {
         replace(selection.map((id) => ({ id: id })));
       }}
-      listTitle={_field.name}
+      listTitle={fieldMetadata.name}
     />
   );
 };

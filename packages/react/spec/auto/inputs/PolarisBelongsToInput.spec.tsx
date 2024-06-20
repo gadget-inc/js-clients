@@ -1,42 +1,15 @@
-import { AppProvider } from "@shopify/polaris";
-import translations from "@shopify/polaris/locales/en.json";
 import { RenderResult, act, render, screen } from "@testing-library/react";
 import { userEvent } from "@testing-library/user-event";
-import React, { ReactNode } from "react";
-import { FormProvider, useForm } from "react-hook-form";
-import { AutoFormMetadataContext } from "../../../src/auto/AutoFormContext.js";
+import React from "react";
 import { PolarisBelongsToInput } from "../../../src/auto/polaris/inputs/PolarisBelongsToInput.js";
 import { ActionMetadata } from "../../../src/metadata.js";
-import { testApi as api } from "../../apis.js";
-import { MockClientProvider, mockUrqlClient } from "../../testWrappers.js";
-
-const MockForm = (saveData: () => void) => {
-  return (props: { children: ReactNode }) => {
-    // eslint-disable-next-line react-hooks/rules-of-hooks
-    const methods = useForm();
-
-    return (
-      <MockClientProvider api={api}>
-        <FormProvider {...methods}>
-          <AutoFormMetadataContext.Provider value={{ submit: saveData as any, metadata }}>
-            <AppProvider i18n={translations}>
-              {/* eslint-disable-next-line @typescript-eslint/no-misused-promises */}
-              <form onSubmit={methods.handleSubmit(saveData)}>
-                {props.children}
-                <button type="submit">Submit</button>
-              </form>
-            </AppProvider>
-          </AutoFormMetadataContext.Provider>
-        </FormProvider>
-      </MockClientProvider>
-    );
-  };
-};
+import { mockUrqlClient } from "../../testWrappers.js";
+import { MockForm } from "../MockForm.js";
 
 describe("PolarisBelongsToInput", () => {
   describe("for widget create", () => {
     test("it preloads the first findMany result", async () => {
-      render(<PolarisBelongsToInput field="section" />, { wrapper: MockForm(jest.fn()) });
+      render(<PolarisBelongsToInput field="section" />, { wrapper: MockForm(jest.fn(), metadata) });
 
       expect(mockUrqlClient.executeQuery.mock.calls[0][0].variables).toEqual({
         first: 25,
@@ -50,7 +23,7 @@ describe("PolarisBelongsToInput", () => {
 
       beforeEach(() => {
         mockHandleSubmit = jest.fn();
-        result = render(<PolarisBelongsToInput field="section" />, { wrapper: MockForm(mockHandleSubmit) });
+        result = render(<PolarisBelongsToInput field="section" />, { wrapper: MockForm(mockHandleSubmit, metadata) });
         mockUrqlClient.executeQuery.pushResponse("sections", sectionsQueryResponse);
       });
 

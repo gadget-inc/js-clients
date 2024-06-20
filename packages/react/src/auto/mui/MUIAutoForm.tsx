@@ -3,11 +3,13 @@ import { LoadingButton } from "@mui/lab";
 import type { GridProps } from "@mui/material";
 import { Alert, Grid, Skeleton } from "@mui/material";
 import React from "react";
+import { FormProvider } from "react-hook-form";
 import { useActionMetadata } from "../../metadata.js";
 import { useActionForm } from "../../useActionForm.js";
 import type { ErrorWrapper, OptionsType } from "../../utils.js";
 import type { AutoFormProps } from "../AutoForm.js";
 import { useFormFields, useValidationResolver } from "../AutoForm.js";
+import { AutoFormMetadataContext } from "../AutoFormContext.js";
 import { MUIErrorDisplay } from "./MUIErrorDisplay.js";
 import { MUIFormInput } from "./MUIFormInput.js";
 
@@ -36,7 +38,7 @@ export const MUIAutoForm = <
 >(
   props: MUIAutoFormProps<GivenOptions, SchemaT, ActionFunc, Options>
 ) => {
-  const { action, include: _include, exclude: _exclude, fields: _fields, submitLabel: _submitLabel, ...rest } = props;
+  const { action, record, findBy, ...rest } = props;
 
   // fetch metadata describing this actions inputs and outputs from the backend
   const { metadata, fetching: fetchingMetadata, error: metadataError } = useActionMetadata(action);
@@ -50,8 +52,10 @@ export const MUIAutoForm = <
     control,
     error: formError,
     formState: { isLoading, isSubmitSuccessful },
+    originalFormMethods,
   } = useActionForm(action, {
     defaultValues: { [action.modelApiIdentifier]: props.record },
+    findBy,
     resolver: useValidationResolver(metadata),
     send: fields.map(([path]) => path),
   });
@@ -66,18 +70,22 @@ export const MUIAutoForm = <
   }
 
   return (
-    <Grid container component="form" spacing={2} onSubmit={submit} {...rest}>
-      {fetchingMetadata && <MUIFormSkeleton />}
-      {fields.map(([path, field]) => (
-        <Grid item key={field.apiIdentifier} xs={12}>
-          <MUIFormInput path={path} field={field} control={control} />
+    <AutoFormMetadataContext.Provider value={{ submit, metadata }}>
+      <FormProvider {...originalFormMethods}>
+        <Grid container component="form" spacing={2} onSubmit={submit} {...rest}>
+          {fetchingMetadata && <MUIFormSkeleton />}
+          {fields.map(([path, field]) => (
+            <Grid item key={field.apiIdentifier} xs={12}>
+              <MUIFormInput path={path} field={field} control={control} />
+            </Grid>
+          ))}
+          <Grid item xs={12}>
+            <LoadingButton loading={isLoading} type="submit">
+              {(props.submitLabel as any) ?? "Submit"}
+            </LoadingButton>
+          </Grid>
         </Grid>
-      ))}
-      <Grid item xs={12}>
-        <LoadingButton loading={isLoading} type="submit">
-          {(props.submitLabel as any) ?? "Submit"}
-        </LoadingButton>
-      </Grid>
-    </Grid>
+      </FormProvider>
+    </AutoFormMetadataContext.Provider>
   );
 };

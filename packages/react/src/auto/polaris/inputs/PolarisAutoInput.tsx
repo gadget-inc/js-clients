@@ -4,8 +4,7 @@ import React from "react";
 import { useController } from "react-hook-form";
 import type { GadgetEnumConfig, GadgetFieldType } from "../../../internal/gql/graphql.js";
 import { FieldType } from "../../../metadata.js";
-import { useFormFields } from "../../AutoForm.js";
-import { useAutoFormMetadata } from "../../AutoFormContext.js";
+import { useFieldMetadata } from "../../hooks/useFieldMetadata.js";
 import { PolarisDateTimePicker } from "../PolarisDateTimePicker.js";
 import { PolarisFileInput } from "../PolarisFileInput.js";
 import { PolarisFixedOptionsCombobox } from "../PolarisFixedOptionsCombobox.js";
@@ -21,29 +20,20 @@ const FieldTypeToInputType: Partial<Record<GadgetFieldType, TextFieldProps["type
 };
 
 export const PolarisAutoInput = (props: { field: string }) => {
-  const { metadata } = useAutoFormMetadata();
-  const fields = useFormFields(metadata, {});
-  const fieldMetadata = fields.find((field) => field[1].apiIdentifier === props.field);
-
-  if (!fieldMetadata) {
-    throw new Error(`Field ${props.field} not found in metadata`);
-  }
-
-  const path = fieldMetadata[0];
-  const _field = fieldMetadata[1];
+  const { path, fieldMetadata } = useFieldMetadata(props.field);
 
   const {
     field: fieldProps,
     fieldState: { error },
   } = useController({
     name: path,
-    rules: { required: _field.requiredArgumentForInput },
+    rules: { required: fieldMetadata.requiredArgumentForInput },
   });
   // many polaris components don't take refs because they are weenies, see https://github.com/Shopify/polaris/issues/1083
   // omit the ref from the forwarded along props so that we don't get a warning
   const { ref: _ref, ...field } = fieldProps;
 
-  const config = _field.configuration;
+  const config = fieldMetadata.configuration;
   switch (config.fieldType) {
     case FieldType.String:
     case FieldType.Number:
@@ -53,23 +43,31 @@ export const PolarisAutoInput = (props: { field: string }) => {
     case FieldType.Color:
     case FieldType.Url: {
       return (
-        <TextField label={_field.name} type={FieldTypeToInputType[_field.fieldType]} autoComplete="off" {...field} error={error?.message} />
+        <TextField
+          label={fieldMetadata.name}
+          type={FieldTypeToInputType[fieldMetadata.fieldType]}
+          autoComplete="off"
+          {...field}
+          error={error?.message}
+        />
       );
     }
     case FieldType.Boolean: {
-      return <Checkbox label={_field.name} {...field} error={error?.message} />;
+      return <Checkbox label={fieldMetadata.name} {...field} error={error?.message} />;
     }
     case FieldType.DateTime: {
-      return <PolarisDateTimePicker dateLabel={_field.name} includeTime={(config as any).includeTime} {...field} error={error?.message} />;
+      return (
+        <PolarisDateTimePicker dateLabel={fieldMetadata.name} includeTime={(config as any).includeTime} {...field} error={error?.message} />
+      );
     }
     case FieldType.Json: {
-      return <PolarisJSONInput label={_field.name} multiline={4} monospaced autoComplete="off" {...field} />;
+      return <PolarisJSONInput label={fieldMetadata.name} multiline={4} monospaced autoComplete="off" {...field} />;
     }
     case FieldType.Enum: {
-      const config = _field.configuration as GadgetEnumConfig;
+      const config = fieldMetadata.configuration as GadgetEnumConfig;
       return (
         <PolarisFixedOptionsCombobox
-          label={_field.name}
+          label={fieldMetadata.name}
           options={config.options.map((option) => ({ value: option.name, label: option.name }))}
           allowMultiple={config.allowMultiple}
           {...field}
@@ -77,16 +75,16 @@ export const PolarisAutoInput = (props: { field: string }) => {
       );
     }
     case FieldType.File: {
-      return <PolarisFileInput label={_field.name} {...field} />;
+      return <PolarisFileInput label={fieldMetadata.name} {...field} />;
     }
     case FieldType.RoleAssignments: {
-      return <PolarisRolesCombobox label={_field.name} {...field} />;
+      return <PolarisRolesCombobox label={fieldMetadata.name} {...field} />;
     }
     case FieldType.HasMany:
     case FieldType.HasManyThrough:
     case FieldType.HasOne:
     case FieldType.BelongsTo: {
-      return <PolarisBelongsToInput field={_field.apiIdentifier} />;
+      return <PolarisBelongsToInput field={fieldMetadata.apiIdentifier} />;
     }
     case FieldType.RichText: {
       // TODO: implement rich text input
@@ -100,7 +98,7 @@ export const PolarisAutoInput = (props: { field: string }) => {
       return null;
     }
     default: {
-      throw new Error(`Unsupported field type for Polaris AutoForm: ${_field.fieldType}`);
+      throw new Error(`Unsupported field type for Polaris AutoForm: ${fieldMetadata.fieldType}`);
     }
   }
 };
