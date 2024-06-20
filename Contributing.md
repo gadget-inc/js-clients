@@ -16,13 +16,13 @@ For running the Cypress tests, you need an API key for communicating with a Gadg
 To open Cypress and execute tests interactively, run:
 
 ```react
-pnpm -F=react exec cypress open
+pnpm -F=react run cypress:open
 ```
 
 To run Cypress on the command line, run:
 
 ```react
-pnpm -F=react exec cypress run
+pnpm -F=react run cypress:run
 ```
 
 ## Regenerating GraphQL queries
@@ -34,6 +34,8 @@ You can author queries using the `graphql` helper, and then generate types for t
 ```
 pnpm -F=react gql-gen
 ```
+
+Note that it uses the real Gadget app's GraphQL schema to generate types. The URL for the schema is defined in the `packages/react/codegen.ts` file. You may need to add `NODE_TLS_REJECT_UNAUTHORIZED=0` environment variable before running the command if you're having issues with the SSL certificate and you're using a self-signed certificate.
 
 See the [`graphql-codegen`](https://the-guild.dev/graphql/codegen/docs/guides/react-vue#writing-graphql-queries) docs for more info.
 
