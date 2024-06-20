@@ -74,7 +74,8 @@ const unwindEdges = (input: any): any => {
 };
 
 export const disambiguateDefaultValues = (data: any, initialData: any, action: any) => {
-  const initialKeys = Object.keys(initialData).filter((key) => !OmittedKeys.includes(key as OmittedKey));
+  const unwindedInitialData = unwindEdges(initialData);
+  const initialKeys = Object.keys(unwindedInitialData).filter((key) => !OmittedKeys.includes(key as OmittedKey));
 
   const result = Object.fromEntries(
     Object.entries(data).flatMap(([key, value]) => {
@@ -89,7 +90,7 @@ export const disambiguateDefaultValues = (data: any, initialData: any, action: a
   const modelData = { ...data[action.modelApiIdentifier] };
 
   for (const key of Object.keys(modelData)) {
-    const initialValue = initialData[key];
+    const initialValue = unwindedInitialData[key];
 
     if (
       !!data[action.modelApiIdentifier] &&
@@ -99,7 +100,9 @@ export const disambiguateDefaultValues = (data: any, initialData: any, action: a
     ) {
       modelData[key] = data[action.modelApiIdentifier][key];
     } else if (key in data && initialValue !== data[key]) {
-      modelData[key] = data[key];
+      if (key in data && initialValue !== data[key]) {
+        modelData[key] = data[key];
+      }
     }
   }
 

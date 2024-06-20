@@ -1669,6 +1669,183 @@ describe("useActionFormNested", () => {
       );
     });
 
+    test("can update HasMany -> HasMany relationships that are reordered and one is deleted with shorthand pathing", async () => {
+      const queryResponse = {
+        data: {
+          quiz: {
+            __typename: "Quiz",
+            id: "168",
+            text: "quiz title",
+            questions: {
+              edges: [
+                {
+                  node: {
+                    id: "1",
+                    text: "question text - 1",
+                    answers: {
+                      edges: [
+                        {
+                          node: {
+                            id: "1",
+                            text: "answer text - 1",
+                          },
+                        },
+                        {
+                          node: {
+                            id: "2",
+                            text: "answer text - 2",
+                          },
+                        },
+                        {
+                          node: {
+                            id: "3",
+                            text: "answer text - 3",
+                          },
+                        },
+                      ],
+                    },
+                    __typename: "Question",
+                  },
+                  __typename: "QuestionEdge",
+                },
+              ],
+              __typename: "QuestionConnection",
+            },
+          },
+        },
+      };
+
+      const { result: useActionFormHook } = renderHook(
+        () =>
+          useActionForm(nestedExampleApi.quiz.update, {
+            findBy: "168",
+            select: {
+              id: true,
+              text: true,
+              questions: {
+                edges: {
+                  node: {
+                    id: true,
+                    text: true,
+                    answers: {
+                      edges: {
+                        node: {
+                          id: true,
+                          text: true,
+                        },
+                      },
+                    },
+                  },
+                },
+              },
+            },
+            onError: (error) => {
+              expect(error).toBeUndefined();
+            },
+          }),
+        {
+          wrapper: MockClientWrapper(nestedExampleApi),
+        }
+      );
+
+      expect(mockUrqlClient.executeQuery).toBeCalledTimes(1);
+
+      mockUrqlClient.executeQuery.pushResponse("quiz", {
+        stale: false,
+        hasNext: false,
+        data: queryResponse.data,
+      });
+
+      let formValues: any;
+
+      await act(async () => {
+        formValues = useActionFormHook.current.getValues();
+      });
+
+      expect(formValues.quiz).toBeDefined();
+      expect(formValues.quiz.text).toBeDefined();
+      expect(formValues.quiz.questions).toBeDefined();
+      expect(formValues.quiz.questions.length).toBe(1);
+      expect(formValues.quiz.questions[0].answers.length).toBe(3);
+
+      const { result: questions0AnswersFieldArrayHook } = renderHook(() =>
+        useFieldArray({ control: useActionFormHook.current.control, name: "questions.0.answers" })
+      );
+
+      await act(async () => {
+        (useActionFormHook.current as any).setValue("questions.0.text", "test question updated - 1");
+
+        questions0AnswersFieldArrayHook.current.move(0, 2);
+        questions0AnswersFieldArrayHook.current.remove(2);
+      });
+
+      let submitPromise: Promise<any>;
+
+      await act(async () => {
+        submitPromise = useActionFormHook.current.submit();
+      });
+
+      expect(mockUrqlClient.executeMutation).toBeCalledTimes(1);
+
+      mockUrqlClient.executeMutation.pushResponse("updateQuiz", {
+        data: {
+          quiz: {
+            __typename: "Quiz",
+            createdAt: "2023-12-12T15:20:11.728Z",
+            id: "21",
+            text: "test quiz",
+            updatedAt: "2023-12-12T15:20:11.728Z",
+          },
+        },
+        stale: false,
+        hasNext: false,
+      });
+
+      await act(async () => {
+        await submitPromise;
+      });
+
+      const submitResult = mockUrqlClient.executeMutation.mock.calls[0][0].variables;
+      expect(submitResult).toMatchInlineSnapshot(`
+        {
+          "id": "168",
+          "quiz": {
+            "questions": [
+              {
+                "update": {
+                  "answers": [
+                    {
+                      "delete": {
+                        "id": "1",
+                      },
+                    },
+                    {
+                      "update": {
+                        "id": "2",
+                        "text": "answer text - 2",
+                      },
+                    },
+                    {
+                      "update": {
+                        "id": "3",
+                        "text": "answer text - 3",
+                      },
+                    },
+                  ],
+                  "id": "1",
+                  "text": "test question updated - 1",
+                },
+              },
+            ],
+            "text": "quiz title",
+          },
+        }
+      `);
+
+      expect(submitResult.quiz.questions.length).toBe(1);
+      expect(submitResult.quiz.questions[0].update.answers.length).toBe(3);
+    });
+
     test("can update multiple HasOne -> BelongsTo relationships", async () => {
       const queryResponse = {
         data: {
@@ -1775,6 +1952,122 @@ describe("useActionFormNested", () => {
       const submitResult = mockUrqlClient.executeMutation.mock.calls[0][0].variables;
       expect(submitResult.answer.notification.update.answer._link).toBe("999");
       expect(submitResult.answer.recommendedProduct.update.answer._link).toBe("999");
+    });
+
+    test("can update HasOne -> BelongsTo relationships with shorthand pathing", async () => {
+      const queryResponse = {
+        data: {
+          answer: {
+            __typename: "Answer",
+            id: "123",
+            text: "answer text",
+            notification: {
+              __typename: "Notification",
+              id: "1",
+              enabled: false,
+              answer: {
+                id: "123",
+              },
+            },
+          },
+        },
+      };
+
+      const { result: useActionFormHook } = renderHook(
+        () =>
+          useActionForm(nestedExampleApi.answer.update, {
+            findBy: "168",
+            select: {
+              id: true,
+              text: true,
+              notification: {
+                id: true,
+                enabled: true,
+                answer: {
+                  id: true,
+                },
+              },
+              recommendedProduct: {
+                id: true,
+                answer: {
+                  id: true,
+                },
+              },
+            },
+            onError: (error) => {
+              expect(error).toBeUndefined();
+            },
+          }),
+        {
+          wrapper: MockClientWrapper(nestedExampleApi),
+        }
+      );
+
+      expect(mockUrqlClient.executeQuery).toBeCalledTimes(1);
+
+      mockUrqlClient.executeQuery.pushResponse("answer", {
+        stale: false,
+        hasNext: false,
+        data: queryResponse.data,
+      });
+
+      let formValues: any;
+
+      await act(async () => {
+        formValues = useActionFormHook.current.getValues();
+      });
+
+      expect(formValues.answer).toBeDefined();
+
+      await act(async () => {
+        (useActionFormHook.current as any).setValue("notification.answer.id", "999");
+      });
+
+      let submitPromise: Promise<any>;
+
+      await act(async () => {
+        submitPromise = useActionFormHook.current.submit();
+      });
+
+      expect(mockUrqlClient.executeMutation).toBeCalledTimes(1);
+
+      mockUrqlClient.executeMutation.pushResponse("updateAnswer", {
+        data: {
+          answer: {
+            __typename: "Answer",
+            createdAt: "2023-12-12T15:20:11.728Z",
+            id: "123",
+            text: "test answer",
+            updatedAt: "2023-12-12T15:20:11.728Z",
+          },
+        },
+        stale: false,
+        hasNext: false,
+      });
+
+      await act(async () => {
+        await submitPromise;
+      });
+
+      const submitResult = mockUrqlClient.executeMutation.mock.calls[0][0].variables;
+      expect(submitResult.answer.notification.update.answer._link).toBe("999");
+      expect(submitResult).toMatchInlineSnapshot(`
+        {
+          "answer": {
+            "notification": {
+              "update": {
+                "answer": {
+                  "_link": "999",
+                },
+                "enabled": false,
+                "id": "1",
+              },
+            },
+            "text": "answer text",
+          },
+          "id": "123",
+        }
+      `);
     });
 
     describe("with HasManyThrough relationship", () => {
@@ -2526,6 +2819,86 @@ describe("useActionFormNested", () => {
     });
 
     describe("with BelongsTo relationships", () => {
+      test("can update BelongsTo with shortform pathing", async () => {
+        const queryResponse = {
+          data: {
+            answer: {
+              __typename: "Answer",
+              id: "123",
+              text: "Answer create",
+              question: {
+                __typename: "Question",
+                id: "1",
+                text: "test",
+              },
+            },
+          },
+        };
+
+        const { result: useActionFormHook } = renderHook(
+          () =>
+            useActionForm(nestedExampleApi.answer.update, {
+              findBy: "123",
+              select: {
+                id: true,
+                text: true,
+                question: {
+                  id: true,
+                  text: true,
+                },
+              },
+              onError: (error) => {
+                expect(error).toBeUndefined();
+              },
+            }),
+          {
+            wrapper: MockClientWrapper(nestedExampleApi),
+          }
+        );
+
+        expect(mockUrqlClient.executeQuery).toBeCalledTimes(1);
+
+        mockUrqlClient.executeQuery.pushResponse("answer", {
+          stale: false,
+          hasNext: false,
+          data: queryResponse.data,
+        });
+
+        (useActionFormHook.current as any).setValue("question.text", "new text");
+
+        let submitPromise: Promise<any>;
+
+        await act(async () => {
+          submitPromise = useActionFormHook.current.submit();
+        });
+
+        expect(mockUrqlClient.executeMutation).toHaveBeenCalledTimes(1);
+        expect(mockUrqlClient.executeMutation.mock.calls[0][0].variables).toMatchInlineSnapshot(`
+          {
+            "answer": {
+              "question": {
+                "update": {
+                  "id": "1",
+                  "text": "new text",
+                },
+              },
+              "text": "Answer create",
+            },
+            "id": "123",
+          }
+        `);
+
+        mockUrqlClient.executeMutation.pushResponse("updateAnswer", {
+          data: {},
+          stale: false,
+          hasNext: false,
+        });
+
+        await act(async () => {
+          await submitPromise;
+        });
+      });
+
       test("can update BelongsTo", async () => {
         const queryResponse = {
           data: {
