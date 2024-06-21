@@ -1,13 +1,11 @@
 import type { TextFieldProps } from "@mui/material";
 import { Autocomplete, Checkbox, FormControl, FormControlLabel, FormGroup, FormHelperText, TextField } from "@mui/material";
 import { DatePicker, DateTimePicker } from "@mui/x-date-pickers";
-import type { ReactElement } from "react";
-import React from "react";
-import type { Control } from "react-hook-form";
+import React, { ReactElement } from "react";
 import { useController } from "react-hook-form";
-import type { GadgetEnumConfig, GadgetFieldType } from "../../internal/gql/graphql.js";
-import type { FieldMetadata } from "../../metadata.js";
-import { FieldType } from "../../metadata.js";
+import type { GadgetEnumConfig, GadgetFieldType } from "../../../internal/gql/graphql.js";
+import { FieldType } from "../../../metadata.js";
+import { useFieldMetadata } from "../../hooks/useFieldMetadata.js";
 import { MUIFileInput } from "./MUIFileInput.js";
 import { MUIJSONInput } from "./MUIJSONInput.js";
 import { MUIRolesCombobox } from "./MUIRolesCombobox.js";
@@ -19,36 +17,39 @@ const FieldTypeToInputType: Partial<Record<GadgetFieldType, TextFieldProps["type
   [FieldType.EncryptedString]: "password",
 };
 
-export const MUIAutoFormControl = (props: { path: string; control: Control<any>; field: FieldMetadata; children: ReactElement }) => {
+export const MUIAutoFormControl = (props: { field: string; children: ReactElement }) => {
+  const { path, metadata } = useFieldMetadata(props.field);
   const {
     fieldState: { error },
   } = useController({
-    name: props.path,
-    control: props.control,
-    rules: { required: props.field.requiredArgumentForInput },
+    name: path,
+    rules: { required: metadata.requiredArgumentForInput },
   });
 
   return (
-    <FormControl {...props.field} error={!!error}>
+    <FormControl {...metadata} error={!!error}>
       <FormGroup>
-        <FormControlLabel label={props.field.name} control={props.children} />
+        <FormControlLabel label={metadata.name} control={props.children} />
       </FormGroup>
       {error && <FormHelperText>{error?.message}</FormHelperText>}
     </FormControl>
   );
 };
 
-export const MUIFormInput = (props: { path: string; field: FieldMetadata; control: Control<any> }) => {
+export const MUIAutoInput = (props: { field: string }) => {
+  const { path, metadata } = useFieldMetadata(props.field);
+
   const {
-    field,
+    field: fieldProps,
     fieldState: { error },
   } = useController({
-    name: props.path,
-    control: props.control,
-    rules: { required: props.field.requiredArgumentForInput },
+    name: path,
+
+    rules: { required: metadata.requiredArgumentForInput },
   });
 
-  const config = props.field.configuration;
+  const config = metadata.configuration;
+
   switch (config.fieldType) {
     case FieldType.String:
     case FieldType.Number:
@@ -59,10 +60,10 @@ export const MUIFormInput = (props: { path: string; field: FieldMetadata; contro
     case FieldType.Url: {
       return (
         <TextField
-          label={props.field.name}
-          type={FieldTypeToInputType[props.field.fieldType]}
+          label={metadata.name}
+          type={FieldTypeToInputType[metadata.fieldType]}
           autoComplete="off"
-          {...field}
+          {...fieldProps}
           error={!!error}
           helperText={error?.message}
         />
@@ -71,41 +72,41 @@ export const MUIFormInput = (props: { path: string; field: FieldMetadata; contro
     case FieldType.Boolean: {
       return (
         <MUIAutoFormControl {...props}>
-          <Checkbox {...field} />
+          <Checkbox {...fieldProps} />
         </MUIAutoFormControl>
       );
     }
     case FieldType.DateTime: {
       return (
         <MUIAutoFormControl {...props}>
-          {(config as any).includeTime ? <DateTimePicker {...field} /> : <DatePicker {...field} />}
+          {(config as any).includeTime ? <DateTimePicker {...fieldProps} /> : <DatePicker {...fieldProps} />}
         </MUIAutoFormControl>
       );
     }
     case FieldType.Json: {
-      return <MUIJSONInput label={props.field.name} {...field} />;
+      return <MUIJSONInput label={metadata.name} {...fieldProps} />;
     }
     case FieldType.Enum: {
-      const config = props.field.configuration as GadgetEnumConfig;
+      const config = metadata.configuration as GadgetEnumConfig;
       return (
         <Autocomplete
           disablePortal
           multiple={config.allowMultiple}
           options={config.options.map((option) => ({ id: option.name, label: option.name }))}
-          {...field}
-          renderInput={(params) => <TextField {...params} label={props.field.name} />}
+          {...fieldProps}
+          renderInput={(params) => <TextField {...params} label={metadata.name} />}
         />
       );
     }
     case FieldType.File: {
       return (
         <MUIAutoFormControl {...props}>
-          <MUIFileInput label={props.field.name} {...field} />
+          <MUIFileInput label={metadata.name} {...fieldProps} />
         </MUIAutoFormControl>
       );
     }
     case FieldType.RoleAssignments: {
-      return <MUIRolesCombobox label={props.field.name} {...field} />;
+      return <MUIRolesCombobox label={metadata.name} {...fieldProps} />;
     }
     case FieldType.HasMany:
     case FieldType.HasManyThrough:
@@ -122,11 +123,13 @@ export const MUIFormInput = (props: { path: string; field: FieldMetadata; contro
       // TODO: implement money input
       return null;
     }
-    case FieldType.Vector: {
+
+    // Not rendered as an input
+    case FieldType.Vector:
+    case FieldType.Computed:
       return null;
-    }
     default: {
-      throw new Error(`Unsupported field type for MUI AutoForm: ${props.field.fieldType}`);
+      throw new Error(`Unsupported field type for MUI AutoForm: ${metadata.fieldType}`);
     }
   }
 };

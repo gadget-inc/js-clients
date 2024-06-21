@@ -10,7 +10,7 @@ import type { AutoFormProps } from "../AutoForm.js";
 import { useFormFields, useValidationResolver } from "../AutoForm.js";
 import { AutoFormMetadataContext } from "../AutoFormContext.js";
 import { PolarisErrorDisplay } from "./PolarisErrorDisplay.js";
-import { PolarisFormInput } from "./PolarisFormInput.js";
+import { PolarisAutoInput } from "./inputs/PolarisAutoInput.js";
 
 export const PolarisFormSkeleton = () => (
   <>
@@ -49,7 +49,7 @@ export const PolarisAutoForm = <
     defaultValues: { [action.modelApiIdentifier]: record },
     findBy,
     resolver: useValidationResolver(metadata),
-    send: fields.map(([path]) => path),
+    send: fields.map(({ path }) => path),
   });
 
   const error = formError ?? metadataError;
@@ -86,8 +86,8 @@ export const PolarisAutoForm = <
       <FormProvider {...originalFormMethods}>
         <Form {...rest} onSubmit={submit}>
           <FormLayout>
-            {fields.map(([path, field]) => (
-              <PolarisFormInput key={field.apiIdentifier} path={path} field={field} control={originalFormMethods.control} />
+            {fields.map(({ metadata }) => (
+              <PolarisAutoInput field={metadata.apiIdentifier} key={metadata.apiIdentifier} />
             ))}
             <Button
               loading={isLoading}

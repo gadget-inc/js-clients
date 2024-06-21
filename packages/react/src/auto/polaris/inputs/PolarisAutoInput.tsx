@@ -20,20 +20,20 @@ const FieldTypeToInputType: Partial<Record<GadgetFieldType, TextFieldProps["type
 };
 
 export const PolarisAutoInput = (props: { field: string }) => {
-  const { path, fieldMetadata } = useFieldMetadata(props.field);
+  const { path, metadata } = useFieldMetadata(props.field);
 
   const {
     field: fieldProps,
     fieldState: { error },
   } = useController({
     name: path,
-    rules: { required: fieldMetadata.requiredArgumentForInput },
+    rules: { required: metadata.requiredArgumentForInput },
   });
   // many polaris components don't take refs because they are weenies, see https://github.com/Shopify/polaris/issues/1083
   // omit the ref from the forwarded along props so that we don't get a warning
   const { ref: _ref, ...field } = fieldProps;
 
-  const config = fieldMetadata.configuration;
+  const config = metadata.configuration;
   switch (config.fieldType) {
     case FieldType.String:
     case FieldType.Number:
@@ -44,8 +44,8 @@ export const PolarisAutoInput = (props: { field: string }) => {
     case FieldType.Url: {
       return (
         <TextField
-          label={fieldMetadata.name}
-          type={FieldTypeToInputType[fieldMetadata.fieldType]}
+          label={metadata.name}
+          type={FieldTypeToInputType[metadata.fieldType]}
           autoComplete="off"
           {...field}
           error={error?.message}
@@ -53,21 +53,21 @@ export const PolarisAutoInput = (props: { field: string }) => {
       );
     }
     case FieldType.Boolean: {
-      return <Checkbox label={fieldMetadata.name} {...field} error={error?.message} />;
+      return <Checkbox label={metadata.name} {...field} error={error?.message} />;
     }
     case FieldType.DateTime: {
       return (
-        <PolarisDateTimePicker dateLabel={fieldMetadata.name} includeTime={(config as any).includeTime} {...field} error={error?.message} />
+        <PolarisDateTimePicker dateLabel={metadata.name} includeTime={(config as any).includeTime} {...field} error={error?.message} />
       );
     }
     case FieldType.Json: {
-      return <PolarisJSONInput label={fieldMetadata.name} multiline={4} monospaced autoComplete="off" {...field} />;
+      return <PolarisJSONInput label={metadata.name} multiline={4} monospaced autoComplete="off" {...field} />;
     }
     case FieldType.Enum: {
-      const config = fieldMetadata.configuration as GadgetEnumConfig;
+      const config = metadata.configuration as GadgetEnumConfig;
       return (
         <PolarisFixedOptionsCombobox
-          label={fieldMetadata.name}
+          label={metadata.name}
           options={config.options.map((option) => ({ value: option.name, label: option.name }))}
           allowMultiple={config.allowMultiple}
           {...field}
@@ -75,16 +75,16 @@ export const PolarisAutoInput = (props: { field: string }) => {
       );
     }
     case FieldType.File: {
-      return <PolarisFileInput label={fieldMetadata.name} {...field} />;
+      return <PolarisFileInput label={metadata.name} {...field} />;
     }
     case FieldType.RoleAssignments: {
-      return <PolarisRolesCombobox label={fieldMetadata.name} {...field} />;
+      return <PolarisRolesCombobox label={metadata.name} {...field} />;
     }
     case FieldType.HasMany:
     case FieldType.HasManyThrough:
     case FieldType.HasOne:
     case FieldType.BelongsTo: {
-      return <PolarisBelongsToInput field={fieldMetadata.apiIdentifier} />;
+      return <PolarisBelongsToInput field={metadata.apiIdentifier} />;
     }
     case FieldType.RichText: {
       // TODO: implement rich text input
@@ -94,11 +94,13 @@ export const PolarisAutoInput = (props: { field: string }) => {
       // TODO: implement money input
       return null;
     }
-    case FieldType.Vector: {
+
+    // Not rendered as an input
+    case FieldType.Vector:
+    case FieldType.Computed:
       return null;
-    }
     default: {
-      throw new Error(`Unsupported field type for Polaris AutoForm: ${fieldMetadata.fieldType}`);
+      throw new Error(`Unsupported field type for Polaris AutoForm: ${metadata.fieldType}`);
     }
   }
 };
