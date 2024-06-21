@@ -2,7 +2,7 @@ import type { TextFieldProps } from "@mui/material";
 import { TextField } from "@mui/material";
 import type { ChangeEvent } from "react";
 import React, { useCallback, useState } from "react";
-import { useFocus } from "../../useFocus.js";
+import { useFocus } from "../../../useFocus.js";
 
 export const MUIJSONInput = (props: Omit<TextFieldProps, "value" | "onChange"> & { value: any; onChange: (value: any) => void }) => {
   const { value, onChange, ...rest } = props;

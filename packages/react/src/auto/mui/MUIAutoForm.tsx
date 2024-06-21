@@ -11,7 +11,7 @@ import type { AutoFormProps } from "../AutoForm.js";
 import { useFormFields, useValidationResolver } from "../AutoForm.js";
 import { AutoFormMetadataContext } from "../AutoFormContext.js";
 import { MUIErrorDisplay } from "./MUIErrorDisplay.js";
-import { MUIFormInput } from "./MUIFormInput.js";
+import { MUIAutoInput } from "./inputs/MUIAutoInput.js";
 
 export const MUIFormSkeleton = () => (
   <>
@@ -49,7 +49,6 @@ export const MUIAutoForm = <
   // setup the form state for the action
   const {
     submit,
-    control,
     error: formError,
     formState: { isLoading, isSubmitSuccessful },
     originalFormMethods,
@@ -57,7 +56,7 @@ export const MUIAutoForm = <
     defaultValues: { [action.modelApiIdentifier]: props.record },
     findBy,
     resolver: useValidationResolver(metadata),
-    send: fields.map(([path]) => path),
+    send: fields.map(({ path }) => path),
   });
 
   const error = formError ?? metadataError;
@@ -74,9 +73,9 @@ export const MUIAutoForm = <
       <FormProvider {...originalFormMethods}>
         <Grid container component="form" spacing={2} onSubmit={submit} {...rest}>
           {fetchingMetadata && <MUIFormSkeleton />}
-          {fields.map(([path, field]) => (
-            <Grid item key={field.apiIdentifier} xs={12}>
-              <MUIFormInput path={path} field={field} control={control} />
+          {fields.map(({ metadata }) => (
+            <Grid item key={metadata.apiIdentifier} xs={12}>
+              <MUIAutoInput field={metadata.apiIdentifier} />
             </Grid>
           ))}
           <Grid item xs={12}>

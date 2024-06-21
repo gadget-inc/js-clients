@@ -50,16 +50,27 @@ export const useValidationResolver = (metadata: ActionMetadata | undefined) => {
 export const useFormFields = (
   metadata: ActionMetadata | undefined | null,
   options: { include?: string[]; exclude?: string[]; fields?: string[]; select?: Record<string, any> }
-): (readonly [string, FieldMetadata])[] => {
+): readonly { path: string; metadata: FieldMetadata }[] => {
   return useMemo(() => {
     if (!metadata) return [];
     const objectFields = metadata.action.inputFields.filter((field) => field.configuration.__typename === "GadgetObjectFieldConfig");
     const nonObjectFields = metadata.action.inputFields.filter((field) => field.configuration.__typename !== "GadgetObjectFieldConfig");
 
-    const includedRootLevelFields = filterFieldList(nonObjectFields, options as any).map((field) => [field.apiIdentifier, field] as const);
+    const includedRootLevelFields = filterFieldList(nonObjectFields, options as any).map(
+      (field) =>
+        ({
+          path: field.apiIdentifier,
+          metadata: field,
+        } as const)
+    );
+
     const includedObjectFields = objectFields.flatMap((objectField) =>
       filterFieldList((objectField.configuration as unknown as GadgetObjectFieldConfig).fields as any, options as any).map(
-        (innerField) => [`${objectField.apiIdentifier}.${innerField.apiIdentifier}`, innerField] as const
+        (innerField) =>
+          ({
+            path: `${objectField.apiIdentifier}.${innerField.apiIdentifier}`,
+            metadata: innerField,
+          } as const)
       )
     );
     return [...includedObjectFields, ...includedRootLevelFields];

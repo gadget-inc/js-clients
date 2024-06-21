@@ -9,18 +9,18 @@ import { useFieldMetadata } from "../../hooks/useFieldMetadata.js";
 
 export const PolarisBelongsToInput = (props: { field: string }) => {
   const api = useApi();
-  const { path, fieldMetadata } = useFieldMetadata(props.field);
+  const { path, metadata } = useFieldMetadata(props.field);
 
   const {
     field: fieldProps,
     fieldState: { error: fieldError },
   } = useController({
     name: path + ".id",
-    rules: { required: fieldMetadata.requiredArgumentForInput },
+    rules: { required: metadata.requiredArgumentForInput },
   });
 
   const { ref: _ref, ...field } = fieldProps;
-  const config = fieldMetadata.configuration as GadgetBelongsToConfig;
+  const config = metadata.configuration as GadgetBelongsToConfig;
 
   if (!config || !config.relatedModel) {
     throw new Error(`Field ${props.field} not found in metadata`);
@@ -41,5 +41,5 @@ export const PolarisBelongsToInput = (props: { field: string }) => {
     return { label: record.name, value: record.id };
   });
 
-  return <Select label={fieldMetadata.name} options={options} {...field} error={fieldError?.message} />;
+  return <Select label={metadata.name} options={options} {...field} error={fieldError?.message} />;
 };

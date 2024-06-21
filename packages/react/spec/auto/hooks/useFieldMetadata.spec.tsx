@@ -14,9 +14,9 @@ describe("useFieldMetadata hook", () => {
 
   describe("for widget create", () => {
     test("Returns the path and field metadata when given the field api id for belongsTo fields", () => {
-      const { path, fieldMetadata } = getUseFieldMetadataResult("section");
+      const { path, metadata } = getUseFieldMetadataResult("section");
       expect(path).toEqual("widget.section");
-      expect(fieldMetadata).toMatchInlineSnapshot(`
+      expect(metadata).toMatchInlineSnapshot(`
         {
           "__typename": "GadgetModelField",
           "apiIdentifier": "section",
@@ -38,9 +38,9 @@ describe("useFieldMetadata hook", () => {
     });
 
     test("Returns the path and field metadata when given the field api id for string fields", () => {
-      const { path, fieldMetadata } = getUseFieldMetadataResult("stringField");
+      const { path, metadata } = getUseFieldMetadataResult("stringField");
       expect(path).toEqual("widget.stringField");
-      expect(fieldMetadata).toMatchInlineSnapshot(`
+      expect(metadata).toMatchInlineSnapshot(`
         {
           "__typename": "GadgetModelField",
           "apiIdentifier": "stringField",

@@ -9,7 +9,7 @@ import { useFindMany } from "../../../useFindMany.js";
 import { useFieldMetadata } from "../../hooks/useFieldMetadata.js";
 
 export const PolarisHasManyInput = (props: { field: string }) => {
-  const { path, fieldMetadata } = useFieldMetadata(props.field);
+  const { path, metadata } = useFieldMetadata(props.field);
 
   const api = useApi();
   const { getValues } = useFormContext();
@@ -18,7 +18,7 @@ export const PolarisHasManyInput = (props: { field: string }) => {
     name: path,
   });
 
-  const config = fieldMetadata.configuration as GadgetBelongsToConfig;
+  const config = metadata.configuration as GadgetBelongsToConfig;
 
   if (!config || !config.relatedModel) {
     throw new Error(`Field ${props.field} not found in metadata`);
@@ -69,7 +69,7 @@ export const PolarisHasManyInput = (props: { field: string }) => {
   const textField = (
     <Autocomplete.TextField
       onChange={updateText}
-      label={fieldMetadata.name}
+      label={metadata.name}
       value={inputValue}
       verticalContent={verticalContentMarkup}
       autoComplete="off"
@@ -85,7 +85,7 @@ export const PolarisHasManyInput = (props: { field: string }) => {
       onSelect={(selection) => {
         replace(selection.map((id) => ({ id: id })));
       }}
-      listTitle={fieldMetadata.name}
+      listTitle={metadata.name}
     />
   );
 };

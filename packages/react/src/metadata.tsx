@@ -221,32 +221,36 @@ export const filterFieldList = (
   // if no explicit selection has been given, filter down to the field types we know we have support for
   const explicitSet = options?.fields ?? options?.include ?? options?.exclude ?? options?.select;
   if (!explicitSet) {
-    subset = subset.filter((field) => {
-      switch (field.fieldType) {
-        case FieldType.String:
-        case FieldType.Number:
-        case FieldType.Email:
-        case FieldType.Password:
-        case FieldType.EncryptedString:
-        case FieldType.Color:
-        case FieldType.Url:
-        case FieldType.Boolean:
-        case FieldType.DateTime:
-        case FieldType.Json:
-        case FieldType.Enum:
-        case FieldType.File:
-        case FieldType.RoleAssignments:
-        case FieldType.BelongsTo:
-        case FieldType.HasMany:
-          return true;
-        default:
-          return false;
-      }
-    });
+    subset = subset.filter((field) => acceptedFieldTypes.has(field.fieldType));
   }
 
   return subset;
 };
+
+const acceptedFieldTypes = new Set([
+  FieldType.Boolean,
+  FieldType.Color,
+  FieldType.Computed, // Not rendered as an input
+  FieldType.DateTime,
+  FieldType.Email,
+  FieldType.EncryptedString,
+  FieldType.Enum,
+  FieldType.File,
+  FieldType.Json,
+  FieldType.Number,
+  FieldType.Password,
+  FieldType.RichText,
+  FieldType.RoleAssignments,
+  FieldType.String,
+  FieldType.Url,
+  FieldType.Vector, // Not rendered as an input
+
+  // Relationships
+  FieldType.BelongsTo,
+  FieldType.HasMany,
+  FieldType.HasManyThrough,
+  FieldType.HasOne,
+]);
 
 /**
  * Retrieve the roles available in the Gadget app from the backend
