@@ -2,6 +2,8 @@ import { GraphQLError } from "@0no-co/graphql.web";
 import type {
   AnyActionFunction,
   AnyBulkActionFunction,
+  AnyClient,
+  AnyModelManager,
   BackgroundActionHandle,
   EnqueueBackgroundActionOptions,
   FieldSelection,
@@ -9,7 +11,7 @@ import type {
   InvalidFieldError,
   InvalidRecordError,
 } from "@gadgetinc/api-client-core";
-import { gadgetErrorFor, getNonNullableError } from "@gadgetinc/api-client-core";
+import { gadgetErrorFor, getNonNullableError, namespaceDataPath } from "@gadgetinc/api-client-core";
 import type { CombinedError, RequestPolicy } from "@urql/core";
 import { useMemo } from "react";
 import type { AnyVariables, Operation, OperationContext, UseQueryArgs, UseQueryState } from "urql";
@@ -398,4 +400,12 @@ export const set = (obj: any, path: string, value: any) => {
     if (i === pathArray.length - 1) acc[key] = value;
     return acc[key];
   }, obj);
+};
+
+export const getModelManager = (
+  apiClient: AnyClient,
+  apiIdentifier: string,
+  namespace?: string[] | string | null
+): AnyModelManager | undefined => {
+  return get(apiClient, namespaceDataPath([apiIdentifier], namespace).join("."));
 };

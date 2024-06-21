@@ -1,11 +1,11 @@
-import type { ActionFunction, AnyModelManager } from "@gadgetinc/api-client-core";
+import type { ActionFunction } from "@gadgetinc/api-client-core";
 import { assert } from "@gadgetinc/api-client-core";
 import type { ResultOf } from "@graphql-typed-document-node/core";
 import { useApi } from "./GadgetProvider.js";
 import { graphql } from "./internal/gql/gql.js";
 import { GadgetFieldType } from "./internal/gql/graphql.js";
 import { useGadgetQuery } from "./useGadgetQuery.js";
-import { ErrorWrapper } from "./utils.js";
+import { ErrorWrapper, getModelManager } from "./utils.js";
 
 /**
  * The enum of all possible field types in Gadget's type system
@@ -32,11 +32,13 @@ const FieldMetadataFragment = graphql(/* GraphQL */ `
       ... on GadgetHasManyConfig {
         relatedModel {
           apiIdentifier
+          namespace
         }
       }
       ... on GadgetBelongsToConfig {
         relatedModel {
           apiIdentifier
+          namespace
         }
       }
       ... on GadgetEnumConfig {
@@ -51,10 +53,11 @@ const FieldMetadataFragment = graphql(/* GraphQL */ `
 `);
 
 const ModelMetadataQuery = graphql(/* GraphQL */ `
-  query GetModelMetadata($apiIdentifier: String!) {
+  query GetModelMetadata($apiIdentifier: String!, $namespace: [String!]) {
     gadgetMeta {
-      model(apiIdentifier: $apiIdentifier) {
+      model(apiIdentifier: $apiIdentifier, namespace: $namespace) {
         apiIdentifier
+        namespace
         name
         fields {
           ...FieldMetadata
@@ -97,9 +100,9 @@ const _SubFieldsFragment = graphql(/* GraphQL */ `
 `);
 
 const ModelActionMetadataQuery = graphql(/* GraphQL */ `
-  query ModelActionMetadata($model: String!, $action: String!) {
+  query ModelActionMetadata($modelApiIdentifier: String!, $modelNamespace: [String!], $action: String!) {
     gadgetMeta {
-      model(apiIdentifier: $model) {
+      model(apiIdentifier: $modelApiIdentifier, namespace: $modelNamespace) {
         name
         action(apiIdentifier: $action) {
           name
@@ -136,10 +139,10 @@ export type FieldMetadata = ResultOf<typeof FieldMetadataFragment>;
  * Retrieve a given Gadget model's metadata from the backend
  * @internal
  */
-export const useModelMetadata = (apiIdentifier: string) => {
+export const useModelMetadata = (apiIdentifier: string, namespace: string[]) => {
   const [{ data, fetching, error }] = useGadgetQuery({
     query: ModelMetadataQuery,
-    variables: { apiIdentifier },
+    variables: { apiIdentifier, namespace },
   });
 
   return {
@@ -156,7 +159,7 @@ export const useModelMetadata = (apiIdentifier: string) => {
 export const useActionMetadata = (actionFunction: ActionFunction<any, any, any, any, any>) => {
   const api = useApi();
   const modelManager = assert(
-    (api as any)[actionFunction.modelApiIdentifier] as AnyModelManager,
+    getModelManager(api, actionFunction.modelApiIdentifier, actionFunction.namespace),
     "no model manager found for action function"
   );
   let actionName;
@@ -173,7 +176,11 @@ export const useActionMetadata = (actionFunction: ActionFunction<any, any, any, 
 
   const [{ data, fetching, error }] = useGadgetQuery({
     query: ModelActionMetadataQuery,
-    variables: { model: actionFunction.modelApiIdentifier, action: actionName },
+    variables: {
+      modelApiIdentifier: actionFunction.modelApiIdentifier,
+      modelNamespace: actionFunction.namespace,
+      action: actionName,
+    },
   });
 
   if (data) {

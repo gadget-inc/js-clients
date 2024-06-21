@@ -1,10 +1,11 @@
-import { AnyModelManager, assert } from "@gadgetinc/api-client-core";
+import { assert } from "@gadgetinc/api-client-core";
 import { Select } from "@shopify/polaris";
 import React from "react";
 import { useController } from "react-hook-form";
-import { GadgetBelongsToConfig } from "src/internal/gql/graphql.js";
+import type { GadgetBelongsToConfig } from "src/internal/gql/graphql.js";
 import { useApi } from "../../../GadgetProvider.js";
 import { useFindMany } from "../../../useFindMany.js";
+import { getModelManager } from "../../../utils.js";
 import { useFieldMetadata } from "../../hooks/useFieldMetadata.js";
 
 export const PolarisBelongsToInput = (props: { field: string }) => {
@@ -27,7 +28,7 @@ export const PolarisBelongsToInput = (props: { field: string }) => {
   }
 
   const modelManager = assert(
-    (api as any)[config.relatedModel.apiIdentifier] as AnyModelManager,
+    getModelManager(api, config.relatedModel.apiIdentifier, config.relatedModel.namespace),
     "no model manager found for action function"
   );
 
