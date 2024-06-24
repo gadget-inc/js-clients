@@ -121,7 +121,7 @@ export const findOneByFieldRunner = <Shape extends RecordShape = any, Options ex
   throwOnEmptyData = true,
   namespace?: string | string[] | null
 ) => {
-  const plan = findOneByFieldOperation(operation, fieldName, fieldValue, defaultSelection, modelApiIdentifier, options);
+  const plan = findOneByFieldOperation(operation, fieldName, fieldValue, defaultSelection, modelApiIdentifier, options, namespace);
   const dataPath = namespaceDataPath([operation], namespace);
   const $results = modelManager.connection.currentClient.query(plan.query, plan.variables);
 

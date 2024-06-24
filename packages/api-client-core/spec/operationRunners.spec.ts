@@ -119,6 +119,37 @@ describe("operationRunners", () => {
     test("can execute a findOneByField operation against a model", async () => {
       const promise = findOneByFieldRunner({ connection }, "widgets", "email", "test@test.com", { id: true, name: true }, "widget");
 
+      expect(query).toMatchInlineSnapshot(`
+        "query widgets($after: String, $first: Int, $before: String, $last: Int, $filter: [WidgetFilter!]) {
+          widgets(
+            after: $after
+            first: $first
+            before: $before
+            last: $last
+            filter: $filter
+          ) {
+            pageInfo {
+              hasNextPage
+              hasPreviousPage
+              startCursor
+              endCursor
+            }
+            edges {
+              cursor
+              node {
+                id
+                name
+                __typename
+              }
+            }
+          }
+          gadgetMeta {
+            hydrations(modelName: 
+        "widget")
+          }
+        }"
+      `);
+
       mockUrqlClient.executeQuery.pushResponse("widgets", {
         data: {
           widgets: {
@@ -130,6 +161,80 @@ describe("operationRunners", () => {
                 },
               },
             ],
+          },
+        },
+        stale: false,
+        hasNext: false,
+      });
+
+      const result = await promise;
+      expect(result.id).toBeTruthy();
+      expect(result.name).toBeTruthy();
+    });
+
+    test("can execute a findOneByField operation against a namespaced model", async () => {
+      const promise = findOneByFieldRunner(
+        { connection },
+        "widgets",
+        "email",
+        "test@test.com",
+        { id: true, name: true },
+        "widget",
+        undefined,
+        undefined,
+        ["outer", "inner"]
+      );
+
+      expect(query).toMatchInlineSnapshot(`
+        "query widgets($after: String, $first: Int, $before: String, $last: Int, $filter: [OuterInnerWidgetFilter!]) {
+          outer {
+            inner {
+              widgets(
+                after: $after
+                first: $first
+                before: $before
+                last: $last
+                filter: $filter
+              ) {
+                pageInfo {
+                  hasNextPage
+                  hasPreviousPage
+                  startCursor
+                  endCursor
+                }
+                edges {
+                  cursor
+                  node {
+                    id
+                    name
+                    __typename
+                  }
+                }
+              }
+            }
+          }
+          gadgetMeta {
+            hydrations(modelName: 
+        "outer.inner.widget")
+          }
+        }"
+      `);
+
+      mockUrqlClient.executeQuery.pushResponse("widgets", {
+        data: {
+          outer: {
+            inner: {
+              widgets: {
+                edges: [
+                  {
+                    node: {
+                      id: "123",
+                      name: "foo",
+                    },
+                  },
+                ],
+              },
+            },
           },
         },
         stale: false,
