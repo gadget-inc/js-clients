@@ -38,6 +38,20 @@ describeForEachAutoAdapter("AutoForm", ({ name, adapter: { AutoForm }, wrapper }
     ensureFieldInputLabelsExist();
   });
 
+  it("can render a form to update model and submit it", () => {
+    cy.mountWithWrapper(<AutoForm action={api.widget.update} exclude={["gizmos"]} findBy="1145" />, wrapper);
+
+    cy.contains("Name");
+    cy.contains("Inventory count");
+    cy.contains("Anything");
+
+    // Clear the fetched value to prevent from making the value stored in the database longer as the test runs
+    cy.get(`input[name="widget.name"]`).clear().type("updated test record");
+    cy.get(`input[name="widget.inventoryCount"]`).clear().type("1234");
+    cy.get("form [type=submit][aria-hidden!=true]").click();
+    cy.contains("Saved Widget successfully");
+  });
+
   it("can render a form to create namespaced model", () => {
     cy.mountWithWrapper(<AutoForm action={api.game.stadium.create} exclude={["rounds"]} />, wrapper);
 

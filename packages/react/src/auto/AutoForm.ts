@@ -5,7 +5,8 @@ import { useMemo } from "react";
 import type { RecordIdentifier } from "src/use-action-form/types.js";
 import type { GadgetObjectFieldConfig } from "../internal/gql/graphql.js";
 import type { ActionMetadata, FieldMetadata } from "../metadata.js";
-import { filterFieldList } from "../metadata.js";
+import { filterFieldList, useActionMetadata } from "../metadata.js";
+import { useActionForm } from "../useActionForm.js";
 import type { OptionsType } from "../utils.js";
 import { validationSchema } from "../validationSchema.js";
 
@@ -73,6 +74,56 @@ export const useFormFields = (
           } as const)
       )
     );
+
     return [...includedObjectFields, ...includedRootLevelFields];
   }, [metadata, options]);
+};
+
+/**
+ * Internal React hook for sharing logic between different `AutoForm` components.
+ * @internal
+ */
+export const useAutoForm = <
+  GivenOptions extends OptionsType,
+  SchemaT,
+  ActionFunc extends ActionFunction<GivenOptions, any, any, SchemaT, any>,
+  Options extends ActionFunc["optionsType"]
+>(
+  props: AutoFormProps<GivenOptions, SchemaT, ActionFunc, Options>
+) => {
+  const { action, record, findBy } = props;
+
+  const { metadata, fetching: fetchingMetadata, error: metadataError } = useActionMetadata(props.action);
+
+  // filter down the fields to render only what we want to render for this form
+  const fields = useFormFields(metadata, props);
+  const operatesWithRecordId = !!metadata?.action.operatesWithRecordIdentity;
+
+  // setup the form state for the action
+  const {
+    submit,
+    error: formError,
+    formState: { isSubmitSuccessful, isLoading },
+    originalFormMethods,
+  } = useActionForm(action, {
+    defaultValues: {
+      [action.modelApiIdentifier]: record,
+      id: "0", // The ID value will be replaced when sending the form to use the record found by `findBy`
+    },
+    findBy,
+    resolver: useValidationResolver(metadata),
+    send: [...fields.map(({ path }) => path), operatesWithRecordId ? "id" : undefined].filter((item) => !!item) as string[],
+  });
+
+  return {
+    metadata,
+    fetchingMetadata,
+    metadataError,
+    fields,
+    submit,
+    formError,
+    isSubmitSuccessful,
+    isLoading,
+    originalFormMethods,
+  };
 };

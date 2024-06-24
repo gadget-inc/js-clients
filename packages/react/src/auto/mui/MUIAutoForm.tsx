@@ -3,11 +3,8 @@ import type { GridProps } from "@mui/material";
 import { Grid, Skeleton } from "@mui/material";
 import React from "react";
 import { FormProvider } from "react-hook-form";
-import { useActionMetadata } from "../../metadata.js";
-import { useActionForm } from "../../useActionForm.js";
 import type { OptionsType } from "../../utils.js";
-import type { AutoFormProps } from "../AutoForm.js";
-import { useFormFields, useValidationResolver } from "../AutoForm.js";
+import { useAutoForm, type AutoFormProps } from "../AutoForm.js";
 import { AutoFormMetadataContext } from "../AutoFormContext.js";
 import { MUIAutoInput } from "./inputs/MUIAutoInput.js";
 import { MUIAutoSubmit } from "./submit/MUIAutoSubmit.js";
@@ -38,26 +35,9 @@ export const MUIAutoForm = <
 >(
   props: MUIAutoFormProps<GivenOptions, SchemaT, ActionFunc, Options>
 ) => {
-  const { action, record, findBy, ...rest } = props;
-
-  // fetch metadata describing this actions inputs and outputs from the backend
-  const { metadata, fetching: fetchingMetadata, error: metadataError } = useActionMetadata(action);
-
-  // filter down the fields to render only what we want to render for this form
-  const fields = useFormFields(metadata, props);
-
-  // setup the form state for the action
-  const {
-    submit,
-    error: formError,
-    formState: { isLoading, isSubmitSuccessful },
-    originalFormMethods,
-  } = useActionForm(action, {
-    defaultValues: { [action.modelApiIdentifier]: props.record },
-    findBy,
-    resolver: useValidationResolver(metadata),
-    send: fields.map(({ path }) => path),
-  });
+  const { action: _action, record: _record, findBy: _findBy, ...rest } = props;
+  const { metadata, fetchingMetadata, metadataError, fields, submit, formError, isSubmitSuccessful, isLoading, originalFormMethods } =
+    useAutoForm(props);
 
   const autoFormMetadataContext: AutoFormMetadataContext = {
     submit,
