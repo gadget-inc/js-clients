@@ -55,7 +55,7 @@ describe("useFieldMetadata hook", () => {
     });
 
     test("Throws an error when given a field api id that does not exist", () => {
-      expect(() => getUseFieldMetadataResult("fakeField")).toThrowErrorMatchingInlineSnapshot(`"Field fakeField not found in metadata"`);
+      expect(() => getUseFieldMetadataResult("fakeField")).toThrowErrorMatchingInlineSnapshot(`"Field "fakeField" not found in metadata"`);
     });
   });
 });

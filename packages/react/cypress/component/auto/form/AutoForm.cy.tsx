@@ -53,7 +53,7 @@ describeForEachAutoAdapter("AutoForm", ({ name, adapter: { AutoForm }, wrapper }
     cy.get(`input[name="widget.name"]`).type("test record");
 
     cy.get("form [type=submit][aria-hidden!=true]").click();
-    cy.contains("is a required");
+    cy.contains("is a required field");
 
     cy.get(`input[name="widget.inventoryCount"]`).type("42");
     cy.get("form [type=submit][aria-hidden!=true]").click();
