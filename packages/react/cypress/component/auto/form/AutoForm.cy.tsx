@@ -32,6 +32,16 @@ describeForEachAutoAdapter("AutoForm", ({ name, adapter: { AutoForm }, wrapper }
     cy.contains("Saved Widget successfully");
   });
 
+  it("can render a form to create namespaced model", () => {
+    cy.mountWithWrapper(<AutoForm action={api.game.stadium.create} exclude={["rounds"]} />, wrapper);
+
+    cy.contains("Name");
+    cy.get(`input[name="stadium.name"]`).type("test stadium record");
+
+    cy.get("form [type=submit][aria-hidden!=true]").click();
+    cy.contains("Saved Stadium successfully");
+  });
+
   it("can show invalid field errors from the server and recover from them", () => {
     cy.mountWithWrapper(<AutoForm action={api.widget.create} exclude={["gizmos"]} />, wrapper);
 

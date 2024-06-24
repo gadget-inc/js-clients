@@ -2,7 +2,8 @@ import { AppProvider } from "@shopify/polaris";
 import translations from "@shopify/polaris/locales/en.json";
 import { act, render } from "@testing-library/react";
 import { userEvent } from "@testing-library/user-event";
-import React, { ReactNode } from "react";
+import type { ReactNode } from "react";
+import React from "react";
 import { PolarisAutoForm } from "../../src/auto/polaris/PolarisAutoForm.js";
 import { PolarisAutoSubmit } from "../../src/auto/polaris/PolarisAutoSubmit.js";
 import { PolarisAutoInput } from "../../src/auto/polaris/inputs/PolarisAutoInput.js";
@@ -98,7 +99,8 @@ describe("PolarisAutoForm", () => {
 
 function loadMockWidgetCreateMetadata() {
   expect(mockUrqlClient.executeQuery.mock.calls[0][0].variables).toEqual({
-    model: "widget",
+    modelApiIdentifier: "widget",
+    modelNamespace: null,
     action: "create",
   });
 

@@ -1,4 +1,3 @@
-import type { AnyModelManager } from "@gadgetinc/api-client-core";
 import { assert } from "@gadgetinc/api-client-core";
 import { Autocomplete, LegacyStack, Tag } from "@shopify/polaris";
 import React, { useCallback, useState } from "react";
@@ -6,6 +5,7 @@ import { useFieldArray, useFormContext } from "react-hook-form";
 import type { GadgetBelongsToConfig } from "src/internal/gql/graphql.js";
 import { useApi } from "../../../GadgetProvider.js";
 import { useFindMany } from "../../../useFindMany.js";
+import { getModelManager } from "../../../utils.js";
 import { useFieldMetadata } from "../../hooks/useFieldMetadata.js";
 
 export const PolarisHasManyInput = (props: { field: string }) => {
@@ -25,7 +25,7 @@ export const PolarisHasManyInput = (props: { field: string }) => {
   }
 
   const modelManager = assert(
-    (api as any)[config.relatedModel.apiIdentifier] as AnyModelManager,
+    getModelManager(api, config.relatedModel.apiIdentifier, config.relatedModel.namespace),
     "no model manager found for action function"
   );
 

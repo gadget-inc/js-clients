@@ -1,8 +1,9 @@
-import { RenderResult, act, render, screen } from "@testing-library/react";
+import type { RenderResult } from "@testing-library/react";
+import { act, render, screen } from "@testing-library/react";
 import { userEvent } from "@testing-library/user-event";
 import React from "react";
 import { PolarisBelongsToInput } from "../../../src/auto/polaris/inputs/PolarisBelongsToInput.js";
-import { ActionMetadata } from "../../../src/metadata.js";
+import type { ActionMetadata } from "../../../src/metadata.js";
 import { mockUrqlClient } from "../../testWrappers.js";
 import { MockForm } from "../MockForm.js";
 
