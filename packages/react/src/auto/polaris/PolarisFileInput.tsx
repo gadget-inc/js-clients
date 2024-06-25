@@ -1,5 +1,5 @@
 import { DropZone, InlineStack, Text, Thumbnail } from "@shopify/polaris";
-import { NoteMinor } from "@shopify/polaris-icons";
+import { NoteIcon } from "@shopify/polaris-icons";
 import React, { useCallback } from "react";
 
 export interface PolarisFileInputProps {
@@ -21,7 +21,7 @@ export const PolarisFileInput = (props: PolarisFileInputProps) => {
   const fileUpload = !file && <DropZone.FileUpload />;
   const uploadedFiles = file && (
     <InlineStack>
-      <Thumbnail size="small" alt={file.name} source={validImageTypes.includes(file.type) ? window.URL.createObjectURL(file) : NoteMinor} />
+      <Thumbnail size="small" alt={file.name} source={validImageTypes.includes(file.type) ? window.URL.createObjectURL(file) : NoteIcon} />
       <div>
         {file.name}{" "}
         <Text variant="bodySm" as="p">

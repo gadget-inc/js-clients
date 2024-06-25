@@ -1,6 +1,6 @@
 import type { DatePickerProps } from "@shopify/polaris";
 import { DatePicker, Icon, InlineStack, Popover, TextField } from "@shopify/polaris";
-import { CalendarMajor, ClockMinor } from "@shopify/polaris-icons";
+import { CalendarIcon, ClockIcon } from "@shopify/polaris-icons";
 import { format } from "date-fns";
 import { utcToZonedTime, zonedTimeToUtc } from "date-fns-tz";
 import React, { useCallback, useEffect, useState } from "react";
@@ -110,7 +110,7 @@ export const PolarisDateTimePicker = (props: {
           <TextField
             id={props.id ? `${props.id}-date` : undefined}
             label={props.dateLabel ?? "Date"}
-            prefix={<Icon source={CalendarMajor} />}
+            prefix={<Icon source={CalendarIcon} />}
             autoComplete="off"
             value={localTime ? format(localTime, "yyyy-MM-dd") : ""}
             onFocus={toggleDatePopoverActive}
@@ -134,7 +134,7 @@ export const PolarisDateTimePicker = (props: {
         <TextField
           id={props.id ? `${props.id}-time` : undefined}
           label={props.timeLabel ?? "Time"}
-          prefix={<Icon source={ClockMinor} />}
+          prefix={<Icon source={ClockIcon} />}
           autoComplete="off"
           value={timeString}
           onChange={onTimeStringChange}
