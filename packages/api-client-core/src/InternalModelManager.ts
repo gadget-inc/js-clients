@@ -89,10 +89,10 @@ export const internalFindManyQuery = (apiIdentifier: string, namespace: string[]
         [`list${capitalizedApiIdentifier}`]: Call(
           {
             ...defaultVariables,
-            after: Var({ value: options?.after, type: "String" }),
-            before: Var({ value: options?.before, type: "String" }),
-            first: Var({ value: options?.first, type: "Int" }),
-            last: Var({ value: options?.last, type: "Int" }),
+            after: options?.after ? Var({ value: options.after, type: "String" }) : undefined,
+            before: options?.before ? Var({ value: options?.before, type: "String" }) : undefined,
+            first: options?.first ? Var({ value: options?.first, type: "Int" }) : undefined,
+            last: options?.last ? Var({ value: options?.last, type: "Int" }) : undefined,
           },
           {
             pageInfo: { hasNextPage: true, hasPreviousPage: true, startCursor: true, endCursor: true },
@@ -223,8 +223,8 @@ export const internalDeleteManyMutation = (
       internal: namespacify(namespace, {
         [`deleteMany${capitalizedApiIdentifier}`]: Call(
           {
-            search: Var({ value: options?.search, type: "String" }),
-            filter: Var({ value: options?.filter, type: `[${filterTypeName(apiIdentifier, namespace)}!]` }),
+            search: options?.search ? Var({ value: options?.search, type: "String" }) : undefined,
+            filter: options?.filter ? Var({ value: options?.filter, type: `[${filterTypeName(apiIdentifier, namespace)}!]` }) : undefined,
           },
           {
             success: true,
