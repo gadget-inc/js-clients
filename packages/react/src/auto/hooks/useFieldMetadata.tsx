@@ -7,7 +7,7 @@ export const useFieldMetadata = (fieldApiIdentifier: string) => {
   const targetFieldMetadata = fields.find((field) => field.metadata.apiIdentifier === fieldApiIdentifier);
 
   if (!targetFieldMetadata) {
-    throw new Error(`Field ${fieldApiIdentifier} not found in metadata`);
+    throw new Error(`Field "${fieldApiIdentifier}" not found in metadata`);
   }
 
   return targetFieldMetadata;

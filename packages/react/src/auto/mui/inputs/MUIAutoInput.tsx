@@ -1,21 +1,16 @@
-import type { TextFieldProps } from "@mui/material";
 import { Autocomplete, Checkbox, FormControl, FormControlLabel, FormGroup, FormHelperText, TextField } from "@mui/material";
 import { DatePicker, DateTimePicker } from "@mui/x-date-pickers";
 import React, { ReactElement } from "react";
 import { useController } from "react-hook-form";
-import type { GadgetEnumConfig, GadgetFieldType } from "../../../internal/gql/graphql.js";
+
+import type { GadgetEnumConfig } from "../../../internal/gql/graphql.js";
 import { FieldType } from "../../../metadata.js";
 import { useFieldMetadata } from "../../hooks/useFieldMetadata.js";
+
+import { MUIAutoTextInput } from "./MUIAutoTextInput.js";
 import { MUIFileInput } from "./MUIFileInput.js";
 import { MUIJSONInput } from "./MUIJSONInput.js";
 import { MUIRolesCombobox } from "./MUIRolesCombobox.js";
-
-const FieldTypeToInputType: Partial<Record<GadgetFieldType, TextFieldProps["type"]>> = {
-  [FieldType.Number]: "number",
-  [FieldType.Email]: "email",
-  [FieldType.Password]: "password",
-  [FieldType.EncryptedString]: "password",
-};
 
 export const MUIAutoFormControl = (props: { field: string; children: ReactElement }) => {
   const { path, metadata } = useFieldMetadata(props.field);
@@ -54,20 +49,14 @@ export const MUIAutoInput = (props: { field: string }) => {
     case FieldType.String:
     case FieldType.Number:
     case FieldType.Email:
-    case FieldType.Password:
-    case FieldType.EncryptedString:
     case FieldType.Color:
     case FieldType.Url: {
-      return (
-        <TextField
-          label={metadata.name}
-          type={FieldTypeToInputType[metadata.fieldType]}
-          autoComplete="off"
-          {...fieldProps}
-          error={!!error}
-          helperText={error?.message}
-        />
-      );
+      return <MUIAutoTextInput field={props.field} />;
+    }
+    case FieldType.Password:
+    case FieldType.EncryptedString: {
+      // TODO - Needs updated implementation to handle security concerns
+      return <MUIAutoTextInput field={props.field} />;
     }
     case FieldType.Boolean: {
       return (

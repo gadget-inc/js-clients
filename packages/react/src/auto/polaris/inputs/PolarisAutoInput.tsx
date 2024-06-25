@@ -1,8 +1,7 @@
-import type { TextFieldProps } from "@shopify/polaris";
-import { Checkbox, TextField } from "@shopify/polaris";
+import { Checkbox } from "@shopify/polaris";
 import React from "react";
 import { useController } from "react-hook-form";
-import type { GadgetEnumConfig, GadgetFieldType } from "../../../internal/gql/graphql.js";
+import type { GadgetEnumConfig } from "../../../internal/gql/graphql.js";
 import { FieldType } from "../../../metadata.js";
 import { useFieldMetadata } from "../../hooks/useFieldMetadata.js";
 import { PolarisDateTimePicker } from "../PolarisDateTimePicker.js";
@@ -10,14 +9,8 @@ import { PolarisFileInput } from "../PolarisFileInput.js";
 import { PolarisFixedOptionsCombobox } from "../PolarisFixedOptionsCombobox.js";
 import { PolarisJSONInput } from "../PolarisJSONInput.js";
 import { PolarisRolesCombobox } from "../PolarisRolesCombobox.js";
+import { PolarisAutoTextInput } from "./PolarisAutoTextInput.js";
 import { PolarisBelongsToInput } from "./PolarisBelongsToInput.js";
-
-const FieldTypeToInputType: Partial<Record<GadgetFieldType, TextFieldProps["type"]>> = {
-  [FieldType.Number]: "number",
-  [FieldType.Email]: "email",
-  [FieldType.Password]: "password",
-  [FieldType.EncryptedString]: "password",
-};
 
 export const PolarisAutoInput = (props: { field: string }) => {
   const { path, metadata } = useFieldMetadata(props.field);
@@ -38,19 +31,14 @@ export const PolarisAutoInput = (props: { field: string }) => {
     case FieldType.String:
     case FieldType.Number:
     case FieldType.Email:
-    case FieldType.Password:
-    case FieldType.EncryptedString:
     case FieldType.Color:
     case FieldType.Url: {
-      return (
-        <TextField
-          label={metadata.name}
-          type={FieldTypeToInputType[metadata.fieldType]}
-          autoComplete="off"
-          {...field}
-          error={error?.message}
-        />
-      );
+      return <PolarisAutoTextInput field={props.field} />;
+    }
+    case FieldType.Password:
+    case FieldType.EncryptedString: {
+      // TODO - Needs updated implementation to handle security concerns
+      return <PolarisAutoTextInput field={props.field} />;
     }
     case FieldType.Boolean: {
       return <Checkbox label={metadata.name} {...field} error={error?.message} />;
