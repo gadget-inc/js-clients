@@ -3,8 +3,8 @@ import React from "react";
 import { FormProvider, useForm } from "react-hook-form";
 import { Provider } from "../../src/GadgetProvider.tsx";
 import { PolarisAutoForm } from "../../src/auto/polaris/PolarisAutoForm.tsx";
-import { PolarisAutoSubmit } from "../../src/auto/polaris/PolarisAutoSubmit.tsx";
 import { PolarisAutoInput } from "../../src/auto/polaris/inputs/PolarisAutoInput.tsx";
+import { PolarisAutoSubmit } from "../../src/auto/polaris/submit/PolarisAutoSubmit.tsx";
 import { testApi as api } from "../apis.ts";
 
 // More on how to set up stories at: https://storybook.js.org/docs/writing-stories#default-export
