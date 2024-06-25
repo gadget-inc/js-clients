@@ -1,0 +1,6 @@
+/* Override the default background color of the code editor to allow components that use the code editor to have a custom background color */
+.prism-code-editor {
+  background: transparent;
+  --widget__bg: transparent;
+  --editor__bg-highlight: transparent;
+}
