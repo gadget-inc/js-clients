@@ -1,4 +1,4 @@
-import { Autocomplete, Checkbox, FormControl, FormControlLabel, FormGroup, FormHelperText, TextField } from "@mui/material";
+import { Autocomplete, FormControl, FormControlLabel, FormGroup, FormHelperText, TextField } from "@mui/material";
 import { DatePicker, DateTimePicker } from "@mui/x-date-pickers";
 import React, { ReactElement } from "react";
 import { useController } from "react-hook-form";
@@ -8,6 +8,7 @@ import { FieldType } from "../../../metadata.js";
 import { useFieldMetadata } from "../../hooks/useFieldMetadata.js";
 
 import { MUIAutoTextInput } from "./MUIAutoTextInput.js";
+import { MUIBooleanInput } from "./MUIBooleanInput.js";
 import { MUIFileInput } from "./MUIFileInput.js";
 import { MUIJSONInput } from "./MUIJSONInput.js";
 import { MUIRolesCombobox } from "./MUIRolesCombobox.js";
@@ -59,11 +60,7 @@ export const MUIAutoInput = (props: { field: string }) => {
       return <MUIAutoTextInput field={props.field} />;
     }
     case FieldType.Boolean: {
-      return (
-        <MUIAutoFormControl {...props}>
-          <Checkbox {...fieldProps} />
-        </MUIAutoFormControl>
-      );
+      return <MUIBooleanInput field={props.field} />;
     }
     case FieldType.DateTime: {
       return (

@@ -1,4 +1,3 @@
-import { Checkbox } from "@shopify/polaris";
 import React from "react";
 import { useController } from "react-hook-form";
 import type { GadgetEnumConfig } from "../../../internal/gql/graphql.js";
@@ -11,6 +10,7 @@ import { PolarisJSONInput } from "../PolarisJSONInput.js";
 import { PolarisRolesCombobox } from "../PolarisRolesCombobox.js";
 import { PolarisAutoTextInput } from "./PolarisAutoTextInput.js";
 import { PolarisBelongsToInput } from "./PolarisBelongsToInput.js";
+import { PolarisBooleanInput } from "./PolarisBooleanInput.js";
 
 export const PolarisAutoInput = (props: { field: string }) => {
   const { path, metadata } = useFieldMetadata(props.field);
@@ -41,7 +41,7 @@ export const PolarisAutoInput = (props: { field: string }) => {
       return <PolarisAutoTextInput field={props.field} />;
     }
     case FieldType.Boolean: {
-      return <Checkbox label={metadata.name} {...field} error={error?.message} />;
+      return <PolarisBooleanInput field={props.field} />;
     }
     case FieldType.DateTime: {
       return (

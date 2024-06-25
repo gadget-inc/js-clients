@@ -39,7 +39,9 @@
     "prepublishOnly": "pnpm build",
     "prerelease": "gitpkg publish",
     "storybook": "storybook dev -p 6006",
-    "build-storybook": "storybook build"
+    "build-storybook": "storybook build",
+    "cypress:open": "cypress open",
+    "cypress:run": "cypress run"
   },
   "dependencies": {
     "@0no-co/graphql.web": "^1.0.4",
