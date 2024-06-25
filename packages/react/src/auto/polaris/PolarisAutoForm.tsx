@@ -1,6 +1,6 @@
 import type { ActionFunction } from "@gadgetinc/api-client-core";
 import type { FormProps } from "@shopify/polaris";
-import { Banner, Button, Form, FormLayout, SkeletonBodyText, SkeletonDisplayText } from "@shopify/polaris";
+import { Form, FormLayout, SkeletonBodyText, SkeletonDisplayText } from "@shopify/polaris";
 import React from "react";
 import { FormProvider } from "react-hook-form";
 import { useActionMetadata } from "../../metadata.js";
@@ -9,8 +9,9 @@ import type { OptionsType } from "../../utils.js";
 import type { AutoFormProps } from "../AutoForm.js";
 import { useFormFields, useValidationResolver } from "../AutoForm.js";
 import { AutoFormMetadataContext } from "../AutoFormContext.js";
-import { PolarisErrorDisplay } from "./PolarisErrorDisplay.js";
 import { PolarisAutoInput } from "./inputs/PolarisAutoInput.js";
+import { PolarisAutoSubmit } from "./submit/PolarisAutoSubmit.js";
+import { PolarisSubmitResultBanner } from "./submit/PolarisSubmitResultBanner.js";
 
 export const PolarisFormSkeleton = () => (
   <>
@@ -52,16 +53,20 @@ export const PolarisAutoForm = <
     send: fields.map(({ path }) => path),
   });
 
-  const error = formError ?? metadataError;
-  if (error && !(error as any).valiationErrors) {
-    return <PolarisErrorDisplay error={error} />;
+  const autoFormMetadataContext: AutoFormMetadataContext = {
+    submit,
+    metadata,
+    submitResult: {
+      isSuccessful: isSubmitSuccessful,
+      error: formError ?? metadataError,
+    },
+  };
+
+  if (props.successContent && isSubmitSuccessful) {
+    return props.successContent;
   }
 
-  if (isSubmitSuccessful) {
-    return props.successContent ?? <Banner title={`Saved ${metadata?.name} successfully.`} tone="success" />;
-  }
-
-  if (fetchingMetadata)
+  if (fetchingMetadata) {
     return (
       <Form {...rest} onSubmit={submit}>
         <FormLayout>
@@ -69,36 +74,23 @@ export const PolarisAutoForm = <
         </FormLayout>
       </Form>
     );
+  }
 
-  if (props.children)
-    return (
-      <AutoFormMetadataContext.Provider value={{ submit, metadata }}>
-        <FormProvider {...originalFormMethods}>
-          <Form {...rest} onSubmit={submit}>
-            <FormLayout>{props.children}</FormLayout>
-          </Form>
-        </FormProvider>
-      </AutoFormMetadataContext.Provider>
-    );
+  const formContent = props.children ?? (
+    <>
+      <PolarisSubmitResultBanner />
+      {fields.map(({ metadata }) => (
+        <PolarisAutoInput field={metadata.apiIdentifier} key={metadata.apiIdentifier} />
+      ))}
+      <PolarisAutoSubmit>{props.submitLabel ?? "Submit"}</PolarisAutoSubmit>
+    </>
+  );
 
   return (
-    <AutoFormMetadataContext.Provider value={{ submit, metadata }}>
+    <AutoFormMetadataContext.Provider value={autoFormMetadataContext}>
       <FormProvider {...originalFormMethods}>
         <Form {...rest} onSubmit={submit}>
-          <FormLayout>
-            {fields.map(({ metadata }) => (
-              <PolarisAutoInput field={metadata.apiIdentifier} key={metadata.apiIdentifier} />
-            ))}
-            <Button
-              loading={isLoading}
-              submit
-              onClick={async () => {
-                submit;
-              }}
-            >
-              {(props.submitLabel as any) ?? "Submit"}
-            </Button>
-          </FormLayout>
+          <FormLayout>{formContent}</FormLayout>
         </Form>
       </FormProvider>
     </AutoFormMetadataContext.Provider>

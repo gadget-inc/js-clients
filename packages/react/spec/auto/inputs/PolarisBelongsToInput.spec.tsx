@@ -10,7 +10,9 @@ import { MockForm } from "../MockForm.js";
 describe("PolarisBelongsToInput", () => {
   describe("for widget create", () => {
     test("it preloads the first findMany result", async () => {
-      render(<PolarisBelongsToInput field="section" />, { wrapper: MockForm(jest.fn(), metadata) });
+      render(<PolarisBelongsToInput field="section" />, {
+        wrapper: MockForm({ submit: jest.fn(), metadata }),
+      });
 
       expect(mockUrqlClient.executeQuery.mock.calls[0][0].variables).toEqual({
         first: 25,
@@ -24,7 +26,9 @@ describe("PolarisBelongsToInput", () => {
 
       beforeEach(() => {
         mockHandleSubmit = jest.fn();
-        result = render(<PolarisBelongsToInput field="section" />, { wrapper: MockForm(mockHandleSubmit, metadata) });
+        result = render(<PolarisBelongsToInput field="section" />, {
+          wrapper: MockForm({ submit: mockHandleSubmit, metadata }),
+        });
         mockUrqlClient.executeQuery.pushResponse("sections", sectionsQueryResponse);
       });
 
