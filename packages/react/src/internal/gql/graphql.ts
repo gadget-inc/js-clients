@@ -24,6 +24,12 @@ export type Scalars = {
   GadgetID: { input: any; output: any };
   /** Instructions for a client to turn raw transport types (like strings) into useful client side types (like Dates). Unstable and not intended for developer use. */
   HydrationPlan: { input: any; output: any };
+  /** Represents one player result record in internal api calls. Returns a JSON blob of all the record's fields. */
+  InternalGamePlayerRecord: { input: any; output: any };
+  /** Represents one round result record in internal api calls. Returns a JSON blob of all the record's fields. */
+  InternalGameRoundRecord: { input: any; output: any };
+  /** Represents one stadium result record in internal api calls. Returns a JSON blob of all the record's fields. */
+  InternalGameStadiumRecord: { input: any; output: any };
   /** Represents one gizmo result record in internal api calls. Returns a JSON blob of all the record's fields. */
   InternalGizmoRecord: { input: any; output: any };
   /** Represents one modelA result record in internal api calls. Returns a JSON blob of all the record's fields. */
@@ -96,17 +102,26 @@ export type BackgroundActionQueue = {
 
 export type BackgroundActionResult =
   | AddInventoryWidgetResult
+  | CreateGamePlayerResult
+  | CreateGameRoundResult
+  | CreateGameStadiumResult
   | CreateGizmoResult
   | CreateModelAResult
   | CreateSectionResult
   | CreateTestDataResult
   | CreateWidgetResult
+  | DeleteGamePlayerResult
+  | DeleteGameRoundResult
+  | DeleteGameStadiumResult
   | DeleteGizmoResult
   | DeleteModelAResult
   | DeleteSectionResult
   | DeleteUserResult
   | DeleteWidgetResult
   | SignOutUserResult
+  | UpdateGamePlayerResult
+  | UpdateGameRoundResult
+  | UpdateGameStadiumResult
   | UpdateGizmoResult
   | UpdateModelAResult
   | UpdateSectionResult
@@ -124,6 +139,121 @@ export type BackgroundActionRetryPolicy = {
   randomizeInterval?: InputMaybe<Scalars["Boolean"]["input"]>;
   /** The number of repeat attempts to make if the initial attempt fails. Defaults to 10. Note: the total number of attempts will be this number plus one -- this counts the number of retries *after* the first attempt. */
   retryCount?: InputMaybe<Scalars["Int"]["input"]>;
+};
+
+export type BackgroundGameMutations = {
+  __typename?: "BackgroundGameMutations";
+  bulkCreatePlayers: BulkEnqueueBackgroundActionResult;
+  bulkCreateRounds: BulkEnqueueBackgroundActionResult;
+  bulkCreateStadia: BulkEnqueueBackgroundActionResult;
+  bulkDeletePlayers: BulkEnqueueBackgroundActionResult;
+  bulkDeleteRounds: BulkEnqueueBackgroundActionResult;
+  bulkDeleteStadia: BulkEnqueueBackgroundActionResult;
+  bulkUpdatePlayers: BulkEnqueueBackgroundActionResult;
+  bulkUpdateRounds: BulkEnqueueBackgroundActionResult;
+  bulkUpdateStadia: BulkEnqueueBackgroundActionResult;
+  createPlayer: EnqueueBackgroundActionResult;
+  createRound: EnqueueBackgroundActionResult;
+  createStadium: EnqueueBackgroundActionResult;
+  deletePlayer: EnqueueBackgroundActionResult;
+  deleteRound: EnqueueBackgroundActionResult;
+  deleteStadium: EnqueueBackgroundActionResult;
+  updatePlayer: EnqueueBackgroundActionResult;
+  updateRound: EnqueueBackgroundActionResult;
+  updateStadium: EnqueueBackgroundActionResult;
+};
+
+export type BackgroundGameMutationsBulkCreatePlayersArgs = {
+  backgroundOptions?: InputMaybe<EnqueueBackgroundActionOptions>;
+  inputs: Array<BulkCreateGamePlayersInput>;
+};
+
+export type BackgroundGameMutationsBulkCreateRoundsArgs = {
+  backgroundOptions?: InputMaybe<EnqueueBackgroundActionOptions>;
+  inputs: Array<BulkCreateGameRoundsInput>;
+};
+
+export type BackgroundGameMutationsBulkCreateStadiaArgs = {
+  backgroundOptions?: InputMaybe<EnqueueBackgroundActionOptions>;
+  inputs: Array<BulkCreateGameStadiaInput>;
+};
+
+export type BackgroundGameMutationsBulkDeletePlayersArgs = {
+  backgroundOptions?: InputMaybe<EnqueueBackgroundActionOptions>;
+  ids: Array<Scalars["GadgetID"]["input"]>;
+};
+
+export type BackgroundGameMutationsBulkDeleteRoundsArgs = {
+  backgroundOptions?: InputMaybe<EnqueueBackgroundActionOptions>;
+  ids: Array<Scalars["GadgetID"]["input"]>;
+};
+
+export type BackgroundGameMutationsBulkDeleteStadiaArgs = {
+  backgroundOptions?: InputMaybe<EnqueueBackgroundActionOptions>;
+  ids: Array<Scalars["GadgetID"]["input"]>;
+};
+
+export type BackgroundGameMutationsBulkUpdatePlayersArgs = {
+  backgroundOptions?: InputMaybe<EnqueueBackgroundActionOptions>;
+  inputs: Array<BulkUpdateGamePlayersInput>;
+};
+
+export type BackgroundGameMutationsBulkUpdateRoundsArgs = {
+  backgroundOptions?: InputMaybe<EnqueueBackgroundActionOptions>;
+  inputs: Array<BulkUpdateGameRoundsInput>;
+};
+
+export type BackgroundGameMutationsBulkUpdateStadiaArgs = {
+  backgroundOptions?: InputMaybe<EnqueueBackgroundActionOptions>;
+  inputs: Array<BulkUpdateGameStadiaInput>;
+};
+
+export type BackgroundGameMutationsCreatePlayerArgs = {
+  backgroundOptions?: InputMaybe<EnqueueBackgroundActionOptions>;
+  player?: InputMaybe<CreateGamePlayerInput>;
+};
+
+export type BackgroundGameMutationsCreateRoundArgs = {
+  backgroundOptions?: InputMaybe<EnqueueBackgroundActionOptions>;
+  round?: InputMaybe<CreateGameRoundInput>;
+};
+
+export type BackgroundGameMutationsCreateStadiumArgs = {
+  backgroundOptions?: InputMaybe<EnqueueBackgroundActionOptions>;
+  stadium?: InputMaybe<CreateGameStadiumInput>;
+};
+
+export type BackgroundGameMutationsDeletePlayerArgs = {
+  backgroundOptions?: InputMaybe<EnqueueBackgroundActionOptions>;
+  id: Scalars["GadgetID"]["input"];
+};
+
+export type BackgroundGameMutationsDeleteRoundArgs = {
+  backgroundOptions?: InputMaybe<EnqueueBackgroundActionOptions>;
+  id: Scalars["GadgetID"]["input"];
+};
+
+export type BackgroundGameMutationsDeleteStadiumArgs = {
+  backgroundOptions?: InputMaybe<EnqueueBackgroundActionOptions>;
+  id: Scalars["GadgetID"]["input"];
+};
+
+export type BackgroundGameMutationsUpdatePlayerArgs = {
+  backgroundOptions?: InputMaybe<EnqueueBackgroundActionOptions>;
+  id: Scalars["GadgetID"]["input"];
+  player?: InputMaybe<UpdateGamePlayerInput>;
+};
+
+export type BackgroundGameMutationsUpdateRoundArgs = {
+  backgroundOptions?: InputMaybe<EnqueueBackgroundActionOptions>;
+  id: Scalars["GadgetID"]["input"];
+  round?: InputMaybe<UpdateGameRoundInput>;
+};
+
+export type BackgroundGameMutationsUpdateStadiumArgs = {
+  backgroundOptions?: InputMaybe<EnqueueBackgroundActionOptions>;
+  id: Scalars["GadgetID"]["input"];
+  stadium?: InputMaybe<UpdateGameStadiumInput>;
 };
 
 export type BackgroundMutations = {
@@ -155,6 +285,7 @@ export type BackgroundMutations = {
   deleteSection: EnqueueBackgroundActionResult;
   deleteUser: EnqueueBackgroundActionResult;
   deleteWidget: EnqueueBackgroundActionResult;
+  game: BackgroundGameMutations;
   signOutUser: EnqueueBackgroundActionResult;
   updateGizmo: EnqueueBackgroundActionResult;
   updateModelA: EnqueueBackgroundActionResult;
@@ -354,6 +485,51 @@ export type BulkAddInventoryWidgetsResult = {
   widgets?: Maybe<Array<Maybe<Widget>>>;
 };
 
+export type BulkCreateGamePlayersInput = {
+  player?: InputMaybe<CreateGamePlayerInput>;
+};
+
+/** The output when running the create on the player model in bulk. */
+export type BulkCreateGamePlayersResult = {
+  __typename?: "BulkCreateGamePlayersResult";
+  /** Aggregated list of errors that any bulk action encountered while processing */
+  errors?: Maybe<Array<ExecutionError>>;
+  /** The list of all changed player records by each sent bulk action. Returned in the same order as the input bulk action params. */
+  players?: Maybe<Array<Maybe<GamePlayer>>>;
+  /** Boolean describing if all the bulk actions succeeded or not */
+  success: Scalars["Boolean"]["output"];
+};
+
+export type BulkCreateGameRoundsInput = {
+  round?: InputMaybe<CreateGameRoundInput>;
+};
+
+/** The output when running the create on the round model in bulk. */
+export type BulkCreateGameRoundsResult = {
+  __typename?: "BulkCreateGameRoundsResult";
+  /** Aggregated list of errors that any bulk action encountered while processing */
+  errors?: Maybe<Array<ExecutionError>>;
+  /** The list of all changed round records by each sent bulk action. Returned in the same order as the input bulk action params. */
+  rounds?: Maybe<Array<Maybe<GameRound>>>;
+  /** Boolean describing if all the bulk actions succeeded or not */
+  success: Scalars["Boolean"]["output"];
+};
+
+export type BulkCreateGameStadiaInput = {
+  stadium?: InputMaybe<CreateGameStadiumInput>;
+};
+
+/** The output when running the create on the stadium model in bulk. */
+export type BulkCreateGameStadiaResult = {
+  __typename?: "BulkCreateGameStadiaResult";
+  /** Aggregated list of errors that any bulk action encountered while processing */
+  errors?: Maybe<Array<ExecutionError>>;
+  /** The list of all changed stadium records by each sent bulk action. Returned in the same order as the input bulk action params. */
+  stadia?: Maybe<Array<Maybe<GameStadium>>>;
+  /** Boolean describing if all the bulk actions succeeded or not */
+  success: Scalars["Boolean"]["output"];
+};
+
 export type BulkCreateGizmosInput = {
   gizmo?: InputMaybe<CreateGizmoInput>;
 };
@@ -408,6 +584,33 @@ export type BulkCreateWidgetsResult = {
   success: Scalars["Boolean"]["output"];
   /** The list of all changed widget records by each sent bulk action. Returned in the same order as the input bulk action params. */
   widgets?: Maybe<Array<Maybe<Widget>>>;
+};
+
+/** The output when running the delete on the player model in bulk. */
+export type BulkDeleteGamePlayersResult = {
+  __typename?: "BulkDeleteGamePlayersResult";
+  /** Aggregated list of errors that any bulk action encountered while processing */
+  errors?: Maybe<Array<ExecutionError>>;
+  /** Boolean describing if all the bulk actions succeeded or not */
+  success: Scalars["Boolean"]["output"];
+};
+
+/** The output when running the delete on the round model in bulk. */
+export type BulkDeleteGameRoundsResult = {
+  __typename?: "BulkDeleteGameRoundsResult";
+  /** Aggregated list of errors that any bulk action encountered while processing */
+  errors?: Maybe<Array<ExecutionError>>;
+  /** Boolean describing if all the bulk actions succeeded or not */
+  success: Scalars["Boolean"]["output"];
+};
+
+/** The output when running the delete on the stadium model in bulk. */
+export type BulkDeleteGameStadiaResult = {
+  __typename?: "BulkDeleteGameStadiaResult";
+  /** Aggregated list of errors that any bulk action encountered while processing */
+  errors?: Maybe<Array<ExecutionError>>;
+  /** Boolean describing if all the bulk actions succeeded or not */
+  success: Scalars["Boolean"]["output"];
 };
 
 /** The output when running the delete on the gizmo model in bulk. */
@@ -477,6 +680,54 @@ export type BulkSignOutUsersResult = {
   success: Scalars["Boolean"]["output"];
   /** The list of all changed user records by each sent bulk action. Returned in the same order as the input bulk action params. */
   users?: Maybe<Array<Maybe<User>>>;
+};
+
+export type BulkUpdateGamePlayersInput = {
+  id: Scalars["GadgetID"]["input"];
+  player?: InputMaybe<UpdateGamePlayerInput>;
+};
+
+/** The output when running the update on the player model in bulk. */
+export type BulkUpdateGamePlayersResult = {
+  __typename?: "BulkUpdateGamePlayersResult";
+  /** Aggregated list of errors that any bulk action encountered while processing */
+  errors?: Maybe<Array<ExecutionError>>;
+  /** The list of all changed player records by each sent bulk action. Returned in the same order as the input bulk action params. */
+  players?: Maybe<Array<Maybe<GamePlayer>>>;
+  /** Boolean describing if all the bulk actions succeeded or not */
+  success: Scalars["Boolean"]["output"];
+};
+
+export type BulkUpdateGameRoundsInput = {
+  id: Scalars["GadgetID"]["input"];
+  round?: InputMaybe<UpdateGameRoundInput>;
+};
+
+/** The output when running the update on the round model in bulk. */
+export type BulkUpdateGameRoundsResult = {
+  __typename?: "BulkUpdateGameRoundsResult";
+  /** Aggregated list of errors that any bulk action encountered while processing */
+  errors?: Maybe<Array<ExecutionError>>;
+  /** The list of all changed round records by each sent bulk action. Returned in the same order as the input bulk action params. */
+  rounds?: Maybe<Array<Maybe<GameRound>>>;
+  /** Boolean describing if all the bulk actions succeeded or not */
+  success: Scalars["Boolean"]["output"];
+};
+
+export type BulkUpdateGameStadiaInput = {
+  id: Scalars["GadgetID"]["input"];
+  stadium?: InputMaybe<UpdateGameStadiumInput>;
+};
+
+/** The output when running the update on the stadium model in bulk. */
+export type BulkUpdateGameStadiaResult = {
+  __typename?: "BulkUpdateGameStadiaResult";
+  /** Aggregated list of errors that any bulk action encountered while processing */
+  errors?: Maybe<Array<ExecutionError>>;
+  /** The list of all changed stadium records by each sent bulk action. Returned in the same order as the input bulk action params. */
+  stadia?: Maybe<Array<Maybe<GameStadium>>>;
+  /** Boolean describing if all the bulk actions succeeded or not */
+  success: Scalars["Boolean"]["output"];
 };
 
 export type BulkUpdateGizmosInput = {
@@ -581,6 +832,37 @@ export type ConvergeGizmoValues = {
 };
 
 /** Declaratively specifies the list of records a relationship should become and invokes the given actions in order to change the current state to get to the newly specified state. */
+export type ConvergePlayerInput = {
+  /** An optional partial set of action api identifiers to use when creating, updating, and deleting records to converge to the new list. */
+  actions?: InputMaybe<ConvergeActionMap>;
+  /** The new list of records to converge to */
+  values: Array<InputMaybe<ConvergePlayerValues>>;
+};
+
+/** One element of a ConvergePlayerInput record converge list */
+export type ConvergePlayerValues = {
+  currentRound?: InputMaybe<RoundBelongsToInput>;
+  id?: InputMaybe<Scalars["GadgetID"]["input"]>;
+  name?: InputMaybe<Scalars["String"]["input"]>;
+};
+
+/** Declaratively specifies the list of records a relationship should become and invokes the given actions in order to change the current state to get to the newly specified state. */
+export type ConvergeRoundInput = {
+  /** An optional partial set of action api identifiers to use when creating, updating, and deleting records to converge to the new list. */
+  actions?: InputMaybe<ConvergeActionMap>;
+  /** The new list of records to converge to */
+  values: Array<InputMaybe<ConvergeRoundValues>>;
+};
+
+/** One element of a ConvergeRoundInput record converge list */
+export type ConvergeRoundValues = {
+  id?: InputMaybe<Scalars["GadgetID"]["input"]>;
+  name?: InputMaybe<Scalars["String"]["input"]>;
+  players?: InputMaybe<Array<InputMaybe<PlayerHasManyInput>>>;
+  stadium?: InputMaybe<StadiumBelongsToInput>;
+};
+
+/** Declaratively specifies the list of records a relationship should become and invokes the given actions in order to change the current state to get to the newly specified state. */
 export type ConvergeWidgetInput = {
   /** An optional partial set of action api identifiers to use when creating, updating, and deleting records to converge to the new list. */
   actions?: InputMaybe<ConvergeActionMap>;
@@ -608,6 +890,43 @@ export type ConvergeWidgetValues = {
   secretKey?: InputMaybe<Scalars["String"]["input"]>;
   section?: InputMaybe<SectionBelongsToInput>;
   startsAt?: InputMaybe<Scalars["DateTime"]["input"]>;
+};
+
+export type CreateGamePlayerInput = {
+  currentRound?: InputMaybe<RoundBelongsToInput>;
+  name?: InputMaybe<Scalars["String"]["input"]>;
+};
+
+export type CreateGamePlayerResult = {
+  __typename?: "CreateGamePlayerResult";
+  errors?: Maybe<Array<ExecutionError>>;
+  player?: Maybe<GamePlayer>;
+  success: Scalars["Boolean"]["output"];
+};
+
+export type CreateGameRoundInput = {
+  name?: InputMaybe<Scalars["String"]["input"]>;
+  players?: InputMaybe<Array<InputMaybe<PlayerHasManyInput>>>;
+  stadium?: InputMaybe<StadiumBelongsToInput>;
+};
+
+export type CreateGameRoundResult = {
+  __typename?: "CreateGameRoundResult";
+  errors?: Maybe<Array<ExecutionError>>;
+  round?: Maybe<GameRound>;
+  success: Scalars["Boolean"]["output"];
+};
+
+export type CreateGameStadiumInput = {
+  name?: InputMaybe<Scalars["String"]["input"]>;
+  rounds?: InputMaybe<Array<InputMaybe<RoundHasManyInput>>>;
+};
+
+export type CreateGameStadiumResult = {
+  __typename?: "CreateGameStadiumResult";
+  errors?: Maybe<Array<ExecutionError>>;
+  stadium?: Maybe<GameStadium>;
+  success: Scalars["Boolean"]["output"];
 };
 
 export type CreateGizmoInput = {
@@ -704,6 +1023,24 @@ export type DateTimeFilter = {
   lessThanOrEqual?: InputMaybe<Scalars["DateTime"]["input"]>;
   notEquals?: InputMaybe<Scalars["DateTime"]["input"]>;
   notIn?: InputMaybe<Array<InputMaybe<Scalars["DateTime"]["input"]>>>;
+};
+
+export type DeleteGamePlayerResult = {
+  __typename?: "DeleteGamePlayerResult";
+  errors?: Maybe<Array<ExecutionError>>;
+  success: Scalars["Boolean"]["output"];
+};
+
+export type DeleteGameRoundResult = {
+  __typename?: "DeleteGameRoundResult";
+  errors?: Maybe<Array<ExecutionError>>;
+  success: Scalars["Boolean"]["output"];
+};
+
+export type DeleteGameStadiumResult = {
+  __typename?: "DeleteGameStadiumResult";
+  errors?: Maybe<Array<ExecutionError>>;
+  success: Scalars["Boolean"]["output"];
 };
 
 export type DeleteGizmoResult = {
@@ -1016,6 +1353,7 @@ export type GadgetModel = {
   actions: Array<GadgetAction>;
   apiIdentifier: Scalars["String"]["output"];
   currentSingletonApiIdentifier?: Maybe<Scalars["String"]["output"]>;
+  defaultDisplayField: GadgetModelField;
   exampleFilterQuery: Scalars["String"]["output"];
   exampleFindMostRecentlyCreatedQuery: Scalars["String"]["output"];
   exampleFullFindFirstQuery: Scalars["String"]["output"];
@@ -1114,6 +1452,341 @@ export type GadgetTrigger = {
   specID: Scalars["String"]["output"];
 };
 
+export type GameMutations = {
+  __typename?: "GameMutations";
+  bulkCreatePlayers?: Maybe<BulkCreateGamePlayersResult>;
+  bulkCreateRounds?: Maybe<BulkCreateGameRoundsResult>;
+  bulkCreateStadia?: Maybe<BulkCreateGameStadiaResult>;
+  bulkDeletePlayers?: Maybe<BulkDeleteGamePlayersResult>;
+  bulkDeleteRounds?: Maybe<BulkDeleteGameRoundsResult>;
+  bulkDeleteStadia?: Maybe<BulkDeleteGameStadiaResult>;
+  bulkUpdatePlayers?: Maybe<BulkUpdateGamePlayersResult>;
+  bulkUpdateRounds?: Maybe<BulkUpdateGameRoundsResult>;
+  bulkUpdateStadia?: Maybe<BulkUpdateGameStadiaResult>;
+  createPlayer?: Maybe<CreateGamePlayerResult>;
+  createRound?: Maybe<CreateGameRoundResult>;
+  createStadium?: Maybe<CreateGameStadiumResult>;
+  deletePlayer?: Maybe<DeleteGamePlayerResult>;
+  deleteRound?: Maybe<DeleteGameRoundResult>;
+  deleteStadium?: Maybe<DeleteGameStadiumResult>;
+  updatePlayer?: Maybe<UpdateGamePlayerResult>;
+  updateRound?: Maybe<UpdateGameRoundResult>;
+  updateStadium?: Maybe<UpdateGameStadiumResult>;
+};
+
+export type GameMutationsBulkCreatePlayersArgs = {
+  inputs: Array<BulkCreateGamePlayersInput>;
+};
+
+export type GameMutationsBulkCreateRoundsArgs = {
+  inputs: Array<BulkCreateGameRoundsInput>;
+};
+
+export type GameMutationsBulkCreateStadiaArgs = {
+  inputs: Array<BulkCreateGameStadiaInput>;
+};
+
+export type GameMutationsBulkDeletePlayersArgs = {
+  ids: Array<Scalars["GadgetID"]["input"]>;
+};
+
+export type GameMutationsBulkDeleteRoundsArgs = {
+  ids: Array<Scalars["GadgetID"]["input"]>;
+};
+
+export type GameMutationsBulkDeleteStadiaArgs = {
+  ids: Array<Scalars["GadgetID"]["input"]>;
+};
+
+export type GameMutationsBulkUpdatePlayersArgs = {
+  inputs: Array<BulkUpdateGamePlayersInput>;
+};
+
+export type GameMutationsBulkUpdateRoundsArgs = {
+  inputs: Array<BulkUpdateGameRoundsInput>;
+};
+
+export type GameMutationsBulkUpdateStadiaArgs = {
+  inputs: Array<BulkUpdateGameStadiaInput>;
+};
+
+export type GameMutationsCreatePlayerArgs = {
+  player?: InputMaybe<CreateGamePlayerInput>;
+};
+
+export type GameMutationsCreateRoundArgs = {
+  round?: InputMaybe<CreateGameRoundInput>;
+};
+
+export type GameMutationsCreateStadiumArgs = {
+  stadium?: InputMaybe<CreateGameStadiumInput>;
+};
+
+export type GameMutationsDeletePlayerArgs = {
+  id: Scalars["GadgetID"]["input"];
+};
+
+export type GameMutationsDeleteRoundArgs = {
+  id: Scalars["GadgetID"]["input"];
+};
+
+export type GameMutationsDeleteStadiumArgs = {
+  id: Scalars["GadgetID"]["input"];
+};
+
+export type GameMutationsUpdatePlayerArgs = {
+  id: Scalars["GadgetID"]["input"];
+  player?: InputMaybe<UpdateGamePlayerInput>;
+};
+
+export type GameMutationsUpdateRoundArgs = {
+  id: Scalars["GadgetID"]["input"];
+  round?: InputMaybe<UpdateGameRoundInput>;
+};
+
+export type GameMutationsUpdateStadiumArgs = {
+  id: Scalars["GadgetID"]["input"];
+  stadium?: InputMaybe<UpdateGameStadiumInput>;
+};
+
+export type GamePlayer = {
+  __typename?: "GamePlayer";
+  /** Get all the fields for this record. Useful for not having to list out all the fields you want to retrieve, but slower. */
+  _all: Scalars["JSONObject"]["output"];
+  /** The time at which this record was first created. Set once upon record creation and never changed. Managed by Gadget. */
+  createdAt: Scalars["DateTime"]["output"];
+  currentRound?: Maybe<GameRound>;
+  currentRoundId?: Maybe<Scalars["GadgetID"]["output"]>;
+  /** The globally unique, unchanging identifier for this record. Assigned and managed by Gadget. */
+  id: Scalars["GadgetID"]["output"];
+  name?: Maybe<Scalars["String"]["output"]>;
+  /** The time at which this record was last changed. Set each time the record is successfully acted upon by an action. Managed by Gadget. */
+  updatedAt: Scalars["DateTime"]["output"];
+};
+
+/** A connection to a list of GamePlayer items. */
+export type GamePlayerConnection = {
+  __typename?: "GamePlayerConnection";
+  /** A list of edges. */
+  edges: Array<GamePlayerEdge>;
+  /** Information to aid in pagination. */
+  pageInfo: PageInfo;
+};
+
+/** An edge in a GamePlayer connection. */
+export type GamePlayerEdge = {
+  __typename?: "GamePlayerEdge";
+  /** A cursor for use in pagination */
+  cursor: Scalars["String"]["output"];
+  /** The item at the end of the edge */
+  node: GamePlayer;
+};
+
+export type GamePlayerFilter = {
+  AND?: InputMaybe<Array<InputMaybe<GamePlayerFilter>>>;
+  NOT?: InputMaybe<Array<InputMaybe<GamePlayerFilter>>>;
+  OR?: InputMaybe<Array<InputMaybe<GamePlayerFilter>>>;
+  createdAt?: InputMaybe<DateTimeFilter>;
+  currentRound?: InputMaybe<IdFilter>;
+  currentRoundId?: InputMaybe<IdFilter>;
+  id?: InputMaybe<IdFilter>;
+  name?: InputMaybe<StringFilter>;
+  updatedAt?: InputMaybe<DateTimeFilter>;
+};
+
+export type GamePlayerSort = {
+  /** Sort the results by the createdAt field. Defaults to ascending (smallest value first). */
+  createdAt?: InputMaybe<SortOrder>;
+  /** Sort the results by the id field. Defaults to ascending (smallest value first). */
+  id?: InputMaybe<SortOrder>;
+  /** Sort the results by the name field. Defaults to ascending (smallest value first). */
+  name?: InputMaybe<SortOrder>;
+  /** Sort the results by the updatedAt field. Defaults to ascending (smallest value first). */
+  updatedAt?: InputMaybe<SortOrder>;
+};
+
+export type GameQueries = {
+  __typename?: "GameQueries";
+  player?: Maybe<GamePlayer>;
+  players: GamePlayerConnection;
+  round?: Maybe<GameRound>;
+  rounds: GameRoundConnection;
+  stadia: GameStadiumConnection;
+  stadium?: Maybe<GameStadium>;
+};
+
+export type GameQueriesPlayerArgs = {
+  id: Scalars["GadgetID"]["input"];
+};
+
+export type GameQueriesPlayersArgs = {
+  after?: InputMaybe<Scalars["String"]["input"]>;
+  before?: InputMaybe<Scalars["String"]["input"]>;
+  filter?: InputMaybe<Array<GamePlayerFilter>>;
+  first?: InputMaybe<Scalars["Int"]["input"]>;
+  last?: InputMaybe<Scalars["Int"]["input"]>;
+  search?: InputMaybe<Scalars["String"]["input"]>;
+  sort?: InputMaybe<Array<GamePlayerSort>>;
+};
+
+export type GameQueriesRoundArgs = {
+  id: Scalars["GadgetID"]["input"];
+};
+
+export type GameQueriesRoundsArgs = {
+  after?: InputMaybe<Scalars["String"]["input"]>;
+  before?: InputMaybe<Scalars["String"]["input"]>;
+  filter?: InputMaybe<Array<GameRoundFilter>>;
+  first?: InputMaybe<Scalars["Int"]["input"]>;
+  last?: InputMaybe<Scalars["Int"]["input"]>;
+  search?: InputMaybe<Scalars["String"]["input"]>;
+  sort?: InputMaybe<Array<GameRoundSort>>;
+};
+
+export type GameQueriesStadiaArgs = {
+  after?: InputMaybe<Scalars["String"]["input"]>;
+  before?: InputMaybe<Scalars["String"]["input"]>;
+  filter?: InputMaybe<Array<GameStadiumFilter>>;
+  first?: InputMaybe<Scalars["Int"]["input"]>;
+  last?: InputMaybe<Scalars["Int"]["input"]>;
+  search?: InputMaybe<Scalars["String"]["input"]>;
+  sort?: InputMaybe<Array<GameStadiumSort>>;
+};
+
+export type GameQueriesStadiumArgs = {
+  id: Scalars["GadgetID"]["input"];
+};
+
+export type GameRound = {
+  __typename?: "GameRound";
+  /** Get all the fields for this record. Useful for not having to list out all the fields you want to retrieve, but slower. */
+  _all: Scalars["JSONObject"]["output"];
+  /** The time at which this record was first created. Set once upon record creation and never changed. Managed by Gadget. */
+  createdAt: Scalars["DateTime"]["output"];
+  /** The globally unique, unchanging identifier for this record. Assigned and managed by Gadget. */
+  id: Scalars["GadgetID"]["output"];
+  name?: Maybe<Scalars["String"]["output"]>;
+  players: GamePlayerConnection;
+  stadium: GameStadium;
+  stadiumId: Scalars["GadgetID"]["output"];
+  /** The time at which this record was last changed. Set each time the record is successfully acted upon by an action. Managed by Gadget. */
+  updatedAt: Scalars["DateTime"]["output"];
+};
+
+export type GameRoundPlayersArgs = {
+  after?: InputMaybe<Scalars["String"]["input"]>;
+  before?: InputMaybe<Scalars["String"]["input"]>;
+  filter?: InputMaybe<Array<GamePlayerFilter>>;
+  first?: InputMaybe<Scalars["Int"]["input"]>;
+  last?: InputMaybe<Scalars["Int"]["input"]>;
+  search?: InputMaybe<Scalars["String"]["input"]>;
+  sort?: InputMaybe<Array<GamePlayerSort>>;
+};
+
+/** A connection to a list of GameRound items. */
+export type GameRoundConnection = {
+  __typename?: "GameRoundConnection";
+  /** A list of edges. */
+  edges: Array<GameRoundEdge>;
+  /** Information to aid in pagination. */
+  pageInfo: PageInfo;
+};
+
+/** An edge in a GameRound connection. */
+export type GameRoundEdge = {
+  __typename?: "GameRoundEdge";
+  /** A cursor for use in pagination */
+  cursor: Scalars["String"]["output"];
+  /** The item at the end of the edge */
+  node: GameRound;
+};
+
+export type GameRoundFilter = {
+  AND?: InputMaybe<Array<InputMaybe<GameRoundFilter>>>;
+  NOT?: InputMaybe<Array<InputMaybe<GameRoundFilter>>>;
+  OR?: InputMaybe<Array<InputMaybe<GameRoundFilter>>>;
+  createdAt?: InputMaybe<DateTimeFilter>;
+  id?: InputMaybe<IdFilter>;
+  name?: InputMaybe<StringFilter>;
+  stadium?: InputMaybe<IdFilter>;
+  stadiumId?: InputMaybe<IdFilter>;
+  updatedAt?: InputMaybe<DateTimeFilter>;
+};
+
+export type GameRoundSort = {
+  /** Sort the results by the createdAt field. Defaults to ascending (smallest value first). */
+  createdAt?: InputMaybe<SortOrder>;
+  /** Sort the results by the id field. Defaults to ascending (smallest value first). */
+  id?: InputMaybe<SortOrder>;
+  /** Sort the results by the name field. Defaults to ascending (smallest value first). */
+  name?: InputMaybe<SortOrder>;
+  /** Sort the results by the updatedAt field. Defaults to ascending (smallest value first). */
+  updatedAt?: InputMaybe<SortOrder>;
+};
+
+export type GameStadium = {
+  __typename?: "GameStadium";
+  /** Get all the fields for this record. Useful for not having to list out all the fields you want to retrieve, but slower. */
+  _all: Scalars["JSONObject"]["output"];
+  /** The time at which this record was first created. Set once upon record creation and never changed. Managed by Gadget. */
+  createdAt: Scalars["DateTime"]["output"];
+  /** The globally unique, unchanging identifier for this record. Assigned and managed by Gadget. */
+  id: Scalars["GadgetID"]["output"];
+  name?: Maybe<Scalars["String"]["output"]>;
+  rounds: GameRoundConnection;
+  /** The time at which this record was last changed. Set each time the record is successfully acted upon by an action. Managed by Gadget. */
+  updatedAt: Scalars["DateTime"]["output"];
+};
+
+export type GameStadiumRoundsArgs = {
+  after?: InputMaybe<Scalars["String"]["input"]>;
+  before?: InputMaybe<Scalars["String"]["input"]>;
+  filter?: InputMaybe<Array<GameRoundFilter>>;
+  first?: InputMaybe<Scalars["Int"]["input"]>;
+  last?: InputMaybe<Scalars["Int"]["input"]>;
+  search?: InputMaybe<Scalars["String"]["input"]>;
+  sort?: InputMaybe<Array<GameRoundSort>>;
+};
+
+/** A connection to a list of GameStadium items. */
+export type GameStadiumConnection = {
+  __typename?: "GameStadiumConnection";
+  /** A list of edges. */
+  edges: Array<GameStadiumEdge>;
+  /** Information to aid in pagination. */
+  pageInfo: PageInfo;
+};
+
+/** An edge in a GameStadium connection. */
+export type GameStadiumEdge = {
+  __typename?: "GameStadiumEdge";
+  /** A cursor for use in pagination */
+  cursor: Scalars["String"]["output"];
+  /** The item at the end of the edge */
+  node: GameStadium;
+};
+
+export type GameStadiumFilter = {
+  AND?: InputMaybe<Array<InputMaybe<GameStadiumFilter>>>;
+  NOT?: InputMaybe<Array<InputMaybe<GameStadiumFilter>>>;
+  OR?: InputMaybe<Array<InputMaybe<GameStadiumFilter>>>;
+  createdAt?: InputMaybe<DateTimeFilter>;
+  id?: InputMaybe<IdFilter>;
+  name?: InputMaybe<StringFilter>;
+  updatedAt?: InputMaybe<DateTimeFilter>;
+};
+
+export type GameStadiumSort = {
+  /** Sort the results by the createdAt field. Defaults to ascending (smallest value first). */
+  createdAt?: InputMaybe<SortOrder>;
+  /** Sort the results by the id field. Defaults to ascending (smallest value first). */
+  id?: InputMaybe<SortOrder>;
+  /** Sort the results by the name field. Defaults to ascending (smallest value first). */
+  name?: InputMaybe<SortOrder>;
+  /** Sort the results by the updatedAt field. Defaults to ascending (smallest value first). */
+  updatedAt?: InputMaybe<SortOrder>;
+};
+
 export type Gizmo = {
   __typename?: "Gizmo";
   /** Get all the fields for this record. Useful for not having to list out all the fields you want to retrieve, but slower. */
@@ -1201,6 +1874,27 @@ export type InternalBelongsToInput = {
   _link?: InputMaybe<Scalars["GadgetID"]["input"]>;
 };
 
+export type InternalBulkCreateGamePlayersResult = {
+  __typename?: "InternalBulkCreateGamePlayersResult";
+  errors?: Maybe<Array<ExecutionError>>;
+  players?: Maybe<Array<Maybe<Scalars["InternalGamePlayerRecord"]["output"]>>>;
+  success: Scalars["Boolean"]["output"];
+};
+
+export type InternalBulkCreateGameRoundsResult = {
+  __typename?: "InternalBulkCreateGameRoundsResult";
+  errors?: Maybe<Array<ExecutionError>>;
+  rounds?: Maybe<Array<Maybe<Scalars["InternalGameRoundRecord"]["output"]>>>;
+  success: Scalars["Boolean"]["output"];
+};
+
+export type InternalBulkCreateGameStadiaResult = {
+  __typename?: "InternalBulkCreateGameStadiaResult";
+  errors?: Maybe<Array<ExecutionError>>;
+  stadia?: Maybe<Array<Maybe<Scalars["InternalGameStadiumRecord"]["output"]>>>;
+  success: Scalars["Boolean"]["output"];
+};
+
 export type InternalBulkCreateGizmosResult = {
   __typename?: "InternalBulkCreateGizmosResult";
   errors?: Maybe<Array<ExecutionError>>;
@@ -1241,6 +1935,27 @@ export type InternalBulkCreateWidgetsResult = {
   errors?: Maybe<Array<ExecutionError>>;
   success: Scalars["Boolean"]["output"];
   widgets?: Maybe<Array<Maybe<Scalars["InternalWidgetRecord"]["output"]>>>;
+};
+
+export type InternalCreateGamePlayerResult = {
+  __typename?: "InternalCreateGamePlayerResult";
+  errors?: Maybe<Array<ExecutionError>>;
+  player?: Maybe<Scalars["InternalGamePlayerRecord"]["output"]>;
+  success: Scalars["Boolean"]["output"];
+};
+
+export type InternalCreateGameRoundResult = {
+  __typename?: "InternalCreateGameRoundResult";
+  errors?: Maybe<Array<ExecutionError>>;
+  round?: Maybe<Scalars["InternalGameRoundRecord"]["output"]>;
+  success: Scalars["Boolean"]["output"];
+};
+
+export type InternalCreateGameStadiumResult = {
+  __typename?: "InternalCreateGameStadiumResult";
+  errors?: Maybe<Array<ExecutionError>>;
+  stadium?: Maybe<Scalars["InternalGameStadiumRecord"]["output"]>;
+  success: Scalars["Boolean"]["output"];
 };
 
 export type InternalCreateGizmoResult = {
@@ -1285,10 +2000,49 @@ export type InternalCreateWidgetResult = {
   widget?: Maybe<Scalars["InternalWidgetRecord"]["output"]>;
 };
 
+export type InternalDeleteGamePlayerResult = {
+  __typename?: "InternalDeleteGamePlayerResult";
+  errors?: Maybe<Array<ExecutionError>>;
+  player?: Maybe<Scalars["InternalGamePlayerRecord"]["output"]>;
+  success: Scalars["Boolean"]["output"];
+};
+
+export type InternalDeleteGameRoundResult = {
+  __typename?: "InternalDeleteGameRoundResult";
+  errors?: Maybe<Array<ExecutionError>>;
+  round?: Maybe<Scalars["InternalGameRoundRecord"]["output"]>;
+  success: Scalars["Boolean"]["output"];
+};
+
+export type InternalDeleteGameStadiumResult = {
+  __typename?: "InternalDeleteGameStadiumResult";
+  errors?: Maybe<Array<ExecutionError>>;
+  stadium?: Maybe<Scalars["InternalGameStadiumRecord"]["output"]>;
+  success: Scalars["Boolean"]["output"];
+};
+
 export type InternalDeleteGizmoResult = {
   __typename?: "InternalDeleteGizmoResult";
   errors?: Maybe<Array<ExecutionError>>;
   gizmo?: Maybe<Scalars["InternalGizmoRecord"]["output"]>;
+  success: Scalars["Boolean"]["output"];
+};
+
+export type InternalDeleteManyGamePlayerResult = {
+  __typename?: "InternalDeleteManyGamePlayerResult";
+  errors?: Maybe<Array<ExecutionError>>;
+  success: Scalars["Boolean"]["output"];
+};
+
+export type InternalDeleteManyGameRoundResult = {
+  __typename?: "InternalDeleteManyGameRoundResult";
+  errors?: Maybe<Array<ExecutionError>>;
+  success: Scalars["Boolean"]["output"];
+};
+
+export type InternalDeleteManyGameStadiumResult = {
+  __typename?: "InternalDeleteManyGameStadiumResult";
+  errors?: Maybe<Array<ExecutionError>>;
   success: Scalars["Boolean"]["output"];
 };
 
@@ -1361,6 +2115,306 @@ export type InternalDeleteWidgetResult = {
   errors?: Maybe<Array<ExecutionError>>;
   success: Scalars["Boolean"]["output"];
   widget?: Maybe<Scalars["InternalWidgetRecord"]["output"]>;
+};
+
+export type InternalGameMutations = {
+  __typename?: "InternalGameMutations";
+  bulkCreatePlayers?: Maybe<InternalBulkCreateGamePlayersResult>;
+  bulkCreateRounds?: Maybe<InternalBulkCreateGameRoundsResult>;
+  bulkCreateStadia?: Maybe<InternalBulkCreateGameStadiaResult>;
+  createPlayer?: Maybe<InternalCreateGamePlayerResult>;
+  createRound?: Maybe<InternalCreateGameRoundResult>;
+  createStadium?: Maybe<InternalCreateGameStadiumResult>;
+  deleteManyPlayer?: Maybe<InternalDeleteManyGamePlayerResult>;
+  deleteManyRound?: Maybe<InternalDeleteManyGameRoundResult>;
+  deleteManyStadium?: Maybe<InternalDeleteManyGameStadiumResult>;
+  deletePlayer?: Maybe<InternalDeleteGamePlayerResult>;
+  deleteRound?: Maybe<InternalDeleteGameRoundResult>;
+  deleteStadium?: Maybe<InternalDeleteGameStadiumResult>;
+  triggerCreatePlayer?: Maybe<CreateGamePlayerResult>;
+  triggerCreateRound?: Maybe<CreateGameRoundResult>;
+  triggerCreateStadium?: Maybe<CreateGameStadiumResult>;
+  triggerDeletePlayer?: Maybe<DeleteGamePlayerResult>;
+  triggerDeleteRound?: Maybe<DeleteGameRoundResult>;
+  triggerDeleteStadium?: Maybe<DeleteGameStadiumResult>;
+  triggerUpdatePlayer?: Maybe<UpdateGamePlayerResult>;
+  triggerUpdateRound?: Maybe<UpdateGameRoundResult>;
+  triggerUpdateStadium?: Maybe<UpdateGameStadiumResult>;
+  updatePlayer?: Maybe<InternalUpdateGamePlayerResult>;
+  updateRound?: Maybe<InternalUpdateGameRoundResult>;
+  updateStadium?: Maybe<InternalUpdateGameStadiumResult>;
+};
+
+export type InternalGameMutationsBulkCreatePlayersArgs = {
+  players: Array<InputMaybe<InternalGamePlayerInput>>;
+};
+
+export type InternalGameMutationsBulkCreateRoundsArgs = {
+  rounds: Array<InputMaybe<InternalGameRoundInput>>;
+};
+
+export type InternalGameMutationsBulkCreateStadiaArgs = {
+  stadia: Array<InputMaybe<InternalGameStadiumInput>>;
+};
+
+export type InternalGameMutationsCreatePlayerArgs = {
+  player?: InputMaybe<InternalGamePlayerInput>;
+};
+
+export type InternalGameMutationsCreateRoundArgs = {
+  round?: InputMaybe<InternalGameRoundInput>;
+};
+
+export type InternalGameMutationsCreateStadiumArgs = {
+  stadium?: InputMaybe<InternalGameStadiumInput>;
+};
+
+export type InternalGameMutationsDeleteManyPlayerArgs = {
+  filter?: InputMaybe<Array<GamePlayerFilter>>;
+  search?: InputMaybe<Scalars["String"]["input"]>;
+};
+
+export type InternalGameMutationsDeleteManyRoundArgs = {
+  filter?: InputMaybe<Array<GameRoundFilter>>;
+  search?: InputMaybe<Scalars["String"]["input"]>;
+};
+
+export type InternalGameMutationsDeleteManyStadiumArgs = {
+  filter?: InputMaybe<Array<GameStadiumFilter>>;
+  search?: InputMaybe<Scalars["String"]["input"]>;
+};
+
+export type InternalGameMutationsDeletePlayerArgs = {
+  id: Scalars["GadgetID"]["input"];
+};
+
+export type InternalGameMutationsDeleteRoundArgs = {
+  id: Scalars["GadgetID"]["input"];
+};
+
+export type InternalGameMutationsDeleteStadiumArgs = {
+  id: Scalars["GadgetID"]["input"];
+};
+
+export type InternalGameMutationsTriggerCreatePlayerArgs = {
+  context?: InputMaybe<AppGraphQlTriggerMutationContext>;
+  params?: InputMaybe<Scalars["JSONObject"]["input"]>;
+  trigger?: InputMaybe<Scalars["JSONObject"]["input"]>;
+  verifyTriggerExists?: InputMaybe<Scalars["Boolean"]["input"]>;
+};
+
+export type InternalGameMutationsTriggerCreateRoundArgs = {
+  context?: InputMaybe<AppGraphQlTriggerMutationContext>;
+  params?: InputMaybe<Scalars["JSONObject"]["input"]>;
+  trigger?: InputMaybe<Scalars["JSONObject"]["input"]>;
+  verifyTriggerExists?: InputMaybe<Scalars["Boolean"]["input"]>;
+};
+
+export type InternalGameMutationsTriggerCreateStadiumArgs = {
+  context?: InputMaybe<AppGraphQlTriggerMutationContext>;
+  params?: InputMaybe<Scalars["JSONObject"]["input"]>;
+  trigger?: InputMaybe<Scalars["JSONObject"]["input"]>;
+  verifyTriggerExists?: InputMaybe<Scalars["Boolean"]["input"]>;
+};
+
+export type InternalGameMutationsTriggerDeletePlayerArgs = {
+  context?: InputMaybe<AppGraphQlTriggerMutationContext>;
+  params?: InputMaybe<Scalars["JSONObject"]["input"]>;
+  trigger?: InputMaybe<Scalars["JSONObject"]["input"]>;
+  verifyTriggerExists?: InputMaybe<Scalars["Boolean"]["input"]>;
+};
+
+export type InternalGameMutationsTriggerDeleteRoundArgs = {
+  context?: InputMaybe<AppGraphQlTriggerMutationContext>;
+  params?: InputMaybe<Scalars["JSONObject"]["input"]>;
+  trigger?: InputMaybe<Scalars["JSONObject"]["input"]>;
+  verifyTriggerExists?: InputMaybe<Scalars["Boolean"]["input"]>;
+};
+
+export type InternalGameMutationsTriggerDeleteStadiumArgs = {
+  context?: InputMaybe<AppGraphQlTriggerMutationContext>;
+  params?: InputMaybe<Scalars["JSONObject"]["input"]>;
+  trigger?: InputMaybe<Scalars["JSONObject"]["input"]>;
+  verifyTriggerExists?: InputMaybe<Scalars["Boolean"]["input"]>;
+};
+
+export type InternalGameMutationsTriggerUpdatePlayerArgs = {
+  context?: InputMaybe<AppGraphQlTriggerMutationContext>;
+  params?: InputMaybe<Scalars["JSONObject"]["input"]>;
+  trigger?: InputMaybe<Scalars["JSONObject"]["input"]>;
+  verifyTriggerExists?: InputMaybe<Scalars["Boolean"]["input"]>;
+};
+
+export type InternalGameMutationsTriggerUpdateRoundArgs = {
+  context?: InputMaybe<AppGraphQlTriggerMutationContext>;
+  params?: InputMaybe<Scalars["JSONObject"]["input"]>;
+  trigger?: InputMaybe<Scalars["JSONObject"]["input"]>;
+  verifyTriggerExists?: InputMaybe<Scalars["Boolean"]["input"]>;
+};
+
+export type InternalGameMutationsTriggerUpdateStadiumArgs = {
+  context?: InputMaybe<AppGraphQlTriggerMutationContext>;
+  params?: InputMaybe<Scalars["JSONObject"]["input"]>;
+  trigger?: InputMaybe<Scalars["JSONObject"]["input"]>;
+  verifyTriggerExists?: InputMaybe<Scalars["Boolean"]["input"]>;
+};
+
+export type InternalGameMutationsUpdatePlayerArgs = {
+  id: Scalars["GadgetID"]["input"];
+  player?: InputMaybe<InternalGamePlayerInput>;
+};
+
+export type InternalGameMutationsUpdateRoundArgs = {
+  id: Scalars["GadgetID"]["input"];
+  round?: InputMaybe<InternalGameRoundInput>;
+};
+
+export type InternalGameMutationsUpdateStadiumArgs = {
+  id: Scalars["GadgetID"]["input"];
+  stadium?: InputMaybe<InternalGameStadiumInput>;
+};
+
+export type InternalGamePlayerInput = {
+  createdAt?: InputMaybe<Scalars["DateTime"]["input"]>;
+  currentRound?: InputMaybe<InternalBelongsToInput>;
+  id?: InputMaybe<Scalars["GadgetID"]["input"]>;
+  name?: InputMaybe<Scalars["String"]["input"]>;
+  state?: InputMaybe<Scalars["RecordState"]["input"]>;
+  stateHistory?: InputMaybe<Scalars["RecordState"]["input"]>;
+  updatedAt?: InputMaybe<Scalars["DateTime"]["input"]>;
+};
+
+/** A connection to a list of InternalGamePlayerRecord items. */
+export type InternalGamePlayerRecordConnection = {
+  __typename?: "InternalGamePlayerRecordConnection";
+  /** A list of edges. */
+  edges: Array<InternalGamePlayerRecordEdge>;
+  /** Information to aid in pagination. */
+  pageInfo: PageInfo;
+};
+
+/** An edge in a InternalGamePlayerRecord connection. */
+export type InternalGamePlayerRecordEdge = {
+  __typename?: "InternalGamePlayerRecordEdge";
+  /** A cursor for use in pagination */
+  cursor: Scalars["String"]["output"];
+  /** The item at the end of the edge */
+  node: Scalars["InternalGamePlayerRecord"]["output"];
+};
+
+export type InternalGameQueries = {
+  __typename?: "InternalGameQueries";
+  /** Currently open platform transaction details, or null if no transaction is open */
+  currentTransactionDetails?: Maybe<Scalars["JSONObject"]["output"]>;
+  listPlayer: InternalGamePlayerRecordConnection;
+  listRound: InternalGameRoundRecordConnection;
+  listStadium: InternalGameStadiumRecordConnection;
+  player?: Maybe<Scalars["InternalGamePlayerRecord"]["output"]>;
+  round?: Maybe<Scalars["InternalGameRoundRecord"]["output"]>;
+  stadium?: Maybe<Scalars["InternalGameStadiumRecord"]["output"]>;
+};
+
+export type InternalGameQueriesListPlayerArgs = {
+  after?: InputMaybe<Scalars["String"]["input"]>;
+  before?: InputMaybe<Scalars["String"]["input"]>;
+  filter?: InputMaybe<Array<GamePlayerFilter>>;
+  first?: InputMaybe<Scalars["Int"]["input"]>;
+  last?: InputMaybe<Scalars["Int"]["input"]>;
+  search?: InputMaybe<Scalars["String"]["input"]>;
+  select?: InputMaybe<Array<Scalars["String"]["input"]>>;
+  sort?: InputMaybe<Array<GamePlayerSort>>;
+};
+
+export type InternalGameQueriesListRoundArgs = {
+  after?: InputMaybe<Scalars["String"]["input"]>;
+  before?: InputMaybe<Scalars["String"]["input"]>;
+  filter?: InputMaybe<Array<GameRoundFilter>>;
+  first?: InputMaybe<Scalars["Int"]["input"]>;
+  last?: InputMaybe<Scalars["Int"]["input"]>;
+  search?: InputMaybe<Scalars["String"]["input"]>;
+  select?: InputMaybe<Array<Scalars["String"]["input"]>>;
+  sort?: InputMaybe<Array<GameRoundSort>>;
+};
+
+export type InternalGameQueriesListStadiumArgs = {
+  after?: InputMaybe<Scalars["String"]["input"]>;
+  before?: InputMaybe<Scalars["String"]["input"]>;
+  filter?: InputMaybe<Array<GameStadiumFilter>>;
+  first?: InputMaybe<Scalars["Int"]["input"]>;
+  last?: InputMaybe<Scalars["Int"]["input"]>;
+  search?: InputMaybe<Scalars["String"]["input"]>;
+  select?: InputMaybe<Array<Scalars["String"]["input"]>>;
+  sort?: InputMaybe<Array<GameStadiumSort>>;
+};
+
+export type InternalGameQueriesPlayerArgs = {
+  id: Scalars["GadgetID"]["input"];
+  select?: InputMaybe<Array<Scalars["String"]["input"]>>;
+};
+
+export type InternalGameQueriesRoundArgs = {
+  id: Scalars["GadgetID"]["input"];
+  select?: InputMaybe<Array<Scalars["String"]["input"]>>;
+};
+
+export type InternalGameQueriesStadiumArgs = {
+  id: Scalars["GadgetID"]["input"];
+  select?: InputMaybe<Array<Scalars["String"]["input"]>>;
+};
+
+export type InternalGameRoundInput = {
+  createdAt?: InputMaybe<Scalars["DateTime"]["input"]>;
+  id?: InputMaybe<Scalars["GadgetID"]["input"]>;
+  name?: InputMaybe<Scalars["String"]["input"]>;
+  stadium?: InputMaybe<InternalBelongsToInput>;
+  state?: InputMaybe<Scalars["RecordState"]["input"]>;
+  stateHistory?: InputMaybe<Scalars["RecordState"]["input"]>;
+  updatedAt?: InputMaybe<Scalars["DateTime"]["input"]>;
+};
+
+/** A connection to a list of InternalGameRoundRecord items. */
+export type InternalGameRoundRecordConnection = {
+  __typename?: "InternalGameRoundRecordConnection";
+  /** A list of edges. */
+  edges: Array<InternalGameRoundRecordEdge>;
+  /** Information to aid in pagination. */
+  pageInfo: PageInfo;
+};
+
+/** An edge in a InternalGameRoundRecord connection. */
+export type InternalGameRoundRecordEdge = {
+  __typename?: "InternalGameRoundRecordEdge";
+  /** A cursor for use in pagination */
+  cursor: Scalars["String"]["output"];
+  /** The item at the end of the edge */
+  node: Scalars["InternalGameRoundRecord"]["output"];
+};
+
+export type InternalGameStadiumInput = {
+  createdAt?: InputMaybe<Scalars["DateTime"]["input"]>;
+  id?: InputMaybe<Scalars["GadgetID"]["input"]>;
+  name?: InputMaybe<Scalars["String"]["input"]>;
+  state?: InputMaybe<Scalars["RecordState"]["input"]>;
+  stateHistory?: InputMaybe<Scalars["RecordState"]["input"]>;
+  updatedAt?: InputMaybe<Scalars["DateTime"]["input"]>;
+};
+
+/** A connection to a list of InternalGameStadiumRecord items. */
+export type InternalGameStadiumRecordConnection = {
+  __typename?: "InternalGameStadiumRecordConnection";
+  /** A list of edges. */
+  edges: Array<InternalGameStadiumRecordEdge>;
+  /** Information to aid in pagination. */
+  pageInfo: PageInfo;
+};
+
+/** An edge in a InternalGameStadiumRecord connection. */
+export type InternalGameStadiumRecordEdge = {
+  __typename?: "InternalGameStadiumRecordEdge";
+  /** A cursor for use in pagination */
+  cursor: Scalars["String"]["output"];
+  /** The item at the end of the edge */
+  node: Scalars["InternalGameStadiumRecord"]["output"];
 };
 
 export type InternalGizmoInput = {
@@ -1447,6 +2501,7 @@ export type InternalMutations = {
   deleteSession?: Maybe<InternalDeleteSessionResult>;
   deleteUser?: Maybe<InternalDeleteUserResult>;
   deleteWidget?: Maybe<InternalDeleteWidgetResult>;
+  game: InternalGameMutations;
   rollbackTransaction: Scalars["String"]["output"];
   startTransaction: Scalars["String"]["output"];
   triggerAddInventoryWidget?: Maybe<AddInventoryWidgetResult>;
@@ -1742,6 +2797,7 @@ export type InternalQueries = {
   __typename?: "InternalQueries";
   /** Currently open platform transaction details, or null if no transaction is open */
   currentTransactionDetails?: Maybe<Scalars["JSONObject"]["output"]>;
+  game: InternalGameQueries;
   gizmo?: Maybe<Scalars["InternalGizmoRecord"]["output"]>;
   listGizmo: InternalGizmoRecordConnection;
   listModelA: InternalModelARecordConnection;
@@ -1901,6 +2957,27 @@ export type InternalSessionRecordEdge = {
   cursor: Scalars["String"]["output"];
   /** The item at the end of the edge */
   node: Scalars["InternalSessionRecord"]["output"];
+};
+
+export type InternalUpdateGamePlayerResult = {
+  __typename?: "InternalUpdateGamePlayerResult";
+  errors?: Maybe<Array<ExecutionError>>;
+  player?: Maybe<Scalars["InternalGamePlayerRecord"]["output"]>;
+  success: Scalars["Boolean"]["output"];
+};
+
+export type InternalUpdateGameRoundResult = {
+  __typename?: "InternalUpdateGameRoundResult";
+  errors?: Maybe<Array<ExecutionError>>;
+  round?: Maybe<Scalars["InternalGameRoundRecord"]["output"]>;
+  success: Scalars["Boolean"]["output"];
+};
+
+export type InternalUpdateGameStadiumResult = {
+  __typename?: "InternalUpdateGameStadiumResult";
+  errors?: Maybe<Array<ExecutionError>>;
+  stadium?: Maybe<Scalars["InternalGameStadiumRecord"]["output"]>;
+  success: Scalars["Boolean"]["output"];
 };
 
 export type InternalUpdateGizmoResult = {
@@ -2162,6 +3239,7 @@ export type Mutation = {
   deleteWidget?: Maybe<DeleteWidgetResult>;
   /** Meta information about the application, like it's name, schema, and other internal details. */
   gadgetMeta: GadgetApplicationMeta;
+  game: GameMutations;
   internal: InternalMutations;
   signOutUser?: Maybe<SignOutUserResult>;
   updateGizmo?: Maybe<UpdateGizmoResult>;
@@ -2318,6 +3396,38 @@ export type NestedGizmoUpdateInput = {
   widget?: InputMaybe<WidgetBelongsToInput>;
 };
 
+export type NestedPlayerCreateInput = {
+  currentRound?: InputMaybe<RoundBelongsToInput>;
+  name?: InputMaybe<Scalars["String"]["input"]>;
+};
+
+export type NestedPlayerDeleteInput = {
+  id: Scalars["GadgetID"]["input"];
+};
+
+export type NestedPlayerUpdateInput = {
+  currentRound?: InputMaybe<RoundBelongsToInput>;
+  id: Scalars["GadgetID"]["input"];
+  name?: InputMaybe<Scalars["String"]["input"]>;
+};
+
+export type NestedRoundCreateInput = {
+  name?: InputMaybe<Scalars["String"]["input"]>;
+  players?: InputMaybe<Array<InputMaybe<PlayerHasManyInput>>>;
+  stadium?: InputMaybe<StadiumBelongsToInput>;
+};
+
+export type NestedRoundDeleteInput = {
+  id: Scalars["GadgetID"]["input"];
+};
+
+export type NestedRoundUpdateInput = {
+  id: Scalars["GadgetID"]["input"];
+  name?: InputMaybe<Scalars["String"]["input"]>;
+  players?: InputMaybe<Array<InputMaybe<PlayerHasManyInput>>>;
+  stadium?: InputMaybe<StadiumBelongsToInput>;
+};
+
 export type NestedSectionCreateInput = {
   name?: InputMaybe<Scalars["String"]["input"]>;
   widgets?: InputMaybe<Array<InputMaybe<WidgetHasManyInput>>>;
@@ -2331,6 +3441,21 @@ export type NestedSectionUpdateInput = {
   id: Scalars["GadgetID"]["input"];
   name?: InputMaybe<Scalars["String"]["input"]>;
   widgets?: InputMaybe<Array<InputMaybe<WidgetHasManyInput>>>;
+};
+
+export type NestedStadiumCreateInput = {
+  name?: InputMaybe<Scalars["String"]["input"]>;
+  rounds?: InputMaybe<Array<InputMaybe<RoundHasManyInput>>>;
+};
+
+export type NestedStadiumDeleteInput = {
+  id: Scalars["GadgetID"]["input"];
+};
+
+export type NestedStadiumUpdateInput = {
+  id: Scalars["GadgetID"]["input"];
+  name?: InputMaybe<Scalars["String"]["input"]>;
+  rounds?: InputMaybe<Array<InputMaybe<RoundHasManyInput>>>;
 };
 
 export type NestedWidgetAddInventoryInput = {
@@ -2404,11 +3529,21 @@ export type PageInfo = {
   startCursor?: Maybe<Scalars["String"]["output"]>;
 };
 
+/** Input object supporting setting or updating related model record on a relationship field */
+export type PlayerHasManyInput = {
+  /** Creates, updates, or deletes existing records in the database as needed to arrive at the list of records specified. */
+  _converge?: InputMaybe<ConvergePlayerInput>;
+  create?: InputMaybe<NestedPlayerCreateInput>;
+  delete?: InputMaybe<NestedPlayerDeleteInput>;
+  update?: InputMaybe<NestedPlayerUpdateInput>;
+};
+
 export type Query = {
   __typename?: "Query";
   currentSession?: Maybe<Session>;
   /** Meta information about the application, like it's name, schema, and other internal details. */
   gadgetMeta: GadgetApplicationMeta;
+  game: GameQueries;
   gizmo?: Maybe<Gizmo>;
   gizmos: GizmoConnection;
   internal: InternalQueries;
@@ -2533,6 +3668,24 @@ export type Role = {
   key: Scalars["String"]["output"];
   /** The human readable name for this role. Can be changed. */
   name: Scalars["String"]["output"];
+};
+
+/** Input object supporting setting or updating related model record on a relationship field */
+export type RoundBelongsToInput = {
+  /** Existing ID of another record, which you would like to associate this record with */
+  _link?: InputMaybe<Scalars["GadgetID"]["input"]>;
+  create?: InputMaybe<NestedRoundCreateInput>;
+  delete?: InputMaybe<NestedRoundDeleteInput>;
+  update?: InputMaybe<NestedRoundUpdateInput>;
+};
+
+/** Input object supporting setting or updating related model record on a relationship field */
+export type RoundHasManyInput = {
+  /** Creates, updates, or deletes existing records in the database as needed to arrive at the list of records specified. */
+  _converge?: InputMaybe<ConvergeRoundInput>;
+  create?: InputMaybe<NestedRoundCreateInput>;
+  delete?: InputMaybe<NestedRoundDeleteInput>;
+  update?: InputMaybe<NestedRoundUpdateInput>;
 };
 
 export type Section = {
@@ -2690,6 +3843,15 @@ export enum SortOrder {
   Descending = "Descending",
 }
 
+/** Input object supporting setting or updating related model record on a relationship field */
+export type StadiumBelongsToInput = {
+  /** Existing ID of another record, which you would like to associate this record with */
+  _link?: InputMaybe<Scalars["GadgetID"]["input"]>;
+  create?: InputMaybe<NestedStadiumCreateInput>;
+  delete?: InputMaybe<NestedStadiumDeleteInput>;
+  update?: InputMaybe<NestedStadiumUpdateInput>;
+};
+
 export type StringFilter = {
   equals?: InputMaybe<Scalars["String"]["input"]>;
   greaterThan?: InputMaybe<Scalars["String"]["input"]>;
@@ -2710,6 +3872,43 @@ export type Subscription = {
 
 export type SubscriptionBackgroundActionArgs = {
   id: Scalars["String"]["input"];
+};
+
+export type UpdateGamePlayerInput = {
+  currentRound?: InputMaybe<RoundBelongsToInput>;
+  name?: InputMaybe<Scalars["String"]["input"]>;
+};
+
+export type UpdateGamePlayerResult = {
+  __typename?: "UpdateGamePlayerResult";
+  errors?: Maybe<Array<ExecutionError>>;
+  player?: Maybe<GamePlayer>;
+  success: Scalars["Boolean"]["output"];
+};
+
+export type UpdateGameRoundInput = {
+  name?: InputMaybe<Scalars["String"]["input"]>;
+  players?: InputMaybe<Array<InputMaybe<PlayerHasManyInput>>>;
+  stadium?: InputMaybe<StadiumBelongsToInput>;
+};
+
+export type UpdateGameRoundResult = {
+  __typename?: "UpdateGameRoundResult";
+  errors?: Maybe<Array<ExecutionError>>;
+  round?: Maybe<GameRound>;
+  success: Scalars["Boolean"]["output"];
+};
+
+export type UpdateGameStadiumInput = {
+  name?: InputMaybe<Scalars["String"]["input"]>;
+  rounds?: InputMaybe<Array<InputMaybe<RoundHasManyInput>>>;
+};
+
+export type UpdateGameStadiumResult = {
+  __typename?: "UpdateGameStadiumResult";
+  errors?: Maybe<Array<ExecutionError>>;
+  stadium?: Maybe<GameStadium>;
+  success: Scalars["Boolean"]["output"];
 };
 
 export type UpdateGizmoInput = {
@@ -3414,6 +4613,7 @@ export type ModelActionMetadataQuery = {
         __typename?: "GadgetAction";
         name: string;
         apiIdentifier: string;
+        operatesWithRecordIdentity: boolean;
         inputFields: Array<{
           __typename?: "GadgetObjectField";
           name: string;
@@ -4107,6 +5307,7 @@ export const ModelActionMetadataDocument = {
                           selections: [
                             { kind: "Field", name: { kind: "Name", value: "name" } },
                             { kind: "Field", name: { kind: "Name", value: "apiIdentifier" } },
+                            { kind: "Field", name: { kind: "Name", value: "operatesWithRecordIdentity" } },
                             {
                               kind: "Field",
                               name: { kind: "Name", value: "inputFields" },

@@ -107,6 +107,7 @@ const ModelActionMetadataQuery = graphql(/* GraphQL */ `
         action(apiIdentifier: $action) {
           name
           apiIdentifier
+          operatesWithRecordIdentity
           inputFields {
             ...FieldMetadata
             ...SubFields
@@ -225,13 +226,8 @@ export const filterFieldList = (
     subset = subset.filter((field) => !excludes.has(field.apiIdentifier));
   }
 
-  // if no explicit selection has been given, filter down to the field types we know we have support for
-  const explicitSet = options?.fields ?? options?.include ?? options?.exclude ?? options?.select;
-  if (!explicitSet) {
-    subset = subset.filter((field) => acceptedFieldTypes.has(field.fieldType));
-  }
-
-  return subset;
+  // Filter out fields that are not supported by the form
+  return subset.filter((field) => acceptedFieldTypes.has(field.fieldType));
 };
 
 const acceptedFieldTypes = new Set([
@@ -255,7 +251,6 @@ const acceptedFieldTypes = new Set([
   // Relationships
   FieldType.BelongsTo,
   FieldType.HasMany,
-  FieldType.HasManyThrough,
   FieldType.HasOne,
 ]);
 

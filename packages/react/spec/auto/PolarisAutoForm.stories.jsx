@@ -50,7 +50,8 @@ export const Primary = {
 export const UpdateRecord = {
   args: {
     action: api.widget.update,
-    findBy: "655",
+    findBy: "1002",
+    exclude: ["gizmos"],
   },
 };
 

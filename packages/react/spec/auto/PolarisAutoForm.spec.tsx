@@ -9,7 +9,7 @@ import { PolarisAutoInput } from "../../src/auto/polaris/inputs/PolarisAutoInput
 import { PolarisAutoSubmit } from "../../src/auto/polaris/submit/PolarisAutoSubmit.js";
 import { testApi as api } from "../apis.js";
 import { MockClientProvider, mockUrqlClient } from "../testWrappers.js";
-import { mockWidgetActionMetadata } from "./support/mockWidgetResponses.js";
+import { getWidgetModelMetadata, getWidgetRecord } from "./support/widgetModel.js";
 
 const PolarisMockedProviders = (props: { children: ReactNode }) => {
   return (
@@ -27,6 +27,43 @@ describe("PolarisAutoForm", () => {
         loadMockWidgetCreateMetadata();
         expect(getByLabelText("Name")).toBeInTheDocument();
       });
+    });
+
+    test("it includes the record ID when submitting a form that updates a record", async () => {
+      const user = userEvent.setup();
+
+      const { getByRole, getByLabelText } = render(<PolarisAutoForm action={api.widget.update} exclude={["gizmos"]} findBy="1145" />, {
+        wrapper: PolarisMockedProviders,
+      });
+
+      loadMockWidgetUpdateMetadata();
+
+      const submitButton = getByRole("button");
+      expect(submitButton).toHaveTextContent("Submit");
+
+      await act(async () => {
+        const nameElement = getByLabelText("Name");
+        await user.clear(nameElement);
+        await user.click(nameElement);
+        await user.keyboard("updated test record");
+
+        const inventoryCountElement = getByLabelText("Inventory count");
+        await user.clear(inventoryCountElement);
+        await user.click(inventoryCountElement);
+        await user.keyboard("1234");
+
+        await user.click(getByRole("button"));
+      });
+
+      const mutation = mockUrqlClient.executeMutation.mock.calls[0][0];
+      const mutationName = mutation.query.definitions[0].name.value;
+      const variables = mutation.variables.widget;
+      const recordId = mutation.variables.id;
+
+      expect(mutationName).toEqual("updateWidget");
+      expect(variables.inventoryCount).toEqual(1234);
+      expect(variables.name).toEqual("updated test record");
+      expect(recordId).toEqual("1145");
     });
   });
 
@@ -63,10 +100,12 @@ describe("PolarisAutoForm", () => {
         expect(submitButton).toHaveTextContent("Submit");
 
         await act(async () => {
-          await user.click(getByLabelText("Name"));
+          const nameElement = getByLabelText("Name");
+          await user.click(nameElement);
           await user.keyboard("test record");
 
-          await user.click(getByLabelText("Inventory count"));
+          const inventoryCountElement = getByLabelText("Inventory count");
+          await user.click(inventoryCountElement);
           await user.keyboard("22");
 
           await user.click(getByRole("button"));
@@ -74,7 +113,7 @@ describe("PolarisAutoForm", () => {
 
         const mutation = mockUrqlClient.executeMutation.mock.calls[0][0];
         const mutationName = mutation.query.definitions[0].name.value;
-        const variables = mockUrqlClient.executeMutation.mock.calls[0][0].variables.widget;
+        const variables = mutation.variables.widget;
 
         expect(mutationName).toEqual("createWidget");
         expect(variables.inventoryCount).toEqual(22);
@@ -82,7 +121,7 @@ describe("PolarisAutoForm", () => {
       });
 
       test("you can pass a custom label", () => {
-        const { getByRole, getByText } = render(
+        const { getByRole } = render(
           <PolarisAutoForm action={api.widget.create}>
             <PolarisAutoInput field="name" />
             <PolarisAutoSubmit>Save</PolarisAutoSubmit>
@@ -105,5 +144,37 @@ function loadMockWidgetCreateMetadata() {
     action: "create",
   });
 
-  mockWidgetActionMetadata();
+  mockUrqlClient.executeQuery.pushResponse("ModelActionMetadata", {
+    stale: false,
+    hasNext: false,
+    data: getWidgetModelMetadata({
+      name: "Create",
+      apiIdentifier: "create",
+      operatesWithRecordIdentity: false,
+    }),
+  });
+}
+
+function loadMockWidgetUpdateMetadata() {
+  expect(mockUrqlClient.executeQuery.mock.calls[0][0].variables).toEqual({
+    modelApiIdentifier: "widget",
+    modelNamespace: null,
+    action: "update",
+  });
+
+  mockUrqlClient.executeQuery.pushResponse("widget", {
+    stale: false,
+    hasNext: false,
+    data: getWidgetRecord(),
+  });
+
+  mockUrqlClient.executeQuery.pushResponse("ModelActionMetadata", {
+    stale: false,
+    hasNext: false,
+    data: getWidgetModelMetadata({
+      name: "Update",
+      apiIdentifier: "update",
+      operatesWithRecordIdentity: true,
+    }),
+  });
 }

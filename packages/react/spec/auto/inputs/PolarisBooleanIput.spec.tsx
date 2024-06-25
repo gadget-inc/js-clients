@@ -7,7 +7,7 @@ import { PolarisAutoForm } from "../../../src/auto/polaris/PolarisAutoForm.js";
 import { PolarisBooleanInput } from "../../../src/auto/polaris/inputs/PolarisBooleanInput.js";
 import { testApi as api } from "../../apis.js";
 import { MockClientProvider, mockUrqlClient } from "../../testWrappers.js";
-import { mockWidgetActionMetadata } from "../support/mockWidgetResponses.js";
+import { getWidgetModelMetadata, getWidgetRecord } from "../support/widgetModel.js";
 
 const PolarisMockedProviders = (props: { children: ReactNode }) => {
   return (
@@ -27,7 +27,7 @@ describe("PolarisBooleanInput", () => {
 
   it("should be able to pass in custom properties from Polaris", () => {
     const { getByLabelText } = render(
-      <PolarisAutoForm action={api.widget.create} findBy="42">
+      <PolarisAutoForm action={api.widget.update} findBy="42">
         <PolarisBooleanInput field="name" label="I agree to do something" />
       </PolarisAutoForm>,
       { wrapper: PolarisMockedProviders }
@@ -39,49 +39,21 @@ describe("PolarisBooleanInput", () => {
 });
 
 const mockWidgetFindBy = () => {
-  mockWidgetActionMetadata();
+  mockUrqlClient.executeQuery.pushResponse("ModelActionMetadata", {
+    stale: false,
+    hasNext: false,
+    data: getWidgetModelMetadata({
+      name: "Update",
+      apiIdentifier: "update",
+      operatesWithRecordIdentity: true,
+    }),
+  });
 
   mockUrqlClient.executeQuery.pushResponse("widget", {
     stale: false,
     hasNext: false,
-    data: {
-      widget: {
-        __typename: "Widget",
-        id: "42",
-        anything: {
-          key: "value",
-          example: true,
-        },
-        birthday: null,
-        category: [],
-        color: null,
-        createdAt: "2024-06-24T18:55:29.621Z",
-        description: {
-          markdown: "example _rich_ **text**",
-          truncatedHTML: "<p>example <em>rich</em> <strong>text</strong></p> ",
-          __typename: "RichText",
-        },
-        embedding: null,
-        inStock: true,
-        inventoryCount: 123,
-        isChecked: true,
-        metafields: null,
-        mustBeLongString: null,
-        name: "example value for name",
-        roles: [],
-        secretKey: null,
-        startsAt: null,
-        updatedAt: "2024-06-24T18:55:29.621Z",
-      },
-      gadgetMeta: {
-        hydrations: {
-          updatedAt: "DateTime",
-          startsAt: "DateTime",
-          birthday: "DateTime",
-          createdAt: "DateTime",
-        },
-        __typename: "GadgetApplicationMeta",
-      },
-    },
+    data: getWidgetRecord({
+      isChecked: true,
+    }),
   });
 };
