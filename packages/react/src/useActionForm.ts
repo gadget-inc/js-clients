@@ -1,4 +1,4 @@
-import type { ActionFunction, AnyModelManager, GlobalActionFunction } from "@gadgetinc/api-client-core";
+import type { ActionFunction, GlobalActionFunction } from "@gadgetinc/api-client-core";
 import { useCallback, useEffect, useRef } from "react";
 import type { DeepPartial, FieldErrors, FieldValues, UseFormProps } from "react-hook-form";
 import { useForm } from "react-hook-form";
@@ -20,7 +20,7 @@ import {
 import { useAction } from "./useAction.js";
 import { useGlobalAction } from "./useGlobalAction.js";
 import type { ErrorWrapper, OptionsType } from "./utils.js";
-import { get, set } from "./utils.js";
+import { get, getModelManager, set } from "./utils.js";
 
 export * from "react-hook-form";
 
@@ -82,7 +82,7 @@ export const useActionForm = <
   const isModelAction = "modelApiIdentifier" in action;
 
   // find the existing record if there is one
-  const modelManager = isModelAction ? ((api as any)[action.modelApiIdentifier] as AnyModelManager) : undefined;
+  const modelManager = isModelAction ? getModelManager(api, action.modelApiIdentifier, action.namespace) : undefined;
   const [findResult] = useFindExistingRecord(modelManager, options?.findBy || "1", {
     pause: !findExistingRecord,
     select: options?.select,
