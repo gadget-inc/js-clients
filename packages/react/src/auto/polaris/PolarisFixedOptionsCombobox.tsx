@@ -1,6 +1,6 @@
 import type { AutocompleteProps } from "@shopify/polaris";
 import { Autocomplete, Icon, InlineStack, Tag } from "@shopify/polaris";
-import { SearchMinor } from "@shopify/polaris-icons";
+import { SearchIcon } from "@shopify/polaris-icons";
 import React, { useCallback, useMemo, useState } from "react";
 
 export interface EnumOption {
@@ -102,7 +102,7 @@ export const PolarisFixedOptionsCombobox = (props: PolarisFixedOptionsComboboxPr
       onChange={updateText}
       label={label}
       value={inputValue}
-      prefix={allowMultiple ? undefined : <Icon source={SearchMinor} tone="base" />}
+      prefix={allowMultiple ? undefined : <Icon source={SearchIcon} tone="base" />}
       verticalContent={verticalContentMarkup}
       placeholder="Search"
       autoComplete="off"
