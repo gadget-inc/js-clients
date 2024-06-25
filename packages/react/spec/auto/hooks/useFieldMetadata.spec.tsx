@@ -6,7 +6,7 @@ import { MockForm } from "../MockForm.js";
 describe("useFieldMetadata hook", () => {
   const getUseFieldMetadataResult = (fieldApiId: string) => {
     const { result } = renderHook(() => useFieldMetadata(fieldApiId), {
-      wrapper: MockForm(jest.fn(), metadata),
+      wrapper: MockForm({ submit: jest.fn(), metadata }),
     });
 
     return result.current;

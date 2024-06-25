@@ -2,11 +2,15 @@ import React, { useContext } from "react";
 import type { UseActionFormSubmit } from "src/use-action-form/types.js";
 import type { ActionMetadata } from "../metadata.js";
 
-/**  */
+export interface AutoFormSubmitResult {
+  isSuccessful?: boolean;
+  error?: Error;
+}
 
 export interface AutoFormMetadataContext {
   metadata: ActionMetadata | undefined;
   submit: UseActionFormSubmit<any>;
+  submitResult?: AutoFormSubmitResult;
 }
 /**
  * React context that stores an instance of the metadata loaded for a particular form action

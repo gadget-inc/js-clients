@@ -14,7 +14,12 @@ describe("PolarisAutoTextInput", () => {
   let result: RenderResult;
 
   describe("for create", () => {
-    const getCreateWrapper = () => ({ wrapper: MockForm(jest.fn(), metadata) });
+    const getCreateWrapper = () => ({
+      wrapper: MockForm({
+        submit: jest.fn(),
+        metadata,
+      }),
+    });
 
     test("it renders required inputs with the correct labels", async () => {
       result = render(<PolarisAutoTextInput field="name" />, getCreateWrapper());

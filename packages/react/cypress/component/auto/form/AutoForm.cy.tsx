@@ -7,11 +7,17 @@ describeForEachAutoAdapter("AutoForm", ({ name, adapter: { AutoForm }, wrapper }
     cy.viewport("macbook-13");
   });
 
+  const ensureFieldInputLabelsExist = () => {
+    cy.contains("Name");
+    cy.contains("Inventory count");
+    cy.contains("Anything");
+  };
+
   it("renders an error if the backend returns one when fetching the model data", () => {
     cy.intercept("POST", `${api.connection.options.endpoint}?operation=ModelActionMetadata`, { forceNetworkError: true });
 
     cy.mountWithWrapper(<AutoForm action={api.widget.create} />, wrapper);
-    cy.contains("error");
+    cy.contains("Failed to fetch");
   });
 
   it("can customize the submit label", () => {
@@ -22,14 +28,14 @@ describeForEachAutoAdapter("AutoForm", ({ name, adapter: { AutoForm }, wrapper }
   it("can render a form to create model and submit it", () => {
     cy.mountWithWrapper(<AutoForm action={api.widget.create} exclude={["gizmos"]} />, wrapper);
 
-    cy.contains("Name");
-    cy.contains("Inventory count");
-    cy.contains("Anything");
+    ensureFieldInputLabelsExist();
 
     cy.get(`input[name="widget.name"]`).type("test record");
     cy.get(`input[name="widget.inventoryCount"]`).type("42");
     cy.get("form [type=submit][aria-hidden!=true]").click();
     cy.contains("Saved Widget successfully");
+
+    ensureFieldInputLabelsExist();
   });
 
   it("can render a form to create namespaced model", () => {
@@ -45,9 +51,7 @@ describeForEachAutoAdapter("AutoForm", ({ name, adapter: { AutoForm }, wrapper }
   it("can show invalid field errors from the server and recover from them", () => {
     cy.mountWithWrapper(<AutoForm action={api.widget.create} exclude={["gizmos"]} />, wrapper);
 
-    cy.contains("Name");
-    cy.contains("Inventory count");
-    cy.contains("Anything");
+    ensureFieldInputLabelsExist();
 
     // fill in name but not inventoryCount
     cy.get(`input[name="widget.name"]`).type("test record");
