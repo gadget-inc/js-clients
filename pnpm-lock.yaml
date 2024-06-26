@@ -392,6 +392,9 @@ importers:
       lodash:
         specifier: ^4.17.21
         version: 4.17.21
+      prism-code-editor:
+        specifier: ^3.3.2
+        version: 3.3.2
       prop-types:
         specifier: ^15.8.1
         version: 15.8.1
@@ -13217,6 +13220,10 @@ packages:
   /pretty-hrtime@1.0.3:
     resolution: {integrity: sha512-66hKPCr+72mlfiSjlEB1+45IjXSqvVAIy6mocupoww4tBFE9R9IhwwUGoI4G++Tc9Aq+2rxOt0RFU6gPcrte0A==}
     engines: {node: '>= 0.8'}
+    dev: true
+
+  /prism-code-editor@3.3.2:
+    resolution: {integrity: sha512-olqOGwUo0e6isTLazpIM9RZRgrI2h/hOG9w+V2/SGPM00E6ZQmHm6MgISsSiXhXmTaENEWCARX/BLcWg595Y7g==}
     dev: true
 
   /process-nextick-args@2.0.1:

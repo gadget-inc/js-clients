@@ -6,8 +6,8 @@ import { useFieldMetadata } from "../../hooks/useFieldMetadata.js";
 import { PolarisDateTimePicker } from "../PolarisDateTimePicker.js";
 import { PolarisFileInput } from "../PolarisFileInput.js";
 import { PolarisFixedOptionsCombobox } from "../PolarisFixedOptionsCombobox.js";
-import { PolarisJSONInput } from "../PolarisJSONInput.js";
 import { PolarisRolesCombobox } from "../PolarisRolesCombobox.js";
+import { PolarisAutoJSONInput } from "./PolarisAutoJsonInput.js";
 import { PolarisAutoTextInput } from "./PolarisAutoTextInput.js";
 import { PolarisBelongsToInput } from "./PolarisBelongsToInput.js";
 import { PolarisBooleanInput } from "./PolarisBooleanInput.js";
@@ -49,7 +49,7 @@ export const PolarisAutoInput = (props: { field: string }) => {
       );
     }
     case FieldType.Json: {
-      return <PolarisJSONInput label={metadata.name} multiline={4} monospaced autoComplete="off" {...field} />;
+      return <PolarisAutoJSONInput field={props.field} />;
     }
     case FieldType.Enum: {
       const config = metadata.configuration as GadgetEnumConfig;

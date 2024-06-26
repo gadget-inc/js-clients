@@ -7,10 +7,10 @@ import type { GadgetEnumConfig } from "../../../internal/gql/graphql.js";
 import { FieldType } from "../../../metadata.js";
 import { useFieldMetadata } from "../../hooks/useFieldMetadata.js";
 
+import { MUIAutoJSONInput } from "./MUIAutoJSONInput.js";
 import { MUIAutoTextInput } from "./MUIAutoTextInput.js";
 import { MUIBooleanInput } from "./MUIBooleanInput.js";
 import { MUIFileInput } from "./MUIFileInput.js";
-import { MUIJSONInput } from "./MUIJSONInput.js";
 import { MUIRolesCombobox } from "./MUIRolesCombobox.js";
 
 export const MUIAutoFormControl = (props: { field: string; children: ReactElement }) => {
@@ -70,7 +70,7 @@ export const MUIAutoInput = (props: { field: string }) => {
       );
     }
     case FieldType.Json: {
-      return <MUIJSONInput label={metadata.name} {...fieldProps} />;
+      return <MUIAutoJSONInput field={props.field} />;
     }
     case FieldType.Enum: {
       const config = metadata.configuration as GadgetEnumConfig;
