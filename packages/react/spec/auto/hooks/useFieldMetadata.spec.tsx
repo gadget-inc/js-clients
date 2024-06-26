@@ -1,6 +1,6 @@
 import { renderHook } from "@testing-library/react";
 import { useFieldMetadata } from "../../../src/auto/hooks/useFieldMetadata.js";
-import { ActionMetadata } from "../../../src/metadata.js";
+import type { ActionMetadata } from "../../../src/metadata.js";
 import { MockForm } from "../MockForm.js";
 
 describe("useFieldMetadata hook", () => {

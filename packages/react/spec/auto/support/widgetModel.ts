@@ -279,11 +279,17 @@ export const getWidgetModelMetadata = (
   };
 };
 
-export const getWidgetRecord = (overrides?: { id?: string; isChecked?: boolean }) => {
+export const getWidgetRecord = (overrides?: { id?: string; isChecked?: boolean; inventoryCount?: number; name?: string }) => {
+  // Default values
+  const isChecked = overrides?.isChecked ?? null;
+  const inventoryCount = overrides?.inventoryCount ?? 1234;
+  const name = overrides?.name ?? "Widget";
+  const id = overrides?.id ?? "1145";
+
   return {
     widget: {
       __typename: "Widget",
-      id: overrides?.id ?? "1145",
+      id,
       anything: {
         key: "value",
         example: true,
@@ -299,11 +305,11 @@ export const getWidgetRecord = (overrides?: { id?: string; isChecked?: boolean }
       },
       embedding: null,
       inStock: true,
-      inventoryCount: 1234,
-      isChecked: overrides?.isChecked ?? null,
+      inventoryCount,
+      isChecked,
       metafields: null,
       mustBeLongString: null,
-      name: "updated test record",
+      name,
       roles: [],
       secretKey: null,
       startsAt: null,
