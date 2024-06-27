@@ -6,8 +6,8 @@ import React from "react";
 import { PolarisAutoForm } from "../../../src/auto/polaris/PolarisAutoForm.js";
 import { PolarisBooleanInput } from "../../../src/auto/polaris/inputs/PolarisBooleanInput.js";
 import { testApi as api } from "../../apis.js";
-import { MockClientProvider, mockUrqlClient } from "../../testWrappers.js";
-import { getWidgetModelMetadata, getWidgetRecord } from "../support/widgetModel.js";
+import { MockClientProvider } from "../../testWrappers.js";
+import { mockWidgetFindBy } from "../support/helper.js";
 
 const PolarisMockedProviders = (props: { children: ReactNode }) => {
   return (
@@ -20,7 +20,7 @@ const PolarisMockedProviders = (props: { children: ReactNode }) => {
 describe("PolarisBooleanInput", () => {
   it("should automatically set the pre-filled value when the form is pre-filled", async () => {
     const { getByLabelText } = render(<PolarisAutoForm action={api.widget.create} findBy="42" />, { wrapper: PolarisMockedProviders });
-    mockWidgetFindBy();
+    mockUpdateWidgetFindBy();
     const checkbox = getByLabelText("Is checked");
     expect(checkbox).toBeChecked();
   });
@@ -32,28 +32,21 @@ describe("PolarisBooleanInput", () => {
       </PolarisAutoForm>,
       { wrapper: PolarisMockedProviders }
     );
-    mockWidgetFindBy();
+    mockUpdateWidgetFindBy();
     const checkbox = getByLabelText("I agree to do something");
     expect(checkbox).toBeChecked();
   });
 });
 
-const mockWidgetFindBy = () => {
-  mockUrqlClient.executeQuery.pushResponse("ModelActionMetadata", {
-    stale: false,
-    hasNext: false,
-    data: getWidgetModelMetadata({
+const mockUpdateWidgetFindBy = () => {
+  mockWidgetFindBy(
+    {
       name: "Update",
       apiIdentifier: "update",
       operatesWithRecordIdentity: true,
-    }),
-  });
-
-  mockUrqlClient.executeQuery.pushResponse("widget", {
-    stale: false,
-    hasNext: false,
-    data: getWidgetRecord({
+    },
+    {
       isChecked: true,
-    }),
-  });
+    }
+  );
 };
