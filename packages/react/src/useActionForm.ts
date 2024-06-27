@@ -60,8 +60,9 @@ export const useActionForm = <
     select?: ActionFunc extends ActionFunction<GivenOptions, any, any, SchemaT, any> ? ActionFunc["optionsType"]["select"] : never;
     /**
      * Which fields to send from the form's values when sending it from the backend.
+     * It can be a list of field API identifiers, or a function that returns a list of field API identifiers.
      */
-    send?: string[];
+    send?: string[] | (() => string[]);
     /**
      * Called when the form submits
      */
@@ -190,7 +191,7 @@ export const useActionForm = <
           if (options?.send) {
             const unmasked = variables;
             variables = {};
-            for (const key of options.send) {
+            for (const key of typeof options.send === "function" ? options.send() : options.send) {
               set(variables, key, get(unmasked, key));
             }
           }

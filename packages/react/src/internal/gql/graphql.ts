@@ -1347,6 +1347,15 @@ export type GadgetHasManyConfig = GadgetFieldConfigInterface & {
   relatedModelKey?: Maybe<Scalars["String"]["output"]>;
 };
 
+export type GadgetHasOneConfig = GadgetFieldConfigInterface & {
+  __typename?: "GadgetHasOneConfig";
+  fieldType: GadgetFieldType;
+  isConfigured: Scalars["Boolean"]["output"];
+  isInverseConfigured: Scalars["Boolean"]["output"];
+  relatedModel?: Maybe<GadgetModel>;
+  relatedModelKey?: Maybe<Scalars["String"]["output"]>;
+};
+
 export type GadgetModel = {
   __typename?: "GadgetModel";
   action?: Maybe<GadgetAction>;
@@ -1854,6 +1863,10 @@ export type GizmoSort = {
   orientation?: InputMaybe<SortOrder>;
   /** Sort the results by the updatedAt field. Defaults to ascending (smallest value first). */
   updatedAt?: InputMaybe<SortOrder>;
+};
+
+export type IdEqualsFilter = {
+  equals?: InputMaybe<Scalars["GadgetID"]["input"]>;
 };
 
 export type IdFilter = {
@@ -2602,6 +2615,10 @@ export type InternalMutationsDeleteManySectionArgs = {
   search?: InputMaybe<Scalars["String"]["input"]>;
 };
 
+export type InternalMutationsDeleteManySessionArgs = {
+  filter?: InputMaybe<Array<SessionFilter>>;
+};
+
 export type InternalMutationsDeleteManyUserArgs = {
   filter?: InputMaybe<Array<UserFilter>>;
   search?: InputMaybe<Scalars["String"]["input"]>;
@@ -2853,6 +2870,7 @@ export type InternalQueriesListSectionArgs = {
 export type InternalQueriesListSessionArgs = {
   after?: InputMaybe<Scalars["String"]["input"]>;
   before?: InputMaybe<Scalars["String"]["input"]>;
+  filter?: InputMaybe<Array<SessionFilter>>;
   first?: InputMaybe<Scalars["Int"]["input"]>;
   last?: InputMaybe<Scalars["Int"]["input"]>;
   select?: InputMaybe<Array<Scalars["String"]["input"]>>;
@@ -3608,6 +3626,7 @@ export type QuerySessionArgs = {
 export type QuerySessionsArgs = {
   after?: InputMaybe<Scalars["String"]["input"]>;
   before?: InputMaybe<Scalars["String"]["input"]>;
+  filter?: InputMaybe<Array<SessionFilter>>;
   first?: InputMaybe<Scalars["Int"]["input"]>;
   last?: InputMaybe<Scalars["Int"]["input"]>;
 };
@@ -3792,6 +3811,12 @@ export type SessionEdge = {
   cursor: Scalars["String"]["output"];
   /** The item at the end of the edge */
   node: Session;
+};
+
+export type SessionFilter = {
+  id?: InputMaybe<IdEqualsFilter>;
+  user?: InputMaybe<IdEqualsFilter>;
+  userId?: InputMaybe<IdEqualsFilter>;
 };
 
 export type SignInUserResult = {
@@ -4280,6 +4305,7 @@ type FieldMetadata_GadgetModelField_Fragment = {
         fieldType: GadgetFieldType;
         relatedModel?: { __typename?: "GadgetModel"; apiIdentifier: string; namespace?: Array<string> | null } | null;
       }
+    | { __typename: "GadgetHasOneConfig"; fieldType: GadgetFieldType }
     | { __typename: "GadgetObjectFieldConfig"; fieldType: GadgetFieldType };
 };
 
@@ -4308,6 +4334,7 @@ type FieldMetadata_GadgetObjectField_Fragment = {
         fieldType: GadgetFieldType;
         relatedModel?: { __typename?: "GadgetModel"; apiIdentifier: string; namespace?: Array<string> | null } | null;
       }
+    | { __typename: "GadgetHasOneConfig"; fieldType: GadgetFieldType }
     | { __typename: "GadgetObjectFieldConfig"; fieldType: GadgetFieldType };
 };
 
@@ -4354,6 +4381,7 @@ export type GetModelMetadataQuery = {
               fieldType: GadgetFieldType;
               relatedModel?: { __typename?: "GadgetModel"; apiIdentifier: string; namespace?: Array<string> | null } | null;
             }
+          | { __typename: "GadgetHasOneConfig"; fieldType: GadgetFieldType }
           | { __typename: "GadgetObjectFieldConfig"; fieldType: GadgetFieldType };
       }>;
     } | null;
@@ -4368,6 +4396,7 @@ type SubFields_GadgetModelField_Fragment = {
     | { __typename: "GadgetEnumConfig" }
     | { __typename: "GadgetGenericFieldConfig" }
     | { __typename: "GadgetHasManyConfig" }
+    | { __typename: "GadgetHasOneConfig" }
     | {
         __typename: "GadgetObjectFieldConfig";
         name?: string | null;
@@ -4398,6 +4427,7 @@ type SubFields_GadgetModelField_Fragment = {
                 fieldType: GadgetFieldType;
                 relatedModel?: { __typename?: "GadgetModel"; apiIdentifier: string; namespace?: Array<string> | null } | null;
               }
+            | { __typename: "GadgetHasOneConfig"; fieldType: GadgetFieldType }
             | {
                 __typename: "GadgetObjectFieldConfig";
                 name?: string | null;
@@ -4429,6 +4459,7 @@ type SubFields_GadgetModelField_Fragment = {
                         fieldType: GadgetFieldType;
                         relatedModel?: { __typename?: "GadgetModel"; apiIdentifier: string; namespace?: Array<string> | null } | null;
                       }
+                    | { __typename: "GadgetHasOneConfig"; fieldType: GadgetFieldType }
                     | {
                         __typename: "GadgetObjectFieldConfig";
                         name?: string | null;
@@ -4468,6 +4499,7 @@ type SubFields_GadgetModelField_Fragment = {
                                   namespace?: Array<string> | null;
                                 } | null;
                               }
+                            | { __typename: "GadgetHasOneConfig"; fieldType: GadgetFieldType }
                             | { __typename: "GadgetObjectFieldConfig"; fieldType: GadgetFieldType };
                         }>;
                       };
@@ -4485,6 +4517,7 @@ type SubFields_GadgetObjectField_Fragment = {
     | { __typename: "GadgetEnumConfig" }
     | { __typename: "GadgetGenericFieldConfig" }
     | { __typename: "GadgetHasManyConfig" }
+    | { __typename: "GadgetHasOneConfig" }
     | {
         __typename: "GadgetObjectFieldConfig";
         name?: string | null;
@@ -4515,6 +4548,7 @@ type SubFields_GadgetObjectField_Fragment = {
                 fieldType: GadgetFieldType;
                 relatedModel?: { __typename?: "GadgetModel"; apiIdentifier: string; namespace?: Array<string> | null } | null;
               }
+            | { __typename: "GadgetHasOneConfig"; fieldType: GadgetFieldType }
             | {
                 __typename: "GadgetObjectFieldConfig";
                 name?: string | null;
@@ -4546,6 +4580,7 @@ type SubFields_GadgetObjectField_Fragment = {
                         fieldType: GadgetFieldType;
                         relatedModel?: { __typename?: "GadgetModel"; apiIdentifier: string; namespace?: Array<string> | null } | null;
                       }
+                    | { __typename: "GadgetHasOneConfig"; fieldType: GadgetFieldType }
                     | {
                         __typename: "GadgetObjectFieldConfig";
                         name?: string | null;
@@ -4585,6 +4620,7 @@ type SubFields_GadgetObjectField_Fragment = {
                                   namespace?: Array<string> | null;
                                 } | null;
                               }
+                            | { __typename: "GadgetHasOneConfig"; fieldType: GadgetFieldType }
                             | { __typename: "GadgetObjectFieldConfig"; fieldType: GadgetFieldType };
                         }>;
                       };
@@ -4639,6 +4675,7 @@ export type ModelActionMetadataQuery = {
                 fieldType: GadgetFieldType;
                 relatedModel?: { __typename?: "GadgetModel"; apiIdentifier: string; namespace?: Array<string> | null } | null;
               }
+            | { __typename: "GadgetHasOneConfig"; fieldType: GadgetFieldType }
             | {
                 __typename: "GadgetObjectFieldConfig";
                 name?: string | null;
@@ -4670,6 +4707,7 @@ export type ModelActionMetadataQuery = {
                         fieldType: GadgetFieldType;
                         relatedModel?: { __typename?: "GadgetModel"; apiIdentifier: string; namespace?: Array<string> | null } | null;
                       }
+                    | { __typename: "GadgetHasOneConfig"; fieldType: GadgetFieldType }
                     | {
                         __typename: "GadgetObjectFieldConfig";
                         name?: string | null;
@@ -4709,6 +4747,7 @@ export type ModelActionMetadataQuery = {
                                   namespace?: Array<string> | null;
                                 } | null;
                               }
+                            | { __typename: "GadgetHasOneConfig"; fieldType: GadgetFieldType }
                             | {
                                 __typename: "GadgetObjectFieldConfig";
                                 name?: string | null;
@@ -4748,6 +4787,7 @@ export type ModelActionMetadataQuery = {
                                           namespace?: Array<string> | null;
                                         } | null;
                                       }
+                                    | { __typename: "GadgetHasOneConfig"; fieldType: GadgetFieldType }
                                     | { __typename: "GadgetObjectFieldConfig"; fieldType: GadgetFieldType };
                                 }>;
                               };
