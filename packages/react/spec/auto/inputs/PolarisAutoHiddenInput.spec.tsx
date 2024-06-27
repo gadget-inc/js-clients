@@ -134,7 +134,7 @@ const mockUpdateWidgetFindBy = () => {
       id: "42",
       isChecked: true,
       inventoryCount: 1234,
-      name: "Alice",
+      name: "Foo",
     }
   );
 };

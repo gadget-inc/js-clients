@@ -7,7 +7,7 @@ import type { GadgetObjectFieldConfig } from "../internal/gql/graphql.js";
 import type { ActionMetadata, FieldMetadata } from "../metadata.js";
 import { filterFieldList, useActionMetadata } from "../metadata.js";
 import { useActionForm } from "../useActionForm.js";
-import type { OptionsType } from "../utils.js";
+import { get, type OptionsType } from "../utils.js";
 import { validationSchema } from "../validationSchema.js";
 
 /** The props that any <AutoForm/> component accepts */
@@ -103,7 +103,7 @@ export const useAutoForm = <
   const {
     submit,
     error: formError,
-    formState: { isSubmitSuccessful, isLoading },
+    formState: { isSubmitSuccessful, isLoading, dirtyFields },
     originalFormMethods,
   } = useActionForm(action, {
     defaultValues: {
@@ -112,7 +112,19 @@ export const useAutoForm = <
     },
     findBy,
     resolver: useValidationResolver(metadata),
-    send: [...fields.map(({ path }) => path), operatesWithRecordId ? "id" : undefined].filter((item) => !!item) as string[],
+    send: () => {
+      const fieldsToSend = fields
+        .map(({ path }) => path)
+        .filter((item) => {
+          const isDirty = get(dirtyFields, item);
+          return isDirty;
+        });
+
+      if (operatesWithRecordId) {
+        fieldsToSend.push("id");
+      }
+      return fieldsToSend;
+    },
   });
 
   return {

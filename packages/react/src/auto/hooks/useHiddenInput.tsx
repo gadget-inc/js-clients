@@ -5,11 +5,13 @@ import { useFieldMetadata } from "./useFieldMetadata.js";
 export const useHiddenInput = (props: { field: string; value: any }) => {
   const { field, value } = props;
   const { path, metadata } = useFieldMetadata(field);
-  const form = useFormContext();
+  const { setValue, formState } = useFormContext();
 
   useEffect(() => {
-    form.setValue(path, value);
-  }, [form, path, value]);
+    setValue(path, value, {
+      shouldDirty: true,
+    });
+  }, [formState.defaultValues, path, setValue, value]);
 
   return {
     value,

@@ -1,3 +1,5 @@
+import { recordIdInputField } from "./shared.js";
+
 export const widgetModelInputFields = {
   name: "Widget",
   apiIdentifier: "widget",
@@ -247,18 +249,6 @@ export const widgetModelInputFields = {
   __typename: "GadgetObjectField",
 };
 
-export const recordIdInputField = {
-  name: "Id",
-  apiIdentifier: "id",
-  fieldType: "ID",
-  requiredArgumentForInput: true,
-  configuration: {
-    __typename: "GadgetGenericFieldConfig",
-    fieldType: "ID",
-  },
-  __typename: "GadgetObjectField",
-};
-
 export const getWidgetModelMetadata = (
   action: { name: string; apiIdentifier: string; operatesWithRecordIdentity: boolean },
   inputFields = [widgetModelInputFields]
@@ -283,7 +273,7 @@ export const getWidgetRecord = (overrides?: { id?: string; isChecked?: boolean; 
   // Default values
   const isChecked = overrides?.isChecked ?? null;
   const inventoryCount = overrides?.inventoryCount ?? 1234;
-  const name = overrides?.name ?? "Widget";
+  const name = overrides?.name ?? "Widget 1";
   const id = overrides?.id ?? "1145";
 
   return {
