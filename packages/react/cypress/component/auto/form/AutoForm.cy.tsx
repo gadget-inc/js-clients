@@ -48,6 +48,15 @@ describeForEachAutoAdapter("AutoForm", ({ name, adapter: { AutoForm }, wrapper }
     // Clear the fetched value to prevent from making the value stored in the database longer as the test runs
     cy.get(`input[name="widget.name"]`).clear().type("updated test record");
     cy.get(`input[name="widget.inventoryCount"]`).clear().type("1234");
+    cy.get(`input[name="widget.section"]`).clear().type("Section Foo");
+
+    cy.contains(`Section Foo`).click();
+    /**
+     * This relies on the existence of `section` model record with {id:1, name:"Section Foo"}
+     * This proves the selection of the correct record
+     */
+    cy.get(`[id="1_Section Foo"]`);
+
     cy.get("form [type=submit][aria-hidden!=true]").click();
     cy.contains("Saved Widget successfully");
   });
