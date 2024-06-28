@@ -35,6 +35,12 @@ const FieldMetadataFragment = graphql(/* GraphQL */ `
           namespace
         }
       }
+      ... on GadgetHasOneConfig {
+        relatedModel {
+          apiIdentifier
+          namespace
+        }
+      }
       ... on GadgetBelongsToConfig {
         relatedModel {
           apiIdentifier

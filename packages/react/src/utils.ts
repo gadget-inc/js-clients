@@ -402,6 +402,15 @@ export const set = (obj: any, path: string, value: any) => {
   }, obj);
 };
 
+/**
+ * Based on Lodash uniqBy to ensure all array elements are unique by a property
+ * https://youmightnotneed.com/lodash
+ */
+export const uniqByProperty = (arr: any[], property: string) => {
+  const getPropertyValue = (item: any) => item[property];
+  return arr.filter((x, i, self) => i === self.findIndex((y) => getPropertyValue(x) === getPropertyValue(y)));
+};
+
 export const getModelManager = (
   apiClient: AnyClient,
   apiIdentifier: string,

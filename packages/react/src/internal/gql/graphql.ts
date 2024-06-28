@@ -4305,7 +4305,11 @@ type FieldMetadata_GadgetModelField_Fragment = {
         fieldType: GadgetFieldType;
         relatedModel?: { __typename?: "GadgetModel"; apiIdentifier: string; namespace?: Array<string> | null } | null;
       }
-    | { __typename: "GadgetHasOneConfig"; fieldType: GadgetFieldType }
+    | {
+        __typename: "GadgetHasOneConfig";
+        fieldType: GadgetFieldType;
+        relatedModel?: { __typename?: "GadgetModel"; apiIdentifier: string; namespace?: Array<string> | null } | null;
+      }
     | { __typename: "GadgetObjectFieldConfig"; fieldType: GadgetFieldType };
 };
 
@@ -4334,7 +4338,11 @@ type FieldMetadata_GadgetObjectField_Fragment = {
         fieldType: GadgetFieldType;
         relatedModel?: { __typename?: "GadgetModel"; apiIdentifier: string; namespace?: Array<string> | null } | null;
       }
-    | { __typename: "GadgetHasOneConfig"; fieldType: GadgetFieldType }
+    | {
+        __typename: "GadgetHasOneConfig";
+        fieldType: GadgetFieldType;
+        relatedModel?: { __typename?: "GadgetModel"; apiIdentifier: string; namespace?: Array<string> | null } | null;
+      }
     | { __typename: "GadgetObjectFieldConfig"; fieldType: GadgetFieldType };
 };
 
@@ -4381,7 +4389,11 @@ export type GetModelMetadataQuery = {
               fieldType: GadgetFieldType;
               relatedModel?: { __typename?: "GadgetModel"; apiIdentifier: string; namespace?: Array<string> | null } | null;
             }
-          | { __typename: "GadgetHasOneConfig"; fieldType: GadgetFieldType }
+          | {
+              __typename: "GadgetHasOneConfig";
+              fieldType: GadgetFieldType;
+              relatedModel?: { __typename?: "GadgetModel"; apiIdentifier: string; namespace?: Array<string> | null } | null;
+            }
           | { __typename: "GadgetObjectFieldConfig"; fieldType: GadgetFieldType };
       }>;
     } | null;
@@ -4427,7 +4439,11 @@ type SubFields_GadgetModelField_Fragment = {
                 fieldType: GadgetFieldType;
                 relatedModel?: { __typename?: "GadgetModel"; apiIdentifier: string; namespace?: Array<string> | null } | null;
               }
-            | { __typename: "GadgetHasOneConfig"; fieldType: GadgetFieldType }
+            | {
+                __typename: "GadgetHasOneConfig";
+                fieldType: GadgetFieldType;
+                relatedModel?: { __typename?: "GadgetModel"; apiIdentifier: string; namespace?: Array<string> | null } | null;
+              }
             | {
                 __typename: "GadgetObjectFieldConfig";
                 name?: string | null;
@@ -4459,7 +4475,11 @@ type SubFields_GadgetModelField_Fragment = {
                         fieldType: GadgetFieldType;
                         relatedModel?: { __typename?: "GadgetModel"; apiIdentifier: string; namespace?: Array<string> | null } | null;
                       }
-                    | { __typename: "GadgetHasOneConfig"; fieldType: GadgetFieldType }
+                    | {
+                        __typename: "GadgetHasOneConfig";
+                        fieldType: GadgetFieldType;
+                        relatedModel?: { __typename?: "GadgetModel"; apiIdentifier: string; namespace?: Array<string> | null } | null;
+                      }
                     | {
                         __typename: "GadgetObjectFieldConfig";
                         name?: string | null;
@@ -4499,7 +4519,15 @@ type SubFields_GadgetModelField_Fragment = {
                                   namespace?: Array<string> | null;
                                 } | null;
                               }
-                            | { __typename: "GadgetHasOneConfig"; fieldType: GadgetFieldType }
+                            | {
+                                __typename: "GadgetHasOneConfig";
+                                fieldType: GadgetFieldType;
+                                relatedModel?: {
+                                  __typename?: "GadgetModel";
+                                  apiIdentifier: string;
+                                  namespace?: Array<string> | null;
+                                } | null;
+                              }
                             | { __typename: "GadgetObjectFieldConfig"; fieldType: GadgetFieldType };
                         }>;
                       };
@@ -4548,7 +4576,11 @@ type SubFields_GadgetObjectField_Fragment = {
                 fieldType: GadgetFieldType;
                 relatedModel?: { __typename?: "GadgetModel"; apiIdentifier: string; namespace?: Array<string> | null } | null;
               }
-            | { __typename: "GadgetHasOneConfig"; fieldType: GadgetFieldType }
+            | {
+                __typename: "GadgetHasOneConfig";
+                fieldType: GadgetFieldType;
+                relatedModel?: { __typename?: "GadgetModel"; apiIdentifier: string; namespace?: Array<string> | null } | null;
+              }
             | {
                 __typename: "GadgetObjectFieldConfig";
                 name?: string | null;
@@ -4580,7 +4612,11 @@ type SubFields_GadgetObjectField_Fragment = {
                         fieldType: GadgetFieldType;
                         relatedModel?: { __typename?: "GadgetModel"; apiIdentifier: string; namespace?: Array<string> | null } | null;
                       }
-                    | { __typename: "GadgetHasOneConfig"; fieldType: GadgetFieldType }
+                    | {
+                        __typename: "GadgetHasOneConfig";
+                        fieldType: GadgetFieldType;
+                        relatedModel?: { __typename?: "GadgetModel"; apiIdentifier: string; namespace?: Array<string> | null } | null;
+                      }
                     | {
                         __typename: "GadgetObjectFieldConfig";
                         name?: string | null;
@@ -4620,7 +4656,15 @@ type SubFields_GadgetObjectField_Fragment = {
                                   namespace?: Array<string> | null;
                                 } | null;
                               }
-                            | { __typename: "GadgetHasOneConfig"; fieldType: GadgetFieldType }
+                            | {
+                                __typename: "GadgetHasOneConfig";
+                                fieldType: GadgetFieldType;
+                                relatedModel?: {
+                                  __typename?: "GadgetModel";
+                                  apiIdentifier: string;
+                                  namespace?: Array<string> | null;
+                                } | null;
+                              }
                             | { __typename: "GadgetObjectFieldConfig"; fieldType: GadgetFieldType };
                         }>;
                       };
@@ -4675,7 +4719,11 @@ export type ModelActionMetadataQuery = {
                 fieldType: GadgetFieldType;
                 relatedModel?: { __typename?: "GadgetModel"; apiIdentifier: string; namespace?: Array<string> | null } | null;
               }
-            | { __typename: "GadgetHasOneConfig"; fieldType: GadgetFieldType }
+            | {
+                __typename: "GadgetHasOneConfig";
+                fieldType: GadgetFieldType;
+                relatedModel?: { __typename?: "GadgetModel"; apiIdentifier: string; namespace?: Array<string> | null } | null;
+              }
             | {
                 __typename: "GadgetObjectFieldConfig";
                 name?: string | null;
@@ -4707,7 +4755,11 @@ export type ModelActionMetadataQuery = {
                         fieldType: GadgetFieldType;
                         relatedModel?: { __typename?: "GadgetModel"; apiIdentifier: string; namespace?: Array<string> | null } | null;
                       }
-                    | { __typename: "GadgetHasOneConfig"; fieldType: GadgetFieldType }
+                    | {
+                        __typename: "GadgetHasOneConfig";
+                        fieldType: GadgetFieldType;
+                        relatedModel?: { __typename?: "GadgetModel"; apiIdentifier: string; namespace?: Array<string> | null } | null;
+                      }
                     | {
                         __typename: "GadgetObjectFieldConfig";
                         name?: string | null;
@@ -4747,7 +4799,15 @@ export type ModelActionMetadataQuery = {
                                   namespace?: Array<string> | null;
                                 } | null;
                               }
-                            | { __typename: "GadgetHasOneConfig"; fieldType: GadgetFieldType }
+                            | {
+                                __typename: "GadgetHasOneConfig";
+                                fieldType: GadgetFieldType;
+                                relatedModel?: {
+                                  __typename?: "GadgetModel";
+                                  apiIdentifier: string;
+                                  namespace?: Array<string> | null;
+                                } | null;
+                              }
                             | {
                                 __typename: "GadgetObjectFieldConfig";
                                 name?: string | null;
@@ -4787,7 +4847,15 @@ export type ModelActionMetadataQuery = {
                                           namespace?: Array<string> | null;
                                         } | null;
                                       }
-                                    | { __typename: "GadgetHasOneConfig"; fieldType: GadgetFieldType }
+                                    | {
+                                        __typename: "GadgetHasOneConfig";
+                                        fieldType: GadgetFieldType;
+                                        relatedModel?: {
+                                          __typename?: "GadgetModel";
+                                          apiIdentifier: string;
+                                          namespace?: Array<string> | null;
+                                        } | null;
+                                      }
                                     | { __typename: "GadgetObjectFieldConfig"; fieldType: GadgetFieldType };
                                 }>;
                               };
@@ -4844,6 +4912,26 @@ export const FieldMetadataFragmentDoc = {
                 {
                   kind: "InlineFragment",
                   typeCondition: { kind: "NamedType", name: { kind: "Name", value: "GadgetHasManyConfig" } },
+                  selectionSet: {
+                    kind: "SelectionSet",
+                    selections: [
+                      {
+                        kind: "Field",
+                        name: { kind: "Name", value: "relatedModel" },
+                        selectionSet: {
+                          kind: "SelectionSet",
+                          selections: [
+                            { kind: "Field", name: { kind: "Name", value: "apiIdentifier" } },
+                            { kind: "Field", name: { kind: "Name", value: "namespace" } },
+                          ],
+                        },
+                      },
+                    ],
+                  },
+                },
+                {
+                  kind: "InlineFragment",
+                  typeCondition: { kind: "NamedType", name: { kind: "Name", value: "GadgetHasOneConfig" } },
                   selectionSet: {
                     kind: "SelectionSet",
                     selections: [
@@ -5068,6 +5156,26 @@ export const SubFieldsFragmentDoc = {
                 },
                 {
                   kind: "InlineFragment",
+                  typeCondition: { kind: "NamedType", name: { kind: "Name", value: "GadgetHasOneConfig" } },
+                  selectionSet: {
+                    kind: "SelectionSet",
+                    selections: [
+                      {
+                        kind: "Field",
+                        name: { kind: "Name", value: "relatedModel" },
+                        selectionSet: {
+                          kind: "SelectionSet",
+                          selections: [
+                            { kind: "Field", name: { kind: "Name", value: "apiIdentifier" } },
+                            { kind: "Field", name: { kind: "Name", value: "namespace" } },
+                          ],
+                        },
+                      },
+                    ],
+                  },
+                },
+                {
+                  kind: "InlineFragment",
                   typeCondition: { kind: "NamedType", name: { kind: "Name", value: "GadgetBelongsToConfig" } },
                   selectionSet: {
                     kind: "SelectionSet",
@@ -5214,6 +5322,26 @@ export const GetModelMetadataDocument = {
                 {
                   kind: "InlineFragment",
                   typeCondition: { kind: "NamedType", name: { kind: "Name", value: "GadgetHasManyConfig" } },
+                  selectionSet: {
+                    kind: "SelectionSet",
+                    selections: [
+                      {
+                        kind: "Field",
+                        name: { kind: "Name", value: "relatedModel" },
+                        selectionSet: {
+                          kind: "SelectionSet",
+                          selections: [
+                            { kind: "Field", name: { kind: "Name", value: "apiIdentifier" } },
+                            { kind: "Field", name: { kind: "Name", value: "namespace" } },
+                          ],
+                        },
+                      },
+                    ],
+                  },
+                },
+                {
+                  kind: "InlineFragment",
+                  typeCondition: { kind: "NamedType", name: { kind: "Name", value: "GadgetHasOneConfig" } },
                   selectionSet: {
                     kind: "SelectionSet",
                     selections: [
@@ -5404,6 +5532,26 @@ export const ModelActionMetadataDocument = {
                 {
                   kind: "InlineFragment",
                   typeCondition: { kind: "NamedType", name: { kind: "Name", value: "GadgetHasManyConfig" } },
+                  selectionSet: {
+                    kind: "SelectionSet",
+                    selections: [
+                      {
+                        kind: "Field",
+                        name: { kind: "Name", value: "relatedModel" },
+                        selectionSet: {
+                          kind: "SelectionSet",
+                          selections: [
+                            { kind: "Field", name: { kind: "Name", value: "apiIdentifier" } },
+                            { kind: "Field", name: { kind: "Name", value: "namespace" } },
+                          ],
+                        },
+                      },
+                    ],
+                  },
+                },
+                {
+                  kind: "InlineFragment",
+                  typeCondition: { kind: "NamedType", name: { kind: "Name", value: "GadgetHasOneConfig" } },
                   selectionSet: {
                     kind: "SelectionSet",
                     selections: [

@@ -2,11 +2,10 @@ import { Autocomplete, FormControl, FormControlLabel, FormGroup, FormHelperText,
 import { DatePicker, DateTimePicker } from "@mui/x-date-pickers";
 import React, { ReactElement } from "react";
 import { useController } from "react-hook-form";
-
 import type { GadgetEnumConfig } from "../../../internal/gql/graphql.js";
 import { FieldType } from "../../../metadata.js";
 import { useFieldMetadata } from "../../hooks/useFieldMetadata.js";
-
+import { MUIAutoRelationshipInput } from "./MUIAutoRelationshipInput.js";
 import { MUIAutoTextInput } from "./MUIAutoTextInput.js";
 import { MUIBooleanInput } from "./MUIBooleanInput.js";
 import { MUIFileInput } from "./MUIFileInput.js";
@@ -95,10 +94,12 @@ export const MUIAutoInput = (props: { field: string }) => {
       return <MUIRolesCombobox label={metadata.name} {...fieldProps} />;
     }
     case FieldType.HasMany:
-    case FieldType.HasManyThrough:
     case FieldType.HasOne:
     case FieldType.BelongsTo: {
-      // TODO: implement relationship field inputs
+      return <MUIAutoRelationshipInput field={props.field} />;
+    }
+    case FieldType.HasManyThrough: {
+      // TODO: implement HasManyThrough input with join model record create/delete/update
       return null;
     }
     case FieldType.RichText: {
