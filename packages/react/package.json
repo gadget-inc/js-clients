@@ -59,7 +59,7 @@
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "setup-polly-jest": "^0.11.0",
-    "wonka": "^6.3.2"
+    "wonka": "^6.3.4"
   },
   "peerDependencies": {
     "react": "^18.0.0",

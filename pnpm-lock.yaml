@@ -309,8 +309,8 @@ importers:
         specifier: ^0.11.0
         version: 0.11.0(@pollyjs/core@6.0.6)
       wonka:
-        specifier: ^6.3.2
-        version: 6.3.2
+        specifier: ^6.3.4
+        version: 6.3.4
 
   packages/react-shopify-app-bridge:
     dependencies:
@@ -7577,7 +7577,7 @@ packages:
     dependencies:
       '@urql/core': 4.0.10(graphql@16.8.1)
       react: 18.2.0
-      wonka: 6.3.2
+      wonka: 6.3.4
     transitivePeerDependencies:
       - graphql
     dev: false
@@ -7803,6 +7803,9 @@ packages:
 
   /wonka@6.3.2:
     resolution: {integrity: sha512-2xXbQ1LnwNS7egVm1HPhW2FyKrekolzhpM3mCwXdQr55gO+tAiY76rhb32OL9kKsW8taj++iP7C6hxlVzbnvrw==}
+
+  /wonka@6.3.4:
+    resolution: {integrity: sha512-CjpbqNtBGNAeyNS/9W6q3kSkKE52+FjIj7AkFlLr11s/VWGUu6a2CdYSdGxocIhIVjaW/zchesBQUKPVU69Cqg==}
 
   /word-wrap@1.2.5:
     resolution: {integrity: sha512-BN22B5eaMMI9UMtjrGd5g5eCYPpCPDUy0FJXbYsaT5zYxjFOckS53SQDE3pWkVoWpHXVb3BrYcEN4Twa55B5cA==}
