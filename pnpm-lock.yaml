@@ -239,8 +239,8 @@ importers:
         specifier: ^2.6.2
         version: 2.6.2
       urql:
-        specifier: ^4.0.4
-        version: 4.0.4(graphql@16.8.1)(react@18.2.0)
+        specifier: ^4.1.0
+        version: 4.1.0(@urql/core@4.0.10)(react@18.2.0)
     devDependencies:
       '@n1ru4l/json-patch-plus':
         specifier: ^0.2.0
@@ -7570,16 +7570,15 @@ packages:
       requires-port: 1.0.0
     dev: true
 
-  /urql@4.0.4(graphql@16.8.1)(react@18.2.0):
-    resolution: {integrity: sha512-C5P4BMnAsk+rbytCWglit5ijXbIKXsa9wofSGPbuMyJKsDdL+9GfipS362Nff/Caag+eYOK5W+sox8fwEILT6Q==}
+  /urql@4.1.0(@urql/core@4.0.10)(react@18.2.0):
+    resolution: {integrity: sha512-NfbfTvxy1sM89EQAJWm89qJZihUWk7BSMfrWgfljFXLOf+e7RK7DtV/Tbg2+82HnCG2x3LcEOJenxiFSYEC+bw==}
     peerDependencies:
+      '@urql/core': ^5.0.0
       react: '>= 16.8.0'
     dependencies:
       '@urql/core': 4.0.10(graphql@16.8.1)
       react: 18.2.0
       wonka: 6.3.2
-    transitivePeerDependencies:
-      - graphql
     dev: false
 
   /utf8-byte-length@1.0.4:
