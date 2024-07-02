@@ -2,7 +2,7 @@ import { act, renderHook } from "@testing-library/react";
 import { assert, type IsExact } from "conditional-type-checks";
 import { CombinedError } from "urql";
 import { useActionForm } from "../src/useActionForm.js";
-import { bulkExampleApi, fullAuthApi, relatedProductsApi } from "./apis.js";
+import { bulkExampleApi, fullAuthApi, kitchenSinkApi, relatedProductsApi } from "./apis.js";
 import { MockClientWrapper, mockUrqlClient } from "./testWrappers.js";
 
 describe("useActionForm", () => {
@@ -1493,6 +1493,147 @@ describe("useActionForm", () => {
     expect(result.current.actionData).toEqual({ id: "123", email: "new@test.com", password: "newsecret" });
     expect(result.current.getValues("user.email")).toBe("test@test.com");
     expect(result.current.getValues("user.password")).toBe("secret");
+  });
+
+  test("can be used with an update action when finding record by id in a namespaced model", async () => {
+    let submitted = false;
+    let success = false;
+
+    const { result } = renderHook(
+      () =>
+        useActionForm(kitchenSinkApi.game.player.update, {
+          findBy: "123",
+          onSubmit: () => {
+            submitted = true;
+          },
+          onSuccess: () => {
+            success = true;
+          },
+          onError: (e) => {
+            expect(e).toBeUndefined();
+          },
+        }),
+      { wrapper: MockClientWrapper(kitchenSinkApi) }
+    );
+
+    expect(submitted).toBe(false);
+    expect(success).toBe(false);
+    expect(result.current.formState.isLoading).toBe(true);
+    expect(result.current.formState.isSubmitted).toBe(false);
+    expect(result.current.formState.isSubmitSuccessful).toBe(false);
+    expect(result.current.formState.isSubmitting).toBe(false);
+    expect(result.current.error).toBeFalsy();
+    expect(result.current.actionData).toBeFalsy();
+    expect(result.current.getValues("player.name")).toBeUndefined();
+
+    expect(mockUrqlClient.executeQuery).toBeCalledTimes(1);
+
+    mockUrqlClient.executeQuery.pushResponse("player", {
+      data: {
+        game: {
+          player: {
+            id: "123",
+            name: "Caitlin Clark",
+            __typename: "Player",
+            createdAt: "2023-10-13T18:38:06.676Z",
+            updatedAt: "2023-10-13T18:40:36.741Z",
+          },
+        },
+      },
+      stale: false,
+      hasNext: false,
+    });
+
+    expect(submitted).toBe(false);
+    expect(success).toBe(false);
+    expect(result.current.formState.isLoading).toBe(false);
+    expect(result.current.formState.isSubmitted).toBe(false);
+    expect(result.current.formState.isSubmitSuccessful).toBe(false);
+    expect(result.current.formState.isSubmitting).toBe(false);
+    expect(result.current.error).toBeFalsy();
+    expect(result.current.actionData).toBeFalsy();
+    expect(result.current.getValues("player.name")).toBe("Caitlin Clark");
+
+    let submitPromise: Promise<any>;
+
+    await act(async () => {
+      (result.current as any).setValue("player.name", "Kamilla Cardoso");
+      submitPromise = result.current.submit();
+    });
+
+    expect(submitted).toBe(true);
+    expect(success).toBe(false);
+    expect(result.current.formState.isLoading).toBe(false);
+    expect(result.current.formState.isSubmitted).toBe(false);
+    expect(result.current.formState.isSubmitSuccessful).toBe(false);
+    expect(result.current.formState.isSubmitting).toBe(true);
+    expect(result.current.error).toBeFalsy();
+    expect(result.current.actionData).toBeFalsy();
+    expect(result.current.getValues("player.name")).toBe("Kamilla Cardoso");
+
+    expect(mockUrqlClient.executeMutation.mock.calls[0][0].variables).toEqual({
+      id: "123",
+      player: {
+        name: "Kamilla Cardoso",
+      },
+    });
+
+    mockUrqlClient.executeMutation.pushResponse("updatePlayer", {
+      data: {
+        game: {
+          updatePlayer: {
+            success: true,
+            player: {
+              id: "123",
+              name: "Kamilla Cardoso",
+            },
+          },
+        },
+      },
+      stale: false,
+      hasNext: false,
+    });
+
+    await act(async () => {
+      const result = await submitPromise;
+      expect(result).toMatchInlineSnapshot(`
+        {
+          "data": {
+            "id": "123",
+            "name": "Kamilla Cardoso",
+          },
+          "error": undefined,
+          "fetching": false,
+          "hasNext": false,
+          "operation": null,
+          "stale": false,
+        }
+      `);
+    });
+
+    expect(submitted).toBe(true);
+    expect(success).toBe(true);
+    expect(result.current.formState.isLoading).toBe(false);
+    expect(result.current.formState.isSubmitted).toBe(true);
+    expect(result.current.formState.isSubmitSuccessful).toBe(true);
+    expect(result.current.formState.isSubmitting).toBe(false);
+    expect(result.current.error).toBeFalsy();
+    expect(result.current.actionData).toEqual({ id: "123", name: "Kamilla Cardoso" });
+    expect(result.current.getValues("player.name")).toBe("Kamilla Cardoso");
+
+    await act(async () => {
+      result.current.reset();
+    });
+
+    expect(submitted).toBe(true);
+    expect(success).toBe(true);
+    expect(result.current.formState.isLoading).toBe(false);
+    expect(result.current.formState.isSubmitted).toBe(false);
+    expect(result.current.formState.isSubmitSuccessful).toBe(false);
+    expect(result.current.formState.isSubmitting).toBe(false);
+    expect(result.current.error).toBeFalsy();
+    expect(result.current.actionData).toEqual({ id: "123", name: "Kamilla Cardoso" });
+    expect(result.current.getValues("player.name")).toBe("Caitlin Clark");
   });
 
   test("can be used with an update action when finding record by id and registering flat fields", async () => {

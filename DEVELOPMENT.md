@@ -14,14 +14,11 @@ pnpm --filter=@gadgetinc/api-client-core prerelease
 pnpm --filter=@gadgetinc/api-client-core gitpkg publish --registry git@mygit.server:org/private-registry.git
 ```
 
-Once you've released a package, you can add a resolution in your other project's `package.json`:
+Once you've released a package, you can use it in a project by updating the dependency in the project's `package.json`:
 
 ```json
 {
   "dependencies": {
-    "@gadgetinc/react": "0.1.2"
-  },
-  "resolutions": {
     "@gadgetinc/react": "https://codeload.github.com/gadget-inc/js-clients/tar.gz/@gadgetinc/react-v0.1.2-gitpkg-0123456"
   }
 }
