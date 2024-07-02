@@ -213,9 +213,9 @@ describe("InternalModelManager", () => {
     test("should build a find many query with no options", () => {
       const plan = internalFindManyQuery("widget", [], undefined);
       expect(plan.query).toMatchInlineSnapshot(`
-        "query InternalFindManyWidget($after: String, $before: String, $first: Int, $last: Int) {
+        "query InternalFindManyWidget {
           internal {
-            listWidget(after: $after, before: $before, first: $first, last: $last) {
+            listWidget {
               pageInfo {
                 hasNextPage
                 hasPreviousPage
@@ -239,9 +239,9 @@ describe("InternalModelManager", () => {
     test("should build a find many query with sort", () => {
       const plan = internalFindManyQuery("widget", [], { sort: [{ id: "Ascending" }] });
       expect(plan.query).toMatchInlineSnapshot(`
-        "query InternalFindManyWidget($sort: [WidgetSort!], $after: String, $before: String, $first: Int, $last: Int) {
+        "query InternalFindManyWidget($sort: [WidgetSort!]) {
           internal {
-            listWidget(sort: $sort, after: $after, before: $before, first: $first, last: $last) {
+            listWidget(sort: $sort) {
               pageInfo {
                 hasNextPage
                 hasPreviousPage
@@ -266,9 +266,9 @@ describe("InternalModelManager", () => {
     test("should build a find many query with search", () => {
       const plan = internalFindManyQuery("widget", [], { search: "term" });
       expect(plan.query).toMatchInlineSnapshot(`
-        "query InternalFindManyWidget($search: String, $after: String, $before: String, $first: Int, $last: Int) {
+        "query InternalFindManyWidget($search: String) {
           internal {
-            listWidget(search: $search, after: $after, before: $before, first: $first, last: $last) {
+            listWidget(search: $search) {
               pageInfo {
                 hasNextPage
                 hasPreviousPage
@@ -293,9 +293,9 @@ describe("InternalModelManager", () => {
     test("should build a find many query with filter", () => {
       const plan = internalFindManyQuery("widget", [], { filter: [{ id: { equals: "1" } }] });
       expect(plan.query).toMatchInlineSnapshot(`
-        "query InternalFindManyWidget($filter: [WidgetFilter!], $after: String, $before: String, $first: Int, $last: Int) {
+        "query InternalFindManyWidget($filter: [WidgetFilter!]) {
           internal {
-            listWidget(filter: $filter, after: $after, before: $before, first: $first, last: $last) {
+            listWidget(filter: $filter) {
               pageInfo {
                 hasNextPage
                 hasPreviousPage
@@ -332,11 +332,11 @@ describe("InternalModelManager", () => {
     test("should build a find many query for a namespaced model", () => {
       const plan = internalFindManyQuery("widget", ["deep", "namespace"], undefined);
       expect(plan.query).toMatchInlineSnapshot(`
-        "query InternalFindManyWidget($after: String, $before: String, $first: Int, $last: Int) {
+        "query InternalFindManyWidget {
           internal {
             deep {
               namespace {
-                listWidget(after: $after, before: $before, first: $first, last: $last) {
+                listWidget {
                   pageInfo {
                     hasNextPage
                     hasPreviousPage
@@ -369,11 +369,11 @@ describe("InternalModelManager", () => {
       expect(plan.query).toMatch(/DeepNamespaceWidgetFilter/);
 
       expect(plan.query).toMatchInlineSnapshot(`
-        "query InternalFindManyWidget($sort: [DeepNamespaceWidgetSort!], $filter: [DeepNamespaceWidgetFilter!], $after: String, $before: String, $first: Int, $last: Int) {
+        "query InternalFindManyWidget($sort: [DeepNamespaceWidgetSort!], $filter: [DeepNamespaceWidgetFilter!]) {
           internal {
             deep {
               namespace {
-                listWidget(sort: $sort, filter: $filter, after: $after, before: $before, first: $first, last: $last) {
+                listWidget(sort: $sort, filter: $filter) {
                   pageInfo {
                     hasNextPage
                     hasPreviousPage
@@ -727,9 +727,9 @@ describe("InternalModelManager", () => {
       const result = internalDeleteManyMutation("widget_model", []);
 
       expect(result.query).toMatchInlineSnapshot(`
-        "mutation InternalDeleteManyWidgetModel($search: String, $filter: [WidgetModelFilter!]) {
+        "mutation InternalDeleteManyWidgetModel {
           internal {
-            deleteManyWidgetModel(search: $search, filter: $filter) {
+            deleteManyWidgetModel {
               success
               errors {
                 message
@@ -1016,9 +1016,9 @@ describe("InternalModelManager", () => {
       const result = internalDeleteManyMutation("widget", [], {});
 
       expect(result.query).toMatchInlineSnapshot(`
-        "mutation InternalDeleteManyWidget($search: String, $filter: [WidgetFilter!]) {
+        "mutation InternalDeleteManyWidget {
           internal {
-            deleteManyWidget(search: $search, filter: $filter) {
+            deleteManyWidget {
               success
               errors {
                 message
@@ -1039,14 +1039,14 @@ describe("InternalModelManager", () => {
     });
 
     test("should build a namespaced delete many records mutation", () => {
-      const result = internalDeleteManyMutation("widget", ["deep", "namespace"], {});
+      const result = internalDeleteManyMutation("widget", ["deep", "namespace"], { filter: {} });
 
       expect(result.query).toMatchInlineSnapshot(`
-        "mutation InternalDeleteManyWidget($search: String, $filter: [DeepNamespaceWidgetFilter!]) {
+        "mutation InternalDeleteManyWidget($filter: [DeepNamespaceWidgetFilter!]) {
           internal {
             deep {
               namespace {
-                deleteManyWidget(search: $search, filter: $filter) {
+                deleteManyWidget(filter: $filter) {
                   success
                   errors {
                     message
@@ -1066,7 +1066,7 @@ describe("InternalModelManager", () => {
       `);
       expectValidGraphQLQuery(result.query);
       expect(result.query).toMatch(/DeepNamespaceWidgetFilter/);
-      expect(result.variables).toEqual({});
+      expect(result.variables).toEqual({ filter: {} });
     });
 
     test("should build a find many query for a namespaced model with a sort and filter", () => {
