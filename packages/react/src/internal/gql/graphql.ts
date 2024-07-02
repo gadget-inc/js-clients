@@ -126,6 +126,7 @@ export type BackgroundActionResult =
   | DeleteSectionResult
   | DeleteUserResult
   | DeleteWidgetResult
+  | FlipAllResult
   | SignInUserResult
   | SignOutUserResult
   | SignUpUserResult
@@ -335,6 +336,7 @@ export type BackgroundMutations = {
   deleteSection: EnqueueBackgroundActionResult;
   deleteUser: EnqueueBackgroundActionResult;
   deleteWidget: EnqueueBackgroundActionResult;
+  flipAll: EnqueueBackgroundActionResult;
   game: BackgroundGameMutations;
   signInUser: EnqueueBackgroundActionResult;
   signOutUser: EnqueueBackgroundActionResult;
@@ -488,6 +490,12 @@ export type BackgroundMutationsDeleteUserArgs = {
 export type BackgroundMutationsDeleteWidgetArgs = {
   backgroundOptions?: InputMaybe<EnqueueBackgroundActionOptions>;
   id: Scalars["GadgetID"]["input"];
+};
+
+export type BackgroundMutationsFlipAllArgs = {
+  backgroundOptions?: InputMaybe<EnqueueBackgroundActionOptions>;
+  inventoryCount?: InputMaybe<Scalars["Float"]["input"]>;
+  title?: InputMaybe<Scalars["String"]["input"]>;
 };
 
 export type BackgroundMutationsSignInUserArgs = {
@@ -1283,6 +1291,13 @@ export type ExecutionError = {
   message: Scalars["String"]["output"];
   /** The stack for any exception that caused the error. Only available for super users. */
   stack?: Maybe<Scalars["String"]["output"]>;
+};
+
+export type FlipAllResult = {
+  __typename?: "FlipAllResult";
+  errors?: Maybe<Array<ExecutionError>>;
+  result?: Maybe<Scalars["JSON"]["output"]>;
+  success: Scalars["Boolean"]["output"];
 };
 
 export type FloatFilter = {
@@ -2981,6 +2996,7 @@ export type InternalMutations = {
   triggerDeleteSection?: Maybe<DeleteSectionResult>;
   triggerDeleteUser?: Maybe<DeleteUserResult>;
   triggerDeleteWidget?: Maybe<DeleteWidgetResult>;
+  triggerFlipAll?: Maybe<FlipAllResult>;
   triggerSignInUser?: Maybe<SignInUserResult>;
   triggerSignOutUser?: Maybe<SignOutUserResult>;
   triggerSignUpUser?: Maybe<SignUpUserResult>;
@@ -3173,6 +3189,13 @@ export type InternalMutationsTriggerDeleteUserArgs = {
 export type InternalMutationsTriggerDeleteWidgetArgs = {
   context?: InputMaybe<AppGraphQlTriggerMutationContext>;
   params?: InputMaybe<Scalars["JSONObject"]["input"]>;
+  trigger?: InputMaybe<Scalars["JSONObject"]["input"]>;
+  verifyTriggerExists?: InputMaybe<Scalars["Boolean"]["input"]>;
+};
+
+export type InternalMutationsTriggerFlipAllArgs = {
+  inventoryCount?: InputMaybe<Scalars["Float"]["input"]>;
+  title?: InputMaybe<Scalars["String"]["input"]>;
   trigger?: InputMaybe<Scalars["JSONObject"]["input"]>;
   verifyTriggerExists?: InputMaybe<Scalars["Boolean"]["input"]>;
 };
@@ -3731,6 +3754,7 @@ export type Mutation = {
   deleteSection?: Maybe<DeleteSectionResult>;
   deleteUser?: Maybe<DeleteUserResult>;
   deleteWidget?: Maybe<DeleteWidgetResult>;
+  flipAll?: Maybe<FlipAllResult>;
   /** Meta information about the application, like it's name, schema, and other internal details. */
   gadgetMeta: GadgetApplicationMeta;
   game: GameMutations;
@@ -3852,6 +3876,11 @@ export type MutationDeleteUserArgs = {
 
 export type MutationDeleteWidgetArgs = {
   id: Scalars["GadgetID"]["input"];
+};
+
+export type MutationFlipAllArgs = {
+  inventoryCount?: InputMaybe<Scalars["Float"]["input"]>;
+  title?: InputMaybe<Scalars["String"]["input"]>;
 };
 
 export type MutationSignInUserArgs = {
@@ -4889,6 +4918,7 @@ type FieldMetadata_GadgetModelField_Fragment = {
       }
     | {
         __typename: "GadgetDateTimeConfig";
+        includeTime: boolean;
         fieldType: GadgetFieldType;
         validations: Array<
           | { __typename: "GadgetGenericFieldValidation"; name: string; specID: string }
@@ -4981,6 +5011,7 @@ type FieldMetadata_GadgetObjectField_Fragment = {
       }
     | {
         __typename: "GadgetDateTimeConfig";
+        includeTime: boolean;
         fieldType: GadgetFieldType;
         validations: Array<
           | { __typename: "GadgetGenericFieldValidation"; name: string; specID: string }
@@ -5091,6 +5122,7 @@ export type GetModelMetadataQuery = {
             }
           | {
               __typename: "GadgetDateTimeConfig";
+              includeTime: boolean;
               fieldType: GadgetFieldType;
               validations: Array<
                 | { __typename: "GadgetGenericFieldValidation"; name: string; specID: string }
@@ -5200,6 +5232,7 @@ type SubFields_GadgetModelField_Fragment = {
               }
             | {
                 __typename: "GadgetDateTimeConfig";
+                includeTime: boolean;
                 fieldType: GadgetFieldType;
                 validations: Array<
                   | { __typename: "GadgetGenericFieldValidation"; name: string; specID: string }
@@ -5291,6 +5324,7 @@ type SubFields_GadgetModelField_Fragment = {
                       }
                     | {
                         __typename: "GadgetDateTimeConfig";
+                        includeTime: boolean;
                         fieldType: GadgetFieldType;
                         validations: Array<
                           | { __typename: "GadgetGenericFieldValidation"; name: string; specID: string }
@@ -5421,6 +5455,7 @@ type SubFields_GadgetModelField_Fragment = {
                               }
                             | {
                                 __typename: "GadgetDateTimeConfig";
+                                includeTime: boolean;
                                 fieldType: GadgetFieldType;
                                 validations: Array<
                                   | { __typename: "GadgetGenericFieldValidation"; name: string; specID: string }
@@ -5627,6 +5662,7 @@ type SubFields_GadgetObjectField_Fragment = {
               }
             | {
                 __typename: "GadgetDateTimeConfig";
+                includeTime: boolean;
                 fieldType: GadgetFieldType;
                 validations: Array<
                   | { __typename: "GadgetGenericFieldValidation"; name: string; specID: string }
@@ -5718,6 +5754,7 @@ type SubFields_GadgetObjectField_Fragment = {
                       }
                     | {
                         __typename: "GadgetDateTimeConfig";
+                        includeTime: boolean;
                         fieldType: GadgetFieldType;
                         validations: Array<
                           | { __typename: "GadgetGenericFieldValidation"; name: string; specID: string }
@@ -5848,6 +5885,7 @@ type SubFields_GadgetObjectField_Fragment = {
                               }
                             | {
                                 __typename: "GadgetDateTimeConfig";
+                                includeTime: boolean;
                                 fieldType: GadgetFieldType;
                                 validations: Array<
                                   | { __typename: "GadgetGenericFieldValidation"; name: string; specID: string }
@@ -6060,6 +6098,7 @@ export type ModelActionMetadataQuery = {
               }
             | {
                 __typename: "GadgetDateTimeConfig";
+                includeTime: boolean;
                 fieldType: GadgetFieldType;
                 validations: Array<
                   | { __typename: "GadgetGenericFieldValidation"; name: string; specID: string }
@@ -6151,6 +6190,7 @@ export type ModelActionMetadataQuery = {
                       }
                     | {
                         __typename: "GadgetDateTimeConfig";
+                        includeTime: boolean;
                         fieldType: GadgetFieldType;
                         validations: Array<
                           | { __typename: "GadgetGenericFieldValidation"; name: string; specID: string }
@@ -6281,6 +6321,7 @@ export type ModelActionMetadataQuery = {
                               }
                             | {
                                 __typename: "GadgetDateTimeConfig";
+                                includeTime: boolean;
                                 fieldType: GadgetFieldType;
                                 validations: Array<
                                   | { __typename: "GadgetGenericFieldValidation"; name: string; specID: string }
@@ -6449,6 +6490,7 @@ export type ModelActionMetadataQuery = {
                                       }
                                     | {
                                         __typename: "GadgetDateTimeConfig";
+                                        includeTime: boolean;
                                         fieldType: GadgetFieldType;
                                         validations: Array<
                                           | { __typename: "GadgetGenericFieldValidation"; name: string; specID: string }
@@ -6855,6 +6897,11 @@ export const FieldMetadataFragmentDoc = {
                     ],
                   },
                 },
+                {
+                  kind: "InlineFragment",
+                  typeCondition: { kind: "NamedType", name: { kind: "Name", value: "GadgetDateTimeConfig" } },
+                  selectionSet: { kind: "SelectionSet", selections: [{ kind: "Field", name: { kind: "Name", value: "includeTime" } }] },
+                },
               ],
             },
           },
@@ -7139,6 +7186,11 @@ export const SubFieldsFragmentDoc = {
                     ],
                   },
                 },
+                {
+                  kind: "InlineFragment",
+                  typeCondition: { kind: "NamedType", name: { kind: "Name", value: "GadgetDateTimeConfig" } },
+                  selectionSet: { kind: "SelectionSet", selections: [{ kind: "Field", name: { kind: "Name", value: "includeTime" } }] },
+                },
               ],
             },
           },
@@ -7382,6 +7434,11 @@ export const GetModelMetadataDocument = {
                       },
                     ],
                   },
+                },
+                {
+                  kind: "InlineFragment",
+                  typeCondition: { kind: "NamedType", name: { kind: "Name", value: "GadgetDateTimeConfig" } },
+                  selectionSet: { kind: "SelectionSet", selections: [{ kind: "Field", name: { kind: "Name", value: "includeTime" } }] },
                 },
               ],
             },
@@ -7651,6 +7708,11 @@ export const ModelActionMetadataDocument = {
                       },
                     ],
                   },
+                },
+                {
+                  kind: "InlineFragment",
+                  typeCondition: { kind: "NamedType", name: { kind: "Name", value: "GadgetDateTimeConfig" } },
+                  selectionSet: { kind: "SelectionSet", selections: [{ kind: "Field", name: { kind: "Name", value: "includeTime" } }] },
                 },
               ],
             },

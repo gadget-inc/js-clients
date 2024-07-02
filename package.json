@@ -16,7 +16,7 @@
     "watch": "run-p --print-label watch:*",
     "watch:client": "pnpm --filter=@gadgetinc/api-client-core watch",
     "watch:react": "pnpm --filter=@gadgetinc/react watch",
-    "test": "NODE_OPTIONS=\"--max-old-space-size=4096 --stack-trace-limit=1000\" jest",
+    "test": "NODE_OPTIONS=\"--max-old-space-size=4096 --stack-trace-limit=1000\" TZ=UTC jest",
     "check-dependency-versions": "./scripts/check-dependency-versions.ts",
     "preinstall": "npx only-allow pnpm"
   },

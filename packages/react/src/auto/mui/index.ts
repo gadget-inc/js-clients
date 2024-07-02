@@ -7,5 +7,6 @@ export { MUIAutoBelongsToInput as AutoBelongsToInput } from "./inputs/MUIAutoRel
 export { MUIAutoRolesInput as AutoRolesInput } from "./inputs/MUIAutoRolesInput.js";
 export { MUIAutoTextInput as AutoTextInput } from "./inputs/MUIAutoTextInput.js";
 export { MUIBooleanInput as AutoBooleanInput } from "./inputs/MUIBooleanInput.js";
+export { MUIDateTimePicker as DateTimePicker } from "./inputs/MUIDateTimePicker.js";
 export { MUIAutoSubmit as AutoSubmit } from "./submit/MUIAutoSubmit.js";
 export { MUISubmitResultBanner as SubmitResultBanner } from "./submit/MUISubmitResultBanner.js";

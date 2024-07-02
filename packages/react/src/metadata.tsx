@@ -78,6 +78,9 @@ const FieldMetadataFragment = graphql(/* GraphQL */ `
           color
         }
       }
+      ... on GadgetDateTimeConfig {
+        includeTime
+      }
     }
   }
 `);
