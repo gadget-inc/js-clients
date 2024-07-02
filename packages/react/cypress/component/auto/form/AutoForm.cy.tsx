@@ -13,6 +13,11 @@ describeForEachAutoAdapter("AutoForm", ({ name, adapter: { AutoForm }, wrapper }
     cy.contains("Anything");
   };
 
+  const submit = (modelName: string) => {
+    cy.get("form [type=submit][aria-hidden!=true]").click();
+    cy.contains(`Saved ${modelName} successfully`);
+  };
+
   it("renders an error if the backend returns one when fetching the model data", () => {
     cy.intercept("POST", `${api.connection.options.endpoint}?operation=ModelActionMetadata`, { forceNetworkError: true });
 
@@ -31,15 +36,19 @@ describeForEachAutoAdapter("AutoForm", ({ name, adapter: { AutoForm }, wrapper }
     ensureFieldInputLabelsExist();
 
     cy.get(`input[name="widget.name"]`).type("test record");
-    cy.get(`input[name="widget.inventoryCount"]`).type("42");
-    cy.get("form [type=submit][aria-hidden!=true]").click();
-    cy.contains("Saved Widget successfully");
+    cy.get(`input[name="widget.inventoryCount"]`).type("999");
 
+    cy.get(`input[id="Roles_Autocomplete_Textfield"]`).click().type("u"); // To search for "unauthenticated"
+    cy.get(`li[data-listbox-option-value="unauthenticated"]`).click();
+    cy.get(`input[id="Roles_Autocomplete_Textfield"]`).click().clear();
+    cy.get(`span`).contains("unauthenticated").should("exist");
+
+    submit("Widget");
     ensureFieldInputLabelsExist();
   });
 
   it("can render a form to update model and submit it", () => {
-    cy.mountWithWrapper(<AutoForm action={api.widget.update} exclude={["gizmos"]} findBy="1145" />, wrapper);
+    cy.mountWithWrapper(<AutoForm action={api.widget.update} exclude={["gizmos"]} findBy="999" />, wrapper);
 
     cy.contains("Name");
     cy.contains("Inventory count");
@@ -57,8 +66,7 @@ describeForEachAutoAdapter("AutoForm", ({ name, adapter: { AutoForm }, wrapper }
      */
     cy.get(`[id="1_Section Foo"]`);
 
-    cy.get("form [type=submit][aria-hidden!=true]").click();
-    cy.contains("Saved Widget successfully");
+    submit("Widget");
   });
 
   it("can render a form to create namespaced model", () => {
@@ -67,8 +75,7 @@ describeForEachAutoAdapter("AutoForm", ({ name, adapter: { AutoForm }, wrapper }
     cy.contains("Name");
     cy.get(`input[name="stadium.name"]`).type("test stadium record");
 
-    cy.get("form [type=submit][aria-hidden!=true]").click();
-    cy.contains("Saved Stadium successfully");
+    submit("Stadium");
   });
 
   it("can show invalid field errors from the server and recover from them", () => {
@@ -83,8 +90,8 @@ describeForEachAutoAdapter("AutoForm", ({ name, adapter: { AutoForm }, wrapper }
     cy.contains("is a required field");
 
     cy.get(`input[name="widget.inventoryCount"]`).type("42");
-    cy.get("form [type=submit][aria-hidden!=true]").click();
-    cy.contains("Saved Widget successfully");
+
+    submit("Widget");
   });
 
   it("can render a form to update a model without making changes and submit it", async () => {
@@ -96,8 +103,8 @@ describeForEachAutoAdapter("AutoForm", ({ name, adapter: { AutoForm }, wrapper }
         cy.mountWithWrapper(<AutoForm action={api.widget.update} record={record.id} exclude={["gizmos"]} />, wrapper);
         cy.get(`input[name="widget.name"]`).should("have.value", name);
         cy.get(`input[name="widget.inventoryCount"]`).should("have.value", 42);
-        cy.get("form [type=submit][aria-hidden!=true]").click();
-        cy.contains("Saved Widget successfully");
+
+        submit("Widget");
       });
   });
 });
