@@ -269,12 +269,25 @@ export const getWidgetModelMetadata = (
   };
 };
 
-export const getWidgetRecord = (overrides?: { id?: string; isChecked?: boolean; inventoryCount?: number; name?: string }) => {
+export const getWidgetRecord = (overrides?: {
+  id?: string;
+  isChecked?: boolean;
+  inventoryCount?: number;
+  name?: string;
+  startsAt?: string;
+  roles?: {
+    key: string;
+    name: string;
+    __typename: "Role";
+  }[];
+}) => {
   // Default values
   const isChecked = overrides?.isChecked ?? null;
+  const startsAt = overrides?.startsAt ?? null;
   const inventoryCount = overrides?.inventoryCount ?? 1234;
   const name = overrides?.name ?? "Widget 1";
   const id = overrides?.id ?? "1145";
+  const roles = overrides?.roles ?? [];
 
   return {
     widget: {
@@ -300,7 +313,7 @@ export const getWidgetRecord = (overrides?: { id?: string; isChecked?: boolean; 
       metafields: null,
       mustBeLongString: null,
       name,
-      roles: [],
+      roles,
       secretKey: null,
       startsAt: null,
       updatedAt: "2024-06-25T15:08:47.538Z",

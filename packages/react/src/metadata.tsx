@@ -54,6 +54,9 @@ const FieldMetadataFragment = graphql(/* GraphQL */ `
           color
         }
       }
+      ... on GadgetDateTimeConfig {
+        includeTime
+      }
     }
   }
 `);
@@ -129,6 +132,7 @@ const RolesMetadataQuery = graphql(/* GraphQL */ `
     gadgetMeta {
       roles {
         name
+        key
         selectable
       }
     }

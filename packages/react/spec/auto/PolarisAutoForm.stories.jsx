@@ -50,7 +50,7 @@ export const Primary = {
 export const UpdateRecord = {
   args: {
     action: api.widget.update,
-    findBy: "1002",
+    findBy: "999",
     exclude: ["gizmos"],
   },
 };
@@ -65,7 +65,8 @@ export const Excluded = {
 export const Included = {
   args: {
     action: api.widget.create,
-    include: ["birthday", "roles"],
+    findBy: "999",
+    include: ["startsAt", "roles"],
   },
 };
 

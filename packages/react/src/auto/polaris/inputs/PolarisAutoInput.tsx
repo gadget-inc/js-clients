@@ -3,14 +3,14 @@ import { useController } from "react-hook-form";
 import type { GadgetEnumConfig } from "../../../internal/gql/graphql.js";
 import { FieldType } from "../../../metadata.js";
 import { useFieldMetadata } from "../../hooks/useFieldMetadata.js";
-import { PolarisDateTimePicker } from "../PolarisDateTimePicker.js";
 import { PolarisFileInput } from "../PolarisFileInput.js";
 import { PolarisFixedOptionsCombobox } from "../PolarisFixedOptionsCombobox.js";
 import { PolarisJSONInput } from "../PolarisJSONInput.js";
-import { PolarisRolesCombobox } from "../PolarisRolesCombobox.js";
 import { PolarisAutoRelationshipInput } from "./PolarisAutoRelationshipInput.js";
+import { PolarisAutoRolesInput } from "./PolarisAutoRolesInput.js";
 import { PolarisAutoTextInput } from "./PolarisAutoTextInput.js";
 import { PolarisBooleanInput } from "./PolarisBooleanInput.js";
+import { PolarisDateTimePicker } from "./PolarisDateTimePicker.js";
 
 export const PolarisAutoInput = (props: { field: string }) => {
   const { path, metadata } = useFieldMetadata(props.field);
@@ -44,9 +44,7 @@ export const PolarisAutoInput = (props: { field: string }) => {
       return <PolarisBooleanInput field={props.field} />;
     }
     case FieldType.DateTime: {
-      return (
-        <PolarisDateTimePicker dateLabel={metadata.name} includeTime={(config as any).includeTime} {...field} error={error?.message} />
-      );
+      return <PolarisDateTimePicker field={props.field} />;
     }
     case FieldType.Json: {
       return <PolarisJSONInput label={metadata.name} multiline={4} monospaced autoComplete="off" {...field} />;
@@ -66,7 +64,7 @@ export const PolarisAutoInput = (props: { field: string }) => {
       return <PolarisFileInput label={metadata.name} {...field} />;
     }
     case FieldType.RoleAssignments: {
-      return <PolarisRolesCombobox label={metadata.name} {...field} />;
+      return <PolarisAutoRolesInput field={props.field} {...field} />;
     }
     case FieldType.HasMany:
     case FieldType.HasOne:
