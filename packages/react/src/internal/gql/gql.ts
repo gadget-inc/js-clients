@@ -21,7 +21,7 @@ const documents = {
     types.SubFieldsFragmentDoc,
   "\n  query ModelActionMetadata($modelApiIdentifier: String!, $modelNamespace: [String!], $action: String!) {\n    gadgetMeta {\n      model(apiIdentifier: $modelApiIdentifier, namespace: $modelNamespace) {\n        name\n        action(apiIdentifier: $action) {\n          name\n          apiIdentifier\n          operatesWithRecordIdentity\n          inputFields {\n            ...FieldMetadata\n            ...SubFields\n          }\n        }\n      }\n    }\n  }\n":
     types.ModelActionMetadataDocument,
-  "\n  query RolesMetadata {\n    gadgetMeta {\n      roles {\n        name\n        selectable\n      }\n    }\n  }\n":
+  "\n  query RolesMetadata {\n    gadgetMeta {\n      roles {\n        name\n        key\n        selectable\n      }\n    }\n  }\n":
     types.RolesMetadataDocument,
 };
 
@@ -67,8 +67,8 @@ export function graphql(
  * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
 export function graphql(
-  source: "\n  query RolesMetadata {\n    gadgetMeta {\n      roles {\n        name\n        selectable\n      }\n    }\n  }\n"
-): (typeof documents)["\n  query RolesMetadata {\n    gadgetMeta {\n      roles {\n        name\n        selectable\n      }\n    }\n  }\n"];
+  source: "\n  query RolesMetadata {\n    gadgetMeta {\n      roles {\n        name\n        key\n        selectable\n      }\n    }\n  }\n"
+): (typeof documents)["\n  query RolesMetadata {\n    gadgetMeta {\n      roles {\n        name\n        key\n        selectable\n      }\n    }\n  }\n"];
 
 export function graphql(source: string) {
   return (documents as any)[source] ?? {};

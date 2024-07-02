@@ -4873,7 +4873,10 @@ export type RolesMetadataQueryVariables = Exact<{ [key: string]: never }>;
 
 export type RolesMetadataQuery = {
   __typename?: "Query";
-  gadgetMeta: { __typename?: "GadgetApplicationMeta"; roles: Array<{ __typename?: "GadgetRole"; name: string; selectable: boolean }> };
+  gadgetMeta: {
+    __typename?: "GadgetApplicationMeta";
+    roles: Array<{ __typename?: "GadgetRole"; name: string; key: string; selectable: boolean }>;
+  };
 };
 
 export const FieldMetadataFragmentDoc = {
@@ -5744,6 +5747,7 @@ export const RolesMetadataDocument = {
                     kind: "SelectionSet",
                     selections: [
                       { kind: "Field", name: { kind: "Name", value: "name" } },
+                      { kind: "Field", name: { kind: "Name", value: "key" } },
                       { kind: "Field", name: { kind: "Name", value: "selectable" } },
                     ],
                   },

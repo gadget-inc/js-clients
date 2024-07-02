@@ -6,11 +6,11 @@ import type { GadgetEnumConfig } from "../../../internal/gql/graphql.js";
 import { FieldType } from "../../../metadata.js";
 import { useFieldMetadata } from "../../hooks/useFieldMetadata.js";
 import { MUIAutoRelationshipInput } from "./MUIAutoRelationshipInput.js";
+import { MUIAutoRolesInput } from "./MUIAutoRolesInput.js";
 import { MUIAutoTextInput } from "./MUIAutoTextInput.js";
 import { MUIBooleanInput } from "./MUIBooleanInput.js";
 import { MUIFileInput } from "./MUIFileInput.js";
 import { MUIJSONInput } from "./MUIJSONInput.js";
-import { MUIRolesCombobox } from "./MUIRolesCombobox.js";
 
 export const MUIAutoFormControl = (props: { field: string; children: ReactElement }) => {
   const { path, metadata } = useFieldMetadata(props.field);
@@ -91,7 +91,7 @@ export const MUIAutoInput = (props: { field: string }) => {
       );
     }
     case FieldType.RoleAssignments: {
-      return <MUIRolesCombobox label={metadata.name} {...fieldProps} />;
+      return <MUIAutoRolesInput field={props.field} />;
     }
     case FieldType.HasMany:
     case FieldType.HasOne:

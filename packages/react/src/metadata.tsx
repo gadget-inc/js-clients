@@ -129,6 +129,7 @@ const RolesMetadataQuery = graphql(/* GraphQL */ `
     gadgetMeta {
       roles {
         name
+        key
         selectable
       }
     }
