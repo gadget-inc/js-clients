@@ -1,52 +1,9 @@
 import type { DatePickerProps } from "@shopify/polaris";
-import { DatePicker, Icon, InlineStack, Popover, TextField } from "@shopify/polaris";
+import { Box, DatePicker, Icon, InlineStack, Listbox, Popover, TextField } from "@shopify/polaris";
 import { CalendarIcon, ClockIcon } from "@shopify/polaris-icons";
 import { format } from "date-fns";
 import { utcToZonedTime, zonedTimeToUtc } from "date-fns-tz";
-import React, { useCallback, useEffect, useState } from "react";
-import { useFocus } from "../../useFocus.js";
-
-const getTimeString = (date: Date) => format(date, "K:m aa");
-
-// Use a regular expression to extract hours, minutes, and AM/PM
-const timeStringRegex = /(\d{1,2}):?(\d{0,2})\s*([APMapm]{0,2})/;
-
-const parseTimeString = (timeString: string) => {
-  const result = timeString.match(timeStringRegex);
-
-  if (!result) {
-    return null;
-  }
-
-  // eslint-disable-next-line prefer-const
-  let [_, hoursStr, minutesStr, ampm] = result;
-
-  // Convert extracted values to integers
-  let hours = parseInt(hoursStr, 10);
-  const minutes = parseInt(minutesStr, 10) || 0; // Default minutes to 0 if not provided
-
-  // Handle AM/PM
-  ampm = ampm.toLowerCase();
-
-  if (ampm === "pm" && hours < 12) {
-    hours += 12;
-  } else if (ampm === "am" && hours === 12) {
-    hours = 0;
-  }
-
-  // Get the current date to set the time
-  const date = new Date();
-  date.setHours(hours, minutes, 0, 0);
-
-  return date;
-};
-
-const copyTime = (to: Date, input: Date) => {
-  to.setHours(input.getHours());
-  to.setMinutes(input.getMinutes());
-  to.setSeconds(input.getSeconds());
-  to.setMilliseconds(input.getMilliseconds());
-};
+import React, { useCallback, useState } from "react";
 
 const today = new Date();
 export const PolarisDateTimePicker = (props: {
@@ -63,43 +20,77 @@ export const PolarisDateTimePicker = (props: {
   const localTime = value ? utcToZonedTime(value, localTz) : undefined;
   const [{ month, year }, setDate] = useState({ month: (localTime ?? today).getMonth(), year: (localTime ?? today).getFullYear() });
   const [datePopoverActive, setDatePopoverActive] = useState(false);
+  const [timeString, setTimeString] = useState(localTime ? format(localTime, "HH:mm") : "");
+  const [popoverActive, setPopoverActive] = useState(false);
+  const [timeParseError, setTimeParseError] = useState(false);
+
+  const hours = Array.from({ length: 12 }, (_, i) => (i + 1).toString().padStart(2, "0"));
+  const mins = Array.from({ length: 60 }, (_, i) => i.toString().padStart(2, "0"));
+  const ampm = ["AM", "PM"];
+  const timeFormatRegex = new RegExp(/((1[0-2]|0?[1-9]):([0-5][0-9]) ?([AaPp][Mm]))/);
+
+  const [hourSelected, setHourSelected] = useState(hours[0]);
+  const [minSelected, setMinSelected] = useState(mins[0]);
+  const [ampmSelected, setAmpmSelected] = useState(ampm[0]);
 
   const onDateChange = useCallback<Exclude<DatePickerProps["onChange"], undefined>>(
     (range) => {
       const date = new Date(range.start);
-      localTime && copyTime(date, localTime);
       onChange(zonedTimeToUtc(date, localTz));
       setDatePopoverActive(false);
     },
-    [localTime, onChange]
+    [onChange, localTz]
   );
 
-  // use a text field for the time input so any time can be entered
-  // the text field needs to be able to pass through invalid time states as the user enters input, so we use a different state atom for it, and only call `onChange` with valid dates
-  const [timeString, setTimeString] = useState(localTime ? getTimeString(localTime) : "");
-  useEffect(() => {
-    if (value) {
-      setTimeString(getTimeString(value));
+  const toggleDatePopoverActive = useCallback(() => setDatePopoverActive((active) => !active), []);
+  const handleMonthChange = useCallback((month: number, year: number) => {
+    setDate({ month, year });
+  }, []);
+
+  const onTimeStringChange = (value: string) => {
+    setTimeString(value);
+    const trimmedValue = value.trim();
+    if (!timeFormatRegex.test(trimmedValue)) {
+      setTimeParseError(true);
+      return;
     }
-  }, [value]);
+    setTimeParseError(false);
+    const [hours, minutes] = trimmedValue.split(":").map((part) => parseInt(part, 10));
+    const newAmpm = trimmedValue.slice(-2).toUpperCase();
+    if (isNaN(hours) || isNaN(minutes) || !ampm.includes(newAmpm)) {
+      return;
+    }
+    const newTime = new Date(localTime ?? today);
+    newTime.setHours(hours, minutes);
+    onChange(zonedTimeToUtc(newTime, localTz));
 
-  const onTimeStringChange = useCallback(
-    (newValue: string) => {
-      setTimeString(newValue);
-      const parsed = parseTimeString(timeString);
-      if (parsed) {
-        const date = localTime ? new Date(localTime) : new Date();
-        copyTime(date, parsed);
-        onChange(zonedTimeToUtc(date, localTz));
-      }
-    },
-    [localTime, onChange, timeString]
-  );
+    const paddedHours = hours.toString().padStart(2, "0");
+    const paddedMins = minutes.toString().padStart(2, "0");
+    setHourSelected(paddedHours);
+    setMinSelected(paddedMins);
+    setAmpmSelected(newAmpm);
+    setTimeString(`${paddedHours}:${paddedMins} ${newAmpm}`);
+  };
 
-  const parseSuccess = !!parseTimeString(timeString);
-  const [isTimeFocused, timeInputFocusProps] = useFocus();
-  const toggleDatePopoverActive = useCallback(() => setDatePopoverActive((v) => !v), []);
-  const handleMonthChange = useCallback((month: number, year: number) => setDate({ month, year }), []);
+  const createMarkup = (items: string[], selectedState: string) => {
+    return items.map((item, i) => {
+      return (
+        <div key={i} style={{ textAlign: "center", cursor: "default", padding: "0px 4px" }}>
+          <Listbox.Option value={item}>
+            {selectedState === item ? (
+              <Box padding="100" background="bg-surface-secondary-selected" borderRadius="200" minHeight="30px" minWidth="30px">
+                {item}
+              </Box>
+            ) : (
+              <Box minHeight="30px" minWidth="30px" padding="100">
+                {item}
+              </Box>
+            )}
+          </Listbox.Option>
+        </div>
+      );
+    });
+  };
 
   return (
     <InlineStack gap="400">
@@ -131,16 +122,63 @@ export const PolarisDateTimePicker = (props: {
         </div>
       </Popover>
       {props.includeTime && (
-        <TextField
-          id={props.id ? `${props.id}-time` : undefined}
-          label={props.timeLabel ?? "Time"}
-          prefix={<Icon source={ClockIcon} />}
-          autoComplete="off"
-          value={timeString}
-          onChange={onTimeStringChange}
-          {...timeInputFocusProps}
-          error={!parseSuccess && !isTimeFocused && `Invalid time, please enter a value like "11:00 AM"`}
-        />
+        <Popover
+          active={popoverActive}
+          onClose={() => setPopoverActive(false)}
+          activator={
+            <TextField
+              prefix={<Icon source={ClockIcon} />}
+              id={props.id ? `${props.id}-time` : undefined}
+              label={props.timeLabel ?? "Time"}
+              autoComplete="off"
+              value={timeString}
+              onChange={onTimeStringChange}
+              onFocus={() => setPopoverActive(true)}
+              error={timeParseError && `Invalid time format`}
+            />
+          }
+        >
+          <div style={{ overflow: "hidden", padding: "15px 8px" }}>
+            <div style={{ display: "flex" }}>
+              <div style={{ overflowY: "scroll", height: "250px" }}>
+                <Listbox
+                  onSelect={(value: string) => {
+                    setHourSelected(value);
+                    const newTime = `${value}:${minSelected} ${ampmSelected}`;
+                    setTimeString(newTime);
+                    setTimeParseError(!timeFormatRegex.test(newTime));
+                  }}
+                >
+                  {createMarkup(hours, hourSelected)}
+                </Listbox>
+              </div>
+              <div style={{ overflowY: "scroll", height: "250px" }}>
+                <Listbox
+                  onSelect={(value: string) => {
+                    setMinSelected(value);
+                    const newTime = `${hourSelected}:${value} ${ampmSelected}`;
+                    setTimeString(newTime);
+                    setTimeParseError(!timeFormatRegex.test(newTime));
+                  }}
+                >
+                  {createMarkup(mins, minSelected)}
+                </Listbox>
+              </div>
+              <div style={{ overflowY: "scroll", height: "250px" }}>
+                <Listbox
+                  onSelect={(value: string) => {
+                    setAmpmSelected(value);
+                    const newTime = `${hourSelected}:${minSelected} ${value}`;
+                    setTimeString(newTime);
+                    setTimeParseError(!timeFormatRegex.test(newTime));
+                  }}
+                >
+                  {createMarkup(ampm, ampmSelected)}
+                </Listbox>
+              </div>
+            </div>
+          </div>
+        </Popover>
       )}
     </InlineStack>
   );
