@@ -106,6 +106,7 @@ export const PolarisFixedOptionsCombobox = (props: PolarisFixedOptionsComboboxPr
       verticalContent={verticalContentMarkup}
       placeholder="Search"
       autoComplete="off"
+      id={`${label}_Autocomplete_Textfield`}
     />
   );
 
@@ -116,6 +117,7 @@ export const PolarisFixedOptionsCombobox = (props: PolarisFixedOptionsComboboxPr
       selected={selectedValues}
       onSelect={updateSelection}
       textField={textField}
+      id={`${label}_Autocomplete`}
       allowMultiple={allowMultiple}
     />
   );
