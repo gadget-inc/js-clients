@@ -2,6 +2,7 @@ export * from "./PolarisAutoForm.js";
 export { PolarisAutoForm as AutoForm } from "./PolarisAutoForm.js";
 export { PolarisAutoHiddenInput as AutoHiddenInput } from "./inputs/PolarisAutoHiddenInput.js";
 export { PolarisAutoInput as AutoInput } from "./inputs/PolarisAutoInput.js";
+export { PolarisAutoJSONInput as AutoJSONInput } from "./inputs/PolarisAutoJsonInput.js";
 export { PolarisAutoBelongsToInput as AutoBelongsToInput } from "./inputs/PolarisAutoRelationshipInput.js";
 export { PolarisAutoRolesInput as AutoRolesInput } from "./inputs/PolarisAutoRolesInput.js";
 export { PolarisAutoTextInput as AutoTextInput } from "./inputs/PolarisAutoTextInput.js";

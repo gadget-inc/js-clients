@@ -279,6 +279,7 @@ export const getWidgetRecord = (overrides?: {
     name: string;
     __typename: "Role";
   }[];
+  metafields?: any;
 }) => {
   // Default values
   const isChecked = overrides?.isChecked ?? null;
@@ -286,6 +287,7 @@ export const getWidgetRecord = (overrides?: {
   const name = overrides?.name ?? "Widget 1";
   const id = overrides?.id ?? "1145";
   const roles = overrides?.roles ?? [];
+  const metafields = overrides?.metafields ?? null;
 
   return {
     widget: {
@@ -308,7 +310,7 @@ export const getWidgetRecord = (overrides?: {
       inStock: true,
       inventoryCount,
       isChecked,
-      metafields: null,
+      metafields,
       mustBeLongString: null,
       name,
       roles,
