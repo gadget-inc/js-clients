@@ -50,7 +50,7 @@ export const useValidationResolver = (metadata: ActionMetadata | undefined) => {
  */
 export const useFormFields = (
   metadata: ActionMetadata | undefined | null,
-  options: { include?: string[]; exclude?: string[]; fields?: string[]; select?: Record<string, any> }
+  options: { include?: string[]; exclude?: string[] }
 ): readonly { path: string; metadata: FieldMetadata }[] => {
   return useMemo(() => {
     if (!metadata) return [];

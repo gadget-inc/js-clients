@@ -207,29 +207,33 @@ export const useActionMetadata = (actionFunction: ActionFunction<any, any, any, 
  */
 export const filterFieldList = (
   fields: FieldMetadata[] | undefined,
-  options?: { include?: string[]; exclude?: string[]; fields?: string[]; select?: Record<string, any> }
+  options?: { include?: string[]; exclude?: string[] }
 ): FieldMetadata[] => {
   if (!fields) {
     return [];
   }
+
   let subset = fields;
-  if (options?.fields) {
-    return options.fields.map((apiIdentifier) => {
-      const field = fields.find((field) => field.apiIdentifier === apiIdentifier);
-      if (!field) throw new Error(`form trying to include field ${apiIdentifier} that doesn't exist on the model`);
-      return field;
-    });
-  }
+
   if (options?.include) {
+    // When including fields, the order will match the order of the `include` array
+    subset = [];
     const includes = new Set(options.include);
-    subset = subset.filter((field) => includes.has(field.apiIdentifier));
+
+    for (const includedFieldApiId of Array.from(includes)) {
+      const metadataField = fields.find((field) => field.apiIdentifier === includedFieldApiId);
+      if (metadataField) {
+        subset.push(metadataField);
+      }
+    }
   }
-  if (options?.select) {
-    const includes = new Set(Object.keys(options.select).filter((key) => options.select![key]));
-    subset = subset.filter((field) => includes.has(field.apiIdentifier));
-  }
+
   if (options?.exclude) {
     const excludes = new Set(options.exclude);
+    if (options?.include && options.include.some((fieldApiId) => excludes.has(fieldApiId))) {
+      throw new Error("Cannot include and exclude the same field");
+    }
+
     subset = subset.filter((field) => !excludes.has(field.apiIdentifier));
   }
 
