@@ -33,13 +33,14 @@ describe("PolarisAutoForm", () => {
     test("it includes the record ID when submitting a form that updates a record", async () => {
       const user = userEvent.setup();
 
-      const { getByRole, getByLabelText } = render(<PolarisAutoForm action={api.widget.update} exclude={["gizmos"]} findBy="1145" />, {
+      const result = render(<PolarisAutoForm action={api.widget.update} exclude={["gizmos"]} findBy="1145" />, {
         wrapper: PolarisMockedProviders,
       });
+      const { getByLabelText, queryAllByText } = result;
 
       loadMockWidgetUpdateMetadata();
 
-      const submitButton = getByRole("button");
+      const submitButton = queryAllByText("Submit")[0];
       expect(submitButton).toHaveTextContent("Submit");
 
       await act(async () => {
@@ -53,7 +54,7 @@ describe("PolarisAutoForm", () => {
         await user.click(inventoryCountElement);
         await user.keyboard("1234");
 
-        await user.click(getByRole("button"));
+        await user.click(submitButton);
       });
 
       const mutation = mockUrqlClient.executeMutation.mock.calls[0][0];
@@ -196,13 +197,14 @@ describe("PolarisAutoForm", () => {
     test("it should not include fields that are not dirty when submitting a form that updates a record", async () => {
       const user = userEvent.setup();
 
-      const { getByRole, getByLabelText } = render(<PolarisAutoForm action={api.widget.update} exclude={["gizmos"]} findBy="1145" />, {
+      const result = render(<PolarisAutoForm action={api.widget.update} exclude={["gizmos"]} findBy="1145" />, {
         wrapper: PolarisMockedProviders,
       });
+      const { getByLabelText, queryAllByText } = result;
 
       loadMockWidgetUpdateMetadata();
 
-      const submitButton = getByRole("button");
+      const submitButton = queryAllByText("Submit")[0];
       expect(submitButton).toHaveTextContent("Submit");
 
       await act(async () => {
@@ -212,7 +214,7 @@ describe("PolarisAutoForm", () => {
         // The fetched record has an inventory count of 42. We will update it to 1234.
         await user.keyboard("1234");
 
-        await user.click(getByRole("button"));
+        await user.click(submitButton);
       });
 
       const mutation = mockUrqlClient.executeMutation.mock.calls[0][0];

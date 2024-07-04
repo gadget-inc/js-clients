@@ -11,6 +11,7 @@ import { MUIAutoRelationshipInput } from "./MUIAutoRelationshipInput.js";
 import { MUIAutoRolesInput } from "./MUIAutoRolesInput.js";
 import { MUIAutoTextInput } from "./MUIAutoTextInput.js";
 import { MUIBooleanInput } from "./MUIBooleanInput.js";
+import { MUIEncryptedStringInput } from "./MUIEncryptedStringInput.js";
 import { MUIFileInput } from "./MUIFileInput.js";
 
 export const MUIAutoFormControl = (props: { field: string; children: ReactElement }) => {
@@ -53,8 +54,10 @@ export const MUIAutoInput = (props: { field: string }) => {
     case FieldType.Url: {
       return <MUIAutoTextInput field={props.field} />;
     }
-    case FieldType.Password:
     case FieldType.EncryptedString: {
+      return <MUIEncryptedStringInput field={props.field} />;
+    }
+    case FieldType.Password: {
       // TODO - Needs updated implementation to handle security concerns
       return <MUIAutoTextInput field={props.field} />;
     }
