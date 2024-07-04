@@ -1,6 +1,11 @@
 import type { ISchema } from "yup";
-import { array, boolean, date, mixed, number, object, string } from "yup";
-import type { GadgetEnumConfig, GadgetObjectFieldConfig } from "./internal/gql/graphql.js";
+import { NumberSchema, StringSchema, array, boolean, date, mixed, number, object, string } from "yup";
+import type {
+  GadgetEnumConfig,
+  GadgetObjectFieldConfig,
+  GadgetRangeFieldValidation,
+  GadgetRegexFieldValidation,
+} from "./internal/gql/graphql.js";
 import { GadgetFieldType } from "./internal/gql/graphql.js";
 import type { FieldMetadata } from "./metadata.js";
 
@@ -114,6 +119,31 @@ const validatorForField = (field: FieldMetadata) => {
     validator = validator.required();
   } else {
     validator = (validator.nullable() as any).default(null);
+  }
+
+  for (const validation of field.configuration.validations) {
+    switch (validation?.__typename) {
+      case "GadgetRangeFieldValidation": {
+        const rangeValidation = validation as GadgetRangeFieldValidation;
+        if (validator instanceof StringSchema || validator instanceof NumberSchema) {
+          if (rangeValidation.min) {
+            validator = validator.min(rangeValidation.min);
+          }
+          if (rangeValidation.max) {
+            validator = validator.max(rangeValidation.max);
+          }
+        }
+        break;
+      }
+
+      case "GadgetRegexFieldValidation": {
+        const regexValidation = validation as GadgetRegexFieldValidation;
+        if (regexValidation.pattern && validator instanceof StringSchema) {
+          validator = validator.matches(new RegExp(regexValidation.pattern));
+        }
+        break;
+      }
+    }
   }
 
   return validator;

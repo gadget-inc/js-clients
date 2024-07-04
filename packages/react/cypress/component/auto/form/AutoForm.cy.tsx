@@ -91,6 +91,11 @@ describeForEachAutoAdapter("AutoForm", ({ name, adapter: { AutoForm }, wrapper }
 
     cy.get(`input[name="widget.inventoryCount"]`).type("42");
 
+    cy.get(`input[name="widget.mustBeLongString"]`).type("short");
+    cy.contains("must be at least 20 characters");
+
+    cy.get(`input[name="widget.mustBeLongString"]`).type(` l${"o".repeat(20)}ng enough`);
+
     submit("Widget");
   });
 

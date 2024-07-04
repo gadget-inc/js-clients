@@ -20,7 +20,6 @@ export const PolarisAutoInput = (props: { field: string }) => {
     fieldState: { error },
   } = useController({
     name: path,
-    rules: { required: metadata.requiredArgumentForInput },
   });
   // many polaris components don't take refs because they are weenies, see https://github.com/Shopify/polaris/issues/1083
   // omit the ref from the forwarded along props so that we don't get a warning

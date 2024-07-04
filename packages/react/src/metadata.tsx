@@ -29,6 +29,29 @@ const FieldMetadataFragment = graphql(/* GraphQL */ `
     configuration {
       __typename
       fieldType
+      validations {
+        __typename
+        ... on GadgetRegexFieldValidation {
+          name
+          specID
+          pattern
+        }
+        ... on GadgetRangeFieldValidation {
+          name
+          specID
+          min
+          max
+        }
+        ... on GadgetOnlyImageFileFieldValidation {
+          name
+          specID
+          allowAnimatedImages
+        }
+        ... on GadgetGenericFieldValidation {
+          name
+          specID
+        }
+      }
       ... on GadgetHasManyConfig {
         relatedModel {
           apiIdentifier
