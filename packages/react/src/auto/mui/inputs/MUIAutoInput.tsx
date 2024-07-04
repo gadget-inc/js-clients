@@ -1,6 +1,7 @@
 import { Autocomplete, FormControl, FormControlLabel, FormGroup, FormHelperText, TextField } from "@mui/material";
 import { DatePicker, DateTimePicker } from "@mui/x-date-pickers";
-import React, { ReactElement } from "react";
+import type { ReactElement } from "react";
+import React from "react";
 import { useController } from "react-hook-form";
 import type { GadgetEnumConfig } from "../../../internal/gql/graphql.js";
 import { FieldType } from "../../../metadata.js";
@@ -18,7 +19,6 @@ export const MUIAutoFormControl = (props: { field: string; children: ReactElemen
     fieldState: { error },
   } = useController({
     name: path,
-    rules: { required: metadata.requiredArgumentForInput },
   });
 
   return (

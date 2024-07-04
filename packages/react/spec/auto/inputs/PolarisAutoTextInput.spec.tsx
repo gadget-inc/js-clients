@@ -93,11 +93,12 @@ describe("PolarisAutoTextInput", () => {
   });
 });
 
-const metadata: ActionMetadata = {
+const metadata = {
   name: "Widget",
   action: {
     name: "Create",
     apiIdentifier: "create",
+    operatesWithRecordIdentity: false,
     inputFields: [
       {
         name: "Widget",
@@ -108,6 +109,7 @@ const metadata: ActionMetadata = {
           __typename: "GadgetObjectFieldConfig",
           fieldType: "Object",
           name: null,
+          validations: [],
           fields: [
             {
               name: "Name",
@@ -120,6 +122,7 @@ const metadata: ActionMetadata = {
               configuration: {
                 __typename: "GadgetGenericFieldConfig",
                 fieldType: "String",
+                validations: [],
               },
             },
             {
@@ -133,6 +136,7 @@ const metadata: ActionMetadata = {
               configuration: {
                 __typename: "GadgetGenericFieldConfig",
                 fieldType: "Number",
+                validations: [],
               },
             },
             {
@@ -146,6 +150,7 @@ const metadata: ActionMetadata = {
               configuration: {
                 __typename: "GadgetGenericFieldConfig",
                 fieldType: "Color",
+                validations: [],
               },
             },
             {
@@ -159,6 +164,7 @@ const metadata: ActionMetadata = {
               configuration: {
                 __typename: "GadgetGenericFieldConfig",
                 fieldType: "EncryptedString",
+                validations: [],
               },
             },
             {
@@ -172,6 +178,7 @@ const metadata: ActionMetadata = {
               configuration: {
                 __typename: "GadgetGenericFieldConfig",
                 fieldType: "Password",
+                validations: [],
               },
             },
             {
@@ -185,6 +192,7 @@ const metadata: ActionMetadata = {
               configuration: {
                 __typename: "GadgetGenericFieldConfig",
                 fieldType: "Email",
+                validations: [],
               },
             },
             {
@@ -198,6 +206,7 @@ const metadata: ActionMetadata = {
               configuration: {
                 __typename: "GadgetGenericFieldConfig",
                 fieldType: "URL",
+                validations: [],
               },
             },
           ],

@@ -9,6 +9,7 @@ export const gizmoModelInputFields = {
     __typename: "GadgetObjectFieldConfig",
     fieldType: "Object",
     name: null,
+    validations: [],
     fields: [
       {
         name: "Widget",
@@ -20,6 +21,7 @@ export const gizmoModelInputFields = {
         configuration: {
           __typename: "GadgetBelongsToConfig",
           fieldType: "BelongsTo",
+          validations: [],
           relatedModel: {
             apiIdentifier: "widget",
             namespace: [],
@@ -36,6 +38,7 @@ export const gizmoModelInputFields = {
         configuration: {
           __typename: "GadgetGenericFieldConfig",
           fieldType: "String",
+          validations: [],
         },
       },
       {
@@ -48,6 +51,7 @@ export const gizmoModelInputFields = {
         configuration: {
           __typename: "GadgetGenericFieldConfig",
           fieldType: "String",
+          validations: [],
         },
       },
     ],

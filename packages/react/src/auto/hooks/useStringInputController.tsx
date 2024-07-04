@@ -32,7 +32,6 @@ export const useStringInputController = (props: {
     fieldState: { error },
   } = useController({
     name: path,
-    rules: { required: metadata.requiredArgumentForInput },
     control,
   });
 

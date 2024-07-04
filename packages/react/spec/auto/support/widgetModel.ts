@@ -9,6 +9,7 @@ export const widgetModelInputFields = {
     __typename: "GadgetObjectFieldConfig",
     fieldType: "Object",
     name: null,
+    validations: [],
     fields: [
       {
         name: "Name",
@@ -17,10 +18,16 @@ export const widgetModelInputFields = {
         requiredArgumentForInput: true,
         sortable: true,
         filterable: true,
-        __typename: "GadgetModelField",
         configuration: {
           __typename: "GadgetGenericFieldConfig",
           fieldType: "String",
+          validations: [
+            {
+              name: "Required",
+              specID: "gadget/validation/required",
+              __typename: "GadgetGenericFieldValidation",
+            },
+          ],
         },
       },
       {
@@ -30,10 +37,23 @@ export const widgetModelInputFields = {
         requiredArgumentForInput: true,
         sortable: true,
         filterable: true,
-        __typename: "GadgetModelField",
         configuration: {
           __typename: "GadgetGenericFieldConfig",
           fieldType: "Number",
+          validations: [
+            {
+              name: "Number range",
+              specID: "gadget/validation/number-range",
+              __typename: "GadgetRangeFieldValidation",
+              min: 0,
+              max: null,
+            },
+            {
+              name: "Required",
+              specID: "gadget/validation/required",
+              __typename: "GadgetGenericFieldValidation",
+            },
+          ],
         },
       },
       {
@@ -43,13 +63,13 @@ export const widgetModelInputFields = {
         requiredArgumentForInput: false,
         sortable: false,
         filterable: false,
-        __typename: "GadgetModelField",
         configuration: {
           __typename: "GadgetHasManyConfig",
           fieldType: "HasMany",
+          validations: [],
           relatedModel: {
             apiIdentifier: "gizmo",
-            __typename: "GadgetModel",
+            namespace: [],
           },
         },
       },
@@ -60,10 +80,10 @@ export const widgetModelInputFields = {
         requiredArgumentForInput: false,
         sortable: true,
         filterable: true,
-        __typename: "GadgetModelField",
         configuration: {
           __typename: "GadgetGenericFieldConfig",
           fieldType: "JSON",
+          validations: [],
         },
       },
       {
@@ -73,10 +93,10 @@ export const widgetModelInputFields = {
         requiredArgumentForInput: false,
         sortable: true,
         filterable: true,
-        __typename: "GadgetModelField",
         configuration: {
           __typename: "GadgetGenericFieldConfig",
           fieldType: "RichText",
+          validations: [],
         },
       },
       {
@@ -86,26 +106,23 @@ export const widgetModelInputFields = {
         requiredArgumentForInput: false,
         sortable: true,
         filterable: true,
-        __typename: "GadgetModelField",
         configuration: {
           __typename: "GadgetEnumConfig",
           fieldType: "Enum",
+          validations: [],
           allowMultiple: true,
           options: [
             {
               name: "Whoosits",
               color: "#FCFCFC",
-              __typename: "GadgetEnumOption",
             },
             {
               name: "Whatsits",
               color: "#606060",
-              __typename: "GadgetEnumOption",
             },
             {
               name: "Galores",
               color: "#DF2222",
-              __typename: "GadgetEnumOption",
             },
           ],
         },
@@ -117,10 +134,10 @@ export const widgetModelInputFields = {
         requiredArgumentForInput: false,
         sortable: true,
         filterable: true,
-        __typename: "GadgetModelField",
         configuration: {
           __typename: "GadgetDateTimeConfig",
           fieldType: "DateTime",
+          validations: [],
         },
       },
       {
@@ -130,10 +147,10 @@ export const widgetModelInputFields = {
         requiredArgumentForInput: false,
         sortable: true,
         filterable: true,
-        __typename: "GadgetModelField",
         configuration: {
           __typename: "GadgetGenericFieldConfig",
           fieldType: "Boolean",
+          validations: [],
         },
       },
       {
@@ -143,10 +160,10 @@ export const widgetModelInputFields = {
         requiredArgumentForInput: false,
         sortable: true,
         filterable: true,
-        __typename: "GadgetModelField",
         configuration: {
           __typename: "GadgetGenericFieldConfig",
           fieldType: "JSON",
+          validations: [],
         },
       },
       {
@@ -156,10 +173,10 @@ export const widgetModelInputFields = {
         requiredArgumentForInput: false,
         sortable: false,
         filterable: true,
-        __typename: "GadgetModelField",
         configuration: {
           __typename: "GadgetGenericFieldConfig",
           fieldType: "RoleAssignments",
+          validations: [],
         },
       },
       {
@@ -169,10 +186,10 @@ export const widgetModelInputFields = {
         requiredArgumentForInput: false,
         sortable: true,
         filterable: true,
-        __typename: "GadgetModelField",
         configuration: {
           __typename: "GadgetDateTimeConfig",
           fieldType: "DateTime",
+          validations: [],
         },
       },
       {
@@ -182,10 +199,16 @@ export const widgetModelInputFields = {
         requiredArgumentForInput: false,
         sortable: true,
         filterable: true,
-        __typename: "GadgetModelField",
         configuration: {
           __typename: "GadgetGenericFieldConfig",
           fieldType: "Color",
+          validations: [
+            {
+              name: "Color",
+              specID: "gadget/validation/color",
+              __typename: "GadgetGenericFieldValidation",
+            },
+          ],
         },
       },
       {
@@ -195,10 +218,10 @@ export const widgetModelInputFields = {
         requiredArgumentForInput: false,
         sortable: false,
         filterable: false,
-        __typename: "GadgetModelField",
         configuration: {
           __typename: "GadgetGenericFieldConfig",
           fieldType: "EncryptedString",
+          validations: [],
         },
       },
       {
@@ -208,10 +231,10 @@ export const widgetModelInputFields = {
         requiredArgumentForInput: false,
         sortable: true,
         filterable: true,
-        __typename: "GadgetModelField",
         configuration: {
           __typename: "GadgetGenericFieldConfig",
           fieldType: "Vector",
+          validations: [],
         },
       },
       {
@@ -221,13 +244,13 @@ export const widgetModelInputFields = {
         requiredArgumentForInput: false,
         sortable: false,
         filterable: true,
-        __typename: "GadgetModelField",
         configuration: {
           __typename: "GadgetBelongsToConfig",
           fieldType: "BelongsTo",
+          validations: [],
           relatedModel: {
             apiIdentifier: "section",
-            __typename: "GadgetModel",
+            namespace: [],
           },
         },
       },
@@ -238,10 +261,18 @@ export const widgetModelInputFields = {
         requiredArgumentForInput: false,
         sortable: true,
         filterable: true,
-        __typename: "GadgetModelField",
         configuration: {
           __typename: "GadgetGenericFieldConfig",
           fieldType: "String",
+          validations: [
+            {
+              name: "String length range",
+              specID: "gadget/validation/string-size",
+              __dirname: "GadgetRangeFieldValidation",
+              min: 20,
+              max: null,
+            },
+          ],
         },
       },
     ],
@@ -251,7 +282,7 @@ export const widgetModelInputFields = {
 
 export const getWidgetModelMetadata = (
   action: { name: string; apiIdentifier: string; operatesWithRecordIdentity: boolean },
-  inputFields = [widgetModelInputFields]
+  inputFields = [widgetModelInputFields] as any[]
 ) => {
   return {
     gadgetMeta: {

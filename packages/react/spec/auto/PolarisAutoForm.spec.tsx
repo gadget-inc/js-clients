@@ -246,7 +246,7 @@ describe("PolarisAutoForm", () => {
         await user.keyboard("updated test record");
         await user.clear(nameElement);
 
-        await user.click(getByRole("button"));
+        await user.click(submitButton);
       });
 
       const mutation = mockUrqlClient.executeMutation.mock.calls[0][0];
@@ -256,6 +256,256 @@ describe("PolarisAutoForm", () => {
       expect(mutationName).toEqual("createGizmo");
       expect(variables).toEqual({
         name: "",
+      });
+    });
+  });
+
+  describe("client-side validations", () => {
+    test("it should not submit the form if the string field is invalid", async () => {
+      const user = userEvent.setup();
+
+      const { getByRole, getByLabelText } = render(<PolarisAutoForm action={api.widget.create} />, {
+        wrapper: PolarisMockedProviders,
+      });
+
+      mockUrqlClient.executeQuery.pushResponse("ModelActionMetadata", {
+        stale: false,
+        hasNext: false,
+        data: getWidgetModelMetadata(
+          {
+            name: "Create",
+            apiIdentifier: "create",
+            operatesWithRecordIdentity: false,
+          },
+          [
+            {
+              name: "Widget",
+              apiIdentifier: "widget",
+              fieldType: "Object",
+              requiredArgumentForInput: false,
+              configuration: {
+                __typename: "GadgetObjectFieldConfig",
+                fieldType: "Object",
+                name: null,
+                validations: [],
+                fields: [
+                  {
+                    name: "Name",
+                    apiIdentifier: "name",
+                    fieldType: "String",
+                    requiredArgumentForInput: true,
+                    sortable: true,
+                    filterable: true,
+                    configuration: {
+                      __typename: "GadgetGenericFieldConfig",
+                      fieldType: "String",
+                      validations: [
+                        {
+                          name: "Required",
+                          specID: "gadget/validation/required",
+                          __typename: "GadgetGenericFieldValidation",
+                        },
+                        {
+                          name: "String length range",
+                          specID: "gadget/validation/string-size",
+                          __typename: "GadgetRangeFieldValidation",
+                          min: 20,
+                          max: 50,
+                        },
+                        {
+                          name: "RegExp pattern",
+                          specID: "gadget/validation/regexp",
+                          __typename: "GadgetRegexFieldValidation",
+                          pattern: "^[a-zA-Z ]+$",
+                        },
+                      ],
+                    },
+                  },
+                ],
+              },
+              __typename: "GadgetObjectField",
+            },
+          ]
+        ),
+      });
+
+      const submitButton = getByRole("button");
+      expect(submitButton).toHaveTextContent("Submit");
+
+      await act(async () => {
+        await user.click(submitButton);
+      });
+
+      // Name is a required field. Since it is not filled.
+      expect(mockUrqlClient.executeMutation.mock.calls.length).toBe(0);
+
+      await act(async () => {
+        const nameElement = getByLabelText("Name");
+        await user.clear(nameElement);
+        await user.click(nameElement);
+        await user.keyboard("very short");
+
+        await user.click(submitButton);
+      });
+
+      // Name has to be at least 20 characters long.
+      expect(mockUrqlClient.executeMutation.mock.calls.length).toBe(0);
+
+      await act(async () => {
+        const nameElement = getByLabelText("Name");
+        await user.clear(nameElement);
+        await user.click(nameElement);
+        await user.keyboard(`now make it super l${"o".repeat(50)}ng`);
+
+        await user.click(submitButton);
+      });
+
+      // Name has to be at most 50 characters long.
+      expect(mockUrqlClient.executeMutation.mock.calls.length).toBe(0);
+
+      await act(async () => {
+        const nameElement = getByLabelText("Name");
+        await user.clear(nameElement);
+        await user.click(nameElement);
+        await user.keyboard("1".repeat(30));
+
+        await user.click(submitButton);
+      });
+
+      // Name is within the range, but the regex pattern validation fails because it only allows alphabets.
+      expect(mockUrqlClient.executeMutation.mock.calls.length).toBe(0);
+
+      await act(async () => {
+        const nameElement = getByLabelText("Name");
+        await user.clear(nameElement);
+        await user.click(nameElement);
+        await user.keyboard(`lets make it valid now something long enough`);
+
+        await user.click(submitButton);
+      });
+
+      const mutation = mockUrqlClient.executeMutation.mock.calls[0][0];
+      const mutationName = mutation.query.definitions[0].name.value;
+      const variables = mutation.variables.widget;
+
+      expect(mutationName).toEqual("createWidget");
+      expect(variables).toEqual({
+        name: "lets make it valid now something long enough",
+      });
+    });
+
+    test("it should not submit the form if the number field is invalid", async () => {
+      const user = userEvent.setup();
+
+      const { getByRole, getByLabelText } = render(<PolarisAutoForm action={api.widget.create} />, {
+        wrapper: PolarisMockedProviders,
+      });
+
+      mockUrqlClient.executeQuery.pushResponse("ModelActionMetadata", {
+        stale: false,
+        hasNext: false,
+        data: getWidgetModelMetadata(
+          {
+            name: "Create",
+            apiIdentifier: "create",
+            operatesWithRecordIdentity: false,
+          },
+          [
+            {
+              name: "Widget",
+              apiIdentifier: "widget",
+              fieldType: "Object",
+              requiredArgumentForInput: false,
+              configuration: {
+                __typename: "GadgetObjectFieldConfig",
+                fieldType: "Object",
+                name: null,
+                validations: [],
+                fields: [
+                  {
+                    name: "Inventory count",
+                    apiIdentifier: "inventoryCount",
+                    fieldType: "Number",
+                    requiredArgumentForInput: true,
+                    sortable: true,
+                    filterable: true,
+                    configuration: {
+                      __typename: "GadgetGenericFieldConfig",
+                      fieldType: "Number",
+                      validations: [
+                        {
+                          name: "Required",
+                          specID: "gadget/validation/required",
+                          __typename: "GadgetGenericFieldValidation",
+                        },
+                        {
+                          name: "Number range",
+                          specID: "gadget/validation/number-range",
+                          __typename: "GadgetRangeFieldValidation",
+                          min: 5,
+                          max: 10,
+                        },
+                      ],
+                    },
+                  },
+                ],
+              },
+              __typename: "GadgetObjectField",
+            },
+          ]
+        ),
+      });
+
+      const submitButton = getByRole("button");
+      expect(submitButton).toHaveTextContent("Submit");
+
+      await act(async () => {
+        await user.click(submitButton);
+      });
+
+      // Name is a required field.
+      expect(mockUrqlClient.executeMutation.mock.calls.length).toBe(0);
+
+      await act(async () => {
+        const inventoryCountElement = getByLabelText("Inventory count");
+        await user.clear(inventoryCountElement);
+        await user.click(inventoryCountElement);
+        await user.keyboard("0");
+
+        await user.click(submitButton);
+      });
+
+      // Inventory count has to be at least 5.
+      expect(mockUrqlClient.executeMutation.mock.calls.length).toBe(0);
+
+      await act(async () => {
+        const inventoryCountElement = getByLabelText("Inventory count");
+        await user.clear(inventoryCountElement);
+        await user.click(inventoryCountElement);
+        await user.keyboard("999");
+
+        await user.click(submitButton);
+      });
+
+      // Inventory count has to be at most 10.
+      expect(mockUrqlClient.executeMutation.mock.calls.length).toBe(0);
+
+      await act(async () => {
+        const inventoryCountElement = getByLabelText("Inventory count");
+        await user.clear(inventoryCountElement);
+        await user.click(inventoryCountElement);
+        await user.keyboard("5");
+
+        await user.click(submitButton);
+      });
+
+      const mutation = mockUrqlClient.executeMutation.mock.calls[0][0];
+      const mutationName = mutation.query.definitions[0].name.value;
+      const variables = mutation.variables.widget;
+
+      expect(mutationName).toEqual("createWidget");
+      expect(variables).toEqual({
+        inventoryCount: 5,
       });
     });
   });
