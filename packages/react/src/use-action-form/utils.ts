@@ -317,7 +317,7 @@ export const reshapeDataForGraphqlApi = async (client: AnyClient, defaultValues:
       }
 
       const inputHasId = "id" in input;
-      const inputHasMoreFields = Object.keys(input).length > 1;
+      const inputHasMoreFields = Object.keys(input).filter((field) => field !== "__typename").length > 1;
       const inputUpdateId = updates[path!]?.[0];
 
       switch (fieldType.type) {
