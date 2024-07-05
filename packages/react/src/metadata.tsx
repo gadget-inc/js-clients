@@ -72,6 +72,7 @@ const FieldMetadataFragment = graphql(/* GraphQL */ `
       }
       ... on GadgetEnumConfig {
         allowMultiple
+        allowOther
         options {
           name
           color
