@@ -194,6 +194,14 @@ export const useActionForm = <
 
       await handleSubmit(
         async (data) => {
+          console.debug("[useActionForm] form submitted", {
+            hasAmbiguousIdentifier: isModelAction && action.hasAmbiguousIdentifier,
+            existingRecordId,
+            defaultValues,
+            data,
+            findResultData: findResult.data,
+          });
+
           if (isModelAction) {
             if (!action.hasAmbiguousIdentifier && findResult.data) {
               data = disambiguateDefaultValues(data, findResult.data, action);
@@ -208,6 +216,10 @@ export const useActionForm = <
               });
             }
 
+            console.log("[useActionForm] reshaping data for graphql api", {
+              data,
+              defaultValues,
+            });
             data = await reshapeDataForGraphqlApi(api, defaultValues, data);
           }
 
@@ -230,6 +242,10 @@ export const useActionForm = <
           }
 
           options?.onSubmit?.();
+
+          console.debug("[useActionForm] running action", {
+            variables,
+          });
 
           result = await runAction(variables);
           if (!result.error) {
@@ -298,6 +314,19 @@ export const useActionForm = <
       }
     },
   }) as unknown as UseActionFormState<ActionFunc, ActionFunc["variablesType"] & ExtraFormVariables, FormContext>;
+
+  console.debug("[useActionForm] rendering form hook", {
+    isReady,
+    hasSetInitialValues: hasSetInitialValues.current,
+    hasAmbiguousIdentifier: isModelAction && action.hasAmbiguousIdentifier,
+    isModelAction,
+    findExistingRecord,
+    findResult,
+    actionResult,
+    defaultValues,
+    existingRecordId,
+    modelApiIdentifier: isModelAction ? action.modelApiIdentifier : undefined,
+  });
 
   return {
     ...formHook,
