@@ -1,5 +1,6 @@
 import type { ISchema } from "yup";
-import { NumberSchema, StringSchema, array, boolean, date, mixed, number, object, string } from "yup";
+import { MixedSchema, NumberSchema, StringSchema, array, boolean, date, mixed, number, object, string } from "yup";
+import { fileSizeValidationErrorMessage } from "./auto/hooks/useFileInputController.js";
 import type {
   GadgetEnumConfig,
   GadgetGenericFieldValidation,
@@ -10,15 +11,6 @@ import type {
 } from "./internal/gql/graphql.js";
 import { GadgetFieldType } from "./internal/gql/graphql.js";
 import type { FieldMetadata } from "./metadata.js";
-
-const fileInputValidator = object({
-  base64: string(),
-  copyURL: string(),
-  directUploadToken: string(),
-  mimeType: string(),
-  fileName: string(),
-  file: object(),
-});
 
 const richTextInputValidator = object({
   markdown: string().required(),
@@ -62,7 +54,13 @@ const validatorForField = (field: FieldMetadata) => {
       break;
     }
     case GadgetFieldType.File: {
-      validator = fileInputValidator;
+      validator = mixed().test("is-uploading", function (value) {
+        const { path, createError } = this;
+        if (isAutoFileFieldValue(value) && value.$uploading) {
+          return createError({ path, message: "file is still uploading" });
+        }
+        return true;
+      });
       break;
     }
     case GadgetFieldType.Number: {
@@ -126,14 +124,23 @@ const validatorForField = (field: FieldMetadata) => {
   for (const validation of field.configuration.validations) {
     switch (validation?.__typename) {
       case "GadgetRangeFieldValidation": {
-        const rangeValidation = validation as GadgetRangeFieldValidation;
+        const { min, max } = validation as GadgetRangeFieldValidation;
         if (validator instanceof StringSchema || validator instanceof NumberSchema) {
-          if (rangeValidation.min) {
-            validator = validator.min(rangeValidation.min);
-          }
-          if (rangeValidation.max) {
-            validator = validator.max(rangeValidation.max);
-          }
+          if (min) validator = validator.min(min);
+          if (max) validator = validator.max(max);
+        } else if (field.fieldType === GadgetFieldType.File && validator instanceof MixedSchema) {
+          validator = validator.test("is-valid-file-size", function (value) {
+            const { path, createError } = this;
+
+            if (isAutoFileFieldValue(value) && value.$invalidFileSize) {
+              return createError({
+                path,
+                message: fileSizeValidationErrorMessage(validation, value.$invalidFileSize),
+              });
+            }
+
+            return true;
+          });
         }
         break;
       }
@@ -147,8 +154,27 @@ const validatorForField = (field: FieldMetadata) => {
       }
 
       case "GadgetOnlyImageFileFieldValidation": {
-        const { allowAnimatedImages } = validation as GadgetOnlyImageFileFieldValidation;
-        // TODO: implement image file validation, with option to allow animations
+        if (validator instanceof MixedSchema) {
+          validator = validator.test("is-valid-image-file", function (value) {
+            const { allowAnimatedImages } = validation as GadgetOnlyImageFileFieldValidation;
+
+            if (typeof value == "undefined") return true;
+            const { path, createError } = this;
+
+            if (isAutoFileFieldValue(value)) {
+              if (!value.mimeType.startsWith("image/")) {
+                return createError({ path, message: `must be a valid image file type; file type was detected as "${value.mimeType}"` });
+              }
+
+              if (!allowAnimatedImages && value.mimeType === "image/gif") {
+                return createError({ path, message: "must not be an animated image file" });
+              }
+            }
+
+            return true;
+          });
+        }
+
         break;
       }
 
@@ -191,6 +217,7 @@ const EmailValidationSpecId = "gadget/validation/email-address";
 const ColorValidationSpecId = "gadget/validation/color";
 const StrongPasswordValidationSpecId = "gadget/validation/password";
 const UrlValidationSpecId = "gadget/validation/url";
+export const RequiredValidationSpecId = "gadget/validation/required";
 
 const colorRegex = new RegExp(/^#([0-9a-fA-F]{6}|[0-9a-fA-F]{8})$/);
 const strongPasswordRegex = new RegExp("^(?=.*\\d)(?=.*[!@#$%^&*\\-=_+\\[\\]{}|;:'\",.<>/?])(.{8,})$");
@@ -204,4 +231,17 @@ export const validationSchema = (fields: FieldMetadata[]) => {
     validators[field.apiIdentifier] = validatorForField(field);
   }
   return object(validators);
+};
+
+export interface AutoFileFieldValue {
+  fileName: string;
+  mimeType: string;
+  url?: string;
+  directUploadToken?: string;
+  $uploading?: boolean;
+  $invalidFileSize?: number;
+}
+
+export const isAutoFileFieldValue = (value: any): value is AutoFileFieldValue => {
+  return typeof value === "object" && value !== null && "mimeType" in value && "fileName" in value;
 };

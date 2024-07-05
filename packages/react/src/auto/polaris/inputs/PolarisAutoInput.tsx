@@ -3,7 +3,7 @@ import { useController } from "react-hook-form";
 import type { GadgetEnumConfig } from "../../../internal/gql/graphql.js";
 import { FieldType } from "../../../metadata.js";
 import { useFieldMetadata } from "../../hooks/useFieldMetadata.js";
-import { PolarisFileInput } from "../PolarisFileInput.js";
+import { PolarisAutoFileInput } from "../PolarisAutoFileInput.js";
 import { PolarisFixedOptionsCombobox } from "../PolarisFixedOptionsCombobox.js";
 import { PolarisAutoJSONInput } from "./PolarisAutoJsonInput.js";
 import { PolarisAutoRelationshipInput } from "./PolarisAutoRelationshipInput.js";
@@ -63,7 +63,7 @@ export const PolarisAutoInput = (props: { field: string }) => {
       );
     }
     case FieldType.File: {
-      return <PolarisFileInput label={metadata.name} {...field} />;
+      return <PolarisAutoFileInput field={props.field} />;
     }
     case FieldType.RoleAssignments: {
       return <PolarisAutoRolesInput field={props.field} {...field} />;

@@ -1,3 +1,4 @@
+export { PolarisAutoFileInput as AutoFileInput } from "./PolarisAutoFileInput.js";
 export * from "./PolarisAutoForm.js";
 export { PolarisAutoForm as AutoForm } from "./PolarisAutoForm.js";
 export { PolarisAutoHiddenInput as AutoHiddenInput } from "./inputs/PolarisAutoHiddenInput.js";

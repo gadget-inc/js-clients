@@ -1,5 +1,6 @@
 export * from "./MUIAutoForm.js";
 export { MUIAutoForm as AutoForm } from "./MUIAutoForm.js";
+export { MUIAutoFileInput as AutoFileInput } from "./inputs/MUIAutoFileInput.js";
 export { MUIAutoHiddenInput as AutoHiddenInput } from "./inputs/MUIAutoHiddenInput.js";
 export { MUIAutoInput as AutoInput } from "./inputs/MUIAutoInput.js";
 export { MUIAutoJSONInput as AutoJSONInput } from "./inputs/MUIAutoJSONInput.js";
