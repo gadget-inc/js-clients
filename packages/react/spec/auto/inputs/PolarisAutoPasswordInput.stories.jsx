@@ -4,6 +4,7 @@ import { FormProvider, useForm } from "react-hook-form";
 import { Provider } from "../../../src/GadgetProvider.tsx";
 import { PolarisAutoForm } from "../../../src/auto/polaris/PolarisAutoForm.tsx";
 import { PolarisPasswordInput } from "../../../src/auto/polaris/inputs/PolarisPasswordInput.tsx";
+import { PolarisAutoSubmit } from "../../../src/auto/polaris/submit/PolarisAutoSubmit.tsx";
 import { testApi as api } from "../../apis.ts";
 
 // More on how to set up stories at: https://storybook.js.org/docs/writing-stories#default-export
@@ -12,6 +13,7 @@ export default {
   component: (props) => (
     <PolarisAutoForm {...props}>
       <PolarisPasswordInput field="password" />
+      <PolarisAutoSubmit />
     </PolarisAutoForm>
   ),
   decorators: [
