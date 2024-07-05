@@ -23,6 +23,9 @@ type GadgetProviderProps = {
   isRootFrameRequest: boolean;
 };
 
+// mutation which passes the session token back to Gadget to see if this shop is already installed and if not, install it
+// for managed installations where there is no OAuth callback sent to Gadget, this is the piece that first discovers a new shop and informs the backend
+// for normal OAuth installs, this also checks that the right scopes have been granted by this shop in order to trigger re-authentication
 const FetchOrInstallShopMutation = `
   mutation ShopifyFetchOrInstallShop($shopifySessionToken: String!) {
     shopifyConnection {
@@ -48,14 +51,6 @@ const InnerGadgetProvider = memo(
     const isEmbedded = appBridge.environment.embedded || appBridge.environment.mobile;
     const inDestinationContext = isEmbedded && type === AppType.Embedded;
     const forceRedirect = isReady && typeof host !== "undefined" && !inDestinationContext;
-    const [context, setContext] = useState<GadgetAuthContextValue>({
-      isAuthenticated: false,
-      isEmbedded: false,
-      canAuth: false,
-      loading: true,
-      appBridge,
-      isRootFrameRequest: false,
-    });
 
     const [idTokenError, setIdTokenError] = useState<Error | undefined>();
 
@@ -92,6 +87,7 @@ const InnerGadgetProvider = memo(
     let missingScopes: string[] = useMemo(() => [], []);
     const hasFetchedOrInstalledShop = useRef(false);
     const hasStartedFetchingOrInstallingShop = useRef(false);
+    let hasInstallStateHint = false;
 
     const [{ data: fetchOrInstallShopData, fetching: fetchingOrInstallingShop, error: fetchingOrInstallingShopError }, fetchOrInstallShop] =
       useMutation<{
@@ -99,10 +95,15 @@ const InnerGadgetProvider = memo(
       }>(FetchOrInstallShopMutation);
 
     if (fetchOrInstallShopData) {
-      console.debug({ fetchOrInstallShopData }, "[gadget-rsab] fetched or installed shop data");
       redirectToOauth = fetchOrInstallShopData.shopifyConnection.fetchOrInstallShop.redirectToOauth;
       isAuthenticated = fetchOrInstallShopData.shopifyConnection.fetchOrInstallShop.isAuthenticated;
       missingScopes = fetchOrInstallShopData.shopifyConnection.fetchOrInstallShop.missingScopes ?? [];
+    } else if (typeof window != "undefined" && window.gadgetConfig?.shopifyInstallState) {
+      const hint = window.gadgetConfig.shopifyInstallState;
+      hasInstallStateHint = true;
+      redirectToOauth = hint.redirectToOauth;
+      isAuthenticated = hint.isAuthenticated;
+      missingScopes = hint.missingScopes ?? [];
     }
 
     // we want to show the loading state until we've started fetching or installing the shop
@@ -111,7 +112,10 @@ const InnerGadgetProvider = memo(
       if (fetchingOrInstallingShop) {
         hasStartedFetchingOrInstallingShop.current = true;
       }
-    }, [fetchingOrInstallingShop]);
+      if (hasInstallStateHint) {
+        console.debug("[gadget-rsab] shopifyInstallState hint used", window.gadgetConfig!.shopifyInstallState);
+      }
+    }, [fetchingOrInstallingShop, hasInstallStateHint]);
 
     // always run one fetch to the gadget backend on boot to discover if this app is installed
     useEffect(() => {
@@ -125,7 +129,7 @@ const InnerGadgetProvider = memo(
         .idToken()
         .then((idToken) => {
           console.debug("[gadget-rsab] fetching or installing shop");
-          fetchOrInstallShop({ shopifySessionToken: idToken }).catch((err) => {
+          fetchOrInstallShop({ shopifySessionToken: idToken }).catch((err: any) => {
             console.error({ err }, "[gadget-rsab] error fetching or installing shop");
           });
         })
@@ -152,10 +156,30 @@ const InnerGadgetProvider = memo(
       // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [gadgetAppUrl, isRootFrameRequest, originalQueryParams, redirectToOauth]);
 
-    const loading = forceRedirect || redirectToOauth || fetchingOrInstallingShop || !hasStartedFetchingOrInstallingShop.current;
+    // we're loading we need to redirect somewhere so we dont render the app while a redirect is underway
+    let loading = forceRedirect || redirectToOauth;
+
+    // we're also loading if we're in the middle of checking installation status in the backend
+    if (!hasStartedFetchingOrInstallingShop.current || fetchingOrInstallingShop) {
+      if (hasInstallStateHint) {
+        // if the backend request is outstanding, but we have an installation status hint that says we're already authenticated, assume that's what the backend will say too, and stop being loading earlier to improve LCP
+        loading ||= !isAuthenticated;
+      } else {
+        loading = true;
+      }
+    }
+
+    const [contextValue, setContextValue] = useState<GadgetAuthContextValue>({
+      isAuthenticated,
+      isEmbedded,
+      canAuth: !!appBridge,
+      loading,
+      appBridge,
+      isRootFrameRequest,
+    });
 
     useEffect(() => {
-      const context = {
+      const newContext = {
         isAuthenticated,
         isEmbedded,
         canAuth: !!appBridge,
@@ -165,9 +189,9 @@ const InnerGadgetProvider = memo(
         isRootFrameRequest,
       };
 
-      console.debug("[gadget-rsab] context changed", context);
+      console.debug("[gadget-rsab] context changed", newContext);
 
-      return setContext(context);
+      return setContextValue(newContext);
     }, [loading, isEmbedded, appBridge, isAuthenticated, fetchingOrInstallingShopError, idTokenError, isRootFrameRequest]);
 
     useEffect(() => {
@@ -181,7 +205,7 @@ const InnerGadgetProvider = memo(
       }
     }, [redirectToOauth, missingScopes]);
 
-    return <GadgetAuthContext.Provider value={context}>{children}</GadgetAuthContext.Provider>;
+    return <GadgetAuthContext.Provider value={contextValue}>{children}</GadgetAuthContext.Provider>;
   }
 );
 
@@ -245,7 +269,14 @@ type ProviderLocation = {
 export const Provider = ({ type, children, api }: { type?: AppType; children: ReactNode; shopifyApiKey: string; api: AnyClient }) => {
   // if we haven't properly set up the shopify global then skip anything that requires app bridge
   const shopifyGlobalDefined = !!(globalThis && globalThis.shopify);
-  const [location, setLocation] = useState<ProviderLocation | null>(null);
+
+  const location = useMemo<ProviderLocation>(
+    () => ({
+      asPath: `${window.location.pathname}${window.location.search}`,
+      query: new URLSearchParams(window.location.search),
+    }),
+    []
+  );
   const isReady = !!location;
   const { query } = location ?? {};
   const host = query?.get("host") ?? undefined;
@@ -258,13 +289,6 @@ export const Provider = ({ type, children, api }: { type?: AppType; children: Re
   const isRootFrameRequest = !query?.has("hmac") && !query?.has("shop") && type == AppType.Embedded;
 
   const gadgetAppUrl = new URL(api.connection.options.endpoint).origin;
-
-  useEffect(() => {
-    setLocation({
-      asPath: `${window.location.pathname}${window.location.search}`,
-      query: new URLSearchParams(window.location.search),
-    });
-  }, []);
 
   console.debug("[gadget-rsab] provider rendering", {
     host,

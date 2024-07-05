@@ -88,8 +88,6 @@ describe("useGadget", () => {
     rerender();
 
     expect(result.current.isEmbedded).toBeTruthy();
-
-    window.shopify.environment.mobile = false;
   });
 
   test("has correct authenticated value", async () => {
@@ -210,7 +208,6 @@ describe("useGadget", () => {
 
   test("has loading true for embedded apps until ShopifyFetchOrInstallShop resolves", async () => {
     window.shopify.environment.embedded = true;
-    const location = window.location;
     // @ts-expect-error mock
     delete window.location;
 
@@ -263,8 +260,229 @@ describe("useGadget", () => {
     expect(result.current.isRootFrameRequest).toBeFalsy();
     expect(result.current.loading).toBeFalsy();
     expect(result.current.isAuthenticated).toBeTruthy();
+  });
 
-    window.location = location;
-    window.shopify.environment.embedded = false;
+  test("has loading false from the start when the install state hint is present", async () => {
+    window.shopify.environment.embedded = true;
+    // @ts-expect-error mock
+    delete window.location;
+
+    // @ts-expect-error mock
+    window.location = {
+      origin: "https://test-app.gadget.app",
+      pathname: "/",
+      search: "?shop=example.myshopify.com&hmac=abcdefg&host=abcdfg",
+      assign: jest.fn(),
+    };
+
+    window.gadgetConfig = {
+      shopifyInstallState: {
+        redirectToOauth: false,
+        isAuthenticated: true,
+        missingScopes: [],
+      },
+    };
+
+    const { result } = renderHook(() => useGadget(), {
+      wrapper: (props: { children: ReactNode }) => (
+        <Provider api={mockApiClient} shopifyApiKey={mockApiKey} type={AppType.Embedded}>
+          {props.children}
+        </Provider>
+      ),
+    });
+
+    await act(async () => {
+      resolveIdToken("some-id-token");
+    });
+
+    expect(result.current.loading).toBeFalsy();
+    expect(result.current.isAuthenticated).toBeTruthy();
+
+    await mockUrqlClient.executeMutation.waitForSubject("ShopifyFetchOrInstallShop");
+
+    mockUrqlClient.executeMutation.pushResponse("ShopifyFetchOrInstallShop", {
+      data: {
+        shopifyConnection: {
+          fetchOrInstallShop: {
+            isAuthenticated: true,
+            redirectToOauth: false,
+          },
+        },
+      },
+      stale: false,
+      hasNext: false,
+    });
+
+    expect(result.current.isRootFrameRequest).toBeFalsy();
+    expect(result.current.loading).toBeFalsy();
+    expect(result.current.isAuthenticated).toBeTruthy();
+  });
+
+  test("has loading true from the start when the install state hint is present and reports that we're not authenticated", async () => {
+    window.shopify.environment.embedded = true;
+    // @ts-expect-error mock
+    delete window.location;
+
+    // @ts-expect-error mock
+    window.location = {
+      origin: "https://test-app.gadget.app",
+      pathname: "/",
+      search: "?shop=example.myshopify.com&hmac=abcdefg&host=abcdfg",
+      assign: jest.fn(),
+    };
+
+    window.gadgetConfig = {
+      shopifyInstallState: {
+        redirectToOauth: false,
+        isAuthenticated: false,
+        missingScopes: [],
+      },
+    };
+
+    const { result } = renderHook(() => useGadget(), {
+      wrapper: (props: { children: ReactNode }) => (
+        <Provider api={mockApiClient} shopifyApiKey={mockApiKey} type={AppType.Embedded}>
+          {props.children}
+        </Provider>
+      ),
+    });
+
+    await act(async () => {
+      resolveIdToken("some-id-token");
+    });
+
+    expect(result.current.loading).toBeTruthy();
+    expect(result.current.isAuthenticated).toBeFalsy();
+
+    await mockUrqlClient.executeMutation.waitForSubject("ShopifyFetchOrInstallShop");
+
+    mockUrqlClient.executeMutation.pushResponse("ShopifyFetchOrInstallShop", {
+      data: {
+        shopifyConnection: {
+          fetchOrInstallShop: {
+            isAuthenticated: false,
+            redirectToOauth: true,
+          },
+        },
+      },
+      stale: false,
+      hasNext: false,
+    });
+
+    expect(result.current.isRootFrameRequest).toBeFalsy();
+    expect(result.current.loading).toBeTruthy(); // still true because we're now redirecting to oauth
+    expect(result.current.isAuthenticated).toBeFalsy();
+  });
+
+  test("has loading false when the install state hint is present and reports that we're authenticated, but then the mutation arrives and says we aren't", async () => {
+    window.shopify.environment.embedded = true;
+    // @ts-expect-error mock
+    delete window.location;
+
+    // @ts-expect-error mock
+    window.location = {
+      origin: "https://test-app.gadget.app",
+      pathname: "/",
+      search: "?shop=example.myshopify.com&hmac=abcdefg&host=abcdfg",
+      assign: jest.fn(),
+    };
+
+    window.gadgetConfig = {
+      shopifyInstallState: {
+        redirectToOauth: false,
+        isAuthenticated: true,
+        missingScopes: [],
+      },
+    };
+
+    const { result } = renderHook(() => useGadget(), {
+      wrapper: (props: { children: ReactNode }) => (
+        <Provider api={mockApiClient} shopifyApiKey={mockApiKey} type={AppType.Embedded}>
+          {props.children}
+        </Provider>
+      ),
+    });
+
+    await act(async () => {
+      resolveIdToken("some-id-token");
+    });
+
+    expect(result.current.loading).toBeFalsy();
+    expect(result.current.isAuthenticated).toBeTruthy();
+
+    await mockUrqlClient.executeMutation.waitForSubject("ShopifyFetchOrInstallShop");
+
+    mockUrqlClient.executeMutation.pushResponse("ShopifyFetchOrInstallShop", {
+      data: {
+        shopifyConnection: {
+          fetchOrInstallShop: {
+            isAuthenticated: false,
+            redirectToOauth: true,
+          },
+        },
+      },
+      stale: false,
+      hasNext: false,
+    });
+
+    expect(result.current.isRootFrameRequest).toBeFalsy();
+    expect(result.current.loading).toBeTruthy(); // now true because we're redirecting to oauth
+    expect(result.current.isAuthenticated).toBeFalsy();
+  });
+
+  test("has loading false after a failed managed shopify install", async () => {
+    window.shopify.environment.embedded = true;
+    // @ts-expect-error mock
+    delete window.location;
+
+    // @ts-expect-error mock
+    window.location = {
+      origin: "https://test-app.gadget.app",
+      pathname: "/",
+      search: "?shop=example.myshopify.com&hmac=abcdefg&host=abcdfg",
+      assign: jest.fn(),
+    };
+
+    window.gadgetConfig = {
+      shopifyInstallState: {
+        redirectToOauth: false,
+        isAuthenticated: false,
+        missingScopes: [],
+      },
+    };
+
+    const { result } = renderHook(() => useGadget(), {
+      wrapper: (props: { children: ReactNode }) => (
+        <Provider api={mockApiClient} shopifyApiKey={mockApiKey} type={AppType.Embedded}>
+          {props.children}
+        </Provider>
+      ),
+    });
+
+    await act(async () => {
+      resolveIdToken("some-id-token");
+    });
+
+    expect(result.current.loading).toBeTruthy();
+    expect(result.current.isAuthenticated).toBeFalsy();
+
+    await mockUrqlClient.executeMutation.waitForSubject("ShopifyFetchOrInstallShop");
+
+    mockUrqlClient.executeMutation.pushResponse("ShopifyFetchOrInstallShop", {
+      data: {
+        shopifyConnection: {
+          fetchOrInstallShop: {
+            isAuthenticated: false,
+            redirectToOauth: false,
+          },
+        },
+      },
+      stale: false,
+      hasNext: false,
+    });
+
+    expect(result.current.isRootFrameRequest).toBeFalsy();
+    expect(result.current.loading).toBeFalsy();
+    expect(result.current.isAuthenticated).toBeFalsy();
   });
 });
