@@ -1,5 +1,5 @@
 import React, { useContext } from "react";
-import type { UseActionFormSubmit } from "src/use-action-form/types.js";
+import type { RecordIdentifier, UseActionFormSubmit } from "src/use-action-form/types.js";
 import type { ActionMetadata } from "../metadata.js";
 
 export interface AutoFormSubmitResult {
@@ -8,6 +8,7 @@ export interface AutoFormSubmitResult {
 }
 
 export interface AutoFormMetadataContext {
+  findBy?: RecordIdentifier;
   metadata: ActionMetadata | undefined;
   submit: UseActionFormSubmit<any>;
   submitResult?: AutoFormSubmitResult;

@@ -13,6 +13,7 @@ import { MUIAutoTextInput } from "./MUIAutoTextInput.js";
 import { MUIBooleanInput } from "./MUIBooleanInput.js";
 import { MUIEncryptedStringInput } from "./MUIEncryptedStringInput.js";
 import { MUIFileInput } from "./MUIFileInput.js";
+import { MUIPasswordInput } from "./MUIPasswordInput.js";
 
 export const MUIAutoFormControl = (props: { field: string; children: ReactElement }) => {
   const { path, metadata } = useFieldMetadata(props.field);
@@ -58,8 +59,7 @@ export const MUIAutoInput = (props: { field: string }) => {
       return <MUIEncryptedStringInput field={props.field} />;
     }
     case FieldType.Password: {
-      // TODO - Needs updated implementation to handle security concerns
-      return <MUIAutoTextInput field={props.field} />;
+      return <MUIPasswordInput field={props.field} />;
     }
     case FieldType.Boolean: {
       return <MUIBooleanInput field={props.field} />;
