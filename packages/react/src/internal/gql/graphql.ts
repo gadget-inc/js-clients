@@ -126,7 +126,9 @@ export type BackgroundActionResult =
   | DeleteSectionResult
   | DeleteUserResult
   | DeleteWidgetResult
+  | SignInUserResult
   | SignOutUserResult
+  | SignUpUserResult
   | UpdateGameCityResult
   | UpdateGamePlayerResult
   | UpdateGameRoundResult
@@ -315,7 +317,9 @@ export type BackgroundMutations = {
   bulkDeleteSections: BulkEnqueueBackgroundActionResult;
   bulkDeleteUsers: BulkEnqueueBackgroundActionResult;
   bulkDeleteWidgets: BulkEnqueueBackgroundActionResult;
+  bulkSignInUsers: BulkEnqueueBackgroundActionResult;
   bulkSignOutUsers: BulkEnqueueBackgroundActionResult;
+  bulkSignUpUsers: BulkEnqueueBackgroundActionResult;
   bulkUpdateGizmos: BulkEnqueueBackgroundActionResult;
   bulkUpdateModelAs: BulkEnqueueBackgroundActionResult;
   bulkUpdateSections: BulkEnqueueBackgroundActionResult;
@@ -332,7 +336,9 @@ export type BackgroundMutations = {
   deleteUser: EnqueueBackgroundActionResult;
   deleteWidget: EnqueueBackgroundActionResult;
   game: BackgroundGameMutations;
+  signInUser: EnqueueBackgroundActionResult;
   signOutUser: EnqueueBackgroundActionResult;
+  signUpUser: EnqueueBackgroundActionResult;
   updateGizmo: EnqueueBackgroundActionResult;
   updateModelA: EnqueueBackgroundActionResult;
   updateSection: EnqueueBackgroundActionResult;
@@ -396,9 +402,19 @@ export type BackgroundMutationsBulkDeleteWidgetsArgs = {
   ids: Array<Scalars["GadgetID"]["input"]>;
 };
 
+export type BackgroundMutationsBulkSignInUsersArgs = {
+  backgroundOptions?: InputMaybe<EnqueueBackgroundActionOptions>;
+  inputs: Array<BulkSignInUsersInput>;
+};
+
 export type BackgroundMutationsBulkSignOutUsersArgs = {
   backgroundOptions?: InputMaybe<EnqueueBackgroundActionOptions>;
   inputs: Array<BulkSignOutUsersInput>;
+};
+
+export type BackgroundMutationsBulkSignUpUsersArgs = {
+  backgroundOptions?: InputMaybe<EnqueueBackgroundActionOptions>;
+  inputs: Array<BulkSignUpUsersInput>;
 };
 
 export type BackgroundMutationsBulkUpdateGizmosArgs = {
@@ -474,10 +490,21 @@ export type BackgroundMutationsDeleteWidgetArgs = {
   id: Scalars["GadgetID"]["input"];
 };
 
+export type BackgroundMutationsSignInUserArgs = {
+  backgroundOptions?: InputMaybe<EnqueueBackgroundActionOptions>;
+  id: Scalars["GadgetID"]["input"];
+  user?: InputMaybe<SignInUserInput>;
+};
+
 export type BackgroundMutationsSignOutUserArgs = {
   backgroundOptions?: InputMaybe<EnqueueBackgroundActionOptions>;
   id: Scalars["GadgetID"]["input"];
   user?: InputMaybe<SignOutUserInput>;
+};
+
+export type BackgroundMutationsSignUpUserArgs = {
+  backgroundOptions?: InputMaybe<EnqueueBackgroundActionOptions>;
+  user?: InputMaybe<SignUpUserInput>;
 };
 
 export type BackgroundMutationsUpdateGizmoArgs = {
@@ -736,6 +763,22 @@ export type BulkEnqueueBackgroundActionResult = {
   success: Scalars["Boolean"]["output"];
 };
 
+export type BulkSignInUsersInput = {
+  id: Scalars["GadgetID"]["input"];
+  user?: InputMaybe<SignInUserInput>;
+};
+
+/** The output when running the signIn on the user model in bulk. */
+export type BulkSignInUsersResult = {
+  __typename?: "BulkSignInUsersResult";
+  /** Aggregated list of errors that any bulk action encountered while processing */
+  errors?: Maybe<Array<ExecutionError>>;
+  /** Boolean describing if all the bulk actions succeeded or not */
+  success: Scalars["Boolean"]["output"];
+  /** The list of all changed user records by each sent bulk action. Returned in the same order as the input bulk action params. */
+  users?: Maybe<Array<Maybe<User>>>;
+};
+
 export type BulkSignOutUsersInput = {
   id: Scalars["GadgetID"]["input"];
   user?: InputMaybe<SignOutUserInput>;
@@ -744,6 +787,21 @@ export type BulkSignOutUsersInput = {
 /** The output when running the signOut on the user model in bulk. */
 export type BulkSignOutUsersResult = {
   __typename?: "BulkSignOutUsersResult";
+  /** Aggregated list of errors that any bulk action encountered while processing */
+  errors?: Maybe<Array<ExecutionError>>;
+  /** Boolean describing if all the bulk actions succeeded or not */
+  success: Scalars["Boolean"]["output"];
+  /** The list of all changed user records by each sent bulk action. Returned in the same order as the input bulk action params. */
+  users?: Maybe<Array<Maybe<User>>>;
+};
+
+export type BulkSignUpUsersInput = {
+  user?: InputMaybe<SignUpUserInput>;
+};
+
+/** The output when running the signUp on the user model in bulk. */
+export type BulkSignUpUsersResult = {
+  __typename?: "BulkSignUpUsersResult";
   /** Aggregated list of errors that any bulk action encountered while processing */
   errors?: Maybe<Array<ExecutionError>>;
   /** Boolean describing if all the bulk actions succeeded or not */
@@ -3655,7 +3713,9 @@ export type Mutation = {
   bulkDeleteSections?: Maybe<BulkDeleteSectionsResult>;
   bulkDeleteUsers?: Maybe<BulkDeleteUsersResult>;
   bulkDeleteWidgets?: Maybe<BulkDeleteWidgetsResult>;
+  bulkSignInUsers?: Maybe<BulkSignInUsersResult>;
   bulkSignOutUsers?: Maybe<BulkSignOutUsersResult>;
+  bulkSignUpUsers?: Maybe<BulkSignUpUsersResult>;
   bulkUpdateGizmos?: Maybe<BulkUpdateGizmosResult>;
   bulkUpdateModelAs?: Maybe<BulkUpdateModelAsResult>;
   bulkUpdateSections?: Maybe<BulkUpdateSectionsResult>;
@@ -3675,7 +3735,9 @@ export type Mutation = {
   gadgetMeta: GadgetApplicationMeta;
   game: GameMutations;
   internal: InternalMutations;
+  signInUser?: Maybe<SignInUserResult>;
   signOutUser?: Maybe<SignOutUserResult>;
+  signUpUser?: Maybe<SignUpUserResult>;
   updateGizmo?: Maybe<UpdateGizmoResult>;
   updateModelA?: Maybe<UpdateModelAResult>;
   updateSection?: Maybe<UpdateSectionResult>;
@@ -3728,8 +3790,16 @@ export type MutationBulkDeleteWidgetsArgs = {
   ids: Array<Scalars["GadgetID"]["input"]>;
 };
 
+export type MutationBulkSignInUsersArgs = {
+  inputs: Array<BulkSignInUsersInput>;
+};
+
 export type MutationBulkSignOutUsersArgs = {
   inputs: Array<BulkSignOutUsersInput>;
+};
+
+export type MutationBulkSignUpUsersArgs = {
+  inputs: Array<BulkSignUpUsersInput>;
 };
 
 export type MutationBulkUpdateGizmosArgs = {
@@ -3784,9 +3854,18 @@ export type MutationDeleteWidgetArgs = {
   id: Scalars["GadgetID"]["input"];
 };
 
+export type MutationSignInUserArgs = {
+  id: Scalars["GadgetID"]["input"];
+  user?: InputMaybe<SignInUserInput>;
+};
+
 export type MutationSignOutUserArgs = {
   id: Scalars["GadgetID"]["input"];
   user?: InputMaybe<SignOutUserInput>;
+};
+
+export type MutationSignUpUserArgs = {
+  user?: InputMaybe<SignUpUserInput>;
 };
 
 export type MutationUpdateGizmoArgs = {
@@ -4254,6 +4333,17 @@ export type SessionFilter = {
   userId?: InputMaybe<IdEqualsFilter>;
 };
 
+export type SignInUserInput = {
+  email?: InputMaybe<Scalars["String"]["input"]>;
+  emailVerified?: InputMaybe<Scalars["Boolean"]["input"]>;
+  firstName?: InputMaybe<Scalars["String"]["input"]>;
+  googleImageUrl?: InputMaybe<Scalars["String"]["input"]>;
+  googleProfileId?: InputMaybe<Scalars["String"]["input"]>;
+  lastName?: InputMaybe<Scalars["String"]["input"]>;
+  lastSignedIn?: InputMaybe<Scalars["DateTime"]["input"]>;
+  password?: InputMaybe<Scalars["String"]["input"]>;
+};
+
 export type SignInUserResult = {
   __typename?: "SignInUserResult";
   errors?: Maybe<Array<ExecutionError>>;
@@ -4277,6 +4367,17 @@ export type SignOutUserResult = {
   errors?: Maybe<Array<ExecutionError>>;
   success: Scalars["Boolean"]["output"];
   user?: Maybe<User>;
+};
+
+export type SignUpUserInput = {
+  email?: InputMaybe<Scalars["String"]["input"]>;
+  emailVerified?: InputMaybe<Scalars["Boolean"]["input"]>;
+  firstName?: InputMaybe<Scalars["String"]["input"]>;
+  googleImageUrl?: InputMaybe<Scalars["String"]["input"]>;
+  googleProfileId?: InputMaybe<Scalars["String"]["input"]>;
+  lastName?: InputMaybe<Scalars["String"]["input"]>;
+  lastSignedIn?: InputMaybe<Scalars["DateTime"]["input"]>;
+  password?: InputMaybe<Scalars["String"]["input"]>;
 };
 
 export type SignUpUserResult = {
@@ -4800,6 +4901,7 @@ type FieldMetadata_GadgetModelField_Fragment = {
     | {
         __typename: "GadgetEnumConfig";
         allowMultiple: boolean;
+        allowOther: boolean;
         fieldType: GadgetFieldType;
         options: Array<{ __typename?: "GadgetEnumOption"; name: string; color: string }>;
         validations: Array<
@@ -4891,6 +4993,7 @@ type FieldMetadata_GadgetObjectField_Fragment = {
     | {
         __typename: "GadgetEnumConfig";
         allowMultiple: boolean;
+        allowOther: boolean;
         fieldType: GadgetFieldType;
         options: Array<{ __typename?: "GadgetEnumOption"; name: string; color: string }>;
         validations: Array<
@@ -5000,6 +5103,7 @@ export type GetModelMetadataQuery = {
           | {
               __typename: "GadgetEnumConfig";
               allowMultiple: boolean;
+              allowOther: boolean;
               fieldType: GadgetFieldType;
               options: Array<{ __typename?: "GadgetEnumOption"; name: string; color: string }>;
               validations: Array<
@@ -5108,6 +5212,7 @@ type SubFields_GadgetModelField_Fragment = {
             | {
                 __typename: "GadgetEnumConfig";
                 allowMultiple: boolean;
+                allowOther: boolean;
                 fieldType: GadgetFieldType;
                 options: Array<{ __typename?: "GadgetEnumOption"; name: string; color: string }>;
                 validations: Array<
@@ -5204,6 +5309,7 @@ type SubFields_GadgetModelField_Fragment = {
                     | {
                         __typename: "GadgetEnumConfig";
                         allowMultiple: boolean;
+                        allowOther: boolean;
                         fieldType: GadgetFieldType;
                         options: Array<{ __typename?: "GadgetEnumOption"; name: string; color: string }>;
                         validations: Array<
@@ -5338,6 +5444,7 @@ type SubFields_GadgetModelField_Fragment = {
                             | {
                                 __typename: "GadgetEnumConfig";
                                 allowMultiple: boolean;
+                                allowOther: boolean;
                                 fieldType: GadgetFieldType;
                                 options: Array<{ __typename?: "GadgetEnumOption"; name: string; color: string }>;
                                 validations: Array<
@@ -5532,6 +5639,7 @@ type SubFields_GadgetObjectField_Fragment = {
             | {
                 __typename: "GadgetEnumConfig";
                 allowMultiple: boolean;
+                allowOther: boolean;
                 fieldType: GadgetFieldType;
                 options: Array<{ __typename?: "GadgetEnumOption"; name: string; color: string }>;
                 validations: Array<
@@ -5628,6 +5736,7 @@ type SubFields_GadgetObjectField_Fragment = {
                     | {
                         __typename: "GadgetEnumConfig";
                         allowMultiple: boolean;
+                        allowOther: boolean;
                         fieldType: GadgetFieldType;
                         options: Array<{ __typename?: "GadgetEnumOption"; name: string; color: string }>;
                         validations: Array<
@@ -5762,6 +5871,7 @@ type SubFields_GadgetObjectField_Fragment = {
                             | {
                                 __typename: "GadgetEnumConfig";
                                 allowMultiple: boolean;
+                                allowOther: boolean;
                                 fieldType: GadgetFieldType;
                                 options: Array<{ __typename?: "GadgetEnumOption"; name: string; color: string }>;
                                 validations: Array<
@@ -5962,6 +6072,7 @@ export type ModelActionMetadataQuery = {
             | {
                 __typename: "GadgetEnumConfig";
                 allowMultiple: boolean;
+                allowOther: boolean;
                 fieldType: GadgetFieldType;
                 options: Array<{ __typename?: "GadgetEnumOption"; name: string; color: string }>;
                 validations: Array<
@@ -6058,6 +6169,7 @@ export type ModelActionMetadataQuery = {
                     | {
                         __typename: "GadgetEnumConfig";
                         allowMultiple: boolean;
+                        allowOther: boolean;
                         fieldType: GadgetFieldType;
                         options: Array<{ __typename?: "GadgetEnumOption"; name: string; color: string }>;
                         validations: Array<
@@ -6192,6 +6304,7 @@ export type ModelActionMetadataQuery = {
                             | {
                                 __typename: "GadgetEnumConfig";
                                 allowMultiple: boolean;
+                                allowOther: boolean;
                                 fieldType: GadgetFieldType;
                                 options: Array<{ __typename?: "GadgetEnumOption"; name: string; color: string }>;
                                 validations: Array<
@@ -6364,6 +6477,7 @@ export type ModelActionMetadataQuery = {
                                     | {
                                         __typename: "GadgetEnumConfig";
                                         allowMultiple: boolean;
+                                        allowOther: boolean;
                                         fieldType: GadgetFieldType;
                                         options: Array<{ __typename?: "GadgetEnumOption"; name: string; color: string }>;
                                         validations: Array<
@@ -6726,6 +6840,7 @@ export const FieldMetadataFragmentDoc = {
                     kind: "SelectionSet",
                     selections: [
                       { kind: "Field", name: { kind: "Name", value: "allowMultiple" } },
+                      { kind: "Field", name: { kind: "Name", value: "allowOther" } },
                       {
                         kind: "Field",
                         name: { kind: "Name", value: "options" },
@@ -7009,6 +7124,7 @@ export const SubFieldsFragmentDoc = {
                     kind: "SelectionSet",
                     selections: [
                       { kind: "Field", name: { kind: "Name", value: "allowMultiple" } },
+                      { kind: "Field", name: { kind: "Name", value: "allowOther" } },
                       {
                         kind: "Field",
                         name: { kind: "Name", value: "options" },
@@ -7252,6 +7368,7 @@ export const GetModelMetadataDocument = {
                     kind: "SelectionSet",
                     selections: [
                       { kind: "Field", name: { kind: "Name", value: "allowMultiple" } },
+                      { kind: "Field", name: { kind: "Name", value: "allowOther" } },
                       {
                         kind: "Field",
                         name: { kind: "Name", value: "options" },
@@ -7520,6 +7637,7 @@ export const ModelActionMetadataDocument = {
                     kind: "SelectionSet",
                     selections: [
                       { kind: "Field", name: { kind: "Name", value: "allowMultiple" } },
+                      { kind: "Field", name: { kind: "Name", value: "allowOther" } },
                       {
                         kind: "Field",
                         name: { kind: "Name", value: "options" },
