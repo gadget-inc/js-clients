@@ -16,6 +16,7 @@ describe("PolarisAutoRolesInput", () => {
 
   beforeEach(() => {
     user = userEvent.setup();
+    setupRenderResult();
   });
 
   const setupRenderResult = () => {
@@ -30,8 +31,6 @@ describe("PolarisAutoRolesInput", () => {
   };
 
   test("it preloads the selected role from the record and fetches all available role options", async () => {
-    setupRenderResult();
-
     // First call to get field metadata
     expect(mockUrqlClient.executeQuery.mock.calls[0][0].variables).toEqual({
       action: "update",
@@ -59,8 +58,6 @@ describe("PolarisAutoRolesInput", () => {
   });
 
   test("Sends a list of role keys on submission", async () => {
-    setupRenderResult();
-
     await act(async () => {
       const removeSignedInRoleButton = result.container.querySelector(`button[aria-label="Remove signed-in"]`)!;
       await user.click(removeSignedInRoleButton);

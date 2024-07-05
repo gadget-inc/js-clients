@@ -14,8 +14,14 @@ export const PolarisEncryptedStringInput = (
   const [isShown, setIsShown] = useState(false);
 
   const showHideToggleButton = (
-    <div style={{ display: "flex" }} role={`${props.field}ToggleShowHideButton`}>
-      <Button variant="plain" size="slim" icon={isShown ? HideIcon : ViewIcon} onClick={() => setIsShown(!isShown)} />
+    <div style={{ display: "flex" }}>
+      <Button
+        variant="plain"
+        size="slim"
+        icon={isShown ? HideIcon : ViewIcon}
+        onClick={() => setIsShown(!isShown)}
+        role={`${props.field}ToggleShowHideButton`}
+      />
     </div>
   );
 

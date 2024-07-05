@@ -32,8 +32,8 @@ importers:
         specifier: ^1.9.0
         version: 1.9.0
       "@gadget-client/js-clients-test":
-        specifier: 1.498.0-development.584
-        version: 1.498.0-development.584
+        specifier: 1.498.0-development.667
+        version: 1.498.0-development.667
       "@gadget-client/kitchen-sink":
         specifier: 1.5.0-development.200
         version: 1.5.0-development.200
@@ -412,17 +412,17 @@ importers:
 
   packages/react-big-commerce:
     dependencies:
-      '@gadgetinc/api-client-core':
+      "@gadgetinc/api-client-core":
         specifier: workspace:*
         version: link:../api-client-core
     devDependencies:
-      '@gadgetinc/react':
+      "@gadgetinc/react":
         specifier: workspace:*
         version: link:../react
-      '@types/react':
+      "@types/react":
         specifier: ^18.2.79
         version: 18.2.79
-      '@types/react-dom':
+      "@types/react-dom":
         specifier: ^18.2.25
         version: 18.2.25
       conditional-type-checks:
@@ -3342,8 +3342,8 @@ packages:
       "@gadgetinc/api-client-core": link:packages/api-client-core
     dev: true
 
-  /@gadget-client/js-clients-test@1.498.0-development.584:
-    resolution: { integrity: sha1-2DRjSpJMvDmp9Q78f+Hhsplng44=, tarball: https://registry.gadget.dev/npm/_/tarball/57882/114412/8393 }
+  /@gadget-client/js-clients-test@1.498.0-development.667:
+    resolution: { integrity: sha1-yX42uLAc0ihN74KVZCw4jySuGaY=, tarball: https://registry.gadget.dev/npm/_/tarball/57882/114412/8443 }
     dependencies:
       "@gadgetinc/api-client-core": link:packages/api-client-core
     dev: true

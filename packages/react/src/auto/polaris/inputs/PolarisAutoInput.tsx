@@ -12,6 +12,7 @@ import { PolarisAutoRolesInput } from "./PolarisAutoRolesInput.js";
 import { PolarisAutoTextInput } from "./PolarisAutoTextInput.js";
 import { PolarisBooleanInput } from "./PolarisBooleanInput.js";
 import { PolarisEncryptedStringInput } from "./PolarisEncryptedStringInput.js";
+import { PolarisPasswordInput } from "./PolarisPasswordInput.js";
 
 export const PolarisAutoInput = (props: { field: string }) => {
   const { path, metadata } = useFieldMetadata(props.field);
@@ -39,8 +40,7 @@ export const PolarisAutoInput = (props: { field: string }) => {
       return <PolarisEncryptedStringInput field={props.field} />;
     }
     case FieldType.Password: {
-      // TODO - Needs updated implementation to handle security concerns
-      return <PolarisAutoTextInput field={props.field} />;
+      return <PolarisPasswordInput field={props.field} />;
     }
     case FieldType.Boolean: {
       return <PolarisBooleanInput field={props.field} />;

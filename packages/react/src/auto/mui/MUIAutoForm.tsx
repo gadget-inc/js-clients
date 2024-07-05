@@ -35,11 +35,12 @@ export const MUIAutoForm = <
 >(
   props: MUIAutoFormProps<GivenOptions, SchemaT, ActionFunc, Options>
 ) => {
-  const { action: _action, record: _record, findBy: _findBy, ...rest } = props;
+  const { action: _action, record: _record, findBy, ...rest } = props;
   const { metadata, fetchingMetadata, metadataError, fields, submit, formError, isSubmitSuccessful, isLoading, originalFormMethods } =
     useAutoForm(props);
 
   const autoFormMetadataContext: AutoFormMetadataContext = {
+    findBy,
     submit,
     metadata,
     submitResult: {

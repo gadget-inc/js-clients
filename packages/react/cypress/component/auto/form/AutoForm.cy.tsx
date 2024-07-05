@@ -112,4 +112,15 @@ describeForEachAutoAdapter("AutoForm", ({ name, adapter: { AutoForm }, wrapper }
         submit("Widget");
       });
   });
+
+  it("Only allows existing passwords to be replaced, not edited", () => {
+    cy.mountWithWrapper(<AutoForm action={api.user.update} findBy={"1"} include={["password"]} />, wrapper);
+
+    // fill in name but not inventoryCount
+    cy.get(`input[name="user.password"]`).should("be.disabled");
+    cy.get(`button[role="passwordEditPasswordButton"]`).first().click();
+
+    // Enabled after clicking the edit button
+    cy.get(`input[name="user.password"]`).should("be.enabled");
+  });
 });
