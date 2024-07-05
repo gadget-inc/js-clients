@@ -2899,6 +2899,91 @@ describe("useActionFormNested", () => {
         });
       });
 
+      test("can update BelongsTo link", async () => {
+        const queryResponse = {
+          data: {
+            answer: {
+              __typename: "Answer",
+              id: "123",
+              text: "Answer create",
+              question: {
+                __typename: "Question",
+                id: "1",
+              },
+            },
+          },
+        };
+
+        const { result: useActionFormHook } = renderHook(
+          () =>
+            useActionForm(nestedExampleApi.answer.update, {
+              findBy: "123",
+              select: {
+                id: true,
+                text: true,
+                question: {
+                  id: true,
+                },
+              },
+              onError: (error) => {
+                expect(error).toBeUndefined();
+              },
+            }),
+          {
+            wrapper: MockClientWrapper(nestedExampleApi),
+          }
+        );
+
+        expect(mockUrqlClient.executeQuery).toBeCalledTimes(1);
+
+        mockUrqlClient.executeQuery.pushResponse("answer", {
+          stale: false,
+          hasNext: false,
+          data: queryResponse.data,
+        });
+
+        let formValues: any;
+
+        await act(async () => {
+          formValues = useActionFormHook.current.getValues();
+        });
+
+        expect(formValues.answer).toBeDefined();
+
+        await act(async () => {
+          (useActionFormHook.current as any).setValue("answer.question.id", "2");
+        });
+
+        let submitPromise: Promise<any>;
+
+        await act(async () => {
+          submitPromise = useActionFormHook.current.submit();
+        });
+
+        expect(mockUrqlClient.executeMutation).toHaveBeenCalledTimes(1);
+        expect(mockUrqlClient.executeMutation.mock.calls[0][0].variables).toMatchInlineSnapshot(`
+          {
+            "answer": {
+              "question": {
+                "_link": "2",
+              },
+              "text": "Answer create",
+            },
+            "id": "123",
+          }
+        `);
+
+        mockUrqlClient.executeMutation.pushResponse("updateAnswer", {
+          data: {},
+          stale: false,
+          hasNext: false,
+        });
+
+        await act(async () => {
+          await submitPromise;
+        });
+      });
+
       test("can update BelongsTo", async () => {
         const queryResponse = {
           data: {

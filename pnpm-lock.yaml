@@ -410,6 +410,31 @@ importers:
         specifier: ^6.3.2
         version: 6.3.2
 
+  packages/react-big-commerce:
+    dependencies:
+      '@gadgetinc/api-client-core':
+        specifier: workspace:*
+        version: link:../api-client-core
+    devDependencies:
+      '@gadgetinc/react':
+        specifier: workspace:*
+        version: link:../react
+      '@types/react':
+        specifier: ^18.2.79
+        version: 18.2.79
+      '@types/react-dom':
+        specifier: ^18.2.25
+        version: 18.2.25
+      conditional-type-checks:
+        specifier: ^1.0.6
+        version: 1.0.6
+      react:
+        specifier: ^18.2.0
+        version: 18.2.0
+      react-dom:
+        specifier: ^18.2.0
+        version: 18.2.0(react@18.2.0)
+
   packages/react-shopify-app-bridge:
     dependencies:
       "@gadgetinc/api-client-core":
