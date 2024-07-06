@@ -24,11 +24,10 @@ export const PolarisFormSkeleton = () => (
 export const PolarisAutoForm = <
   GivenOptions extends OptionsType,
   SchemaT,
-  ActionFunc extends ActionFunction<GivenOptions, any, any, SchemaT, any>,
-  Options extends ActionFunc["optionsType"]
+  ActionFunc extends ActionFunction<GivenOptions, any, any, SchemaT, any>
 >(
   //polaris form props also take an 'action' property, which we need to omit here.
-  props: AutoFormProps<GivenOptions, SchemaT, ActionFunc, Options> & Omit<Partial<FormProps>, "action">
+  props: AutoFormProps<GivenOptions, SchemaT, ActionFunc> & Omit<Partial<FormProps>, "action">
 ) => {
   const { action: _action, record: _record, findBy, ...rest } = props;
   const { metadata, fetchingMetadata, metadataError, fields, submit, formError, isSubmitSuccessful, isLoading, originalFormMethods } =

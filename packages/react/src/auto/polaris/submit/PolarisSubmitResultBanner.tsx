@@ -1,46 +1,25 @@
-import { Banner, BannerProps } from "@shopify/polaris";
-import React, { useEffect, useState } from "react";
-import { useAutoFormMetadata } from "../../AutoFormContext.js";
+import type { BannerProps } from "@shopify/polaris";
+import { Banner } from "@shopify/polaris";
+import React from "react";
+import { useResultBannerController } from "../../hooks/useResultBannerController.js";
 
 export const PolarisSubmitResultBanner = (props: { successBannerProps?: BannerProps; errorBannerProps?: BannerProps }) => {
-  const { successBannerProps, errorBannerProps } = props;
+  const { show, hide, successful, title } = useResultBannerController();
 
-  const { metadata, submitResult } = useAutoFormMetadata();
-
-  const [isManuallyClosed, setIsManuallyClosed] = useState(false);
-  const hideBanner = () => setIsManuallyClosed(true);
-
-  useEffect(() => {
-    setIsManuallyClosed(false);
-  }, [submitResult?.isSuccessful, submitResult?.error]);
-
-  if (!isManuallyClosed) {
-    if (submitResult?.isSuccessful) {
-      return (
-        <Banner
-          title={`Saved ${`${metadata?.name} `}successfully.`}
-          tone="success"
-          {...successBannerProps}
-          onDismiss={() => {
-            hideBanner();
-            successBannerProps?.onDismiss?.();
-          }}
-        />
-      );
-    } else if (submitResult?.error) {
-      return (
-        <Banner
-          title={submitResult?.error.message}
-          tone="critical"
-          {...errorBannerProps}
-          onDismiss={() => {
-            hideBanner?.();
-            errorBannerProps?.onDismiss?.();
-          }}
-        />
-      );
-    }
+  if (show) {
+    const bannerProps = successful ? props.successBannerProps : props.errorBannerProps;
+    return (
+      <Banner
+        title={title}
+        tone={successful ? "success" : "critical"}
+        {...bannerProps}
+        onDismiss={() => {
+          hide();
+          bannerProps?.onDismiss?.();
+        }}
+      />
+    );
   }
 
-  return <></>;
+  return null;
 };

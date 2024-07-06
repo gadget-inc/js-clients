@@ -1,38 +1,21 @@
-import { Alert, AlertProps, Button } from "@mui/material";
-import React, { useEffect, useState } from "react";
-import { useAutoFormMetadata } from "../../AutoFormContext.js";
+import type { AlertProps } from "@mui/material";
+import { Alert, Button } from "@mui/material";
+import React from "react";
+import { useResultBannerController } from "../../hooks/useResultBannerController.js";
 
 export const MUISubmitResultBanner = (props: { successBannerProps?: AlertProps; errorBannerProps?: AlertProps }) => {
-  const { successBannerProps, errorBannerProps } = props;
+  const { show, hide, successful, title } = useResultBannerController();
 
-  const { metadata, submitResult } = useAutoFormMetadata();
+  if (show) {
+    const bannerProps = successful ? props.successBannerProps : props.errorBannerProps;
 
-  const [isManuallyClosed, setIsManuallyClosed] = useState(false);
-  const hideBanner = () => setIsManuallyClosed(true);
-
-  useEffect(() => {
-    setIsManuallyClosed(false);
-  }, [submitResult?.isSuccessful, submitResult?.error]);
-
-  const hideBannerButton = <Button onClick={hideBanner}>X</Button>;
-
-  if (!isManuallyClosed) {
-    if (submitResult?.isSuccessful) {
-      return (
-        <Alert severity="success" {...successBannerProps}>
-          {`Saved ${`${metadata?.name} `}successfully.`}
-          {hideBannerButton}
-        </Alert>
-      );
-    } else if (submitResult?.error) {
-      return (
-        <Alert severity="error" {...errorBannerProps}>
-          {submitResult?.error.message}
-          {hideBannerButton}
-        </Alert>
-      );
-    }
+    return (
+      <Alert severity={successful ? "success" : "error"} {...bannerProps}>
+        {title}
+        <Button onClick={hide}>X</Button>
+      </Alert>
+    );
   }
 
-  return <></>;
+  return null;
 };

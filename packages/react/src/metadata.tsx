@@ -1,6 +1,7 @@
-import type { ActionFunction } from "@gadgetinc/api-client-core";
+import type { ActionFunction, AnyClient, GlobalActionFunction } from "@gadgetinc/api-client-core";
 import { assert } from "@gadgetinc/api-client-core";
 import type { ResultOf } from "@graphql-typed-document-node/core";
+import { DocumentNode } from "graphql";
 import { useApi } from "./GadgetProvider.js";
 import { graphql } from "./internal/gql/gql.js";
 import { GadgetFieldType } from "./internal/gql/graphql.js";
@@ -151,6 +152,21 @@ const ModelActionMetadataQuery = graphql(/* GraphQL */ `
   }
 `);
 
+const GlobalActionMetadataQuery = graphql(/* GraphQL */ `
+  query GlobalActionMetadata($apiIdentifier: String!, $namespace: [String!]) {
+    gadgetMeta {
+      globalAction(apiIdentifier: $apiIdentifier, namespace: $namespace) {
+        name
+        apiIdentifier
+        inputFields {
+          ...FieldMetadata
+          ...SubFields
+        }
+      }
+    }
+  }
+`);
+
 const RolesMetadataQuery = graphql(/* GraphQL */ `
   query RolesMetadata {
     gadgetMeta {
@@ -166,6 +182,9 @@ const RolesMetadataQuery = graphql(/* GraphQL */ `
 export type ModelMetadata = Exclude<ResultOf<typeof ModelMetadataQuery>["gadgetMeta"]["model"], null | undefined>;
 export type ActionMetadata = Clarify<
   WithRequired<Exclude<ResultOf<typeof ModelActionMetadataQuery>["gadgetMeta"]["model"], null | undefined>, "action">
+>;
+export type GlobalActionMetadata = Clarify<
+  Exclude<ResultOf<typeof GlobalActionMetadataQuery>["gadgetMeta"]["globalAction"], null | undefined>
 >;
 
 export type FieldMetadata = ResultOf<typeof FieldMetadataFragment>;
@@ -187,43 +206,79 @@ export const useModelMetadata = (apiIdentifier: string, namespace: string[]) => 
   };
 };
 
-/**
- * Retrieve a given Gadget model's metadata from the backend
- * @internal
- */
-export const useActionMetadata = (actionFunction: ActionFunction<any, any, any, any, any>) => {
-  const api = useApi();
-  const modelManager = assert(
-    getModelManager(api, actionFunction.modelApiIdentifier, actionFunction.namespace),
-    "no model manager found for action function"
-  );
-  let actionName;
-  const proto = Object.getPrototypeOf(modelManager);
-  for (const [key, value] of Object.entries(proto)) {
-    if (value === actionFunction) {
-      actionName = key;
-      break;
+const getGlobalActionApiIdentifier = (api: AnyClient, fn: GlobalActionFunction<any>) => {
+  let cursor: any = api;
+  if (fn.namespace) {
+    for (const segment of Array.isArray(fn.namespace) ? fn.namespace : [fn.namespace]) {
+      cursor = cursor[segment];
     }
   }
-  if (!actionName) {
-    throw new Error("action function not found on model manager");
+  for (const [key, value] of Object.entries(cursor)) {
+    if (value === fn) {
+      return key;
+    }
   }
+  throw new Error("global action function not found on model manager");
+};
 
-  const [{ data, fetching, error }] = useGadgetQuery({
-    query: ModelActionMetadataQuery,
-    variables: {
+/**
+ * Retrieve a given Gadget model action's metadata from the backend
+ * @internal
+ */
+export const useActionMetadata = (actionFunction: ActionFunction<any, any, any, any, any> | GlobalActionFunction<any>) => {
+  const api = useApi();
+
+  let query: DocumentNode;
+  let variables: Record<string, any>;
+
+  if (actionFunction.type === "globalAction") {
+    query = GlobalActionMetadataQuery;
+    variables = {
+      apiIdentifier: getGlobalActionApiIdentifier(api, actionFunction),
+      namespace: actionFunction.namespace,
+    };
+  } else {
+    query = ModelActionMetadataQuery;
+    const modelManager = assert(
+      getModelManager(api, actionFunction.modelApiIdentifier, actionFunction.namespace),
+      "no model manager found for action function"
+    );
+    let actionName;
+    const proto = Object.getPrototypeOf(modelManager);
+    for (const [key, value] of Object.entries(proto)) {
+      if (value === actionFunction) {
+        actionName = key;
+        break;
+      }
+    }
+    if (!actionName) {
+      throw new Error("action function not found on model manager");
+    }
+    variables = {
       modelApiIdentifier: actionFunction.modelApiIdentifier,
       modelNamespace: actionFunction.namespace,
       action: actionName,
-    },
+    };
+  }
+
+  const [{ data, fetching, error }] = useGadgetQuery({
+    query,
+    variables,
   });
 
+  let metadata: ActionMetadata | GlobalActionMetadata | undefined = undefined;
+
   if (data) {
-    assert(data.gadgetMeta.model?.action, "no model metadata found from Gadget API");
+    if (actionFunction.type === "globalAction") {
+      metadata = assert(data.gadgetMeta.globalAction, "no global action metadata found from Gadget API");
+    } else {
+      metadata = data.gadgetMeta.model as ActionMetadata;
+      assert(metadata?.action, "no model metadata found from Gadget API");
+    }
   }
 
   return {
-    metadata: data ? (data.gadgetMeta.model as ActionMetadata) : data,
+    metadata,
     fetching,
     error: error ? ErrorWrapper.forClientSideError(error) : undefined,
   };
@@ -306,4 +361,8 @@ export const useRolesMetadata = () => {
     fetching,
     error: error ? ErrorWrapper.forClientSideError(error) : undefined,
   };
+};
+
+export const isActionMetadata = (metadata: ActionMetadata | GlobalActionMetadata): metadata is ActionMetadata => {
+  return "action" in metadata;
 };

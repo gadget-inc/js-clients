@@ -20,9 +20,8 @@ export const MUIFormSkeleton = () => (
 export type MUIAutoFormProps<
   GivenOptions extends OptionsType,
   SchemaT,
-  ActionFunc extends ActionFunction<GivenOptions, any, any, SchemaT, any>,
-  Options extends ActionFunc["optionsType"]
-> = AutoFormProps<GivenOptions, SchemaT, ActionFunc, Options> & GridProps;
+  ActionFunc extends ActionFunction<GivenOptions, any, any, SchemaT, any>
+> = AutoFormProps<GivenOptions, SchemaT, ActionFunc> & GridProps;
 
 /**
  * Renders a form for an action on a model automatically using MUI
@@ -30,10 +29,9 @@ export type MUIAutoFormProps<
 export const MUIAutoForm = <
   GivenOptions extends OptionsType,
   SchemaT,
-  ActionFunc extends ActionFunction<GivenOptions, any, any, SchemaT, any>,
-  Options extends ActionFunc["optionsType"]
+  ActionFunc extends ActionFunction<GivenOptions, any, any, SchemaT, any>
 >(
-  props: MUIAutoFormProps<GivenOptions, SchemaT, ActionFunc, Options>
+  props: MUIAutoFormProps<GivenOptions, SchemaT, ActionFunc>
 ) => {
   const { action: _action, record: _record, findBy, ...rest } = props;
   const { metadata, fetchingMetadata, metadataError, fields, submit, formError, isSubmitSuccessful, isLoading, originalFormMethods } =
