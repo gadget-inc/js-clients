@@ -6,15 +6,18 @@ import type { RecordIdentifier } from "src/use-action-form/types.js";
 import type { GadgetObjectFieldConfig } from "../internal/gql/graphql.js";
 import type { ActionMetadata, FieldMetadata, GlobalActionMetadata } from "../metadata.js";
 import { filterFieldList, isActionMetadata, useActionMetadata } from "../metadata.js";
+import type { FieldValues } from "../useActionForm.js";
 import { useActionForm } from "../useActionForm.js";
-import { get, type OptionsType } from "../utils.js";
+import { type OptionsType } from "../utils.js";
 import { validationSchema } from "../validationSchema.js";
 
 /** The props that any <AutoForm/> component accepts */
 export type AutoFormProps<
   GivenOptions extends OptionsType,
   SchemaT,
-  ActionFunc extends ActionFunction<GivenOptions, any, any, SchemaT, any> | GlobalActionFunction<any>
+  ActionFunc extends ActionFunction<GivenOptions, any, any, SchemaT, any>,
+  ExtraFormVariables extends FieldValues = Record<string, unknown>,
+  DefaultValues = ActionFunc["variablesType"] & ExtraFormVariables
 > = {
   /** Which action this fom will run on submit */
   action: ActionFunc;
@@ -28,6 +31,8 @@ export type AutoFormProps<
   fields?: string[];
   /** A denylist of fields to render within the form. Every field except these fields will be rendered as inputs. */
   exclude?: string[];
+  /** A set of field values to pre-populate the form with on load. Only applies to create forms. */
+  defaultValues?: DefaultValues;
   /** The label to use for the submit button at the bottom of the form */
   submitLabel?: ReactNode;
   /** What to show the user once the form has been submitted successfully */
@@ -91,7 +96,7 @@ export const useAutoForm = <
 >(
   props: AutoFormProps<GivenOptions, SchemaT, ActionFunc>
 ) => {
-  const { action, record, findBy } = props;
+  const { action, record, defaultValues, findBy } = props;
 
   const { metadata, fetching: fetchingMetadata, error: metadataError } = useActionMetadata(props.action);
 
@@ -110,7 +115,7 @@ export const useAutoForm = <
       action.type === "globalAction"
         ? {}
         : {
-            [action.modelApiIdentifier]: record,
+            [action.modelApiIdentifier]: record ?? defaultValues,
             id: "0", // The ID value will be replaced when sending the form to use the record found by `findBy`
           },
     findBy,

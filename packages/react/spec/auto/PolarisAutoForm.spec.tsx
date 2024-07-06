@@ -248,6 +248,38 @@ describe("PolarisAutoForm", () => {
       });
       expect(recordId).toEqual("1145");
     });
+
+    test("it should include default values fields that are not dirty when submitting a create form", async () => {
+      const user = userEvent.setup();
+
+      const { getByRole, getByLabelText } = render(
+        <PolarisAutoForm
+          action={api.gizmo.create}
+          exclude={["widget"]}
+          defaultValues={{
+            name: "test record",
+            orientation: "test orientation",
+          }}
+        />,
+        {
+          wrapper: PolarisMockedProviders,
+        }
+      );
+
+      loadMockGizmoCreateMetadata();
+
+      await act(async () => {
+        await user.click(getByRole("button"));
+      });
+
+      const mutation = mockUrqlClient.executeMutation.mock.calls[0][0];
+
+      expect(mutation.query.definitions[0].name.value).toEqual("createGizmo");
+      expect(mutation.variables.gizmo).toEqual({
+        name: "test record",
+        orientation: "test orientation",
+      });
+    });
   });
 
   describe("client-side validations", () => {
