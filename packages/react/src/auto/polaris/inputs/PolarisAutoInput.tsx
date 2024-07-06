@@ -14,6 +14,9 @@ import { PolarisAutoTextInput } from "./PolarisAutoTextInput.js";
 import { PolarisAutoBelongsToInput } from "./relationships/PolarisAutoBelongsToInput.js";
 import { PolarisAutoHasManyInput } from "./relationships/PolarisAutoHasManyInput.js";
 
+// lazy import for smaller bundle size by default
+const PolarisAutoRichTextInput = React.lazy(() => import("./PolarisAutoRichTextInput.js"));
+
 export const PolarisAutoInput = (props: { field: string }) => {
   const { metadata } = useFieldMetadata(props.field);
   const config = metadata.configuration;
@@ -68,8 +71,7 @@ export const PolarisAutoInput = (props: { field: string }) => {
       return null;
     }
     case FieldType.RichText: {
-      // TODO: implement rich text input
-      return null;
+      return <PolarisAutoRichTextInput field={props.field} />;
     }
     case FieldType.Money: {
       // TODO: implement money input

@@ -80,6 +80,7 @@ export default {
 
   // A map from regular expressions to module names or to arrays of module names that allow to stub out resources with a single module
   moduleNameMapper: {
+    "\\.css$": "<rootDir>/spec/__mocks__/styleMock.js",
     "^(\\.{1,2}/.*)\\.js$": "$1",
   },
 
@@ -108,7 +109,7 @@ export default {
   // resetModules: false,
 
   // A path to a custom resolver
-  // resolver: undefined,
+  resolver: "<rootDir>/spec/jest-resolver.cjs",
 
   // Automatically restore mock state between every test
   restoreMocks: true,
