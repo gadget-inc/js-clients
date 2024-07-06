@@ -6,7 +6,7 @@ export { PolarisAutoEncryptedStringInput as AutoEncryptedStringInput } from "./i
 export { PolarisAutoFileInput as AutoFileInput } from "./inputs/PolarisAutoFileInput.js";
 export { PolarisAutoHiddenInput as AutoHiddenInput } from "./inputs/PolarisAutoHiddenInput.js";
 export { PolarisAutoInput as AutoInput } from "./inputs/PolarisAutoInput.js";
-export { PolarisAutoJSONInput as AutoJSONInput } from "./inputs/PolarisAutoJsonInput.js";
+export { PolarisAutoJSONInput as AutoJSONInput } from "./inputs/PolarisAutoJSONInput.js";
 export { PolarisAutoPasswordInput as AutoPasswordInput } from "./inputs/PolarisAutoPasswordInput.js";
 export { PolarisAutoBelongsToInput as AutoBelongsToInput } from "./inputs/PolarisAutoRelationshipInput.js";
 export { PolarisAutoRolesInput as AutoRolesInput } from "./inputs/PolarisAutoRolesInput.js";
