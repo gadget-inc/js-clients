@@ -119,8 +119,12 @@ export const useAutoForm = <
       const fieldsToSend = fields
         .map(({ path }) => path)
         .filter((item) => {
-          const isDirty = get(dirtyFields, item);
-          return isDirty;
+          if (props.include || props.fields) {
+            return props.include?.includes(item) || props.fields?.includes(item);
+          } else if (props.exclude) {
+            return !props.exclude?.includes(item);
+          }
+          return true;
         });
 
       if (operatesWithRecordId) {
