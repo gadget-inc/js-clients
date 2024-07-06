@@ -1,5 +1,3 @@
-import { FormControl, FormControlLabel, FormGroup, FormHelperText } from "@mui/material";
-import type { ReactElement } from "react";
 import React from "react";
 import { useController } from "react-hook-form";
 import { FieldType } from "../../../metadata.js";
@@ -15,23 +13,8 @@ import { MUIAutoRelationshipInput } from "./MUIAutoRelationshipInput.js";
 import { MUIAutoRolesInput } from "./MUIAutoRolesInput.js";
 import { MUIAutoTextInput } from "./MUIAutoTextInput.js";
 
-export const MUIAutoFormControl = (props: { field: string; children: ReactElement }) => {
-  const { path, metadata } = useFieldMetadata(props.field);
-  const {
-    fieldState: { error },
-  } = useController({
-    name: path,
-  });
-
-  return (
-    <FormControl {...metadata} error={!!error}>
-      <FormGroup>
-        <FormControlLabel label={metadata.name} control={props.children} />
-      </FormGroup>
-      {error && <FormHelperText>{error?.message}</FormHelperText>}
-    </FormControl>
-  );
-};
+// lazy import for smaller bundle size by default
+const MUIAutoRichTextInput = React.lazy(() => import("./MUIAutoRichTextInput.js"));
 
 export const MUIAutoInput = (props: { field: string }) => {
   const { path, metadata } = useFieldMetadata(props.field);
@@ -89,8 +72,7 @@ export const MUIAutoInput = (props: { field: string }) => {
       return null;
     }
     case FieldType.RichText: {
-      // TODO: implement rich text input
-      return null;
+      return <MUIAutoRichTextInput field={props.field} />;
     }
     case FieldType.Money: {
       // TODO: implement money input

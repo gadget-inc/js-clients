@@ -65,6 +65,7 @@
     "@gadgetinc/api-client-core": "workspace:*",
     "@graphql-codegen/cli": "^5.0.0",
     "@graphql-codegen/client-preset": "^4.1.0",
+    "@mdxeditor/editor": "^3.8.0",
     "@mui/material": "^5.14.8",
     "@n1ru4l/json-patch-plus": "^0.2.0",
     "@pollyjs/adapter-fetch": "^6.0.6",
@@ -108,6 +109,7 @@
     "wonka": "^6.3.2"
   },
   "peerDependencies": {
+    "@mdxeditor/editor": "^3.8.0",
     "@mui/lab": "5.0.0-alpha.145",
     "@mui/material": "^5.14.8",
     "@mui/x-data-grid": "^6.12.1",
@@ -118,6 +120,9 @@
     "react-dom": "^18.0.0"
   },
   "peerDependenciesMeta": {
+    "@mdxeditor/editor": {
+      "optional": true
+    },
     "@mui/lab": {
       "optional": true
     },

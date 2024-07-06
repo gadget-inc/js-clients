@@ -113,6 +113,10 @@ describeForEachAutoAdapter("AutoForm", ({ name, adapter: { AutoForm }, wrapper }
       });
   });
 
+  it("can render a rich text editor for markdown content", async () => {
+    cy.mountWithWrapper(<AutoForm action={api.widget.create} include={["name", "inventoryCount", "description"]} />, wrapper);
+  });
+
   it("Only allows existing passwords to be replaced, not edited", () => {
     cy.mountWithWrapper(<AutoForm action={api.user.update} findBy={"1"} include={["password"]} />, wrapper);
 

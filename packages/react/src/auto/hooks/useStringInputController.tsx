@@ -40,6 +40,7 @@ export const useStringInputController = (
   const placeholder = PlaceholderValues[metadata.fieldType];
 
   return {
+    id: path,
     label: metadata.name,
     type: FieldTypeToInputType[metadata.fieldType],
     isError: !!error,

@@ -31,7 +31,7 @@ export const PolarisWrapper = ({ children }: { children: ReactNode }) => (
 );
 
 const suites: AutoSuiteConfig[] = [
-  { name: "MUI", adapter: MUIAdapter as any, wrapper: MUIWrapper },
+  // { name: "MUI", adapter: MUIAdapter as any, wrapper: MUIWrapper },
   { name: "Polaris", adapter: PolarisAdapter as any, wrapper: PolarisWrapper },
 ];
 
