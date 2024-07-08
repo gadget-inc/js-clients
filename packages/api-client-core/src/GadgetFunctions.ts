@@ -74,29 +74,29 @@ export interface MaybeFindFirstFunction<OptionsT, SelectionT, SchemaT, DefaultsT
   schemaType: SchemaT | null;
 }
 
-interface ActionWithIdAndVariables<OptionsT, VariablesT> {
+export interface ActionWithIdAndVariables<OptionsT, VariablesT> {
   <Options extends OptionsT>(id: string, variables: VariablesT, options?: LimitToKnownKeys<Options, OptionsT>):
     | AsyncRecord<any>
     | Promise<void>;
 }
 
-interface ActionWithNoIdAndVariables<OptionsT, VariablesT> {
+export interface ActionWithNoIdAndVariables<OptionsT, VariablesT> {
   <Options extends OptionsT>(variables: VariablesT, options?: LimitToKnownKeys<Options, OptionsT>): AsyncRecord<any>;
 }
 
-interface ActionWithIdAndNoVariables<OptionsT> {
+export interface ActionWithIdAndNoVariables<OptionsT> {
   <Options extends OptionsT>(id: string, options?: LimitToKnownKeys<Options, OptionsT>): AsyncRecord<any> | Promise<void>;
 }
 
-interface ActionWithNoIdAndNoVariables<OptionsT> {
+export interface ActionWithNoIdAndNoVariables<OptionsT> {
   <Options extends OptionsT>(options?: LimitToKnownKeys<Options, OptionsT>): AsyncRecord<any>;
 }
 
-interface BulkActionWithIdsAndNoVariables<OptionsT> {
+export interface BulkActionWithIdsAndNoVariables<OptionsT> {
   <Options extends OptionsT>(ids: string[], options?: LimitToKnownKeys<Options, OptionsT>): AsyncRecord<any>;
 }
 
-interface BulkActionWithInputs<OptionsT, VariablesT> {
+export interface BulkActionWithInputs<OptionsT, VariablesT> {
   <Options extends OptionsT>(inputs: VariablesT, options?: LimitToKnownKeys<Options, OptionsT>): AsyncRecord<any>;
 }
 

@@ -1,9 +1,16 @@
-import type { ActionFunction, GlobalActionFunction } from "@gadgetinc/api-client-core";
+import type {
+  ActionFunction,
+  ActionWithIdAndNoVariables,
+  ActionWithIdAndVariables,
+  BulkActionWithIdsAndNoVariables,
+  GlobalActionFunction,
+} from "@gadgetinc/api-client-core";
 import { useCallback, useEffect, useRef } from "react";
 import type { DeepPartial, FieldErrors, FieldValues, UseFormProps } from "react-hook-form";
 import { useForm } from "react-hook-form";
 import { useApi } from "./GadgetProvider.js";
 import type {
+  ContextAwareSelect,
   RecordIdentifier,
   UseActionFormHookStateData,
   UseActionFormResult,
@@ -11,11 +18,15 @@ import type {
   UseActionFormSubmit,
 } from "./use-action-form/types.js";
 import {
+  OmittedKey,
+  applyDataMask,
   disambiguateDefaultValues,
+  getReadOnlyPaths,
+  processDefaultValues,
   reshapeDataForGraphqlApi,
   toDefaultValues,
+  transformContextAwareToSelect,
   useFindExistingRecord,
-  type OmittedKey,
 } from "./use-action-form/utils.js";
 import { useAction } from "./useAction.js";
 import { useGlobalAction } from "./useGlobalAction.js";
@@ -23,6 +34,55 @@ import type { ErrorWrapper, OptionsType } from "./utils.js";
 import { get, getModelManager, set } from "./utils.js";
 
 export * from "react-hook-form";
+
+type AnyActionWithId<OptionsT> =
+  | ActionWithIdAndNoVariables<OptionsT>
+  | ActionWithIdAndVariables<OptionsT, any>
+  | BulkActionWithIdsAndNoVariables<OptionsT>;
+
+type ActionFormOptions<
+  GivenOptions extends OptionsType,
+  SchemaT,
+  ActionFunc extends ActionFunction<GivenOptions, any, any, SchemaT, any> | GlobalActionFunction<any>,
+  // eslint-disable-next-line @typescript-eslint/ban-types
+  ExtraFormVariables extends FieldValues = {},
+  DefaultValues = ActionFunc["variablesType"] & ExtraFormVariables,
+  ActionResultData = UseActionFormHookStateData<ActionFunc>
+> = Omit<UseFormProps<ActionFunc["variablesType"] & ExtraFormVariables, any>, "defaultValues"> & {
+  defaultValues?: DeepPartial<DefaultValues & { [key in OmittedKey]?: any }>;
+
+  /**
+   * Which fields to select on from the record when retrieving it from the backend.
+   */
+  select?: ActionFunc extends ActionFunction<GivenOptions, any, any, SchemaT, any>
+    ? ContextAwareSelect<ActionFunc["optionsType"]["select"]>
+    : never;
+  /**
+   * Which fields to send from the form's values when sending it from the backend.
+   */
+  send?: string[];
+  /**
+   * Called when the form submits
+   */
+  onSubmit?: () => void;
+  /**
+   * Called when the action completes successfully on the backend
+   */
+  onSuccess?: (actionResult: ActionResultData) => void;
+  /**
+   * Called when the form submission errors before sending, during the API call, or if the API call returns an error.
+   */
+  onError?: (error: Error | FieldErrors<ActionFunc["variablesType"]>) => void;
+} & (ActionFunc extends AnyActionWithId<GivenOptions>
+    ? {
+        /**
+         * The record identifier to run this action on, if it already exists.
+         * Should be undefined for create actions, or a record ID (or finder) for update / etc actions
+         **/
+        findBy?: RecordIdentifier;
+      }
+    : // eslint-disable-next-line @typescript-eslint/ban-types
+      {});
 
 /**
  * React hook to manage state for a form that calls a Gadget action. `useActionForm` must be passed an action function from an instance of your generated API client library, like `api.user.create`, `api.blogPost.publish` or `api.someGlobalAction`. `useActionForm` returns a `Form` object from `react-hook-form` which can be used to build great form experiences.
@@ -42,60 +102,40 @@ export const useActionForm = <
   ActionFunc extends ActionFunction<GivenOptions, any, any, SchemaT, any> | GlobalActionFunction<any>,
   // eslint-disable-next-line @typescript-eslint/ban-types
   ExtraFormVariables extends FieldValues = {},
-  FormContext = any,
-  ActionResultData = UseActionFormHookStateData<ActionFunc>,
-  DefaultValues = ActionFunc["variablesType"] & ExtraFormVariables
+  FormContext = any
 >(
   action: ActionFunc,
-  options?: Omit<UseFormProps<ActionFunc["variablesType"] & ExtraFormVariables, FormContext>, "defaultValues"> & {
-    defaultValues?: DeepPartial<DefaultValues & { [key in OmittedKey]?: any }>;
-    /**
-     * The record identifier to run this action on, if it already exists.
-     * Should be undefined for create actions, or a record ID (or finder) for update / etc actions
-     **/
-    findBy?: RecordIdentifier;
-    /**
-     * Which fields to select on from the record when retrieving it from the backend.
-     */
-    select?: ActionFunc extends ActionFunction<GivenOptions, any, any, SchemaT, any> ? ActionFunc["optionsType"]["select"] : never;
-    /**
-     * Which fields to send from the form's values when sending it from the backend.
-     */
-    send?: string[];
-    /**
-     * Called when the form submits
-     */
-    onSubmit?: () => void;
-    /**
-     * Called when the action completes successfully on the backend
-     */
-    onSuccess?: (actionResult: ActionResultData) => void;
-    /**
-     * Called when the form submission errors before sending, during the API call, or if the API call returns an error.
-     */
-    onError?: (error: Error | FieldErrors<ActionFunc["variablesType"]>) => void;
-  }
+  options?: ActionFormOptions<GivenOptions, SchemaT, ActionFunc, ExtraFormVariables>
 ): UseActionFormResult<GivenOptions, SchemaT, ActionFunc, ExtraFormVariables, FormContext> => {
+  const findById = options && "findBy" in options ? options.findBy : undefined;
   const api = useApi();
-  const findExistingRecord = !!options?.findBy;
+  const findExistingRecord = !!findById;
   const hasSetInitialValues = useRef<boolean>(!findExistingRecord);
   const isModelAction = "modelApiIdentifier" in action;
+  const actionSelect = options?.select ? transformContextAwareToSelect(options.select) : undefined;
 
   // find the existing record if there is one
   const modelManager = isModelAction ? getModelManager(api, action.modelApiIdentifier, action.namespace) : undefined;
-  const [findResult] = useFindExistingRecord(modelManager, options?.findBy || "1", {
+  const [findResult] = useFindExistingRecord(modelManager, findById || "1", {
     pause: !findExistingRecord,
-    select: options?.select,
+    select: actionSelect,
   });
 
   const isReady = !findExistingRecord || !!findResult.data;
 
   let defaultValues = options?.defaultValues;
   if (isModelAction && findResult.data) {
-    const modelDefaultValues = toDefaultValues(action.modelApiIdentifier, findResult.data);
-    defaultValues = action.hasAmbiguousIdentifier
-      ? { ...options?.defaultValues, [action.modelApiIdentifier]: modelDefaultValues }
-      : { ...options?.defaultValues, ...modelDefaultValues, [action.modelApiIdentifier]: modelDefaultValues };
+    // const modelDefaultValues = toDefaultValues(action.modelApiIdentifier, findResult.data);
+    // defaultValues = action.hasAmbiguousIdentifier
+    //   ? { ...options?.defaultValues, [action.modelApiIdentifier]: modelDefaultValues }
+    //   : { ...options?.defaultValues, ...modelDefaultValues, [action.modelApiIdentifier]: modelDefaultValues };
+
+    defaultValues = processDefaultValues({
+      hasAmbiguousDefaultValues: action.hasAmbiguousIdentifier ?? false,
+      modelApiIdentifier: action.modelApiIdentifier,
+      defaultValues: options?.defaultValues,
+      data: findResult.data,
+    });
   }
 
   let existingRecordId: string | undefined = undefined;
@@ -125,7 +165,7 @@ export const useActionForm = <
   // get the action runner to run on submit
   const [actionResult, runAction] =
     // eslint-disable-next-line react-hooks/rules-of-hooks
-    isModelAction ? useAction(action, { select: options?.select }) : useGlobalAction(action);
+    isModelAction ? useAction(action, { select: actionSelect }) : useGlobalAction(action);
 
   const handleSubmissionError = useCallback(
     (error: Error | FieldErrors<ActionFunc["variablesType"]>) => {
@@ -174,6 +214,15 @@ export const useActionForm = <
               data = disambiguateDefaultValues(data, findResult.data, action);
             }
 
+            if (options?.select || options?.send) {
+              data = applyDataMask({
+                data,
+                modelApiIdentifier: action.modelApiIdentifier,
+                select: options.select,
+                send: options.send,
+              });
+            }
+
             data = await reshapeDataForGraphqlApi(api, defaultValues, data);
           }
 
@@ -198,6 +247,28 @@ export const useActionForm = <
           result = await runAction(variables);
           if (!result.error) {
             options?.onSuccess?.(result.data);
+            if (isModelAction && result.data) {
+              if (findExistingRecord) {
+                const newDefaultValues = processDefaultValues({
+                  data: result.data,
+                  defaultValues: options?.defaultValues,
+                  modelApiIdentifier: action.modelApiIdentifier,
+                  hasAmbiguousDefaultValues: action.hasAmbiguousIdentifier ?? false,
+                });
+
+                formHook.reset(newDefaultValues, { keepValues: true });
+              }
+
+              if (options?.select) {
+                const readOnlyPaths = getReadOnlyPaths(options.select);
+
+                for (const path of readOnlyPaths) {
+                  const value = get(result.data, path);
+                  formHook.setValue(path as ActionFunc["variablesType"], value);
+                  formHook.setValue(`${action.modelApiIdentifier}.${path}` as ActionFunc["variablesType"], value);
+                }
+              }
+            }
           }
         },
         (errors) => {
@@ -214,14 +285,15 @@ export const useActionForm = <
     [
       formHook,
       handleSubmit,
-      action,
       isModelAction,
-      findResult.data,
       existingRecordId,
       options,
       runAction,
+      action,
+      findResult.data,
       api,
       defaultValues,
+      findExistingRecord,
       handleSubmissionError,
     ]
   );

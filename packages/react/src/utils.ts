@@ -402,6 +402,19 @@ export const set = (obj: any, path: string, value: any) => {
   }, obj);
 };
 
+/**
+ * Removes the property at path of object.
+ * From https://youmightnotneed.com/lodash
+ */
+export const unset = (obj: any, path: string) => {
+  const pathArray = pathToPathArray(path);
+
+  pathArray.reduce((acc, key, i) => {
+    if (i === pathArray.length - 1) delete acc[key];
+    return acc[key];
+  }, obj);
+};
+
 export const getModelManager = (
   apiClient: AnyClient,
   apiIdentifier: string,
