@@ -7,5 +7,6 @@ export { PolarisAutoBelongsToInput as AutoBelongsToInput } from "./inputs/Polari
 export { PolarisAutoRolesInput as AutoRolesInput } from "./inputs/PolarisAutoRolesInput.js";
 export { PolarisAutoTextInput as AutoTextInput } from "./inputs/PolarisAutoTextInput.js";
 export { PolarisBooleanInput as AutoBooleanInput } from "./inputs/PolarisBooleanInput.js";
+export { PolarisDateTimePicker as DateTimePicker } from "./inputs/PolarisDateTimePicker.js";
 export { PolarisAutoSubmit as AutoSubmit } from "./submit/PolarisAutoSubmit.js";
 export { PolarisSubmitResultBanner as SubmitResultBanner } from "./submit/PolarisSubmitResultBanner.js";

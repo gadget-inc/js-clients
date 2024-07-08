@@ -3,7 +3,6 @@ import { useController } from "react-hook-form";
 import type { GadgetEnumConfig } from "../../../internal/gql/graphql.js";
 import { FieldType } from "../../../metadata.js";
 import { useFieldMetadata } from "../../hooks/useFieldMetadata.js";
-import { PolarisDateTimePicker } from "../PolarisDateTimePicker.js";
 import { PolarisFileInput } from "../PolarisFileInput.js";
 import { PolarisFixedOptionsCombobox } from "../PolarisFixedOptionsCombobox.js";
 import { PolarisAutoJSONInput } from "./PolarisAutoJsonInput.js";
@@ -11,6 +10,7 @@ import { PolarisAutoRelationshipInput } from "./PolarisAutoRelationshipInput.js"
 import { PolarisAutoRolesInput } from "./PolarisAutoRolesInput.js";
 import { PolarisAutoTextInput } from "./PolarisAutoTextInput.js";
 import { PolarisBooleanInput } from "./PolarisBooleanInput.js";
+import { PolarisDateTimePicker } from "./PolarisDateTimePicker.js";
 import { PolarisEncryptedStringInput } from "./PolarisEncryptedStringInput.js";
 import { PolarisPasswordInput } from "./PolarisPasswordInput.js";
 
@@ -46,9 +46,7 @@ export const PolarisAutoInput = (props: { field: string }) => {
       return <PolarisBooleanInput field={props.field} />;
     }
     case FieldType.DateTime: {
-      return (
-        <PolarisDateTimePicker dateLabel={metadata.name} includeTime={(config as any).includeTime} {...field} error={error?.message} />
-      );
+      return <PolarisDateTimePicker field={props.field} />;
     }
     case FieldType.Json: {
       return <PolarisAutoJSONInput field={props.field} />;

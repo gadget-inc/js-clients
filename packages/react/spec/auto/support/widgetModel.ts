@@ -305,6 +305,7 @@ export const getWidgetRecord = (overrides?: {
   isChecked?: boolean;
   inventoryCount?: number;
   name?: string;
+  startsAt?: Date;
   roles?: {
     key: string;
     name: string;
@@ -314,6 +315,7 @@ export const getWidgetRecord = (overrides?: {
 }) => {
   // Default values
   const isChecked = overrides?.isChecked ?? null;
+  const startsAt = overrides?.startsAt ?? null;
   const inventoryCount = overrides?.inventoryCount ?? 1234;
   const name = overrides?.name ?? "Widget 1";
   const id = overrides?.id ?? "1145";
@@ -346,7 +348,7 @@ export const getWidgetRecord = (overrides?: {
       name,
       roles,
       secretKey: null,
-      startsAt: null,
+      startsAt,
       updatedAt: "2024-06-25T15:08:47.538Z",
     },
     gadgetMeta: {

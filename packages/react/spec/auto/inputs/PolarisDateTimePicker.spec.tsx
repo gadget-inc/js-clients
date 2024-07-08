@@ -1,13 +1,13 @@
-import { AppProvider } from "@shopify/polaris";
-import translations from "@shopify/polaris/locales/en.json";
 import { act, render, screen } from "@testing-library/react";
 import { userEvent } from "@testing-library/user-event";
-import React, { ReactNode } from "react";
-import { PolarisDateTimePicker } from "../../../src/auto/polaris/PolarisDateTimePicker.js";
-
-const PolarisWrapper = (props: { children: ReactNode }) => {
-  return <AppProvider i18n={translations}>{props.children}</AppProvider>;
-};
+import React from "react";
+import { PolarisAutoForm } from "../../../src/auto/polaris/PolarisAutoForm.js";
+import { PolarisDateTimePicker } from "../../../src/auto/polaris/inputs/PolarisDateTimePicker.js";
+import { PolarisAutoSubmit } from "../../../src/auto/polaris/submit/PolarisAutoSubmit.js";
+import { testApi as api } from "../../apis.js";
+import { mockUrqlClient } from "../../testWrappers.js";
+import { mockWidgetFindBy } from "../support/helper.js";
+import { PolarisMockedProviders } from "./PolarisMockedProviders.js";
 
 describe("PolarisDateTimePicker", () => {
   it("can change the time", async () => {
@@ -16,17 +16,49 @@ describe("PolarisDateTimePicker", () => {
       ...originalDateResolvedOptions,
       timeZone: "America/New_York",
     });
-    const onChangeSpy = jest.fn();
-    const user = userEvent.setup();
-    const baseDate = new Date("2021-03-05T11:23:10.000Z");
-    render(<PolarisDateTimePicker id="test" includeTime value={baseDate} onChange={onChangeSpy} />, { wrapper: PolarisWrapper });
 
+    const today = new Date();
+    today.setHours(15);
+    today.setMinutes(0);
+    today.setSeconds(0);
+    today.setMilliseconds(0);
+
+    const onChangeSpy = jest.fn();
+    render(
+      <PolarisAutoForm action={api.widget.create} findBy={"42"}>
+        <PolarisDateTimePicker id="test" includeTime hideTimePopover onChange={onChangeSpy} field="startsAt" />
+        <PolarisAutoSubmit />
+      </PolarisAutoForm>,
+      { wrapper: PolarisMockedProviders }
+    );
+
+    mockUpdateWidgetFindBy();
+    const user = userEvent.setup();
     await act(async () => {
       await user.click(screen.getByLabelText("Time"));
-      await user.clear(screen.getByLabelText("Time"));
-      await user.type(screen.getByLabelText("Time"), "11:00 AM");
+      await user.type(screen.getByLabelText("Time"), "11");
+      await user.type(screen.getByLabelText("Time"), ":");
+      await user.type(screen.getByLabelText("Time"), "00 ");
+      await user.type(screen.getByLabelText("Time"), "AM");
+      await user.click(screen.getByRole("button"));
     });
 
-    expect(onChangeSpy).toHaveBeenCalledWith(new Date("2021-03-05T16:00:00.000Z"));
+    const formSubmitRequest = mockUrqlClient.executeMutation.mock.calls[0][0];
+    const startsAt = formSubmitRequest.variables.widget.startsAt;
+    expect(startsAt).toEqual(today);
+    expect(onChangeSpy).toHaveBeenCalledWith(today);
   });
 });
+
+const mockUpdateWidgetFindBy = () => {
+  mockWidgetFindBy(
+    {
+      name: "Update",
+      apiIdentifier: "update",
+      operatesWithRecordIdentity: true,
+    },
+    {
+      id: "42",
+    }
+  );
+};
