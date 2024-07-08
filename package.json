@@ -16,7 +16,7 @@
     "watch": "run-p --print-label watch:*",
     "watch:client": "pnpm --filter=@gadgetinc/api-client-core watch",
     "watch:react": "pnpm --filter=@gadgetinc/react watch",
-    "test": "NODE_OPTIONS=\"--max-old-space-size=4096 --stack-trace-limit=1000\" jest",
+    "test": "NODE_OPTIONS=\"--max-old-space-size=4096 --stack-trace-limit=1000\" TZ=UTC jest",
     "check-dependency-versions": "./scripts/check-dependency-versions.ts",
     "preinstall": "npx only-allow pnpm"
   },
@@ -26,7 +26,7 @@
     "@gadget-client/app-with-no-user-model": "^1.10.0",
     "@gadget-client/bulk-actions-test": "^1.113.0",
     "@gadget-client/full-auth": "^1.9.0",
-    "@gadget-client/js-clients-test": "1.498.0-development.584", 
+    "@gadget-client/js-clients-test": "1.498.0-development.584",
     "@gadget-client/kitchen-sink": "1.5.0-development.200",
     "@gadget-client/related-products-example": "^1.865.0",
     "@gadget-client/zxcv-deeply-nested": "^1.212.0",

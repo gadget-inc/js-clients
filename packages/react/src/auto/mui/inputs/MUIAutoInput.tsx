@@ -1,6 +1,6 @@
 import { Autocomplete, FormControl, FormControlLabel, FormGroup, FormHelperText, TextField } from "@mui/material";
-import { DatePicker, DateTimePicker } from "@mui/x-date-pickers";
-import React, { ReactElement } from "react";
+import type { ReactElement } from "react";
+import React from "react";
 import { useController } from "react-hook-form";
 import type { GadgetEnumConfig } from "../../../internal/gql/graphql.js";
 import { FieldType } from "../../../metadata.js";
@@ -9,6 +9,7 @@ import { MUIAutoRelationshipInput } from "./MUIAutoRelationshipInput.js";
 import { MUIAutoRolesInput } from "./MUIAutoRolesInput.js";
 import { MUIAutoTextInput } from "./MUIAutoTextInput.js";
 import { MUIBooleanInput } from "./MUIBooleanInput.js";
+import MUIDateTimePicker from "./MUIDateTimePicker.js";
 import { MUIFileInput } from "./MUIFileInput.js";
 import { MUIJSONInput } from "./MUIJSONInput.js";
 
@@ -62,11 +63,7 @@ export const MUIAutoInput = (props: { field: string }) => {
       return <MUIBooleanInput field={props.field} />;
     }
     case FieldType.DateTime: {
-      return (
-        <MUIAutoFormControl {...props}>
-          {(config as any).includeTime ? <DateTimePicker {...fieldProps} /> : <DatePicker {...fieldProps} />}
-        </MUIAutoFormControl>
-      );
+      return <MUIDateTimePicker field={props.field} />;
     }
     case FieldType.Json: {
       return <MUIJSONInput label={metadata.name} {...fieldProps} />;
