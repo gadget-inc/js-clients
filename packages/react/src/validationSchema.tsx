@@ -2,7 +2,9 @@ import type { ISchema } from "yup";
 import { NumberSchema, StringSchema, array, boolean, date, mixed, number, object, string } from "yup";
 import type {
   GadgetEnumConfig,
+  GadgetGenericFieldValidation,
   GadgetObjectFieldConfig,
+  GadgetOnlyImageFileFieldValidation,
   GadgetRangeFieldValidation,
   GadgetRegexFieldValidation,
 } from "./internal/gql/graphql.js";
@@ -143,11 +145,55 @@ const validatorForField = (field: FieldMetadata) => {
         }
         break;
       }
+
+      case "GadgetOnlyImageFileFieldValidation": {
+        const { allowAnimatedImages } = validation as GadgetOnlyImageFileFieldValidation;
+        // TODO: implement image file validation, with option to allow animations
+        break;
+      }
+
+      case "GadgetGenericFieldValidation": {
+        const { specID } = validation as GadgetGenericFieldValidation;
+        validator = addGadgetGenericFieldValidation(validator, specID);
+        break;
+      }
     }
   }
 
   return validator;
 };
+
+const addGadgetGenericFieldValidation = (validator: any, validationSpecId: string) => {
+  switch (validationSpecId) {
+    case ColorValidationSpecId: {
+      return validator.matches(colorRegex, "Must be a color");
+    }
+
+    case EmailValidationSpecId: {
+      return validator.email();
+    }
+
+    case StrongPasswordValidationSpecId: {
+      return validator.matches(strongPasswordRegex, "Must contain at least 8 characters, 1 number and 1 special character");
+    }
+
+    case UrlValidationSpecId: {
+      return validator.url();
+    }
+
+    default: {
+      return validator;
+    }
+  }
+};
+
+const EmailValidationSpecId = "gadget/validation/email-address";
+const ColorValidationSpecId = "gadget/validation/color";
+const StrongPasswordValidationSpecId = "gadget/validation/password";
+const UrlValidationSpecId = "gadget/validation/url";
+
+const colorRegex = new RegExp(/^#([0-9a-fA-F]{6}|[0-9a-fA-F]{8})$/);
+const strongPasswordRegex = new RegExp("^(?=.*\\d)(?=.*[!@#$%^&*\\-=_+\\[\\]{}|;:'\",.<>/?])(.{8,})$");
 
 /**
  * Build a Yup validation schema given some fields metadata for validating that a data object conforms to the schema at runtime
