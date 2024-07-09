@@ -2,7 +2,7 @@ import { act, render, screen } from "@testing-library/react";
 import { userEvent } from "@testing-library/user-event";
 import React from "react";
 import { PolarisAutoForm } from "../../../src/auto/polaris/PolarisAutoForm.js";
-import { PolarisDateTimePicker } from "../../../src/auto/polaris/inputs/PolarisDateTimePicker.js";
+import { PolarisAutoDateTimePicker } from "../../../src/auto/polaris/inputs/PolarisAutoDateTimePicker.js";
 import { PolarisAutoSubmit } from "../../../src/auto/polaris/submit/PolarisAutoSubmit.js";
 import { testApi as api } from "../../apis.js";
 import { mockUrqlClient } from "../../testWrappers.js";
@@ -26,7 +26,7 @@ describe("PolarisDateTimePicker", () => {
     const onChangeSpy = jest.fn();
     render(
       <PolarisAutoForm action={api.widget.create} findBy={"42"}>
-        <PolarisDateTimePicker id="test" includeTime hideTimePopover onChange={onChangeSpy} field="startsAt" />
+        <PolarisAutoDateTimePicker id="test" includeTime hideTimePopover onChange={onChangeSpy} field="startsAt" />
         <PolarisAutoSubmit />
       </PolarisAutoForm>,
       { wrapper: PolarisMockedProviders }

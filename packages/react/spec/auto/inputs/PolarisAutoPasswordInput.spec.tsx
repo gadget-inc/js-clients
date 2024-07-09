@@ -2,7 +2,7 @@ import type { RenderResult } from "@testing-library/react";
 import { render } from "@testing-library/react";
 import React from "react";
 import { PolarisAutoForm } from "../../../src/auto/polaris/PolarisAutoForm.js";
-import { PolarisPasswordInput } from "../../../src/auto/polaris/inputs/PolarisPasswordInput.js";
+import { PolarisAutoPasswordInput } from "../../../src/auto/polaris/inputs/PolarisAutoPasswordInput.js";
 import { testApi as api } from "../../apis.js";
 import { mockUserFindBy } from "../support/helper.js";
 import { PolarisMockedProviders } from "./PolarisMockedProviders.js";
@@ -13,7 +13,7 @@ describe("PolarisPasswordInput", () => {
   test("it renders the edit password button", async () => {
     result = render(
       <PolarisAutoForm action={api.user.update} findBy="1">
-        <PolarisPasswordInput field={"password"} />
+        <PolarisAutoPasswordInput field={"password"} />
       </PolarisAutoForm>,
       { wrapper: PolarisMockedProviders }
     );
@@ -27,7 +27,7 @@ describe("PolarisPasswordInput", () => {
   test("it can override the appearance of the edit password toggle button", async () => {
     result = render(
       <PolarisAutoForm action={api.user.update} findBy="1">
-        <PolarisPasswordInput field="password" suffix={"override here"} />
+        <PolarisAutoPasswordInput field="password" suffix={"override here"} />
       </PolarisAutoForm>,
       { wrapper: PolarisMockedProviders }
     );

@@ -5,15 +5,15 @@ import { useController } from "react-hook-form";
 import type { GadgetEnumConfig } from "../../../internal/gql/graphql.js";
 import { FieldType } from "../../../metadata.js";
 import { useFieldMetadata } from "../../hooks/useFieldMetadata.js";
+import { MUIAutoBooleanInput } from "./MUIAutoBooleanInput.js";
+import MUIAutoDateTimePicker from "./MUIAutoDateTimePicker.js";
+import { MUIAutoEncryptedStringInput } from "./MUIAutoEncryptedStringInput.js";
 import { MUIAutoFileInput } from "./MUIAutoFileInput.js";
 import { MUIAutoJSONInput } from "./MUIAutoJSONInput.js";
+import { MUIAutoPasswordInput } from "./MUIAutoPasswordInput.js";
 import { MUIAutoRelationshipInput } from "./MUIAutoRelationshipInput.js";
 import { MUIAutoRolesInput } from "./MUIAutoRolesInput.js";
 import { MUIAutoTextInput } from "./MUIAutoTextInput.js";
-import { MUIBooleanInput } from "./MUIBooleanInput.js";
-import MUIDateTimePicker from "./MUIDateTimePicker.js";
-import { MUIEncryptedStringInput } from "./MUIEncryptedStringInput.js";
-import { MUIPasswordInput } from "./MUIPasswordInput.js";
 
 export const MUIAutoFormControl = (props: { field: string; children: ReactElement }) => {
   const { path, metadata } = useFieldMetadata(props.field);
@@ -56,16 +56,16 @@ export const MUIAutoInput = (props: { field: string }) => {
       return <MUIAutoTextInput field={props.field} />;
     }
     case FieldType.EncryptedString: {
-      return <MUIEncryptedStringInput field={props.field} />;
+      return <MUIAutoEncryptedStringInput field={props.field} />;
     }
     case FieldType.Password: {
-      return <MUIPasswordInput field={props.field} />;
+      return <MUIAutoPasswordInput field={props.field} />;
     }
     case FieldType.Boolean: {
-      return <MUIBooleanInput field={props.field} />;
+      return <MUIAutoBooleanInput field={props.field} />;
     }
     case FieldType.DateTime: {
-      return <MUIDateTimePicker field={props.field} />;
+      return <MUIAutoDateTimePicker field={props.field} />;
     }
     case FieldType.Json: {
       return <MUIAutoJSONInput field={props.field} />;

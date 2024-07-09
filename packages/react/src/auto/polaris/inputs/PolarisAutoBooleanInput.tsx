@@ -5,7 +5,7 @@ import type { Control } from "react-hook-form";
 import { useController } from "react-hook-form";
 import { useFieldMetadata } from "../../hooks/useFieldMetadata.js";
 
-export const PolarisBooleanInput = (props: { field: string; control?: Control<any> } & Partial<CheckboxProps>) => {
+export const PolarisAutoBooleanInput = (props: { field: string; control?: Control<any> } & Partial<CheckboxProps>) => {
   const { field: fieldApiIdentifier, control, ...rest } = props;
 
   const { path, metadata } = useFieldMetadata(fieldApiIdentifier);

@@ -1,7 +1,7 @@
 import type { RenderResult } from "@testing-library/react";
 import { render } from "@testing-library/react";
 import React from "react";
-import { PolarisEncryptedStringInput } from "../../../src/auto/polaris/inputs/PolarisEncryptedStringInput.js";
+import { PolarisAutoEncryptedStringInput } from "../../../src/auto/polaris/inputs/PolarisAutoEncryptedStringInput.js";
 import type { ActionMetadata } from "../../../src/metadata.js";
 import { MockForm } from "../MockForm.js";
 
@@ -16,7 +16,7 @@ describe("PolarisEncryptedStringInput", () => {
   });
 
   test("it renders the show/hide toggle button", async () => {
-    result = render(<PolarisEncryptedStringInput field="secretKey" />, getCreateWrapper());
+    result = render(<PolarisAutoEncryptedStringInput field="secretKey" />, getCreateWrapper());
     const fieldNameLabel = result.queryByText("Secret key");
     expect(fieldNameLabel).toBeInTheDocument();
 
@@ -24,7 +24,7 @@ describe("PolarisEncryptedStringInput", () => {
   });
 
   test("it can override the appearance of the show/hide toggle button", async () => {
-    result = render(<PolarisEncryptedStringInput field="secretKey" suffix={"override here"} />, getCreateWrapper());
+    result = render(<PolarisAutoEncryptedStringInput field="secretKey" suffix={"override here"} />, getCreateWrapper());
     const fieldNameLabel = result.queryByText("Secret key");
     expect(fieldNameLabel).toBeInTheDocument();
 

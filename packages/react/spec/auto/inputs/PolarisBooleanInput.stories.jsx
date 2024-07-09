@@ -3,12 +3,12 @@ import React from "react";
 import { FormProvider, useForm } from "react-hook-form";
 import { Provider } from "../../../src/GadgetProvider.tsx";
 import { PolarisAutoForm } from "../../../src/auto/polaris/PolarisAutoForm.tsx";
-import { PolarisBooleanInput } from "../../../src/auto/polaris/inputs/PolarisBooleanInput.tsx";
+import { PolarisAutoBooleanInput } from "../../../src/auto/polaris/inputs/PolarisAutoBooleanInput.tsx";
 import { testApi as api } from "../../apis.ts";
 
 export default {
   title: "Polaris/BooleanInput",
-  component: PolarisBooleanInput,
+  component: PolarisAutoBooleanInput,
   decorators: [
     (Story, { parameters }) => {
       const { theme = "light" } = parameters;

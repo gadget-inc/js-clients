@@ -4,7 +4,7 @@ import { ClockIcon } from "@shopify/polaris-icons";
 import { zonedTimeToUtc } from "date-fns-tz";
 import React, { useEffect, useState } from "react";
 import type { ControllerRenderProps, FieldValues } from "react-hook-form";
-import { copyTime, getDateFromDateTimeObject, getDateTimeObjectFromDate } from "./PolarisDateTimePicker.js";
+import { copyTime, getDateFromDateTimeObject, getDateTimeObjectFromDate } from "./PolarisAutoDateTimePicker.js";
 
 const createMarkup = (items: string[], selectedState: string) => {
   return items.map((item, i) => {
@@ -50,7 +50,7 @@ export interface DateTimeState {
 
 type DateTimeKey = keyof DateTimeState;
 
-const PolarisTimePicker = (props: {
+const PolarisAutoTimePicker = (props: {
   fieldProps: ControllerRenderProps<FieldValues, string>;
   onChange?: (value: Date) => void;
   localTime?: Date;
@@ -185,4 +185,4 @@ const PolarisTimePicker = (props: {
   );
 };
 
-export default PolarisTimePicker;
+export default PolarisAutoTimePicker;
