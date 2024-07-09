@@ -138,6 +138,7 @@ const ModelActionMetadataQuery = graphql(/* GraphQL */ `
     gadgetMeta {
       model(apiIdentifier: $modelApiIdentifier, namespace: $modelNamespace) {
         name
+        defaultRecord
         action(apiIdentifier: $action) {
           name
           apiIdentifier

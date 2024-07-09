@@ -257,8 +257,10 @@ describe("PolarisAutoForm", () => {
           action={api.gizmo.create}
           exclude={["widget"]}
           defaultValues={{
-            name: "test record",
-            orientation: "test orientation",
+            gizmo: {
+              name: "test record",
+              orientation: "test orientation",
+            },
           }}
         />,
         {

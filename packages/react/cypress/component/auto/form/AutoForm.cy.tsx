@@ -206,4 +206,52 @@ describeForEachAutoAdapter("AutoForm", ({ name, adapter: { AutoForm }, wrapper }
 
     cy.contains("Flip all succeeded.");
   });
+
+  it("prepopulates with default values from the server for create actions", () => {
+    cy.mountWithWrapper(<AutoForm action={api.part.create} />, wrapper);
+
+    // fill in name but not inventoryCount
+    cy.get(`input[name="part.name"]`).should("have.value", "");
+    cy.get(`input[name="part.count"]`).should("have.value", "0");
+    cy.get(`input[name="part.notes"]`).should("have.value", "no notes");
+
+    submit("Part");
+  });
+
+  it("prepopulates with default values from the props of the form which take precedence", () => {
+    cy.mountWithWrapper(<AutoForm action={api.part.create} defaultValues={{ part: { name: "test record" } }} />, wrapper);
+
+    cy.get(`input[name="part.name"]`).should("have.value", "test record");
+    cy.get(`input[name="part.count"]`).should("have.value", "");
+    cy.get(`input[name="part.notes"]`).should("have.value", "");
+  });
+
+  it("doesn't add default values from the server for update actions actions", () => {
+    cy.intercept("POST", `${api.connection.options.endpoint}?operation=part`, {
+      statusCode: 200,
+      body: {
+        data: {
+          part: {
+            __typename: "Part",
+
+            id: "1",
+            name: "test record",
+            count: null, // pass a null value that shouldn't be overridden by the server side default here on the client
+            notes: "some notes",
+            createdAt: "2024-07-08T22:56:26.963Z",
+            updatedAt: "2024-07-09T14:42:57.109Z",
+          },
+        },
+      },
+    });
+
+    cy.mountWithWrapper(<AutoForm action={api.part.update} findBy="1" />, wrapper);
+
+    // fill in name but not inventoryCount
+    cy.get(`input[name="part.name"]`).should("have.value", "test record");
+    cy.get(`input[name="part.count"]`).should("have.value", "");
+    cy.get(`input[name="part.notes"]`).should("have.value", "some notes");
+
+    submit("Part");
+  });
 });

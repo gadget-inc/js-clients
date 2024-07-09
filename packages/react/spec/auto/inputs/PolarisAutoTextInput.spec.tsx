@@ -95,6 +95,7 @@ describe("PolarisAutoTextInput", () => {
 
 const metadata = {
   name: "Widget",
+  defaultRecord: {},
   action: {
     name: "Create",
     apiIdentifier: "create",
