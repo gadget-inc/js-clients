@@ -2,7 +2,12 @@ module.exports = {
   extends: "@gadgetinc/eslint-config",
   parserOptions: {
     tsconfigRootDir: __dirname,
-    project: ["./packages/*/tsconfig.json", "./scripts/tsconfig.json", "./packages/blog-example/tsconfig.node.json"],
+    project: [
+      "./packages/*/tsconfig.json",
+      "./packages/react/cypress/tsconfig.json",
+      "./scripts/tsconfig.json",
+      "./packages/blog-example/tsconfig.node.json",
+    ],
   },
   settings: {
     "import/extensions": [".js", ".jsx"],

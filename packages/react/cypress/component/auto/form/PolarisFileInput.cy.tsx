@@ -1,82 +1,38 @@
 import React from "react";
-import { getStadiumModelMetadata, getStadiumRecord } from "../../../../spec/auto/support/stadiumModel.js";
+import { getStadiumRecord } from "../../../../spec/auto/support/stadiumModel.js";
 import { PolarisAutoFileInput } from "../../../../src/auto/polaris/PolarisAutoFileInput.js";
 import { PolarisAutoForm } from "../../../../src/auto/polaris/PolarisAutoForm.js";
 import { api } from "../../../support/api.js";
 import { PolarisWrapper } from "../../../support/auto.js";
 
 describe("PolarisFileInput", () => {
-  const getSubmitButton = () => {
-    return cy.get("form [type=submit][aria-hidden!=true]");
-  };
-
   const interceptModelCreateActionMetadata = (validations: any[]) => {
-    cy.intercept(
-      {
-        method: "POST",
-        url: `${api.connection.endpoint}?operation=ModelActionMetadata`,
+    cy.mockModelActionMetadata(api, {
+      modelName: "Stadium",
+      action: {
+        apiIdentifier: "create",
+        operatesWithRecordIdentity: false,
       },
-      {
-        data: getStadiumModelMetadata(
-          {
-            name: "Create",
-            apiIdentifier: "create",
-            operatesWithRecordIdentity: false,
-          },
-          getInputFieldsWithCustomValidations(validations)
-        ),
-      }
-    ).as("ModelCreateActionMetadata");
+      inputFields: getInputFieldsWithCustomValidations(validations),
+    });
   };
 
   const interceptModelUpdateActionMetadata = (validations: any[]) => {
-    cy.intercept(
-      {
-        method: "POST",
-        url: `${api.connection.endpoint}?operation=ModelActionMetadata`,
+    cy.mockModelActionMetadata(api, {
+      modelName: "Stadium",
+      action: {
+        apiIdentifier: "update",
+        operatesWithRecordIdentity: false,
       },
-      {
-        data: getStadiumModelMetadata(
-          {
-            name: "Update",
-            apiIdentifier: "update",
-            operatesWithRecordIdentity: true,
-          },
-          getInputFieldsWithCustomValidations(validations)
-        ),
-      }
-    ).as("ModelUpdateActionMetadata");
+      inputFields: getInputFieldsWithCustomValidations(validations),
+    });
   };
 
   beforeEach(() => {
     cy.viewport("macbook-13");
 
-    cy.intercept(
-      {
-        method: "POST",
-        url: `${api.connection.endpoint}?operation=GetDirectUploadToken`,
-      },
-      {
-        data: {
-          gadgetMeta: {
-            directUploadToken: {
-              url: "https://storage.googleapis.com/gadget-storage-uploads/direct-uploads/token123",
-              token: "token123",
-              __typename: "DirectUploadToken",
-            },
-            __typename: "GadgetApplicationMeta",
-          },
-        },
-      }
-    ).as("getDirectUploadToken");
-
-    cy.intercept(
-      {
-        method: "PUT",
-        url: "https://storage.googleapis.com/gadget-storage-uploads/direct-uploads/token123", // The URL should be the one returned by the getDirectUploadToken query
-      },
-      {} // The payload is not important for this test
-    ).as("uploadFile");
+    cy.mockGetDirectUploadToken(api);
+    cy.mockUploadFile();
 
     cy.intercept(
       {
@@ -97,6 +53,37 @@ describe("PolarisFileInput", () => {
         },
       }
     ).as("createStadium");
+  });
+
+  describe("clearing the file value", () => {
+    beforeEach(() => {
+      cy.intercept(
+        {
+          method: "POST",
+          url: `${api.connection.endpoint}?operation=stadium`,
+        },
+        {
+          data: getStadiumRecord(),
+        }
+      ).as("getStadium");
+    });
+
+    it("should clear the file value when clicking the delete file icon and the field is not required", () => {
+      interceptModelUpdateActionMetadata([]);
+
+      cy.mountWithWrapper(<PolarisAutoForm action={api.game.stadium.create} findBy="42" />, PolarisWrapper);
+
+      cy.get("#clear-file-photo").should("exist");
+
+      cy.get("#clear-file-photo").click();
+      cy.get(".Polaris-Thumbnail").should("not.exist");
+      cy.get(".Polaris-DropZone-FileUpload").should("exist");
+
+      cy.getSubmitButton().click();
+      cy.get("@createStadium").its("request.body.variables.stadium").should("deep.equal", {
+        photo: null,
+      });
+    });
   });
 
   it("show the image thumbnail after the file is selected", () => {
@@ -142,11 +129,11 @@ describe("PolarisFileInput", () => {
         action: "drag-drop",
       });
 
-      getSubmitButton().click();
+      cy.getSubmitButton().click();
       cy.get("#photoError").should("contain", `file is still uploading`);
 
       cy.wait("@uploadFile");
-      getSubmitButton().click();
+      cy.getSubmitButton().click();
       cy.contains("Saved Stadium successfully");
     });
   });
@@ -172,7 +159,7 @@ describe("PolarisFileInput", () => {
         });
         cy.wait("@getDirectUploadToken");
 
-        getSubmitButton().click();
+        cy.getSubmitButton().click();
         cy.contains("Saved Stadium successfully");
       });
     });
@@ -197,7 +184,7 @@ describe("PolarisFileInput", () => {
         });
         cy.wait("@getDirectUploadToken");
 
-        getSubmitButton().click();
+        cy.getSubmitButton().click();
         cy.contains("Saved Stadium successfully");
       });
 
@@ -221,7 +208,7 @@ describe("PolarisFileInput", () => {
         // The file upload should not start
         cy.get("@getDirectUploadToken").should("be.null");
 
-        getSubmitButton().click();
+        cy.getSubmitButton().click();
         cy.get("#photoError").should("contain", `must be a file between 100 B and 1 kB big`);
       });
 
@@ -244,7 +231,7 @@ describe("PolarisFileInput", () => {
         // The file upload should not start
         cy.get("@getDirectUploadToken").should("be.null");
 
-        getSubmitButton().click();
+        cy.getSubmitButton().click();
         cy.get("#photoError").should("contain", `must be a file larger than than 10 MB`);
       });
 
@@ -267,7 +254,7 @@ describe("PolarisFileInput", () => {
         // The file upload should not start
         cy.get("@getDirectUploadToken").should("be.null");
 
-        getSubmitButton().click();
+        cy.getSubmitButton().click();
         cy.get("#photoError").should("contain", `must be a file smaller than 100 B`);
       });
     });
