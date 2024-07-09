@@ -5,6 +5,7 @@ import { useController } from "react-hook-form";
 import type { GadgetEnumConfig } from "../../../internal/gql/graphql.js";
 import { FieldType } from "../../../metadata.js";
 import { useFieldMetadata } from "../../hooks/useFieldMetadata.js";
+import { MUIAutoFileInput } from "./MUIAutoFileInput.js";
 import { MUIAutoJSONInput } from "./MUIAutoJSONInput.js";
 import { MUIAutoRelationshipInput } from "./MUIAutoRelationshipInput.js";
 import { MUIAutoRolesInput } from "./MUIAutoRolesInput.js";
@@ -12,7 +13,6 @@ import { MUIAutoTextInput } from "./MUIAutoTextInput.js";
 import { MUIBooleanInput } from "./MUIBooleanInput.js";
 import MUIDateTimePicker from "./MUIDateTimePicker.js";
 import { MUIEncryptedStringInput } from "./MUIEncryptedStringInput.js";
-import { MUIFileInput } from "./MUIFileInput.js";
 import { MUIPasswordInput } from "./MUIPasswordInput.js";
 
 export const MUIAutoFormControl = (props: { field: string; children: ReactElement }) => {
@@ -83,11 +83,7 @@ export const MUIAutoInput = (props: { field: string }) => {
       );
     }
     case FieldType.File: {
-      return (
-        <MUIAutoFormControl {...props}>
-          <MUIFileInput label={metadata.name} {...fieldProps} />
-        </MUIAutoFormControl>
-      );
+      return <MUIAutoFileInput field={props.field} />;
     }
     case FieldType.RoleAssignments: {
       return <MUIAutoRolesInput field={props.field} />;

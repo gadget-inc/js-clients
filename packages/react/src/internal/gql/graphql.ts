@@ -1374,6 +1374,7 @@ export type GadgetApplicationMeta = {
   environmentName: Scalars["String"]["output"];
   environmentSlug: Scalars["String"]["output"];
   firstModelForExamples: GadgetModel;
+  globalAction?: Maybe<GadgetGlobalAction>;
   globalActions: Array<GadgetGlobalAction>;
   graphQLEndpoint: Scalars["String"]["output"];
   hasGlobalActions: Scalars["Boolean"]["output"];
@@ -1399,6 +1400,11 @@ export type GadgetApplicationMeta = {
 
 export type GadgetApplicationMetaDirectUploadTokenArgs = {
   nonce?: InputMaybe<Scalars["String"]["input"]>;
+};
+
+export type GadgetApplicationMetaGlobalActionArgs = {
+  apiIdentifier?: InputMaybe<Scalars["String"]["input"]>;
+  namespace?: InputMaybe<Array<Scalars["String"]["input"]>>;
 };
 
 export type GadgetApplicationMetaHydrationsArgs = {
@@ -1528,6 +1534,7 @@ export type GadgetGlobalAction = {
   acceptsInput: Scalars["Boolean"]["output"];
   apiIdentifier: Scalars["String"]["output"];
   examples?: Maybe<GadgetGlobalActionGraphQlType>;
+  inputFields: Array<GadgetObjectField>;
   name: Scalars["String"]["output"];
   namespace?: Maybe<Array<Scalars["String"]["output"]>>;
   requiresInput: Scalars["Boolean"]["output"];
@@ -1578,6 +1585,7 @@ export type GadgetModel = {
   apiIdentifier: Scalars["String"]["output"];
   currentSingletonApiIdentifier?: Maybe<Scalars["String"]["output"]>;
   defaultDisplayField: GadgetModelField;
+  defaultRecord: Scalars["JSON"]["output"];
   exampleFilterQuery: Scalars["String"]["output"];
   exampleFindMostRecentlyCreatedQuery: Scalars["String"]["output"];
   exampleFullFindFirstQuery: Scalars["String"]["output"];
