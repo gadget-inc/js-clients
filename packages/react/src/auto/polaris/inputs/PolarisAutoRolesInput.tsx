@@ -1,7 +1,9 @@
 import React from "react";
 import type { Control } from "react-hook-form";
+import { getPropsWithoutRef } from "../../../utils.js";
 import { useRoleInputController } from "../../hooks/useRoleInputController.js";
-import { PolarisFixedOptionsCombobox, PolarisFixedOptionsMultiComboboxProps } from "../PolarisFixedOptionsCombobox.js";
+import type { PolarisFixedOptionsMultiComboboxProps } from "../PolarisFixedOptionsCombobox.js";
+import { PolarisFixedOptionsCombobox } from "../PolarisFixedOptionsCombobox.js";
 
 export const PolarisAutoRolesInput = (
   props: {
@@ -23,7 +25,7 @@ export const PolarisAutoRolesInput = (
       options={options}
       allowMultiple
       label={metadata.name}
-      {...fieldProps}
+      {...getPropsWithoutRef(fieldProps)}
       value={selectedRoleKeys}
       loading={loading}
     />

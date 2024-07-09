@@ -3,6 +3,7 @@ import { TextField } from "@shopify/polaris";
 import React from "react";
 import type { Control } from "react-hook-form";
 import { useFocus } from "../../../useFocus.js";
+import { getPropsWithoutRef } from "../../../utils.js";
 import { useJSONInputController } from "../../hooks/useJSONInputController.js";
 
 export const PolarisAutoJSONInput = (
@@ -22,11 +23,11 @@ export const PolarisAutoJSONInput = (
       <TextField
         multiline={4}
         monospaced
-        {...restOfOriginalController}
+        {...getPropsWithoutRef(restOfOriginalController)}
         value={stringValue}
         onChange={onStringValueChange}
         error={!isFocused && error && `Invalid JSON: ${error.message}`}
-        {...focusProps}
+        {...getPropsWithoutRef(focusProps)}
         {...restOfProps}
       />
     </>
