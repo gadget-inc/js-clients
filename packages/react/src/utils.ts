@@ -13,7 +13,7 @@ import type {
 } from "@gadgetinc/api-client-core";
 import { gadgetErrorFor, getNonNullableError, namespaceDataPath } from "@gadgetinc/api-client-core";
 import type { CombinedError, RequestPolicy } from "@urql/core";
-import { useMemo } from "react";
+import { RefCallback, RefObject, useMemo } from "react";
 import type { AnyVariables, Operation, OperationContext, UseQueryArgs, UseQueryState } from "urql";
 
 /**
@@ -417,4 +417,15 @@ export const getModelManager = (
   namespace?: string[] | string | null
 ): AnyModelManager | undefined => {
   return get(apiClient, namespaceDataPath([apiIdentifier], namespace).join("."));
+};
+
+/**
+ * In some cases, we need to exclude the `ref` property from the original object (e.g. input controllers) to prevent from showing up a warning message from React.
+ * This function helps to get the object without the `ref` property.
+ *
+ * Check out https://github.com/gadget-inc/js-clients/pull/466 for more details.
+ */
+export const getPropsWithoutRef = <T extends { ref: RefCallback<any> | RefObject<any> }>(props: T) => {
+  const { ref: _ref, ...rest } = props;
+  return rest;
 };

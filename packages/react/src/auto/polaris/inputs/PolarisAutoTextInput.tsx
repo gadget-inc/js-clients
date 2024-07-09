@@ -2,6 +2,7 @@ import type { TextFieldProps } from "@shopify/polaris";
 import { TextField } from "@shopify/polaris";
 import React from "react";
 import type { Control } from "react-hook-form";
+import { getPropsWithoutRef } from "../../../utils.js";
 import { useStringInputController } from "../../hooks/useStringInputController.js";
 
 export const PolarisAutoTextInput = (
@@ -15,7 +16,7 @@ export const PolarisAutoTextInput = (
 
   return (
     <TextField
-      {...stringInputController}
+      {...getPropsWithoutRef(stringInputController)}
       requiredIndicator={stringInputController.metadata.requiredArgumentForInput}
       type={stringInputController.type as TextFieldProps["type"]}
       error={stringInputController.isError}
