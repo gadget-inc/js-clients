@@ -75,7 +75,7 @@ export const PolarisAutoTable = <
         onClearAll={() => {}}
         tabs={[]}
         selected={1}
-        loading={true}
+        loading={fetching}
       />
       <IndexTable
         {...polarisTableProps}
