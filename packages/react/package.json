@@ -1,6 +1,6 @@
 {
   "name": "@gadgetinc/react",
-  "version": "0.15.13",
+  "version": "0.15.14",
   "files": [
     "README.md",
     "dist/**/*"
