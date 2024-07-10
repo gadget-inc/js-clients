@@ -1,10 +1,8 @@
 import { Provider } from '../../src/GadgetProvider.tsx';
 import { PolarisAutoTable } from '../../src/auto/polaris/PolarisAutoTable.tsx';
-import { AppProvider, Page, LegacyCard } from '@shopify/polaris';
+import { AppProvider, LegacyCard } from '@shopify/polaris';
 import { testApi as api } from '../apis.ts';
 import React from 'react';
-import { PolarisAutoInput } from '../../src/auto/polaris/inputs/PolarisAutoInput.tsx';
-import { PolarisAutoSubmit } from '../../src/auto/polaris/PolarisAutoSubmit.tsx';
 
 // More on how to set up stories at: https://storybook.js.org/docs/writing-stories#default-export
 export default {

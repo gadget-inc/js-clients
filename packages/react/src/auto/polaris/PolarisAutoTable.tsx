@@ -5,7 +5,6 @@ import React, { useMemo } from "react";
 import { useTable } from "../../useTable.js";
 import type { OptionsType } from "../../utils.js";
 import type { AutoTableProps } from "../AutoTable.js";
-import { PolarisErrorDisplay } from "./PolarisErrorDisplay.js";
 
 const PolarisSkeletonTable = (props: { columns: number }) => {
   const count = Array.from(Array(props.columns));
@@ -54,9 +53,10 @@ export const PolarisAutoTable = <
     return { headings, sortable };
   }, [columns]);
 
+  /*
   if (error) {
     return <PolarisErrorDisplay error={error} retry={refresh} />;
-  }
+  }*/
 
   if ((fetching && !rows) || !columns) {
     return <PolarisSkeletonTable columns={polarisTableProps.headings.length} />;
@@ -75,7 +75,7 @@ export const PolarisAutoTable = <
         onClearAll={() => {}}
         tabs={[]}
         selected={1}
-        loading={true}
+        loading={fetching}
       />
       <IndexTable
         {...polarisTableProps}
