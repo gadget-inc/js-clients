@@ -1,7 +1,7 @@
 import React from "react";
 import { getStadiumRecord } from "../../../../spec/auto/support/stadiumModel.js";
-import { PolarisAutoFileInput } from "../../../../src/auto/polaris/PolarisAutoFileInput.js";
 import { PolarisAutoForm } from "../../../../src/auto/polaris/PolarisAutoForm.js";
+import { PolarisAutoFileInput } from "../../../../src/auto/polaris/inputs/PolarisAutoFileInput.js";
 import { api } from "../../../support/api.js";
 import { PolarisWrapper } from "../../../support/auto.js";
 

@@ -2,8 +2,8 @@ import { AppProvider } from "@shopify/polaris";
 import React from "react";
 import { FormProvider, useForm } from "react-hook-form";
 import { Provider } from "../../../src/GadgetProvider.tsx";
-import { PolarisAutoFileInput } from "../../../src/auto/polaris/PolarisAutoFileInput.tsx";
 import { PolarisAutoForm } from "../../../src/auto/polaris/PolarisAutoForm.tsx";
+import { PolarisAutoFileInput } from "../../../src/auto/polaris/inputs/PolarisAutoFileInput.tsx";
 import { testApi as api } from "../../apis.ts";
 
 export default {

@@ -6,7 +6,7 @@ import { useController } from "react-hook-form";
 import type { GadgetDateTimeConfig } from "../../../internal/gql/graphql.js";
 import { useFieldMetadata } from "../../hooks/useFieldMetadata.js";
 
-export const MUIDateTimePicker = (props: { field: string; value?: Date; onChange?: (value: Date) => void; error?: string }) => {
+export const MUIAutoDateTimePicker = (props: { field: string; value?: Date; onChange?: (value: Date) => void; error?: string }) => {
   const localTz = Intl.DateTimeFormat().resolvedOptions().timeZone;
   const { path, metadata } = useFieldMetadata(props.field);
   const config = metadata.configuration;
@@ -35,4 +35,4 @@ export const MUIDateTimePicker = (props: { field: string; value?: Date; onChange
   );
 };
 
-export default MUIDateTimePicker;
+export default MUIAutoDateTimePicker;

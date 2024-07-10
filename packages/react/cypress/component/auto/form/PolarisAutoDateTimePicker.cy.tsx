@@ -2,7 +2,7 @@ import { format } from "date-fns";
 import { utcToZonedTime } from "date-fns-tz";
 import React from "react";
 import { PolarisAutoForm } from "../../../../src/auto/polaris/PolarisAutoForm.js";
-import { PolarisDateTimePicker } from "../../../../src/auto/polaris/inputs/PolarisDateTimePicker.js";
+import { PolarisAutoDateTimePicker } from "../../../../src/auto/polaris/inputs/PolarisAutoDateTimePicker.js";
 import { api } from "../../../support/api.js";
 import { PolarisWrapper } from "../../../support/auto.js";
 
@@ -20,7 +20,7 @@ describe("PolarisDateTimePicker", () => {
       const onChangeSpy = cy.spy().as("onChangeSpy");
       cy.mountWithWrapper(
         <PolarisAutoForm action={api.widget.create}>
-          <PolarisDateTimePicker field="startsAt" id="test" onChange={onChangeSpy} />
+          <PolarisAutoDateTimePicker field="startsAt" id="test" onChange={onChangeSpy} />
         </PolarisAutoForm>,
         PolarisWrapper
       );
@@ -34,7 +34,7 @@ describe("PolarisDateTimePicker", () => {
       const onChangeSpy = cy.spy().as("onChangeSpy");
       cy.mountWithWrapper(
         <PolarisAutoForm action={api.widget.create}>
-          <PolarisDateTimePicker id="test" includeTime value={baseDate} onChange={onChangeSpy} field="startsAt" />
+          <PolarisAutoDateTimePicker id="test" includeTime value={baseDate} onChange={onChangeSpy} field="startsAt" />
         </PolarisAutoForm>,
         PolarisWrapper
       );
@@ -45,7 +45,7 @@ describe("PolarisDateTimePicker", () => {
       const onChangeSpy = cy.spy().as("onChangeSpy");
       cy.mountWithWrapper(
         <PolarisAutoForm action={api.widget.create}>
-          <PolarisDateTimePicker id="test" value={baseDate} onChange={onChangeSpy} field="startsAt" />
+          <PolarisAutoDateTimePicker id="test" value={baseDate} onChange={onChangeSpy} field="startsAt" />
         </PolarisAutoForm>,
         PolarisWrapper
       );
@@ -63,7 +63,7 @@ describe("PolarisDateTimePicker", () => {
       const onChangeSpy = cy.spy().as("onChangeSpy");
       cy.mountWithWrapper(
         <PolarisAutoForm action={api.widget.create}>
-          <PolarisDateTimePicker id="test" value={baseDate} onChange={onChangeSpy} field="startsAt" />
+          <PolarisAutoDateTimePicker id="test" value={baseDate} onChange={onChangeSpy} field="startsAt" />
         </PolarisAutoForm>,
         PolarisWrapper
       );
@@ -83,7 +83,7 @@ describe("PolarisDateTimePicker", () => {
       const onChangeSpy = cy.spy().as("onChangeSpy");
       cy.mountWithWrapper(
         <PolarisAutoForm action={api.widget.create}>
-          <PolarisDateTimePicker id="test" includeTime onChange={onChangeSpy} field="startsAt" />
+          <PolarisAutoDateTimePicker id="test" includeTime onChange={onChangeSpy} field="startsAt" />
         </PolarisAutoForm>,
         PolarisWrapper
       );
@@ -97,7 +97,7 @@ describe("PolarisDateTimePicker", () => {
       const onChangeSpy = cy.spy().as("onChangeSpy");
       cy.mountWithWrapper(
         <PolarisAutoForm action={api.widget.create}>
-          <PolarisDateTimePicker id="test" includeTime value={baseDate} onChange={onChangeSpy} field="startsAt" />
+          <PolarisAutoDateTimePicker id="test" includeTime value={baseDate} onChange={onChangeSpy} field="startsAt" />
         </PolarisAutoForm>,
         PolarisWrapper
       );
@@ -109,7 +109,7 @@ describe("PolarisDateTimePicker", () => {
       const onChangeSpy = cy.spy().as("onChangeSpy");
       cy.mountWithWrapper(
         <PolarisAutoForm action={api.widget.create}>
-          <PolarisDateTimePicker id="test" includeTime value={baseDate} onChange={onChangeSpy} field="startsAt" />
+          <PolarisAutoDateTimePicker id="test" includeTime value={baseDate} onChange={onChangeSpy} field="startsAt" />
         </PolarisAutoForm>,
         PolarisWrapper
       );
@@ -127,7 +127,7 @@ describe("PolarisDateTimePicker", () => {
       const onChangeSpy = cy.spy().as("onChangeSpy");
       cy.mountWithWrapper(
         <PolarisAutoForm action={api.widget.create}>
-          <PolarisDateTimePicker id="test" includeTime value={baseDate} onChange={onChangeSpy} field="startsAt" />
+          <PolarisAutoDateTimePicker id="test" includeTime value={baseDate} onChange={onChangeSpy} field="startsAt" />
         </PolarisAutoForm>,
         PolarisWrapper
       );

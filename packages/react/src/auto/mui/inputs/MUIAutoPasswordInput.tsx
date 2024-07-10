@@ -1,18 +1,18 @@
-import type { TextFieldProps } from "@shopify/polaris";
-import { Button } from "@shopify/polaris";
-import { EditIcon } from "@shopify/polaris-icons";
+import type { TextFieldProps } from "@mui/material";
+import { IconButton } from "@mui/material";
 import React, { useState } from "react";
 import type { Control } from "react-hook-form";
 import { useAutoFormMetadata } from "../../AutoFormContext.js";
-import { PolarisEncryptedStringInput } from "./PolarisEncryptedStringInput.js";
+import { MUIAutoEncryptedStringInput } from "./MUIAutoEncryptedStringInput.js";
 
 /**
  * The salted password hash is not retrieved from the DB
  * Regardless of the password is defined or not, this placeholder is shown as exposing an unset password is a security risk
  */
 const existingPasswordPlaceholder = "********";
+const pencilEmoji = `✏️`;
 
-export const PolarisPasswordInput = (
+export const MUIAutoPasswordInput = (
   props: {
     field: string; // The field API identifier
     control?: Control<any>;
@@ -22,18 +22,18 @@ export const PolarisPasswordInput = (
   const [isEditing, setIsEditing] = useState(!findBy);
 
   const startEditingButton = (
-    <div style={{ display: "flex" }}>
-      <Button variant="plain" size="slim" icon={EditIcon} onClick={() => setIsEditing(true)} role={`${props.field}EditPasswordButton`} />
-    </div>
+    <IconButton onClick={() => setIsEditing(true)} role={`${props.field}EditPasswordButton`}>
+      {pencilEmoji}
+    </IconButton>
   );
 
   return (
-    <PolarisEncryptedStringInput
+    <MUIAutoEncryptedStringInput
       {...(isEditing
         ? { placeholder: "Password" }
         : {
+            InputProps: { endAdornment: startEditingButton },
             placeholder: existingPasswordPlaceholder,
-            suffix: startEditingButton,
             disabled: true,
           })}
       {...props}

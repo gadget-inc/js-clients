@@ -5,10 +5,10 @@ import { format } from "date-fns";
 import { utcToZonedTime, zonedTimeToUtc } from "date-fns-tz";
 import React, { useCallback, useMemo, useState } from "react";
 import { useController } from "react-hook-form";
-import { GadgetDateTimeConfig } from "../../../internal/gql/graphql.js";
+import type { GadgetDateTimeConfig } from "../../../internal/gql/graphql.js";
 import { useFieldMetadata } from "../../hooks/useFieldMetadata.js";
-import type { DateTimeState } from "./PolarisTimePicker.js";
-import PolarisTimePicker from "./PolarisTimePicker.js";
+import type { DateTimeState } from "./PolarisAutoTimePicker.js";
+import PolarisAutoTimePicker from "./PolarisAutoTimePicker.js";
 
 export const copyTime = (to: Date, input: Date) => {
   to.setHours(input.getHours());
@@ -40,7 +40,7 @@ export const getDateFromDateTimeObject = (dateTime: DateTimeState) => {
   return date;
 };
 
-export const PolarisDateTimePicker = (props: {
+export const PolarisAutoDateTimePicker = (props: {
   field: string;
   id?: string;
   value?: Date;
@@ -116,7 +116,7 @@ export const PolarisDateTimePicker = (props: {
         </div>
       </Popover>
       {(props.includeTime ?? (config as GadgetDateTimeConfig).includeTime) && (
-        <PolarisTimePicker
+        <PolarisAutoTimePicker
           fieldProps={fieldProps}
           id={props.id}
           localTime={localTime}

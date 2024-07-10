@@ -2,7 +2,7 @@ import { act, render } from "@testing-library/react";
 import { userEvent } from "@testing-library/user-event";
 import React from "react";
 import { PolarisAutoForm } from "../../../src/auto/polaris/PolarisAutoForm.js";
-import { PolarisBooleanInput } from "../../../src/auto/polaris/inputs/PolarisBooleanInput.js";
+import { PolarisAutoBooleanInput } from "../../../src/auto/polaris/inputs/PolarisAutoBooleanInput.js";
 import { PolarisAutoSubmit } from "../../../src/auto/polaris/submit/PolarisAutoSubmit.js";
 import { testApi as api } from "../../apis.js";
 import { mockUrqlClient } from "../../testWrappers.js";
@@ -22,7 +22,7 @@ describe("PolarisBooleanInput", () => {
   it("should be able to pass in custom properties from Polaris and submit with the proper value", async () => {
     const { getByLabelText, getByRole } = render(
       <PolarisAutoForm action={api.widget.update} findBy="42">
-        <PolarisBooleanInput field="isChecked" label="I agree to do something" />
+        <PolarisAutoBooleanInput field="isChecked" label="I agree to do something" />
         <PolarisAutoSubmit />
       </PolarisAutoForm>,
       { wrapper: PolarisMockedProviders }

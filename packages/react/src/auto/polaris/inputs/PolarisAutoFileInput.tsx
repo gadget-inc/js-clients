@@ -4,8 +4,8 @@ import { DeleteIcon, NoteIcon } from "@shopify/polaris-icons";
 import { filesize } from "filesize";
 import React, { useMemo } from "react";
 import type { Control } from "react-hook-form";
-import { isAutoFileFieldValue } from "../../validationSchema.js";
-import { getFileSizeValidationMessage, imageFileTypes, useFileInputController } from "../hooks/useFileInputController.js";
+import { isAutoFileFieldValue } from "../../../validationSchema.js";
+import { getFileSizeValidationMessage, imageFileTypes, useFileInputController } from "../../hooks/useFileInputController.js";
 
 export const PolarisAutoFileInput = (props: { field: string; control?: Control<any> } & DropZoneProps) => {
   const { field: fieldApiIdentifier, control, ...rest } = props;

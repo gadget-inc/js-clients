@@ -3,16 +3,16 @@ import { useController } from "react-hook-form";
 import type { GadgetEnumConfig } from "../../../internal/gql/graphql.js";
 import { FieldType } from "../../../metadata.js";
 import { useFieldMetadata } from "../../hooks/useFieldMetadata.js";
-import { PolarisAutoFileInput } from "../PolarisAutoFileInput.js";
 import { PolarisFixedOptionsCombobox } from "../PolarisFixedOptionsCombobox.js";
+import { PolarisAutoBooleanInput } from "./PolarisAutoBooleanInput.js";
+import { PolarisAutoDateTimePicker } from "./PolarisAutoDateTimePicker.js";
+import { PolarisAutoEncryptedStringInput } from "./PolarisAutoEncryptedStringInput.js";
+import { PolarisAutoFileInput } from "./PolarisAutoFileInput.js";
 import { PolarisAutoJSONInput } from "./PolarisAutoJsonInput.js";
+import { PolarisAutoPasswordInput } from "./PolarisAutoPasswordInput.js";
 import { PolarisAutoRelationshipInput } from "./PolarisAutoRelationshipInput.js";
 import { PolarisAutoRolesInput } from "./PolarisAutoRolesInput.js";
 import { PolarisAutoTextInput } from "./PolarisAutoTextInput.js";
-import { PolarisBooleanInput } from "./PolarisBooleanInput.js";
-import { PolarisDateTimePicker } from "./PolarisDateTimePicker.js";
-import { PolarisEncryptedStringInput } from "./PolarisEncryptedStringInput.js";
-import { PolarisPasswordInput } from "./PolarisPasswordInput.js";
 
 export const PolarisAutoInput = (props: { field: string }) => {
   const { path, metadata } = useFieldMetadata(props.field);
@@ -37,16 +37,16 @@ export const PolarisAutoInput = (props: { field: string }) => {
       return <PolarisAutoTextInput field={props.field} />;
     }
     case FieldType.EncryptedString: {
-      return <PolarisEncryptedStringInput field={props.field} />;
+      return <PolarisAutoEncryptedStringInput field={props.field} />;
     }
     case FieldType.Password: {
-      return <PolarisPasswordInput field={props.field} />;
+      return <PolarisAutoPasswordInput field={props.field} />;
     }
     case FieldType.Boolean: {
-      return <PolarisBooleanInput field={props.field} />;
+      return <PolarisAutoBooleanInput field={props.field} />;
     }
     case FieldType.DateTime: {
-      return <PolarisDateTimePicker field={props.field} />;
+      return <PolarisAutoDateTimePicker field={props.field} />;
     }
     case FieldType.Json: {
       return <PolarisAutoJSONInput field={props.field} />;

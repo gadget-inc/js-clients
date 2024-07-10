@@ -5,7 +5,7 @@ import React, { useState } from "react";
 import type { Control } from "react-hook-form";
 import { PolarisAutoTextInput } from "./PolarisAutoTextInput.js";
 
-export const PolarisEncryptedStringInput = (
+export const PolarisAutoEncryptedStringInput = (
   props: {
     field: string; // The field API identifier
     control?: Control<any>;

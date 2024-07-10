@@ -3,7 +3,7 @@ import React from "react";
 import { FormProvider, useForm } from "react-hook-form";
 import { Provider } from "../../../src/GadgetProvider.tsx";
 import { PolarisAutoForm } from "../../../src/auto/polaris/PolarisAutoForm.tsx";
-import { PolarisPasswordInput } from "../../../src/auto/polaris/inputs/PolarisPasswordInput.tsx";
+import { PolarisAutoPasswordInput } from "../../../src/auto/polaris/inputs/PolarisAutoPasswordInput.tsx";
 import { PolarisAutoSubmit } from "../../../src/auto/polaris/submit/PolarisAutoSubmit.tsx";
 import { testApi as api } from "../../apis.ts";
 
@@ -12,7 +12,7 @@ export default {
   title: "Polaris/AutoPasswordInput",
   component: (props) => (
     <PolarisAutoForm {...props}>
-      <PolarisPasswordInput field="password" />
+      <PolarisAutoPasswordInput field="password" />
       <PolarisAutoSubmit />
     </PolarisAutoForm>
   ),
