@@ -25,6 +25,9 @@ describe("PolarisDateTimePicker", () => {
         PolarisWrapper
       );
       cy.get("#test-date").should("have.value", "");
+
+      cy.get("#test-date").click();
+      cy.get(".Polaris-DatePicker__Title").contains(`${new Date().getFullYear()}`);
     });
 
     it("can show the current value", () => {
