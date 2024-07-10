@@ -110,7 +110,7 @@ export const PolarisDateTimePicker = (props: {
             allowRange={false}
             onChange={onDateChange}
             onMonthChange={handleMonthChange}
-            selected={props.value}
+            selected={localTime}
             {...props.datePickerProps}
           />
         </div>
