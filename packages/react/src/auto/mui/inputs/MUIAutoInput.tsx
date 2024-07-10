@@ -1,13 +1,13 @@
-import { Autocomplete, FormControl, FormControlLabel, FormGroup, FormHelperText, TextField } from "@mui/material";
+import { FormControl, FormControlLabel, FormGroup, FormHelperText } from "@mui/material";
 import type { ReactElement } from "react";
 import React from "react";
 import { useController } from "react-hook-form";
-import type { GadgetEnumConfig } from "../../../internal/gql/graphql.js";
 import { FieldType } from "../../../metadata.js";
 import { useFieldMetadata } from "../../hooks/useFieldMetadata.js";
 import { MUIAutoBooleanInput } from "./MUIAutoBooleanInput.js";
 import MUIAutoDateTimePicker from "./MUIAutoDateTimePicker.js";
 import { MUIAutoEncryptedStringInput } from "./MUIAutoEncryptedStringInput.js";
+import { MUIAutoEnumInput } from "./MUIAutoEnumInput.js";
 import { MUIAutoFileInput } from "./MUIAutoFileInput.js";
 import { MUIAutoJSONInput } from "./MUIAutoJSONInput.js";
 import { MUIAutoPasswordInput } from "./MUIAutoPasswordInput.js";
@@ -71,16 +71,7 @@ export const MUIAutoInput = (props: { field: string }) => {
       return <MUIAutoJSONInput field={props.field} />;
     }
     case FieldType.Enum: {
-      const config = metadata.configuration as GadgetEnumConfig;
-      return (
-        <Autocomplete
-          disablePortal
-          multiple={config.allowMultiple}
-          options={config.options.map((option) => ({ id: option.name, label: option.name }))}
-          {...fieldProps}
-          renderInput={(params) => <TextField {...params} label={metadata.name} />}
-        />
-      );
+      return <MUIAutoEnumInput field={props.field} />;
     }
     case FieldType.File: {
       return <MUIAutoFileInput field={props.field} />;

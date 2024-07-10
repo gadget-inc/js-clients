@@ -3,6 +3,7 @@ export { PolarisAutoForm as AutoForm } from "./PolarisAutoForm.js";
 export { PolarisAutoBooleanInput as AutoBooleanInput } from "./inputs/PolarisAutoBooleanInput.js";
 export { PolarisAutoDateTimePicker as DateTimePicker } from "./inputs/PolarisAutoDateTimePicker.js";
 export { PolarisAutoEncryptedStringInput as AutoEncryptedStringInput } from "./inputs/PolarisAutoEncryptedStringInput.js";
+export { PolarisAutoEnumInput as AutoEnumInput } from "./inputs/PolarisAutoEnumInput.js";
 export { PolarisAutoFileInput as AutoFileInput } from "./inputs/PolarisAutoFileInput.js";
 export { PolarisAutoHiddenInput as AutoHiddenInput } from "./inputs/PolarisAutoHiddenInput.js";
 export { PolarisAutoInput as AutoInput } from "./inputs/PolarisAutoInput.js";
