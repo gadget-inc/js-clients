@@ -1,15 +1,10 @@
-import type {
-  ActionFunction,
-  ActionWithIdAndNoVariables,
-  ActionWithIdAndVariables,
-  BulkActionWithIdsAndNoVariables,
-  GlobalActionFunction,
-} from "@gadgetinc/api-client-core";
+import type { ActionFunction, GlobalActionFunction } from "@gadgetinc/api-client-core";
 import { useCallback, useEffect, useRef } from "react";
 import type { DeepPartial, FieldErrors, FieldValues, UseFormProps } from "react-hook-form";
 import { useForm } from "react-hook-form";
 import { useApi } from "./GadgetProvider.js";
 import type {
+  AnyActionWithId,
   ContextAwareSelect,
   RecordIdentifier,
   UseActionFormHookStateData,
@@ -34,11 +29,6 @@ import type { ErrorWrapper, OptionsType } from "./utils.js";
 import { get, getModelManager, set } from "./utils.js";
 
 export * from "react-hook-form";
-
-type AnyActionWithId<OptionsT> =
-  | ActionWithIdAndNoVariables<OptionsT>
-  | ActionWithIdAndVariables<OptionsT, any>
-  | BulkActionWithIdsAndNoVariables<OptionsT>;
 
 type ActionFormOptions<
   GivenOptions extends OptionsType,
@@ -125,11 +115,6 @@ export const useActionForm = <
 
   let defaultValues = options?.defaultValues;
   if (isModelAction && findResult.data) {
-    // const modelDefaultValues = toDefaultValues(action.modelApiIdentifier, findResult.data);
-    // defaultValues = action.hasAmbiguousIdentifier
-    //   ? { ...options?.defaultValues, [action.modelApiIdentifier]: modelDefaultValues }
-    //   : { ...options?.defaultValues, ...modelDefaultValues, [action.modelApiIdentifier]: modelDefaultValues };
-
     defaultValues = processDefaultValues({
       hasAmbiguousDefaultValues: action.hasAmbiguousIdentifier ?? false,
       modelApiIdentifier: action.modelApiIdentifier,
@@ -217,7 +202,7 @@ export const useActionForm = <
             if (options?.select || options?.send) {
               data = applyDataMask({
                 data,
-                modelApiIdentifier: action.modelApiIdentifier,
+                modelApiIdentifier: findResult.data ? action.modelApiIdentifier : undefined,
                 select: options.select,
                 send: options.send,
               });
@@ -234,11 +219,13 @@ export const useActionForm = <
             variables.id = existingRecordId;
           }
 
-          if (options?.send) {
-            const unmasked = variables;
-            variables = {};
-            for (const key of options.send) {
-              set(variables, key, get(unmasked, key));
+          if (!isModelAction) {
+            if (options?.send) {
+              const unmasked = variables;
+              variables = {};
+              for (const key of options.send) {
+                set(variables, key, get(unmasked, key));
+              }
             }
           }
 

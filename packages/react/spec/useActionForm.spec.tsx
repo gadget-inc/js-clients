@@ -1,6 +1,7 @@
 import { act, renderHook } from "@testing-library/react";
 import { assert, type IsExact } from "conditional-type-checks";
 import { CombinedError } from "urql";
+import { applyDataMask } from "../src/use-action-form/utils.js";
 import { useActionForm } from "../src/useActionForm.js";
 import { bulkExampleApi, fullAuthApi, kitchenSinkApi, nestedExampleApi, relatedProductsApi } from "./apis.js";
 import { MockClientWrapper, mockUrqlClient } from "./testWrappers.js";
@@ -1013,7 +1014,7 @@ describe("useActionForm", () => {
     expect(mockUrqlClient.executeMutation).toBeCalledTimes(0);
   });
 
-  test("can only send certain fields in the action", async () => {
+  test("can only send certain fields in a create action", async () => {
     let submitted = false;
     let success = false;
 
@@ -2680,107 +2681,7 @@ describe("useActionForm", () => {
     expect(result.current.getValues("newPassword")).toBe("newPass");
   });
 
-  test("can select fields as read only to cause belongsTo's to be a link", async () => {
-    const queryResponse = {
-      data: {
-        answer: {
-          __typename: "Answer",
-          id: "123",
-          text: "Answer create",
-          question: {
-            __typename: "Question",
-            id: "1",
-            text: "question text",
-          },
-        },
-      },
-    };
-
-    const { result: useActionFormHook } = renderHook(
-      () =>
-        useActionForm(nestedExampleApi.answer.update, {
-          findBy: "123",
-          select: {
-            id: true,
-            text: true,
-            question: {
-              id: true,
-              text: "ReadOnly",
-            },
-          },
-          onError: (error) => {
-            expect(error).toBeUndefined();
-          },
-        }),
-      {
-        wrapper: MockClientWrapper(nestedExampleApi),
-      }
-    );
-
-    expect(mockUrqlClient.executeQuery).toHaveBeenCalledTimes(1);
-
-    mockUrqlClient.executeQuery.pushResponse("answer", {
-      stale: false,
-      hasNext: false,
-      data: queryResponse.data,
-    });
-
-    let formValues: any;
-
-    await act(async () => {
-      formValues = useActionFormHook.current.getValues();
-    });
-
-    expect(formValues.answer).toBeDefined();
-
-    await act(async () => {
-      (useActionFormHook.current as any).setValue("answer.question.id", "2");
-    });
-
-    let submitPromise: Promise<any>;
-
-    await act(async () => {
-      submitPromise = useActionFormHook.current.submit();
-    });
-
-    expect(mockUrqlClient.executeMutation).toHaveBeenCalledTimes(1);
-    expect(mockUrqlClient.executeMutation.mock.calls[0][0].variables).toMatchInlineSnapshot(`
-      {
-        "answer": {
-          "question": {
-            "_link": "2",
-          },
-          "text": "Answer create",
-        },
-        "id": "123",
-      }
-    `);
-
-    mockUrqlClient.executeMutation.pushResponse("updateAnswer", {
-      data: {
-        updateAnswer: {
-          answer: {
-            __typename: "Answer",
-            id: "123",
-            text: "Answer create",
-            question: {
-              __typename: "Question",
-              id: "2",
-              text: "totally different text",
-            },
-          },
-        },
-      },
-      stale: true,
-      hasNext: false,
-    });
-
-    await act(async () => {
-      await submitPromise;
-    });
-  });
-
-  test("while using findby, can select fields as read only and their values are updated in the formstate after an update", async () => {
+  test("while using findby, can select fields as read only and their values are set in the formstate after an update", async () => {
     const queryResponse = {
       data: {
         answer: {
@@ -2903,6 +2804,107 @@ describe("useActionForm", () => {
     `);
   });
 
+  test("can filter out fields using send with model actions", async () => {
+    const queryResponse = {
+      data: {
+        answer: {
+          __typename: "Answer",
+          id: "123",
+          text: "Answer create",
+          question: {
+            __typename: "Question",
+            id: "1",
+            text: "question text",
+          },
+        },
+      },
+    };
+
+    const { result: useActionFormHook } = renderHook(
+      () =>
+        useActionForm(nestedExampleApi.answer.update, {
+          findBy: "123",
+          select: {
+            id: true,
+            text: true,
+            question: {
+              id: true,
+              text: true,
+            },
+          },
+          send: ["id", "text", "question.id"],
+          onError: (error) => {
+            expect(error).toBeUndefined();
+          },
+        }),
+      {
+        wrapper: MockClientWrapper(nestedExampleApi),
+      }
+    );
+
+    expect(mockUrqlClient.executeQuery).toHaveBeenCalledTimes(1);
+
+    mockUrqlClient.executeQuery.pushResponse("answer", {
+      stale: false,
+      hasNext: false,
+      data: queryResponse.data,
+    });
+
+    let formValues: any;
+
+    await act(async () => {
+      formValues = useActionFormHook.current.getValues();
+    });
+
+    expect(formValues.answer).toBeDefined();
+
+    await act(async () => {
+      (useActionFormHook.current as any).setValue("answer.question.id", "2");
+    });
+
+    let submitPromise: Promise<any>;
+
+    await act(async () => {
+      submitPromise = useActionFormHook.current.submit();
+    });
+
+    expect(mockUrqlClient.executeMutation).toHaveBeenCalledTimes(1);
+    expect(mockUrqlClient.executeMutation.mock.calls[0][0].variables).toMatchInlineSnapshot(`
+      {
+        "answer": {
+          "question": {
+            "_link": "2",
+          },
+          "text": "Answer create",
+        },
+        "id": "123",
+      }
+    `);
+
+    mockUrqlClient.executeMutation.pushResponse("updateAnswer", {
+      data: {
+        updateAnswer: {
+          answer: {
+            __typename: "Answer",
+            id: "123",
+            text: "Answer create",
+            question: {
+              __typename: "Question",
+              id: "2",
+              text: "totally different text",
+            },
+          },
+        },
+      },
+      stale: true,
+      hasNext: false,
+    });
+
+    await act(async () => {
+      await submitPromise;
+    });
+  });
+
   test("form state is updated when reset is called", async () => {
     const queryResponse = {
       data: {
@@ -3004,6 +3006,69 @@ describe("useActionForm", () => {
           "text": "question text",
         },
         "text": "Answer create",
+      }
+    `);
+  });
+});
+
+describe("utils", () => {
+  test("can apply data mask with select", async () => {
+    const result = applyDataMask({
+      modelApiIdentifier: "answer",
+      data: {
+        answer: {
+          text: "Answer create",
+          question: {
+            id: "1",
+            text: "question text",
+          },
+        },
+      },
+      select: {
+        id: true,
+        text: true,
+        question: {
+          id: true,
+          text: "ReadOnly",
+        },
+      },
+    });
+
+    expect(result).toMatchInlineSnapshot(`
+      {
+        "answer": {
+          "question": {
+            "id": "1",
+          },
+          "text": "Answer create",
+        },
+      }
+    `);
+  });
+
+  test("can apply data mask with send", async () => {
+    const result = applyDataMask({
+      modelApiIdentifier: "answer",
+      data: {
+        answer: {
+          text: "Answer create",
+          question: {
+            id: "1",
+            text: "question text",
+          },
+        },
+      },
+      send: ["id", "text", "question.id"],
+    });
+
+    expect(result).toMatchInlineSnapshot(`
+      {
+        "answer": {
+          "question": {
+            "id": "1",
+          },
+          "text": "Answer create",
+        },
       }
     `);
   });
