@@ -71,9 +71,21 @@ const validatorForField = (field: FieldMetadata) => {
       validator = string();
       break;
     }
-    case GadgetFieldType.RecordState:
-    case GadgetFieldType.Any:
     case GadgetFieldType.Json: {
+      validator = mixed().test("is-valid-json", function (value) {
+        if (typeof value == "undefined") return true;
+        const { path, createError } = this;
+
+        if (isFailedJSONParse(value)) {
+          return createError({ path, message: value.error.message });
+        }
+        return true;
+      });
+
+      break;
+    }
+    case GadgetFieldType.RecordState:
+    case GadgetFieldType.Any: {
       validator = mixed();
       break;
     }
@@ -221,6 +233,15 @@ export const RequiredValidationSpecId = "gadget/validation/required";
 
 const colorRegex = new RegExp(/^#([0-9a-fA-F]{6}|[0-9a-fA-F]{8})$/);
 const strongPasswordRegex = new RegExp("^(?=.*\\d)(?=.*[!@#$%^&*\\-=_+\\[\\]{}|;:'\",.<>/?])(.{8,})$");
+
+export interface FailedJSONParse {
+  $failedParse: true;
+  error: Error;
+  raw: string;
+}
+export const isFailedJSONParse = (value: any): value is FailedJSONParse => {
+  return value && typeof value == "object" && "$failedParse" in value;
+};
 
 /**
  * Build a Yup validation schema given some fields metadata for validating that a data object conforms to the schema at runtime

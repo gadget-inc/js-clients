@@ -9,26 +9,25 @@ export const MUIAutoJSONInput = (
   props: {
     field: string; // The field API identifier
     control?: Control<any>;
-  } & Partial<TextFieldProps>
+  } & Partial<Omit<TextFieldProps, "onChange">>
 ) => {
-  const { onStringValueChange, error, stringValue, originalController } = useJSONInputController(props);
   const [isFocused, focusProps] = useFocus();
   const { field: _field, control: _control, ...restOfProps } = props;
+  const { type: _type, errorMessage, ...controller } = useJSONInputController(props);
 
-  const inErrorState = !isFocused && !!error;
+  const inErrorState = !isFocused && !!errorMessage;
 
   return (
     <TextField
       multiline
       maxRows={4}
       inputProps={{ style: { fontFamily: "monospace" } }}
-      {...originalController}
-      value={stringValue}
-      onChange={(event) => onStringValueChange(event.target.value)}
       error={inErrorState}
-      helperText={inErrorState && `Invalid JSON: ${error.message}`}
+      helperText={inErrorState && `Invalid JSON: ${errorMessage}`}
+      {...controller}
       {...focusProps}
       {...restOfProps}
+      onChange={(event) => controller.onChange(event.target.value)}
     />
   );
 };

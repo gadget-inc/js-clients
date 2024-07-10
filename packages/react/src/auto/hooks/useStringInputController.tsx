@@ -1,4 +1,5 @@
-import { useController, type Control } from "react-hook-form";
+import type { UseControllerProps } from "react-hook-form";
+import { useController } from "react-hook-form";
 import type { GadgetFieldType } from "../../internal/gql/graphql.js";
 import { FieldType } from "../../metadata.js";
 import { useFieldMetadata } from "./useFieldMetadata.js";
@@ -20,11 +21,12 @@ const PlaceholderValues: Partial<Record<GadgetFieldType, string>> = {
   [FieldType.Url]: "example.com",
 } as const;
 
-export const useStringInputController = (props: {
-  field: string; // The field API identifier
-  control?: Control<any>;
-}) => {
-  const { field: fieldApiIdentifier, control } = props;
+export const useStringInputController = (
+  props: {
+    field: string; // The field API identifier
+  } & Omit<UseControllerProps, "name">
+) => {
+  const { field: fieldApiIdentifier, ...rest } = props;
   const { path, metadata } = useFieldMetadata(fieldApiIdentifier);
 
   const {
@@ -32,7 +34,7 @@ export const useStringInputController = (props: {
     fieldState: { error },
   } = useController({
     name: path,
-    control,
+    ...rest,
   });
 
   const placeholder = PlaceholderValues[metadata.fieldType];

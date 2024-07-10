@@ -8,7 +8,7 @@ import { PolarisAutoBooleanInput } from "./PolarisAutoBooleanInput.js";
 import { PolarisAutoDateTimePicker } from "./PolarisAutoDateTimePicker.js";
 import { PolarisAutoEncryptedStringInput } from "./PolarisAutoEncryptedStringInput.js";
 import { PolarisAutoFileInput } from "./PolarisAutoFileInput.js";
-import { PolarisAutoJSONInput } from "./PolarisAutoJsonInput.js";
+import { PolarisAutoJSONInput } from "./PolarisAutoJSONInput.js";
 import { PolarisAutoPasswordInput } from "./PolarisAutoPasswordInput.js";
 import { PolarisAutoRelationshipInput } from "./PolarisAutoRelationshipInput.js";
 import { PolarisAutoRolesInput } from "./PolarisAutoRolesInput.js";
