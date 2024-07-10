@@ -21,6 +21,8 @@ const documents = {
     types.SubFieldsFragmentDoc,
   "\n  query ModelActionMetadata($modelApiIdentifier: String!, $modelNamespace: [String!], $action: String!) {\n    gadgetMeta {\n      model(apiIdentifier: $modelApiIdentifier, namespace: $modelNamespace) {\n        name\n        action(apiIdentifier: $action) {\n          name\n          apiIdentifier\n          operatesWithRecordIdentity\n          inputFields {\n            ...FieldMetadata\n            ...SubFields\n          }\n        }\n      }\n    }\n  }\n":
     types.ModelActionMetadataDocument,
+  "\n  query GlobalActionMetadata($apiIdentifier: String!, $namespace: [String!]) {\n    gadgetMeta {\n      globalAction(apiIdentifier: $apiIdentifier, namespace: $namespace) {\n        name\n        apiIdentifier\n        inputFields {\n          ...FieldMetadata\n          ...SubFields\n        }\n      }\n    }\n  }\n":
+    types.GlobalActionMetadataDocument,
   "\n  query RolesMetadata {\n    gadgetMeta {\n      roles {\n        name\n        key\n        selectable\n      }\n    }\n  }\n":
     types.RolesMetadataDocument,
 };
@@ -63,6 +65,12 @@ export function graphql(
 export function graphql(
   source: "\n  query ModelActionMetadata($modelApiIdentifier: String!, $modelNamespace: [String!], $action: String!) {\n    gadgetMeta {\n      model(apiIdentifier: $modelApiIdentifier, namespace: $modelNamespace) {\n        name\n        action(apiIdentifier: $action) {\n          name\n          apiIdentifier\n          operatesWithRecordIdentity\n          inputFields {\n            ...FieldMetadata\n            ...SubFields\n          }\n        }\n      }\n    }\n  }\n"
 ): (typeof documents)["\n  query ModelActionMetadata($modelApiIdentifier: String!, $modelNamespace: [String!], $action: String!) {\n    gadgetMeta {\n      model(apiIdentifier: $modelApiIdentifier, namespace: $modelNamespace) {\n        name\n        action(apiIdentifier: $action) {\n          name\n          apiIdentifier\n          operatesWithRecordIdentity\n          inputFields {\n            ...FieldMetadata\n            ...SubFields\n          }\n        }\n      }\n    }\n  }\n"];
+/**
+ * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+ */
+export function graphql(
+  source: "\n  query GlobalActionMetadata($apiIdentifier: String!, $namespace: [String!]) {\n    gadgetMeta {\n      globalAction(apiIdentifier: $apiIdentifier, namespace: $namespace) {\n        name\n        apiIdentifier\n        inputFields {\n          ...FieldMetadata\n          ...SubFields\n        }\n      }\n    }\n  }\n"
+): (typeof documents)["\n  query GlobalActionMetadata($apiIdentifier: String!, $namespace: [String!]) {\n    gadgetMeta {\n      globalAction(apiIdentifier: $apiIdentifier, namespace: $namespace) {\n        name\n        apiIdentifier\n        inputFields {\n          ...FieldMetadata\n          ...SubFields\n        }\n      }\n    }\n  }\n"];
 /**
  * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */

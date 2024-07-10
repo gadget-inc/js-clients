@@ -1,11 +1,11 @@
-import type { ActionFunction, GadgetRecord } from "@gadgetinc/api-client-core";
+import type { ActionFunction, GadgetRecord, GlobalActionFunction } from "@gadgetinc/api-client-core";
 import { yupResolver } from "@hookform/resolvers/yup";
 import type { ReactNode } from "react";
 import { useMemo } from "react";
 import type { RecordIdentifier } from "src/use-action-form/types.js";
 import type { GadgetObjectFieldConfig } from "../internal/gql/graphql.js";
-import type { ActionMetadata, FieldMetadata } from "../metadata.js";
-import { filterFieldList, useActionMetadata } from "../metadata.js";
+import type { ActionMetadata, FieldMetadata, GlobalActionMetadata } from "../metadata.js";
+import { filterFieldList, isActionMetadata, useActionMetadata } from "../metadata.js";
 import { useActionForm } from "../useActionForm.js";
 import { get, type OptionsType } from "../utils.js";
 import { validationSchema } from "../validationSchema.js";
@@ -14,8 +14,7 @@ import { validationSchema } from "../validationSchema.js";
 export type AutoFormProps<
   GivenOptions extends OptionsType,
   SchemaT,
-  ActionFunc extends ActionFunction<GivenOptions, any, any, SchemaT, any>,
-  Options extends ActionFunc["optionsType"]
+  ActionFunc extends ActionFunction<GivenOptions, any, any, SchemaT, any> | GlobalActionFunction<any>
 > = {
   /** Which action this fom will run on submit */
   action: ActionFunc;
@@ -38,10 +37,11 @@ export type AutoFormProps<
 /**
  * React hook for getting the validation schema for a list of fields
  */
-export const useValidationResolver = (metadata: ActionMetadata | undefined) => {
+export const useValidationResolver = (metadata: ActionMetadata | GlobalActionMetadata | undefined) => {
   return useMemo(() => {
     if (!metadata) return undefined;
-    return yupResolver(validationSchema(metadata.action.inputFields));
+    const action = isActionMetadata(metadata) ? metadata.action : metadata;
+    return yupResolver(validationSchema(action.inputFields));
   }, [metadata]);
 };
 
@@ -49,13 +49,14 @@ export const useValidationResolver = (metadata: ActionMetadata | undefined) => {
  * React hook for getting a list of fields to use in a form (given include/exclude options)
  */
 export const useFormFields = (
-  metadata: ActionMetadata | undefined | null,
+  metadata: ActionMetadata | GlobalActionMetadata | undefined | null,
   options: { include?: string[]; exclude?: string[] }
 ): readonly { path: string; metadata: FieldMetadata }[] => {
   return useMemo(() => {
     if (!metadata) return [];
-    const objectFields = metadata.action.inputFields.filter((field) => field.configuration.__typename === "GadgetObjectFieldConfig");
-    const nonObjectFields = metadata.action.inputFields.filter((field) => field.configuration.__typename !== "GadgetObjectFieldConfig");
+    const action = isActionMetadata(metadata) ? metadata.action : metadata;
+    const objectFields = action.inputFields.filter((field) => field.configuration.__typename === "GadgetObjectFieldConfig");
+    const nonObjectFields = action.inputFields.filter((field) => field.configuration.__typename !== "GadgetObjectFieldConfig");
 
     const includedRootLevelFields = filterFieldList(nonObjectFields, options as any).map(
       (field) =>
@@ -86,10 +87,9 @@ export const useFormFields = (
 export const useAutoForm = <
   GivenOptions extends OptionsType,
   SchemaT,
-  ActionFunc extends ActionFunction<GivenOptions, any, any, SchemaT, any>,
-  Options extends ActionFunc["optionsType"]
+  ActionFunc extends ActionFunction<GivenOptions, any, any, SchemaT, any> | GlobalActionFunction<any>
 >(
-  props: AutoFormProps<GivenOptions, SchemaT, ActionFunc, Options>
+  props: AutoFormProps<GivenOptions, SchemaT, ActionFunc>
 ) => {
   const { action, record, findBy } = props;
 
@@ -97,7 +97,7 @@ export const useAutoForm = <
 
   // filter down the fields to render only what we want to render for this form
   const fields = useFormFields(metadata, props);
-  const operatesWithRecordId = !!metadata?.action.operatesWithRecordIdentity;
+  const operatesWithRecordId = !!(metadata && isActionMetadata(metadata) && metadata.action.operatesWithRecordIdentity);
 
   // setup the form state for the action
   const {
@@ -106,10 +106,13 @@ export const useAutoForm = <
     formState: { isSubmitSuccessful, isLoading, dirtyFields },
     originalFormMethods,
   } = useActionForm(action, {
-    defaultValues: {
-      [action.modelApiIdentifier]: record,
-      id: "0", // The ID value will be replaced when sending the form to use the record found by `findBy`
-    },
+    defaultValues:
+      action.type === "globalAction"
+        ? {}
+        : {
+            [action.modelApiIdentifier]: record,
+            id: "0", // The ID value will be replaced when sending the form to use the record found by `findBy`
+          },
     findBy,
     resolver: useValidationResolver(metadata),
     send: () => {

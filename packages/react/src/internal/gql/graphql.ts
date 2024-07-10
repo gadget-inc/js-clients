@@ -36,6 +36,8 @@ export type Scalars = {
   InternalGizmoRecord: { input: any; output: any };
   /** Represents one modelA result record in internal api calls. Returns a JSON blob of all the record's fields. */
   InternalModelARecord: { input: any; output: any };
+  /** Represents one part result record in internal api calls. Returns a JSON blob of all the record's fields. */
+  InternalPartRecord: { input: any; output: any };
   /** Represents one section result record in internal api calls. Returns a JSON blob of all the record's fields. */
   InternalSectionRecord: { input: any; output: any };
   /** Represents one session result record in internal api calls. Returns a JSON blob of all the record's fields. */
@@ -50,6 +52,10 @@ export type Scalars = {
   JSONObject: { input: any; output: any };
   /** Represents the state of one record in a Gadget database. Represented as either a string or set of strings nested in objects. */
   RecordState: { input: any; output: any };
+  /** Represents the possible values of the tags enum. */
+  StadiumTagsEnum: { input: any; output: any };
+  /** Represents the possible values of the type enum. */
+  StadiumTypeEnum: { input: any; output: any };
   /** A field whose value conforms to the standard URL format as specified in RFC3986: https://www.ietf.org/rfc/rfc3986.txt. */
   URL: { input: any; output: any };
   /** The `Upload` scalar type represents a file upload. */
@@ -114,6 +120,7 @@ export type BackgroundActionResult =
   | CreateGameStadiumResult
   | CreateGizmoResult
   | CreateModelAResult
+  | CreatePartResult
   | CreateSectionResult
   | CreateTestDataResult
   | CreateWidgetResult
@@ -123,6 +130,7 @@ export type BackgroundActionResult =
   | DeleteGameStadiumResult
   | DeleteGizmoResult
   | DeleteModelAResult
+  | DeletePartResult
   | DeleteSectionResult
   | DeleteUserResult
   | DeleteWidgetResult
@@ -136,6 +144,7 @@ export type BackgroundActionResult =
   | UpdateGameStadiumResult
   | UpdateGizmoResult
   | UpdateModelAResult
+  | UpdatePartResult
   | UpdateSectionResult
   | UpdateUserResult
   | UpdateWidgetResult;
@@ -311,10 +320,12 @@ export type BackgroundMutations = {
   bulkAddInventoryWidgets: BulkEnqueueBackgroundActionResult;
   bulkCreateGizmos: BulkEnqueueBackgroundActionResult;
   bulkCreateModelAs: BulkEnqueueBackgroundActionResult;
+  bulkCreateParts: BulkEnqueueBackgroundActionResult;
   bulkCreateSections: BulkEnqueueBackgroundActionResult;
   bulkCreateWidgets: BulkEnqueueBackgroundActionResult;
   bulkDeleteGizmos: BulkEnqueueBackgroundActionResult;
   bulkDeleteModelAs: BulkEnqueueBackgroundActionResult;
+  bulkDeleteParts: BulkEnqueueBackgroundActionResult;
   bulkDeleteSections: BulkEnqueueBackgroundActionResult;
   bulkDeleteUsers: BulkEnqueueBackgroundActionResult;
   bulkDeleteWidgets: BulkEnqueueBackgroundActionResult;
@@ -323,16 +334,19 @@ export type BackgroundMutations = {
   bulkSignUpUsers: BulkEnqueueBackgroundActionResult;
   bulkUpdateGizmos: BulkEnqueueBackgroundActionResult;
   bulkUpdateModelAs: BulkEnqueueBackgroundActionResult;
+  bulkUpdateParts: BulkEnqueueBackgroundActionResult;
   bulkUpdateSections: BulkEnqueueBackgroundActionResult;
   bulkUpdateUsers: BulkEnqueueBackgroundActionResult;
   bulkUpdateWidgets: BulkEnqueueBackgroundActionResult;
   createGizmo: EnqueueBackgroundActionResult;
   createModelA: EnqueueBackgroundActionResult;
+  createPart: EnqueueBackgroundActionResult;
   createSection: EnqueueBackgroundActionResult;
   createTestData: EnqueueBackgroundActionResult;
   createWidget: EnqueueBackgroundActionResult;
   deleteGizmo: EnqueueBackgroundActionResult;
   deleteModelA: EnqueueBackgroundActionResult;
+  deletePart: EnqueueBackgroundActionResult;
   deleteSection: EnqueueBackgroundActionResult;
   deleteUser: EnqueueBackgroundActionResult;
   deleteWidget: EnqueueBackgroundActionResult;
@@ -343,6 +357,7 @@ export type BackgroundMutations = {
   signUpUser: EnqueueBackgroundActionResult;
   updateGizmo: EnqueueBackgroundActionResult;
   updateModelA: EnqueueBackgroundActionResult;
+  updatePart: EnqueueBackgroundActionResult;
   updateSection: EnqueueBackgroundActionResult;
   updateUser: EnqueueBackgroundActionResult;
   updateWidget: EnqueueBackgroundActionResult;
@@ -369,6 +384,11 @@ export type BackgroundMutationsBulkCreateModelAsArgs = {
   inputs: Array<Scalars["JSON"]["input"]>;
 };
 
+export type BackgroundMutationsBulkCreatePartsArgs = {
+  backgroundOptions?: InputMaybe<EnqueueBackgroundActionOptions>;
+  inputs: Array<BulkCreatePartsInput>;
+};
+
 export type BackgroundMutationsBulkCreateSectionsArgs = {
   backgroundOptions?: InputMaybe<EnqueueBackgroundActionOptions>;
   inputs: Array<BulkCreateSectionsInput>;
@@ -385,6 +405,11 @@ export type BackgroundMutationsBulkDeleteGizmosArgs = {
 };
 
 export type BackgroundMutationsBulkDeleteModelAsArgs = {
+  backgroundOptions?: InputMaybe<EnqueueBackgroundActionOptions>;
+  ids: Array<Scalars["GadgetID"]["input"]>;
+};
+
+export type BackgroundMutationsBulkDeletePartsArgs = {
   backgroundOptions?: InputMaybe<EnqueueBackgroundActionOptions>;
   ids: Array<Scalars["GadgetID"]["input"]>;
 };
@@ -429,6 +454,11 @@ export type BackgroundMutationsBulkUpdateModelAsArgs = {
   ids: Array<Scalars["GadgetID"]["input"]>;
 };
 
+export type BackgroundMutationsBulkUpdatePartsArgs = {
+  backgroundOptions?: InputMaybe<EnqueueBackgroundActionOptions>;
+  inputs: Array<BulkUpdatePartsInput>;
+};
+
 export type BackgroundMutationsBulkUpdateSectionsArgs = {
   backgroundOptions?: InputMaybe<EnqueueBackgroundActionOptions>;
   inputs: Array<BulkUpdateSectionsInput>;
@@ -453,6 +483,11 @@ export type BackgroundMutationsCreateModelAArgs = {
   backgroundOptions?: InputMaybe<EnqueueBackgroundActionOptions>;
 };
 
+export type BackgroundMutationsCreatePartArgs = {
+  backgroundOptions?: InputMaybe<EnqueueBackgroundActionOptions>;
+  part?: InputMaybe<CreatePartInput>;
+};
+
 export type BackgroundMutationsCreateSectionArgs = {
   backgroundOptions?: InputMaybe<EnqueueBackgroundActionOptions>;
   section?: InputMaybe<CreateSectionInput>;
@@ -473,6 +508,11 @@ export type BackgroundMutationsDeleteGizmoArgs = {
 };
 
 export type BackgroundMutationsDeleteModelAArgs = {
+  backgroundOptions?: InputMaybe<EnqueueBackgroundActionOptions>;
+  id: Scalars["GadgetID"]["input"];
+};
+
+export type BackgroundMutationsDeletePartArgs = {
   backgroundOptions?: InputMaybe<EnqueueBackgroundActionOptions>;
   id: Scalars["GadgetID"]["input"];
 };
@@ -524,6 +564,12 @@ export type BackgroundMutationsUpdateGizmoArgs = {
 export type BackgroundMutationsUpdateModelAArgs = {
   backgroundOptions?: InputMaybe<EnqueueBackgroundActionOptions>;
   id: Scalars["GadgetID"]["input"];
+};
+
+export type BackgroundMutationsUpdatePartArgs = {
+  backgroundOptions?: InputMaybe<EnqueueBackgroundActionOptions>;
+  id: Scalars["GadgetID"]["input"];
+  part?: InputMaybe<UpdatePartInput>;
 };
 
 export type BackgroundMutationsUpdateSectionArgs = {
@@ -652,6 +698,21 @@ export type BulkCreateModelAsResult = {
   success: Scalars["Boolean"]["output"];
 };
 
+export type BulkCreatePartsInput = {
+  part?: InputMaybe<CreatePartInput>;
+};
+
+/** The output when running the create on the part model in bulk. */
+export type BulkCreatePartsResult = {
+  __typename?: "BulkCreatePartsResult";
+  /** Aggregated list of errors that any bulk action encountered while processing */
+  errors?: Maybe<Array<ExecutionError>>;
+  /** The list of all changed part records by each sent bulk action. Returned in the same order as the input bulk action params. */
+  parts?: Maybe<Array<Maybe<Part>>>;
+  /** Boolean describing if all the bulk actions succeeded or not */
+  success: Scalars["Boolean"]["output"];
+};
+
 export type BulkCreateSectionsInput = {
   section?: InputMaybe<CreateSectionInput>;
 };
@@ -730,6 +791,15 @@ export type BulkDeleteGizmosResult = {
 /** The output when running the delete on the modelA model in bulk. */
 export type BulkDeleteModelAsResult = {
   __typename?: "BulkDeleteModelAsResult";
+  /** Aggregated list of errors that any bulk action encountered while processing */
+  errors?: Maybe<Array<ExecutionError>>;
+  /** Boolean describing if all the bulk actions succeeded or not */
+  success: Scalars["Boolean"]["output"];
+};
+
+/** The output when running the delete on the part model in bulk. */
+export type BulkDeletePartsResult = {
+  __typename?: "BulkDeletePartsResult";
   /** Aggregated list of errors that any bulk action encountered while processing */
   errors?: Maybe<Array<ExecutionError>>;
   /** Boolean describing if all the bulk actions succeeded or not */
@@ -905,6 +975,22 @@ export type BulkUpdateModelAsResult = {
   errors?: Maybe<Array<ExecutionError>>;
   /** The list of all changed modelA records by each sent bulk action. Returned in the same order as the input bulk action params. */
   modelAs?: Maybe<Array<Maybe<ModelA>>>;
+  /** Boolean describing if all the bulk actions succeeded or not */
+  success: Scalars["Boolean"]["output"];
+};
+
+export type BulkUpdatePartsInput = {
+  id: Scalars["GadgetID"]["input"];
+  part?: InputMaybe<UpdatePartInput>;
+};
+
+/** The output when running the update on the part model in bulk. */
+export type BulkUpdatePartsResult = {
+  __typename?: "BulkUpdatePartsResult";
+  /** Aggregated list of errors that any bulk action encountered while processing */
+  errors?: Maybe<Array<ExecutionError>>;
+  /** The list of all changed part records by each sent bulk action. Returned in the same order as the input bulk action params. */
+  parts?: Maybe<Array<Maybe<Part>>>;
   /** Boolean describing if all the bulk actions succeeded or not */
   success: Scalars["Boolean"]["output"];
 };
@@ -1095,6 +1181,8 @@ export type CreateGameStadiumInput = {
   name?: InputMaybe<Scalars["String"]["input"]>;
   photo?: InputMaybe<StoredFileInput>;
   rounds?: InputMaybe<Array<InputMaybe<RoundHasManyInput>>>;
+  tags?: InputMaybe<Array<Scalars["StadiumTagsEnum"]["input"]>>;
+  type?: InputMaybe<Scalars["StadiumTypeEnum"]["input"]>;
 };
 
 export type CreateGameStadiumResult = {
@@ -1121,6 +1209,19 @@ export type CreateModelAResult = {
   __typename?: "CreateModelAResult";
   errors?: Maybe<Array<ExecutionError>>;
   modelA?: Maybe<ModelA>;
+  success: Scalars["Boolean"]["output"];
+};
+
+export type CreatePartInput = {
+  count?: InputMaybe<Scalars["Float"]["input"]>;
+  name?: InputMaybe<Scalars["String"]["input"]>;
+  notes?: InputMaybe<Scalars["String"]["input"]>;
+};
+
+export type CreatePartResult = {
+  __typename?: "CreatePartResult";
+  errors?: Maybe<Array<ExecutionError>>;
+  part?: Maybe<Part>;
   success: Scalars["Boolean"]["output"];
 };
 
@@ -1232,6 +1333,12 @@ export type DeleteGizmoResult = {
 
 export type DeleteModelAResult = {
   __typename?: "DeleteModelAResult";
+  errors?: Maybe<Array<ExecutionError>>;
+  success: Scalars["Boolean"]["output"];
+};
+
+export type DeletePartResult = {
+  __typename?: "DeletePartResult";
   errors?: Maybe<Array<ExecutionError>>;
   success: Scalars["Boolean"]["output"];
 };
@@ -2092,6 +2199,8 @@ export type GameStadium = {
   name?: Maybe<Scalars["String"]["output"]>;
   photo?: Maybe<StoredFile>;
   rounds: GameRoundConnection;
+  tags?: Maybe<Array<Scalars["StadiumTagsEnum"]["output"]>>;
+  type?: Maybe<Scalars["StadiumTypeEnum"]["output"]>;
   /** The time at which this record was last changed. Set each time the record is successfully acted upon by an action. Managed by Gadget. */
   updatedAt: Scalars["DateTime"]["output"];
 };
@@ -2133,6 +2242,8 @@ export type GameStadiumFilter = {
   createdAt?: InputMaybe<DateTimeFilter>;
   id?: InputMaybe<IdFilter>;
   name?: InputMaybe<StringFilter>;
+  tags?: InputMaybe<MultiEnumFilter>;
+  type?: InputMaybe<SingleEnumFilter>;
   updatedAt?: InputMaybe<DateTimeFilter>;
 };
 
@@ -2143,6 +2254,10 @@ export type GameStadiumSort = {
   id?: InputMaybe<SortOrder>;
   /** Sort the results by the name field. Defaults to ascending (smallest value first). */
   name?: InputMaybe<SortOrder>;
+  /** Sort the results by the tags field. Defaults to ascending (smallest value first). */
+  tags?: InputMaybe<SortOrder>;
+  /** Sort the results by the type field. Defaults to ascending (smallest value first). */
+  type?: InputMaybe<SortOrder>;
   /** Sort the results by the updatedAt field. Defaults to ascending (smallest value first). */
   updatedAt?: InputMaybe<SortOrder>;
 };
@@ -2280,6 +2395,13 @@ export type InternalBulkCreateModelAsResult = {
   success: Scalars["Boolean"]["output"];
 };
 
+export type InternalBulkCreatePartsResult = {
+  __typename?: "InternalBulkCreatePartsResult";
+  errors?: Maybe<Array<ExecutionError>>;
+  parts?: Maybe<Array<Maybe<Scalars["InternalPartRecord"]["output"]>>>;
+  success: Scalars["Boolean"]["output"];
+};
+
 export type InternalBulkCreateSectionsResult = {
   __typename?: "InternalBulkCreateSectionsResult";
   errors?: Maybe<Array<ExecutionError>>;
@@ -2347,6 +2469,13 @@ export type InternalCreateModelAResult = {
   __typename?: "InternalCreateModelAResult";
   errors?: Maybe<Array<ExecutionError>>;
   modelA?: Maybe<Scalars["InternalModelARecord"]["output"]>;
+  success: Scalars["Boolean"]["output"];
+};
+
+export type InternalCreatePartResult = {
+  __typename?: "InternalCreatePartResult";
+  errors?: Maybe<Array<ExecutionError>>;
+  part?: Maybe<Scalars["InternalPartRecord"]["output"]>;
   success: Scalars["Boolean"]["output"];
 };
 
@@ -2449,6 +2578,12 @@ export type InternalDeleteManyModelAResult = {
   success: Scalars["Boolean"]["output"];
 };
 
+export type InternalDeleteManyPartResult = {
+  __typename?: "InternalDeleteManyPartResult";
+  errors?: Maybe<Array<ExecutionError>>;
+  success: Scalars["Boolean"]["output"];
+};
+
 export type InternalDeleteManySectionResult = {
   __typename?: "InternalDeleteManySectionResult";
   errors?: Maybe<Array<ExecutionError>>;
@@ -2477,6 +2612,13 @@ export type InternalDeleteModelAResult = {
   __typename?: "InternalDeleteModelAResult";
   errors?: Maybe<Array<ExecutionError>>;
   modelA?: Maybe<Scalars["InternalModelARecord"]["output"]>;
+  success: Scalars["Boolean"]["output"];
+};
+
+export type InternalDeletePartResult = {
+  __typename?: "InternalDeletePartResult";
+  errors?: Maybe<Array<ExecutionError>>;
+  part?: Maybe<Scalars["InternalPartRecord"]["output"]>;
   success: Scalars["Boolean"]["output"];
 };
 
@@ -2885,6 +3027,8 @@ export type InternalGameStadiumInput = {
   photo?: InputMaybe<InternalStoredFileInput>;
   state?: InputMaybe<Scalars["RecordState"]["input"]>;
   stateHistory?: InputMaybe<Scalars["RecordState"]["input"]>;
+  tags?: InputMaybe<Array<Scalars["StadiumTagsEnum"]["input"]>>;
+  type?: InputMaybe<Scalars["StadiumTypeEnum"]["input"]>;
   updatedAt?: InputMaybe<Scalars["DateTime"]["input"]>;
 };
 
@@ -2967,6 +3111,7 @@ export type InternalMutations = {
   acquireLock: LockOperationResult;
   bulkCreateGizmos?: Maybe<InternalBulkCreateGizmosResult>;
   bulkCreateModelAs?: Maybe<InternalBulkCreateModelAsResult>;
+  bulkCreateParts?: Maybe<InternalBulkCreatePartsResult>;
   bulkCreateSections?: Maybe<InternalBulkCreateSectionsResult>;
   bulkCreateSessions?: Maybe<InternalBulkCreateSessionsResult>;
   bulkCreateUsers?: Maybe<InternalBulkCreateUsersResult>;
@@ -2974,6 +3119,7 @@ export type InternalMutations = {
   commitTransaction: Scalars["String"]["output"];
   createGizmo?: Maybe<InternalCreateGizmoResult>;
   createModelA?: Maybe<InternalCreateModelAResult>;
+  createPart?: Maybe<InternalCreatePartResult>;
   createSection?: Maybe<InternalCreateSectionResult>;
   createSession?: Maybe<InternalCreateSessionResult>;
   createUser?: Maybe<InternalCreateUserResult>;
@@ -2981,11 +3127,13 @@ export type InternalMutations = {
   deleteGizmo?: Maybe<InternalDeleteGizmoResult>;
   deleteManyGizmo?: Maybe<InternalDeleteManyGizmoResult>;
   deleteManyModelA?: Maybe<InternalDeleteManyModelAResult>;
+  deleteManyPart?: Maybe<InternalDeleteManyPartResult>;
   deleteManySection?: Maybe<InternalDeleteManySectionResult>;
   deleteManySession?: Maybe<InternalDeleteManySessionResult>;
   deleteManyUser?: Maybe<InternalDeleteManyUserResult>;
   deleteManyWidget?: Maybe<InternalDeleteManyWidgetResult>;
   deleteModelA?: Maybe<InternalDeleteModelAResult>;
+  deletePart?: Maybe<InternalDeletePartResult>;
   deleteSection?: Maybe<InternalDeleteSectionResult>;
   deleteSession?: Maybe<InternalDeleteSessionResult>;
   deleteUser?: Maybe<InternalDeleteUserResult>;
@@ -2996,11 +3144,13 @@ export type InternalMutations = {
   triggerAddInventoryWidget?: Maybe<AddInventoryWidgetResult>;
   triggerCreateGizmo?: Maybe<CreateGizmoResult>;
   triggerCreateModelA?: Maybe<CreateModelAResult>;
+  triggerCreatePart?: Maybe<CreatePartResult>;
   triggerCreateSection?: Maybe<CreateSectionResult>;
   triggerCreateTestData?: Maybe<CreateTestDataResult>;
   triggerCreateWidget?: Maybe<CreateWidgetResult>;
   triggerDeleteGizmo?: Maybe<DeleteGizmoResult>;
   triggerDeleteModelA?: Maybe<DeleteModelAResult>;
+  triggerDeletePart?: Maybe<DeletePartResult>;
   triggerDeleteSection?: Maybe<DeleteSectionResult>;
   triggerDeleteUser?: Maybe<DeleteUserResult>;
   triggerDeleteWidget?: Maybe<DeleteWidgetResult>;
@@ -3010,11 +3160,13 @@ export type InternalMutations = {
   triggerSignUpUser?: Maybe<SignUpUserResult>;
   triggerUpdateGizmo?: Maybe<UpdateGizmoResult>;
   triggerUpdateModelA?: Maybe<UpdateModelAResult>;
+  triggerUpdatePart?: Maybe<UpdatePartResult>;
   triggerUpdateSection?: Maybe<UpdateSectionResult>;
   triggerUpdateUser?: Maybe<UpdateUserResult>;
   triggerUpdateWidget?: Maybe<UpdateWidgetResult>;
   updateGizmo?: Maybe<InternalUpdateGizmoResult>;
   updateModelA?: Maybe<InternalUpdateModelAResult>;
+  updatePart?: Maybe<InternalUpdatePartResult>;
   updateSection?: Maybe<InternalUpdateSectionResult>;
   updateSession?: Maybe<InternalUpdateSessionResult>;
   updateUser?: Maybe<InternalUpdateUserResult>;
@@ -3031,6 +3183,10 @@ export type InternalMutationsBulkCreateGizmosArgs = {
 
 export type InternalMutationsBulkCreateModelAsArgs = {
   modelAs: Array<InputMaybe<InternalModelAInput>>;
+};
+
+export type InternalMutationsBulkCreatePartsArgs = {
+  parts: Array<InputMaybe<InternalPartInput>>;
 };
 
 export type InternalMutationsBulkCreateSectionsArgs = {
@@ -3055,6 +3211,10 @@ export type InternalMutationsCreateGizmoArgs = {
 
 export type InternalMutationsCreateModelAArgs = {
   modelA?: InputMaybe<InternalModelAInput>;
+};
+
+export type InternalMutationsCreatePartArgs = {
+  part?: InputMaybe<InternalPartInput>;
 };
 
 export type InternalMutationsCreateSectionArgs = {
@@ -3087,6 +3247,11 @@ export type InternalMutationsDeleteManyModelAArgs = {
   search?: InputMaybe<Scalars["String"]["input"]>;
 };
 
+export type InternalMutationsDeleteManyPartArgs = {
+  filter?: InputMaybe<Array<PartFilter>>;
+  search?: InputMaybe<Scalars["String"]["input"]>;
+};
+
 export type InternalMutationsDeleteManySectionArgs = {
   filter?: InputMaybe<Array<SectionFilter>>;
   search?: InputMaybe<Scalars["String"]["input"]>;
@@ -3107,6 +3272,10 @@ export type InternalMutationsDeleteManyWidgetArgs = {
 };
 
 export type InternalMutationsDeleteModelAArgs = {
+  id: Scalars["GadgetID"]["input"];
+};
+
+export type InternalMutationsDeletePartArgs = {
   id: Scalars["GadgetID"]["input"];
 };
 
@@ -3147,6 +3316,13 @@ export type InternalMutationsTriggerCreateModelAArgs = {
   verifyTriggerExists?: InputMaybe<Scalars["Boolean"]["input"]>;
 };
 
+export type InternalMutationsTriggerCreatePartArgs = {
+  context?: InputMaybe<AppGraphQlTriggerMutationContext>;
+  params?: InputMaybe<Scalars["JSONObject"]["input"]>;
+  trigger?: InputMaybe<Scalars["JSONObject"]["input"]>;
+  verifyTriggerExists?: InputMaybe<Scalars["Boolean"]["input"]>;
+};
+
 export type InternalMutationsTriggerCreateSectionArgs = {
   context?: InputMaybe<AppGraphQlTriggerMutationContext>;
   params?: InputMaybe<Scalars["JSONObject"]["input"]>;
@@ -3174,6 +3350,13 @@ export type InternalMutationsTriggerDeleteGizmoArgs = {
 };
 
 export type InternalMutationsTriggerDeleteModelAArgs = {
+  context?: InputMaybe<AppGraphQlTriggerMutationContext>;
+  params?: InputMaybe<Scalars["JSONObject"]["input"]>;
+  trigger?: InputMaybe<Scalars["JSONObject"]["input"]>;
+  verifyTriggerExists?: InputMaybe<Scalars["Boolean"]["input"]>;
+};
+
+export type InternalMutationsTriggerDeletePartArgs = {
   context?: InputMaybe<AppGraphQlTriggerMutationContext>;
   params?: InputMaybe<Scalars["JSONObject"]["input"]>;
   trigger?: InputMaybe<Scalars["JSONObject"]["input"]>;
@@ -3243,6 +3426,13 @@ export type InternalMutationsTriggerUpdateModelAArgs = {
   verifyTriggerExists?: InputMaybe<Scalars["Boolean"]["input"]>;
 };
 
+export type InternalMutationsTriggerUpdatePartArgs = {
+  context?: InputMaybe<AppGraphQlTriggerMutationContext>;
+  params?: InputMaybe<Scalars["JSONObject"]["input"]>;
+  trigger?: InputMaybe<Scalars["JSONObject"]["input"]>;
+  verifyTriggerExists?: InputMaybe<Scalars["Boolean"]["input"]>;
+};
+
 export type InternalMutationsTriggerUpdateSectionArgs = {
   context?: InputMaybe<AppGraphQlTriggerMutationContext>;
   params?: InputMaybe<Scalars["JSONObject"]["input"]>;
@@ -3274,6 +3464,11 @@ export type InternalMutationsUpdateModelAArgs = {
   modelA?: InputMaybe<InternalModelAInput>;
 };
 
+export type InternalMutationsUpdatePartArgs = {
+  id: Scalars["GadgetID"]["input"];
+  part?: InputMaybe<InternalPartInput>;
+};
+
 export type InternalMutationsUpdateSectionArgs = {
   id: Scalars["GadgetID"]["input"];
   section?: InputMaybe<InternalSectionInput>;
@@ -3294,6 +3489,42 @@ export type InternalMutationsUpdateWidgetArgs = {
   widget?: InputMaybe<InternalWidgetInput>;
 };
 
+export type InternalPartAtomicsInput = {
+  /** Numeric atomic commands for operating on count. */
+  count?: InputMaybe<Array<NumericAtomicFieldUpdateInput>>;
+};
+
+export type InternalPartInput = {
+  /** An optional list of atomically applied commands for race-safe mutations of the record */
+  _atomics?: InputMaybe<InternalPartAtomicsInput>;
+  count?: InputMaybe<Scalars["Float"]["input"]>;
+  createdAt?: InputMaybe<Scalars["DateTime"]["input"]>;
+  id?: InputMaybe<Scalars["GadgetID"]["input"]>;
+  name?: InputMaybe<Scalars["String"]["input"]>;
+  notes?: InputMaybe<Scalars["String"]["input"]>;
+  state?: InputMaybe<Scalars["RecordState"]["input"]>;
+  stateHistory?: InputMaybe<Scalars["RecordState"]["input"]>;
+  updatedAt?: InputMaybe<Scalars["DateTime"]["input"]>;
+};
+
+/** A connection to a list of InternalPartRecord items. */
+export type InternalPartRecordConnection = {
+  __typename?: "InternalPartRecordConnection";
+  /** A list of edges. */
+  edges: Array<InternalPartRecordEdge>;
+  /** Information to aid in pagination. */
+  pageInfo: PageInfo;
+};
+
+/** An edge in a InternalPartRecord connection. */
+export type InternalPartRecordEdge = {
+  __typename?: "InternalPartRecordEdge";
+  /** A cursor for use in pagination */
+  cursor: Scalars["String"]["output"];
+  /** The item at the end of the edge */
+  node: Scalars["InternalPartRecord"]["output"];
+};
+
 export type InternalQueries = {
   __typename?: "InternalQueries";
   /** Currently open platform transaction details, or null if no transaction is open */
@@ -3302,11 +3533,13 @@ export type InternalQueries = {
   gizmo?: Maybe<Scalars["InternalGizmoRecord"]["output"]>;
   listGizmo: InternalGizmoRecordConnection;
   listModelA: InternalModelARecordConnection;
+  listPart: InternalPartRecordConnection;
   listSection: InternalSectionRecordConnection;
   listSession: InternalSessionRecordConnection;
   listUser: InternalUserRecordConnection;
   listWidget: InternalWidgetRecordConnection;
   modelA?: Maybe<Scalars["InternalModelARecord"]["output"]>;
+  part?: Maybe<Scalars["InternalPartRecord"]["output"]>;
   section?: Maybe<Scalars["InternalSectionRecord"]["output"]>;
   session?: Maybe<Scalars["InternalSessionRecord"]["output"]>;
   user?: Maybe<Scalars["InternalUserRecord"]["output"]>;
@@ -3338,6 +3571,17 @@ export type InternalQueriesListModelAArgs = {
   search?: InputMaybe<Scalars["String"]["input"]>;
   select?: InputMaybe<Array<Scalars["String"]["input"]>>;
   sort?: InputMaybe<Array<ModelASort>>;
+};
+
+export type InternalQueriesListPartArgs = {
+  after?: InputMaybe<Scalars["String"]["input"]>;
+  before?: InputMaybe<Scalars["String"]["input"]>;
+  filter?: InputMaybe<Array<PartFilter>>;
+  first?: InputMaybe<Scalars["Int"]["input"]>;
+  last?: InputMaybe<Scalars["Int"]["input"]>;
+  search?: InputMaybe<Scalars["String"]["input"]>;
+  select?: InputMaybe<Array<Scalars["String"]["input"]>>;
+  sort?: InputMaybe<Array<PartSort>>;
 };
 
 export type InternalQueriesListSectionArgs = {
@@ -3383,6 +3627,11 @@ export type InternalQueriesListWidgetArgs = {
 };
 
 export type InternalQueriesModelAArgs = {
+  id: Scalars["GadgetID"]["input"];
+  select?: InputMaybe<Array<Scalars["String"]["input"]>>;
+};
+
+export type InternalQueriesPartArgs = {
   id: Scalars["GadgetID"]["input"];
   select?: InputMaybe<Array<Scalars["String"]["input"]>>;
 };
@@ -3514,6 +3763,13 @@ export type InternalUpdateModelAResult = {
   __typename?: "InternalUpdateModelAResult";
   errors?: Maybe<Array<ExecutionError>>;
   modelA?: Maybe<Scalars["InternalModelARecord"]["output"]>;
+  success: Scalars["Boolean"]["output"];
+};
+
+export type InternalUpdatePartResult = {
+  __typename?: "InternalUpdatePartResult";
+  errors?: Maybe<Array<ExecutionError>>;
+  part?: Maybe<Scalars["InternalPartRecord"]["output"]>;
   success: Scalars["Boolean"]["output"];
 };
 
@@ -3737,10 +3993,12 @@ export type Mutation = {
   bulkAddInventoryWidgets?: Maybe<BulkAddInventoryWidgetsResult>;
   bulkCreateGizmos?: Maybe<BulkCreateGizmosResult>;
   bulkCreateModelAs?: Maybe<BulkCreateModelAsResult>;
+  bulkCreateParts?: Maybe<BulkCreatePartsResult>;
   bulkCreateSections?: Maybe<BulkCreateSectionsResult>;
   bulkCreateWidgets?: Maybe<BulkCreateWidgetsResult>;
   bulkDeleteGizmos?: Maybe<BulkDeleteGizmosResult>;
   bulkDeleteModelAs?: Maybe<BulkDeleteModelAsResult>;
+  bulkDeleteParts?: Maybe<BulkDeletePartsResult>;
   bulkDeleteSections?: Maybe<BulkDeleteSectionsResult>;
   bulkDeleteUsers?: Maybe<BulkDeleteUsersResult>;
   bulkDeleteWidgets?: Maybe<BulkDeleteWidgetsResult>;
@@ -3749,16 +4007,19 @@ export type Mutation = {
   bulkSignUpUsers?: Maybe<BulkSignUpUsersResult>;
   bulkUpdateGizmos?: Maybe<BulkUpdateGizmosResult>;
   bulkUpdateModelAs?: Maybe<BulkUpdateModelAsResult>;
+  bulkUpdateParts?: Maybe<BulkUpdatePartsResult>;
   bulkUpdateSections?: Maybe<BulkUpdateSectionsResult>;
   bulkUpdateUsers?: Maybe<BulkUpdateUsersResult>;
   bulkUpdateWidgets?: Maybe<BulkUpdateWidgetsResult>;
   createGizmo?: Maybe<CreateGizmoResult>;
   createModelA?: Maybe<CreateModelAResult>;
+  createPart?: Maybe<CreatePartResult>;
   createSection?: Maybe<CreateSectionResult>;
   createTestData?: Maybe<CreateTestDataResult>;
   createWidget?: Maybe<CreateWidgetResult>;
   deleteGizmo?: Maybe<DeleteGizmoResult>;
   deleteModelA?: Maybe<DeleteModelAResult>;
+  deletePart?: Maybe<DeletePartResult>;
   deleteSection?: Maybe<DeleteSectionResult>;
   deleteUser?: Maybe<DeleteUserResult>;
   deleteWidget?: Maybe<DeleteWidgetResult>;
@@ -3772,6 +4033,7 @@ export type Mutation = {
   signUpUser?: Maybe<SignUpUserResult>;
   updateGizmo?: Maybe<UpdateGizmoResult>;
   updateModelA?: Maybe<UpdateModelAResult>;
+  updatePart?: Maybe<UpdatePartResult>;
   updateSection?: Maybe<UpdateSectionResult>;
   updateUser?: Maybe<UpdateUserResult>;
   updateWidget?: Maybe<UpdateWidgetResult>;
@@ -3794,6 +4056,10 @@ export type MutationBulkCreateModelAsArgs = {
   inputs: Array<Scalars["JSON"]["input"]>;
 };
 
+export type MutationBulkCreatePartsArgs = {
+  inputs: Array<BulkCreatePartsInput>;
+};
+
 export type MutationBulkCreateSectionsArgs = {
   inputs: Array<BulkCreateSectionsInput>;
 };
@@ -3807,6 +4073,10 @@ export type MutationBulkDeleteGizmosArgs = {
 };
 
 export type MutationBulkDeleteModelAsArgs = {
+  ids: Array<Scalars["GadgetID"]["input"]>;
+};
+
+export type MutationBulkDeletePartsArgs = {
   ids: Array<Scalars["GadgetID"]["input"]>;
 };
 
@@ -3842,6 +4112,10 @@ export type MutationBulkUpdateModelAsArgs = {
   ids: Array<Scalars["GadgetID"]["input"]>;
 };
 
+export type MutationBulkUpdatePartsArgs = {
+  inputs: Array<BulkUpdatePartsInput>;
+};
+
 export type MutationBulkUpdateSectionsArgs = {
   inputs: Array<BulkUpdateSectionsInput>;
 };
@@ -3858,6 +4132,10 @@ export type MutationCreateGizmoArgs = {
   gizmo?: InputMaybe<CreateGizmoInput>;
 };
 
+export type MutationCreatePartArgs = {
+  part?: InputMaybe<CreatePartInput>;
+};
+
 export type MutationCreateSectionArgs = {
   section?: InputMaybe<CreateSectionInput>;
 };
@@ -3871,6 +4149,10 @@ export type MutationDeleteGizmoArgs = {
 };
 
 export type MutationDeleteModelAArgs = {
+  id: Scalars["GadgetID"]["input"];
+};
+
+export type MutationDeletePartArgs = {
   id: Scalars["GadgetID"]["input"];
 };
 
@@ -3912,6 +4194,11 @@ export type MutationUpdateGizmoArgs = {
 
 export type MutationUpdateModelAArgs = {
   id: Scalars["GadgetID"]["input"];
+};
+
+export type MutationUpdatePartArgs = {
+  id: Scalars["GadgetID"]["input"];
+  part?: InputMaybe<UpdatePartInput>;
 };
 
 export type MutationUpdateSectionArgs = {
@@ -4013,6 +4300,8 @@ export type NestedStadiumCreateInput = {
   name?: InputMaybe<Scalars["String"]["input"]>;
   photo?: InputMaybe<StoredFileInput>;
   rounds?: InputMaybe<Array<InputMaybe<RoundHasManyInput>>>;
+  tags?: InputMaybe<Array<Scalars["StadiumTagsEnum"]["input"]>>;
+  type?: InputMaybe<Scalars["StadiumTypeEnum"]["input"]>;
 };
 
 export type NestedStadiumDeleteInput = {
@@ -4025,6 +4314,8 @@ export type NestedStadiumUpdateInput = {
   name?: InputMaybe<Scalars["String"]["input"]>;
   photo?: InputMaybe<StoredFileInput>;
   rounds?: InputMaybe<Array<InputMaybe<RoundHasManyInput>>>;
+  tags?: InputMaybe<Array<Scalars["StadiumTagsEnum"]["input"]>>;
+  type?: InputMaybe<Scalars["StadiumTypeEnum"]["input"]>;
 };
 
 export type NestedWidgetAddInventoryInput = {
@@ -4098,6 +4389,66 @@ export type PageInfo = {
   startCursor?: Maybe<Scalars["String"]["output"]>;
 };
 
+export type Part = {
+  __typename?: "Part";
+  /** Get all the fields for this record. Useful for not having to list out all the fields you want to retrieve, but slower. */
+  _all: Scalars["JSONObject"]["output"];
+  count?: Maybe<Scalars["Float"]["output"]>;
+  /** The time at which this record was first created. Set once upon record creation and never changed. Managed by Gadget. */
+  createdAt: Scalars["DateTime"]["output"];
+  /** The globally unique, unchanging identifier for this record. Assigned and managed by Gadget. */
+  id: Scalars["GadgetID"]["output"];
+  name?: Maybe<Scalars["String"]["output"]>;
+  notes?: Maybe<Scalars["String"]["output"]>;
+  /** The time at which this record was last changed. Set each time the record is successfully acted upon by an action. Managed by Gadget. */
+  updatedAt: Scalars["DateTime"]["output"];
+};
+
+/** A connection to a list of Part items. */
+export type PartConnection = {
+  __typename?: "PartConnection";
+  /** A list of edges. */
+  edges: Array<PartEdge>;
+  /** Information to aid in pagination. */
+  pageInfo: PageInfo;
+};
+
+/** An edge in a Part connection. */
+export type PartEdge = {
+  __typename?: "PartEdge";
+  /** A cursor for use in pagination */
+  cursor: Scalars["String"]["output"];
+  /** The item at the end of the edge */
+  node: Part;
+};
+
+export type PartFilter = {
+  AND?: InputMaybe<Array<InputMaybe<PartFilter>>>;
+  NOT?: InputMaybe<Array<InputMaybe<PartFilter>>>;
+  OR?: InputMaybe<Array<InputMaybe<PartFilter>>>;
+  count?: InputMaybe<FloatFilter>;
+  createdAt?: InputMaybe<DateTimeFilter>;
+  id?: InputMaybe<IdFilter>;
+  name?: InputMaybe<StringFilter>;
+  notes?: InputMaybe<StringFilter>;
+  updatedAt?: InputMaybe<DateTimeFilter>;
+};
+
+export type PartSort = {
+  /** Sort the results by the count field. Defaults to ascending (smallest value first). */
+  count?: InputMaybe<SortOrder>;
+  /** Sort the results by the createdAt field. Defaults to ascending (smallest value first). */
+  createdAt?: InputMaybe<SortOrder>;
+  /** Sort the results by the id field. Defaults to ascending (smallest value first). */
+  id?: InputMaybe<SortOrder>;
+  /** Sort the results by the name field. Defaults to ascending (smallest value first). */
+  name?: InputMaybe<SortOrder>;
+  /** Sort the results by the notes field. Defaults to ascending (smallest value first). */
+  notes?: InputMaybe<SortOrder>;
+  /** Sort the results by the updatedAt field. Defaults to ascending (smallest value first). */
+  updatedAt?: InputMaybe<SortOrder>;
+};
+
 /** Input object supporting setting or updating related model record on a relationship field */
 export type PlayerHasManyInput = {
   /** Creates, updates, or deletes existing records in the database as needed to arrive at the list of records specified. */
@@ -4118,6 +4469,8 @@ export type Query = {
   internal: InternalQueries;
   modelA?: Maybe<ModelA>;
   modelAs: ModelAConnection;
+  part?: Maybe<Part>;
+  parts: PartConnection;
   section?: Maybe<Section>;
   sections: SectionConnection;
   session?: Maybe<Session>;
@@ -4154,6 +4507,20 @@ export type QueryModelAsArgs = {
   last?: InputMaybe<Scalars["Int"]["input"]>;
   search?: InputMaybe<Scalars["String"]["input"]>;
   sort?: InputMaybe<Array<ModelASort>>;
+};
+
+export type QueryPartArgs = {
+  id: Scalars["GadgetID"]["input"];
+};
+
+export type QueryPartsArgs = {
+  after?: InputMaybe<Scalars["String"]["input"]>;
+  before?: InputMaybe<Scalars["String"]["input"]>;
+  filter?: InputMaybe<Array<PartFilter>>;
+  first?: InputMaybe<Scalars["Int"]["input"]>;
+  last?: InputMaybe<Scalars["Int"]["input"]>;
+  search?: InputMaybe<Scalars["String"]["input"]>;
+  sort?: InputMaybe<Array<PartSort>>;
 };
 
 export type QuerySectionArgs = {
@@ -4435,6 +4802,13 @@ export type SimpleError = ExecutionError & {
   stack?: Maybe<Scalars["String"]["output"]>;
 };
 
+export type SingleEnumFilter = {
+  equals?: InputMaybe<Scalars["String"]["input"]>;
+  in?: InputMaybe<Array<InputMaybe<Scalars["String"]["input"]>>>;
+  isSet?: InputMaybe<Scalars["Boolean"]["input"]>;
+  notEquals?: InputMaybe<Scalars["String"]["input"]>;
+};
+
 /** A sort order for a field. Can be Ascending or Descending. */
 export enum SortOrder {
   Ascending = "Ascending",
@@ -4552,6 +4926,8 @@ export type UpdateGameStadiumInput = {
   name?: InputMaybe<Scalars["String"]["input"]>;
   photo?: InputMaybe<StoredFileInput>;
   rounds?: InputMaybe<Array<InputMaybe<RoundHasManyInput>>>;
+  tags?: InputMaybe<Array<Scalars["StadiumTagsEnum"]["input"]>>;
+  type?: InputMaybe<Scalars["StadiumTypeEnum"]["input"]>;
 };
 
 export type UpdateGameStadiumResult = {
@@ -4578,6 +4954,19 @@ export type UpdateModelAResult = {
   __typename?: "UpdateModelAResult";
   errors?: Maybe<Array<ExecutionError>>;
   modelA?: Maybe<ModelA>;
+  success: Scalars["Boolean"]["output"];
+};
+
+export type UpdatePartInput = {
+  count?: InputMaybe<Scalars["Float"]["input"]>;
+  name?: InputMaybe<Scalars["String"]["input"]>;
+  notes?: InputMaybe<Scalars["String"]["input"]>;
+};
+
+export type UpdatePartResult = {
+  __typename?: "UpdatePartResult";
+  errors?: Maybe<Array<ExecutionError>>;
+  part?: Maybe<Part>;
   success: Scalars["Boolean"]["output"];
 };
 
@@ -6722,6 +7111,643 @@ export type ModelActionMetadataQuery = {
   };
 };
 
+export type GlobalActionMetadataQueryVariables = Exact<{
+  apiIdentifier: Scalars["String"]["input"];
+  namespace?: InputMaybe<Array<Scalars["String"]["input"]> | Scalars["String"]["input"]>;
+}>;
+
+export type GlobalActionMetadataQuery = {
+  __typename?: "Query";
+  gadgetMeta: {
+    __typename?: "GadgetApplicationMeta";
+    globalAction?: {
+      __typename?: "GadgetGlobalAction";
+      name: string;
+      apiIdentifier: string;
+      inputFields: Array<{
+        __typename?: "GadgetObjectField";
+        name: string;
+        apiIdentifier: string;
+        fieldType: GadgetFieldType;
+        requiredArgumentForInput: boolean;
+        configuration:
+          | {
+              __typename: "GadgetBelongsToConfig";
+              fieldType: GadgetFieldType;
+              relatedModel?: { __typename?: "GadgetModel"; apiIdentifier: string; namespace?: Array<string> | null } | null;
+              validations: Array<
+                | { __typename: "GadgetGenericFieldValidation"; name: string; specID: string }
+                | { __typename: "GadgetOnlyImageFileFieldValidation"; name: string; specID: string; allowAnimatedImages: boolean }
+                | { __typename: "GadgetRangeFieldValidation"; name: string; specID: string; min?: number | null; max?: number | null }
+                | { __typename: "GadgetRegexFieldValidation"; name: string; specID: string; pattern?: string | null }
+                | null
+              >;
+            }
+          | {
+              __typename: "GadgetDateTimeConfig";
+              includeTime: boolean;
+              fieldType: GadgetFieldType;
+              validations: Array<
+                | { __typename: "GadgetGenericFieldValidation"; name: string; specID: string }
+                | { __typename: "GadgetOnlyImageFileFieldValidation"; name: string; specID: string; allowAnimatedImages: boolean }
+                | { __typename: "GadgetRangeFieldValidation"; name: string; specID: string; min?: number | null; max?: number | null }
+                | { __typename: "GadgetRegexFieldValidation"; name: string; specID: string; pattern?: string | null }
+                | null
+              >;
+            }
+          | {
+              __typename: "GadgetEnumConfig";
+              allowMultiple: boolean;
+              allowOther: boolean;
+              fieldType: GadgetFieldType;
+              options: Array<{ __typename?: "GadgetEnumOption"; name: string; color: string }>;
+              validations: Array<
+                | { __typename: "GadgetGenericFieldValidation"; name: string; specID: string }
+                | { __typename: "GadgetOnlyImageFileFieldValidation"; name: string; specID: string; allowAnimatedImages: boolean }
+                | { __typename: "GadgetRangeFieldValidation"; name: string; specID: string; min?: number | null; max?: number | null }
+                | { __typename: "GadgetRegexFieldValidation"; name: string; specID: string; pattern?: string | null }
+                | null
+              >;
+            }
+          | {
+              __typename: "GadgetGenericFieldConfig";
+              fieldType: GadgetFieldType;
+              validations: Array<
+                | { __typename: "GadgetGenericFieldValidation"; name: string; specID: string }
+                | { __typename: "GadgetOnlyImageFileFieldValidation"; name: string; specID: string; allowAnimatedImages: boolean }
+                | { __typename: "GadgetRangeFieldValidation"; name: string; specID: string; min?: number | null; max?: number | null }
+                | { __typename: "GadgetRegexFieldValidation"; name: string; specID: string; pattern?: string | null }
+                | null
+              >;
+            }
+          | {
+              __typename: "GadgetHasManyConfig";
+              fieldType: GadgetFieldType;
+              relatedModel?: { __typename?: "GadgetModel"; apiIdentifier: string; namespace?: Array<string> | null } | null;
+              validations: Array<
+                | { __typename: "GadgetGenericFieldValidation"; name: string; specID: string }
+                | { __typename: "GadgetOnlyImageFileFieldValidation"; name: string; specID: string; allowAnimatedImages: boolean }
+                | { __typename: "GadgetRangeFieldValidation"; name: string; specID: string; min?: number | null; max?: number | null }
+                | { __typename: "GadgetRegexFieldValidation"; name: string; specID: string; pattern?: string | null }
+                | null
+              >;
+            }
+          | {
+              __typename: "GadgetHasOneConfig";
+              fieldType: GadgetFieldType;
+              relatedModel?: { __typename?: "GadgetModel"; apiIdentifier: string; namespace?: Array<string> | null } | null;
+              validations: Array<
+                | { __typename: "GadgetGenericFieldValidation"; name: string; specID: string }
+                | { __typename: "GadgetOnlyImageFileFieldValidation"; name: string; specID: string; allowAnimatedImages: boolean }
+                | { __typename: "GadgetRangeFieldValidation"; name: string; specID: string; min?: number | null; max?: number | null }
+                | { __typename: "GadgetRegexFieldValidation"; name: string; specID: string; pattern?: string | null }
+                | null
+              >;
+            }
+          | {
+              __typename: "GadgetObjectFieldConfig";
+              name?: string | null;
+              fieldType: GadgetFieldType;
+              fields: Array<{
+                __typename?: "GadgetModelField";
+                sortable: boolean;
+                filterable: boolean;
+                name: string;
+                apiIdentifier: string;
+                fieldType: GadgetFieldType;
+                requiredArgumentForInput: boolean;
+                configuration:
+                  | {
+                      __typename: "GadgetBelongsToConfig";
+                      fieldType: GadgetFieldType;
+                      relatedModel?: { __typename?: "GadgetModel"; apiIdentifier: string; namespace?: Array<string> | null } | null;
+                      validations: Array<
+                        | { __typename: "GadgetGenericFieldValidation"; name: string; specID: string }
+                        | { __typename: "GadgetOnlyImageFileFieldValidation"; name: string; specID: string; allowAnimatedImages: boolean }
+                        | {
+                            __typename: "GadgetRangeFieldValidation";
+                            name: string;
+                            specID: string;
+                            min?: number | null;
+                            max?: number | null;
+                          }
+                        | { __typename: "GadgetRegexFieldValidation"; name: string; specID: string; pattern?: string | null }
+                        | null
+                      >;
+                    }
+                  | {
+                      __typename: "GadgetDateTimeConfig";
+                      includeTime: boolean;
+                      fieldType: GadgetFieldType;
+                      validations: Array<
+                        | { __typename: "GadgetGenericFieldValidation"; name: string; specID: string }
+                        | { __typename: "GadgetOnlyImageFileFieldValidation"; name: string; specID: string; allowAnimatedImages: boolean }
+                        | {
+                            __typename: "GadgetRangeFieldValidation";
+                            name: string;
+                            specID: string;
+                            min?: number | null;
+                            max?: number | null;
+                          }
+                        | { __typename: "GadgetRegexFieldValidation"; name: string; specID: string; pattern?: string | null }
+                        | null
+                      >;
+                    }
+                  | {
+                      __typename: "GadgetEnumConfig";
+                      allowMultiple: boolean;
+                      allowOther: boolean;
+                      fieldType: GadgetFieldType;
+                      options: Array<{ __typename?: "GadgetEnumOption"; name: string; color: string }>;
+                      validations: Array<
+                        | { __typename: "GadgetGenericFieldValidation"; name: string; specID: string }
+                        | { __typename: "GadgetOnlyImageFileFieldValidation"; name: string; specID: string; allowAnimatedImages: boolean }
+                        | {
+                            __typename: "GadgetRangeFieldValidation";
+                            name: string;
+                            specID: string;
+                            min?: number | null;
+                            max?: number | null;
+                          }
+                        | { __typename: "GadgetRegexFieldValidation"; name: string; specID: string; pattern?: string | null }
+                        | null
+                      >;
+                    }
+                  | {
+                      __typename: "GadgetGenericFieldConfig";
+                      fieldType: GadgetFieldType;
+                      validations: Array<
+                        | { __typename: "GadgetGenericFieldValidation"; name: string; specID: string }
+                        | { __typename: "GadgetOnlyImageFileFieldValidation"; name: string; specID: string; allowAnimatedImages: boolean }
+                        | {
+                            __typename: "GadgetRangeFieldValidation";
+                            name: string;
+                            specID: string;
+                            min?: number | null;
+                            max?: number | null;
+                          }
+                        | { __typename: "GadgetRegexFieldValidation"; name: string; specID: string; pattern?: string | null }
+                        | null
+                      >;
+                    }
+                  | {
+                      __typename: "GadgetHasManyConfig";
+                      fieldType: GadgetFieldType;
+                      relatedModel?: { __typename?: "GadgetModel"; apiIdentifier: string; namespace?: Array<string> | null } | null;
+                      validations: Array<
+                        | { __typename: "GadgetGenericFieldValidation"; name: string; specID: string }
+                        | { __typename: "GadgetOnlyImageFileFieldValidation"; name: string; specID: string; allowAnimatedImages: boolean }
+                        | {
+                            __typename: "GadgetRangeFieldValidation";
+                            name: string;
+                            specID: string;
+                            min?: number | null;
+                            max?: number | null;
+                          }
+                        | { __typename: "GadgetRegexFieldValidation"; name: string; specID: string; pattern?: string | null }
+                        | null
+                      >;
+                    }
+                  | {
+                      __typename: "GadgetHasOneConfig";
+                      fieldType: GadgetFieldType;
+                      relatedModel?: { __typename?: "GadgetModel"; apiIdentifier: string; namespace?: Array<string> | null } | null;
+                      validations: Array<
+                        | { __typename: "GadgetGenericFieldValidation"; name: string; specID: string }
+                        | { __typename: "GadgetOnlyImageFileFieldValidation"; name: string; specID: string; allowAnimatedImages: boolean }
+                        | {
+                            __typename: "GadgetRangeFieldValidation";
+                            name: string;
+                            specID: string;
+                            min?: number | null;
+                            max?: number | null;
+                          }
+                        | { __typename: "GadgetRegexFieldValidation"; name: string; specID: string; pattern?: string | null }
+                        | null
+                      >;
+                    }
+                  | {
+                      __typename: "GadgetObjectFieldConfig";
+                      name?: string | null;
+                      fieldType: GadgetFieldType;
+                      fields: Array<{
+                        __typename?: "GadgetModelField";
+                        sortable: boolean;
+                        filterable: boolean;
+                        name: string;
+                        apiIdentifier: string;
+                        fieldType: GadgetFieldType;
+                        requiredArgumentForInput: boolean;
+                        configuration:
+                          | {
+                              __typename: "GadgetBelongsToConfig";
+                              fieldType: GadgetFieldType;
+                              relatedModel?: { __typename?: "GadgetModel"; apiIdentifier: string; namespace?: Array<string> | null } | null;
+                              validations: Array<
+                                | { __typename: "GadgetGenericFieldValidation"; name: string; specID: string }
+                                | {
+                                    __typename: "GadgetOnlyImageFileFieldValidation";
+                                    name: string;
+                                    specID: string;
+                                    allowAnimatedImages: boolean;
+                                  }
+                                | {
+                                    __typename: "GadgetRangeFieldValidation";
+                                    name: string;
+                                    specID: string;
+                                    min?: number | null;
+                                    max?: number | null;
+                                  }
+                                | { __typename: "GadgetRegexFieldValidation"; name: string; specID: string; pattern?: string | null }
+                                | null
+                              >;
+                            }
+                          | {
+                              __typename: "GadgetDateTimeConfig";
+                              includeTime: boolean;
+                              fieldType: GadgetFieldType;
+                              validations: Array<
+                                | { __typename: "GadgetGenericFieldValidation"; name: string; specID: string }
+                                | {
+                                    __typename: "GadgetOnlyImageFileFieldValidation";
+                                    name: string;
+                                    specID: string;
+                                    allowAnimatedImages: boolean;
+                                  }
+                                | {
+                                    __typename: "GadgetRangeFieldValidation";
+                                    name: string;
+                                    specID: string;
+                                    min?: number | null;
+                                    max?: number | null;
+                                  }
+                                | { __typename: "GadgetRegexFieldValidation"; name: string; specID: string; pattern?: string | null }
+                                | null
+                              >;
+                            }
+                          | {
+                              __typename: "GadgetEnumConfig";
+                              allowMultiple: boolean;
+                              allowOther: boolean;
+                              fieldType: GadgetFieldType;
+                              options: Array<{ __typename?: "GadgetEnumOption"; name: string; color: string }>;
+                              validations: Array<
+                                | { __typename: "GadgetGenericFieldValidation"; name: string; specID: string }
+                                | {
+                                    __typename: "GadgetOnlyImageFileFieldValidation";
+                                    name: string;
+                                    specID: string;
+                                    allowAnimatedImages: boolean;
+                                  }
+                                | {
+                                    __typename: "GadgetRangeFieldValidation";
+                                    name: string;
+                                    specID: string;
+                                    min?: number | null;
+                                    max?: number | null;
+                                  }
+                                | { __typename: "GadgetRegexFieldValidation"; name: string; specID: string; pattern?: string | null }
+                                | null
+                              >;
+                            }
+                          | {
+                              __typename: "GadgetGenericFieldConfig";
+                              fieldType: GadgetFieldType;
+                              validations: Array<
+                                | { __typename: "GadgetGenericFieldValidation"; name: string; specID: string }
+                                | {
+                                    __typename: "GadgetOnlyImageFileFieldValidation";
+                                    name: string;
+                                    specID: string;
+                                    allowAnimatedImages: boolean;
+                                  }
+                                | {
+                                    __typename: "GadgetRangeFieldValidation";
+                                    name: string;
+                                    specID: string;
+                                    min?: number | null;
+                                    max?: number | null;
+                                  }
+                                | { __typename: "GadgetRegexFieldValidation"; name: string; specID: string; pattern?: string | null }
+                                | null
+                              >;
+                            }
+                          | {
+                              __typename: "GadgetHasManyConfig";
+                              fieldType: GadgetFieldType;
+                              relatedModel?: { __typename?: "GadgetModel"; apiIdentifier: string; namespace?: Array<string> | null } | null;
+                              validations: Array<
+                                | { __typename: "GadgetGenericFieldValidation"; name: string; specID: string }
+                                | {
+                                    __typename: "GadgetOnlyImageFileFieldValidation";
+                                    name: string;
+                                    specID: string;
+                                    allowAnimatedImages: boolean;
+                                  }
+                                | {
+                                    __typename: "GadgetRangeFieldValidation";
+                                    name: string;
+                                    specID: string;
+                                    min?: number | null;
+                                    max?: number | null;
+                                  }
+                                | { __typename: "GadgetRegexFieldValidation"; name: string; specID: string; pattern?: string | null }
+                                | null
+                              >;
+                            }
+                          | {
+                              __typename: "GadgetHasOneConfig";
+                              fieldType: GadgetFieldType;
+                              relatedModel?: { __typename?: "GadgetModel"; apiIdentifier: string; namespace?: Array<string> | null } | null;
+                              validations: Array<
+                                | { __typename: "GadgetGenericFieldValidation"; name: string; specID: string }
+                                | {
+                                    __typename: "GadgetOnlyImageFileFieldValidation";
+                                    name: string;
+                                    specID: string;
+                                    allowAnimatedImages: boolean;
+                                  }
+                                | {
+                                    __typename: "GadgetRangeFieldValidation";
+                                    name: string;
+                                    specID: string;
+                                    min?: number | null;
+                                    max?: number | null;
+                                  }
+                                | { __typename: "GadgetRegexFieldValidation"; name: string; specID: string; pattern?: string | null }
+                                | null
+                              >;
+                            }
+                          | {
+                              __typename: "GadgetObjectFieldConfig";
+                              name?: string | null;
+                              fieldType: GadgetFieldType;
+                              fields: Array<{
+                                __typename?: "GadgetModelField";
+                                sortable: boolean;
+                                filterable: boolean;
+                                name: string;
+                                apiIdentifier: string;
+                                fieldType: GadgetFieldType;
+                                requiredArgumentForInput: boolean;
+                                configuration:
+                                  | {
+                                      __typename: "GadgetBelongsToConfig";
+                                      fieldType: GadgetFieldType;
+                                      relatedModel?: {
+                                        __typename?: "GadgetModel";
+                                        apiIdentifier: string;
+                                        namespace?: Array<string> | null;
+                                      } | null;
+                                      validations: Array<
+                                        | { __typename: "GadgetGenericFieldValidation"; name: string; specID: string }
+                                        | {
+                                            __typename: "GadgetOnlyImageFileFieldValidation";
+                                            name: string;
+                                            specID: string;
+                                            allowAnimatedImages: boolean;
+                                          }
+                                        | {
+                                            __typename: "GadgetRangeFieldValidation";
+                                            name: string;
+                                            specID: string;
+                                            min?: number | null;
+                                            max?: number | null;
+                                          }
+                                        | {
+                                            __typename: "GadgetRegexFieldValidation";
+                                            name: string;
+                                            specID: string;
+                                            pattern?: string | null;
+                                          }
+                                        | null
+                                      >;
+                                    }
+                                  | {
+                                      __typename: "GadgetDateTimeConfig";
+                                      includeTime: boolean;
+                                      fieldType: GadgetFieldType;
+                                      validations: Array<
+                                        | { __typename: "GadgetGenericFieldValidation"; name: string; specID: string }
+                                        | {
+                                            __typename: "GadgetOnlyImageFileFieldValidation";
+                                            name: string;
+                                            specID: string;
+                                            allowAnimatedImages: boolean;
+                                          }
+                                        | {
+                                            __typename: "GadgetRangeFieldValidation";
+                                            name: string;
+                                            specID: string;
+                                            min?: number | null;
+                                            max?: number | null;
+                                          }
+                                        | {
+                                            __typename: "GadgetRegexFieldValidation";
+                                            name: string;
+                                            specID: string;
+                                            pattern?: string | null;
+                                          }
+                                        | null
+                                      >;
+                                    }
+                                  | {
+                                      __typename: "GadgetEnumConfig";
+                                      allowMultiple: boolean;
+                                      allowOther: boolean;
+                                      fieldType: GadgetFieldType;
+                                      options: Array<{ __typename?: "GadgetEnumOption"; name: string; color: string }>;
+                                      validations: Array<
+                                        | { __typename: "GadgetGenericFieldValidation"; name: string; specID: string }
+                                        | {
+                                            __typename: "GadgetOnlyImageFileFieldValidation";
+                                            name: string;
+                                            specID: string;
+                                            allowAnimatedImages: boolean;
+                                          }
+                                        | {
+                                            __typename: "GadgetRangeFieldValidation";
+                                            name: string;
+                                            specID: string;
+                                            min?: number | null;
+                                            max?: number | null;
+                                          }
+                                        | {
+                                            __typename: "GadgetRegexFieldValidation";
+                                            name: string;
+                                            specID: string;
+                                            pattern?: string | null;
+                                          }
+                                        | null
+                                      >;
+                                    }
+                                  | {
+                                      __typename: "GadgetGenericFieldConfig";
+                                      fieldType: GadgetFieldType;
+                                      validations: Array<
+                                        | { __typename: "GadgetGenericFieldValidation"; name: string; specID: string }
+                                        | {
+                                            __typename: "GadgetOnlyImageFileFieldValidation";
+                                            name: string;
+                                            specID: string;
+                                            allowAnimatedImages: boolean;
+                                          }
+                                        | {
+                                            __typename: "GadgetRangeFieldValidation";
+                                            name: string;
+                                            specID: string;
+                                            min?: number | null;
+                                            max?: number | null;
+                                          }
+                                        | {
+                                            __typename: "GadgetRegexFieldValidation";
+                                            name: string;
+                                            specID: string;
+                                            pattern?: string | null;
+                                          }
+                                        | null
+                                      >;
+                                    }
+                                  | {
+                                      __typename: "GadgetHasManyConfig";
+                                      fieldType: GadgetFieldType;
+                                      relatedModel?: {
+                                        __typename?: "GadgetModel";
+                                        apiIdentifier: string;
+                                        namespace?: Array<string> | null;
+                                      } | null;
+                                      validations: Array<
+                                        | { __typename: "GadgetGenericFieldValidation"; name: string; specID: string }
+                                        | {
+                                            __typename: "GadgetOnlyImageFileFieldValidation";
+                                            name: string;
+                                            specID: string;
+                                            allowAnimatedImages: boolean;
+                                          }
+                                        | {
+                                            __typename: "GadgetRangeFieldValidation";
+                                            name: string;
+                                            specID: string;
+                                            min?: number | null;
+                                            max?: number | null;
+                                          }
+                                        | {
+                                            __typename: "GadgetRegexFieldValidation";
+                                            name: string;
+                                            specID: string;
+                                            pattern?: string | null;
+                                          }
+                                        | null
+                                      >;
+                                    }
+                                  | {
+                                      __typename: "GadgetHasOneConfig";
+                                      fieldType: GadgetFieldType;
+                                      relatedModel?: {
+                                        __typename?: "GadgetModel";
+                                        apiIdentifier: string;
+                                        namespace?: Array<string> | null;
+                                      } | null;
+                                      validations: Array<
+                                        | { __typename: "GadgetGenericFieldValidation"; name: string; specID: string }
+                                        | {
+                                            __typename: "GadgetOnlyImageFileFieldValidation";
+                                            name: string;
+                                            specID: string;
+                                            allowAnimatedImages: boolean;
+                                          }
+                                        | {
+                                            __typename: "GadgetRangeFieldValidation";
+                                            name: string;
+                                            specID: string;
+                                            min?: number | null;
+                                            max?: number | null;
+                                          }
+                                        | {
+                                            __typename: "GadgetRegexFieldValidation";
+                                            name: string;
+                                            specID: string;
+                                            pattern?: string | null;
+                                          }
+                                        | null
+                                      >;
+                                    }
+                                  | {
+                                      __typename: "GadgetObjectFieldConfig";
+                                      fieldType: GadgetFieldType;
+                                      validations: Array<
+                                        | { __typename: "GadgetGenericFieldValidation"; name: string; specID: string }
+                                        | {
+                                            __typename: "GadgetOnlyImageFileFieldValidation";
+                                            name: string;
+                                            specID: string;
+                                            allowAnimatedImages: boolean;
+                                          }
+                                        | {
+                                            __typename: "GadgetRangeFieldValidation";
+                                            name: string;
+                                            specID: string;
+                                            min?: number | null;
+                                            max?: number | null;
+                                          }
+                                        | {
+                                            __typename: "GadgetRegexFieldValidation";
+                                            name: string;
+                                            specID: string;
+                                            pattern?: string | null;
+                                          }
+                                        | null
+                                      >;
+                                    };
+                              }>;
+                              validations: Array<
+                                | { __typename: "GadgetGenericFieldValidation"; name: string; specID: string }
+                                | {
+                                    __typename: "GadgetOnlyImageFileFieldValidation";
+                                    name: string;
+                                    specID: string;
+                                    allowAnimatedImages: boolean;
+                                  }
+                                | {
+                                    __typename: "GadgetRangeFieldValidation";
+                                    name: string;
+                                    specID: string;
+                                    min?: number | null;
+                                    max?: number | null;
+                                  }
+                                | { __typename: "GadgetRegexFieldValidation"; name: string; specID: string; pattern?: string | null }
+                                | null
+                              >;
+                            };
+                      }>;
+                      validations: Array<
+                        | { __typename: "GadgetGenericFieldValidation"; name: string; specID: string }
+                        | { __typename: "GadgetOnlyImageFileFieldValidation"; name: string; specID: string; allowAnimatedImages: boolean }
+                        | {
+                            __typename: "GadgetRangeFieldValidation";
+                            name: string;
+                            specID: string;
+                            min?: number | null;
+                            max?: number | null;
+                          }
+                        | { __typename: "GadgetRegexFieldValidation"; name: string; specID: string; pattern?: string | null }
+                        | null
+                      >;
+                    };
+              }>;
+              validations: Array<
+                | { __typename: "GadgetGenericFieldValidation"; name: string; specID: string }
+                | { __typename: "GadgetOnlyImageFileFieldValidation"; name: string; specID: string; allowAnimatedImages: boolean }
+                | { __typename: "GadgetRangeFieldValidation"; name: string; specID: string; min?: number | null; max?: number | null }
+                | { __typename: "GadgetRegexFieldValidation"; name: string; specID: string; pattern?: string | null }
+                | null
+              >;
+            };
+      }>;
+    } | null;
+  };
+};
+
 export type RolesMetadataQueryVariables = Exact<{ [key: string]: never }>;
 
 export type RolesMetadataQuery = {
@@ -7833,6 +8859,360 @@ export const ModelActionMetadataDocument = {
     },
   ],
 } as unknown as DocumentNode<ModelActionMetadataQuery, ModelActionMetadataQueryVariables>;
+export const GlobalActionMetadataDocument = {
+  kind: "Document",
+  definitions: [
+    {
+      kind: "OperationDefinition",
+      operation: "query",
+      name: { kind: "Name", value: "GlobalActionMetadata" },
+      variableDefinitions: [
+        {
+          kind: "VariableDefinition",
+          variable: { kind: "Variable", name: { kind: "Name", value: "apiIdentifier" } },
+          type: { kind: "NonNullType", type: { kind: "NamedType", name: { kind: "Name", value: "String" } } },
+        },
+        {
+          kind: "VariableDefinition",
+          variable: { kind: "Variable", name: { kind: "Name", value: "namespace" } },
+          type: { kind: "ListType", type: { kind: "NonNullType", type: { kind: "NamedType", name: { kind: "Name", value: "String" } } } },
+        },
+      ],
+      selectionSet: {
+        kind: "SelectionSet",
+        selections: [
+          {
+            kind: "Field",
+            name: { kind: "Name", value: "gadgetMeta" },
+            selectionSet: {
+              kind: "SelectionSet",
+              selections: [
+                {
+                  kind: "Field",
+                  name: { kind: "Name", value: "globalAction" },
+                  arguments: [
+                    {
+                      kind: "Argument",
+                      name: { kind: "Name", value: "apiIdentifier" },
+                      value: { kind: "Variable", name: { kind: "Name", value: "apiIdentifier" } },
+                    },
+                    {
+                      kind: "Argument",
+                      name: { kind: "Name", value: "namespace" },
+                      value: { kind: "Variable", name: { kind: "Name", value: "namespace" } },
+                    },
+                  ],
+                  selectionSet: {
+                    kind: "SelectionSet",
+                    selections: [
+                      { kind: "Field", name: { kind: "Name", value: "name" } },
+                      { kind: "Field", name: { kind: "Name", value: "apiIdentifier" } },
+                      {
+                        kind: "Field",
+                        name: { kind: "Name", value: "inputFields" },
+                        selectionSet: {
+                          kind: "SelectionSet",
+                          selections: [
+                            { kind: "FragmentSpread", name: { kind: "Name", value: "FieldMetadata" } },
+                            { kind: "FragmentSpread", name: { kind: "Name", value: "SubFields" } },
+                          ],
+                        },
+                      },
+                    ],
+                  },
+                },
+              ],
+            },
+          },
+        ],
+      },
+    },
+    {
+      kind: "FragmentDefinition",
+      name: { kind: "Name", value: "FieldMetadata" },
+      typeCondition: { kind: "NamedType", name: { kind: "Name", value: "GadgetField" } },
+      selectionSet: {
+        kind: "SelectionSet",
+        selections: [
+          { kind: "Field", name: { kind: "Name", value: "name" } },
+          { kind: "Field", name: { kind: "Name", value: "apiIdentifier" } },
+          { kind: "Field", name: { kind: "Name", value: "fieldType" } },
+          { kind: "Field", name: { kind: "Name", value: "requiredArgumentForInput" } },
+          {
+            kind: "InlineFragment",
+            typeCondition: { kind: "NamedType", name: { kind: "Name", value: "GadgetModelField" } },
+            selectionSet: {
+              kind: "SelectionSet",
+              selections: [
+                { kind: "Field", name: { kind: "Name", value: "sortable" } },
+                { kind: "Field", name: { kind: "Name", value: "filterable" } },
+              ],
+            },
+          },
+          {
+            kind: "Field",
+            name: { kind: "Name", value: "configuration" },
+            selectionSet: {
+              kind: "SelectionSet",
+              selections: [
+                { kind: "Field", name: { kind: "Name", value: "__typename" } },
+                { kind: "Field", name: { kind: "Name", value: "fieldType" } },
+                {
+                  kind: "Field",
+                  name: { kind: "Name", value: "validations" },
+                  selectionSet: {
+                    kind: "SelectionSet",
+                    selections: [
+                      { kind: "Field", name: { kind: "Name", value: "__typename" } },
+                      {
+                        kind: "InlineFragment",
+                        typeCondition: { kind: "NamedType", name: { kind: "Name", value: "GadgetRegexFieldValidation" } },
+                        selectionSet: {
+                          kind: "SelectionSet",
+                          selections: [
+                            { kind: "Field", name: { kind: "Name", value: "name" } },
+                            { kind: "Field", name: { kind: "Name", value: "specID" } },
+                            { kind: "Field", name: { kind: "Name", value: "pattern" } },
+                          ],
+                        },
+                      },
+                      {
+                        kind: "InlineFragment",
+                        typeCondition: { kind: "NamedType", name: { kind: "Name", value: "GadgetRangeFieldValidation" } },
+                        selectionSet: {
+                          kind: "SelectionSet",
+                          selections: [
+                            { kind: "Field", name: { kind: "Name", value: "name" } },
+                            { kind: "Field", name: { kind: "Name", value: "specID" } },
+                            { kind: "Field", name: { kind: "Name", value: "min" } },
+                            { kind: "Field", name: { kind: "Name", value: "max" } },
+                          ],
+                        },
+                      },
+                      {
+                        kind: "InlineFragment",
+                        typeCondition: { kind: "NamedType", name: { kind: "Name", value: "GadgetOnlyImageFileFieldValidation" } },
+                        selectionSet: {
+                          kind: "SelectionSet",
+                          selections: [
+                            { kind: "Field", name: { kind: "Name", value: "name" } },
+                            { kind: "Field", name: { kind: "Name", value: "specID" } },
+                            { kind: "Field", name: { kind: "Name", value: "allowAnimatedImages" } },
+                          ],
+                        },
+                      },
+                      {
+                        kind: "InlineFragment",
+                        typeCondition: { kind: "NamedType", name: { kind: "Name", value: "GadgetGenericFieldValidation" } },
+                        selectionSet: {
+                          kind: "SelectionSet",
+                          selections: [
+                            { kind: "Field", name: { kind: "Name", value: "name" } },
+                            { kind: "Field", name: { kind: "Name", value: "specID" } },
+                          ],
+                        },
+                      },
+                    ],
+                  },
+                },
+                {
+                  kind: "InlineFragment",
+                  typeCondition: { kind: "NamedType", name: { kind: "Name", value: "GadgetHasManyConfig" } },
+                  selectionSet: {
+                    kind: "SelectionSet",
+                    selections: [
+                      {
+                        kind: "Field",
+                        name: { kind: "Name", value: "relatedModel" },
+                        selectionSet: {
+                          kind: "SelectionSet",
+                          selections: [
+                            { kind: "Field", name: { kind: "Name", value: "apiIdentifier" } },
+                            { kind: "Field", name: { kind: "Name", value: "namespace" } },
+                          ],
+                        },
+                      },
+                    ],
+                  },
+                },
+                {
+                  kind: "InlineFragment",
+                  typeCondition: { kind: "NamedType", name: { kind: "Name", value: "GadgetHasOneConfig" } },
+                  selectionSet: {
+                    kind: "SelectionSet",
+                    selections: [
+                      {
+                        kind: "Field",
+                        name: { kind: "Name", value: "relatedModel" },
+                        selectionSet: {
+                          kind: "SelectionSet",
+                          selections: [
+                            { kind: "Field", name: { kind: "Name", value: "apiIdentifier" } },
+                            { kind: "Field", name: { kind: "Name", value: "namespace" } },
+                          ],
+                        },
+                      },
+                    ],
+                  },
+                },
+                {
+                  kind: "InlineFragment",
+                  typeCondition: { kind: "NamedType", name: { kind: "Name", value: "GadgetBelongsToConfig" } },
+                  selectionSet: {
+                    kind: "SelectionSet",
+                    selections: [
+                      {
+                        kind: "Field",
+                        name: { kind: "Name", value: "relatedModel" },
+                        selectionSet: {
+                          kind: "SelectionSet",
+                          selections: [
+                            { kind: "Field", name: { kind: "Name", value: "apiIdentifier" } },
+                            { kind: "Field", name: { kind: "Name", value: "namespace" } },
+                          ],
+                        },
+                      },
+                    ],
+                  },
+                },
+                {
+                  kind: "InlineFragment",
+                  typeCondition: { kind: "NamedType", name: { kind: "Name", value: "GadgetEnumConfig" } },
+                  selectionSet: {
+                    kind: "SelectionSet",
+                    selections: [
+                      { kind: "Field", name: { kind: "Name", value: "allowMultiple" } },
+                      { kind: "Field", name: { kind: "Name", value: "allowOther" } },
+                      {
+                        kind: "Field",
+                        name: { kind: "Name", value: "options" },
+                        selectionSet: {
+                          kind: "SelectionSet",
+                          selections: [
+                            { kind: "Field", name: { kind: "Name", value: "name" } },
+                            { kind: "Field", name: { kind: "Name", value: "color" } },
+                          ],
+                        },
+                      },
+                    ],
+                  },
+                },
+                {
+                  kind: "InlineFragment",
+                  typeCondition: { kind: "NamedType", name: { kind: "Name", value: "GadgetDateTimeConfig" } },
+                  selectionSet: { kind: "SelectionSet", selections: [{ kind: "Field", name: { kind: "Name", value: "includeTime" } }] },
+                },
+              ],
+            },
+          },
+        ],
+      },
+    },
+    {
+      kind: "FragmentDefinition",
+      name: { kind: "Name", value: "SubFields" },
+      typeCondition: { kind: "NamedType", name: { kind: "Name", value: "GadgetField" } },
+      selectionSet: {
+        kind: "SelectionSet",
+        selections: [
+          {
+            kind: "Field",
+            name: { kind: "Name", value: "configuration" },
+            selectionSet: {
+              kind: "SelectionSet",
+              selections: [
+                { kind: "Field", name: { kind: "Name", value: "__typename" } },
+                {
+                  kind: "InlineFragment",
+                  typeCondition: { kind: "NamedType", name: { kind: "Name", value: "GadgetObjectFieldConfig" } },
+                  selectionSet: {
+                    kind: "SelectionSet",
+                    selections: [
+                      { kind: "Field", name: { kind: "Name", value: "name" } },
+                      {
+                        kind: "Field",
+                        name: { kind: "Name", value: "fields" },
+                        selectionSet: {
+                          kind: "SelectionSet",
+                          selections: [
+                            { kind: "FragmentSpread", name: { kind: "Name", value: "FieldMetadata" } },
+                            {
+                              kind: "Field",
+                              name: { kind: "Name", value: "configuration" },
+                              selectionSet: {
+                                kind: "SelectionSet",
+                                selections: [
+                                  { kind: "Field", name: { kind: "Name", value: "__typename" } },
+                                  {
+                                    kind: "InlineFragment",
+                                    typeCondition: { kind: "NamedType", name: { kind: "Name", value: "GadgetObjectFieldConfig" } },
+                                    selectionSet: {
+                                      kind: "SelectionSet",
+                                      selections: [
+                                        { kind: "Field", name: { kind: "Name", value: "name" } },
+                                        {
+                                          kind: "Field",
+                                          name: { kind: "Name", value: "fields" },
+                                          selectionSet: {
+                                            kind: "SelectionSet",
+                                            selections: [
+                                              { kind: "FragmentSpread", name: { kind: "Name", value: "FieldMetadata" } },
+                                              {
+                                                kind: "Field",
+                                                name: { kind: "Name", value: "configuration" },
+                                                selectionSet: {
+                                                  kind: "SelectionSet",
+                                                  selections: [
+                                                    { kind: "Field", name: { kind: "Name", value: "__typename" } },
+                                                    {
+                                                      kind: "InlineFragment",
+                                                      typeCondition: {
+                                                        kind: "NamedType",
+                                                        name: { kind: "Name", value: "GadgetObjectFieldConfig" },
+                                                      },
+                                                      selectionSet: {
+                                                        kind: "SelectionSet",
+                                                        selections: [
+                                                          { kind: "Field", name: { kind: "Name", value: "name" } },
+                                                          {
+                                                            kind: "Field",
+                                                            name: { kind: "Name", value: "fields" },
+                                                            selectionSet: {
+                                                              kind: "SelectionSet",
+                                                              selections: [
+                                                                { kind: "FragmentSpread", name: { kind: "Name", value: "FieldMetadata" } },
+                                                              ],
+                                                            },
+                                                          },
+                                                        ],
+                                                      },
+                                                    },
+                                                  ],
+                                                },
+                                              },
+                                            ],
+                                          },
+                                        },
+                                      ],
+                                    },
+                                  },
+                                ],
+                              },
+                            },
+                          ],
+                        },
+                      },
+                    ],
+                  },
+                },
+              ],
+            },
+          },
+        ],
+      },
+    },
+  ],
+} as unknown as DocumentNode<GlobalActionMetadataQuery, GlobalActionMetadataQueryVariables>;
 export const RolesMetadataDocument = {
   kind: "Document",
   definitions: [
