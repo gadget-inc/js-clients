@@ -6,6 +6,7 @@ import { PolarisAutoDateTimePicker } from "../../../src/auto/polaris/inputs/Pola
 import { PolarisAutoSubmit } from "../../../src/auto/polaris/submit/PolarisAutoSubmit.js";
 import { testApi as api } from "../../apis.js";
 import { mockUrqlClient } from "../../testWrappers.js";
+import { sleep } from "../../utils.js";
 import { mockWidgetFindBy } from "../support/helper.js";
 import { PolarisMockedProviders } from "./PolarisMockedProviders.js";
 
@@ -37,9 +38,13 @@ describe("PolarisDateTimePicker", () => {
     await act(async () => {
       await user.click(screen.getByLabelText("Time"));
       await user.type(screen.getByLabelText("Time"), "11");
+      await sleep(100);
       await user.type(screen.getByLabelText("Time"), ":");
+      await sleep(100);
       await user.type(screen.getByLabelText("Time"), "00 ");
+      await sleep(100);
       await user.type(screen.getByLabelText("Time"), "AM");
+      await sleep(100);
       await user.click(screen.getByRole("button"));
     });
 
@@ -51,6 +56,10 @@ describe("PolarisDateTimePicker", () => {
 });
 
 const mockUpdateWidgetFindBy = () => {
+  const startsAtDate = new Date();
+  startsAtDate.setHours(11);
+  startsAtDate.setMinutes(0);
+
   mockWidgetFindBy(
     {
       name: "Update",
@@ -59,6 +68,7 @@ const mockUpdateWidgetFindBy = () => {
     },
     {
       id: "42",
+      startsAt: startsAtDate,
     }
   );
 };

@@ -59,8 +59,7 @@ const PolarisAutoTimePicker = (props: {
   hideTimePopover?: boolean;
   localTz?: string;
 }) => {
-  const defaultDate = props.fieldProps.value ? props.fieldProps.value : props.localTime;
-  const [timeString, setTimeString] = useState(defaultDate ? getTimeString(getDateTimeObjectFromDate(defaultDate)) : "");
+  const [timeString, setTimeString] = useState(props.localTime ? getTimeString(getDateTimeObjectFromDate(props.localTime)) : "");
   const [timePopoverActive, setTimePopoverActive] = useState(false);
   const [timeParseError, setTimeParseError] = useState(false);
   const setHourSelected = (hour: string) =>

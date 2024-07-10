@@ -1,7 +1,7 @@
 import type { DatePickerProps, TextFieldProps } from "@shopify/polaris";
 import { DatePicker, Icon, InlineStack, Popover, TextField } from "@shopify/polaris";
 import { CalendarIcon } from "@shopify/polaris-icons";
-import { format } from "date-fns";
+import { format, isValid } from "date-fns";
 import { utcToZonedTime, zonedTimeToUtc } from "date-fns-tz";
 import React, { useCallback, useMemo, useState } from "react";
 import { useController } from "react-hook-form";
@@ -59,17 +59,32 @@ export const PolarisAutoDateTimePicker = (props: {
 
   const { onChange, value } = props;
   const localTz = Intl.DateTimeFormat().resolvedOptions().timeZone;
+  const fieldPropsDate = useMemo(() => new Date(fieldProps.value), [fieldProps.value]);
   const localTime = useMemo(() => {
-    return value ? utcToZonedTime(value, localTz) : fieldProps.value ? new Date(fieldProps.value) : undefined;
-  }, [value, fieldProps.value, localTz]);
+    return value ? utcToZonedTime(value, localTz) : isValid(fieldPropsDate) ? new Date(fieldProps.value) : undefined;
+  }, [value, localTz, fieldPropsDate, fieldProps.value]);
 
   const [datePopoverActive, setDatePopoverActive] = useState(false);
+
+  const [popoverMonth, setPopoverMonth] = useState(
+    getDateTimeObjectFromDate(zonedTimeToUtc(isValid(fieldPropsDate) ? fieldPropsDate : new Date(), localTz)).month
+  );
+  const [popoverYear, setPopoverYear] = useState(
+    getDateTimeObjectFromDate(zonedTimeToUtc(isValid(fieldPropsDate) ? fieldPropsDate : new Date(), localTz)).year
+  );
 
   const config = metadata.configuration;
 
   const onDateChange = useCallback<Exclude<DatePickerProps["onChange"], undefined>>(
     (range) => {
       fieldProps && copyTime(range.start, zonedTimeToUtc(range.start, localTz));
+      const fieldPropsDate = new Date(fieldProps.value);
+      if (isValid(fieldPropsDate)) {
+        range.start.setHours(fieldPropsDate.getHours());
+        range.start.setMinutes(fieldPropsDate.getMinutes());
+        range.start.setSeconds(fieldPropsDate.getSeconds());
+        range.start.setMilliseconds(fieldPropsDate.getMilliseconds());
+      }
       onChange?.(zonedTimeToUtc(range.start, localTz));
       fieldProps.onChange(zonedTimeToUtc(range.start, localTz));
       setDatePopoverActive(false);
@@ -77,13 +92,16 @@ export const PolarisAutoDateTimePicker = (props: {
     [onChange, localTz, fieldProps]
   );
 
-  const toggleDatePopoverActive = useCallback(() => setDatePopoverActive((active) => !active), []);
-  const handleMonthChange = useCallback(
-    (month: number, year: number) => {
-      fieldProps.onChange(getDateFromDateTimeObject({ ...getDateTimeObjectFromDate(fieldProps.value), month, year }));
-    },
-    [fieldProps]
-  );
+  const toggleDatePopoverActive = useCallback(() => {
+    const fieldPropsDate = new Date(fieldProps.value);
+    setPopoverMonth(getDateTimeObjectFromDate(isValid(fieldPropsDate) ? fieldPropsDate : new Date()).month);
+    setPopoverYear(getDateTimeObjectFromDate(isValid(fieldPropsDate) ? fieldPropsDate : new Date()).year);
+    setDatePopoverActive((active) => !active);
+  }, [fieldProps.value]);
+  const handleMonthChange = useCallback((month: number, year: number) => {
+    setPopoverMonth(month);
+    setPopoverYear(year);
+  }, []);
 
   return (
     <InlineStack gap="400">
@@ -105,12 +123,12 @@ export const PolarisAutoDateTimePicker = (props: {
       >
         <div style={{ padding: "16px" }}>
           <DatePicker
-            month={getDateTimeObjectFromDate(zonedTimeToUtc(fieldProps.value ? new Date(fieldProps.value) : new Date(), localTz)).month}
-            year={getDateTimeObjectFromDate(zonedTimeToUtc(fieldProps.value ? new Date(fieldProps.value) : new Date(), localTz)).year}
+            month={popoverMonth}
+            year={popoverYear}
             allowRange={false}
             onChange={onDateChange}
             onMonthChange={handleMonthChange}
-            selected={props.value}
+            selected={localTime ?? new Date()}
             {...props.datePickerProps}
           />
         </div>
