@@ -84,6 +84,8 @@ describe("PolarisDateTimePicker", () => {
         </PolarisAutoForm>,
         PolarisWrapper
       );
+      // Test is flaky without waiting for the DOM to load
+      cy.wait(100);
       cy.get("#test-date").should("have.value", "");
       cy.get("#test-time").should("have.value", "");
     });
