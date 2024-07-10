@@ -1,11 +1,11 @@
 import { AppProvider } from "@shopify/polaris";
+import translations from "@shopify/polaris/locales/en.json";
 import React from "react";
 import { FormProvider, useForm } from "react-hook-form";
 import { Provider } from "../../../src/GadgetProvider.tsx";
 import { PolarisAutoForm } from "../../../src/auto/polaris/PolarisAutoForm.tsx";
 import { PolarisBooleanInput } from "../../../src/auto/polaris/inputs/PolarisBooleanInput.tsx";
 import { testApi as api } from "../../apis.ts";
-
 export default {
   title: "Polaris/BooleanInput",
   component: PolarisBooleanInput,
@@ -13,7 +13,7 @@ export default {
     (Story, { parameters }) => {
       const { theme = "light" } = parameters;
       return (
-        <AppProvider>
+        <AppProvider i18n={translations}>
           <FormProvider {...useForm()}>
             <Provider api={api}>
               <PolarisAutoForm action={api.widget.create}>
