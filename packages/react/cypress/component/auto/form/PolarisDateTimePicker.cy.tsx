@@ -38,6 +38,18 @@ describe("PolarisDateTimePicker", () => {
       cy.get("#test-date").should("have.value", format(dateInLocalTZ, "yyyy-MM-dd"));
     });
 
+    it("can change the date when the value is undefined", async () => {
+      const onChangeSpy = cy.spy().as("onChangeSpy");
+      cy.mountWithWrapper(
+        <PolarisAutoForm action={api.widget.create}>
+          <PolarisDateTimePicker id="test" onChange={onChangeSpy} field="startsAt" />
+        </PolarisAutoForm>,
+        PolarisWrapper
+      );
+      cy.get("#test-date").click();
+      cy.get(".Polaris-DatePicker__Title").contains(`${new Date().getFullYear()}`);
+    });
+
     it("can change the date", async () => {
       const onChangeSpy = cy.spy().as("onChangeSpy");
       cy.mountWithWrapper(

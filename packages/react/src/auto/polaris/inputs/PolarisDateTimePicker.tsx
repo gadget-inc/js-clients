@@ -69,10 +69,9 @@ export const PolarisDateTimePicker = (props: {
 
   const onDateChange = useCallback<Exclude<DatePickerProps["onChange"], undefined>>(
     (range) => {
-      const date = new Date(range.start);
-      fieldProps && copyTime(date, zonedTimeToUtc(new Date(fieldProps.value), localTz));
-      onChange?.(zonedTimeToUtc(date, localTz));
-      fieldProps.onChange(zonedTimeToUtc(date, localTz));
+      fieldProps && copyTime(range.start, zonedTimeToUtc(range.start, localTz));
+      onChange?.(zonedTimeToUtc(range.start, localTz));
+      fieldProps.onChange(zonedTimeToUtc(range.start, localTz));
       setDatePopoverActive(false);
     },
     [onChange, localTz, fieldProps]
@@ -106,8 +105,8 @@ export const PolarisDateTimePicker = (props: {
       >
         <div style={{ padding: "16px" }}>
           <DatePicker
-            month={getDateTimeObjectFromDate(zonedTimeToUtc(new Date(fieldProps.value), localTz)).month}
-            year={getDateTimeObjectFromDate(zonedTimeToUtc(new Date(fieldProps.value), localTz)).year}
+            month={getDateTimeObjectFromDate(zonedTimeToUtc(fieldProps.value ? new Date(fieldProps.value) : new Date(), localTz)).month}
+            year={getDateTimeObjectFromDate(zonedTimeToUtc(fieldProps.value ? new Date(fieldProps.value) : new Date(), localTz)).year}
             allowRange={false}
             onChange={onDateChange}
             onMonthChange={handleMonthChange}
