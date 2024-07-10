@@ -25,6 +25,9 @@ describe("PolarisDateTimePicker", () => {
         PolarisWrapper
       );
       cy.get("#test-date").should("have.value", "");
+
+      cy.get("#test-date").click();
+      cy.get(".Polaris-DatePicker__Title").contains(`${new Date().getFullYear()}`);
     });
 
     it("can show the current value", () => {
@@ -84,6 +87,8 @@ describe("PolarisDateTimePicker", () => {
         </PolarisAutoForm>,
         PolarisWrapper
       );
+      // Test is flaky without waiting for the DOM to load
+      cy.wait(100);
       cy.get("#test-date").should("have.value", "");
       cy.get("#test-time").should("have.value", "");
     });
