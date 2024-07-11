@@ -1,4 +1,5 @@
 import type { AnyClient } from "@gadgetinc/api-client-core";
+import { jest } from "@jest/globals";
 import type { ReactNode } from "react";
 import React, { Suspense } from "react";
 import type { MockUrqlClient } from "../../api-client-core/spec/mockUrqlClient.js";
@@ -17,7 +18,7 @@ export const MockClientWrapper =
   (props: { children: ReactNode }) => {
     const urql = urqlClient ?? mockUrqlClient;
 
-    jest.spyOn(api.connection, "currentClient", "get").mockReturnValue(urql);
+    jest.spyOn(api.connection, "currentClient" as any, "get").mockReturnValue(urql);
 
     return (
       <Provider api={api} navigate={propOverrides?.navigate} auth={propOverrides?.auth}>

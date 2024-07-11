@@ -1,8 +1,10 @@
+import { jest } from "@jest/globals";
 import type { Client, GraphQLRequest, OperationContext, OperationResult, OperationResultSource } from "@urql/core";
 import { createRequest, makeErrorResult } from "@urql/core";
 import type { DocumentNode, ExecutionResult, OperationDefinitionNode } from "graphql";
 import type { SubscribePayload, Client as SubscriptionClient, Sink as SubscriptionSink } from "graphql-ws";
-import { defaults, find, findLast } from "lodash";
+import type { FunctionLike } from "jest-mock";
+import { defaults, find, findLast } from "lodash-es";
 import pRetry from "p-retry";
 import { act } from "react-dom/test-utils";
 import type { Sink, Source, Subject } from "wonka";
@@ -28,7 +30,7 @@ export function withPromise<T extends OperationResult>(_source$: Source<T>): Ope
   return source$;
 }
 
-export type MockOperationFn = jest.Mock & {
+export type MockOperationFn<F extends FunctionLike> = jest.Mock<(...args: any[]) => any> & {
   subjects: Record<string, Subject<OperationResult>>;
   /**
    * Push a response to any subscribed listeners from an `executeXYZ` call in an urql client.
@@ -51,9 +53,9 @@ export type MockFetchFn = jest.Mock & {
 };
 
 export interface MockUrqlClient extends Client {
-  executeQuery: MockOperationFn;
-  executeMutation: MockOperationFn;
-  executeSubscription: MockOperationFn;
+  executeQuery: MockOperationFn<Client["executeQuery"]>;
+  executeMutation: MockOperationFn<Client["executeMutation"]>;
+  executeSubscription: MockOperationFn<Client["executeSubscription"]>;
   [$gadgetConnection]: {
     fetch: MockFetchFn;
   };
@@ -100,7 +102,7 @@ const newMockOperationFn = (assertions?: (request: GraphQLRequest) => void) => {
     }
 
     return withPromise(subjects[key].source);
-  }) as unknown as MockOperationFn;
+  }) as unknown as MockOperationFn<any>;
 
   fn.subjects = subjects;
   fn.pushResponse = (key, response) => {

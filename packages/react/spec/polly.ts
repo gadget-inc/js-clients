@@ -3,10 +3,13 @@ import XHRAdapter from "@pollyjs/adapter-xhr";
 import type { PollyConfig } from "@pollyjs/core";
 import FSPersister from "@pollyjs/persister-fs";
 import path from "path";
-import { setupPolly } from "setup-polly-jest";
+import * as pollyJest from "setup-polly-jest";
+import { fileURLToPath } from "url";
+
+const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
 export const startPolly = (config: PollyConfig) => {
-  const context = setupPolly({
+  const context = pollyJest.default.setupPolly({
     adapters: [NodeHttpAdapter as any, XHRAdapter as any],
     persister: FSPersister as any,
 
