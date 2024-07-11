@@ -221,17 +221,6 @@ const metadata = {
 } as ActionMetadata;
 
 const mockFindBy = () => {
-  mockUrqlClient.executeQuery.pushResponse("ModelActionMetadata", {
-    stale: false,
-    hasNext: false,
-    data: {
-      gadgetMeta: {
-        model: metadata,
-        __typename: "GadgetApplicationMeta",
-      },
-    },
-  });
-
   mockUrqlClient.executeQuery.pushResponse("widget", {
     stale: false,
     hasNext: false,
@@ -257,6 +246,17 @@ const mockFindBy = () => {
           birthday: "DateTime",
           createdAt: "DateTime",
         },
+        __typename: "GadgetApplicationMeta",
+      },
+    },
+  });
+
+  mockUrqlClient.executeQuery.pushResponse("ModelActionMetadata", {
+    stale: false,
+    hasNext: false,
+    data: {
+      gadgetMeta: {
+        model: metadata,
         __typename: "GadgetApplicationMeta",
       },
     },
