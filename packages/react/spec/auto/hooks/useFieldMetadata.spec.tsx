@@ -1,3 +1,4 @@
+import { jest } from "@jest/globals";
 import { renderHook } from "@testing-library/react";
 import { useFieldMetadata } from "../../../src/auto/hooks/useFieldMetadata.js";
 import type { ActionMetadata } from "../../../src/metadata.js";
@@ -6,7 +7,7 @@ import { MockForm } from "../MockForm.js";
 describe("useFieldMetadata hook", () => {
   const getUseFieldMetadataResult = (fieldApiId: string) => {
     const { result } = renderHook(() => useFieldMetadata(fieldApiId), {
-      wrapper: MockForm({ submit: jest.fn(), metadata }),
+      wrapper: MockForm({ submit: jest.fn<any>(), metadata }),
     });
 
     return result.current;

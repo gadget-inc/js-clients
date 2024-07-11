@@ -1,3 +1,4 @@
+import { jest } from "@jest/globals";
 import { renderHook } from "@testing-library/react";
 import { useFormFields } from "../../../src/auto/AutoForm.js";
 import { useAutoFormMetadata } from "../../../src/auto/AutoFormContext.js";
@@ -12,7 +13,7 @@ describe("useFormFields hook", () => {
         return useFormFields(autoFormMetadata, options);
       },
       {
-        wrapper: MockForm({ submit: jest.fn(), metadata }),
+        wrapper: MockForm({ submit: jest.fn<any>(), metadata }),
       }
     );
 
