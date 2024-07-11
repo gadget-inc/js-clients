@@ -81,6 +81,7 @@ export default {
   // A map from regular expressions to module names or to arrays of module names that allow to stub out resources with a single module
   moduleNameMapper: {
     "^(\\.{1,2}/.*)\\.js$": "$1",
+    '\\.(css|less)$': '<rootDir>/spec/__mocks__/styleMock.js',
   },
 
   // An array of regexp pattern strings, matched against all module paths before considered 'visible' to the module loader
@@ -170,7 +171,7 @@ export default {
   // transformIgnorePatterns: [
   //   "/node_modules/"
   // ],
-  // transformIgnorePatterns: ["/node_modules/(?!lodash)"],
+   transformIgnorePatterns: ["/node_modules/(?!@mdxeditor|@mdxeditor/editor|longest-streak|markdown-table|fault|escape-string-regex|@react-hook|intersection-observer|micromark*|mdast*|ccount|devlop|parse-entities|character*|is-*|decode-named-character-reference|stringify-entities|unist-*|zwitch|vfile-message|estree-*)"],
 
   // An array of regexp pattern strings that are matched against all modules before the module loader will automatically return a mock for them
   // unmockedModulePathPatterns: undefined,
