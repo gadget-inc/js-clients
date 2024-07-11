@@ -113,12 +113,16 @@ export const getStadiumRecord = (overrides?: {
   id?: string;
   name?: string;
   photo?: { url?: string; fileName?: string; mimeType?: string };
+  tags?: string[];
+  type?: string;
 }) => {
   const id = overrides?.id ?? "433";
   const name = overrides?.name ?? "Testing Stadium";
   const photoUrl = overrides?.photo?.url ?? "https://assets.gadget.dev/assets/icon.svg";
   const photoFileName = overrides?.photo?.fileName ?? "icon.svg";
   const photoMimeType = overrides?.photo?.mimeType ?? "image/svg+xml";
+  const tags = overrides?.tags ?? ["foo", "bar"];
+  const type = overrides?.type ?? "football";
 
   return {
     game: {
@@ -133,6 +137,8 @@ export const getStadiumRecord = (overrides?: {
           mimeType: photoMimeType,
           __typename: "StoredFile",
         },
+        tags,
+        type,
         updatedAt: "2024-07-08T15:33:18.861Z",
       },
       __typename: "GameQueries",

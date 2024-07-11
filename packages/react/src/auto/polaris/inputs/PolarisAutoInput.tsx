@@ -1,12 +1,11 @@
 import React from "react";
 import { useController } from "react-hook-form";
-import type { GadgetEnumConfig } from "../../../internal/gql/graphql.js";
 import { FieldType } from "../../../metadata.js";
 import { useFieldMetadata } from "../../hooks/useFieldMetadata.js";
-import { PolarisFixedOptionsCombobox } from "../PolarisFixedOptionsCombobox.js";
 import { PolarisAutoBooleanInput } from "./PolarisAutoBooleanInput.js";
 import { PolarisAutoDateTimePicker } from "./PolarisAutoDateTimePicker.js";
 import { PolarisAutoEncryptedStringInput } from "./PolarisAutoEncryptedStringInput.js";
+import { PolarisAutoEnumInput } from "./PolarisAutoEnumInput.js";
 import { PolarisAutoFileInput } from "./PolarisAutoFileInput.js";
 import { PolarisAutoJSONInput } from "./PolarisAutoJSONInput.js";
 import { PolarisAutoPasswordInput } from "./PolarisAutoPasswordInput.js";
@@ -52,15 +51,7 @@ export const PolarisAutoInput = (props: { field: string }) => {
       return <PolarisAutoJSONInput field={props.field} />;
     }
     case FieldType.Enum: {
-      const config = metadata.configuration as GadgetEnumConfig;
-      return (
-        <PolarisFixedOptionsCombobox
-          label={metadata.name}
-          options={config.options.map((option) => ({ value: option.name, label: option.name }))}
-          allowMultiple={config.allowMultiple}
-          {...field}
-        />
-      );
+      return <PolarisAutoEnumInput field={props.field} />;
     }
     case FieldType.File: {
       return <PolarisAutoFileInput field={props.field} />;

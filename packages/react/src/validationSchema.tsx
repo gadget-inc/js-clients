@@ -45,11 +45,11 @@ const validatorForField = (field: FieldMetadata) => {
     }
     case GadgetFieldType.Enum: {
       const config = field.configuration as GadgetEnumConfig;
-      const element = string().oneOf(config.options.map((option) => option.name));
-      if (config.allowMultiple) {
-        validator = array(element);
+      if (config.allowOther) {
+        validator = config.allowMultiple ? array(string()) : string();
       } else {
-        validator = element;
+        const element = string().oneOf(config.options.map((option) => option.name));
+        validator = config.allowMultiple ? array(element) : element;
       }
       break;
     }
