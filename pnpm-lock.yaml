@@ -95,7 +95,7 @@ importers:
       jest-junit:
         specifier: ^16.0.0
         version: 16.0.0
-      lodash:
+      lodash-es:
         specifier: ^4.17.21
         version: 4.17.21
       npm-run-all:
@@ -353,9 +353,9 @@ importers:
       '@types/jest':
         specifier: ^29.5.12
         version: 29.5.12
-      '@types/lodash':
+      '@types/lodash-es':
         specifier: ^4.17.1
-        version: 4.17.1
+        version: 4.17.12
       '@types/node':
         specifier: ^18.0.0
         version: 18.11.18
@@ -392,12 +392,9 @@ importers:
       graphql-ws:
         specifier: ^5.13.1
         version: 5.13.1(graphql@16.8.1)
-      lodash:
+      lodash-es:
         specifier: ^4.17.21
         version: 4.17.21
-      prop-types:
-        specifier: ^15.8.1
-        version: 15.8.1
       react:
         specifier: ^18.2.0
         version: 18.2.0
@@ -6849,6 +6846,12 @@ packages:
     resolution: {integrity: sha512-D5qGUYwjvnNNextdU59/+fI+spnwtTFmyQP0h+PfIOSkNfpU6AOICUOkm4i0OnSk+NyjdPJrxCDro0sJsWlRpQ==}
     dependencies:
       '@types/node': 18.19.33
+    dev: true
+
+  /@types/lodash-es@4.17.12:
+    resolution: {integrity: sha512-0NgftHUcV4v34VhXm8QBSftKVXtbkBG3ViCjs6+eJ5a6y6Mi/jiFGPc1sC7QK+9BFhWrURE3EOggmWaSxL9OzQ==}
+    dependencies:
+      '@types/lodash': 4.17.1
     dev: true
 
   /@types/lodash@4.17.1:

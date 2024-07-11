@@ -3,7 +3,7 @@
 /**
  * Tests adopted from https://github.com/repeaterjs/repeater/blob/master/packages/repeater/src/__tests__/repeater.ts.
  */
-
+import { jest } from "@jest/globals";
 import { DroppingBuffer, FixedBuffer, MAX_QUEUE_LENGTH, Repeater, RepeaterOverflowError, SlidingBuffer } from "../src/repeater/index.js";
 import { delayPromise } from "./helpers.js";
 

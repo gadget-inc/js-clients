@@ -1,7 +1,9 @@
 import type { AnyClient } from "@gadgetinc/api-client-core";
 import { GadgetConnection } from "@gadgetinc/api-client-core";
+import { jest } from "@jest/globals";
 import "@testing-library/jest-dom";
 import { render } from "@testing-library/react";
+import type { SpiedFunction } from "jest-mock";
 import React from "react";
 import { mockUrqlClient } from "../../api-client-core/spec/mockUrqlClient.js";
 import { Provider } from "../src/Provider.js";
@@ -9,7 +11,7 @@ import { Provider } from "../src/Provider.js";
 describe("GadgetProvider", () => {
   let mockApiClient: AnyClient;
   const mockBigCommerceInit = jest.fn();
-  let setAuthenticationModeSpy: jest.SpyInstance;
+  let setAuthenticationModeSpy: SpiedFunction<typeof mockApiClient.connection.setAuthenticationMode>;
   const { location } = window;
 
   beforeAll(() => {
@@ -33,7 +35,7 @@ describe("GadgetProvider", () => {
       }),
     } as any;
 
-    jest.spyOn(mockApiClient.connection, "currentClient", "get").mockReturnValue(mockUrqlClient);
+    jest.spyOn(mockApiClient.connection, "currentClient" as any, "get").mockReturnValue(mockUrqlClient);
     setAuthenticationModeSpy = jest.spyOn(mockApiClient.connection, "setAuthenticationMode");
   });
 

@@ -1,5 +1,6 @@
 import { Client as RelatedProductsClient } from "@gadget-client/related-products-example";
 import { AuthenticationMode, type AnyClient } from "@gadgetinc/api-client-core";
+import { jest } from "@jest/globals";
 import "@testing-library/jest-dom";
 import { renderHook } from "@testing-library/react";
 import type { IsExact } from "conditional-type-checks";
@@ -25,7 +26,7 @@ const _TestUseGadgetReturnsAppropriateTypesWithSpecificClient = () => {
 describe("useGadget", () => {
   let api: AnyClient;
   let sessionToken: SessionToken;
-  let mockFetch: jest.Mock;
+  let mockFetch: jest.Mock<typeof globalThis.fetch>;
 
   beforeEach(() => {
     mockFetch = jest.fn();
