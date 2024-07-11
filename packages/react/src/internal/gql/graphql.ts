@@ -6469,6 +6469,7 @@ export type ModelActionMetadataQuery = {
     model?: {
       __typename?: "GadgetModel";
       name: string;
+      defaultRecord: any;
       action?: {
         __typename?: "GadgetAction";
         name: string;
@@ -8534,6 +8535,7 @@ export const ModelActionMetadataDocument = {
                     kind: "SelectionSet",
                     selections: [
                       { kind: "Field", name: { kind: "Name", value: "name" } },
+                      { kind: "Field", name: { kind: "Name", value: "defaultRecord" } },
                       {
                         kind: "Field",
                         name: { kind: "Name", value: "action" },

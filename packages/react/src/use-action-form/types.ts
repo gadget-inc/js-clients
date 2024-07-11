@@ -39,7 +39,7 @@ export type UseActionFormResult<
   FormVariables extends FieldValues,
   FormContext = any
 > = Omit<UseFormReturn<FormVariables & FormInput<ActionFunc["variablesType"]>, FormContext>, "handleSubmit" | "formState"> & {
-  formState: UseActionFormState<ActionFunc, FormVariables, FormContext>;
+  formState: UseActionFormState<ActionFunc, FormVariables, FormContext> & { isReady: boolean };
   /**
    * Any error that occurred during initial data fetching or action submission
    */

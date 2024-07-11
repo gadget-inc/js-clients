@@ -237,11 +237,13 @@ export const useActionForm = <
         return target.isSubmitSuccessful && !actionResult.fetching && !actionResult.error;
       } else if (prop === "isLoading") {
         return target.isLoading || findResult.fetching;
+      } else if (prop === "isReady") {
+        return isReady;
       } else {
         return (target as any)[prop];
       }
     },
-  }) as unknown as UseActionFormState<ActionFunc, ActionFunc["variablesType"] & ExtraFormVariables, FormContext>;
+  }) as unknown as UseActionFormState<ActionFunc, ActionFunc["variablesType"] & ExtraFormVariables, FormContext> & { isReady: boolean };
 
   return {
     ...formHook,

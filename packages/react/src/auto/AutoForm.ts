@@ -1,20 +1,23 @@
 import type { ActionFunction, GadgetRecord, GlobalActionFunction } from "@gadgetinc/api-client-core";
 import { yupResolver } from "@hookform/resolvers/yup";
 import type { ReactNode } from "react";
-import { useMemo } from "react";
+import { useEffect, useMemo, useRef } from "react";
 import type { RecordIdentifier } from "src/use-action-form/types.js";
 import type { GadgetObjectFieldConfig } from "../internal/gql/graphql.js";
 import type { ActionMetadata, FieldMetadata, GlobalActionMetadata } from "../metadata.js";
 import { filterFieldList, isActionMetadata, useActionMetadata } from "../metadata.js";
+import type { FieldValues } from "../useActionForm.js";
 import { useActionForm } from "../useActionForm.js";
-import { get, type OptionsType } from "../utils.js";
+import { type OptionsType } from "../utils.js";
 import { validationSchema } from "../validationSchema.js";
 
 /** The props that any <AutoForm/> component accepts */
 export type AutoFormProps<
   GivenOptions extends OptionsType,
   SchemaT,
-  ActionFunc extends ActionFunction<GivenOptions, any, any, SchemaT, any> | GlobalActionFunction<any>
+  ActionFunc extends ActionFunction<GivenOptions, any, any, SchemaT, any> | GlobalActionFunction<any>,
+  ExtraFormVariables extends FieldValues = Record<string, unknown>,
+  DefaultValues = ActionFunc["variablesType"] & ExtraFormVariables
 > = {
   /** Which action this fom will run on submit */
   action: ActionFunc;
@@ -24,10 +27,10 @@ export type AutoFormProps<
   record?: GadgetRecord<any>;
   /** An allowlist of fields to render within the form. Only these fields will be rendered as inputs. */
   include?: string[];
-  /** An allowlist of fields to render within the form. Only these fields will be rendered as inputs. */
-  fields?: string[];
   /** A denylist of fields to render within the form. Every field except these fields will be rendered as inputs. */
   exclude?: string[];
+  /** A set of field values to pre-populate the form with on load. Only applies to create forms. */
+  defaultValues?: DefaultValues;
   /** The label to use for the submit button at the bottom of the form */
   submitLabel?: ReactNode;
   /** What to show the user once the form has been submitted successfully */
@@ -89,38 +92,47 @@ export const useAutoForm = <
   SchemaT,
   ActionFunc extends ActionFunction<GivenOptions, any, any, SchemaT, any> | GlobalActionFunction<any>
 >(
-  props: AutoFormProps<GivenOptions, SchemaT, ActionFunc>
+  props: AutoFormProps<GivenOptions, SchemaT, ActionFunc, any, any>
 ) => {
   const { action, record, findBy } = props;
-
   const { metadata, fetching: fetchingMetadata, error: metadataError } = useActionMetadata(props.action);
 
   // filter down the fields to render only what we want to render for this form
   const fields = useFormFields(metadata, props);
   const operatesWithRecordId = !!(metadata && isActionMetadata(metadata) && metadata.action.operatesWithRecordIdentity);
+  const modelApiIdentifier = action.type == "action" ? action.modelApiIdentifier : undefined;
+  const defaultValues: Record<string, any> = useMemo(
+    () =>
+      props.defaultValues ??
+      (action.type === "globalAction"
+        ? {}
+        : {
+            [modelApiIdentifier!]: record ?? (!operatesWithRecordId && metadata && isActionMetadata(metadata) && metadata?.defaultRecord),
+            id: "0", // The ID value will be replaced when sending the form to use the record found by `findBy`
+          }),
+    [props.defaultValues, action.type, modelApiIdentifier, record, operatesWithRecordId, metadata]
+  );
 
   // setup the form state for the action
   const {
     submit,
     error: formError,
-    formState: { isSubmitSuccessful, isLoading, dirtyFields },
+    formState: { isSubmitSuccessful, isLoading, isReady },
     originalFormMethods,
   } = useActionForm(action, {
-    defaultValues:
-      action.type === "globalAction"
-        ? {}
-        : {
-            [action.modelApiIdentifier]: record,
-            id: "0", // The ID value will be replaced when sending the form to use the record found by `findBy`
-          },
+    defaultValues,
     findBy,
     resolver: useValidationResolver(metadata),
     send: () => {
       const fieldsToSend = fields
         .map(({ path }) => path)
         .filter((item) => {
-          const isDirty = get(dirtyFields, item);
-          return isDirty;
+          if (props.include) {
+            return props.include?.includes(item);
+          } else if (props.exclude) {
+            return !props.exclude?.includes(item);
+          }
+          return true;
         });
 
       if (operatesWithRecordId) {
@@ -129,6 +141,15 @@ export const useAutoForm = <
       return fieldsToSend;
     },
   });
+
+  // we don't have synchronous access to the default values always -- sometimes we need to load them from the metadata. if we do that, then we need to forcibly set them into the form state once they have been loaded
+  const hasSetInitialValues = useRef<boolean>(false);
+  useEffect(() => {
+    if (isReady && !hasSetInitialValues.current && modelApiIdentifier && defaultValues[modelApiIdentifier]) {
+      hasSetInitialValues.current = true;
+      originalFormMethods.reset(defaultValues);
+    }
+  }, [isReady, defaultValues, originalFormMethods, modelApiIdentifier]);
 
   return {
     metadata,

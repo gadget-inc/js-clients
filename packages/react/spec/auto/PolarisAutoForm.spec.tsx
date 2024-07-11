@@ -139,7 +139,7 @@ describe("PolarisAutoForm", () => {
   });
 
   describe("dirty fields", () => {
-    test("it should not include fields that are not dirty when submitting a form", async () => {
+    test("it should include fields that are not dirty when submitting a create form", async () => {
       const user = userEvent.setup();
 
       const { getByRole, getByLabelText } = render(<PolarisAutoForm action={api.gizmo.create} exclude={["widget"]} />, {
@@ -148,11 +148,8 @@ describe("PolarisAutoForm", () => {
 
       loadMockGizmoCreateMetadata();
 
-      const submitButton = getByRole("button");
-      expect(submitButton).toHaveTextContent("Submit");
-
       // Inside the "gizmo" model, there are two fields: "Name" and "Orientation", both are not required.
-      // We first modify the "Name" field and submit the form to ensure that only the "Name" field is included in the mutation.
+      // We first modify the "Name" field and submit the form to ensure that both the "Name" and "Orientation" fields are included in the mutation.
 
       await act(async () => {
         const nameElement = getByLabelText("Name");
@@ -170,6 +167,8 @@ describe("PolarisAutoForm", () => {
       expect(mutationName).toEqual("createGizmo");
       expect(variables).toEqual({
         name: "updated test record",
+        orientation: null,
+        // widget field is absent because it is excluded from the form
       });
 
       // Now modify the other field and submit again to ensure that the other field is also included.
@@ -194,7 +193,7 @@ describe("PolarisAutoForm", () => {
       });
     });
 
-    test("it should not include fields that are not dirty when submitting a form that updates a record", async () => {
+    test("it should include fields that are not dirty when submitting an update form", async () => {
       const user = userEvent.setup();
 
       const result = render(<PolarisAutoForm action={api.widget.update} exclude={["gizmos"]} findBy="1145" />, {
@@ -223,41 +222,64 @@ describe("PolarisAutoForm", () => {
       const recordId = mutation.variables.id;
 
       expect(mutationName).toEqual("updateWidget");
-      // Since we only modified the inventory count field, only that field should be included in the mutation.
       expect(variables).toEqual({
+        anything: {
+          example: true,
+          key: "value",
+        },
+        birthday: null,
+        category: [],
+        color: null,
+        description: {
+          markdown: "example _rich_ **text**",
+        },
+        embedding: null,
         inventoryCount: 1234,
+        isChecked: null,
+        metafields: null,
+        mustBeLongString: null,
+        name: "Test Widget",
+        roles: [],
+        secretKey: null,
+        section: {
+          _link: undefined,
+        },
+        startsAt: null,
       });
       expect(recordId).toEqual("1145");
     });
 
-    test("it should still count as a dirty field when the field has typed something then cleared", async () => {
+    test("it should include default values fields that are not dirty when submitting a create form", async () => {
       const user = userEvent.setup();
 
-      const { getByRole, getByLabelText } = render(<PolarisAutoForm action={api.gizmo.create} exclude={["widget"]} />, {
-        wrapper: PolarisMockedProviders,
-      });
+      const { getByRole, getByLabelText } = render(
+        <PolarisAutoForm
+          action={api.gizmo.create}
+          exclude={["widget"]}
+          defaultValues={{
+            gizmo: {
+              name: "test record",
+              orientation: "test orientation",
+            },
+          }}
+        />,
+        {
+          wrapper: PolarisMockedProviders,
+        }
+      );
 
       loadMockGizmoCreateMetadata();
 
-      const submitButton = getByRole("button");
-      expect(submitButton).toHaveTextContent("Submit");
-
       await act(async () => {
-        const nameElement = getByLabelText("Name");
-        await user.click(nameElement);
-        await user.keyboard("updated test record");
-        await user.clear(nameElement);
-
-        await user.click(submitButton);
+        await user.click(getByRole("button"));
       });
 
       const mutation = mockUrqlClient.executeMutation.mock.calls[0][0];
-      const mutationName = mutation.query.definitions[0].name.value;
-      const variables = mutation.variables.gizmo;
 
-      expect(mutationName).toEqual("createGizmo");
-      expect(variables).toEqual({
-        name: "",
+      expect(mutation.query.definitions[0].name.value).toEqual("createGizmo");
+      expect(mutation.variables.gizmo).toEqual({
+        name: "test record",
+        orientation: "test orientation",
       });
     });
   });
