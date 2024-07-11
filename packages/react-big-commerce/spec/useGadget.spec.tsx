@@ -1,5 +1,6 @@
 import type { AnyClient } from "@gadgetinc/api-client-core";
 import { GadgetConnection } from "@gadgetinc/api-client-core";
+import { jest } from "@jest/globals";
 import "@testing-library/jest-dom";
 import { renderHook } from "@testing-library/react";
 import type { IsExact } from "conditional-type-checks";
@@ -41,7 +42,7 @@ describe("useGadget", () => {
       }),
     } as any;
 
-    jest.spyOn(mockApiClient.connection, "currentClient", "get").mockReturnValue(mockUrqlClient);
+    jest.spyOn(mockApiClient.connection, "currentClient" as any, "get").mockReturnValue(mockUrqlClient);
   });
 
   afterAll(() => {

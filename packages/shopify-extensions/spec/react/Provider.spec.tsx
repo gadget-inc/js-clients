@@ -1,5 +1,6 @@
 import { Client } from "@gadget-client/related-products-example";
 import { AuthenticationMode, type AnyClient } from "@gadgetinc/api-client-core";
+import { jest } from "@jest/globals";
 import "@testing-library/jest-dom";
 import { render, waitFor } from "@testing-library/react";
 import React, { useEffect } from "react";
@@ -9,7 +10,7 @@ import { useGadget, type SessionToken } from "../../src/react/index.js";
 describe("Provider", () => {
   let api: AnyClient;
   let sessionToken: SessionToken;
-  let mockFetch: jest.Mock;
+  let mockFetch: jest.Mock<typeof globalThis.fetch>;
 
   beforeEach(() => {
     mockFetch = jest.fn();

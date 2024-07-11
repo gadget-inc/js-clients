@@ -1,3 +1,4 @@
+import { jest } from "@jest/globals";
 import { GadgetConnection, GadgetRecordList, InternalModelManager } from "../src/index.js";
 
 describe("GadgetRecordList", () => {

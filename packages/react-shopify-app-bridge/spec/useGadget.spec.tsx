@@ -1,7 +1,7 @@
 import type { AnyClient } from "@gadgetinc/api-client-core";
 import { GadgetConnection } from "@gadgetinc/api-client-core";
+import { jest } from "@jest/globals";
 import type { ShopifyGlobal } from "@shopify/app-bridge-react";
-import * as AppBridgeReact from "@shopify/app-bridge-react";
 import "@testing-library/jest-dom";
 import { renderHook } from "@testing-library/react";
 import type { IsExact } from "conditional-type-checks";
@@ -29,7 +29,6 @@ const _TestUseGadgetReturnsAppropriateTypes = () => {
 describe("useGadget", () => {
   let mockApiClient: AnyClient;
   const mockApiKey = "some-api-key";
-  let useAppBridgeMock: jest.SpyInstance;
   let resolveIdToken: (value: string) => void;
 
   beforeEach(() => {
@@ -39,7 +38,7 @@ describe("useGadget", () => {
       }),
     } as any;
 
-    jest.spyOn(mockApiClient.connection, "currentClient", "get").mockReturnValue(mockUrqlClient);
+    jest.spyOn(mockApiClient.connection, "currentClient" as any, "get").mockReturnValue(mockUrqlClient);
     window.shopify = {
       // @ts-expect-error mock
       environment: {
@@ -56,8 +55,6 @@ describe("useGadget", () => {
           resolveIdToken = resolve;
         }),
     };
-
-    useAppBridgeMock = jest.spyOn(AppBridgeReact, "useAppBridge").mockImplementation(() => window.shopify);
   });
 
   test("has correct embedded value", () => {
