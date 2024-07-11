@@ -1,4 +1,5 @@
 import { AppProvider, Card, Page } from "@shopify/polaris";
+import translations from "@shopify/polaris/locales/en.json";
 import React from "react";
 import { FormProvider, useForm } from "react-hook-form";
 import { Provider } from "../../../src/GadgetProvider.tsx";
@@ -14,7 +15,7 @@ export default {
       const { theme = "light" } = parameters;
       return (
         <Provider api={api}>
-          <AppProvider>
+          <AppProvider i18n={translations}>
             <FormProvider {...useForm()}>
               <PolarisAutoForm action={api.widget.create}>
                 <Page>
