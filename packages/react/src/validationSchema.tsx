@@ -122,6 +122,12 @@ const validatorForField = (field: FieldMetadata) => {
       validator = array();
       break;
     }
+
+    case GadgetFieldType.Array: {
+      validator = array();
+      break;
+    }
+
     default: {
       throw new Error(`unknown field type ${field.fieldType} for validator generation`);
     }
