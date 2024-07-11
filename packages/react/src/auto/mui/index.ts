@@ -8,6 +8,13 @@ export { MUIAutoInput as AutoInput } from "./inputs/MUIAutoInput.js";
 export { MUIAutoJSONInput as AutoJSONInput } from "./inputs/MUIAutoJSONInput.js";
 export { MUIAutoBelongsToInput as AutoBelongsToInput } from "./inputs/MUIAutoRelationshipInput.js";
 export { MUIAutoRolesInput as AutoRolesInput } from "./inputs/MUIAutoRolesInput.js";
-export { MUIAutoTextInput as AutoTextInput } from "./inputs/MUIAutoTextInput.js";
+export {
+  MUIAutoTextInput as AutoColorInput,
+  MUIAutoTextInput as AutoEmailInput,
+  MUIAutoTextInput as AutoNumberInput,
+  MUIAutoTextInput as AutoStringInput,
+  MUIAutoTextInput as AutoTextInput,
+  MUIAutoTextInput as AutoUrlInput,
+} from "./inputs/MUIAutoTextInput.js";
 export { MUIAutoSubmit as AutoSubmit } from "./submit/MUIAutoSubmit.js";
 export { MUISubmitResultBanner as SubmitResultBanner } from "./submit/MUISubmitResultBanner.js";

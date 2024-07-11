@@ -10,6 +10,13 @@ export { PolarisAutoJSONInput as AutoJSONInput } from "./inputs/PolarisAutoJSONI
 export { PolarisAutoPasswordInput as AutoPasswordInput } from "./inputs/PolarisAutoPasswordInput.js";
 export { PolarisAutoBelongsToInput as AutoBelongsToInput } from "./inputs/PolarisAutoRelationshipInput.js";
 export { PolarisAutoRolesInput as AutoRolesInput } from "./inputs/PolarisAutoRolesInput.js";
-export { PolarisAutoTextInput as AutoTextInput } from "./inputs/PolarisAutoTextInput.js";
+export {
+  PolarisAutoTextInput as AutoColorInput,
+  PolarisAutoTextInput as AutoEmailInput,
+  PolarisAutoTextInput as AutoNumberInput,
+  PolarisAutoTextInput as AutoStringInput,
+  PolarisAutoTextInput as AutoTextInput,
+  PolarisAutoTextInput as AutoUrlInput,
+} from "./inputs/PolarisAutoTextInput.js";
 export { PolarisAutoSubmit as AutoSubmit } from "./submit/PolarisAutoSubmit.js";
 export { PolarisSubmitResultBanner as SubmitResultBanner } from "./submit/PolarisSubmitResultBanner.js";
