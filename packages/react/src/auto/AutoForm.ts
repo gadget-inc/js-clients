@@ -58,7 +58,13 @@ export const useFormFields = (
   return useMemo(() => {
     if (!metadata) return [];
     const action = isActionMetadata(metadata) ? metadata.action : metadata;
-    const objectFields = action.inputFields.filter((field) => field.configuration.__typename === "GadgetObjectFieldConfig");
+    const isModelMetadata = metadata.__typename === "GadgetModel";
+
+    const objectFields = isModelMetadata
+      ? action.inputFields.filter(
+          (field) => field.configuration.__typename === "GadgetObjectFieldConfig" && field.apiIdentifier === metadata.apiIdentifier
+        )
+      : [];
     const nonObjectFields = action.inputFields.filter((field) => field.configuration.__typename !== "GadgetObjectFieldConfig");
 
     const includedRootLevelFields = filterFieldList(nonObjectFields, options as any).map(

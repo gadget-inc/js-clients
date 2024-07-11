@@ -62,6 +62,7 @@ describe("useFieldMetadata hook", () => {
 
 const metadata: ActionMetadata = {
   name: "Widget",
+  apiIdentifier: "widget",
   action: {
     name: "Create",
     apiIdentifier: "create",

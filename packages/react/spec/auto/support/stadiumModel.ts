@@ -97,6 +97,7 @@ export const getStadiumModelMetadata = (
     gadgetMeta: {
       model: {
         name: "Stadium",
+        apiIdentifier: "stadium",
         action: {
           ...action,
           inputFields: action.operatesWithRecordIdentity ? [recordIdInputField, ...inputFields] : inputFields,
