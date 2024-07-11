@@ -94,7 +94,7 @@
     "@types/setup-polly-jest": "^0.5.5",
     "@urql/core": "^4.0.10",
     "conditional-type-checks": "^1.0.6",
-    "cypress": "^13.2.0",
+    "cypress": "^13.13.0",
     "cypress-each": "^1.13.3",
     "execa": "^5.1.1",
     "graphql": "^16.8.1",

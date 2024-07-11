@@ -378,8 +378,8 @@ importers:
         specifier: ^1.0.6
         version: 1.0.6
       cypress:
-        specifier: ^13.2.0
-        version: 13.11.0
+        specifier: ^13.13.0
+        version: 13.13.0
       cypress-each:
         specifier: ^1.13.3
         version: 1.14.0
@@ -794,7 +794,7 @@ packages:
       '@babel/core': 7.19.0
       '@babel/helper-validator-option': 7.18.6
       browserslist: 4.20.3
-      semver: 6.3.0
+      semver: 6.3.1
     dev: true
 
   /@babel/helper-compilation-targets@7.24.7:
@@ -8610,8 +8610,8 @@ packages:
     resolution: {integrity: sha512-mUpF5KSSBy0kQaxYPLFswHceYoUMpXWRAJJ2LrcuHu1Vp5lgMw96lLtpDsNGID13FQhBfPSW6FmYBBCQqdJRBg==}
     dev: true
 
-  /cypress@13.11.0:
-    resolution: {integrity: sha512-NXXogbAxVlVje4XHX+Cx5eMFZv4Dho/2rIcdBHg9CNPFUGZdM4cRdgIgM7USmNYsC12XY0bZENEQ+KBk72fl+A==}
+  /cypress@13.13.0:
+    resolution: {integrity: sha512-ou/MQUDq4tcDJI2FsPaod2FZpex4kpIK43JJlcBgWrX8WX7R/05ZxGTuxedOuZBfxjZxja+fbijZGyxiLP6CFA==}
     engines: {node: ^16.0.0 || ^18.0.0 || >=20.0.0}
     hasBin: true
     requiresBuild: true
@@ -10119,7 +10119,7 @@ packages:
     engines: {node: '>=10'}
     dependencies:
       at-least-node: 1.0.0
-      graceful-fs: 4.2.10
+      graceful-fs: 4.2.11
       jsonfile: 6.1.0
       universalify: 2.0.0
     dev: true
@@ -11266,7 +11266,7 @@ packages:
       '@babel/parser': 7.19.0
       '@istanbuljs/schema': 0.1.3
       istanbul-lib-coverage: 3.2.0
-      semver: 6.3.0
+      semver: 6.3.1
     transitivePeerDependencies:
       - supports-color
     dev: true
