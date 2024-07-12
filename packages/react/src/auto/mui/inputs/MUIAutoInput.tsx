@@ -11,9 +11,10 @@ import { MUIAutoEnumInput } from "./MUIAutoEnumInput.js";
 import { MUIAutoFileInput } from "./MUIAutoFileInput.js";
 import { MUIAutoJSONInput } from "./MUIAutoJSONInput.js";
 import { MUIAutoPasswordInput } from "./MUIAutoPasswordInput.js";
-import { MUIAutoRelationshipInput } from "./MUIAutoRelationshipInput.js";
 import { MUIAutoRolesInput } from "./MUIAutoRolesInput.js";
 import { MUIAutoTextInput } from "./MUIAutoTextInput.js";
+import { MUIAutoBelongsToInput } from "./relationships/MUIAutoBelongsToInput.js";
+import { MUIAutoHasManyInput } from "./relationships/MUIAutoHasManyInput.js";
 
 export const MUIAutoFormControl = (props: { field: string; children: ReactElement }) => {
   const { path, metadata } = useFieldMetadata(props.field);
@@ -79,10 +80,16 @@ export const MUIAutoInput = (props: { field: string }) => {
     case FieldType.RoleAssignments: {
       return <MUIAutoRolesInput field={props.field} />;
     }
-    case FieldType.HasMany:
-    case FieldType.HasOne:
     case FieldType.BelongsTo: {
-      return <MUIAutoRelationshipInput field={props.field} />;
+      return <MUIAutoBelongsToInput field={props.field} />;
+    }
+    case FieldType.HasOne: {
+      // TODO - Update implementation of MUIAutoHasOneInput after 1-1 mapping maintenance system is updated in API
+      // return <MUIAutoHasOneInput field={props.field} />;
+      return null;
+    }
+    case FieldType.HasMany: {
+      return <MUIAutoHasManyInput field={props.field} />;
     }
     case FieldType.HasManyThrough: {
       // TODO: implement HasManyThrough input with join model record create/delete/update

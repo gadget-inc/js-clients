@@ -411,12 +411,37 @@ export const uniqByProperty = (arr: any[], property: string) => {
   return arr.filter((x, i, self) => i === self.findIndex((y) => getPropertyValue(x) === getPropertyValue(y)));
 };
 
+/**
+ * Based on Lodash uniq to ensure all array elements are unique
+ * https://youmightnotneed.com/lodash
+ */
+export const uniq = (arr: any[]) => [...new Set(arr)];
+
+/**
+ * Based on Lodash compact to ensure all array elements are truthy
+ * https://youmightnotneed.com/lodash
+ */
+export const compact = (arr: any[]) => arr.filter((x) => !!x);
+
 export const getModelManager = (
   apiClient: AnyClient,
   apiIdentifier: string,
   namespace?: string[] | string | null
 ): AnyModelManager | undefined => {
   return get(apiClient, namespaceDataPath([apiIdentifier], namespace).join("."));
+};
+
+type SortOrder = "asc" | "desc";
+export const sortByProperty = <T>(arr: T[], property: keyof T, order: SortOrder = "asc"): T[] => {
+  return arr.sort((a, b) => {
+    if (a[property] < b[property]) {
+      return order === "asc" ? -1 : 1;
+    }
+    if (a[property] > b[property]) {
+      return order === "asc" ? 1 : -1;
+    }
+    return 0;
+  });
 };
 
 /**

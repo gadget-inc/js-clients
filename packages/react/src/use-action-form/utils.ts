@@ -324,7 +324,7 @@ export const reshapeDataForGraphqlApi = async (client: AnyClient, defaultValues:
         case "HasMany":
         case "HasOne":
         case "HasManyThrough":
-          return inputHasId ? { update: { ...rest } } : { create: { ...rest } };
+          return getParentRelationshipFieldGraphqlApiInput({ input, result });
         case "BelongsTo":
           return inputHasId
             ? inputHasMoreFields
@@ -354,6 +354,22 @@ export const reshapeDataForGraphqlApi = async (client: AnyClient, defaultValues:
   const result = transform(data, { depth: 0 });
 
   return result;
+};
+
+const getParentRelationshipFieldGraphqlApiInput = (props: { input: any; result: any }) => {
+  const { input, result } = props;
+  const { __typename, ...rest } = result;
+
+  if ("__id" in rest) {
+    if ("__unlinkedInverseField" in rest && rest.__unlinkedInverseField) {
+      const inverseFieldApiId = rest.__unlinkedInverseField;
+      return { update: { id: rest.__id, [inverseFieldApiId]: { _link: null } } };
+    }
+    return { update: { id: rest.__id } }; // Calling this update action automatically links it to the current parent model's record ID
+  } else {
+    const inputHasId = "id" in input;
+    return inputHasId ? { update: { ...rest } } : { create: { ...rest } };
+  }
 };
 
 const isPlainObject = (obj: any) => {

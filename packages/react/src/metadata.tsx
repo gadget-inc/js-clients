@@ -58,11 +58,17 @@ const FieldMetadataFragment = graphql(/* GraphQL */ `
           apiIdentifier
           namespace
         }
+        inverseField {
+          apiIdentifier
+        }
       }
       ... on GadgetHasOneConfig {
         relatedModel {
           apiIdentifier
           namespace
+        }
+        inverseField {
+          apiIdentifier
         }
       }
       ... on GadgetBelongsToConfig {

@@ -5354,6 +5354,7 @@ type FieldMetadata_GadgetModelField_Fragment = {
         __typename: "GadgetHasManyConfig";
         fieldType: GadgetFieldType;
         relatedModel?: { __typename?: "GadgetModel"; apiIdentifier: string; namespace?: Array<string> | null } | null;
+        inverseField?: { __typename?: "GadgetModelField"; apiIdentifier: string } | null;
         validations: Array<
           | { __typename: "GadgetGenericFieldValidation"; name: string; specID: string }
           | { __typename: "GadgetOnlyImageFileFieldValidation"; name: string; specID: string; allowAnimatedImages: boolean }
@@ -5366,6 +5367,7 @@ type FieldMetadata_GadgetModelField_Fragment = {
         __typename: "GadgetHasOneConfig";
         fieldType: GadgetFieldType;
         relatedModel?: { __typename?: "GadgetModel"; apiIdentifier: string; namespace?: Array<string> | null } | null;
+        inverseField?: { __typename?: "GadgetModelField"; apiIdentifier: string } | null;
         validations: Array<
           | { __typename: "GadgetGenericFieldValidation"; name: string; specID: string }
           | { __typename: "GadgetOnlyImageFileFieldValidation"; name: string; specID: string; allowAnimatedImages: boolean }
@@ -5447,6 +5449,7 @@ type FieldMetadata_GadgetObjectField_Fragment = {
         __typename: "GadgetHasManyConfig";
         fieldType: GadgetFieldType;
         relatedModel?: { __typename?: "GadgetModel"; apiIdentifier: string; namespace?: Array<string> | null } | null;
+        inverseField?: { __typename?: "GadgetModelField"; apiIdentifier: string } | null;
         validations: Array<
           | { __typename: "GadgetGenericFieldValidation"; name: string; specID: string }
           | { __typename: "GadgetOnlyImageFileFieldValidation"; name: string; specID: string; allowAnimatedImages: boolean }
@@ -5459,6 +5462,7 @@ type FieldMetadata_GadgetObjectField_Fragment = {
         __typename: "GadgetHasOneConfig";
         fieldType: GadgetFieldType;
         relatedModel?: { __typename?: "GadgetModel"; apiIdentifier: string; namespace?: Array<string> | null } | null;
+        inverseField?: { __typename?: "GadgetModelField"; apiIdentifier: string } | null;
         validations: Array<
           | { __typename: "GadgetGenericFieldValidation"; name: string; specID: string }
           | { __typename: "GadgetOnlyImageFileFieldValidation"; name: string; specID: string; allowAnimatedImages: boolean }
@@ -5558,6 +5562,7 @@ export type GetModelMetadataQuery = {
               __typename: "GadgetHasManyConfig";
               fieldType: GadgetFieldType;
               relatedModel?: { __typename?: "GadgetModel"; apiIdentifier: string; namespace?: Array<string> | null } | null;
+              inverseField?: { __typename?: "GadgetModelField"; apiIdentifier: string } | null;
               validations: Array<
                 | { __typename: "GadgetGenericFieldValidation"; name: string; specID: string }
                 | { __typename: "GadgetOnlyImageFileFieldValidation"; name: string; specID: string; allowAnimatedImages: boolean }
@@ -5570,6 +5575,7 @@ export type GetModelMetadataQuery = {
               __typename: "GadgetHasOneConfig";
               fieldType: GadgetFieldType;
               relatedModel?: { __typename?: "GadgetModel"; apiIdentifier: string; namespace?: Array<string> | null } | null;
+              inverseField?: { __typename?: "GadgetModelField"; apiIdentifier: string } | null;
               validations: Array<
                 | { __typename: "GadgetGenericFieldValidation"; name: string; specID: string }
                 | { __typename: "GadgetOnlyImageFileFieldValidation"; name: string; specID: string; allowAnimatedImages: boolean }
@@ -5668,6 +5674,7 @@ type SubFields_GadgetModelField_Fragment = {
                 __typename: "GadgetHasManyConfig";
                 fieldType: GadgetFieldType;
                 relatedModel?: { __typename?: "GadgetModel"; apiIdentifier: string; namespace?: Array<string> | null } | null;
+                inverseField?: { __typename?: "GadgetModelField"; apiIdentifier: string } | null;
                 validations: Array<
                   | { __typename: "GadgetGenericFieldValidation"; name: string; specID: string }
                   | { __typename: "GadgetOnlyImageFileFieldValidation"; name: string; specID: string; allowAnimatedImages: boolean }
@@ -5680,6 +5687,7 @@ type SubFields_GadgetModelField_Fragment = {
                 __typename: "GadgetHasOneConfig";
                 fieldType: GadgetFieldType;
                 relatedModel?: { __typename?: "GadgetModel"; apiIdentifier: string; namespace?: Array<string> | null } | null;
+                inverseField?: { __typename?: "GadgetModelField"; apiIdentifier: string } | null;
                 validations: Array<
                   | { __typename: "GadgetGenericFieldValidation"; name: string; specID: string }
                   | { __typename: "GadgetOnlyImageFileFieldValidation"; name: string; specID: string; allowAnimatedImages: boolean }
@@ -5778,6 +5786,7 @@ type SubFields_GadgetModelField_Fragment = {
                         __typename: "GadgetHasManyConfig";
                         fieldType: GadgetFieldType;
                         relatedModel?: { __typename?: "GadgetModel"; apiIdentifier: string; namespace?: Array<string> | null } | null;
+                        inverseField?: { __typename?: "GadgetModelField"; apiIdentifier: string } | null;
                         validations: Array<
                           | { __typename: "GadgetGenericFieldValidation"; name: string; specID: string }
                           | { __typename: "GadgetOnlyImageFileFieldValidation"; name: string; specID: string; allowAnimatedImages: boolean }
@@ -5796,6 +5805,7 @@ type SubFields_GadgetModelField_Fragment = {
                         __typename: "GadgetHasOneConfig";
                         fieldType: GadgetFieldType;
                         relatedModel?: { __typename?: "GadgetModel"; apiIdentifier: string; namespace?: Array<string> | null } | null;
+                        inverseField?: { __typename?: "GadgetModelField"; apiIdentifier: string } | null;
                         validations: Array<
                           | { __typename: "GadgetGenericFieldValidation"; name: string; specID: string }
                           | { __typename: "GadgetOnlyImageFileFieldValidation"; name: string; specID: string; allowAnimatedImages: boolean }
@@ -5928,6 +5938,7 @@ type SubFields_GadgetModelField_Fragment = {
                                   apiIdentifier: string;
                                   namespace?: Array<string> | null;
                                 } | null;
+                                inverseField?: { __typename?: "GadgetModelField"; apiIdentifier: string } | null;
                                 validations: Array<
                                   | { __typename: "GadgetGenericFieldValidation"; name: string; specID: string }
                                   | {
@@ -5955,6 +5966,7 @@ type SubFields_GadgetModelField_Fragment = {
                                   apiIdentifier: string;
                                   namespace?: Array<string> | null;
                                 } | null;
+                                inverseField?: { __typename?: "GadgetModelField"; apiIdentifier: string } | null;
                                 validations: Array<
                                   | { __typename: "GadgetGenericFieldValidation"; name: string; specID: string }
                                   | {
@@ -6098,6 +6110,7 @@ type SubFields_GadgetObjectField_Fragment = {
                 __typename: "GadgetHasManyConfig";
                 fieldType: GadgetFieldType;
                 relatedModel?: { __typename?: "GadgetModel"; apiIdentifier: string; namespace?: Array<string> | null } | null;
+                inverseField?: { __typename?: "GadgetModelField"; apiIdentifier: string } | null;
                 validations: Array<
                   | { __typename: "GadgetGenericFieldValidation"; name: string; specID: string }
                   | { __typename: "GadgetOnlyImageFileFieldValidation"; name: string; specID: string; allowAnimatedImages: boolean }
@@ -6110,6 +6123,7 @@ type SubFields_GadgetObjectField_Fragment = {
                 __typename: "GadgetHasOneConfig";
                 fieldType: GadgetFieldType;
                 relatedModel?: { __typename?: "GadgetModel"; apiIdentifier: string; namespace?: Array<string> | null } | null;
+                inverseField?: { __typename?: "GadgetModelField"; apiIdentifier: string } | null;
                 validations: Array<
                   | { __typename: "GadgetGenericFieldValidation"; name: string; specID: string }
                   | { __typename: "GadgetOnlyImageFileFieldValidation"; name: string; specID: string; allowAnimatedImages: boolean }
@@ -6208,6 +6222,7 @@ type SubFields_GadgetObjectField_Fragment = {
                         __typename: "GadgetHasManyConfig";
                         fieldType: GadgetFieldType;
                         relatedModel?: { __typename?: "GadgetModel"; apiIdentifier: string; namespace?: Array<string> | null } | null;
+                        inverseField?: { __typename?: "GadgetModelField"; apiIdentifier: string } | null;
                         validations: Array<
                           | { __typename: "GadgetGenericFieldValidation"; name: string; specID: string }
                           | { __typename: "GadgetOnlyImageFileFieldValidation"; name: string; specID: string; allowAnimatedImages: boolean }
@@ -6226,6 +6241,7 @@ type SubFields_GadgetObjectField_Fragment = {
                         __typename: "GadgetHasOneConfig";
                         fieldType: GadgetFieldType;
                         relatedModel?: { __typename?: "GadgetModel"; apiIdentifier: string; namespace?: Array<string> | null } | null;
+                        inverseField?: { __typename?: "GadgetModelField"; apiIdentifier: string } | null;
                         validations: Array<
                           | { __typename: "GadgetGenericFieldValidation"; name: string; specID: string }
                           | { __typename: "GadgetOnlyImageFileFieldValidation"; name: string; specID: string; allowAnimatedImages: boolean }
@@ -6358,6 +6374,7 @@ type SubFields_GadgetObjectField_Fragment = {
                                   apiIdentifier: string;
                                   namespace?: Array<string> | null;
                                 } | null;
+                                inverseField?: { __typename?: "GadgetModelField"; apiIdentifier: string } | null;
                                 validations: Array<
                                   | { __typename: "GadgetGenericFieldValidation"; name: string; specID: string }
                                   | {
@@ -6385,6 +6402,7 @@ type SubFields_GadgetObjectField_Fragment = {
                                   apiIdentifier: string;
                                   namespace?: Array<string> | null;
                                 } | null;
+                                inverseField?: { __typename?: "GadgetModelField"; apiIdentifier: string } | null;
                                 validations: Array<
                                   | { __typename: "GadgetGenericFieldValidation"; name: string; specID: string }
                                   | {
@@ -6536,6 +6554,7 @@ export type ModelActionMetadataQuery = {
                 __typename: "GadgetHasManyConfig";
                 fieldType: GadgetFieldType;
                 relatedModel?: { __typename?: "GadgetModel"; apiIdentifier: string; namespace?: Array<string> | null } | null;
+                inverseField?: { __typename?: "GadgetModelField"; apiIdentifier: string } | null;
                 validations: Array<
                   | { __typename: "GadgetGenericFieldValidation"; name: string; specID: string }
                   | { __typename: "GadgetOnlyImageFileFieldValidation"; name: string; specID: string; allowAnimatedImages: boolean }
@@ -6548,6 +6567,7 @@ export type ModelActionMetadataQuery = {
                 __typename: "GadgetHasOneConfig";
                 fieldType: GadgetFieldType;
                 relatedModel?: { __typename?: "GadgetModel"; apiIdentifier: string; namespace?: Array<string> | null } | null;
+                inverseField?: { __typename?: "GadgetModelField"; apiIdentifier: string } | null;
                 validations: Array<
                   | { __typename: "GadgetGenericFieldValidation"; name: string; specID: string }
                   | { __typename: "GadgetOnlyImageFileFieldValidation"; name: string; specID: string; allowAnimatedImages: boolean }
@@ -6646,6 +6666,7 @@ export type ModelActionMetadataQuery = {
                         __typename: "GadgetHasManyConfig";
                         fieldType: GadgetFieldType;
                         relatedModel?: { __typename?: "GadgetModel"; apiIdentifier: string; namespace?: Array<string> | null } | null;
+                        inverseField?: { __typename?: "GadgetModelField"; apiIdentifier: string } | null;
                         validations: Array<
                           | { __typename: "GadgetGenericFieldValidation"; name: string; specID: string }
                           | { __typename: "GadgetOnlyImageFileFieldValidation"; name: string; specID: string; allowAnimatedImages: boolean }
@@ -6664,6 +6685,7 @@ export type ModelActionMetadataQuery = {
                         __typename: "GadgetHasOneConfig";
                         fieldType: GadgetFieldType;
                         relatedModel?: { __typename?: "GadgetModel"; apiIdentifier: string; namespace?: Array<string> | null } | null;
+                        inverseField?: { __typename?: "GadgetModelField"; apiIdentifier: string } | null;
                         validations: Array<
                           | { __typename: "GadgetGenericFieldValidation"; name: string; specID: string }
                           | { __typename: "GadgetOnlyImageFileFieldValidation"; name: string; specID: string; allowAnimatedImages: boolean }
@@ -6796,6 +6818,7 @@ export type ModelActionMetadataQuery = {
                                   apiIdentifier: string;
                                   namespace?: Array<string> | null;
                                 } | null;
+                                inverseField?: { __typename?: "GadgetModelField"; apiIdentifier: string } | null;
                                 validations: Array<
                                   | { __typename: "GadgetGenericFieldValidation"; name: string; specID: string }
                                   | {
@@ -6823,6 +6846,7 @@ export type ModelActionMetadataQuery = {
                                   apiIdentifier: string;
                                   namespace?: Array<string> | null;
                                 } | null;
+                                inverseField?: { __typename?: "GadgetModelField"; apiIdentifier: string } | null;
                                 validations: Array<
                                   | { __typename: "GadgetGenericFieldValidation"; name: string; specID: string }
                                   | {
@@ -6980,6 +7004,7 @@ export type ModelActionMetadataQuery = {
                                           apiIdentifier: string;
                                           namespace?: Array<string> | null;
                                         } | null;
+                                        inverseField?: { __typename?: "GadgetModelField"; apiIdentifier: string } | null;
                                         validations: Array<
                                           | { __typename: "GadgetGenericFieldValidation"; name: string; specID: string }
                                           | {
@@ -7012,6 +7037,7 @@ export type ModelActionMetadataQuery = {
                                           apiIdentifier: string;
                                           namespace?: Array<string> | null;
                                         } | null;
+                                        inverseField?: { __typename?: "GadgetModelField"; apiIdentifier: string } | null;
                                         validations: Array<
                                           | { __typename: "GadgetGenericFieldValidation"; name: string; specID: string }
                                           | {
@@ -7186,6 +7212,7 @@ export type GlobalActionMetadataQuery = {
               __typename: "GadgetHasManyConfig";
               fieldType: GadgetFieldType;
               relatedModel?: { __typename?: "GadgetModel"; apiIdentifier: string; namespace?: Array<string> | null } | null;
+              inverseField?: { __typename?: "GadgetModelField"; apiIdentifier: string } | null;
               validations: Array<
                 | { __typename: "GadgetGenericFieldValidation"; name: string; specID: string }
                 | { __typename: "GadgetOnlyImageFileFieldValidation"; name: string; specID: string; allowAnimatedImages: boolean }
@@ -7198,6 +7225,7 @@ export type GlobalActionMetadataQuery = {
               __typename: "GadgetHasOneConfig";
               fieldType: GadgetFieldType;
               relatedModel?: { __typename?: "GadgetModel"; apiIdentifier: string; namespace?: Array<string> | null } | null;
+              inverseField?: { __typename?: "GadgetModelField"; apiIdentifier: string } | null;
               validations: Array<
                 | { __typename: "GadgetGenericFieldValidation"; name: string; specID: string }
                 | { __typename: "GadgetOnlyImageFileFieldValidation"; name: string; specID: string; allowAnimatedImages: boolean }
@@ -7296,6 +7324,7 @@ export type GlobalActionMetadataQuery = {
                       __typename: "GadgetHasManyConfig";
                       fieldType: GadgetFieldType;
                       relatedModel?: { __typename?: "GadgetModel"; apiIdentifier: string; namespace?: Array<string> | null } | null;
+                      inverseField?: { __typename?: "GadgetModelField"; apiIdentifier: string } | null;
                       validations: Array<
                         | { __typename: "GadgetGenericFieldValidation"; name: string; specID: string }
                         | { __typename: "GadgetOnlyImageFileFieldValidation"; name: string; specID: string; allowAnimatedImages: boolean }
@@ -7314,6 +7343,7 @@ export type GlobalActionMetadataQuery = {
                       __typename: "GadgetHasOneConfig";
                       fieldType: GadgetFieldType;
                       relatedModel?: { __typename?: "GadgetModel"; apiIdentifier: string; namespace?: Array<string> | null } | null;
+                      inverseField?: { __typename?: "GadgetModelField"; apiIdentifier: string } | null;
                       validations: Array<
                         | { __typename: "GadgetGenericFieldValidation"; name: string; specID: string }
                         | { __typename: "GadgetOnlyImageFileFieldValidation"; name: string; specID: string; allowAnimatedImages: boolean }
@@ -7438,6 +7468,7 @@ export type GlobalActionMetadataQuery = {
                               __typename: "GadgetHasManyConfig";
                               fieldType: GadgetFieldType;
                               relatedModel?: { __typename?: "GadgetModel"; apiIdentifier: string; namespace?: Array<string> | null } | null;
+                              inverseField?: { __typename?: "GadgetModelField"; apiIdentifier: string } | null;
                               validations: Array<
                                 | { __typename: "GadgetGenericFieldValidation"; name: string; specID: string }
                                 | {
@@ -7461,6 +7492,7 @@ export type GlobalActionMetadataQuery = {
                               __typename: "GadgetHasOneConfig";
                               fieldType: GadgetFieldType;
                               relatedModel?: { __typename?: "GadgetModel"; apiIdentifier: string; namespace?: Array<string> | null } | null;
+                              inverseField?: { __typename?: "GadgetModelField"; apiIdentifier: string } | null;
                               validations: Array<
                                 | { __typename: "GadgetGenericFieldValidation"; name: string; specID: string }
                                 | {
@@ -7618,6 +7650,7 @@ export type GlobalActionMetadataQuery = {
                                         apiIdentifier: string;
                                         namespace?: Array<string> | null;
                                       } | null;
+                                      inverseField?: { __typename?: "GadgetModelField"; apiIdentifier: string } | null;
                                       validations: Array<
                                         | { __typename: "GadgetGenericFieldValidation"; name: string; specID: string }
                                         | {
@@ -7650,6 +7683,7 @@ export type GlobalActionMetadataQuery = {
                                         apiIdentifier: string;
                                         namespace?: Array<string> | null;
                                       } | null;
+                                      inverseField?: { __typename?: "GadgetModelField"; apiIdentifier: string } | null;
                                       validations: Array<
                                         | { __typename: "GadgetGenericFieldValidation"; name: string; specID: string }
                                         | {
@@ -7868,6 +7902,14 @@ export const FieldMetadataFragmentDoc = {
                           ],
                         },
                       },
+                      {
+                        kind: "Field",
+                        name: { kind: "Name", value: "inverseField" },
+                        selectionSet: {
+                          kind: "SelectionSet",
+                          selections: [{ kind: "Field", name: { kind: "Name", value: "apiIdentifier" } }],
+                        },
+                      },
                     ],
                   },
                 },
@@ -7886,6 +7928,14 @@ export const FieldMetadataFragmentDoc = {
                             { kind: "Field", name: { kind: "Name", value: "apiIdentifier" } },
                             { kind: "Field", name: { kind: "Name", value: "namespace" } },
                           ],
+                        },
+                      },
+                      {
+                        kind: "Field",
+                        name: { kind: "Name", value: "inverseField" },
+                        selectionSet: {
+                          kind: "SelectionSet",
+                          selections: [{ kind: "Field", name: { kind: "Name", value: "apiIdentifier" } }],
                         },
                       },
                     ],
@@ -8157,6 +8207,14 @@ export const SubFieldsFragmentDoc = {
                           ],
                         },
                       },
+                      {
+                        kind: "Field",
+                        name: { kind: "Name", value: "inverseField" },
+                        selectionSet: {
+                          kind: "SelectionSet",
+                          selections: [{ kind: "Field", name: { kind: "Name", value: "apiIdentifier" } }],
+                        },
+                      },
                     ],
                   },
                 },
@@ -8175,6 +8233,14 @@ export const SubFieldsFragmentDoc = {
                             { kind: "Field", name: { kind: "Name", value: "apiIdentifier" } },
                             { kind: "Field", name: { kind: "Name", value: "namespace" } },
                           ],
+                        },
+                      },
+                      {
+                        kind: "Field",
+                        name: { kind: "Name", value: "inverseField" },
+                        selectionSet: {
+                          kind: "SelectionSet",
+                          selections: [{ kind: "Field", name: { kind: "Name", value: "apiIdentifier" } }],
                         },
                       },
                     ],
@@ -8406,6 +8472,14 @@ export const GetModelMetadataDocument = {
                           ],
                         },
                       },
+                      {
+                        kind: "Field",
+                        name: { kind: "Name", value: "inverseField" },
+                        selectionSet: {
+                          kind: "SelectionSet",
+                          selections: [{ kind: "Field", name: { kind: "Name", value: "apiIdentifier" } }],
+                        },
+                      },
                     ],
                   },
                 },
@@ -8424,6 +8498,14 @@ export const GetModelMetadataDocument = {
                             { kind: "Field", name: { kind: "Name", value: "apiIdentifier" } },
                             { kind: "Field", name: { kind: "Name", value: "namespace" } },
                           ],
+                        },
+                      },
+                      {
+                        kind: "Field",
+                        name: { kind: "Name", value: "inverseField" },
+                        selectionSet: {
+                          kind: "SelectionSet",
+                          selections: [{ kind: "Field", name: { kind: "Name", value: "apiIdentifier" } }],
                         },
                       },
                     ],
@@ -8682,6 +8764,14 @@ export const ModelActionMetadataDocument = {
                           ],
                         },
                       },
+                      {
+                        kind: "Field",
+                        name: { kind: "Name", value: "inverseField" },
+                        selectionSet: {
+                          kind: "SelectionSet",
+                          selections: [{ kind: "Field", name: { kind: "Name", value: "apiIdentifier" } }],
+                        },
+                      },
                     ],
                   },
                 },
@@ -8700,6 +8790,14 @@ export const ModelActionMetadataDocument = {
                             { kind: "Field", name: { kind: "Name", value: "apiIdentifier" } },
                             { kind: "Field", name: { kind: "Name", value: "namespace" } },
                           ],
+                        },
+                      },
+                      {
+                        kind: "Field",
+                        name: { kind: "Name", value: "inverseField" },
+                        selectionSet: {
+                          kind: "SelectionSet",
+                          selections: [{ kind: "Field", name: { kind: "Name", value: "apiIdentifier" } }],
                         },
                       },
                     ],
@@ -9036,6 +9134,14 @@ export const GlobalActionMetadataDocument = {
                           ],
                         },
                       },
+                      {
+                        kind: "Field",
+                        name: { kind: "Name", value: "inverseField" },
+                        selectionSet: {
+                          kind: "SelectionSet",
+                          selections: [{ kind: "Field", name: { kind: "Name", value: "apiIdentifier" } }],
+                        },
+                      },
                     ],
                   },
                 },
@@ -9054,6 +9160,14 @@ export const GlobalActionMetadataDocument = {
                             { kind: "Field", name: { kind: "Name", value: "apiIdentifier" } },
                             { kind: "Field", name: { kind: "Name", value: "namespace" } },
                           ],
+                        },
+                      },
+                      {
+                        kind: "Field",
+                        name: { kind: "Name", value: "inverseField" },
+                        selectionSet: {
+                          kind: "SelectionSet",
+                          selections: [{ kind: "Field", name: { kind: "Name", value: "apiIdentifier" } }],
                         },
                       },
                     ],

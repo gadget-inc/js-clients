@@ -9,7 +9,6 @@ export { PolarisAutoHiddenInput as AutoHiddenInput } from "./inputs/PolarisAutoH
 export { PolarisAutoInput as AutoInput } from "./inputs/PolarisAutoInput.js";
 export { PolarisAutoJSONInput as AutoJSONInput } from "./inputs/PolarisAutoJSONInput.js";
 export { PolarisAutoPasswordInput as AutoPasswordInput } from "./inputs/PolarisAutoPasswordInput.js";
-export { PolarisAutoBelongsToInput as AutoBelongsToInput } from "./inputs/PolarisAutoRelationshipInput.js";
 export { PolarisAutoRolesInput as AutoRolesInput } from "./inputs/PolarisAutoRolesInput.js";
 export {
   PolarisAutoTextInput as AutoColorInput,
@@ -19,5 +18,7 @@ export {
   PolarisAutoTextInput as AutoTextInput,
   PolarisAutoTextInput as AutoUrlInput,
 } from "./inputs/PolarisAutoTextInput.js";
+export { PolarisAutoBelongsToInput as AutoBelongsToInput } from "./inputs/relationships/PolarisAutoBelongsToInput.js";
+export { PolarisAutoHasManyInput as AutoHasManyInput } from "./inputs/relationships/PolarisAutoHasManyInput.js";
 export { PolarisAutoSubmit as AutoSubmit } from "./submit/PolarisAutoSubmit.js";
 export { PolarisSubmitResultBanner as SubmitResultBanner } from "./submit/PolarisSubmitResultBanner.js";
