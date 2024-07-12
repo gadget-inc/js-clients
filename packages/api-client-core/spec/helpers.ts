@@ -1,5 +1,5 @@
 import { parse } from "@0no-co/graphql.web";
-import { defaults } from "lodash";
+import { defaults } from "lodash-es";
 import pRetry from "p-retry";
 
 export const withWindowMissingSupport = (key: keyof typeof window, run: () => void) => {

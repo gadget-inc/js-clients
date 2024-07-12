@@ -1,6 +1,3 @@
-jest.mock("graphql-ws", () => {
-  return { createClient: jest.fn(), CloseCode: { ConnectionAcknowledgementTimeout: 1, ConnectionInitialisationTimeout: 2 } };
-});
 import { AuthenticationMode, BrowserSessionStorageType, GadgetConnection, InMemoryStorage } from "../src/index.js";
 import { GadgetConnectionSharedSuite } from "./GadgetConnection-suite.js";
 
