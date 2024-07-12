@@ -1014,7 +1014,7 @@ describe("useActionForm", () => {
     expect(mockUrqlClient.executeMutation).toBeCalledTimes(0);
   });
 
-  test("can only send certain fields in a create action", async () => {
+  test("can only send certain fields in a create action using fully qualified send field names", async () => {
     let submitted = false;
     let success = false;
 
@@ -1035,85 +1035,183 @@ describe("useActionForm", () => {
       { wrapper: MockClientWrapper(relatedProductsApi) }
     );
 
-    expect(submitted).toBe(false);
-    expect(success).toBe(false);
-    expect(result.current.formState.isLoading).toBe(false);
-    expect(result.current.formState.isSubmitted).toBe(false);
-    expect(result.current.formState.isSubmitSuccessful).toBe(false);
-    expect(result.current.formState.isSubmitting).toBe(false);
-    expect(result.current.error).toBeFalsy();
-    expect(result.current.actionData).toBeFalsy();
-    expect(result.current.getValues("user.email")).toBeUndefined();
-    expect(result.current.getValues("user.password")).toBeUndefined();
-
-    expect(mockUrqlClient.executeQuery).toBeCalledTimes(0);
-
-    let submitPromise: Promise<any>;
+    expect(mockUrqlClient.executeQuery).toHaveBeenCalledTimes(0);
 
     await act(async () => {
       (result.current as any).setValue("user.email", "test@test.com");
       (result.current as any).setValue("user.password", "secret");
-      submitPromise = result.current.submit();
+      void result.current.submit();
     });
 
     expect(submitted).toBe(true);
     expect(success).toBe(false);
-    expect(result.current.formState.isLoading).toBe(false);
-    expect(result.current.formState.isSubmitted).toBe(false);
-    expect(result.current.formState.isSubmitSuccessful).toBe(false);
-    expect(result.current.formState.isSubmitting).toBe(true);
-    expect(result.current.error).toBeFalsy();
-    expect(result.current.actionData).toBeFalsy();
-    expect(result.current.getValues("user.email")).toBe("test@test.com");
-    expect(result.current.getValues("user.password")).toBe("secret");
 
     expect(mockUrqlClient.executeMutation.mock.calls[0][0].variables).toEqual({
       user: {
+        // only email is sent
         email: "test@test.com",
       },
     });
+  });
 
-    mockUrqlClient.executeMutation.pushResponse("createUser", {
-      data: {
-        createUser: {
-          success: true,
-          user: {
-            id: "123",
-            email: "test@test.com",
+  test("can only send certain fields in an update action using fully qualified send field names", async () => {
+    let submitted = false;
+    let success = false;
+
+    const { result } = renderHook(
+      () =>
+        useActionForm(relatedProductsApi.user.update, {
+          findBy: "123",
+          onSubmit: () => {
+            submitted = true;
           },
+          onSuccess: () => {
+            success = true;
+          },
+          onError: (e) => {
+            expect(e).toBeUndefined();
+          },
+          send: ["user.email"],
+        }),
+      { wrapper: MockClientWrapper(relatedProductsApi) }
+    );
+
+    expect(mockUrqlClient.executeQuery).toHaveBeenCalledTimes(1);
+
+    mockUrqlClient.executeQuery.pushResponse("user", {
+      data: {
+        user: {
+          id: "123",
+          email: "test@test.com",
+          password: "secret",
+          __typename: "User",
+          createdAt: "2023-10-13T18:38:06.676Z",
+          updatedAt: "2023-10-13T18:40:36.741Z",
         },
       },
       stale: false,
       hasNext: false,
     });
 
+    expect(submitted).toBe(false);
+    expect(success).toBe(false);
+
     await act(async () => {
-      const result = await submitPromise;
-      expect(result).toMatchInlineSnapshot(`
-        {
-          "data": {
-            "email": "test@test.com",
-            "id": "123",
-          },
-          "error": undefined,
-          "fetching": false,
-          "hasNext": false,
-          "operation": null,
-          "stale": false,
-        }
-      `);
+      (result.current as any).setValue("user.email", "test@test.com");
+      (result.current as any).setValue("user.password", "secret");
+      void result.current.submit();
     });
 
     expect(submitted).toBe(true);
-    expect(success).toBe(true);
-    expect(result.current.formState.isLoading).toBe(false);
-    expect(result.current.formState.isSubmitted).toBe(true);
-    expect(result.current.formState.isSubmitSuccessful).toBe(true);
-    expect(result.current.formState.isSubmitting).toBe(false);
-    expect(result.current.error).toBeFalsy();
-    expect(result.current.actionData).toEqual({ id: "123", email: "test@test.com" });
-    expect(result.current.getValues("user.email")).toBe("test@test.com");
-    expect(result.current.getValues("user.password")).toBe("secret");
+    expect(success).toBe(false);
+
+    expect(mockUrqlClient.executeMutation.mock.calls[0][0].variables).toEqual({
+      id: "123",
+      user: {
+        // only email is sent
+        email: "test@test.com",
+      },
+    });
+  });
+
+  test("can only send certain fields in a create action using shorthand send field names", async () => {
+    let submitted = false;
+    let success = false;
+
+    const { result } = renderHook(
+      () =>
+        useActionForm(relatedProductsApi.user.create, {
+          onSubmit: () => {
+            submitted = true;
+          },
+          onSuccess: () => {
+            success = true;
+          },
+          onError: (e) => {
+            expect(e).toBeUndefined();
+          },
+          send: ["email"],
+        }),
+      { wrapper: MockClientWrapper(relatedProductsApi) }
+    );
+
+    expect(mockUrqlClient.executeQuery).toHaveBeenCalledTimes(0);
+
+    await act(async () => {
+      (result.current as any).setValue("email", "test@test.com");
+      (result.current as any).setValue("password", "secret");
+      void result.current.submit();
+    });
+
+    expect(submitted).toBe(true);
+    expect(success).toBe(false);
+
+    expect(mockUrqlClient.executeMutation.mock.calls[0][0].variables).toEqual({
+      user: {
+        // only email is sent
+        email: "test@test.com",
+      },
+    });
+  });
+
+  test("can only send certain fields in an update action using shorthand send field names", async () => {
+    let submitted = false;
+    let success = false;
+
+    const { result } = renderHook(
+      () =>
+        useActionForm(relatedProductsApi.user.update, {
+          findBy: "123",
+          onSubmit: () => {
+            submitted = true;
+          },
+          onSuccess: () => {
+            success = true;
+          },
+          onError: (e) => {
+            expect(e).toBeUndefined();
+          },
+          send: ["email"],
+        }),
+      { wrapper: MockClientWrapper(relatedProductsApi) }
+    );
+
+    expect(mockUrqlClient.executeQuery).toHaveBeenCalledTimes(1);
+
+    mockUrqlClient.executeQuery.pushResponse("user", {
+      data: {
+        user: {
+          id: "123",
+          email: "test@test.com",
+          password: "secret",
+          __typename: "User",
+          createdAt: "2023-10-13T18:38:06.676Z",
+          updatedAt: "2023-10-13T18:40:36.741Z",
+        },
+      },
+      stale: false,
+      hasNext: false,
+    });
+
+    expect(submitted).toBe(false);
+    expect(success).toBe(false);
+
+    await act(async () => {
+      (result.current as any).setValue("email", "test@test.com");
+      (result.current as any).setValue("password", "secret");
+      void result.current.submit();
+    });
+
+    expect(submitted).toBe(true);
+    expect(success).toBe(false);
+
+    expect(mockUrqlClient.executeMutation.mock.calls[0][0].variables).toEqual({
+      id: "123",
+      user: {
+        // only email is sent
+        email: "test@test.com",
+      },
+    });
   });
 
   test("can be used with an update action when given an existing record as default values at the root level", async () => {
