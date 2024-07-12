@@ -1,5 +1,5 @@
-import { ReactNode } from "react";
-import { Control } from "react-hook-form";
+import type { ReactNode } from "react";
+import type { Control } from "react-hook-form";
 
 export interface AutoRelationshipInputProps {
   field: string;
