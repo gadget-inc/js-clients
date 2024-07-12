@@ -29,7 +29,7 @@
     "@gadget-client/kitchen-sink": "1.5.0-development.200",
     "@gadget-client/related-products-example": "^1.865.0",
     "@gadget-client/zxcv-deeply-nested": "^1.212.0",
-    "@gadget-client/zxcv-manythrough-example": "1.3.0-development.40",
+    "@gadget-client/zxcv-manythrough-example": "1.3.0-nick-dev.3",
     "@gadget-client/zxcv-simple-relationship": "^1.23.0",
     "@gadgetinc/api-client-core": "workspace:*",
     "@gadgetinc/eslint-config": "^0.6.1",

@@ -325,7 +325,7 @@ export const reshapeDataForGraphqlApi = async (client: AnyClient, defaultValues:
       }
 
       if (belongsTo) {
-        return depth <= 1 ? { ...rest, ...belongsTo } : { ...rest, create: { ...belongsTo } }; // when we're in the root, we need to return the belongsTo object as part of the result otherwise wrap it in a create
+        return depth <= 1 ? { ...rest, ...belongsTo } : { create: { ...rest, ...belongsTo } }; // when we're in the root, we need to return the belongsTo object as part of the result otherwise wrap it in a create
       }
 
       if (depth <= 1 || fieldType == null) {

@@ -42,8 +42,8 @@ importers:
         specifier: ^1.212.0
         version: 1.212.0
       '@gadget-client/zxcv-manythrough-example':
-        specifier: 1.3.0-development.40
-        version: 1.3.0-development.40
+        specifier: 1.3.0-nick-dev.3
+        version: 1.3.0-nick-dev.3
       '@gadget-client/zxcv-simple-relationship':
         specifier: ^1.23.0
         version: 1.23.0
@@ -1369,8 +1369,8 @@ packages:
       '@gadgetinc/api-client-core': link:packages/api-client-core
     dev: true
 
-  /@gadget-client/zxcv-manythrough-example@1.3.0-development.40:
-    resolution: {integrity: sha1-XCn9yCwa3uW7VOmjzHweDoV6IfQ=, tarball: https://registry.gadget.dev/npm/_/tarball/114722/228808/7560}
+  /@gadget-client/zxcv-manythrough-example@1.3.0-nick-dev.3:
+    resolution: {integrity: sha1-Yr9R0+RxpzsxoAINzzh+66js9jY=, tarball: https://registry.gadget.dev/npm/_/tarball/114722/281903/8561}
     dependencies:
       '@gadgetinc/api-client-core': link:packages/api-client-core
     dev: true
