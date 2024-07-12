@@ -572,6 +572,44 @@ export const UpdatePost = (props: { id: string }) => {
 const [{ data, fetching, error }, _refetch] = useFindBy(api.blogPost.findBySlug, "some-slug", { select: { id: true, title: true } });
 ```
 
+### `useActionForm(actionFunction: ModelActionFunction | GlobalActionFunction, options: UseActionFormOptions = {}): UseActionFormResult`
+
+`useActionForm` manages form state for calling actions in your Gadget backend. `useActionForm` can fetch the record for editing, manage the state of the fields as the user changes them in a form, track validations and errors, and then call the action with the form data when the user submits the form. `useActionForm` can call Actions on models as well as Global Actions. See the [Gadget Reference Docs](https://docs.gadget.dev/reference/react#useactionform) for more information.
+
+- `actionFunction`: The model action or action function from your application's API client. Gadget generates these action functions for each action or model action defined in your project. Required. Example: `api.widget.create`, or `api.user.update` or `api.blogPost.publish`.
+- `options`: options for controlling the behavior of the form not an exhaustive list, for additonal properties see [gadget reference docs](https://docs.gadget.dev/reference/react#useactionform) for more information.
+  - `defaultValues`: Default values to seed the form inputs with. Can be omitted. Mutually exclusive with the `findBy`. Optional.
+  - `findBy`: Details for automatically finding a record to seed the form values with. When passed as a string, will look up a record with that `id`. When passed an object, will call a `findBy<Field>` function on the api object to retrieve a record by that field.
+  - `select`: Which fields to select from the backend when retrieving initial data with `findBy`. See [docs on the select option](https://docs.gadget.dev/reference/react#the-select-option) for more information. Optional.
+  - `send`: Which fields to send from the form values to the backend for the action. Useful if you want to include fields in your form state for driving UI that shouldn't be sent with the submission. Optional.
+  - `onSubmit`: Callback called right before data is submitted to the backend action. Optional.
+  - `onSuccess`: Callback called after a successful submission to the backend action. Passed the action result, which is the object with `{data, error, fetching}` keys. Optional.
+  - `onError`: Callback called after an error occurs finding the initial record or during submission to the backend action. Passed the error, which can be a transport error from a broken network, or a list of validation errors returned by the backend. Optional.
+
+`useActionForm` returns an object with properties from [`react-hook-form` (see docs)](https://react-hook-form.com/docs/useform) and additional properties for handling the action see [gadget docs](https://docs.gadget.dev/reference/react#useactionform) for an exhaustive list.
+
+Example:
+
+```javascript
+import { useActionForm } from "@gadgetinc/react";
+import { api } from "../api";
+
+const PostForm = () => {
+  const { register, submit } = useActionForm(api.post.create);
+
+  return (
+    <form onSubmit={submit}>
+      <label htmlFor="title">Title</label>
+      <input id="title" type="text" {...register("post.title")} />
+
+      <label htmlFor="content">Content</label>
+      <textarea id="content" {...register("post.content")} />
+      <input type="submit" />
+    </form>
+  );
+};
+```
+
 ### `useGlobalAction(actionFunction: GlobalActionFunction, options: UseGlobalActionOptions = {}): [{data, fetching, error}, refetch]`
 
 `useGlobalAction` is a hook for running a backend Global Action. `useGlobalAction(api.someGlobalAction)` is the React equivalent of `await api.someGlobalAction({...})`. `useGlobalAction` doesn't immediately dispatch a request to run an action server side, but instead returns a result object and a function which runs the action, similar to [`urql`'s `useMutation` hook](https://formidable.com/open-source/urql/docs/api/urql/#usemutation). `useGlobalAction` must be passed one of the global action functions from an instance of your application's generated API client. Options:

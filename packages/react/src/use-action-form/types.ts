@@ -1,4 +1,13 @@
-import type { ActionFunction, DefaultSelection, GadgetRecord, GlobalActionFunction, Select } from "@gadgetinc/api-client-core";
+import type {
+  ActionFunction,
+  ActionWithIdAndNoVariables,
+  ActionWithIdAndVariables,
+  BulkActionWithIdsAndNoVariables,
+  DefaultSelection,
+  GadgetRecord,
+  GlobalActionFunction,
+  Select,
+} from "@gadgetinc/api-client-core";
 import type { FieldValues, UseFormReturn } from "react-hook-form";
 import type { useAction } from "../useAction.js";
 import type { useGlobalAction } from "../useGlobalAction.js";
@@ -104,3 +113,10 @@ export type UseActionFormState<
 type Increment<A extends number[]> = [...A, 0];
 
 type IsAny<T> = 0 extends 1 & T ? true : false;
+
+export type ContextAwareSelect<T> = T extends boolean | null | undefined ? T | "ReadOnly" : { [K in keyof T]: ContextAwareSelect<T[K]> };
+
+export type AnyActionWithId<OptionsT> =
+  | ActionWithIdAndNoVariables<OptionsT>
+  | ActionWithIdAndVariables<OptionsT, any>
+  | BulkActionWithIdsAndNoVariables<OptionsT>;
