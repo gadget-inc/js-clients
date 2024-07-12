@@ -12,8 +12,8 @@ import type {
   UseActionFormState,
   UseActionFormSubmit,
 } from "./use-action-form/types.js";
+import type { OmittedKey } from "./use-action-form/utils.js";
 import {
-  OmittedKey,
   applyDataMask,
   disambiguateDefaultValues,
   getReadOnlyPaths,

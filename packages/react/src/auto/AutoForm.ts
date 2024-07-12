@@ -2,7 +2,7 @@ import type { ActionFunction, GadgetRecord, GlobalActionFunction } from "@gadget
 import { yupResolver } from "@hookform/resolvers/yup";
 import type { ReactNode } from "react";
 import { useEffect, useMemo, useRef } from "react";
-import type { RecordIdentifier } from "src/use-action-form/types.js";
+import type { AnyActionWithId, RecordIdentifier } from "src/use-action-form/types.js";
 import type { GadgetObjectFieldConfig } from "../internal/gql/graphql.js";
 import type { ActionMetadata, FieldMetadata, GlobalActionMetadata } from "../metadata.js";
 import { filterFieldList, isActionMetadata, useActionMetadata } from "../metadata.js";
@@ -21,8 +21,6 @@ export type AutoFormProps<
 > = {
   /** Which action this fom will run on submit */
   action: ActionFunc;
-  /** How to find the record this form will act on */
-  findBy?: RecordIdentifier;
   /** A record for this form to act on */
   record?: GadgetRecord<any>;
   /** An allowlist of fields to render within the form. Only these fields will be rendered as inputs. */
@@ -35,7 +33,16 @@ export type AutoFormProps<
   submitLabel?: ReactNode;
   /** What to show the user once the form has been submitted successfully */
   successContent?: ReactNode;
-};
+} & (ActionFunc extends AnyActionWithId<GivenOptions>
+  ? {
+      /**
+       * The record identifier to run this action on, if it already exists.
+       * Should be undefined for create actions, or a record ID (or finder) for update / etc actions
+       **/
+      findBy?: RecordIdentifier;
+    }
+  : // eslint-disable-next-line @typescript-eslint/ban-types
+    {});
 
 /**
  * React hook for getting the validation schema for a list of fields
@@ -100,14 +107,14 @@ export const useAutoForm = <
 >(
   props: AutoFormProps<GivenOptions, SchemaT, ActionFunc, any, any>
 ) => {
-  const { action, record, findBy } = props;
+  const { action, record } = props;
   const { metadata, fetching: fetchingMetadata, error: metadataError } = useActionMetadata(props.action);
 
   // filter down the fields to render only what we want to render for this form
   const fields = useFormFields(metadata, props);
   const operatesWithRecordId = !!(metadata && isActionMetadata(metadata) && metadata.action.operatesWithRecordIdentity);
   const modelApiIdentifier = action.type == "action" ? action.modelApiIdentifier : undefined;
-  const defaultValues: Record<string, any> = useMemo(
+  const defaultValues: Record<string, unknown> = useMemo(
     () =>
       props.defaultValues ??
       (action.type === "globalAction"
@@ -126,8 +133,8 @@ export const useAutoForm = <
     formState: { isSubmitSuccessful, isLoading, isReady },
     originalFormMethods,
   } = useActionForm(action, {
-    defaultValues,
-    findBy,
+    defaultValues: defaultValues as any,
+    findBy: "findBy" in props ? props.findBy : undefined,
     resolver: useValidationResolver(metadata),
     send: () => {
       const fieldsToSend = fields

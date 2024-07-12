@@ -436,7 +436,12 @@ export function getReadOnlyPaths(obj?: any, prefix = ""): string[] {
  * Uses the `select` object to remove any fields that are marked as `ReadOnly` from the `data` object.
  * Also removes any fields that isn't in the `send` array.
  */
-export function applyDataMask(opts: { select?: any; send?: string[]; data: Record<string, any>; modelApiIdentifier?: string }) {
+export function applyDataMask(opts: {
+  select?: any;
+  send?: string[] | (() => string[]);
+  data: Record<string, any>;
+  modelApiIdentifier?: string;
+}) {
   const { select, send, data, modelApiIdentifier } = opts;
 
   const readOnlyPaths = getReadOnlyPaths(select, modelApiIdentifier);
@@ -448,14 +453,15 @@ export function applyDataMask(opts: { select?: any; send?: string[]; data: Recor
   if (!send) return data;
   const dataToSend = {};
 
-  for (const key of send) {
+  const sendArray = typeof send === "function" ? send() : send;
+  for (const key of sendArray) {
     const candidates = [key];
     if (modelApiIdentifier) {
       candidates.push(`${modelApiIdentifier}.${key}`);
     }
     for (const key of candidates) {
       const value = get(data, key);
-      if (value != null) {
+      if (typeof value != "undefined") {
         set(dataToSend, key, value);
         break;
       }

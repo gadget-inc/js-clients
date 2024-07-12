@@ -55,6 +55,26 @@ describe("PolarisFileInput", () => {
         },
       }
     ).as("createStadium");
+
+    cy.intercept(
+      {
+        method: "POST",
+        url: `${api.connection.endpoint}?operation=updateStadium`,
+      },
+      {
+        data: {
+          game: {
+            updateStadium: {
+              success: true,
+              errors: null,
+              stadium: {}, // The response content doesn't matter for the tests
+              __typename: "CreateGameStadiumResult",
+            },
+            __typename: "GameMutations",
+          },
+        },
+      }
+    ).as("updateStadium");
   });
 
   describe("clearing the file value", () => {
@@ -73,7 +93,7 @@ describe("PolarisFileInput", () => {
     it("should clear the file value when clicking the delete file icon and the field is not required", () => {
       interceptModelUpdateActionMetadata([]);
 
-      cy.mountWithWrapper(<PolarisAutoForm action={api.game.stadium.create} findBy="42" />, PolarisWrapper);
+      cy.mountWithWrapper(<PolarisAutoForm action={api.game.stadium.update} findBy="42" />, PolarisWrapper);
 
       cy.get("#clear-file-photo").should("exist");
 
@@ -82,7 +102,7 @@ describe("PolarisFileInput", () => {
       cy.get(".Polaris-DropZone-FileUpload").should("exist");
 
       cy.getSubmitButton().click();
-      cy.get("@createStadium").its("request.body.variables.stadium").should("deep.equal", {
+      cy.get("@updateStadium").its("request.body.variables.stadium").should("deep.equal", {
         photo: null,
       });
     });
@@ -278,7 +298,7 @@ describe("PolarisFileInput", () => {
     it("should automatically set the pre-filled value when the form is pre-filled", () => {
       interceptModelUpdateActionMetadata([]);
 
-      cy.mountWithWrapper(<PolarisAutoForm action={api.game.stadium.create} findBy="42" />, PolarisWrapper);
+      cy.mountWithWrapper(<PolarisAutoForm action={api.game.stadium.update} findBy="42" />, PolarisWrapper);
 
       cy.get(".Polaris-InlineStack > div").contains("icon.svg");
       cy.get(".Polaris-Thumbnail").find("img").should("have.attr", "src").should("contain", "https://assets.gadget.dev/assets/icon.svg");
@@ -293,7 +313,7 @@ describe("PolarisFileInput", () => {
         },
       ]);
 
-      cy.mountWithWrapper(<PolarisAutoForm action={api.game.stadium.create} findBy="42" />, PolarisWrapper);
+      cy.mountWithWrapper(<PolarisAutoForm action={api.game.stadium.update} findBy="42" />, PolarisWrapper);
 
       cy.get(".Polaris-InlineStack > div").contains("icon.svg");
       cy.get(".Polaris-Thumbnail").find("img").should("have.attr", "src").should("contain", "https://assets.gadget.dev/assets/icon.svg");
