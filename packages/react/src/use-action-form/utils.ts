@@ -2,7 +2,7 @@ import type { AnyClient, AnyModelManager, GadgetRecord } from "@gadgetinc/api-cl
 import { $modelRelationships, camelize, isEqual } from "@gadgetinc/api-client-core";
 import { useFindBy } from "../useFindBy.js";
 import { useFindOne } from "../useFindOne.js";
-import type { ErrorWrapper } from "../utils.js";
+import { get, set, unset, type ErrorWrapper } from "../utils.js";
 
 /** Finds a given record from the backend database by either id or a `{[field: string]: value}` slug */
 export const useFindExistingRecord = (
@@ -39,6 +39,22 @@ const omitKeys = (data: any) => {
     delete newData[key];
   }
   return newData;
+};
+
+export const processDefaultValues = (opts: {
+  hasAmbiguousDefaultValues: boolean;
+  modelApiIdentifier: string;
+  data: any;
+  defaultValues?: any;
+}) => {
+  const { modelApiIdentifier, data, defaultValues } = opts;
+
+  const modelDefaultValues = toDefaultValues(modelApiIdentifier, data);
+  const result = opts.hasAmbiguousDefaultValues
+    ? { ...defaultValues, [modelApiIdentifier]: modelDefaultValues }
+    : { ...defaultValues, ...modelDefaultValues, [modelApiIdentifier]: modelDefaultValues };
+
+  return result;
 };
 
 export const toDefaultValues = (modelApiIdentifier: string | undefined, data: any) => {
@@ -309,7 +325,7 @@ export const reshapeDataForGraphqlApi = async (client: AnyClient, defaultValues:
       }
 
       if (belongsTo) {
-        return depth <= 1 ? { ...rest, ...belongsTo } : { ...rest, create: { ...belongsTo } }; // when we're in the root, we need to return the belongsTo object as part of the result otherwise wrap it in a create
+        return depth <= 1 ? { ...rest, ...belongsTo } : { create: { ...rest, ...belongsTo } }; // when we're in the root, we need to return the belongsTo object as part of the result otherwise wrap it in a create
       }
 
       if (depth <= 1 || fieldType == null) {
@@ -382,3 +398,75 @@ const isPlainObject = (obj: any) => {
 
   return Object.getPrototypeOf(obj) === proto;
 };
+
+export function transformContextAwareToSelect<T>(obj?: T) {
+  if (typeof obj !== "object" || obj == null) {
+    return obj === "ReadOnly" ? true : obj;
+  }
+
+  const result: any = Array.isArray(obj) ? [] : {};
+  for (const key in obj) {
+    const value = obj[key];
+    result[key] = transformContextAwareToSelect(value);
+  }
+  return result;
+}
+
+export function getReadOnlyPaths(obj?: any, prefix = ""): string[] {
+  if (!obj) {
+    return [];
+  }
+
+  let paths: string[] = [];
+  for (const key of Object.keys(obj)) {
+    let currentPath = prefix ? `${prefix}.${key}` : key;
+    if (currentPath.includes("edges.node")) {
+      currentPath = currentPath.replace("edges.node", "*");
+    }
+    if (obj[key] === "ReadOnly") {
+      paths.push(currentPath);
+    } else if (typeof obj[key] === "object" && obj[key] != null) {
+      paths = paths.concat(getReadOnlyPaths(obj[key], currentPath));
+    }
+  }
+  return paths;
+}
+
+/**
+ * Uses the `select` object to remove any fields that are marked as `ReadOnly` from the `data` object.
+ * Also removes any fields that isn't in the `send` array.
+ */
+export function applyDataMask(opts: {
+  select?: any;
+  send?: string[] | (() => string[]);
+  data: Record<string, any>;
+  modelApiIdentifier?: string;
+}) {
+  const { select, send, data, modelApiIdentifier } = opts;
+
+  const readOnlyPaths = getReadOnlyPaths(select, modelApiIdentifier);
+
+  for (const path of readOnlyPaths) {
+    unset(data, path);
+  }
+
+  if (!send) return data;
+  const dataToSend = {};
+
+  const sendArray = typeof send === "function" ? send() : send;
+  for (const key of sendArray) {
+    const candidates = [key];
+    if (modelApiIdentifier) {
+      candidates.push(`${modelApiIdentifier}.${key}`);
+    }
+    for (const key of candidates) {
+      const value = get(data, key);
+      if (typeof value != "undefined") {
+        set(dataToSend, key, value);
+        break;
+      }
+    }
+  }
+
+  return dataToSend;
+}

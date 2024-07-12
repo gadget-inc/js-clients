@@ -1,10 +1,11 @@
 import { Client } from "@gadget-client/related-products-example";
 import { AuthenticationMode, type AnyClient } from "@gadgetinc/api-client-core";
+import { jest } from "@jest/globals";
 import { registerShopifySessionTokenAuthentication } from "../src/index.js";
 
 describe("utils", () => {
   let api: AnyClient;
-  let mockFetch: jest.Mock;
+  let mockFetch: jest.Mock<typeof globalThis.fetch>;
 
   beforeEach(() => {
     mockFetch = jest.fn();

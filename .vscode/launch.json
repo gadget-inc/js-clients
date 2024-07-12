@@ -8,6 +8,7 @@
       "type": "node",
       "name": "vscode-jest-tests.v2",
       "request": "launch",
+      "runtimeArgs": ["--experimental-vm-modules"],
       "args": ["--runInBand", "--watchAll=false", "--testNamePattern", "${jest.testNamePattern}", "--runTestsByPath", "${jest.testFile}"],
       "cwd": "${workspaceFolder}",
       "console": "integratedTerminal",

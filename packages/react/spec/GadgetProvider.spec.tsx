@@ -30,7 +30,7 @@ describe("GadgetProvider", () => {
   test("internal components can access the urql client when wrapped in the provider which is passed an urql client", () => {
     const { result } = renderHook(() => useConnection(), {
       wrapper: (props: { children: ReactNode }) => {
-        return <Provider value={mockUrqlClient}>{props.children}</Provider>;
+        return <Provider value={mockUrqlClient as any}>{props.children}</Provider>;
       },
     });
 
@@ -77,7 +77,7 @@ describe("GadgetProvider", () => {
     expect(() =>
       renderHook(() => useApi(), {
         wrapper: (props: { children: ReactNode }) => {
-          return <Provider value={mockUrqlClient}>{props.children}</Provider>;
+          return <Provider value={mockUrqlClient as any}>{props.children}</Provider>;
         },
       })
     ).toThrowErrorMatchingInlineSnapshot(`

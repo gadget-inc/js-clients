@@ -48,6 +48,42 @@ describeForEachAutoAdapter("AutoForm", ({ name, adapter: { AutoForm }, wrapper }
   });
 
   it("can render a form to update model and submit it", () => {
+    cy.intercept("POST", `${api.connection.options.endpoint}?operation=widget`, {
+      body: {
+        data: {
+          widget: {
+            __typename: "Widget",
+            id: "999",
+            anything: 1,
+            birthday: null,
+            category: [],
+            color: null,
+            createdAt: "2024-06-24T17:46:07.333Z",
+            description: null,
+            embedding: null,
+            inStock: true,
+            inventoryCount: 1234,
+            isChecked: null,
+            metafields: null,
+            mustBeLongString: null,
+            name: "updated test record",
+            secretKey: "encrypted value here",
+            startsAt: "2024-06-24T11:07:00.000Z",
+            updatedAt: "2024-07-12T18:48:16.057Z",
+          },
+          gadgetMeta: {
+            hydrations: {
+              updatedAt: "DateTime",
+              startsAt: "DateTime",
+              birthday: "DateTime",
+              createdAt: "DateTime",
+            },
+            __typename: "GadgetApplicationMeta",
+          },
+        },
+      },
+    });
+
     cy.mountWithWrapper(<AutoForm action={api.widget.update} exclude={["gizmos"]} findBy="999" />, wrapper);
 
     cy.contains("Name");

@@ -1,3 +1,4 @@
+import { jest } from "@jest/globals";
 import { act, render, screen } from "@testing-library/react";
 import { userEvent } from "@testing-library/user-event";
 import React from "react";
@@ -26,7 +27,7 @@ describe("PolarisDateTimePicker", () => {
 
     const onChangeSpy = jest.fn();
     render(
-      <PolarisAutoForm action={api.widget.create} findBy={"42"}>
+      <PolarisAutoForm action={api.widget.update} findBy={"42"}>
         <PolarisAutoDateTimePicker id="test" includeTime hideTimePopover onChange={onChangeSpy} field="startsAt" />
         <PolarisAutoSubmit />
       </PolarisAutoForm>,

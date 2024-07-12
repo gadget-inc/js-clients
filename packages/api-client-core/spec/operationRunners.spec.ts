@@ -1,4 +1,5 @@
 import { GraphQLError } from "@0no-co/graphql.web";
+import { jest } from "@jest/globals";
 import { diff } from "@n1ru4l/json-patch-plus";
 import { CombinedError } from "@urql/core";
 import nock from "nock";
@@ -33,7 +34,7 @@ describe("operationRunners", () => {
         query = request.query.loc?.source.body;
       },
     });
-    jest.spyOn(connection, "currentClient", "get").mockReturnValue(mockUrqlClient as any);
+    jest.spyOn(connection, "currentClient" as any, "get").mockReturnValue(mockUrqlClient as any);
   });
 
   describe("findOneRunner", () => {
@@ -953,7 +954,7 @@ describe("operationRunners", () => {
       );
 
       expect(mockUrqlClient.executeMutation.mock.calls.length).toEqual(1);
-      expect(mockUrqlClient.executeMutation.mock.calls[0][1].requestPolicy).toEqual("network-only");
+      expect(mockUrqlClient.executeMutation.mock.calls[0][1]!.requestPolicy).toEqual("network-only");
       expect(mockUrqlClient.executeMutation.mock.calls[0][0].variables).toEqual({
         backgroundOptions: { retries: { retryCount: 10 } },
         widget: { name: "new widget" },

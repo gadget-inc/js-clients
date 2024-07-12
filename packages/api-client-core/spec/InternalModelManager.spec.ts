@@ -1,3 +1,4 @@
+import { jest } from "@jest/globals";
 import {
   BrowserSessionStorageType,
   GadgetConnection,
@@ -1096,7 +1097,7 @@ describe("InternalModelManager", () => {
     beforeEach(() => {
       const connection = new GadgetConnection({ endpoint: "https://someapp.gadget.app" });
       mockUrqlClient = createMockUrqlClient({});
-      jest.spyOn(connection, "currentClient", "get").mockReturnValue(mockUrqlClient as any);
+      jest.spyOn(connection, "currentClient" as any, "get").mockReturnValue(mockUrqlClient as any);
 
       manager = new InternalModelManager("widget", connection, { pluralApiIdentifier: "widgets" });
     });
@@ -1305,7 +1306,7 @@ describe("InternalModelManager", () => {
     beforeEach(() => {
       const connection = new GadgetConnection({ endpoint: "https://someapp.gadget.app" });
       mockUrqlClient = createMockUrqlClient({});
-      jest.spyOn(connection, "currentClient", "get").mockReturnValue(mockUrqlClient as any);
+      jest.spyOn(connection, "currentClient" as any, "get").mockReturnValue(mockUrqlClient as any);
 
       manager = new InternalModelManager("widget", connection, { pluralApiIdentifier: "widgets", namespace: ["inner", "outer"] });
     });

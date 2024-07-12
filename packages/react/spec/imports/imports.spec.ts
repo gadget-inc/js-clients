@@ -2,7 +2,9 @@ import execa from "execa";
 import fs from "fs/promises";
 import os from "os";
 import path from "path";
+import { fileURLToPath } from "url";
 
+const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const root = path.resolve(path.join(__dirname, "..", ".."));
 
 describe("importing from different contexts", () => {

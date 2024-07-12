@@ -33,7 +33,7 @@ export const MUIAutoForm = <
 >(
   props: MUIAutoFormProps<GivenOptions, SchemaT, ActionFunc>
 ) => {
-  const { record: _record, action, findBy, ...rest } = props;
+  const { record: _record, action, findBy, ...rest } = props as MUIAutoFormProps<GivenOptions, SchemaT, ActionFunc> & { findBy: any };
   const { metadata, fetchingMetadata, metadataError, fields, submit, formError, isSubmitSuccessful, isLoading, originalFormMethods } =
     useAutoForm(props);
 
@@ -73,7 +73,7 @@ export const MUIAutoForm = <
   return (
     <AutoFormMetadataContext.Provider value={autoFormMetadataContext}>
       <FormProvider {...originalFormMethods}>
-        <Grid container component="form" spacing={2} onSubmit={submit} {...rest}>
+        <Grid container component="form" spacing={2} onSubmit={submit as any} {...rest}>
           {formContent}
         </Grid>
       </FormProvider>

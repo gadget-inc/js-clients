@@ -1,3 +1,4 @@
+import { jest } from "@jest/globals";
 import { act, renderHook } from "@testing-library/react";
 import { useSignOut } from "../../src/auth/useSignOut.js";
 import { fullAuthApi } from "../apis.js";
