@@ -59,45 +59,39 @@ export const PolarisAutoDateTimePicker = (props: {
 
   const { onChange, value } = props;
   const localTz = Intl.DateTimeFormat().resolvedOptions().timeZone;
-  const fieldPropsDate = useMemo(() => new Date(fieldProps.value), [fieldProps.value]);
   const localTime = useMemo(() => {
-    return value ? utcToZonedTime(value, localTz) : isValid(fieldPropsDate) ? new Date(fieldProps.value) : undefined;
-  }, [value, localTz, fieldPropsDate, fieldProps.value]);
+    return value ? value : isValid(new Date(fieldProps.value)) ? new Date(fieldProps.value) : undefined;
+  }, [value, fieldProps.value]);
 
   const [datePopoverActive, setDatePopoverActive] = useState(false);
 
-  const [popoverMonth, setPopoverMonth] = useState(
-    getDateTimeObjectFromDate(zonedTimeToUtc(isValid(fieldPropsDate) ? fieldPropsDate : new Date(), localTz)).month
-  );
-  const [popoverYear, setPopoverYear] = useState(
-    getDateTimeObjectFromDate(zonedTimeToUtc(isValid(fieldPropsDate) ? fieldPropsDate : new Date(), localTz)).year
-  );
+  const [popoverMonth, setPopoverMonth] = useState(getDateTimeObjectFromDate(localTime ?? utcToZonedTime(new Date(), localTz)).month);
+  const [popoverYear, setPopoverYear] = useState(getDateTimeObjectFromDate(localTime ?? utcToZonedTime(new Date(), localTz)).year);
 
   const config = metadata.configuration;
 
   const onDateChange = useCallback<Exclude<DatePickerProps["onChange"], undefined>>(
     (range) => {
-      fieldProps && copyTime(range.start, zonedTimeToUtc(range.start, localTz));
-      const fieldPropsDate = new Date(fieldProps.value);
-      if (isValid(fieldPropsDate)) {
-        range.start.setHours(fieldPropsDate.getHours());
-        range.start.setMinutes(fieldPropsDate.getMinutes());
-        range.start.setSeconds(fieldPropsDate.getSeconds());
-        range.start.setMilliseconds(fieldPropsDate.getMilliseconds());
+      (fieldProps || value) && copyTime(range.start, zonedTimeToUtc(range.start, localTz));
+      const dateOverride = value ?? new Date(fieldProps.value);
+      if (isValid(dateOverride)) {
+        range.start.setHours(dateOverride.getHours());
+        range.start.setMinutes(dateOverride.getMinutes());
+        range.start.setSeconds(dateOverride.getSeconds());
+        range.start.setMilliseconds(dateOverride.getMilliseconds());
       }
       onChange?.(zonedTimeToUtc(range.start, localTz));
       fieldProps.onChange(zonedTimeToUtc(range.start, localTz));
       setDatePopoverActive(false);
     },
-    [onChange, localTz, fieldProps]
+    [fieldProps, value, localTz, onChange]
   );
 
   const toggleDatePopoverActive = useCallback(() => {
-    const fieldPropsDate = new Date(fieldProps.value);
-    setPopoverMonth(getDateTimeObjectFromDate(isValid(fieldPropsDate) ? fieldPropsDate : new Date()).month);
-    setPopoverYear(getDateTimeObjectFromDate(isValid(fieldPropsDate) ? fieldPropsDate : new Date()).year);
+    setPopoverMonth(getDateTimeObjectFromDate(isValid(localTime) && localTime ? localTime : new Date()).month);
+    setPopoverYear(getDateTimeObjectFromDate(isValid(localTime) && localTime ? localTime : new Date()).year);
     setDatePopoverActive((active) => !active);
-  }, [fieldProps.value]);
+  }, [localTime]);
   const handleMonthChange = useCallback((month: number, year: number) => {
     setPopoverMonth(month);
     setPopoverYear(year);
@@ -142,6 +136,7 @@ export const PolarisAutoDateTimePicker = (props: {
           hideTimePopover={props.hideTimePopover}
           localTz={localTz}
           timePickerProps={props.timePickerProps}
+          value={value}
         />
       )}
     </InlineStack>

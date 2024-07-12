@@ -52,6 +52,7 @@ type DateTimeKey = keyof DateTimeState;
 
 const PolarisAutoTimePicker = (props: {
   fieldProps: ControllerRenderProps<FieldValues, string>;
+  value?: Date;
   onChange?: (value: Date) => void;
   localTime?: Date;
   id?: string;
@@ -59,15 +60,31 @@ const PolarisAutoTimePicker = (props: {
   hideTimePopover?: boolean;
   localTz?: string;
 }) => {
+  const [valueProp, setValueProp] = useState(props.value);
   const [timeString, setTimeString] = useState(props.localTime ? getTimeString(getDateTimeObjectFromDate(props.localTime)) : "");
   const [timePopoverActive, setTimePopoverActive] = useState(false);
   const [timeParseError, setTimeParseError] = useState(false);
-  const setHourSelected = (hour: string) =>
+  const setHourSelected = (hour: string) => {
+    if (valueProp) {
+      props.onChange?.(getDateFromDateTimeObject({ ...getDateTimeObjectFromDate(valueProp), hour }));
+      return;
+    }
     props.fieldProps.onChange(getDateFromDateTimeObject({ ...getDateTimeObjectFromDate(props.fieldProps.value ?? new Date()), hour }));
-  const setMinSelected = (minute: string) =>
+  };
+  const setMinSelected = (minute: string) => {
+    if (valueProp) {
+      props.onChange?.(getDateFromDateTimeObject({ ...getDateTimeObjectFromDate(valueProp), minute }));
+      return;
+    }
     props.fieldProps.onChange(getDateFromDateTimeObject({ ...getDateTimeObjectFromDate(props.fieldProps.value ?? new Date()), minute }));
-  const setAmpmSelected = (ampm: string) =>
+  };
+  const setAmpmSelected = (ampm: string) => {
+    if (valueProp) {
+      props.onChange?.(getDateFromDateTimeObject({ ...getDateTimeObjectFromDate(valueProp), ampm }));
+      return;
+    }
     props.fieldProps.onChange(getDateFromDateTimeObject({ ...getDateTimeObjectFromDate(props.fieldProps.value ?? new Date()), ampm }));
+  };
 
   const onTimeStringChange = (value: string) => {
     setTimeString(value);
@@ -110,25 +127,31 @@ const PolarisAutoTimePicker = (props: {
 
     props.onChange?.(zonedTimeToUtc(date, props.localTz ?? "UTC"));
     props.fieldProps.onChange(zonedTimeToUtc(date, props.localTz ?? "UTC"));
+    if (valueProp) {
+      setValueProp(zonedTimeToUtc(date, props.localTz ?? "UTC"));
+    }
 
     setTimeString(`${parseInt(hoursStr, 10) === 0 ? "12" : hoursStr}:${paddedMins} ${newAmpm}`);
   };
 
   const hourTimeFormatter = (value: string) => {
-    return `${value}:${
-      props.fieldProps.value ? getDateTimeObjectFromDate(props.fieldProps.value).minute.toString().padStart(2, "0") : minsArr[0]
-    } ${props.fieldProps.value ? getDateTimeObjectFromDate(props.fieldProps.value).ampm : ampmArr[0]}`;
+    const defaultValue = valueProp ?? props.fieldProps.value;
+    return `${value}:${defaultValue ? getDateTimeObjectFromDate(defaultValue).minute.toString().padStart(2, "0") : minsArr[0]} ${
+      defaultValue ? getDateTimeObjectFromDate(defaultValue).ampm : ampmArr[0]
+    }`;
   };
 
   const minTimeFormatter = (value: string) => {
-    return `${props.fieldProps.value ? getDateTimeObjectFromDate(props.fieldProps.value).hour : hoursArr[0]}:${value.padStart(2, "0")} ${
-      props.fieldProps.value ? getDateTimeObjectFromDate(props.fieldProps.value).ampm : ampmArr[0]
+    const defaultValue = valueProp ?? props.fieldProps.value;
+    return `${defaultValue ? getDateTimeObjectFromDate(defaultValue).hour : hoursArr[0]}:${value.padStart(2, "0")} ${
+      defaultValue ? getDateTimeObjectFromDate(defaultValue).ampm : ampmArr[0]
     }`;
   };
 
   const ampmTimeFormatter = (value: string) => {
-    return `${props.fieldProps.value ? getDateTimeObjectFromDate(props.fieldProps.value).hour : hoursArr[0]}:${
-      props.fieldProps.value ? getDateTimeObjectFromDate(props.fieldProps.value).minute.toString().padStart(2, "0") : minsArr[0]
+    const defaultValue = valueProp ?? props.fieldProps.value;
+    return `${defaultValue ? getDateTimeObjectFromDate(defaultValue).hour : hoursArr[0]}:${
+      defaultValue ? getDateTimeObjectFromDate(defaultValue).minute.toString().padStart(2, "0") : minsArr[0]
     } ${value}`;
   };
 
@@ -137,9 +160,9 @@ const PolarisAutoTimePicker = (props: {
   const ampmProps = { array: ampmArr, formatter: ampmTimeFormatter, key: "ampm" as DateTimeKey };
 
   useEffect(() => {
-    if (!props.fieldProps.value) return;
+    if (!props.fieldProps.value || valueProp) return;
     setTimeString(getTimeString(getDateTimeObjectFromDate(props.fieldProps.value)));
-  }, [props.fieldProps.value]);
+  }, [props.fieldProps.value, valueProp, setTimeString]);
 
   return (
     <>
@@ -169,7 +192,9 @@ const PolarisAutoTimePicker = (props: {
                   <Listbox onSelect={(value: string) => onTimeStringChange(timeComponentProps.formatter(value))}>
                     {createMarkup(
                       timeComponentProps.array,
-                      props.fieldProps.value
+                      valueProp
+                        ? `${getDateTimeObjectFromDate(valueProp)[timeComponentProps.key]}`
+                        : props.fieldProps.value
                         ? `${getDateTimeObjectFromDate(props.fieldProps.value)[timeComponentProps.key]}`
                         : timeComponentProps.array[0]
                     )}

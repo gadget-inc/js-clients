@@ -1,14 +1,23 @@
 import { format } from "date-fns";
 import { utcToZonedTime } from "date-fns-tz";
-import React from "react";
+import React, { useState } from "react";
 import { PolarisAutoForm } from "../../../../src/auto/polaris/PolarisAutoForm.js";
 import { PolarisAutoDateTimePicker } from "../../../../src/auto/polaris/inputs/PolarisAutoDateTimePicker.js";
 import { api } from "../../../support/api.js";
 import { PolarisWrapper } from "../../../support/auto.js";
 
-const baseDate = new Date("2021-03-05T11:23:10.000Z");
+const baseDate = new Date("2021-03-05T11:23:00.000Z");
 const localTz = Intl.DateTimeFormat().resolvedOptions().timeZone;
 const dateInLocalTZ = utcToZonedTime(baseDate, localTz);
+
+const TestComponentWithCustomOnChange = () => {
+  const [date, setDate] = useState(baseDate);
+  return (
+    <PolarisAutoForm action={api.widget.create}>
+      <PolarisAutoDateTimePicker id="test" value={date} onChange={setDate} field="startsAt" />
+    </PolarisAutoForm>
+  );
+};
 
 describe("PolarisDateTimePicker", () => {
   beforeEach(() => {
@@ -105,7 +114,7 @@ describe("PolarisDateTimePicker", () => {
       cy.get("#test-time").should("have.value", format(dateInLocalTZ, "K:m aa"));
     });
 
-    it("can change the date", async () => {
+    it("can change the date", () => {
       const onChangeSpy = cy.spy().as("onChangeSpy");
       cy.mountWithWrapper(
         <PolarisAutoForm action={api.widget.create}>
@@ -119,7 +128,7 @@ describe("PolarisDateTimePicker", () => {
       cy.get("@onChangeSpy")
         .should("have.been.called")
         .then(() => {
-          expect(onChangeSpy.getCalls()[0].args[0].toISOString()).equal(new Date("2021-03-04T11:23:10.000Z").toISOString());
+          expect(onChangeSpy.getCalls()[0].args[0].toISOString()).equal(new Date("2021-03-04T11:23:00.000Z").toISOString());
         });
     });
 
@@ -131,11 +140,19 @@ describe("PolarisDateTimePicker", () => {
         </PolarisAutoForm>,
         PolarisWrapper
       );
-      cy.get("#test-time").clear().type("foo");
+      cy.get("#test-time").click().clear().type("foo");
       cy.get("body").click();
-      cy.contains("Invalid time");
-      cy.get("#test-time").clear().type("12:21 AM");
-      cy.contains("Invalid time").should("not.exist");
+      cy.contains("Invalid time format");
+      cy.get("#test-time").click().clear().type("12:21 AM");
+      cy.contains("Invalid time format").should("not.exist");
+    });
+
+    it("can show the selected date", () => {
+      cy.mountWithWrapper(<TestComponentWithCustomOnChange />, PolarisWrapper);
+      cy.get("#test-date").click();
+      cy.get(`[aria-label='Thursday March 4 2021']`).click();
+      cy.get("#test-date").click();
+      cy.get(`[aria-label='Thursday March 4 2021']`).should("have.attr", "aria-pressed", "true");
     });
   });
 });
