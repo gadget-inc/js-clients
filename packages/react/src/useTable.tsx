@@ -1,25 +1,24 @@
-import type {
-  DefaultSelection,
-  FindManyFunction,
-  GadgetRecord,
-  GadgetRecordList,
-  LimitToKnownKeys,
-  Select,
+import {
+  type DefaultSelection,
+  type FindManyFunction,
+  type GadgetRecord,
+  type GadgetRecordList,
+  type LimitToKnownKeys,
+  type Select,
 } from "@gadgetinc/api-client-core";
 import type { OperationContext } from "@urql/core";
-import type { ReactNode } from "react";
 import { useCallback, useMemo, useState } from "react";
 import type { GadgetFieldType } from "./internal/gql/graphql.js";
 import type { ModelMetadata } from "./metadata.js";
-import { FieldType, filterFieldList, useModelMetadata } from "./metadata.js";
+import { filterFieldList, useModelMetadata } from "./metadata.js";
 import { useFindMany } from "./useFindMany.js";
-import type { ErrorWrapper, OptionsType, ReadOperationOptions } from "./utils.js";
+import type { ColumnValueType, ErrorWrapper, OptionsType, ReadOperationOptions } from "./utils.js";
 
 export interface TableColumn {
   name: string;
   apiIdentifier: string;
   fieldType: GadgetFieldType;
-  getValue: (record: GadgetRecord<any>) => ReactNode;
+  getValue: (record: GadgetRecord<any>) => ColumnValueType;
   sortable: boolean;
 }
 
@@ -50,7 +49,7 @@ export type TableResult<Data> = [
   (
     | {
         columns: TableColumn[];
-        rows: Record<string, ReactNode>[];
+        rows: Record<string, ColumnValueType>[];
         data: Data;
         page: TablePagination;
         metadata: ModelMetadata;
@@ -129,15 +128,7 @@ export const useTable = <
         apiIdentifier: field.apiIdentifier,
         fieldType: field.fieldType,
         getValue: (record: GadgetRecord<any>) => {
-          const value = record[field.apiIdentifier];
-          switch (field.fieldType) {
-            case FieldType.DateTime: {
-              return value?.toLocaleString();
-            }
-            default: {
-              return value;
-            }
-          }
+          return record[field.apiIdentifier];
         },
         sortable: "sortable" in field && field.sortable,
       })),
@@ -175,7 +166,7 @@ export const useTable = <
 
   if (metadata && data && columns) {
     const rows = data.map((record) => {
-      const row: Record<string, ReactNode> = { id: (record as any).id };
+      const row: Record<string, ColumnValueType> = { id: (record as any).id };
       for (const { apiIdentifier, getValue } of columns) {
         row[apiIdentifier] = getValue(record);
       }

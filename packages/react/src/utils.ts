@@ -467,3 +467,38 @@ export const getPropsWithoutRef = <T extends { ref: RefCallback<any> | RefObject
   const { ref: _ref, ...rest } = props;
   return rest;
 };
+
+export type RichTextValueType = {
+  markdown: string;
+  __typename: "RichText";
+};
+
+export type RoleAssignmentsValueType = {
+  key: string;
+  name: string;
+  __typename: "Role";
+};
+
+export type FileValueType = {
+  url: string;
+  mimeType: string;
+  fileName: string;
+  __typename: "StoredFile";
+};
+
+export type ColumnValueType =
+  | string
+  | number
+  | boolean
+  | Date
+  | null
+  | string[]
+  | RoleAssignmentsValueType[]
+  | FileValueType
+  | RichTextValueType;
+
+export const isRoleAssignmentsArray = (value: ColumnValueType): value is RoleAssignmentsValueType[] => {
+  if (!Array.isArray(value) || value.length === 0) return false;
+  if (!value.every((item) => typeof item === "object" && "__typename" in item && item.__typename === "Role")) return false;
+  return true;
+};
