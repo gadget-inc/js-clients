@@ -7,7 +7,6 @@ export { MUIAutoFileInput as AutoFileInput } from "./inputs/MUIAutoFileInput.js"
 export { MUIAutoHiddenInput as AutoHiddenInput } from "./inputs/MUIAutoHiddenInput.js";
 export { MUIAutoInput as AutoInput } from "./inputs/MUIAutoInput.js";
 export { MUIAutoJSONInput as AutoJSONInput } from "./inputs/MUIAutoJSONInput.js";
-export { MUIAutoBelongsToInput as AutoBelongsToInput } from "./inputs/MUIAutoRelationshipInput.js";
 export { MUIAutoRolesInput as AutoRolesInput } from "./inputs/MUIAutoRolesInput.js";
 export {
   MUIAutoTextInput as AutoColorInput,
@@ -17,5 +16,7 @@ export {
   MUIAutoTextInput as AutoTextInput,
   MUIAutoTextInput as AutoUrlInput,
 } from "./inputs/MUIAutoTextInput.js";
+export { MUIAutoBelongsToInput as AutoBelongsToInput } from "./inputs/relationships/MUIAutoBelongsToInput.js";
+export { MUIAutoHasManyInput as AutoHasManyInput } from "./inputs/relationships/MUIAutoHasManyInput.js";
 export { MUIAutoSubmit as AutoSubmit } from "./submit/MUIAutoSubmit.js";
 export { MUISubmitResultBanner as SubmitResultBanner } from "./submit/MUISubmitResultBanner.js";

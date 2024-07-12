@@ -12,6 +12,10 @@ export interface AutoFormMetadataContext {
   metadata: ActionMetadata | GlobalActionMetadata | undefined;
   submit: UseActionFormSubmit<any>;
   submitResult?: AutoFormSubmitResult;
+  model?: {
+    namespace?: string | string[] | null;
+    apiIdentifier?: string;
+  };
 }
 /**
  * React context that stores an instance of the metadata loaded for a particular form action

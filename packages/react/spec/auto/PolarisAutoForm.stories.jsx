@@ -52,7 +52,6 @@ export const UpdateRecord = {
   args: {
     action: api.widget.update,
     findBy: "999",
-    exclude: ["gizmos"],
   },
 };
 
@@ -86,5 +85,12 @@ export const Expanded = {
   tags: ["!autodocs"],
   docs: {
     source: { language: "tsx", code: "hi world" },
+  },
+};
+
+export const Namespaced = {
+  args: {
+    action: api.game.city.update,
+    findBy: "1",
   },
 };

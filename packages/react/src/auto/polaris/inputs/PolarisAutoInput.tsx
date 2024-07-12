@@ -9,9 +9,10 @@ import { PolarisAutoEnumInput } from "./PolarisAutoEnumInput.js";
 import { PolarisAutoFileInput } from "./PolarisAutoFileInput.js";
 import { PolarisAutoJSONInput } from "./PolarisAutoJSONInput.js";
 import { PolarisAutoPasswordInput } from "./PolarisAutoPasswordInput.js";
-import { PolarisAutoRelationshipInput } from "./PolarisAutoRelationshipInput.js";
 import { PolarisAutoRolesInput } from "./PolarisAutoRolesInput.js";
 import { PolarisAutoTextInput } from "./PolarisAutoTextInput.js";
+import { PolarisAutoBelongsToInput } from "./relationships/PolarisAutoBelongsToInput.js";
+import { PolarisAutoHasManyInput } from "./relationships/PolarisAutoHasManyInput.js";
 
 export const PolarisAutoInput = (props: { field: string }) => {
   const { path, metadata } = useFieldMetadata(props.field);
@@ -57,12 +58,18 @@ export const PolarisAutoInput = (props: { field: string }) => {
       return <PolarisAutoFileInput field={props.field} />;
     }
     case FieldType.RoleAssignments: {
-      return <PolarisAutoRolesInput field={props.field} {...field} />;
+      return <PolarisAutoRolesInput field={props.field} />;
     }
-    case FieldType.HasMany:
-    case FieldType.HasOne:
     case FieldType.BelongsTo: {
-      return <PolarisAutoRelationshipInput field={metadata.apiIdentifier} />;
+      return <PolarisAutoBelongsToInput field={props.field} />;
+    }
+    case FieldType.HasOne: {
+      // TODO - Update implementation of PolarisAutoHasOneInput after 1-1 mapping maintenance system is updated in API
+      // return <PolarisAutoHasOneInput field={props.field} />;
+      return null;
+    }
+    case FieldType.HasMany: {
+      return <PolarisAutoHasManyInput field={props.field} />;
     }
     case FieldType.HasManyThrough: {
       // TODO: implement HasManyThrough input with join model record create/delete

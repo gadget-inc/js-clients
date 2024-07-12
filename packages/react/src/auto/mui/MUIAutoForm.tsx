@@ -33,7 +33,7 @@ export const MUIAutoForm = <
 >(
   props: MUIAutoFormProps<GivenOptions, SchemaT, ActionFunc>
 ) => {
-  const { action: _action, record: _record, findBy, ...rest } = props;
+  const { record: _record, action, findBy, ...rest } = props;
   const { metadata, fetchingMetadata, metadataError, fields, submit, formError, isSubmitSuccessful, isLoading, originalFormMethods } =
     useAutoForm(props);
 
@@ -44,6 +44,10 @@ export const MUIAutoForm = <
     submitResult: {
       isSuccessful: isSubmitSuccessful,
       error: formError ?? metadataError,
+    },
+    model: {
+      apiIdentifier: action.modelApiIdentifier,
+      namespace: action.namespace,
     },
   };
 

@@ -63,6 +63,7 @@ export const widgetModelInputFields = {
         requiredArgumentForInput: false,
         sortable: false,
         filterable: false,
+        __typename: "GadgetModelField",
         configuration: {
           __typename: "GadgetHasManyConfig",
           fieldType: "HasMany",
@@ -70,6 +71,11 @@ export const widgetModelInputFields = {
           relatedModel: {
             apiIdentifier: "gizmo",
             namespace: [],
+            __typename: "GadgetModel",
+          },
+          inverseField: {
+            apiIdentifier: "widget",
+            __typename: "GadgetModelField",
           },
         },
       },
