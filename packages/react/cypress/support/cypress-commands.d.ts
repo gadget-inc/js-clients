@@ -6,6 +6,7 @@ declare namespace Cypress {
       api: any,
       props: {
         modelName: string;
+        modelApiIdentifier: string;
         action: {
           apiIdentifier: string;
           operatesWithRecordIdentity: boolean;

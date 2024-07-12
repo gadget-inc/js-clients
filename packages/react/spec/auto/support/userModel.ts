@@ -150,6 +150,7 @@ export const getUserModelMetadata = (
     gadgetMeta: {
       model: {
         name: "User",
+        apiIdentifier: "user",
         action: {
           ...action,
           inputFields: action.operatesWithRecordIdentity ? [recordIdInputField, ...inputFields] : inputFields,

@@ -3,7 +3,7 @@ import "cypress-each";
 import { recordIdInputField } from "../../spec/auto/support/shared.js";
 
 Cypress.Commands.add("mockModelActionMetadata", (api: AnyClient, props) => {
-  const { modelName, action, inputFields } = props;
+  const { modelName, modelApiIdentifier, action, inputFields } = props;
 
   cy.intercept(
     {
@@ -15,6 +15,7 @@ Cypress.Commands.add("mockModelActionMetadata", (api: AnyClient, props) => {
         gadgetMeta: {
           model: {
             name: modelName,
+            apiIdentifier: modelApiIdentifier,
             action: {
               ...action,
               name: action.apiIdentifier,

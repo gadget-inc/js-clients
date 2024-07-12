@@ -23,12 +23,29 @@ describe("useFormFields hook", () => {
     const fields = getUseFormFieldsResult({});
 
     expect(fields.map((field) => field.metadata.apiIdentifier)).toMatchInlineSnapshot(`
-        [
-          "stringField1",
-          "stringField2",
-          "stringField3",
-        ]
-      `);
+      [
+        "stringField1",
+        "stringField2",
+        "stringField3",
+        "params_str",
+        "params_num",
+        "params_bool",
+      ]
+    `);
+  });
+
+  test("Excludes object fields that the name is not equal to the model API identifier", () => {
+    const fields = getUseFormFieldsResult({});
+    expect(fields.map((field) => field.metadata.apiIdentifier)).toMatchInlineSnapshot(`
+      [
+        "stringField1",
+        "stringField2",
+        "stringField3",
+        "params_str",
+        "params_num",
+        "params_bool",
+      ]
+    `);
   });
 
   test("Returns the fields in the order of the include options list", () => {
@@ -42,7 +59,7 @@ describe("useFormFields hook", () => {
     const exclude = ["stringField2", "stringField3"];
 
     const fields = getUseFormFieldsResult({ exclude });
-    expect(fields.map((field) => field.metadata.apiIdentifier)).toEqual(["stringField1"]);
+    expect(fields.map((field) => field.metadata.apiIdentifier)).toEqual(["stringField1", "params_str", "params_num", "params_bool"]);
   });
 
   test("Has an error when including and excluding the same fields", () => {
@@ -57,9 +74,11 @@ describe("useFormFields hook", () => {
 
 const metadata: ActionMetadata = {
   name: "Widget",
+  apiIdentifier: "widget",
   action: {
     name: "Create",
     apiIdentifier: "create",
+    operatesWithRecordIdentity: false,
     inputFields: [
       {
         name: "Widget",
@@ -100,6 +119,67 @@ const metadata: ActionMetadata = {
               filterable: true,
               __typename: "GadgetModelField",
               configuration: {},
+            },
+          ],
+        },
+        __typename: "GadgetObjectField",
+      },
+      // Fields that are from the input params defined in the action code
+      {
+        name: "Params str",
+        apiIdentifier: "params_str",
+        fieldType: "String",
+        requiredArgumentForInput: false,
+        configuration: {
+          __typename: "GadgetGenericFieldConfig",
+          fieldType: "String",
+        },
+        __typename: "GadgetObjectField",
+      },
+      {
+        name: "Params num",
+        apiIdentifier: "params_num",
+        fieldType: "Number",
+        requiredArgumentForInput: false,
+        configuration: {
+          __typename: "GadgetGenericFieldConfig",
+          fieldType: "Number",
+        },
+        __typename: "GadgetObjectField",
+      },
+      {
+        name: "Params bool",
+        apiIdentifier: "params_bool",
+        fieldType: "Boolean",
+        requiredArgumentForInput: false,
+        configuration: {
+          __typename: "GadgetGenericFieldConfig",
+          fieldType: "Boolean",
+        },
+        __typename: "GadgetObjectField",
+      },
+      {
+        name: "Params obj",
+        apiIdentifier: "params_obj",
+        fieldType: "Object",
+        requiredArgumentForInput: false,
+        configuration: {
+          __typename: "GadgetObjectFieldConfig",
+          fieldType: "Object",
+          name: null,
+          fields: [
+            {
+              name: "Params obj inner str",
+              apiIdentifier: "params_obj_inner_str",
+              fieldType: "String",
+              requiredArgumentForInput: false,
+              sortable: true,
+              filterable: true,
+              __typename: "GadgetModelField",
+              configuration: {
+                __typename: "GadgetGenericFieldConfig",
+                fieldType: "String",
+              },
             },
           ],
         },

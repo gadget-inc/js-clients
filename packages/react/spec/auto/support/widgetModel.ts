@@ -288,6 +288,7 @@ export const getWidgetModelMetadata = (
     gadgetMeta: {
       model: {
         name: "Widget",
+        apiIdentifier: "widget",
         action: {
           ...action,
           inputFields: action.operatesWithRecordIdentity ? [recordIdInputField, ...inputFields] : inputFields,

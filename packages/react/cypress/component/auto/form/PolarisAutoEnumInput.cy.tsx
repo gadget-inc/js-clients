@@ -322,6 +322,7 @@ const baseTagsInputField = {
 
 const baseModelActionMetadata = {
   modelName: "Stadium",
+  modelApiIdentifier: "stadium",
   action: {
     apiIdentifier: "create",
     operatesWithRecordIdentity: false,

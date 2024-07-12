@@ -65,7 +65,8 @@ export const getGizmoModelMetadata = (
   return {
     gadgetMeta: {
       model: {
-        name: "Widget",
+        name: "Gizmo",
+        apiIdentifier: "gizmo",
         action: {
           ...action,
           inputFields: action.operatesWithRecordIdentity ? [recordIdInputField, ...inputFields] : inputFields,

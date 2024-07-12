@@ -9,6 +9,7 @@ describe("PolarisFileInput", () => {
   const interceptModelCreateActionMetadata = (validations: any[]) => {
     cy.mockModelActionMetadata(api, {
       modelName: "Stadium",
+      modelApiIdentifier: "stadium",
       action: {
         apiIdentifier: "create",
         operatesWithRecordIdentity: false,
@@ -20,6 +21,7 @@ describe("PolarisFileInput", () => {
   const interceptModelUpdateActionMetadata = (validations: any[]) => {
     cy.mockModelActionMetadata(api, {
       modelName: "Stadium",
+      modelApiIdentifier: "stadium",
       action: {
         apiIdentifier: "update",
         operatesWithRecordIdentity: false,
