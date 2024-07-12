@@ -60,7 +60,7 @@ export const useFileInputController = (props: {
   }, [metadata]);
 
   const clearFileValue = useCallback(() => {
-    fieldProps.onChange(undefined);
+    fieldProps.onChange(null);
     setImageThumbnailURL(undefined);
     clearErrors(path);
   }, [clearErrors, fieldProps, path]);
