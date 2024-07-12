@@ -1,12 +1,13 @@
+import { jest } from "@jest/globals";
 import { render } from "@testing-library/react";
 import React from "react";
-import { AutoFormSubmitResult } from "../../../src/auto/AutoFormContext.js";
+import type { AutoFormSubmitResult } from "../../../src/auto/AutoFormContext.js";
 import { PolarisSubmitResultBanner } from "../../../src/auto/polaris/submit/PolarisSubmitResultBanner.js";
-import { ActionMetadata } from "../../../src/metadata.js";
+import type { ActionMetadata } from "../../../src/metadata.js";
 import { MockForm } from "../MockForm.js";
 
 describe("PolarisSubmitResultBanner", () => {
-  const getWrapper = (submitResult: AutoFormSubmitResult) => ({ wrapper: MockForm({ submit: jest.fn(), metadata, submitResult }) });
+  const getWrapper = (submitResult: AutoFormSubmitResult) => ({ wrapper: MockForm({ submit: jest.fn<any>(), metadata, submitResult }) });
 
   describe("Successful form submission", () => {
     it("shows the model name the banner by default", async () => {

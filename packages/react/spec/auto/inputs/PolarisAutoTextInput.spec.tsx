@@ -1,8 +1,10 @@
+import { jest } from "@jest/globals";
 import { AppProvider } from "@shopify/polaris";
 import translations from "@shopify/polaris/locales/en.json";
 import type { RenderResult } from "@testing-library/react";
 import { render } from "@testing-library/react";
-import React, { ReactNode } from "react";
+import type { ReactNode } from "react";
+import React from "react";
 import { PolarisAutoForm } from "../../../src/auto/polaris/PolarisAutoForm.js";
 import { PolarisAutoTextInput } from "../../../src/auto/polaris/inputs/PolarisAutoTextInput.js";
 import type { ActionMetadata } from "../../../src/metadata.js";
@@ -16,7 +18,7 @@ describe("PolarisAutoTextInput", () => {
   describe("for create", () => {
     const getCreateWrapper = () => ({
       wrapper: MockForm({
-        submit: jest.fn(),
+        submit: jest.fn<any>(),
         metadata,
       }),
     });

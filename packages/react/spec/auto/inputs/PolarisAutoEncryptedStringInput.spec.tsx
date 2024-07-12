@@ -1,3 +1,4 @@
+import { jest } from "@jest/globals";
 import type { RenderResult } from "@testing-library/react";
 import { render } from "@testing-library/react";
 import React from "react";
@@ -10,7 +11,7 @@ describe("PolarisEncryptedStringInput", () => {
 
   const getCreateWrapper = () => ({
     wrapper: MockForm({
-      submit: jest.fn(),
+      submit: jest.fn<any>(),
       metadata,
     }),
   });
