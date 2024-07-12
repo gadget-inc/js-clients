@@ -1,10 +1,20 @@
 import type { FindManyFunction } from "@gadgetinc/api-client-core";
-import { BlockStack, DataTable, EmptySearchResult, IndexFilters, IndexTable, IndexTableProps, Pagination, SkeletonBodyText, useSetIndexFiltersMode } from "@shopify/polaris";
+import type { IndexTableProps } from "@shopify/polaris";
+import {
+  BlockStack,
+  DataTable,
+  EmptySearchResult,
+  IndexFilters,
+  IndexTable,
+  SkeletonBodyText,
+  useSetIndexFiltersMode,
+} from "@shopify/polaris";
 import pluralize from "pluralize";
 import React, { useMemo } from "react";
 import { useTable } from "../../useTable.js";
 import type { OptionsType } from "../../utils.js";
 import type { AutoTableProps } from "../AutoTable.js";
+import { PolarisTableCellRenderer } from "./tableCells/PolarisTableCellRenderer.js";
 
 const PolarisSkeletonTable = (props: { columns: number }) => {
   const count = Array.from(Array(props.columns));
@@ -37,7 +47,7 @@ export const PolarisAutoTable = <
     } as any
   );
 
-  const {mode, setMode} = useSetIndexFiltersMode();
+  const { mode, setMode } = useSetIndexFiltersMode();
 
   const polarisTableProps = useMemo(() => {
     const headings = [] as unknown as IndexTableProps["headings"];
@@ -69,10 +79,19 @@ export const PolarisAutoTable = <
 
   return (
     <BlockStack>
-      <IndexFilters mode={mode} setMode={setMode} filters={[]} 
-        onQueryChange={() => {}}
-        onQueryClear={() => {}}
-        onClearAll={() => {}}
+      <IndexFilters
+        mode={mode}
+        setMode={setMode}
+        filters={[]}
+        onQueryChange={() => {
+          // TODO
+        }}
+        onQueryClear={() => {
+          // TODO
+        }}
+        onClearAll={() => {
+          // TODO
+        }}
         tabs={[]}
         selected={1}
         loading={fetching}
@@ -96,7 +115,11 @@ export const PolarisAutoTable = <
           rows.map((row, index) => (
             <IndexTable.Row key={row.id as string} id={row.id as string} position={index}>
               {columns.map((column) => (
-                <IndexTable.Cell key={column.apiIdentifier}>{row[column.apiIdentifier]}</IndexTable.Cell>
+                <IndexTable.Cell key={column.apiIdentifier}>
+                  <div style={{ maxWidth: "200px" }}>
+                    <PolarisTableCellRenderer column={column} value={row[column.apiIdentifier]} />
+                  </div>
+                </IndexTable.Cell>
               ))}
             </IndexTable.Row>
           ))}
