@@ -1,7 +1,7 @@
 import { AppProvider } from "@shopify/polaris";
 import translations from "@shopify/polaris/locales/en.json";
-import { act, render } from "@testing-library/react";
-import { userEvent } from "@testing-library/user-event";
+import { RenderResult, act, render } from "@testing-library/react";
+import { UserEvent, userEvent } from "@testing-library/user-event";
 import type { ReactNode } from "react";
 import React from "react";
 import { PolarisAutoForm } from "../../src/auto/polaris/PolarisAutoForm.js";
@@ -530,6 +530,65 @@ describe("PolarisAutoForm", () => {
       expect(mutationName).toEqual("createWidget");
       expect(variables).toEqual({
         inventoryCount: 5,
+      });
+    });
+  });
+
+  describe("for null values", () => {
+    const submittedVariables = () => {
+      const mutation = mockUrqlClient.executeMutation.mock.calls[0][0];
+      const variables = mutation.variables.widget;
+
+      return variables;
+    };
+
+    describe("when an update form gets a null value for a boolean field", () => {
+      let user: UserEvent;
+      let renderResult: RenderResult;
+
+      beforeEach(() => {
+        user = userEvent.setup();
+
+        renderResult = render(<PolarisAutoForm action={api.widget.update} exclude={["gizmos"]} findBy="1145" />, {
+          wrapper: PolarisMockedProviders,
+        });
+
+        loadMockWidgetUpdateMetadata();
+      });
+
+      test("it should remain null when submitting the form if unchanged", async () => {
+        await act(async () => {
+          const nameElement = renderResult.getByLabelText("Name");
+          await user.clear(nameElement);
+          await user.click(nameElement);
+          await user.keyboard("updated another test record");
+
+          await user.click(renderResult.getByRole("button"));
+        });
+
+        expect(submittedVariables().isChecked).toEqual(null);
+      });
+
+      test("it should send true if the user selects the checkbox", async () => {
+        await act(async () => {
+          const isCheckedElement = renderResult.getByLabelText("Is checked");
+          await user.click(isCheckedElement);
+          await user.click(renderResult.getByRole("button"));
+        });
+
+        expect(submittedVariables().isChecked).toEqual(true);
+      });
+
+      test("it should send false if the user selects the checkbox and then unselects it", async () => {
+        await act(async () => {
+          const isCheckedElement = renderResult.getByLabelText("Is checked");
+          await user.click(isCheckedElement);
+          await user.click(isCheckedElement);
+
+          await user.click(renderResult.getByRole("button"));
+        });
+
+        expect(submittedVariables().isChecked).toEqual(false);
       });
     });
   });
