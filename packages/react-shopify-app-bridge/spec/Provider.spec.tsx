@@ -1,6 +1,6 @@
 import type { AnyClient } from "@gadgetinc/api-client-core";
 import { GadgetConnection } from "@gadgetinc/api-client-core";
-import * as AppBridgeReact from "@shopify/app-bridge-react";
+import { jest } from "@jest/globals";
 import "@testing-library/jest-dom";
 import { render } from "@testing-library/react";
 import React from "react";
@@ -10,10 +10,9 @@ import { AppType, Provider } from "../src/Provider.js";
 
 describe("GadgetProvider", () => {
   let mockApiClient: AnyClient;
-  const mockNavigate = jest.fn();
-  const mockOpen = jest.fn();
+  const mockNavigate = jest.fn<any>();
+  const mockOpen = jest.fn<any>();
   const mockApiKey = "some-api-key";
-  let useAppBridgeMock: jest.SpyInstance;
   let resolveIdToken: (value: string) => void;
 
   beforeEach(() => {
@@ -49,20 +48,17 @@ describe("GadgetProvider", () => {
         }),
     };
 
-    useAppBridgeMock = jest.spyOn(AppBridgeReact, "useAppBridge").mockImplementation(() => window.shopify);
-
     mockApiClient = {
       connection: new GadgetConnection({
         endpoint: "https://test-app.gadget.app/endpoint",
       }),
     } as any;
 
-    jest.spyOn(mockApiClient.connection, "currentClient", "get").mockReturnValue(mockUrqlClient);
+    jest.spyOn(mockApiClient.connection, "currentClient" as any, "get").mockReturnValue(mockUrqlClient);
   });
 
   afterEach(() => {
     mockNavigate.mockClear();
-    useAppBridgeMock.mockClear();
   });
 
   describe.each([true, false])("as install request: %s", (isInstallRequest) => {

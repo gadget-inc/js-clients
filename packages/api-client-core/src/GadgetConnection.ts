@@ -50,13 +50,14 @@ export interface GadgetConnectionOptions {
   authenticationMode?: AuthenticationModeOptions;
   websocketsEndpoint?: string;
   subscriptionClientOptions?: GadgetSubscriptionClientOptions;
-  websocketImplementation?: any;
+  websocketImplementation?: typeof WebSocket;
   fetchImplementation?: typeof globalThis.fetch;
   environment?: string;
   requestPolicy?: ClientOptions["requestPolicy"];
   applicationId?: string;
   baseRouteURL?: string;
   exchanges?: Exchanges;
+  createSubscriptionClient?: typeof createSubscriptionClient;
 }
 
 /**
@@ -86,7 +87,7 @@ export class GadgetConnection {
   readonly endpoint: string;
   private subscriptionClientOptions?: SubscriptionClientOptions;
   private websocketsEndpoint: string;
-  private websocketImplementation?: WebSocket;
+  private websocketImplementation?: typeof WebSocket;
   private _fetchImplementation: typeof globalThis.fetch;
   private environment: string;
   private exchanges: Required<Exchanges>;
@@ -104,6 +105,7 @@ export class GadgetConnection {
   authenticationMode: AuthenticationMode = AuthenticationMode.Anonymous;
   private sessionTokenStore?: BrowserStorage;
   private requestPolicy: RequestPolicy;
+  createSubscriptionClient: typeof createSubscriptionClient;
 
   constructor(readonly options: GadgetConnectionOptions) {
     if (!options.endpoint) throw new Error("Must provide an `endpoint` option for a GadgetConnection to connect to");
@@ -135,6 +137,7 @@ export class GadgetConnection {
       afterAll: [],
       ...options.exchanges,
     };
+    this.createSubscriptionClient = options.createSubscriptionClient ?? createSubscriptionClient;
 
     this.setAuthenticationMode(options.authenticationMode);
 
@@ -449,7 +452,7 @@ export class GadgetConnection {
       url = addUrlParams(url, overrides.urlParams);
     }
 
-    return createSubscriptionClient({
+    return this.createSubscriptionClient({
       url,
       webSocketImpl: this.websocketImplementation,
       connectionParams: async () => {

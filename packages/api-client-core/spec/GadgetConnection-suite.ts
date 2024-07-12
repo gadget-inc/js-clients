@@ -1,11 +1,11 @@
+import { jest } from "@jest/globals";
 import { Response } from "cross-fetch";
 import gqlTag from "gql-tag";
-import { createClient } from "graphql-ws";
 import nock from "nock";
 import { AuthenticationMode, BrowserSessionStorageType, GadgetConnection } from "../src/index.js";
 import { base64 } from "./helpers.js";
 
-const gql = gqlTag as any;
+const gql = gqlTag.default as any;
 nock.disableNetConnect();
 
 // eslint-disable-next-line jest/no-export
@@ -664,7 +664,7 @@ export const GadgetConnectionSharedSuite = (queryExtra = "") => {
     });
 
     test("fetch can pass relative string paths when used with a relative base endpoint", async () => {
-      const fetch = jest.fn().mockResolvedValue(new Response("hello")) as any;
+      const fetch = jest.fn<typeof globalThis.fetch>().mockResolvedValue(new Response("hello"));
       const connection = new GadgetConnection({
         endpoint: "/api/graphql?operation=meta",
         authenticationMode: { apiKey: "gsk-abcde" },
@@ -735,7 +735,7 @@ export const GadgetConnectionSharedSuite = (queryExtra = "") => {
     });
 
     test("fetch can pass relative string paths when used with a baseRouteURL", async () => {
-      const fetch = jest.fn().mockResolvedValue(new Response("hello")) as any;
+      const fetch = jest.fn<typeof globalThis.fetch>().mockResolvedValue(new Response("hello"));
       const connection = new GadgetConnection({
         endpoint: "https://api.internal.net/api/graphql?operation=meta",
         authenticationMode: { apiKey: "gsk-abcde" },
@@ -901,9 +901,12 @@ export const GadgetConnectionSharedSuite = (queryExtra = "") => {
 
     if (globalThis.WebSocket) {
       test("subscription clients should correctly append url params overrides", () => {
+        const createSubscriptionClient = jest.fn() as any;
+
         const connection = new GadgetConnection({
           endpoint: "/api/graphql",
           authenticationMode: { apiKey: "gsk-abcde" },
+          createSubscriptionClient,
         });
 
         connection.newSubscriptionClient({
@@ -912,14 +915,16 @@ export const GadgetConnectionSharedSuite = (queryExtra = "") => {
           },
         });
 
-        expect((createClient as any).mock.calls[0][0].url).toEqual("/api/graphql/batch?foo=bar");
+        expect(createSubscriptionClient.mock.calls[0][0].url).toEqual("/api/graphql/batch?foo=bar");
       });
 
       test("subscription clients should correctly append url params to base endpoints that already have them", () => {
+        const createSubscriptionClient = jest.fn() as any;
         const connection = new GadgetConnection({
           endpoint: "/api/graphql?base=whatever",
           websocketsEndpoint: "/api/graphql/batch?base=whatever",
           authenticationMode: { apiKey: "gsk-abcde" },
+          createSubscriptionClient,
         });
 
         connection.newSubscriptionClient({
@@ -928,7 +933,7 @@ export const GadgetConnectionSharedSuite = (queryExtra = "") => {
           },
         });
 
-        expect((createClient as any).mock.calls[0][0].url).toEqual("/api/graphql/batch?base=whatever&foo=bar");
+        expect(createSubscriptionClient.mock.calls[0][0].url).toEqual("/api/graphql/batch?base=whatever&foo=bar");
       });
     }
   });
