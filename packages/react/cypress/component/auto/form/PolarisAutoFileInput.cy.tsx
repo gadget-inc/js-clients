@@ -226,6 +226,8 @@ describe("PolarisFileInput", () => {
 
         cy.mountWithWrapper(<PolarisAutoForm action={api.game.stadium.create} />, PolarisWrapper);
 
+        cy.get(".Polaris-DropZone-FileUpload").should("contain", "Accepts larger than 10 MB");
+
         cy.get(".Polaris-DropZone-FileUpload").selectFile("./cypress/support/assets/ottawa-stadium.jpg", {
           action: "drag-drop",
         });
@@ -248,6 +250,8 @@ describe("PolarisFileInput", () => {
         ]);
 
         cy.mountWithWrapper(<PolarisAutoForm action={api.game.stadium.create} />, PolarisWrapper);
+
+        cy.get(".Polaris-DropZone-FileUpload").should("contain", "Accepts smaller than 100 B");
 
         cy.get(".Polaris-DropZone-FileUpload").selectFile("./cypress/support/assets/ottawa-stadium.jpg", {
           action: "drag-drop",

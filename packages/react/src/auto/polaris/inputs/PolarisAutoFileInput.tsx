@@ -27,8 +27,8 @@ export const PolarisAutoFileInput = (props: { field: string; control?: Control<a
       const validation = validations.fileSize;
       const message = getFileSizeValidationMessage(validation, {
         inRange: (min, max) => `between ${filesize(min)} and ${filesize(max)}`,
-        max: (max) => `larger than ${filesize(max)}`,
-        min: (min) => `smaller than ${filesize(min)}`,
+        max: (max) => `smaller than ${filesize(max)}`,
+        min: (min) => `larger than ${filesize(min)}`,
       });
       if (message) actionHintParts.push(message);
     }
