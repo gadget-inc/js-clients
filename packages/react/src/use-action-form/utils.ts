@@ -429,17 +429,22 @@ export function applyDataMask(opts: { select?: any; send?: string[]; data: Recor
     unset(data, path);
   }
 
+  if (!send) return data;
   const dataToSend = {};
-  if (send) {
-    for (const key of send) {
-      const value = modelApiIdentifier ? get(data, `${modelApiIdentifier}.${key}`) : undefined ?? get(data, key);
+
+  for (const key of send) {
+    const candidates = [key];
+    if (modelApiIdentifier) {
+      candidates.push(`${modelApiIdentifier}.${key}`);
+    }
+    for (const key of candidates) {
+      const value = get(data, key);
       if (value != null) {
-        set(dataToSend, modelApiIdentifier ? `${modelApiIdentifier}.${key}` : key, value);
+        set(dataToSend, key, value);
+        break;
       }
     }
-
-    return dataToSend;
   }
 
-  return data;
+  return dataToSend;
 }

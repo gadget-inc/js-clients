@@ -1,4 +1,4 @@
-import type { ActionFunction, GlobalActionFunction } from "@gadgetinc/api-client-core";
+import { disambiguateActionVariables, type ActionFunction, type GlobalActionFunction } from "@gadgetinc/api-client-core";
 import { useCallback, useEffect, useRef } from "react";
 import type { DeepPartial, FieldErrors, FieldValues, UseFormProps } from "react-hook-form";
 import { useForm } from "react-hook-form";
@@ -195,14 +195,20 @@ export const useActionForm = <
       await handleSubmit(
         async (data) => {
           if (isModelAction) {
-            if (!action.hasAmbiguousIdentifier && findResult.data) {
-              data = disambiguateDefaultValues(data, findResult.data, action);
+            if (!action.hasAmbiguousIdentifier) {
+              if (findResult.data) {
+                // if we fetched initial data, we can detect which set of data changed, either the shorthand or fully qualified form. disambiguate using the data aware disambiguator
+                data = disambiguateDefaultValues(data, findResult.data, action);
+              } else {
+                // if we didn't fetch initial data, the data won't be in both the shorthand and longhand spots, so use the normal variables disambiguator we use for actions by default
+                data = disambiguateActionVariables(action, data);
+              }
             }
 
             if (options?.select || options?.send) {
               data = applyDataMask({
                 data,
-                modelApiIdentifier: findResult.data ? action.modelApiIdentifier : undefined,
+                modelApiIdentifier: action.modelApiIdentifier,
                 select: options.select,
                 send: options.send,
               });
