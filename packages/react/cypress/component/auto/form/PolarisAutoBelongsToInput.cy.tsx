@@ -201,6 +201,9 @@ const getInputFieldsWithCustomValidations = () => {
               relatedModel: {
                 apiIdentifier: "section",
                 namespace: [],
+                defaultDisplayField: {
+                  apiIdentifier: "name",
+                },
               },
             },
           },

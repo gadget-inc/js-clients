@@ -40,6 +40,9 @@ export const gameCityModelInputFields = {
           relatedModel: {
             apiIdentifier: "stadium",
             namespace: ["game"],
+            defaultDisplayField: {
+              apiIdentifier: "name",
+            },
             __typename: "GadgetModel",
           },
           inverseField: {

@@ -218,6 +218,9 @@ const getInputFieldsWithCustomValidations = () => {
               relatedModel: {
                 apiIdentifier: "gizmo",
                 namespace: [],
+                defaultDisplayField: {
+                  apiIdentifier: "name",
+                },
                 __typename: "GadgetModel",
               },
               inverseField: {

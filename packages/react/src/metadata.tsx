@@ -57,6 +57,9 @@ const FieldMetadataFragment = graphql(/* GraphQL */ `
         relatedModel {
           apiIdentifier
           namespace
+          defaultDisplayField {
+            apiIdentifier
+          }
         }
         inverseField {
           apiIdentifier
@@ -66,6 +69,9 @@ const FieldMetadataFragment = graphql(/* GraphQL */ `
         relatedModel {
           apiIdentifier
           namespace
+          defaultDisplayField {
+            apiIdentifier
+          }
         }
         inverseField {
           apiIdentifier
@@ -75,6 +81,9 @@ const FieldMetadataFragment = graphql(/* GraphQL */ `
         relatedModel {
           apiIdentifier
           namespace
+          defaultDisplayField {
+            apiIdentifier
+          }
         }
       }
       ... on GadgetEnumConfig {

@@ -25,6 +25,9 @@ export const gizmoModelInputFields = {
           relatedModel: {
             apiIdentifier: "widget",
             namespace: [],
+            defaultDisplayField: {
+              apiIdentifier: "name",
+            },
           },
         },
       },

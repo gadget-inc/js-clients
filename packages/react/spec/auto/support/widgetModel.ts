@@ -71,6 +71,9 @@ export const widgetModelInputFields = {
           relatedModel: {
             apiIdentifier: "gizmo",
             namespace: [],
+            defaultDisplayField: {
+              apiIdentifier: "name",
+            },
             __typename: "GadgetModel",
           },
           inverseField: {
@@ -257,6 +260,9 @@ export const widgetModelInputFields = {
           relatedModel: {
             apiIdentifier: "section",
             namespace: [],
+            defaultDisplayField: {
+              apiIdentifier: "name",
+            },
           },
         },
       },
