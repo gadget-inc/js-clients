@@ -15,7 +15,7 @@ export const PolarisAutoBelongsToInput = (props: AutoRelationshipInputProps) => 
     errorMessage,
 
     selectedRecordId,
-    retrievedSelectedRecordIdExists,
+    selectedRelatedModelRecordMissing,
 
     onSelectRecord,
     onRemoveRecord,
@@ -27,7 +27,7 @@ export const PolarisAutoBelongsToInput = (props: AutoRelationshipInputProps) => 
 
   const selectedRecordTag = selectedRecordId ? (
     <Tag onRemove={onRemoveRecord} key={`selectedRecordTag_${selectedRecordId}`}>
-      <p style={{ color: !retrievedSelectedRecordIdExists ? "red" : undefined }} id={`${selectedRecordId}_${selectedRecordLabel}`}>
+      <p style={{ color: selectedRelatedModelRecordMissing ? "red" : undefined }} id={`${selectedRecordId}_${selectedRecordLabel}`}>
         {selectedRecordLabel}
       </p>
     </Tag>
