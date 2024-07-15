@@ -6,12 +6,14 @@ import { Provider } from "../../../src/GadgetProvider.tsx";
 import { PolarisAutoForm } from "../../../src/auto/polaris/PolarisAutoForm.tsx";
 import { PolarisAutoPasswordInput } from "../../../src/auto/polaris/inputs/PolarisAutoPasswordInput.tsx";
 import { PolarisAutoSubmit } from "../../../src/auto/polaris/submit/PolarisAutoSubmit.tsx";
+import { PolarisSubmitResultBanner } from "../../../src/auto/polaris/submit/PolarisSubmitResultBanner.tsx";
 import { testApi as api } from "../../apis.ts";
 // More on how to set up stories at: https://storybook.js.org/docs/writing-stories#default-export
 export default {
   title: "Polaris/AutoPasswordInput",
   component: (props) => (
     <PolarisAutoForm {...props}>
+      <PolarisSubmitResultBanner />
       <PolarisAutoPasswordInput field="password" />
       <PolarisAutoSubmit />
     </PolarisAutoForm>

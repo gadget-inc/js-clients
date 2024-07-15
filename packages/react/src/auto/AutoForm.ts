@@ -5,10 +5,10 @@ import { useEffect, useMemo, useRef } from "react";
 import type { AnyActionWithId, RecordIdentifier, UseActionFormHookStateData } from "src/use-action-form/types.js";
 import type { GadgetObjectFieldConfig } from "../internal/gql/graphql.js";
 import type { ActionMetadata, FieldMetadata, GlobalActionMetadata } from "../metadata.js";
-import { filterFieldList, isActionMetadata, useActionMetadata } from "../metadata.js";
+import { FieldType, filterFieldList, isActionMetadata, useActionMetadata } from "../metadata.js";
 import type { FieldValues } from "../useActionForm.js";
 import { useActionForm } from "../useActionForm.js";
-import { type OptionsType } from "../utils.js";
+import { get, type OptionsType } from "../utils.js";
 import { validationSchema } from "../validationSchema.js";
 
 /** The props that any <AutoForm/> component accepts */
@@ -132,7 +132,7 @@ export const useAutoForm = <
   const {
     submit,
     error: formError,
-    formState: { isSubmitSuccessful, isLoading, isReady, isSubmitting },
+    formState: { isSubmitSuccessful, isLoading, isReady, isSubmitting, touchedFields },
     originalFormMethods,
   } = useActionForm(action, {
     defaultValues: defaultValues as any,
@@ -140,7 +140,13 @@ export const useAutoForm = <
     resolver: useValidationResolver(metadata),
     send: () => {
       const fieldsToSend = fields
-        .filter(({ metadata }) => {
+        .filter(({ path, metadata }) => {
+          const isUntouchedPasswordField = metadata.fieldType === FieldType.Password && "findBy" in props && !get(touchedFields, path);
+          if (isUntouchedPasswordField) {
+            // Never send the password field if it hasn't been touched. Doing so will clear the record value
+            return false;
+          }
+
           if (props.include) {
             return props.include?.includes(metadata.apiIdentifier);
           } else if (props.exclude) {

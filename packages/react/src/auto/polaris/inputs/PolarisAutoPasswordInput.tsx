@@ -2,8 +2,9 @@ import type { TextFieldProps } from "@shopify/polaris";
 import { Button } from "@shopify/polaris";
 import { EditIcon } from "@shopify/polaris-icons";
 import React, { useState } from "react";
-import type { Control } from "react-hook-form";
+import { useController, type Control } from "react-hook-form";
 import { useAutoFormMetadata } from "../../AutoFormContext.js";
+import { useFieldMetadata } from "../../hooks/useFieldMetadata.js";
 import { PolarisAutoEncryptedStringInput } from "./PolarisAutoEncryptedStringInput.js";
 
 /**
@@ -19,11 +20,19 @@ export const PolarisAutoPasswordInput = (
   } & Partial<TextFieldProps>
 ) => {
   const { findBy } = useAutoFormMetadata();
+  const { path } = useFieldMetadata(props.field);
+  const { field: fieldProps } = useController({ name: path });
+
   const [isEditing, setIsEditing] = useState(!findBy);
+
+  const startEditing = () => {
+    fieldProps.onChange(""); // Touch the field to mark it as dirty
+    setIsEditing(true);
+  };
 
   const startEditingButton = (
     <div style={{ display: "flex" }}>
-      <Button variant="plain" size="slim" icon={EditIcon} onClick={() => setIsEditing(true)} role={`${props.field}EditPasswordButton`} />
+      <Button variant="plain" size="slim" icon={EditIcon} onClick={startEditing} role={`${props.field}EditPasswordButton`} />
     </div>
   );
 
