@@ -1,6 +1,6 @@
 import type { ActionFunction } from "@gadgetinc/api-client-core";
 import type { FormProps } from "@shopify/polaris";
-import { Form, FormLayout, SkeletonBodyText, SkeletonDisplayText } from "@shopify/polaris";
+import { BlockStack, Form, FormLayout, SkeletonBodyText, SkeletonDisplayText } from "@shopify/polaris";
 import React from "react";
 import { FormProvider } from "react-hook-form";
 import type { OptionsType } from "../../utils.js";
@@ -74,7 +74,9 @@ export const PolarisAutoForm = <
           {fields.map(({ metadata }) => (
             <PolarisAutoInput field={metadata.apiIdentifier} key={metadata.apiIdentifier} />
           ))}
-          <PolarisAutoSubmit>{props.submitLabel ?? "Submit"}</PolarisAutoSubmit>
+          <div>
+            <PolarisAutoSubmit>{props.submitLabel ?? "Submit"}</PolarisAutoSubmit>
+          </div>
         </>
       )}
     </>
@@ -84,7 +86,7 @@ export const PolarisAutoForm = <
     <AutoFormMetadataContext.Provider value={autoFormMetadataContext}>
       <FormProvider {...originalFormMethods}>
         <Form {...rest} onSubmit={submit}>
-          <FormLayout>{formContent}</FormLayout>
+          <BlockStack gap="400">{formContent}</BlockStack>
         </Form>
       </FormProvider>
     </AutoFormMetadataContext.Provider>
