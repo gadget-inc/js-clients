@@ -102,6 +102,59 @@ describe("PolarisDateTimePicker", () => {
       cy.get("#test-time").should("have.value", "");
     });
 
+    it("can show the default field value", () => {
+      cy.mockModelActionMetadata(api, {
+        modelName: "Widget",
+        modelApiIdentifier: "widget",
+        action: {
+          apiIdentifier: "create",
+          operatesWithRecordIdentity: false,
+        },
+        inputFields: [
+          {
+            name: "Widget",
+            apiIdentifier: "widget",
+            fieldType: "Object",
+            requiredArgumentForInput: false,
+            configuration: {
+              __typename: "GadgetObjectFieldConfig",
+              fieldType: "Object",
+              validations: [],
+              name: null,
+              fields: [
+                {
+                  name: "Starts at",
+                  apiIdentifier: "startsAt",
+                  fieldType: "DateTime",
+                  requiredArgumentForInput: false,
+                  sortable: true,
+                  filterable: true,
+                  configuration: {
+                    __typename: "GadgetDateTimeConfig",
+                    fieldType: "DateTime",
+                    validations: [],
+                  },
+                },
+              ],
+            },
+            __typename: "GadgetObjectField",
+          },
+        ],
+        defaultRecord: {
+          startsAt: "2024-07-10T04:00:00.000Z",
+        },
+      });
+      cy.mountWithWrapper(
+        <PolarisAutoForm action={api.widget.create}>
+          <PolarisAutoDateTimePicker id="test" includeTime field="startsAt" />
+        </PolarisAutoForm>,
+        PolarisWrapper
+      );
+
+      cy.get("#test-date").should("have.value", "2024-07-10");
+      cy.get("#test-time").should("have.value", "4:00 AM");
+    });
+
     it("can show the current value", () => {
       const onChangeSpy = cy.spy().as("onChangeSpy");
       cy.mountWithWrapper(
