@@ -11,15 +11,17 @@ const createMarkup = (items: string[], selectedState: string) => {
     return (
       <div key={i} style={{ textAlign: "center", cursor: "default", padding: "0px 4px" }}>
         <Listbox.Option value={item}>
-          {selectedState.padStart(2, "0") === item.padStart(2, "0") || (parseInt(selectedState, 10) === 0 && item === "12") ? (
-            <Box padding="100" background="bg-surface-secondary-selected" borderRadius="200" minHeight="30px" minWidth="30px">
-              {item}
-            </Box>
-          ) : (
-            <Box minHeight="30px" minWidth="30px" padding="100">
-              {item}
-            </Box>
-          )}
+          <div style={{ cursor: "pointer" }}>
+            {selectedState.padStart(2, "0") === item.padStart(2, "0") || (parseInt(selectedState, 10) === 0 && item === "12") ? (
+              <Box padding="100" background="bg-surface-secondary-selected" borderRadius="200" minHeight="30px" minWidth="30px">
+                {item}
+              </Box>
+            ) : (
+              <Box minHeight="30px" minWidth="30px" padding="100">
+                {item}
+              </Box>
+            )}
+          </div>
         </Listbox.Option>
       </div>
     );
@@ -169,6 +171,7 @@ const PolarisAutoTimePicker = (props: {
       <Popover
         active={timePopoverActive}
         onClose={() => setTimePopoverActive(false)}
+        preferredAlignment="right"
         activator={
           <TextField
             prefix={<Icon source={ClockIcon} />}
@@ -184,26 +187,28 @@ const PolarisAutoTimePicker = (props: {
           />
         }
       >
-        {!props.hideTimePopover && (
-          <div style={{ overflow: "hidden", padding: "15px 8px" }}>
-            <div style={{ display: "flex" }}>
-              {[hourProps, minProps, ampmProps].map((timeComponentProps, i) => (
-                <Scrollable key={i} style={{ overflowY: "scroll", height: "250px" }}>
-                  <Listbox onSelect={(value: string) => onTimeStringChange(timeComponentProps.formatter(value))}>
-                    {createMarkup(
-                      timeComponentProps.array,
-                      valueProp
-                        ? `${getDateTimeObjectFromDate(valueProp)[timeComponentProps.key]}`
-                        : props.fieldProps.value
-                        ? `${getDateTimeObjectFromDate(new Date(props.fieldProps.value))[timeComponentProps.key]}`
-                        : timeComponentProps.array[0]
-                    )}
-                  </Listbox>
-                </Scrollable>
-              ))}
+        <Popover.Pane fixed>
+          {!props.hideTimePopover && (
+            <div style={{ overflow: "hidden", padding: "15px 8px" }}>
+              <div style={{ display: "flex" }}>
+                {[hourProps, minProps, ampmProps].map((timeComponentProps, i) => (
+                  <Scrollable key={i} style={{ overflowY: "scroll", height: "250px" }}>
+                    <Listbox onSelect={(value: string) => onTimeStringChange(timeComponentProps.formatter(value))}>
+                      {createMarkup(
+                        timeComponentProps.array,
+                        valueProp
+                          ? `${getDateTimeObjectFromDate(valueProp)[timeComponentProps.key]}`
+                          : props.fieldProps.value
+                          ? `${getDateTimeObjectFromDate(new Date(props.fieldProps.value))[timeComponentProps.key]}`
+                          : timeComponentProps.array[0]
+                      )}
+                    </Listbox>
+                  </Scrollable>
+                ))}
+              </div>
             </div>
-          </div>
-        )}
+          )}
+        </Popover.Pane>
       </Popover>
     </>
   );
