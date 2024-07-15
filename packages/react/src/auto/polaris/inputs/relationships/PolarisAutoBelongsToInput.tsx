@@ -48,7 +48,6 @@ export const PolarisAutoBelongsToInput = (props: AutoRelationshipInputProps) => 
           <Combobox.TextField
             prefix={<Icon source={SearchIcon} />}
             onChange={search.set}
-            onBlur={pagination.resetPagination}
             value={search.value}
             name={path}
             label={metadata.name}

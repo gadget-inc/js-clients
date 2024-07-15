@@ -228,11 +228,6 @@ export const useAllRelatedModelRecords = (props: {
     setSearchValue(emptySearch ? undefined : search);
   }, []);
 
-  const resetPagination = useCallback(() => {
-    clearPagination(); // Causes a refetch
-    setLoadedRecords([]); // Will be populated with the first page in the useEffect below
-  }, [newlyFetchedRecords]);
-
   /**
    * This useEffect appends the newly fetched records to the list of records that have already been loaded
    * `numberOfRecordsToLoad` are retrieved per `useFindMany` call
@@ -264,7 +259,6 @@ export const useAllRelatedModelRecords = (props: {
       clearPagination,
       loadNextPage,
       hasNextPage,
-      resetPagination,
     },
 
     search: {

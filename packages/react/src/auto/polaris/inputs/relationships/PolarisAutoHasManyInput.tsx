@@ -34,7 +34,6 @@ export const PolarisAutoHasManyInput = (props: AutoRelationshipInputProps) => {
           <Combobox.TextField
             prefix={<Icon source={SearchIcon} />}
             onChange={search.set}
-            // onBlur={pagination.resetPagination}
             value={search.value}
             label={metadata.name}
             name={path}
