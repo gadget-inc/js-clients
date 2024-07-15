@@ -46,7 +46,6 @@ export const useStringInputController = (
     errorMessage: error?.message,
     autoComplete: "off",
     placeholder,
-
     metadata,
     ...fieldProperties,
   };

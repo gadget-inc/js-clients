@@ -6,10 +6,10 @@ import { AutoFormMetadataContext } from "../../src/auto/AutoFormContext.js";
 import { testApi as api } from "../apis.js";
 import { MockClientProvider } from "../testWrappers.js";
 
-export const MockForm = ({ submit, metadata, submitResult }: AutoFormMetadataContext) => {
+export const MockForm = ({ submit, metadata, submitResult, resolver }: AutoFormMetadataContext & { resolver?: any }) => {
   return (props: { children: ReactNode }) => {
     // eslint-disable-next-line react-hooks/rules-of-hooks
-    const methods = useForm();
+    const methods = useForm({ resolver });
 
     return (
       <MockClientProvider api={api}>

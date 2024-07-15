@@ -19,8 +19,7 @@ export const PolarisAutoTextInput = (
       {...getPropsWithoutRef(stringInputController)}
       requiredIndicator={stringInputController.metadata.requiredArgumentForInput}
       type={stringInputController.type as TextFieldProps["type"]}
-      error={stringInputController.isError}
-      helpText={stringInputController.errorMessage}
+      error={stringInputController.errorMessage}
       {...props}
     />
   );
