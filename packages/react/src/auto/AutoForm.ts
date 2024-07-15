@@ -2,7 +2,7 @@ import type { ActionFunction, GadgetRecord, GlobalActionFunction } from "@gadget
 import { yupResolver } from "@hookform/resolvers/yup";
 import type { ReactNode } from "react";
 import { useEffect, useMemo, useRef } from "react";
-import type { AnyActionWithId, RecordIdentifier } from "src/use-action-form/types.js";
+import type { AnyActionWithId, RecordIdentifier, UseActionFormHookStateData } from "src/use-action-form/types.js";
 import type { GadgetObjectFieldConfig } from "../internal/gql/graphql.js";
 import type { ActionMetadata, FieldMetadata, GlobalActionMetadata } from "../metadata.js";
 import { filterFieldList, isActionMetadata, useActionMetadata } from "../metadata.js";
@@ -33,6 +33,8 @@ export type AutoFormProps<
   submitLabel?: ReactNode;
   /** What to show the user once the form has been submitted successfully */
   successContent?: ReactNode;
+  /** Called when the form submission completes successfully on the backend */
+  onSuccess?: (record: UseActionFormHookStateData<ActionFunc>) => void;
 } & (ActionFunc extends AnyActionWithId<GivenOptions>
   ? {
       /**
@@ -107,7 +109,7 @@ export const useAutoForm = <
 >(
   props: AutoFormProps<GivenOptions, SchemaT, ActionFunc, any, any>
 ) => {
-  const { action, record } = props;
+  const { action, record, onSuccess } = props;
   const { metadata, fetching: fetchingMetadata, error: metadataError } = useActionMetadata(props.action);
 
   // filter down the fields to render only what we want to render for this form
@@ -153,6 +155,7 @@ export const useAutoForm = <
       }
       return fieldsToSend;
     },
+    onSuccess,
   });
 
   // we don't have synchronous access to the default values always -- sometimes we need to load them from the metadata. if we do that, then we need to forcibly set them into the form state once they have been loaded

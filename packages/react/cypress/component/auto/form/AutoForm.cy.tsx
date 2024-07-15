@@ -47,6 +47,27 @@ describeForEachAutoAdapter("AutoForm", ({ name, adapter: { AutoForm }, wrapper }
     ensureFieldInputLabelsExist();
   });
 
+  it("onSuccess callback should return a record result after the form submission", () => {
+    const onSuccessSpy = cy.spy().as("onSuccessSpy");
+    cy.mountWithWrapper(<AutoForm action={api.widget.create} exclude={["gizmos"]} onSuccess={onSuccessSpy} />, wrapper);
+
+    cy.get(`input[name="widget.name"]`).type("test record");
+    cy.get(`input[name="widget.inventoryCount"]`).type("999");
+
+    cy.getSubmitButton().click();
+
+    cy.contains(`Saved Widget successfully`).should("not.exist");
+
+    // eslint-disable-next-line jest/valid-expect-in-promise
+    cy.get("@onSuccessSpy")
+      .should("have.been.called")
+      .then(() => {
+        const record = onSuccessSpy.getCalls()[0].args[0].toJSON();
+        expect(record).property("inventoryCount", 999);
+        expect(record).property("name", "test record");
+      });
+  });
+
   it("should show an error banner and not render a form when it fails to fetch metadata", () => {
     cy.intercept(
       {
@@ -185,7 +206,7 @@ describeForEachAutoAdapter("AutoForm", ({ name, adapter: { AutoForm }, wrapper }
       });
   });
 
-  it("Only allows existing passwords to be replaced, not edited", () => {
+  it("only allows existing passwords to be replaced, not edited", () => {
     cy.mountWithWrapper(<AutoForm action={api.user.update} findBy={"1"} include={["password"]} />, wrapper);
 
     // fill in name but not inventoryCount

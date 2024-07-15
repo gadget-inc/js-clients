@@ -3,23 +3,37 @@ import { Banner } from "@shopify/polaris";
 import React from "react";
 import { useResultBannerController } from "../../hooks/useResultBannerController.js";
 
+const PolarisBaseSubmitResultBanner = (props: BannerProps) => {
+  const { hide, successful, title } = useResultBannerController();
+
+  return (
+    <Banner
+      title={title}
+      tone={successful ? "success" : "critical"}
+      {...props}
+      onDismiss={() => {
+        hide();
+        props?.onDismiss?.();
+      }}
+    />
+  );
+};
+
 export const PolarisSubmitResultBanner = (props: { successBannerProps?: BannerProps; errorBannerProps?: BannerProps }) => {
-  const { show, hide, successful, title } = useResultBannerController();
+  return (
+    <>
+      <PolarisSubmitSuccessfulBanner {...props.successBannerProps} />
+      <PolarisSubmitErrorBanner {...props.errorBannerProps} />
+    </>
+  );
+};
 
-  if (show) {
-    const bannerProps = successful ? props.successBannerProps : props.errorBannerProps;
-    return (
-      <Banner
-        title={title}
-        tone={successful ? "success" : "critical"}
-        {...bannerProps}
-        onDismiss={() => {
-          hide();
-          bannerProps?.onDismiss?.();
-        }}
-      />
-    );
-  }
+export const PolarisSubmitSuccessfulBanner = (props: BannerProps) => {
+  const { show, successful } = useResultBannerController();
+  return show && successful ? <PolarisBaseSubmitResultBanner {...props} /> : null;
+};
 
-  return null;
+export const PolarisSubmitErrorBanner = (props: BannerProps) => {
+  const { show, successful } = useResultBannerController();
+  return show && !successful ? <PolarisBaseSubmitResultBanner {...props} /> : null;
 };
