@@ -41,8 +41,8 @@ export const PolarisAutoFileInput = (props: { field: string; control?: Control<a
     if (!value || !isAutoFileFieldValue(value)) return null;
 
     return (
-      <Box padding="100">
-        <InlineStack align="space-between">
+      <Box padding="100" paddingInlineEnd={"400"}>
+        <InlineStack align="space-between" gap="400">
           <InlineStack gap="200" blockAlign="center">
             <Thumbnail
               size="small"
