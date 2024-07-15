@@ -16,8 +16,12 @@ jobs:
         run: pnpm --filter=blog-example build-vite
   test-cypress:
     runs-on: ubuntu-latest
+    container:
+      image: cypress/included:cypress-13.13.0-node-20.14.0-chrome-126.0.6478.114-1-ff-127.0.1-edge-126.0.2592.61-1
     steps:
       - uses: actions/checkout@v3
+      - name: install sudo
+        run: apt update && apt install sudo curl xz-utils
       - uses: ./.github/actions/setup-test-env
       - name: Build all packages (so they can require each other)
         run: pnpm build
