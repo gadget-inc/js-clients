@@ -40,6 +40,9 @@ export const stadiumModelInputFields = {
           relatedModel: {
             apiIdentifier: "round",
             namespace: ["game"],
+            defaultDisplayField: {
+              apiIdentifier: "name",
+            },
             __typename: "GadgetModel",
           },
         },
@@ -59,6 +62,9 @@ export const stadiumModelInputFields = {
           relatedModel: {
             apiIdentifier: "city",
             namespace: ["game"],
+            defaultDisplayField: {
+              apiIdentifier: "name",
+            },
             __typename: "GadgetModel",
           },
         },

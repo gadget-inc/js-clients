@@ -1,3 +1,4 @@
+import { assert } from "@gadgetinc/api-client-core";
 import { useCallback, useEffect, useState } from "react";
 import { FieldType } from "../../metadata.js";
 import { useFindMany } from "../../useFindMany.js";
@@ -16,7 +17,7 @@ export const useRelatedModelOptions = (props: {
   field: string; // Field API identifier
   optionLabel?: OptionLabel; // The label to display for each related model record
 }) => {
-  const { field, optionLabel } = props;
+  const { field } = props;
   const { metadata } = useFieldMetadata(field);
   const { findBy, model } = useAutoFormMetadata();
 
@@ -28,6 +29,11 @@ export const useRelatedModelOptions = (props: {
   const relatedModelNamespace = relationshipFieldConfig.relatedModel?.namespace;
   const relatedModelInverseFieldApiId =
     "inverseField" in relationshipFieldConfig ? relationshipFieldConfig.inverseField?.apiIdentifier : undefined;
+
+  const optionLabel = assert(
+    props.optionLabel ?? relationshipFieldConfig.relatedModel?.defaultDisplayField.apiIdentifier,
+    "Option label is required for relationships"
+  );
 
   const { selected } = isBelongsToField
     ? // eslint-disable-next-line
@@ -94,13 +100,11 @@ const getRecordIdsAsString = (records?: { map: (mapperFunction: (record: { id: s
     .sort()
     .join(",");
 
-export const getRecordsAsOptions = (records: Record<string, any>[], optionLabel?: OptionLabel) => {
-  const getRecordLabel = (record: Record<string, any>, optionLabel?: OptionLabel): string =>
-    optionLabel
-      ? typeof optionLabel === "string"
-        ? record[optionLabel] // Related model field API id
-        : optionLabel(record) // Callback on the whole related model record
-      : record.name; // TODO - Incorporate DataModel.defaultDisplayField
+export const getRecordsAsOptions = (records: Record<string, any>[], optionLabel: OptionLabel) => {
+  const getRecordLabel = (record: Record<string, any>, optionLabel: OptionLabel): string =>
+    typeof optionLabel === "string"
+      ? record[optionLabel] // Related model field API id
+      : optionLabel(record); // Callback on the whole related model record
 
   return (
     records?.map((record: Record<string, any>) => ({
