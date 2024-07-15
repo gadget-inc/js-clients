@@ -1,7 +1,9 @@
 import { AppProvider } from "@shopify/polaris";
 import translations from "@shopify/polaris/locales/en.json";
-import { RenderResult, act, render } from "@testing-library/react";
-import { UserEvent, userEvent } from "@testing-library/user-event";
+import type { RenderResult } from "@testing-library/react";
+import { act, render } from "@testing-library/react";
+import type { UserEvent } from "@testing-library/user-event";
+import { userEvent } from "@testing-library/user-event";
 import type { ReactNode } from "react";
 import React from "react";
 import { PolarisAutoForm } from "../../src/auto/polaris/PolarisAutoForm.js";
@@ -139,6 +141,35 @@ describe("PolarisAutoForm", () => {
   });
 
   describe("dirty fields", () => {
+    test("it should include fields that are in the 'include' prop when submitting a create form", async () => {
+      const user = userEvent.setup();
+
+      const { getByRole, getByLabelText } = render(<PolarisAutoForm action={api.gizmo.create} include={["name", "orientation"]} />, {
+        wrapper: PolarisMockedProviders,
+      });
+
+      loadMockGizmoCreateMetadata();
+
+      await act(async () => {
+        const nameElement = getByLabelText("Name");
+        await user.clear(nameElement);
+        await user.click(nameElement);
+        await user.keyboard("updated test record");
+
+        await user.click(getByRole("button"));
+      });
+
+      const mutation = mockUrqlClient.executeMutation.mock.calls[0][0];
+      const mutationName = mutation.query.definitions[0].name.value;
+      const variables = mutation.variables.gizmo;
+
+      expect(mutationName).toEqual("createGizmo");
+      expect(variables).toEqual({
+        name: "updated test record",
+        orientation: null,
+      });
+    });
+
     test("it should include fields that are not dirty when submitting a create form", async () => {
       const user = userEvent.setup();
 

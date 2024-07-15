@@ -138,15 +138,15 @@ export const useAutoForm = <
     resolver: useValidationResolver(metadata),
     send: () => {
       const fieldsToSend = fields
-        .map(({ path }) => path)
-        .filter((item) => {
+        .filter(({ metadata }) => {
           if (props.include) {
-            return props.include?.includes(item);
+            return props.include?.includes(metadata.apiIdentifier);
           } else if (props.exclude) {
-            return !props.exclude?.includes(item);
+            return !props.exclude?.includes(metadata.apiIdentifier);
           }
           return true;
-        });
+        })
+        .map(({ path }) => path);
 
       if (operatesWithRecordId) {
         fieldsToSend.push("id");
