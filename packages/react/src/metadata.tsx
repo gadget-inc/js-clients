@@ -285,7 +285,7 @@ export const useActionMetadata = (actionFunction: ActionFunction<any, any, any, 
 
   let metadata: ActionMetadata | GlobalActionMetadata | undefined = undefined;
 
-  if (data) {
+  if (data && !error) {
     if (actionFunction.type === "globalAction") {
       metadata = assert(data.gadgetMeta.globalAction, "no global action metadata found from Gadget API");
     } else {

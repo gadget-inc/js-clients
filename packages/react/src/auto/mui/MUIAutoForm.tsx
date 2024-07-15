@@ -59,14 +59,18 @@ export const MUIAutoForm = <
     <>
       <MUISubmitResultBanner />
       {fetchingMetadata && <MUIFormSkeleton />}
-      {fields.map(({ metadata }) => (
-        <Grid item key={metadata.apiIdentifier} xs={12}>
-          <MUIAutoInput field={metadata.apiIdentifier} />
-        </Grid>
-      ))}
-      <Grid item xs={12}>
-        <MUIAutoSubmit loading={isLoading}>{props.submitLabel ?? "Submit"}</MUIAutoSubmit>
-      </Grid>
+      {!metadataError && (
+        <>
+          {fields.map(({ metadata }) => (
+            <Grid item key={metadata.apiIdentifier} xs={12}>
+              <MUIAutoInput field={metadata.apiIdentifier} />
+            </Grid>
+          ))}
+          <Grid item xs={12}>
+            <MUIAutoSubmit loading={isLoading}>{props.submitLabel ?? "Submit"}</MUIAutoSubmit>
+          </Grid>
+        </>
+      )}
     </>
   );
 

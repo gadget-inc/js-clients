@@ -47,6 +47,42 @@ describeForEachAutoAdapter("AutoForm", ({ name, adapter: { AutoForm }, wrapper }
     ensureFieldInputLabelsExist();
   });
 
+  it("should show an error banner and not render a form when it fails to fetch metadata", () => {
+    cy.intercept(
+      {
+        method: "POST",
+        url: `${api.connection.endpoint}?operation=ModelActionMetadata`,
+      },
+      {
+        errors: [
+          {
+            message:
+              'GGT_INVALID_JSON_DEFAULT: Invalid JSON default, cannot apply to record. Parse error: Unexpected token \'}\', "{\n  "hello":\n}" is not valid JSON',
+            locations: [
+              {
+                line: 6,
+                column: 7,
+              },
+            ],
+            path: ["gadgetMeta", "model", "defaultRecord"],
+            extensions: {
+              fromSandbox: false,
+            },
+          },
+        ],
+        data: {
+          gadgetMeta: {
+            model: null,
+          },
+        },
+      }
+    ).as("ModelCreateActionMetadataError");
+
+    cy.mountWithWrapper(<AutoForm action={api.widget.create} />, wrapper);
+    cy.contains("GGT_INVALID_JSON_DEFAULT: Invalid JSON default, cannot apply to record");
+    cy.getSubmitButton().should("not.exist");
+  });
+
   it("can render a form to update model and submit it", () => {
     cy.intercept("POST", `${api.connection.options.endpoint}?operation=widget`, {
       body: {
