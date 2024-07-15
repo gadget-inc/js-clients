@@ -1,5 +1,4 @@
 import React from "react";
-import { useController } from "react-hook-form";
 import { FieldType } from "../../../metadata.js";
 import { useFieldMetadata } from "../../hooks/useFieldMetadata.js";
 import { PolarisAutoBooleanInput } from "./PolarisAutoBooleanInput.js";
@@ -15,19 +14,9 @@ import { PolarisAutoBelongsToInput } from "./relationships/PolarisAutoBelongsToI
 import { PolarisAutoHasManyInput } from "./relationships/PolarisAutoHasManyInput.js";
 
 export const PolarisAutoInput = (props: { field: string }) => {
-  const { path, metadata } = useFieldMetadata(props.field);
-
-  const {
-    field: fieldProps,
-    fieldState: { error },
-  } = useController({
-    name: path,
-  });
-  // many polaris components don't take refs because they are weenies, see https://github.com/Shopify/polaris/issues/1083
-  // omit the ref from the forwarded along props so that we don't get a warning
-  const { ref: _ref, ...field } = fieldProps;
-
+  const { metadata } = useFieldMetadata(props.field);
   const config = metadata.configuration;
+
   switch (config.fieldType) {
     case FieldType.String:
     case FieldType.Number:

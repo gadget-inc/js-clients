@@ -35,17 +35,7 @@ export const MUIAutoFormControl = (props: { field: string; children: ReactElemen
 };
 
 export const MUIAutoInput = (props: { field: string }) => {
-  const { path, metadata } = useFieldMetadata(props.field);
-
-  const {
-    field: fieldProps,
-    fieldState: { error },
-  } = useController({
-    name: path,
-
-    rules: { required: metadata.requiredArgumentForInput },
-  });
-
+  const { metadata } = useFieldMetadata(props.field);
   const config = metadata.configuration;
 
   switch (config.fieldType) {
