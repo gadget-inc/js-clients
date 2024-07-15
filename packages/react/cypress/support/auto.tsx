@@ -7,7 +7,7 @@ import type { ComponentType, ReactNode } from "react";
 import React from "react";
 import { FormProvider, useForm } from "react-hook-form";
 import type { AutoAdapter } from "../../src/auto/index.js";
-import * as MUIAdapter from "../../src/auto/mui/index.js";
+import * as MUIAdapter from "../../src/auto/mui/test-index.js";
 import * as PolarisAdapter from "../../src/auto/polaris/index.js";
 
 interface AutoSuiteConfig {
