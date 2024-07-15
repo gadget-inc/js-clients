@@ -2,7 +2,8 @@ import { jest } from "@jest/globals";
 import { AppProvider } from "@shopify/polaris";
 import translations from "@shopify/polaris/locales/en.json";
 import type { RenderResult } from "@testing-library/react";
-import { render } from "@testing-library/react";
+import { act, render, screen } from "@testing-library/react";
+import { userEvent } from "@testing-library/user-event";
 import type { ReactNode } from "react";
 import React from "react";
 import { PolarisAutoForm } from "../../../src/auto/polaris/PolarisAutoForm.js";
@@ -70,6 +71,44 @@ describe("PolarisAutoTextInput", () => {
       const fieldNameLabel = result.queryByText("Secret key");
       expect(fieldNameLabel).toBeInTheDocument();
       expect(result.queryByPlaceholderText("Enter text")).toBeInTheDocument();
+    });
+  });
+
+  describe("validation errors", () => {
+    describe("client side validation errors", () => {
+      const getCreateWrapper = () => ({
+        wrapper: MockForm({
+          submit: jest.fn<any>(),
+          resolver: () => {
+            return {
+              values: {},
+              errors: {
+                "widget.name": {
+                  type: "required",
+                  message: "This is required.",
+                },
+              },
+            };
+          },
+          metadata,
+        }),
+      });
+
+      beforeEach(async () => {
+        const user = userEvent.setup();
+        result = render(<PolarisAutoTextInput field="name" />, getCreateWrapper());
+        await act(async () => {
+          await user.click(screen.getByRole("button"));
+        });
+      });
+
+      test("it renders client side validation messages", async () => {
+        expect(screen.queryByText("This is required.")).toBeInTheDocument();
+      });
+
+      test("it renders polaris inline errors", async () => {
+        expect(result.container.getElementsByClassName("Polaris-InlineError")).toHaveLength(1);
+      });
     });
   });
 

@@ -122,8 +122,7 @@ export const PolarisAutoEnumInput = (props: { field: string; control?: Control<a
           verticalContent={selectedTagsElement}
           onChange={setSearchValue}
           id={`${props.field}-combobox-textfield`}
-          error={isError}
-          helpText={errorMessage}
+          error={errorMessage}
         />
       }
       {...comboboxProps}
