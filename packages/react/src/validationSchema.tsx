@@ -134,7 +134,7 @@ const validatorForField = (field: FieldMetadata) => {
   }
 
   if (field.requiredArgumentForInput) {
-    validator = validator.required();
+    validator = validator.required(`${field.name} is required`);
   } else {
     validator = (validator.nullable() as any).default(null);
   }
