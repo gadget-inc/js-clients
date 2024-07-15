@@ -161,7 +161,7 @@ const PolarisAutoTimePicker = (props: {
 
   useEffect(() => {
     if (!props.fieldProps.value || valueProp) return;
-    setTimeString(getTimeString(getDateTimeObjectFromDate(props.fieldProps.value)));
+    setTimeString(getTimeString(getDateTimeObjectFromDate(new Date(props.fieldProps.value))));
   }, [props.fieldProps.value, valueProp, setTimeString]);
 
   return (
@@ -195,7 +195,7 @@ const PolarisAutoTimePicker = (props: {
                       valueProp
                         ? `${getDateTimeObjectFromDate(valueProp)[timeComponentProps.key]}`
                         : props.fieldProps.value
-                        ? `${getDateTimeObjectFromDate(props.fieldProps.value)[timeComponentProps.key]}`
+                        ? `${getDateTimeObjectFromDate(new Date(props.fieldProps.value))[timeComponentProps.key]}`
                         : timeComponentProps.array[0]
                     )}
                   </Listbox>
