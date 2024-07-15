@@ -33,7 +33,7 @@ const InnerProvider = (props: { children: ReactNode; api: AnyClient; signedPaylo
 
   useEffect(() => {
     if (!signedPayload) {
-      console.log("[gadget-react-big-commerce] no signed payload, skipping auth setup");
+      console.log("[gadget-react-bigcommerce] no signed payload, skipping auth setup");
       return;
     }
 
@@ -66,15 +66,15 @@ const InnerProvider = (props: { children: ReactNode; api: AnyClient; signedPaylo
     const BigCommerce = (window as any).Bigcommerce;
 
     if (!BigCommerce) {
-      console.warn("[gadget-react-big-commerce] BigCommerce global not found, not initializing BigCommerce SDK");
+      console.warn("[gadget-react-bigcommerce] BigCommerce global not found, not initializing BigCommerce SDK");
       return;
     }
 
-    console.debug("[gadget-react-big-commerce] initializing BigCommerce SDK");
+    console.debug("[gadget-react-bigcommerce] initializing BigCommerce SDK");
     BigCommerce.init();
   }, [isAuthenticated]);
 
-  console.debug("[gadget-react-big-commerce] provider rendering", {
+  console.debug("[gadget-react-bigcommerce] provider rendering", {
     signedPayload,
     data,
     fetching,

@@ -48,9 +48,9 @@ jobs:
           token: ${{ secrets.NPM_TOKEN }}
           package: ./packages/shopify-extensions/package.json
           access: public
-      - name: Publish @gadgetinc/react-big-commerce
+      - name: Publish @gadgetinc/react-bigcommerce
         uses: JS-DevTools/npm-publish@v1
         with:
           token: ${{ secrets.NPM_TOKEN }}
-          package: ./packages/react-big-commerce/package.json
+          package: ./packages/react-bigcommerce/package.json
           access: public

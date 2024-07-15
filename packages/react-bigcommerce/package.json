@@ -1,5 +1,5 @@
 {
-  "name": "@gadgetinc/react-big-commerce",
+  "name": "@gadgetinc/react-bigcommerce",
   "version": "0.0.1",
   "files": [
     "README.md",
@@ -7,7 +7,7 @@
   ],
   "license": "MIT",
   "repository": "github:gadget-inc/js-clients",
-  "homepage": "https://github.com/gadget-inc/js-clients/tree/main/packages/react-big-commerce",
+  "homepage": "https://github.com/gadget-inc/js-clients/tree/main/packages/react-bigcommerce",
   "type": "module",
   "exports": {
     ".": {
