@@ -1,6 +1,5 @@
 import type { ComboboxProps } from "@shopify/polaris";
-import { AutoSelection, Box, Combobox, Icon, InlineStack, Listbox, Tag, Text } from "@shopify/polaris";
-import { SearchIcon } from "@shopify/polaris-icons";
+import { AutoSelection, Box, Combobox, InlineStack, Listbox, Tag, Text } from "@shopify/polaris";
 import React, { useCallback } from "react";
 import { type Control } from "react-hook-form";
 import { useEnumInputController } from "../../hooks/useEnumInputController.js";
@@ -115,7 +114,6 @@ export const PolarisAutoEnumInput = (props: { field: string; control?: Control<a
       activator={
         <Combobox.TextField
           autoComplete="off"
-          prefix={<Icon source={SearchIcon} />}
           label={inputLabel}
           value={searchValue}
           placeholder="Search"

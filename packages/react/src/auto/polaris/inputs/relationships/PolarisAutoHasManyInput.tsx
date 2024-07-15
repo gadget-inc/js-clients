@@ -1,6 +1,5 @@
 import { GadgetRecordList } from "@gadgetinc/api-client-core";
-import { Banner, Combobox, Icon } from "@shopify/polaris";
-import { SearchIcon } from "@shopify/polaris-icons";
+import { Banner, Combobox } from "@shopify/polaris";
 import React from "react";
 import { useHasManyInputController } from "../../../hooks/useHasManyInputController.js";
 import { optionRecordsToLoadCount } from "../../../hooks/useRelatedModelOptions.js";
@@ -32,7 +31,6 @@ export const PolarisAutoHasManyInput = (props: AutoRelationshipInputProps) => {
       <Combobox
         activator={
           <Combobox.TextField
-            prefix={<Icon source={SearchIcon} />}
             onChange={search.set}
             value={search.value}
             label={metadata.name}

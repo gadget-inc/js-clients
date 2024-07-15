@@ -1,5 +1,4 @@
-import { Combobox, Icon, Tag } from "@shopify/polaris";
-import { SearchIcon } from "@shopify/polaris-icons";
+import { Combobox, Tag } from "@shopify/polaris";
 import React from "react";
 import { useBelongsToInputController } from "../../../hooks/useBelongsToInputController.js";
 import { optionRecordsToLoadCount } from "../../../hooks/useRelatedModelOptions.js";
@@ -46,7 +45,6 @@ export const PolarisAutoBelongsToInput = (props: AutoRelationshipInputProps) => 
       <Combobox
         activator={
           <Combobox.TextField
-            prefix={<Icon source={SearchIcon} />}
             onChange={search.set}
             value={search.value}
             name={path}
