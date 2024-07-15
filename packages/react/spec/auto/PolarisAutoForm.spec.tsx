@@ -173,7 +173,7 @@ describe("PolarisAutoForm", () => {
     test("it should include fields that are not dirty when submitting a create form", async () => {
       const user = userEvent.setup();
 
-      const { getByRole, getByLabelText } = render(<PolarisAutoForm action={api.gizmo.create} exclude={["widget"]} />, {
+      const { getByRole, getByLabelText, queryAllByText } = render(<PolarisAutoForm action={api.gizmo.create} exclude={["widget"]} />, {
         wrapper: PolarisMockedProviders,
       });
 
@@ -209,8 +209,12 @@ describe("PolarisAutoForm", () => {
         await user.clear(nameElement);
         await user.click(nameElement);
         await user.keyboard("updated another test record");
+      });
 
-        await user.click(getByRole("button"));
+      await act(async () => {
+        const submitButton = queryAllByText("Submit")[0];
+        expect(submitButton).toHaveTextContent("Submit");
+        await user.click(submitButton);
       });
 
       mutation = mockUrqlClient.executeMutation.mock.calls[1][0];

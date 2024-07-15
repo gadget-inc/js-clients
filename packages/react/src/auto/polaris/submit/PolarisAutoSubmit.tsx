@@ -1,5 +1,6 @@
 import { Button } from "@shopify/polaris";
-import React, { ReactNode } from "react";
+import type { ReactNode } from "react";
+import React from "react";
 
 /**
  * Button for submitting the AutoForm values
@@ -10,6 +11,10 @@ import React, { ReactNode } from "react";
  * const { submit } = useAutoFormMetadata();
  *
  */
-export const PolarisAutoSubmit = (props: { children?: ReactNode }) => {
-  return <Button submit>{(props.children as any) ?? "Submit"}</Button>;
+export const PolarisAutoSubmit = (props: { children?: ReactNode; isSubmitting?: boolean }) => {
+  return (
+    <Button submit loading={props.isSubmitting}>
+      {(props.children as any) ?? "Submit"}
+    </Button>
+  );
 };

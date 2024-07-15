@@ -132,7 +132,7 @@ export const useAutoForm = <
   const {
     submit,
     error: formError,
-    formState: { isSubmitSuccessful, isLoading, isReady },
+    formState: { isSubmitSuccessful, isLoading, isReady, isSubmitting },
     originalFormMethods,
   } = useActionForm(action, {
     defaultValues: defaultValues as any,
@@ -174,6 +174,7 @@ export const useAutoForm = <
     fields,
     submit,
     formError,
+    isSubmitting,
     isSubmitSuccessful,
     isLoading,
     originalFormMethods,

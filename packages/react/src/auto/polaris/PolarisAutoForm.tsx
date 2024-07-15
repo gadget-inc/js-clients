@@ -35,7 +35,7 @@ export const PolarisAutoForm = <
     findBy,
     ...rest
   } = props as AutoFormProps<GivenOptions, SchemaT, ActionFunc> & Omit<Partial<FormProps>, "action"> & { findBy: any };
-  const { metadata, fetchingMetadata, metadataError, fields, submit, formError, isSubmitSuccessful, isLoading, originalFormMethods } =
+  const { metadata, fetchingMetadata, metadataError, fields, submit, formError, isSubmitting, isSubmitSuccessful, originalFormMethods } =
     useAutoForm(props);
 
   const autoFormMetadataContext: AutoFormMetadataContext = {
@@ -75,7 +75,7 @@ export const PolarisAutoForm = <
             <PolarisAutoInput field={metadata.apiIdentifier} key={metadata.apiIdentifier} />
           ))}
           <div>
-            <PolarisAutoSubmit>{props.submitLabel ?? "Submit"}</PolarisAutoSubmit>
+            <PolarisAutoSubmit isSubmitting={isSubmitting}>{props.submitLabel ?? "Submit"}</PolarisAutoSubmit>
           </div>
         </>
       )}
