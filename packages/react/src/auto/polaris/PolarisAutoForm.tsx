@@ -69,10 +69,14 @@ export const PolarisAutoForm = <
   const formContent = props.children ?? (
     <>
       <PolarisSubmitResultBanner />
-      {fields.map(({ metadata }) => (
-        <PolarisAutoInput field={metadata.apiIdentifier} key={metadata.apiIdentifier} />
-      ))}
-      <PolarisAutoSubmit>{props.submitLabel ?? "Submit"}</PolarisAutoSubmit>
+      {!metadataError && (
+        <>
+          {fields.map(({ metadata }) => (
+            <PolarisAutoInput field={metadata.apiIdentifier} key={metadata.apiIdentifier} />
+          ))}
+          <PolarisAutoSubmit>{props.submitLabel ?? "Submit"}</PolarisAutoSubmit>
+        </>
+      )}
     </>
   );
 
