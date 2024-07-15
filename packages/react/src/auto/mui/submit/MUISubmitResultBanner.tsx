@@ -3,19 +3,32 @@ import { Alert, Button } from "@mui/material";
 import React from "react";
 import { useResultBannerController } from "../../hooks/useResultBannerController.js";
 
+const MUIBaseSubmitResultBanner = (props: AlertProps) => {
+  const { hide, successful, title } = useResultBannerController();
+
+  return (
+    <Alert severity={successful ? "success" : "error"} {...props}>
+      {title}
+      <Button onClick={hide}>X</Button>
+    </Alert>
+  );
+};
+
 export const MUISubmitResultBanner = (props: { successBannerProps?: AlertProps; errorBannerProps?: AlertProps }) => {
-  const { show, hide, successful, title } = useResultBannerController();
+  return (
+    <>
+      <MUISubmitSuccessfulBanner {...props.successBannerProps} />
+      <MUISubmitErrorBanner {...props.errorBannerProps} />
+    </>
+  );
+};
 
-  if (show) {
-    const bannerProps = successful ? props.successBannerProps : props.errorBannerProps;
+export const MUISubmitSuccessfulBanner = (props: AlertProps) => {
+  const { show, successful } = useResultBannerController();
+  return show && successful ? <MUIBaseSubmitResultBanner {...props} /> : null;
+};
 
-    return (
-      <Alert severity={successful ? "success" : "error"} {...bannerProps}>
-        {title}
-        <Button onClick={hide}>X</Button>
-      </Alert>
-    );
-  }
-
-  return null;
+export const MUISubmitErrorBanner = (props: AlertProps) => {
+  const { show, successful } = useResultBannerController();
+  return show && !successful ? <MUIBaseSubmitResultBanner {...props} /> : null;
 };

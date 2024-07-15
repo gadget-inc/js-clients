@@ -8,7 +8,7 @@ import { useAutoForm, type AutoFormProps } from "../AutoForm.js";
 import { AutoFormMetadataContext } from "../AutoFormContext.js";
 import { MUIAutoInput } from "./inputs/MUIAutoInput.js";
 import { MUIAutoSubmit } from "./submit/MUIAutoSubmit.js";
-import { MUISubmitResultBanner } from "./submit/MUISubmitResultBanner.js";
+import { MUISubmitErrorBanner, MUISubmitResultBanner } from "./submit/MUISubmitResultBanner.js";
 
 export const MUIFormSkeleton = () => (
   <>
@@ -57,7 +57,7 @@ export const MUIAutoForm = <
 
   const formContent = props.children ?? (
     <>
-      <MUISubmitResultBanner />
+      {!props.onSuccess ? <MUISubmitResultBanner /> : <MUISubmitErrorBanner />}
       {fetchingMetadata && <MUIFormSkeleton />}
       {!metadataError && (
         <>
