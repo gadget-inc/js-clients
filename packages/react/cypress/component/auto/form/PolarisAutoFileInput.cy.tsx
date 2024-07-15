@@ -24,7 +24,7 @@ describe("PolarisFileInput", () => {
       modelApiIdentifier: "stadium",
       action: {
         apiIdentifier: "update",
-        operatesWithRecordIdentity: false,
+        operatesWithRecordIdentity: true,
       },
       inputFields: getInputFieldsWithCustomValidations(validations),
     });

@@ -30,6 +30,30 @@ describe("PolarisAutoForm", () => {
         loadMockWidgetCreateMetadata();
         expect(getByLabelText("Name")).toBeInTheDocument();
       });
+
+      test("it throws an error if a create action is mixed with a findBy prop", async () => {
+        expect(() => {
+          // @ts-expect-error: mixing a create and a findBy should throw a type error too
+          render(<PolarisAutoForm action={api.widget.create} findBy="1234" />, { wrapper: PolarisMockedProviders });
+          loadMockWidgetCreateMetadata();
+        }).toThrow("The 'findBy' prop is only allowed for update actions.");
+      });
+
+      describe("for a required field", () => {
+        test("it throw an error if you exclude the field", async () => {
+          expect(() => {
+            render(<PolarisAutoForm action={api.widget.create} exclude={["inventoryCount"]} />, { wrapper: PolarisMockedProviders });
+            loadMockWidgetCreateMetadata();
+          }).toThrow("The field inventoryCount is required and cannot be excluded.");
+        });
+
+        test("if you include fields, you must include the required fields", async () => {
+          expect(() => {
+            render(<PolarisAutoForm action={api.widget.create} include={["name"]} />, { wrapper: PolarisMockedProviders });
+            loadMockWidgetCreateMetadata();
+          }).toThrow("The following required fields are missing from the include list: inventoryCount");
+        });
+      });
     });
 
     test("it includes the record ID when submitting a form that updates a record", async () => {

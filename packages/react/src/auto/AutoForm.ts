@@ -167,6 +167,12 @@ export const useAutoForm = <
     }
   }, [isReady, defaultValues, originalFormMethods, modelApiIdentifier]);
 
+  if (!fetchingMetadata) {
+    if (!operatesWithRecordId && "findBy" in props) {
+      throw new Error("The 'findBy' prop is only allowed for update actions.");
+    }
+  }
+
   return {
     metadata,
     fetchingMetadata,
