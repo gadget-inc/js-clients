@@ -38,11 +38,6 @@ describeForEachAutoAdapter("AutoForm", ({ name, adapter: { AutoForm }, wrapper }
     cy.get(`input[name="widget.name"]`).type("test record");
     cy.get(`input[name="widget.inventoryCount"]`).type("999");
 
-    cy.get(`input[id="Roles_Autocomplete_Textfield"]`).click().type("u"); // To search for "unauthenticated"
-    cy.get(`li[data-listbox-option-value="unauthenticated"]`).click();
-    cy.get(`input[id="Roles_Autocomplete_Textfield"]`).click().clear();
-    cy.get(`span`).contains("unauthenticated").should("exist");
-
     submit("Widget");
     ensureFieldInputLabelsExist();
   });

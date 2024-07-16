@@ -31,7 +31,7 @@ export const MUIAutoRolesInput = (
       multiple
       renderInput={(params) => <TextField {...params} label={label} />}
       renderOption={(optionAttributes, option) => (
-        <li {...optionAttributes} data-listbox-option-value={option.label}>
+        <li {...optionAttributes} data-listbox-option-value={option.id}>
           {option.label}
         </li>
       )}
