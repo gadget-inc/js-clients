@@ -20,6 +20,11 @@ export const PolarisAutoRolesInput = (
     throw fieldError;
   }
 
+  if (loading || !options || options.length === 0) {
+    // Don't render until role options exist. There must always be at least one role option `unauthenticated`
+    return null;
+  }
+
   return (
     <PolarisFixedOptionsCombobox
       options={options}
@@ -27,7 +32,6 @@ export const PolarisAutoRolesInput = (
       label={metadata.name}
       {...getPropsWithoutRef(fieldProps)}
       value={selectedRoleKeys}
-      loading={loading}
     />
   );
 };
