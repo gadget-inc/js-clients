@@ -6,20 +6,34 @@ import React, { useEffect, useState } from "react";
 import type { ControllerRenderProps, FieldValues } from "react-hook-form";
 import { copyTime, getDateFromDateTimeObject, getDateTimeObjectFromDate } from "./PolarisAutoDateTimePicker.js";
 
-const createMarkup = (items: string[], selectedState: string) => {
+const createMarkup = (
+  items: string[],
+  selectedState: string,
+  colNum: number,
+  selectCoord: { col: number; row: number },
+  setSelectCoord: React.Dispatch<React.SetStateAction<{ col: number; row: number }>>
+) => {
   return items.map((item, i) => {
     return (
       <div key={i} style={{ textAlign: "center", cursor: "default", padding: "0px 4px" }}>
         <Listbox.Option value={item}>
-          {selectedState.padStart(2, "0") === item.padStart(2, "0") || (parseInt(selectedState, 10) === 0 && item === "12") ? (
-            <Box padding="100" background="bg-surface-secondary-selected" borderRadius="200" minHeight="30px" minWidth="30px">
-              {item}
-            </Box>
-          ) : (
-            <Box minHeight="30px" minWidth="30px" padding="100">
-              {item}
-            </Box>
-          )}
+          <div
+            style={{ cursor: "pointer" }}
+            onMouseEnter={() => setSelectCoord({ col: colNum, row: i })}
+            onMouseLeave={() => setSelectCoord({ col: -1, row: -1 })}
+          >
+            {selectedState.padStart(2, "0") == item.padStart(2, "0") ||
+            (parseInt(selectedState, 10) == 0 && item == "12") ||
+            (selectCoord?.col == colNum && selectCoord.row == i) ? (
+              <Box padding="100" background="bg-surface-secondary-selected" borderRadius="200" minHeight="30px" minWidth="30px">
+                {item}
+              </Box>
+            ) : (
+              <Box minHeight="30px" minWidth="30px" padding="100">
+                {item}
+              </Box>
+            )}
+          </div>
         </Listbox.Option>
       </div>
     );
@@ -64,6 +78,7 @@ const PolarisAutoTimePicker = (props: {
   const [timeString, setTimeString] = useState(props.localTime ? getTimeString(getDateTimeObjectFromDate(props.localTime)) : "");
   const [timePopoverActive, setTimePopoverActive] = useState(false);
   const [timeParseError, setTimeParseError] = useState(false);
+  const [selectCoord, setSelectCoord] = useState({ col: -1, row: -1 });
   const setHourSelected = (hour: string) => {
     if (valueProp) {
       props.onChange?.(getDateFromDateTimeObject({ ...getDateTimeObjectFromDate(valueProp), hour }));
@@ -155,9 +170,21 @@ const PolarisAutoTimePicker = (props: {
     } ${value}`;
   };
 
-  const hourProps = { array: hoursArr, formatter: hourTimeFormatter, key: "hour" as DateTimeKey };
-  const minProps = { array: minsArr, formatter: minTimeFormatter, key: "minute" as DateTimeKey };
-  const ampmProps = { array: ampmArr, formatter: ampmTimeFormatter, key: "ampm" as DateTimeKey };
+  const hourProps = {
+    array: hoursArr,
+    formatter: hourTimeFormatter,
+    key: "hour" as DateTimeKey,
+  };
+  const minProps = {
+    array: minsArr,
+    formatter: minTimeFormatter,
+    key: "minute" as DateTimeKey,
+  };
+  const ampmProps = {
+    array: ampmArr,
+    formatter: ampmTimeFormatter,
+    key: "ampm" as DateTimeKey,
+  };
 
   useEffect(() => {
     if (!props.fieldProps.value || valueProp) return;
@@ -169,6 +196,7 @@ const PolarisAutoTimePicker = (props: {
       <Popover
         active={timePopoverActive}
         onClose={() => setTimePopoverActive(false)}
+        preferredAlignment="right"
         activator={
           <TextField
             prefix={<Icon source={ClockIcon} />}
@@ -184,26 +212,31 @@ const PolarisAutoTimePicker = (props: {
           />
         }
       >
-        {!props.hideTimePopover && (
-          <div style={{ overflow: "hidden", padding: "15px 8px" }}>
-            <div style={{ display: "flex" }}>
-              {[hourProps, minProps, ampmProps].map((timeComponentProps, i) => (
-                <Scrollable key={i} style={{ overflowY: "scroll", height: "250px" }}>
-                  <Listbox onSelect={(value: string) => onTimeStringChange(timeComponentProps.formatter(value))}>
-                    {createMarkup(
-                      timeComponentProps.array,
-                      valueProp
-                        ? `${getDateTimeObjectFromDate(valueProp)[timeComponentProps.key]}`
-                        : props.fieldProps.value
-                        ? `${getDateTimeObjectFromDate(new Date(props.fieldProps.value))[timeComponentProps.key]}`
-                        : timeComponentProps.array[0]
-                    )}
-                  </Listbox>
-                </Scrollable>
-              ))}
+        <Popover.Pane fixed>
+          {!props.hideTimePopover && (
+            <div style={{ overflow: "hidden", padding: "15px 8px" }}>
+              <div style={{ display: "flex" }}>
+                {[hourProps, minProps, ampmProps].map((timeComponentProps, i) => (
+                  <Scrollable key={i} style={{ overflowY: "scroll", height: "250px" }}>
+                    <Listbox onSelect={(value: string) => onTimeStringChange(timeComponentProps.formatter(value))}>
+                      {createMarkup(
+                        timeComponentProps.array,
+                        valueProp
+                          ? `${getDateTimeObjectFromDate(valueProp)[timeComponentProps.key]}`
+                          : props.fieldProps.value
+                          ? `${getDateTimeObjectFromDate(new Date(props.fieldProps.value))[timeComponentProps.key]}`
+                          : timeComponentProps.array[0],
+                        i,
+                        selectCoord,
+                        setSelectCoord
+                      )}
+                    </Listbox>
+                  </Scrollable>
+                ))}
+              </div>
             </div>
-          </div>
-        )}
+          )}
+        </Popover.Pane>
       </Popover>
     </>
   );

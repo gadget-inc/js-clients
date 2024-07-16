@@ -128,16 +128,18 @@ export const PolarisAutoDateTimePicker = (props: {
         </div>
       </Popover>
       {(props.includeTime ?? (config as GadgetDateTimeConfig).includeTime) && (
-        <PolarisAutoTimePicker
-          fieldProps={fieldProps}
-          id={props.id}
-          localTime={localTime}
-          onChange={onChange}
-          hideTimePopover={props.hideTimePopover}
-          localTz={localTz}
-          timePickerProps={props.timePickerProps}
-          value={value}
-        />
+        <div style={{ width: "130px" }}>
+          <PolarisAutoTimePicker
+            fieldProps={fieldProps}
+            id={props.id}
+            localTime={localTime}
+            onChange={onChange}
+            hideTimePopover={props.hideTimePopover}
+            localTz={localTz}
+            timePickerProps={props.timePickerProps}
+            value={value}
+          />
+        </div>
       )}
     </InlineStack>
   );
