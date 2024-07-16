@@ -7,6 +7,7 @@ import { PolarisAutoEncryptedStringInput } from "./PolarisAutoEncryptedStringInp
 import { PolarisAutoEnumInput } from "./PolarisAutoEnumInput.js";
 import { PolarisAutoFileInput } from "./PolarisAutoFileInput.js";
 import { PolarisAutoJSONInput } from "./PolarisAutoJSONInput.js";
+import { PolarisAutoNumberInput } from "./PolarisAutoNumberInput.js";
 import { PolarisAutoPasswordInput } from "./PolarisAutoPasswordInput.js";
 import { PolarisAutoRolesInput } from "./PolarisAutoRolesInput.js";
 import { PolarisAutoTextInput } from "./PolarisAutoTextInput.js";
@@ -19,11 +20,13 @@ export const PolarisAutoInput = (props: { field: string }) => {
 
   switch (config.fieldType) {
     case FieldType.String:
-    case FieldType.Number:
     case FieldType.Email:
     case FieldType.Color:
     case FieldType.Url: {
       return <PolarisAutoTextInput field={props.field} />;
+    }
+    case FieldType.Number: {
+      return <PolarisAutoNumberInput field={props.field} />;
     }
     case FieldType.EncryptedString: {
       return <PolarisAutoEncryptedStringInput field={props.field} />;

@@ -5400,6 +5400,7 @@ type FieldMetadata_GadgetModelField_Fragment = {
       }
     | {
         __typename: "GadgetNumberConfig";
+        decimals?: number | null;
         fieldType: GadgetFieldType;
         validations: Array<
           | { __typename: "GadgetGenericFieldValidation"; name: string; specID: string }
@@ -5521,6 +5522,7 @@ type FieldMetadata_GadgetObjectField_Fragment = {
       }
     | {
         __typename: "GadgetNumberConfig";
+        decimals?: number | null;
         fieldType: GadgetFieldType;
         validations: Array<
           | { __typename: "GadgetGenericFieldValidation"; name: string; specID: string }
@@ -5660,6 +5662,7 @@ export type GetModelMetadataQuery = {
             }
           | {
               __typename: "GadgetNumberConfig";
+              decimals?: number | null;
               fieldType: GadgetFieldType;
               validations: Array<
                 | { __typename: "GadgetGenericFieldValidation"; name: string; specID: string }
@@ -5799,6 +5802,7 @@ type SubFields_GadgetModelField_Fragment = {
               }
             | {
                 __typename: "GadgetNumberConfig";
+                decimals?: number | null;
                 fieldType: GadgetFieldType;
                 validations: Array<
                   | { __typename: "GadgetGenericFieldValidation"; name: string; specID: string }
@@ -5949,6 +5953,7 @@ type SubFields_GadgetModelField_Fragment = {
                       }
                     | {
                         __typename: "GadgetNumberConfig";
+                        decimals?: number | null;
                         fieldType: GadgetFieldType;
                         validations: Array<
                           | { __typename: "GadgetGenericFieldValidation"; name: string; specID: string }
@@ -6135,6 +6140,7 @@ type SubFields_GadgetModelField_Fragment = {
                               }
                             | {
                                 __typename: "GadgetNumberConfig";
+                                decimals?: number | null;
                                 fieldType: GadgetFieldType;
                                 validations: Array<
                                   | { __typename: "GadgetGenericFieldValidation"; name: string; specID: string }
@@ -6319,6 +6325,7 @@ type SubFields_GadgetObjectField_Fragment = {
               }
             | {
                 __typename: "GadgetNumberConfig";
+                decimals?: number | null;
                 fieldType: GadgetFieldType;
                 validations: Array<
                   | { __typename: "GadgetGenericFieldValidation"; name: string; specID: string }
@@ -6469,6 +6476,7 @@ type SubFields_GadgetObjectField_Fragment = {
                       }
                     | {
                         __typename: "GadgetNumberConfig";
+                        decimals?: number | null;
                         fieldType: GadgetFieldType;
                         validations: Array<
                           | { __typename: "GadgetGenericFieldValidation"; name: string; specID: string }
@@ -6655,6 +6663,7 @@ type SubFields_GadgetObjectField_Fragment = {
                               }
                             | {
                                 __typename: "GadgetNumberConfig";
+                                decimals?: number | null;
                                 fieldType: GadgetFieldType;
                                 validations: Array<
                                   | { __typename: "GadgetGenericFieldValidation"; name: string; specID: string }
@@ -6846,6 +6855,7 @@ export type ModelActionMetadataQuery = {
               }
             | {
                 __typename: "GadgetNumberConfig";
+                decimals?: number | null;
                 fieldType: GadgetFieldType;
                 validations: Array<
                   | { __typename: "GadgetGenericFieldValidation"; name: string; specID: string }
@@ -6996,6 +7006,7 @@ export type ModelActionMetadataQuery = {
                       }
                     | {
                         __typename: "GadgetNumberConfig";
+                        decimals?: number | null;
                         fieldType: GadgetFieldType;
                         validations: Array<
                           | { __typename: "GadgetGenericFieldValidation"; name: string; specID: string }
@@ -7182,6 +7193,7 @@ export type ModelActionMetadataQuery = {
                               }
                             | {
                                 __typename: "GadgetNumberConfig";
+                                decimals?: number | null;
                                 fieldType: GadgetFieldType;
                                 validations: Array<
                                   | { __typename: "GadgetGenericFieldValidation"; name: string; specID: string }
@@ -7403,6 +7415,7 @@ export type ModelActionMetadataQuery = {
                                       }
                                     | {
                                         __typename: "GadgetNumberConfig";
+                                        decimals?: number | null;
                                         fieldType: GadgetFieldType;
                                         validations: Array<
                                           | { __typename: "GadgetGenericFieldValidation"; name: string; specID: string }
@@ -7617,6 +7630,7 @@ export type GlobalActionMetadataQuery = {
             }
           | {
               __typename: "GadgetNumberConfig";
+              decimals?: number | null;
               fieldType: GadgetFieldType;
               validations: Array<
                 | { __typename: "GadgetGenericFieldValidation"; name: string; specID: string }
@@ -7767,6 +7781,7 @@ export type GlobalActionMetadataQuery = {
                     }
                   | {
                       __typename: "GadgetNumberConfig";
+                      decimals?: number | null;
                       fieldType: GadgetFieldType;
                       validations: Array<
                         | { __typename: "GadgetGenericFieldValidation"; name: string; specID: string }
@@ -7953,6 +7968,7 @@ export type GlobalActionMetadataQuery = {
                             }
                           | {
                               __typename: "GadgetNumberConfig";
+                              decimals?: number | null;
                               fieldType: GadgetFieldType;
                               validations: Array<
                                 | { __typename: "GadgetGenericFieldValidation"; name: string; specID: string }
@@ -8174,6 +8190,7 @@ export type GlobalActionMetadataQuery = {
                                     }
                                   | {
                                       __typename: "GadgetNumberConfig";
+                                      decimals?: number | null;
                                       fieldType: GadgetFieldType;
                                       validations: Array<
                                         | { __typename: "GadgetGenericFieldValidation"; name: string; specID: string }
@@ -8502,6 +8519,11 @@ export const FieldMetadataFragmentDoc = {
                   kind: "InlineFragment",
                   typeCondition: { kind: "NamedType", name: { kind: "Name", value: "GadgetDateTimeConfig" } },
                   selectionSet: { kind: "SelectionSet", selections: [{ kind: "Field", name: { kind: "Name", value: "includeTime" } }] },
+                },
+                {
+                  kind: "InlineFragment",
+                  typeCondition: { kind: "NamedType", name: { kind: "Name", value: "GadgetNumberConfig" } },
+                  selectionSet: { kind: "SelectionSet", selections: [{ kind: "Field", name: { kind: "Name", value: "decimals" } }] },
                 },
               ],
             },
@@ -8832,6 +8854,11 @@ export const SubFieldsFragmentDoc = {
                   typeCondition: { kind: "NamedType", name: { kind: "Name", value: "GadgetDateTimeConfig" } },
                   selectionSet: { kind: "SelectionSet", selections: [{ kind: "Field", name: { kind: "Name", value: "includeTime" } }] },
                 },
+                {
+                  kind: "InlineFragment",
+                  typeCondition: { kind: "NamedType", name: { kind: "Name", value: "GadgetNumberConfig" } },
+                  selectionSet: { kind: "SelectionSet", selections: [{ kind: "Field", name: { kind: "Name", value: "decimals" } }] },
+                },
               ],
             },
           },
@@ -9120,6 +9147,11 @@ export const GetModelMetadataDocument = {
                   kind: "InlineFragment",
                   typeCondition: { kind: "NamedType", name: { kind: "Name", value: "GadgetDateTimeConfig" } },
                   selectionSet: { kind: "SelectionSet", selections: [{ kind: "Field", name: { kind: "Name", value: "includeTime" } }] },
+                },
+                {
+                  kind: "InlineFragment",
+                  typeCondition: { kind: "NamedType", name: { kind: "Name", value: "GadgetNumberConfig" } },
+                  selectionSet: { kind: "SelectionSet", selections: [{ kind: "Field", name: { kind: "Name", value: "decimals" } }] },
                 },
               ],
             },
@@ -9436,6 +9468,11 @@ export const ModelActionMetadataDocument = {
                   kind: "InlineFragment",
                   typeCondition: { kind: "NamedType", name: { kind: "Name", value: "GadgetDateTimeConfig" } },
                   selectionSet: { kind: "SelectionSet", selections: [{ kind: "Field", name: { kind: "Name", value: "includeTime" } }] },
+                },
+                {
+                  kind: "InlineFragment",
+                  typeCondition: { kind: "NamedType", name: { kind: "Name", value: "GadgetNumberConfig" } },
+                  selectionSet: { kind: "SelectionSet", selections: [{ kind: "Field", name: { kind: "Name", value: "decimals" } }] },
                 },
               ],
             },
@@ -9830,6 +9867,11 @@ export const GlobalActionMetadataDocument = {
                   kind: "InlineFragment",
                   typeCondition: { kind: "NamedType", name: { kind: "Name", value: "GadgetDateTimeConfig" } },
                   selectionSet: { kind: "SelectionSet", selections: [{ kind: "Field", name: { kind: "Name", value: "includeTime" } }] },
+                },
+                {
+                  kind: "InlineFragment",
+                  typeCondition: { kind: "NamedType", name: { kind: "Name", value: "GadgetNumberConfig" } },
+                  selectionSet: { kind: "SelectionSet", selections: [{ kind: "Field", name: { kind: "Name", value: "decimals" } }] },
                 },
               ],
             },

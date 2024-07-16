@@ -8,12 +8,12 @@ export { PolarisAutoFileInput as AutoFileInput } from "./inputs/PolarisAutoFileI
 export { PolarisAutoHiddenInput as AutoHiddenInput } from "./inputs/PolarisAutoHiddenInput.js";
 export { PolarisAutoInput as AutoInput } from "./inputs/PolarisAutoInput.js";
 export { PolarisAutoJSONInput as AutoJSONInput } from "./inputs/PolarisAutoJSONInput.js";
+export { PolarisAutoNumberInput as AutoNumberInput } from "./inputs/PolarisAutoNumberInput.js";
 export { PolarisAutoPasswordInput as AutoPasswordInput } from "./inputs/PolarisAutoPasswordInput.js";
 export { PolarisAutoRolesInput as AutoRolesInput } from "./inputs/PolarisAutoRolesInput.js";
 export {
   PolarisAutoTextInput as AutoColorInput,
   PolarisAutoTextInput as AutoEmailInput,
-  PolarisAutoTextInput as AutoNumberInput,
   PolarisAutoTextInput as AutoStringInput,
   PolarisAutoTextInput as AutoTextInput,
   PolarisAutoTextInput as AutoUrlInput,
