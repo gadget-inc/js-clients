@@ -1,8 +1,9 @@
 import type { TextFieldProps } from "@mui/material";
 import { IconButton } from "@mui/material";
 import React, { useState } from "react";
-import type { Control } from "react-hook-form";
+import { useController, type Control } from "react-hook-form";
 import { useAutoFormMetadata } from "../../AutoFormContext.js";
+import { useFieldMetadata } from "../../hooks/useFieldMetadata.js";
 import { MUIAutoEncryptedStringInput } from "./MUIAutoEncryptedStringInput.js";
 
 /**
@@ -19,10 +20,18 @@ export const MUIAutoPasswordInput = (
   } & Partial<TextFieldProps>
 ) => {
   const { findBy } = useAutoFormMetadata();
+  const { path } = useFieldMetadata(props.field);
+  const { field: fieldProps } = useController({ name: path });
+
   const [isEditing, setIsEditing] = useState(!findBy);
 
+  const startEditing = () => {
+    fieldProps.onChange(""); // Touch the field to mark it as dirty
+    setIsEditing(true);
+  };
+
   const startEditingButton = (
-    <IconButton onClick={() => setIsEditing(true)} role={`${props.field}EditPasswordButton`}>
+    <IconButton onClick={startEditing} role={`${props.field}EditPasswordButton`}>
       {pencilEmoji}
     </IconButton>
   );
