@@ -97,6 +97,9 @@ const FieldMetadataFragment = graphql(/* GraphQL */ `
       ... on GadgetDateTimeConfig {
         includeTime
       }
+      ... on GadgetNumberConfig {
+        decimals
+      }
     }
   }
 `);

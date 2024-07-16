@@ -7,6 +7,7 @@ import { userEvent } from "@testing-library/user-event";
 import type { ReactNode } from "react";
 import React from "react";
 import { PolarisAutoForm } from "../../../src/auto/polaris/PolarisAutoForm.js";
+import { PolarisAutoNumberInput } from "../../../src/auto/polaris/inputs/PolarisAutoNumberInput.js";
 import { PolarisAutoTextInput } from "../../../src/auto/polaris/inputs/PolarisAutoTextInput.js";
 import type { ActionMetadata } from "../../../src/metadata.js";
 import { testApi as api } from "../../apis.js";
@@ -130,6 +131,70 @@ describe("PolarisAutoTextInput", () => {
       expect(result.queryByDisplayValue("password_RecordValue")).toBeInTheDocument();
       expect(result.queryByDisplayValue("email_RecordValue")).toBeInTheDocument();
       expect(result.queryByDisplayValue("url_RecordValue")).toBeInTheDocument();
+    });
+  });
+
+  describe("number config with decimals", () => {
+    const getCreateWrapper = (decimals?: number) => ({
+      wrapper: MockForm({
+        submit: jest.fn<any>(),
+        metadata: {
+          name: "Widget",
+          apiIdentifier: "widget",
+          defaultRecord: {},
+          action: {
+            name: "Create",
+            apiIdentifier: "create",
+            operatesWithRecordIdentity: false,
+            inputFields: [
+              {
+                name: "Widget",
+                apiIdentifier: "widget",
+                fieldType: "Object",
+                requiredArgumentForInput: false,
+                configuration: {
+                  __typename: "GadgetObjectFieldConfig",
+                  fieldType: "Object",
+                  name: null,
+                  validations: [],
+                  fields: [
+                    {
+                      name: "Inventory count",
+                      apiIdentifier: "inventoryCount",
+                      fieldType: "Number",
+                      requiredArgumentForInput: true,
+                      sortable: true,
+                      filterable: true,
+                      __typename: "GadgetModelField",
+                      configuration: {
+                        __typename: "GadgetNumberConfig",
+                        fieldType: "Number",
+                        validations: [],
+                        decimals,
+                      },
+                    },
+                  ],
+                },
+                __typename: "GadgetObjectField",
+              },
+            ],
+            __typename: "GadgetAction",
+          },
+          __typename: "GadgetModel",
+        } as ActionMetadata,
+      }),
+    });
+
+    test("it renders number inputs with any step value when no decimals are set", async () => {
+      result = render(<PolarisAutoNumberInput field="inventoryCount" />, getCreateWrapper());
+      const field = result.container.querySelector(`input[name="widget.inventoryCount"]`);
+      expect(field).toHaveAttribute("step", "any");
+    });
+
+    test("it renders number inputs with a step value when decimals are set", async () => {
+      result = render(<PolarisAutoNumberInput field="inventoryCount" />, getCreateWrapper(2));
+      const field = result.container.querySelector(`input[name="widget.inventoryCount"]`);
+      expect(field).toHaveAttribute("step", "0.01");
     });
   });
 });
