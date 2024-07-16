@@ -293,12 +293,13 @@ const mockFindBy = () => {
     },
   });
 
+  const updateMetadata = { ...metadata, action: { ...metadata.action, apiIdentifier: "update", operatesWithRecordIdentity: true } };
   mockUrqlClient.executeQuery.pushResponse("ModelActionMetadata", {
     stale: false,
     hasNext: false,
     data: {
       gadgetMeta: {
-        model: metadata,
+        model: updateMetadata,
         __typename: "GadgetApplicationMeta",
       },
     },

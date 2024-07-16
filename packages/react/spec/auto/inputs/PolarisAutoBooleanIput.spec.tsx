@@ -11,9 +11,12 @@ import { PolarisMockedProviders } from "./PolarisMockedProviders.js";
 
 describe("PolarisBooleanInput", () => {
   it("should automatically set the pre-filled value when the form is pre-filled", async () => {
-    const { getByLabelText } = render(<PolarisAutoForm action={api.widget.update} findBy="42" include={["isChecked"]} />, {
-      wrapper: PolarisMockedProviders,
-    });
+    const { getByLabelText } = render(
+      <PolarisAutoForm action={api.widget.update} findBy="42" include={["isChecked", "name", "inventoryCount"]} />,
+      {
+        wrapper: PolarisMockedProviders,
+      }
+    );
     mockUpdateWidgetFindBy();
     const checkbox = getByLabelText("Is checked");
     expect(checkbox).toBeChecked();

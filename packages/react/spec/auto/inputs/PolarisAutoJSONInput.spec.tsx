@@ -11,9 +11,12 @@ import { PolarisMockedProviders } from "./PolarisMockedProviders.js";
 
 describe("PolarisJSONInput", () => {
   it("should automatically set the pre-filled value when the form is pre-filled", async () => {
-    const { getByLabelText } = render(<PolarisAutoForm action={api.widget.update} findBy="42" include={["metafields"]} />, {
-      wrapper: PolarisMockedProviders,
-    });
+    const { getByLabelText } = render(
+      <PolarisAutoForm action={api.widget.update} findBy="42" include={["metafields", "name", "inventoryCount"]} />,
+      {
+        wrapper: PolarisMockedProviders,
+      }
+    );
     mockUpdateWidgetFindBy();
     const input = getByLabelText("Metafields");
     expect(input).toHaveValue(`{
