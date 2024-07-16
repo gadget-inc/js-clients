@@ -1,5 +1,5 @@
 import type { TextFieldProps } from "@shopify/polaris";
-import { Box, Icon, Listbox, Popover, Scrollable, TextField } from "@shopify/polaris";
+import { Box, Icon, Listbox, Popover, Scrollable, Text, TextField } from "@shopify/polaris";
 import { ClockIcon } from "@shopify/polaris-icons";
 import { zonedTimeToUtc } from "date-fns-tz";
 import React, { useEffect, useState } from "react";
@@ -25,8 +25,10 @@ const createMarkup = (
             {selectedState.padStart(2, "0") == item.padStart(2, "0") ||
             (parseInt(selectedState, 10) == 0 && item == "12") ||
             (selectCoord?.col == colNum && selectCoord.row == i) ? (
-              <Box padding="100" background="bg-surface-secondary-selected" borderRadius="200" minHeight="30px" minWidth="30px">
-                {item}
+              <Box padding="100" background="bg-inverse" borderRadius="200" minHeight="30px" minWidth="30px">
+                <Text as="p" tone="text-inverse">
+                  {item}
+                </Text>
               </Box>
             ) : (
               <Box minHeight="30px" minWidth="30px" padding="100">
