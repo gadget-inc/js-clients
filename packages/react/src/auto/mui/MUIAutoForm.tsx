@@ -33,6 +33,20 @@ export const MUIAutoForm = <
 >(
   props: MUIAutoFormProps<GivenOptions, SchemaT, ActionFunc>
 ) => {
+  const { action, findBy } = props as MUIAutoFormProps<GivenOptions, SchemaT, ActionFunc> & { findBy: any };
+
+  // Component key to force re-render when the action or findBy changes
+  const componentKey = `${action.modelApiIdentifier}.${action.operationName}.${findBy}`;
+
+  return <MUIAutoFormComponent key={componentKey} {...props} />;
+};
+export const MUIAutoFormComponent = <
+  GivenOptions extends OptionsType,
+  SchemaT,
+  ActionFunc extends ActionFunction<GivenOptions, any, any, SchemaT, any>
+>(
+  props: MUIAutoFormProps<GivenOptions, SchemaT, ActionFunc>
+) => {
   const { record: _record, action, findBy, ...rest } = props as MUIAutoFormProps<GivenOptions, SchemaT, ActionFunc> & { findBy: any };
   const { metadata, fetchingMetadata, metadataError, fields, submit, formError, isSubmitSuccessful, isLoading, originalFormMethods } =
     useAutoForm(props);
@@ -75,7 +89,10 @@ export const MUIAutoForm = <
   );
 
   return (
-    <AutoFormMetadataContext.Provider value={autoFormMetadataContext}>
+    <AutoFormMetadataContext.Provider
+      value={autoFormMetadataContext}
+      key={`${action.modelApiIdentifier}.${action.operationName}.${findBy}`}
+    >
       <FormProvider {...originalFormMethods}>
         <Grid container component="form" spacing={2} onSubmit={submit as any} {...rest}>
           {formContent}

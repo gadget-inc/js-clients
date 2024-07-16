@@ -29,6 +29,28 @@ export const PolarisAutoForm = <
   //polaris form props also take an 'action' property, which we need to omit here.
   props: AutoFormProps<GivenOptions, SchemaT, ActionFunc> & Omit<Partial<FormProps>, "action">
 ) => {
+  const { action, findBy } = props as AutoFormProps<GivenOptions, SchemaT, ActionFunc> &
+    Omit<Partial<FormProps>, "action"> & { findBy: any };
+
+  // Component key to force re-render when the action or findBy changes
+  const componentKey = `${action.modelApiIdentifier}.${action.operationName}.${findBy}`;
+
+  return (
+    <PolarisAutoFormComponent
+      key={componentKey}
+      {...(props as AutoFormProps<GivenOptions, SchemaT, ActionFunc> & Omit<Partial<FormProps>, "action"> & { findBy: any })}
+    />
+  );
+};
+
+const PolarisAutoFormComponent = <
+  GivenOptions extends OptionsType,
+  SchemaT,
+  ActionFunc extends ActionFunction<GivenOptions, any, any, SchemaT, any>
+>(
+  //polaris form props also take an 'action' property, which we need to omit here.
+  props: AutoFormProps<GivenOptions, SchemaT, ActionFunc> & Omit<Partial<FormProps>, "action">
+) => {
   const {
     record: _record,
     action,
