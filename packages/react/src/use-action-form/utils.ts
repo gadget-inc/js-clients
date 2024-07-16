@@ -49,12 +49,26 @@ export const processDefaultValues = (opts: {
 }) => {
   const { modelApiIdentifier, data, defaultValues } = opts;
 
+  convertRoleObjectListIntoStringList(data); // Incoming role objects arrays need to be converted to role key string arrays because the API will only accept role keys
+
   const modelDefaultValues = toDefaultValues(modelApiIdentifier, data);
   const result = opts.hasAmbiguousDefaultValues
     ? { ...defaultValues, [modelApiIdentifier]: modelDefaultValues }
     : { ...defaultValues, ...modelDefaultValues, [modelApiIdentifier]: modelDefaultValues };
 
   return result;
+};
+
+const convertRoleObjectListIntoStringList = (data: any) => {
+  for (const key of Object.keys(data)) {
+    const isArray = Array.isArray(data[key]) && data[key].length;
+    if (isArray) {
+      data[key] = data[key].map((role: any) => {
+        const hasRoleKey = typeof role === "object" && "__typename" in role && role.__typename === "Role" && "key" in role;
+        return hasRoleKey ? role.key : role;
+      });
+    }
+  }
 };
 
 export const toDefaultValues = (modelApiIdentifier: string | undefined, data: any) => {
