@@ -312,7 +312,7 @@ importers:
         specifier: ^6.3.2
         version: 6.3.2
 
-  packages/react-big-commerce:
+  packages/react-bigcommerce:
     dependencies:
       '@gadgetinc/api-client-core':
         specifier: workspace:*
