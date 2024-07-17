@@ -1,3 +1,4 @@
+/* eslint-disable jest/valid-expect */
 import React from "react";
 import { api } from "../../../support/api.js";
 import { describeForEachAutoAdapter } from "../../../support/auto.js";
@@ -199,5 +200,33 @@ describeForEachAutoAdapter("AutoForm", ({ name, adapter: { AutoForm }, wrapper }
 
         submit("Widget");
       });
+  });
+
+  it("can render a rich text editor for markdown content", async () => {
+    cy.mountWithWrapper(<AutoForm action={api.widget.create} include={["name", "inventoryCount", "description"]} />, wrapper);
+
+    cy.get(`input[name="widget.name"]`).type("test record");
+    cy.get(`input[name="widget.inventoryCount"]`).type("42");
+    cy.get(`[aria-label="editable markdown"] > p`).type("# foobar\n## foobaz");
+
+    cy.intercept("POST", `${api.connection.options.endpoint}?operation=createWidget`, {
+      body: {
+        data: {
+          widget: {
+            __typename: "Widget",
+            id: "999",
+          },
+        },
+      },
+    }).as("createWidget");
+
+    submit("Widget");
+
+    cy.wait("@createWidget").then((interception) => {
+      const { variables } = interception.request.body;
+      expect(variables.widget.name).to.equal("test record");
+      expect(variables.widget.inventoryCount).to.equal(42);
+      expect(variables.widget.description).to.deep.equal({ markdown: "# foobar\n\n## foobaz" });
+    });
   });
 });

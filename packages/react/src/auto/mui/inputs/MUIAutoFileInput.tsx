@@ -2,7 +2,7 @@ import { Button, styled } from "@mui/material";
 import React from "react";
 import type { Control } from "react-hook-form";
 import { useFileInputController } from "../../hooks/useFileInputController.js";
-import { MUIAutoFormControl } from "./MUIAutoInput.js";
+import { MUIAutoFormControl } from "./MUIAutoFormControl.js";
 
 export interface MUIFileInputProps {
   label?: string;

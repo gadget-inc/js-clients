@@ -82,7 +82,7 @@ const PolarisAutoFormComponent = <
     return (
       <Form {...rest} onSubmit={submit}>
         <FormLayout>
-          <PolarisFormSkeleton />;
+          <PolarisFormSkeleton />
         </FormLayout>
       </Form>
     );

@@ -26,9 +26,9 @@ describe("PolarisAutoForm", () => {
   describe("when used as a one liner", () => {
     describe("for widget create", () => {
       test("it renders the name input", async () => {
-        const { getByLabelText } = render(<PolarisAutoForm action={api.widget.create} />, { wrapper: PolarisMockedProviders });
+        const { findByLabelText } = render(<PolarisAutoForm action={api.widget.create} />, { wrapper: PolarisMockedProviders });
         loadMockWidgetCreateMetadata();
-        expect(getByLabelText("Name")).toBeInTheDocument();
+        expect(await findByLabelText("Name")).toBeInTheDocument();
       });
 
       test("it throws an error if a create action is mixed with a findBy prop", async () => {
@@ -113,7 +113,7 @@ describe("PolarisAutoForm", () => {
       test("it submits the form", async () => {
         const user = userEvent.setup();
 
-        const { getByRole, getByLabelText } = render(
+        const { findByText, getByLabelText } = render(
           <PolarisAutoForm action={api.widget.create}>
             <PolarisAutoInput field="name" />
             <PolarisAutoInput field="inventoryCount" />
@@ -124,8 +124,8 @@ describe("PolarisAutoForm", () => {
 
         loadMockWidgetCreateMetadata();
 
-        const submitButton = getByRole("button");
-        expect(submitButton).toHaveTextContent("Submit");
+        const submitButton = await findByText("Submit", { selector: ':not([aria-hidden="true"])' });
+        expect(submitButton).toBeTruthy();
 
         await act(async () => {
           const nameElement = getByLabelText("Name");
@@ -136,7 +136,7 @@ describe("PolarisAutoForm", () => {
           await user.click(inventoryCountElement);
           await user.keyboard("22");
 
-          await user.click(getByRole("button"));
+          await user.click(await findByText("Submit", { selector: ':not([aria-hidden="true"])' }));
         });
 
         const mutation = mockUrqlClient.executeMutation.mock.calls[0][0];
@@ -149,7 +149,7 @@ describe("PolarisAutoForm", () => {
       });
 
       test("you can pass a custom label", () => {
-        const { getByRole } = render(
+        const { getByText } = render(
           <PolarisAutoForm action={api.widget.create}>
             <PolarisAutoInput field="name" />
             <PolarisAutoSubmit>Save</PolarisAutoSubmit>
@@ -159,7 +159,7 @@ describe("PolarisAutoForm", () => {
 
         loadMockWidgetCreateMetadata();
 
-        expect(getByRole("button")).toHaveTextContent("Save");
+        expect(getByText("Save")).toBeTruthy();
       });
     });
   });
@@ -168,7 +168,7 @@ describe("PolarisAutoForm", () => {
     test("it should include fields that are in the 'include' prop when submitting a create form", async () => {
       const user = userEvent.setup();
 
-      const { getByRole, getByLabelText } = render(<PolarisAutoForm action={api.gizmo.create} include={["name", "orientation"]} />, {
+      const { getByText, getByLabelText } = render(<PolarisAutoForm action={api.gizmo.create} include={["name", "orientation"]} />, {
         wrapper: PolarisMockedProviders,
       });
 
@@ -180,7 +180,7 @@ describe("PolarisAutoForm", () => {
         await user.click(nameElement);
         await user.keyboard("updated test record");
 
-        await user.click(getByRole("button"));
+        await user.click(getByText("Submit", { selector: ':not([aria-hidden="true"])' }));
       });
 
       const mutation = mockUrqlClient.executeMutation.mock.calls[0][0];
@@ -197,7 +197,7 @@ describe("PolarisAutoForm", () => {
     test("it should include fields that are not dirty when submitting a create form", async () => {
       const user = userEvent.setup();
 
-      const { getByRole, getByLabelText, queryAllByText } = render(<PolarisAutoForm action={api.gizmo.create} exclude={["widget"]} />, {
+      const { findByText, getByLabelText, queryAllByText } = render(<PolarisAutoForm action={api.gizmo.create} exclude={["widget"]} />, {
         wrapper: PolarisMockedProviders,
       });
 
@@ -210,9 +210,10 @@ describe("PolarisAutoForm", () => {
         const nameElement = getByLabelText("Name");
         await user.clear(nameElement);
         await user.click(nameElement);
-        await user.keyboard("updated test record");
+        await user.keyboard("new test record");
 
-        await user.click(getByRole("button"));
+        const submit = await findByText("Submit", { selector: ':not([aria-hidden="true"])' });
+        await user.click(submit);
       });
 
       let mutation = mockUrqlClient.executeMutation.mock.calls[0][0];
@@ -221,7 +222,7 @@ describe("PolarisAutoForm", () => {
 
       expect(mutationName).toEqual("createGizmo");
       expect(variables).toEqual({
-        name: "updated test record",
+        name: "new test record",
         orientation: null,
         // widget field is absent because it is excluded from the form
       });
@@ -229,10 +230,10 @@ describe("PolarisAutoForm", () => {
       // Now modify the other field and submit again to ensure that the other field is also included.
 
       await act(async () => {
-        const nameElement = getByLabelText("Orientation");
-        await user.clear(nameElement);
-        await user.click(nameElement);
-        await user.keyboard("updated another test record");
+        const orientationElement = getByLabelText("Orientation");
+        await user.clear(orientationElement);
+        await user.click(orientationElement);
+        await user.keyboard("orientation value");
       });
 
       await act(async () => {
@@ -247,8 +248,8 @@ describe("PolarisAutoForm", () => {
 
       expect(mutationName).toEqual("createGizmo");
       expect(variables).toEqual({
-        name: "updated test record",
-        orientation: "updated another test record",
+        name: "new test record",
+        orientation: "orientation value",
       });
     });
 
@@ -290,7 +291,7 @@ describe("PolarisAutoForm", () => {
         category: [],
         color: null,
         description: {
-          markdown: "example _rich_ **text**",
+          markdown: "example *rich* **text**",
         },
         embedding: null,
         inventoryCount: 1234,
@@ -311,7 +312,7 @@ describe("PolarisAutoForm", () => {
     test("it should include default values fields that are not dirty when submitting a create form", async () => {
       const user = userEvent.setup();
 
-      const { getByRole, getByLabelText } = render(
+      const { findByText } = render(
         <PolarisAutoForm
           action={api.gizmo.create}
           exclude={["widget"]}
@@ -330,7 +331,7 @@ describe("PolarisAutoForm", () => {
       loadMockGizmoCreateMetadata();
 
       await act(async () => {
-        await user.click(getByRole("button"));
+        await user.click(await findByText("Submit", { selector: ':not([aria-hidden="true"])' }));
       });
 
       const mutation = mockUrqlClient.executeMutation.mock.calls[0][0];
@@ -622,7 +623,7 @@ describe("PolarisAutoForm", () => {
           await user.click(nameElement);
           await user.keyboard("updated another test record");
 
-          await user.click(renderResult.getByRole("button"));
+          await user.click(await renderResult.findByText("Submit", { selector: ':not([aria-hidden="true"])' }));
         });
 
         expect(submittedVariables().isChecked).toEqual(null);
@@ -632,7 +633,7 @@ describe("PolarisAutoForm", () => {
         await act(async () => {
           const isCheckedElement = renderResult.getByLabelText("Is checked");
           await user.click(isCheckedElement);
-          await user.click(renderResult.getByRole("button"));
+          await user.click(await renderResult.findByText("Submit", { selector: ':not([aria-hidden="true"])' }));
         });
 
         expect(submittedVariables().isChecked).toEqual(true);
@@ -644,7 +645,7 @@ describe("PolarisAutoForm", () => {
           await user.click(isCheckedElement);
           await user.click(isCheckedElement);
 
-          await user.click(renderResult.getByRole("button"));
+          await user.click(await renderResult.findByText("Submit", { selector: ':not([aria-hidden="true"])' }));
         });
 
         expect(submittedVariables().isChecked).toEqual(false);

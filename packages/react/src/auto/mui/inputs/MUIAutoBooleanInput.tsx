@@ -3,7 +3,7 @@ import { Checkbox } from "@mui/material";
 import React from "react";
 import { useController, type Control } from "react-hook-form";
 import { useFieldMetadata } from "../../hooks/useFieldMetadata.js";
-import { MUIAutoFormControl } from "./MUIAutoInput.js";
+import { MUIAutoFormControl } from "./MUIAutoFormControl.js";
 
 export const MUIAutoBooleanInput = (props: { field: string; control?: Control<any> } & Partial<CheckboxProps>) => {
   const { field: fieldApiIdentifier, control, ...rest } = props;
