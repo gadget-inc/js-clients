@@ -37,6 +37,8 @@ export const useStringInputController = (
     ...rest,
   });
 
+  const { value, ...restOfFieldProperties } = fieldProperties;
+
   const placeholder = PlaceholderValues[metadata.fieldType];
 
   return {
@@ -47,6 +49,12 @@ export const useStringInputController = (
     autoComplete: "off",
     placeholder,
     metadata,
-    ...fieldProperties,
+    value: getValue(value, metadata.fieldType),
+    ...restOfFieldProperties,
   };
+};
+
+const getValue = (value: any, fieldType: GadgetFieldType) => {
+  // JSON fields can have null value which is different from an empty string. In that case, use null directly
+  return fieldType === FieldType.Json ? value : value ?? "";
 };
