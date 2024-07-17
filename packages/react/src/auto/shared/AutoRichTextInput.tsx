@@ -21,10 +21,11 @@ import {
 } from "@mdxeditor/editor";
 import "@mdxeditor/editor/style.css";
 import type { ForwardedRef } from "react";
-import React from "react";
+import React, { useEffect, useRef } from "react";
 import { useFormContext, type Control } from "react-hook-form";
 import { get } from "../../utils.js";
 import { useStringInputController } from "../hooks/useStringInputController.js";
+import { multiref } from "../hooks/utils.js";
 
 export default function AutoRichTextInput(
   props: {
@@ -36,6 +37,13 @@ export default function AutoRichTextInput(
   const { formState } = useFormContext();
   const { field, control, editorRef, ...rest } = props;
   const controller = useStringInputController({ field, control });
+  const innerRef = useRef<MDXEditorMethods>(null);
+
+  useEffect(() => {
+    if (innerRef.current) {
+      innerRef.current.setMarkdown(controller.value?.markdown ?? "");
+    }
+  }, [controller.value]);
 
   return (
     <MDXEditor
@@ -66,10 +74,10 @@ export default function AutoRichTextInput(
         }),
       ]}
       contentEditableClassName="autoform-prose"
-      {...rest}
       markdown={controller.value?.markdown ?? ""}
       onChange={(markdown) => controller.onChange({ markdown })}
-      ref={editorRef}
+      ref={multiref(innerRef, editorRef)}
+      {...rest}
     />
   );
 }
