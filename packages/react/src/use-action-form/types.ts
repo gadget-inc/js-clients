@@ -48,7 +48,7 @@ export type UseActionFormResult<
   FormVariables extends FieldValues,
   FormContext = any
 > = Omit<UseFormReturn<FormVariables & FormInput<ActionFunc["variablesType"]>, FormContext>, "handleSubmit" | "formState"> & {
-  formState: UseActionFormState<ActionFunc, FormVariables, FormContext>;
+  formState: UseActionFormState<ActionFunc, FormVariables, FormContext> & { isReady: boolean };
   /**
    * Any error that occurred during initial data fetching or action submission
    */
@@ -63,6 +63,8 @@ export type UseActionFormResult<
   actionData?: ActionFunc extends ActionFunction<GivenOptions, any, any, SchemaT, any>
     ? ReturnType<typeof useAction<GivenOptions, SchemaT, ActionFunc, any>>[0]["data"]
     : ReturnType<typeof useGlobalAction<any>>[0]["data"];
+
+  originalFormMethods: UseFormReturn<FormVariables, FormContext>;
 };
 
 export type UseActionFormHookState<F extends ActionFunction<any, any, any, any, any> | GlobalActionFunction<any>> = ActionHookState<

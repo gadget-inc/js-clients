@@ -49,12 +49,26 @@ export const processDefaultValues = (opts: {
 }) => {
   const { modelApiIdentifier, data, defaultValues } = opts;
 
+  convertRoleObjectListIntoStringList(data); // Incoming role objects arrays need to be converted to role key string arrays because the API will only accept role keys
+
   const modelDefaultValues = toDefaultValues(modelApiIdentifier, data);
   const result = opts.hasAmbiguousDefaultValues
     ? { ...defaultValues, [modelApiIdentifier]: modelDefaultValues }
     : { ...defaultValues, ...modelDefaultValues, [modelApiIdentifier]: modelDefaultValues };
 
   return result;
+};
+
+const convertRoleObjectListIntoStringList = (data: any) => {
+  for (const key of Object.keys(data)) {
+    const isArray = Array.isArray(data[key]) && data[key].length;
+    if (isArray) {
+      data[key] = data[key].map((role: any) => {
+        const hasRoleKey = typeof role === "object" && "__typename" in role && role.__typename === "Role" && "key" in role;
+        return hasRoleKey ? role.key : role;
+      });
+    }
+  }
 };
 
 export const toDefaultValues = (modelApiIdentifier: string | undefined, data: any) => {
@@ -340,7 +354,7 @@ export const reshapeDataForGraphqlApi = async (client: AnyClient, defaultValues:
         case "HasMany":
         case "HasOne":
         case "HasManyThrough":
-          return inputHasId ? { update: { ...rest } } : { create: { ...rest } };
+          return getParentRelationshipFieldGraphqlApiInput({ input, result });
         case "BelongsTo":
           return inputHasId
             ? inputHasMoreFields
@@ -370,6 +384,22 @@ export const reshapeDataForGraphqlApi = async (client: AnyClient, defaultValues:
   const result = transform(data, { depth: 0 });
 
   return result;
+};
+
+const getParentRelationshipFieldGraphqlApiInput = (props: { input: any; result: any }) => {
+  const { input, result } = props;
+  const { __typename, ...rest } = result;
+
+  if ("__id" in rest) {
+    if ("__unlinkedInverseField" in rest && rest.__unlinkedInverseField) {
+      const inverseFieldApiId = rest.__unlinkedInverseField;
+      return { update: { id: rest.__id, [inverseFieldApiId]: { _link: null } } };
+    }
+    return { update: { id: rest.__id } }; // Calling this update action automatically links it to the current parent model's record ID
+  } else {
+    const inputHasId = "id" in input;
+    return inputHasId ? { update: { ...rest } } : { create: { ...rest } };
+  }
 };
 
 const isPlainObject = (obj: any) => {
@@ -420,7 +450,12 @@ export function getReadOnlyPaths(obj?: any, prefix = ""): string[] {
  * Uses the `select` object to remove any fields that are marked as `ReadOnly` from the `data` object.
  * Also removes any fields that isn't in the `send` array.
  */
-export function applyDataMask(opts: { select?: any; send?: string[]; data: Record<string, any>; modelApiIdentifier?: string }) {
+export function applyDataMask(opts: {
+  select?: any;
+  send?: string[] | (() => string[]);
+  data: Record<string, any>;
+  modelApiIdentifier?: string;
+}) {
   const { select, send, data, modelApiIdentifier } = opts;
 
   const readOnlyPaths = getReadOnlyPaths(select, modelApiIdentifier);
@@ -432,14 +467,15 @@ export function applyDataMask(opts: { select?: any; send?: string[]; data: Recor
   if (!send) return data;
   const dataToSend = {};
 
-  for (const key of send) {
+  const sendArray = typeof send === "function" ? send() : send;
+  for (const key of sendArray) {
     const candidates = [key];
     if (modelApiIdentifier) {
       candidates.push(`${modelApiIdentifier}.${key}`);
     }
     for (const key of candidates) {
       const value = get(data, key);
-      if (value != null) {
+      if (typeof value != "undefined") {
         set(dataToSend, key, value);
         break;
       }

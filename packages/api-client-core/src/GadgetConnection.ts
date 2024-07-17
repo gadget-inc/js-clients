@@ -50,7 +50,7 @@ export interface GadgetConnectionOptions {
   authenticationMode?: AuthenticationModeOptions;
   websocketsEndpoint?: string;
   subscriptionClientOptions?: GadgetSubscriptionClientOptions;
-  websocketImplementation?: typeof WebSocket;
+  websocketImplementation?: typeof globalThis.WebSocket;
   fetchImplementation?: typeof globalThis.fetch;
   environment?: string;
   requestPolicy?: ClientOptions["requestPolicy"];
@@ -84,10 +84,10 @@ export class GadgetConnection {
   static version = "<prerelease>" as const;
 
   // Options used when generating new GraphQL clients for the base connection and for for transactions
-  private endpoint: string;
+  readonly endpoint: string;
   private subscriptionClientOptions?: SubscriptionClientOptions;
   private websocketsEndpoint: string;
-  private websocketImplementation?: typeof WebSocket;
+  private websocketImplementation?: typeof globalThis.WebSocket;
   private _fetchImplementation: typeof globalThis.fetch;
   private environment: string;
   private exchanges: Required<Exchanges>;

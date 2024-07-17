@@ -12,8 +12,8 @@ import type {
   UseActionFormState,
   UseActionFormSubmit,
 } from "./use-action-form/types.js";
+import type { OmittedKey } from "./use-action-form/utils.js";
 import {
-  OmittedKey,
   applyDataMask,
   disambiguateDefaultValues,
   getReadOnlyPaths,
@@ -50,7 +50,7 @@ type ActionFormOptions<
   /**
    * Which fields to send from the form's values when sending it from the backend.
    */
-  send?: string[];
+  send?: string[] | (() => string[]);
   /**
    * Called when the form submits
    */
@@ -134,10 +134,12 @@ export const useActionForm = <
   }
 
   // setup the react-hook-form object, passing any options from the props
-  const { handleSubmit, formState, ...formHook } = useForm<ActionFunc["variablesType"], FormContext>({
+
+  const originalFormMethods = useForm<ActionFunc["variablesType"], FormContext>({
     ...options,
     defaultValues: toDefaultValues(isModelAction ? action.modelApiIdentifier : undefined, defaultValues),
   });
+  const { handleSubmit, formState, ...formHook } = originalFormMethods;
 
   // when the default values arrive from the record find later, reset them into the form. react-hook-form doesn't watch the default values after the first render
   useEffect(() => {
@@ -229,7 +231,7 @@ export const useActionForm = <
             if (options?.send) {
               const unmasked = variables;
               variables = {};
-              for (const key of options.send) {
+              for (const key of typeof options.send === "function" ? options.send() : options.send) {
                 set(variables, key, get(unmasked, key));
               }
             }
@@ -299,11 +301,13 @@ export const useActionForm = <
         return target.isSubmitSuccessful && !actionResult.fetching && !actionResult.error;
       } else if (prop === "isLoading") {
         return target.isLoading || findResult.fetching;
+      } else if (prop === "isReady") {
+        return isReady;
       } else {
         return (target as any)[prop];
       }
     },
-  }) as unknown as UseActionFormState<ActionFunc, ActionFunc["variablesType"] & ExtraFormVariables, FormContext>;
+  }) as unknown as UseActionFormState<ActionFunc, ActionFunc["variablesType"] & ExtraFormVariables, FormContext> & { isReady: boolean };
 
   return {
     ...formHook,
@@ -311,5 +315,6 @@ export const useActionForm = <
     error: findResult.error || actionResult.error,
     submit: submit as unknown as UseActionFormSubmit<ActionFunc>,
     actionData: actionResult.data,
+    originalFormMethods,
   };
 };

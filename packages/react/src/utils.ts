@@ -13,7 +13,7 @@ import type {
 } from "@gadgetinc/api-client-core";
 import { gadgetErrorFor, getNonNullableError, namespaceDataPath } from "@gadgetinc/api-client-core";
 import type { CombinedError, RequestPolicy } from "@urql/core";
-import { useMemo } from "react";
+import { RefCallback, RefObject, useMemo } from "react";
 import type { AnyVariables, Operation, OperationContext, UseQueryArgs, UseQueryState } from "urql";
 
 /**
@@ -403,6 +403,27 @@ export const set = (obj: any, path: string, value: any) => {
 };
 
 /**
+ * Based on Lodash uniqBy to ensure all array elements are unique by a property
+ * https://youmightnotneed.com/lodash
+ */
+export const uniqByProperty = (arr: any[], property: string) => {
+  const getPropertyValue = (item: any) => item[property];
+  return arr.filter((x, i, self) => i === self.findIndex((y) => getPropertyValue(x) === getPropertyValue(y)));
+};
+
+/**
+ * Based on Lodash uniq to ensure all array elements are unique
+ * https://youmightnotneed.com/lodash
+ */
+export const uniq = (arr: any[]) => [...new Set(arr)];
+
+/**
+ * Based on Lodash compact to ensure all array elements are truthy
+ * https://youmightnotneed.com/lodash
+ */
+export const compact = (arr: any[]) => arr.filter((x) => !!x);
+
+/**
  * Removes the property at path of object.
  * From https://youmightnotneed.com/lodash
  */
@@ -421,4 +442,28 @@ export const getModelManager = (
   namespace?: string[] | string | null
 ): AnyModelManager | undefined => {
   return get(apiClient, namespaceDataPath([apiIdentifier], namespace).join("."));
+};
+
+type SortOrder = "asc" | "desc";
+export const sortByProperty = <T>(arr: T[], property: keyof T, order: SortOrder = "asc"): T[] => {
+  return arr.sort((a, b) => {
+    if (a[property] < b[property]) {
+      return order === "asc" ? -1 : 1;
+    }
+    if (a[property] > b[property]) {
+      return order === "asc" ? 1 : -1;
+    }
+    return 0;
+  });
+};
+
+/**
+ * In some cases, we need to exclude the `ref` property from the original object (e.g. input controllers) to prevent from showing up a warning message from React.
+ * This function helps to get the object without the `ref` property.
+ *
+ * Check out https://github.com/gadget-inc/js-clients/pull/466 for more details.
+ */
+export const getPropsWithoutRef = <T extends { ref: RefCallback<any> | RefObject<any> }>(props: T) => {
+  const { ref: _ref, ...rest } = props;
+  return rest;
 };
