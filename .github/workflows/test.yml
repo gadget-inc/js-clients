@@ -24,7 +24,7 @@ jobs:
       - name: Cypress info
         run: pnpm exec cypress info
       - name: Run cypress tests
-        run: pnpm --filter=react exec cypress run --browser chrome --component --env JS_CLIENTS_TEST_API_KEY=${{secrets.CYPRESS_JS_CLIENTS_TEST_API_KEY}}
+        run: pnpm --filter=react exec cypress run --component --env JS_CLIENTS_TEST_API_KEY=${{secrets.CYPRESS_JS_CLIENTS_TEST_API_KEY}}
   lint:
     runs-on: ubuntu-latest
     steps:
