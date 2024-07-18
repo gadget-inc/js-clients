@@ -1,3 +1,4 @@
+import type { FieldSelection } from "@gadgetinc/api-client-core";
 import {
   type DefaultSelection,
   type FindManyFunction,
@@ -10,7 +11,7 @@ import type { OperationContext } from "@urql/core";
 import { useCallback, useMemo, useState } from "react";
 import type { GadgetFieldType } from "./internal/gql/graphql.js";
 import type { ModelMetadata } from "./metadata.js";
-import { filterFieldList, useModelMetadata } from "./metadata.js";
+import { filterAutoTableFieldList, useModelMetadata } from "./metadata.js";
 import { useDebouncedSearch } from "./useDebouncedSearch.js";
 import { useFindMany } from "./useFindMany.js";
 import { type ColumnValueType, type ErrorWrapper, type OptionsType, type ReadOperationOptions } from "./utils.js";
@@ -41,9 +42,7 @@ export interface TableOptions {
   pageSize?: number;
   initialCursor?: string;
   initialDirection?: "forward" | "backward";
-  include?: string[];
-  exclude?: string[];
-  fields?: string[];
+  columns?: string[];
 }
 
 export type TableData<Data> =
@@ -107,6 +106,22 @@ export const useTable = <
 
   const { debouncedValue: debouncedSearchValue, ...search } = useDebouncedSearch({ clearCursor });
 
+  const fieldSelectionMap = useMemo(() => {
+    if (options?.select) return options.select;
+
+    if (!options?.columns) return undefined; // Use the default selection
+
+    const selectionMap: FieldSelection = {};
+    for (const column of options.columns) {
+      selectionMap[column] = true;
+    }
+
+    return {
+      ...selectionMap,
+      id: true,
+    };
+  }, [options?.columns, options?.select]);
+
   let variables;
   if (direction == "forward") {
     variables = {
@@ -119,17 +134,12 @@ export const useTable = <
       before: cursor,
     };
   }
-  // we always need to select the record id for key tracking, add `id`. only add it if there's an explicit selection
-  let select = options?.select ? options.select : null;
-  if (select) {
-    select = { ...select, id: true };
-  }
 
   const [{ data, fetching: dataFetching, error: dataError }, refresh] = useFindMany(manager, {
     ...options,
     ...(variables as any),
     ...(debouncedSearchValue && { search: debouncedSearchValue }),
-    select,
+    select: fieldSelectionMap,
   });
 
   const namespace = manager.findMany.namespace;
@@ -139,7 +149,14 @@ export const useTable = <
     fetching: fetchingMetadata,
     error: metadataError,
   } = useModelMetadata(manager.findMany.modelApiIdentifier, namespaceAsArray);
-  const fields = useMemo(() => filterFieldList(metadata?.fields, options), [metadata?.fields, options]);
+  const fields = useMemo(
+    () =>
+      filterAutoTableFieldList(metadata?.fields, {
+        ...options,
+        include: fieldSelectionMap && Object.keys(fieldSelectionMap),
+      }),
+    [fieldSelectionMap, metadata?.fields, options]
+  );
 
   const columns: TableColumn[] = useMemo(
     () =>

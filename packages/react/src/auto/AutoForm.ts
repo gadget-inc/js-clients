@@ -5,7 +5,7 @@ import { useEffect, useMemo, useRef } from "react";
 import type { AnyActionWithId, RecordIdentifier, UseActionFormHookStateData } from "src/use-action-form/types.js";
 import type { GadgetObjectFieldConfig } from "../internal/gql/graphql.js";
 import type { ActionMetadata, FieldMetadata, GlobalActionMetadata } from "../metadata.js";
-import { FieldType, filterFieldList, isActionMetadata, useActionMetadata } from "../metadata.js";
+import { FieldType, filterAutoFormFieldList, isActionMetadata, useActionMetadata } from "../metadata.js";
 import type { FieldValues } from "../useActionForm.js";
 import { useActionForm } from "../useActionForm.js";
 import { get, type OptionsType } from "../utils.js";
@@ -76,7 +76,7 @@ export const useFormFields = (
       : [];
     const nonObjectFields = action.inputFields.filter((field) => field.configuration.__typename !== "GadgetObjectFieldConfig");
 
-    const includedRootLevelFields = filterFieldList(nonObjectFields, options as any).map(
+    const includedRootLevelFields = filterAutoFormFieldList(nonObjectFields, options as any).map(
       (field) =>
         ({
           path: field.apiIdentifier,
@@ -85,7 +85,7 @@ export const useFormFields = (
     );
 
     const includedObjectFields = objectFields.flatMap((objectField) =>
-      filterFieldList((objectField.configuration as unknown as GadgetObjectFieldConfig).fields as any, options as any).map(
+      filterAutoFormFieldList((objectField.configuration as unknown as GadgetObjectFieldConfig).fields as any, options as any).map(
         (innerField) =>
           ({
             path: `${objectField.apiIdentifier}.${innerField.apiIdentifier}`,

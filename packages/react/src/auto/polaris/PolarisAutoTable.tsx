@@ -40,23 +40,13 @@ export const PolarisAutoTable = <
 >(
   props: AutoTableProps<GivenOptions, SchemaT, FinderFunction, Options>
 ) => {
-  const [
+  const [{ rows, columns, metadata, fetching, error, page, search }, refresh] = useTable<GivenOptions, SchemaT, FinderFunction, Options>(
+    props.model,
     {
-      rows,
-      columns,
-
-      metadata,
-
-      fetching,
-      error,
-
-      page,
-      search,
-    },
-    refresh,
-  ] = useTable<GivenOptions, SchemaT, FinderFunction, Options>(props.model, {
-    select: props.select,
-  } as any);
+      select: props.select,
+      columns: props.columns,
+    } as any
+  );
 
   const { mode, setMode } = useSetIndexFiltersMode();
 

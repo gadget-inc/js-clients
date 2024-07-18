@@ -42,3 +42,10 @@ export const Primary = {
     model: api.widget,
   },
 };
+
+export const SelectFields = {
+  args: {
+    model: api.widget,
+    columns: ["name", "inventoryCount"],
+  },
+};
