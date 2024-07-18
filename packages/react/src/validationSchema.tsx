@@ -12,10 +12,6 @@ import type {
 import { GadgetFieldType } from "./internal/gql/graphql.js";
 import type { FieldMetadata } from "./metadata.js";
 
-const richTextInputValidator = object({
-  markdown: string().required(),
-});
-
 const validatorForField = (field: FieldMetadata) => {
   let validator;
   switch (field.fieldType) {
@@ -99,7 +95,7 @@ const validatorForField = (field: FieldMetadata) => {
       break;
     }
     case GadgetFieldType.RichText: {
-      validator = richTextInputValidator;
+      validator = object({});
       break;
     }
     case GadgetFieldType.RoleAssignments: {
@@ -134,6 +130,9 @@ const validatorForField = (field: FieldMetadata) => {
   }
 
   if (field.requiredArgumentForInput) {
+    if (field.fieldType === GadgetFieldType.RichText) {
+      validator = object({ markdown: string().required() });
+    }
     validator = validator.required(`${field.name} is required`);
   } else {
     validator = (validator.nullable() as any).default(null);
