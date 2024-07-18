@@ -1,11 +1,11 @@
 import type { FindManyFunction } from "@gadgetinc/api-client-core";
+import type { IndexTableProps } from "@shopify/polaris";
 import {
   BlockStack,
   DataTable,
   EmptySearchResult,
   IndexFilters,
   IndexTable,
-  IndexTableProps,
   SkeletonBodyText,
   useSetIndexFiltersMode,
 } from "@shopify/polaris";
@@ -14,6 +14,7 @@ import React, { useMemo } from "react";
 import { useTable } from "../../useTable.js";
 import type { OptionsType } from "../../utils.js";
 import type { AutoTableProps } from "../AutoTable.js";
+import { PolarisAutoTableCellRenderer } from "./tableCells/PolarisAutoTableCellRenderer.js";
 
 const PolarisSkeletonTable = (props: { columns: number }) => {
   const count = Array.from(Array(props.columns));
@@ -106,7 +107,11 @@ export const PolarisAutoTable = <
           rows.map((row, index) => (
             <IndexTable.Row key={row.id as string} id={row.id as string} position={index}>
               {columns.map((column) => (
-                <IndexTable.Cell key={column.apiIdentifier}>{row[column.apiIdentifier]}</IndexTable.Cell>
+                <IndexTable.Cell key={column.apiIdentifier}>
+                  <div style={{ maxWidth: "200px" }}>
+                    <PolarisAutoTableCellRenderer column={column} value={row[column.apiIdentifier]} />
+                  </div>
+                </IndexTable.Cell>
               ))}
             </IndexTable.Row>
           ))}

@@ -377,6 +377,7 @@ const acceptedFieldTypes = new Set([
   FieldType.String,
   FieldType.Url,
   FieldType.Vector, // Not rendered as an input
+  FieldType.RichText,
 
   // Relationships
   FieldType.BelongsTo,
