@@ -40,12 +40,23 @@ export const PolarisAutoTable = <
 >(
   props: AutoTableProps<GivenOptions, SchemaT, FinderFunction, Options>
 ) => {
-  const [{ rows, columns, metadata, fetching, page, error }, refresh] = useTable<GivenOptions, SchemaT, FinderFunction, Options>(
-    props.model,
+  const [
     {
-      select: props.select,
-    } as any
-  );
+      rows,
+      columns,
+
+      metadata,
+
+      fetching,
+      error,
+
+      page,
+      search,
+    },
+    refresh,
+  ] = useTable<GivenOptions, SchemaT, FinderFunction, Options>(props.model, {
+    select: props.select,
+  } as any);
 
   const { mode, setMode } = useSetIndexFiltersMode();
 
@@ -75,18 +86,22 @@ export const PolarisAutoTable = <
   return (
     <BlockStack>
       <IndexFilters
+        filteringAccessibilityTooltip="Search and filter (F)"
         mode={mode}
         setMode={setMode}
+        appliedFilters={[]}
         filters={[]}
-        // eslint-disable-next-line @typescript-eslint/no-empty-function
-        onQueryChange={() => {}}
-        // eslint-disable-next-line @typescript-eslint/no-empty-function
-        onQueryClear={() => {}}
-        // eslint-disable-next-line @typescript-eslint/no-empty-function
-        onClearAll={() => {}}
+        onClearAll={() => undefined}
         tabs={[]}
         selected={1}
         loading={fetching}
+        cancelAction={{
+          onAction: () => search.clear(),
+        }}
+        // Search
+        queryValue={search.value}
+        onQueryChange={search.set}
+        onQueryClear={search.clear}
       />
       <IndexTable
         {...polarisTableProps}

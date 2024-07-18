@@ -57,6 +57,11 @@ jest.unstable_mockModule("../src/useTable", () => ({
           goToPreviousPage: jest.fn(),
         },
         fetching: false,
+        search: {
+          value: "",
+          set: jest.fn(),
+          clear: jest.fn(),
+        },
       },
       jest.fn(),
     ];
