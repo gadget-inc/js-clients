@@ -100,6 +100,8 @@ export interface BulkActionWithInputs<OptionsT, VariablesT> {
   <Options extends OptionsT>(inputs: VariablesT, options?: LimitToKnownKeys<Options, OptionsT>): AsyncRecord<any>;
 }
 
+export type UnionResultType = Record<string, { hasReturnType: boolean }>;
+
 export interface ActionFunctionMetadata<OptionsT, VariablesT, SelectionT, SchemaT, DefaultsT, IsBulk> {
   type: "action";
   operationName: string;
@@ -107,6 +109,7 @@ export interface ActionFunctionMetadata<OptionsT, VariablesT, SelectionT, Schema
   namespace: string | string[] | null;
   modelApiIdentifier: string;
   modelSelectionField: string;
+  operatesWithRecordIdentity: boolean;
   defaultSelection: DefaultsT;
   selectionType: SelectionT;
   optionsType: OptionsT;
@@ -119,6 +122,7 @@ export interface ActionFunctionMetadata<OptionsT, VariablesT, SelectionT, Schema
   paramOnlyVariables?: readonly string[];
   hasReturnType?: boolean;
   singleActionFunctionName?: string;
+  unionResultType?: UnionResultType | null;
   /** @deprecated */
   hasCreateOrUpdateEffect?: boolean;
 }

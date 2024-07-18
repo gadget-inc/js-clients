@@ -603,7 +603,7 @@ export const disambiguateActionVariables = (action: AnyActionFunction, variables
         if (action.paramOnlyVariables?.includes(key)) {
           newVariables[key] = value;
         } else {
-          if (key == "id") {
+          if (key == "id" && action.operatesWithRecordIdentity) {
             newVariables.id = value;
           } else {
             newVariables[action.modelApiIdentifier][key] = value;

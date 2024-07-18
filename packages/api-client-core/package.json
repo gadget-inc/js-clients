@@ -1,6 +1,6 @@
 {
   "name": "@gadgetinc/api-client-core",
-  "version": "0.15.26",
+  "version": "0.15.27",
   "files": [
     "Readme.md",
     "dist/**/*"
@@ -38,7 +38,7 @@
     "graphql-ws": "^5.13.1",
     "isomorphic-ws": "^5.0.0",
     "klona": "^2.0.6",
-    "tiny-graphql-query-compiler": "^0.2.2",
+    "tiny-graphql-query-compiler": "github:gadget-inc/js-clients#tiny-graphql-query-compiler-v0.2.4-gitpkg-ce2aa5a",
     "tslib": "^2.6.2",
     "type-fest": "^3.13.1",
     "wonka": "^6.3.2",
@@ -53,6 +53,7 @@
     "p-retry": "^4.5.0",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
+    "tiny-graphql-query-compiler": "workspace:*",
     "typescript": "5.4.5"
   }
 }

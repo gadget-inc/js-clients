@@ -1,7 +1,7 @@
 import type { FieldSelection as BuilderFieldSelection, BuilderOperation, Variable } from "tiny-graphql-query-compiler";
-import { Call, Var, compileWithVariableValues } from "tiny-graphql-query-compiler";
+import { Call, On, Var, compileWithVariableValues } from "tiny-graphql-query-compiler";
 import type { FieldSelection } from "./FieldSelection.js";
-import type { AnyActionFunction } from "./index.js";
+import type { AnyActionFunction, UnionResultType } from "./index.js";
 import {
   ErrorsSelection,
   camelize,
@@ -19,6 +19,18 @@ import type { ActionFunctionOptions, BaseFindOptions, EnqueueBackgroundActionOpt
 const fieldSelectionToQueryCompilerFields = (selection: FieldSelection, includeTypename = false): BuilderFieldSelection => {
   const output: BuilderFieldSelection = { ...selection };
   if (includeTypename) output.__typename = true;
+  return output;
+};
+
+const unionResultTypeToQueryCompilerFields = (unionResultType: UnionResultType, selection: FieldSelection) => {
+  const output: BuilderFieldSelection = {
+    __typename: true,
+  };
+
+  for (const [key, value] of Object.entries(unionResultType)) {
+    output[key] = On(value.hasReturnType ? { result: true } : fieldSelectionToQueryCompilerFields(selection, false));
+  }
+
   return output;
 };
 
@@ -130,11 +142,21 @@ const variableOptionsToVariables = (variables: VariablesOptions) => {
   return Object.fromEntries(Object.entries(variables).map(([name, options]) => [name, Var(options)]));
 };
 
-const actionResultFieldSelection = (modelSelectionField: string, selection: FieldSelection, hasReturnType?: boolean | null) => {
+const actionResultFieldSelection = (
+  modelSelectionField: string,
+  selection: FieldSelection,
+  hasReturnType?: boolean | null,
+  unionResultType?: UnionResultType | null
+) => {
   return {
     success: true,
     ...ErrorsSelection,
-    [modelSelectionField]: selection && !hasReturnType ? fieldSelectionToQueryCompilerFields(selection, true) : false,
+    [modelSelectionField]:
+      selection && !hasReturnType
+        ? unionResultType
+          ? unionResultTypeToQueryCompilerFields(unionResultType, selection)
+          : fieldSelectionToQueryCompilerFields(selection, true)
+        : false,
     result: !!hasReturnType,
   } as FieldSelection;
 };
@@ -148,12 +170,16 @@ export const actionOperation = (
   options?: BaseFindOptions | null,
   namespace?: string | string[] | null,
   isBulkAction?: boolean | null,
-  hasReturnType?: boolean | null
+  hasReturnType?: boolean | null,
+  unionResultType?: UnionResultType | null
 ) => {
   const selection = options?.select || defaultSelection;
 
   let fields: BuilderFieldSelection = {
-    [operation]: Call(variableOptionsToVariables(variables), actionResultFieldSelection(modelSelectionField, selection, hasReturnType)),
+    [operation]: Call(
+      variableOptionsToVariables(variables),
+      actionResultFieldSelection(modelSelectionField, selection, hasReturnType, unionResultType)
+    ),
   };
 
   fields = namespacify(namespace, fields);

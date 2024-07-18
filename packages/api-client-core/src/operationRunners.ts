@@ -6,7 +6,13 @@ import type { OperationResult } from "@urql/core";
 import type { Source } from "wonka";
 import type { FieldSelection } from "./FieldSelection.js";
 import type { GadgetConnection } from "./GadgetConnection.js";
-import type { ActionFunctionMetadata, AnyActionFunction, AnyBulkActionFunction, GlobalActionFunction } from "./GadgetFunctions.js";
+import type {
+  ActionFunctionMetadata,
+  AnyActionFunction,
+  AnyBulkActionFunction,
+  GlobalActionFunction,
+  UnionResultType,
+} from "./GadgetFunctions.js";
 import type { GadgetRecord, RecordShape } from "./GadgetRecord.js";
 import { GadgetRecordList } from "./GadgetRecordList.js";
 import type { AnyModelManager } from "./ModelManager.js";
@@ -265,7 +271,8 @@ export const actionRunner: ActionRunner = async <Shape extends RecordShape = any
   variables: VariablesOptions,
   options?: BaseFindOptions | null,
   namespace?: string | string[] | null,
-  hasReturnType?: boolean | null
+  hasReturnType?: boolean | null,
+  unionResultType?: UnionResultType | null
 ) => {
   const plan = actionOperation(
     operation,
@@ -276,7 +283,8 @@ export const actionRunner: ActionRunner = async <Shape extends RecordShape = any
     options,
     namespace,
     isBulkAction,
-    hasReturnType
+    hasReturnType,
+    unionResultType
   );
   const response = await modelManager.connection.currentClient.mutation(plan.query, plan.variables).toPromise();
   const dataPath = namespaceDataPath([operation], namespace);
