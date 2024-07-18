@@ -1,4 +1,5 @@
 import type { FindManyFunction } from "@gadgetinc/api-client-core";
+import type { TableOptions } from "../useTable.js";
 import type { OptionsType } from "../utils.js";
 
 /**
@@ -15,4 +16,5 @@ export type AutoTableProps<
   pageSize?: number;
   initialCursor?: string;
   initialDirection?: string;
+  columns?: TableOptions["columns"];
 };

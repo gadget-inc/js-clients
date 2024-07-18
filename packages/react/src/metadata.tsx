@@ -307,7 +307,7 @@ export const useActionMetadata = (actionFunction: ActionFunction<any, any, any, 
 /**
  * @internal
  */
-export const filterFieldList = (
+export const filterAutoFormFieldList = (
   fields: FieldMetadata[] | undefined,
   options?: { include?: string[]; exclude?: string[] }
 ): FieldMetadata[] => {
@@ -357,10 +357,10 @@ export const filterFieldList = (
   }
 
   // Filter out fields that are not supported by the form
-  return subset.filter((field) => acceptedFieldTypes.has(field.fieldType));
+  return subset.filter((field) => acceptedAutoFormFieldTypes.has(field.fieldType));
 };
 
-const acceptedFieldTypes = new Set([
+const acceptedAutoFormFieldTypes = new Set([
   FieldType.Boolean,
   FieldType.Color,
   FieldType.Computed, // Not rendered as an input
@@ -377,6 +377,54 @@ const acceptedFieldTypes = new Set([
   FieldType.String,
   FieldType.Url,
   FieldType.Vector, // Not rendered as an input
+  FieldType.RichText,
+
+  // Relationships
+  FieldType.BelongsTo,
+  FieldType.HasMany,
+  FieldType.HasOne,
+]);
+
+export const filterAutoTableFieldList = (fields: FieldMetadata[] | undefined, options?: { include?: string[] }) => {
+  if (!fields) {
+    return [];
+  }
+
+  let subset = fields;
+
+  if (options?.include) {
+    // When including fields, the order will match the order of the `include` array
+    subset = [];
+    const includes = new Set(options.include);
+
+    for (const includedFieldApiId of Array.from(includes)) {
+      const metadataField = fields.find((field) => field.apiIdentifier === includedFieldApiId);
+      if (metadataField) {
+        subset.push(metadataField);
+      }
+    }
+  }
+
+  // Filter out fields that are not supported by the form
+  return subset.filter((field) => acceptedAutoTableFieldTypes.has(field.fieldType));
+};
+
+const acceptedAutoTableFieldTypes = new Set([
+  FieldType.Boolean,
+  FieldType.Color,
+  FieldType.Computed,
+  FieldType.DateTime,
+  FieldType.Email,
+  FieldType.EncryptedString,
+  FieldType.Enum,
+  FieldType.File,
+  FieldType.Json,
+  FieldType.Number,
+  FieldType.Password,
+  FieldType.RichText,
+  FieldType.RoleAssignments,
+  FieldType.String,
+  FieldType.Url,
   FieldType.RichText,
 
   // Relationships

@@ -7,10 +7,10 @@ import { recordIdInputField } from "../support/shared.js";
 import { widgetModelInputFields } from "../support/widgetModel.js";
 
 describe("useTable hook", () => {
-  const getUseTableResult = () => {
+  const getUseTableResult = (options?: Parameters<typeof useTable>["1"]) => {
     const { result } = renderHook(
       () => {
-        return useTable(api.widget);
+        return useTable(api.widget, options);
       },
       {
         wrapper: MockTable(),
@@ -19,7 +19,7 @@ describe("useTable hook", () => {
     return result;
   };
 
-  it("should return the list of data and field information of a table", async () => {
+  it("should return the list of data and field information of a table", () => {
     const result = getUseTableResult();
     loadMockWidgetModelMetadata();
     loadWidgetData();
@@ -40,7 +40,6 @@ describe("useTable hook", () => {
         birthday: "2024-07-01T00:00:00.000Z",
         color: null,
         secretKey: "secret",
-        embedding: null,
         section: undefined,
         mustBeLongString: "hellllllllllllllllllllllllllllo",
       },
@@ -130,12 +129,6 @@ describe("useTable hook", () => {
         sortable: false,
       },
       {
-        apiIdentifier: "embedding",
-        fieldType: "Vector",
-        name: "Embedding",
-        sortable: true,
-      },
-      {
         apiIdentifier: "section",
         fieldType: "BelongsTo",
         name: "Section",
@@ -148,6 +141,51 @@ describe("useTable hook", () => {
         sortable: true,
       },
     ]);
+  });
+
+  it("should return the columns that are specified in the columns property", async () => {
+    const result = getUseTableResult({
+      columns: ["name", "inventoryCount"],
+    });
+    loadMockWidgetModelMetadata();
+    loadWidgetData();
+
+    // The fields inside the `node` should only contain the fields that are specified in the columns property + the id field
+    expect(mockUrqlClient.executeQuery.mock.calls[0][0].query.loc.source.body).toMatchInlineSnapshot(`
+      "query widgets($after: String, $first: Int, $before: String, $last: Int) {
+        widgets(after: $after, first: $first, before: $before, last: $last) {
+          pageInfo {
+            hasNextPage
+            hasPreviousPage
+            startCursor
+            endCursor
+          }
+          edges {
+            cursor
+            node {
+              name
+              inventoryCount
+              id
+              __typename
+            }
+          }
+        }
+        gadgetMeta {
+          hydrations(modelName: 
+      "widget")
+        }
+      }"
+    `);
+    expect(result.current[0].columns?.map((column) => column.apiIdentifier)).toEqual(["name", "inventoryCount"]);
+    expect(result.current[0].rows).toMatchInlineSnapshot(`
+      [
+        {
+          "id": "7",
+          "inventoryCount": 1,
+          "name": "foo",
+        },
+      ]
+    `);
   });
 });
 
