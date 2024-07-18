@@ -187,6 +187,31 @@ export const internalUpdateMutation = (apiIdentifier: string, namespace: string[
   });
 };
 
+export const internalUpsertMutation = (apiIdentifier: string, namespace: string[], on: string[] | undefined, record: RecordData) => {
+  const capitalizedApiIdentifier = capitalizeIdentifier(apiIdentifier);
+
+  return compileWithVariableValues({
+    type: "mutation",
+    name: `InternalUpsert${capitalizedApiIdentifier}`,
+    fields: {
+      internal: namespacify(namespace, {
+        [`upsert${capitalizedApiIdentifier}`]: Call(
+          {
+            on: Var({ value: on, type: "[String!]" }),
+            [apiIdentifier]: Var({ value: record, type: internalInputTypeName(apiIdentifier, namespace) }),
+          },
+          {
+            success: true,
+            ...ErrorsSelection,
+            [apiIdentifier]: true,
+          }
+        ),
+      }),
+      ...hydrationSelection(apiIdentifier, namespace),
+    },
+  });
+};
+
 export const internalDeleteMutation = (apiIdentifier: string, namespace: string[], id: string) => {
   const capitalizedApiIdentifier = capitalizeIdentifier(apiIdentifier);
 
@@ -444,6 +469,37 @@ export class InternalModelManager<Shape extends RecordShape = RecordData> {
     const plan = internalUpdateMutation(this.apiIdentifier, this.namespace, id, this.getRecordFromData(record, "update"));
     const response = await this.connection.currentClient.mutation(plan.query, plan.variables).toPromise();
     const result = assertMutationSuccess(response, this.dataPath(`update${this.capitalizedApiIdentifier}`));
+
+    return hydrateRecord(response, result[this.apiIdentifier]);
+  }
+
+  /**
+   * Upserts a record in the backend datastore for this model using the Internal API.
+   * If a matching record exists, it will be updated. If it doesn't exist, it will be created.
+   * By default records will be matched by the `id` field, but you can specify a different field to match on.
+   *
+   * Does *not* run actions -- use the Public API for that.
+   *
+   * @example
+   * // upserts post with id 10 in the database
+   * // if a post with id 10 exists, it will be updated
+   * // if a post with id 10 does not exist, it will be created
+   * const post = await api.internal.post.upsert({ id: "10", title: "A new post title" });
+   *
+   * @example
+   * // upserts post with slug "new-post" in the database
+   * // if a post with slug "new-post" exists, it will be updated
+   * // if a post with slug "new-post" does not exist, it will be created
+   * const post = await api.internal.post.upsert({ slug: "new-post", title: "A new post title" }, ["slug"]);
+   *
+   * @param record The data for the record to update
+   * @returns The upserted record
+   */
+  async upsert(record: RecordData, on?: string[]): Promise<GadgetRecord<Shape>> {
+    on && assert(on.length > 0, `Must specify at least one field to upsert on`);
+    const plan = internalUpsertMutation(this.apiIdentifier, this.namespace, on, this.getRecordFromData(record, "upsert"));
+    const response = await this.connection.currentClient.mutation(plan.query, plan.variables).toPromise();
+    const result = assertMutationSuccess(response, this.dataPath(`upsert${this.capitalizedApiIdentifier}`));
 
     return hydrateRecord(response, result[this.apiIdentifier]);
   }
