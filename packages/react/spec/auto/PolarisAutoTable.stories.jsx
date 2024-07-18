@@ -56,3 +56,14 @@ export const OnErrorState = {
     columns: ["somethingSuperWrong"],
   },
 };
+
+export const onClickCallback = {
+  name: "onClick callback",
+  args: {
+    model: api.widget,
+    onClick: (row) => {
+      // eslint-disable-next-line no-undef
+      window.alert(`You clicked on row: ${JSON.stringify(row, null, 2)}`);
+    },
+  },
+};

@@ -1,6 +1,6 @@
 import type { FindManyFunction } from "@gadgetinc/api-client-core";
 import type { TableOptions } from "../useTable.js";
-import type { OptionsType } from "../utils.js";
+import type { ColumnValueType, OptionsType } from "../utils.js";
 
 /**
  * The props to pass to an AutoTable. Includes both the Gadget-land props as well as the adapter specific props.
@@ -17,4 +17,5 @@ export type AutoTableProps<
   initialCursor?: string;
   initialDirection?: string;
   columns?: TableOptions["columns"];
+  onClick?: (row: Record<string, ColumnValueType>) => void;
 };
