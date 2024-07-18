@@ -1,4 +1,5 @@
 import { AppProvider, Card } from "@shopify/polaris";
+import translations from "@shopify/polaris/locales/en.json";
 import React from "react";
 import { Provider } from "../../src/GadgetProvider.tsx";
 import { PolarisAutoTable } from "../../src/auto/polaris/PolarisAutoTable.tsx";
@@ -14,7 +15,7 @@ export default {
       // 👇 Make it configurable by reading the theme value from parameters
       return (
         <Provider api={api}>
-          <AppProvider>
+          <AppProvider i18n={translations}>
             <Card>
               <div style={{ maxHeight: "70vh", overflow: "auto" }}>
                 <Story />

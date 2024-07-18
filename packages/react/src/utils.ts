@@ -436,6 +436,20 @@ export const unset = (obj: any, path: string) => {
   }, obj);
 };
 
+/**
+ * Wrapper to make a debounced function
+ * NOTE: When using this within a React component, make sure to wrap this in a `useCallback` so that the previous timeoutId is preserved between renders.
+ */
+// eslint-disable-next-line @typescript-eslint/ban-types
+export const debounce = (fn: Function, delayInMs = 300) => {
+  let timeoutId: ReturnType<typeof setTimeout>;
+
+  return (...args: any[]) => {
+    clearTimeout(timeoutId);
+    timeoutId = setTimeout(() => fn.apply(this, args), delayInMs);
+  };
+};
+
 export const getModelManager = (
   apiClient: AnyClient,
   apiIdentifier: string,

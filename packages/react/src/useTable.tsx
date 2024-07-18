@@ -11,8 +11,9 @@ import { useCallback, useMemo, useState } from "react";
 import type { GadgetFieldType } from "./internal/gql/graphql.js";
 import type { ModelMetadata } from "./metadata.js";
 import { filterFieldList, useModelMetadata } from "./metadata.js";
+import { useDebouncedSearch } from "./useDebouncedSearch.js";
 import { useFindMany } from "./useFindMany.js";
-import type { ColumnValueType, ErrorWrapper, OptionsType, ReadOperationOptions } from "./utils.js";
+import { type ColumnValueType, type ErrorWrapper, type OptionsType, type ReadOperationOptions } from "./utils.js";
 
 export interface TableColumn {
   name: string;
@@ -45,20 +46,33 @@ export interface TableOptions {
   fields?: string[];
 }
 
+export type TableData<Data> =
+  | {
+      columns: TableColumn[];
+      rows: Record<string, ColumnValueType>[];
+      data: Data;
+      metadata: ModelMetadata;
+    }
+  | {
+      columns: null;
+      rows: null;
+      data: null;
+      metadata: null;
+    };
+
 export type TableResult<Data> = [
-  (
-    | {
-        columns: TableColumn[];
-        rows: Record<string, ColumnValueType>[];
-        data: Data;
-        page: TablePagination;
-        metadata: ModelMetadata;
-        fetching: boolean;
-        error?: ErrorWrapper;
-      }
-    | { columns: null; rows: null; data: null; metadata: null; page: TablePagination; fetching: boolean; error?: ErrorWrapper }
-  ),
-  (opts?: Partial<OperationContext>) => void
+  TableData<Data> & {
+    page: TablePagination;
+    fetching: boolean;
+    error?: ErrorWrapper;
+  } & {
+    search: {
+      value: string;
+      set: (value: string) => void;
+      clear: () => void;
+    };
+  },
+  refresh: (opts?: Partial<OperationContext>) => void
 ];
 
 /**
@@ -84,9 +98,14 @@ export const useTable = <
 ): TableResult<
   GadgetRecordList<Select<Exclude<F["schemaType"], null | undefined>, DefaultSelection<F["selectionType"], Options, F["defaultSelection"]>>>
 > => {
+  const pageSize = options?.pageSize ?? 50;
+
   const [cursor, setCursor] = useState<string | undefined>(options?.initialCursor);
   const [direction, setDirection] = useState<"forward" | "backward">(options?.initialDirection ?? "forward");
-  const pageSize = options?.pageSize ?? 50;
+
+  const clearCursor = useCallback(() => setCursor(undefined), []);
+
+  const { debouncedValue: debouncedSearchValue, ...search } = useDebouncedSearch({ clearCursor });
 
   let variables;
   if (direction == "forward") {
@@ -109,13 +128,14 @@ export const useTable = <
   const [{ data, fetching: dataFetching, error: dataError }, refresh] = useFindMany(manager, {
     ...options,
     ...(variables as any),
+    ...(debouncedSearchValue && { search: debouncedSearchValue }),
     select,
   });
 
   const namespace = manager.findMany.namespace;
   const namespaceAsArray: string[] = namespace ? (Array.isArray(namespace) ? namespace : [namespace]) : [];
   const {
-    metadata: metadata,
+    metadata,
     fetching: fetchingMetadata,
     error: metadataError,
   } = useModelMetadata(manager.findMany.modelApiIdentifier, namespaceAsArray);
@@ -153,7 +173,8 @@ export const useTable = <
     }
   }, [data]);
 
-  const fetching = dataFetching || fetchingMetadata;
+  const isAwaitingDebouncedSearchValue = search.value != debouncedSearchValue;
+  const fetching = dataFetching || fetchingMetadata || isAwaitingDebouncedSearchValue;
   const error = dataError || metadataError;
   const page: TablePagination = {
     goToNextPage,
@@ -164,16 +185,45 @@ export const useTable = <
     hasPreviousPage: data?.hasPreviousPage,
   };
 
-  if (metadata && data && columns) {
-    const rows = data.map((record) => {
-      const row: Record<string, ColumnValueType> = { id: (record as any).id };
-      for (const { apiIdentifier, getValue } of columns) {
-        row[apiIdentifier] = getValue(record);
+  return [
+    {
+      ...getTableData({ metadata, data, columns }),
+      page,
+      fetching,
+      error,
+      search,
+    },
+    refresh,
+  ];
+};
+
+const getTableData = (props: { columns?: TableColumn[]; data?: GadgetRecordList<any>; metadata?: ModelMetadata }) => {
+  const { columns, data, metadata } = props;
+
+  return metadata && data && columns
+    ? {
+        rows: getRows({ data, columns }),
+        columns,
+        data,
+        metadata,
       }
-      return row;
-    });
-    return [{ rows, columns, data, metadata, page, fetching, error }, refresh];
-  } else {
-    return [{ rows: null, columns: null, data: null, metadata: null, page, fetching, error }, refresh];
-  }
+    : {
+        rows: null,
+        columns: null,
+
+        data: null,
+        metadata: null,
+      };
+};
+
+const getRows = (props: { data: GadgetRecordList<any>; columns: TableColumn[] }) => {
+  const { columns, data } = props;
+
+  return data.map((record) => {
+    const row: Record<string, ColumnValueType> = { id: record.id };
+    for (const { apiIdentifier, getValue } of columns) {
+      row[apiIdentifier] = getValue(record);
+    }
+    return row;
+  });
 };

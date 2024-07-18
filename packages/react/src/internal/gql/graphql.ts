@@ -14,6 +14,8 @@ export type Scalars = {
   Boolean: { input: boolean; output: boolean };
   Int: { input: number; output: number };
   Float: { input: number; output: number };
+  /** Represents the possible values of the fieldA enum. */
+  AutoTableTestEnumEnum: { input: any; output: any };
   /** A date string, such as 2007-12-03, compliant with the `full-date` format outlined in section 5.6 of the RFC 3339 profile of the ISO 8601 standard for representation of dates and times using the Gregorian calendar. */
   Date: { input: any; output: any };
   /** A date-time or full-date string at UTC, such as 2007-12-03 or 2007-12-03T10:15:30Z, compliant with the `full-date` or `date-time` formats outlined in section 5.6 of the RFC 3339 profile of the ISO 8601 standard for representation of dates and times using the Gregorian calendar. If a full date-time is passed, timezone will be ignored and it will be truncated to just the date part. */
@@ -24,6 +26,8 @@ export type Scalars = {
   GadgetID: { input: any; output: any };
   /** Instructions for a client to turn raw transport types (like strings) into useful client side types (like Dates). Unstable and not intended for developer use. */
   HydrationPlan: { input: any; output: any };
+  /** Represents one autoTableTest result record in internal api calls. Returns a JSON blob of all the record's fields. */
+  InternalAutoTableTestRecord: { input: any; output: any };
   /** Represents one city result record in internal api calls. Returns a JSON blob of all the record's fields. */
   InternalGameCityRecord: { input: any; output: any };
   /** Represents one player result record in internal api calls. Returns a JSON blob of all the record's fields. */
@@ -77,6 +81,107 @@ export type AppGraphQlTriggerMutationContext = {
   sessionID?: InputMaybe<Scalars["GadgetID"]["input"]>;
 };
 
+export type AutoTableTest = {
+  __typename?: "AutoTableTest";
+  /** Get all the fields for this record. Useful for not having to list out all the fields you want to retrieve, but slower. */
+  _all: Scalars["JSONObject"]["output"];
+  bool?: Maybe<Scalars["Boolean"]["output"]>;
+  /** The time at which this record was first created. Set once upon record creation and never changed. Managed by Gadget. */
+  createdAt: Scalars["DateTime"]["output"];
+  dt?: Maybe<Scalars["DateTime"]["output"]>;
+  email?: Maybe<Scalars["String"]["output"]>;
+  enum?: Maybe<Array<Scalars["AutoTableTestEnumEnum"]["output"]>>;
+  es?: Maybe<Scalars["String"]["output"]>;
+  file?: Maybe<StoredFile>;
+  /** The globally unique, unchanging identifier for this record. Assigned and managed by Gadget. */
+  id: Scalars["GadgetID"]["output"];
+  json?: Maybe<Scalars["JSON"]["output"]>;
+  num?: Maybe<Scalars["Float"]["output"]>;
+  rl?: Maybe<Array<Role>>;
+  rt?: Maybe<RichText>;
+  str?: Maybe<Scalars["String"]["output"]>;
+  /** The time at which this record was last changed. Set each time the record is successfully acted upon by an action. Managed by Gadget. */
+  updatedAt: Scalars["DateTime"]["output"];
+  url?: Maybe<Scalars["String"]["output"]>;
+  vect?: Maybe<Array<Scalars["Float"]["output"]>>;
+  vectCosineSimilarityTo?: Maybe<Scalars["Float"]["output"]>;
+  vectL2DistanceTo?: Maybe<Scalars["Float"]["output"]>;
+};
+
+export type AutoTableTestVectCosineSimilarityToArgs = {
+  vector: Array<Scalars["Float"]["input"]>;
+};
+
+export type AutoTableTestVectL2DistanceToArgs = {
+  vector: Array<Scalars["Float"]["input"]>;
+};
+
+/** A connection to a list of AutoTableTest items. */
+export type AutoTableTestConnection = {
+  __typename?: "AutoTableTestConnection";
+  /** A list of edges. */
+  edges: Array<AutoTableTestEdge>;
+  /** Information to aid in pagination. */
+  pageInfo: PageInfo;
+};
+
+/** An edge in a AutoTableTest connection. */
+export type AutoTableTestEdge = {
+  __typename?: "AutoTableTestEdge";
+  /** A cursor for use in pagination */
+  cursor: Scalars["String"]["output"];
+  /** The item at the end of the edge */
+  node: AutoTableTest;
+};
+
+export type AutoTableTestFilter = {
+  AND?: InputMaybe<Array<InputMaybe<AutoTableTestFilter>>>;
+  NOT?: InputMaybe<Array<InputMaybe<AutoTableTestFilter>>>;
+  OR?: InputMaybe<Array<InputMaybe<AutoTableTestFilter>>>;
+  bool?: InputMaybe<BooleanFilter>;
+  createdAt?: InputMaybe<DateTimeFilter>;
+  dt?: InputMaybe<DateTimeFilter>;
+  email?: InputMaybe<StringFilter>;
+  enum?: InputMaybe<MultiEnumFilter>;
+  id?: InputMaybe<IdFilter>;
+  json?: InputMaybe<JsonFilter>;
+  num?: InputMaybe<FloatFilter>;
+  rt?: InputMaybe<StringFilter>;
+  str?: InputMaybe<StringFilter>;
+  updatedAt?: InputMaybe<DateTimeFilter>;
+  url?: InputMaybe<StringFilter>;
+  vect?: InputMaybe<VectorFilter>;
+};
+
+export type AutoTableTestSort = {
+  /** Sort the results by the bool field. Defaults to ascending (smallest value first). */
+  bool?: InputMaybe<SortOrder>;
+  /** Sort the results by the createdAt field. Defaults to ascending (smallest value first). */
+  createdAt?: InputMaybe<SortOrder>;
+  /** Sort the results by the dt field. Defaults to ascending (smallest value first). */
+  dt?: InputMaybe<SortOrder>;
+  /** Sort the results by the email field. Defaults to ascending (smallest value first). */
+  email?: InputMaybe<SortOrder>;
+  /** Sort the results by the enum field. Defaults to ascending (smallest value first). */
+  enum?: InputMaybe<SortOrder>;
+  /** Sort the results by the id field. Defaults to ascending (smallest value first). */
+  id?: InputMaybe<SortOrder>;
+  /** Sort the results by the json field. Defaults to ascending (smallest value first). */
+  json?: InputMaybe<SortOrder>;
+  /** Sort the results by the num field. Defaults to ascending (smallest value first). */
+  num?: InputMaybe<SortOrder>;
+  /** Sort the results by the rt field. Defaults to ascending (smallest value first). */
+  rt?: InputMaybe<SortOrder>;
+  /** Sort the results by the str field. Defaults to ascending (smallest value first). */
+  str?: InputMaybe<SortOrder>;
+  /** Sort the results by the updatedAt field. Defaults to ascending (smallest value first). */
+  updatedAt?: InputMaybe<SortOrder>;
+  /** Sort the results by the url field. Defaults to ascending (smallest value first). */
+  url?: InputMaybe<SortOrder>;
+  /** Sort the results by the vect vector field. Sorts based on the distance between a given vector and the vector stored in vect. */
+  vect?: InputMaybe<VectorSortOrder>;
+};
+
 export type BackgroundAction = {
   __typename?: "BackgroundAction";
   /** The ID of the background action */
@@ -114,6 +219,7 @@ export type BackgroundActionQueue = {
 
 export type BackgroundActionResult =
   | AddInventoryWidgetResult
+  | CreateAutoTableTestResult
   | CreateGameCityResult
   | CreateGamePlayerResult
   | CreateGameRoundResult
@@ -124,6 +230,7 @@ export type BackgroundActionResult =
   | CreateSectionResult
   | CreateTestDataResult
   | CreateWidgetResult
+  | DeleteAutoTableTestResult
   | DeleteGameCityResult
   | DeleteGamePlayerResult
   | DeleteGameRoundResult
@@ -138,6 +245,7 @@ export type BackgroundActionResult =
   | SignInUserResult
   | SignOutUserResult
   | SignUpUserResult
+  | UpdateAutoTableTestResult
   | UpdateGameCityResult
   | UpdateGamePlayerResult
   | UpdateGameRoundResult
@@ -318,11 +426,13 @@ export type BackgroundMutations = {
   __typename?: "BackgroundMutations";
   addInventoryWidget: EnqueueBackgroundActionResult;
   bulkAddInventoryWidgets: BulkEnqueueBackgroundActionResult;
+  bulkCreateAutoTableTests: BulkEnqueueBackgroundActionResult;
   bulkCreateGizmos: BulkEnqueueBackgroundActionResult;
   bulkCreateModelAs: BulkEnqueueBackgroundActionResult;
   bulkCreateParts: BulkEnqueueBackgroundActionResult;
   bulkCreateSections: BulkEnqueueBackgroundActionResult;
   bulkCreateWidgets: BulkEnqueueBackgroundActionResult;
+  bulkDeleteAutoTableTests: BulkEnqueueBackgroundActionResult;
   bulkDeleteGizmos: BulkEnqueueBackgroundActionResult;
   bulkDeleteModelAs: BulkEnqueueBackgroundActionResult;
   bulkDeleteParts: BulkEnqueueBackgroundActionResult;
@@ -332,18 +442,21 @@ export type BackgroundMutations = {
   bulkSignInUsers: BulkEnqueueBackgroundActionResult;
   bulkSignOutUsers: BulkEnqueueBackgroundActionResult;
   bulkSignUpUsers: BulkEnqueueBackgroundActionResult;
+  bulkUpdateAutoTableTests: BulkEnqueueBackgroundActionResult;
   bulkUpdateGizmos: BulkEnqueueBackgroundActionResult;
   bulkUpdateModelAs: BulkEnqueueBackgroundActionResult;
   bulkUpdateParts: BulkEnqueueBackgroundActionResult;
   bulkUpdateSections: BulkEnqueueBackgroundActionResult;
   bulkUpdateUsers: BulkEnqueueBackgroundActionResult;
   bulkUpdateWidgets: BulkEnqueueBackgroundActionResult;
+  createAutoTableTest: EnqueueBackgroundActionResult;
   createGizmo: EnqueueBackgroundActionResult;
   createModelA: EnqueueBackgroundActionResult;
   createPart: EnqueueBackgroundActionResult;
   createSection: EnqueueBackgroundActionResult;
   createTestData: EnqueueBackgroundActionResult;
   createWidget: EnqueueBackgroundActionResult;
+  deleteAutoTableTest: EnqueueBackgroundActionResult;
   deleteGizmo: EnqueueBackgroundActionResult;
   deleteModelA: EnqueueBackgroundActionResult;
   deletePart: EnqueueBackgroundActionResult;
@@ -355,6 +468,7 @@ export type BackgroundMutations = {
   signInUser: EnqueueBackgroundActionResult;
   signOutUser: EnqueueBackgroundActionResult;
   signUpUser: EnqueueBackgroundActionResult;
+  updateAutoTableTest: EnqueueBackgroundActionResult;
   updateGizmo: EnqueueBackgroundActionResult;
   updateModelA: EnqueueBackgroundActionResult;
   updatePart: EnqueueBackgroundActionResult;
@@ -372,6 +486,11 @@ export type BackgroundMutationsAddInventoryWidgetArgs = {
 export type BackgroundMutationsBulkAddInventoryWidgetsArgs = {
   backgroundOptions?: InputMaybe<EnqueueBackgroundActionOptions>;
   inputs: Array<BulkAddInventoryWidgetsInput>;
+};
+
+export type BackgroundMutationsBulkCreateAutoTableTestsArgs = {
+  backgroundOptions?: InputMaybe<EnqueueBackgroundActionOptions>;
+  inputs: Array<BulkCreateAutoTableTestsInput>;
 };
 
 export type BackgroundMutationsBulkCreateGizmosArgs = {
@@ -397,6 +516,11 @@ export type BackgroundMutationsBulkCreateSectionsArgs = {
 export type BackgroundMutationsBulkCreateWidgetsArgs = {
   backgroundOptions?: InputMaybe<EnqueueBackgroundActionOptions>;
   inputs: Array<BulkCreateWidgetsInput>;
+};
+
+export type BackgroundMutationsBulkDeleteAutoTableTestsArgs = {
+  backgroundOptions?: InputMaybe<EnqueueBackgroundActionOptions>;
+  ids: Array<Scalars["GadgetID"]["input"]>;
 };
 
 export type BackgroundMutationsBulkDeleteGizmosArgs = {
@@ -444,6 +568,11 @@ export type BackgroundMutationsBulkSignUpUsersArgs = {
   inputs: Array<BulkSignUpUsersInput>;
 };
 
+export type BackgroundMutationsBulkUpdateAutoTableTestsArgs = {
+  backgroundOptions?: InputMaybe<EnqueueBackgroundActionOptions>;
+  inputs: Array<BulkUpdateAutoTableTestsInput>;
+};
+
 export type BackgroundMutationsBulkUpdateGizmosArgs = {
   backgroundOptions?: InputMaybe<EnqueueBackgroundActionOptions>;
   inputs: Array<BulkUpdateGizmosInput>;
@@ -474,6 +603,11 @@ export type BackgroundMutationsBulkUpdateWidgetsArgs = {
   inputs: Array<BulkUpdateWidgetsInput>;
 };
 
+export type BackgroundMutationsCreateAutoTableTestArgs = {
+  autoTableTest?: InputMaybe<CreateAutoTableTestInput>;
+  backgroundOptions?: InputMaybe<EnqueueBackgroundActionOptions>;
+};
+
 export type BackgroundMutationsCreateGizmoArgs = {
   backgroundOptions?: InputMaybe<EnqueueBackgroundActionOptions>;
   gizmo?: InputMaybe<CreateGizmoInput>;
@@ -500,6 +634,11 @@ export type BackgroundMutationsCreateTestDataArgs = {
 export type BackgroundMutationsCreateWidgetArgs = {
   backgroundOptions?: InputMaybe<EnqueueBackgroundActionOptions>;
   widget?: InputMaybe<CreateWidgetInput>;
+};
+
+export type BackgroundMutationsDeleteAutoTableTestArgs = {
+  backgroundOptions?: InputMaybe<EnqueueBackgroundActionOptions>;
+  id: Scalars["GadgetID"]["input"];
 };
 
 export type BackgroundMutationsDeleteGizmoArgs = {
@@ -553,6 +692,12 @@ export type BackgroundMutationsSignOutUserArgs = {
 export type BackgroundMutationsSignUpUserArgs = {
   backgroundOptions?: InputMaybe<EnqueueBackgroundActionOptions>;
   user?: InputMaybe<SignUpUserInput>;
+};
+
+export type BackgroundMutationsUpdateAutoTableTestArgs = {
+  autoTableTest?: InputMaybe<UpdateAutoTableTestInput>;
+  backgroundOptions?: InputMaybe<EnqueueBackgroundActionOptions>;
+  id: Scalars["GadgetID"]["input"];
 };
 
 export type BackgroundMutationsUpdateGizmoArgs = {
@@ -610,6 +755,21 @@ export type BulkAddInventoryWidgetsResult = {
   success: Scalars["Boolean"]["output"];
   /** The list of all changed widget records by each sent bulk action. Returned in the same order as the input bulk action params. */
   widgets?: Maybe<Array<Maybe<Widget>>>;
+};
+
+export type BulkCreateAutoTableTestsInput = {
+  autoTableTest?: InputMaybe<CreateAutoTableTestInput>;
+};
+
+/** The output when running the create on the autoTableTest model in bulk. */
+export type BulkCreateAutoTableTestsResult = {
+  __typename?: "BulkCreateAutoTableTestsResult";
+  /** The list of all changed autoTableTest records by each sent bulk action. Returned in the same order as the input bulk action params. */
+  autoTableTests?: Maybe<Array<Maybe<AutoTableTest>>>;
+  /** Aggregated list of errors that any bulk action encountered while processing */
+  errors?: Maybe<Array<ExecutionError>>;
+  /** Boolean describing if all the bulk actions succeeded or not */
+  success: Scalars["Boolean"]["output"];
 };
 
 export type BulkCreateGameCitiesInput = {
@@ -741,6 +901,15 @@ export type BulkCreateWidgetsResult = {
   success: Scalars["Boolean"]["output"];
   /** The list of all changed widget records by each sent bulk action. Returned in the same order as the input bulk action params. */
   widgets?: Maybe<Array<Maybe<Widget>>>;
+};
+
+/** The output when running the delete on the autoTableTest model in bulk. */
+export type BulkDeleteAutoTableTestsResult = {
+  __typename?: "BulkDeleteAutoTableTestsResult";
+  /** Aggregated list of errors that any bulk action encountered while processing */
+  errors?: Maybe<Array<ExecutionError>>;
+  /** Boolean describing if all the bulk actions succeeded or not */
+  success: Scalars["Boolean"]["output"];
 };
 
 /** The output when running the delete on the city model in bulk. */
@@ -886,6 +1055,22 @@ export type BulkSignUpUsersResult = {
   success: Scalars["Boolean"]["output"];
   /** The list of all changed user records by each sent bulk action. Returned in the same order as the input bulk action params. */
   users?: Maybe<Array<Maybe<User>>>;
+};
+
+export type BulkUpdateAutoTableTestsInput = {
+  autoTableTest?: InputMaybe<UpdateAutoTableTestInput>;
+  id: Scalars["GadgetID"]["input"];
+};
+
+/** The output when running the update on the autoTableTest model in bulk. */
+export type BulkUpdateAutoTableTestsResult = {
+  __typename?: "BulkUpdateAutoTableTestsResult";
+  /** The list of all changed autoTableTest records by each sent bulk action. Returned in the same order as the input bulk action params. */
+  autoTableTests?: Maybe<Array<Maybe<AutoTableTest>>>;
+  /** Aggregated list of errors that any bulk action encountered while processing */
+  errors?: Maybe<Array<ExecutionError>>;
+  /** Boolean describing if all the bulk actions succeeded or not */
+  success: Scalars["Boolean"]["output"];
 };
 
 export type BulkUpdateGameCitiesInput = {
@@ -1139,6 +1324,31 @@ export type ConvergeWidgetValues = {
   startsAt?: InputMaybe<Scalars["DateTime"]["input"]>;
 };
 
+export type CreateAutoTableTestInput = {
+  bool?: InputMaybe<Scalars["Boolean"]["input"]>;
+  dt?: InputMaybe<Scalars["DateTime"]["input"]>;
+  email?: InputMaybe<Scalars["String"]["input"]>;
+  enum?: InputMaybe<Array<Scalars["AutoTableTestEnumEnum"]["input"]>>;
+  es?: InputMaybe<Scalars["String"]["input"]>;
+  file?: InputMaybe<StoredFileInput>;
+  json?: InputMaybe<Scalars["JSON"]["input"]>;
+  num?: InputMaybe<Scalars["Float"]["input"]>;
+  pwd?: InputMaybe<Scalars["String"]["input"]>;
+  /** A string list of Gadget platform Role keys to assign to this record */
+  rl?: InputMaybe<Array<Scalars["String"]["input"]>>;
+  rt?: InputMaybe<RichTextInput>;
+  str?: InputMaybe<Scalars["String"]["input"]>;
+  url?: InputMaybe<Scalars["String"]["input"]>;
+  vect?: InputMaybe<Array<Scalars["Float"]["input"]>>;
+};
+
+export type CreateAutoTableTestResult = {
+  __typename?: "CreateAutoTableTestResult";
+  autoTableTest?: Maybe<AutoTableTest>;
+  errors?: Maybe<Array<ExecutionError>>;
+  success: Scalars["Boolean"]["output"];
+};
+
 export type CreateGameCityInput = {
   name?: InputMaybe<Scalars["String"]["input"]>;
   stadium?: InputMaybe<StadiumHasOneInput>;
@@ -1299,6 +1509,12 @@ export type DateTimeFilter = {
   lessThanOrEqual?: InputMaybe<Scalars["DateTime"]["input"]>;
   notEquals?: InputMaybe<Scalars["DateTime"]["input"]>;
   notIn?: InputMaybe<Array<InputMaybe<Scalars["DateTime"]["input"]>>>;
+};
+
+export type DeleteAutoTableTestResult = {
+  __typename?: "DeleteAutoTableTestResult";
+  errors?: Maybe<Array<ExecutionError>>;
+  success: Scalars["Boolean"]["output"];
 };
 
 export type DeleteGameCityResult = {
@@ -2354,10 +2570,65 @@ export type IdFilter = {
   notIn?: InputMaybe<Array<InputMaybe<Scalars["GadgetID"]["input"]>>>;
 };
 
+export type InternalAutoTableTestAtomicsInput = {
+  /** Numeric atomic commands for operating on num. */
+  num?: InputMaybe<Array<NumericAtomicFieldUpdateInput>>;
+};
+
+export type InternalAutoTableTestInput = {
+  /** An optional list of atomically applied commands for race-safe mutations of the record */
+  _atomics?: InputMaybe<InternalAutoTableTestAtomicsInput>;
+  bool?: InputMaybe<Scalars["Boolean"]["input"]>;
+  createdAt?: InputMaybe<Scalars["DateTime"]["input"]>;
+  dt?: InputMaybe<Scalars["DateTime"]["input"]>;
+  email?: InputMaybe<Scalars["String"]["input"]>;
+  enum?: InputMaybe<Array<Scalars["AutoTableTestEnumEnum"]["input"]>>;
+  es?: InputMaybe<Scalars["String"]["input"]>;
+  file?: InputMaybe<InternalStoredFileInput>;
+  id?: InputMaybe<Scalars["GadgetID"]["input"]>;
+  json?: InputMaybe<Scalars["JSON"]["input"]>;
+  num?: InputMaybe<Scalars["Float"]["input"]>;
+  pwd?: InputMaybe<Scalars["String"]["input"]>;
+  /** A string list of Gadget platform Role keys to assign to this record */
+  rl?: InputMaybe<Array<Scalars["String"]["input"]>>;
+  rt?: InputMaybe<RichTextInput>;
+  state?: InputMaybe<Scalars["RecordState"]["input"]>;
+  stateHistory?: InputMaybe<Scalars["RecordState"]["input"]>;
+  str?: InputMaybe<Scalars["String"]["input"]>;
+  updatedAt?: InputMaybe<Scalars["DateTime"]["input"]>;
+  url?: InputMaybe<Scalars["String"]["input"]>;
+  vect?: InputMaybe<Array<Scalars["Float"]["input"]>>;
+};
+
+/** A connection to a list of InternalAutoTableTestRecord items. */
+export type InternalAutoTableTestRecordConnection = {
+  __typename?: "InternalAutoTableTestRecordConnection";
+  /** A list of edges. */
+  edges: Array<InternalAutoTableTestRecordEdge>;
+  /** Information to aid in pagination. */
+  pageInfo: PageInfo;
+};
+
+/** An edge in a InternalAutoTableTestRecord connection. */
+export type InternalAutoTableTestRecordEdge = {
+  __typename?: "InternalAutoTableTestRecordEdge";
+  /** A cursor for use in pagination */
+  cursor: Scalars["String"]["output"];
+  /** The item at the end of the edge */
+  node: Scalars["InternalAutoTableTestRecord"]["output"];
+};
+
 /** Input object to set the link between this field and the model it belongs to */
 export type InternalBelongsToInput = {
   /** Existing ID of another record, which you would like to associate this record with */
   _link?: InputMaybe<Scalars["GadgetID"]["input"]>;
+};
+
+export type InternalBulkCreateAutoTableTestsResult = {
+  __typename?: "InternalBulkCreateAutoTableTestsResult";
+  autoTableTests?: Maybe<Array<Maybe<Scalars["InternalAutoTableTestRecord"]["output"]>>>;
+  errors?: Maybe<Array<ExecutionError>>;
+  success: Scalars["Boolean"]["output"];
 };
 
 export type InternalBulkCreateGameCitiesResult = {
@@ -2437,6 +2708,13 @@ export type InternalBulkCreateWidgetsResult = {
   widgets?: Maybe<Array<Maybe<Scalars["InternalWidgetRecord"]["output"]>>>;
 };
 
+export type InternalCreateAutoTableTestResult = {
+  __typename?: "InternalCreateAutoTableTestResult";
+  autoTableTest?: Maybe<Scalars["InternalAutoTableTestRecord"]["output"]>;
+  errors?: Maybe<Array<ExecutionError>>;
+  success: Scalars["Boolean"]["output"];
+};
+
 export type InternalCreateGameCityResult = {
   __typename?: "InternalCreateGameCityResult";
   city?: Maybe<Scalars["InternalGameCityRecord"]["output"]>;
@@ -2514,6 +2792,13 @@ export type InternalCreateWidgetResult = {
   widget?: Maybe<Scalars["InternalWidgetRecord"]["output"]>;
 };
 
+export type InternalDeleteAutoTableTestResult = {
+  __typename?: "InternalDeleteAutoTableTestResult";
+  autoTableTest?: Maybe<Scalars["InternalAutoTableTestRecord"]["output"]>;
+  errors?: Maybe<Array<ExecutionError>>;
+  success: Scalars["Boolean"]["output"];
+};
+
 export type InternalDeleteGameCityResult = {
   __typename?: "InternalDeleteGameCityResult";
   city?: Maybe<Scalars["InternalGameCityRecord"]["output"]>;
@@ -2546,6 +2831,12 @@ export type InternalDeleteGizmoResult = {
   __typename?: "InternalDeleteGizmoResult";
   errors?: Maybe<Array<ExecutionError>>;
   gizmo?: Maybe<Scalars["InternalGizmoRecord"]["output"]>;
+  success: Scalars["Boolean"]["output"];
+};
+
+export type InternalDeleteManyAutoTableTestResult = {
+  __typename?: "InternalDeleteManyAutoTableTestResult";
+  errors?: Maybe<Array<ExecutionError>>;
   success: Scalars["Boolean"]["output"];
 };
 
@@ -3116,6 +3407,7 @@ export type InternalMutations = {
   __typename?: "InternalMutations";
   /** Acquire a backend lock, returning only once the lock has been acquired */
   acquireLock: LockOperationResult;
+  bulkCreateAutoTableTests?: Maybe<InternalBulkCreateAutoTableTestsResult>;
   bulkCreateGizmos?: Maybe<InternalBulkCreateGizmosResult>;
   bulkCreateModelAs?: Maybe<InternalBulkCreateModelAsResult>;
   bulkCreateParts?: Maybe<InternalBulkCreatePartsResult>;
@@ -3124,6 +3416,7 @@ export type InternalMutations = {
   bulkCreateUsers?: Maybe<InternalBulkCreateUsersResult>;
   bulkCreateWidgets?: Maybe<InternalBulkCreateWidgetsResult>;
   commitTransaction: Scalars["String"]["output"];
+  createAutoTableTest?: Maybe<InternalCreateAutoTableTestResult>;
   createGizmo?: Maybe<InternalCreateGizmoResult>;
   createModelA?: Maybe<InternalCreateModelAResult>;
   createPart?: Maybe<InternalCreatePartResult>;
@@ -3131,7 +3424,9 @@ export type InternalMutations = {
   createSession?: Maybe<InternalCreateSessionResult>;
   createUser?: Maybe<InternalCreateUserResult>;
   createWidget?: Maybe<InternalCreateWidgetResult>;
+  deleteAutoTableTest?: Maybe<InternalDeleteAutoTableTestResult>;
   deleteGizmo?: Maybe<InternalDeleteGizmoResult>;
+  deleteManyAutoTableTest?: Maybe<InternalDeleteManyAutoTableTestResult>;
   deleteManyGizmo?: Maybe<InternalDeleteManyGizmoResult>;
   deleteManyModelA?: Maybe<InternalDeleteManyModelAResult>;
   deleteManyPart?: Maybe<InternalDeleteManyPartResult>;
@@ -3149,12 +3444,14 @@ export type InternalMutations = {
   rollbackTransaction: Scalars["String"]["output"];
   startTransaction: Scalars["String"]["output"];
   triggerAddInventoryWidget?: Maybe<AddInventoryWidgetResult>;
+  triggerCreateAutoTableTest?: Maybe<CreateAutoTableTestResult>;
   triggerCreateGizmo?: Maybe<CreateGizmoResult>;
   triggerCreateModelA?: Maybe<CreateModelAResult>;
   triggerCreatePart?: Maybe<CreatePartResult>;
   triggerCreateSection?: Maybe<CreateSectionResult>;
   triggerCreateTestData?: Maybe<CreateTestDataResult>;
   triggerCreateWidget?: Maybe<CreateWidgetResult>;
+  triggerDeleteAutoTableTest?: Maybe<DeleteAutoTableTestResult>;
   triggerDeleteGizmo?: Maybe<DeleteGizmoResult>;
   triggerDeleteModelA?: Maybe<DeleteModelAResult>;
   triggerDeletePart?: Maybe<DeletePartResult>;
@@ -3165,12 +3462,14 @@ export type InternalMutations = {
   triggerSignInUser?: Maybe<SignInUserResult>;
   triggerSignOutUser?: Maybe<SignOutUserResult>;
   triggerSignUpUser?: Maybe<SignUpUserResult>;
+  triggerUpdateAutoTableTest?: Maybe<UpdateAutoTableTestResult>;
   triggerUpdateGizmo?: Maybe<UpdateGizmoResult>;
   triggerUpdateModelA?: Maybe<UpdateModelAResult>;
   triggerUpdatePart?: Maybe<UpdatePartResult>;
   triggerUpdateSection?: Maybe<UpdateSectionResult>;
   triggerUpdateUser?: Maybe<UpdateUserResult>;
   triggerUpdateWidget?: Maybe<UpdateWidgetResult>;
+  updateAutoTableTest?: Maybe<InternalUpdateAutoTableTestResult>;
   updateGizmo?: Maybe<InternalUpdateGizmoResult>;
   updateModelA?: Maybe<InternalUpdateModelAResult>;
   updatePart?: Maybe<InternalUpdatePartResult>;
@@ -3182,6 +3481,10 @@ export type InternalMutations = {
 
 export type InternalMutationsAcquireLockArgs = {
   lock: Scalars["String"]["input"];
+};
+
+export type InternalMutationsBulkCreateAutoTableTestsArgs = {
+  autoTableTests: Array<InputMaybe<InternalAutoTableTestInput>>;
 };
 
 export type InternalMutationsBulkCreateGizmosArgs = {
@@ -3212,6 +3515,10 @@ export type InternalMutationsBulkCreateWidgetsArgs = {
   widgets: Array<InputMaybe<InternalWidgetInput>>;
 };
 
+export type InternalMutationsCreateAutoTableTestArgs = {
+  autoTableTest?: InputMaybe<InternalAutoTableTestInput>;
+};
+
 export type InternalMutationsCreateGizmoArgs = {
   gizmo?: InputMaybe<InternalGizmoInput>;
 };
@@ -3240,8 +3547,17 @@ export type InternalMutationsCreateWidgetArgs = {
   widget?: InputMaybe<InternalWidgetInput>;
 };
 
+export type InternalMutationsDeleteAutoTableTestArgs = {
+  id: Scalars["GadgetID"]["input"];
+};
+
 export type InternalMutationsDeleteGizmoArgs = {
   id: Scalars["GadgetID"]["input"];
+};
+
+export type InternalMutationsDeleteManyAutoTableTestArgs = {
+  filter?: InputMaybe<Array<AutoTableTestFilter>>;
+  search?: InputMaybe<Scalars["String"]["input"]>;
 };
 
 export type InternalMutationsDeleteManyGizmoArgs = {
@@ -3309,6 +3625,13 @@ export type InternalMutationsTriggerAddInventoryWidgetArgs = {
   verifyTriggerExists?: InputMaybe<Scalars["Boolean"]["input"]>;
 };
 
+export type InternalMutationsTriggerCreateAutoTableTestArgs = {
+  context?: InputMaybe<AppGraphQlTriggerMutationContext>;
+  params?: InputMaybe<Scalars["JSONObject"]["input"]>;
+  trigger?: InputMaybe<Scalars["JSONObject"]["input"]>;
+  verifyTriggerExists?: InputMaybe<Scalars["Boolean"]["input"]>;
+};
+
 export type InternalMutationsTriggerCreateGizmoArgs = {
   context?: InputMaybe<AppGraphQlTriggerMutationContext>;
   params?: InputMaybe<Scalars["JSONObject"]["input"]>;
@@ -3343,6 +3666,13 @@ export type InternalMutationsTriggerCreateTestDataArgs = {
 };
 
 export type InternalMutationsTriggerCreateWidgetArgs = {
+  context?: InputMaybe<AppGraphQlTriggerMutationContext>;
+  params?: InputMaybe<Scalars["JSONObject"]["input"]>;
+  trigger?: InputMaybe<Scalars["JSONObject"]["input"]>;
+  verifyTriggerExists?: InputMaybe<Scalars["Boolean"]["input"]>;
+};
+
+export type InternalMutationsTriggerDeleteAutoTableTestArgs = {
   context?: InputMaybe<AppGraphQlTriggerMutationContext>;
   params?: InputMaybe<Scalars["JSONObject"]["input"]>;
   trigger?: InputMaybe<Scalars["JSONObject"]["input"]>;
@@ -3419,6 +3749,13 @@ export type InternalMutationsTriggerSignUpUserArgs = {
   verifyTriggerExists?: InputMaybe<Scalars["Boolean"]["input"]>;
 };
 
+export type InternalMutationsTriggerUpdateAutoTableTestArgs = {
+  context?: InputMaybe<AppGraphQlTriggerMutationContext>;
+  params?: InputMaybe<Scalars["JSONObject"]["input"]>;
+  trigger?: InputMaybe<Scalars["JSONObject"]["input"]>;
+  verifyTriggerExists?: InputMaybe<Scalars["Boolean"]["input"]>;
+};
+
 export type InternalMutationsTriggerUpdateGizmoArgs = {
   context?: InputMaybe<AppGraphQlTriggerMutationContext>;
   params?: InputMaybe<Scalars["JSONObject"]["input"]>;
@@ -3459,6 +3796,11 @@ export type InternalMutationsTriggerUpdateWidgetArgs = {
   params?: InputMaybe<Scalars["JSONObject"]["input"]>;
   trigger?: InputMaybe<Scalars["JSONObject"]["input"]>;
   verifyTriggerExists?: InputMaybe<Scalars["Boolean"]["input"]>;
+};
+
+export type InternalMutationsUpdateAutoTableTestArgs = {
+  autoTableTest?: InputMaybe<InternalAutoTableTestInput>;
+  id: Scalars["GadgetID"]["input"];
 };
 
 export type InternalMutationsUpdateGizmoArgs = {
@@ -3534,10 +3876,12 @@ export type InternalPartRecordEdge = {
 
 export type InternalQueries = {
   __typename?: "InternalQueries";
+  autoTableTest?: Maybe<Scalars["InternalAutoTableTestRecord"]["output"]>;
   /** Currently open platform transaction details, or null if no transaction is open */
   currentTransactionDetails?: Maybe<Scalars["JSONObject"]["output"]>;
   game: InternalGameQueries;
   gizmo?: Maybe<Scalars["InternalGizmoRecord"]["output"]>;
+  listAutoTableTest: InternalAutoTableTestRecordConnection;
   listGizmo: InternalGizmoRecordConnection;
   listModelA: InternalModelARecordConnection;
   listPart: InternalPartRecordConnection;
@@ -3553,9 +3897,25 @@ export type InternalQueries = {
   widget?: Maybe<Scalars["InternalWidgetRecord"]["output"]>;
 };
 
+export type InternalQueriesAutoTableTestArgs = {
+  id: Scalars["GadgetID"]["input"];
+  select?: InputMaybe<Array<Scalars["String"]["input"]>>;
+};
+
 export type InternalQueriesGizmoArgs = {
   id: Scalars["GadgetID"]["input"];
   select?: InputMaybe<Array<Scalars["String"]["input"]>>;
+};
+
+export type InternalQueriesListAutoTableTestArgs = {
+  after?: InputMaybe<Scalars["String"]["input"]>;
+  before?: InputMaybe<Scalars["String"]["input"]>;
+  filter?: InputMaybe<Array<AutoTableTestFilter>>;
+  first?: InputMaybe<Scalars["Int"]["input"]>;
+  last?: InputMaybe<Scalars["Int"]["input"]>;
+  search?: InputMaybe<Scalars["String"]["input"]>;
+  select?: InputMaybe<Array<Scalars["String"]["input"]>>;
+  sort?: InputMaybe<Array<AutoTableTestSort>>;
 };
 
 export type InternalQueriesListGizmoArgs = {
@@ -3729,6 +4089,13 @@ export type InternalStoredFileInput = {
   storageToken: Scalars["String"]["input"];
   /** Has no effect. Convenience property to allow sending an internal metadata blob back to the Internal API, but doesn't do anything. URLs generated by Gadget expire and are not stored. */
   url?: InputMaybe<Scalars["String"]["input"]>;
+};
+
+export type InternalUpdateAutoTableTestResult = {
+  __typename?: "InternalUpdateAutoTableTestResult";
+  autoTableTest?: Maybe<Scalars["InternalAutoTableTestRecord"]["output"]>;
+  errors?: Maybe<Array<ExecutionError>>;
+  success: Scalars["Boolean"]["output"];
 };
 
 export type InternalUpdateGameCityResult = {
@@ -3998,11 +4365,13 @@ export type Mutation = {
   addInventoryWidget?: Maybe<AddInventoryWidgetResult>;
   background: BackgroundMutations;
   bulkAddInventoryWidgets?: Maybe<BulkAddInventoryWidgetsResult>;
+  bulkCreateAutoTableTests?: Maybe<BulkCreateAutoTableTestsResult>;
   bulkCreateGizmos?: Maybe<BulkCreateGizmosResult>;
   bulkCreateModelAs?: Maybe<BulkCreateModelAsResult>;
   bulkCreateParts?: Maybe<BulkCreatePartsResult>;
   bulkCreateSections?: Maybe<BulkCreateSectionsResult>;
   bulkCreateWidgets?: Maybe<BulkCreateWidgetsResult>;
+  bulkDeleteAutoTableTests?: Maybe<BulkDeleteAutoTableTestsResult>;
   bulkDeleteGizmos?: Maybe<BulkDeleteGizmosResult>;
   bulkDeleteModelAs?: Maybe<BulkDeleteModelAsResult>;
   bulkDeleteParts?: Maybe<BulkDeletePartsResult>;
@@ -4012,18 +4381,21 @@ export type Mutation = {
   bulkSignInUsers?: Maybe<BulkSignInUsersResult>;
   bulkSignOutUsers?: Maybe<BulkSignOutUsersResult>;
   bulkSignUpUsers?: Maybe<BulkSignUpUsersResult>;
+  bulkUpdateAutoTableTests?: Maybe<BulkUpdateAutoTableTestsResult>;
   bulkUpdateGizmos?: Maybe<BulkUpdateGizmosResult>;
   bulkUpdateModelAs?: Maybe<BulkUpdateModelAsResult>;
   bulkUpdateParts?: Maybe<BulkUpdatePartsResult>;
   bulkUpdateSections?: Maybe<BulkUpdateSectionsResult>;
   bulkUpdateUsers?: Maybe<BulkUpdateUsersResult>;
   bulkUpdateWidgets?: Maybe<BulkUpdateWidgetsResult>;
+  createAutoTableTest?: Maybe<CreateAutoTableTestResult>;
   createGizmo?: Maybe<CreateGizmoResult>;
   createModelA?: Maybe<CreateModelAResult>;
   createPart?: Maybe<CreatePartResult>;
   createSection?: Maybe<CreateSectionResult>;
   createTestData?: Maybe<CreateTestDataResult>;
   createWidget?: Maybe<CreateWidgetResult>;
+  deleteAutoTableTest?: Maybe<DeleteAutoTableTestResult>;
   deleteGizmo?: Maybe<DeleteGizmoResult>;
   deleteModelA?: Maybe<DeleteModelAResult>;
   deletePart?: Maybe<DeletePartResult>;
@@ -4038,6 +4410,7 @@ export type Mutation = {
   signInUser?: Maybe<SignInUserResult>;
   signOutUser?: Maybe<SignOutUserResult>;
   signUpUser?: Maybe<SignUpUserResult>;
+  updateAutoTableTest?: Maybe<UpdateAutoTableTestResult>;
   updateGizmo?: Maybe<UpdateGizmoResult>;
   updateModelA?: Maybe<UpdateModelAResult>;
   updatePart?: Maybe<UpdatePartResult>;
@@ -4053,6 +4426,10 @@ export type MutationAddInventoryWidgetArgs = {
 
 export type MutationBulkAddInventoryWidgetsArgs = {
   inputs: Array<BulkAddInventoryWidgetsInput>;
+};
+
+export type MutationBulkCreateAutoTableTestsArgs = {
+  inputs: Array<BulkCreateAutoTableTestsInput>;
 };
 
 export type MutationBulkCreateGizmosArgs = {
@@ -4073,6 +4450,10 @@ export type MutationBulkCreateSectionsArgs = {
 
 export type MutationBulkCreateWidgetsArgs = {
   inputs: Array<BulkCreateWidgetsInput>;
+};
+
+export type MutationBulkDeleteAutoTableTestsArgs = {
+  ids: Array<Scalars["GadgetID"]["input"]>;
 };
 
 export type MutationBulkDeleteGizmosArgs = {
@@ -4111,6 +4492,10 @@ export type MutationBulkSignUpUsersArgs = {
   inputs: Array<BulkSignUpUsersInput>;
 };
 
+export type MutationBulkUpdateAutoTableTestsArgs = {
+  inputs: Array<BulkUpdateAutoTableTestsInput>;
+};
+
 export type MutationBulkUpdateGizmosArgs = {
   inputs: Array<BulkUpdateGizmosInput>;
 };
@@ -4135,6 +4520,10 @@ export type MutationBulkUpdateWidgetsArgs = {
   inputs: Array<BulkUpdateWidgetsInput>;
 };
 
+export type MutationCreateAutoTableTestArgs = {
+  autoTableTest?: InputMaybe<CreateAutoTableTestInput>;
+};
+
 export type MutationCreateGizmoArgs = {
   gizmo?: InputMaybe<CreateGizmoInput>;
 };
@@ -4149,6 +4538,10 @@ export type MutationCreateSectionArgs = {
 
 export type MutationCreateWidgetArgs = {
   widget?: InputMaybe<CreateWidgetInput>;
+};
+
+export type MutationDeleteAutoTableTestArgs = {
+  id: Scalars["GadgetID"]["input"];
 };
 
 export type MutationDeleteGizmoArgs = {
@@ -4192,6 +4585,11 @@ export type MutationSignOutUserArgs = {
 
 export type MutationSignUpUserArgs = {
   user?: InputMaybe<SignUpUserInput>;
+};
+
+export type MutationUpdateAutoTableTestArgs = {
+  autoTableTest?: InputMaybe<UpdateAutoTableTestInput>;
+  id: Scalars["GadgetID"]["input"];
 };
 
 export type MutationUpdateGizmoArgs = {
@@ -4467,6 +4865,8 @@ export type PlayerHasManyInput = {
 
 export type Query = {
   __typename?: "Query";
+  autoTableTest?: Maybe<AutoTableTest>;
+  autoTableTests: AutoTableTestConnection;
   currentSession?: Maybe<Session>;
   /** Meta information about the application, like it's name, schema, and other internal details. */
   gadgetMeta: GadgetApplicationMeta;
@@ -4486,6 +4886,20 @@ export type Query = {
   users: UserConnection;
   widget?: Maybe<Widget>;
   widgets: WidgetConnection;
+};
+
+export type QueryAutoTableTestArgs = {
+  id: Scalars["GadgetID"]["input"];
+};
+
+export type QueryAutoTableTestsArgs = {
+  after?: InputMaybe<Scalars["String"]["input"]>;
+  before?: InputMaybe<Scalars["String"]["input"]>;
+  filter?: InputMaybe<Array<AutoTableTestFilter>>;
+  first?: InputMaybe<Scalars["Int"]["input"]>;
+  last?: InputMaybe<Scalars["Int"]["input"]>;
+  search?: InputMaybe<Scalars["String"]["input"]>;
+  sort?: InputMaybe<Array<AutoTableTestSort>>;
 };
 
 export type QueryGizmoArgs = {
@@ -4889,6 +5303,31 @@ export type Subscription = {
 
 export type SubscriptionBackgroundActionArgs = {
   id: Scalars["String"]["input"];
+};
+
+export type UpdateAutoTableTestInput = {
+  bool?: InputMaybe<Scalars["Boolean"]["input"]>;
+  dt?: InputMaybe<Scalars["DateTime"]["input"]>;
+  email?: InputMaybe<Scalars["String"]["input"]>;
+  enum?: InputMaybe<Array<Scalars["AutoTableTestEnumEnum"]["input"]>>;
+  es?: InputMaybe<Scalars["String"]["input"]>;
+  file?: InputMaybe<StoredFileInput>;
+  json?: InputMaybe<Scalars["JSON"]["input"]>;
+  num?: InputMaybe<Scalars["Float"]["input"]>;
+  pwd?: InputMaybe<Scalars["String"]["input"]>;
+  /** A string list of Gadget platform Role keys to assign to this record */
+  rl?: InputMaybe<Array<Scalars["String"]["input"]>>;
+  rt?: InputMaybe<RichTextInput>;
+  str?: InputMaybe<Scalars["String"]["input"]>;
+  url?: InputMaybe<Scalars["String"]["input"]>;
+  vect?: InputMaybe<Array<Scalars["Float"]["input"]>>;
+};
+
+export type UpdateAutoTableTestResult = {
+  __typename?: "UpdateAutoTableTestResult";
+  autoTableTest?: Maybe<AutoTableTest>;
+  errors?: Maybe<Array<ExecutionError>>;
+  success: Scalars["Boolean"]["output"];
 };
 
 export type UpdateGameCityInput = {
