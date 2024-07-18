@@ -1,5 +1,5 @@
 export interface FieldSelection {
-  [key: string]: boolean | null | undefined | FieldCall | FieldSelection;
+  [key: string]: boolean | null | undefined | FieldCall | FieldSelection | InlineFragment;
 }
 
 export interface BuilderOperation {
@@ -31,6 +31,8 @@ const compileFieldSelection = (fields: FieldSelection): string[] => {
         } else {
           return `${field}${args}`;
         }
+      } else if (value instanceof InlineFragment) {
+        return [`... on ${field} {`, ...compileFieldSelection(value.fields), `}`];
       } else {
         return [`${field} {`, ...compileFieldSelection(value as FieldSelection), `}`];
       }
@@ -63,6 +65,8 @@ const extractVariables = (fields: FieldSelection): Record<string, Variable> => {
       if (value.subselection) {
         Object.assign(variables, extractVariables(value.subselection));
       }
+    } else if (value instanceof InlineFragment) {
+      Object.assign(variables, extractVariables(value.fields));
     } else if (typeof value === "object" && value !== null) {
       Object.assign(variables, extractVariables(value));
     }
@@ -86,6 +90,10 @@ class FieldCall {
   constructor(readonly args: Record<string, any>, readonly subselection?: FieldSelection) {}
 }
 
+class InlineFragment {
+  constructor(readonly fields: FieldSelection) {}
+}
+
 export interface VariableOptions {
   type: string;
   name?: string;
@@ -106,6 +114,8 @@ export const Call = (args: Record<string, Variable | any>, subselection?: FieldS
 
 /** Used for calling a field with a variable within the args to a field */
 export const Var = (options: VariableOptions) => new Variable(options.type + (options.required ? "!" : ""), options.name, options.value);
+
+export const On = (fields: FieldSelection) => new InlineFragment(fields);
 
 /** Compiles one JS object describing a query into a GraphQL string */
 export const compile = (operation: BuilderOperation): string => {
