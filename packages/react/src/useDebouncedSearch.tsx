@@ -1,6 +1,13 @@
 import { useCallback, useState } from "react";
 import { debounce } from "./utils.js";
 
+export interface SearchResult {
+  value: string;
+  debouncedValue: string;
+  set: (value: string) => void;
+  clear: () => void;
+}
+
 export const useDebouncedSearch = (props: { clearCursor: () => void; debounceMilliseconds?: number }) => {
   const { clearCursor, debounceMilliseconds } = props;
   const [searchValue, setSearchValue] = useState<string>("");
