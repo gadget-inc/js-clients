@@ -659,6 +659,7 @@ function loadMockGizmoCreateMetadata() {
     modelApiIdentifier: "gizmo",
     modelNamespace: null,
     action: "create",
+    includeRelatedFields: false,
   });
 
   mockUrqlClient.executeQuery.pushResponse("ModelActionMetadata", {
@@ -677,6 +678,7 @@ function loadMockWidgetCreateMetadata() {
     modelApiIdentifier: "widget",
     modelNamespace: null,
     action: "create",
+    includeRelatedFields: false,
   });
 
   mockUrqlClient.executeQuery.pushResponse("ModelActionMetadata", {
@@ -695,6 +697,7 @@ function loadMockWidgetUpdateMetadata() {
     modelApiIdentifier: "widget",
     modelNamespace: null,
     action: "update",
+    includeRelatedFields: false,
   });
 
   mockUrqlClient.executeQuery.pushResponse("widget", {

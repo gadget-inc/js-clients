@@ -169,4 +169,103 @@ describe("PolarisAutoTable", () => {
       inventoryCount: 1,
     });
   });
+
+  it("should render the columns using the correct cell renderer in related model fields", async () => {
+    setMockUseTableResponse({
+      newRows: [
+        {
+          id: "1",
+          hasOne: {
+            id: "1",
+            hasOneName: "has one name value",
+          },
+          hasMany: {
+            edges: [
+              {
+                node: {
+                  id: "1",
+                  hasManyNumber: 1,
+                },
+              },
+              {
+                node: {
+                  id: "2",
+                  hasManyNumber: 2,
+                },
+              },
+            ],
+          },
+          belongsTo: {
+            id: "1",
+            belongsToEnum: ["belongs", "to", "enum", "value"],
+          },
+        },
+      ],
+      newColumns: [
+        {
+          apiIdentifier: "hasOne",
+          fieldType: "HasOne",
+          name: "Has One",
+          sortable: true,
+          relatedField: {
+            apiIdentifier: "hasOneName",
+            fieldType: "String",
+          },
+        },
+        {
+          apiIdentifier: "hasMany",
+          fieldType: "HasMany",
+          name: "Has Many",
+          sortable: true,
+          relatedField: {
+            apiIdentifier: "hasManyNumber",
+            fieldType: "Number",
+          },
+        },
+        {
+          apiIdentifier: "belongsTo",
+          fieldType: "BelongsTo",
+          name: "Belongs To",
+          sortable: true,
+          relatedField: {
+            apiIdentifier: "belongsToEnum",
+            fieldType: "Enum",
+          },
+        },
+      ],
+    });
+
+    const { container } = render(
+      <PolarisAutoTable
+        model={api.widget}
+        columns={[
+          "name",
+          { field: "hasOne", relatedField: "hasOneName" },
+          { field: "hasMany", relatedField: "hasManyNumber" },
+          { field: "belongsTo", relatedField: "belongsToEnum" },
+        ]}
+      />,
+      {
+        wrapper: PolarisMockedProviders,
+      }
+    );
+    const table = container.querySelector(`.${POLARIS_TABLE_CLASSES.CONTAINER}`)!;
+    const rows = table.getElementsByClassName(POLARIS_TABLE_CLASSES.ROW);
+
+    const firstRow = rows[0];
+    const firstRowCells = firstRow.getElementsByClassName(POLARIS_TABLE_CLASSES.CELL);
+
+    // "hasOne" column
+    expect(firstRowCells[1].textContent).toBe("has one name value");
+
+    // "hasMany" column
+    const tagsInHasManyCell = firstRowCells[2].getElementsByClassName("Polaris-Tag");
+    expect(tagsInHasManyCell.length).toBe(2);
+    expect(Array.from(tagsInHasManyCell).map((t) => t.textContent)).toEqual(["1", "2"]);
+
+    // "belongsTo" column
+    const tagsInBelongsToCell = firstRowCells[3].getElementsByClassName("Polaris-Tag");
+    expect(tagsInBelongsToCell.length).toBe(4);
+    expect(Array.from(tagsInBelongsToCell).map((t) => t.textContent)).toEqual(["belongs", "to", "enum", "value"]);
+  });
 });
