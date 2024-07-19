@@ -74,6 +74,44 @@ export const widgetModelInputFields = {
             defaultDisplayField: {
               apiIdentifier: "name",
             },
+            fields: [
+              {
+                name: "Id",
+                apiIdentifier: "id",
+                fieldType: "ID",
+                __typename: "GadgetModelField",
+              },
+              {
+                name: "Name",
+                apiIdentifier: "name",
+                fieldType: "String",
+                __typename: "GadgetModelField",
+              },
+              {
+                name: "Orientation",
+                apiIdentifier: "orientation",
+                fieldType: "String",
+                __typename: "GadgetModelField",
+              },
+              {
+                name: "Widget",
+                apiIdentifier: "widget",
+                fieldType: "BelongsTo",
+                __typename: "GadgetModelField",
+              },
+              {
+                name: "Created at",
+                apiIdentifier: "createdAt",
+                fieldType: "DateTime",
+                __typename: "GadgetModelField",
+              },
+              {
+                name: "Updated at",
+                apiIdentifier: "updatedAt",
+                fieldType: "DateTime",
+                __typename: "GadgetModelField",
+              },
+            ],
             __typename: "GadgetModel",
           },
           inverseField: {

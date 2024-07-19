@@ -9,12 +9,13 @@ import {
 } from "@gadgetinc/api-client-core";
 import type { OperationContext } from "@urql/core";
 import { useCallback, useMemo, useState } from "react";
-import type { GadgetFieldType } from "./internal/gql/graphql.js";
+import { GadgetFieldType } from "./internal/gql/graphql.js";
 import type { ModelMetadata } from "./metadata.js";
 import { filterAutoTableFieldList, useModelMetadata } from "./metadata.js";
 import { useDebouncedSearch } from "./useDebouncedSearch.js";
 import { useFindMany } from "./useFindMany.js";
-import { type ColumnValueType, type ErrorWrapper, type OptionsType, type ReadOperationOptions } from "./utils.js";
+import type { RelatedFieldColumn } from "./utils.js";
+import { isRelatedFieldColumn, type ColumnValueType, type ErrorWrapper, type OptionsType, type ReadOperationOptions } from "./utils.js";
 
 export interface TableColumn {
   name: string;
@@ -22,6 +23,7 @@ export interface TableColumn {
   fieldType: GadgetFieldType;
   getValue: (record: GadgetRecord<any>) => ColumnValueType;
   sortable: boolean;
+  relatedField?: TableColumn;
 }
 
 export interface TablePagination {
@@ -42,7 +44,7 @@ export interface TableOptions {
   pageSize?: number;
   initialCursor?: string;
   initialDirection?: "forward" | "backward";
-  columns?: string[];
+  columns?: (string | RelatedFieldColumn)[];
 }
 
 export type TableData<Data> =
@@ -106,21 +108,61 @@ export const useTable = <
 
   const { debouncedValue: debouncedSearchValue, ...search } = useDebouncedSearch({ clearCursor });
 
+  const namespace = manager.findMany.namespace;
+  const namespaceAsArray: string[] = namespace ? (Array.isArray(namespace) ? namespace : [namespace]) : [];
+  const {
+    metadata,
+    fetching: fetchingMetadata,
+    error: metadataError,
+  } = useModelMetadata(manager.findMany.modelApiIdentifier, namespaceAsArray);
+
   const fieldSelectionMap = useMemo(() => {
     if (options?.select) return options.select;
 
     if (!options?.columns) return undefined; // Use the default selection
 
     const selectionMap: FieldSelection = {};
+    if (!metadata) return selectionMap;
+
     for (const column of options.columns) {
-      selectionMap[column] = true;
+      if (typeof column === "string") {
+        selectionMap[column] = true;
+        continue;
+      }
+
+      if (isRelatedFieldColumn(column)) {
+        // We need to find the related model field from the metadata
+        // to determine whether the field is a has-one or has-many relationship,
+        // and build the correct selection map for it.
+        const fieldMetadata = metadata.fields.find((field) => field.apiIdentifier === column.field);
+        if (!fieldMetadata) {
+          throw new Error(`Field '${column.field}' not found in metadata`);
+        }
+
+        if (
+          fieldMetadata.configuration.__typename === "GadgetHasOneConfig" ||
+          fieldMetadata.configuration.__typename === "GadgetBelongsToConfig"
+        ) {
+          selectionMap[column.field] = {
+            [column.relatedField]: true,
+          };
+        } else {
+          selectionMap[column.field] = {
+            edges: {
+              node: {
+                [column.relatedField]: true,
+              },
+            },
+          };
+        }
+      }
     }
 
     return {
       ...selectionMap,
       id: true,
     };
-  }, [options?.columns, options?.select]);
+  }, [metadata, options?.columns, options?.select]);
 
   let variables;
   if (direction == "forward") {
@@ -140,15 +182,9 @@ export const useTable = <
     ...(variables as any),
     ...(debouncedSearchValue && { search: debouncedSearchValue }),
     select: fieldSelectionMap,
+    pause: !metadata, // Don't fetch data until metadata is loaded
   });
 
-  const namespace = manager.findMany.namespace;
-  const namespaceAsArray: string[] = namespace ? (Array.isArray(namespace) ? namespace : [namespace]) : [];
-  const {
-    metadata,
-    fetching: fetchingMetadata,
-    error: metadataError,
-  } = useModelMetadata(manager.findMany.modelApiIdentifier, namespaceAsArray);
   const fields = useMemo(
     () =>
       filterAutoTableFieldList(metadata?.fields, {
@@ -158,9 +194,55 @@ export const useTable = <
     [fieldSelectionMap, metadata?.fields, options]
   );
 
-  const columns: TableColumn[] = useMemo(
-    () =>
-      fields.map((field) => ({
+  const columns: TableColumn[] = useMemo(() => {
+    const columnsMap =
+      options?.columns &&
+      new Map(
+        options.columns.map((column) => {
+          if (isRelatedFieldColumn(column)) {
+            return [column.field, column.relatedField];
+          } else {
+            return [column, undefined];
+          }
+        })
+      );
+
+    return fields.map((field) => {
+      let relatedField: TableColumn | undefined;
+      const relatedFieldColumn = columnsMap?.get(field.apiIdentifier);
+
+      if (relatedFieldColumn) {
+        if (
+          field.fieldType !== GadgetFieldType.HasOne &&
+          field.fieldType !== GadgetFieldType.BelongsTo &&
+          field.fieldType !== GadgetFieldType.HasMany
+        ) {
+          throw new Error(`Field '${field.apiIdentifier}' is not a relationship field`);
+        }
+
+        const relatedFieldMetadata =
+          field.configuration.__typename === "GadgetHasOneConfig" ||
+          field.configuration.__typename === "GadgetBelongsToConfig" ||
+          field.configuration.__typename === "GadgetHasManyConfig"
+            ? field.configuration.relatedModel?.fields?.find((relatedField) => relatedField.apiIdentifier === relatedFieldColumn)
+            : undefined;
+
+        if (!relatedFieldMetadata) {
+          throw new Error(`Related field '${relatedFieldColumn}' not found in metadata`);
+        }
+
+        relatedField = {
+          name: relatedFieldMetadata.name,
+          apiIdentifier: relatedFieldMetadata.apiIdentifier,
+          fieldType: relatedFieldMetadata.fieldType,
+          getValue: (record: GadgetRecord<any>) => {
+            return record[field.apiIdentifier]?.[relatedFieldMetadata.apiIdentifier];
+          },
+          sortable: false,
+        };
+      }
+
+      return {
         name: field.name,
         apiIdentifier: field.apiIdentifier,
         fieldType: field.fieldType,
@@ -168,9 +250,10 @@ export const useTable = <
           return record[field.apiIdentifier];
         },
         sortable: "sortable" in field && field.sortable,
-      })),
-    [fields]
-  );
+        relatedField,
+      } as TableColumn;
+    });
+  }, [fields, options?.columns]);
 
   const goToNextPage = useCallback(() => {
     if (data && data.hasNextPage) {

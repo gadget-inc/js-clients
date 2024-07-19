@@ -500,6 +500,18 @@ export type FileValueType = {
   __typename: "StoredFile";
 };
 
+export type ValueWithTypename = {
+  __typename: string;
+  [key: string]: ColumnValueType;
+};
+
+export type HasManyValueType = {
+  __typename: string;
+  edges: {
+    node: ValueWithTypename;
+  }[];
+};
+
 export type ColumnValueType =
   | string
   | number
@@ -509,10 +521,21 @@ export type ColumnValueType =
   | string[]
   | RoleAssignmentsValueType[]
   | FileValueType
-  | RichTextValueType;
+  | RichTextValueType
+  | ValueWithTypename
+  | HasManyValueType;
 
 export const isRoleAssignmentsArray = (value: ColumnValueType): value is RoleAssignmentsValueType[] => {
   if (!Array.isArray(value) || value.length === 0) return false;
   if (!value.every((item) => typeof item === "object" && "__typename" in item && item.__typename === "Role")) return false;
   return true;
+};
+
+export type RelatedFieldColumn = {
+  field: string;
+  relatedField: string;
+};
+
+export const isRelatedFieldColumn = (value: any): value is RelatedFieldColumn => {
+  return typeof value === "object" && value !== null && "field" in value && "relatedField" in value;
 };

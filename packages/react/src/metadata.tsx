@@ -17,6 +17,14 @@ export const FieldType = GadgetFieldType;
 type WithRequired<T, K extends keyof T> = T & { [P in K]-?: Exclude<T[P], null> };
 type Clarify<T> = T extends Record<string, unknown> ? { [Key in keyof T]: T[Key] } : T;
 
+const RelatedModelFieldFragment = graphql(/* GraphQL */ `
+  fragment RelatedModelFieldFragment on GadgetModelField {
+    name
+    apiIdentifier
+    fieldType
+  }
+`);
+
 const FieldMetadataFragment = graphql(/* GraphQL */ `
   fragment FieldMetadata on GadgetField {
     name
@@ -59,6 +67,10 @@ const FieldMetadataFragment = graphql(/* GraphQL */ `
           namespace
           defaultDisplayField {
             apiIdentifier
+            fieldType
+          }
+          fields @include(if: $includeRelatedFields) {
+            ...RelatedModelFieldFragment
           }
         }
         inverseField {
@@ -71,6 +83,10 @@ const FieldMetadataFragment = graphql(/* GraphQL */ `
           namespace
           defaultDisplayField {
             apiIdentifier
+            fieldType
+          }
+          fields @include(if: $includeRelatedFields) {
+            ...RelatedModelFieldFragment
           }
         }
         inverseField {
@@ -83,6 +99,10 @@ const FieldMetadataFragment = graphql(/* GraphQL */ `
           namespace
           defaultDisplayField {
             apiIdentifier
+            fieldType
+          }
+          fields @include(if: $includeRelatedFields) {
+            ...RelatedModelFieldFragment
           }
         }
       }
@@ -105,7 +125,7 @@ const FieldMetadataFragment = graphql(/* GraphQL */ `
 `);
 
 const ModelMetadataQuery = graphql(/* GraphQL */ `
-  query GetModelMetadata($apiIdentifier: String!, $namespace: [String!]) {
+  query GetModelMetadata($apiIdentifier: String!, $namespace: [String!], $includeRelatedFields: Boolean!) {
     gadgetMeta {
       model(apiIdentifier: $apiIdentifier, namespace: $namespace) {
         apiIdentifier
@@ -152,7 +172,7 @@ const _SubFieldsFragment = graphql(/* GraphQL */ `
 `);
 
 const ModelActionMetadataQuery = graphql(/* GraphQL */ `
-  query ModelActionMetadata($modelApiIdentifier: String!, $modelNamespace: [String!], $action: String!) {
+  query ModelActionMetadata($modelApiIdentifier: String!, $modelNamespace: [String!], $action: String!, $includeRelatedFields: Boolean!) {
     gadgetMeta {
       model(apiIdentifier: $modelApiIdentifier, namespace: $modelNamespace) {
         name
@@ -172,8 +192,11 @@ const ModelActionMetadataQuery = graphql(/* GraphQL */ `
   }
 `);
 
+/**
+ * Global actions don't have related fields, but $includeRelatedFields needed for the fragment
+ */
 const GlobalActionMetadataQuery = graphql(/* GraphQL */ `
-  query GlobalActionMetadata($apiIdentifier: String!, $namespace: [String!]) {
+  query GlobalActionMetadata($apiIdentifier: String!, $namespace: [String!], $includeRelatedFields: Boolean = false) {
     gadgetMeta {
       globalAction(apiIdentifier: $apiIdentifier, namespace: $namespace) {
         name
@@ -216,7 +239,11 @@ export type FieldMetadata = ResultOf<typeof FieldMetadataFragment>;
 export const useModelMetadata = (apiIdentifier: string, namespace: string[]) => {
   const [{ data, fetching, error }] = useGadgetQuery({
     query: ModelMetadataQuery,
-    variables: { apiIdentifier, namespace },
+    variables: {
+      apiIdentifier,
+      namespace,
+      includeRelatedFields: true,
+    },
   });
 
   return {
@@ -256,6 +283,7 @@ export const useActionMetadata = (actionFunction: ActionFunction<any, any, any, 
     variables = {
       apiIdentifier: getGlobalActionApiIdentifier(api, actionFunction),
       namespace: actionFunction.namespace,
+      includeRelatedFields: false,
     };
   } else {
     query = ModelActionMetadataQuery;
@@ -278,6 +306,7 @@ export const useActionMetadata = (actionFunction: ActionFunction<any, any, any, 
       modelApiIdentifier: actionFunction.modelApiIdentifier,
       modelNamespace: actionFunction.namespace,
       action: actionName,
+      includeRelatedFields: false,
     };
   }
 
@@ -403,6 +432,14 @@ export const filterAutoTableFieldList = (fields: FieldMetadata[] | undefined, op
         subset.push(metadataField);
       }
     }
+  } else {
+    // Don't include relationships in the table by default
+    subset = subset.filter(
+      (field) =>
+        field.fieldType !== GadgetFieldType.HasOne &&
+        field.fieldType !== GadgetFieldType.HasMany &&
+        field.fieldType !== GadgetFieldType.BelongsTo
+    );
   }
 
   // Filter out fields that are not supported by the form

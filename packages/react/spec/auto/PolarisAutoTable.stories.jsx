@@ -39,20 +39,20 @@ export default {
 // More on writing stories with args: https://storybook.js.org/docs/writing-stories/args
 export const Primary = {
   args: {
-    model: api.widget,
+    model: api.autoTableTest,
   },
 };
 
 export const SelectFields = {
   args: {
-    model: api.widget,
-    columns: ["name", "inventoryCount"],
+    model: api.autoTableTest,
+    columns: ["str", "num"],
   },
 };
 
 export const OnErrorState = {
   args: {
-    model: api.widget,
+    model: api.autoTableTest,
     columns: ["somethingSuperWrong"],
   },
 };
@@ -60,10 +60,54 @@ export const OnErrorState = {
 export const onClickCallback = {
   name: "onClick callback",
   args: {
-    model: api.widget,
+    model: api.autoTableTest,
     onClick: (row) => {
       // eslint-disable-next-line no-undef
       window.alert(`You clicked on row: ${JSON.stringify(row, null, 2)}`);
     },
+  },
+};
+
+export const SelectRelatedFieldsHasOne = {
+  name: "Select related fields - has one relationship",
+  args: {
+    model: api.autoTableTest,
+    columns: [
+      "str",
+      "num",
+      {
+        field: "hasOne",
+        relatedField: "name",
+      },
+    ],
+  },
+};
+
+export const SelectRelatedFieldsHasMany = {
+  name: "Select related fields - has many relationship",
+  args: {
+    model: api.autoTableTest,
+    columns: [
+      "str",
+      "num",
+      {
+        field: "hasMany",
+        relatedField: "name",
+      },
+    ],
+  },
+};
+
+export const SelectRelatedFieldsBelongsTo = {
+  name: "Select related fields - belongs to relationship",
+  args: {
+    model: api._autoTableTestRelatedModel,
+    columns: [
+      "name",
+      {
+        field: "belongsToParent",
+        relatedField: "str",
+      },
+    ],
   },
 };
