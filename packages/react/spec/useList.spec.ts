@@ -1,5 +1,5 @@
 import { jest } from "@jest/globals";
-import { act, renderHook } from "@testing-library/react";
+import { act, renderHook, waitFor } from "@testing-library/react";
 
 let data: any = [{ id: 1 }, { id: 2 }];
 let fetching = false;
@@ -23,7 +23,7 @@ describe("useList", () => {
 
   describe("pagination", () => {
     it("will return you a list of records", () => {
-      expect(result.current[0].records).toEqual([{ id: 1 }, { id: 2 }]);
+      expect(result.current[0].data).toEqual([{ id: 1 }, { id: 2 }]);
     });
 
     describe("page size", () => {
@@ -84,6 +84,24 @@ describe("useList", () => {
 
         expect(result.current[0].page.variables).toEqual({ last: 25, before: "startCursor" });
       });
+    });
+  });
+
+  describe("search", () => {
+    beforeEach(() => {
+      data = [{ id: 1 }, { id: 2 }];
+      const renderResult = renderHook(() => useList(manager));
+      result = renderResult.result;
+    });
+
+    it("will return you a search object after a debounce 300ms", async () => {
+      result.current[0].search.set("searchValue");
+      await waitFor(() => expect(result.current[0].search.value).toEqual("searchValue"));
+    });
+
+    it("will pass the search params to the useFindMany hook", async () => {
+      result.current[0].search.set("searchValue");
+      await waitFor(() => expect(useFindMany).toHaveBeenCalledWith(manager, { first: 50, after: undefined, search: "searchValue" }));
     });
   });
 

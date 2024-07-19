@@ -3,17 +3,17 @@ import {
   type DefaultSelection,
   type FindManyFunction,
   type GadgetRecord,
-  type GadgetRecordList,
   type LimitToKnownKeys,
   type Select,
 } from "@gadgetinc/api-client-core";
 import type { OperationContext } from "@urql/core";
-import { useCallback, useMemo, useState } from "react";
+import { useMemo } from "react";
 import { GadgetFieldType } from "./internal/gql/graphql.js";
 import type { ModelMetadata } from "./metadata.js";
 import { filterAutoTableFieldList, useModelMetadata } from "./metadata.js";
-import { useDebouncedSearch } from "./useDebouncedSearch.js";
-import { useFindMany } from "./useFindMany.js";
+import type { SearchResult } from "./useDebouncedSearch.js";
+import type { PaginationResult } from "./useList.js";
+import { useList } from "./useList.js";
 import type { RelatedFieldColumn } from "./utils.js";
 import { isRelatedFieldColumn, type ColumnValueType, type ErrorWrapper, type OptionsType, type ReadOperationOptions } from "./utils.js";
 
@@ -24,20 +24,6 @@ export interface TableColumn {
   getValue: (record: GadgetRecord<any>) => ColumnValueType;
   sortable: boolean;
   relatedField?: TableColumn;
-}
-
-export interface TablePagination {
-  hasNextPage: boolean | undefined;
-  hasPreviousPage: boolean | undefined;
-  variables: {
-    first?: number;
-    after?: string;
-    last?: number;
-    before?: string;
-  };
-  pageSize: number;
-  goToNextPage(): void;
-  goToPreviousPage(): void;
 }
 
 export interface TableOptions {
@@ -63,15 +49,10 @@ export type TableData<Data> =
 
 export type TableResult<Data> = [
   TableData<Data> & {
-    page: TablePagination;
+    page: PaginationResult;
     fetching: boolean;
     error?: ErrorWrapper;
-  } & {
-    search: {
-      value: string;
-      set: (value: string) => void;
-      clear: () => void;
-    };
+    search: SearchResult;
   },
   refresh: (opts?: Partial<OperationContext>) => void
 ];
@@ -97,17 +78,8 @@ export const useTable = <
   manager: { findMany: F },
   options?: LimitToKnownKeys<Options, F["optionsType"] & ReadOperationOptions & TableOptions>
 ): TableResult<
-  GadgetRecordList<Select<Exclude<F["schemaType"], null | undefined>, DefaultSelection<F["selectionType"], Options, F["defaultSelection"]>>>
+  GadgetRecord<Select<Exclude<F["schemaType"], null | undefined>, DefaultSelection<F["selectionType"], Options, F["defaultSelection"]>>>[]
 > => {
-  const pageSize = options?.pageSize ?? 50;
-
-  const [cursor, setCursor] = useState<string | undefined>(options?.initialCursor);
-  const [direction, setDirection] = useState<"forward" | "backward">(options?.initialDirection ?? "forward");
-
-  const clearCursor = useCallback(() => setCursor(undefined), []);
-
-  const { debouncedValue: debouncedSearchValue, ...search } = useDebouncedSearch({ clearCursor });
-
   const namespace = manager.findMany.namespace;
   const namespaceAsArray: string[] = namespace ? (Array.isArray(namespace) ? namespace : [namespace]) : [];
   const {
@@ -161,26 +133,11 @@ export const useTable = <
     return selectionMap;
   }, [metadata, options?.columns, options?.select]);
 
-  let variables;
-  if (direction == "forward") {
-    variables = {
-      first: pageSize,
-      after: cursor,
-    };
-  } else {
-    variables = {
-      last: pageSize,
-      before: cursor,
-    };
-  }
-
-  const [{ data, fetching: dataFetching, error: dataError }, refresh] = useFindMany(manager, {
+  const [{ data, fetching: dataFetching, error: dataError, page, search }, refresh] = useList(manager, {
     ...options,
-    ...(variables as any),
-    ...(debouncedSearchValue && { search: debouncedSearchValue }),
     select: fieldSelectionMap ? { ...fieldSelectionMap, id: true } : undefined,
     pause: !metadata, // Don't fetch data until metadata is loaded
-  });
+  } as any);
 
   const fields = useMemo(
     () =>
@@ -252,35 +209,9 @@ export const useTable = <
     });
   }, [fields, options?.columns]);
 
-  const goToNextPage = useCallback(() => {
-    if (data && data.hasNextPage) {
-      setDirection("forward");
-      setCursor(data.endCursor);
-    } else {
-      console.warn("can't navigate to next page currently, no next page available");
-    }
-  }, [data]);
-
-  const goToPreviousPage = useCallback(() => {
-    if (data && data.hasPreviousPage) {
-      setDirection("backward");
-      setCursor(data.startCursor);
-    } else {
-      console.warn("can't navigate to previous page currently, no previous page available");
-    }
-  }, [data]);
-
-  const isAwaitingDebouncedSearchValue = search.value != debouncedSearchValue;
+  const isAwaitingDebouncedSearchValue = search.value != search.debouncedValue;
   const fetching = dataFetching || fetchingMetadata || isAwaitingDebouncedSearchValue;
   const error = dataError || metadataError;
-  const page: TablePagination = {
-    goToNextPage,
-    goToPreviousPage,
-    variables,
-    pageSize,
-    hasNextPage: data?.hasNextPage,
-    hasPreviousPage: data?.hasPreviousPage,
-  };
 
   return [
     {
@@ -294,7 +225,7 @@ export const useTable = <
   ];
 };
 
-const getTableData = (props: { columns?: TableColumn[]; data?: GadgetRecordList<any>; metadata?: ModelMetadata }) => {
+const getTableData = (props: { columns?: TableColumn[]; data?: GadgetRecord<any>[]; metadata?: ModelMetadata }) => {
   const { columns, data, metadata } = props;
 
   return metadata && data && columns
@@ -313,7 +244,7 @@ const getTableData = (props: { columns?: TableColumn[]; data?: GadgetRecordList<
       };
 };
 
-const getRows = (props: { data: GadgetRecordList<any>; columns: TableColumn[] }) => {
+const getRows = (props: { data: GadgetRecord<any>[]; columns: TableColumn[] }) => {
   const { columns, data } = props;
 
   return data.map((record) => {
