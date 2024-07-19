@@ -12,9 +12,9 @@ import {
   useSetIndexFiltersMode,
 } from "@shopify/polaris";
 import pluralize from "pluralize";
-import React, { useMemo } from "react";
+import React, { useCallback, useMemo } from "react";
 import { useTable } from "../../useTable.js";
-import type { OptionsType } from "../../utils.js";
+import type { ColumnValueType, OptionsType } from "../../utils.js";
 import type { AutoTableProps } from "../AutoTable.js";
 import { PolarisAutoTableCellRenderer } from "./tableCells/PolarisAutoTableCellRenderer.js";
 
@@ -42,12 +42,21 @@ export const PolarisAutoTable = <
 >(
   props: AutoTableProps<GivenOptions, SchemaT, FinderFunction, Options>
 ) => {
+  const { onClick } = props;
+
   const [{ rows, columns, metadata, fetching, error, page, search }, refresh] = useTable<GivenOptions, SchemaT, FinderFunction, Options>(
     props.model,
     {
       select: props.select,
       columns: props.columns,
     } as any
+  );
+
+  const onClickCallback = useCallback(
+    (row: Record<string, ColumnValueType>) => {
+      return () => onClick?.(row);
+    },
+    [onClick]
   );
 
   const { mode, setMode } = useSetIndexFiltersMode();
@@ -124,7 +133,12 @@ export const PolarisAutoTable = <
         {rows &&
           columns &&
           rows.map((row, index) => (
-            <IndexTable.Row key={row.id as string} id={row.id as string} position={index}>
+            <IndexTable.Row
+              key={row.id as string}
+              id={row.id as string}
+              position={index}
+              onClick={onClick ? onClickCallback(row) : undefined}
+            >
               {columns.map((column) => (
                 <IndexTable.Cell key={column.apiIdentifier}>
                   <div style={{ maxWidth: "200px" }}>
