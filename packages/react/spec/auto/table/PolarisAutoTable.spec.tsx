@@ -11,68 +11,71 @@ const POLARIS_TABLE_CLASSES = {
   CELL: "Polaris-IndexTable__TableCell",
 } as const;
 
+let rows: any[] = [
+  {
+    id: "1",
+    name: "hello",
+    inventoryCount: 1,
+  },
+  {
+    id: "2",
+    name: "cool",
+    inventoryCount: 2,
+  },
+  {
+    id: "3",
+    name: "world",
+    inventoryCount: null,
+  },
+];
+let columns: any[] = [
+  {
+    apiIdentifier: "name",
+    fieldType: "String",
+    name: "Name",
+    sortable: true,
+  },
+  {
+    apiIdentifier: "inventoryCount",
+    fieldType: "Number",
+    name: "Inventory count",
+    sortable: true,
+  },
+];
+let error: undefined | Error = undefined;
+
 // The path is relative to the file from the packages/react/spec/jest.setup.ts file, not from this test file
 jest.unstable_mockModule("../src/useTable", () => ({
-  useTable: jest.fn().mockImplementation(() => {
-    return [
-      {
-        rows: [
-          {
-            id: "1",
-            name: "hello",
-            inventoryCount: 1,
-          },
-          {
-            id: "2",
-            name: "cool",
-            inventoryCount: 2,
-          },
-          {
-            id: "3",
-            name: "world",
-            inventoryCount: null,
-          },
-        ],
-        columns: [
-          {
-            apiIdentifier: "name",
-            fieldType: "String",
-            name: "Name",
-            sortable: true,
-          },
-          {
-            apiIdentifier: "inventoryCount",
-            fieldType: "Number",
-            name: "Inventory count",
-            sortable: true,
-          },
-        ],
-        metadata: {
-          name: "Widget",
-        },
-        page: {
-          hasNextPage: false,
-          hasPreviousPage: false,
-          goToNextPage: jest.fn(),
-          goToPreviousPage: jest.fn(),
-        },
-        fetching: false,
-        search: {
-          value: "",
-          set: jest.fn(),
-          clear: jest.fn(),
-        },
+  useTable: jest.fn().mockImplementation(() => [
+    {
+      rows,
+      columns,
+      metadata: {
+        name: "Widget",
       },
-      jest.fn(),
-    ];
-  }),
+      page: {
+        hasNextPage: false,
+        hasPreviousPage: false,
+        goToNextPage: jest.fn(),
+        goToPreviousPage: jest.fn(),
+      },
+      fetching: false,
+      search: {
+        value: "",
+        set: jest.fn(),
+        clear: jest.fn(),
+      },
+      error,
+    },
+    jest.fn(),
+  ]),
 }));
 
 // We are mocking the useTable hook that is used by PolarisAutoTable, so we need to import it dynamically
 const { PolarisAutoTable } = await import("../../../src/auto/polaris/PolarisAutoTable.js");
 
 describe("PolarisAutoTable", () => {
-  it("can render a table with records inside", () => {
+  it("should render a table with records inside", () => {
     const { container } = render(<PolarisAutoTable model={api.widget} />, { wrapper: PolarisMockedProviders });
     const table = container.querySelector(`.${POLARIS_TABLE_CLASSES.CONTAINER}`)!;
 
@@ -87,22 +90,43 @@ describe("PolarisAutoTable", () => {
     expect(headers[0].querySelector("input")).toHaveAttribute("type", "checkbox");
 
     // Three rows should be rendered
-    const rows = table.getElementsByClassName(POLARIS_TABLE_CLASSES.ROW);
-    expect(rows.length).toBe(3);
+    const tableRows = table.getElementsByClassName(POLARIS_TABLE_CLASSES.ROW);
+    expect(tableRows.length).toBe(3);
 
-    const firstRow = rows[0];
+    const firstRow = tableRows[0];
     const firstRowCells = firstRow.getElementsByClassName(POLARIS_TABLE_CLASSES.CELL);
     expect(firstRowCells[1].textContent).toBe("hello");
     expect(firstRowCells[2].textContent).toBe("1");
 
-    const secondRow = rows[1];
+    const secondRow = tableRows[1];
     const secondRowCells = secondRow.getElementsByClassName(POLARIS_TABLE_CLASSES.CELL);
     expect(secondRowCells[1].textContent).toBe("cool");
     expect(secondRowCells[2].textContent).toBe("2");
 
-    const thirdRow = rows[2];
+    const thirdRow = tableRows[2];
     const thirdRowCells = thirdRow.getElementsByClassName(POLARIS_TABLE_CLASSES.CELL);
     expect(thirdRowCells[1].textContent).toBe("world");
     expect(thirdRowCells[2].textContent).toBe(""); // Empty cell for null value
+  });
+
+  it("should show an error banner when there is a GraphQL error", () => {
+    rows = [];
+    columns = [];
+    error = new Error(`[GraphQL] Cannot query field "somethingSuperWrong" on type "Widget".`);
+
+    const { container } = render(<PolarisAutoTable model={api.widget} />, { wrapper: PolarisMockedProviders });
+    const table = container.querySelector(`.${POLARIS_TABLE_CLASSES.CONTAINER}`)!;
+
+    const headers = table.getElementsByClassName(POLARIS_TABLE_CLASSES.HEADING);
+    expect(Array.from(headers).map((h) => h.textContent)).toEqual([]);
+
+    // The error banner should be rendered
+    expect(container.querySelector(".Polaris-Banner")!.textContent).toBe(
+      `[GraphQL] Cannot query field "somethingSuperWrong" on type "Widget".`
+    );
+
+    // Zero rows should be rendered
+    const tableRows = table.getElementsByClassName(POLARIS_TABLE_CLASSES.ROW);
+    expect(tableRows.length).toBe(0);
   });
 });

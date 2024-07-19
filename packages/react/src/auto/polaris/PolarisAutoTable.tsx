@@ -1,7 +1,9 @@
 import type { FindManyFunction } from "@gadgetinc/api-client-core";
 import type { IndexTableProps } from "@shopify/polaris";
 import {
+  Banner,
   BlockStack,
+  Box,
   DataTable,
   EmptySearchResult,
   IndexFilters,
@@ -64,7 +66,7 @@ export const PolarisAutoTable = <
     return { headings, sortable };
   }, [columns]);
 
-  if ((fetching && !rows) || !columns) {
+  if (!error && ((fetching && !rows) || !columns)) {
     return <PolarisSkeletonTable columns={polarisTableProps.headings.length} />;
   }
 
@@ -92,14 +94,26 @@ export const PolarisAutoTable = <
         queryValue={search.value}
         onQueryChange={search.set}
         onQueryClear={search.clear}
+        disabled={!!error}
       />
+
+      {error && (
+        <Box paddingBlockStart="200" paddingBlockEnd="1000">
+          <Banner title={error.message} tone="critical" />
+        </Box>
+      )}
+
       <IndexTable
         {...polarisTableProps}
         resourceName={resourceName}
         emptyState={<EmptySearchResult title={`No ${resourceName.plural} yet`} description={""} withIllustration />}
         loading={fetching}
         hasMoreItems={page.hasNextPage}
-        itemCount={rows?.length ?? 0}
+        itemCount={
+          error
+            ? 1 // Don't show the empty state if there's an error
+            : rows?.length ?? 0
+        }
         pagination={{
           hasNext: page.hasNextPage,
           hasPrevious: page.hasPreviousPage,

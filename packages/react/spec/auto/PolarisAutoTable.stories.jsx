@@ -49,3 +49,10 @@ export const SelectFields = {
     columns: ["name", "inventoryCount"],
   },
 };
+
+export const OnErrorState = {
+  args: {
+    model: api.widget,
+    columns: ["somethingSuperWrong"],
+  },
+};
