@@ -447,6 +447,7 @@ export const filterAutoTableFieldList = (fields: FieldMetadata[] | undefined, op
 };
 
 const acceptedAutoTableFieldTypes = new Set([
+  FieldType.Id,
   FieldType.Boolean,
   FieldType.Color,
   FieldType.Computed,

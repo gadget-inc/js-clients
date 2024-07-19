@@ -27,6 +27,7 @@ export const PolarisAutoTableCellRenderer = (props: {
   }
 
   switch (column.fieldType) {
+    case FieldType.Id:
     case FieldType.String:
     case FieldType.Number:
     case FieldType.Email:
