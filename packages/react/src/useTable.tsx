@@ -158,10 +158,7 @@ export const useTable = <
       }
     }
 
-    return {
-      ...selectionMap,
-      id: true,
-    };
+    return selectionMap;
   }, [metadata, options?.columns, options?.select]);
 
   let variables;
@@ -181,7 +178,7 @@ export const useTable = <
     ...options,
     ...(variables as any),
     ...(debouncedSearchValue && { search: debouncedSearchValue }),
-    select: fieldSelectionMap,
+    select: fieldSelectionMap ? { ...fieldSelectionMap, id: true } : undefined,
     pause: !metadata, // Don't fetch data until metadata is loaded
   });
 

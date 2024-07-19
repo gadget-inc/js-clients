@@ -49,6 +49,12 @@ describe("useTable hook", () => {
       })
     ).toEqual([
       {
+        apiIdentifier: "id",
+        fieldType: "ID",
+        name: "Id",
+        sortable: false,
+      },
+      {
         apiIdentifier: "name",
         fieldType: "String",
         name: "Name",
@@ -152,30 +158,30 @@ describe("useTable hook", () => {
 
       // The fields inside the `node` should only contain the fields that are specified in the columns property + the id field
       expect(mockUrqlClient.executeQuery.mock.calls[1][0].query.loc.source.body).toMatchInlineSnapshot(`
-              "query widgets($after: String, $first: Int, $before: String, $last: Int) {
-                widgets(after: $after, first: $first, before: $before, last: $last) {
-                  pageInfo {
-                    hasNextPage
-                    hasPreviousPage
-                    startCursor
-                    endCursor
-                  }
-                  edges {
-                    cursor
-                    node {
-                      name
-                      inventoryCount
-                      id
-                      __typename
-                    }
-                  }
-                }
-                gadgetMeta {
-                  hydrations(modelName: 
-              "widget")
-                }
-              }"
-          `);
+        "query widgets($after: String, $first: Int, $before: String, $last: Int) {
+          widgets(after: $after, first: $first, before: $before, last: $last) {
+            pageInfo {
+              hasNextPage
+              hasPreviousPage
+              startCursor
+              endCursor
+            }
+            edges {
+              cursor
+              node {
+                name
+                inventoryCount
+                id
+                __typename
+              }
+            }
+          }
+          gadgetMeta {
+            hydrations(modelName: 
+        "widget")
+          }
+        }"
+      `);
       expect(result.current[0].columns?.map((column) => column.apiIdentifier)).toEqual(["name", "inventoryCount"]);
       expect(result.current[0].rows).toMatchInlineSnapshot(`
               [
