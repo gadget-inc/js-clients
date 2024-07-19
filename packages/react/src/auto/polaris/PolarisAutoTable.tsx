@@ -49,6 +49,7 @@ export const PolarisAutoTable = <
     {
       select: props.select,
       columns: props.columns,
+      pageSize: props.pageSize,
     } as any
   );
 
