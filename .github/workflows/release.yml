@@ -10,6 +10,8 @@ on:
 jobs:
   test:
     uses: ./.github/workflows/test.yml
+    secrets:
+      CYPRESS_JS_CLIENTS_TEST_API_KEY: "${{ secrets.CYPRESS_JS_CLIENTS_TEST_API_KEY }}"
   release:
     needs: test
     runs-on: ubuntu-latest
