@@ -16,7 +16,7 @@ import {
 } from "../src/index.js";
 import { asyncIterableToIterator, waitForExpectationToPass } from "./helpers.js";
 import { MockBulkFlipDownWidgetsAction, MockBulkUpdateWidgetAction, MockGlobalAction, MockWidgetCreateAction } from "./mockActions.js";
-import { MockUrqlClient, createMockUrqlClient, mockGraphQLWSClient } from "./mockUrqlClient.js";
+import { createMockUrqlClient, mockGraphQLWSClient, type MockUrqlClient } from "./mockUrqlClient.js";
 
 nock.disableNetConnect();
 
@@ -564,6 +564,108 @@ describe("operationRunners", () => {
       expect(result.name).toBeTruthy();
     });
 
+    test("can run a single action with an object result type", async () => {
+      const promise = actionRunner<{ __typename: string; id: string; name: string; eventAt: Date }>(
+        {
+          connection,
+        },
+        "upsertWidget",
+        { id: true, name: true, eventAt: true },
+        "widget",
+        "widget",
+        false,
+        {
+          widget: {
+            value: { name: "hello" },
+            required: false,
+            type: "UpsertWidgetInput",
+          },
+        },
+        {},
+        null,
+        {
+          "... on CreatePostResult": { hasReturnType: false },
+          "... on UpdatePostResult": { hasReturnType: false },
+        }
+      );
+
+      mockUrqlClient.executeMutation.pushResponse("upsertWidget", {
+        data: {
+          upsertWidget: {
+            __typename: "CreatePostResult",
+            success: true,
+            errors: null,
+            widget: {
+              __typename: "Widget",
+              id: "123",
+              name: "foo",
+              eventAt: "2021-01-01T00:00:00Z",
+            },
+          },
+          gadgetMeta: {
+            hydrations: {
+              eventAt: "DateTime",
+            },
+          },
+        },
+        stale: false,
+        hasNext: false,
+      });
+
+      const result = await promise;
+      expect(result.__typename).toEqual("Widget");
+      expect(result.id).toEqual("123");
+      expect(result.name).toEqual("foo");
+      expect(result.eventAt).toEqual(new Date("2021-01-01T00:00:00Z"));
+    });
+
+    test("can run a single action with an object result type that has an inner return type", async () => {
+      const promise = actionRunner<any>(
+        {
+          connection,
+        },
+        "upsertWidget",
+        { id: true, name: true, eventAt: true },
+        "widget",
+        "widget",
+        false,
+        {
+          widget: {
+            value: { name: "hello" },
+            required: false,
+            type: "UpsertWidgetInput",
+          },
+        },
+        {},
+        null,
+        {
+          "... on CreatePostResult": { hasReturnType: false },
+          "... on UpdatePostResult": { hasReturnType: true },
+        }
+      );
+
+      mockUrqlClient.executeMutation.pushResponse("upsertWidget", {
+        data: {
+          upsertWidget: {
+            __typename: "UpdatePostResult",
+            success: true,
+            errors: null,
+            result: { foo: "bar" },
+          },
+          gadgetMeta: {
+            hydrations: {
+              eventAt: "DateTime",
+            },
+          },
+        },
+        stale: false,
+        hasNext: false,
+      });
+
+      const result = await promise;
+      expect(result).toEqual({ foo: "bar" });
+    });
+
     test("can run an action with hasReturnType", async () => {
       const promise = actionRunner(
         {
@@ -749,6 +851,96 @@ describe("operationRunners", () => {
       expect(results[0].name).toBeTruthy();
       expect(results[1].id).toBeTruthy();
       expect(results[1].name).toBeTruthy();
+    });
+
+    test("can run a bulk action with a returnType", async () => {
+      const promise = actionRunner<{ id: string; name: string }>(
+        {
+          connection,
+        },
+        "bulkCreateWidgets",
+        { id: true, name: true },
+        "widget",
+        "widgets",
+        true,
+        {
+          inputs: {
+            value: [{ id: "123", widget: { name: "foo" } }],
+            required: true,
+            type: "[BulkCreateWidgetInput!]",
+          },
+        },
+        {},
+        null,
+        true
+      );
+
+      mockUrqlClient.executeMutation.pushResponse("bulkCreateWidgets", {
+        data: {
+          bulkCreateWidgets: {
+            success: true,
+            errors: null,
+            results: [{ hello: "world" }, { hello: "other world" }, "a string result"],
+          },
+        },
+        stale: false,
+        hasNext: false,
+      });
+
+      const results = await promise;
+
+      expect(results[0]).toEqual({ hello: "world" });
+      expect(results[1]).toEqual({ hello: "other world" });
+      expect(results[2]).toEqual("a string result");
+    });
+
+    test("can run a bulk action with an object returnType", async () => {
+      const promise = actionRunner<{ id: string; name: string }>(
+        {
+          connection,
+        },
+        "bulkUpsertWidgets",
+        { id: true, name: true },
+        "widget",
+        "widgets",
+        true,
+        {
+          inputs: {
+            value: [{ widget: { id: "123", name: "foo" } }],
+            required: true,
+            type: "[BulkUpsertWidgetInput!]",
+          },
+        },
+        {},
+        null,
+        {
+          widgets: {
+            hasReturnType: {
+              "... on Widget": { select: true },
+              "... on UpsertWidgetReturnType": { hasReturnType: true },
+            },
+          },
+        }
+      );
+
+      mockUrqlClient.executeMutation.pushResponse("bulkUpsertWidgets", {
+        data: {
+          bulkUpsertWidgets: {
+            success: true,
+            errors: null,
+            widgets: [
+              { __typename: "Widget", id: "1", name: "foo" },
+              { __typename: "UpsertWidgetReturnType", result: [{ hello: "other world" }, "other string"] },
+            ],
+          },
+        },
+        stale: false,
+        hasNext: false,
+      });
+
+      const results = await promise;
+      expect(results[0]).toEqual({ __typename: "Widget", id: "1", name: "foo" });
+      expect(results[1]).toEqual([{ hello: "other world" }, "other string"]);
     });
 
     test("throws a nice error when a bulk action returns errors", async () => {

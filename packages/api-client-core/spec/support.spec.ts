@@ -4,11 +4,18 @@ import {
   assertMutationSuccess,
   assertNullableOperationSuccess,
   assertOperationSuccess,
+  disambiguateActionVariables,
   disambiguateBulkActionVariables,
   GadgetOperationError,
   getNonNullableError,
 } from "../src/index.js";
-import { MockBulkFlipDownWidgetsAction, MockBulkUpdateWidgetAction } from "./mockActions.js";
+import {
+  MockBulkCreateWidgetAction,
+  MockBulkFlipDownWidgetsAction,
+  MockBulkUpdateWidgetAction,
+  MockWidgetCreateAction,
+  MockWidgetUpdateAction,
+} from "./mockActions.js";
 
 describe("support utilities", () => {
   describe("assertOperationSuccess", () => {
@@ -349,6 +356,86 @@ describe("support utilities", () => {
     });
   });
 
+  describe("disambiguateActionVariables", () => {
+    test("it should map variables to the fully qualified form when operating with record identity", async () => {
+      expect(MockWidgetUpdateAction.operatesWithRecordIdentity).toBe(true);
+
+      expect(disambiguateActionVariables(MockWidgetUpdateAction, { id: "123", name: "foobar" })).toEqual({
+        id: "123",
+        widget: { name: "foobar" },
+      });
+    });
+
+    test("it should leave the fully qualified as is when operating with record identity", async () => {
+      expect(MockWidgetUpdateAction.operatesWithRecordIdentity).toBe(true);
+
+      expect(disambiguateActionVariables(MockWidgetUpdateAction, { widget: { id: "123", name: "foobar" } })).toEqual({
+        widget: { id: "123", name: "foobar" },
+      });
+    });
+
+    test("it should not add params only variables when operating on the flat form with record identity", async () => {
+      const action = { ...MockWidgetUpdateAction, paramOnlyVariables: ["foo"] };
+
+      expect(disambiguateActionVariables(action, { id: "123", name: "foobar", foo: "bar" })).toEqual({
+        id: "123",
+        foo: "bar",
+        widget: { name: "foobar" },
+      });
+    });
+
+    test("it should map variables to the fully qualified form when operating without record identity", async () => {
+      expect(MockWidgetCreateAction.operatesWithRecordIdentity).toBe(false);
+
+      expect(disambiguateActionVariables(MockWidgetCreateAction, { id: "123", name: "foobar" })).toEqual({
+        widget: { id: "123", name: "foobar" },
+      });
+    });
+
+    test("it should leave the fully qualified as is when operating without record identity", async () => {
+      expect(MockWidgetCreateAction.operatesWithRecordIdentity).toBe(false);
+
+      expect(disambiguateActionVariables(MockWidgetCreateAction, { widget: { id: "123", name: "foobar" } })).toEqual({
+        widget: { id: "123", name: "foobar" },
+      });
+    });
+
+    test("it should not add params only variables when operating on the flat form without record identity", async () => {
+      const action = { ...MockWidgetCreateAction, paramOnlyVariables: ["foo"] };
+
+      expect(disambiguateActionVariables(action, { id: "123", name: "foobar", foo: "bar" })).toEqual({
+        foo: "bar",
+        widget: { id: "123", name: "foobar" },
+      });
+    });
+
+    test("it should not disambiguate if the action does not have model input", async () => {
+      const action = { ...MockWidgetCreateAction, acceptsModelInput: false };
+
+      expect(disambiguateActionVariables(action, { id: "123", name: "foobar" })).toEqual({
+        id: "123",
+        name: "foobar",
+      });
+    });
+
+    test("it should default to extracting ids if the action doesn't have operatesWithRecordIdentity", async () => {
+      const { operatesWithRecordIdentity: _, ...action } = MockWidgetCreateAction;
+
+      expect(disambiguateActionVariables(action as any, { id: "123", name: "foobar" })).toEqual({
+        id: "123",
+        widget: { name: "foobar" },
+      });
+    });
+
+    test("it errors if there are ambiguous identifiers", async () => {
+      const action = { ...MockWidgetUpdateAction, hasAmbiguousIdentifier: true };
+
+      expect(() => disambiguateActionVariables(action, { id: "123", name: "foobar" })).toThrowErrorMatchingInlineSnapshot(
+        `"Invalid arguments found in variables. Did you mean to use ({ widget: { ... } })?"`
+      );
+    });
+  });
+
   describe("disambiguateBulkActionVariables", () => {
     test("it should leave variables objects with ids alone", () => {
       expect(disambiguateBulkActionVariables(MockBulkFlipDownWidgetsAction, { ids: ["1", "2", "3"] })).toEqual({ ids: ["1", "2", "3"] });
@@ -360,9 +447,19 @@ describe("support utilities", () => {
       });
     });
 
-    test("it should leave the structure of variables objects with inputs alone, but map each input to the fully qualified form", () => {
+    test("it should leave the structure of variables objects with inputs alone, but map each input to the fully qualified form when operating with record identity", () => {
+      expect(MockBulkUpdateWidgetAction.operatesWithRecordIdentity).toBe(true);
+
       expect(disambiguateBulkActionVariables(MockBulkUpdateWidgetAction, { inputs: [{ id: "123", name: "foobar" }] })).toEqual({
         inputs: [{ id: "123", widget: { name: "foobar" } }],
+      });
+    });
+
+    test("it should leave the structure of variables objects with inputs alone, but map each input to the fully qualified form when operating without record identity", () => {
+      expect(MockBulkCreateWidgetAction.operatesWithRecordIdentity).toBe(false);
+
+      expect(disambiguateBulkActionVariables(MockBulkCreateWidgetAction, { inputs: [{ id: "123", name: "foobar" }] })).toEqual({
+        inputs: [{ widget: { id: "123", name: "foobar" } }],
       });
     });
 

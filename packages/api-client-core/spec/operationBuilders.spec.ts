@@ -667,6 +667,119 @@ describe("operation builders", () => {
       `);
     });
 
+    test("actionOperation should build a mutation query for an object hasReturnType", async () => {
+      expect(
+        actionOperation(
+          "upsertWidget",
+          { __typename: true, id: true, name: true, eventAt: true },
+          "widget",
+          "widget",
+          {},
+          null,
+          null,
+          null,
+          {
+            "... on CreatePostResult": { hasReturnType: false },
+            "... on UpdatePostResult": { hasReturnType: false },
+          }
+        )
+      ).toMatchInlineSnapshot(`
+        {
+          "query": "mutation upsertWidget {
+          upsertWidget {
+            success
+            errors {
+              message
+              code
+              ... on InvalidRecordError {
+                validationErrors {
+                  message
+                  apiIdentifier
+                }
+              }
+            }
+            ... on CreatePostResult {
+              __typename
+              widget {
+                __typename
+                id
+                name
+                eventAt
+              }
+            }
+            ... on UpdatePostResult {
+              __typename
+              widget {
+                __typename
+                id
+                name
+                eventAt
+              }
+            }
+          }
+          gadgetMeta {
+            hydrations(modelName: "widget")
+          }
+        }",
+          "variables": {},
+        }
+      `);
+    });
+
+    test("actionOperation should build a mutation query for an object hasReturnType with an inner return type", async () => {
+      expect(
+        actionOperation(
+          "upsertWidget",
+          { __typename: true, id: true, name: true, eventAt: true },
+          "widget",
+          "widget",
+          {},
+          null,
+          null,
+          null,
+          {
+            "... on CreatePostResult": { hasReturnType: false },
+            "... on UpdatePostResult": { hasReturnType: true },
+          }
+        )
+      ).toMatchInlineSnapshot(`
+        {
+          "query": "mutation upsertWidget {
+          upsertWidget {
+            success
+            errors {
+              message
+              code
+              ... on InvalidRecordError {
+                validationErrors {
+                  message
+                  apiIdentifier
+                }
+              }
+            }
+            ... on CreatePostResult {
+              __typename
+              widget {
+                __typename
+                id
+                name
+                eventAt
+              }
+            }
+            ... on UpdatePostResult {
+              __typename
+              result
+            }
+          }
+          gadgetMeta {
+            hydrations(modelName: "widget")
+          }
+        }",
+          "variables": {},
+        }
+      `);
+    });
+
     test("actionOperation should build a mutation query for an action that has a return type", () => {
       expect(
         actionOperation(
@@ -706,13 +819,55 @@ describe("operation builders", () => {
       `);
     });
 
+    test("actionOperation should build a bulk mutation query", () => {
+      expect(
+        actionOperation(
+          "bulkCreateWidgets",
+          { __typename: true, id: true, state: true },
+          "widget",
+          "widgets",
+          {},
+          { select: { id: true } },
+          undefined,
+          true,
+          false
+        )
+      ).toMatchInlineSnapshot(`
+        {
+          "query": "mutation bulkCreateWidgets {
+          bulkCreateWidgets {
+            success
+            errors {
+              message
+              code
+              ... on InvalidRecordError {
+                validationErrors {
+                  message
+                  apiIdentifier
+                }
+              }
+            }
+            widgets {
+              id
+              __typename
+            }
+          }
+          gadgetMeta {
+            hydrations(modelName: "widget")
+          }
+        }",
+          "variables": {},
+        }
+      `);
+    });
+
     test("actionOperation should build a bulk mutation query for an action that has a return type", () => {
       expect(
         actionOperation(
           "bulkCreateWidgets",
           { __typename: true, id: true, state: true },
           "widget",
-          "widget",
+          "widgets",
           {},
           { select: { id: true } },
           undefined,
@@ -734,7 +889,62 @@ describe("operation builders", () => {
                 }
               }
             }
-            result
+            results
+          }
+          gadgetMeta {
+            hydrations(modelName: "widget")
+          }
+        }",
+          "variables": {},
+        }
+      `);
+    });
+
+    test("actionOperation should build a bulk mutation query for an action that has an object return type", () => {
+      expect(
+        actionOperation(
+          "bulkUpsertWidgets",
+          { __typename: true, id: true, state: true },
+          "widget",
+          "widgets",
+          {},
+          { select: { id: true } },
+          undefined,
+          true,
+          {
+            widgets: {
+              hasReturnType: {
+                "... on Widget": { select: true },
+                "... on UpsertWidgetReturnType": { hasReturnType: true },
+              },
+            },
+          }
+        )
+      ).toMatchInlineSnapshot(`
+        {
+          "query": "mutation bulkUpsertWidgets {
+          bulkUpsertWidgets {
+            success
+            errors {
+              message
+              code
+              ... on InvalidRecordError {
+                validationErrors {
+                  message
+                  apiIdentifier
+                }
+              }
+            }
+            widgets {
+              ... on Widget {
+                id
+                __typename
+              }
+              ... on UpsertWidgetReturnType {
+                __typename
+                result
+              }
+            }
           }
           gadgetMeta {
             hydrations(modelName: "widget")

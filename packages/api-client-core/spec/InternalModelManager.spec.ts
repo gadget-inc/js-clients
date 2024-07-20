@@ -11,6 +11,7 @@ import {
   internalFindManyQuery,
   internalFindOneQuery,
   internalUpdateMutation,
+  internalUpsertMutation,
 } from "../src/index.js";
 import { expectValidGraphQLQuery } from "./helpers.js";
 import type { MockUrqlClient } from "./mockUrqlClient.js";
@@ -920,6 +921,79 @@ describe("InternalModelManager", () => {
       `);
       expectValidGraphQLQuery(result.query);
       expect(result.variables).toEqual({ id: "123", widget: { foo: "bar" } });
+    });
+
+    test("should build a upsert record mutation", () => {
+      let result = internalUpsertMutation("widget", [], undefined, { foo: "bar" });
+
+      expect(result.query).toMatchInlineSnapshot(`
+        "mutation InternalUpsertWidget($on: [String!], $widget: InternalWidgetInput) {
+          internal {
+            upsertWidget(on: $on, widget: $widget) {
+              success
+              errors {
+                message
+                code
+                ... on InvalidRecordError {
+                  validationErrors {
+                    message
+                    apiIdentifier
+                  }
+                }
+              }
+              widget
+            }
+          }
+          gadgetMeta {
+            hydrations(modelName: "widget")
+          }
+        }"
+      `);
+
+      expect(result.variables).toMatchInlineSnapshot(`
+        {
+          "widget": {
+            "foo": "bar",
+          },
+        }
+      `);
+
+      result = internalUpsertMutation("widget", [], ["foo"], { foo: "bar" });
+
+      expect(result.query).toMatchInlineSnapshot(`
+        "mutation InternalUpsertWidget($on: [String!], $widget: InternalWidgetInput) {
+          internal {
+            upsertWidget(on: $on, widget: $widget) {
+              success
+              errors {
+                message
+                code
+                ... on InvalidRecordError {
+                  validationErrors {
+                    message
+                    apiIdentifier
+                  }
+                }
+              }
+              widget
+            }
+          }
+          gadgetMeta {
+            hydrations(modelName: "widget")
+          }
+        }"
+      `);
+
+      expect(result.variables).toMatchInlineSnapshot(`
+        {
+          "on": [
+            "foo",
+          ],
+          "widget": {
+            "foo": "bar",
+          },
+        }
+      `);
     });
 
     test("should build a namespaced update record mutation", () => {

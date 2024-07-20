@@ -6,7 +6,13 @@ import type { OperationResult } from "@urql/core";
 import type { Source } from "wonka";
 import type { FieldSelection } from "./FieldSelection.js";
 import type { GadgetConnection } from "./GadgetConnection.js";
-import type { ActionFunctionMetadata, AnyActionFunction, AnyBulkActionFunction, GlobalActionFunction } from "./GadgetFunctions.js";
+import type {
+  ActionFunctionMetadata,
+  AnyActionFunction,
+  AnyBulkActionFunction,
+  GlobalActionFunction,
+  HasReturnType,
+} from "./GadgetFunctions.js";
 import type { GadgetRecord, RecordShape } from "./GadgetRecord.js";
 import { GadgetRecordList } from "./GadgetRecordList.js";
 import type { AnyModelManager } from "./ModelManager.js";
@@ -178,7 +184,7 @@ export const findManyRunner = <Shape extends RecordShape = any, Options extends 
 };
 
 export interface ActionRunner {
-  (
+  <Shape extends RecordShape = any>(
     modelManager: { connection: GadgetConnection },
     operation: string,
     defaultSelection: FieldSelection | null,
@@ -188,8 +194,8 @@ export interface ActionRunner {
     variables: VariablesOptions,
     options?: BaseFindOptions | null,
     namespace?: string | string[] | null,
-    hasReturnType?: true
-  ): Promise<any>;
+    hasReturnType?: HasReturnType
+  ): Promise<Shape>;
 
   <Shape extends RecordShape = any>(
     modelManager: { connection: GadgetConnection },
@@ -201,7 +207,7 @@ export interface ActionRunner {
     variables: VariablesOptions,
     options?: BaseFindOptions | null,
     namespace?: string | string[] | null,
-    hasReturnType?: false
+    hasReturnType?: false | null
   ): Promise<Shape extends void ? void : GadgetRecord<Shape>>;
 
   <Shape extends RecordShape = any>(
@@ -228,7 +234,7 @@ export interface ActionRunner {
     namespace?: string | string[] | null
   ): Promise<Shape extends void ? void : GadgetRecord<Shape>[]>;
 
-  (
+  <Shape extends RecordShape = any>(
     modelManager: { connection: GadgetConnection },
     operation: string,
     defaultSelection: FieldSelection | null,
@@ -238,8 +244,8 @@ export interface ActionRunner {
     variables: VariablesOptions,
     options?: BaseFindOptions | null,
     namespace?: string | string[] | null,
-    hasReturnType?: true
-  ): Promise<any[]>;
+    hasReturnType?: HasReturnType
+  ): Promise<Shape[]>;
 
   <Shape extends RecordShape = any>(
     modelManager: { connection: GadgetConnection },
@@ -251,7 +257,7 @@ export interface ActionRunner {
     variables: VariablesOptions,
     options?: BaseFindOptions | null,
     namespace?: string | string[] | null,
-    hasReturnType?: false
+    hasReturnType?: false | null
   ): Promise<Shape extends void ? void : GadgetRecord<Shape>[]>;
 }
 
@@ -265,7 +271,7 @@ export const actionRunner: ActionRunner = async <Shape extends RecordShape = any
   variables: VariablesOptions,
   options?: BaseFindOptions | null,
   namespace?: string | string[] | null,
-  hasReturnType?: boolean | null
+  hasReturnType?: HasReturnType | null
 ) => {
   const plan = actionOperation(
     operation,
@@ -278,6 +284,7 @@ export const actionRunner: ActionRunner = async <Shape extends RecordShape = any
     isBulkAction,
     hasReturnType
   );
+
   const response = await modelManager.connection.currentClient.mutation(plan.query, plan.variables).toPromise();
   const dataPath = namespaceDataPath([operation], namespace);
 
@@ -289,10 +296,8 @@ export const actionRunner: ActionRunner = async <Shape extends RecordShape = any
     return processActionResponse(defaultSelection, response, mutationTriple, modelSelectionField, hasReturnType);
   } else {
     const mutationTriple = get(response.data, dataPath);
-    const results =
-      mutationTriple[modelSelectionField] && defaultSelection
-        ? hydrateRecordArray<Shape>(response, mutationTriple[modelSelectionField])
-        : undefined;
+
+    const results = processBulkActionResponse(defaultSelection, response, mutationTriple, modelSelectionField, hasReturnType);
     if (mutationTriple.errors) {
       const errors = mutationTriple.errors.map((error: any) => gadgetErrorFor(error));
       throw new GadgetErrorGroup(errors, results);
@@ -302,21 +307,69 @@ export const actionRunner: ActionRunner = async <Shape extends RecordShape = any
   }
 };
 
+const processBulkActionResponse = <Shape extends RecordShape = any>(
+  defaultSelection: FieldSelection | null,
+  response: any,
+  records: any,
+  modelSelectionField: string,
+  hasReturnType?: HasReturnType | null
+) => {
+  if (defaultSelection == null) return [];
+  if (!hasReturnType) {
+    return hydrateRecordArray<Shape>(response, records[modelSelectionField]);
+  } else if (typeof hasReturnType == "boolean") {
+    return records.results;
+  } else {
+    return Object.entries(hasReturnType).flatMap(([returnTypeField, innerHasReturnType]) => {
+      const results = records[returnTypeField];
+
+      if (!Array.isArray(results)) {
+        return [];
+      }
+
+      return results.map((result) => {
+        const returnTypeForResult =
+          "hasReturnType" in innerHasReturnType ? returnTypeForRecord(result, innerHasReturnType.hasReturnType) : false;
+
+        if (!returnTypeForResult) {
+          return hydrateRecord<Shape>(response, result);
+        } else {
+          return processActionResponse(defaultSelection, response, result, modelSelectionField, returnTypeForResult);
+        }
+      });
+    });
+  }
+};
+
 const processActionResponse = <Shape extends RecordShape = any>(
   defaultSelection: FieldSelection | null,
   response: any,
   record: any,
   modelSelectionField: string,
-  hasReturnType?: boolean | null
-) => {
+  hasReturnType?: HasReturnType | null
+): any => {
   // Delete actions have a null selection. We do an early return for this because `hydrateRecordArray` will fail
   // if there's nothing at `mutationResult[modelSelectionField]`, but the caller isn't expecting a return (void).
   if (defaultSelection == null) return;
   if (!hasReturnType) {
     return hydrateRecord<Shape>(response, record[modelSelectionField]);
-  } else {
+  } else if (typeof hasReturnType == "boolean") {
     return record.result;
+  } else {
+    const innerReturnType = returnTypeForRecord(record, hasReturnType);
+
+    return processActionResponse(defaultSelection, response, record, modelSelectionField, innerReturnType);
   }
+};
+
+const returnTypeForRecord = (record: any, hasReturnType: HasReturnType) => {
+  if (typeof hasReturnType == "boolean") {
+    return hasReturnType;
+  }
+
+  const innerReturnTypeForTypename = hasReturnType[`... on ${record.__typename}`];
+
+  return innerReturnTypeForTypename && "hasReturnType" in innerReturnTypeForTypename ? innerReturnTypeForTypename.hasReturnType : false;
 };
 
 export const globalActionRunner = async (

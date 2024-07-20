@@ -100,12 +100,15 @@ export interface BulkActionWithInputs<OptionsT, VariablesT> {
   <Options extends OptionsT>(inputs: VariablesT, options?: LimitToKnownKeys<Options, OptionsT>): AsyncRecord<any>;
 }
 
+export type HasReturnType = boolean | Record<string, { hasReturnType: HasReturnType } | { select: boolean }>;
+
 export interface ActionFunctionMetadata<OptionsT, VariablesT, SelectionT, SchemaT, DefaultsT, IsBulk> {
   type: "action";
   operationName: string;
   operationReturnType?: string;
   namespace: string | string[] | null;
   modelApiIdentifier: string;
+  operatesWithRecordIdentity?: boolean;
   modelSelectionField: string;
   defaultSelection: DefaultsT;
   selectionType: SelectionT;
@@ -117,7 +120,7 @@ export interface ActionFunctionMetadata<OptionsT, VariablesT, SelectionT, Schema
   hasAmbiguousIdentifier?: boolean;
   acceptsModelInput?: boolean;
   paramOnlyVariables?: readonly string[];
-  hasReturnType?: boolean;
+  hasReturnType?: HasReturnType;
   singleActionFunctionName?: string;
   /** @deprecated */
   hasCreateOrUpdateEffect?: boolean;

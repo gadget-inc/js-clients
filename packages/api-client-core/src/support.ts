@@ -588,6 +588,9 @@ export const disambiguateActionVariables = (action: AnyActionFunction, variables
 
   let newVariables: Record<string, any>;
 
+  // for backwards compatibilty, actions without the operatesWithRecordIdentity metadata should extract the id from the variables
+  const shouldExtractId = action.operatesWithRecordIdentity ?? true;
+
   if (action.acceptsModelInput ?? action.hasCreateOrUpdateEffect) {
     if (
       action.modelApiIdentifier in variables &&
@@ -603,7 +606,7 @@ export const disambiguateActionVariables = (action: AnyActionFunction, variables
         if (action.paramOnlyVariables?.includes(key)) {
           newVariables[key] = value;
         } else {
-          if (key == "id") {
+          if (key == "id" && shouldExtractId) {
             newVariables.id = value;
           } else {
             newVariables[action.modelApiIdentifier][key] = value;
