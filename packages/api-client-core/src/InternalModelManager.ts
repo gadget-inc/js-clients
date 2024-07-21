@@ -490,14 +490,15 @@ export class InternalModelManager<Shape extends RecordShape = RecordData> {
    * // upserts post with slug "new-post" in the database
    * // if a post with slug "new-post" exists, it will be updated
    * // if a post with slug "new-post" does not exist, it will be created
-   * const post = await api.internal.post.upsert({ slug: "new-post", title: "A new post title" }, ["slug"]);
+   * const post = await api.internal.post.upsert({ post: {slug: "new-post", title: "A new post title" }, on: ["slug"] });
    *
    * @param record The data for the record to update
    * @returns The upserted record
    */
-  async upsert(record: RecordData, on?: string[]): Promise<GadgetRecord<Shape>> {
+  async upsert(record: RecordData & { on?: string[] }): Promise<GadgetRecord<Shape>> {
+    const { on, ...recordData } = record;
     on && assert(on.length > 0, `Must specify at least one field to upsert on`);
-    const plan = internalUpsertMutation(this.apiIdentifier, this.namespace, on, this.getRecordFromData(record, "upsert"));
+    const plan = internalUpsertMutation(this.apiIdentifier, this.namespace, on, this.getRecordFromData(recordData, "upsert"));
     const response = await this.connection.currentClient.mutation(plan.query, plan.variables).toPromise();
     const result = assertMutationSuccess(response, this.dataPath(`upsert${this.capitalizedApiIdentifier}`));
 
