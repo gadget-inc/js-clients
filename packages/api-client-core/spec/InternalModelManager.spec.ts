@@ -1333,6 +1333,120 @@ describe("InternalModelManager", () => {
       expect(result.name).toBeTruthy();
     });
 
+    test("can execute an upsert against a model", async () => {
+      const promise = manager.upsert({ id: "123", name: "foo" });
+
+      expect(mockUrqlClient.executeMutation.mock.calls[0][0].variables).toMatchInlineSnapshot(`
+        {
+          "widget": {
+            "id": "123",
+            "name": "foo",
+          },
+        }
+      `);
+
+      mockUrqlClient.executeMutation.pushResponse("InternalUpsertWidget", {
+        data: {
+          internal: {
+            upsertWidget: {
+              success: true,
+              errors: null,
+              widget: {
+                id: "123",
+                name: "foo",
+              },
+            },
+          },
+        },
+        stale: false,
+        hasNext: false,
+      });
+
+      const result = await promise;
+      expect(result.id).toBeTruthy();
+      expect(result.name).toBeTruthy();
+    });
+
+    test("can execute an upsert against a model with an on at the root level", async () => {
+      const promise = manager.upsert({ id: "123", name: "foo", on: ["name"] });
+
+      expect(mockUrqlClient.executeMutation.mock.calls[0][0].variables).toMatchInlineSnapshot(`
+        {
+          "on": [
+            "name",
+          ],
+          "widget": {
+            "id": "123",
+            "name": "foo",
+          },
+        }
+      `);
+
+      mockUrqlClient.executeMutation.pushResponse("InternalUpsertWidget", {
+        data: {
+          internal: {
+            upsertWidget: {
+              success: true,
+              errors: null,
+              widget: {
+                id: "123",
+                name: "foo",
+              },
+            },
+          },
+        },
+        stale: false,
+        hasNext: false,
+      });
+
+      const result = await promise;
+      expect(result.id).toBeTruthy();
+      expect(result.name).toBeTruthy();
+    });
+
+    test("can execute an upsert against a model with an on at the fully qualified level", async () => {
+      const promise = manager.upsert({ widget: { id: "123", name: "bar" }, on: ["name"] });
+
+      expect(mockUrqlClient.executeMutation.mock.calls[0][0].variables).toMatchInlineSnapshot(`
+        {
+          "on": [
+            "name",
+          ],
+          "widget": {
+            "id": "123",
+            "name": "bar",
+          },
+        }
+      `);
+
+      mockUrqlClient.executeMutation.pushResponse("InternalUpsertWidget", {
+        data: {
+          internal: {
+            upsertWidget: {
+              success: true,
+              errors: null,
+              widget: {
+                id: "123",
+                name: "bar",
+              },
+            },
+          },
+        },
+        stale: false,
+        hasNext: false,
+      });
+
+      const result = await promise;
+      expect(result.id).toBeTruthy();
+      expect(result.name).toBeTruthy();
+    });
+
+    test("throws an error if attempting to run an upsert with an empty on", async () => {
+      await expect(manager.upsert({ widget: { id: "123", name: "bar" }, on: [] })).rejects.toThrowErrorMatchingInlineSnapshot(
+        `"assertion error: Must specify at least one field to upsert on"`
+      );
+    });
+
     test("can execute a delete operation against a model", async () => {
       const promise = manager.delete("123");
 
