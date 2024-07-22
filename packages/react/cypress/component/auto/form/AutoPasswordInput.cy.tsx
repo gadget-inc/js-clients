@@ -8,24 +8,34 @@ describeForEachAutoAdapter("AutoForm", ({ name, adapter: { AutoForm }, wrapper }
   });
 
   const expectUpdateActionSubmissionVariables = (expectedQueryValue?: any) => {
-    cy.intercept({ method: "POST", url: `${api.connection.endpoint}?operation=updateUser` }, (req) => {
-      // eslint-disable-next-line
-      expect(req.body.variables).to.deep.equal(expectedQueryValue);
+    cy.intercept(
+      {
+        times: 1,
+        method: "POST",
+        url: `${api.connection.endpoint}?operation=updateUser`,
+      },
+      (req) => {
+        // eslint-disable-next-line
+        expect(req.body.variables).to.deep.equal(expectedQueryValue);
 
-      // The response content doesn't matter for the tests
-      req.reply({
-        data: {
-          updateUser: {
-            success: true,
-            errors: null,
-            user: {},
+        // The response content doesn't matter for the tests
+        req.reply({
+          data: {
+            updateUser: {
+              success: true,
+              errors: null,
+              user: {},
+            },
           },
-        },
-      });
-    }).as("updateUser");
+        });
+      }
+    ).as("updateUser");
   };
 
   const submit = (modelName: string, expectedQueryValue?: any) => {
+    cy.wait(100);
+
+    cy.get("form [type=submit][aria-hidden!=true]").should("not.be.disabled");
     cy.get("form [type=submit][aria-hidden!=true]").click();
 
     cy.wait("@updateUser");
@@ -37,7 +47,6 @@ describeForEachAutoAdapter("AutoForm", ({ name, adapter: { AutoForm }, wrapper }
   it("only allows existing passwords to be replaced, not edited", () => {
     const updatedPassword = "abcd1234!@#$";
     const expectedVariables = { id: "1", user: { password: updatedPassword } };
-    expectUpdateActionSubmissionVariables(expectedVariables); // Password field is changed and included
 
     cy.mountWithWrapper(<AutoForm action={api.user.update} findBy={"1"} include={["password"]} />, wrapper);
 
@@ -48,17 +57,17 @@ describeForEachAutoAdapter("AutoForm", ({ name, adapter: { AutoForm }, wrapper }
     cy.get(`input[name="user.password"]`).should("be.enabled");
     cy.get(`input[name="user.password"]`).type(updatedPassword);
 
+    expectUpdateActionSubmissionVariables(expectedVariables); // Password field is changed and included
     submit("User", expectedVariables);
   });
 
   it("does not submit anything when for update actions when the password fields are untouched", () => {
     const expectedVariables = { id: "1", user: {} };
-    expectUpdateActionSubmissionVariables(expectedVariables); // Untouched so the password field is not included
-
     cy.mountWithWrapper(<AutoForm action={api.user.update} findBy={"1"} include={["password"]} />, wrapper);
 
     cy.get(`input[name="user.password"]`).should("be.disabled");
 
+    expectUpdateActionSubmissionVariables(expectedVariables); // Untouched so the password field is not included
     submit("User", expectedVariables);
   });
 });
