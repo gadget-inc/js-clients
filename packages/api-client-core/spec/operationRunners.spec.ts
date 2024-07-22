@@ -4,7 +4,7 @@ import { diff } from "@n1ru4l/json-patch-plus";
 import { CombinedError } from "@urql/core";
 import nock from "nock";
 import { BackgroundActionHandle } from "../src/BackgroundActionHandle.js";
-import type { AnyModelManager, GadgetErrorGroup } from "../src/index.js";
+import type { AnyModelManager, GadgetErrorGroup, LimitToKnownKeys } from "../src/index.js";
 import {
   GadgetConnection,
   actionRunner,
@@ -14,11 +14,36 @@ import {
   findOneByFieldRunner,
   findOneRunner,
 } from "../src/index.js";
+import { DefaultPostSelection, type CreatePostOptions, type CreatePostResult, type SelectedPostOrDefault } from "./TestSchema.js";
 import { asyncIterableToIterator, waitForExpectationToPass } from "./helpers.js";
 import { MockBulkFlipDownWidgetsAction, MockBulkUpdateWidgetAction, MockGlobalAction, MockWidgetCreateAction } from "./mockActions.js";
 import { createMockUrqlClient, mockGraphQLWSClient, type MockUrqlClient } from "./mockUrqlClient.js";
 
 nock.disableNetConnect();
+
+describe("type checks", () => {
+  // Prior to Gadget v1.1 this is the way that action functions were defined.
+  // This test ensures that the legacy clients still type check correctly
+  const _TestLegacyActionRunnerTypeCheck = () => {
+    async function _createPost<Options extends CreatePostOptions>(
+      this: { connection: GadgetConnection },
+      options?: LimitToKnownKeys<Options, CreatePostOptions>
+    ): Promise<CreatePostResult<Options>> {
+      return await actionRunner<SelectedPostOrDefault<Options>>(
+        this,
+        "createPost",
+        DefaultPostSelection,
+        "post",
+        "post",
+        false,
+        {},
+        options,
+        null,
+        false
+      );
+    }
+  };
+});
 
 // eslint-disable-next-line jest/no-export
 describe("operationRunners", () => {
@@ -565,7 +590,7 @@ describe("operationRunners", () => {
     });
 
     test("can run a single action with an object result type", async () => {
-      const promise = actionRunner<{ __typename: string; id: string; name: string; eventAt: Date }>(
+      const promise = actionRunner(
         {
           connection,
         },
@@ -620,7 +645,7 @@ describe("operationRunners", () => {
     });
 
     test("can run a single action with an object result type that has an inner return type", async () => {
-      const promise = actionRunner<any>(
+      const promise = actionRunner(
         {
           connection,
         },
@@ -854,7 +879,7 @@ describe("operationRunners", () => {
     });
 
     test("can run a bulk action with a returnType", async () => {
-      const promise = actionRunner<{ id: string; name: string }>(
+      const promise = actionRunner(
         {
           connection,
         },
@@ -895,7 +920,7 @@ describe("operationRunners", () => {
     });
 
     test("can run a bulk action with an object returnType", async () => {
-      const promise = actionRunner<{ id: string; name: string }>(
+      const promise = actionRunner(
         {
           connection,
         },

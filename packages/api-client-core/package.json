@@ -1,6 +1,6 @@
 {
   "name": "@gadgetinc/api-client-core",
-  "version": "0.15.28",
+  "version": "0.15.29",
   "files": [
     "Readme.md",
     "dist/**/*"
