@@ -1,4 +1,5 @@
 // The index to be used by the jest and cypress tests until MUI components are ready for pre-release
+export { MUIAutoButton as AutoButton } from "./MUIAutoButton.js";
 export * from "./MUIAutoForm.js";
 export { MUIAutoForm as AutoForm } from "./MUIAutoForm.js";
 export { MUIAutoBooleanInput as AutoBooleanInput } from "./inputs/MUIAutoBooleanInput.js";

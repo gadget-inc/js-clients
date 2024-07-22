@@ -1,7 +1,7 @@
 import type { ActionFunction, AnyClient, GlobalActionFunction } from "@gadgetinc/api-client-core";
 import { assert } from "@gadgetinc/api-client-core";
 import type { ResultOf } from "@graphql-typed-document-node/core";
-import { DocumentNode } from "graphql";
+import type { DocumentNode } from "graphql";
 import { useApi } from "./GadgetProvider.js";
 import { graphql } from "./internal/gql/gql.js";
 import { GadgetFieldType } from "./internal/gql/graphql.js";
@@ -182,6 +182,7 @@ const ModelActionMetadataQuery = graphql(/* GraphQL */ `
           name
           apiIdentifier
           operatesWithRecordIdentity
+          isDeleteAction
           inputFields {
             ...FieldMetadata
             ...SubFields

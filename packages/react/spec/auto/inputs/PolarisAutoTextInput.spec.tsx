@@ -146,6 +146,7 @@ describe("PolarisAutoTextInput", () => {
             name: "Create",
             apiIdentifier: "create",
             operatesWithRecordIdentity: false,
+            isDeleteAction: false,
             inputFields: [
               {
                 name: "Widget",
@@ -207,6 +208,7 @@ const metadata = {
     name: "Create",
     apiIdentifier: "create",
     operatesWithRecordIdentity: false,
+    isDeleteAction: false,
     inputFields: [
       {
         name: "Widget",

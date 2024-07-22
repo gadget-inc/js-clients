@@ -32,3 +32,48 @@ Cypress.Commands.add("mountWithWrapper", (component, Wrapper, options = {}) => {
 
   return mount(wrapped, options);
 });
+
+before(() => {
+  cy.window().then((win) => {
+    win.shopify = {
+      environment: {
+        embedded: false,
+        mobile: false,
+        pos: false,
+      },
+      config: {
+        apiKey: "some-api-key",
+        shop: "example.myshopify.com",
+        locale: "en",
+      },
+      idToken: () =>
+        new Promise((resolve) => {
+          resolve("some-id-token");
+        }),
+      toast: {
+        show: (msg: string) => {
+          const message = document.createElement("div");
+          message.className = "mock-toast";
+          message.innerHTML = msg;
+          document.body.appendChild(message);
+          setTimeout(() => {
+            document.body.removeChild(message);
+          }, 3000);
+        },
+      },
+    } as any;
+  });
+});
+
+beforeEach(() => {
+  cy.window().then((win) => {
+    const mockToasts = win.document.getElementsByClassName("mock-toast");
+    while (mockToasts.length > 0) {
+      try {
+        mockToasts[0].parentNode?.removeChild(mockToasts[0]);
+      } catch (e) {
+        // don't worry if the element has already been removed or changed parents
+      }
+    }
+  });
+});

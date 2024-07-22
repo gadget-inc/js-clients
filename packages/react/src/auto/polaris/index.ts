@@ -1,3 +1,4 @@
+export { PolarisAutoButton as AutoButton } from "./PolarisAutoButton.js";
 export * from "./PolarisAutoForm.js";
 export { PolarisAutoForm as AutoForm } from "./PolarisAutoForm.js";
 export { PolarisAutoBooleanInput as AutoBooleanInput } from "./inputs/PolarisAutoBooleanInput.js";

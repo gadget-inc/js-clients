@@ -188,6 +188,8 @@ export type AutoTableTestRelatedModel = {
   createdAt: Scalars["DateTime"]["output"];
   /** The globally unique, unchanging identifier for this record. Assigned and managed by Gadget. */
   id: Scalars["GadgetID"]["output"];
+  manyBelongsToParent?: Maybe<AutoTableTest>;
+  manyBelongsToParentId?: Maybe<Scalars["GadgetID"]["output"]>;
   name?: Maybe<Scalars["String"]["output"]>;
   someBool?: Maybe<Scalars["Boolean"]["output"]>;
   someNumber?: Maybe<Scalars["Float"]["output"]>;
@@ -221,6 +223,8 @@ export type AutoTableTestRelatedModelFilter = {
   belongsToParentId?: InputMaybe<IdFilter>;
   createdAt?: InputMaybe<DateTimeFilter>;
   id?: InputMaybe<IdFilter>;
+  manyBelongsToParent?: InputMaybe<IdFilter>;
+  manyBelongsToParentId?: InputMaybe<IdFilter>;
   name?: InputMaybe<StringFilter>;
   someBool?: InputMaybe<BooleanFilter>;
   someNumber?: InputMaybe<FloatFilter>;
@@ -1468,6 +1472,7 @@ export type ConvergeAutoTableTestRelatedModelInput = {
 export type ConvergeAutoTableTestRelatedModelValues = {
   belongsToParent?: InputMaybe<AutoTableTestBelongsToInput>;
   id?: InputMaybe<Scalars["GadgetID"]["input"]>;
+  manyBelongsToParent?: InputMaybe<AutoTableTestBelongsToInput>;
   name?: InputMaybe<Scalars["String"]["input"]>;
   someBool?: InputMaybe<Scalars["Boolean"]["input"]>;
   someNumber?: InputMaybe<Scalars["Float"]["input"]>;
@@ -1572,6 +1577,7 @@ export type CreateAutoTableTestInput = {
 
 export type CreateAutoTableTestRelatedModelInput = {
   belongsToParent?: InputMaybe<AutoTableTestBelongsToInput>;
+  manyBelongsToParent?: InputMaybe<AutoTableTestBelongsToInput>;
   name?: InputMaybe<Scalars["String"]["input"]>;
   someBool?: InputMaybe<Scalars["Boolean"]["input"]>;
   someNumber?: InputMaybe<Scalars["Float"]["input"]>;
@@ -2908,6 +2914,7 @@ export type InternalAutoTableTestRelatedModelInput = {
   belongsToParent?: InputMaybe<InternalBelongsToInput>;
   createdAt?: InputMaybe<Scalars["DateTime"]["input"]>;
   id?: InputMaybe<Scalars["GadgetID"]["input"]>;
+  manyBelongsToParent?: InputMaybe<InternalBelongsToInput>;
   name?: InputMaybe<Scalars["String"]["input"]>;
   someBool?: InputMaybe<Scalars["Boolean"]["input"]>;
   someNumber?: InputMaybe<Scalars["Float"]["input"]>;
@@ -5119,6 +5126,7 @@ export type NestedAutoTableTestDeleteInput = {
 
 export type NestedAutoTableTestRelatedModelCreateInput = {
   belongsToParent?: InputMaybe<AutoTableTestBelongsToInput>;
+  manyBelongsToParent?: InputMaybe<AutoTableTestBelongsToInput>;
   name?: InputMaybe<Scalars["String"]["input"]>;
   someBool?: InputMaybe<Scalars["Boolean"]["input"]>;
   someNumber?: InputMaybe<Scalars["Float"]["input"]>;
@@ -5131,6 +5139,7 @@ export type NestedAutoTableTestRelatedModelDeleteInput = {
 export type NestedAutoTableTestRelatedModelUpdateInput = {
   belongsToParent?: InputMaybe<AutoTableTestBelongsToInput>;
   id: Scalars["GadgetID"]["input"];
+  manyBelongsToParent?: InputMaybe<AutoTableTestBelongsToInput>;
   name?: InputMaybe<Scalars["String"]["input"]>;
   someBool?: InputMaybe<Scalars["Boolean"]["input"]>;
   someNumber?: InputMaybe<Scalars["Float"]["input"]>;
@@ -5882,6 +5891,7 @@ export type UpdateAutoTableTestInput = {
 
 export type UpdateAutoTableTestRelatedModelInput = {
   belongsToParent?: InputMaybe<AutoTableTestBelongsToInput>;
+  manyBelongsToParent?: InputMaybe<AutoTableTestBelongsToInput>;
   name?: InputMaybe<Scalars["String"]["input"]>;
   someBool?: InputMaybe<Scalars["Boolean"]["input"]>;
   someNumber?: InputMaybe<Scalars["Float"]["input"]>;
@@ -7898,6 +7908,7 @@ export type ModelActionMetadataQuery = {
         name: string;
         apiIdentifier: string;
         operatesWithRecordIdentity: boolean;
+        isDeleteAction: boolean;
         inputFields: Array<{
           __typename?: "GadgetObjectField";
           name: string;
@@ -10807,6 +10818,7 @@ export const ModelActionMetadataDocument = {
                             { kind: "Field", name: { kind: "Name", value: "name" } },
                             { kind: "Field", name: { kind: "Name", value: "apiIdentifier" } },
                             { kind: "Field", name: { kind: "Name", value: "operatesWithRecordIdentity" } },
+                            { kind: "Field", name: { kind: "Name", value: "isDeleteAction" } },
                             {
                               kind: "Field",
                               name: { kind: "Name", value: "inputFields" },
