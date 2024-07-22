@@ -30,7 +30,7 @@ export const PolarisAutoButton = <
 
   return (
     <Button loading={fetching} disabled={fetching} tone={isDestructive ? "critical" : undefined} onClick={run} {...buttonProps}>
-      {label}
+      {props?.children ?? label}
     </Button>
   );
 };

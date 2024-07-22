@@ -48,7 +48,7 @@ export const MUIAutoButton = <
   return (
     <>
       <LoadingButton loading={fetching} disabled={fetching} color={isDestructive ? "error" : undefined} onClick={run} {...buttonProps}>
-        {label}
+        {props?.children ?? label}
       </LoadingButton>
       {snackbar && <SnackbarHack {...snackbar} />}
     </>

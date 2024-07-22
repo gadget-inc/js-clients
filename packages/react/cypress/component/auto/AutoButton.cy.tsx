@@ -101,6 +101,11 @@ describeForEachAutoAdapter("AutoButton", ({ name, adapter: { AutoButton }, wrapp
     cy.contains("Update Widget succeeded.");
   });
 
+  it("allows overriding the label", () => {
+    cy.mountWithWrapper(<AutoButton action={api.widget.create}>Whizbang the flimflam</AutoButton>, wrapper);
+    cy.contains("Whizbang the flimflam");
+  });
+
   it("allows overriding the onSuccess behaviour", () => {
     let onSuccessCalled = false;
     cy.mountWithWrapper(
