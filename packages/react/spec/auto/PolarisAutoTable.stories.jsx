@@ -111,3 +111,11 @@ export const SelectRelatedFieldsBelongsTo = {
     ],
   },
 };
+
+export const LiveData = {
+  name: "Live data",
+  args: {
+    model: api.widget,
+    live: true,
+  },
+};
