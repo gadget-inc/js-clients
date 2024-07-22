@@ -652,6 +652,15 @@ describe("PolarisAutoForm", () => {
       });
     });
   });
+
+  describe("Bulk actions", () => {
+    it("throws an error when a bulk action is used", () => {
+      expect(() => {
+        render(<PolarisAutoForm action={api.widget.bulkUpdate as any} />, { wrapper: PolarisMockedProviders });
+        loadMockWidgetCreateMetadata();
+      }).toThrow("Bulk actions are not supported in AutoForms");
+    });
+  });
 });
 
 function loadMockGizmoCreateMetadata() {

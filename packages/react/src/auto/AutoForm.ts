@@ -110,6 +110,11 @@ export const useAutoForm = <
   props: AutoFormProps<GivenOptions, SchemaT, ActionFunc, any, any>
 ) => {
   const { action, record, onSuccess } = props;
+
+  if (action.isBulk) {
+    throw new Error("Bulk actions are not supported in AutoForms");
+  }
+
   const { metadata, fetching: fetchingMetadata, error: metadataError } = useActionMetadata(props.action);
 
   // filter down the fields to render only what we want to render for this form
