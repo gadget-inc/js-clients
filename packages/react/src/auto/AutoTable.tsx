@@ -16,6 +16,7 @@ export type AutoTableProps<
   pageSize?: number;
   initialCursor?: string;
   initialDirection?: string;
+  live?: boolean;
   columns?: TableOptions["columns"];
   onClick?: (row: Record<string, ColumnValueType>) => void;
 };

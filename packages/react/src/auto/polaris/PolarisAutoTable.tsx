@@ -50,6 +50,7 @@ export const PolarisAutoTable = <
       select: props.select,
       columns: props.columns,
       pageSize: props.pageSize,
+      live: props.live,
     } as any
   );
 
