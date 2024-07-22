@@ -1061,7 +1061,7 @@ describe("operationRunners", () => {
           connection,
         },
         "bulkDeleteWidgets",
-        { id: true, name: true },
+        null,
         "widget",
         "widgets",
         true,

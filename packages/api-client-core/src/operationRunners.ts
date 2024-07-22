@@ -261,7 +261,7 @@ export interface ActionRunner {
   ): Promise<Shape extends void ? void : GadgetRecord<Shape>[]>;
 }
 
-export const actionRunner: ActionRunner = async <Shape extends RecordShape = any>(
+export const actionRunner: ActionRunner = async (
   modelManager: { connection: GadgetConnection },
   operation: string,
   defaultSelection: FieldSelection | null,
@@ -314,7 +314,7 @@ const processBulkActionResponse = <Shape extends RecordShape = any>(
   modelSelectionField: string,
   hasReturnType?: HasReturnType | null
 ) => {
-  if (defaultSelection == null) return [];
+  if (defaultSelection == null) return;
   if (!hasReturnType) {
     return hydrateRecordArray<Shape>(response, records[modelSelectionField]);
   } else if (typeof hasReturnType == "boolean") {
