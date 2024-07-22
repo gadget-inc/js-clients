@@ -1,4 +1,5 @@
-import type { AvailableSelection } from "../src/types.js";
+import type { GadgetRecord } from "src/index.js";
+import type { AvailableSelection, DeepFilterNever, DefaultSelection, Select, Selectable } from "../src/types.js";
 
 export type NestedThing = {
   bool: boolean;
@@ -48,3 +49,36 @@ export type TestSchema = {
 };
 
 export type AvailableTestSchemaSelection = AvailableSelection<TestSchema>;
+
+export const DefaultPostSelection = {
+  __typename: true,
+  createdAt: true,
+  id: true,
+  updatedAt: true,
+} as const;
+
+export type Post = {
+  __typename: "Post";
+  id: string;
+  createdAt: Date;
+  updatedAt: Date;
+};
+
+export type AvailablePostSelection = {
+  __typename?: boolean | null | undefined;
+  id?: boolean | null | undefined;
+  createdAt?: boolean | null | undefined;
+  updatedAt?: boolean | null | undefined;
+};
+
+export type SelectedPostOrDefault<Options extends Selectable<AvailablePostSelection>> = DeepFilterNever<
+  Select<Post, DefaultSelection<AvailablePostSelection, Options, typeof DefaultPostSelection>>
+>;
+
+export interface CreatePostOptions {
+  select?: AvailablePostSelection;
+}
+
+export type CreatePostResult<Options extends CreatePostOptions> = SelectedPostOrDefault<Options> extends void
+  ? void
+  : GadgetRecord<SelectedPostOrDefault<Options>>;

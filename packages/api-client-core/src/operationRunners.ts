@@ -184,7 +184,7 @@ export const findManyRunner = <Shape extends RecordShape = any, Options extends 
 };
 
 export interface ActionRunner {
-  <Shape extends RecordShape = any>(
+  (
     modelManager: { connection: GadgetConnection },
     operation: string,
     defaultSelection: FieldSelection | null,
@@ -195,7 +195,7 @@ export interface ActionRunner {
     options?: BaseFindOptions | null,
     namespace?: string | string[] | null,
     hasReturnType?: HasReturnType
-  ): Promise<Shape>;
+  ): Promise<any>;
 
   <Shape extends RecordShape = any>(
     modelManager: { connection: GadgetConnection },
@@ -234,7 +234,7 @@ export interface ActionRunner {
     namespace?: string | string[] | null
   ): Promise<Shape extends void ? void : GadgetRecord<Shape>[]>;
 
-  <Shape extends RecordShape = any>(
+  (
     modelManager: { connection: GadgetConnection },
     operation: string,
     defaultSelection: FieldSelection | null,
@@ -245,7 +245,7 @@ export interface ActionRunner {
     options?: BaseFindOptions | null,
     namespace?: string | string[] | null,
     hasReturnType?: HasReturnType
-  ): Promise<Shape[]>;
+  ): Promise<any[]>;
 
   <Shape extends RecordShape = any>(
     modelManager: { connection: GadgetConnection },
