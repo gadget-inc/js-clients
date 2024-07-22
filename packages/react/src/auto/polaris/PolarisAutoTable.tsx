@@ -24,7 +24,9 @@ const PolarisSkeletonTable = (props: { columns: number }) => {
     <DataTable
       columnContentTypes={count.map(() => "text")}
       headings={count.map((i) => (
-        <SkeletonBodyText key={i} lines={1} />
+        <Box width="100px" key={i}>
+          <SkeletonBodyText lines={1} />
+        </Box>
       ))}
       rows={Array.from(Array(3)).map((_) => count.map((i) => <SkeletonBodyText key={i} lines={1} />))}
     />
@@ -78,7 +80,7 @@ export const PolarisAutoTable = <
   }, [columns]);
 
   if (!error && ((fetching && !rows) || !columns)) {
-    return <PolarisSkeletonTable columns={polarisTableProps.headings.length} />;
+    return <PolarisSkeletonTable columns={3} />;
   }
 
   const resourceName = {
