@@ -94,3 +94,9 @@ export const Namespaced = {
     findBy: "1",
   },
 };
+
+export const GlobalAction = {
+  args: {
+    action: api.flipAll,
+  },
+};
