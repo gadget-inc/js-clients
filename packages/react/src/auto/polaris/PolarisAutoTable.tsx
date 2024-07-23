@@ -13,8 +13,8 @@ import {
 } from "@shopify/polaris";
 import pluralize from "pluralize";
 import React, { useCallback, useMemo } from "react";
-import type { TableRow } from "../../useTable.js";
 import { useTable } from "../../useTable.js";
+import type { TableRow } from "../../useTableUtils/types.js";
 import type { ColumnValueType, OptionsType } from "../../utils.js";
 import type { AutoTableProps } from "../AutoTable.js";
 import { PolarisAutoTableCellRenderer } from "./tableCells/PolarisAutoTableCellRenderer.js";

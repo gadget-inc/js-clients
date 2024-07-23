@@ -1,8 +1,10 @@
-import { AppProvider, Box, BlockStack, LegacyCard } from "@shopify/polaris";
+import { AppProvider, BlockStack, Box, Button, LegacyCard } from "@shopify/polaris";
+import { DeleteIcon } from "@shopify/polaris-icons";
 import translations from "@shopify/polaris/locales/en.json";
-import React from "react";
+import React, { useEffect } from "react";
 import { Provider } from "../../src/GadgetProvider.tsx";
 import { PolarisAutoTable } from "../../src/auto/polaris/PolarisAutoTable.tsx";
+import { useAction } from "../../src/useAction.ts";
 import { testApi as api } from "../apis.ts";
 
 // More on how to set up stories at: https://storybook.js.org/docs/writing-stories#default-export
@@ -16,7 +18,7 @@ export default {
       return (
         <Provider api={api}>
           <AppProvider i18n={translations}>
-            <div style={{ width: '100%'}}>
+            <div style={{ width: "100%" }}>
               <Box paddingBlockEnd="400">
                 <BlockStack gap="200">
                   <LegacyCard>
@@ -137,6 +139,44 @@ export const CustomCell = {
         name: "Custom cell",
         render: (record) => {
           return <div>Custom cell: {record.str}</div>;
+        },
+      },
+    ],
+  },
+};
+
+const CustomDeleteButtonCellRenderer = (props) => {
+  const [{ error, fetching }, _delete] = useAction(api.autoTableTest.delete);
+
+  useEffect(() => {
+    if (error) {
+      // eslint-disable-next-line no-undef
+      window.alert(`Error deleting record: ${error.message}`);
+    }
+  }, [error]);
+
+  return (
+    <Button
+      icon={DeleteIcon}
+      onClick={() => {
+        void _delete({
+          id: props.record.id,
+        });
+      }}
+      loading={fetching}
+    />
+  );
+};
+
+export const CustomCellWithDeleteButton = {
+  args: {
+    model: api.autoTableTest,
+    columns: [
+      "str",
+      {
+        name: "Actions",
+        render: (record) => {
+          return <CustomDeleteButtonCellRenderer record={record} />;
         },
       },
     ],
