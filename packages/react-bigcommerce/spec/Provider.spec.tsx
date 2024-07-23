@@ -59,8 +59,8 @@ describe("GadgetProvider", () => {
     expect(mockUrqlClient.executeQuery.mock.calls[0][0].query.loc.source.body).toMatchInlineSnapshot(`
       "query BigCommerceSession {
         currentSession {
-          bigCommerceUserId
-          bigCommerceStore {
+          bigcommerceUserId
+          bigcommerceStore {
             storeHash
           }
           roles {
@@ -74,8 +74,8 @@ describe("GadgetProvider", () => {
     mockUrqlClient.executeQuery.pushResponse("BigCommerceSession", {
       data: {
         currentSession: {
-          bigCommerceUserId: null,
-          bigCommerceStore: null,
+          bigcommerceUserId: null,
+          bigcommerceStore: null,
           roles: [
             {
               key: "unauthenticated",
@@ -110,8 +110,8 @@ describe("GadgetProvider", () => {
     expect(mockUrqlClient.executeQuery.mock.calls[0][0].query.loc.source.body).toMatchInlineSnapshot(`
       "query BigCommerceSession {
         currentSession {
-          bigCommerceUserId
-          bigCommerceStore {
+          bigcommerceUserId
+          bigcommerceStore {
             storeHash
           }
           roles {
@@ -125,8 +125,8 @@ describe("GadgetProvider", () => {
     mockUrqlClient.executeQuery.pushResponse("BigCommerceSession", {
       data: {
         currentSession: {
-          bigCommerceUserId: "123",
-          bigCommerceStore: {
+          bigcommerceUserId: "123",
+          bigcommerceStore: {
             storeHash: "xyz789",
           },
           roles: [

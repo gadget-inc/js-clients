@@ -64,8 +64,8 @@ describe("useGadget", () => {
     mockUrqlClient.executeQuery.pushResponse("BigCommerceSession", {
       data: {
         currentSession: {
-          bigCommerceUserId: null,
-          bigCommerceStore: null,
+          bigcommerceUserId: null,
+          bigcommerceStore: null,
           roles: [
             {
               key: "unauthenticated",
@@ -102,8 +102,8 @@ describe("useGadget", () => {
     mockUrqlClient.executeQuery.pushResponse("BigCommerceSession", {
       data: {
         currentSession: {
-          bigCommerceUserId: "123",
-          bigCommerceStore: {
+          bigcommerceUserId: "123",
+          bigcommerceStore: {
             storeHash: "xyz789",
           },
           roles: [
