@@ -13,6 +13,7 @@ import {
 } from "@shopify/polaris";
 import pluralize from "pluralize";
 import React, { useCallback, useMemo } from "react";
+import type { TableRow } from "../../useTable.js";
 import { useTable } from "../../useTable.js";
 import type { ColumnValueType, OptionsType } from "../../utils.js";
 import type { AutoTableProps } from "../AutoTable.js";
@@ -57,7 +58,7 @@ export const PolarisAutoTable = <
   );
 
   const onClickCallback = useCallback(
-    (row: Record<string, ColumnValueType>) => {
+    (row: TableRow) => {
       return () => onClick?.(row);
     },
     [onClick]
@@ -146,7 +147,11 @@ export const PolarisAutoTable = <
               {columns.map((column) => (
                 <IndexTable.Cell key={column.apiIdentifier}>
                   <div style={{ maxWidth: "200px" }}>
-                    <PolarisAutoTableCellRenderer column={column} value={row[column.apiIdentifier]} />
+                    {column.isCustomCell ? (
+                      column.getValue(row)
+                    ) : (
+                      <PolarisAutoTableCellRenderer column={column} value={row[column.apiIdentifier] as ColumnValueType} />
+                    )}
                   </div>
                 </IndexTable.Cell>
               ))}

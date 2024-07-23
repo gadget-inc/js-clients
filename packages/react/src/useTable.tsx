@@ -7,6 +7,7 @@ import {
   type Select,
 } from "@gadgetinc/api-client-core";
 import type { OperationContext } from "@urql/core";
+import type { ReactNode } from "react";
 import { useMemo } from "react";
 import { GadgetFieldType } from "./internal/gql/graphql.js";
 import type { ModelMetadata } from "./metadata.js";
@@ -14,29 +15,50 @@ import { filterAutoTableFieldList, useModelMetadata } from "./metadata.js";
 import type { SearchResult } from "./useDebouncedSearch.js";
 import type { PaginationResult } from "./useList.js";
 import { useList } from "./useList.js";
-import type { RelatedFieldColumn } from "./utils.js";
-import { isRelatedFieldColumn, type ColumnValueType, type ErrorWrapper, type OptionsType, type ReadOperationOptions } from "./utils.js";
+import type { CustomCellColumn, RelatedFieldColumn } from "./utils.js";
+import {
+  isCustomCellColumn,
+  isRelatedFieldColumn,
+  type ColumnValueType,
+  type ErrorWrapper,
+  type OptionsType,
+  type ReadOperationOptions,
+} from "./utils.js";
 
-export interface TableColumn {
+type BaseTableColumn = {
   name: string;
   apiIdentifier: string;
+};
+
+type RecordTableColumnValue = BaseTableColumn & {
   fieldType: GadgetFieldType;
-  getValue: (record: GadgetRecord<any>) => ColumnValueType;
   sortable: boolean;
-  relatedField?: TableColumn;
-}
+  relatedField?: RecordTableColumnValue;
+  getValue: (record: GadgetRecord<any>) => ColumnValueType;
+  isCustomCell: false;
+};
+
+type CustomTableColumnValue = BaseTableColumn & {
+  getValue: (record: GadgetRecord<any>) => ReactNode;
+  isCustomCell: true;
+  sortable: false;
+};
+
+export type TableColumn = RecordTableColumnValue | CustomTableColumnValue;
+
+export type TableRow = Record<string, ColumnValueType | ReactNode>;
 
 export interface TableOptions {
   pageSize?: number;
   initialCursor?: string;
   initialDirection?: "forward" | "backward";
-  columns?: (string | RelatedFieldColumn)[];
+  columns?: (string | RelatedFieldColumn | CustomCellColumn)[];
 }
 
 export type TableData<Data> =
   | {
       columns: TableColumn[];
-      rows: Record<string, ColumnValueType>[];
+      rows: TableRow[];
       data: Data;
       metadata: ModelMetadata;
     }
@@ -161,8 +183,8 @@ export const useTable = <
         })
       );
 
-    return fields.map((field) => {
-      let relatedField: TableColumn | undefined;
+    const result: TableColumn[] = fields.map((field) => {
+      let relatedField: RecordTableColumnValue | undefined;
       const relatedFieldColumn = columnsMap?.get(field.apiIdentifier);
 
       if (relatedFieldColumn) {
@@ -192,8 +214,9 @@ export const useTable = <
           getValue: (record: GadgetRecord<any>) => {
             return record[field.apiIdentifier]?.[relatedFieldMetadata.apiIdentifier];
           },
+          isCustomCell: false,
           sortable: false,
-        };
+        } satisfies RecordTableColumnValue;
       }
 
       return {
@@ -205,8 +228,25 @@ export const useTable = <
         },
         sortable: "sortable" in field && field.sortable,
         relatedField,
-      } as TableColumn;
+        isCustomCell: false,
+      } satisfies RecordTableColumnValue;
     });
+
+    if (options?.columns) {
+      // Add custom cell columns
+      for (const custom of options.columns) {
+        if (!isCustomCellColumn(custom)) continue;
+        result.push({
+          name: custom.name,
+          apiIdentifier: custom.name,
+          isCustomCell: true,
+          getValue: (record: GadgetRecord<any>) => custom.render(record),
+          sortable: false,
+        });
+      }
+    }
+
+    return result;
   }, [fields, options?.columns]);
 
   const isAwaitingDebouncedSearchValue = search.value != search.debouncedValue;
@@ -248,7 +288,7 @@ const getRows = (props: { data: GadgetRecord<any>[]; columns: TableColumn[] }) =
   const { columns, data } = props;
 
   return data.map((record) => {
-    const row: Record<string, ColumnValueType> = { id: record.id };
+    const row: TableRow = { id: record.id };
     for (const { apiIdentifier, getValue } of columns) {
       row[apiIdentifier] = getValue(record);
     }

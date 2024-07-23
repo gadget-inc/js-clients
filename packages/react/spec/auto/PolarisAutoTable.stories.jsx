@@ -123,3 +123,22 @@ export const LiveData = {
     live: true,
   },
 };
+
+export const CustomCell = {
+  args: {
+    model: api.autoTableTest,
+    columns: [
+      "str",
+      {
+        field: "hasOne",
+        relatedField: "name",
+      },
+      {
+        name: "Custom cell",
+        render: (record) => {
+          return <div>Custom cell: {record.str}</div>;
+        },
+      },
+    ],
+  },
+};
