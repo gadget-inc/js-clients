@@ -1,9 +1,9 @@
 import type { ActionFunction } from "@gadgetinc/api-client-core";
 import type { FormProps } from "@shopify/polaris";
-import { BlockStack, Form, FormLayout, SkeletonBodyText, SkeletonDisplayText } from "@shopify/polaris";
-import React from "react";
+import { BlockStack, Form, FormLayout, SkeletonBodyText, SkeletonDisplayText, Text } from "@shopify/polaris";
+import React, { useMemo } from "react";
 import { FormProvider } from "react-hook-form";
-import type { OptionsType } from "../../utils.js";
+import { humanizeCamelCase, type OptionsType } from "../../utils.js";
 import type { AutoFormProps } from "../AutoForm.js";
 import { useAutoForm } from "../AutoForm.js";
 import { AutoFormMetadataContext } from "../AutoFormContext.js";
@@ -73,6 +73,7 @@ const PolarisAutoFormComponent = <
       namespace: action.namespace,
     },
   };
+  const humanizedOperationName = useMemo(() => humanizeCamelCase(action.operationName), [action.operationName]);
 
   if (props.successContent && isSubmitSuccessful) {
     return props.successContent;
@@ -90,6 +91,9 @@ const PolarisAutoFormComponent = <
 
   const formContent = props.children ?? (
     <>
+      <Text variant="headingLg" as="h5">
+        {humanizedOperationName}
+      </Text>
       {!props.onSuccess ? <PolarisSubmitResultBanner /> : <PolarisSubmitErrorBanner />}
       {!metadataError && (
         <>

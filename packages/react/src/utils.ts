@@ -539,3 +539,24 @@ export type RelatedFieldColumn = {
 export const isRelatedFieldColumn = (value: any): value is RelatedFieldColumn => {
   return typeof value === "object" && value !== null && "field" in value && "relatedField" in value;
 };
+
+/**
+ * Humanizes a camelCase string by adding spaces between words and capitalizing the first letter
+ * Examples
+ *    humanizeCamelCase("createNewWidget") => "Create New Widget"
+ *    humanizeCamelCase("do99Things") => "Do 99 Things"
+ */
+export const humanizeCamelCase = (camelCaseString: string): string => {
+  // Regular expression to find sequences of lowercase letters or digits followed by uppercase letters
+  const uppercaseAfterLowercaseRegex = /([a-z\d])([A-Z])/g;
+
+  // Add a space between the lowercase letter or digit and the uppercase letter
+  let humanized = camelCaseString.replace(uppercaseAfterLowercaseRegex, "$1 $2");
+
+  // Adjust to keep sequential numbers together with spaces around them
+  humanized = humanized.replace(/([a-zA-Z])(\d)/g, "$1 $2");
+  humanized = humanized.replace(/(\d)([a-zA-Z])/g, "$1 $2");
+
+  // Capitalize the first letter
+  return humanized.replace(/^./, (str) => str.toUpperCase());
+};

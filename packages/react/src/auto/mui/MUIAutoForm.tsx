@@ -1,9 +1,9 @@
 import type { ActionFunction } from "@gadgetinc/api-client-core";
 import type { GridProps } from "@mui/material";
-import { Grid, Skeleton } from "@mui/material";
-import React from "react";
+import { Grid, Skeleton, Typography } from "@mui/material";
+import React, { useMemo } from "react";
 import { FormProvider } from "react-hook-form";
-import type { OptionsType } from "../../utils.js";
+import { humanizeCamelCase, type OptionsType } from "../../utils.js";
 import { useAutoForm, type AutoFormProps } from "../AutoForm.js";
 import { AutoFormMetadataContext } from "../AutoFormContext.js";
 import { MUIAutoInput } from "./inputs/MUIAutoInput.js";
@@ -65,12 +65,15 @@ export const MUIAutoFormComponent = <
     },
   };
 
+  const humanizedOperationName = useMemo(() => humanizeCamelCase(action.operationName), [action.operationName]);
+
   if (props.successContent && isSubmitSuccessful) {
     return props.successContent;
   }
 
   const formContent = props.children ?? (
     <>
+      <Typography variant="h5">{humanizedOperationName}</Typography>
       {!props.onSuccess ? <MUISubmitResultBanner /> : <MUISubmitErrorBanner />}
       {fetchingMetadata && <MUIFormSkeleton />}
       {!metadataError && (
