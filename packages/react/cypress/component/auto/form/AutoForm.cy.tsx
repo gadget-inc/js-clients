@@ -64,6 +64,26 @@ describeForEachAutoAdapter("AutoForm", ({ name, adapter: { AutoForm }, wrapper }
       });
   });
 
+  it("onFailure callback should return an error if the form submission fails", () => {
+    const onFailureSpy = cy.spy().as("onFailureSpy");
+    cy.mountWithWrapper(<AutoForm action={api.widget.alwaysThrowError} exclude={["gizmos"]} onFailure={onFailureSpy} />, wrapper);
+
+    cy.get(`input[name="widget.name"]`).type("test record");
+    cy.get(`input[name="widget.inventoryCount"]`).type("999");
+
+    cy.getSubmitButton().click();
+
+    cy.contains(`Saved Widget successfully`).should("not.exist");
+
+    // eslint-disable-next-line jest/valid-expect-in-promise
+    cy.get("@onFailureSpy")
+      .should("have.been.called")
+      .then(() => {
+        const error = onFailureSpy.getCalls()[0].args[0];
+        expect(error.message).to.equal("[GraphQL] GGT_UNKNOWN: something goes wrong");
+      });
+  });
+
   it("should show an error banner and not render a form when it fails to fetch metadata", () => {
     cy.intercept(
       {
