@@ -11,8 +11,8 @@ type ProviderLocation = {
 const BigCommerceSessionQuery = `
   query BigCommerceSession {
     currentSession {
-      bigCommerceUserId
-      bigCommerceStore {
+      bigcommerceUserId
+      bigcommerceStore {
         storeHash
       }
       roles {
@@ -26,7 +26,7 @@ const InnerProvider = (props: { children: ReactNode; api: AnyClient; signedPaylo
   const { api, signedPayload } = props;
 
   const [{ data, fetching, error }] = useQuery<{
-    currentSession: { bigCommerceUserId: string; bigCommerceStore: { storeHash: string }; roles: { key: string }[] };
+    currentSession: { bigcommerceUserId: string; bigcommerceStore: { storeHash: string }; roles: { key: string }[] };
   }>({
     query: BigCommerceSessionQuery,
   });
@@ -48,15 +48,15 @@ const InnerProvider = (props: { children: ReactNode; api: AnyClient; signedPaylo
           });
         },
         async processTransactionConnectionParams(params) {
-          params.auth.bigCommerceSignedPayload = signedPayload;
+          params.auth.bigcommerceSignedPayload = signedPayload;
         },
       },
     });
   }, [api, signedPayload]);
 
   const isAuthenticated = !!data?.currentSession?.roles?.some((role) => role.key === "Role-BigCommerce-App");
-  const userId = data?.currentSession?.bigCommerceUserId ?? undefined;
-  const storeHash = data?.currentSession?.bigCommerceStore?.storeHash ?? undefined;
+  const userId = data?.currentSession?.bigcommerceUserId ?? undefined;
+  const storeHash = data?.currentSession?.bigcommerceStore?.storeHash ?? undefined;
 
   useEffect(() => {
     if (!isAuthenticated) {
