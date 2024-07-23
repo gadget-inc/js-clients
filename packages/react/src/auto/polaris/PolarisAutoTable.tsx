@@ -1,4 +1,4 @@
-import type { FindManyFunction } from "@gadgetinc/api-client-core";
+import type { FindManyFunction, SortOrder } from "@gadgetinc/api-client-core";
 import type { IndexTableProps } from "@shopify/polaris";
 import {
   Banner,
@@ -12,9 +12,9 @@ import {
   useSetIndexFiltersMode,
 } from "@shopify/polaris";
 import pluralize from "pluralize";
-import React, { useCallback, useMemo } from "react";
+import React, { useCallback, useEffect, useMemo, useState } from "react";
 import { useTable } from "../../useTable.js";
-import type { TableRow } from "../../useTableUtils/types.js";
+import type { TableColumn, TableRow } from "../../useTableUtils/types.js";
 import type { ColumnValueType, OptionsType } from "../../utils.js";
 import type { AutoTableProps } from "../AutoTable.js";
 import { useTableBulkActions } from "../hooks/useTableBulkActions.js";
@@ -35,6 +35,22 @@ const PolarisSkeletonTable = (props: { columns: number }) => {
     />
   );
 };
+const gadgetToPolarisDirection = (direction?: SortOrder) => {
+  if (direction === "Ascending") {
+    return "ascending";
+  } else if (direction === "Descending") {
+    return "descending";
+  }
+  return undefined;
+};
+
+const polarisToGadgetDirection = (direction: "ascending" | "descending"): SortOrder => {
+  return direction === "ascending" ? "Ascending" : "Descending";
+};
+
+const getColumnIndex = (columns: TableColumn[], apiIdentifier: string | undefined) => {
+  return columns.findIndex((column) => column.apiIdentifier === apiIdentifier);
+};
 
 /**
  * Renders a table of records from the backend automatically for a given model using Polaris
@@ -49,7 +65,7 @@ export const PolarisAutoTable = <
 ) => {
   const { onClick } = props;
 
-  const [{ rows, columns, metadata, fetching, error, page, search, selection }, refresh] = useTable<
+  const [{ rows, columns, metadata, fetching, error, page, search, sort, selection }, refresh] = useTable<
     GivenOptions,
     SchemaT,
     FinderFunction,
@@ -59,7 +75,39 @@ export const PolarisAutoTable = <
     columns: props.columns,
     pageSize: props.pageSize,
     live: props.live,
+    sort: props.sort,
+    filter: props.filter,
   } as any);
+
+  const [sortColumnIndex, setSortColumnIndex] = useState<number | undefined>(
+    columns ? getColumnIndex(columns, props.sort ? Object.keys(props.sort)[0] : undefined) : undefined
+  );
+  const [getDefaultColumnIndexFromProps, setGetDefaultColumnIndexFromProps] = useState(true);
+  const [sortDirection, setSortDirection] = useState<SortOrder | undefined>(props.sort ? Object.values(props.sort)[0] : undefined);
+  const [disableSort, setDisableSort] = useState<boolean>(false);
+  const defaultSortDirection = props.sort ? Object.values(props.sort)[0] : "Descending";
+
+  useEffect(() => {
+    if (!sortColumnIndex && getDefaultColumnIndexFromProps) {
+      setSortColumnIndex(columns ? getColumnIndex(columns, props.sort ? Object.keys(props.sort)[0] : undefined) : undefined);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [columns]);
+
+  const handleColumnSort = (headingIndex: number, direction: SortOrder) => {
+    if (columns) {
+      const isSortDisabled = disableSort && sortColumnIndex === headingIndex;
+      setSortColumnIndex(isSortDisabled ? undefined : headingIndex);
+      setSortDirection(isSortDisabled ? undefined : direction);
+      setGetDefaultColumnIndexFromProps(false);
+      sort(columns[headingIndex].apiIdentifier, isSortDisabled ? undefined : direction);
+      if (direction !== defaultSortDirection) {
+        setDisableSort(true);
+      } else {
+        setDisableSort(false);
+      }
+    }
+  };
 
   const onClickCallback = useCallback(
     (row: TableRow) => {
@@ -142,6 +190,10 @@ export const PolarisAutoTable = <
           onNext: page.goToNextPage,
           onPrevious: page.goToPreviousPage,
         }}
+        defaultSortDirection={defaultSortDirection}
+        sortDirection={gadgetToPolarisDirection(sortDirection)}
+        sortColumnIndex={sortColumnIndex}
+        onSort={(headingIndex, direction) => handleColumnSort(headingIndex, polarisToGadgetDirection(direction))}
       >
         {rows &&
           columns &&

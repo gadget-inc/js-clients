@@ -53,6 +53,7 @@ export const SelectFields = {
   args: {
     model: api.autoTableTest,
     columns: ["str", "num"],
+    sort: { num: "Ascending" },
   },
 };
 
