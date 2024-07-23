@@ -437,6 +437,16 @@ export const unset = (obj: any, path: string) => {
 };
 
 /**
+ * Omits the given properties from an object
+ * From https://youmightnotneed.com/lodash
+ */
+export const omit = (obj: any, omittedProperties: string[]) => {
+  obj = { ...obj };
+  omittedProperties.forEach((prop) => delete obj[prop]);
+  return obj;
+};
+
+/**
  * Wrapper to make a debounced function
  * NOTE: When using this within a React component, make sure to wrap this in a `useCallback` so that the previous timeoutId is preserved between renders.
  */
