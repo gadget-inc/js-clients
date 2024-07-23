@@ -1,11 +1,11 @@
 import type { DefaultSelection, FindManyFunction, GadgetRecord, LimitToKnownKeys, Select } from "@gadgetinc/api-client-core";
 import type { OperationContext } from "@urql/core";
-import { omit } from "lodash-es";
 import { useCallback, useState } from "react";
 import type { SearchResult } from "./useDebouncedSearch.js";
 import { useDebouncedSearch } from "./useDebouncedSearch.js";
 import { useFindMany } from "./useFindMany.js";
 import type { ErrorWrapper, OptionsType, ReadOperationOptions } from "./utils.js";
+import { omit } from "./utils.js";
 
 export interface PaginationResult {
   hasNextPage: boolean | undefined;
