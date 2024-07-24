@@ -8,7 +8,7 @@ import { useAutoForm, type AutoFormProps } from "../AutoForm.js";
 import { AutoFormMetadataContext } from "../AutoFormContext.js";
 import { MUIAutoInput } from "./inputs/MUIAutoInput.js";
 import { MUIAutoSubmit } from "./submit/MUIAutoSubmit.js";
-import { MUISubmitErrorBanner, MUISubmitResultBanner } from "./submit/MUISubmitResultBanner.js";
+import { MUISubmitErrorBanner, MUISubmitSuccessfulBanner } from "./submit/MUISubmitResultBanner.js";
 
 export const MUIFormSkeleton = () => (
   <>
@@ -74,7 +74,8 @@ export const MUIAutoFormComponent = <
   const formContent = props.children ?? (
     <>
       <Typography variant="h5">{humanizedOperationName}</Typography>
-      {!props.onSuccess ? <MUISubmitResultBanner /> : <MUISubmitErrorBanner />}
+      {!props.onSuccess && <MUISubmitSuccessfulBanner />}
+      {!props.onFailure && <MUISubmitErrorBanner />}
       {fetchingMetadata && <MUIFormSkeleton />}
       {!metadataError && (
         <>

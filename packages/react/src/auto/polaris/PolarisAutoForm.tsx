@@ -9,7 +9,7 @@ import { useAutoForm } from "../AutoForm.js";
 import { AutoFormMetadataContext } from "../AutoFormContext.js";
 import { PolarisAutoInput } from "./inputs/PolarisAutoInput.js";
 import { PolarisAutoSubmit } from "./submit/PolarisAutoSubmit.js";
-import { PolarisSubmitErrorBanner, PolarisSubmitResultBanner } from "./submit/PolarisSubmitResultBanner.js";
+import { PolarisSubmitErrorBanner, PolarisSubmitSuccessfulBanner } from "./submit/PolarisSubmitResultBanner.js";
 
 export const PolarisFormSkeleton = () => (
   <>
@@ -94,7 +94,8 @@ const PolarisAutoFormComponent = <
       <Text variant="headingLg" as="h5">
         {humanizedOperationName}
       </Text>
-      {!props.onSuccess ? <PolarisSubmitResultBanner /> : <PolarisSubmitErrorBanner />}
+      {!props.onSuccess && <PolarisSubmitSuccessfulBanner />}
+      {!props.onFailure && <PolarisSubmitErrorBanner />}
       {!metadataError && (
         <>
           {fields.map(({ metadata }) => (

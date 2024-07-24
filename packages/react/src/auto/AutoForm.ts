@@ -6,7 +6,7 @@ import type { AnyActionWithId, RecordIdentifier, UseActionFormHookStateData } fr
 import type { GadgetObjectFieldConfig } from "../internal/gql/graphql.js";
 import type { ActionMetadata, FieldMetadata, GlobalActionMetadata } from "../metadata.js";
 import { FieldType, filterAutoFormFieldList, isActionMetadata, useActionMetadata } from "../metadata.js";
-import type { FieldValues } from "../useActionForm.js";
+import type { FieldErrors, FieldValues } from "../useActionForm.js";
 import { useActionForm } from "../useActionForm.js";
 import { get, type OptionsType } from "../utils.js";
 import { validationSchema } from "../validationSchema.js";
@@ -35,6 +35,8 @@ export type AutoFormProps<
   successContent?: ReactNode;
   /** Called when the form submission completes successfully on the backend */
   onSuccess?: (record: UseActionFormHookStateData<ActionFunc>) => void;
+  /** Called when the form submission errors before sending, during the API call, or if the API call returns an error. */
+  onFailure?: (error: Error | FieldErrors<ActionFunc["variablesType"]>) => void;
 } & (ActionFunc extends AnyActionWithId<GivenOptions>
   ? {
       /**
@@ -109,7 +111,7 @@ export const useAutoForm = <
 >(
   props: AutoFormProps<GivenOptions, SchemaT, ActionFunc, any, any>
 ) => {
-  const { action, record, onSuccess } = props;
+  const { action, record, onSuccess, onFailure } = props;
 
   if (action.isBulk) {
     throw new Error("Bulk actions are not supported in AutoForms");
@@ -167,6 +169,7 @@ export const useAutoForm = <
       return fieldsToSend;
     },
     onSuccess,
+    onError: onFailure,
   });
 
   // we don't have synchronous access to the default values always -- sometimes we need to load them from the metadata. if we do that, then we need to forcibly set them into the form state once they have been loaded

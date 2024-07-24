@@ -100,3 +100,27 @@ export const GlobalAction = {
     action: api.flipAll,
   },
 };
+
+export const onSuccessCallback = {
+  name: "onSuccess callback",
+  args: {
+    action: api.widget.create,
+    onSuccess: (record) => {
+      // eslint-disable-next-line no-undef
+      window.alert(`Record created: ${JSON.stringify(record, null, 2)}`);
+    },
+  },
+};
+
+export const onFailureCallback = {
+  name: "onFailure callback",
+  args: {
+    action: api.widget.alwaysThrowError,
+    onFailure: (error) => {
+      // eslint-disable-next-line no-undef
+      window.alert(`Error: ${error.message} (see console for details)`);
+      // eslint-disable-next-line no-undef
+      console.error(error);
+    },
+  },
+};
