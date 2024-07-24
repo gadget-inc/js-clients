@@ -34,7 +34,7 @@ Cypress.Commands.add("mountWithWrapper", (component, Wrapper, options = {}) => {
 });
 
 before(() => {
-  cy.window().then((win) => {
+  cy.window().then((win: any) => {
     win.shopify = {
       environment: {
         embedded: false,
