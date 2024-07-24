@@ -17,6 +17,8 @@ import { useTable } from "../../useTable.js";
 import type { TableRow } from "../../useTableUtils/types.js";
 import type { ColumnValueType, OptionsType } from "../../utils.js";
 import type { AutoTableProps } from "../AutoTable.js";
+import { useTableBulkActions } from "../hooks/useTableBulkActions.js";
+import { PolarisAutoBulkActionModal } from "./PolarisAutoBulkActionModal.js";
 import { PolarisAutoTableCellRenderer } from "./tableCells/PolarisAutoTableCellRenderer.js";
 
 const PolarisSkeletonTable = (props: { columns: number }) => {
@@ -47,15 +49,17 @@ export const PolarisAutoTable = <
 ) => {
   const { onClick } = props;
 
-  const [{ rows, columns, metadata, fetching, error, page, search }, refresh] = useTable<GivenOptions, SchemaT, FinderFunction, Options>(
-    props.model,
-    {
-      select: props.select,
-      columns: props.columns,
-      pageSize: props.pageSize,
-      live: props.live,
-    } as any
-  );
+  const [{ rows, columns, metadata, fetching, error, page, search, selection }, refresh] = useTable<
+    GivenOptions,
+    SchemaT,
+    FinderFunction,
+    Options
+  >(props.model, {
+    select: props.select,
+    columns: props.columns,
+    pageSize: props.pageSize,
+    live: props.live,
+  } as any);
 
   const onClickCallback = useCallback(
     (row: TableRow) => {
@@ -80,6 +84,8 @@ export const PolarisAutoTable = <
     return { headings, sortable };
   }, [columns]);
 
+  const { bulkActionOptions, selectedModelActionDetails } = useTableBulkActions({ model: props.model });
+
   if (!error && ((fetching && !rows) || !columns)) {
     return <PolarisSkeletonTable columns={3} />;
   }
@@ -91,8 +97,8 @@ export const PolarisAutoTable = <
 
   return (
     <BlockStack>
+      <PolarisAutoBulkActionModal model={props.model} modelActionDetails={selectedModelActionDetails} ids={selection.recordIds} />
       <IndexFilters
-        filteringAccessibilityTooltip="Search and filter (F)"
         mode={mode}
         setMode={setMode}
         appliedFilters={[]}
@@ -101,14 +107,12 @@ export const PolarisAutoTable = <
         tabs={[]}
         selected={1}
         loading={fetching}
-        cancelAction={{
-          onAction: () => search.clear(),
-        }}
+        cancelAction={{ onAction: () => search.clear() }}
+        disabled={!!error}
         // Search
         queryValue={search.value}
         onQueryChange={search.set}
         onQueryClear={search.clear}
-        disabled={!!error}
       />
 
       {error && (
@@ -118,7 +122,11 @@ export const PolarisAutoTable = <
       )}
 
       <IndexTable
+        selectedItemsCount={selection.recordIds.length}
+        {...disablePaginatedSelectAllButton}
+        onSelectionChange={selection.onSelectionChange}
         {...polarisTableProps}
+        bulkActions={bulkActionOptions.map((option) => ({ content: option.humanizedName, onAction: option.selectModelAction }))}
         resourceName={resourceName}
         emptyState={<EmptySearchResult title={`No ${resourceName.plural} yet`} description={""} withIllustration />}
         loading={fetching}
@@ -143,6 +151,7 @@ export const PolarisAutoTable = <
               id={row.id as string}
               position={index}
               onClick={onClick ? onClickCallback(row) : undefined}
+              selected={selection.recordIds.includes(row.id as string)}
             >
               {columns.map((column) => (
                 <IndexTable.Cell key={column.apiIdentifier}>
@@ -160,4 +169,8 @@ export const PolarisAutoTable = <
       </IndexTable>
     </BlockStack>
   );
+};
+
+const disablePaginatedSelectAllButton = {
+  paginatedSelectAllActionText: "", // Empty string to hide the select all button. We only allow selection on the current page
 };

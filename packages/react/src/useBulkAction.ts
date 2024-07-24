@@ -102,18 +102,23 @@ export const useBulkAction = <
 const processResult = (result: UseMutationState<any, any>, action: BulkActionFunction<any, any, any, any, any>) => {
   let error = ErrorWrapper.forMaybeCombinedError(result.error);
   let data = undefined;
+
   if (result.data && !error) {
-    // TODO deal with deletion better than checking selectionType
-    if (action.defaultSelection != null) {
-      const dataPath = namespaceDataPath([action.operationName], action.namespace);
-      const mutationData = get(result.data, dataPath);
-      if (mutationData) {
+    const dataPath = namespaceDataPath([action.operationName], action.namespace);
+    const mutationData = get(result.data, dataPath);
+
+    if (mutationData) {
+      const isDeleteAction = (action as any).isDeleter;
+      if (!isDeleteAction) {
         const errors = mutationData["errors"];
         if (errors && errors[0]) {
           error = ErrorWrapper.forErrorsResponse(errors, (error as any)?.response);
         } else {
           data = action.hasReturnType ? mutationData.results : hydrateRecordArray(result, mutationData[action.modelSelectionField]);
         }
+      } else {
+        // Delete action
+        data = mutationData;
       }
     }
   }

@@ -5,6 +5,7 @@ import type { GadgetFieldType } from "../internal/gql/graphql.js";
 import type { ModelMetadata } from "../metadata.js";
 import type { SearchResult } from "../useDebouncedSearch.js";
 import type { PaginationResult } from "../useList.js";
+import { RecordSelection } from "../useSelectedRecordsController.js";
 import type { ColumnValueType, CustomCellColumn, ErrorWrapper, RelatedFieldColumn } from "../utils.js";
 
 type BaseTableColumn = {
@@ -57,6 +58,7 @@ export type TableResult<Data> = [
     fetching: boolean;
     error?: ErrorWrapper;
     search: SearchResult;
+    selection: RecordSelection;
   },
   refresh: (opts?: Partial<OperationContext>) => void
 ];
