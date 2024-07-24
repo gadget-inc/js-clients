@@ -44,12 +44,20 @@ const gadgetToPolarisDirection = (direction?: SortOrder) => {
   return undefined;
 };
 
-const polarisToGadgetDirection = (direction: "ascending" | "descending"): SortOrder => {
-  return direction === "ascending" ? "Ascending" : "Descending";
-};
-
 const getColumnIndex = (columns: TableColumn[], apiIdentifier: string | undefined) => {
   return columns.findIndex((column) => column.apiIdentifier === apiIdentifier);
+};
+
+const getNextDirection = (sortDirection: SortOrder | undefined) => {
+  switch (sortDirection) {
+    case "Descending":
+      return "Ascending";
+    case "Ascending":
+      return undefined;
+    case undefined:
+    default:
+      return "Descending";
+  }
 };
 
 /**
@@ -84,8 +92,6 @@ export const PolarisAutoTable = <
   );
   const [getDefaultColumnIndexFromProps, setGetDefaultColumnIndexFromProps] = useState(true);
   const [sortDirection, setSortDirection] = useState<SortOrder | undefined>(props.sort ? Object.values(props.sort)[0] : undefined);
-  const [disableSort, setDisableSort] = useState<boolean>(false);
-  const defaultSortDirection = props.sort ? Object.values(props.sort)[0] : "Descending";
 
   useEffect(() => {
     if (!sortColumnIndex && getDefaultColumnIndexFromProps) {
@@ -94,18 +100,13 @@ export const PolarisAutoTable = <
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [columns]);
 
-  const handleColumnSort = (headingIndex: number, direction: SortOrder) => {
+  const handleColumnSort = (headingIndex: number) => {
     if (columns) {
-      const isSortDisabled = disableSort && sortColumnIndex === headingIndex;
-      setSortColumnIndex(isSortDisabled ? undefined : headingIndex);
-      setSortDirection(isSortDisabled ? undefined : direction);
       setGetDefaultColumnIndexFromProps(false);
-      sort(columns[headingIndex].apiIdentifier, isSortDisabled ? undefined : direction);
-      if (direction !== defaultSortDirection) {
-        setDisableSort(true);
-      } else {
-        setDisableSort(false);
-      }
+      const nextDirection = headingIndex !== sortColumnIndex ? "Descending" : getNextDirection(sortDirection);
+      setSortDirection(nextDirection);
+      setSortColumnIndex(nextDirection ? headingIndex : undefined);
+      sort(columns[headingIndex].apiIdentifier, nextDirection);
     }
   };
 
@@ -190,10 +191,9 @@ export const PolarisAutoTable = <
           onNext: page.goToNextPage,
           onPrevious: page.goToPreviousPage,
         }}
-        defaultSortDirection={defaultSortDirection}
         sortDirection={gadgetToPolarisDirection(sortDirection)}
         sortColumnIndex={sortColumnIndex}
-        onSort={(headingIndex, direction) => handleColumnSort(headingIndex, polarisToGadgetDirection(direction))}
+        onSort={(headingIndex) => handleColumnSort(headingIndex)}
       >
         {rows &&
           columns &&
