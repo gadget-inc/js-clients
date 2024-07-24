@@ -1,4 +1,4 @@
-import { AppProvider, Card } from "@shopify/polaris";
+import { AppProvider, Box, BlockStack, LegacyCard } from "@shopify/polaris";
 import translations from "@shopify/polaris/locales/en.json";
 import React from "react";
 import { Provider } from "../../src/GadgetProvider.tsx";
@@ -16,11 +16,15 @@ export default {
       return (
         <Provider api={api}>
           <AppProvider i18n={translations}>
-            <Card>
-              <div style={{ maxHeight: "70vh", overflow: "auto" }}>
-                <Story />
-              </div>
-            </Card>
+            <div style={{ width: '100%'}}>
+              <Box paddingBlockEnd="400">
+                <BlockStack gap="200">
+                  <LegacyCard>
+                    <Story />
+                  </LegacyCard>
+                </BlockStack>
+              </Box>
+            </div>
           </AppProvider>
         </Provider>
       );
@@ -29,7 +33,7 @@ export default {
 
   parameters: {
     // Optional parameter to center the component in the Canvas. More info: https://storybook.js.org/docs/configure/story-layout
-    layout: "centered",
+    layout: "padded",
   },
   // This component will have an automatically generated Autodocs entry: https://storybook.js.org/docs/writing-docs/autodocs
   tags: ["autodocs"],
