@@ -69,7 +69,6 @@ export const useFormFields = (
   return useMemo(() => {
     if (!metadata) return [];
     const action = isActionMetadata(metadata) ? metadata.action : metadata;
-
     const isModelMetadata = metadata.__typename === "GadgetModel";
 
     const objectFields = isModelMetadata
@@ -97,25 +96,8 @@ export const useFormFields = (
       )
     );
 
-    const allFormFields = [...includedObjectFields, ...includedRootLevelFields];
-    validateFormFieldApiIdentifierUniqueness(
-      action.apiIdentifier,
-      allFormFields.map(({ metadata }) => metadata.apiIdentifier)
-    );
-
-    return allFormFields;
+    return [...includedObjectFields, ...includedRootLevelFields];
   }, [metadata, options]);
-};
-
-const validateFormFieldApiIdentifierUniqueness = (actionApiIdentifier: string, inputApiIdentifiers: string[]) => {
-  const seen = new Set<string>();
-
-  for (const apiId of inputApiIdentifiers) {
-    if (seen.has(apiId)) {
-      throw new Error(`Input "${apiId}" is not unique for action "${actionApiIdentifier}"`);
-    }
-    seen.add(apiId);
-  }
 };
 
 /**

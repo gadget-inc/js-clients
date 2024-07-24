@@ -33,8 +33,8 @@ importers:
         specifier: ^1.9.0
         version: 1.9.0
       '@gadget-client/js-clients-test':
-        specifier: 1.498.0-development.1694
-        version: 1.498.0-development.1694
+        specifier: 1.498.0-development.1683
+        version: 1.498.0-development.1683
       '@gadget-client/kitchen-sink':
         specifier: 1.5.0-development.200
         version: 1.5.0-development.200
@@ -3719,8 +3719,8 @@ packages:
       '@gadgetinc/api-client-core': link:packages/api-client-core
     dev: true
 
-  /@gadget-client/js-clients-test@1.498.0-development.1694:
-    resolution: {integrity: sha1-MpptDSRppuGJwpehKLfN9oPkqp8=, tarball: https://registry.gadget.dev/npm/_/tarball/57882/114412/8672}
+  /@gadget-client/js-clients-test@1.498.0-development.1683:
+    resolution: {integrity: sha1-frz+5P6w2nBj/fbSruCv+p47TS8=, tarball: https://registry.gadget.dev/npm/_/tarball/57882/114412/8656}
     dependencies:
       '@gadgetinc/api-client-core': link:packages/api-client-core
     dev: true

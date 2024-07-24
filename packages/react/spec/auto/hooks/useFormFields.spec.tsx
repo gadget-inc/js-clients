@@ -71,14 +71,6 @@ describe("useFormFields hook", () => {
       })
     ).toThrowErrorMatchingInlineSnapshot(`"Cannot include and exclude the same field"`);
   });
-
-  test("Has an error when the metadata has duplicate input field api identifiers", () => {
-    expect(() => {
-      renderHook(() => useFormFields(autoFormMetadataWithDuplicateInputFields as any, {}), {
-        wrapper: MockForm({ submit: jest.fn<any>(), metadata }),
-      });
-    }).toThrowErrorMatchingInlineSnapshot(`"Input "str" is not unique for action "updateWithCustomParams""`);
-  });
 });
 
 const metadata: ActionMetadata = {
@@ -199,72 +191,3 @@ const metadata: ActionMetadata = {
   },
   __typename: "GadgetModel",
 } as ActionMetadata;
-
-const autoFormMetadataWithDuplicateInputFields = {
-  name: "Auto table test",
-  apiIdentifier: "autoTableTest",
-  defaultRecord: { str: "awd", __typename: "AutoTableTest" },
-  action: {
-    name: "Update with custom params",
-    apiIdentifier: "updateWithCustomParams",
-    operatesWithRecordIdentity: true,
-    isDeleteAction: false,
-    inputFields: [
-      {
-        name: "Auto table test",
-        apiIdentifier: "autoTableTest",
-        fieldType: "Object",
-        requiredArgumentForInput: false,
-        configuration: {
-          __typename: "GadgetObjectFieldConfig",
-          fieldType: "Object",
-          validations: [],
-          name: null,
-          fields: [
-            {
-              name: "Str",
-              apiIdentifier: "str",
-              fieldType: "String",
-              requiredArgumentForInput: false,
-              sortable: true,
-              filterable: true,
-              __typename: "GadgetModelField",
-              configuration: {
-                __typename: "GadgetGenericFieldConfig",
-                fieldType: "String",
-                validations: [],
-              },
-            },
-          ],
-        },
-        __typename: "GadgetObjectField",
-      },
-      {
-        name: "Str",
-        apiIdentifier: "str",
-        fieldType: "String",
-        requiredArgumentForInput: false,
-        configuration: {
-          __typename: "GadgetGenericFieldConfig",
-          fieldType: "String",
-          validations: [],
-        },
-        __typename: "GadgetObjectField",
-      },
-      {
-        name: "Id",
-        apiIdentifier: "id",
-        fieldType: "ID",
-        requiredArgumentForInput: true,
-        configuration: {
-          __typename: "GadgetGenericFieldConfig",
-          fieldType: "ID",
-          validations: [],
-        },
-        __typename: "GadgetObjectField",
-      },
-    ],
-    __typename: "GadgetAction",
-  },
-  __typename: "GadgetModel",
-};
