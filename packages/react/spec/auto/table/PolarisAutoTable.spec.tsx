@@ -170,7 +170,7 @@ describe("PolarisAutoTable", () => {
     });
   });
 
-  it("should render the columns using the correct cell renderer in related model fields", async () => {
+  it("should render the columns using the correct cell renderer in related model fields", () => {
     setMockUseTableResponse({
       newRows: [
         {
@@ -267,5 +267,61 @@ describe("PolarisAutoTable", () => {
     const tagsInBelongsToCell = firstRowCells[3].getElementsByClassName("Polaris-Tag");
     expect(tagsInBelongsToCell.length).toBe(4);
     expect(Array.from(tagsInBelongsToCell).map((t) => t.textContent)).toEqual(["belongs", "to", "enum", "value"]);
+  });
+
+  it("should render the custom columns", () => {
+    const customCellRenderer = (record: any) => (
+      <div data-testid="custom-cell-div">
+        this is a custom cell: {record.id}-{record.name}
+      </div>
+    );
+    setMockUseTableResponse({
+      newRows: [
+        {
+          id: "1",
+          name: "hello",
+          customCell: customCellRenderer({ name: "hello" }),
+        },
+      ],
+      newColumns: [
+        {
+          apiIdentifier: "name",
+          fieldType: "String",
+          name: "Name",
+          sortable: true,
+        },
+        {
+          name: "Custom cell",
+          apiIdentifier: "Custom cell",
+          isCustomCell: true,
+          sortable: false,
+          getValue: customCellRenderer,
+        },
+      ],
+    });
+
+    const { container } = render(
+      <PolarisAutoTable
+        model={api.widget}
+        columns={[
+          "name",
+          {
+            name: "Custom cell",
+            render: customCellRenderer,
+          },
+        ]}
+      />,
+      {
+        wrapper: PolarisMockedProviders,
+      }
+    );
+
+    const table = container.querySelector(`.${POLARIS_TABLE_CLASSES.CONTAINER}`)!;
+    const rows = table.getElementsByClassName(POLARIS_TABLE_CLASSES.ROW);
+
+    const firstRow = rows[0];
+    const firstRowCells = firstRow.getElementsByClassName(POLARIS_TABLE_CLASSES.CELL);
+    expect(firstRowCells[1].textContent).toBe("hello");
+    expect(firstRowCells[2].textContent).toBe("this is a custom cell: 1-hello");
   });
 });

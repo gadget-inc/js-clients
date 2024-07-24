@@ -8,12 +8,14 @@ import type {
   EnqueueBackgroundActionOptions,
   FieldSelection,
   GadgetError,
+  GadgetRecord,
   InvalidFieldError,
   InvalidRecordError,
 } from "@gadgetinc/api-client-core";
 import { gadgetErrorFor, getNonNullableError, namespaceDataPath } from "@gadgetinc/api-client-core";
 import type { CombinedError, RequestPolicy } from "@urql/core";
-import { RefCallback, RefObject, useMemo } from "react";
+import type { ReactNode, RefCallback, RefObject } from "react";
+import { useMemo } from "react";
 import type { AnyVariables, Operation, OperationContext, UseQueryArgs, UseQueryState } from "urql";
 
 /**
@@ -548,6 +550,15 @@ export type RelatedFieldColumn = {
 
 export const isRelatedFieldColumn = (value: any): value is RelatedFieldColumn => {
   return typeof value === "object" && value !== null && "field" in value && "relatedField" in value;
+};
+
+export type CustomCellColumn = {
+  name: string;
+  render: (record: GadgetRecord<any>) => ReactNode;
+};
+
+export const isCustomCellColumn = (value: any): value is CustomCellColumn => {
+  return typeof value === "object" && value !== null && "name" in value && "render" in value;
 };
 
 /**

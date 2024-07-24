@@ -1,4 +1,5 @@
 import { renderHook } from "@testing-library/react";
+import React, { isValidElement } from "react";
 import { useTable } from "../../../src/useTable.js";
 import { testApi as api } from "../../apis.js";
 import { mockUrqlClient } from "../../testWrappers.js";
@@ -51,12 +52,15 @@ describe("useTable hook", () => {
       {
         apiIdentifier: "id",
         fieldType: "ID",
+        isCustomCell: false,
         name: "Id",
+        relatedField: undefined,
         sortable: false,
       },
       {
         apiIdentifier: "name",
         fieldType: "String",
+        isCustomCell: false,
         name: "Name",
         relatedField: undefined,
         sortable: true,
@@ -64,6 +68,7 @@ describe("useTable hook", () => {
       {
         apiIdentifier: "inventoryCount",
         fieldType: "Number",
+        isCustomCell: false,
         name: "Inventory count",
         relatedField: undefined,
         sortable: true,
@@ -71,6 +76,7 @@ describe("useTable hook", () => {
       {
         apiIdentifier: "anything",
         fieldType: "JSON",
+        isCustomCell: false,
         name: "Anything",
         relatedField: undefined,
         sortable: true,
@@ -78,6 +84,7 @@ describe("useTable hook", () => {
       {
         apiIdentifier: "description",
         fieldType: "RichText",
+        isCustomCell: false,
         name: "Description",
         relatedField: undefined,
         sortable: true,
@@ -85,6 +92,7 @@ describe("useTable hook", () => {
       {
         apiIdentifier: "category",
         fieldType: "Enum",
+        isCustomCell: false,
         name: "Category",
         relatedField: undefined,
         sortable: true,
@@ -92,6 +100,7 @@ describe("useTable hook", () => {
       {
         apiIdentifier: "startsAt",
         fieldType: "DateTime",
+        isCustomCell: false,
         name: "Starts at",
         relatedField: undefined,
         sortable: true,
@@ -99,6 +108,7 @@ describe("useTable hook", () => {
       {
         apiIdentifier: "isChecked",
         fieldType: "Boolean",
+        isCustomCell: false,
         name: "Is checked",
         relatedField: undefined,
         sortable: true,
@@ -106,6 +116,7 @@ describe("useTable hook", () => {
       {
         apiIdentifier: "metafields",
         fieldType: "JSON",
+        isCustomCell: false,
         name: "Metafields",
         relatedField: undefined,
         sortable: true,
@@ -113,6 +124,7 @@ describe("useTable hook", () => {
       {
         apiIdentifier: "roles",
         fieldType: "RoleAssignments",
+        isCustomCell: false,
         name: "Roles",
         relatedField: undefined,
         sortable: false,
@@ -120,6 +132,7 @@ describe("useTable hook", () => {
       {
         apiIdentifier: "birthday",
         fieldType: "DateTime",
+        isCustomCell: false,
         name: "Birthday",
         relatedField: undefined,
         sortable: true,
@@ -127,6 +140,7 @@ describe("useTable hook", () => {
       {
         apiIdentifier: "color",
         fieldType: "Color",
+        isCustomCell: false,
         name: "Color",
         relatedField: undefined,
         sortable: true,
@@ -134,6 +148,7 @@ describe("useTable hook", () => {
       {
         apiIdentifier: "secretKey",
         fieldType: "EncryptedString",
+        isCustomCell: false,
         name: "Secret key",
         relatedField: undefined,
         sortable: false,
@@ -141,6 +156,7 @@ describe("useTable hook", () => {
       {
         apiIdentifier: "mustBeLongString",
         fieldType: "String",
+        isCustomCell: false,
         name: "Must be long string",
         relatedField: undefined,
         sortable: true,
@@ -323,6 +339,48 @@ describe("useTable hook", () => {
       }
 
       expect(error!.message).toBe("Field 'notExist' not found in metadata");
+    });
+
+    it("should include custom cell columns if specified", async () => {
+      const result = getUseTableResult({
+        columns: [
+          "name",
+          {
+            name: "Custom column",
+            render: (record) => <div>hello {record.name}</div>,
+          },
+        ],
+      });
+      loadMockWidgetModelMetadataForRelationship();
+      loadMockWidgetDataForRelationship();
+
+      expect(
+        result.current[0].columns?.map((column) => {
+          const { getValue: _getValue, ...rest } = column;
+          return rest;
+        })
+      ).toMatchInlineSnapshot(`
+        [
+          {
+            "apiIdentifier": "name",
+            "fieldType": "String",
+            "isCustomCell": false,
+            "name": "Name",
+            "relatedField": undefined,
+            "sortable": true,
+          },
+          {
+            "apiIdentifier": "Custom column",
+            "isCustomCell": true,
+            "name": "Custom column",
+            "sortable": false,
+          },
+        ]
+      `);
+
+      const customColumnGetValueResult = result.current[0].columns![1].getValue({ name: "foo" });
+      // Expect the getValue result to be a valid React element
+      expect(isValidElement(customColumnGetValueResult)).toBe(true);
     });
   });
 });
