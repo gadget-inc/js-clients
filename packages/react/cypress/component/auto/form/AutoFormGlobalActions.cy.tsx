@@ -33,6 +33,10 @@ describeForEachAutoAdapter("AutoForm - Global actions", ({ name, adapter: { Auto
     cy.wait("@globalActionCall");
 
     cy.contains("Flip all succeeded.");
+
+    // Inputs are cleared after submission on global actions
+    cy.get(`input[name="title"]`).should("have.value", "");
+    cy.get(`input[name="inventoryCount"]`).should("have.value", "");
   });
 
   it("builds forms for global actions and submits, showing any errors and allowing resubmission", () => {

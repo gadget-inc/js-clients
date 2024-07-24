@@ -41,6 +41,10 @@ describeForEachAutoAdapter("AutoForm", ({ name, adapter: { AutoForm }, wrapper }
 
     submit("Widget");
     ensureFieldInputLabelsExist();
+
+    // Ensure that the form is cleared after submitting the create action
+    cy.get(`input[name="widget.name"]`).should("have.value", "");
+    cy.get(`input[name="widget.inventoryCount"]`).should("have.value", "");
   });
 
   it("onSuccess callback should return a record result after the form submission", () => {
@@ -176,6 +180,10 @@ describeForEachAutoAdapter("AutoForm", ({ name, adapter: { AutoForm }, wrapper }
     cy.get(`[id="1_Section Foo"]`);
 
     submit("Widget");
+
+    // Ensure that the form values remain after submitting the update action
+    cy.get(`input[name="widget.name"]`).should("have.value", "updated test record");
+    cy.get(`input[name="widget.inventoryCount"]`).should("have.value", "1234");
   });
 
   it("can render a form to create namespaced model", () => {
