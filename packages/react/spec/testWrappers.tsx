@@ -22,7 +22,7 @@ export const MockClientWrapper =
 
     return (
       <Provider api={api} navigate={propOverrides?.navigate} auth={propOverrides?.auth}>
-        <Suspense fallback={<div>Loading...</div>}>{props.children}</Suspense>
+        <Suspense fallback={<div id="MockClientWrapperSuspenseFallback">Loading...</div>}>{props.children}</Suspense>
       </Provider>
     );
   };
@@ -52,7 +52,7 @@ export const LiveClientWrapper =
   (props: { children: ReactNode }) => {
     return (
       <Provider api={api} navigate={propOverrides?.navigate} auth={propOverrides?.auth}>
-        <Suspense fallback={<div>Loading...</div>}>{props.children}</Suspense>
+        <Suspense fallback={<div id="LiveClientWrapperSuspenseFallback">Loading...</div>}>{props.children}</Suspense>
       </Provider>
     );
   };
@@ -62,7 +62,7 @@ export const MockGraphQLWSClientWrapper = (api: AnyClient, auth?: Partial<Gadget
 
   return (
     <Provider api={api} auth={auth}>
-      <Suspense fallback={<div>Loading...</div>}>{props.children}</Suspense>
+      <Suspense fallback={<div id="MockGraphQLWSClientWrapperSuspenseFallback">Loading...</div>}>{props.children}</Suspense>
     </Provider>
   );
 };

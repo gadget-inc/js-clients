@@ -89,7 +89,7 @@ export const useTable = <
     return selectionMap;
   }, [metadata, options?.columns, options?.select]);
 
-  const [{ data, fetching: dataFetching, error: dataError, page, search }, refresh] = useList(manager, {
+  const [{ data, fetching: dataFetching, error: dataError, page, search, selection }, refresh] = useList(manager, {
     ...options,
     select: fieldSelectionMap ? { ...fieldSelectionMap, id: true } : undefined,
     pause: !metadata, // Don't fetch data until metadata is loaded
@@ -121,6 +121,7 @@ export const useTable = <
       fetching,
       error,
       search,
+      selection,
     },
     refresh,
   ];

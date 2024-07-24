@@ -4,6 +4,7 @@ import { useCallback, useState } from "react";
 import type { SearchResult } from "./useDebouncedSearch.js";
 import { useDebouncedSearch } from "./useDebouncedSearch.js";
 import { useFindMany } from "./useFindMany.js";
+import { RecordSelection, useSelectedRecordsController } from "./useSelectedRecordsController.js";
 import type { ErrorWrapper, OptionsType, ReadOperationOptions } from "./utils.js";
 import { omit } from "./utils.js";
 
@@ -26,16 +27,15 @@ export interface ListOptions {
 }
 
 export type ListResult<Data> = [
-  (
-    | {
-        data: Data;
-        page: PaginationResult;
-        search: SearchResult;
-        fetching: boolean;
-        error?: ErrorWrapper;
-      }
-    | { data: undefined; page: PaginationResult; search: SearchResult; fetching: boolean; error?: ErrorWrapper }
-  ),
+  {
+    data?: Data;
+    page: PaginationResult;
+    search: SearchResult;
+    selection: RecordSelection;
+    fetching: boolean;
+    error?: ErrorWrapper;
+  },
+
   (opts?: Partial<OperationContext>) => void
 ];
 
@@ -55,9 +55,15 @@ export const useList = <
   const [cursor, setCursor] = useState<string | undefined>();
   const [direction, setDirection] = useState<"forward" | "backward">("forward");
   const clearCursor = useCallback(() => setCursor(undefined), []);
-  const { ...search } = useDebouncedSearch({ clearCursor });
 
-  const pageSize = options?.pageSize ?? 50;
+  const { ...search } = useDebouncedSearch({
+    onDebouncedSearchValueChange() {
+      clearCursor();
+      selection.clearAll(); // Referenced before definition because selectedRecordsController needs to reference the records
+    },
+  });
+
+  const pageSize = options?.pageSize ?? DefaultPageSize;
 
   let variables;
   if (direction == "forward") {
@@ -79,6 +85,8 @@ export const useList = <
     ...(variables as any),
     ...(search.debouncedValue && { search: search.debouncedValue }),
   });
+
+  const selection = useSelectedRecordsController({ currentPageIds: data?.map((record) => (record as any).id) ?? [] });
 
   const goToNextPage = useCallback(() => {
     if (data && data.hasNextPage) {
@@ -109,5 +117,17 @@ export const useList = <
     variables,
   };
 
-  return [{ data: records, fetching, page, search, error }, refresh];
+  return [
+    {
+      data: records,
+      fetching,
+      page,
+      search,
+      error,
+      selection,
+    },
+    refresh,
+  ];
 };
+
+export const DefaultPageSize = 50;
