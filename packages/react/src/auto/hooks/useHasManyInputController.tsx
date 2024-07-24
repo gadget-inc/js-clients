@@ -1,5 +1,5 @@
-import { useCallback, useMemo } from "react";
-import { useFieldArray } from "react-hook-form";
+import { useCallback, useEffect, useMemo } from "react";
+import { useFieldArray, useFormContext } from "react-hook-form";
 import { GadgetHasManyConfig } from "../../internal/gql/graphql.js";
 import { uniq } from "../../utils.js";
 import { AutoRelationshipInputProps } from "../interfaces/AutoRelationshipInputProps.js";
@@ -8,6 +8,7 @@ import { useRelatedModelOptions } from "./useRelatedModelOptions.js";
 
 export const useHasManyInputController = (props: AutoRelationshipInputProps) => {
   const { field } = props;
+  const { getValues } = useFormContext();
   const fieldMetadata = useFieldMetadata(field);
   const { metadata, path } = fieldMetadata;
   const inverseFieldApiIdentifier = useMemo(() => {
@@ -15,6 +16,7 @@ export const useHasManyInputController = (props: AutoRelationshipInputProps) => 
   }, [metadata.configuration]);
 
   const { fields, remove, append } = useFieldArray({ name: path });
+  const clearAllFields = useCallback(async () => remove(), []);
 
   const relatedModelOptions = useRelatedModelOptions(props);
   const { selected, relatedModel } = relatedModelOptions;
@@ -24,6 +26,13 @@ export const useHasManyInputController = (props: AutoRelationshipInputProps) => 
 
   const retrievedSelectedRecordIds = selected.records?.map((record: { id: string }) => record.id) ?? [];
   const unlinkedRecordIds = fields.filter((field: any) => field.__unlinkedInverseField).map((field: any) => field.__id);
+  const formContextValue = getValues(path);
+
+  useEffect(() => {
+    if (!formContextValue) {
+      void clearAllFields(); // This is called asynchronously to avoid an infinite loop
+    }
+  }, [!formContextValue || formContextValue.length === 0]);
 
   const selectedRecordIds = uniq(
     [

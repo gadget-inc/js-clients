@@ -122,6 +122,8 @@ export const useAutoForm = <
   // filter down the fields to render only what we want to render for this form
   const fields = useFormFields(metadata, props);
   const operatesWithRecordId = !!(metadata && isActionMetadata(metadata) && metadata.action.operatesWithRecordIdentity);
+  const isDeleteAction = metadata && isActionMetadata(metadata) && metadata.action.isDeleteAction;
+  const isGlobalAction = action.type === "globalAction";
   const modelApiIdentifier = action.type == "action" ? action.modelApiIdentifier : undefined;
   const defaultValues: Record<string, unknown> = useMemo(
     () =>
@@ -139,6 +141,7 @@ export const useAutoForm = <
   const {
     submit,
     error: formError,
+    reset,
     formState: { isSubmitSuccessful, isLoading, isReady, isSubmitting, touchedFields },
     originalFormMethods,
   } = useActionForm(action, {
@@ -168,8 +171,15 @@ export const useAutoForm = <
       }
       return fieldsToSend;
     },
-    onSuccess,
     onError: onFailure,
+    onSuccess:
+      onSuccess ??
+      function clearInputValues() {
+        const isCreateAction = !operatesWithRecordId && !isDeleteAction && !isGlobalAction;
+        if (isCreateAction || isGlobalAction) {
+          reset();
+        }
+      },
   });
 
   // we don't have synchronous access to the default values always -- sometimes we need to load them from the metadata. if we do that, then we need to forcibly set them into the form state once they have been loaded

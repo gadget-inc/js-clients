@@ -29,6 +29,13 @@ export const useJSONInputController = (
     }
   }, [jsonValue, isParseError]);
 
+  // Setting the value to an empty string when the value gets undefined through resets
+  useEffect(() => {
+    if (stringInputController.value === undefined) {
+      setString("");
+    }
+  }, [stringInputController.value]);
+
   const onChange = useCallback(
     (newString: string) => {
       setString(newString);
