@@ -64,7 +64,7 @@ describe("AutoTable - Sort", () => {
     ).as("getWidgetsWithAscendingSort");
   };
 
-  it("sorts ID in descending order", () => {
+  it("cycles through sorting directions when the column is selected", () => {
     mockModelMetadata();
     mockGetWidgets();
     cy.mountWithWrapper(<PolarisAutoTable model={api.widget} />, PolarisWrapper);
@@ -101,6 +101,20 @@ describe("AutoTable - Sort", () => {
     cy.get("@getWidgets").its("request.body.variables").should("deep.equal", {
       first: 50,
     });
+  });
+
+  it("displays the default sorting direction when it is set explicitly", () => {
+    mockModelMetadata();
+    mockGetWidgetsWithAscendingSort();
+    cy.mountWithWrapper(<PolarisAutoTable model={api.widget} sort={{ id: "Ascending" }} />, PolarisWrapper);
+    cy.get("@getWidgetsWithAscendingSort")
+      .its("request.body.variables")
+      .should("deep.equal", {
+        first: 50,
+        sort: {
+          id: "Ascending",
+        },
+      });
   });
 });
 
