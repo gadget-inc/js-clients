@@ -3,7 +3,7 @@ import { PolarisAutoTable } from "../../../../src/auto/polaris/PolarisAutoTable.
 import { api } from "../../../support/api.js";
 import { PolarisWrapper } from "../../../support/auto.js";
 
-describe("AutoTable - Filter", () => {
+describe("AutoTable - Sort", () => {
   beforeEach(() => {
     cy.viewport("macbook-13");
   });
@@ -64,7 +64,7 @@ describe("AutoTable - Filter", () => {
     ).as("getWidgetsWithAscendingSort");
   };
 
-  it("filters ID in descending order", () => {
+  it("sorts ID in descending order", () => {
     mockModelMetadata();
     mockGetWidgets();
     cy.mountWithWrapper(<PolarisAutoTable model={api.widget} />, PolarisWrapper);
