@@ -1,4 +1,4 @@
-import type { FindManyFunction } from "@gadgetinc/api-client-core";
+import type { FindManyFunction, SortOrder } from "@gadgetinc/api-client-core";
 import type { IndexTableProps } from "@shopify/polaris";
 import {
   Banner,
@@ -12,9 +12,9 @@ import {
   useSetIndexFiltersMode,
 } from "@shopify/polaris";
 import pluralize from "pluralize";
-import React, { useCallback, useMemo } from "react";
+import React, { useCallback, useMemo, useState } from "react";
 import { useTable } from "../../useTable.js";
-import type { TableRow } from "../../useTableUtils/types.js";
+import type { TableColumn, TableRow } from "../../useTableUtils/types.js";
 import type { ColumnValueType, OptionsType } from "../../utils.js";
 import type { AutoTableProps } from "../AutoTable.js";
 import { useTableBulkActions } from "../hooks/useTableBulkActions.js";
@@ -35,6 +35,30 @@ const PolarisSkeletonTable = (props: { columns: number }) => {
     />
   );
 };
+const gadgetToPolarisDirection = (direction?: SortOrder) => {
+  if (direction === "Ascending") {
+    return "ascending";
+  } else if (direction === "Descending") {
+    return "descending";
+  }
+  return undefined;
+};
+
+const getColumnIndex = (columns: TableColumn[], apiIdentifier: string | undefined) => {
+  return columns.findIndex((column) => column.apiIdentifier === apiIdentifier);
+};
+
+const getNextDirection = (sortDirection: SortOrder | undefined) => {
+  switch (sortDirection) {
+    case "Descending":
+      return "Ascending";
+    case "Ascending":
+      return undefined;
+    case undefined:
+    default:
+      return "Descending";
+  }
+};
 
 /**
  * Renders a table of records from the backend automatically for a given model using Polaris
@@ -49,7 +73,7 @@ export const PolarisAutoTable = <
 ) => {
   const { onClick } = props;
 
-  const [{ rows, columns, metadata, fetching, error, page, search, selection }, refresh] = useTable<
+  const [{ rows, columns, metadata, fetching, error, page, search, sort, selection }, refresh] = useTable<
     GivenOptions,
     SchemaT,
     FinderFunction,
@@ -59,7 +83,24 @@ export const PolarisAutoTable = <
     columns: props.columns,
     pageSize: props.pageSize,
     live: props.live,
+    sort: props.sort,
+    filter: props.filter,
   } as any);
+
+  const [sortColumnApiIdentifier, setSortColumnApiIdentifier] = useState<string | undefined>(
+    props.sort ? Object.keys(props.sort)[0] : undefined
+  );
+  const [sortDirection, setSortDirection] = useState<SortOrder | undefined>(props.sort ? Object.values(props.sort)[0] : undefined);
+
+  const handleColumnSort = (headingIndex: number) => {
+    if (columns) {
+      const columnApiIdentifier = columns[headingIndex].apiIdentifier;
+      const nextDirection = columnApiIdentifier !== sortColumnApiIdentifier ? "Descending" : getNextDirection(sortDirection);
+      setSortDirection(nextDirection);
+      setSortColumnApiIdentifier(nextDirection ? columnApiIdentifier : undefined);
+      sort(columnApiIdentifier, nextDirection);
+    }
+  };
 
   const onClickCallback = useCallback(
     (row: TableRow) => {
@@ -142,6 +183,9 @@ export const PolarisAutoTable = <
           onNext: page.goToNextPage,
           onPrevious: page.goToPreviousPage,
         }}
+        sortDirection={gadgetToPolarisDirection(sortDirection)}
+        sortColumnIndex={columns ? getColumnIndex(columns, sortColumnApiIdentifier) : undefined}
+        onSort={(headingIndex) => handleColumnSort(headingIndex)}
       >
         {rows &&
           columns &&

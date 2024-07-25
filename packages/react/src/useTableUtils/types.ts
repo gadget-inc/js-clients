@@ -1,4 +1,4 @@
-import type { GadgetRecord } from "@gadgetinc/api-client-core";
+import type { GadgetRecord, SortOrder } from "@gadgetinc/api-client-core";
 import type { OperationContext } from "@urql/core";
 import type { ReactNode } from "react";
 import type { GadgetFieldType } from "../internal/gql/graphql.js";
@@ -59,6 +59,7 @@ export type TableResult<Data> = [
     error?: ErrorWrapper;
     search: SearchResult;
     selection: RecordSelection;
+    sort: (colName: string, direction?: SortOrder) => void;
   },
   refresh: (opts?: Partial<OperationContext>) => void
 ];

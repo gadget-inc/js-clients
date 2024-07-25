@@ -1,4 +1,4 @@
-import type { FieldSelection } from "@gadgetinc/api-client-core";
+import type { FieldSelection, SortOrder } from "@gadgetinc/api-client-core";
 import {
   type DefaultSelection,
   type FindManyFunction,
@@ -6,7 +6,7 @@ import {
   type LimitToKnownKeys,
   type Select,
 } from "@gadgetinc/api-client-core";
-import { useMemo } from "react";
+import { useCallback, useMemo, useState } from "react";
 import { filterAutoTableFieldList, useModelMetadata } from "./metadata.js";
 import { useList } from "./useList.js";
 import { getTableColumns, getTableData } from "./useTableUtils/helpers.js";
@@ -43,6 +43,15 @@ export const useTable = <
     fetching: fetchingMetadata,
     error: metadataError,
   } = useModelMetadata(manager.findMany.modelApiIdentifier, namespaceAsArray);
+  const [sort, setSort] = useState<OptionsType["sort"] | undefined>(options?.sort);
+
+  const sortColumn = useCallback((colName: string, direction?: SortOrder) => {
+    if (direction) {
+      setSort({ [colName]: direction });
+    } else {
+      setSort(undefined);
+    }
+  }, []);
 
   const fieldSelectionMap = useMemo(() => {
     if (options?.select) return options.select;
@@ -91,6 +100,8 @@ export const useTable = <
 
   const [{ data, fetching: dataFetching, error: dataError, page, search, selection }, refresh] = useList(manager, {
     ...options,
+    sort: sort,
+    filter: options?.filter,
     select: fieldSelectionMap ? { ...fieldSelectionMap, id: true } : undefined,
     pause: !metadata, // Don't fetch data until metadata is loaded
   } as any);
@@ -121,6 +132,7 @@ export const useTable = <
       fetching,
       error,
       search,
+      sort: sortColumn,
       selection,
     },
     refresh,
