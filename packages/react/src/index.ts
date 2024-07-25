@@ -21,5 +21,7 @@ export { useGadgetMutation as useMutation } from "./useGadgetMutation.js";
 export { useGadgetQuery as useQuery } from "./useGadgetQuery.js";
 export * from "./useGet.js";
 export * from "./useGlobalAction.js";
+export * from "./useList.js";
 export * from "./useMaybeFindFirst.js";
 export * from "./useMaybeFindOne.js";
+export * from "./useTable.js";
