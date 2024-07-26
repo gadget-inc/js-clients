@@ -13,6 +13,8 @@ const POLARIS_TABLE_CLASSES = {
   CELL: "Polaris-IndexTable__TableCell",
 } as const;
 
+const POLARIS_TAG_CLASS = "Polaris-Tag";
+
 let rows: any[] = [];
 let columns: any[] = [];
 let error: Error | undefined;
@@ -267,12 +269,12 @@ describe("PolarisAutoTable", () => {
     expect(firstRowCells[1].textContent).toBe("has one name value");
 
     // "hasMany" column
-    const tagsInHasManyCell = firstRowCells[2].getElementsByClassName("Polaris-Tag");
+    const tagsInHasManyCell = firstRowCells[2].getElementsByClassName(POLARIS_TAG_CLASS);
     expect(tagsInHasManyCell.length).toBe(2);
     expect(Array.from(tagsInHasManyCell).map((t) => t.textContent)).toEqual(["1", "2"]);
 
     // "belongsTo" column
-    const tagsInBelongsToCell = firstRowCells[3].getElementsByClassName("Polaris-Tag");
+    const tagsInBelongsToCell = firstRowCells[3].getElementsByClassName(POLARIS_TAG_CLASS);
     expect(tagsInBelongsToCell.length).toBe(4);
     expect(Array.from(tagsInBelongsToCell).map((t) => t.textContent)).toEqual(["belongs", "to", "enum", "value"]);
   });
@@ -331,5 +333,71 @@ describe("PolarisAutoTable", () => {
     const firstRowCells = firstRow.getElementsByClassName(POLARIS_TABLE_CLASSES.CELL);
     expect(firstRowCells[1].textContent).toBe("hello");
     expect(firstRowCells[2].textContent).toBe("this is a custom cell: 1-hello");
+  });
+
+  describe("show more indicator in tag cell renderer", () => {
+    it("should appear in the cell when there are more than 5 tags", () => {
+      setMockUseTableResponse({
+        newRows: [
+          {
+            id: "1",
+            tags: ["1", "2", "3", "4", "5", "6"],
+          },
+        ],
+        newColumns: [
+          {
+            apiIdentifier: "tags",
+            fieldType: "Enum",
+            name: "Tags",
+            sortable: true,
+          },
+        ],
+      });
+
+      const { container } = render(<PolarisAutoTable model={api.widget} />, {
+        wrapper: PolarisMockedProviders,
+      });
+
+      const table = container.querySelector(`.${POLARIS_TABLE_CLASSES.CONTAINER}`)!;
+      const rows = table.getElementsByClassName(POLARIS_TABLE_CLASSES.ROW);
+
+      const firstRow = rows[0];
+      const firstRowCells = firstRow.getElementsByClassName(POLARIS_TABLE_CLASSES.CELL);
+
+      expect(firstRowCells[1].getElementsByClassName(POLARIS_TAG_CLASS).length).toBe(5);
+      expect(firstRowCells[1].innerHTML).toContain("...");
+    });
+
+    it("should not appear in the cell when there are less than 5 tags", () => {
+      setMockUseTableResponse({
+        newRows: [
+          {
+            id: "1",
+            tags: ["1", "2", "3", "4"],
+          },
+        ],
+        newColumns: [
+          {
+            apiIdentifier: "tags",
+            fieldType: "Enum",
+            name: "Tags",
+            sortable: true,
+          },
+        ],
+      });
+
+      const { container } = render(<PolarisAutoTable model={api.widget} />, {
+        wrapper: PolarisMockedProviders,
+      });
+
+      const table = container.querySelector(`.${POLARIS_TABLE_CLASSES.CONTAINER}`)!;
+      const rows = table.getElementsByClassName(POLARIS_TABLE_CLASSES.ROW);
+
+      const firstRow = rows[0];
+      const firstRowCells = firstRow.getElementsByClassName(POLARIS_TABLE_CLASSES.CELL);
+
+      expect(firstRowCells[1].getElementsByClassName(POLARIS_TAG_CLASS).length).toBe(4);
+      expect(firstRowCells[1].innerHTML).not.toContain("...");
+    });
   });
 });
