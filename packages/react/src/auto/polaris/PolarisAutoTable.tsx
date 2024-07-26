@@ -83,15 +83,15 @@ export const PolarisAutoTable = <
     columns: props.columns,
     pageSize: props.pageSize,
     live: props.live,
-    sort: props.defaultSort,
+    sort: props.initialSort,
     filter: props.filter,
   } as any);
 
   const [sortColumnApiIdentifier, setSortColumnApiIdentifier] = useState<string | undefined>(
-    props.defaultSort ? Object.keys(props.defaultSort)[0] : undefined
+    props.initialSort ? Object.keys(props.initialSort)[0] : undefined
   );
   const [sortDirection, setSortDirection] = useState<SortOrder | undefined>(
-    props.defaultSort ? Object.values(props.defaultSort)[0] : undefined
+    props.initialSort ? Object.values(props.initialSort)[0] : undefined
   );
 
   const handleColumnSort = (headingIndex: number) => {

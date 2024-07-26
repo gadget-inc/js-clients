@@ -46,6 +46,7 @@ export default {
 export const Primary = {
   args: {
     model: api.autoTableTest,
+    initialSort: { id: "Descending" },
   },
 };
 

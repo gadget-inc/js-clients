@@ -106,7 +106,7 @@ describe("AutoTable - Sort", () => {
   it("displays the default sorting direction when it is set explicitly", () => {
     mockModelMetadata();
     mockGetWidgetsWithAscendingSort();
-    cy.mountWithWrapper(<PolarisAutoTable model={api.widget} defaultSort={{ id: "Ascending" }} />, PolarisWrapper);
+    cy.mountWithWrapper(<PolarisAutoTable model={api.widget} initialSort={{ id: "Ascending" }} />, PolarisWrapper);
     cy.get("@getWidgetsWithAscendingSort")
       .its("request.body.variables")
       .should("deep.equal", {
