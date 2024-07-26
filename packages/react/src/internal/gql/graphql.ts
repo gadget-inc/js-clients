@@ -78,6 +78,34 @@ export type AddInventoryWidgetResult = {
   widget?: Maybe<Widget>;
 };
 
+export type AlwaysThrowErrorWidgetInput = {
+  anything?: InputMaybe<Scalars["JSON"]["input"]>;
+  birthday?: InputMaybe<Scalars["DateOrDateTime"]["input"]>;
+  category?: InputMaybe<Array<Scalars["WidgetCategoryEnum"]["input"]>>;
+  color?: InputMaybe<Scalars["String"]["input"]>;
+  description?: InputMaybe<RichTextInput>;
+  embedding?: InputMaybe<Array<Scalars["Float"]["input"]>>;
+  gizmos?: InputMaybe<Array<InputMaybe<GizmoHasManyInput>>>;
+  inventoryCount?: InputMaybe<Scalars["Float"]["input"]>;
+  isChecked?: InputMaybe<Scalars["Boolean"]["input"]>;
+  metafields?: InputMaybe<Scalars["JSON"]["input"]>;
+  mustBeLongString?: InputMaybe<Scalars["String"]["input"]>;
+  name?: InputMaybe<Scalars["String"]["input"]>;
+  /** A string list of Gadget platform Role keys to assign to this record */
+  roles?: InputMaybe<Array<Scalars["String"]["input"]>>;
+  secretKey?: InputMaybe<Scalars["String"]["input"]>;
+  section?: InputMaybe<SectionBelongsToInput>;
+  startsAt?: InputMaybe<Scalars["DateTime"]["input"]>;
+};
+
+export type AlwaysThrowErrorWidgetResult = {
+  __typename?: "AlwaysThrowErrorWidgetResult";
+  actionRun?: Maybe<Scalars["String"]["output"]>;
+  errors?: Maybe<Array<ExecutionError>>;
+  success: Scalars["Boolean"]["output"];
+  widget?: Maybe<Widget>;
+};
+
 /** Input object for specifying the context of a mutation trigger */
 export type AppGraphQlTriggerMutationContext = {
   /** The ID of the session that triggered this mutation. Will be the session that's loaded in the mutation context. */
@@ -89,6 +117,7 @@ export type AutoTableTest = {
   /** Get all the fields for this record. Useful for not having to list out all the fields you want to retrieve, but slower. */
   _all: Scalars["JSONObject"]["output"];
   bool?: Maybe<Scalars["Boolean"]["output"]>;
+  computed?: Maybe<Scalars["JSON"]["output"]>;
   /** The time at which this record was first created. Set once upon record creation and never changed. Managed by Gadget. */
   createdAt: Scalars["DateTime"]["output"];
   dt?: Maybe<Scalars["DateTime"]["output"]>;
@@ -137,8 +166,10 @@ export type AutoTableTestBelongsToInput = {
   _link?: InputMaybe<Scalars["GadgetID"]["input"]>;
   create?: InputMaybe<NestedAutoTableTestCreateInput>;
   customAction?: InputMaybe<NestedAutoTableTestCustomActionInput>;
+  customActionWithParams?: InputMaybe<NestedAutoTableTestCustomActionWithParamsInput>;
   delete?: InputMaybe<NestedAutoTableTestDeleteInput>;
   update?: InputMaybe<NestedAutoTableTestUpdateInput>;
+  updateWithCustomParams?: InputMaybe<NestedAutoTableTestUpdateWithCustomParamsInput>;
 };
 
 /** A connection to a list of AutoTableTest items. */
@@ -328,6 +359,7 @@ export type BackgroundActionQueue = {
 
 export type BackgroundActionResult =
   | AddInventoryWidgetResult
+  | AlwaysThrowErrorWidgetResult
   | CreateAutoTableTestRelatedModelResult
   | CreateAutoTableTestResult
   | CreateGameCityResult
@@ -341,6 +373,7 @@ export type BackgroundActionResult =
   | CreateTestDataResult
   | CreateWidgetResult
   | CustomActionAutoTableTestResult
+  | CustomActionWithParamsAutoTableTestResult
   | DeleteAutoTableTestRelatedModelResult
   | DeleteAutoTableTestResult
   | DeleteGameCityResult
@@ -368,7 +401,8 @@ export type BackgroundActionResult =
   | UpdatePartResult
   | UpdateSectionResult
   | UpdateUserResult
-  | UpdateWidgetResult;
+  | UpdateWidgetResult
+  | UpdateWithCustomParamsAutoTableTestResult;
 
 export type BackgroundActionRetryPolicy = {
   /** The exponential backoff factor to use for calculating the retry delay for successive retries. Set this higher to grow the delay faster with each retry attempt. Default is 2. */
@@ -397,6 +431,10 @@ export type BackgroundGameMutations = {
   bulkUpdatePlayers: BulkEnqueueBackgroundActionResult;
   bulkUpdateRounds: BulkEnqueueBackgroundActionResult;
   bulkUpdateStadia: BulkEnqueueBackgroundActionResult;
+  bulkUpsertCities: BulkEnqueueBackgroundActionResult;
+  bulkUpsertPlayers: BulkEnqueueBackgroundActionResult;
+  bulkUpsertRounds: BulkEnqueueBackgroundActionResult;
+  bulkUpsertStadia: BulkEnqueueBackgroundActionResult;
   createCity: EnqueueBackgroundActionResult;
   createPlayer: EnqueueBackgroundActionResult;
   createRound: EnqueueBackgroundActionResult;
@@ -409,6 +447,10 @@ export type BackgroundGameMutations = {
   updatePlayer: EnqueueBackgroundActionResult;
   updateRound: EnqueueBackgroundActionResult;
   updateStadium: EnqueueBackgroundActionResult;
+  upsertCity: EnqueueBackgroundActionResult;
+  upsertPlayer: EnqueueBackgroundActionResult;
+  upsertRound: EnqueueBackgroundActionResult;
+  upsertStadium: EnqueueBackgroundActionResult;
 };
 
 export type BackgroundGameMutationsBulkCreateCitiesArgs = {
@@ -469,6 +511,26 @@ export type BackgroundGameMutationsBulkUpdateRoundsArgs = {
 export type BackgroundGameMutationsBulkUpdateStadiaArgs = {
   backgroundOptions?: InputMaybe<EnqueueBackgroundActionOptions>;
   inputs: Array<BulkUpdateGameStadiaInput>;
+};
+
+export type BackgroundGameMutationsBulkUpsertCitiesArgs = {
+  backgroundOptions?: InputMaybe<EnqueueBackgroundActionOptions>;
+  inputs: Array<BulkUpsertGameCitiesInput>;
+};
+
+export type BackgroundGameMutationsBulkUpsertPlayersArgs = {
+  backgroundOptions?: InputMaybe<EnqueueBackgroundActionOptions>;
+  inputs: Array<BulkUpsertGamePlayersInput>;
+};
+
+export type BackgroundGameMutationsBulkUpsertRoundsArgs = {
+  backgroundOptions?: InputMaybe<EnqueueBackgroundActionOptions>;
+  inputs: Array<BulkUpsertGameRoundsInput>;
+};
+
+export type BackgroundGameMutationsBulkUpsertStadiaArgs = {
+  backgroundOptions?: InputMaybe<EnqueueBackgroundActionOptions>;
+  inputs: Array<BulkUpsertGameStadiaInput>;
 };
 
 export type BackgroundGameMutationsCreateCityArgs = {
@@ -535,10 +597,36 @@ export type BackgroundGameMutationsUpdateStadiumArgs = {
   stadium?: InputMaybe<UpdateGameStadiumInput>;
 };
 
+export type BackgroundGameMutationsUpsertCityArgs = {
+  backgroundOptions?: InputMaybe<EnqueueBackgroundActionOptions>;
+  city?: InputMaybe<UpsertGameCityInput>;
+  on?: InputMaybe<Array<Scalars["String"]["input"]>>;
+};
+
+export type BackgroundGameMutationsUpsertPlayerArgs = {
+  backgroundOptions?: InputMaybe<EnqueueBackgroundActionOptions>;
+  on?: InputMaybe<Array<Scalars["String"]["input"]>>;
+  player?: InputMaybe<UpsertGamePlayerInput>;
+};
+
+export type BackgroundGameMutationsUpsertRoundArgs = {
+  backgroundOptions?: InputMaybe<EnqueueBackgroundActionOptions>;
+  on?: InputMaybe<Array<Scalars["String"]["input"]>>;
+  round?: InputMaybe<UpsertGameRoundInput>;
+};
+
+export type BackgroundGameMutationsUpsertStadiumArgs = {
+  backgroundOptions?: InputMaybe<EnqueueBackgroundActionOptions>;
+  on?: InputMaybe<Array<Scalars["String"]["input"]>>;
+  stadium?: InputMaybe<UpsertGameStadiumInput>;
+};
+
 export type BackgroundMutations = {
   __typename?: "BackgroundMutations";
   addInventoryWidget: EnqueueBackgroundActionResult;
+  alwaysThrowErrorWidget: EnqueueBackgroundActionResult;
   bulkAddInventoryWidgets: BulkEnqueueBackgroundActionResult;
+  bulkAlwaysThrowErrorWidgets: BulkEnqueueBackgroundActionResult;
   bulkCreateAutoTableTestRelatedModels: BulkEnqueueBackgroundActionResult;
   bulkCreateAutoTableTests: BulkEnqueueBackgroundActionResult;
   bulkCreateGizmos: BulkEnqueueBackgroundActionResult;
@@ -547,6 +635,7 @@ export type BackgroundMutations = {
   bulkCreateSections: BulkEnqueueBackgroundActionResult;
   bulkCreateWidgets: BulkEnqueueBackgroundActionResult;
   bulkCustomActionAutoTableTests: BulkEnqueueBackgroundActionResult;
+  bulkCustomActionWithParamsAutoTableTests: BulkEnqueueBackgroundActionResult;
   bulkDeleteAutoTableTestRelatedModels: BulkEnqueueBackgroundActionResult;
   bulkDeleteAutoTableTests: BulkEnqueueBackgroundActionResult;
   bulkDeleteGizmos: BulkEnqueueBackgroundActionResult;
@@ -566,6 +655,15 @@ export type BackgroundMutations = {
   bulkUpdateSections: BulkEnqueueBackgroundActionResult;
   bulkUpdateUsers: BulkEnqueueBackgroundActionResult;
   bulkUpdateWidgets: BulkEnqueueBackgroundActionResult;
+  bulkUpdateWithCustomParamsAutoTableTests: BulkEnqueueBackgroundActionResult;
+  bulkUpsertAutoTableTestRelatedModels: BulkEnqueueBackgroundActionResult;
+  bulkUpsertAutoTableTests: BulkEnqueueBackgroundActionResult;
+  bulkUpsertGizmos: BulkEnqueueBackgroundActionResult;
+  bulkUpsertModelAs: BulkEnqueueBackgroundActionResult;
+  bulkUpsertParts: BulkEnqueueBackgroundActionResult;
+  bulkUpsertSections: BulkEnqueueBackgroundActionResult;
+  bulkUpsertUsers: BulkEnqueueBackgroundActionResult;
+  bulkUpsertWidgets: BulkEnqueueBackgroundActionResult;
   createAutoTableTest: EnqueueBackgroundActionResult;
   createAutoTableTestRelatedModel: EnqueueBackgroundActionResult;
   createGizmo: EnqueueBackgroundActionResult;
@@ -575,6 +673,7 @@ export type BackgroundMutations = {
   createTestData: EnqueueBackgroundActionResult;
   createWidget: EnqueueBackgroundActionResult;
   customActionAutoTableTest: EnqueueBackgroundActionResult;
+  customActionWithParamsAutoTableTest: EnqueueBackgroundActionResult;
   deleteAutoTableTest: EnqueueBackgroundActionResult;
   deleteAutoTableTestRelatedModel: EnqueueBackgroundActionResult;
   deleteGizmo: EnqueueBackgroundActionResult;
@@ -596,6 +695,15 @@ export type BackgroundMutations = {
   updateSection: EnqueueBackgroundActionResult;
   updateUser: EnqueueBackgroundActionResult;
   updateWidget: EnqueueBackgroundActionResult;
+  updateWithCustomParamsAutoTableTest: EnqueueBackgroundActionResult;
+  upsertAutoTableTest: EnqueueBackgroundActionResult;
+  upsertAutoTableTestRelatedModel: EnqueueBackgroundActionResult;
+  upsertGizmo: EnqueueBackgroundActionResult;
+  upsertModelA: EnqueueBackgroundActionResult;
+  upsertPart: EnqueueBackgroundActionResult;
+  upsertSection: EnqueueBackgroundActionResult;
+  upsertUser: EnqueueBackgroundActionResult;
+  upsertWidget: EnqueueBackgroundActionResult;
 };
 
 export type BackgroundMutationsAddInventoryWidgetArgs = {
@@ -604,9 +712,19 @@ export type BackgroundMutationsAddInventoryWidgetArgs = {
   id: Scalars["GadgetID"]["input"];
 };
 
+export type BackgroundMutationsAlwaysThrowErrorWidgetArgs = {
+  backgroundOptions?: InputMaybe<EnqueueBackgroundActionOptions>;
+  widget?: InputMaybe<AlwaysThrowErrorWidgetInput>;
+};
+
 export type BackgroundMutationsBulkAddInventoryWidgetsArgs = {
   backgroundOptions?: InputMaybe<EnqueueBackgroundActionOptions>;
   inputs: Array<BulkAddInventoryWidgetsInput>;
+};
+
+export type BackgroundMutationsBulkAlwaysThrowErrorWidgetsArgs = {
+  backgroundOptions?: InputMaybe<EnqueueBackgroundActionOptions>;
+  inputs: Array<BulkAlwaysThrowErrorWidgetsInput>;
 };
 
 export type BackgroundMutationsBulkCreateAutoTableTestRelatedModelsArgs = {
@@ -647,6 +765,11 @@ export type BackgroundMutationsBulkCreateWidgetsArgs = {
 export type BackgroundMutationsBulkCustomActionAutoTableTestsArgs = {
   backgroundOptions?: InputMaybe<EnqueueBackgroundActionOptions>;
   ids: Array<Scalars["GadgetID"]["input"]>;
+};
+
+export type BackgroundMutationsBulkCustomActionWithParamsAutoTableTestsArgs = {
+  backgroundOptions?: InputMaybe<EnqueueBackgroundActionOptions>;
+  inputs: Array<BulkCustomActionWithParamsAutoTableTestsInput>;
 };
 
 export type BackgroundMutationsBulkDeleteAutoTableTestRelatedModelsArgs = {
@@ -744,6 +867,51 @@ export type BackgroundMutationsBulkUpdateWidgetsArgs = {
   inputs: Array<BulkUpdateWidgetsInput>;
 };
 
+export type BackgroundMutationsBulkUpdateWithCustomParamsAutoTableTestsArgs = {
+  backgroundOptions?: InputMaybe<EnqueueBackgroundActionOptions>;
+  inputs: Array<BulkUpdateWithCustomParamsAutoTableTestsInput>;
+};
+
+export type BackgroundMutationsBulkUpsertAutoTableTestRelatedModelsArgs = {
+  backgroundOptions?: InputMaybe<EnqueueBackgroundActionOptions>;
+  inputs: Array<BulkUpsertAutoTableTestRelatedModelsInput>;
+};
+
+export type BackgroundMutationsBulkUpsertAutoTableTestsArgs = {
+  backgroundOptions?: InputMaybe<EnqueueBackgroundActionOptions>;
+  inputs: Array<BulkUpsertAutoTableTestsInput>;
+};
+
+export type BackgroundMutationsBulkUpsertGizmosArgs = {
+  backgroundOptions?: InputMaybe<EnqueueBackgroundActionOptions>;
+  inputs: Array<BulkUpsertGizmosInput>;
+};
+
+export type BackgroundMutationsBulkUpsertModelAsArgs = {
+  backgroundOptions?: InputMaybe<EnqueueBackgroundActionOptions>;
+  inputs: Array<BulkUpsertModelAsInput>;
+};
+
+export type BackgroundMutationsBulkUpsertPartsArgs = {
+  backgroundOptions?: InputMaybe<EnqueueBackgroundActionOptions>;
+  inputs: Array<BulkUpsertPartsInput>;
+};
+
+export type BackgroundMutationsBulkUpsertSectionsArgs = {
+  backgroundOptions?: InputMaybe<EnqueueBackgroundActionOptions>;
+  inputs: Array<BulkUpsertSectionsInput>;
+};
+
+export type BackgroundMutationsBulkUpsertUsersArgs = {
+  backgroundOptions?: InputMaybe<EnqueueBackgroundActionOptions>;
+  inputs: Array<BulkUpsertUsersInput>;
+};
+
+export type BackgroundMutationsBulkUpsertWidgetsArgs = {
+  backgroundOptions?: InputMaybe<EnqueueBackgroundActionOptions>;
+  inputs: Array<BulkUpsertWidgetsInput>;
+};
+
 export type BackgroundMutationsCreateAutoTableTestArgs = {
   autoTableTest?: InputMaybe<CreateAutoTableTestInput>;
   backgroundOptions?: InputMaybe<EnqueueBackgroundActionOptions>;
@@ -785,6 +953,13 @@ export type BackgroundMutationsCreateWidgetArgs = {
 export type BackgroundMutationsCustomActionAutoTableTestArgs = {
   backgroundOptions?: InputMaybe<EnqueueBackgroundActionOptions>;
   id: Scalars["GadgetID"]["input"];
+};
+
+export type BackgroundMutationsCustomActionWithParamsAutoTableTestArgs = {
+  backgroundOptions?: InputMaybe<EnqueueBackgroundActionOptions>;
+  id: Scalars["GadgetID"]["input"];
+  numberParam1?: InputMaybe<Scalars["Float"]["input"]>;
+  stringParam1?: InputMaybe<Scalars["String"]["input"]>;
 };
 
 export type BackgroundMutationsDeleteAutoTableTestArgs = {
@@ -897,6 +1072,64 @@ export type BackgroundMutationsUpdateWidgetArgs = {
   widget?: InputMaybe<UpdateWidgetInput>;
 };
 
+export type BackgroundMutationsUpdateWithCustomParamsAutoTableTestArgs = {
+  autoTableTest?: InputMaybe<UpdateWithCustomParamsAutoTableTestInput>;
+  backgroundOptions?: InputMaybe<EnqueueBackgroundActionOptions>;
+  id: Scalars["GadgetID"]["input"];
+  num?: InputMaybe<Scalars["Float"]["input"]>;
+  numberParam1?: InputMaybe<Scalars["Float"]["input"]>;
+  str?: InputMaybe<Scalars["String"]["input"]>;
+  stringParam1?: InputMaybe<Scalars["String"]["input"]>;
+};
+
+export type BackgroundMutationsUpsertAutoTableTestArgs = {
+  autoTableTest?: InputMaybe<UpsertAutoTableTestInput>;
+  backgroundOptions?: InputMaybe<EnqueueBackgroundActionOptions>;
+  on?: InputMaybe<Array<Scalars["String"]["input"]>>;
+};
+
+export type BackgroundMutationsUpsertAutoTableTestRelatedModelArgs = {
+  _autoTableTestRelatedModel?: InputMaybe<UpsertAutoTableTestRelatedModelInput>;
+  backgroundOptions?: InputMaybe<EnqueueBackgroundActionOptions>;
+  on?: InputMaybe<Array<Scalars["String"]["input"]>>;
+};
+
+export type BackgroundMutationsUpsertGizmoArgs = {
+  backgroundOptions?: InputMaybe<EnqueueBackgroundActionOptions>;
+  gizmo?: InputMaybe<UpsertGizmoInput>;
+  on?: InputMaybe<Array<Scalars["String"]["input"]>>;
+};
+
+export type BackgroundMutationsUpsertModelAArgs = {
+  backgroundOptions?: InputMaybe<EnqueueBackgroundActionOptions>;
+  modelA?: InputMaybe<UpsertModelAInput>;
+  on?: InputMaybe<Array<Scalars["String"]["input"]>>;
+};
+
+export type BackgroundMutationsUpsertPartArgs = {
+  backgroundOptions?: InputMaybe<EnqueueBackgroundActionOptions>;
+  on?: InputMaybe<Array<Scalars["String"]["input"]>>;
+  part?: InputMaybe<UpsertPartInput>;
+};
+
+export type BackgroundMutationsUpsertSectionArgs = {
+  backgroundOptions?: InputMaybe<EnqueueBackgroundActionOptions>;
+  on?: InputMaybe<Array<Scalars["String"]["input"]>>;
+  section?: InputMaybe<UpsertSectionInput>;
+};
+
+export type BackgroundMutationsUpsertUserArgs = {
+  backgroundOptions?: InputMaybe<EnqueueBackgroundActionOptions>;
+  on?: InputMaybe<Array<Scalars["String"]["input"]>>;
+  user?: InputMaybe<UpsertUserInput>;
+};
+
+export type BackgroundMutationsUpsertWidgetArgs = {
+  backgroundOptions?: InputMaybe<EnqueueBackgroundActionOptions>;
+  on?: InputMaybe<Array<Scalars["String"]["input"]>>;
+  widget?: InputMaybe<UpsertWidgetInput>;
+};
+
 export type BooleanFilter = {
   equals?: InputMaybe<Scalars["Boolean"]["input"]>;
   isSet?: InputMaybe<Scalars["Boolean"]["input"]>;
@@ -911,6 +1144,21 @@ export type BulkAddInventoryWidgetsInput = {
 /** The output when running the addInventory on the widget model in bulk. */
 export type BulkAddInventoryWidgetsResult = {
   __typename?: "BulkAddInventoryWidgetsResult";
+  /** Aggregated list of errors that any bulk action encountered while processing */
+  errors?: Maybe<Array<ExecutionError>>;
+  /** Boolean describing if all the bulk actions succeeded or not */
+  success: Scalars["Boolean"]["output"];
+  /** The list of all changed widget records by each sent bulk action. Returned in the same order as the input bulk action params. */
+  widgets?: Maybe<Array<Maybe<Widget>>>;
+};
+
+export type BulkAlwaysThrowErrorWidgetsInput = {
+  widget?: InputMaybe<AlwaysThrowErrorWidgetInput>;
+};
+
+/** The output when running the alwaysThrowError on the widget model in bulk. */
+export type BulkAlwaysThrowErrorWidgetsResult = {
+  __typename?: "BulkAlwaysThrowErrorWidgetsResult";
   /** Aggregated list of errors that any bulk action encountered while processing */
   errors?: Maybe<Array<ExecutionError>>;
   /** Boolean describing if all the bulk actions succeeded or not */
@@ -1083,6 +1331,23 @@ export type BulkCreateWidgetsResult = {
 /** The output when running the customAction on the autoTableTest model in bulk. */
 export type BulkCustomActionAutoTableTestsResult = {
   __typename?: "BulkCustomActionAutoTableTestsResult";
+  /** The list of all changed autoTableTest records by each sent bulk action. Returned in the same order as the input bulk action params. */
+  autoTableTests?: Maybe<Array<Maybe<AutoTableTest>>>;
+  /** Aggregated list of errors that any bulk action encountered while processing */
+  errors?: Maybe<Array<ExecutionError>>;
+  /** Boolean describing if all the bulk actions succeeded or not */
+  success: Scalars["Boolean"]["output"];
+};
+
+export type BulkCustomActionWithParamsAutoTableTestsInput = {
+  id: Scalars["GadgetID"]["input"];
+  numberParam1?: InputMaybe<Scalars["Float"]["input"]>;
+  stringParam1?: InputMaybe<Scalars["String"]["input"]>;
+};
+
+/** The output when running the customActionWithParams on the autoTableTest model in bulk. */
+export type BulkCustomActionWithParamsAutoTableTestsResult = {
+  __typename?: "BulkCustomActionWithParamsAutoTableTestsResult";
   /** The list of all changed autoTableTest records by each sent bulk action. Returned in the same order as the input bulk action params. */
   autoTableTests?: Maybe<Array<Maybe<AutoTableTest>>>;
   /** Aggregated list of errors that any bulk action encountered while processing */
@@ -1441,6 +1706,230 @@ export type BulkUpdateWidgetsResult = {
   widgets?: Maybe<Array<Maybe<Widget>>>;
 };
 
+export type BulkUpdateWithCustomParamsAutoTableTestsInput = {
+  autoTableTest?: InputMaybe<UpdateWithCustomParamsAutoTableTestInput>;
+  id: Scalars["GadgetID"]["input"];
+  num?: InputMaybe<Scalars["Float"]["input"]>;
+  numberParam1?: InputMaybe<Scalars["Float"]["input"]>;
+  str?: InputMaybe<Scalars["String"]["input"]>;
+  stringParam1?: InputMaybe<Scalars["String"]["input"]>;
+};
+
+/** The output when running the updateWithCustomParams on the autoTableTest model in bulk. */
+export type BulkUpdateWithCustomParamsAutoTableTestsResult = {
+  __typename?: "BulkUpdateWithCustomParamsAutoTableTestsResult";
+  /** The list of all changed autoTableTest records by each sent bulk action. Returned in the same order as the input bulk action params. */
+  autoTableTests?: Maybe<Array<Maybe<AutoTableTest>>>;
+  /** Aggregated list of errors that any bulk action encountered while processing */
+  errors?: Maybe<Array<ExecutionError>>;
+  /** Boolean describing if all the bulk actions succeeded or not */
+  success: Scalars["Boolean"]["output"];
+};
+
+export type BulkUpsertAutoTableTestRelatedModelsInput = {
+  _autoTableTestRelatedModel?: InputMaybe<UpsertAutoTableTestRelatedModelInput>;
+  /** An array of Strings */
+  on?: InputMaybe<Array<Scalars["String"]["input"]>>;
+};
+
+/** The result of a bulk upsert operation for the _autoTableTestRelatedModel */
+export type BulkUpsertAutoTableTestRelatedModelsResult = {
+  __typename?: "BulkUpsertAutoTableTestRelatedModelsResult";
+  /** The results of each upsert action in the bulk operation */
+  _autoTableTestRelatedModels?: Maybe<Array<Maybe<AutoTableTestRelatedModel>>>;
+  /** Aggregated list of errors that any bulk action encountered while processing */
+  errors?: Maybe<Array<ExecutionError>>;
+  /** Boolean describing if all the bulk actions succeeded or not */
+  success: Scalars["Boolean"]["output"];
+};
+
+export type BulkUpsertAutoTableTestsInput = {
+  autoTableTest?: InputMaybe<UpsertAutoTableTestInput>;
+  /** An array of Strings */
+  on?: InputMaybe<Array<Scalars["String"]["input"]>>;
+};
+
+/** The result of a bulk upsert operation for the autoTableTest */
+export type BulkUpsertAutoTableTestsResult = {
+  __typename?: "BulkUpsertAutoTableTestsResult";
+  /** The results of each upsert action in the bulk operation */
+  autoTableTests?: Maybe<Array<Maybe<AutoTableTest>>>;
+  /** Aggregated list of errors that any bulk action encountered while processing */
+  errors?: Maybe<Array<ExecutionError>>;
+  /** Boolean describing if all the bulk actions succeeded or not */
+  success: Scalars["Boolean"]["output"];
+};
+
+export type BulkUpsertGameCitiesInput = {
+  city?: InputMaybe<UpsertGameCityInput>;
+  /** An array of Strings */
+  on?: InputMaybe<Array<Scalars["String"]["input"]>>;
+};
+
+/** The result of a bulk upsert operation for the city */
+export type BulkUpsertGameCitiesResult = {
+  __typename?: "BulkUpsertGameCitiesResult";
+  /** The results of each upsert action in the bulk operation */
+  cities?: Maybe<Array<Maybe<GameCity>>>;
+  /** Aggregated list of errors that any bulk action encountered while processing */
+  errors?: Maybe<Array<ExecutionError>>;
+  /** Boolean describing if all the bulk actions succeeded or not */
+  success: Scalars["Boolean"]["output"];
+};
+
+export type BulkUpsertGamePlayersInput = {
+  /** An array of Strings */
+  on?: InputMaybe<Array<Scalars["String"]["input"]>>;
+  player?: InputMaybe<UpsertGamePlayerInput>;
+};
+
+/** The result of a bulk upsert operation for the player */
+export type BulkUpsertGamePlayersResult = {
+  __typename?: "BulkUpsertGamePlayersResult";
+  /** Aggregated list of errors that any bulk action encountered while processing */
+  errors?: Maybe<Array<ExecutionError>>;
+  /** The results of each upsert action in the bulk operation */
+  players?: Maybe<Array<Maybe<GamePlayer>>>;
+  /** Boolean describing if all the bulk actions succeeded or not */
+  success: Scalars["Boolean"]["output"];
+};
+
+export type BulkUpsertGameRoundsInput = {
+  /** An array of Strings */
+  on?: InputMaybe<Array<Scalars["String"]["input"]>>;
+  round?: InputMaybe<UpsertGameRoundInput>;
+};
+
+/** The result of a bulk upsert operation for the round */
+export type BulkUpsertGameRoundsResult = {
+  __typename?: "BulkUpsertGameRoundsResult";
+  /** Aggregated list of errors that any bulk action encountered while processing */
+  errors?: Maybe<Array<ExecutionError>>;
+  /** The results of each upsert action in the bulk operation */
+  rounds?: Maybe<Array<Maybe<GameRound>>>;
+  /** Boolean describing if all the bulk actions succeeded or not */
+  success: Scalars["Boolean"]["output"];
+};
+
+export type BulkUpsertGameStadiaInput = {
+  /** An array of Strings */
+  on?: InputMaybe<Array<Scalars["String"]["input"]>>;
+  stadium?: InputMaybe<UpsertGameStadiumInput>;
+};
+
+/** The result of a bulk upsert operation for the stadium */
+export type BulkUpsertGameStadiaResult = {
+  __typename?: "BulkUpsertGameStadiaResult";
+  /** Aggregated list of errors that any bulk action encountered while processing */
+  errors?: Maybe<Array<ExecutionError>>;
+  /** The results of each upsert action in the bulk operation */
+  stadia?: Maybe<Array<Maybe<GameStadium>>>;
+  /** Boolean describing if all the bulk actions succeeded or not */
+  success: Scalars["Boolean"]["output"];
+};
+
+export type BulkUpsertGizmosInput = {
+  gizmo?: InputMaybe<UpsertGizmoInput>;
+  /** An array of Strings */
+  on?: InputMaybe<Array<Scalars["String"]["input"]>>;
+};
+
+/** The result of a bulk upsert operation for the gizmo */
+export type BulkUpsertGizmosResult = {
+  __typename?: "BulkUpsertGizmosResult";
+  /** Aggregated list of errors that any bulk action encountered while processing */
+  errors?: Maybe<Array<ExecutionError>>;
+  /** The results of each upsert action in the bulk operation */
+  gizmos?: Maybe<Array<Maybe<Gizmo>>>;
+  /** Boolean describing if all the bulk actions succeeded or not */
+  success: Scalars["Boolean"]["output"];
+};
+
+export type BulkUpsertModelAsInput = {
+  modelA?: InputMaybe<UpsertModelAInput>;
+  /** An array of Strings */
+  on?: InputMaybe<Array<Scalars["String"]["input"]>>;
+};
+
+/** The result of a bulk upsert operation for the modelA */
+export type BulkUpsertModelAsResult = {
+  __typename?: "BulkUpsertModelAsResult";
+  /** Aggregated list of errors that any bulk action encountered while processing */
+  errors?: Maybe<Array<ExecutionError>>;
+  /** The results of each upsert action in the bulk operation */
+  modelAs?: Maybe<Array<Maybe<ModelA>>>;
+  /** Boolean describing if all the bulk actions succeeded or not */
+  success: Scalars["Boolean"]["output"];
+};
+
+export type BulkUpsertPartsInput = {
+  /** An array of Strings */
+  on?: InputMaybe<Array<Scalars["String"]["input"]>>;
+  part?: InputMaybe<UpsertPartInput>;
+};
+
+/** The result of a bulk upsert operation for the part */
+export type BulkUpsertPartsResult = {
+  __typename?: "BulkUpsertPartsResult";
+  /** Aggregated list of errors that any bulk action encountered while processing */
+  errors?: Maybe<Array<ExecutionError>>;
+  /** The results of each upsert action in the bulk operation */
+  parts?: Maybe<Array<Maybe<Part>>>;
+  /** Boolean describing if all the bulk actions succeeded or not */
+  success: Scalars["Boolean"]["output"];
+};
+
+export type BulkUpsertSectionsInput = {
+  /** An array of Strings */
+  on?: InputMaybe<Array<Scalars["String"]["input"]>>;
+  section?: InputMaybe<UpsertSectionInput>;
+};
+
+/** The result of a bulk upsert operation for the section */
+export type BulkUpsertSectionsResult = {
+  __typename?: "BulkUpsertSectionsResult";
+  /** Aggregated list of errors that any bulk action encountered while processing */
+  errors?: Maybe<Array<ExecutionError>>;
+  /** The results of each upsert action in the bulk operation */
+  sections?: Maybe<Array<Maybe<Section>>>;
+  /** Boolean describing if all the bulk actions succeeded or not */
+  success: Scalars["Boolean"]["output"];
+};
+
+export type BulkUpsertUsersInput = {
+  /** An array of Strings */
+  on?: InputMaybe<Array<Scalars["String"]["input"]>>;
+  user?: InputMaybe<UpsertUserInput>;
+};
+
+/** The result of a bulk upsert operation for the user */
+export type BulkUpsertUsersResult = {
+  __typename?: "BulkUpsertUsersResult";
+  /** Aggregated list of errors that any bulk action encountered while processing */
+  errors?: Maybe<Array<ExecutionError>>;
+  /** Boolean describing if all the bulk actions succeeded or not */
+  success: Scalars["Boolean"]["output"];
+  /** The results of each upsert action in the bulk operation */
+  users?: Maybe<Array<Maybe<User>>>;
+};
+
+export type BulkUpsertWidgetsInput = {
+  /** An array of Strings */
+  on?: InputMaybe<Array<Scalars["String"]["input"]>>;
+  widget?: InputMaybe<UpsertWidgetInput>;
+};
+
+/** The result of a bulk upsert operation for the widget */
+export type BulkUpsertWidgetsResult = {
+  __typename?: "BulkUpsertWidgetsResult";
+  /** Aggregated list of errors that any bulk action encountered while processing */
+  errors?: Maybe<Array<ExecutionError>>;
+  /** Boolean describing if all the bulk actions succeeded or not */
+  success: Scalars["Boolean"]["output"];
+  /** The results of each upsert action in the bulk operation */
+  widgets?: Maybe<Array<Maybe<Widget>>>;
+};
+
 /** Input object supporting setting or updating related model record on a relationship field */
 export type CityBelongsToInput = {
   /** Existing ID of another record, which you would like to associate this record with */
@@ -1583,7 +2072,7 @@ export type CreateAutoTableTestRelatedModelInput = {
   someNumber?: InputMaybe<Scalars["Float"]["input"]>;
 };
 
-export type CreateAutoTableTestRelatedModelResult = {
+export type CreateAutoTableTestRelatedModelResult = UpsertAutoTableTestRelatedModelResult & {
   __typename?: "CreateAutoTableTestRelatedModelResult";
   _autoTableTestRelatedModel?: Maybe<AutoTableTestRelatedModel>;
   actionRun?: Maybe<Scalars["String"]["output"]>;
@@ -1591,7 +2080,7 @@ export type CreateAutoTableTestRelatedModelResult = {
   success: Scalars["Boolean"]["output"];
 };
 
-export type CreateAutoTableTestResult = {
+export type CreateAutoTableTestResult = UpsertAutoTableTestResult & {
   __typename?: "CreateAutoTableTestResult";
   actionRun?: Maybe<Scalars["String"]["output"]>;
   autoTableTest?: Maybe<AutoTableTest>;
@@ -1604,7 +2093,7 @@ export type CreateGameCityInput = {
   stadium?: InputMaybe<StadiumHasOneInput>;
 };
 
-export type CreateGameCityResult = {
+export type CreateGameCityResult = UpsertGameCityResult & {
   __typename?: "CreateGameCityResult";
   actionRun?: Maybe<Scalars["String"]["output"]>;
   city?: Maybe<GameCity>;
@@ -1617,7 +2106,7 @@ export type CreateGamePlayerInput = {
   name?: InputMaybe<Scalars["String"]["input"]>;
 };
 
-export type CreateGamePlayerResult = {
+export type CreateGamePlayerResult = UpsertGamePlayerResult & {
   __typename?: "CreateGamePlayerResult";
   actionRun?: Maybe<Scalars["String"]["output"]>;
   errors?: Maybe<Array<ExecutionError>>;
@@ -1631,7 +2120,7 @@ export type CreateGameRoundInput = {
   stadium?: InputMaybe<StadiumBelongsToInput>;
 };
 
-export type CreateGameRoundResult = {
+export type CreateGameRoundResult = UpsertGameRoundResult & {
   __typename?: "CreateGameRoundResult";
   actionRun?: Maybe<Scalars["String"]["output"]>;
   errors?: Maybe<Array<ExecutionError>>;
@@ -1648,7 +2137,7 @@ export type CreateGameStadiumInput = {
   type?: InputMaybe<Scalars["StadiumTypeEnum"]["input"]>;
 };
 
-export type CreateGameStadiumResult = {
+export type CreateGameStadiumResult = UpsertGameStadiumResult & {
   __typename?: "CreateGameStadiumResult";
   actionRun?: Maybe<Scalars["String"]["output"]>;
   errors?: Maybe<Array<ExecutionError>>;
@@ -1662,7 +2151,7 @@ export type CreateGizmoInput = {
   widget?: InputMaybe<WidgetBelongsToInput>;
 };
 
-export type CreateGizmoResult = {
+export type CreateGizmoResult = UpsertGizmoResult & {
   __typename?: "CreateGizmoResult";
   actionRun?: Maybe<Scalars["String"]["output"]>;
   errors?: Maybe<Array<ExecutionError>>;
@@ -1670,7 +2159,7 @@ export type CreateGizmoResult = {
   success: Scalars["Boolean"]["output"];
 };
 
-export type CreateModelAResult = {
+export type CreateModelAResult = UpsertModelAResult & {
   __typename?: "CreateModelAResult";
   actionRun?: Maybe<Scalars["String"]["output"]>;
   errors?: Maybe<Array<ExecutionError>>;
@@ -1684,7 +2173,7 @@ export type CreatePartInput = {
   notes?: InputMaybe<Scalars["String"]["input"]>;
 };
 
-export type CreatePartResult = {
+export type CreatePartResult = UpsertPartResult & {
   __typename?: "CreatePartResult";
   actionRun?: Maybe<Scalars["String"]["output"]>;
   errors?: Maybe<Array<ExecutionError>>;
@@ -1697,7 +2186,7 @@ export type CreateSectionInput = {
   widgets?: InputMaybe<Array<InputMaybe<WidgetHasManyInput>>>;
 };
 
-export type CreateSectionResult = {
+export type CreateSectionResult = UpsertSectionResult & {
   __typename?: "CreateSectionResult";
   actionRun?: Maybe<Scalars["String"]["output"]>;
   errors?: Maybe<Array<ExecutionError>>;
@@ -1732,7 +2221,7 @@ export type CreateWidgetInput = {
   startsAt?: InputMaybe<Scalars["DateTime"]["input"]>;
 };
 
-export type CreateWidgetResult = {
+export type CreateWidgetResult = UpsertWidgetResult & {
   __typename?: "CreateWidgetResult";
   actionRun?: Maybe<Scalars["String"]["output"]>;
   errors?: Maybe<Array<ExecutionError>>;
@@ -1742,6 +2231,14 @@ export type CreateWidgetResult = {
 
 export type CustomActionAutoTableTestResult = {
   __typename?: "CustomActionAutoTableTestResult";
+  actionRun?: Maybe<Scalars["String"]["output"]>;
+  autoTableTest?: Maybe<AutoTableTest>;
+  errors?: Maybe<Array<ExecutionError>>;
+  success: Scalars["Boolean"]["output"];
+};
+
+export type CustomActionWithParamsAutoTableTestResult = {
+  __typename?: "CustomActionWithParamsAutoTableTestResult";
   actionRun?: Maybe<Scalars["String"]["output"]>;
   autoTableTest?: Maybe<AutoTableTest>;
   errors?: Maybe<Array<ExecutionError>>;
@@ -2207,6 +2704,7 @@ export type GadgetModel = {
   exampleInternalFindManyQuery: Scalars["String"]["output"];
   exampleInternalFindOneQuery: Scalars["String"]["output"];
   exampleInternalUpdateMutation: Scalars["String"]["output"];
+  exampleInternalUpsertMutation: Scalars["String"]["output"];
   examplePaginationQuery: Scalars["String"]["output"];
   exampleSearchQuery: Scalars["String"]["output"];
   exampleSimpleFindManyQuery: Scalars["String"]["output"];
@@ -2389,6 +2887,10 @@ export type GameMutations = {
   bulkUpdatePlayers?: Maybe<BulkUpdateGamePlayersResult>;
   bulkUpdateRounds?: Maybe<BulkUpdateGameRoundsResult>;
   bulkUpdateStadia?: Maybe<BulkUpdateGameStadiaResult>;
+  bulkUpsertCities: BulkUpsertGameCitiesResult;
+  bulkUpsertPlayers: BulkUpsertGamePlayersResult;
+  bulkUpsertRounds: BulkUpsertGameRoundsResult;
+  bulkUpsertStadia: BulkUpsertGameStadiaResult;
   createCity?: Maybe<CreateGameCityResult>;
   createPlayer?: Maybe<CreateGamePlayerResult>;
   createRound?: Maybe<CreateGameRoundResult>;
@@ -2401,6 +2903,10 @@ export type GameMutations = {
   updatePlayer?: Maybe<UpdateGamePlayerResult>;
   updateRound?: Maybe<UpdateGameRoundResult>;
   updateStadium?: Maybe<UpdateGameStadiumResult>;
+  upsertCity?: Maybe<UpsertGameCityResult>;
+  upsertPlayer?: Maybe<UpsertGamePlayerResult>;
+  upsertRound?: Maybe<UpsertGameRoundResult>;
+  upsertStadium?: Maybe<UpsertGameStadiumResult>;
 };
 
 export type GameMutationsBulkCreateCitiesArgs = {
@@ -2449,6 +2955,22 @@ export type GameMutationsBulkUpdateRoundsArgs = {
 
 export type GameMutationsBulkUpdateStadiaArgs = {
   inputs: Array<BulkUpdateGameStadiaInput>;
+};
+
+export type GameMutationsBulkUpsertCitiesArgs = {
+  inputs: Array<BulkUpsertGameCitiesInput>;
+};
+
+export type GameMutationsBulkUpsertPlayersArgs = {
+  inputs: Array<BulkUpsertGamePlayersInput>;
+};
+
+export type GameMutationsBulkUpsertRoundsArgs = {
+  inputs: Array<BulkUpsertGameRoundsInput>;
+};
+
+export type GameMutationsBulkUpsertStadiaArgs = {
+  inputs: Array<BulkUpsertGameStadiaInput>;
 };
 
 export type GameMutationsCreateCityArgs = {
@@ -2501,6 +3023,26 @@ export type GameMutationsUpdateRoundArgs = {
 export type GameMutationsUpdateStadiumArgs = {
   id: Scalars["GadgetID"]["input"];
   stadium?: InputMaybe<UpdateGameStadiumInput>;
+};
+
+export type GameMutationsUpsertCityArgs = {
+  city?: InputMaybe<UpsertGameCityInput>;
+  on?: InputMaybe<Array<Scalars["String"]["input"]>>;
+};
+
+export type GameMutationsUpsertPlayerArgs = {
+  on?: InputMaybe<Array<Scalars["String"]["input"]>>;
+  player?: InputMaybe<UpsertGamePlayerInput>;
+};
+
+export type GameMutationsUpsertRoundArgs = {
+  on?: InputMaybe<Array<Scalars["String"]["input"]>>;
+  round?: InputMaybe<UpsertGameRoundInput>;
+};
+
+export type GameMutationsUpsertStadiumArgs = {
+  on?: InputMaybe<Array<Scalars["String"]["input"]>>;
+  stadium?: InputMaybe<UpsertGameStadiumInput>;
 };
 
 export type GamePlayer = {
@@ -3359,6 +3901,10 @@ export type InternalGameMutations = {
   updatePlayer?: Maybe<InternalUpdateGamePlayerResult>;
   updateRound?: Maybe<InternalUpdateGameRoundResult>;
   updateStadium?: Maybe<InternalUpdateGameStadiumResult>;
+  upsertCity?: Maybe<InternalUpsertGameCityResult>;
+  upsertPlayer?: Maybe<InternalUpsertGamePlayerResult>;
+  upsertRound?: Maybe<InternalUpsertGameRoundResult>;
+  upsertStadium?: Maybe<InternalUpsertGameStadiumResult>;
 };
 
 export type InternalGameMutationsBulkCreateCitiesArgs = {
@@ -3530,6 +4076,26 @@ export type InternalGameMutationsUpdateRoundArgs = {
 
 export type InternalGameMutationsUpdateStadiumArgs = {
   id: Scalars["GadgetID"]["input"];
+  stadium?: InputMaybe<InternalGameStadiumInput>;
+};
+
+export type InternalGameMutationsUpsertCityArgs = {
+  city?: InputMaybe<InternalGameCityInput>;
+  on?: InputMaybe<Array<Scalars["String"]["input"]>>;
+};
+
+export type InternalGameMutationsUpsertPlayerArgs = {
+  on?: InputMaybe<Array<Scalars["String"]["input"]>>;
+  player?: InputMaybe<InternalGamePlayerInput>;
+};
+
+export type InternalGameMutationsUpsertRoundArgs = {
+  on?: InputMaybe<Array<Scalars["String"]["input"]>>;
+  round?: InputMaybe<InternalGameRoundInput>;
+};
+
+export type InternalGameMutationsUpsertStadiumArgs = {
+  on?: InputMaybe<Array<Scalars["String"]["input"]>>;
   stadium?: InputMaybe<InternalGameStadiumInput>;
 };
 
@@ -3798,6 +4364,7 @@ export type InternalMutations = {
   rollbackTransaction: Scalars["String"]["output"];
   startTransaction: Scalars["String"]["output"];
   triggerAddInventoryWidget?: Maybe<AddInventoryWidgetResult>;
+  triggerAlwaysThrowErrorWidget?: Maybe<AlwaysThrowErrorWidgetResult>;
   triggerCreateAutoTableTest?: Maybe<CreateAutoTableTestResult>;
   triggerCreateAutoTableTestRelatedModel?: Maybe<CreateAutoTableTestRelatedModelResult>;
   triggerCreateGizmo?: Maybe<CreateGizmoResult>;
@@ -3807,6 +4374,7 @@ export type InternalMutations = {
   triggerCreateTestData?: Maybe<CreateTestDataResult>;
   triggerCreateWidget?: Maybe<CreateWidgetResult>;
   triggerCustomActionAutoTableTest?: Maybe<CustomActionAutoTableTestResult>;
+  triggerCustomActionWithParamsAutoTableTest?: Maybe<CustomActionWithParamsAutoTableTestResult>;
   triggerDeleteAutoTableTest?: Maybe<DeleteAutoTableTestResult>;
   triggerDeleteAutoTableTestRelatedModel?: Maybe<DeleteAutoTableTestRelatedModelResult>;
   triggerDeleteGizmo?: Maybe<DeleteGizmoResult>;
@@ -3827,6 +4395,7 @@ export type InternalMutations = {
   triggerUpdateSection?: Maybe<UpdateSectionResult>;
   triggerUpdateUser?: Maybe<UpdateUserResult>;
   triggerUpdateWidget?: Maybe<UpdateWidgetResult>;
+  triggerUpdateWithCustomParamsAutoTableTest?: Maybe<UpdateWithCustomParamsAutoTableTestResult>;
   updateAutoTableTest?: Maybe<InternalUpdateAutoTableTestResult>;
   updateAutoTableTestRelatedModel?: Maybe<InternalUpdateAutoTableTestRelatedModelResult>;
   updateGizmo?: Maybe<InternalUpdateGizmoResult>;
@@ -3836,6 +4405,15 @@ export type InternalMutations = {
   updateSession?: Maybe<InternalUpdateSessionResult>;
   updateUser?: Maybe<InternalUpdateUserResult>;
   updateWidget?: Maybe<InternalUpdateWidgetResult>;
+  upsertAutoTableTest?: Maybe<InternalUpsertAutoTableTestResult>;
+  upsertAutoTableTestRelatedModel?: Maybe<InternalUpsertAutoTableTestRelatedModelResult>;
+  upsertGizmo?: Maybe<InternalUpsertGizmoResult>;
+  upsertModelA?: Maybe<InternalUpsertModelAResult>;
+  upsertPart?: Maybe<InternalUpsertPartResult>;
+  upsertSection?: Maybe<InternalUpsertSectionResult>;
+  upsertSession?: Maybe<InternalUpsertSessionResult>;
+  upsertUser?: Maybe<InternalUpsertUserResult>;
+  upsertWidget?: Maybe<InternalUpsertWidgetResult>;
 };
 
 export type InternalMutationsAcquireLockArgs = {
@@ -4001,6 +4579,13 @@ export type InternalMutationsTriggerAddInventoryWidgetArgs = {
   verifyTriggerExists?: InputMaybe<Scalars["Boolean"]["input"]>;
 };
 
+export type InternalMutationsTriggerAlwaysThrowErrorWidgetArgs = {
+  context?: InputMaybe<AppGraphQlTriggerMutationContext>;
+  params?: InputMaybe<Scalars["JSONObject"]["input"]>;
+  trigger?: InputMaybe<Scalars["JSONObject"]["input"]>;
+  verifyTriggerExists?: InputMaybe<Scalars["Boolean"]["input"]>;
+};
+
 export type InternalMutationsTriggerCreateAutoTableTestArgs = {
   context?: InputMaybe<AppGraphQlTriggerMutationContext>;
   params?: InputMaybe<Scalars["JSONObject"]["input"]>;
@@ -4056,6 +4641,13 @@ export type InternalMutationsTriggerCreateWidgetArgs = {
 };
 
 export type InternalMutationsTriggerCustomActionAutoTableTestArgs = {
+  context?: InputMaybe<AppGraphQlTriggerMutationContext>;
+  params?: InputMaybe<Scalars["JSONObject"]["input"]>;
+  trigger?: InputMaybe<Scalars["JSONObject"]["input"]>;
+  verifyTriggerExists?: InputMaybe<Scalars["Boolean"]["input"]>;
+};
+
+export type InternalMutationsTriggerCustomActionWithParamsAutoTableTestArgs = {
   context?: InputMaybe<AppGraphQlTriggerMutationContext>;
   params?: InputMaybe<Scalars["JSONObject"]["input"]>;
   trigger?: InputMaybe<Scalars["JSONObject"]["input"]>;
@@ -4202,6 +4794,13 @@ export type InternalMutationsTriggerUpdateWidgetArgs = {
   verifyTriggerExists?: InputMaybe<Scalars["Boolean"]["input"]>;
 };
 
+export type InternalMutationsTriggerUpdateWithCustomParamsAutoTableTestArgs = {
+  context?: InputMaybe<AppGraphQlTriggerMutationContext>;
+  params?: InputMaybe<Scalars["JSONObject"]["input"]>;
+  trigger?: InputMaybe<Scalars["JSONObject"]["input"]>;
+  verifyTriggerExists?: InputMaybe<Scalars["Boolean"]["input"]>;
+};
+
 export type InternalMutationsUpdateAutoTableTestArgs = {
   autoTableTest?: InputMaybe<InternalAutoTableTestInput>;
   id: Scalars["GadgetID"]["input"];
@@ -4244,6 +4843,51 @@ export type InternalMutationsUpdateUserArgs = {
 
 export type InternalMutationsUpdateWidgetArgs = {
   id: Scalars["GadgetID"]["input"];
+  widget?: InputMaybe<InternalWidgetInput>;
+};
+
+export type InternalMutationsUpsertAutoTableTestArgs = {
+  autoTableTest?: InputMaybe<InternalAutoTableTestInput>;
+  on?: InputMaybe<Array<Scalars["String"]["input"]>>;
+};
+
+export type InternalMutationsUpsertAutoTableTestRelatedModelArgs = {
+  _autoTableTestRelatedModel?: InputMaybe<InternalAutoTableTestRelatedModelInput>;
+  on?: InputMaybe<Array<Scalars["String"]["input"]>>;
+};
+
+export type InternalMutationsUpsertGizmoArgs = {
+  gizmo?: InputMaybe<InternalGizmoInput>;
+  on?: InputMaybe<Array<Scalars["String"]["input"]>>;
+};
+
+export type InternalMutationsUpsertModelAArgs = {
+  modelA?: InputMaybe<InternalModelAInput>;
+  on?: InputMaybe<Array<Scalars["String"]["input"]>>;
+};
+
+export type InternalMutationsUpsertPartArgs = {
+  on?: InputMaybe<Array<Scalars["String"]["input"]>>;
+  part?: InputMaybe<InternalPartInput>;
+};
+
+export type InternalMutationsUpsertSectionArgs = {
+  on?: InputMaybe<Array<Scalars["String"]["input"]>>;
+  section?: InputMaybe<InternalSectionInput>;
+};
+
+export type InternalMutationsUpsertSessionArgs = {
+  on?: InputMaybe<Array<Scalars["String"]["input"]>>;
+  session?: InputMaybe<InternalSessionInput>;
+};
+
+export type InternalMutationsUpsertUserArgs = {
+  on?: InputMaybe<Array<Scalars["String"]["input"]>>;
+  user?: InputMaybe<InternalUserInput>;
+};
+
+export type InternalMutationsUpsertWidgetArgs = {
+  on?: InputMaybe<Array<Scalars["String"]["input"]>>;
   widget?: InputMaybe<InternalWidgetInput>;
 };
 
@@ -4609,6 +5253,97 @@ export type InternalUpdateWidgetResult = {
   widget?: Maybe<Scalars["InternalWidgetRecord"]["output"]>;
 };
 
+export type InternalUpsertAutoTableTestRelatedModelResult = {
+  __typename?: "InternalUpsertAutoTableTestRelatedModelResult";
+  _autoTableTestRelatedModel?: Maybe<Scalars["InternalAutoTableTestRelatedModelRecord"]["output"]>;
+  errors?: Maybe<Array<ExecutionError>>;
+  success: Scalars["Boolean"]["output"];
+};
+
+export type InternalUpsertAutoTableTestResult = {
+  __typename?: "InternalUpsertAutoTableTestResult";
+  autoTableTest?: Maybe<Scalars["InternalAutoTableTestRecord"]["output"]>;
+  errors?: Maybe<Array<ExecutionError>>;
+  success: Scalars["Boolean"]["output"];
+};
+
+export type InternalUpsertGameCityResult = {
+  __typename?: "InternalUpsertGameCityResult";
+  city?: Maybe<Scalars["InternalGameCityRecord"]["output"]>;
+  errors?: Maybe<Array<ExecutionError>>;
+  success: Scalars["Boolean"]["output"];
+};
+
+export type InternalUpsertGamePlayerResult = {
+  __typename?: "InternalUpsertGamePlayerResult";
+  errors?: Maybe<Array<ExecutionError>>;
+  player?: Maybe<Scalars["InternalGamePlayerRecord"]["output"]>;
+  success: Scalars["Boolean"]["output"];
+};
+
+export type InternalUpsertGameRoundResult = {
+  __typename?: "InternalUpsertGameRoundResult";
+  errors?: Maybe<Array<ExecutionError>>;
+  round?: Maybe<Scalars["InternalGameRoundRecord"]["output"]>;
+  success: Scalars["Boolean"]["output"];
+};
+
+export type InternalUpsertGameStadiumResult = {
+  __typename?: "InternalUpsertGameStadiumResult";
+  errors?: Maybe<Array<ExecutionError>>;
+  stadium?: Maybe<Scalars["InternalGameStadiumRecord"]["output"]>;
+  success: Scalars["Boolean"]["output"];
+};
+
+export type InternalUpsertGizmoResult = {
+  __typename?: "InternalUpsertGizmoResult";
+  errors?: Maybe<Array<ExecutionError>>;
+  gizmo?: Maybe<Scalars["InternalGizmoRecord"]["output"]>;
+  success: Scalars["Boolean"]["output"];
+};
+
+export type InternalUpsertModelAResult = {
+  __typename?: "InternalUpsertModelAResult";
+  errors?: Maybe<Array<ExecutionError>>;
+  modelA?: Maybe<Scalars["InternalModelARecord"]["output"]>;
+  success: Scalars["Boolean"]["output"];
+};
+
+export type InternalUpsertPartResult = {
+  __typename?: "InternalUpsertPartResult";
+  errors?: Maybe<Array<ExecutionError>>;
+  part?: Maybe<Scalars["InternalPartRecord"]["output"]>;
+  success: Scalars["Boolean"]["output"];
+};
+
+export type InternalUpsertSectionResult = {
+  __typename?: "InternalUpsertSectionResult";
+  errors?: Maybe<Array<ExecutionError>>;
+  section?: Maybe<Scalars["InternalSectionRecord"]["output"]>;
+  success: Scalars["Boolean"]["output"];
+};
+
+export type InternalUpsertSessionResult = {
+  __typename?: "InternalUpsertSessionResult";
+  errors?: Maybe<Array<ExecutionError>>;
+  session?: Maybe<Scalars["InternalSessionRecord"]["output"]>;
+  success: Scalars["Boolean"]["output"];
+};
+
+export type InternalUpsertUserResult = {
+  __typename?: "InternalUpsertUserResult";
+  errors?: Maybe<Array<ExecutionError>>;
+  success: Scalars["Boolean"]["output"];
+  user?: Maybe<Scalars["InternalUserRecord"]["output"]>;
+};
+
+export type InternalUpsertWidgetResult = {
+  __typename?: "InternalUpsertWidgetResult";
+  errors?: Maybe<Array<ExecutionError>>;
+  success: Scalars["Boolean"]["output"];
+  widget?: Maybe<Scalars["InternalWidgetRecord"]["output"]>;
+};
+
 export type InternalUserInput = {
   createdAt?: InputMaybe<Scalars["DateTime"]["input"]>;
   email?: InputMaybe<Scalars["String"]["input"]>;
@@ -4797,8 +5532,10 @@ export type MultiEnumFilter = {
 export type Mutation = {
   __typename?: "Mutation";
   addInventoryWidget?: Maybe<AddInventoryWidgetResult>;
+  alwaysThrowErrorWidget?: Maybe<AlwaysThrowErrorWidgetResult>;
   background: BackgroundMutations;
   bulkAddInventoryWidgets?: Maybe<BulkAddInventoryWidgetsResult>;
+  bulkAlwaysThrowErrorWidgets?: Maybe<BulkAlwaysThrowErrorWidgetsResult>;
   bulkCreateAutoTableTestRelatedModels?: Maybe<BulkCreateAutoTableTestRelatedModelsResult>;
   bulkCreateAutoTableTests?: Maybe<BulkCreateAutoTableTestsResult>;
   bulkCreateGizmos?: Maybe<BulkCreateGizmosResult>;
@@ -4807,6 +5544,7 @@ export type Mutation = {
   bulkCreateSections?: Maybe<BulkCreateSectionsResult>;
   bulkCreateWidgets?: Maybe<BulkCreateWidgetsResult>;
   bulkCustomActionAutoTableTests?: Maybe<BulkCustomActionAutoTableTestsResult>;
+  bulkCustomActionWithParamsAutoTableTests?: Maybe<BulkCustomActionWithParamsAutoTableTestsResult>;
   bulkDeleteAutoTableTestRelatedModels?: Maybe<BulkDeleteAutoTableTestRelatedModelsResult>;
   bulkDeleteAutoTableTests?: Maybe<BulkDeleteAutoTableTestsResult>;
   bulkDeleteGizmos?: Maybe<BulkDeleteGizmosResult>;
@@ -4826,6 +5564,15 @@ export type Mutation = {
   bulkUpdateSections?: Maybe<BulkUpdateSectionsResult>;
   bulkUpdateUsers?: Maybe<BulkUpdateUsersResult>;
   bulkUpdateWidgets?: Maybe<BulkUpdateWidgetsResult>;
+  bulkUpdateWithCustomParamsAutoTableTests?: Maybe<BulkUpdateWithCustomParamsAutoTableTestsResult>;
+  bulkUpsertAutoTableTestRelatedModels: BulkUpsertAutoTableTestRelatedModelsResult;
+  bulkUpsertAutoTableTests: BulkUpsertAutoTableTestsResult;
+  bulkUpsertGizmos: BulkUpsertGizmosResult;
+  bulkUpsertModelAs: BulkUpsertModelAsResult;
+  bulkUpsertParts: BulkUpsertPartsResult;
+  bulkUpsertSections: BulkUpsertSectionsResult;
+  bulkUpsertUsers: BulkUpsertUsersResult;
+  bulkUpsertWidgets: BulkUpsertWidgetsResult;
   createAutoTableTest?: Maybe<CreateAutoTableTestResult>;
   createAutoTableTestRelatedModel?: Maybe<CreateAutoTableTestRelatedModelResult>;
   createGizmo?: Maybe<CreateGizmoResult>;
@@ -4835,6 +5582,7 @@ export type Mutation = {
   createTestData?: Maybe<CreateTestDataResult>;
   createWidget?: Maybe<CreateWidgetResult>;
   customActionAutoTableTest?: Maybe<CustomActionAutoTableTestResult>;
+  customActionWithParamsAutoTableTest?: Maybe<CustomActionWithParamsAutoTableTestResult>;
   deleteAutoTableTest?: Maybe<DeleteAutoTableTestResult>;
   deleteAutoTableTestRelatedModel?: Maybe<DeleteAutoTableTestRelatedModelResult>;
   deleteGizmo?: Maybe<DeleteGizmoResult>;
@@ -4859,6 +5607,15 @@ export type Mutation = {
   updateSection?: Maybe<UpdateSectionResult>;
   updateUser?: Maybe<UpdateUserResult>;
   updateWidget?: Maybe<UpdateWidgetResult>;
+  updateWithCustomParamsAutoTableTest?: Maybe<UpdateWithCustomParamsAutoTableTestResult>;
+  upsertAutoTableTest?: Maybe<UpsertAutoTableTestResult>;
+  upsertAutoTableTestRelatedModel?: Maybe<UpsertAutoTableTestRelatedModelResult>;
+  upsertGizmo?: Maybe<UpsertGizmoResult>;
+  upsertModelA?: Maybe<UpsertModelAResult>;
+  upsertPart?: Maybe<UpsertPartResult>;
+  upsertSection?: Maybe<UpsertSectionResult>;
+  upsertUser?: Maybe<UpsertUserResult>;
+  upsertWidget?: Maybe<UpsertWidgetResult>;
 };
 
 export type MutationAddInventoryWidgetArgs = {
@@ -4866,8 +5623,16 @@ export type MutationAddInventoryWidgetArgs = {
   id: Scalars["GadgetID"]["input"];
 };
 
+export type MutationAlwaysThrowErrorWidgetArgs = {
+  widget?: InputMaybe<AlwaysThrowErrorWidgetInput>;
+};
+
 export type MutationBulkAddInventoryWidgetsArgs = {
   inputs: Array<BulkAddInventoryWidgetsInput>;
+};
+
+export type MutationBulkAlwaysThrowErrorWidgetsArgs = {
+  inputs: Array<BulkAlwaysThrowErrorWidgetsInput>;
 };
 
 export type MutationBulkCreateAutoTableTestRelatedModelsArgs = {
@@ -4900,6 +5665,10 @@ export type MutationBulkCreateWidgetsArgs = {
 
 export type MutationBulkCustomActionAutoTableTestsArgs = {
   ids: Array<Scalars["GadgetID"]["input"]>;
+};
+
+export type MutationBulkCustomActionWithParamsAutoTableTestsArgs = {
+  inputs: Array<BulkCustomActionWithParamsAutoTableTestsInput>;
 };
 
 export type MutationBulkDeleteAutoTableTestRelatedModelsArgs = {
@@ -4978,6 +5747,42 @@ export type MutationBulkUpdateWidgetsArgs = {
   inputs: Array<BulkUpdateWidgetsInput>;
 };
 
+export type MutationBulkUpdateWithCustomParamsAutoTableTestsArgs = {
+  inputs: Array<BulkUpdateWithCustomParamsAutoTableTestsInput>;
+};
+
+export type MutationBulkUpsertAutoTableTestRelatedModelsArgs = {
+  inputs: Array<BulkUpsertAutoTableTestRelatedModelsInput>;
+};
+
+export type MutationBulkUpsertAutoTableTestsArgs = {
+  inputs: Array<BulkUpsertAutoTableTestsInput>;
+};
+
+export type MutationBulkUpsertGizmosArgs = {
+  inputs: Array<BulkUpsertGizmosInput>;
+};
+
+export type MutationBulkUpsertModelAsArgs = {
+  inputs: Array<BulkUpsertModelAsInput>;
+};
+
+export type MutationBulkUpsertPartsArgs = {
+  inputs: Array<BulkUpsertPartsInput>;
+};
+
+export type MutationBulkUpsertSectionsArgs = {
+  inputs: Array<BulkUpsertSectionsInput>;
+};
+
+export type MutationBulkUpsertUsersArgs = {
+  inputs: Array<BulkUpsertUsersInput>;
+};
+
+export type MutationBulkUpsertWidgetsArgs = {
+  inputs: Array<BulkUpsertWidgetsInput>;
+};
+
 export type MutationCreateAutoTableTestArgs = {
   autoTableTest?: InputMaybe<CreateAutoTableTestInput>;
 };
@@ -5004,6 +5809,12 @@ export type MutationCreateWidgetArgs = {
 
 export type MutationCustomActionAutoTableTestArgs = {
   id: Scalars["GadgetID"]["input"];
+};
+
+export type MutationCustomActionWithParamsAutoTableTestArgs = {
+  id: Scalars["GadgetID"]["input"];
+  numberParam1?: InputMaybe<Scalars["Float"]["input"]>;
+  stringParam1?: InputMaybe<Scalars["String"]["input"]>;
 };
 
 export type MutationDeleteAutoTableTestArgs = {
@@ -5096,6 +5907,55 @@ export type MutationUpdateWidgetArgs = {
   widget?: InputMaybe<UpdateWidgetInput>;
 };
 
+export type MutationUpdateWithCustomParamsAutoTableTestArgs = {
+  autoTableTest?: InputMaybe<UpdateWithCustomParamsAutoTableTestInput>;
+  id: Scalars["GadgetID"]["input"];
+  num?: InputMaybe<Scalars["Float"]["input"]>;
+  numberParam1?: InputMaybe<Scalars["Float"]["input"]>;
+  str?: InputMaybe<Scalars["String"]["input"]>;
+  stringParam1?: InputMaybe<Scalars["String"]["input"]>;
+};
+
+export type MutationUpsertAutoTableTestArgs = {
+  autoTableTest?: InputMaybe<UpsertAutoTableTestInput>;
+  on?: InputMaybe<Array<Scalars["String"]["input"]>>;
+};
+
+export type MutationUpsertAutoTableTestRelatedModelArgs = {
+  _autoTableTestRelatedModel?: InputMaybe<UpsertAutoTableTestRelatedModelInput>;
+  on?: InputMaybe<Array<Scalars["String"]["input"]>>;
+};
+
+export type MutationUpsertGizmoArgs = {
+  gizmo?: InputMaybe<UpsertGizmoInput>;
+  on?: InputMaybe<Array<Scalars["String"]["input"]>>;
+};
+
+export type MutationUpsertModelAArgs = {
+  modelA?: InputMaybe<UpsertModelAInput>;
+  on?: InputMaybe<Array<Scalars["String"]["input"]>>;
+};
+
+export type MutationUpsertPartArgs = {
+  on?: InputMaybe<Array<Scalars["String"]["input"]>>;
+  part?: InputMaybe<UpsertPartInput>;
+};
+
+export type MutationUpsertSectionArgs = {
+  on?: InputMaybe<Array<Scalars["String"]["input"]>>;
+  section?: InputMaybe<UpsertSectionInput>;
+};
+
+export type MutationUpsertUserArgs = {
+  on?: InputMaybe<Array<Scalars["String"]["input"]>>;
+  user?: InputMaybe<UpsertUserInput>;
+};
+
+export type MutationUpsertWidgetArgs = {
+  on?: InputMaybe<Array<Scalars["String"]["input"]>>;
+  widget?: InputMaybe<UpsertWidgetInput>;
+};
+
 export type NestedAutoTableTestCreateInput = {
   bool?: InputMaybe<Scalars["Boolean"]["input"]>;
   dt?: InputMaybe<Scalars["DateTime"]["input"]>;
@@ -5118,6 +5978,12 @@ export type NestedAutoTableTestCreateInput = {
 
 export type NestedAutoTableTestCustomActionInput = {
   id: Scalars["GadgetID"]["input"];
+};
+
+export type NestedAutoTableTestCustomActionWithParamsInput = {
+  id: Scalars["GadgetID"]["input"];
+  numberParam1?: InputMaybe<Scalars["Float"]["input"]>;
+  stringParam1?: InputMaybe<Scalars["String"]["input"]>;
 };
 
 export type NestedAutoTableTestDeleteInput = {
@@ -5162,6 +6028,29 @@ export type NestedAutoTableTestUpdateInput = {
   rl?: InputMaybe<Array<Scalars["String"]["input"]>>;
   rt?: InputMaybe<RichTextInput>;
   str?: InputMaybe<Scalars["String"]["input"]>;
+  url?: InputMaybe<Scalars["String"]["input"]>;
+  vect?: InputMaybe<Array<Scalars["Float"]["input"]>>;
+};
+
+export type NestedAutoTableTestUpdateWithCustomParamsInput = {
+  bool?: InputMaybe<Scalars["Boolean"]["input"]>;
+  dt?: InputMaybe<Scalars["DateTime"]["input"]>;
+  email?: InputMaybe<Scalars["String"]["input"]>;
+  enum?: InputMaybe<Array<Scalars["AutoTableTestEnumEnum"]["input"]>>;
+  es?: InputMaybe<Scalars["String"]["input"]>;
+  file?: InputMaybe<StoredFileInput>;
+  hasMany?: InputMaybe<Array<InputMaybe<AutoTableTestRelatedModelHasManyInput>>>;
+  hasOne?: InputMaybe<AutoTableTestRelatedModelHasOneInput>;
+  id: Scalars["GadgetID"]["input"];
+  json?: InputMaybe<Scalars["JSON"]["input"]>;
+  num?: InputMaybe<Scalars["Float"]["input"]>;
+  numberParam1?: InputMaybe<Scalars["Float"]["input"]>;
+  pwd?: InputMaybe<Scalars["String"]["input"]>;
+  /** A string list of Gadget platform Role keys to assign to this record */
+  rl?: InputMaybe<Array<Scalars["String"]["input"]>>;
+  rt?: InputMaybe<RichTextInput>;
+  str?: InputMaybe<Scalars["String"]["input"]>;
+  stringParam1?: InputMaybe<Scalars["String"]["input"]>;
   url?: InputMaybe<Scalars["String"]["input"]>;
   vect?: InputMaybe<Array<Scalars["Float"]["input"]>>;
 };
@@ -5271,6 +6160,26 @@ export type NestedStadiumUpdateInput = {
 export type NestedWidgetAddInventoryInput = {
   count?: InputMaybe<Scalars["Float"]["input"]>;
   id: Scalars["GadgetID"]["input"];
+};
+
+export type NestedWidgetAlwaysThrowErrorInput = {
+  anything?: InputMaybe<Scalars["JSON"]["input"]>;
+  birthday?: InputMaybe<Scalars["DateOrDateTime"]["input"]>;
+  category?: InputMaybe<Array<Scalars["WidgetCategoryEnum"]["input"]>>;
+  color?: InputMaybe<Scalars["String"]["input"]>;
+  description?: InputMaybe<RichTextInput>;
+  embedding?: InputMaybe<Array<Scalars["Float"]["input"]>>;
+  gizmos?: InputMaybe<Array<InputMaybe<GizmoHasManyInput>>>;
+  inventoryCount?: InputMaybe<Scalars["Float"]["input"]>;
+  isChecked?: InputMaybe<Scalars["Boolean"]["input"]>;
+  metafields?: InputMaybe<Scalars["JSON"]["input"]>;
+  mustBeLongString?: InputMaybe<Scalars["String"]["input"]>;
+  name?: InputMaybe<Scalars["String"]["input"]>;
+  /** A string list of Gadget platform Role keys to assign to this record */
+  roles?: InputMaybe<Array<Scalars["String"]["input"]>>;
+  secretKey?: InputMaybe<Scalars["String"]["input"]>;
+  section?: InputMaybe<SectionBelongsToInput>;
+  startsAt?: InputMaybe<Scalars["DateTime"]["input"]>;
 };
 
 export type NestedWidgetCreateInput = {
@@ -5768,7 +6677,7 @@ export type SignUpUserInput = {
   password?: InputMaybe<Scalars["String"]["input"]>;
 };
 
-export type SignUpUserResult = {
+export type SignUpUserResult = UpsertUserResult & {
   __typename?: "SignUpUserResult";
   actionRun?: Maybe<Scalars["String"]["output"]>;
   errors?: Maybe<Array<ExecutionError>>;
@@ -5897,7 +6806,7 @@ export type UpdateAutoTableTestRelatedModelInput = {
   someNumber?: InputMaybe<Scalars["Float"]["input"]>;
 };
 
-export type UpdateAutoTableTestRelatedModelResult = {
+export type UpdateAutoTableTestRelatedModelResult = UpsertAutoTableTestRelatedModelResult & {
   __typename?: "UpdateAutoTableTestRelatedModelResult";
   _autoTableTestRelatedModel?: Maybe<AutoTableTestRelatedModel>;
   actionRun?: Maybe<Scalars["String"]["output"]>;
@@ -5905,7 +6814,7 @@ export type UpdateAutoTableTestRelatedModelResult = {
   success: Scalars["Boolean"]["output"];
 };
 
-export type UpdateAutoTableTestResult = {
+export type UpdateAutoTableTestResult = UpsertAutoTableTestResult & {
   __typename?: "UpdateAutoTableTestResult";
   actionRun?: Maybe<Scalars["String"]["output"]>;
   autoTableTest?: Maybe<AutoTableTest>;
@@ -5918,7 +6827,7 @@ export type UpdateGameCityInput = {
   stadium?: InputMaybe<StadiumHasOneInput>;
 };
 
-export type UpdateGameCityResult = {
+export type UpdateGameCityResult = UpsertGameCityResult & {
   __typename?: "UpdateGameCityResult";
   actionRun?: Maybe<Scalars["String"]["output"]>;
   city?: Maybe<GameCity>;
@@ -5931,7 +6840,7 @@ export type UpdateGamePlayerInput = {
   name?: InputMaybe<Scalars["String"]["input"]>;
 };
 
-export type UpdateGamePlayerResult = {
+export type UpdateGamePlayerResult = UpsertGamePlayerResult & {
   __typename?: "UpdateGamePlayerResult";
   actionRun?: Maybe<Scalars["String"]["output"]>;
   errors?: Maybe<Array<ExecutionError>>;
@@ -5945,7 +6854,7 @@ export type UpdateGameRoundInput = {
   stadium?: InputMaybe<StadiumBelongsToInput>;
 };
 
-export type UpdateGameRoundResult = {
+export type UpdateGameRoundResult = UpsertGameRoundResult & {
   __typename?: "UpdateGameRoundResult";
   actionRun?: Maybe<Scalars["String"]["output"]>;
   errors?: Maybe<Array<ExecutionError>>;
@@ -5962,7 +6871,7 @@ export type UpdateGameStadiumInput = {
   type?: InputMaybe<Scalars["StadiumTypeEnum"]["input"]>;
 };
 
-export type UpdateGameStadiumResult = {
+export type UpdateGameStadiumResult = UpsertGameStadiumResult & {
   __typename?: "UpdateGameStadiumResult";
   actionRun?: Maybe<Scalars["String"]["output"]>;
   errors?: Maybe<Array<ExecutionError>>;
@@ -5976,7 +6885,7 @@ export type UpdateGizmoInput = {
   widget?: InputMaybe<WidgetBelongsToInput>;
 };
 
-export type UpdateGizmoResult = {
+export type UpdateGizmoResult = UpsertGizmoResult & {
   __typename?: "UpdateGizmoResult";
   actionRun?: Maybe<Scalars["String"]["output"]>;
   errors?: Maybe<Array<ExecutionError>>;
@@ -5984,7 +6893,7 @@ export type UpdateGizmoResult = {
   success: Scalars["Boolean"]["output"];
 };
 
-export type UpdateModelAResult = {
+export type UpdateModelAResult = UpsertModelAResult & {
   __typename?: "UpdateModelAResult";
   actionRun?: Maybe<Scalars["String"]["output"]>;
   errors?: Maybe<Array<ExecutionError>>;
@@ -5998,7 +6907,7 @@ export type UpdatePartInput = {
   notes?: InputMaybe<Scalars["String"]["input"]>;
 };
 
-export type UpdatePartResult = {
+export type UpdatePartResult = UpsertPartResult & {
   __typename?: "UpdatePartResult";
   actionRun?: Maybe<Scalars["String"]["output"]>;
   errors?: Maybe<Array<ExecutionError>>;
@@ -6011,7 +6920,7 @@ export type UpdateSectionInput = {
   widgets?: InputMaybe<Array<InputMaybe<WidgetHasManyInput>>>;
 };
 
-export type UpdateSectionResult = {
+export type UpdateSectionResult = UpsertSectionResult & {
   __typename?: "UpdateSectionResult";
   actionRun?: Maybe<Scalars["String"]["output"]>;
   errors?: Maybe<Array<ExecutionError>>;
@@ -6030,7 +6939,7 @@ export type UpdateUserInput = {
   password?: InputMaybe<Scalars["String"]["input"]>;
 };
 
-export type UpdateUserResult = {
+export type UpdateUserResult = UpsertUserResult & {
   __typename?: "UpdateUserResult";
   actionRun?: Maybe<Scalars["String"]["output"]>;
   errors?: Maybe<Array<ExecutionError>>;
@@ -6058,12 +6967,248 @@ export type UpdateWidgetInput = {
   startsAt?: InputMaybe<Scalars["DateTime"]["input"]>;
 };
 
-export type UpdateWidgetResult = {
+export type UpdateWidgetResult = UpsertWidgetResult & {
   __typename?: "UpdateWidgetResult";
   actionRun?: Maybe<Scalars["String"]["output"]>;
   errors?: Maybe<Array<ExecutionError>>;
   success: Scalars["Boolean"]["output"];
   widget?: Maybe<Widget>;
+};
+
+export type UpdateWithCustomParamsAutoTableTestInput = {
+  bool?: InputMaybe<Scalars["Boolean"]["input"]>;
+  dt?: InputMaybe<Scalars["DateTime"]["input"]>;
+  email?: InputMaybe<Scalars["String"]["input"]>;
+  enum?: InputMaybe<Array<Scalars["AutoTableTestEnumEnum"]["input"]>>;
+  es?: InputMaybe<Scalars["String"]["input"]>;
+  file?: InputMaybe<StoredFileInput>;
+  hasMany?: InputMaybe<Array<InputMaybe<AutoTableTestRelatedModelHasManyInput>>>;
+  hasOne?: InputMaybe<AutoTableTestRelatedModelHasOneInput>;
+  json?: InputMaybe<Scalars["JSON"]["input"]>;
+  num?: InputMaybe<Scalars["Float"]["input"]>;
+  pwd?: InputMaybe<Scalars["String"]["input"]>;
+  /** A string list of Gadget platform Role keys to assign to this record */
+  rl?: InputMaybe<Array<Scalars["String"]["input"]>>;
+  rt?: InputMaybe<RichTextInput>;
+  str?: InputMaybe<Scalars["String"]["input"]>;
+  url?: InputMaybe<Scalars["String"]["input"]>;
+  vect?: InputMaybe<Array<Scalars["Float"]["input"]>>;
+};
+
+export type UpdateWithCustomParamsAutoTableTestResult = {
+  __typename?: "UpdateWithCustomParamsAutoTableTestResult";
+  actionRun?: Maybe<Scalars["String"]["output"]>;
+  autoTableTest?: Maybe<AutoTableTest>;
+  errors?: Maybe<Array<ExecutionError>>;
+  success: Scalars["Boolean"]["output"];
+};
+
+export type UpsertAutoTableTestInput = {
+  bool?: InputMaybe<Scalars["Boolean"]["input"]>;
+  dt?: InputMaybe<Scalars["DateTime"]["input"]>;
+  email?: InputMaybe<Scalars["String"]["input"]>;
+  enum?: InputMaybe<Array<Scalars["AutoTableTestEnumEnum"]["input"]>>;
+  es?: InputMaybe<Scalars["String"]["input"]>;
+  file?: InputMaybe<StoredFileInput>;
+  hasMany?: InputMaybe<Array<InputMaybe<AutoTableTestRelatedModelHasManyInput>>>;
+  hasOne?: InputMaybe<AutoTableTestRelatedModelHasOneInput>;
+  id?: InputMaybe<Scalars["GadgetID"]["input"]>;
+  json?: InputMaybe<Scalars["JSON"]["input"]>;
+  num?: InputMaybe<Scalars["Float"]["input"]>;
+  pwd?: InputMaybe<Scalars["String"]["input"]>;
+  /** A string list of Gadget platform Role keys to assign to this record */
+  rl?: InputMaybe<Array<Scalars["String"]["input"]>>;
+  rt?: InputMaybe<RichTextInput>;
+  str?: InputMaybe<Scalars["String"]["input"]>;
+  url?: InputMaybe<Scalars["String"]["input"]>;
+  vect?: InputMaybe<Array<Scalars["Float"]["input"]>>;
+};
+
+export type UpsertAutoTableTestRelatedModelInput = {
+  belongsToParent?: InputMaybe<AutoTableTestBelongsToInput>;
+  id?: InputMaybe<Scalars["GadgetID"]["input"]>;
+  manyBelongsToParent?: InputMaybe<AutoTableTestBelongsToInput>;
+  name?: InputMaybe<Scalars["String"]["input"]>;
+  someBool?: InputMaybe<Scalars["Boolean"]["input"]>;
+  someNumber?: InputMaybe<Scalars["Float"]["input"]>;
+};
+
+export type UpsertAutoTableTestRelatedModelResult = {
+  actionRun?: Maybe<Scalars["String"]["output"]>;
+  errors?: Maybe<Array<ExecutionError>>;
+  success: Scalars["Boolean"]["output"];
+};
+
+export type UpsertAutoTableTestResult = {
+  actionRun?: Maybe<Scalars["String"]["output"]>;
+  errors?: Maybe<Array<ExecutionError>>;
+  success: Scalars["Boolean"]["output"];
+};
+
+export type UpsertError = UpsertAutoTableTestRelatedModelResult &
+  UpsertAutoTableTestResult &
+  UpsertGameCityResult &
+  UpsertGamePlayerResult &
+  UpsertGameRoundResult &
+  UpsertGameStadiumResult &
+  UpsertGizmoResult &
+  UpsertModelAResult &
+  UpsertPartResult &
+  UpsertSectionResult &
+  UpsertUserResult &
+  UpsertWidgetResult & {
+    __typename?: "UpsertError";
+    actionRun?: Maybe<Scalars["String"]["output"]>;
+    errors?: Maybe<Array<ExecutionError>>;
+    success: Scalars["Boolean"]["output"];
+  };
+
+export type UpsertGameCityInput = {
+  id?: InputMaybe<Scalars["GadgetID"]["input"]>;
+  name?: InputMaybe<Scalars["String"]["input"]>;
+  stadium?: InputMaybe<StadiumHasOneInput>;
+};
+
+export type UpsertGameCityResult = {
+  actionRun?: Maybe<Scalars["String"]["output"]>;
+  errors?: Maybe<Array<ExecutionError>>;
+  success: Scalars["Boolean"]["output"];
+};
+
+export type UpsertGamePlayerInput = {
+  currentRound?: InputMaybe<RoundBelongsToInput>;
+  id?: InputMaybe<Scalars["GadgetID"]["input"]>;
+  name?: InputMaybe<Scalars["String"]["input"]>;
+};
+
+export type UpsertGamePlayerResult = {
+  actionRun?: Maybe<Scalars["String"]["output"]>;
+  errors?: Maybe<Array<ExecutionError>>;
+  success: Scalars["Boolean"]["output"];
+};
+
+export type UpsertGameRoundInput = {
+  id?: InputMaybe<Scalars["GadgetID"]["input"]>;
+  name?: InputMaybe<Scalars["String"]["input"]>;
+  players?: InputMaybe<Array<InputMaybe<PlayerHasManyInput>>>;
+  stadium?: InputMaybe<StadiumBelongsToInput>;
+};
+
+export type UpsertGameRoundResult = {
+  actionRun?: Maybe<Scalars["String"]["output"]>;
+  errors?: Maybe<Array<ExecutionError>>;
+  success: Scalars["Boolean"]["output"];
+};
+
+export type UpsertGameStadiumInput = {
+  city?: InputMaybe<CityBelongsToInput>;
+  id?: InputMaybe<Scalars["GadgetID"]["input"]>;
+  name?: InputMaybe<Scalars["String"]["input"]>;
+  photo?: InputMaybe<StoredFileInput>;
+  rounds?: InputMaybe<Array<InputMaybe<RoundHasManyInput>>>;
+  tags?: InputMaybe<Array<Scalars["StadiumTagsEnum"]["input"]>>;
+  type?: InputMaybe<Scalars["StadiumTypeEnum"]["input"]>;
+};
+
+export type UpsertGameStadiumResult = {
+  actionRun?: Maybe<Scalars["String"]["output"]>;
+  errors?: Maybe<Array<ExecutionError>>;
+  success: Scalars["Boolean"]["output"];
+};
+
+export type UpsertGizmoInput = {
+  id?: InputMaybe<Scalars["GadgetID"]["input"]>;
+  name?: InputMaybe<Scalars["String"]["input"]>;
+  orientation?: InputMaybe<Scalars["String"]["input"]>;
+  widget?: InputMaybe<WidgetBelongsToInput>;
+};
+
+export type UpsertGizmoResult = {
+  actionRun?: Maybe<Scalars["String"]["output"]>;
+  errors?: Maybe<Array<ExecutionError>>;
+  success: Scalars["Boolean"]["output"];
+};
+
+export type UpsertModelAInput = {
+  id?: InputMaybe<Scalars["GadgetID"]["input"]>;
+};
+
+export type UpsertModelAResult = {
+  actionRun?: Maybe<Scalars["String"]["output"]>;
+  errors?: Maybe<Array<ExecutionError>>;
+  success: Scalars["Boolean"]["output"];
+};
+
+export type UpsertPartInput = {
+  count?: InputMaybe<Scalars["Float"]["input"]>;
+  id?: InputMaybe<Scalars["GadgetID"]["input"]>;
+  name?: InputMaybe<Scalars["String"]["input"]>;
+  notes?: InputMaybe<Scalars["String"]["input"]>;
+};
+
+export type UpsertPartResult = {
+  actionRun?: Maybe<Scalars["String"]["output"]>;
+  errors?: Maybe<Array<ExecutionError>>;
+  success: Scalars["Boolean"]["output"];
+};
+
+export type UpsertSectionInput = {
+  id?: InputMaybe<Scalars["GadgetID"]["input"]>;
+  name?: InputMaybe<Scalars["String"]["input"]>;
+  widgets?: InputMaybe<Array<InputMaybe<WidgetHasManyInput>>>;
+};
+
+export type UpsertSectionResult = {
+  actionRun?: Maybe<Scalars["String"]["output"]>;
+  errors?: Maybe<Array<ExecutionError>>;
+  success: Scalars["Boolean"]["output"];
+};
+
+export type UpsertUserInput = {
+  email?: InputMaybe<Scalars["String"]["input"]>;
+  emailVerified?: InputMaybe<Scalars["Boolean"]["input"]>;
+  firstName?: InputMaybe<Scalars["String"]["input"]>;
+  googleImageUrl?: InputMaybe<Scalars["String"]["input"]>;
+  googleProfileId?: InputMaybe<Scalars["String"]["input"]>;
+  id?: InputMaybe<Scalars["GadgetID"]["input"]>;
+  lastName?: InputMaybe<Scalars["String"]["input"]>;
+  lastSignedIn?: InputMaybe<Scalars["DateTime"]["input"]>;
+  password?: InputMaybe<Scalars["String"]["input"]>;
+  /** A string list of Gadget platform Role keys to assign to this record */
+  roles?: InputMaybe<Array<Scalars["String"]["input"]>>;
+};
+
+export type UpsertUserResult = {
+  actionRun?: Maybe<Scalars["String"]["output"]>;
+  errors?: Maybe<Array<ExecutionError>>;
+  success: Scalars["Boolean"]["output"];
+};
+
+export type UpsertWidgetInput = {
+  anything?: InputMaybe<Scalars["JSON"]["input"]>;
+  birthday?: InputMaybe<Scalars["DateOrDateTime"]["input"]>;
+  category?: InputMaybe<Array<Scalars["WidgetCategoryEnum"]["input"]>>;
+  color?: InputMaybe<Scalars["String"]["input"]>;
+  description?: InputMaybe<RichTextInput>;
+  embedding?: InputMaybe<Array<Scalars["Float"]["input"]>>;
+  gizmos?: InputMaybe<Array<InputMaybe<GizmoHasManyInput>>>;
+  id?: InputMaybe<Scalars["GadgetID"]["input"]>;
+  inventoryCount?: InputMaybe<Scalars["Float"]["input"]>;
+  isChecked?: InputMaybe<Scalars["Boolean"]["input"]>;
+  metafields?: InputMaybe<Scalars["JSON"]["input"]>;
+  mustBeLongString?: InputMaybe<Scalars["String"]["input"]>;
+  name?: InputMaybe<Scalars["String"]["input"]>;
+  /** A string list of Gadget platform Role keys to assign to this record */
+  roles?: InputMaybe<Array<Scalars["String"]["input"]>>;
+  secretKey?: InputMaybe<Scalars["String"]["input"]>;
+  section?: InputMaybe<SectionBelongsToInput>;
+  startsAt?: InputMaybe<Scalars["DateTime"]["input"]>;
+};
+
+export type UpsertWidgetResult = {
+  actionRun?: Maybe<Scalars["String"]["output"]>;
+  errors?: Maybe<Array<ExecutionError>>;
+  success: Scalars["Boolean"]["output"];
 };
 
 export type User = {
@@ -6243,6 +7388,7 @@ export type WidgetBelongsToInput = {
   /** Existing ID of another record, which you would like to associate this record with */
   _link?: InputMaybe<Scalars["GadgetID"]["input"]>;
   addInventory?: InputMaybe<NestedWidgetAddInventoryInput>;
+  alwaysThrowError?: InputMaybe<NestedWidgetAlwaysThrowErrorInput>;
   create?: InputMaybe<NestedWidgetCreateInput>;
   delete?: InputMaybe<NestedWidgetDeleteInput>;
   update?: InputMaybe<NestedWidgetUpdateInput>;
@@ -6293,6 +7439,7 @@ export type WidgetHasManyInput = {
   /** Creates, updates, or deletes existing records in the database as needed to arrive at the list of records specified. */
   _converge?: InputMaybe<ConvergeWidgetInput>;
   addInventory?: InputMaybe<NestedWidgetAddInventoryInput>;
+  alwaysThrowError?: InputMaybe<NestedWidgetAlwaysThrowErrorInput>;
   create?: InputMaybe<NestedWidgetCreateInput>;
   delete?: InputMaybe<NestedWidgetDeleteInput>;
   update?: InputMaybe<NestedWidgetUpdateInput>;
@@ -6354,7 +7501,7 @@ type FieldMetadata_GadgetModelField_Fragment = {
           __typename?: "GadgetModel";
           apiIdentifier: string;
           namespace?: Array<string> | null;
-          defaultDisplayField: { __typename?: "GadgetModelField"; apiIdentifier: string; fieldType: GadgetFieldType };
+          defaultDisplayField: { __typename?: "GadgetModelField"; name: string; apiIdentifier: string; fieldType: GadgetFieldType };
           fields?: Array<{ __typename?: "GadgetModelField"; name: string; apiIdentifier: string; fieldType: GadgetFieldType }>;
         } | null;
         validations: Array<
@@ -6409,7 +7556,7 @@ type FieldMetadata_GadgetModelField_Fragment = {
           __typename?: "GadgetModel";
           apiIdentifier: string;
           namespace?: Array<string> | null;
-          defaultDisplayField: { __typename?: "GadgetModelField"; apiIdentifier: string; fieldType: GadgetFieldType };
+          defaultDisplayField: { __typename?: "GadgetModelField"; name: string; apiIdentifier: string; fieldType: GadgetFieldType };
           fields?: Array<{ __typename?: "GadgetModelField"; name: string; apiIdentifier: string; fieldType: GadgetFieldType }>;
         } | null;
         inverseField?: { __typename?: "GadgetModelField"; apiIdentifier: string } | null;
@@ -6428,7 +7575,7 @@ type FieldMetadata_GadgetModelField_Fragment = {
           __typename?: "GadgetModel";
           apiIdentifier: string;
           namespace?: Array<string> | null;
-          defaultDisplayField: { __typename?: "GadgetModelField"; apiIdentifier: string; fieldType: GadgetFieldType };
+          defaultDisplayField: { __typename?: "GadgetModelField"; name: string; apiIdentifier: string; fieldType: GadgetFieldType };
           fields?: Array<{ __typename?: "GadgetModelField"; name: string; apiIdentifier: string; fieldType: GadgetFieldType }>;
         } | null;
         inverseField?: { __typename?: "GadgetModelField"; apiIdentifier: string } | null;
@@ -6479,7 +7626,7 @@ type FieldMetadata_GadgetObjectField_Fragment = {
           __typename?: "GadgetModel";
           apiIdentifier: string;
           namespace?: Array<string> | null;
-          defaultDisplayField: { __typename?: "GadgetModelField"; apiIdentifier: string; fieldType: GadgetFieldType };
+          defaultDisplayField: { __typename?: "GadgetModelField"; name: string; apiIdentifier: string; fieldType: GadgetFieldType };
           fields?: Array<{ __typename?: "GadgetModelField"; name: string; apiIdentifier: string; fieldType: GadgetFieldType }>;
         } | null;
         validations: Array<
@@ -6534,7 +7681,7 @@ type FieldMetadata_GadgetObjectField_Fragment = {
           __typename?: "GadgetModel";
           apiIdentifier: string;
           namespace?: Array<string> | null;
-          defaultDisplayField: { __typename?: "GadgetModelField"; apiIdentifier: string; fieldType: GadgetFieldType };
+          defaultDisplayField: { __typename?: "GadgetModelField"; name: string; apiIdentifier: string; fieldType: GadgetFieldType };
           fields?: Array<{ __typename?: "GadgetModelField"; name: string; apiIdentifier: string; fieldType: GadgetFieldType }>;
         } | null;
         inverseField?: { __typename?: "GadgetModelField"; apiIdentifier: string } | null;
@@ -6553,7 +7700,7 @@ type FieldMetadata_GadgetObjectField_Fragment = {
           __typename?: "GadgetModel";
           apiIdentifier: string;
           namespace?: Array<string> | null;
-          defaultDisplayField: { __typename?: "GadgetModelField"; apiIdentifier: string; fieldType: GadgetFieldType };
+          defaultDisplayField: { __typename?: "GadgetModelField"; name: string; apiIdentifier: string; fieldType: GadgetFieldType };
           fields?: Array<{ __typename?: "GadgetModelField"; name: string; apiIdentifier: string; fieldType: GadgetFieldType }>;
         } | null;
         inverseField?: { __typename?: "GadgetModelField"; apiIdentifier: string } | null;
@@ -6623,7 +7770,7 @@ export type GetModelMetadataQuery = {
                 __typename?: "GadgetModel";
                 apiIdentifier: string;
                 namespace?: Array<string> | null;
-                defaultDisplayField: { __typename?: "GadgetModelField"; apiIdentifier: string; fieldType: GadgetFieldType };
+                defaultDisplayField: { __typename?: "GadgetModelField"; name: string; apiIdentifier: string; fieldType: GadgetFieldType };
                 fields?: Array<{ __typename?: "GadgetModelField"; name: string; apiIdentifier: string; fieldType: GadgetFieldType }>;
               } | null;
               validations: Array<
@@ -6678,7 +7825,7 @@ export type GetModelMetadataQuery = {
                 __typename?: "GadgetModel";
                 apiIdentifier: string;
                 namespace?: Array<string> | null;
-                defaultDisplayField: { __typename?: "GadgetModelField"; apiIdentifier: string; fieldType: GadgetFieldType };
+                defaultDisplayField: { __typename?: "GadgetModelField"; name: string; apiIdentifier: string; fieldType: GadgetFieldType };
                 fields?: Array<{ __typename?: "GadgetModelField"; name: string; apiIdentifier: string; fieldType: GadgetFieldType }>;
               } | null;
               inverseField?: { __typename?: "GadgetModelField"; apiIdentifier: string } | null;
@@ -6697,7 +7844,7 @@ export type GetModelMetadataQuery = {
                 __typename?: "GadgetModel";
                 apiIdentifier: string;
                 namespace?: Array<string> | null;
-                defaultDisplayField: { __typename?: "GadgetModelField"; apiIdentifier: string; fieldType: GadgetFieldType };
+                defaultDisplayField: { __typename?: "GadgetModelField"; name: string; apiIdentifier: string; fieldType: GadgetFieldType };
                 fields?: Array<{ __typename?: "GadgetModelField"; name: string; apiIdentifier: string; fieldType: GadgetFieldType }>;
               } | null;
               inverseField?: { __typename?: "GadgetModelField"; apiIdentifier: string } | null;
@@ -6766,7 +7913,7 @@ type SubFields_GadgetModelField_Fragment = {
                   __typename?: "GadgetModel";
                   apiIdentifier: string;
                   namespace?: Array<string> | null;
-                  defaultDisplayField: { __typename?: "GadgetModelField"; apiIdentifier: string; fieldType: GadgetFieldType };
+                  defaultDisplayField: { __typename?: "GadgetModelField"; name: string; apiIdentifier: string; fieldType: GadgetFieldType };
                   fields?: Array<{ __typename?: "GadgetModelField"; name: string; apiIdentifier: string; fieldType: GadgetFieldType }>;
                 } | null;
                 validations: Array<
@@ -6821,7 +7968,7 @@ type SubFields_GadgetModelField_Fragment = {
                   __typename?: "GadgetModel";
                   apiIdentifier: string;
                   namespace?: Array<string> | null;
-                  defaultDisplayField: { __typename?: "GadgetModelField"; apiIdentifier: string; fieldType: GadgetFieldType };
+                  defaultDisplayField: { __typename?: "GadgetModelField"; name: string; apiIdentifier: string; fieldType: GadgetFieldType };
                   fields?: Array<{ __typename?: "GadgetModelField"; name: string; apiIdentifier: string; fieldType: GadgetFieldType }>;
                 } | null;
                 inverseField?: { __typename?: "GadgetModelField"; apiIdentifier: string } | null;
@@ -6840,7 +7987,7 @@ type SubFields_GadgetModelField_Fragment = {
                   __typename?: "GadgetModel";
                   apiIdentifier: string;
                   namespace?: Array<string> | null;
-                  defaultDisplayField: { __typename?: "GadgetModelField"; apiIdentifier: string; fieldType: GadgetFieldType };
+                  defaultDisplayField: { __typename?: "GadgetModelField"; name: string; apiIdentifier: string; fieldType: GadgetFieldType };
                   fields?: Array<{ __typename?: "GadgetModelField"; name: string; apiIdentifier: string; fieldType: GadgetFieldType }>;
                 } | null;
                 inverseField?: { __typename?: "GadgetModelField"; apiIdentifier: string } | null;
@@ -6884,7 +8031,12 @@ type SubFields_GadgetModelField_Fragment = {
                           __typename?: "GadgetModel";
                           apiIdentifier: string;
                           namespace?: Array<string> | null;
-                          defaultDisplayField: { __typename?: "GadgetModelField"; apiIdentifier: string; fieldType: GadgetFieldType };
+                          defaultDisplayField: {
+                            __typename?: "GadgetModelField";
+                            name: string;
+                            apiIdentifier: string;
+                            fieldType: GadgetFieldType;
+                          };
                           fields?: Array<{
                             __typename?: "GadgetModelField";
                             name: string;
@@ -6968,7 +8120,12 @@ type SubFields_GadgetModelField_Fragment = {
                           __typename?: "GadgetModel";
                           apiIdentifier: string;
                           namespace?: Array<string> | null;
-                          defaultDisplayField: { __typename?: "GadgetModelField"; apiIdentifier: string; fieldType: GadgetFieldType };
+                          defaultDisplayField: {
+                            __typename?: "GadgetModelField";
+                            name: string;
+                            apiIdentifier: string;
+                            fieldType: GadgetFieldType;
+                          };
                           fields?: Array<{
                             __typename?: "GadgetModelField";
                             name: string;
@@ -6998,7 +8155,12 @@ type SubFields_GadgetModelField_Fragment = {
                           __typename?: "GadgetModel";
                           apiIdentifier: string;
                           namespace?: Array<string> | null;
-                          defaultDisplayField: { __typename?: "GadgetModelField"; apiIdentifier: string; fieldType: GadgetFieldType };
+                          defaultDisplayField: {
+                            __typename?: "GadgetModelField";
+                            name: string;
+                            apiIdentifier: string;
+                            fieldType: GadgetFieldType;
+                          };
                           fields?: Array<{
                             __typename?: "GadgetModelField";
                             name: string;
@@ -7061,6 +8223,7 @@ type SubFields_GadgetModelField_Fragment = {
                                   namespace?: Array<string> | null;
                                   defaultDisplayField: {
                                     __typename?: "GadgetModelField";
+                                    name: string;
                                     apiIdentifier: string;
                                     fieldType: GadgetFieldType;
                                   };
@@ -7169,6 +8332,7 @@ type SubFields_GadgetModelField_Fragment = {
                                   namespace?: Array<string> | null;
                                   defaultDisplayField: {
                                     __typename?: "GadgetModelField";
+                                    name: string;
                                     apiIdentifier: string;
                                     fieldType: GadgetFieldType;
                                   };
@@ -7208,6 +8372,7 @@ type SubFields_GadgetModelField_Fragment = {
                                   namespace?: Array<string> | null;
                                   defaultDisplayField: {
                                     __typename?: "GadgetModelField";
+                                    name: string;
                                     apiIdentifier: string;
                                     fieldType: GadgetFieldType;
                                   };
@@ -7340,7 +8505,7 @@ type SubFields_GadgetObjectField_Fragment = {
                   __typename?: "GadgetModel";
                   apiIdentifier: string;
                   namespace?: Array<string> | null;
-                  defaultDisplayField: { __typename?: "GadgetModelField"; apiIdentifier: string; fieldType: GadgetFieldType };
+                  defaultDisplayField: { __typename?: "GadgetModelField"; name: string; apiIdentifier: string; fieldType: GadgetFieldType };
                   fields?: Array<{ __typename?: "GadgetModelField"; name: string; apiIdentifier: string; fieldType: GadgetFieldType }>;
                 } | null;
                 validations: Array<
@@ -7395,7 +8560,7 @@ type SubFields_GadgetObjectField_Fragment = {
                   __typename?: "GadgetModel";
                   apiIdentifier: string;
                   namespace?: Array<string> | null;
-                  defaultDisplayField: { __typename?: "GadgetModelField"; apiIdentifier: string; fieldType: GadgetFieldType };
+                  defaultDisplayField: { __typename?: "GadgetModelField"; name: string; apiIdentifier: string; fieldType: GadgetFieldType };
                   fields?: Array<{ __typename?: "GadgetModelField"; name: string; apiIdentifier: string; fieldType: GadgetFieldType }>;
                 } | null;
                 inverseField?: { __typename?: "GadgetModelField"; apiIdentifier: string } | null;
@@ -7414,7 +8579,7 @@ type SubFields_GadgetObjectField_Fragment = {
                   __typename?: "GadgetModel";
                   apiIdentifier: string;
                   namespace?: Array<string> | null;
-                  defaultDisplayField: { __typename?: "GadgetModelField"; apiIdentifier: string; fieldType: GadgetFieldType };
+                  defaultDisplayField: { __typename?: "GadgetModelField"; name: string; apiIdentifier: string; fieldType: GadgetFieldType };
                   fields?: Array<{ __typename?: "GadgetModelField"; name: string; apiIdentifier: string; fieldType: GadgetFieldType }>;
                 } | null;
                 inverseField?: { __typename?: "GadgetModelField"; apiIdentifier: string } | null;
@@ -7458,7 +8623,12 @@ type SubFields_GadgetObjectField_Fragment = {
                           __typename?: "GadgetModel";
                           apiIdentifier: string;
                           namespace?: Array<string> | null;
-                          defaultDisplayField: { __typename?: "GadgetModelField"; apiIdentifier: string; fieldType: GadgetFieldType };
+                          defaultDisplayField: {
+                            __typename?: "GadgetModelField";
+                            name: string;
+                            apiIdentifier: string;
+                            fieldType: GadgetFieldType;
+                          };
                           fields?: Array<{
                             __typename?: "GadgetModelField";
                             name: string;
@@ -7542,7 +8712,12 @@ type SubFields_GadgetObjectField_Fragment = {
                           __typename?: "GadgetModel";
                           apiIdentifier: string;
                           namespace?: Array<string> | null;
-                          defaultDisplayField: { __typename?: "GadgetModelField"; apiIdentifier: string; fieldType: GadgetFieldType };
+                          defaultDisplayField: {
+                            __typename?: "GadgetModelField";
+                            name: string;
+                            apiIdentifier: string;
+                            fieldType: GadgetFieldType;
+                          };
                           fields?: Array<{
                             __typename?: "GadgetModelField";
                             name: string;
@@ -7572,7 +8747,12 @@ type SubFields_GadgetObjectField_Fragment = {
                           __typename?: "GadgetModel";
                           apiIdentifier: string;
                           namespace?: Array<string> | null;
-                          defaultDisplayField: { __typename?: "GadgetModelField"; apiIdentifier: string; fieldType: GadgetFieldType };
+                          defaultDisplayField: {
+                            __typename?: "GadgetModelField";
+                            name: string;
+                            apiIdentifier: string;
+                            fieldType: GadgetFieldType;
+                          };
                           fields?: Array<{
                             __typename?: "GadgetModelField";
                             name: string;
@@ -7635,6 +8815,7 @@ type SubFields_GadgetObjectField_Fragment = {
                                   namespace?: Array<string> | null;
                                   defaultDisplayField: {
                                     __typename?: "GadgetModelField";
+                                    name: string;
                                     apiIdentifier: string;
                                     fieldType: GadgetFieldType;
                                   };
@@ -7743,6 +8924,7 @@ type SubFields_GadgetObjectField_Fragment = {
                                   namespace?: Array<string> | null;
                                   defaultDisplayField: {
                                     __typename?: "GadgetModelField";
+                                    name: string;
                                     apiIdentifier: string;
                                     fieldType: GadgetFieldType;
                                   };
@@ -7782,6 +8964,7 @@ type SubFields_GadgetObjectField_Fragment = {
                                   namespace?: Array<string> | null;
                                   defaultDisplayField: {
                                     __typename?: "GadgetModelField";
+                                    name: string;
                                     apiIdentifier: string;
                                     fieldType: GadgetFieldType;
                                   };
@@ -7923,7 +9106,7 @@ export type ModelActionMetadataQuery = {
                   __typename?: "GadgetModel";
                   apiIdentifier: string;
                   namespace?: Array<string> | null;
-                  defaultDisplayField: { __typename?: "GadgetModelField"; apiIdentifier: string; fieldType: GadgetFieldType };
+                  defaultDisplayField: { __typename?: "GadgetModelField"; name: string; apiIdentifier: string; fieldType: GadgetFieldType };
                   fields?: Array<{ __typename?: "GadgetModelField"; name: string; apiIdentifier: string; fieldType: GadgetFieldType }>;
                 } | null;
                 validations: Array<
@@ -7978,7 +9161,7 @@ export type ModelActionMetadataQuery = {
                   __typename?: "GadgetModel";
                   apiIdentifier: string;
                   namespace?: Array<string> | null;
-                  defaultDisplayField: { __typename?: "GadgetModelField"; apiIdentifier: string; fieldType: GadgetFieldType };
+                  defaultDisplayField: { __typename?: "GadgetModelField"; name: string; apiIdentifier: string; fieldType: GadgetFieldType };
                   fields?: Array<{ __typename?: "GadgetModelField"; name: string; apiIdentifier: string; fieldType: GadgetFieldType }>;
                 } | null;
                 inverseField?: { __typename?: "GadgetModelField"; apiIdentifier: string } | null;
@@ -7997,7 +9180,7 @@ export type ModelActionMetadataQuery = {
                   __typename?: "GadgetModel";
                   apiIdentifier: string;
                   namespace?: Array<string> | null;
-                  defaultDisplayField: { __typename?: "GadgetModelField"; apiIdentifier: string; fieldType: GadgetFieldType };
+                  defaultDisplayField: { __typename?: "GadgetModelField"; name: string; apiIdentifier: string; fieldType: GadgetFieldType };
                   fields?: Array<{ __typename?: "GadgetModelField"; name: string; apiIdentifier: string; fieldType: GadgetFieldType }>;
                 } | null;
                 inverseField?: { __typename?: "GadgetModelField"; apiIdentifier: string } | null;
@@ -8041,7 +9224,12 @@ export type ModelActionMetadataQuery = {
                           __typename?: "GadgetModel";
                           apiIdentifier: string;
                           namespace?: Array<string> | null;
-                          defaultDisplayField: { __typename?: "GadgetModelField"; apiIdentifier: string; fieldType: GadgetFieldType };
+                          defaultDisplayField: {
+                            __typename?: "GadgetModelField";
+                            name: string;
+                            apiIdentifier: string;
+                            fieldType: GadgetFieldType;
+                          };
                           fields?: Array<{
                             __typename?: "GadgetModelField";
                             name: string;
@@ -8125,7 +9313,12 @@ export type ModelActionMetadataQuery = {
                           __typename?: "GadgetModel";
                           apiIdentifier: string;
                           namespace?: Array<string> | null;
-                          defaultDisplayField: { __typename?: "GadgetModelField"; apiIdentifier: string; fieldType: GadgetFieldType };
+                          defaultDisplayField: {
+                            __typename?: "GadgetModelField";
+                            name: string;
+                            apiIdentifier: string;
+                            fieldType: GadgetFieldType;
+                          };
                           fields?: Array<{
                             __typename?: "GadgetModelField";
                             name: string;
@@ -8155,7 +9348,12 @@ export type ModelActionMetadataQuery = {
                           __typename?: "GadgetModel";
                           apiIdentifier: string;
                           namespace?: Array<string> | null;
-                          defaultDisplayField: { __typename?: "GadgetModelField"; apiIdentifier: string; fieldType: GadgetFieldType };
+                          defaultDisplayField: {
+                            __typename?: "GadgetModelField";
+                            name: string;
+                            apiIdentifier: string;
+                            fieldType: GadgetFieldType;
+                          };
                           fields?: Array<{
                             __typename?: "GadgetModelField";
                             name: string;
@@ -8218,6 +9416,7 @@ export type ModelActionMetadataQuery = {
                                   namespace?: Array<string> | null;
                                   defaultDisplayField: {
                                     __typename?: "GadgetModelField";
+                                    name: string;
                                     apiIdentifier: string;
                                     fieldType: GadgetFieldType;
                                   };
@@ -8326,6 +9525,7 @@ export type ModelActionMetadataQuery = {
                                   namespace?: Array<string> | null;
                                   defaultDisplayField: {
                                     __typename?: "GadgetModelField";
+                                    name: string;
                                     apiIdentifier: string;
                                     fieldType: GadgetFieldType;
                                   };
@@ -8365,6 +9565,7 @@ export type ModelActionMetadataQuery = {
                                   namespace?: Array<string> | null;
                                   defaultDisplayField: {
                                     __typename?: "GadgetModelField";
+                                    name: string;
                                     apiIdentifier: string;
                                     fieldType: GadgetFieldType;
                                   };
@@ -8440,6 +9641,7 @@ export type ModelActionMetadataQuery = {
                                           namespace?: Array<string> | null;
                                           defaultDisplayField: {
                                             __typename?: "GadgetModelField";
+                                            name: string;
                                             apiIdentifier: string;
                                             fieldType: GadgetFieldType;
                                           };
@@ -8568,6 +9770,7 @@ export type ModelActionMetadataQuery = {
                                           namespace?: Array<string> | null;
                                           defaultDisplayField: {
                                             __typename?: "GadgetModelField";
+                                            name: string;
                                             apiIdentifier: string;
                                             fieldType: GadgetFieldType;
                                           };
@@ -8612,6 +9815,7 @@ export type ModelActionMetadataQuery = {
                                           namespace?: Array<string> | null;
                                           defaultDisplayField: {
                                             __typename?: "GadgetModelField";
+                                            name: string;
                                             apiIdentifier: string;
                                             fieldType: GadgetFieldType;
                                           };
@@ -8780,7 +9984,7 @@ export type GlobalActionMetadataQuery = {
                 __typename?: "GadgetModel";
                 apiIdentifier: string;
                 namespace?: Array<string> | null;
-                defaultDisplayField: { __typename?: "GadgetModelField"; apiIdentifier: string; fieldType: GadgetFieldType };
+                defaultDisplayField: { __typename?: "GadgetModelField"; name: string; apiIdentifier: string; fieldType: GadgetFieldType };
                 fields?: Array<{ __typename?: "GadgetModelField"; name: string; apiIdentifier: string; fieldType: GadgetFieldType }>;
               } | null;
               validations: Array<
@@ -8835,7 +10039,7 @@ export type GlobalActionMetadataQuery = {
                 __typename?: "GadgetModel";
                 apiIdentifier: string;
                 namespace?: Array<string> | null;
-                defaultDisplayField: { __typename?: "GadgetModelField"; apiIdentifier: string; fieldType: GadgetFieldType };
+                defaultDisplayField: { __typename?: "GadgetModelField"; name: string; apiIdentifier: string; fieldType: GadgetFieldType };
                 fields?: Array<{ __typename?: "GadgetModelField"; name: string; apiIdentifier: string; fieldType: GadgetFieldType }>;
               } | null;
               inverseField?: { __typename?: "GadgetModelField"; apiIdentifier: string } | null;
@@ -8854,7 +10058,7 @@ export type GlobalActionMetadataQuery = {
                 __typename?: "GadgetModel";
                 apiIdentifier: string;
                 namespace?: Array<string> | null;
-                defaultDisplayField: { __typename?: "GadgetModelField"; apiIdentifier: string; fieldType: GadgetFieldType };
+                defaultDisplayField: { __typename?: "GadgetModelField"; name: string; apiIdentifier: string; fieldType: GadgetFieldType };
                 fields?: Array<{ __typename?: "GadgetModelField"; name: string; apiIdentifier: string; fieldType: GadgetFieldType }>;
               } | null;
               inverseField?: { __typename?: "GadgetModelField"; apiIdentifier: string } | null;
@@ -8898,7 +10102,12 @@ export type GlobalActionMetadataQuery = {
                         __typename?: "GadgetModel";
                         apiIdentifier: string;
                         namespace?: Array<string> | null;
-                        defaultDisplayField: { __typename?: "GadgetModelField"; apiIdentifier: string; fieldType: GadgetFieldType };
+                        defaultDisplayField: {
+                          __typename?: "GadgetModelField";
+                          name: string;
+                          apiIdentifier: string;
+                          fieldType: GadgetFieldType;
+                        };
                         fields?: Array<{
                           __typename?: "GadgetModelField";
                           name: string;
@@ -8982,7 +10191,12 @@ export type GlobalActionMetadataQuery = {
                         __typename?: "GadgetModel";
                         apiIdentifier: string;
                         namespace?: Array<string> | null;
-                        defaultDisplayField: { __typename?: "GadgetModelField"; apiIdentifier: string; fieldType: GadgetFieldType };
+                        defaultDisplayField: {
+                          __typename?: "GadgetModelField";
+                          name: string;
+                          apiIdentifier: string;
+                          fieldType: GadgetFieldType;
+                        };
                         fields?: Array<{
                           __typename?: "GadgetModelField";
                           name: string;
@@ -9012,7 +10226,12 @@ export type GlobalActionMetadataQuery = {
                         __typename?: "GadgetModel";
                         apiIdentifier: string;
                         namespace?: Array<string> | null;
-                        defaultDisplayField: { __typename?: "GadgetModelField"; apiIdentifier: string; fieldType: GadgetFieldType };
+                        defaultDisplayField: {
+                          __typename?: "GadgetModelField";
+                          name: string;
+                          apiIdentifier: string;
+                          fieldType: GadgetFieldType;
+                        };
                         fields?: Array<{
                           __typename?: "GadgetModelField";
                           name: string;
@@ -9073,7 +10292,12 @@ export type GlobalActionMetadataQuery = {
                                 __typename?: "GadgetModel";
                                 apiIdentifier: string;
                                 namespace?: Array<string> | null;
-                                defaultDisplayField: { __typename?: "GadgetModelField"; apiIdentifier: string; fieldType: GadgetFieldType };
+                                defaultDisplayField: {
+                                  __typename?: "GadgetModelField";
+                                  name: string;
+                                  apiIdentifier: string;
+                                  fieldType: GadgetFieldType;
+                                };
                                 fields?: Array<{
                                   __typename?: "GadgetModelField";
                                   name: string;
@@ -9177,7 +10401,12 @@ export type GlobalActionMetadataQuery = {
                                 __typename?: "GadgetModel";
                                 apiIdentifier: string;
                                 namespace?: Array<string> | null;
-                                defaultDisplayField: { __typename?: "GadgetModelField"; apiIdentifier: string; fieldType: GadgetFieldType };
+                                defaultDisplayField: {
+                                  __typename?: "GadgetModelField";
+                                  name: string;
+                                  apiIdentifier: string;
+                                  fieldType: GadgetFieldType;
+                                };
                                 fields?: Array<{
                                   __typename?: "GadgetModelField";
                                   name: string;
@@ -9212,7 +10441,12 @@ export type GlobalActionMetadataQuery = {
                                 __typename?: "GadgetModel";
                                 apiIdentifier: string;
                                 namespace?: Array<string> | null;
-                                defaultDisplayField: { __typename?: "GadgetModelField"; apiIdentifier: string; fieldType: GadgetFieldType };
+                                defaultDisplayField: {
+                                  __typename?: "GadgetModelField";
+                                  name: string;
+                                  apiIdentifier: string;
+                                  fieldType: GadgetFieldType;
+                                };
                                 fields?: Array<{
                                   __typename?: "GadgetModelField";
                                   name: string;
@@ -9285,6 +10519,7 @@ export type GlobalActionMetadataQuery = {
                                         namespace?: Array<string> | null;
                                         defaultDisplayField: {
                                           __typename?: "GadgetModelField";
+                                          name: string;
                                           apiIdentifier: string;
                                           fieldType: GadgetFieldType;
                                         };
@@ -9413,6 +10648,7 @@ export type GlobalActionMetadataQuery = {
                                         namespace?: Array<string> | null;
                                         defaultDisplayField: {
                                           __typename?: "GadgetModelField";
+                                          name: string;
                                           apiIdentifier: string;
                                           fieldType: GadgetFieldType;
                                         };
@@ -9457,6 +10693,7 @@ export type GlobalActionMetadataQuery = {
                                         namespace?: Array<string> | null;
                                         defaultDisplayField: {
                                           __typename?: "GadgetModelField";
+                                          name: string;
                                           apiIdentifier: string;
                                           fieldType: GadgetFieldType;
                                         };
@@ -9735,6 +10972,7 @@ export const FieldMetadataFragmentDoc = {
                               selectionSet: {
                                 kind: "SelectionSet",
                                 selections: [
+                                  { kind: "Field", name: { kind: "Name", value: "name" } },
                                   { kind: "Field", name: { kind: "Name", value: "apiIdentifier" } },
                                   { kind: "Field", name: { kind: "Name", value: "fieldType" } },
                                 ],
@@ -9795,6 +11033,7 @@ export const FieldMetadataFragmentDoc = {
                               selectionSet: {
                                 kind: "SelectionSet",
                                 selections: [
+                                  { kind: "Field", name: { kind: "Name", value: "name" } },
                                   { kind: "Field", name: { kind: "Name", value: "apiIdentifier" } },
                                   { kind: "Field", name: { kind: "Name", value: "fieldType" } },
                                 ],
@@ -9855,6 +11094,7 @@ export const FieldMetadataFragmentDoc = {
                               selectionSet: {
                                 kind: "SelectionSet",
                                 selections: [
+                                  { kind: "Field", name: { kind: "Name", value: "name" } },
                                   { kind: "Field", name: { kind: "Name", value: "apiIdentifier" } },
                                   { kind: "Field", name: { kind: "Name", value: "fieldType" } },
                                 ],
@@ -10167,6 +11407,7 @@ export const SubFieldsFragmentDoc = {
                               selectionSet: {
                                 kind: "SelectionSet",
                                 selections: [
+                                  { kind: "Field", name: { kind: "Name", value: "name" } },
                                   { kind: "Field", name: { kind: "Name", value: "apiIdentifier" } },
                                   { kind: "Field", name: { kind: "Name", value: "fieldType" } },
                                 ],
@@ -10227,6 +11468,7 @@ export const SubFieldsFragmentDoc = {
                               selectionSet: {
                                 kind: "SelectionSet",
                                 selections: [
+                                  { kind: "Field", name: { kind: "Name", value: "name" } },
                                   { kind: "Field", name: { kind: "Name", value: "apiIdentifier" } },
                                   { kind: "Field", name: { kind: "Name", value: "fieldType" } },
                                 ],
@@ -10287,6 +11529,7 @@ export const SubFieldsFragmentDoc = {
                               selectionSet: {
                                 kind: "SelectionSet",
                                 selections: [
+                                  { kind: "Field", name: { kind: "Name", value: "name" } },
                                   { kind: "Field", name: { kind: "Name", value: "apiIdentifier" } },
                                   { kind: "Field", name: { kind: "Name", value: "fieldType" } },
                                 ],
@@ -10551,6 +11794,7 @@ export const GetModelMetadataDocument = {
                               selectionSet: {
                                 kind: "SelectionSet",
                                 selections: [
+                                  { kind: "Field", name: { kind: "Name", value: "name" } },
                                   { kind: "Field", name: { kind: "Name", value: "apiIdentifier" } },
                                   { kind: "Field", name: { kind: "Name", value: "fieldType" } },
                                 ],
@@ -10611,6 +11855,7 @@ export const GetModelMetadataDocument = {
                               selectionSet: {
                                 kind: "SelectionSet",
                                 selections: [
+                                  { kind: "Field", name: { kind: "Name", value: "name" } },
                                   { kind: "Field", name: { kind: "Name", value: "apiIdentifier" } },
                                   { kind: "Field", name: { kind: "Name", value: "fieldType" } },
                                 ],
@@ -10671,6 +11916,7 @@ export const GetModelMetadataDocument = {
                               selectionSet: {
                                 kind: "SelectionSet",
                                 selections: [
+                                  { kind: "Field", name: { kind: "Name", value: "name" } },
                                   { kind: "Field", name: { kind: "Name", value: "apiIdentifier" } },
                                   { kind: "Field", name: { kind: "Name", value: "fieldType" } },
                                 ],
@@ -10963,6 +12209,7 @@ export const ModelActionMetadataDocument = {
                               selectionSet: {
                                 kind: "SelectionSet",
                                 selections: [
+                                  { kind: "Field", name: { kind: "Name", value: "name" } },
                                   { kind: "Field", name: { kind: "Name", value: "apiIdentifier" } },
                                   { kind: "Field", name: { kind: "Name", value: "fieldType" } },
                                 ],
@@ -11023,6 +12270,7 @@ export const ModelActionMetadataDocument = {
                               selectionSet: {
                                 kind: "SelectionSet",
                                 selections: [
+                                  { kind: "Field", name: { kind: "Name", value: "name" } },
                                   { kind: "Field", name: { kind: "Name", value: "apiIdentifier" } },
                                   { kind: "Field", name: { kind: "Name", value: "fieldType" } },
                                 ],
@@ -11083,6 +12331,7 @@ export const ModelActionMetadataDocument = {
                               selectionSet: {
                                 kind: "SelectionSet",
                                 selections: [
+                                  { kind: "Field", name: { kind: "Name", value: "name" } },
                                   { kind: "Field", name: { kind: "Name", value: "apiIdentifier" } },
                                   { kind: "Field", name: { kind: "Name", value: "fieldType" } },
                                 ],
@@ -11453,6 +12702,7 @@ export const GlobalActionMetadataDocument = {
                               selectionSet: {
                                 kind: "SelectionSet",
                                 selections: [
+                                  { kind: "Field", name: { kind: "Name", value: "name" } },
                                   { kind: "Field", name: { kind: "Name", value: "apiIdentifier" } },
                                   { kind: "Field", name: { kind: "Name", value: "fieldType" } },
                                 ],
@@ -11513,6 +12763,7 @@ export const GlobalActionMetadataDocument = {
                               selectionSet: {
                                 kind: "SelectionSet",
                                 selections: [
+                                  { kind: "Field", name: { kind: "Name", value: "name" } },
                                   { kind: "Field", name: { kind: "Name", value: "apiIdentifier" } },
                                   { kind: "Field", name: { kind: "Name", value: "fieldType" } },
                                 ],
@@ -11573,6 +12824,7 @@ export const GlobalActionMetadataDocument = {
                               selectionSet: {
                                 kind: "SelectionSet",
                                 selections: [
+                                  { kind: "Field", name: { kind: "Name", value: "name" } },
                                   { kind: "Field", name: { kind: "Name", value: "apiIdentifier" } },
                                   { kind: "Field", name: { kind: "Name", value: "fieldType" } },
                                 ],

@@ -66,6 +66,7 @@ const FieldMetadataFragment = graphql(/* GraphQL */ `
           apiIdentifier
           namespace
           defaultDisplayField {
+            name
             apiIdentifier
             fieldType
           }
@@ -82,6 +83,7 @@ const FieldMetadataFragment = graphql(/* GraphQL */ `
           apiIdentifier
           namespace
           defaultDisplayField {
+            name
             apiIdentifier
             fieldType
           }
@@ -98,6 +100,7 @@ const FieldMetadataFragment = graphql(/* GraphQL */ `
           apiIdentifier
           namespace
           defaultDisplayField {
+            name
             apiIdentifier
             fieldType
           }
@@ -415,39 +418,22 @@ const acceptedAutoFormFieldTypes = new Set([
   FieldType.HasOne,
 ]);
 
-export const filterAutoTableFieldList = (fields: FieldMetadata[] | undefined, options?: { include?: string[] }) => {
-  if (!fields) {
-    return [];
-  }
-
+export const filterAutoTableFieldList = (fields: FieldMetadata[]) => {
   let subset = fields;
 
-  if (options?.include) {
-    // When including fields, the order will match the order of the `include` array
-    subset = [];
-    const includes = new Set(options.include);
-
-    for (const includedFieldApiId of Array.from(includes)) {
-      const metadataField = fields.find((field) => field.apiIdentifier === includedFieldApiId);
-      if (metadataField) {
-        subset.push(metadataField);
-      }
-    }
-  } else {
-    // Don't include relationships in the table by default
-    subset = subset.filter(
-      (field) =>
-        field.fieldType !== GadgetFieldType.HasOne &&
-        field.fieldType !== GadgetFieldType.HasMany &&
-        field.fieldType !== GadgetFieldType.BelongsTo
-    );
-  }
+  // Don't include relationships in the table by default
+  subset = subset.filter(
+    (field) =>
+      field.fieldType !== GadgetFieldType.HasOne &&
+      field.fieldType !== GadgetFieldType.HasMany &&
+      field.fieldType !== GadgetFieldType.BelongsTo
+  );
 
   // Filter out fields that are not supported by the form
   return subset.filter((field) => acceptedAutoTableFieldTypes.has(field.fieldType));
 };
 
-const acceptedAutoTableFieldTypes = new Set([
+export const acceptedAutoTableFieldTypes = new Set([
   FieldType.Id,
   FieldType.Boolean,
   FieldType.Color,

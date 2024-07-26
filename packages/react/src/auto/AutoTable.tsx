@@ -18,6 +18,7 @@ export type AutoTableProps<
   initialDirection?: string;
   live?: boolean;
   columns?: TableOptions["columns"];
+  excludeColumns?: string[];
   onClick?: (row: TableRow) => void;
   sort?: Options["sort"];
   filter?: Options["filter"];

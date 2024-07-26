@@ -285,12 +285,13 @@ describe("PolarisAutoTable", () => {
         this is a custom cell: {record.id}-{record.name}
       </div>
     );
+
     setMockUseTableResponse({
       newRows: [
         {
           id: "1",
           name: "hello",
-          customCell: customCellRenderer({ name: "hello" }),
+          "Custom cell": customCellRenderer({ id: "1", name: "hello" }),
         },
       ],
       newColumns: [

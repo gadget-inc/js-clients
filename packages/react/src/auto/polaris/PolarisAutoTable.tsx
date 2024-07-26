@@ -12,6 +12,7 @@ import {
   useSetIndexFiltersMode,
 } from "@shopify/polaris";
 import pluralize from "pluralize";
+import type { ReactNode } from "react";
 import React, { useCallback, useMemo, useState } from "react";
 import { useTable } from "../../useTable.js";
 import type { TableColumn, TableRow } from "../../useTableUtils/types.js";
@@ -81,6 +82,7 @@ export const PolarisAutoTable = <
   >(props.model, {
     select: props.select,
     columns: props.columns,
+    excludeColumns: props.excludeColumns,
     pageSize: props.pageSize,
     live: props.live,
     sort: props.sort,
@@ -201,7 +203,7 @@ export const PolarisAutoTable = <
                 <IndexTable.Cell key={column.apiIdentifier}>
                   <div style={{ maxWidth: "200px" }}>
                     {column.isCustomCell ? (
-                      column.getValue(row)
+                      (row[column.apiIdentifier] as ReactNode)
                     ) : (
                       <PolarisAutoTableCellRenderer column={column} value={row[column.apiIdentifier] as ColumnValueType} />
                     )}
