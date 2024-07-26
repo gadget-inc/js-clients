@@ -1,10 +1,11 @@
 import type { DefaultSelection, FindManyFunction, GadgetRecord, LimitToKnownKeys, Select } from "@gadgetinc/api-client-core";
 import type { OperationContext } from "@urql/core";
-import { useCallback, useState } from "react";
+import { useCallback, useMemo, useState } from "react";
 import type { SearchResult } from "./useDebouncedSearch.js";
 import { useDebouncedSearch } from "./useDebouncedSearch.js";
 import { useFindMany } from "./useFindMany.js";
-import { RecordSelection, useSelectedRecordsController } from "./useSelectedRecordsController.js";
+import type { RecordSelection } from "./useSelectedRecordsController.js";
+import { useSelectedRecordsController } from "./useSelectedRecordsController.js";
 import type { ErrorWrapper, OptionsType, ReadOperationOptions } from "./utils.js";
 import { omit } from "./utils.js";
 
@@ -55,6 +56,12 @@ export const useList = <
   const [cursor, setCursor] = useState<string | undefined>();
   const [direction, setDirection] = useState<"forward" | "backward">("forward");
   const clearCursor = useCallback(() => setCursor(undefined), []);
+
+  useMemo(() => {
+    clearCursor();
+    setDirection("forward");
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [options?.sort, clearCursor]);
 
   const { ...search } = useDebouncedSearch({
     onDebouncedSearchValueChange() {
