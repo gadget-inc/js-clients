@@ -459,7 +459,6 @@ const acceptedAutoTableFieldTypes = new Set([
   FieldType.File,
   FieldType.Json,
   FieldType.Number,
-  FieldType.Password,
   FieldType.RichText,
   FieldType.RoleAssignments,
   FieldType.String,

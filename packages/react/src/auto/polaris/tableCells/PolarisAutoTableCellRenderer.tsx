@@ -4,8 +4,8 @@ import { FieldType } from "../../../metadata.js";
 import type { ColumnValueType, HasManyValueType, ValueWithTypename } from "../../../utils.js";
 import { PolarisAutoTableBooleanCell } from "./PolarisAutoTableBooleanCell.js";
 import { PolarisAutoTableDateTimeCell } from "./PolarisAutoTableDateTimeCell.js";
+import { PolarisAutoTableEncryptedStringCell } from "./PolarisAutoTableEncryptedStringCell.js";
 import { PolarisAutoTableFileCell } from "./PolarisAutoTableFileCell.js";
-import { PolarisAutoTablePasswordCell } from "./PolarisAutoTablePasswordCell.js";
 import { PolarisAutoTableTagCell } from "./PolarisAutoTableTagCell.js";
 import { PolarisAutoTableTextCell } from "./PolarisAutoTableTextCell.js";
 
@@ -31,15 +31,15 @@ export const PolarisAutoTableCellRenderer = (props: {
     case FieldType.String:
     case FieldType.Number:
     case FieldType.Email:
+    case FieldType.Computed:
     case FieldType.Url:
     case FieldType.RichText:
     case FieldType.Json: {
       return <PolarisAutoTableTextCell value={value} />;
     }
 
-    case FieldType.Password:
     case FieldType.EncryptedString: {
-      return <PolarisAutoTablePasswordCell />;
+      return <PolarisAutoTableEncryptedStringCell value={value} />;
     }
 
     case FieldType.RoleAssignments:
