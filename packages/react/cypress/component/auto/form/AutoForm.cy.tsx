@@ -45,6 +45,10 @@ describeForEachAutoAdapter("AutoForm", ({ name, adapter: { AutoForm }, wrapper }
     // Ensure that the form is cleared after submitting the create action
     cy.get(`input[name="widget.name"]`).should("have.value", "");
     cy.get(`input[name="widget.inventoryCount"]`).should("have.value", "");
+
+    // Ensure that the success banner can be closed
+    cy.get(`button[aria-label="Dismiss notification"]`).click();
+    cy.contains(`Saved Widget successfully`).should("not.exist");
   });
 
   it("onSuccess callback should return a record result after the form submission", () => {

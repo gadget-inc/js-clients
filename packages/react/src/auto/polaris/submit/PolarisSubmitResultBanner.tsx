@@ -3,22 +3,6 @@ import { Banner } from "@shopify/polaris";
 import React from "react";
 import { useResultBannerController } from "../../hooks/useResultBannerController.js";
 
-const PolarisBaseSubmitResultBanner = (props: BannerProps) => {
-  const { hide, successful, title } = useResultBannerController();
-
-  return (
-    <Banner
-      title={title}
-      tone={successful ? "success" : "critical"}
-      {...props}
-      onDismiss={() => {
-        hide();
-        props?.onDismiss?.();
-      }}
-    />
-  );
-};
-
 export const PolarisSubmitResultBanner = (props: { successBannerProps?: BannerProps; errorBannerProps?: BannerProps }) => {
   return (
     <>
@@ -29,11 +13,17 @@ export const PolarisSubmitResultBanner = (props: { successBannerProps?: BannerPr
 };
 
 export const PolarisSubmitSuccessfulBanner = (props: BannerProps) => {
-  const { show, successful } = useResultBannerController();
-  return show && successful ? <PolarisBaseSubmitResultBanner {...props} /> : null;
+  const { show, hide, successful, ...rest } = useResultBannerController();
+  if (!show || !successful) {
+    return null;
+  }
+  return <Banner tone="success" onDismiss={hide} {...rest} {...props} />;
 };
 
 export const PolarisSubmitErrorBanner = (props: BannerProps) => {
-  const { show, successful } = useResultBannerController();
-  return show && !successful ? <PolarisBaseSubmitResultBanner {...props} /> : null;
+  const { show, hide, successful, ...rest } = useResultBannerController();
+  if (!show || successful) {
+    return null;
+  }
+  return <Banner tone="critical" onDismiss={hide} {...rest} {...props} />;
 };
