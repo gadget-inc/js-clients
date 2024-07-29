@@ -1,11 +1,17 @@
 import { Banner, Button, ButtonGroup, Modal, Spinner, Text } from "@shopify/polaris";
 import React, { useCallback, useEffect, useMemo } from "react";
 import { useBulkAction } from "../../useBulkAction.js";
+import { TableRow } from "../../useTableUtils/types.js";
 import { humanizeCamelCase } from "../../utils.js";
 import { ModelActionDetails } from "../hooks/useTableBulkActions.js";
 
-export const PolarisAutoBulkActionModal = (props: { model: any; modelActionDetails?: ModelActionDetails; ids: string[] }) => {
-  const { model, modelActionDetails, ids } = props;
+export const PolarisAutoBulkActionModal = (props: {
+  model: any;
+  modelActionDetails?: ModelActionDetails;
+  ids: string[];
+  selectedRows: TableRow[];
+}) => {
+  const { model, modelActionDetails, ids, selectedRows } = props;
 
   const [showModal, setShowModal] = React.useState(!!modelActionDetails);
   const [actionName, setActionName] = React.useState(modelActionDetails?.apiIdentifier);
@@ -18,10 +24,12 @@ export const PolarisAutoBulkActionModal = (props: { model: any; modelActionDetai
     setActionName(modelActionDetails.apiIdentifier);
   }, [modelActionDetails]);
 
-  const actionIsLoaded = modelActionDetails && actionName && model[actionName];
-  const isBulkAction = actionIsLoaded && modelActionDetails.isBulk;
+  const actionIsLoaded = modelActionDetails && actionName;
+  const isBulkGadgetAction = actionIsLoaded && model[actionName] && modelActionDetails.isGadgetAction && modelActionDetails.isBulk;
 
   const modalTitle = useMemo(() => humanizeCamelCase(actionName ?? ""), [actionName]);
+
+  const closeModal = useCallback(() => setShowModal(false), [setShowModal]);
 
   if (!actionIsLoaded) {
     return null;
@@ -30,18 +38,20 @@ export const PolarisAutoBulkActionModal = (props: { model: any; modelActionDetai
   return (
     <>
       <Modal onClose={() => setShowModal(false)} title={modalTitle} open={showModal}>
-        {isBulkAction ? (
-          <BulkActionModalContent model={model} modelActionDetails={modelActionDetails} ids={ids} close={() => setShowModal(false)} />
-        ) : null}
+        {isBulkGadgetAction ? (
+          <GadgetBulkActionModalContent model={model} modelActionDetails={modelActionDetails} ids={ids} close={closeModal} />
+        ) : (
+          <CustomBulkActionModalContent modelActionDetails={modelActionDetails} ids={ids} close={closeModal} selectedRows={selectedRows} />
+        )}
       </Modal>
     </>
   );
 };
 
 /**
- * Modal content for executing bulk actions
+ * Modal content for executing Gadget bulk actions
  */
-const BulkActionModalContent = (props: { model: any; modelActionDetails: ModelActionDetails; ids: string[]; close: () => void }) => {
+const GadgetBulkActionModalContent = (props: { model: any; modelActionDetails: ModelActionDetails; ids: string[]; close: () => void }) => {
   const { model, modelActionDetails, ids, close } = props;
 
   const [hasRun, setHasRun] = React.useState(false);
@@ -57,11 +67,6 @@ const BulkActionModalContent = (props: { model: any; modelActionDetails: ModelAc
     ? (data as any)?.errors?.map((e: { message: string }) => e.message).join(", ")
     : "";
 
-  const initialMessage = useMemo(
-    () => <Text as="p">{`Are you sure you want to run this action on ${ids.length} record${ids.length === 1 ? "" : `s`}?`}</Text>,
-    [ids.length]
-  );
-
   const actionResultBanner = useMemo(
     () => (hasError ? <Banner title={errorMessage} tone="critical" /> : <Banner title={ActionSuccessMessage} tone="success" />),
     [hasError, errorMessage]
@@ -76,7 +81,7 @@ const BulkActionModalContent = (props: { model: any; modelActionDetails: ModelAc
     <>
       <Modal.Section>
         {fetching && <CenteredSpinner />}
-        {!fetching && (hasRun ? actionResultBanner : initialMessage)}
+        {!fetching && (hasRun ? actionResultBanner : <RunActionConfirmationText count={ids.length} />)}
       </Modal.Section>
       <Modal.Section>
         <div style={{ float: "right", paddingBottom: "16px" }}>
@@ -84,9 +89,11 @@ const BulkActionModalContent = (props: { model: any; modelActionDetails: ModelAc
             <Button variant="secondary" onClick={close}>
               Close
             </Button>
-            <Button disabled={hasError || hasRun} variant="primary" onClick={runAction} loading={fetching}>
-              Run
-            </Button>
+            {((!hasError && !hasRun) || fetching) && (
+              <Button variant="primary" onClick={runAction} loading={fetching}>
+                Run
+              </Button>
+            )}
           </ButtonGroup>
         </div>
       </Modal.Section>
@@ -99,4 +106,46 @@ const CenteredSpinner = () => (
     <Spinner accessibilityLabel="Spinner example" size="large" />
   </div>
 );
-const ActionSuccessMessage = `Action completed successfully`;
+
+const ActionCompletedMessage = `Action completed`;
+const ActionSuccessMessage = `${ActionCompletedMessage} successfully`;
+
+const CustomBulkActionModalContent = (props: {
+  modelActionDetails: ModelActionDetails;
+  ids: string[];
+  close: () => void;
+  selectedRows: TableRow[];
+}) => {
+  const { modelActionDetails, ids, selectedRows, close } = props;
+
+  if (modelActionDetails.isGadgetAction) {
+    throw new Error(`Custom callback "${modelActionDetails.apiIdentifier}" is invalid`);
+  }
+
+  if (!modelActionDetails.render) {
+    throw new Error(`Failed to render custom bulk action modal content. Property "render" must be provided`);
+  }
+
+  return (
+    <>
+      <Modal.Section>{modelActionDetails.render(ids, selectedRows)}</Modal.Section>
+      <Modal.Section>
+        <div style={{ float: "right", paddingBottom: "16px" }}>
+          <ButtonGroup>
+            <Button variant="secondary" onClick={close}>
+              Close
+            </Button>
+          </ButtonGroup>
+        </div>
+      </Modal.Section>
+    </>
+  );
+};
+
+const RunActionConfirmationText = (props: { count: number }) => {
+  const { count } = props;
+  return useMemo(
+    () => <Text as="p">{`Are you sure you want to run this action on ${count} record${count === 1 ? "" : `s`}?`}</Text>,
+    [count]
+  );
+};

@@ -143,7 +143,11 @@ const PolarisAutoTableComponent = <
     return { headings, sortable };
   }, [columns]);
 
-  const { bulkActionOptions, selectedModelActionDetails } = useTableBulkActions({ model: props.model });
+  const { bulkActionOptions, selectedModelActionDetails } = useTableBulkActions({
+    model: props.model,
+    actions: props.actions,
+    excludeActions: props.excludeActions,
+  });
 
   if (!error && ((fetching && !rows) || !columns)) {
     return <PolarisSkeletonTable columns={3} />;
@@ -154,9 +158,16 @@ const PolarisAutoTableComponent = <
     plural: metadata ? pluralize(metadata.name) : "",
   };
 
+  const selectedRows = (rows ?? []).filter((row) => selection.recordIds.includes(row.id as string));
+
   return (
     <BlockStack>
-      <PolarisAutoBulkActionModal model={props.model} modelActionDetails={selectedModelActionDetails} ids={selection.recordIds} />
+      <PolarisAutoBulkActionModal
+        model={props.model}
+        modelActionDetails={selectedModelActionDetails}
+        ids={selection.recordIds}
+        selectedRows={selectedRows}
+      />
       <IndexFilters
         mode={mode}
         setMode={setMode}
@@ -185,7 +196,10 @@ const PolarisAutoTableComponent = <
         {...disablePaginatedSelectAllButton}
         onSelectionChange={selection.onSelectionChange}
         {...polarisTableProps}
-        bulkActions={bulkActionOptions.map((option) => ({ content: option.humanizedName, onAction: option.selectModelAction }))}
+        bulkActions={bulkActionOptions.map((option) => ({
+          content: option.humanizedName,
+          onAction: option.callback ? () => option.callback?.(selection.recordIds, selectedRows) : option.selectModelAction,
+        }))}
         resourceName={resourceName}
         emptyState={<EmptySearchResult title={`No ${resourceName.plural} yet`} description={""} withIllustration />}
         loading={fetching}

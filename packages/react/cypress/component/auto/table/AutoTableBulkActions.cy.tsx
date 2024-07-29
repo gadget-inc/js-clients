@@ -45,17 +45,49 @@ describe("AutoTable - Bulk actions", () => {
     ).as(as);
   };
 
-  const openBulkDeleteActionDialog = () => {
+  const openBulkAction = (label: string) => {
     cy.get(`button[aria-label="Actions"]`).click();
-    cy.contains("Bulk Delete").click();
+    return cy.contains(label).click();
   };
+
+  const selectRecordIds = (ids: string[]) => {
+    for (const id of ids) {
+      cy.get(`input[id="Select-${id}"]`).eq(0).click();
+    }
+  };
+
+  let stubCallback: any;
 
   beforeEach(() => {
     cy.viewport("macbook-13");
     mockModelMetadata();
     mockGetWidgets();
 
-    cy.mountWithWrapper(<PolarisAutoTable model={api.widget} />, PolarisWrapper);
+    stubCallback = cy.stub();
+    cy.mountWithWrapper(
+      <PolarisAutoTable
+        model={api.widget}
+        actions={[
+          "delete",
+          {
+            label: "Custom renderer action",
+            render: (recordIds, records) => {
+              return (
+                <div>
+                  <p>Selected record ids: {recordIds.join(",")}</p>
+                  <p>Selected record inventory count sum: {records.reduce((total, record) => total + (record.inventoryCount ?? 0), 0)}</p>
+                </div>
+              );
+            },
+          },
+          {
+            label: "Custom callback action",
+            callback: stubCallback,
+          },
+        ]}
+      />,
+      PolarisWrapper
+    );
 
     cy.wait("@getModelMetadata");
     cy.wait("@getWidgets").its("request.body.variables").should("deep.equal", { first: 50 }); // No search value
@@ -65,7 +97,7 @@ describe("AutoTable - Bulk actions", () => {
     cy.get(`input[id=":r3:"]`).eq(0).click();
     cy.contains("50 selected").should("exist");
 
-    openBulkDeleteActionDialog();
+    openBulkAction("Delete");
 
     cy.contains("Are you sure you want to run this action on 50 records?").should("exist");
     cy.get("button").contains("Close").click();
@@ -75,11 +107,8 @@ describe("AutoTable - Bulk actions", () => {
   });
 
   it("Can run the bulkDelete action with the selected IDs", () => {
-    // Select records with ids 10, 11, 12
-    cy.get(`input[id="Select-10"]`).eq(0).click();
-    cy.get(`input[id="Select-11"]`).eq(0).click();
-    cy.get(`input[id="Select-12"]`).eq(0).click();
-    openBulkDeleteActionDialog();
+    selectRecordIds(["10", "11", "12"]);
+    openBulkAction("Delete");
 
     cy.contains("Are you sure you want to run this action on 3 records?").should("exist");
 
@@ -96,10 +125,12 @@ describe("AutoTable - Bulk actions", () => {
     cy.get("button").contains("Close").click();
 
     // Now ensure that error response appears in the modal
+    selectRecordIds(["20", "21", "22"]);
+
     cy.get(`input[id="Select-20"]`).eq(0).click();
     cy.get(`input[id="Select-21"]`).eq(0).click();
     cy.get(`input[id="Select-22"]`).eq(0).click();
-    openBulkDeleteActionDialog();
+    openBulkAction("Delete");
 
     mockBulkDeleteWidgets(bulkDeleteFailureResponse, "bulkDeleteWidgets2");
 
@@ -107,6 +138,23 @@ describe("AutoTable - Bulk actions", () => {
     cy.wait("@bulkDeleteWidgets2");
 
     cy.contains(bulkDeleteFailureMessage);
+  });
+
+  describe("Custom actions", () => {
+    beforeEach(() => {
+      selectRecordIds(["10", "11", "12"]);
+    });
+
+    it("Can run custom actions with passed in renderers", () => {
+      openBulkAction("Custom renderer action");
+
+      cy.contains("Selected record ids: 10,11,12").should("exist");
+      cy.contains(`Selected record inventory count sum: 126`).should("exist");
+    });
+
+    it("Can run custom actions with passed in callbacks", () => {
+      openBulkAction("Custom callback action").then(() => expect(stubCallback).to.be.called);
+    });
   });
 });
 

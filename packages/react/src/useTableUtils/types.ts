@@ -37,7 +37,16 @@ export interface TableOptions {
   initialDirection?: "forward" | "backward";
   columns?: (string | RelatedFieldColumn | CustomCellColumn)[];
   excludeColumns?: string[];
+  actions?: (string | ActionCallback)[];
+  excludeActions?: string[];
 }
+
+export type ActionCallback = {
+  label: string;
+} & (
+  | { callback: (recordIds: string[], records: GadgetRecord<any>[]) => any }
+  | { render: (recordIds: string[], records: GadgetRecord<any>[]) => ReactNode }
+);
 
 export type TableData<Data> =
   | {
