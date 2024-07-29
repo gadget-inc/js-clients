@@ -25,6 +25,12 @@ const PolarisMockedProviders = (props: { children: ReactNode }) => {
 describe("PolarisAutoForm", () => {
   describe("when used as a one liner", () => {
     describe("for widget create", () => {
+      test("it renders", async () => {
+        //  Render without expects because the first time using the mockUrqlClient can occasionally get stuck in a suspense, which will fail DOM checks
+        render(<PolarisAutoForm action={api.widget.create} />, { wrapper: PolarisMockedProviders });
+        loadMockWidgetCreateMetadata();
+      });
+
       test("it renders the name input", async () => {
         const { findByLabelText } = render(<PolarisAutoForm action={api.widget.create} />, { wrapper: PolarisMockedProviders });
         loadMockWidgetCreateMetadata();
