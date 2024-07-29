@@ -200,8 +200,8 @@ const PolarisAutoTableComponent = <
           content: option.humanizedName,
           onAction: option.callback ? () => option.callback?.(selection.recordIds, selectedRows) : option.selectModelAction,
         }))}
-        resourceName={resourceName}
-        emptyState={<EmptySearchResult title={`No ${resourceName.plural} yet`} description={""} withIllustration />}
+        resourceName={props.resourceName ?? resourceName}
+        emptyState={props.emptyState ?? <EmptySearchResult title={`No ${resourceName.plural} yet`} description={""} withIllustration />}
         loading={fetching}
         hasMoreItems={page.hasNextPage}
         itemCount={
@@ -218,6 +218,10 @@ const PolarisAutoTableComponent = <
         sortDirection={gadgetToPolarisDirection(sortDirection)}
         sortColumnIndex={columns ? getColumnIndex(columns, sortColumnApiIdentifier) : undefined}
         onSort={(headingIndex) => handleColumnSort(headingIndex)}
+        selectable={props.selectable === undefined ? true : props.selectable}
+        lastColumnSticky={props.lastColumnSticky}
+        hasZebraStriping={props.hasZebraStriping}
+        condensed={props.condensed}
       >
         {rows &&
           columns &&
