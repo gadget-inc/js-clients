@@ -22,4 +22,6 @@ export type AutoTableProps<
   onClick?: (row: TableRow) => void;
   initialSort?: Options["sort"];
   filter?: Options["filter"];
+  actions?: TableOptions["actions"];
+  excludeActions?: TableOptions["excludeActions"];
 };
