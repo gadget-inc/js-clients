@@ -48,6 +48,11 @@ export const Primary = {
     model: api.autoTableTest,
   },
 };
+export const Namespaced = {
+  args: {
+    model: api.game.city,
+  },
+};
 
 export const SelectFields = {
   args: {

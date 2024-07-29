@@ -72,6 +72,20 @@ export const PolarisAutoTable = <
 >(
   props: AutoTableProps<GivenOptions, SchemaT, FinderFunction, Options>
 ) => {
+  const { model } = props;
+  const componentKey = `${[model.findMany.namespace, model.findMany.modelApiIdentifier].join("_")}AutoTable`;
+
+  return <PolarisAutoTableComponent key={componentKey} {...props} />;
+};
+
+const PolarisAutoTableComponent = <
+  GivenOptions extends OptionsType,
+  SchemaT,
+  FinderFunction extends FindManyFunction<GivenOptions, any, SchemaT, any>,
+  Options extends FinderFunction["optionsType"]
+>(
+  props: AutoTableProps<GivenOptions, SchemaT, FinderFunction, Options>
+) => {
   const { onClick } = props;
 
   const [{ rows, columns, metadata, fetching, error, page, search, sort, selection }, refresh] = useTable<
