@@ -62,6 +62,22 @@ describe("useList", () => {
 
         expect(result.current[0].page.variables).toEqual({ first: 25, after: "endCursor" });
       });
+
+      test("changing the sort property will reset the cursor", async () => {
+        const { result, rerender } = renderHook((sort) => useList(manager, { pageSize: 25, sort }));
+
+        await act(async () => {
+          result.current[0].page.goToNextPage();
+        });
+
+        expect(result.current[0].page.variables).toEqual({ first: 25, after: "endCursor" });
+
+        //this is a weird api -- it takes a parameter that you pass to your original renderHook function
+        const sort = { name: "asc" };
+        rerender(sort);
+
+        expect(result.current[0].page.variables).toEqual({ after: undefined, first: 25 });
+      });
     });
 
     describe("when a data result has previous pages", () => {
