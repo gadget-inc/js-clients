@@ -74,6 +74,28 @@ export const onClickCallback = {
   },
 };
 
+export const SelectRichTextField = {
+  args: {
+    model: api.autoTableTest,
+    columns: ["str", "rt"],
+  },
+};
+
+export const SelectFileField = {
+  args: {
+    model: api.autoTableTest,
+    columns: ["str", "file"],
+  },
+};
+
+export const SelectRelatedFieldStringHasOne = {
+  name: "Select related field using string value - has one relationship",
+  args: {
+    model: api.autoTableTest,
+    columns: ["str", "num", "hasOne"],
+  },
+};
+
 export const SelectRelatedFieldsHasOne = {
   name: "Select related fields - has one relationship",
   args: {
@@ -89,6 +111,14 @@ export const SelectRelatedFieldsHasOne = {
   },
 };
 
+export const SelectRelatedFieldStringHasMany = {
+  name: "Select related field using string value - has many relationship",
+  args: {
+    model: api.autoTableTest,
+    columns: ["str", "num", "hasMany"],
+  },
+};
+
 export const SelectRelatedFieldsHasMany = {
   name: "Select related fields - has many relationship",
   args: {
@@ -101,6 +131,14 @@ export const SelectRelatedFieldsHasMany = {
         relatedField: "name",
       },
     ],
+  },
+};
+
+export const SelectRelatedFieldStringBelongsTo = {
+  name: "Select related field using string value - belongs to relationship",
+  args: {
+    model: api._autoTableTestRelatedModel,
+    columns: ["name", "belongsToParent"],
   },
 };
 
@@ -131,14 +169,21 @@ export const CustomCell = {
     model: api.autoTableTest,
     columns: [
       "str",
+      "file",
       {
         field: "hasOne",
         relatedField: "name",
       },
+      "hasMany",
+      "rt",
       {
         name: "Custom cell",
         render: (record) => {
-          return <div>Custom cell: {record.str}</div>;
+          return (
+            <div>
+              Custom cell, num field: {record.num} ({record.id})
+            </div>
+          );
         },
       },
     ],
@@ -180,5 +225,12 @@ export const CustomCellWithDeleteButton = {
         },
       },
     ],
+  },
+};
+
+export const ExcludeColumns = {
+  args: {
+    model: api.autoTableTest,
+    excludeColumns: ["str", "enum", "num"],
   },
 };

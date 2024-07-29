@@ -185,9 +185,9 @@ describe("useTable hook", () => {
             edges {
               cursor
               node {
+                id
                 name
                 inventoryCount
-                id
                 __typename
               }
             }
@@ -210,19 +210,13 @@ describe("useTable hook", () => {
           `);
     });
 
-    it("should return the related model field if the column values are relationship fields", async () => {
+    it("should use default display field if the column string is a relationship field", async () => {
       const result = getUseTableResult({
-        columns: [
-          "name",
-          { field: "hasMany", relatedField: "name" },
-          { field: "hasOne", relatedField: "name" },
-          { field: "belongsTo", relatedField: "str" },
-        ],
+        columns: ["name", "hasMany", "hasOne", "belongsTo"],
       });
       loadMockWidgetModelMetadataForRelationship();
       loadMockWidgetDataForRelationship();
 
-      // The relationship fields should be expanded to include the related fields
       expect(mockUrqlClient.executeQuery.mock.calls[1][0].query.loc.source.body).toMatchInlineSnapshot(`
         "query widgets($after: String, $first: Int, $before: String, $last: Int) {
           widgets(after: $after, first: $first, before: $before, last: $last) {
@@ -235,21 +229,24 @@ describe("useTable hook", () => {
             edges {
               cursor
               node {
+                id
                 name
                 hasMany {
                   edges {
                     node {
+                      id
                       name
                     }
                   }
                 }
                 hasOne {
+                  id
                   name
                 }
                 belongsTo {
-                  str
+                  id
+                  email
                 }
-                id
                 __typename
               }
             }
@@ -296,6 +293,109 @@ describe("useTable hook", () => {
       `);
     });
 
+    it("should return the related model field if the column values are relationship fields", async () => {
+      const result = getUseTableResult({
+        columns: [
+          "name",
+          { field: "hasMany", relatedField: "name" },
+          { field: "hasOne", relatedField: "name" },
+          { field: "belongsTo", relatedField: "str" },
+        ],
+      });
+      loadMockWidgetModelMetadataForRelationship();
+      loadMockWidgetDataForRelationship();
+
+      // The relationship fields should be expanded to include the related fields
+      expect(mockUrqlClient.executeQuery.mock.calls[1][0].query.loc.source.body).toMatchInlineSnapshot(`
+        "query widgets($after: String, $first: Int, $before: String, $last: Int) {
+          widgets(after: $after, first: $first, before: $before, last: $last) {
+            pageInfo {
+              hasNextPage
+              hasPreviousPage
+              startCursor
+              endCursor
+            }
+            edges {
+              cursor
+              node {
+                id
+                name
+                hasMany {
+                  edges {
+                    node {
+                      id
+                      name
+                    }
+                  }
+                }
+                hasOne {
+                  id
+                  name
+                }
+                belongsTo {
+                  id
+                  str
+                }
+                __typename
+              }
+            }
+          }
+          gadgetMeta {
+            hydrations(modelName: 
+        "widget")
+          }
+        }"
+      `);
+      expect(result.current[0].columns?.map((column) => column.apiIdentifier)).toEqual(["name", "hasMany", "hasOne", "belongsTo"]);
+      expect(result.current[0].rows).toMatchInlineSnapshot(`
+        [
+          {
+            "belongsTo": {
+              "str": "foo",
+            },
+            "hasMany": {
+              "edges": [
+                {
+                  "node": {
+                    "name": "gizmo 9",
+                  },
+                },
+                {
+                  "node": {
+                    "name": "gizmo 10",
+                  },
+                },
+                {
+                  "node": {
+                    "name": "gizmo 11",
+                  },
+                },
+              ],
+            },
+            "hasOne": {
+              "name": "gizmo 12",
+            },
+            "id": undefined,
+            "name": "hello",
+          },
+        ]
+      `);
+    });
+
+    it.each(["password", "hasManyThrough"])("should throw an error if the selected field type is %s", async (fieldType) => {
+      let error: Error | undefined;
+      try {
+        getUseTableResult({
+          columns: [`${fieldType}Field`],
+        });
+        loadMockWidgetModelMetadataForInvalidFields();
+      } catch (err) {
+        error = err as Error;
+      }
+
+      expect(error!.message).toBe(`Field '${fieldType}Field' cannot be shown in the table`);
+    });
+
     it("should throw an error if the relationship field's type is not a relationship", async () => {
       let error: Error | undefined;
       try {
@@ -308,7 +408,7 @@ describe("useTable hook", () => {
         error = err as Error;
       }
 
-      expect(error!.message).toBe("Field 'name' is not a relationship field");
+      expect(error!.message).toBe("Related field 'invalid' does not exist in the related model");
     });
 
     it("should throw an error if the related field does not exist", async () => {
@@ -323,7 +423,7 @@ describe("useTable hook", () => {
         error = err as Error;
       }
 
-      expect(error!.message).toBe("Related field 'invalid' not found in metadata");
+      expect(error!.message).toBe("Related field 'invalid' does not exist in the related model");
     });
 
     it("should throw an error if the relationship field does not exist", async () => {
@@ -338,7 +438,7 @@ describe("useTable hook", () => {
         error = err as Error;
       }
 
-      expect(error!.message).toBe("Field 'notExist' not found in metadata");
+      expect(error!.message).toBe("Field 'notExist' does not exist in the model");
     });
 
     it("should include custom cell columns if specified", async () => {
@@ -381,6 +481,187 @@ describe("useTable hook", () => {
       const customColumnGetValueResult = result.current[0].columns![1].getValue({ name: "foo" });
       // Expect the getValue result to be a valid React element
       expect(isValidElement(customColumnGetValueResult)).toBe(true);
+    });
+  });
+
+  describe("excludeColumns property", () => {
+    it("should throw an error when 'excludeColumns' and 'columns' are both specified", () => {
+      let error: Error | undefined;
+      try {
+        getUseTableResult({
+          columns: [{ field: "hasOne", relatedField: "invalid" }],
+          excludeColumns: ["name"],
+        });
+        loadMockWidgetModelMetadataForRelationship();
+        loadMockWidgetDataForRelationship();
+      } catch (err) {
+        error = err as Error;
+      }
+
+      expect(error!.message).toBe("Cannot use both 'columns' and 'excludeColumns' options at the same time");
+    });
+
+    it("should exclude the specified columns", () => {
+      const result = getUseTableResult({
+        excludeColumns: ["name", "inventoryCount"],
+      });
+      loadMockWidgetModelMetadata();
+      loadWidgetData();
+
+      // The fields inside the `node` should not contain the fields that are specified in the exclude property
+      expect(mockUrqlClient.executeQuery.mock.calls[1][0].query.loc.source.body).toMatchInlineSnapshot(`
+        "query widgets($after: String, $first: Int, $before: String, $last: Int) {
+          widgets(after: $after, first: $first, before: $before, last: $last) {
+            pageInfo {
+              hasNextPage
+              hasPreviousPage
+              startCursor
+              endCursor
+            }
+            edges {
+              cursor
+              node {
+                id
+                anything
+                description {
+                  markdown
+                  truncatedHTML
+                }
+                category
+                startsAt
+                isChecked
+                metafields
+                roles {
+                  key
+                  name
+                }
+                birthday
+                color
+                secretKey
+                mustBeLongString
+                __typename
+              }
+            }
+          }
+          gadgetMeta {
+            hydrations(modelName: 
+        "widget")
+          }
+        }"
+      `);
+
+      // The list should not contain "name" and "inventoryCount" because they are excluded
+      expect(result.current[0].columns?.map((column) => column.apiIdentifier)).toEqual([
+        "id",
+        "anything",
+        "description",
+        "category",
+        "startsAt",
+        "isChecked",
+        "metafields",
+        "roles",
+        "birthday",
+        "color",
+        "secretKey",
+        "mustBeLongString",
+      ]);
+      expect(result.current[0].rows).toMatchInlineSnapshot(`
+        [
+          {
+            "anything": null,
+            "birthday": "2024-07-01T00:00:00.000Z",
+            "category": [
+              "foo",
+            ],
+            "color": null,
+            "description": "# foo bar",
+            "id": "7",
+            "isChecked": true,
+            "metafields": {
+              "hello": "world",
+            },
+            "mustBeLongString": "hellllllllllllllllllllllllllllo",
+            "roles": [
+              "unauthenticated",
+            ],
+            "secretKey": "secret",
+            "startsAt": "2024-07-01T01:00:00.000Z",
+          },
+        ]
+      `);
+    });
+  });
+
+  describe("custom cell renderer", () => {
+    it("should be able to access all fields of a table", () => {
+      let recordFromRender: any;
+
+      const result = getUseTableResult({
+        columns: [
+          "name",
+          {
+            name: "Custom column",
+            render: (record) => {
+              recordFromRender = record;
+              return <div>some custom stuff</div>;
+            },
+          },
+        ],
+      });
+      loadMockWidgetModelMetadata();
+      loadWidgetData();
+
+      // It should include all model fields in the query
+      expect(mockUrqlClient.executeQuery.mock.calls[1][0].query.loc.source.body).toMatchInlineSnapshot(`
+        "query widgets($after: String, $first: Int, $before: String, $last: Int) {
+          widgets(after: $after, first: $first, before: $before, last: $last) {
+            pageInfo {
+              hasNextPage
+              hasPreviousPage
+              startCursor
+              endCursor
+            }
+            edges {
+              cursor
+              node {
+                id
+                name
+                __typename
+                anything
+                birthday
+                category
+                color
+                createdAt
+                description {
+                  markdown
+                  truncatedHTML
+                }
+                embedding
+                inStock
+                inventoryCount
+                isChecked
+                metafields
+                mustBeLongString
+                roles {
+                  key
+                  name
+                }
+                secretKey
+                startsAt
+                updatedAt
+              }
+            }
+          }
+          gadgetMeta {
+            hydrations(modelName: 
+        "widget")
+          }
+        }"
+      `);
+
+      expect(recordFromRender.name).toBe("foo");
+      // "inventoryCount" should be included in the record even though it's not in the columns
+      expect(recordFromRender.inventoryCount).toBe(1);
     });
   });
 });
@@ -697,6 +978,61 @@ const loadMockWidgetDataForRelationship = () => {
           endCursor: "eyJpZCI6IjU2In0=",
           __typename: "PageInfo",
         },
+      },
+    },
+  });
+};
+
+const loadMockWidgetModelMetadataForInvalidFields = () => {
+  mockUrqlClient.executeQuery.pushResponse("GetModelMetadata", {
+    stale: false,
+    hasNext: false,
+    data: {
+      gadgetMeta: {
+        model: {
+          apiIdentifier: "widget",
+          namespace: [],
+          name: "Wudget",
+          fields: [
+            recordIdInputField,
+            {
+              name: "Password field",
+              apiIdentifier: "passwordField",
+              fieldType: "Password",
+              requiredArgumentForInput: false,
+              sortable: false,
+              filterable: false,
+              __typename: "GadgetModelField",
+              configuration: {
+                __typename: "GadgetGenericFieldConfig",
+                fieldType: "Password",
+                validations: [
+                  {
+                    __typename: "GadgetGenericFieldValidation",
+                    name: "Strong password",
+                    specID: "gadget/validation/password",
+                  },
+                ],
+              },
+            },
+            {
+              name: "Has many through field",
+              apiIdentifier: "hasManyThroughField",
+              fieldType: "HasManyThrough",
+              requiredArgumentForInput: false,
+              sortable: false,
+              filterable: false,
+              __typename: "GadgetModelField",
+              configuration: {
+                __typename: "GadgetGenericFieldConfig",
+                fieldType: "HasManyThrough",
+                validations: [],
+              },
+            },
+          ],
+          __typename: "GadgetModel",
+        },
+        __typename: "GadgetApplicationMeta",
       },
     },
   });

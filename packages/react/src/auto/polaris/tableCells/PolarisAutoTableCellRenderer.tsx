@@ -60,9 +60,13 @@ export const PolarisAutoTableCellRenderer = (props: {
     }
 
     case FieldType.HasOne: {
-      const { __typename, ...rest } = value as ValueWithTypename;
       if (!column.relatedField) return null;
-      return <PolarisAutoTableCellRenderer column={column.relatedField} value={rest[column.relatedField.apiIdentifier]} />;
+      return (
+        <PolarisAutoTableCellRenderer
+          column={column.relatedField}
+          value={(value as ValueWithTypename)[column.relatedField.apiIdentifier]}
+        />
+      );
     }
 
     case FieldType.HasMany: {
@@ -72,9 +76,13 @@ export const PolarisAutoTableCellRenderer = (props: {
     }
 
     case FieldType.BelongsTo: {
-      const { __typename, ...rest } = value as ValueWithTypename;
       if (!column.relatedField) return null;
-      return <PolarisAutoTableCellRenderer column={column.relatedField} value={rest[column.relatedField.apiIdentifier]} />;
+      return (
+        <PolarisAutoTableCellRenderer
+          column={column.relatedField}
+          value={(value as ValueWithTypename)[column.relatedField.apiIdentifier]}
+        />
+      );
     }
 
     default:

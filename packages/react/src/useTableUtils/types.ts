@@ -5,7 +5,7 @@ import type { GadgetFieldType } from "../internal/gql/graphql.js";
 import type { ModelMetadata } from "../metadata.js";
 import type { SearchResult } from "../useDebouncedSearch.js";
 import type { PaginationResult } from "../useList.js";
-import { RecordSelection } from "../useSelectedRecordsController.js";
+import type { RecordSelection } from "../useSelectedRecordsController.js";
 import type { ColumnValueType, CustomCellColumn, ErrorWrapper, RelatedFieldColumn } from "../utils.js";
 
 type BaseTableColumn = {
@@ -36,6 +36,7 @@ export interface TableOptions {
   initialCursor?: string;
   initialDirection?: "forward" | "backward";
   columns?: (string | RelatedFieldColumn | CustomCellColumn)[];
+  excludeColumns?: string[];
 }
 
 export type TableData<Data> =

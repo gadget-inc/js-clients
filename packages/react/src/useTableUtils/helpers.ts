@@ -1,138 +1,213 @@
-import type { GadgetRecord } from "@gadgetinc/api-client-core";
+import type { FieldSelection, GadgetRecord } from "@gadgetinc/api-client-core";
 import type { FieldMetadataFragment } from "../internal/gql/graphql.js";
 import { GadgetFieldType } from "../internal/gql/graphql.js";
-import type { ModelMetadata } from "../metadata.js";
+import { acceptedAutoTableFieldTypes, filterAutoTableFieldList } from "../metadata.js";
 import { isCustomCellColumn, isRelatedFieldColumn } from "../utils.js";
-import type { RecordTableColumnValue, TableColumn, TableOptions, TableRow } from "./types.js";
+import type { TableColumn, TableOptions, TableRow } from "./types.js";
 
-export const getTableData = (props: { columns?: TableColumn[]; data?: GadgetRecord<any>[]; metadata?: ModelMetadata }) => {
-  const { columns, data, metadata } = props;
+type ColumnsOption = Exclude<TableOptions["columns"], undefined>;
 
-  return metadata && data && columns
-    ? {
-        rows: getTableRows({ data, columns }),
-        columns,
-        data,
-        metadata,
-      }
-    : {
-        rows: null,
-        columns: null,
-
-        data: null,
-        metadata: null,
-      };
+const getColumnApiIdentifier = (column: ColumnsOption[number]) => {
+  if (typeof column === "string") {
+    return column;
+  } else if (isRelatedFieldColumn(column)) {
+    return column.field;
+  } else {
+    return column.name;
+  }
 };
 
-export const getTableRows = (props: { data: GadgetRecord<any>[]; columns: TableColumn[] }) => {
-  const { columns, data } = props;
-
-  return data.map((record) => {
-    const row: TableRow = { id: record.id };
-    for (const { apiIdentifier, getValue } of columns) {
-      row[apiIdentifier] = getValue(record);
-    }
-    return row;
-  });
+const maybeGetRelatedModelFromRelationshipField = (field: FieldMetadataFragment) => {
+  if (
+    field.configuration.__typename === "GadgetBelongsToConfig" ||
+    field.configuration.__typename === "GadgetHasOneConfig" ||
+    field.configuration.__typename === "GadgetHasManyConfig"
+  ) {
+    return field.configuration.relatedModel;
+  }
 };
 
-export const getTableColumns = (fields: FieldMetadataFragment[], columns: TableOptions["columns"]) => {
-  const columnsMap = columns && getColumnsMap(columns);
+const getInnerSelectionForRelationshipField = (
+  fieldApiIdentifier: string,
+  relatedFieldApiIdentifier: string,
+  fieldType: GadgetFieldType
+): FieldSelection => {
+  const innerSelection: FieldSelection = {
+    id: true,
+    [relatedFieldApiIdentifier]: true,
+  };
 
-  const result: TableColumn[] = fields.map((field) => {
-    let relatedField: RecordTableColumnValue | undefined;
-    const relatedFieldColumn = columnsMap?.get(field.apiIdentifier);
-
-    if (relatedFieldColumn) {
-      relatedField = getRelatedFieldTableColumn(field, relatedFieldColumn);
-    }
-
+  if (fieldType === GadgetFieldType.HasOne || fieldType === GadgetFieldType.BelongsTo) {
+    return innerSelection;
+  } else if (fieldType === GadgetFieldType.HasMany) {
     return {
+      edges: {
+        node: innerSelection,
+      },
+    };
+  }
+
+  throw new Error(`Field '${fieldApiIdentifier}' is not a relationship field`);
+};
+
+export type TableSpec = {
+  targetColumns: ColumnsOption;
+  fieldMetadataMap: Map<string, FieldMetadataFragment>;
+  defaultSelection: Record<string, any>;
+};
+
+export const getTableSpec = (
+  fieldMetadataArray: FieldMetadataFragment[],
+  columns: TableOptions["columns"],
+  excludeColumns: TableOptions["excludeColumns"],
+  defaultSelection: Record<string, any>
+) => {
+  const spec: TableSpec = {
+    targetColumns: [],
+    fieldMetadataMap: new Map(fieldMetadataArray.map((field) => [field.apiIdentifier, field])),
+    defaultSelection,
+  };
+
+  if (columns && excludeColumns) {
+    throw new Error("Cannot use both 'columns' and 'excludeColumns' options at the same time");
+  }
+
+  if (columns) {
+    spec.targetColumns = columns;
+  } else if (excludeColumns) {
+    const excludeSet = new Set(excludeColumns);
+    spec.targetColumns = filterAutoTableFieldList(fieldMetadataArray)
+      .filter((field) => !excludeSet.has(field.apiIdentifier))
+      .map((field) => field.apiIdentifier);
+  } else {
+    spec.targetColumns = filterAutoTableFieldList(fieldMetadataArray).map((field) => field.apiIdentifier);
+  }
+
+  return spec;
+};
+
+export const getTableSelectionMap = (spec: TableSpec) => {
+  let selectionMap: FieldSelection = {
+    id: true,
+  };
+
+  for (const column of spec.targetColumns) {
+    if (isCustomCellColumn(column)) {
+      selectionMap = {
+        ...selectionMap,
+        ...spec.defaultSelection,
+      };
+      continue;
+    }
+
+    const columnApiIdentifier = getColumnApiIdentifier(column);
+    const field = _getFieldMetadataByApiIdentifier(spec, isRelatedFieldColumn(column) ? column.field : column);
+
+    if (!acceptedAutoTableFieldTypes.has(field.fieldType)) {
+      throw new Error(`Field '${columnApiIdentifier}' cannot be shown in the table`);
+    }
+
+    const relatedModel = maybeGetRelatedModelFromRelationshipField(field);
+
+    if (typeof column === "string") {
+      if (relatedModel) {
+        selectionMap[column] = getInnerSelectionForRelationshipField(
+          column,
+          relatedModel.defaultDisplayField.apiIdentifier,
+          field.fieldType
+        );
+      } else {
+        selectionMap[column] = spec.defaultSelection[column] ?? true;
+      }
+    } else if (isRelatedFieldColumn(column)) {
+      const relatedField = relatedModel?.fields?.find((field) => field.apiIdentifier === column.relatedField);
+      if (!relatedField) {
+        throw new Error(`Related field '${column.relatedField}' does not exist in the related model`);
+      }
+      selectionMap[column.field] = getInnerSelectionForRelationshipField(column.field, column.relatedField, field.fieldType);
+    }
+  }
+
+  return selectionMap;
+};
+
+export const getTableRows = (spec: TableSpec, records: GadgetRecord<any>[]) => {
+  return records.map((record) => _recordToRow(spec, record));
+};
+
+export const getTableColumns = (spec: TableSpec) => {
+  const columns: TableColumn[] = [];
+  for (const targetColumn of spec.targetColumns) {
+    if (isCustomCellColumn(targetColumn)) {
+      columns.push({
+        name: targetColumn.name,
+        apiIdentifier: targetColumn.name,
+        getValue: (record) => targetColumn.render(record),
+        isCustomCell: true,
+        sortable: false,
+      });
+      continue;
+    }
+
+    const field = _getFieldMetadataByApiIdentifier(spec, isRelatedFieldColumn(targetColumn) ? targetColumn.field : targetColumn);
+
+    const relatedModel = maybeGetRelatedModelFromRelationshipField(field);
+    const relatedField = isRelatedFieldColumn(targetColumn)
+      ? relatedModel?.fields?.find((field) => field.apiIdentifier === targetColumn.relatedField)
+      : relatedModel
+      ? {
+          name: relatedModel.defaultDisplayField.name,
+          apiIdentifier: relatedModel.defaultDisplayField.apiIdentifier,
+          fieldType: relatedModel.defaultDisplayField.fieldType,
+        }
+      : undefined;
+
+    columns.push({
       name: field.name,
       apiIdentifier: field.apiIdentifier,
       fieldType: field.fieldType,
-      getValue: (record: GadgetRecord<any>) => {
-        return record[field.apiIdentifier];
-      },
       sortable: "sortable" in field && field.sortable,
-      relatedField,
+      getValue: (record) => record[field.apiIdentifier],
       isCustomCell: false,
-    } satisfies RecordTableColumnValue;
-  });
+      relatedField: relatedField
+        ? {
+            name: relatedField.name,
+            apiIdentifier: relatedField.apiIdentifier,
+            fieldType: relatedField.fieldType,
+            sortable: "sortable" in field && field.sortable,
+            getValue: (record) => record[field.apiIdentifier],
+            isCustomCell: false,
+          }
+        : undefined,
+    });
+  }
 
-  if (columns) {
-    // Add custom cell columns
-    for (const column of columns) {
-      if (!isCustomCellColumn(column)) continue;
-      result.push({
-        name: column.name,
-        apiIdentifier: column.name,
-        isCustomCell: true,
-        getValue: (record: GadgetRecord<any>) => column.render(record),
-        sortable: false,
-      });
+  return columns;
+};
+
+const _getFieldMetadataByApiIdentifier = (spec: TableSpec, apiIdentifier: string) => {
+  const field = spec.fieldMetadataMap.get(apiIdentifier);
+  if (!field) {
+    throw new Error(`Field '${apiIdentifier}' does not exist in the model`);
+  }
+  return field;
+};
+
+const _recordToRow = (spec: TableSpec, record: GadgetRecord<any>) => {
+  const row: TableRow = {
+    id: record.id,
+  };
+
+  for (const targetColumn of spec.targetColumns) {
+    const columnApiIdentifier = getColumnApiIdentifier(targetColumn);
+
+    if (isCustomCellColumn(targetColumn)) {
+      row[columnApiIdentifier] = targetColumn.render(record);
+      continue;
     }
 
-    // Sort columns based on the order in the options
-    const sortingColumnList = columns.map((column) => {
-      if (isRelatedFieldColumn(column)) {
-        return column.field;
-      }
-
-      if (isCustomCellColumn(column)) {
-        return column.name;
-      }
-
-      return column;
-    });
-    result.sort((a, b) => {
-      return sortingColumnList.indexOf(a.apiIdentifier) - sortingColumnList.indexOf(b.apiIdentifier);
-    });
+    row[columnApiIdentifier] = record[columnApiIdentifier];
   }
 
-  return result;
-};
-
-const getColumnsMap = (columns: Exclude<TableOptions["columns"], undefined>) => {
-  return new Map(
-    columns.map((column) => {
-      if (isRelatedFieldColumn(column)) {
-        return [column.field, column.relatedField];
-      } else {
-        return [column, undefined];
-      }
-    })
-  );
-};
-
-const getRelatedFieldTableColumn = (field: FieldMetadataFragment, relatedFieldColumn: string): RecordTableColumnValue => {
-  if (
-    field.fieldType !== GadgetFieldType.HasOne &&
-    field.fieldType !== GadgetFieldType.BelongsTo &&
-    field.fieldType !== GadgetFieldType.HasMany
-  ) {
-    throw new Error(`Field '${field.apiIdentifier}' is not a relationship field`);
-  }
-
-  const relatedFieldMetadata =
-    field.configuration.__typename === "GadgetHasOneConfig" ||
-    field.configuration.__typename === "GadgetBelongsToConfig" ||
-    field.configuration.__typename === "GadgetHasManyConfig"
-      ? field.configuration.relatedModel?.fields?.find((relatedField) => relatedField.apiIdentifier === relatedFieldColumn)
-      : undefined;
-
-  if (!relatedFieldMetadata) {
-    throw new Error(`Related field '${relatedFieldColumn}' not found in metadata`);
-  }
-
-  return {
-    name: relatedFieldMetadata.name,
-    apiIdentifier: relatedFieldMetadata.apiIdentifier,
-    fieldType: relatedFieldMetadata.fieldType,
-    getValue: (record: GadgetRecord<any>) => {
-      return record[field.apiIdentifier]?.[relatedFieldMetadata.apiIdentifier];
-    },
-    isCustomCell: false,
-    sortable: false,
-  };
+  return row;
 };
