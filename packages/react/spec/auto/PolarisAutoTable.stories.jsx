@@ -274,6 +274,14 @@ export const ExcludedActionParameters = {
   },
 };
 
+export const HideSearchAndPagination = {
+  args: {
+    model: api.autoTableTest,
+    searchable: false,
+    paginate: false,
+  },
+};
+
 const windowAlert = (message) => {
   // eslint-disable-next-line no-undef
   window.alert(message);

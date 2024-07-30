@@ -24,4 +24,6 @@ export type AutoTableProps<
   filter?: Options["filter"];
   actions?: TableOptions["actions"];
   excludeActions?: TableOptions["excludeActions"];
+  searchable?: boolean;
+  paginate?: boolean;
 };
