@@ -1677,3 +1677,59 @@ export const first50WidgetRecords = {
     traceId: "62efa3ded4eaed65c4309ee48de15d3a",
   },
 };
+
+export const mockSearchResultWidget = (searchedForWidgetName: string) => ({
+  data: {
+    widgets: {
+      pageInfo: {
+        hasNextPage: true,
+        hasPreviousPage: false,
+        startCursor: "eyJpZCI6IjcifQ==",
+        endCursor: "eyJpZCI6IjU2In0=",
+        __typename: "PageInfo",
+      },
+      edges: [
+        {
+          cursor: "eyJpZCI6IjcifQ==",
+          node: {
+            __typename: "Widget",
+            id: "777",
+            anything: null,
+            birthday: "2002-02-02",
+            category: [],
+            color: null,
+            createdAt: "2023-09-07T19:18:50.262Z",
+            description: null,
+            embedding: null,
+            inStock: true,
+            inventoryCount: 1,
+            isChecked: false,
+            metafields: null,
+            mustBeLongString: null,
+            name: searchedForWidgetName,
+            roles: [],
+            secretKey: "skey",
+            startsAt: null,
+            updatedAt: "2024-07-17T20:55:36.191Z",
+          },
+          __typename: "WidgetEdge",
+        },
+      ],
+
+      __typename: "WidgetConnection",
+    },
+    gadgetMeta: {
+      hydrations: {
+        updatedAt: "DateTime",
+        startsAt: "DateTime",
+        birthday: "DateTime",
+        createdAt: "DateTime",
+      },
+      __typename: "GadgetApplicationMeta",
+    },
+  },
+  extensions: {
+    logs: "https://ggt.link/logs/114412/62efa3ded4eaed65c4309ee48de15d3a",
+    traceId: "62efa3ded4eaed65c4309ee48de15d3a",
+  },
+});
