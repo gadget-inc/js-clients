@@ -6,7 +6,7 @@ import type { ModelMetadata } from "../metadata.js";
 import type { SearchResult } from "../useDebouncedSearch.js";
 import type { PaginationResult } from "../useList.js";
 import type { RecordSelection } from "../useSelectedRecordsController.js";
-import type { ColumnValueType, CustomCellColumn, ErrorWrapper, RelatedFieldColumn } from "../utils.js";
+import type { CellDetailColumn, ColumnValueType, CustomCellRendererColumn, ErrorWrapper } from "../utils.js";
 
 type BaseTableColumn = {
   name: string;
@@ -35,7 +35,7 @@ export interface TableOptions {
   pageSize?: number;
   initialCursor?: string;
   initialDirection?: "forward" | "backward";
-  columns?: (string | RelatedFieldColumn | CustomCellColumn)[];
+  columns?: (string | CellDetailColumn | CustomCellRendererColumn)[];
   excludeColumns?: string[];
   actions?: (string | ActionCallback)[];
   excludeActions?: string[];

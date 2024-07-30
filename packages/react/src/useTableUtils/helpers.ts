@@ -2,20 +2,10 @@ import type { FieldSelection, GadgetRecord } from "@gadgetinc/api-client-core";
 import type { FieldMetadataFragment } from "../internal/gql/graphql.js";
 import { GadgetFieldType } from "../internal/gql/graphql.js";
 import { acceptedAutoTableFieldTypes, filterAutoTableFieldList } from "../metadata.js";
-import { isCustomCellColumn, isRelatedFieldColumn } from "../utils.js";
+import { convertToCellDetailColumn, isCustomCellRendererColumn, maybeGetRelationshipFromColumnPath } from "../utils.js";
 import type { TableColumn, TableOptions, TableRow } from "./types.js";
 
 type ColumnsOption = Exclude<TableOptions["columns"], undefined>;
-
-const getColumnApiIdentifier = (column: ColumnsOption[number]) => {
-  if (typeof column === "string") {
-    return column;
-  } else if (isRelatedFieldColumn(column)) {
-    return column.field;
-  } else {
-    return column.name;
-  }
-};
 
 const maybeGetRelatedModelFromRelationshipField = (field: FieldMetadataFragment) => {
   if (
@@ -30,7 +20,8 @@ const maybeGetRelatedModelFromRelationshipField = (field: FieldMetadataFragment)
 const getInnerSelectionForRelationshipField = (
   fieldApiIdentifier: string,
   relatedFieldApiIdentifier: string,
-  fieldType: GadgetFieldType
+  fieldType: GadgetFieldType,
+  existingSelection: any
 ): FieldSelection => {
   const innerSelection: FieldSelection = {
     id: true,
@@ -38,11 +29,17 @@ const getInnerSelectionForRelationshipField = (
   };
 
   if (fieldType === GadgetFieldType.HasOne || fieldType === GadgetFieldType.BelongsTo) {
-    return innerSelection;
+    return {
+      ...(innerSelection ?? {}),
+      ...existingSelection,
+    };
   } else if (fieldType === GadgetFieldType.HasMany) {
     return {
       edges: {
-        node: innerSelection,
+        node: {
+          ...(existingSelection?.edges?.node ?? {}),
+          ...innerSelection,
+        },
       },
     };
   }
@@ -91,8 +88,8 @@ export const getTableSelectionMap = (spec: TableSpec) => {
     id: true,
   };
 
-  for (const column of spec.targetColumns) {
-    if (isCustomCellColumn(column)) {
+  for (const targetColumn of spec.targetColumns) {
+    if (isCustomCellRendererColumn(targetColumn)) {
       selectionMap = {
         ...selectionMap,
         ...spec.defaultSelection,
@@ -100,31 +97,53 @@ export const getTableSelectionMap = (spec: TableSpec) => {
       continue;
     }
 
-    const columnApiIdentifier = getColumnApiIdentifier(column);
-    const field = _getFieldMetadataByApiIdentifier(spec, isRelatedFieldColumn(column) ? column.field : column);
+    const { field: columnPath } = convertToCellDetailColumn(targetColumn);
+    const relationship = maybeGetRelationshipFromColumnPath(columnPath);
+    const field = _getFieldMetadataByApiIdentifier(spec, relationship ? relationship.apiIdentifier : columnPath);
 
     if (!acceptedAutoTableFieldTypes.has(field.fieldType)) {
-      throw new Error(`Field '${columnApiIdentifier}' cannot be shown in the table`);
+      throw new Error(`Field '${columnPath}' cannot be shown in the table`);
     }
 
     const relatedModel = maybeGetRelatedModelFromRelationshipField(field);
 
-    if (typeof column === "string") {
+    if (relationship) {
+      if (
+        (field.fieldType === GadgetFieldType.HasOne || field.fieldType === GadgetFieldType.BelongsTo) &&
+        relationship.__expectHasManyRelationship
+      ) {
+        throw new Error(
+          `Field '${columnPath}' is a has one or belongs to relationship, but the column path expects the field to be a has many relationship`
+        );
+      }
+
+      if (field.fieldType === GadgetFieldType.HasMany && !relationship.__expectHasManyRelationship) {
+        throw new Error(
+          `Field '${columnPath}' is a has many relationship, but the column path expects the field to be a has one or belongs to relationship`
+        );
+      }
+
+      const relatedField = relatedModel?.fields?.find((field) => field.apiIdentifier === relationship.relatedField);
+      if (!relatedField) {
+        throw new Error(`Related field '${relationship.relatedField}' does not exist in the related model`);
+      }
+      selectionMap[relationship.apiIdentifier] = getInnerSelectionForRelationshipField(
+        relationship.apiIdentifier,
+        relationship.relatedField,
+        field.fieldType,
+        selectionMap[relationship.apiIdentifier]
+      );
+    } else {
       if (relatedModel) {
-        selectionMap[column] = getInnerSelectionForRelationshipField(
-          column,
+        selectionMap[columnPath] = getInnerSelectionForRelationshipField(
+          columnPath,
           relatedModel.defaultDisplayField.apiIdentifier,
-          field.fieldType
+          field.fieldType,
+          selectionMap[columnPath]
         );
       } else {
-        selectionMap[column] = spec.defaultSelection[column] ?? true;
+        selectionMap[columnPath] = spec.defaultSelection[columnPath] ?? true;
       }
-    } else if (isRelatedFieldColumn(column)) {
-      const relatedField = relatedModel?.fields?.find((field) => field.apiIdentifier === column.relatedField);
-      if (!relatedField) {
-        throw new Error(`Related field '${column.relatedField}' does not exist in the related model`);
-      }
-      selectionMap[column.field] = getInnerSelectionForRelationshipField(column.field, column.relatedField, field.fieldType);
     }
   }
 
@@ -138,22 +157,24 @@ export const getTableRows = (spec: TableSpec, records: GadgetRecord<any>[]) => {
 export const getTableColumns = (spec: TableSpec) => {
   const columns: TableColumn[] = [];
   for (const targetColumn of spec.targetColumns) {
-    if (isCustomCellColumn(targetColumn)) {
+    if (isCustomCellRendererColumn(targetColumn)) {
       columns.push({
-        name: targetColumn.name,
-        apiIdentifier: targetColumn.name,
-        getValue: (record) => targetColumn.render(record),
+        name: targetColumn.header,
+        apiIdentifier: targetColumn.header,
+        getValue: (record) => targetColumn.render({ record }),
         isCustomCell: true,
         sortable: false,
       });
       continue;
     }
 
-    const field = _getFieldMetadataByApiIdentifier(spec, isRelatedFieldColumn(targetColumn) ? targetColumn.field : targetColumn);
+    const { field: columnPath, header, sortable } = convertToCellDetailColumn(targetColumn);
+    const relationship = maybeGetRelationshipFromColumnPath(columnPath);
+    const field = _getFieldMetadataByApiIdentifier(spec, relationship ? relationship.apiIdentifier : columnPath);
 
     const relatedModel = maybeGetRelatedModelFromRelationshipField(field);
-    const relatedField = isRelatedFieldColumn(targetColumn)
-      ? relatedModel?.fields?.find((field) => field.apiIdentifier === targetColumn.relatedField)
+    const relatedField = relationship
+      ? relatedModel?.fields?.find((field) => field.apiIdentifier === relationship.relatedField)
       : relatedModel
       ? {
           name: relatedModel.defaultDisplayField.name,
@@ -163,10 +184,10 @@ export const getTableColumns = (spec: TableSpec) => {
       : undefined;
 
     columns.push({
-      name: field.name,
+      name: header ?? field.name,
       apiIdentifier: field.apiIdentifier,
       fieldType: field.fieldType,
-      sortable: "sortable" in field && field.sortable,
+      sortable: sortable ?? ("sortable" in field && field.sortable),
       getValue: (record) => record[field.apiIdentifier],
       isCustomCell: false,
       relatedField: relatedField
@@ -199,14 +220,14 @@ const _recordToRow = (spec: TableSpec, record: GadgetRecord<any>) => {
   };
 
   for (const targetColumn of spec.targetColumns) {
-    const columnApiIdentifier = getColumnApiIdentifier(targetColumn);
-
-    if (isCustomCellColumn(targetColumn)) {
-      row[columnApiIdentifier] = targetColumn.render(record);
+    if (isCustomCellRendererColumn(targetColumn)) {
+      row[targetColumn.header] = targetColumn.render({ record });
       continue;
     }
 
-    row[columnApiIdentifier] = record[columnApiIdentifier];
+    const { field: columnPath } = convertToCellDetailColumn(targetColumn);
+    const relationship = maybeGetRelationshipFromColumnPath(columnPath);
+    row[relationship?.apiIdentifier ?? columnPath] = record[relationship?.apiIdentifier ?? columnPath];
   }
 
   return row;

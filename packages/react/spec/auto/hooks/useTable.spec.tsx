@@ -297,9 +297,11 @@ describe("useTable hook", () => {
       const result = getUseTableResult({
         columns: [
           "name",
-          { field: "hasMany", relatedField: "name" },
-          { field: "hasOne", relatedField: "name" },
-          { field: "belongsTo", relatedField: "str" },
+          "hasMany.edges.node.name",
+          "hasOne.name",
+          {
+            field: "belongsTo.str",
+          },
         ],
       });
       loadMockWidgetModelMetadataForRelationship();
@@ -396,11 +398,57 @@ describe("useTable hook", () => {
       expect(error!.message).toBe(`Field '${fieldType}Field' cannot be shown in the table`);
     });
 
+    it("should throw an error if the relationship field dot notation is a has many style but the field type is has one", async () => {
+      let error: Error | undefined;
+      try {
+        getUseTableResult({
+          columns: [
+            "name",
+            "hasOne.edges.node.name",
+            {
+              field: "belongsTo.str",
+            },
+          ],
+        });
+        loadMockWidgetModelMetadataForRelationship();
+        loadMockWidgetDataForRelationship();
+      } catch (err) {
+        error = err as Error;
+      }
+
+      expect(error!.message).toBe(
+        "Field 'hasOne.edges.node.name' is a has one or belongs to relationship, but the column path expects the field to be a has many relationship"
+      );
+    });
+
+    it("should throw an error if the relationship field dot notation is a has one style but the field type is has many", async () => {
+      let error: Error | undefined;
+      try {
+        getUseTableResult({
+          columns: [
+            "name",
+            "hasMany.name",
+            {
+              field: "belongsTo.str",
+            },
+          ],
+        });
+        loadMockWidgetModelMetadataForRelationship();
+        loadMockWidgetDataForRelationship();
+      } catch (err) {
+        error = err as Error;
+      }
+
+      expect(error!.message).toBe(
+        "Field 'hasMany.name' is a has many relationship, but the column path expects the field to be a has one or belongs to relationship"
+      );
+    });
+
     it("should throw an error if the relationship field's type is not a relationship", async () => {
       let error: Error | undefined;
       try {
         getUseTableResult({
-          columns: [{ field: "name", relatedField: "invalid" }],
+          columns: ["name.invalid"],
         });
         loadMockWidgetModelMetadataForRelationship();
         loadMockWidgetDataForRelationship();
@@ -415,7 +463,7 @@ describe("useTable hook", () => {
       let error: Error | undefined;
       try {
         getUseTableResult({
-          columns: [{ field: "hasOne", relatedField: "invalid" }],
+          columns: ["hasOne.invalid"],
         });
         loadMockWidgetModelMetadataForRelationship();
         loadMockWidgetDataForRelationship();
@@ -430,7 +478,7 @@ describe("useTable hook", () => {
       let error: Error | undefined;
       try {
         getUseTableResult({
-          columns: [{ field: "notExist", relatedField: "name" }],
+          columns: ["notExist.name"],
         });
         loadMockWidgetModelMetadataForRelationship();
         loadMockWidgetDataForRelationship();
@@ -446,8 +494,8 @@ describe("useTable hook", () => {
         columns: [
           "name",
           {
-            name: "Custom column",
-            render: (record) => <div>hello {record.name}</div>,
+            header: "Custom column",
+            render: (props) => <div>hello {props.record.name}</div>,
           },
         ],
       });
@@ -489,7 +537,7 @@ describe("useTable hook", () => {
       let error: Error | undefined;
       try {
         getUseTableResult({
-          columns: [{ field: "hasOne", relatedField: "invalid" }],
+          columns: ["hasOne.invalid"],
           excludeColumns: ["name"],
         });
         loadMockWidgetModelMetadataForRelationship();
@@ -600,9 +648,9 @@ describe("useTable hook", () => {
         columns: [
           "name",
           {
-            name: "Custom column",
-            render: (record) => {
-              recordFromRender = record;
+            header: "Custom column",
+            render: (props) => {
+              recordFromRender = props.record;
               return <div>some custom stuff</div>;
             },
           },

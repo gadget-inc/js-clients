@@ -248,12 +248,7 @@ describe("PolarisAutoTable", () => {
     const { container } = render(
       <PolarisAutoTable
         model={api.widget}
-        columns={[
-          "name",
-          { field: "hasOne", relatedField: "hasOneName" },
-          { field: "hasMany", relatedField: "hasManyNumber" },
-          { field: "belongsTo", relatedField: "belongsToEnum" },
-        ]}
+        columns={["name", "hasOne.hasOneName", "hasMany.edges.node.hasManyNumber", "belongsTo.belongsToEnum"]}
       />,
       {
         wrapper: PolarisMockedProviders,
@@ -280,18 +275,20 @@ describe("PolarisAutoTable", () => {
   });
 
   it("should render the custom columns", () => {
-    const customCellRenderer = (record: any) => (
-      <div data-testid="custom-cell-div">
-        this is a custom cell: {record.id}-{record.name}
-      </div>
-    );
+    const CustomCellRenderer = (props: { record: any }) => {
+      return (
+        <div data-testid="custom-cell-div">
+          this is a custom cell: {props.record.id}-{props.record.name}
+        </div>
+      );
+    };
 
     setMockUseTableResponse({
       newRows: [
         {
           id: "1",
           name: "hello",
-          "Custom cell": customCellRenderer({ id: "1", name: "hello" }),
+          "Custom cell": <CustomCellRenderer record={{ id: "1", name: "hello" }} />,
         },
       ],
       newColumns: [
@@ -306,7 +303,7 @@ describe("PolarisAutoTable", () => {
           apiIdentifier: "Custom cell",
           isCustomCell: true,
           sortable: false,
-          getValue: customCellRenderer,
+          getValue: CustomCellRenderer,
         },
       ],
     });
@@ -317,8 +314,8 @@ describe("PolarisAutoTable", () => {
         columns={[
           "name",
           {
-            name: "Custom cell",
-            render: customCellRenderer,
+            header: "Custom cell",
+            render: CustomCellRenderer,
           },
         ]}
       />,

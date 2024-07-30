@@ -543,22 +543,59 @@ export const isRoleAssignmentsArray = (value: ColumnValueType): value is RoleAss
   return true;
 };
 
-export type RelatedFieldColumn = {
+export const isRelationshipColumn = (value: string) => {
+  const parts = value.split(".");
+  return parts.length === 2 || parts.length === 4;
+};
+
+export const maybeGetRelationshipFromColumnPath = (value: string) => {
+  const parts = value.split(".");
+  if (parts.length === 2) {
+    return {
+      apiIdentifier: parts[0],
+      relatedField: parts[1],
+      __expectHasManyRelationship: false,
+    };
+  }
+
+  if (parts.length === 4) {
+    return {
+      apiIdentifier: parts[0],
+      relatedField: parts[3],
+      __expectHasManyRelationship: true,
+    };
+  }
+
+  return null;
+};
+
+export type CellDetailColumn = {
+  header?: string;
   field: string;
-  relatedField: string;
+  sortable?: boolean;
 };
 
-export const isRelatedFieldColumn = (value: any): value is RelatedFieldColumn => {
-  return typeof value === "object" && value !== null && "field" in value && "relatedField" in value;
+export type CustomCellRendererColumn = {
+  header: string;
+  render: (props: { record: GadgetRecord<any> }) => ReactNode;
 };
 
-export type CustomCellColumn = {
-  name: string;
-  render: (record: GadgetRecord<any>) => ReactNode;
+export const isCellDetailColumn = (value: any): value is CellDetailColumn => {
+  return typeof value === "object" && value !== null && "field" in value;
 };
 
-export const isCustomCellColumn = (value: any): value is CustomCellColumn => {
-  return typeof value === "object" && value !== null && "name" in value && "render" in value;
+export const isCustomCellRendererColumn = (value: any): value is CustomCellRendererColumn => {
+  return typeof value === "object" && value !== null && "render" in value;
+};
+
+export const convertToCellDetailColumn = (column: string | CellDetailColumn): CellDetailColumn => {
+  if (typeof column === "string") {
+    return {
+      field: column,
+    };
+  }
+
+  return column;
 };
 
 /**

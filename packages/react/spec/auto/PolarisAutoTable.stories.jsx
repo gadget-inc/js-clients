@@ -104,14 +104,7 @@ export const SelectRelatedFieldsHasOne = {
   name: "Select related fields - has one relationship",
   args: {
     model: api.autoTableTest,
-    columns: [
-      "str",
-      "num",
-      {
-        field: "hasOne",
-        relatedField: "name",
-      },
-    ],
+    columns: ["str", "num", "hasOne.name"],
   },
 };
 
@@ -127,14 +120,7 @@ export const SelectRelatedFieldsHasMany = {
   name: "Select related fields - has many relationship",
   args: {
     model: api.autoTableTest,
-    columns: [
-      "str",
-      "num",
-      {
-        field: "hasMany",
-        relatedField: "name",
-      },
-    ],
+    columns: ["str", "num", "hasMany.edges.node.name"],
   },
 };
 
@@ -150,13 +136,7 @@ export const SelectRelatedFieldsBelongsTo = {
   name: "Select related fields - belongs to relationship",
   args: {
     model: api._autoTableTestRelatedModel,
-    columns: [
-      "name",
-      {
-        field: "belongsToParent",
-        relatedField: "str",
-      },
-    ],
+    columns: ["name", "belongsToParent.str"],
   },
 };
 
@@ -174,18 +154,25 @@ export const CustomCell = {
     columns: [
       "str",
       "file",
+      "hasOne",
+      "hasOne.someBool",
       {
-        field: "hasOne",
-        relatedField: "name",
+        header: "has one number",
+        field: "hasOne.someNumber",
       },
       "hasMany",
+      "hasMany.edges.node.someBool",
+      {
+        header: "has many number",
+        field: "hasMany.edges.node.someNumber",
+      },
       "rt",
       {
-        name: "Custom cell",
-        render: (record) => {
+        header: "Custom cell",
+        render: (props) => {
           return (
             <div>
-              Custom cell, num field: {record.num} ({record.id})
+              Custom cell, num field: {props.record.num} ({props.record.id})
             </div>
           );
         },
@@ -222,9 +209,9 @@ export const CustomCellWithDeleteButton = {
     columns: [
       "str",
       {
-        name: "Actions",
-        render: (record) => {
-          return <CustomDeleteButtonCellRenderer record={record} />;
+        header: "Actions",
+        render: (props) => {
+          return <CustomDeleteButtonCellRenderer record={props.record} />;
         },
       },
     ],
