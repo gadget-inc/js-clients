@@ -127,9 +127,9 @@ export const useAutoForm = <
   SchemaT,
   ActionFunc extends ActionFunction<GivenOptions, any, any, SchemaT, any> | GlobalActionFunction<any>
 >(
-  props: AutoFormProps<GivenOptions, SchemaT, ActionFunc, any, any>
+  props: AutoFormProps<GivenOptions, SchemaT, ActionFunc, any, any> & { findBy?: any }
 ) => {
-  const { action, record, onSuccess, onFailure } = props;
+  const { action, record, onSuccess, onFailure, findBy } = props;
 
   if (action.isBulk) {
     throw new Error("Bulk actions are not supported in AutoForms");
@@ -137,9 +137,10 @@ export const useAutoForm = <
 
   const { metadata, fetching: fetchingMetadata, error: metadataError } = useActionMetadata(props.action);
 
+  const operatesWithRecordId = !!(metadata && isActionMetadata(metadata) && metadata.action.operatesWithRecordIdentity);
+
   // filter down the fields to render only what we want to render for this form
   const fields = useFormFields(metadata, props);
-  const operatesWithRecordId = !!(metadata && isActionMetadata(metadata) && metadata.action.operatesWithRecordIdentity);
   const isDeleteAction = metadata && isActionMetadata(metadata) && metadata.action.isDeleteAction;
   const isGlobalAction = action.type === "globalAction";
   const modelApiIdentifier = action.type == "action" ? action.modelApiIdentifier : undefined;
@@ -210,9 +211,7 @@ export const useAutoForm = <
   }, [isReady, defaultValues, originalFormMethods, modelApiIdentifier]);
 
   if (!fetchingMetadata) {
-    if (!operatesWithRecordId && "findBy" in props) {
-      throw new Error("The 'findBy' prop is only allowed for update actions.");
-    }
+    validateFindBy(operatesWithRecordId, !!findBy);
   }
 
   return {
@@ -227,4 +226,12 @@ export const useAutoForm = <
     isLoading,
     originalFormMethods,
   };
+};
+
+const validateFindBy = (operatesWithRecordId: boolean, hasFindBy: boolean) => {
+  if (operatesWithRecordId && !hasFindBy) {
+    throw new Error("The 'findBy' prop is required for actions that operate with a record identity.");
+  } else if (!operatesWithRecordId && hasFindBy) {
+    throw new Error("The 'findBy' prop is only allowed for actions that operate with a record identity.");
+  }
 };

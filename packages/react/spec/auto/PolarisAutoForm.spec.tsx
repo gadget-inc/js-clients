@@ -36,7 +36,22 @@ describe("PolarisAutoForm", () => {
           // @ts-expect-error: mixing a create and a findBy should throw a type error too
           render(<PolarisAutoForm action={api.widget.create} findBy="1234" />, { wrapper: PolarisMockedProviders });
           loadMockWidgetCreateMetadata();
-        }).toThrow("The 'findBy' prop is only allowed for update actions.");
+        }).toThrow("The 'findBy' prop is only allowed for actions that operate with a record identity.");
+      });
+
+      describe("for actions that require IDs", () => {
+        test("it throws an error for update actions missing the findBy prop", async () => {
+          expect(() => {
+            render(<PolarisAutoForm action={api.widget.update} />, { wrapper: PolarisMockedProviders });
+            loadMockWidgetUpdateMetadata();
+          }).toThrow("The 'findBy' prop is required for actions that operate with a record identity.");
+        });
+        test("it throws an error for delete actions missing the findBy prop", async () => {
+          expect(() => {
+            render(<PolarisAutoForm action={api.widget.delete} />, { wrapper: PolarisMockedProviders });
+            loadMockWidgetDeleteMetadata();
+          }).toThrow("The 'findBy' prop is required for actions that operate with a record identity.");
+        });
       });
 
       describe("for a required field", () => {
@@ -64,7 +79,7 @@ describe("PolarisAutoForm", () => {
       });
       const { getByLabelText, queryAllByText } = result;
 
-      loadMockWidgetUpdateMetadata();
+      loadMockWidgetUpdateMetadataWithFindBy();
 
       const submitButton = queryAllByText("Submit")[0];
       expect(submitButton).toHaveTextContent("Submit");
@@ -261,7 +276,7 @@ describe("PolarisAutoForm", () => {
       });
       const { getByLabelText, queryAllByText } = result;
 
-      loadMockWidgetUpdateMetadata();
+      loadMockWidgetUpdateMetadataWithFindBy();
 
       const submitButton = queryAllByText("Submit")[0];
       expect(submitButton).toHaveTextContent("Submit");
@@ -613,7 +628,7 @@ describe("PolarisAutoForm", () => {
           wrapper: PolarisMockedProviders,
         });
 
-        loadMockWidgetUpdateMetadata();
+        loadMockWidgetUpdateMetadataWithFindBy();
       });
 
       test("it should remain null when submitting the form if unchanged", async () => {
@@ -702,29 +717,66 @@ function loadMockWidgetCreateMetadata() {
 }
 
 function loadMockWidgetUpdateMetadata() {
+  mockWidgetUpdateHelperFunctions.expectMetadataRequest();
+  mockWidgetUpdateHelperFunctions.mockMetadataResponse();
+}
+
+function loadMockWidgetUpdateMetadataWithFindBy() {
+  mockWidgetUpdateHelperFunctions.expectMetadataRequest();
+  mockWidgetUpdateHelperFunctions.mockFindByResponse();
+  mockWidgetUpdateHelperFunctions.mockMetadataResponse();
+}
+
+const mockWidgetUpdateHelperFunctions = {
+  mockMetadataResponse: () => {
+    mockUrqlClient.executeQuery.pushResponse("ModelActionMetadata", {
+      stale: false,
+      hasNext: false,
+      data: getWidgetModelMetadata({
+        name: "Update",
+        apiIdentifier: "update",
+        operatesWithRecordIdentity: true,
+      }),
+    });
+  },
+  mockFindByResponse: () => {
+    mockUrqlClient.executeQuery.pushResponse("widget", {
+      stale: false,
+      hasNext: false,
+      data: getWidgetRecord({
+        name: "Test Widget",
+        inventoryCount: 42,
+      }),
+    });
+  },
+  expectMetadataRequest: () => {
+    expect(mockUrqlClient.executeQuery.mock.calls[0][0].variables).toEqual({
+      modelApiIdentifier: "widget",
+      modelNamespace: null,
+      action: "update",
+      includeRelatedFields: false,
+    });
+  },
+};
+
+function loadMockWidgetDeleteMetadata() {
   expect(mockUrqlClient.executeQuery.mock.calls[0][0].variables).toEqual({
     modelApiIdentifier: "widget",
     modelNamespace: null,
-    action: "update",
+    action: "delete",
     includeRelatedFields: false,
-  });
-
-  mockUrqlClient.executeQuery.pushResponse("widget", {
-    stale: false,
-    hasNext: false,
-    data: getWidgetRecord({
-      name: "Test Widget",
-      inventoryCount: 42,
-    }),
   });
 
   mockUrqlClient.executeQuery.pushResponse("ModelActionMetadata", {
     stale: false,
     hasNext: false,
-    data: getWidgetModelMetadata({
-      name: "Update",
-      apiIdentifier: "update",
-      operatesWithRecordIdentity: true,
-    }),
+    data: getWidgetModelMetadata(
+      {
+        name: "Delete",
+        apiIdentifier: "delete",
+        operatesWithRecordIdentity: true,
+      },
+      [] // No input fields beyond ID
+    ),
   });
 }
