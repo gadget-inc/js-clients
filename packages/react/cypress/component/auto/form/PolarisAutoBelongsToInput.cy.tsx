@@ -199,6 +199,7 @@ const getInputFieldsWithCustomValidations = () => {
               fieldType: "BelongsTo",
               validations: [],
               relatedModel: {
+                key: "DataModel-section",
                 apiIdentifier: "section",
                 namespace: [],
                 defaultDisplayField: {

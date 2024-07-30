@@ -38,6 +38,7 @@ export const stadiumModelInputFields = {
           fieldType: "HasMany",
           validations: [],
           relatedModel: {
+            key: "DataModel-round",
             apiIdentifier: "round",
             namespace: ["game"],
             defaultDisplayField: {
@@ -60,6 +61,7 @@ export const stadiumModelInputFields = {
           fieldType: "BelongsTo",
           validations: [],
           relatedModel: {
+            key: "DataModel-city",
             apiIdentifier: "city",
             namespace: ["game"],
             defaultDisplayField: {

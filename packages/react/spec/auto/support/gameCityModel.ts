@@ -38,6 +38,7 @@ export const gameCityModelInputFields = {
           fieldType: "HasOne",
           validations: [],
           relatedModel: {
+            key: "DataModel-stadium",
             apiIdentifier: "stadium",
             namespace: ["game"],
             defaultDisplayField: {

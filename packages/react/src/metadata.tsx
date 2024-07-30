@@ -63,6 +63,7 @@ const FieldMetadataFragment = graphql(/* GraphQL */ `
       }
       ... on GadgetHasManyConfig {
         relatedModel {
+          key
           apiIdentifier
           namespace
           defaultDisplayField {
@@ -80,6 +81,7 @@ const FieldMetadataFragment = graphql(/* GraphQL */ `
       }
       ... on GadgetHasOneConfig {
         relatedModel {
+          key
           apiIdentifier
           namespace
           defaultDisplayField {
@@ -97,6 +99,7 @@ const FieldMetadataFragment = graphql(/* GraphQL */ `
       }
       ... on GadgetBelongsToConfig {
         relatedModel {
+          key
           apiIdentifier
           namespace
           defaultDisplayField {
@@ -390,9 +393,28 @@ export const filterAutoFormFieldList = (
   }
 
   // Filter out fields that are not supported by the form
-  return subset.filter((field) => acceptedAutoFormFieldTypes.has(field.fieldType));
+  const validFieldTypeSubset = subset.filter(isAcceptedFieldTypeFilter);
+
+  return options?.include
+    ? validFieldTypeSubset // Everything explicitly included is valid
+    : validFieldTypeSubset.filter(isNotRelatedToSpecialModelFilter); // Without explicit includes, filter out relationships to special models
 };
 
+/**
+ * Filters out relationship fields that are related to special models
+ */
+const isNotRelatedToSpecialModelFilter = (field: FieldMetadata) => {
+  const relatedModelKey =
+    field.configuration &&
+    "relatedModel" in field.configuration &&
+    field.configuration.relatedModel &&
+    field.configuration.relatedModel.key;
+  return typeof relatedModelKey === "string" ? !specialModelKeys.has(relatedModelKey) : true;
+};
+
+const specialModelKeys = new Set(["DataModel-Shopify-Shop"]);
+
+const isAcceptedFieldTypeFilter = (field: FieldMetadata) => acceptedAutoFormFieldTypes.has(field.fieldType);
 const acceptedAutoFormFieldTypes = new Set([
   FieldType.Boolean,
   FieldType.Color,
