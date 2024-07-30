@@ -189,7 +189,7 @@ describe("PolarisAutoTextInput", () => {
     test("it renders number inputs with any step value when no decimals are set", async () => {
       result = render(<PolarisAutoNumberInput field="inventoryCount" />, getCreateWrapper());
       const field = result.container.querySelector(`input[name="widget.inventoryCount"]`);
-      expect(field).toHaveAttribute("step", "any");
+      expect(field).toHaveAttribute("step", "1");
     });
 
     test("it renders number inputs with a step value when decimals are set", async () => {
