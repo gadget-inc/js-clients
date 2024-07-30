@@ -27,7 +27,10 @@ describe("PolarisAutoForm", () => {
     describe("for widget create", () => {
       test("it renders the name input", async () => {
         const { findByLabelText } = render(<PolarisAutoForm action={api.widget.create} />, { wrapper: PolarisMockedProviders });
-        loadMockWidgetCreateMetadata();
+        act(() => {
+          loadMockWidgetCreateMetadata();
+        });
+
         expect(await findByLabelText("Name")).toBeInTheDocument();
       });
 
@@ -35,7 +38,9 @@ describe("PolarisAutoForm", () => {
         expect(() => {
           // @ts-expect-error: mixing a create and a findBy should throw a type error too
           render(<PolarisAutoForm action={api.widget.create} findBy="1234" />, { wrapper: PolarisMockedProviders });
-          loadMockWidgetCreateMetadata();
+          act(() => {
+            loadMockWidgetCreateMetadata();
+          });
         }).toThrow("The 'findBy' prop is only allowed for update actions.");
       });
 
@@ -43,14 +48,18 @@ describe("PolarisAutoForm", () => {
         test("it throw an error if you exclude the field", async () => {
           expect(() => {
             render(<PolarisAutoForm action={api.widget.create} exclude={["inventoryCount"]} />, { wrapper: PolarisMockedProviders });
-            loadMockWidgetCreateMetadata();
+            act(() => {
+              loadMockWidgetCreateMetadata();
+            });
           }).toThrow("The field inventoryCount is required and cannot be excluded.");
         });
 
         test("if you include fields, you must include the required fields", async () => {
           expect(() => {
             render(<PolarisAutoForm action={api.widget.create} include={["name"]} />, { wrapper: PolarisMockedProviders });
-            loadMockWidgetCreateMetadata();
+            act(() => {
+              loadMockWidgetCreateMetadata();
+            });
           }).toThrow("The following required fields are missing from the include list: inventoryCount");
         });
       });
@@ -104,7 +113,9 @@ describe("PolarisAutoForm", () => {
           </PolarisAutoForm>,
           { wrapper: PolarisMockedProviders }
         );
-        loadMockWidgetCreateMetadata();
+        act(() => {
+          loadMockWidgetCreateMetadata();
+        });
         expect(getByLabelText("Name")).toBeInTheDocument();
       });
     });
@@ -122,7 +133,9 @@ describe("PolarisAutoForm", () => {
           { wrapper: PolarisMockedProviders }
         );
 
-        loadMockWidgetCreateMetadata();
+        act(() => {
+          loadMockWidgetCreateMetadata();
+        });
 
         const submitButton = await findByText("Submit", { selector: ':not([aria-hidden="true"])' });
         expect(submitButton).toBeTruthy();
@@ -157,7 +170,9 @@ describe("PolarisAutoForm", () => {
           { wrapper: PolarisMockedProviders }
         );
 
-        loadMockWidgetCreateMetadata();
+        act(() => {
+          loadMockWidgetCreateMetadata();
+        });
 
         expect(getByText("Save")).toBeTruthy();
       });
@@ -657,7 +672,9 @@ describe("PolarisAutoForm", () => {
     it("throws an error when a bulk action is used", () => {
       expect(() => {
         render(<PolarisAutoForm action={api.widget.bulkUpdate as any} />, { wrapper: PolarisMockedProviders });
-        loadMockWidgetCreateMetadata();
+        act(() => {
+          loadMockWidgetCreateMetadata();
+        });
       }).toThrow("Bulk actions are not supported in AutoForms");
     });
   });
