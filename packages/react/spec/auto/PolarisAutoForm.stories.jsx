@@ -65,8 +65,7 @@ export const Excluded = {
 export const Included = {
   args: {
     action: api.widget.create,
-    findBy: "999",
-    include: ["startsAt", "roles"],
+    include: ["name", "inventoryCount"],
   },
 };
 
