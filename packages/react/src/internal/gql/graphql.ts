@@ -7499,6 +7499,7 @@ type FieldMetadata_GadgetModelField_Fragment = {
         fieldType: GadgetFieldType;
         relatedModel?: {
           __typename?: "GadgetModel";
+          key: string;
           apiIdentifier: string;
           namespace?: Array<string> | null;
           defaultDisplayField: { __typename?: "GadgetModelField"; name: string; apiIdentifier: string; fieldType: GadgetFieldType };
@@ -7554,6 +7555,7 @@ type FieldMetadata_GadgetModelField_Fragment = {
         fieldType: GadgetFieldType;
         relatedModel?: {
           __typename?: "GadgetModel";
+          key: string;
           apiIdentifier: string;
           namespace?: Array<string> | null;
           defaultDisplayField: { __typename?: "GadgetModelField"; name: string; apiIdentifier: string; fieldType: GadgetFieldType };
@@ -7573,6 +7575,7 @@ type FieldMetadata_GadgetModelField_Fragment = {
         fieldType: GadgetFieldType;
         relatedModel?: {
           __typename?: "GadgetModel";
+          key: string;
           apiIdentifier: string;
           namespace?: Array<string> | null;
           defaultDisplayField: { __typename?: "GadgetModelField"; name: string; apiIdentifier: string; fieldType: GadgetFieldType };
@@ -7624,6 +7627,7 @@ type FieldMetadata_GadgetObjectField_Fragment = {
         fieldType: GadgetFieldType;
         relatedModel?: {
           __typename?: "GadgetModel";
+          key: string;
           apiIdentifier: string;
           namespace?: Array<string> | null;
           defaultDisplayField: { __typename?: "GadgetModelField"; name: string; apiIdentifier: string; fieldType: GadgetFieldType };
@@ -7679,6 +7683,7 @@ type FieldMetadata_GadgetObjectField_Fragment = {
         fieldType: GadgetFieldType;
         relatedModel?: {
           __typename?: "GadgetModel";
+          key: string;
           apiIdentifier: string;
           namespace?: Array<string> | null;
           defaultDisplayField: { __typename?: "GadgetModelField"; name: string; apiIdentifier: string; fieldType: GadgetFieldType };
@@ -7698,6 +7703,7 @@ type FieldMetadata_GadgetObjectField_Fragment = {
         fieldType: GadgetFieldType;
         relatedModel?: {
           __typename?: "GadgetModel";
+          key: string;
           apiIdentifier: string;
           namespace?: Array<string> | null;
           defaultDisplayField: { __typename?: "GadgetModelField"; name: string; apiIdentifier: string; fieldType: GadgetFieldType };
@@ -7768,6 +7774,7 @@ export type GetModelMetadataQuery = {
               fieldType: GadgetFieldType;
               relatedModel?: {
                 __typename?: "GadgetModel";
+                key: string;
                 apiIdentifier: string;
                 namespace?: Array<string> | null;
                 defaultDisplayField: { __typename?: "GadgetModelField"; name: string; apiIdentifier: string; fieldType: GadgetFieldType };
@@ -7823,6 +7830,7 @@ export type GetModelMetadataQuery = {
               fieldType: GadgetFieldType;
               relatedModel?: {
                 __typename?: "GadgetModel";
+                key: string;
                 apiIdentifier: string;
                 namespace?: Array<string> | null;
                 defaultDisplayField: { __typename?: "GadgetModelField"; name: string; apiIdentifier: string; fieldType: GadgetFieldType };
@@ -7842,6 +7850,7 @@ export type GetModelMetadataQuery = {
               fieldType: GadgetFieldType;
               relatedModel?: {
                 __typename?: "GadgetModel";
+                key: string;
                 apiIdentifier: string;
                 namespace?: Array<string> | null;
                 defaultDisplayField: { __typename?: "GadgetModelField"; name: string; apiIdentifier: string; fieldType: GadgetFieldType };
@@ -7911,6 +7920,7 @@ type SubFields_GadgetModelField_Fragment = {
                 fieldType: GadgetFieldType;
                 relatedModel?: {
                   __typename?: "GadgetModel";
+                  key: string;
                   apiIdentifier: string;
                   namespace?: Array<string> | null;
                   defaultDisplayField: { __typename?: "GadgetModelField"; name: string; apiIdentifier: string; fieldType: GadgetFieldType };
@@ -7966,6 +7976,7 @@ type SubFields_GadgetModelField_Fragment = {
                 fieldType: GadgetFieldType;
                 relatedModel?: {
                   __typename?: "GadgetModel";
+                  key: string;
                   apiIdentifier: string;
                   namespace?: Array<string> | null;
                   defaultDisplayField: { __typename?: "GadgetModelField"; name: string; apiIdentifier: string; fieldType: GadgetFieldType };
@@ -7985,6 +7996,7 @@ type SubFields_GadgetModelField_Fragment = {
                 fieldType: GadgetFieldType;
                 relatedModel?: {
                   __typename?: "GadgetModel";
+                  key: string;
                   apiIdentifier: string;
                   namespace?: Array<string> | null;
                   defaultDisplayField: { __typename?: "GadgetModelField"; name: string; apiIdentifier: string; fieldType: GadgetFieldType };
@@ -8029,6 +8041,7 @@ type SubFields_GadgetModelField_Fragment = {
                         fieldType: GadgetFieldType;
                         relatedModel?: {
                           __typename?: "GadgetModel";
+                          key: string;
                           apiIdentifier: string;
                           namespace?: Array<string> | null;
                           defaultDisplayField: {
@@ -8118,6 +8131,7 @@ type SubFields_GadgetModelField_Fragment = {
                         fieldType: GadgetFieldType;
                         relatedModel?: {
                           __typename?: "GadgetModel";
+                          key: string;
                           apiIdentifier: string;
                           namespace?: Array<string> | null;
                           defaultDisplayField: {
@@ -8153,6 +8167,7 @@ type SubFields_GadgetModelField_Fragment = {
                         fieldType: GadgetFieldType;
                         relatedModel?: {
                           __typename?: "GadgetModel";
+                          key: string;
                           apiIdentifier: string;
                           namespace?: Array<string> | null;
                           defaultDisplayField: {
@@ -8219,6 +8234,7 @@ type SubFields_GadgetModelField_Fragment = {
                                 fieldType: GadgetFieldType;
                                 relatedModel?: {
                                   __typename?: "GadgetModel";
+                                  key: string;
                                   apiIdentifier: string;
                                   namespace?: Array<string> | null;
                                   defaultDisplayField: {
@@ -8328,6 +8344,7 @@ type SubFields_GadgetModelField_Fragment = {
                                 fieldType: GadgetFieldType;
                                 relatedModel?: {
                                   __typename?: "GadgetModel";
+                                  key: string;
                                   apiIdentifier: string;
                                   namespace?: Array<string> | null;
                                   defaultDisplayField: {
@@ -8368,6 +8385,7 @@ type SubFields_GadgetModelField_Fragment = {
                                 fieldType: GadgetFieldType;
                                 relatedModel?: {
                                   __typename?: "GadgetModel";
+                                  key: string;
                                   apiIdentifier: string;
                                   namespace?: Array<string> | null;
                                   defaultDisplayField: {
@@ -8503,6 +8521,7 @@ type SubFields_GadgetObjectField_Fragment = {
                 fieldType: GadgetFieldType;
                 relatedModel?: {
                   __typename?: "GadgetModel";
+                  key: string;
                   apiIdentifier: string;
                   namespace?: Array<string> | null;
                   defaultDisplayField: { __typename?: "GadgetModelField"; name: string; apiIdentifier: string; fieldType: GadgetFieldType };
@@ -8558,6 +8577,7 @@ type SubFields_GadgetObjectField_Fragment = {
                 fieldType: GadgetFieldType;
                 relatedModel?: {
                   __typename?: "GadgetModel";
+                  key: string;
                   apiIdentifier: string;
                   namespace?: Array<string> | null;
                   defaultDisplayField: { __typename?: "GadgetModelField"; name: string; apiIdentifier: string; fieldType: GadgetFieldType };
@@ -8577,6 +8597,7 @@ type SubFields_GadgetObjectField_Fragment = {
                 fieldType: GadgetFieldType;
                 relatedModel?: {
                   __typename?: "GadgetModel";
+                  key: string;
                   apiIdentifier: string;
                   namespace?: Array<string> | null;
                   defaultDisplayField: { __typename?: "GadgetModelField"; name: string; apiIdentifier: string; fieldType: GadgetFieldType };
@@ -8621,6 +8642,7 @@ type SubFields_GadgetObjectField_Fragment = {
                         fieldType: GadgetFieldType;
                         relatedModel?: {
                           __typename?: "GadgetModel";
+                          key: string;
                           apiIdentifier: string;
                           namespace?: Array<string> | null;
                           defaultDisplayField: {
@@ -8710,6 +8732,7 @@ type SubFields_GadgetObjectField_Fragment = {
                         fieldType: GadgetFieldType;
                         relatedModel?: {
                           __typename?: "GadgetModel";
+                          key: string;
                           apiIdentifier: string;
                           namespace?: Array<string> | null;
                           defaultDisplayField: {
@@ -8745,6 +8768,7 @@ type SubFields_GadgetObjectField_Fragment = {
                         fieldType: GadgetFieldType;
                         relatedModel?: {
                           __typename?: "GadgetModel";
+                          key: string;
                           apiIdentifier: string;
                           namespace?: Array<string> | null;
                           defaultDisplayField: {
@@ -8811,6 +8835,7 @@ type SubFields_GadgetObjectField_Fragment = {
                                 fieldType: GadgetFieldType;
                                 relatedModel?: {
                                   __typename?: "GadgetModel";
+                                  key: string;
                                   apiIdentifier: string;
                                   namespace?: Array<string> | null;
                                   defaultDisplayField: {
@@ -8920,6 +8945,7 @@ type SubFields_GadgetObjectField_Fragment = {
                                 fieldType: GadgetFieldType;
                                 relatedModel?: {
                                   __typename?: "GadgetModel";
+                                  key: string;
                                   apiIdentifier: string;
                                   namespace?: Array<string> | null;
                                   defaultDisplayField: {
@@ -8960,6 +8986,7 @@ type SubFields_GadgetObjectField_Fragment = {
                                 fieldType: GadgetFieldType;
                                 relatedModel?: {
                                   __typename?: "GadgetModel";
+                                  key: string;
                                   apiIdentifier: string;
                                   namespace?: Array<string> | null;
                                   defaultDisplayField: {
@@ -9104,6 +9131,7 @@ export type ModelActionMetadataQuery = {
                 fieldType: GadgetFieldType;
                 relatedModel?: {
                   __typename?: "GadgetModel";
+                  key: string;
                   apiIdentifier: string;
                   namespace?: Array<string> | null;
                   defaultDisplayField: { __typename?: "GadgetModelField"; name: string; apiIdentifier: string; fieldType: GadgetFieldType };
@@ -9159,6 +9187,7 @@ export type ModelActionMetadataQuery = {
                 fieldType: GadgetFieldType;
                 relatedModel?: {
                   __typename?: "GadgetModel";
+                  key: string;
                   apiIdentifier: string;
                   namespace?: Array<string> | null;
                   defaultDisplayField: { __typename?: "GadgetModelField"; name: string; apiIdentifier: string; fieldType: GadgetFieldType };
@@ -9178,6 +9207,7 @@ export type ModelActionMetadataQuery = {
                 fieldType: GadgetFieldType;
                 relatedModel?: {
                   __typename?: "GadgetModel";
+                  key: string;
                   apiIdentifier: string;
                   namespace?: Array<string> | null;
                   defaultDisplayField: { __typename?: "GadgetModelField"; name: string; apiIdentifier: string; fieldType: GadgetFieldType };
@@ -9222,6 +9252,7 @@ export type ModelActionMetadataQuery = {
                         fieldType: GadgetFieldType;
                         relatedModel?: {
                           __typename?: "GadgetModel";
+                          key: string;
                           apiIdentifier: string;
                           namespace?: Array<string> | null;
                           defaultDisplayField: {
@@ -9311,6 +9342,7 @@ export type ModelActionMetadataQuery = {
                         fieldType: GadgetFieldType;
                         relatedModel?: {
                           __typename?: "GadgetModel";
+                          key: string;
                           apiIdentifier: string;
                           namespace?: Array<string> | null;
                           defaultDisplayField: {
@@ -9346,6 +9378,7 @@ export type ModelActionMetadataQuery = {
                         fieldType: GadgetFieldType;
                         relatedModel?: {
                           __typename?: "GadgetModel";
+                          key: string;
                           apiIdentifier: string;
                           namespace?: Array<string> | null;
                           defaultDisplayField: {
@@ -9412,6 +9445,7 @@ export type ModelActionMetadataQuery = {
                                 fieldType: GadgetFieldType;
                                 relatedModel?: {
                                   __typename?: "GadgetModel";
+                                  key: string;
                                   apiIdentifier: string;
                                   namespace?: Array<string> | null;
                                   defaultDisplayField: {
@@ -9521,6 +9555,7 @@ export type ModelActionMetadataQuery = {
                                 fieldType: GadgetFieldType;
                                 relatedModel?: {
                                   __typename?: "GadgetModel";
+                                  key: string;
                                   apiIdentifier: string;
                                   namespace?: Array<string> | null;
                                   defaultDisplayField: {
@@ -9561,6 +9596,7 @@ export type ModelActionMetadataQuery = {
                                 fieldType: GadgetFieldType;
                                 relatedModel?: {
                                   __typename?: "GadgetModel";
+                                  key: string;
                                   apiIdentifier: string;
                                   namespace?: Array<string> | null;
                                   defaultDisplayField: {
@@ -9637,6 +9673,7 @@ export type ModelActionMetadataQuery = {
                                         fieldType: GadgetFieldType;
                                         relatedModel?: {
                                           __typename?: "GadgetModel";
+                                          key: string;
                                           apiIdentifier: string;
                                           namespace?: Array<string> | null;
                                           defaultDisplayField: {
@@ -9766,6 +9803,7 @@ export type ModelActionMetadataQuery = {
                                         fieldType: GadgetFieldType;
                                         relatedModel?: {
                                           __typename?: "GadgetModel";
+                                          key: string;
                                           apiIdentifier: string;
                                           namespace?: Array<string> | null;
                                           defaultDisplayField: {
@@ -9811,6 +9849,7 @@ export type ModelActionMetadataQuery = {
                                         fieldType: GadgetFieldType;
                                         relatedModel?: {
                                           __typename?: "GadgetModel";
+                                          key: string;
                                           apiIdentifier: string;
                                           namespace?: Array<string> | null;
                                           defaultDisplayField: {
@@ -9982,6 +10021,7 @@ export type GlobalActionMetadataQuery = {
               fieldType: GadgetFieldType;
               relatedModel?: {
                 __typename?: "GadgetModel";
+                key: string;
                 apiIdentifier: string;
                 namespace?: Array<string> | null;
                 defaultDisplayField: { __typename?: "GadgetModelField"; name: string; apiIdentifier: string; fieldType: GadgetFieldType };
@@ -10037,6 +10077,7 @@ export type GlobalActionMetadataQuery = {
               fieldType: GadgetFieldType;
               relatedModel?: {
                 __typename?: "GadgetModel";
+                key: string;
                 apiIdentifier: string;
                 namespace?: Array<string> | null;
                 defaultDisplayField: { __typename?: "GadgetModelField"; name: string; apiIdentifier: string; fieldType: GadgetFieldType };
@@ -10056,6 +10097,7 @@ export type GlobalActionMetadataQuery = {
               fieldType: GadgetFieldType;
               relatedModel?: {
                 __typename?: "GadgetModel";
+                key: string;
                 apiIdentifier: string;
                 namespace?: Array<string> | null;
                 defaultDisplayField: { __typename?: "GadgetModelField"; name: string; apiIdentifier: string; fieldType: GadgetFieldType };
@@ -10100,6 +10142,7 @@ export type GlobalActionMetadataQuery = {
                       fieldType: GadgetFieldType;
                       relatedModel?: {
                         __typename?: "GadgetModel";
+                        key: string;
                         apiIdentifier: string;
                         namespace?: Array<string> | null;
                         defaultDisplayField: {
@@ -10189,6 +10232,7 @@ export type GlobalActionMetadataQuery = {
                       fieldType: GadgetFieldType;
                       relatedModel?: {
                         __typename?: "GadgetModel";
+                        key: string;
                         apiIdentifier: string;
                         namespace?: Array<string> | null;
                         defaultDisplayField: {
@@ -10224,6 +10268,7 @@ export type GlobalActionMetadataQuery = {
                       fieldType: GadgetFieldType;
                       relatedModel?: {
                         __typename?: "GadgetModel";
+                        key: string;
                         apiIdentifier: string;
                         namespace?: Array<string> | null;
                         defaultDisplayField: {
@@ -10290,6 +10335,7 @@ export type GlobalActionMetadataQuery = {
                               fieldType: GadgetFieldType;
                               relatedModel?: {
                                 __typename?: "GadgetModel";
+                                key: string;
                                 apiIdentifier: string;
                                 namespace?: Array<string> | null;
                                 defaultDisplayField: {
@@ -10399,6 +10445,7 @@ export type GlobalActionMetadataQuery = {
                               fieldType: GadgetFieldType;
                               relatedModel?: {
                                 __typename?: "GadgetModel";
+                                key: string;
                                 apiIdentifier: string;
                                 namespace?: Array<string> | null;
                                 defaultDisplayField: {
@@ -10439,6 +10486,7 @@ export type GlobalActionMetadataQuery = {
                               fieldType: GadgetFieldType;
                               relatedModel?: {
                                 __typename?: "GadgetModel";
+                                key: string;
                                 apiIdentifier: string;
                                 namespace?: Array<string> | null;
                                 defaultDisplayField: {
@@ -10515,6 +10563,7 @@ export type GlobalActionMetadataQuery = {
                                       fieldType: GadgetFieldType;
                                       relatedModel?: {
                                         __typename?: "GadgetModel";
+                                        key: string;
                                         apiIdentifier: string;
                                         namespace?: Array<string> | null;
                                         defaultDisplayField: {
@@ -10644,6 +10693,7 @@ export type GlobalActionMetadataQuery = {
                                       fieldType: GadgetFieldType;
                                       relatedModel?: {
                                         __typename?: "GadgetModel";
+                                        key: string;
                                         apiIdentifier: string;
                                         namespace?: Array<string> | null;
                                         defaultDisplayField: {
@@ -10689,6 +10739,7 @@ export type GlobalActionMetadataQuery = {
                                       fieldType: GadgetFieldType;
                                       relatedModel?: {
                                         __typename?: "GadgetModel";
+                                        key: string;
                                         apiIdentifier: string;
                                         namespace?: Array<string> | null;
                                         defaultDisplayField: {
@@ -10964,6 +11015,7 @@ export const FieldMetadataFragmentDoc = {
                         selectionSet: {
                           kind: "SelectionSet",
                           selections: [
+                            { kind: "Field", name: { kind: "Name", value: "key" } },
                             { kind: "Field", name: { kind: "Name", value: "apiIdentifier" } },
                             { kind: "Field", name: { kind: "Name", value: "namespace" } },
                             {
@@ -11025,6 +11077,7 @@ export const FieldMetadataFragmentDoc = {
                         selectionSet: {
                           kind: "SelectionSet",
                           selections: [
+                            { kind: "Field", name: { kind: "Name", value: "key" } },
                             { kind: "Field", name: { kind: "Name", value: "apiIdentifier" } },
                             { kind: "Field", name: { kind: "Name", value: "namespace" } },
                             {
@@ -11086,6 +11139,7 @@ export const FieldMetadataFragmentDoc = {
                         selectionSet: {
                           kind: "SelectionSet",
                           selections: [
+                            { kind: "Field", name: { kind: "Name", value: "key" } },
                             { kind: "Field", name: { kind: "Name", value: "apiIdentifier" } },
                             { kind: "Field", name: { kind: "Name", value: "namespace" } },
                             {
@@ -11399,6 +11453,7 @@ export const SubFieldsFragmentDoc = {
                         selectionSet: {
                           kind: "SelectionSet",
                           selections: [
+                            { kind: "Field", name: { kind: "Name", value: "key" } },
                             { kind: "Field", name: { kind: "Name", value: "apiIdentifier" } },
                             { kind: "Field", name: { kind: "Name", value: "namespace" } },
                             {
@@ -11460,6 +11515,7 @@ export const SubFieldsFragmentDoc = {
                         selectionSet: {
                           kind: "SelectionSet",
                           selections: [
+                            { kind: "Field", name: { kind: "Name", value: "key" } },
                             { kind: "Field", name: { kind: "Name", value: "apiIdentifier" } },
                             { kind: "Field", name: { kind: "Name", value: "namespace" } },
                             {
@@ -11521,6 +11577,7 @@ export const SubFieldsFragmentDoc = {
                         selectionSet: {
                           kind: "SelectionSet",
                           selections: [
+                            { kind: "Field", name: { kind: "Name", value: "key" } },
                             { kind: "Field", name: { kind: "Name", value: "apiIdentifier" } },
                             { kind: "Field", name: { kind: "Name", value: "namespace" } },
                             {
@@ -11786,6 +11843,7 @@ export const GetModelMetadataDocument = {
                         selectionSet: {
                           kind: "SelectionSet",
                           selections: [
+                            { kind: "Field", name: { kind: "Name", value: "key" } },
                             { kind: "Field", name: { kind: "Name", value: "apiIdentifier" } },
                             { kind: "Field", name: { kind: "Name", value: "namespace" } },
                             {
@@ -11847,6 +11905,7 @@ export const GetModelMetadataDocument = {
                         selectionSet: {
                           kind: "SelectionSet",
                           selections: [
+                            { kind: "Field", name: { kind: "Name", value: "key" } },
                             { kind: "Field", name: { kind: "Name", value: "apiIdentifier" } },
                             { kind: "Field", name: { kind: "Name", value: "namespace" } },
                             {
@@ -11908,6 +11967,7 @@ export const GetModelMetadataDocument = {
                         selectionSet: {
                           kind: "SelectionSet",
                           selections: [
+                            { kind: "Field", name: { kind: "Name", value: "key" } },
                             { kind: "Field", name: { kind: "Name", value: "apiIdentifier" } },
                             { kind: "Field", name: { kind: "Name", value: "namespace" } },
                             {
@@ -12201,6 +12261,7 @@ export const ModelActionMetadataDocument = {
                         selectionSet: {
                           kind: "SelectionSet",
                           selections: [
+                            { kind: "Field", name: { kind: "Name", value: "key" } },
                             { kind: "Field", name: { kind: "Name", value: "apiIdentifier" } },
                             { kind: "Field", name: { kind: "Name", value: "namespace" } },
                             {
@@ -12262,6 +12323,7 @@ export const ModelActionMetadataDocument = {
                         selectionSet: {
                           kind: "SelectionSet",
                           selections: [
+                            { kind: "Field", name: { kind: "Name", value: "key" } },
                             { kind: "Field", name: { kind: "Name", value: "apiIdentifier" } },
                             { kind: "Field", name: { kind: "Name", value: "namespace" } },
                             {
@@ -12323,6 +12385,7 @@ export const ModelActionMetadataDocument = {
                         selectionSet: {
                           kind: "SelectionSet",
                           selections: [
+                            { kind: "Field", name: { kind: "Name", value: "key" } },
                             { kind: "Field", name: { kind: "Name", value: "apiIdentifier" } },
                             { kind: "Field", name: { kind: "Name", value: "namespace" } },
                             {
@@ -12694,6 +12757,7 @@ export const GlobalActionMetadataDocument = {
                         selectionSet: {
                           kind: "SelectionSet",
                           selections: [
+                            { kind: "Field", name: { kind: "Name", value: "key" } },
                             { kind: "Field", name: { kind: "Name", value: "apiIdentifier" } },
                             { kind: "Field", name: { kind: "Name", value: "namespace" } },
                             {
@@ -12755,6 +12819,7 @@ export const GlobalActionMetadataDocument = {
                         selectionSet: {
                           kind: "SelectionSet",
                           selections: [
+                            { kind: "Field", name: { kind: "Name", value: "key" } },
                             { kind: "Field", name: { kind: "Name", value: "apiIdentifier" } },
                             { kind: "Field", name: { kind: "Name", value: "namespace" } },
                             {
@@ -12816,6 +12881,7 @@ export const GlobalActionMetadataDocument = {
                         selectionSet: {
                           kind: "SelectionSet",
                           selections: [
+                            { kind: "Field", name: { kind: "Name", value: "key" } },
                             { kind: "Field", name: { kind: "Name", value: "apiIdentifier" } },
                             { kind: "Field", name: { kind: "Name", value: "namespace" } },
                             {

@@ -72,6 +72,10 @@ const PolarisAutoFormComponent = <
       apiIdentifier: action.modelApiIdentifier,
       namespace: action.namespace,
     },
+    options: {
+      include: props.include,
+      exclude: props.exclude,
+    },
   };
   const humanizedOperationName = useMemo(() => humanizeCamelCase(action.operationName), [action.operationName]);
 

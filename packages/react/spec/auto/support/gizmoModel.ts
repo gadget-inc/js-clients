@@ -23,6 +23,7 @@ export const gizmoModelInputFields = {
           fieldType: "BelongsTo",
           validations: [],
           relatedModel: {
+            key: "DataModel-widget",
             apiIdentifier: "widget",
             namespace: [],
             defaultDisplayField: {

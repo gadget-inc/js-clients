@@ -5,6 +5,8 @@ import { useAutoFormMetadata } from "../../../src/auto/AutoFormContext.js";
 import type { ActionMetadata } from "../../../src/metadata.js";
 import { MockForm } from "../MockForm.js";
 
+const shopifyShopModelKey = "DataModel-Shopify-Shop";
+
 describe("useFormFields hook", () => {
   const getUseFormFieldsResult = (options: { include?: string[]; exclude?: string[] }) => {
     const { result } = renderHook(
@@ -61,6 +63,19 @@ describe("useFormFields hook", () => {
 
     const fields = getUseFormFieldsResult({ exclude });
     expect(fields.map((field) => field.metadata.apiIdentifier)).toEqual(["stringField1", "params_str", "params_num", "params_bool"]);
+  });
+
+  describe("Relationships with special models", () => {
+    test("includes relationship fields that have shopifyShop as the related model if explicitly included", () => {
+      const fields = getUseFormFieldsResult({ include: ["shop"] });
+      expect(fields).toHaveLength(1);
+      expect((fields[0] as any).metadata.configuration.relatedModel.key).toEqual(shopifyShopModelKey);
+    });
+
+    test("Exclude relationship fields that have shopifyShop as the related model", () => {
+      const fields = getUseFormFieldsResult({});
+      expect(fields.some((field) => (field as any).metadata.configuration?.relatedModel?.key === shopifyShopModelKey)).toBeFalsy();
+    });
   });
 
   test("Has an error when including and excluding the same fields", () => {
@@ -128,6 +143,32 @@ const metadata: ActionMetadata = {
               filterable: true,
               __typename: "GadgetModelField",
               configuration: {},
+            },
+            {
+              name: "Shop",
+              apiIdentifier: "shop",
+              fieldType: "BelongsTo",
+              requiredArgumentForInput: false,
+              sortable: false,
+              filterable: true,
+              __typename: "GadgetModelField",
+              configuration: {
+                __typename: "GadgetBelongsToConfig",
+                fieldType: "BelongsTo",
+                validations: [],
+                relatedModel: {
+                  key: shopifyShopModelKey,
+                  apiIdentifier: "shopifyShop",
+                  namespace: [],
+                  defaultDisplayField: {
+                    name: "Name",
+                    apiIdentifier: "name",
+                    fieldType: "String",
+                    __typename: "GadgetModelField",
+                  },
+                  __typename: "GadgetModel",
+                },
+              },
             },
           ],
         },

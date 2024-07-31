@@ -69,6 +69,7 @@ export const widgetModelInputFields = {
           fieldType: "HasMany",
           validations: [],
           relatedModel: {
+            key: "DataModel-gizmo",
             apiIdentifier: "gizmo",
             namespace: [],
             defaultDisplayField: {
@@ -296,6 +297,7 @@ export const widgetModelInputFields = {
           fieldType: "BelongsTo",
           validations: [],
           relatedModel: {
+            key: "DataModel-section",
             apiIdentifier: "section",
             namespace: [],
             defaultDisplayField: {

@@ -30,4 +30,6 @@ export type AutoTableProps<
   hasZebraStriping?: boolean;
   resourceName?: { singular: string; plural: string };
   condensed?: boolean;
+  searchable?: boolean;
+  paginate?: boolean;
 };

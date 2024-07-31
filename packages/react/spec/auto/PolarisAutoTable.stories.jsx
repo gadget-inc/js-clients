@@ -299,6 +299,14 @@ export const CustomEmptyState = {
     filter: { AND: [{ bool: { equals: false } }, { bool: { equals: true } }] },
     model: api.autoTableTest,
     emptyState: CustomEmptyStateMarkup,
+  }
+};
+
+export const HideSearchAndPagination = {
+  args: {
+    model: api.autoTableTest,
+    searchable: false,
+    paginate: false,
   },
 };
 

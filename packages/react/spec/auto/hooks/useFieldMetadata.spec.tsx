@@ -27,6 +27,7 @@ describe("useFieldMetadata hook", () => {
             "relatedModel": {
               "__typename": "GadgetModel",
               "apiIdentifier": "section",
+              "key": "DataModel-section",
             },
           },
           "fieldType": "BelongsTo",
@@ -90,6 +91,7 @@ const metadata: ActionMetadata = {
                 __typename: "GadgetBelongsToConfig",
                 fieldType: "BelongsTo",
                 relatedModel: {
+                  key: "DataModel-section",
                   apiIdentifier: "section",
                   __typename: "GadgetModel",
                 },
