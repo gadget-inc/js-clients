@@ -1,7 +1,7 @@
 import { AppProvider } from "@shopify/polaris";
 import translations from "@shopify/polaris/locales/en.json";
 import type { RenderResult } from "@testing-library/react";
-import { act, render } from "@testing-library/react";
+import { act, render, screen } from "@testing-library/react";
 import type { UserEvent } from "@testing-library/user-event";
 import { userEvent } from "@testing-library/user-event";
 import type { ReactNode } from "react";
@@ -26,9 +26,9 @@ describe("PolarisAutoForm", () => {
   describe("when used as a one liner", () => {
     describe("for widget create", () => {
       test("it renders the name input", async () => {
-        const { findByLabelText } = render(<PolarisAutoForm action={api.widget.create} />, { wrapper: PolarisMockedProviders });
+        render(<PolarisAutoForm action={api.widget.create} />, { wrapper: PolarisMockedProviders });
         loadMockWidgetCreateMetadata();
-        expect(await findByLabelText("Name")).toBeInTheDocument();
+        expect(await screen.findByLabelText("Name")).toBeInTheDocument();
       });
 
       test("it throws an error if a create action is mixed with a findBy prop", async () => {
