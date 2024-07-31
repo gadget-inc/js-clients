@@ -18,7 +18,7 @@ import { useTable } from "../../useTable.js";
 import type { TableColumn, TableRow } from "../../useTableUtils/types.js";
 import type { ColumnValueType, OptionsType } from "../../utils.js";
 import type { AutoTableProps } from "../AutoTable.js";
-import { useTableBulkActions } from "../hooks/useTableBulkActions.js";
+import { BulkActionOption, useTableBulkActions } from "../hooks/useTableBulkActions.js";
 import { PolarisAutoBulkActionModal } from "./PolarisAutoBulkActionModal.js";
 import { PolarisAutoTableCellRenderer } from "./tableCells/PolarisAutoTableCellRenderer.js";
 
@@ -129,16 +129,26 @@ const PolarisAutoTableComponent = <
     excludeActions: props.excludeActions,
   });
 
-  if (!error && ((fetching && !rows) || !columns)) {
-    return <PolarisSkeletonTable columns={3} />;
-  }
-
-  const resourceName = {
+  const resourceName = props.resourceName ?? {
     singular: metadata?.name ?? "",
     plural: metadata ? pluralize(metadata.name) : "",
   };
 
   const selectedRows = (rows ?? []).filter((row) => selection.recordIds.includes(row.id as string));
+
+  const promotedBulkActions = useMemo(
+    () => bulkActionOptions.filter((option) => option.promoted).map(bulkActionOptionMapper(selectedRows)),
+    [bulkActionOptions, selectedRows]
+  );
+
+  const bulkActions = useMemo(
+    () => bulkActionOptions.filter((option) => !option.promoted).map(bulkActionOptionMapper(selectedRows)),
+    [bulkActionOptions, selectedRows]
+  );
+
+  if (!error && ((fetching && !rows) || !columns)) {
+    return <PolarisSkeletonTable columns={3} />;
+  }
 
   return (
     <BlockStack>
@@ -178,11 +188,9 @@ const PolarisAutoTableComponent = <
         {...disablePaginatedSelectAllButton}
         onSelectionChange={selection.onSelectionChange}
         {...polarisTableProps}
-        bulkActions={bulkActionOptions.map((option) => ({
-          content: option.humanizedName,
-          onAction: option.callback ? () => option.callback?.(selection.recordIds, selectedRows) : option.selectModelAction,
-        }))}
-        resourceName={props.resourceName ?? resourceName}
+        promotedBulkActions={promotedBulkActions.length ? promotedBulkActions : undefined}
+        bulkActions={bulkActions.length ? bulkActions : undefined}
+        resourceName={resourceName}
         emptyState={props.emptyState ?? <EmptySearchResult title={`No ${resourceName.plural} yet`} description={""} withIllustration />}
         loading={fetching}
         hasMoreItems={page.hasNextPage}
@@ -239,4 +247,12 @@ const PolarisAutoTableComponent = <
 
 const disablePaginatedSelectAllButton = {
   paginatedSelectAllActionText: "", // Empty string to hide the select all button. We only allow selection on the current page
+};
+
+const bulkActionOptionMapper = (selectedRows: TableRow[]) => {
+  return (option: BulkActionOption) => ({
+    id: option.humanizedName,
+    content: option.humanizedName,
+    onAction: option.action ? () => option.action?.(selectedRows) : option.selectModelAction,
+  });
 };

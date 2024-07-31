@@ -245,42 +245,6 @@ export const ExcludeColumns = {
   },
 };
 
-export const IncludedActionParameters = {
-  args: {
-    model: api.autoTableTest,
-    actions: [
-      "customAction",
-      {
-        label: "Sum Nums callback",
-        callback: (ids, records) => windowAlert(`Sum of record "num" values: ${sumRecordNumValues(records)}`),
-      },
-      {
-        label: "Sum Nums rendered",
-        render: (ids, records) => {
-          return (
-            <div>
-              <p>
-                {sumRecordNumValues(records)}
-                {` is the sum of the num field in records with ids: `}
-                {ids.join(", ")}
-              </p>
-              <button onClick={() => windowAlert(ids)}>Alert the IDs</button>
-              <button onClick={() => windowAlert(JSON.stringify(records))}>Alert the full records</button>
-            </div>
-          );
-        },
-      },
-    ],
-  },
-};
-
-export const ExcludedActionParameters = {
-  args: {
-    model: api.autoTableTest,
-    excludeActions: ["delete"],
-  },
-};
-
 export const BuiltInPolarisTableProps = {
   args: {
     model: api.autoTableTest,
@@ -318,8 +282,4 @@ export const HideSearchAndPagination = {
 const windowAlert = (message) => {
   // eslint-disable-next-line no-undef
   window.alert(message);
-};
-
-const sumRecordNumValues = (records) => {
-  return records.reduce((total, record) => total + (record.num ?? 0), 0);
 };

@@ -41,7 +41,7 @@ export const PolarisAutoBulkActionModal = (props: {
         {isBulkGadgetAction ? (
           <GadgetBulkActionModalContent model={model} modelActionDetails={modelActionDetails} ids={ids} close={closeModal} />
         ) : (
-          <CustomBulkActionModalContent modelActionDetails={modelActionDetails} ids={ids} close={closeModal} selectedRows={selectedRows} />
+          <CustomBulkActionModalContent modelActionDetails={modelActionDetails} close={closeModal} selectedRows={selectedRows} />
         )}
       </Modal>
     </>
@@ -110,36 +110,18 @@ const CenteredSpinner = () => (
 const ActionCompletedMessage = `Action completed`;
 const ActionSuccessMessage = `${ActionCompletedMessage} successfully`;
 
-const CustomBulkActionModalContent = (props: {
-  modelActionDetails: ModelActionDetails;
-  ids: string[];
-  close: () => void;
-  selectedRows: TableRow[];
-}) => {
-  const { modelActionDetails, ids, selectedRows, close } = props;
+const CustomBulkActionModalContent = (props: { modelActionDetails: ModelActionDetails; close: () => void; selectedRows: TableRow[] }) => {
+  const { modelActionDetails, selectedRows, close } = props;
 
   if (modelActionDetails.isGadgetAction) {
-    throw new Error(`Custom callback "${modelActionDetails.apiIdentifier}" is invalid`);
+    throw new Error(`Custom action "${modelActionDetails.apiIdentifier}" is invalid`);
   }
 
-  if (!modelActionDetails.render) {
-    throw new Error(`Failed to render custom bulk action modal content. Property "render" must be provided`);
+  if (!modelActionDetails.promptComponent) {
+    throw new Error(`Failed to render custom bulk action modal content. Property "promptComponent" must be provided`);
   }
 
-  return (
-    <>
-      <Modal.Section>{modelActionDetails.render(ids, selectedRows)}</Modal.Section>
-      <Modal.Section>
-        <div style={{ float: "right", paddingBottom: "16px" }}>
-          <ButtonGroup>
-            <Button variant="secondary" onClick={close}>
-              Close
-            </Button>
-          </ButtonGroup>
-        </div>
-      </Modal.Section>
-    </>
-  );
+  return modelActionDetails.promptComponent({ records: selectedRows, close });
 };
 
 const RunActionConfirmationText = (props: { count: number }) => {

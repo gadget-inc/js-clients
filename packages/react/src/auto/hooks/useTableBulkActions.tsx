@@ -1,6 +1,6 @@
 import React, { useMemo } from "react";
 import deepEqual from "react-fast-compare";
-import { ActionCallback, TableOptions } from "../../useTableUtils/types.js";
+import { ActionCallback, promptComponent, TableOptions } from "../../useTableUtils/types.js";
 import { humanizeCamelCase } from "../../utils.js";
 
 export type ModelActionDetails =
@@ -15,14 +15,15 @@ export type ModelActionDetails =
   | {
       isGadgetAction: false;
       apiIdentifier: string;
-      render?: (recordIds: string[], records: any[]) => React.ReactNode;
+      promptComponent?: promptComponent;
     };
 
 export type BulkActionOption = {
+  promoted: boolean;
   humanizedName: string;
   selectModelAction: () => void;
   apiIdentifier: string;
-  callback?: (recordIds: string[], records: any[]) => any;
+  action?: (records: any[]) => any;
 };
 
 export const useTableBulkActions = (props: {
@@ -60,7 +61,7 @@ export const useTableBulkActions = (props: {
 const getModelActionsForTableAsBulkActionOptions = (props: {
   model: any;
   setSelectedModelActionDetails: (value: ModelActionDetails) => void;
-}) => {
+}): BulkActionOption[] => {
   const { model, setSelectedModelActionDetails } = props;
   const allModelActionsDetails = getModelActionsForTable({ model });
 
@@ -70,6 +71,7 @@ const getModelActionsForTableAsBulkActionOptions = (props: {
       humanizedName: humanizeCamelCase(removeBulkPrefix(actionDetails.apiIdentifier)),
       selectModelAction: () => setSelectedModelActionDetails(actionDetails), // To open the corresponding modal
       apiIdentifier: lowercaseFirstChar(removeBulkPrefix(actionDetails.apiIdentifier)), // `bulk` prefix removed
+      promoted: true,
     }));
 };
 
@@ -122,51 +124,51 @@ function getValidateActionsWithExclude(excludeActions: string[], gadgetModelActi
   return gadgetModelActionsAsBulkActionOptions.filter((action) => !excludeActions.includes(action.apiIdentifier));
 }
 
-function getValidatedIncludedActions(
+const getValidatedIncludedActions = (
   actions: (string | ActionCallback)[],
   gadgetModelActionsAsBulkActionOptions: BulkActionOption[],
   setSelectedModelActionDetails: React.Dispatch<React.SetStateAction<ModelActionDetails | undefined>>
-) {
-  const bulkActions = [];
+): BulkActionOption[] => {
+  const bulkActions: BulkActionOption[] = [];
   for (const action of actions) {
     if (typeof action === "string") {
-      // Ensure that this is a real action name
-      const modelAction = gadgetModelActionsAsBulkActionOptions.find((actionOption) => actionOption.apiIdentifier === action);
-      if (!modelAction) {
-        throw new Error(`Action '${action}' not found in model`);
-      }
-      bulkActions.push(modelAction);
+      bulkActions.push(getValidatedBulkModelActionOption(gadgetModelActionsAsBulkActionOptions, action));
     } else {
-      // Custom callback/renderer
-      validateCallbackXorRender(action);
-      const customCallbackModelActionDetails = {
-        isGadgetAction: false,
-        apiIdentifier: action.label,
-        render: "render" in action ? action.render ?? undefined : undefined,
-      } as const;
-      bulkActions.push({
-        humanizedName: action.label,
-        selectModelAction: () => setSelectedModelActionDetails(customCallbackModelActionDetails),
-        callback: "callback" in action ? action.callback ?? undefined : undefined,
-        apiIdentifier: action.label,
-      });
+      validateActionXorRender(action);
+      if ("action" in action && typeof action.action === "string") {
+        // Relabelled Gadget model action
+        bulkActions.push({
+          ...getValidatedBulkModelActionOption(gadgetModelActionsAsBulkActionOptions, action.action),
+          humanizedName: action.label,
+          promoted: action.promoted ?? false,
+        });
+      } else {
+        // Custom callback/renderer
+        bulkActions.push({
+          humanizedName: action.label,
+          selectModelAction: () => setSelectedModelActionDetails(getCustomCallbackModelActionDetails(action)),
+          action: "action" in action && typeof action.action === "function" ? action.action : undefined,
+          apiIdentifier: action.label,
+          promoted: action.promoted ?? false,
+        });
+      }
     }
   }
   return bulkActions;
-}
+};
 
 /**
  * Ensures that the action has either a callback or a render, but not both
  */
-const validateCallbackXorRender = (action: ActionCallback) => {
+const validateActionXorRender = (action: ActionCallback) => {
   const label = action.label;
 
-  if ("callback" in action && "render" in action) {
-    throw new Error(`Cannot have both callback and render in action with label: "${label}"`);
+  if ("action" in action && "promptComponent" in action) {
+    throw new Error(`Cannot have both action and promptComponent in action with label: "${label}"`);
   }
 
-  if (!("callback" in action) && !("render" in action)) {
-    throw new Error(`Missing required property "callback" | "render" in action with label: "${label}"`);
+  if (!("action" in action) && !("promptComponent" in action)) {
+    throw new Error(`Missing required property "action" | "promptComponent" in action with label: "${label}"`);
   }
 };
 
@@ -175,3 +177,18 @@ const removeBulkPrefix = (actionName: string) => (actionName.startsWith("bulk") 
 const lowercaseFirstChar = (input: string) => {
   return input.length === 0 ? "" : `${input.charAt(0).toLowerCase()}${input.slice(1)}`;
 };
+
+const getValidatedBulkModelActionOption = (gadgetModelActionsAsBulkActionOptions: BulkActionOption[], action: string) => {
+  const modelAction = gadgetModelActionsAsBulkActionOptions.find((actionOption) => actionOption.apiIdentifier === action);
+  if (!modelAction) {
+    throw new Error(`'${action}' is not a valid action on the model`);
+  }
+  return modelAction;
+};
+
+const getCustomCallbackModelActionDetails = (action: ActionCallback) =>
+  ({
+    isGadgetAction: false,
+    apiIdentifier: action.label,
+    promptComponent: "promptComponent" in action ? action.promptComponent ?? undefined : undefined,
+  } as const);
