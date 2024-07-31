@@ -3,10 +3,10 @@ import { act, render } from "@testing-library/react";
 import type { UserEvent } from "@testing-library/user-event";
 import { userEvent } from "@testing-library/user-event";
 import React from "react";
+import { GadgetFieldType } from "../../../src/internal/gql/graphql.js";
+import type { TableColumn } from "../../../src/useTableUtils/types.js";
 import { testApi as api } from "../../apis.js";
 import { PolarisMockedProviders } from "../inputs/PolarisMockedProviders.js";
-import type { TableColumn } from "../../../src/useTableUtils/types.js";
-import { GadgetFieldType } from "../../../src/internal/gql/graphql.js";
 
 const POLARIS_TABLE_CLASSES = {
   CONTAINER: "Polaris-IndexTable-ScrollContainer",
@@ -193,68 +193,32 @@ describe("PolarisAutoTable", () => {
       newRows: [
         {
           id: "1",
-          hasOne: {
-            id: "1",
-            hasOneName: "has one name value",
-          },
-          hasMany: {
-            edges: [
-              {
-                node: {
-                  id: "1",
-                  hasManyNumber: 1,
-                },
-              },
-              {
-                node: {
-                  id: "2",
-                  hasManyNumber: 2,
-                },
-              },
-            ],
-          },
-          belongsTo: {
-            id: "1",
-            belongsToEnum: ["belongs", "to", "enum", "value"],
-          },
+          hasOne: "has one name value",
+          hasMany: ["1", "2"],
+          belongsTo: ["belongs", "to", "enum", "value"],
         },
       ],
       newColumns: [
         {
           field: "hasOne",
-          type: GadgetFieldType.HasOne,
+          relationshipType: GadgetFieldType.HasOne,
+          type: GadgetFieldType.String,
           header: "Has One",
           sortable: true,
-          relatedField: {
-            sortable: true,
-            header: "hasOneName",
-            field: "hasOneName",
-            type: GadgetFieldType.String,
-          },
         },
         {
           field: "hasMany",
-          type: GadgetFieldType.HasMany,
+          relationshipType: GadgetFieldType.HasMany,
+          type: GadgetFieldType.String,
           header: "Has Many",
           sortable: true,
-          relatedField: {
-            header: "hasManyNumber",
-            sortable: true,
-            field: "hasManyNumber",
-            type: GadgetFieldType.Number,
-          },
         },
         {
           field: "belongsTo",
-          type: GadgetFieldType.BelongsTo,
+          relationshipType: GadgetFieldType.BelongsTo,
+          type: GadgetFieldType.Enum,
           header: "Belongs To",
           sortable: true,
-          relatedField: {
-            header: 'belongsToEnum',
-            sortable: true,
-            field: "belongsToEnum",
-            type: GadgetFieldType.Enum,
-          },
         },
       ],
     });

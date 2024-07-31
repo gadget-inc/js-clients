@@ -1,5 +1,5 @@
 import { renderHook } from "@testing-library/react";
-import React, { isValidElement } from "react";
+import React from "react";
 import { useTable } from "../../../src/useTable.js";
 import { testApi as api } from "../../apis.js";
 import { mockUrqlClient } from "../../testWrappers.js";
@@ -43,7 +43,7 @@ describe("useTable hook", () => {
         mustBeLongString: "hellllllllllllllllllllllllllllo",
       },
     ]);
-    expect( result.current[0].columns ).toEqual([
+    expect(result.current[0].columns).toEqual([
       {
         field: "id",
         header: "Id",
@@ -242,31 +242,13 @@ describe("useTable hook", () => {
       expect(result.current[0].rows).toMatchInlineSnapshot(`
         [
           {
-            "belongsTo": {
-              "str": "foo",
-            },
-            "hasMany": {
-              "edges": [
-                {
-                  "node": {
-                    "name": "gizmo 9",
-                  },
-                },
-                {
-                  "node": {
-                    "name": "gizmo 10",
-                  },
-                },
-                {
-                  "node": {
-                    "name": "gizmo 11",
-                  },
-                },
-              ],
-            },
-            "hasOne": {
-              "name": "gizmo 12",
-            },
+            "belongsTo": "foo",
+            "hasMany": [
+              "gizmo 9",
+              "gizmo 10",
+              "gizmo 11",
+            ],
+            "hasOne": "gizmo 12",
             "id": undefined,
             "name": "hello",
           },
@@ -331,31 +313,13 @@ describe("useTable hook", () => {
       expect(result.current[0].rows).toMatchInlineSnapshot(`
         [
           {
-            "belongsTo": {
-              "str": "foo",
-            },
-            "hasMany": {
-              "edges": [
-                {
-                  "node": {
-                    "name": "gizmo 9",
-                  },
-                },
-                {
-                  "node": {
-                    "name": "gizmo 10",
-                  },
-                },
-                {
-                  "node": {
-                    "name": "gizmo 11",
-                  },
-                },
-              ],
-            },
-            "hasOne": {
-              "name": "gizmo 12",
-            },
+            "belongsTo": "foo",
+            "hasMany": [
+              "gizmo 9",
+              "gizmo 10",
+              "gizmo 11",
+            ],
+            "hasOne": "gizmo 12",
             "id": undefined,
             "name": "hello",
           },
@@ -440,7 +404,6 @@ describe("useTable hook", () => {
           {
             "field": "name",
             "header": "Name",
-            "relatedField": undefined,
             "sortable": true,
             "type": "String",
           },
@@ -889,6 +852,12 @@ const loadMockWidgetModelMetadataForRelationship = () => {
                       fieldType: "String",
                       __typename: "GadgetModelField",
                     },
+                    {
+                      name: "Email",
+                      apiIdentifier: "email",
+                      fieldType: "Email",
+                      __typename: "GadgetModelField",
+                    },
                   ],
                   __typename: "GadgetModel",
                 },
@@ -939,6 +908,7 @@ const loadMockWidgetDataForRelationship = () => {
               },
               belongsTo: {
                 str: "foo",
+                email: "foo",
               },
               startsAt: "2024-07-01T01:00:00.000Z",
               updatedAt: "2023-09-21T17:19:11.197Z",

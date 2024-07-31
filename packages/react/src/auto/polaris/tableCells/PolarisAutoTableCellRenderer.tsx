@@ -1,29 +1,24 @@
 import React from "react";
+import type { TableColumn } from "src/useTableUtils/types.js";
 import { FieldType } from "../../../metadata.js";
-import type { ColumnValueType, HasManyValueType, ValueWithTypename } from "../../../utils.js";
+import type { ColumnValueType } from "../../../utils.js";
 import { PolarisAutoTableBooleanCell } from "./PolarisAutoTableBooleanCell.js";
 import { PolarisAutoTableDateTimeCell } from "./PolarisAutoTableDateTimeCell.js";
 import { PolarisAutoTableEncryptedStringCell } from "./PolarisAutoTableEncryptedStringCell.js";
 import { PolarisAutoTableFileCell } from "./PolarisAutoTableFileCell.js";
 import { PolarisAutoTableTagCell } from "./PolarisAutoTableTagCell.js";
 import { PolarisAutoTableTextCell } from "./PolarisAutoTableTextCell.js";
-import type { ColumnType } from "src/useTableUtils/types.js";
 
-export const PolarisAutoTableCellRenderer = (props: {
-  column: {
-    type: ColumnType;
-    relatedField?: {
-      field: string;
-      type: ColumnType;
-    };
-  };
-  value: ColumnValueType;
-}) => {
+export const PolarisAutoTableCellRenderer = (props: { column: TableColumn; value: ColumnValueType }) => {
   const { column, value } = props;
 
   if (value === null || value === undefined) {
     // Don't render anything for null values
     return null;
+  }
+
+  if (column.relationshipType === FieldType.HasMany) {
+    return <PolarisAutoTableTagCell value={value as any} />;
   }
 
   switch (column.type) {
@@ -57,32 +52,6 @@ export const PolarisAutoTableCellRenderer = (props: {
 
     case FieldType.File: {
       return <PolarisAutoTableFileCell value={value as any} />;
-    }
-
-    case FieldType.HasOne: {
-      if (!column.relatedField) return null;
-      return (
-        <PolarisAutoTableCellRenderer
-          column={column.relatedField}
-          value={(value as ValueWithTypename)[column.relatedField.field]}
-        />
-      );
-    }
-
-    case FieldType.HasMany: {
-      const { edges } = value as HasManyValueType;
-      if (!column.relatedField) return null;
-      return <PolarisAutoTableTagCell value={edges.map((edge) => String(edge.node[column.relatedField!.field]))} />;
-    }
-
-    case FieldType.BelongsTo: {
-      if (!column.relatedField) return null;
-      return (
-        <PolarisAutoTableCellRenderer
-          column={column.relatedField}
-          value={(value as ValueWithTypename)[column.relatedField.field]}
-        />
-      );
     }
 
     default:
