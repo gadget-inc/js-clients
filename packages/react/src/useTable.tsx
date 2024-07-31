@@ -71,7 +71,7 @@ export const useTable = <
   const tableData = useMemo(() => {
     return tableSpec && data && metadata
       ? {
-          rows: getTableRows(tableSpec, data),
+          rows: getTableRows(tableSpec.targetColumns, data),
           columns: getTableColumns(tableSpec),
           data,
           metadata,

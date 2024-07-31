@@ -19,6 +19,7 @@ export type RecordTableColumnValue = BaseTableColumn & {
   relatedField?: RecordTableColumnValue;
   getValue: (record: GadgetRecord<any>) => ColumnValueType;
   isCustomCell: false;
+  columnPath: string;
 };
 
 export type CustomTableColumnValue = BaseTableColumn & {

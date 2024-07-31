@@ -16,7 +16,7 @@ import type { ReactNode } from "react";
 import React, { useCallback, useMemo, useState } from "react";
 import { useTable } from "../../useTable.js";
 import type { TableColumn, TableRow } from "../../useTableUtils/types.js";
-import type { ColumnValueType, OptionsType } from "../../utils.js";
+import { get, type ColumnValueType, type OptionsType } from "../../utils.js";
 import type { AutoTableProps } from "../AutoTable.js";
 import { useTableBulkActions } from "../hooks/useTableBulkActions.js";
 import { PolarisAutoBulkActionModal } from "./PolarisAutoBulkActionModal.js";
@@ -235,7 +235,7 @@ const PolarisAutoTableComponent = <
                     {column.isCustomCell ? (
                       (row[column.apiIdentifier] as ReactNode)
                     ) : (
-                      <PolarisAutoTableCellRenderer column={column} value={row[column.apiIdentifier] as ColumnValueType} />
+                      <PolarisAutoTableCellRenderer column={column} value={get(row, column.columnPath) as ColumnValueType} />
                     )}
                   </div>
                 </IndexTable.Cell>

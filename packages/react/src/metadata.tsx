@@ -22,6 +22,9 @@ const RelatedModelFieldFragment = graphql(/* GraphQL */ `
     name
     apiIdentifier
     fieldType
+    configuration {
+      __typename
+    }
   }
 `);
 

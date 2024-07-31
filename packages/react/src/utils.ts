@@ -545,9 +545,12 @@ export const isRoleAssignmentsArray = (value: ColumnValueType): value is RoleAss
 
 export const isRelationshipColumn = (value: string) => {
   const parts = value.split(".");
-  return parts.length === 2 || parts.length === 4;
+  return parts.length >= 2;
 };
 
+/**
+ * @deprecated
+ */
 export const maybeGetRelationshipFromColumnPath = (value: string) => {
   const parts = value.split(".");
   if (parts.length === 2) {
@@ -567,6 +570,11 @@ export const maybeGetRelationshipFromColumnPath = (value: string) => {
   }
 
   return null;
+};
+
+export type RowDetail = {
+  header: string;
+  value: ColumnValueType;
 };
 
 export type CellDetailColumn = {
