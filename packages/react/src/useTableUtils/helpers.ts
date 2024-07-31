@@ -140,8 +140,8 @@ export const getTableColumns = (spec: TableSpec) => {
   for (const targetColumn of spec.targetColumns) {
     if (isCustomCellColumn(targetColumn)) {
       columns.push({
-        name: targetColumn.name,
-        apiIdentifier: targetColumn.name,
+        header: targetColumn.name,
+        field: targetColumn.name,
         type: "CustomRenderer",
         sortable: false,
       });
@@ -162,14 +162,14 @@ export const getTableColumns = (spec: TableSpec) => {
       : undefined;
 
     columns.push({
-      name: field.name,
-      apiIdentifier: field.apiIdentifier,
+      header: field.name,
+      field: field.apiIdentifier,
       type: field.fieldType,
       sortable: "sortable" in field && field.sortable,
       relatedField: relatedField
         ? {
-            name: relatedField.name,
-            apiIdentifier: relatedField.apiIdentifier,
+            header: relatedField.name,
+            field: relatedField.apiIdentifier,
             type: relatedField.fieldType,
             sortable: "sortable" in field && field.sortable,
           }

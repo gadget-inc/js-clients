@@ -9,8 +9,8 @@ import type { RecordSelection } from "../useSelectedRecordsController.js";
 import type { ColumnValueType, CustomCellColumn, ErrorWrapper, RelatedFieldColumn } from "../utils.js";
 
 type BaseTableColumn = {
-  name: string;
-  apiIdentifier: string;
+  header: string;
+  field: string;
 };
 
 export type ColumnType = GadgetFieldType | "CustomRenderer";

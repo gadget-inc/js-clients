@@ -41,14 +41,14 @@ const setMockUseTableResponse = (returns?: { newRows?: any[]; newColumns?: Table
   ];
   columns = returns?.newColumns ?? [
     {
-      apiIdentifier: "name",
-      name: "Name",
+      field: "name",
+      header: "Name",
       sortable: true,
       type: GadgetFieldType.String,
     },
     {
-      apiIdentifier: "inventoryCount",
-      name: "Inventory count",
+      field: "inventoryCount",
+      header: "Inventory count",
       sortable: true,
       type: GadgetFieldType.Number,
     },
@@ -221,38 +221,38 @@ describe("PolarisAutoTable", () => {
       ],
       newColumns: [
         {
-          apiIdentifier: "hasOne",
+          field: "hasOne",
           type: GadgetFieldType.HasOne,
-          name: "Has One",
+          header: "Has One",
           sortable: true,
           relatedField: {
             sortable: true,
-            name: "hasOneName",
-            apiIdentifier: "hasOneName",
+            header: "hasOneName",
+            field: "hasOneName",
             type: GadgetFieldType.String,
           },
         },
         {
-          apiIdentifier: "hasMany",
+          field: "hasMany",
           type: GadgetFieldType.HasMany,
-          name: "Has Many",
+          header: "Has Many",
           sortable: true,
           relatedField: {
-            name: "hasManyNumber",
+            header: "hasManyNumber",
             sortable: true,
-            apiIdentifier: "hasManyNumber",
+            field: "hasManyNumber",
             type: GadgetFieldType.Number,
           },
         },
         {
-          apiIdentifier: "belongsTo",
+          field: "belongsTo",
           type: GadgetFieldType.BelongsTo,
-          name: "Belongs To",
+          header: "Belongs To",
           sortable: true,
           relatedField: {
-            name: 'belongsToEnum',
+            header: 'belongsToEnum',
             sortable: true,
-            apiIdentifier: "belongsToEnum",
+            field: "belongsToEnum",
             type: GadgetFieldType.Enum,
           },
         },
@@ -310,14 +310,14 @@ describe("PolarisAutoTable", () => {
       ],
       newColumns: [
         {
-          apiIdentifier: "name",
+          field: "name",
           type: GadgetFieldType.String,
-          name: "Name",
+          header: "Name",
           sortable: true,
         },
         {
-          name: "Custom cell",
-          apiIdentifier: "Custom cell",
+          header: "Custom cell",
+          field: "Custom cell",
           type: "CustomRenderer",
           sortable: false,
         },
@@ -360,9 +360,9 @@ describe("PolarisAutoTable", () => {
         ],
         newColumns: [
           {
-            apiIdentifier: "tags",
+            field: "tags",
             type: GadgetFieldType.Enum,
-            name: "Tags",
+            header: "Tags",
             sortable: true,
           },
         ],
@@ -392,9 +392,9 @@ describe("PolarisAutoTable", () => {
         ],
         newColumns: [
           {
-            apiIdentifier: "tags",
+            field: "tags",
             type: GadgetFieldType.Enum,
-            name: "Tags",
+            header: "Tags",
             sortable: true,
           },
         ],

@@ -45,99 +45,99 @@ describe("useTable hook", () => {
     ]);
     expect( result.current[0].columns ).toEqual([
       {
-        apiIdentifier: "id",
-        name: "Id",
+        field: "id",
+        header: "Id",
         relatedField: undefined,
         sortable: false,
         type: "ID",
       },
       {
-        apiIdentifier: "name",
-        name: "Name",
+        field: "name",
+        header: "Name",
         relatedField: undefined,
         sortable: true,
         type: "String",
       },
       {
-        apiIdentifier: "inventoryCount",
-        name: "Inventory count",
+        field: "inventoryCount",
+        header: "Inventory count",
         relatedField: undefined,
         sortable: true,
         type: "Number",
       },
       {
-        apiIdentifier: "anything",
-        name: "Anything",
+        field: "anything",
+        header: "Anything",
         relatedField: undefined,
         sortable: true,
         type: "JSON",
       },
       {
-        apiIdentifier: "description",
-        name: "Description",
+        field: "description",
+        header: "Description",
         relatedField: undefined,
         sortable: true,
         type: "RichText",
       },
       {
-        apiIdentifier: "category",
-        name: "Category",
+        field: "category",
+        header: "Category",
         relatedField: undefined,
         sortable: true,
         type: "Enum",
       },
       {
-        apiIdentifier: "startsAt",
-        name: "Starts at",
+        field: "startsAt",
+        header: "Starts at",
         relatedField: undefined,
         sortable: true,
         type: "DateTime",
       },
       {
-        apiIdentifier: "isChecked",
-        name: "Is checked",
+        field: "isChecked",
+        header: "Is checked",
         relatedField: undefined,
         sortable: true,
         type: "Boolean",
       },
       {
-        apiIdentifier: "metafields",
-        name: "Metafields",
+        field: "metafields",
+        header: "Metafields",
         relatedField: undefined,
         sortable: true,
         type: "JSON",
       },
       {
-        apiIdentifier: "roles",
-        name: "Roles",
+        field: "roles",
+        header: "Roles",
         relatedField: undefined,
         sortable: false,
         type: "RoleAssignments",
       },
       {
-        apiIdentifier: "birthday",
-        name: "Birthday",
+        field: "birthday",
+        header: "Birthday",
         relatedField: undefined,
         sortable: true,
         type: "DateTime",
       },
       {
-        apiIdentifier: "color",
-        name: "Color",
+        field: "color",
+        header: "Color",
         relatedField: undefined,
         sortable: true,
         type: "Color",
       },
       {
-        apiIdentifier: "secretKey",
-        name: "Secret key",
+        field: "secretKey",
+        header: "Secret key",
         relatedField: undefined,
         sortable: false,
         type: "EncryptedString",
       },
       {
-        apiIdentifier: "mustBeLongString",
-        name: "Must be long string",
+        field: "mustBeLongString",
+        header: "Must be long string",
         relatedField: undefined,
         sortable: true,
         type: "String",
@@ -179,7 +179,7 @@ describe("useTable hook", () => {
           }
         }"
       `);
-      expect(result.current[0].columns?.map((column) => column.apiIdentifier)).toEqual(["name", "inventoryCount"]);
+      expect(result.current[0].columns?.map((column) => column.field)).toEqual(["name", "inventoryCount"]);
       expect(result.current[0].rows).toMatchInlineSnapshot(`
               [
                 {
@@ -238,7 +238,7 @@ describe("useTable hook", () => {
           }
         }"
       `);
-      expect(result.current[0].columns?.map((column) => column.apiIdentifier)).toEqual(["name", "hasMany", "hasOne", "belongsTo"]);
+      expect(result.current[0].columns?.map((column) => column.field)).toEqual(["name", "hasMany", "hasOne", "belongsTo"]);
       expect(result.current[0].rows).toMatchInlineSnapshot(`
         [
           {
@@ -327,7 +327,7 @@ describe("useTable hook", () => {
           }
         }"
       `);
-      expect(result.current[0].columns?.map((column) => column.apiIdentifier)).toEqual(["name", "hasMany", "hasOne", "belongsTo"]);
+      expect(result.current[0].columns?.map((column) => column.field)).toEqual(["name", "hasMany", "hasOne", "belongsTo"]);
       expect(result.current[0].rows).toMatchInlineSnapshot(`
         [
           {
@@ -438,15 +438,15 @@ describe("useTable hook", () => {
       expect(result.current[0].columns).toMatchInlineSnapshot(`
         [
           {
-            "apiIdentifier": "name",
-            "name": "Name",
+            "field": "name",
+            "header": "Name",
             "relatedField": undefined,
             "sortable": true,
             "type": "String",
           },
           {
-            "apiIdentifier": "Custom column",
-            "name": "Custom column",
+            "field": "Custom column",
+            "header": "Custom column",
             "sortable": false,
             "type": "CustomRenderer",
           },
@@ -522,7 +522,7 @@ describe("useTable hook", () => {
       `);
 
       // The list should not contain "name" and "inventoryCount" because they are excluded
-      expect(result.current[0].columns?.map((column) => column.apiIdentifier)).toEqual([
+      expect(result.current[0].columns?.map((column) => column.field)).toEqual([
         "id",
         "anything",
         "description",
