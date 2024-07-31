@@ -811,6 +811,7 @@ const loadMockWidgetModelMetadataForRelationship = () => {
                 fieldType: "HasOne",
                 validations: [],
                 relatedModel: {
+                  key: "DataModel-_autoTableTestRelatedModel",
                   apiIdentifier: "_autoTableTestRelatedModel",
                   namespace: [],
                   defaultDisplayField: {
@@ -853,6 +854,7 @@ const loadMockWidgetModelMetadataForRelationship = () => {
                 fieldType: "HasMany",
                 validations: [],
                 relatedModel: {
+                  key: "DataModel-_autoTableTestRelatedModel",
                   apiIdentifier: "_autoTableTestRelatedModel",
                   namespace: [],
                   defaultDisplayField: {
@@ -895,6 +897,7 @@ const loadMockWidgetModelMetadataForRelationship = () => {
                 fieldType: "BelongsTo",
                 validations: [],
                 relatedModel: {
+                  key: "DataModel-widget",
                   apiIdentifier: "widget",
                   namespace: [],
                   defaultDisplayField: {

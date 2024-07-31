@@ -216,6 +216,7 @@ const getInputFieldsWithCustomValidations = () => {
               fieldType: "HasMany",
               validations: [],
               relatedModel: {
+                key: "DataModel-gizmo",
                 apiIdentifier: "gizmo",
                 namespace: [],
                 defaultDisplayField: {

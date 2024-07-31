@@ -16,6 +16,10 @@ export interface AutoFormMetadataContext {
     namespace?: string | string[] | null;
     apiIdentifier?: string;
   };
+  options?: {
+    include?: string[];
+    exclude?: string[];
+  };
 }
 /**
  * React context that stores an instance of the metadata loaded for a particular form action

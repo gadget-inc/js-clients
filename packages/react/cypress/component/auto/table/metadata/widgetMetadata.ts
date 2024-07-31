@@ -191,6 +191,7 @@ export const widgetModelMetadata = {
               fieldType: "BelongsTo",
               validations: [],
               relatedModel: {
+                key: "DataModel-section",
                 apiIdentifier: "section",
                 namespace: [],
                 defaultDisplayField: {
@@ -214,6 +215,7 @@ export const widgetModelMetadata = {
               fieldType: "HasMany",
               validations: [],
               relatedModel: {
+                key: "DataModel-gizmo",
                 apiIdentifier: "gizmo",
                 namespace: [],
                 defaultDisplayField: {
