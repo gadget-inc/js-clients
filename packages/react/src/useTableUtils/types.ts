@@ -13,17 +13,16 @@ type BaseTableColumn = {
   apiIdentifier: string;
 };
 
+export type ColumnType = GadgetFieldType | "CustomRenderer";
+
 export type RecordTableColumnValue = BaseTableColumn & {
-  fieldType: GadgetFieldType;
+  type: ColumnType;
   sortable: boolean;
   relatedField?: RecordTableColumnValue;
-  getValue: (record: GadgetRecord<any>) => ColumnValueType;
-  isCustomCell: false;
 };
 
 export type CustomTableColumnValue = BaseTableColumn & {
-  getValue: (record: GadgetRecord<any>) => ReactNode;
-  isCustomCell: true;
+  type: ColumnType;
   sortable: false;
 };
 

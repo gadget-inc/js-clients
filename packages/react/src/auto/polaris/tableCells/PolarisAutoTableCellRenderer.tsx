@@ -1,5 +1,4 @@
 import React from "react";
-import type { GadgetFieldType } from "../../../internal/gql/graphql.js";
 import { FieldType } from "../../../metadata.js";
 import type { ColumnValueType, HasManyValueType, ValueWithTypename } from "../../../utils.js";
 import { PolarisAutoTableBooleanCell } from "./PolarisAutoTableBooleanCell.js";
@@ -8,13 +7,14 @@ import { PolarisAutoTableEncryptedStringCell } from "./PolarisAutoTableEncrypted
 import { PolarisAutoTableFileCell } from "./PolarisAutoTableFileCell.js";
 import { PolarisAutoTableTagCell } from "./PolarisAutoTableTagCell.js";
 import { PolarisAutoTableTextCell } from "./PolarisAutoTableTextCell.js";
+import type { ColumnType } from "src/useTableUtils/types.js";
 
 export const PolarisAutoTableCellRenderer = (props: {
   column: {
-    fieldType: GadgetFieldType;
+    type: ColumnType;
     relatedField?: {
       apiIdentifier: string;
-      fieldType: GadgetFieldType;
+      type: ColumnType;
     };
   };
   value: ColumnValueType;
@@ -26,7 +26,7 @@ export const PolarisAutoTableCellRenderer = (props: {
     return null;
   }
 
-  switch (column.fieldType) {
+  switch (column.type) {
     case FieldType.Id:
     case FieldType.String:
     case FieldType.Number:

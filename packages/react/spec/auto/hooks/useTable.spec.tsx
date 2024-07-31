@@ -43,123 +43,104 @@ describe("useTable hook", () => {
         mustBeLongString: "hellllllllllllllllllllllllllllo",
       },
     ]);
-    expect(
-      result.current[0].columns?.map((column) => {
-        const { getValue: _getValue, ...rest } = column;
-        return rest;
-      })
-    ).toEqual([
+    expect( result.current[0].columns ).toEqual([
       {
         apiIdentifier: "id",
-        fieldType: "ID",
-        isCustomCell: false,
         name: "Id",
         relatedField: undefined,
         sortable: false,
+        type: "ID",
       },
       {
         apiIdentifier: "name",
-        fieldType: "String",
-        isCustomCell: false,
         name: "Name",
         relatedField: undefined,
         sortable: true,
+        type: "String",
       },
       {
         apiIdentifier: "inventoryCount",
-        fieldType: "Number",
-        isCustomCell: false,
         name: "Inventory count",
         relatedField: undefined,
         sortable: true,
+        type: "Number",
       },
       {
         apiIdentifier: "anything",
-        fieldType: "JSON",
-        isCustomCell: false,
         name: "Anything",
         relatedField: undefined,
         sortable: true,
+        type: "JSON",
       },
       {
         apiIdentifier: "description",
-        fieldType: "RichText",
-        isCustomCell: false,
         name: "Description",
         relatedField: undefined,
         sortable: true,
+        type: "RichText",
       },
       {
         apiIdentifier: "category",
-        fieldType: "Enum",
-        isCustomCell: false,
         name: "Category",
         relatedField: undefined,
         sortable: true,
+        type: "Enum",
       },
       {
         apiIdentifier: "startsAt",
-        fieldType: "DateTime",
-        isCustomCell: false,
         name: "Starts at",
         relatedField: undefined,
         sortable: true,
+        type: "DateTime",
       },
       {
         apiIdentifier: "isChecked",
-        fieldType: "Boolean",
-        isCustomCell: false,
         name: "Is checked",
         relatedField: undefined,
         sortable: true,
+        type: "Boolean",
       },
       {
         apiIdentifier: "metafields",
-        fieldType: "JSON",
-        isCustomCell: false,
         name: "Metafields",
         relatedField: undefined,
         sortable: true,
+        type: "JSON",
       },
       {
         apiIdentifier: "roles",
-        fieldType: "RoleAssignments",
-        isCustomCell: false,
         name: "Roles",
         relatedField: undefined,
         sortable: false,
+        type: "RoleAssignments",
       },
       {
         apiIdentifier: "birthday",
-        fieldType: "DateTime",
-        isCustomCell: false,
         name: "Birthday",
         relatedField: undefined,
         sortable: true,
+        type: "DateTime",
       },
       {
         apiIdentifier: "color",
-        fieldType: "Color",
-        isCustomCell: false,
         name: "Color",
         relatedField: undefined,
         sortable: true,
+        type: "Color",
       },
       {
         apiIdentifier: "secretKey",
-        fieldType: "EncryptedString",
-        isCustomCell: false,
         name: "Secret key",
         relatedField: undefined,
         sortable: false,
+        type: "EncryptedString",
       },
       {
         apiIdentifier: "mustBeLongString",
-        fieldType: "String",
-        isCustomCell: false,
         name: "Must be long string",
         relatedField: undefined,
         sortable: true,
+        type: "String",
       },
     ]);
   });
@@ -454,33 +435,23 @@ describe("useTable hook", () => {
       loadMockWidgetModelMetadataForRelationship();
       loadMockWidgetDataForRelationship();
 
-      expect(
-        result.current[0].columns?.map((column) => {
-          const { getValue: _getValue, ...rest } = column;
-          return rest;
-        })
-      ).toMatchInlineSnapshot(`
+      expect(result.current[0].columns).toMatchInlineSnapshot(`
         [
           {
             "apiIdentifier": "name",
-            "fieldType": "String",
-            "isCustomCell": false,
             "name": "Name",
             "relatedField": undefined,
             "sortable": true,
+            "type": "String",
           },
           {
             "apiIdentifier": "Custom column",
-            "isCustomCell": true,
             "name": "Custom column",
             "sortable": false,
+            "type": "CustomRenderer",
           },
         ]
       `);
-
-      const customColumnGetValueResult = result.current[0].columns![1].getValue({ name: "foo" });
-      // Expect the getValue result to be a valid React element
-      expect(isValidElement(customColumnGetValueResult)).toBe(true);
     });
   });
 

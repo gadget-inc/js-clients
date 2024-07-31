@@ -5,6 +5,8 @@ import { userEvent } from "@testing-library/user-event";
 import React from "react";
 import { testApi as api } from "../../apis.js";
 import { PolarisMockedProviders } from "../inputs/PolarisMockedProviders.js";
+import type { TableColumn } from "../../../src/useTableUtils/types.js";
+import { GadgetFieldType } from "../../../src/internal/gql/graphql.js";
 
 const POLARIS_TABLE_CLASSES = {
   CONTAINER: "Polaris-IndexTable-ScrollContainer",
@@ -16,10 +18,10 @@ const POLARIS_TABLE_CLASSES = {
 const POLARIS_TAG_CLASS = "Polaris-Tag";
 
 let rows: any[] = [];
-let columns: any[] = [];
+let columns: TableColumn[] = [];
 let error: Error | undefined;
 
-const setMockUseTableResponse = (returns?: { newRows?: any[]; newColumns?: any[]; newError?: Error }) => {
+const setMockUseTableResponse = (returns?: { newRows?: any[]; newColumns?: TableColumn[]; newError?: Error }) => {
   rows = returns?.newRows ?? [
     {
       id: "1",
@@ -40,15 +42,15 @@ const setMockUseTableResponse = (returns?: { newRows?: any[]; newColumns?: any[]
   columns = returns?.newColumns ?? [
     {
       apiIdentifier: "name",
-      fieldType: "String",
       name: "Name",
       sortable: true,
+      type: GadgetFieldType.String,
     },
     {
       apiIdentifier: "inventoryCount",
-      fieldType: "Number",
       name: "Inventory count",
       sortable: true,
+      type: GadgetFieldType.Number,
     },
   ];
   error = returns?.newError ?? undefined;
@@ -220,32 +222,38 @@ describe("PolarisAutoTable", () => {
       newColumns: [
         {
           apiIdentifier: "hasOne",
-          fieldType: "HasOne",
+          type: GadgetFieldType.HasOne,
           name: "Has One",
           sortable: true,
           relatedField: {
+            sortable: true,
+            name: "hasOneName",
             apiIdentifier: "hasOneName",
-            fieldType: "String",
+            type: GadgetFieldType.String,
           },
         },
         {
           apiIdentifier: "hasMany",
-          fieldType: "HasMany",
+          type: GadgetFieldType.HasMany,
           name: "Has Many",
           sortable: true,
           relatedField: {
+            name: "hasManyNumber",
+            sortable: true,
             apiIdentifier: "hasManyNumber",
-            fieldType: "Number",
+            type: GadgetFieldType.Number,
           },
         },
         {
           apiIdentifier: "belongsTo",
-          fieldType: "BelongsTo",
+          type: GadgetFieldType.BelongsTo,
           name: "Belongs To",
           sortable: true,
           relatedField: {
+            name: 'belongsToEnum',
+            sortable: true,
             apiIdentifier: "belongsToEnum",
-            fieldType: "Enum",
+            type: GadgetFieldType.Enum,
           },
         },
       ],
@@ -303,16 +311,15 @@ describe("PolarisAutoTable", () => {
       newColumns: [
         {
           apiIdentifier: "name",
-          fieldType: "String",
+          type: GadgetFieldType.String,
           name: "Name",
           sortable: true,
         },
         {
           name: "Custom cell",
           apiIdentifier: "Custom cell",
-          isCustomCell: true,
+          type: "CustomRenderer",
           sortable: false,
-          getValue: customCellRenderer,
         },
       ],
     });
@@ -354,7 +361,7 @@ describe("PolarisAutoTable", () => {
         newColumns: [
           {
             apiIdentifier: "tags",
-            fieldType: "Enum",
+            type: GadgetFieldType.Enum,
             name: "Tags",
             sortable: true,
           },
@@ -386,7 +393,7 @@ describe("PolarisAutoTable", () => {
         newColumns: [
           {
             apiIdentifier: "tags",
-            fieldType: "Enum",
+            type: GadgetFieldType.Enum,
             name: "Tags",
             sortable: true,
           },

@@ -142,8 +142,7 @@ export const getTableColumns = (spec: TableSpec) => {
       columns.push({
         name: targetColumn.name,
         apiIdentifier: targetColumn.name,
-        getValue: (record) => targetColumn.render(record),
-        isCustomCell: true,
+        type: "CustomRenderer",
         sortable: false,
       });
       continue;
@@ -165,18 +164,14 @@ export const getTableColumns = (spec: TableSpec) => {
     columns.push({
       name: field.name,
       apiIdentifier: field.apiIdentifier,
-      fieldType: field.fieldType,
+      type: field.fieldType,
       sortable: "sortable" in field && field.sortable,
-      getValue: (record) => record[field.apiIdentifier],
-      isCustomCell: false,
       relatedField: relatedField
         ? {
             name: relatedField.name,
             apiIdentifier: relatedField.apiIdentifier,
-            fieldType: relatedField.fieldType,
+            type: relatedField.fieldType,
             sortable: "sortable" in field && field.sortable,
-            getValue: (record) => record[field.apiIdentifier],
-            isCustomCell: false,
           }
         : undefined,
     });

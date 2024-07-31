@@ -222,7 +222,7 @@ const PolarisAutoTableComponent = <
               {columns.map((column) => (
                 <IndexTable.Cell key={column.apiIdentifier}>
                   <div style={{ maxWidth: "200px" }}>
-                    {column.isCustomCell ? (
+                    {column.type == "CustomRenderer" ? (
                       (row[column.apiIdentifier] as ReactNode)
                     ) : (
                       <PolarisAutoTableCellRenderer column={column} value={row[column.apiIdentifier] as ColumnValueType} />
