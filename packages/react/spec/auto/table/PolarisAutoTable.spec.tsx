@@ -75,6 +75,12 @@ jest.unstable_mockModule("../src/useTable", () => ({
         set: jest.fn(),
         clear: jest.fn(),
       },
+      sort: {
+        column: "",
+        direction: "Ascending",
+        handleColumnSort: jest.fn(),
+        setSort: jest.fn(),
+      },
       error,
       selection: {
         recordIds: [],

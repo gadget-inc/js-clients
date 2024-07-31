@@ -13,7 +13,7 @@ import {
 } from "@shopify/polaris";
 import pluralize from "pluralize";
 import type { ReactNode } from "react";
-import React, { useCallback, useMemo, useState } from "react";
+import React, { useCallback, useMemo } from "react";
 import { useTable } from "../../useTable.js";
 import type { TableColumn, TableRow } from "../../useTableUtils/types.js";
 import type { ColumnValueType, OptionsType } from "../../utils.js";
@@ -47,18 +47,6 @@ const gadgetToPolarisDirection = (direction?: SortOrder) => {
 
 const getColumnIndex = (columns: TableColumn[], apiIdentifier: string | undefined) => {
   return columns.findIndex((column) => column.apiIdentifier === apiIdentifier);
-};
-
-const getNextDirection = (sortDirection: SortOrder | undefined) => {
-  switch (sortDirection) {
-    case "Descending":
-      return "Ascending";
-    case "Ascending":
-      return undefined;
-    case undefined:
-    default:
-      return "Descending";
-  }
 };
 
 /**
@@ -101,24 +89,14 @@ const PolarisAutoTableComponent = <
     excludeColumns: props.excludeColumns,
     pageSize: props.pageSize,
     live: props.live,
-    sort: props.initialSort,
+    initialSort: props.initialSort,
     filter: props.filter,
   } as any);
-
-  const [sortColumnApiIdentifier, setSortColumnApiIdentifier] = useState<string | undefined>(
-    props.initialSort ? Object.keys(props.initialSort)[0] : undefined
-  );
-  const [sortDirection, setSortDirection] = useState<SortOrder | undefined>(
-    props.initialSort ? Object.values(props.initialSort)[0] : undefined
-  );
 
   const handleColumnSort = (headingIndex: number) => {
     if (columns) {
       const columnApiIdentifier = columns[headingIndex].apiIdentifier;
-      const nextDirection = columnApiIdentifier !== sortColumnApiIdentifier ? "Descending" : getNextDirection(sortDirection);
-      setSortDirection(nextDirection);
-      setSortColumnApiIdentifier(nextDirection ? columnApiIdentifier : undefined);
-      sort(columnApiIdentifier, nextDirection);
+      sort.handleColumnSort(columnApiIdentifier);
     }
   };
 
@@ -223,8 +201,8 @@ const PolarisAutoTableComponent = <
               }
             : undefined
         }
-        sortDirection={gadgetToPolarisDirection(sortDirection)}
-        sortColumnIndex={columns ? getColumnIndex(columns, sortColumnApiIdentifier) : undefined}
+        sortDirection={gadgetToPolarisDirection(sort.direction)}
+        sortColumnIndex={columns ? getColumnIndex(columns, sort.column) : undefined}
         onSort={(headingIndex) => handleColumnSort(headingIndex)}
       >
         {rows &&
