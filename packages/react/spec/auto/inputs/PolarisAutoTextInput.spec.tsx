@@ -13,6 +13,7 @@ import type { ActionMetadata } from "../../../src/metadata.js";
 import { testApi as api } from "../../apis.js";
 import { MockClientProvider, mockUrqlClient } from "../../testWrappers.js";
 import { MockForm } from "../MockForm.js";
+import { apiTriggerOnly } from "../support/Triggers.js";
 
 describe("PolarisAutoTextInput", () => {
   let result: RenderResult;
@@ -147,6 +148,7 @@ describe("PolarisAutoTextInput", () => {
             apiIdentifier: "create",
             operatesWithRecordIdentity: false,
             isDeleteAction: false,
+            triggers: apiTriggerOnly,
             inputFields: [
               {
                 name: "Widget",
@@ -209,6 +211,7 @@ const metadata = {
     apiIdentifier: "create",
     operatesWithRecordIdentity: false,
     isDeleteAction: false,
+    triggers: apiTriggerOnly,
     inputFields: [
       {
         name: "Widget",

@@ -1,4 +1,5 @@
 import { recordIdInputField } from "./shared.js";
+import { apiTriggerOnly } from "./Triggers.js";
 
 export const userModelInputFields = {
   name: "User",
@@ -154,6 +155,7 @@ export const getUserModelMetadata = (
         action: {
           ...action,
           inputFields: action.operatesWithRecordIdentity ? [recordIdInputField, ...inputFields] : inputFields,
+          triggers: apiTriggerOnly,
           __typename: "GadgetAction",
         },
         __typename: "GadgetModel",

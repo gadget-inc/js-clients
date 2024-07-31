@@ -1,4 +1,5 @@
 import { recordIdInputField } from "./shared.js";
+import { apiTriggerOnly } from "./Triggers.js";
 
 export const gizmoModelInputFields = {
   name: "Gizmo",
@@ -74,6 +75,7 @@ export const getGizmoModelMetadata = (
         action: {
           ...action,
           inputFields: action.operatesWithRecordIdentity ? [recordIdInputField, ...inputFields] : inputFields,
+          triggers: apiTriggerOnly,
           __typename: "GadgetAction",
         },
         __typename: "GadgetModel",

@@ -12,6 +12,7 @@ import { PolarisAutoSubmit } from "../../src/auto/polaris/submit/PolarisAutoSubm
 import { testApi as api } from "../apis.js";
 import { MockClientProvider, mockUrqlClient } from "../testWrappers.js";
 import { getGizmoModelMetadata } from "./support/gizmoModel.js";
+import { getGlobalActionMetadata } from "./support/globalActions.js";
 import { getWidgetModelMetadata, getWidgetRecord } from "./support/widgetModel.js";
 
 const PolarisMockedProviders = (props: { children: ReactNode }) => {
@@ -676,6 +677,36 @@ describe("PolarisAutoForm", () => {
       }).toThrow("Bulk actions are not supported in AutoForms");
     });
   });
+  describe("Actions without triggers", () => {
+    describe("No triggers in the api client", () => {
+      it("throws an error when a model action without triggers", () => {
+        expect(() => {
+          render(<PolarisAutoForm action={api.autoTableTest.noTriggerAction as any} />, { wrapper: PolarisMockedProviders });
+        }).toThrow("Actions must have API triggers to be used in AutoForms");
+      });
+
+      it("throws an error when a global action without triggers", () => {
+        expect(() => {
+          render(<PolarisAutoForm action={api.noTriggerGlobalAction as any} />, { wrapper: PolarisMockedProviders });
+        }).toThrow("Actions must have API triggers to be used in AutoForms");
+      });
+    });
+    describe("Has triggers in api client but no triggers in action metadata", () => {
+      it("throws an error when a model action without triggers", () => {
+        expect(() => {
+          render(<PolarisAutoForm action={api.widget.create as any} />, { wrapper: PolarisMockedProviders });
+          loadMockWidgetCreateMetadata({ triggers: [{ specID: "non/api/trigger", __typename: "GadgetTrigger" }] });
+        }).toThrow("Actions must have API triggers to be used in AutoForms");
+      });
+
+      it("throws an error when a global action without triggers", () => {
+        expect(() => {
+          render(<PolarisAutoForm action={api.flipAll as any} />, { wrapper: PolarisMockedProviders });
+          loadMockFlipAllMetadata({ triggers: [{ specID: "non/api/trigger", __typename: "GadgetTrigger" }] });
+        }).toThrow("Actions must have API triggers to be used in AutoForms");
+      });
+    });
+  });
 });
 
 function loadMockGizmoCreateMetadata() {
@@ -697,7 +728,7 @@ function loadMockGizmoCreateMetadata() {
   });
 }
 
-function loadMockWidgetCreateMetadata() {
+function loadMockWidgetCreateMetadata(opts?: { inputFields?: any[]; triggers?: any[] }) {
   expect(mockUrqlClient.executeQuery.mock.calls[0][0].variables).toEqual({
     modelApiIdentifier: "widget",
     modelNamespace: null,
@@ -708,11 +739,15 @@ function loadMockWidgetCreateMetadata() {
   mockUrqlClient.executeQuery.pushResponse("ModelActionMetadata", {
     stale: false,
     hasNext: false,
-    data: getWidgetModelMetadata({
-      name: "Create",
-      apiIdentifier: "create",
-      operatesWithRecordIdentity: false,
-    }),
+    data: getWidgetModelMetadata(
+      {
+        name: "Create",
+        apiIdentifier: "create",
+        operatesWithRecordIdentity: false,
+      },
+      opts?.inputFields,
+      opts?.triggers
+    ),
   });
 }
 
@@ -778,5 +813,22 @@ function loadMockWidgetDeleteMetadata() {
       },
       [] // No input fields beyond ID
     ),
+  });
+}
+
+function loadMockFlipAllMetadata(opts?: { triggers?: any[] }) {
+  expect(mockUrqlClient.executeQuery.mock.calls[0][0].variables).toEqual({
+    namespace: null,
+    apiIdentifier: "flipAll",
+    includeRelatedFields: false,
+  });
+
+  mockUrqlClient.executeQuery.pushResponse("GlobalActionMetadata", {
+    stale: false,
+    hasNext: false,
+    data: getGlobalActionMetadata({
+      apiIdentifier: "flipAll",
+      triggers: opts?.triggers,
+    }),
   });
 }

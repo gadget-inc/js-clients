@@ -1,17 +1,18 @@
 import React from "react";
+import { apiTriggerOnly } from "../../../../spec/auto/support/Triggers.js";
 import { PolarisAutoForm } from "../../../../src/auto/polaris/PolarisAutoForm.js";
 import { PolarisAutoBelongsToInput } from "../../../../src/auto/polaris/inputs/relationships/PolarisAutoBelongsToInput.js";
 import { PolarisAutoSubmit } from "../../../../src/auto/polaris/submit/PolarisAutoSubmit.js";
 import { PolarisSubmitResultBanner } from "../../../../src/auto/polaris/submit/PolarisSubmitResultBanner.js";
 import { api } from "../../../support/api.js";
 import { PolarisWrapper } from "../../../support/auto.js";
-
 describe("PolarisAutoBelongsToInput", () => {
   const interceptModelUpdateActionMetadata = () => {
     cy.mockModelActionMetadata(api, {
       modelApiIdentifier: "widget",
       modelName: "Widget",
       action: { apiIdentifier: "update", operatesWithRecordIdentity: true },
+      triggers: apiTriggerOnly,
       inputFields: getInputFieldsWithCustomValidations(),
     });
   };
