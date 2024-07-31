@@ -87,6 +87,8 @@ const PolarisAutoTableComponent = <
   props: AutoTableProps<GivenOptions, SchemaT, FinderFunction, Options>
 ) => {
   const { onClick } = props;
+  const searchable = props.searchable ?? true;
+  const paginate = props.paginate ?? true;
 
   const [{ rows, columns, metadata, fetching, error, page, search, sort, selection }, refresh] = useTable<
     GivenOptions,
@@ -168,22 +170,24 @@ const PolarisAutoTableComponent = <
         ids={selection.recordIds}
         selectedRows={selectedRows}
       />
-      <IndexFilters
-        mode={mode}
-        setMode={setMode}
-        appliedFilters={[]}
-        filters={[]}
-        onClearAll={() => undefined}
-        tabs={[]}
-        selected={1}
-        loading={fetching}
-        cancelAction={{ onAction: () => search.clear() }}
-        disabled={!!error}
-        // Search
-        queryValue={search.value}
-        onQueryChange={search.set}
-        onQueryClear={search.clear}
-      />
+      {searchable && (
+        <IndexFilters
+          mode={mode}
+          setMode={setMode}
+          appliedFilters={[]}
+          filters={[]}
+          onClearAll={() => undefined}
+          tabs={[]}
+          selected={1}
+          loading={fetching}
+          cancelAction={{ onAction: () => search.clear() }}
+          disabled={!!error}
+          // Search
+          queryValue={search.value}
+          onQueryChange={search.set}
+          onQueryClear={search.clear}
+        />
+      )}
 
       {error && (
         <Box paddingBlockStart="200" paddingBlockEnd="1000">
@@ -209,12 +213,16 @@ const PolarisAutoTableComponent = <
             ? 1 // Don't show the empty state if there's an error
             : rows?.length ?? 0
         }
-        pagination={{
-          hasNext: page.hasNextPage,
-          hasPrevious: page.hasPreviousPage,
-          onNext: page.goToNextPage,
-          onPrevious: page.goToPreviousPage,
-        }}
+        pagination={
+          paginate
+            ? {
+                hasNext: page.hasNextPage,
+                hasPrevious: page.hasPreviousPage,
+                onNext: page.goToNextPage,
+                onPrevious: page.goToPreviousPage,
+              }
+            : undefined
+        }
         sortDirection={gadgetToPolarisDirection(sortDirection)}
         sortColumnIndex={columns ? getColumnIndex(columns, sortColumnApiIdentifier) : undefined}
         onSort={(headingIndex) => handleColumnSort(headingIndex)}
