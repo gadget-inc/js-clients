@@ -7,6 +7,8 @@ import { PolarisAutoTable } from "../../src/auto/polaris/PolarisAutoTable.tsx";
 import { useAction } from "../../src/useAction.ts";
 import { testApi as api } from "../apis.ts";
 
+const CustomEmptyStateMarkup = <p>This is a custom empty state. Bazinga.</p>;
+
 // More on how to set up stories at: https://storybook.js.org/docs/writing-stories#default-export
 export default {
   title: "Polaris/AutoTable",
@@ -272,6 +274,32 @@ export const ExcludedActionParameters = {
     model: api.autoTableTest,
     excludeActions: ["delete"],
   },
+};
+
+export const BuiltInPolarisTableProps = {
+  args: {
+    model: api.autoTableTest,
+    selectable: false,
+    lastColumnSticky: true,
+    hasZebraStriping: true,
+    resourceName: { singular: "fizzing whizzbee", plural: "fizzing whizzbees" },
+  },
+};
+
+export const Condensed = {
+  args: {
+    model: api.autoTableTest,
+    condensed: true,
+  },
+};
+
+export const CustomEmptyState = {
+  args: {
+    // A filter that will never be true so that the empty state is always shown
+    filter: { AND: [{ bool: { equals: false } }, { bool: { equals: true } }] },
+    model: api.autoTableTest,
+    emptyState: CustomEmptyStateMarkup,
+  }
 };
 
 export const HideSearchAndPagination = {

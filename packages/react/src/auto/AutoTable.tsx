@@ -24,6 +24,12 @@ export type AutoTableProps<
   filter?: Options["filter"];
   actions?: TableOptions["actions"];
   excludeActions?: TableOptions["excludeActions"];
+  selectable?: boolean;
+  emptyState?: React.ReactNode;
+  lastColumnSticky?: boolean;
+  hasZebraStriping?: boolean;
+  resourceName?: { singular: string; plural: string };
+  condensed?: boolean;
   searchable?: boolean;
   paginate?: boolean;
 };
