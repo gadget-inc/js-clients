@@ -3,7 +3,7 @@ export { MUIAutoButton as AutoButton } from "./MUIAutoButton.js";
 export * from "./MUIAutoForm.js";
 export { MUIAutoForm as AutoForm } from "./MUIAutoForm.js";
 export { MUIAutoBooleanInput as AutoBooleanInput } from "./inputs/MUIAutoBooleanInput.js";
-export { MUIAutoDateTimePicker as DateTimePicker } from "./inputs/MUIAutoDateTimePicker.js";
+export { MUIAutoDateTimePicker as AutoDateTimePicker } from "./inputs/MUIAutoDateTimePicker.js";
 export { MUIAutoEnumInput as AutoEnumInput } from "./inputs/MUIAutoEnumInput.js";
 export { MUIAutoFileInput as AutoFileInput } from "./inputs/MUIAutoFileInput.js";
 export { MUIAutoHiddenInput as AutoHiddenInput } from "./inputs/MUIAutoHiddenInput.js";
