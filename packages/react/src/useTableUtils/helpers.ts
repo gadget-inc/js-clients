@@ -173,6 +173,10 @@ export const getTableColumns = (spec: Pick<TableSpec, "fieldMetadataTree" | "tar
       column.relationshipType = firstField.fieldType as RelationshipType;
     }
 
+    if (targetField.configuration?.__typename === "GadgetDateTimeConfig") {
+      column.includeTime = targetField.configuration.includeTime;
+    }
+
     columns.push(column);
   }
 

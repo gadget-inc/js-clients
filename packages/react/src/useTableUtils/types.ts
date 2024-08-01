@@ -30,6 +30,8 @@ export type TableColumn = {
   /** parent relationship type if the parent field is a relationship */
   relationshipType?: RelationshipType;
   sortable: boolean;
+  /** For controlling if the time is shown on DateTime cell renderers   */
+  includeTime?: boolean;
 };
 
 export type TableRow = Record<string, ColumnValueType | ReactNode>;
