@@ -13,6 +13,18 @@ import { getTableColumns, getTableRows, getTableSelectionMap, getTableSpec } fro
 import type { TableOptions, TableResult } from "./useTableUtils/types.js";
 import { type OptionsType, type ReadOperationOptions } from "./utils.js";
 
+const getNextDirection = (sortDirection: SortOrder | undefined) => {
+  switch (sortDirection) {
+    case "Descending":
+      return "Ascending";
+    case "Ascending":
+      return undefined;
+    case undefined:
+    default:
+      return "Descending";
+  }
+};
+
 /**
  * Headless React hook for powering a table showing a page of Gadget records from the backend, optionally sorted, filtered, searched, and selected from. Returns a standard hook result set with a tuple of the result object with `data`, `fetching`, and `error` keys, and a `refetch` function. `data` will be a `GadgetRecordList` object holding the list of returned records and pagination info.
  *
@@ -32,7 +44,7 @@ export const useTable = <
   Options extends F["optionsType"] & ReadOperationOptions & TableOptions
 >(
   manager: { findMany: F },
-  options?: LimitToKnownKeys<Options, F["optionsType"] & ReadOperationOptions & TableOptions>
+  options?: LimitToKnownKeys<Options, Omit<F["optionsType"], "sort"> & ReadOperationOptions & TableOptions>
 ): TableResult<
   GadgetRecord<Select<Exclude<F["schemaType"], null | undefined>, DefaultSelection<F["selectionType"], Options, F["defaultSelection"]>>>[]
 > => {
@@ -43,7 +55,14 @@ export const useTable = <
     fetching: fetchingMetadata,
     error: metadataError,
   } = useModelMetadata(manager.findMany.modelApiIdentifier, namespaceAsArray);
-  const [sort, setSort] = useState<OptionsType["sort"] | undefined>(options?.sort);
+  const [sort, setSort] = useState<OptionsType["sort"] | undefined>(options?.initialSort);
+
+  const [sortColumnApiIdentifier, setSortColumnApiIdentifier] = useState<string | undefined>(
+    options?.initialSort ? Object.keys(options.initialSort)[0] : undefined
+  );
+  const [sortDirection, setSortDirection] = useState<SortOrder | undefined>(
+    options?.initialSort ? Object.values(options.initialSort)[0] : undefined
+  );
 
   const sortColumn = useCallback((colName: string, direction?: SortOrder) => {
     if (direction) {
@@ -52,6 +71,16 @@ export const useTable = <
       setSort(undefined);
     }
   }, []);
+
+  const handleColumnSort = useCallback(
+    (columnApiIdentifier: string) => {
+      const nextDirection = columnApiIdentifier !== sortColumnApiIdentifier ? "Descending" : getNextDirection(sortDirection);
+      setSortDirection(nextDirection);
+      setSortColumnApiIdentifier(nextDirection ? columnApiIdentifier : undefined);
+      sortColumn(columnApiIdentifier, nextDirection);
+    },
+    [sortColumnApiIdentifier, sortDirection]
+  );
 
   const tableSpec = useMemo(
     () => metadata && getTableSpec(metadata.fields, options?.columns, options?.excludeColumns, manager.findMany.defaultSelection),
@@ -88,6 +117,13 @@ export const useTable = <
   const fetching = dataFetching || fetchingMetadata || isAwaitingDebouncedSearchValue;
   const error = dataError || metadataError;
 
+  const sortState = {
+    column: sortColumnApiIdentifier ?? "",
+    direction: sortDirection ?? "Ascending",
+    handleColumnSort,
+    setSort: sortColumn,
+  };
+
   return [
     {
       ...tableData,
@@ -95,7 +131,7 @@ export const useTable = <
       fetching,
       error,
       search,
-      sort: sortColumn,
+      sort: sortState,
       selection,
     },
     refresh,

@@ -35,6 +35,7 @@ export interface TableOptions {
   pageSize?: number;
   initialCursor?: string;
   initialDirection?: "forward" | "backward";
+  initialSort?: { [column: string]: SortOrder };
   columns?: (string | RelatedFieldColumn | CustomCellColumn)[];
   excludeColumns?: string[];
   actions?: (string | ActionCallback)[];
@@ -62,6 +63,13 @@ export type TableData<Data> =
       metadata: null;
     };
 
+type SortState = {
+  column: string;
+  direction: SortOrder;
+  handleColumnSort: (column: string) => void;
+  setSort: (column: string, direction: SortOrder) => void;
+};
+
 export type TableResult<Data> = [
   TableData<Data> & {
     page: PaginationResult;
@@ -69,7 +77,7 @@ export type TableResult<Data> = [
     error?: ErrorWrapper;
     search: SearchResult;
     selection: RecordSelection;
-    sort: (colName: string, direction?: SortOrder) => void;
+    sort: SortState;
   },
   refresh: (opts?: Partial<OperationContext>) => void
 ];
