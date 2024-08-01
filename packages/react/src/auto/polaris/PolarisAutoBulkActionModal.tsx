@@ -31,18 +31,14 @@ export const PolarisAutoBulkActionModal = (props: {
 
   const closeModal = useCallback(() => setShowModal(false), [setShowModal]);
 
-  if (!actionIsLoaded) {
+  if (!actionIsLoaded || !isBulkGadgetAction) {
     return null;
   }
 
   return (
     <>
       <Modal onClose={() => setShowModal(false)} title={modalTitle} open={showModal}>
-        {isBulkGadgetAction ? (
-          <GadgetBulkActionModalContent model={model} modelActionDetails={modelActionDetails} ids={ids} close={closeModal} />
-        ) : (
-          <CustomBulkActionModalContent modelActionDetails={modelActionDetails} ids={ids} close={closeModal} selectedRows={selectedRows} />
-        )}
+        <GadgetBulkActionModalContent model={model} modelActionDetails={modelActionDetails} ids={ids} close={closeModal} />
       </Modal>
     </>
   );
@@ -109,38 +105,6 @@ const CenteredSpinner = () => (
 
 const ActionCompletedMessage = `Action completed`;
 const ActionSuccessMessage = `${ActionCompletedMessage} successfully`;
-
-const CustomBulkActionModalContent = (props: {
-  modelActionDetails: ModelActionDetails;
-  ids: string[];
-  close: () => void;
-  selectedRows: TableRow[];
-}) => {
-  const { modelActionDetails, ids, selectedRows, close } = props;
-
-  if (modelActionDetails.isGadgetAction) {
-    throw new Error(`Custom callback "${modelActionDetails.apiIdentifier}" is invalid`);
-  }
-
-  if (!modelActionDetails.render) {
-    throw new Error(`Failed to render custom bulk action modal content. Property "render" must be provided`);
-  }
-
-  return (
-    <>
-      <Modal.Section>{modelActionDetails.render(ids, selectedRows)}</Modal.Section>
-      <Modal.Section>
-        <div style={{ float: "right", paddingBottom: "16px" }}>
-          <ButtonGroup>
-            <Button variant="secondary" onClick={close}>
-              Close
-            </Button>
-          </ButtonGroup>
-        </div>
-      </Modal.Section>
-    </>
-  );
-};
 
 const RunActionConfirmationText = (props: { count: number }) => {
   const { count } = props;

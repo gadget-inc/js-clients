@@ -35,10 +35,9 @@ export interface TableOptions {
 
 export type ActionCallback = {
   label: string;
-} & (
-  | { callback: (recordIds: string[], records: GadgetRecord<any>[]) => any }
-  | { render: (recordIds: string[], records: GadgetRecord<any>[]) => ReactNode }
-);
+  promoted?: boolean;
+  action: string | ((records: GadgetRecord<any>[]) => any);
+};
 
 export type TableData<Data> =
   | {

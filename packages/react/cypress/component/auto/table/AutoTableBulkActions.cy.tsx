@@ -45,9 +45,12 @@ describe("AutoTable - Bulk actions", () => {
     ).as(as);
   };
 
-  const openBulkAction = (label: string) => {
-    cy.get(`button[aria-label="Actions"]`).click();
-    return cy.contains(label).click();
+  const openBulkAction = (label: string, isPromoted = true) => {
+    if (isPromoted) {
+      return cy.contains(label).click({ force: true });
+    }
+    cy.get(`button[aria-label="More actions"]`).eq(1).click();
+    return cy.contains(label).click({ force: true });
   };
 
   const selectRecordIds = (ids: string[]) => {
@@ -69,21 +72,10 @@ describe("AutoTable - Bulk actions", () => {
         model={api.widget}
         actions={[
           "delete",
-          {
-            label: "Custom renderer action",
-            render: (recordIds, records) => {
-              return (
-                <div>
-                  <p>Selected record ids: {recordIds.join(",")}</p>
-                  <p>Selected record inventory count sum: {records.reduce((total, record) => total + (record.inventoryCount ?? 0), 0)}</p>
-                </div>
-              );
-            },
-          },
-          {
-            label: "Custom callback action",
-            callback: stubCallback,
-          },
+          { label: "Custom callback action", action: stubCallback },
+          { label: "Relabeled model action", action: "delete" },
+          { promoted: true, label: "(Promoted)Custom callback action", action: stubCallback },
+          { promoted: true, label: "(Promoted)Relabeled model action", action: "delete" },
         ]}
       />,
       PolarisWrapper
@@ -140,20 +132,31 @@ describe("AutoTable - Bulk actions", () => {
     cy.contains(bulkDeleteFailureMessage);
   });
 
-  describe("Custom actions", () => {
+  describe.each([true, false])("Custom actions with promoted=%s", (promoted) => {
     beforeEach(() => {
       selectRecordIds(["10", "11", "12"]);
     });
 
-    it("Can run custom actions with passed in renderers", () => {
-      openBulkAction("Custom renderer action");
-
-      cy.contains("Selected record ids: 10,11,12").should("exist");
-      cy.contains(`Selected record inventory count sum: 126`).should("exist");
+    it("Can run custom actions with passed in callbacks", () => {
+      openBulkAction(`${promoted ? `(Promoted)` : ""}Custom callback action`, promoted).then(() => expect(stubCallback).to.be.called);
     });
 
-    it("Can run custom actions with passed in callbacks", () => {
-      openBulkAction("Custom callback action").then(() => expect(stubCallback).to.be.called);
+    it("Can run relabeled Gadget actions", () => {
+      openBulkAction(`${promoted ? `(Promoted)` : ""}Relabeled model action`, promoted);
+
+      cy.contains("Are you sure you want to run this action on 3 records?").should("exist");
+
+      mockBulkDeleteWidgets(bulkDeleteSuccessResponse, "bulkDeleteWidgets");
+      mockGetWidgets();
+      cy.get("button").contains("Run").click();
+      cy.wait("@bulkDeleteWidgets")
+        .its("request.body.variables")
+        .should("deep.equal", { ids: ["10", "11", "12"] }); // selected IDs included
+
+      cy.wait("@getWidgets").its("request.body.variables").should("deep.equal", { first: 50 }); // No search value
+
+      cy.contains("Action completed successfully");
+      cy.get("button").contains("Close").click();
     });
   });
 });
