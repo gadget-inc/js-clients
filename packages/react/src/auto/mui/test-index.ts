@@ -11,7 +11,6 @@ export { MUIAutoInput as AutoInput } from "./inputs/MUIAutoInput.js";
 export { MUIAutoJSONInput as AutoJSONInput } from "./inputs/MUIAutoJSONInput.js";
 export { MUIAutoRolesInput as AutoRolesInput } from "./inputs/MUIAutoRolesInput.js";
 export {
-  MUIAutoTextInput as AutoColorInput,
   MUIAutoTextInput as AutoEmailInput,
   MUIAutoTextInput as AutoNumberInput,
   MUIAutoTextInput as AutoStringInput,
