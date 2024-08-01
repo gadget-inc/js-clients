@@ -6,6 +6,7 @@ import { Provider } from "../../src/GadgetProvider.tsx";
 import { PolarisAutoTable } from "../../src/auto/polaris/PolarisAutoTable.tsx";
 import { useAction } from "../../src/useAction.ts";
 import { testApi as api } from "../apis.ts";
+import { StorybookErrorBoundary } from "./StorybookErrorBoundary.tsx";
 
 const CustomEmptyStateMarkup = <p>This is a custom empty state. Bazinga.</p>;
 
@@ -13,10 +14,12 @@ const CustomEmptyStateMarkup = <p>This is a custom empty state. Bazinga.</p>;
 export default {
   title: "Polaris/AutoTable",
   component: PolarisAutoTable,
+
   decorators: [
     // 👇 Defining the decorator in the preview file applies it to all stories
     (Story) => {
       // 👇 Make it configurable by reading the theme value from parameters
+
       return (
         <Provider api={api}>
           <AppProvider i18n={translations}>
@@ -24,7 +27,9 @@ export default {
               <Box paddingBlockEnd="400">
                 <BlockStack gap="200">
                   <LegacyCard>
-                    <Story />
+                    <StorybookErrorBoundary>
+                      <Story />
+                    </StorybookErrorBoundary>
                   </LegacyCard>
                 </BlockStack>
               </Box>
@@ -299,7 +304,7 @@ export const CustomEmptyState = {
     filter: { AND: [{ bool: { equals: false } }, { bool: { equals: true } }] },
     model: api.autoTableTest,
     emptyState: CustomEmptyStateMarkup,
-  }
+  },
 };
 
 export const HideSearchAndPagination = {
