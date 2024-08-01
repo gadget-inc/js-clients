@@ -14,7 +14,6 @@ export { PolarisAutoNumberInput as AutoNumberInput } from "./inputs/PolarisAutoN
 export { PolarisAutoPasswordInput as AutoPasswordInput } from "./inputs/PolarisAutoPasswordInput.js";
 export { PolarisAutoRolesInput as AutoRolesInput } from "./inputs/PolarisAutoRolesInput.js";
 export {
-  PolarisAutoTextInput as AutoColorInput,
   PolarisAutoTextInput as AutoEmailInput,
   PolarisAutoTextInput as AutoStringInput,
   PolarisAutoTextInput as AutoTextInput,
