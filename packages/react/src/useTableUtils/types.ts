@@ -32,19 +32,12 @@ export interface TableOptions {
   actions?: (string | ActionCallback)[];
   excludeActions?: string[];
 }
+
 export type ActionCallback = {
   label: string;
   promoted?: boolean;
-} & (
-  | {
-      action: string | ((records: GadgetRecord<any>[]) => any);
-    }
-  | {
-      promptComponent: promptComponent;
-    }
-);
-
-export type promptComponent = (props: { records: GadgetRecord<any>[]; close?: () => void }) => ReactNode;
+  action: string | ((records: GadgetRecord<any>[]) => any);
+};
 
 export type TableData<Data> =
   | {

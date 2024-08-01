@@ -72,10 +72,8 @@ describe("AutoTable - Bulk actions", () => {
         model={api.widget}
         actions={[
           "delete",
-          { label: "Custom renderer action", promptComponent: SamplepromptComponent },
           { label: "Custom callback action", action: stubCallback },
           { label: "Relabeled model action", action: "delete" },
-          { promoted: true, label: "(Promoted)Custom renderer action", promptComponent: SamplepromptComponent },
           { promoted: true, label: "(Promoted)Custom callback action", action: stubCallback },
           { promoted: true, label: "(Promoted)Relabeled model action", action: "delete" },
         ]}
@@ -137,13 +135,6 @@ describe("AutoTable - Bulk actions", () => {
   describe.each([true, false])("Custom actions with promoted=%s", (promoted) => {
     beforeEach(() => {
       selectRecordIds(["10", "11", "12"]);
-    });
-
-    it("Can run custom actions with passed in renderers", () => {
-      openBulkAction(`${promoted ? `(Promoted)` : ""}Custom renderer action`, promoted);
-
-      cy.contains("Selected record ids: 10,11,12").should("exist");
-      cy.contains(`Selected record inventory count sum: 126`).should("exist");
     });
 
     it("Can run custom actions with passed in callbacks", () => {
@@ -224,14 +215,4 @@ const bulkDeleteFailureResponse = {
     logs: "https://ggt.link/logs/114412/3faf15ad42c60f33ea5f012e99137263",
     traceId: "3faf15ad42c60f33ea5f012e99137263",
   },
-};
-
-const SamplepromptComponent = (props: { records: any[] }) => {
-  const { records } = props;
-  return (
-    <div>
-      <p>Selected record ids: {records.map((record) => record.id).join(",")}</p>
-      <p>Selected record inventory count sum: {records.reduce((total, record) => total + (record.inventoryCount ?? 0), 0)}</p>
-    </div>
-  );
 };

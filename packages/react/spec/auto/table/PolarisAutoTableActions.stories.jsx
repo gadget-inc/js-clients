@@ -1,10 +1,10 @@
-import { AppProvider, BlockStack, Box, LegacyCard, Modal } from "@shopify/polaris";
+import { AppProvider, BlockStack, Box, LegacyCard } from "@shopify/polaris";
 import translations from "@shopify/polaris/locales/en.json";
 import React from "react";
 import { Provider } from "../../../src/GadgetProvider.tsx";
 import { PolarisAutoTable } from "../../../src/auto/polaris/PolarisAutoTable.tsx";
 import { testApi as api } from "../../apis.ts";
-
+import { StorybookErrorBoundary } from "../StorybookErrorBoundary.tsx";
 // More on how to set up stories at: https://storybook.js.org/docs/writing-stories#default-export
 export default {
   title: "Polaris/AutoTable/ActionParameters",
@@ -20,7 +20,9 @@ export default {
               <Box paddingBlockEnd="400">
                 <BlockStack gap="200">
                   <LegacyCard>
-                    <Story />
+                    <StorybookErrorBoundary>
+                      <Story />
+                    </StorybookErrorBoundary>
                   </LegacyCard>
                 </BlockStack>
               </Box>
@@ -31,22 +33,6 @@ export default {
     },
   ],
 };
-
-const CustomActionComponent = ({ records, close }) => (
-  <>
-    <Modal.Section>
-      <p>
-        {sumRecordNumValues(records)}
-        {` is the sum of the num field in records with ids: `}
-        {records.map((record) => record.id).join(", ")}
-      </p>
-    </Modal.Section>
-    <Modal.Section>
-      <button onClick={() => windowAlert(JSON.stringify(records))}>Alert the full records</button>
-      <button onClick={close}>Close</button>
-    </Modal.Section>
-  </>
-);
 
 export const IncludedActionParameters = {
   args: {
@@ -60,9 +46,9 @@ export const IncludedActionParameters = {
         action: (records) => windowAlert(`Sum of record "num" values: ${sumRecordNumValues(records)}`),
       },
       {
-        label: "Sum Nums rendered",
+        label: "Sum Nums promoted",
         promoted: true,
-        promptComponent: CustomActionComponent,
+        action: (records) => windowAlert(`Sum of record "num" values: ${sumRecordNumValues(records)}`),
       },
     ],
   },

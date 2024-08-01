@@ -31,18 +31,14 @@ export const PolarisAutoBulkActionModal = (props: {
 
   const closeModal = useCallback(() => setShowModal(false), [setShowModal]);
 
-  if (!actionIsLoaded) {
+  if (!actionIsLoaded || !isBulkGadgetAction) {
     return null;
   }
 
   return (
     <>
       <Modal onClose={() => setShowModal(false)} title={modalTitle} open={showModal}>
-        {isBulkGadgetAction ? (
-          <GadgetBulkActionModalContent model={model} modelActionDetails={modelActionDetails} ids={ids} close={closeModal} />
-        ) : (
-          <CustomBulkActionModalContent modelActionDetails={modelActionDetails} close={closeModal} selectedRows={selectedRows} />
-        )}
+        <GadgetBulkActionModalContent model={model} modelActionDetails={modelActionDetails} ids={ids} close={closeModal} />
       </Modal>
     </>
   );
@@ -109,20 +105,6 @@ const CenteredSpinner = () => (
 
 const ActionCompletedMessage = `Action completed`;
 const ActionSuccessMessage = `${ActionCompletedMessage} successfully`;
-
-const CustomBulkActionModalContent = (props: { modelActionDetails: ModelActionDetails; close: () => void; selectedRows: TableRow[] }) => {
-  const { modelActionDetails, selectedRows, close } = props;
-
-  if (modelActionDetails.isGadgetAction) {
-    throw new Error(`Custom action "${modelActionDetails.apiIdentifier}" is invalid`);
-  }
-
-  if (!modelActionDetails.promptComponent) {
-    throw new Error(`Failed to render custom bulk action modal content. Property "promptComponent" must be provided`);
-  }
-
-  return modelActionDetails.promptComponent({ records: selectedRows, close });
-};
 
 const RunActionConfirmationText = (props: { count: number }) => {
   const { count } = props;

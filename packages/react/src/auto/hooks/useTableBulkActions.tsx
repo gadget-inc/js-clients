@@ -1,6 +1,6 @@
 import React, { useMemo } from "react";
 import deepEqual from "react-fast-compare";
-import { ActionCallback, promptComponent, TableOptions } from "../../useTableUtils/types.js";
+import { ActionCallback, TableOptions } from "../../useTableUtils/types.js";
 import { humanizeCamelCase } from "../../utils.js";
 
 export type ModelActionDetails =
@@ -15,13 +15,12 @@ export type ModelActionDetails =
   | {
       isGadgetAction: false;
       apiIdentifier: string;
-      promptComponent?: promptComponent;
     };
 
 export type BulkActionOption = {
   promoted: boolean;
   humanizedName: string;
-  selectModelAction: () => void;
+  selectModelAction?: () => void;
   apiIdentifier: string;
   action?: (records: any[]) => any;
 };
@@ -46,7 +45,7 @@ export const useTableBulkActions = (props: {
     }
 
     if (actions) {
-      return getValidatedIncludedActions(actions, gadgetModelActionsAsBulkActionOptions, setSelectedModelActionDetails);
+      return getValidatedIncludedActions(actions, gadgetModelActionsAsBulkActionOptions);
     }
 
     return gadgetModelActionsAsBulkActionOptions; // Default - No `actions` or `excludeActions` provided
@@ -126,16 +125,17 @@ function getValidateActionsWithExclude(excludeActions: string[], gadgetModelActi
 
 const getValidatedIncludedActions = (
   actions: (string | ActionCallback)[],
-  gadgetModelActionsAsBulkActionOptions: BulkActionOption[],
-  setSelectedModelActionDetails: React.Dispatch<React.SetStateAction<ModelActionDetails | undefined>>
+  gadgetModelActionsAsBulkActionOptions: BulkActionOption[]
 ): BulkActionOption[] => {
   const bulkActions: BulkActionOption[] = [];
   for (const action of actions) {
     if (typeof action === "string") {
       bulkActions.push(getValidatedBulkModelActionOption(gadgetModelActionsAsBulkActionOptions, action));
     } else {
-      validateActionXorRender(action);
-      if ("action" in action && typeof action.action === "string") {
+      if (!("action" in action)) {
+        throw new Error("Custom action objects must have an 'action' property");
+      }
+      if (typeof action.action === "string") {
         // Relabelled Gadget model action
         bulkActions.push({
           ...getValidatedBulkModelActionOption(gadgetModelActionsAsBulkActionOptions, action.action),
@@ -143,11 +143,10 @@ const getValidatedIncludedActions = (
           promoted: action.promoted ?? false,
         });
       } else {
-        // Custom callback/renderer
+        // Custom callback function
         bulkActions.push({
           humanizedName: action.label,
-          selectModelAction: () => setSelectedModelActionDetails(getCustomCallbackModelActionDetails(action)),
-          action: "action" in action && typeof action.action === "function" ? action.action : undefined,
+          action: action.action,
           apiIdentifier: action.label,
           promoted: action.promoted ?? false,
         });
@@ -155,21 +154,6 @@ const getValidatedIncludedActions = (
     }
   }
   return bulkActions;
-};
-
-/**
- * Ensures that the action has either a callback or a render, but not both
- */
-const validateActionXorRender = (action: ActionCallback) => {
-  const label = action.label;
-
-  if ("action" in action && "promptComponent" in action) {
-    throw new Error(`Cannot have both action and promptComponent in action with label: "${label}"`);
-  }
-
-  if (!("action" in action) && !("promptComponent" in action)) {
-    throw new Error(`Missing required property "action" | "promptComponent" in action with label: "${label}"`);
-  }
 };
 
 const removeBulkPrefix = (actionName: string) => (actionName.startsWith("bulk") ? actionName.slice(4) : actionName);
@@ -185,10 +169,3 @@ const getValidatedBulkModelActionOption = (gadgetModelActionsAsBulkActionOptions
   }
   return modelAction;
 };
-
-const getCustomCallbackModelActionDetails = (action: ActionCallback) =>
-  ({
-    isGadgetAction: false,
-    apiIdentifier: action.label,
-    promptComponent: "promptComponent" in action ? action.promptComponent ?? undefined : undefined,
-  } as const);

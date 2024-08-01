@@ -253,6 +253,6 @@ const bulkActionOptionMapper = (selectedRows: TableRow[]) => {
   return (option: BulkActionOption) => ({
     id: option.humanizedName,
     content: option.humanizedName,
-    onAction: option.action ? () => option.action?.(selectedRows) : option.selectModelAction,
+    onAction: option.action ? () => option.action?.(selectedRows) : option.selectModelAction ?? (() => undefined),
   });
 };
