@@ -11,7 +11,7 @@ import { useModelMetadata } from "./metadata.js";
 import { useList } from "./useList.js";
 import { getTableColumns, getTableRows, getTableSelectionMap, getTableSpec } from "./useTableUtils/helpers.js";
 import type { TableOptions, TableResult } from "./useTableUtils/types.js";
-import { type OptionsType, type ReadOperationOptions } from "./utils.js";
+import { deepMerge, type OptionsType, type ReadOperationOptions } from "./utils.js";
 
 const getNextDirection = (sortDirection: SortOrder | undefined) => {
   switch (sortDirection) {
@@ -93,7 +93,7 @@ export const useTable = <
     ...options,
     sort: sort,
     filter: options?.filter,
-    select: selectionMap,
+    select: deepMerge(options?.select ?? {}, selectionMap),
     pause: !metadata, // Don't fetch data until metadata is loaded
   } as any);
 

@@ -16,8 +16,8 @@ export const PolarisAutoTableTagCell = (props: { value: string | string[] | Role
     if (Array.isArray(value)) {
       if (isRoleAssignmentsArray(value)) {
         formattedTags = value.map((role) => role.name);
-      } else if (typeof value[0] === "string") {
-        formattedTags = value;
+      } else {
+        formattedTags = value.map((tag) => tag.toString());
       }
     } else {
       formattedTags = [value];

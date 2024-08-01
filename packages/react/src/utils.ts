@@ -8,13 +8,12 @@ import type {
   EnqueueBackgroundActionOptions,
   FieldSelection,
   GadgetError,
-  GadgetRecord,
   InvalidFieldError,
   InvalidRecordError,
 } from "@gadgetinc/api-client-core";
 import { gadgetErrorFor, getNonNullableError, namespaceDataPath } from "@gadgetinc/api-client-core";
 import type { CombinedError, RequestPolicy } from "@urql/core";
-import type { ReactNode, RefCallback, RefObject } from "react";
+import type { RefCallback, RefObject } from "react";
 import { useMemo } from "react";
 import type { AnyVariables, Operation, OperationContext, UseQueryArgs, UseQueryState } from "urql";
 
@@ -543,24 +542,6 @@ export const isRoleAssignmentsArray = (value: ColumnValueType): value is RoleAss
   return true;
 };
 
-export type RelatedFieldColumn = {
-  field: string;
-  relatedField: string;
-};
-
-export const isRelatedFieldColumn = (value: any): value is RelatedFieldColumn => {
-  return typeof value === "object" && value !== null && "field" in value && "relatedField" in value;
-};
-
-export type CustomCellColumn = {
-  name: string;
-  render: (record: GadgetRecord<any>) => ReactNode;
-};
-
-export const isCustomCellColumn = (value: any): value is CustomCellColumn => {
-  return typeof value === "object" && value !== null && "name" in value && "render" in value;
-};
-
 /**
  * Humanizes a camelCase string by adding spaces between words and capitalizing the first letter
  * Examples
@@ -580,4 +561,17 @@ export const humanizeCamelCase = (camelCaseString: string): string => {
 
   // Capitalize the first letter
   return humanized.replace(/^./, (str) => str.toUpperCase());
+};
+
+export const deepMerge = (obj1: any, obj2: any) => {
+  for (const key in obj2) {
+    if (Object.prototype.hasOwnProperty.call(obj2, key)) {
+      if (obj2[key] instanceof Object && obj1[key] instanceof Object) {
+        obj1[key] = deepMerge(obj1[key], obj2[key]);
+      } else {
+        obj1[key] = obj2[key];
+      }
+    }
+  }
+  return obj1;
 };

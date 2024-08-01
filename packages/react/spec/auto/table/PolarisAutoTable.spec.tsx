@@ -193,28 +193,28 @@ describe("PolarisAutoTable", () => {
       newRows: [
         {
           id: "1",
-          hasOne: "has one name value",
-          hasMany: ["1", "2"],
-          belongsTo: ["belongs", "to", "enum", "value"],
+          "hasOne.hasOneName": "has one name value",
+          "hasMany.hasManyNumber": ["1", "2"],
+          "belongsTo.belongsToEnum": ["belongs", "to", "enum", "value"],
         },
       ],
       newColumns: [
         {
-          field: "hasOne",
+          field: "hasOne.hasOneName",
           relationshipType: GadgetFieldType.HasOne,
           type: GadgetFieldType.String,
           header: "Has One",
           sortable: true,
         },
         {
-          field: "hasMany",
+          field: "hasMany.hasManyNumber",
           relationshipType: GadgetFieldType.HasMany,
           type: GadgetFieldType.String,
           header: "Has Many",
           sortable: true,
         },
         {
-          field: "belongsTo",
+          field: "belongsTo.belongsToEnum",
           relationshipType: GadgetFieldType.BelongsTo,
           type: GadgetFieldType.Enum,
           header: "Belongs To",
@@ -224,15 +224,7 @@ describe("PolarisAutoTable", () => {
     });
 
     const { container } = render(
-      <PolarisAutoTable
-        model={api.widget}
-        columns={[
-          "name",
-          { field: "hasOne", relatedField: "hasOneName" },
-          { field: "hasMany", relatedField: "hasManyNumber" },
-          { field: "belongsTo", relatedField: "belongsToEnum" },
-        ]}
-      />,
+      <PolarisAutoTable model={api.widget} columns={["name", "hasOne.hasOneName", "hasMany.hasManyNumber", "belongsTo.belongsToEnum"]} />,
       {
         wrapper: PolarisMockedProviders,
       }
@@ -258,9 +250,9 @@ describe("PolarisAutoTable", () => {
   });
 
   it("should render the custom columns", () => {
-    const customCellRenderer = (record: any) => (
+    const customCellRenderer = (props: { record: any }) => (
       <div data-testid="custom-cell-div">
-        this is a custom cell: {record.id}-{record.name}
+        this is a custom cell: {props.record.id}-{props.record.name}
       </div>
     );
 
@@ -269,7 +261,7 @@ describe("PolarisAutoTable", () => {
         {
           id: "1",
           name: "hello",
-          "Custom cell": customCellRenderer({ id: "1", name: "hello" }),
+          "Custom cell": customCellRenderer({ record: { id: "1", name: "hello" } }),
         },
       ],
       newColumns: [
@@ -294,7 +286,7 @@ describe("PolarisAutoTable", () => {
         columns={[
           "name",
           {
-            name: "Custom cell",
+            header: "Custom cell",
             render: customCellRenderer,
           },
         ]}
