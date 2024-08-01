@@ -33,6 +33,8 @@ export type AutoFormProps<
   submitLabel?: ReactNode;
   /** What to show the user once the form has been submitted successfully */
   successContent?: ReactNode;
+  /** The title at the top of the form. False to omit */
+  title?: string | false;
   /** Called when the form submission completes successfully on the backend */
   onSuccess?: (record: UseActionFormHookStateData<ActionFunc>) => void;
   /** Called when the form submission errors before sending, during the API call, or if the API call returns an error. */
