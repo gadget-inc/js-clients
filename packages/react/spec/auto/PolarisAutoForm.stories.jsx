@@ -7,6 +7,7 @@ import { PolarisAutoForm } from "../../src/auto/polaris/PolarisAutoForm.tsx";
 import { PolarisAutoInput } from "../../src/auto/polaris/inputs/PolarisAutoInput.tsx";
 import { PolarisAutoSubmit } from "../../src/auto/polaris/submit/PolarisAutoSubmit.tsx";
 import { testApi as api } from "../apis.ts";
+import { StorybookErrorBoundary } from "./StorybookErrorBoundary.tsx";
 
 // More on how to set up stories at: https://storybook.js.org/docs/writing-stories#default-export
 export default {
@@ -22,7 +23,9 @@ export default {
             <FormProvider {...useForm()}>
               <Page>
                 <Card>
-                  <Story />
+                  <StorybookErrorBoundary>
+                    <Story />
+                  </StorybookErrorBoundary>
                 </Card>
               </Page>
             </FormProvider>
