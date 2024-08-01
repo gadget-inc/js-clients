@@ -1,5 +1,5 @@
 import { renderHook } from "@testing-library/react";
-import React, { isValidElement } from "react";
+import React from "react";
 import { useTable } from "../../../src/useTable.js";
 import { testApi as api } from "../../apis.js";
 import { mockUrqlClient } from "../../testWrappers.js";
@@ -43,123 +43,104 @@ describe("useTable hook", () => {
         mustBeLongString: "hellllllllllllllllllllllllllllo",
       },
     ]);
-    expect(
-      result.current[0].columns?.map((column) => {
-        const { getValue: _getValue, ...rest } = column;
-        return rest;
-      })
-    ).toEqual([
+    expect(result.current[0].columns).toEqual([
       {
-        apiIdentifier: "id",
-        fieldType: "ID",
-        isCustomCell: false,
-        name: "Id",
+        field: "id",
+        header: "Id",
         relatedField: undefined,
         sortable: false,
+        type: "ID",
       },
       {
-        apiIdentifier: "name",
-        fieldType: "String",
-        isCustomCell: false,
-        name: "Name",
+        field: "name",
+        header: "Name",
         relatedField: undefined,
         sortable: true,
+        type: "String",
       },
       {
-        apiIdentifier: "inventoryCount",
-        fieldType: "Number",
-        isCustomCell: false,
-        name: "Inventory count",
+        field: "inventoryCount",
+        header: "Inventory count",
         relatedField: undefined,
         sortable: true,
+        type: "Number",
       },
       {
-        apiIdentifier: "anything",
-        fieldType: "JSON",
-        isCustomCell: false,
-        name: "Anything",
+        field: "anything",
+        header: "Anything",
         relatedField: undefined,
         sortable: true,
+        type: "JSON",
       },
       {
-        apiIdentifier: "description",
-        fieldType: "RichText",
-        isCustomCell: false,
-        name: "Description",
+        field: "description",
+        header: "Description",
         relatedField: undefined,
         sortable: true,
+        type: "RichText",
       },
       {
-        apiIdentifier: "category",
-        fieldType: "Enum",
-        isCustomCell: false,
-        name: "Category",
+        field: "category",
+        header: "Category",
         relatedField: undefined,
         sortable: true,
+        type: "Enum",
       },
       {
-        apiIdentifier: "startsAt",
-        fieldType: "DateTime",
-        isCustomCell: false,
-        name: "Starts at",
+        field: "startsAt",
+        header: "Starts at",
         relatedField: undefined,
         sortable: true,
+        type: "DateTime",
       },
       {
-        apiIdentifier: "isChecked",
-        fieldType: "Boolean",
-        isCustomCell: false,
-        name: "Is checked",
+        field: "isChecked",
+        header: "Is checked",
         relatedField: undefined,
         sortable: true,
+        type: "Boolean",
       },
       {
-        apiIdentifier: "metafields",
-        fieldType: "JSON",
-        isCustomCell: false,
-        name: "Metafields",
+        field: "metafields",
+        header: "Metafields",
         relatedField: undefined,
         sortable: true,
+        type: "JSON",
       },
       {
-        apiIdentifier: "roles",
-        fieldType: "RoleAssignments",
-        isCustomCell: false,
-        name: "Roles",
+        field: "roles",
+        header: "Roles",
         relatedField: undefined,
         sortable: false,
+        type: "RoleAssignments",
       },
       {
-        apiIdentifier: "birthday",
-        fieldType: "DateTime",
-        isCustomCell: false,
-        name: "Birthday",
+        field: "birthday",
+        header: "Birthday",
         relatedField: undefined,
         sortable: true,
+        type: "DateTime",
       },
       {
-        apiIdentifier: "color",
-        fieldType: "Color",
-        isCustomCell: false,
-        name: "Color",
+        field: "color",
+        header: "Color",
         relatedField: undefined,
         sortable: true,
+        type: "Color",
       },
       {
-        apiIdentifier: "secretKey",
-        fieldType: "EncryptedString",
-        isCustomCell: false,
-        name: "Secret key",
+        field: "secretKey",
+        header: "Secret key",
         relatedField: undefined,
         sortable: false,
+        type: "EncryptedString",
       },
       {
-        apiIdentifier: "mustBeLongString",
-        fieldType: "String",
-        isCustomCell: false,
-        name: "Must be long string",
+        field: "mustBeLongString",
+        header: "Must be long string",
         relatedField: undefined,
         sortable: true,
+        type: "String",
       },
     ]);
   });
@@ -198,7 +179,7 @@ describe("useTable hook", () => {
           }
         }"
       `);
-      expect(result.current[0].columns?.map((column) => column.apiIdentifier)).toEqual(["name", "inventoryCount"]);
+      expect(result.current[0].columns?.map((column) => column.field)).toEqual(["name", "inventoryCount"]);
       expect(result.current[0].rows).toMatchInlineSnapshot(`
               [
                 {
@@ -257,35 +238,17 @@ describe("useTable hook", () => {
           }
         }"
       `);
-      expect(result.current[0].columns?.map((column) => column.apiIdentifier)).toEqual(["name", "hasMany", "hasOne", "belongsTo"]);
+      expect(result.current[0].columns?.map((column) => column.field)).toEqual(["name", "hasMany", "hasOne", "belongsTo"]);
       expect(result.current[0].rows).toMatchInlineSnapshot(`
         [
           {
-            "belongsTo": {
-              "str": "foo",
-            },
-            "hasMany": {
-              "edges": [
-                {
-                  "node": {
-                    "name": "gizmo 9",
-                  },
-                },
-                {
-                  "node": {
-                    "name": "gizmo 10",
-                  },
-                },
-                {
-                  "node": {
-                    "name": "gizmo 11",
-                  },
-                },
-              ],
-            },
-            "hasOne": {
-              "name": "gizmo 12",
-            },
+            "belongsTo": "foo",
+            "hasMany": [
+              "gizmo 9",
+              "gizmo 10",
+              "gizmo 11",
+            ],
+            "hasOne": "gizmo 12",
             "id": undefined,
             "name": "hello",
           },
@@ -346,35 +309,17 @@ describe("useTable hook", () => {
           }
         }"
       `);
-      expect(result.current[0].columns?.map((column) => column.apiIdentifier)).toEqual(["name", "hasMany", "hasOne", "belongsTo"]);
+      expect(result.current[0].columns?.map((column) => column.field)).toEqual(["name", "hasMany", "hasOne", "belongsTo"]);
       expect(result.current[0].rows).toMatchInlineSnapshot(`
         [
           {
-            "belongsTo": {
-              "str": "foo",
-            },
-            "hasMany": {
-              "edges": [
-                {
-                  "node": {
-                    "name": "gizmo 9",
-                  },
-                },
-                {
-                  "node": {
-                    "name": "gizmo 10",
-                  },
-                },
-                {
-                  "node": {
-                    "name": "gizmo 11",
-                  },
-                },
-              ],
-            },
-            "hasOne": {
-              "name": "gizmo 12",
-            },
+            "belongsTo": "foo",
+            "hasMany": [
+              "gizmo 9",
+              "gizmo 10",
+              "gizmo 11",
+            ],
+            "hasOne": "gizmo 12",
             "id": undefined,
             "name": "hello",
           },
@@ -454,33 +399,22 @@ describe("useTable hook", () => {
       loadMockWidgetModelMetadataForRelationship();
       loadMockWidgetDataForRelationship();
 
-      expect(
-        result.current[0].columns?.map((column) => {
-          const { getValue: _getValue, ...rest } = column;
-          return rest;
-        })
-      ).toMatchInlineSnapshot(`
+      expect(result.current[0].columns).toMatchInlineSnapshot(`
         [
           {
-            "apiIdentifier": "name",
-            "fieldType": "String",
-            "isCustomCell": false,
-            "name": "Name",
-            "relatedField": undefined,
+            "field": "name",
+            "header": "Name",
             "sortable": true,
+            "type": "String",
           },
           {
-            "apiIdentifier": "Custom column",
-            "isCustomCell": true,
-            "name": "Custom column",
+            "field": "Custom column",
+            "header": "Custom column",
             "sortable": false,
+            "type": "CustomRenderer",
           },
         ]
       `);
-
-      const customColumnGetValueResult = result.current[0].columns![1].getValue({ name: "foo" });
-      // Expect the getValue result to be a valid React element
-      expect(isValidElement(customColumnGetValueResult)).toBe(true);
     });
   });
 
@@ -551,7 +485,7 @@ describe("useTable hook", () => {
       `);
 
       // The list should not contain "name" and "inventoryCount" because they are excluded
-      expect(result.current[0].columns?.map((column) => column.apiIdentifier)).toEqual([
+      expect(result.current[0].columns?.map((column) => column.field)).toEqual([
         "id",
         "anything",
         "description",
@@ -918,6 +852,12 @@ const loadMockWidgetModelMetadataForRelationship = () => {
                       fieldType: "String",
                       __typename: "GadgetModelField",
                     },
+                    {
+                      name: "Email",
+                      apiIdentifier: "email",
+                      fieldType: "Email",
+                      __typename: "GadgetModelField",
+                    },
                   ],
                   __typename: "GadgetModel",
                 },
@@ -968,6 +908,7 @@ const loadMockWidgetDataForRelationship = () => {
               },
               belongsTo: {
                 str: "foo",
+                email: "foo",
               },
               startsAt: "2024-07-01T01:00:00.000Z",
               updatedAt: "2023-09-21T17:19:11.197Z",

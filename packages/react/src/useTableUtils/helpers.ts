@@ -3,7 +3,7 @@ import type { FieldMetadataFragment } from "../internal/gql/graphql.js";
 import { GadgetFieldType } from "../internal/gql/graphql.js";
 import { acceptedAutoTableFieldTypes, filterAutoTableFieldList } from "../metadata.js";
 import { isCustomCellColumn, isRelatedFieldColumn } from "../utils.js";
-import type { TableColumn, TableOptions, TableRow } from "./types.js";
+import type { RelationshipType, TableColumn, TableOptions, TableRow } from "./types.js";
 
 type ColumnsOption = Exclude<TableOptions["columns"], undefined>;
 
@@ -140,46 +140,39 @@ export const getTableColumns = (spec: TableSpec) => {
   for (const targetColumn of spec.targetColumns) {
     if (isCustomCellColumn(targetColumn)) {
       columns.push({
-        name: targetColumn.name,
-        apiIdentifier: targetColumn.name,
-        getValue: (record) => targetColumn.render(record),
-        isCustomCell: true,
+        header: targetColumn.name,
+        field: targetColumn.name,
+        type: "CustomRenderer",
         sortable: false,
       });
-      continue;
-    }
+    } else {
+      const field = _getFieldMetadataByApiIdentifier(spec, isRelatedFieldColumn(targetColumn) ? targetColumn.field : targetColumn);
 
-    const field = _getFieldMetadataByApiIdentifier(spec, isRelatedFieldColumn(targetColumn) ? targetColumn.field : targetColumn);
+      const column: TableColumn = {
+        header: field.name,
+        field: field.apiIdentifier,
+        type: field.fieldType,
+        sortable: "sortable" in field && field.sortable,
+      };
 
-    const relatedModel = maybeGetRelatedModelFromRelationshipField(field);
-    const relatedField = isRelatedFieldColumn(targetColumn)
-      ? relatedModel?.fields?.find((field) => field.apiIdentifier === targetColumn.relatedField)
-      : relatedModel
-      ? {
-          name: relatedModel.defaultDisplayField.name,
-          apiIdentifier: relatedModel.defaultDisplayField.apiIdentifier,
-          fieldType: relatedModel.defaultDisplayField.fieldType,
+      const relatedModel = maybeGetRelatedModelFromRelationshipField(field);
+      if (relatedModel) {
+        const relatedField = isRelatedFieldColumn(targetColumn)
+          ? relatedModel.fields?.find((field) => field.apiIdentifier === targetColumn.relatedField)
+          : {
+              name: relatedModel.defaultDisplayField.name,
+              apiIdentifier: relatedModel.defaultDisplayField.apiIdentifier,
+              fieldType: relatedModel.defaultDisplayField.fieldType,
+            };
+
+        if (relatedField) {
+          column.type = relatedField.fieldType;
+          column.relationshipType = field.fieldType as RelationshipType;
         }
-      : undefined;
+      }
 
-    columns.push({
-      name: field.name,
-      apiIdentifier: field.apiIdentifier,
-      fieldType: field.fieldType,
-      sortable: "sortable" in field && field.sortable,
-      getValue: (record) => record[field.apiIdentifier],
-      isCustomCell: false,
-      relatedField: relatedField
-        ? {
-            name: relatedField.name,
-            apiIdentifier: relatedField.apiIdentifier,
-            fieldType: relatedField.fieldType,
-            sortable: "sortable" in field && field.sortable,
-            getValue: (record) => record[field.apiIdentifier],
-            isCustomCell: false,
-          }
-        : undefined,
-    });
+      columns.push(column);
+    }
   }
 
   return columns;
@@ -203,10 +196,30 @@ const _recordToRow = (spec: TableSpec, record: GadgetRecord<any>) => {
 
     if (isCustomCellColumn(targetColumn)) {
       row[columnApiIdentifier] = targetColumn.render(record);
-      continue;
-    }
+    } else {
+      const field = _getFieldMetadataByApiIdentifier(spec, isRelatedFieldColumn(targetColumn) ? targetColumn.field : targetColumn);
 
-    row[columnApiIdentifier] = record[columnApiIdentifier];
+      const relatedModel = maybeGetRelatedModelFromRelationshipField(field);
+      if (relatedModel) {
+        const relatedField = isRelatedFieldColumn(targetColumn)
+          ? relatedModel.fields?.find((field) => field.apiIdentifier === targetColumn.relatedField)
+          : {
+              name: relatedModel.defaultDisplayField.name,
+              apiIdentifier: relatedModel.defaultDisplayField.apiIdentifier,
+              fieldType: relatedModel.defaultDisplayField.fieldType,
+            };
+
+        if (relatedField) {
+          if (field.fieldType === GadgetFieldType.HasOne || field.fieldType === GadgetFieldType.BelongsTo) {
+            row[columnApiIdentifier] = record[columnApiIdentifier]?.[relatedField.apiIdentifier];
+          } else {
+            row[columnApiIdentifier] = record[columnApiIdentifier]?.edges.map((edge: any) => edge.node[relatedField.apiIdentifier]);
+          }
+        }
+      } else {
+        row[columnApiIdentifier] = record[columnApiIdentifier];
+      }
+    }
   }
 
   return row;

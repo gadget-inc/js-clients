@@ -46,7 +46,7 @@ const gadgetToPolarisDirection = (direction?: SortOrder) => {
 };
 
 const getColumnIndex = (columns: TableColumn[], apiIdentifier: string | undefined) => {
-  return columns.findIndex((column) => column.apiIdentifier === apiIdentifier);
+  return columns.findIndex((column) => column.field === apiIdentifier);
 };
 
 /**
@@ -95,7 +95,7 @@ const PolarisAutoTableComponent = <
 
   const handleColumnSort = (headingIndex: number) => {
     if (columns) {
-      const columnApiIdentifier = columns[headingIndex].apiIdentifier;
+      const columnApiIdentifier = columns[headingIndex].field;
       sort.handleColumnSort(columnApiIdentifier);
     }
   };
@@ -115,7 +115,7 @@ const PolarisAutoTableComponent = <
 
     if (columns) {
       for (const column of columns) {
-        headings.push({ title: column.name });
+        headings.push({ title: column.header });
         sortable.push(column.sortable);
       }
     }
@@ -220,12 +220,12 @@ const PolarisAutoTableComponent = <
               selected={selection.recordIds.includes(row.id as string)}
             >
               {columns.map((column) => (
-                <IndexTable.Cell key={column.apiIdentifier}>
+                <IndexTable.Cell key={column.field}>
                   <div style={{ maxWidth: "200px" }}>
-                    {column.isCustomCell ? (
-                      (row[column.apiIdentifier] as ReactNode)
+                    {column.type == "CustomRenderer" ? (
+                      (row[column.field] as ReactNode)
                     ) : (
-                      <PolarisAutoTableCellRenderer column={column} value={row[column.apiIdentifier] as ColumnValueType} />
+                      <PolarisAutoTableCellRenderer column={column} value={row[column.field] as ColumnValueType} />
                     )}
                   </div>
                 </IndexTable.Cell>

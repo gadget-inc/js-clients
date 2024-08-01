@@ -8,7 +8,10 @@ describe("PolarisAutoTableCellRenderer", () => {
     cy.mountWithWrapper(
       <PolarisAutoTableCellRenderer
         column={{
-          fieldType: FieldType.String,
+          header: "String",
+          field: "string",
+          sortable: true,
+          type: FieldType.String,
         }}
         value="Hello, World!"
       />,
@@ -20,7 +23,10 @@ describe("PolarisAutoTableCellRenderer", () => {
     cy.mountWithWrapper(
       <PolarisAutoTableCellRenderer
         column={{
-          fieldType: FieldType.DateTime,
+          header: "Date",
+          field: "date",
+          sortable: true,
+          type: FieldType.DateTime,
         }}
         value={new Date("2024-07-01T01:00:00.000Z")}
       />,
@@ -32,7 +38,10 @@ describe("PolarisAutoTableCellRenderer", () => {
     cy.mountWithWrapper(
       <PolarisAutoTableCellRenderer
         column={{
-          fieldType: FieldType.Enum,
+          header: "Enum",
+          field: "enum",
+          sortable: true,
+          type: FieldType.Enum,
         }}
         value={["foo", "bar"]}
       />,
@@ -47,7 +56,10 @@ describe("PolarisAutoTableCellRenderer", () => {
     cy.mountWithWrapper(
       <PolarisAutoTableCellRenderer
         column={{
-          fieldType: FieldType.String,
+          header: "String",
+          field: "string",
+          sortable: true,
+          type: FieldType.String,
         }}
         value={null}
       />,

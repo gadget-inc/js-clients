@@ -8,26 +8,17 @@ import type { PaginationResult } from "../useList.js";
 import type { RecordSelection } from "../useSelectedRecordsController.js";
 import type { ColumnValueType, CustomCellColumn, ErrorWrapper, RelatedFieldColumn } from "../utils.js";
 
-type BaseTableColumn = {
-  name: string;
-  apiIdentifier: string;
-};
+export type ColumnType = GadgetFieldType | "CustomRenderer";
 
-export type RecordTableColumnValue = BaseTableColumn & {
-  fieldType: GadgetFieldType;
+export type RelationshipType = GadgetFieldType.HasMany | GadgetFieldType.HasOne | GadgetFieldType.BelongsTo;
+
+export type TableColumn = {
+  header: string;
+  field: string;
+  type: ColumnType;
+  relationshipType?: RelationshipType;
   sortable: boolean;
-  relatedField?: RecordTableColumnValue;
-  getValue: (record: GadgetRecord<any>) => ColumnValueType;
-  isCustomCell: false;
 };
-
-export type CustomTableColumnValue = BaseTableColumn & {
-  getValue: (record: GadgetRecord<any>) => ReactNode;
-  isCustomCell: true;
-  sortable: false;
-};
-
-export type TableColumn = RecordTableColumnValue | CustomTableColumnValue;
 
 export type TableRow = Record<string, ColumnValueType | ReactNode>;
 
