@@ -106,14 +106,7 @@ export const SelectRelatedFieldsHasOne = {
   name: "Select related fields - has one relationship",
   args: {
     model: api.autoTableTest,
-    columns: [
-      "str",
-      "num",
-      {
-        field: "hasOne",
-        relatedField: "name",
-      },
-    ],
+    columns: ["str", "num", "hasOne.name"],
   },
 };
 
@@ -129,14 +122,7 @@ export const SelectRelatedFieldsHasMany = {
   name: "Select related fields - has many relationship",
   args: {
     model: api.autoTableTest,
-    columns: [
-      "str",
-      "num",
-      {
-        field: "hasMany",
-        relatedField: "name",
-      },
-    ],
+    columns: ["str", "num", "hasMany.edges.node.name"],
   },
 };
 
@@ -152,13 +138,7 @@ export const SelectRelatedFieldsBelongsTo = {
   name: "Select related fields - belongs to relationship",
   args: {
     model: api._autoTableTestRelatedModel,
-    columns: [
-      "name",
-      {
-        field: "belongsToParent",
-        relatedField: "str",
-      },
-    ],
+    columns: ["name", "belongsToParent.str"],
   },
 };
 
@@ -170,24 +150,66 @@ export const LiveData = {
   },
 };
 
+export const huh = {
+  args: {
+    model: api.autoTableTest,
+    columns: [{ header: "custom", render: () => <p>hello</p> }],
+  },
+};
+
 export const CustomCell = {
   args: {
     model: api.autoTableTest,
     columns: [
       "str",
       "file",
+      "hasOne",
+      "hasOne.name",
       {
-        field: "hasOne",
-        relatedField: "name",
+        header: "Has one number",
+        field: "hasOne.someNumber",
       },
       "hasMany",
+      "hasMany.edges.node.name",
+      {
+        header: "Has many number",
+        field: "hasMany.edges.node.someNumber",
+      },
       "rt",
       {
-        name: "Custom cell",
-        render: (record) => {
+        header: "Custom cell",
+        render: ({ record }) => {
           return (
             <div>
               Custom cell, num field: {record.num} ({record.id})
+            </div>
+          );
+        },
+      },
+    ],
+  },
+};
+
+export const SelectProperty = {
+  args: {
+    model: api.autoTableTest,
+    select: {
+      hasMany: {
+        edges: {
+          node: {
+            name: true,
+          },
+        },
+      },
+      id: true,
+    },
+    columns: [
+      {
+        header: "Custom cell",
+        render: ({ record }) => {
+          return (
+            <div>
+              Custom cell, has many field: {JSON.stringify(record.hasMany.edges.map((edge) => edge.node.name))} ({record.id})
             </div>
           );
         },
@@ -224,8 +246,8 @@ export const CustomCellWithDeleteButton = {
     columns: [
       "str",
       {
-        name: "Actions",
-        render: (record) => {
+        header: "Actions",
+        render: ({ record }) => {
           return <CustomDeleteButtonCellRenderer record={record} />;
         },
       },
@@ -299,7 +321,7 @@ export const CustomEmptyState = {
     filter: { AND: [{ bool: { equals: false } }, { bool: { equals: true } }] },
     model: api.autoTableTest,
     emptyState: CustomEmptyStateMarkup,
-  }
+  },
 };
 
 export const HideSearchAndPagination = {

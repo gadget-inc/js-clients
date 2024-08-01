@@ -99,6 +99,9 @@ export const widgetModelInputFields = {
                 apiIdentifier: "widget",
                 fieldType: "BelongsTo",
                 __typename: "GadgetModelField",
+                configuration: {
+                  __typename: "GadgetBelongsToConfig",
+                },
               },
               {
                 name: "Created at",

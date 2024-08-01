@@ -258,12 +258,7 @@ describe("useTable hook", () => {
 
     it("should return the related model field if the column values are relationship fields", async () => {
       const result = getUseTableResult({
-        columns: [
-          "name",
-          { field: "hasMany", relatedField: "name" },
-          { field: "hasOne", relatedField: "name" },
-          { field: "belongsTo", relatedField: "str" },
-        ],
+        columns: ["name", "hasMany.edges.node.name", "hasOne.name", "belongsTo.str"],
       });
       loadMockWidgetModelMetadataForRelationship();
       loadMockWidgetDataForRelationship();
@@ -309,17 +304,22 @@ describe("useTable hook", () => {
           }
         }"
       `);
-      expect(result.current[0].columns?.map((column) => column.field)).toEqual(["name", "hasMany", "hasOne", "belongsTo"]);
+      expect(result.current[0].columns?.map((column) => column.field)).toEqual([
+        "name",
+        "hasMany.edges.node.name",
+        "hasOne.name",
+        "belongsTo.str",
+      ]);
       expect(result.current[0].rows).toMatchInlineSnapshot(`
         [
           {
-            "belongsTo": "foo",
-            "hasMany": [
+            "belongsTo.str": "foo",
+            "hasMany.edges.node.name": [
               "gizmo 9",
               "gizmo 10",
               "gizmo 11",
             ],
-            "hasOne": "gizmo 12",
+            "hasOne.name": "gizmo 12",
             "id": undefined,
             "name": "hello",
           },
@@ -345,7 +345,7 @@ describe("useTable hook", () => {
       let error: Error | undefined;
       try {
         getUseTableResult({
-          columns: [{ field: "name", relatedField: "invalid" }],
+          columns: ["name.invalid"],
         });
         loadMockWidgetModelMetadataForRelationship();
         loadMockWidgetDataForRelationship();
@@ -353,14 +353,14 @@ describe("useTable hook", () => {
         error = err as Error;
       }
 
-      expect(error!.message).toBe("Related field 'invalid' does not exist in the related model");
+      expect(error!.message).toBe("Field 'name.invalid' does not exist in the model");
     });
 
     it("should throw an error if the related field does not exist", async () => {
       let error: Error | undefined;
       try {
         getUseTableResult({
-          columns: [{ field: "hasOne", relatedField: "invalid" }],
+          columns: ["hasOne.invalid"],
         });
         loadMockWidgetModelMetadataForRelationship();
         loadMockWidgetDataForRelationship();
@@ -368,14 +368,14 @@ describe("useTable hook", () => {
         error = err as Error;
       }
 
-      expect(error!.message).toBe("Related field 'invalid' does not exist in the related model");
+      expect(error!.message).toBe("Field 'invalid' does not exist in the related model");
     });
 
     it("should throw an error if the relationship field does not exist", async () => {
       let error: Error | undefined;
       try {
         getUseTableResult({
-          columns: [{ field: "notExist", relatedField: "name" }],
+          columns: ["notExist.name"],
         });
         loadMockWidgetModelMetadataForRelationship();
         loadMockWidgetDataForRelationship();
@@ -391,8 +391,8 @@ describe("useTable hook", () => {
         columns: [
           "name",
           {
-            name: "Custom column",
-            render: (record) => <div>hello {record.name}</div>,
+            header: "Custom column",
+            render: ({ record }) => <div>hello {record.name}</div>,
           },
         ],
       });
@@ -423,7 +423,7 @@ describe("useTable hook", () => {
       let error: Error | undefined;
       try {
         getUseTableResult({
-          columns: [{ field: "hasOne", relatedField: "invalid" }],
+          columns: ["hasOne.invalid"],
           excludeColumns: ["name"],
         });
         loadMockWidgetModelMetadataForRelationship();
@@ -534,8 +534,8 @@ describe("useTable hook", () => {
         columns: [
           "name",
           {
-            name: "Custom column",
-            render: (record) => {
+            header: "Custom column",
+            render: ({ record }) => {
               recordFromRender = record;
               return <div>some custom stuff</div>;
             },
@@ -596,6 +596,59 @@ describe("useTable hook", () => {
       expect(recordFromRender.name).toBe("foo");
       // "inventoryCount" should be included in the record even though it's not in the columns
       expect(recordFromRender.inventoryCount).toBe(1);
+    });
+  });
+
+  describe("select property", () => {
+    it("should combine the selected fields from the `select` property and the `columns` property", () => {
+      const result = getUseTableResult({
+        select: {
+          gizmos: {
+            edges: {
+              node: {
+                name: true,
+              },
+            },
+          },
+        },
+        columns: ["name", "inventoryCount"],
+      });
+      loadMockWidgetModelMetadata();
+      loadWidgetData();
+
+      // The "gizmos" field should be included in the query even though it's not in the columns
+      expect(mockUrqlClient.executeQuery.mock.calls[1][0].query.loc.source.body).toMatchInlineSnapshot(`
+        "query widgets($after: String, $first: Int, $before: String, $last: Int) {
+          widgets(after: $after, first: $first, before: $before, last: $last) {
+            pageInfo {
+              hasNextPage
+              hasPreviousPage
+              startCursor
+              endCursor
+            }
+            edges {
+              cursor
+              node {
+                gizmos {
+                  edges {
+                    node {
+                      name
+                    }
+                  }
+                }
+                id
+                name
+                inventoryCount
+                __typename
+              }
+            }
+          }
+          gadgetMeta {
+            hydrations(modelName: 
+        "widget")
+          }
+        }"
+      `);
     });
   });
 });

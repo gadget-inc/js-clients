@@ -4384,6 +4384,8 @@ export type InternalMutations = {
   triggerDeleteUser?: Maybe<DeleteUserResult>;
   triggerDeleteWidget?: Maybe<DeleteWidgetResult>;
   triggerFlipAll?: Maybe<FlipAllResult>;
+  triggerNoTriggerActionAutoTableTest?: Maybe<NoTriggerActionAutoTableTestResult>;
+  triggerNoTriggerGlobalAction?: Maybe<NoTriggerGlobalActionResult>;
   triggerSignInUser?: Maybe<SignInUserResult>;
   triggerSignOutUser?: Maybe<SignOutUserResult>;
   triggerSignUpUser?: Maybe<SignUpUserResult>;
@@ -4713,6 +4715,18 @@ export type InternalMutationsTriggerDeleteWidgetArgs = {
 export type InternalMutationsTriggerFlipAllArgs = {
   inventoryCount?: InputMaybe<Scalars["Float"]["input"]>;
   title?: InputMaybe<Scalars["String"]["input"]>;
+  trigger?: InputMaybe<Scalars["JSONObject"]["input"]>;
+  verifyTriggerExists?: InputMaybe<Scalars["Boolean"]["input"]>;
+};
+
+export type InternalMutationsTriggerNoTriggerActionAutoTableTestArgs = {
+  context?: InputMaybe<AppGraphQlTriggerMutationContext>;
+  params?: InputMaybe<Scalars["JSONObject"]["input"]>;
+  trigger?: InputMaybe<Scalars["JSONObject"]["input"]>;
+  verifyTriggerExists?: InputMaybe<Scalars["Boolean"]["input"]>;
+};
+
+export type InternalMutationsTriggerNoTriggerGlobalActionArgs = {
   trigger?: InputMaybe<Scalars["JSONObject"]["input"]>;
   verifyTriggerExists?: InputMaybe<Scalars["Boolean"]["input"]>;
 };
@@ -6225,6 +6239,21 @@ export type NestedWidgetUpdateInput = {
   secretKey?: InputMaybe<Scalars["String"]["input"]>;
   section?: InputMaybe<SectionBelongsToInput>;
   startsAt?: InputMaybe<Scalars["DateTime"]["input"]>;
+};
+
+export type NoTriggerActionAutoTableTestResult = {
+  __typename?: "NoTriggerActionAutoTableTestResult";
+  actionRun?: Maybe<Scalars["String"]["output"]>;
+  autoTableTest?: Maybe<AutoTableTest>;
+  errors?: Maybe<Array<ExecutionError>>;
+  success: Scalars["Boolean"]["output"];
+};
+
+export type NoTriggerGlobalActionResult = {
+  __typename?: "NoTriggerGlobalActionResult";
+  errors?: Maybe<Array<ExecutionError>>;
+  result?: Maybe<Scalars["JSON"]["output"]>;
+  success: Scalars["Boolean"]["output"];
 };
 
 /** Input object for updating a numeric field's value in a race-safe way in the internal API */
