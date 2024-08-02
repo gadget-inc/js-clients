@@ -18,4 +18,13 @@ export const simpleExampleApi = new SimpleClient({ environment: "Development" })
 export const kitchenSinkApi = new KitchenSinkClient({ environment: "Development" });
 export const hasManyThroughApi = new ManyThroughClient({ environment: "Development" });
 export const fileFieldApi = new FileFieldClient({ environment: "Development" });
-export const testApi = new TestClient({ environment: "Development" });
+export const testApi = new TestClient({
+  environment: "Development",
+  authenticationMode:
+    "VITE_JS_CLIENTS_TEST_API_KEY" in (import.meta as any)
+      ? ({
+          apiKey: (import.meta as any).env.VITE_JS_CLIENTS_TEST_API_KEY,
+          dangerouslyAllowBrowserApiKey: true,
+        } as any)
+      : undefined,
+});

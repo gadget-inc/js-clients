@@ -251,6 +251,12 @@ export const SelectProperty = {
   },
 };
 
+export const ShopifyShopModel = {
+  args: {
+    model: api.shopifyShop,
+  },
+};
+
 const CustomDeleteButtonCellRenderer = (props) => {
   const [{ error, fetching }, _delete] = useAction(api.autoTableTest.delete);
 
