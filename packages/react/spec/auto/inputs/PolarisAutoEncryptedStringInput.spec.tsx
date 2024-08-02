@@ -5,6 +5,7 @@ import React from "react";
 import { PolarisAutoEncryptedStringInput } from "../../../src/auto/polaris/inputs/PolarisAutoEncryptedStringInput.js";
 import type { ActionMetadata } from "../../../src/metadata.js";
 import { MockForm } from "../MockForm.js";
+import { apiTriggerOnly } from "../support/Triggers.js";
 
 describe("PolarisEncryptedStringInput", () => {
   let result: RenderResult;
@@ -39,6 +40,7 @@ const metadata: ActionMetadata = {
   action: {
     name: "Create",
     apiIdentifier: "create",
+    triggers: apiTriggerOnly,
     inputFields: [
       {
         name: "Widget",

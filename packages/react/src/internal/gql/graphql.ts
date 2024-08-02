@@ -166,7 +166,6 @@ export type AutoTableTestBelongsToInput = {
   _link?: InputMaybe<Scalars["GadgetID"]["input"]>;
   create?: InputMaybe<NestedAutoTableTestCreateInput>;
   customAction?: InputMaybe<NestedAutoTableTestCustomActionInput>;
-  customActionWithParams?: InputMaybe<NestedAutoTableTestCustomActionWithParamsInput>;
   delete?: InputMaybe<NestedAutoTableTestDeleteInput>;
   update?: InputMaybe<NestedAutoTableTestUpdateInput>;
   updateWithCustomParams?: InputMaybe<NestedAutoTableTestUpdateWithCustomParamsInput>;
@@ -370,10 +369,8 @@ export type BackgroundActionResult =
   | CreateModelAResult
   | CreatePartResult
   | CreateSectionResult
-  | CreateTestDataResult
   | CreateWidgetResult
   | CustomActionAutoTableTestResult
-  | CustomActionWithParamsAutoTableTestResult
   | DeleteAutoTableTestRelatedModelResult
   | DeleteAutoTableTestResult
   | DeleteGameCityResult
@@ -635,7 +632,6 @@ export type BackgroundMutations = {
   bulkCreateSections: BulkEnqueueBackgroundActionResult;
   bulkCreateWidgets: BulkEnqueueBackgroundActionResult;
   bulkCustomActionAutoTableTests: BulkEnqueueBackgroundActionResult;
-  bulkCustomActionWithParamsAutoTableTests: BulkEnqueueBackgroundActionResult;
   bulkDeleteAutoTableTestRelatedModels: BulkEnqueueBackgroundActionResult;
   bulkDeleteAutoTableTests: BulkEnqueueBackgroundActionResult;
   bulkDeleteGizmos: BulkEnqueueBackgroundActionResult;
@@ -670,10 +666,8 @@ export type BackgroundMutations = {
   createModelA: EnqueueBackgroundActionResult;
   createPart: EnqueueBackgroundActionResult;
   createSection: EnqueueBackgroundActionResult;
-  createTestData: EnqueueBackgroundActionResult;
   createWidget: EnqueueBackgroundActionResult;
   customActionAutoTableTest: EnqueueBackgroundActionResult;
-  customActionWithParamsAutoTableTest: EnqueueBackgroundActionResult;
   deleteAutoTableTest: EnqueueBackgroundActionResult;
   deleteAutoTableTestRelatedModel: EnqueueBackgroundActionResult;
   deleteGizmo: EnqueueBackgroundActionResult;
@@ -765,11 +759,6 @@ export type BackgroundMutationsBulkCreateWidgetsArgs = {
 export type BackgroundMutationsBulkCustomActionAutoTableTestsArgs = {
   backgroundOptions?: InputMaybe<EnqueueBackgroundActionOptions>;
   ids: Array<Scalars["GadgetID"]["input"]>;
-};
-
-export type BackgroundMutationsBulkCustomActionWithParamsAutoTableTestsArgs = {
-  backgroundOptions?: InputMaybe<EnqueueBackgroundActionOptions>;
-  inputs: Array<BulkCustomActionWithParamsAutoTableTestsInput>;
 };
 
 export type BackgroundMutationsBulkDeleteAutoTableTestRelatedModelsArgs = {
@@ -941,10 +930,6 @@ export type BackgroundMutationsCreateSectionArgs = {
   section?: InputMaybe<CreateSectionInput>;
 };
 
-export type BackgroundMutationsCreateTestDataArgs = {
-  backgroundOptions?: InputMaybe<EnqueueBackgroundActionOptions>;
-};
-
 export type BackgroundMutationsCreateWidgetArgs = {
   backgroundOptions?: InputMaybe<EnqueueBackgroundActionOptions>;
   widget?: InputMaybe<CreateWidgetInput>;
@@ -953,13 +938,6 @@ export type BackgroundMutationsCreateWidgetArgs = {
 export type BackgroundMutationsCustomActionAutoTableTestArgs = {
   backgroundOptions?: InputMaybe<EnqueueBackgroundActionOptions>;
   id: Scalars["GadgetID"]["input"];
-};
-
-export type BackgroundMutationsCustomActionWithParamsAutoTableTestArgs = {
-  backgroundOptions?: InputMaybe<EnqueueBackgroundActionOptions>;
-  id: Scalars["GadgetID"]["input"];
-  numberParam1?: InputMaybe<Scalars["Float"]["input"]>;
-  stringParam1?: InputMaybe<Scalars["String"]["input"]>;
 };
 
 export type BackgroundMutationsDeleteAutoTableTestArgs = {
@@ -1331,23 +1309,6 @@ export type BulkCreateWidgetsResult = {
 /** The output when running the customAction on the autoTableTest model in bulk. */
 export type BulkCustomActionAutoTableTestsResult = {
   __typename?: "BulkCustomActionAutoTableTestsResult";
-  /** The list of all changed autoTableTest records by each sent bulk action. Returned in the same order as the input bulk action params. */
-  autoTableTests?: Maybe<Array<Maybe<AutoTableTest>>>;
-  /** Aggregated list of errors that any bulk action encountered while processing */
-  errors?: Maybe<Array<ExecutionError>>;
-  /** Boolean describing if all the bulk actions succeeded or not */
-  success: Scalars["Boolean"]["output"];
-};
-
-export type BulkCustomActionWithParamsAutoTableTestsInput = {
-  id: Scalars["GadgetID"]["input"];
-  numberParam1?: InputMaybe<Scalars["Float"]["input"]>;
-  stringParam1?: InputMaybe<Scalars["String"]["input"]>;
-};
-
-/** The output when running the customActionWithParams on the autoTableTest model in bulk. */
-export type BulkCustomActionWithParamsAutoTableTestsResult = {
-  __typename?: "BulkCustomActionWithParamsAutoTableTestsResult";
   /** The list of all changed autoTableTest records by each sent bulk action. Returned in the same order as the input bulk action params. */
   autoTableTests?: Maybe<Array<Maybe<AutoTableTest>>>;
   /** Aggregated list of errors that any bulk action encountered while processing */
@@ -5558,7 +5519,6 @@ export type Mutation = {
   bulkCreateSections?: Maybe<BulkCreateSectionsResult>;
   bulkCreateWidgets?: Maybe<BulkCreateWidgetsResult>;
   bulkCustomActionAutoTableTests?: Maybe<BulkCustomActionAutoTableTestsResult>;
-  bulkCustomActionWithParamsAutoTableTests?: Maybe<BulkCustomActionWithParamsAutoTableTestsResult>;
   bulkDeleteAutoTableTestRelatedModels?: Maybe<BulkDeleteAutoTableTestRelatedModelsResult>;
   bulkDeleteAutoTableTests?: Maybe<BulkDeleteAutoTableTestsResult>;
   bulkDeleteGizmos?: Maybe<BulkDeleteGizmosResult>;
@@ -5593,10 +5553,8 @@ export type Mutation = {
   createModelA?: Maybe<CreateModelAResult>;
   createPart?: Maybe<CreatePartResult>;
   createSection?: Maybe<CreateSectionResult>;
-  createTestData?: Maybe<CreateTestDataResult>;
   createWidget?: Maybe<CreateWidgetResult>;
   customActionAutoTableTest?: Maybe<CustomActionAutoTableTestResult>;
-  customActionWithParamsAutoTableTest?: Maybe<CustomActionWithParamsAutoTableTestResult>;
   deleteAutoTableTest?: Maybe<DeleteAutoTableTestResult>;
   deleteAutoTableTestRelatedModel?: Maybe<DeleteAutoTableTestRelatedModelResult>;
   deleteGizmo?: Maybe<DeleteGizmoResult>;
@@ -5679,10 +5637,6 @@ export type MutationBulkCreateWidgetsArgs = {
 
 export type MutationBulkCustomActionAutoTableTestsArgs = {
   ids: Array<Scalars["GadgetID"]["input"]>;
-};
-
-export type MutationBulkCustomActionWithParamsAutoTableTestsArgs = {
-  inputs: Array<BulkCustomActionWithParamsAutoTableTestsInput>;
 };
 
 export type MutationBulkDeleteAutoTableTestRelatedModelsArgs = {
@@ -5823,12 +5777,6 @@ export type MutationCreateWidgetArgs = {
 
 export type MutationCustomActionAutoTableTestArgs = {
   id: Scalars["GadgetID"]["input"];
-};
-
-export type MutationCustomActionWithParamsAutoTableTestArgs = {
-  id: Scalars["GadgetID"]["input"];
-  numberParam1?: InputMaybe<Scalars["Float"]["input"]>;
-  stringParam1?: InputMaybe<Scalars["String"]["input"]>;
 };
 
 export type MutationDeleteAutoTableTestArgs = {
@@ -5992,12 +5940,6 @@ export type NestedAutoTableTestCreateInput = {
 
 export type NestedAutoTableTestCustomActionInput = {
   id: Scalars["GadgetID"]["input"];
-};
-
-export type NestedAutoTableTestCustomActionWithParamsInput = {
-  id: Scalars["GadgetID"]["input"];
-  numberParam1?: InputMaybe<Scalars["Float"]["input"]>;
-  stringParam1?: InputMaybe<Scalars["String"]["input"]>;
 };
 
 export type NestedAutoTableTestDeleteInput = {
@@ -10019,6 +9961,7 @@ export type ModelActionMetadataQuery = {
                 >;
               };
         }>;
+        triggers?: Array<{ __typename?: "GadgetTrigger"; specID: string }> | null;
       } | null;
     } | null;
   };
@@ -10909,6 +10852,7 @@ export type GlobalActionMetadataQuery = {
               >;
             };
       }>;
+      triggers?: Array<{ __typename?: "GadgetTrigger"; specID: string }> | null;
     } | null;
   };
 };
@@ -12165,6 +12109,14 @@ export const ModelActionMetadataDocument = {
                                 ],
                               },
                             },
+                            {
+                              kind: "Field",
+                              name: { kind: "Name", value: "triggers" },
+                              selectionSet: {
+                                kind: "SelectionSet",
+                                selections: [{ kind: "Field", name: { kind: "Name", value: "specID" } }],
+                              },
+                            },
                           ],
                         },
                       },
@@ -12663,6 +12615,11 @@ export const GlobalActionMetadataDocument = {
                             { kind: "FragmentSpread", name: { kind: "Name", value: "SubFields" } },
                           ],
                         },
+                      },
+                      {
+                        kind: "Field",
+                        name: { kind: "Name", value: "triggers" },
+                        selectionSet: { kind: "SelectionSet", selections: [{ kind: "Field", name: { kind: "Name", value: "specID" } }] },
                       },
                     ],
                   },

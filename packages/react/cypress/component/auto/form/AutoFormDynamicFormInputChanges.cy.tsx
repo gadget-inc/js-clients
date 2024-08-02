@@ -1,4 +1,5 @@
 import React from "react";
+import { apiTriggerOnly } from "../../../../spec/auto/support/Triggers.js";
 import { api } from "../../../support/api.js";
 import { describeForEachAutoAdapter } from "../../../support/auto.js";
 
@@ -24,6 +25,7 @@ describeForEachAutoAdapter("AutoForm", ({ name, adapter: { AutoForm }, wrapper }
       modelName: "Widget",
       action: { apiIdentifier: "update", operatesWithRecordIdentity: true },
       inputFields: getInputFieldsWithCustomValidations(),
+      triggers: apiTriggerOnly,
     });
   };
 

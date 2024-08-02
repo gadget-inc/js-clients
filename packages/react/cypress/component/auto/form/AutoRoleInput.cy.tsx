@@ -1,4 +1,5 @@
 import React from "react";
+import { apiTriggerOnly } from "../../../../spec/auto/support/Triggers.js";
 import { api } from "../../../support/api.js";
 import { describeForEachAutoAdapter } from "../../../support/auto.js";
 
@@ -135,6 +136,7 @@ const modelActionMetadataResponse = {
           name: "Create",
           apiIdentifier: "create",
           operatesWithRecordIdentity: false,
+          triggers: apiTriggerOnly,
           inputFields: [
             {
               name: "Widget",

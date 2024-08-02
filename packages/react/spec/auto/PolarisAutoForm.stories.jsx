@@ -126,9 +126,3 @@ export const onFailureCallback = {
     },
   },
 };
-export const FieldNameCustomParamCollisionError = {
-  args: {
-    findBy: "1",
-    action: api.autoTableTest.updateWithCustomParams,
-  },
-};

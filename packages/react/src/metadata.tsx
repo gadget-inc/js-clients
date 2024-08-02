@@ -193,6 +193,9 @@ const ModelActionMetadataQuery = graphql(/* GraphQL */ `
             ...FieldMetadata
             ...SubFields
           }
+          triggers {
+            specID
+          }
         }
       }
     }
@@ -211,6 +214,9 @@ const GlobalActionMetadataQuery = graphql(/* GraphQL */ `
         inputFields {
           ...FieldMetadata
           ...SubFields
+        }
+        triggers {
+          specID
         }
       }
     }
@@ -292,7 +298,7 @@ export const useActionMetadata = (actionFunction: ActionFunction<any, any, any, 
       namespace: actionFunction.namespace,
       includeRelatedFields: false,
     };
-  } else {
+  } else if (actionFunction.type === "action") {
     query = ModelActionMetadataQuery;
     const modelManager = assert(
       getModelManager(api, actionFunction.modelApiIdentifier, actionFunction.namespace),
@@ -315,6 +321,8 @@ export const useActionMetadata = (actionFunction: ActionFunction<any, any, any, 
       action: actionName,
       includeRelatedFields: false,
     };
+  } else {
+    throw new Error(`Invalid action function type`);
   }
 
   const [{ data, fetching, error }] = useGadgetQuery({

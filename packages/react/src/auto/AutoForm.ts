@@ -10,6 +10,7 @@ import type { FieldErrors, FieldValues } from "../useActionForm.js";
 import { useActionForm } from "../useActionForm.js";
 import { get, type OptionsType } from "../utils.js";
 import { validationSchema } from "../validationSchema.js";
+import { validateNonBulkAction, validateTriggersFromApiClient, validateTriggersFromMetadata } from "./AutoFormActionValidators.js";
 
 /** The props that any <AutoForm/> component accepts */
 export type AutoFormProps<
@@ -133,18 +134,18 @@ export const useAutoForm = <
 ) => {
   const { action, record, onSuccess, onFailure, findBy } = props;
 
-  if (action.isBulk) {
-    throw new Error("Bulk actions are not supported in AutoForms");
-  }
+  validateNonBulkAction(action);
+  validateTriggersFromApiClient(action);
 
   const { metadata, fetching: fetchingMetadata, error: metadataError } = useActionMetadata(props.action);
 
-  const operatesWithRecordId = !!(metadata && isActionMetadata(metadata) && metadata.action.operatesWithRecordIdentity);
+  validateTriggersFromMetadata(metadata);
 
   // filter down the fields to render only what we want to render for this form
   const fields = useFormFields(metadata, props);
   const isDeleteAction = metadata && isActionMetadata(metadata) && metadata.action.isDeleteAction;
   const isGlobalAction = action.type === "globalAction";
+  const operatesWithRecordId = !!(metadata && isActionMetadata(metadata) && metadata.action.operatesWithRecordIdentity);
   const modelApiIdentifier = action.type == "action" ? action.modelApiIdentifier : undefined;
   const defaultValues: Record<string, unknown> = useMemo(
     () =>

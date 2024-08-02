@@ -1,4 +1,5 @@
 import { recordIdInputField } from "./shared.js";
+import { apiTriggerOnly } from "./Triggers.js";
 
 export const stadiumModelInputFields = {
   name: "Stadium",
@@ -109,6 +110,7 @@ export const getStadiumModelMetadata = (
         action: {
           ...action,
           inputFields: action.operatesWithRecordIdentity ? [recordIdInputField, ...inputFields] : inputFields,
+          triggers: apiTriggerOnly,
           __typename: "GadgetAction",
         },
         __typename: "GadgetModel",
