@@ -43,7 +43,7 @@ export const PolarisAutoTableCellRenderer = (props: { column: TableColumn; value
     }
 
     case FieldType.DateTime: {
-      return <PolarisAutoTableDateTimeCell value={value as any} />;
+      return <PolarisAutoTableDateTimeCell value={value as any} includeTime={column.includeTime ?? true} />;
     }
 
     case FieldType.Boolean: {

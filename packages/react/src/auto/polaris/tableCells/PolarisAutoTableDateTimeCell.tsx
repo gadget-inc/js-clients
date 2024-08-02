@@ -2,8 +2,10 @@ import { format } from "date-fns";
 import React from "react";
 import { PolarisAutoTableTextCell } from "./PolarisAutoTableTextCell.js";
 
-export const PolarisAutoTableDateTimeCell = (props: { value: Date }) => {
-  const { value } = props;
+export const PolarisAutoTableDateTimeCell = (props: { value: Date; includeTime: boolean }) => {
+  const { value, includeTime } = props;
 
-  return value instanceof Date ? <PolarisAutoTableTextCell value={format(value, "LLL d, y K:mm a")} /> : null;
+  const timeFormat = includeTime ? "LLL d, y K:mm a" : "LLL d, y";
+
+  return value instanceof Date ? <PolarisAutoTableTextCell value={format(value, timeFormat)} /> : null;
 };
