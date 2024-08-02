@@ -40,7 +40,10 @@ export const getTableSpec = (
       .map((field) => field.apiIdentifier);
   } else {
     // Select all fields available for the table
-    spec.targetColumns = filterAutoTableFieldList(fieldMetadataArray).map((field) => field.apiIdentifier);
+    const defaultSelectionKeys = new Set(Object.keys(defaultSelection));
+    spec.targetColumns = filterAutoTableFieldList(fieldMetadataArray.filter((field) => defaultSelectionKeys.has(field.apiIdentifier))).map(
+      (field) => field.apiIdentifier
+    );
   }
 
   return spec;

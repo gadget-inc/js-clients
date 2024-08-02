@@ -72,31 +72,31 @@ describe("AutoTable - Sort", () => {
     cy.wait("@getWidgets").its("request.body.variables").should("deep.equal", { first: 50 });
 
     mockGetWidgetsWithDescendingSort();
-    cy.contains("Sortable Id").click({ force: true });
+    cy.contains("ID").click({ force: true });
     cy.wait("@getWidgetsWithDescendingSort");
     cy.get("@getWidgetsWithDescendingSort")
       .its("request.body.variables")
       .should("deep.equal", {
         first: 50,
         sort: {
-          sortableId: "Descending",
+          id: "Descending",
         },
       });
 
     mockGetWidgetsWithAscendingSort();
-    cy.contains("Sortable Id").click({ force: true });
+    cy.contains("ID").click({ force: true });
     cy.wait("@getWidgetsWithAscendingSort");
     cy.get("@getWidgetsWithAscendingSort")
       .its("request.body.variables")
       .should("deep.equal", {
         first: 50,
         sort: {
-          sortableId: "Ascending",
+          id: "Ascending",
         },
       });
 
     mockGetWidgets();
-    cy.contains("Sortable Id").click({ force: true });
+    cy.contains("ID").click({ force: true });
     cy.wait("@getWidgets");
     cy.get("@getWidgets").its("request.body.variables").should("deep.equal", {
       first: 50,
@@ -127,8 +127,8 @@ const sortTestWidgetModelMetadata = {
         name: "Sort Widget",
         fields: [
           {
-            name: "Sortable Id",
-            apiIdentifier: "sortableId",
+            name: "ID",
+            apiIdentifier: "id",
             fieldType: "ID",
             requiredArgumentForInput: true,
             sortable: true,
@@ -152,8 +152,8 @@ const sortTestWidgetModelMetadata = {
             },
           },
           {
-            name: "Sortable integer field",
-            apiIdentifier: "sortableIntegerField",
+            name: "Inventory count",
+            apiIdentifier: "inventoryCount",
             fieldType: "Number",
             requiredArgumentForInput: true,
             sortable: true,
@@ -199,8 +199,8 @@ const mockUnsortedIdContent = {
           cursor: "eyJpZCI6IjcifQ==",
           node: {
             __typename: "Widget",
-            sortableId: "0",
-            sortableIntegerField: 17,
+            id: "0",
+            inventoryCount: 17,
           },
           __typename: "WidgetEdge",
         },
@@ -208,8 +208,8 @@ const mockUnsortedIdContent = {
           cursor: "eyJpZCI6IjcifQ==",
           node: {
             __typename: "Widget",
-            sortableId: "2",
-            sortableIntegerField: 15,
+            id: "2",
+            inventoryCount: 15,
           },
           __typename: "WidgetEdge",
         },
@@ -217,8 +217,8 @@ const mockUnsortedIdContent = {
           cursor: "eyJpZCI6IjcifQ==",
           node: {
             __typename: "Widget",
-            sortableId: "1",
-            sortableIntegerField: 16,
+            id: "1",
+            inventoryCount: 16,
           },
           __typename: "WidgetEdge",
         },
@@ -243,8 +243,8 @@ const mockDescendingSortedIdContent = {
           cursor: "eyJpZCI6IjcifQ==",
           node: {
             __typename: "Widget",
-            sortableId: "2",
-            sortableIntegerField: 15,
+            id: "2",
+            inventoryCount: 15,
           },
           __typename: "WidgetEdge",
         },
@@ -252,8 +252,8 @@ const mockDescendingSortedIdContent = {
           cursor: "eyJpZCI6IjcifQ==",
           node: {
             __typename: "Widget",
-            sortableId: "1",
-            sortableIntegerField: 16,
+            id: "1",
+            inventoryCount: 16,
           },
           __typename: "WidgetEdge",
         },
@@ -261,8 +261,8 @@ const mockDescendingSortedIdContent = {
           cursor: "eyJpZCI6IjcifQ==",
           node: {
             __typename: "Widget",
-            sortableId: "0",
-            sortableIntegerField: 17,
+            id: "0",
+            inventoryCount: 17,
           },
           __typename: "WidgetEdge",
         },
@@ -287,8 +287,8 @@ const mockAscendingSortedIdContent = {
           cursor: "eyJpZCI6IjcifQ==",
           node: {
             __typename: "Widget",
-            sortableId: "0",
-            sortableIntegerField: 17,
+            id: "0",
+            inventoryCount: 17,
           },
           __typename: "WidgetEdge",
         },
@@ -296,8 +296,8 @@ const mockAscendingSortedIdContent = {
           cursor: "eyJpZCI6IjcifQ==",
           node: {
             __typename: "Widget",
-            sortableId: "1",
-            sortableIntegerField: 16,
+            id: "1",
+            inventoryCount: 16,
           },
           __typename: "WidgetEdge",
         },
@@ -305,8 +305,8 @@ const mockAscendingSortedIdContent = {
           cursor: "eyJpZCI6IjcifQ==",
           node: {
             __typename: "Widget",
-            sortableId: "2",
-            sortableIntegerField: 15,
+            id: "2",
+            inventoryCount: 15,
           },
           __typename: "WidgetEdge",
         },

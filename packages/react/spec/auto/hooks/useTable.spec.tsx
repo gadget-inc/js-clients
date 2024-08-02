@@ -10,10 +10,21 @@ import { recordIdInputField } from "../support/shared.js";
 import { widgetModelInputFields } from "../support/widgetModel.js";
 
 describe("useTable hook", () => {
-  const getUseTableResult = (options?: Parameters<typeof useTable>["1"]) => {
+  const getUseTableResult = (options?: Parameters<typeof useTable>["1"], customDefaultSelection?: Record<string, any>) => {
     const { result } = renderHook(
       () => {
-        return useTable(api.widget, options);
+        return useTable(
+          customDefaultSelection
+            ? ({
+                ...api.widget,
+                findMany: {
+                  ...api.widget.findMany,
+                  defaultSelection: customDefaultSelection,
+                },
+              } as any)
+            : api.widget,
+          options
+        );
       },
       {
         wrapper: MockTable(),
@@ -26,6 +37,49 @@ describe("useTable hook", () => {
     const result = getUseTableResult();
     loadMockWidgetModelMetadata();
     loadWidgetData();
+
+    expect(mockUrqlClient.executeQuery.mock.calls[1][0].query.loc.source.body).toMatchInlineSnapshot(`
+      "query widgets($after: String, $first: Int, $before: String, $last: Int) {
+        widgets(after: $after, first: $first, before: $before, last: $last) {
+          pageInfo {
+            hasNextPage
+            hasPreviousPage
+            startCursor
+            endCursor
+          }
+          edges {
+            cursor
+            node {
+              id
+              name
+              inventoryCount
+              anything
+              description {
+                markdown
+                truncatedHTML
+              }
+              category
+              startsAt
+              isChecked
+              metafields
+              roles {
+                key
+                name
+              }
+              birthday
+              color
+              secretKey
+              mustBeLongString
+              __typename
+            }
+          }
+        }
+        gadgetMeta {
+          hydrations(modelName: 
+      "widget")
+        }
+      }"
+    `);
 
     expect(result.current[0].rows).toEqual([
       {
@@ -145,6 +199,46 @@ describe("useTable hook", () => {
         type: "String",
       },
     ]);
+  });
+
+  describe("no columns property", () => {
+    it("should use the list from the default selection", () => {
+      getUseTableResult(
+        {},
+        {
+          name: true,
+          inventoryCount: true,
+        } // Assume that the default selection is only name and inventoryCount to simulate the case where some of the fields are not publicly accessible or are not selected by default
+      );
+      loadMockWidgetModelMetadata();
+      loadWidgetData();
+
+      expect(mockUrqlClient.executeQuery.mock.calls[1][0].query.loc.source.body).toMatchInlineSnapshot(`
+        "query widgets($after: String, $first: Int, $before: String, $last: Int) {
+          widgets(after: $after, first: $first, before: $before, last: $last) {
+            pageInfo {
+              hasNextPage
+              hasPreviousPage
+              startCursor
+              endCursor
+            }
+            edges {
+              cursor
+              node {
+                id
+                name
+                inventoryCount
+                __typename
+              }
+            }
+          }
+          gadgetMeta {
+            hydrations(modelName: 
+        "widget")
+          }
+        }"
+      `);
+    });
   });
 
   describe("columns property", () => {
