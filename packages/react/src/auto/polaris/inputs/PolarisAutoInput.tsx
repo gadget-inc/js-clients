@@ -6,6 +6,7 @@ import { PolarisAutoDateTimePicker } from "./PolarisAutoDateTimePicker.js";
 import { PolarisAutoEncryptedStringInput } from "./PolarisAutoEncryptedStringInput.js";
 import { PolarisAutoEnumInput } from "./PolarisAutoEnumInput.js";
 import { PolarisAutoFileInput } from "./PolarisAutoFileInput.js";
+import { PolarisAutoIdInput } from "./PolarisAutoIdInput.js";
 import { PolarisAutoJSONInput } from "./PolarisAutoJSONInput.js";
 import { PolarisAutoNumberInput } from "./PolarisAutoNumberInput.js";
 import { PolarisAutoPasswordInput } from "./PolarisAutoPasswordInput.js";
@@ -22,6 +23,9 @@ export const PolarisAutoInput = (props: { field: string }) => {
   const config = metadata.configuration;
 
   switch (config.fieldType) {
+    case FieldType.Id: {
+      return <PolarisAutoIdInput field={props.field} />;
+    }
     case FieldType.String:
     case FieldType.Email:
     case FieldType.Color:
