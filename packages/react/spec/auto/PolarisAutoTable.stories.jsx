@@ -1,4 +1,4 @@
-import { AppProvider, BlockStack, Box, Button, LegacyCard } from "@shopify/polaris";
+import { AppProvider, BlockStack, Box, Button, Checkbox, LegacyCard } from "@shopify/polaris";
 import { DeleteIcon } from "@shopify/polaris-icons";
 import translations from "@shopify/polaris/locales/en.json";
 import React, { useEffect } from "react";
@@ -155,10 +155,38 @@ export const LiveData = {
   },
 };
 
-export const huh = {
+const CustomCheckboxCell = ({ record }) => {
+  const [_result, update] = useAction(api.autoTableTest.update);
+
+  return (
+    <Checkbox
+      checked={record.bool}
+      onChange={(value) => {
+        void update({
+          id: record.id,
+          bool: value,
+        });
+      }}
+    />
+  );
+};
+
+export const CustomCellWithUseAction = {
   args: {
     model: api.autoTableTest,
-    columns: [{ header: "custom", render: () => <p>hello</p> }],
+    columns: [
+      "bool",
+      {
+        header: "Pass the whole function",
+        render: CustomCheckboxCell,
+      },
+      {
+        header: "JSX style",
+        render: (props) => <CustomCheckboxCell {...props} />,
+      },
+    ],
+    // eslint-disable-next-line @typescript-eslint/no-empty-function
+    onClick: () => {},
   },
 };
 
