@@ -1,9 +1,11 @@
-import { renderHook } from "@testing-library/react";
+import { render, renderHook } from "@testing-library/react";
 import React from "react";
+import { useAction } from "../../../src/useAction.js";
 import { useTable } from "../../../src/useTable.js";
 import { testApi as api } from "../../apis.js";
 import { mockUrqlClient } from "../../testWrappers.js";
 import { MockTable } from "../MockTable.js";
+import { PolarisMockedProviders } from "../inputs/PolarisMockedProviders.js";
 import { recordIdInputField } from "../support/shared.js";
 import { widgetModelInputFields } from "../support/widgetModel.js";
 
@@ -527,6 +529,39 @@ describe("useTable hook", () => {
   });
 
   describe("custom cell renderer", () => {
+    // This test makes sure that the custom cell renderer is a valid React component by trying to render it.
+    // If it is not a valid React component, it will throw an error.
+    it("should be able to pass a JSX element with a hook inside", () => {
+      let error;
+
+      try {
+        const Cell = () => {
+          useAction(api.widget.update);
+          return <div>some custom stuff</div>;
+        };
+
+        const result = getUseTableResult({
+          columns: [
+            "name",
+            {
+              header: "Custom column",
+              render: Cell,
+            },
+          ],
+        });
+        loadMockWidgetModelMetadata();
+        loadWidgetData();
+
+        render(<>{result.current[0].rows?.[0]?.["Custom column"]}</>, {
+          wrapper: PolarisMockedProviders,
+        });
+      } catch (err) {
+        error = err;
+      }
+
+      expect(error).toBeUndefined();
+    });
+
     it("should be able to access all fields of a table", () => {
       let recordFromRender: any;
 
@@ -544,6 +579,9 @@ describe("useTable hook", () => {
       });
       loadMockWidgetModelMetadata();
       loadWidgetData();
+
+      // Trigger a render to get the record
+      render(<>{result.current[0].rows?.[0]?.["Custom column"]}</>);
 
       // It should include all model fields in the query
       expect(mockUrqlClient.executeQuery.mock.calls[1][0].query.loc.source.body).toMatchInlineSnapshot(`

@@ -1,4 +1,5 @@
 import type { FieldSelection, GadgetRecord } from "@gadgetinc/api-client-core";
+import React from "react";
 import type { FieldMetadataFragment } from "../internal/gql/graphql.js";
 import { GadgetFieldType } from "../internal/gql/graphql.js";
 import { acceptedAutoTableFieldTypes, filterAutoTableFieldList } from "../metadata.js";
@@ -190,7 +191,8 @@ const recordToRow = (spec: Pick<TableSpec, "fieldMetadataTree" | "targetColumns"
 
   for (const targetColumn of spec.targetColumns) {
     if (isCustomCellColumn(targetColumn)) {
-      row[targetColumn.header] = targetColumn.render({ record });
+      const CellComponent = targetColumn.render;
+      row[targetColumn.header] = <CellComponent record={record} />;
       continue;
     }
 
