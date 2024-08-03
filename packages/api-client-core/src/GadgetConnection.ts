@@ -71,6 +71,7 @@ export enum AuthenticationMode {
   APIKey = "api-key",
   InternalAuthToken = "internal-auth-token",
   Anonymous = "anonymous",
+  ExternalJWT = "jwt",
   Custom = "custom",
 }
 
@@ -169,6 +170,8 @@ export class GadgetConnection {
         this.authenticationMode = AuthenticationMode.InternalAuthToken;
       } else if (options.apiKey) {
         this.authenticationMode = AuthenticationMode.APIKey;
+      } else if (options.jwt) {
+        this.authenticationMode = AuthenticationMode.ExternalJWT;
       } else if (options.custom) {
         this.authenticationMode = AuthenticationMode.Custom;
       }
@@ -464,6 +467,8 @@ export class GadgetConnection {
           connectionParams.auth.token = this.options.authenticationMode!.internalAuthToken!;
         } else if (this.authenticationMode == AuthenticationMode.BrowserSession) {
           connectionParams.auth.sessionToken = this.sessionTokenStore!.getItem(this.sessionStorageKey);
+        } else if (this.authenticationMode == AuthenticationMode.ExternalJWT) {
+          connectionParams.auth.jwt = this.options.authenticationMode!.jwt!;
         } else if (this.authenticationMode == AuthenticationMode.Custom) {
           await this.options.authenticationMode?.custom?.processTransactionConnectionParams(connectionParams);
         }
@@ -498,6 +503,8 @@ export class GadgetConnection {
       headers.authorization = "Basic " + base64("gadget-internal" + ":" + this.options.authenticationMode!.internalAuthToken!);
     } else if (this.authenticationMode == AuthenticationMode.APIKey) {
       headers.authorization = `Bearer ${this.options.authenticationMode?.apiKey}`;
+    } else if (this.authenticationMode == AuthenticationMode.ExternalJWT) {
+      headers.authorization = `Bearer ${this.options.authenticationMode?.jwt}`;
     } else if (this.authenticationMode == AuthenticationMode.BrowserSession) {
       const val = this.sessionTokenStore!.getItem(this.sessionStorageKey);
       if (val) {
