@@ -29,6 +29,7 @@ import type { ErrorWrapper, OptionsType } from "./utils.js";
 import { get, getModelManager, set } from "./utils.js";
 
 export * from "react-hook-form";
+export * from "./use-action-form/types.js";
 
 type ActionFormOptions<
   GivenOptions extends OptionsType,
