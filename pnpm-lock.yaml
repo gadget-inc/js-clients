@@ -232,9 +232,6 @@ importers:
       '@gadgetinc/api-client-core':
         specifier: workspace:*
         version: link:../api-client-core
-      '@graphql-typed-document-node/core':
-        specifier: ^3.2.0
-        version: 3.2.0(graphql@16.8.1)
       '@hookform/resolvers':
         specifier: ^3.3.1
         version: 3.6.0(react-hook-form@7.48.2)
@@ -290,6 +287,9 @@ importers:
       '@graphql-codegen/client-preset':
         specifier: ^4.1.0
         version: 4.2.6(graphql@16.8.1)
+      '@graphql-typed-document-node/core':
+        specifier: ^3.2.0
+        version: 3.2.0(graphql@16.8.1)
       '@mdxeditor/editor':
         specifier: ^3.8.0
         version: 3.8.0(@codemirror/language@6.10.2)(@lezer/common@1.2.1)(@lezer/highlight@1.2.0)(@types/react-dom@18.2.25)(@types/react@18.2.79)(react-dom@18.2.0)(react@18.2.0)(yjs@13.6.18)
@@ -4408,6 +4408,7 @@ packages:
       graphql: ^0.8.0 || ^0.9.0 || ^0.10.0 || ^0.11.0 || ^0.12.0 || ^0.13.0 || ^14.0.0 || ^15.0.0 || ^16.0.0 || ^17.0.0
     dependencies:
       graphql: 16.8.1
+    dev: true
 
   /@hookform/resolvers@3.6.0(react-hook-form@7.48.2):
     resolution: {integrity: sha512-UBcpyOX3+RR+dNnqBd0lchXpoL8p4xC21XP8H6Meb8uve5Br1GCnmg0PcBoKKqPKgGu9GHQ/oygcmPrQhetwqw==}

@@ -1,6 +1,6 @@
 {
   "name": "@gadgetinc/react",
-  "version": "0.16.0",
+  "version": "0.16.1",
   "files": [
     "README.md",
     "dist/**/*",
@@ -49,7 +49,6 @@
   "dependencies": {
     "@0no-co/graphql.web": "^1.0.4",
     "@gadgetinc/api-client-core": "^0.15.24",
-    "@graphql-typed-document-node/core": "^3.2.0",
     "@hookform/resolvers": "^3.3.1",
     "date-fns": "^2.30.0",
     "date-fns-tz": "^2.0.0",
@@ -62,6 +61,7 @@
     "yup": "^1.2.0"
   },
   "devDependencies": {
+    "@graphql-typed-document-node/core": "^3.2.0",
     "@types/tmp": "^0.2.6",
     "copyfiles": "^2.4.1",
     "@chromatic-com/storybook": "^1.5.0",
@@ -120,8 +120,8 @@
     "@mui/material": "^5.14.8",
     "@mui/x-data-grid": "^6.12.1",
     "@mui/x-date-pickers": "^6.14.0",
-    "@shopify/polaris": "^13.8.0",
-    "@shopify/polaris-icons": "^9.3.0",
+    "@shopify/polaris": "^12.0.0 || ^13.0.0",
+    "@shopify/polaris-icons": "^8.1.0 || ^9.0.0",
     "react": "^18.0.0",
     "react-dom": "^18.0.0"
   },
