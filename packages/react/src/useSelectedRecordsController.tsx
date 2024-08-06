@@ -1,6 +1,13 @@
-import { IndexTableSelectionType } from "@shopify/polaris";
 import { useEffect, useState } from "react";
 import { uniq } from "./utils.js";
+
+export enum SelectionType {
+  All = "all",
+  Page = "page",
+  Multi = "multi",
+  Single = "single",
+  Range = "range",
+}
 
 export type RecordSelection = {
   recordIds: string[];
@@ -8,12 +15,7 @@ export type RecordSelection = {
   selectCurrentPage: () => void;
   selectIds: (ids: string[]) => void;
   deselectIds: (ids: string[]) => void;
-  onSelectionChange: (
-    selectionType: IndexTableSelectionType,
-    toggleType: boolean,
-    selection?: string | [number, number],
-    position?: number
-  ) => void;
+  onSelectionChange: (selectionType: SelectionType, toggleType: boolean, selection?: string | [number, number], position?: number) => void;
 };
 
 export const useSelectedRecordsController = (props: { currentPageIds: string[] }) => {
@@ -33,22 +35,22 @@ export const useSelectedRecordsController = (props: { currentPageIds: string[] }
   }, [currentPageIds.join(",")]);
 
   const onSelectionChange = (
-    selectionType: IndexTableSelectionType,
+    selectionType: SelectionType,
     toggleType: boolean,
     selection?: string | [number, number],
     position?: number
   ) => {
     switch (selectionType) {
-      case IndexTableSelectionType.Single: {
+      case SelectionType.Single: {
         const selectedId = [`${selection}`];
         toggleType ? selected.selectIds(selectedId) : selected.deselectIds(selectedId);
         break;
       }
-      case IndexTableSelectionType.Page: {
+      case SelectionType.Page: {
         toggleType ? selected.selectCurrentPage() : selected.clearAll();
         break;
       }
-      case IndexTableSelectionType.Multi: {
+      case SelectionType.Multi: {
         // During a multiselect, the row indexes are returned instead of the record ids
         if (!Array.isArray(selection)) {
           throw new Error("Expected an array of indexes for multi-select");
@@ -60,8 +62,8 @@ export const useSelectedRecordsController = (props: { currentPageIds: string[] }
         toggleType ? selected.selectIds(selectedIds) : selected.deselectIds(selectedIds);
         break;
       }
-      case IndexTableSelectionType.All: // Do not allow selection outside of the current page
-      case IndexTableSelectionType.Range: // Do not allow selection outside of the current page
+      case SelectionType.All: // Do not allow selection outside of the current page
+      case SelectionType.Range: // Do not allow selection outside of the current page
       default:
         break;
     }

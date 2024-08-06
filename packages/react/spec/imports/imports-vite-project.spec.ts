@@ -9,6 +9,7 @@ import { fileURLToPath } from "url";
 // Assuming the path to your example Vite project folder
 const dirname = path.dirname(fileURLToPath(import.meta.url));
 const viteProjectPath = path.join(dirname, "example-vite-project");
+const viteBaseProjectPath = path.join(dirname, "example-vite-base-react-project");
 const root = path.resolve(path.join(dirname, "..", ".."));
 
 const copyFolderToTmp = async (source: string) => {
@@ -56,22 +57,50 @@ const createProjectTarball = async (cwd: string) => {
   return { tarballPath, cleanupCallback };
 };
 
-describe("Vite Project Build", () => {
+const copyAndInstall = async (source: string) => {
+  // Create a temporary directory
+  const { dirPath, cleanupCallback } = await copyFolderToTmp(source);
+
+  const { tarballPath } = await createProjectTarball(root);
+
+  // Run `pnpm install` in the copied project directory
+  await execa("pnpm", ["install"], { cwd: dirPath });
+  await execa("pnpm", ["add", tarballPath], { cwd: dirPath });
+
+  // Run `vite build` in the copied project directory
+  await execa("vite", ["build"], { cwd: dirPath });
+  return cleanupCallback;
+};
+
+describe("Vite project builds when it imports @gadgetinc/react without any peer dependencies installed", () => {
   let tmpViteDirCleanUp: any;
 
   beforeAll(async () => {
     // Create a temporary directory
-    const { dirPath: viteDirPath, cleanupCallback: viteCleanupCallback } = await copyFolderToTmp(viteProjectPath);
-    tmpViteDirCleanUp = viteCleanupCallback;
+    tmpViteDirCleanUp = await copyAndInstall(viteBaseProjectPath);
+  }, 40000);
 
-    const { tarballPath } = await createProjectTarball(root);
+  afterAll(async () => {
+    // Clean up the temporary directory
+    await new Promise((resolve: (reason?: any) => void) => {
+      tmpViteDirCleanUp(() => {
+        resolve();
+      });
+    });
+  });
 
-    // Run `pnpm install` in the copied project directory
-    await execa("pnpm", ["install"], { cwd: viteDirPath });
-    await execa("pnpm", ["add", tarballPath], { cwd: viteDirPath });
+  it("should build successfully", () => {
+    // This test will pass if the beforeAll hook completes without throwing an error
+    // You can add assertions here if you want to check specific outcomes
+  });
+});
 
-    // Run `vite build` in the copied project directory
-    await execa("vite", ["build"], { cwd: viteDirPath });
+describe("Vite project builds when it imports @gadgetinc/react/auto/polaris when polaris is installed", () => {
+  let tmpViteDirCleanUp: any;
+
+  beforeAll(async () => {
+    // Create a temporary directory
+    tmpViteDirCleanUp = await copyAndInstall(viteProjectPath);
   }, 40000);
 
   afterAll(async () => {
