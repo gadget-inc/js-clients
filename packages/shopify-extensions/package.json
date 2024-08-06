@@ -1,6 +1,6 @@
 {
   "name": "@gadgetinc/shopify-extensions",
-  "version": "0.2.1",
+  "version": "0.3.0",
   "files": [
     "README.md",
     "dist/**/*",
@@ -47,6 +47,6 @@
   "peerDependencies": {
     "react": "^18.0.0",
     "react-dom": "^18.0.0",
-    "@gadgetinc/react": "^0.15.0"
+    "@gadgetinc/react": "^0.16.0"
   }
 }
