@@ -67,7 +67,7 @@ export type TableData<Data> =
       metadata: null;
     };
 
-type SortState = {
+export type SortState = {
   column: string;
   direction: SortOrder;
   handleColumnSort: (column: string) => void;
@@ -96,7 +96,7 @@ export type RelatedFieldColumn = {
 
 export type CustomCellColumn = {
   header: string;
-  render: (props: { record: GadgetRecord<any> }) => ReactNode;
+  render: (props: { record: GadgetRecord<any>; index: number }) => ReactNode;
 };
 
 export type CellDetailColumn = {

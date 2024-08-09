@@ -3,7 +3,7 @@ import React from "react";
 import { PolarisAutoTable } from "../../../../src/auto/polaris/PolarisAutoTable.js";
 import { api } from "../../../support/api.js";
 import { PolarisWrapper } from "../../../support/auto.js";
-import { first50WidgetRecords, widgetModelMetadata } from "./metadata/widgetMetadata.js";
+import { mockGetWidgets, mockGetWidgetsWithSearch, mockModelMetadata } from "./helpers.js";
 
 // Only using a single character at a time because each keypress does another API call
 const sampleSearchValue1 = "a";
@@ -16,45 +16,6 @@ describe("AutoTable - Search", () => {
     cy.viewport("macbook-13");
   });
 
-  const mockModelMetadata = () => {
-    cy.intercept(
-      {
-        method: "POST",
-        url: `${api.connection.options.endpoint}?operation=GetModelMetadata`,
-        times: 1,
-      },
-      (req) => {
-        req.reply(widgetModelMetadata);
-      }
-    ).as("getModelMetadata");
-  };
-
-  const mockGetWidgets = () => {
-    cy.intercept(
-      {
-        method: "POST",
-        url: `${api.connection.options.endpoint}?operation=widgets`,
-        times: 1,
-      },
-      (req) => {
-        req.reply(first50WidgetRecords);
-      }
-    ).as("getWidgets");
-  };
-
-  const mockGetWidgetsWithSearch = () => {
-    cy.intercept(
-      {
-        method: "POST",
-        url: `${api.connection.options.endpoint}?operation=widgets`,
-        times: 1,
-      },
-      (req) => {
-        req.reply(mockSearchResultWidget);
-      }
-    ).as("getWidgetsWithSearch");
-  };
-
   it("Includes search values in the call to retrieve model records only when it is defined", () => {
     mockModelMetadata();
     mockGetWidgets();
@@ -64,7 +25,7 @@ describe("AutoTable - Search", () => {
     cy.wait("@getModelMetadata");
     cy.wait("@getWidgets").its("request.body.variables").should("deep.equal", { first: 50 }); // No search value
 
-    mockGetWidgetsWithSearch();
+    mockGetWidgetsWithSearch(searchedForWidgetName);
     cy.get(`button[aria-label="Search and filter results"]`).click();
     cy.get(`input[type="text"]`).eq(0).click().type(sampleSearchValue1);
     cy.wait("@getWidgetsWithSearch");
@@ -74,7 +35,7 @@ describe("AutoTable - Search", () => {
     });
     cy.contains(searchedForWidgetName).should("exist");
 
-    mockGetWidgetsWithSearch();
+    mockGetWidgetsWithSearch(searchedForWidgetName);
     cy.get(`input[type="text"]`).eq(0).click().type(sampleSearchValue2);
     cy.wait("@getWidgetsWithSearch");
     cy.get("@getWidgetsWithSearch")
@@ -95,59 +56,3 @@ describe("AutoTable - Search", () => {
     });
   });
 });
-
-const mockSearchResultWidget = {
-  data: {
-    widgets: {
-      pageInfo: {
-        hasNextPage: true,
-        hasPreviousPage: false,
-        startCursor: "eyJpZCI6IjcifQ==",
-        endCursor: "eyJpZCI6IjU2In0=",
-        __typename: "PageInfo",
-      },
-      edges: [
-        {
-          cursor: "eyJpZCI6IjcifQ==",
-          node: {
-            __typename: "Widget",
-            id: "777",
-            anything: null,
-            birthday: "2002-02-02",
-            category: [],
-            color: null,
-            createdAt: "2023-09-07T19:18:50.262Z",
-            description: null,
-            embedding: null,
-            inStock: true,
-            inventoryCount: 1,
-            isChecked: false,
-            metafields: null,
-            mustBeLongString: null,
-            name: searchedForWidgetName,
-            roles: [],
-            secretKey: "skey",
-            startsAt: null,
-            updatedAt: "2024-07-17T20:55:36.191Z",
-          },
-          __typename: "WidgetEdge",
-        },
-      ],
-
-      __typename: "WidgetConnection",
-    },
-    gadgetMeta: {
-      hydrations: {
-        updatedAt: "DateTime",
-        startsAt: "DateTime",
-        birthday: "DateTime",
-        createdAt: "DateTime",
-      },
-      __typename: "GadgetApplicationMeta",
-    },
-  },
-  extensions: {
-    logs: "https://ggt.link/logs/114412/62efa3ded4eaed65c4309ee48de15d3a",
-    traceId: "62efa3ded4eaed65c4309ee48de15d3a",
-  },
-};

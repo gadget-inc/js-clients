@@ -139,7 +139,7 @@ export const getTableSelectionMap = (spec: TableSpec) => {
 };
 
 export const getTableRows = (spec: Pick<TableSpec, "fieldMetadataTree" | "targetColumns">, records: GadgetRecord<any>[]) => {
-  return records.map((record) => recordToRow(spec, record));
+  return records.map((record, index) => recordToRow(spec, record, index));
 };
 
 export const getTableColumns = (spec: Pick<TableSpec, "fieldMetadataTree" | "targetColumns">) => {
@@ -187,7 +187,7 @@ export const getTableColumns = (spec: Pick<TableSpec, "fieldMetadataTree" | "tar
   return columns;
 };
 
-const recordToRow = (spec: Pick<TableSpec, "fieldMetadataTree" | "targetColumns">, record: GadgetRecord<any>) => {
+const recordToRow = (spec: Pick<TableSpec, "fieldMetadataTree" | "targetColumns">, record: GadgetRecord<any>, index: number) => {
   const row: TableRow = {
     id: record.id,
   };
@@ -195,7 +195,7 @@ const recordToRow = (spec: Pick<TableSpec, "fieldMetadataTree" | "targetColumns"
   for (const targetColumn of spec.targetColumns) {
     if (isCustomCellColumn(targetColumn)) {
       const CellComponent = targetColumn.render;
-      row[targetColumn.header] = <CellComponent record={record} />;
+      row[targetColumn.header] = <CellComponent record={record} index={index} />;
       continue;
     }
 
