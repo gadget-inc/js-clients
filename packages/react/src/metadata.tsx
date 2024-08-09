@@ -345,7 +345,7 @@ export const useActionMetadata = (actionFunction: ActionFunction<any, any, any, 
  */
 export const filterAutoFormFieldList = (
   fields: FieldMetadata[] | undefined,
-  options?: { include?: string[]; exclude?: string[] }
+  options?: { include?: string[]; exclude?: string[]; allowIdFieldType?: boolean }
 ): FieldMetadata[] => {
   if (!fields) {
     return [];
@@ -393,7 +393,7 @@ export const filterAutoFormFieldList = (
   }
 
   // Filter out fields that are not supported by the form
-  const validFieldTypeSubset = subset.filter(isAcceptedFieldTypeFilter);
+  const validFieldTypeSubset = subset.filter(isAcceptedFieldTypeFilter(options?.allowIdFieldType));
 
   return options?.include
     ? validFieldTypeSubset // Everything explicitly included is valid
@@ -414,7 +414,11 @@ const isNotRelatedToSpecialModelFilter = (field: FieldMetadata) => {
 
 const specialModelKeys = new Set(["DataModel-Shopify-Shop"]);
 
-const isAcceptedFieldTypeFilter = (field: FieldMetadata) => acceptedAutoFormFieldTypes.has(field.fieldType);
+const isAcceptedFieldTypeFilter = (allowIdFieldType?: boolean) => {
+  return (field: FieldMetadata) =>
+    acceptedAutoFormFieldTypes.has(field.fieldType) || (allowIdFieldType && field.fieldType === FieldType.Id);
+};
+
 const acceptedAutoFormFieldTypes = new Set([
   FieldType.Boolean,
   FieldType.Color,
