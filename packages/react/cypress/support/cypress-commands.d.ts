@@ -12,6 +12,7 @@ declare namespace Cypress {
           operatesWithRecordIdentity: boolean;
         };
         inputFields: any[];
+        triggers: any[];
         defaultRecord?: Record<string, any>;
       }
     ): Chainable<void>;

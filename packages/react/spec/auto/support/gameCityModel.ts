@@ -1,4 +1,5 @@
 import { recordIdInputField } from "./shared.js";
+import { apiTriggerOnly } from "./Triggers.js";
 
 export const gameCityModelInputFields = {
   name: "City",
@@ -65,6 +66,7 @@ export const getGameCityModelMetadata = (action: { name: string; apiIdentifier: 
         action: {
           ...action,
           inputFields: [recordIdInputField, gameCityModelInputFields],
+          triggers: apiTriggerOnly,
           __typename: "GadgetAction",
         },
         __typename: "GadgetModel",

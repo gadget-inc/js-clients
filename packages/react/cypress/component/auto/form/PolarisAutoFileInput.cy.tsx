@@ -1,4 +1,5 @@
 import React from "react";
+import { apiTriggerOnly } from "../../../../spec/auto/support/Triggers.js";
 import { getStadiumRecord } from "../../../../spec/auto/support/stadiumModel.js";
 import { PolarisAutoForm } from "../../../../src/auto/polaris/PolarisAutoForm.js";
 import { PolarisAutoFileInput } from "../../../../src/auto/polaris/inputs/PolarisAutoFileInput.js";
@@ -15,6 +16,7 @@ describe("PolarisFileInput", () => {
         operatesWithRecordIdentity: false,
       },
       inputFields: getInputFieldsWithCustomValidations(validations),
+      triggers: apiTriggerOnly,
     });
   };
 
@@ -27,6 +29,7 @@ describe("PolarisFileInput", () => {
         operatesWithRecordIdentity: true,
       },
       inputFields: getInputFieldsWithCustomValidations(validations),
+      triggers: apiTriggerOnly,
     });
   };
 

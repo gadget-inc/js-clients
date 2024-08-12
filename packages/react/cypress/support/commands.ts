@@ -1,5 +1,6 @@
 import type { AnyClient } from "@gadgetinc/api-client-core";
 import "cypress-each";
+import { apiTriggerOnly } from "../../spec/auto/support/Triggers.js";
 import { recordIdInputField } from "../../spec/auto/support/shared.js";
 
 Cypress.Commands.add("mockModelActionMetadata", (api: AnyClient, props) => {
@@ -19,6 +20,7 @@ Cypress.Commands.add("mockModelActionMetadata", (api: AnyClient, props) => {
             action: {
               ...action,
               name: action.apiIdentifier,
+              triggers: apiTriggerOnly,
               inputFields: action.operatesWithRecordIdentity ? [recordIdInputField, ...inputFields] : inputFields,
               __typename: "GadgetAction",
             },

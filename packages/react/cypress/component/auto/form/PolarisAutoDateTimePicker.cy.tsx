@@ -1,6 +1,7 @@
 import { format } from "date-fns";
 import { utcToZonedTime } from "date-fns-tz";
 import React, { useState } from "react";
+import { apiTriggerOnly } from "../../../../spec/auto/support/Triggers.js";
 import { PolarisAutoForm } from "../../../../src/auto/polaris/PolarisAutoForm.js";
 import { PolarisAutoDateTimePicker } from "../../../../src/auto/polaris/inputs/PolarisAutoDateTimePicker.js";
 import { api } from "../../../support/api.js";
@@ -110,6 +111,8 @@ describe("PolarisDateTimePicker", () => {
           apiIdentifier: "create",
           operatesWithRecordIdentity: false,
         },
+
+        triggers: apiTriggerOnly,
         inputFields: [
           {
             name: "Widget",

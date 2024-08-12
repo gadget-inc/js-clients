@@ -1,4 +1,5 @@
 import React from "react";
+import { apiTriggerOnly } from "../../../../spec/auto/support/Triggers.js";
 import { PolarisAutoForm } from "../../../../src/auto/polaris/PolarisAutoForm.js";
 import { PolarisAutoHasManyInput } from "../../../../src/auto/polaris/inputs/relationships/PolarisAutoHasManyInput.js";
 import { PolarisAutoSubmit } from "../../../../src/auto/polaris/submit/PolarisAutoSubmit.js";
@@ -14,6 +15,7 @@ describe("PolarisAutoHasManyInput", () => {
       modelName: "Widget",
       action: { apiIdentifier: "update", operatesWithRecordIdentity: true },
       inputFields: getInputFieldsWithCustomValidations(),
+      triggers: apiTriggerOnly,
     });
   };
 
