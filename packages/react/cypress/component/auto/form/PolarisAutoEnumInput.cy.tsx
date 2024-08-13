@@ -1,4 +1,5 @@
 import React from "react";
+import { apiTriggerOnly } from "../../../../spec/auto/support/Triggers.js";
 import { getStadiumRecord } from "../../../../spec/auto/support/stadiumModel.js";
 import { PolarisAutoForm } from "../../../../src/auto/polaris/PolarisAutoForm.js";
 import { api } from "../../../support/api.js";
@@ -327,6 +328,7 @@ const baseModelActionMetadata = {
     apiIdentifier: "create",
     operatesWithRecordIdentity: false,
   },
+  triggers: apiTriggerOnly,
   inputFields: [
     {
       name: "Stadium",

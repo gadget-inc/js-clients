@@ -1,4 +1,5 @@
 import { recordIdInputField } from "./shared.js";
+import { apiTriggerOnly } from "./Triggers.js";
 
 export const widgetModelInputFields = {
   name: "Widget",
@@ -337,7 +338,8 @@ export const widgetModelInputFields = {
 
 export const getWidgetModelMetadata = (
   action: { name: string; apiIdentifier: string; operatesWithRecordIdentity: boolean },
-  inputFields = [widgetModelInputFields] as any[]
+  inputFields = [widgetModelInputFields] as any[],
+  triggers = apiTriggerOnly
 ) => {
   return {
     gadgetMeta: {
@@ -347,6 +349,7 @@ export const getWidgetModelMetadata = (
         action: {
           ...action,
           inputFields: action.operatesWithRecordIdentity ? [recordIdInputField, ...inputFields] : inputFields,
+          triggers,
           __typename: "GadgetAction",
         },
         __typename: "GadgetModel",

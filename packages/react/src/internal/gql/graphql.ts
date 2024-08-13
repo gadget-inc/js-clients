@@ -48,6 +48,20 @@ export type Scalars = {
   InternalSectionRecord: { input: any; output: any };
   /** Represents one session result record in internal api calls. Returns a JSON blob of all the record's fields. */
   InternalSessionRecord: { input: any; output: any };
+  /** Represents one shopifyGdprRequest result record in internal api calls. Returns a JSON blob of all the record's fields. */
+  InternalShopifyGdprRequestRecord: { input: any; output: any };
+  /** Represents one shopifyProductImage result record in internal api calls. Returns a JSON blob of all the record's fields. */
+  InternalShopifyProductImageRecord: { input: any; output: any };
+  /** Represents one shopifyProductOption result record in internal api calls. Returns a JSON blob of all the record's fields. */
+  InternalShopifyProductOptionRecord: { input: any; output: any };
+  /** Represents one shopifyProduct result record in internal api calls. Returns a JSON blob of all the record's fields. */
+  InternalShopifyProductRecord: { input: any; output: any };
+  /** Represents one shopifyProductVariant result record in internal api calls. Returns a JSON blob of all the record's fields. */
+  InternalShopifyProductVariantRecord: { input: any; output: any };
+  /** Represents one shopifyShop result record in internal api calls. Returns a JSON blob of all the record's fields. */
+  InternalShopifyShopRecord: { input: any; output: any };
+  /** Represents one shopifySync result record in internal api calls. Returns a JSON blob of all the record's fields. */
+  InternalShopifySyncRecord: { input: any; output: any };
   /** Represents one user result record in internal api calls. Returns a JSON blob of all the record's fields. */
   InternalUserRecord: { input: any; output: any };
   /** Represents one widget result record in internal api calls. Returns a JSON blob of all the record's fields. */
@@ -58,6 +72,10 @@ export type Scalars = {
   JSONObject: { input: any; output: any };
   /** Represents the state of one record in a Gadget database. Represented as either a string or set of strings nested in objects. */
   RecordState: { input: any; output: any };
+  /** Represents the possible values of the Topic enum. */
+  ShopifyGdprRequestTopicEnum: { input: any; output: any };
+  /** Represents the possible values of the Status enum. */
+  ShopifyProductStatusEnum: { input: any; output: any };
   /** Represents the possible values of the tags enum. */
   StadiumTagsEnum: { input: any; output: any };
   /** Represents the possible values of the type enum. */
@@ -68,6 +86,24 @@ export type Scalars = {
   Upload: { input: any; output: any };
   /** Represents the possible values of the fieldA enum. */
   WidgetCategoryEnum: { input: any; output: any };
+};
+
+export type AbortShopifySyncInput = {
+  domain?: InputMaybe<Scalars["String"]["input"]>;
+  errorDetails?: InputMaybe<Scalars["String"]["input"]>;
+  errorMessage?: InputMaybe<Scalars["String"]["input"]>;
+  force?: InputMaybe<Scalars["Boolean"]["input"]>;
+  models?: InputMaybe<Scalars["JSON"]["input"]>;
+  shop?: InputMaybe<ShopifyShopBelongsToInput>;
+  syncSince?: InputMaybe<Scalars["DateTime"]["input"]>;
+};
+
+export type AbortShopifySyncResult = UpsertShopifySyncResult & {
+  __typename?: "AbortShopifySyncResult";
+  actionRun?: Maybe<Scalars["String"]["output"]>;
+  errors?: Maybe<Array<ExecutionError>>;
+  shopifySync?: Maybe<ShopifySync>;
+  success: Scalars["Boolean"]["output"];
 };
 
 export type AddInventoryWidgetResult = {
@@ -358,8 +394,10 @@ export type BackgroundActionQueue = {
 };
 
 export type BackgroundActionResult =
+  | AbortShopifySyncResult
   | AddInventoryWidgetResult
   | AlwaysThrowErrorWidgetResult
+  | CompleteShopifySyncResult
   | CreateAutoTableTestRelatedModelResult
   | CreateAutoTableTestResult
   | CreateGameCityResult
@@ -386,7 +424,9 @@ export type BackgroundActionResult =
   | DeleteSectionResult
   | DeleteUserResult
   | DeleteWidgetResult
+  | ErrorShopifySyncResult
   | FlipAllResult
+  | RunShopifySyncResult
   | SignInUserResult
   | SignOutUserResult
   | SignUpUserResult
@@ -623,10 +663,13 @@ export type BackgroundGameMutationsUpsertStadiumArgs = {
 
 export type BackgroundMutations = {
   __typename?: "BackgroundMutations";
+  abortShopifySync: EnqueueBackgroundActionResult;
   addInventoryWidget: EnqueueBackgroundActionResult;
   alwaysThrowErrorWidget: EnqueueBackgroundActionResult;
+  bulkAbortShopifySyncs: BulkEnqueueBackgroundActionResult;
   bulkAddInventoryWidgets: BulkEnqueueBackgroundActionResult;
   bulkAlwaysThrowErrorWidgets: BulkEnqueueBackgroundActionResult;
+  bulkCompleteShopifySyncs: BulkEnqueueBackgroundActionResult;
   bulkCreateAutoTableTestRelatedModels: BulkEnqueueBackgroundActionResult;
   bulkCreateAutoTableTests: BulkEnqueueBackgroundActionResult;
   bulkCreateGizmos: BulkEnqueueBackgroundActionResult;
@@ -644,6 +687,8 @@ export type BackgroundMutations = {
   bulkDeleteSections: BulkEnqueueBackgroundActionResult;
   bulkDeleteUsers: BulkEnqueueBackgroundActionResult;
   bulkDeleteWidgets: BulkEnqueueBackgroundActionResult;
+  bulkErrorShopifySyncs: BulkEnqueueBackgroundActionResult;
+  bulkRunShopifySyncs: BulkEnqueueBackgroundActionResult;
   bulkSignInUsers: BulkEnqueueBackgroundActionResult;
   bulkSignOutUsers: BulkEnqueueBackgroundActionResult;
   bulkSignUpUsers: BulkEnqueueBackgroundActionResult;
@@ -662,8 +707,10 @@ export type BackgroundMutations = {
   bulkUpsertModelAs: BulkEnqueueBackgroundActionResult;
   bulkUpsertParts: BulkEnqueueBackgroundActionResult;
   bulkUpsertSections: BulkEnqueueBackgroundActionResult;
+  bulkUpsertShopifySyncs: BulkEnqueueBackgroundActionResult;
   bulkUpsertUsers: BulkEnqueueBackgroundActionResult;
   bulkUpsertWidgets: BulkEnqueueBackgroundActionResult;
+  completeShopifySync: EnqueueBackgroundActionResult;
   createAutoTableTest: EnqueueBackgroundActionResult;
   createAutoTableTestRelatedModel: EnqueueBackgroundActionResult;
   createGizmo: EnqueueBackgroundActionResult;
@@ -682,8 +729,10 @@ export type BackgroundMutations = {
   deleteSection: EnqueueBackgroundActionResult;
   deleteUser: EnqueueBackgroundActionResult;
   deleteWidget: EnqueueBackgroundActionResult;
+  errorShopifySync: EnqueueBackgroundActionResult;
   flipAll: EnqueueBackgroundActionResult;
   game: BackgroundGameMutations;
+  runShopifySync: EnqueueBackgroundActionResult;
   signInUser: EnqueueBackgroundActionResult;
   signOutUser: EnqueueBackgroundActionResult;
   signUpUser: EnqueueBackgroundActionResult;
@@ -702,8 +751,15 @@ export type BackgroundMutations = {
   upsertModelA: EnqueueBackgroundActionResult;
   upsertPart: EnqueueBackgroundActionResult;
   upsertSection: EnqueueBackgroundActionResult;
+  upsertShopifySync: EnqueueBackgroundActionResult;
   upsertUser: EnqueueBackgroundActionResult;
   upsertWidget: EnqueueBackgroundActionResult;
+};
+
+export type BackgroundMutationsAbortShopifySyncArgs = {
+  backgroundOptions?: InputMaybe<EnqueueBackgroundActionOptions>;
+  id: Scalars["GadgetID"]["input"];
+  shopifySync?: InputMaybe<AbortShopifySyncInput>;
 };
 
 export type BackgroundMutationsAddInventoryWidgetArgs = {
@@ -717,6 +773,11 @@ export type BackgroundMutationsAlwaysThrowErrorWidgetArgs = {
   widget?: InputMaybe<AlwaysThrowErrorWidgetInput>;
 };
 
+export type BackgroundMutationsBulkAbortShopifySyncsArgs = {
+  backgroundOptions?: InputMaybe<EnqueueBackgroundActionOptions>;
+  inputs: Array<BulkAbortShopifySyncsInput>;
+};
+
 export type BackgroundMutationsBulkAddInventoryWidgetsArgs = {
   backgroundOptions?: InputMaybe<EnqueueBackgroundActionOptions>;
   inputs: Array<BulkAddInventoryWidgetsInput>;
@@ -725,6 +786,11 @@ export type BackgroundMutationsBulkAddInventoryWidgetsArgs = {
 export type BackgroundMutationsBulkAlwaysThrowErrorWidgetsArgs = {
   backgroundOptions?: InputMaybe<EnqueueBackgroundActionOptions>;
   inputs: Array<BulkAlwaysThrowErrorWidgetsInput>;
+};
+
+export type BackgroundMutationsBulkCompleteShopifySyncsArgs = {
+  backgroundOptions?: InputMaybe<EnqueueBackgroundActionOptions>;
+  inputs: Array<BulkCompleteShopifySyncsInput>;
 };
 
 export type BackgroundMutationsBulkCreateAutoTableTestRelatedModelsArgs = {
@@ -810,6 +876,16 @@ export type BackgroundMutationsBulkDeleteUsersArgs = {
 export type BackgroundMutationsBulkDeleteWidgetsArgs = {
   backgroundOptions?: InputMaybe<EnqueueBackgroundActionOptions>;
   ids: Array<Scalars["GadgetID"]["input"]>;
+};
+
+export type BackgroundMutationsBulkErrorShopifySyncsArgs = {
+  backgroundOptions?: InputMaybe<EnqueueBackgroundActionOptions>;
+  inputs: Array<BulkErrorShopifySyncsInput>;
+};
+
+export type BackgroundMutationsBulkRunShopifySyncsArgs = {
+  backgroundOptions?: InputMaybe<EnqueueBackgroundActionOptions>;
+  inputs: Array<BulkRunShopifySyncsInput>;
 };
 
 export type BackgroundMutationsBulkSignInUsersArgs = {
@@ -902,6 +978,11 @@ export type BackgroundMutationsBulkUpsertSectionsArgs = {
   inputs: Array<BulkUpsertSectionsInput>;
 };
 
+export type BackgroundMutationsBulkUpsertShopifySyncsArgs = {
+  backgroundOptions?: InputMaybe<EnqueueBackgroundActionOptions>;
+  inputs: Array<BulkUpsertShopifySyncsInput>;
+};
+
 export type BackgroundMutationsBulkUpsertUsersArgs = {
   backgroundOptions?: InputMaybe<EnqueueBackgroundActionOptions>;
   inputs: Array<BulkUpsertUsersInput>;
@@ -910,6 +991,12 @@ export type BackgroundMutationsBulkUpsertUsersArgs = {
 export type BackgroundMutationsBulkUpsertWidgetsArgs = {
   backgroundOptions?: InputMaybe<EnqueueBackgroundActionOptions>;
   inputs: Array<BulkUpsertWidgetsInput>;
+};
+
+export type BackgroundMutationsCompleteShopifySyncArgs = {
+  backgroundOptions?: InputMaybe<EnqueueBackgroundActionOptions>;
+  id: Scalars["GadgetID"]["input"];
+  shopifySync?: InputMaybe<CompleteShopifySyncInput>;
 };
 
 export type BackgroundMutationsCreateAutoTableTestArgs = {
@@ -1002,10 +1089,22 @@ export type BackgroundMutationsDeleteWidgetArgs = {
   id: Scalars["GadgetID"]["input"];
 };
 
+export type BackgroundMutationsErrorShopifySyncArgs = {
+  backgroundOptions?: InputMaybe<EnqueueBackgroundActionOptions>;
+  id: Scalars["GadgetID"]["input"];
+  shopifySync?: InputMaybe<ErrorShopifySyncInput>;
+};
+
 export type BackgroundMutationsFlipAllArgs = {
   backgroundOptions?: InputMaybe<EnqueueBackgroundActionOptions>;
   inventoryCount?: InputMaybe<Scalars["Float"]["input"]>;
   title?: InputMaybe<Scalars["String"]["input"]>;
+};
+
+export type BackgroundMutationsRunShopifySyncArgs = {
+  backgroundOptions?: InputMaybe<EnqueueBackgroundActionOptions>;
+  shopifySync?: InputMaybe<RunShopifySyncInput>;
+  startReason?: InputMaybe<Scalars["String"]["input"]>;
 };
 
 export type BackgroundMutationsSignInUserArgs = {
@@ -1118,6 +1217,13 @@ export type BackgroundMutationsUpsertSectionArgs = {
   section?: InputMaybe<UpsertSectionInput>;
 };
 
+export type BackgroundMutationsUpsertShopifySyncArgs = {
+  backgroundOptions?: InputMaybe<EnqueueBackgroundActionOptions>;
+  on?: InputMaybe<Array<Scalars["String"]["input"]>>;
+  shopifySync?: InputMaybe<UpsertShopifySyncInput>;
+  startReason?: InputMaybe<Scalars["String"]["input"]>;
+};
+
 export type BackgroundMutationsUpsertUserArgs = {
   backgroundOptions?: InputMaybe<EnqueueBackgroundActionOptions>;
   on?: InputMaybe<Array<Scalars["String"]["input"]>>;
@@ -1134,6 +1240,22 @@ export type BooleanFilter = {
   equals?: InputMaybe<Scalars["Boolean"]["input"]>;
   isSet?: InputMaybe<Scalars["Boolean"]["input"]>;
   notEquals?: InputMaybe<Scalars["Boolean"]["input"]>;
+};
+
+export type BulkAbortShopifySyncsInput = {
+  id: Scalars["GadgetID"]["input"];
+  shopifySync?: InputMaybe<AbortShopifySyncInput>;
+};
+
+/** The output when running the abort on the shopifySync model in bulk. */
+export type BulkAbortShopifySyncsResult = {
+  __typename?: "BulkAbortShopifySyncsResult";
+  /** Aggregated list of errors that any bulk action encountered while processing */
+  errors?: Maybe<Array<ExecutionError>>;
+  /** The list of all changed shopifySync records by each sent bulk action. Returned in the same order as the input bulk action params. */
+  shopifySyncs?: Maybe<Array<Maybe<ShopifySync>>>;
+  /** Boolean describing if all the bulk actions succeeded or not */
+  success: Scalars["Boolean"]["output"];
 };
 
 export type BulkAddInventoryWidgetsInput = {
@@ -1165,6 +1287,22 @@ export type BulkAlwaysThrowErrorWidgetsResult = {
   success: Scalars["Boolean"]["output"];
   /** The list of all changed widget records by each sent bulk action. Returned in the same order as the input bulk action params. */
   widgets?: Maybe<Array<Maybe<Widget>>>;
+};
+
+export type BulkCompleteShopifySyncsInput = {
+  id: Scalars["GadgetID"]["input"];
+  shopifySync?: InputMaybe<CompleteShopifySyncInput>;
+};
+
+/** The output when running the complete on the shopifySync model in bulk. */
+export type BulkCompleteShopifySyncsResult = {
+  __typename?: "BulkCompleteShopifySyncsResult";
+  /** Aggregated list of errors that any bulk action encountered while processing */
+  errors?: Maybe<Array<ExecutionError>>;
+  /** The list of all changed shopifySync records by each sent bulk action. Returned in the same order as the input bulk action params. */
+  shopifySyncs?: Maybe<Array<Maybe<ShopifySync>>>;
+  /** Boolean describing if all the bulk actions succeeded or not */
+  success: Scalars["Boolean"]["output"];
 };
 
 export type BulkCreateAutoTableTestRelatedModelsInput = {
@@ -1469,6 +1607,38 @@ export type BulkEnqueueBackgroundActionResult = {
   __typename?: "BulkEnqueueBackgroundActionResult";
   backgroundActions?: Maybe<Array<BackgroundActionHandle>>;
   errors?: Maybe<Array<ExecutionError>>;
+  success: Scalars["Boolean"]["output"];
+};
+
+export type BulkErrorShopifySyncsInput = {
+  id: Scalars["GadgetID"]["input"];
+  shopifySync?: InputMaybe<ErrorShopifySyncInput>;
+};
+
+/** The output when running the error on the shopifySync model in bulk. */
+export type BulkErrorShopifySyncsResult = {
+  __typename?: "BulkErrorShopifySyncsResult";
+  /** Aggregated list of errors that any bulk action encountered while processing */
+  errors?: Maybe<Array<ExecutionError>>;
+  /** The list of all changed shopifySync records by each sent bulk action. Returned in the same order as the input bulk action params. */
+  shopifySyncs?: Maybe<Array<Maybe<ShopifySync>>>;
+  /** Boolean describing if all the bulk actions succeeded or not */
+  success: Scalars["Boolean"]["output"];
+};
+
+export type BulkRunShopifySyncsInput = {
+  shopifySync?: InputMaybe<RunShopifySyncInput>;
+  startReason?: InputMaybe<Scalars["String"]["input"]>;
+};
+
+/** The output when running the run on the shopifySync model in bulk. */
+export type BulkRunShopifySyncsResult = {
+  __typename?: "BulkRunShopifySyncsResult";
+  /** Aggregated list of errors that any bulk action encountered while processing */
+  errors?: Maybe<Array<ExecutionError>>;
+  /** The list of all changed shopifySync records by each sent bulk action. Returned in the same order as the input bulk action params. */
+  shopifySyncs?: Maybe<Array<Maybe<ShopifySync>>>;
+  /** Boolean describing if all the bulk actions succeeded or not */
   success: Scalars["Boolean"]["output"];
 };
 
@@ -1896,6 +2066,24 @@ export type BulkUpsertSectionsResult = {
   success: Scalars["Boolean"]["output"];
 };
 
+export type BulkUpsertShopifySyncsInput = {
+  /** An array of Strings */
+  on?: InputMaybe<Array<Scalars["String"]["input"]>>;
+  shopifySync?: InputMaybe<UpsertShopifySyncInput>;
+  startReason?: InputMaybe<Scalars["String"]["input"]>;
+};
+
+/** The result of a bulk upsert operation for the shopifySync */
+export type BulkUpsertShopifySyncsResult = {
+  __typename?: "BulkUpsertShopifySyncsResult";
+  /** Aggregated list of errors that any bulk action encountered while processing */
+  errors?: Maybe<Array<ExecutionError>>;
+  /** The results of each upsert action in the bulk operation */
+  shopifySyncs?: Maybe<Array<Maybe<ShopifySync>>>;
+  /** Boolean describing if all the bulk actions succeeded or not */
+  success: Scalars["Boolean"]["output"];
+};
+
 export type BulkUpsertUsersInput = {
   /** An array of Strings */
   on?: InputMaybe<Array<Scalars["String"]["input"]>>;
@@ -1937,6 +2125,24 @@ export type CityBelongsToInput = {
   create?: InputMaybe<NestedCityCreateInput>;
   delete?: InputMaybe<NestedCityDeleteInput>;
   update?: InputMaybe<NestedCityUpdateInput>;
+};
+
+export type CompleteShopifySyncInput = {
+  domain?: InputMaybe<Scalars["String"]["input"]>;
+  errorDetails?: InputMaybe<Scalars["String"]["input"]>;
+  errorMessage?: InputMaybe<Scalars["String"]["input"]>;
+  force?: InputMaybe<Scalars["Boolean"]["input"]>;
+  models?: InputMaybe<Scalars["JSON"]["input"]>;
+  shop?: InputMaybe<ShopifyShopBelongsToInput>;
+  syncSince?: InputMaybe<Scalars["DateTime"]["input"]>;
+};
+
+export type CompleteShopifySyncResult = {
+  __typename?: "CompleteShopifySyncResult";
+  actionRun?: Maybe<Scalars["String"]["output"]>;
+  errors?: Maybe<Array<ExecutionError>>;
+  shopifySync?: Maybe<ShopifySync>;
+  success: Scalars["Boolean"]["output"];
 };
 
 /** A list of actions to run when converging a set of records. Pass this to a converge operation to override which actions will be used to create, update, and delete records while moving to the new set of specified records. */
@@ -2194,6 +2400,46 @@ export type CreateSectionResult = UpsertSectionResult & {
   success: Scalars["Boolean"]["output"];
 };
 
+export type CreateShopifyGdprRequestResult = UpsertShopifyGdprRequestResult & {
+  __typename?: "CreateShopifyGdprRequestResult";
+  actionRun?: Maybe<Scalars["String"]["output"]>;
+  errors?: Maybe<Array<ExecutionError>>;
+  shopifyGdprRequest?: Maybe<ShopifyGdprRequest>;
+  success: Scalars["Boolean"]["output"];
+};
+
+export type CreateShopifyProductImageResult = UpsertShopifyProductImageResult & {
+  __typename?: "CreateShopifyProductImageResult";
+  actionRun?: Maybe<Scalars["String"]["output"]>;
+  errors?: Maybe<Array<ExecutionError>>;
+  shopifyProductImage?: Maybe<ShopifyProductImage>;
+  success: Scalars["Boolean"]["output"];
+};
+
+export type CreateShopifyProductOptionResult = UpsertShopifyProductOptionResult & {
+  __typename?: "CreateShopifyProductOptionResult";
+  actionRun?: Maybe<Scalars["String"]["output"]>;
+  errors?: Maybe<Array<ExecutionError>>;
+  shopifyProductOption?: Maybe<ShopifyProductOption>;
+  success: Scalars["Boolean"]["output"];
+};
+
+export type CreateShopifyProductResult = UpsertShopifyProductResult & {
+  __typename?: "CreateShopifyProductResult";
+  actionRun?: Maybe<Scalars["String"]["output"]>;
+  errors?: Maybe<Array<ExecutionError>>;
+  shopifyProduct?: Maybe<ShopifyProduct>;
+  success: Scalars["Boolean"]["output"];
+};
+
+export type CreateShopifyProductVariantResult = UpsertShopifyProductVariantResult & {
+  __typename?: "CreateShopifyProductVariantResult";
+  actionRun?: Maybe<Scalars["String"]["output"]>;
+  errors?: Maybe<Array<ExecutionError>>;
+  shopifyProductVariant?: Maybe<ShopifyProductVariant>;
+  success: Scalars["Boolean"]["output"];
+};
+
 export type CreateTestDataResult = {
   __typename?: "CreateTestDataResult";
   errors?: Maybe<Array<ExecutionError>>;
@@ -2345,6 +2591,34 @@ export type DeleteSectionResult = {
   success: Scalars["Boolean"]["output"];
 };
 
+export type DeleteShopifyProductImageResult = {
+  __typename?: "DeleteShopifyProductImageResult";
+  actionRun?: Maybe<Scalars["String"]["output"]>;
+  errors?: Maybe<Array<ExecutionError>>;
+  success: Scalars["Boolean"]["output"];
+};
+
+export type DeleteShopifyProductOptionResult = {
+  __typename?: "DeleteShopifyProductOptionResult";
+  actionRun?: Maybe<Scalars["String"]["output"]>;
+  errors?: Maybe<Array<ExecutionError>>;
+  success: Scalars["Boolean"]["output"];
+};
+
+export type DeleteShopifyProductResult = {
+  __typename?: "DeleteShopifyProductResult";
+  actionRun?: Maybe<Scalars["String"]["output"]>;
+  errors?: Maybe<Array<ExecutionError>>;
+  success: Scalars["Boolean"]["output"];
+};
+
+export type DeleteShopifyProductVariantResult = {
+  __typename?: "DeleteShopifyProductVariantResult";
+  actionRun?: Maybe<Scalars["String"]["output"]>;
+  errors?: Maybe<Array<ExecutionError>>;
+  success: Scalars["Boolean"]["output"];
+};
+
 export type DeleteUserResult = {
   __typename?: "DeleteUserResult";
   actionRun?: Maybe<Scalars["String"]["output"]>;
@@ -2386,6 +2660,24 @@ export type EnqueueBackgroundActionResult = {
   __typename?: "EnqueueBackgroundActionResult";
   backgroundAction?: Maybe<BackgroundActionHandle>;
   errors?: Maybe<Array<ExecutionError>>;
+  success: Scalars["Boolean"]["output"];
+};
+
+export type ErrorShopifySyncInput = {
+  domain?: InputMaybe<Scalars["String"]["input"]>;
+  errorDetails?: InputMaybe<Scalars["String"]["input"]>;
+  errorMessage?: InputMaybe<Scalars["String"]["input"]>;
+  force?: InputMaybe<Scalars["Boolean"]["input"]>;
+  models?: InputMaybe<Scalars["JSON"]["input"]>;
+  shop?: InputMaybe<ShopifyShopBelongsToInput>;
+  syncSince?: InputMaybe<Scalars["DateTime"]["input"]>;
+};
+
+export type ErrorShopifySyncResult = {
+  __typename?: "ErrorShopifySyncResult";
+  actionRun?: Maybe<Scalars["String"]["output"]>;
+  errors?: Maybe<Array<ExecutionError>>;
+  shopifySync?: Maybe<ShopifySync>;
   success: Scalars["Boolean"]["output"];
 };
 
@@ -3397,6 +3689,14 @@ export type IdFilter = {
   notIn?: InputMaybe<Array<InputMaybe<Scalars["GadgetID"]["input"]>>>;
 };
 
+export type InstallShopifyShopResult = UpsertShopifyShopResult & {
+  __typename?: "InstallShopifyShopResult";
+  actionRun?: Maybe<Scalars["String"]["output"]>;
+  errors?: Maybe<Array<ExecutionError>>;
+  shopifyShop?: Maybe<ShopifyShop>;
+  success: Scalars["Boolean"]["output"];
+};
+
 export type InternalAutoTableTestAtomicsInput = {
   /** Numeric atomic commands for operating on num. */
   num?: InputMaybe<Array<NumericAtomicFieldUpdateInput>>;
@@ -3566,6 +3866,55 @@ export type InternalBulkCreateSessionsResult = {
   success: Scalars["Boolean"]["output"];
 };
 
+export type InternalBulkCreateShopifyGdprRequestsResult = {
+  __typename?: "InternalBulkCreateShopifyGdprRequestsResult";
+  errors?: Maybe<Array<ExecutionError>>;
+  shopifyGdprRequests?: Maybe<Array<Maybe<Scalars["InternalShopifyGdprRequestRecord"]["output"]>>>;
+  success: Scalars["Boolean"]["output"];
+};
+
+export type InternalBulkCreateShopifyProductImagesResult = {
+  __typename?: "InternalBulkCreateShopifyProductImagesResult";
+  errors?: Maybe<Array<ExecutionError>>;
+  shopifyProductImages?: Maybe<Array<Maybe<Scalars["InternalShopifyProductImageRecord"]["output"]>>>;
+  success: Scalars["Boolean"]["output"];
+};
+
+export type InternalBulkCreateShopifyProductOptionsResult = {
+  __typename?: "InternalBulkCreateShopifyProductOptionsResult";
+  errors?: Maybe<Array<ExecutionError>>;
+  shopifyProductOptions?: Maybe<Array<Maybe<Scalars["InternalShopifyProductOptionRecord"]["output"]>>>;
+  success: Scalars["Boolean"]["output"];
+};
+
+export type InternalBulkCreateShopifyProductVariantsResult = {
+  __typename?: "InternalBulkCreateShopifyProductVariantsResult";
+  errors?: Maybe<Array<ExecutionError>>;
+  shopifyProductVariants?: Maybe<Array<Maybe<Scalars["InternalShopifyProductVariantRecord"]["output"]>>>;
+  success: Scalars["Boolean"]["output"];
+};
+
+export type InternalBulkCreateShopifyProductsResult = {
+  __typename?: "InternalBulkCreateShopifyProductsResult";
+  errors?: Maybe<Array<ExecutionError>>;
+  shopifyProducts?: Maybe<Array<Maybe<Scalars["InternalShopifyProductRecord"]["output"]>>>;
+  success: Scalars["Boolean"]["output"];
+};
+
+export type InternalBulkCreateShopifyShopsResult = {
+  __typename?: "InternalBulkCreateShopifyShopsResult";
+  errors?: Maybe<Array<ExecutionError>>;
+  shopifyShops?: Maybe<Array<Maybe<Scalars["InternalShopifyShopRecord"]["output"]>>>;
+  success: Scalars["Boolean"]["output"];
+};
+
+export type InternalBulkCreateShopifySyncsResult = {
+  __typename?: "InternalBulkCreateShopifySyncsResult";
+  errors?: Maybe<Array<ExecutionError>>;
+  shopifySyncs?: Maybe<Array<Maybe<Scalars["InternalShopifySyncRecord"]["output"]>>>;
+  success: Scalars["Boolean"]["output"];
+};
+
 export type InternalBulkCreateUsersResult = {
   __typename?: "InternalBulkCreateUsersResult";
   errors?: Maybe<Array<ExecutionError>>;
@@ -3654,6 +4003,55 @@ export type InternalCreateSessionResult = {
   __typename?: "InternalCreateSessionResult";
   errors?: Maybe<Array<ExecutionError>>;
   session?: Maybe<Scalars["InternalSessionRecord"]["output"]>;
+  success: Scalars["Boolean"]["output"];
+};
+
+export type InternalCreateShopifyGdprRequestResult = {
+  __typename?: "InternalCreateShopifyGdprRequestResult";
+  errors?: Maybe<Array<ExecutionError>>;
+  shopifyGdprRequest?: Maybe<Scalars["InternalShopifyGdprRequestRecord"]["output"]>;
+  success: Scalars["Boolean"]["output"];
+};
+
+export type InternalCreateShopifyProductImageResult = {
+  __typename?: "InternalCreateShopifyProductImageResult";
+  errors?: Maybe<Array<ExecutionError>>;
+  shopifyProductImage?: Maybe<Scalars["InternalShopifyProductImageRecord"]["output"]>;
+  success: Scalars["Boolean"]["output"];
+};
+
+export type InternalCreateShopifyProductOptionResult = {
+  __typename?: "InternalCreateShopifyProductOptionResult";
+  errors?: Maybe<Array<ExecutionError>>;
+  shopifyProductOption?: Maybe<Scalars["InternalShopifyProductOptionRecord"]["output"]>;
+  success: Scalars["Boolean"]["output"];
+};
+
+export type InternalCreateShopifyProductResult = {
+  __typename?: "InternalCreateShopifyProductResult";
+  errors?: Maybe<Array<ExecutionError>>;
+  shopifyProduct?: Maybe<Scalars["InternalShopifyProductRecord"]["output"]>;
+  success: Scalars["Boolean"]["output"];
+};
+
+export type InternalCreateShopifyProductVariantResult = {
+  __typename?: "InternalCreateShopifyProductVariantResult";
+  errors?: Maybe<Array<ExecutionError>>;
+  shopifyProductVariant?: Maybe<Scalars["InternalShopifyProductVariantRecord"]["output"]>;
+  success: Scalars["Boolean"]["output"];
+};
+
+export type InternalCreateShopifyShopResult = {
+  __typename?: "InternalCreateShopifyShopResult";
+  errors?: Maybe<Array<ExecutionError>>;
+  shopifyShop?: Maybe<Scalars["InternalShopifyShopRecord"]["output"]>;
+  success: Scalars["Boolean"]["output"];
+};
+
+export type InternalCreateShopifySyncResult = {
+  __typename?: "InternalCreateShopifySyncResult";
+  errors?: Maybe<Array<ExecutionError>>;
+  shopifySync?: Maybe<Scalars["InternalShopifySyncRecord"]["output"]>;
   success: Scalars["Boolean"]["output"];
 };
 
@@ -3786,6 +4184,48 @@ export type InternalDeleteManySessionResult = {
   success: Scalars["Boolean"]["output"];
 };
 
+export type InternalDeleteManyShopifyGdprRequestResult = {
+  __typename?: "InternalDeleteManyShopifyGdprRequestResult";
+  errors?: Maybe<Array<ExecutionError>>;
+  success: Scalars["Boolean"]["output"];
+};
+
+export type InternalDeleteManyShopifyProductImageResult = {
+  __typename?: "InternalDeleteManyShopifyProductImageResult";
+  errors?: Maybe<Array<ExecutionError>>;
+  success: Scalars["Boolean"]["output"];
+};
+
+export type InternalDeleteManyShopifyProductOptionResult = {
+  __typename?: "InternalDeleteManyShopifyProductOptionResult";
+  errors?: Maybe<Array<ExecutionError>>;
+  success: Scalars["Boolean"]["output"];
+};
+
+export type InternalDeleteManyShopifyProductResult = {
+  __typename?: "InternalDeleteManyShopifyProductResult";
+  errors?: Maybe<Array<ExecutionError>>;
+  success: Scalars["Boolean"]["output"];
+};
+
+export type InternalDeleteManyShopifyProductVariantResult = {
+  __typename?: "InternalDeleteManyShopifyProductVariantResult";
+  errors?: Maybe<Array<ExecutionError>>;
+  success: Scalars["Boolean"]["output"];
+};
+
+export type InternalDeleteManyShopifyShopResult = {
+  __typename?: "InternalDeleteManyShopifyShopResult";
+  errors?: Maybe<Array<ExecutionError>>;
+  success: Scalars["Boolean"]["output"];
+};
+
+export type InternalDeleteManyShopifySyncResult = {
+  __typename?: "InternalDeleteManyShopifySyncResult";
+  errors?: Maybe<Array<ExecutionError>>;
+  success: Scalars["Boolean"]["output"];
+};
+
 export type InternalDeleteManyUserResult = {
   __typename?: "InternalDeleteManyUserResult";
   errors?: Maybe<Array<ExecutionError>>;
@@ -3823,6 +4263,55 @@ export type InternalDeleteSessionResult = {
   __typename?: "InternalDeleteSessionResult";
   errors?: Maybe<Array<ExecutionError>>;
   session?: Maybe<Scalars["InternalSessionRecord"]["output"]>;
+  success: Scalars["Boolean"]["output"];
+};
+
+export type InternalDeleteShopifyGdprRequestResult = {
+  __typename?: "InternalDeleteShopifyGdprRequestResult";
+  errors?: Maybe<Array<ExecutionError>>;
+  shopifyGdprRequest?: Maybe<Scalars["InternalShopifyGdprRequestRecord"]["output"]>;
+  success: Scalars["Boolean"]["output"];
+};
+
+export type InternalDeleteShopifyProductImageResult = {
+  __typename?: "InternalDeleteShopifyProductImageResult";
+  errors?: Maybe<Array<ExecutionError>>;
+  shopifyProductImage?: Maybe<Scalars["InternalShopifyProductImageRecord"]["output"]>;
+  success: Scalars["Boolean"]["output"];
+};
+
+export type InternalDeleteShopifyProductOptionResult = {
+  __typename?: "InternalDeleteShopifyProductOptionResult";
+  errors?: Maybe<Array<ExecutionError>>;
+  shopifyProductOption?: Maybe<Scalars["InternalShopifyProductOptionRecord"]["output"]>;
+  success: Scalars["Boolean"]["output"];
+};
+
+export type InternalDeleteShopifyProductResult = {
+  __typename?: "InternalDeleteShopifyProductResult";
+  errors?: Maybe<Array<ExecutionError>>;
+  shopifyProduct?: Maybe<Scalars["InternalShopifyProductRecord"]["output"]>;
+  success: Scalars["Boolean"]["output"];
+};
+
+export type InternalDeleteShopifyProductVariantResult = {
+  __typename?: "InternalDeleteShopifyProductVariantResult";
+  errors?: Maybe<Array<ExecutionError>>;
+  shopifyProductVariant?: Maybe<Scalars["InternalShopifyProductVariantRecord"]["output"]>;
+  success: Scalars["Boolean"]["output"];
+};
+
+export type InternalDeleteShopifyShopResult = {
+  __typename?: "InternalDeleteShopifyShopResult";
+  errors?: Maybe<Array<ExecutionError>>;
+  shopifyShop?: Maybe<Scalars["InternalShopifyShopRecord"]["output"]>;
+  success: Scalars["Boolean"]["output"];
+};
+
+export type InternalDeleteShopifySyncResult = {
+  __typename?: "InternalDeleteShopifySyncResult";
+  errors?: Maybe<Array<ExecutionError>>;
+  shopifySync?: Maybe<Scalars["InternalShopifySyncRecord"]["output"]>;
   success: Scalars["Boolean"]["output"];
 };
 
@@ -4330,6 +4819,13 @@ export type InternalMutations = {
   bulkCreateParts?: Maybe<InternalBulkCreatePartsResult>;
   bulkCreateSections?: Maybe<InternalBulkCreateSectionsResult>;
   bulkCreateSessions?: Maybe<InternalBulkCreateSessionsResult>;
+  bulkCreateShopifyGdprRequests?: Maybe<InternalBulkCreateShopifyGdprRequestsResult>;
+  bulkCreateShopifyProductImages?: Maybe<InternalBulkCreateShopifyProductImagesResult>;
+  bulkCreateShopifyProductOptions?: Maybe<InternalBulkCreateShopifyProductOptionsResult>;
+  bulkCreateShopifyProductVariants?: Maybe<InternalBulkCreateShopifyProductVariantsResult>;
+  bulkCreateShopifyProducts?: Maybe<InternalBulkCreateShopifyProductsResult>;
+  bulkCreateShopifyShops?: Maybe<InternalBulkCreateShopifyShopsResult>;
+  bulkCreateShopifySyncs?: Maybe<InternalBulkCreateShopifySyncsResult>;
   bulkCreateUsers?: Maybe<InternalBulkCreateUsersResult>;
   bulkCreateWidgets?: Maybe<InternalBulkCreateWidgetsResult>;
   commitTransaction: Scalars["String"]["output"];
@@ -4340,6 +4836,13 @@ export type InternalMutations = {
   createPart?: Maybe<InternalCreatePartResult>;
   createSection?: Maybe<InternalCreateSectionResult>;
   createSession?: Maybe<InternalCreateSessionResult>;
+  createShopifyGdprRequest?: Maybe<InternalCreateShopifyGdprRequestResult>;
+  createShopifyProduct?: Maybe<InternalCreateShopifyProductResult>;
+  createShopifyProductImage?: Maybe<InternalCreateShopifyProductImageResult>;
+  createShopifyProductOption?: Maybe<InternalCreateShopifyProductOptionResult>;
+  createShopifyProductVariant?: Maybe<InternalCreateShopifyProductVariantResult>;
+  createShopifyShop?: Maybe<InternalCreateShopifyShopResult>;
+  createShopifySync?: Maybe<InternalCreateShopifySyncResult>;
   createUser?: Maybe<InternalCreateUserResult>;
   createWidget?: Maybe<InternalCreateWidgetResult>;
   deleteAutoTableTest?: Maybe<InternalDeleteAutoTableTestResult>;
@@ -4352,25 +4855,46 @@ export type InternalMutations = {
   deleteManyPart?: Maybe<InternalDeleteManyPartResult>;
   deleteManySection?: Maybe<InternalDeleteManySectionResult>;
   deleteManySession?: Maybe<InternalDeleteManySessionResult>;
+  deleteManyShopifyGdprRequest?: Maybe<InternalDeleteManyShopifyGdprRequestResult>;
+  deleteManyShopifyProduct?: Maybe<InternalDeleteManyShopifyProductResult>;
+  deleteManyShopifyProductImage?: Maybe<InternalDeleteManyShopifyProductImageResult>;
+  deleteManyShopifyProductOption?: Maybe<InternalDeleteManyShopifyProductOptionResult>;
+  deleteManyShopifyProductVariant?: Maybe<InternalDeleteManyShopifyProductVariantResult>;
+  deleteManyShopifyShop?: Maybe<InternalDeleteManyShopifyShopResult>;
+  deleteManyShopifySync?: Maybe<InternalDeleteManyShopifySyncResult>;
   deleteManyUser?: Maybe<InternalDeleteManyUserResult>;
   deleteManyWidget?: Maybe<InternalDeleteManyWidgetResult>;
   deleteModelA?: Maybe<InternalDeleteModelAResult>;
   deletePart?: Maybe<InternalDeletePartResult>;
   deleteSection?: Maybe<InternalDeleteSectionResult>;
   deleteSession?: Maybe<InternalDeleteSessionResult>;
+  deleteShopifyGdprRequest?: Maybe<InternalDeleteShopifyGdprRequestResult>;
+  deleteShopifyProduct?: Maybe<InternalDeleteShopifyProductResult>;
+  deleteShopifyProductImage?: Maybe<InternalDeleteShopifyProductImageResult>;
+  deleteShopifyProductOption?: Maybe<InternalDeleteShopifyProductOptionResult>;
+  deleteShopifyProductVariant?: Maybe<InternalDeleteShopifyProductVariantResult>;
+  deleteShopifyShop?: Maybe<InternalDeleteShopifyShopResult>;
+  deleteShopifySync?: Maybe<InternalDeleteShopifySyncResult>;
   deleteUser?: Maybe<InternalDeleteUserResult>;
   deleteWidget?: Maybe<InternalDeleteWidgetResult>;
   game: InternalGameMutations;
   rollbackTransaction: Scalars["String"]["output"];
   startTransaction: Scalars["String"]["output"];
+  triggerAbortShopifySync?: Maybe<AbortShopifySyncResult>;
   triggerAddInventoryWidget?: Maybe<AddInventoryWidgetResult>;
   triggerAlwaysThrowErrorWidget?: Maybe<AlwaysThrowErrorWidgetResult>;
+  triggerCompleteShopifySync?: Maybe<CompleteShopifySyncResult>;
   triggerCreateAutoTableTest?: Maybe<CreateAutoTableTestResult>;
   triggerCreateAutoTableTestRelatedModel?: Maybe<CreateAutoTableTestRelatedModelResult>;
   triggerCreateGizmo?: Maybe<CreateGizmoResult>;
   triggerCreateModelA?: Maybe<CreateModelAResult>;
   triggerCreatePart?: Maybe<CreatePartResult>;
   triggerCreateSection?: Maybe<CreateSectionResult>;
+  triggerCreateShopifyGdprRequest?: Maybe<CreateShopifyGdprRequestResult>;
+  triggerCreateShopifyProduct?: Maybe<CreateShopifyProductResult>;
+  triggerCreateShopifyProductImage?: Maybe<CreateShopifyProductImageResult>;
+  triggerCreateShopifyProductOption?: Maybe<CreateShopifyProductOptionResult>;
+  triggerCreateShopifyProductVariant?: Maybe<CreateShopifyProductVariantResult>;
   triggerCreateTestData?: Maybe<CreateTestDataResult>;
   triggerCreateWidget?: Maybe<CreateWidgetResult>;
   triggerCustomActionAutoTableTest?: Maybe<CustomActionAutoTableTestResult>;
@@ -4381,20 +4905,35 @@ export type InternalMutations = {
   triggerDeleteModelA?: Maybe<DeleteModelAResult>;
   triggerDeletePart?: Maybe<DeletePartResult>;
   triggerDeleteSection?: Maybe<DeleteSectionResult>;
+  triggerDeleteShopifyProduct?: Maybe<DeleteShopifyProductResult>;
+  triggerDeleteShopifyProductImage?: Maybe<DeleteShopifyProductImageResult>;
+  triggerDeleteShopifyProductOption?: Maybe<DeleteShopifyProductOptionResult>;
+  triggerDeleteShopifyProductVariant?: Maybe<DeleteShopifyProductVariantResult>;
   triggerDeleteUser?: Maybe<DeleteUserResult>;
   triggerDeleteWidget?: Maybe<DeleteWidgetResult>;
+  triggerErrorShopifySync?: Maybe<ErrorShopifySyncResult>;
   triggerFlipAll?: Maybe<FlipAllResult>;
+  triggerInstallShopifyShop?: Maybe<InstallShopifyShopResult>;
   triggerNoTriggerActionAutoTableTest?: Maybe<NoTriggerActionAutoTableTestResult>;
   triggerNoTriggerGlobalAction?: Maybe<NoTriggerGlobalActionResult>;
+  triggerReinstallShopifyShop?: Maybe<ReinstallShopifyShopResult>;
+  triggerRunShopifySync?: Maybe<RunShopifySyncResult>;
   triggerSignInUser?: Maybe<SignInUserResult>;
   triggerSignOutUser?: Maybe<SignOutUserResult>;
   triggerSignUpUser?: Maybe<SignUpUserResult>;
+  triggerUninstallShopifyShop?: Maybe<UninstallShopifyShopResult>;
   triggerUpdateAutoTableTest?: Maybe<UpdateAutoTableTestResult>;
   triggerUpdateAutoTableTestRelatedModel?: Maybe<UpdateAutoTableTestRelatedModelResult>;
   triggerUpdateGizmo?: Maybe<UpdateGizmoResult>;
   triggerUpdateModelA?: Maybe<UpdateModelAResult>;
   triggerUpdatePart?: Maybe<UpdatePartResult>;
   triggerUpdateSection?: Maybe<UpdateSectionResult>;
+  triggerUpdateShopifyGdprRequest?: Maybe<UpdateShopifyGdprRequestResult>;
+  triggerUpdateShopifyProduct?: Maybe<UpdateShopifyProductResult>;
+  triggerUpdateShopifyProductImage?: Maybe<UpdateShopifyProductImageResult>;
+  triggerUpdateShopifyProductOption?: Maybe<UpdateShopifyProductOptionResult>;
+  triggerUpdateShopifyProductVariant?: Maybe<UpdateShopifyProductVariantResult>;
+  triggerUpdateShopifyShop?: Maybe<UpdateShopifyShopResult>;
   triggerUpdateUser?: Maybe<UpdateUserResult>;
   triggerUpdateWidget?: Maybe<UpdateWidgetResult>;
   triggerUpdateWithCustomParamsAutoTableTest?: Maybe<UpdateWithCustomParamsAutoTableTestResult>;
@@ -4405,6 +4944,13 @@ export type InternalMutations = {
   updatePart?: Maybe<InternalUpdatePartResult>;
   updateSection?: Maybe<InternalUpdateSectionResult>;
   updateSession?: Maybe<InternalUpdateSessionResult>;
+  updateShopifyGdprRequest?: Maybe<InternalUpdateShopifyGdprRequestResult>;
+  updateShopifyProduct?: Maybe<InternalUpdateShopifyProductResult>;
+  updateShopifyProductImage?: Maybe<InternalUpdateShopifyProductImageResult>;
+  updateShopifyProductOption?: Maybe<InternalUpdateShopifyProductOptionResult>;
+  updateShopifyProductVariant?: Maybe<InternalUpdateShopifyProductVariantResult>;
+  updateShopifyShop?: Maybe<InternalUpdateShopifyShopResult>;
+  updateShopifySync?: Maybe<InternalUpdateShopifySyncResult>;
   updateUser?: Maybe<InternalUpdateUserResult>;
   updateWidget?: Maybe<InternalUpdateWidgetResult>;
   upsertAutoTableTest?: Maybe<InternalUpsertAutoTableTestResult>;
@@ -4414,6 +4960,13 @@ export type InternalMutations = {
   upsertPart?: Maybe<InternalUpsertPartResult>;
   upsertSection?: Maybe<InternalUpsertSectionResult>;
   upsertSession?: Maybe<InternalUpsertSessionResult>;
+  upsertShopifyGdprRequest?: Maybe<InternalUpsertShopifyGdprRequestResult>;
+  upsertShopifyProduct?: Maybe<InternalUpsertShopifyProductResult>;
+  upsertShopifyProductImage?: Maybe<InternalUpsertShopifyProductImageResult>;
+  upsertShopifyProductOption?: Maybe<InternalUpsertShopifyProductOptionResult>;
+  upsertShopifyProductVariant?: Maybe<InternalUpsertShopifyProductVariantResult>;
+  upsertShopifyShop?: Maybe<InternalUpsertShopifyShopResult>;
+  upsertShopifySync?: Maybe<InternalUpsertShopifySyncResult>;
   upsertUser?: Maybe<InternalUpsertUserResult>;
   upsertWidget?: Maybe<InternalUpsertWidgetResult>;
 };
@@ -4450,6 +5003,34 @@ export type InternalMutationsBulkCreateSessionsArgs = {
   sessions: Array<InputMaybe<InternalSessionInput>>;
 };
 
+export type InternalMutationsBulkCreateShopifyGdprRequestsArgs = {
+  shopifyGdprRequests: Array<InputMaybe<InternalShopifyGdprRequestInput>>;
+};
+
+export type InternalMutationsBulkCreateShopifyProductImagesArgs = {
+  shopifyProductImages: Array<InputMaybe<InternalShopifyProductImageInput>>;
+};
+
+export type InternalMutationsBulkCreateShopifyProductOptionsArgs = {
+  shopifyProductOptions: Array<InputMaybe<InternalShopifyProductOptionInput>>;
+};
+
+export type InternalMutationsBulkCreateShopifyProductVariantsArgs = {
+  shopifyProductVariants: Array<InputMaybe<InternalShopifyProductVariantInput>>;
+};
+
+export type InternalMutationsBulkCreateShopifyProductsArgs = {
+  shopifyProducts: Array<InputMaybe<InternalShopifyProductInput>>;
+};
+
+export type InternalMutationsBulkCreateShopifyShopsArgs = {
+  shopifyShops: Array<InputMaybe<InternalShopifyShopInput>>;
+};
+
+export type InternalMutationsBulkCreateShopifySyncsArgs = {
+  shopifySyncs: Array<InputMaybe<InternalShopifySyncInput>>;
+};
+
 export type InternalMutationsBulkCreateUsersArgs = {
   users: Array<InputMaybe<InternalUserInput>>;
 };
@@ -4484,6 +5065,34 @@ export type InternalMutationsCreateSectionArgs = {
 
 export type InternalMutationsCreateSessionArgs = {
   session?: InputMaybe<InternalSessionInput>;
+};
+
+export type InternalMutationsCreateShopifyGdprRequestArgs = {
+  shopifyGdprRequest?: InputMaybe<InternalShopifyGdprRequestInput>;
+};
+
+export type InternalMutationsCreateShopifyProductArgs = {
+  shopifyProduct?: InputMaybe<InternalShopifyProductInput>;
+};
+
+export type InternalMutationsCreateShopifyProductImageArgs = {
+  shopifyProductImage?: InputMaybe<InternalShopifyProductImageInput>;
+};
+
+export type InternalMutationsCreateShopifyProductOptionArgs = {
+  shopifyProductOption?: InputMaybe<InternalShopifyProductOptionInput>;
+};
+
+export type InternalMutationsCreateShopifyProductVariantArgs = {
+  shopifyProductVariant?: InputMaybe<InternalShopifyProductVariantInput>;
+};
+
+export type InternalMutationsCreateShopifyShopArgs = {
+  shopifyShop?: InputMaybe<InternalShopifyShopInput>;
+};
+
+export type InternalMutationsCreateShopifySyncArgs = {
+  shopifySync?: InputMaybe<InternalShopifySyncInput>;
 };
 
 export type InternalMutationsCreateUserArgs = {
@@ -4540,6 +5149,41 @@ export type InternalMutationsDeleteManySessionArgs = {
   filter?: InputMaybe<Array<SessionFilter>>;
 };
 
+export type InternalMutationsDeleteManyShopifyGdprRequestArgs = {
+  filter?: InputMaybe<Array<ShopifyGdprRequestFilter>>;
+  search?: InputMaybe<Scalars["String"]["input"]>;
+};
+
+export type InternalMutationsDeleteManyShopifyProductArgs = {
+  filter?: InputMaybe<Array<ShopifyProductFilter>>;
+  search?: InputMaybe<Scalars["String"]["input"]>;
+};
+
+export type InternalMutationsDeleteManyShopifyProductImageArgs = {
+  filter?: InputMaybe<Array<ShopifyProductImageFilter>>;
+  search?: InputMaybe<Scalars["String"]["input"]>;
+};
+
+export type InternalMutationsDeleteManyShopifyProductOptionArgs = {
+  filter?: InputMaybe<Array<ShopifyProductOptionFilter>>;
+  search?: InputMaybe<Scalars["String"]["input"]>;
+};
+
+export type InternalMutationsDeleteManyShopifyProductVariantArgs = {
+  filter?: InputMaybe<Array<ShopifyProductVariantFilter>>;
+  search?: InputMaybe<Scalars["String"]["input"]>;
+};
+
+export type InternalMutationsDeleteManyShopifyShopArgs = {
+  filter?: InputMaybe<Array<ShopifyShopFilter>>;
+  search?: InputMaybe<Scalars["String"]["input"]>;
+};
+
+export type InternalMutationsDeleteManyShopifySyncArgs = {
+  filter?: InputMaybe<Array<ShopifySyncFilter>>;
+  search?: InputMaybe<Scalars["String"]["input"]>;
+};
+
 export type InternalMutationsDeleteManyUserArgs = {
   filter?: InputMaybe<Array<UserFilter>>;
   search?: InputMaybe<Scalars["String"]["input"]>;
@@ -4566,12 +5210,47 @@ export type InternalMutationsDeleteSessionArgs = {
   id: Scalars["GadgetID"]["input"];
 };
 
+export type InternalMutationsDeleteShopifyGdprRequestArgs = {
+  id: Scalars["GadgetID"]["input"];
+};
+
+export type InternalMutationsDeleteShopifyProductArgs = {
+  id: Scalars["GadgetID"]["input"];
+};
+
+export type InternalMutationsDeleteShopifyProductImageArgs = {
+  id: Scalars["GadgetID"]["input"];
+};
+
+export type InternalMutationsDeleteShopifyProductOptionArgs = {
+  id: Scalars["GadgetID"]["input"];
+};
+
+export type InternalMutationsDeleteShopifyProductVariantArgs = {
+  id: Scalars["GadgetID"]["input"];
+};
+
+export type InternalMutationsDeleteShopifyShopArgs = {
+  id: Scalars["GadgetID"]["input"];
+};
+
+export type InternalMutationsDeleteShopifySyncArgs = {
+  id: Scalars["GadgetID"]["input"];
+};
+
 export type InternalMutationsDeleteUserArgs = {
   id: Scalars["GadgetID"]["input"];
 };
 
 export type InternalMutationsDeleteWidgetArgs = {
   id: Scalars["GadgetID"]["input"];
+};
+
+export type InternalMutationsTriggerAbortShopifySyncArgs = {
+  context?: InputMaybe<AppGraphQlTriggerMutationContext>;
+  params?: InputMaybe<Scalars["JSONObject"]["input"]>;
+  trigger?: InputMaybe<Scalars["JSONObject"]["input"]>;
+  verifyTriggerExists?: InputMaybe<Scalars["Boolean"]["input"]>;
 };
 
 export type InternalMutationsTriggerAddInventoryWidgetArgs = {
@@ -4582,6 +5261,13 @@ export type InternalMutationsTriggerAddInventoryWidgetArgs = {
 };
 
 export type InternalMutationsTriggerAlwaysThrowErrorWidgetArgs = {
+  context?: InputMaybe<AppGraphQlTriggerMutationContext>;
+  params?: InputMaybe<Scalars["JSONObject"]["input"]>;
+  trigger?: InputMaybe<Scalars["JSONObject"]["input"]>;
+  verifyTriggerExists?: InputMaybe<Scalars["Boolean"]["input"]>;
+};
+
+export type InternalMutationsTriggerCompleteShopifySyncArgs = {
   context?: InputMaybe<AppGraphQlTriggerMutationContext>;
   params?: InputMaybe<Scalars["JSONObject"]["input"]>;
   trigger?: InputMaybe<Scalars["JSONObject"]["input"]>;
@@ -4624,6 +5310,41 @@ export type InternalMutationsTriggerCreatePartArgs = {
 };
 
 export type InternalMutationsTriggerCreateSectionArgs = {
+  context?: InputMaybe<AppGraphQlTriggerMutationContext>;
+  params?: InputMaybe<Scalars["JSONObject"]["input"]>;
+  trigger?: InputMaybe<Scalars["JSONObject"]["input"]>;
+  verifyTriggerExists?: InputMaybe<Scalars["Boolean"]["input"]>;
+};
+
+export type InternalMutationsTriggerCreateShopifyGdprRequestArgs = {
+  context?: InputMaybe<AppGraphQlTriggerMutationContext>;
+  params?: InputMaybe<Scalars["JSONObject"]["input"]>;
+  trigger?: InputMaybe<Scalars["JSONObject"]["input"]>;
+  verifyTriggerExists?: InputMaybe<Scalars["Boolean"]["input"]>;
+};
+
+export type InternalMutationsTriggerCreateShopifyProductArgs = {
+  context?: InputMaybe<AppGraphQlTriggerMutationContext>;
+  params?: InputMaybe<Scalars["JSONObject"]["input"]>;
+  trigger?: InputMaybe<Scalars["JSONObject"]["input"]>;
+  verifyTriggerExists?: InputMaybe<Scalars["Boolean"]["input"]>;
+};
+
+export type InternalMutationsTriggerCreateShopifyProductImageArgs = {
+  context?: InputMaybe<AppGraphQlTriggerMutationContext>;
+  params?: InputMaybe<Scalars["JSONObject"]["input"]>;
+  trigger?: InputMaybe<Scalars["JSONObject"]["input"]>;
+  verifyTriggerExists?: InputMaybe<Scalars["Boolean"]["input"]>;
+};
+
+export type InternalMutationsTriggerCreateShopifyProductOptionArgs = {
+  context?: InputMaybe<AppGraphQlTriggerMutationContext>;
+  params?: InputMaybe<Scalars["JSONObject"]["input"]>;
+  trigger?: InputMaybe<Scalars["JSONObject"]["input"]>;
+  verifyTriggerExists?: InputMaybe<Scalars["Boolean"]["input"]>;
+};
+
+export type InternalMutationsTriggerCreateShopifyProductVariantArgs = {
   context?: InputMaybe<AppGraphQlTriggerMutationContext>;
   params?: InputMaybe<Scalars["JSONObject"]["input"]>;
   trigger?: InputMaybe<Scalars["JSONObject"]["input"]>;
@@ -4698,6 +5419,34 @@ export type InternalMutationsTriggerDeleteSectionArgs = {
   verifyTriggerExists?: InputMaybe<Scalars["Boolean"]["input"]>;
 };
 
+export type InternalMutationsTriggerDeleteShopifyProductArgs = {
+  context?: InputMaybe<AppGraphQlTriggerMutationContext>;
+  params?: InputMaybe<Scalars["JSONObject"]["input"]>;
+  trigger?: InputMaybe<Scalars["JSONObject"]["input"]>;
+  verifyTriggerExists?: InputMaybe<Scalars["Boolean"]["input"]>;
+};
+
+export type InternalMutationsTriggerDeleteShopifyProductImageArgs = {
+  context?: InputMaybe<AppGraphQlTriggerMutationContext>;
+  params?: InputMaybe<Scalars["JSONObject"]["input"]>;
+  trigger?: InputMaybe<Scalars["JSONObject"]["input"]>;
+  verifyTriggerExists?: InputMaybe<Scalars["Boolean"]["input"]>;
+};
+
+export type InternalMutationsTriggerDeleteShopifyProductOptionArgs = {
+  context?: InputMaybe<AppGraphQlTriggerMutationContext>;
+  params?: InputMaybe<Scalars["JSONObject"]["input"]>;
+  trigger?: InputMaybe<Scalars["JSONObject"]["input"]>;
+  verifyTriggerExists?: InputMaybe<Scalars["Boolean"]["input"]>;
+};
+
+export type InternalMutationsTriggerDeleteShopifyProductVariantArgs = {
+  context?: InputMaybe<AppGraphQlTriggerMutationContext>;
+  params?: InputMaybe<Scalars["JSONObject"]["input"]>;
+  trigger?: InputMaybe<Scalars["JSONObject"]["input"]>;
+  verifyTriggerExists?: InputMaybe<Scalars["Boolean"]["input"]>;
+};
+
 export type InternalMutationsTriggerDeleteUserArgs = {
   context?: InputMaybe<AppGraphQlTriggerMutationContext>;
   params?: InputMaybe<Scalars["JSONObject"]["input"]>;
@@ -4712,9 +5461,23 @@ export type InternalMutationsTriggerDeleteWidgetArgs = {
   verifyTriggerExists?: InputMaybe<Scalars["Boolean"]["input"]>;
 };
 
+export type InternalMutationsTriggerErrorShopifySyncArgs = {
+  context?: InputMaybe<AppGraphQlTriggerMutationContext>;
+  params?: InputMaybe<Scalars["JSONObject"]["input"]>;
+  trigger?: InputMaybe<Scalars["JSONObject"]["input"]>;
+  verifyTriggerExists?: InputMaybe<Scalars["Boolean"]["input"]>;
+};
+
 export type InternalMutationsTriggerFlipAllArgs = {
   inventoryCount?: InputMaybe<Scalars["Float"]["input"]>;
   title?: InputMaybe<Scalars["String"]["input"]>;
+  trigger?: InputMaybe<Scalars["JSONObject"]["input"]>;
+  verifyTriggerExists?: InputMaybe<Scalars["Boolean"]["input"]>;
+};
+
+export type InternalMutationsTriggerInstallShopifyShopArgs = {
+  context?: InputMaybe<AppGraphQlTriggerMutationContext>;
+  params?: InputMaybe<Scalars["JSONObject"]["input"]>;
   trigger?: InputMaybe<Scalars["JSONObject"]["input"]>;
   verifyTriggerExists?: InputMaybe<Scalars["Boolean"]["input"]>;
 };
@@ -4727,6 +5490,20 @@ export type InternalMutationsTriggerNoTriggerActionAutoTableTestArgs = {
 };
 
 export type InternalMutationsTriggerNoTriggerGlobalActionArgs = {
+  trigger?: InputMaybe<Scalars["JSONObject"]["input"]>;
+  verifyTriggerExists?: InputMaybe<Scalars["Boolean"]["input"]>;
+};
+
+export type InternalMutationsTriggerReinstallShopifyShopArgs = {
+  context?: InputMaybe<AppGraphQlTriggerMutationContext>;
+  params?: InputMaybe<Scalars["JSONObject"]["input"]>;
+  trigger?: InputMaybe<Scalars["JSONObject"]["input"]>;
+  verifyTriggerExists?: InputMaybe<Scalars["Boolean"]["input"]>;
+};
+
+export type InternalMutationsTriggerRunShopifySyncArgs = {
+  context?: InputMaybe<AppGraphQlTriggerMutationContext>;
+  params?: InputMaybe<Scalars["JSONObject"]["input"]>;
   trigger?: InputMaybe<Scalars["JSONObject"]["input"]>;
   verifyTriggerExists?: InputMaybe<Scalars["Boolean"]["input"]>;
 };
@@ -4746,6 +5523,13 @@ export type InternalMutationsTriggerSignOutUserArgs = {
 };
 
 export type InternalMutationsTriggerSignUpUserArgs = {
+  context?: InputMaybe<AppGraphQlTriggerMutationContext>;
+  params?: InputMaybe<Scalars["JSONObject"]["input"]>;
+  trigger?: InputMaybe<Scalars["JSONObject"]["input"]>;
+  verifyTriggerExists?: InputMaybe<Scalars["Boolean"]["input"]>;
+};
+
+export type InternalMutationsTriggerUninstallShopifyShopArgs = {
   context?: InputMaybe<AppGraphQlTriggerMutationContext>;
   params?: InputMaybe<Scalars["JSONObject"]["input"]>;
   trigger?: InputMaybe<Scalars["JSONObject"]["input"]>;
@@ -4788,6 +5572,48 @@ export type InternalMutationsTriggerUpdatePartArgs = {
 };
 
 export type InternalMutationsTriggerUpdateSectionArgs = {
+  context?: InputMaybe<AppGraphQlTriggerMutationContext>;
+  params?: InputMaybe<Scalars["JSONObject"]["input"]>;
+  trigger?: InputMaybe<Scalars["JSONObject"]["input"]>;
+  verifyTriggerExists?: InputMaybe<Scalars["Boolean"]["input"]>;
+};
+
+export type InternalMutationsTriggerUpdateShopifyGdprRequestArgs = {
+  context?: InputMaybe<AppGraphQlTriggerMutationContext>;
+  params?: InputMaybe<Scalars["JSONObject"]["input"]>;
+  trigger?: InputMaybe<Scalars["JSONObject"]["input"]>;
+  verifyTriggerExists?: InputMaybe<Scalars["Boolean"]["input"]>;
+};
+
+export type InternalMutationsTriggerUpdateShopifyProductArgs = {
+  context?: InputMaybe<AppGraphQlTriggerMutationContext>;
+  params?: InputMaybe<Scalars["JSONObject"]["input"]>;
+  trigger?: InputMaybe<Scalars["JSONObject"]["input"]>;
+  verifyTriggerExists?: InputMaybe<Scalars["Boolean"]["input"]>;
+};
+
+export type InternalMutationsTriggerUpdateShopifyProductImageArgs = {
+  context?: InputMaybe<AppGraphQlTriggerMutationContext>;
+  params?: InputMaybe<Scalars["JSONObject"]["input"]>;
+  trigger?: InputMaybe<Scalars["JSONObject"]["input"]>;
+  verifyTriggerExists?: InputMaybe<Scalars["Boolean"]["input"]>;
+};
+
+export type InternalMutationsTriggerUpdateShopifyProductOptionArgs = {
+  context?: InputMaybe<AppGraphQlTriggerMutationContext>;
+  params?: InputMaybe<Scalars["JSONObject"]["input"]>;
+  trigger?: InputMaybe<Scalars["JSONObject"]["input"]>;
+  verifyTriggerExists?: InputMaybe<Scalars["Boolean"]["input"]>;
+};
+
+export type InternalMutationsTriggerUpdateShopifyProductVariantArgs = {
+  context?: InputMaybe<AppGraphQlTriggerMutationContext>;
+  params?: InputMaybe<Scalars["JSONObject"]["input"]>;
+  trigger?: InputMaybe<Scalars["JSONObject"]["input"]>;
+  verifyTriggerExists?: InputMaybe<Scalars["Boolean"]["input"]>;
+};
+
+export type InternalMutationsTriggerUpdateShopifyShopArgs = {
   context?: InputMaybe<AppGraphQlTriggerMutationContext>;
   params?: InputMaybe<Scalars["JSONObject"]["input"]>;
   trigger?: InputMaybe<Scalars["JSONObject"]["input"]>;
@@ -4850,6 +5676,41 @@ export type InternalMutationsUpdateSessionArgs = {
   session?: InputMaybe<InternalSessionInput>;
 };
 
+export type InternalMutationsUpdateShopifyGdprRequestArgs = {
+  id: Scalars["GadgetID"]["input"];
+  shopifyGdprRequest?: InputMaybe<InternalShopifyGdprRequestInput>;
+};
+
+export type InternalMutationsUpdateShopifyProductArgs = {
+  id: Scalars["GadgetID"]["input"];
+  shopifyProduct?: InputMaybe<InternalShopifyProductInput>;
+};
+
+export type InternalMutationsUpdateShopifyProductImageArgs = {
+  id: Scalars["GadgetID"]["input"];
+  shopifyProductImage?: InputMaybe<InternalShopifyProductImageInput>;
+};
+
+export type InternalMutationsUpdateShopifyProductOptionArgs = {
+  id: Scalars["GadgetID"]["input"];
+  shopifyProductOption?: InputMaybe<InternalShopifyProductOptionInput>;
+};
+
+export type InternalMutationsUpdateShopifyProductVariantArgs = {
+  id: Scalars["GadgetID"]["input"];
+  shopifyProductVariant?: InputMaybe<InternalShopifyProductVariantInput>;
+};
+
+export type InternalMutationsUpdateShopifyShopArgs = {
+  id: Scalars["GadgetID"]["input"];
+  shopifyShop?: InputMaybe<InternalShopifyShopInput>;
+};
+
+export type InternalMutationsUpdateShopifySyncArgs = {
+  id: Scalars["GadgetID"]["input"];
+  shopifySync?: InputMaybe<InternalShopifySyncInput>;
+};
+
 export type InternalMutationsUpdateUserArgs = {
   id: Scalars["GadgetID"]["input"];
   user?: InputMaybe<InternalUserInput>;
@@ -4893,6 +5754,41 @@ export type InternalMutationsUpsertSectionArgs = {
 export type InternalMutationsUpsertSessionArgs = {
   on?: InputMaybe<Array<Scalars["String"]["input"]>>;
   session?: InputMaybe<InternalSessionInput>;
+};
+
+export type InternalMutationsUpsertShopifyGdprRequestArgs = {
+  on?: InputMaybe<Array<Scalars["String"]["input"]>>;
+  shopifyGdprRequest?: InputMaybe<InternalShopifyGdprRequestInput>;
+};
+
+export type InternalMutationsUpsertShopifyProductArgs = {
+  on?: InputMaybe<Array<Scalars["String"]["input"]>>;
+  shopifyProduct?: InputMaybe<InternalShopifyProductInput>;
+};
+
+export type InternalMutationsUpsertShopifyProductImageArgs = {
+  on?: InputMaybe<Array<Scalars["String"]["input"]>>;
+  shopifyProductImage?: InputMaybe<InternalShopifyProductImageInput>;
+};
+
+export type InternalMutationsUpsertShopifyProductOptionArgs = {
+  on?: InputMaybe<Array<Scalars["String"]["input"]>>;
+  shopifyProductOption?: InputMaybe<InternalShopifyProductOptionInput>;
+};
+
+export type InternalMutationsUpsertShopifyProductVariantArgs = {
+  on?: InputMaybe<Array<Scalars["String"]["input"]>>;
+  shopifyProductVariant?: InputMaybe<InternalShopifyProductVariantInput>;
+};
+
+export type InternalMutationsUpsertShopifyShopArgs = {
+  on?: InputMaybe<Array<Scalars["String"]["input"]>>;
+  shopifyShop?: InputMaybe<InternalShopifyShopInput>;
+};
+
+export type InternalMutationsUpsertShopifySyncArgs = {
+  on?: InputMaybe<Array<Scalars["String"]["input"]>>;
+  shopifySync?: InputMaybe<InternalShopifySyncInput>;
 };
 
 export type InternalMutationsUpsertUserArgs = {
@@ -4956,12 +5852,26 @@ export type InternalQueries = {
   listPart: InternalPartRecordConnection;
   listSection: InternalSectionRecordConnection;
   listSession: InternalSessionRecordConnection;
+  listShopifyGdprRequest: InternalShopifyGdprRequestRecordConnection;
+  listShopifyProduct: InternalShopifyProductRecordConnection;
+  listShopifyProductImage: InternalShopifyProductImageRecordConnection;
+  listShopifyProductOption: InternalShopifyProductOptionRecordConnection;
+  listShopifyProductVariant: InternalShopifyProductVariantRecordConnection;
+  listShopifyShop: InternalShopifyShopRecordConnection;
+  listShopifySync: InternalShopifySyncRecordConnection;
   listUser: InternalUserRecordConnection;
   listWidget: InternalWidgetRecordConnection;
   modelA?: Maybe<Scalars["InternalModelARecord"]["output"]>;
   part?: Maybe<Scalars["InternalPartRecord"]["output"]>;
   section?: Maybe<Scalars["InternalSectionRecord"]["output"]>;
   session?: Maybe<Scalars["InternalSessionRecord"]["output"]>;
+  shopifyGdprRequest?: Maybe<Scalars["InternalShopifyGdprRequestRecord"]["output"]>;
+  shopifyProduct?: Maybe<Scalars["InternalShopifyProductRecord"]["output"]>;
+  shopifyProductImage?: Maybe<Scalars["InternalShopifyProductImageRecord"]["output"]>;
+  shopifyProductOption?: Maybe<Scalars["InternalShopifyProductOptionRecord"]["output"]>;
+  shopifyProductVariant?: Maybe<Scalars["InternalShopifyProductVariantRecord"]["output"]>;
+  shopifyShop?: Maybe<Scalars["InternalShopifyShopRecord"]["output"]>;
+  shopifySync?: Maybe<Scalars["InternalShopifySyncRecord"]["output"]>;
   user?: Maybe<Scalars["InternalUserRecord"]["output"]>;
   widget?: Maybe<Scalars["InternalWidgetRecord"]["output"]>;
 };
@@ -5056,6 +5966,83 @@ export type InternalQueriesListSessionArgs = {
   select?: InputMaybe<Array<Scalars["String"]["input"]>>;
 };
 
+export type InternalQueriesListShopifyGdprRequestArgs = {
+  after?: InputMaybe<Scalars["String"]["input"]>;
+  before?: InputMaybe<Scalars["String"]["input"]>;
+  filter?: InputMaybe<Array<ShopifyGdprRequestFilter>>;
+  first?: InputMaybe<Scalars["Int"]["input"]>;
+  last?: InputMaybe<Scalars["Int"]["input"]>;
+  search?: InputMaybe<Scalars["String"]["input"]>;
+  select?: InputMaybe<Array<Scalars["String"]["input"]>>;
+  sort?: InputMaybe<Array<ShopifyGdprRequestSort>>;
+};
+
+export type InternalQueriesListShopifyProductArgs = {
+  after?: InputMaybe<Scalars["String"]["input"]>;
+  before?: InputMaybe<Scalars["String"]["input"]>;
+  filter?: InputMaybe<Array<ShopifyProductFilter>>;
+  first?: InputMaybe<Scalars["Int"]["input"]>;
+  last?: InputMaybe<Scalars["Int"]["input"]>;
+  search?: InputMaybe<Scalars["String"]["input"]>;
+  select?: InputMaybe<Array<Scalars["String"]["input"]>>;
+  sort?: InputMaybe<Array<ShopifyProductSort>>;
+};
+
+export type InternalQueriesListShopifyProductImageArgs = {
+  after?: InputMaybe<Scalars["String"]["input"]>;
+  before?: InputMaybe<Scalars["String"]["input"]>;
+  filter?: InputMaybe<Array<ShopifyProductImageFilter>>;
+  first?: InputMaybe<Scalars["Int"]["input"]>;
+  last?: InputMaybe<Scalars["Int"]["input"]>;
+  search?: InputMaybe<Scalars["String"]["input"]>;
+  select?: InputMaybe<Array<Scalars["String"]["input"]>>;
+  sort?: InputMaybe<Array<ShopifyProductImageSort>>;
+};
+
+export type InternalQueriesListShopifyProductOptionArgs = {
+  after?: InputMaybe<Scalars["String"]["input"]>;
+  before?: InputMaybe<Scalars["String"]["input"]>;
+  filter?: InputMaybe<Array<ShopifyProductOptionFilter>>;
+  first?: InputMaybe<Scalars["Int"]["input"]>;
+  last?: InputMaybe<Scalars["Int"]["input"]>;
+  search?: InputMaybe<Scalars["String"]["input"]>;
+  select?: InputMaybe<Array<Scalars["String"]["input"]>>;
+  sort?: InputMaybe<Array<ShopifyProductOptionSort>>;
+};
+
+export type InternalQueriesListShopifyProductVariantArgs = {
+  after?: InputMaybe<Scalars["String"]["input"]>;
+  before?: InputMaybe<Scalars["String"]["input"]>;
+  filter?: InputMaybe<Array<ShopifyProductVariantFilter>>;
+  first?: InputMaybe<Scalars["Int"]["input"]>;
+  last?: InputMaybe<Scalars["Int"]["input"]>;
+  search?: InputMaybe<Scalars["String"]["input"]>;
+  select?: InputMaybe<Array<Scalars["String"]["input"]>>;
+  sort?: InputMaybe<Array<ShopifyProductVariantSort>>;
+};
+
+export type InternalQueriesListShopifyShopArgs = {
+  after?: InputMaybe<Scalars["String"]["input"]>;
+  before?: InputMaybe<Scalars["String"]["input"]>;
+  filter?: InputMaybe<Array<ShopifyShopFilter>>;
+  first?: InputMaybe<Scalars["Int"]["input"]>;
+  last?: InputMaybe<Scalars["Int"]["input"]>;
+  search?: InputMaybe<Scalars["String"]["input"]>;
+  select?: InputMaybe<Array<Scalars["String"]["input"]>>;
+  sort?: InputMaybe<Array<ShopifyShopSort>>;
+};
+
+export type InternalQueriesListShopifySyncArgs = {
+  after?: InputMaybe<Scalars["String"]["input"]>;
+  before?: InputMaybe<Scalars["String"]["input"]>;
+  filter?: InputMaybe<Array<ShopifySyncFilter>>;
+  first?: InputMaybe<Scalars["Int"]["input"]>;
+  last?: InputMaybe<Scalars["Int"]["input"]>;
+  search?: InputMaybe<Scalars["String"]["input"]>;
+  select?: InputMaybe<Array<Scalars["String"]["input"]>>;
+  sort?: InputMaybe<Array<ShopifySyncSort>>;
+};
+
 export type InternalQueriesListUserArgs = {
   after?: InputMaybe<Scalars["String"]["input"]>;
   before?: InputMaybe<Scalars["String"]["input"]>;
@@ -5094,6 +6081,41 @@ export type InternalQueriesSectionArgs = {
 };
 
 export type InternalQueriesSessionArgs = {
+  id: Scalars["GadgetID"]["input"];
+  select?: InputMaybe<Array<Scalars["String"]["input"]>>;
+};
+
+export type InternalQueriesShopifyGdprRequestArgs = {
+  id: Scalars["GadgetID"]["input"];
+  select?: InputMaybe<Array<Scalars["String"]["input"]>>;
+};
+
+export type InternalQueriesShopifyProductArgs = {
+  id: Scalars["GadgetID"]["input"];
+  select?: InputMaybe<Array<Scalars["String"]["input"]>>;
+};
+
+export type InternalQueriesShopifyProductImageArgs = {
+  id: Scalars["GadgetID"]["input"];
+  select?: InputMaybe<Array<Scalars["String"]["input"]>>;
+};
+
+export type InternalQueriesShopifyProductOptionArgs = {
+  id: Scalars["GadgetID"]["input"];
+  select?: InputMaybe<Array<Scalars["String"]["input"]>>;
+};
+
+export type InternalQueriesShopifyProductVariantArgs = {
+  id: Scalars["GadgetID"]["input"];
+  select?: InputMaybe<Array<Scalars["String"]["input"]>>;
+};
+
+export type InternalQueriesShopifyShopArgs = {
+  id: Scalars["GadgetID"]["input"];
+  select?: InputMaybe<Array<Scalars["String"]["input"]>>;
+};
+
+export type InternalQueriesShopifySyncArgs = {
   id: Scalars["GadgetID"]["input"];
   select?: InputMaybe<Array<Scalars["String"]["input"]>>;
 };
@@ -5138,6 +6160,10 @@ export type InternalSectionRecordEdge = {
 export type InternalSessionInput = {
   createdAt?: InputMaybe<Scalars["DateTime"]["input"]>;
   id?: InputMaybe<Scalars["GadgetID"]["input"]>;
+  /** A string list of Gadget platform Role keys to assign to this record */
+  roles?: InputMaybe<Array<Scalars["String"]["input"]>>;
+  shop?: InputMaybe<InternalBelongsToInput>;
+  shopifySID?: InputMaybe<Scalars["String"]["input"]>;
   state?: InputMaybe<Scalars["RecordState"]["input"]>;
   stateHistory?: InputMaybe<Scalars["RecordState"]["input"]>;
   updatedAt?: InputMaybe<Scalars["DateTime"]["input"]>;
@@ -5160,6 +6186,343 @@ export type InternalSessionRecordEdge = {
   cursor: Scalars["String"]["output"];
   /** The item at the end of the edge */
   node: Scalars["InternalSessionRecord"]["output"];
+};
+
+export type InternalShopifyGdprRequestInput = {
+  createdAt?: InputMaybe<Scalars["DateTime"]["input"]>;
+  id?: InputMaybe<Scalars["GadgetID"]["input"]>;
+  payload?: InputMaybe<Scalars["JSON"]["input"]>;
+  shop?: InputMaybe<InternalBelongsToInput>;
+  state?: InputMaybe<Scalars["RecordState"]["input"]>;
+  stateHistory?: InputMaybe<Scalars["RecordState"]["input"]>;
+  topic?: InputMaybe<Scalars["ShopifyGdprRequestTopicEnum"]["input"]>;
+  updatedAt?: InputMaybe<Scalars["DateTime"]["input"]>;
+};
+
+/** A connection to a list of InternalShopifyGdprRequestRecord items. */
+export type InternalShopifyGdprRequestRecordConnection = {
+  __typename?: "InternalShopifyGdprRequestRecordConnection";
+  /** A list of edges. */
+  edges: Array<InternalShopifyGdprRequestRecordEdge>;
+  /** Information to aid in pagination. */
+  pageInfo: PageInfo;
+};
+
+/** An edge in a InternalShopifyGdprRequestRecord connection. */
+export type InternalShopifyGdprRequestRecordEdge = {
+  __typename?: "InternalShopifyGdprRequestRecordEdge";
+  /** A cursor for use in pagination */
+  cursor: Scalars["String"]["output"];
+  /** The item at the end of the edge */
+  node: Scalars["InternalShopifyGdprRequestRecord"]["output"];
+};
+
+export type InternalShopifyProductImageAtomicsInput = {
+  /** Numeric atomic commands for operating on height. */
+  height?: InputMaybe<Array<NumericAtomicFieldUpdateInput>>;
+  /** Numeric atomic commands for operating on position. */
+  position?: InputMaybe<Array<NumericAtomicFieldUpdateInput>>;
+  /** Numeric atomic commands for operating on width. */
+  width?: InputMaybe<Array<NumericAtomicFieldUpdateInput>>;
+};
+
+export type InternalShopifyProductImageInput = {
+  /** An optional list of atomically applied commands for race-safe mutations of the record */
+  _atomics?: InputMaybe<InternalShopifyProductImageAtomicsInput>;
+  alt?: InputMaybe<Scalars["String"]["input"]>;
+  createdAt?: InputMaybe<Scalars["DateTime"]["input"]>;
+  height?: InputMaybe<Scalars["Float"]["input"]>;
+  id?: InputMaybe<Scalars["GadgetID"]["input"]>;
+  position?: InputMaybe<Scalars["Float"]["input"]>;
+  product?: InputMaybe<InternalBelongsToInput>;
+  shop?: InputMaybe<InternalBelongsToInput>;
+  shopifyCreatedAt?: InputMaybe<Scalars["DateTime"]["input"]>;
+  shopifyUpdatedAt?: InputMaybe<Scalars["DateTime"]["input"]>;
+  source?: InputMaybe<Scalars["String"]["input"]>;
+  state?: InputMaybe<Scalars["RecordState"]["input"]>;
+  stateHistory?: InputMaybe<Scalars["RecordState"]["input"]>;
+  updatedAt?: InputMaybe<Scalars["DateTime"]["input"]>;
+  width?: InputMaybe<Scalars["Float"]["input"]>;
+};
+
+/** A connection to a list of InternalShopifyProductImageRecord items. */
+export type InternalShopifyProductImageRecordConnection = {
+  __typename?: "InternalShopifyProductImageRecordConnection";
+  /** A list of edges. */
+  edges: Array<InternalShopifyProductImageRecordEdge>;
+  /** Information to aid in pagination. */
+  pageInfo: PageInfo;
+};
+
+/** An edge in a InternalShopifyProductImageRecord connection. */
+export type InternalShopifyProductImageRecordEdge = {
+  __typename?: "InternalShopifyProductImageRecordEdge";
+  /** A cursor for use in pagination */
+  cursor: Scalars["String"]["output"];
+  /** The item at the end of the edge */
+  node: Scalars["InternalShopifyProductImageRecord"]["output"];
+};
+
+export type InternalShopifyProductInput = {
+  body?: InputMaybe<Scalars["String"]["input"]>;
+  category?: InputMaybe<Scalars["JSON"]["input"]>;
+  compareAtPriceRange?: InputMaybe<Scalars["JSON"]["input"]>;
+  createdAt?: InputMaybe<Scalars["DateTime"]["input"]>;
+  handle?: InputMaybe<Scalars["String"]["input"]>;
+  id?: InputMaybe<Scalars["GadgetID"]["input"]>;
+  productCategory?: InputMaybe<Scalars["JSON"]["input"]>;
+  productType?: InputMaybe<Scalars["String"]["input"]>;
+  publishedAt?: InputMaybe<Scalars["DateTime"]["input"]>;
+  shop?: InputMaybe<InternalBelongsToInput>;
+  shopifyCreatedAt?: InputMaybe<Scalars["DateTime"]["input"]>;
+  shopifyUpdatedAt?: InputMaybe<Scalars["DateTime"]["input"]>;
+  state?: InputMaybe<Scalars["RecordState"]["input"]>;
+  stateHistory?: InputMaybe<Scalars["RecordState"]["input"]>;
+  status?: InputMaybe<Scalars["ShopifyProductStatusEnum"]["input"]>;
+  tags?: InputMaybe<Scalars["JSON"]["input"]>;
+  templateSuffix?: InputMaybe<Scalars["String"]["input"]>;
+  title?: InputMaybe<Scalars["String"]["input"]>;
+  updatedAt?: InputMaybe<Scalars["DateTime"]["input"]>;
+  vendor?: InputMaybe<Scalars["String"]["input"]>;
+};
+
+export type InternalShopifyProductOptionAtomicsInput = {
+  /** Numeric atomic commands for operating on position. */
+  position?: InputMaybe<Array<NumericAtomicFieldUpdateInput>>;
+};
+
+export type InternalShopifyProductOptionInput = {
+  /** An optional list of atomically applied commands for race-safe mutations of the record */
+  _atomics?: InputMaybe<InternalShopifyProductOptionAtomicsInput>;
+  createdAt?: InputMaybe<Scalars["DateTime"]["input"]>;
+  id?: InputMaybe<Scalars["GadgetID"]["input"]>;
+  name?: InputMaybe<Scalars["String"]["input"]>;
+  position?: InputMaybe<Scalars["Float"]["input"]>;
+  product?: InputMaybe<InternalBelongsToInput>;
+  shop?: InputMaybe<InternalBelongsToInput>;
+  state?: InputMaybe<Scalars["RecordState"]["input"]>;
+  stateHistory?: InputMaybe<Scalars["RecordState"]["input"]>;
+  updatedAt?: InputMaybe<Scalars["DateTime"]["input"]>;
+  values?: InputMaybe<Scalars["JSON"]["input"]>;
+};
+
+/** A connection to a list of InternalShopifyProductOptionRecord items. */
+export type InternalShopifyProductOptionRecordConnection = {
+  __typename?: "InternalShopifyProductOptionRecordConnection";
+  /** A list of edges. */
+  edges: Array<InternalShopifyProductOptionRecordEdge>;
+  /** Information to aid in pagination. */
+  pageInfo: PageInfo;
+};
+
+/** An edge in a InternalShopifyProductOptionRecord connection. */
+export type InternalShopifyProductOptionRecordEdge = {
+  __typename?: "InternalShopifyProductOptionRecordEdge";
+  /** A cursor for use in pagination */
+  cursor: Scalars["String"]["output"];
+  /** The item at the end of the edge */
+  node: Scalars["InternalShopifyProductOptionRecord"]["output"];
+};
+
+/** A connection to a list of InternalShopifyProductRecord items. */
+export type InternalShopifyProductRecordConnection = {
+  __typename?: "InternalShopifyProductRecordConnection";
+  /** A list of edges. */
+  edges: Array<InternalShopifyProductRecordEdge>;
+  /** Information to aid in pagination. */
+  pageInfo: PageInfo;
+};
+
+/** An edge in a InternalShopifyProductRecord connection. */
+export type InternalShopifyProductRecordEdge = {
+  __typename?: "InternalShopifyProductRecordEdge";
+  /** A cursor for use in pagination */
+  cursor: Scalars["String"]["output"];
+  /** The item at the end of the edge */
+  node: Scalars["InternalShopifyProductRecord"]["output"];
+};
+
+export type InternalShopifyProductVariantAtomicsInput = {
+  /** Numeric atomic commands for operating on inventoryQuantity. */
+  inventoryQuantity?: InputMaybe<Array<NumericAtomicFieldUpdateInput>>;
+  /** Numeric atomic commands for operating on position. */
+  position?: InputMaybe<Array<NumericAtomicFieldUpdateInput>>;
+};
+
+export type InternalShopifyProductVariantInput = {
+  /** An optional list of atomically applied commands for race-safe mutations of the record */
+  _atomics?: InputMaybe<InternalShopifyProductVariantAtomicsInput>;
+  barcode?: InputMaybe<Scalars["String"]["input"]>;
+  compareAtPrice?: InputMaybe<Scalars["String"]["input"]>;
+  createdAt?: InputMaybe<Scalars["DateTime"]["input"]>;
+  id?: InputMaybe<Scalars["GadgetID"]["input"]>;
+  inventoryPolicy?: InputMaybe<Scalars["String"]["input"]>;
+  inventoryQuantity?: InputMaybe<Scalars["Float"]["input"]>;
+  option1?: InputMaybe<Scalars["String"]["input"]>;
+  option2?: InputMaybe<Scalars["String"]["input"]>;
+  option3?: InputMaybe<Scalars["String"]["input"]>;
+  position?: InputMaybe<Scalars["Float"]["input"]>;
+  presentmentPrices?: InputMaybe<Scalars["JSON"]["input"]>;
+  price?: InputMaybe<Scalars["String"]["input"]>;
+  product?: InputMaybe<InternalBelongsToInput>;
+  productImage?: InputMaybe<InternalBelongsToInput>;
+  selectedOptions?: InputMaybe<Scalars["JSON"]["input"]>;
+  shop?: InputMaybe<InternalBelongsToInput>;
+  shopifyCreatedAt?: InputMaybe<Scalars["DateTime"]["input"]>;
+  shopifyUpdatedAt?: InputMaybe<Scalars["DateTime"]["input"]>;
+  sku?: InputMaybe<Scalars["String"]["input"]>;
+  state?: InputMaybe<Scalars["RecordState"]["input"]>;
+  stateHistory?: InputMaybe<Scalars["RecordState"]["input"]>;
+  taxCode?: InputMaybe<Scalars["String"]["input"]>;
+  taxable?: InputMaybe<Scalars["Boolean"]["input"]>;
+  title?: InputMaybe<Scalars["String"]["input"]>;
+  updatedAt?: InputMaybe<Scalars["DateTime"]["input"]>;
+};
+
+/** A connection to a list of InternalShopifyProductVariantRecord items. */
+export type InternalShopifyProductVariantRecordConnection = {
+  __typename?: "InternalShopifyProductVariantRecordConnection";
+  /** A list of edges. */
+  edges: Array<InternalShopifyProductVariantRecordEdge>;
+  /** Information to aid in pagination. */
+  pageInfo: PageInfo;
+};
+
+/** An edge in a InternalShopifyProductVariantRecord connection. */
+export type InternalShopifyProductVariantRecordEdge = {
+  __typename?: "InternalShopifyProductVariantRecordEdge";
+  /** A cursor for use in pagination */
+  cursor: Scalars["String"]["output"];
+  /** The item at the end of the edge */
+  node: Scalars["InternalShopifyProductVariantRecord"]["output"];
+};
+
+export type InternalShopifyShopAtomicsInput = {
+  /** Numeric atomic commands for operating on latitude. */
+  latitude?: InputMaybe<Array<NumericAtomicFieldUpdateInput>>;
+  /** Numeric atomic commands for operating on longitude. */
+  longitude?: InputMaybe<Array<NumericAtomicFieldUpdateInput>>;
+};
+
+export type InternalShopifyShopInput = {
+  /** An optional list of atomically applied commands for race-safe mutations of the record */
+  _atomics?: InputMaybe<InternalShopifyShopAtomicsInput>;
+  accessToken?: InputMaybe<Scalars["String"]["input"]>;
+  address1?: InputMaybe<Scalars["String"]["input"]>;
+  address2?: InputMaybe<Scalars["String"]["input"]>;
+  checkoutApiSupported?: InputMaybe<Scalars["Boolean"]["input"]>;
+  city?: InputMaybe<Scalars["String"]["input"]>;
+  cookieConsentLevel?: InputMaybe<Scalars["String"]["input"]>;
+  country?: InputMaybe<Scalars["String"]["input"]>;
+  countryCode?: InputMaybe<Scalars["String"]["input"]>;
+  countryName?: InputMaybe<Scalars["String"]["input"]>;
+  countyTaxes?: InputMaybe<Scalars["JSON"]["input"]>;
+  createdAt?: InputMaybe<Scalars["DateTime"]["input"]>;
+  currency?: InputMaybe<Scalars["String"]["input"]>;
+  customerAccountsV2?: InputMaybe<Scalars["JSON"]["input"]>;
+  customerEmail?: InputMaybe<Scalars["String"]["input"]>;
+  disabledWebhooks?: InputMaybe<Scalars["JSON"]["input"]>;
+  domain?: InputMaybe<Scalars["String"]["input"]>;
+  eligibleForCardReaderGiveaway?: InputMaybe<Scalars["Boolean"]["input"]>;
+  eligibleForPayments?: InputMaybe<Scalars["Boolean"]["input"]>;
+  email?: InputMaybe<Scalars["String"]["input"]>;
+  enabledPresentmentCurrencies?: InputMaybe<Scalars["JSON"]["input"]>;
+  finances?: InputMaybe<Scalars["Boolean"]["input"]>;
+  forceSsl?: InputMaybe<Scalars["Boolean"]["input"]>;
+  googleAppsDomain?: InputMaybe<Scalars["String"]["input"]>;
+  googleAppsLoginEnabled?: InputMaybe<Scalars["Boolean"]["input"]>;
+  grantedScopes?: InputMaybe<Scalars["JSON"]["input"]>;
+  hasDiscounts?: InputMaybe<Scalars["Boolean"]["input"]>;
+  hasGiftCards?: InputMaybe<Scalars["Boolean"]["input"]>;
+  hasStorefront?: InputMaybe<Scalars["Boolean"]["input"]>;
+  ianaTimezone?: InputMaybe<Scalars["String"]["input"]>;
+  id?: InputMaybe<Scalars["GadgetID"]["input"]>;
+  installedViaApiKey?: InputMaybe<Scalars["String"]["input"]>;
+  latitude?: InputMaybe<Scalars["Float"]["input"]>;
+  longitude?: InputMaybe<Scalars["Float"]["input"]>;
+  marketingSmsContentEnabledAtCheckout?: InputMaybe<Scalars["Boolean"]["input"]>;
+  moneyFormat?: InputMaybe<Scalars["String"]["input"]>;
+  moneyInEmailsFormat?: InputMaybe<Scalars["String"]["input"]>;
+  moneyWithCurrencyFormat?: InputMaybe<Scalars["String"]["input"]>;
+  moneyWithCurrencyInEmailsFormat?: InputMaybe<Scalars["String"]["input"]>;
+  multiLocationEnabled?: InputMaybe<Scalars["Boolean"]["input"]>;
+  myshopifyDomain?: InputMaybe<Scalars["String"]["input"]>;
+  name?: InputMaybe<Scalars["String"]["input"]>;
+  passwordEnabled?: InputMaybe<Scalars["Boolean"]["input"]>;
+  phone?: InputMaybe<Scalars["String"]["input"]>;
+  planDisplayName?: InputMaybe<Scalars["String"]["input"]>;
+  planName?: InputMaybe<Scalars["String"]["input"]>;
+  preLaunchEnabled?: InputMaybe<Scalars["Boolean"]["input"]>;
+  primaryLocale?: InputMaybe<Scalars["String"]["input"]>;
+  province?: InputMaybe<Scalars["String"]["input"]>;
+  provinceCode?: InputMaybe<Scalars["String"]["input"]>;
+  registeredWebhooks?: InputMaybe<Scalars["JSON"]["input"]>;
+  requiresExtraPaymentsAgreement?: InputMaybe<Scalars["Boolean"]["input"]>;
+  setupRequired?: InputMaybe<Scalars["Boolean"]["input"]>;
+  shopOwner?: InputMaybe<Scalars["String"]["input"]>;
+  shopifyCreatedAt?: InputMaybe<Scalars["DateTime"]["input"]>;
+  shopifyUpdatedAt?: InputMaybe<Scalars["DateTime"]["input"]>;
+  source?: InputMaybe<Scalars["String"]["input"]>;
+  state?: InputMaybe<Scalars["RecordState"]["input"]>;
+  stateHistory?: InputMaybe<Scalars["RecordState"]["input"]>;
+  taxShipping?: InputMaybe<Scalars["Boolean"]["input"]>;
+  taxesIncluded?: InputMaybe<Scalars["Boolean"]["input"]>;
+  timezone?: InputMaybe<Scalars["String"]["input"]>;
+  transactionalSmsDisabled?: InputMaybe<Scalars["Boolean"]["input"]>;
+  updatedAt?: InputMaybe<Scalars["DateTime"]["input"]>;
+  weightUnit?: InputMaybe<Scalars["String"]["input"]>;
+  zipCode?: InputMaybe<Scalars["String"]["input"]>;
+};
+
+/** A connection to a list of InternalShopifyShopRecord items. */
+export type InternalShopifyShopRecordConnection = {
+  __typename?: "InternalShopifyShopRecordConnection";
+  /** A list of edges. */
+  edges: Array<InternalShopifyShopRecordEdge>;
+  /** Information to aid in pagination. */
+  pageInfo: PageInfo;
+};
+
+/** An edge in a InternalShopifyShopRecord connection. */
+export type InternalShopifyShopRecordEdge = {
+  __typename?: "InternalShopifyShopRecordEdge";
+  /** A cursor for use in pagination */
+  cursor: Scalars["String"]["output"];
+  /** The item at the end of the edge */
+  node: Scalars["InternalShopifyShopRecord"]["output"];
+};
+
+export type InternalShopifySyncInput = {
+  createdAt?: InputMaybe<Scalars["DateTime"]["input"]>;
+  domain?: InputMaybe<Scalars["String"]["input"]>;
+  errorDetails?: InputMaybe<Scalars["String"]["input"]>;
+  errorMessage?: InputMaybe<Scalars["String"]["input"]>;
+  force?: InputMaybe<Scalars["Boolean"]["input"]>;
+  id?: InputMaybe<Scalars["GadgetID"]["input"]>;
+  models?: InputMaybe<Scalars["JSON"]["input"]>;
+  shop?: InputMaybe<InternalBelongsToInput>;
+  state?: InputMaybe<Scalars["RecordState"]["input"]>;
+  stateHistory?: InputMaybe<Scalars["RecordState"]["input"]>;
+  syncSince?: InputMaybe<Scalars["DateTime"]["input"]>;
+  updatedAt?: InputMaybe<Scalars["DateTime"]["input"]>;
+};
+
+/** A connection to a list of InternalShopifySyncRecord items. */
+export type InternalShopifySyncRecordConnection = {
+  __typename?: "InternalShopifySyncRecordConnection";
+  /** A list of edges. */
+  edges: Array<InternalShopifySyncRecordEdge>;
+  /** Information to aid in pagination. */
+  pageInfo: PageInfo;
+};
+
+/** An edge in a InternalShopifySyncRecord connection. */
+export type InternalShopifySyncRecordEdge = {
+  __typename?: "InternalShopifySyncRecordEdge";
+  /** A cursor for use in pagination */
+  cursor: Scalars["String"]["output"];
+  /** The item at the end of the edge */
+  node: Scalars["InternalShopifySyncRecord"]["output"];
 };
 
 /** Input object supporting updating a value for a File field within the Internal API. Includes the storage token for the file which is it's unique identifier, as well as some metadata for the file. Note: the Internal API doesn't support uploading files, just storing the results of prior uploads. Actions must be used to upload files. */
@@ -5253,6 +6616,55 @@ export type InternalUpdateSessionResult = {
   success: Scalars["Boolean"]["output"];
 };
 
+export type InternalUpdateShopifyGdprRequestResult = {
+  __typename?: "InternalUpdateShopifyGdprRequestResult";
+  errors?: Maybe<Array<ExecutionError>>;
+  shopifyGdprRequest?: Maybe<Scalars["InternalShopifyGdprRequestRecord"]["output"]>;
+  success: Scalars["Boolean"]["output"];
+};
+
+export type InternalUpdateShopifyProductImageResult = {
+  __typename?: "InternalUpdateShopifyProductImageResult";
+  errors?: Maybe<Array<ExecutionError>>;
+  shopifyProductImage?: Maybe<Scalars["InternalShopifyProductImageRecord"]["output"]>;
+  success: Scalars["Boolean"]["output"];
+};
+
+export type InternalUpdateShopifyProductOptionResult = {
+  __typename?: "InternalUpdateShopifyProductOptionResult";
+  errors?: Maybe<Array<ExecutionError>>;
+  shopifyProductOption?: Maybe<Scalars["InternalShopifyProductOptionRecord"]["output"]>;
+  success: Scalars["Boolean"]["output"];
+};
+
+export type InternalUpdateShopifyProductResult = {
+  __typename?: "InternalUpdateShopifyProductResult";
+  errors?: Maybe<Array<ExecutionError>>;
+  shopifyProduct?: Maybe<Scalars["InternalShopifyProductRecord"]["output"]>;
+  success: Scalars["Boolean"]["output"];
+};
+
+export type InternalUpdateShopifyProductVariantResult = {
+  __typename?: "InternalUpdateShopifyProductVariantResult";
+  errors?: Maybe<Array<ExecutionError>>;
+  shopifyProductVariant?: Maybe<Scalars["InternalShopifyProductVariantRecord"]["output"]>;
+  success: Scalars["Boolean"]["output"];
+};
+
+export type InternalUpdateShopifyShopResult = {
+  __typename?: "InternalUpdateShopifyShopResult";
+  errors?: Maybe<Array<ExecutionError>>;
+  shopifyShop?: Maybe<Scalars["InternalShopifyShopRecord"]["output"]>;
+  success: Scalars["Boolean"]["output"];
+};
+
+export type InternalUpdateShopifySyncResult = {
+  __typename?: "InternalUpdateShopifySyncResult";
+  errors?: Maybe<Array<ExecutionError>>;
+  shopifySync?: Maybe<Scalars["InternalShopifySyncRecord"]["output"]>;
+  success: Scalars["Boolean"]["output"];
+};
+
 export type InternalUpdateUserResult = {
   __typename?: "InternalUpdateUserResult";
   errors?: Maybe<Array<ExecutionError>>;
@@ -5341,6 +6753,55 @@ export type InternalUpsertSessionResult = {
   __typename?: "InternalUpsertSessionResult";
   errors?: Maybe<Array<ExecutionError>>;
   session?: Maybe<Scalars["InternalSessionRecord"]["output"]>;
+  success: Scalars["Boolean"]["output"];
+};
+
+export type InternalUpsertShopifyGdprRequestResult = {
+  __typename?: "InternalUpsertShopifyGdprRequestResult";
+  errors?: Maybe<Array<ExecutionError>>;
+  shopifyGdprRequest?: Maybe<Scalars["InternalShopifyGdprRequestRecord"]["output"]>;
+  success: Scalars["Boolean"]["output"];
+};
+
+export type InternalUpsertShopifyProductImageResult = {
+  __typename?: "InternalUpsertShopifyProductImageResult";
+  errors?: Maybe<Array<ExecutionError>>;
+  shopifyProductImage?: Maybe<Scalars["InternalShopifyProductImageRecord"]["output"]>;
+  success: Scalars["Boolean"]["output"];
+};
+
+export type InternalUpsertShopifyProductOptionResult = {
+  __typename?: "InternalUpsertShopifyProductOptionResult";
+  errors?: Maybe<Array<ExecutionError>>;
+  shopifyProductOption?: Maybe<Scalars["InternalShopifyProductOptionRecord"]["output"]>;
+  success: Scalars["Boolean"]["output"];
+};
+
+export type InternalUpsertShopifyProductResult = {
+  __typename?: "InternalUpsertShopifyProductResult";
+  errors?: Maybe<Array<ExecutionError>>;
+  shopifyProduct?: Maybe<Scalars["InternalShopifyProductRecord"]["output"]>;
+  success: Scalars["Boolean"]["output"];
+};
+
+export type InternalUpsertShopifyProductVariantResult = {
+  __typename?: "InternalUpsertShopifyProductVariantResult";
+  errors?: Maybe<Array<ExecutionError>>;
+  shopifyProductVariant?: Maybe<Scalars["InternalShopifyProductVariantRecord"]["output"]>;
+  success: Scalars["Boolean"]["output"];
+};
+
+export type InternalUpsertShopifyShopResult = {
+  __typename?: "InternalUpsertShopifyShopResult";
+  errors?: Maybe<Array<ExecutionError>>;
+  shopifyShop?: Maybe<Scalars["InternalShopifyShopRecord"]["output"]>;
+  success: Scalars["Boolean"]["output"];
+};
+
+export type InternalUpsertShopifySyncResult = {
+  __typename?: "InternalUpsertShopifySyncResult";
+  errors?: Maybe<Array<ExecutionError>>;
+  shopifySync?: Maybe<Scalars["InternalShopifySyncRecord"]["output"]>;
   success: Scalars["Boolean"]["output"];
 };
 
@@ -5545,11 +7006,14 @@ export type MultiEnumFilter = {
 
 export type Mutation = {
   __typename?: "Mutation";
+  abortShopifySync?: Maybe<AbortShopifySyncResult>;
   addInventoryWidget?: Maybe<AddInventoryWidgetResult>;
   alwaysThrowErrorWidget?: Maybe<AlwaysThrowErrorWidgetResult>;
   background: BackgroundMutations;
+  bulkAbortShopifySyncs?: Maybe<BulkAbortShopifySyncsResult>;
   bulkAddInventoryWidgets?: Maybe<BulkAddInventoryWidgetsResult>;
   bulkAlwaysThrowErrorWidgets?: Maybe<BulkAlwaysThrowErrorWidgetsResult>;
+  bulkCompleteShopifySyncs?: Maybe<BulkCompleteShopifySyncsResult>;
   bulkCreateAutoTableTestRelatedModels?: Maybe<BulkCreateAutoTableTestRelatedModelsResult>;
   bulkCreateAutoTableTests?: Maybe<BulkCreateAutoTableTestsResult>;
   bulkCreateGizmos?: Maybe<BulkCreateGizmosResult>;
@@ -5567,6 +7031,8 @@ export type Mutation = {
   bulkDeleteSections?: Maybe<BulkDeleteSectionsResult>;
   bulkDeleteUsers?: Maybe<BulkDeleteUsersResult>;
   bulkDeleteWidgets?: Maybe<BulkDeleteWidgetsResult>;
+  bulkErrorShopifySyncs?: Maybe<BulkErrorShopifySyncsResult>;
+  bulkRunShopifySyncs?: Maybe<BulkRunShopifySyncsResult>;
   bulkSignInUsers?: Maybe<BulkSignInUsersResult>;
   bulkSignOutUsers?: Maybe<BulkSignOutUsersResult>;
   bulkSignUpUsers?: Maybe<BulkSignUpUsersResult>;
@@ -5585,8 +7051,10 @@ export type Mutation = {
   bulkUpsertModelAs: BulkUpsertModelAsResult;
   bulkUpsertParts: BulkUpsertPartsResult;
   bulkUpsertSections: BulkUpsertSectionsResult;
+  bulkUpsertShopifySyncs: BulkUpsertShopifySyncsResult;
   bulkUpsertUsers: BulkUpsertUsersResult;
   bulkUpsertWidgets: BulkUpsertWidgetsResult;
+  completeShopifySync?: Maybe<CompleteShopifySyncResult>;
   createAutoTableTest?: Maybe<CreateAutoTableTestResult>;
   createAutoTableTestRelatedModel?: Maybe<CreateAutoTableTestRelatedModelResult>;
   createGizmo?: Maybe<CreateGizmoResult>;
@@ -5605,11 +7073,14 @@ export type Mutation = {
   deleteSection?: Maybe<DeleteSectionResult>;
   deleteUser?: Maybe<DeleteUserResult>;
   deleteWidget?: Maybe<DeleteWidgetResult>;
+  errorShopifySync?: Maybe<ErrorShopifySyncResult>;
   flipAll?: Maybe<FlipAllResult>;
   /** Meta information about the application, like it's name, schema, and other internal details. */
   gadgetMeta: GadgetApplicationMeta;
   game: GameMutations;
   internal: InternalMutations;
+  runShopifySync?: Maybe<RunShopifySyncResult>;
+  shopifyConnection?: Maybe<ShopifyConnectionMutations>;
   signInUser?: Maybe<SignInUserResult>;
   signOutUser?: Maybe<SignOutUserResult>;
   signUpUser?: Maybe<SignUpUserResult>;
@@ -5628,8 +7099,14 @@ export type Mutation = {
   upsertModelA?: Maybe<UpsertModelAResult>;
   upsertPart?: Maybe<UpsertPartResult>;
   upsertSection?: Maybe<UpsertSectionResult>;
+  upsertShopifySync?: Maybe<UpsertShopifySyncResult>;
   upsertUser?: Maybe<UpsertUserResult>;
   upsertWidget?: Maybe<UpsertWidgetResult>;
+};
+
+export type MutationAbortShopifySyncArgs = {
+  id: Scalars["GadgetID"]["input"];
+  shopifySync?: InputMaybe<AbortShopifySyncInput>;
 };
 
 export type MutationAddInventoryWidgetArgs = {
@@ -5641,12 +7118,20 @@ export type MutationAlwaysThrowErrorWidgetArgs = {
   widget?: InputMaybe<AlwaysThrowErrorWidgetInput>;
 };
 
+export type MutationBulkAbortShopifySyncsArgs = {
+  inputs: Array<BulkAbortShopifySyncsInput>;
+};
+
 export type MutationBulkAddInventoryWidgetsArgs = {
   inputs: Array<BulkAddInventoryWidgetsInput>;
 };
 
 export type MutationBulkAlwaysThrowErrorWidgetsArgs = {
   inputs: Array<BulkAlwaysThrowErrorWidgetsInput>;
+};
+
+export type MutationBulkCompleteShopifySyncsArgs = {
+  inputs: Array<BulkCompleteShopifySyncsInput>;
 };
 
 export type MutationBulkCreateAutoTableTestRelatedModelsArgs = {
@@ -5715,6 +7200,14 @@ export type MutationBulkDeleteUsersArgs = {
 
 export type MutationBulkDeleteWidgetsArgs = {
   ids: Array<Scalars["GadgetID"]["input"]>;
+};
+
+export type MutationBulkErrorShopifySyncsArgs = {
+  inputs: Array<BulkErrorShopifySyncsInput>;
+};
+
+export type MutationBulkRunShopifySyncsArgs = {
+  inputs: Array<BulkRunShopifySyncsInput>;
 };
 
 export type MutationBulkSignInUsersArgs = {
@@ -5789,12 +7282,21 @@ export type MutationBulkUpsertSectionsArgs = {
   inputs: Array<BulkUpsertSectionsInput>;
 };
 
+export type MutationBulkUpsertShopifySyncsArgs = {
+  inputs: Array<BulkUpsertShopifySyncsInput>;
+};
+
 export type MutationBulkUpsertUsersArgs = {
   inputs: Array<BulkUpsertUsersInput>;
 };
 
 export type MutationBulkUpsertWidgetsArgs = {
   inputs: Array<BulkUpsertWidgetsInput>;
+};
+
+export type MutationCompleteShopifySyncArgs = {
+  id: Scalars["GadgetID"]["input"];
+  shopifySync?: InputMaybe<CompleteShopifySyncInput>;
 };
 
 export type MutationCreateAutoTableTestArgs = {
@@ -5863,9 +7365,19 @@ export type MutationDeleteWidgetArgs = {
   id: Scalars["GadgetID"]["input"];
 };
 
+export type MutationErrorShopifySyncArgs = {
+  id: Scalars["GadgetID"]["input"];
+  shopifySync?: InputMaybe<ErrorShopifySyncInput>;
+};
+
 export type MutationFlipAllArgs = {
   inventoryCount?: InputMaybe<Scalars["Float"]["input"]>;
   title?: InputMaybe<Scalars["String"]["input"]>;
+};
+
+export type MutationRunShopifySyncArgs = {
+  shopifySync?: InputMaybe<RunShopifySyncInput>;
+  startReason?: InputMaybe<Scalars["String"]["input"]>;
 };
 
 export type MutationSignInUserArgs = {
@@ -5958,6 +7470,12 @@ export type MutationUpsertPartArgs = {
 export type MutationUpsertSectionArgs = {
   on?: InputMaybe<Array<Scalars["String"]["input"]>>;
   section?: InputMaybe<UpsertSectionInput>;
+};
+
+export type MutationUpsertShopifySyncArgs = {
+  on?: InputMaybe<Array<Scalars["String"]["input"]>>;
+  shopifySync?: InputMaybe<UpsertShopifySyncInput>;
+  startReason?: InputMaybe<Scalars["String"]["input"]>;
 };
 
 export type MutationUpsertUserArgs = {
@@ -6367,6 +7885,21 @@ export type Query = {
   sections: SectionConnection;
   session?: Maybe<Session>;
   sessions: SessionConnection;
+  shopifyConnection: Shopify;
+  shopifyGdprRequest?: Maybe<ShopifyGdprRequest>;
+  shopifyGdprRequests: ShopifyGdprRequestConnection;
+  shopifyProduct?: Maybe<ShopifyProduct>;
+  shopifyProductImage?: Maybe<ShopifyProductImage>;
+  shopifyProductImages: ShopifyProductImageConnection;
+  shopifyProductOption?: Maybe<ShopifyProductOption>;
+  shopifyProductOptions: ShopifyProductOptionConnection;
+  shopifyProductVariant?: Maybe<ShopifyProductVariant>;
+  shopifyProductVariants: ShopifyProductVariantConnection;
+  shopifyProducts: ShopifyProductConnection;
+  shopifyShop?: Maybe<ShopifyShop>;
+  shopifyShops: ShopifyShopConnection;
+  shopifySync?: Maybe<ShopifySync>;
+  shopifySyncs: ShopifySyncConnection;
   user?: Maybe<User>;
   users: UserConnection;
   widget?: Maybe<Widget>;
@@ -6469,6 +8002,104 @@ export type QuerySessionsArgs = {
   last?: InputMaybe<Scalars["Int"]["input"]>;
 };
 
+export type QueryShopifyGdprRequestArgs = {
+  id: Scalars["GadgetID"]["input"];
+};
+
+export type QueryShopifyGdprRequestsArgs = {
+  after?: InputMaybe<Scalars["String"]["input"]>;
+  before?: InputMaybe<Scalars["String"]["input"]>;
+  filter?: InputMaybe<Array<ShopifyGdprRequestFilter>>;
+  first?: InputMaybe<Scalars["Int"]["input"]>;
+  last?: InputMaybe<Scalars["Int"]["input"]>;
+  search?: InputMaybe<Scalars["String"]["input"]>;
+  sort?: InputMaybe<Array<ShopifyGdprRequestSort>>;
+};
+
+export type QueryShopifyProductArgs = {
+  id: Scalars["GadgetID"]["input"];
+};
+
+export type QueryShopifyProductImageArgs = {
+  id: Scalars["GadgetID"]["input"];
+};
+
+export type QueryShopifyProductImagesArgs = {
+  after?: InputMaybe<Scalars["String"]["input"]>;
+  before?: InputMaybe<Scalars["String"]["input"]>;
+  filter?: InputMaybe<Array<ShopifyProductImageFilter>>;
+  first?: InputMaybe<Scalars["Int"]["input"]>;
+  last?: InputMaybe<Scalars["Int"]["input"]>;
+  search?: InputMaybe<Scalars["String"]["input"]>;
+  sort?: InputMaybe<Array<ShopifyProductImageSort>>;
+};
+
+export type QueryShopifyProductOptionArgs = {
+  id: Scalars["GadgetID"]["input"];
+};
+
+export type QueryShopifyProductOptionsArgs = {
+  after?: InputMaybe<Scalars["String"]["input"]>;
+  before?: InputMaybe<Scalars["String"]["input"]>;
+  filter?: InputMaybe<Array<ShopifyProductOptionFilter>>;
+  first?: InputMaybe<Scalars["Int"]["input"]>;
+  last?: InputMaybe<Scalars["Int"]["input"]>;
+  search?: InputMaybe<Scalars["String"]["input"]>;
+  sort?: InputMaybe<Array<ShopifyProductOptionSort>>;
+};
+
+export type QueryShopifyProductVariantArgs = {
+  id: Scalars["GadgetID"]["input"];
+};
+
+export type QueryShopifyProductVariantsArgs = {
+  after?: InputMaybe<Scalars["String"]["input"]>;
+  before?: InputMaybe<Scalars["String"]["input"]>;
+  filter?: InputMaybe<Array<ShopifyProductVariantFilter>>;
+  first?: InputMaybe<Scalars["Int"]["input"]>;
+  last?: InputMaybe<Scalars["Int"]["input"]>;
+  search?: InputMaybe<Scalars["String"]["input"]>;
+  sort?: InputMaybe<Array<ShopifyProductVariantSort>>;
+};
+
+export type QueryShopifyProductsArgs = {
+  after?: InputMaybe<Scalars["String"]["input"]>;
+  before?: InputMaybe<Scalars["String"]["input"]>;
+  filter?: InputMaybe<Array<ShopifyProductFilter>>;
+  first?: InputMaybe<Scalars["Int"]["input"]>;
+  last?: InputMaybe<Scalars["Int"]["input"]>;
+  search?: InputMaybe<Scalars["String"]["input"]>;
+  sort?: InputMaybe<Array<ShopifyProductSort>>;
+};
+
+export type QueryShopifyShopArgs = {
+  id: Scalars["GadgetID"]["input"];
+};
+
+export type QueryShopifyShopsArgs = {
+  after?: InputMaybe<Scalars["String"]["input"]>;
+  before?: InputMaybe<Scalars["String"]["input"]>;
+  filter?: InputMaybe<Array<ShopifyShopFilter>>;
+  first?: InputMaybe<Scalars["Int"]["input"]>;
+  last?: InputMaybe<Scalars["Int"]["input"]>;
+  search?: InputMaybe<Scalars["String"]["input"]>;
+  sort?: InputMaybe<Array<ShopifyShopSort>>;
+};
+
+export type QueryShopifySyncArgs = {
+  id: Scalars["GadgetID"]["input"];
+};
+
+export type QueryShopifySyncsArgs = {
+  after?: InputMaybe<Scalars["String"]["input"]>;
+  before?: InputMaybe<Scalars["String"]["input"]>;
+  filter?: InputMaybe<Array<ShopifySyncFilter>>;
+  first?: InputMaybe<Scalars["Int"]["input"]>;
+  last?: InputMaybe<Scalars["Int"]["input"]>;
+  search?: InputMaybe<Scalars["String"]["input"]>;
+  sort?: InputMaybe<Array<ShopifySyncSort>>;
+};
+
 export type QueryUserArgs = {
   id: Scalars["GadgetID"]["input"];
 };
@@ -6495,6 +8126,14 @@ export type QueryWidgetsArgs = {
   last?: InputMaybe<Scalars["Int"]["input"]>;
   search?: InputMaybe<Scalars["String"]["input"]>;
   sort?: InputMaybe<Array<WidgetSort>>;
+};
+
+export type ReinstallShopifyShopResult = {
+  __typename?: "ReinstallShopifyShopResult";
+  actionRun?: Maybe<Scalars["String"]["output"]>;
+  errors?: Maybe<Array<ExecutionError>>;
+  shopifyShop?: Maybe<ShopifyShop>;
+  success: Scalars["Boolean"]["output"];
 };
 
 /** A snippet of text supporting rich formatting and access in a variety of formats */
@@ -6543,6 +8182,24 @@ export type RoundHasManyInput = {
   create?: InputMaybe<NestedRoundCreateInput>;
   delete?: InputMaybe<NestedRoundDeleteInput>;
   update?: InputMaybe<NestedRoundUpdateInput>;
+};
+
+export type RunShopifySyncInput = {
+  domain?: InputMaybe<Scalars["String"]["input"]>;
+  errorDetails?: InputMaybe<Scalars["String"]["input"]>;
+  errorMessage?: InputMaybe<Scalars["String"]["input"]>;
+  force?: InputMaybe<Scalars["Boolean"]["input"]>;
+  models?: InputMaybe<Scalars["JSON"]["input"]>;
+  shop?: InputMaybe<ShopifyShopBelongsToInput>;
+  syncSince?: InputMaybe<Scalars["DateTime"]["input"]>;
+};
+
+export type RunShopifySyncResult = UpsertShopifySyncResult & {
+  __typename?: "RunShopifySyncResult";
+  actionRun?: Maybe<Scalars["String"]["output"]>;
+  errors?: Maybe<Array<ExecutionError>>;
+  shopifySync?: Maybe<ShopifySync>;
+  success: Scalars["Boolean"]["output"];
 };
 
 export type Section = {
@@ -6625,6 +8282,10 @@ export type Session = {
   createdAt: Scalars["DateTime"]["output"];
   /** The globally unique, unchanging identifier for this record. Assigned and managed by Gadget. */
   id?: Maybe<Scalars["GadgetID"]["output"]>;
+  roles?: Maybe<Array<Role>>;
+  shop?: Maybe<ShopifyShop>;
+  shopId?: Maybe<Scalars["GadgetID"]["output"]>;
+  shopifySID?: Maybe<Scalars["String"]["output"]>;
   /** The current state this record is in. Changed by invoking actions. Managed by Gadget. */
   state: Scalars["RecordState"]["output"];
   /** The time at which this record was last changed. Set each time the record is successfully acted upon by an action. Managed by Gadget. */
@@ -6653,8 +8314,971 @@ export type SessionEdge = {
 
 export type SessionFilter = {
   id?: InputMaybe<IdEqualsFilter>;
+  shop?: InputMaybe<IdEqualsFilter>;
+  shopId?: InputMaybe<IdEqualsFilter>;
+  shopifySID?: InputMaybe<StringEqualsFilter>;
   user?: InputMaybe<IdEqualsFilter>;
   userId?: InputMaybe<IdEqualsFilter>;
+};
+
+/** Information about the Shopify Connection */
+export type Shopify = {
+  __typename?: "Shopify";
+  /** A list missing scopes compared to the Connection based on the current session's shop */
+  missingScopes?: Maybe<Array<Scalars["String"]["output"]>>;
+  /** Whether the current session's shop requires a re-authentication with Shopify to acquire updated scopes */
+  requiresReauthentication?: Maybe<Scalars["Boolean"]["output"]>;
+};
+
+export type ShopifyConnectionFetchOrInstallShopResult = {
+  __typename?: "ShopifyConnectionFetchOrInstallShopResult";
+  isAuthenticated: Scalars["Boolean"]["output"];
+  missingScopes: Array<Scalars["String"]["output"]>;
+  redirectToOauth: Scalars["Boolean"]["output"];
+};
+
+export type ShopifyConnectionMutations = {
+  __typename?: "ShopifyConnectionMutations";
+  fetchOrInstallShop?: Maybe<ShopifyConnectionFetchOrInstallShopResult>;
+};
+
+export type ShopifyConnectionMutationsFetchOrInstallShopArgs = {
+  shopifySessionToken: Scalars["String"]["input"];
+};
+
+export type ShopifyGdprRequest = {
+  __typename?: "ShopifyGdprRequest";
+  /** Get all the fields for this record. Useful for not having to list out all the fields you want to retrieve, but slower. */
+  _all: Scalars["JSONObject"]["output"];
+  /** The time at which this record was first created. Set once upon record creation and never changed. Managed by Gadget. */
+  createdAt: Scalars["DateTime"]["output"];
+  /** The globally unique, unchanging identifier for this record. Assigned and managed by Gadget. */
+  id: Scalars["GadgetID"]["output"];
+  payload?: Maybe<Scalars["JSON"]["output"]>;
+  shop: ShopifyShop;
+  shopId: Scalars["GadgetID"]["output"];
+  topic: Scalars["ShopifyGdprRequestTopicEnum"]["output"];
+  /** The time at which this record was last changed. Set each time the record is successfully acted upon by an action. Managed by Gadget. */
+  updatedAt: Scalars["DateTime"]["output"];
+};
+
+/** A connection to a list of ShopifyGdprRequest items. */
+export type ShopifyGdprRequestConnection = {
+  __typename?: "ShopifyGdprRequestConnection";
+  /** A list of edges. */
+  edges: Array<ShopifyGdprRequestEdge>;
+  /** Information to aid in pagination. */
+  pageInfo: PageInfo;
+};
+
+/** An edge in a ShopifyGdprRequest connection. */
+export type ShopifyGdprRequestEdge = {
+  __typename?: "ShopifyGdprRequestEdge";
+  /** A cursor for use in pagination */
+  cursor: Scalars["String"]["output"];
+  /** The item at the end of the edge */
+  node: ShopifyGdprRequest;
+};
+
+export type ShopifyGdprRequestFilter = {
+  AND?: InputMaybe<Array<InputMaybe<ShopifyGdprRequestFilter>>>;
+  NOT?: InputMaybe<Array<InputMaybe<ShopifyGdprRequestFilter>>>;
+  OR?: InputMaybe<Array<InputMaybe<ShopifyGdprRequestFilter>>>;
+  createdAt?: InputMaybe<DateTimeFilter>;
+  id?: InputMaybe<IdFilter>;
+  payload?: InputMaybe<JsonFilter>;
+  shop?: InputMaybe<IdFilter>;
+  shopId?: InputMaybe<IdFilter>;
+  topic?: InputMaybe<SingleEnumFilter>;
+  updatedAt?: InputMaybe<DateTimeFilter>;
+};
+
+export type ShopifyGdprRequestSort = {
+  /** Sort the results by the createdAt field. Defaults to ascending (smallest value first). */
+  createdAt?: InputMaybe<SortOrder>;
+  /** Sort the results by the id field. Defaults to ascending (smallest value first). */
+  id?: InputMaybe<SortOrder>;
+  /** Sort the results by the payload field. Defaults to ascending (smallest value first). */
+  payload?: InputMaybe<SortOrder>;
+  /** Sort the results by the topic field. Defaults to ascending (smallest value first). */
+  topic?: InputMaybe<SortOrder>;
+  /** Sort the results by the updatedAt field. Defaults to ascending (smallest value first). */
+  updatedAt?: InputMaybe<SortOrder>;
+};
+
+export type ShopifyProduct = {
+  __typename?: "ShopifyProduct";
+  /** Get all the fields for this record. Useful for not having to list out all the fields you want to retrieve, but slower. */
+  _all: Scalars["JSONObject"]["output"];
+  body?: Maybe<Scalars["String"]["output"]>;
+  category?: Maybe<Scalars["JSON"]["output"]>;
+  compareAtPriceRange?: Maybe<Scalars["JSON"]["output"]>;
+  /** The time at which this record was first created. Set once upon record creation and never changed. Managed by Gadget. */
+  createdAt: Scalars["DateTime"]["output"];
+  handle?: Maybe<Scalars["String"]["output"]>;
+  /** The globally unique, unchanging identifier for this record. Assigned and managed by Shopify. */
+  id: Scalars["GadgetID"]["output"];
+  images: ShopifyProductImageConnection;
+  options: ShopifyProductOptionConnection;
+  productCategory?: Maybe<Scalars["JSON"]["output"]>;
+  productType?: Maybe<Scalars["String"]["output"]>;
+  publishedAt?: Maybe<Scalars["DateTime"]["output"]>;
+  shop?: Maybe<ShopifyShop>;
+  shopId?: Maybe<Scalars["GadgetID"]["output"]>;
+  shopifyCreatedAt?: Maybe<Scalars["DateTime"]["output"]>;
+  shopifyUpdatedAt?: Maybe<Scalars["DateTime"]["output"]>;
+  status?: Maybe<Scalars["ShopifyProductStatusEnum"]["output"]>;
+  tags?: Maybe<Scalars["JSON"]["output"]>;
+  templateSuffix?: Maybe<Scalars["String"]["output"]>;
+  title?: Maybe<Scalars["String"]["output"]>;
+  /** The time at which this record was last changed. Set each time the record is successfully acted upon by an action. Managed by Gadget. */
+  updatedAt: Scalars["DateTime"]["output"];
+  variants: ShopifyProductVariantConnection;
+  vendor?: Maybe<Scalars["String"]["output"]>;
+};
+
+export type ShopifyProductImagesArgs = {
+  after?: InputMaybe<Scalars["String"]["input"]>;
+  before?: InputMaybe<Scalars["String"]["input"]>;
+  filter?: InputMaybe<Array<ShopifyProductImageFilter>>;
+  first?: InputMaybe<Scalars["Int"]["input"]>;
+  last?: InputMaybe<Scalars["Int"]["input"]>;
+  search?: InputMaybe<Scalars["String"]["input"]>;
+  sort?: InputMaybe<Array<ShopifyProductImageSort>>;
+};
+
+export type ShopifyProductOptionsArgs = {
+  after?: InputMaybe<Scalars["String"]["input"]>;
+  before?: InputMaybe<Scalars["String"]["input"]>;
+  filter?: InputMaybe<Array<ShopifyProductOptionFilter>>;
+  first?: InputMaybe<Scalars["Int"]["input"]>;
+  last?: InputMaybe<Scalars["Int"]["input"]>;
+  search?: InputMaybe<Scalars["String"]["input"]>;
+  sort?: InputMaybe<Array<ShopifyProductOptionSort>>;
+};
+
+export type ShopifyProductVariantsArgs = {
+  after?: InputMaybe<Scalars["String"]["input"]>;
+  before?: InputMaybe<Scalars["String"]["input"]>;
+  filter?: InputMaybe<Array<ShopifyProductVariantFilter>>;
+  first?: InputMaybe<Scalars["Int"]["input"]>;
+  last?: InputMaybe<Scalars["Int"]["input"]>;
+  search?: InputMaybe<Scalars["String"]["input"]>;
+  sort?: InputMaybe<Array<ShopifyProductVariantSort>>;
+};
+
+/** A connection to a list of ShopifyProduct items. */
+export type ShopifyProductConnection = {
+  __typename?: "ShopifyProductConnection";
+  /** A list of edges. */
+  edges: Array<ShopifyProductEdge>;
+  /** Information to aid in pagination. */
+  pageInfo: PageInfo;
+};
+
+/** An edge in a ShopifyProduct connection. */
+export type ShopifyProductEdge = {
+  __typename?: "ShopifyProductEdge";
+  /** A cursor for use in pagination */
+  cursor: Scalars["String"]["output"];
+  /** The item at the end of the edge */
+  node: ShopifyProduct;
+};
+
+export type ShopifyProductFilter = {
+  AND?: InputMaybe<Array<InputMaybe<ShopifyProductFilter>>>;
+  NOT?: InputMaybe<Array<InputMaybe<ShopifyProductFilter>>>;
+  OR?: InputMaybe<Array<InputMaybe<ShopifyProductFilter>>>;
+  body?: InputMaybe<StringFilter>;
+  category?: InputMaybe<JsonFilter>;
+  compareAtPriceRange?: InputMaybe<JsonFilter>;
+  createdAt?: InputMaybe<DateTimeFilter>;
+  handle?: InputMaybe<StringFilter>;
+  id?: InputMaybe<IdFilter>;
+  productCategory?: InputMaybe<JsonFilter>;
+  productType?: InputMaybe<StringFilter>;
+  publishedAt?: InputMaybe<DateTimeFilter>;
+  shop?: InputMaybe<IdFilter>;
+  shopId?: InputMaybe<IdFilter>;
+  shopifyCreatedAt?: InputMaybe<DateTimeFilter>;
+  shopifyUpdatedAt?: InputMaybe<DateTimeFilter>;
+  status?: InputMaybe<SingleEnumFilter>;
+  tags?: InputMaybe<JsonFilter>;
+  templateSuffix?: InputMaybe<StringFilter>;
+  title?: InputMaybe<StringFilter>;
+  updatedAt?: InputMaybe<DateTimeFilter>;
+  vendor?: InputMaybe<StringFilter>;
+};
+
+export type ShopifyProductImage = {
+  __typename?: "ShopifyProductImage";
+  /** Get all the fields for this record. Useful for not having to list out all the fields you want to retrieve, but slower. */
+  _all: Scalars["JSONObject"]["output"];
+  alt?: Maybe<Scalars["String"]["output"]>;
+  /** The time at which this record was first created. Set once upon record creation and never changed. Managed by Gadget. */
+  createdAt: Scalars["DateTime"]["output"];
+  height?: Maybe<Scalars["Float"]["output"]>;
+  /** The globally unique, unchanging identifier for this record. Assigned and managed by Shopify. */
+  id: Scalars["GadgetID"]["output"];
+  position?: Maybe<Scalars["Float"]["output"]>;
+  product?: Maybe<ShopifyProduct>;
+  productId?: Maybe<Scalars["GadgetID"]["output"]>;
+  shop?: Maybe<ShopifyShop>;
+  shopId?: Maybe<Scalars["GadgetID"]["output"]>;
+  shopifyCreatedAt?: Maybe<Scalars["DateTime"]["output"]>;
+  shopifyUpdatedAt?: Maybe<Scalars["DateTime"]["output"]>;
+  source?: Maybe<Scalars["String"]["output"]>;
+  /** The time at which this record was last changed. Set each time the record is successfully acted upon by an action. Managed by Gadget. */
+  updatedAt: Scalars["DateTime"]["output"];
+  variants: ShopifyProductVariantConnection;
+  width?: Maybe<Scalars["Float"]["output"]>;
+};
+
+export type ShopifyProductImageVariantsArgs = {
+  after?: InputMaybe<Scalars["String"]["input"]>;
+  before?: InputMaybe<Scalars["String"]["input"]>;
+  filter?: InputMaybe<Array<ShopifyProductVariantFilter>>;
+  first?: InputMaybe<Scalars["Int"]["input"]>;
+  last?: InputMaybe<Scalars["Int"]["input"]>;
+  search?: InputMaybe<Scalars["String"]["input"]>;
+  sort?: InputMaybe<Array<ShopifyProductVariantSort>>;
+};
+
+/** A connection to a list of ShopifyProductImage items. */
+export type ShopifyProductImageConnection = {
+  __typename?: "ShopifyProductImageConnection";
+  /** A list of edges. */
+  edges: Array<ShopifyProductImageEdge>;
+  /** Information to aid in pagination. */
+  pageInfo: PageInfo;
+};
+
+/** An edge in a ShopifyProductImage connection. */
+export type ShopifyProductImageEdge = {
+  __typename?: "ShopifyProductImageEdge";
+  /** A cursor for use in pagination */
+  cursor: Scalars["String"]["output"];
+  /** The item at the end of the edge */
+  node: ShopifyProductImage;
+};
+
+export type ShopifyProductImageFilter = {
+  AND?: InputMaybe<Array<InputMaybe<ShopifyProductImageFilter>>>;
+  NOT?: InputMaybe<Array<InputMaybe<ShopifyProductImageFilter>>>;
+  OR?: InputMaybe<Array<InputMaybe<ShopifyProductImageFilter>>>;
+  alt?: InputMaybe<StringFilter>;
+  createdAt?: InputMaybe<DateTimeFilter>;
+  height?: InputMaybe<FloatFilter>;
+  id?: InputMaybe<IdFilter>;
+  position?: InputMaybe<FloatFilter>;
+  product?: InputMaybe<IdFilter>;
+  productId?: InputMaybe<IdFilter>;
+  shop?: InputMaybe<IdFilter>;
+  shopId?: InputMaybe<IdFilter>;
+  shopifyCreatedAt?: InputMaybe<DateTimeFilter>;
+  shopifyUpdatedAt?: InputMaybe<DateTimeFilter>;
+  source?: InputMaybe<StringFilter>;
+  updatedAt?: InputMaybe<DateTimeFilter>;
+  width?: InputMaybe<FloatFilter>;
+};
+
+export type ShopifyProductImageSort = {
+  /** Sort the results by the alt field. Defaults to ascending (smallest value first). */
+  alt?: InputMaybe<SortOrder>;
+  /** Sort the results by the createdAt field. Defaults to ascending (smallest value first). */
+  createdAt?: InputMaybe<SortOrder>;
+  /** Sort the results by the height field. Defaults to ascending (smallest value first). */
+  height?: InputMaybe<SortOrder>;
+  /** Sort the results by the id field. Defaults to ascending (smallest value first). */
+  id?: InputMaybe<SortOrder>;
+  /** Sort the results by the position field. Defaults to ascending (smallest value first). */
+  position?: InputMaybe<SortOrder>;
+  /** Sort the results by the shopifyCreatedAt field. Defaults to ascending (smallest value first). */
+  shopifyCreatedAt?: InputMaybe<SortOrder>;
+  /** Sort the results by the shopifyUpdatedAt field. Defaults to ascending (smallest value first). */
+  shopifyUpdatedAt?: InputMaybe<SortOrder>;
+  /** Sort the results by the source field. Defaults to ascending (smallest value first). */
+  source?: InputMaybe<SortOrder>;
+  /** Sort the results by the updatedAt field. Defaults to ascending (smallest value first). */
+  updatedAt?: InputMaybe<SortOrder>;
+  /** Sort the results by the width field. Defaults to ascending (smallest value first). */
+  width?: InputMaybe<SortOrder>;
+};
+
+export type ShopifyProductOption = {
+  __typename?: "ShopifyProductOption";
+  /** Get all the fields for this record. Useful for not having to list out all the fields you want to retrieve, but slower. */
+  _all: Scalars["JSONObject"]["output"];
+  /** The time at which this record was first created. Set once upon record creation and never changed. Managed by Gadget. */
+  createdAt: Scalars["DateTime"]["output"];
+  /** The globally unique, unchanging identifier for this record. Assigned and managed by Shopify. */
+  id: Scalars["GadgetID"]["output"];
+  name?: Maybe<Scalars["String"]["output"]>;
+  position?: Maybe<Scalars["Float"]["output"]>;
+  product?: Maybe<ShopifyProduct>;
+  productId?: Maybe<Scalars["GadgetID"]["output"]>;
+  shop?: Maybe<ShopifyShop>;
+  shopId?: Maybe<Scalars["GadgetID"]["output"]>;
+  /** The time at which this record was last changed. Set each time the record is successfully acted upon by an action. Managed by Gadget. */
+  updatedAt: Scalars["DateTime"]["output"];
+  values?: Maybe<Scalars["JSON"]["output"]>;
+};
+
+/** A connection to a list of ShopifyProductOption items. */
+export type ShopifyProductOptionConnection = {
+  __typename?: "ShopifyProductOptionConnection";
+  /** A list of edges. */
+  edges: Array<ShopifyProductOptionEdge>;
+  /** Information to aid in pagination. */
+  pageInfo: PageInfo;
+};
+
+/** An edge in a ShopifyProductOption connection. */
+export type ShopifyProductOptionEdge = {
+  __typename?: "ShopifyProductOptionEdge";
+  /** A cursor for use in pagination */
+  cursor: Scalars["String"]["output"];
+  /** The item at the end of the edge */
+  node: ShopifyProductOption;
+};
+
+export type ShopifyProductOptionFilter = {
+  AND?: InputMaybe<Array<InputMaybe<ShopifyProductOptionFilter>>>;
+  NOT?: InputMaybe<Array<InputMaybe<ShopifyProductOptionFilter>>>;
+  OR?: InputMaybe<Array<InputMaybe<ShopifyProductOptionFilter>>>;
+  createdAt?: InputMaybe<DateTimeFilter>;
+  id?: InputMaybe<IdFilter>;
+  name?: InputMaybe<StringFilter>;
+  position?: InputMaybe<FloatFilter>;
+  product?: InputMaybe<IdFilter>;
+  productId?: InputMaybe<IdFilter>;
+  shop?: InputMaybe<IdFilter>;
+  shopId?: InputMaybe<IdFilter>;
+  updatedAt?: InputMaybe<DateTimeFilter>;
+  values?: InputMaybe<JsonFilter>;
+};
+
+export type ShopifyProductOptionSort = {
+  /** Sort the results by the createdAt field. Defaults to ascending (smallest value first). */
+  createdAt?: InputMaybe<SortOrder>;
+  /** Sort the results by the id field. Defaults to ascending (smallest value first). */
+  id?: InputMaybe<SortOrder>;
+  /** Sort the results by the name field. Defaults to ascending (smallest value first). */
+  name?: InputMaybe<SortOrder>;
+  /** Sort the results by the position field. Defaults to ascending (smallest value first). */
+  position?: InputMaybe<SortOrder>;
+  /** Sort the results by the updatedAt field. Defaults to ascending (smallest value first). */
+  updatedAt?: InputMaybe<SortOrder>;
+  /** Sort the results by the values field. Defaults to ascending (smallest value first). */
+  values?: InputMaybe<SortOrder>;
+};
+
+export type ShopifyProductSort = {
+  /** Sort the results by the body field. Defaults to ascending (smallest value first). */
+  body?: InputMaybe<SortOrder>;
+  /** Sort the results by the category field. Defaults to ascending (smallest value first). */
+  category?: InputMaybe<SortOrder>;
+  /** Sort the results by the compareAtPriceRange field. Defaults to ascending (smallest value first). */
+  compareAtPriceRange?: InputMaybe<SortOrder>;
+  /** Sort the results by the createdAt field. Defaults to ascending (smallest value first). */
+  createdAt?: InputMaybe<SortOrder>;
+  /** Sort the results by the handle field. Defaults to ascending (smallest value first). */
+  handle?: InputMaybe<SortOrder>;
+  /** Sort the results by the id field. Defaults to ascending (smallest value first). */
+  id?: InputMaybe<SortOrder>;
+  /** Sort the results by the productCategory field. Defaults to ascending (smallest value first). */
+  productCategory?: InputMaybe<SortOrder>;
+  /** Sort the results by the productType field. Defaults to ascending (smallest value first). */
+  productType?: InputMaybe<SortOrder>;
+  /** Sort the results by the publishedAt field. Defaults to ascending (smallest value first). */
+  publishedAt?: InputMaybe<SortOrder>;
+  /** Sort the results by the shopifyCreatedAt field. Defaults to ascending (smallest value first). */
+  shopifyCreatedAt?: InputMaybe<SortOrder>;
+  /** Sort the results by the shopifyUpdatedAt field. Defaults to ascending (smallest value first). */
+  shopifyUpdatedAt?: InputMaybe<SortOrder>;
+  /** Sort the results by the status field. Defaults to ascending (smallest value first). */
+  status?: InputMaybe<SortOrder>;
+  /** Sort the results by the tags field. Defaults to ascending (smallest value first). */
+  tags?: InputMaybe<SortOrder>;
+  /** Sort the results by the templateSuffix field. Defaults to ascending (smallest value first). */
+  templateSuffix?: InputMaybe<SortOrder>;
+  /** Sort the results by the title field. Defaults to ascending (smallest value first). */
+  title?: InputMaybe<SortOrder>;
+  /** Sort the results by the updatedAt field. Defaults to ascending (smallest value first). */
+  updatedAt?: InputMaybe<SortOrder>;
+  /** Sort the results by the vendor field. Defaults to ascending (smallest value first). */
+  vendor?: InputMaybe<SortOrder>;
+};
+
+export type ShopifyProductVariant = {
+  __typename?: "ShopifyProductVariant";
+  /** Get all the fields for this record. Useful for not having to list out all the fields you want to retrieve, but slower. */
+  _all: Scalars["JSONObject"]["output"];
+  barcode?: Maybe<Scalars["String"]["output"]>;
+  compareAtPrice?: Maybe<Scalars["String"]["output"]>;
+  /** The time at which this record was first created. Set once upon record creation and never changed. Managed by Gadget. */
+  createdAt: Scalars["DateTime"]["output"];
+  /** The globally unique, unchanging identifier for this record. Assigned and managed by Shopify. */
+  id: Scalars["GadgetID"]["output"];
+  inventoryPolicy?: Maybe<Scalars["String"]["output"]>;
+  inventoryQuantity?: Maybe<Scalars["Float"]["output"]>;
+  option1?: Maybe<Scalars["String"]["output"]>;
+  option2?: Maybe<Scalars["String"]["output"]>;
+  option3?: Maybe<Scalars["String"]["output"]>;
+  position?: Maybe<Scalars["Float"]["output"]>;
+  presentmentPrices?: Maybe<Scalars["JSON"]["output"]>;
+  price?: Maybe<Scalars["String"]["output"]>;
+  product?: Maybe<ShopifyProduct>;
+  productId?: Maybe<Scalars["GadgetID"]["output"]>;
+  productImage?: Maybe<ShopifyProductImage>;
+  productImageId?: Maybe<Scalars["GadgetID"]["output"]>;
+  selectedOptions?: Maybe<Scalars["JSON"]["output"]>;
+  shop?: Maybe<ShopifyShop>;
+  shopId?: Maybe<Scalars["GadgetID"]["output"]>;
+  shopifyCreatedAt?: Maybe<Scalars["DateTime"]["output"]>;
+  shopifyUpdatedAt?: Maybe<Scalars["DateTime"]["output"]>;
+  sku?: Maybe<Scalars["String"]["output"]>;
+  taxCode?: Maybe<Scalars["String"]["output"]>;
+  taxable?: Maybe<Scalars["Boolean"]["output"]>;
+  title?: Maybe<Scalars["String"]["output"]>;
+  /** The time at which this record was last changed. Set each time the record is successfully acted upon by an action. Managed by Gadget. */
+  updatedAt: Scalars["DateTime"]["output"];
+};
+
+/** A connection to a list of ShopifyProductVariant items. */
+export type ShopifyProductVariantConnection = {
+  __typename?: "ShopifyProductVariantConnection";
+  /** A list of edges. */
+  edges: Array<ShopifyProductVariantEdge>;
+  /** Information to aid in pagination. */
+  pageInfo: PageInfo;
+};
+
+/** An edge in a ShopifyProductVariant connection. */
+export type ShopifyProductVariantEdge = {
+  __typename?: "ShopifyProductVariantEdge";
+  /** A cursor for use in pagination */
+  cursor: Scalars["String"]["output"];
+  /** The item at the end of the edge */
+  node: ShopifyProductVariant;
+};
+
+export type ShopifyProductVariantFilter = {
+  AND?: InputMaybe<Array<InputMaybe<ShopifyProductVariantFilter>>>;
+  NOT?: InputMaybe<Array<InputMaybe<ShopifyProductVariantFilter>>>;
+  OR?: InputMaybe<Array<InputMaybe<ShopifyProductVariantFilter>>>;
+  barcode?: InputMaybe<StringFilter>;
+  compareAtPrice?: InputMaybe<StringFilter>;
+  createdAt?: InputMaybe<DateTimeFilter>;
+  id?: InputMaybe<IdFilter>;
+  inventoryPolicy?: InputMaybe<StringFilter>;
+  inventoryQuantity?: InputMaybe<FloatFilter>;
+  option1?: InputMaybe<StringFilter>;
+  option2?: InputMaybe<StringFilter>;
+  option3?: InputMaybe<StringFilter>;
+  position?: InputMaybe<FloatFilter>;
+  presentmentPrices?: InputMaybe<JsonFilter>;
+  price?: InputMaybe<StringFilter>;
+  product?: InputMaybe<IdFilter>;
+  productId?: InputMaybe<IdFilter>;
+  productImage?: InputMaybe<IdFilter>;
+  productImageId?: InputMaybe<IdFilter>;
+  selectedOptions?: InputMaybe<JsonFilter>;
+  shop?: InputMaybe<IdFilter>;
+  shopId?: InputMaybe<IdFilter>;
+  shopifyCreatedAt?: InputMaybe<DateTimeFilter>;
+  shopifyUpdatedAt?: InputMaybe<DateTimeFilter>;
+  sku?: InputMaybe<StringFilter>;
+  taxCode?: InputMaybe<StringFilter>;
+  taxable?: InputMaybe<BooleanFilter>;
+  title?: InputMaybe<StringFilter>;
+  updatedAt?: InputMaybe<DateTimeFilter>;
+};
+
+export type ShopifyProductVariantSort = {
+  /** Sort the results by the barcode field. Defaults to ascending (smallest value first). */
+  barcode?: InputMaybe<SortOrder>;
+  /** Sort the results by the compareAtPrice field. Defaults to ascending (smallest value first). */
+  compareAtPrice?: InputMaybe<SortOrder>;
+  /** Sort the results by the createdAt field. Defaults to ascending (smallest value first). */
+  createdAt?: InputMaybe<SortOrder>;
+  /** Sort the results by the id field. Defaults to ascending (smallest value first). */
+  id?: InputMaybe<SortOrder>;
+  /** Sort the results by the inventoryPolicy field. Defaults to ascending (smallest value first). */
+  inventoryPolicy?: InputMaybe<SortOrder>;
+  /** Sort the results by the inventoryQuantity field. Defaults to ascending (smallest value first). */
+  inventoryQuantity?: InputMaybe<SortOrder>;
+  /** Sort the results by the option1 field. Defaults to ascending (smallest value first). */
+  option1?: InputMaybe<SortOrder>;
+  /** Sort the results by the option2 field. Defaults to ascending (smallest value first). */
+  option2?: InputMaybe<SortOrder>;
+  /** Sort the results by the option3 field. Defaults to ascending (smallest value first). */
+  option3?: InputMaybe<SortOrder>;
+  /** Sort the results by the position field. Defaults to ascending (smallest value first). */
+  position?: InputMaybe<SortOrder>;
+  /** Sort the results by the presentmentPrices field. Defaults to ascending (smallest value first). */
+  presentmentPrices?: InputMaybe<SortOrder>;
+  /** Sort the results by the price field. Defaults to ascending (smallest value first). */
+  price?: InputMaybe<SortOrder>;
+  /** Sort the results by the selectedOptions field. Defaults to ascending (smallest value first). */
+  selectedOptions?: InputMaybe<SortOrder>;
+  /** Sort the results by the shopifyCreatedAt field. Defaults to ascending (smallest value first). */
+  shopifyCreatedAt?: InputMaybe<SortOrder>;
+  /** Sort the results by the shopifyUpdatedAt field. Defaults to ascending (smallest value first). */
+  shopifyUpdatedAt?: InputMaybe<SortOrder>;
+  /** Sort the results by the sku field. Defaults to ascending (smallest value first). */
+  sku?: InputMaybe<SortOrder>;
+  /** Sort the results by the taxCode field. Defaults to ascending (smallest value first). */
+  taxCode?: InputMaybe<SortOrder>;
+  /** Sort the results by the taxable field. Defaults to ascending (smallest value first). */
+  taxable?: InputMaybe<SortOrder>;
+  /** Sort the results by the title field. Defaults to ascending (smallest value first). */
+  title?: InputMaybe<SortOrder>;
+  /** Sort the results by the updatedAt field. Defaults to ascending (smallest value first). */
+  updatedAt?: InputMaybe<SortOrder>;
+};
+
+export type ShopifyShop = {
+  __typename?: "ShopifyShop";
+  /** Get all the fields for this record. Useful for not having to list out all the fields you want to retrieve, but slower. */
+  _all: Scalars["JSONObject"]["output"];
+  address1?: Maybe<Scalars["String"]["output"]>;
+  address2?: Maybe<Scalars["String"]["output"]>;
+  checkoutApiSupported?: Maybe<Scalars["Boolean"]["output"]>;
+  city?: Maybe<Scalars["String"]["output"]>;
+  cookieConsentLevel?: Maybe<Scalars["String"]["output"]>;
+  country?: Maybe<Scalars["String"]["output"]>;
+  countryCode?: Maybe<Scalars["String"]["output"]>;
+  countryName?: Maybe<Scalars["String"]["output"]>;
+  countyTaxes?: Maybe<Scalars["JSON"]["output"]>;
+  /** The time at which this record was first created. Set once upon record creation and never changed. Managed by Gadget. */
+  createdAt: Scalars["DateTime"]["output"];
+  currency?: Maybe<Scalars["String"]["output"]>;
+  customerAccountsV2?: Maybe<Scalars["JSON"]["output"]>;
+  customerEmail?: Maybe<Scalars["String"]["output"]>;
+  disabledWebhooks?: Maybe<Scalars["JSON"]["output"]>;
+  domain?: Maybe<Scalars["String"]["output"]>;
+  eligibleForCardReaderGiveaway?: Maybe<Scalars["Boolean"]["output"]>;
+  eligibleForPayments?: Maybe<Scalars["Boolean"]["output"]>;
+  email?: Maybe<Scalars["String"]["output"]>;
+  enabledPresentmentCurrencies?: Maybe<Scalars["JSON"]["output"]>;
+  finances?: Maybe<Scalars["Boolean"]["output"]>;
+  forceSsl?: Maybe<Scalars["Boolean"]["output"]>;
+  gdprRequests: ShopifyGdprRequestConnection;
+  googleAppsDomain?: Maybe<Scalars["String"]["output"]>;
+  googleAppsLoginEnabled?: Maybe<Scalars["Boolean"]["output"]>;
+  grantedScopes?: Maybe<Scalars["JSON"]["output"]>;
+  hasDiscounts?: Maybe<Scalars["Boolean"]["output"]>;
+  hasGiftCards?: Maybe<Scalars["Boolean"]["output"]>;
+  hasStorefront?: Maybe<Scalars["Boolean"]["output"]>;
+  ianaTimezone?: Maybe<Scalars["String"]["output"]>;
+  /** The globally unique, unchanging identifier for this record. Assigned and managed by Shopify. */
+  id: Scalars["GadgetID"]["output"];
+  installedViaApiKey?: Maybe<Scalars["String"]["output"]>;
+  latitude?: Maybe<Scalars["Float"]["output"]>;
+  longitude?: Maybe<Scalars["Float"]["output"]>;
+  marketingSmsContentEnabledAtCheckout?: Maybe<Scalars["Boolean"]["output"]>;
+  moneyFormat?: Maybe<Scalars["String"]["output"]>;
+  moneyInEmailsFormat?: Maybe<Scalars["String"]["output"]>;
+  moneyWithCurrencyFormat?: Maybe<Scalars["String"]["output"]>;
+  moneyWithCurrencyInEmailsFormat?: Maybe<Scalars["String"]["output"]>;
+  multiLocationEnabled?: Maybe<Scalars["Boolean"]["output"]>;
+  myshopifyDomain?: Maybe<Scalars["String"]["output"]>;
+  name?: Maybe<Scalars["String"]["output"]>;
+  passwordEnabled?: Maybe<Scalars["Boolean"]["output"]>;
+  phone?: Maybe<Scalars["String"]["output"]>;
+  planDisplayName?: Maybe<Scalars["String"]["output"]>;
+  planName?: Maybe<Scalars["String"]["output"]>;
+  preLaunchEnabled?: Maybe<Scalars["Boolean"]["output"]>;
+  primaryLocale?: Maybe<Scalars["String"]["output"]>;
+  productImages: ShopifyProductImageConnection;
+  productOptions: ShopifyProductOptionConnection;
+  productVariants: ShopifyProductVariantConnection;
+  products: ShopifyProductConnection;
+  province?: Maybe<Scalars["String"]["output"]>;
+  provinceCode?: Maybe<Scalars["String"]["output"]>;
+  registeredWebhooks?: Maybe<Scalars["JSON"]["output"]>;
+  requiresExtraPaymentsAgreement?: Maybe<Scalars["Boolean"]["output"]>;
+  setupRequired?: Maybe<Scalars["Boolean"]["output"]>;
+  shopOwner?: Maybe<Scalars["String"]["output"]>;
+  shopifyCreatedAt?: Maybe<Scalars["DateTime"]["output"]>;
+  shopifyUpdatedAt?: Maybe<Scalars["DateTime"]["output"]>;
+  source?: Maybe<Scalars["String"]["output"]>;
+  /** The current state this record is in. Changed by invoking actions. Managed by Gadget. */
+  state: Scalars["RecordState"]["output"];
+  syncs: ShopifySyncConnection;
+  taxShipping?: Maybe<Scalars["Boolean"]["output"]>;
+  taxesIncluded?: Maybe<Scalars["Boolean"]["output"]>;
+  timezone?: Maybe<Scalars["String"]["output"]>;
+  transactionalSmsDisabled?: Maybe<Scalars["Boolean"]["output"]>;
+  /** The time at which this record was last changed. Set each time the record is successfully acted upon by an action. Managed by Gadget. */
+  updatedAt: Scalars["DateTime"]["output"];
+  weightUnit?: Maybe<Scalars["String"]["output"]>;
+  zipCode?: Maybe<Scalars["String"]["output"]>;
+};
+
+export type ShopifyShopGdprRequestsArgs = {
+  after?: InputMaybe<Scalars["String"]["input"]>;
+  before?: InputMaybe<Scalars["String"]["input"]>;
+  filter?: InputMaybe<Array<ShopifyGdprRequestFilter>>;
+  first?: InputMaybe<Scalars["Int"]["input"]>;
+  last?: InputMaybe<Scalars["Int"]["input"]>;
+  search?: InputMaybe<Scalars["String"]["input"]>;
+  sort?: InputMaybe<Array<ShopifyGdprRequestSort>>;
+};
+
+export type ShopifyShopProductImagesArgs = {
+  after?: InputMaybe<Scalars["String"]["input"]>;
+  before?: InputMaybe<Scalars["String"]["input"]>;
+  filter?: InputMaybe<Array<ShopifyProductImageFilter>>;
+  first?: InputMaybe<Scalars["Int"]["input"]>;
+  last?: InputMaybe<Scalars["Int"]["input"]>;
+  search?: InputMaybe<Scalars["String"]["input"]>;
+  sort?: InputMaybe<Array<ShopifyProductImageSort>>;
+};
+
+export type ShopifyShopProductOptionsArgs = {
+  after?: InputMaybe<Scalars["String"]["input"]>;
+  before?: InputMaybe<Scalars["String"]["input"]>;
+  filter?: InputMaybe<Array<ShopifyProductOptionFilter>>;
+  first?: InputMaybe<Scalars["Int"]["input"]>;
+  last?: InputMaybe<Scalars["Int"]["input"]>;
+  search?: InputMaybe<Scalars["String"]["input"]>;
+  sort?: InputMaybe<Array<ShopifyProductOptionSort>>;
+};
+
+export type ShopifyShopProductVariantsArgs = {
+  after?: InputMaybe<Scalars["String"]["input"]>;
+  before?: InputMaybe<Scalars["String"]["input"]>;
+  filter?: InputMaybe<Array<ShopifyProductVariantFilter>>;
+  first?: InputMaybe<Scalars["Int"]["input"]>;
+  last?: InputMaybe<Scalars["Int"]["input"]>;
+  search?: InputMaybe<Scalars["String"]["input"]>;
+  sort?: InputMaybe<Array<ShopifyProductVariantSort>>;
+};
+
+export type ShopifyShopProductsArgs = {
+  after?: InputMaybe<Scalars["String"]["input"]>;
+  before?: InputMaybe<Scalars["String"]["input"]>;
+  filter?: InputMaybe<Array<ShopifyProductFilter>>;
+  first?: InputMaybe<Scalars["Int"]["input"]>;
+  last?: InputMaybe<Scalars["Int"]["input"]>;
+  search?: InputMaybe<Scalars["String"]["input"]>;
+  sort?: InputMaybe<Array<ShopifyProductSort>>;
+};
+
+export type ShopifyShopSyncsArgs = {
+  after?: InputMaybe<Scalars["String"]["input"]>;
+  before?: InputMaybe<Scalars["String"]["input"]>;
+  filter?: InputMaybe<Array<ShopifySyncFilter>>;
+  first?: InputMaybe<Scalars["Int"]["input"]>;
+  last?: InputMaybe<Scalars["Int"]["input"]>;
+  search?: InputMaybe<Scalars["String"]["input"]>;
+  sort?: InputMaybe<Array<ShopifySyncSort>>;
+};
+
+/** Input object supporting setting or updating related model record on a relationship field */
+export type ShopifyShopBelongsToInput = {
+  /** Existing ID of another record, which you would like to associate this record with */
+  _link?: InputMaybe<Scalars["GadgetID"]["input"]>;
+};
+
+/** A connection to a list of ShopifyShop items. */
+export type ShopifyShopConnection = {
+  __typename?: "ShopifyShopConnection";
+  /** A list of edges. */
+  edges: Array<ShopifyShopEdge>;
+  /** Information to aid in pagination. */
+  pageInfo: PageInfo;
+};
+
+/** An edge in a ShopifyShop connection. */
+export type ShopifyShopEdge = {
+  __typename?: "ShopifyShopEdge";
+  /** A cursor for use in pagination */
+  cursor: Scalars["String"]["output"];
+  /** The item at the end of the edge */
+  node: ShopifyShop;
+};
+
+export type ShopifyShopFilter = {
+  AND?: InputMaybe<Array<InputMaybe<ShopifyShopFilter>>>;
+  NOT?: InputMaybe<Array<InputMaybe<ShopifyShopFilter>>>;
+  OR?: InputMaybe<Array<InputMaybe<ShopifyShopFilter>>>;
+  address1?: InputMaybe<StringFilter>;
+  address2?: InputMaybe<StringFilter>;
+  checkoutApiSupported?: InputMaybe<BooleanFilter>;
+  city?: InputMaybe<StringFilter>;
+  cookieConsentLevel?: InputMaybe<StringFilter>;
+  country?: InputMaybe<StringFilter>;
+  countryCode?: InputMaybe<StringFilter>;
+  countryName?: InputMaybe<StringFilter>;
+  countyTaxes?: InputMaybe<JsonFilter>;
+  createdAt?: InputMaybe<DateTimeFilter>;
+  currency?: InputMaybe<StringFilter>;
+  customerAccountsV2?: InputMaybe<JsonFilter>;
+  customerEmail?: InputMaybe<StringFilter>;
+  disabledWebhooks?: InputMaybe<JsonFilter>;
+  domain?: InputMaybe<StringFilter>;
+  eligibleForCardReaderGiveaway?: InputMaybe<BooleanFilter>;
+  eligibleForPayments?: InputMaybe<BooleanFilter>;
+  email?: InputMaybe<StringFilter>;
+  enabledPresentmentCurrencies?: InputMaybe<JsonFilter>;
+  finances?: InputMaybe<BooleanFilter>;
+  forceSsl?: InputMaybe<BooleanFilter>;
+  googleAppsDomain?: InputMaybe<StringFilter>;
+  googleAppsLoginEnabled?: InputMaybe<BooleanFilter>;
+  grantedScopes?: InputMaybe<JsonFilter>;
+  hasDiscounts?: InputMaybe<BooleanFilter>;
+  hasGiftCards?: InputMaybe<BooleanFilter>;
+  hasStorefront?: InputMaybe<BooleanFilter>;
+  ianaTimezone?: InputMaybe<StringFilter>;
+  id?: InputMaybe<IdFilter>;
+  installedViaApiKey?: InputMaybe<StringFilter>;
+  latitude?: InputMaybe<FloatFilter>;
+  longitude?: InputMaybe<FloatFilter>;
+  marketingSmsContentEnabledAtCheckout?: InputMaybe<BooleanFilter>;
+  moneyFormat?: InputMaybe<StringFilter>;
+  moneyInEmailsFormat?: InputMaybe<StringFilter>;
+  moneyWithCurrencyFormat?: InputMaybe<StringFilter>;
+  moneyWithCurrencyInEmailsFormat?: InputMaybe<StringFilter>;
+  multiLocationEnabled?: InputMaybe<BooleanFilter>;
+  myshopifyDomain?: InputMaybe<StringFilter>;
+  name?: InputMaybe<StringFilter>;
+  passwordEnabled?: InputMaybe<BooleanFilter>;
+  phone?: InputMaybe<StringFilter>;
+  planDisplayName?: InputMaybe<StringFilter>;
+  planName?: InputMaybe<StringFilter>;
+  preLaunchEnabled?: InputMaybe<BooleanFilter>;
+  primaryLocale?: InputMaybe<StringFilter>;
+  province?: InputMaybe<StringFilter>;
+  provinceCode?: InputMaybe<StringFilter>;
+  registeredWebhooks?: InputMaybe<JsonFilter>;
+  requiresExtraPaymentsAgreement?: InputMaybe<BooleanFilter>;
+  setupRequired?: InputMaybe<BooleanFilter>;
+  shopOwner?: InputMaybe<StringFilter>;
+  shopifyCreatedAt?: InputMaybe<DateTimeFilter>;
+  shopifyUpdatedAt?: InputMaybe<DateTimeFilter>;
+  source?: InputMaybe<StringFilter>;
+  state?: InputMaybe<StateFilter>;
+  taxShipping?: InputMaybe<BooleanFilter>;
+  taxesIncluded?: InputMaybe<BooleanFilter>;
+  timezone?: InputMaybe<StringFilter>;
+  transactionalSmsDisabled?: InputMaybe<BooleanFilter>;
+  updatedAt?: InputMaybe<DateTimeFilter>;
+  weightUnit?: InputMaybe<StringFilter>;
+  zipCode?: InputMaybe<StringFilter>;
+};
+
+export type ShopifyShopSort = {
+  /** Sort the results by the address1 field. Defaults to ascending (smallest value first). */
+  address1?: InputMaybe<SortOrder>;
+  /** Sort the results by the address2 field. Defaults to ascending (smallest value first). */
+  address2?: InputMaybe<SortOrder>;
+  /** Sort the results by the checkoutApiSupported field. Defaults to ascending (smallest value first). */
+  checkoutApiSupported?: InputMaybe<SortOrder>;
+  /** Sort the results by the city field. Defaults to ascending (smallest value first). */
+  city?: InputMaybe<SortOrder>;
+  /** Sort the results by the cookieConsentLevel field. Defaults to ascending (smallest value first). */
+  cookieConsentLevel?: InputMaybe<SortOrder>;
+  /** Sort the results by the country field. Defaults to ascending (smallest value first). */
+  country?: InputMaybe<SortOrder>;
+  /** Sort the results by the countryCode field. Defaults to ascending (smallest value first). */
+  countryCode?: InputMaybe<SortOrder>;
+  /** Sort the results by the countryName field. Defaults to ascending (smallest value first). */
+  countryName?: InputMaybe<SortOrder>;
+  /** Sort the results by the countyTaxes field. Defaults to ascending (smallest value first). */
+  countyTaxes?: InputMaybe<SortOrder>;
+  /** Sort the results by the createdAt field. Defaults to ascending (smallest value first). */
+  createdAt?: InputMaybe<SortOrder>;
+  /** Sort the results by the currency field. Defaults to ascending (smallest value first). */
+  currency?: InputMaybe<SortOrder>;
+  /** Sort the results by the customerAccountsV2 field. Defaults to ascending (smallest value first). */
+  customerAccountsV2?: InputMaybe<SortOrder>;
+  /** Sort the results by the customerEmail field. Defaults to ascending (smallest value first). */
+  customerEmail?: InputMaybe<SortOrder>;
+  /** Sort the results by the disabledWebhooks field. Defaults to ascending (smallest value first). */
+  disabledWebhooks?: InputMaybe<SortOrder>;
+  /** Sort the results by the domain field. Defaults to ascending (smallest value first). */
+  domain?: InputMaybe<SortOrder>;
+  /** Sort the results by the eligibleForCardReaderGiveaway field. Defaults to ascending (smallest value first). */
+  eligibleForCardReaderGiveaway?: InputMaybe<SortOrder>;
+  /** Sort the results by the eligibleForPayments field. Defaults to ascending (smallest value first). */
+  eligibleForPayments?: InputMaybe<SortOrder>;
+  /** Sort the results by the email field. Defaults to ascending (smallest value first). */
+  email?: InputMaybe<SortOrder>;
+  /** Sort the results by the enabledPresentmentCurrencies field. Defaults to ascending (smallest value first). */
+  enabledPresentmentCurrencies?: InputMaybe<SortOrder>;
+  /** Sort the results by the finances field. Defaults to ascending (smallest value first). */
+  finances?: InputMaybe<SortOrder>;
+  /** Sort the results by the forceSsl field. Defaults to ascending (smallest value first). */
+  forceSsl?: InputMaybe<SortOrder>;
+  /** Sort the results by the googleAppsDomain field. Defaults to ascending (smallest value first). */
+  googleAppsDomain?: InputMaybe<SortOrder>;
+  /** Sort the results by the googleAppsLoginEnabled field. Defaults to ascending (smallest value first). */
+  googleAppsLoginEnabled?: InputMaybe<SortOrder>;
+  /** Sort the results by the grantedScopes field. Defaults to ascending (smallest value first). */
+  grantedScopes?: InputMaybe<SortOrder>;
+  /** Sort the results by the hasDiscounts field. Defaults to ascending (smallest value first). */
+  hasDiscounts?: InputMaybe<SortOrder>;
+  /** Sort the results by the hasGiftCards field. Defaults to ascending (smallest value first). */
+  hasGiftCards?: InputMaybe<SortOrder>;
+  /** Sort the results by the hasStorefront field. Defaults to ascending (smallest value first). */
+  hasStorefront?: InputMaybe<SortOrder>;
+  /** Sort the results by the ianaTimezone field. Defaults to ascending (smallest value first). */
+  ianaTimezone?: InputMaybe<SortOrder>;
+  /** Sort the results by the id field. Defaults to ascending (smallest value first). */
+  id?: InputMaybe<SortOrder>;
+  /** Sort the results by the installedViaApiKey field. Defaults to ascending (smallest value first). */
+  installedViaApiKey?: InputMaybe<SortOrder>;
+  /** Sort the results by the latitude field. Defaults to ascending (smallest value first). */
+  latitude?: InputMaybe<SortOrder>;
+  /** Sort the results by the longitude field. Defaults to ascending (smallest value first). */
+  longitude?: InputMaybe<SortOrder>;
+  /** Sort the results by the marketingSmsContentEnabledAtCheckout field. Defaults to ascending (smallest value first). */
+  marketingSmsContentEnabledAtCheckout?: InputMaybe<SortOrder>;
+  /** Sort the results by the moneyFormat field. Defaults to ascending (smallest value first). */
+  moneyFormat?: InputMaybe<SortOrder>;
+  /** Sort the results by the moneyInEmailsFormat field. Defaults to ascending (smallest value first). */
+  moneyInEmailsFormat?: InputMaybe<SortOrder>;
+  /** Sort the results by the moneyWithCurrencyFormat field. Defaults to ascending (smallest value first). */
+  moneyWithCurrencyFormat?: InputMaybe<SortOrder>;
+  /** Sort the results by the moneyWithCurrencyInEmailsFormat field. Defaults to ascending (smallest value first). */
+  moneyWithCurrencyInEmailsFormat?: InputMaybe<SortOrder>;
+  /** Sort the results by the multiLocationEnabled field. Defaults to ascending (smallest value first). */
+  multiLocationEnabled?: InputMaybe<SortOrder>;
+  /** Sort the results by the myshopifyDomain field. Defaults to ascending (smallest value first). */
+  myshopifyDomain?: InputMaybe<SortOrder>;
+  /** Sort the results by the name field. Defaults to ascending (smallest value first). */
+  name?: InputMaybe<SortOrder>;
+  /** Sort the results by the passwordEnabled field. Defaults to ascending (smallest value first). */
+  passwordEnabled?: InputMaybe<SortOrder>;
+  /** Sort the results by the phone field. Defaults to ascending (smallest value first). */
+  phone?: InputMaybe<SortOrder>;
+  /** Sort the results by the planDisplayName field. Defaults to ascending (smallest value first). */
+  planDisplayName?: InputMaybe<SortOrder>;
+  /** Sort the results by the planName field. Defaults to ascending (smallest value first). */
+  planName?: InputMaybe<SortOrder>;
+  /** Sort the results by the preLaunchEnabled field. Defaults to ascending (smallest value first). */
+  preLaunchEnabled?: InputMaybe<SortOrder>;
+  /** Sort the results by the primaryLocale field. Defaults to ascending (smallest value first). */
+  primaryLocale?: InputMaybe<SortOrder>;
+  /** Sort the results by the province field. Defaults to ascending (smallest value first). */
+  province?: InputMaybe<SortOrder>;
+  /** Sort the results by the provinceCode field. Defaults to ascending (smallest value first). */
+  provinceCode?: InputMaybe<SortOrder>;
+  /** Sort the results by the registeredWebhooks field. Defaults to ascending (smallest value first). */
+  registeredWebhooks?: InputMaybe<SortOrder>;
+  /** Sort the results by the requiresExtraPaymentsAgreement field. Defaults to ascending (smallest value first). */
+  requiresExtraPaymentsAgreement?: InputMaybe<SortOrder>;
+  /** Sort the results by the setupRequired field. Defaults to ascending (smallest value first). */
+  setupRequired?: InputMaybe<SortOrder>;
+  /** Sort the results by the shopOwner field. Defaults to ascending (smallest value first). */
+  shopOwner?: InputMaybe<SortOrder>;
+  /** Sort the results by the shopifyCreatedAt field. Defaults to ascending (smallest value first). */
+  shopifyCreatedAt?: InputMaybe<SortOrder>;
+  /** Sort the results by the shopifyUpdatedAt field. Defaults to ascending (smallest value first). */
+  shopifyUpdatedAt?: InputMaybe<SortOrder>;
+  /** Sort the results by the source field. Defaults to ascending (smallest value first). */
+  source?: InputMaybe<SortOrder>;
+  /** Sort the results by the state field. Defaults to ascending (smallest value first). */
+  state?: InputMaybe<SortOrder>;
+  /** Sort the results by the taxShipping field. Defaults to ascending (smallest value first). */
+  taxShipping?: InputMaybe<SortOrder>;
+  /** Sort the results by the taxesIncluded field. Defaults to ascending (smallest value first). */
+  taxesIncluded?: InputMaybe<SortOrder>;
+  /** Sort the results by the timezone field. Defaults to ascending (smallest value first). */
+  timezone?: InputMaybe<SortOrder>;
+  /** Sort the results by the transactionalSmsDisabled field. Defaults to ascending (smallest value first). */
+  transactionalSmsDisabled?: InputMaybe<SortOrder>;
+  /** Sort the results by the updatedAt field. Defaults to ascending (smallest value first). */
+  updatedAt?: InputMaybe<SortOrder>;
+  /** Sort the results by the weightUnit field. Defaults to ascending (smallest value first). */
+  weightUnit?: InputMaybe<SortOrder>;
+  /** Sort the results by the zipCode field. Defaults to ascending (smallest value first). */
+  zipCode?: InputMaybe<SortOrder>;
+};
+
+export type ShopifySync = {
+  __typename?: "ShopifySync";
+  /** Get all the fields for this record. Useful for not having to list out all the fields you want to retrieve, but slower. */
+  _all: Scalars["JSONObject"]["output"];
+  /** The time at which this record was first created. Set once upon record creation and never changed. Managed by Gadget. */
+  createdAt: Scalars["DateTime"]["output"];
+  domain: Scalars["String"]["output"];
+  errorDetails?: Maybe<Scalars["String"]["output"]>;
+  errorMessage?: Maybe<Scalars["String"]["output"]>;
+  force?: Maybe<Scalars["Boolean"]["output"]>;
+  /** The globally unique, unchanging identifier for this record. Assigned and managed by Gadget. */
+  id: Scalars["GadgetID"]["output"];
+  models?: Maybe<Scalars["JSON"]["output"]>;
+  shop: ShopifyShop;
+  shopId: Scalars["GadgetID"]["output"];
+  /** The current state this record is in. Changed by invoking actions. Managed by Gadget. */
+  state: Scalars["RecordState"]["output"];
+  /** DateTime that this sync was run from */
+  syncSince?: Maybe<Scalars["DateTime"]["output"]>;
+  /** The time at which this record was last changed. Set each time the record is successfully acted upon by an action. Managed by Gadget. */
+  updatedAt: Scalars["DateTime"]["output"];
+};
+
+/** A connection to a list of ShopifySync items. */
+export type ShopifySyncConnection = {
+  __typename?: "ShopifySyncConnection";
+  /** A list of edges. */
+  edges: Array<ShopifySyncEdge>;
+  /** Information to aid in pagination. */
+  pageInfo: PageInfo;
+};
+
+/** An edge in a ShopifySync connection. */
+export type ShopifySyncEdge = {
+  __typename?: "ShopifySyncEdge";
+  /** A cursor for use in pagination */
+  cursor: Scalars["String"]["output"];
+  /** The item at the end of the edge */
+  node: ShopifySync;
+};
+
+export type ShopifySyncFilter = {
+  AND?: InputMaybe<Array<InputMaybe<ShopifySyncFilter>>>;
+  NOT?: InputMaybe<Array<InputMaybe<ShopifySyncFilter>>>;
+  OR?: InputMaybe<Array<InputMaybe<ShopifySyncFilter>>>;
+  createdAt?: InputMaybe<DateTimeFilter>;
+  domain?: InputMaybe<StringFilter>;
+  errorDetails?: InputMaybe<StringFilter>;
+  errorMessage?: InputMaybe<StringFilter>;
+  force?: InputMaybe<BooleanFilter>;
+  id?: InputMaybe<IdFilter>;
+  models?: InputMaybe<JsonFilter>;
+  shop?: InputMaybe<IdFilter>;
+  shopId?: InputMaybe<IdFilter>;
+  state?: InputMaybe<StateFilter>;
+  syncSince?: InputMaybe<DateTimeFilter>;
+  updatedAt?: InputMaybe<DateTimeFilter>;
+};
+
+export type ShopifySyncSort = {
+  /** Sort the results by the createdAt field. Defaults to ascending (smallest value first). */
+  createdAt?: InputMaybe<SortOrder>;
+  /** Sort the results by the domain field. Defaults to ascending (smallest value first). */
+  domain?: InputMaybe<SortOrder>;
+  /** Sort the results by the errorDetails field. Defaults to ascending (smallest value first). */
+  errorDetails?: InputMaybe<SortOrder>;
+  /** Sort the results by the errorMessage field. Defaults to ascending (smallest value first). */
+  errorMessage?: InputMaybe<SortOrder>;
+  /** Sort the results by the force field. Defaults to ascending (smallest value first). */
+  force?: InputMaybe<SortOrder>;
+  /** Sort the results by the id field. Defaults to ascending (smallest value first). */
+  id?: InputMaybe<SortOrder>;
+  /** Sort the results by the models field. Defaults to ascending (smallest value first). */
+  models?: InputMaybe<SortOrder>;
+  /** Sort the results by the state field. Defaults to ascending (smallest value first). */
+  state?: InputMaybe<SortOrder>;
+  /** Sort the results by the syncSince field. Defaults to ascending (smallest value first). */
+  syncSince?: InputMaybe<SortOrder>;
+  /** Sort the results by the updatedAt field. Defaults to ascending (smallest value first). */
+  updatedAt?: InputMaybe<SortOrder>;
 };
 
 export type SignInUserInput = {
@@ -6754,6 +9378,11 @@ export type StadiumHasOneInput = {
   update?: InputMaybe<NestedStadiumUpdateInput>;
 };
 
+export type StateFilter = {
+  inState?: InputMaybe<Scalars["String"]["input"]>;
+  isSet?: InputMaybe<Scalars["Boolean"]["input"]>;
+};
+
 /** One file that has been stored and attached to a record */
 export type StoredFile = {
   __typename?: "StoredFile";
@@ -6785,6 +9414,10 @@ export type StoredFileInput = {
   mimeType?: InputMaybe<Scalars["String"]["input"]>;
 };
 
+export type StringEqualsFilter = {
+  equals?: InputMaybe<Scalars["String"]["input"]>;
+};
+
 export type StringFilter = {
   equals?: InputMaybe<Scalars["String"]["input"]>;
   greaterThan?: InputMaybe<Scalars["String"]["input"]>;
@@ -6805,6 +9438,14 @@ export type Subscription = {
 
 export type SubscriptionBackgroundActionArgs = {
   id: Scalars["String"]["input"];
+};
+
+export type UninstallShopifyShopResult = {
+  __typename?: "UninstallShopifyShopResult";
+  actionRun?: Maybe<Scalars["String"]["output"]>;
+  errors?: Maybe<Array<ExecutionError>>;
+  shopifyShop?: Maybe<ShopifyShop>;
+  success: Scalars["Boolean"]["output"];
 };
 
 export type UpdateAutoTableTestInput = {
@@ -6957,6 +9598,54 @@ export type UpdateSectionResult = UpsertSectionResult & {
   success: Scalars["Boolean"]["output"];
 };
 
+export type UpdateShopifyGdprRequestResult = UpsertShopifyGdprRequestResult & {
+  __typename?: "UpdateShopifyGdprRequestResult";
+  actionRun?: Maybe<Scalars["String"]["output"]>;
+  errors?: Maybe<Array<ExecutionError>>;
+  shopifyGdprRequest?: Maybe<ShopifyGdprRequest>;
+  success: Scalars["Boolean"]["output"];
+};
+
+export type UpdateShopifyProductImageResult = UpsertShopifyProductImageResult & {
+  __typename?: "UpdateShopifyProductImageResult";
+  actionRun?: Maybe<Scalars["String"]["output"]>;
+  errors?: Maybe<Array<ExecutionError>>;
+  shopifyProductImage?: Maybe<ShopifyProductImage>;
+  success: Scalars["Boolean"]["output"];
+};
+
+export type UpdateShopifyProductOptionResult = UpsertShopifyProductOptionResult & {
+  __typename?: "UpdateShopifyProductOptionResult";
+  actionRun?: Maybe<Scalars["String"]["output"]>;
+  errors?: Maybe<Array<ExecutionError>>;
+  shopifyProductOption?: Maybe<ShopifyProductOption>;
+  success: Scalars["Boolean"]["output"];
+};
+
+export type UpdateShopifyProductResult = UpsertShopifyProductResult & {
+  __typename?: "UpdateShopifyProductResult";
+  actionRun?: Maybe<Scalars["String"]["output"]>;
+  errors?: Maybe<Array<ExecutionError>>;
+  shopifyProduct?: Maybe<ShopifyProduct>;
+  success: Scalars["Boolean"]["output"];
+};
+
+export type UpdateShopifyProductVariantResult = UpsertShopifyProductVariantResult & {
+  __typename?: "UpdateShopifyProductVariantResult";
+  actionRun?: Maybe<Scalars["String"]["output"]>;
+  errors?: Maybe<Array<ExecutionError>>;
+  shopifyProductVariant?: Maybe<ShopifyProductVariant>;
+  success: Scalars["Boolean"]["output"];
+};
+
+export type UpdateShopifyShopResult = UpsertShopifyShopResult & {
+  __typename?: "UpdateShopifyShopResult";
+  actionRun?: Maybe<Scalars["String"]["output"]>;
+  errors?: Maybe<Array<ExecutionError>>;
+  shopifyShop?: Maybe<ShopifyShop>;
+  success: Scalars["Boolean"]["output"];
+};
+
 export type UpdateUserInput = {
   email?: InputMaybe<Scalars["String"]["input"]>;
   emailVerified?: InputMaybe<Scalars["Boolean"]["input"]>;
@@ -7084,6 +9773,13 @@ export type UpsertError = UpsertAutoTableTestRelatedModelResult &
   UpsertModelAResult &
   UpsertPartResult &
   UpsertSectionResult &
+  UpsertShopifyGdprRequestResult &
+  UpsertShopifyProductImageResult &
+  UpsertShopifyProductOptionResult &
+  UpsertShopifyProductResult &
+  UpsertShopifyProductVariantResult &
+  UpsertShopifyShopResult &
+  UpsertShopifySyncResult &
   UpsertUserResult &
   UpsertWidgetResult & {
     __typename?: "UpsertError";
@@ -7188,6 +9884,59 @@ export type UpsertSectionInput = {
 };
 
 export type UpsertSectionResult = {
+  actionRun?: Maybe<Scalars["String"]["output"]>;
+  errors?: Maybe<Array<ExecutionError>>;
+  success: Scalars["Boolean"]["output"];
+};
+
+export type UpsertShopifyGdprRequestResult = {
+  actionRun?: Maybe<Scalars["String"]["output"]>;
+  errors?: Maybe<Array<ExecutionError>>;
+  success: Scalars["Boolean"]["output"];
+};
+
+export type UpsertShopifyProductImageResult = {
+  actionRun?: Maybe<Scalars["String"]["output"]>;
+  errors?: Maybe<Array<ExecutionError>>;
+  success: Scalars["Boolean"]["output"];
+};
+
+export type UpsertShopifyProductOptionResult = {
+  actionRun?: Maybe<Scalars["String"]["output"]>;
+  errors?: Maybe<Array<ExecutionError>>;
+  success: Scalars["Boolean"]["output"];
+};
+
+export type UpsertShopifyProductResult = {
+  actionRun?: Maybe<Scalars["String"]["output"]>;
+  errors?: Maybe<Array<ExecutionError>>;
+  success: Scalars["Boolean"]["output"];
+};
+
+export type UpsertShopifyProductVariantResult = {
+  actionRun?: Maybe<Scalars["String"]["output"]>;
+  errors?: Maybe<Array<ExecutionError>>;
+  success: Scalars["Boolean"]["output"];
+};
+
+export type UpsertShopifyShopResult = {
+  actionRun?: Maybe<Scalars["String"]["output"]>;
+  errors?: Maybe<Array<ExecutionError>>;
+  success: Scalars["Boolean"]["output"];
+};
+
+export type UpsertShopifySyncInput = {
+  domain?: InputMaybe<Scalars["String"]["input"]>;
+  errorDetails?: InputMaybe<Scalars["String"]["input"]>;
+  errorMessage?: InputMaybe<Scalars["String"]["input"]>;
+  force?: InputMaybe<Scalars["Boolean"]["input"]>;
+  id?: InputMaybe<Scalars["GadgetID"]["input"]>;
+  models?: InputMaybe<Scalars["JSON"]["input"]>;
+  shop?: InputMaybe<ShopifyShopBelongsToInput>;
+  syncSince?: InputMaybe<Scalars["DateTime"]["input"]>;
+};
+
+export type UpsertShopifySyncResult = {
   actionRun?: Maybe<Scalars["String"]["output"]>;
   errors?: Maybe<Array<ExecutionError>>;
   success: Scalars["Boolean"]["output"];
@@ -10019,6 +12768,7 @@ export type ModelActionMetadataQuery = {
                 >;
               };
         }>;
+        triggers?: Array<{ __typename?: "GadgetTrigger"; specID: string }> | null;
       } | null;
     } | null;
   };
@@ -10909,6 +13659,7 @@ export type GlobalActionMetadataQuery = {
               >;
             };
       }>;
+      triggers?: Array<{ __typename?: "GadgetTrigger"; specID: string }> | null;
     } | null;
   };
 };
@@ -12165,6 +14916,14 @@ export const ModelActionMetadataDocument = {
                                 ],
                               },
                             },
+                            {
+                              kind: "Field",
+                              name: { kind: "Name", value: "triggers" },
+                              selectionSet: {
+                                kind: "SelectionSet",
+                                selections: [{ kind: "Field", name: { kind: "Name", value: "specID" } }],
+                              },
+                            },
                           ],
                         },
                       },
@@ -12663,6 +15422,11 @@ export const GlobalActionMetadataDocument = {
                             { kind: "FragmentSpread", name: { kind: "Name", value: "SubFields" } },
                           ],
                         },
+                      },
+                      {
+                        kind: "Field",
+                        name: { kind: "Name", value: "triggers" },
+                        selectionSet: { kind: "SelectionSet", selections: [{ kind: "Field", name: { kind: "Name", value: "specID" } }] },
                       },
                     ],
                   },
