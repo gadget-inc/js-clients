@@ -11,6 +11,8 @@ export enum AppType {
   Embedded,
 }
 
+type ShopifyInstallState = NonNullable<NonNullable<Window["gadgetConfig"]>["shopifyInstallState"]>;
+
 /** Internal props used to create the right structure of providers */
 type GadgetProviderProps = {
   children: ReactNode;
@@ -21,6 +23,7 @@ type GadgetProviderProps = {
   host: string | undefined;
   isReady: boolean;
   isRootFrameRequest: boolean;
+  shopifyInstallState?: ShopifyInstallState;
 };
 
 // mutation which passes the session token back to Gadget to see if this shop is already installed and if not, install it
@@ -40,7 +43,17 @@ const FetchOrInstallShopMutation = `
 
 // inner component that exists in order to ask for the app bridge
 const InnerGadgetProvider = memo(
-  ({ children, gadgetAppUrl, originalQueryParams, api, type, host, isReady, isRootFrameRequest }: GadgetProviderProps) => {
+  ({
+    children,
+    gadgetAppUrl,
+    originalQueryParams,
+    api,
+    type,
+    host,
+    isReady,
+    isRootFrameRequest,
+    shopifyInstallState: _shopifyInstallState,
+  }: GadgetProviderProps) => {
     const appBridge = useAppBridge();
     // We need to be sure we're in the destination context when running any of the auth steps.
     // Some browsers have strict policies that prevent sharing local/session storage between embedded & non-embedded contexts.
@@ -87,7 +100,10 @@ const InnerGadgetProvider = memo(
     let missingScopes: string[] = useMemo(() => [], []);
     const hasFetchedOrInstalledShop = useRef(false);
     const hasStartedFetchingOrInstallingShop = useRef(false);
-    let hasInstallStateHint = false;
+
+    const shopifyInstallState =
+      _shopifyInstallState ?? (typeof window != "undefined" ? window.gadgetConfig?.shopifyInstallState : undefined);
+    const hasInstallStateHint = !!shopifyInstallState;
 
     const [{ data: fetchOrInstallShopData, fetching: fetchingOrInstallingShop, error: fetchingOrInstallingShopError }, fetchOrInstallShop] =
       useMutation<{
@@ -98,12 +114,10 @@ const InnerGadgetProvider = memo(
       redirectToOauth = fetchOrInstallShopData.shopifyConnection.fetchOrInstallShop.redirectToOauth;
       isAuthenticated = fetchOrInstallShopData.shopifyConnection.fetchOrInstallShop.isAuthenticated;
       missingScopes = fetchOrInstallShopData.shopifyConnection.fetchOrInstallShop.missingScopes ?? [];
-    } else if (typeof window != "undefined" && window.gadgetConfig?.shopifyInstallState) {
-      const hint = window.gadgetConfig.shopifyInstallState;
-      hasInstallStateHint = true;
-      redirectToOauth = hint.redirectToOauth;
-      isAuthenticated = hint.isAuthenticated;
-      missingScopes = hint.missingScopes ?? [];
+    } else if (shopifyInstallState) {
+      redirectToOauth = shopifyInstallState.redirectToOauth;
+      isAuthenticated = shopifyInstallState.isAuthenticated;
+      missingScopes = shopifyInstallState.missingScopes ?? [];
     }
 
     // we want to show the loading state until we've started fetching or installing the shop
@@ -113,9 +127,9 @@ const InnerGadgetProvider = memo(
         hasStartedFetchingOrInstallingShop.current = true;
       }
       if (hasInstallStateHint) {
-        console.debug("[gadget-rsab] shopifyInstallState hint used", window.gadgetConfig!.shopifyInstallState);
+        console.debug("[gadget-rsab] shopifyInstallState hint used", shopifyInstallState);
       }
-    }, [fetchingOrInstallingShop, hasInstallStateHint]);
+    }, [fetchingOrInstallingShop, hasInstallStateHint, shopifyInstallState]);
 
     // always run one fetch to the gadget backend on boot to discover if this app is installed
     useEffect(() => {
@@ -266,17 +280,46 @@ type ProviderLocation = {
   asPath?: string;
 };
 
-export const Provider = ({ type, children, api }: { type?: AppType; children: ReactNode; shopifyApiKey: string; api: AnyClient }) => {
+export const Provider = ({
+  type,
+  children,
+  api,
+  location: _location,
+  shopifyInstallState,
+}: {
+  type?: AppType;
+  children: ReactNode;
+  shopifyApiKey: string;
+  api: AnyClient;
+  /**
+   * The location object to use for the provider. This is required in server-side rendering.
+   *
+   * By default, the provider will use the current window location object.
+   * */
+  location?: Pick<Window["location"], "pathname" | "search">;
+  /**
+   * Manually specify the Shopify install state.
+   * This can be useful when the install state is known before the provider is rendered or in server-side rendering to skip some of the initial checks.
+   *
+   * By default, the provider will look for the state in the `window.gadgetConfig.shopifyInstallState` object.
+   * */
+  shopifyInstallState?: ShopifyInstallState;
+}) => {
   // if we haven't properly set up the shopify global then skip anything that requires app bridge
   const shopifyGlobalDefined = !!(globalThis && globalThis.shopify);
 
-  const location = useMemo<ProviderLocation>(
-    () => ({
-      asPath: `${window.location.pathname}${window.location.search}`,
-      query: new URLSearchParams(window.location.search),
-    }),
-    []
-  );
+  const location = useMemo<ProviderLocation>(() => {
+    if (typeof window === "undefined" && !_location) {
+      throw new Error("`location` property is required in server-side rendering");
+    }
+
+    const pathname = _location?.pathname ?? window.location.pathname;
+    const search = _location?.search ?? window.location.search;
+    return {
+      asPath: `${pathname}${search}`,
+      query: new URLSearchParams(search),
+    };
+  }, [_location]);
   const isReady = !!location;
   const { query } = location ?? {};
   const host = query?.get("host") ?? undefined;
@@ -297,7 +340,13 @@ export const Provider = ({ type, children, api }: { type?: AppType; children: Re
     isReady,
   });
 
-  if (coalescedType == AppType.Embedded && !shopifyGlobalDefined && globalThis.top && globalThis.top !== globalThis.self) {
+  if (
+    coalescedType == AppType.Embedded &&
+    !shopifyGlobalDefined &&
+    globalThis.top &&
+    globalThis.top !== globalThis.self &&
+    "dispatchEvent" in globalThis
+  ) {
     let url: URL | undefined = undefined;
 
     try {
@@ -319,7 +368,7 @@ export const Provider = ({ type, children, api }: { type?: AppType; children: Re
     }
   }
 
-  if (coalescedType === AppType.Embedded && globalThis.top === globalThis.self) {
+  if (coalescedType === AppType.Embedded && globalThis.top === globalThis.self && "dispatchEvent" in globalThis) {
     const event = new CustomEvent("gadget:devharness:rsab.embeddedInRootContext");
     globalThis.dispatchEvent(event);
   }
@@ -335,6 +384,7 @@ export const Provider = ({ type, children, api }: { type?: AppType; children: Re
           host={host}
           isReady={isReady}
           isRootFrameRequest={isRootFrameRequest}
+          shopifyInstallState={shopifyInstallState}
         >
           {children}
         </InnerGadgetProvider>
