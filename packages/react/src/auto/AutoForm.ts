@@ -91,7 +91,10 @@ export const useFormFields = (
     );
 
     const includedObjectFields = objectFields.flatMap((objectField) =>
-      filterAutoFormFieldList((objectField.configuration as unknown as GadgetObjectFieldConfig).fields as any, options as any).map(
+      filterAutoFormFieldList((objectField.configuration as unknown as GadgetObjectFieldConfig).fields as any, {
+        ...(options as any),
+        isUpsertAction: true, // For upsert meta-actions, we allow IDs, and they are object fields instead of root level
+      }).map(
         (innerField) =>
           ({
             path: `${objectField.apiIdentifier}.${innerField.apiIdentifier}`,
@@ -147,14 +150,19 @@ export const useAutoForm = <
   const isGlobalAction = action.type === "globalAction";
   const operatesWithRecordId = !!(metadata && isActionMetadata(metadata) && metadata.action.operatesWithRecordIdentity);
   const modelApiIdentifier = action.type == "action" ? action.modelApiIdentifier : undefined;
+  const isUpsertMetaAction = metadata && isActionMetadata(metadata) && fields.some((field) => field.metadata.fieldType === FieldType.Id);
+  const isUpsertWithFindBy = isUpsertMetaAction && !!findBy;
+
   const defaultValues: Record<string, unknown> = useMemo(
     () =>
       props.defaultValues ??
       (action.type === "globalAction"
         ? {}
         : {
-            [modelApiIdentifier!]: record ?? (!operatesWithRecordId && metadata && isActionMetadata(metadata) && metadata?.defaultRecord),
-            id: "0", // The ID value will be replaced when sending the form to use the record found by `findBy`
+            [modelApiIdentifier!]:
+              record ??
+              (!(operatesWithRecordId || isUpsertWithFindBy) && metadata && isActionMetadata(metadata) && metadata?.defaultRecord),
+            id: findBy,
           }),
     [props.defaultValues, action.type, modelApiIdentifier, record, operatesWithRecordId, metadata]
   );
@@ -164,7 +172,10 @@ export const useAutoForm = <
     submit,
     error: formError,
     reset,
-    formState: { isSubmitSuccessful, isLoading, isReady, isSubmitting, touchedFields },
+    setValue,
+    getValues,
+
+    formState: { isSubmitSuccessful, isLoading, isReady, isSubmitting, touchedFields, errors },
     originalFormMethods,
   } = useActionForm(action, {
     defaultValues: defaultValues as any,
@@ -173,7 +184,8 @@ export const useAutoForm = <
     send: () => {
       const fieldsToSend = fields
         .filter(({ path, metadata }) => {
-          const isUntouchedPasswordField = metadata.fieldType === FieldType.Password && "findBy" in props && !get(touchedFields, path);
+          const fieldType = metadata.fieldType;
+          const isUntouchedPasswordField = fieldType === FieldType.Password && "findBy" in props && !get(touchedFields, path);
           if (isUntouchedPasswordField) {
             // Never send the password field if it hasn't been touched. Doing so will clear the record value
             return false;
@@ -197,8 +209,9 @@ export const useAutoForm = <
     onSuccess:
       onSuccess ??
       function clearInputValues() {
-        const isCreateAction = !operatesWithRecordId && !isDeleteAction && !isGlobalAction;
-        if (isCreateAction || isGlobalAction) {
+        const isCreateAction = !operatesWithRecordId && !isDeleteAction && !isGlobalAction && !isUpsertMetaAction;
+        const isUpsertWithoutFindBy = isUpsertMetaAction && !isUpsertWithFindBy;
+        if (isCreateAction || isGlobalAction || isUpsertWithoutFindBy) {
           reset();
         }
       },
@@ -214,14 +227,20 @@ export const useAutoForm = <
   }, [isReady, defaultValues, originalFormMethods, modelApiIdentifier]);
 
   if (!fetchingMetadata) {
-    validateFindBy(operatesWithRecordId, !!findBy);
+    validateFindBy({ operatesWithRecordId, hasFindBy: !!findBy, isUpsertMetaAction: !!isUpsertMetaAction });
   }
+
+  useEffect(() => {
+    if (isUpsertWithFindBy) {
+      setValue(`${modelApiIdentifier!}.id`, findBy); // Upsert actions use mode.id instead of use root level api value
+    }
+  }, [getValues(`${modelApiIdentifier!}.id`), isUpsertWithFindBy]);
 
   return {
     metadata,
     fetchingMetadata,
     metadataError,
-    fields,
+    fields: fields.filter(removeIdFieldsUnlessUpsertWithoutFindBy(isUpsertWithFindBy)),
     submit,
     formError,
     isSubmitting,
@@ -231,7 +250,19 @@ export const useAutoForm = <
   };
 };
 
-const validateFindBy = (operatesWithRecordId: boolean, hasFindBy: boolean) => {
+const removeIdFieldsUnlessUpsertWithoutFindBy = (isUpsertWithFindBy?: boolean) => {
+  return (field: { metadata: FieldMetadata }) => {
+    return field.metadata.fieldType === FieldType.Id ? !isUpsertWithFindBy : true;
+  };
+};
+
+const validateFindBy = (params: { operatesWithRecordId: boolean; hasFindBy: boolean; isUpsertMetaAction: boolean }) => {
+  const { operatesWithRecordId, hasFindBy, isUpsertMetaAction } = params;
+
+  if (isUpsertMetaAction) {
+    return; // optional findBy value for upsert meta actions
+  }
+
   if (operatesWithRecordId && !hasFindBy) {
     throw new Error("The 'findBy' prop is required for actions that operate with a record identity.");
   } else if (!operatesWithRecordId && hasFindBy) {

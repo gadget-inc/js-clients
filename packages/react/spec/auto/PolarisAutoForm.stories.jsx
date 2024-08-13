@@ -58,6 +58,19 @@ export const UpdateRecord = {
   },
 };
 
+export const UpsertRecordWithFindBy = {
+  args: {
+    action: api.widget.upsert,
+    findBy: "1",
+  },
+};
+
+export const UpsertRecordWithoutFindBy = {
+  args: {
+    action: api.widget.upsert,
+  },
+};
+
 export const Excluded = {
   args: {
     action: api.widget.create,

@@ -353,7 +353,7 @@ export const useActionMetadata = (actionFunction: ActionFunction<any, any, any, 
  */
 export const filterAutoFormFieldList = (
   fields: FieldMetadata[] | undefined,
-  options?: { include?: string[]; exclude?: string[] }
+  options?: { include?: string[]; exclude?: string[]; isUpsertAction?: boolean }
 ): FieldMetadata[] => {
   if (!fields) {
     return [];
@@ -384,7 +384,7 @@ export const filterAutoFormFieldList = (
   }
 
   // Filter out fields that are not supported by the form
-  const validFieldTypeSubset = subset.filter(isAcceptedFieldTypeFilter);
+  const validFieldTypeSubset = subset.filter(options?.isUpsertAction ? isAcceptedUpsertFieldType : isAcceptedFieldType);
 
   return options?.include
     ? validFieldTypeSubset // Everything explicitly included is valid
@@ -405,7 +405,9 @@ const isNotRelatedToSpecialModelFilter = (field: FieldMetadata) => {
 
 const specialModelKeys = new Set(["DataModel-Shopify-Shop"]);
 
-const isAcceptedFieldTypeFilter = (field: FieldMetadata) => acceptedAutoFormFieldTypes.has(field.fieldType);
+const isAcceptedFieldType = (field: FieldMetadata) => acceptedAutoFormFieldTypes.has(field.fieldType);
+const isAcceptedUpsertFieldType = (field: FieldMetadata) => field.fieldType === FieldType.Id || isAcceptedFieldType(field);
+
 const acceptedAutoFormFieldTypes = new Set([
   FieldType.Boolean,
   FieldType.Color,
