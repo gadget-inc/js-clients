@@ -360,7 +360,10 @@ export const filterAutoFormFieldList = (
   }
 
   let subset = fields;
-  const requiredFields = fields.filter((field) => field.requiredArgumentForInput && field.apiIdentifier !== "id");
+
+  if (options?.include && options?.exclude) {
+    throw new Error("Cannot use both 'include' and 'exclude' options at the same time");
+  }
 
   if (options?.include) {
     // When including fields, the order will match the order of the `include` array
@@ -373,30 +376,10 @@ export const filterAutoFormFieldList = (
         subset.push(metadataField);
       }
     }
-
-    //if any of the required fields are not included, throw an error as they must be included
-    const missingRequiredFields = requiredFields.filter((field) => !includes.has(field.apiIdentifier));
-    if (missingRequiredFields.length) {
-      throw new Error(
-        `The following required fields are missing from the include list: ${missingRequiredFields
-          .map((field) => field.apiIdentifier)
-          .join(", ")}`
-      );
-    }
   }
 
   if (options?.exclude) {
     const excludes = new Set(options.exclude);
-    if (options?.include && options.include.some((fieldApiId) => excludes.has(fieldApiId))) {
-      throw new Error("Cannot include and exclude the same field");
-    }
-
-    options.exclude.forEach((excludedField) => {
-      if (requiredFields.some((field) => field.apiIdentifier === excludedField)) {
-        throw new Error(`The field ${excludedField} is required and cannot be excluded.`);
-      }
-    });
-
     subset = subset.filter((field) => !excludes.has(field.apiIdentifier));
   }
 
