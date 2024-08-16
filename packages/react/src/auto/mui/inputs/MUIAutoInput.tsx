@@ -6,6 +6,7 @@ import MUIAutoDateTimePicker from "./MUIAutoDateTimePicker.js";
 import { MUIAutoEncryptedStringInput } from "./MUIAutoEncryptedStringInput.js";
 import { MUIAutoEnumInput } from "./MUIAutoEnumInput.js";
 import { MUIAutoFileInput } from "./MUIAutoFileInput.js";
+import { MUIAutoIdInput } from "./MUIAutoIdInput.js";
 import { MUIAutoJSONInput } from "./MUIAutoJSONInput.js";
 import { MUIAutoPasswordInput } from "./MUIAutoPasswordInput.js";
 import { MUIAutoRolesInput } from "./MUIAutoRolesInput.js";
@@ -21,6 +22,9 @@ export const MUIAutoInput = (props: { field: string }) => {
   const config = metadata.configuration;
 
   switch (config.fieldType) {
+    case FieldType.Id: {
+      return <MUIAutoIdInput field={props.field} />;
+    }
     case FieldType.String:
     case FieldType.Number:
     case FieldType.Email:

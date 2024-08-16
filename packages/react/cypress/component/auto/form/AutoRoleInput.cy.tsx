@@ -73,7 +73,6 @@ describeForEachAutoAdapter("AutoForm", ({ name, adapter: { AutoForm }, wrapper }
     cy.get(`span`).contains("test-api-key").should("exist"); // Chip to show the selected role
 
     expectCreateActionSubmissionVariables({
-      id: "0",
       widget: {
         roles: ["Role-abc123abc"], // Role key is sent. Not the role name
       },
