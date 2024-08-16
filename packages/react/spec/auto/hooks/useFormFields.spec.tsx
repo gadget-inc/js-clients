@@ -78,13 +78,13 @@ describe("useFormFields hook", () => {
     });
   });
 
-  test("Has an error when including and excluding the same fields", () => {
+  test("Has an error when using include and exclude at the same time", () => {
     expect(() =>
       getUseFormFieldsResult({
         include: ["stringField2", "stringField1", "stringField3"],
         exclude: ["stringField2", "stringField3"],
       })
-    ).toThrowErrorMatchingInlineSnapshot(`"Cannot include and exclude the same field"`);
+    ).toThrowErrorMatchingInlineSnapshot(`"Cannot use both 'include' and 'exclude' options at the same time"`);
   });
 
   test("Has an error when the metadata has duplicate input field api identifiers", () => {

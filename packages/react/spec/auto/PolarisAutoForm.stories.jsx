@@ -62,6 +62,7 @@ export const Excluded = {
   args: {
     action: api.widget.create,
     exclude: ["birthday", "roles"],
+    include: ["name", "inventoryCount"],
   },
 };
 

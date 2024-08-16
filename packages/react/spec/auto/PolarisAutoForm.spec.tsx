@@ -54,22 +54,15 @@ describe("PolarisAutoForm", () => {
           }).toThrow("The 'findBy' prop is required for actions that operate with a record identity.");
         });
       });
+    });
 
-      describe("for a required field", () => {
-        test("it throw an error if you exclude the field", async () => {
-          expect(() => {
-            render(<PolarisAutoForm action={api.widget.create} exclude={["inventoryCount"]} />, { wrapper: PolarisMockedProviders });
-            loadMockWidgetCreateMetadata();
-          }).toThrow("The field inventoryCount is required and cannot be excluded.");
+    test("it throws an error if you use include and exclude at the same time", async () => {
+      expect(() => {
+        render(<PolarisAutoForm action={api.widget.create} exclude={["inventoryCount"]} include={["name"]} />, {
+          wrapper: PolarisMockedProviders,
         });
-
-        test("if you include fields, you must include the required fields", async () => {
-          expect(() => {
-            render(<PolarisAutoForm action={api.widget.create} include={["name"]} />, { wrapper: PolarisMockedProviders });
-            loadMockWidgetCreateMetadata();
-          }).toThrow("The following required fields are missing from the include list: inventoryCount");
-        });
-      });
+        loadMockWidgetCreateMetadata();
+      }).toThrow("Cannot use both 'include' and 'exclude' options at the same time");
     });
 
     test("it includes the record ID when submitting a form that updates a record", async () => {
