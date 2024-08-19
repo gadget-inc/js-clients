@@ -97,6 +97,7 @@ describe("PolarisFileInput", () => {
       interceptModelUpdateActionMetadata([]);
 
       cy.mountWithWrapper(<PolarisAutoForm action={api.game.stadium.update} findBy="42" />, PolarisWrapper);
+      cy.wait("@ModelCreateActionMetadata");
 
       cy.get("#clear-file-photo").should("exist");
 
@@ -120,6 +121,7 @@ describe("PolarisFileInput", () => {
       </PolarisAutoForm>,
       PolarisWrapper
     );
+    cy.wait("@ModelCreateActionMetadata");
 
     cy.get(".Polaris-DropZone-FileUpload").selectFile("./cypress/support/assets/ottawa-stadium.jpg", {
       action: "drag-drop",
@@ -149,6 +151,7 @@ describe("PolarisFileInput", () => {
       ).as("uploadFile");
 
       cy.mountWithWrapper(<PolarisAutoForm action={api.game.stadium.create} />, PolarisWrapper);
+      cy.wait("@ModelCreateActionMetadata");
 
       cy.get(".Polaris-DropZone-FileUpload").selectFile("./cypress/support/assets/ottawa-stadium.jpg", {
         action: "drag-drop",
@@ -176,6 +179,7 @@ describe("PolarisFileInput", () => {
         ]);
 
         cy.mountWithWrapper(<PolarisAutoForm action={api.game.stadium.create} />, PolarisWrapper);
+        cy.wait("@ModelCreateActionMetadata");
 
         cy.get(".Polaris-DropZone-FileUpload").should("contain", "Accepts .jpg, .webp, .svg, and .png");
 
@@ -225,6 +229,7 @@ describe("PolarisFileInput", () => {
         ]);
 
         cy.mountWithWrapper(<PolarisAutoForm action={api.game.stadium.create} />, PolarisWrapper);
+        cy.wait("@ModelCreateActionMetadata");
 
         cy.get(".Polaris-DropZone-FileUpload").selectFile("./cypress/support/assets/ottawa-stadium.jpg", {
           action: "drag-drop",
@@ -248,6 +253,7 @@ describe("PolarisFileInput", () => {
         ]);
 
         cy.mountWithWrapper(<PolarisAutoForm action={api.game.stadium.create} />, PolarisWrapper);
+        cy.wait("@ModelCreateActionMetadata");
 
         cy.get(".Polaris-DropZone-FileUpload").should("contain", "Accepts larger than 10 MB");
 
@@ -273,6 +279,7 @@ describe("PolarisFileInput", () => {
         ]);
 
         cy.mountWithWrapper(<PolarisAutoForm action={api.game.stadium.create} />, PolarisWrapper);
+        cy.wait("@ModelCreateActionMetadata");
 
         cy.get(".Polaris-DropZone-FileUpload").should("contain", "Accepts smaller than 100 B");
 
@@ -306,6 +313,7 @@ describe("PolarisFileInput", () => {
       interceptModelUpdateActionMetadata([]);
 
       cy.mountWithWrapper(<PolarisAutoForm action={api.game.stadium.update} findBy="42" />, PolarisWrapper);
+      cy.wait("@ModelCreateActionMetadata");
 
       cy.get(".Polaris-InlineStack > div").contains("icon.svg");
       cy.get(".Polaris-Thumbnail").find("img").should("have.attr", "src").should("contain", "https://assets.gadget.dev/assets/icon.svg");
@@ -321,6 +329,7 @@ describe("PolarisFileInput", () => {
       ]);
 
       cy.mountWithWrapper(<PolarisAutoForm action={api.game.stadium.update} findBy="42" />, PolarisWrapper);
+      cy.wait("@ModelCreateActionMetadata");
 
       cy.get(".Polaris-InlineStack > div").contains("icon.svg");
       cy.get(".Polaris-Thumbnail").find("img").should("have.attr", "src").should("contain", "https://assets.gadget.dev/assets/icon.svg");

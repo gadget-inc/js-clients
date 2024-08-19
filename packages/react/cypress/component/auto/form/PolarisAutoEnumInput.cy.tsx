@@ -59,6 +59,7 @@ describe("PolarisEnumInput", () => {
     cy.mockModelActionMetadata(api, baseModelActionMetadata);
 
     cy.mountWithWrapper(<PolarisAutoForm action={api.game.stadium.create} />, PolarisWrapper);
+    cy.wait("@ModelCreateActionMetadata");
     cy.get("#type-combobox-textfield").click();
     cy.contains("football").should("exist");
     cy.contains("basketball").should("exist");
@@ -76,6 +77,7 @@ describe("PolarisEnumInput", () => {
       cy.mockModelActionMetadata(api, baseModelActionMetadata);
 
       cy.mountWithWrapper(<PolarisAutoForm action={api.game.stadium.create} />, PolarisWrapper);
+      cy.wait("@ModelCreateActionMetadata");
       cy.get("#type-combobox-textfield").click();
       cy.contains("football").click();
       cy.get(".Polaris-InlineStack").should("contain", "football");
@@ -100,6 +102,7 @@ describe("PolarisEnumInput", () => {
       cy.mockModelActionMetadata(api, baseModelActionMetadata);
 
       cy.mountWithWrapper(<PolarisAutoForm action={api.game.stadium.create} />, PolarisWrapper);
+      cy.wait("@ModelCreateActionMetadata");
       // For single select enums
       cy.get("#type-combobox-textfield").type("foot");
 
@@ -156,6 +159,7 @@ describe("PolarisEnumInput", () => {
       });
 
       cy.mountWithWrapper(<PolarisAutoForm action={api.game.stadium.create} />, PolarisWrapper);
+      cy.wait("@ModelCreateActionMetadata");
       cy.get("#type-combobox-textfield").type("extra");
       cy.contains(`Add "extra"`).click();
       cy.get(".Polaris-InlineStack").should("contain", "extra");
@@ -197,6 +201,7 @@ describe("PolarisEnumInput", () => {
       });
 
       cy.mountWithWrapper(<PolarisAutoForm action={api.game.stadium.create} />, PolarisWrapper);
+      cy.wait("@ModelCreateActionMetadata");
       cy.get("#type-combobox-textfield").type("hello");
       cy.contains(`Add "hello"`).should("not.exist");
       cy.contains(`No options found matching "hello"`).should("exist");
@@ -235,6 +240,7 @@ describe("PolarisEnumInput", () => {
       });
 
       cy.mountWithWrapper(<PolarisAutoForm action={api.game.stadium.update} findBy="42" />, PolarisWrapper);
+      cy.wait("@ModelCreateActionMetadata");
       cy.get(".Polaris-InlineStack").should("contain", "football");
       cy.get(".Polaris-InlineStack").should("contain", "hello");
       cy.get(".Polaris-InlineStack").should("contain", "world");
@@ -250,6 +256,7 @@ describe("PolarisEnumInput", () => {
       });
 
       cy.mountWithWrapper(<PolarisAutoForm action={api.game.stadium.update} findBy="42" />, PolarisWrapper);
+      cy.wait("@ModelCreateActionMetadata");
       cy.get("#type-combobox-textfield").click();
       cy.get('[aria-label="Remove football"]').click();
 

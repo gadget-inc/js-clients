@@ -117,6 +117,7 @@ describe("PolarisAutoBelongsToInput", () => {
   });
   it("can deselect a related record and submit it", () => {
     cy.mountWithWrapper(<PolarisAutoForm action={api.widget.update} findBy="42" />, PolarisWrapper);
+    cy.wait("@ModelCreateActionMetadata");
 
     cy.get(`[id="1_Section 1"]`); // Section 1 is already selected
     cy.get(`button[aria-label="Remove "]`).click(); // Deselect
@@ -128,6 +129,7 @@ describe("PolarisAutoBelongsToInput", () => {
 
   it("can select a related record and submit it", () => {
     cy.mountWithWrapper(<PolarisAutoForm action={api.widget.update} findBy="42" />, PolarisWrapper);
+    cy.wait("@ModelCreateActionMetadata");
 
     cy.get(`input[name="widget.section"]`).click();
     cy.contains(`Section 3`).click();
@@ -148,6 +150,7 @@ describe("PolarisAutoBelongsToInput", () => {
         </PolarisAutoForm>,
         PolarisWrapper
       );
+      cy.wait("@ModelCreateActionMetadata");
       cy.get(`input[name="widget.section"]`).click();
       cy.contains(`Section 3 other field`).click();
 
@@ -165,6 +168,7 @@ describe("PolarisAutoBelongsToInput", () => {
         </PolarisAutoForm>,
         PolarisWrapper
       );
+      cy.wait("@ModelCreateActionMetadata");
       cy.get(`input[name="widget.section"]`).click();
       cy.contains(`Custom label for 3`).click();
 

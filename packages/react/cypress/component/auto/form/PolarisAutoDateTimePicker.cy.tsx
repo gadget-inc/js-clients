@@ -153,6 +153,7 @@ describe("PolarisDateTimePicker", () => {
         </PolarisAutoForm>,
         PolarisWrapper
       );
+      cy.wait("@ModelCreateActionMetadata");
 
       cy.get("#test-date").should("have.value", "2024-07-10");
       cy.get("#test-time").should("have.value", "4:00 AM");

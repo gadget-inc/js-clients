@@ -108,6 +108,7 @@ describe("PolarisAutoHasManyInput", () => {
 
   it("can deselect exiting related records and select new records and submit it", () => {
     cy.mountWithWrapper(<PolarisAutoForm action={api.widget.update} findBy="42" />, PolarisWrapper);
+    cy.wait("@ModelCreateActionMetadata");
 
     cy.get(`span[title="Gizmo 1"]`);
     cy.get(`span[title="Gizmo 2"]`);
