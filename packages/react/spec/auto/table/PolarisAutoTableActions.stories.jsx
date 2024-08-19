@@ -61,6 +61,12 @@ export const ExcludedActionParameters = {
   },
 };
 
+export const NoTriggerableActions = {
+  args: {
+    model: api.shopifyProductVariant,
+  },
+};
+
 const windowAlert = (message) => {
   // eslint-disable-next-line no-undef
   window.alert(message);

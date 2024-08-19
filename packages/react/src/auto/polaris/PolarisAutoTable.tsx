@@ -211,7 +211,7 @@ const PolarisAutoTableComponent = <
           sortDirection={gadgetToPolarisDirection(sort.direction)}
           sortColumnIndex={columns ? getColumnIndex(columns, sort.column) : undefined}
           onSort={(headingIndex) => handleColumnSort(headingIndex)}
-          selectable={props.selectable === undefined ? true : props.selectable}
+          selectable={props.selectable === undefined ? bulkActionOptions.length !== 0 : props.selectable}
           lastColumnSticky={props.lastColumnSticky}
           hasZebraStriping={props.hasZebraStriping}
           condensed={props.condensed}
