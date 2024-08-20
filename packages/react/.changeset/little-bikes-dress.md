@@ -1,5 +1,5 @@
 ---
-"@gadgetinc/react": minor
+"@gadgetinc/react": patch
 ---
 
 # Added support for `upsert` actions in AutoForm.
