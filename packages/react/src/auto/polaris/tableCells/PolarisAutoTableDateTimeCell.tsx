@@ -1,5 +1,5 @@
 import React from "react";
-import { formatLongDateTimeString } from "../../../utils.js";
+import { formatLongDateTimeString } from "../../../dateTimeUtils.js";
 import { PolarisAutoTableTextCell } from "./PolarisAutoTableTextCell.js";
 
 export const PolarisAutoTableDateTimeCell = (props: { value: Date; includeTime: boolean }) => {
