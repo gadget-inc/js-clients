@@ -1,5 +1,12 @@
 # @gadgetinc/react
 
+## 0.16.4
+
+### Patch Changes
+
+- Bug: Displaying HasMany relationship in AutoTable when some values are null throws an error
+- Removed dependency on date-fns to reduce bundle size
+
 ## 0.16.3
 
 ### Patch Changes
