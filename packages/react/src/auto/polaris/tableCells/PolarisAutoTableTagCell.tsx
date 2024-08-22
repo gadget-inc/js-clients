@@ -1,11 +1,11 @@
 import { InlineStack, Tag, Text } from "@shopify/polaris";
 import React, { useEffect, useMemo, useRef, useState } from "react";
-import type { RoleAssignmentsValueType } from "../../../utils.js";
+import type { Nullable, RoleAssignmentsValueType } from "../../../utils.js";
 import { isRoleAssignmentsArray } from "../../../utils.js";
 
 const MAX_TAGS_LENGTH = 5;
 
-export const PolarisAutoTableTagCell = (props: { value: string | string[] | RoleAssignmentsValueType[] }) => {
+export const PolarisAutoTableTagCell = (props: { value: Nullable<string> | Nullable<string>[] | RoleAssignmentsValueType[] }) => {
   const { value } = props;
   const [showMore, setShowMore] = useState(false);
   const ref = useRef<HTMLDivElement>(null);
@@ -17,10 +17,13 @@ export const PolarisAutoTableTagCell = (props: { value: string | string[] | Role
       if (isRoleAssignmentsArray(value)) {
         formattedTags = value.map((role) => role.name);
       } else {
-        formattedTags = value.map((tag) => tag.toString());
+        const compactValues = value.filter((tag) => tag !== null && tag !== undefined) as string[];
+        formattedTags = compactValues.map((tag) => tag.toString());
       }
     } else {
-      formattedTags = [value];
+      if (value !== null && value !== undefined) {
+        formattedTags = [value];
+      }
     }
 
     return {

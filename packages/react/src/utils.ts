@@ -523,22 +523,25 @@ export type HasManyValueType = {
   }[];
 };
 
+export type Nullable<T> = T | null;
+
 export type ColumnValueType =
-  | string
-  | number
-  | boolean
-  | Date
+  | Nullable<string>
+  | Nullable<number>
+  | Nullable<boolean>
+  | Nullable<Date>
   | null
-  | string[]
+  | Nullable<string>[]
+  | Array<null>
   | RoleAssignmentsValueType[]
-  | FileValueType
-  | RichTextValueType
-  | ValueWithTypename
-  | HasManyValueType;
+  | Nullable<FileValueType>
+  | Nullable<RichTextValueType>
+  | Nullable<ValueWithTypename>
+  | Nullable<HasManyValueType>;
 
 export const isRoleAssignmentsArray = (value: ColumnValueType): value is RoleAssignmentsValueType[] => {
   if (!Array.isArray(value) || value.length === 0) return false;
-  if (!value.every((item) => typeof item === "object" && "__typename" in item && item.__typename === "Role")) return false;
+  if (!value.every((item) => item !== null && typeof item === "object" && "__typename" in item && item.__typename === "Role")) return false;
   return true;
 };
 

@@ -15,6 +15,12 @@ describe("PolarisAutoTableTextCell", () => {
     cy.get(".Polaris-Tag").eq(1).should("have.text", "bar");
   });
 
+  it("handles null values", () => {
+    cy.mountWithWrapper(<PolarisAutoTableTagCell value={["foo", null]} />, PolarisWrapper);
+    cy.get(".Polaris-Tag").should("have.length", 1);
+    cy.get(".Polaris-Tag").eq(0).should("have.text", "foo");
+  });
+
   it("renders an array of roles as multiple tags", () => {
     cy.mountWithWrapper(
       <PolarisAutoTableTagCell
