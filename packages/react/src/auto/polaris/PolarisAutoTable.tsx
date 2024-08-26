@@ -165,6 +165,7 @@ const PolarisAutoTableComponent = <
             filters={[]}
             onClearAll={() => undefined}
             tabs={[]}
+            canCreateNewView={false}
             selected={1}
             loading={fetching}
             cancelAction={{ onAction: () => search.clear() }}
