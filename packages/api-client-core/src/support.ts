@@ -697,6 +697,9 @@ export const ErrorsSelection: BuilderFieldSelection = {
     message: true,
     code: true,
     "... on InvalidRecordError": {
+      model: {
+        apiIdentifier: true,
+      },
       validationErrors: {
         message: true,
         apiIdentifier: true,

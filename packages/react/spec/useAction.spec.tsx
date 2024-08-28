@@ -171,6 +171,9 @@ describe("useAction", () => {
             message
             code
             ... on InvalidRecordError {
+              model {
+                apiIdentifier
+              }
               validationErrors {
                 message
                 apiIdentifier
@@ -356,6 +359,9 @@ describe("useAction", () => {
               message
               code
               ... on InvalidRecordError {
+                model {
+                  apiIdentifier
+                }
                 validationErrors {
                   message
                   apiIdentifier
