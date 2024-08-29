@@ -733,11 +733,12 @@ export const ErrorsSelection: BuilderFieldSelection = {
 export const formatErrorMessages = (error: Error) => {
   const result: Record<string, any> = {};
 
-  if (error instanceof InvalidRecordError) {
-    for (const validationError of error.validationErrors) {
-      if (error.modelApiIdentifier) {
-        result[error.modelApiIdentifier] ??= {};
-        result[error.modelApiIdentifier][validationError.apiIdentifier] = { message: validationError.message };
+  if ("validationErrors" in error) {
+    const invalidRecordError = error as InvalidRecordError;
+    for (const validationError of invalidRecordError.validationErrors) {
+      if (invalidRecordError.modelApiIdentifier) {
+        result[invalidRecordError.modelApiIdentifier] ??= {};
+        result[invalidRecordError.modelApiIdentifier][validationError.apiIdentifier] = { message: validationError.message };
       } else {
         result[validationError.apiIdentifier] = { message: validationError.message };
       }
