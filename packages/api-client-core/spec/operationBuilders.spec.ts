@@ -554,6 +554,9 @@ describe("operation builders", () => {
               message
               code
               ... on InvalidRecordError {
+                model {
+                  apiIdentifier
+                }
                 validationErrors {
                   message
                   apiIdentifier
@@ -586,6 +589,9 @@ describe("operation builders", () => {
               message
               code
               ... on InvalidRecordError {
+                model {
+                  apiIdentifier
+                }
                 validationErrors {
                   message
                   apiIdentifier
@@ -616,6 +622,9 @@ describe("operation builders", () => {
               message
               code
               ... on InvalidRecordError {
+                model {
+                  apiIdentifier
+                }
                 validationErrors {
                   message
                   apiIdentifier
@@ -645,6 +654,9 @@ describe("operation builders", () => {
                 message
                 code
                 ... on InvalidRecordError {
+                  model {
+                    apiIdentifier
+                  }
                   validationErrors {
                     message
                     apiIdentifier
@@ -692,6 +704,9 @@ describe("operation builders", () => {
               message
               code
               ... on InvalidRecordError {
+                model {
+                  apiIdentifier
+                }
                 validationErrors {
                   message
                   apiIdentifier
@@ -751,6 +766,9 @@ describe("operation builders", () => {
               message
               code
               ... on InvalidRecordError {
+                model {
+                  apiIdentifier
+                }
                 validationErrors {
                   message
                   apiIdentifier
@@ -802,6 +820,9 @@ describe("operation builders", () => {
               message
               code
               ... on InvalidRecordError {
+                model {
+                  apiIdentifier
+                }
                 validationErrors {
                   message
                   apiIdentifier
@@ -841,6 +862,9 @@ describe("operation builders", () => {
               message
               code
               ... on InvalidRecordError {
+                model {
+                  apiIdentifier
+                }
                 validationErrors {
                   message
                   apiIdentifier
@@ -883,6 +907,9 @@ describe("operation builders", () => {
               message
               code
               ... on InvalidRecordError {
+                model {
+                  apiIdentifier
+                }
                 validationErrors {
                   message
                   apiIdentifier
@@ -929,6 +956,9 @@ describe("operation builders", () => {
               message
               code
               ... on InvalidRecordError {
+                model {
+                  apiIdentifier
+                }
                 validationErrors {
                   message
                   apiIdentifier
@@ -967,6 +997,9 @@ describe("operation builders", () => {
                 message
                 code
                 ... on InvalidRecordError {
+                  model {
+                    apiIdentifier
+                  }
                   validationErrors {
                     message
                     apiIdentifier
@@ -1001,6 +1034,9 @@ describe("operation builders", () => {
                 message
                 code
                 ... on InvalidRecordError {
+                  model {
+                    apiIdentifier
+                  }
                   validationErrors {
                     message
                     apiIdentifier
@@ -1042,6 +1078,9 @@ describe("operation builders", () => {
                     message
                     code
                     ... on InvalidRecordError {
+                      model {
+                        apiIdentifier
+                      }
                       validationErrors {
                         message
                         apiIdentifier
@@ -1267,6 +1306,9 @@ describe("operation builders", () => {
                   message
                   code
                   ... on InvalidRecordError {
+                    model {
+                      apiIdentifier
+                    }
                     validationErrors {
                       message
                       apiIdentifier
@@ -1302,6 +1344,9 @@ describe("operation builders", () => {
                   message
                   code
                   ... on InvalidRecordError {
+                    model {
+                      apiIdentifier
+                    }
                     validationErrors {
                       message
                       apiIdentifier
@@ -1335,6 +1380,9 @@ describe("operation builders", () => {
                   message
                   code
                   ... on InvalidRecordError {
+                    model {
+                      apiIdentifier
+                    }
                     validationErrors {
                       message
                       apiIdentifier
@@ -1368,6 +1416,9 @@ describe("operation builders", () => {
               message
               code
               ... on InvalidRecordError {
+                model {
+                  apiIdentifier
+                }
                 validationErrors {
                   message
                   apiIdentifier
@@ -1394,6 +1445,9 @@ describe("operation builders", () => {
                   message
                   code
                   ... on InvalidRecordError {
+                    model {
+                      apiIdentifier
+                    }
                     validationErrors {
                       message
                       apiIdentifier
@@ -1420,6 +1474,9 @@ describe("operation builders", () => {
               message
               code
               ... on InvalidRecordError {
+                model {
+                  apiIdentifier
+                }
                 validationErrors {
                   message
                   apiIdentifier

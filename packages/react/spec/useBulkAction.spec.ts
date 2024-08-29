@@ -106,6 +106,9 @@ describe("useBulkAction", () => {
             message
             code
             ... on InvalidRecordError {
+              model {
+                apiIdentifier
+              }
               validationErrors {
                 message
                 apiIdentifier
@@ -189,6 +192,9 @@ describe("useBulkAction", () => {
               message
               code
               ... on InvalidRecordError {
+                model {
+                  apiIdentifier
+                }
                 validationErrors {
                   message
                   apiIdentifier

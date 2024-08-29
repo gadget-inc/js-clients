@@ -621,6 +621,9 @@ describe("InternalModelManager", () => {
                 message
                 code
                 ... on InvalidRecordError {
+                  model {
+                    apiIdentifier
+                  }
                   validationErrors {
                     message
                     apiIdentifier
@@ -651,6 +654,9 @@ describe("InternalModelManager", () => {
                 message
                 code
                 ... on InvalidRecordError {
+                  model {
+                    apiIdentifier
+                  }
                   validationErrors {
                     message
                     apiIdentifier
@@ -681,6 +687,9 @@ describe("InternalModelManager", () => {
                 message
                 code
                 ... on InvalidRecordError {
+                  model {
+                    apiIdentifier
+                  }
                   validationErrors {
                     message
                     apiIdentifier
@@ -711,6 +720,9 @@ describe("InternalModelManager", () => {
                 message
                 code
                 ... on InvalidRecordError {
+                  model {
+                    apiIdentifier
+                  }
                   validationErrors {
                     message
                     apiIdentifier
@@ -737,6 +749,9 @@ describe("InternalModelManager", () => {
                 message
                 code
                 ... on InvalidRecordError {
+                  model {
+                    apiIdentifier
+                  }
                   validationErrors {
                     message
                     apiIdentifier
@@ -775,6 +790,9 @@ describe("InternalModelManager", () => {
                 message
                 code
                 ... on InvalidRecordError {
+                  model {
+                    apiIdentifier
+                  }
                   validationErrors {
                     message
                     apiIdentifier
@@ -807,6 +825,9 @@ describe("InternalModelManager", () => {
                     message
                     code
                     ... on InvalidRecordError {
+                      model {
+                        apiIdentifier
+                      }
                       validationErrors {
                         message
                         apiIdentifier
@@ -840,6 +861,9 @@ describe("InternalModelManager", () => {
                 message
                 code
                 ... on InvalidRecordError {
+                  model {
+                    apiIdentifier
+                  }
                   validationErrors {
                     message
                     apiIdentifier
@@ -872,6 +896,9 @@ describe("InternalModelManager", () => {
                     message
                     code
                     ... on InvalidRecordError {
+                      model {
+                        apiIdentifier
+                      }
                       validationErrors {
                         message
                         apiIdentifier
@@ -905,6 +932,9 @@ describe("InternalModelManager", () => {
                 message
                 code
                 ... on InvalidRecordError {
+                  model {
+                    apiIdentifier
+                  }
                   validationErrors {
                     message
                     apiIdentifier
@@ -935,6 +965,9 @@ describe("InternalModelManager", () => {
                 message
                 code
                 ... on InvalidRecordError {
+                  model {
+                    apiIdentifier
+                  }
                   validationErrors {
                     message
                     apiIdentifier
@@ -969,6 +1002,9 @@ describe("InternalModelManager", () => {
                 message
                 code
                 ... on InvalidRecordError {
+                  model {
+                    apiIdentifier
+                  }
                   validationErrors {
                     message
                     apiIdentifier
@@ -1010,6 +1046,9 @@ describe("InternalModelManager", () => {
                     message
                     code
                     ... on InvalidRecordError {
+                      model {
+                        apiIdentifier
+                      }
                       validationErrors {
                         message
                         apiIdentifier
@@ -1043,6 +1082,9 @@ describe("InternalModelManager", () => {
                 message
                 code
                 ... on InvalidRecordError {
+                  model {
+                    apiIdentifier
+                  }
                   validationErrors {
                     message
                     apiIdentifier
@@ -1071,6 +1113,9 @@ describe("InternalModelManager", () => {
                     message
                     code
                     ... on InvalidRecordError {
+                      model {
+                        apiIdentifier
+                      }
                       validationErrors {
                         message
                         apiIdentifier
@@ -1099,6 +1144,9 @@ describe("InternalModelManager", () => {
                 message
                 code
                 ... on InvalidRecordError {
+                  model {
+                    apiIdentifier
+                  }
                   validationErrors {
                     message
                     apiIdentifier
@@ -1127,6 +1175,9 @@ describe("InternalModelManager", () => {
                     message
                     code
                     ... on InvalidRecordError {
+                      model {
+                        apiIdentifier
+                      }
                       validationErrors {
                         message
                         apiIdentifier

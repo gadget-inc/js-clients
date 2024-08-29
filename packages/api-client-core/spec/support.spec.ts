@@ -6,8 +6,10 @@ import {
   assertOperationSuccess,
   disambiguateActionVariables,
   disambiguateBulkActionVariables,
+  formatErrorMessages,
   GadgetOperationError,
   getNonNullableError,
+  InvalidRecordError,
 } from "../src/index.js";
 import {
   MockBulkCreateWidgetAction,
@@ -476,6 +478,62 @@ describe("support utilities", () => {
     test("it should normalize input arrays for actions which accept inputs containing fully qualified inputs", () => {
       expect(disambiguateBulkActionVariables(MockBulkUpdateWidgetAction, [{ id: "123", widget: { name: "foobar" } }])).toEqual({
         inputs: [{ id: "123", widget: { name: "foobar" } }],
+      });
+    });
+  });
+
+  describe("formatErrorMessages", () => {
+    test("it should format a validation error when there is a model api identifier", () => {
+      const error = new InvalidRecordError(
+        "Record is invalid and can't be saved. foo is not present, bar is not present.",
+        [
+          { apiIdentifier: "foo", message: "is not present" },
+          { apiIdentifier: "bar", message: "is not long enough" },
+        ],
+        "widget"
+      );
+
+      const result = formatErrorMessages(error);
+
+      expect(result).toEqual({
+        widget: {
+          foo: { message: "is not present" },
+          bar: { message: "is not long enough" },
+        },
+      });
+    });
+
+    test("it should format a validation error when there is no model api identifier", () => {
+      const error = new InvalidRecordError("Record is invalid and can't be saved. foo is not present, bar is not present.", [
+        { apiIdentifier: "foo", message: "is not present" },
+        { apiIdentifier: "bar", message: "is not long enough" },
+      ]);
+
+      const result = formatErrorMessages(error);
+
+      expect(result).toEqual({
+        foo: { message: "is not present" },
+        bar: { message: "is not long enough" },
+      });
+    });
+
+    test("is should format a standard error", () => {
+      const error = new Error("Network error: something went wrong");
+
+      const result = formatErrorMessages(error);
+
+      expect(result).toEqual({
+        root: { message: "Network error: something went wrong" },
+      });
+    });
+
+    test("is should format a GadgetError with a code", () => {
+      const error = new GadgetOperationError("GGT_SOMETHING: something went wrong", "GGT_SOMETHING");
+
+      const result = formatErrorMessages(error);
+
+      expect(result).toEqual({
+        root: { message: "something went wrong" },
       });
     });
   });

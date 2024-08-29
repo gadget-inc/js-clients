@@ -74,6 +74,9 @@ describe("useGlobalAction", () => {
             message
             code
             ... on InvalidRecordError {
+              model {
+                apiIdentifier
+              }
               validationErrors {
                 message
                 apiIdentifier
@@ -181,6 +184,9 @@ describe("useGlobalAction", () => {
               message
               code
               ... on InvalidRecordError {
+                model {
+                  apiIdentifier
+                }
                 validationErrors {
                   message
                   apiIdentifier
