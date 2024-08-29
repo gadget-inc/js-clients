@@ -707,3 +707,47 @@ export const ErrorsSelection: BuilderFieldSelection = {
     },
   },
 };
+
+/**
+ * Formats error messages into a structured object.
+ *
+ * @param {Error} error - The error object to format.
+ * @returns {Record<string, any>} An object containing formatted error messages.
+ *   For InvalidRecordError, it structures validation errors by model and field.
+ *   For other errors, it returns a single root message.
+ *
+ * @example
+ * // For an InvalidRecordError:
+ * // {
+ * //   modelName: {
+ * //     fieldName: { message: "Error message" }
+ * //   }
+ * // }
+ *
+ * @example
+ * // For other errors:
+ * // {
+ * //   root: { message: "Error message" }
+ * // }
+ */
+export const formatErrorMessages = (error: Error) => {
+  const result: Record<string, any> = {};
+
+  if (error instanceof InvalidRecordError) {
+    for (const validationError of error.validationErrors) {
+      if (error.modelApiIdentifier) {
+        result[error.modelApiIdentifier] ??= {};
+        result[error.modelApiIdentifier][validationError.apiIdentifier] = { message: validationError.message };
+      } else {
+        result[validationError.apiIdentifier] = { message: validationError.message };
+      }
+    }
+  } else {
+    const codeToReplace = "code" in error ? `${error.code}: ` : "";
+    const message = error.message.replace(codeToReplace, "");
+
+    result.root = { message };
+  }
+
+  return result;
+};
