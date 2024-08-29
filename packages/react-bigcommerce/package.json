@@ -1,6 +1,6 @@
 {
   "name": "@gadgetinc/react-bigcommerce",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "files": [
     "README.md",
     "dist/**/*"
@@ -27,7 +27,7 @@
     "prerelease": "gitpkg publish"
   },
   "dependencies": {
-    "@gadgetinc/api-client-core": "^0.15.31"
+    "@gadgetinc/api-client-core": "^0.15.32"
   },
   "devDependencies": {
     "@gadgetinc/api-client-core": "workspace:*",
