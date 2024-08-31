@@ -14,8 +14,8 @@ import {
 import pluralize from "pluralize";
 import type { ReactNode } from "react";
 import React, { useCallback, useMemo } from "react";
-import { useTable } from "../../useTable.js";
 import type { TableColumn, TableRow } from "../../use-table/types.js";
+import { useTable } from "../../useTable.js";
 import type { ColumnValueType, OptionsType } from "../../utils.js";
 import type { AutoTableProps } from "../AutoTable.js";
 import { AutoTableContext } from "../AutoTableContext.js";

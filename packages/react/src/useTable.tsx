@@ -8,9 +8,9 @@ import {
 } from "@gadgetinc/api-client-core";
 import { useCallback, useMemo, useState } from "react";
 import { useModelMetadata } from "./metadata.js";
-import { useList } from "./useList.js";
 import { getTableColumns, getTableRows, getTableSelectionMap, getTableSpec } from "./use-table/helpers.js";
 import type { TableOptions, TableResult } from "./use-table/types.js";
+import { useList } from "./useList.js";
 import { deepMerge, type OptionsType, type ReadOperationOptions } from "./utils.js";
 
 const getNextDirection = (sortDirection: SortOrder | undefined) => {
