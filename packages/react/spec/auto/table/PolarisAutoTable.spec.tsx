@@ -4,7 +4,7 @@ import type { UserEvent } from "@testing-library/user-event";
 import { userEvent } from "@testing-library/user-event";
 import React from "react";
 import { GadgetFieldType } from "../../../src/internal/gql/graphql.js";
-import type { TableColumn } from "../../../src/useTableUtils/types.js";
+import type { TableColumn } from "../../../src/use-table/types.js";
 import { testApi as api } from "../../apis.js";
 import { PolarisMockedProviders } from "../inputs/PolarisMockedProviders.js";
 

@@ -1,6 +1,6 @@
 import React, { useMemo } from "react";
 import deepEqual from "react-fast-compare";
-import { ActionCallback, TableOptions } from "../../useTableUtils/types.js";
+import { ActionCallback, TableOptions } from "../../use-table/types.js";
 import { humanizeCamelCase } from "../../utils.js";
 
 export type ModelActionDetails =

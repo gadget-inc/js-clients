@@ -5,8 +5,8 @@ import {
   getTableColumns,
   getTableRows,
   getTableSelectionMap,
-} from "../../../src/useTableUtils/helpers.js";
-import type { RelationshipType } from "../../../src/useTableUtils/types.js";
+} from "../../../src/use-table/helpers.js";
+import type { RelationshipType } from "../../../src/use-table/types.js";
 
 describe("helper functions for useTable hook", () => {
   describe("fieldMetadataArrayToFieldMetadataTree", () => {

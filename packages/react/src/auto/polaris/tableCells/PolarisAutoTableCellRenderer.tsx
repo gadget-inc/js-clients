@@ -1,5 +1,5 @@
 import React from "react";
-import type { TableColumn } from "src/useTableUtils/types.js";
+import type { TableColumn } from "src/use-table/types.js";
 import { FieldType } from "../../../metadata.js";
 import type { ColumnValueType } from "../../../utils.js";
 import { PolarisAutoTableBooleanCell } from "./PolarisAutoTableBooleanCell.js";

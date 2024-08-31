@@ -1,5 +1,5 @@
 import type { FindManyFunction } from "@gadgetinc/api-client-core";
-import type { TableOptions, TableRow } from "../useTableUtils/types.js";
+import type { TableOptions, TableRow } from "../use-table/types.js";
 import type { OptionsType } from "../utils.js";
 
 /**

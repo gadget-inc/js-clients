@@ -1,6 +1,6 @@
 import { GadgetRecord } from "@gadgetinc/api-client-core";
 import React, { useContext } from "react";
-import type { TableResult } from "src/useTableUtils/types.js";
+import type { TableResult } from "src/use-table/types.js";
 
 export type AutoTableContext = TableResult<GadgetRecord<any>>;
 
