@@ -1,5 +1,7 @@
-import { Button, ButtonProps } from "@shopify/polaris";
-import React, { ReactNode } from "react";
+import type { ButtonProps } from "@shopify/polaris";
+import { Button } from "@shopify/polaris";
+import type { ReactNode } from "react";
+import React from "react";
 
 /**
  * Button for submitting the AutoForm values

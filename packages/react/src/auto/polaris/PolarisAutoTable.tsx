@@ -19,7 +19,8 @@ import { useTable } from "../../useTable.js";
 import type { ColumnValueType, OptionsType } from "../../utils.js";
 import type { AutoTableProps } from "../AutoTable.js";
 import { AutoTableContext } from "../AutoTableContext.js";
-import { BulkActionOption, useTableBulkActions } from "../hooks/useTableBulkActions.js";
+import type { BulkActionOption } from "../hooks/useTableBulkActions.js";
+import { useTableBulkActions } from "../hooks/useTableBulkActions.js";
 import { PolarisAutoBulkActionModal } from "./PolarisAutoBulkActionModal.js";
 import { PolarisAutoTableCellRenderer } from "./tableCells/PolarisAutoTableCellRenderer.js";
 

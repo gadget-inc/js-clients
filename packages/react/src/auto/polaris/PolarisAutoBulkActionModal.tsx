@@ -1,9 +1,9 @@
 import { Banner, Button, ButtonGroup, Modal, Spinner, Text } from "@shopify/polaris";
 import React, { useCallback, useEffect, useMemo } from "react";
-import { TableRow } from "../../use-table/types.js";
+import type { TableRow } from "../../use-table/types.js";
 import { useBulkAction } from "../../useBulkAction.js";
 import { humanizeCamelCase } from "../../utils.js";
-import { ModelActionDetails } from "../hooks/useTableBulkActions.js";
+import type { ModelActionDetails } from "../hooks/useTableBulkActions.js";
 
 export const PolarisAutoBulkActionModal = (props: {
   model: any;

@@ -1,5 +1,6 @@
 import { useMemo } from "react";
-import { Control, useController } from "react-hook-form";
+import type { Control } from "react-hook-form";
+import { useController } from "react-hook-form";
 import { useRolesMetadata } from "../../metadata.js";
 import { useFieldMetadata } from "./useFieldMetadata.js";
 
