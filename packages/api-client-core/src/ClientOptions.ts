@@ -92,9 +92,16 @@ export interface AuthenticationModeOptions {
   // Use no authentication at all, and get access only to the data that the Unauthenticated backend role has access to.
   anonymous?: true;
 
+  // @deprecated Use internal instead
+  internalAuthToken?: string;
+
   // @private Use an internal platform auth token for authentication
   // This is used to communicate within Gadget itself and shouldn't be used to connect to Gadget from other systems
-  internalAuthToken?: string;
+  internal?: {
+    authToken: string;
+    actAsSession?: boolean;
+    getSessionId?: () => Promise<string | undefined>;
+  };
 
   // @private Use a passed custom function for managing authentication. For some fancy integrations that the API client supports, like embedded Shopify apps, we use platform native features to authenticate with the Gadget backend.
   custom?: {
