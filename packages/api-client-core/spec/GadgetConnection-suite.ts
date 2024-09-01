@@ -178,6 +178,43 @@ export const GadgetConnectionSharedSuite = (queryExtra = "") => {
       expect(result.data).toEqual({ meta: { appName: "some app" } });
     });
 
+    it("should allow connecting with a JWT from an external system", async () => {
+      nock("https://someapp.gadget.app")
+        .post("/api/graphql?operation=meta", { query: `{\n  meta {\n    appName\n${queryExtra}  }\n}`, variables: {} })
+        .reply(200, function () {
+          expect(this.req.headers["authorization"]).toEqual([`Bearer foobarbaz`]);
+
+          return {
+            data: {
+              meta: {
+                appName: "some app",
+              },
+            },
+          };
+        });
+
+      const connection = new GadgetConnection({
+        endpoint: "https://someapp.gadget.app/api/graphql",
+        authenticationMode: { jwt: "foobarbaz" },
+      });
+
+      const result = await connection.currentClient
+        .query(
+          gql`
+            {
+              meta {
+                appName
+              }
+            }
+          `,
+          {}
+        )
+        .toPromise();
+
+      expect(result.error).toBeUndefined();
+      expect(result.data).toEqual({ meta: { appName: "some app" } });
+    });
+
     describe("session token storage", () => {
       it("should allow connecting with no session in a session storage mode", async () => {
         nock("https://someapp.gadget.app")
