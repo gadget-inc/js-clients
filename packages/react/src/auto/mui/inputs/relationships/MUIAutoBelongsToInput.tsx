@@ -1,7 +1,7 @@
 import { Autocomplete, Box, TextField, Typography } from "@mui/material";
 import React from "react";
 import { useBelongsToInputController } from "../../../hooks/useBelongsToInputController.js";
-import { AutoRelationshipInputProps } from "../../../interfaces/AutoRelationshipInputProps.js";
+import type { AutoRelationshipInputProps } from "../../../interfaces/AutoRelationshipInputProps.js";
 
 export const MUIAutoBelongsToInput = (props: AutoRelationshipInputProps) => {
   const {

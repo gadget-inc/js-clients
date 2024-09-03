@@ -1,7 +1,7 @@
 import { Alert, Autocomplete, Box, TextField, Typography } from "@mui/material";
 import React from "react";
 import { useHasOneInputController } from "../../../hooks/useHasOneInputController.js";
-import { AutoRelationshipInputProps } from "../../../interfaces/AutoRelationshipInputProps.js";
+import type { AutoRelationshipInputProps } from "../../../interfaces/AutoRelationshipInputProps.js";
 
 /**
  * TODO - Enable when API level 1-1 relationship mappings are maintained by calling updates on other records

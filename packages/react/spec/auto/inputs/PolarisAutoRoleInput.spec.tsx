@@ -1,6 +1,7 @@
 import type { RenderResult } from "@testing-library/react";
 import { act, render, screen } from "@testing-library/react";
-import { UserEvent, userEvent } from "@testing-library/user-event";
+import type { UserEvent } from "@testing-library/user-event";
+import { userEvent } from "@testing-library/user-event";
 import React from "react";
 import { PolarisAutoForm } from "../../../src/auto/polaris/PolarisAutoForm.js";
 import { PolarisAutoRolesInput } from "../../../src/auto/polaris/inputs/PolarisAutoRolesInput.js";

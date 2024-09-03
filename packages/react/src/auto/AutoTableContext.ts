@@ -1,4 +1,4 @@
-import { GadgetRecord } from "@gadgetinc/api-client-core";
+import type { GadgetRecord } from "@gadgetinc/api-client-core";
 import React, { useContext } from "react";
 import type { TableResult } from "src/use-table/types.js";
 

@@ -1,6 +1,7 @@
 import { AppProvider } from "@shopify/polaris";
 import translations from "@shopify/polaris/locales/en.json";
-import React, { ReactNode } from "react";
+import type { ReactNode } from "react";
+import React from "react";
 import { FormProvider, useForm } from "react-hook-form";
 import { AutoFormMetadataContext } from "../../src/auto/AutoFormContext.js";
 import { testApi as api } from "../apis.js";

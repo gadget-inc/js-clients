@@ -5,8 +5,8 @@ import { useFindMany } from "../../useFindMany.js";
 import { useFindOne } from "../../useFindOne.js";
 import { sortByProperty, uniqByProperty } from "../../utils.js";
 import { useAutoFormMetadata } from "../AutoFormContext.js";
-import { OptionLabel } from "../interfaces/AutoRelationshipInputProps.js";
-import { RelationshipFieldConfig } from "../interfaces/RelationshipFieldConfig.js";
+import type { OptionLabel } from "../interfaces/AutoRelationshipInputProps.js";
+import type { RelationshipFieldConfig } from "../interfaces/RelationshipFieldConfig.js";
 import { useFieldMetadata } from "./useFieldMetadata.js";
 import { useModelManager } from "./useModelManager.js";
 

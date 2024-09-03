@@ -2,7 +2,7 @@ import { Combobox, Tag } from "@shopify/polaris";
 import React from "react";
 import { useBelongsToInputController } from "../../../hooks/useBelongsToInputController.js";
 import { optionRecordsToLoadCount } from "../../../hooks/useRelatedModelOptions.js";
-import { AutoRelationshipInputProps } from "../../../interfaces/AutoRelationshipInputProps.js";
+import type { AutoRelationshipInputProps } from "../../../interfaces/AutoRelationshipInputProps.js";
 import { RelatedModelOptions } from "./RelatedModelOptions.js";
 
 export const PolarisAutoBelongsToInput = (props: AutoRelationshipInputProps) => {
