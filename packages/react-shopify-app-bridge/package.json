@@ -1,6 +1,6 @@
 {
   "name": "@gadgetinc/react-shopify-app-bridge",
-  "version": "0.16.3",
+  "version": "0.16.4",
   "files": [
     "README.md",
     "dist/**/*"
@@ -27,7 +27,7 @@
     "prerelease": "gitpkg publish"
   },
   "dependencies": {
-    "@gadgetinc/api-client-core": "^0.15.32",
+    "@gadgetinc/api-client-core": "^0.15.33",
     "crypto-js": "^4.2.0",
     "tslib": "^2.6.2"
   },

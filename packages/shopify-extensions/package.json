@@ -1,6 +1,6 @@
 {
   "name": "@gadgetinc/shopify-extensions",
-  "version": "0.3.2",
+  "version": "0.3.3",
   "files": [
     "README.md",
     "dist/**/*",
@@ -33,7 +33,7 @@
     "prerelease": "gitpkg publish"
   },
   "dependencies": {
-    "@gadgetinc/api-client-core": "^0.15.32"
+    "@gadgetinc/api-client-core": "^0.15.33"
   },
   "devDependencies": {
     "@gadgetinc/api-client-core": "workspace:*",

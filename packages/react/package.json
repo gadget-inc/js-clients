@@ -1,6 +1,6 @@
 {
   "name": "@gadgetinc/react",
-  "version": "0.16.6",
+  "version": "0.16.7",
   "files": [
     "README.md",
     "dist/**/*",
@@ -48,7 +48,7 @@
   },
   "dependencies": {
     "@0no-co/graphql.web": "^1.0.4",
-    "@gadgetinc/api-client-core": "^0.15.32",
+    "@gadgetinc/api-client-core": "^0.15.33",
     "@hookform/resolvers": "^3.3.1",
     "filesize": "^10.1.2",
     "pluralize": "^8.0.0",
