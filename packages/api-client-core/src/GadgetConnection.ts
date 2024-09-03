@@ -69,6 +69,7 @@ export interface GadgetConnectionOptions {
 export enum AuthenticationMode {
   BrowserSession = "browser-session",
   APIKey = "api-key",
+  Internal = "internal",
   InternalAuthToken = "internal-auth-token",
   Anonymous = "anonymous",
   Custom = "custom",
@@ -165,6 +166,8 @@ export class GadgetConnection {
     if (options) {
       if (options.browserSession) {
         this.enableSessionMode(options.browserSession);
+      } else if (options.internal) {
+        this.authenticationMode = AuthenticationMode.Internal;
       } else if (options.internalAuthToken) {
         this.authenticationMode = AuthenticationMode.InternalAuthToken;
       } else if (options.apiKey) {
@@ -308,7 +311,8 @@ export class GadgetConnection {
     input = processMaybeRelativeInput(input, this.options.baseRouteURL ?? this.options.endpoint);
 
     if (this.isGadgetRequest(input)) {
-      init.headers = { ...this.requestHeaders(), ...init.headers };
+      const requestHeaders = await this.requestHeaders();
+      init.headers = { ...requestHeaders, ...init.headers };
 
       if (this.authenticationMode == AuthenticationMode.Custom) {
         await this.options.authenticationMode!.custom!.processFetch(input, init);
@@ -460,8 +464,19 @@ export class GadgetConnection {
         const connectionParams: Record<string, any> = { environment: this.environment, auth: { type: this.authenticationMode } };
         if (this.authenticationMode == AuthenticationMode.APIKey) {
           connectionParams.auth.key = this.options.authenticationMode!.apiKey!;
-        } else if (this.authenticationMode == AuthenticationMode.InternalAuthToken) {
-          connectionParams.auth.token = this.options.authenticationMode!.internalAuthToken!;
+        } else if (
+          this.authenticationMode == AuthenticationMode.Internal ||
+          this.authenticationMode == AuthenticationMode.InternalAuthToken
+        ) {
+          const authToken =
+            this.authenticationMode == AuthenticationMode.Internal
+              ? this.options.authenticationMode!.internal!.authToken
+              : this.options.authenticationMode!.internalAuthToken!;
+          connectionParams.auth.token = authToken;
+          if (this.authenticationMode == AuthenticationMode.Internal && this.options.authenticationMode!.internal!.actAsSession) {
+            connectionParams.auth.actAsInternalSession = true;
+            connectionParams.auth.internalSessionId = await this.options.authenticationMode!.internal!.getSessionId?.();
+          }
         } else if (this.authenticationMode == AuthenticationMode.BrowserSession) {
           connectionParams.auth.sessionToken = this.sessionTokenStore!.getItem(this.sessionStorageKey);
         } else if (this.authenticationMode == AuthenticationMode.Custom) {
@@ -491,11 +506,25 @@ export class GadgetConnection {
     });
   }
 
-  private requestHeaders() {
+  private async requestHeaders() {
     const headers: Record<string, string> = {};
 
-    if (this.authenticationMode == AuthenticationMode.InternalAuthToken) {
-      headers.authorization = "Basic " + base64("gadget-internal" + ":" + this.options.authenticationMode!.internalAuthToken!);
+    if (this.authenticationMode == AuthenticationMode.Internal || this.authenticationMode == AuthenticationMode.InternalAuthToken) {
+      const authToken =
+        this.authenticationMode == AuthenticationMode.Internal
+          ? this.options.authenticationMode!.internal!.authToken
+          : this.options.authenticationMode!.internalAuthToken!;
+
+      headers.authorization = "Basic " + base64("gadget-internal" + ":" + authToken);
+
+      if (this.authenticationMode == AuthenticationMode.Internal && this.options.authenticationMode!.internal!.actAsSession) {
+        headers["x-gadget-act-as-internal-session"] = "true";
+
+        const sessionId = await this.options.authenticationMode!.internal!.getSessionId?.();
+        if (sessionId) {
+          headers["x-gadget-internal-session-id"] = sessionId;
+        }
+      }
     } else if (this.authenticationMode == AuthenticationMode.APIKey) {
       headers.authorization = `Bearer ${this.options.authenticationMode?.apiKey}`;
     } else if (this.authenticationMode == AuthenticationMode.BrowserSession) {

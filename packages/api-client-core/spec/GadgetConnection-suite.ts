@@ -141,6 +141,138 @@ export const GadgetConnectionSharedSuite = (queryExtra = "") => {
       expect(result.data).toEqual({ meta: { appName: "some app" } });
     });
 
+    it("should allow connecting with internal authentication when not using actAsSession", async () => {
+      nock("https://someapp.gadget.app")
+        .post("/api/graphql?operation=meta", { query: `{\n  meta {\n    appName\n${queryExtra}  }\n}`, variables: {} })
+        .reply(200, function () {
+          expect(this.req.headers["authorization"]).toEqual([`Basic ${base64("gadget-internal:opaque-token-thing")}`]);
+
+          return {
+            data: {
+              meta: {
+                appName: "some app",
+              },
+            },
+          };
+        });
+
+      const connection = new GadgetConnection({
+        endpoint: "https://someapp.gadget.app/api/graphql",
+        authenticationMode: {
+          internal: {
+            authToken: "opaque-token-thing",
+            actAsSession: false,
+          },
+        },
+      });
+
+      const result = await connection.currentClient
+        .query(
+          gql`
+            {
+              meta {
+                appName
+              }
+            }
+          `,
+          {}
+        )
+        .toPromise();
+
+      expect(result.error).toBeUndefined();
+      expect(result.data).toEqual({ meta: { appName: "some app" } });
+    });
+
+    it("should allow connecting with internal authentication when using actAsSession", async () => {
+      nock("https://someapp.gadget.app")
+        .post("/api/graphql?operation=meta", { query: `{\n  meta {\n    appName\n${queryExtra}  }\n}`, variables: {} })
+        .reply(200, function () {
+          expect(this.req.headers["authorization"]).toEqual([`Basic ${base64("gadget-internal:opaque-token-thing")}`]);
+          expect(this.req.headers["x-gadget-act-as-internal-session"]).toEqual(["true"]);
+          expect(this.req.headers["x-gadget-internal-session-id"]).toEqual(["123"]);
+
+          return {
+            data: {
+              meta: {
+                appName: "some app",
+              },
+            },
+          };
+        });
+
+      const connection = new GadgetConnection({
+        endpoint: "https://someapp.gadget.app/api/graphql",
+        authenticationMode: {
+          internal: {
+            authToken: "opaque-token-thing",
+            actAsSession: true,
+            getSessionId: () => Promise.resolve("123"),
+          },
+        },
+      });
+
+      const result = await connection.currentClient
+        .query(
+          gql`
+            {
+              meta {
+                appName
+              }
+            }
+          `,
+          {}
+        )
+        .toPromise();
+
+      expect(result.error).toBeUndefined();
+      expect(result.data).toEqual({ meta: { appName: "some app" } });
+    });
+
+    it("should allow connecting with internal authentication when using actAsSession and there is no session id", async () => {
+      nock("https://someapp.gadget.app")
+        .post("/api/graphql?operation=meta", { query: `{\n  meta {\n    appName\n${queryExtra}  }\n}`, variables: {} })
+        .reply(200, function () {
+          expect(this.req.headers["authorization"]).toEqual([`Basic ${base64("gadget-internal:opaque-token-thing")}`]);
+          expect(this.req.headers["x-gadget-act-as-internal-session"]).toEqual(["true"]);
+          expect(this.req.headers["x-gadget-internal-session-id"]).toBeUndefined();
+
+          return {
+            data: {
+              meta: {
+                appName: "some app",
+              },
+            },
+          };
+        });
+
+      const connection = new GadgetConnection({
+        endpoint: "https://someapp.gadget.app/api/graphql",
+        authenticationMode: {
+          internal: {
+            authToken: "opaque-token-thing",
+            actAsSession: true,
+            getSessionId: () => Promise.resolve(undefined),
+          },
+        },
+      });
+
+      const result = await connection.currentClient
+        .query(
+          gql`
+            {
+              meta {
+                appName
+              }
+            }
+          `,
+          {}
+        )
+        .toPromise();
+
+      expect(result.error).toBeUndefined();
+      expect(result.data).toEqual({ meta: { appName: "some app" } });
+    });
+
     it("should allow connecting with a gadget API Key", async () => {
       nock("https://someapp.gadget.app")
         .post("/api/graphql?operation=meta", { query: `{\n  meta {\n    appName\n${queryExtra}  }\n}`, variables: {} })
