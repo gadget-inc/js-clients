@@ -59,6 +59,8 @@
     "yup": "^1.2.0"
   },
   "devDependencies": {
+    "@chakra-ui/react": "^2.8.2",
+    "framer-motion": "^11.3.31",
     "@changesets/cli": "^2.27.7",
     "@chromatic-com/storybook": "^1.5.0",
     "@emotion/react": "^11.11.1",
@@ -146,6 +148,9 @@
       "optional": true
     },
     "@shopify/polaris-icons": {
+      "optional": true
+    },
+    "@chakra-ui/react": {
       "optional": true
     }
   }

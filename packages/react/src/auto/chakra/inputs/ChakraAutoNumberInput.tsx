@@ -1,22 +1,29 @@
-import type { TextFieldProps } from "@shopify/polaris";
+import {
+  FormControl,
+  FormLabel,
+  NumberDecrementStepper,
+  NumberIncrementStepper,
+  NumberInput,
+  NumberInputField,
+  NumberInputStepper,
+  type NumberInputProps,
+} from "@chakra-ui/react";
 import React from "react";
 import type { Control } from "react-hook-form";
 import { useStringInputController } from "../../hooks/useStringInputController.js";
 import { countNumberOfDecimals, getStepFromNumberOfDecimals } from "../../shared/sharedUtils.js";
-import { PolarisAutoTextInput } from "./PolarisAutoTextInput.js";
 
-export const PolarisAutoNumberInput = (
+export const ChakraAutoNumberInput = (
   props: {
-    field: string; // The field API identifier
+    field: string;
     control?: Control<any>;
-  } & Partial<TextFieldProps>
+  } & Partial<NumberInputProps>
 ) => {
   const { field, control } = props;
   const { type, metadata, value } = useStringInputController({ field, control });
-  const fieldType = type as TextFieldProps["type"];
 
   const step =
-    fieldType === "number" &&
+    type === "number" &&
     metadata.configuration.__typename === "GadgetNumberConfig" &&
     metadata.configuration.decimals &&
     metadata.configuration.decimals > 0
@@ -25,5 +32,18 @@ export const PolarisAutoNumberInput = (
       ? getStepFromNumberOfDecimals(countNumberOfDecimals(`${value}`))
       : 1;
 
-  return <PolarisAutoTextInput step={step} {...props} />;
+  return (
+    <FormControl isRequired={metadata.requiredArgumentForInput}>
+      <FormLabel>{metadata.name}</FormLabel>
+      <NumberInput step={step}>
+        <NumberInputField />
+        <NumberInputStepper>
+          <NumberIncrementStepper />
+          <NumberDecrementStepper />
+        </NumberInputStepper>
+      </NumberInput>
+    </FormControl>
+  );
 };
+
+export default ChakraAutoNumberInput;
