@@ -98,19 +98,23 @@ export const useTable = <
   } as any);
 
   const tableData = useMemo(() => {
-    return tableSpec && data && metadata
-      ? {
-          rows: getTableRows(tableSpec, data),
-          columns: getTableColumns(tableSpec),
-          data,
-          metadata,
-        }
-      : {
-          rows: null,
-          columns: null,
-          data: null,
-          metadata: null,
-        };
+    if (tableSpec && data && metadata) {
+      const columns = getTableColumns(tableSpec);
+      const rows = getTableRows(tableSpec, columns, data);
+      return {
+        rows,
+        columns,
+        data,
+        metadata,
+      };
+    } else {
+      return {
+        rows: null,
+        columns: null,
+        data: null,
+        metadata: null,
+      };
+    }
   }, [data, metadata, tableSpec]);
 
   const isAwaitingDebouncedSearchValue = search.value != search.debouncedValue;

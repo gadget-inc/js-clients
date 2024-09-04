@@ -10,6 +10,26 @@ import { recordIdInputField } from "../support/shared.js";
 import { widgetModelInputFields } from "../support/widgetModel.js";
 
 describe("useTable hook", () => {
+  let timesUsedCryptoRandomUUID = 0;
+  const uuids: string[] = [];
+
+  const shimCryptoRandomUUID = () => {
+    Object.defineProperty(globalThis, "crypto", {
+      value: {
+        randomUUID: () => {
+          timesUsedCryptoRandomUUID++;
+          const mostRecentCryptoRandomUUID = `000-000-000-000-${timesUsedCryptoRandomUUID}`;
+          uuids.push(mostRecentCryptoRandomUUID);
+          return mostRecentCryptoRandomUUID;
+        },
+      },
+    });
+  };
+
+  beforeEach(() => {
+    shimCryptoRandomUUID();
+  });
+
   const getUseTableResult = (options?: Parameters<typeof useTable>["1"], customDefaultSelection?: Record<string, any>) => {
     const { result } = renderHook(
       () => {
@@ -99,106 +119,110 @@ describe("useTable hook", () => {
         mustBeLongString: "hellllllllllllllllllllllllllllo",
       },
     ]);
-    expect(result.current[0].columns).toEqual([
-      {
-        field: "id",
-        header: "Id",
-        relatedField: undefined,
-        sortable: false,
-        type: "ID",
-      },
-      {
-        field: "name",
-        header: "Name",
-        relatedField: undefined,
-        sortable: true,
-        type: "String",
-      },
-      {
-        field: "inventoryCount",
-        header: "Inventory count",
-        relatedField: undefined,
-        sortable: true,
-        type: "Number",
-      },
-      {
-        field: "anything",
-        header: "Anything",
-        relatedField: undefined,
-        sortable: true,
-        type: "JSON",
-      },
-      {
-        field: "description",
-        header: "Description",
-        relatedField: undefined,
-        sortable: true,
-        type: "RichText",
-      },
-      {
-        field: "category",
-        header: "Category",
-        relatedField: undefined,
-        sortable: true,
-        type: "Enum",
-      },
-      {
-        field: "startsAt",
-        header: "Starts at",
-        relatedField: undefined,
-        sortable: true,
-        type: "DateTime",
-      },
-      {
-        field: "isChecked",
-        header: "Is checked",
-        relatedField: undefined,
-        sortable: true,
-        type: "Boolean",
-      },
-      {
-        field: "metafields",
-        header: "Metafields",
-        relatedField: undefined,
-        sortable: true,
-        type: "JSON",
-      },
-      {
-        field: "roles",
-        header: "Roles",
-        relatedField: undefined,
-        sortable: false,
-        type: "RoleAssignments",
-      },
-      {
-        field: "birthday",
-        header: "Birthday",
-        relatedField: undefined,
-        sortable: true,
-        type: "DateTime",
-      },
-      {
-        field: "color",
-        header: "Color",
-        relatedField: undefined,
-        sortable: true,
-        type: "Color",
-      },
-      {
-        field: "secretKey",
-        header: "Secret key",
-        relatedField: undefined,
-        sortable: false,
-        type: "EncryptedString",
-      },
-      {
-        field: "mustBeLongString",
-        header: "Must be long string",
-        relatedField: undefined,
-        sortable: true,
-        type: "String",
-      },
-    ]);
+    expect(result.current[0].columns).toMatchInlineSnapshot(`
+      [
+        {
+          "field": "id",
+          "header": "Id",
+          "identifier": "id",
+          "sortable": false,
+          "type": "ID",
+        },
+        {
+          "field": "name",
+          "header": "Name",
+          "identifier": "name",
+          "sortable": true,
+          "type": "String",
+        },
+        {
+          "field": "inventoryCount",
+          "header": "Inventory count",
+          "identifier": "inventoryCount",
+          "sortable": true,
+          "type": "Number",
+        },
+        {
+          "field": "anything",
+          "header": "Anything",
+          "identifier": "anything",
+          "sortable": true,
+          "type": "JSON",
+        },
+        {
+          "field": "description",
+          "header": "Description",
+          "identifier": "description",
+          "sortable": true,
+          "type": "RichText",
+        },
+        {
+          "field": "category",
+          "header": "Category",
+          "identifier": "category",
+          "sortable": true,
+          "type": "Enum",
+        },
+        {
+          "field": "startsAt",
+          "header": "Starts at",
+          "identifier": "startsAt",
+          "includeTime": undefined,
+          "sortable": true,
+          "type": "DateTime",
+        },
+        {
+          "field": "isChecked",
+          "header": "Is checked",
+          "identifier": "isChecked",
+          "sortable": true,
+          "type": "Boolean",
+        },
+        {
+          "field": "metafields",
+          "header": "Metafields",
+          "identifier": "metafields",
+          "sortable": true,
+          "type": "JSON",
+        },
+        {
+          "field": "roles",
+          "header": "Roles",
+          "identifier": "roles",
+          "sortable": false,
+          "type": "RoleAssignments",
+        },
+        {
+          "field": "birthday",
+          "header": "Birthday",
+          "identifier": "birthday",
+          "includeTime": undefined,
+          "sortable": true,
+          "type": "DateTime",
+        },
+        {
+          "field": "color",
+          "header": "Color",
+          "identifier": "color",
+          "sortable": true,
+          "type": "Color",
+        },
+        {
+          "field": "secretKey",
+          "header": "Secret key",
+          "identifier": "secretKey",
+          "sortable": false,
+          "type": "EncryptedString",
+        },
+        {
+          "field": "mustBeLongString",
+          "header": "Must be long string",
+          "identifier": "mustBeLongString",
+          "sortable": true,
+          "type": "String",
+        },
+      ]
+    `);
   });
 
   describe("no columns property", () => {
@@ -500,12 +524,15 @@ describe("useTable hook", () => {
           {
             "field": "name",
             "header": "Name",
+            "identifier": "name",
             "sortable": true,
             "type": "String",
           },
           {
             "field": "Custom column",
             "header": "Custom column",
+            "identifier": "000-000-000-000-1",
+            "render": [Function],
             "sortable": false,
             "type": "CustomRenderer",
           },
@@ -675,7 +702,9 @@ describe("useTable hook", () => {
       loadWidgetData();
 
       // Trigger a render to get the record
-      render(<>{result.current[0].rows?.[0]?.["Custom column"]}</>);
+      const customCellRenderColumnResultKey = Object.keys(result.current[0].rows?.[0] ?? {}).find((key) => uuids.includes(key))!;
+      expect(customCellRenderColumnResultKey).toBeDefined();
+      render(<>{result.current[0].rows?.[0]?.[customCellRenderColumnResultKey]}</>);
 
       // It should include all model fields in the query
       expect(mockUrqlClient.executeQuery.mock.calls[1][0].query.loc.source.body).toMatchInlineSnapshot(`
@@ -728,6 +757,49 @@ describe("useTable hook", () => {
       expect(recordFromRender.name).toBe("foo");
       // "inventoryCount" should be included in the record even though it's not in the columns
       expect(recordFromRender.inventoryCount).toBe(1);
+    });
+
+    it("should be able to access all fields of a table with duplicate custom cell headers", () => {
+      let recordFromRender: any;
+
+      const result = getUseTableResult({
+        columns: [
+          "name",
+          {
+            header: "Custom column",
+            render: ({ record }) => {
+              recordFromRender = record;
+              return <div>some custom stuff</div>;
+            },
+          },
+          {
+            header: "Custom column",
+            render: ({ record }) => {
+              recordFromRender = record;
+              return <div>some different stuff</div>;
+            },
+          },
+        ],
+      });
+      loadMockWidgetModelMetadata();
+      loadWidgetData();
+
+      const columns = result.current[0].rows?.[0] ?? {};
+      const columnKeys = Object.keys(columns);
+      expect(columnKeys).toMatchInlineSnapshot(`
+        [
+          "id",
+          "000-000-000-000-8",
+          "000-000-000-000-9",
+          "name",
+        ]
+      `);
+
+      const customColumn1Result = render(<>{result.current[0].rows?.[0]?.[columnKeys[1]]}</>);
+      expect(customColumn1Result.container.textContent).toBe("some custom stuff");
+
+      const customColumn2Result = render(<>{result.current[0].rows?.[0]?.[columnKeys[2]]}</>);
+      expect(customColumn2Result.container.textContent).toBe("some different stuff");
     });
   });
 

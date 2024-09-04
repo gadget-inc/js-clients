@@ -10,7 +10,7 @@ import type { ColumnValueType, ErrorWrapper } from "../utils.js";
 
 export type ColumnType = GadgetFieldType | "CustomRenderer";
 
-type ColumnsOption = Exclude<TableOptions["columns"], undefined>;
+export type ColumnsOption = Exclude<TableOptions["columns"], undefined>;
 
 export type TableSpec = {
   targetColumns: ColumnsOption;
@@ -22,6 +22,8 @@ export type TableSpec = {
 export type RelationshipType = GadgetFieldType.HasMany | GadgetFieldType.HasOne | GadgetFieldType.BelongsTo;
 
 export type TableColumn = {
+  /** Identifier for the column */
+  identifier: string;
   /** Human-readable header value for the column */
   header: string;
   /** Dot-separated path to the field in the record */
@@ -32,6 +34,8 @@ export type TableColumn = {
   sortable: boolean;
   /** For controlling if the time is shown on DateTime cell renderers   */
   includeTime?: boolean;
+  /** Custom render function */
+  render?: CustomCellRenderer;
 };
 
 export type TableRow = Record<string, ColumnValueType | ReactNode>;
@@ -96,8 +100,10 @@ export type RelatedFieldColumn = {
 
 export type CustomCellColumn = {
   header: string;
-  render: (props: { record: GadgetRecord<any>; index: number }) => ReactNode;
+  render: CustomCellRenderer;
 };
+
+export type CustomCellRenderer = (props: { record: GadgetRecord<any>; index: number }) => ReactNode;
 
 export type CellDetailColumn = {
   header?: string;
