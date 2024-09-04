@@ -8,14 +8,14 @@ export const validateNonBulkAction = (action: ActionFunction<any, any, any, any,
 };
 
 const GadgetApiTriggerSpecId = "gadget/trigger/graphql_api";
-const ApiTriggerRequiredError = `Actions must have API triggers to be used in AutoForms`;
+export const TriggerableActionRequiredErrorMessage = `"action" must be a valid Gadget action with an API trigger to be used in AutoForms`;
 const validActionTypes = ["globalAction", "action"];
 
 export const validateTriggersFromApiClient = (action: ActionFunction<any, any, any, any, any> | GlobalActionFunction<any>) => {
   if (!validActionTypes.includes(action.type)) {
     // When the API client is built with an action without the API trigger, the type will be "stubbedAction"
     // action.type === "globalAction" | "action" // Only when the action has the API trigger when the api client is built
-    throw new Error(ApiTriggerRequiredError);
+    throw new Error(TriggerableActionRequiredErrorMessage);
   }
 };
 
@@ -32,7 +32,7 @@ export const validateTriggersFromMetadata = (metadata?: ActionMetadata | GlobalA
 
     const hasApiTrigger = triggersAsArray.some((trigger) => trigger.specID === GadgetApiTriggerSpecId);
     if (!hasApiTrigger) {
-      throw new Error(ApiTriggerRequiredError);
+      throw new Error(TriggerableActionRequiredErrorMessage);
     }
   }
 };
