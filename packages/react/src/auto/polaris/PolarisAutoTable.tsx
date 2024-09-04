@@ -1,4 +1,4 @@
-import type { FindManyFunction, SortOrder } from "@gadgetinc/api-client-core";
+import type { FindManyFunction, GadgetRecord, SortOrder } from "@gadgetinc/api-client-core";
 import type { IndexTableProps } from "@shopify/polaris";
 import {
   Banner,
@@ -90,7 +90,7 @@ const PolarisAutoTableComponent = <
     filter: props.filter,
   } as any);
 
-  const { columns, rows, page, fetching, error, search, selection, sort, metadata } = methods;
+  const { columns, rows, page, fetching, error, search, selection, sort, metadata, data: rawRecords } = methods;
 
   const handleColumnSort = (headingIndex: number) => {
     if (columns) {
@@ -100,8 +100,8 @@ const PolarisAutoTableComponent = <
   };
 
   const onClickCallback = useCallback(
-    (row: TableRow) => {
-      return () => onClick?.(row);
+    (row: TableRow, rawRecord: GadgetRecord<any>) => {
+      return () => onClick?.(row, rawRecord);
     },
     [onClick]
   );
@@ -220,27 +220,30 @@ const PolarisAutoTableComponent = <
         >
           {rows &&
             columns &&
-            rows.map((row, index) => (
-              <IndexTable.Row
-                key={row.id as string}
-                id={row.id as string}
-                position={index}
-                onClick={onClick ? onClickCallback(row) : undefined}
-                selected={selection.recordIds.includes(row.id as string)}
-              >
-                {columns.map((column) => (
-                  <IndexTable.Cell key={column.identifier}>
-                    <div style={{ maxWidth: "200px" }}>
-                      {column.type == "CustomRenderer" ? (
-                        (row[column.identifier] as ReactNode)
-                      ) : (
-                        <PolarisAutoTableCellRenderer column={column} value={row[column.identifier] as ColumnValueType} />
-                      )}
-                    </div>
-                  </IndexTable.Cell>
-                ))}
-              </IndexTable.Row>
-            ))}
+            rows.map((row, index) => {
+              const rawRecord = rawRecords?.[index];
+              return (
+                <IndexTable.Row
+                  key={row.id as string}
+                  id={row.id as string}
+                  position={index}
+                  onClick={onClick ? onClickCallback(row, rawRecord) : undefined}
+                  selected={selection.recordIds.includes(row.id as string)}
+                >
+                  {columns.map((column) => (
+                    <IndexTable.Cell key={column.identifier}>
+                      <div style={{ maxWidth: "200px" }}>
+                        {column.type == "CustomRenderer" ? (
+                          (row[column.identifier] as ReactNode)
+                        ) : (
+                          <PolarisAutoTableCellRenderer column={column} value={row[column.identifier] as ColumnValueType} />
+                        )}
+                      </div>
+                    </IndexTable.Cell>
+                  ))}
+                </IndexTable.Row>
+              );
+            })}
         </IndexTable>
       </BlockStack>
     </AutoTableContext.Provider>

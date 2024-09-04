@@ -186,11 +186,14 @@ describe("PolarisAutoTable", () => {
       await user.click(firstRowCells[0]);
     });
 
-    expect(onClickCallback).toHaveBeenCalledWith({
-      id: "1",
-      name: "hello",
-      inventoryCount: 1,
-    });
+    expect(onClickCallback).toHaveBeenCalledWith(
+      {
+        id: "1",
+        name: "hello",
+        inventoryCount: 1,
+      },
+      undefined // Raw records are not mocked, thus are undefined in this callback
+    );
   });
 
   it("should render the columns using the correct cell renderer in related model fields", () => {
