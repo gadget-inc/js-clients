@@ -72,6 +72,7 @@ const PolarisAutoFormComponent = <
     submitResult: {
       isSuccessful: isSubmitSuccessful,
       error: formError ?? metadataError,
+      isSubmitting,
     },
     model: {
       apiIdentifier: action.modelApiIdentifier,
@@ -114,7 +115,7 @@ const PolarisAutoFormComponent = <
             <PolarisAutoInput field={metadata.apiIdentifier} key={metadata.apiIdentifier} />
           ))}
           <div>
-            <PolarisAutoSubmit isSubmitting={isSubmitting}>{props.submitLabel ?? "Submit"}</PolarisAutoSubmit>
+            <PolarisAutoSubmit>{props.submitLabel ?? "Submit"} </PolarisAutoSubmit>
           </div>
         </>
       )}
