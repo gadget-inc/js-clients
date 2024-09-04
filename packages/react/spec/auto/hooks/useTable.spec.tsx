@@ -732,7 +732,7 @@ describe("useTable hook", () => {
   });
 
   describe("select property", () => {
-    it("should combine the selected fields from the `select` property and the `columns` property", () => {
+    it("should completely override the default selection on relationship fields", () => {
       const result = getUseTableResult({
         select: {
           gizmos: {
@@ -768,9 +768,79 @@ describe("useTable hook", () => {
                     }
                   }
                 }
-                id
-                name
-                inventoryCount
+                __typename
+              }
+            }
+          }
+          gadgetMeta {
+            hydrations(modelName: 
+        "widget")
+          }
+        }"
+      `);
+    });
+
+    it("should completely override the default selection on simple fields", () => {
+      const result = getUseTableResult({
+        select: {
+          gizmos: {
+            id: true,
+          },
+        },
+        columns: ["name", "inventoryCount"],
+      });
+      loadMockWidgetModelMetadata();
+      loadWidgetData();
+
+      // The "gizmos" field should be included in the query even though it's not in the columns
+      expect(mockUrqlClient.executeQuery.mock.calls[1][0].query.loc.source.body).toMatchInlineSnapshot(`
+        "query widgets($after: String, $first: Int, $before: String, $last: Int) {
+          widgets(after: $after, first: $first, before: $before, last: $last) {
+            pageInfo {
+              hasNextPage
+              hasPreviousPage
+              startCursor
+              endCursor
+            }
+            edges {
+              cursor
+              node {
+                gizmos {
+                  id
+                }
+                __typename
+              }
+            }
+          }
+          gadgetMeta {
+            hydrations(modelName: 
+        "widget")
+          }
+        }"
+      `);
+    });
+
+    it("should completely override the default selection to select nothing", () => {
+      const result = getUseTableResult({
+        select: {},
+        columns: ["name", "inventoryCount"],
+      });
+      loadMockWidgetModelMetadata();
+      loadWidgetData();
+
+      // The "gizmos" field should be included in the query even though it's not in the columns
+      expect(mockUrqlClient.executeQuery.mock.calls[1][0].query.loc.source.body).toMatchInlineSnapshot(`
+        "query widgets($after: String, $first: Int, $before: String, $last: Int) {
+          widgets(after: $after, first: $first, before: $before, last: $last) {
+            pageInfo {
+              hasNextPage
+              hasPreviousPage
+              startCursor
+              endCursor
+            }
+            edges {
+              cursor
+              node {
                 __typename
               }
             }

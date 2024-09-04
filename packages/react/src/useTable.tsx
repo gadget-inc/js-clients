@@ -11,7 +11,7 @@ import { useModelMetadata } from "./metadata.js";
 import { getTableColumns, getTableRows, getTableSelectionMap, getTableSpec } from "./use-table/helpers.js";
 import type { TableOptions, TableResult } from "./use-table/types.js";
 import { useList } from "./useList.js";
-import { deepMerge, type OptionsType, type ReadOperationOptions } from "./utils.js";
+import { type OptionsType, type ReadOperationOptions } from "./utils.js";
 
 const getNextDirection = (sortDirection: SortOrder | undefined) => {
   switch (sortDirection) {
@@ -87,13 +87,13 @@ export const useTable = <
     [manager.findMany.defaultSelection, metadata, options?.columns, options?.excludeColumns]
   );
 
-  const selectionMap = useMemo(() => tableSpec && getTableSelectionMap(tableSpec), [tableSpec]);
+  const selectionMap = useMemo(() => options?.select ?? (tableSpec && getTableSelectionMap(tableSpec)), [options?.select, tableSpec]);
 
   const [{ data, fetching: dataFetching, error: dataError, page, search, selection }, refresh] = useList(manager, {
     ...options,
     sort: sort,
     filter: options?.filter,
-    select: deepMerge(options?.select ?? {}, selectionMap),
+    select: selectionMap,
     pause: !metadata, // Don't fetch data until metadata is loaded
   } as any);
 
