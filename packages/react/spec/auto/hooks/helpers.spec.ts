@@ -1,3 +1,4 @@
+import { GadgetRecord } from "@gadgetinc/api-client-core";
 import type { FieldMetadataFragment } from "../../../src/internal/gql/graphql.js";
 import { GadgetFieldType } from "../../../src/internal/gql/graphql.js";
 import {
@@ -6,7 +7,7 @@ import {
   getTableRows,
   getTableSelectionMap,
 } from "../../../src/use-table/helpers.js";
-import type { RelationshipType } from "../../../src/use-table/types.js";
+import type { RelationshipType, TableSpec } from "../../../src/use-table/types.js";
 
 describe("helper functions for useTable hook", () => {
   describe("fieldMetadataArrayToFieldMetadataTree", () => {
@@ -204,8 +205,13 @@ describe("helper functions for useTable hook", () => {
   });
 
   describe("getTableRows", () => {
+    const getTableRowsFromTableSpec = (tableSpec: Pick<TableSpec, "fieldMetadataTree" | "targetColumns">, records: GadgetRecord<any>[]) => {
+      const columns = getTableColumns(tableSpec);
+      const rows = getTableRows(tableSpec, columns, records);
+      return rows;
+    };
     it("should return an array of table rows for simple fields", () => {
-      const result = getTableRows(
+      const result = getTableRowsFromTableSpec(
         {
           fieldMetadataTree: fieldMetadataArrayToFieldMetadataTree([
             getSimpleFieldMetadata("Name", "name", GadgetFieldType.String),
@@ -282,7 +288,7 @@ describe("helper functions for useTable hook", () => {
       });
 
       it("should return an array of table rows for fields with relationship fields when not specifying the related fields", () => {
-        const result = getTableRows(
+        const result = getTableRowsFromTableSpec(
           {
             targetColumns: ["address", "owner", "products", "manufacturer"],
             fieldMetadataTree: fieldMetadataTreeWithRelationship,
@@ -302,7 +308,7 @@ describe("helper functions for useTable hook", () => {
       });
 
       it("should return an array of table rows for fields with relationship fields when specifying the related fields", () => {
-        const result = getTableRows(
+        const result = getTableRowsFromTableSpec(
           {
             targetColumns: ["address", "owner.name", "products.edges.node.sku", "manufacturer.country"],
             fieldMetadataTree: fieldMetadataTreeWithRelationship,
@@ -333,20 +339,24 @@ describe("helper functions for useTable hook", () => {
         targetColumns: ["name", "age"],
       });
 
-      expect(result).toEqual([
-        {
-          header: "Name",
-          field: "name",
-          type: GadgetFieldType.String,
-          sortable: true,
-        },
-        {
-          header: "Age",
-          field: "age",
-          type: GadgetFieldType.Number,
-          sortable: true,
-        },
-      ]);
+      expect(result).toMatchInlineSnapshot(`
+        [
+          {
+            "field": "name",
+            "header": "Name",
+            "identifier": "name",
+            "sortable": true,
+            "type": "String",
+          },
+          {
+            "field": "age",
+            "header": "Age",
+            "identifier": "age",
+            "sortable": true,
+            "type": "Number",
+          },
+        ]
+      `);
     });
 
     it("should return an array of table columns for simple fields when the column value is a cell detail", () => {
@@ -368,20 +378,24 @@ describe("helper functions for useTable hook", () => {
         ],
       });
 
-      expect(result).toEqual([
-        {
-          header: "Some cool name",
-          field: "name",
-          type: GadgetFieldType.String,
-          sortable: true,
-        },
-        {
-          header: "Age",
-          field: "age",
-          type: GadgetFieldType.Number,
-          sortable: false,
-        },
-      ]);
+      expect(result).toMatchInlineSnapshot(`
+        [
+          {
+            "field": "name",
+            "header": "Some cool name",
+            "identifier": "name",
+            "sortable": true,
+            "type": "String",
+          },
+          {
+            "field": "age",
+            "header": "Age",
+            "identifier": "age",
+            "sortable": false,
+            "type": "Number",
+          },
+        ]
+      `);
     });
 
     describe("relationship fields", () => {
@@ -391,35 +405,41 @@ describe("helper functions for useTable hook", () => {
           fieldMetadataTree: fieldMetadataTreeWithRelationship,
         });
 
-        expect(result).toEqual([
-          {
-            header: "Address",
-            field: "address",
-            type: GadgetFieldType.String,
-            sortable: true,
-          },
-          {
-            header: "Owner",
-            field: "owner",
-            relationshipType: "HasOne",
-            type: GadgetFieldType.String,
-            sortable: true,
-          },
-          {
-            header: "Products",
-            field: "products",
-            relationshipType: "HasMany",
-            type: GadgetFieldType.String,
-            sortable: true,
-          },
-          {
-            header: "Manufacturer",
-            field: "manufacturer",
-            relationshipType: "BelongsTo",
-            type: GadgetFieldType.String,
-            sortable: true,
-          },
-        ]);
+        expect(result).toMatchInlineSnapshot(`
+          [
+            {
+              "field": "address",
+              "header": "Address",
+              "identifier": "address",
+              "sortable": true,
+              "type": "String",
+            },
+            {
+              "field": "owner",
+              "header": "Owner",
+              "identifier": "owner",
+              "relationshipType": "HasOne",
+              "sortable": true,
+              "type": "String",
+            },
+            {
+              "field": "products",
+              "header": "Products",
+              "identifier": "products",
+              "relationshipType": "HasMany",
+              "sortable": true,
+              "type": "String",
+            },
+            {
+              "field": "manufacturer",
+              "header": "Manufacturer",
+              "identifier": "manufacturer",
+              "relationshipType": "BelongsTo",
+              "sortable": true,
+              "type": "String",
+            },
+          ]
+        `);
       });
 
       it("should return an array of table columns for fields with relationship fields when specifying the related fields", () => {
@@ -428,35 +448,41 @@ describe("helper functions for useTable hook", () => {
           fieldMetadataTree: fieldMetadataTreeWithRelationship,
         });
 
-        expect(result).toEqual([
-          {
-            header: "Address",
-            field: "address",
-            type: GadgetFieldType.String,
-            sortable: true,
-          },
-          {
-            header: "Owner",
-            field: "owner.name",
-            type: GadgetFieldType.String,
-            relationshipType: "HasOne",
-            sortable: true,
-          },
-          {
-            header: "Products",
-            field: "products.edges.node.sku",
-            relationshipType: "HasMany",
-            type: GadgetFieldType.String,
-            sortable: true,
-          },
-          {
-            header: "Manufacturer",
-            field: "manufacturer.country",
-            type: GadgetFieldType.String,
-            relationshipType: "BelongsTo",
-            sortable: true,
-          },
-        ]);
+        expect(result).toMatchInlineSnapshot(`
+          [
+            {
+              "field": "address",
+              "header": "Address",
+              "identifier": "address",
+              "sortable": true,
+              "type": "String",
+            },
+            {
+              "field": "owner.name",
+              "header": "Owner",
+              "identifier": "owner.name",
+              "relationshipType": "HasOne",
+              "sortable": true,
+              "type": "String",
+            },
+            {
+              "field": "products.edges.node.sku",
+              "header": "Products",
+              "identifier": "products.edges.node.sku",
+              "relationshipType": "HasMany",
+              "sortable": true,
+              "type": "String",
+            },
+            {
+              "field": "manufacturer.country",
+              "header": "Manufacturer",
+              "identifier": "manufacturer.country",
+              "relationshipType": "BelongsTo",
+              "sortable": true,
+              "type": "String",
+            },
+          ]
+        `);
       });
     });
   });

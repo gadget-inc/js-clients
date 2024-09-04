@@ -8,6 +8,9 @@ import type { TableColumn } from "../../../src/use-table/types.js";
 import { testApi as api } from "../../apis.js";
 import { PolarisMockedProviders } from "../inputs/PolarisMockedProviders.js";
 
+const sampleUUID1 = "000-000-000-000-001";
+const sampleUUID2 = "000-000-000-000-002";
+
 const POLARIS_TABLE_CLASSES = {
   CONTAINER: "Polaris-IndexTable-ScrollContainer",
   HEADING: "Polaris-IndexTable__TableHeading",
@@ -41,12 +44,14 @@ const setMockUseTableResponse = (returns?: { newRows?: any[]; newColumns?: Table
   ];
   columns = returns?.newColumns ?? [
     {
+      identifier: "name",
       field: "name",
       header: "Name",
       sortable: true,
       type: GadgetFieldType.String,
     },
     {
+      identifier: "inventoryCount",
       field: "inventoryCount",
       header: "Inventory count",
       sortable: true,
@@ -200,6 +205,7 @@ describe("PolarisAutoTable", () => {
       ],
       newColumns: [
         {
+          identifier: "hasOne.hasOneName",
           field: "hasOne.hasOneName",
           relationshipType: GadgetFieldType.HasOne,
           type: GadgetFieldType.String,
@@ -207,6 +213,7 @@ describe("PolarisAutoTable", () => {
           sortable: true,
         },
         {
+          identifier: "hasMany.hasManyNumber",
           field: "hasMany.hasManyNumber",
           relationshipType: GadgetFieldType.HasMany,
           type: GadgetFieldType.String,
@@ -214,6 +221,7 @@ describe("PolarisAutoTable", () => {
           sortable: true,
         },
         {
+          identifier: "belongsTo.belongsToEnum",
           field: "belongsTo.belongsToEnum",
           relationshipType: GadgetFieldType.BelongsTo,
           type: GadgetFieldType.Enum,
@@ -261,17 +269,19 @@ describe("PolarisAutoTable", () => {
         {
           id: "1",
           name: "hello",
-          "Custom cell": customCellRenderer({ record: { id: "1", name: "hello" } }),
+          [sampleUUID1]: customCellRenderer({ record: { id: "1", name: "hello" } }),
         },
       ],
       newColumns: [
         {
+          identifier: "name",
           field: "name",
           type: GadgetFieldType.String,
           header: "Name",
           sortable: true,
         },
         {
+          identifier: sampleUUID1,
           header: "Custom cell",
           field: "Custom cell",
           type: "CustomRenderer",
@@ -305,6 +315,72 @@ describe("PolarisAutoTable", () => {
     expect(firstRowCells[2].textContent).toBe("this is a custom cell: 1-hello");
   });
 
+  it("should render the custom columns when they have duplicate headers", () => {
+    const customCellRenderer1 = (props: { record: any }) => (
+      <div data-testid="custom-cell-div">
+        this is a custom cell: {props.record.id}-{props.record.name}
+      </div>
+    );
+    const customCellRenderer2 = (props: { record: any }) => (
+      <div data-testid="custom-cell-div-2">
+        Different custom cell: {props.record.id}-{props.record.name}
+      </div>
+    );
+
+    setMockUseTableResponse({
+      newRows: [
+        {
+          id: "1",
+          name: "hello",
+          [sampleUUID1]: customCellRenderer1({ record: { id: "1", name: "hello" } }),
+          [sampleUUID2]: customCellRenderer2({ record: { id: "1", name: "hello" } }),
+        },
+      ],
+      newColumns: [
+        {
+          identifier: "name",
+          field: "name",
+          type: GadgetFieldType.String,
+          header: "Name",
+          sortable: true,
+        },
+        {
+          identifier: sampleUUID1,
+          header: "Custom cell",
+          field: "Custom cell",
+          type: "CustomRenderer",
+          sortable: false,
+        },
+        {
+          identifier: sampleUUID2,
+          header: "Custom cell",
+          field: "Custom cell",
+          type: "CustomRenderer",
+          sortable: false,
+        },
+      ],
+    });
+
+    const { container } = render(
+      <PolarisAutoTable
+        model={api.widget}
+        columns={["name", { header: "Custom cell", render: customCellRenderer1 }, { header: "Custom cell", render: customCellRenderer2 }]}
+      />,
+      {
+        wrapper: PolarisMockedProviders,
+      }
+    );
+
+    const table = container.querySelector(`.${POLARIS_TABLE_CLASSES.CONTAINER}`)!;
+    const rows = table.getElementsByClassName(POLARIS_TABLE_CLASSES.ROW);
+
+    const firstRow = rows[0];
+    const firstRowCells = firstRow.getElementsByClassName(POLARIS_TABLE_CLASSES.CELL);
+    expect(firstRowCells[1].textContent).toBe("hello");
+    expect(firstRowCells[2].textContent).toBe("this is a custom cell: 1-hello");
+    expect(firstRowCells[3].textContent).toBe("Different custom cell: 1-hello");
+  });
+
   describe("show more indicator in tag cell renderer", () => {
     it("should appear in the cell when there are more than 5 tags", () => {
       setMockUseTableResponse({
@@ -316,6 +392,7 @@ describe("PolarisAutoTable", () => {
         ],
         newColumns: [
           {
+            identifier: "tags",
             field: "tags",
             type: GadgetFieldType.Enum,
             header: "Tags",
@@ -348,6 +425,7 @@ describe("PolarisAutoTable", () => {
         ],
         newColumns: [
           {
+            identifier: "tags",
             field: "tags",
             type: GadgetFieldType.Enum,
             header: "Tags",

@@ -8,6 +8,7 @@ describe("PolarisAutoTableCellRenderer", () => {
     cy.mountWithWrapper(
       <PolarisAutoTableCellRenderer
         column={{
+          identifier: "String",
           header: "String",
           field: "string",
           sortable: true,
@@ -23,6 +24,7 @@ describe("PolarisAutoTableCellRenderer", () => {
     cy.mountWithWrapper(
       <PolarisAutoTableCellRenderer
         column={{
+          identifier: "Date",
           header: "Date",
           field: "date",
           sortable: true,
@@ -38,6 +40,7 @@ describe("PolarisAutoTableCellRenderer", () => {
     cy.mountWithWrapper(
       <PolarisAutoTableCellRenderer
         column={{
+          identifier: "Enum",
           header: "Enum",
           field: "enum",
           sortable: true,
@@ -56,6 +59,7 @@ describe("PolarisAutoTableCellRenderer", () => {
     cy.mountWithWrapper(
       <PolarisAutoTableCellRenderer
         column={{
+          identifier: "String",
           header: "String",
           field: "string",
           sortable: true,

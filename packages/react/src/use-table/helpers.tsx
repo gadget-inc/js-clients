@@ -138,16 +138,23 @@ export const getTableSelectionMap = (spec: TableSpec) => {
   return selectionMap;
 };
 
-export const getTableRows = (spec: Pick<TableSpec, "fieldMetadataTree" | "targetColumns">, records: GadgetRecord<any>[]) => {
-  return records.map((record, index) => recordToRow(spec, record, index));
+export const getTableRows = (
+  spec: Pick<TableSpec, "fieldMetadataTree" | "targetColumns">,
+  columns: TableColumn[],
+  records: GadgetRecord<any>[]
+) => {
+  return records.map((record, recordIndex) => recordToRow(spec, columns, record, recordIndex));
 };
 
 export const getTableColumns = (spec: Pick<TableSpec, "fieldMetadataTree" | "targetColumns">) => {
   const columns: TableColumn[] = [];
 
-  for (const targetColumn of spec.targetColumns) {
+  for (const [i, targetColumn] of spec.targetColumns.entries()) {
     if (isCustomCellColumn(targetColumn)) {
+      const identifier = crypto.randomUUID();
       columns.push({
+        identifier,
+        render: targetColumn.render,
         header: targetColumn.header,
         field: targetColumn.header,
         type: "CustomRenderer",
@@ -161,6 +168,7 @@ export const getTableColumns = (spec: Pick<TableSpec, "fieldMetadataTree" | "tar
     const { firstField, targetField, isHasMany, isHasOneOrBelongsTo } = getFieldInformationByColumnPath(spec.fieldMetadataTree, columnPath);
 
     const column: TableColumn = {
+      identifier: columnPath,
       header: header ?? firstField.name,
       field: columnPath,
       type: targetField.fieldType,
@@ -187,18 +195,30 @@ export const getTableColumns = (spec: Pick<TableSpec, "fieldMetadataTree" | "tar
   return columns;
 };
 
-const recordToRow = (spec: Pick<TableSpec, "fieldMetadataTree" | "targetColumns">, record: GadgetRecord<any>, index: number) => {
+const recordToRow = (
+  spec: Pick<TableSpec, "fieldMetadataTree" | "targetColumns">,
+  columns: TableColumn[],
+  record: GadgetRecord<any>,
+  recordIndex: number
+) => {
   const row: TableRow = {
     id: record.id,
   };
 
-  for (const targetColumn of spec.targetColumns) {
-    if (isCustomCellColumn(targetColumn)) {
-      const CellComponent = targetColumn.render;
-      row[targetColumn.header] = <CellComponent record={record} index={index} />;
+  for (const column of columns) {
+    if (column.type === "CustomRenderer") {
+      const CellComponent = column.render;
+      if (!CellComponent) {
+        throw new Error(`Custom cell renderer for column with header'${column.header}' is invalid`);
+      }
+      row[column.identifier] = <CellComponent record={record} index={recordIndex} />;
       continue;
     }
-
+  }
+  for (const targetColumn of spec.targetColumns) {
+    if (isCustomCellColumn(targetColumn)) {
+      continue;
+    }
     const { field: columnPath } = getCellDetailColumnByColumnValue(targetColumn);
     const { firstPathSegment, targetField, isHasMany, isHasOneOrBelongsTo } = getFieldInformationByColumnPath(
       spec.fieldMetadataTree,
@@ -240,11 +260,19 @@ const getFieldInformationByColumnPath = (fieldMetadataTree: TableSpec["fieldMeta
 };
 
 const isCustomCellColumn = (value: any): value is CustomCellColumn => {
-  return typeof value === "object" && value !== null && "header" in value && "render" in value;
+  return typeof value === "object" && value !== null && "render" in value;
 };
 
 const getCellDetailColumnByColumnValue = (column: string | CellDetailColumn): CellDetailColumn => {
-  return typeof column === "string" ? { field: column } : column;
+  if (typeof column === "string") {
+    return { field: column };
+  }
+
+  if (typeof column === "object" && column !== null && "field" in column && typeof column.field === "string") {
+    return column;
+  }
+
+  throw new Error(`Invalid column value: ${JSON.stringify(column)}`);
 };
 
 const isColumnSortable = (fieldMetadata: FieldMetadataFragment, sortable: boolean | undefined) => {

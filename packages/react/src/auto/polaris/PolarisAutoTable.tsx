@@ -229,12 +229,12 @@ const PolarisAutoTableComponent = <
                 selected={selection.recordIds.includes(row.id as string)}
               >
                 {columns.map((column) => (
-                  <IndexTable.Cell key={column.field}>
+                  <IndexTable.Cell key={column.identifier}>
                     <div style={{ maxWidth: "200px" }}>
                       {column.type == "CustomRenderer" ? (
-                        (row[column.field] as ReactNode)
+                        (row[column.identifier] as ReactNode)
                       ) : (
-                        <PolarisAutoTableCellRenderer column={column} value={row[column.field] as ColumnValueType} />
+                        <PolarisAutoTableCellRenderer column={column} value={row[column.identifier] as ColumnValueType} />
                       )}
                     </div>
                   </IndexTable.Cell>
