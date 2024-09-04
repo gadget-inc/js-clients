@@ -5,6 +5,7 @@ import React from "react";
 import { FormProvider } from "react-hook-form";
 import { humanizeCamelCase, type OptionsType } from "../../utils.js";
 import { useAutoForm, type AutoFormProps } from "../AutoForm.js";
+import { TriggerableActionRequiredErrorMessage } from "../AutoFormActionValidators.js";
 import { AutoFormMetadataContext } from "../AutoFormContext.js";
 import { MUIAutoInput } from "./inputs/MUIAutoInput.js";
 import { MUIAutoSubmit } from "./submit/MUIAutoSubmit.js";
@@ -35,8 +36,12 @@ export const MUIAutoForm = <
 ) => {
   const { action, findBy } = props as MUIAutoFormProps<GivenOptions, SchemaT, ActionFunc> & { findBy: any };
 
+  if (!action) {
+    throw new Error(TriggerableActionRequiredErrorMessage);
+  }
+
   // Component key to force re-render when the action or findBy changes
-  const componentKey = `${action.modelApiIdentifier}.${action.operationName}.${findBy}`;
+  const componentKey = `${action.modelApiIdentifier ?? ""}.${action.operationName}.${findBy}`;
 
   return <MUIAutoFormComponent key={componentKey} {...props} />;
 };

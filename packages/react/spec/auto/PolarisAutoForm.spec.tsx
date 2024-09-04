@@ -6,6 +6,7 @@ import type { UserEvent } from "@testing-library/user-event";
 import { userEvent } from "@testing-library/user-event";
 import type { ReactNode } from "react";
 import React from "react";
+import { TriggerableActionRequiredErrorMessage } from "../../src/auto/AutoFormActionValidators.js";
 import { PolarisAutoForm } from "../../src/auto/polaris/PolarisAutoForm.js";
 import { PolarisAutoInput } from "../../src/auto/polaris/inputs/PolarisAutoInput.js";
 import { PolarisAutoSubmit } from "../../src/auto/polaris/submit/PolarisAutoSubmit.js";
@@ -675,13 +676,13 @@ describe("PolarisAutoForm", () => {
       it("throws an error when a model action without triggers", () => {
         expect(() => {
           render(<PolarisAutoForm action={api.autoTableTest.noTriggerAction as any} />, { wrapper: PolarisMockedProviders });
-        }).toThrow("Actions must have API triggers to be used in AutoForms");
+        }).toThrow(TriggerableActionRequiredErrorMessage);
       });
 
       it("throws an error when a global action without triggers", () => {
         expect(() => {
           render(<PolarisAutoForm action={api.noTriggerGlobalAction as any} />, { wrapper: PolarisMockedProviders });
-        }).toThrow("Actions must have API triggers to be used in AutoForms");
+        }).toThrow(TriggerableActionRequiredErrorMessage);
       });
     });
     describe("Has triggers in api client but no triggers in action metadata", () => {
@@ -689,14 +690,14 @@ describe("PolarisAutoForm", () => {
         expect(() => {
           render(<PolarisAutoForm action={api.widget.create as any} />, { wrapper: PolarisMockedProviders });
           loadMockWidgetCreateMetadata({ triggers: [{ specID: "non/api/trigger", __typename: "GadgetTrigger" }] });
-        }).toThrow("Actions must have API triggers to be used in AutoForms");
+        }).toThrow(TriggerableActionRequiredErrorMessage);
       });
 
       it("throws an error when a global action without triggers", () => {
         expect(() => {
           render(<PolarisAutoForm action={api.flipAll as any} />, { wrapper: PolarisMockedProviders });
           loadMockFlipAllMetadata({ triggers: [{ specID: "non/api/trigger", __typename: "GadgetTrigger" }] });
-        }).toThrow("Actions must have API triggers to be used in AutoForms");
+        }).toThrow(TriggerableActionRequiredErrorMessage);
       });
     });
   });
