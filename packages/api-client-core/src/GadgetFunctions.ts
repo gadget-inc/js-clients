@@ -23,7 +23,7 @@ export interface FindOneFunction<OptionsT, SelectionT, SchemaT, DefaultsT> {
   selectionType: SelectionT;
   optionsType: OptionsT;
   schemaType: SchemaT | null;
-  plan: <Options extends OptionsT>(fieldValue: string, options?: LimitToKnownKeys<Options, OptionsT>) => GQLBuilderResult;
+  plan?: <Options extends OptionsT>(fieldValue: string, options?: LimitToKnownKeys<Options, OptionsT>) => GQLBuilderResult;
 }
 
 export interface MaybeFindOneFunction<OptionsT, SelectionT, SchemaT, DefaultsT> {
@@ -38,7 +38,7 @@ export interface MaybeFindOneFunction<OptionsT, SelectionT, SchemaT, DefaultsT> 
   selectionType: SelectionT;
   optionsType: OptionsT;
   schemaType: SchemaT | null;
-  plan: <Options extends OptionsT>(fieldValue: string, options?: LimitToKnownKeys<Options, OptionsT>) => GQLBuilderResult;
+  plan?: <Options extends OptionsT>(fieldValue: string, options?: LimitToKnownKeys<Options, OptionsT>) => GQLBuilderResult;
 }
 
 export interface FindManyFunction<OptionsT, SelectionT, SchemaT, DefaultsT> {
@@ -52,7 +52,7 @@ export interface FindManyFunction<OptionsT, SelectionT, SchemaT, DefaultsT> {
   selectionType: SelectionT;
   optionsType: OptionsT;
   schemaType: SchemaT | null;
-  plan: <Options extends OptionsT>(options?: LimitToKnownKeys<Options, OptionsT>) => GQLBuilderResult;
+  plan?: <Options extends OptionsT>(options?: LimitToKnownKeys<Options, OptionsT>) => GQLBuilderResult;
 }
 
 export interface FindFirstFunction<OptionsT, SelectionT, SchemaT, DefaultsT> {
@@ -66,7 +66,7 @@ export interface FindFirstFunction<OptionsT, SelectionT, SchemaT, DefaultsT> {
   selectionType: SelectionT;
   optionsType: OptionsT;
   schemaType: SchemaT | null;
-  plan: <Options extends OptionsT>(options?: LimitToKnownKeys<Options, OptionsT>)  => GQLBuilderResult;
+  plan?: <Options extends OptionsT>(options?: LimitToKnownKeys<Options, OptionsT>) => GQLBuilderResult;
 }
 
 export interface MaybeFindFirstFunction<OptionsT, SelectionT, SchemaT, DefaultsT> {
@@ -80,7 +80,7 @@ export interface MaybeFindFirstFunction<OptionsT, SelectionT, SchemaT, DefaultsT
   selectionType: SelectionT;
   optionsType: OptionsT;
   schemaType: SchemaT | null;
-  plan: <Options extends OptionsT>(options?: LimitToKnownKeys<Options, OptionsT>)  => GQLBuilderResult;
+  plan?: <Options extends OptionsT>(options?: LimitToKnownKeys<Options, OptionsT>) => GQLBuilderResult;
 }
 
 export interface ActionWithIdAndVariables<OptionsT, VariablesT> {
@@ -131,7 +131,7 @@ export interface ActionFunctionMetadata<OptionsT, VariablesT, SelectionT, Schema
   paramOnlyVariables?: readonly string[];
   hasReturnType?: HasReturnType;
   singleActionFunctionName?: string;
-  plan:<Options extends OptionsT>(options?: LimitToKnownKeys<Options, OptionsT>)  => GQLBuilderResult;
+  plan?: <Options extends OptionsT>(options?: LimitToKnownKeys<Options, OptionsT>) => GQLBuilderResult;
   /** @deprecated */
   hasCreateOrUpdateEffect?: boolean;
 }
@@ -172,7 +172,7 @@ export interface GetFunction<OptionsT, SelectionT, SchemaT, DefaultsT> {
   selectionType: SelectionT;
   optionsType: OptionsT;
   schemaType: SchemaT | null;
-  plan: <Options extends OptionsT>(options?: LimitToKnownKeys<Options, OptionsT>)  => GQLBuilderResult;
+  plan?: <Options extends OptionsT>(options?: LimitToKnownKeys<Options, OptionsT>) => GQLBuilderResult;
 }
 
 export interface GlobalActionFunction<VariablesT> {
@@ -185,6 +185,7 @@ export interface GlobalActionFunction<VariablesT> {
   variables: VariablesOptions;
   variablesType: VariablesT;
   isBulk?: undefined;
+  plan?: (variables?: VariablesOptions) => GQLBuilderResult;
 }
 
 export type AnyActionFunction = ActionFunctionMetadata<any, any, any, any, any, any> | GlobalActionFunction<any>;

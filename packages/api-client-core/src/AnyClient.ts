@@ -15,6 +15,7 @@ export interface AnyClient {
   mutate(graphQL: string, variables?: Record<string, any>): Promise<any>;
   transaction<T>(callback: (transaction: GadgetTransaction) => Promise<T>): Promise<T>;
   internal: InternalModelManagerNamespace;
+  apiClientCoreVersion?: string;
   [$modelRelationships]?: { [modelName: string]: { [apiIdentifier: string]: { type: string; model: string } } };
 }
 
