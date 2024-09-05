@@ -3144,6 +3144,114 @@ describe("utils", () => {
     `);
   });
 
+  test("it removes relationship fields that are entirely read-only", async () => {
+    const result = applyDataMask({
+      modelApiIdentifier: "answer",
+      data: {
+        answer: {
+          text: "Answer create",
+          question: {
+            text: "question text",
+          },
+        },
+      },
+      select: {
+        id: true,
+        text: true,
+        question: {
+          text: "ReadOnly",
+        },
+      },
+    });
+
+    expect(result).toMatchInlineSnapshot(`
+      {
+        "answer": {
+          "text": "Answer create",
+        },
+      }
+    `);
+  });
+
+  test("it does not remove relationship fields that are not entirely read-only", async () => {
+    const result = applyDataMask({
+      modelApiIdentifier: "answer",
+      data: {
+        answer: {
+          text: "Answer create",
+          question: {
+            foo: "bar",
+            text: "question text",
+          },
+        },
+      },
+      select: {
+        id: true,
+        text: true,
+        question: {
+          foo: true,
+          text: "ReadOnly",
+        },
+      },
+    });
+
+    expect(result).toMatchInlineSnapshot(`
+      {
+        "answer": {
+          "question": {
+            "foo": "bar",
+          },
+          "text": "Answer create",
+        },
+      }
+    `);
+  });
+
+  test("it does not remove relationship fields when only some of their fields are read-only", async () => {
+    const result = applyDataMask({
+      modelApiIdentifier: "answer",
+      data: {
+        answer: {
+          text: "Answer create",
+          question: {
+            text: "question text",
+            a: {
+              b: {
+                c: "NICE",
+                d: "abc",
+              },
+              e: "xyz",
+            },
+          },
+        },
+      },
+      select: {
+        id: true,
+        text: true,
+        question: {
+          text: true,
+          a: { b: { c: true, d: "ReadOnly" }, e: "ReadOnly" },
+        },
+      },
+    });
+
+    expect(result).toMatchInlineSnapshot(`
+      {
+        "answer": {
+          "question": {
+            "a": {
+              "b": {
+                "c": "NICE",
+              },
+            },
+            "text": "question text",
+          },
+          "text": "Answer create",
+        },
+      }
+    `);
+  });
+
   test("can apply data mask with send", async () => {
     const result = applyDataMask({
       modelApiIdentifier: "answer",

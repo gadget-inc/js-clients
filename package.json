@@ -8,6 +8,7 @@
   "scripts": {
     "lint": "pnpm lint:prettier && pnpm lint:eslint",
     "lint:prettier": "NODE_OPTIONS=\"--max-old-space-size=4096\" prettier --check \"(packages|scripts)/**/*.{js,ts,tsx}\"",
+    "lint:prettier:fix": "NODE_OPTIONS=\"--max-old-space-size=4096\" prettier --write --check \"(packages|scripts)/**/*.{js,ts,tsx}\"",
     "lint:eslint": "NODE_OPTIONS=\"--max-old-space-size=4096\" eslint --quiet --ext ts,tsx packages scripts",
     "lint:fix": "NODE_OPTIONS=\"--max-old-space-size=4096\" prettier --write --check \"(packages|scripts)/**/*.{js,ts,tsx}\" && eslint --ext ts,tsx --fix packages scripts",
     "typecheck": "pnpm -r --no-bail run --if-present typecheck",
