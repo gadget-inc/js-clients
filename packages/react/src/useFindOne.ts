@@ -1,5 +1,5 @@
 import type { DefaultSelection, FindOneFunction, GadgetRecord, LimitToKnownKeys, Select } from "@gadgetinc/api-client-core";
-import { findOneOperation, get, hydrateRecord, namespaceDataPath } from "@gadgetinc/api-client-core";
+import { get, hydrateRecord, namespaceDataPath } from "@gadgetinc/api-client-core";
 import { useMemo } from "react";
 import { useGadgetQuery } from "./useGadgetQuery.js";
 import { useStructuralMemo } from "./useStructuralMemo.js";
@@ -63,7 +63,7 @@ export const useFindOne = <
     const error = ErrorWrapper.errorIfDataAbsent(rawResult, dataPath, options?.pause);
 
     return { ...rawResult, data, error };
-  }, [manager.findOne.operationName, rawResult, options?.pause]);
+  }, [manager.findOne.operationName, manager.findOne.namespace, rawResult, options?.pause]);
 
   return [result, refresh];
 };
