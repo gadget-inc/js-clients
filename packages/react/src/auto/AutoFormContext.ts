@@ -5,6 +5,7 @@ import type { ActionMetadata, GlobalActionMetadata } from "../metadata.js";
 export interface AutoFormSubmitResult {
   isSuccessful?: boolean;
   error?: Error;
+  isSubmitting?: boolean;
 }
 
 export interface AutoFormMetadataContext {

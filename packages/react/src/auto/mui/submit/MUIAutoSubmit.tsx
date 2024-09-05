@@ -1,6 +1,7 @@
 import type { LoadingButtonProps } from "@mui/lab";
 import { LoadingButton } from "@mui/lab";
 import React from "react";
+import { useAutoFormMetadata } from "../../AutoFormContext.js";
 
 /**
  * Button for submitting the AutoForm values
@@ -12,8 +13,11 @@ import React from "react";
  *
  */
 export const MUIAutoSubmit = (props: LoadingButtonProps) => {
+  const { submitResult } = useAutoFormMetadata();
+  const isSubmitting = submitResult?.isSubmitting;
+
   return (
-    <LoadingButton type="submit" {...props}>
+    <LoadingButton type="submit" loading={isSubmitting} {...props}>
       {props.children ?? "Submit"}
     </LoadingButton>
   );
