@@ -412,6 +412,7 @@ export type BackgroundActionResult =
   | CreateWidgetResult
   | CustomActionAutoTableTestResult
   | CustomActionWithParamsAutoTableTestResult
+  | CustomObjectParamsGameCityResult
   | DeleteAutoTableTestRelatedModelResult
   | DeleteAutoTableTestResult
   | DeleteGameCityResult
@@ -426,6 +427,8 @@ export type BackgroundActionResult =
   | DeleteWidgetResult
   | ErrorShopifySyncResult
   | FlipAllResult
+  | NameSpacedActionAResult
+  | NameSpacedCustomObjectParamsResult
   | RunShopifySyncResult
   | SignInUserResult
   | SignOutUserResult
@@ -463,6 +466,7 @@ export type BackgroundGameMutations = {
   bulkCreatePlayers: BulkEnqueueBackgroundActionResult;
   bulkCreateRounds: BulkEnqueueBackgroundActionResult;
   bulkCreateStadia: BulkEnqueueBackgroundActionResult;
+  bulkCustomObjectParamsCities: BulkEnqueueBackgroundActionResult;
   bulkDeleteCities: BulkEnqueueBackgroundActionResult;
   bulkDeletePlayers: BulkEnqueueBackgroundActionResult;
   bulkDeleteRounds: BulkEnqueueBackgroundActionResult;
@@ -479,6 +483,7 @@ export type BackgroundGameMutations = {
   createPlayer: EnqueueBackgroundActionResult;
   createRound: EnqueueBackgroundActionResult;
   createStadium: EnqueueBackgroundActionResult;
+  customObjectParamsCity: EnqueueBackgroundActionResult;
   deleteCity: EnqueueBackgroundActionResult;
   deletePlayer: EnqueueBackgroundActionResult;
   deleteRound: EnqueueBackgroundActionResult;
@@ -511,6 +516,11 @@ export type BackgroundGameMutationsBulkCreateRoundsArgs = {
 export type BackgroundGameMutationsBulkCreateStadiaArgs = {
   backgroundOptions?: InputMaybe<EnqueueBackgroundActionOptions>;
   inputs: Array<BulkCreateGameStadiaInput>;
+};
+
+export type BackgroundGameMutationsBulkCustomObjectParamsCitiesArgs = {
+  backgroundOptions?: InputMaybe<EnqueueBackgroundActionOptions>;
+  inputs: Array<BulkCustomObjectParamsGameCitiesInput>;
 };
 
 export type BackgroundGameMutationsBulkDeleteCitiesArgs = {
@@ -591,6 +601,14 @@ export type BackgroundGameMutationsCreateRoundArgs = {
 export type BackgroundGameMutationsCreateStadiumArgs = {
   backgroundOptions?: InputMaybe<EnqueueBackgroundActionOptions>;
   stadium?: InputMaybe<CreateGameStadiumInput>;
+};
+
+export type BackgroundGameMutationsCustomObjectParamsCityArgs = {
+  backgroundOptions?: InputMaybe<EnqueueBackgroundActionOptions>;
+  city?: InputMaybe<CustomObjectParamsGameCityInput>;
+  id: Scalars["GadgetID"]["input"];
+  objParam?: InputMaybe<CustomObjectParamsObjParamInput>;
+  rootLevelStr?: InputMaybe<Scalars["String"]["input"]>;
 };
 
 export type BackgroundGameMutationsDeleteCityArgs = {
@@ -732,6 +750,7 @@ export type BackgroundMutations = {
   errorShopifySync: EnqueueBackgroundActionResult;
   flipAll: EnqueueBackgroundActionResult;
   game: BackgroundGameMutations;
+  name: BackgroundNameMutations;
   runShopifySync: EnqueueBackgroundActionResult;
   signInUser: EnqueueBackgroundActionResult;
   signOutUser: EnqueueBackgroundActionResult;
@@ -1236,6 +1255,27 @@ export type BackgroundMutationsUpsertWidgetArgs = {
   widget?: InputMaybe<UpsertWidgetInput>;
 };
 
+export type BackgroundNameMutations = {
+  __typename?: "BackgroundNameMutations";
+  spaced: BackgroundNameSpacedMutations;
+};
+
+export type BackgroundNameSpacedMutations = {
+  __typename?: "BackgroundNameSpacedMutations";
+  actionA: EnqueueBackgroundActionResult;
+  customObjectParams: EnqueueBackgroundActionResult;
+};
+
+export type BackgroundNameSpacedMutationsActionAArgs = {
+  backgroundOptions?: InputMaybe<EnqueueBackgroundActionOptions>;
+};
+
+export type BackgroundNameSpacedMutationsCustomObjectParamsArgs = {
+  backgroundOptions?: InputMaybe<EnqueueBackgroundActionOptions>;
+  objParam?: InputMaybe<NameSpacedCustomObjectParamsObjParamInput>;
+  rootLevelStr?: InputMaybe<Scalars["String"]["input"]>;
+};
+
 export type BooleanFilter = {
   equals?: InputMaybe<Scalars["Boolean"]["input"]>;
   isSet?: InputMaybe<Scalars["Boolean"]["input"]>;
@@ -1488,6 +1528,24 @@ export type BulkCustomActionWithParamsAutoTableTestsResult = {
   __typename?: "BulkCustomActionWithParamsAutoTableTestsResult";
   /** The list of all changed autoTableTest records by each sent bulk action. Returned in the same order as the input bulk action params. */
   autoTableTests?: Maybe<Array<Maybe<AutoTableTest>>>;
+  /** Aggregated list of errors that any bulk action encountered while processing */
+  errors?: Maybe<Array<ExecutionError>>;
+  /** Boolean describing if all the bulk actions succeeded or not */
+  success: Scalars["Boolean"]["output"];
+};
+
+export type BulkCustomObjectParamsGameCitiesInput = {
+  city?: InputMaybe<CustomObjectParamsGameCityInput>;
+  id: Scalars["GadgetID"]["input"];
+  objParam?: InputMaybe<CustomObjectParamsObjParamInput>;
+  rootLevelStr?: InputMaybe<Scalars["String"]["input"]>;
+};
+
+/** The output when running the customObjectParams on the city model in bulk. */
+export type BulkCustomObjectParamsGameCitiesResult = {
+  __typename?: "BulkCustomObjectParamsGameCitiesResult";
+  /** The list of all changed city records by each sent bulk action. Returned in the same order as the input bulk action params. */
+  cities?: Maybe<Array<Maybe<GameCity>>>;
   /** Aggregated list of errors that any bulk action encountered while processing */
   errors?: Maybe<Array<ExecutionError>>;
   /** Boolean describing if all the bulk actions succeeded or not */
@@ -2123,6 +2181,7 @@ export type CityBelongsToInput = {
   /** Existing ID of another record, which you would like to associate this record with */
   _link?: InputMaybe<Scalars["GadgetID"]["input"]>;
   create?: InputMaybe<NestedCityCreateInput>;
+  customObjectParams?: InputMaybe<NestedCityCustomObjectParamsInput>;
   delete?: InputMaybe<NestedCityDeleteInput>;
   update?: InputMaybe<NestedCityUpdateInput>;
 };
@@ -2489,6 +2548,33 @@ export type CustomActionWithParamsAutoTableTestResult = {
   autoTableTest?: Maybe<AutoTableTest>;
   errors?: Maybe<Array<ExecutionError>>;
   success: Scalars["Boolean"]["output"];
+};
+
+export type CustomObjectParamsGameCityInput = {
+  name?: InputMaybe<Scalars["String"]["input"]>;
+  stadium?: InputMaybe<StadiumHasOneInput>;
+};
+
+export type CustomObjectParamsGameCityResult = {
+  __typename?: "CustomObjectParamsGameCityResult";
+  actionRun?: Maybe<Scalars["String"]["output"]>;
+  city?: Maybe<GameCity>;
+  errors?: Maybe<Array<ExecutionError>>;
+  success: Scalars["Boolean"]["output"];
+};
+
+export type CustomObjectParamsObjParamInput = {
+  firstLevelStr?: InputMaybe<Scalars["String"]["input"]>;
+  objProperty1?: InputMaybe<CustomObjectParamsObjProperty1Input>;
+};
+
+export type CustomObjectParamsObjProperty1Input = {
+  objProperty2?: InputMaybe<CustomObjectParamsObjProperty2Input>;
+  secondLevelStr?: InputMaybe<Scalars["String"]["input"]>;
+};
+
+export type CustomObjectParamsObjProperty2Input = {
+  thirdLevelStr?: InputMaybe<Scalars["String"]["input"]>;
 };
 
 export type DateFilter = {
@@ -3171,6 +3257,7 @@ export type GameMutations = {
   bulkCreatePlayers?: Maybe<BulkCreateGamePlayersResult>;
   bulkCreateRounds?: Maybe<BulkCreateGameRoundsResult>;
   bulkCreateStadia?: Maybe<BulkCreateGameStadiaResult>;
+  bulkCustomObjectParamsCities?: Maybe<BulkCustomObjectParamsGameCitiesResult>;
   bulkDeleteCities?: Maybe<BulkDeleteGameCitiesResult>;
   bulkDeletePlayers?: Maybe<BulkDeleteGamePlayersResult>;
   bulkDeleteRounds?: Maybe<BulkDeleteGameRoundsResult>;
@@ -3187,6 +3274,7 @@ export type GameMutations = {
   createPlayer?: Maybe<CreateGamePlayerResult>;
   createRound?: Maybe<CreateGameRoundResult>;
   createStadium?: Maybe<CreateGameStadiumResult>;
+  customObjectParamsCity?: Maybe<CustomObjectParamsGameCityResult>;
   deleteCity?: Maybe<DeleteGameCityResult>;
   deletePlayer?: Maybe<DeleteGamePlayerResult>;
   deleteRound?: Maybe<DeleteGameRoundResult>;
@@ -3215,6 +3303,10 @@ export type GameMutationsBulkCreateRoundsArgs = {
 
 export type GameMutationsBulkCreateStadiaArgs = {
   inputs: Array<BulkCreateGameStadiaInput>;
+};
+
+export type GameMutationsBulkCustomObjectParamsCitiesArgs = {
+  inputs: Array<BulkCustomObjectParamsGameCitiesInput>;
 };
 
 export type GameMutationsBulkDeleteCitiesArgs = {
@@ -3279,6 +3371,13 @@ export type GameMutationsCreateRoundArgs = {
 
 export type GameMutationsCreateStadiumArgs = {
   stadium?: InputMaybe<CreateGameStadiumInput>;
+};
+
+export type GameMutationsCustomObjectParamsCityArgs = {
+  city?: InputMaybe<CustomObjectParamsGameCityInput>;
+  id: Scalars["GadgetID"]["input"];
+  objParam?: InputMaybe<CustomObjectParamsObjParamInput>;
+  rootLevelStr?: InputMaybe<Scalars["String"]["input"]>;
 };
 
 export type GameMutationsDeleteCityArgs = {
@@ -4378,6 +4477,7 @@ export type InternalGameMutations = {
   triggerCreatePlayer?: Maybe<CreateGamePlayerResult>;
   triggerCreateRound?: Maybe<CreateGameRoundResult>;
   triggerCreateStadium?: Maybe<CreateGameStadiumResult>;
+  triggerCustomObjectParamsCity?: Maybe<CustomObjectParamsGameCityResult>;
   triggerDeleteCity?: Maybe<DeleteGameCityResult>;
   triggerDeletePlayer?: Maybe<DeleteGamePlayerResult>;
   triggerDeleteRound?: Maybe<DeleteGameRoundResult>;
@@ -4486,6 +4586,13 @@ export type InternalGameMutationsTriggerCreateRoundArgs = {
 };
 
 export type InternalGameMutationsTriggerCreateStadiumArgs = {
+  context?: InputMaybe<AppGraphQlTriggerMutationContext>;
+  params?: InputMaybe<Scalars["JSONObject"]["input"]>;
+  trigger?: InputMaybe<Scalars["JSONObject"]["input"]>;
+  verifyTriggerExists?: InputMaybe<Scalars["Boolean"]["input"]>;
+};
+
+export type InternalGameMutationsTriggerCustomObjectParamsCityArgs = {
   context?: InputMaybe<AppGraphQlTriggerMutationContext>;
   params?: InputMaybe<Scalars["JSONObject"]["input"]>;
   trigger?: InputMaybe<Scalars["JSONObject"]["input"]>;
@@ -4878,6 +4985,7 @@ export type InternalMutations = {
   deleteUser?: Maybe<InternalDeleteUserResult>;
   deleteWidget?: Maybe<InternalDeleteWidgetResult>;
   game: InternalGameMutations;
+  name: InternalNameMutations;
   rollbackTransaction: Scalars["String"]["output"];
   startTransaction: Scalars["String"]["output"];
   triggerAbortShopifySync?: Maybe<AbortShopifySyncResult>;
@@ -5799,6 +5907,35 @@ export type InternalMutationsUpsertUserArgs = {
 export type InternalMutationsUpsertWidgetArgs = {
   on?: InputMaybe<Array<Scalars["String"]["input"]>>;
   widget?: InputMaybe<InternalWidgetInput>;
+};
+
+export type InternalNameMutations = {
+  __typename?: "InternalNameMutations";
+  spaced: InternalNameSpacedMutations;
+};
+
+export type InternalNameSpacedMutations = {
+  __typename?: "InternalNameSpacedMutations";
+  triggerActionA?: Maybe<NameSpacedActionAResult>;
+  triggerCustomObjectParams?: Maybe<NameSpacedCustomObjectParamsResult>;
+  triggerNoTriggerGlobalAction?: Maybe<NameSpacedNoTriggerGlobalActionResult>;
+};
+
+export type InternalNameSpacedMutationsTriggerActionAArgs = {
+  trigger?: InputMaybe<Scalars["JSONObject"]["input"]>;
+  verifyTriggerExists?: InputMaybe<Scalars["Boolean"]["input"]>;
+};
+
+export type InternalNameSpacedMutationsTriggerCustomObjectParamsArgs = {
+  objParam?: InputMaybe<NameSpacedCustomObjectParamsObjParamInput>;
+  rootLevelStr?: InputMaybe<Scalars["String"]["input"]>;
+  trigger?: InputMaybe<Scalars["JSONObject"]["input"]>;
+  verifyTriggerExists?: InputMaybe<Scalars["Boolean"]["input"]>;
+};
+
+export type InternalNameSpacedMutationsTriggerNoTriggerGlobalActionArgs = {
+  trigger?: InputMaybe<Scalars["JSONObject"]["input"]>;
+  verifyTriggerExists?: InputMaybe<Scalars["Boolean"]["input"]>;
 };
 
 export type InternalPartAtomicsInput = {
@@ -7079,6 +7216,7 @@ export type Mutation = {
   gadgetMeta: GadgetApplicationMeta;
   game: GameMutations;
   internal: InternalMutations;
+  name: NameMutations;
   runShopifySync?: Maybe<RunShopifySyncResult>;
   shopifyConnection?: Maybe<ShopifyConnectionMutations>;
   signInUser?: Maybe<SignInUserResult>;
@@ -7488,6 +7626,57 @@ export type MutationUpsertWidgetArgs = {
   widget?: InputMaybe<UpsertWidgetInput>;
 };
 
+export type NameMutations = {
+  __typename?: "NameMutations";
+  spaced: NameSpacedMutations;
+};
+
+export type NameSpacedActionAResult = {
+  __typename?: "NameSpacedActionAResult";
+  errors?: Maybe<Array<ExecutionError>>;
+  result?: Maybe<Scalars["JSON"]["output"]>;
+  success: Scalars["Boolean"]["output"];
+};
+
+export type NameSpacedCustomObjectParamsObjParamInput = {
+  firstLevelStr?: InputMaybe<Scalars["String"]["input"]>;
+  objProperty1?: InputMaybe<NameSpacedCustomObjectParamsObjProperty1Input>;
+};
+
+export type NameSpacedCustomObjectParamsObjProperty1Input = {
+  objProperty2?: InputMaybe<NameSpacedCustomObjectParamsObjProperty2Input>;
+  secondLevelStr?: InputMaybe<Scalars["String"]["input"]>;
+};
+
+export type NameSpacedCustomObjectParamsObjProperty2Input = {
+  thirdLevelStr?: InputMaybe<Scalars["String"]["input"]>;
+};
+
+export type NameSpacedCustomObjectParamsResult = {
+  __typename?: "NameSpacedCustomObjectParamsResult";
+  errors?: Maybe<Array<ExecutionError>>;
+  result?: Maybe<Scalars["JSON"]["output"]>;
+  success: Scalars["Boolean"]["output"];
+};
+
+export type NameSpacedMutations = {
+  __typename?: "NameSpacedMutations";
+  actionA?: Maybe<NameSpacedActionAResult>;
+  customObjectParams?: Maybe<NameSpacedCustomObjectParamsResult>;
+};
+
+export type NameSpacedMutationsCustomObjectParamsArgs = {
+  objParam?: InputMaybe<NameSpacedCustomObjectParamsObjParamInput>;
+  rootLevelStr?: InputMaybe<Scalars["String"]["input"]>;
+};
+
+export type NameSpacedNoTriggerGlobalActionResult = {
+  __typename?: "NameSpacedNoTriggerGlobalActionResult";
+  errors?: Maybe<Array<ExecutionError>>;
+  result?: Maybe<Scalars["JSON"]["output"]>;
+  success: Scalars["Boolean"]["output"];
+};
+
 export type NestedAutoTableTestCreateInput = {
   bool?: InputMaybe<Scalars["Boolean"]["input"]>;
   dt?: InputMaybe<Scalars["DateTime"]["input"]>;
@@ -7592,6 +7781,14 @@ export type NestedCityCreateInput = {
   stadium?: InputMaybe<StadiumHasOneInput>;
 };
 
+export type NestedCityCustomObjectParamsInput = {
+  id: Scalars["GadgetID"]["input"];
+  name?: InputMaybe<Scalars["String"]["input"]>;
+  objParam?: InputMaybe<NestedCustomObjectParamsObjParamInput>;
+  rootLevelStr?: InputMaybe<Scalars["String"]["input"]>;
+  stadium?: InputMaybe<StadiumHasOneInput>;
+};
+
 export type NestedCityDeleteInput = {
   id: Scalars["GadgetID"]["input"];
 };
@@ -7600,6 +7797,20 @@ export type NestedCityUpdateInput = {
   id: Scalars["GadgetID"]["input"];
   name?: InputMaybe<Scalars["String"]["input"]>;
   stadium?: InputMaybe<StadiumHasOneInput>;
+};
+
+export type NestedCustomObjectParamsObjParamInput = {
+  firstLevelStr?: InputMaybe<Scalars["String"]["input"]>;
+  objProperty1?: InputMaybe<NestedCustomObjectParamsObjProperty1Input>;
+};
+
+export type NestedCustomObjectParamsObjProperty1Input = {
+  objProperty2?: InputMaybe<NestedCustomObjectParamsObjProperty2Input>;
+  secondLevelStr?: InputMaybe<Scalars["String"]["input"]>;
+};
+
+export type NestedCustomObjectParamsObjProperty2Input = {
+  thirdLevelStr?: InputMaybe<Scalars["String"]["input"]>;
 };
 
 export type NestedGizmoCreateInput = {

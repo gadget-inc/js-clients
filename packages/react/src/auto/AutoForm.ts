@@ -2,6 +2,7 @@ import type { ActionFunction, GadgetRecord, GlobalActionFunction } from "@gadget
 import { yupResolver } from "@hookform/resolvers/yup";
 import type { ReactNode } from "react";
 import { useEffect, useMemo, useRef } from "react";
+import deepEqual from "react-fast-compare";
 import type { AnyActionWithId, RecordIdentifier, UseActionFormHookStateData } from "src/use-action-form/types.js";
 import type { GadgetObjectFieldConfig } from "../internal/gql/graphql.js";
 import type { ActionMetadata, FieldMetadata, GlobalActionMetadata } from "../metadata.js";
@@ -72,14 +73,21 @@ export const useFormFields = (
   return useMemo(() => {
     if (!metadata) return [];
     const action = isActionMetadata(metadata) ? metadata.action : metadata;
-
     const isModelMetadata = metadata.__typename === "GadgetModel";
+    const modelApiIdentifier = isModelMetadata ? metadata.apiIdentifier : undefined;
 
-    const objectFields = isModelMetadata
+    const modelAsObjectField = isModelMetadata
       ? action.inputFields.filter(
-          (field) => field.configuration.__typename === "GadgetObjectFieldConfig" && field.apiIdentifier === metadata.apiIdentifier
+          (field) => field.configuration.__typename === "GadgetObjectFieldConfig" && field.apiIdentifier === modelApiIdentifier
         )
       : [];
+
+    const customParamObjectFields = action.inputFields.filter(
+      (field) =>
+        field.configuration.__typename === "GadgetObjectFieldConfig" && !modelAsObjectField.some((objField) => deepEqual(objField, field))
+    );
+    console.log("customParamObjectFields :", customParamObjectFields);
+
     const nonObjectFields = action.inputFields.filter((field) => field.configuration.__typename !== "GadgetObjectFieldConfig");
 
     const includedRootLevelFields = filterAutoFormFieldList(nonObjectFields, options as any).map(
@@ -90,7 +98,7 @@ export const useFormFields = (
         } as const)
     );
 
-    const includedObjectFields = objectFields.flatMap((objectField) =>
+    const includedObjectFields = modelAsObjectField.flatMap((objectField) =>
       filterAutoFormFieldList((objectField.configuration as unknown as GadgetObjectFieldConfig).fields as any, {
         ...(options as any),
         isUpsertAction: true, // For upsert meta-actions, we allow IDs, and they are object fields instead of root level
