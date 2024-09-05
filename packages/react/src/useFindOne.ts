@@ -44,14 +44,11 @@ export const useFindOne = <
 > => {
   const memoizedOptions = useStructuralMemo(options);
   const plan = useMemo(() => {
-    return findOneOperation(
-      manager.findOne.operationName,
-      id,
-      manager.findOne.defaultSelection,
-      manager.findOne.modelApiIdentifier,
-      memoizedOptions,
-      manager.findOne.namespace
-    );
+    if (manager.findOne.plan) {
+      return manager.findOne.plan(id, memoizedOptions);
+    } else {
+      throw new Error("Incompatible client passed to useFindOne hook, please use an api client with version >= 0.17.0")
+    }
   }, [manager, id, memoizedOptions]);
 
   const [rawResult, refresh] = useGadgetQuery(useQueryArgs(plan, options));
