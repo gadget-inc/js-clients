@@ -79,8 +79,11 @@ export const onClickCallback = {
   name: "onClick callback",
   args: {
     model: api.autoTableTest,
-    onClick: (row) => {
-      windowAlert(`You clicked on row: ${JSON.stringify(row, null, 2)}`);
+    onClick: (row, rawRecord) => {
+      windowAlert(`You clicked on a row with ID: ${row.id}`);
+      windowAlert(`row: ${JSON.stringify(row, null, 2)}`);
+      windowAlert(`rawRecord:\n ${JSON.stringify(rawRecord, null, 2)}
+`);
     },
   },
 };
