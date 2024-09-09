@@ -26,6 +26,48 @@ describeForEachAutoAdapter("AutoForm - Default model field values", ({ name, ada
     cy.get(`input[name="part.notes"]`).should("have.value", "");
   });
 
+  it("can set default values in props for excluded fields and send them to the server", () => {
+    cy.mountWithWrapper(
+      <AutoForm action={api.part.create} defaultValues={{ part: { name: "test record" } }} exclude={["name"]} />,
+      wrapper
+    );
+
+    cy.get(`input[name="part.count"]`).should("have.value", "");
+    cy.get(`input[name="part.notes"]`).should("have.value", "");
+    cy.get(`input[name="part.name"]`).should("not.exist");
+
+    cy.intercept("POST", `${api.connection.options.endpoint}?operation=createPart`, (req) => {
+      req.reply();
+    }).as("createPart");
+
+    cy.getSubmitButton().click();
+    cy.wait("@createPart");
+    cy.get("@createPart")
+      .its("request.body.variables")
+      .should("deep.equal", { part: { name: "test record", count: null, notes: null } });
+  });
+
+  it("can set default values in props for non-included fields and send them to the server", () => {
+    cy.mountWithWrapper(
+      <AutoForm action={api.part.create} defaultValues={{ part: { name: "test record" } }} include={["count", "notes"]} />,
+      wrapper
+    );
+
+    cy.get(`input[name="part.count"]`).should("have.value", "");
+    cy.get(`input[name="part.notes"]`).should("have.value", "");
+    cy.get(`input[name="part.name"]`).should("not.exist");
+
+    cy.intercept("POST", `${api.connection.options.endpoint}?operation=createPart`, (req) => {
+      req.reply();
+    }).as("createPart");
+
+    cy.getSubmitButton().click();
+    cy.wait("@createPart");
+    cy.get("@createPart")
+      .its("request.body.variables")
+      .should("deep.equal", { part: { name: "test record", count: null, notes: null } });
+  });
+
   it("doesn't add default values from the server for update actions actions", () => {
     cy.intercept("POST", `${api.connection.options.endpoint}?operation=part`, {
       statusCode: 200,

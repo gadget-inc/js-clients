@@ -75,7 +75,14 @@ export const Excluded = {
   args: {
     action: api.widget.create,
     exclude: ["birthday", "roles"],
-    include: ["name", "inventoryCount"],
+  },
+};
+
+export const ExcludedWithDefaultValues = {
+  args: {
+    action: api.widget.create,
+    exclude: ["name"],
+    defaultValues: { widget: { name: "Name from default when there is no field input component" } },
   },
 };
 
@@ -83,6 +90,14 @@ export const Included = {
   args: {
     action: api.widget.create,
     include: ["name", "inventoryCount"],
+  },
+};
+
+export const IncludedWithDefaultValues = {
+  args: {
+    action: api.widget.create,
+    include: ["inventoryCount"],
+    defaultValues: { widget: { name: "Name from default when there is no field input component" } },
   },
 };
 

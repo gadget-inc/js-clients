@@ -578,3 +578,41 @@ export const deepMerge = (obj1: any, obj2: any) => {
   }
   return obj1;
 };
+
+/**
+ * Deep flattens an object by converting all nested objects into a single level of keys.
+ * Example:
+ *    deepFlattenObject( { a: { b: { c: 1, d: 2, }, e: 3, }, f: 4, }} ) => {
+ *      "a.b.c": 1, "a.b.d": 2, "a.e": 3, "f": 4
+ *    }
+ * @param obj - The object to flatten.
+ * @param parentKey - The current key path in the object.
+ * @param separator - The separator to use between keys.
+ * @returns A flattened object with keys separated by the specified separator.
+ */
+export const deepFlattenObject = (obj: any, parentKey = "", separator = "."): Record<string, any> => {
+  const result: Record<string, any> = {};
+
+  for (const key in obj) {
+    if (Object.prototype.hasOwnProperty.call(obj, key)) {
+      const newKey = parentKey ? `${parentKey}${separator}${key}` : key;
+
+      if (typeof obj[key] === "object" && obj[key] !== null && !Array.isArray(obj[key])) {
+        Object.assign(result, deepFlattenObject(obj[key], newKey, separator));
+      } else {
+        result[newKey] = obj[key];
+      }
+    }
+  }
+
+  return result;
+};
+
+/**
+ * Get a list of all the keys in a flattened object
+ * @param obj - The object to flatten
+ * @returns A list of all the keys in the flattened object
+ */
+export const getFlattenedObjectKeys = (obj: any) => {
+  return Object.keys(deepFlattenObject(obj));
+};
