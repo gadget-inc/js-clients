@@ -8,7 +8,7 @@ import type { ActionMetadata, FieldMetadata, GlobalActionMetadata } from "../met
 import { FieldType, filterAutoFormFieldList, isActionMetadata, useActionMetadata } from "../metadata.js";
 import type { FieldErrors, FieldValues } from "../useActionForm.js";
 import { useActionForm } from "../useActionForm.js";
-import { get, type OptionsType } from "../utils.js";
+import { get, getFlattenedObjectKeys, type OptionsType } from "../utils.js";
 import { validationSchema } from "../validationSchema.js";
 import { validateNonBulkAction, validateTriggersFromApiClient, validateTriggersFromMetadata } from "./AutoFormActionValidators.js";
 
@@ -203,6 +203,17 @@ export const useAutoForm = <
       if (operatesWithRecordId) {
         fieldsToSend.push("id");
       }
+
+      if (props.defaultValues && modelApiIdentifier) {
+        // Add any explicitly set default values to the fields to send in the event that they are not included
+        const explicityDefaultedPaths = getFlattenedObjectKeys(props.defaultValues);
+        explicityDefaultedPaths.forEach((path) => {
+          if (!fieldsToSend.includes(path)) {
+            fieldsToSend.push(path);
+          }
+        });
+      }
+
       return fieldsToSend;
     },
     onError: onFailure,
@@ -232,7 +243,7 @@ export const useAutoForm = <
 
   useEffect(() => {
     if (isUpsertWithFindBy) {
-      setValue(`${modelApiIdentifier!}.id`, findBy); // Upsert actions use mode.id instead of use root level api value
+      setValue(`${modelApiIdentifier!}.id`, findBy); // Upsert actions use model.id instead of use root level api value
     }
   }, [getValues(`${modelApiIdentifier!}.id`), isUpsertWithFindBy]);
 
