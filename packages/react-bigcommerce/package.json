@@ -41,6 +41,6 @@
   "peerDependencies": {
     "react": "^18.0.0",
     "react-dom": "^18.0.0",
-    "@gadgetinc/react": "^0.16.0"
+    "@gadgetinc/react": "^0.17.0"
   }
 }

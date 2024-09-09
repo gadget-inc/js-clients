@@ -1,5 +1,17 @@
 # @gadgetinc/react
 
+## 0.17.0
+
+### Patch Changes
+
+- Updated the `select` property in useTable and AutoTable to completely override the default selection instead of being combined with the default selection (Breaking change)
+- Updated AutoForm to throw an error when given an invalid action
+- Updated AutoSubmit to have a loading state that is controlled by the useAutoFormMetadata hook
+- Updated the `AutoTable` `onClick` callback prop to accept the full `GadgetRecord` corresponding to the row as well as the `TableRow` itself
+- Bug: Fixed an issue with AutoTable where custom cell renderers with duplicate headers would have duplicate columns content
+- Bug: Fixed bug in Polaris AutoTable where the `createNewView` button would erroneously appear on certain parent element widths
+- Bug: Fixed a bug in `<AutoForm/>` where the `defaultValues` prop values was not included in the submission request if the defaulted field was excluded with the `include` or `exclude` properties.
+
 ## 0.16.4
 
 ### Patch Changes
