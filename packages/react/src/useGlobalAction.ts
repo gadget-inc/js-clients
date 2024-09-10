@@ -1,6 +1,6 @@
-import type { GlobalActionFunction } from "@gadgetinc/api-client-core";
+import type { GlobalActionFunction, StubbedActionFunction } from "@gadgetinc/api-client-core";
 import { get, globalActionOperation, namespaceDataPath } from "@gadgetinc/api-client-core";
-import { useCallback, useMemo } from "react";
+import { useCallback, useEffect, useMemo } from "react";
 import type { OperationContext, UseMutationState } from "urql";
 import { useGadgetMutation } from "./useGadgetMutation.js";
 import type { ActionHookResult } from "./utils.js";
@@ -30,6 +30,27 @@ import { ErrorWrapper } from "./utils.js";
 export const useGlobalAction = <F extends GlobalActionFunction<any>>(
   action: F
 ): ActionHookResult<any, Exclude<F["variablesType"], null | undefined>> => {
+  useEffect(() => {
+    if (action.type === ("stubbedAction" as string)) {
+      const stubbedAction = action as unknown as StubbedActionFunction<any>;
+      if (!("reason" in stubbedAction) || !("dataPath" in stubbedAction)) {
+        // Don't dispatch an event if the generated client has not yet been updated with the updated parameters
+        return;
+      }
+
+      const event = new CustomEvent("gadget:devharness:stubbedActionError", {
+        detail: {
+          reason: stubbedAction.reason,
+          action: {
+            actionApiIdentifier: stubbedAction.functionName,
+            dataPath: stubbedAction.dataPath,
+          },
+        },
+      });
+      globalThis.dispatchEvent(event);
+    }
+  }, []);
+
   const plan = useMemo(() => {
     return globalActionOperation(action.operationName, action.variables, action.namespace);
   }, [action]);

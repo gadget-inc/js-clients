@@ -255,4 +255,36 @@ describe("useGlobalAction", () => {
 
     expect(result.current[0]).toBe(beforeObject);
   });
+
+  test("sends a stubbedActionError event when the action is stubbed", () => {
+    let eventDispatched: CustomEvent | undefined;
+
+    globalThis.addEventListener("gadget:devharness:stubbedActionError", (event) => {
+      eventDispatched = event as CustomEvent;
+    });
+
+    const { result, rerender } = renderHook(
+      () =>
+        useGlobalAction({
+          // @ts-expect-error intentionally passing the wrong type
+          type: "stubbedAction",
+          reason: "MissingApiTrigger",
+          dataPath: "fakePath",
+          functionName: "fakeFunction",
+          variables: {},
+        }),
+      {
+        wrapper: MockClientWrapper(bulkExampleApi),
+      }
+    );
+
+    expect(eventDispatched).toBeTruthy();
+    expect(eventDispatched!.detail).toEqual({
+      reason: "MissingApiTrigger",
+      action: {
+        actionApiIdentifier: "fakeFunction",
+        dataPath: "fakePath",
+      },
+    });
+  });
 });
