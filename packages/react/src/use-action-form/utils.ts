@@ -460,6 +460,25 @@ export function applyDataMask(opts: {
 
   const readOnlyPaths = getReadOnlyPaths(select, modelApiIdentifier);
 
+  // Check for relationship fields that are entirely read-only, including nested relationships
+  const checkRelationshipFields = (obj: any, prefix = "") => {
+    const relationshipFields = Object.keys(obj || {}).filter((key) => typeof obj[key] === "object" && obj[key] !== null);
+    for (const field of relationshipFields) {
+      const currentPrefix = prefix ? `${prefix}.${field}` : field;
+      const allFieldPaths = Object.keys(obj[field]).map((subField) => `${currentPrefix}.${subField}`);
+      const readOnlyFieldPaths = allFieldPaths.filter((subField) => readOnlyPaths.includes(subField));
+
+      if (readOnlyFieldPaths.length > 0 && readOnlyFieldPaths.length === allFieldPaths.length) {
+        readOnlyPaths.push(currentPrefix);
+      } else {
+        // Recursively check nested relationships
+        checkRelationshipFields(obj[field], currentPrefix);
+      }
+    }
+  };
+
+  checkRelationshipFields(select, modelApiIdentifier);
+
   for (const path of readOnlyPaths) {
     unset(data, path);
   }
