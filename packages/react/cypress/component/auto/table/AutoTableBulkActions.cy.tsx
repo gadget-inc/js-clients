@@ -1,5 +1,6 @@
 /* eslint-disable jest/valid-expect */
 import React from "react";
+import { ActionErrorMessage, ActionSuccessMessage } from "../../../../src/auto/polaris/PolarisAutoBulkActionModal.js";
 import { PolarisAutoTable } from "../../../../src/auto/polaris/PolarisAutoTable.js";
 import { api } from "../../../support/api.js";
 import { PolarisWrapper } from "../../../support/auto.js";
@@ -113,15 +114,10 @@ describe("AutoTable - Bulk actions", () => {
 
     cy.wait("@getWidgets").its("request.body.variables").should("deep.equal", { first: 50 }); // No search value
 
-    cy.contains("Action completed successfully");
-    cy.get("button").contains("Close").click();
+    cy.contains(ActionSuccessMessage);
 
     // Now ensure that error response appears in the modal
     selectRecordIds(["20", "21", "22"]);
-
-    cy.get(`input[id="Select-20"]`).eq(0).click();
-    cy.get(`input[id="Select-21"]`).eq(0).click();
-    cy.get(`input[id="Select-22"]`).eq(0).click();
     openBulkAction("Delete");
 
     mockBulkDeleteWidgets(bulkDeleteFailureResponse, "bulkDeleteWidgets2");
@@ -129,7 +125,7 @@ describe("AutoTable - Bulk actions", () => {
     cy.get("button").contains("Run").click();
     cy.wait("@bulkDeleteWidgets2");
 
-    cy.contains(bulkDeleteFailureMessage);
+    cy.contains(ActionErrorMessage);
   });
 
   describe.each([true, false])("Custom actions with promoted=%s", (promoted) => {
@@ -155,8 +151,7 @@ describe("AutoTable - Bulk actions", () => {
 
       cy.wait("@getWidgets").its("request.body.variables").should("deep.equal", { first: 50 }); // No search value
 
-      cy.contains("Action completed successfully");
-      cy.get("button").contains("Close").click();
+      cy.contains(ActionSuccessMessage);
     });
   });
 });
