@@ -10,7 +10,7 @@ export const MUIAutoEnumInput = <
   FreeSolo extends boolean | undefined = false,
   ChipComponent extends React.ElementType = ChipTypeMap["defaultComponent"]
 >(
-  props: { field: string } & Partial<AutocompleteProps<Value, Multiple, DisableClearable, FreeSolo, ChipComponent>>
+  props: { field: string; label?: string } & Partial<AutocompleteProps<Value, Multiple, DisableClearable, FreeSolo, ChipComponent>>
 ) => {
   const { allowMultiple, selectedOptions, onSelectionChange, allOptions, label } = useEnumInputController(props);
 
@@ -19,7 +19,7 @@ export const MUIAutoEnumInput = <
       disablePortal
       multiple={allowMultiple}
       options={allOptions}
-      renderInput={(params) => <TextField {...params} label={label} />}
+      renderInput={(params) => <TextField {...params} label={props.label ?? label} />}
       value={allowMultiple ? selectedOptions : selectedOptions[0]}
       onChange={(event, value) => {
         if (value === null || (Array.isArray(value) && value.length === 0)) {

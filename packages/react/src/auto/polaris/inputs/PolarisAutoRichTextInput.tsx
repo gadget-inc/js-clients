@@ -12,7 +12,7 @@ export default function PolarisAutoRichTextInput(props: ComponentProps<typeof Au
     <div className="Polaris-FormLayout__Item">
       <div className="Polaris-Labelled__LabelWrapper">
         <Label id={controller.id} requiredIndicator={controller.metadata.requiredArgumentForInput}>
-          {controller.metadata.name}
+          {props.label ?? controller.metadata.name}
         </Label>
       </div>
       <div className="Autoform-RichTextInput">

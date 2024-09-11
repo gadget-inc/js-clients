@@ -6,7 +6,13 @@ import { zonedTimeToUtc } from "../../../dateTimeUtils.js";
 import type { GadgetDateTimeConfig } from "../../../internal/gql/graphql.js";
 import { useFieldMetadata } from "../../hooks/useFieldMetadata.js";
 
-export const MUIAutoDateTimePicker = (props: { field: string; value?: Date; onChange?: (value: Date) => void; error?: string }) => {
+export const MUIAutoDateTimePicker = (props: {
+  field: string;
+  value?: Date;
+  onChange?: (value: Date) => void;
+  error?: string;
+  label?: string;
+}) => {
   const localTz = Intl.DateTimeFormat().resolvedOptions().timeZone;
   const { path, metadata } = useFieldMetadata(props.field);
   const config = metadata.configuration;
@@ -17,7 +23,7 @@ export const MUIAutoDateTimePicker = (props: { field: string; value?: Date; onCh
   return (
     <Box sx={{ display: "flex" }}>
       <DatePicker
-        label={metadata.name}
+        label={props.label ?? metadata.name}
         onChange={(newValue: string | number | Date | null) => {
           props.onChange?.(zonedTimeToUtc(new Date(newValue ?? ""), localTz));
           fieldProps.onChange(zonedTimeToUtc(new Date(newValue ?? ""), localTz));

@@ -8,6 +8,7 @@ export const MUIAutoRolesInput = (
   props: {
     field: string; // Field API identifier
     control?: Control<any>;
+    label?: string;
   } & Partial<AutocompleteProps<{ id: string; label: string }, true, any, any>>
 ) => {
   const { options, loading, rolesError, fieldError, selectedRoleKeys, fieldProps, metadata } = useRoleInputController(props);
@@ -19,7 +20,7 @@ export const MUIAutoRolesInput = (
     throw fieldError;
   }
 
-  const label = metadata.name;
+  const label = props.label ?? metadata.name;
   if (loading) {
     return <TextField label={label} autoComplete="off" disabled={loading} />;
   }

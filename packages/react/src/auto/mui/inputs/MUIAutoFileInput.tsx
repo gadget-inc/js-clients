@@ -21,8 +21,8 @@ const VisuallyHiddenInput = styled("input")({
   width: 1,
 });
 
-export const MUIAutoFileInput = (props: { field: string; control?: Control<any> }) => {
-  const { field: fieldApiIdentifier, control } = props;
+export const MUIAutoFileInput = (props: { field: string; control?: Control<any>; label?: string }) => {
+  const { field: fieldApiIdentifier, control, label } = props;
   const { onFileUpload, metadata } = useFileInputController({
     field: fieldApiIdentifier,
     control,
@@ -31,7 +31,7 @@ export const MUIAutoFileInput = (props: { field: string; control?: Control<any> 
   return (
     <MUIAutoFormControl field={props.field}>
       <Button component="label" variant="contained">
-        {metadata.name} {metadata.requiredArgumentForInput ? "*" : null}
+        {props.label ?? metadata.name} {metadata.requiredArgumentForInput ? "*" : null}
         <VisuallyHiddenInput
           type="file"
           onChange={(event) => {

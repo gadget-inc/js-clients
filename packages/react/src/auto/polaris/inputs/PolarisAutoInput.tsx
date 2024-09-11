@@ -18,64 +18,64 @@ import { PolarisAutoHasManyInput } from "./relationships/PolarisAutoHasManyInput
 // lazy import for smaller bundle size by default
 const PolarisAutoRichTextInput = React.lazy(() => import("./PolarisAutoRichTextInput.js"));
 
-export const PolarisAutoInput = (props: { field: string }) => {
+export const PolarisAutoInput = (props: { field: string; label?: string }) => {
   const { metadata } = useFieldMetadata(props.field);
   const config = metadata.configuration;
 
   switch (config.fieldType) {
     case FieldType.Id: {
-      return <PolarisAutoIdInput field={props.field} />;
+      return <PolarisAutoIdInput field={props.field} label={props.label} />;
     }
     case FieldType.String:
     case FieldType.Email:
     case FieldType.Color:
     case FieldType.Url: {
-      return <PolarisAutoTextInput field={props.field} />;
+      return <PolarisAutoTextInput field={props.field} label={props.label} />;
     }
     case FieldType.Number: {
-      return <PolarisAutoNumberInput field={props.field} />;
+      return <PolarisAutoNumberInput field={props.field} label={props.label} />;
     }
     case FieldType.EncryptedString: {
-      return <PolarisAutoEncryptedStringInput field={props.field} />;
+      return <PolarisAutoEncryptedStringInput field={props.field} label={props.label} />;
     }
     case FieldType.Password: {
-      return <PolarisAutoPasswordInput field={props.field} />;
+      return <PolarisAutoPasswordInput field={props.field} label={props.label} />;
     }
     case FieldType.Boolean: {
-      return <PolarisAutoBooleanInput field={props.field} />;
+      return <PolarisAutoBooleanInput field={props.field} label={props.label} />;
     }
     case FieldType.DateTime: {
-      return <PolarisAutoDateTimePicker field={props.field} />;
+      return <PolarisAutoDateTimePicker field={props.field} label={props.label} />;
     }
     case FieldType.Json: {
-      return <PolarisAutoJSONInput field={props.field} />;
+      return <PolarisAutoJSONInput field={props.field} label={props.label} />;
     }
     case FieldType.Enum: {
-      return <PolarisAutoEnumInput field={props.field} />;
+      return <PolarisAutoEnumInput field={props.field} label={props.label} />;
     }
     case FieldType.File: {
-      return <PolarisAutoFileInput field={props.field} />;
+      return <PolarisAutoFileInput field={props.field} label={props.label} />;
     }
     case FieldType.RoleAssignments: {
-      return <PolarisAutoRolesInput field={props.field} />;
+      return <PolarisAutoRolesInput field={props.field} label={props.label} />;
     }
     case FieldType.BelongsTo: {
-      return <PolarisAutoBelongsToInput field={props.field} />;
+      return <PolarisAutoBelongsToInput field={props.field} label={props.label} />;
     }
     case FieldType.HasOne: {
       // TODO - Update implementation of PolarisAutoHasOneInput after 1-1 mapping maintenance system is updated in API
-      // return <PolarisAutoHasOneInput field={props.field} />;
+      // return <PolarisAutoHasOneInput field={props.field}  label={props.label} />;
       return null;
     }
     case FieldType.HasMany: {
-      return <PolarisAutoHasManyInput field={props.field} />;
+      return <PolarisAutoHasManyInput field={props.field} label={props.label} />;
     }
     case FieldType.HasManyThrough: {
       // TODO: implement HasManyThrough input with join model record create/delete
       return null;
     }
     case FieldType.RichText: {
-      return <PolarisAutoRichTextInput field={props.field} />;
+      return <PolarisAutoRichTextInput field={props.field} label={props.label} />;
     }
     case FieldType.Money: {
       // TODO: implement money input

@@ -16,6 +16,7 @@ export const PolarisAutoJSONInput = (
   const { field: _field, control: _control, ...restOfProps } = props;
   const { type: _type, errorMessage, ...controller } = useJSONInputController(props);
 
+  const label = props.label ?? controller.label;
   return (
     <>
       <TextField
@@ -25,6 +26,7 @@ export const PolarisAutoJSONInput = (
         {...getPropsWithoutRef(controller)}
         {...getPropsWithoutRef(focusProps)}
         {...restOfProps}
+        label={label}
       />
     </>
   );

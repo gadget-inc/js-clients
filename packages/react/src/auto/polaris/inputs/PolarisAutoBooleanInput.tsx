@@ -18,7 +18,8 @@ export const PolarisAutoBooleanInput = (props: { field: string; control?: Contro
     name: path,
   });
 
+  const label = props.label ?? metadata.name;
   const { value: _value, ...restFieldProps } = fieldProps;
 
-  return <Checkbox label={metadata.name} {...restFieldProps} checked={!!fieldProps.value} error={error?.message} {...rest} />;
+  return <Checkbox {...restFieldProps} checked={!!fieldProps.value} error={error?.message} {...rest} label={label} />;
 };

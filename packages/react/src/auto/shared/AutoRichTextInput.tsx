@@ -14,6 +14,7 @@ interface AutoRichTextInputProps {
   field: string;
   control?: Control<any>;
   editorRef?: ForwardedRef<MDXEditorMethods> | null;
+  label?: string;
 }
 
 const AutoRichTextInput: React.FC<AutoRichTextInputProps> = (props) => {

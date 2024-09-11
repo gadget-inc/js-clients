@@ -43,7 +43,13 @@ export const MUIAutoHasManyInput = (props: AutoRelationshipInputProps) => {
       onChange={(e, selectedValue) => selectedValue.forEach((id) => onSelectRecord(id))}
       onClose={() => search.set()}
       renderInput={(params) => (
-        <TextField {...params} value={search.value} label={metadata.name} onChange={(e) => search.set(e.target.value)} name={path} />
+        <TextField
+          {...params}
+          value={search.value}
+          label={props.label ?? metadata.name}
+          onChange={(e) => search.set(e.target.value)}
+          name={path}
+        />
       )}
     ></Autocomplete>
   );

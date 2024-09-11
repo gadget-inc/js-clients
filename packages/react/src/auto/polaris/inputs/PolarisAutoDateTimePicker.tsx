@@ -47,6 +47,7 @@ export const PolarisAutoDateTimePicker = (props: {
   error?: string;
   includeTime?: boolean;
   hideTimePopover?: boolean;
+  label?: string;
   datePickerProps?: Partial<DatePickerProps>;
   timePickerProps?: Partial<TextFieldProps>;
 }) => {
@@ -104,7 +105,7 @@ export const PolarisAutoDateTimePicker = (props: {
         activator={
           <TextField
             id={props.id ? `${props.id}-date` : undefined}
-            label={metadata.name ?? "Date"}
+            label={props.label ?? metadata.name ?? "Date"}
             prefix={<Icon source={CalendarIcon} />}
             autoComplete="off"
             value={localTime ? formatShortDateString(localTime) : ""}

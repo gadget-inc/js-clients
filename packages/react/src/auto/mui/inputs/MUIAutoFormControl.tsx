@@ -4,7 +4,7 @@ import React from "react";
 import { useController } from "react-hook-form";
 import { useFieldMetadata } from "../../hooks/useFieldMetadata.js";
 
-export const MUIAutoFormControl = (props: { field: string; children: ReactElement }) => {
+export const MUIAutoFormControl = (props: { field: string; children: ReactElement; label?: string }) => {
   const { path, metadata } = useFieldMetadata(props.field);
   const {
     fieldState: { error },
@@ -15,7 +15,7 @@ export const MUIAutoFormControl = (props: { field: string; children: ReactElemen
   return (
     <FormControl {...metadata} error={!!error}>
       <FormGroup>
-        <FormControlLabel label={metadata.name} control={props.children} />
+        <FormControlLabel label={props.label ?? metadata.name} control={props.children} />
       </FormGroup>
       {error && <FormHelperText>{error?.message}</FormHelperText>}
     </FormControl>

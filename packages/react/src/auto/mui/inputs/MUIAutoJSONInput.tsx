@@ -16,7 +16,7 @@ export const MUIAutoJSONInput = (
   const { type: _type, errorMessage, ...controller } = useJSONInputController(props);
 
   const inErrorState = !isFocused && !!errorMessage;
-
+  const label = props.label ?? controller.label;
   return (
     <TextField
       multiline
@@ -27,6 +27,7 @@ export const MUIAutoJSONInput = (
       {...controller}
       {...focusProps}
       {...restOfProps}
+      label={label}
       onChange={(event) => controller.onChange(event.target.value)}
     />
   );

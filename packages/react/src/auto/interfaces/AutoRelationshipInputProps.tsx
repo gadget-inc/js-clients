@@ -5,6 +5,7 @@ export interface AutoRelationshipInputProps {
   field: string;
   control?: Control<any>;
   optionLabel?: OptionLabel;
+  label?: string;
 }
 
 /**

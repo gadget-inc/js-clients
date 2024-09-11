@@ -48,7 +48,7 @@ export const PolarisAutoBelongsToInput = (props: AutoRelationshipInputProps) => 
             onChange={search.set}
             value={search.value}
             name={path}
-            label={metadata.name}
+            label={props.label ?? metadata.name}
             placeholder="Search"
             autoComplete="off"
             verticalContent={selectedRecordTag}

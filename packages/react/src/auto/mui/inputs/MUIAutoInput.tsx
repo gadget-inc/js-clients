@@ -17,62 +17,62 @@ import { MUIAutoHasManyInput } from "./relationships/MUIAutoHasManyInput.js";
 // lazy import for smaller bundle size by default
 const MUIAutoRichTextInput = React.lazy(() => import("./MUIAutoRichTextInput.js"));
 
-export const MUIAutoInput = (props: { field: string }) => {
+export const MUIAutoInput = (props: { field: string; label?: string }) => {
   const { metadata } = useFieldMetadata(props.field);
   const config = metadata.configuration;
 
   switch (config.fieldType) {
     case FieldType.Id: {
-      return <MUIAutoIdInput field={props.field} />;
+      return <MUIAutoIdInput field={props.field} label={props.label} />;
     }
     case FieldType.String:
     case FieldType.Number:
     case FieldType.Email:
     case FieldType.Color:
     case FieldType.Url: {
-      return <MUIAutoTextInput field={props.field} />;
+      return <MUIAutoTextInput field={props.field} label={props.label} />;
     }
     case FieldType.EncryptedString: {
-      return <MUIAutoEncryptedStringInput field={props.field} />;
+      return <MUIAutoEncryptedStringInput field={props.field} label={props.label} />;
     }
     case FieldType.Password: {
-      return <MUIAutoPasswordInput field={props.field} />;
+      return <MUIAutoPasswordInput field={props.field} label={props.label} />;
     }
     case FieldType.Boolean: {
-      return <MUIAutoBooleanInput field={props.field} />;
+      return <MUIAutoBooleanInput field={props.field} label={props.label} />;
     }
     case FieldType.DateTime: {
-      return <MUIAutoDateTimePicker field={props.field} />;
+      return <MUIAutoDateTimePicker field={props.field} label={props.label} />;
     }
     case FieldType.Json: {
-      return <MUIAutoJSONInput field={props.field} />;
+      return <MUIAutoJSONInput field={props.field} label={props.label} />;
     }
     case FieldType.Enum: {
-      return <MUIAutoEnumInput field={props.field} />;
+      return <MUIAutoEnumInput field={props.field} label={props.label} />;
     }
     case FieldType.File: {
-      return <MUIAutoFileInput field={props.field} />;
+      return <MUIAutoFileInput field={props.field} label={props.label} />;
     }
     case FieldType.RoleAssignments: {
-      return <MUIAutoRolesInput field={props.field} />;
+      return <MUIAutoRolesInput field={props.field} label={props.label} />;
     }
     case FieldType.BelongsTo: {
-      return <MUIAutoBelongsToInput field={props.field} />;
+      return <MUIAutoBelongsToInput field={props.field} label={props.label} />;
     }
     case FieldType.HasOne: {
       // TODO - Update implementation of MUIAutoHasOneInput after 1-1 mapping maintenance system is updated in API
-      // return <MUIAutoHasOneInput field={props.field} />;
+      // return <MUIAutoHasOneInput field={props.field}  label={props.label} />;
       return null;
     }
     case FieldType.HasMany: {
-      return <MUIAutoHasManyInput field={props.field} />;
+      return <MUIAutoHasManyInput field={props.field} label={props.label} />;
     }
     case FieldType.HasManyThrough: {
       // TODO: implement HasManyThrough input with join model record create/delete/update
       return null;
     }
     case FieldType.RichText: {
-      return <MUIAutoRichTextInput field={props.field} />;
+      return <MUIAutoRichTextInput field={props.field} label={props.label} />;
     }
     case FieldType.Money: {
       // TODO: implement money input

@@ -81,12 +81,19 @@ export const MUIAutoFormComponent = <
     return props.successContent;
   }
 
+  if (fetchingMetadata) {
+    return (
+      <Grid container component="form" spacing={2} onSubmit={submit as any} {...rest}>
+        <MUIFormSkeleton />
+      </Grid>
+    );
+  }
+
   const formContent = props.children ?? (
     <>
       {formTitle && <Typography variant="h5">{formTitle}</Typography>}
       {!props.onSuccess && <MUISubmitSuccessfulBanner />}
       {!props.onFailure && <MUISubmitErrorBanner />}
-      {fetchingMetadata && <MUIFormSkeleton />}
       {!metadataError && (
         <>
           {fields.map(({ metadata }) => (

@@ -29,7 +29,7 @@ export const PolarisAutoRolesInput = (
     <PolarisFixedOptionsCombobox
       options={options}
       allowMultiple
-      label={metadata.name}
+      label={props.label ?? metadata.name}
       {...getPropsWithoutRef(fieldProps)}
       value={selectedRoleKeys}
     />
