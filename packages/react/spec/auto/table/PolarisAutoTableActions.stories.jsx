@@ -38,6 +38,7 @@ export const IncludedActionParameters = {
   args: {
     model: api.autoTableTest,
     actions: [
+      "delete",
       "customAction",
       { label: "Alternate action label", action: "customAction" },
       {
