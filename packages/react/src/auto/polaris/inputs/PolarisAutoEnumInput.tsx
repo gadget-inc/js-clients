@@ -4,8 +4,8 @@ import React, { useCallback } from "react";
 import { type Control } from "react-hook-form";
 import { useEnumInputController } from "../../hooks/useEnumInputController.js";
 
-export const PolarisAutoEnumInput = (props: { field: string; control?: Control<any> } & Partial<ComboboxProps>) => {
-  const { field: fieldApiIdentifier, control, ...comboboxProps } = props;
+export const PolarisAutoEnumInput = (props: { field: string; control?: Control<any>; label?: string } & Partial<ComboboxProps>) => {
+  const { field: fieldApiIdentifier, control, label: labelProp, ...comboboxProps } = props;
   const {
     allowMultiple,
     allowOther,
@@ -104,7 +104,7 @@ export const PolarisAutoEnumInput = (props: { field: string; control?: Control<a
 
   const inputLabel = (
     <>
-      {label} {metadata.requiredArgumentForInput ? <span style={{ color: "var(--p-color-text-critical)" }}>*</span> : null}
+      {labelProp ?? label} {metadata.requiredArgumentForInput ? <span style={{ color: "var(--p-color-text-critical)" }}>*</span> : null}
     </>
   );
 

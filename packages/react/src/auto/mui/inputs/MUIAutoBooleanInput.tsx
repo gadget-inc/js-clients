@@ -5,8 +5,8 @@ import { useController, type Control } from "react-hook-form";
 import { useFieldMetadata } from "../../hooks/useFieldMetadata.js";
 import { MUIAutoFormControl } from "./MUIAutoFormControl.js";
 
-export const MUIAutoBooleanInput = (props: { field: string; control?: Control<any> } & Partial<CheckboxProps>) => {
-  const { field: fieldApiIdentifier, control, ...rest } = props;
+export const MUIAutoBooleanInput = (props: { field: string; control?: Control<any>; label?: string } & Partial<CheckboxProps>) => {
+  const { field: fieldApiIdentifier, label, control, ...rest } = props;
 
   const { path } = useFieldMetadata(fieldApiIdentifier);
 
@@ -18,7 +18,7 @@ export const MUIAutoBooleanInput = (props: { field: string; control?: Control<an
   const { value: _value, ...restFieldProps } = fieldProps;
 
   return (
-    <MUIAutoFormControl field={props.field}>
+    <MUIAutoFormControl field={props.field} label={label}>
       <Checkbox {...restFieldProps} checked={fieldProps.value} {...rest} />
     </MUIAutoFormControl>
   );

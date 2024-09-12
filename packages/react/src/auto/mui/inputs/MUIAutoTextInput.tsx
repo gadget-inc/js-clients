@@ -14,14 +14,14 @@ export const MUIAutoTextInput = (
   const stringInputController = useStringInputController({ field, control });
 
   const isRequired = stringInputController.metadata.requiredArgumentForInput;
-  const label = stringInputController.label + (isRequired ? " *" : "");
+  const label = (props.label ?? stringInputController.label) + (isRequired ? " *" : "");
   return (
     <TextField
       {...stringInputController}
-      label={label}
       error={stringInputController.isError}
       helperText={stringInputController.errorMessage}
       {...props}
+      label={label}
     />
   );
 };

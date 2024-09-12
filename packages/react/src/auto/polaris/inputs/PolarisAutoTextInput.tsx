@@ -21,6 +21,7 @@ export const PolarisAutoTextInput = (
       type={stringInputController.type as TextFieldProps["type"]}
       error={stringInputController.errorMessage}
       {...props}
+      label={props.label || stringInputController.metadata.name}
     />
   );
 };
