@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-non-null-assertion */
 import type { DefinitionNode, DirectiveNode, OperationDefinitionNode } from "@0no-co/graphql.web";
-import type { ClientOptions, RequestPolicy } from "@urql/core";
-import { Client, cacheExchange, fetchExchange, subscriptionExchange } from "@urql/core";
+import type { ClientOptions, RequestPolicy, SSRExchange } from "@urql/core";
+import { Client, cacheExchange, fetchExchange, ssrExchange, subscriptionExchange } from "@urql/core";
 import type { ExecutionResult } from "graphql";
 import type { Sink, Client as SubscriptionClient, ClientOptions as SubscriptionClientOptions } from "graphql-ws";
 import { CloseCode, createClient as createSubscriptionClient } from "graphql-ws";
@@ -107,6 +107,8 @@ export class GadgetConnection {
   private sessionTokenStore?: BrowserStorage;
   private requestPolicy: RequestPolicy;
   createSubscriptionClient: typeof createSubscriptionClient;
+
+  ssrExchange?: SSRExchange;
 
   constructor(readonly options: GadgetConnectionOptions) {
     if (!options.endpoint) throw new Error("Must provide an `endpoint` option for a GadgetConnection to connect to");
@@ -363,7 +365,14 @@ export class GadgetConnection {
   }
 
   private newBaseClient() {
-    const exchanges = [...this.exchanges.beforeAll, operationNameExchange, urlParamExchange];
+    this.ssrExchange = ssrExchange({
+      isClient: typeof window !== "undefined",
+      initialState: typeof window !== "undefined" ? (window as any).__URQL_DATA__ : undefined,
+      staleWhileRevalidate: true,
+    });
+    this.ssrExchange.extractData();
+
+    const exchanges = [...this.exchanges.beforeAll, operationNameExchange, urlParamExchange, this.ssrExchange];
 
     // apply urql's default caching behaviour when client side (but skip it server side)
     if (typeof window != "undefined") {
