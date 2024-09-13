@@ -2,6 +2,7 @@ import type { ISchema } from "yup";
 import { MixedSchema, NumberSchema, StringSchema, array, boolean, date, mixed, number, object, string } from "yup";
 import { fileSizeValidationErrorMessage } from "./auto/hooks/useFileInputController.js";
 import type {
+  FieldMetadataFragment,
   GadgetEnumConfig,
   GadgetGenericFieldValidation,
   GadgetObjectFieldConfig,
@@ -12,8 +13,10 @@ import type {
 import { GadgetFieldType } from "./internal/gql/graphql.js";
 import type { FieldMetadata } from "./metadata.js";
 
-const validatorForField = (field: FieldMetadata) => {
+const validatorForField = (field: FieldMetadata, pathsToValidate: string[] = [], currentFieldPath = "") => {
   let validator;
+  const path = currentFieldPath ? `${currentFieldPath}.${field.apiIdentifier}` : field.apiIdentifier;
+
   switch (field.fieldType) {
     case GadgetFieldType.Boolean: {
       validator = boolean();
@@ -91,7 +94,7 @@ const validatorForField = (field: FieldMetadata) => {
     }
     case GadgetFieldType.Object: {
       const config = field.configuration as GadgetObjectFieldConfig;
-      validator = validationSchema(config.fields as any);
+      validator = validationSchema(config.fields as any, pathsToValidate, path);
       break;
     }
     case GadgetFieldType.RichText: {
@@ -129,13 +132,23 @@ const validatorForField = (field: FieldMetadata) => {
     }
   }
 
-  if (field.requiredArgumentForInput) {
+  validator = applyValidationsToInputField(field, validator, pathsToValidate.includes(path));
+
+  return validator;
+};
+
+const applyValidationsToInputField = (field: FieldMetadataFragment, validator: any, pathRequiresValidation: boolean) => {
+  if (field.requiredArgumentForInput && pathRequiresValidation) {
     if (field.fieldType === GadgetFieldType.RichText) {
       validator = object({ markdown: string().required() });
     }
     validator = validator.required(`${field.name} is required`);
   } else {
-    validator = (validator.nullable() as any).default(null);
+    validator = validator.nullable().default(null);
+  }
+
+  if (!pathRequiresValidation) {
+    return validator;
   }
 
   for (const validation of field.configuration.validations) {
@@ -251,10 +264,10 @@ export const isFailedJSONParse = (value: any): value is FailedJSONParse => {
 /**
  * Build a Yup validation schema given some fields metadata for validating that a data object conforms to the schema at runtime
  */
-export const validationSchema = (fields: FieldMetadata[]) => {
+export const validationSchema = (fields: FieldMetadata[], pathsToValidate: string[] = [], currentPath = "") => {
   const validators: Record<string, ISchema<any>> = {};
   for (const field of fields) {
-    validators[field.apiIdentifier] = validatorForField(field);
+    validators[field.apiIdentifier] = validatorForField(field, pathsToValidate, currentPath);
   }
   return object(validators);
 };
