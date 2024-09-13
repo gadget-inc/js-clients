@@ -74,7 +74,7 @@ export const UpsertRecordWithoutFindBy = {
 export const Excluded = {
   args: {
     action: api.widget.create,
-    exclude: ["birthday", "roles"],
+    exclude: ["birthday", "roles", "name"],
   },
 };
 
@@ -89,7 +89,8 @@ export const ExcludedWithDefaultValues = {
 export const Included = {
   args: {
     action: api.widget.create,
-    include: ["name", "inventoryCount"],
+    // Inventory is required and  not included. This will be a server-side error since it can be set in the action file code
+    include: ["name"],
   },
 };
 

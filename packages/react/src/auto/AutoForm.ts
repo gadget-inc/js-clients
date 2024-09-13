@@ -54,12 +54,12 @@ export type AutoFormProps<
 /**
  * React hook for getting the validation schema for a list of fields
  */
-export const useValidationResolver = (metadata: ActionMetadata | GlobalActionMetadata | undefined) => {
+const useValidationResolver = (metadata: ActionMetadata | GlobalActionMetadata | undefined, pathsToValidate: string[]) => {
   return useMemo(() => {
     if (!metadata) return undefined;
     const action = isActionMetadata(metadata) ? metadata.action : metadata;
-    return yupResolver(validationSchema(action.inputFields));
-  }, [metadata]);
+    return yupResolver(validationSchema(action.inputFields, pathsToValidate));
+  }, [metadata, pathsToValidate]);
 };
 
 /**
@@ -180,7 +180,10 @@ export const useAutoForm = <
   } = useActionForm(action, {
     defaultValues: defaultValues as any,
     findBy: "findBy" in props ? props.findBy : undefined,
-    resolver: useValidationResolver(metadata),
+    resolver: useValidationResolver(
+      metadata,
+      fields.map(({ path }) => path)
+    ),
     send: () => {
       const fieldsToSend = fields
         .filter(({ path, metadata }) => {
