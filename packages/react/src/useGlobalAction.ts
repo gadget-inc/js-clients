@@ -42,7 +42,8 @@ export const useGlobalAction = <F extends GlobalActionFunction<any>>(
         detail: {
           reason: stubbedAction.reason,
           action: {
-            actionApiIdentifier: stubbedAction.functionName,
+            functionName: stubbedAction.functionName,
+            actionApiIdentifier: stubbedAction.actionApiIdentifier,
             dataPath: stubbedAction.dataPath,
           },
         },

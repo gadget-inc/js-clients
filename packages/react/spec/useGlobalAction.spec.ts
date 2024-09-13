@@ -270,7 +270,8 @@ describe("useGlobalAction", () => {
           type: "stubbedAction",
           reason: "MissingApiTrigger",
           dataPath: "fakePath",
-          functionName: "fakeFunction",
+          functionName: "fakeAction",
+          actionApiIdentifier: "fakeAction",
           variables: {},
         }),
       {
@@ -282,7 +283,8 @@ describe("useGlobalAction", () => {
     expect(eventDispatched!.detail).toEqual({
       reason: "MissingApiTrigger",
       action: {
-        actionApiIdentifier: "fakeFunction",
+        functionName: "fakeAction",
+        actionApiIdentifier: "fakeAction",
         dataPath: "fakePath",
       },
     });

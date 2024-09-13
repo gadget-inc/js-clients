@@ -143,6 +143,7 @@ export interface StubbedActionFunctionMetadata {
   functionName: string;
   operationName?: string;
   errorMessage: string;
+  actionApiIdentifier: string;
   modelApiIdentifier?: string;
   variables: VariablesOptions;
   reason: StubbedActionReason;

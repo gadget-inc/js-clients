@@ -820,7 +820,8 @@ describe("useAction", () => {
           type: "stubbedAction",
           reason: "MissingApiTrigger",
           dataPath: "fakePath",
-          functionName: "fakeFunction",
+          functionName: "fakeAction",
+          actionApiIdentifier: "fakeAction",
           modelApiIdentifier: "fakeModel",
           variables: {},
         }),
@@ -833,7 +834,8 @@ describe("useAction", () => {
     expect(eventDispatched!.detail).toEqual({
       reason: "MissingApiTrigger",
       action: {
-        actionApiIdentifier: "fakeFunction",
+        functionName: "fakeAction",
+        actionApiIdentifier: "fakeAction",
         dataPath: "fakePath",
         modelApiIdentifier: "fakeModel",
       },
