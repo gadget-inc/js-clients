@@ -1,4 +1,11 @@
-import type { ActionFunction, DefaultSelection, GadgetRecord, LimitToKnownKeys, Select } from "@gadgetinc/api-client-core";
+import type {
+  ActionFunction,
+  DefaultSelection,
+  GadgetRecord,
+  LimitToKnownKeys,
+  Select,
+  StubbedActionFunction,
+} from "@gadgetinc/api-client-core";
 import {
   actionOperation,
   capitalizeIdentifier,
@@ -7,7 +14,7 @@ import {
   hydrateRecord,
   namespaceDataPath,
 } from "@gadgetinc/api-client-core";
-import { useCallback, useContext, useMemo } from "react";
+import { useCallback, useContext, useEffect, useMemo } from "react";
 import type { AnyVariables, OperationContext, UseMutationState } from "urql";
 import { GadgetUrqlClientContext } from "./GadgetProvider.js";
 import { useGadgetMutation } from "./useGadgetMutation.js";
@@ -61,6 +68,28 @@ export const useAction = <
   Exclude<F["variablesType"], null | undefined>
 > => {
   if (!useContext(GadgetUrqlClientContext)) throw new Error(noProviderErrorMessage);
+
+  useEffect(() => {
+    if (action.type === ("stubbedAction" as string)) {
+      const stubbedAction = action as unknown as StubbedActionFunction<GivenOptions>;
+      if (!("reason" in stubbedAction) || !("dataPath" in stubbedAction)) {
+        // Don't dispatch an event if the generated client has not yet been updated with the updated parameters
+        return;
+      }
+
+      const event = new CustomEvent("gadget:devharness:stubbedActionError", {
+        detail: {
+          reason: stubbedAction.reason,
+          action: {
+            actionApiIdentifier: stubbedAction.functionName,
+            modelApiIdentifier: stubbedAction.modelApiIdentifier,
+            dataPath: stubbedAction.dataPath,
+          },
+        },
+      });
+      globalThis.dispatchEvent(event);
+    }
+  }, []);
 
   const memoizedOptions = useStructuralMemo(options);
   const plan = useMemo(() => {

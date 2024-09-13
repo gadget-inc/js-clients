@@ -1,4 +1,11 @@
-import type { BulkActionFunction, DefaultSelection, GadgetRecord, LimitToKnownKeys, Select } from "@gadgetinc/api-client-core";
+import type {
+  BulkActionFunction,
+  DefaultSelection,
+  GadgetRecord,
+  LimitToKnownKeys,
+  Select,
+  StubbedActionFunction,
+} from "@gadgetinc/api-client-core";
 import {
   actionOperation,
   capitalizeIdentifier,
@@ -7,7 +14,7 @@ import {
   hydrateRecordArray,
   namespaceDataPath,
 } from "@gadgetinc/api-client-core";
-import { useCallback, useMemo } from "react";
+import { useCallback, useEffect, useMemo } from "react";
 import type { OperationContext, UseMutationState } from "urql";
 import { useGadgetMutation } from "./useGadgetMutation.js";
 import { useStructuralMemo } from "./useStructuralMemo.js";
@@ -57,6 +64,28 @@ export const useBulkAction = <
       >[],
   Exclude<F["variablesType"], null | undefined>
 > => {
+  useEffect(() => {
+    if (action.type === ("stubbedAction" as string)) {
+      const stubbedAction = action as unknown as StubbedActionFunction<GivenOptions>;
+      if (!("reason" in stubbedAction) || !("dataPath" in stubbedAction)) {
+        // Don't dispatch an event if the generated client has not yet been updated with the updated parameters
+        return;
+      }
+
+      const event = new CustomEvent("gadget:devharness:stubbedActionError", {
+        detail: {
+          reason: stubbedAction.reason,
+          action: {
+            actionApiIdentifier: stubbedAction.functionName,
+            modelApiIdentifier: stubbedAction.modelApiIdentifier,
+            dataPath: stubbedAction.dataPath,
+          },
+        },
+      });
+      globalThis.dispatchEvent(event);
+    }
+  }, []);
+
   const memoizedOptions = useStructuralMemo(options);
   const plan = useMemo(() => {
     return actionOperation(

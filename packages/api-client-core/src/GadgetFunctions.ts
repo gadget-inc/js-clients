@@ -136,6 +136,21 @@ export interface ActionFunctionMetadata<OptionsT, VariablesT, SelectionT, Schema
   hasCreateOrUpdateEffect?: boolean;
 }
 
+export type StubbedActionReason = "MissingApiTrigger";
+
+export interface StubbedActionFunctionMetadata {
+  type: "stubbedAction";
+  functionName: string;
+  operationName?: string;
+  errorMessage: string;
+  modelApiIdentifier?: string;
+  variables: VariablesOptions;
+  reason: StubbedActionReason;
+  dataPath: string;
+}
+
+export type StubbedActionFunction<OptionsT> = StubbedActionFunctionMetadata & ActionWithNoIdAndNoVariables<OptionsT>;
+
 export type ActionFunction<OptionsT, VariablesT, SelectionT, SchemaT, DefaultsT> = ActionFunctionMetadata<
   OptionsT,
   VariablesT,
