@@ -1,5 +1,14 @@
 # @gadgetinc/react
 
+## 0.17.1
+
+### Patch Changes
+
+- Updated `AutoTable` to automatically deselect records and close after running Gadget bulk actions
+- Updated `AutoInput` to accept an optional `label?: string` input
+- Fixed bug with AutoForm include/exclude system which prevented submission due to validations getting applied to hidden fields
+- fix(useActionForm): fixes issue where relationship fields with readonly children were sometimes updated
+
 ## 0.17.0
 
 ### Patch Changes
