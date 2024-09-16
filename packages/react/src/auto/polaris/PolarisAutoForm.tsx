@@ -6,7 +6,7 @@ import { FormProvider } from "react-hook-form";
 import { humanizeCamelCase, type OptionsType } from "../../utils.js";
 import type { AutoFormProps } from "../AutoForm.js";
 import { useAutoForm } from "../AutoForm.js";
-import { TriggerableActionRequiredErrorMessage } from "../AutoFormActionValidators.js";
+import { validateAutoFormProps } from "../AutoFormActionValidators.js";
 import { AutoFormMetadataContext } from "../AutoFormContext.js";
 import { PolarisAutoInput } from "./inputs/PolarisAutoInput.js";
 import { PolarisAutoSubmit } from "./submit/PolarisAutoSubmit.js";
@@ -33,9 +33,7 @@ export const PolarisAutoForm = <
   const { action, findBy } = props as AutoFormProps<GivenOptions, SchemaT, ActionFunc> &
     Omit<Partial<FormProps>, "action"> & { findBy: any };
 
-  if (!action) {
-    throw new Error(TriggerableActionRequiredErrorMessage);
-  }
+  validateAutoFormProps(props);
 
   // Component key to force re-render when the action or findBy changes
   const componentKey = `${action.modelApiIdentifier ?? ""}.${action.operationName}.${findBy}`;

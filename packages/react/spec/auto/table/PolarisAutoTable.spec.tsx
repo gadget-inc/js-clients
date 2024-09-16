@@ -3,6 +3,7 @@ import { act, render } from "@testing-library/react";
 import type { UserEvent } from "@testing-library/user-event";
 import { userEvent } from "@testing-library/user-event";
 import React from "react";
+import { InvalidModelErrorMessage } from "../../../src/auto/AutoTableValidators.js";
 import { GadgetFieldType } from "../../../src/internal/gql/graphql.js";
 import type { TableColumn } from "../../../src/use-table/types.js";
 import { testApi as api } from "../../apis.js";
@@ -449,6 +450,16 @@ describe("PolarisAutoTable", () => {
 
       expect(firstRowCells[1].getElementsByClassName(POLARIS_TAG_CLASS).length).toBe(4);
       expect(firstRowCells[1].innerHTML).not.toContain("...");
+    });
+  });
+
+  describe("invalid model", () => {
+    it("throws an error when the model is not valid", () => {
+      expect(() => {
+        render(<PolarisAutoTable model={(api as any).invalidModel} />, {
+          wrapper: PolarisMockedProviders,
+        });
+      }).toThrow(InvalidModelErrorMessage);
     });
   });
 });

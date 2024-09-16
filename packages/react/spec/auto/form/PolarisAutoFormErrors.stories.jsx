@@ -28,6 +28,16 @@ export default {
   ],
 };
 
+export const InvalidModelAction = {
+  args: {
+    action: api.autoTableTest.invalidAction,
+  },
+};
+
+export const MissingActionProp = {
+  args: {},
+};
+
 export const FieldNameCustomParamCollisionError = {
   args: {
     findBy: "1",

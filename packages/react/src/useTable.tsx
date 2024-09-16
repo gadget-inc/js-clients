@@ -7,6 +7,7 @@ import {
   type Select,
 } from "@gadgetinc/api-client-core";
 import { useCallback, useMemo, useState } from "react";
+import { validateAutoTableProps } from "./auto/AutoTableValidators.js";
 import { useModelMetadata } from "./metadata.js";
 import { getTableColumns, getTableRows, getTableSelectionMap, getTableSpec } from "./use-table/helpers.js";
 import type { TableOptions, TableResult } from "./use-table/types.js";
@@ -48,6 +49,8 @@ export const useTable = <
 ): TableResult<
   GadgetRecord<Select<Exclude<F["schemaType"], null | undefined>, DefaultSelection<F["selectionType"], Options, F["defaultSelection"]>>>[]
 > => {
+  validateAutoTableProps(manager);
+
   const namespace = manager.findMany.namespace;
   const namespaceAsArray: string[] = namespace ? (Array.isArray(namespace) ? namespace : [namespace]) : [];
   const {
