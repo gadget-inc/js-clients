@@ -67,7 +67,7 @@ export const useBulkAction = <
   useEffect(() => {
     if (action.type === ("stubbedAction" as string)) {
       const stubbedAction = action as unknown as StubbedActionFunction<GivenOptions>;
-      if (!("reason" in stubbedAction) || !("dataPath" in stubbedAction)) {
+      if (!("reason" in stubbedAction) || !("dataPath" in stubbedAction) || !("actionApiIdentifier" in stubbedAction)) {
         // Don't dispatch an event if the generated client has not yet been updated with the updated parameters
         return;
       }
@@ -76,7 +76,8 @@ export const useBulkAction = <
         detail: {
           reason: stubbedAction.reason,
           action: {
-            actionApiIdentifier: stubbedAction.functionName,
+            functionName: stubbedAction.functionName,
+            actionApiIdentifier: stubbedAction.actionApiIdentifier,
             modelApiIdentifier: stubbedAction.modelApiIdentifier,
             dataPath: stubbedAction.dataPath,
           },
