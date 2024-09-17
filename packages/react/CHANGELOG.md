@@ -1,5 +1,12 @@
 # @gadgetinc/react
 
+## 0.17.2
+
+### Patch Changes
+
+- Removed deprecated Polaris `Frame` usage from AutoTable
+- Fixed bug in `AutoForm` where dynamically changing findBy object props did not cause the form to re-render
+
 ## 0.17.1
 
 ### Patch Changes
