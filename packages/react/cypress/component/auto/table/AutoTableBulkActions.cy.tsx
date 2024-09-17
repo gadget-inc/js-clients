@@ -115,16 +115,17 @@ describe("AutoTable - Bulk actions", () => {
     cy.wait("@getWidgets").its("request.body.variables").should("deep.equal", { first: 50 }); // No search value
 
     cy.contains(ActionSuccessMessage);
+    cy.get("button").contains("Close").click();
 
     // Now ensure that error response appears in the modal
     selectRecordIds(["20", "21", "22"]);
+
     openBulkAction("Delete");
 
     mockBulkDeleteWidgets(bulkDeleteFailureResponse, "bulkDeleteWidgets2");
 
     cy.get("button").contains("Run").click();
     cy.wait("@bulkDeleteWidgets2");
-
     cy.contains(ActionErrorMessage);
   });
 
@@ -152,6 +153,7 @@ describe("AutoTable - Bulk actions", () => {
       cy.wait("@getWidgets").its("request.body.variables").should("deep.equal", { first: 50 }); // No search value
 
       cy.contains(ActionSuccessMessage);
+      cy.get("button").contains("Close").click();
     });
   });
 });
