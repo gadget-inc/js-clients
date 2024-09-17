@@ -38,7 +38,7 @@ export const PolarisAutoForm = <
   }
 
   // Component key to force re-render when the action or findBy changes
-  const componentKey = `${action.modelApiIdentifier ?? ""}.${action.operationName}.${findBy}`;
+  const componentKey = `${action.modelApiIdentifier ?? ""}.${action.operationName}.${JSON.stringify(findBy)}`;
 
   return (
     <PolarisAutoFormComponent
