@@ -87,8 +87,14 @@ export type TableResult<Data> = [
     selection: RecordSelection;
     sort: SortState;
   },
-  refresh: (opts?: Partial<OperationContext>) => void
+  refresh: (opts?: Partial<OperationContext>) => void,
+  toast: {
+    message?: ToastMessage;
+    setMessage: (toastMessage: ToastMessage) => void;
+  }
 ];
+
+export type ToastMessage = { text: string; type: "success" | "error" };
 
 /**
  * @deprecated

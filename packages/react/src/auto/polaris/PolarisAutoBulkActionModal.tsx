@@ -1,4 +1,4 @@
-import { Button, ButtonGroup, Modal, Spinner, Text, Toast } from "@shopify/polaris";
+import { Button, ButtonGroup, Modal, Popover, Spinner, Text } from "@shopify/polaris";
 import React, { useCallback, useEffect, useMemo } from "react";
 import type { TableRow } from "../../use-table/types.js";
 import { useBulkAction } from "../../useBulkAction.js";
@@ -16,13 +16,17 @@ export const PolarisAutoBulkActionModal = (props: {
 
   return (
     <>
-      {toastMessage && (
-        <Toast
-          content={toastMessage}
-          onDismiss={() => setToastMessage(undefined)}
-          duration={4500}
-          error={toastMessage.includes(ActionErrorMessage)}
-        />
+      {false && toastMessage && (
+        <>
+          <Popover
+            active={true}
+            activator={<div style={{ position: "absolute", top: "90%", left: "100px" }}></div>}
+            onClose={() => setToastMessage(undefined)}
+            preferredPosition="above"
+          >
+            Hello 1234
+          </Popover>
+        </>
       )}
       <BulkActionModal {...props} setToastMessage={setToastMessage} />
     </>

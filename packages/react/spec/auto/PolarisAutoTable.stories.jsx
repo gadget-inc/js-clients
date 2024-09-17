@@ -21,21 +21,29 @@ export default {
       // 👇 Make it configurable by reading the theme value from parameters
 
       return (
-        <Provider api={api}>
-          <AppProvider i18n={translations}>
-            <div style={{ width: "100%" }}>
-              <Box paddingBlockEnd="400">
-                <BlockStack gap="200">
-                  <LegacyCard>
-                    <StorybookErrorBoundary>
-                      <Story />
-                    </StorybookErrorBoundary>
-                  </LegacyCard>
-                </BlockStack>
-              </Box>
-            </div>
-          </AppProvider>
-        </Provider>
+        <div
+          style={
+            {
+              // width: "333px"
+            }
+          }
+        >
+          <Provider api={api}>
+            <AppProvider i18n={translations}>
+              <div style={{ width: "100%" }}>
+                <Box paddingBlockEnd="400">
+                  <BlockStack gap="200">
+                    <LegacyCard>
+                      <StorybookErrorBoundary>
+                        <Story />
+                      </StorybookErrorBoundary>
+                    </LegacyCard>
+                  </BlockStack>
+                </Box>
+              </div>
+            </AppProvider>
+          </Provider>
+        </div>
       );
     },
   ],

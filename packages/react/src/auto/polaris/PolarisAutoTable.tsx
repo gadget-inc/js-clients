@@ -15,8 +15,8 @@ import {
 
 import pluralize from "pluralize";
 import type { ReactNode } from "react";
-import React, { useCallback, useMemo } from "react";
-import type { TableColumn, TableRow } from "../../use-table/types.js";
+import React, { useCallback, useMemo, useState } from "react";
+import type { TableColumn, TableRow, ToastMessage } from "../../use-table/types.js";
 import { useTable } from "../../useTable.js";
 import type { ColumnValueType, OptionsType } from "../../utils.js";
 import type { AutoTableProps } from "../AutoTable.js";
@@ -81,6 +81,9 @@ const PolarisAutoTableComponent = <
   const { onClick } = props;
   const searchable = props.searchable ?? true;
   const paginate = props.paginate ?? true;
+
+  const [toastMessage, setToastMessage] = useState<ToastMessage | undefined>(undefined);
+  const toast = { message: toastMessage, setMessage: setToastMessage };
 
   const [methods, refresh] = useTable<GivenOptions, SchemaT, FinderFunction, Options>(props.model, {
     select: props.select,
@@ -152,106 +155,118 @@ const PolarisAutoTableComponent = <
   }
 
   return (
-    <AutoTableContext.Provider value={[methods, refresh]}>
-      <Frame>
-        <BlockStack>
-          <PolarisAutoBulkActionModal
-            model={props.model}
-            modelActionDetails={selectedModelActionDetails}
-            ids={selection.recordIds}
-            selectedRows={selectedRows}
-            clearSelection={selection.clearAll}
-          />
+    <AutoTableContext.Provider value={[methods, refresh, toast]}>
+      <div
+        style={{
+          position: "relative",
 
-          {searchable && (
-            <IndexFilters
-              mode={mode}
-              setMode={setMode}
-              appliedFilters={[]}
-              filters={[]}
-              onClearAll={() => undefined}
-              tabs={[]}
-              canCreateNewView={false}
-              selected={1}
-              loading={fetching}
-              cancelAction={{ onAction: () => search.clear() }}
-              disabled={!!error}
-              // Search
-              queryValue={search.value}
-              onQueryChange={search.set}
-              onQueryClear={search.clear}
-            />
-          )}
+          width: "100%",
 
-          {error && (
-            <Box paddingBlockStart="200" paddingBlockEnd="1000">
-              <Banner title={error.message} tone="critical" />
-            </Box>
-          )}
-
-          <IndexTable
-            selectedItemsCount={selection.recordIds.length}
-            {...disablePaginatedSelectAllButton}
-            onSelectionChange={selection.onSelectionChange}
-            {...polarisTableProps}
-            promotedBulkActions={promotedBulkActions.length ? promotedBulkActions : undefined}
-            bulkActions={bulkActions.length ? bulkActions : undefined}
-            resourceName={resourceName}
-            emptyState={props.emptyState ?? <EmptySearchResult title={`No ${resourceName.plural} yet`} description={""} withIllustration />}
+          backgroundColor: "blue",
+          // height: "1px",
+        }}
+      >
+        <div style={{ position: "absolute", top: "102233%", left: "50%", zIndex: 132345, backgroundColor: "green", height: "0px" }}>
+          <div style={{ backgroundColor: "red" }}>TOASTY</div>
+        </div>
+      </div>
+      <PolarisAutoBulkActionModal
+        model={props.model}
+        modelActionDetails={selectedModelActionDetails}
+        ids={selection.recordIds}
+        selectedRows={selectedRows}
+        clearSelection={selection.clearAll}
+      />
+      {false && <Frame></Frame>}
+      <BlockStack>
+        {searchable && (
+          <IndexFilters
+            mode={mode}
+            setMode={setMode}
+            appliedFilters={[]}
+            filters={[]}
+            onClearAll={() => undefined}
+            tabs={[]}
+            canCreateNewView={false}
+            selected={1}
             loading={fetching}
-            hasMoreItems={page.hasNextPage}
-            itemCount={
-              error
-                ? 1 // Don't show the empty state if there's an error
-                : rows?.length ?? 0
-            }
-            pagination={
-              paginate
-                ? {
-                    hasNext: page.hasNextPage,
-                    hasPrevious: page.hasPreviousPage,
-                    onNext: page.goToNextPage,
-                    onPrevious: page.goToPreviousPage,
-                  }
-                : undefined
-            }
-            sortDirection={gadgetToPolarisDirection(sort.direction)}
-            sortColumnIndex={columns ? getColumnIndex(columns, sort.column) : undefined}
-            onSort={(headingIndex) => handleColumnSort(headingIndex)}
-            selectable={props.selectable === undefined ? bulkActionOptions.length !== 0 : props.selectable}
-            lastColumnSticky={props.lastColumnSticky}
-            hasZebraStriping={props.hasZebraStriping}
-            condensed={props.condensed}
-          >
-            {rows &&
-              columns &&
-              rows.map((row, index) => {
-                const rawRecord = rawRecords?.[index];
-                return (
-                  <IndexTable.Row
-                    key={row.id as string}
-                    id={row.id as string}
-                    position={index}
-                    onClick={onClick ? onClickCallback(row, rawRecord) : undefined}
-                    selected={selection.recordIds.includes(row.id as string)}
-                  >
-                    {columns.map((column) => (
-                      <IndexTable.Cell key={column.identifier}>
-                        <div style={{ maxWidth: "200px" }}>
-                          {column.type == "CustomRenderer" ? (
-                            (row[column.identifier] as ReactNode)
-                          ) : (
-                            <PolarisAutoTableCellRenderer column={column} value={row[column.identifier] as ColumnValueType} />
-                          )}
-                        </div>
-                      </IndexTable.Cell>
-                    ))}
-                  </IndexTable.Row>
-                );
-              })}
-          </IndexTable>
-        </BlockStack>
-      </Frame>
+            cancelAction={{ onAction: () => search.clear() }}
+            disabled={!!error}
+            // Search
+            queryValue={search.value}
+            onQueryChange={search.set}
+            onQueryClear={search.clear}
+          />
+        )}
+
+        {"error" && (
+          <Box paddingBlockStart="200" paddingBlockEnd="1000">
+            <Banner title={"error.message"} tone="critical" />
+          </Box>
+        )}
+
+        <IndexTable
+          selectedItemsCount={selection.recordIds.length}
+          {...disablePaginatedSelectAllButton}
+          onSelectionChange={selection.onSelectionChange}
+          {...polarisTableProps}
+          promotedBulkActions={promotedBulkActions.length ? promotedBulkActions : undefined}
+          bulkActions={bulkActions.length ? bulkActions : undefined}
+          resourceName={resourceName}
+          emptyState={props.emptyState ?? <EmptySearchResult title={`No ${resourceName.plural} yet`} description={""} withIllustration />}
+          loading={fetching}
+          hasMoreItems={page.hasNextPage}
+          itemCount={
+            error
+              ? 1 // Don't show the empty state if there's an error
+              : rows?.length ?? 0
+          }
+          pagination={
+            paginate
+              ? {
+                  hasNext: page.hasNextPage,
+                  hasPrevious: page.hasPreviousPage,
+                  onNext: page.goToNextPage,
+                  onPrevious: page.goToPreviousPage,
+                }
+              : undefined
+          }
+          sortDirection={gadgetToPolarisDirection(sort.direction)}
+          sortColumnIndex={columns ? getColumnIndex(columns, sort.column) : undefined}
+          onSort={(headingIndex) => handleColumnSort(headingIndex)}
+          selectable={props.selectable === undefined ? bulkActionOptions.length !== 0 : props.selectable}
+          lastColumnSticky={props.lastColumnSticky}
+          hasZebraStriping={props.hasZebraStriping}
+          condensed={props.condensed}
+        >
+          {rows &&
+            columns &&
+            rows.map((row, index) => {
+              const rawRecord = rawRecords?.[index];
+              return (
+                <IndexTable.Row
+                  key={row.id as string}
+                  id={row.id as string}
+                  position={index}
+                  onClick={onClick ? onClickCallback(row, rawRecord) : undefined}
+                  selected={selection.recordIds.includes(row.id as string)}
+                >
+                  {columns.map((column) => (
+                    <IndexTable.Cell key={column.identifier}>
+                      <div style={{ maxWidth: "200px" }}>
+                        {column.type == "CustomRenderer" ? (
+                          (row[column.identifier] as ReactNode)
+                        ) : (
+                          <PolarisAutoTableCellRenderer column={column} value={row[column.identifier] as ColumnValueType} />
+                        )}
+                      </div>
+                    </IndexTable.Cell>
+                  ))}
+                </IndexTable.Row>
+              );
+            })}
+        </IndexTable>
+      </BlockStack>
     </AutoTableContext.Provider>
   );
 };
