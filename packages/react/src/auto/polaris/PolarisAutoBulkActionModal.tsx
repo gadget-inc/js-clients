@@ -1,4 +1,4 @@
-import { Button, ButtonGroup, Modal, Spinner, Text, Toast } from "@shopify/polaris";
+import { Banner, Button, ButtonGroup, Modal, Spinner, Text } from "@shopify/polaris";
 import React, { useCallback, useEffect, useMemo } from "react";
 import type { TableRow } from "../../use-table/types.js";
 import { useBulkAction } from "../../useBulkAction.js";
@@ -12,32 +12,7 @@ export const PolarisAutoBulkActionModal = (props: {
   selectedRows: TableRow[];
   clearSelection: () => void;
 }) => {
-  const [toastMessage, setToastMessage] = React.useState<string | undefined>(undefined);
-
-  return (
-    <>
-      {toastMessage && (
-        <Toast
-          content={toastMessage}
-          onDismiss={() => setToastMessage(undefined)}
-          duration={4500}
-          error={toastMessage.includes(ActionErrorMessage)}
-        />
-      )}
-      <BulkActionModal {...props} setToastMessage={setToastMessage} />
-    </>
-  );
-};
-
-const BulkActionModal = (props: {
-  model: any;
-  modelActionDetails?: ModelActionDetails;
-  ids: string[];
-  selectedRows: TableRow[];
-  clearSelection: () => void;
-  setToastMessage: (message: string) => void;
-}) => {
-  const { model, modelActionDetails, ids, selectedRows, clearSelection, setToastMessage } = props;
+  const { model, modelActionDetails, ids, selectedRows, clearSelection } = props;
 
   const [showModal, setShowModal] = React.useState(!!modelActionDetails);
   const [actionName, setActionName] = React.useState(modelActionDetails?.apiIdentifier);
@@ -55,7 +30,10 @@ const BulkActionModal = (props: {
 
   const modalTitle = useMemo(() => humanizeCamelCase(actionName ?? ""), [actionName]);
 
-  const closeModal = useCallback(() => setShowModal(false), [setShowModal]);
+  const closeAndClear = useCallback(() => {
+    setShowModal(false);
+    clearSelection();
+  }, [setShowModal, clearSelection]);
 
   if (!actionIsLoaded || !isBulkGadgetAction) {
     return null;
@@ -63,15 +41,13 @@ const BulkActionModal = (props: {
 
   return (
     <>
-      <Modal onClose={() => setShowModal(false)} title={modalTitle} open={showModal}>
+      <Modal onClose={closeAndClear} title={modalTitle} open={showModal}>
         <GadgetBulkActionModalContent
           model={model}
           modelActionDetails={modelActionDetails}
           actionLabel={modalTitle.replace("Bulk ", "")}
           ids={ids}
-          close={closeModal}
-          clearSelection={clearSelection}
-          setToastMessage={setToastMessage}
+          close={closeAndClear}
         />
       </Modal>
     </>
@@ -87,10 +63,8 @@ const GadgetBulkActionModalContent = (props: {
   actionLabel: string;
   ids: string[];
   close: () => void;
-  clearSelection: () => void;
-  setToastMessage: (message: string) => void;
 }) => {
-  const { model, modelActionDetails, actionLabel: actionName, ids, close, clearSelection, setToastMessage } = props;
+  const { model, modelActionDetails, actionLabel: actionName, ids, close } = props;
 
   const [hasRun, setHasRun] = React.useState(false);
 
@@ -100,25 +74,26 @@ const GadgetBulkActionModalContent = (props: {
 
   const hasError = !!(error || (data && (data as any).success === false));
 
+  const actionResultBanner = useMemo(
+    () =>
+      hasError ? (
+        <Banner title={`${actionName}${ActionErrorMessage}`} tone="critical" />
+      ) : (
+        <Banner title={`${actionName}${ActionSuccessMessage}`} tone="success" />
+      ),
+    [hasError]
+  );
+
   const runAction = useCallback(() => {
     void runBulkAction(ids);
     setHasRun(true);
-  }, [runBulkAction, ids, clearSelection, close]);
-
-  // Automatically close the modal if the action is successful
-  useEffect(() => {
-    if (!fetching && hasRun) {
-      clearSelection();
-      close();
-      setToastMessage(hasError ? `${actionName}${ActionErrorMessage}` : `${actionName}${ActionSuccessMessage}`);
-    }
-  }, [fetching, hasRun, hasError, clearSelection, close, setToastMessage, actionName]);
+  }, [runBulkAction, ids]);
 
   return (
     <>
       <Modal.Section>
         {fetching && <CenteredSpinner />}
-        {!fetching && !hasRun && <RunActionConfirmationText count={ids.length} />}
+        {!fetching && (hasRun ? actionResultBanner : <RunActionConfirmationText count={ids.length} />)}
       </Modal.Section>
       <Modal.Section>
         <div style={{ float: "right", paddingBottom: "16px" }}>
