@@ -2,6 +2,7 @@ import React, { useMemo } from "react";
 import deepEqual from "react-fast-compare";
 import type { ActionCallback, TableOptions } from "../../use-table/types.js";
 import { humanizeCamelCase } from "../../utils.js";
+import { validateAutoTableProps } from "../AutoTableValidators.js";
 
 export type ModelActionDetails =
   | {
@@ -31,6 +32,8 @@ export const useTableBulkActions = (props: {
   excludeActions: TableOptions["excludeActions"];
 }) => {
   const { model, actions, excludeActions } = props;
+
+  validateAutoTableProps(props.model);
 
   if (actions && excludeActions) {
     throw new Error("Cannot have both actions and excludeActions in the same table");

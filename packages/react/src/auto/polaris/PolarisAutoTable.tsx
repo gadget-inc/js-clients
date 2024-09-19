@@ -19,6 +19,7 @@ import { useTable } from "../../useTable.js";
 import type { ColumnValueType, OptionsType } from "../../utils.js";
 import type { AutoTableProps } from "../AutoTable.js";
 import { AutoTableContext } from "../AutoTableContext.js";
+import { validateAutoTableProps } from "../AutoTableValidators.js";
 import type { BulkActionOption } from "../hooks/useTableBulkActions.js";
 import { useTableBulkActions } from "../hooks/useTableBulkActions.js";
 import { PolarisAutoBulkActionModal } from "./PolarisAutoBulkActionModal.js";
@@ -63,6 +64,9 @@ export const PolarisAutoTable = <
   props: AutoTableProps<GivenOptions, SchemaT, FinderFunction, Options>
 ) => {
   const { model } = props;
+
+  validateAutoTableProps(props.model);
+
   const componentKey = `${[model.findMany.namespace, model.findMany.modelApiIdentifier].join("_")}AutoTable`;
 
   return <PolarisAutoTableComponent key={componentKey} {...props} />;
