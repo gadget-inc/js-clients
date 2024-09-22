@@ -223,6 +223,8 @@ const PolarisAutoTableComponent = <
           hasZebraStriping={props.hasZebraStriping}
           condensed={props.condensed}
         >
+          <PolarisIndexTableCellStyleOverride />
+
           {rows &&
             columns &&
             rows.map((row, index) => {
@@ -236,8 +238,8 @@ const PolarisAutoTableComponent = <
                   selected={selection.recordIds.includes(row.id as string)}
                 >
                   {columns.map((column) => (
-                    <IndexTable.Cell key={column.identifier}>
-                      <div style={{ maxWidth: "200px" }}>
+                    <IndexTable.Cell key={column.identifier} className="Gadget_PolarisAutoTable_IndexTableCell">
+                      <div style={{ ...defaultCellStyle, ...column.style }}>
                         {column.type == "CustomRenderer" ? (
                           (row[column.identifier] as ReactNode)
                         ) : (
@@ -251,8 +253,27 @@ const PolarisAutoTableComponent = <
             })}
         </IndexTable>
       </BlockStack>
+      <PolarisIndexTableCellStyleOverride />
     </AutoTableContext.Provider>
   );
+};
+
+const defaultCellStyle: React.CSSProperties = {
+  maxWidth: "200px",
+  padding: "0.375rem",
+  overflow: "hidden",
+  textOverflow: "ellipsis",
+  whiteSpace: "nowrap",
+} as const;
+
+const PolarisIndexTableCellStyleOverride = () => {
+  // !important to override the default padding from a class that gets applied afterwards
+  const css = /*css*/ `
+  .Gadget_PolarisAutoTable_IndexTableCell {
+    padding: 0px !important; 
+  }
+`;
+  return <style>{css}</style>;
 };
 
 const disablePaginatedSelectAllButton = {

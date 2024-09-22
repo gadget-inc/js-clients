@@ -346,6 +346,7 @@ describe("helper functions for useTable hook", () => {
             "header": "Name",
             "identifier": "name",
             "sortable": true,
+            "style": undefined,
             "type": "String",
           },
           {
@@ -353,6 +354,7 @@ describe("helper functions for useTable hook", () => {
             "header": "Age",
             "identifier": "age",
             "sortable": true,
+            "style": undefined,
             "type": "Number",
           },
         ]
@@ -385,6 +387,7 @@ describe("helper functions for useTable hook", () => {
             "header": "Some cool name",
             "identifier": "name",
             "sortable": true,
+            "style": undefined,
             "type": "String",
           },
           {
@@ -392,6 +395,7 @@ describe("helper functions for useTable hook", () => {
             "header": "Age",
             "identifier": "age",
             "sortable": false,
+            "style": undefined,
             "type": "Number",
           },
         ]
@@ -412,6 +416,7 @@ describe("helper functions for useTable hook", () => {
               "header": "Address",
               "identifier": "address",
               "sortable": true,
+              "style": undefined,
               "type": "String",
             },
             {
@@ -420,6 +425,7 @@ describe("helper functions for useTable hook", () => {
               "identifier": "owner",
               "relationshipType": "HasOne",
               "sortable": true,
+              "style": undefined,
               "type": "String",
             },
             {
@@ -428,6 +434,7 @@ describe("helper functions for useTable hook", () => {
               "identifier": "products",
               "relationshipType": "HasMany",
               "sortable": true,
+              "style": undefined,
               "type": "String",
             },
             {
@@ -436,6 +443,7 @@ describe("helper functions for useTable hook", () => {
               "identifier": "manufacturer",
               "relationshipType": "BelongsTo",
               "sortable": true,
+              "style": undefined,
               "type": "String",
             },
           ]
@@ -455,6 +463,7 @@ describe("helper functions for useTable hook", () => {
               "header": "Address",
               "identifier": "address",
               "sortable": true,
+              "style": undefined,
               "type": "String",
             },
             {
@@ -463,6 +472,7 @@ describe("helper functions for useTable hook", () => {
               "identifier": "owner.name",
               "relationshipType": "HasOne",
               "sortable": true,
+              "style": undefined,
               "type": "String",
             },
             {
@@ -471,6 +481,7 @@ describe("helper functions for useTable hook", () => {
               "identifier": "products.edges.node.sku",
               "relationshipType": "HasMany",
               "sortable": true,
+              "style": undefined,
               "type": "String",
             },
             {
@@ -479,6 +490,7 @@ describe("helper functions for useTable hook", () => {
               "identifier": "manufacturer.country",
               "relationshipType": "BelongsTo",
               "sortable": true,
+              "style": undefined,
               "type": "String",
             },
           ]

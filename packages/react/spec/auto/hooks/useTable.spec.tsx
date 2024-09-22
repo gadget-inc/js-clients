@@ -126,6 +126,7 @@ describe("useTable hook", () => {
           "header": "Id",
           "identifier": "id",
           "sortable": false,
+          "style": undefined,
           "type": "ID",
         },
         {
@@ -133,6 +134,7 @@ describe("useTable hook", () => {
           "header": "Name",
           "identifier": "name",
           "sortable": true,
+          "style": undefined,
           "type": "String",
         },
         {
@@ -140,6 +142,7 @@ describe("useTable hook", () => {
           "header": "Inventory count",
           "identifier": "inventoryCount",
           "sortable": true,
+          "style": undefined,
           "type": "Number",
         },
         {
@@ -147,6 +150,7 @@ describe("useTable hook", () => {
           "header": "Anything",
           "identifier": "anything",
           "sortable": true,
+          "style": undefined,
           "type": "JSON",
         },
         {
@@ -154,6 +158,7 @@ describe("useTable hook", () => {
           "header": "Description",
           "identifier": "description",
           "sortable": true,
+          "style": undefined,
           "type": "RichText",
         },
         {
@@ -161,6 +166,7 @@ describe("useTable hook", () => {
           "header": "Category",
           "identifier": "category",
           "sortable": true,
+          "style": undefined,
           "type": "Enum",
         },
         {
@@ -169,6 +175,7 @@ describe("useTable hook", () => {
           "identifier": "startsAt",
           "includeTime": undefined,
           "sortable": true,
+          "style": undefined,
           "type": "DateTime",
         },
         {
@@ -176,6 +183,7 @@ describe("useTable hook", () => {
           "header": "Is checked",
           "identifier": "isChecked",
           "sortable": true,
+          "style": undefined,
           "type": "Boolean",
         },
         {
@@ -183,6 +191,7 @@ describe("useTable hook", () => {
           "header": "Metafields",
           "identifier": "metafields",
           "sortable": true,
+          "style": undefined,
           "type": "JSON",
         },
         {
@@ -190,6 +199,7 @@ describe("useTable hook", () => {
           "header": "Roles",
           "identifier": "roles",
           "sortable": false,
+          "style": undefined,
           "type": "RoleAssignments",
         },
         {
@@ -198,6 +208,7 @@ describe("useTable hook", () => {
           "identifier": "birthday",
           "includeTime": undefined,
           "sortable": true,
+          "style": undefined,
           "type": "DateTime",
         },
         {
@@ -205,6 +216,7 @@ describe("useTable hook", () => {
           "header": "Color",
           "identifier": "color",
           "sortable": true,
+          "style": undefined,
           "type": "Color",
         },
         {
@@ -212,6 +224,7 @@ describe("useTable hook", () => {
           "header": "Secret key",
           "identifier": "secretKey",
           "sortable": false,
+          "style": undefined,
           "type": "EncryptedString",
         },
         {
@@ -219,6 +232,7 @@ describe("useTable hook", () => {
           "header": "Must be long string",
           "identifier": "mustBeLongString",
           "sortable": true,
+          "style": undefined,
           "type": "String",
         },
       ]
@@ -526,6 +540,7 @@ describe("useTable hook", () => {
             "header": "Name",
             "identifier": "name",
             "sortable": true,
+            "style": undefined,
             "type": "String",
           },
           {
@@ -534,6 +549,7 @@ describe("useTable hook", () => {
             "identifier": "000-000-000-000-1",
             "render": [Function],
             "sortable": false,
+            "style": undefined,
             "type": "CustomRenderer",
           },
         ]

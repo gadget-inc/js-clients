@@ -159,12 +159,13 @@ export const getTableColumns = (spec: Pick<TableSpec, "fieldMetadataTree" | "tar
         field: targetColumn.header,
         type: "CustomRenderer",
         sortable: false,
+        style: targetColumn.style,
       });
 
       continue;
     }
 
-    const { header, field: columnPath, sortable } = getCellDetailColumnByColumnValue(targetColumn);
+    const { header, field: columnPath, sortable, style } = getCellDetailColumnByColumnValue(targetColumn);
     const { firstField, targetField, isHasMany, isHasOneOrBelongsTo } = getFieldInformationByColumnPath(spec.fieldMetadataTree, columnPath);
 
     const column: TableColumn = {
@@ -173,6 +174,7 @@ export const getTableColumns = (spec: Pick<TableSpec, "fieldMetadataTree" | "tar
       field: columnPath,
       type: targetField.fieldType,
       sortable: isColumnSortable(targetField, sortable),
+      style,
     };
 
     // The column path doesn't specify a related field, so we need to get the default display field

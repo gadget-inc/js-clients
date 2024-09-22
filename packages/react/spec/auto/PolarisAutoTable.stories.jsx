@@ -213,7 +213,8 @@ export const CustomCell = {
       },
       "rt",
       {
-        header: "Custom cell",
+        style: { backgroundColor: "#abcdef", width: "320px", maxWidth: "320px" },
+        header: "Custom cell with custom style",
         render: ({ record }) => {
           return (
             <div>
