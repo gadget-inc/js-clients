@@ -36,6 +36,8 @@ export type TableColumn = {
   includeTime?: boolean;
   /** Custom render function */
   render?: CustomCellRenderer;
+  /** Custom style for the cells in the column */
+  style?: React.CSSProperties;
 };
 
 export type TableRow = Record<string, ColumnValueType | ReactNode>;
@@ -101,6 +103,7 @@ export type RelatedFieldColumn = {
 export type CustomCellColumn = {
   header: string;
   render: CustomCellRenderer;
+  style?: React.CSSProperties;
 };
 
 export type CustomCellRenderer = (props: { record: GadgetRecord<any>; index: number }) => ReactNode;
@@ -109,6 +112,7 @@ export type CellDetailColumn = {
   header?: string;
   field: string;
   sortable?: boolean;
+  style?: React.CSSProperties;
 };
 
 export type FieldMetadataFragmentWithRelationshipConfig = FieldMetadataFragment & {
