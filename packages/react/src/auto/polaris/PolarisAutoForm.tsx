@@ -12,7 +12,7 @@ import { PolarisAutoInput } from "./inputs/PolarisAutoInput.js";
 import { PolarisAutoSubmit } from "./submit/PolarisAutoSubmit.js";
 import { PolarisSubmitErrorBanner, PolarisSubmitSuccessfulBanner } from "./submit/PolarisSubmitResultBanner.js";
 
-export const PolarisFormSkeleton = () => (
+export const PolarisAutoFormSkeleton = () => (
   <>
     <SkeletonDisplayText size="medium" />
     <SkeletonBodyText />
@@ -92,7 +92,7 @@ const PolarisAutoFormComponent = <
     return (
       <Form {...rest} onSubmit={submit}>
         <FormLayout>
-          <PolarisFormSkeleton />
+          <PolarisAutoFormSkeleton />
         </FormLayout>
       </Form>
     );
