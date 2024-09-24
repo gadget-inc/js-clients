@@ -3,7 +3,7 @@ import { get, globalActionOperation, namespaceDataPath } from "@gadgetinc/api-cl
 import { useCallback, useEffect, useMemo } from "react";
 import type { OperationContext, UseMutationState } from "urql";
 import { useGadgetMutation } from "./useGadgetMutation.js";
-import type { ActionHookResult } from "./utils.js";
+import type { ActionHookResultWithOptionalCallbackVariables } from "./utils.js";
 import { ErrorWrapper } from "./utils.js";
 
 /**
@@ -29,7 +29,7 @@ import { ErrorWrapper } from "./utils.js";
  */
 export const useGlobalAction = <F extends GlobalActionFunction<any>>(
   action: F
-): ActionHookResult<any, Exclude<F["variablesType"], null | undefined>> => {
+): ActionHookResultWithOptionalCallbackVariables<any, Exclude<F["variablesType"], null | undefined>> => {
   useEffect(() => {
     if (action.type === ("stubbedAction" as string)) {
       const stubbedAction = action as unknown as StubbedActionFunction<any>;
@@ -63,8 +63,8 @@ export const useGlobalAction = <F extends GlobalActionFunction<any>>(
   return [
     transformedResult,
     useCallback(
-      async (variables: F["variablesType"], context?: Partial<OperationContext>) => {
-        const result = await runMutation(variables, context);
+      async (variables?: F["variablesType"], context?: Partial<OperationContext>) => {
+        const result = await runMutation(variables ?? {}, context);
         return processResult({ fetching: false, ...result }, action);
       },
       [action, runMutation]
