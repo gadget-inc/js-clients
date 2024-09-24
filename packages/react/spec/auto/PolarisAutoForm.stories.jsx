@@ -156,3 +156,10 @@ export const onFailureCallback = {
     },
   },
 };
+
+export const hasManyThrough = {
+  name: "HasManyThrough fields",
+  args: {
+    action: api.hasManyThrough.baseModel.create,
+  },
+};
