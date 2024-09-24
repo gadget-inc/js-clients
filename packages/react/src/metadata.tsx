@@ -61,7 +61,42 @@ const FieldMetadataFragment = graphql(/* GraphQL */ `
           specID
         }
       }
+      ... on GadgetHasManyThroughConfig {
+        relatedModel {
+          key
+          apiIdentifier
+          namespace
+          defaultDisplayField {
+            name
+            apiIdentifier
+            fieldType
+          }
+          fields @include(if: $includeRelatedFields) {
+            ...RelatedModelFieldFragment
+          }
+        }
+        inverseField {
+          apiIdentifier
+        }
+        joinModel {
+          key
+          apiIdentifier
+          namespace
+          defaultDisplayField {
+            name
+            apiIdentifier
+            fieldType
+          }
+        }
+        inverseJoinModelField {
+          apiIdentifier
+        }
+        inverseRelatedModelField {
+          apiIdentifier
+        }
+      }
       ... on GadgetHasManyConfig {
+        isJoinModelHasManyField
         relatedModel {
           key
           apiIdentifier
@@ -383,6 +418,9 @@ export const filterAutoFormFieldList = (
     subset = subset.filter((field) => !excludes.has(field.apiIdentifier));
   }
 
+  // Remove `hasMany` fields that emerge from `hasManyThrough` fields that are not actually model fields
+  subset = subset.filter((field) => !isJoinModelHasManyField(field));
+
   // Filter out fields that are not supported by the form
   const validFieldTypeSubset = subset.filter(options?.isUpsertAction ? isAcceptedUpsertFieldType : isAcceptedFieldType);
 
@@ -407,6 +445,11 @@ const specialModelKeys = new Set(["DataModel-Shopify-Shop"]);
 
 const isAcceptedFieldType = (field: FieldMetadata) => acceptedAutoFormFieldTypes.has(field.fieldType);
 const isAcceptedUpsertFieldType = (field: FieldMetadata) => field.fieldType === FieldType.Id || isAcceptedFieldType(field);
+
+const isJoinModelHasManyField = (field: FieldMetadata) =>
+  field.fieldType === FieldType.HasMany &&
+  field.configuration.__typename === "GadgetHasManyConfig" &&
+  field.configuration.isJoinModelHasManyField;
 
 const acceptedAutoFormFieldTypes = new Set([
   FieldType.Boolean,

@@ -40,6 +40,12 @@ export type Scalars = {
   InternalGameStadiumRecord: { input: any; output: any };
   /** Represents one gizmo result record in internal api calls. Returns a JSON blob of all the record's fields. */
   InternalGizmoRecord: { input: any; output: any };
+  /** Represents one baseModel result record in internal api calls. Returns a JSON blob of all the record's fields. */
+  InternalHasManyThroughBaseModelRecord: { input: any; output: any };
+  /** Represents one joinerModel result record in internal api calls. Returns a JSON blob of all the record's fields. */
+  InternalHasManyThroughJoinerModelRecord: { input: any; output: any };
+  /** Represents one siblingModel result record in internal api calls. Returns a JSON blob of all the record's fields. */
+  InternalHasManyThroughSiblingModelRecord: { input: any; output: any };
   /** Represents one modelA result record in internal api calls. Returns a JSON blob of all the record's fields. */
   InternalModelARecord: { input: any; output: any };
   /** Represents one part result record in internal api calls. Returns a JSON blob of all the record's fields. */
@@ -405,6 +411,9 @@ export type BackgroundActionResult =
   | CreateGameRoundResult
   | CreateGameStadiumResult
   | CreateGizmoResult
+  | CreateHasManyThroughBaseModelResult
+  | CreateHasManyThroughJoinerModelResult
+  | CreateHasManyThroughSiblingModelResult
   | CreateModelAResult
   | CreatePartResult
   | CreateSectionResult
@@ -412,6 +421,7 @@ export type BackgroundActionResult =
   | CreateWidgetResult
   | CustomActionAutoTableTestResult
   | CustomActionWithParamsAutoTableTestResult
+  | CustomObjectParamsGameCityResult
   | DeleteAutoTableTestRelatedModelResult
   | DeleteAutoTableTestResult
   | DeleteGameCityResult
@@ -419,6 +429,9 @@ export type BackgroundActionResult =
   | DeleteGameRoundResult
   | DeleteGameStadiumResult
   | DeleteGizmoResult
+  | DeleteHasManyThroughBaseModelResult
+  | DeleteHasManyThroughJoinerModelResult
+  | DeleteHasManyThroughSiblingModelResult
   | DeleteModelAResult
   | DeletePartResult
   | DeleteSectionResult
@@ -426,6 +439,8 @@ export type BackgroundActionResult =
   | DeleteWidgetResult
   | ErrorShopifySyncResult
   | FlipAllResult
+  | NameSpacedActionAResult
+  | NameSpacedCustomObjectParamsResult
   | RunShopifySyncResult
   | SignInUserResult
   | SignOutUserResult
@@ -437,6 +452,9 @@ export type BackgroundActionResult =
   | UpdateGameRoundResult
   | UpdateGameStadiumResult
   | UpdateGizmoResult
+  | UpdateHasManyThroughBaseModelResult
+  | UpdateHasManyThroughJoinerModelResult
+  | UpdateHasManyThroughSiblingModelResult
   | UpdateModelAResult
   | UpdatePartResult
   | UpdateSectionResult
@@ -463,6 +481,7 @@ export type BackgroundGameMutations = {
   bulkCreatePlayers: BulkEnqueueBackgroundActionResult;
   bulkCreateRounds: BulkEnqueueBackgroundActionResult;
   bulkCreateStadia: BulkEnqueueBackgroundActionResult;
+  bulkCustomObjectParamsCities: BulkEnqueueBackgroundActionResult;
   bulkDeleteCities: BulkEnqueueBackgroundActionResult;
   bulkDeletePlayers: BulkEnqueueBackgroundActionResult;
   bulkDeleteRounds: BulkEnqueueBackgroundActionResult;
@@ -479,6 +498,7 @@ export type BackgroundGameMutations = {
   createPlayer: EnqueueBackgroundActionResult;
   createRound: EnqueueBackgroundActionResult;
   createStadium: EnqueueBackgroundActionResult;
+  customObjectParamsCity: EnqueueBackgroundActionResult;
   deleteCity: EnqueueBackgroundActionResult;
   deletePlayer: EnqueueBackgroundActionResult;
   deleteRound: EnqueueBackgroundActionResult;
@@ -511,6 +531,11 @@ export type BackgroundGameMutationsBulkCreateRoundsArgs = {
 export type BackgroundGameMutationsBulkCreateStadiaArgs = {
   backgroundOptions?: InputMaybe<EnqueueBackgroundActionOptions>;
   inputs: Array<BulkCreateGameStadiaInput>;
+};
+
+export type BackgroundGameMutationsBulkCustomObjectParamsCitiesArgs = {
+  backgroundOptions?: InputMaybe<EnqueueBackgroundActionOptions>;
+  inputs: Array<BulkCustomObjectParamsGameCitiesInput>;
 };
 
 export type BackgroundGameMutationsBulkDeleteCitiesArgs = {
@@ -593,6 +618,14 @@ export type BackgroundGameMutationsCreateStadiumArgs = {
   stadium?: InputMaybe<CreateGameStadiumInput>;
 };
 
+export type BackgroundGameMutationsCustomObjectParamsCityArgs = {
+  backgroundOptions?: InputMaybe<EnqueueBackgroundActionOptions>;
+  city?: InputMaybe<CustomObjectParamsGameCityInput>;
+  id: Scalars["GadgetID"]["input"];
+  objParam?: InputMaybe<CustomObjectParamsObjParamInput>;
+  rootLevelStr?: InputMaybe<Scalars["String"]["input"]>;
+};
+
 export type BackgroundGameMutationsDeleteCityArgs = {
   backgroundOptions?: InputMaybe<EnqueueBackgroundActionOptions>;
   id: Scalars["GadgetID"]["input"];
@@ -659,6 +692,160 @@ export type BackgroundGameMutationsUpsertStadiumArgs = {
   backgroundOptions?: InputMaybe<EnqueueBackgroundActionOptions>;
   on?: InputMaybe<Array<Scalars["String"]["input"]>>;
   stadium?: InputMaybe<UpsertGameStadiumInput>;
+};
+
+export type BackgroundHasManyThroughMutations = {
+  __typename?: "BackgroundHasManyThroughMutations";
+  bulkCreateBaseModels: BulkEnqueueBackgroundActionResult;
+  bulkCreateJoinerModels: BulkEnqueueBackgroundActionResult;
+  bulkCreateSiblingModels: BulkEnqueueBackgroundActionResult;
+  bulkDeleteBaseModels: BulkEnqueueBackgroundActionResult;
+  bulkDeleteJoinerModels: BulkEnqueueBackgroundActionResult;
+  bulkDeleteSiblingModels: BulkEnqueueBackgroundActionResult;
+  bulkUpdateBaseModels: BulkEnqueueBackgroundActionResult;
+  bulkUpdateJoinerModels: BulkEnqueueBackgroundActionResult;
+  bulkUpdateSiblingModels: BulkEnqueueBackgroundActionResult;
+  bulkUpsertBaseModels: BulkEnqueueBackgroundActionResult;
+  bulkUpsertJoinerModels: BulkEnqueueBackgroundActionResult;
+  bulkUpsertSiblingModels: BulkEnqueueBackgroundActionResult;
+  createBaseModel: EnqueueBackgroundActionResult;
+  createJoinerModel: EnqueueBackgroundActionResult;
+  createSiblingModel: EnqueueBackgroundActionResult;
+  deleteBaseModel: EnqueueBackgroundActionResult;
+  deleteJoinerModel: EnqueueBackgroundActionResult;
+  deleteSiblingModel: EnqueueBackgroundActionResult;
+  updateBaseModel: EnqueueBackgroundActionResult;
+  updateJoinerModel: EnqueueBackgroundActionResult;
+  updateSiblingModel: EnqueueBackgroundActionResult;
+  upsertBaseModel: EnqueueBackgroundActionResult;
+  upsertJoinerModel: EnqueueBackgroundActionResult;
+  upsertSiblingModel: EnqueueBackgroundActionResult;
+};
+
+export type BackgroundHasManyThroughMutationsBulkCreateBaseModelsArgs = {
+  backgroundOptions?: InputMaybe<EnqueueBackgroundActionOptions>;
+  inputs: Array<BulkCreateHasManyThroughBaseModelsInput>;
+};
+
+export type BackgroundHasManyThroughMutationsBulkCreateJoinerModelsArgs = {
+  backgroundOptions?: InputMaybe<EnqueueBackgroundActionOptions>;
+  inputs: Array<BulkCreateHasManyThroughJoinerModelsInput>;
+};
+
+export type BackgroundHasManyThroughMutationsBulkCreateSiblingModelsArgs = {
+  backgroundOptions?: InputMaybe<EnqueueBackgroundActionOptions>;
+  inputs: Array<BulkCreateHasManyThroughSiblingModelsInput>;
+};
+
+export type BackgroundHasManyThroughMutationsBulkDeleteBaseModelsArgs = {
+  backgroundOptions?: InputMaybe<EnqueueBackgroundActionOptions>;
+  ids: Array<Scalars["GadgetID"]["input"]>;
+};
+
+export type BackgroundHasManyThroughMutationsBulkDeleteJoinerModelsArgs = {
+  backgroundOptions?: InputMaybe<EnqueueBackgroundActionOptions>;
+  ids: Array<Scalars["GadgetID"]["input"]>;
+};
+
+export type BackgroundHasManyThroughMutationsBulkDeleteSiblingModelsArgs = {
+  backgroundOptions?: InputMaybe<EnqueueBackgroundActionOptions>;
+  ids: Array<Scalars["GadgetID"]["input"]>;
+};
+
+export type BackgroundHasManyThroughMutationsBulkUpdateBaseModelsArgs = {
+  backgroundOptions?: InputMaybe<EnqueueBackgroundActionOptions>;
+  inputs: Array<BulkUpdateHasManyThroughBaseModelsInput>;
+};
+
+export type BackgroundHasManyThroughMutationsBulkUpdateJoinerModelsArgs = {
+  backgroundOptions?: InputMaybe<EnqueueBackgroundActionOptions>;
+  inputs: Array<BulkUpdateHasManyThroughJoinerModelsInput>;
+};
+
+export type BackgroundHasManyThroughMutationsBulkUpdateSiblingModelsArgs = {
+  backgroundOptions?: InputMaybe<EnqueueBackgroundActionOptions>;
+  inputs: Array<BulkUpdateHasManyThroughSiblingModelsInput>;
+};
+
+export type BackgroundHasManyThroughMutationsBulkUpsertBaseModelsArgs = {
+  backgroundOptions?: InputMaybe<EnqueueBackgroundActionOptions>;
+  inputs: Array<BulkUpsertHasManyThroughBaseModelsInput>;
+};
+
+export type BackgroundHasManyThroughMutationsBulkUpsertJoinerModelsArgs = {
+  backgroundOptions?: InputMaybe<EnqueueBackgroundActionOptions>;
+  inputs: Array<BulkUpsertHasManyThroughJoinerModelsInput>;
+};
+
+export type BackgroundHasManyThroughMutationsBulkUpsertSiblingModelsArgs = {
+  backgroundOptions?: InputMaybe<EnqueueBackgroundActionOptions>;
+  inputs: Array<BulkUpsertHasManyThroughSiblingModelsInput>;
+};
+
+export type BackgroundHasManyThroughMutationsCreateBaseModelArgs = {
+  backgroundOptions?: InputMaybe<EnqueueBackgroundActionOptions>;
+  baseModel?: InputMaybe<CreateHasManyThroughBaseModelInput>;
+};
+
+export type BackgroundHasManyThroughMutationsCreateJoinerModelArgs = {
+  backgroundOptions?: InputMaybe<EnqueueBackgroundActionOptions>;
+  joinerModel?: InputMaybe<CreateHasManyThroughJoinerModelInput>;
+};
+
+export type BackgroundHasManyThroughMutationsCreateSiblingModelArgs = {
+  backgroundOptions?: InputMaybe<EnqueueBackgroundActionOptions>;
+  siblingModel?: InputMaybe<CreateHasManyThroughSiblingModelInput>;
+};
+
+export type BackgroundHasManyThroughMutationsDeleteBaseModelArgs = {
+  backgroundOptions?: InputMaybe<EnqueueBackgroundActionOptions>;
+  id: Scalars["GadgetID"]["input"];
+};
+
+export type BackgroundHasManyThroughMutationsDeleteJoinerModelArgs = {
+  backgroundOptions?: InputMaybe<EnqueueBackgroundActionOptions>;
+  id: Scalars["GadgetID"]["input"];
+};
+
+export type BackgroundHasManyThroughMutationsDeleteSiblingModelArgs = {
+  backgroundOptions?: InputMaybe<EnqueueBackgroundActionOptions>;
+  id: Scalars["GadgetID"]["input"];
+};
+
+export type BackgroundHasManyThroughMutationsUpdateBaseModelArgs = {
+  backgroundOptions?: InputMaybe<EnqueueBackgroundActionOptions>;
+  baseModel?: InputMaybe<UpdateHasManyThroughBaseModelInput>;
+  id: Scalars["GadgetID"]["input"];
+};
+
+export type BackgroundHasManyThroughMutationsUpdateJoinerModelArgs = {
+  backgroundOptions?: InputMaybe<EnqueueBackgroundActionOptions>;
+  id: Scalars["GadgetID"]["input"];
+  joinerModel?: InputMaybe<UpdateHasManyThroughJoinerModelInput>;
+};
+
+export type BackgroundHasManyThroughMutationsUpdateSiblingModelArgs = {
+  backgroundOptions?: InputMaybe<EnqueueBackgroundActionOptions>;
+  id: Scalars["GadgetID"]["input"];
+  siblingModel?: InputMaybe<UpdateHasManyThroughSiblingModelInput>;
+};
+
+export type BackgroundHasManyThroughMutationsUpsertBaseModelArgs = {
+  backgroundOptions?: InputMaybe<EnqueueBackgroundActionOptions>;
+  baseModel?: InputMaybe<UpsertHasManyThroughBaseModelInput>;
+  on?: InputMaybe<Array<Scalars["String"]["input"]>>;
+};
+
+export type BackgroundHasManyThroughMutationsUpsertJoinerModelArgs = {
+  backgroundOptions?: InputMaybe<EnqueueBackgroundActionOptions>;
+  joinerModel?: InputMaybe<UpsertHasManyThroughJoinerModelInput>;
+  on?: InputMaybe<Array<Scalars["String"]["input"]>>;
+};
+
+export type BackgroundHasManyThroughMutationsUpsertSiblingModelArgs = {
+  backgroundOptions?: InputMaybe<EnqueueBackgroundActionOptions>;
+  on?: InputMaybe<Array<Scalars["String"]["input"]>>;
+  siblingModel?: InputMaybe<UpsertHasManyThroughSiblingModelInput>;
 };
 
 export type BackgroundMutations = {
@@ -732,6 +919,8 @@ export type BackgroundMutations = {
   errorShopifySync: EnqueueBackgroundActionResult;
   flipAll: EnqueueBackgroundActionResult;
   game: BackgroundGameMutations;
+  hasManyThrough: BackgroundHasManyThroughMutations;
+  name: BackgroundNameMutations;
   runShopifySync: EnqueueBackgroundActionResult;
   signInUser: EnqueueBackgroundActionResult;
   signOutUser: EnqueueBackgroundActionResult;
@@ -1236,6 +1425,43 @@ export type BackgroundMutationsUpsertWidgetArgs = {
   widget?: InputMaybe<UpsertWidgetInput>;
 };
 
+export type BackgroundNameMutations = {
+  __typename?: "BackgroundNameMutations";
+  spaced: BackgroundNameSpacedMutations;
+};
+
+export type BackgroundNameSpacedMutations = {
+  __typename?: "BackgroundNameSpacedMutations";
+  actionA: EnqueueBackgroundActionResult;
+  customObjectParams: EnqueueBackgroundActionResult;
+};
+
+export type BackgroundNameSpacedMutationsActionAArgs = {
+  backgroundOptions?: InputMaybe<EnqueueBackgroundActionOptions>;
+};
+
+export type BackgroundNameSpacedMutationsCustomObjectParamsArgs = {
+  backgroundOptions?: InputMaybe<EnqueueBackgroundActionOptions>;
+  objParam?: InputMaybe<NameSpacedCustomObjectParamsObjParamInput>;
+  rootLevelStr?: InputMaybe<Scalars["String"]["input"]>;
+};
+
+/** Input object supporting setting or updating related model record on a relationship field */
+export type BaseModelBelongsToInput = {
+  /** Existing ID of another record, which you would like to associate this record with */
+  _link?: InputMaybe<Scalars["GadgetID"]["input"]>;
+  create?: InputMaybe<NestedBaseModelCreateInput>;
+  delete?: InputMaybe<NestedBaseModelDeleteInput>;
+  update?: InputMaybe<NestedBaseModelUpdateInput>;
+};
+
+/** Input object supporting setting or updating related model record on a relationship field */
+export type BaseModelHasManyThroughInput = {
+  create?: InputMaybe<NestedBaseModelCreateInput>;
+  delete?: InputMaybe<NestedBaseModelDeleteInput>;
+  update?: InputMaybe<NestedBaseModelUpdateInput>;
+};
+
 export type BooleanFilter = {
   equals?: InputMaybe<Scalars["Boolean"]["input"]>;
   isSet?: InputMaybe<Scalars["Boolean"]["input"]>;
@@ -1410,6 +1636,51 @@ export type BulkCreateGizmosResult = {
   success: Scalars["Boolean"]["output"];
 };
 
+export type BulkCreateHasManyThroughBaseModelsInput = {
+  baseModel?: InputMaybe<CreateHasManyThroughBaseModelInput>;
+};
+
+/** The output when running the create on the baseModel model in bulk. */
+export type BulkCreateHasManyThroughBaseModelsResult = {
+  __typename?: "BulkCreateHasManyThroughBaseModelsResult";
+  /** The list of all changed baseModel records by each sent bulk action. Returned in the same order as the input bulk action params. */
+  baseModels?: Maybe<Array<Maybe<HasManyThroughBaseModel>>>;
+  /** Aggregated list of errors that any bulk action encountered while processing */
+  errors?: Maybe<Array<ExecutionError>>;
+  /** Boolean describing if all the bulk actions succeeded or not */
+  success: Scalars["Boolean"]["output"];
+};
+
+export type BulkCreateHasManyThroughJoinerModelsInput = {
+  joinerModel?: InputMaybe<CreateHasManyThroughJoinerModelInput>;
+};
+
+/** The output when running the create on the joinerModel model in bulk. */
+export type BulkCreateHasManyThroughJoinerModelsResult = {
+  __typename?: "BulkCreateHasManyThroughJoinerModelsResult";
+  /** Aggregated list of errors that any bulk action encountered while processing */
+  errors?: Maybe<Array<ExecutionError>>;
+  /** The list of all changed joinerModel records by each sent bulk action. Returned in the same order as the input bulk action params. */
+  joinerModels?: Maybe<Array<Maybe<HasManyThroughJoinerModel>>>;
+  /** Boolean describing if all the bulk actions succeeded or not */
+  success: Scalars["Boolean"]["output"];
+};
+
+export type BulkCreateHasManyThroughSiblingModelsInput = {
+  siblingModel?: InputMaybe<CreateHasManyThroughSiblingModelInput>;
+};
+
+/** The output when running the create on the siblingModel model in bulk. */
+export type BulkCreateHasManyThroughSiblingModelsResult = {
+  __typename?: "BulkCreateHasManyThroughSiblingModelsResult";
+  /** Aggregated list of errors that any bulk action encountered while processing */
+  errors?: Maybe<Array<ExecutionError>>;
+  /** The list of all changed siblingModel records by each sent bulk action. Returned in the same order as the input bulk action params. */
+  siblingModels?: Maybe<Array<Maybe<HasManyThroughSiblingModel>>>;
+  /** Boolean describing if all the bulk actions succeeded or not */
+  success: Scalars["Boolean"]["output"];
+};
+
 /** The output when running the create on the modelA model in bulk. */
 export type BulkCreateModelAsResult = {
   __typename?: "BulkCreateModelAsResult";
@@ -1494,6 +1765,24 @@ export type BulkCustomActionWithParamsAutoTableTestsResult = {
   success: Scalars["Boolean"]["output"];
 };
 
+export type BulkCustomObjectParamsGameCitiesInput = {
+  city?: InputMaybe<CustomObjectParamsGameCityInput>;
+  id: Scalars["GadgetID"]["input"];
+  objParam?: InputMaybe<CustomObjectParamsObjParamInput>;
+  rootLevelStr?: InputMaybe<Scalars["String"]["input"]>;
+};
+
+/** The output when running the customObjectParams on the city model in bulk. */
+export type BulkCustomObjectParamsGameCitiesResult = {
+  __typename?: "BulkCustomObjectParamsGameCitiesResult";
+  /** The list of all changed city records by each sent bulk action. Returned in the same order as the input bulk action params. */
+  cities?: Maybe<Array<Maybe<GameCity>>>;
+  /** Aggregated list of errors that any bulk action encountered while processing */
+  errors?: Maybe<Array<ExecutionError>>;
+  /** Boolean describing if all the bulk actions succeeded or not */
+  success: Scalars["Boolean"]["output"];
+};
+
 /** The output when running the delete on the _autoTableTestRelatedModel model in bulk. */
 export type BulkDeleteAutoTableTestRelatedModelsResult = {
   __typename?: "BulkDeleteAutoTableTestRelatedModelsResult";
@@ -1551,6 +1840,33 @@ export type BulkDeleteGameStadiaResult = {
 /** The output when running the delete on the gizmo model in bulk. */
 export type BulkDeleteGizmosResult = {
   __typename?: "BulkDeleteGizmosResult";
+  /** Aggregated list of errors that any bulk action encountered while processing */
+  errors?: Maybe<Array<ExecutionError>>;
+  /** Boolean describing if all the bulk actions succeeded or not */
+  success: Scalars["Boolean"]["output"];
+};
+
+/** The output when running the delete on the baseModel model in bulk. */
+export type BulkDeleteHasManyThroughBaseModelsResult = {
+  __typename?: "BulkDeleteHasManyThroughBaseModelsResult";
+  /** Aggregated list of errors that any bulk action encountered while processing */
+  errors?: Maybe<Array<ExecutionError>>;
+  /** Boolean describing if all the bulk actions succeeded or not */
+  success: Scalars["Boolean"]["output"];
+};
+
+/** The output when running the delete on the joinerModel model in bulk. */
+export type BulkDeleteHasManyThroughJoinerModelsResult = {
+  __typename?: "BulkDeleteHasManyThroughJoinerModelsResult";
+  /** Aggregated list of errors that any bulk action encountered while processing */
+  errors?: Maybe<Array<ExecutionError>>;
+  /** Boolean describing if all the bulk actions succeeded or not */
+  success: Scalars["Boolean"]["output"];
+};
+
+/** The output when running the delete on the siblingModel model in bulk. */
+export type BulkDeleteHasManyThroughSiblingModelsResult = {
+  __typename?: "BulkDeleteHasManyThroughSiblingModelsResult";
   /** Aggregated list of errors that any bulk action encountered while processing */
   errors?: Maybe<Array<ExecutionError>>;
   /** Boolean describing if all the bulk actions succeeded or not */
@@ -1801,6 +2117,54 @@ export type BulkUpdateGizmosResult = {
   success: Scalars["Boolean"]["output"];
 };
 
+export type BulkUpdateHasManyThroughBaseModelsInput = {
+  baseModel?: InputMaybe<UpdateHasManyThroughBaseModelInput>;
+  id: Scalars["GadgetID"]["input"];
+};
+
+/** The output when running the update on the baseModel model in bulk. */
+export type BulkUpdateHasManyThroughBaseModelsResult = {
+  __typename?: "BulkUpdateHasManyThroughBaseModelsResult";
+  /** The list of all changed baseModel records by each sent bulk action. Returned in the same order as the input bulk action params. */
+  baseModels?: Maybe<Array<Maybe<HasManyThroughBaseModel>>>;
+  /** Aggregated list of errors that any bulk action encountered while processing */
+  errors?: Maybe<Array<ExecutionError>>;
+  /** Boolean describing if all the bulk actions succeeded or not */
+  success: Scalars["Boolean"]["output"];
+};
+
+export type BulkUpdateHasManyThroughJoinerModelsInput = {
+  id: Scalars["GadgetID"]["input"];
+  joinerModel?: InputMaybe<UpdateHasManyThroughJoinerModelInput>;
+};
+
+/** The output when running the update on the joinerModel model in bulk. */
+export type BulkUpdateHasManyThroughJoinerModelsResult = {
+  __typename?: "BulkUpdateHasManyThroughJoinerModelsResult";
+  /** Aggregated list of errors that any bulk action encountered while processing */
+  errors?: Maybe<Array<ExecutionError>>;
+  /** The list of all changed joinerModel records by each sent bulk action. Returned in the same order as the input bulk action params. */
+  joinerModels?: Maybe<Array<Maybe<HasManyThroughJoinerModel>>>;
+  /** Boolean describing if all the bulk actions succeeded or not */
+  success: Scalars["Boolean"]["output"];
+};
+
+export type BulkUpdateHasManyThroughSiblingModelsInput = {
+  id: Scalars["GadgetID"]["input"];
+  siblingModel?: InputMaybe<UpdateHasManyThroughSiblingModelInput>;
+};
+
+/** The output when running the update on the siblingModel model in bulk. */
+export type BulkUpdateHasManyThroughSiblingModelsResult = {
+  __typename?: "BulkUpdateHasManyThroughSiblingModelsResult";
+  /** Aggregated list of errors that any bulk action encountered while processing */
+  errors?: Maybe<Array<ExecutionError>>;
+  /** The list of all changed siblingModel records by each sent bulk action. Returned in the same order as the input bulk action params. */
+  siblingModels?: Maybe<Array<Maybe<HasManyThroughSiblingModel>>>;
+  /** Boolean describing if all the bulk actions succeeded or not */
+  success: Scalars["Boolean"]["output"];
+};
+
 /** The output when running the update on the modelA model in bulk. */
 export type BulkUpdateModelAsResult = {
   __typename?: "BulkUpdateModelAsResult";
@@ -2015,6 +2379,57 @@ export type BulkUpsertGizmosResult = {
   success: Scalars["Boolean"]["output"];
 };
 
+export type BulkUpsertHasManyThroughBaseModelsInput = {
+  baseModel?: InputMaybe<UpsertHasManyThroughBaseModelInput>;
+  /** An array of Strings */
+  on?: InputMaybe<Array<Scalars["String"]["input"]>>;
+};
+
+/** The result of a bulk upsert operation for the baseModel */
+export type BulkUpsertHasManyThroughBaseModelsResult = {
+  __typename?: "BulkUpsertHasManyThroughBaseModelsResult";
+  /** The results of each upsert action in the bulk operation */
+  baseModels?: Maybe<Array<Maybe<HasManyThroughBaseModel>>>;
+  /** Aggregated list of errors that any bulk action encountered while processing */
+  errors?: Maybe<Array<ExecutionError>>;
+  /** Boolean describing if all the bulk actions succeeded or not */
+  success: Scalars["Boolean"]["output"];
+};
+
+export type BulkUpsertHasManyThroughJoinerModelsInput = {
+  joinerModel?: InputMaybe<UpsertHasManyThroughJoinerModelInput>;
+  /** An array of Strings */
+  on?: InputMaybe<Array<Scalars["String"]["input"]>>;
+};
+
+/** The result of a bulk upsert operation for the joinerModel */
+export type BulkUpsertHasManyThroughJoinerModelsResult = {
+  __typename?: "BulkUpsertHasManyThroughJoinerModelsResult";
+  /** Aggregated list of errors that any bulk action encountered while processing */
+  errors?: Maybe<Array<ExecutionError>>;
+  /** The results of each upsert action in the bulk operation */
+  joinerModels?: Maybe<Array<Maybe<HasManyThroughJoinerModel>>>;
+  /** Boolean describing if all the bulk actions succeeded or not */
+  success: Scalars["Boolean"]["output"];
+};
+
+export type BulkUpsertHasManyThroughSiblingModelsInput = {
+  /** An array of Strings */
+  on?: InputMaybe<Array<Scalars["String"]["input"]>>;
+  siblingModel?: InputMaybe<UpsertHasManyThroughSiblingModelInput>;
+};
+
+/** The result of a bulk upsert operation for the siblingModel */
+export type BulkUpsertHasManyThroughSiblingModelsResult = {
+  __typename?: "BulkUpsertHasManyThroughSiblingModelsResult";
+  /** Aggregated list of errors that any bulk action encountered while processing */
+  errors?: Maybe<Array<ExecutionError>>;
+  /** The results of each upsert action in the bulk operation */
+  siblingModels?: Maybe<Array<Maybe<HasManyThroughSiblingModel>>>;
+  /** Boolean describing if all the bulk actions succeeded or not */
+  success: Scalars["Boolean"]["output"];
+};
+
 export type BulkUpsertModelAsInput = {
   modelA?: InputMaybe<UpsertModelAInput>;
   /** An array of Strings */
@@ -2123,6 +2538,7 @@ export type CityBelongsToInput = {
   /** Existing ID of another record, which you would like to associate this record with */
   _link?: InputMaybe<Scalars["GadgetID"]["input"]>;
   create?: InputMaybe<NestedCityCreateInput>;
+  customObjectParams?: InputMaybe<NestedCityCustomObjectParamsInput>;
   delete?: InputMaybe<NestedCityDeleteInput>;
   update?: InputMaybe<NestedCityUpdateInput>;
 };
@@ -2187,6 +2603,21 @@ export type ConvergeGizmoValues = {
   name?: InputMaybe<Scalars["String"]["input"]>;
   orientation?: InputMaybe<Scalars["String"]["input"]>;
   widget?: InputMaybe<WidgetBelongsToInput>;
+};
+
+/** Declaratively specifies the list of records a relationship should become and invokes the given actions in order to change the current state to get to the newly specified state. */
+export type ConvergeJoinerModelInput = {
+  /** An optional partial set of action api identifiers to use when creating, updating, and deleting records to converge to the new list. */
+  actions?: InputMaybe<ConvergeActionMap>;
+  /** The new list of records to converge to */
+  values: Array<InputMaybe<ConvergeJoinerModelValues>>;
+};
+
+/** One element of a ConvergeJoinerModelInput record converge list */
+export type ConvergeJoinerModelValues = {
+  id?: InputMaybe<Scalars["GadgetID"]["input"]>;
+  joinerBelongsToBase?: InputMaybe<BaseModelBelongsToInput>;
+  joinerBelongsToSibling?: InputMaybe<SiblingModelBelongsToInput>;
 };
 
 /** Declaratively specifies the list of records a relationship should become and invokes the given actions in order to change the current state to get to the newly specified state. */
@@ -2365,6 +2796,48 @@ export type CreateGizmoResult = UpsertGizmoResult & {
   success: Scalars["Boolean"]["output"];
 };
 
+export type CreateHasManyThroughBaseModelInput = {
+  baseModelHmtField?: InputMaybe<Array<InputMaybe<SiblingModelHasManyThroughInput>>>;
+  baseModelName?: InputMaybe<Scalars["String"]["input"]>;
+  joinerModel?: InputMaybe<Array<InputMaybe<JoinerModelHasManyInput>>>;
+  joinerModels?: InputMaybe<Array<InputMaybe<JoinerModelHasManyInput>>>;
+};
+
+export type CreateHasManyThroughBaseModelResult = UpsertHasManyThroughBaseModelResult & {
+  __typename?: "CreateHasManyThroughBaseModelResult";
+  actionRun?: Maybe<Scalars["String"]["output"]>;
+  baseModel?: Maybe<HasManyThroughBaseModel>;
+  errors?: Maybe<Array<ExecutionError>>;
+  success: Scalars["Boolean"]["output"];
+};
+
+export type CreateHasManyThroughJoinerModelInput = {
+  joinerBelongsToBase?: InputMaybe<BaseModelBelongsToInput>;
+  joinerBelongsToSibling?: InputMaybe<SiblingModelBelongsToInput>;
+};
+
+export type CreateHasManyThroughJoinerModelResult = UpsertHasManyThroughJoinerModelResult & {
+  __typename?: "CreateHasManyThroughJoinerModelResult";
+  actionRun?: Maybe<Scalars["String"]["output"]>;
+  errors?: Maybe<Array<ExecutionError>>;
+  joinerModel?: Maybe<HasManyThroughJoinerModel>;
+  success: Scalars["Boolean"]["output"];
+};
+
+export type CreateHasManyThroughSiblingModelInput = {
+  joinerModel?: InputMaybe<Array<InputMaybe<JoinerModelHasManyInput>>>;
+  joinerModels?: InputMaybe<Array<InputMaybe<JoinerModelHasManyInput>>>;
+  siblingModelHmtField?: InputMaybe<Array<InputMaybe<BaseModelHasManyThroughInput>>>;
+};
+
+export type CreateHasManyThroughSiblingModelResult = UpsertHasManyThroughSiblingModelResult & {
+  __typename?: "CreateHasManyThroughSiblingModelResult";
+  actionRun?: Maybe<Scalars["String"]["output"]>;
+  errors?: Maybe<Array<ExecutionError>>;
+  siblingModel?: Maybe<HasManyThroughSiblingModel>;
+  success: Scalars["Boolean"]["output"];
+};
+
 export type CreateModelAResult = UpsertModelAResult & {
   __typename?: "CreateModelAResult";
   actionRun?: Maybe<Scalars["String"]["output"]>;
@@ -2491,6 +2964,33 @@ export type CustomActionWithParamsAutoTableTestResult = {
   success: Scalars["Boolean"]["output"];
 };
 
+export type CustomObjectParamsGameCityInput = {
+  name?: InputMaybe<Scalars["String"]["input"]>;
+  stadium?: InputMaybe<StadiumHasOneInput>;
+};
+
+export type CustomObjectParamsGameCityResult = {
+  __typename?: "CustomObjectParamsGameCityResult";
+  actionRun?: Maybe<Scalars["String"]["output"]>;
+  city?: Maybe<GameCity>;
+  errors?: Maybe<Array<ExecutionError>>;
+  success: Scalars["Boolean"]["output"];
+};
+
+export type CustomObjectParamsObjParamInput = {
+  firstLevelStr?: InputMaybe<Scalars["String"]["input"]>;
+  objProperty1?: InputMaybe<CustomObjectParamsObjProperty1Input>;
+};
+
+export type CustomObjectParamsObjProperty1Input = {
+  objProperty2?: InputMaybe<CustomObjectParamsObjProperty2Input>;
+  secondLevelStr?: InputMaybe<Scalars["String"]["input"]>;
+};
+
+export type CustomObjectParamsObjProperty2Input = {
+  thirdLevelStr?: InputMaybe<Scalars["String"]["input"]>;
+};
+
 export type DateFilter = {
   after?: InputMaybe<Scalars["DateOrDateTime"]["input"]>;
   afterOrOn?: InputMaybe<Scalars["DateOrDateTime"]["input"]>;
@@ -2565,6 +3065,27 @@ export type DeleteGameStadiumResult = {
 
 export type DeleteGizmoResult = {
   __typename?: "DeleteGizmoResult";
+  actionRun?: Maybe<Scalars["String"]["output"]>;
+  errors?: Maybe<Array<ExecutionError>>;
+  success: Scalars["Boolean"]["output"];
+};
+
+export type DeleteHasManyThroughBaseModelResult = {
+  __typename?: "DeleteHasManyThroughBaseModelResult";
+  actionRun?: Maybe<Scalars["String"]["output"]>;
+  errors?: Maybe<Array<ExecutionError>>;
+  success: Scalars["Boolean"]["output"];
+};
+
+export type DeleteHasManyThroughJoinerModelResult = {
+  __typename?: "DeleteHasManyThroughJoinerModelResult";
+  actionRun?: Maybe<Scalars["String"]["output"]>;
+  errors?: Maybe<Array<ExecutionError>>;
+  success: Scalars["Boolean"]["output"];
+};
+
+export type DeleteHasManyThroughSiblingModelResult = {
+  __typename?: "DeleteHasManyThroughSiblingModelResult";
   actionRun?: Maybe<Scalars["String"]["output"]>;
   errors?: Maybe<Array<ExecutionError>>;
   success: Scalars["Boolean"]["output"];
@@ -2793,6 +3314,7 @@ export type GadgetApplicationMeta = {
   sessionID?: Maybe<Scalars["String"]["output"]>;
   shopifyConnectionApiVersion?: Maybe<Scalars["String"]["output"]>;
   slug: Scalars["String"]["output"];
+  supportsGadgetVitePlugin: Scalars["Boolean"]["output"];
 };
 
 export type GadgetApplicationMetaDirectUploadTokenArgs = {
@@ -2959,6 +3481,22 @@ export type GadgetHasManyConfig = GadgetFieldConfigInterface & {
   inverseField?: Maybe<GadgetModelField>;
   isConfigured: Scalars["Boolean"]["output"];
   isInverseConfigured: Scalars["Boolean"]["output"];
+  isJoinModelHasManyField: Scalars["Boolean"]["output"];
+  relatedModel?: Maybe<GadgetModel>;
+  relatedModelKey?: Maybe<Scalars["String"]["output"]>;
+  validations: Array<Maybe<GadgetFieldValidationUnion>>;
+};
+
+export type GadgetHasManyThroughConfig = GadgetFieldConfigInterface & {
+  __typename?: "GadgetHasManyThroughConfig";
+  fieldType: GadgetFieldType;
+  inverseField?: Maybe<GadgetModelField>;
+  inverseJoinModelField?: Maybe<GadgetModelField>;
+  inverseRelatedModelField?: Maybe<GadgetModelField>;
+  isConfigured: Scalars["Boolean"]["output"];
+  isInverseConfigured: Scalars["Boolean"]["output"];
+  joinModel?: Maybe<GadgetModel>;
+  joinModelKey?: Maybe<Scalars["String"]["output"]>;
   relatedModel?: Maybe<GadgetModel>;
   relatedModelKey?: Maybe<Scalars["String"]["output"]>;
   validations: Array<Maybe<GadgetFieldValidationUnion>>;
@@ -3171,6 +3709,7 @@ export type GameMutations = {
   bulkCreatePlayers?: Maybe<BulkCreateGamePlayersResult>;
   bulkCreateRounds?: Maybe<BulkCreateGameRoundsResult>;
   bulkCreateStadia?: Maybe<BulkCreateGameStadiaResult>;
+  bulkCustomObjectParamsCities?: Maybe<BulkCustomObjectParamsGameCitiesResult>;
   bulkDeleteCities?: Maybe<BulkDeleteGameCitiesResult>;
   bulkDeletePlayers?: Maybe<BulkDeleteGamePlayersResult>;
   bulkDeleteRounds?: Maybe<BulkDeleteGameRoundsResult>;
@@ -3187,6 +3726,7 @@ export type GameMutations = {
   createPlayer?: Maybe<CreateGamePlayerResult>;
   createRound?: Maybe<CreateGameRoundResult>;
   createStadium?: Maybe<CreateGameStadiumResult>;
+  customObjectParamsCity?: Maybe<CustomObjectParamsGameCityResult>;
   deleteCity?: Maybe<DeleteGameCityResult>;
   deletePlayer?: Maybe<DeleteGamePlayerResult>;
   deleteRound?: Maybe<DeleteGameRoundResult>;
@@ -3215,6 +3755,10 @@ export type GameMutationsBulkCreateRoundsArgs = {
 
 export type GameMutationsBulkCreateStadiaArgs = {
   inputs: Array<BulkCreateGameStadiaInput>;
+};
+
+export type GameMutationsBulkCustomObjectParamsCitiesArgs = {
+  inputs: Array<BulkCustomObjectParamsGameCitiesInput>;
 };
 
 export type GameMutationsBulkDeleteCitiesArgs = {
@@ -3279,6 +3823,13 @@ export type GameMutationsCreateRoundArgs = {
 
 export type GameMutationsCreateStadiumArgs = {
   stadium?: InputMaybe<CreateGameStadiumInput>;
+};
+
+export type GameMutationsCustomObjectParamsCityArgs = {
+  city?: InputMaybe<CustomObjectParamsGameCityInput>;
+  id: Scalars["GadgetID"]["input"];
+  objParam?: InputMaybe<CustomObjectParamsObjParamInput>;
+  rootLevelStr?: InputMaybe<Scalars["String"]["input"]>;
 };
 
 export type GameMutationsDeleteCityArgs = {
@@ -3673,6 +4224,376 @@ export type GizmoSort = {
   updatedAt?: InputMaybe<SortOrder>;
 };
 
+export type HasManyThroughBaseModel = {
+  __typename?: "HasManyThroughBaseModel";
+  /** Get all the fields for this record. Useful for not having to list out all the fields you want to retrieve, but slower. */
+  _all: Scalars["JSONObject"]["output"];
+  baseModelHmtField: HasManyThroughSiblingModelConnection;
+  baseModelName?: Maybe<Scalars["String"]["output"]>;
+  /** The time at which this record was first created. Set once upon record creation and never changed. Managed by Gadget. */
+  createdAt: Scalars["DateTime"]["output"];
+  /** The globally unique, unchanging identifier for this record. Assigned and managed by Gadget. */
+  id: Scalars["GadgetID"]["output"];
+  joinerModels: HasManyThroughJoinerModelConnection;
+  /** The time at which this record was last changed. Set each time the record is successfully acted upon by an action. Managed by Gadget. */
+  updatedAt: Scalars["DateTime"]["output"];
+};
+
+export type HasManyThroughBaseModelBaseModelHmtFieldArgs = {
+  after?: InputMaybe<Scalars["String"]["input"]>;
+  before?: InputMaybe<Scalars["String"]["input"]>;
+  first?: InputMaybe<Scalars["Int"]["input"]>;
+  last?: InputMaybe<Scalars["Int"]["input"]>;
+};
+
+export type HasManyThroughBaseModelJoinerModelsArgs = {
+  after?: InputMaybe<Scalars["String"]["input"]>;
+  before?: InputMaybe<Scalars["String"]["input"]>;
+  first?: InputMaybe<Scalars["Int"]["input"]>;
+  last?: InputMaybe<Scalars["Int"]["input"]>;
+};
+
+/** A connection to a list of HasManyThroughBaseModel items. */
+export type HasManyThroughBaseModelConnection = {
+  __typename?: "HasManyThroughBaseModelConnection";
+  /** A list of edges. */
+  edges: Array<HasManyThroughBaseModelEdge>;
+  /** Information to aid in pagination. */
+  pageInfo: PageInfo;
+};
+
+/** An edge in a HasManyThroughBaseModel connection. */
+export type HasManyThroughBaseModelEdge = {
+  __typename?: "HasManyThroughBaseModelEdge";
+  /** A cursor for use in pagination */
+  cursor: Scalars["String"]["output"];
+  /** The item at the end of the edge */
+  node: HasManyThroughBaseModel;
+};
+
+export type HasManyThroughBaseModelFilter = {
+  AND?: InputMaybe<Array<InputMaybe<HasManyThroughBaseModelFilter>>>;
+  NOT?: InputMaybe<Array<InputMaybe<HasManyThroughBaseModelFilter>>>;
+  OR?: InputMaybe<Array<InputMaybe<HasManyThroughBaseModelFilter>>>;
+  baseModelName?: InputMaybe<StringFilter>;
+  createdAt?: InputMaybe<DateTimeFilter>;
+  id?: InputMaybe<IdFilter>;
+  updatedAt?: InputMaybe<DateTimeFilter>;
+};
+
+export type HasManyThroughBaseModelSort = {
+  /** Sort the results by the baseModelName field. Defaults to ascending (smallest value first). */
+  baseModelName?: InputMaybe<SortOrder>;
+  /** Sort the results by the createdAt field. Defaults to ascending (smallest value first). */
+  createdAt?: InputMaybe<SortOrder>;
+  /** Sort the results by the id field. Defaults to ascending (smallest value first). */
+  id?: InputMaybe<SortOrder>;
+  /** Sort the results by the updatedAt field. Defaults to ascending (smallest value first). */
+  updatedAt?: InputMaybe<SortOrder>;
+};
+
+export type HasManyThroughJoinerModel = {
+  __typename?: "HasManyThroughJoinerModel";
+  /** Get all the fields for this record. Useful for not having to list out all the fields you want to retrieve, but slower. */
+  _all: Scalars["JSONObject"]["output"];
+  /** The time at which this record was first created. Set once upon record creation and never changed. Managed by Gadget. */
+  createdAt: Scalars["DateTime"]["output"];
+  /** The globally unique, unchanging identifier for this record. Assigned and managed by Gadget. */
+  id: Scalars["GadgetID"]["output"];
+  joinerBelongsToBase?: Maybe<HasManyThroughBaseModel>;
+  joinerBelongsToBaseId?: Maybe<Scalars["GadgetID"]["output"]>;
+  joinerBelongsToSibling?: Maybe<HasManyThroughSiblingModel>;
+  joinerBelongsToSiblingId?: Maybe<Scalars["GadgetID"]["output"]>;
+  /** The time at which this record was last changed. Set each time the record is successfully acted upon by an action. Managed by Gadget. */
+  updatedAt: Scalars["DateTime"]["output"];
+};
+
+/** A connection to a list of HasManyThroughJoinerModel items. */
+export type HasManyThroughJoinerModelConnection = {
+  __typename?: "HasManyThroughJoinerModelConnection";
+  /** A list of edges. */
+  edges: Array<HasManyThroughJoinerModelEdge>;
+  /** Information to aid in pagination. */
+  pageInfo: PageInfo;
+};
+
+/** An edge in a HasManyThroughJoinerModel connection. */
+export type HasManyThroughJoinerModelEdge = {
+  __typename?: "HasManyThroughJoinerModelEdge";
+  /** A cursor for use in pagination */
+  cursor: Scalars["String"]["output"];
+  /** The item at the end of the edge */
+  node: HasManyThroughJoinerModel;
+};
+
+export type HasManyThroughJoinerModelFilter = {
+  AND?: InputMaybe<Array<InputMaybe<HasManyThroughJoinerModelFilter>>>;
+  NOT?: InputMaybe<Array<InputMaybe<HasManyThroughJoinerModelFilter>>>;
+  OR?: InputMaybe<Array<InputMaybe<HasManyThroughJoinerModelFilter>>>;
+  createdAt?: InputMaybe<DateTimeFilter>;
+  id?: InputMaybe<IdFilter>;
+  joinerBelongsToBase?: InputMaybe<IdFilter>;
+  joinerBelongsToBaseId?: InputMaybe<IdFilter>;
+  joinerBelongsToSibling?: InputMaybe<IdFilter>;
+  joinerBelongsToSiblingId?: InputMaybe<IdFilter>;
+  updatedAt?: InputMaybe<DateTimeFilter>;
+};
+
+export type HasManyThroughJoinerModelSort = {
+  /** Sort the results by the createdAt field. Defaults to ascending (smallest value first). */
+  createdAt?: InputMaybe<SortOrder>;
+  /** Sort the results by the id field. Defaults to ascending (smallest value first). */
+  id?: InputMaybe<SortOrder>;
+  /** Sort the results by the updatedAt field. Defaults to ascending (smallest value first). */
+  updatedAt?: InputMaybe<SortOrder>;
+};
+
+export type HasManyThroughMutations = {
+  __typename?: "HasManyThroughMutations";
+  bulkCreateBaseModels?: Maybe<BulkCreateHasManyThroughBaseModelsResult>;
+  bulkCreateJoinerModels?: Maybe<BulkCreateHasManyThroughJoinerModelsResult>;
+  bulkCreateSiblingModels?: Maybe<BulkCreateHasManyThroughSiblingModelsResult>;
+  bulkDeleteBaseModels?: Maybe<BulkDeleteHasManyThroughBaseModelsResult>;
+  bulkDeleteJoinerModels?: Maybe<BulkDeleteHasManyThroughJoinerModelsResult>;
+  bulkDeleteSiblingModels?: Maybe<BulkDeleteHasManyThroughSiblingModelsResult>;
+  bulkUpdateBaseModels?: Maybe<BulkUpdateHasManyThroughBaseModelsResult>;
+  bulkUpdateJoinerModels?: Maybe<BulkUpdateHasManyThroughJoinerModelsResult>;
+  bulkUpdateSiblingModels?: Maybe<BulkUpdateHasManyThroughSiblingModelsResult>;
+  bulkUpsertBaseModels: BulkUpsertHasManyThroughBaseModelsResult;
+  bulkUpsertJoinerModels: BulkUpsertHasManyThroughJoinerModelsResult;
+  bulkUpsertSiblingModels: BulkUpsertHasManyThroughSiblingModelsResult;
+  createBaseModel?: Maybe<CreateHasManyThroughBaseModelResult>;
+  createJoinerModel?: Maybe<CreateHasManyThroughJoinerModelResult>;
+  createSiblingModel?: Maybe<CreateHasManyThroughSiblingModelResult>;
+  deleteBaseModel?: Maybe<DeleteHasManyThroughBaseModelResult>;
+  deleteJoinerModel?: Maybe<DeleteHasManyThroughJoinerModelResult>;
+  deleteSiblingModel?: Maybe<DeleteHasManyThroughSiblingModelResult>;
+  updateBaseModel?: Maybe<UpdateHasManyThroughBaseModelResult>;
+  updateJoinerModel?: Maybe<UpdateHasManyThroughJoinerModelResult>;
+  updateSiblingModel?: Maybe<UpdateHasManyThroughSiblingModelResult>;
+  upsertBaseModel?: Maybe<UpsertHasManyThroughBaseModelResult>;
+  upsertJoinerModel?: Maybe<UpsertHasManyThroughJoinerModelResult>;
+  upsertSiblingModel?: Maybe<UpsertHasManyThroughSiblingModelResult>;
+};
+
+export type HasManyThroughMutationsBulkCreateBaseModelsArgs = {
+  inputs: Array<BulkCreateHasManyThroughBaseModelsInput>;
+};
+
+export type HasManyThroughMutationsBulkCreateJoinerModelsArgs = {
+  inputs: Array<BulkCreateHasManyThroughJoinerModelsInput>;
+};
+
+export type HasManyThroughMutationsBulkCreateSiblingModelsArgs = {
+  inputs: Array<BulkCreateHasManyThroughSiblingModelsInput>;
+};
+
+export type HasManyThroughMutationsBulkDeleteBaseModelsArgs = {
+  ids: Array<Scalars["GadgetID"]["input"]>;
+};
+
+export type HasManyThroughMutationsBulkDeleteJoinerModelsArgs = {
+  ids: Array<Scalars["GadgetID"]["input"]>;
+};
+
+export type HasManyThroughMutationsBulkDeleteSiblingModelsArgs = {
+  ids: Array<Scalars["GadgetID"]["input"]>;
+};
+
+export type HasManyThroughMutationsBulkUpdateBaseModelsArgs = {
+  inputs: Array<BulkUpdateHasManyThroughBaseModelsInput>;
+};
+
+export type HasManyThroughMutationsBulkUpdateJoinerModelsArgs = {
+  inputs: Array<BulkUpdateHasManyThroughJoinerModelsInput>;
+};
+
+export type HasManyThroughMutationsBulkUpdateSiblingModelsArgs = {
+  inputs: Array<BulkUpdateHasManyThroughSiblingModelsInput>;
+};
+
+export type HasManyThroughMutationsBulkUpsertBaseModelsArgs = {
+  inputs: Array<BulkUpsertHasManyThroughBaseModelsInput>;
+};
+
+export type HasManyThroughMutationsBulkUpsertJoinerModelsArgs = {
+  inputs: Array<BulkUpsertHasManyThroughJoinerModelsInput>;
+};
+
+export type HasManyThroughMutationsBulkUpsertSiblingModelsArgs = {
+  inputs: Array<BulkUpsertHasManyThroughSiblingModelsInput>;
+};
+
+export type HasManyThroughMutationsCreateBaseModelArgs = {
+  baseModel?: InputMaybe<CreateHasManyThroughBaseModelInput>;
+};
+
+export type HasManyThroughMutationsCreateJoinerModelArgs = {
+  joinerModel?: InputMaybe<CreateHasManyThroughJoinerModelInput>;
+};
+
+export type HasManyThroughMutationsCreateSiblingModelArgs = {
+  siblingModel?: InputMaybe<CreateHasManyThroughSiblingModelInput>;
+};
+
+export type HasManyThroughMutationsDeleteBaseModelArgs = {
+  id: Scalars["GadgetID"]["input"];
+};
+
+export type HasManyThroughMutationsDeleteJoinerModelArgs = {
+  id: Scalars["GadgetID"]["input"];
+};
+
+export type HasManyThroughMutationsDeleteSiblingModelArgs = {
+  id: Scalars["GadgetID"]["input"];
+};
+
+export type HasManyThroughMutationsUpdateBaseModelArgs = {
+  baseModel?: InputMaybe<UpdateHasManyThroughBaseModelInput>;
+  id: Scalars["GadgetID"]["input"];
+};
+
+export type HasManyThroughMutationsUpdateJoinerModelArgs = {
+  id: Scalars["GadgetID"]["input"];
+  joinerModel?: InputMaybe<UpdateHasManyThroughJoinerModelInput>;
+};
+
+export type HasManyThroughMutationsUpdateSiblingModelArgs = {
+  id: Scalars["GadgetID"]["input"];
+  siblingModel?: InputMaybe<UpdateHasManyThroughSiblingModelInput>;
+};
+
+export type HasManyThroughMutationsUpsertBaseModelArgs = {
+  baseModel?: InputMaybe<UpsertHasManyThroughBaseModelInput>;
+  on?: InputMaybe<Array<Scalars["String"]["input"]>>;
+};
+
+export type HasManyThroughMutationsUpsertJoinerModelArgs = {
+  joinerModel?: InputMaybe<UpsertHasManyThroughJoinerModelInput>;
+  on?: InputMaybe<Array<Scalars["String"]["input"]>>;
+};
+
+export type HasManyThroughMutationsUpsertSiblingModelArgs = {
+  on?: InputMaybe<Array<Scalars["String"]["input"]>>;
+  siblingModel?: InputMaybe<UpsertHasManyThroughSiblingModelInput>;
+};
+
+export type HasManyThroughQueries = {
+  __typename?: "HasManyThroughQueries";
+  baseModel?: Maybe<HasManyThroughBaseModel>;
+  baseModels: HasManyThroughBaseModelConnection;
+  joinerModel?: Maybe<HasManyThroughJoinerModel>;
+  joinerModels: HasManyThroughJoinerModelConnection;
+  siblingModel?: Maybe<HasManyThroughSiblingModel>;
+  siblingModels: HasManyThroughSiblingModelConnection;
+};
+
+export type HasManyThroughQueriesBaseModelArgs = {
+  id: Scalars["GadgetID"]["input"];
+};
+
+export type HasManyThroughQueriesBaseModelsArgs = {
+  after?: InputMaybe<Scalars["String"]["input"]>;
+  before?: InputMaybe<Scalars["String"]["input"]>;
+  filter?: InputMaybe<Array<HasManyThroughBaseModelFilter>>;
+  first?: InputMaybe<Scalars["Int"]["input"]>;
+  last?: InputMaybe<Scalars["Int"]["input"]>;
+  search?: InputMaybe<Scalars["String"]["input"]>;
+  sort?: InputMaybe<Array<HasManyThroughBaseModelSort>>;
+};
+
+export type HasManyThroughQueriesJoinerModelArgs = {
+  id: Scalars["GadgetID"]["input"];
+};
+
+export type HasManyThroughQueriesJoinerModelsArgs = {
+  after?: InputMaybe<Scalars["String"]["input"]>;
+  before?: InputMaybe<Scalars["String"]["input"]>;
+  filter?: InputMaybe<Array<HasManyThroughJoinerModelFilter>>;
+  first?: InputMaybe<Scalars["Int"]["input"]>;
+  last?: InputMaybe<Scalars["Int"]["input"]>;
+  search?: InputMaybe<Scalars["String"]["input"]>;
+  sort?: InputMaybe<Array<HasManyThroughJoinerModelSort>>;
+};
+
+export type HasManyThroughQueriesSiblingModelArgs = {
+  id: Scalars["GadgetID"]["input"];
+};
+
+export type HasManyThroughQueriesSiblingModelsArgs = {
+  after?: InputMaybe<Scalars["String"]["input"]>;
+  before?: InputMaybe<Scalars["String"]["input"]>;
+  filter?: InputMaybe<Array<HasManyThroughSiblingModelFilter>>;
+  first?: InputMaybe<Scalars["Int"]["input"]>;
+  last?: InputMaybe<Scalars["Int"]["input"]>;
+  search?: InputMaybe<Scalars["String"]["input"]>;
+  sort?: InputMaybe<Array<HasManyThroughSiblingModelSort>>;
+};
+
+export type HasManyThroughSiblingModel = {
+  __typename?: "HasManyThroughSiblingModel";
+  /** Get all the fields for this record. Useful for not having to list out all the fields you want to retrieve, but slower. */
+  _all: Scalars["JSONObject"]["output"];
+  /** The time at which this record was first created. Set once upon record creation and never changed. Managed by Gadget. */
+  createdAt: Scalars["DateTime"]["output"];
+  /** The globally unique, unchanging identifier for this record. Assigned and managed by Gadget. */
+  id: Scalars["GadgetID"]["output"];
+  joinerModels: HasManyThroughJoinerModelConnection;
+  siblingModelHmtField: HasManyThroughBaseModelConnection;
+  /** The time at which this record was last changed. Set each time the record is successfully acted upon by an action. Managed by Gadget. */
+  updatedAt: Scalars["DateTime"]["output"];
+};
+
+export type HasManyThroughSiblingModelJoinerModelsArgs = {
+  after?: InputMaybe<Scalars["String"]["input"]>;
+  before?: InputMaybe<Scalars["String"]["input"]>;
+  first?: InputMaybe<Scalars["Int"]["input"]>;
+  last?: InputMaybe<Scalars["Int"]["input"]>;
+};
+
+export type HasManyThroughSiblingModelSiblingModelHmtFieldArgs = {
+  after?: InputMaybe<Scalars["String"]["input"]>;
+  before?: InputMaybe<Scalars["String"]["input"]>;
+  first?: InputMaybe<Scalars["Int"]["input"]>;
+  last?: InputMaybe<Scalars["Int"]["input"]>;
+};
+
+/** A connection to a list of HasManyThroughSiblingModel items. */
+export type HasManyThroughSiblingModelConnection = {
+  __typename?: "HasManyThroughSiblingModelConnection";
+  /** A list of edges. */
+  edges: Array<HasManyThroughSiblingModelEdge>;
+  /** Information to aid in pagination. */
+  pageInfo: PageInfo;
+};
+
+/** An edge in a HasManyThroughSiblingModel connection. */
+export type HasManyThroughSiblingModelEdge = {
+  __typename?: "HasManyThroughSiblingModelEdge";
+  /** A cursor for use in pagination */
+  cursor: Scalars["String"]["output"];
+  /** The item at the end of the edge */
+  node: HasManyThroughSiblingModel;
+};
+
+export type HasManyThroughSiblingModelFilter = {
+  AND?: InputMaybe<Array<InputMaybe<HasManyThroughSiblingModelFilter>>>;
+  NOT?: InputMaybe<Array<InputMaybe<HasManyThroughSiblingModelFilter>>>;
+  OR?: InputMaybe<Array<InputMaybe<HasManyThroughSiblingModelFilter>>>;
+  createdAt?: InputMaybe<DateTimeFilter>;
+  id?: InputMaybe<IdFilter>;
+  updatedAt?: InputMaybe<DateTimeFilter>;
+};
+
+export type HasManyThroughSiblingModelSort = {
+  /** Sort the results by the createdAt field. Defaults to ascending (smallest value first). */
+  createdAt?: InputMaybe<SortOrder>;
+  /** Sort the results by the id field. Defaults to ascending (smallest value first). */
+  id?: InputMaybe<SortOrder>;
+  /** Sort the results by the updatedAt field. Defaults to ascending (smallest value first). */
+  updatedAt?: InputMaybe<SortOrder>;
+};
+
 export type IdEqualsFilter = {
   equals?: InputMaybe<Scalars["GadgetID"]["input"]>;
 };
@@ -3838,6 +4759,27 @@ export type InternalBulkCreateGizmosResult = {
   success: Scalars["Boolean"]["output"];
 };
 
+export type InternalBulkCreateHasManyThroughBaseModelsResult = {
+  __typename?: "InternalBulkCreateHasManyThroughBaseModelsResult";
+  baseModels?: Maybe<Array<Maybe<Scalars["InternalHasManyThroughBaseModelRecord"]["output"]>>>;
+  errors?: Maybe<Array<ExecutionError>>;
+  success: Scalars["Boolean"]["output"];
+};
+
+export type InternalBulkCreateHasManyThroughJoinerModelsResult = {
+  __typename?: "InternalBulkCreateHasManyThroughJoinerModelsResult";
+  errors?: Maybe<Array<ExecutionError>>;
+  joinerModels?: Maybe<Array<Maybe<Scalars["InternalHasManyThroughJoinerModelRecord"]["output"]>>>;
+  success: Scalars["Boolean"]["output"];
+};
+
+export type InternalBulkCreateHasManyThroughSiblingModelsResult = {
+  __typename?: "InternalBulkCreateHasManyThroughSiblingModelsResult";
+  errors?: Maybe<Array<ExecutionError>>;
+  siblingModels?: Maybe<Array<Maybe<Scalars["InternalHasManyThroughSiblingModelRecord"]["output"]>>>;
+  success: Scalars["Boolean"]["output"];
+};
+
 export type InternalBulkCreateModelAsResult = {
   __typename?: "InternalBulkCreateModelAsResult";
   errors?: Maybe<Array<ExecutionError>>;
@@ -3975,6 +4917,27 @@ export type InternalCreateGizmoResult = {
   __typename?: "InternalCreateGizmoResult";
   errors?: Maybe<Array<ExecutionError>>;
   gizmo?: Maybe<Scalars["InternalGizmoRecord"]["output"]>;
+  success: Scalars["Boolean"]["output"];
+};
+
+export type InternalCreateHasManyThroughBaseModelResult = {
+  __typename?: "InternalCreateHasManyThroughBaseModelResult";
+  baseModel?: Maybe<Scalars["InternalHasManyThroughBaseModelRecord"]["output"]>;
+  errors?: Maybe<Array<ExecutionError>>;
+  success: Scalars["Boolean"]["output"];
+};
+
+export type InternalCreateHasManyThroughJoinerModelResult = {
+  __typename?: "InternalCreateHasManyThroughJoinerModelResult";
+  errors?: Maybe<Array<ExecutionError>>;
+  joinerModel?: Maybe<Scalars["InternalHasManyThroughJoinerModelRecord"]["output"]>;
+  success: Scalars["Boolean"]["output"];
+};
+
+export type InternalCreateHasManyThroughSiblingModelResult = {
+  __typename?: "InternalCreateHasManyThroughSiblingModelResult";
+  errors?: Maybe<Array<ExecutionError>>;
+  siblingModel?: Maybe<Scalars["InternalHasManyThroughSiblingModelRecord"]["output"]>;
   success: Scalars["Boolean"]["output"];
 };
 
@@ -4118,6 +5081,27 @@ export type InternalDeleteGizmoResult = {
   success: Scalars["Boolean"]["output"];
 };
 
+export type InternalDeleteHasManyThroughBaseModelResult = {
+  __typename?: "InternalDeleteHasManyThroughBaseModelResult";
+  baseModel?: Maybe<Scalars["InternalHasManyThroughBaseModelRecord"]["output"]>;
+  errors?: Maybe<Array<ExecutionError>>;
+  success: Scalars["Boolean"]["output"];
+};
+
+export type InternalDeleteHasManyThroughJoinerModelResult = {
+  __typename?: "InternalDeleteHasManyThroughJoinerModelResult";
+  errors?: Maybe<Array<ExecutionError>>;
+  joinerModel?: Maybe<Scalars["InternalHasManyThroughJoinerModelRecord"]["output"]>;
+  success: Scalars["Boolean"]["output"];
+};
+
+export type InternalDeleteHasManyThroughSiblingModelResult = {
+  __typename?: "InternalDeleteHasManyThroughSiblingModelResult";
+  errors?: Maybe<Array<ExecutionError>>;
+  siblingModel?: Maybe<Scalars["InternalHasManyThroughSiblingModelRecord"]["output"]>;
+  success: Scalars["Boolean"]["output"];
+};
+
 export type InternalDeleteManyAutoTableTestRelatedModelResult = {
   __typename?: "InternalDeleteManyAutoTableTestRelatedModelResult";
   errors?: Maybe<Array<ExecutionError>>;
@@ -4156,6 +5140,24 @@ export type InternalDeleteManyGameStadiumResult = {
 
 export type InternalDeleteManyGizmoResult = {
   __typename?: "InternalDeleteManyGizmoResult";
+  errors?: Maybe<Array<ExecutionError>>;
+  success: Scalars["Boolean"]["output"];
+};
+
+export type InternalDeleteManyHasManyThroughBaseModelResult = {
+  __typename?: "InternalDeleteManyHasManyThroughBaseModelResult";
+  errors?: Maybe<Array<ExecutionError>>;
+  success: Scalars["Boolean"]["output"];
+};
+
+export type InternalDeleteManyHasManyThroughJoinerModelResult = {
+  __typename?: "InternalDeleteManyHasManyThroughJoinerModelResult";
+  errors?: Maybe<Array<ExecutionError>>;
+  success: Scalars["Boolean"]["output"];
+};
+
+export type InternalDeleteManyHasManyThroughSiblingModelResult = {
+  __typename?: "InternalDeleteManyHasManyThroughSiblingModelResult";
   errors?: Maybe<Array<ExecutionError>>;
   success: Scalars["Boolean"]["output"];
 };
@@ -4378,6 +5380,7 @@ export type InternalGameMutations = {
   triggerCreatePlayer?: Maybe<CreateGamePlayerResult>;
   triggerCreateRound?: Maybe<CreateGameRoundResult>;
   triggerCreateStadium?: Maybe<CreateGameStadiumResult>;
+  triggerCustomObjectParamsCity?: Maybe<CustomObjectParamsGameCityResult>;
   triggerDeleteCity?: Maybe<DeleteGameCityResult>;
   triggerDeletePlayer?: Maybe<DeleteGamePlayerResult>;
   triggerDeleteRound?: Maybe<DeleteGameRoundResult>;
@@ -4486,6 +5489,13 @@ export type InternalGameMutationsTriggerCreateRoundArgs = {
 };
 
 export type InternalGameMutationsTriggerCreateStadiumArgs = {
+  context?: InputMaybe<AppGraphQlTriggerMutationContext>;
+  params?: InputMaybe<Scalars["JSONObject"]["input"]>;
+  trigger?: InputMaybe<Scalars["JSONObject"]["input"]>;
+  verifyTriggerExists?: InputMaybe<Scalars["Boolean"]["input"]>;
+};
+
+export type InternalGameMutationsTriggerCustomObjectParamsCityArgs = {
   context?: InputMaybe<AppGraphQlTriggerMutationContext>;
   params?: InputMaybe<Scalars["JSONObject"]["input"]>;
   trigger?: InputMaybe<Scalars["JSONObject"]["input"]>;
@@ -4782,6 +5792,322 @@ export type InternalGizmoRecordEdge = {
   node: Scalars["InternalGizmoRecord"]["output"];
 };
 
+export type InternalHasManyThroughBaseModelInput = {
+  baseModelName?: InputMaybe<Scalars["String"]["input"]>;
+  createdAt?: InputMaybe<Scalars["DateTime"]["input"]>;
+  id?: InputMaybe<Scalars["GadgetID"]["input"]>;
+  state?: InputMaybe<Scalars["RecordState"]["input"]>;
+  stateHistory?: InputMaybe<Scalars["RecordState"]["input"]>;
+  updatedAt?: InputMaybe<Scalars["DateTime"]["input"]>;
+};
+
+/** A connection to a list of InternalHasManyThroughBaseModelRecord items. */
+export type InternalHasManyThroughBaseModelRecordConnection = {
+  __typename?: "InternalHasManyThroughBaseModelRecordConnection";
+  /** A list of edges. */
+  edges: Array<InternalHasManyThroughBaseModelRecordEdge>;
+  /** Information to aid in pagination. */
+  pageInfo: PageInfo;
+};
+
+/** An edge in a InternalHasManyThroughBaseModelRecord connection. */
+export type InternalHasManyThroughBaseModelRecordEdge = {
+  __typename?: "InternalHasManyThroughBaseModelRecordEdge";
+  /** A cursor for use in pagination */
+  cursor: Scalars["String"]["output"];
+  /** The item at the end of the edge */
+  node: Scalars["InternalHasManyThroughBaseModelRecord"]["output"];
+};
+
+export type InternalHasManyThroughJoinerModelInput = {
+  createdAt?: InputMaybe<Scalars["DateTime"]["input"]>;
+  id?: InputMaybe<Scalars["GadgetID"]["input"]>;
+  joinerBelongsToBase?: InputMaybe<InternalBelongsToInput>;
+  joinerBelongsToSibling?: InputMaybe<InternalBelongsToInput>;
+  state?: InputMaybe<Scalars["RecordState"]["input"]>;
+  stateHistory?: InputMaybe<Scalars["RecordState"]["input"]>;
+  updatedAt?: InputMaybe<Scalars["DateTime"]["input"]>;
+};
+
+/** A connection to a list of InternalHasManyThroughJoinerModelRecord items. */
+export type InternalHasManyThroughJoinerModelRecordConnection = {
+  __typename?: "InternalHasManyThroughJoinerModelRecordConnection";
+  /** A list of edges. */
+  edges: Array<InternalHasManyThroughJoinerModelRecordEdge>;
+  /** Information to aid in pagination. */
+  pageInfo: PageInfo;
+};
+
+/** An edge in a InternalHasManyThroughJoinerModelRecord connection. */
+export type InternalHasManyThroughJoinerModelRecordEdge = {
+  __typename?: "InternalHasManyThroughJoinerModelRecordEdge";
+  /** A cursor for use in pagination */
+  cursor: Scalars["String"]["output"];
+  /** The item at the end of the edge */
+  node: Scalars["InternalHasManyThroughJoinerModelRecord"]["output"];
+};
+
+export type InternalHasManyThroughMutations = {
+  __typename?: "InternalHasManyThroughMutations";
+  bulkCreateBaseModels?: Maybe<InternalBulkCreateHasManyThroughBaseModelsResult>;
+  bulkCreateJoinerModels?: Maybe<InternalBulkCreateHasManyThroughJoinerModelsResult>;
+  bulkCreateSiblingModels?: Maybe<InternalBulkCreateHasManyThroughSiblingModelsResult>;
+  createBaseModel?: Maybe<InternalCreateHasManyThroughBaseModelResult>;
+  createJoinerModel?: Maybe<InternalCreateHasManyThroughJoinerModelResult>;
+  createSiblingModel?: Maybe<InternalCreateHasManyThroughSiblingModelResult>;
+  deleteBaseModel?: Maybe<InternalDeleteHasManyThroughBaseModelResult>;
+  deleteJoinerModel?: Maybe<InternalDeleteHasManyThroughJoinerModelResult>;
+  deleteManyBaseModel?: Maybe<InternalDeleteManyHasManyThroughBaseModelResult>;
+  deleteManyJoinerModel?: Maybe<InternalDeleteManyHasManyThroughJoinerModelResult>;
+  deleteManySiblingModel?: Maybe<InternalDeleteManyHasManyThroughSiblingModelResult>;
+  deleteSiblingModel?: Maybe<InternalDeleteHasManyThroughSiblingModelResult>;
+  triggerCreateBaseModel?: Maybe<CreateHasManyThroughBaseModelResult>;
+  triggerCreateJoinerModel?: Maybe<CreateHasManyThroughJoinerModelResult>;
+  triggerCreateSiblingModel?: Maybe<CreateHasManyThroughSiblingModelResult>;
+  triggerDeleteBaseModel?: Maybe<DeleteHasManyThroughBaseModelResult>;
+  triggerDeleteJoinerModel?: Maybe<DeleteHasManyThroughJoinerModelResult>;
+  triggerDeleteSiblingModel?: Maybe<DeleteHasManyThroughSiblingModelResult>;
+  triggerUpdateBaseModel?: Maybe<UpdateHasManyThroughBaseModelResult>;
+  triggerUpdateJoinerModel?: Maybe<UpdateHasManyThroughJoinerModelResult>;
+  triggerUpdateSiblingModel?: Maybe<UpdateHasManyThroughSiblingModelResult>;
+  updateBaseModel?: Maybe<InternalUpdateHasManyThroughBaseModelResult>;
+  updateJoinerModel?: Maybe<InternalUpdateHasManyThroughJoinerModelResult>;
+  updateSiblingModel?: Maybe<InternalUpdateHasManyThroughSiblingModelResult>;
+  upsertBaseModel?: Maybe<InternalUpsertHasManyThroughBaseModelResult>;
+  upsertJoinerModel?: Maybe<InternalUpsertHasManyThroughJoinerModelResult>;
+  upsertSiblingModel?: Maybe<InternalUpsertHasManyThroughSiblingModelResult>;
+};
+
+export type InternalHasManyThroughMutationsBulkCreateBaseModelsArgs = {
+  baseModels: Array<InputMaybe<InternalHasManyThroughBaseModelInput>>;
+};
+
+export type InternalHasManyThroughMutationsBulkCreateJoinerModelsArgs = {
+  joinerModels: Array<InputMaybe<InternalHasManyThroughJoinerModelInput>>;
+};
+
+export type InternalHasManyThroughMutationsBulkCreateSiblingModelsArgs = {
+  siblingModels: Array<InputMaybe<InternalHasManyThroughSiblingModelInput>>;
+};
+
+export type InternalHasManyThroughMutationsCreateBaseModelArgs = {
+  baseModel?: InputMaybe<InternalHasManyThroughBaseModelInput>;
+};
+
+export type InternalHasManyThroughMutationsCreateJoinerModelArgs = {
+  joinerModel?: InputMaybe<InternalHasManyThroughJoinerModelInput>;
+};
+
+export type InternalHasManyThroughMutationsCreateSiblingModelArgs = {
+  siblingModel?: InputMaybe<InternalHasManyThroughSiblingModelInput>;
+};
+
+export type InternalHasManyThroughMutationsDeleteBaseModelArgs = {
+  id: Scalars["GadgetID"]["input"];
+};
+
+export type InternalHasManyThroughMutationsDeleteJoinerModelArgs = {
+  id: Scalars["GadgetID"]["input"];
+};
+
+export type InternalHasManyThroughMutationsDeleteManyBaseModelArgs = {
+  filter?: InputMaybe<Array<HasManyThroughBaseModelFilter>>;
+  search?: InputMaybe<Scalars["String"]["input"]>;
+};
+
+export type InternalHasManyThroughMutationsDeleteManyJoinerModelArgs = {
+  filter?: InputMaybe<Array<HasManyThroughJoinerModelFilter>>;
+  search?: InputMaybe<Scalars["String"]["input"]>;
+};
+
+export type InternalHasManyThroughMutationsDeleteManySiblingModelArgs = {
+  filter?: InputMaybe<Array<HasManyThroughSiblingModelFilter>>;
+  search?: InputMaybe<Scalars["String"]["input"]>;
+};
+
+export type InternalHasManyThroughMutationsDeleteSiblingModelArgs = {
+  id: Scalars["GadgetID"]["input"];
+};
+
+export type InternalHasManyThroughMutationsTriggerCreateBaseModelArgs = {
+  context?: InputMaybe<AppGraphQlTriggerMutationContext>;
+  params?: InputMaybe<Scalars["JSONObject"]["input"]>;
+  trigger?: InputMaybe<Scalars["JSONObject"]["input"]>;
+  verifyTriggerExists?: InputMaybe<Scalars["Boolean"]["input"]>;
+};
+
+export type InternalHasManyThroughMutationsTriggerCreateJoinerModelArgs = {
+  context?: InputMaybe<AppGraphQlTriggerMutationContext>;
+  params?: InputMaybe<Scalars["JSONObject"]["input"]>;
+  trigger?: InputMaybe<Scalars["JSONObject"]["input"]>;
+  verifyTriggerExists?: InputMaybe<Scalars["Boolean"]["input"]>;
+};
+
+export type InternalHasManyThroughMutationsTriggerCreateSiblingModelArgs = {
+  context?: InputMaybe<AppGraphQlTriggerMutationContext>;
+  params?: InputMaybe<Scalars["JSONObject"]["input"]>;
+  trigger?: InputMaybe<Scalars["JSONObject"]["input"]>;
+  verifyTriggerExists?: InputMaybe<Scalars["Boolean"]["input"]>;
+};
+
+export type InternalHasManyThroughMutationsTriggerDeleteBaseModelArgs = {
+  context?: InputMaybe<AppGraphQlTriggerMutationContext>;
+  params?: InputMaybe<Scalars["JSONObject"]["input"]>;
+  trigger?: InputMaybe<Scalars["JSONObject"]["input"]>;
+  verifyTriggerExists?: InputMaybe<Scalars["Boolean"]["input"]>;
+};
+
+export type InternalHasManyThroughMutationsTriggerDeleteJoinerModelArgs = {
+  context?: InputMaybe<AppGraphQlTriggerMutationContext>;
+  params?: InputMaybe<Scalars["JSONObject"]["input"]>;
+  trigger?: InputMaybe<Scalars["JSONObject"]["input"]>;
+  verifyTriggerExists?: InputMaybe<Scalars["Boolean"]["input"]>;
+};
+
+export type InternalHasManyThroughMutationsTriggerDeleteSiblingModelArgs = {
+  context?: InputMaybe<AppGraphQlTriggerMutationContext>;
+  params?: InputMaybe<Scalars["JSONObject"]["input"]>;
+  trigger?: InputMaybe<Scalars["JSONObject"]["input"]>;
+  verifyTriggerExists?: InputMaybe<Scalars["Boolean"]["input"]>;
+};
+
+export type InternalHasManyThroughMutationsTriggerUpdateBaseModelArgs = {
+  context?: InputMaybe<AppGraphQlTriggerMutationContext>;
+  params?: InputMaybe<Scalars["JSONObject"]["input"]>;
+  trigger?: InputMaybe<Scalars["JSONObject"]["input"]>;
+  verifyTriggerExists?: InputMaybe<Scalars["Boolean"]["input"]>;
+};
+
+export type InternalHasManyThroughMutationsTriggerUpdateJoinerModelArgs = {
+  context?: InputMaybe<AppGraphQlTriggerMutationContext>;
+  params?: InputMaybe<Scalars["JSONObject"]["input"]>;
+  trigger?: InputMaybe<Scalars["JSONObject"]["input"]>;
+  verifyTriggerExists?: InputMaybe<Scalars["Boolean"]["input"]>;
+};
+
+export type InternalHasManyThroughMutationsTriggerUpdateSiblingModelArgs = {
+  context?: InputMaybe<AppGraphQlTriggerMutationContext>;
+  params?: InputMaybe<Scalars["JSONObject"]["input"]>;
+  trigger?: InputMaybe<Scalars["JSONObject"]["input"]>;
+  verifyTriggerExists?: InputMaybe<Scalars["Boolean"]["input"]>;
+};
+
+export type InternalHasManyThroughMutationsUpdateBaseModelArgs = {
+  baseModel?: InputMaybe<InternalHasManyThroughBaseModelInput>;
+  id: Scalars["GadgetID"]["input"];
+};
+
+export type InternalHasManyThroughMutationsUpdateJoinerModelArgs = {
+  id: Scalars["GadgetID"]["input"];
+  joinerModel?: InputMaybe<InternalHasManyThroughJoinerModelInput>;
+};
+
+export type InternalHasManyThroughMutationsUpdateSiblingModelArgs = {
+  id: Scalars["GadgetID"]["input"];
+  siblingModel?: InputMaybe<InternalHasManyThroughSiblingModelInput>;
+};
+
+export type InternalHasManyThroughMutationsUpsertBaseModelArgs = {
+  baseModel?: InputMaybe<InternalHasManyThroughBaseModelInput>;
+  on?: InputMaybe<Array<Scalars["String"]["input"]>>;
+};
+
+export type InternalHasManyThroughMutationsUpsertJoinerModelArgs = {
+  joinerModel?: InputMaybe<InternalHasManyThroughJoinerModelInput>;
+  on?: InputMaybe<Array<Scalars["String"]["input"]>>;
+};
+
+export type InternalHasManyThroughMutationsUpsertSiblingModelArgs = {
+  on?: InputMaybe<Array<Scalars["String"]["input"]>>;
+  siblingModel?: InputMaybe<InternalHasManyThroughSiblingModelInput>;
+};
+
+export type InternalHasManyThroughQueries = {
+  __typename?: "InternalHasManyThroughQueries";
+  baseModel?: Maybe<Scalars["InternalHasManyThroughBaseModelRecord"]["output"]>;
+  /** Currently open platform transaction details, or null if no transaction is open */
+  currentTransactionDetails?: Maybe<Scalars["JSONObject"]["output"]>;
+  joinerModel?: Maybe<Scalars["InternalHasManyThroughJoinerModelRecord"]["output"]>;
+  listBaseModel: InternalHasManyThroughBaseModelRecordConnection;
+  listJoinerModel: InternalHasManyThroughJoinerModelRecordConnection;
+  listSiblingModel: InternalHasManyThroughSiblingModelRecordConnection;
+  siblingModel?: Maybe<Scalars["InternalHasManyThroughSiblingModelRecord"]["output"]>;
+};
+
+export type InternalHasManyThroughQueriesBaseModelArgs = {
+  id: Scalars["GadgetID"]["input"];
+  select?: InputMaybe<Array<Scalars["String"]["input"]>>;
+};
+
+export type InternalHasManyThroughQueriesJoinerModelArgs = {
+  id: Scalars["GadgetID"]["input"];
+  select?: InputMaybe<Array<Scalars["String"]["input"]>>;
+};
+
+export type InternalHasManyThroughQueriesListBaseModelArgs = {
+  after?: InputMaybe<Scalars["String"]["input"]>;
+  before?: InputMaybe<Scalars["String"]["input"]>;
+  filter?: InputMaybe<Array<HasManyThroughBaseModelFilter>>;
+  first?: InputMaybe<Scalars["Int"]["input"]>;
+  last?: InputMaybe<Scalars["Int"]["input"]>;
+  search?: InputMaybe<Scalars["String"]["input"]>;
+  select?: InputMaybe<Array<Scalars["String"]["input"]>>;
+  sort?: InputMaybe<Array<HasManyThroughBaseModelSort>>;
+};
+
+export type InternalHasManyThroughQueriesListJoinerModelArgs = {
+  after?: InputMaybe<Scalars["String"]["input"]>;
+  before?: InputMaybe<Scalars["String"]["input"]>;
+  filter?: InputMaybe<Array<HasManyThroughJoinerModelFilter>>;
+  first?: InputMaybe<Scalars["Int"]["input"]>;
+  last?: InputMaybe<Scalars["Int"]["input"]>;
+  search?: InputMaybe<Scalars["String"]["input"]>;
+  select?: InputMaybe<Array<Scalars["String"]["input"]>>;
+  sort?: InputMaybe<Array<HasManyThroughJoinerModelSort>>;
+};
+
+export type InternalHasManyThroughQueriesListSiblingModelArgs = {
+  after?: InputMaybe<Scalars["String"]["input"]>;
+  before?: InputMaybe<Scalars["String"]["input"]>;
+  filter?: InputMaybe<Array<HasManyThroughSiblingModelFilter>>;
+  first?: InputMaybe<Scalars["Int"]["input"]>;
+  last?: InputMaybe<Scalars["Int"]["input"]>;
+  search?: InputMaybe<Scalars["String"]["input"]>;
+  select?: InputMaybe<Array<Scalars["String"]["input"]>>;
+  sort?: InputMaybe<Array<HasManyThroughSiblingModelSort>>;
+};
+
+export type InternalHasManyThroughQueriesSiblingModelArgs = {
+  id: Scalars["GadgetID"]["input"];
+  select?: InputMaybe<Array<Scalars["String"]["input"]>>;
+};
+
+export type InternalHasManyThroughSiblingModelInput = {
+  createdAt?: InputMaybe<Scalars["DateTime"]["input"]>;
+  id?: InputMaybe<Scalars["GadgetID"]["input"]>;
+  state?: InputMaybe<Scalars["RecordState"]["input"]>;
+  stateHistory?: InputMaybe<Scalars["RecordState"]["input"]>;
+  updatedAt?: InputMaybe<Scalars["DateTime"]["input"]>;
+};
+
+/** A connection to a list of InternalHasManyThroughSiblingModelRecord items. */
+export type InternalHasManyThroughSiblingModelRecordConnection = {
+  __typename?: "InternalHasManyThroughSiblingModelRecordConnection";
+  /** A list of edges. */
+  edges: Array<InternalHasManyThroughSiblingModelRecordEdge>;
+  /** Information to aid in pagination. */
+  pageInfo: PageInfo;
+};
+
+/** An edge in a InternalHasManyThroughSiblingModelRecord connection. */
+export type InternalHasManyThroughSiblingModelRecordEdge = {
+  __typename?: "InternalHasManyThroughSiblingModelRecordEdge";
+  /** A cursor for use in pagination */
+  cursor: Scalars["String"]["output"];
+  /** The item at the end of the edge */
+  node: Scalars["InternalHasManyThroughSiblingModelRecord"]["output"];
+};
+
 export type InternalModelAInput = {
   createdAt?: InputMaybe<Scalars["DateTime"]["input"]>;
   id?: InputMaybe<Scalars["GadgetID"]["input"]>;
@@ -4878,6 +6204,8 @@ export type InternalMutations = {
   deleteUser?: Maybe<InternalDeleteUserResult>;
   deleteWidget?: Maybe<InternalDeleteWidgetResult>;
   game: InternalGameMutations;
+  hasManyThrough: InternalHasManyThroughMutations;
+  name: InternalNameMutations;
   rollbackTransaction: Scalars["String"]["output"];
   startTransaction: Scalars["String"]["output"];
   triggerAbortShopifySync?: Maybe<AbortShopifySyncResult>;
@@ -5801,6 +7129,35 @@ export type InternalMutationsUpsertWidgetArgs = {
   widget?: InputMaybe<InternalWidgetInput>;
 };
 
+export type InternalNameMutations = {
+  __typename?: "InternalNameMutations";
+  spaced: InternalNameSpacedMutations;
+};
+
+export type InternalNameSpacedMutations = {
+  __typename?: "InternalNameSpacedMutations";
+  triggerActionA?: Maybe<NameSpacedActionAResult>;
+  triggerCustomObjectParams?: Maybe<NameSpacedCustomObjectParamsResult>;
+  triggerNoTriggerGlobalAction?: Maybe<NameSpacedNoTriggerGlobalActionResult>;
+};
+
+export type InternalNameSpacedMutationsTriggerActionAArgs = {
+  trigger?: InputMaybe<Scalars["JSONObject"]["input"]>;
+  verifyTriggerExists?: InputMaybe<Scalars["Boolean"]["input"]>;
+};
+
+export type InternalNameSpacedMutationsTriggerCustomObjectParamsArgs = {
+  objParam?: InputMaybe<NameSpacedCustomObjectParamsObjParamInput>;
+  rootLevelStr?: InputMaybe<Scalars["String"]["input"]>;
+  trigger?: InputMaybe<Scalars["JSONObject"]["input"]>;
+  verifyTriggerExists?: InputMaybe<Scalars["Boolean"]["input"]>;
+};
+
+export type InternalNameSpacedMutationsTriggerNoTriggerGlobalActionArgs = {
+  trigger?: InputMaybe<Scalars["JSONObject"]["input"]>;
+  verifyTriggerExists?: InputMaybe<Scalars["Boolean"]["input"]>;
+};
+
 export type InternalPartAtomicsInput = {
   /** Numeric atomic commands for operating on count. */
   count?: InputMaybe<Array<NumericAtomicFieldUpdateInput>>;
@@ -5845,6 +7202,7 @@ export type InternalQueries = {
   currentTransactionDetails?: Maybe<Scalars["JSONObject"]["output"]>;
   game: InternalGameQueries;
   gizmo?: Maybe<Scalars["InternalGizmoRecord"]["output"]>;
+  hasManyThrough: InternalHasManyThroughQueries;
   listAutoTableTest: InternalAutoTableTestRecordConnection;
   listAutoTableTestRelatedModel: InternalAutoTableTestRelatedModelRecordConnection;
   listGizmo: InternalGizmoRecordConnection;
@@ -6588,6 +7946,27 @@ export type InternalUpdateGizmoResult = {
   success: Scalars["Boolean"]["output"];
 };
 
+export type InternalUpdateHasManyThroughBaseModelResult = {
+  __typename?: "InternalUpdateHasManyThroughBaseModelResult";
+  baseModel?: Maybe<Scalars["InternalHasManyThroughBaseModelRecord"]["output"]>;
+  errors?: Maybe<Array<ExecutionError>>;
+  success: Scalars["Boolean"]["output"];
+};
+
+export type InternalUpdateHasManyThroughJoinerModelResult = {
+  __typename?: "InternalUpdateHasManyThroughJoinerModelResult";
+  errors?: Maybe<Array<ExecutionError>>;
+  joinerModel?: Maybe<Scalars["InternalHasManyThroughJoinerModelRecord"]["output"]>;
+  success: Scalars["Boolean"]["output"];
+};
+
+export type InternalUpdateHasManyThroughSiblingModelResult = {
+  __typename?: "InternalUpdateHasManyThroughSiblingModelResult";
+  errors?: Maybe<Array<ExecutionError>>;
+  siblingModel?: Maybe<Scalars["InternalHasManyThroughSiblingModelRecord"]["output"]>;
+  success: Scalars["Boolean"]["output"];
+};
+
 export type InternalUpdateModelAResult = {
   __typename?: "InternalUpdateModelAResult";
   errors?: Maybe<Array<ExecutionError>>;
@@ -6725,6 +8104,27 @@ export type InternalUpsertGizmoResult = {
   __typename?: "InternalUpsertGizmoResult";
   errors?: Maybe<Array<ExecutionError>>;
   gizmo?: Maybe<Scalars["InternalGizmoRecord"]["output"]>;
+  success: Scalars["Boolean"]["output"];
+};
+
+export type InternalUpsertHasManyThroughBaseModelResult = {
+  __typename?: "InternalUpsertHasManyThroughBaseModelResult";
+  baseModel?: Maybe<Scalars["InternalHasManyThroughBaseModelRecord"]["output"]>;
+  errors?: Maybe<Array<ExecutionError>>;
+  success: Scalars["Boolean"]["output"];
+};
+
+export type InternalUpsertHasManyThroughJoinerModelResult = {
+  __typename?: "InternalUpsertHasManyThroughJoinerModelResult";
+  errors?: Maybe<Array<ExecutionError>>;
+  joinerModel?: Maybe<Scalars["InternalHasManyThroughJoinerModelRecord"]["output"]>;
+  success: Scalars["Boolean"]["output"];
+};
+
+export type InternalUpsertHasManyThroughSiblingModelResult = {
+  __typename?: "InternalUpsertHasManyThroughSiblingModelResult";
+  errors?: Maybe<Array<ExecutionError>>;
+  siblingModel?: Maybe<Scalars["InternalHasManyThroughSiblingModelRecord"]["output"]>;
   success: Scalars["Boolean"]["output"];
 };
 
@@ -6941,6 +8341,15 @@ export type JsonFilter = {
   notIn?: InputMaybe<Array<InputMaybe<Scalars["JSON"]["input"]>>>;
 };
 
+/** Input object supporting setting or updating related model record on a relationship field */
+export type JoinerModelHasManyInput = {
+  /** Creates, updates, or deletes existing records in the database as needed to arrive at the list of records specified. */
+  _converge?: InputMaybe<ConvergeJoinerModelInput>;
+  create?: InputMaybe<NestedJoinerModelCreateInput>;
+  delete?: InputMaybe<NestedJoinerModelDeleteInput>;
+  update?: InputMaybe<NestedJoinerModelUpdateInput>;
+};
+
 export type LockOperationResult = {
   __typename?: "LockOperationResult";
   /** Any errors encountered during the locking/unlocking operation */
@@ -7078,7 +8487,9 @@ export type Mutation = {
   /** Meta information about the application, like it's name, schema, and other internal details. */
   gadgetMeta: GadgetApplicationMeta;
   game: GameMutations;
+  hasManyThrough: HasManyThroughMutations;
   internal: InternalMutations;
+  name: NameMutations;
   runShopifySync?: Maybe<RunShopifySyncResult>;
   shopifyConnection?: Maybe<ShopifyConnectionMutations>;
   signInUser?: Maybe<SignInUserResult>;
@@ -7488,6 +8899,57 @@ export type MutationUpsertWidgetArgs = {
   widget?: InputMaybe<UpsertWidgetInput>;
 };
 
+export type NameMutations = {
+  __typename?: "NameMutations";
+  spaced: NameSpacedMutations;
+};
+
+export type NameSpacedActionAResult = {
+  __typename?: "NameSpacedActionAResult";
+  errors?: Maybe<Array<ExecutionError>>;
+  result?: Maybe<Scalars["JSON"]["output"]>;
+  success: Scalars["Boolean"]["output"];
+};
+
+export type NameSpacedCustomObjectParamsObjParamInput = {
+  firstLevelStr?: InputMaybe<Scalars["String"]["input"]>;
+  objProperty1?: InputMaybe<NameSpacedCustomObjectParamsObjProperty1Input>;
+};
+
+export type NameSpacedCustomObjectParamsObjProperty1Input = {
+  objProperty2?: InputMaybe<NameSpacedCustomObjectParamsObjProperty2Input>;
+  secondLevelStr?: InputMaybe<Scalars["String"]["input"]>;
+};
+
+export type NameSpacedCustomObjectParamsObjProperty2Input = {
+  thirdLevelStr?: InputMaybe<Scalars["String"]["input"]>;
+};
+
+export type NameSpacedCustomObjectParamsResult = {
+  __typename?: "NameSpacedCustomObjectParamsResult";
+  errors?: Maybe<Array<ExecutionError>>;
+  result?: Maybe<Scalars["JSON"]["output"]>;
+  success: Scalars["Boolean"]["output"];
+};
+
+export type NameSpacedMutations = {
+  __typename?: "NameSpacedMutations";
+  actionA?: Maybe<NameSpacedActionAResult>;
+  customObjectParams?: Maybe<NameSpacedCustomObjectParamsResult>;
+};
+
+export type NameSpacedMutationsCustomObjectParamsArgs = {
+  objParam?: InputMaybe<NameSpacedCustomObjectParamsObjParamInput>;
+  rootLevelStr?: InputMaybe<Scalars["String"]["input"]>;
+};
+
+export type NameSpacedNoTriggerGlobalActionResult = {
+  __typename?: "NameSpacedNoTriggerGlobalActionResult";
+  errors?: Maybe<Array<ExecutionError>>;
+  result?: Maybe<Scalars["JSON"]["output"]>;
+  success: Scalars["Boolean"]["output"];
+};
+
 export type NestedAutoTableTestCreateInput = {
   bool?: InputMaybe<Scalars["Boolean"]["input"]>;
   dt?: InputMaybe<Scalars["DateTime"]["input"]>;
@@ -7587,8 +9049,35 @@ export type NestedAutoTableTestUpdateWithCustomParamsInput = {
   vect?: InputMaybe<Array<Scalars["Float"]["input"]>>;
 };
 
+export type NestedBaseModelCreateInput = {
+  baseModelHmtField?: InputMaybe<Array<InputMaybe<SiblingModelHasManyThroughInput>>>;
+  baseModelName?: InputMaybe<Scalars["String"]["input"]>;
+  joinerModel?: InputMaybe<Array<InputMaybe<JoinerModelHasManyInput>>>;
+  joinerModels?: InputMaybe<Array<InputMaybe<JoinerModelHasManyInput>>>;
+};
+
+export type NestedBaseModelDeleteInput = {
+  id: Scalars["GadgetID"]["input"];
+};
+
+export type NestedBaseModelUpdateInput = {
+  baseModelHmtField?: InputMaybe<Array<InputMaybe<SiblingModelHasManyThroughInput>>>;
+  baseModelName?: InputMaybe<Scalars["String"]["input"]>;
+  id: Scalars["GadgetID"]["input"];
+  joinerModel?: InputMaybe<Array<InputMaybe<JoinerModelHasManyInput>>>;
+  joinerModels?: InputMaybe<Array<InputMaybe<JoinerModelHasManyInput>>>;
+};
+
 export type NestedCityCreateInput = {
   name?: InputMaybe<Scalars["String"]["input"]>;
+  stadium?: InputMaybe<StadiumHasOneInput>;
+};
+
+export type NestedCityCustomObjectParamsInput = {
+  id: Scalars["GadgetID"]["input"];
+  name?: InputMaybe<Scalars["String"]["input"]>;
+  objParam?: InputMaybe<NestedCustomObjectParamsObjParamInput>;
+  rootLevelStr?: InputMaybe<Scalars["String"]["input"]>;
   stadium?: InputMaybe<StadiumHasOneInput>;
 };
 
@@ -7600,6 +9089,20 @@ export type NestedCityUpdateInput = {
   id: Scalars["GadgetID"]["input"];
   name?: InputMaybe<Scalars["String"]["input"]>;
   stadium?: InputMaybe<StadiumHasOneInput>;
+};
+
+export type NestedCustomObjectParamsObjParamInput = {
+  firstLevelStr?: InputMaybe<Scalars["String"]["input"]>;
+  objProperty1?: InputMaybe<NestedCustomObjectParamsObjProperty1Input>;
+};
+
+export type NestedCustomObjectParamsObjProperty1Input = {
+  objProperty2?: InputMaybe<NestedCustomObjectParamsObjProperty2Input>;
+  secondLevelStr?: InputMaybe<Scalars["String"]["input"]>;
+};
+
+export type NestedCustomObjectParamsObjProperty2Input = {
+  thirdLevelStr?: InputMaybe<Scalars["String"]["input"]>;
 };
 
 export type NestedGizmoCreateInput = {
@@ -7617,6 +9120,21 @@ export type NestedGizmoUpdateInput = {
   name?: InputMaybe<Scalars["String"]["input"]>;
   orientation?: InputMaybe<Scalars["String"]["input"]>;
   widget?: InputMaybe<WidgetBelongsToInput>;
+};
+
+export type NestedJoinerModelCreateInput = {
+  joinerBelongsToBase?: InputMaybe<BaseModelBelongsToInput>;
+  joinerBelongsToSibling?: InputMaybe<SiblingModelBelongsToInput>;
+};
+
+export type NestedJoinerModelDeleteInput = {
+  id: Scalars["GadgetID"]["input"];
+};
+
+export type NestedJoinerModelUpdateInput = {
+  id: Scalars["GadgetID"]["input"];
+  joinerBelongsToBase?: InputMaybe<BaseModelBelongsToInput>;
+  joinerBelongsToSibling?: InputMaybe<SiblingModelBelongsToInput>;
 };
 
 export type NestedPlayerCreateInput = {
@@ -7664,6 +9182,23 @@ export type NestedSectionUpdateInput = {
   id: Scalars["GadgetID"]["input"];
   name?: InputMaybe<Scalars["String"]["input"]>;
   widgets?: InputMaybe<Array<InputMaybe<WidgetHasManyInput>>>;
+};
+
+export type NestedSiblingModelCreateInput = {
+  joinerModel?: InputMaybe<Array<InputMaybe<JoinerModelHasManyInput>>>;
+  joinerModels?: InputMaybe<Array<InputMaybe<JoinerModelHasManyInput>>>;
+  siblingModelHmtField?: InputMaybe<Array<InputMaybe<BaseModelHasManyThroughInput>>>;
+};
+
+export type NestedSiblingModelDeleteInput = {
+  id: Scalars["GadgetID"]["input"];
+};
+
+export type NestedSiblingModelUpdateInput = {
+  id: Scalars["GadgetID"]["input"];
+  joinerModel?: InputMaybe<Array<InputMaybe<JoinerModelHasManyInput>>>;
+  joinerModels?: InputMaybe<Array<InputMaybe<JoinerModelHasManyInput>>>;
+  siblingModelHmtField?: InputMaybe<Array<InputMaybe<BaseModelHasManyThroughInput>>>;
 };
 
 export type NestedStadiumCreateInput = {
@@ -7876,6 +9411,7 @@ export type Query = {
   game: GameQueries;
   gizmo?: Maybe<Gizmo>;
   gizmos: GizmoConnection;
+  hasManyThrough: HasManyThroughQueries;
   internal: InternalQueries;
   modelA?: Maybe<ModelA>;
   modelAs: ModelAConnection;
@@ -9281,6 +10817,22 @@ export type ShopifySyncSort = {
   updatedAt?: InputMaybe<SortOrder>;
 };
 
+/** Input object supporting setting or updating related model record on a relationship field */
+export type SiblingModelBelongsToInput = {
+  /** Existing ID of another record, which you would like to associate this record with */
+  _link?: InputMaybe<Scalars["GadgetID"]["input"]>;
+  create?: InputMaybe<NestedSiblingModelCreateInput>;
+  delete?: InputMaybe<NestedSiblingModelDeleteInput>;
+  update?: InputMaybe<NestedSiblingModelUpdateInput>;
+};
+
+/** Input object supporting setting or updating related model record on a relationship field */
+export type SiblingModelHasManyThroughInput = {
+  create?: InputMaybe<NestedSiblingModelCreateInput>;
+  delete?: InputMaybe<NestedSiblingModelDeleteInput>;
+  update?: InputMaybe<NestedSiblingModelUpdateInput>;
+};
+
 export type SignInUserInput = {
   email?: InputMaybe<Scalars["String"]["input"]>;
   emailVerified?: InputMaybe<Scalars["Boolean"]["input"]>;
@@ -9563,6 +11115,48 @@ export type UpdateGizmoResult = UpsertGizmoResult & {
   success: Scalars["Boolean"]["output"];
 };
 
+export type UpdateHasManyThroughBaseModelInput = {
+  baseModelHmtField?: InputMaybe<Array<InputMaybe<SiblingModelHasManyThroughInput>>>;
+  baseModelName?: InputMaybe<Scalars["String"]["input"]>;
+  joinerModel?: InputMaybe<Array<InputMaybe<JoinerModelHasManyInput>>>;
+  joinerModels?: InputMaybe<Array<InputMaybe<JoinerModelHasManyInput>>>;
+};
+
+export type UpdateHasManyThroughBaseModelResult = UpsertHasManyThroughBaseModelResult & {
+  __typename?: "UpdateHasManyThroughBaseModelResult";
+  actionRun?: Maybe<Scalars["String"]["output"]>;
+  baseModel?: Maybe<HasManyThroughBaseModel>;
+  errors?: Maybe<Array<ExecutionError>>;
+  success: Scalars["Boolean"]["output"];
+};
+
+export type UpdateHasManyThroughJoinerModelInput = {
+  joinerBelongsToBase?: InputMaybe<BaseModelBelongsToInput>;
+  joinerBelongsToSibling?: InputMaybe<SiblingModelBelongsToInput>;
+};
+
+export type UpdateHasManyThroughJoinerModelResult = UpsertHasManyThroughJoinerModelResult & {
+  __typename?: "UpdateHasManyThroughJoinerModelResult";
+  actionRun?: Maybe<Scalars["String"]["output"]>;
+  errors?: Maybe<Array<ExecutionError>>;
+  joinerModel?: Maybe<HasManyThroughJoinerModel>;
+  success: Scalars["Boolean"]["output"];
+};
+
+export type UpdateHasManyThroughSiblingModelInput = {
+  joinerModel?: InputMaybe<Array<InputMaybe<JoinerModelHasManyInput>>>;
+  joinerModels?: InputMaybe<Array<InputMaybe<JoinerModelHasManyInput>>>;
+  siblingModelHmtField?: InputMaybe<Array<InputMaybe<BaseModelHasManyThroughInput>>>;
+};
+
+export type UpdateHasManyThroughSiblingModelResult = UpsertHasManyThroughSiblingModelResult & {
+  __typename?: "UpdateHasManyThroughSiblingModelResult";
+  actionRun?: Maybe<Scalars["String"]["output"]>;
+  errors?: Maybe<Array<ExecutionError>>;
+  siblingModel?: Maybe<HasManyThroughSiblingModel>;
+  success: Scalars["Boolean"]["output"];
+};
+
 export type UpdateModelAResult = UpsertModelAResult & {
   __typename?: "UpdateModelAResult";
   actionRun?: Maybe<Scalars["String"]["output"]>;
@@ -9770,6 +11364,9 @@ export type UpsertError = UpsertAutoTableTestRelatedModelResult &
   UpsertGameRoundResult &
   UpsertGameStadiumResult &
   UpsertGizmoResult &
+  UpsertHasManyThroughBaseModelResult &
+  UpsertHasManyThroughJoinerModelResult &
+  UpsertHasManyThroughSiblingModelResult &
   UpsertModelAResult &
   UpsertPartResult &
   UpsertSectionResult &
@@ -9849,6 +11446,45 @@ export type UpsertGizmoInput = {
 };
 
 export type UpsertGizmoResult = {
+  actionRun?: Maybe<Scalars["String"]["output"]>;
+  errors?: Maybe<Array<ExecutionError>>;
+  success: Scalars["Boolean"]["output"];
+};
+
+export type UpsertHasManyThroughBaseModelInput = {
+  baseModelHmtField?: InputMaybe<Array<InputMaybe<SiblingModelHasManyThroughInput>>>;
+  baseModelName?: InputMaybe<Scalars["String"]["input"]>;
+  id?: InputMaybe<Scalars["GadgetID"]["input"]>;
+  joinerModel?: InputMaybe<Array<InputMaybe<JoinerModelHasManyInput>>>;
+  joinerModels?: InputMaybe<Array<InputMaybe<JoinerModelHasManyInput>>>;
+};
+
+export type UpsertHasManyThroughBaseModelResult = {
+  actionRun?: Maybe<Scalars["String"]["output"]>;
+  errors?: Maybe<Array<ExecutionError>>;
+  success: Scalars["Boolean"]["output"];
+};
+
+export type UpsertHasManyThroughJoinerModelInput = {
+  id?: InputMaybe<Scalars["GadgetID"]["input"]>;
+  joinerBelongsToBase?: InputMaybe<BaseModelBelongsToInput>;
+  joinerBelongsToSibling?: InputMaybe<SiblingModelBelongsToInput>;
+};
+
+export type UpsertHasManyThroughJoinerModelResult = {
+  actionRun?: Maybe<Scalars["String"]["output"]>;
+  errors?: Maybe<Array<ExecutionError>>;
+  success: Scalars["Boolean"]["output"];
+};
+
+export type UpsertHasManyThroughSiblingModelInput = {
+  id?: InputMaybe<Scalars["GadgetID"]["input"]>;
+  joinerModel?: InputMaybe<Array<InputMaybe<JoinerModelHasManyInput>>>;
+  joinerModels?: InputMaybe<Array<InputMaybe<JoinerModelHasManyInput>>>;
+  siblingModelHmtField?: InputMaybe<Array<InputMaybe<BaseModelHasManyThroughInput>>>;
+};
+
+export type UpsertHasManyThroughSiblingModelResult = {
   actionRun?: Maybe<Scalars["String"]["output"]>;
   errors?: Maybe<Array<ExecutionError>>;
   success: Scalars["Boolean"]["output"];
@@ -10330,6 +11966,7 @@ type FieldMetadata_GadgetModelField_Fragment = {
       }
     | {
         __typename: "GadgetHasManyConfig";
+        isJoinModelHasManyField: boolean;
         fieldType: GadgetFieldType;
         relatedModel?: {
           __typename?: "GadgetModel";
@@ -10340,6 +11977,35 @@ type FieldMetadata_GadgetModelField_Fragment = {
           fields?: Array<{ __typename?: "GadgetModelField"; name: string; apiIdentifier: string; fieldType: GadgetFieldType }>;
         } | null;
         inverseField?: { __typename?: "GadgetModelField"; apiIdentifier: string } | null;
+        validations: Array<
+          | { __typename: "GadgetGenericFieldValidation"; name: string; specID: string }
+          | { __typename: "GadgetOnlyImageFileFieldValidation"; name: string; specID: string; allowAnimatedImages: boolean }
+          | { __typename: "GadgetRangeFieldValidation"; name: string; specID: string; min?: number | null; max?: number | null }
+          | { __typename: "GadgetRegexFieldValidation"; name: string; specID: string; pattern?: string | null }
+          | null
+        >;
+      }
+    | {
+        __typename: "GadgetHasManyThroughConfig";
+        fieldType: GadgetFieldType;
+        relatedModel?: {
+          __typename?: "GadgetModel";
+          key: string;
+          apiIdentifier: string;
+          namespace?: Array<string> | null;
+          defaultDisplayField: { __typename?: "GadgetModelField"; name: string; apiIdentifier: string; fieldType: GadgetFieldType };
+          fields?: Array<{ __typename?: "GadgetModelField"; name: string; apiIdentifier: string; fieldType: GadgetFieldType }>;
+        } | null;
+        inverseField?: { __typename?: "GadgetModelField"; apiIdentifier: string } | null;
+        joinModel?: {
+          __typename?: "GadgetModel";
+          key: string;
+          apiIdentifier: string;
+          namespace?: Array<string> | null;
+          defaultDisplayField: { __typename?: "GadgetModelField"; name: string; apiIdentifier: string; fieldType: GadgetFieldType };
+        } | null;
+        inverseJoinModelField?: { __typename?: "GadgetModelField"; apiIdentifier: string } | null;
+        inverseRelatedModelField?: { __typename?: "GadgetModelField"; apiIdentifier: string } | null;
         validations: Array<
           | { __typename: "GadgetGenericFieldValidation"; name: string; specID: string }
           | { __typename: "GadgetOnlyImageFileFieldValidation"; name: string; specID: string; allowAnimatedImages: boolean }
@@ -10458,6 +12124,7 @@ type FieldMetadata_GadgetObjectField_Fragment = {
       }
     | {
         __typename: "GadgetHasManyConfig";
+        isJoinModelHasManyField: boolean;
         fieldType: GadgetFieldType;
         relatedModel?: {
           __typename?: "GadgetModel";
@@ -10468,6 +12135,35 @@ type FieldMetadata_GadgetObjectField_Fragment = {
           fields?: Array<{ __typename?: "GadgetModelField"; name: string; apiIdentifier: string; fieldType: GadgetFieldType }>;
         } | null;
         inverseField?: { __typename?: "GadgetModelField"; apiIdentifier: string } | null;
+        validations: Array<
+          | { __typename: "GadgetGenericFieldValidation"; name: string; specID: string }
+          | { __typename: "GadgetOnlyImageFileFieldValidation"; name: string; specID: string; allowAnimatedImages: boolean }
+          | { __typename: "GadgetRangeFieldValidation"; name: string; specID: string; min?: number | null; max?: number | null }
+          | { __typename: "GadgetRegexFieldValidation"; name: string; specID: string; pattern?: string | null }
+          | null
+        >;
+      }
+    | {
+        __typename: "GadgetHasManyThroughConfig";
+        fieldType: GadgetFieldType;
+        relatedModel?: {
+          __typename?: "GadgetModel";
+          key: string;
+          apiIdentifier: string;
+          namespace?: Array<string> | null;
+          defaultDisplayField: { __typename?: "GadgetModelField"; name: string; apiIdentifier: string; fieldType: GadgetFieldType };
+          fields?: Array<{ __typename?: "GadgetModelField"; name: string; apiIdentifier: string; fieldType: GadgetFieldType }>;
+        } | null;
+        inverseField?: { __typename?: "GadgetModelField"; apiIdentifier: string } | null;
+        joinModel?: {
+          __typename?: "GadgetModel";
+          key: string;
+          apiIdentifier: string;
+          namespace?: Array<string> | null;
+          defaultDisplayField: { __typename?: "GadgetModelField"; name: string; apiIdentifier: string; fieldType: GadgetFieldType };
+        } | null;
+        inverseJoinModelField?: { __typename?: "GadgetModelField"; apiIdentifier: string } | null;
+        inverseRelatedModelField?: { __typename?: "GadgetModelField"; apiIdentifier: string } | null;
         validations: Array<
           | { __typename: "GadgetGenericFieldValidation"; name: string; specID: string }
           | { __typename: "GadgetOnlyImageFileFieldValidation"; name: string; specID: string; allowAnimatedImages: boolean }
@@ -10605,6 +12301,7 @@ export type GetModelMetadataQuery = {
             }
           | {
               __typename: "GadgetHasManyConfig";
+              isJoinModelHasManyField: boolean;
               fieldType: GadgetFieldType;
               relatedModel?: {
                 __typename?: "GadgetModel";
@@ -10615,6 +12312,35 @@ export type GetModelMetadataQuery = {
                 fields?: Array<{ __typename?: "GadgetModelField"; name: string; apiIdentifier: string; fieldType: GadgetFieldType }>;
               } | null;
               inverseField?: { __typename?: "GadgetModelField"; apiIdentifier: string } | null;
+              validations: Array<
+                | { __typename: "GadgetGenericFieldValidation"; name: string; specID: string }
+                | { __typename: "GadgetOnlyImageFileFieldValidation"; name: string; specID: string; allowAnimatedImages: boolean }
+                | { __typename: "GadgetRangeFieldValidation"; name: string; specID: string; min?: number | null; max?: number | null }
+                | { __typename: "GadgetRegexFieldValidation"; name: string; specID: string; pattern?: string | null }
+                | null
+              >;
+            }
+          | {
+              __typename: "GadgetHasManyThroughConfig";
+              fieldType: GadgetFieldType;
+              relatedModel?: {
+                __typename?: "GadgetModel";
+                key: string;
+                apiIdentifier: string;
+                namespace?: Array<string> | null;
+                defaultDisplayField: { __typename?: "GadgetModelField"; name: string; apiIdentifier: string; fieldType: GadgetFieldType };
+                fields?: Array<{ __typename?: "GadgetModelField"; name: string; apiIdentifier: string; fieldType: GadgetFieldType }>;
+              } | null;
+              inverseField?: { __typename?: "GadgetModelField"; apiIdentifier: string } | null;
+              joinModel?: {
+                __typename?: "GadgetModel";
+                key: string;
+                apiIdentifier: string;
+                namespace?: Array<string> | null;
+                defaultDisplayField: { __typename?: "GadgetModelField"; name: string; apiIdentifier: string; fieldType: GadgetFieldType };
+              } | null;
+              inverseJoinModelField?: { __typename?: "GadgetModelField"; apiIdentifier: string } | null;
+              inverseRelatedModelField?: { __typename?: "GadgetModelField"; apiIdentifier: string } | null;
               validations: Array<
                 | { __typename: "GadgetGenericFieldValidation"; name: string; specID: string }
                 | { __typename: "GadgetOnlyImageFileFieldValidation"; name: string; specID: string; allowAnimatedImages: boolean }
@@ -10679,6 +12405,7 @@ type SubFields_GadgetModelField_Fragment = {
     | { __typename: "GadgetEnumConfig" }
     | { __typename: "GadgetGenericFieldConfig" }
     | { __typename: "GadgetHasManyConfig" }
+    | { __typename: "GadgetHasManyThroughConfig" }
     | { __typename: "GadgetHasOneConfig" }
     | { __typename: "GadgetNumberConfig" }
     | {
@@ -10751,6 +12478,7 @@ type SubFields_GadgetModelField_Fragment = {
               }
             | {
                 __typename: "GadgetHasManyConfig";
+                isJoinModelHasManyField: boolean;
                 fieldType: GadgetFieldType;
                 relatedModel?: {
                   __typename?: "GadgetModel";
@@ -10761,6 +12489,35 @@ type SubFields_GadgetModelField_Fragment = {
                   fields?: Array<{ __typename?: "GadgetModelField"; name: string; apiIdentifier: string; fieldType: GadgetFieldType }>;
                 } | null;
                 inverseField?: { __typename?: "GadgetModelField"; apiIdentifier: string } | null;
+                validations: Array<
+                  | { __typename: "GadgetGenericFieldValidation"; name: string; specID: string }
+                  | { __typename: "GadgetOnlyImageFileFieldValidation"; name: string; specID: string; allowAnimatedImages: boolean }
+                  | { __typename: "GadgetRangeFieldValidation"; name: string; specID: string; min?: number | null; max?: number | null }
+                  | { __typename: "GadgetRegexFieldValidation"; name: string; specID: string; pattern?: string | null }
+                  | null
+                >;
+              }
+            | {
+                __typename: "GadgetHasManyThroughConfig";
+                fieldType: GadgetFieldType;
+                relatedModel?: {
+                  __typename?: "GadgetModel";
+                  key: string;
+                  apiIdentifier: string;
+                  namespace?: Array<string> | null;
+                  defaultDisplayField: { __typename?: "GadgetModelField"; name: string; apiIdentifier: string; fieldType: GadgetFieldType };
+                  fields?: Array<{ __typename?: "GadgetModelField"; name: string; apiIdentifier: string; fieldType: GadgetFieldType }>;
+                } | null;
+                inverseField?: { __typename?: "GadgetModelField"; apiIdentifier: string } | null;
+                joinModel?: {
+                  __typename?: "GadgetModel";
+                  key: string;
+                  apiIdentifier: string;
+                  namespace?: Array<string> | null;
+                  defaultDisplayField: { __typename?: "GadgetModelField"; name: string; apiIdentifier: string; fieldType: GadgetFieldType };
+                } | null;
+                inverseJoinModelField?: { __typename?: "GadgetModelField"; apiIdentifier: string } | null;
+                inverseRelatedModelField?: { __typename?: "GadgetModelField"; apiIdentifier: string } | null;
                 validations: Array<
                   | { __typename: "GadgetGenericFieldValidation"; name: string; specID: string }
                   | { __typename: "GadgetOnlyImageFileFieldValidation"; name: string; specID: string; allowAnimatedImages: boolean }
@@ -10906,6 +12663,7 @@ type SubFields_GadgetModelField_Fragment = {
                       }
                     | {
                         __typename: "GadgetHasManyConfig";
+                        isJoinModelHasManyField: boolean;
                         fieldType: GadgetFieldType;
                         relatedModel?: {
                           __typename?: "GadgetModel";
@@ -10926,6 +12684,56 @@ type SubFields_GadgetModelField_Fragment = {
                           }>;
                         } | null;
                         inverseField?: { __typename?: "GadgetModelField"; apiIdentifier: string } | null;
+                        validations: Array<
+                          | { __typename: "GadgetGenericFieldValidation"; name: string; specID: string }
+                          | { __typename: "GadgetOnlyImageFileFieldValidation"; name: string; specID: string; allowAnimatedImages: boolean }
+                          | {
+                              __typename: "GadgetRangeFieldValidation";
+                              name: string;
+                              specID: string;
+                              min?: number | null;
+                              max?: number | null;
+                            }
+                          | { __typename: "GadgetRegexFieldValidation"; name: string; specID: string; pattern?: string | null }
+                          | null
+                        >;
+                      }
+                    | {
+                        __typename: "GadgetHasManyThroughConfig";
+                        fieldType: GadgetFieldType;
+                        relatedModel?: {
+                          __typename?: "GadgetModel";
+                          key: string;
+                          apiIdentifier: string;
+                          namespace?: Array<string> | null;
+                          defaultDisplayField: {
+                            __typename?: "GadgetModelField";
+                            name: string;
+                            apiIdentifier: string;
+                            fieldType: GadgetFieldType;
+                          };
+                          fields?: Array<{
+                            __typename?: "GadgetModelField";
+                            name: string;
+                            apiIdentifier: string;
+                            fieldType: GadgetFieldType;
+                          }>;
+                        } | null;
+                        inverseField?: { __typename?: "GadgetModelField"; apiIdentifier: string } | null;
+                        joinModel?: {
+                          __typename?: "GadgetModel";
+                          key: string;
+                          apiIdentifier: string;
+                          namespace?: Array<string> | null;
+                          defaultDisplayField: {
+                            __typename?: "GadgetModelField";
+                            name: string;
+                            apiIdentifier: string;
+                            fieldType: GadgetFieldType;
+                          };
+                        } | null;
+                        inverseJoinModelField?: { __typename?: "GadgetModelField"; apiIdentifier: string } | null;
+                        inverseRelatedModelField?: { __typename?: "GadgetModelField"; apiIdentifier: string } | null;
                         validations: Array<
                           | { __typename: "GadgetGenericFieldValidation"; name: string; specID: string }
                           | { __typename: "GadgetOnlyImageFileFieldValidation"; name: string; specID: string; allowAnimatedImages: boolean }
@@ -11119,6 +12927,7 @@ type SubFields_GadgetModelField_Fragment = {
                               }
                             | {
                                 __typename: "GadgetHasManyConfig";
+                                isJoinModelHasManyField: boolean;
                                 fieldType: GadgetFieldType;
                                 relatedModel?: {
                                   __typename?: "GadgetModel";
@@ -11139,6 +12948,61 @@ type SubFields_GadgetModelField_Fragment = {
                                   }>;
                                 } | null;
                                 inverseField?: { __typename?: "GadgetModelField"; apiIdentifier: string } | null;
+                                validations: Array<
+                                  | { __typename: "GadgetGenericFieldValidation"; name: string; specID: string }
+                                  | {
+                                      __typename: "GadgetOnlyImageFileFieldValidation";
+                                      name: string;
+                                      specID: string;
+                                      allowAnimatedImages: boolean;
+                                    }
+                                  | {
+                                      __typename: "GadgetRangeFieldValidation";
+                                      name: string;
+                                      specID: string;
+                                      min?: number | null;
+                                      max?: number | null;
+                                    }
+                                  | { __typename: "GadgetRegexFieldValidation"; name: string; specID: string; pattern?: string | null }
+                                  | null
+                                >;
+                              }
+                            | {
+                                __typename: "GadgetHasManyThroughConfig";
+                                fieldType: GadgetFieldType;
+                                relatedModel?: {
+                                  __typename?: "GadgetModel";
+                                  key: string;
+                                  apiIdentifier: string;
+                                  namespace?: Array<string> | null;
+                                  defaultDisplayField: {
+                                    __typename?: "GadgetModelField";
+                                    name: string;
+                                    apiIdentifier: string;
+                                    fieldType: GadgetFieldType;
+                                  };
+                                  fields?: Array<{
+                                    __typename?: "GadgetModelField";
+                                    name: string;
+                                    apiIdentifier: string;
+                                    fieldType: GadgetFieldType;
+                                  }>;
+                                } | null;
+                                inverseField?: { __typename?: "GadgetModelField"; apiIdentifier: string } | null;
+                                joinModel?: {
+                                  __typename?: "GadgetModel";
+                                  key: string;
+                                  apiIdentifier: string;
+                                  namespace?: Array<string> | null;
+                                  defaultDisplayField: {
+                                    __typename?: "GadgetModelField";
+                                    name: string;
+                                    apiIdentifier: string;
+                                    fieldType: GadgetFieldType;
+                                  };
+                                } | null;
+                                inverseJoinModelField?: { __typename?: "GadgetModelField"; apiIdentifier: string } | null;
+                                inverseRelatedModelField?: { __typename?: "GadgetModelField"; apiIdentifier: string } | null;
                                 validations: Array<
                                   | { __typename: "GadgetGenericFieldValidation"; name: string; specID: string }
                                   | {
@@ -11280,6 +13144,7 @@ type SubFields_GadgetObjectField_Fragment = {
     | { __typename: "GadgetEnumConfig" }
     | { __typename: "GadgetGenericFieldConfig" }
     | { __typename: "GadgetHasManyConfig" }
+    | { __typename: "GadgetHasManyThroughConfig" }
     | { __typename: "GadgetHasOneConfig" }
     | { __typename: "GadgetNumberConfig" }
     | {
@@ -11352,6 +13217,7 @@ type SubFields_GadgetObjectField_Fragment = {
               }
             | {
                 __typename: "GadgetHasManyConfig";
+                isJoinModelHasManyField: boolean;
                 fieldType: GadgetFieldType;
                 relatedModel?: {
                   __typename?: "GadgetModel";
@@ -11362,6 +13228,35 @@ type SubFields_GadgetObjectField_Fragment = {
                   fields?: Array<{ __typename?: "GadgetModelField"; name: string; apiIdentifier: string; fieldType: GadgetFieldType }>;
                 } | null;
                 inverseField?: { __typename?: "GadgetModelField"; apiIdentifier: string } | null;
+                validations: Array<
+                  | { __typename: "GadgetGenericFieldValidation"; name: string; specID: string }
+                  | { __typename: "GadgetOnlyImageFileFieldValidation"; name: string; specID: string; allowAnimatedImages: boolean }
+                  | { __typename: "GadgetRangeFieldValidation"; name: string; specID: string; min?: number | null; max?: number | null }
+                  | { __typename: "GadgetRegexFieldValidation"; name: string; specID: string; pattern?: string | null }
+                  | null
+                >;
+              }
+            | {
+                __typename: "GadgetHasManyThroughConfig";
+                fieldType: GadgetFieldType;
+                relatedModel?: {
+                  __typename?: "GadgetModel";
+                  key: string;
+                  apiIdentifier: string;
+                  namespace?: Array<string> | null;
+                  defaultDisplayField: { __typename?: "GadgetModelField"; name: string; apiIdentifier: string; fieldType: GadgetFieldType };
+                  fields?: Array<{ __typename?: "GadgetModelField"; name: string; apiIdentifier: string; fieldType: GadgetFieldType }>;
+                } | null;
+                inverseField?: { __typename?: "GadgetModelField"; apiIdentifier: string } | null;
+                joinModel?: {
+                  __typename?: "GadgetModel";
+                  key: string;
+                  apiIdentifier: string;
+                  namespace?: Array<string> | null;
+                  defaultDisplayField: { __typename?: "GadgetModelField"; name: string; apiIdentifier: string; fieldType: GadgetFieldType };
+                } | null;
+                inverseJoinModelField?: { __typename?: "GadgetModelField"; apiIdentifier: string } | null;
+                inverseRelatedModelField?: { __typename?: "GadgetModelField"; apiIdentifier: string } | null;
                 validations: Array<
                   | { __typename: "GadgetGenericFieldValidation"; name: string; specID: string }
                   | { __typename: "GadgetOnlyImageFileFieldValidation"; name: string; specID: string; allowAnimatedImages: boolean }
@@ -11507,6 +13402,7 @@ type SubFields_GadgetObjectField_Fragment = {
                       }
                     | {
                         __typename: "GadgetHasManyConfig";
+                        isJoinModelHasManyField: boolean;
                         fieldType: GadgetFieldType;
                         relatedModel?: {
                           __typename?: "GadgetModel";
@@ -11527,6 +13423,56 @@ type SubFields_GadgetObjectField_Fragment = {
                           }>;
                         } | null;
                         inverseField?: { __typename?: "GadgetModelField"; apiIdentifier: string } | null;
+                        validations: Array<
+                          | { __typename: "GadgetGenericFieldValidation"; name: string; specID: string }
+                          | { __typename: "GadgetOnlyImageFileFieldValidation"; name: string; specID: string; allowAnimatedImages: boolean }
+                          | {
+                              __typename: "GadgetRangeFieldValidation";
+                              name: string;
+                              specID: string;
+                              min?: number | null;
+                              max?: number | null;
+                            }
+                          | { __typename: "GadgetRegexFieldValidation"; name: string; specID: string; pattern?: string | null }
+                          | null
+                        >;
+                      }
+                    | {
+                        __typename: "GadgetHasManyThroughConfig";
+                        fieldType: GadgetFieldType;
+                        relatedModel?: {
+                          __typename?: "GadgetModel";
+                          key: string;
+                          apiIdentifier: string;
+                          namespace?: Array<string> | null;
+                          defaultDisplayField: {
+                            __typename?: "GadgetModelField";
+                            name: string;
+                            apiIdentifier: string;
+                            fieldType: GadgetFieldType;
+                          };
+                          fields?: Array<{
+                            __typename?: "GadgetModelField";
+                            name: string;
+                            apiIdentifier: string;
+                            fieldType: GadgetFieldType;
+                          }>;
+                        } | null;
+                        inverseField?: { __typename?: "GadgetModelField"; apiIdentifier: string } | null;
+                        joinModel?: {
+                          __typename?: "GadgetModel";
+                          key: string;
+                          apiIdentifier: string;
+                          namespace?: Array<string> | null;
+                          defaultDisplayField: {
+                            __typename?: "GadgetModelField";
+                            name: string;
+                            apiIdentifier: string;
+                            fieldType: GadgetFieldType;
+                          };
+                        } | null;
+                        inverseJoinModelField?: { __typename?: "GadgetModelField"; apiIdentifier: string } | null;
+                        inverseRelatedModelField?: { __typename?: "GadgetModelField"; apiIdentifier: string } | null;
                         validations: Array<
                           | { __typename: "GadgetGenericFieldValidation"; name: string; specID: string }
                           | { __typename: "GadgetOnlyImageFileFieldValidation"; name: string; specID: string; allowAnimatedImages: boolean }
@@ -11720,6 +13666,7 @@ type SubFields_GadgetObjectField_Fragment = {
                               }
                             | {
                                 __typename: "GadgetHasManyConfig";
+                                isJoinModelHasManyField: boolean;
                                 fieldType: GadgetFieldType;
                                 relatedModel?: {
                                   __typename?: "GadgetModel";
@@ -11740,6 +13687,61 @@ type SubFields_GadgetObjectField_Fragment = {
                                   }>;
                                 } | null;
                                 inverseField?: { __typename?: "GadgetModelField"; apiIdentifier: string } | null;
+                                validations: Array<
+                                  | { __typename: "GadgetGenericFieldValidation"; name: string; specID: string }
+                                  | {
+                                      __typename: "GadgetOnlyImageFileFieldValidation";
+                                      name: string;
+                                      specID: string;
+                                      allowAnimatedImages: boolean;
+                                    }
+                                  | {
+                                      __typename: "GadgetRangeFieldValidation";
+                                      name: string;
+                                      specID: string;
+                                      min?: number | null;
+                                      max?: number | null;
+                                    }
+                                  | { __typename: "GadgetRegexFieldValidation"; name: string; specID: string; pattern?: string | null }
+                                  | null
+                                >;
+                              }
+                            | {
+                                __typename: "GadgetHasManyThroughConfig";
+                                fieldType: GadgetFieldType;
+                                relatedModel?: {
+                                  __typename?: "GadgetModel";
+                                  key: string;
+                                  apiIdentifier: string;
+                                  namespace?: Array<string> | null;
+                                  defaultDisplayField: {
+                                    __typename?: "GadgetModelField";
+                                    name: string;
+                                    apiIdentifier: string;
+                                    fieldType: GadgetFieldType;
+                                  };
+                                  fields?: Array<{
+                                    __typename?: "GadgetModelField";
+                                    name: string;
+                                    apiIdentifier: string;
+                                    fieldType: GadgetFieldType;
+                                  }>;
+                                } | null;
+                                inverseField?: { __typename?: "GadgetModelField"; apiIdentifier: string } | null;
+                                joinModel?: {
+                                  __typename?: "GadgetModel";
+                                  key: string;
+                                  apiIdentifier: string;
+                                  namespace?: Array<string> | null;
+                                  defaultDisplayField: {
+                                    __typename?: "GadgetModelField";
+                                    name: string;
+                                    apiIdentifier: string;
+                                    fieldType: GadgetFieldType;
+                                  };
+                                } | null;
+                                inverseJoinModelField?: { __typename?: "GadgetModelField"; apiIdentifier: string } | null;
+                                inverseRelatedModelField?: { __typename?: "GadgetModelField"; apiIdentifier: string } | null;
                                 validations: Array<
                                   | { __typename: "GadgetGenericFieldValidation"; name: string; specID: string }
                                   | {
@@ -11962,6 +13964,7 @@ export type ModelActionMetadataQuery = {
               }
             | {
                 __typename: "GadgetHasManyConfig";
+                isJoinModelHasManyField: boolean;
                 fieldType: GadgetFieldType;
                 relatedModel?: {
                   __typename?: "GadgetModel";
@@ -11972,6 +13975,35 @@ export type ModelActionMetadataQuery = {
                   fields?: Array<{ __typename?: "GadgetModelField"; name: string; apiIdentifier: string; fieldType: GadgetFieldType }>;
                 } | null;
                 inverseField?: { __typename?: "GadgetModelField"; apiIdentifier: string } | null;
+                validations: Array<
+                  | { __typename: "GadgetGenericFieldValidation"; name: string; specID: string }
+                  | { __typename: "GadgetOnlyImageFileFieldValidation"; name: string; specID: string; allowAnimatedImages: boolean }
+                  | { __typename: "GadgetRangeFieldValidation"; name: string; specID: string; min?: number | null; max?: number | null }
+                  | { __typename: "GadgetRegexFieldValidation"; name: string; specID: string; pattern?: string | null }
+                  | null
+                >;
+              }
+            | {
+                __typename: "GadgetHasManyThroughConfig";
+                fieldType: GadgetFieldType;
+                relatedModel?: {
+                  __typename?: "GadgetModel";
+                  key: string;
+                  apiIdentifier: string;
+                  namespace?: Array<string> | null;
+                  defaultDisplayField: { __typename?: "GadgetModelField"; name: string; apiIdentifier: string; fieldType: GadgetFieldType };
+                  fields?: Array<{ __typename?: "GadgetModelField"; name: string; apiIdentifier: string; fieldType: GadgetFieldType }>;
+                } | null;
+                inverseField?: { __typename?: "GadgetModelField"; apiIdentifier: string } | null;
+                joinModel?: {
+                  __typename?: "GadgetModel";
+                  key: string;
+                  apiIdentifier: string;
+                  namespace?: Array<string> | null;
+                  defaultDisplayField: { __typename?: "GadgetModelField"; name: string; apiIdentifier: string; fieldType: GadgetFieldType };
+                } | null;
+                inverseJoinModelField?: { __typename?: "GadgetModelField"; apiIdentifier: string } | null;
+                inverseRelatedModelField?: { __typename?: "GadgetModelField"; apiIdentifier: string } | null;
                 validations: Array<
                   | { __typename: "GadgetGenericFieldValidation"; name: string; specID: string }
                   | { __typename: "GadgetOnlyImageFileFieldValidation"; name: string; specID: string; allowAnimatedImages: boolean }
@@ -12117,6 +14149,7 @@ export type ModelActionMetadataQuery = {
                       }
                     | {
                         __typename: "GadgetHasManyConfig";
+                        isJoinModelHasManyField: boolean;
                         fieldType: GadgetFieldType;
                         relatedModel?: {
                           __typename?: "GadgetModel";
@@ -12137,6 +14170,56 @@ export type ModelActionMetadataQuery = {
                           }>;
                         } | null;
                         inverseField?: { __typename?: "GadgetModelField"; apiIdentifier: string } | null;
+                        validations: Array<
+                          | { __typename: "GadgetGenericFieldValidation"; name: string; specID: string }
+                          | { __typename: "GadgetOnlyImageFileFieldValidation"; name: string; specID: string; allowAnimatedImages: boolean }
+                          | {
+                              __typename: "GadgetRangeFieldValidation";
+                              name: string;
+                              specID: string;
+                              min?: number | null;
+                              max?: number | null;
+                            }
+                          | { __typename: "GadgetRegexFieldValidation"; name: string; specID: string; pattern?: string | null }
+                          | null
+                        >;
+                      }
+                    | {
+                        __typename: "GadgetHasManyThroughConfig";
+                        fieldType: GadgetFieldType;
+                        relatedModel?: {
+                          __typename?: "GadgetModel";
+                          key: string;
+                          apiIdentifier: string;
+                          namespace?: Array<string> | null;
+                          defaultDisplayField: {
+                            __typename?: "GadgetModelField";
+                            name: string;
+                            apiIdentifier: string;
+                            fieldType: GadgetFieldType;
+                          };
+                          fields?: Array<{
+                            __typename?: "GadgetModelField";
+                            name: string;
+                            apiIdentifier: string;
+                            fieldType: GadgetFieldType;
+                          }>;
+                        } | null;
+                        inverseField?: { __typename?: "GadgetModelField"; apiIdentifier: string } | null;
+                        joinModel?: {
+                          __typename?: "GadgetModel";
+                          key: string;
+                          apiIdentifier: string;
+                          namespace?: Array<string> | null;
+                          defaultDisplayField: {
+                            __typename?: "GadgetModelField";
+                            name: string;
+                            apiIdentifier: string;
+                            fieldType: GadgetFieldType;
+                          };
+                        } | null;
+                        inverseJoinModelField?: { __typename?: "GadgetModelField"; apiIdentifier: string } | null;
+                        inverseRelatedModelField?: { __typename?: "GadgetModelField"; apiIdentifier: string } | null;
                         validations: Array<
                           | { __typename: "GadgetGenericFieldValidation"; name: string; specID: string }
                           | { __typename: "GadgetOnlyImageFileFieldValidation"; name: string; specID: string; allowAnimatedImages: boolean }
@@ -12330,6 +14413,7 @@ export type ModelActionMetadataQuery = {
                               }
                             | {
                                 __typename: "GadgetHasManyConfig";
+                                isJoinModelHasManyField: boolean;
                                 fieldType: GadgetFieldType;
                                 relatedModel?: {
                                   __typename?: "GadgetModel";
@@ -12350,6 +14434,61 @@ export type ModelActionMetadataQuery = {
                                   }>;
                                 } | null;
                                 inverseField?: { __typename?: "GadgetModelField"; apiIdentifier: string } | null;
+                                validations: Array<
+                                  | { __typename: "GadgetGenericFieldValidation"; name: string; specID: string }
+                                  | {
+                                      __typename: "GadgetOnlyImageFileFieldValidation";
+                                      name: string;
+                                      specID: string;
+                                      allowAnimatedImages: boolean;
+                                    }
+                                  | {
+                                      __typename: "GadgetRangeFieldValidation";
+                                      name: string;
+                                      specID: string;
+                                      min?: number | null;
+                                      max?: number | null;
+                                    }
+                                  | { __typename: "GadgetRegexFieldValidation"; name: string; specID: string; pattern?: string | null }
+                                  | null
+                                >;
+                              }
+                            | {
+                                __typename: "GadgetHasManyThroughConfig";
+                                fieldType: GadgetFieldType;
+                                relatedModel?: {
+                                  __typename?: "GadgetModel";
+                                  key: string;
+                                  apiIdentifier: string;
+                                  namespace?: Array<string> | null;
+                                  defaultDisplayField: {
+                                    __typename?: "GadgetModelField";
+                                    name: string;
+                                    apiIdentifier: string;
+                                    fieldType: GadgetFieldType;
+                                  };
+                                  fields?: Array<{
+                                    __typename?: "GadgetModelField";
+                                    name: string;
+                                    apiIdentifier: string;
+                                    fieldType: GadgetFieldType;
+                                  }>;
+                                } | null;
+                                inverseField?: { __typename?: "GadgetModelField"; apiIdentifier: string } | null;
+                                joinModel?: {
+                                  __typename?: "GadgetModel";
+                                  key: string;
+                                  apiIdentifier: string;
+                                  namespace?: Array<string> | null;
+                                  defaultDisplayField: {
+                                    __typename?: "GadgetModelField";
+                                    name: string;
+                                    apiIdentifier: string;
+                                    fieldType: GadgetFieldType;
+                                  };
+                                } | null;
+                                inverseJoinModelField?: { __typename?: "GadgetModelField"; apiIdentifier: string } | null;
+                                inverseRelatedModelField?: { __typename?: "GadgetModelField"; apiIdentifier: string } | null;
                                 validations: Array<
                                   | { __typename: "GadgetGenericFieldValidation"; name: string; specID: string }
                                   | {
@@ -12578,6 +14717,7 @@ export type ModelActionMetadataQuery = {
                                       }
                                     | {
                                         __typename: "GadgetHasManyConfig";
+                                        isJoinModelHasManyField: boolean;
                                         fieldType: GadgetFieldType;
                                         relatedModel?: {
                                           __typename?: "GadgetModel";
@@ -12598,6 +14738,66 @@ export type ModelActionMetadataQuery = {
                                           }>;
                                         } | null;
                                         inverseField?: { __typename?: "GadgetModelField"; apiIdentifier: string } | null;
+                                        validations: Array<
+                                          | { __typename: "GadgetGenericFieldValidation"; name: string; specID: string }
+                                          | {
+                                              __typename: "GadgetOnlyImageFileFieldValidation";
+                                              name: string;
+                                              specID: string;
+                                              allowAnimatedImages: boolean;
+                                            }
+                                          | {
+                                              __typename: "GadgetRangeFieldValidation";
+                                              name: string;
+                                              specID: string;
+                                              min?: number | null;
+                                              max?: number | null;
+                                            }
+                                          | {
+                                              __typename: "GadgetRegexFieldValidation";
+                                              name: string;
+                                              specID: string;
+                                              pattern?: string | null;
+                                            }
+                                          | null
+                                        >;
+                                      }
+                                    | {
+                                        __typename: "GadgetHasManyThroughConfig";
+                                        fieldType: GadgetFieldType;
+                                        relatedModel?: {
+                                          __typename?: "GadgetModel";
+                                          key: string;
+                                          apiIdentifier: string;
+                                          namespace?: Array<string> | null;
+                                          defaultDisplayField: {
+                                            __typename?: "GadgetModelField";
+                                            name: string;
+                                            apiIdentifier: string;
+                                            fieldType: GadgetFieldType;
+                                          };
+                                          fields?: Array<{
+                                            __typename?: "GadgetModelField";
+                                            name: string;
+                                            apiIdentifier: string;
+                                            fieldType: GadgetFieldType;
+                                          }>;
+                                        } | null;
+                                        inverseField?: { __typename?: "GadgetModelField"; apiIdentifier: string } | null;
+                                        joinModel?: {
+                                          __typename?: "GadgetModel";
+                                          key: string;
+                                          apiIdentifier: string;
+                                          namespace?: Array<string> | null;
+                                          defaultDisplayField: {
+                                            __typename?: "GadgetModelField";
+                                            name: string;
+                                            apiIdentifier: string;
+                                            fieldType: GadgetFieldType;
+                                          };
+                                        } | null;
+                                        inverseJoinModelField?: { __typename?: "GadgetModelField"; apiIdentifier: string } | null;
+                                        inverseRelatedModelField?: { __typename?: "GadgetModelField"; apiIdentifier: string } | null;
                                         validations: Array<
                                           | { __typename: "GadgetGenericFieldValidation"; name: string; specID: string }
                                           | {
@@ -12853,6 +15053,7 @@ export type GlobalActionMetadataQuery = {
             }
           | {
               __typename: "GadgetHasManyConfig";
+              isJoinModelHasManyField: boolean;
               fieldType: GadgetFieldType;
               relatedModel?: {
                 __typename?: "GadgetModel";
@@ -12863,6 +15064,35 @@ export type GlobalActionMetadataQuery = {
                 fields?: Array<{ __typename?: "GadgetModelField"; name: string; apiIdentifier: string; fieldType: GadgetFieldType }>;
               } | null;
               inverseField?: { __typename?: "GadgetModelField"; apiIdentifier: string } | null;
+              validations: Array<
+                | { __typename: "GadgetGenericFieldValidation"; name: string; specID: string }
+                | { __typename: "GadgetOnlyImageFileFieldValidation"; name: string; specID: string; allowAnimatedImages: boolean }
+                | { __typename: "GadgetRangeFieldValidation"; name: string; specID: string; min?: number | null; max?: number | null }
+                | { __typename: "GadgetRegexFieldValidation"; name: string; specID: string; pattern?: string | null }
+                | null
+              >;
+            }
+          | {
+              __typename: "GadgetHasManyThroughConfig";
+              fieldType: GadgetFieldType;
+              relatedModel?: {
+                __typename?: "GadgetModel";
+                key: string;
+                apiIdentifier: string;
+                namespace?: Array<string> | null;
+                defaultDisplayField: { __typename?: "GadgetModelField"; name: string; apiIdentifier: string; fieldType: GadgetFieldType };
+                fields?: Array<{ __typename?: "GadgetModelField"; name: string; apiIdentifier: string; fieldType: GadgetFieldType }>;
+              } | null;
+              inverseField?: { __typename?: "GadgetModelField"; apiIdentifier: string } | null;
+              joinModel?: {
+                __typename?: "GadgetModel";
+                key: string;
+                apiIdentifier: string;
+                namespace?: Array<string> | null;
+                defaultDisplayField: { __typename?: "GadgetModelField"; name: string; apiIdentifier: string; fieldType: GadgetFieldType };
+              } | null;
+              inverseJoinModelField?: { __typename?: "GadgetModelField"; apiIdentifier: string } | null;
+              inverseRelatedModelField?: { __typename?: "GadgetModelField"; apiIdentifier: string } | null;
               validations: Array<
                 | { __typename: "GadgetGenericFieldValidation"; name: string; specID: string }
                 | { __typename: "GadgetOnlyImageFileFieldValidation"; name: string; specID: string; allowAnimatedImages: boolean }
@@ -13008,6 +15238,7 @@ export type GlobalActionMetadataQuery = {
                     }
                   | {
                       __typename: "GadgetHasManyConfig";
+                      isJoinModelHasManyField: boolean;
                       fieldType: GadgetFieldType;
                       relatedModel?: {
                         __typename?: "GadgetModel";
@@ -13028,6 +15259,56 @@ export type GlobalActionMetadataQuery = {
                         }>;
                       } | null;
                       inverseField?: { __typename?: "GadgetModelField"; apiIdentifier: string } | null;
+                      validations: Array<
+                        | { __typename: "GadgetGenericFieldValidation"; name: string; specID: string }
+                        | { __typename: "GadgetOnlyImageFileFieldValidation"; name: string; specID: string; allowAnimatedImages: boolean }
+                        | {
+                            __typename: "GadgetRangeFieldValidation";
+                            name: string;
+                            specID: string;
+                            min?: number | null;
+                            max?: number | null;
+                          }
+                        | { __typename: "GadgetRegexFieldValidation"; name: string; specID: string; pattern?: string | null }
+                        | null
+                      >;
+                    }
+                  | {
+                      __typename: "GadgetHasManyThroughConfig";
+                      fieldType: GadgetFieldType;
+                      relatedModel?: {
+                        __typename?: "GadgetModel";
+                        key: string;
+                        apiIdentifier: string;
+                        namespace?: Array<string> | null;
+                        defaultDisplayField: {
+                          __typename?: "GadgetModelField";
+                          name: string;
+                          apiIdentifier: string;
+                          fieldType: GadgetFieldType;
+                        };
+                        fields?: Array<{
+                          __typename?: "GadgetModelField";
+                          name: string;
+                          apiIdentifier: string;
+                          fieldType: GadgetFieldType;
+                        }>;
+                      } | null;
+                      inverseField?: { __typename?: "GadgetModelField"; apiIdentifier: string } | null;
+                      joinModel?: {
+                        __typename?: "GadgetModel";
+                        key: string;
+                        apiIdentifier: string;
+                        namespace?: Array<string> | null;
+                        defaultDisplayField: {
+                          __typename?: "GadgetModelField";
+                          name: string;
+                          apiIdentifier: string;
+                          fieldType: GadgetFieldType;
+                        };
+                      } | null;
+                      inverseJoinModelField?: { __typename?: "GadgetModelField"; apiIdentifier: string } | null;
+                      inverseRelatedModelField?: { __typename?: "GadgetModelField"; apiIdentifier: string } | null;
                       validations: Array<
                         | { __typename: "GadgetGenericFieldValidation"; name: string; specID: string }
                         | { __typename: "GadgetOnlyImageFileFieldValidation"; name: string; specID: string; allowAnimatedImages: boolean }
@@ -13221,6 +15502,7 @@ export type GlobalActionMetadataQuery = {
                             }
                           | {
                               __typename: "GadgetHasManyConfig";
+                              isJoinModelHasManyField: boolean;
                               fieldType: GadgetFieldType;
                               relatedModel?: {
                                 __typename?: "GadgetModel";
@@ -13241,6 +15523,61 @@ export type GlobalActionMetadataQuery = {
                                 }>;
                               } | null;
                               inverseField?: { __typename?: "GadgetModelField"; apiIdentifier: string } | null;
+                              validations: Array<
+                                | { __typename: "GadgetGenericFieldValidation"; name: string; specID: string }
+                                | {
+                                    __typename: "GadgetOnlyImageFileFieldValidation";
+                                    name: string;
+                                    specID: string;
+                                    allowAnimatedImages: boolean;
+                                  }
+                                | {
+                                    __typename: "GadgetRangeFieldValidation";
+                                    name: string;
+                                    specID: string;
+                                    min?: number | null;
+                                    max?: number | null;
+                                  }
+                                | { __typename: "GadgetRegexFieldValidation"; name: string; specID: string; pattern?: string | null }
+                                | null
+                              >;
+                            }
+                          | {
+                              __typename: "GadgetHasManyThroughConfig";
+                              fieldType: GadgetFieldType;
+                              relatedModel?: {
+                                __typename?: "GadgetModel";
+                                key: string;
+                                apiIdentifier: string;
+                                namespace?: Array<string> | null;
+                                defaultDisplayField: {
+                                  __typename?: "GadgetModelField";
+                                  name: string;
+                                  apiIdentifier: string;
+                                  fieldType: GadgetFieldType;
+                                };
+                                fields?: Array<{
+                                  __typename?: "GadgetModelField";
+                                  name: string;
+                                  apiIdentifier: string;
+                                  fieldType: GadgetFieldType;
+                                }>;
+                              } | null;
+                              inverseField?: { __typename?: "GadgetModelField"; apiIdentifier: string } | null;
+                              joinModel?: {
+                                __typename?: "GadgetModel";
+                                key: string;
+                                apiIdentifier: string;
+                                namespace?: Array<string> | null;
+                                defaultDisplayField: {
+                                  __typename?: "GadgetModelField";
+                                  name: string;
+                                  apiIdentifier: string;
+                                  fieldType: GadgetFieldType;
+                                };
+                              } | null;
+                              inverseJoinModelField?: { __typename?: "GadgetModelField"; apiIdentifier: string } | null;
+                              inverseRelatedModelField?: { __typename?: "GadgetModelField"; apiIdentifier: string } | null;
                               validations: Array<
                                 | { __typename: "GadgetGenericFieldValidation"; name: string; specID: string }
                                 | {
@@ -13469,6 +15806,7 @@ export type GlobalActionMetadataQuery = {
                                     }
                                   | {
                                       __typename: "GadgetHasManyConfig";
+                                      isJoinModelHasManyField: boolean;
                                       fieldType: GadgetFieldType;
                                       relatedModel?: {
                                         __typename?: "GadgetModel";
@@ -13489,6 +15827,66 @@ export type GlobalActionMetadataQuery = {
                                         }>;
                                       } | null;
                                       inverseField?: { __typename?: "GadgetModelField"; apiIdentifier: string } | null;
+                                      validations: Array<
+                                        | { __typename: "GadgetGenericFieldValidation"; name: string; specID: string }
+                                        | {
+                                            __typename: "GadgetOnlyImageFileFieldValidation";
+                                            name: string;
+                                            specID: string;
+                                            allowAnimatedImages: boolean;
+                                          }
+                                        | {
+                                            __typename: "GadgetRangeFieldValidation";
+                                            name: string;
+                                            specID: string;
+                                            min?: number | null;
+                                            max?: number | null;
+                                          }
+                                        | {
+                                            __typename: "GadgetRegexFieldValidation";
+                                            name: string;
+                                            specID: string;
+                                            pattern?: string | null;
+                                          }
+                                        | null
+                                      >;
+                                    }
+                                  | {
+                                      __typename: "GadgetHasManyThroughConfig";
+                                      fieldType: GadgetFieldType;
+                                      relatedModel?: {
+                                        __typename?: "GadgetModel";
+                                        key: string;
+                                        apiIdentifier: string;
+                                        namespace?: Array<string> | null;
+                                        defaultDisplayField: {
+                                          __typename?: "GadgetModelField";
+                                          name: string;
+                                          apiIdentifier: string;
+                                          fieldType: GadgetFieldType;
+                                        };
+                                        fields?: Array<{
+                                          __typename?: "GadgetModelField";
+                                          name: string;
+                                          apiIdentifier: string;
+                                          fieldType: GadgetFieldType;
+                                        }>;
+                                      } | null;
+                                      inverseField?: { __typename?: "GadgetModelField"; apiIdentifier: string } | null;
+                                      joinModel?: {
+                                        __typename?: "GadgetModel";
+                                        key: string;
+                                        apiIdentifier: string;
+                                        namespace?: Array<string> | null;
+                                        defaultDisplayField: {
+                                          __typename?: "GadgetModelField";
+                                          name: string;
+                                          apiIdentifier: string;
+                                          fieldType: GadgetFieldType;
+                                        };
+                                      } | null;
+                                      inverseJoinModelField?: { __typename?: "GadgetModelField"; apiIdentifier: string } | null;
+                                      inverseRelatedModelField?: { __typename?: "GadgetModelField"; apiIdentifier: string } | null;
                                       validations: Array<
                                         | { __typename: "GadgetGenericFieldValidation"; name: string; specID: string }
                                         | {
@@ -13785,10 +16183,113 @@ export const FieldMetadataFragmentDoc = {
                 },
                 {
                   kind: "InlineFragment",
+                  typeCondition: { kind: "NamedType", name: { kind: "Name", value: "GadgetHasManyThroughConfig" } },
+                  selectionSet: {
+                    kind: "SelectionSet",
+                    selections: [
+                      {
+                        kind: "Field",
+                        name: { kind: "Name", value: "relatedModel" },
+                        selectionSet: {
+                          kind: "SelectionSet",
+                          selections: [
+                            { kind: "Field", name: { kind: "Name", value: "key" } },
+                            { kind: "Field", name: { kind: "Name", value: "apiIdentifier" } },
+                            { kind: "Field", name: { kind: "Name", value: "namespace" } },
+                            {
+                              kind: "Field",
+                              name: { kind: "Name", value: "defaultDisplayField" },
+                              selectionSet: {
+                                kind: "SelectionSet",
+                                selections: [
+                                  { kind: "Field", name: { kind: "Name", value: "name" } },
+                                  { kind: "Field", name: { kind: "Name", value: "apiIdentifier" } },
+                                  { kind: "Field", name: { kind: "Name", value: "fieldType" } },
+                                ],
+                              },
+                            },
+                            {
+                              kind: "Field",
+                              name: { kind: "Name", value: "fields" },
+                              directives: [
+                                {
+                                  kind: "Directive",
+                                  name: { kind: "Name", value: "include" },
+                                  arguments: [
+                                    {
+                                      kind: "Argument",
+                                      name: { kind: "Name", value: "if" },
+                                      value: { kind: "Variable", name: { kind: "Name", value: "includeRelatedFields" } },
+                                    },
+                                  ],
+                                },
+                              ],
+                              selectionSet: {
+                                kind: "SelectionSet",
+                                selections: [{ kind: "FragmentSpread", name: { kind: "Name", value: "RelatedModelFieldFragment" } }],
+                              },
+                            },
+                          ],
+                        },
+                      },
+                      {
+                        kind: "Field",
+                        name: { kind: "Name", value: "inverseField" },
+                        selectionSet: {
+                          kind: "SelectionSet",
+                          selections: [{ kind: "Field", name: { kind: "Name", value: "apiIdentifier" } }],
+                        },
+                      },
+                      {
+                        kind: "Field",
+                        name: { kind: "Name", value: "joinModel" },
+                        selectionSet: {
+                          kind: "SelectionSet",
+                          selections: [
+                            { kind: "Field", name: { kind: "Name", value: "key" } },
+                            { kind: "Field", name: { kind: "Name", value: "apiIdentifier" } },
+                            { kind: "Field", name: { kind: "Name", value: "namespace" } },
+                            {
+                              kind: "Field",
+                              name: { kind: "Name", value: "defaultDisplayField" },
+                              selectionSet: {
+                                kind: "SelectionSet",
+                                selections: [
+                                  { kind: "Field", name: { kind: "Name", value: "name" } },
+                                  { kind: "Field", name: { kind: "Name", value: "apiIdentifier" } },
+                                  { kind: "Field", name: { kind: "Name", value: "fieldType" } },
+                                ],
+                              },
+                            },
+                          ],
+                        },
+                      },
+                      {
+                        kind: "Field",
+                        name: { kind: "Name", value: "inverseJoinModelField" },
+                        selectionSet: {
+                          kind: "SelectionSet",
+                          selections: [{ kind: "Field", name: { kind: "Name", value: "apiIdentifier" } }],
+                        },
+                      },
+                      {
+                        kind: "Field",
+                        name: { kind: "Name", value: "inverseRelatedModelField" },
+                        selectionSet: {
+                          kind: "SelectionSet",
+                          selections: [{ kind: "Field", name: { kind: "Name", value: "apiIdentifier" } }],
+                        },
+                      },
+                    ],
+                  },
+                },
+                {
+                  kind: "InlineFragment",
                   typeCondition: { kind: "NamedType", name: { kind: "Name", value: "GadgetHasManyConfig" } },
                   selectionSet: {
                     kind: "SelectionSet",
                     selections: [
+                      { kind: "Field", name: { kind: "Name", value: "isJoinModelHasManyField" } },
                       {
                         kind: "Field",
                         name: { kind: "Name", value: "relatedModel" },
@@ -14223,10 +16724,113 @@ export const SubFieldsFragmentDoc = {
                 },
                 {
                   kind: "InlineFragment",
+                  typeCondition: { kind: "NamedType", name: { kind: "Name", value: "GadgetHasManyThroughConfig" } },
+                  selectionSet: {
+                    kind: "SelectionSet",
+                    selections: [
+                      {
+                        kind: "Field",
+                        name: { kind: "Name", value: "relatedModel" },
+                        selectionSet: {
+                          kind: "SelectionSet",
+                          selections: [
+                            { kind: "Field", name: { kind: "Name", value: "key" } },
+                            { kind: "Field", name: { kind: "Name", value: "apiIdentifier" } },
+                            { kind: "Field", name: { kind: "Name", value: "namespace" } },
+                            {
+                              kind: "Field",
+                              name: { kind: "Name", value: "defaultDisplayField" },
+                              selectionSet: {
+                                kind: "SelectionSet",
+                                selections: [
+                                  { kind: "Field", name: { kind: "Name", value: "name" } },
+                                  { kind: "Field", name: { kind: "Name", value: "apiIdentifier" } },
+                                  { kind: "Field", name: { kind: "Name", value: "fieldType" } },
+                                ],
+                              },
+                            },
+                            {
+                              kind: "Field",
+                              name: { kind: "Name", value: "fields" },
+                              directives: [
+                                {
+                                  kind: "Directive",
+                                  name: { kind: "Name", value: "include" },
+                                  arguments: [
+                                    {
+                                      kind: "Argument",
+                                      name: { kind: "Name", value: "if" },
+                                      value: { kind: "Variable", name: { kind: "Name", value: "includeRelatedFields" } },
+                                    },
+                                  ],
+                                },
+                              ],
+                              selectionSet: {
+                                kind: "SelectionSet",
+                                selections: [{ kind: "FragmentSpread", name: { kind: "Name", value: "RelatedModelFieldFragment" } }],
+                              },
+                            },
+                          ],
+                        },
+                      },
+                      {
+                        kind: "Field",
+                        name: { kind: "Name", value: "inverseField" },
+                        selectionSet: {
+                          kind: "SelectionSet",
+                          selections: [{ kind: "Field", name: { kind: "Name", value: "apiIdentifier" } }],
+                        },
+                      },
+                      {
+                        kind: "Field",
+                        name: { kind: "Name", value: "joinModel" },
+                        selectionSet: {
+                          kind: "SelectionSet",
+                          selections: [
+                            { kind: "Field", name: { kind: "Name", value: "key" } },
+                            { kind: "Field", name: { kind: "Name", value: "apiIdentifier" } },
+                            { kind: "Field", name: { kind: "Name", value: "namespace" } },
+                            {
+                              kind: "Field",
+                              name: { kind: "Name", value: "defaultDisplayField" },
+                              selectionSet: {
+                                kind: "SelectionSet",
+                                selections: [
+                                  { kind: "Field", name: { kind: "Name", value: "name" } },
+                                  { kind: "Field", name: { kind: "Name", value: "apiIdentifier" } },
+                                  { kind: "Field", name: { kind: "Name", value: "fieldType" } },
+                                ],
+                              },
+                            },
+                          ],
+                        },
+                      },
+                      {
+                        kind: "Field",
+                        name: { kind: "Name", value: "inverseJoinModelField" },
+                        selectionSet: {
+                          kind: "SelectionSet",
+                          selections: [{ kind: "Field", name: { kind: "Name", value: "apiIdentifier" } }],
+                        },
+                      },
+                      {
+                        kind: "Field",
+                        name: { kind: "Name", value: "inverseRelatedModelField" },
+                        selectionSet: {
+                          kind: "SelectionSet",
+                          selections: [{ kind: "Field", name: { kind: "Name", value: "apiIdentifier" } }],
+                        },
+                      },
+                    ],
+                  },
+                },
+                {
+                  kind: "InlineFragment",
                   typeCondition: { kind: "NamedType", name: { kind: "Name", value: "GadgetHasManyConfig" } },
                   selectionSet: {
                     kind: "SelectionSet",
                     selections: [
+                      { kind: "Field", name: { kind: "Name", value: "isJoinModelHasManyField" } },
                       {
                         kind: "Field",
                         name: { kind: "Name", value: "relatedModel" },
@@ -14613,10 +17217,113 @@ export const GetModelMetadataDocument = {
                 },
                 {
                   kind: "InlineFragment",
+                  typeCondition: { kind: "NamedType", name: { kind: "Name", value: "GadgetHasManyThroughConfig" } },
+                  selectionSet: {
+                    kind: "SelectionSet",
+                    selections: [
+                      {
+                        kind: "Field",
+                        name: { kind: "Name", value: "relatedModel" },
+                        selectionSet: {
+                          kind: "SelectionSet",
+                          selections: [
+                            { kind: "Field", name: { kind: "Name", value: "key" } },
+                            { kind: "Field", name: { kind: "Name", value: "apiIdentifier" } },
+                            { kind: "Field", name: { kind: "Name", value: "namespace" } },
+                            {
+                              kind: "Field",
+                              name: { kind: "Name", value: "defaultDisplayField" },
+                              selectionSet: {
+                                kind: "SelectionSet",
+                                selections: [
+                                  { kind: "Field", name: { kind: "Name", value: "name" } },
+                                  { kind: "Field", name: { kind: "Name", value: "apiIdentifier" } },
+                                  { kind: "Field", name: { kind: "Name", value: "fieldType" } },
+                                ],
+                              },
+                            },
+                            {
+                              kind: "Field",
+                              name: { kind: "Name", value: "fields" },
+                              directives: [
+                                {
+                                  kind: "Directive",
+                                  name: { kind: "Name", value: "include" },
+                                  arguments: [
+                                    {
+                                      kind: "Argument",
+                                      name: { kind: "Name", value: "if" },
+                                      value: { kind: "Variable", name: { kind: "Name", value: "includeRelatedFields" } },
+                                    },
+                                  ],
+                                },
+                              ],
+                              selectionSet: {
+                                kind: "SelectionSet",
+                                selections: [{ kind: "FragmentSpread", name: { kind: "Name", value: "RelatedModelFieldFragment" } }],
+                              },
+                            },
+                          ],
+                        },
+                      },
+                      {
+                        kind: "Field",
+                        name: { kind: "Name", value: "inverseField" },
+                        selectionSet: {
+                          kind: "SelectionSet",
+                          selections: [{ kind: "Field", name: { kind: "Name", value: "apiIdentifier" } }],
+                        },
+                      },
+                      {
+                        kind: "Field",
+                        name: { kind: "Name", value: "joinModel" },
+                        selectionSet: {
+                          kind: "SelectionSet",
+                          selections: [
+                            { kind: "Field", name: { kind: "Name", value: "key" } },
+                            { kind: "Field", name: { kind: "Name", value: "apiIdentifier" } },
+                            { kind: "Field", name: { kind: "Name", value: "namespace" } },
+                            {
+                              kind: "Field",
+                              name: { kind: "Name", value: "defaultDisplayField" },
+                              selectionSet: {
+                                kind: "SelectionSet",
+                                selections: [
+                                  { kind: "Field", name: { kind: "Name", value: "name" } },
+                                  { kind: "Field", name: { kind: "Name", value: "apiIdentifier" } },
+                                  { kind: "Field", name: { kind: "Name", value: "fieldType" } },
+                                ],
+                              },
+                            },
+                          ],
+                        },
+                      },
+                      {
+                        kind: "Field",
+                        name: { kind: "Name", value: "inverseJoinModelField" },
+                        selectionSet: {
+                          kind: "SelectionSet",
+                          selections: [{ kind: "Field", name: { kind: "Name", value: "apiIdentifier" } }],
+                        },
+                      },
+                      {
+                        kind: "Field",
+                        name: { kind: "Name", value: "inverseRelatedModelField" },
+                        selectionSet: {
+                          kind: "SelectionSet",
+                          selections: [{ kind: "Field", name: { kind: "Name", value: "apiIdentifier" } }],
+                        },
+                      },
+                    ],
+                  },
+                },
+                {
+                  kind: "InlineFragment",
                   typeCondition: { kind: "NamedType", name: { kind: "Name", value: "GadgetHasManyConfig" } },
                   selectionSet: {
                     kind: "SelectionSet",
                     selections: [
+                      { kind: "Field", name: { kind: "Name", value: "isJoinModelHasManyField" } },
                       {
                         kind: "Field",
                         name: { kind: "Name", value: "relatedModel" },
@@ -15039,10 +17746,113 @@ export const ModelActionMetadataDocument = {
                 },
                 {
                   kind: "InlineFragment",
+                  typeCondition: { kind: "NamedType", name: { kind: "Name", value: "GadgetHasManyThroughConfig" } },
+                  selectionSet: {
+                    kind: "SelectionSet",
+                    selections: [
+                      {
+                        kind: "Field",
+                        name: { kind: "Name", value: "relatedModel" },
+                        selectionSet: {
+                          kind: "SelectionSet",
+                          selections: [
+                            { kind: "Field", name: { kind: "Name", value: "key" } },
+                            { kind: "Field", name: { kind: "Name", value: "apiIdentifier" } },
+                            { kind: "Field", name: { kind: "Name", value: "namespace" } },
+                            {
+                              kind: "Field",
+                              name: { kind: "Name", value: "defaultDisplayField" },
+                              selectionSet: {
+                                kind: "SelectionSet",
+                                selections: [
+                                  { kind: "Field", name: { kind: "Name", value: "name" } },
+                                  { kind: "Field", name: { kind: "Name", value: "apiIdentifier" } },
+                                  { kind: "Field", name: { kind: "Name", value: "fieldType" } },
+                                ],
+                              },
+                            },
+                            {
+                              kind: "Field",
+                              name: { kind: "Name", value: "fields" },
+                              directives: [
+                                {
+                                  kind: "Directive",
+                                  name: { kind: "Name", value: "include" },
+                                  arguments: [
+                                    {
+                                      kind: "Argument",
+                                      name: { kind: "Name", value: "if" },
+                                      value: { kind: "Variable", name: { kind: "Name", value: "includeRelatedFields" } },
+                                    },
+                                  ],
+                                },
+                              ],
+                              selectionSet: {
+                                kind: "SelectionSet",
+                                selections: [{ kind: "FragmentSpread", name: { kind: "Name", value: "RelatedModelFieldFragment" } }],
+                              },
+                            },
+                          ],
+                        },
+                      },
+                      {
+                        kind: "Field",
+                        name: { kind: "Name", value: "inverseField" },
+                        selectionSet: {
+                          kind: "SelectionSet",
+                          selections: [{ kind: "Field", name: { kind: "Name", value: "apiIdentifier" } }],
+                        },
+                      },
+                      {
+                        kind: "Field",
+                        name: { kind: "Name", value: "joinModel" },
+                        selectionSet: {
+                          kind: "SelectionSet",
+                          selections: [
+                            { kind: "Field", name: { kind: "Name", value: "key" } },
+                            { kind: "Field", name: { kind: "Name", value: "apiIdentifier" } },
+                            { kind: "Field", name: { kind: "Name", value: "namespace" } },
+                            {
+                              kind: "Field",
+                              name: { kind: "Name", value: "defaultDisplayField" },
+                              selectionSet: {
+                                kind: "SelectionSet",
+                                selections: [
+                                  { kind: "Field", name: { kind: "Name", value: "name" } },
+                                  { kind: "Field", name: { kind: "Name", value: "apiIdentifier" } },
+                                  { kind: "Field", name: { kind: "Name", value: "fieldType" } },
+                                ],
+                              },
+                            },
+                          ],
+                        },
+                      },
+                      {
+                        kind: "Field",
+                        name: { kind: "Name", value: "inverseJoinModelField" },
+                        selectionSet: {
+                          kind: "SelectionSet",
+                          selections: [{ kind: "Field", name: { kind: "Name", value: "apiIdentifier" } }],
+                        },
+                      },
+                      {
+                        kind: "Field",
+                        name: { kind: "Name", value: "inverseRelatedModelField" },
+                        selectionSet: {
+                          kind: "SelectionSet",
+                          selections: [{ kind: "Field", name: { kind: "Name", value: "apiIdentifier" } }],
+                        },
+                      },
+                    ],
+                  },
+                },
+                {
+                  kind: "InlineFragment",
                   typeCondition: { kind: "NamedType", name: { kind: "Name", value: "GadgetHasManyConfig" } },
                   selectionSet: {
                     kind: "SelectionSet",
                     selections: [
+                      { kind: "Field", name: { kind: "Name", value: "isJoinModelHasManyField" } },
                       {
                         kind: "Field",
                         name: { kind: "Name", value: "relatedModel" },
@@ -15540,10 +18350,113 @@ export const GlobalActionMetadataDocument = {
                 },
                 {
                   kind: "InlineFragment",
+                  typeCondition: { kind: "NamedType", name: { kind: "Name", value: "GadgetHasManyThroughConfig" } },
+                  selectionSet: {
+                    kind: "SelectionSet",
+                    selections: [
+                      {
+                        kind: "Field",
+                        name: { kind: "Name", value: "relatedModel" },
+                        selectionSet: {
+                          kind: "SelectionSet",
+                          selections: [
+                            { kind: "Field", name: { kind: "Name", value: "key" } },
+                            { kind: "Field", name: { kind: "Name", value: "apiIdentifier" } },
+                            { kind: "Field", name: { kind: "Name", value: "namespace" } },
+                            {
+                              kind: "Field",
+                              name: { kind: "Name", value: "defaultDisplayField" },
+                              selectionSet: {
+                                kind: "SelectionSet",
+                                selections: [
+                                  { kind: "Field", name: { kind: "Name", value: "name" } },
+                                  { kind: "Field", name: { kind: "Name", value: "apiIdentifier" } },
+                                  { kind: "Field", name: { kind: "Name", value: "fieldType" } },
+                                ],
+                              },
+                            },
+                            {
+                              kind: "Field",
+                              name: { kind: "Name", value: "fields" },
+                              directives: [
+                                {
+                                  kind: "Directive",
+                                  name: { kind: "Name", value: "include" },
+                                  arguments: [
+                                    {
+                                      kind: "Argument",
+                                      name: { kind: "Name", value: "if" },
+                                      value: { kind: "Variable", name: { kind: "Name", value: "includeRelatedFields" } },
+                                    },
+                                  ],
+                                },
+                              ],
+                              selectionSet: {
+                                kind: "SelectionSet",
+                                selections: [{ kind: "FragmentSpread", name: { kind: "Name", value: "RelatedModelFieldFragment" } }],
+                              },
+                            },
+                          ],
+                        },
+                      },
+                      {
+                        kind: "Field",
+                        name: { kind: "Name", value: "inverseField" },
+                        selectionSet: {
+                          kind: "SelectionSet",
+                          selections: [{ kind: "Field", name: { kind: "Name", value: "apiIdentifier" } }],
+                        },
+                      },
+                      {
+                        kind: "Field",
+                        name: { kind: "Name", value: "joinModel" },
+                        selectionSet: {
+                          kind: "SelectionSet",
+                          selections: [
+                            { kind: "Field", name: { kind: "Name", value: "key" } },
+                            { kind: "Field", name: { kind: "Name", value: "apiIdentifier" } },
+                            { kind: "Field", name: { kind: "Name", value: "namespace" } },
+                            {
+                              kind: "Field",
+                              name: { kind: "Name", value: "defaultDisplayField" },
+                              selectionSet: {
+                                kind: "SelectionSet",
+                                selections: [
+                                  { kind: "Field", name: { kind: "Name", value: "name" } },
+                                  { kind: "Field", name: { kind: "Name", value: "apiIdentifier" } },
+                                  { kind: "Field", name: { kind: "Name", value: "fieldType" } },
+                                ],
+                              },
+                            },
+                          ],
+                        },
+                      },
+                      {
+                        kind: "Field",
+                        name: { kind: "Name", value: "inverseJoinModelField" },
+                        selectionSet: {
+                          kind: "SelectionSet",
+                          selections: [{ kind: "Field", name: { kind: "Name", value: "apiIdentifier" } }],
+                        },
+                      },
+                      {
+                        kind: "Field",
+                        name: { kind: "Name", value: "inverseRelatedModelField" },
+                        selectionSet: {
+                          kind: "SelectionSet",
+                          selections: [{ kind: "Field", name: { kind: "Name", value: "apiIdentifier" } }],
+                        },
+                      },
+                    ],
+                  },
+                },
+                {
+                  kind: "InlineFragment",
                   typeCondition: { kind: "NamedType", name: { kind: "Name", value: "GadgetHasManyConfig" } },
                   selectionSet: {
                     kind: "SelectionSet",
                     selections: [
+                      { kind: "Field", name: { kind: "Name", value: "isJoinModelHasManyField" } },
                       {
                         kind: "Field",
                         name: { kind: "Name", value: "relatedModel" },
