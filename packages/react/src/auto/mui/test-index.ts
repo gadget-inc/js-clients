@@ -14,7 +14,6 @@ export {
   MUIAutoTextInput as AutoEmailInput,
   MUIAutoTextInput as AutoNumberInput,
   MUIAutoTextInput as AutoStringInput,
-  MUIAutoTextInput as AutoTextInput,
   MUIAutoTextInput as AutoUrlInput,
 } from "./inputs/MUIAutoTextInput.js";
 export { MUIAutoBelongsToInput as AutoBelongsToInput } from "./inputs/relationships/MUIAutoBelongsToInput.js";

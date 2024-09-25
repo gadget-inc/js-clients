@@ -15,7 +15,6 @@ export { PolarisAutoRolesInput as AutoRolesInput } from "./inputs/PolarisAutoRol
 export {
   PolarisAutoTextInput as AutoEmailInput,
   PolarisAutoTextInput as AutoStringInput,
-  PolarisAutoTextInput as AutoTextInput,
   PolarisAutoTextInput as AutoUrlInput,
 } from "./inputs/PolarisAutoTextInput.js";
 export { PolarisAutoBelongsToInput as AutoBelongsToInput } from "./inputs/relationships/PolarisAutoBelongsToInput.js";
