@@ -140,12 +140,12 @@ const PolarisAutoTableComponent = <
   const selectedRows = (rows ?? []).filter((row) => selection.recordIds.includes(row.id as string));
 
   const promotedBulkActions = useMemo(
-    () => bulkActionOptions.filter((option) => option.promoted).map(bulkActionOptionMapper(selectedRows)),
+    () => bulkActionOptions.filter((option) => option.promoted).map(bulkActionOptionMapper(selectedRows, selection.clearAll)),
     [bulkActionOptions, selectedRows]
   );
 
   const bulkActions = useMemo(
-    () => bulkActionOptions.filter((option) => !option.promoted).map(bulkActionOptionMapper(selectedRows)),
+    () => bulkActionOptions.filter((option) => !option.promoted).map(bulkActionOptionMapper(selectedRows, selection.clearAll)),
     [bulkActionOptions, selectedRows]
   );
 
@@ -280,10 +280,15 @@ const disablePaginatedSelectAllButton = {
   paginatedSelectAllActionText: "", // Empty string to hide the select all button. We only allow selection on the current page
 };
 
-const bulkActionOptionMapper = (selectedRows: TableRow[]) => {
+const bulkActionOptionMapper = (selectedRows: TableRow[], clearSelection: () => void) => {
   return (option: BulkActionOption) => ({
     id: option.humanizedName,
     content: option.humanizedName,
-    onAction: option.action ? () => option.action?.(selectedRows) : option.selectModelAction ?? (() => undefined),
+    onAction: option.action
+      ? () => {
+          option.action?.(selectedRows);
+          clearSelection();
+        }
+      : option.selectModelAction ?? (() => undefined),
   });
 };
