@@ -127,14 +127,18 @@ export type RequiredKeysOf<BaseType> = Exclude<
  * Includes the data result object and a function for running the mutation.
  **/
 export type ActionHookResult<Data = any, Variables extends AnyVariables = AnyVariables> = RequiredKeysOf<Variables> extends never
-  ? [
-      ActionHookState<Data, Variables>,
-      (variables?: Variables, context?: Partial<OperationContext>) => Promise<ActionHookState<Data, Variables>>
-    ]
-  : [
-      ActionHookState<Data, Variables>,
-      (variables: Variables, context?: Partial<OperationContext>) => Promise<ActionHookState<Data, Variables>>
-    ];
+  ? ActionHookResultWithOptionalCallbackVariables<Data, Variables>
+  : ActionHookResultWithRequiredCallbackVariables<Data, Variables>;
+
+export type ActionHookResultWithOptionalCallbackVariables<Data = any, Variables extends AnyVariables = AnyVariables> = [
+  ActionHookState<Data, Variables>,
+  (variables?: Variables, context?: Partial<OperationContext>) => Promise<ActionHookState<Data, Variables>>
+];
+
+export type ActionHookResultWithRequiredCallbackVariables<Data = any, Variables extends AnyVariables = AnyVariables> = [
+  ActionHookState<Data, Variables>,
+  (variables: Variables, context?: Partial<OperationContext>) => Promise<ActionHookState<Data, Variables>>
+];
 
 /**
  * The inner result object returned from a mutation result
