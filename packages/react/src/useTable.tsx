@@ -45,7 +45,10 @@ export const useTable = <
   Options extends F["optionsType"] & ReadOperationOptions & TableOptions
 >(
   manager: { findMany: F },
-  options?: LimitToKnownKeys<Options, Omit<F["optionsType"], "sort"> & ReadOperationOptions & TableOptions>
+  options?: LimitToKnownKeys<
+    Options,
+    Omit<F["optionsType"], "sort" | "first" | "last" | "after" | "before"> & ReadOperationOptions & TableOptions
+  >
 ): TableResult<
   GadgetRecord<Select<Exclude<F["schemaType"], null | undefined>, DefaultSelection<F["selectionType"], Options, F["defaultSelection"]>>>[]
 > => {
