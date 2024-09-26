@@ -1,6 +1,7 @@
 export { PolarisAutoButton as AutoButton } from "./PolarisAutoButton.js";
 export { PolarisAutoForm as AutoForm, PolarisAutoFormSkeleton as AutoFormSkeleton } from "./PolarisAutoForm.js";
 export { PolarisAutoTable as AutoTable } from "./PolarisAutoTable.js";
+export { PolarisAutoRichTextInput as AutoRichTextInput } from "./inputs/LazyLoadedPolarisAutoRichTextInput.js";
 export { PolarisAutoBooleanInput as AutoBooleanInput } from "./inputs/PolarisAutoBooleanInput.js";
 export { PolarisAutoDateTimePicker as AutoDateTimePicker } from "./inputs/PolarisAutoDateTimePicker.js";
 export { PolarisAutoEncryptedStringInput as AutoEncryptedStringInput } from "./inputs/PolarisAutoEncryptedStringInput.js";

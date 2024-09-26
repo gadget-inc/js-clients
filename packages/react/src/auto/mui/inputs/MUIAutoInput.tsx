@@ -1,6 +1,7 @@
 import React from "react";
 import { FieldType } from "../../../metadata.js";
 import { useFieldMetadata } from "../../hooks/useFieldMetadata.js";
+import { MUIAutoRichTextInput } from "./LazyLoadedMUIAutoRichTextInput.js";
 import { MUIAutoBooleanInput } from "./MUIAutoBooleanInput.js";
 import MUIAutoDateTimePicker from "./MUIAutoDateTimePicker.js";
 import { MUIAutoEncryptedStringInput } from "./MUIAutoEncryptedStringInput.js";
@@ -13,9 +14,6 @@ import { MUIAutoRolesInput } from "./MUIAutoRolesInput.js";
 import { MUIAutoTextInput } from "./MUIAutoTextInput.js";
 import { MUIAutoBelongsToInput } from "./relationships/MUIAutoBelongsToInput.js";
 import { MUIAutoHasManyInput } from "./relationships/MUIAutoHasManyInput.js";
-
-// lazy import for smaller bundle size by default
-const MUIAutoRichTextInput = React.lazy(() => import("./MUIAutoRichTextInput.js"));
 
 export const MUIAutoInput = (props: { field: string; label?: string }) => {
   const { metadata } = useFieldMetadata(props.field);
