@@ -19,7 +19,11 @@ export type TableSpec = {
   defaultSelection: Record<string, any>;
 };
 
-export type RelationshipType = GadgetFieldType.HasMany | GadgetFieldType.HasOne | GadgetFieldType.BelongsTo;
+export type RelationshipType =
+  | GadgetFieldType.HasMany
+  | GadgetFieldType.HasOne
+  | GadgetFieldType.BelongsTo
+  | GadgetFieldType.HasManyThrough;
 
 export type TableColumn = {
   /** Identifier for the column */

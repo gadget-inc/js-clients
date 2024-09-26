@@ -86,7 +86,7 @@ export const getTableSelectionMap = (spec: TableSpec) => {
             throw new Error(errorMessages.RELATED_HAS_ONE_OR_BELONGS_TO_FIELD_NOT_EXIST);
           }
 
-          if (isHasManyField(firstField)) {
+          if (isHasManyOrHasManyThroughField(firstField)) {
             throw new Error(errorMessages.RELATED_HAS_MANY_FIELD_NOT_EXIST);
           }
         }
@@ -94,7 +94,7 @@ export const getTableSelectionMap = (spec: TableSpec) => {
       }
 
       const isHasOneOrBelongsTo = isHasOneOrBelongsToField(fieldMetadata);
-      const isHasMany = isHasManyField(fieldMetadata);
+      const isHasMany = isHasManyOrHasManyThroughField(fieldMetadata);
 
       if (!acceptedAutoTableFieldTypes.has(fieldMetadata.fieldType)) {
         throw new Error(`Field '${columnPath}' cannot be shown in the table`);
@@ -249,7 +249,7 @@ const getFieldInformationByColumnPath = (fieldMetadataTree: TableSpec["fieldMeta
   const targetField = getFieldMetadataByColumnPath(fieldMetadataTree, columnPath);
 
   const isHasOneOrBelongsTo = isHasOneOrBelongsToField(firstField);
-  const isHasMany = isHasManyField(firstField);
+  const isHasMany = isHasManyOrHasManyThroughField(firstField);
 
   return {
     firstPathSegment,
@@ -282,7 +282,7 @@ const isColumnSortable = (fieldMetadata: FieldMetadataFragment, sortable: boolea
 };
 
 const mergeColumnPathByFieldType = (columnPath: string, newSegment: string, field: { fieldType: GadgetFieldType }) => {
-  if (isHasManyField(field)) {
+  if (isHasManyOrHasManyThroughField(field)) {
     return `${columnPath}.edges.node.${newSegment}`;
   }
 
@@ -293,8 +293,8 @@ const isHasOneOrBelongsToField = (field: { fieldType: GadgetFieldType }) => {
   return field.fieldType === GadgetFieldType.HasOne || field.fieldType === GadgetFieldType.BelongsTo;
 };
 
-const isHasManyField = (field: { fieldType: GadgetFieldType }) => {
-  return field.fieldType === GadgetFieldType.HasMany;
+const isHasManyOrHasManyThroughField = (field: { fieldType: GadgetFieldType }) => {
+  return field.fieldType === GadgetFieldType.HasMany || field.fieldType === GadgetFieldType.HasManyThrough;
 };
 
 const richTextSelection = {
@@ -352,7 +352,7 @@ export const fieldMetadataArrayToFieldMetadataTree = (fieldMetadataArray: FieldM
         $field: field,
         ...fieldMetadataArrayToFieldMetadataTree(getRelatedModelFields(field) as any[]),
       };
-    } else if (isHasManyField(field)) {
+    } else if (isHasManyOrHasManyThroughField(field)) {
       map[field.apiIdentifier] = {
         $field: field,
         edges: {
@@ -383,7 +383,7 @@ const getFieldMetadataByColumnPath = (fieldMetadataTree: TableSpec["fieldMetadat
 };
 
 const maybeGetRelatedModelFromRelationshipField = (field: FieldMetadataFragment) => {
-  if ((isHasOneOrBelongsToField(field) || isHasManyField(field)) && "configuration" in field) {
+  if ((isHasOneOrBelongsToField(field) || isHasManyOrHasManyThroughField(field)) && "configuration" in field) {
     return (field as FieldMetadataFragmentWithRelationshipConfig).configuration.relatedModel;
   }
 };

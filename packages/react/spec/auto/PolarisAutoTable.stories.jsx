@@ -335,6 +335,19 @@ export const HideSearchAndPagination = {
   },
 };
 
+export const HasManyThroughFields = {
+  args: {
+    model: api.hasManyThrough.baseModel,
+    columns: [
+      "baseModelHmtField",
+      {
+        header: "Sibling ID",
+        field: "baseModelHmtField.edges.node.id",
+      },
+    ],
+  },
+};
+
 const windowAlert = (message) => {
   // eslint-disable-next-line no-undef
   window.alert(message);

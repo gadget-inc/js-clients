@@ -512,6 +512,7 @@ export const acceptedAutoTableFieldTypes = new Set([
   // Relationships
   FieldType.BelongsTo,
   FieldType.HasMany,
+  FieldType.HasManyThrough,
   FieldType.HasOne,
 ]);
 

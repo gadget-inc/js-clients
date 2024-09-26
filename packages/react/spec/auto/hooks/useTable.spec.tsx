@@ -327,7 +327,7 @@ describe("useTable hook", () => {
 
     it("should use default display field if the column string is a relationship field", async () => {
       const result = getUseTableResult({
-        columns: ["name", "hasMany", "hasOne", "belongsTo"],
+        columns: ["name", "hasMany", "hasOne", "belongsTo", "baseModelHmtField"],
       });
       loadMockWidgetModelMetadataForRelationship();
       loadMockWidgetDataForRelationship();
@@ -362,6 +362,14 @@ describe("useTable hook", () => {
                   id
                   email
                 }
+                baseModelHmtField {
+                  edges {
+                    node {
+                      id
+                      siblingName
+                    }
+                  }
+                }
                 __typename
               }
             }
@@ -372,10 +380,20 @@ describe("useTable hook", () => {
           }
         }"
       `);
-      expect(result.current[0].columns?.map((column) => column.field)).toEqual(["name", "hasMany", "hasOne", "belongsTo"]);
+      expect(result.current[0].columns?.map((column) => column.field)).toEqual([
+        "name",
+        "hasMany",
+        "hasOne",
+        "belongsTo",
+        "baseModelHmtField",
+      ]);
       expect(result.current[0].rows).toMatchInlineSnapshot(`
         [
           {
+            "baseModelHmtField": [
+              "sibling 1",
+              "sibling 2",
+            ],
             "belongsTo": "foo",
             "hasMany": [
               "gizmo 9",
@@ -392,7 +410,7 @@ describe("useTable hook", () => {
 
     it("should return the related model field if the column values are relationship fields", async () => {
       const result = getUseTableResult({
-        columns: ["name", "hasMany.edges.node.name", "hasOne.name", "belongsTo.str"],
+        columns: ["name", "hasMany.edges.node.name", "hasOne.name", "belongsTo.str", "baseModelHmtField.edges.node.id"],
       });
       loadMockWidgetModelMetadataForRelationship();
       loadMockWidgetDataForRelationship();
@@ -428,6 +446,13 @@ describe("useTable hook", () => {
                   id
                   str
                 }
+                baseModelHmtField {
+                  edges {
+                    node {
+                      id
+                    }
+                  }
+                }
                 __typename
               }
             }
@@ -443,10 +468,15 @@ describe("useTable hook", () => {
         "hasMany.edges.node.name",
         "hasOne.name",
         "belongsTo.str",
+        "baseModelHmtField.edges.node.id",
       ]);
       expect(result.current[0].rows).toMatchInlineSnapshot(`
         [
           {
+            "baseModelHmtField.edges.node.id": [
+              "1",
+              "2",
+            ],
             "belongsTo.str": "foo",
             "hasMany.edges.node.name": [
               "gizmo 9",
@@ -461,7 +491,7 @@ describe("useTable hook", () => {
       `);
     });
 
-    it.each(["password", "hasManyThrough"])("should throw an error if the selected field type is %s", async (fieldType) => {
+    it.each(["password"])("should throw an error if the selected field type is %s", async (fieldType) => {
       let error: Error | undefined;
       try {
         getUseTableResult({
@@ -1206,6 +1236,88 @@ const loadMockWidgetModelMetadataForRelationship = () => {
                 },
               },
             },
+            {
+              name: "Base model hmt field",
+              apiIdentifier: "baseModelHmtField",
+              fieldType: "HasManyThrough",
+              requiredArgumentForInput: false,
+              sortable: false,
+              filterable: false,
+              __typename: "GadgetModelField",
+              configuration: {
+                __typename: "GadgetHasManyThroughConfig",
+                fieldType: "HasManyThrough",
+                validations: [],
+                relatedModel: {
+                  key: "Oss4sCDW-DJU",
+                  apiIdentifier: "siblingModel",
+                  namespace: ["hasManyThrough"],
+                  defaultDisplayField: {
+                    name: "Sibling name",
+                    apiIdentifier: "siblingName",
+                    fieldType: "String",
+                    __typename: "GadgetModelField",
+                  },
+                  fields: [
+                    {
+                      name: "Id",
+                      apiIdentifier: "id",
+                      fieldType: "ID",
+                      __typename: "GadgetModelField",
+                    },
+                    {
+                      name: "Sibling name",
+                      apiIdentifier: "siblingName",
+                      fieldType: "String",
+                      __typename: "GadgetModelField",
+                    },
+                    {
+                      name: "Sibling model hmt field",
+                      apiIdentifier: "siblingModelHmtField",
+                      fieldType: "HasManyThrough",
+                      __typename: "GadgetModelField",
+                    },
+                    {
+                      name: "Created at",
+                      apiIdentifier: "createdAt",
+                      fieldType: "DateTime",
+                      __typename: "GadgetModelField",
+                    },
+                    {
+                      name: "Updated at",
+                      apiIdentifier: "updatedAt",
+                      fieldType: "DateTime",
+                      __typename: "GadgetModelField",
+                    },
+                  ],
+                  __typename: "GadgetModel",
+                },
+                inverseField: {
+                  apiIdentifier: "siblingModelHmtField",
+                  __typename: "GadgetModelField",
+                },
+                joinModel: {
+                  key: "tJDsf_FvYqsi",
+                  apiIdentifier: "joinerModel",
+                  namespace: ["hasManyThrough"],
+                  defaultDisplayField: {
+                    name: "Id",
+                    apiIdentifier: "id",
+                    fieldType: "ID",
+                    __typename: "GadgetModelField",
+                  },
+                  __typename: "GadgetModel",
+                },
+                inverseJoinModelField: {
+                  apiIdentifier: "joinerBelongsToBase",
+                  __typename: "GadgetModelField",
+                },
+                inverseRelatedModelField: {
+                  apiIdentifier: "joinerBelongsToSibling",
+                  __typename: "GadgetModelField",
+                },
+              },
+            },
           ],
           __typename: "GadgetModel",
         },
@@ -1245,6 +1357,27 @@ const loadMockWidgetDataForRelationship = () => {
                     },
                   },
                 ],
+              },
+              baseModelHmtField: {
+                edges: [
+                  {
+                    node: {
+                      id: "1",
+                      siblingName: "sibling 1",
+                      __typename: "HasManyThroughSiblingModel",
+                    },
+                    __typename: "HasManyThroughSiblingModelEdge",
+                  },
+                  {
+                    node: {
+                      id: "2",
+                      siblingName: "sibling 2",
+                      __typename: "HasManyThroughSiblingModel",
+                    },
+                    __typename: "HasManyThroughSiblingModelEdge",
+                  },
+                ],
+                __typename: "HasManyThroughSiblingModelConnection",
               },
               hasOne: {
                 name: "gizmo 12",
