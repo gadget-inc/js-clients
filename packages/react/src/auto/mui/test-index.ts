@@ -2,6 +2,7 @@
 export { MUIAutoButton as AutoButton } from "./MUIAutoButton.js";
 export * from "./MUIAutoForm.js";
 export { MUIAutoForm as AutoForm } from "./MUIAutoForm.js";
+export { MUIAutoRichTextInput as AutoRichTextInput } from "./inputs/LazyLoadedMUIAutoRichTextInput.js";
 export { MUIAutoBooleanInput as AutoBooleanInput } from "./inputs/MUIAutoBooleanInput.js";
 export { MUIAutoDateTimePicker as AutoDateTimePicker } from "./inputs/MUIAutoDateTimePicker.js";
 export { MUIAutoEnumInput as AutoEnumInput } from "./inputs/MUIAutoEnumInput.js";

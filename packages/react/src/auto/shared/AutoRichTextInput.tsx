@@ -1,21 +1,9 @@
-import type { ForwardedRef } from "react";
 import React, { useEffect, useRef, useState } from "react";
-import type { Control } from "react-hook-form";
 import { useFormContext } from "react-hook-form";
 import { get } from "../../utils.js";
 import { useStringInputController } from "../hooks/useStringInputController.js";
 import { multiref } from "../hooks/utils.js";
-
-interface MDXEditorMethods {
-  setMarkdown: (markdown: string) => void;
-}
-
-interface AutoRichTextInputProps {
-  field: string;
-  control?: Control<any>;
-  editorRef?: ForwardedRef<MDXEditorMethods> | null;
-  label?: string;
-}
+import { AutoRichTextInputProps, MDXEditorMethods } from "./AutoRichTextInputProps.js";
 
 const AutoRichTextInput: React.FC<AutoRichTextInputProps> = (props) => {
   const { formState } = useFormContext();
