@@ -17,7 +17,7 @@ export const PolarisAutoTableCellRenderer = (props: { column: TableColumn; value
     return null;
   }
 
-  if (column.relationshipType === FieldType.HasMany) {
+  if (column.relationshipType === FieldType.HasMany || column.relationshipType === FieldType.HasManyThrough) {
     return <PolarisAutoTableTagCell value={value as any} />;
   }
 
