@@ -268,4 +268,49 @@ declare module "react-hook-form" {
       render: (props: { submit: (e?: React.FormEvent) => void }) => React.ReactNode | React.ReactNode[];
       encType: "application/x-www-form-urlencoded" | "multipart/form-data" | "text/plain" | "application/json";
     }>;
+
+  /**
+   * The options for registering a field in react-hook-form.
+   *
+   * @see
+   * [API](https://react-hook-form.com/docs/useform/register)
+   *
+   */
+  export type RegisterOptions<
+    TFieldValues extends FieldValues = FieldValues,
+    TFieldName extends FieldPath<TFieldValues> = FieldPath<TFieldValues>
+  > = Partial<{
+    required: Message | ValidationRule<boolean>;
+    min: ValidationRule<number | string>;
+    max: ValidationRule<number | string>;
+    maxLength: ValidationRule<number>;
+    minLength: ValidationRule<number>;
+    validate:
+      | Validate<FieldPathValue<TFieldValues, TFieldName>, TFieldValues>
+      | Record<string, Validate<FieldPathValue<TFieldValues, TFieldName>, TFieldValues>>;
+    value: FieldPathValue<TFieldValues, TFieldName>;
+    setValueAs: (value: any) => any;
+    shouldUnregister?: boolean;
+    onChange?: (event: any) => void;
+    onBlur?: (event: any) => void;
+    disabled: boolean;
+    deps: InternalFieldName | InternalFieldName[];
+  }> &
+    (
+      | {
+          pattern?: ValidationRule<RegExp>;
+          valueAsNumber?: false;
+          valueAsDate?: false;
+        }
+      | {
+          pattern?: undefined;
+          valueAsNumber?: false;
+          valueAsDate?: true;
+        }
+      | {
+          pattern?: undefined;
+          valueAsNumber?: true;
+          valueAsDate?: false;
+        }
+    );
 }
