@@ -23,23 +23,82 @@ export interface PaginationResult {
   goToPreviousPage(): void;
 }
 
+/**
+ * Options for configuring the list behavior.
+ * @remarks For a full list of options, refer to https://docs.gadget.dev/reference/react#uselist
+ */
 export interface ListOptions {
+  /** The number of items to display per page. If not specified, a default value of 50 is used. */
   pageSize?: number;
 }
 
-export type ListResult<Data> = [
-  {
-    data?: Data;
-    page: PaginationResult;
-    search: SearchResult;
-    selection: RecordSelection;
-    fetching: boolean;
-    error?: ErrorWrapper;
-  },
+/**
+ * Represents the current state of the list.
+ * @template Data - The type of the data returned in the list.
+ */
+export interface ListState<Data> {
+  /** The current page of data items. May be undefined if data is not yet loaded. */
+  data?: Data;
+  /** Information and controls for pagination. */
+  page: PaginationResult;
+  /** Information about the current search state. */
+  search: SearchResult;
+  /** Information about selected records. */
+  selection: RecordSelection;
+  /** Indicates whether the list is currently being fetched. */
+  fetching: boolean;
+  /** Error information if an error occurred during fetching. */
+  error?: ErrorWrapper;
+}
 
-  (opts?: Partial<OperationContext>) => void
-];
+/**
+ * A function to refresh the list data.
+ * @param {Partial<OperationContext>} [opts] - Optional context for the refresh operation.
+ */
+export type RefreshFunction = (opts?: Partial<OperationContext>) => void;
 
+/**
+ * Represents the result of a list operation.
+ * @template Data - The type of the data returned in the list.
+ * @remarks For details, refer to https://docs.gadget.dev/reference/react#uselist
+ */
+export type ListResult<Data> = [ListState<Data>, RefreshFunction];
+
+/**
+ * A hook for managing paginated lists with search and selection capabilities.
+ *
+ * @template T - The type of the records in the list.
+ * @template F - The type of the findMany function.
+ *
+ * @param manager - An object containing the findMany function for the model.
+ * @param [options] - Optional configuration for the list.
+ * @param [options.pageSize=10] - The number of items per page.
+ * @param [options.search] - A search string to filter the records.
+ * @param [options.filter] - A filter object to limit the returned records.
+ * @param [options.sort] - A sort object to order the returned records.
+ * @param [options.select] - A select object to specify which fields to return.
+ * @param [options.live] - Whether to subscribe to real-time updates.
+ *
+ * @example
+ * const [{ data, fetching, error, page }, refresh] = useList(api.customer, {
+ *   sort: {
+ *     createdAt: "Descending",
+ *   },
+ *   live: true,
+ * });
+ *
+ * @returns A tuple containing the list state and a refresh function.
+ * @returns [0] An object containing the list state:
+ *   - data: An array of GadgetRecord objects representing the current page of records.
+ *   - page: A PaginationResult object for managing pagination.
+ *   - search: A SearchResult object for managing search functionality.
+ *   - selection: A RecordSelection object for managing selected records.
+ *   - fetching: A boolean indicating if the list is currently being fetched.
+ *   - error: An ErrorWrapper object if an error occurred, or undefined.
+ * @returns [1] A function to refresh the list data.
+ *
+ * For a full list of options, refer to https://docs.gadget.dev/reference/react#uselist
+ */
 export const useList = <
   GivenOptions extends OptionsType,
   SchemaT,

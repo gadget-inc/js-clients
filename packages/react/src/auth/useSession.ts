@@ -11,10 +11,31 @@ import { useApi } from "../GadgetProvider.js";
 import { useGet } from "../useGet.js";
 import type { OptionsType, ReadOperationOptions } from "../utils.js";
 
+/**
+ * Represents a Gadget session record.
+ */
 export type GadgetSession = GadgetRecord<Record<string, any>>;
 
+/**
+ * Represents a Gadget user record.
+ */
 export type GadgetUser = GadgetRecord<Record<string, any>>;
 
+/**
+ * Represents a client with session and user managers.
+ *
+ * @template SessionGivenOptions - The options type for the session manager.
+ * @template SessionSchemaT - The schema type for the session manager.
+ * @template UserGivenOptions - The options type for the user manager.
+ * @template UserSchemaT - The schema type for the user manager.
+ *
+ * @extends AnyClient
+ *
+ * @property currentSession - The session manager.
+ * @property currentSession.get - A function to get the current session.
+ * @property user - The user manager.
+ * @property user.findMany - A function to find multiple users.
+ */
 export type ClientWithSessionAndUserManagers<SessionGivenOptions, SessionSchemaT, UserGivenOptions, UserSchemaT> = AnyClient & {
   currentSession: { get: GetFunction<SessionGivenOptions, any, SessionSchemaT, any> };
   user: { findMany: FindManyFunction<UserGivenOptions, any, UserSchemaT, any> };

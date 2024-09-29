@@ -11,12 +11,25 @@ export * from "./auth/useUser.js";
 export * from "./useAction.js";
 export * from "./useActionForm.js";
 export * from "./useBulkAction.js";
+export { GadgetController as Controller, useGadgetController as useController } from "./useController.js";
+export type {
+  GadgetControllerProps as ControllerProps,
+  GadgetFieldError as FieldError,
+  GadgetFieldErrors as FieldErrors,
+  GadgetInternalFieldErrors as InternalFieldErrors,
+  GadgetMessage as Message,
+  GadgetMultipleFieldErrors as MultipleFieldErrors,
+  GadgetRegisterOptions as RegisterOptions,
+  GadgetUseControllerProps as UseControllerProps,
+  GadgetUseControllerReturn as UseControllerReturn,
+} from "./useController.js";
 export * from "./useEnqueue.js";
 export * from "./useFetch.js";
 export * from "./useFindBy.js";
 export * from "./useFindFirst.js";
 export * from "./useFindMany.js";
 export * from "./useFindOne.js";
+export type { GadgetFormProps as FormProps, GadgetUseFormReturn as UseFormReturn } from "./useForm.js";
 export { useGadgetMutation as useMutation } from "./useGadgetMutation.js";
 export { useGadgetQuery as useQuery } from "./useGadgetQuery.js";
 export * from "./useGet.js";
