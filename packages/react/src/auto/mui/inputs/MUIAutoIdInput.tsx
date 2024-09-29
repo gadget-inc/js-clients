@@ -1,15 +1,24 @@
-import { FieldType } from "../../../metadata.js";
-
 import type { TextFieldProps } from "@mui/material";
 import React from "react";
+import { FieldType } from "../../../metadata.js";
 import { useStringInputController } from "../../hooks/useStringInputController.js";
+import { AutoIdInputProps } from "../../shared/AutoInputTypes.js";
 import { MUIAutoTextInput } from "./MUIAutoTextInput.js";
 
-export const MUIAutoIdInput = (
-  props: {
-    field: string;
-  } & Partial<TextFieldProps>
-) => {
+export type MUIAutoIdInputProps = AutoIdInputProps & Partial<TextFieldProps>;
+
+/**
+ * An id input component for use within <AutoForm></AutoForm> components
+ * @example
+ * ```tsx
+ * <AutoForm action={api.modelA.create}>
+ *   <AutoIdInput field="id" />
+ * </AutoForm>
+ * ```
+ * @param props.field The API identifier of the Id field
+ * @returns The id input component
+ */
+export const MUIAutoIdInput = (props: MUIAutoIdInputProps) => {
   const { field } = props;
   const { name, metadata } = useStringInputController({ field });
 

@@ -3,7 +3,15 @@ import { Alert, Button } from "@mui/material";
 import React from "react";
 import { useResultBannerController } from "../../hooks/useResultBannerController.js";
 
-export const MUISubmitResultBanner = (props: { successBannerProps?: AlertProps; errorBannerProps?: AlertProps }) => {
+type MUISubmitResultBannerProps = { successBannerProps?: AlertProps; errorBannerProps?: AlertProps };
+
+/**
+ * A banner that displays the result of an AutoForm submission.
+ * @param props.successBannerProps - The props for the successful banner
+ * @param props.errorBannerProps - The props for the error banner
+ * @returns The banner component
+ */
+export const MUISubmitResultBanner = (props: MUISubmitResultBannerProps) => {
   return (
     <>
       <MUISubmitSuccessfulBanner {...props.successBannerProps} />

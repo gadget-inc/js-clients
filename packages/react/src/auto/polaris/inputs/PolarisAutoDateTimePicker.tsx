@@ -6,6 +6,7 @@ import { useController } from "react-hook-form";
 import { formatShortDateString, isValidDate, utcToZonedTime, zonedTimeToUtc } from "../../../dateTimeUtils.js";
 import type { GadgetDateTimeConfig } from "../../../internal/gql/graphql.js";
 import { useFieldMetadata } from "../../hooks/useFieldMetadata.js";
+import type { AutoDateTimeInputProps } from "../../shared/AutoInputTypes.js";
 import type { DateTimeState } from "./PolarisAutoTimePicker.js";
 import PolarisAutoTimePicker from "./PolarisAutoTimePicker.js";
 
@@ -39,18 +40,46 @@ export const getDateFromDateTimeObject = (dateTime: DateTimeState) => {
   return date;
 };
 
-export const PolarisAutoDateTimePicker = (props: {
-  field: string;
+export interface PolarisAutoDateTimePickerProps extends AutoDateTimeInputProps {
+  /**
+   * The HTML ID of the DateTime field
+   */
   id?: string;
-  value?: Date;
-  onChange?: (value: Date) => void;
-  error?: string;
+  /**
+   * Indicates if the Gadget DateTime field includes a time component
+   */
   includeTime?: boolean;
+  /**
+   * Indicates if the time popover should be hidden
+   */
   hideTimePopover?: boolean;
-  label?: string;
+  /**
+   * Props to pass to the Polaris DatePicker component
+   */
   datePickerProps?: Partial<DatePickerProps>;
+  /**
+   * Props to pass to the Polaris TimePicker component
+   */
   timePickerProps?: Partial<TextFieldProps>;
-}) => {
+}
+
+/**
+ * A date and time picker for use within <AutoForm></AutoForm> components.
+ * @example
+ * ```tsx
+ * <AutoForm action={api.modelA.create}>
+ *   <AutoDateTimePicker field="dueDate" />
+ * </AutoForm>
+ * ```
+ * @param props.field - The API identifier of the DateTime field.
+ * @param props.label - The label of the date and time picker.
+ * @param props.includeTime - Indicates if the the time picker component should be shown. Defaults to the value of the includeTime field metadata configuration.
+ * @param props.hideTimePopover - Indicates if the time popover should be hidden.
+ * @param props.datePickerProps - Additional props passed to the Polaris DatePicker component.
+ * @param props.timePickerProps - Additional props passed to the Polaris TimePicker component.
+ * @returns The date and time picker component.
+ */
+export const PolarisAutoDateTimePicker = (props: PolarisAutoDateTimePickerProps) => {
   const { path, metadata } = useFieldMetadata(props.field);
 
   const { field: fieldProps } = useController({

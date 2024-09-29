@@ -1,10 +1,24 @@
 import type { ComboboxProps } from "@shopify/polaris";
 import { AutoSelection, Box, Combobox, InlineStack, Listbox, Tag, Text } from "@shopify/polaris";
 import React, { useCallback } from "react";
-import { type Control } from "react-hook-form";
 import { useEnumInputController } from "../../hooks/useEnumInputController.js";
+import { AutoEnumInputProps } from "../../shared/AutoInputTypes.js";
 
-export const PolarisAutoEnumInput = (props: { field: string; control?: Control<any>; label?: string } & Partial<ComboboxProps>) => {
+export type PolarisAutoEnumInputProps = AutoEnumInputProps & Partial<ComboboxProps>;
+
+/**
+ * An enum option picker for use within <AutoForm></AutoForm> components.
+ * @example
+ * ```tsx
+ * <AutoForm action={api.modelA.create}>
+ *   <AutoEnumInput field="enumField" />
+ * </AutoForm>
+ * ```
+ * @param props.field - The API identifier for the Enum field.
+ * @param props.label - The label of the input.
+ * @returns The AutoEnumInput component.
+ */
+export const PolarisAutoEnumInput = (props: PolarisAutoEnumInputProps) => {
   const { field: fieldApiIdentifier, control, label: labelProp, ...comboboxProps } = props;
   const {
     allowMultiple,

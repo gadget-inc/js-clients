@@ -1,16 +1,25 @@
 import React from "react";
-import type { Control } from "react-hook-form";
 import { getPropsWithoutRef } from "../../../utils.js";
 import { useRoleInputController } from "../../hooks/useRoleInputController.js";
+import { AutoRolesInputProps } from "../../shared/AutoInputTypes.js";
 import type { PolarisFixedOptionsMultiComboboxProps } from "../PolarisFixedOptionsCombobox.js";
 import { PolarisFixedOptionsCombobox } from "../PolarisFixedOptionsCombobox.js";
 
-export const PolarisAutoRolesInput = (
-  props: {
-    field: string; // Field API identifier
-    control?: Control<any>;
-  } & Partial<PolarisFixedOptionsMultiComboboxProps>
-) => {
+type PolarisAutoRolesInputProps = AutoRolesInputProps & Partial<PolarisFixedOptionsMultiComboboxProps>;
+
+/**
+ * A role list input component for use within <AutoForm></AutoForm> components.
+ * @example
+ * ```tsx
+ * <AutoForm action={api.modelA.create}>
+ *   <AutoRolesInput field="roles" />
+ * </AutoForm>
+ * ```
+ * @param props.field - The role list field API identifier
+ * @param props.label - The label of the role list field
+ * @returns The Polaris Auto Roles Input component
+ */
+export const PolarisAutoRolesInput = (props: PolarisAutoRolesInputProps) => {
   const { options, loading, rolesError, fieldError, selectedRoleKeys, fieldProps, metadata } = useRoleInputController(props);
 
   if (rolesError) {

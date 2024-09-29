@@ -2,9 +2,10 @@ import type { TextFieldProps } from "@shopify/polaris";
 import { Button } from "@shopify/polaris";
 import { EditIcon } from "@shopify/polaris-icons";
 import React, { useState } from "react";
-import { useController, type Control } from "react-hook-form";
+import { useController } from "react-hook-form";
 import { useAutoFormMetadata } from "../../AutoFormContext.js";
 import { useFieldMetadata } from "../../hooks/useFieldMetadata.js";
+import { AutoPasswordInputProps } from "../../shared/AutoInputTypes.js";
 import { PolarisAutoEncryptedStringInput } from "./PolarisAutoEncryptedStringInput.js";
 
 /**
@@ -12,13 +13,21 @@ import { PolarisAutoEncryptedStringInput } from "./PolarisAutoEncryptedStringInp
  * Regardless of the password is defined or not, this placeholder is shown as exposing an unset password is a security risk
  */
 const existingPasswordPlaceholder = "********";
+type PolarisAutoPasswordInputProps = AutoPasswordInputProps & Partial<TextFieldProps>;
 
-export const PolarisAutoPasswordInput = (
-  props: {
-    field: string; // The field API identifier
-    control?: Control<any>;
-  } & Partial<TextFieldProps>
-) => {
+/**
+ * A password input component for use within <AutoForm></AutoForm> components.
+ * @example
+ * ```tsx
+ * <AutoForm action={api.modelA.create}>
+ *   <AutoPasswordInput field="passwordFieldApiId" />
+ * </AutoForm>
+ * ```
+ * @param props.field - The password field API identifier
+ * @param props.label - The label of the password input component
+ * @returns The password input component
+ */
+export const PolarisAutoPasswordInput = (props: PolarisAutoPasswordInputProps) => {
   const { findBy } = useAutoFormMetadata();
   const { path } = useFieldMetadata(props.field);
   const { field: fieldProps } = useController({ name: path });
