@@ -42,7 +42,27 @@ const reducer = <T>(state: FetchHookState<T>, action: FetchAction<T>): FetchHook
   }
 };
 
+/**
+ * Options for the useFetch hook
+ */
 export interface FetchHookOptions extends RequestInit {
+  /**
+   * If true, the request will be streamed as UTF-8 encoded text.
+   * If set to a string, the response will be decoded as a string.
+   *
+   * @example
+   * ```
+   * const [{data, fetching, error}, refresh] = useFetch("/users/get", {
+   *   stream: true,
+   * })
+   * ```
+   *
+   * ```
+   * const [{data, fetching, error}, refresh] = useFetch("/users/get", {
+   *   stream: "string",
+   * })
+   * ```
+   */
   stream?: boolean | string;
   json?: boolean;
   sendImmediately?: boolean;
