@@ -9,17 +9,36 @@ import { useSelectedRecordsController } from "./useSelectedRecordsController.js"
 import type { ErrorWrapper, OptionsType, ReadOperationOptions } from "./utils.js";
 import { omit } from "./utils.js";
 
+/**
+ * Provides methods and properties to navigate through a paginated list of records.
+ */
 export interface PaginationResult {
+  /** Indicates whether a next page of results is available. */
   hasNextPage: boolean | undefined;
+
+  /** Indicates whether a previous page of results is available. */
   hasPreviousPage: boolean | undefined;
+
+  /**
+   * The variables used to fetch the current page of results.
+   */
   variables: {
     first?: number;
     after?: string;
     last?: number;
     before?: string;
   };
+
   pageSize: number;
+
+  /**
+   * Updates the pagination state to fetch the next set of items.
+   */
   goToNextPage(): void;
+
+  /**
+   * Updates the pagination state to fetch the previous set of items.
+   */
   goToPreviousPage(): void;
 }
 
