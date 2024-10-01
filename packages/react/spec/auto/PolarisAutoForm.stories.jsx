@@ -108,7 +108,6 @@ export const Expanded = {
     children: (
       <>
         <PolarisAutoInput field="name" />
-        <PolarisAutoInput field="inventoryCount" />
         <PolarisAutoInput field="isChecked" />
         <PolarisAutoSubmit />
       </>

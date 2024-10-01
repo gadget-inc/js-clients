@@ -32,6 +32,15 @@ export const validateAutoFormProps = (props: Parameters<typeof useAutoForm>[0]) 
   if (!props.action) {
     throw new Error(InvalidActionErrorMessage);
   }
+
+  if (props.children) {
+    if (props.include) {
+      throw new Error(`AutoForm components with children cannot use the include option`);
+    }
+    if (props.exclude) {
+      throw new Error(`AutoForm components with children cannot use the exclude option`);
+    }
+  }
 };
 
 export const validateTriggersFromMetadata = (metadata?: ActionMetadata | GlobalActionMetadata) => {

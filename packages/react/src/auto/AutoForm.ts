@@ -40,6 +40,8 @@ export type AutoFormProps<
   onSuccess?: (record: UseActionFormHookStateData<ActionFunc>) => void;
   /** Called when the form submission errors before sending, during the API call, or if the API call returns an error. */
   onFailure?: (error: Error | FieldErrors<ActionFunc["variablesType"]>) => void;
+  /** Custom components to render within the form. Using this will override all default field rendering.   */
+  children?: ReactNode;
 } & (ActionFunc extends AnyActionWithId<GivenOptions>
   ? {
       /**
@@ -152,6 +154,14 @@ export const useAutoForm = <
   const modelApiIdentifier = action.type == "action" ? action.modelApiIdentifier : undefined;
   const isUpsertMetaAction = metadata && isActionMetadata(metadata) && fields.some((field) => field.metadata.fieldType === FieldType.Id);
   const isUpsertWithFindBy = isUpsertMetaAction && !!findBy;
+  const hasCustomChildren = !!props.children;
+  const fieldPathsToValidate = useMemo(
+    () =>
+      hasCustomChildren
+        ? [] // With custom children, do not validate fields before sending them to avoid blocking submissions due to missing required fields
+        : fields.map(({ path }) => path),
+    [hasCustomChildren, fields]
+  );
 
   const defaultValues: Record<string, unknown> = useMemo(
     () =>
@@ -180,10 +190,7 @@ export const useAutoForm = <
   } = useActionForm(action, {
     defaultValues: defaultValues as any,
     findBy: "findBy" in props ? props.findBy : undefined,
-    resolver: useValidationResolver(
-      metadata,
-      fields.map(({ path }) => path)
-    ),
+    resolver: useValidationResolver(metadata, fieldPathsToValidate),
     send: () => {
       const fieldsToSend = fields
         .filter(({ path, metadata }) => {

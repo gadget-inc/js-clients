@@ -258,4 +258,52 @@ describeForEachAutoAdapter("AutoForm", ({ name, adapter: { AutoForm }, wrapper }
       expect(variables.widget.description).to.deep.equal({ markdown: "# foobar\n\n## foobaz" });
     });
   });
+
+  it("can submit a form with custom children even if the action has required fields", async () => {
+    cy.mountWithWrapper(
+      <AutoForm action={api.widget.create}>
+        {/* Note that widget has name and inventoryCount as required fields that are not included here */}
+        <button type="submit">Submit</button>
+      </AutoForm>,
+      wrapper
+    );
+
+    cy.intercept("POST", `${api.connection.options.endpoint}?operation=createWidget`, {
+      body: {
+        data: {
+          createWidget: {
+            success: false,
+            errors: [
+              {
+                message: "GGT_INVALID_RECORD: widget is invalid and can't be saved. inventoryCount is required.",
+                code: "GGT_INVALID_RECORD",
+                model: {
+                  apiIdentifier: "widget",
+                  __typename: "GadgetModel",
+                },
+                validationErrors: [
+                  {
+                    message: "is required",
+                    apiIdentifier: "inventoryCount",
+                    __typename: "InvalidFieldError",
+                  },
+                ],
+                __typename: "InvalidRecordError",
+              },
+            ],
+            widget: null,
+            __typename: "CreateWidgetResult",
+          },
+        },
+      },
+    }).as("createWidget");
+
+    cy.contains("Submit").click({ force: true });
+
+    cy.wait("@createWidget").then((interception) => {
+      const { variables } = interception.request.body;
+
+      expect(variables).to.deep.equal({ widget: {} });
+    });
+  });
 });
