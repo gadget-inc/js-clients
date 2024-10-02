@@ -1,8 +1,9 @@
 import { assert } from "@gadgetinc/api-client-core";
 import { useCallback, useEffect, useState } from "react";
 import { FieldType } from "../../metadata.js";
+import { RecordIdentifier } from "../../use-action-form/types.js";
+import { useFindExistingRecord } from "../../use-action-form/utils.js";
 import { useFindMany } from "../../useFindMany.js";
-import { useFindOne } from "../../useFindOne.js";
 import { sortByProperty, uniqByProperty } from "../../utils.js";
 import { useAutoFormMetadata } from "../AutoFormContext.js";
 import type { OptionLabel } from "../interfaces/AutoRelationshipInputProps.js";
@@ -21,7 +22,6 @@ export const useRelatedModelOptions = (props: {
   const { metadata } = useFieldMetadata(field);
   const { findBy, model } = useAutoFormMetadata();
 
-  const currentRecordId = typeof findBy === "string" ? findBy : undefined;
   const isBelongsToField = metadata.configuration.fieldType === FieldType.BelongsTo;
   const relationshipFieldConfig = metadata.configuration as RelationshipFieldConfig;
 
@@ -39,12 +39,13 @@ export const useRelatedModelOptions = (props: {
     ? // eslint-disable-next-line
       useLinkedChildModelRelatedModelRecords({
         belongsToFieldApiId: field,
-        currentRecordId,
+        findBy,
         currentModel: { apiIdentifier: model!.apiIdentifier!, namespace: model!.namespace },
       })
     : // eslint-disable-next-line
       useLinkedParentModelRelatedModelRecords({
-        currentRecordId,
+        findBy,
+        currentModel: { apiIdentifier: model!.apiIdentifier!, namespace: model!.namespace },
         relatedModel: {
           apiIdentifier: relatedModelApiIdentifier!,
           namespace: relatedModelNamespace,
@@ -122,18 +123,18 @@ export const getRecordsAsOptions = (records: Record<string, any>[], optionLabel:
  */
 export const useLinkedChildModelRelatedModelRecords = (props: {
   belongsToFieldApiId: string;
-  currentRecordId?: string;
+  findBy?: RecordIdentifier;
   currentModel: { apiIdentifier: string; namespace?: string[] | string | null };
 }) => {
-  const { belongsToFieldApiId, currentRecordId, currentModel } = props;
+  const { findBy, belongsToFieldApiId, currentModel } = props;
 
   const modelManager = useModelManager(currentModel);
 
-  const [{ data: selectedRecord, fetching: fetchingSelected, error: fetchSelectedRecordError }] = useFindOne(
-    modelManager as any,
-    currentRecordId ?? "",
+  const [{ data: selectedRecord, fetching: fetchingSelected, error: fetchSelectedRecordError }] = useFindExistingRecord(
+    modelManager,
+    findBy ?? "",
     {
-      pause: !currentRecordId, // BelongsTo needs a selected record to query in the related model
+      pause: !findBy, // BelongsTo needs a selected record to query in the related model
       select: {
         id: true,
         [`${belongsToFieldApiId}Id`]: true, // Retrieve the raw field value, regardless of if the ID exists or not
@@ -144,7 +145,14 @@ export const useLinkedChildModelRelatedModelRecords = (props: {
 
   return {
     selected: {
-      records: selectedRecord ? [selectedRecord] : undefined,
+      records: selectedRecord
+        ? [
+            {
+              ...selectedRecord[belongsToFieldApiId]?._all,
+              [`${belongsToFieldApiId}Id`]: selectedRecord[`${belongsToFieldApiId}Id`],
+            },
+          ]
+        : undefined,
       fetching: fetchingSelected,
       error: fetchSelectedRecordError,
     },
@@ -155,14 +163,19 @@ export const useLinkedChildModelRelatedModelRecords = (props: {
  * For getting the related child model records in a HasOne/HasMany relationship
  */
 export const useLinkedParentModelRelatedModelRecords = (props: {
+  currentModel: {
+    apiIdentifier: string;
+    namespace?: string[] | string | null;
+  };
   relatedModel: {
     apiIdentifier: string;
     namespace?: string[] | string | null;
     inverseFieldApiIdentifier: string;
   };
-  currentRecordId?: string;
+  findBy?: RecordIdentifier;
 }) => {
-  const { currentRecordId, relatedModel } = props;
+  const { currentModel, relatedModel, findBy } = props;
+  const { currentRecordId, fetchingCurrentRecord } = useCurrentRecordId({ currentModel, findBy });
 
   const relatedModelManager = useModelManager(relatedModel);
 
@@ -174,7 +187,7 @@ export const useLinkedParentModelRelatedModelRecords = (props: {
   }
 
   const [{ data: selectedRecords, fetching: fetchingSelected, error: fetchSelectedRecordError }] = useFindMany(relatedModelManager as any, {
-    pause: !currentRecordId, // HasOne/HasMany need the current record to query the inverse field in the related model
+    pause: !currentRecordId || fetchingCurrentRecord, // HasOne/HasMany need the current record to query the inverse field in the related model
 
     first: selectedRecordsToLoadCount, // Many records can point to the current record in hasOne/hasMany
     filter: { [inverseFieldApiIdentifier]: { equals: currentRecordId } }, // Filter by the inverse field belongsTo field value
@@ -186,6 +199,38 @@ export const useLinkedParentModelRelatedModelRecords = (props: {
       fetching: fetchingSelected,
       error: fetchSelectedRecordError,
     },
+  };
+};
+
+const useCurrentRecordId = (props: {
+  currentModel: {
+    apiIdentifier: string;
+    namespace?: string[] | string | null;
+  };
+  findBy?: RecordIdentifier;
+}) => {
+  const { currentModel, findBy } = props;
+
+  const findByAsIdString = typeof findBy === "string" ? findBy : undefined;
+  const pause = !findBy || !!findByAsIdString;
+  const currentModelManager = useModelManager(currentModel);
+
+  const [{ data: currentRecord, fetching: fetchingCurrentRecord, error: fetchCurrentRecordError }] = useFindExistingRecord(
+    currentModelManager,
+    findBy ?? {},
+    { pause, select: { id: true } }
+  );
+
+  if (findByAsIdString) {
+    return {
+      currentRecordId: findByAsIdString,
+      fetchingCurrentRecord: false,
+    };
+  }
+
+  return {
+    currentRecordId: currentRecord?.id,
+    fetchingCurrentRecord,
   };
 };
 
