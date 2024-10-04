@@ -308,7 +308,7 @@ export const reshapeDataForGraphqlApi = async (client: AnyClient, defaultValues:
       return results.flatMap((result) => result);
     } else if (isPlainObject(input)) {
       // if the input is an object, we need to handle it differently
-      const result: any = {};
+      let result: any = {};
 
       for (const key of Object.keys(input)) {
         const currentPath = path ? `${path}.${key}` : key;
@@ -356,32 +356,23 @@ export const reshapeDataForGraphqlApi = async (client: AnyClient, defaultValues:
       }
 
       if (belongsTo) {
-        return depth <= 1 ? { ...rest, ...belongsTo } : { create: { ...rest, ...belongsTo } }; // when we're in the root, we need to return the belongsTo object as part of the result otherwise wrap it in a create
+        result = { ...rest, ...belongsTo };
+      } else {
+        result = rest;
       }
 
       if (depth <= 1 || fieldType == null) {
-        return { ...rest };
+        return result;
       }
 
-      const inputHasId = "id" in input;
-      const inputHasMoreFields = Object.keys(input).filter((field) => field !== "__typename").length > 1;
-      const inputUpdateId = updates[path!]?.[0];
-
       switch (fieldType.type) {
-        case "HasMany":
         case "HasOne":
+          return getHasOneGraphqlApiInput({ input, result, defaultValues, path: path! });
+        case "HasMany":
         case "HasManyThrough":
-          return getParentRelationshipFieldGraphqlApiInput({ input, result });
+          return getHasManyGraphqlApiInput({ input, result });
         case "BelongsTo":
-          return inputHasId
-            ? input["id"] === null
-              ? { _link: null }
-              : inputHasMoreFields
-              ? { update: { id: input["id"], ...rest } }
-              : { _link: input["id"] }
-            : inputUpdateId // input has no id, but this path was found in the updates object, so we need to delete it
-            ? { delete: { id: inputUpdateId } }
-            : { create: { ...rest } };
+          return getBelongsToGraphqlApiInput({ input, result, updates, path: path! });
         default:
           throw new Error(
             `Can't transform input, Unknown field type ${fieldType?.type}. ${JSON.stringify(
@@ -405,23 +396,71 @@ export const reshapeDataForGraphqlApi = async (client: AnyClient, defaultValues:
   return result;
 };
 
-const getParentRelationshipFieldGraphqlApiInput = (props: { input: any; result: any }) => {
+const getBelongsToGraphqlApiInput = (props: { input: any; result: any; updates: Record<string, number[]>; path: string }) => {
+  const { input, result, updates, path } = props;
+
+  const { __typename, ...rest } = result;
+
+  const inputHasId = "id" in input;
+  const inputHasLink = !!("_link" in input && input._link);
+  const inputHasUnlink = !!("_unlink" in input && input._unlink);
+  const inputHasMoreFields = Object.keys(input).filter((field) => field !== "__typename").length > 0;
+  const inputUpdateId = updates[path]?.[0];
+
+  return inputHasLink
+    ? { _link: input._link }
+    : inputHasUnlink
+    ? { _link: null }
+    : inputHasId
+    ? input["id"] === null
+      ? { _link: null }
+      : inputHasMoreFields
+      ? { update: { id: input["id"], ...rest } }
+      : { _link: input["id"] }
+    : inputUpdateId && !inputHasMoreFields
+    ? { _link: null }
+    : { create: { ...rest } };
+};
+
+const getHasOneGraphqlApiInput = (props: { input: any; result: any; defaultValues: any; path: string }) => {
+  const { input, result, defaultValues, path } = props;
+  const { __typename, ...rest } = result;
+
+  const currentValue = get(defaultValues, path);
+
+  const currentId = currentValue?.id;
+  const newId = rest._link ?? input.id;
+
+  if ("_unlink" in input && input._unlink) {
+    return { _unlink: input._unlink };
+  }
+
+  const unlink = currentId && currentId !== newId ? { _unlink: currentId } : undefined;
+
+  if ("_link" in rest && rest._link) {
+    return { update: { id: rest._link }, ...unlink };
+  } else {
+    const inputHasId = "id" in input;
+    return inputHasId ? { update: { ...rest }, ...unlink } : { create: { ...rest }, ...unlink };
+  }
+};
+
+const getHasManyGraphqlApiInput = (props: { input: any; result: any }) => {
   const { input, result } = props;
   const { __typename, ...rest } = result;
 
-  if ("__id" in rest) {
-    if ("__unlinkedInverseField" in rest && rest.__unlinkedInverseField) {
-      const inverseFieldApiId = rest.__unlinkedInverseField;
-      return { update: { id: rest.__id, [inverseFieldApiId]: { _link: null } } };
-    }
-    return { update: { id: rest.__id } }; // Calling this update action automatically links it to the current parent model's record ID
+  if ("_link" in rest && rest._link) {
+    return { update: { id: rest._link } };
+  } else if ("_unlink" in rest && rest._unlink) {
+    const { id, inverseFieldApiIdentifier } = rest._unlink;
+    return { update: { id, [inverseFieldApiIdentifier]: { _link: null } } };
   } else {
     const inputHasId = "id" in input;
     return inputHasId ? { update: { ...rest } } : { create: { ...rest } };
   }
 };
 
-export const isPlainObject = (obj: any) => {
+export const isPlainObject = (obj: any): obj is Record<string, unknown> => {
   if (typeof obj !== "object" || obj === null) return false;
 
   let proto = obj;
@@ -506,6 +545,7 @@ export function applyDataMask(opts: {
   const dataToSend = {};
 
   const sendArray = typeof send === "function" ? send() : send;
+
   for (const key of sendArray) {
     const candidates = [key];
     if (modelApiIdentifier) {
@@ -514,7 +554,12 @@ export function applyDataMask(opts: {
     for (const key of candidates) {
       const value = get(data, key);
       if (typeof value != "undefined") {
-        set(dataToSend, key, value);
+        const pathSegments = key.split(".");
+        const parentPath = pathSegments.slice(0, -1).join(".");
+        const parentValue = get(dataToSend, parentPath);
+        if (parentValue !== null) {
+          set(dataToSend, key, value);
+        }
         break;
       }
     }
