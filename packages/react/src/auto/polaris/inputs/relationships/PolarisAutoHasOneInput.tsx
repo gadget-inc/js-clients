@@ -1,7 +1,8 @@
 import { Banner, Combobox } from "@shopify/polaris";
 import React from "react";
+import { autoInput } from "../../../AutoInput.js";
 import { useHasOneInputController } from "../../../hooks/useHasOneInputController.js";
-import { optionRecordsToLoadCount } from "../../../hooks/useRelatedModelOptions.js";
+import { optionRecordsToLoadCount } from "../../../hooks/useRelatedModel.js";
 import type { AutoRelationshipInputProps } from "../../../interfaces/AutoRelationshipInputProps.js";
 import { RelatedModelOptions } from "./RelatedModelOptions.js";
 import { getSelectedRelatedRecordTags } from "./SelectedRelatedRecordTags.js";
@@ -11,7 +12,7 @@ import { getSelectedRelatedRecordTags } from "./SelectedRelatedRecordTags.js";
  */
 const showErrorBannerWhenTooManyRelatedRecords = false;
 
-export const PolarisAutoHasOneInput = (props: AutoRelationshipInputProps) => {
+export const PolarisAutoHasOneInput = autoInput((props: AutoRelationshipInputProps) => {
   const { field } = props;
   const {
     fieldMetadata: { path, metadata },
@@ -62,4 +63,4 @@ export const PolarisAutoHasOneInput = (props: AutoRelationshipInputProps) => {
       </Combobox>
     </>
   );
-};
+});

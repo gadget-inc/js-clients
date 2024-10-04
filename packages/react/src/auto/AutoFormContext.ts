@@ -1,5 +1,5 @@
 import React, { useContext } from "react";
-import type { RecordIdentifier, UseActionFormSubmit } from "src/use-action-form/types.js";
+import type { RecordIdentifier, UseActionFormPagination, UseActionFormSubmit } from "src/use-action-form/types.js";
 import type { ActionMetadata, GlobalActionMetadata } from "../metadata.js";
 
 export interface AutoFormSubmitResult {
@@ -21,6 +21,7 @@ export interface AutoFormMetadataContext {
     include?: string[];
     exclude?: string[];
   };
+  pagination: UseActionFormPagination;
 }
 /**
  * React context that stores an instance of the metadata loaded for a particular form action

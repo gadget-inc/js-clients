@@ -3291,6 +3291,219 @@ describe("useActionFormNested", () => {
         });
       });
 
+      test("can relink a BelongsTo", async () => {
+        const queryResponse = {
+          data: {
+            answer: {
+              __typename: "Answer",
+              id: "123",
+              text: "Answer create",
+              question: {
+                __typename: "Question",
+                id: "1",
+                text: "test",
+              },
+            },
+          },
+        };
+
+        const { result: useActionFormHook } = renderHook(
+          () =>
+            useActionForm(nestedExampleApi.answer.update, {
+              findBy: "123",
+              select: {
+                id: true,
+                text: true,
+                question: {
+                  id: true,
+                  text: true,
+                },
+              },
+              onError: (error) => {
+                expect(error).toBeUndefined();
+              },
+            }),
+          {
+            wrapper: MockClientWrapper(nestedExampleApi),
+          }
+        );
+
+        expect(mockUrqlClient.executeQuery).toBeCalledTimes(1);
+
+        mockUrqlClient.executeQuery.pushResponse("answer", {
+          stale: false,
+          hasNext: false,
+          data: queryResponse.data,
+        });
+
+        let formValues: any;
+
+        await act(async () => {
+          formValues = useActionFormHook.current.getValues();
+        });
+
+        expect(formValues.answer).toBeDefined();
+        expect(formValues.answer.question.id).toEqual("1");
+
+        await act(async () => {
+          (useActionFormHook.current as any).setValue("answer.question.id", "2");
+        });
+
+        let submitPromise: Promise<any>;
+
+        await act(async () => {
+          submitPromise = useActionFormHook.current.submit();
+        });
+
+        expect(mockUrqlClient.executeMutation).toHaveBeenCalledTimes(1);
+        expect(mockUrqlClient.executeMutation.mock.calls[0][0].variables).toMatchInlineSnapshot(`
+          {
+            "answer": {
+              "question": {
+                "update": {
+                  "id": "2",
+                  "text": "test",
+                },
+              },
+              "text": "Answer create",
+            },
+            "id": "123",
+          }
+        `);
+
+        mockUrqlClient.executeMutation.pushResponse("updateAnswer", {
+          data: {
+            answer: {
+              __typename: "Answer",
+              id: "123",
+              text: "Answer create",
+              question: {
+                __typename: "Question",
+                id: "2",
+                text: "test #2",
+              },
+            },
+          },
+          stale: false,
+          hasNext: false,
+        });
+
+        await act(async () => {
+          await submitPromise;
+        });
+
+        await act(async () => {
+          formValues = useActionFormHook.current.getValues();
+        });
+
+        expect(formValues.answer).toBeDefined();
+
+        expect(formValues.answer.question.id).toEqual("2");
+      });
+
+      test("can remove a BelongsTo link", async () => {
+        const queryResponse = {
+          data: {
+            answer: {
+              __typename: "Answer",
+              id: "123",
+              text: "Answer create",
+              question: {
+                __typename: "Question",
+                id: "1",
+                text: "test",
+              },
+            },
+          },
+        };
+
+        const { result: useActionFormHook } = renderHook(
+          () =>
+            useActionForm(nestedExampleApi.answer.update, {
+              findBy: "123",
+              select: {
+                id: true,
+                text: true,
+                question: {
+                  id: true,
+                  text: true,
+                },
+              },
+              onError: (error) => {
+                expect(error).toBeUndefined();
+              },
+            }),
+          {
+            wrapper: MockClientWrapper(nestedExampleApi),
+          }
+        );
+
+        expect(mockUrqlClient.executeQuery).toBeCalledTimes(1);
+
+        mockUrqlClient.executeQuery.pushResponse("answer", {
+          stale: false,
+          hasNext: false,
+          data: queryResponse.data,
+        });
+
+        let formValues: any;
+
+        await act(async () => {
+          formValues = useActionFormHook.current.getValues();
+        });
+
+        expect(formValues.answer).toBeDefined();
+        expect(formValues.answer.question.id).toEqual("1");
+
+        await act(async () => {
+          (useActionFormHook.current as any).setValue("answer.question.id", null);
+        });
+
+        let submitPromise: Promise<any>;
+
+        await act(async () => {
+          submitPromise = useActionFormHook.current.submit();
+        });
+
+        expect(mockUrqlClient.executeMutation).toHaveBeenCalledTimes(1);
+        expect(mockUrqlClient.executeMutation.mock.calls[0][0].variables).toMatchInlineSnapshot(`
+          {
+            "answer": {
+              "question": {
+                "_link": null,
+              },
+              "text": "Answer create",
+            },
+            "id": "123",
+          }
+        `);
+
+        mockUrqlClient.executeMutation.pushResponse("updateAnswer", {
+          data: {
+            answer: {
+              __typename: "Answer",
+              id: "123",
+              text: "Answer create",
+              question: null,
+            },
+          },
+          stale: false,
+          hasNext: false,
+        });
+
+        await act(async () => {
+          await submitPromise;
+        });
+
+        await act(async () => {
+          formValues = useActionFormHook.current.getValues();
+        });
+
+        expect(formValues.answer).toBeDefined();
+
+        expect(formValues.answer.question.id).toBeNull();
+      });
+
       test("can create BelongsTo", async () => {
         const { result: useActionFormHook } = renderHook(
           () =>

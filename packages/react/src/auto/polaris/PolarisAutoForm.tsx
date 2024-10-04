@@ -60,8 +60,20 @@ const PolarisAutoFormComponent = <
     findBy,
     ...rest
   } = props as AutoFormProps<GivenOptions, SchemaT, ActionFunc> & Omit<Partial<FormProps>, "action"> & { findBy: any };
-  const { metadata, fetchingMetadata, metadataError, fields, submit, formError, isSubmitting, isSubmitSuccessful, originalFormMethods } =
-    useAutoForm(props);
+
+  const {
+    metadata,
+    fetchingMetadata,
+    isLoading,
+    metadataError,
+    fields,
+    submit,
+    formError,
+    isSubmitting,
+    isSubmitSuccessful,
+    originalFormMethods,
+    pagination,
+  } = useAutoForm(props);
 
   const autoFormMetadataContext: AutoFormMetadataContext = {
     findBy,
@@ -80,6 +92,7 @@ const PolarisAutoFormComponent = <
       include: props.include,
       exclude: props.exclude,
     },
+    pagination,
   };
 
   const formTitle = props.title === undefined ? humanizeCamelCase(action.operationName) : props.title;
@@ -88,7 +101,7 @@ const PolarisAutoFormComponent = <
     return props.successContent;
   }
 
-  if (fetchingMetadata) {
+  if (fetchingMetadata || isLoading) {
     return (
       <Form {...rest} onSubmit={submit}>
         <FormLayout>

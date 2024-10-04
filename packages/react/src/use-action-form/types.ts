@@ -41,6 +41,11 @@ export type FormInput<InputT, Depth extends number = 9, CurrentDepth extends num
   ? { [K in keyof InputT]: FormInput<InputT[K], Depth, Increment<CurrentDepth>> }
   : InputT | null | undefined;
 
+export type UseActionFormPagination = Record<
+  string,
+  { loading: boolean; hasPreviousPage: boolean; hasNextPage: boolean; startCursor: string | null; endCursor: string | null } | undefined
+>;
+
 export type UseActionFormResult<
   GivenOptions extends OptionsType,
   SchemaT,
@@ -65,6 +70,8 @@ export type UseActionFormResult<
     : ReturnType<typeof useGlobalAction<any>>[0]["data"];
 
   originalFormMethods: UseFormReturn<FormVariables, FormContext>;
+
+  pagination: UseActionFormPagination;
 };
 
 export type UseActionFormHookState<F extends ActionFunction<any, any, any, any, any> | GlobalActionFunction<any>> = ActionHookState<

@@ -1,18 +1,18 @@
-import type { GadgetRecordList } from "@gadgetinc/api-client-core";
-import { Banner, Combobox } from "@shopify/polaris";
+import { Combobox } from "@shopify/polaris";
 import React from "react";
+import { autoInput } from "../../../AutoInput.js";
 import { useHasManyInputController } from "../../../hooks/useHasManyInputController.js";
-import { optionRecordsToLoadCount } from "../../../hooks/useRelatedModelOptions.js";
+import { optionRecordsToLoadCount } from "../../../hooks/useRelatedModel.js";
 import type { AutoRelationshipInputProps } from "../../../interfaces/AutoRelationshipInputProps.js";
 import { RelatedModelOptions } from "./RelatedModelOptions.js";
 import { getSelectedRelatedRecordTags } from "./SelectedRelatedRecordTags.js";
 
-export const PolarisAutoHasManyInput = (props: AutoRelationshipInputProps) => {
+export const PolarisAutoHasManyInput = autoInput((props: AutoRelationshipInputProps) => {
   const { field } = props;
 
   const {
     fieldMetadata: { path, metadata },
-    relatedModelOptions: { options, searchFilterOptions, selected, search, pagination },
+    relatedModelOptions: { options, searchFilterOptions, search, pagination },
 
     selectedRecordIds,
     errorMessage,
@@ -22,9 +22,9 @@ export const PolarisAutoHasManyInput = (props: AutoRelationshipInputProps) => {
     onRemoveRecord,
   } = useHasManyInputController(props);
 
-  if ((selected.records as GadgetRecordList<never>)?.hasNextPage) {
-    return <Banner tone="warning">{`Too many related records for ${field}. Cannot edit`}</Banner>;
-  }
+  // if ((selected.records as GadgetRecordList<never>)?.hasNextPage) {
+  //   return <Banner tone="warning">{`Too many related records for ${field}. Cannot edit`}</Banner>;
+  // }
 
   return (
     <>
@@ -58,4 +58,4 @@ export const PolarisAutoHasManyInput = (props: AutoRelationshipInputProps) => {
       </Combobox>
     </>
   );
-};
+});

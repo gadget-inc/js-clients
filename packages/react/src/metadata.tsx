@@ -17,16 +17,97 @@ export const FieldType = GadgetFieldType;
 type WithRequired<T, K extends keyof T> = T & { [P in K]-?: Exclude<T[P], null> };
 type Clarify<T> = T extends Record<string, unknown> ? { [Key in keyof T]: T[Key] } : T;
 
-const RelatedModelFieldFragment = graphql(/* GraphQL */ `
+const _RelatedModelFieldFragment = graphql(/* GraphQL */ `
+  fragment RelatedModelFieldFragmentDepth3 on GadgetModelField {
+    ...BaseFieldMetadata
+    __typename
+  }
+
+  fragment RelatedModelFieldFragmentDepth2 on GadgetModelField {
+    ...BaseFieldMetadata
+    configuration {
+      ... on GadgetHasManyThroughConfig {
+        relatedModel {
+          fields @include(if: $includeRelatedFields) {
+            ...RelatedModelFieldFragmentDepth3
+            __typename
+          }
+        }
+      }
+      ... on GadgetHasManyConfig {
+        relatedModel {
+          fields @include(if: $includeRelatedFields) {
+            ...RelatedModelFieldFragmentDepth3
+            __typename
+          }
+        }
+      }
+      ... on GadgetHasOneConfig {
+        relatedModel {
+          fields @include(if: $includeRelatedFields) {
+            ...RelatedModelFieldFragmentDepth3
+            __typename
+          }
+        }
+      }
+      ... on GadgetBelongsToConfig {
+        relatedModel {
+          fields @include(if: $includeRelatedFields) {
+            ...RelatedModelFieldFragmentDepth3
+            __typename
+          }
+        }
+      }
+    }
+    __typename
+  }
+
+  fragment RelatedModelFieldFragmentDepth1 on GadgetModelField {
+    ...BaseFieldMetadata
+    configuration {
+      ... on GadgetHasManyThroughConfig {
+        relatedModel {
+          fields @include(if: $includeRelatedFields) {
+            ...RelatedModelFieldFragmentDepth2
+            __typename
+          }
+        }
+      }
+      ... on GadgetHasManyConfig {
+        relatedModel {
+          fields @include(if: $includeRelatedFields) {
+            ...RelatedModelFieldFragmentDepth2
+            __typename
+          }
+        }
+      }
+      ... on GadgetHasOneConfig {
+        relatedModel {
+          fields @include(if: $includeRelatedFields) {
+            ...RelatedModelFieldFragmentDepth2
+            __typename
+          }
+        }
+      }
+      ... on GadgetBelongsToConfig {
+        relatedModel {
+          fields @include(if: $includeRelatedFields) {
+            ...RelatedModelFieldFragmentDepth2
+            __typename
+          }
+        }
+      }
+    }
+    __typename
+  }
+
   fragment RelatedModelFieldFragment on GadgetModelField {
-    name
-    apiIdentifier
-    fieldType
+    ...RelatedModelFieldFragmentDepth1
   }
 `);
 
 const FieldMetadataFragment = graphql(/* GraphQL */ `
-  fragment FieldMetadata on GadgetField {
+  fragment BaseFieldMetadata on GadgetField {
     name
     apiIdentifier
     fieldType
@@ -71,9 +152,6 @@ const FieldMetadataFragment = graphql(/* GraphQL */ `
             apiIdentifier
             fieldType
           }
-          fields @include(if: $includeRelatedFields) {
-            ...RelatedModelFieldFragment
-          }
         }
         inverseField {
           apiIdentifier
@@ -106,9 +184,6 @@ const FieldMetadataFragment = graphql(/* GraphQL */ `
             apiIdentifier
             fieldType
           }
-          fields @include(if: $includeRelatedFields) {
-            ...RelatedModelFieldFragment
-          }
         }
         inverseField {
           apiIdentifier
@@ -123,9 +198,6 @@ const FieldMetadataFragment = graphql(/* GraphQL */ `
             name
             apiIdentifier
             fieldType
-          }
-          fields @include(if: $includeRelatedFields) {
-            ...RelatedModelFieldFragment
           }
         }
         inverseField {
@@ -142,9 +214,6 @@ const FieldMetadataFragment = graphql(/* GraphQL */ `
             apiIdentifier
             fieldType
           }
-          fields @include(if: $includeRelatedFields) {
-            ...RelatedModelFieldFragment
-          }
         }
       }
       ... on GadgetEnumConfig {
@@ -160,6 +229,40 @@ const FieldMetadataFragment = graphql(/* GraphQL */ `
       }
       ... on GadgetNumberConfig {
         decimals
+      }
+    }
+  }
+
+  fragment FieldMetadata on GadgetField {
+    ...BaseFieldMetadata
+    configuration {
+      ... on GadgetHasManyThroughConfig {
+        relatedModel {
+          fields @include(if: $includeRelatedFields) {
+            ...RelatedModelFieldFragment
+          }
+        }
+      }
+      ... on GadgetHasManyConfig {
+        relatedModel {
+          fields @include(if: $includeRelatedFields) {
+            ...RelatedModelFieldFragment
+          }
+        }
+      }
+      ... on GadgetHasOneConfig {
+        relatedModel {
+          fields @include(if: $includeRelatedFields) {
+            ...RelatedModelFieldFragment
+          }
+        }
+      }
+      ... on GadgetBelongsToConfig {
+        relatedModel {
+          fields @include(if: $includeRelatedFields) {
+            ...RelatedModelFieldFragment
+          }
+        }
       }
     }
   }
@@ -320,7 +423,9 @@ const getGlobalActionApiIdentifier = (api: AnyClient, fn: GlobalActionFunction<a
  * Retrieve a given Gadget model action's metadata from the backend
  * @internal
  */
-export const useActionMetadata = (actionFunction: ActionFunction<any, any, any, any, any> | GlobalActionFunction<any>) => {
+export const useActionMetadata = (
+  actionFunction: ActionFunction<any, any, any, any, any> | GlobalActionFunction<any>
+): { metadata: ActionMetadata | GlobalActionMetadata | undefined; fetching: boolean; error: ErrorWrapper | undefined } => {
   const api = useApi();
 
   let query: DocumentNode;
@@ -354,7 +459,7 @@ export const useActionMetadata = (actionFunction: ActionFunction<any, any, any, 
       modelApiIdentifier: actionFunction.modelApiIdentifier,
       modelNamespace: actionFunction.namespace,
       action: actionName,
-      includeRelatedFields: false,
+      includeRelatedFields: true,
     };
   } else {
     throw new Error(`Invalid action function type`);

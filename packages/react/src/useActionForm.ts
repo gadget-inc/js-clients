@@ -1,5 +1,5 @@
 import { disambiguateActionVariables, type ActionFunction, type GlobalActionFunction } from "@gadgetinc/api-client-core";
-import { useCallback, useEffect, useRef } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import type { DeepPartial, FieldErrors, FieldValues, UseFormProps } from "react-hook-form";
 import { useForm } from "react-hook-form";
 import { useApi } from "./GadgetProvider.js";
@@ -8,6 +8,7 @@ import type {
   ContextAwareSelect,
   RecordIdentifier,
   UseActionFormHookStateData,
+  UseActionFormPagination,
   UseActionFormResult,
   UseActionFormState,
   UseActionFormSubmit,
@@ -74,6 +75,10 @@ type ActionFormOptions<
          * Should be undefined for create actions, or a record ID (or finder) for update / etc actions
          **/
         findBy?: RecordIdentifier;
+        /**
+         * Whether to pause fetching the record by
+         */
+        pause?: boolean;
       }
     : // eslint-disable-next-line @typescript-eslint/ban-types
       {});
@@ -102,16 +107,18 @@ export const useActionForm = <
   options?: ActionFormOptions<GivenOptions, SchemaT, ActionFunc, ExtraFormVariables>
 ): UseActionFormResult<GivenOptions, SchemaT, ActionFunc, ExtraFormVariables, FormContext> => {
   const findById = options && "findBy" in options ? options.findBy : undefined;
+  const pause = options && "pause" in options ? options.pause : undefined;
   const api = useApi();
   const findExistingRecord = !!findById;
   const hasSetInitialValues = useRef<boolean>(!findExistingRecord);
   const isModelAction = "modelApiIdentifier" in action;
   const actionSelect = options?.select ? transformContextAwareToSelect(options.select) : undefined;
+  const [pagination, setPagination] = useState<UseActionFormPagination>({});
 
   // find the existing record if there is one
   const modelManager = isModelAction ? getModelManager(api, action.modelApiIdentifier, action.namespace) : undefined;
   const [findResult] = useFindExistingRecord(modelManager, findById || "1", {
-    pause: !findExistingRecord,
+    pause: pause || !findExistingRecord,
     select: actionSelect,
   });
 
@@ -357,6 +364,7 @@ export const useActionForm = <
     error: findResult.error || actionResult.error,
     submit: submit as unknown as UseActionFormSubmit<ActionFunc>,
     actionData: actionResult.data,
+    pagination,
     originalFormMethods,
   };
 };

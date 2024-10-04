@@ -1,18 +1,16 @@
-import { useCallback, useEffect, useMemo } from "react";
+import { useCallback } from "react";
 import { useController } from "react-hook-form";
-import { useAutoFormMetadata } from "../AutoFormContext.js";
 import type { AutoRelationshipInputProps } from "../interfaces/AutoRelationshipInputProps.js";
 import { useFieldMetadata } from "./useFieldMetadata.js";
-import { useRelatedModelOptions } from "./useRelatedModelOptions.js";
+import { useRelatedModelOptions } from "./useRelatedModel.js";
 
 export const useBelongsToInputController = (props: AutoRelationshipInputProps) => {
   const { field, control } = props;
   const fieldMetadata = useFieldMetadata(field);
   const { path } = fieldMetadata;
-  const { findBy } = useAutoFormMetadata();
 
   const relatedModelOptions = useRelatedModelOptions(props);
-  const { selected, relatedModel } = relatedModelOptions;
+  const { relatedModel } = relatedModelOptions;
 
   const {
     field: fieldProps,
@@ -22,35 +20,19 @@ export const useBelongsToInputController = (props: AutoRelationshipInputProps) =
     control,
   });
 
-  const isLoading = selected.fetching || relatedModel.fetching;
-  const errorMessage = fieldError?.message || selected.error?.message || relatedModel.error?.message;
+  const isLoading = relatedModel.fetching;
+  const errorMessage = fieldError?.message || relatedModel.error?.message;
 
-  const retrievedSelectedRecordId = useMemo(() => {
-    return !selected.fetching && selected.records && selected.records.length ? selected.records[0][`${field}Id`] : null;
-  }, [selected.fetching]);
-
-  const selectedRelatedModelRecordMissing = useMemo(() => {
-    if (!findBy) {
-      // Without a find by, there is no retrieved record ID
-      return false;
-    }
-    return !selected.fetching && selected.records && selected.records.length ? !selected.records[0][field] : true;
-  }, [findBy, selected.fetching]);
-
-  useEffect(() => {
-    // Initializing the controller with the selected record ID from the DB
-    if (!selected.fetching && retrievedSelectedRecordId) {
-      fieldProps.onChange(retrievedSelectedRecordId);
-    }
-  }, [selected.fetching]);
-
-  const onSelectRecord = useCallback((recordId: string) => {
-    fieldProps.onChange(recordId);
-  }, []);
+  const onSelectRecord = useCallback(
+    (recordId: string) => {
+      fieldProps.onChange(recordId);
+    },
+    [fieldProps]
+  );
 
   const onRemoveRecord = useCallback(() => {
     fieldProps.onChange(null);
-  }, []);
+  }, [fieldProps]);
 
   return {
     fieldMetadata,
@@ -60,7 +42,6 @@ export const useBelongsToInputController = (props: AutoRelationshipInputProps) =
     onRemoveRecord,
 
     selectedRecordId: fieldProps.value,
-    selectedRelatedModelRecordMissing,
 
     isLoading,
     errorMessage,

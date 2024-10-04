@@ -5,9 +5,10 @@ import { filesize } from "filesize";
 import React, { useMemo } from "react";
 import type { Control } from "react-hook-form";
 import { isAutoFileFieldValue } from "../../../validationSchema.js";
+import { autoInput } from "../../AutoInput.js";
 import { getFileSizeValidationMessage, imageFileTypes, useFileInputController } from "../../hooks/useFileInputController.js";
 
-export const PolarisAutoFileInput = (props: { field: string; control?: Control<any> } & DropZoneProps) => {
+export const PolarisAutoFileInput = autoInput((props: { field: string; control?: Control<any> } & DropZoneProps) => {
   const { field: fieldApiIdentifier, control, ...rest } = props;
   const { fieldProps, errorMessage, imageThumbnailURL, onFileUpload, clearFileValue, canClearFileValue, validations, metadata } =
     useFileInputController({
@@ -98,4 +99,4 @@ export const PolarisAutoFileInput = (props: { field: string; control?: Control<a
       )}
     </>
   );
-};
+});
