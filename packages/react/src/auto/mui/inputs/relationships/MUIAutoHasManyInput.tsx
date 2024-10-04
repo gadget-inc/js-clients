@@ -1,7 +1,7 @@
 import { Autocomplete, Box, TextField, Typography } from "@mui/material";
 import React from "react";
 import { autoInput } from "../../../AutoInput.js";
-import { useHasManyInputController } from "../../../hooks/useHasManyInputController.js";
+import { useHasManyInputController } from "../../../hooks/useHasManyController.js";
 import type { AutoRelationshipInputProps } from "../../../interfaces/AutoRelationshipInputProps.js";
 
 export const MUIAutoHasManyInput = autoInput((props: AutoRelationshipInputProps) => {
@@ -9,10 +9,12 @@ export const MUIAutoHasManyInput = autoInput((props: AutoRelationshipInputProps)
     fieldMetadata: { path, metadata },
     relatedModelOptions: { options, search, pagination },
 
-    selectedRecordIds,
+    selectedRecords,
 
     onSelectRecord,
   } = useHasManyInputController(props);
+
+  const selectedRecordIds = selectedRecords.map((record) => record.id);
 
   return (
     <Autocomplete

@@ -20,5 +20,6 @@ export {
 } from "./inputs/PolarisAutoTextInput.js";
 export { PolarisAutoBelongsToInput as AutoBelongsToInput } from "./inputs/relationships/PolarisAutoBelongsToInput.js";
 export { PolarisAutoHasManyInput as AutoHasManyInput } from "./inputs/relationships/PolarisAutoHasManyInput.js";
+export { PolarisAutoRelationshipForm as AutoRelationshipForm } from "./inputs/relationships/PolarisAutoRelationshipForm.js";
 export { PolarisAutoSubmit as AutoSubmit } from "./submit/PolarisAutoSubmit.js";
 export { PolarisSubmitResultBanner as SubmitResultBanner } from "./submit/PolarisSubmitResultBanner.js";

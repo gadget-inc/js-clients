@@ -7,18 +7,24 @@ import { PolarisAutoFileInput } from "../../../src/auto/polaris/inputs/PolarisAu
 import { FormProvider, useForm } from "../../../src/useActionForm.ts";
 import { testApi as api } from "../../apis.ts";
 
+const Component = (props) => {
+  return (
+    <PolarisAutoForm action={api.game.stadium.create}>
+      <PolarisAutoFileInput {...props} />
+    </PolarisAutoForm>
+  );
+};
+
 export default {
   title: "Polaris/FileInput",
-  component: PolarisAutoFileInput,
+  component: Component,
   decorators: [
     (Story, { parameters }) => {
       return (
         <AppProvider i18n={translations}>
           <FormProvider {...useForm()}>
             <Provider api={api}>
-              <PolarisAutoForm action={api.game.stadium.create}>
-                <Story />
-              </PolarisAutoForm>
+              <Story />
             </Provider>
           </FormProvider>
         </AppProvider>

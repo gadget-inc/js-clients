@@ -78,6 +78,10 @@ type ActionFormOptions<
          * If false, don't throw an error if the the given findBy value is an invalid object
          */
         throwOnInvalidFindByObject?: boolean;
+        /**
+         * Whether to pause fetching the record by
+         */
+        pause?: boolean;
       }
     : // eslint-disable-next-line @typescript-eslint/ban-types
       {});
@@ -107,6 +111,7 @@ export const useActionForm = <
 ): UseActionFormResult<GivenOptions, SchemaT, ActionFunc, ExtraFormVariables, FormContext> => {
   const findById = options && "findBy" in options ? options.findBy : undefined;
   const throwOnInvalidFindByObject = options && "findBy" in options ? options?.throwOnInvalidFindByObject ?? true : true;
+  const pause = options && "pause" in options ? options.pause : undefined;
   const api = useApi();
   const findExistingRecord = !!findById;
   const hasSetInitialValues = useRef<boolean>(!findExistingRecord);
@@ -116,7 +121,7 @@ export const useActionForm = <
   // find the existing record if there is one
   const modelManager = isModelAction ? getModelManager(api, action.modelApiIdentifier, action.namespace) : undefined;
   const [findResult] = useFindExistingRecord(modelManager, findById || "1", {
-    pause: !findExistingRecord,
+    pause: pause || !findExistingRecord,
     select: actionSelect,
     throwOnInvalidFindByObject,
   });
