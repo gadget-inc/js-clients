@@ -4,7 +4,7 @@ import type { GadgetHasOneConfig } from "../../internal/gql/graphql.js";
 import { uniq } from "../../utils.js";
 import type { AutoRelationshipInputProps } from "../interfaces/AutoRelationshipInputProps.js";
 import { useFieldMetadata } from "./useFieldMetadata.js";
-import { useRelatedModelOptions } from "./useRelatedModelOptions.js";
+import { useRelatedModelOptions } from "./useRelatedModel.js";
 
 export const useHasOneInputController = (props: AutoRelationshipInputProps) => {
   const { field } = props;
