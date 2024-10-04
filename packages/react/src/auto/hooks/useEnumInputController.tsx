@@ -21,7 +21,7 @@ export const useEnumInputController = (props: {
     control,
     name: path,
   });
-  const [searchValue, setSearchValue] = useState(typeof fieldProps.value === "string" ? fieldProps.value : "");
+  const [searchValue, setSearchValue] = useState("");
 
   const selectedOptions = useMemo(
     () => (typeof fieldProps.value === "string" ? [fieldProps.value] : fieldProps.value ?? []) as string[],
