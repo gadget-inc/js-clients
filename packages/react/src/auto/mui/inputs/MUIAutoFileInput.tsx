@@ -1,6 +1,6 @@
 import { Button, styled } from "@mui/material";
 import React from "react";
-import type { Control } from "react-hook-form";
+import type { Control } from "../../../useActionForm.js";
 import { useFileInputController } from "../../hooks/useFileInputController.js";
 import { MUIAutoFormControl } from "./MUIAutoFormControl.js";
 

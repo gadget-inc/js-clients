@@ -1,12 +1,13 @@
 import React from "react";
-import { AutoRichTextInputProps } from "../../shared/AutoRichTextInputProps.js";
+import { autoInput } from "../../AutoInput.js";
+import type { AutoRichTextInputProps } from "../../shared/AutoRichTextInputProps.js";
 
 const LazyLoadedPolarisAutoRichTextInput = React.lazy(() => import("./PolarisAutoRichTextInput.js"));
 
-export const PolarisAutoRichTextInput = (props: AutoRichTextInputProps) => {
+export const PolarisAutoRichTextInput = autoInput((props: AutoRichTextInputProps) => {
   return (
     <>
       <LazyLoadedPolarisAutoRichTextInput {...props} />
     </>
   );
-};
+});

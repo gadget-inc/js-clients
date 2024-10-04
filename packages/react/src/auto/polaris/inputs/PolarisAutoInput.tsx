@@ -1,5 +1,6 @@
 import React from "react";
 import { FieldType } from "../../../metadata.js";
+import { autoInput } from "../../AutoInput.js";
 import { useFieldMetadata } from "../../hooks/useFieldMetadata.js";
 import { PolarisAutoRichTextInput } from "./LazyLoadedPolarisAutoRichTextInput.js";
 import { PolarisAutoBooleanInput } from "./PolarisAutoBooleanInput.js";
@@ -15,8 +16,9 @@ import { PolarisAutoRolesInput } from "./PolarisAutoRolesInput.js";
 import { PolarisAutoTextInput } from "./PolarisAutoTextInput.js";
 import { PolarisAutoBelongsToInput } from "./relationships/PolarisAutoBelongsToInput.js";
 import { PolarisAutoHasManyInput } from "./relationships/PolarisAutoHasManyInput.js";
+import { PolarisAutoHasOneInput } from "./relationships/PolarisAutoHasOneInput.js";
 
-export const PolarisAutoInput = (props: { field: string; label?: string }) => {
+export const PolarisAutoInput = autoInput((props: { field: string; label?: string }) => {
   const { metadata } = useFieldMetadata(props.field);
   const config = metadata.configuration;
 
@@ -62,8 +64,7 @@ export const PolarisAutoInput = (props: { field: string; label?: string }) => {
     }
     case FieldType.HasOne: {
       // TODO - Update implementation of PolarisAutoHasOneInput after 1-1 mapping maintenance system is updated in API
-      // return <PolarisAutoHasOneInput field={props.field}  label={props.label} />;
-      return null;
+      return <PolarisAutoHasOneInput field={props.field} label={props.label} />;
     }
     case FieldType.HasMany: {
       return <PolarisAutoHasManyInput field={props.field} label={props.label} />;
@@ -88,4 +89,4 @@ export const PolarisAutoInput = (props: { field: string; label?: string }) => {
       throw new Error(`Unsupported field type for Polaris AutoForm: ${metadata.fieldType}`);
     }
   }
-};
+});

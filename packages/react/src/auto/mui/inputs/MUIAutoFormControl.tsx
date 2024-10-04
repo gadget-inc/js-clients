@@ -1,7 +1,7 @@
 import { FormControl, FormControlLabel, FormGroup, FormHelperText } from "@mui/material";
 import type { ReactElement } from "react";
 import React from "react";
-import { useController } from "react-hook-form";
+import { useController } from "../../../useActionForm.js";
 import { useFieldMetadata } from "../../hooks/useFieldMetadata.js";
 
 export const MUIAutoFormControl = (props: { field: string; children: ReactElement; label?: string }) => {

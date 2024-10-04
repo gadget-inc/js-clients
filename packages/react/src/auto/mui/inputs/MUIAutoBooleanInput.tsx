@@ -1,7 +1,7 @@
 import type { CheckboxProps } from "@mui/material";
 import { Checkbox } from "@mui/material";
 import React from "react";
-import { useController, type Control } from "react-hook-form";
+import { useController, type Control } from "../../../useActionForm.js";
 import { useFieldMetadata } from "../../hooks/useFieldMetadata.js";
 import { MUIAutoFormControl } from "./MUIAutoFormControl.js";
 

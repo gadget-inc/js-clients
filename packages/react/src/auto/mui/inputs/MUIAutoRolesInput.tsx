@@ -1,7 +1,7 @@
 import type { AutocompleteProps } from "@mui/material";
 import { Autocomplete, TextField } from "@mui/material";
 import React from "react";
-import type { Control } from "react-hook-form";
+import type { Control } from "../../../useActionForm.js";
 import { useRoleInputController } from "../../hooks/useRoleInputController.js";
 
 export const MUIAutoRolesInput = (
