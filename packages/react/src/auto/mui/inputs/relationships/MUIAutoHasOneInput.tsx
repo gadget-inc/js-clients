@@ -1,4 +1,4 @@
-import { Alert, Autocomplete, Box, TextField, Typography } from "@mui/material";
+import { Autocomplete, Box, TextField, Typography } from "@mui/material";
 import React from "react";
 import { useHasOneInputController } from "../../../hooks/useHasOneInputController.js";
 import type { AutoRelationshipInputProps } from "../../../interfaces/AutoRelationshipInputProps.js";
@@ -12,26 +12,17 @@ export const MUIAutoHasOneInput = (props: AutoRelationshipInputProps) => {
   const { field } = props;
   const {
     fieldMetadata: { path, metadata },
-    relatedModelOptions: { options, selected, search, pagination, relatedModel },
-    selectedRecordIds,
-    errorMessage,
-    isLoading,
-
+    relatedModelOptions: { options, search, pagination },
+    selectedRecord,
     onSelectRecord,
     onRemoveRecord,
   } = useHasOneInputController(props);
-
-  const hasMultipleRelatedRecords = selected.records && selected.records.length > 1;
-
-  if (showErrorBannerWhenTooManyRelatedRecords && hasMultipleRelatedRecords) {
-    return <Alert>{`Multiple related records for hasOne field "${field}"`}</Alert>;
-  }
 
   return (
     <Autocomplete
       renderOption={(props, option) => {
         const isShowMoreButton = option.recordId === "-1";
-        const isSelected = selectedRecordIds === option.recordId;
+        const isSelected = selectedRecord?.id === option.recordId;
         return !isShowMoreButton ? (
           <Box component="li" {...props}>
             {isSelected && `✔️ `}

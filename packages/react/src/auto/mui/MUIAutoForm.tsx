@@ -2,7 +2,7 @@ import type { ActionFunction } from "@gadgetinc/api-client-core";
 import type { GridProps } from "@mui/material";
 import { Grid, Skeleton, Typography } from "@mui/material";
 import React from "react";
-import { FormProvider } from "react-hook-form";
+import { FormProvider } from "../../useActionForm.js";
 import { humanizeCamelCase, type OptionsType } from "../../utils.js";
 import { useAutoForm, type AutoFormProps } from "../AutoForm.js";
 import { validateAutoFormProps } from "../AutoFormActionValidators.js";
@@ -68,10 +68,7 @@ export const MUIAutoFormComponent = <
       apiIdentifier: action.modelApiIdentifier,
       namespace: action.namespace,
     },
-    options: {
-      include: props.include,
-      exclude: props.exclude,
-    },
+    fields,
   };
 
   const formTitle = props.title === undefined ? humanizeCamelCase(action.operationName) : props.title;
