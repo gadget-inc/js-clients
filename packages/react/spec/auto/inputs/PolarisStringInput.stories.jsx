@@ -7,10 +7,22 @@ import { PolarisAutoTextInput } from "../../../src/auto/polaris/inputs/PolarisAu
 import { FormProvider, useForm } from "../../../src/useActionForm.ts";
 import { testApi as api } from "../../apis.ts";
 
+const Component = (props) => {
+  return (
+    <PolarisAutoForm action={api.widget.create}>
+      <Page>
+        <Card>
+          <PolarisAutoTextInput {...props} />
+        </Card>
+      </Page>
+    </PolarisAutoForm>
+  );
+};
+
 // More on how to set up stories at: https://storybook.js.org/docs/writing-stories#default-export
 export default {
   title: "Polaris/StringInput",
-  component: PolarisAutoTextInput,
+  component: Component,
   decorators: [
     // 👇 Defining the decorator in the preview file applies it to all stories
     (Story, { parameters }) => {
@@ -20,13 +32,7 @@ export default {
         <Provider api={api}>
           <AppProvider i18n={translations}>
             <FormProvider {...useForm()}>
-              <PolarisAutoForm action={api.widget.create}>
-                <Page>
-                  <Card>
-                    <Story />
-                  </Card>
-                </Page>
-              </PolarisAutoForm>
+              <Story />
             </FormProvider>
           </AppProvider>
         </Provider>
