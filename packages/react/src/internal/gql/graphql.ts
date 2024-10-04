@@ -3679,6 +3679,7 @@ export type GadgetAction = {
   inputFields: Array<GadgetObjectField>;
   isCreateOrUpdateAction: Scalars["Boolean"]["output"];
   isDeleteAction: Scalars["Boolean"]["output"];
+  isUpsertMetaAction: Scalars["Boolean"]["output"];
   name: Scalars["String"]["output"];
   namespace: Array<Scalars["String"]["output"]>;
   operatesWithRecordIdentity: Scalars["Boolean"]["output"];
@@ -3936,6 +3937,7 @@ export type GadgetHasManyThroughConfig = GadgetFieldConfigInterface & {
   isConfigured: Scalars["Boolean"]["output"];
   isInverseConfigured: Scalars["Boolean"]["output"];
   joinModel?: Maybe<GadgetModel>;
+  joinModelHasManyFieldApiIdentifier?: Maybe<Scalars["String"]["output"]>;
   joinModelKey?: Maybe<Scalars["String"]["output"]>;
   relatedModel?: Maybe<GadgetModel>;
   relatedModelKey?: Maybe<Scalars["String"]["output"]>;
@@ -13424,6 +13426,7 @@ type FieldMetadata_GadgetModelField_Fragment = {
       }
     | {
         __typename: "GadgetHasManyThroughConfig";
+        joinModelHasManyFieldApiIdentifier?: string | null;
         fieldType: GadgetFieldType;
         relatedModel?: {
           __typename?: "GadgetModel";
@@ -13572,6 +13575,7 @@ type FieldMetadata_GadgetObjectField_Fragment = {
       }
     | {
         __typename: "GadgetHasManyThroughConfig";
+        joinModelHasManyFieldApiIdentifier?: string | null;
         fieldType: GadgetFieldType;
         relatedModel?: {
           __typename?: "GadgetModel";
@@ -13739,6 +13743,7 @@ export type GetModelMetadataQuery = {
             }
           | {
               __typename: "GadgetHasManyThroughConfig";
+              joinModelHasManyFieldApiIdentifier?: string | null;
               fieldType: GadgetFieldType;
               relatedModel?: {
                 __typename?: "GadgetModel";
@@ -13907,6 +13912,7 @@ type SubFields_GadgetModelField_Fragment = {
               }
             | {
                 __typename: "GadgetHasManyThroughConfig";
+                joinModelHasManyFieldApiIdentifier?: string | null;
                 fieldType: GadgetFieldType;
                 relatedModel?: {
                   __typename?: "GadgetModel";
@@ -14078,6 +14084,7 @@ type SubFields_GadgetModelField_Fragment = {
                       }
                     | {
                         __typename: "GadgetHasManyThroughConfig";
+                        joinModelHasManyFieldApiIdentifier?: string | null;
                         fieldType: GadgetFieldType;
                         relatedModel?: {
                           __typename?: "GadgetModel";
@@ -14297,6 +14304,7 @@ type SubFields_GadgetModelField_Fragment = {
                               }
                             | {
                                 __typename: "GadgetHasManyThroughConfig";
+                                joinModelHasManyFieldApiIdentifier?: string | null;
                                 fieldType: GadgetFieldType;
                                 relatedModel?: {
                                   __typename?: "GadgetModel";
@@ -14536,6 +14544,7 @@ type SubFields_GadgetObjectField_Fragment = {
               }
             | {
                 __typename: "GadgetHasManyThroughConfig";
+                joinModelHasManyFieldApiIdentifier?: string | null;
                 fieldType: GadgetFieldType;
                 relatedModel?: {
                   __typename?: "GadgetModel";
@@ -14707,6 +14716,7 @@ type SubFields_GadgetObjectField_Fragment = {
                       }
                     | {
                         __typename: "GadgetHasManyThroughConfig";
+                        joinModelHasManyFieldApiIdentifier?: string | null;
                         fieldType: GadgetFieldType;
                         relatedModel?: {
                           __typename?: "GadgetModel";
@@ -14926,6 +14936,7 @@ type SubFields_GadgetObjectField_Fragment = {
                               }
                             | {
                                 __typename: "GadgetHasManyThroughConfig";
+                                joinModelHasManyFieldApiIdentifier?: string | null;
                                 fieldType: GadgetFieldType;
                                 relatedModel?: {
                                   __typename?: "GadgetModel";
@@ -15170,6 +15181,7 @@ export type ModelActionMetadataQuery = {
             }
           | {
               __typename: "GadgetHasManyThroughConfig";
+              joinModelHasManyFieldApiIdentifier?: string | null;
               fieldType: GadgetFieldType;
               relatedModel?: {
                 __typename?: "GadgetModel";
@@ -15341,6 +15353,7 @@ export type ModelActionMetadataQuery = {
                     }
                   | {
                       __typename: "GadgetHasManyThroughConfig";
+                      joinModelHasManyFieldApiIdentifier?: string | null;
                       fieldType: GadgetFieldType;
                       relatedModel?: {
                         __typename?: "GadgetModel";
@@ -15560,6 +15573,7 @@ export type ModelActionMetadataQuery = {
                             }
                           | {
                               __typename: "GadgetHasManyThroughConfig";
+                              joinModelHasManyFieldApiIdentifier?: string | null;
                               fieldType: GadgetFieldType;
                               relatedModel?: {
                                 __typename?: "GadgetModel";
@@ -15819,6 +15833,7 @@ export type ModelActionMetadataQuery = {
                                     }
                                   | {
                                       __typename: "GadgetHasManyThroughConfig";
+                                      joinModelHasManyFieldApiIdentifier?: string | null;
                                       fieldType: GadgetFieldType;
                                       relatedModel?: {
                                         __typename?: "GadgetModel";
@@ -16094,6 +16109,7 @@ export type ModelActionMetadataQuery = {
               }
             | {
                 __typename: "GadgetHasManyThroughConfig";
+                joinModelHasManyFieldApiIdentifier?: string | null;
                 fieldType: GadgetFieldType;
                 relatedModel?: {
                   __typename?: "GadgetModel";
@@ -16265,6 +16281,7 @@ export type ModelActionMetadataQuery = {
                       }
                     | {
                         __typename: "GadgetHasManyThroughConfig";
+                        joinModelHasManyFieldApiIdentifier?: string | null;
                         fieldType: GadgetFieldType;
                         relatedModel?: {
                           __typename?: "GadgetModel";
@@ -16484,6 +16501,7 @@ export type ModelActionMetadataQuery = {
                               }
                             | {
                                 __typename: "GadgetHasManyThroughConfig";
+                                joinModelHasManyFieldApiIdentifier?: string | null;
                                 fieldType: GadgetFieldType;
                                 relatedModel?: {
                                   __typename?: "GadgetModel";
@@ -16743,6 +16761,7 @@ export type ModelActionMetadataQuery = {
                                       }
                                     | {
                                         __typename: "GadgetHasManyThroughConfig";
+                                        joinModelHasManyFieldApiIdentifier?: string | null;
                                         fieldType: GadgetFieldType;
                                         relatedModel?: {
                                           __typename?: "GadgetModel";
@@ -17022,6 +17041,7 @@ export type GlobalActionMetadataQuery = {
             }
           | {
               __typename: "GadgetHasManyThroughConfig";
+              joinModelHasManyFieldApiIdentifier?: string | null;
               fieldType: GadgetFieldType;
               relatedModel?: {
                 __typename?: "GadgetModel";
@@ -17193,6 +17213,7 @@ export type GlobalActionMetadataQuery = {
                     }
                   | {
                       __typename: "GadgetHasManyThroughConfig";
+                      joinModelHasManyFieldApiIdentifier?: string | null;
                       fieldType: GadgetFieldType;
                       relatedModel?: {
                         __typename?: "GadgetModel";
@@ -17412,6 +17433,7 @@ export type GlobalActionMetadataQuery = {
                             }
                           | {
                               __typename: "GadgetHasManyThroughConfig";
+                              joinModelHasManyFieldApiIdentifier?: string | null;
                               fieldType: GadgetFieldType;
                               relatedModel?: {
                                 __typename?: "GadgetModel";
@@ -17671,6 +17693,7 @@ export type GlobalActionMetadataQuery = {
                                     }
                                   | {
                                       __typename: "GadgetHasManyThroughConfig";
+                                      joinModelHasManyFieldApiIdentifier?: string | null;
                                       fieldType: GadgetFieldType;
                                       relatedModel?: {
                                         __typename?: "GadgetModel";
@@ -18008,6 +18031,7 @@ export const FieldMetadataFragmentDoc = {
                           selections: [{ kind: "Field", name: { kind: "Name", value: "apiIdentifier" } }],
                         },
                       },
+                      { kind: "Field", name: { kind: "Name", value: "joinModelHasManyFieldApiIdentifier" } },
                     ],
                   },
                 },
@@ -18383,6 +18407,7 @@ export const SubFieldsFragmentDoc = {
                           selections: [{ kind: "Field", name: { kind: "Name", value: "apiIdentifier" } }],
                         },
                       },
+                      { kind: "Field", name: { kind: "Name", value: "joinModelHasManyFieldApiIdentifier" } },
                     ],
                   },
                 },
@@ -18731,6 +18756,7 @@ export const GetModelMetadataDocument = {
                           selections: [{ kind: "Field", name: { kind: "Name", value: "apiIdentifier" } }],
                         },
                       },
+                      { kind: "Field", name: { kind: "Name", value: "joinModelHasManyFieldApiIdentifier" } },
                     ],
                   },
                 },
@@ -19153,6 +19179,7 @@ export const ModelActionMetadataDocument = {
                           selections: [{ kind: "Field", name: { kind: "Name", value: "apiIdentifier" } }],
                         },
                       },
+                      { kind: "Field", name: { kind: "Name", value: "joinModelHasManyFieldApiIdentifier" } },
                     ],
                   },
                 },
@@ -19598,6 +19625,7 @@ export const GlobalActionMetadataDocument = {
                           selections: [{ kind: "Field", name: { kind: "Name", value: "apiIdentifier" } }],
                         },
                       },
+                      { kind: "Field", name: { kind: "Name", value: "joinModelHasManyFieldApiIdentifier" } },
                     ],
                   },
                 },

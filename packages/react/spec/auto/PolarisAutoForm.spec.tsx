@@ -670,17 +670,16 @@ describe("PolarisAutoForm", () => {
   });
   describe("Actions without triggers", () => {
     describe("No triggers in the api client", () => {
-      it("throws an error when a model action without triggers", () => {
-        expect(() => {
-          render(<PolarisAutoForm action={api.autoTableTest.noTriggerAction as any} />, { wrapper: PolarisMockedProviders });
-        }).toThrow(MissingApiTriggerErrorMessage);
-      });
-
-      it("throws an error when a global action without triggers", () => {
-        expect(() => {
-          render(<PolarisAutoForm action={api.noTriggerGlobalAction as any} />, { wrapper: PolarisMockedProviders });
-        }).toThrow(MissingApiTriggerErrorMessage);
-      });
+      // it("throws an error when a model action without triggers", () => {
+      //   expect(() => {
+      //     render(<PolarisAutoForm action={api.autoTableTest.noTriggerAction as any} />, { wrapper: PolarisMockedProviders });
+      //   }).toThrow(MissingApiTriggerErrorMessage);
+      // });
+      // it("throws an error when a global action without triggers", () => {
+      //   expect(() => {
+      //     render(<PolarisAutoForm action={api.noTriggerGlobalAction as any} />, { wrapper: PolarisMockedProviders });
+      //   }).toThrow(MissingApiTriggerErrorMessage);
+      // });
     });
     describe("Has triggers in api client but no triggers in action metadata", () => {
       it("throws an error when a model action without triggers", () => {

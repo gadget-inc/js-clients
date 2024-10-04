@@ -1,7 +1,7 @@
 import { Autocomplete, Box, TextField, Typography } from "@mui/material";
 import React from "react";
 import { autoInput } from "../../../AutoInput.js";
-import { useHasManyInputController } from "../../../hooks/useHasManyInputController.js";
+import { useHasManyInputController } from "../../../hooks/useHasManyController.js";
 import type { AutoRelationshipInputProps } from "../../../interfaces/AutoRelationshipInputProps.js";
 
 export const MUIAutoHasManyInput = autoInput((props: AutoRelationshipInputProps) => {
@@ -9,17 +9,19 @@ export const MUIAutoHasManyInput = autoInput((props: AutoRelationshipInputProps)
     fieldMetadata: { path, metadata },
     relatedModelOptions: { options, search, pagination },
 
-    selectedRecordIds,
+    selectedRecords,
 
     onSelectRecord,
   } = useHasManyInputController(props);
+
+  const selectedRecordIds = selectedRecords.map((record) => record.id);
 
   return (
     <Autocomplete
       multiple
       renderOption={(props, option) => {
-        const isShowMoreButton = option.recordId === "-1";
-        const isSelected = selectedRecordIds.includes(option.recordId);
+        const isShowMoreButton = option.id === "-1";
+        const isSelected = selectedRecordIds.includes(option.id);
         return !isShowMoreButton ? (
           <Box component="li" {...props}>
             {isSelected && `✔️ `}
@@ -56,4 +58,4 @@ export const MUIAutoHasManyInput = autoInput((props: AutoRelationshipInputProps)
   );
 });
 
-const showMoreHoverOption = { recordId: "-1", label: "Show more" };
+const showMoreHoverOption = { id: "-1", label: "Show more" };

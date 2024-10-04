@@ -1,14 +1,16 @@
-import type { ActionFunction, GadgetRecord, GlobalActionFunction } from "@gadgetinc/api-client-core";
+import type { ActionFunction, FieldSelection, GadgetRecord, GlobalActionFunction } from "@gadgetinc/api-client-core";
 import { yupResolver } from "@hookform/resolvers/yup";
 import type { ReactNode } from "react";
-import { useEffect, useMemo, useRef } from "react";
-import type { AnyActionWithId, RecordIdentifier, UseActionFormHookStateData } from "src/use-action-form/types.js";
-import type { GadgetObjectFieldConfig } from "../internal/gql/graphql.js";
+import React, { useEffect, useMemo, useRef } from "react";
+import type { GadgetHasManyThroughConfig, GadgetObjectFieldConfig } from "../internal/gql/graphql.js";
 import type { FieldMetadata, GlobalActionMetadata, ModelWithOneActionMetadata } from "../metadata.js";
-import { FieldType, filterAutoFormFieldList, isModelActionMetadata, useActionMetadata } from "../metadata.js";
-import type { FieldErrors, FieldValues } from "../useActionForm.js";
+import { FieldType, buildAutoFormFieldList, isModelActionMetadata, useActionMetadata } from "../metadata.js";
+import type { AnyActionWithId, RecordIdentifier, UseActionFormHookStateData, UseActionFormSubmit } from "../use-action-form/types.js";
+import { isPlainObject } from "../use-action-form/utils.js";
+import { pathListToSelection } from "../use-table/helpers.js";
+import type { FieldErrors, FieldValues, UseFormReturn } from "../useActionForm.js";
 import { useActionForm } from "../useActionForm.js";
-import { get, getFlattenedObjectKeys, type OptionsType } from "../utils.js";
+import { get, getFlattenedObjectKeys, type ErrorWrapper, type OptionsType } from "../utils.js";
 import { validationSchema } from "../validationSchema.js";
 import {
   validateFindByObjectWithMetadata,
@@ -16,6 +18,7 @@ import {
   validateTriggersFromApiClient,
   validateTriggersFromMetadata,
 } from "./AutoFormActionValidators.js";
+import { isAutoInput } from "./AutoInput.js";
 
 /** The props that any <AutoForm/> component accepts */
 export type AutoFormProps<
@@ -47,6 +50,10 @@ export type AutoFormProps<
   onFailure?: (error: Error | FieldErrors<ActionFunc["variablesType"]>) => void;
   /** Custom components to render within the form. Using this will override all default field rendering.   */
   children?: ReactNode;
+  /**
+   * Enable debug logging for this form
+   */
+  debug?: boolean;
 } & (ActionFunc extends AnyActionWithId<GivenOptions>
   ? {
       /**
@@ -89,22 +96,22 @@ export const useFormFields = (
       : [];
     const nonObjectFields = action.inputFields.filter((field) => field.configuration.__typename !== "GadgetObjectFieldConfig");
 
-    const includedRootLevelFields = filterAutoFormFieldList(nonObjectFields, options as any).map(
-      (field) =>
+    const includedRootLevelFields = buildAutoFormFieldList(nonObjectFields, options as any).map(
+      ([path, field]) =>
         ({
-          path: field.apiIdentifier,
+          path,
           metadata: field,
         } as const)
     );
 
     const includedObjectFields = objectFields.flatMap((objectField) =>
-      filterAutoFormFieldList((objectField.configuration as unknown as GadgetObjectFieldConfig).fields as any, {
+      buildAutoFormFieldList((objectField.configuration as unknown as GadgetObjectFieldConfig).fields as any, {
         ...(options as any),
         isUpsertAction: true, // For upsert meta-actions, we allow IDs, and they are object fields instead of root level
       }).map(
-        (innerField) =>
+        ([innerPath, innerField]) =>
           ({
-            path: `${objectField.apiIdentifier}.${innerField.apiIdentifier}`,
+            path: `${objectField.apiIdentifier}.${innerPath}`,
             metadata: innerField,
           } as const)
       )
@@ -113,11 +120,24 @@ export const useFormFields = (
     const allFormFields = [...includedObjectFields, ...includedRootLevelFields];
     validateFormFieldApiIdentifierUniqueness(
       action.apiIdentifier,
-      allFormFields.map(({ metadata }) => metadata.apiIdentifier)
+      allFormFields.map(({ path }) => path)
     );
 
     return allFormFields;
   }, [metadata, options]);
+};
+
+export const useFormSelection = (
+  modelApiIdentifier: string | undefined,
+  fields: readonly { path: string; metadata: FieldMetadata }[]
+): FieldSelection | undefined => {
+  if (!modelApiIdentifier) return;
+  if (!fields.length) return;
+
+  const paths = fields.map((f) => f.path.replace(new RegExp(`^${modelApiIdentifier}\\.`), ""));
+  const fieldMetaData = fields.map((f) => f.metadata);
+
+  return pathListToSelection(modelApiIdentifier, paths, fieldMetaData);
 };
 
 const validateFormFieldApiIdentifierUniqueness = (actionApiIdentifier: string, inputApiIdentifiers: string[]) => {
@@ -141,8 +161,26 @@ export const useAutoForm = <
   ActionFunc extends ActionFunction<GivenOptions, any, any, SchemaT, any> | GlobalActionFunction<any>
 >(
   props: AutoFormProps<GivenOptions, SchemaT, ActionFunc, any, any> & { findBy?: any }
-) => {
-  const { action, record, onSuccess, onFailure, findBy } = props;
+): {
+  metadata: ModelWithOneActionMetadata | GlobalActionMetadata | undefined;
+  fetchingMetadata: boolean;
+  metadataError: ErrorWrapper | undefined;
+  fields: readonly { path: string; metadata: FieldMetadata }[];
+  submit: UseActionFormSubmit<ActionFunc>;
+  formError: Error | ErrorWrapper | null | undefined;
+  isSubmitting: boolean;
+  isSubmitSuccessful: boolean;
+  isLoading: boolean;
+  originalFormMethods: UseFormReturn<any, any>;
+} => {
+  const { action, record, onSuccess, onFailure, findBy, children } = props;
+  let include = props.include;
+  let exclude = props.exclude;
+
+  if (children) {
+    include = extractPathsFromChildren(children);
+    exclude = undefined;
+  }
 
   validateNonBulkAction(action);
   validateTriggersFromApiClient(action);
@@ -152,7 +190,8 @@ export const useAutoForm = <
   validateTriggersFromMetadata(metadata);
 
   // filter down the fields to render only what we want to render for this form
-  const fields = useFormFields(metadata, props);
+  const fields = useFormFields(metadata, { include, exclude });
+
   validateFindByObjectWithMetadata(fields, findBy);
   const isDeleteAction = metadata && isModelActionMetadata(metadata) && metadata.action.isDeleteAction;
   const isGlobalAction = action.type === "globalAction";
@@ -160,15 +199,10 @@ export const useAutoForm = <
   const modelApiIdentifier = action.type == "action" ? action.modelApiIdentifier : undefined;
   const isUpsertMetaAction =
     metadata && isModelActionMetadata(metadata) && fields.some((field) => field.metadata.fieldType === FieldType.Id);
+
+  const selection = useFormSelection(modelApiIdentifier, fields);
   const isUpsertWithFindBy = isUpsertMetaAction && !!findBy;
-  const hasCustomChildren = !!props.children;
-  const fieldPathsToValidate = useMemo(
-    () =>
-      hasCustomChildren
-        ? [] // With custom children, do not validate fields before sending them to avoid blocking submissions due to missing required fields
-        : fields.map(({ path }) => path),
-    [hasCustomChildren, fields]
-  );
+  const fieldPathsToValidate = useMemo(() => fields.map(({ path }) => path), [fields]);
 
   const defaultValues: Record<string, unknown> = useMemo(
     () =>
@@ -195,20 +229,53 @@ export const useAutoForm = <
     setValue,
     getValues,
 
-    formState: { isSubmitSuccessful, isLoading, isReady, isSubmitting, touchedFields, errors },
+    formState: { isSubmitSuccessful, submitCount, isLoading, isReady, isSubmitting, touchedFields, errors },
     originalFormMethods,
   } = useActionForm(action, {
     defaultValues: defaultValues as any,
     findBy: "findBy" in props ? props.findBy : undefined,
     throwOnInvalidFindByObject: false,
+    pause: "findBy" in props ? fetchingMetadata : undefined,
+    select: selection as any,
     resolver: useValidationResolver(metadata, fieldPathsToValidate),
     send: () => {
+      const hasManyFieldPaths = new Set(
+        fields.flatMap(({ path, metadata }) => {
+          if (metadata.fieldType === FieldType.HasMany || metadata.fieldType === FieldType.HasManyThrough) {
+            return path;
+          } else {
+            return [];
+          }
+        })
+      );
+
+      const hasManyThroughFieldMap: Record<string, string> = {};
+
+      for (const { path, metadata } of fields) {
+        if (metadata.fieldType === FieldType.HasManyThrough) {
+          const config = metadata.configuration as GadgetHasManyThroughConfig;
+          const pathParts = path.split(".");
+          const basePath = pathParts.slice(0, -1);
+          hasManyThroughFieldMap[path] = [...basePath, config.joinModelHasManyFieldApiIdentifier].join(".");
+        }
+      }
+
       const fieldsToSend = fields
         .filter(({ path, metadata }) => {
           const fieldType = metadata.fieldType;
           const isUntouchedPasswordField = fieldType === FieldType.Password && "findBy" in props && !get(touchedFields, path);
           if (isUntouchedPasswordField) {
             // Never send the password field if it hasn't been touched. Doing so will clear the record value
+            return false;
+          }
+
+          const pathParts = path.split(".");
+          const isChildOfHasManyField = pathParts.some((_, index) => {
+            const parentPath = pathParts.slice(0, index).join(".");
+            return hasManyFieldPaths.has(parentPath);
+          });
+
+          if (isChildOfHasManyField) {
             return false;
           }
 
@@ -235,19 +302,41 @@ export const useAutoForm = <
         });
       }
 
-      return fieldsToSend;
+      return fieldsToSend.map((field) => {
+        if (hasManyThroughFieldMap[field]) {
+          return hasManyThroughFieldMap[field];
+        }
+        return field;
+      });
     },
     onError: onFailure,
-    onSuccess:
-      onSuccess ??
-      function clearInputValues() {
-        const isCreateAction = !operatesWithRecordId && !isDeleteAction && !isGlobalAction && !isUpsertMetaAction;
-        const isUpsertWithoutFindBy = isUpsertMetaAction && !isUpsertWithFindBy;
-        if (isCreateAction || isGlobalAction || isUpsertWithoutFindBy) {
-          reset();
-        }
-      },
+    onSuccess,
+    debug: props.debug,
   });
+
+  const isCreateAction = !operatesWithRecordId && !isDeleteAction && !isGlobalAction && !isUpsertMetaAction;
+  const isUpsertWithoutFindBy = isUpsertMetaAction && !isUpsertWithFindBy;
+
+  useEffect(() => {
+    if (isSubmitSuccessful) {
+      if (isCreateAction || isUpsertWithoutFindBy || isGlobalAction) {
+        const resetValues =
+          modelApiIdentifier && selection ? resetValuesForDefaultValues(modelApiIdentifier, defaultValues, selection) : defaultValues;
+
+        reset(resetValues);
+      }
+    }
+  }, [
+    isSubmitSuccessful,
+    isCreateAction,
+    isUpsertWithoutFindBy,
+    isGlobalAction,
+    reset,
+    defaultValues,
+    submitCount,
+    selection,
+    modelApiIdentifier,
+  ]);
 
   // we don't have synchronous access to the default values always -- sometimes we need to load them from the metadata. if we do that, then we need to forcibly set them into the form state once they have been loaded
   const hasSetInitialValues = useRef<boolean>(false);
@@ -280,6 +369,73 @@ export const useAutoForm = <
     isLoading,
     originalFormMethods,
   };
+};
+
+const resetValuesForDefaultValues = (modelApiIdentifier: string, defaultValues: Record<string, unknown>, selection: FieldSelection) => {
+  const extractResetArrayPathsFromSelection = (selection: FieldSelection) => {
+    return Object.keys(selection).reduce<any>((acc, key) => {
+      const selectionValue = selection[key];
+
+      if (isPlainObject(selectionValue)) {
+        if ("edges" in selectionValue) {
+          acc[key] = [];
+        } else {
+          const subSelectionValue = extractResetArrayPathsFromSelection(selectionValue);
+          if (Object.keys(subSelectionValue).length > 0) {
+            acc[key] = subSelectionValue;
+          }
+        }
+      }
+
+      return acc;
+    }, {});
+  };
+
+  return {
+    ...defaultValues,
+    [modelApiIdentifier]: {
+      ...(defaultValues[modelApiIdentifier] ?? {}),
+      ...extractResetArrayPathsFromSelection(selection),
+    },
+  };
+};
+
+export const extractPathsFromChildren = (children: React.ReactNode) => {
+  const paths = new Set<string>();
+
+  React.Children.forEach(children, (child) => {
+    if (React.isValidElement(child)) {
+      const grandChildren = child.props.children as React.ReactNode | undefined;
+      let childPaths: string[] = [];
+
+      if (grandChildren) {
+        childPaths = extractPathsFromChildren(grandChildren);
+      }
+
+      let field: string | undefined = undefined;
+
+      if (isAutoInput(child)) {
+        const props = child.props as { field: string; selectPaths?: string[]; children?: React.ReactNode };
+        field = props.field;
+
+        paths.add(field);
+
+        if (props.selectPaths && Array.isArray(props.selectPaths)) {
+          props.selectPaths.forEach((selectPath) => {
+            paths.add(`${field}.${selectPath}`);
+          });
+        }
+      }
+
+      if (childPaths.length > 0) {
+        for (const childPath of childPaths) {
+          paths.add(field ? `${field}.${childPath}` : childPath);
+        }
+      }
+    }
+  });
+
+  return Array.from(paths);
 };
 
 const removeIdFieldsUnlessUpsertWithoutFindBy = (isUpsertWithFindBy?: boolean) => {

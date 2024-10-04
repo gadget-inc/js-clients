@@ -1,32 +1,25 @@
 import { Combobox } from "@shopify/polaris";
 import React, { useMemo } from "react";
 import { autoInput } from "../../../AutoInput.js";
-import { useHasManyInputController } from "../../../hooks/useHasManyController.js";
+import { useHasManyThroughInputController } from "../../../hooks/useHasManyThroughController.js";
 import { optionRecordsToLoadCount, useOptionLabelForField } from "../../../hooks/useRelatedModel.js";
 import type { AutoRelationshipInputProps } from "../../../interfaces/AutoRelationshipInputProps.js";
 import { RelatedModelOptions } from "./RelatedModelOptions.js";
 import { getSelectedRelatedRecordTags } from "./SelectedRelatedRecordTags.js";
 
-export const PolarisAutoHasManyInput = autoInput((props: AutoRelationshipInputProps) => {
+export const PolarisAutoHasManyThroughInput = autoInput((props: AutoRelationshipInputProps) => {
   const { field } = props;
-
   const {
     fieldMetadata: { path, metadata },
     relatedModelOptions: { options, searchFilterOptions, search, pagination, relatedModel },
-
     selectedRecords,
     errorMessage,
     isLoading,
-
-    onSelectRecord,
     onRemoveRecord,
-  } = useHasManyInputController(props);
+    onSelectRecord,
+  } = useHasManyThroughInputController(props);
 
   const optionLabel = useOptionLabelForField(field, props.optionLabel);
-
-  // if ((selected.records as GadgetRecordList<never>)?.hasNextPage) {
-  //   return <Banner tone="warning">{`Too many related records for ${field}. Cannot edit`}</Banner>;
-  // }
 
   const selectedRecordIds = useMemo(() => {
     return selectedRecords.map((record) => record.id).filter((id) => !!id) as string[];
