@@ -390,6 +390,8 @@ const getParentRelationshipFieldGraphqlApiInput = (props: { input: any; result: 
   const { input, result } = props;
   const { __typename, ...rest } = result;
 
+  console.log({ input, result });
+
   if ("__id" in rest) {
     if ("__unlinkedInverseField" in rest && rest.__unlinkedInverseField) {
       const inverseFieldApiId = rest.__unlinkedInverseField;

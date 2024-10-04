@@ -13,10 +13,7 @@ import { useModelManager } from "./useModelManager.js";
 export const optionRecordsToLoadCount = 25;
 export const selectedRecordsToLoadCount = 25;
 
-export const useRelatedModelOptions = (props: {
-  field: string; // Field API identifier
-  optionLabel?: OptionLabel; // The label to display for each related model record
-}) => {
+export const useRelatedModelRecords = (props: { field: string }) => {
   const { field } = props;
   const { metadata } = useFieldMetadata(field);
   const { findBy, model } = useAutoFormMetadata();
@@ -29,11 +26,6 @@ export const useRelatedModelOptions = (props: {
   const relatedModelNamespace = relationshipFieldConfig.relatedModel?.namespace;
   const relatedModelInverseFieldApiId =
     "inverseField" in relationshipFieldConfig ? relationshipFieldConfig.inverseField?.apiIdentifier : undefined;
-
-  const optionLabel = assert(
-    props.optionLabel ?? relationshipFieldConfig.relatedModel?.defaultDisplayField.apiIdentifier,
-    "Option label is required for relationships"
-  );
 
   const { selected } = isBelongsToField
     ? // eslint-disable-next-line
@@ -54,8 +46,30 @@ export const useRelatedModelOptions = (props: {
 
   const relatedModelRecords = useAllRelatedModelRecords({
     relatedModel: { apiIdentifier: relatedModelApiIdentifier!, namespace: relatedModelNamespace },
-    optionLabel,
+    filter: isBelongsToField ? undefined : { [relatedModelInverseFieldApiId + "Id"]: { isSet: false } },
   });
+
+  return {
+    selected,
+    relatedModelRecords,
+  };
+};
+
+export const useRelatedModelOptions = (props: {
+  field: string; // Field API identifier
+  optionLabel?: OptionLabel; // The label to display for each related model record
+}) => {
+  const { field } = props;
+  const { metadata } = useFieldMetadata(field);
+
+  const relationshipFieldConfig = metadata.configuration as RelationshipFieldConfig;
+
+  const optionLabel = assert(
+    props.optionLabel ?? relationshipFieldConfig.relatedModel?.defaultDisplayField.apiIdentifier,
+    "Option label is required for relationships"
+  );
+  const { selected, relatedModelRecords } = useRelatedModelRecords(props);
+
   const { relatedModel, pagination, search } = relatedModelRecords;
 
   const getOptions = () => {
@@ -120,7 +134,7 @@ export const getRecordsAsOptions = (records: Record<string, any>[], optionLabel:
  *
  * The lookup is done using the `findBy` to lookup on the current model to retrieve the related model record data
  */
-export const useLinkedChildModelRelatedModelRecords = (props: {
+const useLinkedChildModelRelatedModelRecords = (props: {
   belongsToFieldApiId: string;
   currentRecordId?: string;
   currentModel: { apiIdentifier: string; namespace?: string[] | string | null };
@@ -154,7 +168,7 @@ export const useLinkedChildModelRelatedModelRecords = (props: {
 /**
  * For getting the related child model records in a HasOne/HasMany relationship
  */
-export const useLinkedParentModelRelatedModelRecords = (props: {
+const useLinkedParentModelRelatedModelRecords = (props: {
   relatedModel: {
     apiIdentifier: string;
     namespace?: string[] | string | null;
@@ -177,7 +191,7 @@ export const useLinkedParentModelRelatedModelRecords = (props: {
     pause: !currentRecordId, // HasOne/HasMany need the current record to query the inverse field in the related model
 
     first: selectedRecordsToLoadCount, // Many records can point to the current record in hasOne/hasMany
-    filter: { [inverseFieldApiIdentifier]: { equals: currentRecordId } }, // Filter by the inverse field belongsTo field value
+    filter: { [inverseFieldApiIdentifier + "Id"]: { equals: currentRecordId } }, // Filter by the inverse field belongsTo field value
   });
 
   return {
@@ -189,8 +203,9 @@ export const useLinkedParentModelRelatedModelRecords = (props: {
   };
 };
 
-export const useAllRelatedModelRecords = (props: {
+const useAllRelatedModelRecords = (props: {
   optionLabel?: OptionLabel;
+  filter?: Record<string, any>;
   relatedModel: { apiIdentifier: string; namespace?: string[] | string | null };
 }) => {
   const { optionLabel, relatedModel } = props;
@@ -204,6 +219,7 @@ export const useAllRelatedModelRecords = (props: {
 
   const [{ data: newlyFetchedRecords, fetching, error }, _refetch] = useFindMany(relatedModelManager as any, {
     first: optionRecordsToLoadCount,
+    ...(props.filter && { filter: props.filter }),
     ...(paginationPage && { after: paginationPage }),
     ...(searchValue && { search: searchValue }),
     ...(optionLabelIsFieldName && { select: { id: true, [optionLabel]: true } }),

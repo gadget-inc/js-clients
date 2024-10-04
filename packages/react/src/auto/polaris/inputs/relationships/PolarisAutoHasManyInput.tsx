@@ -2,7 +2,7 @@ import type { GadgetRecordList } from "@gadgetinc/api-client-core";
 import { Banner, Combobox } from "@shopify/polaris";
 import React from "react";
 import { useHasManyInputController } from "../../../hooks/useHasManyInputController.js";
-import { optionRecordsToLoadCount } from "../../../hooks/useRelatedModelOptions.js";
+import { optionRecordsToLoadCount } from "../../../hooks/useRelatedModel.js";
 import type { AutoRelationshipInputProps } from "../../../interfaces/AutoRelationshipInputProps.js";
 import { RelatedModelOptions } from "./RelatedModelOptions.js";
 import { getSelectedRelatedRecordTags } from "./SelectedRelatedRecordTags.js";

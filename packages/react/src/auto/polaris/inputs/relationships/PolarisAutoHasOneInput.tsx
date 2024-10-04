@@ -1,7 +1,7 @@
 import { Banner, Combobox } from "@shopify/polaris";
 import React from "react";
 import { useHasOneInputController } from "../../../hooks/useHasOneInputController.js";
-import { optionRecordsToLoadCount } from "../../../hooks/useRelatedModelOptions.js";
+import { optionRecordsToLoadCount } from "../../../hooks/useRelatedModel.js";
 import type { AutoRelationshipInputProps } from "../../../interfaces/AutoRelationshipInputProps.js";
 import { RelatedModelOptions } from "./RelatedModelOptions.js";
 import { getSelectedRelatedRecordTags } from "./SelectedRelatedRecordTags.js";

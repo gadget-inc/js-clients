@@ -3,7 +3,7 @@ import { useController } from "react-hook-form";
 import { useAutoFormMetadata } from "../AutoFormContext.js";
 import type { AutoRelationshipInputProps } from "../interfaces/AutoRelationshipInputProps.js";
 import { useFieldMetadata } from "./useFieldMetadata.js";
-import { useRelatedModelOptions } from "./useRelatedModelOptions.js";
+import { useRelatedModelOptions } from "./useRelatedModel.js";
 
 export const useBelongsToInputController = (props: AutoRelationshipInputProps) => {
   const { field, control } = props;
