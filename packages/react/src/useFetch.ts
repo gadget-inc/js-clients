@@ -4,12 +4,28 @@ import { useConnection } from "./GadgetProvider.js";
 import { useStructuralMemo } from "./useStructuralMemo.js";
 import { ErrorWrapper } from "./utils.js";
 
+/**
+ * Tracks the state of a fetch operation.
+ *
+ * @template T The type of data expected from the fetch operation.
+ */
 export interface FetchHookState<T> {
+  /** Holds the successfully retrieved data from the fetch operation. */
   data?: T;
+
+  /** Contains the raw Response object from the completed fetch operation. */
   response?: Response;
+
+  /** Captures any error that occurred during the fetch operation. */
   error?: ErrorWrapper;
+
+  /** Signals whether a fetch operation is actively in progress. */
   fetching: boolean;
+
+  /** Indicates if the fetch operation is actively streaming data. */
   streaming: boolean;
+
+  /** Stores the options applied to the fetch operation. */
   options: FetchHookOptions;
 }
 
@@ -42,10 +58,47 @@ const reducer = <T>(state: FetchHookState<T>, action: FetchAction<T>): FetchHook
   }
 };
 
+/**
+ * Configures the behavior of the useFetch hook.
+ *
+ * Extends the standard RequestInit interface to add additional options.
+ */
 export interface FetchHookOptions extends RequestInit {
+  /**
+   * Controls whether to stream the response.
+   *
+   * When set to true, streams the response as Uint8Array.
+   * When set to a string, decodes the response using the specified encoding.
+   */
   stream?: boolean | string;
+
+  /**
+   * Enables automatic JSON parsing of the response.
+   *
+   * When true, attempts to parse the response body as JSON.
+   */
   json?: boolean;
+
+  /**
+   * Executes the request immediately upon component mount.
+   */
   sendImmediately?: boolean;
+
+  /**
+   * Executes this callback with the final value of the streamed string once the stream has finished.
+   *
+   * @example
+   * ```
+   * const [{data, fetching, error}, refresh] = useFetch("/users/get", {
+   *   onStreamComplete: (value) => {
+   *     console.log(value);
+   *   }
+   * })
+   * ```
+   *
+   * @param value The complete streamed response as a string.
+   * @returns void
+   */
   onStreamComplete?: (value: string) => void;
 }
 
