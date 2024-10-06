@@ -111,9 +111,9 @@ export class GadgetTooManyRequestsError extends Error {
   causedByClient = false;
 }
 
-/*
+/**
  * A Gadget API error representing a backend validation error on the input data for an action. Thrown when any of the validations configured on a model fail for the given input data. Has a `validationErrors` property describing which fields failed validation, with messages for each.
- **/
+ */
 export class InvalidRecordError extends Error {
   code = "GGT_INVALID_RECORD";
   name = "InvalidRecordError";
