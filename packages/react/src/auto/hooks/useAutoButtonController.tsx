@@ -37,7 +37,7 @@ export const useAutoButtonController = <
   const { action, variables, onSuccess, onError, ...buttonProps } = props;
   const { metadata, fetching: fetchingMetadata, error: metadataError } = useActionMetadata(action);
 
-  const [{ data: result, fetching: fetchingAction, error }, runAction] =
+  const [{ data: result, fetching: fetchingActionResult, error }, runAction] =
     // eslint-disable-next-line react-hooks/rules-of-hooks
     action.type == "globalAction" ? useGlobalAction(action) : useAction(action);
 
@@ -65,8 +65,8 @@ export const useAutoButtonController = <
 
   return {
     result,
-    fetching: fetchingMetadata || fetchingAction,
-    running: fetchingAction,
+    fetching: fetchingMetadata || fetchingActionResult,
+    running: fetchingActionResult,
     error: metadataError || error,
     label,
     isDestructive,

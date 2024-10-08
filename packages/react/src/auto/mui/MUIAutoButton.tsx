@@ -20,7 +20,7 @@ export const MUIAutoButton = <
 >(
   props: AutoButtonProps<GivenOptions, SchemaT, ActionFunc> & ComponentProps<typeof LoadingButton>
 ) => {
-  const { fetching, isDestructive, run, label, buttonProps } = useAutoButtonController({
+  const { fetching, running, isDestructive, run, label, buttonProps } = useAutoButtonController({
     onSuccess: (_result) => {
       setSnackbar({
         open: true,
@@ -47,7 +47,7 @@ export const MUIAutoButton = <
 
   return (
     <>
-      <LoadingButton loading={fetching} disabled={fetching} color={isDestructive ? "error" : undefined} onClick={run} {...buttonProps}>
+      <LoadingButton loading={running} disabled={fetching} color={isDestructive ? "error" : undefined} onClick={run} {...buttonProps}>
         {props?.children ?? label}
       </LoadingButton>
       {snackbar && <SnackbarHack {...snackbar} />}

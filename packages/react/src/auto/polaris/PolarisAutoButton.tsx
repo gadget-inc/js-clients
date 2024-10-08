@@ -18,7 +18,7 @@ export const PolarisAutoButton = <
 >(
   props: AutoButtonProps<GivenOptions, SchemaT, ActionFunc> & ComponentProps<typeof Button>
 ) => {
-  const { fetching, isDestructive, run, label, buttonProps } = useAutoButtonController({
+  const { fetching, running, isDestructive, run, label, buttonProps } = useAutoButtonController({
     onSuccess: (_result) => {
       if (window && window.shopify && window.shopify.toast) {
         window.shopify.toast.show(`${label} succeeded.`);
@@ -37,7 +37,7 @@ export const PolarisAutoButton = <
   });
 
   return (
-    <Button loading={fetching} disabled={fetching} tone={isDestructive ? "critical" : undefined} onClick={run} {...buttonProps}>
+    <Button loading={running} disabled={fetching} tone={isDestructive ? "critical" : undefined} onClick={run} {...buttonProps}>
       {props?.children ?? label}
     </Button>
   );
