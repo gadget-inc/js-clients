@@ -357,7 +357,9 @@ export const reshapeDataForGraphqlApi = async (client: AnyClient, defaultValues:
           return getParentRelationshipFieldGraphqlApiInput({ input, result });
         case "BelongsTo":
           return inputHasId
-            ? inputHasMoreFields
+            ? input["id"] === null
+              ? { _link: null }
+              : inputHasMoreFields
               ? { update: { id: input["id"], ...rest } }
               : { _link: input["id"] }
             : inputUpdateId // input has no id, but this path was found in the updates object, so we need to delete it
