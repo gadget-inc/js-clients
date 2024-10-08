@@ -34,8 +34,11 @@ export const useBelongsToInputController = (props: AutoRelationshipInputProps) =
       // Without a find by, there is no retrieved record ID
       return false;
     }
-    return !selected.fetching && selected.records && selected.records.length ? !selected.records[0][field] : true;
-  }, [findBy, selected.fetching]);
+
+    return !selected.fetching && selected.records && selected.records.length
+      ? !selected.records[0].id && !relatedModel.records.map((r) => r.id).includes(fieldProps.value)
+      : true;
+  }, [findBy, selected.fetching, fieldProps.value, relatedModel.records]);
 
   useEffect(() => {
     // Initializing the controller with the selected record ID from the DB

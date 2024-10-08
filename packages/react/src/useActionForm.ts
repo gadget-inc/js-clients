@@ -74,6 +74,10 @@ type ActionFormOptions<
          * Should be undefined for create actions, or a record ID (or finder) for update / etc actions
          **/
         findBy?: RecordIdentifier;
+        /**
+         * If false, don't throw an error if the the given findBy value is an invalid object
+         */
+        throwOnInvalidFindByObject?: boolean;
       }
     : // eslint-disable-next-line @typescript-eslint/ban-types
       {});
@@ -102,6 +106,7 @@ export const useActionForm = <
   options?: ActionFormOptions<GivenOptions, SchemaT, ActionFunc, ExtraFormVariables>
 ): UseActionFormResult<GivenOptions, SchemaT, ActionFunc, ExtraFormVariables, FormContext> => {
   const findById = options && "findBy" in options ? options.findBy : undefined;
+  const throwOnInvalidFindByObject = options && "findBy" in options ? options?.throwOnInvalidFindByObject ?? true : true;
   const api = useApi();
   const findExistingRecord = !!findById;
   const hasSetInitialValues = useRef<boolean>(!findExistingRecord);
@@ -113,6 +118,7 @@ export const useActionForm = <
   const [findResult] = useFindExistingRecord(modelManager, findById || "1", {
     pause: !findExistingRecord,
     select: actionSelect,
+    throwOnInvalidFindByObject,
   });
 
   const isReady = !findExistingRecord || !!findResult.data;
