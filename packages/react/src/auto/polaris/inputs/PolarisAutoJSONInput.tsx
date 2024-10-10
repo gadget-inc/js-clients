@@ -1,17 +1,26 @@
 import type { TextFieldProps } from "@shopify/polaris";
 import { TextField } from "@shopify/polaris";
 import React from "react";
-import type { Control } from "react-hook-form";
 import { useFocus } from "../../../useFocus.js";
 import { getPropsWithoutRef } from "../../../utils.js";
 import { useJSONInputController } from "../../hooks/useJSONInputController.js";
+import { AutoJSONInputProps } from "../../shared/AutoInputTypes.js";
 
-export const PolarisAutoJSONInput = (
-  props: {
-    field: string; // The field API identifier
-    control?: Control<any>;
-  } & Partial<Omit<TextFieldProps, "onChange">>
-) => {
+type PolarisAutoJSONInputProps = AutoJSONInputProps & Partial<Omit<TextFieldProps, "onChange">>;
+
+/**
+ * JSON field input component for use within <AutoForm></AutoForm> components.
+ * @example
+ * ```tsx
+ * <AutoForm action={api.modelA.create}>
+ *   <AutoJSONInput field="fieldA" label="Field A" />
+ * </AutoForm>
+ * ```
+ * @param props.field - The JSON field API identifier
+ * @param props.label - The label of the JSON input component
+ * @returns The JSON input component
+ */
+export const PolarisAutoJSONInput = (props: PolarisAutoJSONInputProps) => {
   const [isFocused, focusProps] = useFocus();
   const { field: _field, control: _control, ...restOfProps } = props;
   const { type: _type, errorMessage, ...controller } = useJSONInputController(props);

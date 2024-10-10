@@ -1,16 +1,24 @@
 import type { AutocompleteProps } from "@mui/material";
 import { Autocomplete, TextField } from "@mui/material";
 import React from "react";
-import type { Control } from "react-hook-form";
 import { useRoleInputController } from "../../hooks/useRoleInputController.js";
+import { AutoRolesInputProps } from "../../shared/AutoInputTypes.js";
 
-export const MUIAutoRolesInput = (
-  props: {
-    field: string; // Field API identifier
-    control?: Control<any>;
-    label?: string;
-  } & Partial<AutocompleteProps<{ id: string; label: string }, true, any, any>>
-) => {
+type MUIAutoRolesInputProps = AutoRolesInputProps & Partial<AutocompleteProps<{ id: string; label: string }, true, any, any>>;
+
+/**
+ * A role list input component for use within <AutoForm></AutoForm> components.
+ * @example
+ * ```tsx
+ * <AutoForm action={api.modelA.create}>
+ *   <AutoRolesInput field="roles" />
+ * </AutoForm>
+ * ```
+ * @param props.field - The role list field API identifier
+ * @param props.label - The label of the role list field
+ * @returns The Polaris Auto Roles Input component
+ */
+export const MUIAutoRolesInput = (props: MUIAutoRolesInputProps) => {
   const { options, loading, rolesError, fieldError, selectedRoleKeys, fieldProps, metadata } = useRoleInputController(props);
 
   if (rolesError) {

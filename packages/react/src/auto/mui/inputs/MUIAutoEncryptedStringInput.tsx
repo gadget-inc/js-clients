@@ -1,15 +1,23 @@
-import type { TextFieldProps } from "@mui/material";
-import { IconButton } from "@mui/material";
+import { IconButton, TextFieldProps } from "@mui/material";
 import React, { useState } from "react";
-import type { Control } from "react-hook-form";
+import type { AutoEncryptedStringInputProps } from "../../shared/AutoInputTypes.js";
 import { MUIAutoTextInput } from "./MUIAutoTextInput.js";
 
-export const MUIAutoEncryptedStringInput = (
-  props: {
-    field: string; // The field API identifier
-    control?: Control<any>;
-  } & Partial<TextFieldProps>
-) => {
+type MUIAutoEncryptedStringInputProps = AutoEncryptedStringInputProps & Partial<TextFieldProps>;
+
+/**
+ * An encrypted string input for use within <AutoForm></AutoForm> components.
+ * @example
+ * ```tsx
+ * <AutoForm action={api.modelA.create}>
+ *   <AutoEncryptedStringInput field="encryptedStringField" />
+ * </AutoForm>
+ * ```
+ * @param props.field - The API identifier for the EncryptedString field.
+ * @param props.label - The label of the EncryptedString field.
+ * @returns The AutoEncryptedStringInput component.
+ */
+export const MUIAutoEncryptedStringInput = (props: MUIAutoEncryptedStringInputProps) => {
   const [isShown, setIsShown] = useState(false);
   const showHideToggleButton = <IconButton onClick={() => setIsShown(!isShown)}>{isShown ? `🔒` : `👁️`}</IconButton>;
 

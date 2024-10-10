@@ -1,15 +1,24 @@
 import type { TextFieldProps } from "@shopify/polaris";
 import React from "react";
-import type { Control } from "react-hook-form";
 import { useStringInputController } from "../../hooks/useStringInputController.js";
+import { AutoNumberInputProps } from "../../shared/AutoInputTypes.js";
 import { PolarisAutoTextInput } from "./PolarisAutoTextInput.js";
 
-export const PolarisAutoNumberInput = (
-  props: {
-    field: string; // The field API identifier
-    control?: Control<any>;
-  } & Partial<TextFieldProps>
-) => {
+type PolarisAutoNumberInputProps = AutoNumberInputProps & Partial<TextFieldProps>;
+
+/**
+ * A number input component for use within <AutoForm></AutoForm> components.
+ * @example
+ * ```tsx
+ * <AutoForm action={api.modelA.create}>
+ *   <AutoNumberInput field="count" />
+ * </AutoForm>
+ * ```
+ * @param props.field - The number field API identifier
+ * @param props.label - The label of the number input component
+ * @returns The number input component
+ */
+export const PolarisAutoNumberInput = (props: PolarisAutoNumberInputProps) => {
   const { field, control } = props;
   const { type, metadata, value } = useStringInputController({ field, control });
   const fieldType = type as TextFieldProps["type"];

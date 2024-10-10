@@ -2,15 +2,24 @@ import type { TextFieldProps } from "@shopify/polaris";
 import { Button } from "@shopify/polaris";
 import { HideIcon, ViewIcon } from "@shopify/polaris-icons";
 import React, { useState } from "react";
-import type { Control } from "react-hook-form";
+import { AutoEncryptedStringInputProps } from "../../shared/AutoInputTypes.js";
 import { PolarisAutoTextInput } from "./PolarisAutoTextInput.js";
 
-export const PolarisAutoEncryptedStringInput = (
-  props: {
-    field: string; // The field API identifier
-    control?: Control<any>;
-  } & Partial<TextFieldProps>
-) => {
+export type PolarisAutoEncryptedStringInputProps = AutoEncryptedStringInputProps & Partial<TextFieldProps>;
+
+/**
+ * An encrypted string input for use within <AutoForm></AutoForm> components.
+ * @example
+ * ```tsx
+ * <AutoForm action={api.modelA.create}>
+ *   <AutoEncryptedStringInput field="encryptedStringField" />
+ * </AutoForm>
+ * ```
+ * @param props.field - The API identifier for the EncryptedString field.
+ * @param props.label - The label of the EncryptedString field.
+ * @returns The AutoEncryptedStringInput component.
+ */
+export const PolarisAutoEncryptedStringInput = (props: PolarisAutoEncryptedStringInputProps) => {
   const [isShown, setIsShown] = useState(false);
 
   const showHideToggleButton = (
