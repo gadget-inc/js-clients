@@ -1,5 +1,5 @@
 import { useEffect } from "react";
-import { useFormContext } from "react-hook-form";
+import { useFormContext } from "../../useActionForm.js";
 import { useFieldMetadata } from "./useFieldMetadata.js";
 
 export const useHiddenInput = (props: { field: string; value: any }) => {

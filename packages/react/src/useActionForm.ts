@@ -74,6 +74,10 @@ type ActionFormOptions<
          * Should be undefined for create actions, or a record ID (or finder) for update / etc actions
          **/
         findBy?: RecordIdentifier;
+        /**
+         * Whether to pause fetching the record by
+         */
+        pause?: boolean;
       }
     : // eslint-disable-next-line @typescript-eslint/ban-types
       {});
@@ -102,6 +106,7 @@ export const useActionForm = <
   options?: ActionFormOptions<GivenOptions, SchemaT, ActionFunc, ExtraFormVariables>
 ): UseActionFormResult<GivenOptions, SchemaT, ActionFunc, ExtraFormVariables, FormContext> => {
   const findById = options && "findBy" in options ? options.findBy : undefined;
+  const pause = options && "pause" in options ? options.pause : undefined;
   const api = useApi();
   const findExistingRecord = !!findById;
   const hasSetInitialValues = useRef<boolean>(!findExistingRecord);
@@ -111,7 +116,7 @@ export const useActionForm = <
   // find the existing record if there is one
   const modelManager = isModelAction ? getModelManager(api, action.modelApiIdentifier, action.namespace) : undefined;
   const [findResult] = useFindExistingRecord(modelManager, findById || "1", {
-    pause: !findExistingRecord,
+    pause: pause || !findExistingRecord,
     select: actionSelect,
   });
 

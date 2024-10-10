@@ -1,35 +1,32 @@
-import { Banner, Combobox } from "@shopify/polaris";
+import { Combobox, Tag } from "@shopify/polaris";
 import React from "react";
+import { autoInput } from "../../../AutoInput.js";
 import { useHasOneInputController } from "../../../hooks/useHasOneInputController.js";
-import { optionRecordsToLoadCount } from "../../../hooks/useRelatedModelOptions.js";
+import { getRecordAsOption, optionRecordsToLoadCount, useOptionLabelForField } from "../../../hooks/useRelatedModel.js";
 import type { AutoRelationshipInputProps } from "../../../interfaces/AutoRelationshipInputProps.js";
 import { RelatedModelOptions } from "./RelatedModelOptions.js";
-import { getSelectedRelatedRecordTags } from "./SelectedRelatedRecordTags.js";
 
-/**
- * TODO - Enable when API level 1-1 relationship mappings are maintained by calling updates on other records
- */
-const showErrorBannerWhenTooManyRelatedRecords = false;
-
-export const PolarisAutoHasOneInput = (props: AutoRelationshipInputProps) => {
+export const PolarisAutoHasOneInput = autoInput((props: AutoRelationshipInputProps) => {
   const { field } = props;
   const {
     fieldMetadata: { path, metadata },
-    relatedModelOptions: { options, searchFilterOptions, selected, search, pagination },
-
-    selectedRecordIds,
+    relatedModelOptions: { options, searchFilterOptions, search, pagination, relatedModel },
+    selectedRecord,
     errorMessage,
     isLoading,
-
     onSelectRecord,
     onRemoveRecord,
   } = useHasOneInputController(props);
 
-  const hasMultipleRelatedRecords = selected.records && selected.records.length > 1;
+  const optionLabel = useOptionLabelForField(field, props.optionLabel);
 
-  if (showErrorBannerWhenTooManyRelatedRecords && hasMultipleRelatedRecords) {
-    return <Banner tone="warning">{`Multiple related records for hasOne field "${field}"`}</Banner>;
-  }
+  const selectedOption = selectedRecord ? getRecordAsOption(selectedRecord, optionLabel) : null;
+
+  const selectedRecordTag = selectedOption ? (
+    <Tag onRemove={() => selectedRecord && onRemoveRecord(selectedRecord)} key={`selectedRecordTag_${selectedOption.id}`}>
+      <p id={`${selectedOption.id}_${selectedOption.label}`}>{selectedOption.label}</p>
+    </Tag>
+  ) : null;
 
   return (
     <>
@@ -42,11 +39,7 @@ export const PolarisAutoHasOneInput = (props: AutoRelationshipInputProps) => {
             name={path}
             placeholder="Search"
             autoComplete="off"
-            verticalContent={getSelectedRelatedRecordTags({
-              selectedRecordIds,
-              onRemoveRecord,
-              options,
-            })}
+            verticalContent={selectedRecordTag}
           />
         }
         onScrolledToBottom={pagination.loadNextPage}
@@ -55,11 +48,12 @@ export const PolarisAutoHasOneInput = (props: AutoRelationshipInputProps) => {
         <RelatedModelOptions
           isLoading={isLoading}
           errorMessage={errorMessage}
-          checkSelected={(id) => selectedRecordIds.includes(id)}
+          checkSelected={(id) => selectedRecord?.id === id}
           onSelect={onSelectRecord}
+          records={relatedModel.records}
           options={searchFilterOptions}
         />
       </Combobox>
     </>
   );
-};
+});

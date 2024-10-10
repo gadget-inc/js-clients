@@ -1,5 +1,5 @@
 import type { ForwardedRef } from "react";
-import type { Control } from "react-hook-form";
+import type { Control } from "../../useActionForm.js";
 
 export interface MDXEditorMethods {
   setMarkdown: (markdown: string) => void;
