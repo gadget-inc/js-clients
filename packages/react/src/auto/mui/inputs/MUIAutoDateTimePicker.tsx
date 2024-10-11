@@ -16,14 +16,16 @@ export const MUIAutoDateTimePicker = (props: {
   const localTz = Intl.DateTimeFormat().resolvedOptions().timeZone;
   const { path, metadata } = useFieldMetadata(props.field);
   const config = metadata.configuration;
-  const { field: fieldProps } = useController({
-    name: path,
-  });
+  const isRequired = metadata.requiredArgumentForInput;
+  const label = (props.label ?? metadata.name) + (isRequired ? " *" : "");
+
+  const { field: fieldProps, fieldState } = useController({ name: path });
 
   return (
     <Box sx={{ display: "flex" }}>
       <DatePicker
-        label={props.label ?? metadata.name}
+        label={label}
+        slotProps={{ textField: { error: !!fieldState.error, helperText: fieldState.error?.message } }}
         onChange={(newValue: string | number | Date | null) => {
           props.onChange?.(zonedTimeToUtc(new Date(newValue ?? ""), localTz));
           fieldProps.onChange(zonedTimeToUtc(new Date(newValue ?? ""), localTz));
