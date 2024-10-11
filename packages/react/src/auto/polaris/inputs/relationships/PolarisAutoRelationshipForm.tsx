@@ -37,7 +37,12 @@ export const PolarisAutoRelationshipForm = autoInput(
       return <PolarisAutoBelongsToRelationshipForm pathPrefix={pathPrefix}>{props.children}</PolarisAutoBelongsToRelationshipForm>;
     } else if (metadata.configuration.__typename === "GadgetHasManyConfig") {
       return (
-        <PolarisAutoHasManyRelationshipForm field={field} pathPrefix={pathPrefix} primaryLabel={props.primaryLabel}>
+        <PolarisAutoHasManyRelationshipForm
+          field={field}
+          pathPrefix={pathPrefix}
+          primaryLabel={props.primaryLabel}
+          secondaryLabel={props.secondaryLabel}
+        >
           {props.children}
         </PolarisAutoHasManyRelationshipForm>
       );
@@ -79,8 +84,12 @@ const PolarisAutoHasManyRelationshipForm = (props: {
   return (
     <Box borderColor="border" borderWidth="025" borderRadius="200">
       <BlockStack as="ul">
-        {fields.map((field, idx) => {
+        {fields.flatMap((field, idx) => {
           const record = records[idx];
+
+          if (!record) {
+            return [];
+          }
 
           const primary = getRecordAsOption(record, primaryLabel);
           const secondary = props.secondaryLabel && getRecordLabel(record, props.secondaryLabel);
@@ -110,11 +119,9 @@ const PolarisAutoHasManyRelationshipForm = (props: {
                       <Text variant="bodyMd" fontWeight="semibold" as="h3">
                         {primary.label}
                       </Text>
-                      {secondary && (
-                        <Text variant="bodyMd" as="p" tone="subdued">
-                          {secondary}
-                        </Text>
-                      )}
+                      <Text variant="bodyMd" as="p" tone="subdued">
+                        {secondary ?? <span style={{ visibility: "hidden" }}>&nbsp;</span>}
+                      </Text>
                     </BlockStack>
                   ) : (
                     <Text variant="bodyMd" as="h3" tone="subdued">

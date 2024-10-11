@@ -3,9 +3,9 @@ import { DatePicker, Icon, InlineStack, Popover, TextField } from "@shopify/pola
 import { CalendarIcon } from "@shopify/polaris-icons";
 import React, { useCallback, useMemo, useState } from "react";
 import { useController } from "react-hook-form";
-import { autoInput } from "src/auto/AutoInput.js";
 import { formatShortDateString, isValidDate, utcToZonedTime, zonedTimeToUtc } from "../../../dateTimeUtils.js";
 import type { GadgetDateTimeConfig } from "../../../internal/gql/graphql.js";
+import { autoInput } from "../../AutoInput.js";
 import { useFieldMetadata } from "../../hooks/useFieldMetadata.js";
 import type { DateTimeState } from "./PolarisAutoTimePicker.js";
 import PolarisAutoTimePicker from "./PolarisAutoTimePicker.js";

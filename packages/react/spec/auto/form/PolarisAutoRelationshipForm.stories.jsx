@@ -20,6 +20,7 @@ const ExampleAutoRelatedForm = (props) => {
           </Text>
           <PolarisAutoInput field="name" />
           <PolarisAutoInput field="description" />
+          <PolarisAutoInput field="inventoryCount" />
         </Card>
 
         <Card>
@@ -43,6 +44,7 @@ const ExampleAutoRelatedForm = (props) => {
             secondaryLabel="orientation"
           >
             <PolarisAutoInput field="name" />
+            <PolarisAutoInput field="orientation" />
             <PolarisAutoInput field="attachment" />
           </PolarisAutoRelationshipForm>
         </Card>
@@ -70,7 +72,13 @@ export default {
   ],
 };
 
-export const Primary = {
+export const Create = {
+  args: {
+    action: api.widget.create,
+  },
+};
+
+export const Update = {
   args: {
     action: api.widget.update,
     findBy: "1",
