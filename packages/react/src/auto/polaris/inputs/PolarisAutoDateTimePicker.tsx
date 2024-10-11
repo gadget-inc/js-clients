@@ -53,9 +53,7 @@ export const PolarisAutoDateTimePicker = (props: {
 }) => {
   const { path, metadata } = useFieldMetadata(props.field);
 
-  const { field: fieldProps } = useController({
-    name: path,
-  });
+  const { field: fieldProps, fieldState } = useController({ name: path });
 
   const { onChange, value } = props;
   const localTz = Intl.DateTimeFormat().resolvedOptions().timeZone;
@@ -110,7 +108,8 @@ export const PolarisAutoDateTimePicker = (props: {
             autoComplete="off"
             value={localTime ? formatShortDateString(localTime) : ""}
             onFocus={toggleDatePopoverActive}
-            error={props.error}
+            requiredIndicator={metadata.requiredArgumentForInput}
+            error={props.error ?? fieldState.error?.message}
           />
         }
         onClose={toggleDatePopoverActive}
