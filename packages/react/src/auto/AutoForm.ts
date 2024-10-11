@@ -10,7 +10,12 @@ import type { FieldErrors, FieldValues } from "../useActionForm.js";
 import { useActionForm } from "../useActionForm.js";
 import { get, getFlattenedObjectKeys, type OptionsType } from "../utils.js";
 import { validationSchema } from "../validationSchema.js";
-import { validateNonBulkAction, validateTriggersFromApiClient, validateTriggersFromMetadata } from "./AutoFormActionValidators.js";
+import {
+  validateFindByObjectWithMetadata,
+  validateNonBulkAction,
+  validateTriggersFromApiClient,
+  validateTriggersFromMetadata,
+} from "./AutoFormActionValidators.js";
 
 /** The props that any <AutoForm/> component accepts */
 export type AutoFormProps<
@@ -148,6 +153,7 @@ export const useAutoForm = <
 
   // filter down the fields to render only what we want to render for this form
   const fields = useFormFields(metadata, props);
+  validateFindByObjectWithMetadata(fields, findBy);
   const isDeleteAction = metadata && isActionMetadata(metadata) && metadata.action.isDeleteAction;
   const isGlobalAction = action.type === "globalAction";
   const operatesWithRecordId = !!(metadata && isActionMetadata(metadata) && metadata.action.operatesWithRecordIdentity);
@@ -172,9 +178,12 @@ export const useAutoForm = <
             [modelApiIdentifier!]:
               record ??
               (!(operatesWithRecordId || isUpsertWithFindBy) && metadata && isActionMetadata(metadata) && metadata?.defaultRecord),
-            id: findBy,
+            id:
+              typeof findBy === "string"
+                ? findBy // ID is given directly
+                : undefined, // Set by the retrieved existing record if object based findBy value
           }),
-    [props.defaultValues, action.type, modelApiIdentifier, record, operatesWithRecordId, metadata]
+    [props.defaultValues, action.type, modelApiIdentifier, record, operatesWithRecordId, metadata, findBy]
   );
 
   // setup the form state for the action
@@ -190,6 +199,7 @@ export const useAutoForm = <
   } = useActionForm(action, {
     defaultValues: defaultValues as any,
     findBy: "findBy" in props ? props.findBy : undefined,
+    throwOnInvalidFindByObject: false,
     resolver: useValidationResolver(metadata, fieldPathsToValidate),
     send: () => {
       const fieldsToSend = fields

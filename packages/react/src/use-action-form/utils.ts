@@ -4,30 +4,47 @@ import { useFindBy } from "../useFindBy.js";
 import { useFindOne } from "../useFindOne.js";
 import { get, set, unset, type ErrorWrapper } from "../utils.js";
 
+const noopUseFindExistingRecordResponse = [
+  { fetching: false },
+  () => undefined, // no-op callback
+] as [{ fetching: boolean }, () => void];
+
 /** Finds a given record from the backend database by either id or a `{[field: string]: value}` slug */
 export const useFindExistingRecord = (
   modelManager: AnyModelManager | undefined,
-  findBy: string | { [key: string]: any },
-  options: { select?: Record<string, any>; pause?: boolean }
+  findBy: string | { [key: string]: any } | undefined,
+  options: { select?: Record<string, any>; pause?: boolean; throwOnInvalidFindByObject?: boolean }
 ): [{ data?: GadgetRecord<any>; fetching: boolean; error?: ErrorWrapper }, () => void] => {
+  if (!modelManager || !findBy) {
+    return noopUseFindExistingRecordResponse;
+  }
+
   // for simplicity, we conditionally call either the findBy or findOne hook. this violates the rules of hooks, but is a LOT simpler than mounting and pausing both hooks and massaging the results of each together. this means we don't support the same form toggling from being for a record found by id and then later a record found by some other criteria, but that's a very rare use case. you can workaround this by adding a `key` prop to the component calling `useActionForm`, and having the value change when the find method changes, which will give different instance of the component and avoid the hook order changing.
-  if (modelManager && typeof findBy === "string") {
+  if (typeof findBy === "string") {
     // eslint-disable-next-line react-hooks/rules-of-hooks
     return useFindOne(modelManager as any, findBy, options);
-  } else if (modelManager) {
+  }
+
+  const isValidFindByObject = typeof findBy === "object" && !Array.isArray(findBy) && Object.keys(findBy).length;
+  if (isValidFindByObject) {
     const [findByKey, findByValue] = Object.entries(findBy)[0];
-    const finder = (modelManager as Record<string, any>)[`findBy${camelize(findByKey)}`];
+    const findByOperationName = `findBy${camelize(findByKey)}`;
+
+    if (!(findByOperationName in modelManager)) {
+      if (options.throwOnInvalidFindByObject === undefined || options.throwOnInvalidFindByObject) {
+        throw new Error(
+          `Invalid findBy object: ${JSON.stringify(findBy)}. ${findByOperationName} is not a valid findBy operation for this model.`
+        );
+      }
+      return noopUseFindExistingRecordResponse;
+    }
+    const finder = (modelManager as Record<string, any>)[findByOperationName];
 
     // eslint-disable-next-line react-hooks/rules-of-hooks
     return (useFindBy as any)(finder, findByValue, options);
-  } else {
-    return [
-      { fetching: false },
-      () => {
-        // noop
-      },
-    ];
   }
+
+  return noopUseFindExistingRecordResponse;
 };
 
 const OmittedKeys = ["id", "createdAt", "updatedAt", "__typename"] as const;
@@ -402,7 +419,7 @@ const getParentRelationshipFieldGraphqlApiInput = (props: { input: any; result: 
   }
 };
 
-const isPlainObject = (obj: any) => {
+export const isPlainObject = (obj: any) => {
   if (typeof obj !== "object" || obj === null) return false;
 
   let proto = obj;

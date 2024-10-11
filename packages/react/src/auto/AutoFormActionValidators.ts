@@ -1,5 +1,7 @@
 import type { ActionFunction, GlobalActionFunction } from "@gadgetinc/api-client-core";
-import type { ActionMetadata, GlobalActionMetadata } from "../metadata.js";
+import { FieldMetadata, type ActionMetadata, type GlobalActionMetadata } from "../metadata.js";
+import { RecordIdentifier } from "../use-action-form/types.js";
+import { isPlainObject } from "../use-action-form/utils.js";
 import type { useAutoForm } from "./AutoForm.js";
 
 export const validateNonBulkAction = (action: ActionFunction<any, any, any, any, any> | GlobalActionFunction<any>) => {
@@ -44,19 +46,48 @@ export const validateAutoFormProps = (props: Parameters<typeof useAutoForm>[0]) 
 };
 
 export const validateTriggersFromMetadata = (metadata?: ActionMetadata | GlobalActionMetadata) => {
-  if (metadata) {
-    // When an action's API trigger is removed but the referenced API client still uses the old api-triggered action, the presence of the trigger shall be checked in the metadata
+  if (!metadata) {
+    return;
+  }
+  // When an action's API trigger is removed but the referenced API client still uses the old api-triggered action, the presence of the trigger shall be checked in the metadata
 
-    const triggersAsArray =
-      (metadata.__typename === "GadgetGlobalAction"
-        ? metadata.triggers
-        : metadata.__typename === "GadgetModel"
-        ? metadata.action.triggers
-        : []) ?? [];
+  const triggersAsArray =
+    (metadata.__typename === "GadgetGlobalAction"
+      ? metadata.triggers
+      : metadata.__typename === "GadgetModel"
+      ? metadata.action.triggers
+      : []) ?? [];
 
-    const hasApiTrigger = triggersAsArray.some((trigger) => trigger.specID === GadgetApiTriggerSpecId);
-    if (!hasApiTrigger) {
-      throw new Error(MissingApiTriggerErrorMessage);
-    }
+  const hasApiTrigger = triggersAsArray.some((trigger) => trigger.specID === GadgetApiTriggerSpecId);
+  if (!hasApiTrigger) {
+    throw new Error(MissingApiTriggerErrorMessage);
+  }
+};
+
+export const validateFindByObjectWithMetadata = (
+  fields?: readonly { path: string; metadata: FieldMetadata }[],
+  findBy?: RecordIdentifier
+) => {
+  if (!findBy || typeof findBy === "string") {
+    return;
+  }
+
+  if (!isPlainObject(findBy) || Object.keys(findBy).length !== 1) {
+    throw new Error("The findBy prop in AutoForm must be an object containing a single unique Gadget field API identifier as a key.");
+  }
+
+  if (!fields || !fields.length) {
+    return;
+  }
+
+  const findByUniqueFieldApiId = Object.keys(findBy)[0];
+  const uniqueFields = fields
+    .filter((field) => field.metadata.configuration.validations.some((validation) => validation?.specID === "gadget/validation/unique"))
+    .map((field) => field.metadata.apiIdentifier);
+
+  if (!uniqueFields.includes(findByUniqueFieldApiId)) {
+    throw new Error(
+      `The findBy prop in AutoForm must be an object containing a unique Gadget field API identifier as a key. "${findByUniqueFieldApiId}" is not a unique field name.`
+    );
   }
 };
