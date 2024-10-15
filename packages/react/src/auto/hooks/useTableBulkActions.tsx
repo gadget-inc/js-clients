@@ -74,6 +74,7 @@ const getModelActionsForTableAsBulkActionOptions = (props: {
       selectModelAction: () => setSelectedModelActionDetails(actionDetails), // To open the corresponding modal
       apiIdentifier: lowercaseFirstChar(removeBulkPrefix(actionDetails.apiIdentifier)), // `bulk` prefix removed
       promoted: true,
+      isDeleter: "isDeleter" in actionDetails ? actionDetails.isDeleter : false,
     }));
 };
 
