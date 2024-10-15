@@ -286,6 +286,31 @@ export const globalActionOperation = (
   });
 };
 
+export const computedViewOperation = (
+    operation: string,
+    variables: VariablesOptions,
+    defaultSelection: FieldSelection,
+    namespace?: string | string[] | null
+  ) => {
+    let fields = {
+      [operation]: Call(
+        variableOptionsToVariables(variables),
+        fieldSelectionToQueryCompilerFields(defaultSelection, true),
+      ),
+    };
+  
+    if (namespace) {
+      fields = namespacify(namespace, fields);
+    }
+  
+    return compileWithVariableValues({
+      type: "query",
+      name: operation,
+      fields,
+    });
+  };
+
+
 export interface GraphQLBackgroundActionOptions {
   retries?: { retryCount: number };
   queue?: { name: string; maxConcurrency?: number };
