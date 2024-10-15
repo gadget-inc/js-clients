@@ -283,6 +283,7 @@ const disablePaginatedSelectAllButton = {
 const bulkActionOptionMapper = (selectedRows: TableRow[], clearSelection: () => void) => {
   return (option: BulkActionOption) => ({
     id: option.humanizedName,
+    destructive: "isDeleter" in option ? option.isDeleter : false,
     content: option.humanizedName,
     onAction: option.action
       ? () => {
