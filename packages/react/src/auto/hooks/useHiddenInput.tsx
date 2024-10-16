@@ -15,6 +15,10 @@ export const useHiddenInput = (props: { field: string; value: any }) => {
       setAtPath = `${path}.id`;
     }
 
+    if (metadata.fieldType == GadgetFieldType.File) {
+      throw new Error("Hidden inputs don't support file fields -- please use a real input so the upload is managed properly");
+    }
+
     setValue(setAtPath, value, {
       shouldDirty: true,
     });

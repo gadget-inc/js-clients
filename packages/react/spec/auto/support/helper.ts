@@ -1,5 +1,5 @@
 import { mockUrqlClient } from "../../testWrappers.js";
-import { getGameCityModelMetadata, getGameCityRecord } from "./gameCityModel.js";
+import { getStadiumModelMetadata, getStadiumRecord } from "./stadiumModel.js";
 import { getUserModelMetadata, getUserRecord } from "./userModel.js";
 import { getWidgetModelMetadata, getWidgetRecord } from "./widgetModel.js";
 
@@ -44,18 +44,18 @@ export const mockWidgetFindBy = (
 };
 
 export const mockGameStadiumFindBy = (
-  action: Parameters<typeof getGameCityModelMetadata>[0],
-  overridesRecord?: Parameters<typeof getGameCityRecord>[0]
+  action: Parameters<typeof getStadiumModelMetadata>[0],
+  overridesRecord?: Parameters<typeof getStadiumRecord>[0]
 ) => {
   mockUrqlClient.executeQuery.pushResponse("ModelActionMetadata", {
     stale: false,
     hasNext: false,
-    data: getGameCityModelMetadata(action),
+    data: getStadiumModelMetadata(action),
   });
 
-  mockUrqlClient.executeQuery.pushResponse("city", {
+  mockUrqlClient.executeQuery.pushResponse("stadium", {
     stale: false,
     hasNext: false,
-    data: getGameCityRecord(overridesRecord),
+    data: getStadiumRecord(overridesRecord),
   });
 };

@@ -9,7 +9,7 @@ import { PolarisAutoHiddenInput } from "../../../src/auto/polaris/inputs/Polaris
 import { PolarisAutoSubmit } from "../../../src/auto/polaris/submit/PolarisAutoSubmit.js";
 import { testApi as api } from "../../apis.js";
 import { MockClientProvider, mockUrqlClient } from "../../testWrappers.js";
-import { mockWidgetFindBy } from "../support/helper.js";
+import { mockGameStadiumFindBy, mockWidgetFindBy } from "../support/helper.js";
 import { getWidgetModelMetadata } from "../support/widgetModel.js";
 
 const PolarisMockedProviders = (props: { children: ReactNode }) => {
@@ -21,7 +21,7 @@ const PolarisMockedProviders = (props: { children: ReactNode }) => {
 };
 
 describe("PolarisAutoHiddenInput", () => {
-  it("should set the value", async () => {
+  it("should set the value of scalar fields", async () => {
     const user = userEvent.setup();
 
     const { getByRole } = render(
@@ -104,6 +104,69 @@ describe("PolarisAutoHiddenInput", () => {
 
     expect(mutationName).toEqual("updateWidget");
     expect(variables.name).toEqual("Alice");
+  });
+
+  it("supports setting the value of has many fields", async () => {
+    const user = userEvent.setup();
+
+    const { getByRole } = render(
+      <PolarisAutoForm action={api.widget.create}>
+        <PolarisAutoHiddenInput field="name" value="Bob" />
+        <PolarisAutoHiddenInput field="inventoryCount" value={42} />
+        <PolarisAutoHiddenInput
+          field="gizmos"
+          value={[
+            {
+              id: "1",
+              name: "updated gizmo",
+            },
+            { name: "created gizmo" },
+          ]}
+        />
+        <PolarisAutoSubmit />
+      </PolarisAutoForm>,
+      { wrapper: PolarisMockedProviders }
+    );
+
+    loadMockWidgetCreateMetadata();
+
+    await act(async () => {
+      await user.click(getByRole("button"));
+    });
+
+    const mutation = mockUrqlClient.executeMutation.mock.calls[0][0];
+    const mutationName = mutation.query.definitions[0].name.value;
+    const variables = mutation.variables.widget;
+
+    expect(mutationName).toEqual("createWidget");
+    expect(variables.gizmos).toEqual([{ update: { id: "1", name: "updated gizmo" } }, { create: { name: "created gizmo" } }]);
+  });
+
+  it("shouldn't allow hidden inputs for file fields", async () => {
+    render(
+      <PolarisAutoForm action={api.game.stadium.update} findBy="42">
+        <PolarisAutoHiddenInput field="photo" value={{ url: "https://example.com/photo.jpg" }} />
+        <PolarisAutoSubmit />
+      </PolarisAutoForm>,
+      { wrapper: PolarisMockedProviders }
+    );
+
+    expect(() => {
+      mockGameStadiumFindBy(
+        {
+          name: "Update",
+          apiIdentifier: "update",
+          operatesWithRecordIdentity: true,
+        },
+
+        {
+          id: "42",
+          name: "Foo",
+        }
+      );
+    }).toThrowErrorMatchingInlineSnapshot(
+      `"Hidden inputs don't support file fields -- please use a real input so the upload is managed properly"`
+    );
   });
 });
 
