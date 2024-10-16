@@ -1,5 +1,6 @@
 import { useEffect } from "react";
 import { useFormContext } from "react-hook-form";
+import { GadgetFieldType } from "../../internal/gql/graphql.js";
 import { useFieldMetadata } from "./useFieldMetadata.js";
 
 export const useHiddenInput = (props: { field: string; value: any }) => {
@@ -8,10 +9,16 @@ export const useHiddenInput = (props: { field: string; value: any }) => {
   const { setValue, formState } = useFormContext();
 
   useEffect(() => {
-    setValue(path, value, {
+    let setAtPath = path;
+
+    if (metadata.fieldType == GadgetFieldType.BelongsTo) {
+      setAtPath = `${path}.id`;
+    }
+
+    setValue(setAtPath, value, {
       shouldDirty: true,
     });
-  }, [formState.defaultValues, path, setValue, value]);
+  }, [formState.defaultValues, path, setValue, value, metadata.fieldType]);
 
   return {
     value,
