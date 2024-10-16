@@ -394,7 +394,8 @@ export const computedViewRunner = async (
 ) => {
   const plan = computedViewOperation(operation, variables, defaultSelection, namespace);
   const response = await connection.currentClient.query(plan.query, plan.variables);
-  return assertResponseSuccess(response).data;
+  // return assertResponseSuccess(response).data;
+  return { plan, response }
 };
 
 export async function enqueueActionRunner<SchemaT, Action extends AnyBulkActionFunction, Result = BackgroundActionHandle<SchemaT, Action>>(
