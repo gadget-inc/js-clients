@@ -3,7 +3,7 @@ import { apiTriggerOnly } from "../../../../spec/auto/support/Triggers.js";
 import { api } from "../../../support/api.js";
 import { describeForEachAutoAdapter } from "../../../support/auto.js";
 
-describeForEachAutoAdapter("AutoForm", ({ name, adapter: { AutoForm }, wrapper }) => {
+describeForEachAutoAdapter("AutoRoleInput", ({ name, adapter: { AutoForm }, wrapper }) => {
   beforeEach(() => {
     cy.viewport("macbook-13");
   });

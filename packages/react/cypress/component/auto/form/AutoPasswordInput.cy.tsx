@@ -2,7 +2,7 @@ import React from "react";
 import { api } from "../../../support/api.js";
 import { describeForEachAutoAdapter } from "../../../support/auto.js";
 
-describeForEachAutoAdapter("AutoForm", ({ name, adapter: { AutoForm }, wrapper }) => {
+describeForEachAutoAdapter("AutoPasswordInput", ({ name, adapter: { AutoForm }, wrapper }) => {
   beforeEach(() => {
     cy.viewport("macbook-13");
   });

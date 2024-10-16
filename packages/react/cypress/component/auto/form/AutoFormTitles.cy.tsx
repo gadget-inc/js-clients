@@ -3,7 +3,7 @@ import React from "react";
 import { api } from "../../../support/api.js";
 import { describeForEachAutoAdapter } from "../../../support/auto.js";
 
-describeForEachAutoAdapter("AutoForm", ({ name, adapter: { AutoForm }, wrapper }) => {
+describeForEachAutoAdapter("AutoForm titles", ({ name, adapter: { AutoForm }, wrapper }) => {
   beforeEach(() => {
     cy.viewport("macbook-13");
     cy.intercept("POST", `${api.connection.options.endpoint}?operation=ModelActionMetadata`);
