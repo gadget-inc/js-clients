@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useMemo } from "react";
-import { useController } from "react-hook-form";
+import { useController, useFormContext } from "react-hook-form";
 import { useAutoFormMetadata } from "../AutoFormContext.js";
 import type { AutoRelationshipInputProps } from "../interfaces/AutoRelationshipInputProps.js";
 import { useFieldMetadata } from "./useFieldMetadata.js";
@@ -15,6 +15,10 @@ export const useBelongsToInputController = (props: AutoRelationshipInputProps) =
   const { selected, relatedModel } = relatedModelOptions;
 
   const {
+    formState: { defaultValues },
+  } = useFormContext();
+
+  const {
     field: fieldProps,
     fieldState: { error: fieldError },
   } = useController({
@@ -27,7 +31,7 @@ export const useBelongsToInputController = (props: AutoRelationshipInputProps) =
 
   const retrievedSelectedRecordId = useMemo(() => {
     return !selected.fetching && selected.records && selected.records.length ? selected.records[0][`${field}Id`] : null;
-  }, [selected.fetching]);
+  }, [selected.fetching, selected.records]);
 
   const selectedRelatedModelRecordMissing = useMemo(() => {
     if (!findBy) {
@@ -38,14 +42,14 @@ export const useBelongsToInputController = (props: AutoRelationshipInputProps) =
     return !selected.fetching && selected.records && selected.records.length
       ? !selected.records[0].id && !relatedModel.records.map((r) => r.id).includes(fieldProps.value)
       : true;
-  }, [findBy, selected.fetching, fieldProps.value, relatedModel.records]);
+  }, [findBy, selected.fetching, fieldProps.value, relatedModel.records, retrievedSelectedRecordId]);
 
   useEffect(() => {
     // Initializing the controller with the selected record ID from the DB
     if (!selected.fetching && retrievedSelectedRecordId) {
       fieldProps.onChange(retrievedSelectedRecordId);
     }
-  }, [selected.fetching]);
+  }, [selected.fetching, retrievedSelectedRecordId, defaultValues]);
 
   const onSelectRecord = useCallback((recordId: string) => {
     fieldProps.onChange(recordId);
