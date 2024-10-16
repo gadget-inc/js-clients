@@ -1237,13 +1237,13 @@ describe("operationRunners", () => {
         MockWidgetCreateAction,
         { widget: { name: "new widget" } },
         {
-          priority: "high",
+          priority: "HIGH",
         }
       );
 
       expect(mockUrqlClient.executeMutation.mock.calls.length).toEqual(1);
       expect(mockUrqlClient.executeMutation.mock.calls[0][0].variables).toEqual({
-        backgroundOptions: { priority: "high" },
+        backgroundOptions: { priority: "HIGH" },
         widget: { name: "new widget" },
       });
 
