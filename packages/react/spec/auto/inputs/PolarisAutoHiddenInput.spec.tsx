@@ -28,6 +28,7 @@ describe("PolarisAutoHiddenInput", () => {
       <PolarisAutoForm action={api.widget.create}>
         <PolarisAutoHiddenInput field="name" value="Bob" />
         <PolarisAutoHiddenInput field="inventoryCount" value={42} />
+        <PolarisAutoHiddenInput field="section" value="123" />
         <PolarisAutoSubmit />
       </PolarisAutoForm>,
       { wrapper: PolarisMockedProviders }
@@ -46,6 +47,7 @@ describe("PolarisAutoHiddenInput", () => {
     expect(mutationName).toEqual("createWidget");
     expect(variables.inventoryCount).toEqual(42);
     expect(variables.name).toEqual("Bob");
+    expect(variables.section).toEqual({ _link: "123" });
   });
 
   it("should override the pre-filled value", async () => {
