@@ -289,12 +289,13 @@ export const globalActionOperation = (
 export interface GraphQLBackgroundActionOptions {
   retries?: { retryCount: number };
   queue?: { name: string; maxConcurrency?: number };
-  priority?: string;
+  priority?: "LOW" | "DEFAULT" | "HIGH";
   startAt?: string;
 }
 
 export const graphqlizeBackgroundOptions = (options?: EnqueueBackgroundActionOptions<any> | null) => {
   if (!options) return null;
+
   const obj = { ...options };
   if (typeof obj.retries == "number") {
     obj.retries = {

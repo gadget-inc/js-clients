@@ -345,10 +345,7 @@ describe("useEnqueue", () => {
     const startAt = new Date(new Date().getTime() + 1000);
     let mutationPromise: any;
     act(() => {
-      mutationPromise = result.current[1](
-        { id: "123", user: { email: "test@test.com" } },
-        { priority: "high", retries: 5, startAt: startAt }
-      );
+      mutationPromise = result.current[1]({ id: "123", user: { email: "test@test.com" } }, { priority: "HIGH", retries: 5, startAt });
     });
 
     expect(result.current[0].handle).toBeFalsy();
@@ -358,7 +355,7 @@ describe("useEnqueue", () => {
     expect(mockUrqlClient.executeMutation).toBeCalledTimes(1);
 
     expect(mockUrqlClient.executeMutation.mock.calls[0][0].variables).toEqual({
-      backgroundOptions: { priority: "high", retries: { retryCount: 5 }, startAt: startAt.toISOString() },
+      backgroundOptions: { priority: "HIGH", retries: { retryCount: 5 }, startAt: startAt.toISOString() },
       id: "123",
       user: { email: "test@test.com" },
     });
@@ -387,13 +384,13 @@ describe("useEnqueue", () => {
   });
 
   test("can pass background options as a second argument to the hook function", async () => {
-    const { result } = renderHook(() => useEnqueue(relatedProductsApi.user.update, { priority: "high", retries: 5 }), {
+    const { result } = renderHook(() => useEnqueue(relatedProductsApi.user.update, { priority: "HIGH", retries: 5 }), {
       wrapper: MockClientWrapper(relatedProductsApi),
     });
 
     let mutationPromise: any;
     act(() => {
-      mutationPromise = result.current[1]({ id: "123", user: { email: "test@test.com" } }, { priority: "default" });
+      mutationPromise = result.current[1]({ id: "123", user: { email: "test@test.com" } }, { priority: "DEFAULT" });
     });
 
     expect(result.current[0].handle).toBeFalsy();
@@ -403,7 +400,7 @@ describe("useEnqueue", () => {
     expect(mockUrqlClient.executeMutation).toBeCalledTimes(1);
 
     expect(mockUrqlClient.executeMutation.mock.calls[0][0].variables).toEqual({
-      backgroundOptions: { priority: "default", retries: { retryCount: 5 } },
+      backgroundOptions: { priority: "DEFAULT", retries: { retryCount: 5 } },
       id: "123",
       user: { email: "test@test.com" },
     });
@@ -433,7 +430,7 @@ describe("useEnqueue", () => {
 
   test("can pass urql request options in the a second argument to the hook function", async () => {
     const { result } = renderHook(
-      () => useEnqueue(relatedProductsApi.user.update, { priority: "high", retries: 5, requestPolicy: "cache-and-network" }),
+      () => useEnqueue(relatedProductsApi.user.update, { priority: "HIGH", retries: 5, requestPolicy: "cache-and-network" }),
       {
         wrapper: MockClientWrapper(relatedProductsApi),
       }
@@ -441,13 +438,13 @@ describe("useEnqueue", () => {
 
     let mutationPromise: any;
     act(() => {
-      mutationPromise = result.current[1]({ id: "123", user: { email: "test@test.com" } }, { priority: "default" });
+      mutationPromise = result.current[1]({ id: "123", user: { email: "test@test.com" } }, { priority: "DEFAULT" });
     });
 
     expect(mockUrqlClient.executeMutation).toBeCalledTimes(1);
 
     expect(mockUrqlClient.executeMutation.mock.calls[0][0].variables).toEqual({
-      backgroundOptions: { priority: "default", retries: { retryCount: 5 } },
+      backgroundOptions: { priority: "DEFAULT", retries: { retryCount: 5 } },
       id: "123",
       user: { email: "test@test.com" },
     });

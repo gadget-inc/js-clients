@@ -825,7 +825,7 @@ export type EnqueueBackgroundActionOptions<Action extends AnyActionFunction> = {
   /**
    * How high to place this background action in it's queue. `high` priority actions will be executed before `default` priority actions, and those before `low` priority actions. If not set, the `default` priority will be used.
    */
-  priority?: "low" | "default" | "high";
+  priority?: "LOW" | "DEFAULT" | "HIGH";
 
   /**
    * A queue to put this background action in that limits the maximum concurrency of all actions in the queue. If not set, the action will go into the global queue, and won't be concurrency limited.

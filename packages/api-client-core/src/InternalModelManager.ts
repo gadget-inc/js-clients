@@ -138,7 +138,6 @@ export const internalBulkCreateMutation = (
   namespace: string[],
   records: RecordData[]
 ) => {
-  const capitalizedApiIdentifier = capitalizeIdentifier(apiIdentifier);
   const capitalizedPluralApiIdentifier = capitalizeIdentifier(pluralApiIdentifier);
 
   return compileWithVariableValues({
