@@ -249,6 +249,8 @@ export const reshapeDataForGraphqlApi = async (client: AnyClient, defaultValues:
 
   const updates = getUpdates(defaultValues); // grab the updates from default values to see what needs to be created, updated, or deleted
 
+  console.log({ updates, defaultValues, data });
+
   function transform(input: any, context: ReshapeDataContext): any {
     const { depth, path, fieldType, fieldRelationships } = context;
 
@@ -409,12 +411,11 @@ const getParentRelationshipFieldGraphqlApiInput = (props: { input: any; result: 
   const { input, result } = props;
   const { __typename, ...rest } = result;
 
-  if ("__id" in rest) {
-    if ("__unlinkedInverseField" in rest && rest.__unlinkedInverseField) {
-      const inverseFieldApiId = rest.__unlinkedInverseField;
-      return { update: { id: rest.__id, [inverseFieldApiId]: { _link: null } } };
-    }
-    return { update: { id: rest.__id } }; // Calling this update action automatically links it to the current parent model's record ID
+  if ("_link" in rest && rest._link) {
+    return { update: { id: rest._link } };
+  } else if ("_unlink" in rest && rest._unlink) {
+    const { id, inverseFieldApiIdentifier } = rest._unlink;
+    return { update: { id, [inverseFieldApiIdentifier]: { _link: null } } };
   } else {
     const inputHasId = "id" in input;
     return inputHasId ? { update: { ...rest } } : { create: { ...rest } };

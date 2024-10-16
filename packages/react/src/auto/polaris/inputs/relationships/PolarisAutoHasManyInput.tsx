@@ -1,20 +1,20 @@
-import type { GadgetRecordList } from "@gadgetinc/api-client-core";
-import { Banner, Combobox } from "@shopify/polaris";
-import React from "react";
-import { useHasManyInputController } from "../../../hooks/useHasManyInputController.js";
-import { optionRecordsToLoadCount } from "../../../hooks/useRelatedModelOptions.js";
+import { Combobox } from "@shopify/polaris";
+import React, { useMemo } from "react";
+import { autoInput } from "../../../AutoInput.js";
+import { useHasManyInputController } from "../../../hooks/useHasManyController.js";
+import { optionRecordsToLoadCount, useOptionLabelForField } from "../../../hooks/useRelatedModel.js";
 import type { AutoRelationshipInputProps } from "../../../interfaces/AutoRelationshipInputProps.js";
 import { RelatedModelOptions } from "./RelatedModelOptions.js";
 import { getSelectedRelatedRecordTags } from "./SelectedRelatedRecordTags.js";
 
-export const PolarisAutoHasManyInput = (props: AutoRelationshipInputProps) => {
+export const PolarisAutoHasManyInput = autoInput((props: AutoRelationshipInputProps) => {
   const { field } = props;
 
   const {
     fieldMetadata: { path, metadata },
-    relatedModelOptions: { options, searchFilterOptions, selected, search, pagination },
+    relatedModelOptions: { options, searchFilterOptions, search, pagination, relatedModel },
 
-    selectedRecordIds,
+    selectedRecords,
     errorMessage,
     isLoading,
 
@@ -22,9 +22,15 @@ export const PolarisAutoHasManyInput = (props: AutoRelationshipInputProps) => {
     onRemoveRecord,
   } = useHasManyInputController(props);
 
-  if ((selected.records as GadgetRecordList<never>)?.hasNextPage) {
-    return <Banner tone="warning">{`Too many related records for ${field}. Cannot edit`}</Banner>;
-  }
+  const optionLabel = useOptionLabelForField(field, props.optionLabel);
+
+  // if ((selected.records as GadgetRecordList<never>)?.hasNextPage) {
+  //   return <Banner tone="warning">{`Too many related records for ${field}. Cannot edit`}</Banner>;
+  // }
+
+  const selectedRecordIds = useMemo(() => {
+    return selectedRecords.map((record) => record.id).filter((id) => !!id) as string[];
+  }, [selectedRecords]);
 
   return (
     <>
@@ -38,9 +44,9 @@ export const PolarisAutoHasManyInput = (props: AutoRelationshipInputProps) => {
             placeholder="Search"
             autoComplete="off"
             verticalContent={getSelectedRelatedRecordTags({
-              selectedRecordIds,
+              selectedRecords,
               onRemoveRecord,
-              options,
+              optionLabel,
             })}
           />
         }
@@ -50,6 +56,7 @@ export const PolarisAutoHasManyInput = (props: AutoRelationshipInputProps) => {
       >
         <RelatedModelOptions
           onSelect={onSelectRecord}
+          records={relatedModel.records}
           options={searchFilterOptions}
           checkSelected={(id) => selectedRecordIds.includes(id)}
           errorMessage={errorMessage}
@@ -58,4 +65,4 @@ export const PolarisAutoHasManyInput = (props: AutoRelationshipInputProps) => {
       </Combobox>
     </>
   );
-};
+});
