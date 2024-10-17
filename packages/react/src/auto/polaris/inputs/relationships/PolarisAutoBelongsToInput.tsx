@@ -45,6 +45,7 @@ export const PolarisAutoBelongsToInput = (props: AutoRelationshipInputProps) => 
       <Combobox
         activator={
           <Combobox.TextField
+            requiredIndicator={metadata.requiredArgumentForInput}
             onChange={search.set}
             value={search.value}
             name={path}

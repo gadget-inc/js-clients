@@ -22,6 +22,7 @@ export const PolarisAutoJSONInput = (
       <TextField
         multiline={4}
         monospaced
+        requiredIndicator={controller.metadata.requiredArgumentForInput}
         error={!isFocused && errorMessage && `Invalid JSON: ${errorMessage}`}
         {...getPropsWithoutRef(controller)}
         {...getPropsWithoutRef(focusProps)}
