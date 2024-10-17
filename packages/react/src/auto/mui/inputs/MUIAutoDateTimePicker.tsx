@@ -5,14 +5,21 @@ import { useController } from "react-hook-form";
 import { zonedTimeToUtc } from "../../../dateTimeUtils.js";
 import type { GadgetDateTimeConfig } from "../../../internal/gql/graphql.js";
 import { useFieldMetadata } from "../../hooks/useFieldMetadata.js";
+import type { AutoDateTimeInputProps } from "../../shared/AutoInputTypes.js";
 
-export const MUIAutoDateTimePicker = (props: {
-  field: string;
-  value?: Date;
-  onChange?: (value: Date) => void;
-  error?: string;
-  label?: string;
-}) => {
+/**
+ * A date and time picker for use within <AutoForm></AutoForm> components
+ * @example
+ * ```tsx
+ * <AutoForm action={api.modelA.create}>
+ *   <AutoDateTimePicker field="dueDate" />
+ * </AutoForm>
+ * ```
+ * @param props.field - The API identifier of the DateTime field
+ * @param props.label - The label of the date and time picker
+ * @returns The date and time picker component
+ */
+export const MUIAutoDateTimePicker = (props: AutoDateTimeInputProps) => {
   const localTz = Intl.DateTimeFormat().resolvedOptions().timeZone;
   const { path, metadata } = useFieldMetadata(props.field);
   const config = metadata.configuration;

@@ -1,12 +1,22 @@
 import React from "react";
 import { FieldType } from "../../../metadata.js";
 import { useStringInputController } from "../../hooks/useStringInputController.js";
+import { AutoIdInputProps } from "../../shared/AutoInputTypes.js";
 import { PolarisAutoTextInput } from "./PolarisAutoTextInput.js";
 
-export const PolarisAutoIdInput = (props: {
-  field: string; // The field API identifier
-  label?: string;
-}) => {
+/**
+ * An id input component for use within <AutoForm></AutoForm> components
+ * @example
+ * ```tsx
+ * <AutoForm action={api.modelA.create}>
+ *   <AutoIdInput field="id" />
+ * </AutoForm>
+ * ```
+ * @param props.field The API identifier of the Id field
+ * @param props.label The label of the Id field
+ * @returns The id input component
+ */
+export const PolarisAutoIdInput = (props: AutoIdInputProps) => {
   const { field, label } = props;
   const { name, metadata } = useStringInputController({ field });
 

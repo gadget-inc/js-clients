@@ -12,10 +12,10 @@ export { MUIAutoInput as AutoInput } from "./inputs/MUIAutoInput.js";
 export { MUIAutoJSONInput as AutoJSONInput } from "./inputs/MUIAutoJSONInput.js";
 export { MUIAutoRolesInput as AutoRolesInput } from "./inputs/MUIAutoRolesInput.js";
 export {
-  MUIAutoTextInput as AutoEmailInput,
-  MUIAutoTextInput as AutoNumberInput,
-  MUIAutoTextInput as AutoStringInput,
-  MUIAutoTextInput as AutoUrlInput,
+  MUIAutoEmailInput as AutoEmailInput,
+  MUIAutoNumberInput as AutoNumberInput,
+  MUIAutoStringInput as AutoStringInput,
+  MUIAutoUrlInput as AutoUrlInput,
 } from "./inputs/MUIAutoTextInput.js";
 export { MUIAutoBelongsToInput as AutoBelongsToInput } from "./inputs/relationships/MUIAutoBelongsToInput.js";
 export { MUIAutoHasManyInput as AutoHasManyInput } from "./inputs/relationships/MUIAutoHasManyInput.js";
