@@ -14,8 +14,8 @@ export type Scalars = {
   Boolean: { input: boolean; output: boolean };
   Int: { input: number; output: number };
   Float: { input: number; output: number };
-  /** Represents the possible values of the fieldA enum. */
-  AutoTableTestEnumEnum: { input: any; output: any };
+  /** Represents an amount of money in CAD */
+  CADCurrencyAmount: { input: any; output: any };
   /** A date string, such as 2007-12-03, compliant with the `full-date` format outlined in section 5.6 of the RFC 3339 profile of the ISO 8601 standard for representation of dates and times using the Gregorian calendar. */
   Date: { input: any; output: any };
   /** A date-time or full-date string at UTC, such as 2007-12-03 or 2007-12-03T10:15:30Z, compliant with the `full-date` or `date-time` formats outlined in section 5.6 of the RFC 3339 profile of the ISO 8601 standard for representation of dates and times using the Gregorian calendar. If a full date-time is passed, timezone will be ignored and it will be truncated to just the date part. */
@@ -24,52 +24,54 @@ export type Scalars = {
   DateTime: { input: any; output: any };
   /** The ID of a record in Gadget */
   GadgetID: { input: any; output: any };
+  /** Represents the possible values of the State enum. */
+  GizmoStateEnum: { input: any; output: any };
   /** Instructions for a client to turn raw transport types (like strings) into useful client side types (like Dates). Unstable and not intended for developer use. */
   HydrationPlan: { input: any; output: any };
-  /** Represents one autoTableTest result record in internal api calls. Returns a JSON blob of all the record's fields. */
-  InternalAutoTableTestRecord: { input: any; output: any };
-  /** Represents one _autoTableTestRelatedModel result record in internal api calls. Returns a JSON blob of all the record's fields. */
-  InternalAutoTableTestRelatedModelRecord: { input: any; output: any };
+  /** Represents one billingAccount result record in internal api calls. Returns a JSON blob of all the record's fields. */
+  InternalBillingAccountRecord: { input: any; output: any };
+  /** Represents internal money state, which consists of an amount and a currency */
+  InternalCADCurrencyAmount: { input: any; output: any };
   /** Represents one city result record in internal api calls. Returns a JSON blob of all the record's fields. */
-  InternalGameCityRecord: { input: any; output: any };
-  /** Represents one player result record in internal api calls. Returns a JSON blob of all the record's fields. */
+  InternalCityRecord: { input: any; output: any };
+  /** Represents one course result record in internal api calls. Returns a JSON blob of all the record's fields. */
+  InternalCourseRecord: { input: any; output: any };
+  /** Represents one customer result record in internal api calls. Returns a JSON blob of all the record's fields. */
+  InternalCustomerRecord: { input: any; output: any };
+  /** Represents one ephemeral result record in internal api calls. Returns a JSON blob of all the record's fields. */
+  InternalEphemeralRecord: { input: any; output: any };
+  /** Represents one fieldless result record in internal api calls. Returns a JSON blob of all the record's fields. */
+  InternalFieldlessRecord: { input: any; output: any };
+  /** Represents one friendship result record in internal api calls. Returns a JSON blob of all the record's fields. */
+  InternalFriendshipRecord: { input: any; output: any };
+  /** Represents one game/player result record in internal api calls. Returns a JSON blob of all the record's fields. */
   InternalGamePlayerRecord: { input: any; output: any };
-  /** Represents one round result record in internal api calls. Returns a JSON blob of all the record's fields. */
+  /** Represents one game/round result record in internal api calls. Returns a JSON blob of all the record's fields. */
   InternalGameRoundRecord: { input: any; output: any };
-  /** Represents one stadium result record in internal api calls. Returns a JSON blob of all the record's fields. */
+  /** Represents one game/stadium result record in internal api calls. Returns a JSON blob of all the record's fields. */
   InternalGameStadiumRecord: { input: any; output: any };
   /** Represents one gizmo result record in internal api calls. Returns a JSON blob of all the record's fields. */
   InternalGizmoRecord: { input: any; output: any };
-  /** Represents one baseModel result record in internal api calls. Returns a JSON blob of all the record's fields. */
-  InternalHasManyThroughBaseModelRecord: { input: any; output: any };
-  /** Represents one joinerModel result record in internal api calls. Returns a JSON blob of all the record's fields. */
-  InternalHasManyThroughJoinerModelRecord: { input: any; output: any };
-  /** Represents one siblingModel result record in internal api calls. Returns a JSON blob of all the record's fields. */
-  InternalHasManyThroughSiblingModelRecord: { input: any; output: any };
-  /** Represents one modelA result record in internal api calls. Returns a JSON blob of all the record's fields. */
-  InternalModelARecord: { input: any; output: any };
-  /** Represents one part result record in internal api calls. Returns a JSON blob of all the record's fields. */
-  InternalPartRecord: { input: any; output: any };
+  /** Represents one landmark/stadium result record in internal api calls. Returns a JSON blob of all the record's fields. */
+  InternalLandmarkStadiumRecord: { input: any; output: any };
+  /** Represents one registration result record in internal api calls. Returns a JSON blob of all the record's fields. */
+  InternalRegistrationRecord: { input: any; output: any };
+  /** Represents one sampleModelToTestReallyLongModelNames result record in internal api calls. Returns a JSON blob of all the record's fields. */
+  InternalSampleModelToTestReallyLongModelNamesRecord: { input: any; output: any };
   /** Represents one section result record in internal api calls. Returns a JSON blob of all the record's fields. */
   InternalSectionRecord: { input: any; output: any };
   /** Represents one session result record in internal api calls. Returns a JSON blob of all the record's fields. */
   InternalSessionRecord: { input: any; output: any };
-  /** Represents one shopifyGdprRequest result record in internal api calls. Returns a JSON blob of all the record's fields. */
-  InternalShopifyGdprRequestRecord: { input: any; output: any };
-  /** Represents one shopifyProductImage result record in internal api calls. Returns a JSON blob of all the record's fields. */
-  InternalShopifyProductImageRecord: { input: any; output: any };
-  /** Represents one shopifyProductOption result record in internal api calls. Returns a JSON blob of all the record's fields. */
-  InternalShopifyProductOptionRecord: { input: any; output: any };
-  /** Represents one shopifyProduct result record in internal api calls. Returns a JSON blob of all the record's fields. */
-  InternalShopifyProductRecord: { input: any; output: any };
-  /** Represents one shopifyProductVariant result record in internal api calls. Returns a JSON blob of all the record's fields. */
-  InternalShopifyProductVariantRecord: { input: any; output: any };
-  /** Represents one shopifyShop result record in internal api calls. Returns a JSON blob of all the record's fields. */
-  InternalShopifyShopRecord: { input: any; output: any };
-  /** Represents one shopifySync result record in internal api calls. Returns a JSON blob of all the record's fields. */
-  InternalShopifySyncRecord: { input: any; output: any };
+  /** Represents one sprocket result record in internal api calls. Returns a JSON blob of all the record's fields. */
+  InternalSprocketRecord: { input: any; output: any };
+  /** Represents one student result record in internal api calls. Returns a JSON blob of all the record's fields. */
+  InternalStudentRecord: { input: any; output: any };
+  /** Represents one teacher result record in internal api calls. Returns a JSON blob of all the record's fields. */
+  InternalTeacherRecord: { input: any; output: any };
   /** Represents one user result record in internal api calls. Returns a JSON blob of all the record's fields. */
   InternalUserRecord: { input: any; output: any };
+  /** Represents one widgetImage result record in internal api calls. Returns a JSON blob of all the record's fields. */
+  InternalWidgetImageRecord: { input: any; output: any };
   /** Represents one widget result record in internal api calls. Returns a JSON blob of all the record's fields. */
   InternalWidgetRecord: { input: any; output: any };
   /** The `JSON` scalar type represents JSON values as specified by [ECMA-404](http://www.ecma-international.org/publications/files/ECMA-ST/ECMA-404.pdf). */
@@ -78,38 +80,62 @@ export type Scalars = {
   JSONObject: { input: any; output: any };
   /** Represents the state of one record in a Gadget database. Represented as either a string or set of strings nested in objects. */
   RecordState: { input: any; output: any };
-  /** Represents the possible values of the Topic enum. */
-  ShopifyGdprRequestTopicEnum: { input: any; output: any };
-  /** Represents the possible values of the Status enum. */
-  ShopifyProductStatusEnum: { input: any; output: any };
-  /** Represents the possible values of the tags enum. */
-  StadiumTagsEnum: { input: any; output: any };
-  /** Represents the possible values of the type enum. */
-  StadiumTypeEnum: { input: any; output: any };
   /** A field whose value conforms to the standard URL format as specified in RFC3986: https://www.ietf.org/rfc/rfc3986.txt. */
   URL: { input: any; output: any };
   /** The `Upload` scalar type represents a file upload. */
   Upload: { input: any; output: any };
-  /** Represents the possible values of the fieldA enum. */
+  /** Represents the possible values of the Category enum. */
   WidgetCategoryEnum: { input: any; output: any };
+  /** Represents the possible values of the Phase enum. */
+  WidgetPhaseEnum: { input: any; output: any };
+  /** Represents the possible values of the State enum. */
+  WidgetStateEnum: { input: any; output: any };
 };
 
-export type AbortShopifySyncInput = {
-  domain?: InputMaybe<Scalars["String"]["input"]>;
-  errorDetails?: InputMaybe<Scalars["String"]["input"]>;
-  errorMessage?: InputMaybe<Scalars["String"]["input"]>;
-  force?: InputMaybe<Scalars["Boolean"]["input"]>;
-  models?: InputMaybe<Scalars["JSON"]["input"]>;
-  shop?: InputMaybe<ShopifyShopBelongsToInput>;
-  syncSince?: InputMaybe<Scalars["DateTime"]["input"]>;
-};
-
-export type AbortShopifySyncResult = UpsertShopifySyncResult & {
-  __typename?: "AbortShopifySyncResult";
+export type AddInventoryIfOutOfStockWidgetResult = {
+  __typename?: "AddInventoryIfOutOfStockWidgetResult";
   actionRun?: Maybe<Scalars["String"]["output"]>;
   errors?: Maybe<Array<ExecutionError>>;
-  shopifySync?: Maybe<ShopifySync>;
   success: Scalars["Boolean"]["output"];
+  widget?: Maybe<Widget>;
+};
+
+export type AddInventoryLocationInput = {
+  phone?: InputMaybe<AddInventoryLocationPhoneInput>;
+  street?: InputMaybe<Scalars["String"]["input"]>;
+  streetNumber?: InputMaybe<Scalars["Float"]["input"]>;
+};
+
+export type AddInventoryLocationPhoneInput = {
+  areaCode?: InputMaybe<Scalars["String"]["input"]>;
+  countryCode?: InputMaybe<Scalars["String"]["input"]>;
+};
+
+export type AddInventoryWidgetInput = {
+  anything?: InputMaybe<Scalars["JSON"]["input"]>;
+  birthday?: InputMaybe<Scalars["DateOrDateTime"]["input"]>;
+  category?: InputMaybe<Array<Scalars["WidgetCategoryEnum"]["input"]>>;
+  color?: InputMaybe<Scalars["String"]["input"]>;
+  cost?: InputMaybe<Scalars["CADCurrencyAmount"]["input"]>;
+  description?: InputMaybe<RichTextInput>;
+  email?: InputMaybe<Scalars["String"]["input"]>;
+  embedding?: InputMaybe<Array<Scalars["Float"]["input"]>>;
+  gizmos?: InputMaybe<Array<InputMaybe<GizmoHasManyInput>>>;
+  images?: InputMaybe<Array<InputMaybe<WidgetImageHasManyInput>>>;
+  inventoryCount?: InputMaybe<Scalars["Float"]["input"]>;
+  isChecked?: InputMaybe<Scalars["Boolean"]["input"]>;
+  metafields?: InputMaybe<Scalars["JSON"]["input"]>;
+  name?: InputMaybe<Scalars["String"]["input"]>;
+  phase?: InputMaybe<Scalars["WidgetPhaseEnum"]["input"]>;
+  /** A string list of Gadget platform Role keys to assign to this record */
+  roles?: InputMaybe<Array<Scalars["String"]["input"]>>;
+  secretKey?: InputMaybe<Scalars["String"]["input"]>;
+  section?: InputMaybe<SectionBelongsToInput>;
+  slug?: InputMaybe<Scalars["String"]["input"]>;
+  startsAt?: InputMaybe<Scalars["DateTime"]["input"]>;
+  state?: InputMaybe<Scalars["WidgetStateEnum"]["input"]>;
+  tagline?: InputMaybe<Scalars["String"]["input"]>;
+  url?: InputMaybe<Scalars["String"]["input"]>;
 };
 
 export type AddInventoryWidgetResult = {
@@ -120,248 +146,10 @@ export type AddInventoryWidgetResult = {
   widget?: Maybe<Widget>;
 };
 
-export type AlwaysThrowErrorWidgetInput = {
-  anything?: InputMaybe<Scalars["JSON"]["input"]>;
-  birthday?: InputMaybe<Scalars["DateOrDateTime"]["input"]>;
-  category?: InputMaybe<Array<Scalars["WidgetCategoryEnum"]["input"]>>;
-  color?: InputMaybe<Scalars["String"]["input"]>;
-  description?: InputMaybe<RichTextInput>;
-  embedding?: InputMaybe<Array<Scalars["Float"]["input"]>>;
-  gizmos?: InputMaybe<Array<InputMaybe<GizmoHasManyInput>>>;
-  inventoryCount?: InputMaybe<Scalars["Float"]["input"]>;
-  isChecked?: InputMaybe<Scalars["Boolean"]["input"]>;
-  metafields?: InputMaybe<Scalars["JSON"]["input"]>;
-  mustBeLongString?: InputMaybe<Scalars["String"]["input"]>;
-  name?: InputMaybe<Scalars["String"]["input"]>;
-  /** A string list of Gadget platform Role keys to assign to this record */
-  roles?: InputMaybe<Array<Scalars["String"]["input"]>>;
-  secretKey?: InputMaybe<Scalars["String"]["input"]>;
-  section?: InputMaybe<SectionBelongsToInput>;
-  startsAt?: InputMaybe<Scalars["DateTime"]["input"]>;
-};
-
-export type AlwaysThrowErrorWidgetResult = {
-  __typename?: "AlwaysThrowErrorWidgetResult";
-  actionRun?: Maybe<Scalars["String"]["output"]>;
-  errors?: Maybe<Array<ExecutionError>>;
-  success: Scalars["Boolean"]["output"];
-  widget?: Maybe<Widget>;
-};
-
 /** Input object for specifying the context of a mutation trigger */
 export type AppGraphQlTriggerMutationContext = {
   /** The ID of the session that triggered this mutation. Will be the session that's loaded in the mutation context. */
   sessionID?: InputMaybe<Scalars["GadgetID"]["input"]>;
-};
-
-export type AutoTableTest = {
-  __typename?: "AutoTableTest";
-  /** Get all the fields for this record. Useful for not having to list out all the fields you want to retrieve, but slower. */
-  _all: Scalars["JSONObject"]["output"];
-  bool?: Maybe<Scalars["Boolean"]["output"]>;
-  computed?: Maybe<Scalars["JSON"]["output"]>;
-  /** The time at which this record was first created. Set once upon record creation and never changed. Managed by Gadget. */
-  createdAt: Scalars["DateTime"]["output"];
-  dt?: Maybe<Scalars["DateTime"]["output"]>;
-  email?: Maybe<Scalars["String"]["output"]>;
-  enum?: Maybe<Array<Scalars["AutoTableTestEnumEnum"]["output"]>>;
-  es?: Maybe<Scalars["String"]["output"]>;
-  file?: Maybe<StoredFile>;
-  hasMany: AutoTableTestRelatedModelConnection;
-  hasOne?: Maybe<AutoTableTestRelatedModel>;
-  /** The globally unique, unchanging identifier for this record. Assigned and managed by Gadget. */
-  id: Scalars["GadgetID"]["output"];
-  json?: Maybe<Scalars["JSON"]["output"]>;
-  num?: Maybe<Scalars["Float"]["output"]>;
-  rl?: Maybe<Array<Role>>;
-  rt?: Maybe<RichText>;
-  str?: Maybe<Scalars["String"]["output"]>;
-  /** The time at which this record was last changed. Set each time the record is successfully acted upon by an action. Managed by Gadget. */
-  updatedAt: Scalars["DateTime"]["output"];
-  url?: Maybe<Scalars["String"]["output"]>;
-  vect?: Maybe<Array<Scalars["Float"]["output"]>>;
-  vectCosineSimilarityTo?: Maybe<Scalars["Float"]["output"]>;
-  vectL2DistanceTo?: Maybe<Scalars["Float"]["output"]>;
-};
-
-export type AutoTableTestHasManyArgs = {
-  after?: InputMaybe<Scalars["String"]["input"]>;
-  before?: InputMaybe<Scalars["String"]["input"]>;
-  filter?: InputMaybe<Array<AutoTableTestRelatedModelFilter>>;
-  first?: InputMaybe<Scalars["Int"]["input"]>;
-  last?: InputMaybe<Scalars["Int"]["input"]>;
-  search?: InputMaybe<Scalars["String"]["input"]>;
-  sort?: InputMaybe<Array<AutoTableTestRelatedModelSort>>;
-};
-
-export type AutoTableTestVectCosineSimilarityToArgs = {
-  vector: Array<Scalars["Float"]["input"]>;
-};
-
-export type AutoTableTestVectL2DistanceToArgs = {
-  vector: Array<Scalars["Float"]["input"]>;
-};
-
-/** Input object supporting setting or updating related model record on a relationship field */
-export type AutoTableTestBelongsToInput = {
-  /** Existing ID of another record, which you would like to associate this record with */
-  _link?: InputMaybe<Scalars["GadgetID"]["input"]>;
-  create?: InputMaybe<NestedAutoTableTestCreateInput>;
-  customAction?: InputMaybe<NestedAutoTableTestCustomActionInput>;
-  customActionWithParams?: InputMaybe<NestedAutoTableTestCustomActionWithParamsInput>;
-  delete?: InputMaybe<NestedAutoTableTestDeleteInput>;
-  update?: InputMaybe<NestedAutoTableTestUpdateInput>;
-  updateWithCustomParams?: InputMaybe<NestedAutoTableTestUpdateWithCustomParamsInput>;
-};
-
-/** A connection to a list of AutoTableTest items. */
-export type AutoTableTestConnection = {
-  __typename?: "AutoTableTestConnection";
-  /** A list of edges. */
-  edges: Array<AutoTableTestEdge>;
-  /** Information to aid in pagination. */
-  pageInfo: PageInfo;
-};
-
-/** An edge in a AutoTableTest connection. */
-export type AutoTableTestEdge = {
-  __typename?: "AutoTableTestEdge";
-  /** A cursor for use in pagination */
-  cursor: Scalars["String"]["output"];
-  /** The item at the end of the edge */
-  node: AutoTableTest;
-};
-
-export type AutoTableTestFilter = {
-  AND?: InputMaybe<Array<InputMaybe<AutoTableTestFilter>>>;
-  NOT?: InputMaybe<Array<InputMaybe<AutoTableTestFilter>>>;
-  OR?: InputMaybe<Array<InputMaybe<AutoTableTestFilter>>>;
-  bool?: InputMaybe<BooleanFilter>;
-  createdAt?: InputMaybe<DateTimeFilter>;
-  dt?: InputMaybe<DateTimeFilter>;
-  email?: InputMaybe<StringFilter>;
-  enum?: InputMaybe<MultiEnumFilter>;
-  id?: InputMaybe<IdFilter>;
-  json?: InputMaybe<JsonFilter>;
-  num?: InputMaybe<FloatFilter>;
-  rt?: InputMaybe<StringFilter>;
-  str?: InputMaybe<StringFilter>;
-  updatedAt?: InputMaybe<DateTimeFilter>;
-  url?: InputMaybe<StringFilter>;
-  vect?: InputMaybe<VectorFilter>;
-};
-
-export type AutoTableTestRelatedModel = {
-  __typename?: "AutoTableTestRelatedModel";
-  /** Get all the fields for this record. Useful for not having to list out all the fields you want to retrieve, but slower. */
-  _all: Scalars["JSONObject"]["output"];
-  belongsToParent?: Maybe<AutoTableTest>;
-  belongsToParentId?: Maybe<Scalars["GadgetID"]["output"]>;
-  /** The time at which this record was first created. Set once upon record creation and never changed. Managed by Gadget. */
-  createdAt: Scalars["DateTime"]["output"];
-  /** The globally unique, unchanging identifier for this record. Assigned and managed by Gadget. */
-  id: Scalars["GadgetID"]["output"];
-  manyBelongsToParent?: Maybe<AutoTableTest>;
-  manyBelongsToParentId?: Maybe<Scalars["GadgetID"]["output"]>;
-  name?: Maybe<Scalars["String"]["output"]>;
-  someBool?: Maybe<Scalars["Boolean"]["output"]>;
-  someNumber?: Maybe<Scalars["Float"]["output"]>;
-  /** The time at which this record was last changed. Set each time the record is successfully acted upon by an action. Managed by Gadget. */
-  updatedAt: Scalars["DateTime"]["output"];
-};
-
-/** A connection to a list of AutoTableTestRelatedModel items. */
-export type AutoTableTestRelatedModelConnection = {
-  __typename?: "AutoTableTestRelatedModelConnection";
-  /** A list of edges. */
-  edges: Array<AutoTableTestRelatedModelEdge>;
-  /** Information to aid in pagination. */
-  pageInfo: PageInfo;
-};
-
-/** An edge in a AutoTableTestRelatedModel connection. */
-export type AutoTableTestRelatedModelEdge = {
-  __typename?: "AutoTableTestRelatedModelEdge";
-  /** A cursor for use in pagination */
-  cursor: Scalars["String"]["output"];
-  /** The item at the end of the edge */
-  node: AutoTableTestRelatedModel;
-};
-
-export type AutoTableTestRelatedModelFilter = {
-  AND?: InputMaybe<Array<InputMaybe<AutoTableTestRelatedModelFilter>>>;
-  NOT?: InputMaybe<Array<InputMaybe<AutoTableTestRelatedModelFilter>>>;
-  OR?: InputMaybe<Array<InputMaybe<AutoTableTestRelatedModelFilter>>>;
-  belongsToParent?: InputMaybe<IdFilter>;
-  belongsToParentId?: InputMaybe<IdFilter>;
-  createdAt?: InputMaybe<DateTimeFilter>;
-  id?: InputMaybe<IdFilter>;
-  manyBelongsToParent?: InputMaybe<IdFilter>;
-  manyBelongsToParentId?: InputMaybe<IdFilter>;
-  name?: InputMaybe<StringFilter>;
-  someBool?: InputMaybe<BooleanFilter>;
-  someNumber?: InputMaybe<FloatFilter>;
-  updatedAt?: InputMaybe<DateTimeFilter>;
-};
-
-/** Input object supporting setting or updating related model record on a relationship field */
-export type AutoTableTestRelatedModelHasManyInput = {
-  /** Creates, updates, or deletes existing records in the database as needed to arrive at the list of records specified. */
-  _converge?: InputMaybe<ConvergeAutoTableTestRelatedModelInput>;
-  create?: InputMaybe<NestedAutoTableTestRelatedModelCreateInput>;
-  delete?: InputMaybe<NestedAutoTableTestRelatedModelDeleteInput>;
-  update?: InputMaybe<NestedAutoTableTestRelatedModelUpdateInput>;
-};
-
-/** Input object supporting setting or updating related model record on a relationship field */
-export type AutoTableTestRelatedModelHasOneInput = {
-  create?: InputMaybe<NestedAutoTableTestRelatedModelCreateInput>;
-  delete?: InputMaybe<NestedAutoTableTestRelatedModelDeleteInput>;
-  update?: InputMaybe<NestedAutoTableTestRelatedModelUpdateInput>;
-};
-
-export type AutoTableTestRelatedModelSort = {
-  /** Sort the results by the createdAt field. Defaults to ascending (smallest value first). */
-  createdAt?: InputMaybe<SortOrder>;
-  /** Sort the results by the id field. Defaults to ascending (smallest value first). */
-  id?: InputMaybe<SortOrder>;
-  /** Sort the results by the name field. Defaults to ascending (smallest value first). */
-  name?: InputMaybe<SortOrder>;
-  /** Sort the results by the someBool field. Defaults to ascending (smallest value first). */
-  someBool?: InputMaybe<SortOrder>;
-  /** Sort the results by the someNumber field. Defaults to ascending (smallest value first). */
-  someNumber?: InputMaybe<SortOrder>;
-  /** Sort the results by the updatedAt field. Defaults to ascending (smallest value first). */
-  updatedAt?: InputMaybe<SortOrder>;
-};
-
-export type AutoTableTestSort = {
-  /** Sort the results by the bool field. Defaults to ascending (smallest value first). */
-  bool?: InputMaybe<SortOrder>;
-  /** Sort the results by the createdAt field. Defaults to ascending (smallest value first). */
-  createdAt?: InputMaybe<SortOrder>;
-  /** Sort the results by the dt field. Defaults to ascending (smallest value first). */
-  dt?: InputMaybe<SortOrder>;
-  /** Sort the results by the email field. Defaults to ascending (smallest value first). */
-  email?: InputMaybe<SortOrder>;
-  /** Sort the results by the enum field. Defaults to ascending (smallest value first). */
-  enum?: InputMaybe<SortOrder>;
-  /** Sort the results by the id field. Defaults to ascending (smallest value first). */
-  id?: InputMaybe<SortOrder>;
-  /** Sort the results by the json field. Defaults to ascending (smallest value first). */
-  json?: InputMaybe<SortOrder>;
-  /** Sort the results by the num field. Defaults to ascending (smallest value first). */
-  num?: InputMaybe<SortOrder>;
-  /** Sort the results by the rt field. Defaults to ascending (smallest value first). */
-  rt?: InputMaybe<SortOrder>;
-  /** Sort the results by the str field. Defaults to ascending (smallest value first). */
-  str?: InputMaybe<SortOrder>;
-  /** Sort the results by the updatedAt field. Defaults to ascending (smallest value first). */
-  updatedAt?: InputMaybe<SortOrder>;
-  /** Sort the results by the url field. Defaults to ascending (smallest value first). */
-  url?: InputMaybe<SortOrder>;
-  /** Sort the results by the vect vector field. Sorts based on the distance between a given vector and the vector stored in vect. */
-  vect?: InputMaybe<VectorSortOrder>;
 };
 
 export type BackgroundAction = {
@@ -400,67 +188,93 @@ export type BackgroundActionQueue = {
 };
 
 export type BackgroundActionResult =
-  | AbortShopifySyncResult
+  | AddInventoryIfOutOfStockWidgetResult
   | AddInventoryWidgetResult
-  | AlwaysThrowErrorWidgetResult
-  | CompleteShopifySyncResult
-  | CreateAutoTableTestRelatedModelResult
-  | CreateAutoTableTestResult
-  | CreateGameCityResult
+  | BarfAnErrorGamePlayerResult
+  | BarfAnErrorResult
+  | BendGizmoResult
+  | BreakGizmoResult
+  | ChangePasswordUserResult
+  | CreateBillingAccountResult
+  | CreateCityResult
+  | CreateCourseResult
+  | CreateCustomerResult
+  | CreateEphemeralResult
+  | CreateFieldlessResult
+  | CreateFriendshipResult
   | CreateGamePlayerResult
   | CreateGameRoundResult
   | CreateGameStadiumResult
   | CreateGizmoResult
-  | CreateHasManyThroughBaseModelResult
-  | CreateHasManyThroughJoinerModelResult
-  | CreateHasManyThroughSiblingModelResult
-  | CreateModelAResult
-  | CreatePartResult
+  | CreateLandmarkStadiumResult
+  | CreateRegistrationResult
+  | CreateSampleModelToTestReallyLongModelNamesResult
   | CreateSectionResult
-  | CreateTestDataResult
+  | CreateSprocketResult
+  | CreateStudentResult
+  | CreateTeacherResult
+  | CreateWidgetImageResult
   | CreateWidgetResult
-  | CustomActionAutoTableTestResult
-  | CustomActionWithParamsAutoTableTestResult
-  | CustomObjectParamsGameCityResult
-  | DeleteAutoTableTestRelatedModelResult
-  | DeleteAutoTableTestResult
-  | DeleteGameCityResult
+  | DeleteBillingAccountResult
+  | DeleteCityResult
+  | DeleteCourseResult
+  | DeleteCustomerResult
+  | DeleteEphemeralResult
+  | DeleteFieldlessResult
+  | DeleteFriendshipResult
   | DeleteGamePlayerResult
   | DeleteGameRoundResult
   | DeleteGameStadiumResult
   | DeleteGizmoResult
-  | DeleteHasManyThroughBaseModelResult
-  | DeleteHasManyThroughJoinerModelResult
-  | DeleteHasManyThroughSiblingModelResult
-  | DeleteModelAResult
-  | DeletePartResult
+  | DeleteLandmarkStadiumResult
+  | DeleteRegistrationResult
+  | DeleteSampleModelToTestReallyLongModelNamesResult
   | DeleteSectionResult
+  | DeleteSprocketResult
+  | DeleteStudentResult
+  | DeleteTeacherResult
   | DeleteUserResult
+  | DeleteWidgetImageResult
   | DeleteWidgetResult
-  | ErrorShopifySyncResult
-  | FlipAllResult
-  | NameSpacedActionAResult
-  | NameSpacedCustomObjectParamsResult
-  | RunShopifySyncResult
+  | FlipAllWidgetsResult
+  | FlipDownWidgetResult
+  | FlipUpWidgetResult
+  | FoldGizmoResult
+  | GameCalculateScoresResult
+  | GameLetTheGamesBeginResult
+  | LogParamsResult
+  | OtherCreateGizmoResult
+  | ResetPasswordUserResult
+  | SendResetPasswordUserResult
+  | SendVerifyEmailUserResult
+  | SetBestNumberGamePlayerResult
   | SignInUserResult
   | SignOutUserResult
   | SignUpUserResult
-  | UpdateAutoTableTestRelatedModelResult
-  | UpdateAutoTableTestResult
-  | UpdateGameCityResult
+  | StraightenGizmoResult
+  | UnfoldGizmoResult
+  | UpdateBillingAccountResult
+  | UpdateCityResult
+  | UpdateCourseResult
+  | UpdateCustomerResult
+  | UpdateEphemeralResult
+  | UpdateFieldlessResult
+  | UpdateFriendshipResult
   | UpdateGamePlayerResult
   | UpdateGameRoundResult
   | UpdateGameStadiumResult
   | UpdateGizmoResult
-  | UpdateHasManyThroughBaseModelResult
-  | UpdateHasManyThroughJoinerModelResult
-  | UpdateHasManyThroughSiblingModelResult
-  | UpdateModelAResult
-  | UpdatePartResult
+  | UpdateLandmarkStadiumResult
+  | UpdateRegistrationResult
+  | UpdateSampleModelToTestReallyLongModelNamesResult
   | UpdateSectionResult
+  | UpdateSprocketResult
+  | UpdateStudentResult
+  | UpdateTeacherResult
   | UpdateUserResult
+  | UpdateWidgetImageResult
   | UpdateWidgetResult
-  | UpdateWithCustomParamsAutoTableTestResult;
+  | VerifyEmailUserResult;
 
 export type BackgroundActionRetryPolicy = {
   /** The exponential backoff factor to use for calculating the retry delay for successive retries. Set this higher to grow the delay faster with each retry attempt. Default is 2. */
@@ -477,45 +291,46 @@ export type BackgroundActionRetryPolicy = {
 
 export type BackgroundGameMutations = {
   __typename?: "BackgroundGameMutations";
-  bulkCreateCities: BulkEnqueueBackgroundActionResult;
+  barfAnErrorPlayer: EnqueueBackgroundActionResult;
+  bulkBarfAnErrorPlayers: BulkEnqueueBackgroundActionResult;
   bulkCreatePlayers: BulkEnqueueBackgroundActionResult;
   bulkCreateRounds: BulkEnqueueBackgroundActionResult;
   bulkCreateStadia: BulkEnqueueBackgroundActionResult;
-  bulkCustomObjectParamsCities: BulkEnqueueBackgroundActionResult;
-  bulkDeleteCities: BulkEnqueueBackgroundActionResult;
   bulkDeletePlayers: BulkEnqueueBackgroundActionResult;
   bulkDeleteRounds: BulkEnqueueBackgroundActionResult;
   bulkDeleteStadia: BulkEnqueueBackgroundActionResult;
-  bulkUpdateCities: BulkEnqueueBackgroundActionResult;
+  bulkSetBestNumberPlayers: BulkEnqueueBackgroundActionResult;
   bulkUpdatePlayers: BulkEnqueueBackgroundActionResult;
   bulkUpdateRounds: BulkEnqueueBackgroundActionResult;
   bulkUpdateStadia: BulkEnqueueBackgroundActionResult;
-  bulkUpsertCities: BulkEnqueueBackgroundActionResult;
   bulkUpsertPlayers: BulkEnqueueBackgroundActionResult;
   bulkUpsertRounds: BulkEnqueueBackgroundActionResult;
   bulkUpsertStadia: BulkEnqueueBackgroundActionResult;
-  createCity: EnqueueBackgroundActionResult;
+  calculateScores: EnqueueBackgroundActionResult;
   createPlayer: EnqueueBackgroundActionResult;
   createRound: EnqueueBackgroundActionResult;
   createStadium: EnqueueBackgroundActionResult;
-  customObjectParamsCity: EnqueueBackgroundActionResult;
-  deleteCity: EnqueueBackgroundActionResult;
   deletePlayer: EnqueueBackgroundActionResult;
   deleteRound: EnqueueBackgroundActionResult;
   deleteStadium: EnqueueBackgroundActionResult;
-  updateCity: EnqueueBackgroundActionResult;
+  letTheGamesBegin: EnqueueBackgroundActionResult;
+  setBestNumberPlayer: EnqueueBackgroundActionResult;
   updatePlayer: EnqueueBackgroundActionResult;
   updateRound: EnqueueBackgroundActionResult;
   updateStadium: EnqueueBackgroundActionResult;
-  upsertCity: EnqueueBackgroundActionResult;
   upsertPlayer: EnqueueBackgroundActionResult;
   upsertRound: EnqueueBackgroundActionResult;
   upsertStadium: EnqueueBackgroundActionResult;
 };
 
-export type BackgroundGameMutationsBulkCreateCitiesArgs = {
+export type BackgroundGameMutationsBarfAnErrorPlayerArgs = {
   backgroundOptions?: InputMaybe<EnqueueBackgroundActionOptions>;
-  inputs: Array<BulkCreateGameCitiesInput>;
+  id: Scalars["GadgetID"]["input"];
+};
+
+export type BackgroundGameMutationsBulkBarfAnErrorPlayersArgs = {
+  backgroundOptions?: InputMaybe<EnqueueBackgroundActionOptions>;
+  ids: Array<Scalars["GadgetID"]["input"]>;
 };
 
 export type BackgroundGameMutationsBulkCreatePlayersArgs = {
@@ -533,16 +348,6 @@ export type BackgroundGameMutationsBulkCreateStadiaArgs = {
   inputs: Array<BulkCreateGameStadiaInput>;
 };
 
-export type BackgroundGameMutationsBulkCustomObjectParamsCitiesArgs = {
-  backgroundOptions?: InputMaybe<EnqueueBackgroundActionOptions>;
-  inputs: Array<BulkCustomObjectParamsGameCitiesInput>;
-};
-
-export type BackgroundGameMutationsBulkDeleteCitiesArgs = {
-  backgroundOptions?: InputMaybe<EnqueueBackgroundActionOptions>;
-  ids: Array<Scalars["GadgetID"]["input"]>;
-};
-
 export type BackgroundGameMutationsBulkDeletePlayersArgs = {
   backgroundOptions?: InputMaybe<EnqueueBackgroundActionOptions>;
   ids: Array<Scalars["GadgetID"]["input"]>;
@@ -558,9 +363,9 @@ export type BackgroundGameMutationsBulkDeleteStadiaArgs = {
   ids: Array<Scalars["GadgetID"]["input"]>;
 };
 
-export type BackgroundGameMutationsBulkUpdateCitiesArgs = {
+export type BackgroundGameMutationsBulkSetBestNumberPlayersArgs = {
   backgroundOptions?: InputMaybe<EnqueueBackgroundActionOptions>;
-  inputs: Array<BulkUpdateGameCitiesInput>;
+  ids: Array<Scalars["GadgetID"]["input"]>;
 };
 
 export type BackgroundGameMutationsBulkUpdatePlayersArgs = {
@@ -578,11 +383,6 @@ export type BackgroundGameMutationsBulkUpdateStadiaArgs = {
   inputs: Array<BulkUpdateGameStadiaInput>;
 };
 
-export type BackgroundGameMutationsBulkUpsertCitiesArgs = {
-  backgroundOptions?: InputMaybe<EnqueueBackgroundActionOptions>;
-  inputs: Array<BulkUpsertGameCitiesInput>;
-};
-
 export type BackgroundGameMutationsBulkUpsertPlayersArgs = {
   backgroundOptions?: InputMaybe<EnqueueBackgroundActionOptions>;
   inputs: Array<BulkUpsertGamePlayersInput>;
@@ -598,9 +398,8 @@ export type BackgroundGameMutationsBulkUpsertStadiaArgs = {
   inputs: Array<BulkUpsertGameStadiaInput>;
 };
 
-export type BackgroundGameMutationsCreateCityArgs = {
+export type BackgroundGameMutationsCalculateScoresArgs = {
   backgroundOptions?: InputMaybe<EnqueueBackgroundActionOptions>;
-  city?: InputMaybe<CreateGameCityInput>;
 };
 
 export type BackgroundGameMutationsCreatePlayerArgs = {
@@ -618,19 +417,6 @@ export type BackgroundGameMutationsCreateStadiumArgs = {
   stadium?: InputMaybe<CreateGameStadiumInput>;
 };
 
-export type BackgroundGameMutationsCustomObjectParamsCityArgs = {
-  backgroundOptions?: InputMaybe<EnqueueBackgroundActionOptions>;
-  city?: InputMaybe<CustomObjectParamsGameCityInput>;
-  id: Scalars["GadgetID"]["input"];
-  objParam?: InputMaybe<CustomObjectParamsObjParamInput>;
-  rootLevelStr?: InputMaybe<Scalars["String"]["input"]>;
-};
-
-export type BackgroundGameMutationsDeleteCityArgs = {
-  backgroundOptions?: InputMaybe<EnqueueBackgroundActionOptions>;
-  id: Scalars["GadgetID"]["input"];
-};
-
 export type BackgroundGameMutationsDeletePlayerArgs = {
   backgroundOptions?: InputMaybe<EnqueueBackgroundActionOptions>;
   id: Scalars["GadgetID"]["input"];
@@ -646,9 +432,12 @@ export type BackgroundGameMutationsDeleteStadiumArgs = {
   id: Scalars["GadgetID"]["input"];
 };
 
-export type BackgroundGameMutationsUpdateCityArgs = {
+export type BackgroundGameMutationsLetTheGamesBeginArgs = {
   backgroundOptions?: InputMaybe<EnqueueBackgroundActionOptions>;
-  city?: InputMaybe<UpdateGameCityInput>;
+};
+
+export type BackgroundGameMutationsSetBestNumberPlayerArgs = {
+  backgroundOptions?: InputMaybe<EnqueueBackgroundActionOptions>;
   id: Scalars["GadgetID"]["input"];
 };
 
@@ -670,12 +459,6 @@ export type BackgroundGameMutationsUpdateStadiumArgs = {
   stadium?: InputMaybe<UpdateGameStadiumInput>;
 };
 
-export type BackgroundGameMutationsUpsertCityArgs = {
-  backgroundOptions?: InputMaybe<EnqueueBackgroundActionOptions>;
-  city?: InputMaybe<UpsertGameCityInput>;
-  on?: InputMaybe<Array<Scalars["String"]["input"]>>;
-};
-
 export type BackgroundGameMutationsUpsertPlayerArgs = {
   backgroundOptions?: InputMaybe<EnqueueBackgroundActionOptions>;
   on?: InputMaybe<Array<Scalars["String"]["input"]>>;
@@ -694,277 +477,275 @@ export type BackgroundGameMutationsUpsertStadiumArgs = {
   stadium?: InputMaybe<UpsertGameStadiumInput>;
 };
 
-export type BackgroundHasManyThroughMutations = {
-  __typename?: "BackgroundHasManyThroughMutations";
-  bulkCreateBaseModels: BulkEnqueueBackgroundActionResult;
-  bulkCreateJoinerModels: BulkEnqueueBackgroundActionResult;
-  bulkCreateSiblingModels: BulkEnqueueBackgroundActionResult;
-  bulkDeleteBaseModels: BulkEnqueueBackgroundActionResult;
-  bulkDeleteJoinerModels: BulkEnqueueBackgroundActionResult;
-  bulkDeleteSiblingModels: BulkEnqueueBackgroundActionResult;
-  bulkUpdateBaseModels: BulkEnqueueBackgroundActionResult;
-  bulkUpdateJoinerModels: BulkEnqueueBackgroundActionResult;
-  bulkUpdateSiblingModels: BulkEnqueueBackgroundActionResult;
-  bulkUpsertBaseModels: BulkEnqueueBackgroundActionResult;
-  bulkUpsertJoinerModels: BulkEnqueueBackgroundActionResult;
-  bulkUpsertSiblingModels: BulkEnqueueBackgroundActionResult;
-  createBaseModel: EnqueueBackgroundActionResult;
-  createJoinerModel: EnqueueBackgroundActionResult;
-  createSiblingModel: EnqueueBackgroundActionResult;
-  deleteBaseModel: EnqueueBackgroundActionResult;
-  deleteJoinerModel: EnqueueBackgroundActionResult;
-  deleteSiblingModel: EnqueueBackgroundActionResult;
-  updateBaseModel: EnqueueBackgroundActionResult;
-  updateJoinerModel: EnqueueBackgroundActionResult;
-  updateSiblingModel: EnqueueBackgroundActionResult;
-  upsertBaseModel: EnqueueBackgroundActionResult;
-  upsertJoinerModel: EnqueueBackgroundActionResult;
-  upsertSiblingModel: EnqueueBackgroundActionResult;
+export type BackgroundLandmarkMutations = {
+  __typename?: "BackgroundLandmarkMutations";
+  bulkCreateStadia: BulkEnqueueBackgroundActionResult;
+  bulkDeleteStadia: BulkEnqueueBackgroundActionResult;
+  bulkUpdateStadia: BulkEnqueueBackgroundActionResult;
+  bulkUpsertStadia: BulkEnqueueBackgroundActionResult;
+  createStadium: EnqueueBackgroundActionResult;
+  deleteStadium: EnqueueBackgroundActionResult;
+  updateStadium: EnqueueBackgroundActionResult;
+  upsertStadium: EnqueueBackgroundActionResult;
 };
 
-export type BackgroundHasManyThroughMutationsBulkCreateBaseModelsArgs = {
+export type BackgroundLandmarkMutationsBulkCreateStadiaArgs = {
   backgroundOptions?: InputMaybe<EnqueueBackgroundActionOptions>;
-  inputs: Array<BulkCreateHasManyThroughBaseModelsInput>;
+  inputs: Array<BulkCreateLandmarkStadiaInput>;
 };
 
-export type BackgroundHasManyThroughMutationsBulkCreateJoinerModelsArgs = {
-  backgroundOptions?: InputMaybe<EnqueueBackgroundActionOptions>;
-  inputs: Array<BulkCreateHasManyThroughJoinerModelsInput>;
-};
-
-export type BackgroundHasManyThroughMutationsBulkCreateSiblingModelsArgs = {
-  backgroundOptions?: InputMaybe<EnqueueBackgroundActionOptions>;
-  inputs: Array<BulkCreateHasManyThroughSiblingModelsInput>;
-};
-
-export type BackgroundHasManyThroughMutationsBulkDeleteBaseModelsArgs = {
+export type BackgroundLandmarkMutationsBulkDeleteStadiaArgs = {
   backgroundOptions?: InputMaybe<EnqueueBackgroundActionOptions>;
   ids: Array<Scalars["GadgetID"]["input"]>;
 };
 
-export type BackgroundHasManyThroughMutationsBulkDeleteJoinerModelsArgs = {
+export type BackgroundLandmarkMutationsBulkUpdateStadiaArgs = {
   backgroundOptions?: InputMaybe<EnqueueBackgroundActionOptions>;
-  ids: Array<Scalars["GadgetID"]["input"]>;
+  inputs: Array<BulkUpdateLandmarkStadiaInput>;
 };
 
-export type BackgroundHasManyThroughMutationsBulkDeleteSiblingModelsArgs = {
+export type BackgroundLandmarkMutationsBulkUpsertStadiaArgs = {
   backgroundOptions?: InputMaybe<EnqueueBackgroundActionOptions>;
-  ids: Array<Scalars["GadgetID"]["input"]>;
+  inputs: Array<BulkUpsertLandmarkStadiaInput>;
 };
 
-export type BackgroundHasManyThroughMutationsBulkUpdateBaseModelsArgs = {
+export type BackgroundLandmarkMutationsCreateStadiumArgs = {
   backgroundOptions?: InputMaybe<EnqueueBackgroundActionOptions>;
-  inputs: Array<BulkUpdateHasManyThroughBaseModelsInput>;
+  stadium?: InputMaybe<CreateLandmarkStadiumInput>;
 };
 
-export type BackgroundHasManyThroughMutationsBulkUpdateJoinerModelsArgs = {
-  backgroundOptions?: InputMaybe<EnqueueBackgroundActionOptions>;
-  inputs: Array<BulkUpdateHasManyThroughJoinerModelsInput>;
-};
-
-export type BackgroundHasManyThroughMutationsBulkUpdateSiblingModelsArgs = {
-  backgroundOptions?: InputMaybe<EnqueueBackgroundActionOptions>;
-  inputs: Array<BulkUpdateHasManyThroughSiblingModelsInput>;
-};
-
-export type BackgroundHasManyThroughMutationsBulkUpsertBaseModelsArgs = {
-  backgroundOptions?: InputMaybe<EnqueueBackgroundActionOptions>;
-  inputs: Array<BulkUpsertHasManyThroughBaseModelsInput>;
-};
-
-export type BackgroundHasManyThroughMutationsBulkUpsertJoinerModelsArgs = {
-  backgroundOptions?: InputMaybe<EnqueueBackgroundActionOptions>;
-  inputs: Array<BulkUpsertHasManyThroughJoinerModelsInput>;
-};
-
-export type BackgroundHasManyThroughMutationsBulkUpsertSiblingModelsArgs = {
-  backgroundOptions?: InputMaybe<EnqueueBackgroundActionOptions>;
-  inputs: Array<BulkUpsertHasManyThroughSiblingModelsInput>;
-};
-
-export type BackgroundHasManyThroughMutationsCreateBaseModelArgs = {
-  backgroundOptions?: InputMaybe<EnqueueBackgroundActionOptions>;
-  baseModel?: InputMaybe<CreateHasManyThroughBaseModelInput>;
-};
-
-export type BackgroundHasManyThroughMutationsCreateJoinerModelArgs = {
-  backgroundOptions?: InputMaybe<EnqueueBackgroundActionOptions>;
-  joinerModel?: InputMaybe<CreateHasManyThroughJoinerModelInput>;
-};
-
-export type BackgroundHasManyThroughMutationsCreateSiblingModelArgs = {
-  backgroundOptions?: InputMaybe<EnqueueBackgroundActionOptions>;
-  siblingModel?: InputMaybe<CreateHasManyThroughSiblingModelInput>;
-};
-
-export type BackgroundHasManyThroughMutationsDeleteBaseModelArgs = {
+export type BackgroundLandmarkMutationsDeleteStadiumArgs = {
   backgroundOptions?: InputMaybe<EnqueueBackgroundActionOptions>;
   id: Scalars["GadgetID"]["input"];
 };
 
-export type BackgroundHasManyThroughMutationsDeleteJoinerModelArgs = {
+export type BackgroundLandmarkMutationsUpdateStadiumArgs = {
   backgroundOptions?: InputMaybe<EnqueueBackgroundActionOptions>;
   id: Scalars["GadgetID"]["input"];
+  stadium?: InputMaybe<UpdateLandmarkStadiumInput>;
 };
 
-export type BackgroundHasManyThroughMutationsDeleteSiblingModelArgs = {
-  backgroundOptions?: InputMaybe<EnqueueBackgroundActionOptions>;
-  id: Scalars["GadgetID"]["input"];
-};
-
-export type BackgroundHasManyThroughMutationsUpdateBaseModelArgs = {
-  backgroundOptions?: InputMaybe<EnqueueBackgroundActionOptions>;
-  baseModel?: InputMaybe<UpdateHasManyThroughBaseModelInput>;
-  id: Scalars["GadgetID"]["input"];
-};
-
-export type BackgroundHasManyThroughMutationsUpdateJoinerModelArgs = {
-  backgroundOptions?: InputMaybe<EnqueueBackgroundActionOptions>;
-  id: Scalars["GadgetID"]["input"];
-  joinerModel?: InputMaybe<UpdateHasManyThroughJoinerModelInput>;
-};
-
-export type BackgroundHasManyThroughMutationsUpdateSiblingModelArgs = {
-  backgroundOptions?: InputMaybe<EnqueueBackgroundActionOptions>;
-  id: Scalars["GadgetID"]["input"];
-  siblingModel?: InputMaybe<UpdateHasManyThroughSiblingModelInput>;
-};
-
-export type BackgroundHasManyThroughMutationsUpsertBaseModelArgs = {
-  backgroundOptions?: InputMaybe<EnqueueBackgroundActionOptions>;
-  baseModel?: InputMaybe<UpsertHasManyThroughBaseModelInput>;
-  on?: InputMaybe<Array<Scalars["String"]["input"]>>;
-};
-
-export type BackgroundHasManyThroughMutationsUpsertJoinerModelArgs = {
-  backgroundOptions?: InputMaybe<EnqueueBackgroundActionOptions>;
-  joinerModel?: InputMaybe<UpsertHasManyThroughJoinerModelInput>;
-  on?: InputMaybe<Array<Scalars["String"]["input"]>>;
-};
-
-export type BackgroundHasManyThroughMutationsUpsertSiblingModelArgs = {
+export type BackgroundLandmarkMutationsUpsertStadiumArgs = {
   backgroundOptions?: InputMaybe<EnqueueBackgroundActionOptions>;
   on?: InputMaybe<Array<Scalars["String"]["input"]>>;
-  siblingModel?: InputMaybe<UpsertHasManyThroughSiblingModelInput>;
+  stadium?: InputMaybe<UpsertLandmarkStadiumInput>;
 };
 
 export type BackgroundMutations = {
   __typename?: "BackgroundMutations";
-  abortShopifySync: EnqueueBackgroundActionResult;
+  addInventoryIfOutOfStockWidget: EnqueueBackgroundActionResult;
   addInventoryWidget: EnqueueBackgroundActionResult;
-  alwaysThrowErrorWidget: EnqueueBackgroundActionResult;
-  bulkAbortShopifySyncs: BulkEnqueueBackgroundActionResult;
+  barfAnError: EnqueueBackgroundActionResult;
+  bendGizmo: EnqueueBackgroundActionResult;
+  breakGizmo: EnqueueBackgroundActionResult;
+  bulkAddInventoryIfOutOfStockWidgets: BulkEnqueueBackgroundActionResult;
   bulkAddInventoryWidgets: BulkEnqueueBackgroundActionResult;
-  bulkAlwaysThrowErrorWidgets: BulkEnqueueBackgroundActionResult;
-  bulkCompleteShopifySyncs: BulkEnqueueBackgroundActionResult;
-  bulkCreateAutoTableTestRelatedModels: BulkEnqueueBackgroundActionResult;
-  bulkCreateAutoTableTests: BulkEnqueueBackgroundActionResult;
+  bulkBendGizmos: BulkEnqueueBackgroundActionResult;
+  bulkBreakGizmos: BulkEnqueueBackgroundActionResult;
+  bulkChangePasswordUsers: BulkEnqueueBackgroundActionResult;
+  bulkCreateBillingAccounts: BulkEnqueueBackgroundActionResult;
+  bulkCreateCities: BulkEnqueueBackgroundActionResult;
+  bulkCreateCourses: BulkEnqueueBackgroundActionResult;
+  bulkCreateCustomers: BulkEnqueueBackgroundActionResult;
+  bulkCreateEphemerals: BulkEnqueueBackgroundActionResult;
+  bulkCreateFieldlesses: BulkEnqueueBackgroundActionResult;
+  bulkCreateFriendships: BulkEnqueueBackgroundActionResult;
   bulkCreateGizmos: BulkEnqueueBackgroundActionResult;
-  bulkCreateModelAs: BulkEnqueueBackgroundActionResult;
-  bulkCreateParts: BulkEnqueueBackgroundActionResult;
+  bulkCreateRegistrations: BulkEnqueueBackgroundActionResult;
+  bulkCreateSampleModelToTestReallyLongModelNames: BulkEnqueueBackgroundActionResult;
   bulkCreateSections: BulkEnqueueBackgroundActionResult;
+  bulkCreateSprockets: BulkEnqueueBackgroundActionResult;
+  bulkCreateStudents: BulkEnqueueBackgroundActionResult;
+  bulkCreateTeachers: BulkEnqueueBackgroundActionResult;
+  bulkCreateWidgetImages: BulkEnqueueBackgroundActionResult;
   bulkCreateWidgets: BulkEnqueueBackgroundActionResult;
-  bulkCustomActionAutoTableTests: BulkEnqueueBackgroundActionResult;
-  bulkCustomActionWithParamsAutoTableTests: BulkEnqueueBackgroundActionResult;
-  bulkDeleteAutoTableTestRelatedModels: BulkEnqueueBackgroundActionResult;
-  bulkDeleteAutoTableTests: BulkEnqueueBackgroundActionResult;
+  bulkDeleteBillingAccounts: BulkEnqueueBackgroundActionResult;
+  bulkDeleteCities: BulkEnqueueBackgroundActionResult;
+  bulkDeleteCourses: BulkEnqueueBackgroundActionResult;
+  bulkDeleteCustomers: BulkEnqueueBackgroundActionResult;
+  bulkDeleteEphemerals: BulkEnqueueBackgroundActionResult;
+  bulkDeleteFieldlesses: BulkEnqueueBackgroundActionResult;
+  bulkDeleteFriendships: BulkEnqueueBackgroundActionResult;
   bulkDeleteGizmos: BulkEnqueueBackgroundActionResult;
-  bulkDeleteModelAs: BulkEnqueueBackgroundActionResult;
-  bulkDeleteParts: BulkEnqueueBackgroundActionResult;
+  bulkDeleteRegistrations: BulkEnqueueBackgroundActionResult;
+  bulkDeleteSampleModelToTestReallyLongModelNames: BulkEnqueueBackgroundActionResult;
   bulkDeleteSections: BulkEnqueueBackgroundActionResult;
+  bulkDeleteSprockets: BulkEnqueueBackgroundActionResult;
+  bulkDeleteStudents: BulkEnqueueBackgroundActionResult;
+  bulkDeleteTeachers: BulkEnqueueBackgroundActionResult;
   bulkDeleteUsers: BulkEnqueueBackgroundActionResult;
+  bulkDeleteWidgetImages: BulkEnqueueBackgroundActionResult;
   bulkDeleteWidgets: BulkEnqueueBackgroundActionResult;
-  bulkErrorShopifySyncs: BulkEnqueueBackgroundActionResult;
-  bulkRunShopifySyncs: BulkEnqueueBackgroundActionResult;
+  bulkFlipDownWidgets: BulkEnqueueBackgroundActionResult;
+  bulkFlipUpWidgets: BulkEnqueueBackgroundActionResult;
+  bulkFoldGizmos: BulkEnqueueBackgroundActionResult;
+  bulkOtherCreateGizmos: BulkEnqueueBackgroundActionResult;
+  bulkResetPasswordUsers: BulkEnqueueBackgroundActionResult;
+  bulkSendResetPasswordUsers: BulkEnqueueBackgroundActionResult;
+  bulkSendVerifyEmailUsers: BulkEnqueueBackgroundActionResult;
   bulkSignInUsers: BulkEnqueueBackgroundActionResult;
   bulkSignOutUsers: BulkEnqueueBackgroundActionResult;
   bulkSignUpUsers: BulkEnqueueBackgroundActionResult;
-  bulkUpdateAutoTableTestRelatedModels: BulkEnqueueBackgroundActionResult;
-  bulkUpdateAutoTableTests: BulkEnqueueBackgroundActionResult;
+  bulkStraightenGizmos: BulkEnqueueBackgroundActionResult;
+  bulkUnfoldGizmos: BulkEnqueueBackgroundActionResult;
+  bulkUpdateBillingAccounts: BulkEnqueueBackgroundActionResult;
+  bulkUpdateCities: BulkEnqueueBackgroundActionResult;
+  bulkUpdateCourses: BulkEnqueueBackgroundActionResult;
+  bulkUpdateCustomers: BulkEnqueueBackgroundActionResult;
+  bulkUpdateEphemerals: BulkEnqueueBackgroundActionResult;
+  bulkUpdateFieldlesses: BulkEnqueueBackgroundActionResult;
+  bulkUpdateFriendships: BulkEnqueueBackgroundActionResult;
   bulkUpdateGizmos: BulkEnqueueBackgroundActionResult;
-  bulkUpdateModelAs: BulkEnqueueBackgroundActionResult;
-  bulkUpdateParts: BulkEnqueueBackgroundActionResult;
+  bulkUpdateRegistrations: BulkEnqueueBackgroundActionResult;
+  bulkUpdateSampleModelToTestReallyLongModelNames: BulkEnqueueBackgroundActionResult;
   bulkUpdateSections: BulkEnqueueBackgroundActionResult;
+  bulkUpdateSprockets: BulkEnqueueBackgroundActionResult;
+  bulkUpdateStudents: BulkEnqueueBackgroundActionResult;
+  bulkUpdateTeachers: BulkEnqueueBackgroundActionResult;
   bulkUpdateUsers: BulkEnqueueBackgroundActionResult;
+  bulkUpdateWidgetImages: BulkEnqueueBackgroundActionResult;
   bulkUpdateWidgets: BulkEnqueueBackgroundActionResult;
-  bulkUpdateWithCustomParamsAutoTableTests: BulkEnqueueBackgroundActionResult;
-  bulkUpsertAutoTableTestRelatedModels: BulkEnqueueBackgroundActionResult;
-  bulkUpsertAutoTableTests: BulkEnqueueBackgroundActionResult;
+  bulkUpsertBillingAccounts: BulkEnqueueBackgroundActionResult;
+  bulkUpsertCities: BulkEnqueueBackgroundActionResult;
+  bulkUpsertCourses: BulkEnqueueBackgroundActionResult;
+  bulkUpsertCustomers: BulkEnqueueBackgroundActionResult;
+  bulkUpsertEphemerals: BulkEnqueueBackgroundActionResult;
+  bulkUpsertFieldlesses: BulkEnqueueBackgroundActionResult;
+  bulkUpsertFriendships: BulkEnqueueBackgroundActionResult;
   bulkUpsertGizmos: BulkEnqueueBackgroundActionResult;
-  bulkUpsertModelAs: BulkEnqueueBackgroundActionResult;
-  bulkUpsertParts: BulkEnqueueBackgroundActionResult;
+  bulkUpsertRegistrations: BulkEnqueueBackgroundActionResult;
+  bulkUpsertSampleModelToTestReallyLongModelNames: BulkEnqueueBackgroundActionResult;
   bulkUpsertSections: BulkEnqueueBackgroundActionResult;
-  bulkUpsertShopifySyncs: BulkEnqueueBackgroundActionResult;
+  bulkUpsertSprockets: BulkEnqueueBackgroundActionResult;
+  bulkUpsertStudents: BulkEnqueueBackgroundActionResult;
+  bulkUpsertTeachers: BulkEnqueueBackgroundActionResult;
   bulkUpsertUsers: BulkEnqueueBackgroundActionResult;
+  bulkUpsertWidgetImages: BulkEnqueueBackgroundActionResult;
   bulkUpsertWidgets: BulkEnqueueBackgroundActionResult;
-  completeShopifySync: EnqueueBackgroundActionResult;
-  createAutoTableTest: EnqueueBackgroundActionResult;
-  createAutoTableTestRelatedModel: EnqueueBackgroundActionResult;
+  bulkVerifyEmailUsers: BulkEnqueueBackgroundActionResult;
+  changePasswordUser: EnqueueBackgroundActionResult;
+  createBillingAccount: EnqueueBackgroundActionResult;
+  createCity: EnqueueBackgroundActionResult;
+  createCourse: EnqueueBackgroundActionResult;
+  createCustomer: EnqueueBackgroundActionResult;
+  createEphemeral: EnqueueBackgroundActionResult;
+  createFieldless: EnqueueBackgroundActionResult;
+  createFriendship: EnqueueBackgroundActionResult;
   createGizmo: EnqueueBackgroundActionResult;
-  createModelA: EnqueueBackgroundActionResult;
-  createPart: EnqueueBackgroundActionResult;
+  createRegistration: EnqueueBackgroundActionResult;
+  createSampleModelToTestReallyLongModelNames: EnqueueBackgroundActionResult;
   createSection: EnqueueBackgroundActionResult;
-  createTestData: EnqueueBackgroundActionResult;
+  createSprocket: EnqueueBackgroundActionResult;
+  createStudent: EnqueueBackgroundActionResult;
+  createTeacher: EnqueueBackgroundActionResult;
   createWidget: EnqueueBackgroundActionResult;
-  customActionAutoTableTest: EnqueueBackgroundActionResult;
-  customActionWithParamsAutoTableTest: EnqueueBackgroundActionResult;
-  deleteAutoTableTest: EnqueueBackgroundActionResult;
-  deleteAutoTableTestRelatedModel: EnqueueBackgroundActionResult;
+  createWidgetImage: EnqueueBackgroundActionResult;
+  deleteBillingAccount: EnqueueBackgroundActionResult;
+  deleteCity: EnqueueBackgroundActionResult;
+  deleteCourse: EnqueueBackgroundActionResult;
+  deleteCustomer: EnqueueBackgroundActionResult;
+  deleteEphemeral: EnqueueBackgroundActionResult;
+  deleteFieldless: EnqueueBackgroundActionResult;
+  deleteFriendship: EnqueueBackgroundActionResult;
   deleteGizmo: EnqueueBackgroundActionResult;
-  deleteModelA: EnqueueBackgroundActionResult;
-  deletePart: EnqueueBackgroundActionResult;
+  deleteRegistration: EnqueueBackgroundActionResult;
+  deleteSampleModelToTestReallyLongModelNames: EnqueueBackgroundActionResult;
   deleteSection: EnqueueBackgroundActionResult;
+  deleteSprocket: EnqueueBackgroundActionResult;
+  deleteStudent: EnqueueBackgroundActionResult;
+  deleteTeacher: EnqueueBackgroundActionResult;
   deleteUser: EnqueueBackgroundActionResult;
   deleteWidget: EnqueueBackgroundActionResult;
-  errorShopifySync: EnqueueBackgroundActionResult;
-  flipAll: EnqueueBackgroundActionResult;
+  deleteWidgetImage: EnqueueBackgroundActionResult;
+  flipAllWidgets: EnqueueBackgroundActionResult;
+  flipDownWidget: EnqueueBackgroundActionResult;
+  flipUpWidget: EnqueueBackgroundActionResult;
+  foldGizmo: EnqueueBackgroundActionResult;
   game: BackgroundGameMutations;
-  hasManyThrough: BackgroundHasManyThroughMutations;
-  name: BackgroundNameMutations;
-  runShopifySync: EnqueueBackgroundActionResult;
+  landmark: BackgroundLandmarkMutations;
+  logParams: EnqueueBackgroundActionResult;
+  otherCreateGizmo: EnqueueBackgroundActionResult;
+  resetPasswordUser: EnqueueBackgroundActionResult;
+  sendResetPasswordUser: EnqueueBackgroundActionResult;
+  sendVerifyEmailUser: EnqueueBackgroundActionResult;
   signInUser: EnqueueBackgroundActionResult;
   signOutUser: EnqueueBackgroundActionResult;
   signUpUser: EnqueueBackgroundActionResult;
-  updateAutoTableTest: EnqueueBackgroundActionResult;
-  updateAutoTableTestRelatedModel: EnqueueBackgroundActionResult;
+  straightenGizmo: EnqueueBackgroundActionResult;
+  unfoldGizmo: EnqueueBackgroundActionResult;
+  updateBillingAccount: EnqueueBackgroundActionResult;
+  updateCity: EnqueueBackgroundActionResult;
+  updateCourse: EnqueueBackgroundActionResult;
+  updateCustomer: EnqueueBackgroundActionResult;
+  updateEphemeral: EnqueueBackgroundActionResult;
+  updateFieldless: EnqueueBackgroundActionResult;
+  updateFriendship: EnqueueBackgroundActionResult;
   updateGizmo: EnqueueBackgroundActionResult;
-  updateModelA: EnqueueBackgroundActionResult;
-  updatePart: EnqueueBackgroundActionResult;
+  updateRegistration: EnqueueBackgroundActionResult;
+  updateSampleModelToTestReallyLongModelNames: EnqueueBackgroundActionResult;
   updateSection: EnqueueBackgroundActionResult;
+  updateSprocket: EnqueueBackgroundActionResult;
+  updateStudent: EnqueueBackgroundActionResult;
+  updateTeacher: EnqueueBackgroundActionResult;
   updateUser: EnqueueBackgroundActionResult;
   updateWidget: EnqueueBackgroundActionResult;
-  updateWithCustomParamsAutoTableTest: EnqueueBackgroundActionResult;
-  upsertAutoTableTest: EnqueueBackgroundActionResult;
-  upsertAutoTableTestRelatedModel: EnqueueBackgroundActionResult;
+  updateWidgetImage: EnqueueBackgroundActionResult;
+  upsertBillingAccount: EnqueueBackgroundActionResult;
+  upsertCity: EnqueueBackgroundActionResult;
+  upsertCourse: EnqueueBackgroundActionResult;
+  upsertCustomer: EnqueueBackgroundActionResult;
+  upsertEphemeral: EnqueueBackgroundActionResult;
+  upsertFieldless: EnqueueBackgroundActionResult;
+  upsertFriendship: EnqueueBackgroundActionResult;
   upsertGizmo: EnqueueBackgroundActionResult;
-  upsertModelA: EnqueueBackgroundActionResult;
-  upsertPart: EnqueueBackgroundActionResult;
+  upsertRegistration: EnqueueBackgroundActionResult;
+  upsertSampleModelToTestReallyLongModelNames: EnqueueBackgroundActionResult;
   upsertSection: EnqueueBackgroundActionResult;
-  upsertShopifySync: EnqueueBackgroundActionResult;
+  upsertSprocket: EnqueueBackgroundActionResult;
+  upsertStudent: EnqueueBackgroundActionResult;
+  upsertTeacher: EnqueueBackgroundActionResult;
   upsertUser: EnqueueBackgroundActionResult;
   upsertWidget: EnqueueBackgroundActionResult;
+  upsertWidgetImage: EnqueueBackgroundActionResult;
+  verifyEmailUser: EnqueueBackgroundActionResult;
 };
 
-export type BackgroundMutationsAbortShopifySyncArgs = {
+export type BackgroundMutationsAddInventoryIfOutOfStockWidgetArgs = {
+  amount?: InputMaybe<Scalars["Float"]["input"]>;
   backgroundOptions?: InputMaybe<EnqueueBackgroundActionOptions>;
   id: Scalars["GadgetID"]["input"];
-  shopifySync?: InputMaybe<AbortShopifySyncInput>;
 };
 
 export type BackgroundMutationsAddInventoryWidgetArgs = {
+  amount?: InputMaybe<Scalars["Float"]["input"]>;
   backgroundOptions?: InputMaybe<EnqueueBackgroundActionOptions>;
-  count?: InputMaybe<Scalars["Float"]["input"]>;
+  customName?: InputMaybe<Scalars["String"]["input"]>;
+  id: Scalars["GadgetID"]["input"];
+  inStock?: InputMaybe<Scalars["Boolean"]["input"]>;
+  location?: InputMaybe<AddInventoryLocationInput>;
+  relatedWidgets?: InputMaybe<Array<Scalars["Float"]["input"]>>;
+  widget?: InputMaybe<AddInventoryWidgetInput>;
+};
+
+export type BackgroundMutationsBarfAnErrorArgs = {
+  backgroundOptions?: InputMaybe<EnqueueBackgroundActionOptions>;
+};
+
+export type BackgroundMutationsBendGizmoArgs = {
+  backgroundOptions?: InputMaybe<EnqueueBackgroundActionOptions>;
+  gizmo?: InputMaybe<BendGizmoInput>;
   id: Scalars["GadgetID"]["input"];
 };
 
-export type BackgroundMutationsAlwaysThrowErrorWidgetArgs = {
+export type BackgroundMutationsBreakGizmoArgs = {
   backgroundOptions?: InputMaybe<EnqueueBackgroundActionOptions>;
-  widget?: InputMaybe<AlwaysThrowErrorWidgetInput>;
+  gizmo?: InputMaybe<BreakGizmoInput>;
+  id: Scalars["GadgetID"]["input"];
 };
 
-export type BackgroundMutationsBulkAbortShopifySyncsArgs = {
+export type BackgroundMutationsBulkAddInventoryIfOutOfStockWidgetsArgs = {
   backgroundOptions?: InputMaybe<EnqueueBackgroundActionOptions>;
-  inputs: Array<BulkAbortShopifySyncsInput>;
+  inputs: Array<BulkAddInventoryIfOutOfStockWidgetsInput>;
 };
 
 export type BackgroundMutationsBulkAddInventoryWidgetsArgs = {
@@ -972,24 +753,54 @@ export type BackgroundMutationsBulkAddInventoryWidgetsArgs = {
   inputs: Array<BulkAddInventoryWidgetsInput>;
 };
 
-export type BackgroundMutationsBulkAlwaysThrowErrorWidgetsArgs = {
+export type BackgroundMutationsBulkBendGizmosArgs = {
   backgroundOptions?: InputMaybe<EnqueueBackgroundActionOptions>;
-  inputs: Array<BulkAlwaysThrowErrorWidgetsInput>;
+  inputs: Array<BulkBendGizmosInput>;
 };
 
-export type BackgroundMutationsBulkCompleteShopifySyncsArgs = {
+export type BackgroundMutationsBulkBreakGizmosArgs = {
   backgroundOptions?: InputMaybe<EnqueueBackgroundActionOptions>;
-  inputs: Array<BulkCompleteShopifySyncsInput>;
+  inputs: Array<BulkBreakGizmosInput>;
 };
 
-export type BackgroundMutationsBulkCreateAutoTableTestRelatedModelsArgs = {
+export type BackgroundMutationsBulkChangePasswordUsersArgs = {
   backgroundOptions?: InputMaybe<EnqueueBackgroundActionOptions>;
-  inputs: Array<BulkCreateAutoTableTestRelatedModelsInput>;
+  inputs: Array<BulkChangePasswordUsersInput>;
 };
 
-export type BackgroundMutationsBulkCreateAutoTableTestsArgs = {
+export type BackgroundMutationsBulkCreateBillingAccountsArgs = {
   backgroundOptions?: InputMaybe<EnqueueBackgroundActionOptions>;
-  inputs: Array<BulkCreateAutoTableTestsInput>;
+  inputs: Array<BulkCreateBillingAccountsInput>;
+};
+
+export type BackgroundMutationsBulkCreateCitiesArgs = {
+  backgroundOptions?: InputMaybe<EnqueueBackgroundActionOptions>;
+  inputs: Array<BulkCreateCitiesInput>;
+};
+
+export type BackgroundMutationsBulkCreateCoursesArgs = {
+  backgroundOptions?: InputMaybe<EnqueueBackgroundActionOptions>;
+  inputs: Array<BulkCreateCoursesInput>;
+};
+
+export type BackgroundMutationsBulkCreateCustomersArgs = {
+  backgroundOptions?: InputMaybe<EnqueueBackgroundActionOptions>;
+  inputs: Array<BulkCreateCustomersInput>;
+};
+
+export type BackgroundMutationsBulkCreateEphemeralsArgs = {
+  backgroundOptions?: InputMaybe<EnqueueBackgroundActionOptions>;
+  inputs: Array<BulkCreateEphemeralsInput>;
+};
+
+export type BackgroundMutationsBulkCreateFieldlessesArgs = {
+  backgroundOptions?: InputMaybe<EnqueueBackgroundActionOptions>;
+  inputs: Array<Scalars["JSON"]["input"]>;
+};
+
+export type BackgroundMutationsBulkCreateFriendshipsArgs = {
+  backgroundOptions?: InputMaybe<EnqueueBackgroundActionOptions>;
+  inputs: Array<BulkCreateFriendshipsInput>;
 };
 
 export type BackgroundMutationsBulkCreateGizmosArgs = {
@@ -997,14 +808,14 @@ export type BackgroundMutationsBulkCreateGizmosArgs = {
   inputs: Array<BulkCreateGizmosInput>;
 };
 
-export type BackgroundMutationsBulkCreateModelAsArgs = {
+export type BackgroundMutationsBulkCreateRegistrationsArgs = {
   backgroundOptions?: InputMaybe<EnqueueBackgroundActionOptions>;
-  inputs: Array<Scalars["JSON"]["input"]>;
+  inputs: Array<BulkCreateRegistrationsInput>;
 };
 
-export type BackgroundMutationsBulkCreatePartsArgs = {
+export type BackgroundMutationsBulkCreateSampleModelToTestReallyLongModelNamesArgs = {
   backgroundOptions?: InputMaybe<EnqueueBackgroundActionOptions>;
-  inputs: Array<BulkCreatePartsInput>;
+  inputs: Array<BulkCreateSampleModelToTestReallyLongModelNamesInput>;
 };
 
 export type BackgroundMutationsBulkCreateSectionsArgs = {
@@ -1012,27 +823,62 @@ export type BackgroundMutationsBulkCreateSectionsArgs = {
   inputs: Array<BulkCreateSectionsInput>;
 };
 
+export type BackgroundMutationsBulkCreateSprocketsArgs = {
+  backgroundOptions?: InputMaybe<EnqueueBackgroundActionOptions>;
+  inputs: Array<BulkCreateSprocketsInput>;
+};
+
+export type BackgroundMutationsBulkCreateStudentsArgs = {
+  backgroundOptions?: InputMaybe<EnqueueBackgroundActionOptions>;
+  inputs: Array<BulkCreateStudentsInput>;
+};
+
+export type BackgroundMutationsBulkCreateTeachersArgs = {
+  backgroundOptions?: InputMaybe<EnqueueBackgroundActionOptions>;
+  inputs: Array<BulkCreateTeachersInput>;
+};
+
+export type BackgroundMutationsBulkCreateWidgetImagesArgs = {
+  backgroundOptions?: InputMaybe<EnqueueBackgroundActionOptions>;
+  inputs: Array<BulkCreateWidgetImagesInput>;
+};
+
 export type BackgroundMutationsBulkCreateWidgetsArgs = {
   backgroundOptions?: InputMaybe<EnqueueBackgroundActionOptions>;
   inputs: Array<BulkCreateWidgetsInput>;
 };
 
-export type BackgroundMutationsBulkCustomActionAutoTableTestsArgs = {
+export type BackgroundMutationsBulkDeleteBillingAccountsArgs = {
   backgroundOptions?: InputMaybe<EnqueueBackgroundActionOptions>;
   ids: Array<Scalars["GadgetID"]["input"]>;
 };
 
-export type BackgroundMutationsBulkCustomActionWithParamsAutoTableTestsArgs = {
-  backgroundOptions?: InputMaybe<EnqueueBackgroundActionOptions>;
-  inputs: Array<BulkCustomActionWithParamsAutoTableTestsInput>;
-};
-
-export type BackgroundMutationsBulkDeleteAutoTableTestRelatedModelsArgs = {
+export type BackgroundMutationsBulkDeleteCitiesArgs = {
   backgroundOptions?: InputMaybe<EnqueueBackgroundActionOptions>;
   ids: Array<Scalars["GadgetID"]["input"]>;
 };
 
-export type BackgroundMutationsBulkDeleteAutoTableTestsArgs = {
+export type BackgroundMutationsBulkDeleteCoursesArgs = {
+  backgroundOptions?: InputMaybe<EnqueueBackgroundActionOptions>;
+  ids: Array<Scalars["GadgetID"]["input"]>;
+};
+
+export type BackgroundMutationsBulkDeleteCustomersArgs = {
+  backgroundOptions?: InputMaybe<EnqueueBackgroundActionOptions>;
+  ids: Array<Scalars["GadgetID"]["input"]>;
+};
+
+export type BackgroundMutationsBulkDeleteEphemeralsArgs = {
+  backgroundOptions?: InputMaybe<EnqueueBackgroundActionOptions>;
+  ids: Array<Scalars["GadgetID"]["input"]>;
+};
+
+export type BackgroundMutationsBulkDeleteFieldlessesArgs = {
+  backgroundOptions?: InputMaybe<EnqueueBackgroundActionOptions>;
+  ids: Array<Scalars["GadgetID"]["input"]>;
+};
+
+export type BackgroundMutationsBulkDeleteFriendshipsArgs = {
   backgroundOptions?: InputMaybe<EnqueueBackgroundActionOptions>;
   ids: Array<Scalars["GadgetID"]["input"]>;
 };
@@ -1042,12 +888,12 @@ export type BackgroundMutationsBulkDeleteGizmosArgs = {
   ids: Array<Scalars["GadgetID"]["input"]>;
 };
 
-export type BackgroundMutationsBulkDeleteModelAsArgs = {
+export type BackgroundMutationsBulkDeleteRegistrationsArgs = {
   backgroundOptions?: InputMaybe<EnqueueBackgroundActionOptions>;
   ids: Array<Scalars["GadgetID"]["input"]>;
 };
 
-export type BackgroundMutationsBulkDeletePartsArgs = {
+export type BackgroundMutationsBulkDeleteSampleModelToTestReallyLongModelNamesArgs = {
   backgroundOptions?: InputMaybe<EnqueueBackgroundActionOptions>;
   ids: Array<Scalars["GadgetID"]["input"]>;
 };
@@ -1057,7 +903,27 @@ export type BackgroundMutationsBulkDeleteSectionsArgs = {
   ids: Array<Scalars["GadgetID"]["input"]>;
 };
 
+export type BackgroundMutationsBulkDeleteSprocketsArgs = {
+  backgroundOptions?: InputMaybe<EnqueueBackgroundActionOptions>;
+  ids: Array<Scalars["GadgetID"]["input"]>;
+};
+
+export type BackgroundMutationsBulkDeleteStudentsArgs = {
+  backgroundOptions?: InputMaybe<EnqueueBackgroundActionOptions>;
+  ids: Array<Scalars["GadgetID"]["input"]>;
+};
+
+export type BackgroundMutationsBulkDeleteTeachersArgs = {
+  backgroundOptions?: InputMaybe<EnqueueBackgroundActionOptions>;
+  ids: Array<Scalars["GadgetID"]["input"]>;
+};
+
 export type BackgroundMutationsBulkDeleteUsersArgs = {
+  backgroundOptions?: InputMaybe<EnqueueBackgroundActionOptions>;
+  ids: Array<Scalars["GadgetID"]["input"]>;
+};
+
+export type BackgroundMutationsBulkDeleteWidgetImagesArgs = {
   backgroundOptions?: InputMaybe<EnqueueBackgroundActionOptions>;
   ids: Array<Scalars["GadgetID"]["input"]>;
 };
@@ -1067,14 +933,39 @@ export type BackgroundMutationsBulkDeleteWidgetsArgs = {
   ids: Array<Scalars["GadgetID"]["input"]>;
 };
 
-export type BackgroundMutationsBulkErrorShopifySyncsArgs = {
+export type BackgroundMutationsBulkFlipDownWidgetsArgs = {
   backgroundOptions?: InputMaybe<EnqueueBackgroundActionOptions>;
-  inputs: Array<BulkErrorShopifySyncsInput>;
+  ids: Array<Scalars["GadgetID"]["input"]>;
 };
 
-export type BackgroundMutationsBulkRunShopifySyncsArgs = {
+export type BackgroundMutationsBulkFlipUpWidgetsArgs = {
   backgroundOptions?: InputMaybe<EnqueueBackgroundActionOptions>;
-  inputs: Array<BulkRunShopifySyncsInput>;
+  ids: Array<Scalars["GadgetID"]["input"]>;
+};
+
+export type BackgroundMutationsBulkFoldGizmosArgs = {
+  backgroundOptions?: InputMaybe<EnqueueBackgroundActionOptions>;
+  inputs: Array<BulkFoldGizmosInput>;
+};
+
+export type BackgroundMutationsBulkOtherCreateGizmosArgs = {
+  backgroundOptions?: InputMaybe<EnqueueBackgroundActionOptions>;
+  inputs: Array<BulkOtherCreateGizmosInput>;
+};
+
+export type BackgroundMutationsBulkResetPasswordUsersArgs = {
+  backgroundOptions?: InputMaybe<EnqueueBackgroundActionOptions>;
+  inputs: Array<BulkResetPasswordUsersInput>;
+};
+
+export type BackgroundMutationsBulkSendResetPasswordUsersArgs = {
+  backgroundOptions?: InputMaybe<EnqueueBackgroundActionOptions>;
+  inputs: Array<BulkSendResetPasswordUsersInput>;
+};
+
+export type BackgroundMutationsBulkSendVerifyEmailUsersArgs = {
+  backgroundOptions?: InputMaybe<EnqueueBackgroundActionOptions>;
+  inputs: Array<BulkSendVerifyEmailUsersInput>;
 };
 
 export type BackgroundMutationsBulkSignInUsersArgs = {
@@ -1084,7 +975,7 @@ export type BackgroundMutationsBulkSignInUsersArgs = {
 
 export type BackgroundMutationsBulkSignOutUsersArgs = {
   backgroundOptions?: InputMaybe<EnqueueBackgroundActionOptions>;
-  inputs: Array<BulkSignOutUsersInput>;
+  ids: Array<Scalars["GadgetID"]["input"]>;
 };
 
 export type BackgroundMutationsBulkSignUpUsersArgs = {
@@ -1092,14 +983,49 @@ export type BackgroundMutationsBulkSignUpUsersArgs = {
   inputs: Array<BulkSignUpUsersInput>;
 };
 
-export type BackgroundMutationsBulkUpdateAutoTableTestRelatedModelsArgs = {
+export type BackgroundMutationsBulkStraightenGizmosArgs = {
   backgroundOptions?: InputMaybe<EnqueueBackgroundActionOptions>;
-  inputs: Array<BulkUpdateAutoTableTestRelatedModelsInput>;
+  inputs: Array<BulkStraightenGizmosInput>;
 };
 
-export type BackgroundMutationsBulkUpdateAutoTableTestsArgs = {
+export type BackgroundMutationsBulkUnfoldGizmosArgs = {
   backgroundOptions?: InputMaybe<EnqueueBackgroundActionOptions>;
-  inputs: Array<BulkUpdateAutoTableTestsInput>;
+  inputs: Array<BulkUnfoldGizmosInput>;
+};
+
+export type BackgroundMutationsBulkUpdateBillingAccountsArgs = {
+  backgroundOptions?: InputMaybe<EnqueueBackgroundActionOptions>;
+  inputs: Array<BulkUpdateBillingAccountsInput>;
+};
+
+export type BackgroundMutationsBulkUpdateCitiesArgs = {
+  backgroundOptions?: InputMaybe<EnqueueBackgroundActionOptions>;
+  inputs: Array<BulkUpdateCitiesInput>;
+};
+
+export type BackgroundMutationsBulkUpdateCoursesArgs = {
+  backgroundOptions?: InputMaybe<EnqueueBackgroundActionOptions>;
+  inputs: Array<BulkUpdateCoursesInput>;
+};
+
+export type BackgroundMutationsBulkUpdateCustomersArgs = {
+  backgroundOptions?: InputMaybe<EnqueueBackgroundActionOptions>;
+  inputs: Array<BulkUpdateCustomersInput>;
+};
+
+export type BackgroundMutationsBulkUpdateEphemeralsArgs = {
+  backgroundOptions?: InputMaybe<EnqueueBackgroundActionOptions>;
+  inputs: Array<BulkUpdateEphemeralsInput>;
+};
+
+export type BackgroundMutationsBulkUpdateFieldlessesArgs = {
+  backgroundOptions?: InputMaybe<EnqueueBackgroundActionOptions>;
+  ids: Array<Scalars["GadgetID"]["input"]>;
+};
+
+export type BackgroundMutationsBulkUpdateFriendshipsArgs = {
+  backgroundOptions?: InputMaybe<EnqueueBackgroundActionOptions>;
+  inputs: Array<BulkUpdateFriendshipsInput>;
 };
 
 export type BackgroundMutationsBulkUpdateGizmosArgs = {
@@ -1107,14 +1033,14 @@ export type BackgroundMutationsBulkUpdateGizmosArgs = {
   inputs: Array<BulkUpdateGizmosInput>;
 };
 
-export type BackgroundMutationsBulkUpdateModelAsArgs = {
+export type BackgroundMutationsBulkUpdateRegistrationsArgs = {
   backgroundOptions?: InputMaybe<EnqueueBackgroundActionOptions>;
-  ids: Array<Scalars["GadgetID"]["input"]>;
+  inputs: Array<BulkUpdateRegistrationsInput>;
 };
 
-export type BackgroundMutationsBulkUpdatePartsArgs = {
+export type BackgroundMutationsBulkUpdateSampleModelToTestReallyLongModelNamesArgs = {
   backgroundOptions?: InputMaybe<EnqueueBackgroundActionOptions>;
-  inputs: Array<BulkUpdatePartsInput>;
+  inputs: Array<BulkUpdateSampleModelToTestReallyLongModelNamesInput>;
 };
 
 export type BackgroundMutationsBulkUpdateSectionsArgs = {
@@ -1122,9 +1048,29 @@ export type BackgroundMutationsBulkUpdateSectionsArgs = {
   inputs: Array<BulkUpdateSectionsInput>;
 };
 
+export type BackgroundMutationsBulkUpdateSprocketsArgs = {
+  backgroundOptions?: InputMaybe<EnqueueBackgroundActionOptions>;
+  inputs: Array<BulkUpdateSprocketsInput>;
+};
+
+export type BackgroundMutationsBulkUpdateStudentsArgs = {
+  backgroundOptions?: InputMaybe<EnqueueBackgroundActionOptions>;
+  inputs: Array<BulkUpdateStudentsInput>;
+};
+
+export type BackgroundMutationsBulkUpdateTeachersArgs = {
+  backgroundOptions?: InputMaybe<EnqueueBackgroundActionOptions>;
+  inputs: Array<BulkUpdateTeachersInput>;
+};
+
 export type BackgroundMutationsBulkUpdateUsersArgs = {
   backgroundOptions?: InputMaybe<EnqueueBackgroundActionOptions>;
   inputs: Array<BulkUpdateUsersInput>;
+};
+
+export type BackgroundMutationsBulkUpdateWidgetImagesArgs = {
+  backgroundOptions?: InputMaybe<EnqueueBackgroundActionOptions>;
+  inputs: Array<BulkUpdateWidgetImagesInput>;
 };
 
 export type BackgroundMutationsBulkUpdateWidgetsArgs = {
@@ -1132,19 +1078,39 @@ export type BackgroundMutationsBulkUpdateWidgetsArgs = {
   inputs: Array<BulkUpdateWidgetsInput>;
 };
 
-export type BackgroundMutationsBulkUpdateWithCustomParamsAutoTableTestsArgs = {
+export type BackgroundMutationsBulkUpsertBillingAccountsArgs = {
   backgroundOptions?: InputMaybe<EnqueueBackgroundActionOptions>;
-  inputs: Array<BulkUpdateWithCustomParamsAutoTableTestsInput>;
+  inputs: Array<BulkUpsertBillingAccountsInput>;
 };
 
-export type BackgroundMutationsBulkUpsertAutoTableTestRelatedModelsArgs = {
+export type BackgroundMutationsBulkUpsertCitiesArgs = {
   backgroundOptions?: InputMaybe<EnqueueBackgroundActionOptions>;
-  inputs: Array<BulkUpsertAutoTableTestRelatedModelsInput>;
+  inputs: Array<BulkUpsertCitiesInput>;
 };
 
-export type BackgroundMutationsBulkUpsertAutoTableTestsArgs = {
+export type BackgroundMutationsBulkUpsertCoursesArgs = {
   backgroundOptions?: InputMaybe<EnqueueBackgroundActionOptions>;
-  inputs: Array<BulkUpsertAutoTableTestsInput>;
+  inputs: Array<BulkUpsertCoursesInput>;
+};
+
+export type BackgroundMutationsBulkUpsertCustomersArgs = {
+  backgroundOptions?: InputMaybe<EnqueueBackgroundActionOptions>;
+  inputs: Array<BulkUpsertCustomersInput>;
+};
+
+export type BackgroundMutationsBulkUpsertEphemeralsArgs = {
+  backgroundOptions?: InputMaybe<EnqueueBackgroundActionOptions>;
+  inputs: Array<BulkUpsertEphemeralsInput>;
+};
+
+export type BackgroundMutationsBulkUpsertFieldlessesArgs = {
+  backgroundOptions?: InputMaybe<EnqueueBackgroundActionOptions>;
+  inputs: Array<BulkUpsertFieldlessesInput>;
+};
+
+export type BackgroundMutationsBulkUpsertFriendshipsArgs = {
+  backgroundOptions?: InputMaybe<EnqueueBackgroundActionOptions>;
+  inputs: Array<BulkUpsertFriendshipsInput>;
 };
 
 export type BackgroundMutationsBulkUpsertGizmosArgs = {
@@ -1152,14 +1118,14 @@ export type BackgroundMutationsBulkUpsertGizmosArgs = {
   inputs: Array<BulkUpsertGizmosInput>;
 };
 
-export type BackgroundMutationsBulkUpsertModelAsArgs = {
+export type BackgroundMutationsBulkUpsertRegistrationsArgs = {
   backgroundOptions?: InputMaybe<EnqueueBackgroundActionOptions>;
-  inputs: Array<BulkUpsertModelAsInput>;
+  inputs: Array<BulkUpsertRegistrationsInput>;
 };
 
-export type BackgroundMutationsBulkUpsertPartsArgs = {
+export type BackgroundMutationsBulkUpsertSampleModelToTestReallyLongModelNamesArgs = {
   backgroundOptions?: InputMaybe<EnqueueBackgroundActionOptions>;
-  inputs: Array<BulkUpsertPartsInput>;
+  inputs: Array<BulkUpsertSampleModelToTestReallyLongModelNamesInput>;
 };
 
 export type BackgroundMutationsBulkUpsertSectionsArgs = {
@@ -1167,9 +1133,19 @@ export type BackgroundMutationsBulkUpsertSectionsArgs = {
   inputs: Array<BulkUpsertSectionsInput>;
 };
 
-export type BackgroundMutationsBulkUpsertShopifySyncsArgs = {
+export type BackgroundMutationsBulkUpsertSprocketsArgs = {
   backgroundOptions?: InputMaybe<EnqueueBackgroundActionOptions>;
-  inputs: Array<BulkUpsertShopifySyncsInput>;
+  inputs: Array<BulkUpsertSprocketsInput>;
+};
+
+export type BackgroundMutationsBulkUpsertStudentsArgs = {
+  backgroundOptions?: InputMaybe<EnqueueBackgroundActionOptions>;
+  inputs: Array<BulkUpsertStudentsInput>;
+};
+
+export type BackgroundMutationsBulkUpsertTeachersArgs = {
+  backgroundOptions?: InputMaybe<EnqueueBackgroundActionOptions>;
+  inputs: Array<BulkUpsertTeachersInput>;
 };
 
 export type BackgroundMutationsBulkUpsertUsersArgs = {
@@ -1177,25 +1153,60 @@ export type BackgroundMutationsBulkUpsertUsersArgs = {
   inputs: Array<BulkUpsertUsersInput>;
 };
 
+export type BackgroundMutationsBulkUpsertWidgetImagesArgs = {
+  backgroundOptions?: InputMaybe<EnqueueBackgroundActionOptions>;
+  inputs: Array<BulkUpsertWidgetImagesInput>;
+};
+
 export type BackgroundMutationsBulkUpsertWidgetsArgs = {
   backgroundOptions?: InputMaybe<EnqueueBackgroundActionOptions>;
   inputs: Array<BulkUpsertWidgetsInput>;
 };
 
-export type BackgroundMutationsCompleteShopifySyncArgs = {
+export type BackgroundMutationsBulkVerifyEmailUsersArgs = {
   backgroundOptions?: InputMaybe<EnqueueBackgroundActionOptions>;
+  inputs: Array<BulkVerifyEmailUsersInput>;
+};
+
+export type BackgroundMutationsChangePasswordUserArgs = {
+  backgroundOptions?: InputMaybe<EnqueueBackgroundActionOptions>;
+  currentPassword?: InputMaybe<Scalars["String"]["input"]>;
   id: Scalars["GadgetID"]["input"];
-  shopifySync?: InputMaybe<CompleteShopifySyncInput>;
+  newPassword?: InputMaybe<Scalars["String"]["input"]>;
 };
 
-export type BackgroundMutationsCreateAutoTableTestArgs = {
-  autoTableTest?: InputMaybe<CreateAutoTableTestInput>;
+export type BackgroundMutationsCreateBillingAccountArgs = {
+  backgroundOptions?: InputMaybe<EnqueueBackgroundActionOptions>;
+  billingAccount?: InputMaybe<CreateBillingAccountInput>;
+};
+
+export type BackgroundMutationsCreateCityArgs = {
+  backgroundOptions?: InputMaybe<EnqueueBackgroundActionOptions>;
+  city?: InputMaybe<CreateCityInput>;
+};
+
+export type BackgroundMutationsCreateCourseArgs = {
+  backgroundOptions?: InputMaybe<EnqueueBackgroundActionOptions>;
+  course?: InputMaybe<CreateCourseInput>;
+};
+
+export type BackgroundMutationsCreateCustomerArgs = {
+  backgroundOptions?: InputMaybe<EnqueueBackgroundActionOptions>;
+  customer?: InputMaybe<CreateCustomerInput>;
+};
+
+export type BackgroundMutationsCreateEphemeralArgs = {
+  backgroundOptions?: InputMaybe<EnqueueBackgroundActionOptions>;
+  ephemeral?: InputMaybe<CreateEphemeralInput>;
+};
+
+export type BackgroundMutationsCreateFieldlessArgs = {
   backgroundOptions?: InputMaybe<EnqueueBackgroundActionOptions>;
 };
 
-export type BackgroundMutationsCreateAutoTableTestRelatedModelArgs = {
-  _autoTableTestRelatedModel?: InputMaybe<CreateAutoTableTestRelatedModelInput>;
+export type BackgroundMutationsCreateFriendshipArgs = {
   backgroundOptions?: InputMaybe<EnqueueBackgroundActionOptions>;
+  friendship?: InputMaybe<CreateFriendshipInput>;
 };
 
 export type BackgroundMutationsCreateGizmoArgs = {
@@ -1203,13 +1214,14 @@ export type BackgroundMutationsCreateGizmoArgs = {
   gizmo?: InputMaybe<CreateGizmoInput>;
 };
 
-export type BackgroundMutationsCreateModelAArgs = {
+export type BackgroundMutationsCreateRegistrationArgs = {
   backgroundOptions?: InputMaybe<EnqueueBackgroundActionOptions>;
+  registration?: InputMaybe<CreateRegistrationInput>;
 };
 
-export type BackgroundMutationsCreatePartArgs = {
+export type BackgroundMutationsCreateSampleModelToTestReallyLongModelNamesArgs = {
   backgroundOptions?: InputMaybe<EnqueueBackgroundActionOptions>;
-  part?: InputMaybe<CreatePartInput>;
+  sampleModelToTestReallyLongModelNames?: InputMaybe<CreateSampleModelToTestReallyLongModelNamesInput>;
 };
 
 export type BackgroundMutationsCreateSectionArgs = {
@@ -1217,8 +1229,19 @@ export type BackgroundMutationsCreateSectionArgs = {
   section?: InputMaybe<CreateSectionInput>;
 };
 
-export type BackgroundMutationsCreateTestDataArgs = {
+export type BackgroundMutationsCreateSprocketArgs = {
   backgroundOptions?: InputMaybe<EnqueueBackgroundActionOptions>;
+  sprocket?: InputMaybe<CreateSprocketInput>;
+};
+
+export type BackgroundMutationsCreateStudentArgs = {
+  backgroundOptions?: InputMaybe<EnqueueBackgroundActionOptions>;
+  student?: InputMaybe<CreateStudentInput>;
+};
+
+export type BackgroundMutationsCreateTeacherArgs = {
+  backgroundOptions?: InputMaybe<EnqueueBackgroundActionOptions>;
+  teacher?: InputMaybe<CreateTeacherInput>;
 };
 
 export type BackgroundMutationsCreateWidgetArgs = {
@@ -1226,24 +1249,42 @@ export type BackgroundMutationsCreateWidgetArgs = {
   widget?: InputMaybe<CreateWidgetInput>;
 };
 
-export type BackgroundMutationsCustomActionAutoTableTestArgs = {
+export type BackgroundMutationsCreateWidgetImageArgs = {
+  backgroundOptions?: InputMaybe<EnqueueBackgroundActionOptions>;
+  widgetImage?: InputMaybe<CreateWidgetImageInput>;
+};
+
+export type BackgroundMutationsDeleteBillingAccountArgs = {
   backgroundOptions?: InputMaybe<EnqueueBackgroundActionOptions>;
   id: Scalars["GadgetID"]["input"];
 };
 
-export type BackgroundMutationsCustomActionWithParamsAutoTableTestArgs = {
-  backgroundOptions?: InputMaybe<EnqueueBackgroundActionOptions>;
-  id: Scalars["GadgetID"]["input"];
-  numberParam1?: InputMaybe<Scalars["Float"]["input"]>;
-  stringParam1?: InputMaybe<Scalars["String"]["input"]>;
-};
-
-export type BackgroundMutationsDeleteAutoTableTestArgs = {
+export type BackgroundMutationsDeleteCityArgs = {
   backgroundOptions?: InputMaybe<EnqueueBackgroundActionOptions>;
   id: Scalars["GadgetID"]["input"];
 };
 
-export type BackgroundMutationsDeleteAutoTableTestRelatedModelArgs = {
+export type BackgroundMutationsDeleteCourseArgs = {
+  backgroundOptions?: InputMaybe<EnqueueBackgroundActionOptions>;
+  id: Scalars["GadgetID"]["input"];
+};
+
+export type BackgroundMutationsDeleteCustomerArgs = {
+  backgroundOptions?: InputMaybe<EnqueueBackgroundActionOptions>;
+  id: Scalars["GadgetID"]["input"];
+};
+
+export type BackgroundMutationsDeleteEphemeralArgs = {
+  backgroundOptions?: InputMaybe<EnqueueBackgroundActionOptions>;
+  id: Scalars["GadgetID"]["input"];
+};
+
+export type BackgroundMutationsDeleteFieldlessArgs = {
+  backgroundOptions?: InputMaybe<EnqueueBackgroundActionOptions>;
+  id: Scalars["GadgetID"]["input"];
+};
+
+export type BackgroundMutationsDeleteFriendshipArgs = {
   backgroundOptions?: InputMaybe<EnqueueBackgroundActionOptions>;
   id: Scalars["GadgetID"]["input"];
 };
@@ -1253,17 +1294,32 @@ export type BackgroundMutationsDeleteGizmoArgs = {
   id: Scalars["GadgetID"]["input"];
 };
 
-export type BackgroundMutationsDeleteModelAArgs = {
+export type BackgroundMutationsDeleteRegistrationArgs = {
   backgroundOptions?: InputMaybe<EnqueueBackgroundActionOptions>;
   id: Scalars["GadgetID"]["input"];
 };
 
-export type BackgroundMutationsDeletePartArgs = {
+export type BackgroundMutationsDeleteSampleModelToTestReallyLongModelNamesArgs = {
   backgroundOptions?: InputMaybe<EnqueueBackgroundActionOptions>;
   id: Scalars["GadgetID"]["input"];
 };
 
 export type BackgroundMutationsDeleteSectionArgs = {
+  backgroundOptions?: InputMaybe<EnqueueBackgroundActionOptions>;
+  id: Scalars["GadgetID"]["input"];
+};
+
+export type BackgroundMutationsDeleteSprocketArgs = {
+  backgroundOptions?: InputMaybe<EnqueueBackgroundActionOptions>;
+  id: Scalars["GadgetID"]["input"];
+};
+
+export type BackgroundMutationsDeleteStudentArgs = {
+  backgroundOptions?: InputMaybe<EnqueueBackgroundActionOptions>;
+  id: Scalars["GadgetID"]["input"];
+};
+
+export type BackgroundMutationsDeleteTeacherArgs = {
   backgroundOptions?: InputMaybe<EnqueueBackgroundActionOptions>;
   id: Scalars["GadgetID"]["input"];
 };
@@ -1278,50 +1334,127 @@ export type BackgroundMutationsDeleteWidgetArgs = {
   id: Scalars["GadgetID"]["input"];
 };
 
-export type BackgroundMutationsErrorShopifySyncArgs = {
+export type BackgroundMutationsDeleteWidgetImageArgs = {
   backgroundOptions?: InputMaybe<EnqueueBackgroundActionOptions>;
   id: Scalars["GadgetID"]["input"];
-  shopifySync?: InputMaybe<ErrorShopifySyncInput>;
 };
 
-export type BackgroundMutationsFlipAllArgs = {
+export type BackgroundMutationsFlipAllWidgetsArgs = {
   backgroundOptions?: InputMaybe<EnqueueBackgroundActionOptions>;
-  inventoryCount?: InputMaybe<Scalars["Float"]["input"]>;
-  title?: InputMaybe<Scalars["String"]["input"]>;
 };
 
-export type BackgroundMutationsRunShopifySyncArgs = {
+export type BackgroundMutationsFlipDownWidgetArgs = {
   backgroundOptions?: InputMaybe<EnqueueBackgroundActionOptions>;
-  shopifySync?: InputMaybe<RunShopifySyncInput>;
-  startReason?: InputMaybe<Scalars["String"]["input"]>;
+  id: Scalars["GadgetID"]["input"];
+};
+
+export type BackgroundMutationsFlipUpWidgetArgs = {
+  backgroundOptions?: InputMaybe<EnqueueBackgroundActionOptions>;
+  id: Scalars["GadgetID"]["input"];
+};
+
+export type BackgroundMutationsFoldGizmoArgs = {
+  backgroundOptions?: InputMaybe<EnqueueBackgroundActionOptions>;
+  gizmo?: InputMaybe<FoldGizmoInput>;
+  id: Scalars["GadgetID"]["input"];
+};
+
+export type BackgroundMutationsLogParamsArgs = {
+  arr?: InputMaybe<Array<Scalars["String"]["input"]>>;
+  backgroundOptions?: InputMaybe<EnqueueBackgroundActionOptions>;
+  bool?: InputMaybe<Scalars["Boolean"]["input"]>;
+  num?: InputMaybe<Scalars["Float"]["input"]>;
+  str?: InputMaybe<Scalars["String"]["input"]>;
+};
+
+export type BackgroundMutationsOtherCreateGizmoArgs = {
+  backgroundOptions?: InputMaybe<EnqueueBackgroundActionOptions>;
+  gizmo?: InputMaybe<OtherCreateGizmoInput>;
+};
+
+export type BackgroundMutationsResetPasswordUserArgs = {
+  backgroundOptions?: InputMaybe<EnqueueBackgroundActionOptions>;
+  code?: InputMaybe<Scalars["String"]["input"]>;
+  password?: InputMaybe<Scalars["String"]["input"]>;
+};
+
+export type BackgroundMutationsSendResetPasswordUserArgs = {
+  backgroundOptions?: InputMaybe<EnqueueBackgroundActionOptions>;
+  email?: InputMaybe<Scalars["String"]["input"]>;
+};
+
+export type BackgroundMutationsSendVerifyEmailUserArgs = {
+  backgroundOptions?: InputMaybe<EnqueueBackgroundActionOptions>;
+  email?: InputMaybe<Scalars["String"]["input"]>;
 };
 
 export type BackgroundMutationsSignInUserArgs = {
   backgroundOptions?: InputMaybe<EnqueueBackgroundActionOptions>;
-  id: Scalars["GadgetID"]["input"];
-  user?: InputMaybe<SignInUserInput>;
+  email?: InputMaybe<Scalars["String"]["input"]>;
+  password?: InputMaybe<Scalars["String"]["input"]>;
 };
 
 export type BackgroundMutationsSignOutUserArgs = {
   backgroundOptions?: InputMaybe<EnqueueBackgroundActionOptions>;
   id: Scalars["GadgetID"]["input"];
-  user?: InputMaybe<SignOutUserInput>;
 };
 
 export type BackgroundMutationsSignUpUserArgs = {
   backgroundOptions?: InputMaybe<EnqueueBackgroundActionOptions>;
-  user?: InputMaybe<SignUpUserInput>;
+  email?: InputMaybe<Scalars["String"]["input"]>;
+  password?: InputMaybe<Scalars["String"]["input"]>;
 };
 
-export type BackgroundMutationsUpdateAutoTableTestArgs = {
-  autoTableTest?: InputMaybe<UpdateAutoTableTestInput>;
+export type BackgroundMutationsStraightenGizmoArgs = {
+  backgroundOptions?: InputMaybe<EnqueueBackgroundActionOptions>;
+  gizmo?: InputMaybe<StraightenGizmoInput>;
+  id: Scalars["GadgetID"]["input"];
+};
+
+export type BackgroundMutationsUnfoldGizmoArgs = {
+  backgroundOptions?: InputMaybe<EnqueueBackgroundActionOptions>;
+  gizmo?: InputMaybe<UnfoldGizmoInput>;
+  id: Scalars["GadgetID"]["input"];
+};
+
+export type BackgroundMutationsUpdateBillingAccountArgs = {
+  backgroundOptions?: InputMaybe<EnqueueBackgroundActionOptions>;
+  billingAccount?: InputMaybe<UpdateBillingAccountInput>;
+  id: Scalars["GadgetID"]["input"];
+};
+
+export type BackgroundMutationsUpdateCityArgs = {
+  backgroundOptions?: InputMaybe<EnqueueBackgroundActionOptions>;
+  city?: InputMaybe<UpdateCityInput>;
+  id: Scalars["GadgetID"]["input"];
+};
+
+export type BackgroundMutationsUpdateCourseArgs = {
+  backgroundOptions?: InputMaybe<EnqueueBackgroundActionOptions>;
+  course?: InputMaybe<UpdateCourseInput>;
+  id: Scalars["GadgetID"]["input"];
+};
+
+export type BackgroundMutationsUpdateCustomerArgs = {
+  backgroundOptions?: InputMaybe<EnqueueBackgroundActionOptions>;
+  customer?: InputMaybe<UpdateCustomerInput>;
+  id: Scalars["GadgetID"]["input"];
+};
+
+export type BackgroundMutationsUpdateEphemeralArgs = {
+  backgroundOptions?: InputMaybe<EnqueueBackgroundActionOptions>;
+  ephemeral?: InputMaybe<UpdateEphemeralInput>;
+  id: Scalars["GadgetID"]["input"];
+};
+
+export type BackgroundMutationsUpdateFieldlessArgs = {
   backgroundOptions?: InputMaybe<EnqueueBackgroundActionOptions>;
   id: Scalars["GadgetID"]["input"];
 };
 
-export type BackgroundMutationsUpdateAutoTableTestRelatedModelArgs = {
-  _autoTableTestRelatedModel?: InputMaybe<UpdateAutoTableTestRelatedModelInput>;
+export type BackgroundMutationsUpdateFriendshipArgs = {
   backgroundOptions?: InputMaybe<EnqueueBackgroundActionOptions>;
+  friendship?: InputMaybe<UpdateFriendshipInput>;
   id: Scalars["GadgetID"]["input"];
 };
 
@@ -1331,21 +1464,40 @@ export type BackgroundMutationsUpdateGizmoArgs = {
   id: Scalars["GadgetID"]["input"];
 };
 
-export type BackgroundMutationsUpdateModelAArgs = {
+export type BackgroundMutationsUpdateRegistrationArgs = {
   backgroundOptions?: InputMaybe<EnqueueBackgroundActionOptions>;
   id: Scalars["GadgetID"]["input"];
+  registration?: InputMaybe<UpdateRegistrationInput>;
 };
 
-export type BackgroundMutationsUpdatePartArgs = {
+export type BackgroundMutationsUpdateSampleModelToTestReallyLongModelNamesArgs = {
   backgroundOptions?: InputMaybe<EnqueueBackgroundActionOptions>;
   id: Scalars["GadgetID"]["input"];
-  part?: InputMaybe<UpdatePartInput>;
+  sampleModelToTestReallyLongModelNames?: InputMaybe<UpdateSampleModelToTestReallyLongModelNamesInput>;
 };
 
 export type BackgroundMutationsUpdateSectionArgs = {
   backgroundOptions?: InputMaybe<EnqueueBackgroundActionOptions>;
   id: Scalars["GadgetID"]["input"];
   section?: InputMaybe<UpdateSectionInput>;
+};
+
+export type BackgroundMutationsUpdateSprocketArgs = {
+  backgroundOptions?: InputMaybe<EnqueueBackgroundActionOptions>;
+  id: Scalars["GadgetID"]["input"];
+  sprocket?: InputMaybe<UpdateSprocketInput>;
+};
+
+export type BackgroundMutationsUpdateStudentArgs = {
+  backgroundOptions?: InputMaybe<EnqueueBackgroundActionOptions>;
+  id: Scalars["GadgetID"]["input"];
+  student?: InputMaybe<UpdateStudentInput>;
+};
+
+export type BackgroundMutationsUpdateTeacherArgs = {
+  backgroundOptions?: InputMaybe<EnqueueBackgroundActionOptions>;
+  id: Scalars["GadgetID"]["input"];
+  teacher?: InputMaybe<UpdateTeacherInput>;
 };
 
 export type BackgroundMutationsUpdateUserArgs = {
@@ -1360,25 +1512,51 @@ export type BackgroundMutationsUpdateWidgetArgs = {
   widget?: InputMaybe<UpdateWidgetInput>;
 };
 
-export type BackgroundMutationsUpdateWithCustomParamsAutoTableTestArgs = {
-  autoTableTest?: InputMaybe<UpdateWithCustomParamsAutoTableTestInput>;
+export type BackgroundMutationsUpdateWidgetImageArgs = {
   backgroundOptions?: InputMaybe<EnqueueBackgroundActionOptions>;
   id: Scalars["GadgetID"]["input"];
-  num?: InputMaybe<Scalars["Float"]["input"]>;
-  numberParam1?: InputMaybe<Scalars["Float"]["input"]>;
-  str?: InputMaybe<Scalars["String"]["input"]>;
-  stringParam1?: InputMaybe<Scalars["String"]["input"]>;
+  widgetImage?: InputMaybe<UpdateWidgetImageInput>;
 };
 
-export type BackgroundMutationsUpsertAutoTableTestArgs = {
-  autoTableTest?: InputMaybe<UpsertAutoTableTestInput>;
+export type BackgroundMutationsUpsertBillingAccountArgs = {
   backgroundOptions?: InputMaybe<EnqueueBackgroundActionOptions>;
+  billingAccount?: InputMaybe<UpsertBillingAccountInput>;
   on?: InputMaybe<Array<Scalars["String"]["input"]>>;
 };
 
-export type BackgroundMutationsUpsertAutoTableTestRelatedModelArgs = {
-  _autoTableTestRelatedModel?: InputMaybe<UpsertAutoTableTestRelatedModelInput>;
+export type BackgroundMutationsUpsertCityArgs = {
   backgroundOptions?: InputMaybe<EnqueueBackgroundActionOptions>;
+  city?: InputMaybe<UpsertCityInput>;
+  on?: InputMaybe<Array<Scalars["String"]["input"]>>;
+};
+
+export type BackgroundMutationsUpsertCourseArgs = {
+  backgroundOptions?: InputMaybe<EnqueueBackgroundActionOptions>;
+  course?: InputMaybe<UpsertCourseInput>;
+  on?: InputMaybe<Array<Scalars["String"]["input"]>>;
+};
+
+export type BackgroundMutationsUpsertCustomerArgs = {
+  backgroundOptions?: InputMaybe<EnqueueBackgroundActionOptions>;
+  customer?: InputMaybe<UpsertCustomerInput>;
+  on?: InputMaybe<Array<Scalars["String"]["input"]>>;
+};
+
+export type BackgroundMutationsUpsertEphemeralArgs = {
+  backgroundOptions?: InputMaybe<EnqueueBackgroundActionOptions>;
+  ephemeral?: InputMaybe<UpsertEphemeralInput>;
+  on?: InputMaybe<Array<Scalars["String"]["input"]>>;
+};
+
+export type BackgroundMutationsUpsertFieldlessArgs = {
+  backgroundOptions?: InputMaybe<EnqueueBackgroundActionOptions>;
+  fieldless?: InputMaybe<UpsertFieldlessInput>;
+  on?: InputMaybe<Array<Scalars["String"]["input"]>>;
+};
+
+export type BackgroundMutationsUpsertFriendshipArgs = {
+  backgroundOptions?: InputMaybe<EnqueueBackgroundActionOptions>;
+  friendship?: InputMaybe<UpsertFriendshipInput>;
   on?: InputMaybe<Array<Scalars["String"]["input"]>>;
 };
 
@@ -1388,16 +1566,16 @@ export type BackgroundMutationsUpsertGizmoArgs = {
   on?: InputMaybe<Array<Scalars["String"]["input"]>>;
 };
 
-export type BackgroundMutationsUpsertModelAArgs = {
+export type BackgroundMutationsUpsertRegistrationArgs = {
   backgroundOptions?: InputMaybe<EnqueueBackgroundActionOptions>;
-  modelA?: InputMaybe<UpsertModelAInput>;
   on?: InputMaybe<Array<Scalars["String"]["input"]>>;
+  registration?: InputMaybe<UpsertRegistrationInput>;
 };
 
-export type BackgroundMutationsUpsertPartArgs = {
+export type BackgroundMutationsUpsertSampleModelToTestReallyLongModelNamesArgs = {
   backgroundOptions?: InputMaybe<EnqueueBackgroundActionOptions>;
   on?: InputMaybe<Array<Scalars["String"]["input"]>>;
-  part?: InputMaybe<UpsertPartInput>;
+  sampleModelToTestReallyLongModelNames?: InputMaybe<UpsertSampleModelToTestReallyLongModelNamesInput>;
 };
 
 export type BackgroundMutationsUpsertSectionArgs = {
@@ -1406,16 +1584,29 @@ export type BackgroundMutationsUpsertSectionArgs = {
   section?: InputMaybe<UpsertSectionInput>;
 };
 
-export type BackgroundMutationsUpsertShopifySyncArgs = {
+export type BackgroundMutationsUpsertSprocketArgs = {
   backgroundOptions?: InputMaybe<EnqueueBackgroundActionOptions>;
   on?: InputMaybe<Array<Scalars["String"]["input"]>>;
-  shopifySync?: InputMaybe<UpsertShopifySyncInput>;
-  startReason?: InputMaybe<Scalars["String"]["input"]>;
+  sprocket?: InputMaybe<UpsertSprocketInput>;
+};
+
+export type BackgroundMutationsUpsertStudentArgs = {
+  backgroundOptions?: InputMaybe<EnqueueBackgroundActionOptions>;
+  on?: InputMaybe<Array<Scalars["String"]["input"]>>;
+  student?: InputMaybe<UpsertStudentInput>;
+};
+
+export type BackgroundMutationsUpsertTeacherArgs = {
+  backgroundOptions?: InputMaybe<EnqueueBackgroundActionOptions>;
+  on?: InputMaybe<Array<Scalars["String"]["input"]>>;
+  teacher?: InputMaybe<UpsertTeacherInput>;
 };
 
 export type BackgroundMutationsUpsertUserArgs = {
   backgroundOptions?: InputMaybe<EnqueueBackgroundActionOptions>;
+  email?: InputMaybe<Scalars["String"]["input"]>;
   on?: InputMaybe<Array<Scalars["String"]["input"]>>;
+  password?: InputMaybe<Scalars["String"]["input"]>;
   user?: InputMaybe<UpsertUserInput>;
 };
 
@@ -1425,41 +1616,108 @@ export type BackgroundMutationsUpsertWidgetArgs = {
   widget?: InputMaybe<UpsertWidgetInput>;
 };
 
-export type BackgroundNameMutations = {
-  __typename?: "BackgroundNameMutations";
-  spaced: BackgroundNameSpacedMutations;
-};
-
-export type BackgroundNameSpacedMutations = {
-  __typename?: "BackgroundNameSpacedMutations";
-  actionA: EnqueueBackgroundActionResult;
-  customObjectParams: EnqueueBackgroundActionResult;
-};
-
-export type BackgroundNameSpacedMutationsActionAArgs = {
+export type BackgroundMutationsUpsertWidgetImageArgs = {
   backgroundOptions?: InputMaybe<EnqueueBackgroundActionOptions>;
+  on?: InputMaybe<Array<Scalars["String"]["input"]>>;
+  widgetImage?: InputMaybe<UpsertWidgetImageInput>;
 };
 
-export type BackgroundNameSpacedMutationsCustomObjectParamsArgs = {
+export type BackgroundMutationsVerifyEmailUserArgs = {
   backgroundOptions?: InputMaybe<EnqueueBackgroundActionOptions>;
-  objParam?: InputMaybe<NameSpacedCustomObjectParamsObjParamInput>;
-  rootLevelStr?: InputMaybe<Scalars["String"]["input"]>;
+  code?: InputMaybe<Scalars["String"]["input"]>;
+};
+
+export type BarfAnErrorGamePlayerResult = {
+  __typename?: "BarfAnErrorGamePlayerResult";
+  actionRun?: Maybe<Scalars["String"]["output"]>;
+  errors?: Maybe<Array<ExecutionError>>;
+  player?: Maybe<GamePlayer>;
+  success: Scalars["Boolean"]["output"];
+};
+
+export type BarfAnErrorResult = {
+  __typename?: "BarfAnErrorResult";
+  errors?: Maybe<Array<ExecutionError>>;
+  result?: Maybe<Scalars["JSON"]["output"]>;
+  success: Scalars["Boolean"]["output"];
+};
+
+export type BendGizmoInput = {
+  name?: InputMaybe<Scalars["String"]["input"]>;
+  sprockets?: InputMaybe<Array<InputMaybe<SprocketHasManyInput>>>;
+  state?: InputMaybe<Scalars["GizmoStateEnum"]["input"]>;
+  widget?: InputMaybe<WidgetBelongsToInput>;
+};
+
+export type BendGizmoResult = {
+  __typename?: "BendGizmoResult";
+  actionRun?: Maybe<Scalars["String"]["output"]>;
+  errors?: Maybe<Array<ExecutionError>>;
+  gizmo?: Maybe<Gizmo>;
+  success: Scalars["Boolean"]["output"];
+};
+
+export type BillingAccount = {
+  __typename?: "BillingAccount";
+  /** Get all the fields for this record. Useful for not having to list out all the fields you want to retrieve, but slower. */
+  _all: Scalars["JSONObject"]["output"];
+  balance?: Maybe<Scalars["Float"]["output"]>;
+  /** The time at which this record was first created. Set once upon record creation and never changed. Managed by Gadget. */
+  createdAt: Scalars["DateTime"]["output"];
+  customer: Customer;
+  customerId: Scalars["GadgetID"]["output"];
+  /** The globally unique, unchanging identifier for this record. Assigned and managed by Gadget. */
+  id: Scalars["GadgetID"]["output"];
+  /** The time at which this record was last changed. Set each time the record is successfully acted upon by an action. Managed by Gadget. */
+  updatedAt: Scalars["DateTime"]["output"];
+};
+
+/** A connection to a list of BillingAccount items. */
+export type BillingAccountConnection = {
+  __typename?: "BillingAccountConnection";
+  /** A list of edges. */
+  edges: Array<BillingAccountEdge>;
+  /** Information to aid in pagination. */
+  pageInfo: PageInfo;
+};
+
+/** An edge in a BillingAccount connection. */
+export type BillingAccountEdge = {
+  __typename?: "BillingAccountEdge";
+  /** A cursor for use in pagination */
+  cursor: Scalars["String"]["output"];
+  /** The item at the end of the edge */
+  node: BillingAccount;
+};
+
+export type BillingAccountFilter = {
+  AND?: InputMaybe<Array<InputMaybe<BillingAccountFilter>>>;
+  NOT?: InputMaybe<Array<InputMaybe<BillingAccountFilter>>>;
+  OR?: InputMaybe<Array<InputMaybe<BillingAccountFilter>>>;
+  balance?: InputMaybe<FloatFilter>;
+  createdAt?: InputMaybe<DateTimeFilter>;
+  customer?: InputMaybe<IdFilter>;
+  customerId?: InputMaybe<IdFilter>;
+  id?: InputMaybe<IdFilter>;
+  updatedAt?: InputMaybe<DateTimeFilter>;
 };
 
 /** Input object supporting setting or updating related model record on a relationship field */
-export type BaseModelBelongsToInput = {
-  /** Existing ID of another record, which you would like to associate this record with */
-  _link?: InputMaybe<Scalars["GadgetID"]["input"]>;
-  create?: InputMaybe<NestedBaseModelCreateInput>;
-  delete?: InputMaybe<NestedBaseModelDeleteInput>;
-  update?: InputMaybe<NestedBaseModelUpdateInput>;
+export type BillingAccountHasOneInput = {
+  create?: InputMaybe<NestedBillingAccountCreateInput>;
+  delete?: InputMaybe<NestedBillingAccountDeleteInput>;
+  update?: InputMaybe<NestedBillingAccountUpdateInput>;
 };
 
-/** Input object supporting setting or updating related model record on a relationship field */
-export type BaseModelHasManyThroughInput = {
-  create?: InputMaybe<NestedBaseModelCreateInput>;
-  delete?: InputMaybe<NestedBaseModelDeleteInput>;
-  update?: InputMaybe<NestedBaseModelUpdateInput>;
+export type BillingAccountSort = {
+  /** Sort the results by the balance field. Defaults to ascending (smallest value first). */
+  balance?: InputMaybe<SortOrder>;
+  /** Sort the results by the createdAt field. Defaults to ascending (smallest value first). */
+  createdAt?: InputMaybe<SortOrder>;
+  /** Sort the results by the id field. Defaults to ascending (smallest value first). */
+  id?: InputMaybe<SortOrder>;
+  /** Sort the results by the updatedAt field. Defaults to ascending (smallest value first). */
+  updatedAt?: InputMaybe<SortOrder>;
 };
 
 export type BooleanFilter = {
@@ -1468,25 +1726,46 @@ export type BooleanFilter = {
   notEquals?: InputMaybe<Scalars["Boolean"]["input"]>;
 };
 
-export type BulkAbortShopifySyncsInput = {
-  id: Scalars["GadgetID"]["input"];
-  shopifySync?: InputMaybe<AbortShopifySyncInput>;
+export type BreakGizmoInput = {
+  name?: InputMaybe<Scalars["String"]["input"]>;
+  sprockets?: InputMaybe<Array<InputMaybe<SprocketHasManyInput>>>;
+  state?: InputMaybe<Scalars["GizmoStateEnum"]["input"]>;
+  widget?: InputMaybe<WidgetBelongsToInput>;
 };
 
-/** The output when running the abort on the shopifySync model in bulk. */
-export type BulkAbortShopifySyncsResult = {
-  __typename?: "BulkAbortShopifySyncsResult";
-  /** Aggregated list of errors that any bulk action encountered while processing */
+export type BreakGizmoResult = {
+  __typename?: "BreakGizmoResult";
+  actionRun?: Maybe<Scalars["String"]["output"]>;
   errors?: Maybe<Array<ExecutionError>>;
-  /** The list of all changed shopifySync records by each sent bulk action. Returned in the same order as the input bulk action params. */
-  shopifySyncs?: Maybe<Array<Maybe<ShopifySync>>>;
-  /** Boolean describing if all the bulk actions succeeded or not */
+  gizmo?: Maybe<Gizmo>;
   success: Scalars["Boolean"]["output"];
 };
 
-export type BulkAddInventoryWidgetsInput = {
-  count?: InputMaybe<Scalars["Float"]["input"]>;
+export type BulkAddInventoryIfOutOfStockWidgetsInput = {
+  amount?: InputMaybe<Scalars["Float"]["input"]>;
   id: Scalars["GadgetID"]["input"];
+};
+
+/** The output when running the addInventoryIfOutOfStock on the widget model in bulk. */
+export type BulkAddInventoryIfOutOfStockWidgetsResult = {
+  __typename?: "BulkAddInventoryIfOutOfStockWidgetsResult";
+  /** Aggregated list of errors that any bulk action encountered while processing */
+  errors?: Maybe<Array<ExecutionError>>;
+  /** Boolean describing if all the bulk actions succeeded or not */
+  success: Scalars["Boolean"]["output"];
+  /** The list of all changed widget records by each sent bulk action. Returned in the same order as the input bulk action params. */
+  widgets?: Maybe<Array<Maybe<Widget>>>;
+};
+
+export type BulkAddInventoryWidgetsInput = {
+  amount?: InputMaybe<Scalars["Float"]["input"]>;
+  customName?: InputMaybe<Scalars["String"]["input"]>;
+  id: Scalars["GadgetID"]["input"];
+  inStock?: InputMaybe<Scalars["Boolean"]["input"]>;
+  location?: InputMaybe<AddInventoryLocationInput>;
+  /** An array of Floats */
+  relatedWidgets?: InputMaybe<Array<Scalars["Float"]["input"]>>;
+  widget?: InputMaybe<AddInventoryWidgetInput>;
 };
 
 /** The output when running the addInventory on the widget model in bulk. */
@@ -1500,78 +1779,163 @@ export type BulkAddInventoryWidgetsResult = {
   widgets?: Maybe<Array<Maybe<Widget>>>;
 };
 
-export type BulkAlwaysThrowErrorWidgetsInput = {
-  widget?: InputMaybe<AlwaysThrowErrorWidgetInput>;
-};
-
-/** The output when running the alwaysThrowError on the widget model in bulk. */
-export type BulkAlwaysThrowErrorWidgetsResult = {
-  __typename?: "BulkAlwaysThrowErrorWidgetsResult";
+/** The output when running the barfAnError on the game/player model in bulk. */
+export type BulkBarfAnErrorGamePlayersResult = {
+  __typename?: "BulkBarfAnErrorGamePlayersResult";
   /** Aggregated list of errors that any bulk action encountered while processing */
   errors?: Maybe<Array<ExecutionError>>;
+  /** The list of all changed game/player records by each sent bulk action. Returned in the same order as the input bulk action params. */
+  players?: Maybe<Array<Maybe<GamePlayer>>>;
   /** Boolean describing if all the bulk actions succeeded or not */
   success: Scalars["Boolean"]["output"];
-  /** The list of all changed widget records by each sent bulk action. Returned in the same order as the input bulk action params. */
-  widgets?: Maybe<Array<Maybe<Widget>>>;
 };
 
-export type BulkCompleteShopifySyncsInput = {
+export type BulkBendGizmosInput = {
+  gizmo?: InputMaybe<BendGizmoInput>;
   id: Scalars["GadgetID"]["input"];
-  shopifySync?: InputMaybe<CompleteShopifySyncInput>;
 };
 
-/** The output when running the complete on the shopifySync model in bulk. */
-export type BulkCompleteShopifySyncsResult = {
-  __typename?: "BulkCompleteShopifySyncsResult";
+/** The output when running the bend on the gizmo model in bulk. */
+export type BulkBendGizmosResult = {
+  __typename?: "BulkBendGizmosResult";
   /** Aggregated list of errors that any bulk action encountered while processing */
   errors?: Maybe<Array<ExecutionError>>;
-  /** The list of all changed shopifySync records by each sent bulk action. Returned in the same order as the input bulk action params. */
-  shopifySyncs?: Maybe<Array<Maybe<ShopifySync>>>;
+  /** The list of all changed gizmo records by each sent bulk action. Returned in the same order as the input bulk action params. */
+  gizmos?: Maybe<Array<Maybe<Gizmo>>>;
   /** Boolean describing if all the bulk actions succeeded or not */
   success: Scalars["Boolean"]["output"];
 };
 
-export type BulkCreateAutoTableTestRelatedModelsInput = {
-  _autoTableTestRelatedModel?: InputMaybe<CreateAutoTableTestRelatedModelInput>;
+export type BulkBreakGizmosInput = {
+  gizmo?: InputMaybe<BreakGizmoInput>;
+  id: Scalars["GadgetID"]["input"];
 };
 
-/** The output when running the create on the _autoTableTestRelatedModel model in bulk. */
-export type BulkCreateAutoTableTestRelatedModelsResult = {
-  __typename?: "BulkCreateAutoTableTestRelatedModelsResult";
-  /** The list of all changed _autoTableTestRelatedModel records by each sent bulk action. Returned in the same order as the input bulk action params. */
-  _autoTableTestRelatedModels?: Maybe<Array<Maybe<AutoTableTestRelatedModel>>>;
+/** The output when running the break on the gizmo model in bulk. */
+export type BulkBreakGizmosResult = {
+  __typename?: "BulkBreakGizmosResult";
+  /** Aggregated list of errors that any bulk action encountered while processing */
+  errors?: Maybe<Array<ExecutionError>>;
+  /** The list of all changed gizmo records by each sent bulk action. Returned in the same order as the input bulk action params. */
+  gizmos?: Maybe<Array<Maybe<Gizmo>>>;
+  /** Boolean describing if all the bulk actions succeeded or not */
+  success: Scalars["Boolean"]["output"];
+};
+
+export type BulkChangePasswordUsersInput = {
+  currentPassword?: InputMaybe<Scalars["String"]["input"]>;
+  id: Scalars["GadgetID"]["input"];
+  newPassword?: InputMaybe<Scalars["String"]["input"]>;
+};
+
+/** The output when running the changePassword on the user model in bulk. */
+export type BulkChangePasswordUsersResult = {
+  __typename?: "BulkChangePasswordUsersResult";
+  /** Aggregated list of errors that any bulk action encountered while processing */
+  errors?: Maybe<Array<ExecutionError>>;
+  /** Boolean describing if all the bulk actions succeeded or not */
+  success: Scalars["Boolean"]["output"];
+  /** The list of all changed user records by each sent bulk action. Returned in the same order as the input bulk action params. */
+  users?: Maybe<Array<Maybe<User>>>;
+};
+
+export type BulkCreateBillingAccountsInput = {
+  billingAccount?: InputMaybe<CreateBillingAccountInput>;
+};
+
+/** The output when running the create on the billingAccount model in bulk. */
+export type BulkCreateBillingAccountsResult = {
+  __typename?: "BulkCreateBillingAccountsResult";
+  /** The list of all changed billingAccount records by each sent bulk action. Returned in the same order as the input bulk action params. */
+  billingAccounts?: Maybe<Array<Maybe<BillingAccount>>>;
   /** Aggregated list of errors that any bulk action encountered while processing */
   errors?: Maybe<Array<ExecutionError>>;
   /** Boolean describing if all the bulk actions succeeded or not */
   success: Scalars["Boolean"]["output"];
 };
 
-export type BulkCreateAutoTableTestsInput = {
-  autoTableTest?: InputMaybe<CreateAutoTableTestInput>;
-};
-
-/** The output when running the create on the autoTableTest model in bulk. */
-export type BulkCreateAutoTableTestsResult = {
-  __typename?: "BulkCreateAutoTableTestsResult";
-  /** The list of all changed autoTableTest records by each sent bulk action. Returned in the same order as the input bulk action params. */
-  autoTableTests?: Maybe<Array<Maybe<AutoTableTest>>>;
-  /** Aggregated list of errors that any bulk action encountered while processing */
-  errors?: Maybe<Array<ExecutionError>>;
-  /** Boolean describing if all the bulk actions succeeded or not */
-  success: Scalars["Boolean"]["output"];
-};
-
-export type BulkCreateGameCitiesInput = {
-  city?: InputMaybe<CreateGameCityInput>;
+export type BulkCreateCitiesInput = {
+  city?: InputMaybe<CreateCityInput>;
 };
 
 /** The output when running the create on the city model in bulk. */
-export type BulkCreateGameCitiesResult = {
-  __typename?: "BulkCreateGameCitiesResult";
+export type BulkCreateCitiesResult = {
+  __typename?: "BulkCreateCitiesResult";
   /** The list of all changed city records by each sent bulk action. Returned in the same order as the input bulk action params. */
-  cities?: Maybe<Array<Maybe<GameCity>>>;
+  cities?: Maybe<Array<Maybe<City>>>;
   /** Aggregated list of errors that any bulk action encountered while processing */
   errors?: Maybe<Array<ExecutionError>>;
+  /** Boolean describing if all the bulk actions succeeded or not */
+  success: Scalars["Boolean"]["output"];
+};
+
+export type BulkCreateCoursesInput = {
+  course?: InputMaybe<CreateCourseInput>;
+};
+
+/** The output when running the create on the course model in bulk. */
+export type BulkCreateCoursesResult = {
+  __typename?: "BulkCreateCoursesResult";
+  /** The list of all changed course records by each sent bulk action. Returned in the same order as the input bulk action params. */
+  courses?: Maybe<Array<Maybe<Course>>>;
+  /** Aggregated list of errors that any bulk action encountered while processing */
+  errors?: Maybe<Array<ExecutionError>>;
+  /** Boolean describing if all the bulk actions succeeded or not */
+  success: Scalars["Boolean"]["output"];
+};
+
+export type BulkCreateCustomersInput = {
+  customer?: InputMaybe<CreateCustomerInput>;
+};
+
+/** The output when running the create on the customer model in bulk. */
+export type BulkCreateCustomersResult = {
+  __typename?: "BulkCreateCustomersResult";
+  /** The list of all changed customer records by each sent bulk action. Returned in the same order as the input bulk action params. */
+  customers?: Maybe<Array<Maybe<Customer>>>;
+  /** Aggregated list of errors that any bulk action encountered while processing */
+  errors?: Maybe<Array<ExecutionError>>;
+  /** Boolean describing if all the bulk actions succeeded or not */
+  success: Scalars["Boolean"]["output"];
+};
+
+export type BulkCreateEphemeralsInput = {
+  ephemeral?: InputMaybe<CreateEphemeralInput>;
+};
+
+/** The output when running the create on the ephemeral model in bulk. */
+export type BulkCreateEphemeralsResult = {
+  __typename?: "BulkCreateEphemeralsResult";
+  /** The list of all changed ephemeral records by each sent bulk action. Returned in the same order as the input bulk action params. */
+  ephemerals?: Maybe<Array<Maybe<Ephemeral>>>;
+  /** Aggregated list of errors that any bulk action encountered while processing */
+  errors?: Maybe<Array<ExecutionError>>;
+  /** Boolean describing if all the bulk actions succeeded or not */
+  success: Scalars["Boolean"]["output"];
+};
+
+/** The output when running the create on the fieldless model in bulk. */
+export type BulkCreateFieldlessesResult = {
+  __typename?: "BulkCreateFieldlessesResult";
+  /** Aggregated list of errors that any bulk action encountered while processing */
+  errors?: Maybe<Array<ExecutionError>>;
+  /** The list of all changed fieldless records by each sent bulk action. Returned in the same order as the input bulk action params. */
+  fieldlesses?: Maybe<Array<Maybe<Fieldless>>>;
+  /** Boolean describing if all the bulk actions succeeded or not */
+  success: Scalars["Boolean"]["output"];
+};
+
+export type BulkCreateFriendshipsInput = {
+  friendship?: InputMaybe<CreateFriendshipInput>;
+};
+
+/** The output when running the create on the friendship model in bulk. */
+export type BulkCreateFriendshipsResult = {
+  __typename?: "BulkCreateFriendshipsResult";
+  /** Aggregated list of errors that any bulk action encountered while processing */
+  errors?: Maybe<Array<ExecutionError>>;
+  /** The list of all changed friendship records by each sent bulk action. Returned in the same order as the input bulk action params. */
+  friendships?: Maybe<Array<Maybe<Friendship>>>;
   /** Boolean describing if all the bulk actions succeeded or not */
   success: Scalars["Boolean"]["output"];
 };
@@ -1580,12 +1944,12 @@ export type BulkCreateGamePlayersInput = {
   player?: InputMaybe<CreateGamePlayerInput>;
 };
 
-/** The output when running the create on the player model in bulk. */
+/** The output when running the create on the game/player model in bulk. */
 export type BulkCreateGamePlayersResult = {
   __typename?: "BulkCreateGamePlayersResult";
   /** Aggregated list of errors that any bulk action encountered while processing */
   errors?: Maybe<Array<ExecutionError>>;
-  /** The list of all changed player records by each sent bulk action. Returned in the same order as the input bulk action params. */
+  /** The list of all changed game/player records by each sent bulk action. Returned in the same order as the input bulk action params. */
   players?: Maybe<Array<Maybe<GamePlayer>>>;
   /** Boolean describing if all the bulk actions succeeded or not */
   success: Scalars["Boolean"]["output"];
@@ -1595,12 +1959,12 @@ export type BulkCreateGameRoundsInput = {
   round?: InputMaybe<CreateGameRoundInput>;
 };
 
-/** The output when running the create on the round model in bulk. */
+/** The output when running the create on the game/round model in bulk. */
 export type BulkCreateGameRoundsResult = {
   __typename?: "BulkCreateGameRoundsResult";
   /** Aggregated list of errors that any bulk action encountered while processing */
   errors?: Maybe<Array<ExecutionError>>;
-  /** The list of all changed round records by each sent bulk action. Returned in the same order as the input bulk action params. */
+  /** The list of all changed game/round records by each sent bulk action. Returned in the same order as the input bulk action params. */
   rounds?: Maybe<Array<Maybe<GameRound>>>;
   /** Boolean describing if all the bulk actions succeeded or not */
   success: Scalars["Boolean"]["output"];
@@ -1610,12 +1974,12 @@ export type BulkCreateGameStadiaInput = {
   stadium?: InputMaybe<CreateGameStadiumInput>;
 };
 
-/** The output when running the create on the stadium model in bulk. */
+/** The output when running the create on the game/stadium model in bulk. */
 export type BulkCreateGameStadiaResult = {
   __typename?: "BulkCreateGameStadiaResult";
   /** Aggregated list of errors that any bulk action encountered while processing */
   errors?: Maybe<Array<ExecutionError>>;
-  /** The list of all changed stadium records by each sent bulk action. Returned in the same order as the input bulk action params. */
+  /** The list of all changed game/stadium records by each sent bulk action. Returned in the same order as the input bulk action params. */
   stadia?: Maybe<Array<Maybe<GameStadium>>>;
   /** Boolean describing if all the bulk actions succeeded or not */
   success: Scalars["Boolean"]["output"];
@@ -1636,73 +2000,47 @@ export type BulkCreateGizmosResult = {
   success: Scalars["Boolean"]["output"];
 };
 
-export type BulkCreateHasManyThroughBaseModelsInput = {
-  baseModel?: InputMaybe<CreateHasManyThroughBaseModelInput>;
+export type BulkCreateLandmarkStadiaInput = {
+  stadium?: InputMaybe<CreateLandmarkStadiumInput>;
 };
 
-/** The output when running the create on the baseModel model in bulk. */
-export type BulkCreateHasManyThroughBaseModelsResult = {
-  __typename?: "BulkCreateHasManyThroughBaseModelsResult";
-  /** The list of all changed baseModel records by each sent bulk action. Returned in the same order as the input bulk action params. */
-  baseModels?: Maybe<Array<Maybe<HasManyThroughBaseModel>>>;
+/** The output when running the create on the landmark/stadium model in bulk. */
+export type BulkCreateLandmarkStadiaResult = {
+  __typename?: "BulkCreateLandmarkStadiaResult";
   /** Aggregated list of errors that any bulk action encountered while processing */
   errors?: Maybe<Array<ExecutionError>>;
+  /** The list of all changed landmark/stadium records by each sent bulk action. Returned in the same order as the input bulk action params. */
+  stadia?: Maybe<Array<Maybe<LandmarkStadium>>>;
   /** Boolean describing if all the bulk actions succeeded or not */
   success: Scalars["Boolean"]["output"];
 };
 
-export type BulkCreateHasManyThroughJoinerModelsInput = {
-  joinerModel?: InputMaybe<CreateHasManyThroughJoinerModelInput>;
+export type BulkCreateRegistrationsInput = {
+  registration?: InputMaybe<CreateRegistrationInput>;
 };
 
-/** The output when running the create on the joinerModel model in bulk. */
-export type BulkCreateHasManyThroughJoinerModelsResult = {
-  __typename?: "BulkCreateHasManyThroughJoinerModelsResult";
+/** The output when running the create on the registration model in bulk. */
+export type BulkCreateRegistrationsResult = {
+  __typename?: "BulkCreateRegistrationsResult";
   /** Aggregated list of errors that any bulk action encountered while processing */
   errors?: Maybe<Array<ExecutionError>>;
-  /** The list of all changed joinerModel records by each sent bulk action. Returned in the same order as the input bulk action params. */
-  joinerModels?: Maybe<Array<Maybe<HasManyThroughJoinerModel>>>;
+  /** The list of all changed registration records by each sent bulk action. Returned in the same order as the input bulk action params. */
+  registrations?: Maybe<Array<Maybe<Registration>>>;
   /** Boolean describing if all the bulk actions succeeded or not */
   success: Scalars["Boolean"]["output"];
 };
 
-export type BulkCreateHasManyThroughSiblingModelsInput = {
-  siblingModel?: InputMaybe<CreateHasManyThroughSiblingModelInput>;
+export type BulkCreateSampleModelToTestReallyLongModelNamesInput = {
+  sampleModelToTestReallyLongModelNames?: InputMaybe<CreateSampleModelToTestReallyLongModelNamesInput>;
 };
 
-/** The output when running the create on the siblingModel model in bulk. */
-export type BulkCreateHasManyThroughSiblingModelsResult = {
-  __typename?: "BulkCreateHasManyThroughSiblingModelsResult";
+/** The output when running the create on the sampleModelToTestReallyLongModelNames model in bulk. */
+export type BulkCreateSampleModelToTestReallyLongModelNamesResult = {
+  __typename?: "BulkCreateSampleModelToTestReallyLongModelNamesResult";
   /** Aggregated list of errors that any bulk action encountered while processing */
   errors?: Maybe<Array<ExecutionError>>;
-  /** The list of all changed siblingModel records by each sent bulk action. Returned in the same order as the input bulk action params. */
-  siblingModels?: Maybe<Array<Maybe<HasManyThroughSiblingModel>>>;
-  /** Boolean describing if all the bulk actions succeeded or not */
-  success: Scalars["Boolean"]["output"];
-};
-
-/** The output when running the create on the modelA model in bulk. */
-export type BulkCreateModelAsResult = {
-  __typename?: "BulkCreateModelAsResult";
-  /** Aggregated list of errors that any bulk action encountered while processing */
-  errors?: Maybe<Array<ExecutionError>>;
-  /** The list of all changed modelA records by each sent bulk action. Returned in the same order as the input bulk action params. */
-  modelAs?: Maybe<Array<Maybe<ModelA>>>;
-  /** Boolean describing if all the bulk actions succeeded or not */
-  success: Scalars["Boolean"]["output"];
-};
-
-export type BulkCreatePartsInput = {
-  part?: InputMaybe<CreatePartInput>;
-};
-
-/** The output when running the create on the part model in bulk. */
-export type BulkCreatePartsResult = {
-  __typename?: "BulkCreatePartsResult";
-  /** Aggregated list of errors that any bulk action encountered while processing */
-  errors?: Maybe<Array<ExecutionError>>;
-  /** The list of all changed part records by each sent bulk action. Returned in the same order as the input bulk action params. */
-  parts?: Maybe<Array<Maybe<Part>>>;
+  /** The list of all changed sampleModelToTestReallyLongModelNames records by each sent bulk action. Returned in the same order as the input bulk action params. */
+  sampleModelToTestReallyLongModelNamess?: Maybe<Array<Maybe<SampleModelToTestReallyLongModelNames>>>;
   /** Boolean describing if all the bulk actions succeeded or not */
   success: Scalars["Boolean"]["output"];
 };
@@ -1722,6 +2060,66 @@ export type BulkCreateSectionsResult = {
   success: Scalars["Boolean"]["output"];
 };
 
+export type BulkCreateSprocketsInput = {
+  sprocket?: InputMaybe<CreateSprocketInput>;
+};
+
+/** The output when running the create on the sprocket model in bulk. */
+export type BulkCreateSprocketsResult = {
+  __typename?: "BulkCreateSprocketsResult";
+  /** Aggregated list of errors that any bulk action encountered while processing */
+  errors?: Maybe<Array<ExecutionError>>;
+  /** The list of all changed sprocket records by each sent bulk action. Returned in the same order as the input bulk action params. */
+  sprockets?: Maybe<Array<Maybe<Sprocket>>>;
+  /** Boolean describing if all the bulk actions succeeded or not */
+  success: Scalars["Boolean"]["output"];
+};
+
+export type BulkCreateStudentsInput = {
+  student?: InputMaybe<CreateStudentInput>;
+};
+
+/** The output when running the create on the student model in bulk. */
+export type BulkCreateStudentsResult = {
+  __typename?: "BulkCreateStudentsResult";
+  /** Aggregated list of errors that any bulk action encountered while processing */
+  errors?: Maybe<Array<ExecutionError>>;
+  /** The list of all changed student records by each sent bulk action. Returned in the same order as the input bulk action params. */
+  students?: Maybe<Array<Maybe<Student>>>;
+  /** Boolean describing if all the bulk actions succeeded or not */
+  success: Scalars["Boolean"]["output"];
+};
+
+export type BulkCreateTeachersInput = {
+  teacher?: InputMaybe<CreateTeacherInput>;
+};
+
+/** The output when running the create on the teacher model in bulk. */
+export type BulkCreateTeachersResult = {
+  __typename?: "BulkCreateTeachersResult";
+  /** Aggregated list of errors that any bulk action encountered while processing */
+  errors?: Maybe<Array<ExecutionError>>;
+  /** Boolean describing if all the bulk actions succeeded or not */
+  success: Scalars["Boolean"]["output"];
+  /** The list of all changed teacher records by each sent bulk action. Returned in the same order as the input bulk action params. */
+  teachers?: Maybe<Array<Maybe<Teacher>>>;
+};
+
+export type BulkCreateWidgetImagesInput = {
+  widgetImage?: InputMaybe<CreateWidgetImageInput>;
+};
+
+/** The output when running the create on the widgetImage model in bulk. */
+export type BulkCreateWidgetImagesResult = {
+  __typename?: "BulkCreateWidgetImagesResult";
+  /** Aggregated list of errors that any bulk action encountered while processing */
+  errors?: Maybe<Array<ExecutionError>>;
+  /** Boolean describing if all the bulk actions succeeded or not */
+  success: Scalars["Boolean"]["output"];
+  /** The list of all changed widgetImage records by each sent bulk action. Returned in the same order as the input bulk action params. */
+  widgetImages?: Maybe<Array<Maybe<WidgetImage>>>;
+};
+
 export type BulkCreateWidgetsInput = {
   widget?: InputMaybe<CreateWidgetInput>;
 };
@@ -1737,64 +2135,9 @@ export type BulkCreateWidgetsResult = {
   widgets?: Maybe<Array<Maybe<Widget>>>;
 };
 
-/** The output when running the customAction on the autoTableTest model in bulk. */
-export type BulkCustomActionAutoTableTestsResult = {
-  __typename?: "BulkCustomActionAutoTableTestsResult";
-  /** The list of all changed autoTableTest records by each sent bulk action. Returned in the same order as the input bulk action params. */
-  autoTableTests?: Maybe<Array<Maybe<AutoTableTest>>>;
-  /** Aggregated list of errors that any bulk action encountered while processing */
-  errors?: Maybe<Array<ExecutionError>>;
-  /** Boolean describing if all the bulk actions succeeded or not */
-  success: Scalars["Boolean"]["output"];
-};
-
-export type BulkCustomActionWithParamsAutoTableTestsInput = {
-  id: Scalars["GadgetID"]["input"];
-  numberParam1?: InputMaybe<Scalars["Float"]["input"]>;
-  stringParam1?: InputMaybe<Scalars["String"]["input"]>;
-};
-
-/** The output when running the customActionWithParams on the autoTableTest model in bulk. */
-export type BulkCustomActionWithParamsAutoTableTestsResult = {
-  __typename?: "BulkCustomActionWithParamsAutoTableTestsResult";
-  /** The list of all changed autoTableTest records by each sent bulk action. Returned in the same order as the input bulk action params. */
-  autoTableTests?: Maybe<Array<Maybe<AutoTableTest>>>;
-  /** Aggregated list of errors that any bulk action encountered while processing */
-  errors?: Maybe<Array<ExecutionError>>;
-  /** Boolean describing if all the bulk actions succeeded or not */
-  success: Scalars["Boolean"]["output"];
-};
-
-export type BulkCustomObjectParamsGameCitiesInput = {
-  city?: InputMaybe<CustomObjectParamsGameCityInput>;
-  id: Scalars["GadgetID"]["input"];
-  objParam?: InputMaybe<CustomObjectParamsObjParamInput>;
-  rootLevelStr?: InputMaybe<Scalars["String"]["input"]>;
-};
-
-/** The output when running the customObjectParams on the city model in bulk. */
-export type BulkCustomObjectParamsGameCitiesResult = {
-  __typename?: "BulkCustomObjectParamsGameCitiesResult";
-  /** The list of all changed city records by each sent bulk action. Returned in the same order as the input bulk action params. */
-  cities?: Maybe<Array<Maybe<GameCity>>>;
-  /** Aggregated list of errors that any bulk action encountered while processing */
-  errors?: Maybe<Array<ExecutionError>>;
-  /** Boolean describing if all the bulk actions succeeded or not */
-  success: Scalars["Boolean"]["output"];
-};
-
-/** The output when running the delete on the _autoTableTestRelatedModel model in bulk. */
-export type BulkDeleteAutoTableTestRelatedModelsResult = {
-  __typename?: "BulkDeleteAutoTableTestRelatedModelsResult";
-  /** Aggregated list of errors that any bulk action encountered while processing */
-  errors?: Maybe<Array<ExecutionError>>;
-  /** Boolean describing if all the bulk actions succeeded or not */
-  success: Scalars["Boolean"]["output"];
-};
-
-/** The output when running the delete on the autoTableTest model in bulk. */
-export type BulkDeleteAutoTableTestsResult = {
-  __typename?: "BulkDeleteAutoTableTestsResult";
+/** The output when running the delete on the billingAccount model in bulk. */
+export type BulkDeleteBillingAccountsResult = {
+  __typename?: "BulkDeleteBillingAccountsResult";
   /** Aggregated list of errors that any bulk action encountered while processing */
   errors?: Maybe<Array<ExecutionError>>;
   /** Boolean describing if all the bulk actions succeeded or not */
@@ -1802,15 +2145,60 @@ export type BulkDeleteAutoTableTestsResult = {
 };
 
 /** The output when running the delete on the city model in bulk. */
-export type BulkDeleteGameCitiesResult = {
-  __typename?: "BulkDeleteGameCitiesResult";
+export type BulkDeleteCitiesResult = {
+  __typename?: "BulkDeleteCitiesResult";
   /** Aggregated list of errors that any bulk action encountered while processing */
   errors?: Maybe<Array<ExecutionError>>;
   /** Boolean describing if all the bulk actions succeeded or not */
   success: Scalars["Boolean"]["output"];
 };
 
-/** The output when running the delete on the player model in bulk. */
+/** The output when running the delete on the course model in bulk. */
+export type BulkDeleteCoursesResult = {
+  __typename?: "BulkDeleteCoursesResult";
+  /** Aggregated list of errors that any bulk action encountered while processing */
+  errors?: Maybe<Array<ExecutionError>>;
+  /** Boolean describing if all the bulk actions succeeded or not */
+  success: Scalars["Boolean"]["output"];
+};
+
+/** The output when running the delete on the customer model in bulk. */
+export type BulkDeleteCustomersResult = {
+  __typename?: "BulkDeleteCustomersResult";
+  /** Aggregated list of errors that any bulk action encountered while processing */
+  errors?: Maybe<Array<ExecutionError>>;
+  /** Boolean describing if all the bulk actions succeeded or not */
+  success: Scalars["Boolean"]["output"];
+};
+
+/** The output when running the delete on the ephemeral model in bulk. */
+export type BulkDeleteEphemeralsResult = {
+  __typename?: "BulkDeleteEphemeralsResult";
+  /** Aggregated list of errors that any bulk action encountered while processing */
+  errors?: Maybe<Array<ExecutionError>>;
+  /** Boolean describing if all the bulk actions succeeded or not */
+  success: Scalars["Boolean"]["output"];
+};
+
+/** The output when running the delete on the fieldless model in bulk. */
+export type BulkDeleteFieldlessesResult = {
+  __typename?: "BulkDeleteFieldlessesResult";
+  /** Aggregated list of errors that any bulk action encountered while processing */
+  errors?: Maybe<Array<ExecutionError>>;
+  /** Boolean describing if all the bulk actions succeeded or not */
+  success: Scalars["Boolean"]["output"];
+};
+
+/** The output when running the delete on the friendship model in bulk. */
+export type BulkDeleteFriendshipsResult = {
+  __typename?: "BulkDeleteFriendshipsResult";
+  /** Aggregated list of errors that any bulk action encountered while processing */
+  errors?: Maybe<Array<ExecutionError>>;
+  /** Boolean describing if all the bulk actions succeeded or not */
+  success: Scalars["Boolean"]["output"];
+};
+
+/** The output when running the delete on the game/player model in bulk. */
 export type BulkDeleteGamePlayersResult = {
   __typename?: "BulkDeleteGamePlayersResult";
   /** Aggregated list of errors that any bulk action encountered while processing */
@@ -1819,7 +2207,7 @@ export type BulkDeleteGamePlayersResult = {
   success: Scalars["Boolean"]["output"];
 };
 
-/** The output when running the delete on the round model in bulk. */
+/** The output when running the delete on the game/round model in bulk. */
 export type BulkDeleteGameRoundsResult = {
   __typename?: "BulkDeleteGameRoundsResult";
   /** Aggregated list of errors that any bulk action encountered while processing */
@@ -1828,7 +2216,7 @@ export type BulkDeleteGameRoundsResult = {
   success: Scalars["Boolean"]["output"];
 };
 
-/** The output when running the delete on the stadium model in bulk. */
+/** The output when running the delete on the game/stadium model in bulk. */
 export type BulkDeleteGameStadiaResult = {
   __typename?: "BulkDeleteGameStadiaResult";
   /** Aggregated list of errors that any bulk action encountered while processing */
@@ -1846,45 +2234,27 @@ export type BulkDeleteGizmosResult = {
   success: Scalars["Boolean"]["output"];
 };
 
-/** The output when running the delete on the baseModel model in bulk. */
-export type BulkDeleteHasManyThroughBaseModelsResult = {
-  __typename?: "BulkDeleteHasManyThroughBaseModelsResult";
+/** The output when running the delete on the landmark/stadium model in bulk. */
+export type BulkDeleteLandmarkStadiaResult = {
+  __typename?: "BulkDeleteLandmarkStadiaResult";
   /** Aggregated list of errors that any bulk action encountered while processing */
   errors?: Maybe<Array<ExecutionError>>;
   /** Boolean describing if all the bulk actions succeeded or not */
   success: Scalars["Boolean"]["output"];
 };
 
-/** The output when running the delete on the joinerModel model in bulk. */
-export type BulkDeleteHasManyThroughJoinerModelsResult = {
-  __typename?: "BulkDeleteHasManyThroughJoinerModelsResult";
+/** The output when running the delete on the registration model in bulk. */
+export type BulkDeleteRegistrationsResult = {
+  __typename?: "BulkDeleteRegistrationsResult";
   /** Aggregated list of errors that any bulk action encountered while processing */
   errors?: Maybe<Array<ExecutionError>>;
   /** Boolean describing if all the bulk actions succeeded or not */
   success: Scalars["Boolean"]["output"];
 };
 
-/** The output when running the delete on the siblingModel model in bulk. */
-export type BulkDeleteHasManyThroughSiblingModelsResult = {
-  __typename?: "BulkDeleteHasManyThroughSiblingModelsResult";
-  /** Aggregated list of errors that any bulk action encountered while processing */
-  errors?: Maybe<Array<ExecutionError>>;
-  /** Boolean describing if all the bulk actions succeeded or not */
-  success: Scalars["Boolean"]["output"];
-};
-
-/** The output when running the delete on the modelA model in bulk. */
-export type BulkDeleteModelAsResult = {
-  __typename?: "BulkDeleteModelAsResult";
-  /** Aggregated list of errors that any bulk action encountered while processing */
-  errors?: Maybe<Array<ExecutionError>>;
-  /** Boolean describing if all the bulk actions succeeded or not */
-  success: Scalars["Boolean"]["output"];
-};
-
-/** The output when running the delete on the part model in bulk. */
-export type BulkDeletePartsResult = {
-  __typename?: "BulkDeletePartsResult";
+/** The output when running the delete on the sampleModelToTestReallyLongModelNames model in bulk. */
+export type BulkDeleteSampleModelToTestReallyLongModelNamesResult = {
+  __typename?: "BulkDeleteSampleModelToTestReallyLongModelNamesResult";
   /** Aggregated list of errors that any bulk action encountered while processing */
   errors?: Maybe<Array<ExecutionError>>;
   /** Boolean describing if all the bulk actions succeeded or not */
@@ -1900,9 +2270,45 @@ export type BulkDeleteSectionsResult = {
   success: Scalars["Boolean"]["output"];
 };
 
+/** The output when running the delete on the sprocket model in bulk. */
+export type BulkDeleteSprocketsResult = {
+  __typename?: "BulkDeleteSprocketsResult";
+  /** Aggregated list of errors that any bulk action encountered while processing */
+  errors?: Maybe<Array<ExecutionError>>;
+  /** Boolean describing if all the bulk actions succeeded or not */
+  success: Scalars["Boolean"]["output"];
+};
+
+/** The output when running the delete on the student model in bulk. */
+export type BulkDeleteStudentsResult = {
+  __typename?: "BulkDeleteStudentsResult";
+  /** Aggregated list of errors that any bulk action encountered while processing */
+  errors?: Maybe<Array<ExecutionError>>;
+  /** Boolean describing if all the bulk actions succeeded or not */
+  success: Scalars["Boolean"]["output"];
+};
+
+/** The output when running the delete on the teacher model in bulk. */
+export type BulkDeleteTeachersResult = {
+  __typename?: "BulkDeleteTeachersResult";
+  /** Aggregated list of errors that any bulk action encountered while processing */
+  errors?: Maybe<Array<ExecutionError>>;
+  /** Boolean describing if all the bulk actions succeeded or not */
+  success: Scalars["Boolean"]["output"];
+};
+
 /** The output when running the delete on the user model in bulk. */
 export type BulkDeleteUsersResult = {
   __typename?: "BulkDeleteUsersResult";
+  /** Aggregated list of errors that any bulk action encountered while processing */
+  errors?: Maybe<Array<ExecutionError>>;
+  /** Boolean describing if all the bulk actions succeeded or not */
+  success: Scalars["Boolean"]["output"];
+};
+
+/** The output when running the delete on the widgetImage model in bulk. */
+export type BulkDeleteWidgetImagesResult = {
+  __typename?: "BulkDeleteWidgetImagesResult";
   /** Aggregated list of errors that any bulk action encountered while processing */
   errors?: Maybe<Array<ExecutionError>>;
   /** Boolean describing if all the bulk actions succeeded or not */
@@ -1926,41 +2332,119 @@ export type BulkEnqueueBackgroundActionResult = {
   success: Scalars["Boolean"]["output"];
 };
 
-export type BulkErrorShopifySyncsInput = {
-  id: Scalars["GadgetID"]["input"];
-  shopifySync?: InputMaybe<ErrorShopifySyncInput>;
-};
-
-/** The output when running the error on the shopifySync model in bulk. */
-export type BulkErrorShopifySyncsResult = {
-  __typename?: "BulkErrorShopifySyncsResult";
+/** The output when running the flipDown on the widget model in bulk. */
+export type BulkFlipDownWidgetsResult = {
+  __typename?: "BulkFlipDownWidgetsResult";
   /** Aggregated list of errors that any bulk action encountered while processing */
   errors?: Maybe<Array<ExecutionError>>;
-  /** The list of all changed shopifySync records by each sent bulk action. Returned in the same order as the input bulk action params. */
-  shopifySyncs?: Maybe<Array<Maybe<ShopifySync>>>;
+  /** Boolean describing if all the bulk actions succeeded or not */
+  success: Scalars["Boolean"]["output"];
+  /** The list of all changed widget records by each sent bulk action. Returned in the same order as the input bulk action params. */
+  widgets?: Maybe<Array<Maybe<Widget>>>;
+};
+
+/** The output when running the flipUp on the widget model in bulk. */
+export type BulkFlipUpWidgetsResult = {
+  __typename?: "BulkFlipUpWidgetsResult";
+  /** Aggregated list of errors that any bulk action encountered while processing */
+  errors?: Maybe<Array<ExecutionError>>;
+  /** Boolean describing if all the bulk actions succeeded or not */
+  success: Scalars["Boolean"]["output"];
+  /** The list of all changed widget records by each sent bulk action. Returned in the same order as the input bulk action params. */
+  widgets?: Maybe<Array<Maybe<Widget>>>;
+};
+
+export type BulkFoldGizmosInput = {
+  gizmo?: InputMaybe<FoldGizmoInput>;
+  id: Scalars["GadgetID"]["input"];
+};
+
+/** The output when running the fold on the gizmo model in bulk. */
+export type BulkFoldGizmosResult = {
+  __typename?: "BulkFoldGizmosResult";
+  /** Aggregated list of errors that any bulk action encountered while processing */
+  errors?: Maybe<Array<ExecutionError>>;
+  /** The list of all changed gizmo records by each sent bulk action. Returned in the same order as the input bulk action params. */
+  gizmos?: Maybe<Array<Maybe<Gizmo>>>;
   /** Boolean describing if all the bulk actions succeeded or not */
   success: Scalars["Boolean"]["output"];
 };
 
-export type BulkRunShopifySyncsInput = {
-  shopifySync?: InputMaybe<RunShopifySyncInput>;
-  startReason?: InputMaybe<Scalars["String"]["input"]>;
+export type BulkOtherCreateGizmosInput = {
+  gizmo?: InputMaybe<OtherCreateGizmoInput>;
 };
 
-/** The output when running the run on the shopifySync model in bulk. */
-export type BulkRunShopifySyncsResult = {
-  __typename?: "BulkRunShopifySyncsResult";
+/** The output when running the otherCreate on the gizmo model in bulk. */
+export type BulkOtherCreateGizmosResult = {
+  __typename?: "BulkOtherCreateGizmosResult";
   /** Aggregated list of errors that any bulk action encountered while processing */
   errors?: Maybe<Array<ExecutionError>>;
-  /** The list of all changed shopifySync records by each sent bulk action. Returned in the same order as the input bulk action params. */
-  shopifySyncs?: Maybe<Array<Maybe<ShopifySync>>>;
+  /** The list of all changed gizmo records by each sent bulk action. Returned in the same order as the input bulk action params. */
+  gizmos?: Maybe<Array<Maybe<Gizmo>>>;
+  /** Boolean describing if all the bulk actions succeeded or not */
+  success: Scalars["Boolean"]["output"];
+};
+
+export type BulkResetPasswordUsersInput = {
+  code?: InputMaybe<Scalars["String"]["input"]>;
+  password?: InputMaybe<Scalars["String"]["input"]>;
+};
+
+/** The output when running the resetPassword on the user model in bulk. */
+export type BulkResetPasswordUsersResult = {
+  __typename?: "BulkResetPasswordUsersResult";
+  /** Aggregated list of errors that any bulk action encountered while processing */
+  errors?: Maybe<Array<ExecutionError>>;
+  /** The list of returned values for each action executed in the set of bulk actions. Returned in the same order as the input bulk action params. */
+  results?: Maybe<Array<Maybe<Scalars["JSON"]["output"]>>>;
+  /** Boolean describing if all the bulk actions succeeded or not */
+  success: Scalars["Boolean"]["output"];
+};
+
+export type BulkSendResetPasswordUsersInput = {
+  email?: InputMaybe<Scalars["String"]["input"]>;
+};
+
+/** The output when running the sendResetPassword on the user model in bulk. */
+export type BulkSendResetPasswordUsersResult = {
+  __typename?: "BulkSendResetPasswordUsersResult";
+  /** Aggregated list of errors that any bulk action encountered while processing */
+  errors?: Maybe<Array<ExecutionError>>;
+  /** The list of returned values for each action executed in the set of bulk actions. Returned in the same order as the input bulk action params. */
+  results?: Maybe<Array<Maybe<Scalars["JSON"]["output"]>>>;
+  /** Boolean describing if all the bulk actions succeeded or not */
+  success: Scalars["Boolean"]["output"];
+};
+
+export type BulkSendVerifyEmailUsersInput = {
+  email?: InputMaybe<Scalars["String"]["input"]>;
+};
+
+/** The output when running the sendVerifyEmail on the user model in bulk. */
+export type BulkSendVerifyEmailUsersResult = {
+  __typename?: "BulkSendVerifyEmailUsersResult";
+  /** Aggregated list of errors that any bulk action encountered while processing */
+  errors?: Maybe<Array<ExecutionError>>;
+  /** The list of returned values for each action executed in the set of bulk actions. Returned in the same order as the input bulk action params. */
+  results?: Maybe<Array<Maybe<Scalars["JSON"]["output"]>>>;
+  /** Boolean describing if all the bulk actions succeeded or not */
+  success: Scalars["Boolean"]["output"];
+};
+
+/** The output when running the setBestNumber on the game/player model in bulk. */
+export type BulkSetBestNumberGamePlayersResult = {
+  __typename?: "BulkSetBestNumberGamePlayersResult";
+  /** Aggregated list of errors that any bulk action encountered while processing */
+  errors?: Maybe<Array<ExecutionError>>;
+  /** The list of all changed game/player records by each sent bulk action. Returned in the same order as the input bulk action params. */
+  players?: Maybe<Array<Maybe<GamePlayer>>>;
   /** Boolean describing if all the bulk actions succeeded or not */
   success: Scalars["Boolean"]["output"];
 };
 
 export type BulkSignInUsersInput = {
-  id: Scalars["GadgetID"]["input"];
-  user?: InputMaybe<SignInUserInput>;
+  email?: InputMaybe<Scalars["String"]["input"]>;
+  password?: InputMaybe<Scalars["String"]["input"]>;
 };
 
 /** The output when running the signIn on the user model in bulk. */
@@ -1972,11 +2456,6 @@ export type BulkSignInUsersResult = {
   success: Scalars["Boolean"]["output"];
   /** The list of all changed user records by each sent bulk action. Returned in the same order as the input bulk action params. */
   users?: Maybe<Array<Maybe<User>>>;
-};
-
-export type BulkSignOutUsersInput = {
-  id: Scalars["GadgetID"]["input"];
-  user?: InputMaybe<SignOutUserInput>;
 };
 
 /** The output when running the signOut on the user model in bulk. */
@@ -1991,7 +2470,8 @@ export type BulkSignOutUsersResult = {
 };
 
 export type BulkSignUpUsersInput = {
-  user?: InputMaybe<SignUpUserInput>;
+  email?: InputMaybe<Scalars["String"]["input"]>;
+  password?: InputMaybe<Scalars["String"]["input"]>;
 };
 
 /** The output when running the signUp on the user model in bulk. */
@@ -1999,56 +2479,147 @@ export type BulkSignUpUsersResult = {
   __typename?: "BulkSignUpUsersResult";
   /** Aggregated list of errors that any bulk action encountered while processing */
   errors?: Maybe<Array<ExecutionError>>;
+  /** The list of returned values for each action executed in the set of bulk actions. Returned in the same order as the input bulk action params. */
+  results?: Maybe<Array<Maybe<Scalars["JSON"]["output"]>>>;
   /** Boolean describing if all the bulk actions succeeded or not */
   success: Scalars["Boolean"]["output"];
-  /** The list of all changed user records by each sent bulk action. Returned in the same order as the input bulk action params. */
-  users?: Maybe<Array<Maybe<User>>>;
 };
 
-export type BulkUpdateAutoTableTestRelatedModelsInput = {
-  _autoTableTestRelatedModel?: InputMaybe<UpdateAutoTableTestRelatedModelInput>;
+export type BulkStraightenGizmosInput = {
+  gizmo?: InputMaybe<StraightenGizmoInput>;
   id: Scalars["GadgetID"]["input"];
 };
 
-/** The output when running the update on the _autoTableTestRelatedModel model in bulk. */
-export type BulkUpdateAutoTableTestRelatedModelsResult = {
-  __typename?: "BulkUpdateAutoTableTestRelatedModelsResult";
-  /** The list of all changed _autoTableTestRelatedModel records by each sent bulk action. Returned in the same order as the input bulk action params. */
-  _autoTableTestRelatedModels?: Maybe<Array<Maybe<AutoTableTestRelatedModel>>>;
+/** The output when running the straighten on the gizmo model in bulk. */
+export type BulkStraightenGizmosResult = {
+  __typename?: "BulkStraightenGizmosResult";
+  /** Aggregated list of errors that any bulk action encountered while processing */
+  errors?: Maybe<Array<ExecutionError>>;
+  /** The list of all changed gizmo records by each sent bulk action. Returned in the same order as the input bulk action params. */
+  gizmos?: Maybe<Array<Maybe<Gizmo>>>;
+  /** Boolean describing if all the bulk actions succeeded or not */
+  success: Scalars["Boolean"]["output"];
+};
+
+export type BulkUnfoldGizmosInput = {
+  gizmo?: InputMaybe<UnfoldGizmoInput>;
+  id: Scalars["GadgetID"]["input"];
+};
+
+/** The output when running the unfold on the gizmo model in bulk. */
+export type BulkUnfoldGizmosResult = {
+  __typename?: "BulkUnfoldGizmosResult";
+  /** Aggregated list of errors that any bulk action encountered while processing */
+  errors?: Maybe<Array<ExecutionError>>;
+  /** The list of all changed gizmo records by each sent bulk action. Returned in the same order as the input bulk action params. */
+  gizmos?: Maybe<Array<Maybe<Gizmo>>>;
+  /** Boolean describing if all the bulk actions succeeded or not */
+  success: Scalars["Boolean"]["output"];
+};
+
+export type BulkUpdateBillingAccountsInput = {
+  billingAccount?: InputMaybe<UpdateBillingAccountInput>;
+  id: Scalars["GadgetID"]["input"];
+};
+
+/** The output when running the update on the billingAccount model in bulk. */
+export type BulkUpdateBillingAccountsResult = {
+  __typename?: "BulkUpdateBillingAccountsResult";
+  /** The list of all changed billingAccount records by each sent bulk action. Returned in the same order as the input bulk action params. */
+  billingAccounts?: Maybe<Array<Maybe<BillingAccount>>>;
   /** Aggregated list of errors that any bulk action encountered while processing */
   errors?: Maybe<Array<ExecutionError>>;
   /** Boolean describing if all the bulk actions succeeded or not */
   success: Scalars["Boolean"]["output"];
 };
 
-export type BulkUpdateAutoTableTestsInput = {
-  autoTableTest?: InputMaybe<UpdateAutoTableTestInput>;
-  id: Scalars["GadgetID"]["input"];
-};
-
-/** The output when running the update on the autoTableTest model in bulk. */
-export type BulkUpdateAutoTableTestsResult = {
-  __typename?: "BulkUpdateAutoTableTestsResult";
-  /** The list of all changed autoTableTest records by each sent bulk action. Returned in the same order as the input bulk action params. */
-  autoTableTests?: Maybe<Array<Maybe<AutoTableTest>>>;
-  /** Aggregated list of errors that any bulk action encountered while processing */
-  errors?: Maybe<Array<ExecutionError>>;
-  /** Boolean describing if all the bulk actions succeeded or not */
-  success: Scalars["Boolean"]["output"];
-};
-
-export type BulkUpdateGameCitiesInput = {
-  city?: InputMaybe<UpdateGameCityInput>;
+export type BulkUpdateCitiesInput = {
+  city?: InputMaybe<UpdateCityInput>;
   id: Scalars["GadgetID"]["input"];
 };
 
 /** The output when running the update on the city model in bulk. */
-export type BulkUpdateGameCitiesResult = {
-  __typename?: "BulkUpdateGameCitiesResult";
+export type BulkUpdateCitiesResult = {
+  __typename?: "BulkUpdateCitiesResult";
   /** The list of all changed city records by each sent bulk action. Returned in the same order as the input bulk action params. */
-  cities?: Maybe<Array<Maybe<GameCity>>>;
+  cities?: Maybe<Array<Maybe<City>>>;
   /** Aggregated list of errors that any bulk action encountered while processing */
   errors?: Maybe<Array<ExecutionError>>;
+  /** Boolean describing if all the bulk actions succeeded or not */
+  success: Scalars["Boolean"]["output"];
+};
+
+export type BulkUpdateCoursesInput = {
+  course?: InputMaybe<UpdateCourseInput>;
+  id: Scalars["GadgetID"]["input"];
+};
+
+/** The output when running the update on the course model in bulk. */
+export type BulkUpdateCoursesResult = {
+  __typename?: "BulkUpdateCoursesResult";
+  /** The list of all changed course records by each sent bulk action. Returned in the same order as the input bulk action params. */
+  courses?: Maybe<Array<Maybe<Course>>>;
+  /** Aggregated list of errors that any bulk action encountered while processing */
+  errors?: Maybe<Array<ExecutionError>>;
+  /** Boolean describing if all the bulk actions succeeded or not */
+  success: Scalars["Boolean"]["output"];
+};
+
+export type BulkUpdateCustomersInput = {
+  customer?: InputMaybe<UpdateCustomerInput>;
+  id: Scalars["GadgetID"]["input"];
+};
+
+/** The output when running the update on the customer model in bulk. */
+export type BulkUpdateCustomersResult = {
+  __typename?: "BulkUpdateCustomersResult";
+  /** The list of all changed customer records by each sent bulk action. Returned in the same order as the input bulk action params. */
+  customers?: Maybe<Array<Maybe<Customer>>>;
+  /** Aggregated list of errors that any bulk action encountered while processing */
+  errors?: Maybe<Array<ExecutionError>>;
+  /** Boolean describing if all the bulk actions succeeded or not */
+  success: Scalars["Boolean"]["output"];
+};
+
+export type BulkUpdateEphemeralsInput = {
+  ephemeral?: InputMaybe<UpdateEphemeralInput>;
+  id: Scalars["GadgetID"]["input"];
+};
+
+/** The output when running the update on the ephemeral model in bulk. */
+export type BulkUpdateEphemeralsResult = {
+  __typename?: "BulkUpdateEphemeralsResult";
+  /** The list of all changed ephemeral records by each sent bulk action. Returned in the same order as the input bulk action params. */
+  ephemerals?: Maybe<Array<Maybe<Ephemeral>>>;
+  /** Aggregated list of errors that any bulk action encountered while processing */
+  errors?: Maybe<Array<ExecutionError>>;
+  /** Boolean describing if all the bulk actions succeeded or not */
+  success: Scalars["Boolean"]["output"];
+};
+
+/** The output when running the update on the fieldless model in bulk. */
+export type BulkUpdateFieldlessesResult = {
+  __typename?: "BulkUpdateFieldlessesResult";
+  /** Aggregated list of errors that any bulk action encountered while processing */
+  errors?: Maybe<Array<ExecutionError>>;
+  /** The list of all changed fieldless records by each sent bulk action. Returned in the same order as the input bulk action params. */
+  fieldlesses?: Maybe<Array<Maybe<Fieldless>>>;
+  /** Boolean describing if all the bulk actions succeeded or not */
+  success: Scalars["Boolean"]["output"];
+};
+
+export type BulkUpdateFriendshipsInput = {
+  friendship?: InputMaybe<UpdateFriendshipInput>;
+  id: Scalars["GadgetID"]["input"];
+};
+
+/** The output when running the update on the friendship model in bulk. */
+export type BulkUpdateFriendshipsResult = {
+  __typename?: "BulkUpdateFriendshipsResult";
+  /** Aggregated list of errors that any bulk action encountered while processing */
+  errors?: Maybe<Array<ExecutionError>>;
+  /** The list of all changed friendship records by each sent bulk action. Returned in the same order as the input bulk action params. */
+  friendships?: Maybe<Array<Maybe<Friendship>>>;
   /** Boolean describing if all the bulk actions succeeded or not */
   success: Scalars["Boolean"]["output"];
 };
@@ -2058,12 +2629,12 @@ export type BulkUpdateGamePlayersInput = {
   player?: InputMaybe<UpdateGamePlayerInput>;
 };
 
-/** The output when running the update on the player model in bulk. */
+/** The output when running the update on the game/player model in bulk. */
 export type BulkUpdateGamePlayersResult = {
   __typename?: "BulkUpdateGamePlayersResult";
   /** Aggregated list of errors that any bulk action encountered while processing */
   errors?: Maybe<Array<ExecutionError>>;
-  /** The list of all changed player records by each sent bulk action. Returned in the same order as the input bulk action params. */
+  /** The list of all changed game/player records by each sent bulk action. Returned in the same order as the input bulk action params. */
   players?: Maybe<Array<Maybe<GamePlayer>>>;
   /** Boolean describing if all the bulk actions succeeded or not */
   success: Scalars["Boolean"]["output"];
@@ -2074,12 +2645,12 @@ export type BulkUpdateGameRoundsInput = {
   round?: InputMaybe<UpdateGameRoundInput>;
 };
 
-/** The output when running the update on the round model in bulk. */
+/** The output when running the update on the game/round model in bulk. */
 export type BulkUpdateGameRoundsResult = {
   __typename?: "BulkUpdateGameRoundsResult";
   /** Aggregated list of errors that any bulk action encountered while processing */
   errors?: Maybe<Array<ExecutionError>>;
-  /** The list of all changed round records by each sent bulk action. Returned in the same order as the input bulk action params. */
+  /** The list of all changed game/round records by each sent bulk action. Returned in the same order as the input bulk action params. */
   rounds?: Maybe<Array<Maybe<GameRound>>>;
   /** Boolean describing if all the bulk actions succeeded or not */
   success: Scalars["Boolean"]["output"];
@@ -2090,12 +2661,12 @@ export type BulkUpdateGameStadiaInput = {
   stadium?: InputMaybe<UpdateGameStadiumInput>;
 };
 
-/** The output when running the update on the stadium model in bulk. */
+/** The output when running the update on the game/stadium model in bulk. */
 export type BulkUpdateGameStadiaResult = {
   __typename?: "BulkUpdateGameStadiaResult";
   /** Aggregated list of errors that any bulk action encountered while processing */
   errors?: Maybe<Array<ExecutionError>>;
-  /** The list of all changed stadium records by each sent bulk action. Returned in the same order as the input bulk action params. */
+  /** The list of all changed game/stadium records by each sent bulk action. Returned in the same order as the input bulk action params. */
   stadia?: Maybe<Array<Maybe<GameStadium>>>;
   /** Boolean describing if all the bulk actions succeeded or not */
   success: Scalars["Boolean"]["output"];
@@ -2117,77 +2688,50 @@ export type BulkUpdateGizmosResult = {
   success: Scalars["Boolean"]["output"];
 };
 
-export type BulkUpdateHasManyThroughBaseModelsInput = {
-  baseModel?: InputMaybe<UpdateHasManyThroughBaseModelInput>;
+export type BulkUpdateLandmarkStadiaInput = {
   id: Scalars["GadgetID"]["input"];
+  stadium?: InputMaybe<UpdateLandmarkStadiumInput>;
 };
 
-/** The output when running the update on the baseModel model in bulk. */
-export type BulkUpdateHasManyThroughBaseModelsResult = {
-  __typename?: "BulkUpdateHasManyThroughBaseModelsResult";
-  /** The list of all changed baseModel records by each sent bulk action. Returned in the same order as the input bulk action params. */
-  baseModels?: Maybe<Array<Maybe<HasManyThroughBaseModel>>>;
+/** The output when running the update on the landmark/stadium model in bulk. */
+export type BulkUpdateLandmarkStadiaResult = {
+  __typename?: "BulkUpdateLandmarkStadiaResult";
   /** Aggregated list of errors that any bulk action encountered while processing */
   errors?: Maybe<Array<ExecutionError>>;
+  /** The list of all changed landmark/stadium records by each sent bulk action. Returned in the same order as the input bulk action params. */
+  stadia?: Maybe<Array<Maybe<LandmarkStadium>>>;
   /** Boolean describing if all the bulk actions succeeded or not */
   success: Scalars["Boolean"]["output"];
 };
 
-export type BulkUpdateHasManyThroughJoinerModelsInput = {
+export type BulkUpdateRegistrationsInput = {
   id: Scalars["GadgetID"]["input"];
-  joinerModel?: InputMaybe<UpdateHasManyThroughJoinerModelInput>;
+  registration?: InputMaybe<UpdateRegistrationInput>;
 };
 
-/** The output when running the update on the joinerModel model in bulk. */
-export type BulkUpdateHasManyThroughJoinerModelsResult = {
-  __typename?: "BulkUpdateHasManyThroughJoinerModelsResult";
+/** The output when running the update on the registration model in bulk. */
+export type BulkUpdateRegistrationsResult = {
+  __typename?: "BulkUpdateRegistrationsResult";
   /** Aggregated list of errors that any bulk action encountered while processing */
   errors?: Maybe<Array<ExecutionError>>;
-  /** The list of all changed joinerModel records by each sent bulk action. Returned in the same order as the input bulk action params. */
-  joinerModels?: Maybe<Array<Maybe<HasManyThroughJoinerModel>>>;
+  /** The list of all changed registration records by each sent bulk action. Returned in the same order as the input bulk action params. */
+  registrations?: Maybe<Array<Maybe<Registration>>>;
   /** Boolean describing if all the bulk actions succeeded or not */
   success: Scalars["Boolean"]["output"];
 };
 
-export type BulkUpdateHasManyThroughSiblingModelsInput = {
+export type BulkUpdateSampleModelToTestReallyLongModelNamesInput = {
   id: Scalars["GadgetID"]["input"];
-  siblingModel?: InputMaybe<UpdateHasManyThroughSiblingModelInput>;
+  sampleModelToTestReallyLongModelNames?: InputMaybe<UpdateSampleModelToTestReallyLongModelNamesInput>;
 };
 
-/** The output when running the update on the siblingModel model in bulk. */
-export type BulkUpdateHasManyThroughSiblingModelsResult = {
-  __typename?: "BulkUpdateHasManyThroughSiblingModelsResult";
+/** The output when running the update on the sampleModelToTestReallyLongModelNames model in bulk. */
+export type BulkUpdateSampleModelToTestReallyLongModelNamesResult = {
+  __typename?: "BulkUpdateSampleModelToTestReallyLongModelNamesResult";
   /** Aggregated list of errors that any bulk action encountered while processing */
   errors?: Maybe<Array<ExecutionError>>;
-  /** The list of all changed siblingModel records by each sent bulk action. Returned in the same order as the input bulk action params. */
-  siblingModels?: Maybe<Array<Maybe<HasManyThroughSiblingModel>>>;
-  /** Boolean describing if all the bulk actions succeeded or not */
-  success: Scalars["Boolean"]["output"];
-};
-
-/** The output when running the update on the modelA model in bulk. */
-export type BulkUpdateModelAsResult = {
-  __typename?: "BulkUpdateModelAsResult";
-  /** Aggregated list of errors that any bulk action encountered while processing */
-  errors?: Maybe<Array<ExecutionError>>;
-  /** The list of all changed modelA records by each sent bulk action. Returned in the same order as the input bulk action params. */
-  modelAs?: Maybe<Array<Maybe<ModelA>>>;
-  /** Boolean describing if all the bulk actions succeeded or not */
-  success: Scalars["Boolean"]["output"];
-};
-
-export type BulkUpdatePartsInput = {
-  id: Scalars["GadgetID"]["input"];
-  part?: InputMaybe<UpdatePartInput>;
-};
-
-/** The output when running the update on the part model in bulk. */
-export type BulkUpdatePartsResult = {
-  __typename?: "BulkUpdatePartsResult";
-  /** Aggregated list of errors that any bulk action encountered while processing */
-  errors?: Maybe<Array<ExecutionError>>;
-  /** The list of all changed part records by each sent bulk action. Returned in the same order as the input bulk action params. */
-  parts?: Maybe<Array<Maybe<Part>>>;
+  /** The list of all changed sampleModelToTestReallyLongModelNames records by each sent bulk action. Returned in the same order as the input bulk action params. */
+  sampleModelToTestReallyLongModelNamess?: Maybe<Array<Maybe<SampleModelToTestReallyLongModelNames>>>;
   /** Boolean describing if all the bulk actions succeeded or not */
   success: Scalars["Boolean"]["output"];
 };
@@ -2208,6 +2752,54 @@ export type BulkUpdateSectionsResult = {
   success: Scalars["Boolean"]["output"];
 };
 
+export type BulkUpdateSprocketsInput = {
+  id: Scalars["GadgetID"]["input"];
+  sprocket?: InputMaybe<UpdateSprocketInput>;
+};
+
+/** The output when running the update on the sprocket model in bulk. */
+export type BulkUpdateSprocketsResult = {
+  __typename?: "BulkUpdateSprocketsResult";
+  /** Aggregated list of errors that any bulk action encountered while processing */
+  errors?: Maybe<Array<ExecutionError>>;
+  /** The list of all changed sprocket records by each sent bulk action. Returned in the same order as the input bulk action params. */
+  sprockets?: Maybe<Array<Maybe<Sprocket>>>;
+  /** Boolean describing if all the bulk actions succeeded or not */
+  success: Scalars["Boolean"]["output"];
+};
+
+export type BulkUpdateStudentsInput = {
+  id: Scalars["GadgetID"]["input"];
+  student?: InputMaybe<UpdateStudentInput>;
+};
+
+/** The output when running the update on the student model in bulk. */
+export type BulkUpdateStudentsResult = {
+  __typename?: "BulkUpdateStudentsResult";
+  /** Aggregated list of errors that any bulk action encountered while processing */
+  errors?: Maybe<Array<ExecutionError>>;
+  /** The list of all changed student records by each sent bulk action. Returned in the same order as the input bulk action params. */
+  students?: Maybe<Array<Maybe<Student>>>;
+  /** Boolean describing if all the bulk actions succeeded or not */
+  success: Scalars["Boolean"]["output"];
+};
+
+export type BulkUpdateTeachersInput = {
+  id: Scalars["GadgetID"]["input"];
+  teacher?: InputMaybe<UpdateTeacherInput>;
+};
+
+/** The output when running the update on the teacher model in bulk. */
+export type BulkUpdateTeachersResult = {
+  __typename?: "BulkUpdateTeachersResult";
+  /** Aggregated list of errors that any bulk action encountered while processing */
+  errors?: Maybe<Array<ExecutionError>>;
+  /** Boolean describing if all the bulk actions succeeded or not */
+  success: Scalars["Boolean"]["output"];
+  /** The list of all changed teacher records by each sent bulk action. Returned in the same order as the input bulk action params. */
+  teachers?: Maybe<Array<Maybe<Teacher>>>;
+};
+
 export type BulkUpdateUsersInput = {
   id: Scalars["GadgetID"]["input"];
   user?: InputMaybe<UpdateUserInput>;
@@ -2222,6 +2814,22 @@ export type BulkUpdateUsersResult = {
   success: Scalars["Boolean"]["output"];
   /** The list of all changed user records by each sent bulk action. Returned in the same order as the input bulk action params. */
   users?: Maybe<Array<Maybe<User>>>;
+};
+
+export type BulkUpdateWidgetImagesInput = {
+  id: Scalars["GadgetID"]["input"];
+  widgetImage?: InputMaybe<UpdateWidgetImageInput>;
+};
+
+/** The output when running the update on the widgetImage model in bulk. */
+export type BulkUpdateWidgetImagesResult = {
+  __typename?: "BulkUpdateWidgetImagesResult";
+  /** Aggregated list of errors that any bulk action encountered while processing */
+  errors?: Maybe<Array<ExecutionError>>;
+  /** Boolean describing if all the bulk actions succeeded or not */
+  success: Scalars["Boolean"]["output"];
+  /** The list of all changed widgetImage records by each sent bulk action. Returned in the same order as the input bulk action params. */
+  widgetImages?: Maybe<Array<Maybe<WidgetImage>>>;
 };
 
 export type BulkUpdateWidgetsInput = {
@@ -2240,73 +2848,121 @@ export type BulkUpdateWidgetsResult = {
   widgets?: Maybe<Array<Maybe<Widget>>>;
 };
 
-export type BulkUpdateWithCustomParamsAutoTableTestsInput = {
-  autoTableTest?: InputMaybe<UpdateWithCustomParamsAutoTableTestInput>;
-  id: Scalars["GadgetID"]["input"];
-  num?: InputMaybe<Scalars["Float"]["input"]>;
-  numberParam1?: InputMaybe<Scalars["Float"]["input"]>;
-  str?: InputMaybe<Scalars["String"]["input"]>;
-  stringParam1?: InputMaybe<Scalars["String"]["input"]>;
+export type BulkUpsertBillingAccountsInput = {
+  billingAccount?: InputMaybe<UpsertBillingAccountInput>;
+  /** An array of Strings */
+  on?: InputMaybe<Array<Scalars["String"]["input"]>>;
 };
 
-/** The output when running the updateWithCustomParams on the autoTableTest model in bulk. */
-export type BulkUpdateWithCustomParamsAutoTableTestsResult = {
-  __typename?: "BulkUpdateWithCustomParamsAutoTableTestsResult";
-  /** The list of all changed autoTableTest records by each sent bulk action. Returned in the same order as the input bulk action params. */
-  autoTableTests?: Maybe<Array<Maybe<AutoTableTest>>>;
+/** The result of a bulk upsert operation for the billingAccount model */
+export type BulkUpsertBillingAccountsResult = {
+  __typename?: "BulkUpsertBillingAccountsResult";
+  /** The results of each upsert action in the bulk operation */
+  billingAccounts?: Maybe<Array<Maybe<BillingAccount>>>;
   /** Aggregated list of errors that any bulk action encountered while processing */
   errors?: Maybe<Array<ExecutionError>>;
   /** Boolean describing if all the bulk actions succeeded or not */
   success: Scalars["Boolean"]["output"];
 };
 
-export type BulkUpsertAutoTableTestRelatedModelsInput = {
-  _autoTableTestRelatedModel?: InputMaybe<UpsertAutoTableTestRelatedModelInput>;
+export type BulkUpsertCitiesInput = {
+  city?: InputMaybe<UpsertCityInput>;
   /** An array of Strings */
   on?: InputMaybe<Array<Scalars["String"]["input"]>>;
 };
 
-/** The result of a bulk upsert operation for the _autoTableTestRelatedModel */
-export type BulkUpsertAutoTableTestRelatedModelsResult = {
-  __typename?: "BulkUpsertAutoTableTestRelatedModelsResult";
+/** The result of a bulk upsert operation for the city model */
+export type BulkUpsertCitiesResult = {
+  __typename?: "BulkUpsertCitiesResult";
   /** The results of each upsert action in the bulk operation */
-  _autoTableTestRelatedModels?: Maybe<Array<Maybe<AutoTableTestRelatedModel>>>;
+  cities?: Maybe<Array<Maybe<City>>>;
   /** Aggregated list of errors that any bulk action encountered while processing */
   errors?: Maybe<Array<ExecutionError>>;
   /** Boolean describing if all the bulk actions succeeded or not */
   success: Scalars["Boolean"]["output"];
 };
 
-export type BulkUpsertAutoTableTestsInput = {
-  autoTableTest?: InputMaybe<UpsertAutoTableTestInput>;
+export type BulkUpsertCoursesInput = {
+  course?: InputMaybe<UpsertCourseInput>;
   /** An array of Strings */
   on?: InputMaybe<Array<Scalars["String"]["input"]>>;
 };
 
-/** The result of a bulk upsert operation for the autoTableTest */
-export type BulkUpsertAutoTableTestsResult = {
-  __typename?: "BulkUpsertAutoTableTestsResult";
+/** The result of a bulk upsert operation for the course model */
+export type BulkUpsertCoursesResult = {
+  __typename?: "BulkUpsertCoursesResult";
   /** The results of each upsert action in the bulk operation */
-  autoTableTests?: Maybe<Array<Maybe<AutoTableTest>>>;
+  courses?: Maybe<Array<Maybe<Course>>>;
   /** Aggregated list of errors that any bulk action encountered while processing */
   errors?: Maybe<Array<ExecutionError>>;
   /** Boolean describing if all the bulk actions succeeded or not */
   success: Scalars["Boolean"]["output"];
 };
 
-export type BulkUpsertGameCitiesInput = {
-  city?: InputMaybe<UpsertGameCityInput>;
+export type BulkUpsertCustomersInput = {
+  customer?: InputMaybe<UpsertCustomerInput>;
   /** An array of Strings */
   on?: InputMaybe<Array<Scalars["String"]["input"]>>;
 };
 
-/** The result of a bulk upsert operation for the city */
-export type BulkUpsertGameCitiesResult = {
-  __typename?: "BulkUpsertGameCitiesResult";
+/** The result of a bulk upsert operation for the customer model */
+export type BulkUpsertCustomersResult = {
+  __typename?: "BulkUpsertCustomersResult";
   /** The results of each upsert action in the bulk operation */
-  cities?: Maybe<Array<Maybe<GameCity>>>;
+  customers?: Maybe<Array<Maybe<Customer>>>;
   /** Aggregated list of errors that any bulk action encountered while processing */
   errors?: Maybe<Array<ExecutionError>>;
+  /** Boolean describing if all the bulk actions succeeded or not */
+  success: Scalars["Boolean"]["output"];
+};
+
+export type BulkUpsertEphemeralsInput = {
+  ephemeral?: InputMaybe<UpsertEphemeralInput>;
+  /** An array of Strings */
+  on?: InputMaybe<Array<Scalars["String"]["input"]>>;
+};
+
+/** The result of a bulk upsert operation for the ephemeral model */
+export type BulkUpsertEphemeralsResult = {
+  __typename?: "BulkUpsertEphemeralsResult";
+  /** The results of each upsert action in the bulk operation */
+  ephemerals?: Maybe<Array<Maybe<Ephemeral>>>;
+  /** Aggregated list of errors that any bulk action encountered while processing */
+  errors?: Maybe<Array<ExecutionError>>;
+  /** Boolean describing if all the bulk actions succeeded or not */
+  success: Scalars["Boolean"]["output"];
+};
+
+export type BulkUpsertFieldlessesInput = {
+  fieldless?: InputMaybe<UpsertFieldlessInput>;
+  /** An array of Strings */
+  on?: InputMaybe<Array<Scalars["String"]["input"]>>;
+};
+
+/** The result of a bulk upsert operation for the fieldless model */
+export type BulkUpsertFieldlessesResult = {
+  __typename?: "BulkUpsertFieldlessesResult";
+  /** Aggregated list of errors that any bulk action encountered while processing */
+  errors?: Maybe<Array<ExecutionError>>;
+  /** The results of each upsert action in the bulk operation */
+  fieldlesses?: Maybe<Array<Maybe<Fieldless>>>;
+  /** Boolean describing if all the bulk actions succeeded or not */
+  success: Scalars["Boolean"]["output"];
+};
+
+export type BulkUpsertFriendshipsInput = {
+  friendship?: InputMaybe<UpsertFriendshipInput>;
+  /** An array of Strings */
+  on?: InputMaybe<Array<Scalars["String"]["input"]>>;
+};
+
+/** The result of a bulk upsert operation for the friendship model */
+export type BulkUpsertFriendshipsResult = {
+  __typename?: "BulkUpsertFriendshipsResult";
+  /** Aggregated list of errors that any bulk action encountered while processing */
+  errors?: Maybe<Array<ExecutionError>>;
+  /** The results of each upsert action in the bulk operation */
+  friendships?: Maybe<Array<Maybe<Friendship>>>;
   /** Boolean describing if all the bulk actions succeeded or not */
   success: Scalars["Boolean"]["output"];
 };
@@ -2317,7 +2973,7 @@ export type BulkUpsertGamePlayersInput = {
   player?: InputMaybe<UpsertGamePlayerInput>;
 };
 
-/** The result of a bulk upsert operation for the player */
+/** The result of a bulk upsert operation for the game/player model */
 export type BulkUpsertGamePlayersResult = {
   __typename?: "BulkUpsertGamePlayersResult";
   /** Aggregated list of errors that any bulk action encountered while processing */
@@ -2334,7 +2990,7 @@ export type BulkUpsertGameRoundsInput = {
   round?: InputMaybe<UpsertGameRoundInput>;
 };
 
-/** The result of a bulk upsert operation for the round */
+/** The result of a bulk upsert operation for the game/round model */
 export type BulkUpsertGameRoundsResult = {
   __typename?: "BulkUpsertGameRoundsResult";
   /** Aggregated list of errors that any bulk action encountered while processing */
@@ -2351,7 +3007,7 @@ export type BulkUpsertGameStadiaInput = {
   stadium?: InputMaybe<UpsertGameStadiumInput>;
 };
 
-/** The result of a bulk upsert operation for the stadium */
+/** The result of a bulk upsert operation for the game/stadium model */
 export type BulkUpsertGameStadiaResult = {
   __typename?: "BulkUpsertGameStadiaResult";
   /** Aggregated list of errors that any bulk action encountered while processing */
@@ -2368,7 +3024,7 @@ export type BulkUpsertGizmosInput = {
   on?: InputMaybe<Array<Scalars["String"]["input"]>>;
 };
 
-/** The result of a bulk upsert operation for the gizmo */
+/** The result of a bulk upsert operation for the gizmo model */
 export type BulkUpsertGizmosResult = {
   __typename?: "BulkUpsertGizmosResult";
   /** Aggregated list of errors that any bulk action encountered while processing */
@@ -2379,87 +3035,53 @@ export type BulkUpsertGizmosResult = {
   success: Scalars["Boolean"]["output"];
 };
 
-export type BulkUpsertHasManyThroughBaseModelsInput = {
-  baseModel?: InputMaybe<UpsertHasManyThroughBaseModelInput>;
+export type BulkUpsertLandmarkStadiaInput = {
   /** An array of Strings */
   on?: InputMaybe<Array<Scalars["String"]["input"]>>;
+  stadium?: InputMaybe<UpsertLandmarkStadiumInput>;
 };
 
-/** The result of a bulk upsert operation for the baseModel */
-export type BulkUpsertHasManyThroughBaseModelsResult = {
-  __typename?: "BulkUpsertHasManyThroughBaseModelsResult";
-  /** The results of each upsert action in the bulk operation */
-  baseModels?: Maybe<Array<Maybe<HasManyThroughBaseModel>>>;
+/** The result of a bulk upsert operation for the landmark/stadium model */
+export type BulkUpsertLandmarkStadiaResult = {
+  __typename?: "BulkUpsertLandmarkStadiaResult";
   /** Aggregated list of errors that any bulk action encountered while processing */
   errors?: Maybe<Array<ExecutionError>>;
+  /** The results of each upsert action in the bulk operation */
+  stadia?: Maybe<Array<Maybe<LandmarkStadium>>>;
   /** Boolean describing if all the bulk actions succeeded or not */
   success: Scalars["Boolean"]["output"];
 };
 
-export type BulkUpsertHasManyThroughJoinerModelsInput = {
-  joinerModel?: InputMaybe<UpsertHasManyThroughJoinerModelInput>;
+export type BulkUpsertRegistrationsInput = {
   /** An array of Strings */
   on?: InputMaybe<Array<Scalars["String"]["input"]>>;
+  registration?: InputMaybe<UpsertRegistrationInput>;
 };
 
-/** The result of a bulk upsert operation for the joinerModel */
-export type BulkUpsertHasManyThroughJoinerModelsResult = {
-  __typename?: "BulkUpsertHasManyThroughJoinerModelsResult";
+/** The result of a bulk upsert operation for the registration model */
+export type BulkUpsertRegistrationsResult = {
+  __typename?: "BulkUpsertRegistrationsResult";
   /** Aggregated list of errors that any bulk action encountered while processing */
   errors?: Maybe<Array<ExecutionError>>;
   /** The results of each upsert action in the bulk operation */
-  joinerModels?: Maybe<Array<Maybe<HasManyThroughJoinerModel>>>;
+  registrations?: Maybe<Array<Maybe<Registration>>>;
   /** Boolean describing if all the bulk actions succeeded or not */
   success: Scalars["Boolean"]["output"];
 };
 
-export type BulkUpsertHasManyThroughSiblingModelsInput = {
+export type BulkUpsertSampleModelToTestReallyLongModelNamesInput = {
   /** An array of Strings */
   on?: InputMaybe<Array<Scalars["String"]["input"]>>;
-  siblingModel?: InputMaybe<UpsertHasManyThroughSiblingModelInput>;
+  sampleModelToTestReallyLongModelNames?: InputMaybe<UpsertSampleModelToTestReallyLongModelNamesInput>;
 };
 
-/** The result of a bulk upsert operation for the siblingModel */
-export type BulkUpsertHasManyThroughSiblingModelsResult = {
-  __typename?: "BulkUpsertHasManyThroughSiblingModelsResult";
+/** The result of a bulk upsert operation for the sampleModelToTestReallyLongModelNames model */
+export type BulkUpsertSampleModelToTestReallyLongModelNamesResult = {
+  __typename?: "BulkUpsertSampleModelToTestReallyLongModelNamesResult";
   /** Aggregated list of errors that any bulk action encountered while processing */
   errors?: Maybe<Array<ExecutionError>>;
   /** The results of each upsert action in the bulk operation */
-  siblingModels?: Maybe<Array<Maybe<HasManyThroughSiblingModel>>>;
-  /** Boolean describing if all the bulk actions succeeded or not */
-  success: Scalars["Boolean"]["output"];
-};
-
-export type BulkUpsertModelAsInput = {
-  modelA?: InputMaybe<UpsertModelAInput>;
-  /** An array of Strings */
-  on?: InputMaybe<Array<Scalars["String"]["input"]>>;
-};
-
-/** The result of a bulk upsert operation for the modelA */
-export type BulkUpsertModelAsResult = {
-  __typename?: "BulkUpsertModelAsResult";
-  /** Aggregated list of errors that any bulk action encountered while processing */
-  errors?: Maybe<Array<ExecutionError>>;
-  /** The results of each upsert action in the bulk operation */
-  modelAs?: Maybe<Array<Maybe<ModelA>>>;
-  /** Boolean describing if all the bulk actions succeeded or not */
-  success: Scalars["Boolean"]["output"];
-};
-
-export type BulkUpsertPartsInput = {
-  /** An array of Strings */
-  on?: InputMaybe<Array<Scalars["String"]["input"]>>;
-  part?: InputMaybe<UpsertPartInput>;
-};
-
-/** The result of a bulk upsert operation for the part */
-export type BulkUpsertPartsResult = {
-  __typename?: "BulkUpsertPartsResult";
-  /** Aggregated list of errors that any bulk action encountered while processing */
-  errors?: Maybe<Array<ExecutionError>>;
-  /** The results of each upsert action in the bulk operation */
-  parts?: Maybe<Array<Maybe<Part>>>;
+  sampleModelToTestReallyLongModelNamess?: Maybe<Array<Maybe<SampleModelToTestReallyLongModelNames>>>;
   /** Boolean describing if all the bulk actions succeeded or not */
   success: Scalars["Boolean"]["output"];
 };
@@ -2470,7 +3092,7 @@ export type BulkUpsertSectionsInput = {
   section?: InputMaybe<UpsertSectionInput>;
 };
 
-/** The result of a bulk upsert operation for the section */
+/** The result of a bulk upsert operation for the section model */
 export type BulkUpsertSectionsResult = {
   __typename?: "BulkUpsertSectionsResult";
   /** Aggregated list of errors that any bulk action encountered while processing */
@@ -2481,31 +3103,66 @@ export type BulkUpsertSectionsResult = {
   success: Scalars["Boolean"]["output"];
 };
 
-export type BulkUpsertShopifySyncsInput = {
+export type BulkUpsertSprocketsInput = {
   /** An array of Strings */
   on?: InputMaybe<Array<Scalars["String"]["input"]>>;
-  shopifySync?: InputMaybe<UpsertShopifySyncInput>;
-  startReason?: InputMaybe<Scalars["String"]["input"]>;
+  sprocket?: InputMaybe<UpsertSprocketInput>;
 };
 
-/** The result of a bulk upsert operation for the shopifySync */
-export type BulkUpsertShopifySyncsResult = {
-  __typename?: "BulkUpsertShopifySyncsResult";
+/** The result of a bulk upsert operation for the sprocket model */
+export type BulkUpsertSprocketsResult = {
+  __typename?: "BulkUpsertSprocketsResult";
   /** Aggregated list of errors that any bulk action encountered while processing */
   errors?: Maybe<Array<ExecutionError>>;
   /** The results of each upsert action in the bulk operation */
-  shopifySyncs?: Maybe<Array<Maybe<ShopifySync>>>;
+  sprockets?: Maybe<Array<Maybe<Sprocket>>>;
   /** Boolean describing if all the bulk actions succeeded or not */
   success: Scalars["Boolean"]["output"];
 };
 
-export type BulkUpsertUsersInput = {
+export type BulkUpsertStudentsInput = {
   /** An array of Strings */
   on?: InputMaybe<Array<Scalars["String"]["input"]>>;
+  student?: InputMaybe<UpsertStudentInput>;
+};
+
+/** The result of a bulk upsert operation for the student model */
+export type BulkUpsertStudentsResult = {
+  __typename?: "BulkUpsertStudentsResult";
+  /** Aggregated list of errors that any bulk action encountered while processing */
+  errors?: Maybe<Array<ExecutionError>>;
+  /** The results of each upsert action in the bulk operation */
+  students?: Maybe<Array<Maybe<Student>>>;
+  /** Boolean describing if all the bulk actions succeeded or not */
+  success: Scalars["Boolean"]["output"];
+};
+
+export type BulkUpsertTeachersInput = {
+  /** An array of Strings */
+  on?: InputMaybe<Array<Scalars["String"]["input"]>>;
+  teacher?: InputMaybe<UpsertTeacherInput>;
+};
+
+/** The result of a bulk upsert operation for the teacher model */
+export type BulkUpsertTeachersResult = {
+  __typename?: "BulkUpsertTeachersResult";
+  /** Aggregated list of errors that any bulk action encountered while processing */
+  errors?: Maybe<Array<ExecutionError>>;
+  /** Boolean describing if all the bulk actions succeeded or not */
+  success: Scalars["Boolean"]["output"];
+  /** The results of each upsert action in the bulk operation */
+  teachers?: Maybe<Array<Maybe<Teacher>>>;
+};
+
+export type BulkUpsertUsersInput = {
+  email?: InputMaybe<Scalars["String"]["input"]>;
+  /** An array of Strings */
+  on?: InputMaybe<Array<Scalars["String"]["input"]>>;
+  password?: InputMaybe<Scalars["String"]["input"]>;
   user?: InputMaybe<UpsertUserInput>;
 };
 
-/** The result of a bulk upsert operation for the user */
+/** The result of a bulk upsert operation for the user model */
 export type BulkUpsertUsersResult = {
   __typename?: "BulkUpsertUsersResult";
   /** Aggregated list of errors that any bulk action encountered while processing */
@@ -2513,7 +3170,24 @@ export type BulkUpsertUsersResult = {
   /** Boolean describing if all the bulk actions succeeded or not */
   success: Scalars["Boolean"]["output"];
   /** The results of each upsert action in the bulk operation */
-  users?: Maybe<Array<Maybe<User>>>;
+  users?: Maybe<Array<Maybe<UpsertUser>>>;
+};
+
+export type BulkUpsertWidgetImagesInput = {
+  /** An array of Strings */
+  on?: InputMaybe<Array<Scalars["String"]["input"]>>;
+  widgetImage?: InputMaybe<UpsertWidgetImageInput>;
+};
+
+/** The result of a bulk upsert operation for the widgetImage model */
+export type BulkUpsertWidgetImagesResult = {
+  __typename?: "BulkUpsertWidgetImagesResult";
+  /** Aggregated list of errors that any bulk action encountered while processing */
+  errors?: Maybe<Array<ExecutionError>>;
+  /** Boolean describing if all the bulk actions succeeded or not */
+  success: Scalars["Boolean"]["output"];
+  /** The results of each upsert action in the bulk operation */
+  widgetImages?: Maybe<Array<Maybe<WidgetImage>>>;
 };
 
 export type BulkUpsertWidgetsInput = {
@@ -2522,7 +3196,7 @@ export type BulkUpsertWidgetsInput = {
   widget?: InputMaybe<UpsertWidgetInput>;
 };
 
-/** The result of a bulk upsert operation for the widget */
+/** The result of a bulk upsert operation for the widget model */
 export type BulkUpsertWidgetsResult = {
   __typename?: "BulkUpsertWidgetsResult";
   /** Aggregated list of errors that any bulk action encountered while processing */
@@ -2533,32 +3207,110 @@ export type BulkUpsertWidgetsResult = {
   widgets?: Maybe<Array<Maybe<Widget>>>;
 };
 
+export type BulkVerifyEmailUsersInput = {
+  code?: InputMaybe<Scalars["String"]["input"]>;
+};
+
+/** The output when running the verifyEmail on the user model in bulk. */
+export type BulkVerifyEmailUsersResult = {
+  __typename?: "BulkVerifyEmailUsersResult";
+  /** Aggregated list of errors that any bulk action encountered while processing */
+  errors?: Maybe<Array<ExecutionError>>;
+  /** The list of returned values for each action executed in the set of bulk actions. Returned in the same order as the input bulk action params. */
+  results?: Maybe<Array<Maybe<Scalars["JSON"]["output"]>>>;
+  /** Boolean describing if all the bulk actions succeeded or not */
+  success: Scalars["Boolean"]["output"];
+};
+
+export type ChangePasswordUserResult = {
+  __typename?: "ChangePasswordUserResult";
+  actionRun?: Maybe<Scalars["String"]["output"]>;
+  errors?: Maybe<Array<ExecutionError>>;
+  success: Scalars["Boolean"]["output"];
+  user?: Maybe<User>;
+};
+
+export type City = {
+  __typename?: "City";
+  /** Get all the fields for this record. Useful for not having to list out all the fields you want to retrieve, but slower. */
+  _all: Scalars["JSONObject"]["output"];
+  /** The time at which this record was first created. Set once upon record creation and never changed. Managed by Gadget. */
+  createdAt: Scalars["DateTime"]["output"];
+  /** The globally unique, unchanging identifier for this record. Assigned and managed by Gadget. */
+  id: Scalars["GadgetID"]["output"];
+  name?: Maybe<Scalars["String"]["output"]>;
+  students: StudentConnection;
+  teachers: TeacherConnection;
+  /** The time at which this record was last changed. Set each time the record is successfully acted upon by an action. Managed by Gadget. */
+  updatedAt: Scalars["DateTime"]["output"];
+};
+
+export type CityStudentsArgs = {
+  after?: InputMaybe<Scalars["String"]["input"]>;
+  before?: InputMaybe<Scalars["String"]["input"]>;
+  filter?: InputMaybe<Array<StudentFilter>>;
+  first?: InputMaybe<Scalars["Int"]["input"]>;
+  last?: InputMaybe<Scalars["Int"]["input"]>;
+  search?: InputMaybe<Scalars["String"]["input"]>;
+  sort?: InputMaybe<Array<StudentSort>>;
+};
+
+export type CityTeachersArgs = {
+  after?: InputMaybe<Scalars["String"]["input"]>;
+  before?: InputMaybe<Scalars["String"]["input"]>;
+  filter?: InputMaybe<Array<TeacherFilter>>;
+  first?: InputMaybe<Scalars["Int"]["input"]>;
+  last?: InputMaybe<Scalars["Int"]["input"]>;
+  search?: InputMaybe<Scalars["String"]["input"]>;
+  sort?: InputMaybe<Array<TeacherSort>>;
+};
+
 /** Input object supporting setting or updating related model record on a relationship field */
 export type CityBelongsToInput = {
   /** Existing ID of another record, which you would like to associate this record with */
   _link?: InputMaybe<Scalars["GadgetID"]["input"]>;
   create?: InputMaybe<NestedCityCreateInput>;
-  customObjectParams?: InputMaybe<NestedCityCustomObjectParamsInput>;
   delete?: InputMaybe<NestedCityDeleteInput>;
   update?: InputMaybe<NestedCityUpdateInput>;
 };
 
-export type CompleteShopifySyncInput = {
-  domain?: InputMaybe<Scalars["String"]["input"]>;
-  errorDetails?: InputMaybe<Scalars["String"]["input"]>;
-  errorMessage?: InputMaybe<Scalars["String"]["input"]>;
-  force?: InputMaybe<Scalars["Boolean"]["input"]>;
-  models?: InputMaybe<Scalars["JSON"]["input"]>;
-  shop?: InputMaybe<ShopifyShopBelongsToInput>;
-  syncSince?: InputMaybe<Scalars["DateTime"]["input"]>;
+/** A connection to a list of City items. */
+export type CityConnection = {
+  __typename?: "CityConnection";
+  /** A list of edges. */
+  edges: Array<CityEdge>;
+  /** Information to aid in pagination. */
+  pageInfo: PageInfo;
 };
 
-export type CompleteShopifySyncResult = {
-  __typename?: "CompleteShopifySyncResult";
-  actionRun?: Maybe<Scalars["String"]["output"]>;
-  errors?: Maybe<Array<ExecutionError>>;
-  shopifySync?: Maybe<ShopifySync>;
-  success: Scalars["Boolean"]["output"];
+/** An edge in a City connection. */
+export type CityEdge = {
+  __typename?: "CityEdge";
+  /** A cursor for use in pagination */
+  cursor: Scalars["String"]["output"];
+  /** The item at the end of the edge */
+  node: City;
+};
+
+export type CityFilter = {
+  AND?: InputMaybe<Array<InputMaybe<CityFilter>>>;
+  NOT?: InputMaybe<Array<InputMaybe<CityFilter>>>;
+  OR?: InputMaybe<Array<InputMaybe<CityFilter>>>;
+  createdAt?: InputMaybe<DateTimeFilter>;
+  id?: InputMaybe<IdFilter>;
+  name?: InputMaybe<StringFilter>;
+  updatedAt?: InputMaybe<DateTimeFilter>;
+};
+
+export type CitySort = {
+  /** Sort the results by the createdAt field. Defaults to ascending (smallest value first). */
+  createdAt?: InputMaybe<SortOrder>;
+  /** Sort the results by the id field. Defaults to ascending (smallest value first). */
+  id?: InputMaybe<SortOrder>;
+  /** Sort the results by the name field. Defaults to ascending (smallest value first). */
+  name?: InputMaybe<SortOrder>;
+  /** Sort the results by the updatedAt field. Defaults to ascending (smallest value first). */
+  updatedAt?: InputMaybe<SortOrder>;
 };
 
 /** A list of actions to run when converging a set of records. Pass this to a converge operation to override which actions will be used to create, update, and delete records while moving to the new set of specified records. */
@@ -2572,21 +3324,38 @@ export type ConvergeActionMap = {
 };
 
 /** Declaratively specifies the list of records a relationship should become and invokes the given actions in order to change the current state to get to the newly specified state. */
-export type ConvergeAutoTableTestRelatedModelInput = {
+export type ConvergeCourseInput = {
   /** An optional partial set of action api identifiers to use when creating, updating, and deleting records to converge to the new list. */
   actions?: InputMaybe<ConvergeActionMap>;
   /** The new list of records to converge to */
-  values: Array<InputMaybe<ConvergeAutoTableTestRelatedModelValues>>;
+  values: Array<InputMaybe<ConvergeCourseValues>>;
 };
 
-/** One element of a ConvergeAutoTableTestRelatedModelInput record converge list */
-export type ConvergeAutoTableTestRelatedModelValues = {
-  belongsToParent?: InputMaybe<AutoTableTestBelongsToInput>;
+/** One element of a ConvergeCourseInput record converge list */
+export type ConvergeCourseValues = {
   id?: InputMaybe<Scalars["GadgetID"]["input"]>;
-  manyBelongsToParent?: InputMaybe<AutoTableTestBelongsToInput>;
-  name?: InputMaybe<Scalars["String"]["input"]>;
-  someBool?: InputMaybe<Scalars["Boolean"]["input"]>;
-  someNumber?: InputMaybe<Scalars["Float"]["input"]>;
+  offered?: InputMaybe<Scalars["Boolean"]["input"]>;
+  registration?: InputMaybe<Array<InputMaybe<RegistrationHasManyInput>>>;
+  students?: InputMaybe<Array<InputMaybe<StudentHasManyThroughInput>>>;
+  teacher?: InputMaybe<TeacherBelongsToInput>;
+  title?: InputMaybe<Scalars["String"]["input"]>;
+};
+
+/** Declaratively specifies the list of records a relationship should become and invokes the given actions in order to change the current state to get to the newly specified state. */
+export type ConvergeFriendshipInput = {
+  /** An optional partial set of action api identifiers to use when creating, updating, and deleting records to converge to the new list. */
+  actions?: InputMaybe<ConvergeActionMap>;
+  /** The new list of records to converge to */
+  values: Array<InputMaybe<ConvergeFriendshipValues>>;
+};
+
+/** One element of a ConvergeFriendshipInput record converge list */
+export type ConvergeFriendshipValues = {
+  ended?: InputMaybe<Scalars["DateOrDateTime"]["input"]>;
+  followee?: InputMaybe<StudentBelongsToInput>;
+  follower?: InputMaybe<StudentBelongsToInput>;
+  id?: InputMaybe<Scalars["GadgetID"]["input"]>;
+  started?: InputMaybe<Scalars["DateOrDateTime"]["input"]>;
 };
 
 /** Declaratively specifies the list of records a relationship should become and invokes the given actions in order to change the current state to get to the newly specified state. */
@@ -2601,38 +3370,24 @@ export type ConvergeGizmoInput = {
 export type ConvergeGizmoValues = {
   id?: InputMaybe<Scalars["GadgetID"]["input"]>;
   name?: InputMaybe<Scalars["String"]["input"]>;
-  orientation?: InputMaybe<Scalars["String"]["input"]>;
+  sprockets?: InputMaybe<Array<InputMaybe<SprocketHasManyInput>>>;
+  state?: InputMaybe<Scalars["GizmoStateEnum"]["input"]>;
   widget?: InputMaybe<WidgetBelongsToInput>;
 };
 
 /** Declaratively specifies the list of records a relationship should become and invokes the given actions in order to change the current state to get to the newly specified state. */
-export type ConvergeJoinerModelInput = {
+export type ConvergeRegistrationInput = {
   /** An optional partial set of action api identifiers to use when creating, updating, and deleting records to converge to the new list. */
   actions?: InputMaybe<ConvergeActionMap>;
   /** The new list of records to converge to */
-  values: Array<InputMaybe<ConvergeJoinerModelValues>>;
+  values: Array<InputMaybe<ConvergeRegistrationValues>>;
 };
 
-/** One element of a ConvergeJoinerModelInput record converge list */
-export type ConvergeJoinerModelValues = {
+/** One element of a ConvergeRegistrationInput record converge list */
+export type ConvergeRegistrationValues = {
+  course?: InputMaybe<CourseBelongsToInput>;
   id?: InputMaybe<Scalars["GadgetID"]["input"]>;
-  joinerBelongsToBase?: InputMaybe<BaseModelBelongsToInput>;
-  joinerBelongsToSibling?: InputMaybe<SiblingModelBelongsToInput>;
-};
-
-/** Declaratively specifies the list of records a relationship should become and invokes the given actions in order to change the current state to get to the newly specified state. */
-export type ConvergePlayerInput = {
-  /** An optional partial set of action api identifiers to use when creating, updating, and deleting records to converge to the new list. */
-  actions?: InputMaybe<ConvergeActionMap>;
-  /** The new list of records to converge to */
-  values: Array<InputMaybe<ConvergePlayerValues>>;
-};
-
-/** One element of a ConvergePlayerInput record converge list */
-export type ConvergePlayerValues = {
-  currentRound?: InputMaybe<RoundBelongsToInput>;
-  id?: InputMaybe<Scalars["GadgetID"]["input"]>;
-  name?: InputMaybe<Scalars["String"]["input"]>;
+  student?: InputMaybe<StudentBelongsToInput>;
 };
 
 /** Declaratively specifies the list of records a relationship should become and invokes the given actions in order to change the current state to get to the newly specified state. */
@@ -2646,9 +3401,82 @@ export type ConvergeRoundInput = {
 /** One element of a ConvergeRoundInput record converge list */
 export type ConvergeRoundValues = {
   id?: InputMaybe<Scalars["GadgetID"]["input"]>;
+  number?: InputMaybe<Scalars["Float"]["input"]>;
+  player?: InputMaybe<PlayerBelongsToInput>;
+};
+
+/** Declaratively specifies the list of records a relationship should become and invokes the given actions in order to change the current state to get to the newly specified state. */
+export type ConvergeSprocketInput = {
+  /** An optional partial set of action api identifiers to use when creating, updating, and deleting records to converge to the new list. */
+  actions?: InputMaybe<ConvergeActionMap>;
+  /** The new list of records to converge to */
+  values: Array<InputMaybe<ConvergeSprocketValues>>;
+};
+
+/** One element of a ConvergeSprocketInput record converge list */
+export type ConvergeSprocketValues = {
+  gizmo?: InputMaybe<GizmoBelongsToInput>;
+  id?: InputMaybe<Scalars["GadgetID"]["input"]>;
+  ratio?: InputMaybe<Scalars["Float"]["input"]>;
+};
+
+/** Declaratively specifies the list of records a relationship should become and invokes the given actions in order to change the current state to get to the newly specified state. */
+export type ConvergeStudentInput = {
+  /** An optional partial set of action api identifiers to use when creating, updating, and deleting records to converge to the new list. */
+  actions?: InputMaybe<ConvergeActionMap>;
+  /** The new list of records to converge to */
+  values: Array<InputMaybe<ConvergeStudentValues>>;
+};
+
+/** One element of a ConvergeStudentInput record converge list */
+export type ConvergeStudentValues = {
+  born?: InputMaybe<Scalars["DateOrDateTime"]["input"]>;
+  city?: InputMaybe<CityBelongsToInput>;
+  courses?: InputMaybe<Array<InputMaybe<CourseHasManyThroughInput>>>;
+  followeeFriendships?: InputMaybe<Array<InputMaybe<FriendshipHasManyInput>>>;
+  followees?: InputMaybe<Array<InputMaybe<StudentHasManyThroughInput>>>;
+  followerFriendships?: InputMaybe<Array<InputMaybe<FriendshipHasManyInput>>>;
+  followers?: InputMaybe<Array<InputMaybe<StudentHasManyThroughInput>>>;
+  friendship?: InputMaybe<Array<InputMaybe<FriendshipHasManyInput>>>;
+  id?: InputMaybe<Scalars["GadgetID"]["input"]>;
+  male?: InputMaybe<Scalars["Boolean"]["input"]>;
   name?: InputMaybe<Scalars["String"]["input"]>;
-  players?: InputMaybe<Array<InputMaybe<PlayerHasManyInput>>>;
-  stadium?: InputMaybe<StadiumBelongsToInput>;
+  registration?: InputMaybe<Array<InputMaybe<RegistrationHasManyInput>>>;
+};
+
+/** Declaratively specifies the list of records a relationship should become and invokes the given actions in order to change the current state to get to the newly specified state. */
+export type ConvergeTeacherInput = {
+  /** An optional partial set of action api identifiers to use when creating, updating, and deleting records to converge to the new list. */
+  actions?: InputMaybe<ConvergeActionMap>;
+  /** The new list of records to converge to */
+  values: Array<InputMaybe<ConvergeTeacherValues>>;
+};
+
+/** One element of a ConvergeTeacherInput record converge list */
+export type ConvergeTeacherValues = {
+  born?: InputMaybe<Scalars["DateOrDateTime"]["input"]>;
+  city?: InputMaybe<CityBelongsToInput>;
+  courses?: InputMaybe<Array<InputMaybe<CourseHasManyInput>>>;
+  id?: InputMaybe<Scalars["GadgetID"]["input"]>;
+  male?: InputMaybe<Scalars["Boolean"]["input"]>;
+  name?: InputMaybe<Scalars["String"]["input"]>;
+};
+
+/** Declaratively specifies the list of records a relationship should become and invokes the given actions in order to change the current state to get to the newly specified state. */
+export type ConvergeWidgetImageInput = {
+  /** An optional partial set of action api identifiers to use when creating, updating, and deleting records to converge to the new list. */
+  actions?: InputMaybe<ConvergeActionMap>;
+  /** The new list of records to converge to */
+  values: Array<InputMaybe<ConvergeWidgetImageValues>>;
+};
+
+/** One element of a ConvergeWidgetImageInput record converge list */
+export type ConvergeWidgetImageValues = {
+  altText?: InputMaybe<Scalars["String"]["input"]>;
+  id?: InputMaybe<Scalars["GadgetID"]["input"]>;
+  image?: InputMaybe<StoredFileInput>;
+  order?: InputMaybe<Scalars["Float"]["input"]>;
+  widget?: InputMaybe<WidgetBelongsToInput>;
 };
 
 /** Declaratively specifies the list of records a relationship should become and invokes the given actions in order to change the current state to get to the newly specified state. */
@@ -2665,82 +3493,227 @@ export type ConvergeWidgetValues = {
   birthday?: InputMaybe<Scalars["DateOrDateTime"]["input"]>;
   category?: InputMaybe<Array<Scalars["WidgetCategoryEnum"]["input"]>>;
   color?: InputMaybe<Scalars["String"]["input"]>;
+  cost?: InputMaybe<Scalars["CADCurrencyAmount"]["input"]>;
   description?: InputMaybe<RichTextInput>;
+  email?: InputMaybe<Scalars["String"]["input"]>;
   embedding?: InputMaybe<Array<Scalars["Float"]["input"]>>;
   gizmos?: InputMaybe<Array<InputMaybe<GizmoHasManyInput>>>;
   id?: InputMaybe<Scalars["GadgetID"]["input"]>;
+  images?: InputMaybe<Array<InputMaybe<WidgetImageHasManyInput>>>;
   inventoryCount?: InputMaybe<Scalars["Float"]["input"]>;
   isChecked?: InputMaybe<Scalars["Boolean"]["input"]>;
   metafields?: InputMaybe<Scalars["JSON"]["input"]>;
-  mustBeLongString?: InputMaybe<Scalars["String"]["input"]>;
   name?: InputMaybe<Scalars["String"]["input"]>;
+  phase?: InputMaybe<Scalars["WidgetPhaseEnum"]["input"]>;
   /** A string list of Gadget platform Role keys to assign to this record */
   roles?: InputMaybe<Array<Scalars["String"]["input"]>>;
   secretKey?: InputMaybe<Scalars["String"]["input"]>;
   section?: InputMaybe<SectionBelongsToInput>;
+  slug?: InputMaybe<Scalars["String"]["input"]>;
   startsAt?: InputMaybe<Scalars["DateTime"]["input"]>;
-};
-
-export type CreateAutoTableTestInput = {
-  bool?: InputMaybe<Scalars["Boolean"]["input"]>;
-  dt?: InputMaybe<Scalars["DateTime"]["input"]>;
-  email?: InputMaybe<Scalars["String"]["input"]>;
-  enum?: InputMaybe<Array<Scalars["AutoTableTestEnumEnum"]["input"]>>;
-  es?: InputMaybe<Scalars["String"]["input"]>;
-  file?: InputMaybe<StoredFileInput>;
-  hasMany?: InputMaybe<Array<InputMaybe<AutoTableTestRelatedModelHasManyInput>>>;
-  hasOne?: InputMaybe<AutoTableTestRelatedModelHasOneInput>;
-  json?: InputMaybe<Scalars["JSON"]["input"]>;
-  num?: InputMaybe<Scalars["Float"]["input"]>;
-  pwd?: InputMaybe<Scalars["String"]["input"]>;
-  /** A string list of Gadget platform Role keys to assign to this record */
-  rl?: InputMaybe<Array<Scalars["String"]["input"]>>;
-  rt?: InputMaybe<RichTextInput>;
-  str?: InputMaybe<Scalars["String"]["input"]>;
+  state?: InputMaybe<Scalars["WidgetStateEnum"]["input"]>;
+  tagline?: InputMaybe<Scalars["String"]["input"]>;
   url?: InputMaybe<Scalars["String"]["input"]>;
-  vect?: InputMaybe<Array<Scalars["Float"]["input"]>>;
 };
 
-export type CreateAutoTableTestRelatedModelInput = {
-  belongsToParent?: InputMaybe<AutoTableTestBelongsToInput>;
-  manyBelongsToParent?: InputMaybe<AutoTableTestBelongsToInput>;
-  name?: InputMaybe<Scalars["String"]["input"]>;
-  someBool?: InputMaybe<Scalars["Boolean"]["input"]>;
-  someNumber?: InputMaybe<Scalars["Float"]["input"]>;
+export type Course = {
+  __typename?: "Course";
+  /** Get all the fields for this record. Useful for not having to list out all the fields you want to retrieve, but slower. */
+  _all: Scalars["JSONObject"]["output"];
+  /** The time at which this record was first created. Set once upon record creation and never changed. Managed by Gadget. */
+  createdAt: Scalars["DateTime"]["output"];
+  /** The globally unique, unchanging identifier for this record. Assigned and managed by Gadget. */
+  id: Scalars["GadgetID"]["output"];
+  offered?: Maybe<Scalars["Boolean"]["output"]>;
+  registrations: RegistrationConnection;
+  students: StudentConnection;
+  teacher?: Maybe<Teacher>;
+  teacherId?: Maybe<Scalars["GadgetID"]["output"]>;
+  title?: Maybe<Scalars["String"]["output"]>;
+  /** The time at which this record was last changed. Set each time the record is successfully acted upon by an action. Managed by Gadget. */
+  updatedAt: Scalars["DateTime"]["output"];
 };
 
-export type CreateAutoTableTestRelatedModelResult = UpsertAutoTableTestRelatedModelResult & {
-  __typename?: "CreateAutoTableTestRelatedModelResult";
-  _autoTableTestRelatedModel?: Maybe<AutoTableTestRelatedModel>;
+export type CourseRegistrationsArgs = {
+  after?: InputMaybe<Scalars["String"]["input"]>;
+  before?: InputMaybe<Scalars["String"]["input"]>;
+  first?: InputMaybe<Scalars["Int"]["input"]>;
+  last?: InputMaybe<Scalars["Int"]["input"]>;
+};
+
+export type CourseStudentsArgs = {
+  after?: InputMaybe<Scalars["String"]["input"]>;
+  before?: InputMaybe<Scalars["String"]["input"]>;
+  first?: InputMaybe<Scalars["Int"]["input"]>;
+  last?: InputMaybe<Scalars["Int"]["input"]>;
+};
+
+/** Input object supporting setting or updating related model record on a relationship field */
+export type CourseBelongsToInput = {
+  /** Existing ID of another record, which you would like to associate this record with */
+  _link?: InputMaybe<Scalars["GadgetID"]["input"]>;
+  create?: InputMaybe<NestedCourseCreateInput>;
+  delete?: InputMaybe<NestedCourseDeleteInput>;
+  update?: InputMaybe<NestedCourseUpdateInput>;
+};
+
+/** A connection to a list of Course items. */
+export type CourseConnection = {
+  __typename?: "CourseConnection";
+  /** A list of edges. */
+  edges: Array<CourseEdge>;
+  /** Information to aid in pagination. */
+  pageInfo: PageInfo;
+};
+
+/** An edge in a Course connection. */
+export type CourseEdge = {
+  __typename?: "CourseEdge";
+  /** A cursor for use in pagination */
+  cursor: Scalars["String"]["output"];
+  /** The item at the end of the edge */
+  node: Course;
+};
+
+export type CourseFilter = {
+  AND?: InputMaybe<Array<InputMaybe<CourseFilter>>>;
+  NOT?: InputMaybe<Array<InputMaybe<CourseFilter>>>;
+  OR?: InputMaybe<Array<InputMaybe<CourseFilter>>>;
+  createdAt?: InputMaybe<DateTimeFilter>;
+  id?: InputMaybe<IdFilter>;
+  offered?: InputMaybe<BooleanFilter>;
+  teacher?: InputMaybe<IdFilter>;
+  teacherId?: InputMaybe<IdFilter>;
+  title?: InputMaybe<StringFilter>;
+  updatedAt?: InputMaybe<DateTimeFilter>;
+};
+
+/** Input object supporting setting or updating related model record on a relationship field */
+export type CourseHasManyInput = {
+  /** Creates, updates, or deletes existing records in the database as needed to arrive at the list of records specified. */
+  _converge?: InputMaybe<ConvergeCourseInput>;
+  create?: InputMaybe<NestedCourseCreateInput>;
+  delete?: InputMaybe<NestedCourseDeleteInput>;
+  update?: InputMaybe<NestedCourseUpdateInput>;
+};
+
+/** Input object supporting setting or updating related model record on a relationship field */
+export type CourseHasManyThroughInput = {
+  create?: InputMaybe<NestedCourseCreateInput>;
+  delete?: InputMaybe<NestedCourseDeleteInput>;
+  update?: InputMaybe<NestedCourseUpdateInput>;
+};
+
+export type CourseSort = {
+  /** Sort the results by the createdAt field. Defaults to ascending (smallest value first). */
+  createdAt?: InputMaybe<SortOrder>;
+  /** Sort the results by the id field. Defaults to ascending (smallest value first). */
+  id?: InputMaybe<SortOrder>;
+  /** Sort the results by the offered field. Defaults to ascending (smallest value first). */
+  offered?: InputMaybe<SortOrder>;
+  /** Sort the results by the title field. Defaults to ascending (smallest value first). */
+  title?: InputMaybe<SortOrder>;
+  /** Sort the results by the updatedAt field. Defaults to ascending (smallest value first). */
+  updatedAt?: InputMaybe<SortOrder>;
+};
+
+export type CreateBillingAccountInput = {
+  balance?: InputMaybe<Scalars["Float"]["input"]>;
+  customer?: InputMaybe<CustomerBelongsToInput>;
+};
+
+export type CreateBillingAccountResult = UpsertBillingAccountResult & {
+  __typename?: "CreateBillingAccountResult";
   actionRun?: Maybe<Scalars["String"]["output"]>;
+  billingAccount?: Maybe<BillingAccount>;
   errors?: Maybe<Array<ExecutionError>>;
   success: Scalars["Boolean"]["output"];
 };
 
-export type CreateAutoTableTestResult = UpsertAutoTableTestResult & {
-  __typename?: "CreateAutoTableTestResult";
+export type CreateCityInput = {
+  name?: InputMaybe<Scalars["String"]["input"]>;
+  students?: InputMaybe<Array<InputMaybe<StudentHasManyInput>>>;
+  teachers?: InputMaybe<Array<InputMaybe<TeacherHasManyInput>>>;
+};
+
+export type CreateCityResult = UpsertCityResult & {
+  __typename?: "CreateCityResult";
   actionRun?: Maybe<Scalars["String"]["output"]>;
-  autoTableTest?: Maybe<AutoTableTest>;
+  city?: Maybe<City>;
   errors?: Maybe<Array<ExecutionError>>;
   success: Scalars["Boolean"]["output"];
 };
 
-export type CreateGameCityInput = {
-  name?: InputMaybe<Scalars["String"]["input"]>;
-  stadium?: InputMaybe<StadiumHasOneInput>;
+export type CreateCourseInput = {
+  offered?: InputMaybe<Scalars["Boolean"]["input"]>;
+  registration?: InputMaybe<Array<InputMaybe<RegistrationHasManyInput>>>;
+  registrations?: InputMaybe<Array<InputMaybe<RegistrationHasManyInput>>>;
+  students?: InputMaybe<Array<InputMaybe<StudentHasManyThroughInput>>>;
+  teacher?: InputMaybe<TeacherBelongsToInput>;
+  title?: InputMaybe<Scalars["String"]["input"]>;
 };
 
-export type CreateGameCityResult = UpsertGameCityResult & {
-  __typename?: "CreateGameCityResult";
+export type CreateCourseResult = UpsertCourseResult & {
+  __typename?: "CreateCourseResult";
   actionRun?: Maybe<Scalars["String"]["output"]>;
-  city?: Maybe<GameCity>;
+  course?: Maybe<Course>;
   errors?: Maybe<Array<ExecutionError>>;
+  success: Scalars["Boolean"]["output"];
+};
+
+export type CreateCustomerInput = {
+  billingAccount?: InputMaybe<BillingAccountHasOneInput>;
+  email?: InputMaybe<Scalars["String"]["input"]>;
+};
+
+export type CreateCustomerResult = UpsertCustomerResult & {
+  __typename?: "CreateCustomerResult";
+  actionRun?: Maybe<Scalars["String"]["output"]>;
+  customer?: Maybe<Customer>;
+  errors?: Maybe<Array<ExecutionError>>;
+  success: Scalars["Boolean"]["output"];
+};
+
+export type CreateEphemeralInput = {
+  data?: InputMaybe<Scalars["String"]["input"]>;
+};
+
+export type CreateEphemeralResult = UpsertEphemeralResult & {
+  __typename?: "CreateEphemeralResult";
+  actionRun?: Maybe<Scalars["String"]["output"]>;
+  ephemeral?: Maybe<Ephemeral>;
+  errors?: Maybe<Array<ExecutionError>>;
+  success: Scalars["Boolean"]["output"];
+};
+
+export type CreateFieldlessResult = UpsertFieldlessResult & {
+  __typename?: "CreateFieldlessResult";
+  actionRun?: Maybe<Scalars["String"]["output"]>;
+  errors?: Maybe<Array<ExecutionError>>;
+  fieldless?: Maybe<Fieldless>;
+  success: Scalars["Boolean"]["output"];
+};
+
+export type CreateFriendshipInput = {
+  ended?: InputMaybe<Scalars["DateOrDateTime"]["input"]>;
+  followee?: InputMaybe<StudentBelongsToInput>;
+  follower?: InputMaybe<StudentBelongsToInput>;
+  started?: InputMaybe<Scalars["DateOrDateTime"]["input"]>;
+};
+
+export type CreateFriendshipResult = UpsertFriendshipResult & {
+  __typename?: "CreateFriendshipResult";
+  actionRun?: Maybe<Scalars["String"]["output"]>;
+  errors?: Maybe<Array<ExecutionError>>;
+  friendship?: Maybe<Friendship>;
   success: Scalars["Boolean"]["output"];
 };
 
 export type CreateGamePlayerInput = {
-  currentRound?: InputMaybe<RoundBelongsToInput>;
+  birthday?: InputMaybe<Scalars["DateTime"]["input"]>;
   name?: InputMaybe<Scalars["String"]["input"]>;
+  number?: InputMaybe<Scalars["Float"]["input"]>;
+  rounds?: InputMaybe<Array<InputMaybe<RoundHasManyInput>>>;
 };
 
 export type CreateGamePlayerResult = UpsertGamePlayerResult & {
@@ -2752,9 +3725,8 @@ export type CreateGamePlayerResult = UpsertGamePlayerResult & {
 };
 
 export type CreateGameRoundInput = {
-  name?: InputMaybe<Scalars["String"]["input"]>;
-  players?: InputMaybe<Array<InputMaybe<PlayerHasManyInput>>>;
-  stadium?: InputMaybe<StadiumBelongsToInput>;
+  number?: InputMaybe<Scalars["Float"]["input"]>;
+  player?: InputMaybe<PlayerBelongsToInput>;
 };
 
 export type CreateGameRoundResult = UpsertGameRoundResult & {
@@ -2766,12 +3738,7 @@ export type CreateGameRoundResult = UpsertGameRoundResult & {
 };
 
 export type CreateGameStadiumInput = {
-  city?: InputMaybe<CityBelongsToInput>;
   name?: InputMaybe<Scalars["String"]["input"]>;
-  photo?: InputMaybe<StoredFileInput>;
-  rounds?: InputMaybe<Array<InputMaybe<RoundHasManyInput>>>;
-  tags?: InputMaybe<Array<Scalars["StadiumTagsEnum"]["input"]>>;
-  type?: InputMaybe<Scalars["StadiumTypeEnum"]["input"]>;
 };
 
 export type CreateGameStadiumResult = UpsertGameStadiumResult & {
@@ -2784,7 +3751,8 @@ export type CreateGameStadiumResult = UpsertGameStadiumResult & {
 
 export type CreateGizmoInput = {
   name?: InputMaybe<Scalars["String"]["input"]>;
-  orientation?: InputMaybe<Scalars["String"]["input"]>;
+  sprockets?: InputMaybe<Array<InputMaybe<SprocketHasManyInput>>>;
+  state?: InputMaybe<Scalars["GizmoStateEnum"]["input"]>;
   widget?: InputMaybe<WidgetBelongsToInput>;
 };
 
@@ -2796,72 +3764,45 @@ export type CreateGizmoResult = UpsertGizmoResult & {
   success: Scalars["Boolean"]["output"];
 };
 
-export type CreateHasManyThroughBaseModelInput = {
-  baseModelHmtField?: InputMaybe<Array<InputMaybe<SiblingModelHasManyThroughInput>>>;
-  baseModelName?: InputMaybe<Scalars["String"]["input"]>;
-  joinerModel?: InputMaybe<Array<InputMaybe<JoinerModelHasManyInput>>>;
-  joinerModels?: InputMaybe<Array<InputMaybe<JoinerModelHasManyInput>>>;
-};
-
-export type CreateHasManyThroughBaseModelResult = UpsertHasManyThroughBaseModelResult & {
-  __typename?: "CreateHasManyThroughBaseModelResult";
-  actionRun?: Maybe<Scalars["String"]["output"]>;
-  baseModel?: Maybe<HasManyThroughBaseModel>;
-  errors?: Maybe<Array<ExecutionError>>;
-  success: Scalars["Boolean"]["output"];
-};
-
-export type CreateHasManyThroughJoinerModelInput = {
-  joinerBelongsToBase?: InputMaybe<BaseModelBelongsToInput>;
-  joinerBelongsToSibling?: InputMaybe<SiblingModelBelongsToInput>;
-};
-
-export type CreateHasManyThroughJoinerModelResult = UpsertHasManyThroughJoinerModelResult & {
-  __typename?: "CreateHasManyThroughJoinerModelResult";
-  actionRun?: Maybe<Scalars["String"]["output"]>;
-  errors?: Maybe<Array<ExecutionError>>;
-  joinerModel?: Maybe<HasManyThroughJoinerModel>;
-  success: Scalars["Boolean"]["output"];
-};
-
-export type CreateHasManyThroughSiblingModelInput = {
-  joinerModel?: InputMaybe<Array<InputMaybe<JoinerModelHasManyInput>>>;
-  joinerModels?: InputMaybe<Array<InputMaybe<JoinerModelHasManyInput>>>;
-  siblingModelHmtField?: InputMaybe<Array<InputMaybe<BaseModelHasManyThroughInput>>>;
-};
-
-export type CreateHasManyThroughSiblingModelResult = UpsertHasManyThroughSiblingModelResult & {
-  __typename?: "CreateHasManyThroughSiblingModelResult";
-  actionRun?: Maybe<Scalars["String"]["output"]>;
-  errors?: Maybe<Array<ExecutionError>>;
-  siblingModel?: Maybe<HasManyThroughSiblingModel>;
-  success: Scalars["Boolean"]["output"];
-};
-
-export type CreateModelAResult = UpsertModelAResult & {
-  __typename?: "CreateModelAResult";
-  actionRun?: Maybe<Scalars["String"]["output"]>;
-  errors?: Maybe<Array<ExecutionError>>;
-  modelA?: Maybe<ModelA>;
-  success: Scalars["Boolean"]["output"];
-};
-
-export type CreatePartInput = {
-  count?: InputMaybe<Scalars["Float"]["input"]>;
+export type CreateLandmarkStadiumInput = {
   name?: InputMaybe<Scalars["String"]["input"]>;
-  notes?: InputMaybe<Scalars["String"]["input"]>;
 };
 
-export type CreatePartResult = UpsertPartResult & {
-  __typename?: "CreatePartResult";
+export type CreateLandmarkStadiumResult = UpsertLandmarkStadiumResult & {
+  __typename?: "CreateLandmarkStadiumResult";
   actionRun?: Maybe<Scalars["String"]["output"]>;
   errors?: Maybe<Array<ExecutionError>>;
-  part?: Maybe<Part>;
+  stadium?: Maybe<LandmarkStadium>;
+  success: Scalars["Boolean"]["output"];
+};
+
+export type CreateRegistrationInput = {
+  course?: InputMaybe<CourseBelongsToInput>;
+  student?: InputMaybe<StudentBelongsToInput>;
+};
+
+export type CreateRegistrationResult = UpsertRegistrationResult & {
+  __typename?: "CreateRegistrationResult";
+  actionRun?: Maybe<Scalars["String"]["output"]>;
+  errors?: Maybe<Array<ExecutionError>>;
+  registration?: Maybe<Registration>;
+  success: Scalars["Boolean"]["output"];
+};
+
+export type CreateSampleModelToTestReallyLongModelNamesInput = {
+  title?: InputMaybe<Scalars["String"]["input"]>;
+};
+
+export type CreateSampleModelToTestReallyLongModelNamesResult = UpsertSampleModelToTestReallyLongModelNamesResult & {
+  __typename?: "CreateSampleModelToTestReallyLongModelNamesResult";
+  actionRun?: Maybe<Scalars["String"]["output"]>;
+  errors?: Maybe<Array<ExecutionError>>;
+  sampleModelToTestReallyLongModelNames?: Maybe<SampleModelToTestReallyLongModelNames>;
   success: Scalars["Boolean"]["output"];
 };
 
 export type CreateSectionInput = {
-  name?: InputMaybe<Scalars["String"]["input"]>;
+  title?: InputMaybe<Scalars["String"]["input"]>;
   widgets?: InputMaybe<Array<InputMaybe<WidgetHasManyInput>>>;
 };
 
@@ -2873,51 +3814,72 @@ export type CreateSectionResult = UpsertSectionResult & {
   success: Scalars["Boolean"]["output"];
 };
 
-export type CreateShopifyGdprRequestResult = UpsertShopifyGdprRequestResult & {
-  __typename?: "CreateShopifyGdprRequestResult";
+export type CreateSprocketInput = {
+  gizmo?: InputMaybe<GizmoBelongsToInput>;
+  ratio?: InputMaybe<Scalars["Float"]["input"]>;
+};
+
+export type CreateSprocketResult = UpsertSprocketResult & {
+  __typename?: "CreateSprocketResult";
   actionRun?: Maybe<Scalars["String"]["output"]>;
   errors?: Maybe<Array<ExecutionError>>;
-  shopifyGdprRequest?: Maybe<ShopifyGdprRequest>;
+  sprocket?: Maybe<Sprocket>;
   success: Scalars["Boolean"]["output"];
 };
 
-export type CreateShopifyProductImageResult = UpsertShopifyProductImageResult & {
-  __typename?: "CreateShopifyProductImageResult";
+export type CreateStudentInput = {
+  born?: InputMaybe<Scalars["DateOrDateTime"]["input"]>;
+  city?: InputMaybe<CityBelongsToInput>;
+  courses?: InputMaybe<Array<InputMaybe<CourseHasManyThroughInput>>>;
+  followeeFriendships?: InputMaybe<Array<InputMaybe<FriendshipHasManyInput>>>;
+  followees?: InputMaybe<Array<InputMaybe<StudentHasManyThroughInput>>>;
+  followerFriendships?: InputMaybe<Array<InputMaybe<FriendshipHasManyInput>>>;
+  followers?: InputMaybe<Array<InputMaybe<StudentHasManyThroughInput>>>;
+  friendship?: InputMaybe<Array<InputMaybe<FriendshipHasManyInput>>>;
+  friendships?: InputMaybe<Array<InputMaybe<FriendshipHasManyInput>>>;
+  male?: InputMaybe<Scalars["Boolean"]["input"]>;
+  name?: InputMaybe<Scalars["String"]["input"]>;
+  registration?: InputMaybe<Array<InputMaybe<RegistrationHasManyInput>>>;
+  registrations?: InputMaybe<Array<InputMaybe<RegistrationHasManyInput>>>;
+};
+
+export type CreateStudentResult = UpsertStudentResult & {
+  __typename?: "CreateStudentResult";
   actionRun?: Maybe<Scalars["String"]["output"]>;
   errors?: Maybe<Array<ExecutionError>>;
-  shopifyProductImage?: Maybe<ShopifyProductImage>;
+  student?: Maybe<Student>;
   success: Scalars["Boolean"]["output"];
 };
 
-export type CreateShopifyProductOptionResult = UpsertShopifyProductOptionResult & {
-  __typename?: "CreateShopifyProductOptionResult";
-  actionRun?: Maybe<Scalars["String"]["output"]>;
-  errors?: Maybe<Array<ExecutionError>>;
-  shopifyProductOption?: Maybe<ShopifyProductOption>;
-  success: Scalars["Boolean"]["output"];
+export type CreateTeacherInput = {
+  born?: InputMaybe<Scalars["DateOrDateTime"]["input"]>;
+  city?: InputMaybe<CityBelongsToInput>;
+  courses?: InputMaybe<Array<InputMaybe<CourseHasManyInput>>>;
+  male?: InputMaybe<Scalars["Boolean"]["input"]>;
+  name?: InputMaybe<Scalars["String"]["input"]>;
 };
 
-export type CreateShopifyProductResult = UpsertShopifyProductResult & {
-  __typename?: "CreateShopifyProductResult";
+export type CreateTeacherResult = UpsertTeacherResult & {
+  __typename?: "CreateTeacherResult";
   actionRun?: Maybe<Scalars["String"]["output"]>;
   errors?: Maybe<Array<ExecutionError>>;
-  shopifyProduct?: Maybe<ShopifyProduct>;
   success: Scalars["Boolean"]["output"];
+  teacher?: Maybe<Teacher>;
 };
 
-export type CreateShopifyProductVariantResult = UpsertShopifyProductVariantResult & {
-  __typename?: "CreateShopifyProductVariantResult";
+export type CreateWidgetImageInput = {
+  altText?: InputMaybe<Scalars["String"]["input"]>;
+  image?: InputMaybe<StoredFileInput>;
+  order?: InputMaybe<Scalars["Float"]["input"]>;
+  widget?: InputMaybe<WidgetBelongsToInput>;
+};
+
+export type CreateWidgetImageResult = UpsertWidgetImageResult & {
+  __typename?: "CreateWidgetImageResult";
   actionRun?: Maybe<Scalars["String"]["output"]>;
   errors?: Maybe<Array<ExecutionError>>;
-  shopifyProductVariant?: Maybe<ShopifyProductVariant>;
   success: Scalars["Boolean"]["output"];
-};
-
-export type CreateTestDataResult = {
-  __typename?: "CreateTestDataResult";
-  errors?: Maybe<Array<ExecutionError>>;
-  result?: Maybe<Scalars["JSON"]["output"]>;
-  success: Scalars["Boolean"]["output"];
+  widgetImage?: Maybe<WidgetImage>;
 };
 
 export type CreateWidgetInput = {
@@ -2925,19 +3887,26 @@ export type CreateWidgetInput = {
   birthday?: InputMaybe<Scalars["DateOrDateTime"]["input"]>;
   category?: InputMaybe<Array<Scalars["WidgetCategoryEnum"]["input"]>>;
   color?: InputMaybe<Scalars["String"]["input"]>;
+  cost?: InputMaybe<Scalars["CADCurrencyAmount"]["input"]>;
   description?: InputMaybe<RichTextInput>;
+  email?: InputMaybe<Scalars["String"]["input"]>;
   embedding?: InputMaybe<Array<Scalars["Float"]["input"]>>;
   gizmos?: InputMaybe<Array<InputMaybe<GizmoHasManyInput>>>;
+  images?: InputMaybe<Array<InputMaybe<WidgetImageHasManyInput>>>;
   inventoryCount?: InputMaybe<Scalars["Float"]["input"]>;
   isChecked?: InputMaybe<Scalars["Boolean"]["input"]>;
   metafields?: InputMaybe<Scalars["JSON"]["input"]>;
-  mustBeLongString?: InputMaybe<Scalars["String"]["input"]>;
   name?: InputMaybe<Scalars["String"]["input"]>;
+  phase?: InputMaybe<Scalars["WidgetPhaseEnum"]["input"]>;
   /** A string list of Gadget platform Role keys to assign to this record */
   roles?: InputMaybe<Array<Scalars["String"]["input"]>>;
   secretKey?: InputMaybe<Scalars["String"]["input"]>;
   section?: InputMaybe<SectionBelongsToInput>;
+  slug?: InputMaybe<Scalars["String"]["input"]>;
   startsAt?: InputMaybe<Scalars["DateTime"]["input"]>;
+  state?: InputMaybe<Scalars["WidgetStateEnum"]["input"]>;
+  tagline?: InputMaybe<Scalars["String"]["input"]>;
+  url?: InputMaybe<Scalars["String"]["input"]>;
 };
 
 export type CreateWidgetResult = UpsertWidgetResult & {
@@ -2948,47 +3917,66 @@ export type CreateWidgetResult = UpsertWidgetResult & {
   widget?: Maybe<Widget>;
 };
 
-export type CustomActionAutoTableTestResult = {
-  __typename?: "CustomActionAutoTableTestResult";
-  actionRun?: Maybe<Scalars["String"]["output"]>;
-  autoTableTest?: Maybe<AutoTableTest>;
-  errors?: Maybe<Array<ExecutionError>>;
-  success: Scalars["Boolean"]["output"];
+export type Customer = {
+  __typename?: "Customer";
+  /** Get all the fields for this record. Useful for not having to list out all the fields you want to retrieve, but slower. */
+  _all: Scalars["JSONObject"]["output"];
+  billingAccount?: Maybe<BillingAccount>;
+  /** The time at which this record was first created. Set once upon record creation and never changed. Managed by Gadget. */
+  createdAt: Scalars["DateTime"]["output"];
+  email?: Maybe<Scalars["String"]["output"]>;
+  /** The globally unique, unchanging identifier for this record. Assigned and managed by Gadget. */
+  id: Scalars["GadgetID"]["output"];
+  /** The time at which this record was last changed. Set each time the record is successfully acted upon by an action. Managed by Gadget. */
+  updatedAt: Scalars["DateTime"]["output"];
 };
 
-export type CustomActionWithParamsAutoTableTestResult = {
-  __typename?: "CustomActionWithParamsAutoTableTestResult";
-  actionRun?: Maybe<Scalars["String"]["output"]>;
-  autoTableTest?: Maybe<AutoTableTest>;
-  errors?: Maybe<Array<ExecutionError>>;
-  success: Scalars["Boolean"]["output"];
+/** Input object supporting setting or updating related model record on a relationship field */
+export type CustomerBelongsToInput = {
+  /** Existing ID of another record, which you would like to associate this record with */
+  _link?: InputMaybe<Scalars["GadgetID"]["input"]>;
+  create?: InputMaybe<NestedCustomerCreateInput>;
+  delete?: InputMaybe<NestedCustomerDeleteInput>;
+  update?: InputMaybe<NestedCustomerUpdateInput>;
 };
 
-export type CustomObjectParamsGameCityInput = {
-  name?: InputMaybe<Scalars["String"]["input"]>;
-  stadium?: InputMaybe<StadiumHasOneInput>;
+/** A connection to a list of Customer items. */
+export type CustomerConnection = {
+  __typename?: "CustomerConnection";
+  /** A list of edges. */
+  edges: Array<CustomerEdge>;
+  /** Information to aid in pagination. */
+  pageInfo: PageInfo;
 };
 
-export type CustomObjectParamsGameCityResult = {
-  __typename?: "CustomObjectParamsGameCityResult";
-  actionRun?: Maybe<Scalars["String"]["output"]>;
-  city?: Maybe<GameCity>;
-  errors?: Maybe<Array<ExecutionError>>;
-  success: Scalars["Boolean"]["output"];
+/** An edge in a Customer connection. */
+export type CustomerEdge = {
+  __typename?: "CustomerEdge";
+  /** A cursor for use in pagination */
+  cursor: Scalars["String"]["output"];
+  /** The item at the end of the edge */
+  node: Customer;
 };
 
-export type CustomObjectParamsObjParamInput = {
-  firstLevelStr?: InputMaybe<Scalars["String"]["input"]>;
-  objProperty1?: InputMaybe<CustomObjectParamsObjProperty1Input>;
+export type CustomerFilter = {
+  AND?: InputMaybe<Array<InputMaybe<CustomerFilter>>>;
+  NOT?: InputMaybe<Array<InputMaybe<CustomerFilter>>>;
+  OR?: InputMaybe<Array<InputMaybe<CustomerFilter>>>;
+  createdAt?: InputMaybe<DateTimeFilter>;
+  email?: InputMaybe<StringFilter>;
+  id?: InputMaybe<IdFilter>;
+  updatedAt?: InputMaybe<DateTimeFilter>;
 };
 
-export type CustomObjectParamsObjProperty1Input = {
-  objProperty2?: InputMaybe<CustomObjectParamsObjProperty2Input>;
-  secondLevelStr?: InputMaybe<Scalars["String"]["input"]>;
-};
-
-export type CustomObjectParamsObjProperty2Input = {
-  thirdLevelStr?: InputMaybe<Scalars["String"]["input"]>;
+export type CustomerSort = {
+  /** Sort the results by the createdAt field. Defaults to ascending (smallest value first). */
+  createdAt?: InputMaybe<SortOrder>;
+  /** Sort the results by the email field. Defaults to ascending (smallest value first). */
+  email?: InputMaybe<SortOrder>;
+  /** Sort the results by the id field. Defaults to ascending (smallest value first). */
+  id?: InputMaybe<SortOrder>;
+  /** Sort the results by the updatedAt field. Defaults to ascending (smallest value first). */
+  updatedAt?: InputMaybe<SortOrder>;
 };
 
 export type DateFilter = {
@@ -3021,22 +4009,50 @@ export type DateTimeFilter = {
   notIn?: InputMaybe<Array<InputMaybe<Scalars["DateTime"]["input"]>>>;
 };
 
-export type DeleteAutoTableTestRelatedModelResult = {
-  __typename?: "DeleteAutoTableTestRelatedModelResult";
+export type DeleteBillingAccountResult = {
+  __typename?: "DeleteBillingAccountResult";
   actionRun?: Maybe<Scalars["String"]["output"]>;
   errors?: Maybe<Array<ExecutionError>>;
   success: Scalars["Boolean"]["output"];
 };
 
-export type DeleteAutoTableTestResult = {
-  __typename?: "DeleteAutoTableTestResult";
+export type DeleteCityResult = {
+  __typename?: "DeleteCityResult";
   actionRun?: Maybe<Scalars["String"]["output"]>;
   errors?: Maybe<Array<ExecutionError>>;
   success: Scalars["Boolean"]["output"];
 };
 
-export type DeleteGameCityResult = {
-  __typename?: "DeleteGameCityResult";
+export type DeleteCourseResult = {
+  __typename?: "DeleteCourseResult";
+  actionRun?: Maybe<Scalars["String"]["output"]>;
+  errors?: Maybe<Array<ExecutionError>>;
+  success: Scalars["Boolean"]["output"];
+};
+
+export type DeleteCustomerResult = {
+  __typename?: "DeleteCustomerResult";
+  actionRun?: Maybe<Scalars["String"]["output"]>;
+  errors?: Maybe<Array<ExecutionError>>;
+  success: Scalars["Boolean"]["output"];
+};
+
+export type DeleteEphemeralResult = {
+  __typename?: "DeleteEphemeralResult";
+  actionRun?: Maybe<Scalars["String"]["output"]>;
+  errors?: Maybe<Array<ExecutionError>>;
+  success: Scalars["Boolean"]["output"];
+};
+
+export type DeleteFieldlessResult = {
+  __typename?: "DeleteFieldlessResult";
+  actionRun?: Maybe<Scalars["String"]["output"]>;
+  errors?: Maybe<Array<ExecutionError>>;
+  success: Scalars["Boolean"]["output"];
+};
+
+export type DeleteFriendshipResult = {
+  __typename?: "DeleteFriendshipResult";
   actionRun?: Maybe<Scalars["String"]["output"]>;
   errors?: Maybe<Array<ExecutionError>>;
   success: Scalars["Boolean"]["output"];
@@ -3070,36 +4086,22 @@ export type DeleteGizmoResult = {
   success: Scalars["Boolean"]["output"];
 };
 
-export type DeleteHasManyThroughBaseModelResult = {
-  __typename?: "DeleteHasManyThroughBaseModelResult";
+export type DeleteLandmarkStadiumResult = {
+  __typename?: "DeleteLandmarkStadiumResult";
   actionRun?: Maybe<Scalars["String"]["output"]>;
   errors?: Maybe<Array<ExecutionError>>;
   success: Scalars["Boolean"]["output"];
 };
 
-export type DeleteHasManyThroughJoinerModelResult = {
-  __typename?: "DeleteHasManyThroughJoinerModelResult";
+export type DeleteRegistrationResult = {
+  __typename?: "DeleteRegistrationResult";
   actionRun?: Maybe<Scalars["String"]["output"]>;
   errors?: Maybe<Array<ExecutionError>>;
   success: Scalars["Boolean"]["output"];
 };
 
-export type DeleteHasManyThroughSiblingModelResult = {
-  __typename?: "DeleteHasManyThroughSiblingModelResult";
-  actionRun?: Maybe<Scalars["String"]["output"]>;
-  errors?: Maybe<Array<ExecutionError>>;
-  success: Scalars["Boolean"]["output"];
-};
-
-export type DeleteModelAResult = {
-  __typename?: "DeleteModelAResult";
-  actionRun?: Maybe<Scalars["String"]["output"]>;
-  errors?: Maybe<Array<ExecutionError>>;
-  success: Scalars["Boolean"]["output"];
-};
-
-export type DeletePartResult = {
-  __typename?: "DeletePartResult";
+export type DeleteSampleModelToTestReallyLongModelNamesResult = {
+  __typename?: "DeleteSampleModelToTestReallyLongModelNamesResult";
   actionRun?: Maybe<Scalars["String"]["output"]>;
   errors?: Maybe<Array<ExecutionError>>;
   success: Scalars["Boolean"]["output"];
@@ -3112,29 +4114,22 @@ export type DeleteSectionResult = {
   success: Scalars["Boolean"]["output"];
 };
 
-export type DeleteShopifyProductImageResult = {
-  __typename?: "DeleteShopifyProductImageResult";
+export type DeleteSprocketResult = {
+  __typename?: "DeleteSprocketResult";
   actionRun?: Maybe<Scalars["String"]["output"]>;
   errors?: Maybe<Array<ExecutionError>>;
   success: Scalars["Boolean"]["output"];
 };
 
-export type DeleteShopifyProductOptionResult = {
-  __typename?: "DeleteShopifyProductOptionResult";
+export type DeleteStudentResult = {
+  __typename?: "DeleteStudentResult";
   actionRun?: Maybe<Scalars["String"]["output"]>;
   errors?: Maybe<Array<ExecutionError>>;
   success: Scalars["Boolean"]["output"];
 };
 
-export type DeleteShopifyProductResult = {
-  __typename?: "DeleteShopifyProductResult";
-  actionRun?: Maybe<Scalars["String"]["output"]>;
-  errors?: Maybe<Array<ExecutionError>>;
-  success: Scalars["Boolean"]["output"];
-};
-
-export type DeleteShopifyProductVariantResult = {
-  __typename?: "DeleteShopifyProductVariantResult";
+export type DeleteTeacherResult = {
+  __typename?: "DeleteTeacherResult";
   actionRun?: Maybe<Scalars["String"]["output"]>;
   errors?: Maybe<Array<ExecutionError>>;
   success: Scalars["Boolean"]["output"];
@@ -3142,6 +4137,13 @@ export type DeleteShopifyProductVariantResult = {
 
 export type DeleteUserResult = {
   __typename?: "DeleteUserResult";
+  actionRun?: Maybe<Scalars["String"]["output"]>;
+  errors?: Maybe<Array<ExecutionError>>;
+  success: Scalars["Boolean"]["output"];
+};
+
+export type DeleteWidgetImageResult = {
+  __typename?: "DeleteWidgetImageResult";
   actionRun?: Maybe<Scalars["String"]["output"]>;
   errors?: Maybe<Array<ExecutionError>>;
   success: Scalars["Boolean"]["output"];
@@ -3184,22 +4186,40 @@ export type EnqueueBackgroundActionResult = {
   success: Scalars["Boolean"]["output"];
 };
 
-export type ErrorShopifySyncInput = {
-  domain?: InputMaybe<Scalars["String"]["input"]>;
-  errorDetails?: InputMaybe<Scalars["String"]["input"]>;
-  errorMessage?: InputMaybe<Scalars["String"]["input"]>;
-  force?: InputMaybe<Scalars["Boolean"]["input"]>;
-  models?: InputMaybe<Scalars["JSON"]["input"]>;
-  shop?: InputMaybe<ShopifyShopBelongsToInput>;
-  syncSince?: InputMaybe<Scalars["DateTime"]["input"]>;
+export type Ephemeral = {
+  __typename?: "Ephemeral";
+  /** Get all the fields for this record. Useful for not having to list out all the fields you want to retrieve, but slower. */
+  _all: Scalars["JSONObject"]["output"];
+  /** The time at which this record was first created. Set once upon record creation and never changed. Managed by Gadget. */
+  createdAt: Scalars["DateTime"]["output"];
+  data?: Maybe<Scalars["String"]["output"]>;
+  /** The globally unique, unchanging identifier for this record. Assigned and managed by Gadget. */
+  id: Scalars["GadgetID"]["output"];
+  /** The time at which this record was last changed. Set each time the record is successfully acted upon by an action. Managed by Gadget. */
+  updatedAt: Scalars["DateTime"]["output"];
 };
 
-export type ErrorShopifySyncResult = {
-  __typename?: "ErrorShopifySyncResult";
-  actionRun?: Maybe<Scalars["String"]["output"]>;
-  errors?: Maybe<Array<ExecutionError>>;
-  shopifySync?: Maybe<ShopifySync>;
-  success: Scalars["Boolean"]["output"];
+/** A connection to a list of Ephemeral items. */
+export type EphemeralConnection = {
+  __typename?: "EphemeralConnection";
+  /** A list of edges. */
+  edges: Array<EphemeralEdge>;
+  /** Information to aid in pagination. */
+  pageInfo: PageInfo;
+};
+
+/** An edge in a Ephemeral connection. */
+export type EphemeralEdge = {
+  __typename?: "EphemeralEdge";
+  /** A cursor for use in pagination */
+  cursor: Scalars["String"]["output"];
+  /** The item at the end of the edge */
+  node: Ephemeral;
+};
+
+export type EphemeralFilter = {
+  data?: InputMaybe<StringEqualsFilter>;
+  id?: InputMaybe<IdEqualsFilter>;
 };
 
 export type ExecutionError = {
@@ -3211,11 +4231,75 @@ export type ExecutionError = {
   stack?: Maybe<Scalars["String"]["output"]>;
 };
 
-export type FlipAllResult = {
-  __typename?: "FlipAllResult";
+export type Fieldless = {
+  __typename?: "Fieldless";
+  /** Get all the fields for this record. Useful for not having to list out all the fields you want to retrieve, but slower. */
+  _all: Scalars["JSONObject"]["output"];
+  /** The time at which this record was first created. Set once upon record creation and never changed. Managed by Gadget. */
+  createdAt: Scalars["DateTime"]["output"];
+  /** The globally unique, unchanging identifier for this record. Assigned and managed by Gadget. */
+  id: Scalars["GadgetID"]["output"];
+  /** The time at which this record was last changed. Set each time the record is successfully acted upon by an action. Managed by Gadget. */
+  updatedAt: Scalars["DateTime"]["output"];
+};
+
+/** A connection to a list of Fieldless items. */
+export type FieldlessConnection = {
+  __typename?: "FieldlessConnection";
+  /** A list of edges. */
+  edges: Array<FieldlessEdge>;
+  /** Information to aid in pagination. */
+  pageInfo: PageInfo;
+};
+
+/** An edge in a Fieldless connection. */
+export type FieldlessEdge = {
+  __typename?: "FieldlessEdge";
+  /** A cursor for use in pagination */
+  cursor: Scalars["String"]["output"];
+  /** The item at the end of the edge */
+  node: Fieldless;
+};
+
+export type FieldlessFilter = {
+  AND?: InputMaybe<Array<InputMaybe<FieldlessFilter>>>;
+  NOT?: InputMaybe<Array<InputMaybe<FieldlessFilter>>>;
+  OR?: InputMaybe<Array<InputMaybe<FieldlessFilter>>>;
+  createdAt?: InputMaybe<DateTimeFilter>;
+  id?: InputMaybe<IdFilter>;
+  updatedAt?: InputMaybe<DateTimeFilter>;
+};
+
+export type FieldlessSort = {
+  /** Sort the results by the createdAt field. Defaults to ascending (smallest value first). */
+  createdAt?: InputMaybe<SortOrder>;
+  /** Sort the results by the id field. Defaults to ascending (smallest value first). */
+  id?: InputMaybe<SortOrder>;
+  /** Sort the results by the updatedAt field. Defaults to ascending (smallest value first). */
+  updatedAt?: InputMaybe<SortOrder>;
+};
+
+export type FlipAllWidgetsResult = {
+  __typename?: "FlipAllWidgetsResult";
   errors?: Maybe<Array<ExecutionError>>;
   result?: Maybe<Scalars["JSON"]["output"]>;
   success: Scalars["Boolean"]["output"];
+};
+
+export type FlipDownWidgetResult = {
+  __typename?: "FlipDownWidgetResult";
+  actionRun?: Maybe<Scalars["String"]["output"]>;
+  errors?: Maybe<Array<ExecutionError>>;
+  success: Scalars["Boolean"]["output"];
+  widget?: Maybe<Widget>;
+};
+
+export type FlipUpWidgetResult = {
+  __typename?: "FlipUpWidgetResult";
+  actionRun?: Maybe<Scalars["String"]["output"]>;
+  errors?: Maybe<Array<ExecutionError>>;
+  success: Scalars["Boolean"]["output"];
+  widget?: Maybe<Widget>;
 };
 
 export type FloatFilter = {
@@ -3228,6 +4312,94 @@ export type FloatFilter = {
   lessThanOrEqual?: InputMaybe<Scalars["Float"]["input"]>;
   notEquals?: InputMaybe<Scalars["Float"]["input"]>;
   notIn?: InputMaybe<Array<InputMaybe<Scalars["Float"]["input"]>>>;
+};
+
+export type FoldGizmoInput = {
+  name?: InputMaybe<Scalars["String"]["input"]>;
+  sprockets?: InputMaybe<Array<InputMaybe<SprocketHasManyInput>>>;
+  state?: InputMaybe<Scalars["GizmoStateEnum"]["input"]>;
+  widget?: InputMaybe<WidgetBelongsToInput>;
+};
+
+export type FoldGizmoResult = {
+  __typename?: "FoldGizmoResult";
+  actionRun?: Maybe<Scalars["String"]["output"]>;
+  errors?: Maybe<Array<ExecutionError>>;
+  gizmo?: Maybe<Gizmo>;
+  success: Scalars["Boolean"]["output"];
+};
+
+export type Friendship = {
+  __typename?: "Friendship";
+  /** Get all the fields for this record. Useful for not having to list out all the fields you want to retrieve, but slower. */
+  _all: Scalars["JSONObject"]["output"];
+  /** The time at which this record was first created. Set once upon record creation and never changed. Managed by Gadget. */
+  createdAt: Scalars["DateTime"]["output"];
+  ended?: Maybe<Scalars["Date"]["output"]>;
+  followee: Student;
+  followeeId: Scalars["GadgetID"]["output"];
+  follower: Student;
+  followerId: Scalars["GadgetID"]["output"];
+  /** The globally unique, unchanging identifier for this record. Assigned and managed by Gadget. */
+  id: Scalars["GadgetID"]["output"];
+  started?: Maybe<Scalars["Date"]["output"]>;
+  /** The time at which this record was last changed. Set each time the record is successfully acted upon by an action. Managed by Gadget. */
+  updatedAt: Scalars["DateTime"]["output"];
+};
+
+/** A connection to a list of Friendship items. */
+export type FriendshipConnection = {
+  __typename?: "FriendshipConnection";
+  /** A list of edges. */
+  edges: Array<FriendshipEdge>;
+  /** Information to aid in pagination. */
+  pageInfo: PageInfo;
+};
+
+/** An edge in a Friendship connection. */
+export type FriendshipEdge = {
+  __typename?: "FriendshipEdge";
+  /** A cursor for use in pagination */
+  cursor: Scalars["String"]["output"];
+  /** The item at the end of the edge */
+  node: Friendship;
+};
+
+export type FriendshipFilter = {
+  AND?: InputMaybe<Array<InputMaybe<FriendshipFilter>>>;
+  NOT?: InputMaybe<Array<InputMaybe<FriendshipFilter>>>;
+  OR?: InputMaybe<Array<InputMaybe<FriendshipFilter>>>;
+  createdAt?: InputMaybe<DateTimeFilter>;
+  ended?: InputMaybe<DateFilter>;
+  followee?: InputMaybe<IdFilter>;
+  followeeId?: InputMaybe<IdFilter>;
+  follower?: InputMaybe<IdFilter>;
+  followerId?: InputMaybe<IdFilter>;
+  id?: InputMaybe<IdFilter>;
+  started?: InputMaybe<DateFilter>;
+  updatedAt?: InputMaybe<DateTimeFilter>;
+};
+
+/** Input object supporting setting or updating related model record on a relationship field */
+export type FriendshipHasManyInput = {
+  /** Creates, updates, or deletes existing records in the database as needed to arrive at the list of records specified. */
+  _converge?: InputMaybe<ConvergeFriendshipInput>;
+  create?: InputMaybe<NestedFriendshipCreateInput>;
+  delete?: InputMaybe<NestedFriendshipDeleteInput>;
+  update?: InputMaybe<NestedFriendshipUpdateInput>;
+};
+
+export type FriendshipSort = {
+  /** Sort the results by the createdAt field. Defaults to ascending (smallest value first). */
+  createdAt?: InputMaybe<SortOrder>;
+  /** Sort the results by the ended field. Defaults to ascending (smallest value first). */
+  ended?: InputMaybe<SortOrder>;
+  /** Sort the results by the id field. Defaults to ascending (smallest value first). */
+  id?: InputMaybe<SortOrder>;
+  /** Sort the results by the started field. Defaults to ascending (smallest value first). */
+  started?: InputMaybe<SortOrder>;
+  /** Sort the results by the updatedAt field. Defaults to ascending (smallest value first). */
+  updatedAt?: InputMaybe<SortOrder>;
 };
 
 export type GadgetAction = {
@@ -3304,6 +4476,8 @@ export type GadgetApplicationMeta = {
   jsPackageIdentifier: Scalars["String"]["output"];
   jsPackageTarballURL: Scalars["String"]["output"];
   model?: Maybe<GadgetModel>;
+  /** Get the same metadata blob for a model and all the models reachable from it via relationships */
+  modelAndRelatedModels: Array<GadgetModel>;
   models: Array<GadgetModel>;
   name: Scalars["String"]["output"];
   productionGraphQLEndpoint: Scalars["String"]["output"];
@@ -3333,6 +4507,11 @@ export type GadgetApplicationMetaHydrationsArgs = {
 export type GadgetApplicationMetaModelArgs = {
   apiIdentifier?: InputMaybe<Scalars["String"]["input"]>;
   key?: InputMaybe<Scalars["String"]["input"]>;
+  namespace?: InputMaybe<Array<Scalars["String"]["input"]>>;
+};
+
+export type GadgetApplicationMetaModelAndRelatedModelsArgs = {
+  apiIdentifier?: InputMaybe<Scalars["String"]["input"]>;
   namespace?: InputMaybe<Array<Scalars["String"]["input"]>>;
 };
 
@@ -3650,99 +4829,60 @@ export type GadgetTrigger = {
   specID: Scalars["String"]["output"];
 };
 
-export type GameCity = {
-  __typename?: "GameCity";
-  /** Get all the fields for this record. Useful for not having to list out all the fields you want to retrieve, but slower. */
-  _all: Scalars["JSONObject"]["output"];
-  /** The time at which this record was first created. Set once upon record creation and never changed. Managed by Gadget. */
-  createdAt: Scalars["DateTime"]["output"];
-  /** The globally unique, unchanging identifier for this record. Assigned and managed by Gadget. */
-  id: Scalars["GadgetID"]["output"];
-  name?: Maybe<Scalars["String"]["output"]>;
-  stadium?: Maybe<GameStadium>;
-  /** The time at which this record was last changed. Set each time the record is successfully acted upon by an action. Managed by Gadget. */
-  updatedAt: Scalars["DateTime"]["output"];
+export type GameCalculateScoresResult = {
+  __typename?: "GameCalculateScoresResult";
+  errors?: Maybe<Array<ExecutionError>>;
+  result?: Maybe<Scalars["JSON"]["output"]>;
+  success: Scalars["Boolean"]["output"];
 };
 
-/** A connection to a list of GameCity items. */
-export type GameCityConnection = {
-  __typename?: "GameCityConnection";
-  /** A list of edges. */
-  edges: Array<GameCityEdge>;
-  /** Information to aid in pagination. */
-  pageInfo: PageInfo;
-};
-
-/** An edge in a GameCity connection. */
-export type GameCityEdge = {
-  __typename?: "GameCityEdge";
-  /** A cursor for use in pagination */
-  cursor: Scalars["String"]["output"];
-  /** The item at the end of the edge */
-  node: GameCity;
-};
-
-export type GameCityFilter = {
-  AND?: InputMaybe<Array<InputMaybe<GameCityFilter>>>;
-  NOT?: InputMaybe<Array<InputMaybe<GameCityFilter>>>;
-  OR?: InputMaybe<Array<InputMaybe<GameCityFilter>>>;
-  createdAt?: InputMaybe<DateTimeFilter>;
-  id?: InputMaybe<IdFilter>;
-  name?: InputMaybe<StringFilter>;
-  updatedAt?: InputMaybe<DateTimeFilter>;
-};
-
-export type GameCitySort = {
-  /** Sort the results by the createdAt field. Defaults to ascending (smallest value first). */
-  createdAt?: InputMaybe<SortOrder>;
-  /** Sort the results by the id field. Defaults to ascending (smallest value first). */
-  id?: InputMaybe<SortOrder>;
-  /** Sort the results by the name field. Defaults to ascending (smallest value first). */
-  name?: InputMaybe<SortOrder>;
-  /** Sort the results by the updatedAt field. Defaults to ascending (smallest value first). */
-  updatedAt?: InputMaybe<SortOrder>;
+export type GameLetTheGamesBeginResult = {
+  __typename?: "GameLetTheGamesBeginResult";
+  errors?: Maybe<Array<ExecutionError>>;
+  result?: Maybe<Scalars["JSON"]["output"]>;
+  success: Scalars["Boolean"]["output"];
 };
 
 export type GameMutations = {
   __typename?: "GameMutations";
-  bulkCreateCities?: Maybe<BulkCreateGameCitiesResult>;
+  barfAnErrorPlayer?: Maybe<BarfAnErrorGamePlayerResult>;
+  bulkBarfAnErrorPlayers?: Maybe<BulkBarfAnErrorGamePlayersResult>;
   bulkCreatePlayers?: Maybe<BulkCreateGamePlayersResult>;
   bulkCreateRounds?: Maybe<BulkCreateGameRoundsResult>;
   bulkCreateStadia?: Maybe<BulkCreateGameStadiaResult>;
-  bulkCustomObjectParamsCities?: Maybe<BulkCustomObjectParamsGameCitiesResult>;
-  bulkDeleteCities?: Maybe<BulkDeleteGameCitiesResult>;
   bulkDeletePlayers?: Maybe<BulkDeleteGamePlayersResult>;
   bulkDeleteRounds?: Maybe<BulkDeleteGameRoundsResult>;
   bulkDeleteStadia?: Maybe<BulkDeleteGameStadiaResult>;
-  bulkUpdateCities?: Maybe<BulkUpdateGameCitiesResult>;
+  bulkSetBestNumberPlayers?: Maybe<BulkSetBestNumberGamePlayersResult>;
   bulkUpdatePlayers?: Maybe<BulkUpdateGamePlayersResult>;
   bulkUpdateRounds?: Maybe<BulkUpdateGameRoundsResult>;
   bulkUpdateStadia?: Maybe<BulkUpdateGameStadiaResult>;
-  bulkUpsertCities: BulkUpsertGameCitiesResult;
   bulkUpsertPlayers: BulkUpsertGamePlayersResult;
   bulkUpsertRounds: BulkUpsertGameRoundsResult;
   bulkUpsertStadia: BulkUpsertGameStadiaResult;
-  createCity?: Maybe<CreateGameCityResult>;
+  calculateScores?: Maybe<GameCalculateScoresResult>;
   createPlayer?: Maybe<CreateGamePlayerResult>;
   createRound?: Maybe<CreateGameRoundResult>;
   createStadium?: Maybe<CreateGameStadiumResult>;
-  customObjectParamsCity?: Maybe<CustomObjectParamsGameCityResult>;
-  deleteCity?: Maybe<DeleteGameCityResult>;
   deletePlayer?: Maybe<DeleteGamePlayerResult>;
   deleteRound?: Maybe<DeleteGameRoundResult>;
   deleteStadium?: Maybe<DeleteGameStadiumResult>;
-  updateCity?: Maybe<UpdateGameCityResult>;
+  letTheGamesBegin?: Maybe<GameLetTheGamesBeginResult>;
+  setBestNumberPlayer?: Maybe<SetBestNumberGamePlayerResult>;
   updatePlayer?: Maybe<UpdateGamePlayerResult>;
   updateRound?: Maybe<UpdateGameRoundResult>;
   updateStadium?: Maybe<UpdateGameStadiumResult>;
-  upsertCity?: Maybe<UpsertGameCityResult>;
   upsertPlayer?: Maybe<UpsertGamePlayerResult>;
   upsertRound?: Maybe<UpsertGameRoundResult>;
   upsertStadium?: Maybe<UpsertGameStadiumResult>;
 };
 
-export type GameMutationsBulkCreateCitiesArgs = {
-  inputs: Array<BulkCreateGameCitiesInput>;
+export type GameMutationsBarfAnErrorPlayerArgs = {
+  id: Scalars["GadgetID"]["input"];
+};
+
+export type GameMutationsBulkBarfAnErrorPlayersArgs = {
+  ids: Array<Scalars["GadgetID"]["input"]>;
 };
 
 export type GameMutationsBulkCreatePlayersArgs = {
@@ -3757,14 +4897,6 @@ export type GameMutationsBulkCreateStadiaArgs = {
   inputs: Array<BulkCreateGameStadiaInput>;
 };
 
-export type GameMutationsBulkCustomObjectParamsCitiesArgs = {
-  inputs: Array<BulkCustomObjectParamsGameCitiesInput>;
-};
-
-export type GameMutationsBulkDeleteCitiesArgs = {
-  ids: Array<Scalars["GadgetID"]["input"]>;
-};
-
 export type GameMutationsBulkDeletePlayersArgs = {
   ids: Array<Scalars["GadgetID"]["input"]>;
 };
@@ -3777,8 +4909,8 @@ export type GameMutationsBulkDeleteStadiaArgs = {
   ids: Array<Scalars["GadgetID"]["input"]>;
 };
 
-export type GameMutationsBulkUpdateCitiesArgs = {
-  inputs: Array<BulkUpdateGameCitiesInput>;
+export type GameMutationsBulkSetBestNumberPlayersArgs = {
+  ids: Array<Scalars["GadgetID"]["input"]>;
 };
 
 export type GameMutationsBulkUpdatePlayersArgs = {
@@ -3793,10 +4925,6 @@ export type GameMutationsBulkUpdateStadiaArgs = {
   inputs: Array<BulkUpdateGameStadiaInput>;
 };
 
-export type GameMutationsBulkUpsertCitiesArgs = {
-  inputs: Array<BulkUpsertGameCitiesInput>;
-};
-
 export type GameMutationsBulkUpsertPlayersArgs = {
   inputs: Array<BulkUpsertGamePlayersInput>;
 };
@@ -3807,10 +4935,6 @@ export type GameMutationsBulkUpsertRoundsArgs = {
 
 export type GameMutationsBulkUpsertStadiaArgs = {
   inputs: Array<BulkUpsertGameStadiaInput>;
-};
-
-export type GameMutationsCreateCityArgs = {
-  city?: InputMaybe<CreateGameCityInput>;
 };
 
 export type GameMutationsCreatePlayerArgs = {
@@ -3825,17 +4949,6 @@ export type GameMutationsCreateStadiumArgs = {
   stadium?: InputMaybe<CreateGameStadiumInput>;
 };
 
-export type GameMutationsCustomObjectParamsCityArgs = {
-  city?: InputMaybe<CustomObjectParamsGameCityInput>;
-  id: Scalars["GadgetID"]["input"];
-  objParam?: InputMaybe<CustomObjectParamsObjParamInput>;
-  rootLevelStr?: InputMaybe<Scalars["String"]["input"]>;
-};
-
-export type GameMutationsDeleteCityArgs = {
-  id: Scalars["GadgetID"]["input"];
-};
-
 export type GameMutationsDeletePlayerArgs = {
   id: Scalars["GadgetID"]["input"];
 };
@@ -3848,8 +4961,7 @@ export type GameMutationsDeleteStadiumArgs = {
   id: Scalars["GadgetID"]["input"];
 };
 
-export type GameMutationsUpdateCityArgs = {
-  city?: InputMaybe<UpdateGameCityInput>;
+export type GameMutationsSetBestNumberPlayerArgs = {
   id: Scalars["GadgetID"]["input"];
 };
 
@@ -3866,11 +4978,6 @@ export type GameMutationsUpdateRoundArgs = {
 export type GameMutationsUpdateStadiumArgs = {
   id: Scalars["GadgetID"]["input"];
   stadium?: InputMaybe<UpdateGameStadiumInput>;
-};
-
-export type GameMutationsUpsertCityArgs = {
-  city?: InputMaybe<UpsertGameCityInput>;
-  on?: InputMaybe<Array<Scalars["String"]["input"]>>;
 };
 
 export type GameMutationsUpsertPlayerArgs = {
@@ -3892,15 +4999,26 @@ export type GamePlayer = {
   __typename?: "GamePlayer";
   /** Get all the fields for this record. Useful for not having to list out all the fields you want to retrieve, but slower. */
   _all: Scalars["JSONObject"]["output"];
+  birthday?: Maybe<Scalars["DateTime"]["output"]>;
   /** The time at which this record was first created. Set once upon record creation and never changed. Managed by Gadget. */
   createdAt: Scalars["DateTime"]["output"];
-  currentRound?: Maybe<GameRound>;
-  currentRoundId?: Maybe<Scalars["GadgetID"]["output"]>;
   /** The globally unique, unchanging identifier for this record. Assigned and managed by Gadget. */
   id: Scalars["GadgetID"]["output"];
-  name?: Maybe<Scalars["String"]["output"]>;
+  name: Scalars["String"]["output"];
+  number: Scalars["Float"]["output"];
+  rounds: GameRoundConnection;
   /** The time at which this record was last changed. Set each time the record is successfully acted upon by an action. Managed by Gadget. */
   updatedAt: Scalars["DateTime"]["output"];
+};
+
+export type GamePlayerRoundsArgs = {
+  after?: InputMaybe<Scalars["String"]["input"]>;
+  before?: InputMaybe<Scalars["String"]["input"]>;
+  filter?: InputMaybe<Array<GameRoundFilter>>;
+  first?: InputMaybe<Scalars["Int"]["input"]>;
+  last?: InputMaybe<Scalars["Int"]["input"]>;
+  search?: InputMaybe<Scalars["String"]["input"]>;
+  sort?: InputMaybe<Array<GameRoundSort>>;
 };
 
 /** A connection to a list of GamePlayer items. */
@@ -3925,49 +5043,37 @@ export type GamePlayerFilter = {
   AND?: InputMaybe<Array<InputMaybe<GamePlayerFilter>>>;
   NOT?: InputMaybe<Array<InputMaybe<GamePlayerFilter>>>;
   OR?: InputMaybe<Array<InputMaybe<GamePlayerFilter>>>;
+  birthday?: InputMaybe<DateTimeFilter>;
   createdAt?: InputMaybe<DateTimeFilter>;
-  currentRound?: InputMaybe<IdFilter>;
-  currentRoundId?: InputMaybe<IdFilter>;
   id?: InputMaybe<IdFilter>;
   name?: InputMaybe<StringFilter>;
+  number?: InputMaybe<FloatFilter>;
   updatedAt?: InputMaybe<DateTimeFilter>;
 };
 
 export type GamePlayerSort = {
+  /** Sort the results by the birthday field. Defaults to ascending (smallest value first). */
+  birthday?: InputMaybe<SortOrder>;
   /** Sort the results by the createdAt field. Defaults to ascending (smallest value first). */
   createdAt?: InputMaybe<SortOrder>;
   /** Sort the results by the id field. Defaults to ascending (smallest value first). */
   id?: InputMaybe<SortOrder>;
   /** Sort the results by the name field. Defaults to ascending (smallest value first). */
   name?: InputMaybe<SortOrder>;
+  /** Sort the results by the number field. Defaults to ascending (smallest value first). */
+  number?: InputMaybe<SortOrder>;
   /** Sort the results by the updatedAt field. Defaults to ascending (smallest value first). */
   updatedAt?: InputMaybe<SortOrder>;
 };
 
 export type GameQueries = {
   __typename?: "GameQueries";
-  cities: GameCityConnection;
-  city?: Maybe<GameCity>;
   player?: Maybe<GamePlayer>;
   players: GamePlayerConnection;
   round?: Maybe<GameRound>;
   rounds: GameRoundConnection;
   stadia: GameStadiumConnection;
   stadium?: Maybe<GameStadium>;
-};
-
-export type GameQueriesCitiesArgs = {
-  after?: InputMaybe<Scalars["String"]["input"]>;
-  before?: InputMaybe<Scalars["String"]["input"]>;
-  filter?: InputMaybe<Array<GameCityFilter>>;
-  first?: InputMaybe<Scalars["Int"]["input"]>;
-  last?: InputMaybe<Scalars["Int"]["input"]>;
-  search?: InputMaybe<Scalars["String"]["input"]>;
-  sort?: InputMaybe<Array<GameCitySort>>;
-};
-
-export type GameQueriesCityArgs = {
-  id: Scalars["GadgetID"]["input"];
 };
 
 export type GameQueriesPlayerArgs = {
@@ -4020,22 +5126,11 @@ export type GameRound = {
   createdAt: Scalars["DateTime"]["output"];
   /** The globally unique, unchanging identifier for this record. Assigned and managed by Gadget. */
   id: Scalars["GadgetID"]["output"];
-  name?: Maybe<Scalars["String"]["output"]>;
-  players: GamePlayerConnection;
-  stadium: GameStadium;
-  stadiumId: Scalars["GadgetID"]["output"];
+  number?: Maybe<Scalars["Float"]["output"]>;
+  player: GamePlayer;
+  playerId: Scalars["GadgetID"]["output"];
   /** The time at which this record was last changed. Set each time the record is successfully acted upon by an action. Managed by Gadget. */
   updatedAt: Scalars["DateTime"]["output"];
-};
-
-export type GameRoundPlayersArgs = {
-  after?: InputMaybe<Scalars["String"]["input"]>;
-  before?: InputMaybe<Scalars["String"]["input"]>;
-  filter?: InputMaybe<Array<GamePlayerFilter>>;
-  first?: InputMaybe<Scalars["Int"]["input"]>;
-  last?: InputMaybe<Scalars["Int"]["input"]>;
-  search?: InputMaybe<Scalars["String"]["input"]>;
-  sort?: InputMaybe<Array<GamePlayerSort>>;
 };
 
 /** A connection to a list of GameRound items. */
@@ -4062,9 +5157,9 @@ export type GameRoundFilter = {
   OR?: InputMaybe<Array<InputMaybe<GameRoundFilter>>>;
   createdAt?: InputMaybe<DateTimeFilter>;
   id?: InputMaybe<IdFilter>;
-  name?: InputMaybe<StringFilter>;
-  stadium?: InputMaybe<IdFilter>;
-  stadiumId?: InputMaybe<IdFilter>;
+  number?: InputMaybe<FloatFilter>;
+  player?: InputMaybe<IdFilter>;
+  playerId?: InputMaybe<IdFilter>;
   updatedAt?: InputMaybe<DateTimeFilter>;
 };
 
@@ -4073,8 +5168,8 @@ export type GameRoundSort = {
   createdAt?: InputMaybe<SortOrder>;
   /** Sort the results by the id field. Defaults to ascending (smallest value first). */
   id?: InputMaybe<SortOrder>;
-  /** Sort the results by the name field. Defaults to ascending (smallest value first). */
-  name?: InputMaybe<SortOrder>;
+  /** Sort the results by the number field. Defaults to ascending (smallest value first). */
+  number?: InputMaybe<SortOrder>;
   /** Sort the results by the updatedAt field. Defaults to ascending (smallest value first). */
   updatedAt?: InputMaybe<SortOrder>;
 };
@@ -4083,29 +5178,13 @@ export type GameStadium = {
   __typename?: "GameStadium";
   /** Get all the fields for this record. Useful for not having to list out all the fields you want to retrieve, but slower. */
   _all: Scalars["JSONObject"]["output"];
-  city?: Maybe<GameCity>;
-  cityId?: Maybe<Scalars["GadgetID"]["output"]>;
   /** The time at which this record was first created. Set once upon record creation and never changed. Managed by Gadget. */
   createdAt: Scalars["DateTime"]["output"];
   /** The globally unique, unchanging identifier for this record. Assigned and managed by Gadget. */
   id: Scalars["GadgetID"]["output"];
   name?: Maybe<Scalars["String"]["output"]>;
-  photo?: Maybe<StoredFile>;
-  rounds: GameRoundConnection;
-  tags?: Maybe<Array<Scalars["StadiumTagsEnum"]["output"]>>;
-  type?: Maybe<Scalars["StadiumTypeEnum"]["output"]>;
   /** The time at which this record was last changed. Set each time the record is successfully acted upon by an action. Managed by Gadget. */
   updatedAt: Scalars["DateTime"]["output"];
-};
-
-export type GameStadiumRoundsArgs = {
-  after?: InputMaybe<Scalars["String"]["input"]>;
-  before?: InputMaybe<Scalars["String"]["input"]>;
-  filter?: InputMaybe<Array<GameRoundFilter>>;
-  first?: InputMaybe<Scalars["Int"]["input"]>;
-  last?: InputMaybe<Scalars["Int"]["input"]>;
-  search?: InputMaybe<Scalars["String"]["input"]>;
-  sort?: InputMaybe<Array<GameRoundSort>>;
 };
 
 /** A connection to a list of GameStadium items. */
@@ -4130,13 +5209,9 @@ export type GameStadiumFilter = {
   AND?: InputMaybe<Array<InputMaybe<GameStadiumFilter>>>;
   NOT?: InputMaybe<Array<InputMaybe<GameStadiumFilter>>>;
   OR?: InputMaybe<Array<InputMaybe<GameStadiumFilter>>>;
-  city?: InputMaybe<IdFilter>;
-  cityId?: InputMaybe<IdFilter>;
   createdAt?: InputMaybe<DateTimeFilter>;
   id?: InputMaybe<IdFilter>;
   name?: InputMaybe<StringFilter>;
-  tags?: InputMaybe<MultiEnumFilter>;
-  type?: InputMaybe<SingleEnumFilter>;
   updatedAt?: InputMaybe<DateTimeFilter>;
 };
 
@@ -4147,10 +5222,6 @@ export type GameStadiumSort = {
   id?: InputMaybe<SortOrder>;
   /** Sort the results by the name field. Defaults to ascending (smallest value first). */
   name?: InputMaybe<SortOrder>;
-  /** Sort the results by the tags field. Defaults to ascending (smallest value first). */
-  tags?: InputMaybe<SortOrder>;
-  /** Sort the results by the type field. Defaults to ascending (smallest value first). */
-  type?: InputMaybe<SortOrder>;
   /** Sort the results by the updatedAt field. Defaults to ascending (smallest value first). */
   updatedAt?: InputMaybe<SortOrder>;
 };
@@ -4163,12 +5234,38 @@ export type Gizmo = {
   createdAt: Scalars["DateTime"]["output"];
   /** The globally unique, unchanging identifier for this record. Assigned and managed by Gadget. */
   id: Scalars["GadgetID"]["output"];
-  name?: Maybe<Scalars["String"]["output"]>;
-  orientation?: Maybe<Scalars["String"]["output"]>;
+  name: Scalars["String"]["output"];
+  sprockets: SprocketConnection;
+  state?: Maybe<Scalars["GizmoStateEnum"]["output"]>;
   /** The time at which this record was last changed. Set each time the record is successfully acted upon by an action. Managed by Gadget. */
   updatedAt: Scalars["DateTime"]["output"];
-  widget?: Maybe<Widget>;
-  widgetId?: Maybe<Scalars["GadgetID"]["output"]>;
+  widget: Widget;
+  widgetId: Scalars["GadgetID"]["output"];
+};
+
+export type GizmoSprocketsArgs = {
+  after?: InputMaybe<Scalars["String"]["input"]>;
+  before?: InputMaybe<Scalars["String"]["input"]>;
+  filter?: InputMaybe<Array<SprocketFilter>>;
+  first?: InputMaybe<Scalars["Int"]["input"]>;
+  last?: InputMaybe<Scalars["Int"]["input"]>;
+  search?: InputMaybe<Scalars["String"]["input"]>;
+  sort?: InputMaybe<Array<SprocketSort>>;
+};
+
+/** Input object supporting setting or updating related model record on a relationship field */
+export type GizmoBelongsToInput = {
+  /** Existing ID of another record, which you would like to associate this record with */
+  _link?: InputMaybe<Scalars["GadgetID"]["input"]>;
+  bend?: InputMaybe<NestedGizmoBendInput>;
+  break?: InputMaybe<NestedGizmoBreakInput>;
+  create?: InputMaybe<NestedGizmoCreateInput>;
+  delete?: InputMaybe<NestedGizmoDeleteInput>;
+  fold?: InputMaybe<NestedGizmoFoldInput>;
+  otherCreate?: InputMaybe<NestedGizmoOtherCreateInput>;
+  straighten?: InputMaybe<NestedGizmoStraightenInput>;
+  unfold?: InputMaybe<NestedGizmoUnfoldInput>;
+  update?: InputMaybe<NestedGizmoUpdateInput>;
 };
 
 /** A connection to a list of Gizmo items. */
@@ -4196,7 +5293,7 @@ export type GizmoFilter = {
   createdAt?: InputMaybe<DateTimeFilter>;
   id?: InputMaybe<IdFilter>;
   name?: InputMaybe<StringFilter>;
-  orientation?: InputMaybe<StringFilter>;
+  state?: InputMaybe<SingleEnumFilter>;
   updatedAt?: InputMaybe<DateTimeFilter>;
   widget?: InputMaybe<IdFilter>;
   widgetId?: InputMaybe<IdFilter>;
@@ -4206,8 +5303,14 @@ export type GizmoFilter = {
 export type GizmoHasManyInput = {
   /** Creates, updates, or deletes existing records in the database as needed to arrive at the list of records specified. */
   _converge?: InputMaybe<ConvergeGizmoInput>;
+  bend?: InputMaybe<NestedGizmoBendInput>;
+  break?: InputMaybe<NestedGizmoBreakInput>;
   create?: InputMaybe<NestedGizmoCreateInput>;
   delete?: InputMaybe<NestedGizmoDeleteInput>;
+  fold?: InputMaybe<NestedGizmoFoldInput>;
+  otherCreate?: InputMaybe<NestedGizmoOtherCreateInput>;
+  straighten?: InputMaybe<NestedGizmoStraightenInput>;
+  unfold?: InputMaybe<NestedGizmoUnfoldInput>;
   update?: InputMaybe<NestedGizmoUpdateInput>;
 };
 
@@ -4218,378 +5321,8 @@ export type GizmoSort = {
   id?: InputMaybe<SortOrder>;
   /** Sort the results by the name field. Defaults to ascending (smallest value first). */
   name?: InputMaybe<SortOrder>;
-  /** Sort the results by the orientation field. Defaults to ascending (smallest value first). */
-  orientation?: InputMaybe<SortOrder>;
-  /** Sort the results by the updatedAt field. Defaults to ascending (smallest value first). */
-  updatedAt?: InputMaybe<SortOrder>;
-};
-
-export type HasManyThroughBaseModel = {
-  __typename?: "HasManyThroughBaseModel";
-  /** Get all the fields for this record. Useful for not having to list out all the fields you want to retrieve, but slower. */
-  _all: Scalars["JSONObject"]["output"];
-  baseModelHmtField: HasManyThroughSiblingModelConnection;
-  baseModelName?: Maybe<Scalars["String"]["output"]>;
-  /** The time at which this record was first created. Set once upon record creation and never changed. Managed by Gadget. */
-  createdAt: Scalars["DateTime"]["output"];
-  /** The globally unique, unchanging identifier for this record. Assigned and managed by Gadget. */
-  id: Scalars["GadgetID"]["output"];
-  joinerModels: HasManyThroughJoinerModelConnection;
-  /** The time at which this record was last changed. Set each time the record is successfully acted upon by an action. Managed by Gadget. */
-  updatedAt: Scalars["DateTime"]["output"];
-};
-
-export type HasManyThroughBaseModelBaseModelHmtFieldArgs = {
-  after?: InputMaybe<Scalars["String"]["input"]>;
-  before?: InputMaybe<Scalars["String"]["input"]>;
-  first?: InputMaybe<Scalars["Int"]["input"]>;
-  last?: InputMaybe<Scalars["Int"]["input"]>;
-};
-
-export type HasManyThroughBaseModelJoinerModelsArgs = {
-  after?: InputMaybe<Scalars["String"]["input"]>;
-  before?: InputMaybe<Scalars["String"]["input"]>;
-  first?: InputMaybe<Scalars["Int"]["input"]>;
-  last?: InputMaybe<Scalars["Int"]["input"]>;
-};
-
-/** A connection to a list of HasManyThroughBaseModel items. */
-export type HasManyThroughBaseModelConnection = {
-  __typename?: "HasManyThroughBaseModelConnection";
-  /** A list of edges. */
-  edges: Array<HasManyThroughBaseModelEdge>;
-  /** Information to aid in pagination. */
-  pageInfo: PageInfo;
-};
-
-/** An edge in a HasManyThroughBaseModel connection. */
-export type HasManyThroughBaseModelEdge = {
-  __typename?: "HasManyThroughBaseModelEdge";
-  /** A cursor for use in pagination */
-  cursor: Scalars["String"]["output"];
-  /** The item at the end of the edge */
-  node: HasManyThroughBaseModel;
-};
-
-export type HasManyThroughBaseModelFilter = {
-  AND?: InputMaybe<Array<InputMaybe<HasManyThroughBaseModelFilter>>>;
-  NOT?: InputMaybe<Array<InputMaybe<HasManyThroughBaseModelFilter>>>;
-  OR?: InputMaybe<Array<InputMaybe<HasManyThroughBaseModelFilter>>>;
-  baseModelName?: InputMaybe<StringFilter>;
-  createdAt?: InputMaybe<DateTimeFilter>;
-  id?: InputMaybe<IdFilter>;
-  updatedAt?: InputMaybe<DateTimeFilter>;
-};
-
-export type HasManyThroughBaseModelSort = {
-  /** Sort the results by the baseModelName field. Defaults to ascending (smallest value first). */
-  baseModelName?: InputMaybe<SortOrder>;
-  /** Sort the results by the createdAt field. Defaults to ascending (smallest value first). */
-  createdAt?: InputMaybe<SortOrder>;
-  /** Sort the results by the id field. Defaults to ascending (smallest value first). */
-  id?: InputMaybe<SortOrder>;
-  /** Sort the results by the updatedAt field. Defaults to ascending (smallest value first). */
-  updatedAt?: InputMaybe<SortOrder>;
-};
-
-export type HasManyThroughJoinerModel = {
-  __typename?: "HasManyThroughJoinerModel";
-  /** Get all the fields for this record. Useful for not having to list out all the fields you want to retrieve, but slower. */
-  _all: Scalars["JSONObject"]["output"];
-  /** The time at which this record was first created. Set once upon record creation and never changed. Managed by Gadget. */
-  createdAt: Scalars["DateTime"]["output"];
-  /** The globally unique, unchanging identifier for this record. Assigned and managed by Gadget. */
-  id: Scalars["GadgetID"]["output"];
-  joinerBelongsToBase?: Maybe<HasManyThroughBaseModel>;
-  joinerBelongsToBaseId?: Maybe<Scalars["GadgetID"]["output"]>;
-  joinerBelongsToSibling?: Maybe<HasManyThroughSiblingModel>;
-  joinerBelongsToSiblingId?: Maybe<Scalars["GadgetID"]["output"]>;
-  /** The time at which this record was last changed. Set each time the record is successfully acted upon by an action. Managed by Gadget. */
-  updatedAt: Scalars["DateTime"]["output"];
-};
-
-/** A connection to a list of HasManyThroughJoinerModel items. */
-export type HasManyThroughJoinerModelConnection = {
-  __typename?: "HasManyThroughJoinerModelConnection";
-  /** A list of edges. */
-  edges: Array<HasManyThroughJoinerModelEdge>;
-  /** Information to aid in pagination. */
-  pageInfo: PageInfo;
-};
-
-/** An edge in a HasManyThroughJoinerModel connection. */
-export type HasManyThroughJoinerModelEdge = {
-  __typename?: "HasManyThroughJoinerModelEdge";
-  /** A cursor for use in pagination */
-  cursor: Scalars["String"]["output"];
-  /** The item at the end of the edge */
-  node: HasManyThroughJoinerModel;
-};
-
-export type HasManyThroughJoinerModelFilter = {
-  AND?: InputMaybe<Array<InputMaybe<HasManyThroughJoinerModelFilter>>>;
-  NOT?: InputMaybe<Array<InputMaybe<HasManyThroughJoinerModelFilter>>>;
-  OR?: InputMaybe<Array<InputMaybe<HasManyThroughJoinerModelFilter>>>;
-  createdAt?: InputMaybe<DateTimeFilter>;
-  id?: InputMaybe<IdFilter>;
-  joinerBelongsToBase?: InputMaybe<IdFilter>;
-  joinerBelongsToBaseId?: InputMaybe<IdFilter>;
-  joinerBelongsToSibling?: InputMaybe<IdFilter>;
-  joinerBelongsToSiblingId?: InputMaybe<IdFilter>;
-  updatedAt?: InputMaybe<DateTimeFilter>;
-};
-
-export type HasManyThroughJoinerModelSort = {
-  /** Sort the results by the createdAt field. Defaults to ascending (smallest value first). */
-  createdAt?: InputMaybe<SortOrder>;
-  /** Sort the results by the id field. Defaults to ascending (smallest value first). */
-  id?: InputMaybe<SortOrder>;
-  /** Sort the results by the updatedAt field. Defaults to ascending (smallest value first). */
-  updatedAt?: InputMaybe<SortOrder>;
-};
-
-export type HasManyThroughMutations = {
-  __typename?: "HasManyThroughMutations";
-  bulkCreateBaseModels?: Maybe<BulkCreateHasManyThroughBaseModelsResult>;
-  bulkCreateJoinerModels?: Maybe<BulkCreateHasManyThroughJoinerModelsResult>;
-  bulkCreateSiblingModels?: Maybe<BulkCreateHasManyThroughSiblingModelsResult>;
-  bulkDeleteBaseModels?: Maybe<BulkDeleteHasManyThroughBaseModelsResult>;
-  bulkDeleteJoinerModels?: Maybe<BulkDeleteHasManyThroughJoinerModelsResult>;
-  bulkDeleteSiblingModels?: Maybe<BulkDeleteHasManyThroughSiblingModelsResult>;
-  bulkUpdateBaseModels?: Maybe<BulkUpdateHasManyThroughBaseModelsResult>;
-  bulkUpdateJoinerModels?: Maybe<BulkUpdateHasManyThroughJoinerModelsResult>;
-  bulkUpdateSiblingModels?: Maybe<BulkUpdateHasManyThroughSiblingModelsResult>;
-  bulkUpsertBaseModels: BulkUpsertHasManyThroughBaseModelsResult;
-  bulkUpsertJoinerModels: BulkUpsertHasManyThroughJoinerModelsResult;
-  bulkUpsertSiblingModels: BulkUpsertHasManyThroughSiblingModelsResult;
-  createBaseModel?: Maybe<CreateHasManyThroughBaseModelResult>;
-  createJoinerModel?: Maybe<CreateHasManyThroughJoinerModelResult>;
-  createSiblingModel?: Maybe<CreateHasManyThroughSiblingModelResult>;
-  deleteBaseModel?: Maybe<DeleteHasManyThroughBaseModelResult>;
-  deleteJoinerModel?: Maybe<DeleteHasManyThroughJoinerModelResult>;
-  deleteSiblingModel?: Maybe<DeleteHasManyThroughSiblingModelResult>;
-  updateBaseModel?: Maybe<UpdateHasManyThroughBaseModelResult>;
-  updateJoinerModel?: Maybe<UpdateHasManyThroughJoinerModelResult>;
-  updateSiblingModel?: Maybe<UpdateHasManyThroughSiblingModelResult>;
-  upsertBaseModel?: Maybe<UpsertHasManyThroughBaseModelResult>;
-  upsertJoinerModel?: Maybe<UpsertHasManyThroughJoinerModelResult>;
-  upsertSiblingModel?: Maybe<UpsertHasManyThroughSiblingModelResult>;
-};
-
-export type HasManyThroughMutationsBulkCreateBaseModelsArgs = {
-  inputs: Array<BulkCreateHasManyThroughBaseModelsInput>;
-};
-
-export type HasManyThroughMutationsBulkCreateJoinerModelsArgs = {
-  inputs: Array<BulkCreateHasManyThroughJoinerModelsInput>;
-};
-
-export type HasManyThroughMutationsBulkCreateSiblingModelsArgs = {
-  inputs: Array<BulkCreateHasManyThroughSiblingModelsInput>;
-};
-
-export type HasManyThroughMutationsBulkDeleteBaseModelsArgs = {
-  ids: Array<Scalars["GadgetID"]["input"]>;
-};
-
-export type HasManyThroughMutationsBulkDeleteJoinerModelsArgs = {
-  ids: Array<Scalars["GadgetID"]["input"]>;
-};
-
-export type HasManyThroughMutationsBulkDeleteSiblingModelsArgs = {
-  ids: Array<Scalars["GadgetID"]["input"]>;
-};
-
-export type HasManyThroughMutationsBulkUpdateBaseModelsArgs = {
-  inputs: Array<BulkUpdateHasManyThroughBaseModelsInput>;
-};
-
-export type HasManyThroughMutationsBulkUpdateJoinerModelsArgs = {
-  inputs: Array<BulkUpdateHasManyThroughJoinerModelsInput>;
-};
-
-export type HasManyThroughMutationsBulkUpdateSiblingModelsArgs = {
-  inputs: Array<BulkUpdateHasManyThroughSiblingModelsInput>;
-};
-
-export type HasManyThroughMutationsBulkUpsertBaseModelsArgs = {
-  inputs: Array<BulkUpsertHasManyThroughBaseModelsInput>;
-};
-
-export type HasManyThroughMutationsBulkUpsertJoinerModelsArgs = {
-  inputs: Array<BulkUpsertHasManyThroughJoinerModelsInput>;
-};
-
-export type HasManyThroughMutationsBulkUpsertSiblingModelsArgs = {
-  inputs: Array<BulkUpsertHasManyThroughSiblingModelsInput>;
-};
-
-export type HasManyThroughMutationsCreateBaseModelArgs = {
-  baseModel?: InputMaybe<CreateHasManyThroughBaseModelInput>;
-};
-
-export type HasManyThroughMutationsCreateJoinerModelArgs = {
-  joinerModel?: InputMaybe<CreateHasManyThroughJoinerModelInput>;
-};
-
-export type HasManyThroughMutationsCreateSiblingModelArgs = {
-  siblingModel?: InputMaybe<CreateHasManyThroughSiblingModelInput>;
-};
-
-export type HasManyThroughMutationsDeleteBaseModelArgs = {
-  id: Scalars["GadgetID"]["input"];
-};
-
-export type HasManyThroughMutationsDeleteJoinerModelArgs = {
-  id: Scalars["GadgetID"]["input"];
-};
-
-export type HasManyThroughMutationsDeleteSiblingModelArgs = {
-  id: Scalars["GadgetID"]["input"];
-};
-
-export type HasManyThroughMutationsUpdateBaseModelArgs = {
-  baseModel?: InputMaybe<UpdateHasManyThroughBaseModelInput>;
-  id: Scalars["GadgetID"]["input"];
-};
-
-export type HasManyThroughMutationsUpdateJoinerModelArgs = {
-  id: Scalars["GadgetID"]["input"];
-  joinerModel?: InputMaybe<UpdateHasManyThroughJoinerModelInput>;
-};
-
-export type HasManyThroughMutationsUpdateSiblingModelArgs = {
-  id: Scalars["GadgetID"]["input"];
-  siblingModel?: InputMaybe<UpdateHasManyThroughSiblingModelInput>;
-};
-
-export type HasManyThroughMutationsUpsertBaseModelArgs = {
-  baseModel?: InputMaybe<UpsertHasManyThroughBaseModelInput>;
-  on?: InputMaybe<Array<Scalars["String"]["input"]>>;
-};
-
-export type HasManyThroughMutationsUpsertJoinerModelArgs = {
-  joinerModel?: InputMaybe<UpsertHasManyThroughJoinerModelInput>;
-  on?: InputMaybe<Array<Scalars["String"]["input"]>>;
-};
-
-export type HasManyThroughMutationsUpsertSiblingModelArgs = {
-  on?: InputMaybe<Array<Scalars["String"]["input"]>>;
-  siblingModel?: InputMaybe<UpsertHasManyThroughSiblingModelInput>;
-};
-
-export type HasManyThroughQueries = {
-  __typename?: "HasManyThroughQueries";
-  baseModel?: Maybe<HasManyThroughBaseModel>;
-  baseModels: HasManyThroughBaseModelConnection;
-  joinerModel?: Maybe<HasManyThroughJoinerModel>;
-  joinerModels: HasManyThroughJoinerModelConnection;
-  siblingModel?: Maybe<HasManyThroughSiblingModel>;
-  siblingModels: HasManyThroughSiblingModelConnection;
-};
-
-export type HasManyThroughQueriesBaseModelArgs = {
-  id: Scalars["GadgetID"]["input"];
-};
-
-export type HasManyThroughQueriesBaseModelsArgs = {
-  after?: InputMaybe<Scalars["String"]["input"]>;
-  before?: InputMaybe<Scalars["String"]["input"]>;
-  filter?: InputMaybe<Array<HasManyThroughBaseModelFilter>>;
-  first?: InputMaybe<Scalars["Int"]["input"]>;
-  last?: InputMaybe<Scalars["Int"]["input"]>;
-  search?: InputMaybe<Scalars["String"]["input"]>;
-  sort?: InputMaybe<Array<HasManyThroughBaseModelSort>>;
-};
-
-export type HasManyThroughQueriesJoinerModelArgs = {
-  id: Scalars["GadgetID"]["input"];
-};
-
-export type HasManyThroughQueriesJoinerModelsArgs = {
-  after?: InputMaybe<Scalars["String"]["input"]>;
-  before?: InputMaybe<Scalars["String"]["input"]>;
-  filter?: InputMaybe<Array<HasManyThroughJoinerModelFilter>>;
-  first?: InputMaybe<Scalars["Int"]["input"]>;
-  last?: InputMaybe<Scalars["Int"]["input"]>;
-  search?: InputMaybe<Scalars["String"]["input"]>;
-  sort?: InputMaybe<Array<HasManyThroughJoinerModelSort>>;
-};
-
-export type HasManyThroughQueriesSiblingModelArgs = {
-  id: Scalars["GadgetID"]["input"];
-};
-
-export type HasManyThroughQueriesSiblingModelsArgs = {
-  after?: InputMaybe<Scalars["String"]["input"]>;
-  before?: InputMaybe<Scalars["String"]["input"]>;
-  filter?: InputMaybe<Array<HasManyThroughSiblingModelFilter>>;
-  first?: InputMaybe<Scalars["Int"]["input"]>;
-  last?: InputMaybe<Scalars["Int"]["input"]>;
-  search?: InputMaybe<Scalars["String"]["input"]>;
-  sort?: InputMaybe<Array<HasManyThroughSiblingModelSort>>;
-};
-
-export type HasManyThroughSiblingModel = {
-  __typename?: "HasManyThroughSiblingModel";
-  /** Get all the fields for this record. Useful for not having to list out all the fields you want to retrieve, but slower. */
-  _all: Scalars["JSONObject"]["output"];
-  /** The time at which this record was first created. Set once upon record creation and never changed. Managed by Gadget. */
-  createdAt: Scalars["DateTime"]["output"];
-  /** The globally unique, unchanging identifier for this record. Assigned and managed by Gadget. */
-  id: Scalars["GadgetID"]["output"];
-  joinerModels: HasManyThroughJoinerModelConnection;
-  siblingModelHmtField: HasManyThroughBaseModelConnection;
-  /** The time at which this record was last changed. Set each time the record is successfully acted upon by an action. Managed by Gadget. */
-  updatedAt: Scalars["DateTime"]["output"];
-};
-
-export type HasManyThroughSiblingModelJoinerModelsArgs = {
-  after?: InputMaybe<Scalars["String"]["input"]>;
-  before?: InputMaybe<Scalars["String"]["input"]>;
-  first?: InputMaybe<Scalars["Int"]["input"]>;
-  last?: InputMaybe<Scalars["Int"]["input"]>;
-};
-
-export type HasManyThroughSiblingModelSiblingModelHmtFieldArgs = {
-  after?: InputMaybe<Scalars["String"]["input"]>;
-  before?: InputMaybe<Scalars["String"]["input"]>;
-  first?: InputMaybe<Scalars["Int"]["input"]>;
-  last?: InputMaybe<Scalars["Int"]["input"]>;
-};
-
-/** A connection to a list of HasManyThroughSiblingModel items. */
-export type HasManyThroughSiblingModelConnection = {
-  __typename?: "HasManyThroughSiblingModelConnection";
-  /** A list of edges. */
-  edges: Array<HasManyThroughSiblingModelEdge>;
-  /** Information to aid in pagination. */
-  pageInfo: PageInfo;
-};
-
-/** An edge in a HasManyThroughSiblingModel connection. */
-export type HasManyThroughSiblingModelEdge = {
-  __typename?: "HasManyThroughSiblingModelEdge";
-  /** A cursor for use in pagination */
-  cursor: Scalars["String"]["output"];
-  /** The item at the end of the edge */
-  node: HasManyThroughSiblingModel;
-};
-
-export type HasManyThroughSiblingModelFilter = {
-  AND?: InputMaybe<Array<InputMaybe<HasManyThroughSiblingModelFilter>>>;
-  NOT?: InputMaybe<Array<InputMaybe<HasManyThroughSiblingModelFilter>>>;
-  OR?: InputMaybe<Array<InputMaybe<HasManyThroughSiblingModelFilter>>>;
-  createdAt?: InputMaybe<DateTimeFilter>;
-  id?: InputMaybe<IdFilter>;
-  updatedAt?: InputMaybe<DateTimeFilter>;
-};
-
-export type HasManyThroughSiblingModelSort = {
-  /** Sort the results by the createdAt field. Defaults to ascending (smallest value first). */
-  createdAt?: InputMaybe<SortOrder>;
-  /** Sort the results by the id field. Defaults to ascending (smallest value first). */
-  id?: InputMaybe<SortOrder>;
+  /** Sort the results by the state field. Defaults to ascending (smallest value first). */
+  state?: InputMaybe<SortOrder>;
   /** Sort the results by the updatedAt field. Defaults to ascending (smallest value first). */
   updatedAt?: InputMaybe<SortOrder>;
 };
@@ -4610,98 +5343,16 @@ export type IdFilter = {
   notIn?: InputMaybe<Array<InputMaybe<Scalars["GadgetID"]["input"]>>>;
 };
 
-export type InstallShopifyShopResult = UpsertShopifyShopResult & {
-  __typename?: "InstallShopifyShopResult";
-  actionRun?: Maybe<Scalars["String"]["output"]>;
-  errors?: Maybe<Array<ExecutionError>>;
-  shopifyShop?: Maybe<ShopifyShop>;
-  success: Scalars["Boolean"]["output"];
-};
-
-export type InternalAutoTableTestAtomicsInput = {
-  /** Numeric atomic commands for operating on num. */
-  num?: InputMaybe<Array<NumericAtomicFieldUpdateInput>>;
-};
-
-export type InternalAutoTableTestInput = {
-  /** An optional list of atomically applied commands for race-safe mutations of the record */
-  _atomics?: InputMaybe<InternalAutoTableTestAtomicsInput>;
-  bool?: InputMaybe<Scalars["Boolean"]["input"]>;
-  createdAt?: InputMaybe<Scalars["DateTime"]["input"]>;
-  dt?: InputMaybe<Scalars["DateTime"]["input"]>;
-  email?: InputMaybe<Scalars["String"]["input"]>;
-  enum?: InputMaybe<Array<Scalars["AutoTableTestEnumEnum"]["input"]>>;
-  es?: InputMaybe<Scalars["String"]["input"]>;
-  file?: InputMaybe<InternalStoredFileInput>;
-  id?: InputMaybe<Scalars["GadgetID"]["input"]>;
-  json?: InputMaybe<Scalars["JSON"]["input"]>;
-  num?: InputMaybe<Scalars["Float"]["input"]>;
-  pwd?: InputMaybe<Scalars["String"]["input"]>;
-  /** A string list of Gadget platform Role keys to assign to this record */
-  rl?: InputMaybe<Array<Scalars["String"]["input"]>>;
-  rt?: InputMaybe<RichTextInput>;
-  state?: InputMaybe<Scalars["RecordState"]["input"]>;
-  stateHistory?: InputMaybe<Scalars["RecordState"]["input"]>;
-  str?: InputMaybe<Scalars["String"]["input"]>;
-  updatedAt?: InputMaybe<Scalars["DateTime"]["input"]>;
-  url?: InputMaybe<Scalars["String"]["input"]>;
-  vect?: InputMaybe<Array<Scalars["Float"]["input"]>>;
-};
-
-/** A connection to a list of InternalAutoTableTestRecord items. */
-export type InternalAutoTableTestRecordConnection = {
-  __typename?: "InternalAutoTableTestRecordConnection";
-  /** A list of edges. */
-  edges: Array<InternalAutoTableTestRecordEdge>;
-  /** Information to aid in pagination. */
-  pageInfo: PageInfo;
-};
-
-/** An edge in a InternalAutoTableTestRecord connection. */
-export type InternalAutoTableTestRecordEdge = {
-  __typename?: "InternalAutoTableTestRecordEdge";
-  /** A cursor for use in pagination */
-  cursor: Scalars["String"]["output"];
-  /** The item at the end of the edge */
-  node: Scalars["InternalAutoTableTestRecord"]["output"];
-};
-
-export type InternalAutoTableTestRelatedModelAtomicsInput = {
-  /** Numeric atomic commands for operating on someNumber. */
-  someNumber?: InputMaybe<Array<NumericAtomicFieldUpdateInput>>;
-};
-
-export type InternalAutoTableTestRelatedModelInput = {
-  /** An optional list of atomically applied commands for race-safe mutations of the record */
-  _atomics?: InputMaybe<InternalAutoTableTestRelatedModelAtomicsInput>;
-  belongsToParent?: InputMaybe<InternalBelongsToInput>;
-  createdAt?: InputMaybe<Scalars["DateTime"]["input"]>;
-  id?: InputMaybe<Scalars["GadgetID"]["input"]>;
-  manyBelongsToParent?: InputMaybe<InternalBelongsToInput>;
-  name?: InputMaybe<Scalars["String"]["input"]>;
-  someBool?: InputMaybe<Scalars["Boolean"]["input"]>;
-  someNumber?: InputMaybe<Scalars["Float"]["input"]>;
-  state?: InputMaybe<Scalars["RecordState"]["input"]>;
-  stateHistory?: InputMaybe<Scalars["RecordState"]["input"]>;
-  updatedAt?: InputMaybe<Scalars["DateTime"]["input"]>;
-};
-
-/** A connection to a list of InternalAutoTableTestRelatedModelRecord items. */
-export type InternalAutoTableTestRelatedModelRecordConnection = {
-  __typename?: "InternalAutoTableTestRelatedModelRecordConnection";
-  /** A list of edges. */
-  edges: Array<InternalAutoTableTestRelatedModelRecordEdge>;
-  /** Information to aid in pagination. */
-  pageInfo: PageInfo;
-};
-
-/** An edge in a InternalAutoTableTestRelatedModelRecord connection. */
-export type InternalAutoTableTestRelatedModelRecordEdge = {
-  __typename?: "InternalAutoTableTestRelatedModelRecordEdge";
-  /** A cursor for use in pagination */
-  cursor: Scalars["String"]["output"];
-  /** The item at the end of the edge */
-  node: Scalars["InternalAutoTableTestRelatedModelRecord"]["output"];
+export type IntFilter = {
+  equals?: InputMaybe<Scalars["Int"]["input"]>;
+  greaterThan?: InputMaybe<Scalars["Int"]["input"]>;
+  greaterThanOrEqual?: InputMaybe<Scalars["Int"]["input"]>;
+  in?: InputMaybe<Array<InputMaybe<Scalars["Int"]["input"]>>>;
+  isSet?: InputMaybe<Scalars["Boolean"]["input"]>;
+  lessThan?: InputMaybe<Scalars["Int"]["input"]>;
+  lessThanOrEqual?: InputMaybe<Scalars["Int"]["input"]>;
+  notEquals?: InputMaybe<Scalars["Int"]["input"]>;
+  notIn?: InputMaybe<Array<InputMaybe<Scalars["Int"]["input"]>>>;
 };
 
 /** Input object to set the link between this field and the model it belongs to */
@@ -4710,24 +5361,87 @@ export type InternalBelongsToInput = {
   _link?: InputMaybe<Scalars["GadgetID"]["input"]>;
 };
 
-export type InternalBulkCreateAutoTableTestRelatedModelsResult = {
-  __typename?: "InternalBulkCreateAutoTableTestRelatedModelsResult";
-  _autoTableTestRelatedModels?: Maybe<Array<Maybe<Scalars["InternalAutoTableTestRelatedModelRecord"]["output"]>>>;
+export type InternalBillingAccountAtomicsInput = {
+  /** Numeric atomic commands for operating on balance. */
+  balance?: InputMaybe<Array<NumericAtomicFieldUpdateInput>>;
+};
+
+export type InternalBillingAccountInput = {
+  /** An optional list of atomically applied commands for race-safe mutations of the record */
+  _atomics?: InputMaybe<InternalBillingAccountAtomicsInput>;
+  balance?: InputMaybe<Scalars["Float"]["input"]>;
+  createdAt?: InputMaybe<Scalars["DateTime"]["input"]>;
+  customer?: InputMaybe<InternalBelongsToInput>;
+  id?: InputMaybe<Scalars["GadgetID"]["input"]>;
+  state?: InputMaybe<Scalars["RecordState"]["input"]>;
+  stateHistory?: InputMaybe<Scalars["RecordState"]["input"]>;
+  updatedAt?: InputMaybe<Scalars["DateTime"]["input"]>;
+};
+
+/** A connection to a list of InternalBillingAccountRecord items. */
+export type InternalBillingAccountRecordConnection = {
+  __typename?: "InternalBillingAccountRecordConnection";
+  /** A list of edges. */
+  edges: Array<InternalBillingAccountRecordEdge>;
+  /** Information to aid in pagination. */
+  pageInfo: PageInfo;
+};
+
+/** An edge in a InternalBillingAccountRecord connection. */
+export type InternalBillingAccountRecordEdge = {
+  __typename?: "InternalBillingAccountRecordEdge";
+  /** A cursor for use in pagination */
+  cursor: Scalars["String"]["output"];
+  /** The item at the end of the edge */
+  node: Scalars["InternalBillingAccountRecord"]["output"];
+};
+
+export type InternalBulkCreateBillingAccountsResult = {
+  __typename?: "InternalBulkCreateBillingAccountsResult";
+  billingAccounts?: Maybe<Array<Maybe<Scalars["InternalBillingAccountRecord"]["output"]>>>;
   errors?: Maybe<Array<ExecutionError>>;
   success: Scalars["Boolean"]["output"];
 };
 
-export type InternalBulkCreateAutoTableTestsResult = {
-  __typename?: "InternalBulkCreateAutoTableTestsResult";
-  autoTableTests?: Maybe<Array<Maybe<Scalars["InternalAutoTableTestRecord"]["output"]>>>;
+export type InternalBulkCreateCitiesResult = {
+  __typename?: "InternalBulkCreateCitiesResult";
+  cities?: Maybe<Array<Maybe<Scalars["InternalCityRecord"]["output"]>>>;
   errors?: Maybe<Array<ExecutionError>>;
   success: Scalars["Boolean"]["output"];
 };
 
-export type InternalBulkCreateGameCitiesResult = {
-  __typename?: "InternalBulkCreateGameCitiesResult";
-  cities?: Maybe<Array<Maybe<Scalars["InternalGameCityRecord"]["output"]>>>;
+export type InternalBulkCreateCoursesResult = {
+  __typename?: "InternalBulkCreateCoursesResult";
+  courses?: Maybe<Array<Maybe<Scalars["InternalCourseRecord"]["output"]>>>;
   errors?: Maybe<Array<ExecutionError>>;
+  success: Scalars["Boolean"]["output"];
+};
+
+export type InternalBulkCreateCustomersResult = {
+  __typename?: "InternalBulkCreateCustomersResult";
+  customers?: Maybe<Array<Maybe<Scalars["InternalCustomerRecord"]["output"]>>>;
+  errors?: Maybe<Array<ExecutionError>>;
+  success: Scalars["Boolean"]["output"];
+};
+
+export type InternalBulkCreateEphemeralsResult = {
+  __typename?: "InternalBulkCreateEphemeralsResult";
+  ephemerals?: Maybe<Array<Maybe<Scalars["InternalEphemeralRecord"]["output"]>>>;
+  errors?: Maybe<Array<ExecutionError>>;
+  success: Scalars["Boolean"]["output"];
+};
+
+export type InternalBulkCreateFieldlessesResult = {
+  __typename?: "InternalBulkCreateFieldlessesResult";
+  errors?: Maybe<Array<ExecutionError>>;
+  fieldlesses?: Maybe<Array<Maybe<Scalars["InternalFieldlessRecord"]["output"]>>>;
+  success: Scalars["Boolean"]["output"];
+};
+
+export type InternalBulkCreateFriendshipsResult = {
+  __typename?: "InternalBulkCreateFriendshipsResult";
+  errors?: Maybe<Array<ExecutionError>>;
+  friendships?: Maybe<Array<Maybe<Scalars["InternalFriendshipRecord"]["output"]>>>;
   success: Scalars["Boolean"]["output"];
 };
 
@@ -4759,38 +5473,24 @@ export type InternalBulkCreateGizmosResult = {
   success: Scalars["Boolean"]["output"];
 };
 
-export type InternalBulkCreateHasManyThroughBaseModelsResult = {
-  __typename?: "InternalBulkCreateHasManyThroughBaseModelsResult";
-  baseModels?: Maybe<Array<Maybe<Scalars["InternalHasManyThroughBaseModelRecord"]["output"]>>>;
+export type InternalBulkCreateLandmarkStadiaResult = {
+  __typename?: "InternalBulkCreateLandmarkStadiaResult";
   errors?: Maybe<Array<ExecutionError>>;
+  stadia?: Maybe<Array<Maybe<Scalars["InternalLandmarkStadiumRecord"]["output"]>>>;
   success: Scalars["Boolean"]["output"];
 };
 
-export type InternalBulkCreateHasManyThroughJoinerModelsResult = {
-  __typename?: "InternalBulkCreateHasManyThroughJoinerModelsResult";
+export type InternalBulkCreateRegistrationsResult = {
+  __typename?: "InternalBulkCreateRegistrationsResult";
   errors?: Maybe<Array<ExecutionError>>;
-  joinerModels?: Maybe<Array<Maybe<Scalars["InternalHasManyThroughJoinerModelRecord"]["output"]>>>;
+  registrations?: Maybe<Array<Maybe<Scalars["InternalRegistrationRecord"]["output"]>>>;
   success: Scalars["Boolean"]["output"];
 };
 
-export type InternalBulkCreateHasManyThroughSiblingModelsResult = {
-  __typename?: "InternalBulkCreateHasManyThroughSiblingModelsResult";
+export type InternalBulkCreateSampleModelToTestReallyLongModelNamessResult = {
+  __typename?: "InternalBulkCreateSampleModelToTestReallyLongModelNamessResult";
   errors?: Maybe<Array<ExecutionError>>;
-  siblingModels?: Maybe<Array<Maybe<Scalars["InternalHasManyThroughSiblingModelRecord"]["output"]>>>;
-  success: Scalars["Boolean"]["output"];
-};
-
-export type InternalBulkCreateModelAsResult = {
-  __typename?: "InternalBulkCreateModelAsResult";
-  errors?: Maybe<Array<ExecutionError>>;
-  modelAs?: Maybe<Array<Maybe<Scalars["InternalModelARecord"]["output"]>>>;
-  success: Scalars["Boolean"]["output"];
-};
-
-export type InternalBulkCreatePartsResult = {
-  __typename?: "InternalBulkCreatePartsResult";
-  errors?: Maybe<Array<ExecutionError>>;
-  parts?: Maybe<Array<Maybe<Scalars["InternalPartRecord"]["output"]>>>;
+  sampleModelToTestReallyLongModelNamess?: Maybe<Array<Maybe<Scalars["InternalSampleModelToTestReallyLongModelNamesRecord"]["output"]>>>;
   success: Scalars["Boolean"]["output"];
 };
 
@@ -4808,53 +5508,25 @@ export type InternalBulkCreateSessionsResult = {
   success: Scalars["Boolean"]["output"];
 };
 
-export type InternalBulkCreateShopifyGdprRequestsResult = {
-  __typename?: "InternalBulkCreateShopifyGdprRequestsResult";
+export type InternalBulkCreateSprocketsResult = {
+  __typename?: "InternalBulkCreateSprocketsResult";
   errors?: Maybe<Array<ExecutionError>>;
-  shopifyGdprRequests?: Maybe<Array<Maybe<Scalars["InternalShopifyGdprRequestRecord"]["output"]>>>;
+  sprockets?: Maybe<Array<Maybe<Scalars["InternalSprocketRecord"]["output"]>>>;
   success: Scalars["Boolean"]["output"];
 };
 
-export type InternalBulkCreateShopifyProductImagesResult = {
-  __typename?: "InternalBulkCreateShopifyProductImagesResult";
+export type InternalBulkCreateStudentsResult = {
+  __typename?: "InternalBulkCreateStudentsResult";
   errors?: Maybe<Array<ExecutionError>>;
-  shopifyProductImages?: Maybe<Array<Maybe<Scalars["InternalShopifyProductImageRecord"]["output"]>>>;
+  students?: Maybe<Array<Maybe<Scalars["InternalStudentRecord"]["output"]>>>;
   success: Scalars["Boolean"]["output"];
 };
 
-export type InternalBulkCreateShopifyProductOptionsResult = {
-  __typename?: "InternalBulkCreateShopifyProductOptionsResult";
+export type InternalBulkCreateTeachersResult = {
+  __typename?: "InternalBulkCreateTeachersResult";
   errors?: Maybe<Array<ExecutionError>>;
-  shopifyProductOptions?: Maybe<Array<Maybe<Scalars["InternalShopifyProductOptionRecord"]["output"]>>>;
   success: Scalars["Boolean"]["output"];
-};
-
-export type InternalBulkCreateShopifyProductVariantsResult = {
-  __typename?: "InternalBulkCreateShopifyProductVariantsResult";
-  errors?: Maybe<Array<ExecutionError>>;
-  shopifyProductVariants?: Maybe<Array<Maybe<Scalars["InternalShopifyProductVariantRecord"]["output"]>>>;
-  success: Scalars["Boolean"]["output"];
-};
-
-export type InternalBulkCreateShopifyProductsResult = {
-  __typename?: "InternalBulkCreateShopifyProductsResult";
-  errors?: Maybe<Array<ExecutionError>>;
-  shopifyProducts?: Maybe<Array<Maybe<Scalars["InternalShopifyProductRecord"]["output"]>>>;
-  success: Scalars["Boolean"]["output"];
-};
-
-export type InternalBulkCreateShopifyShopsResult = {
-  __typename?: "InternalBulkCreateShopifyShopsResult";
-  errors?: Maybe<Array<ExecutionError>>;
-  shopifyShops?: Maybe<Array<Maybe<Scalars["InternalShopifyShopRecord"]["output"]>>>;
-  success: Scalars["Boolean"]["output"];
-};
-
-export type InternalBulkCreateShopifySyncsResult = {
-  __typename?: "InternalBulkCreateShopifySyncsResult";
-  errors?: Maybe<Array<ExecutionError>>;
-  shopifySyncs?: Maybe<Array<Maybe<Scalars["InternalShopifySyncRecord"]["output"]>>>;
-  success: Scalars["Boolean"]["output"];
+  teachers?: Maybe<Array<Maybe<Scalars["InternalTeacherRecord"]["output"]>>>;
 };
 
 export type InternalBulkCreateUsersResult = {
@@ -4864,6 +5536,13 @@ export type InternalBulkCreateUsersResult = {
   users?: Maybe<Array<Maybe<Scalars["InternalUserRecord"]["output"]>>>;
 };
 
+export type InternalBulkCreateWidgetImagesResult = {
+  __typename?: "InternalBulkCreateWidgetImagesResult";
+  errors?: Maybe<Array<ExecutionError>>;
+  success: Scalars["Boolean"]["output"];
+  widgetImages?: Maybe<Array<Maybe<Scalars["InternalWidgetImageRecord"]["output"]>>>;
+};
+
 export type InternalBulkCreateWidgetsResult = {
   __typename?: "InternalBulkCreateWidgetsResult";
   errors?: Maybe<Array<ExecutionError>>;
@@ -4871,24 +5550,108 @@ export type InternalBulkCreateWidgetsResult = {
   widgets?: Maybe<Array<Maybe<Scalars["InternalWidgetRecord"]["output"]>>>;
 };
 
-export type InternalCreateAutoTableTestRelatedModelResult = {
-  __typename?: "InternalCreateAutoTableTestRelatedModelResult";
-  _autoTableTestRelatedModel?: Maybe<Scalars["InternalAutoTableTestRelatedModelRecord"]["output"]>;
+export type InternalCityInput = {
+  createdAt?: InputMaybe<Scalars["DateTime"]["input"]>;
+  id?: InputMaybe<Scalars["GadgetID"]["input"]>;
+  name?: InputMaybe<Scalars["String"]["input"]>;
+  state?: InputMaybe<Scalars["RecordState"]["input"]>;
+  stateHistory?: InputMaybe<Scalars["RecordState"]["input"]>;
+  updatedAt?: InputMaybe<Scalars["DateTime"]["input"]>;
+};
+
+/** A connection to a list of InternalCityRecord items. */
+export type InternalCityRecordConnection = {
+  __typename?: "InternalCityRecordConnection";
+  /** A list of edges. */
+  edges: Array<InternalCityRecordEdge>;
+  /** Information to aid in pagination. */
+  pageInfo: PageInfo;
+};
+
+/** An edge in a InternalCityRecord connection. */
+export type InternalCityRecordEdge = {
+  __typename?: "InternalCityRecordEdge";
+  /** A cursor for use in pagination */
+  cursor: Scalars["String"]["output"];
+  /** The item at the end of the edge */
+  node: Scalars["InternalCityRecord"]["output"];
+};
+
+export type InternalCourseInput = {
+  createdAt?: InputMaybe<Scalars["DateTime"]["input"]>;
+  id?: InputMaybe<Scalars["GadgetID"]["input"]>;
+  offered?: InputMaybe<Scalars["Boolean"]["input"]>;
+  state?: InputMaybe<Scalars["RecordState"]["input"]>;
+  stateHistory?: InputMaybe<Scalars["RecordState"]["input"]>;
+  teacher?: InputMaybe<InternalBelongsToInput>;
+  title?: InputMaybe<Scalars["String"]["input"]>;
+  updatedAt?: InputMaybe<Scalars["DateTime"]["input"]>;
+};
+
+/** A connection to a list of InternalCourseRecord items. */
+export type InternalCourseRecordConnection = {
+  __typename?: "InternalCourseRecordConnection";
+  /** A list of edges. */
+  edges: Array<InternalCourseRecordEdge>;
+  /** Information to aid in pagination. */
+  pageInfo: PageInfo;
+};
+
+/** An edge in a InternalCourseRecord connection. */
+export type InternalCourseRecordEdge = {
+  __typename?: "InternalCourseRecordEdge";
+  /** A cursor for use in pagination */
+  cursor: Scalars["String"]["output"];
+  /** The item at the end of the edge */
+  node: Scalars["InternalCourseRecord"]["output"];
+};
+
+export type InternalCreateBillingAccountResult = {
+  __typename?: "InternalCreateBillingAccountResult";
+  billingAccount?: Maybe<Scalars["InternalBillingAccountRecord"]["output"]>;
   errors?: Maybe<Array<ExecutionError>>;
   success: Scalars["Boolean"]["output"];
 };
 
-export type InternalCreateAutoTableTestResult = {
-  __typename?: "InternalCreateAutoTableTestResult";
-  autoTableTest?: Maybe<Scalars["InternalAutoTableTestRecord"]["output"]>;
+export type InternalCreateCityResult = {
+  __typename?: "InternalCreateCityResult";
+  city?: Maybe<Scalars["InternalCityRecord"]["output"]>;
   errors?: Maybe<Array<ExecutionError>>;
   success: Scalars["Boolean"]["output"];
 };
 
-export type InternalCreateGameCityResult = {
-  __typename?: "InternalCreateGameCityResult";
-  city?: Maybe<Scalars["InternalGameCityRecord"]["output"]>;
+export type InternalCreateCourseResult = {
+  __typename?: "InternalCreateCourseResult";
+  course?: Maybe<Scalars["InternalCourseRecord"]["output"]>;
   errors?: Maybe<Array<ExecutionError>>;
+  success: Scalars["Boolean"]["output"];
+};
+
+export type InternalCreateCustomerResult = {
+  __typename?: "InternalCreateCustomerResult";
+  customer?: Maybe<Scalars["InternalCustomerRecord"]["output"]>;
+  errors?: Maybe<Array<ExecutionError>>;
+  success: Scalars["Boolean"]["output"];
+};
+
+export type InternalCreateEphemeralResult = {
+  __typename?: "InternalCreateEphemeralResult";
+  ephemeral?: Maybe<Scalars["InternalEphemeralRecord"]["output"]>;
+  errors?: Maybe<Array<ExecutionError>>;
+  success: Scalars["Boolean"]["output"];
+};
+
+export type InternalCreateFieldlessResult = {
+  __typename?: "InternalCreateFieldlessResult";
+  errors?: Maybe<Array<ExecutionError>>;
+  fieldless?: Maybe<Scalars["InternalFieldlessRecord"]["output"]>;
+  success: Scalars["Boolean"]["output"];
+};
+
+export type InternalCreateFriendshipResult = {
+  __typename?: "InternalCreateFriendshipResult";
+  errors?: Maybe<Array<ExecutionError>>;
+  friendship?: Maybe<Scalars["InternalFriendshipRecord"]["output"]>;
   success: Scalars["Boolean"]["output"];
 };
 
@@ -4920,38 +5683,24 @@ export type InternalCreateGizmoResult = {
   success: Scalars["Boolean"]["output"];
 };
 
-export type InternalCreateHasManyThroughBaseModelResult = {
-  __typename?: "InternalCreateHasManyThroughBaseModelResult";
-  baseModel?: Maybe<Scalars["InternalHasManyThroughBaseModelRecord"]["output"]>;
+export type InternalCreateLandmarkStadiumResult = {
+  __typename?: "InternalCreateLandmarkStadiumResult";
   errors?: Maybe<Array<ExecutionError>>;
+  stadium?: Maybe<Scalars["InternalLandmarkStadiumRecord"]["output"]>;
   success: Scalars["Boolean"]["output"];
 };
 
-export type InternalCreateHasManyThroughJoinerModelResult = {
-  __typename?: "InternalCreateHasManyThroughJoinerModelResult";
+export type InternalCreateRegistrationResult = {
+  __typename?: "InternalCreateRegistrationResult";
   errors?: Maybe<Array<ExecutionError>>;
-  joinerModel?: Maybe<Scalars["InternalHasManyThroughJoinerModelRecord"]["output"]>;
+  registration?: Maybe<Scalars["InternalRegistrationRecord"]["output"]>;
   success: Scalars["Boolean"]["output"];
 };
 
-export type InternalCreateHasManyThroughSiblingModelResult = {
-  __typename?: "InternalCreateHasManyThroughSiblingModelResult";
+export type InternalCreateSampleModelToTestReallyLongModelNamesResult = {
+  __typename?: "InternalCreateSampleModelToTestReallyLongModelNamesResult";
   errors?: Maybe<Array<ExecutionError>>;
-  siblingModel?: Maybe<Scalars["InternalHasManyThroughSiblingModelRecord"]["output"]>;
-  success: Scalars["Boolean"]["output"];
-};
-
-export type InternalCreateModelAResult = {
-  __typename?: "InternalCreateModelAResult";
-  errors?: Maybe<Array<ExecutionError>>;
-  modelA?: Maybe<Scalars["InternalModelARecord"]["output"]>;
-  success: Scalars["Boolean"]["output"];
-};
-
-export type InternalCreatePartResult = {
-  __typename?: "InternalCreatePartResult";
-  errors?: Maybe<Array<ExecutionError>>;
-  part?: Maybe<Scalars["InternalPartRecord"]["output"]>;
+  sampleModelToTestReallyLongModelNames?: Maybe<Scalars["InternalSampleModelToTestReallyLongModelNamesRecord"]["output"]>;
   success: Scalars["Boolean"]["output"];
 };
 
@@ -4969,53 +5718,25 @@ export type InternalCreateSessionResult = {
   success: Scalars["Boolean"]["output"];
 };
 
-export type InternalCreateShopifyGdprRequestResult = {
-  __typename?: "InternalCreateShopifyGdprRequestResult";
+export type InternalCreateSprocketResult = {
+  __typename?: "InternalCreateSprocketResult";
   errors?: Maybe<Array<ExecutionError>>;
-  shopifyGdprRequest?: Maybe<Scalars["InternalShopifyGdprRequestRecord"]["output"]>;
+  sprocket?: Maybe<Scalars["InternalSprocketRecord"]["output"]>;
   success: Scalars["Boolean"]["output"];
 };
 
-export type InternalCreateShopifyProductImageResult = {
-  __typename?: "InternalCreateShopifyProductImageResult";
+export type InternalCreateStudentResult = {
+  __typename?: "InternalCreateStudentResult";
   errors?: Maybe<Array<ExecutionError>>;
-  shopifyProductImage?: Maybe<Scalars["InternalShopifyProductImageRecord"]["output"]>;
+  student?: Maybe<Scalars["InternalStudentRecord"]["output"]>;
   success: Scalars["Boolean"]["output"];
 };
 
-export type InternalCreateShopifyProductOptionResult = {
-  __typename?: "InternalCreateShopifyProductOptionResult";
+export type InternalCreateTeacherResult = {
+  __typename?: "InternalCreateTeacherResult";
   errors?: Maybe<Array<ExecutionError>>;
-  shopifyProductOption?: Maybe<Scalars["InternalShopifyProductOptionRecord"]["output"]>;
   success: Scalars["Boolean"]["output"];
-};
-
-export type InternalCreateShopifyProductResult = {
-  __typename?: "InternalCreateShopifyProductResult";
-  errors?: Maybe<Array<ExecutionError>>;
-  shopifyProduct?: Maybe<Scalars["InternalShopifyProductRecord"]["output"]>;
-  success: Scalars["Boolean"]["output"];
-};
-
-export type InternalCreateShopifyProductVariantResult = {
-  __typename?: "InternalCreateShopifyProductVariantResult";
-  errors?: Maybe<Array<ExecutionError>>;
-  shopifyProductVariant?: Maybe<Scalars["InternalShopifyProductVariantRecord"]["output"]>;
-  success: Scalars["Boolean"]["output"];
-};
-
-export type InternalCreateShopifyShopResult = {
-  __typename?: "InternalCreateShopifyShopResult";
-  errors?: Maybe<Array<ExecutionError>>;
-  shopifyShop?: Maybe<Scalars["InternalShopifyShopRecord"]["output"]>;
-  success: Scalars["Boolean"]["output"];
-};
-
-export type InternalCreateShopifySyncResult = {
-  __typename?: "InternalCreateShopifySyncResult";
-  errors?: Maybe<Array<ExecutionError>>;
-  shopifySync?: Maybe<Scalars["InternalShopifySyncRecord"]["output"]>;
-  success: Scalars["Boolean"]["output"];
+  teacher?: Maybe<Scalars["InternalTeacherRecord"]["output"]>;
 };
 
 export type InternalCreateUserResult = {
@@ -5025,6 +5746,13 @@ export type InternalCreateUserResult = {
   user?: Maybe<Scalars["InternalUserRecord"]["output"]>;
 };
 
+export type InternalCreateWidgetImageResult = {
+  __typename?: "InternalCreateWidgetImageResult";
+  errors?: Maybe<Array<ExecutionError>>;
+  success: Scalars["Boolean"]["output"];
+  widgetImage?: Maybe<Scalars["InternalWidgetImageRecord"]["output"]>;
+};
+
 export type InternalCreateWidgetResult = {
   __typename?: "InternalCreateWidgetResult";
   errors?: Maybe<Array<ExecutionError>>;
@@ -5032,24 +5760,79 @@ export type InternalCreateWidgetResult = {
   widget?: Maybe<Scalars["InternalWidgetRecord"]["output"]>;
 };
 
-export type InternalDeleteAutoTableTestRelatedModelResult = {
-  __typename?: "InternalDeleteAutoTableTestRelatedModelResult";
-  _autoTableTestRelatedModel?: Maybe<Scalars["InternalAutoTableTestRelatedModelRecord"]["output"]>;
+export type InternalCustomerInput = {
+  createdAt?: InputMaybe<Scalars["DateTime"]["input"]>;
+  email?: InputMaybe<Scalars["String"]["input"]>;
+  id?: InputMaybe<Scalars["GadgetID"]["input"]>;
+  state?: InputMaybe<Scalars["RecordState"]["input"]>;
+  stateHistory?: InputMaybe<Scalars["RecordState"]["input"]>;
+  updatedAt?: InputMaybe<Scalars["DateTime"]["input"]>;
+};
+
+/** A connection to a list of InternalCustomerRecord items. */
+export type InternalCustomerRecordConnection = {
+  __typename?: "InternalCustomerRecordConnection";
+  /** A list of edges. */
+  edges: Array<InternalCustomerRecordEdge>;
+  /** Information to aid in pagination. */
+  pageInfo: PageInfo;
+};
+
+/** An edge in a InternalCustomerRecord connection. */
+export type InternalCustomerRecordEdge = {
+  __typename?: "InternalCustomerRecordEdge";
+  /** A cursor for use in pagination */
+  cursor: Scalars["String"]["output"];
+  /** The item at the end of the edge */
+  node: Scalars["InternalCustomerRecord"]["output"];
+};
+
+export type InternalDeleteBillingAccountResult = {
+  __typename?: "InternalDeleteBillingAccountResult";
+  billingAccount?: Maybe<Scalars["InternalBillingAccountRecord"]["output"]>;
   errors?: Maybe<Array<ExecutionError>>;
   success: Scalars["Boolean"]["output"];
 };
 
-export type InternalDeleteAutoTableTestResult = {
-  __typename?: "InternalDeleteAutoTableTestResult";
-  autoTableTest?: Maybe<Scalars["InternalAutoTableTestRecord"]["output"]>;
+export type InternalDeleteCityResult = {
+  __typename?: "InternalDeleteCityResult";
+  city?: Maybe<Scalars["InternalCityRecord"]["output"]>;
   errors?: Maybe<Array<ExecutionError>>;
   success: Scalars["Boolean"]["output"];
 };
 
-export type InternalDeleteGameCityResult = {
-  __typename?: "InternalDeleteGameCityResult";
-  city?: Maybe<Scalars["InternalGameCityRecord"]["output"]>;
+export type InternalDeleteCourseResult = {
+  __typename?: "InternalDeleteCourseResult";
+  course?: Maybe<Scalars["InternalCourseRecord"]["output"]>;
   errors?: Maybe<Array<ExecutionError>>;
+  success: Scalars["Boolean"]["output"];
+};
+
+export type InternalDeleteCustomerResult = {
+  __typename?: "InternalDeleteCustomerResult";
+  customer?: Maybe<Scalars["InternalCustomerRecord"]["output"]>;
+  errors?: Maybe<Array<ExecutionError>>;
+  success: Scalars["Boolean"]["output"];
+};
+
+export type InternalDeleteEphemeralResult = {
+  __typename?: "InternalDeleteEphemeralResult";
+  ephemeral?: Maybe<Scalars["InternalEphemeralRecord"]["output"]>;
+  errors?: Maybe<Array<ExecutionError>>;
+  success: Scalars["Boolean"]["output"];
+};
+
+export type InternalDeleteFieldlessResult = {
+  __typename?: "InternalDeleteFieldlessResult";
+  errors?: Maybe<Array<ExecutionError>>;
+  fieldless?: Maybe<Scalars["InternalFieldlessRecord"]["output"]>;
+  success: Scalars["Boolean"]["output"];
+};
+
+export type InternalDeleteFriendshipResult = {
+  __typename?: "InternalDeleteFriendshipResult";
+  errors?: Maybe<Array<ExecutionError>>;
+  friendship?: Maybe<Scalars["InternalFriendshipRecord"]["output"]>;
   success: Scalars["Boolean"]["output"];
 };
 
@@ -5081,41 +5864,51 @@ export type InternalDeleteGizmoResult = {
   success: Scalars["Boolean"]["output"];
 };
 
-export type InternalDeleteHasManyThroughBaseModelResult = {
-  __typename?: "InternalDeleteHasManyThroughBaseModelResult";
-  baseModel?: Maybe<Scalars["InternalHasManyThroughBaseModelRecord"]["output"]>;
+export type InternalDeleteLandmarkStadiumResult = {
+  __typename?: "InternalDeleteLandmarkStadiumResult";
+  errors?: Maybe<Array<ExecutionError>>;
+  stadium?: Maybe<Scalars["InternalLandmarkStadiumRecord"]["output"]>;
+  success: Scalars["Boolean"]["output"];
+};
+
+export type InternalDeleteManyBillingAccountResult = {
+  __typename?: "InternalDeleteManyBillingAccountResult";
   errors?: Maybe<Array<ExecutionError>>;
   success: Scalars["Boolean"]["output"];
 };
 
-export type InternalDeleteHasManyThroughJoinerModelResult = {
-  __typename?: "InternalDeleteHasManyThroughJoinerModelResult";
-  errors?: Maybe<Array<ExecutionError>>;
-  joinerModel?: Maybe<Scalars["InternalHasManyThroughJoinerModelRecord"]["output"]>;
-  success: Scalars["Boolean"]["output"];
-};
-
-export type InternalDeleteHasManyThroughSiblingModelResult = {
-  __typename?: "InternalDeleteHasManyThroughSiblingModelResult";
-  errors?: Maybe<Array<ExecutionError>>;
-  siblingModel?: Maybe<Scalars["InternalHasManyThroughSiblingModelRecord"]["output"]>;
-  success: Scalars["Boolean"]["output"];
-};
-
-export type InternalDeleteManyAutoTableTestRelatedModelResult = {
-  __typename?: "InternalDeleteManyAutoTableTestRelatedModelResult";
+export type InternalDeleteManyCityResult = {
+  __typename?: "InternalDeleteManyCityResult";
   errors?: Maybe<Array<ExecutionError>>;
   success: Scalars["Boolean"]["output"];
 };
 
-export type InternalDeleteManyAutoTableTestResult = {
-  __typename?: "InternalDeleteManyAutoTableTestResult";
+export type InternalDeleteManyCourseResult = {
+  __typename?: "InternalDeleteManyCourseResult";
   errors?: Maybe<Array<ExecutionError>>;
   success: Scalars["Boolean"]["output"];
 };
 
-export type InternalDeleteManyGameCityResult = {
-  __typename?: "InternalDeleteManyGameCityResult";
+export type InternalDeleteManyCustomerResult = {
+  __typename?: "InternalDeleteManyCustomerResult";
+  errors?: Maybe<Array<ExecutionError>>;
+  success: Scalars["Boolean"]["output"];
+};
+
+export type InternalDeleteManyEphemeralResult = {
+  __typename?: "InternalDeleteManyEphemeralResult";
+  errors?: Maybe<Array<ExecutionError>>;
+  success: Scalars["Boolean"]["output"];
+};
+
+export type InternalDeleteManyFieldlessResult = {
+  __typename?: "InternalDeleteManyFieldlessResult";
+  errors?: Maybe<Array<ExecutionError>>;
+  success: Scalars["Boolean"]["output"];
+};
+
+export type InternalDeleteManyFriendshipResult = {
+  __typename?: "InternalDeleteManyFriendshipResult";
   errors?: Maybe<Array<ExecutionError>>;
   success: Scalars["Boolean"]["output"];
 };
@@ -5144,32 +5937,20 @@ export type InternalDeleteManyGizmoResult = {
   success: Scalars["Boolean"]["output"];
 };
 
-export type InternalDeleteManyHasManyThroughBaseModelResult = {
-  __typename?: "InternalDeleteManyHasManyThroughBaseModelResult";
+export type InternalDeleteManyLandmarkStadiumResult = {
+  __typename?: "InternalDeleteManyLandmarkStadiumResult";
   errors?: Maybe<Array<ExecutionError>>;
   success: Scalars["Boolean"]["output"];
 };
 
-export type InternalDeleteManyHasManyThroughJoinerModelResult = {
-  __typename?: "InternalDeleteManyHasManyThroughJoinerModelResult";
+export type InternalDeleteManyRegistrationResult = {
+  __typename?: "InternalDeleteManyRegistrationResult";
   errors?: Maybe<Array<ExecutionError>>;
   success: Scalars["Boolean"]["output"];
 };
 
-export type InternalDeleteManyHasManyThroughSiblingModelResult = {
-  __typename?: "InternalDeleteManyHasManyThroughSiblingModelResult";
-  errors?: Maybe<Array<ExecutionError>>;
-  success: Scalars["Boolean"]["output"];
-};
-
-export type InternalDeleteManyModelAResult = {
-  __typename?: "InternalDeleteManyModelAResult";
-  errors?: Maybe<Array<ExecutionError>>;
-  success: Scalars["Boolean"]["output"];
-};
-
-export type InternalDeleteManyPartResult = {
-  __typename?: "InternalDeleteManyPartResult";
+export type InternalDeleteManySampleModelToTestReallyLongModelNamesResult = {
+  __typename?: "InternalDeleteManySampleModelToTestReallyLongModelNamesResult";
   errors?: Maybe<Array<ExecutionError>>;
   success: Scalars["Boolean"]["output"];
 };
@@ -5186,44 +5967,20 @@ export type InternalDeleteManySessionResult = {
   success: Scalars["Boolean"]["output"];
 };
 
-export type InternalDeleteManyShopifyGdprRequestResult = {
-  __typename?: "InternalDeleteManyShopifyGdprRequestResult";
+export type InternalDeleteManySprocketResult = {
+  __typename?: "InternalDeleteManySprocketResult";
   errors?: Maybe<Array<ExecutionError>>;
   success: Scalars["Boolean"]["output"];
 };
 
-export type InternalDeleteManyShopifyProductImageResult = {
-  __typename?: "InternalDeleteManyShopifyProductImageResult";
+export type InternalDeleteManyStudentResult = {
+  __typename?: "InternalDeleteManyStudentResult";
   errors?: Maybe<Array<ExecutionError>>;
   success: Scalars["Boolean"]["output"];
 };
 
-export type InternalDeleteManyShopifyProductOptionResult = {
-  __typename?: "InternalDeleteManyShopifyProductOptionResult";
-  errors?: Maybe<Array<ExecutionError>>;
-  success: Scalars["Boolean"]["output"];
-};
-
-export type InternalDeleteManyShopifyProductResult = {
-  __typename?: "InternalDeleteManyShopifyProductResult";
-  errors?: Maybe<Array<ExecutionError>>;
-  success: Scalars["Boolean"]["output"];
-};
-
-export type InternalDeleteManyShopifyProductVariantResult = {
-  __typename?: "InternalDeleteManyShopifyProductVariantResult";
-  errors?: Maybe<Array<ExecutionError>>;
-  success: Scalars["Boolean"]["output"];
-};
-
-export type InternalDeleteManyShopifyShopResult = {
-  __typename?: "InternalDeleteManyShopifyShopResult";
-  errors?: Maybe<Array<ExecutionError>>;
-  success: Scalars["Boolean"]["output"];
-};
-
-export type InternalDeleteManyShopifySyncResult = {
-  __typename?: "InternalDeleteManyShopifySyncResult";
+export type InternalDeleteManyTeacherResult = {
+  __typename?: "InternalDeleteManyTeacherResult";
   errors?: Maybe<Array<ExecutionError>>;
   success: Scalars["Boolean"]["output"];
 };
@@ -5234,23 +5991,29 @@ export type InternalDeleteManyUserResult = {
   success: Scalars["Boolean"]["output"];
 };
 
+export type InternalDeleteManyWidgetImageResult = {
+  __typename?: "InternalDeleteManyWidgetImageResult";
+  errors?: Maybe<Array<ExecutionError>>;
+  success: Scalars["Boolean"]["output"];
+};
+
 export type InternalDeleteManyWidgetResult = {
   __typename?: "InternalDeleteManyWidgetResult";
   errors?: Maybe<Array<ExecutionError>>;
   success: Scalars["Boolean"]["output"];
 };
 
-export type InternalDeleteModelAResult = {
-  __typename?: "InternalDeleteModelAResult";
+export type InternalDeleteRegistrationResult = {
+  __typename?: "InternalDeleteRegistrationResult";
   errors?: Maybe<Array<ExecutionError>>;
-  modelA?: Maybe<Scalars["InternalModelARecord"]["output"]>;
+  registration?: Maybe<Scalars["InternalRegistrationRecord"]["output"]>;
   success: Scalars["Boolean"]["output"];
 };
 
-export type InternalDeletePartResult = {
-  __typename?: "InternalDeletePartResult";
+export type InternalDeleteSampleModelToTestReallyLongModelNamesResult = {
+  __typename?: "InternalDeleteSampleModelToTestReallyLongModelNamesResult";
   errors?: Maybe<Array<ExecutionError>>;
-  part?: Maybe<Scalars["InternalPartRecord"]["output"]>;
+  sampleModelToTestReallyLongModelNames?: Maybe<Scalars["InternalSampleModelToTestReallyLongModelNamesRecord"]["output"]>;
   success: Scalars["Boolean"]["output"];
 };
 
@@ -5268,53 +6031,25 @@ export type InternalDeleteSessionResult = {
   success: Scalars["Boolean"]["output"];
 };
 
-export type InternalDeleteShopifyGdprRequestResult = {
-  __typename?: "InternalDeleteShopifyGdprRequestResult";
+export type InternalDeleteSprocketResult = {
+  __typename?: "InternalDeleteSprocketResult";
   errors?: Maybe<Array<ExecutionError>>;
-  shopifyGdprRequest?: Maybe<Scalars["InternalShopifyGdprRequestRecord"]["output"]>;
+  sprocket?: Maybe<Scalars["InternalSprocketRecord"]["output"]>;
   success: Scalars["Boolean"]["output"];
 };
 
-export type InternalDeleteShopifyProductImageResult = {
-  __typename?: "InternalDeleteShopifyProductImageResult";
+export type InternalDeleteStudentResult = {
+  __typename?: "InternalDeleteStudentResult";
   errors?: Maybe<Array<ExecutionError>>;
-  shopifyProductImage?: Maybe<Scalars["InternalShopifyProductImageRecord"]["output"]>;
+  student?: Maybe<Scalars["InternalStudentRecord"]["output"]>;
   success: Scalars["Boolean"]["output"];
 };
 
-export type InternalDeleteShopifyProductOptionResult = {
-  __typename?: "InternalDeleteShopifyProductOptionResult";
+export type InternalDeleteTeacherResult = {
+  __typename?: "InternalDeleteTeacherResult";
   errors?: Maybe<Array<ExecutionError>>;
-  shopifyProductOption?: Maybe<Scalars["InternalShopifyProductOptionRecord"]["output"]>;
   success: Scalars["Boolean"]["output"];
-};
-
-export type InternalDeleteShopifyProductResult = {
-  __typename?: "InternalDeleteShopifyProductResult";
-  errors?: Maybe<Array<ExecutionError>>;
-  shopifyProduct?: Maybe<Scalars["InternalShopifyProductRecord"]["output"]>;
-  success: Scalars["Boolean"]["output"];
-};
-
-export type InternalDeleteShopifyProductVariantResult = {
-  __typename?: "InternalDeleteShopifyProductVariantResult";
-  errors?: Maybe<Array<ExecutionError>>;
-  shopifyProductVariant?: Maybe<Scalars["InternalShopifyProductVariantRecord"]["output"]>;
-  success: Scalars["Boolean"]["output"];
-};
-
-export type InternalDeleteShopifyShopResult = {
-  __typename?: "InternalDeleteShopifyShopResult";
-  errors?: Maybe<Array<ExecutionError>>;
-  shopifyShop?: Maybe<Scalars["InternalShopifyShopRecord"]["output"]>;
-  success: Scalars["Boolean"]["output"];
-};
-
-export type InternalDeleteShopifySyncResult = {
-  __typename?: "InternalDeleteShopifySyncResult";
-  errors?: Maybe<Array<ExecutionError>>;
-  shopifySync?: Maybe<Scalars["InternalShopifySyncRecord"]["output"]>;
-  success: Scalars["Boolean"]["output"];
+  teacher?: Maybe<Scalars["InternalTeacherRecord"]["output"]>;
 };
 
 export type InternalDeleteUserResult = {
@@ -5324,6 +6059,13 @@ export type InternalDeleteUserResult = {
   user?: Maybe<Scalars["InternalUserRecord"]["output"]>;
 };
 
+export type InternalDeleteWidgetImageResult = {
+  __typename?: "InternalDeleteWidgetImageResult";
+  errors?: Maybe<Array<ExecutionError>>;
+  success: Scalars["Boolean"]["output"];
+  widgetImage?: Maybe<Scalars["InternalWidgetImageRecord"]["output"]>;
+};
+
 export type InternalDeleteWidgetResult = {
   __typename?: "InternalDeleteWidgetResult";
   errors?: Maybe<Array<ExecutionError>>;
@@ -5331,76 +6073,122 @@ export type InternalDeleteWidgetResult = {
   widget?: Maybe<Scalars["InternalWidgetRecord"]["output"]>;
 };
 
-export type InternalGameCityInput = {
+export type InternalEphemeralInput = {
   createdAt?: InputMaybe<Scalars["DateTime"]["input"]>;
+  data?: InputMaybe<Scalars["String"]["input"]>;
   id?: InputMaybe<Scalars["GadgetID"]["input"]>;
-  name?: InputMaybe<Scalars["String"]["input"]>;
   state?: InputMaybe<Scalars["RecordState"]["input"]>;
   stateHistory?: InputMaybe<Scalars["RecordState"]["input"]>;
   updatedAt?: InputMaybe<Scalars["DateTime"]["input"]>;
 };
 
-/** A connection to a list of InternalGameCityRecord items. */
-export type InternalGameCityRecordConnection = {
-  __typename?: "InternalGameCityRecordConnection";
+/** A connection to a list of InternalEphemeralRecord items. */
+export type InternalEphemeralRecordConnection = {
+  __typename?: "InternalEphemeralRecordConnection";
   /** A list of edges. */
-  edges: Array<InternalGameCityRecordEdge>;
+  edges: Array<InternalEphemeralRecordEdge>;
   /** Information to aid in pagination. */
   pageInfo: PageInfo;
 };
 
-/** An edge in a InternalGameCityRecord connection. */
-export type InternalGameCityRecordEdge = {
-  __typename?: "InternalGameCityRecordEdge";
+/** An edge in a InternalEphemeralRecord connection. */
+export type InternalEphemeralRecordEdge = {
+  __typename?: "InternalEphemeralRecordEdge";
   /** A cursor for use in pagination */
   cursor: Scalars["String"]["output"];
   /** The item at the end of the edge */
-  node: Scalars["InternalGameCityRecord"]["output"];
+  node: Scalars["InternalEphemeralRecord"]["output"];
+};
+
+export type InternalFieldlessInput = {
+  createdAt?: InputMaybe<Scalars["DateTime"]["input"]>;
+  id?: InputMaybe<Scalars["GadgetID"]["input"]>;
+  state?: InputMaybe<Scalars["RecordState"]["input"]>;
+  stateHistory?: InputMaybe<Scalars["RecordState"]["input"]>;
+  updatedAt?: InputMaybe<Scalars["DateTime"]["input"]>;
+};
+
+/** A connection to a list of InternalFieldlessRecord items. */
+export type InternalFieldlessRecordConnection = {
+  __typename?: "InternalFieldlessRecordConnection";
+  /** A list of edges. */
+  edges: Array<InternalFieldlessRecordEdge>;
+  /** Information to aid in pagination. */
+  pageInfo: PageInfo;
+};
+
+/** An edge in a InternalFieldlessRecord connection. */
+export type InternalFieldlessRecordEdge = {
+  __typename?: "InternalFieldlessRecordEdge";
+  /** A cursor for use in pagination */
+  cursor: Scalars["String"]["output"];
+  /** The item at the end of the edge */
+  node: Scalars["InternalFieldlessRecord"]["output"];
+};
+
+export type InternalFriendshipInput = {
+  createdAt?: InputMaybe<Scalars["DateTime"]["input"]>;
+  ended?: InputMaybe<Scalars["DateOrDateTime"]["input"]>;
+  followee?: InputMaybe<InternalBelongsToInput>;
+  follower?: InputMaybe<InternalBelongsToInput>;
+  id?: InputMaybe<Scalars["GadgetID"]["input"]>;
+  started?: InputMaybe<Scalars["DateOrDateTime"]["input"]>;
+  state?: InputMaybe<Scalars["RecordState"]["input"]>;
+  stateHistory?: InputMaybe<Scalars["RecordState"]["input"]>;
+  updatedAt?: InputMaybe<Scalars["DateTime"]["input"]>;
+};
+
+/** A connection to a list of InternalFriendshipRecord items. */
+export type InternalFriendshipRecordConnection = {
+  __typename?: "InternalFriendshipRecordConnection";
+  /** A list of edges. */
+  edges: Array<InternalFriendshipRecordEdge>;
+  /** Information to aid in pagination. */
+  pageInfo: PageInfo;
+};
+
+/** An edge in a InternalFriendshipRecord connection. */
+export type InternalFriendshipRecordEdge = {
+  __typename?: "InternalFriendshipRecordEdge";
+  /** A cursor for use in pagination */
+  cursor: Scalars["String"]["output"];
+  /** The item at the end of the edge */
+  node: Scalars["InternalFriendshipRecord"]["output"];
 };
 
 export type InternalGameMutations = {
   __typename?: "InternalGameMutations";
-  bulkCreateCities?: Maybe<InternalBulkCreateGameCitiesResult>;
   bulkCreatePlayers?: Maybe<InternalBulkCreateGamePlayersResult>;
   bulkCreateRounds?: Maybe<InternalBulkCreateGameRoundsResult>;
   bulkCreateStadia?: Maybe<InternalBulkCreateGameStadiaResult>;
-  createCity?: Maybe<InternalCreateGameCityResult>;
   createPlayer?: Maybe<InternalCreateGamePlayerResult>;
   createRound?: Maybe<InternalCreateGameRoundResult>;
   createStadium?: Maybe<InternalCreateGameStadiumResult>;
-  deleteCity?: Maybe<InternalDeleteGameCityResult>;
-  deleteManyCity?: Maybe<InternalDeleteManyGameCityResult>;
   deleteManyPlayer?: Maybe<InternalDeleteManyGamePlayerResult>;
   deleteManyRound?: Maybe<InternalDeleteManyGameRoundResult>;
   deleteManyStadium?: Maybe<InternalDeleteManyGameStadiumResult>;
   deletePlayer?: Maybe<InternalDeleteGamePlayerResult>;
   deleteRound?: Maybe<InternalDeleteGameRoundResult>;
   deleteStadium?: Maybe<InternalDeleteGameStadiumResult>;
-  triggerCreateCity?: Maybe<CreateGameCityResult>;
+  triggerBarfAnErrorPlayer?: Maybe<BarfAnErrorGamePlayerResult>;
+  triggerCalculateScores?: Maybe<GameCalculateScoresResult>;
   triggerCreatePlayer?: Maybe<CreateGamePlayerResult>;
   triggerCreateRound?: Maybe<CreateGameRoundResult>;
   triggerCreateStadium?: Maybe<CreateGameStadiumResult>;
-  triggerCustomObjectParamsCity?: Maybe<CustomObjectParamsGameCityResult>;
-  triggerDeleteCity?: Maybe<DeleteGameCityResult>;
   triggerDeletePlayer?: Maybe<DeleteGamePlayerResult>;
   triggerDeleteRound?: Maybe<DeleteGameRoundResult>;
   triggerDeleteStadium?: Maybe<DeleteGameStadiumResult>;
-  triggerUpdateCity?: Maybe<UpdateGameCityResult>;
+  triggerLetTheGamesBegin?: Maybe<GameLetTheGamesBeginResult>;
+  triggerSetBestNumberPlayer?: Maybe<SetBestNumberGamePlayerResult>;
   triggerUpdatePlayer?: Maybe<UpdateGamePlayerResult>;
   triggerUpdateRound?: Maybe<UpdateGameRoundResult>;
   triggerUpdateStadium?: Maybe<UpdateGameStadiumResult>;
-  updateCity?: Maybe<InternalUpdateGameCityResult>;
   updatePlayer?: Maybe<InternalUpdateGamePlayerResult>;
   updateRound?: Maybe<InternalUpdateGameRoundResult>;
   updateStadium?: Maybe<InternalUpdateGameStadiumResult>;
-  upsertCity?: Maybe<InternalUpsertGameCityResult>;
   upsertPlayer?: Maybe<InternalUpsertGamePlayerResult>;
   upsertRound?: Maybe<InternalUpsertGameRoundResult>;
   upsertStadium?: Maybe<InternalUpsertGameStadiumResult>;
-};
-
-export type InternalGameMutationsBulkCreateCitiesArgs = {
-  cities: Array<InputMaybe<InternalGameCityInput>>;
 };
 
 export type InternalGameMutationsBulkCreatePlayersArgs = {
@@ -5415,10 +6203,6 @@ export type InternalGameMutationsBulkCreateStadiaArgs = {
   stadia: Array<InputMaybe<InternalGameStadiumInput>>;
 };
 
-export type InternalGameMutationsCreateCityArgs = {
-  city?: InputMaybe<InternalGameCityInput>;
-};
-
 export type InternalGameMutationsCreatePlayerArgs = {
   player?: InputMaybe<InternalGamePlayerInput>;
 };
@@ -5429,15 +6213,6 @@ export type InternalGameMutationsCreateRoundArgs = {
 
 export type InternalGameMutationsCreateStadiumArgs = {
   stadium?: InputMaybe<InternalGameStadiumInput>;
-};
-
-export type InternalGameMutationsDeleteCityArgs = {
-  id: Scalars["GadgetID"]["input"];
-};
-
-export type InternalGameMutationsDeleteManyCityArgs = {
-  filter?: InputMaybe<Array<GameCityFilter>>;
-  search?: InputMaybe<Scalars["String"]["input"]>;
 };
 
 export type InternalGameMutationsDeleteManyPlayerArgs = {
@@ -5467,9 +6242,14 @@ export type InternalGameMutationsDeleteStadiumArgs = {
   id: Scalars["GadgetID"]["input"];
 };
 
-export type InternalGameMutationsTriggerCreateCityArgs = {
+export type InternalGameMutationsTriggerBarfAnErrorPlayerArgs = {
   context?: InputMaybe<AppGraphQlTriggerMutationContext>;
   params?: InputMaybe<Scalars["JSONObject"]["input"]>;
+  trigger?: InputMaybe<Scalars["JSONObject"]["input"]>;
+  verifyTriggerExists?: InputMaybe<Scalars["Boolean"]["input"]>;
+};
+
+export type InternalGameMutationsTriggerCalculateScoresArgs = {
   trigger?: InputMaybe<Scalars["JSONObject"]["input"]>;
   verifyTriggerExists?: InputMaybe<Scalars["Boolean"]["input"]>;
 };
@@ -5489,20 +6269,6 @@ export type InternalGameMutationsTriggerCreateRoundArgs = {
 };
 
 export type InternalGameMutationsTriggerCreateStadiumArgs = {
-  context?: InputMaybe<AppGraphQlTriggerMutationContext>;
-  params?: InputMaybe<Scalars["JSONObject"]["input"]>;
-  trigger?: InputMaybe<Scalars["JSONObject"]["input"]>;
-  verifyTriggerExists?: InputMaybe<Scalars["Boolean"]["input"]>;
-};
-
-export type InternalGameMutationsTriggerCustomObjectParamsCityArgs = {
-  context?: InputMaybe<AppGraphQlTriggerMutationContext>;
-  params?: InputMaybe<Scalars["JSONObject"]["input"]>;
-  trigger?: InputMaybe<Scalars["JSONObject"]["input"]>;
-  verifyTriggerExists?: InputMaybe<Scalars["Boolean"]["input"]>;
-};
-
-export type InternalGameMutationsTriggerDeleteCityArgs = {
   context?: InputMaybe<AppGraphQlTriggerMutationContext>;
   params?: InputMaybe<Scalars["JSONObject"]["input"]>;
   trigger?: InputMaybe<Scalars["JSONObject"]["input"]>;
@@ -5530,7 +6296,12 @@ export type InternalGameMutationsTriggerDeleteStadiumArgs = {
   verifyTriggerExists?: InputMaybe<Scalars["Boolean"]["input"]>;
 };
 
-export type InternalGameMutationsTriggerUpdateCityArgs = {
+export type InternalGameMutationsTriggerLetTheGamesBeginArgs = {
+  trigger?: InputMaybe<Scalars["JSONObject"]["input"]>;
+  verifyTriggerExists?: InputMaybe<Scalars["Boolean"]["input"]>;
+};
+
+export type InternalGameMutationsTriggerSetBestNumberPlayerArgs = {
   context?: InputMaybe<AppGraphQlTriggerMutationContext>;
   params?: InputMaybe<Scalars["JSONObject"]["input"]>;
   trigger?: InputMaybe<Scalars["JSONObject"]["input"]>;
@@ -5558,11 +6329,6 @@ export type InternalGameMutationsTriggerUpdateStadiumArgs = {
   verifyTriggerExists?: InputMaybe<Scalars["Boolean"]["input"]>;
 };
 
-export type InternalGameMutationsUpdateCityArgs = {
-  city?: InputMaybe<InternalGameCityInput>;
-  id: Scalars["GadgetID"]["input"];
-};
-
 export type InternalGameMutationsUpdatePlayerArgs = {
   id: Scalars["GadgetID"]["input"];
   player?: InputMaybe<InternalGamePlayerInput>;
@@ -5576,11 +6342,6 @@ export type InternalGameMutationsUpdateRoundArgs = {
 export type InternalGameMutationsUpdateStadiumArgs = {
   id: Scalars["GadgetID"]["input"];
   stadium?: InputMaybe<InternalGameStadiumInput>;
-};
-
-export type InternalGameMutationsUpsertCityArgs = {
-  city?: InputMaybe<InternalGameCityInput>;
-  on?: InputMaybe<Array<Scalars["String"]["input"]>>;
 };
 
 export type InternalGameMutationsUpsertPlayerArgs = {
@@ -5598,11 +6359,19 @@ export type InternalGameMutationsUpsertStadiumArgs = {
   stadium?: InputMaybe<InternalGameStadiumInput>;
 };
 
+export type InternalGamePlayerAtomicsInput = {
+  /** Numeric atomic commands for operating on number. */
+  number?: InputMaybe<Array<NumericAtomicFieldUpdateInput>>;
+};
+
 export type InternalGamePlayerInput = {
+  /** An optional list of atomically applied commands for race-safe mutations of the record */
+  _atomics?: InputMaybe<InternalGamePlayerAtomicsInput>;
+  birthday?: InputMaybe<Scalars["DateTime"]["input"]>;
   createdAt?: InputMaybe<Scalars["DateTime"]["input"]>;
-  currentRound?: InputMaybe<InternalBelongsToInput>;
   id?: InputMaybe<Scalars["GadgetID"]["input"]>;
   name?: InputMaybe<Scalars["String"]["input"]>;
+  number?: InputMaybe<Scalars["Float"]["input"]>;
   state?: InputMaybe<Scalars["RecordState"]["input"]>;
   stateHistory?: InputMaybe<Scalars["RecordState"]["input"]>;
   updatedAt?: InputMaybe<Scalars["DateTime"]["input"]>;
@@ -5628,32 +6397,14 @@ export type InternalGamePlayerRecordEdge = {
 
 export type InternalGameQueries = {
   __typename?: "InternalGameQueries";
-  city?: Maybe<Scalars["InternalGameCityRecord"]["output"]>;
   /** Currently open platform transaction details, or null if no transaction is open */
   currentTransactionDetails?: Maybe<Scalars["JSONObject"]["output"]>;
-  listCity: InternalGameCityRecordConnection;
   listPlayer: InternalGamePlayerRecordConnection;
   listRound: InternalGameRoundRecordConnection;
   listStadium: InternalGameStadiumRecordConnection;
   player?: Maybe<Scalars["InternalGamePlayerRecord"]["output"]>;
   round?: Maybe<Scalars["InternalGameRoundRecord"]["output"]>;
   stadium?: Maybe<Scalars["InternalGameStadiumRecord"]["output"]>;
-};
-
-export type InternalGameQueriesCityArgs = {
-  id: Scalars["GadgetID"]["input"];
-  select?: InputMaybe<Array<Scalars["String"]["input"]>>;
-};
-
-export type InternalGameQueriesListCityArgs = {
-  after?: InputMaybe<Scalars["String"]["input"]>;
-  before?: InputMaybe<Scalars["String"]["input"]>;
-  filter?: InputMaybe<Array<GameCityFilter>>;
-  first?: InputMaybe<Scalars["Int"]["input"]>;
-  last?: InputMaybe<Scalars["Int"]["input"]>;
-  search?: InputMaybe<Scalars["String"]["input"]>;
-  select?: InputMaybe<Array<Scalars["String"]["input"]>>;
-  sort?: InputMaybe<Array<GameCitySort>>;
 };
 
 export type InternalGameQueriesListPlayerArgs = {
@@ -5704,11 +6455,18 @@ export type InternalGameQueriesStadiumArgs = {
   select?: InputMaybe<Array<Scalars["String"]["input"]>>;
 };
 
+export type InternalGameRoundAtomicsInput = {
+  /** Numeric atomic commands for operating on number. */
+  number?: InputMaybe<Array<NumericAtomicFieldUpdateInput>>;
+};
+
 export type InternalGameRoundInput = {
+  /** An optional list of atomically applied commands for race-safe mutations of the record */
+  _atomics?: InputMaybe<InternalGameRoundAtomicsInput>;
   createdAt?: InputMaybe<Scalars["DateTime"]["input"]>;
   id?: InputMaybe<Scalars["GadgetID"]["input"]>;
-  name?: InputMaybe<Scalars["String"]["input"]>;
-  stadium?: InputMaybe<InternalBelongsToInput>;
+  number?: InputMaybe<Scalars["Float"]["input"]>;
+  player?: InputMaybe<InternalBelongsToInput>;
   state?: InputMaybe<Scalars["RecordState"]["input"]>;
   stateHistory?: InputMaybe<Scalars["RecordState"]["input"]>;
   updatedAt?: InputMaybe<Scalars["DateTime"]["input"]>;
@@ -5733,15 +6491,11 @@ export type InternalGameRoundRecordEdge = {
 };
 
 export type InternalGameStadiumInput = {
-  city?: InputMaybe<InternalBelongsToInput>;
   createdAt?: InputMaybe<Scalars["DateTime"]["input"]>;
   id?: InputMaybe<Scalars["GadgetID"]["input"]>;
   name?: InputMaybe<Scalars["String"]["input"]>;
-  photo?: InputMaybe<InternalStoredFileInput>;
   state?: InputMaybe<Scalars["RecordState"]["input"]>;
   stateHistory?: InputMaybe<Scalars["RecordState"]["input"]>;
-  tags?: InputMaybe<Array<Scalars["StadiumTagsEnum"]["input"]>>;
-  type?: InputMaybe<Scalars["StadiumTypeEnum"]["input"]>;
   updatedAt?: InputMaybe<Scalars["DateTime"]["input"]>;
 };
 
@@ -5767,8 +6521,7 @@ export type InternalGizmoInput = {
   createdAt?: InputMaybe<Scalars["DateTime"]["input"]>;
   id?: InputMaybe<Scalars["GadgetID"]["input"]>;
   name?: InputMaybe<Scalars["String"]["input"]>;
-  orientation?: InputMaybe<Scalars["String"]["input"]>;
-  state?: InputMaybe<Scalars["RecordState"]["input"]>;
+  state?: InputMaybe<Scalars["GizmoStateEnum"]["input"]>;
   stateHistory?: InputMaybe<Scalars["RecordState"]["input"]>;
   updatedAt?: InputMaybe<Scalars["DateTime"]["input"]>;
   widget?: InputMaybe<InternalBelongsToInput>;
@@ -5792,535 +6545,352 @@ export type InternalGizmoRecordEdge = {
   node: Scalars["InternalGizmoRecord"]["output"];
 };
 
-export type InternalHasManyThroughBaseModelInput = {
-  baseModelName?: InputMaybe<Scalars["String"]["input"]>;
-  createdAt?: InputMaybe<Scalars["DateTime"]["input"]>;
-  id?: InputMaybe<Scalars["GadgetID"]["input"]>;
-  state?: InputMaybe<Scalars["RecordState"]["input"]>;
-  stateHistory?: InputMaybe<Scalars["RecordState"]["input"]>;
-  updatedAt?: InputMaybe<Scalars["DateTime"]["input"]>;
+export type InternalLandmarkMutations = {
+  __typename?: "InternalLandmarkMutations";
+  bulkCreateStadia?: Maybe<InternalBulkCreateLandmarkStadiaResult>;
+  createStadium?: Maybe<InternalCreateLandmarkStadiumResult>;
+  deleteManyStadium?: Maybe<InternalDeleteManyLandmarkStadiumResult>;
+  deleteStadium?: Maybe<InternalDeleteLandmarkStadiumResult>;
+  triggerCreateStadium?: Maybe<CreateLandmarkStadiumResult>;
+  triggerDeleteStadium?: Maybe<DeleteLandmarkStadiumResult>;
+  triggerUpdateStadium?: Maybe<UpdateLandmarkStadiumResult>;
+  updateStadium?: Maybe<InternalUpdateLandmarkStadiumResult>;
+  upsertStadium?: Maybe<InternalUpsertLandmarkStadiumResult>;
 };
 
-/** A connection to a list of InternalHasManyThroughBaseModelRecord items. */
-export type InternalHasManyThroughBaseModelRecordConnection = {
-  __typename?: "InternalHasManyThroughBaseModelRecordConnection";
-  /** A list of edges. */
-  edges: Array<InternalHasManyThroughBaseModelRecordEdge>;
-  /** Information to aid in pagination. */
-  pageInfo: PageInfo;
+export type InternalLandmarkMutationsBulkCreateStadiaArgs = {
+  stadia: Array<InputMaybe<InternalLandmarkStadiumInput>>;
 };
 
-/** An edge in a InternalHasManyThroughBaseModelRecord connection. */
-export type InternalHasManyThroughBaseModelRecordEdge = {
-  __typename?: "InternalHasManyThroughBaseModelRecordEdge";
-  /** A cursor for use in pagination */
-  cursor: Scalars["String"]["output"];
-  /** The item at the end of the edge */
-  node: Scalars["InternalHasManyThroughBaseModelRecord"]["output"];
+export type InternalLandmarkMutationsCreateStadiumArgs = {
+  stadium?: InputMaybe<InternalLandmarkStadiumInput>;
 };
 
-export type InternalHasManyThroughJoinerModelInput = {
-  createdAt?: InputMaybe<Scalars["DateTime"]["input"]>;
-  id?: InputMaybe<Scalars["GadgetID"]["input"]>;
-  joinerBelongsToBase?: InputMaybe<InternalBelongsToInput>;
-  joinerBelongsToSibling?: InputMaybe<InternalBelongsToInput>;
-  state?: InputMaybe<Scalars["RecordState"]["input"]>;
-  stateHistory?: InputMaybe<Scalars["RecordState"]["input"]>;
-  updatedAt?: InputMaybe<Scalars["DateTime"]["input"]>;
-};
-
-/** A connection to a list of InternalHasManyThroughJoinerModelRecord items. */
-export type InternalHasManyThroughJoinerModelRecordConnection = {
-  __typename?: "InternalHasManyThroughJoinerModelRecordConnection";
-  /** A list of edges. */
-  edges: Array<InternalHasManyThroughJoinerModelRecordEdge>;
-  /** Information to aid in pagination. */
-  pageInfo: PageInfo;
-};
-
-/** An edge in a InternalHasManyThroughJoinerModelRecord connection. */
-export type InternalHasManyThroughJoinerModelRecordEdge = {
-  __typename?: "InternalHasManyThroughJoinerModelRecordEdge";
-  /** A cursor for use in pagination */
-  cursor: Scalars["String"]["output"];
-  /** The item at the end of the edge */
-  node: Scalars["InternalHasManyThroughJoinerModelRecord"]["output"];
-};
-
-export type InternalHasManyThroughMutations = {
-  __typename?: "InternalHasManyThroughMutations";
-  bulkCreateBaseModels?: Maybe<InternalBulkCreateHasManyThroughBaseModelsResult>;
-  bulkCreateJoinerModels?: Maybe<InternalBulkCreateHasManyThroughJoinerModelsResult>;
-  bulkCreateSiblingModels?: Maybe<InternalBulkCreateHasManyThroughSiblingModelsResult>;
-  createBaseModel?: Maybe<InternalCreateHasManyThroughBaseModelResult>;
-  createJoinerModel?: Maybe<InternalCreateHasManyThroughJoinerModelResult>;
-  createSiblingModel?: Maybe<InternalCreateHasManyThroughSiblingModelResult>;
-  deleteBaseModel?: Maybe<InternalDeleteHasManyThroughBaseModelResult>;
-  deleteJoinerModel?: Maybe<InternalDeleteHasManyThroughJoinerModelResult>;
-  deleteManyBaseModel?: Maybe<InternalDeleteManyHasManyThroughBaseModelResult>;
-  deleteManyJoinerModel?: Maybe<InternalDeleteManyHasManyThroughJoinerModelResult>;
-  deleteManySiblingModel?: Maybe<InternalDeleteManyHasManyThroughSiblingModelResult>;
-  deleteSiblingModel?: Maybe<InternalDeleteHasManyThroughSiblingModelResult>;
-  triggerCreateBaseModel?: Maybe<CreateHasManyThroughBaseModelResult>;
-  triggerCreateJoinerModel?: Maybe<CreateHasManyThroughJoinerModelResult>;
-  triggerCreateSiblingModel?: Maybe<CreateHasManyThroughSiblingModelResult>;
-  triggerDeleteBaseModel?: Maybe<DeleteHasManyThroughBaseModelResult>;
-  triggerDeleteJoinerModel?: Maybe<DeleteHasManyThroughJoinerModelResult>;
-  triggerDeleteSiblingModel?: Maybe<DeleteHasManyThroughSiblingModelResult>;
-  triggerUpdateBaseModel?: Maybe<UpdateHasManyThroughBaseModelResult>;
-  triggerUpdateJoinerModel?: Maybe<UpdateHasManyThroughJoinerModelResult>;
-  triggerUpdateSiblingModel?: Maybe<UpdateHasManyThroughSiblingModelResult>;
-  updateBaseModel?: Maybe<InternalUpdateHasManyThroughBaseModelResult>;
-  updateJoinerModel?: Maybe<InternalUpdateHasManyThroughJoinerModelResult>;
-  updateSiblingModel?: Maybe<InternalUpdateHasManyThroughSiblingModelResult>;
-  upsertBaseModel?: Maybe<InternalUpsertHasManyThroughBaseModelResult>;
-  upsertJoinerModel?: Maybe<InternalUpsertHasManyThroughJoinerModelResult>;
-  upsertSiblingModel?: Maybe<InternalUpsertHasManyThroughSiblingModelResult>;
-};
-
-export type InternalHasManyThroughMutationsBulkCreateBaseModelsArgs = {
-  baseModels: Array<InputMaybe<InternalHasManyThroughBaseModelInput>>;
-};
-
-export type InternalHasManyThroughMutationsBulkCreateJoinerModelsArgs = {
-  joinerModels: Array<InputMaybe<InternalHasManyThroughJoinerModelInput>>;
-};
-
-export type InternalHasManyThroughMutationsBulkCreateSiblingModelsArgs = {
-  siblingModels: Array<InputMaybe<InternalHasManyThroughSiblingModelInput>>;
-};
-
-export type InternalHasManyThroughMutationsCreateBaseModelArgs = {
-  baseModel?: InputMaybe<InternalHasManyThroughBaseModelInput>;
-};
-
-export type InternalHasManyThroughMutationsCreateJoinerModelArgs = {
-  joinerModel?: InputMaybe<InternalHasManyThroughJoinerModelInput>;
-};
-
-export type InternalHasManyThroughMutationsCreateSiblingModelArgs = {
-  siblingModel?: InputMaybe<InternalHasManyThroughSiblingModelInput>;
-};
-
-export type InternalHasManyThroughMutationsDeleteBaseModelArgs = {
-  id: Scalars["GadgetID"]["input"];
-};
-
-export type InternalHasManyThroughMutationsDeleteJoinerModelArgs = {
-  id: Scalars["GadgetID"]["input"];
-};
-
-export type InternalHasManyThroughMutationsDeleteManyBaseModelArgs = {
-  filter?: InputMaybe<Array<HasManyThroughBaseModelFilter>>;
+export type InternalLandmarkMutationsDeleteManyStadiumArgs = {
+  filter?: InputMaybe<Array<LandmarkStadiumFilter>>;
   search?: InputMaybe<Scalars["String"]["input"]>;
 };
 
-export type InternalHasManyThroughMutationsDeleteManyJoinerModelArgs = {
-  filter?: InputMaybe<Array<HasManyThroughJoinerModelFilter>>;
-  search?: InputMaybe<Scalars["String"]["input"]>;
-};
-
-export type InternalHasManyThroughMutationsDeleteManySiblingModelArgs = {
-  filter?: InputMaybe<Array<HasManyThroughSiblingModelFilter>>;
-  search?: InputMaybe<Scalars["String"]["input"]>;
-};
-
-export type InternalHasManyThroughMutationsDeleteSiblingModelArgs = {
+export type InternalLandmarkMutationsDeleteStadiumArgs = {
   id: Scalars["GadgetID"]["input"];
 };
 
-export type InternalHasManyThroughMutationsTriggerCreateBaseModelArgs = {
+export type InternalLandmarkMutationsTriggerCreateStadiumArgs = {
   context?: InputMaybe<AppGraphQlTriggerMutationContext>;
   params?: InputMaybe<Scalars["JSONObject"]["input"]>;
   trigger?: InputMaybe<Scalars["JSONObject"]["input"]>;
   verifyTriggerExists?: InputMaybe<Scalars["Boolean"]["input"]>;
 };
 
-export type InternalHasManyThroughMutationsTriggerCreateJoinerModelArgs = {
+export type InternalLandmarkMutationsTriggerDeleteStadiumArgs = {
   context?: InputMaybe<AppGraphQlTriggerMutationContext>;
   params?: InputMaybe<Scalars["JSONObject"]["input"]>;
   trigger?: InputMaybe<Scalars["JSONObject"]["input"]>;
   verifyTriggerExists?: InputMaybe<Scalars["Boolean"]["input"]>;
 };
 
-export type InternalHasManyThroughMutationsTriggerCreateSiblingModelArgs = {
+export type InternalLandmarkMutationsTriggerUpdateStadiumArgs = {
   context?: InputMaybe<AppGraphQlTriggerMutationContext>;
   params?: InputMaybe<Scalars["JSONObject"]["input"]>;
   trigger?: InputMaybe<Scalars["JSONObject"]["input"]>;
   verifyTriggerExists?: InputMaybe<Scalars["Boolean"]["input"]>;
 };
 
-export type InternalHasManyThroughMutationsTriggerDeleteBaseModelArgs = {
-  context?: InputMaybe<AppGraphQlTriggerMutationContext>;
-  params?: InputMaybe<Scalars["JSONObject"]["input"]>;
-  trigger?: InputMaybe<Scalars["JSONObject"]["input"]>;
-  verifyTriggerExists?: InputMaybe<Scalars["Boolean"]["input"]>;
-};
-
-export type InternalHasManyThroughMutationsTriggerDeleteJoinerModelArgs = {
-  context?: InputMaybe<AppGraphQlTriggerMutationContext>;
-  params?: InputMaybe<Scalars["JSONObject"]["input"]>;
-  trigger?: InputMaybe<Scalars["JSONObject"]["input"]>;
-  verifyTriggerExists?: InputMaybe<Scalars["Boolean"]["input"]>;
-};
-
-export type InternalHasManyThroughMutationsTriggerDeleteSiblingModelArgs = {
-  context?: InputMaybe<AppGraphQlTriggerMutationContext>;
-  params?: InputMaybe<Scalars["JSONObject"]["input"]>;
-  trigger?: InputMaybe<Scalars["JSONObject"]["input"]>;
-  verifyTriggerExists?: InputMaybe<Scalars["Boolean"]["input"]>;
-};
-
-export type InternalHasManyThroughMutationsTriggerUpdateBaseModelArgs = {
-  context?: InputMaybe<AppGraphQlTriggerMutationContext>;
-  params?: InputMaybe<Scalars["JSONObject"]["input"]>;
-  trigger?: InputMaybe<Scalars["JSONObject"]["input"]>;
-  verifyTriggerExists?: InputMaybe<Scalars["Boolean"]["input"]>;
-};
-
-export type InternalHasManyThroughMutationsTriggerUpdateJoinerModelArgs = {
-  context?: InputMaybe<AppGraphQlTriggerMutationContext>;
-  params?: InputMaybe<Scalars["JSONObject"]["input"]>;
-  trigger?: InputMaybe<Scalars["JSONObject"]["input"]>;
-  verifyTriggerExists?: InputMaybe<Scalars["Boolean"]["input"]>;
-};
-
-export type InternalHasManyThroughMutationsTriggerUpdateSiblingModelArgs = {
-  context?: InputMaybe<AppGraphQlTriggerMutationContext>;
-  params?: InputMaybe<Scalars["JSONObject"]["input"]>;
-  trigger?: InputMaybe<Scalars["JSONObject"]["input"]>;
-  verifyTriggerExists?: InputMaybe<Scalars["Boolean"]["input"]>;
-};
-
-export type InternalHasManyThroughMutationsUpdateBaseModelArgs = {
-  baseModel?: InputMaybe<InternalHasManyThroughBaseModelInput>;
+export type InternalLandmarkMutationsUpdateStadiumArgs = {
   id: Scalars["GadgetID"]["input"];
+  stadium?: InputMaybe<InternalLandmarkStadiumInput>;
 };
 
-export type InternalHasManyThroughMutationsUpdateJoinerModelArgs = {
-  id: Scalars["GadgetID"]["input"];
-  joinerModel?: InputMaybe<InternalHasManyThroughJoinerModelInput>;
-};
-
-export type InternalHasManyThroughMutationsUpdateSiblingModelArgs = {
-  id: Scalars["GadgetID"]["input"];
-  siblingModel?: InputMaybe<InternalHasManyThroughSiblingModelInput>;
-};
-
-export type InternalHasManyThroughMutationsUpsertBaseModelArgs = {
-  baseModel?: InputMaybe<InternalHasManyThroughBaseModelInput>;
+export type InternalLandmarkMutationsUpsertStadiumArgs = {
   on?: InputMaybe<Array<Scalars["String"]["input"]>>;
+  stadium?: InputMaybe<InternalLandmarkStadiumInput>;
 };
 
-export type InternalHasManyThroughMutationsUpsertJoinerModelArgs = {
-  joinerModel?: InputMaybe<InternalHasManyThroughJoinerModelInput>;
-  on?: InputMaybe<Array<Scalars["String"]["input"]>>;
-};
-
-export type InternalHasManyThroughMutationsUpsertSiblingModelArgs = {
-  on?: InputMaybe<Array<Scalars["String"]["input"]>>;
-  siblingModel?: InputMaybe<InternalHasManyThroughSiblingModelInput>;
-};
-
-export type InternalHasManyThroughQueries = {
-  __typename?: "InternalHasManyThroughQueries";
-  baseModel?: Maybe<Scalars["InternalHasManyThroughBaseModelRecord"]["output"]>;
+export type InternalLandmarkQueries = {
+  __typename?: "InternalLandmarkQueries";
   /** Currently open platform transaction details, or null if no transaction is open */
   currentTransactionDetails?: Maybe<Scalars["JSONObject"]["output"]>;
-  joinerModel?: Maybe<Scalars["InternalHasManyThroughJoinerModelRecord"]["output"]>;
-  listBaseModel: InternalHasManyThroughBaseModelRecordConnection;
-  listJoinerModel: InternalHasManyThroughJoinerModelRecordConnection;
-  listSiblingModel: InternalHasManyThroughSiblingModelRecordConnection;
-  siblingModel?: Maybe<Scalars["InternalHasManyThroughSiblingModelRecord"]["output"]>;
+  listStadium: InternalLandmarkStadiumRecordConnection;
+  stadium?: Maybe<Scalars["InternalLandmarkStadiumRecord"]["output"]>;
 };
 
-export type InternalHasManyThroughQueriesBaseModelArgs = {
-  id: Scalars["GadgetID"]["input"];
-  select?: InputMaybe<Array<Scalars["String"]["input"]>>;
-};
-
-export type InternalHasManyThroughQueriesJoinerModelArgs = {
-  id: Scalars["GadgetID"]["input"];
-  select?: InputMaybe<Array<Scalars["String"]["input"]>>;
-};
-
-export type InternalHasManyThroughQueriesListBaseModelArgs = {
+export type InternalLandmarkQueriesListStadiumArgs = {
   after?: InputMaybe<Scalars["String"]["input"]>;
   before?: InputMaybe<Scalars["String"]["input"]>;
-  filter?: InputMaybe<Array<HasManyThroughBaseModelFilter>>;
+  filter?: InputMaybe<Array<LandmarkStadiumFilter>>;
   first?: InputMaybe<Scalars["Int"]["input"]>;
   last?: InputMaybe<Scalars["Int"]["input"]>;
   search?: InputMaybe<Scalars["String"]["input"]>;
   select?: InputMaybe<Array<Scalars["String"]["input"]>>;
-  sort?: InputMaybe<Array<HasManyThroughBaseModelSort>>;
+  sort?: InputMaybe<Array<LandmarkStadiumSort>>;
 };
 
-export type InternalHasManyThroughQueriesListJoinerModelArgs = {
-  after?: InputMaybe<Scalars["String"]["input"]>;
-  before?: InputMaybe<Scalars["String"]["input"]>;
-  filter?: InputMaybe<Array<HasManyThroughJoinerModelFilter>>;
-  first?: InputMaybe<Scalars["Int"]["input"]>;
-  last?: InputMaybe<Scalars["Int"]["input"]>;
-  search?: InputMaybe<Scalars["String"]["input"]>;
-  select?: InputMaybe<Array<Scalars["String"]["input"]>>;
-  sort?: InputMaybe<Array<HasManyThroughJoinerModelSort>>;
-};
-
-export type InternalHasManyThroughQueriesListSiblingModelArgs = {
-  after?: InputMaybe<Scalars["String"]["input"]>;
-  before?: InputMaybe<Scalars["String"]["input"]>;
-  filter?: InputMaybe<Array<HasManyThroughSiblingModelFilter>>;
-  first?: InputMaybe<Scalars["Int"]["input"]>;
-  last?: InputMaybe<Scalars["Int"]["input"]>;
-  search?: InputMaybe<Scalars["String"]["input"]>;
-  select?: InputMaybe<Array<Scalars["String"]["input"]>>;
-  sort?: InputMaybe<Array<HasManyThroughSiblingModelSort>>;
-};
-
-export type InternalHasManyThroughQueriesSiblingModelArgs = {
+export type InternalLandmarkQueriesStadiumArgs = {
   id: Scalars["GadgetID"]["input"];
   select?: InputMaybe<Array<Scalars["String"]["input"]>>;
 };
 
-export type InternalHasManyThroughSiblingModelInput = {
+export type InternalLandmarkStadiumInput = {
   createdAt?: InputMaybe<Scalars["DateTime"]["input"]>;
   id?: InputMaybe<Scalars["GadgetID"]["input"]>;
+  name?: InputMaybe<Scalars["String"]["input"]>;
   state?: InputMaybe<Scalars["RecordState"]["input"]>;
   stateHistory?: InputMaybe<Scalars["RecordState"]["input"]>;
   updatedAt?: InputMaybe<Scalars["DateTime"]["input"]>;
 };
 
-/** A connection to a list of InternalHasManyThroughSiblingModelRecord items. */
-export type InternalHasManyThroughSiblingModelRecordConnection = {
-  __typename?: "InternalHasManyThroughSiblingModelRecordConnection";
+/** A connection to a list of InternalLandmarkStadiumRecord items. */
+export type InternalLandmarkStadiumRecordConnection = {
+  __typename?: "InternalLandmarkStadiumRecordConnection";
   /** A list of edges. */
-  edges: Array<InternalHasManyThroughSiblingModelRecordEdge>;
+  edges: Array<InternalLandmarkStadiumRecordEdge>;
   /** Information to aid in pagination. */
   pageInfo: PageInfo;
 };
 
-/** An edge in a InternalHasManyThroughSiblingModelRecord connection. */
-export type InternalHasManyThroughSiblingModelRecordEdge = {
-  __typename?: "InternalHasManyThroughSiblingModelRecordEdge";
+/** An edge in a InternalLandmarkStadiumRecord connection. */
+export type InternalLandmarkStadiumRecordEdge = {
+  __typename?: "InternalLandmarkStadiumRecordEdge";
   /** A cursor for use in pagination */
   cursor: Scalars["String"]["output"];
   /** The item at the end of the edge */
-  node: Scalars["InternalHasManyThroughSiblingModelRecord"]["output"];
-};
-
-export type InternalModelAInput = {
-  createdAt?: InputMaybe<Scalars["DateTime"]["input"]>;
-  id?: InputMaybe<Scalars["GadgetID"]["input"]>;
-  state?: InputMaybe<Scalars["RecordState"]["input"]>;
-  stateHistory?: InputMaybe<Scalars["RecordState"]["input"]>;
-  updatedAt?: InputMaybe<Scalars["DateTime"]["input"]>;
-};
-
-/** A connection to a list of InternalModelARecord items. */
-export type InternalModelARecordConnection = {
-  __typename?: "InternalModelARecordConnection";
-  /** A list of edges. */
-  edges: Array<InternalModelARecordEdge>;
-  /** Information to aid in pagination. */
-  pageInfo: PageInfo;
-};
-
-/** An edge in a InternalModelARecord connection. */
-export type InternalModelARecordEdge = {
-  __typename?: "InternalModelARecordEdge";
-  /** A cursor for use in pagination */
-  cursor: Scalars["String"]["output"];
-  /** The item at the end of the edge */
-  node: Scalars["InternalModelARecord"]["output"];
+  node: Scalars["InternalLandmarkStadiumRecord"]["output"];
 };
 
 export type InternalMutations = {
   __typename?: "InternalMutations";
   /** Acquire a backend lock, returning only once the lock has been acquired */
   acquireLock: LockOperationResult;
-  bulkCreateAutoTableTestRelatedModels?: Maybe<InternalBulkCreateAutoTableTestRelatedModelsResult>;
-  bulkCreateAutoTableTests?: Maybe<InternalBulkCreateAutoTableTestsResult>;
+  bulkCreateBillingAccounts?: Maybe<InternalBulkCreateBillingAccountsResult>;
+  bulkCreateCities?: Maybe<InternalBulkCreateCitiesResult>;
+  bulkCreateCourses?: Maybe<InternalBulkCreateCoursesResult>;
+  bulkCreateCustomers?: Maybe<InternalBulkCreateCustomersResult>;
+  bulkCreateEphemerals?: Maybe<InternalBulkCreateEphemeralsResult>;
+  bulkCreateFieldlesses?: Maybe<InternalBulkCreateFieldlessesResult>;
+  bulkCreateFriendships?: Maybe<InternalBulkCreateFriendshipsResult>;
   bulkCreateGizmos?: Maybe<InternalBulkCreateGizmosResult>;
-  bulkCreateModelAs?: Maybe<InternalBulkCreateModelAsResult>;
-  bulkCreateParts?: Maybe<InternalBulkCreatePartsResult>;
+  bulkCreateRegistrations?: Maybe<InternalBulkCreateRegistrationsResult>;
+  bulkCreateSampleModelToTestReallyLongModelNamess?: Maybe<InternalBulkCreateSampleModelToTestReallyLongModelNamessResult>;
   bulkCreateSections?: Maybe<InternalBulkCreateSectionsResult>;
   bulkCreateSessions?: Maybe<InternalBulkCreateSessionsResult>;
-  bulkCreateShopifyGdprRequests?: Maybe<InternalBulkCreateShopifyGdprRequestsResult>;
-  bulkCreateShopifyProductImages?: Maybe<InternalBulkCreateShopifyProductImagesResult>;
-  bulkCreateShopifyProductOptions?: Maybe<InternalBulkCreateShopifyProductOptionsResult>;
-  bulkCreateShopifyProductVariants?: Maybe<InternalBulkCreateShopifyProductVariantsResult>;
-  bulkCreateShopifyProducts?: Maybe<InternalBulkCreateShopifyProductsResult>;
-  bulkCreateShopifyShops?: Maybe<InternalBulkCreateShopifyShopsResult>;
-  bulkCreateShopifySyncs?: Maybe<InternalBulkCreateShopifySyncsResult>;
+  bulkCreateSprockets?: Maybe<InternalBulkCreateSprocketsResult>;
+  bulkCreateStudents?: Maybe<InternalBulkCreateStudentsResult>;
+  bulkCreateTeachers?: Maybe<InternalBulkCreateTeachersResult>;
   bulkCreateUsers?: Maybe<InternalBulkCreateUsersResult>;
+  bulkCreateWidgetImages?: Maybe<InternalBulkCreateWidgetImagesResult>;
   bulkCreateWidgets?: Maybe<InternalBulkCreateWidgetsResult>;
   commitTransaction: Scalars["String"]["output"];
-  createAutoTableTest?: Maybe<InternalCreateAutoTableTestResult>;
-  createAutoTableTestRelatedModel?: Maybe<InternalCreateAutoTableTestRelatedModelResult>;
+  createBillingAccount?: Maybe<InternalCreateBillingAccountResult>;
+  createCity?: Maybe<InternalCreateCityResult>;
+  createCourse?: Maybe<InternalCreateCourseResult>;
+  createCustomer?: Maybe<InternalCreateCustomerResult>;
+  createEphemeral?: Maybe<InternalCreateEphemeralResult>;
+  createFieldless?: Maybe<InternalCreateFieldlessResult>;
+  createFriendship?: Maybe<InternalCreateFriendshipResult>;
   createGizmo?: Maybe<InternalCreateGizmoResult>;
-  createModelA?: Maybe<InternalCreateModelAResult>;
-  createPart?: Maybe<InternalCreatePartResult>;
+  createRegistration?: Maybe<InternalCreateRegistrationResult>;
+  createSampleModelToTestReallyLongModelNames?: Maybe<InternalCreateSampleModelToTestReallyLongModelNamesResult>;
   createSection?: Maybe<InternalCreateSectionResult>;
   createSession?: Maybe<InternalCreateSessionResult>;
-  createShopifyGdprRequest?: Maybe<InternalCreateShopifyGdprRequestResult>;
-  createShopifyProduct?: Maybe<InternalCreateShopifyProductResult>;
-  createShopifyProductImage?: Maybe<InternalCreateShopifyProductImageResult>;
-  createShopifyProductOption?: Maybe<InternalCreateShopifyProductOptionResult>;
-  createShopifyProductVariant?: Maybe<InternalCreateShopifyProductVariantResult>;
-  createShopifyShop?: Maybe<InternalCreateShopifyShopResult>;
-  createShopifySync?: Maybe<InternalCreateShopifySyncResult>;
+  createSprocket?: Maybe<InternalCreateSprocketResult>;
+  createStudent?: Maybe<InternalCreateStudentResult>;
+  createTeacher?: Maybe<InternalCreateTeacherResult>;
   createUser?: Maybe<InternalCreateUserResult>;
   createWidget?: Maybe<InternalCreateWidgetResult>;
-  deleteAutoTableTest?: Maybe<InternalDeleteAutoTableTestResult>;
-  deleteAutoTableTestRelatedModel?: Maybe<InternalDeleteAutoTableTestRelatedModelResult>;
+  createWidgetImage?: Maybe<InternalCreateWidgetImageResult>;
+  deleteBillingAccount?: Maybe<InternalDeleteBillingAccountResult>;
+  deleteCity?: Maybe<InternalDeleteCityResult>;
+  deleteCourse?: Maybe<InternalDeleteCourseResult>;
+  deleteCustomer?: Maybe<InternalDeleteCustomerResult>;
+  deleteEphemeral?: Maybe<InternalDeleteEphemeralResult>;
+  deleteFieldless?: Maybe<InternalDeleteFieldlessResult>;
+  deleteFriendship?: Maybe<InternalDeleteFriendshipResult>;
   deleteGizmo?: Maybe<InternalDeleteGizmoResult>;
-  deleteManyAutoTableTest?: Maybe<InternalDeleteManyAutoTableTestResult>;
-  deleteManyAutoTableTestRelatedModel?: Maybe<InternalDeleteManyAutoTableTestRelatedModelResult>;
+  deleteManyBillingAccount?: Maybe<InternalDeleteManyBillingAccountResult>;
+  deleteManyCity?: Maybe<InternalDeleteManyCityResult>;
+  deleteManyCourse?: Maybe<InternalDeleteManyCourseResult>;
+  deleteManyCustomer?: Maybe<InternalDeleteManyCustomerResult>;
+  deleteManyEphemeral?: Maybe<InternalDeleteManyEphemeralResult>;
+  deleteManyFieldless?: Maybe<InternalDeleteManyFieldlessResult>;
+  deleteManyFriendship?: Maybe<InternalDeleteManyFriendshipResult>;
   deleteManyGizmo?: Maybe<InternalDeleteManyGizmoResult>;
-  deleteManyModelA?: Maybe<InternalDeleteManyModelAResult>;
-  deleteManyPart?: Maybe<InternalDeleteManyPartResult>;
+  deleteManyRegistration?: Maybe<InternalDeleteManyRegistrationResult>;
+  deleteManySampleModelToTestReallyLongModelNames?: Maybe<InternalDeleteManySampleModelToTestReallyLongModelNamesResult>;
   deleteManySection?: Maybe<InternalDeleteManySectionResult>;
   deleteManySession?: Maybe<InternalDeleteManySessionResult>;
-  deleteManyShopifyGdprRequest?: Maybe<InternalDeleteManyShopifyGdprRequestResult>;
-  deleteManyShopifyProduct?: Maybe<InternalDeleteManyShopifyProductResult>;
-  deleteManyShopifyProductImage?: Maybe<InternalDeleteManyShopifyProductImageResult>;
-  deleteManyShopifyProductOption?: Maybe<InternalDeleteManyShopifyProductOptionResult>;
-  deleteManyShopifyProductVariant?: Maybe<InternalDeleteManyShopifyProductVariantResult>;
-  deleteManyShopifyShop?: Maybe<InternalDeleteManyShopifyShopResult>;
-  deleteManyShopifySync?: Maybe<InternalDeleteManyShopifySyncResult>;
+  deleteManySprocket?: Maybe<InternalDeleteManySprocketResult>;
+  deleteManyStudent?: Maybe<InternalDeleteManyStudentResult>;
+  deleteManyTeacher?: Maybe<InternalDeleteManyTeacherResult>;
   deleteManyUser?: Maybe<InternalDeleteManyUserResult>;
   deleteManyWidget?: Maybe<InternalDeleteManyWidgetResult>;
-  deleteModelA?: Maybe<InternalDeleteModelAResult>;
-  deletePart?: Maybe<InternalDeletePartResult>;
+  deleteManyWidgetImage?: Maybe<InternalDeleteManyWidgetImageResult>;
+  deleteRegistration?: Maybe<InternalDeleteRegistrationResult>;
+  deleteSampleModelToTestReallyLongModelNames?: Maybe<InternalDeleteSampleModelToTestReallyLongModelNamesResult>;
   deleteSection?: Maybe<InternalDeleteSectionResult>;
   deleteSession?: Maybe<InternalDeleteSessionResult>;
-  deleteShopifyGdprRequest?: Maybe<InternalDeleteShopifyGdprRequestResult>;
-  deleteShopifyProduct?: Maybe<InternalDeleteShopifyProductResult>;
-  deleteShopifyProductImage?: Maybe<InternalDeleteShopifyProductImageResult>;
-  deleteShopifyProductOption?: Maybe<InternalDeleteShopifyProductOptionResult>;
-  deleteShopifyProductVariant?: Maybe<InternalDeleteShopifyProductVariantResult>;
-  deleteShopifyShop?: Maybe<InternalDeleteShopifyShopResult>;
-  deleteShopifySync?: Maybe<InternalDeleteShopifySyncResult>;
+  deleteSprocket?: Maybe<InternalDeleteSprocketResult>;
+  deleteStudent?: Maybe<InternalDeleteStudentResult>;
+  deleteTeacher?: Maybe<InternalDeleteTeacherResult>;
   deleteUser?: Maybe<InternalDeleteUserResult>;
   deleteWidget?: Maybe<InternalDeleteWidgetResult>;
+  deleteWidgetImage?: Maybe<InternalDeleteWidgetImageResult>;
   game: InternalGameMutations;
-  hasManyThrough: InternalHasManyThroughMutations;
-  name: InternalNameMutations;
+  landmark: InternalLandmarkMutations;
   rollbackTransaction: Scalars["String"]["output"];
   startTransaction: Scalars["String"]["output"];
-  triggerAbortShopifySync?: Maybe<AbortShopifySyncResult>;
+  triggerAddInventoryIfOutOfStockWidget?: Maybe<AddInventoryIfOutOfStockWidgetResult>;
   triggerAddInventoryWidget?: Maybe<AddInventoryWidgetResult>;
-  triggerAlwaysThrowErrorWidget?: Maybe<AlwaysThrowErrorWidgetResult>;
-  triggerCompleteShopifySync?: Maybe<CompleteShopifySyncResult>;
-  triggerCreateAutoTableTest?: Maybe<CreateAutoTableTestResult>;
-  triggerCreateAutoTableTestRelatedModel?: Maybe<CreateAutoTableTestRelatedModelResult>;
+  triggerBarfAnError?: Maybe<BarfAnErrorResult>;
+  triggerBendGizmo?: Maybe<BendGizmoResult>;
+  triggerBreakGizmo?: Maybe<BreakGizmoResult>;
+  triggerChangePasswordUser?: Maybe<ChangePasswordUserResult>;
+  triggerCreateBillingAccount?: Maybe<CreateBillingAccountResult>;
+  triggerCreateCity?: Maybe<CreateCityResult>;
+  triggerCreateCourse?: Maybe<CreateCourseResult>;
+  triggerCreateCustomer?: Maybe<CreateCustomerResult>;
+  triggerCreateEphemeral?: Maybe<CreateEphemeralResult>;
+  triggerCreateFieldless?: Maybe<CreateFieldlessResult>;
+  triggerCreateFriendship?: Maybe<CreateFriendshipResult>;
   triggerCreateGizmo?: Maybe<CreateGizmoResult>;
-  triggerCreateModelA?: Maybe<CreateModelAResult>;
-  triggerCreatePart?: Maybe<CreatePartResult>;
+  triggerCreateRegistration?: Maybe<CreateRegistrationResult>;
+  triggerCreateSampleModelToTestReallyLongModelNames?: Maybe<CreateSampleModelToTestReallyLongModelNamesResult>;
   triggerCreateSection?: Maybe<CreateSectionResult>;
-  triggerCreateShopifyGdprRequest?: Maybe<CreateShopifyGdprRequestResult>;
-  triggerCreateShopifyProduct?: Maybe<CreateShopifyProductResult>;
-  triggerCreateShopifyProductImage?: Maybe<CreateShopifyProductImageResult>;
-  triggerCreateShopifyProductOption?: Maybe<CreateShopifyProductOptionResult>;
-  triggerCreateShopifyProductVariant?: Maybe<CreateShopifyProductVariantResult>;
-  triggerCreateTestData?: Maybe<CreateTestDataResult>;
+  triggerCreateSprocket?: Maybe<CreateSprocketResult>;
+  triggerCreateStudent?: Maybe<CreateStudentResult>;
+  triggerCreateTeacher?: Maybe<CreateTeacherResult>;
   triggerCreateWidget?: Maybe<CreateWidgetResult>;
-  triggerCustomActionAutoTableTest?: Maybe<CustomActionAutoTableTestResult>;
-  triggerCustomActionWithParamsAutoTableTest?: Maybe<CustomActionWithParamsAutoTableTestResult>;
-  triggerDeleteAutoTableTest?: Maybe<DeleteAutoTableTestResult>;
-  triggerDeleteAutoTableTestRelatedModel?: Maybe<DeleteAutoTableTestRelatedModelResult>;
+  triggerCreateWidgetImage?: Maybe<CreateWidgetImageResult>;
+  triggerDeleteBillingAccount?: Maybe<DeleteBillingAccountResult>;
+  triggerDeleteCity?: Maybe<DeleteCityResult>;
+  triggerDeleteCourse?: Maybe<DeleteCourseResult>;
+  triggerDeleteCustomer?: Maybe<DeleteCustomerResult>;
+  triggerDeleteEphemeral?: Maybe<DeleteEphemeralResult>;
+  triggerDeleteFieldless?: Maybe<DeleteFieldlessResult>;
+  triggerDeleteFriendship?: Maybe<DeleteFriendshipResult>;
   triggerDeleteGizmo?: Maybe<DeleteGizmoResult>;
-  triggerDeleteModelA?: Maybe<DeleteModelAResult>;
-  triggerDeletePart?: Maybe<DeletePartResult>;
+  triggerDeleteRegistration?: Maybe<DeleteRegistrationResult>;
+  triggerDeleteSampleModelToTestReallyLongModelNames?: Maybe<DeleteSampleModelToTestReallyLongModelNamesResult>;
   triggerDeleteSection?: Maybe<DeleteSectionResult>;
-  triggerDeleteShopifyProduct?: Maybe<DeleteShopifyProductResult>;
-  triggerDeleteShopifyProductImage?: Maybe<DeleteShopifyProductImageResult>;
-  triggerDeleteShopifyProductOption?: Maybe<DeleteShopifyProductOptionResult>;
-  triggerDeleteShopifyProductVariant?: Maybe<DeleteShopifyProductVariantResult>;
+  triggerDeleteSprocket?: Maybe<DeleteSprocketResult>;
+  triggerDeleteStudent?: Maybe<DeleteStudentResult>;
+  triggerDeleteTeacher?: Maybe<DeleteTeacherResult>;
   triggerDeleteUser?: Maybe<DeleteUserResult>;
   triggerDeleteWidget?: Maybe<DeleteWidgetResult>;
-  triggerErrorShopifySync?: Maybe<ErrorShopifySyncResult>;
-  triggerFlipAll?: Maybe<FlipAllResult>;
-  triggerInstallShopifyShop?: Maybe<InstallShopifyShopResult>;
-  triggerNoTriggerActionAutoTableTest?: Maybe<NoTriggerActionAutoTableTestResult>;
-  triggerNoTriggerGlobalAction?: Maybe<NoTriggerGlobalActionResult>;
-  triggerReinstallShopifyShop?: Maybe<ReinstallShopifyShopResult>;
-  triggerRunShopifySync?: Maybe<RunShopifySyncResult>;
+  triggerDeleteWidgetImage?: Maybe<DeleteWidgetImageResult>;
+  triggerFlipAllWidgets?: Maybe<FlipAllWidgetsResult>;
+  triggerFlipDownWidget?: Maybe<FlipDownWidgetResult>;
+  triggerFlipUpWidget?: Maybe<FlipUpWidgetResult>;
+  triggerFoldGizmo?: Maybe<FoldGizmoResult>;
+  triggerLogParams?: Maybe<LogParamsResult>;
+  triggerOtherCreateGizmo?: Maybe<OtherCreateGizmoResult>;
+  triggerResetPasswordUser?: Maybe<ResetPasswordUserResult>;
+  triggerSendResetPasswordUser?: Maybe<SendResetPasswordUserResult>;
+  triggerSendVerifyEmailUser?: Maybe<SendVerifyEmailUserResult>;
   triggerSignInUser?: Maybe<SignInUserResult>;
   triggerSignOutUser?: Maybe<SignOutUserResult>;
   triggerSignUpUser?: Maybe<SignUpUserResult>;
-  triggerUninstallShopifyShop?: Maybe<UninstallShopifyShopResult>;
-  triggerUpdateAutoTableTest?: Maybe<UpdateAutoTableTestResult>;
-  triggerUpdateAutoTableTestRelatedModel?: Maybe<UpdateAutoTableTestRelatedModelResult>;
+  triggerStraightenGizmo?: Maybe<StraightenGizmoResult>;
+  triggerUnfoldGizmo?: Maybe<UnfoldGizmoResult>;
+  triggerUntriggerableGizmo?: Maybe<UntriggerableGizmoResult>;
+  triggerUntriggerableGlobalAction?: Maybe<UntriggerableGlobalActionResult>;
+  triggerUpdateBillingAccount?: Maybe<UpdateBillingAccountResult>;
+  triggerUpdateCity?: Maybe<UpdateCityResult>;
+  triggerUpdateCourse?: Maybe<UpdateCourseResult>;
+  triggerUpdateCustomer?: Maybe<UpdateCustomerResult>;
+  triggerUpdateEphemeral?: Maybe<UpdateEphemeralResult>;
+  triggerUpdateFieldless?: Maybe<UpdateFieldlessResult>;
+  triggerUpdateFriendship?: Maybe<UpdateFriendshipResult>;
   triggerUpdateGizmo?: Maybe<UpdateGizmoResult>;
-  triggerUpdateModelA?: Maybe<UpdateModelAResult>;
-  triggerUpdatePart?: Maybe<UpdatePartResult>;
+  triggerUpdateRegistration?: Maybe<UpdateRegistrationResult>;
+  triggerUpdateSampleModelToTestReallyLongModelNames?: Maybe<UpdateSampleModelToTestReallyLongModelNamesResult>;
   triggerUpdateSection?: Maybe<UpdateSectionResult>;
-  triggerUpdateShopifyGdprRequest?: Maybe<UpdateShopifyGdprRequestResult>;
-  triggerUpdateShopifyProduct?: Maybe<UpdateShopifyProductResult>;
-  triggerUpdateShopifyProductImage?: Maybe<UpdateShopifyProductImageResult>;
-  triggerUpdateShopifyProductOption?: Maybe<UpdateShopifyProductOptionResult>;
-  triggerUpdateShopifyProductVariant?: Maybe<UpdateShopifyProductVariantResult>;
-  triggerUpdateShopifyShop?: Maybe<UpdateShopifyShopResult>;
+  triggerUpdateSprocket?: Maybe<UpdateSprocketResult>;
+  triggerUpdateStudent?: Maybe<UpdateStudentResult>;
+  triggerUpdateTeacher?: Maybe<UpdateTeacherResult>;
   triggerUpdateUser?: Maybe<UpdateUserResult>;
   triggerUpdateWidget?: Maybe<UpdateWidgetResult>;
-  triggerUpdateWithCustomParamsAutoTableTest?: Maybe<UpdateWithCustomParamsAutoTableTestResult>;
-  updateAutoTableTest?: Maybe<InternalUpdateAutoTableTestResult>;
-  updateAutoTableTestRelatedModel?: Maybe<InternalUpdateAutoTableTestRelatedModelResult>;
+  triggerUpdateWidgetImage?: Maybe<UpdateWidgetImageResult>;
+  triggerVerifyEmailUser?: Maybe<VerifyEmailUserResult>;
+  updateBillingAccount?: Maybe<InternalUpdateBillingAccountResult>;
+  updateCity?: Maybe<InternalUpdateCityResult>;
+  updateCourse?: Maybe<InternalUpdateCourseResult>;
+  updateCustomer?: Maybe<InternalUpdateCustomerResult>;
+  updateEphemeral?: Maybe<InternalUpdateEphemeralResult>;
+  updateFieldless?: Maybe<InternalUpdateFieldlessResult>;
+  updateFriendship?: Maybe<InternalUpdateFriendshipResult>;
   updateGizmo?: Maybe<InternalUpdateGizmoResult>;
-  updateModelA?: Maybe<InternalUpdateModelAResult>;
-  updatePart?: Maybe<InternalUpdatePartResult>;
+  updateRegistration?: Maybe<InternalUpdateRegistrationResult>;
+  updateSampleModelToTestReallyLongModelNames?: Maybe<InternalUpdateSampleModelToTestReallyLongModelNamesResult>;
   updateSection?: Maybe<InternalUpdateSectionResult>;
   updateSession?: Maybe<InternalUpdateSessionResult>;
-  updateShopifyGdprRequest?: Maybe<InternalUpdateShopifyGdprRequestResult>;
-  updateShopifyProduct?: Maybe<InternalUpdateShopifyProductResult>;
-  updateShopifyProductImage?: Maybe<InternalUpdateShopifyProductImageResult>;
-  updateShopifyProductOption?: Maybe<InternalUpdateShopifyProductOptionResult>;
-  updateShopifyProductVariant?: Maybe<InternalUpdateShopifyProductVariantResult>;
-  updateShopifyShop?: Maybe<InternalUpdateShopifyShopResult>;
-  updateShopifySync?: Maybe<InternalUpdateShopifySyncResult>;
+  updateSprocket?: Maybe<InternalUpdateSprocketResult>;
+  updateStudent?: Maybe<InternalUpdateStudentResult>;
+  updateTeacher?: Maybe<InternalUpdateTeacherResult>;
   updateUser?: Maybe<InternalUpdateUserResult>;
   updateWidget?: Maybe<InternalUpdateWidgetResult>;
-  upsertAutoTableTest?: Maybe<InternalUpsertAutoTableTestResult>;
-  upsertAutoTableTestRelatedModel?: Maybe<InternalUpsertAutoTableTestRelatedModelResult>;
+  updateWidgetImage?: Maybe<InternalUpdateWidgetImageResult>;
+  upsertBillingAccount?: Maybe<InternalUpsertBillingAccountResult>;
+  upsertCity?: Maybe<InternalUpsertCityResult>;
+  upsertCourse?: Maybe<InternalUpsertCourseResult>;
+  upsertCustomer?: Maybe<InternalUpsertCustomerResult>;
+  upsertEphemeral?: Maybe<InternalUpsertEphemeralResult>;
+  upsertFieldless?: Maybe<InternalUpsertFieldlessResult>;
+  upsertFriendship?: Maybe<InternalUpsertFriendshipResult>;
   upsertGizmo?: Maybe<InternalUpsertGizmoResult>;
-  upsertModelA?: Maybe<InternalUpsertModelAResult>;
-  upsertPart?: Maybe<InternalUpsertPartResult>;
+  upsertRegistration?: Maybe<InternalUpsertRegistrationResult>;
+  upsertSampleModelToTestReallyLongModelNames?: Maybe<InternalUpsertSampleModelToTestReallyLongModelNamesResult>;
   upsertSection?: Maybe<InternalUpsertSectionResult>;
   upsertSession?: Maybe<InternalUpsertSessionResult>;
-  upsertShopifyGdprRequest?: Maybe<InternalUpsertShopifyGdprRequestResult>;
-  upsertShopifyProduct?: Maybe<InternalUpsertShopifyProductResult>;
-  upsertShopifyProductImage?: Maybe<InternalUpsertShopifyProductImageResult>;
-  upsertShopifyProductOption?: Maybe<InternalUpsertShopifyProductOptionResult>;
-  upsertShopifyProductVariant?: Maybe<InternalUpsertShopifyProductVariantResult>;
-  upsertShopifyShop?: Maybe<InternalUpsertShopifyShopResult>;
-  upsertShopifySync?: Maybe<InternalUpsertShopifySyncResult>;
+  upsertSprocket?: Maybe<InternalUpsertSprocketResult>;
+  upsertStudent?: Maybe<InternalUpsertStudentResult>;
+  upsertTeacher?: Maybe<InternalUpsertTeacherResult>;
   upsertUser?: Maybe<InternalUpsertUserResult>;
   upsertWidget?: Maybe<InternalUpsertWidgetResult>;
+  upsertWidgetImage?: Maybe<InternalUpsertWidgetImageResult>;
 };
 
 export type InternalMutationsAcquireLockArgs = {
   lock: Scalars["String"]["input"];
 };
 
-export type InternalMutationsBulkCreateAutoTableTestRelatedModelsArgs = {
-  _autoTableTestRelatedModels: Array<InputMaybe<InternalAutoTableTestRelatedModelInput>>;
+export type InternalMutationsBulkCreateBillingAccountsArgs = {
+  billingAccounts: Array<InputMaybe<InternalBillingAccountInput>>;
 };
 
-export type InternalMutationsBulkCreateAutoTableTestsArgs = {
-  autoTableTests: Array<InputMaybe<InternalAutoTableTestInput>>;
+export type InternalMutationsBulkCreateCitiesArgs = {
+  cities: Array<InputMaybe<InternalCityInput>>;
+};
+
+export type InternalMutationsBulkCreateCoursesArgs = {
+  courses: Array<InputMaybe<InternalCourseInput>>;
+};
+
+export type InternalMutationsBulkCreateCustomersArgs = {
+  customers: Array<InputMaybe<InternalCustomerInput>>;
+};
+
+export type InternalMutationsBulkCreateEphemeralsArgs = {
+  ephemerals: Array<InputMaybe<InternalEphemeralInput>>;
+};
+
+export type InternalMutationsBulkCreateFieldlessesArgs = {
+  fieldlesses: Array<InputMaybe<InternalFieldlessInput>>;
+};
+
+export type InternalMutationsBulkCreateFriendshipsArgs = {
+  friendships: Array<InputMaybe<InternalFriendshipInput>>;
 };
 
 export type InternalMutationsBulkCreateGizmosArgs = {
   gizmos: Array<InputMaybe<InternalGizmoInput>>;
 };
 
-export type InternalMutationsBulkCreateModelAsArgs = {
-  modelAs: Array<InputMaybe<InternalModelAInput>>;
+export type InternalMutationsBulkCreateRegistrationsArgs = {
+  registrations: Array<InputMaybe<InternalRegistrationInput>>;
 };
 
-export type InternalMutationsBulkCreatePartsArgs = {
-  parts: Array<InputMaybe<InternalPartInput>>;
+export type InternalMutationsBulkCreateSampleModelToTestReallyLongModelNamessArgs = {
+  sampleModelToTestReallyLongModelNamess: Array<InputMaybe<InternalSampleModelToTestReallyLongModelNamesInput>>;
 };
 
 export type InternalMutationsBulkCreateSectionsArgs = {
@@ -6331,60 +6901,68 @@ export type InternalMutationsBulkCreateSessionsArgs = {
   sessions: Array<InputMaybe<InternalSessionInput>>;
 };
 
-export type InternalMutationsBulkCreateShopifyGdprRequestsArgs = {
-  shopifyGdprRequests: Array<InputMaybe<InternalShopifyGdprRequestInput>>;
+export type InternalMutationsBulkCreateSprocketsArgs = {
+  sprockets: Array<InputMaybe<InternalSprocketInput>>;
 };
 
-export type InternalMutationsBulkCreateShopifyProductImagesArgs = {
-  shopifyProductImages: Array<InputMaybe<InternalShopifyProductImageInput>>;
+export type InternalMutationsBulkCreateStudentsArgs = {
+  students: Array<InputMaybe<InternalStudentInput>>;
 };
 
-export type InternalMutationsBulkCreateShopifyProductOptionsArgs = {
-  shopifyProductOptions: Array<InputMaybe<InternalShopifyProductOptionInput>>;
-};
-
-export type InternalMutationsBulkCreateShopifyProductVariantsArgs = {
-  shopifyProductVariants: Array<InputMaybe<InternalShopifyProductVariantInput>>;
-};
-
-export type InternalMutationsBulkCreateShopifyProductsArgs = {
-  shopifyProducts: Array<InputMaybe<InternalShopifyProductInput>>;
-};
-
-export type InternalMutationsBulkCreateShopifyShopsArgs = {
-  shopifyShops: Array<InputMaybe<InternalShopifyShopInput>>;
-};
-
-export type InternalMutationsBulkCreateShopifySyncsArgs = {
-  shopifySyncs: Array<InputMaybe<InternalShopifySyncInput>>;
+export type InternalMutationsBulkCreateTeachersArgs = {
+  teachers: Array<InputMaybe<InternalTeacherInput>>;
 };
 
 export type InternalMutationsBulkCreateUsersArgs = {
   users: Array<InputMaybe<InternalUserInput>>;
 };
 
+export type InternalMutationsBulkCreateWidgetImagesArgs = {
+  widgetImages: Array<InputMaybe<InternalWidgetImageInput>>;
+};
+
 export type InternalMutationsBulkCreateWidgetsArgs = {
   widgets: Array<InputMaybe<InternalWidgetInput>>;
 };
 
-export type InternalMutationsCreateAutoTableTestArgs = {
-  autoTableTest?: InputMaybe<InternalAutoTableTestInput>;
+export type InternalMutationsCreateBillingAccountArgs = {
+  billingAccount?: InputMaybe<InternalBillingAccountInput>;
 };
 
-export type InternalMutationsCreateAutoTableTestRelatedModelArgs = {
-  _autoTableTestRelatedModel?: InputMaybe<InternalAutoTableTestRelatedModelInput>;
+export type InternalMutationsCreateCityArgs = {
+  city?: InputMaybe<InternalCityInput>;
+};
+
+export type InternalMutationsCreateCourseArgs = {
+  course?: InputMaybe<InternalCourseInput>;
+};
+
+export type InternalMutationsCreateCustomerArgs = {
+  customer?: InputMaybe<InternalCustomerInput>;
+};
+
+export type InternalMutationsCreateEphemeralArgs = {
+  ephemeral?: InputMaybe<InternalEphemeralInput>;
+};
+
+export type InternalMutationsCreateFieldlessArgs = {
+  fieldless?: InputMaybe<InternalFieldlessInput>;
+};
+
+export type InternalMutationsCreateFriendshipArgs = {
+  friendship?: InputMaybe<InternalFriendshipInput>;
 };
 
 export type InternalMutationsCreateGizmoArgs = {
   gizmo?: InputMaybe<InternalGizmoInput>;
 };
 
-export type InternalMutationsCreateModelAArgs = {
-  modelA?: InputMaybe<InternalModelAInput>;
+export type InternalMutationsCreateRegistrationArgs = {
+  registration?: InputMaybe<InternalRegistrationInput>;
 };
 
-export type InternalMutationsCreatePartArgs = {
-  part?: InputMaybe<InternalPartInput>;
+export type InternalMutationsCreateSampleModelToTestReallyLongModelNamesArgs = {
+  sampleModelToTestReallyLongModelNames?: InputMaybe<InternalSampleModelToTestReallyLongModelNamesInput>;
 };
 
 export type InternalMutationsCreateSectionArgs = {
@@ -6395,32 +6973,16 @@ export type InternalMutationsCreateSessionArgs = {
   session?: InputMaybe<InternalSessionInput>;
 };
 
-export type InternalMutationsCreateShopifyGdprRequestArgs = {
-  shopifyGdprRequest?: InputMaybe<InternalShopifyGdprRequestInput>;
+export type InternalMutationsCreateSprocketArgs = {
+  sprocket?: InputMaybe<InternalSprocketInput>;
 };
 
-export type InternalMutationsCreateShopifyProductArgs = {
-  shopifyProduct?: InputMaybe<InternalShopifyProductInput>;
+export type InternalMutationsCreateStudentArgs = {
+  student?: InputMaybe<InternalStudentInput>;
 };
 
-export type InternalMutationsCreateShopifyProductImageArgs = {
-  shopifyProductImage?: InputMaybe<InternalShopifyProductImageInput>;
-};
-
-export type InternalMutationsCreateShopifyProductOptionArgs = {
-  shopifyProductOption?: InputMaybe<InternalShopifyProductOptionInput>;
-};
-
-export type InternalMutationsCreateShopifyProductVariantArgs = {
-  shopifyProductVariant?: InputMaybe<InternalShopifyProductVariantInput>;
-};
-
-export type InternalMutationsCreateShopifyShopArgs = {
-  shopifyShop?: InputMaybe<InternalShopifyShopInput>;
-};
-
-export type InternalMutationsCreateShopifySyncArgs = {
-  shopifySync?: InputMaybe<InternalShopifySyncInput>;
+export type InternalMutationsCreateTeacherArgs = {
+  teacher?: InputMaybe<InternalTeacherInput>;
 };
 
 export type InternalMutationsCreateUserArgs = {
@@ -6431,11 +6993,35 @@ export type InternalMutationsCreateWidgetArgs = {
   widget?: InputMaybe<InternalWidgetInput>;
 };
 
-export type InternalMutationsDeleteAutoTableTestArgs = {
+export type InternalMutationsCreateWidgetImageArgs = {
+  widgetImage?: InputMaybe<InternalWidgetImageInput>;
+};
+
+export type InternalMutationsDeleteBillingAccountArgs = {
   id: Scalars["GadgetID"]["input"];
 };
 
-export type InternalMutationsDeleteAutoTableTestRelatedModelArgs = {
+export type InternalMutationsDeleteCityArgs = {
+  id: Scalars["GadgetID"]["input"];
+};
+
+export type InternalMutationsDeleteCourseArgs = {
+  id: Scalars["GadgetID"]["input"];
+};
+
+export type InternalMutationsDeleteCustomerArgs = {
+  id: Scalars["GadgetID"]["input"];
+};
+
+export type InternalMutationsDeleteEphemeralArgs = {
+  id: Scalars["GadgetID"]["input"];
+};
+
+export type InternalMutationsDeleteFieldlessArgs = {
+  id: Scalars["GadgetID"]["input"];
+};
+
+export type InternalMutationsDeleteFriendshipArgs = {
   id: Scalars["GadgetID"]["input"];
 };
 
@@ -6443,13 +7029,37 @@ export type InternalMutationsDeleteGizmoArgs = {
   id: Scalars["GadgetID"]["input"];
 };
 
-export type InternalMutationsDeleteManyAutoTableTestArgs = {
-  filter?: InputMaybe<Array<AutoTableTestFilter>>;
+export type InternalMutationsDeleteManyBillingAccountArgs = {
+  filter?: InputMaybe<Array<BillingAccountFilter>>;
   search?: InputMaybe<Scalars["String"]["input"]>;
 };
 
-export type InternalMutationsDeleteManyAutoTableTestRelatedModelArgs = {
-  filter?: InputMaybe<Array<AutoTableTestRelatedModelFilter>>;
+export type InternalMutationsDeleteManyCityArgs = {
+  filter?: InputMaybe<Array<CityFilter>>;
+  search?: InputMaybe<Scalars["String"]["input"]>;
+};
+
+export type InternalMutationsDeleteManyCourseArgs = {
+  filter?: InputMaybe<Array<CourseFilter>>;
+  search?: InputMaybe<Scalars["String"]["input"]>;
+};
+
+export type InternalMutationsDeleteManyCustomerArgs = {
+  filter?: InputMaybe<Array<CustomerFilter>>;
+  search?: InputMaybe<Scalars["String"]["input"]>;
+};
+
+export type InternalMutationsDeleteManyEphemeralArgs = {
+  filter?: InputMaybe<Array<EphemeralFilter>>;
+};
+
+export type InternalMutationsDeleteManyFieldlessArgs = {
+  filter?: InputMaybe<Array<FieldlessFilter>>;
+  search?: InputMaybe<Scalars["String"]["input"]>;
+};
+
+export type InternalMutationsDeleteManyFriendshipArgs = {
+  filter?: InputMaybe<Array<FriendshipFilter>>;
   search?: InputMaybe<Scalars["String"]["input"]>;
 };
 
@@ -6458,13 +7068,13 @@ export type InternalMutationsDeleteManyGizmoArgs = {
   search?: InputMaybe<Scalars["String"]["input"]>;
 };
 
-export type InternalMutationsDeleteManyModelAArgs = {
-  filter?: InputMaybe<Array<ModelAFilter>>;
+export type InternalMutationsDeleteManyRegistrationArgs = {
+  filter?: InputMaybe<Array<RegistrationFilter>>;
   search?: InputMaybe<Scalars["String"]["input"]>;
 };
 
-export type InternalMutationsDeleteManyPartArgs = {
-  filter?: InputMaybe<Array<PartFilter>>;
+export type InternalMutationsDeleteManySampleModelToTestReallyLongModelNamesArgs = {
+  filter?: InputMaybe<Array<SampleModelToTestReallyLongModelNamesFilter>>;
   search?: InputMaybe<Scalars["String"]["input"]>;
 };
 
@@ -6477,38 +7087,18 @@ export type InternalMutationsDeleteManySessionArgs = {
   filter?: InputMaybe<Array<SessionFilter>>;
 };
 
-export type InternalMutationsDeleteManyShopifyGdprRequestArgs = {
-  filter?: InputMaybe<Array<ShopifyGdprRequestFilter>>;
+export type InternalMutationsDeleteManySprocketArgs = {
+  filter?: InputMaybe<Array<SprocketFilter>>;
   search?: InputMaybe<Scalars["String"]["input"]>;
 };
 
-export type InternalMutationsDeleteManyShopifyProductArgs = {
-  filter?: InputMaybe<Array<ShopifyProductFilter>>;
+export type InternalMutationsDeleteManyStudentArgs = {
+  filter?: InputMaybe<Array<StudentFilter>>;
   search?: InputMaybe<Scalars["String"]["input"]>;
 };
 
-export type InternalMutationsDeleteManyShopifyProductImageArgs = {
-  filter?: InputMaybe<Array<ShopifyProductImageFilter>>;
-  search?: InputMaybe<Scalars["String"]["input"]>;
-};
-
-export type InternalMutationsDeleteManyShopifyProductOptionArgs = {
-  filter?: InputMaybe<Array<ShopifyProductOptionFilter>>;
-  search?: InputMaybe<Scalars["String"]["input"]>;
-};
-
-export type InternalMutationsDeleteManyShopifyProductVariantArgs = {
-  filter?: InputMaybe<Array<ShopifyProductVariantFilter>>;
-  search?: InputMaybe<Scalars["String"]["input"]>;
-};
-
-export type InternalMutationsDeleteManyShopifyShopArgs = {
-  filter?: InputMaybe<Array<ShopifyShopFilter>>;
-  search?: InputMaybe<Scalars["String"]["input"]>;
-};
-
-export type InternalMutationsDeleteManyShopifySyncArgs = {
-  filter?: InputMaybe<Array<ShopifySyncFilter>>;
+export type InternalMutationsDeleteManyTeacherArgs = {
+  filter?: InputMaybe<Array<TeacherFilter>>;
   search?: InputMaybe<Scalars["String"]["input"]>;
 };
 
@@ -6522,11 +7112,16 @@ export type InternalMutationsDeleteManyWidgetArgs = {
   search?: InputMaybe<Scalars["String"]["input"]>;
 };
 
-export type InternalMutationsDeleteModelAArgs = {
+export type InternalMutationsDeleteManyWidgetImageArgs = {
+  filter?: InputMaybe<Array<WidgetImageFilter>>;
+  search?: InputMaybe<Scalars["String"]["input"]>;
+};
+
+export type InternalMutationsDeleteRegistrationArgs = {
   id: Scalars["GadgetID"]["input"];
 };
 
-export type InternalMutationsDeletePartArgs = {
+export type InternalMutationsDeleteSampleModelToTestReallyLongModelNamesArgs = {
   id: Scalars["GadgetID"]["input"];
 };
 
@@ -6538,31 +7133,15 @@ export type InternalMutationsDeleteSessionArgs = {
   id: Scalars["GadgetID"]["input"];
 };
 
-export type InternalMutationsDeleteShopifyGdprRequestArgs = {
+export type InternalMutationsDeleteSprocketArgs = {
   id: Scalars["GadgetID"]["input"];
 };
 
-export type InternalMutationsDeleteShopifyProductArgs = {
+export type InternalMutationsDeleteStudentArgs = {
   id: Scalars["GadgetID"]["input"];
 };
 
-export type InternalMutationsDeleteShopifyProductImageArgs = {
-  id: Scalars["GadgetID"]["input"];
-};
-
-export type InternalMutationsDeleteShopifyProductOptionArgs = {
-  id: Scalars["GadgetID"]["input"];
-};
-
-export type InternalMutationsDeleteShopifyProductVariantArgs = {
-  id: Scalars["GadgetID"]["input"];
-};
-
-export type InternalMutationsDeleteShopifyShopArgs = {
-  id: Scalars["GadgetID"]["input"];
-};
-
-export type InternalMutationsDeleteShopifySyncArgs = {
+export type InternalMutationsDeleteTeacherArgs = {
   id: Scalars["GadgetID"]["input"];
 };
 
@@ -6574,7 +7153,11 @@ export type InternalMutationsDeleteWidgetArgs = {
   id: Scalars["GadgetID"]["input"];
 };
 
-export type InternalMutationsTriggerAbortShopifySyncArgs = {
+export type InternalMutationsDeleteWidgetImageArgs = {
+  id: Scalars["GadgetID"]["input"];
+};
+
+export type InternalMutationsTriggerAddInventoryIfOutOfStockWidgetArgs = {
   context?: InputMaybe<AppGraphQlTriggerMutationContext>;
   params?: InputMaybe<Scalars["JSONObject"]["input"]>;
   trigger?: InputMaybe<Scalars["JSONObject"]["input"]>;
@@ -6588,28 +7171,75 @@ export type InternalMutationsTriggerAddInventoryWidgetArgs = {
   verifyTriggerExists?: InputMaybe<Scalars["Boolean"]["input"]>;
 };
 
-export type InternalMutationsTriggerAlwaysThrowErrorWidgetArgs = {
+export type InternalMutationsTriggerBarfAnErrorArgs = {
+  trigger?: InputMaybe<Scalars["JSONObject"]["input"]>;
+  verifyTriggerExists?: InputMaybe<Scalars["Boolean"]["input"]>;
+};
+
+export type InternalMutationsTriggerBendGizmoArgs = {
   context?: InputMaybe<AppGraphQlTriggerMutationContext>;
   params?: InputMaybe<Scalars["JSONObject"]["input"]>;
   trigger?: InputMaybe<Scalars["JSONObject"]["input"]>;
   verifyTriggerExists?: InputMaybe<Scalars["Boolean"]["input"]>;
 };
 
-export type InternalMutationsTriggerCompleteShopifySyncArgs = {
+export type InternalMutationsTriggerBreakGizmoArgs = {
   context?: InputMaybe<AppGraphQlTriggerMutationContext>;
   params?: InputMaybe<Scalars["JSONObject"]["input"]>;
   trigger?: InputMaybe<Scalars["JSONObject"]["input"]>;
   verifyTriggerExists?: InputMaybe<Scalars["Boolean"]["input"]>;
 };
 
-export type InternalMutationsTriggerCreateAutoTableTestArgs = {
+export type InternalMutationsTriggerChangePasswordUserArgs = {
   context?: InputMaybe<AppGraphQlTriggerMutationContext>;
   params?: InputMaybe<Scalars["JSONObject"]["input"]>;
   trigger?: InputMaybe<Scalars["JSONObject"]["input"]>;
   verifyTriggerExists?: InputMaybe<Scalars["Boolean"]["input"]>;
 };
 
-export type InternalMutationsTriggerCreateAutoTableTestRelatedModelArgs = {
+export type InternalMutationsTriggerCreateBillingAccountArgs = {
+  context?: InputMaybe<AppGraphQlTriggerMutationContext>;
+  params?: InputMaybe<Scalars["JSONObject"]["input"]>;
+  trigger?: InputMaybe<Scalars["JSONObject"]["input"]>;
+  verifyTriggerExists?: InputMaybe<Scalars["Boolean"]["input"]>;
+};
+
+export type InternalMutationsTriggerCreateCityArgs = {
+  context?: InputMaybe<AppGraphQlTriggerMutationContext>;
+  params?: InputMaybe<Scalars["JSONObject"]["input"]>;
+  trigger?: InputMaybe<Scalars["JSONObject"]["input"]>;
+  verifyTriggerExists?: InputMaybe<Scalars["Boolean"]["input"]>;
+};
+
+export type InternalMutationsTriggerCreateCourseArgs = {
+  context?: InputMaybe<AppGraphQlTriggerMutationContext>;
+  params?: InputMaybe<Scalars["JSONObject"]["input"]>;
+  trigger?: InputMaybe<Scalars["JSONObject"]["input"]>;
+  verifyTriggerExists?: InputMaybe<Scalars["Boolean"]["input"]>;
+};
+
+export type InternalMutationsTriggerCreateCustomerArgs = {
+  context?: InputMaybe<AppGraphQlTriggerMutationContext>;
+  params?: InputMaybe<Scalars["JSONObject"]["input"]>;
+  trigger?: InputMaybe<Scalars["JSONObject"]["input"]>;
+  verifyTriggerExists?: InputMaybe<Scalars["Boolean"]["input"]>;
+};
+
+export type InternalMutationsTriggerCreateEphemeralArgs = {
+  context?: InputMaybe<AppGraphQlTriggerMutationContext>;
+  params?: InputMaybe<Scalars["JSONObject"]["input"]>;
+  trigger?: InputMaybe<Scalars["JSONObject"]["input"]>;
+  verifyTriggerExists?: InputMaybe<Scalars["Boolean"]["input"]>;
+};
+
+export type InternalMutationsTriggerCreateFieldlessArgs = {
+  context?: InputMaybe<AppGraphQlTriggerMutationContext>;
+  params?: InputMaybe<Scalars["JSONObject"]["input"]>;
+  trigger?: InputMaybe<Scalars["JSONObject"]["input"]>;
+  verifyTriggerExists?: InputMaybe<Scalars["Boolean"]["input"]>;
+};
+
+export type InternalMutationsTriggerCreateFriendshipArgs = {
   context?: InputMaybe<AppGraphQlTriggerMutationContext>;
   params?: InputMaybe<Scalars["JSONObject"]["input"]>;
   trigger?: InputMaybe<Scalars["JSONObject"]["input"]>;
@@ -6623,14 +7253,14 @@ export type InternalMutationsTriggerCreateGizmoArgs = {
   verifyTriggerExists?: InputMaybe<Scalars["Boolean"]["input"]>;
 };
 
-export type InternalMutationsTriggerCreateModelAArgs = {
+export type InternalMutationsTriggerCreateRegistrationArgs = {
   context?: InputMaybe<AppGraphQlTriggerMutationContext>;
   params?: InputMaybe<Scalars["JSONObject"]["input"]>;
   trigger?: InputMaybe<Scalars["JSONObject"]["input"]>;
   verifyTriggerExists?: InputMaybe<Scalars["Boolean"]["input"]>;
 };
 
-export type InternalMutationsTriggerCreatePartArgs = {
+export type InternalMutationsTriggerCreateSampleModelToTestReallyLongModelNamesArgs = {
   context?: InputMaybe<AppGraphQlTriggerMutationContext>;
   params?: InputMaybe<Scalars["JSONObject"]["input"]>;
   trigger?: InputMaybe<Scalars["JSONObject"]["input"]>;
@@ -6644,42 +7274,23 @@ export type InternalMutationsTriggerCreateSectionArgs = {
   verifyTriggerExists?: InputMaybe<Scalars["Boolean"]["input"]>;
 };
 
-export type InternalMutationsTriggerCreateShopifyGdprRequestArgs = {
+export type InternalMutationsTriggerCreateSprocketArgs = {
   context?: InputMaybe<AppGraphQlTriggerMutationContext>;
   params?: InputMaybe<Scalars["JSONObject"]["input"]>;
   trigger?: InputMaybe<Scalars["JSONObject"]["input"]>;
   verifyTriggerExists?: InputMaybe<Scalars["Boolean"]["input"]>;
 };
 
-export type InternalMutationsTriggerCreateShopifyProductArgs = {
+export type InternalMutationsTriggerCreateStudentArgs = {
   context?: InputMaybe<AppGraphQlTriggerMutationContext>;
   params?: InputMaybe<Scalars["JSONObject"]["input"]>;
   trigger?: InputMaybe<Scalars["JSONObject"]["input"]>;
   verifyTriggerExists?: InputMaybe<Scalars["Boolean"]["input"]>;
 };
 
-export type InternalMutationsTriggerCreateShopifyProductImageArgs = {
+export type InternalMutationsTriggerCreateTeacherArgs = {
   context?: InputMaybe<AppGraphQlTriggerMutationContext>;
   params?: InputMaybe<Scalars["JSONObject"]["input"]>;
-  trigger?: InputMaybe<Scalars["JSONObject"]["input"]>;
-  verifyTriggerExists?: InputMaybe<Scalars["Boolean"]["input"]>;
-};
-
-export type InternalMutationsTriggerCreateShopifyProductOptionArgs = {
-  context?: InputMaybe<AppGraphQlTriggerMutationContext>;
-  params?: InputMaybe<Scalars["JSONObject"]["input"]>;
-  trigger?: InputMaybe<Scalars["JSONObject"]["input"]>;
-  verifyTriggerExists?: InputMaybe<Scalars["Boolean"]["input"]>;
-};
-
-export type InternalMutationsTriggerCreateShopifyProductVariantArgs = {
-  context?: InputMaybe<AppGraphQlTriggerMutationContext>;
-  params?: InputMaybe<Scalars["JSONObject"]["input"]>;
-  trigger?: InputMaybe<Scalars["JSONObject"]["input"]>;
-  verifyTriggerExists?: InputMaybe<Scalars["Boolean"]["input"]>;
-};
-
-export type InternalMutationsTriggerCreateTestDataArgs = {
   trigger?: InputMaybe<Scalars["JSONObject"]["input"]>;
   verifyTriggerExists?: InputMaybe<Scalars["Boolean"]["input"]>;
 };
@@ -6691,28 +7302,56 @@ export type InternalMutationsTriggerCreateWidgetArgs = {
   verifyTriggerExists?: InputMaybe<Scalars["Boolean"]["input"]>;
 };
 
-export type InternalMutationsTriggerCustomActionAutoTableTestArgs = {
+export type InternalMutationsTriggerCreateWidgetImageArgs = {
   context?: InputMaybe<AppGraphQlTriggerMutationContext>;
   params?: InputMaybe<Scalars["JSONObject"]["input"]>;
   trigger?: InputMaybe<Scalars["JSONObject"]["input"]>;
   verifyTriggerExists?: InputMaybe<Scalars["Boolean"]["input"]>;
 };
 
-export type InternalMutationsTriggerCustomActionWithParamsAutoTableTestArgs = {
+export type InternalMutationsTriggerDeleteBillingAccountArgs = {
   context?: InputMaybe<AppGraphQlTriggerMutationContext>;
   params?: InputMaybe<Scalars["JSONObject"]["input"]>;
   trigger?: InputMaybe<Scalars["JSONObject"]["input"]>;
   verifyTriggerExists?: InputMaybe<Scalars["Boolean"]["input"]>;
 };
 
-export type InternalMutationsTriggerDeleteAutoTableTestArgs = {
+export type InternalMutationsTriggerDeleteCityArgs = {
   context?: InputMaybe<AppGraphQlTriggerMutationContext>;
   params?: InputMaybe<Scalars["JSONObject"]["input"]>;
   trigger?: InputMaybe<Scalars["JSONObject"]["input"]>;
   verifyTriggerExists?: InputMaybe<Scalars["Boolean"]["input"]>;
 };
 
-export type InternalMutationsTriggerDeleteAutoTableTestRelatedModelArgs = {
+export type InternalMutationsTriggerDeleteCourseArgs = {
+  context?: InputMaybe<AppGraphQlTriggerMutationContext>;
+  params?: InputMaybe<Scalars["JSONObject"]["input"]>;
+  trigger?: InputMaybe<Scalars["JSONObject"]["input"]>;
+  verifyTriggerExists?: InputMaybe<Scalars["Boolean"]["input"]>;
+};
+
+export type InternalMutationsTriggerDeleteCustomerArgs = {
+  context?: InputMaybe<AppGraphQlTriggerMutationContext>;
+  params?: InputMaybe<Scalars["JSONObject"]["input"]>;
+  trigger?: InputMaybe<Scalars["JSONObject"]["input"]>;
+  verifyTriggerExists?: InputMaybe<Scalars["Boolean"]["input"]>;
+};
+
+export type InternalMutationsTriggerDeleteEphemeralArgs = {
+  context?: InputMaybe<AppGraphQlTriggerMutationContext>;
+  params?: InputMaybe<Scalars["JSONObject"]["input"]>;
+  trigger?: InputMaybe<Scalars["JSONObject"]["input"]>;
+  verifyTriggerExists?: InputMaybe<Scalars["Boolean"]["input"]>;
+};
+
+export type InternalMutationsTriggerDeleteFieldlessArgs = {
+  context?: InputMaybe<AppGraphQlTriggerMutationContext>;
+  params?: InputMaybe<Scalars["JSONObject"]["input"]>;
+  trigger?: InputMaybe<Scalars["JSONObject"]["input"]>;
+  verifyTriggerExists?: InputMaybe<Scalars["Boolean"]["input"]>;
+};
+
+export type InternalMutationsTriggerDeleteFriendshipArgs = {
   context?: InputMaybe<AppGraphQlTriggerMutationContext>;
   params?: InputMaybe<Scalars["JSONObject"]["input"]>;
   trigger?: InputMaybe<Scalars["JSONObject"]["input"]>;
@@ -6726,14 +7365,14 @@ export type InternalMutationsTriggerDeleteGizmoArgs = {
   verifyTriggerExists?: InputMaybe<Scalars["Boolean"]["input"]>;
 };
 
-export type InternalMutationsTriggerDeleteModelAArgs = {
+export type InternalMutationsTriggerDeleteRegistrationArgs = {
   context?: InputMaybe<AppGraphQlTriggerMutationContext>;
   params?: InputMaybe<Scalars["JSONObject"]["input"]>;
   trigger?: InputMaybe<Scalars["JSONObject"]["input"]>;
   verifyTriggerExists?: InputMaybe<Scalars["Boolean"]["input"]>;
 };
 
-export type InternalMutationsTriggerDeletePartArgs = {
+export type InternalMutationsTriggerDeleteSampleModelToTestReallyLongModelNamesArgs = {
   context?: InputMaybe<AppGraphQlTriggerMutationContext>;
   params?: InputMaybe<Scalars["JSONObject"]["input"]>;
   trigger?: InputMaybe<Scalars["JSONObject"]["input"]>;
@@ -6747,28 +7386,21 @@ export type InternalMutationsTriggerDeleteSectionArgs = {
   verifyTriggerExists?: InputMaybe<Scalars["Boolean"]["input"]>;
 };
 
-export type InternalMutationsTriggerDeleteShopifyProductArgs = {
+export type InternalMutationsTriggerDeleteSprocketArgs = {
   context?: InputMaybe<AppGraphQlTriggerMutationContext>;
   params?: InputMaybe<Scalars["JSONObject"]["input"]>;
   trigger?: InputMaybe<Scalars["JSONObject"]["input"]>;
   verifyTriggerExists?: InputMaybe<Scalars["Boolean"]["input"]>;
 };
 
-export type InternalMutationsTriggerDeleteShopifyProductImageArgs = {
+export type InternalMutationsTriggerDeleteStudentArgs = {
   context?: InputMaybe<AppGraphQlTriggerMutationContext>;
   params?: InputMaybe<Scalars["JSONObject"]["input"]>;
   trigger?: InputMaybe<Scalars["JSONObject"]["input"]>;
   verifyTriggerExists?: InputMaybe<Scalars["Boolean"]["input"]>;
 };
 
-export type InternalMutationsTriggerDeleteShopifyProductOptionArgs = {
-  context?: InputMaybe<AppGraphQlTriggerMutationContext>;
-  params?: InputMaybe<Scalars["JSONObject"]["input"]>;
-  trigger?: InputMaybe<Scalars["JSONObject"]["input"]>;
-  verifyTriggerExists?: InputMaybe<Scalars["Boolean"]["input"]>;
-};
-
-export type InternalMutationsTriggerDeleteShopifyProductVariantArgs = {
+export type InternalMutationsTriggerDeleteTeacherArgs = {
   context?: InputMaybe<AppGraphQlTriggerMutationContext>;
   params?: InputMaybe<Scalars["JSONObject"]["input"]>;
   trigger?: InputMaybe<Scalars["JSONObject"]["input"]>;
@@ -6789,47 +7421,70 @@ export type InternalMutationsTriggerDeleteWidgetArgs = {
   verifyTriggerExists?: InputMaybe<Scalars["Boolean"]["input"]>;
 };
 
-export type InternalMutationsTriggerErrorShopifySyncArgs = {
+export type InternalMutationsTriggerDeleteWidgetImageArgs = {
   context?: InputMaybe<AppGraphQlTriggerMutationContext>;
   params?: InputMaybe<Scalars["JSONObject"]["input"]>;
   trigger?: InputMaybe<Scalars["JSONObject"]["input"]>;
   verifyTriggerExists?: InputMaybe<Scalars["Boolean"]["input"]>;
 };
 
-export type InternalMutationsTriggerFlipAllArgs = {
-  inventoryCount?: InputMaybe<Scalars["Float"]["input"]>;
-  title?: InputMaybe<Scalars["String"]["input"]>;
+export type InternalMutationsTriggerFlipAllWidgetsArgs = {
   trigger?: InputMaybe<Scalars["JSONObject"]["input"]>;
   verifyTriggerExists?: InputMaybe<Scalars["Boolean"]["input"]>;
 };
 
-export type InternalMutationsTriggerInstallShopifyShopArgs = {
+export type InternalMutationsTriggerFlipDownWidgetArgs = {
   context?: InputMaybe<AppGraphQlTriggerMutationContext>;
   params?: InputMaybe<Scalars["JSONObject"]["input"]>;
   trigger?: InputMaybe<Scalars["JSONObject"]["input"]>;
   verifyTriggerExists?: InputMaybe<Scalars["Boolean"]["input"]>;
 };
 
-export type InternalMutationsTriggerNoTriggerActionAutoTableTestArgs = {
+export type InternalMutationsTriggerFlipUpWidgetArgs = {
   context?: InputMaybe<AppGraphQlTriggerMutationContext>;
   params?: InputMaybe<Scalars["JSONObject"]["input"]>;
   trigger?: InputMaybe<Scalars["JSONObject"]["input"]>;
   verifyTriggerExists?: InputMaybe<Scalars["Boolean"]["input"]>;
 };
 
-export type InternalMutationsTriggerNoTriggerGlobalActionArgs = {
-  trigger?: InputMaybe<Scalars["JSONObject"]["input"]>;
-  verifyTriggerExists?: InputMaybe<Scalars["Boolean"]["input"]>;
-};
-
-export type InternalMutationsTriggerReinstallShopifyShopArgs = {
+export type InternalMutationsTriggerFoldGizmoArgs = {
   context?: InputMaybe<AppGraphQlTriggerMutationContext>;
   params?: InputMaybe<Scalars["JSONObject"]["input"]>;
   trigger?: InputMaybe<Scalars["JSONObject"]["input"]>;
   verifyTriggerExists?: InputMaybe<Scalars["Boolean"]["input"]>;
 };
 
-export type InternalMutationsTriggerRunShopifySyncArgs = {
+export type InternalMutationsTriggerLogParamsArgs = {
+  arr?: InputMaybe<Array<Scalars["String"]["input"]>>;
+  bool?: InputMaybe<Scalars["Boolean"]["input"]>;
+  num?: InputMaybe<Scalars["Float"]["input"]>;
+  str?: InputMaybe<Scalars["String"]["input"]>;
+  trigger?: InputMaybe<Scalars["JSONObject"]["input"]>;
+  verifyTriggerExists?: InputMaybe<Scalars["Boolean"]["input"]>;
+};
+
+export type InternalMutationsTriggerOtherCreateGizmoArgs = {
+  context?: InputMaybe<AppGraphQlTriggerMutationContext>;
+  params?: InputMaybe<Scalars["JSONObject"]["input"]>;
+  trigger?: InputMaybe<Scalars["JSONObject"]["input"]>;
+  verifyTriggerExists?: InputMaybe<Scalars["Boolean"]["input"]>;
+};
+
+export type InternalMutationsTriggerResetPasswordUserArgs = {
+  context?: InputMaybe<AppGraphQlTriggerMutationContext>;
+  params?: InputMaybe<Scalars["JSONObject"]["input"]>;
+  trigger?: InputMaybe<Scalars["JSONObject"]["input"]>;
+  verifyTriggerExists?: InputMaybe<Scalars["Boolean"]["input"]>;
+};
+
+export type InternalMutationsTriggerSendResetPasswordUserArgs = {
+  context?: InputMaybe<AppGraphQlTriggerMutationContext>;
+  params?: InputMaybe<Scalars["JSONObject"]["input"]>;
+  trigger?: InputMaybe<Scalars["JSONObject"]["input"]>;
+  verifyTriggerExists?: InputMaybe<Scalars["Boolean"]["input"]>;
+};
+
+export type InternalMutationsTriggerSendVerifyEmailUserArgs = {
   context?: InputMaybe<AppGraphQlTriggerMutationContext>;
   params?: InputMaybe<Scalars["JSONObject"]["input"]>;
   trigger?: InputMaybe<Scalars["JSONObject"]["input"]>;
@@ -6857,21 +7512,75 @@ export type InternalMutationsTriggerSignUpUserArgs = {
   verifyTriggerExists?: InputMaybe<Scalars["Boolean"]["input"]>;
 };
 
-export type InternalMutationsTriggerUninstallShopifyShopArgs = {
+export type InternalMutationsTriggerStraightenGizmoArgs = {
   context?: InputMaybe<AppGraphQlTriggerMutationContext>;
   params?: InputMaybe<Scalars["JSONObject"]["input"]>;
   trigger?: InputMaybe<Scalars["JSONObject"]["input"]>;
   verifyTriggerExists?: InputMaybe<Scalars["Boolean"]["input"]>;
 };
 
-export type InternalMutationsTriggerUpdateAutoTableTestArgs = {
+export type InternalMutationsTriggerUnfoldGizmoArgs = {
   context?: InputMaybe<AppGraphQlTriggerMutationContext>;
   params?: InputMaybe<Scalars["JSONObject"]["input"]>;
   trigger?: InputMaybe<Scalars["JSONObject"]["input"]>;
   verifyTriggerExists?: InputMaybe<Scalars["Boolean"]["input"]>;
 };
 
-export type InternalMutationsTriggerUpdateAutoTableTestRelatedModelArgs = {
+export type InternalMutationsTriggerUntriggerableGizmoArgs = {
+  context?: InputMaybe<AppGraphQlTriggerMutationContext>;
+  params?: InputMaybe<Scalars["JSONObject"]["input"]>;
+  trigger?: InputMaybe<Scalars["JSONObject"]["input"]>;
+  verifyTriggerExists?: InputMaybe<Scalars["Boolean"]["input"]>;
+};
+
+export type InternalMutationsTriggerUntriggerableGlobalActionArgs = {
+  trigger?: InputMaybe<Scalars["JSONObject"]["input"]>;
+  verifyTriggerExists?: InputMaybe<Scalars["Boolean"]["input"]>;
+};
+
+export type InternalMutationsTriggerUpdateBillingAccountArgs = {
+  context?: InputMaybe<AppGraphQlTriggerMutationContext>;
+  params?: InputMaybe<Scalars["JSONObject"]["input"]>;
+  trigger?: InputMaybe<Scalars["JSONObject"]["input"]>;
+  verifyTriggerExists?: InputMaybe<Scalars["Boolean"]["input"]>;
+};
+
+export type InternalMutationsTriggerUpdateCityArgs = {
+  context?: InputMaybe<AppGraphQlTriggerMutationContext>;
+  params?: InputMaybe<Scalars["JSONObject"]["input"]>;
+  trigger?: InputMaybe<Scalars["JSONObject"]["input"]>;
+  verifyTriggerExists?: InputMaybe<Scalars["Boolean"]["input"]>;
+};
+
+export type InternalMutationsTriggerUpdateCourseArgs = {
+  context?: InputMaybe<AppGraphQlTriggerMutationContext>;
+  params?: InputMaybe<Scalars["JSONObject"]["input"]>;
+  trigger?: InputMaybe<Scalars["JSONObject"]["input"]>;
+  verifyTriggerExists?: InputMaybe<Scalars["Boolean"]["input"]>;
+};
+
+export type InternalMutationsTriggerUpdateCustomerArgs = {
+  context?: InputMaybe<AppGraphQlTriggerMutationContext>;
+  params?: InputMaybe<Scalars["JSONObject"]["input"]>;
+  trigger?: InputMaybe<Scalars["JSONObject"]["input"]>;
+  verifyTriggerExists?: InputMaybe<Scalars["Boolean"]["input"]>;
+};
+
+export type InternalMutationsTriggerUpdateEphemeralArgs = {
+  context?: InputMaybe<AppGraphQlTriggerMutationContext>;
+  params?: InputMaybe<Scalars["JSONObject"]["input"]>;
+  trigger?: InputMaybe<Scalars["JSONObject"]["input"]>;
+  verifyTriggerExists?: InputMaybe<Scalars["Boolean"]["input"]>;
+};
+
+export type InternalMutationsTriggerUpdateFieldlessArgs = {
+  context?: InputMaybe<AppGraphQlTriggerMutationContext>;
+  params?: InputMaybe<Scalars["JSONObject"]["input"]>;
+  trigger?: InputMaybe<Scalars["JSONObject"]["input"]>;
+  verifyTriggerExists?: InputMaybe<Scalars["Boolean"]["input"]>;
+};
+
+export type InternalMutationsTriggerUpdateFriendshipArgs = {
   context?: InputMaybe<AppGraphQlTriggerMutationContext>;
   params?: InputMaybe<Scalars["JSONObject"]["input"]>;
   trigger?: InputMaybe<Scalars["JSONObject"]["input"]>;
@@ -6885,14 +7594,14 @@ export type InternalMutationsTriggerUpdateGizmoArgs = {
   verifyTriggerExists?: InputMaybe<Scalars["Boolean"]["input"]>;
 };
 
-export type InternalMutationsTriggerUpdateModelAArgs = {
+export type InternalMutationsTriggerUpdateRegistrationArgs = {
   context?: InputMaybe<AppGraphQlTriggerMutationContext>;
   params?: InputMaybe<Scalars["JSONObject"]["input"]>;
   trigger?: InputMaybe<Scalars["JSONObject"]["input"]>;
   verifyTriggerExists?: InputMaybe<Scalars["Boolean"]["input"]>;
 };
 
-export type InternalMutationsTriggerUpdatePartArgs = {
+export type InternalMutationsTriggerUpdateSampleModelToTestReallyLongModelNamesArgs = {
   context?: InputMaybe<AppGraphQlTriggerMutationContext>;
   params?: InputMaybe<Scalars["JSONObject"]["input"]>;
   trigger?: InputMaybe<Scalars["JSONObject"]["input"]>;
@@ -6906,42 +7615,21 @@ export type InternalMutationsTriggerUpdateSectionArgs = {
   verifyTriggerExists?: InputMaybe<Scalars["Boolean"]["input"]>;
 };
 
-export type InternalMutationsTriggerUpdateShopifyGdprRequestArgs = {
+export type InternalMutationsTriggerUpdateSprocketArgs = {
   context?: InputMaybe<AppGraphQlTriggerMutationContext>;
   params?: InputMaybe<Scalars["JSONObject"]["input"]>;
   trigger?: InputMaybe<Scalars["JSONObject"]["input"]>;
   verifyTriggerExists?: InputMaybe<Scalars["Boolean"]["input"]>;
 };
 
-export type InternalMutationsTriggerUpdateShopifyProductArgs = {
+export type InternalMutationsTriggerUpdateStudentArgs = {
   context?: InputMaybe<AppGraphQlTriggerMutationContext>;
   params?: InputMaybe<Scalars["JSONObject"]["input"]>;
   trigger?: InputMaybe<Scalars["JSONObject"]["input"]>;
   verifyTriggerExists?: InputMaybe<Scalars["Boolean"]["input"]>;
 };
 
-export type InternalMutationsTriggerUpdateShopifyProductImageArgs = {
-  context?: InputMaybe<AppGraphQlTriggerMutationContext>;
-  params?: InputMaybe<Scalars["JSONObject"]["input"]>;
-  trigger?: InputMaybe<Scalars["JSONObject"]["input"]>;
-  verifyTriggerExists?: InputMaybe<Scalars["Boolean"]["input"]>;
-};
-
-export type InternalMutationsTriggerUpdateShopifyProductOptionArgs = {
-  context?: InputMaybe<AppGraphQlTriggerMutationContext>;
-  params?: InputMaybe<Scalars["JSONObject"]["input"]>;
-  trigger?: InputMaybe<Scalars["JSONObject"]["input"]>;
-  verifyTriggerExists?: InputMaybe<Scalars["Boolean"]["input"]>;
-};
-
-export type InternalMutationsTriggerUpdateShopifyProductVariantArgs = {
-  context?: InputMaybe<AppGraphQlTriggerMutationContext>;
-  params?: InputMaybe<Scalars["JSONObject"]["input"]>;
-  trigger?: InputMaybe<Scalars["JSONObject"]["input"]>;
-  verifyTriggerExists?: InputMaybe<Scalars["Boolean"]["input"]>;
-};
-
-export type InternalMutationsTriggerUpdateShopifyShopArgs = {
+export type InternalMutationsTriggerUpdateTeacherArgs = {
   context?: InputMaybe<AppGraphQlTriggerMutationContext>;
   params?: InputMaybe<Scalars["JSONObject"]["input"]>;
   trigger?: InputMaybe<Scalars["JSONObject"]["input"]>;
@@ -6962,20 +7650,52 @@ export type InternalMutationsTriggerUpdateWidgetArgs = {
   verifyTriggerExists?: InputMaybe<Scalars["Boolean"]["input"]>;
 };
 
-export type InternalMutationsTriggerUpdateWithCustomParamsAutoTableTestArgs = {
+export type InternalMutationsTriggerUpdateWidgetImageArgs = {
   context?: InputMaybe<AppGraphQlTriggerMutationContext>;
   params?: InputMaybe<Scalars["JSONObject"]["input"]>;
   trigger?: InputMaybe<Scalars["JSONObject"]["input"]>;
   verifyTriggerExists?: InputMaybe<Scalars["Boolean"]["input"]>;
 };
 
-export type InternalMutationsUpdateAutoTableTestArgs = {
-  autoTableTest?: InputMaybe<InternalAutoTableTestInput>;
+export type InternalMutationsTriggerVerifyEmailUserArgs = {
+  context?: InputMaybe<AppGraphQlTriggerMutationContext>;
+  params?: InputMaybe<Scalars["JSONObject"]["input"]>;
+  trigger?: InputMaybe<Scalars["JSONObject"]["input"]>;
+  verifyTriggerExists?: InputMaybe<Scalars["Boolean"]["input"]>;
+};
+
+export type InternalMutationsUpdateBillingAccountArgs = {
+  billingAccount?: InputMaybe<InternalBillingAccountInput>;
   id: Scalars["GadgetID"]["input"];
 };
 
-export type InternalMutationsUpdateAutoTableTestRelatedModelArgs = {
-  _autoTableTestRelatedModel?: InputMaybe<InternalAutoTableTestRelatedModelInput>;
+export type InternalMutationsUpdateCityArgs = {
+  city?: InputMaybe<InternalCityInput>;
+  id: Scalars["GadgetID"]["input"];
+};
+
+export type InternalMutationsUpdateCourseArgs = {
+  course?: InputMaybe<InternalCourseInput>;
+  id: Scalars["GadgetID"]["input"];
+};
+
+export type InternalMutationsUpdateCustomerArgs = {
+  customer?: InputMaybe<InternalCustomerInput>;
+  id: Scalars["GadgetID"]["input"];
+};
+
+export type InternalMutationsUpdateEphemeralArgs = {
+  ephemeral?: InputMaybe<InternalEphemeralInput>;
+  id: Scalars["GadgetID"]["input"];
+};
+
+export type InternalMutationsUpdateFieldlessArgs = {
+  fieldless?: InputMaybe<InternalFieldlessInput>;
+  id: Scalars["GadgetID"]["input"];
+};
+
+export type InternalMutationsUpdateFriendshipArgs = {
+  friendship?: InputMaybe<InternalFriendshipInput>;
   id: Scalars["GadgetID"]["input"];
 };
 
@@ -6984,14 +7704,14 @@ export type InternalMutationsUpdateGizmoArgs = {
   id: Scalars["GadgetID"]["input"];
 };
 
-export type InternalMutationsUpdateModelAArgs = {
+export type InternalMutationsUpdateRegistrationArgs = {
   id: Scalars["GadgetID"]["input"];
-  modelA?: InputMaybe<InternalModelAInput>;
+  registration?: InputMaybe<InternalRegistrationInput>;
 };
 
-export type InternalMutationsUpdatePartArgs = {
+export type InternalMutationsUpdateSampleModelToTestReallyLongModelNamesArgs = {
   id: Scalars["GadgetID"]["input"];
-  part?: InputMaybe<InternalPartInput>;
+  sampleModelToTestReallyLongModelNames?: InputMaybe<InternalSampleModelToTestReallyLongModelNamesInput>;
 };
 
 export type InternalMutationsUpdateSectionArgs = {
@@ -7004,39 +7724,19 @@ export type InternalMutationsUpdateSessionArgs = {
   session?: InputMaybe<InternalSessionInput>;
 };
 
-export type InternalMutationsUpdateShopifyGdprRequestArgs = {
+export type InternalMutationsUpdateSprocketArgs = {
   id: Scalars["GadgetID"]["input"];
-  shopifyGdprRequest?: InputMaybe<InternalShopifyGdprRequestInput>;
+  sprocket?: InputMaybe<InternalSprocketInput>;
 };
 
-export type InternalMutationsUpdateShopifyProductArgs = {
+export type InternalMutationsUpdateStudentArgs = {
   id: Scalars["GadgetID"]["input"];
-  shopifyProduct?: InputMaybe<InternalShopifyProductInput>;
+  student?: InputMaybe<InternalStudentInput>;
 };
 
-export type InternalMutationsUpdateShopifyProductImageArgs = {
+export type InternalMutationsUpdateTeacherArgs = {
   id: Scalars["GadgetID"]["input"];
-  shopifyProductImage?: InputMaybe<InternalShopifyProductImageInput>;
-};
-
-export type InternalMutationsUpdateShopifyProductOptionArgs = {
-  id: Scalars["GadgetID"]["input"];
-  shopifyProductOption?: InputMaybe<InternalShopifyProductOptionInput>;
-};
-
-export type InternalMutationsUpdateShopifyProductVariantArgs = {
-  id: Scalars["GadgetID"]["input"];
-  shopifyProductVariant?: InputMaybe<InternalShopifyProductVariantInput>;
-};
-
-export type InternalMutationsUpdateShopifyShopArgs = {
-  id: Scalars["GadgetID"]["input"];
-  shopifyShop?: InputMaybe<InternalShopifyShopInput>;
-};
-
-export type InternalMutationsUpdateShopifySyncArgs = {
-  id: Scalars["GadgetID"]["input"];
-  shopifySync?: InputMaybe<InternalShopifySyncInput>;
+  teacher?: InputMaybe<InternalTeacherInput>;
 };
 
 export type InternalMutationsUpdateUserArgs = {
@@ -7049,13 +7749,43 @@ export type InternalMutationsUpdateWidgetArgs = {
   widget?: InputMaybe<InternalWidgetInput>;
 };
 
-export type InternalMutationsUpsertAutoTableTestArgs = {
-  autoTableTest?: InputMaybe<InternalAutoTableTestInput>;
+export type InternalMutationsUpdateWidgetImageArgs = {
+  id: Scalars["GadgetID"]["input"];
+  widgetImage?: InputMaybe<InternalWidgetImageInput>;
+};
+
+export type InternalMutationsUpsertBillingAccountArgs = {
+  billingAccount?: InputMaybe<InternalBillingAccountInput>;
   on?: InputMaybe<Array<Scalars["String"]["input"]>>;
 };
 
-export type InternalMutationsUpsertAutoTableTestRelatedModelArgs = {
-  _autoTableTestRelatedModel?: InputMaybe<InternalAutoTableTestRelatedModelInput>;
+export type InternalMutationsUpsertCityArgs = {
+  city?: InputMaybe<InternalCityInput>;
+  on?: InputMaybe<Array<Scalars["String"]["input"]>>;
+};
+
+export type InternalMutationsUpsertCourseArgs = {
+  course?: InputMaybe<InternalCourseInput>;
+  on?: InputMaybe<Array<Scalars["String"]["input"]>>;
+};
+
+export type InternalMutationsUpsertCustomerArgs = {
+  customer?: InputMaybe<InternalCustomerInput>;
+  on?: InputMaybe<Array<Scalars["String"]["input"]>>;
+};
+
+export type InternalMutationsUpsertEphemeralArgs = {
+  ephemeral?: InputMaybe<InternalEphemeralInput>;
+  on?: InputMaybe<Array<Scalars["String"]["input"]>>;
+};
+
+export type InternalMutationsUpsertFieldlessArgs = {
+  fieldless?: InputMaybe<InternalFieldlessInput>;
+  on?: InputMaybe<Array<Scalars["String"]["input"]>>;
+};
+
+export type InternalMutationsUpsertFriendshipArgs = {
+  friendship?: InputMaybe<InternalFriendshipInput>;
   on?: InputMaybe<Array<Scalars["String"]["input"]>>;
 };
 
@@ -7064,14 +7794,14 @@ export type InternalMutationsUpsertGizmoArgs = {
   on?: InputMaybe<Array<Scalars["String"]["input"]>>;
 };
 
-export type InternalMutationsUpsertModelAArgs = {
-  modelA?: InputMaybe<InternalModelAInput>;
+export type InternalMutationsUpsertRegistrationArgs = {
   on?: InputMaybe<Array<Scalars["String"]["input"]>>;
+  registration?: InputMaybe<InternalRegistrationInput>;
 };
 
-export type InternalMutationsUpsertPartArgs = {
+export type InternalMutationsUpsertSampleModelToTestReallyLongModelNamesArgs = {
   on?: InputMaybe<Array<Scalars["String"]["input"]>>;
-  part?: InputMaybe<InternalPartInput>;
+  sampleModelToTestReallyLongModelNames?: InputMaybe<InternalSampleModelToTestReallyLongModelNamesInput>;
 };
 
 export type InternalMutationsUpsertSectionArgs = {
@@ -7084,39 +7814,19 @@ export type InternalMutationsUpsertSessionArgs = {
   session?: InputMaybe<InternalSessionInput>;
 };
 
-export type InternalMutationsUpsertShopifyGdprRequestArgs = {
+export type InternalMutationsUpsertSprocketArgs = {
   on?: InputMaybe<Array<Scalars["String"]["input"]>>;
-  shopifyGdprRequest?: InputMaybe<InternalShopifyGdprRequestInput>;
+  sprocket?: InputMaybe<InternalSprocketInput>;
 };
 
-export type InternalMutationsUpsertShopifyProductArgs = {
+export type InternalMutationsUpsertStudentArgs = {
   on?: InputMaybe<Array<Scalars["String"]["input"]>>;
-  shopifyProduct?: InputMaybe<InternalShopifyProductInput>;
+  student?: InputMaybe<InternalStudentInput>;
 };
 
-export type InternalMutationsUpsertShopifyProductImageArgs = {
+export type InternalMutationsUpsertTeacherArgs = {
   on?: InputMaybe<Array<Scalars["String"]["input"]>>;
-  shopifyProductImage?: InputMaybe<InternalShopifyProductImageInput>;
-};
-
-export type InternalMutationsUpsertShopifyProductOptionArgs = {
-  on?: InputMaybe<Array<Scalars["String"]["input"]>>;
-  shopifyProductOption?: InputMaybe<InternalShopifyProductOptionInput>;
-};
-
-export type InternalMutationsUpsertShopifyProductVariantArgs = {
-  on?: InputMaybe<Array<Scalars["String"]["input"]>>;
-  shopifyProductVariant?: InputMaybe<InternalShopifyProductVariantInput>;
-};
-
-export type InternalMutationsUpsertShopifyShopArgs = {
-  on?: InputMaybe<Array<Scalars["String"]["input"]>>;
-  shopifyShop?: InputMaybe<InternalShopifyShopInput>;
-};
-
-export type InternalMutationsUpsertShopifySyncArgs = {
-  on?: InputMaybe<Array<Scalars["String"]["input"]>>;
-  shopifySync?: InputMaybe<InternalShopifySyncInput>;
+  teacher?: InputMaybe<InternalTeacherInput>;
 };
 
 export type InternalMutationsUpsertUserArgs = {
@@ -7129,117 +7839,86 @@ export type InternalMutationsUpsertWidgetArgs = {
   widget?: InputMaybe<InternalWidgetInput>;
 };
 
-export type InternalNameMutations = {
-  __typename?: "InternalNameMutations";
-  spaced: InternalNameSpacedMutations;
-};
-
-export type InternalNameSpacedMutations = {
-  __typename?: "InternalNameSpacedMutations";
-  triggerActionA?: Maybe<NameSpacedActionAResult>;
-  triggerCustomObjectParams?: Maybe<NameSpacedCustomObjectParamsResult>;
-  triggerNoTriggerGlobalAction?: Maybe<NameSpacedNoTriggerGlobalActionResult>;
-};
-
-export type InternalNameSpacedMutationsTriggerActionAArgs = {
-  trigger?: InputMaybe<Scalars["JSONObject"]["input"]>;
-  verifyTriggerExists?: InputMaybe<Scalars["Boolean"]["input"]>;
-};
-
-export type InternalNameSpacedMutationsTriggerCustomObjectParamsArgs = {
-  objParam?: InputMaybe<NameSpacedCustomObjectParamsObjParamInput>;
-  rootLevelStr?: InputMaybe<Scalars["String"]["input"]>;
-  trigger?: InputMaybe<Scalars["JSONObject"]["input"]>;
-  verifyTriggerExists?: InputMaybe<Scalars["Boolean"]["input"]>;
-};
-
-export type InternalNameSpacedMutationsTriggerNoTriggerGlobalActionArgs = {
-  trigger?: InputMaybe<Scalars["JSONObject"]["input"]>;
-  verifyTriggerExists?: InputMaybe<Scalars["Boolean"]["input"]>;
-};
-
-export type InternalPartAtomicsInput = {
-  /** Numeric atomic commands for operating on count. */
-  count?: InputMaybe<Array<NumericAtomicFieldUpdateInput>>;
-};
-
-export type InternalPartInput = {
-  /** An optional list of atomically applied commands for race-safe mutations of the record */
-  _atomics?: InputMaybe<InternalPartAtomicsInput>;
-  count?: InputMaybe<Scalars["Float"]["input"]>;
-  createdAt?: InputMaybe<Scalars["DateTime"]["input"]>;
-  id?: InputMaybe<Scalars["GadgetID"]["input"]>;
-  name?: InputMaybe<Scalars["String"]["input"]>;
-  notes?: InputMaybe<Scalars["String"]["input"]>;
-  state?: InputMaybe<Scalars["RecordState"]["input"]>;
-  stateHistory?: InputMaybe<Scalars["RecordState"]["input"]>;
-  updatedAt?: InputMaybe<Scalars["DateTime"]["input"]>;
-};
-
-/** A connection to a list of InternalPartRecord items. */
-export type InternalPartRecordConnection = {
-  __typename?: "InternalPartRecordConnection";
-  /** A list of edges. */
-  edges: Array<InternalPartRecordEdge>;
-  /** Information to aid in pagination. */
-  pageInfo: PageInfo;
-};
-
-/** An edge in a InternalPartRecord connection. */
-export type InternalPartRecordEdge = {
-  __typename?: "InternalPartRecordEdge";
-  /** A cursor for use in pagination */
-  cursor: Scalars["String"]["output"];
-  /** The item at the end of the edge */
-  node: Scalars["InternalPartRecord"]["output"];
+export type InternalMutationsUpsertWidgetImageArgs = {
+  on?: InputMaybe<Array<Scalars["String"]["input"]>>;
+  widgetImage?: InputMaybe<InternalWidgetImageInput>;
 };
 
 export type InternalQueries = {
   __typename?: "InternalQueries";
-  _autoTableTestRelatedModel?: Maybe<Scalars["InternalAutoTableTestRelatedModelRecord"]["output"]>;
-  autoTableTest?: Maybe<Scalars["InternalAutoTableTestRecord"]["output"]>;
+  billingAccount?: Maybe<Scalars["InternalBillingAccountRecord"]["output"]>;
+  city?: Maybe<Scalars["InternalCityRecord"]["output"]>;
+  course?: Maybe<Scalars["InternalCourseRecord"]["output"]>;
   /** Currently open platform transaction details, or null if no transaction is open */
   currentTransactionDetails?: Maybe<Scalars["JSONObject"]["output"]>;
+  customer?: Maybe<Scalars["InternalCustomerRecord"]["output"]>;
+  ephemeral?: Maybe<Scalars["InternalEphemeralRecord"]["output"]>;
+  fieldless?: Maybe<Scalars["InternalFieldlessRecord"]["output"]>;
+  friendship?: Maybe<Scalars["InternalFriendshipRecord"]["output"]>;
   game: InternalGameQueries;
   gizmo?: Maybe<Scalars["InternalGizmoRecord"]["output"]>;
-  hasManyThrough: InternalHasManyThroughQueries;
-  listAutoTableTest: InternalAutoTableTestRecordConnection;
-  listAutoTableTestRelatedModel: InternalAutoTableTestRelatedModelRecordConnection;
+  landmark: InternalLandmarkQueries;
+  listBillingAccount: InternalBillingAccountRecordConnection;
+  listCity: InternalCityRecordConnection;
+  listCourse: InternalCourseRecordConnection;
+  listCustomer: InternalCustomerRecordConnection;
+  listEphemeral: InternalEphemeralRecordConnection;
+  listFieldless: InternalFieldlessRecordConnection;
+  listFriendship: InternalFriendshipRecordConnection;
   listGizmo: InternalGizmoRecordConnection;
-  listModelA: InternalModelARecordConnection;
-  listPart: InternalPartRecordConnection;
+  listRegistration: InternalRegistrationRecordConnection;
+  listSampleModelToTestReallyLongModelNames: InternalSampleModelToTestReallyLongModelNamesRecordConnection;
   listSection: InternalSectionRecordConnection;
   listSession: InternalSessionRecordConnection;
-  listShopifyGdprRequest: InternalShopifyGdprRequestRecordConnection;
-  listShopifyProduct: InternalShopifyProductRecordConnection;
-  listShopifyProductImage: InternalShopifyProductImageRecordConnection;
-  listShopifyProductOption: InternalShopifyProductOptionRecordConnection;
-  listShopifyProductVariant: InternalShopifyProductVariantRecordConnection;
-  listShopifyShop: InternalShopifyShopRecordConnection;
-  listShopifySync: InternalShopifySyncRecordConnection;
+  listSprocket: InternalSprocketRecordConnection;
+  listStudent: InternalStudentRecordConnection;
+  listTeacher: InternalTeacherRecordConnection;
   listUser: InternalUserRecordConnection;
   listWidget: InternalWidgetRecordConnection;
-  modelA?: Maybe<Scalars["InternalModelARecord"]["output"]>;
-  part?: Maybe<Scalars["InternalPartRecord"]["output"]>;
+  listWidgetImage: InternalWidgetImageRecordConnection;
+  registration?: Maybe<Scalars["InternalRegistrationRecord"]["output"]>;
+  sampleModelToTestReallyLongModelNames?: Maybe<Scalars["InternalSampleModelToTestReallyLongModelNamesRecord"]["output"]>;
   section?: Maybe<Scalars["InternalSectionRecord"]["output"]>;
   session?: Maybe<Scalars["InternalSessionRecord"]["output"]>;
-  shopifyGdprRequest?: Maybe<Scalars["InternalShopifyGdprRequestRecord"]["output"]>;
-  shopifyProduct?: Maybe<Scalars["InternalShopifyProductRecord"]["output"]>;
-  shopifyProductImage?: Maybe<Scalars["InternalShopifyProductImageRecord"]["output"]>;
-  shopifyProductOption?: Maybe<Scalars["InternalShopifyProductOptionRecord"]["output"]>;
-  shopifyProductVariant?: Maybe<Scalars["InternalShopifyProductVariantRecord"]["output"]>;
-  shopifyShop?: Maybe<Scalars["InternalShopifyShopRecord"]["output"]>;
-  shopifySync?: Maybe<Scalars["InternalShopifySyncRecord"]["output"]>;
+  sprocket?: Maybe<Scalars["InternalSprocketRecord"]["output"]>;
+  student?: Maybe<Scalars["InternalStudentRecord"]["output"]>;
+  teacher?: Maybe<Scalars["InternalTeacherRecord"]["output"]>;
   user?: Maybe<Scalars["InternalUserRecord"]["output"]>;
   widget?: Maybe<Scalars["InternalWidgetRecord"]["output"]>;
+  widgetImage?: Maybe<Scalars["InternalWidgetImageRecord"]["output"]>;
 };
 
-export type InternalQueries_AutoTableTestRelatedModelArgs = {
+export type InternalQueriesBillingAccountArgs = {
   id: Scalars["GadgetID"]["input"];
   select?: InputMaybe<Array<Scalars["String"]["input"]>>;
 };
 
-export type InternalQueriesAutoTableTestArgs = {
+export type InternalQueriesCityArgs = {
+  id: Scalars["GadgetID"]["input"];
+  select?: InputMaybe<Array<Scalars["String"]["input"]>>;
+};
+
+export type InternalQueriesCourseArgs = {
+  id: Scalars["GadgetID"]["input"];
+  select?: InputMaybe<Array<Scalars["String"]["input"]>>;
+};
+
+export type InternalQueriesCustomerArgs = {
+  id: Scalars["GadgetID"]["input"];
+  select?: InputMaybe<Array<Scalars["String"]["input"]>>;
+};
+
+export type InternalQueriesEphemeralArgs = {
+  id: Scalars["GadgetID"]["input"];
+  select?: InputMaybe<Array<Scalars["String"]["input"]>>;
+};
+
+export type InternalQueriesFieldlessArgs = {
+  id: Scalars["GadgetID"]["input"];
+  select?: InputMaybe<Array<Scalars["String"]["input"]>>;
+};
+
+export type InternalQueriesFriendshipArgs = {
   id: Scalars["GadgetID"]["input"];
   select?: InputMaybe<Array<Scalars["String"]["input"]>>;
 };
@@ -7249,26 +7928,79 @@ export type InternalQueriesGizmoArgs = {
   select?: InputMaybe<Array<Scalars["String"]["input"]>>;
 };
 
-export type InternalQueriesListAutoTableTestArgs = {
+export type InternalQueriesListBillingAccountArgs = {
   after?: InputMaybe<Scalars["String"]["input"]>;
   before?: InputMaybe<Scalars["String"]["input"]>;
-  filter?: InputMaybe<Array<AutoTableTestFilter>>;
+  filter?: InputMaybe<Array<BillingAccountFilter>>;
   first?: InputMaybe<Scalars["Int"]["input"]>;
   last?: InputMaybe<Scalars["Int"]["input"]>;
   search?: InputMaybe<Scalars["String"]["input"]>;
   select?: InputMaybe<Array<Scalars["String"]["input"]>>;
-  sort?: InputMaybe<Array<AutoTableTestSort>>;
+  sort?: InputMaybe<Array<BillingAccountSort>>;
 };
 
-export type InternalQueriesListAutoTableTestRelatedModelArgs = {
+export type InternalQueriesListCityArgs = {
   after?: InputMaybe<Scalars["String"]["input"]>;
   before?: InputMaybe<Scalars["String"]["input"]>;
-  filter?: InputMaybe<Array<AutoTableTestRelatedModelFilter>>;
+  filter?: InputMaybe<Array<CityFilter>>;
   first?: InputMaybe<Scalars["Int"]["input"]>;
   last?: InputMaybe<Scalars["Int"]["input"]>;
   search?: InputMaybe<Scalars["String"]["input"]>;
   select?: InputMaybe<Array<Scalars["String"]["input"]>>;
-  sort?: InputMaybe<Array<AutoTableTestRelatedModelSort>>;
+  sort?: InputMaybe<Array<CitySort>>;
+};
+
+export type InternalQueriesListCourseArgs = {
+  after?: InputMaybe<Scalars["String"]["input"]>;
+  before?: InputMaybe<Scalars["String"]["input"]>;
+  filter?: InputMaybe<Array<CourseFilter>>;
+  first?: InputMaybe<Scalars["Int"]["input"]>;
+  last?: InputMaybe<Scalars["Int"]["input"]>;
+  search?: InputMaybe<Scalars["String"]["input"]>;
+  select?: InputMaybe<Array<Scalars["String"]["input"]>>;
+  sort?: InputMaybe<Array<CourseSort>>;
+};
+
+export type InternalQueriesListCustomerArgs = {
+  after?: InputMaybe<Scalars["String"]["input"]>;
+  before?: InputMaybe<Scalars["String"]["input"]>;
+  filter?: InputMaybe<Array<CustomerFilter>>;
+  first?: InputMaybe<Scalars["Int"]["input"]>;
+  last?: InputMaybe<Scalars["Int"]["input"]>;
+  search?: InputMaybe<Scalars["String"]["input"]>;
+  select?: InputMaybe<Array<Scalars["String"]["input"]>>;
+  sort?: InputMaybe<Array<CustomerSort>>;
+};
+
+export type InternalQueriesListEphemeralArgs = {
+  after?: InputMaybe<Scalars["String"]["input"]>;
+  before?: InputMaybe<Scalars["String"]["input"]>;
+  filter?: InputMaybe<Array<EphemeralFilter>>;
+  first?: InputMaybe<Scalars["Int"]["input"]>;
+  last?: InputMaybe<Scalars["Int"]["input"]>;
+  select?: InputMaybe<Array<Scalars["String"]["input"]>>;
+};
+
+export type InternalQueriesListFieldlessArgs = {
+  after?: InputMaybe<Scalars["String"]["input"]>;
+  before?: InputMaybe<Scalars["String"]["input"]>;
+  filter?: InputMaybe<Array<FieldlessFilter>>;
+  first?: InputMaybe<Scalars["Int"]["input"]>;
+  last?: InputMaybe<Scalars["Int"]["input"]>;
+  search?: InputMaybe<Scalars["String"]["input"]>;
+  select?: InputMaybe<Array<Scalars["String"]["input"]>>;
+  sort?: InputMaybe<Array<FieldlessSort>>;
+};
+
+export type InternalQueriesListFriendshipArgs = {
+  after?: InputMaybe<Scalars["String"]["input"]>;
+  before?: InputMaybe<Scalars["String"]["input"]>;
+  filter?: InputMaybe<Array<FriendshipFilter>>;
+  first?: InputMaybe<Scalars["Int"]["input"]>;
+  last?: InputMaybe<Scalars["Int"]["input"]>;
+  search?: InputMaybe<Scalars["String"]["input"]>;
+  select?: InputMaybe<Array<Scalars["String"]["input"]>>;
+  sort?: InputMaybe<Array<FriendshipSort>>;
 };
 
 export type InternalQueriesListGizmoArgs = {
@@ -7282,26 +8014,26 @@ export type InternalQueriesListGizmoArgs = {
   sort?: InputMaybe<Array<GizmoSort>>;
 };
 
-export type InternalQueriesListModelAArgs = {
+export type InternalQueriesListRegistrationArgs = {
   after?: InputMaybe<Scalars["String"]["input"]>;
   before?: InputMaybe<Scalars["String"]["input"]>;
-  filter?: InputMaybe<Array<ModelAFilter>>;
+  filter?: InputMaybe<Array<RegistrationFilter>>;
   first?: InputMaybe<Scalars["Int"]["input"]>;
   last?: InputMaybe<Scalars["Int"]["input"]>;
   search?: InputMaybe<Scalars["String"]["input"]>;
   select?: InputMaybe<Array<Scalars["String"]["input"]>>;
-  sort?: InputMaybe<Array<ModelASort>>;
+  sort?: InputMaybe<Array<RegistrationSort>>;
 };
 
-export type InternalQueriesListPartArgs = {
+export type InternalQueriesListSampleModelToTestReallyLongModelNamesArgs = {
   after?: InputMaybe<Scalars["String"]["input"]>;
   before?: InputMaybe<Scalars["String"]["input"]>;
-  filter?: InputMaybe<Array<PartFilter>>;
+  filter?: InputMaybe<Array<SampleModelToTestReallyLongModelNamesFilter>>;
   first?: InputMaybe<Scalars["Int"]["input"]>;
   last?: InputMaybe<Scalars["Int"]["input"]>;
   search?: InputMaybe<Scalars["String"]["input"]>;
   select?: InputMaybe<Array<Scalars["String"]["input"]>>;
-  sort?: InputMaybe<Array<PartSort>>;
+  sort?: InputMaybe<Array<SampleModelToTestReallyLongModelNamesSort>>;
 };
 
 export type InternalQueriesListSectionArgs = {
@@ -7324,81 +8056,37 @@ export type InternalQueriesListSessionArgs = {
   select?: InputMaybe<Array<Scalars["String"]["input"]>>;
 };
 
-export type InternalQueriesListShopifyGdprRequestArgs = {
+export type InternalQueriesListSprocketArgs = {
   after?: InputMaybe<Scalars["String"]["input"]>;
   before?: InputMaybe<Scalars["String"]["input"]>;
-  filter?: InputMaybe<Array<ShopifyGdprRequestFilter>>;
+  filter?: InputMaybe<Array<SprocketFilter>>;
   first?: InputMaybe<Scalars["Int"]["input"]>;
   last?: InputMaybe<Scalars["Int"]["input"]>;
   search?: InputMaybe<Scalars["String"]["input"]>;
   select?: InputMaybe<Array<Scalars["String"]["input"]>>;
-  sort?: InputMaybe<Array<ShopifyGdprRequestSort>>;
+  sort?: InputMaybe<Array<SprocketSort>>;
 };
 
-export type InternalQueriesListShopifyProductArgs = {
+export type InternalQueriesListStudentArgs = {
   after?: InputMaybe<Scalars["String"]["input"]>;
   before?: InputMaybe<Scalars["String"]["input"]>;
-  filter?: InputMaybe<Array<ShopifyProductFilter>>;
+  filter?: InputMaybe<Array<StudentFilter>>;
   first?: InputMaybe<Scalars["Int"]["input"]>;
   last?: InputMaybe<Scalars["Int"]["input"]>;
   search?: InputMaybe<Scalars["String"]["input"]>;
   select?: InputMaybe<Array<Scalars["String"]["input"]>>;
-  sort?: InputMaybe<Array<ShopifyProductSort>>;
+  sort?: InputMaybe<Array<StudentSort>>;
 };
 
-export type InternalQueriesListShopifyProductImageArgs = {
+export type InternalQueriesListTeacherArgs = {
   after?: InputMaybe<Scalars["String"]["input"]>;
   before?: InputMaybe<Scalars["String"]["input"]>;
-  filter?: InputMaybe<Array<ShopifyProductImageFilter>>;
+  filter?: InputMaybe<Array<TeacherFilter>>;
   first?: InputMaybe<Scalars["Int"]["input"]>;
   last?: InputMaybe<Scalars["Int"]["input"]>;
   search?: InputMaybe<Scalars["String"]["input"]>;
   select?: InputMaybe<Array<Scalars["String"]["input"]>>;
-  sort?: InputMaybe<Array<ShopifyProductImageSort>>;
-};
-
-export type InternalQueriesListShopifyProductOptionArgs = {
-  after?: InputMaybe<Scalars["String"]["input"]>;
-  before?: InputMaybe<Scalars["String"]["input"]>;
-  filter?: InputMaybe<Array<ShopifyProductOptionFilter>>;
-  first?: InputMaybe<Scalars["Int"]["input"]>;
-  last?: InputMaybe<Scalars["Int"]["input"]>;
-  search?: InputMaybe<Scalars["String"]["input"]>;
-  select?: InputMaybe<Array<Scalars["String"]["input"]>>;
-  sort?: InputMaybe<Array<ShopifyProductOptionSort>>;
-};
-
-export type InternalQueriesListShopifyProductVariantArgs = {
-  after?: InputMaybe<Scalars["String"]["input"]>;
-  before?: InputMaybe<Scalars["String"]["input"]>;
-  filter?: InputMaybe<Array<ShopifyProductVariantFilter>>;
-  first?: InputMaybe<Scalars["Int"]["input"]>;
-  last?: InputMaybe<Scalars["Int"]["input"]>;
-  search?: InputMaybe<Scalars["String"]["input"]>;
-  select?: InputMaybe<Array<Scalars["String"]["input"]>>;
-  sort?: InputMaybe<Array<ShopifyProductVariantSort>>;
-};
-
-export type InternalQueriesListShopifyShopArgs = {
-  after?: InputMaybe<Scalars["String"]["input"]>;
-  before?: InputMaybe<Scalars["String"]["input"]>;
-  filter?: InputMaybe<Array<ShopifyShopFilter>>;
-  first?: InputMaybe<Scalars["Int"]["input"]>;
-  last?: InputMaybe<Scalars["Int"]["input"]>;
-  search?: InputMaybe<Scalars["String"]["input"]>;
-  select?: InputMaybe<Array<Scalars["String"]["input"]>>;
-  sort?: InputMaybe<Array<ShopifyShopSort>>;
-};
-
-export type InternalQueriesListShopifySyncArgs = {
-  after?: InputMaybe<Scalars["String"]["input"]>;
-  before?: InputMaybe<Scalars["String"]["input"]>;
-  filter?: InputMaybe<Array<ShopifySyncFilter>>;
-  first?: InputMaybe<Scalars["Int"]["input"]>;
-  last?: InputMaybe<Scalars["Int"]["input"]>;
-  search?: InputMaybe<Scalars["String"]["input"]>;
-  select?: InputMaybe<Array<Scalars["String"]["input"]>>;
-  sort?: InputMaybe<Array<ShopifySyncSort>>;
+  sort?: InputMaybe<Array<TeacherSort>>;
 };
 
 export type InternalQueriesListUserArgs = {
@@ -7423,12 +8111,23 @@ export type InternalQueriesListWidgetArgs = {
   sort?: InputMaybe<Array<WidgetSort>>;
 };
 
-export type InternalQueriesModelAArgs = {
+export type InternalQueriesListWidgetImageArgs = {
+  after?: InputMaybe<Scalars["String"]["input"]>;
+  before?: InputMaybe<Scalars["String"]["input"]>;
+  filter?: InputMaybe<Array<WidgetImageFilter>>;
+  first?: InputMaybe<Scalars["Int"]["input"]>;
+  last?: InputMaybe<Scalars["Int"]["input"]>;
+  search?: InputMaybe<Scalars["String"]["input"]>;
+  select?: InputMaybe<Array<Scalars["String"]["input"]>>;
+  sort?: InputMaybe<Array<WidgetImageSort>>;
+};
+
+export type InternalQueriesRegistrationArgs = {
   id: Scalars["GadgetID"]["input"];
   select?: InputMaybe<Array<Scalars["String"]["input"]>>;
 };
 
-export type InternalQueriesPartArgs = {
+export type InternalQueriesSampleModelToTestReallyLongModelNamesArgs = {
   id: Scalars["GadgetID"]["input"];
   select?: InputMaybe<Array<Scalars["String"]["input"]>>;
 };
@@ -7443,37 +8142,17 @@ export type InternalQueriesSessionArgs = {
   select?: InputMaybe<Array<Scalars["String"]["input"]>>;
 };
 
-export type InternalQueriesShopifyGdprRequestArgs = {
+export type InternalQueriesSprocketArgs = {
   id: Scalars["GadgetID"]["input"];
   select?: InputMaybe<Array<Scalars["String"]["input"]>>;
 };
 
-export type InternalQueriesShopifyProductArgs = {
+export type InternalQueriesStudentArgs = {
   id: Scalars["GadgetID"]["input"];
   select?: InputMaybe<Array<Scalars["String"]["input"]>>;
 };
 
-export type InternalQueriesShopifyProductImageArgs = {
-  id: Scalars["GadgetID"]["input"];
-  select?: InputMaybe<Array<Scalars["String"]["input"]>>;
-};
-
-export type InternalQueriesShopifyProductOptionArgs = {
-  id: Scalars["GadgetID"]["input"];
-  select?: InputMaybe<Array<Scalars["String"]["input"]>>;
-};
-
-export type InternalQueriesShopifyProductVariantArgs = {
-  id: Scalars["GadgetID"]["input"];
-  select?: InputMaybe<Array<Scalars["String"]["input"]>>;
-};
-
-export type InternalQueriesShopifyShopArgs = {
-  id: Scalars["GadgetID"]["input"];
-  select?: InputMaybe<Array<Scalars["String"]["input"]>>;
-};
-
-export type InternalQueriesShopifySyncArgs = {
+export type InternalQueriesTeacherArgs = {
   id: Scalars["GadgetID"]["input"];
   select?: InputMaybe<Array<Scalars["String"]["input"]>>;
 };
@@ -7488,12 +8167,72 @@ export type InternalQueriesWidgetArgs = {
   select?: InputMaybe<Array<Scalars["String"]["input"]>>;
 };
 
+export type InternalQueriesWidgetImageArgs = {
+  id: Scalars["GadgetID"]["input"];
+  select?: InputMaybe<Array<Scalars["String"]["input"]>>;
+};
+
+export type InternalRegistrationInput = {
+  course?: InputMaybe<InternalBelongsToInput>;
+  createdAt?: InputMaybe<Scalars["DateTime"]["input"]>;
+  id?: InputMaybe<Scalars["GadgetID"]["input"]>;
+  state?: InputMaybe<Scalars["RecordState"]["input"]>;
+  stateHistory?: InputMaybe<Scalars["RecordState"]["input"]>;
+  student?: InputMaybe<InternalBelongsToInput>;
+  updatedAt?: InputMaybe<Scalars["DateTime"]["input"]>;
+};
+
+/** A connection to a list of InternalRegistrationRecord items. */
+export type InternalRegistrationRecordConnection = {
+  __typename?: "InternalRegistrationRecordConnection";
+  /** A list of edges. */
+  edges: Array<InternalRegistrationRecordEdge>;
+  /** Information to aid in pagination. */
+  pageInfo: PageInfo;
+};
+
+/** An edge in a InternalRegistrationRecord connection. */
+export type InternalRegistrationRecordEdge = {
+  __typename?: "InternalRegistrationRecordEdge";
+  /** A cursor for use in pagination */
+  cursor: Scalars["String"]["output"];
+  /** The item at the end of the edge */
+  node: Scalars["InternalRegistrationRecord"]["output"];
+};
+
+export type InternalSampleModelToTestReallyLongModelNamesInput = {
+  createdAt?: InputMaybe<Scalars["DateTime"]["input"]>;
+  id?: InputMaybe<Scalars["GadgetID"]["input"]>;
+  state?: InputMaybe<Scalars["RecordState"]["input"]>;
+  stateHistory?: InputMaybe<Scalars["RecordState"]["input"]>;
+  title?: InputMaybe<Scalars["String"]["input"]>;
+  updatedAt?: InputMaybe<Scalars["DateTime"]["input"]>;
+};
+
+/** A connection to a list of InternalSampleModelToTestReallyLongModelNamesRecord items. */
+export type InternalSampleModelToTestReallyLongModelNamesRecordConnection = {
+  __typename?: "InternalSampleModelToTestReallyLongModelNamesRecordConnection";
+  /** A list of edges. */
+  edges: Array<InternalSampleModelToTestReallyLongModelNamesRecordEdge>;
+  /** Information to aid in pagination. */
+  pageInfo: PageInfo;
+};
+
+/** An edge in a InternalSampleModelToTestReallyLongModelNamesRecord connection. */
+export type InternalSampleModelToTestReallyLongModelNamesRecordEdge = {
+  __typename?: "InternalSampleModelToTestReallyLongModelNamesRecordEdge";
+  /** A cursor for use in pagination */
+  cursor: Scalars["String"]["output"];
+  /** The item at the end of the edge */
+  node: Scalars["InternalSampleModelToTestReallyLongModelNamesRecord"]["output"];
+};
+
 export type InternalSectionInput = {
   createdAt?: InputMaybe<Scalars["DateTime"]["input"]>;
   id?: InputMaybe<Scalars["GadgetID"]["input"]>;
-  name?: InputMaybe<Scalars["String"]["input"]>;
   state?: InputMaybe<Scalars["RecordState"]["input"]>;
   stateHistory?: InputMaybe<Scalars["RecordState"]["input"]>;
+  title?: InputMaybe<Scalars["String"]["input"]>;
   updatedAt?: InputMaybe<Scalars["DateTime"]["input"]>;
 };
 
@@ -7518,10 +8257,6 @@ export type InternalSectionRecordEdge = {
 export type InternalSessionInput = {
   createdAt?: InputMaybe<Scalars["DateTime"]["input"]>;
   id?: InputMaybe<Scalars["GadgetID"]["input"]>;
-  /** A string list of Gadget platform Role keys to assign to this record */
-  roles?: InputMaybe<Array<Scalars["String"]["input"]>>;
-  shop?: InputMaybe<InternalBelongsToInput>;
-  shopifySID?: InputMaybe<Scalars["String"]["input"]>;
   state?: InputMaybe<Scalars["RecordState"]["input"]>;
   stateHistory?: InputMaybe<Scalars["RecordState"]["input"]>;
   updatedAt?: InputMaybe<Scalars["DateTime"]["input"]>;
@@ -7546,341 +8281,39 @@ export type InternalSessionRecordEdge = {
   node: Scalars["InternalSessionRecord"]["output"];
 };
 
-export type InternalShopifyGdprRequestInput = {
-  createdAt?: InputMaybe<Scalars["DateTime"]["input"]>;
-  id?: InputMaybe<Scalars["GadgetID"]["input"]>;
-  payload?: InputMaybe<Scalars["JSON"]["input"]>;
-  shop?: InputMaybe<InternalBelongsToInput>;
-  state?: InputMaybe<Scalars["RecordState"]["input"]>;
-  stateHistory?: InputMaybe<Scalars["RecordState"]["input"]>;
-  topic?: InputMaybe<Scalars["ShopifyGdprRequestTopicEnum"]["input"]>;
-  updatedAt?: InputMaybe<Scalars["DateTime"]["input"]>;
+export type InternalSprocketAtomicsInput = {
+  /** Numeric atomic commands for operating on ratio. */
+  ratio?: InputMaybe<Array<NumericAtomicFieldUpdateInput>>;
 };
 
-/** A connection to a list of InternalShopifyGdprRequestRecord items. */
-export type InternalShopifyGdprRequestRecordConnection = {
-  __typename?: "InternalShopifyGdprRequestRecordConnection";
-  /** A list of edges. */
-  edges: Array<InternalShopifyGdprRequestRecordEdge>;
-  /** Information to aid in pagination. */
-  pageInfo: PageInfo;
-};
-
-/** An edge in a InternalShopifyGdprRequestRecord connection. */
-export type InternalShopifyGdprRequestRecordEdge = {
-  __typename?: "InternalShopifyGdprRequestRecordEdge";
-  /** A cursor for use in pagination */
-  cursor: Scalars["String"]["output"];
-  /** The item at the end of the edge */
-  node: Scalars["InternalShopifyGdprRequestRecord"]["output"];
-};
-
-export type InternalShopifyProductImageAtomicsInput = {
-  /** Numeric atomic commands for operating on height. */
-  height?: InputMaybe<Array<NumericAtomicFieldUpdateInput>>;
-  /** Numeric atomic commands for operating on position. */
-  position?: InputMaybe<Array<NumericAtomicFieldUpdateInput>>;
-  /** Numeric atomic commands for operating on width. */
-  width?: InputMaybe<Array<NumericAtomicFieldUpdateInput>>;
-};
-
-export type InternalShopifyProductImageInput = {
+export type InternalSprocketInput = {
   /** An optional list of atomically applied commands for race-safe mutations of the record */
-  _atomics?: InputMaybe<InternalShopifyProductImageAtomicsInput>;
-  alt?: InputMaybe<Scalars["String"]["input"]>;
+  _atomics?: InputMaybe<InternalSprocketAtomicsInput>;
   createdAt?: InputMaybe<Scalars["DateTime"]["input"]>;
-  height?: InputMaybe<Scalars["Float"]["input"]>;
+  gizmo?: InputMaybe<InternalBelongsToInput>;
   id?: InputMaybe<Scalars["GadgetID"]["input"]>;
-  position?: InputMaybe<Scalars["Float"]["input"]>;
-  product?: InputMaybe<InternalBelongsToInput>;
-  shop?: InputMaybe<InternalBelongsToInput>;
-  shopifyCreatedAt?: InputMaybe<Scalars["DateTime"]["input"]>;
-  shopifyUpdatedAt?: InputMaybe<Scalars["DateTime"]["input"]>;
-  source?: InputMaybe<Scalars["String"]["input"]>;
+  ratio?: InputMaybe<Scalars["Float"]["input"]>;
   state?: InputMaybe<Scalars["RecordState"]["input"]>;
   stateHistory?: InputMaybe<Scalars["RecordState"]["input"]>;
   updatedAt?: InputMaybe<Scalars["DateTime"]["input"]>;
-  width?: InputMaybe<Scalars["Float"]["input"]>;
 };
 
-/** A connection to a list of InternalShopifyProductImageRecord items. */
-export type InternalShopifyProductImageRecordConnection = {
-  __typename?: "InternalShopifyProductImageRecordConnection";
+/** A connection to a list of InternalSprocketRecord items. */
+export type InternalSprocketRecordConnection = {
+  __typename?: "InternalSprocketRecordConnection";
   /** A list of edges. */
-  edges: Array<InternalShopifyProductImageRecordEdge>;
+  edges: Array<InternalSprocketRecordEdge>;
   /** Information to aid in pagination. */
   pageInfo: PageInfo;
 };
 
-/** An edge in a InternalShopifyProductImageRecord connection. */
-export type InternalShopifyProductImageRecordEdge = {
-  __typename?: "InternalShopifyProductImageRecordEdge";
+/** An edge in a InternalSprocketRecord connection. */
+export type InternalSprocketRecordEdge = {
+  __typename?: "InternalSprocketRecordEdge";
   /** A cursor for use in pagination */
   cursor: Scalars["String"]["output"];
   /** The item at the end of the edge */
-  node: Scalars["InternalShopifyProductImageRecord"]["output"];
-};
-
-export type InternalShopifyProductInput = {
-  body?: InputMaybe<Scalars["String"]["input"]>;
-  category?: InputMaybe<Scalars["JSON"]["input"]>;
-  compareAtPriceRange?: InputMaybe<Scalars["JSON"]["input"]>;
-  createdAt?: InputMaybe<Scalars["DateTime"]["input"]>;
-  handle?: InputMaybe<Scalars["String"]["input"]>;
-  id?: InputMaybe<Scalars["GadgetID"]["input"]>;
-  productCategory?: InputMaybe<Scalars["JSON"]["input"]>;
-  productType?: InputMaybe<Scalars["String"]["input"]>;
-  publishedAt?: InputMaybe<Scalars["DateTime"]["input"]>;
-  shop?: InputMaybe<InternalBelongsToInput>;
-  shopifyCreatedAt?: InputMaybe<Scalars["DateTime"]["input"]>;
-  shopifyUpdatedAt?: InputMaybe<Scalars["DateTime"]["input"]>;
-  state?: InputMaybe<Scalars["RecordState"]["input"]>;
-  stateHistory?: InputMaybe<Scalars["RecordState"]["input"]>;
-  status?: InputMaybe<Scalars["ShopifyProductStatusEnum"]["input"]>;
-  tags?: InputMaybe<Scalars["JSON"]["input"]>;
-  templateSuffix?: InputMaybe<Scalars["String"]["input"]>;
-  title?: InputMaybe<Scalars["String"]["input"]>;
-  updatedAt?: InputMaybe<Scalars["DateTime"]["input"]>;
-  vendor?: InputMaybe<Scalars["String"]["input"]>;
-};
-
-export type InternalShopifyProductOptionAtomicsInput = {
-  /** Numeric atomic commands for operating on position. */
-  position?: InputMaybe<Array<NumericAtomicFieldUpdateInput>>;
-};
-
-export type InternalShopifyProductOptionInput = {
-  /** An optional list of atomically applied commands for race-safe mutations of the record */
-  _atomics?: InputMaybe<InternalShopifyProductOptionAtomicsInput>;
-  createdAt?: InputMaybe<Scalars["DateTime"]["input"]>;
-  id?: InputMaybe<Scalars["GadgetID"]["input"]>;
-  name?: InputMaybe<Scalars["String"]["input"]>;
-  position?: InputMaybe<Scalars["Float"]["input"]>;
-  product?: InputMaybe<InternalBelongsToInput>;
-  shop?: InputMaybe<InternalBelongsToInput>;
-  state?: InputMaybe<Scalars["RecordState"]["input"]>;
-  stateHistory?: InputMaybe<Scalars["RecordState"]["input"]>;
-  updatedAt?: InputMaybe<Scalars["DateTime"]["input"]>;
-  values?: InputMaybe<Scalars["JSON"]["input"]>;
-};
-
-/** A connection to a list of InternalShopifyProductOptionRecord items. */
-export type InternalShopifyProductOptionRecordConnection = {
-  __typename?: "InternalShopifyProductOptionRecordConnection";
-  /** A list of edges. */
-  edges: Array<InternalShopifyProductOptionRecordEdge>;
-  /** Information to aid in pagination. */
-  pageInfo: PageInfo;
-};
-
-/** An edge in a InternalShopifyProductOptionRecord connection. */
-export type InternalShopifyProductOptionRecordEdge = {
-  __typename?: "InternalShopifyProductOptionRecordEdge";
-  /** A cursor for use in pagination */
-  cursor: Scalars["String"]["output"];
-  /** The item at the end of the edge */
-  node: Scalars["InternalShopifyProductOptionRecord"]["output"];
-};
-
-/** A connection to a list of InternalShopifyProductRecord items. */
-export type InternalShopifyProductRecordConnection = {
-  __typename?: "InternalShopifyProductRecordConnection";
-  /** A list of edges. */
-  edges: Array<InternalShopifyProductRecordEdge>;
-  /** Information to aid in pagination. */
-  pageInfo: PageInfo;
-};
-
-/** An edge in a InternalShopifyProductRecord connection. */
-export type InternalShopifyProductRecordEdge = {
-  __typename?: "InternalShopifyProductRecordEdge";
-  /** A cursor for use in pagination */
-  cursor: Scalars["String"]["output"];
-  /** The item at the end of the edge */
-  node: Scalars["InternalShopifyProductRecord"]["output"];
-};
-
-export type InternalShopifyProductVariantAtomicsInput = {
-  /** Numeric atomic commands for operating on inventoryQuantity. */
-  inventoryQuantity?: InputMaybe<Array<NumericAtomicFieldUpdateInput>>;
-  /** Numeric atomic commands for operating on position. */
-  position?: InputMaybe<Array<NumericAtomicFieldUpdateInput>>;
-};
-
-export type InternalShopifyProductVariantInput = {
-  /** An optional list of atomically applied commands for race-safe mutations of the record */
-  _atomics?: InputMaybe<InternalShopifyProductVariantAtomicsInput>;
-  barcode?: InputMaybe<Scalars["String"]["input"]>;
-  compareAtPrice?: InputMaybe<Scalars["String"]["input"]>;
-  createdAt?: InputMaybe<Scalars["DateTime"]["input"]>;
-  id?: InputMaybe<Scalars["GadgetID"]["input"]>;
-  inventoryPolicy?: InputMaybe<Scalars["String"]["input"]>;
-  inventoryQuantity?: InputMaybe<Scalars["Float"]["input"]>;
-  option1?: InputMaybe<Scalars["String"]["input"]>;
-  option2?: InputMaybe<Scalars["String"]["input"]>;
-  option3?: InputMaybe<Scalars["String"]["input"]>;
-  position?: InputMaybe<Scalars["Float"]["input"]>;
-  presentmentPrices?: InputMaybe<Scalars["JSON"]["input"]>;
-  price?: InputMaybe<Scalars["String"]["input"]>;
-  product?: InputMaybe<InternalBelongsToInput>;
-  productImage?: InputMaybe<InternalBelongsToInput>;
-  selectedOptions?: InputMaybe<Scalars["JSON"]["input"]>;
-  shop?: InputMaybe<InternalBelongsToInput>;
-  shopifyCreatedAt?: InputMaybe<Scalars["DateTime"]["input"]>;
-  shopifyUpdatedAt?: InputMaybe<Scalars["DateTime"]["input"]>;
-  sku?: InputMaybe<Scalars["String"]["input"]>;
-  state?: InputMaybe<Scalars["RecordState"]["input"]>;
-  stateHistory?: InputMaybe<Scalars["RecordState"]["input"]>;
-  taxCode?: InputMaybe<Scalars["String"]["input"]>;
-  taxable?: InputMaybe<Scalars["Boolean"]["input"]>;
-  title?: InputMaybe<Scalars["String"]["input"]>;
-  updatedAt?: InputMaybe<Scalars["DateTime"]["input"]>;
-};
-
-/** A connection to a list of InternalShopifyProductVariantRecord items. */
-export type InternalShopifyProductVariantRecordConnection = {
-  __typename?: "InternalShopifyProductVariantRecordConnection";
-  /** A list of edges. */
-  edges: Array<InternalShopifyProductVariantRecordEdge>;
-  /** Information to aid in pagination. */
-  pageInfo: PageInfo;
-};
-
-/** An edge in a InternalShopifyProductVariantRecord connection. */
-export type InternalShopifyProductVariantRecordEdge = {
-  __typename?: "InternalShopifyProductVariantRecordEdge";
-  /** A cursor for use in pagination */
-  cursor: Scalars["String"]["output"];
-  /** The item at the end of the edge */
-  node: Scalars["InternalShopifyProductVariantRecord"]["output"];
-};
-
-export type InternalShopifyShopAtomicsInput = {
-  /** Numeric atomic commands for operating on latitude. */
-  latitude?: InputMaybe<Array<NumericAtomicFieldUpdateInput>>;
-  /** Numeric atomic commands for operating on longitude. */
-  longitude?: InputMaybe<Array<NumericAtomicFieldUpdateInput>>;
-};
-
-export type InternalShopifyShopInput = {
-  /** An optional list of atomically applied commands for race-safe mutations of the record */
-  _atomics?: InputMaybe<InternalShopifyShopAtomicsInput>;
-  accessToken?: InputMaybe<Scalars["String"]["input"]>;
-  address1?: InputMaybe<Scalars["String"]["input"]>;
-  address2?: InputMaybe<Scalars["String"]["input"]>;
-  checkoutApiSupported?: InputMaybe<Scalars["Boolean"]["input"]>;
-  city?: InputMaybe<Scalars["String"]["input"]>;
-  cookieConsentLevel?: InputMaybe<Scalars["String"]["input"]>;
-  country?: InputMaybe<Scalars["String"]["input"]>;
-  countryCode?: InputMaybe<Scalars["String"]["input"]>;
-  countryName?: InputMaybe<Scalars["String"]["input"]>;
-  countyTaxes?: InputMaybe<Scalars["JSON"]["input"]>;
-  createdAt?: InputMaybe<Scalars["DateTime"]["input"]>;
-  currency?: InputMaybe<Scalars["String"]["input"]>;
-  customerAccountsV2?: InputMaybe<Scalars["JSON"]["input"]>;
-  customerEmail?: InputMaybe<Scalars["String"]["input"]>;
-  disabledWebhooks?: InputMaybe<Scalars["JSON"]["input"]>;
-  domain?: InputMaybe<Scalars["String"]["input"]>;
-  eligibleForCardReaderGiveaway?: InputMaybe<Scalars["Boolean"]["input"]>;
-  eligibleForPayments?: InputMaybe<Scalars["Boolean"]["input"]>;
-  email?: InputMaybe<Scalars["String"]["input"]>;
-  enabledPresentmentCurrencies?: InputMaybe<Scalars["JSON"]["input"]>;
-  finances?: InputMaybe<Scalars["Boolean"]["input"]>;
-  forceSsl?: InputMaybe<Scalars["Boolean"]["input"]>;
-  googleAppsDomain?: InputMaybe<Scalars["String"]["input"]>;
-  googleAppsLoginEnabled?: InputMaybe<Scalars["Boolean"]["input"]>;
-  grantedScopes?: InputMaybe<Scalars["JSON"]["input"]>;
-  hasDiscounts?: InputMaybe<Scalars["Boolean"]["input"]>;
-  hasGiftCards?: InputMaybe<Scalars["Boolean"]["input"]>;
-  hasStorefront?: InputMaybe<Scalars["Boolean"]["input"]>;
-  ianaTimezone?: InputMaybe<Scalars["String"]["input"]>;
-  id?: InputMaybe<Scalars["GadgetID"]["input"]>;
-  installedViaApiKey?: InputMaybe<Scalars["String"]["input"]>;
-  latitude?: InputMaybe<Scalars["Float"]["input"]>;
-  longitude?: InputMaybe<Scalars["Float"]["input"]>;
-  marketingSmsContentEnabledAtCheckout?: InputMaybe<Scalars["Boolean"]["input"]>;
-  moneyFormat?: InputMaybe<Scalars["String"]["input"]>;
-  moneyInEmailsFormat?: InputMaybe<Scalars["String"]["input"]>;
-  moneyWithCurrencyFormat?: InputMaybe<Scalars["String"]["input"]>;
-  moneyWithCurrencyInEmailsFormat?: InputMaybe<Scalars["String"]["input"]>;
-  multiLocationEnabled?: InputMaybe<Scalars["Boolean"]["input"]>;
-  myshopifyDomain?: InputMaybe<Scalars["String"]["input"]>;
-  name?: InputMaybe<Scalars["String"]["input"]>;
-  passwordEnabled?: InputMaybe<Scalars["Boolean"]["input"]>;
-  phone?: InputMaybe<Scalars["String"]["input"]>;
-  planDisplayName?: InputMaybe<Scalars["String"]["input"]>;
-  planName?: InputMaybe<Scalars["String"]["input"]>;
-  preLaunchEnabled?: InputMaybe<Scalars["Boolean"]["input"]>;
-  primaryLocale?: InputMaybe<Scalars["String"]["input"]>;
-  province?: InputMaybe<Scalars["String"]["input"]>;
-  provinceCode?: InputMaybe<Scalars["String"]["input"]>;
-  registeredWebhooks?: InputMaybe<Scalars["JSON"]["input"]>;
-  requiresExtraPaymentsAgreement?: InputMaybe<Scalars["Boolean"]["input"]>;
-  setupRequired?: InputMaybe<Scalars["Boolean"]["input"]>;
-  shopOwner?: InputMaybe<Scalars["String"]["input"]>;
-  shopifyCreatedAt?: InputMaybe<Scalars["DateTime"]["input"]>;
-  shopifyUpdatedAt?: InputMaybe<Scalars["DateTime"]["input"]>;
-  source?: InputMaybe<Scalars["String"]["input"]>;
-  state?: InputMaybe<Scalars["RecordState"]["input"]>;
-  stateHistory?: InputMaybe<Scalars["RecordState"]["input"]>;
-  taxShipping?: InputMaybe<Scalars["Boolean"]["input"]>;
-  taxesIncluded?: InputMaybe<Scalars["Boolean"]["input"]>;
-  timezone?: InputMaybe<Scalars["String"]["input"]>;
-  transactionalSmsDisabled?: InputMaybe<Scalars["Boolean"]["input"]>;
-  updatedAt?: InputMaybe<Scalars["DateTime"]["input"]>;
-  weightUnit?: InputMaybe<Scalars["String"]["input"]>;
-  zipCode?: InputMaybe<Scalars["String"]["input"]>;
-};
-
-/** A connection to a list of InternalShopifyShopRecord items. */
-export type InternalShopifyShopRecordConnection = {
-  __typename?: "InternalShopifyShopRecordConnection";
-  /** A list of edges. */
-  edges: Array<InternalShopifyShopRecordEdge>;
-  /** Information to aid in pagination. */
-  pageInfo: PageInfo;
-};
-
-/** An edge in a InternalShopifyShopRecord connection. */
-export type InternalShopifyShopRecordEdge = {
-  __typename?: "InternalShopifyShopRecordEdge";
-  /** A cursor for use in pagination */
-  cursor: Scalars["String"]["output"];
-  /** The item at the end of the edge */
-  node: Scalars["InternalShopifyShopRecord"]["output"];
-};
-
-export type InternalShopifySyncInput = {
-  createdAt?: InputMaybe<Scalars["DateTime"]["input"]>;
-  domain?: InputMaybe<Scalars["String"]["input"]>;
-  errorDetails?: InputMaybe<Scalars["String"]["input"]>;
-  errorMessage?: InputMaybe<Scalars["String"]["input"]>;
-  force?: InputMaybe<Scalars["Boolean"]["input"]>;
-  id?: InputMaybe<Scalars["GadgetID"]["input"]>;
-  models?: InputMaybe<Scalars["JSON"]["input"]>;
-  shop?: InputMaybe<InternalBelongsToInput>;
-  state?: InputMaybe<Scalars["RecordState"]["input"]>;
-  stateHistory?: InputMaybe<Scalars["RecordState"]["input"]>;
-  syncSince?: InputMaybe<Scalars["DateTime"]["input"]>;
-  updatedAt?: InputMaybe<Scalars["DateTime"]["input"]>;
-};
-
-/** A connection to a list of InternalShopifySyncRecord items. */
-export type InternalShopifySyncRecordConnection = {
-  __typename?: "InternalShopifySyncRecordConnection";
-  /** A list of edges. */
-  edges: Array<InternalShopifySyncRecordEdge>;
-  /** Information to aid in pagination. */
-  pageInfo: PageInfo;
-};
-
-/** An edge in a InternalShopifySyncRecord connection. */
-export type InternalShopifySyncRecordEdge = {
-  __typename?: "InternalShopifySyncRecordEdge";
-  /** A cursor for use in pagination */
-  cursor: Scalars["String"]["output"];
-  /** The item at the end of the edge */
-  node: Scalars["InternalShopifySyncRecord"]["output"];
+  node: Scalars["InternalSprocketRecord"]["output"];
 };
 
 /** Input object supporting updating a value for a File field within the Internal API. Includes the storage token for the file which is it's unique identifier, as well as some metadata for the file. Note: the Internal API doesn't support uploading files, just storing the results of prior uploads. Actions must be used to upload files. */
@@ -7897,24 +8330,112 @@ export type InternalStoredFileInput = {
   url?: InputMaybe<Scalars["String"]["input"]>;
 };
 
-export type InternalUpdateAutoTableTestRelatedModelResult = {
-  __typename?: "InternalUpdateAutoTableTestRelatedModelResult";
-  _autoTableTestRelatedModel?: Maybe<Scalars["InternalAutoTableTestRelatedModelRecord"]["output"]>;
+export type InternalStudentInput = {
+  born?: InputMaybe<Scalars["DateOrDateTime"]["input"]>;
+  city?: InputMaybe<InternalBelongsToInput>;
+  createdAt?: InputMaybe<Scalars["DateTime"]["input"]>;
+  id?: InputMaybe<Scalars["GadgetID"]["input"]>;
+  male?: InputMaybe<Scalars["Boolean"]["input"]>;
+  name?: InputMaybe<Scalars["String"]["input"]>;
+  state?: InputMaybe<Scalars["RecordState"]["input"]>;
+  stateHistory?: InputMaybe<Scalars["RecordState"]["input"]>;
+  updatedAt?: InputMaybe<Scalars["DateTime"]["input"]>;
+};
+
+/** A connection to a list of InternalStudentRecord items. */
+export type InternalStudentRecordConnection = {
+  __typename?: "InternalStudentRecordConnection";
+  /** A list of edges. */
+  edges: Array<InternalStudentRecordEdge>;
+  /** Information to aid in pagination. */
+  pageInfo: PageInfo;
+};
+
+/** An edge in a InternalStudentRecord connection. */
+export type InternalStudentRecordEdge = {
+  __typename?: "InternalStudentRecordEdge";
+  /** A cursor for use in pagination */
+  cursor: Scalars["String"]["output"];
+  /** The item at the end of the edge */
+  node: Scalars["InternalStudentRecord"]["output"];
+};
+
+export type InternalTeacherInput = {
+  born?: InputMaybe<Scalars["DateOrDateTime"]["input"]>;
+  city?: InputMaybe<InternalBelongsToInput>;
+  createdAt?: InputMaybe<Scalars["DateTime"]["input"]>;
+  id?: InputMaybe<Scalars["GadgetID"]["input"]>;
+  male?: InputMaybe<Scalars["Boolean"]["input"]>;
+  name?: InputMaybe<Scalars["String"]["input"]>;
+  state?: InputMaybe<Scalars["RecordState"]["input"]>;
+  stateHistory?: InputMaybe<Scalars["RecordState"]["input"]>;
+  updatedAt?: InputMaybe<Scalars["DateTime"]["input"]>;
+};
+
+/** A connection to a list of InternalTeacherRecord items. */
+export type InternalTeacherRecordConnection = {
+  __typename?: "InternalTeacherRecordConnection";
+  /** A list of edges. */
+  edges: Array<InternalTeacherRecordEdge>;
+  /** Information to aid in pagination. */
+  pageInfo: PageInfo;
+};
+
+/** An edge in a InternalTeacherRecord connection. */
+export type InternalTeacherRecordEdge = {
+  __typename?: "InternalTeacherRecordEdge";
+  /** A cursor for use in pagination */
+  cursor: Scalars["String"]["output"];
+  /** The item at the end of the edge */
+  node: Scalars["InternalTeacherRecord"]["output"];
+};
+
+export type InternalUpdateBillingAccountResult = {
+  __typename?: "InternalUpdateBillingAccountResult";
+  billingAccount?: Maybe<Scalars["InternalBillingAccountRecord"]["output"]>;
   errors?: Maybe<Array<ExecutionError>>;
   success: Scalars["Boolean"]["output"];
 };
 
-export type InternalUpdateAutoTableTestResult = {
-  __typename?: "InternalUpdateAutoTableTestResult";
-  autoTableTest?: Maybe<Scalars["InternalAutoTableTestRecord"]["output"]>;
+export type InternalUpdateCityResult = {
+  __typename?: "InternalUpdateCityResult";
+  city?: Maybe<Scalars["InternalCityRecord"]["output"]>;
   errors?: Maybe<Array<ExecutionError>>;
   success: Scalars["Boolean"]["output"];
 };
 
-export type InternalUpdateGameCityResult = {
-  __typename?: "InternalUpdateGameCityResult";
-  city?: Maybe<Scalars["InternalGameCityRecord"]["output"]>;
+export type InternalUpdateCourseResult = {
+  __typename?: "InternalUpdateCourseResult";
+  course?: Maybe<Scalars["InternalCourseRecord"]["output"]>;
   errors?: Maybe<Array<ExecutionError>>;
+  success: Scalars["Boolean"]["output"];
+};
+
+export type InternalUpdateCustomerResult = {
+  __typename?: "InternalUpdateCustomerResult";
+  customer?: Maybe<Scalars["InternalCustomerRecord"]["output"]>;
+  errors?: Maybe<Array<ExecutionError>>;
+  success: Scalars["Boolean"]["output"];
+};
+
+export type InternalUpdateEphemeralResult = {
+  __typename?: "InternalUpdateEphemeralResult";
+  ephemeral?: Maybe<Scalars["InternalEphemeralRecord"]["output"]>;
+  errors?: Maybe<Array<ExecutionError>>;
+  success: Scalars["Boolean"]["output"];
+};
+
+export type InternalUpdateFieldlessResult = {
+  __typename?: "InternalUpdateFieldlessResult";
+  errors?: Maybe<Array<ExecutionError>>;
+  fieldless?: Maybe<Scalars["InternalFieldlessRecord"]["output"]>;
+  success: Scalars["Boolean"]["output"];
+};
+
+export type InternalUpdateFriendshipResult = {
+  __typename?: "InternalUpdateFriendshipResult";
+  errors?: Maybe<Array<ExecutionError>>;
+  friendship?: Maybe<Scalars["InternalFriendshipRecord"]["output"]>;
   success: Scalars["Boolean"]["output"];
 };
 
@@ -7946,38 +8467,24 @@ export type InternalUpdateGizmoResult = {
   success: Scalars["Boolean"]["output"];
 };
 
-export type InternalUpdateHasManyThroughBaseModelResult = {
-  __typename?: "InternalUpdateHasManyThroughBaseModelResult";
-  baseModel?: Maybe<Scalars["InternalHasManyThroughBaseModelRecord"]["output"]>;
+export type InternalUpdateLandmarkStadiumResult = {
+  __typename?: "InternalUpdateLandmarkStadiumResult";
   errors?: Maybe<Array<ExecutionError>>;
+  stadium?: Maybe<Scalars["InternalLandmarkStadiumRecord"]["output"]>;
   success: Scalars["Boolean"]["output"];
 };
 
-export type InternalUpdateHasManyThroughJoinerModelResult = {
-  __typename?: "InternalUpdateHasManyThroughJoinerModelResult";
+export type InternalUpdateRegistrationResult = {
+  __typename?: "InternalUpdateRegistrationResult";
   errors?: Maybe<Array<ExecutionError>>;
-  joinerModel?: Maybe<Scalars["InternalHasManyThroughJoinerModelRecord"]["output"]>;
+  registration?: Maybe<Scalars["InternalRegistrationRecord"]["output"]>;
   success: Scalars["Boolean"]["output"];
 };
 
-export type InternalUpdateHasManyThroughSiblingModelResult = {
-  __typename?: "InternalUpdateHasManyThroughSiblingModelResult";
+export type InternalUpdateSampleModelToTestReallyLongModelNamesResult = {
+  __typename?: "InternalUpdateSampleModelToTestReallyLongModelNamesResult";
   errors?: Maybe<Array<ExecutionError>>;
-  siblingModel?: Maybe<Scalars["InternalHasManyThroughSiblingModelRecord"]["output"]>;
-  success: Scalars["Boolean"]["output"];
-};
-
-export type InternalUpdateModelAResult = {
-  __typename?: "InternalUpdateModelAResult";
-  errors?: Maybe<Array<ExecutionError>>;
-  modelA?: Maybe<Scalars["InternalModelARecord"]["output"]>;
-  success: Scalars["Boolean"]["output"];
-};
-
-export type InternalUpdatePartResult = {
-  __typename?: "InternalUpdatePartResult";
-  errors?: Maybe<Array<ExecutionError>>;
-  part?: Maybe<Scalars["InternalPartRecord"]["output"]>;
+  sampleModelToTestReallyLongModelNames?: Maybe<Scalars["InternalSampleModelToTestReallyLongModelNamesRecord"]["output"]>;
   success: Scalars["Boolean"]["output"];
 };
 
@@ -7995,53 +8502,25 @@ export type InternalUpdateSessionResult = {
   success: Scalars["Boolean"]["output"];
 };
 
-export type InternalUpdateShopifyGdprRequestResult = {
-  __typename?: "InternalUpdateShopifyGdprRequestResult";
+export type InternalUpdateSprocketResult = {
+  __typename?: "InternalUpdateSprocketResult";
   errors?: Maybe<Array<ExecutionError>>;
-  shopifyGdprRequest?: Maybe<Scalars["InternalShopifyGdprRequestRecord"]["output"]>;
+  sprocket?: Maybe<Scalars["InternalSprocketRecord"]["output"]>;
   success: Scalars["Boolean"]["output"];
 };
 
-export type InternalUpdateShopifyProductImageResult = {
-  __typename?: "InternalUpdateShopifyProductImageResult";
+export type InternalUpdateStudentResult = {
+  __typename?: "InternalUpdateStudentResult";
   errors?: Maybe<Array<ExecutionError>>;
-  shopifyProductImage?: Maybe<Scalars["InternalShopifyProductImageRecord"]["output"]>;
+  student?: Maybe<Scalars["InternalStudentRecord"]["output"]>;
   success: Scalars["Boolean"]["output"];
 };
 
-export type InternalUpdateShopifyProductOptionResult = {
-  __typename?: "InternalUpdateShopifyProductOptionResult";
+export type InternalUpdateTeacherResult = {
+  __typename?: "InternalUpdateTeacherResult";
   errors?: Maybe<Array<ExecutionError>>;
-  shopifyProductOption?: Maybe<Scalars["InternalShopifyProductOptionRecord"]["output"]>;
   success: Scalars["Boolean"]["output"];
-};
-
-export type InternalUpdateShopifyProductResult = {
-  __typename?: "InternalUpdateShopifyProductResult";
-  errors?: Maybe<Array<ExecutionError>>;
-  shopifyProduct?: Maybe<Scalars["InternalShopifyProductRecord"]["output"]>;
-  success: Scalars["Boolean"]["output"];
-};
-
-export type InternalUpdateShopifyProductVariantResult = {
-  __typename?: "InternalUpdateShopifyProductVariantResult";
-  errors?: Maybe<Array<ExecutionError>>;
-  shopifyProductVariant?: Maybe<Scalars["InternalShopifyProductVariantRecord"]["output"]>;
-  success: Scalars["Boolean"]["output"];
-};
-
-export type InternalUpdateShopifyShopResult = {
-  __typename?: "InternalUpdateShopifyShopResult";
-  errors?: Maybe<Array<ExecutionError>>;
-  shopifyShop?: Maybe<Scalars["InternalShopifyShopRecord"]["output"]>;
-  success: Scalars["Boolean"]["output"];
-};
-
-export type InternalUpdateShopifySyncResult = {
-  __typename?: "InternalUpdateShopifySyncResult";
-  errors?: Maybe<Array<ExecutionError>>;
-  shopifySync?: Maybe<Scalars["InternalShopifySyncRecord"]["output"]>;
-  success: Scalars["Boolean"]["output"];
+  teacher?: Maybe<Scalars["InternalTeacherRecord"]["output"]>;
 };
 
 export type InternalUpdateUserResult = {
@@ -8051,6 +8530,13 @@ export type InternalUpdateUserResult = {
   user?: Maybe<Scalars["InternalUserRecord"]["output"]>;
 };
 
+export type InternalUpdateWidgetImageResult = {
+  __typename?: "InternalUpdateWidgetImageResult";
+  errors?: Maybe<Array<ExecutionError>>;
+  success: Scalars["Boolean"]["output"];
+  widgetImage?: Maybe<Scalars["InternalWidgetImageRecord"]["output"]>;
+};
+
 export type InternalUpdateWidgetResult = {
   __typename?: "InternalUpdateWidgetResult";
   errors?: Maybe<Array<ExecutionError>>;
@@ -8058,24 +8544,52 @@ export type InternalUpdateWidgetResult = {
   widget?: Maybe<Scalars["InternalWidgetRecord"]["output"]>;
 };
 
-export type InternalUpsertAutoTableTestRelatedModelResult = {
-  __typename?: "InternalUpsertAutoTableTestRelatedModelResult";
-  _autoTableTestRelatedModel?: Maybe<Scalars["InternalAutoTableTestRelatedModelRecord"]["output"]>;
+export type InternalUpsertBillingAccountResult = {
+  __typename?: "InternalUpsertBillingAccountResult";
+  billingAccount?: Maybe<Scalars["InternalBillingAccountRecord"]["output"]>;
   errors?: Maybe<Array<ExecutionError>>;
   success: Scalars["Boolean"]["output"];
 };
 
-export type InternalUpsertAutoTableTestResult = {
-  __typename?: "InternalUpsertAutoTableTestResult";
-  autoTableTest?: Maybe<Scalars["InternalAutoTableTestRecord"]["output"]>;
+export type InternalUpsertCityResult = {
+  __typename?: "InternalUpsertCityResult";
+  city?: Maybe<Scalars["InternalCityRecord"]["output"]>;
   errors?: Maybe<Array<ExecutionError>>;
   success: Scalars["Boolean"]["output"];
 };
 
-export type InternalUpsertGameCityResult = {
-  __typename?: "InternalUpsertGameCityResult";
-  city?: Maybe<Scalars["InternalGameCityRecord"]["output"]>;
+export type InternalUpsertCourseResult = {
+  __typename?: "InternalUpsertCourseResult";
+  course?: Maybe<Scalars["InternalCourseRecord"]["output"]>;
   errors?: Maybe<Array<ExecutionError>>;
+  success: Scalars["Boolean"]["output"];
+};
+
+export type InternalUpsertCustomerResult = {
+  __typename?: "InternalUpsertCustomerResult";
+  customer?: Maybe<Scalars["InternalCustomerRecord"]["output"]>;
+  errors?: Maybe<Array<ExecutionError>>;
+  success: Scalars["Boolean"]["output"];
+};
+
+export type InternalUpsertEphemeralResult = {
+  __typename?: "InternalUpsertEphemeralResult";
+  ephemeral?: Maybe<Scalars["InternalEphemeralRecord"]["output"]>;
+  errors?: Maybe<Array<ExecutionError>>;
+  success: Scalars["Boolean"]["output"];
+};
+
+export type InternalUpsertFieldlessResult = {
+  __typename?: "InternalUpsertFieldlessResult";
+  errors?: Maybe<Array<ExecutionError>>;
+  fieldless?: Maybe<Scalars["InternalFieldlessRecord"]["output"]>;
+  success: Scalars["Boolean"]["output"];
+};
+
+export type InternalUpsertFriendshipResult = {
+  __typename?: "InternalUpsertFriendshipResult";
+  errors?: Maybe<Array<ExecutionError>>;
+  friendship?: Maybe<Scalars["InternalFriendshipRecord"]["output"]>;
   success: Scalars["Boolean"]["output"];
 };
 
@@ -8107,38 +8621,24 @@ export type InternalUpsertGizmoResult = {
   success: Scalars["Boolean"]["output"];
 };
 
-export type InternalUpsertHasManyThroughBaseModelResult = {
-  __typename?: "InternalUpsertHasManyThroughBaseModelResult";
-  baseModel?: Maybe<Scalars["InternalHasManyThroughBaseModelRecord"]["output"]>;
+export type InternalUpsertLandmarkStadiumResult = {
+  __typename?: "InternalUpsertLandmarkStadiumResult";
   errors?: Maybe<Array<ExecutionError>>;
+  stadium?: Maybe<Scalars["InternalLandmarkStadiumRecord"]["output"]>;
   success: Scalars["Boolean"]["output"];
 };
 
-export type InternalUpsertHasManyThroughJoinerModelResult = {
-  __typename?: "InternalUpsertHasManyThroughJoinerModelResult";
+export type InternalUpsertRegistrationResult = {
+  __typename?: "InternalUpsertRegistrationResult";
   errors?: Maybe<Array<ExecutionError>>;
-  joinerModel?: Maybe<Scalars["InternalHasManyThroughJoinerModelRecord"]["output"]>;
+  registration?: Maybe<Scalars["InternalRegistrationRecord"]["output"]>;
   success: Scalars["Boolean"]["output"];
 };
 
-export type InternalUpsertHasManyThroughSiblingModelResult = {
-  __typename?: "InternalUpsertHasManyThroughSiblingModelResult";
+export type InternalUpsertSampleModelToTestReallyLongModelNamesResult = {
+  __typename?: "InternalUpsertSampleModelToTestReallyLongModelNamesResult";
   errors?: Maybe<Array<ExecutionError>>;
-  siblingModel?: Maybe<Scalars["InternalHasManyThroughSiblingModelRecord"]["output"]>;
-  success: Scalars["Boolean"]["output"];
-};
-
-export type InternalUpsertModelAResult = {
-  __typename?: "InternalUpsertModelAResult";
-  errors?: Maybe<Array<ExecutionError>>;
-  modelA?: Maybe<Scalars["InternalModelARecord"]["output"]>;
-  success: Scalars["Boolean"]["output"];
-};
-
-export type InternalUpsertPartResult = {
-  __typename?: "InternalUpsertPartResult";
-  errors?: Maybe<Array<ExecutionError>>;
-  part?: Maybe<Scalars["InternalPartRecord"]["output"]>;
+  sampleModelToTestReallyLongModelNames?: Maybe<Scalars["InternalSampleModelToTestReallyLongModelNamesRecord"]["output"]>;
   success: Scalars["Boolean"]["output"];
 };
 
@@ -8156,53 +8656,25 @@ export type InternalUpsertSessionResult = {
   success: Scalars["Boolean"]["output"];
 };
 
-export type InternalUpsertShopifyGdprRequestResult = {
-  __typename?: "InternalUpsertShopifyGdprRequestResult";
+export type InternalUpsertSprocketResult = {
+  __typename?: "InternalUpsertSprocketResult";
   errors?: Maybe<Array<ExecutionError>>;
-  shopifyGdprRequest?: Maybe<Scalars["InternalShopifyGdprRequestRecord"]["output"]>;
+  sprocket?: Maybe<Scalars["InternalSprocketRecord"]["output"]>;
   success: Scalars["Boolean"]["output"];
 };
 
-export type InternalUpsertShopifyProductImageResult = {
-  __typename?: "InternalUpsertShopifyProductImageResult";
+export type InternalUpsertStudentResult = {
+  __typename?: "InternalUpsertStudentResult";
   errors?: Maybe<Array<ExecutionError>>;
-  shopifyProductImage?: Maybe<Scalars["InternalShopifyProductImageRecord"]["output"]>;
+  student?: Maybe<Scalars["InternalStudentRecord"]["output"]>;
   success: Scalars["Boolean"]["output"];
 };
 
-export type InternalUpsertShopifyProductOptionResult = {
-  __typename?: "InternalUpsertShopifyProductOptionResult";
+export type InternalUpsertTeacherResult = {
+  __typename?: "InternalUpsertTeacherResult";
   errors?: Maybe<Array<ExecutionError>>;
-  shopifyProductOption?: Maybe<Scalars["InternalShopifyProductOptionRecord"]["output"]>;
   success: Scalars["Boolean"]["output"];
-};
-
-export type InternalUpsertShopifyProductResult = {
-  __typename?: "InternalUpsertShopifyProductResult";
-  errors?: Maybe<Array<ExecutionError>>;
-  shopifyProduct?: Maybe<Scalars["InternalShopifyProductRecord"]["output"]>;
-  success: Scalars["Boolean"]["output"];
-};
-
-export type InternalUpsertShopifyProductVariantResult = {
-  __typename?: "InternalUpsertShopifyProductVariantResult";
-  errors?: Maybe<Array<ExecutionError>>;
-  shopifyProductVariant?: Maybe<Scalars["InternalShopifyProductVariantRecord"]["output"]>;
-  success: Scalars["Boolean"]["output"];
-};
-
-export type InternalUpsertShopifyShopResult = {
-  __typename?: "InternalUpsertShopifyShopResult";
-  errors?: Maybe<Array<ExecutionError>>;
-  shopifyShop?: Maybe<Scalars["InternalShopifyShopRecord"]["output"]>;
-  success: Scalars["Boolean"]["output"];
-};
-
-export type InternalUpsertShopifySyncResult = {
-  __typename?: "InternalUpsertShopifySyncResult";
-  errors?: Maybe<Array<ExecutionError>>;
-  shopifySync?: Maybe<Scalars["InternalShopifySyncRecord"]["output"]>;
-  success: Scalars["Boolean"]["output"];
+  teacher?: Maybe<Scalars["InternalTeacherRecord"]["output"]>;
 };
 
 export type InternalUpsertUserResult = {
@@ -8210,6 +8682,13 @@ export type InternalUpsertUserResult = {
   errors?: Maybe<Array<ExecutionError>>;
   success: Scalars["Boolean"]["output"];
   user?: Maybe<Scalars["InternalUserRecord"]["output"]>;
+};
+
+export type InternalUpsertWidgetImageResult = {
+  __typename?: "InternalUpsertWidgetImageResult";
+  errors?: Maybe<Array<ExecutionError>>;
+  success: Scalars["Boolean"]["output"];
+  widgetImage?: Maybe<Scalars["InternalWidgetImageRecord"]["output"]>;
 };
 
 export type InternalUpsertWidgetResult = {
@@ -8222,6 +8701,8 @@ export type InternalUpsertWidgetResult = {
 export type InternalUserInput = {
   createdAt?: InputMaybe<Scalars["DateTime"]["input"]>;
   email?: InputMaybe<Scalars["String"]["input"]>;
+  emailVerificationToken?: InputMaybe<Scalars["String"]["input"]>;
+  emailVerificationTokenExpiration?: InputMaybe<Scalars["DateTime"]["input"]>;
   emailVerified?: InputMaybe<Scalars["Boolean"]["input"]>;
   firstName?: InputMaybe<Scalars["String"]["input"]>;
   googleImageUrl?: InputMaybe<Scalars["String"]["input"]>;
@@ -8230,6 +8711,8 @@ export type InternalUserInput = {
   lastName?: InputMaybe<Scalars["String"]["input"]>;
   lastSignedIn?: InputMaybe<Scalars["DateTime"]["input"]>;
   password?: InputMaybe<Scalars["String"]["input"]>;
+  resetPasswordToken?: InputMaybe<Scalars["String"]["input"]>;
+  resetPasswordTokenExpiration?: InputMaybe<Scalars["DateTime"]["input"]>;
   /** A string list of Gadget platform Role keys to assign to this record */
   roles?: InputMaybe<Array<Scalars["String"]["input"]>>;
   state?: InputMaybe<Scalars["RecordState"]["input"]>;
@@ -8260,6 +8743,43 @@ export type InternalWidgetAtomicsInput = {
   inventoryCount?: InputMaybe<Array<NumericAtomicFieldUpdateInput>>;
 };
 
+export type InternalWidgetImageAtomicsInput = {
+  /** Numeric atomic commands for operating on order. */
+  order?: InputMaybe<Array<NumericAtomicFieldUpdateInput>>;
+};
+
+export type InternalWidgetImageInput = {
+  /** An optional list of atomically applied commands for race-safe mutations of the record */
+  _atomics?: InputMaybe<InternalWidgetImageAtomicsInput>;
+  altText?: InputMaybe<Scalars["String"]["input"]>;
+  createdAt?: InputMaybe<Scalars["DateTime"]["input"]>;
+  id?: InputMaybe<Scalars["GadgetID"]["input"]>;
+  image?: InputMaybe<InternalStoredFileInput>;
+  order?: InputMaybe<Scalars["Float"]["input"]>;
+  state?: InputMaybe<Scalars["RecordState"]["input"]>;
+  stateHistory?: InputMaybe<Scalars["RecordState"]["input"]>;
+  updatedAt?: InputMaybe<Scalars["DateTime"]["input"]>;
+  widget?: InputMaybe<InternalBelongsToInput>;
+};
+
+/** A connection to a list of InternalWidgetImageRecord items. */
+export type InternalWidgetImageRecordConnection = {
+  __typename?: "InternalWidgetImageRecordConnection";
+  /** A list of edges. */
+  edges: Array<InternalWidgetImageRecordEdge>;
+  /** Information to aid in pagination. */
+  pageInfo: PageInfo;
+};
+
+/** An edge in a InternalWidgetImageRecord connection. */
+export type InternalWidgetImageRecordEdge = {
+  __typename?: "InternalWidgetImageRecordEdge";
+  /** A cursor for use in pagination */
+  cursor: Scalars["String"]["output"];
+  /** The item at the end of the edge */
+  node: Scalars["InternalWidgetImageRecord"]["output"];
+};
+
 export type InternalWidgetInput = {
   /** An optional list of atomically applied commands for race-safe mutations of the record */
   _atomics?: InputMaybe<InternalWidgetAtomicsInput>;
@@ -8267,23 +8787,28 @@ export type InternalWidgetInput = {
   birthday?: InputMaybe<Scalars["DateOrDateTime"]["input"]>;
   category?: InputMaybe<Array<Scalars["WidgetCategoryEnum"]["input"]>>;
   color?: InputMaybe<Scalars["String"]["input"]>;
+  cost?: InputMaybe<Scalars["InternalCADCurrencyAmount"]["input"]>;
   createdAt?: InputMaybe<Scalars["DateTime"]["input"]>;
   description?: InputMaybe<RichTextInput>;
+  email?: InputMaybe<Scalars["String"]["input"]>;
   embedding?: InputMaybe<Array<Scalars["Float"]["input"]>>;
   id?: InputMaybe<Scalars["GadgetID"]["input"]>;
   inventoryCount?: InputMaybe<Scalars["Float"]["input"]>;
   isChecked?: InputMaybe<Scalars["Boolean"]["input"]>;
   metafields?: InputMaybe<Scalars["JSON"]["input"]>;
-  mustBeLongString?: InputMaybe<Scalars["String"]["input"]>;
   name?: InputMaybe<Scalars["String"]["input"]>;
+  phase?: InputMaybe<Scalars["WidgetPhaseEnum"]["input"]>;
   /** A string list of Gadget platform Role keys to assign to this record */
   roles?: InputMaybe<Array<Scalars["String"]["input"]>>;
   secretKey?: InputMaybe<Scalars["String"]["input"]>;
   section?: InputMaybe<InternalBelongsToInput>;
+  slug?: InputMaybe<Scalars["String"]["input"]>;
   startsAt?: InputMaybe<Scalars["DateTime"]["input"]>;
-  state?: InputMaybe<Scalars["RecordState"]["input"]>;
+  state?: InputMaybe<Scalars["WidgetStateEnum"]["input"]>;
   stateHistory?: InputMaybe<Scalars["RecordState"]["input"]>;
+  tagline?: InputMaybe<Scalars["String"]["input"]>;
   updatedAt?: InputMaybe<Scalars["DateTime"]["input"]>;
+  url?: InputMaybe<Scalars["String"]["input"]>;
 };
 
 /** A connection to a list of InternalWidgetRecord items. */
@@ -8341,13 +8866,122 @@ export type JsonFilter = {
   notIn?: InputMaybe<Array<InputMaybe<Scalars["JSON"]["input"]>>>;
 };
 
-/** Input object supporting setting or updating related model record on a relationship field */
-export type JoinerModelHasManyInput = {
-  /** Creates, updates, or deletes existing records in the database as needed to arrive at the list of records specified. */
-  _converge?: InputMaybe<ConvergeJoinerModelInput>;
-  create?: InputMaybe<NestedJoinerModelCreateInput>;
-  delete?: InputMaybe<NestedJoinerModelDeleteInput>;
-  update?: InputMaybe<NestedJoinerModelUpdateInput>;
+export type LandmarkMutations = {
+  __typename?: "LandmarkMutations";
+  bulkCreateStadia?: Maybe<BulkCreateLandmarkStadiaResult>;
+  bulkDeleteStadia?: Maybe<BulkDeleteLandmarkStadiaResult>;
+  bulkUpdateStadia?: Maybe<BulkUpdateLandmarkStadiaResult>;
+  bulkUpsertStadia: BulkUpsertLandmarkStadiaResult;
+  createStadium?: Maybe<CreateLandmarkStadiumResult>;
+  deleteStadium?: Maybe<DeleteLandmarkStadiumResult>;
+  updateStadium?: Maybe<UpdateLandmarkStadiumResult>;
+  upsertStadium?: Maybe<UpsertLandmarkStadiumResult>;
+};
+
+export type LandmarkMutationsBulkCreateStadiaArgs = {
+  inputs: Array<BulkCreateLandmarkStadiaInput>;
+};
+
+export type LandmarkMutationsBulkDeleteStadiaArgs = {
+  ids: Array<Scalars["GadgetID"]["input"]>;
+};
+
+export type LandmarkMutationsBulkUpdateStadiaArgs = {
+  inputs: Array<BulkUpdateLandmarkStadiaInput>;
+};
+
+export type LandmarkMutationsBulkUpsertStadiaArgs = {
+  inputs: Array<BulkUpsertLandmarkStadiaInput>;
+};
+
+export type LandmarkMutationsCreateStadiumArgs = {
+  stadium?: InputMaybe<CreateLandmarkStadiumInput>;
+};
+
+export type LandmarkMutationsDeleteStadiumArgs = {
+  id: Scalars["GadgetID"]["input"];
+};
+
+export type LandmarkMutationsUpdateStadiumArgs = {
+  id: Scalars["GadgetID"]["input"];
+  stadium?: InputMaybe<UpdateLandmarkStadiumInput>;
+};
+
+export type LandmarkMutationsUpsertStadiumArgs = {
+  on?: InputMaybe<Array<Scalars["String"]["input"]>>;
+  stadium?: InputMaybe<UpsertLandmarkStadiumInput>;
+};
+
+export type LandmarkQueries = {
+  __typename?: "LandmarkQueries";
+  stadia: LandmarkStadiumConnection;
+  stadium?: Maybe<LandmarkStadium>;
+};
+
+export type LandmarkQueriesStadiaArgs = {
+  after?: InputMaybe<Scalars["String"]["input"]>;
+  before?: InputMaybe<Scalars["String"]["input"]>;
+  filter?: InputMaybe<Array<LandmarkStadiumFilter>>;
+  first?: InputMaybe<Scalars["Int"]["input"]>;
+  last?: InputMaybe<Scalars["Int"]["input"]>;
+  search?: InputMaybe<Scalars["String"]["input"]>;
+  sort?: InputMaybe<Array<LandmarkStadiumSort>>;
+};
+
+export type LandmarkQueriesStadiumArgs = {
+  id: Scalars["GadgetID"]["input"];
+};
+
+export type LandmarkStadium = {
+  __typename?: "LandmarkStadium";
+  /** Get all the fields for this record. Useful for not having to list out all the fields you want to retrieve, but slower. */
+  _all: Scalars["JSONObject"]["output"];
+  /** The time at which this record was first created. Set once upon record creation and never changed. Managed by Gadget. */
+  createdAt: Scalars["DateTime"]["output"];
+  /** The globally unique, unchanging identifier for this record. Assigned and managed by Gadget. */
+  id: Scalars["GadgetID"]["output"];
+  name?: Maybe<Scalars["String"]["output"]>;
+  /** The time at which this record was last changed. Set each time the record is successfully acted upon by an action. Managed by Gadget. */
+  updatedAt: Scalars["DateTime"]["output"];
+};
+
+/** A connection to a list of LandmarkStadium items. */
+export type LandmarkStadiumConnection = {
+  __typename?: "LandmarkStadiumConnection";
+  /** A list of edges. */
+  edges: Array<LandmarkStadiumEdge>;
+  /** Information to aid in pagination. */
+  pageInfo: PageInfo;
+};
+
+/** An edge in a LandmarkStadium connection. */
+export type LandmarkStadiumEdge = {
+  __typename?: "LandmarkStadiumEdge";
+  /** A cursor for use in pagination */
+  cursor: Scalars["String"]["output"];
+  /** The item at the end of the edge */
+  node: LandmarkStadium;
+};
+
+export type LandmarkStadiumFilter = {
+  AND?: InputMaybe<Array<InputMaybe<LandmarkStadiumFilter>>>;
+  NOT?: InputMaybe<Array<InputMaybe<LandmarkStadiumFilter>>>;
+  OR?: InputMaybe<Array<InputMaybe<LandmarkStadiumFilter>>>;
+  createdAt?: InputMaybe<DateTimeFilter>;
+  id?: InputMaybe<IdFilter>;
+  name?: InputMaybe<StringFilter>;
+  updatedAt?: InputMaybe<DateTimeFilter>;
+};
+
+export type LandmarkStadiumSort = {
+  /** Sort the results by the createdAt field. Defaults to ascending (smallest value first). */
+  createdAt?: InputMaybe<SortOrder>;
+  /** Sort the results by the id field. Defaults to ascending (smallest value first). */
+  id?: InputMaybe<SortOrder>;
+  /** Sort the results by the name field. Defaults to ascending (smallest value first). */
+  name?: InputMaybe<SortOrder>;
+  /** Sort the results by the updatedAt field. Defaults to ascending (smallest value first). */
+  updatedAt?: InputMaybe<SortOrder>;
 };
 
 export type LockOperationResult = {
@@ -8358,52 +8992,27 @@ export type LockOperationResult = {
   success: Scalars["Boolean"]["output"];
 };
 
-export type ModelA = {
-  __typename?: "ModelA";
-  /** Get all the fields for this record. Useful for not having to list out all the fields you want to retrieve, but slower. */
-  _all: Scalars["JSONObject"]["output"];
-  /** The time at which this record was first created. Set once upon record creation and never changed. Managed by Gadget. */
-  createdAt: Scalars["DateTime"]["output"];
-  /** The globally unique, unchanging identifier for this record. Assigned and managed by Gadget. */
-  id: Scalars["GadgetID"]["output"];
-  /** The time at which this record was last changed. Set each time the record is successfully acted upon by an action. Managed by Gadget. */
-  updatedAt: Scalars["DateTime"]["output"];
+export type LogParamsResult = {
+  __typename?: "LogParamsResult";
+  errors?: Maybe<Array<ExecutionError>>;
+  result?: Maybe<Scalars["JSON"]["output"]>;
+  success: Scalars["Boolean"]["output"];
 };
 
-/** A connection to a list of ModelA items. */
-export type ModelAConnection = {
-  __typename?: "ModelAConnection";
-  /** A list of edges. */
-  edges: Array<ModelAEdge>;
-  /** Information to aid in pagination. */
-  pageInfo: PageInfo;
+/** A monetary value containing its amount and currency */
+export type Money = {
+  __typename?: "Money";
+  /** The amount, in the currency's subunit */
+  amount: Scalars["Float"]["output"];
+  /** The currency's three-letter code (ISO 4217) */
+  currency: Scalars["String"]["output"];
+  /** Formatted view of this money value, including both the amount and currency */
+  formattedAmount: Scalars["String"]["output"];
 };
 
-/** An edge in a ModelA connection. */
-export type ModelAEdge = {
-  __typename?: "ModelAEdge";
-  /** A cursor for use in pagination */
-  cursor: Scalars["String"]["output"];
-  /** The item at the end of the edge */
-  node: ModelA;
-};
-
-export type ModelAFilter = {
-  AND?: InputMaybe<Array<InputMaybe<ModelAFilter>>>;
-  NOT?: InputMaybe<Array<InputMaybe<ModelAFilter>>>;
-  OR?: InputMaybe<Array<InputMaybe<ModelAFilter>>>;
-  createdAt?: InputMaybe<DateTimeFilter>;
-  id?: InputMaybe<IdFilter>;
-  updatedAt?: InputMaybe<DateTimeFilter>;
-};
-
-export type ModelASort = {
-  /** Sort the results by the createdAt field. Defaults to ascending (smallest value first). */
-  createdAt?: InputMaybe<SortOrder>;
-  /** Sort the results by the id field. Defaults to ascending (smallest value first). */
-  id?: InputMaybe<SortOrder>;
-  /** Sort the results by the updatedAt field. Defaults to ascending (smallest value first). */
-  updatedAt?: InputMaybe<SortOrder>;
+/** A monetary value containing its amount and currency */
+export type MoneyFormattedAmountArgs = {
+  format?: InputMaybe<Scalars["String"]["input"]>;
 };
 
 export type MultiEnumFilter = {
@@ -8415,177 +9024,321 @@ export type MultiEnumFilter = {
 
 export type Mutation = {
   __typename?: "Mutation";
-  abortShopifySync?: Maybe<AbortShopifySyncResult>;
+  addInventoryIfOutOfStockWidget?: Maybe<AddInventoryIfOutOfStockWidgetResult>;
   addInventoryWidget?: Maybe<AddInventoryWidgetResult>;
-  alwaysThrowErrorWidget?: Maybe<AlwaysThrowErrorWidgetResult>;
   background: BackgroundMutations;
-  bulkAbortShopifySyncs?: Maybe<BulkAbortShopifySyncsResult>;
+  barfAnError?: Maybe<BarfAnErrorResult>;
+  bendGizmo?: Maybe<BendGizmoResult>;
+  breakGizmo?: Maybe<BreakGizmoResult>;
+  bulkAddInventoryIfOutOfStockWidgets?: Maybe<BulkAddInventoryIfOutOfStockWidgetsResult>;
   bulkAddInventoryWidgets?: Maybe<BulkAddInventoryWidgetsResult>;
-  bulkAlwaysThrowErrorWidgets?: Maybe<BulkAlwaysThrowErrorWidgetsResult>;
-  bulkCompleteShopifySyncs?: Maybe<BulkCompleteShopifySyncsResult>;
-  bulkCreateAutoTableTestRelatedModels?: Maybe<BulkCreateAutoTableTestRelatedModelsResult>;
-  bulkCreateAutoTableTests?: Maybe<BulkCreateAutoTableTestsResult>;
+  bulkBendGizmos?: Maybe<BulkBendGizmosResult>;
+  bulkBreakGizmos?: Maybe<BulkBreakGizmosResult>;
+  bulkChangePasswordUsers?: Maybe<BulkChangePasswordUsersResult>;
+  bulkCreateBillingAccounts?: Maybe<BulkCreateBillingAccountsResult>;
+  bulkCreateCities?: Maybe<BulkCreateCitiesResult>;
+  bulkCreateCourses?: Maybe<BulkCreateCoursesResult>;
+  bulkCreateCustomers?: Maybe<BulkCreateCustomersResult>;
+  bulkCreateEphemerals?: Maybe<BulkCreateEphemeralsResult>;
+  bulkCreateFieldlesses?: Maybe<BulkCreateFieldlessesResult>;
+  bulkCreateFriendships?: Maybe<BulkCreateFriendshipsResult>;
   bulkCreateGizmos?: Maybe<BulkCreateGizmosResult>;
-  bulkCreateModelAs?: Maybe<BulkCreateModelAsResult>;
-  bulkCreateParts?: Maybe<BulkCreatePartsResult>;
+  bulkCreateRegistrations?: Maybe<BulkCreateRegistrationsResult>;
+  bulkCreateSampleModelToTestReallyLongModelNames?: Maybe<BulkCreateSampleModelToTestReallyLongModelNamesResult>;
   bulkCreateSections?: Maybe<BulkCreateSectionsResult>;
+  bulkCreateSprockets?: Maybe<BulkCreateSprocketsResult>;
+  bulkCreateStudents?: Maybe<BulkCreateStudentsResult>;
+  bulkCreateTeachers?: Maybe<BulkCreateTeachersResult>;
+  bulkCreateWidgetImages?: Maybe<BulkCreateWidgetImagesResult>;
   bulkCreateWidgets?: Maybe<BulkCreateWidgetsResult>;
-  bulkCustomActionAutoTableTests?: Maybe<BulkCustomActionAutoTableTestsResult>;
-  bulkCustomActionWithParamsAutoTableTests?: Maybe<BulkCustomActionWithParamsAutoTableTestsResult>;
-  bulkDeleteAutoTableTestRelatedModels?: Maybe<BulkDeleteAutoTableTestRelatedModelsResult>;
-  bulkDeleteAutoTableTests?: Maybe<BulkDeleteAutoTableTestsResult>;
+  bulkDeleteBillingAccounts?: Maybe<BulkDeleteBillingAccountsResult>;
+  bulkDeleteCities?: Maybe<BulkDeleteCitiesResult>;
+  bulkDeleteCourses?: Maybe<BulkDeleteCoursesResult>;
+  bulkDeleteCustomers?: Maybe<BulkDeleteCustomersResult>;
+  bulkDeleteEphemerals?: Maybe<BulkDeleteEphemeralsResult>;
+  bulkDeleteFieldlesses?: Maybe<BulkDeleteFieldlessesResult>;
+  bulkDeleteFriendships?: Maybe<BulkDeleteFriendshipsResult>;
   bulkDeleteGizmos?: Maybe<BulkDeleteGizmosResult>;
-  bulkDeleteModelAs?: Maybe<BulkDeleteModelAsResult>;
-  bulkDeleteParts?: Maybe<BulkDeletePartsResult>;
+  bulkDeleteRegistrations?: Maybe<BulkDeleteRegistrationsResult>;
+  bulkDeleteSampleModelToTestReallyLongModelNames?: Maybe<BulkDeleteSampleModelToTestReallyLongModelNamesResult>;
   bulkDeleteSections?: Maybe<BulkDeleteSectionsResult>;
+  bulkDeleteSprockets?: Maybe<BulkDeleteSprocketsResult>;
+  bulkDeleteStudents?: Maybe<BulkDeleteStudentsResult>;
+  bulkDeleteTeachers?: Maybe<BulkDeleteTeachersResult>;
   bulkDeleteUsers?: Maybe<BulkDeleteUsersResult>;
+  bulkDeleteWidgetImages?: Maybe<BulkDeleteWidgetImagesResult>;
   bulkDeleteWidgets?: Maybe<BulkDeleteWidgetsResult>;
-  bulkErrorShopifySyncs?: Maybe<BulkErrorShopifySyncsResult>;
-  bulkRunShopifySyncs?: Maybe<BulkRunShopifySyncsResult>;
+  bulkFlipDownWidgets?: Maybe<BulkFlipDownWidgetsResult>;
+  bulkFlipUpWidgets?: Maybe<BulkFlipUpWidgetsResult>;
+  bulkFoldGizmos?: Maybe<BulkFoldGizmosResult>;
+  bulkOtherCreateGizmos?: Maybe<BulkOtherCreateGizmosResult>;
+  bulkResetPasswordUsers?: Maybe<BulkResetPasswordUsersResult>;
+  bulkSendResetPasswordUsers?: Maybe<BulkSendResetPasswordUsersResult>;
+  bulkSendVerifyEmailUsers?: Maybe<BulkSendVerifyEmailUsersResult>;
   bulkSignInUsers?: Maybe<BulkSignInUsersResult>;
   bulkSignOutUsers?: Maybe<BulkSignOutUsersResult>;
   bulkSignUpUsers?: Maybe<BulkSignUpUsersResult>;
-  bulkUpdateAutoTableTestRelatedModels?: Maybe<BulkUpdateAutoTableTestRelatedModelsResult>;
-  bulkUpdateAutoTableTests?: Maybe<BulkUpdateAutoTableTestsResult>;
+  bulkStraightenGizmos?: Maybe<BulkStraightenGizmosResult>;
+  bulkUnfoldGizmos?: Maybe<BulkUnfoldGizmosResult>;
+  bulkUpdateBillingAccounts?: Maybe<BulkUpdateBillingAccountsResult>;
+  bulkUpdateCities?: Maybe<BulkUpdateCitiesResult>;
+  bulkUpdateCourses?: Maybe<BulkUpdateCoursesResult>;
+  bulkUpdateCustomers?: Maybe<BulkUpdateCustomersResult>;
+  bulkUpdateEphemerals?: Maybe<BulkUpdateEphemeralsResult>;
+  bulkUpdateFieldlesses?: Maybe<BulkUpdateFieldlessesResult>;
+  bulkUpdateFriendships?: Maybe<BulkUpdateFriendshipsResult>;
   bulkUpdateGizmos?: Maybe<BulkUpdateGizmosResult>;
-  bulkUpdateModelAs?: Maybe<BulkUpdateModelAsResult>;
-  bulkUpdateParts?: Maybe<BulkUpdatePartsResult>;
+  bulkUpdateRegistrations?: Maybe<BulkUpdateRegistrationsResult>;
+  bulkUpdateSampleModelToTestReallyLongModelNames?: Maybe<BulkUpdateSampleModelToTestReallyLongModelNamesResult>;
   bulkUpdateSections?: Maybe<BulkUpdateSectionsResult>;
+  bulkUpdateSprockets?: Maybe<BulkUpdateSprocketsResult>;
+  bulkUpdateStudents?: Maybe<BulkUpdateStudentsResult>;
+  bulkUpdateTeachers?: Maybe<BulkUpdateTeachersResult>;
   bulkUpdateUsers?: Maybe<BulkUpdateUsersResult>;
+  bulkUpdateWidgetImages?: Maybe<BulkUpdateWidgetImagesResult>;
   bulkUpdateWidgets?: Maybe<BulkUpdateWidgetsResult>;
-  bulkUpdateWithCustomParamsAutoTableTests?: Maybe<BulkUpdateWithCustomParamsAutoTableTestsResult>;
-  bulkUpsertAutoTableTestRelatedModels: BulkUpsertAutoTableTestRelatedModelsResult;
-  bulkUpsertAutoTableTests: BulkUpsertAutoTableTestsResult;
+  bulkUpsertBillingAccounts: BulkUpsertBillingAccountsResult;
+  bulkUpsertCities: BulkUpsertCitiesResult;
+  bulkUpsertCourses: BulkUpsertCoursesResult;
+  bulkUpsertCustomers: BulkUpsertCustomersResult;
+  bulkUpsertEphemerals: BulkUpsertEphemeralsResult;
+  bulkUpsertFieldlesses: BulkUpsertFieldlessesResult;
+  bulkUpsertFriendships: BulkUpsertFriendshipsResult;
   bulkUpsertGizmos: BulkUpsertGizmosResult;
-  bulkUpsertModelAs: BulkUpsertModelAsResult;
-  bulkUpsertParts: BulkUpsertPartsResult;
+  bulkUpsertRegistrations: BulkUpsertRegistrationsResult;
+  bulkUpsertSampleModelToTestReallyLongModelNames: BulkUpsertSampleModelToTestReallyLongModelNamesResult;
   bulkUpsertSections: BulkUpsertSectionsResult;
-  bulkUpsertShopifySyncs: BulkUpsertShopifySyncsResult;
+  bulkUpsertSprockets: BulkUpsertSprocketsResult;
+  bulkUpsertStudents: BulkUpsertStudentsResult;
+  bulkUpsertTeachers: BulkUpsertTeachersResult;
   bulkUpsertUsers: BulkUpsertUsersResult;
+  bulkUpsertWidgetImages: BulkUpsertWidgetImagesResult;
   bulkUpsertWidgets: BulkUpsertWidgetsResult;
-  completeShopifySync?: Maybe<CompleteShopifySyncResult>;
-  createAutoTableTest?: Maybe<CreateAutoTableTestResult>;
-  createAutoTableTestRelatedModel?: Maybe<CreateAutoTableTestRelatedModelResult>;
+  bulkVerifyEmailUsers?: Maybe<BulkVerifyEmailUsersResult>;
+  changePasswordUser?: Maybe<ChangePasswordUserResult>;
+  createBillingAccount?: Maybe<CreateBillingAccountResult>;
+  createCity?: Maybe<CreateCityResult>;
+  createCourse?: Maybe<CreateCourseResult>;
+  createCustomer?: Maybe<CreateCustomerResult>;
+  createEphemeral?: Maybe<CreateEphemeralResult>;
+  createFieldless?: Maybe<CreateFieldlessResult>;
+  createFriendship?: Maybe<CreateFriendshipResult>;
   createGizmo?: Maybe<CreateGizmoResult>;
-  createModelA?: Maybe<CreateModelAResult>;
-  createPart?: Maybe<CreatePartResult>;
+  createRegistration?: Maybe<CreateRegistrationResult>;
+  createSampleModelToTestReallyLongModelNames?: Maybe<CreateSampleModelToTestReallyLongModelNamesResult>;
   createSection?: Maybe<CreateSectionResult>;
-  createTestData?: Maybe<CreateTestDataResult>;
+  createSprocket?: Maybe<CreateSprocketResult>;
+  createStudent?: Maybe<CreateStudentResult>;
+  createTeacher?: Maybe<CreateTeacherResult>;
   createWidget?: Maybe<CreateWidgetResult>;
-  customActionAutoTableTest?: Maybe<CustomActionAutoTableTestResult>;
-  customActionWithParamsAutoTableTest?: Maybe<CustomActionWithParamsAutoTableTestResult>;
-  deleteAutoTableTest?: Maybe<DeleteAutoTableTestResult>;
-  deleteAutoTableTestRelatedModel?: Maybe<DeleteAutoTableTestRelatedModelResult>;
+  createWidgetImage?: Maybe<CreateWidgetImageResult>;
+  deleteBillingAccount?: Maybe<DeleteBillingAccountResult>;
+  deleteCity?: Maybe<DeleteCityResult>;
+  deleteCourse?: Maybe<DeleteCourseResult>;
+  deleteCustomer?: Maybe<DeleteCustomerResult>;
+  deleteEphemeral?: Maybe<DeleteEphemeralResult>;
+  deleteFieldless?: Maybe<DeleteFieldlessResult>;
+  deleteFriendship?: Maybe<DeleteFriendshipResult>;
   deleteGizmo?: Maybe<DeleteGizmoResult>;
-  deleteModelA?: Maybe<DeleteModelAResult>;
-  deletePart?: Maybe<DeletePartResult>;
+  deleteRegistration?: Maybe<DeleteRegistrationResult>;
+  deleteSampleModelToTestReallyLongModelNames?: Maybe<DeleteSampleModelToTestReallyLongModelNamesResult>;
   deleteSection?: Maybe<DeleteSectionResult>;
+  deleteSprocket?: Maybe<DeleteSprocketResult>;
+  deleteStudent?: Maybe<DeleteStudentResult>;
+  deleteTeacher?: Maybe<DeleteTeacherResult>;
   deleteUser?: Maybe<DeleteUserResult>;
   deleteWidget?: Maybe<DeleteWidgetResult>;
-  errorShopifySync?: Maybe<ErrorShopifySyncResult>;
-  flipAll?: Maybe<FlipAllResult>;
+  deleteWidgetImage?: Maybe<DeleteWidgetImageResult>;
+  flipAllWidgets?: Maybe<FlipAllWidgetsResult>;
+  flipDownWidget?: Maybe<FlipDownWidgetResult>;
+  flipUpWidget?: Maybe<FlipUpWidgetResult>;
+  foldGizmo?: Maybe<FoldGizmoResult>;
   /** Meta information about the application, like it's name, schema, and other internal details. */
   gadgetMeta: GadgetApplicationMeta;
   game: GameMutations;
-  hasManyThrough: HasManyThroughMutations;
   internal: InternalMutations;
-  name: NameMutations;
-  runShopifySync?: Maybe<RunShopifySyncResult>;
-  shopifyConnection?: Maybe<ShopifyConnectionMutations>;
+  landmark: LandmarkMutations;
+  logParams?: Maybe<LogParamsResult>;
+  otherCreateGizmo?: Maybe<OtherCreateGizmoResult>;
+  resetPasswordUser?: Maybe<ResetPasswordUserResult>;
+  sendResetPasswordUser?: Maybe<SendResetPasswordUserResult>;
+  sendVerifyEmailUser?: Maybe<SendVerifyEmailUserResult>;
   signInUser?: Maybe<SignInUserResult>;
   signOutUser?: Maybe<SignOutUserResult>;
   signUpUser?: Maybe<SignUpUserResult>;
-  updateAutoTableTest?: Maybe<UpdateAutoTableTestResult>;
-  updateAutoTableTestRelatedModel?: Maybe<UpdateAutoTableTestRelatedModelResult>;
+  straightenGizmo?: Maybe<StraightenGizmoResult>;
+  unfoldGizmo?: Maybe<UnfoldGizmoResult>;
+  updateBillingAccount?: Maybe<UpdateBillingAccountResult>;
+  updateCity?: Maybe<UpdateCityResult>;
+  updateCourse?: Maybe<UpdateCourseResult>;
+  updateCustomer?: Maybe<UpdateCustomerResult>;
+  updateEphemeral?: Maybe<UpdateEphemeralResult>;
+  updateFieldless?: Maybe<UpdateFieldlessResult>;
+  updateFriendship?: Maybe<UpdateFriendshipResult>;
   updateGizmo?: Maybe<UpdateGizmoResult>;
-  updateModelA?: Maybe<UpdateModelAResult>;
-  updatePart?: Maybe<UpdatePartResult>;
+  updateRegistration?: Maybe<UpdateRegistrationResult>;
+  updateSampleModelToTestReallyLongModelNames?: Maybe<UpdateSampleModelToTestReallyLongModelNamesResult>;
   updateSection?: Maybe<UpdateSectionResult>;
+  updateSprocket?: Maybe<UpdateSprocketResult>;
+  updateStudent?: Maybe<UpdateStudentResult>;
+  updateTeacher?: Maybe<UpdateTeacherResult>;
   updateUser?: Maybe<UpdateUserResult>;
   updateWidget?: Maybe<UpdateWidgetResult>;
-  updateWithCustomParamsAutoTableTest?: Maybe<UpdateWithCustomParamsAutoTableTestResult>;
-  upsertAutoTableTest?: Maybe<UpsertAutoTableTestResult>;
-  upsertAutoTableTestRelatedModel?: Maybe<UpsertAutoTableTestRelatedModelResult>;
+  updateWidgetImage?: Maybe<UpdateWidgetImageResult>;
+  upsertBillingAccount?: Maybe<UpsertBillingAccountResult>;
+  upsertCity?: Maybe<UpsertCityResult>;
+  upsertCourse?: Maybe<UpsertCourseResult>;
+  upsertCustomer?: Maybe<UpsertCustomerResult>;
+  upsertEphemeral?: Maybe<UpsertEphemeralResult>;
+  upsertFieldless?: Maybe<UpsertFieldlessResult>;
+  upsertFriendship?: Maybe<UpsertFriendshipResult>;
   upsertGizmo?: Maybe<UpsertGizmoResult>;
-  upsertModelA?: Maybe<UpsertModelAResult>;
-  upsertPart?: Maybe<UpsertPartResult>;
+  upsertRegistration?: Maybe<UpsertRegistrationResult>;
+  upsertSampleModelToTestReallyLongModelNames?: Maybe<UpsertSampleModelToTestReallyLongModelNamesResult>;
   upsertSection?: Maybe<UpsertSectionResult>;
-  upsertShopifySync?: Maybe<UpsertShopifySyncResult>;
+  upsertSprocket?: Maybe<UpsertSprocketResult>;
+  upsertStudent?: Maybe<UpsertStudentResult>;
+  upsertTeacher?: Maybe<UpsertTeacherResult>;
   upsertUser?: Maybe<UpsertUserResult>;
   upsertWidget?: Maybe<UpsertWidgetResult>;
+  upsertWidgetImage?: Maybe<UpsertWidgetImageResult>;
+  verifyEmailUser?: Maybe<VerifyEmailUserResult>;
 };
 
-export type MutationAbortShopifySyncArgs = {
+export type MutationAddInventoryIfOutOfStockWidgetArgs = {
+  amount?: InputMaybe<Scalars["Float"]["input"]>;
   id: Scalars["GadgetID"]["input"];
-  shopifySync?: InputMaybe<AbortShopifySyncInput>;
 };
 
 export type MutationAddInventoryWidgetArgs = {
-  count?: InputMaybe<Scalars["Float"]["input"]>;
+  amount?: InputMaybe<Scalars["Float"]["input"]>;
+  customName?: InputMaybe<Scalars["String"]["input"]>;
+  id: Scalars["GadgetID"]["input"];
+  inStock?: InputMaybe<Scalars["Boolean"]["input"]>;
+  location?: InputMaybe<AddInventoryLocationInput>;
+  relatedWidgets?: InputMaybe<Array<Scalars["Float"]["input"]>>;
+  widget?: InputMaybe<AddInventoryWidgetInput>;
+};
+
+export type MutationBendGizmoArgs = {
+  gizmo?: InputMaybe<BendGizmoInput>;
   id: Scalars["GadgetID"]["input"];
 };
 
-export type MutationAlwaysThrowErrorWidgetArgs = {
-  widget?: InputMaybe<AlwaysThrowErrorWidgetInput>;
+export type MutationBreakGizmoArgs = {
+  gizmo?: InputMaybe<BreakGizmoInput>;
+  id: Scalars["GadgetID"]["input"];
 };
 
-export type MutationBulkAbortShopifySyncsArgs = {
-  inputs: Array<BulkAbortShopifySyncsInput>;
+export type MutationBulkAddInventoryIfOutOfStockWidgetsArgs = {
+  inputs: Array<BulkAddInventoryIfOutOfStockWidgetsInput>;
 };
 
 export type MutationBulkAddInventoryWidgetsArgs = {
   inputs: Array<BulkAddInventoryWidgetsInput>;
 };
 
-export type MutationBulkAlwaysThrowErrorWidgetsArgs = {
-  inputs: Array<BulkAlwaysThrowErrorWidgetsInput>;
+export type MutationBulkBendGizmosArgs = {
+  inputs: Array<BulkBendGizmosInput>;
 };
 
-export type MutationBulkCompleteShopifySyncsArgs = {
-  inputs: Array<BulkCompleteShopifySyncsInput>;
+export type MutationBulkBreakGizmosArgs = {
+  inputs: Array<BulkBreakGizmosInput>;
 };
 
-export type MutationBulkCreateAutoTableTestRelatedModelsArgs = {
-  inputs: Array<BulkCreateAutoTableTestRelatedModelsInput>;
+export type MutationBulkChangePasswordUsersArgs = {
+  inputs: Array<BulkChangePasswordUsersInput>;
 };
 
-export type MutationBulkCreateAutoTableTestsArgs = {
-  inputs: Array<BulkCreateAutoTableTestsInput>;
+export type MutationBulkCreateBillingAccountsArgs = {
+  inputs: Array<BulkCreateBillingAccountsInput>;
+};
+
+export type MutationBulkCreateCitiesArgs = {
+  inputs: Array<BulkCreateCitiesInput>;
+};
+
+export type MutationBulkCreateCoursesArgs = {
+  inputs: Array<BulkCreateCoursesInput>;
+};
+
+export type MutationBulkCreateCustomersArgs = {
+  inputs: Array<BulkCreateCustomersInput>;
+};
+
+export type MutationBulkCreateEphemeralsArgs = {
+  inputs: Array<BulkCreateEphemeralsInput>;
+};
+
+export type MutationBulkCreateFieldlessesArgs = {
+  inputs: Array<Scalars["JSON"]["input"]>;
+};
+
+export type MutationBulkCreateFriendshipsArgs = {
+  inputs: Array<BulkCreateFriendshipsInput>;
 };
 
 export type MutationBulkCreateGizmosArgs = {
   inputs: Array<BulkCreateGizmosInput>;
 };
 
-export type MutationBulkCreateModelAsArgs = {
-  inputs: Array<Scalars["JSON"]["input"]>;
+export type MutationBulkCreateRegistrationsArgs = {
+  inputs: Array<BulkCreateRegistrationsInput>;
 };
 
-export type MutationBulkCreatePartsArgs = {
-  inputs: Array<BulkCreatePartsInput>;
+export type MutationBulkCreateSampleModelToTestReallyLongModelNamesArgs = {
+  inputs: Array<BulkCreateSampleModelToTestReallyLongModelNamesInput>;
 };
 
 export type MutationBulkCreateSectionsArgs = {
   inputs: Array<BulkCreateSectionsInput>;
 };
 
+export type MutationBulkCreateSprocketsArgs = {
+  inputs: Array<BulkCreateSprocketsInput>;
+};
+
+export type MutationBulkCreateStudentsArgs = {
+  inputs: Array<BulkCreateStudentsInput>;
+};
+
+export type MutationBulkCreateTeachersArgs = {
+  inputs: Array<BulkCreateTeachersInput>;
+};
+
+export type MutationBulkCreateWidgetImagesArgs = {
+  inputs: Array<BulkCreateWidgetImagesInput>;
+};
+
 export type MutationBulkCreateWidgetsArgs = {
   inputs: Array<BulkCreateWidgetsInput>;
 };
 
-export type MutationBulkCustomActionAutoTableTestsArgs = {
+export type MutationBulkDeleteBillingAccountsArgs = {
   ids: Array<Scalars["GadgetID"]["input"]>;
 };
 
-export type MutationBulkCustomActionWithParamsAutoTableTestsArgs = {
-  inputs: Array<BulkCustomActionWithParamsAutoTableTestsInput>;
-};
-
-export type MutationBulkDeleteAutoTableTestRelatedModelsArgs = {
+export type MutationBulkDeleteCitiesArgs = {
   ids: Array<Scalars["GadgetID"]["input"]>;
 };
 
-export type MutationBulkDeleteAutoTableTestsArgs = {
+export type MutationBulkDeleteCoursesArgs = {
+  ids: Array<Scalars["GadgetID"]["input"]>;
+};
+
+export type MutationBulkDeleteCustomersArgs = {
+  ids: Array<Scalars["GadgetID"]["input"]>;
+};
+
+export type MutationBulkDeleteEphemeralsArgs = {
+  ids: Array<Scalars["GadgetID"]["input"]>;
+};
+
+export type MutationBulkDeleteFieldlessesArgs = {
+  ids: Array<Scalars["GadgetID"]["input"]>;
+};
+
+export type MutationBulkDeleteFriendshipsArgs = {
   ids: Array<Scalars["GadgetID"]["input"]>;
 };
 
@@ -8593,11 +9346,11 @@ export type MutationBulkDeleteGizmosArgs = {
   ids: Array<Scalars["GadgetID"]["input"]>;
 };
 
-export type MutationBulkDeleteModelAsArgs = {
+export type MutationBulkDeleteRegistrationsArgs = {
   ids: Array<Scalars["GadgetID"]["input"]>;
 };
 
-export type MutationBulkDeletePartsArgs = {
+export type MutationBulkDeleteSampleModelToTestReallyLongModelNamesArgs = {
   ids: Array<Scalars["GadgetID"]["input"]>;
 };
 
@@ -8605,7 +9358,23 @@ export type MutationBulkDeleteSectionsArgs = {
   ids: Array<Scalars["GadgetID"]["input"]>;
 };
 
+export type MutationBulkDeleteSprocketsArgs = {
+  ids: Array<Scalars["GadgetID"]["input"]>;
+};
+
+export type MutationBulkDeleteStudentsArgs = {
+  ids: Array<Scalars["GadgetID"]["input"]>;
+};
+
+export type MutationBulkDeleteTeachersArgs = {
+  ids: Array<Scalars["GadgetID"]["input"]>;
+};
+
 export type MutationBulkDeleteUsersArgs = {
+  ids: Array<Scalars["GadgetID"]["input"]>;
+};
+
+export type MutationBulkDeleteWidgetImagesArgs = {
   ids: Array<Scalars["GadgetID"]["input"]>;
 };
 
@@ -8613,12 +9382,32 @@ export type MutationBulkDeleteWidgetsArgs = {
   ids: Array<Scalars["GadgetID"]["input"]>;
 };
 
-export type MutationBulkErrorShopifySyncsArgs = {
-  inputs: Array<BulkErrorShopifySyncsInput>;
+export type MutationBulkFlipDownWidgetsArgs = {
+  ids: Array<Scalars["GadgetID"]["input"]>;
 };
 
-export type MutationBulkRunShopifySyncsArgs = {
-  inputs: Array<BulkRunShopifySyncsInput>;
+export type MutationBulkFlipUpWidgetsArgs = {
+  ids: Array<Scalars["GadgetID"]["input"]>;
+};
+
+export type MutationBulkFoldGizmosArgs = {
+  inputs: Array<BulkFoldGizmosInput>;
+};
+
+export type MutationBulkOtherCreateGizmosArgs = {
+  inputs: Array<BulkOtherCreateGizmosInput>;
+};
+
+export type MutationBulkResetPasswordUsersArgs = {
+  inputs: Array<BulkResetPasswordUsersInput>;
+};
+
+export type MutationBulkSendResetPasswordUsersArgs = {
+  inputs: Array<BulkSendResetPasswordUsersInput>;
+};
+
+export type MutationBulkSendVerifyEmailUsersArgs = {
+  inputs: Array<BulkSendVerifyEmailUsersInput>;
 };
 
 export type MutationBulkSignInUsersArgs = {
@@ -8626,129 +9415,252 @@ export type MutationBulkSignInUsersArgs = {
 };
 
 export type MutationBulkSignOutUsersArgs = {
-  inputs: Array<BulkSignOutUsersInput>;
+  ids: Array<Scalars["GadgetID"]["input"]>;
 };
 
 export type MutationBulkSignUpUsersArgs = {
   inputs: Array<BulkSignUpUsersInput>;
 };
 
-export type MutationBulkUpdateAutoTableTestRelatedModelsArgs = {
-  inputs: Array<BulkUpdateAutoTableTestRelatedModelsInput>;
+export type MutationBulkStraightenGizmosArgs = {
+  inputs: Array<BulkStraightenGizmosInput>;
 };
 
-export type MutationBulkUpdateAutoTableTestsArgs = {
-  inputs: Array<BulkUpdateAutoTableTestsInput>;
+export type MutationBulkUnfoldGizmosArgs = {
+  inputs: Array<BulkUnfoldGizmosInput>;
+};
+
+export type MutationBulkUpdateBillingAccountsArgs = {
+  inputs: Array<BulkUpdateBillingAccountsInput>;
+};
+
+export type MutationBulkUpdateCitiesArgs = {
+  inputs: Array<BulkUpdateCitiesInput>;
+};
+
+export type MutationBulkUpdateCoursesArgs = {
+  inputs: Array<BulkUpdateCoursesInput>;
+};
+
+export type MutationBulkUpdateCustomersArgs = {
+  inputs: Array<BulkUpdateCustomersInput>;
+};
+
+export type MutationBulkUpdateEphemeralsArgs = {
+  inputs: Array<BulkUpdateEphemeralsInput>;
+};
+
+export type MutationBulkUpdateFieldlessesArgs = {
+  ids: Array<Scalars["GadgetID"]["input"]>;
+};
+
+export type MutationBulkUpdateFriendshipsArgs = {
+  inputs: Array<BulkUpdateFriendshipsInput>;
 };
 
 export type MutationBulkUpdateGizmosArgs = {
   inputs: Array<BulkUpdateGizmosInput>;
 };
 
-export type MutationBulkUpdateModelAsArgs = {
-  ids: Array<Scalars["GadgetID"]["input"]>;
+export type MutationBulkUpdateRegistrationsArgs = {
+  inputs: Array<BulkUpdateRegistrationsInput>;
 };
 
-export type MutationBulkUpdatePartsArgs = {
-  inputs: Array<BulkUpdatePartsInput>;
+export type MutationBulkUpdateSampleModelToTestReallyLongModelNamesArgs = {
+  inputs: Array<BulkUpdateSampleModelToTestReallyLongModelNamesInput>;
 };
 
 export type MutationBulkUpdateSectionsArgs = {
   inputs: Array<BulkUpdateSectionsInput>;
 };
 
+export type MutationBulkUpdateSprocketsArgs = {
+  inputs: Array<BulkUpdateSprocketsInput>;
+};
+
+export type MutationBulkUpdateStudentsArgs = {
+  inputs: Array<BulkUpdateStudentsInput>;
+};
+
+export type MutationBulkUpdateTeachersArgs = {
+  inputs: Array<BulkUpdateTeachersInput>;
+};
+
 export type MutationBulkUpdateUsersArgs = {
   inputs: Array<BulkUpdateUsersInput>;
+};
+
+export type MutationBulkUpdateWidgetImagesArgs = {
+  inputs: Array<BulkUpdateWidgetImagesInput>;
 };
 
 export type MutationBulkUpdateWidgetsArgs = {
   inputs: Array<BulkUpdateWidgetsInput>;
 };
 
-export type MutationBulkUpdateWithCustomParamsAutoTableTestsArgs = {
-  inputs: Array<BulkUpdateWithCustomParamsAutoTableTestsInput>;
+export type MutationBulkUpsertBillingAccountsArgs = {
+  inputs: Array<BulkUpsertBillingAccountsInput>;
 };
 
-export type MutationBulkUpsertAutoTableTestRelatedModelsArgs = {
-  inputs: Array<BulkUpsertAutoTableTestRelatedModelsInput>;
+export type MutationBulkUpsertCitiesArgs = {
+  inputs: Array<BulkUpsertCitiesInput>;
 };
 
-export type MutationBulkUpsertAutoTableTestsArgs = {
-  inputs: Array<BulkUpsertAutoTableTestsInput>;
+export type MutationBulkUpsertCoursesArgs = {
+  inputs: Array<BulkUpsertCoursesInput>;
+};
+
+export type MutationBulkUpsertCustomersArgs = {
+  inputs: Array<BulkUpsertCustomersInput>;
+};
+
+export type MutationBulkUpsertEphemeralsArgs = {
+  inputs: Array<BulkUpsertEphemeralsInput>;
+};
+
+export type MutationBulkUpsertFieldlessesArgs = {
+  inputs: Array<BulkUpsertFieldlessesInput>;
+};
+
+export type MutationBulkUpsertFriendshipsArgs = {
+  inputs: Array<BulkUpsertFriendshipsInput>;
 };
 
 export type MutationBulkUpsertGizmosArgs = {
   inputs: Array<BulkUpsertGizmosInput>;
 };
 
-export type MutationBulkUpsertModelAsArgs = {
-  inputs: Array<BulkUpsertModelAsInput>;
+export type MutationBulkUpsertRegistrationsArgs = {
+  inputs: Array<BulkUpsertRegistrationsInput>;
 };
 
-export type MutationBulkUpsertPartsArgs = {
-  inputs: Array<BulkUpsertPartsInput>;
+export type MutationBulkUpsertSampleModelToTestReallyLongModelNamesArgs = {
+  inputs: Array<BulkUpsertSampleModelToTestReallyLongModelNamesInput>;
 };
 
 export type MutationBulkUpsertSectionsArgs = {
   inputs: Array<BulkUpsertSectionsInput>;
 };
 
-export type MutationBulkUpsertShopifySyncsArgs = {
-  inputs: Array<BulkUpsertShopifySyncsInput>;
+export type MutationBulkUpsertSprocketsArgs = {
+  inputs: Array<BulkUpsertSprocketsInput>;
+};
+
+export type MutationBulkUpsertStudentsArgs = {
+  inputs: Array<BulkUpsertStudentsInput>;
+};
+
+export type MutationBulkUpsertTeachersArgs = {
+  inputs: Array<BulkUpsertTeachersInput>;
 };
 
 export type MutationBulkUpsertUsersArgs = {
   inputs: Array<BulkUpsertUsersInput>;
 };
 
+export type MutationBulkUpsertWidgetImagesArgs = {
+  inputs: Array<BulkUpsertWidgetImagesInput>;
+};
+
 export type MutationBulkUpsertWidgetsArgs = {
   inputs: Array<BulkUpsertWidgetsInput>;
 };
 
-export type MutationCompleteShopifySyncArgs = {
+export type MutationBulkVerifyEmailUsersArgs = {
+  inputs: Array<BulkVerifyEmailUsersInput>;
+};
+
+export type MutationChangePasswordUserArgs = {
+  currentPassword?: InputMaybe<Scalars["String"]["input"]>;
   id: Scalars["GadgetID"]["input"];
-  shopifySync?: InputMaybe<CompleteShopifySyncInput>;
+  newPassword?: InputMaybe<Scalars["String"]["input"]>;
 };
 
-export type MutationCreateAutoTableTestArgs = {
-  autoTableTest?: InputMaybe<CreateAutoTableTestInput>;
+export type MutationCreateBillingAccountArgs = {
+  billingAccount?: InputMaybe<CreateBillingAccountInput>;
 };
 
-export type MutationCreateAutoTableTestRelatedModelArgs = {
-  _autoTableTestRelatedModel?: InputMaybe<CreateAutoTableTestRelatedModelInput>;
+export type MutationCreateCityArgs = {
+  city?: InputMaybe<CreateCityInput>;
+};
+
+export type MutationCreateCourseArgs = {
+  course?: InputMaybe<CreateCourseInput>;
+};
+
+export type MutationCreateCustomerArgs = {
+  customer?: InputMaybe<CreateCustomerInput>;
+};
+
+export type MutationCreateEphemeralArgs = {
+  ephemeral?: InputMaybe<CreateEphemeralInput>;
+};
+
+export type MutationCreateFriendshipArgs = {
+  friendship?: InputMaybe<CreateFriendshipInput>;
 };
 
 export type MutationCreateGizmoArgs = {
   gizmo?: InputMaybe<CreateGizmoInput>;
 };
 
-export type MutationCreatePartArgs = {
-  part?: InputMaybe<CreatePartInput>;
+export type MutationCreateRegistrationArgs = {
+  registration?: InputMaybe<CreateRegistrationInput>;
+};
+
+export type MutationCreateSampleModelToTestReallyLongModelNamesArgs = {
+  sampleModelToTestReallyLongModelNames?: InputMaybe<CreateSampleModelToTestReallyLongModelNamesInput>;
 };
 
 export type MutationCreateSectionArgs = {
   section?: InputMaybe<CreateSectionInput>;
 };
 
+export type MutationCreateSprocketArgs = {
+  sprocket?: InputMaybe<CreateSprocketInput>;
+};
+
+export type MutationCreateStudentArgs = {
+  student?: InputMaybe<CreateStudentInput>;
+};
+
+export type MutationCreateTeacherArgs = {
+  teacher?: InputMaybe<CreateTeacherInput>;
+};
+
 export type MutationCreateWidgetArgs = {
   widget?: InputMaybe<CreateWidgetInput>;
 };
 
-export type MutationCustomActionAutoTableTestArgs = {
+export type MutationCreateWidgetImageArgs = {
+  widgetImage?: InputMaybe<CreateWidgetImageInput>;
+};
+
+export type MutationDeleteBillingAccountArgs = {
   id: Scalars["GadgetID"]["input"];
 };
 
-export type MutationCustomActionWithParamsAutoTableTestArgs = {
-  id: Scalars["GadgetID"]["input"];
-  numberParam1?: InputMaybe<Scalars["Float"]["input"]>;
-  stringParam1?: InputMaybe<Scalars["String"]["input"]>;
-};
-
-export type MutationDeleteAutoTableTestArgs = {
+export type MutationDeleteCityArgs = {
   id: Scalars["GadgetID"]["input"];
 };
 
-export type MutationDeleteAutoTableTestRelatedModelArgs = {
+export type MutationDeleteCourseArgs = {
+  id: Scalars["GadgetID"]["input"];
+};
+
+export type MutationDeleteCustomerArgs = {
+  id: Scalars["GadgetID"]["input"];
+};
+
+export type MutationDeleteEphemeralArgs = {
+  id: Scalars["GadgetID"]["input"];
+};
+
+export type MutationDeleteFieldlessArgs = {
+  id: Scalars["GadgetID"]["input"];
+};
+
+export type MutationDeleteFriendshipArgs = {
   id: Scalars["GadgetID"]["input"];
 };
 
@@ -8756,15 +9668,27 @@ export type MutationDeleteGizmoArgs = {
   id: Scalars["GadgetID"]["input"];
 };
 
-export type MutationDeleteModelAArgs = {
+export type MutationDeleteRegistrationArgs = {
   id: Scalars["GadgetID"]["input"];
 };
 
-export type MutationDeletePartArgs = {
+export type MutationDeleteSampleModelToTestReallyLongModelNamesArgs = {
   id: Scalars["GadgetID"]["input"];
 };
 
 export type MutationDeleteSectionArgs = {
+  id: Scalars["GadgetID"]["input"];
+};
+
+export type MutationDeleteSprocketArgs = {
+  id: Scalars["GadgetID"]["input"];
+};
+
+export type MutationDeleteStudentArgs = {
+  id: Scalars["GadgetID"]["input"];
+};
+
+export type MutationDeleteTeacherArgs = {
   id: Scalars["GadgetID"]["input"];
 };
 
@@ -8776,42 +9700,102 @@ export type MutationDeleteWidgetArgs = {
   id: Scalars["GadgetID"]["input"];
 };
 
-export type MutationErrorShopifySyncArgs = {
+export type MutationDeleteWidgetImageArgs = {
   id: Scalars["GadgetID"]["input"];
-  shopifySync?: InputMaybe<ErrorShopifySyncInput>;
 };
 
-export type MutationFlipAllArgs = {
-  inventoryCount?: InputMaybe<Scalars["Float"]["input"]>;
-  title?: InputMaybe<Scalars["String"]["input"]>;
+export type MutationFlipDownWidgetArgs = {
+  id: Scalars["GadgetID"]["input"];
 };
 
-export type MutationRunShopifySyncArgs = {
-  shopifySync?: InputMaybe<RunShopifySyncInput>;
-  startReason?: InputMaybe<Scalars["String"]["input"]>;
+export type MutationFlipUpWidgetArgs = {
+  id: Scalars["GadgetID"]["input"];
+};
+
+export type MutationFoldGizmoArgs = {
+  gizmo?: InputMaybe<FoldGizmoInput>;
+  id: Scalars["GadgetID"]["input"];
+};
+
+export type MutationLogParamsArgs = {
+  arr?: InputMaybe<Array<Scalars["String"]["input"]>>;
+  bool?: InputMaybe<Scalars["Boolean"]["input"]>;
+  num?: InputMaybe<Scalars["Float"]["input"]>;
+  str?: InputMaybe<Scalars["String"]["input"]>;
+};
+
+export type MutationOtherCreateGizmoArgs = {
+  gizmo?: InputMaybe<OtherCreateGizmoInput>;
+};
+
+export type MutationResetPasswordUserArgs = {
+  code?: InputMaybe<Scalars["String"]["input"]>;
+  password?: InputMaybe<Scalars["String"]["input"]>;
+};
+
+export type MutationSendResetPasswordUserArgs = {
+  email?: InputMaybe<Scalars["String"]["input"]>;
+};
+
+export type MutationSendVerifyEmailUserArgs = {
+  email?: InputMaybe<Scalars["String"]["input"]>;
 };
 
 export type MutationSignInUserArgs = {
-  id: Scalars["GadgetID"]["input"];
-  user?: InputMaybe<SignInUserInput>;
+  email?: InputMaybe<Scalars["String"]["input"]>;
+  password?: InputMaybe<Scalars["String"]["input"]>;
 };
 
 export type MutationSignOutUserArgs = {
   id: Scalars["GadgetID"]["input"];
-  user?: InputMaybe<SignOutUserInput>;
 };
 
 export type MutationSignUpUserArgs = {
-  user?: InputMaybe<SignUpUserInput>;
+  email?: InputMaybe<Scalars["String"]["input"]>;
+  password?: InputMaybe<Scalars["String"]["input"]>;
 };
 
-export type MutationUpdateAutoTableTestArgs = {
-  autoTableTest?: InputMaybe<UpdateAutoTableTestInput>;
+export type MutationStraightenGizmoArgs = {
+  gizmo?: InputMaybe<StraightenGizmoInput>;
   id: Scalars["GadgetID"]["input"];
 };
 
-export type MutationUpdateAutoTableTestRelatedModelArgs = {
-  _autoTableTestRelatedModel?: InputMaybe<UpdateAutoTableTestRelatedModelInput>;
+export type MutationUnfoldGizmoArgs = {
+  gizmo?: InputMaybe<UnfoldGizmoInput>;
+  id: Scalars["GadgetID"]["input"];
+};
+
+export type MutationUpdateBillingAccountArgs = {
+  billingAccount?: InputMaybe<UpdateBillingAccountInput>;
+  id: Scalars["GadgetID"]["input"];
+};
+
+export type MutationUpdateCityArgs = {
+  city?: InputMaybe<UpdateCityInput>;
+  id: Scalars["GadgetID"]["input"];
+};
+
+export type MutationUpdateCourseArgs = {
+  course?: InputMaybe<UpdateCourseInput>;
+  id: Scalars["GadgetID"]["input"];
+};
+
+export type MutationUpdateCustomerArgs = {
+  customer?: InputMaybe<UpdateCustomerInput>;
+  id: Scalars["GadgetID"]["input"];
+};
+
+export type MutationUpdateEphemeralArgs = {
+  ephemeral?: InputMaybe<UpdateEphemeralInput>;
+  id: Scalars["GadgetID"]["input"];
+};
+
+export type MutationUpdateFieldlessArgs = {
+  id: Scalars["GadgetID"]["input"];
+};
+
+export type MutationUpdateFriendshipArgs = {
+  friendship?: InputMaybe<UpdateFriendshipInput>;
   id: Scalars["GadgetID"]["input"];
 };
 
@@ -8820,18 +9804,34 @@ export type MutationUpdateGizmoArgs = {
   id: Scalars["GadgetID"]["input"];
 };
 
-export type MutationUpdateModelAArgs = {
+export type MutationUpdateRegistrationArgs = {
   id: Scalars["GadgetID"]["input"];
+  registration?: InputMaybe<UpdateRegistrationInput>;
 };
 
-export type MutationUpdatePartArgs = {
+export type MutationUpdateSampleModelToTestReallyLongModelNamesArgs = {
   id: Scalars["GadgetID"]["input"];
-  part?: InputMaybe<UpdatePartInput>;
+  sampleModelToTestReallyLongModelNames?: InputMaybe<UpdateSampleModelToTestReallyLongModelNamesInput>;
 };
 
 export type MutationUpdateSectionArgs = {
   id: Scalars["GadgetID"]["input"];
   section?: InputMaybe<UpdateSectionInput>;
+};
+
+export type MutationUpdateSprocketArgs = {
+  id: Scalars["GadgetID"]["input"];
+  sprocket?: InputMaybe<UpdateSprocketInput>;
+};
+
+export type MutationUpdateStudentArgs = {
+  id: Scalars["GadgetID"]["input"];
+  student?: InputMaybe<UpdateStudentInput>;
+};
+
+export type MutationUpdateTeacherArgs = {
+  id: Scalars["GadgetID"]["input"];
+  teacher?: InputMaybe<UpdateTeacherInput>;
 };
 
 export type MutationUpdateUserArgs = {
@@ -8844,22 +9844,43 @@ export type MutationUpdateWidgetArgs = {
   widget?: InputMaybe<UpdateWidgetInput>;
 };
 
-export type MutationUpdateWithCustomParamsAutoTableTestArgs = {
-  autoTableTest?: InputMaybe<UpdateWithCustomParamsAutoTableTestInput>;
+export type MutationUpdateWidgetImageArgs = {
   id: Scalars["GadgetID"]["input"];
-  num?: InputMaybe<Scalars["Float"]["input"]>;
-  numberParam1?: InputMaybe<Scalars["Float"]["input"]>;
-  str?: InputMaybe<Scalars["String"]["input"]>;
-  stringParam1?: InputMaybe<Scalars["String"]["input"]>;
+  widgetImage?: InputMaybe<UpdateWidgetImageInput>;
 };
 
-export type MutationUpsertAutoTableTestArgs = {
-  autoTableTest?: InputMaybe<UpsertAutoTableTestInput>;
+export type MutationUpsertBillingAccountArgs = {
+  billingAccount?: InputMaybe<UpsertBillingAccountInput>;
   on?: InputMaybe<Array<Scalars["String"]["input"]>>;
 };
 
-export type MutationUpsertAutoTableTestRelatedModelArgs = {
-  _autoTableTestRelatedModel?: InputMaybe<UpsertAutoTableTestRelatedModelInput>;
+export type MutationUpsertCityArgs = {
+  city?: InputMaybe<UpsertCityInput>;
+  on?: InputMaybe<Array<Scalars["String"]["input"]>>;
+};
+
+export type MutationUpsertCourseArgs = {
+  course?: InputMaybe<UpsertCourseInput>;
+  on?: InputMaybe<Array<Scalars["String"]["input"]>>;
+};
+
+export type MutationUpsertCustomerArgs = {
+  customer?: InputMaybe<UpsertCustomerInput>;
+  on?: InputMaybe<Array<Scalars["String"]["input"]>>;
+};
+
+export type MutationUpsertEphemeralArgs = {
+  ephemeral?: InputMaybe<UpsertEphemeralInput>;
+  on?: InputMaybe<Array<Scalars["String"]["input"]>>;
+};
+
+export type MutationUpsertFieldlessArgs = {
+  fieldless?: InputMaybe<UpsertFieldlessInput>;
+  on?: InputMaybe<Array<Scalars["String"]["input"]>>;
+};
+
+export type MutationUpsertFriendshipArgs = {
+  friendship?: InputMaybe<UpsertFriendshipInput>;
   on?: InputMaybe<Array<Scalars["String"]["input"]>>;
 };
 
@@ -8868,14 +9889,14 @@ export type MutationUpsertGizmoArgs = {
   on?: InputMaybe<Array<Scalars["String"]["input"]>>;
 };
 
-export type MutationUpsertModelAArgs = {
-  modelA?: InputMaybe<UpsertModelAInput>;
+export type MutationUpsertRegistrationArgs = {
   on?: InputMaybe<Array<Scalars["String"]["input"]>>;
+  registration?: InputMaybe<UpsertRegistrationInput>;
 };
 
-export type MutationUpsertPartArgs = {
+export type MutationUpsertSampleModelToTestReallyLongModelNamesArgs = {
   on?: InputMaybe<Array<Scalars["String"]["input"]>>;
-  part?: InputMaybe<UpsertPartInput>;
+  sampleModelToTestReallyLongModelNames?: InputMaybe<UpsertSampleModelToTestReallyLongModelNamesInput>;
 };
 
 export type MutationUpsertSectionArgs = {
@@ -8883,14 +9904,25 @@ export type MutationUpsertSectionArgs = {
   section?: InputMaybe<UpsertSectionInput>;
 };
 
-export type MutationUpsertShopifySyncArgs = {
+export type MutationUpsertSprocketArgs = {
   on?: InputMaybe<Array<Scalars["String"]["input"]>>;
-  shopifySync?: InputMaybe<UpsertShopifySyncInput>;
-  startReason?: InputMaybe<Scalars["String"]["input"]>;
+  sprocket?: InputMaybe<UpsertSprocketInput>;
+};
+
+export type MutationUpsertStudentArgs = {
+  on?: InputMaybe<Array<Scalars["String"]["input"]>>;
+  student?: InputMaybe<UpsertStudentInput>;
+};
+
+export type MutationUpsertTeacherArgs = {
+  on?: InputMaybe<Array<Scalars["String"]["input"]>>;
+  teacher?: InputMaybe<UpsertTeacherInput>;
 };
 
 export type MutationUpsertUserArgs = {
+  email?: InputMaybe<Scalars["String"]["input"]>;
   on?: InputMaybe<Array<Scalars["String"]["input"]>>;
+  password?: InputMaybe<Scalars["String"]["input"]>;
   user?: InputMaybe<UpsertUserInput>;
 };
 
@@ -8899,186 +9931,45 @@ export type MutationUpsertWidgetArgs = {
   widget?: InputMaybe<UpsertWidgetInput>;
 };
 
-export type NameMutations = {
-  __typename?: "NameMutations";
-  spaced: NameSpacedMutations;
+export type MutationUpsertWidgetImageArgs = {
+  on?: InputMaybe<Array<Scalars["String"]["input"]>>;
+  widgetImage?: InputMaybe<UpsertWidgetImageInput>;
 };
 
-export type NameSpacedActionAResult = {
-  __typename?: "NameSpacedActionAResult";
-  errors?: Maybe<Array<ExecutionError>>;
-  result?: Maybe<Scalars["JSON"]["output"]>;
-  success: Scalars["Boolean"]["output"];
+export type MutationVerifyEmailUserArgs = {
+  code?: InputMaybe<Scalars["String"]["input"]>;
 };
 
-export type NameSpacedCustomObjectParamsObjParamInput = {
-  firstLevelStr?: InputMaybe<Scalars["String"]["input"]>;
-  objProperty1?: InputMaybe<NameSpacedCustomObjectParamsObjProperty1Input>;
+export type NestedAddInventoryLocationInput = {
+  phone?: InputMaybe<NestedAddInventoryLocationPhoneInput>;
+  street?: InputMaybe<Scalars["String"]["input"]>;
+  streetNumber?: InputMaybe<Scalars["Float"]["input"]>;
 };
 
-export type NameSpacedCustomObjectParamsObjProperty1Input = {
-  objProperty2?: InputMaybe<NameSpacedCustomObjectParamsObjProperty2Input>;
-  secondLevelStr?: InputMaybe<Scalars["String"]["input"]>;
+export type NestedAddInventoryLocationPhoneInput = {
+  areaCode?: InputMaybe<Scalars["String"]["input"]>;
+  countryCode?: InputMaybe<Scalars["String"]["input"]>;
 };
 
-export type NameSpacedCustomObjectParamsObjProperty2Input = {
-  thirdLevelStr?: InputMaybe<Scalars["String"]["input"]>;
+export type NestedBillingAccountCreateInput = {
+  balance?: InputMaybe<Scalars["Float"]["input"]>;
+  customer?: InputMaybe<CustomerBelongsToInput>;
 };
 
-export type NameSpacedCustomObjectParamsResult = {
-  __typename?: "NameSpacedCustomObjectParamsResult";
-  errors?: Maybe<Array<ExecutionError>>;
-  result?: Maybe<Scalars["JSON"]["output"]>;
-  success: Scalars["Boolean"]["output"];
-};
-
-export type NameSpacedMutations = {
-  __typename?: "NameSpacedMutations";
-  actionA?: Maybe<NameSpacedActionAResult>;
-  customObjectParams?: Maybe<NameSpacedCustomObjectParamsResult>;
-};
-
-export type NameSpacedMutationsCustomObjectParamsArgs = {
-  objParam?: InputMaybe<NameSpacedCustomObjectParamsObjParamInput>;
-  rootLevelStr?: InputMaybe<Scalars["String"]["input"]>;
-};
-
-export type NameSpacedNoTriggerGlobalActionResult = {
-  __typename?: "NameSpacedNoTriggerGlobalActionResult";
-  errors?: Maybe<Array<ExecutionError>>;
-  result?: Maybe<Scalars["JSON"]["output"]>;
-  success: Scalars["Boolean"]["output"];
-};
-
-export type NestedAutoTableTestCreateInput = {
-  bool?: InputMaybe<Scalars["Boolean"]["input"]>;
-  dt?: InputMaybe<Scalars["DateTime"]["input"]>;
-  email?: InputMaybe<Scalars["String"]["input"]>;
-  enum?: InputMaybe<Array<Scalars["AutoTableTestEnumEnum"]["input"]>>;
-  es?: InputMaybe<Scalars["String"]["input"]>;
-  file?: InputMaybe<StoredFileInput>;
-  hasMany?: InputMaybe<Array<InputMaybe<AutoTableTestRelatedModelHasManyInput>>>;
-  hasOne?: InputMaybe<AutoTableTestRelatedModelHasOneInput>;
-  json?: InputMaybe<Scalars["JSON"]["input"]>;
-  num?: InputMaybe<Scalars["Float"]["input"]>;
-  pwd?: InputMaybe<Scalars["String"]["input"]>;
-  /** A string list of Gadget platform Role keys to assign to this record */
-  rl?: InputMaybe<Array<Scalars["String"]["input"]>>;
-  rt?: InputMaybe<RichTextInput>;
-  str?: InputMaybe<Scalars["String"]["input"]>;
-  url?: InputMaybe<Scalars["String"]["input"]>;
-  vect?: InputMaybe<Array<Scalars["Float"]["input"]>>;
-};
-
-export type NestedAutoTableTestCustomActionInput = {
+export type NestedBillingAccountDeleteInput = {
   id: Scalars["GadgetID"]["input"];
 };
 
-export type NestedAutoTableTestCustomActionWithParamsInput = {
+export type NestedBillingAccountUpdateInput = {
+  balance?: InputMaybe<Scalars["Float"]["input"]>;
+  customer?: InputMaybe<CustomerBelongsToInput>;
   id: Scalars["GadgetID"]["input"];
-  numberParam1?: InputMaybe<Scalars["Float"]["input"]>;
-  stringParam1?: InputMaybe<Scalars["String"]["input"]>;
-};
-
-export type NestedAutoTableTestDeleteInput = {
-  id: Scalars["GadgetID"]["input"];
-};
-
-export type NestedAutoTableTestRelatedModelCreateInput = {
-  belongsToParent?: InputMaybe<AutoTableTestBelongsToInput>;
-  manyBelongsToParent?: InputMaybe<AutoTableTestBelongsToInput>;
-  name?: InputMaybe<Scalars["String"]["input"]>;
-  someBool?: InputMaybe<Scalars["Boolean"]["input"]>;
-  someNumber?: InputMaybe<Scalars["Float"]["input"]>;
-};
-
-export type NestedAutoTableTestRelatedModelDeleteInput = {
-  id: Scalars["GadgetID"]["input"];
-};
-
-export type NestedAutoTableTestRelatedModelUpdateInput = {
-  belongsToParent?: InputMaybe<AutoTableTestBelongsToInput>;
-  id: Scalars["GadgetID"]["input"];
-  manyBelongsToParent?: InputMaybe<AutoTableTestBelongsToInput>;
-  name?: InputMaybe<Scalars["String"]["input"]>;
-  someBool?: InputMaybe<Scalars["Boolean"]["input"]>;
-  someNumber?: InputMaybe<Scalars["Float"]["input"]>;
-};
-
-export type NestedAutoTableTestUpdateInput = {
-  bool?: InputMaybe<Scalars["Boolean"]["input"]>;
-  dt?: InputMaybe<Scalars["DateTime"]["input"]>;
-  email?: InputMaybe<Scalars["String"]["input"]>;
-  enum?: InputMaybe<Array<Scalars["AutoTableTestEnumEnum"]["input"]>>;
-  es?: InputMaybe<Scalars["String"]["input"]>;
-  file?: InputMaybe<StoredFileInput>;
-  hasMany?: InputMaybe<Array<InputMaybe<AutoTableTestRelatedModelHasManyInput>>>;
-  hasOne?: InputMaybe<AutoTableTestRelatedModelHasOneInput>;
-  id: Scalars["GadgetID"]["input"];
-  json?: InputMaybe<Scalars["JSON"]["input"]>;
-  num?: InputMaybe<Scalars["Float"]["input"]>;
-  pwd?: InputMaybe<Scalars["String"]["input"]>;
-  /** A string list of Gadget platform Role keys to assign to this record */
-  rl?: InputMaybe<Array<Scalars["String"]["input"]>>;
-  rt?: InputMaybe<RichTextInput>;
-  str?: InputMaybe<Scalars["String"]["input"]>;
-  url?: InputMaybe<Scalars["String"]["input"]>;
-  vect?: InputMaybe<Array<Scalars["Float"]["input"]>>;
-};
-
-export type NestedAutoTableTestUpdateWithCustomParamsInput = {
-  bool?: InputMaybe<Scalars["Boolean"]["input"]>;
-  dt?: InputMaybe<Scalars["DateTime"]["input"]>;
-  email?: InputMaybe<Scalars["String"]["input"]>;
-  enum?: InputMaybe<Array<Scalars["AutoTableTestEnumEnum"]["input"]>>;
-  es?: InputMaybe<Scalars["String"]["input"]>;
-  file?: InputMaybe<StoredFileInput>;
-  hasMany?: InputMaybe<Array<InputMaybe<AutoTableTestRelatedModelHasManyInput>>>;
-  hasOne?: InputMaybe<AutoTableTestRelatedModelHasOneInput>;
-  id: Scalars["GadgetID"]["input"];
-  json?: InputMaybe<Scalars["JSON"]["input"]>;
-  num?: InputMaybe<Scalars["Float"]["input"]>;
-  numberParam1?: InputMaybe<Scalars["Float"]["input"]>;
-  pwd?: InputMaybe<Scalars["String"]["input"]>;
-  /** A string list of Gadget platform Role keys to assign to this record */
-  rl?: InputMaybe<Array<Scalars["String"]["input"]>>;
-  rt?: InputMaybe<RichTextInput>;
-  str?: InputMaybe<Scalars["String"]["input"]>;
-  stringParam1?: InputMaybe<Scalars["String"]["input"]>;
-  url?: InputMaybe<Scalars["String"]["input"]>;
-  vect?: InputMaybe<Array<Scalars["Float"]["input"]>>;
-};
-
-export type NestedBaseModelCreateInput = {
-  baseModelHmtField?: InputMaybe<Array<InputMaybe<SiblingModelHasManyThroughInput>>>;
-  baseModelName?: InputMaybe<Scalars["String"]["input"]>;
-  joinerModel?: InputMaybe<Array<InputMaybe<JoinerModelHasManyInput>>>;
-  joinerModels?: InputMaybe<Array<InputMaybe<JoinerModelHasManyInput>>>;
-};
-
-export type NestedBaseModelDeleteInput = {
-  id: Scalars["GadgetID"]["input"];
-};
-
-export type NestedBaseModelUpdateInput = {
-  baseModelHmtField?: InputMaybe<Array<InputMaybe<SiblingModelHasManyThroughInput>>>;
-  baseModelName?: InputMaybe<Scalars["String"]["input"]>;
-  id: Scalars["GadgetID"]["input"];
-  joinerModel?: InputMaybe<Array<InputMaybe<JoinerModelHasManyInput>>>;
-  joinerModels?: InputMaybe<Array<InputMaybe<JoinerModelHasManyInput>>>;
 };
 
 export type NestedCityCreateInput = {
   name?: InputMaybe<Scalars["String"]["input"]>;
-  stadium?: InputMaybe<StadiumHasOneInput>;
-};
-
-export type NestedCityCustomObjectParamsInput = {
-  id: Scalars["GadgetID"]["input"];
-  name?: InputMaybe<Scalars["String"]["input"]>;
-  objParam?: InputMaybe<NestedCustomObjectParamsObjParamInput>;
-  rootLevelStr?: InputMaybe<Scalars["String"]["input"]>;
-  stadium?: InputMaybe<StadiumHasOneInput>;
+  students?: InputMaybe<Array<InputMaybe<StudentHasManyInput>>>;
+  teachers?: InputMaybe<Array<InputMaybe<TeacherHasManyInput>>>;
 };
 
 export type NestedCityDeleteInput = {
@@ -9088,26 +9979,87 @@ export type NestedCityDeleteInput = {
 export type NestedCityUpdateInput = {
   id: Scalars["GadgetID"]["input"];
   name?: InputMaybe<Scalars["String"]["input"]>;
-  stadium?: InputMaybe<StadiumHasOneInput>;
+  students?: InputMaybe<Array<InputMaybe<StudentHasManyInput>>>;
+  teachers?: InputMaybe<Array<InputMaybe<TeacherHasManyInput>>>;
 };
 
-export type NestedCustomObjectParamsObjParamInput = {
-  firstLevelStr?: InputMaybe<Scalars["String"]["input"]>;
-  objProperty1?: InputMaybe<NestedCustomObjectParamsObjProperty1Input>;
+export type NestedCourseCreateInput = {
+  offered?: InputMaybe<Scalars["Boolean"]["input"]>;
+  registration?: InputMaybe<Array<InputMaybe<RegistrationHasManyInput>>>;
+  registrations?: InputMaybe<Array<InputMaybe<RegistrationHasManyInput>>>;
+  students?: InputMaybe<Array<InputMaybe<StudentHasManyThroughInput>>>;
+  teacher?: InputMaybe<TeacherBelongsToInput>;
+  title?: InputMaybe<Scalars["String"]["input"]>;
 };
 
-export type NestedCustomObjectParamsObjProperty1Input = {
-  objProperty2?: InputMaybe<NestedCustomObjectParamsObjProperty2Input>;
-  secondLevelStr?: InputMaybe<Scalars["String"]["input"]>;
+export type NestedCourseDeleteInput = {
+  id: Scalars["GadgetID"]["input"];
 };
 
-export type NestedCustomObjectParamsObjProperty2Input = {
-  thirdLevelStr?: InputMaybe<Scalars["String"]["input"]>;
+export type NestedCourseUpdateInput = {
+  id: Scalars["GadgetID"]["input"];
+  offered?: InputMaybe<Scalars["Boolean"]["input"]>;
+  registration?: InputMaybe<Array<InputMaybe<RegistrationHasManyInput>>>;
+  registrations?: InputMaybe<Array<InputMaybe<RegistrationHasManyInput>>>;
+  students?: InputMaybe<Array<InputMaybe<StudentHasManyThroughInput>>>;
+  teacher?: InputMaybe<TeacherBelongsToInput>;
+  title?: InputMaybe<Scalars["String"]["input"]>;
+};
+
+export type NestedCustomerCreateInput = {
+  billingAccount?: InputMaybe<BillingAccountHasOneInput>;
+  email?: InputMaybe<Scalars["String"]["input"]>;
+};
+
+export type NestedCustomerDeleteInput = {
+  id: Scalars["GadgetID"]["input"];
+};
+
+export type NestedCustomerUpdateInput = {
+  billingAccount?: InputMaybe<BillingAccountHasOneInput>;
+  email?: InputMaybe<Scalars["String"]["input"]>;
+  id: Scalars["GadgetID"]["input"];
+};
+
+export type NestedFriendshipCreateInput = {
+  ended?: InputMaybe<Scalars["DateOrDateTime"]["input"]>;
+  followee?: InputMaybe<StudentBelongsToInput>;
+  follower?: InputMaybe<StudentBelongsToInput>;
+  started?: InputMaybe<Scalars["DateOrDateTime"]["input"]>;
+};
+
+export type NestedFriendshipDeleteInput = {
+  id: Scalars["GadgetID"]["input"];
+};
+
+export type NestedFriendshipUpdateInput = {
+  ended?: InputMaybe<Scalars["DateOrDateTime"]["input"]>;
+  followee?: InputMaybe<StudentBelongsToInput>;
+  follower?: InputMaybe<StudentBelongsToInput>;
+  id: Scalars["GadgetID"]["input"];
+  started?: InputMaybe<Scalars["DateOrDateTime"]["input"]>;
+};
+
+export type NestedGizmoBendInput = {
+  id: Scalars["GadgetID"]["input"];
+  name?: InputMaybe<Scalars["String"]["input"]>;
+  sprockets?: InputMaybe<Array<InputMaybe<SprocketHasManyInput>>>;
+  state?: InputMaybe<Scalars["GizmoStateEnum"]["input"]>;
+  widget?: InputMaybe<WidgetBelongsToInput>;
+};
+
+export type NestedGizmoBreakInput = {
+  id: Scalars["GadgetID"]["input"];
+  name?: InputMaybe<Scalars["String"]["input"]>;
+  sprockets?: InputMaybe<Array<InputMaybe<SprocketHasManyInput>>>;
+  state?: InputMaybe<Scalars["GizmoStateEnum"]["input"]>;
+  widget?: InputMaybe<WidgetBelongsToInput>;
 };
 
 export type NestedGizmoCreateInput = {
   name?: InputMaybe<Scalars["String"]["input"]>;
-  orientation?: InputMaybe<Scalars["String"]["input"]>;
+  sprockets?: InputMaybe<Array<InputMaybe<SprocketHasManyInput>>>;
+  state?: InputMaybe<Scalars["GizmoStateEnum"]["input"]>;
   widget?: InputMaybe<WidgetBelongsToInput>;
 };
 
@@ -9115,47 +10067,90 @@ export type NestedGizmoDeleteInput = {
   id: Scalars["GadgetID"]["input"];
 };
 
-export type NestedGizmoUpdateInput = {
+export type NestedGizmoFoldInput = {
   id: Scalars["GadgetID"]["input"];
   name?: InputMaybe<Scalars["String"]["input"]>;
-  orientation?: InputMaybe<Scalars["String"]["input"]>;
+  sprockets?: InputMaybe<Array<InputMaybe<SprocketHasManyInput>>>;
+  state?: InputMaybe<Scalars["GizmoStateEnum"]["input"]>;
   widget?: InputMaybe<WidgetBelongsToInput>;
 };
 
-export type NestedJoinerModelCreateInput = {
-  joinerBelongsToBase?: InputMaybe<BaseModelBelongsToInput>;
-  joinerBelongsToSibling?: InputMaybe<SiblingModelBelongsToInput>;
+export type NestedGizmoOtherCreateInput = {
+  name?: InputMaybe<Scalars["String"]["input"]>;
+  sprockets?: InputMaybe<Array<InputMaybe<SprocketHasManyInput>>>;
+  state?: InputMaybe<Scalars["GizmoStateEnum"]["input"]>;
+  widget?: InputMaybe<WidgetBelongsToInput>;
 };
 
-export type NestedJoinerModelDeleteInput = {
+export type NestedGizmoStraightenInput = {
   id: Scalars["GadgetID"]["input"];
+  name?: InputMaybe<Scalars["String"]["input"]>;
+  sprockets?: InputMaybe<Array<InputMaybe<SprocketHasManyInput>>>;
+  state?: InputMaybe<Scalars["GizmoStateEnum"]["input"]>;
+  widget?: InputMaybe<WidgetBelongsToInput>;
 };
 
-export type NestedJoinerModelUpdateInput = {
+export type NestedGizmoUnfoldInput = {
   id: Scalars["GadgetID"]["input"];
-  joinerBelongsToBase?: InputMaybe<BaseModelBelongsToInput>;
-  joinerBelongsToSibling?: InputMaybe<SiblingModelBelongsToInput>;
+  name?: InputMaybe<Scalars["String"]["input"]>;
+  sprockets?: InputMaybe<Array<InputMaybe<SprocketHasManyInput>>>;
+  state?: InputMaybe<Scalars["GizmoStateEnum"]["input"]>;
+  widget?: InputMaybe<WidgetBelongsToInput>;
+};
+
+export type NestedGizmoUpdateInput = {
+  id: Scalars["GadgetID"]["input"];
+  name?: InputMaybe<Scalars["String"]["input"]>;
+  sprockets?: InputMaybe<Array<InputMaybe<SprocketHasManyInput>>>;
+  state?: InputMaybe<Scalars["GizmoStateEnum"]["input"]>;
+  widget?: InputMaybe<WidgetBelongsToInput>;
+};
+
+export type NestedPlayerBarfAnErrorInput = {
+  id: Scalars["GadgetID"]["input"];
 };
 
 export type NestedPlayerCreateInput = {
-  currentRound?: InputMaybe<RoundBelongsToInput>;
+  birthday?: InputMaybe<Scalars["DateTime"]["input"]>;
   name?: InputMaybe<Scalars["String"]["input"]>;
+  number?: InputMaybe<Scalars["Float"]["input"]>;
+  rounds?: InputMaybe<Array<InputMaybe<RoundHasManyInput>>>;
 };
 
 export type NestedPlayerDeleteInput = {
   id: Scalars["GadgetID"]["input"];
 };
 
+export type NestedPlayerSetBestNumberInput = {
+  id: Scalars["GadgetID"]["input"];
+};
+
 export type NestedPlayerUpdateInput = {
-  currentRound?: InputMaybe<RoundBelongsToInput>;
+  birthday?: InputMaybe<Scalars["DateTime"]["input"]>;
   id: Scalars["GadgetID"]["input"];
   name?: InputMaybe<Scalars["String"]["input"]>;
+  number?: InputMaybe<Scalars["Float"]["input"]>;
+  rounds?: InputMaybe<Array<InputMaybe<RoundHasManyInput>>>;
+};
+
+export type NestedRegistrationCreateInput = {
+  course?: InputMaybe<CourseBelongsToInput>;
+  student?: InputMaybe<StudentBelongsToInput>;
+};
+
+export type NestedRegistrationDeleteInput = {
+  id: Scalars["GadgetID"]["input"];
+};
+
+export type NestedRegistrationUpdateInput = {
+  course?: InputMaybe<CourseBelongsToInput>;
+  id: Scalars["GadgetID"]["input"];
+  student?: InputMaybe<StudentBelongsToInput>;
 };
 
 export type NestedRoundCreateInput = {
-  name?: InputMaybe<Scalars["String"]["input"]>;
-  players?: InputMaybe<Array<InputMaybe<PlayerHasManyInput>>>;
-  stadium?: InputMaybe<StadiumBelongsToInput>;
+  number?: InputMaybe<Scalars["Float"]["input"]>;
+  player?: InputMaybe<PlayerBelongsToInput>;
 };
 
 export type NestedRoundDeleteInput = {
@@ -9164,13 +10159,12 @@ export type NestedRoundDeleteInput = {
 
 export type NestedRoundUpdateInput = {
   id: Scalars["GadgetID"]["input"];
-  name?: InputMaybe<Scalars["String"]["input"]>;
-  players?: InputMaybe<Array<InputMaybe<PlayerHasManyInput>>>;
-  stadium?: InputMaybe<StadiumBelongsToInput>;
+  number?: InputMaybe<Scalars["Float"]["input"]>;
+  player?: InputMaybe<PlayerBelongsToInput>;
 };
 
 export type NestedSectionCreateInput = {
-  name?: InputMaybe<Scalars["String"]["input"]>;
+  title?: InputMaybe<Scalars["String"]["input"]>;
   widgets?: InputMaybe<Array<InputMaybe<WidgetHasManyInput>>>;
 };
 
@@ -9180,73 +10174,120 @@ export type NestedSectionDeleteInput = {
 
 export type NestedSectionUpdateInput = {
   id: Scalars["GadgetID"]["input"];
-  name?: InputMaybe<Scalars["String"]["input"]>;
+  title?: InputMaybe<Scalars["String"]["input"]>;
   widgets?: InputMaybe<Array<InputMaybe<WidgetHasManyInput>>>;
 };
 
-export type NestedSiblingModelCreateInput = {
-  joinerModel?: InputMaybe<Array<InputMaybe<JoinerModelHasManyInput>>>;
-  joinerModels?: InputMaybe<Array<InputMaybe<JoinerModelHasManyInput>>>;
-  siblingModelHmtField?: InputMaybe<Array<InputMaybe<BaseModelHasManyThroughInput>>>;
+export type NestedSprocketCreateInput = {
+  gizmo?: InputMaybe<GizmoBelongsToInput>;
+  ratio?: InputMaybe<Scalars["Float"]["input"]>;
 };
 
-export type NestedSiblingModelDeleteInput = {
+export type NestedSprocketDeleteInput = {
   id: Scalars["GadgetID"]["input"];
 };
 
-export type NestedSiblingModelUpdateInput = {
+export type NestedSprocketUpdateInput = {
+  gizmo?: InputMaybe<GizmoBelongsToInput>;
   id: Scalars["GadgetID"]["input"];
-  joinerModel?: InputMaybe<Array<InputMaybe<JoinerModelHasManyInput>>>;
-  joinerModels?: InputMaybe<Array<InputMaybe<JoinerModelHasManyInput>>>;
-  siblingModelHmtField?: InputMaybe<Array<InputMaybe<BaseModelHasManyThroughInput>>>;
+  ratio?: InputMaybe<Scalars["Float"]["input"]>;
 };
 
-export type NestedStadiumCreateInput = {
+export type NestedStudentCreateInput = {
+  born?: InputMaybe<Scalars["DateOrDateTime"]["input"]>;
   city?: InputMaybe<CityBelongsToInput>;
+  courses?: InputMaybe<Array<InputMaybe<CourseHasManyThroughInput>>>;
+  followeeFriendships?: InputMaybe<Array<InputMaybe<FriendshipHasManyInput>>>;
+  followees?: InputMaybe<Array<InputMaybe<StudentHasManyThroughInput>>>;
+  followerFriendships?: InputMaybe<Array<InputMaybe<FriendshipHasManyInput>>>;
+  followers?: InputMaybe<Array<InputMaybe<StudentHasManyThroughInput>>>;
+  friendship?: InputMaybe<Array<InputMaybe<FriendshipHasManyInput>>>;
+  friendships?: InputMaybe<Array<InputMaybe<FriendshipHasManyInput>>>;
+  male?: InputMaybe<Scalars["Boolean"]["input"]>;
   name?: InputMaybe<Scalars["String"]["input"]>;
-  photo?: InputMaybe<StoredFileInput>;
-  rounds?: InputMaybe<Array<InputMaybe<RoundHasManyInput>>>;
-  tags?: InputMaybe<Array<Scalars["StadiumTagsEnum"]["input"]>>;
-  type?: InputMaybe<Scalars["StadiumTypeEnum"]["input"]>;
+  registration?: InputMaybe<Array<InputMaybe<RegistrationHasManyInput>>>;
+  registrations?: InputMaybe<Array<InputMaybe<RegistrationHasManyInput>>>;
 };
 
-export type NestedStadiumDeleteInput = {
+export type NestedStudentDeleteInput = {
   id: Scalars["GadgetID"]["input"];
 };
 
-export type NestedStadiumUpdateInput = {
+export type NestedStudentUpdateInput = {
+  born?: InputMaybe<Scalars["DateOrDateTime"]["input"]>;
   city?: InputMaybe<CityBelongsToInput>;
+  courses?: InputMaybe<Array<InputMaybe<CourseHasManyThroughInput>>>;
+  followeeFriendships?: InputMaybe<Array<InputMaybe<FriendshipHasManyInput>>>;
+  followees?: InputMaybe<Array<InputMaybe<StudentHasManyThroughInput>>>;
+  followerFriendships?: InputMaybe<Array<InputMaybe<FriendshipHasManyInput>>>;
+  followers?: InputMaybe<Array<InputMaybe<StudentHasManyThroughInput>>>;
+  friendship?: InputMaybe<Array<InputMaybe<FriendshipHasManyInput>>>;
+  friendships?: InputMaybe<Array<InputMaybe<FriendshipHasManyInput>>>;
   id: Scalars["GadgetID"]["input"];
+  male?: InputMaybe<Scalars["Boolean"]["input"]>;
   name?: InputMaybe<Scalars["String"]["input"]>;
-  photo?: InputMaybe<StoredFileInput>;
-  rounds?: InputMaybe<Array<InputMaybe<RoundHasManyInput>>>;
-  tags?: InputMaybe<Array<Scalars["StadiumTagsEnum"]["input"]>>;
-  type?: InputMaybe<Scalars["StadiumTypeEnum"]["input"]>;
+  registration?: InputMaybe<Array<InputMaybe<RegistrationHasManyInput>>>;
+  registrations?: InputMaybe<Array<InputMaybe<RegistrationHasManyInput>>>;
+};
+
+export type NestedTeacherCreateInput = {
+  born?: InputMaybe<Scalars["DateOrDateTime"]["input"]>;
+  city?: InputMaybe<CityBelongsToInput>;
+  courses?: InputMaybe<Array<InputMaybe<CourseHasManyInput>>>;
+  male?: InputMaybe<Scalars["Boolean"]["input"]>;
+  name?: InputMaybe<Scalars["String"]["input"]>;
+};
+
+export type NestedTeacherDeleteInput = {
+  id: Scalars["GadgetID"]["input"];
+};
+
+export type NestedTeacherUpdateInput = {
+  born?: InputMaybe<Scalars["DateOrDateTime"]["input"]>;
+  city?: InputMaybe<CityBelongsToInput>;
+  courses?: InputMaybe<Array<InputMaybe<CourseHasManyInput>>>;
+  id: Scalars["GadgetID"]["input"];
+  male?: InputMaybe<Scalars["Boolean"]["input"]>;
+  name?: InputMaybe<Scalars["String"]["input"]>;
+};
+
+export type NestedWidgetAddInventoryIfOutOfStockInput = {
+  amount?: InputMaybe<Scalars["Float"]["input"]>;
+  id: Scalars["GadgetID"]["input"];
 };
 
 export type NestedWidgetAddInventoryInput = {
-  count?: InputMaybe<Scalars["Float"]["input"]>;
-  id: Scalars["GadgetID"]["input"];
-};
-
-export type NestedWidgetAlwaysThrowErrorInput = {
+  amount?: InputMaybe<Scalars["Float"]["input"]>;
   anything?: InputMaybe<Scalars["JSON"]["input"]>;
   birthday?: InputMaybe<Scalars["DateOrDateTime"]["input"]>;
   category?: InputMaybe<Array<Scalars["WidgetCategoryEnum"]["input"]>>;
   color?: InputMaybe<Scalars["String"]["input"]>;
+  cost?: InputMaybe<Scalars["CADCurrencyAmount"]["input"]>;
+  customName?: InputMaybe<Scalars["String"]["input"]>;
   description?: InputMaybe<RichTextInput>;
+  email?: InputMaybe<Scalars["String"]["input"]>;
   embedding?: InputMaybe<Array<Scalars["Float"]["input"]>>;
   gizmos?: InputMaybe<Array<InputMaybe<GizmoHasManyInput>>>;
+  id: Scalars["GadgetID"]["input"];
+  images?: InputMaybe<Array<InputMaybe<WidgetImageHasManyInput>>>;
+  inStock?: InputMaybe<Scalars["Boolean"]["input"]>;
   inventoryCount?: InputMaybe<Scalars["Float"]["input"]>;
   isChecked?: InputMaybe<Scalars["Boolean"]["input"]>;
+  location?: InputMaybe<NestedAddInventoryLocationInput>;
   metafields?: InputMaybe<Scalars["JSON"]["input"]>;
-  mustBeLongString?: InputMaybe<Scalars["String"]["input"]>;
   name?: InputMaybe<Scalars["String"]["input"]>;
+  phase?: InputMaybe<Scalars["WidgetPhaseEnum"]["input"]>;
+  /** An array of Floats */
+  relatedWidgets?: InputMaybe<Array<Scalars["Float"]["input"]>>;
   /** A string list of Gadget platform Role keys to assign to this record */
   roles?: InputMaybe<Array<Scalars["String"]["input"]>>;
   secretKey?: InputMaybe<Scalars["String"]["input"]>;
   section?: InputMaybe<SectionBelongsToInput>;
+  slug?: InputMaybe<Scalars["String"]["input"]>;
   startsAt?: InputMaybe<Scalars["DateTime"]["input"]>;
+  state?: InputMaybe<Scalars["WidgetStateEnum"]["input"]>;
+  tagline?: InputMaybe<Scalars["String"]["input"]>;
+  url?: InputMaybe<Scalars["String"]["input"]>;
 };
 
 export type NestedWidgetCreateInput = {
@@ -9254,23 +10295,57 @@ export type NestedWidgetCreateInput = {
   birthday?: InputMaybe<Scalars["DateOrDateTime"]["input"]>;
   category?: InputMaybe<Array<Scalars["WidgetCategoryEnum"]["input"]>>;
   color?: InputMaybe<Scalars["String"]["input"]>;
+  cost?: InputMaybe<Scalars["CADCurrencyAmount"]["input"]>;
   description?: InputMaybe<RichTextInput>;
+  email?: InputMaybe<Scalars["String"]["input"]>;
   embedding?: InputMaybe<Array<Scalars["Float"]["input"]>>;
   gizmos?: InputMaybe<Array<InputMaybe<GizmoHasManyInput>>>;
+  images?: InputMaybe<Array<InputMaybe<WidgetImageHasManyInput>>>;
   inventoryCount?: InputMaybe<Scalars["Float"]["input"]>;
   isChecked?: InputMaybe<Scalars["Boolean"]["input"]>;
   metafields?: InputMaybe<Scalars["JSON"]["input"]>;
-  mustBeLongString?: InputMaybe<Scalars["String"]["input"]>;
   name?: InputMaybe<Scalars["String"]["input"]>;
+  phase?: InputMaybe<Scalars["WidgetPhaseEnum"]["input"]>;
   /** A string list of Gadget platform Role keys to assign to this record */
   roles?: InputMaybe<Array<Scalars["String"]["input"]>>;
   secretKey?: InputMaybe<Scalars["String"]["input"]>;
   section?: InputMaybe<SectionBelongsToInput>;
+  slug?: InputMaybe<Scalars["String"]["input"]>;
   startsAt?: InputMaybe<Scalars["DateTime"]["input"]>;
+  state?: InputMaybe<Scalars["WidgetStateEnum"]["input"]>;
+  tagline?: InputMaybe<Scalars["String"]["input"]>;
+  url?: InputMaybe<Scalars["String"]["input"]>;
 };
 
 export type NestedWidgetDeleteInput = {
   id: Scalars["GadgetID"]["input"];
+};
+
+export type NestedWidgetFlipDownInput = {
+  id: Scalars["GadgetID"]["input"];
+};
+
+export type NestedWidgetFlipUpInput = {
+  id: Scalars["GadgetID"]["input"];
+};
+
+export type NestedWidgetImageCreateInput = {
+  altText?: InputMaybe<Scalars["String"]["input"]>;
+  image?: InputMaybe<StoredFileInput>;
+  order?: InputMaybe<Scalars["Float"]["input"]>;
+  widget?: InputMaybe<WidgetBelongsToInput>;
+};
+
+export type NestedWidgetImageDeleteInput = {
+  id: Scalars["GadgetID"]["input"];
+};
+
+export type NestedWidgetImageUpdateInput = {
+  altText?: InputMaybe<Scalars["String"]["input"]>;
+  id: Scalars["GadgetID"]["input"];
+  image?: InputMaybe<StoredFileInput>;
+  order?: InputMaybe<Scalars["Float"]["input"]>;
+  widget?: InputMaybe<WidgetBelongsToInput>;
 };
 
 export type NestedWidgetUpdateInput = {
@@ -9278,35 +10353,27 @@ export type NestedWidgetUpdateInput = {
   birthday?: InputMaybe<Scalars["DateOrDateTime"]["input"]>;
   category?: InputMaybe<Array<Scalars["WidgetCategoryEnum"]["input"]>>;
   color?: InputMaybe<Scalars["String"]["input"]>;
+  cost?: InputMaybe<Scalars["CADCurrencyAmount"]["input"]>;
   description?: InputMaybe<RichTextInput>;
+  email?: InputMaybe<Scalars["String"]["input"]>;
   embedding?: InputMaybe<Array<Scalars["Float"]["input"]>>;
   gizmos?: InputMaybe<Array<InputMaybe<GizmoHasManyInput>>>;
   id: Scalars["GadgetID"]["input"];
+  images?: InputMaybe<Array<InputMaybe<WidgetImageHasManyInput>>>;
   inventoryCount?: InputMaybe<Scalars["Float"]["input"]>;
   isChecked?: InputMaybe<Scalars["Boolean"]["input"]>;
   metafields?: InputMaybe<Scalars["JSON"]["input"]>;
-  mustBeLongString?: InputMaybe<Scalars["String"]["input"]>;
   name?: InputMaybe<Scalars["String"]["input"]>;
+  phase?: InputMaybe<Scalars["WidgetPhaseEnum"]["input"]>;
   /** A string list of Gadget platform Role keys to assign to this record */
   roles?: InputMaybe<Array<Scalars["String"]["input"]>>;
   secretKey?: InputMaybe<Scalars["String"]["input"]>;
   section?: InputMaybe<SectionBelongsToInput>;
+  slug?: InputMaybe<Scalars["String"]["input"]>;
   startsAt?: InputMaybe<Scalars["DateTime"]["input"]>;
-};
-
-export type NoTriggerActionAutoTableTestResult = {
-  __typename?: "NoTriggerActionAutoTableTestResult";
-  actionRun?: Maybe<Scalars["String"]["output"]>;
-  autoTableTest?: Maybe<AutoTableTest>;
-  errors?: Maybe<Array<ExecutionError>>;
-  success: Scalars["Boolean"]["output"];
-};
-
-export type NoTriggerGlobalActionResult = {
-  __typename?: "NoTriggerGlobalActionResult";
-  errors?: Maybe<Array<ExecutionError>>;
-  result?: Maybe<Scalars["JSON"]["output"]>;
-  success: Scalars["Boolean"]["output"];
+  state?: InputMaybe<Scalars["WidgetStateEnum"]["input"]>;
+  tagline?: InputMaybe<Scalars["String"]["input"]>;
+  url?: InputMaybe<Scalars["String"]["input"]>;
 };
 
 /** Input object for updating a numeric field's value in a race-safe way in the internal API */
@@ -9315,6 +10382,21 @@ export type NumericAtomicFieldUpdateInput = {
   decrement?: InputMaybe<Scalars["Float"]["input"]>;
   /** A number to atomically increment the field value by. Can only be used on numeric fields. */
   increment?: InputMaybe<Scalars["Float"]["input"]>;
+};
+
+export type OtherCreateGizmoInput = {
+  name?: InputMaybe<Scalars["String"]["input"]>;
+  sprockets?: InputMaybe<Array<InputMaybe<SprocketHasManyInput>>>;
+  state?: InputMaybe<Scalars["GizmoStateEnum"]["input"]>;
+  widget?: InputMaybe<WidgetBelongsToInput>;
+};
+
+export type OtherCreateGizmoResult = {
+  __typename?: "OtherCreateGizmoResult";
+  actionRun?: Maybe<Scalars["String"]["output"]>;
+  errors?: Maybe<Array<ExecutionError>>;
+  gizmo?: Maybe<Gizmo>;
+  success: Scalars["Boolean"]["output"];
 };
 
 /** Information about pagination in a connection. */
@@ -9330,144 +10412,159 @@ export type PageInfo = {
   startCursor?: Maybe<Scalars["String"]["output"]>;
 };
 
-export type Part = {
-  __typename?: "Part";
-  /** Get all the fields for this record. Useful for not having to list out all the fields you want to retrieve, but slower. */
-  _all: Scalars["JSONObject"]["output"];
-  count?: Maybe<Scalars["Float"]["output"]>;
-  /** The time at which this record was first created. Set once upon record creation and never changed. Managed by Gadget. */
-  createdAt: Scalars["DateTime"]["output"];
-  /** The globally unique, unchanging identifier for this record. Assigned and managed by Gadget. */
-  id: Scalars["GadgetID"]["output"];
-  name?: Maybe<Scalars["String"]["output"]>;
-  notes?: Maybe<Scalars["String"]["output"]>;
-  /** The time at which this record was last changed. Set each time the record is successfully acted upon by an action. Managed by Gadget. */
-  updatedAt: Scalars["DateTime"]["output"];
-};
-
-/** A connection to a list of Part items. */
-export type PartConnection = {
-  __typename?: "PartConnection";
-  /** A list of edges. */
-  edges: Array<PartEdge>;
-  /** Information to aid in pagination. */
-  pageInfo: PageInfo;
-};
-
-/** An edge in a Part connection. */
-export type PartEdge = {
-  __typename?: "PartEdge";
-  /** A cursor for use in pagination */
-  cursor: Scalars["String"]["output"];
-  /** The item at the end of the edge */
-  node: Part;
-};
-
-export type PartFilter = {
-  AND?: InputMaybe<Array<InputMaybe<PartFilter>>>;
-  NOT?: InputMaybe<Array<InputMaybe<PartFilter>>>;
-  OR?: InputMaybe<Array<InputMaybe<PartFilter>>>;
-  count?: InputMaybe<FloatFilter>;
-  createdAt?: InputMaybe<DateTimeFilter>;
-  id?: InputMaybe<IdFilter>;
-  name?: InputMaybe<StringFilter>;
-  notes?: InputMaybe<StringFilter>;
-  updatedAt?: InputMaybe<DateTimeFilter>;
-};
-
-export type PartSort = {
-  /** Sort the results by the count field. Defaults to ascending (smallest value first). */
-  count?: InputMaybe<SortOrder>;
-  /** Sort the results by the createdAt field. Defaults to ascending (smallest value first). */
-  createdAt?: InputMaybe<SortOrder>;
-  /** Sort the results by the id field. Defaults to ascending (smallest value first). */
-  id?: InputMaybe<SortOrder>;
-  /** Sort the results by the name field. Defaults to ascending (smallest value first). */
-  name?: InputMaybe<SortOrder>;
-  /** Sort the results by the notes field. Defaults to ascending (smallest value first). */
-  notes?: InputMaybe<SortOrder>;
-  /** Sort the results by the updatedAt field. Defaults to ascending (smallest value first). */
-  updatedAt?: InputMaybe<SortOrder>;
-};
-
 /** Input object supporting setting or updating related model record on a relationship field */
-export type PlayerHasManyInput = {
-  /** Creates, updates, or deletes existing records in the database as needed to arrive at the list of records specified. */
-  _converge?: InputMaybe<ConvergePlayerInput>;
+export type PlayerBelongsToInput = {
+  /** Existing ID of another record, which you would like to associate this record with */
+  _link?: InputMaybe<Scalars["GadgetID"]["input"]>;
+  barfAnError?: InputMaybe<NestedPlayerBarfAnErrorInput>;
   create?: InputMaybe<NestedPlayerCreateInput>;
   delete?: InputMaybe<NestedPlayerDeleteInput>;
+  setBestNumber?: InputMaybe<NestedPlayerSetBestNumberInput>;
   update?: InputMaybe<NestedPlayerUpdateInput>;
 };
 
 export type Query = {
   __typename?: "Query";
-  _autoTableTestRelatedModel?: Maybe<AutoTableTestRelatedModel>;
-  _autoTableTestRelatedModels: AutoTableTestRelatedModelConnection;
-  autoTableTest?: Maybe<AutoTableTest>;
-  autoTableTests: AutoTableTestConnection;
+  billingAccount?: Maybe<BillingAccount>;
+  billingAccounts: BillingAccountConnection;
+  cities: CityConnection;
+  city?: Maybe<City>;
+  course?: Maybe<Course>;
+  courses: CourseConnection;
   currentSession?: Maybe<Session>;
+  customer?: Maybe<Customer>;
+  customers: CustomerConnection;
+  ephemeral?: Maybe<Ephemeral>;
+  ephemerals: EphemeralConnection;
+  fieldless?: Maybe<Fieldless>;
+  fieldlesses: FieldlessConnection;
+  friendship?: Maybe<Friendship>;
+  friendships: FriendshipConnection;
   /** Meta information about the application, like it's name, schema, and other internal details. */
   gadgetMeta: GadgetApplicationMeta;
   game: GameQueries;
   gizmo?: Maybe<Gizmo>;
   gizmos: GizmoConnection;
-  hasManyThrough: HasManyThroughQueries;
   internal: InternalQueries;
-  modelA?: Maybe<ModelA>;
-  modelAs: ModelAConnection;
-  part?: Maybe<Part>;
-  parts: PartConnection;
+  landmark: LandmarkQueries;
+  registration?: Maybe<Registration>;
+  registrations: RegistrationConnection;
+  sampleModelToTestReallyLongModelNames?: Maybe<SampleModelToTestReallyLongModelNames>;
+  sampleModelToTestReallyLongModelNamess: SampleModelToTestReallyLongModelNamesConnection;
   section?: Maybe<Section>;
   sections: SectionConnection;
   session?: Maybe<Session>;
   sessions: SessionConnection;
-  shopifyConnection: Shopify;
-  shopifyGdprRequest?: Maybe<ShopifyGdprRequest>;
-  shopifyGdprRequests: ShopifyGdprRequestConnection;
-  shopifyProduct?: Maybe<ShopifyProduct>;
-  shopifyProductImage?: Maybe<ShopifyProductImage>;
-  shopifyProductImages: ShopifyProductImageConnection;
-  shopifyProductOption?: Maybe<ShopifyProductOption>;
-  shopifyProductOptions: ShopifyProductOptionConnection;
-  shopifyProductVariant?: Maybe<ShopifyProductVariant>;
-  shopifyProductVariants: ShopifyProductVariantConnection;
-  shopifyProducts: ShopifyProductConnection;
-  shopifyShop?: Maybe<ShopifyShop>;
-  shopifyShops: ShopifyShopConnection;
-  shopifySync?: Maybe<ShopifySync>;
-  shopifySyncs: ShopifySyncConnection;
+  sprocket?: Maybe<Sprocket>;
+  sprockets: SprocketConnection;
+  student?: Maybe<Student>;
+  students: StudentConnection;
+  teacher?: Maybe<Teacher>;
+  teachers: TeacherConnection;
+  /** Computed view from api/views/totalInStock.gelly */
+  totalInStock?: Maybe<TotalInStock>;
   user?: Maybe<User>;
   users: UserConnection;
   widget?: Maybe<Widget>;
+  widgetImage?: Maybe<WidgetImage>;
+  widgetImages: WidgetImageConnection;
   widgets: WidgetConnection;
 };
 
-export type Query_AutoTableTestRelatedModelArgs = {
+export type QueryBillingAccountArgs = {
   id: Scalars["GadgetID"]["input"];
 };
 
-export type Query_AutoTableTestRelatedModelsArgs = {
+export type QueryBillingAccountsArgs = {
   after?: InputMaybe<Scalars["String"]["input"]>;
   before?: InputMaybe<Scalars["String"]["input"]>;
-  filter?: InputMaybe<Array<AutoTableTestRelatedModelFilter>>;
+  filter?: InputMaybe<Array<BillingAccountFilter>>;
   first?: InputMaybe<Scalars["Int"]["input"]>;
   last?: InputMaybe<Scalars["Int"]["input"]>;
   search?: InputMaybe<Scalars["String"]["input"]>;
-  sort?: InputMaybe<Array<AutoTableTestRelatedModelSort>>;
+  sort?: InputMaybe<Array<BillingAccountSort>>;
 };
 
-export type QueryAutoTableTestArgs = {
+export type QueryCitiesArgs = {
+  after?: InputMaybe<Scalars["String"]["input"]>;
+  before?: InputMaybe<Scalars["String"]["input"]>;
+  filter?: InputMaybe<Array<CityFilter>>;
+  first?: InputMaybe<Scalars["Int"]["input"]>;
+  last?: InputMaybe<Scalars["Int"]["input"]>;
+  search?: InputMaybe<Scalars["String"]["input"]>;
+  sort?: InputMaybe<Array<CitySort>>;
+};
+
+export type QueryCityArgs = {
   id: Scalars["GadgetID"]["input"];
 };
 
-export type QueryAutoTableTestsArgs = {
+export type QueryCourseArgs = {
+  id: Scalars["GadgetID"]["input"];
+};
+
+export type QueryCoursesArgs = {
   after?: InputMaybe<Scalars["String"]["input"]>;
   before?: InputMaybe<Scalars["String"]["input"]>;
-  filter?: InputMaybe<Array<AutoTableTestFilter>>;
+  filter?: InputMaybe<Array<CourseFilter>>;
   first?: InputMaybe<Scalars["Int"]["input"]>;
   last?: InputMaybe<Scalars["Int"]["input"]>;
   search?: InputMaybe<Scalars["String"]["input"]>;
-  sort?: InputMaybe<Array<AutoTableTestSort>>;
+  sort?: InputMaybe<Array<CourseSort>>;
+};
+
+export type QueryCustomerArgs = {
+  id: Scalars["GadgetID"]["input"];
+};
+
+export type QueryCustomersArgs = {
+  after?: InputMaybe<Scalars["String"]["input"]>;
+  before?: InputMaybe<Scalars["String"]["input"]>;
+  filter?: InputMaybe<Array<CustomerFilter>>;
+  first?: InputMaybe<Scalars["Int"]["input"]>;
+  last?: InputMaybe<Scalars["Int"]["input"]>;
+  search?: InputMaybe<Scalars["String"]["input"]>;
+  sort?: InputMaybe<Array<CustomerSort>>;
+};
+
+export type QueryEphemeralArgs = {
+  id: Scalars["GadgetID"]["input"];
+};
+
+export type QueryEphemeralsArgs = {
+  after?: InputMaybe<Scalars["String"]["input"]>;
+  before?: InputMaybe<Scalars["String"]["input"]>;
+  filter?: InputMaybe<Array<EphemeralFilter>>;
+  first?: InputMaybe<Scalars["Int"]["input"]>;
+  last?: InputMaybe<Scalars["Int"]["input"]>;
+};
+
+export type QueryFieldlessArgs = {
+  id: Scalars["GadgetID"]["input"];
+};
+
+export type QueryFieldlessesArgs = {
+  after?: InputMaybe<Scalars["String"]["input"]>;
+  before?: InputMaybe<Scalars["String"]["input"]>;
+  filter?: InputMaybe<Array<FieldlessFilter>>;
+  first?: InputMaybe<Scalars["Int"]["input"]>;
+  last?: InputMaybe<Scalars["Int"]["input"]>;
+  search?: InputMaybe<Scalars["String"]["input"]>;
+  sort?: InputMaybe<Array<FieldlessSort>>;
+};
+
+export type QueryFriendshipArgs = {
+  id: Scalars["GadgetID"]["input"];
+};
+
+export type QueryFriendshipsArgs = {
+  after?: InputMaybe<Scalars["String"]["input"]>;
+  before?: InputMaybe<Scalars["String"]["input"]>;
+  filter?: InputMaybe<Array<FriendshipFilter>>;
+  first?: InputMaybe<Scalars["Int"]["input"]>;
+  last?: InputMaybe<Scalars["Int"]["input"]>;
+  search?: InputMaybe<Scalars["String"]["input"]>;
+  sort?: InputMaybe<Array<FriendshipSort>>;
 };
 
 export type QueryGizmoArgs = {
@@ -9484,32 +10581,32 @@ export type QueryGizmosArgs = {
   sort?: InputMaybe<Array<GizmoSort>>;
 };
 
-export type QueryModelAArgs = {
+export type QueryRegistrationArgs = {
   id: Scalars["GadgetID"]["input"];
 };
 
-export type QueryModelAsArgs = {
+export type QueryRegistrationsArgs = {
   after?: InputMaybe<Scalars["String"]["input"]>;
   before?: InputMaybe<Scalars["String"]["input"]>;
-  filter?: InputMaybe<Array<ModelAFilter>>;
+  filter?: InputMaybe<Array<RegistrationFilter>>;
   first?: InputMaybe<Scalars["Int"]["input"]>;
   last?: InputMaybe<Scalars["Int"]["input"]>;
   search?: InputMaybe<Scalars["String"]["input"]>;
-  sort?: InputMaybe<Array<ModelASort>>;
+  sort?: InputMaybe<Array<RegistrationSort>>;
 };
 
-export type QueryPartArgs = {
+export type QuerySampleModelToTestReallyLongModelNamesArgs = {
   id: Scalars["GadgetID"]["input"];
 };
 
-export type QueryPartsArgs = {
+export type QuerySampleModelToTestReallyLongModelNamessArgs = {
   after?: InputMaybe<Scalars["String"]["input"]>;
   before?: InputMaybe<Scalars["String"]["input"]>;
-  filter?: InputMaybe<Array<PartFilter>>;
+  filter?: InputMaybe<Array<SampleModelToTestReallyLongModelNamesFilter>>;
   first?: InputMaybe<Scalars["Int"]["input"]>;
   last?: InputMaybe<Scalars["Int"]["input"]>;
   search?: InputMaybe<Scalars["String"]["input"]>;
-  sort?: InputMaybe<Array<PartSort>>;
+  sort?: InputMaybe<Array<SampleModelToTestReallyLongModelNamesSort>>;
 };
 
 export type QuerySectionArgs = {
@@ -9538,102 +10635,46 @@ export type QuerySessionsArgs = {
   last?: InputMaybe<Scalars["Int"]["input"]>;
 };
 
-export type QueryShopifyGdprRequestArgs = {
+export type QuerySprocketArgs = {
   id: Scalars["GadgetID"]["input"];
 };
 
-export type QueryShopifyGdprRequestsArgs = {
+export type QuerySprocketsArgs = {
   after?: InputMaybe<Scalars["String"]["input"]>;
   before?: InputMaybe<Scalars["String"]["input"]>;
-  filter?: InputMaybe<Array<ShopifyGdprRequestFilter>>;
+  filter?: InputMaybe<Array<SprocketFilter>>;
   first?: InputMaybe<Scalars["Int"]["input"]>;
   last?: InputMaybe<Scalars["Int"]["input"]>;
   search?: InputMaybe<Scalars["String"]["input"]>;
-  sort?: InputMaybe<Array<ShopifyGdprRequestSort>>;
+  sort?: InputMaybe<Array<SprocketSort>>;
 };
 
-export type QueryShopifyProductArgs = {
+export type QueryStudentArgs = {
   id: Scalars["GadgetID"]["input"];
 };
 
-export type QueryShopifyProductImageArgs = {
+export type QueryStudentsArgs = {
+  after?: InputMaybe<Scalars["String"]["input"]>;
+  before?: InputMaybe<Scalars["String"]["input"]>;
+  filter?: InputMaybe<Array<StudentFilter>>;
+  first?: InputMaybe<Scalars["Int"]["input"]>;
+  last?: InputMaybe<Scalars["Int"]["input"]>;
+  search?: InputMaybe<Scalars["String"]["input"]>;
+  sort?: InputMaybe<Array<StudentSort>>;
+};
+
+export type QueryTeacherArgs = {
   id: Scalars["GadgetID"]["input"];
 };
 
-export type QueryShopifyProductImagesArgs = {
+export type QueryTeachersArgs = {
   after?: InputMaybe<Scalars["String"]["input"]>;
   before?: InputMaybe<Scalars["String"]["input"]>;
-  filter?: InputMaybe<Array<ShopifyProductImageFilter>>;
+  filter?: InputMaybe<Array<TeacherFilter>>;
   first?: InputMaybe<Scalars["Int"]["input"]>;
   last?: InputMaybe<Scalars["Int"]["input"]>;
   search?: InputMaybe<Scalars["String"]["input"]>;
-  sort?: InputMaybe<Array<ShopifyProductImageSort>>;
-};
-
-export type QueryShopifyProductOptionArgs = {
-  id: Scalars["GadgetID"]["input"];
-};
-
-export type QueryShopifyProductOptionsArgs = {
-  after?: InputMaybe<Scalars["String"]["input"]>;
-  before?: InputMaybe<Scalars["String"]["input"]>;
-  filter?: InputMaybe<Array<ShopifyProductOptionFilter>>;
-  first?: InputMaybe<Scalars["Int"]["input"]>;
-  last?: InputMaybe<Scalars["Int"]["input"]>;
-  search?: InputMaybe<Scalars["String"]["input"]>;
-  sort?: InputMaybe<Array<ShopifyProductOptionSort>>;
-};
-
-export type QueryShopifyProductVariantArgs = {
-  id: Scalars["GadgetID"]["input"];
-};
-
-export type QueryShopifyProductVariantsArgs = {
-  after?: InputMaybe<Scalars["String"]["input"]>;
-  before?: InputMaybe<Scalars["String"]["input"]>;
-  filter?: InputMaybe<Array<ShopifyProductVariantFilter>>;
-  first?: InputMaybe<Scalars["Int"]["input"]>;
-  last?: InputMaybe<Scalars["Int"]["input"]>;
-  search?: InputMaybe<Scalars["String"]["input"]>;
-  sort?: InputMaybe<Array<ShopifyProductVariantSort>>;
-};
-
-export type QueryShopifyProductsArgs = {
-  after?: InputMaybe<Scalars["String"]["input"]>;
-  before?: InputMaybe<Scalars["String"]["input"]>;
-  filter?: InputMaybe<Array<ShopifyProductFilter>>;
-  first?: InputMaybe<Scalars["Int"]["input"]>;
-  last?: InputMaybe<Scalars["Int"]["input"]>;
-  search?: InputMaybe<Scalars["String"]["input"]>;
-  sort?: InputMaybe<Array<ShopifyProductSort>>;
-};
-
-export type QueryShopifyShopArgs = {
-  id: Scalars["GadgetID"]["input"];
-};
-
-export type QueryShopifyShopsArgs = {
-  after?: InputMaybe<Scalars["String"]["input"]>;
-  before?: InputMaybe<Scalars["String"]["input"]>;
-  filter?: InputMaybe<Array<ShopifyShopFilter>>;
-  first?: InputMaybe<Scalars["Int"]["input"]>;
-  last?: InputMaybe<Scalars["Int"]["input"]>;
-  search?: InputMaybe<Scalars["String"]["input"]>;
-  sort?: InputMaybe<Array<ShopifyShopSort>>;
-};
-
-export type QueryShopifySyncArgs = {
-  id: Scalars["GadgetID"]["input"];
-};
-
-export type QueryShopifySyncsArgs = {
-  after?: InputMaybe<Scalars["String"]["input"]>;
-  before?: InputMaybe<Scalars["String"]["input"]>;
-  filter?: InputMaybe<Array<ShopifySyncFilter>>;
-  first?: InputMaybe<Scalars["Int"]["input"]>;
-  last?: InputMaybe<Scalars["Int"]["input"]>;
-  search?: InputMaybe<Scalars["String"]["input"]>;
-  sort?: InputMaybe<Array<ShopifySyncSort>>;
+  sort?: InputMaybe<Array<TeacherSort>>;
 };
 
 export type QueryUserArgs = {
@@ -9654,6 +10695,20 @@ export type QueryWidgetArgs = {
   id: Scalars["GadgetID"]["input"];
 };
 
+export type QueryWidgetImageArgs = {
+  id: Scalars["GadgetID"]["input"];
+};
+
+export type QueryWidgetImagesArgs = {
+  after?: InputMaybe<Scalars["String"]["input"]>;
+  before?: InputMaybe<Scalars["String"]["input"]>;
+  filter?: InputMaybe<Array<WidgetImageFilter>>;
+  first?: InputMaybe<Scalars["Int"]["input"]>;
+  last?: InputMaybe<Scalars["Int"]["input"]>;
+  search?: InputMaybe<Scalars["String"]["input"]>;
+  sort?: InputMaybe<Array<WidgetImageSort>>;
+};
+
 export type QueryWidgetsArgs = {
   after?: InputMaybe<Scalars["String"]["input"]>;
   before?: InputMaybe<Scalars["String"]["input"]>;
@@ -9664,11 +10719,76 @@ export type QueryWidgetsArgs = {
   sort?: InputMaybe<Array<WidgetSort>>;
 };
 
-export type ReinstallShopifyShopResult = {
-  __typename?: "ReinstallShopifyShopResult";
+export type Registration = {
+  __typename?: "Registration";
+  /** Get all the fields for this record. Useful for not having to list out all the fields you want to retrieve, but slower. */
+  _all: Scalars["JSONObject"]["output"];
+  course: Course;
+  courseId: Scalars["GadgetID"]["output"];
+  /** The time at which this record was first created. Set once upon record creation and never changed. Managed by Gadget. */
+  createdAt: Scalars["DateTime"]["output"];
+  /** The globally unique, unchanging identifier for this record. Assigned and managed by Gadget. */
+  id: Scalars["GadgetID"]["output"];
+  student: Student;
+  studentId: Scalars["GadgetID"]["output"];
+  /** The time at which this record was last changed. Set each time the record is successfully acted upon by an action. Managed by Gadget. */
+  updatedAt: Scalars["DateTime"]["output"];
+};
+
+/** A connection to a list of Registration items. */
+export type RegistrationConnection = {
+  __typename?: "RegistrationConnection";
+  /** A list of edges. */
+  edges: Array<RegistrationEdge>;
+  /** Information to aid in pagination. */
+  pageInfo: PageInfo;
+};
+
+/** An edge in a Registration connection. */
+export type RegistrationEdge = {
+  __typename?: "RegistrationEdge";
+  /** A cursor for use in pagination */
+  cursor: Scalars["String"]["output"];
+  /** The item at the end of the edge */
+  node: Registration;
+};
+
+export type RegistrationFilter = {
+  AND?: InputMaybe<Array<InputMaybe<RegistrationFilter>>>;
+  NOT?: InputMaybe<Array<InputMaybe<RegistrationFilter>>>;
+  OR?: InputMaybe<Array<InputMaybe<RegistrationFilter>>>;
+  course?: InputMaybe<IdFilter>;
+  courseId?: InputMaybe<IdFilter>;
+  createdAt?: InputMaybe<DateTimeFilter>;
+  id?: InputMaybe<IdFilter>;
+  student?: InputMaybe<IdFilter>;
+  studentId?: InputMaybe<IdFilter>;
+  updatedAt?: InputMaybe<DateTimeFilter>;
+};
+
+/** Input object supporting setting or updating related model record on a relationship field */
+export type RegistrationHasManyInput = {
+  /** Creates, updates, or deletes existing records in the database as needed to arrive at the list of records specified. */
+  _converge?: InputMaybe<ConvergeRegistrationInput>;
+  create?: InputMaybe<NestedRegistrationCreateInput>;
+  delete?: InputMaybe<NestedRegistrationDeleteInput>;
+  update?: InputMaybe<NestedRegistrationUpdateInput>;
+};
+
+export type RegistrationSort = {
+  /** Sort the results by the createdAt field. Defaults to ascending (smallest value first). */
+  createdAt?: InputMaybe<SortOrder>;
+  /** Sort the results by the id field. Defaults to ascending (smallest value first). */
+  id?: InputMaybe<SortOrder>;
+  /** Sort the results by the updatedAt field. Defaults to ascending (smallest value first). */
+  updatedAt?: InputMaybe<SortOrder>;
+};
+
+export type ResetPasswordUserResult = {
+  __typename?: "ResetPasswordUserResult";
   actionRun?: Maybe<Scalars["String"]["output"]>;
   errors?: Maybe<Array<ExecutionError>>;
-  shopifyShop?: Maybe<ShopifyShop>;
+  result?: Maybe<Scalars["JSON"]["output"]>;
   success: Scalars["Boolean"]["output"];
 };
 
@@ -9703,15 +10823,6 @@ export type Role = {
 };
 
 /** Input object supporting setting or updating related model record on a relationship field */
-export type RoundBelongsToInput = {
-  /** Existing ID of another record, which you would like to associate this record with */
-  _link?: InputMaybe<Scalars["GadgetID"]["input"]>;
-  create?: InputMaybe<NestedRoundCreateInput>;
-  delete?: InputMaybe<NestedRoundDeleteInput>;
-  update?: InputMaybe<NestedRoundUpdateInput>;
-};
-
-/** Input object supporting setting or updating related model record on a relationship field */
 export type RoundHasManyInput = {
   /** Creates, updates, or deletes existing records in the database as needed to arrive at the list of records specified. */
   _converge?: InputMaybe<ConvergeRoundInput>;
@@ -9720,22 +10831,61 @@ export type RoundHasManyInput = {
   update?: InputMaybe<NestedRoundUpdateInput>;
 };
 
-export type RunShopifySyncInput = {
-  domain?: InputMaybe<Scalars["String"]["input"]>;
-  errorDetails?: InputMaybe<Scalars["String"]["input"]>;
-  errorMessage?: InputMaybe<Scalars["String"]["input"]>;
-  force?: InputMaybe<Scalars["Boolean"]["input"]>;
-  models?: InputMaybe<Scalars["JSON"]["input"]>;
-  shop?: InputMaybe<ShopifyShopBelongsToInput>;
-  syncSince?: InputMaybe<Scalars["DateTime"]["input"]>;
+export type SampleModelToTestReallyLongModelNames = {
+  __typename?: "SampleModelToTestReallyLongModelNames";
+  /** Get all the fields for this record. Useful for not having to list out all the fields you want to retrieve, but slower. */
+  _all: Scalars["JSONObject"]["output"];
+  /** The time at which this record was first created. Set once upon record creation and never changed. Managed by Gadget. */
+  createdAt: Scalars["DateTime"]["output"];
+  /** The globally unique, unchanging identifier for this record. Assigned and managed by Gadget. */
+  id: Scalars["GadgetID"]["output"];
+  /** The current state this record is in. Changed by invoking actions. Managed by Gadget. */
+  state: Scalars["RecordState"]["output"];
+  title: Scalars["String"]["output"];
+  /** The time at which this record was last changed. Set each time the record is successfully acted upon by an action. Managed by Gadget. */
+  updatedAt: Scalars["DateTime"]["output"];
 };
 
-export type RunShopifySyncResult = UpsertShopifySyncResult & {
-  __typename?: "RunShopifySyncResult";
-  actionRun?: Maybe<Scalars["String"]["output"]>;
-  errors?: Maybe<Array<ExecutionError>>;
-  shopifySync?: Maybe<ShopifySync>;
-  success: Scalars["Boolean"]["output"];
+/** A connection to a list of SampleModelToTestReallyLongModelNames items. */
+export type SampleModelToTestReallyLongModelNamesConnection = {
+  __typename?: "SampleModelToTestReallyLongModelNamesConnection";
+  /** A list of edges. */
+  edges: Array<SampleModelToTestReallyLongModelNamesEdge>;
+  /** Information to aid in pagination. */
+  pageInfo: PageInfo;
+};
+
+/** An edge in a SampleModelToTestReallyLongModelNames connection. */
+export type SampleModelToTestReallyLongModelNamesEdge = {
+  __typename?: "SampleModelToTestReallyLongModelNamesEdge";
+  /** A cursor for use in pagination */
+  cursor: Scalars["String"]["output"];
+  /** The item at the end of the edge */
+  node: SampleModelToTestReallyLongModelNames;
+};
+
+export type SampleModelToTestReallyLongModelNamesFilter = {
+  AND?: InputMaybe<Array<InputMaybe<SampleModelToTestReallyLongModelNamesFilter>>>;
+  NOT?: InputMaybe<Array<InputMaybe<SampleModelToTestReallyLongModelNamesFilter>>>;
+  OR?: InputMaybe<Array<InputMaybe<SampleModelToTestReallyLongModelNamesFilter>>>;
+  createdAt?: InputMaybe<DateTimeFilter>;
+  id?: InputMaybe<IdFilter>;
+  state?: InputMaybe<StateFilter>;
+  title?: InputMaybe<StringFilter>;
+  updatedAt?: InputMaybe<DateTimeFilter>;
+};
+
+export type SampleModelToTestReallyLongModelNamesSort = {
+  /** Sort the results by the createdAt field. Defaults to ascending (smallest value first). */
+  createdAt?: InputMaybe<SortOrder>;
+  /** Sort the results by the id field. Defaults to ascending (smallest value first). */
+  id?: InputMaybe<SortOrder>;
+  /** Sort the results by the state field. Defaults to ascending (smallest value first). */
+  state?: InputMaybe<SortOrder>;
+  /** Sort the results by the title field. Defaults to ascending (smallest value first). */
+  title?: InputMaybe<SortOrder>;
+  /** Sort the results by the updatedAt field. Defaults to ascending (smallest value first). */
+  updatedAt?: InputMaybe<SortOrder>;
 };
 
 export type Section = {
@@ -9746,7 +10896,7 @@ export type Section = {
   createdAt: Scalars["DateTime"]["output"];
   /** The globally unique, unchanging identifier for this record. Assigned and managed by Gadget. */
   id: Scalars["GadgetID"]["output"];
-  name?: Maybe<Scalars["String"]["output"]>;
+  title: Scalars["String"]["output"];
   /** The time at which this record was last changed. Set each time the record is successfully acted upon by an action. Managed by Gadget. */
   updatedAt: Scalars["DateTime"]["output"];
   widgets: WidgetConnection;
@@ -9795,7 +10945,7 @@ export type SectionFilter = {
   OR?: InputMaybe<Array<InputMaybe<SectionFilter>>>;
   createdAt?: InputMaybe<DateTimeFilter>;
   id?: InputMaybe<IdFilter>;
-  name?: InputMaybe<StringFilter>;
+  title?: InputMaybe<StringFilter>;
   updatedAt?: InputMaybe<DateTimeFilter>;
 };
 
@@ -9804,10 +10954,26 @@ export type SectionSort = {
   createdAt?: InputMaybe<SortOrder>;
   /** Sort the results by the id field. Defaults to ascending (smallest value first). */
   id?: InputMaybe<SortOrder>;
-  /** Sort the results by the name field. Defaults to ascending (smallest value first). */
-  name?: InputMaybe<SortOrder>;
+  /** Sort the results by the title field. Defaults to ascending (smallest value first). */
+  title?: InputMaybe<SortOrder>;
   /** Sort the results by the updatedAt field. Defaults to ascending (smallest value first). */
   updatedAt?: InputMaybe<SortOrder>;
+};
+
+export type SendResetPasswordUserResult = {
+  __typename?: "SendResetPasswordUserResult";
+  actionRun?: Maybe<Scalars["String"]["output"]>;
+  errors?: Maybe<Array<ExecutionError>>;
+  result?: Maybe<Scalars["JSON"]["output"]>;
+  success: Scalars["Boolean"]["output"];
+};
+
+export type SendVerifyEmailUserResult = {
+  __typename?: "SendVerifyEmailUserResult";
+  actionRun?: Maybe<Scalars["String"]["output"]>;
+  errors?: Maybe<Array<ExecutionError>>;
+  result?: Maybe<Scalars["JSON"]["output"]>;
+  success: Scalars["Boolean"]["output"];
 };
 
 export type Session = {
@@ -9818,12 +10984,6 @@ export type Session = {
   createdAt: Scalars["DateTime"]["output"];
   /** The globally unique, unchanging identifier for this record. Assigned and managed by Gadget. */
   id?: Maybe<Scalars["GadgetID"]["output"]>;
-  roles?: Maybe<Array<Role>>;
-  shop?: Maybe<ShopifyShop>;
-  shopId?: Maybe<Scalars["GadgetID"]["output"]>;
-  shopifySID?: Maybe<Scalars["String"]["output"]>;
-  /** The current state this record is in. Changed by invoking actions. Managed by Gadget. */
-  state: Scalars["RecordState"]["output"];
   /** The time at which this record was last changed. Set each time the record is successfully acted upon by an action. Managed by Gadget. */
   updatedAt: Scalars["DateTime"]["output"];
   user?: Maybe<User>;
@@ -9850,998 +11010,16 @@ export type SessionEdge = {
 
 export type SessionFilter = {
   id?: InputMaybe<IdEqualsFilter>;
-  shop?: InputMaybe<IdEqualsFilter>;
-  shopId?: InputMaybe<IdEqualsFilter>;
-  shopifySID?: InputMaybe<StringEqualsFilter>;
   user?: InputMaybe<IdEqualsFilter>;
   userId?: InputMaybe<IdEqualsFilter>;
 };
 
-/** Information about the Shopify Connection */
-export type Shopify = {
-  __typename?: "Shopify";
-  /** A list missing scopes compared to the Connection based on the current session's shop */
-  missingScopes?: Maybe<Array<Scalars["String"]["output"]>>;
-  /** Whether the current session's shop requires a re-authentication with Shopify to acquire updated scopes */
-  requiresReauthentication?: Maybe<Scalars["Boolean"]["output"]>;
-};
-
-export type ShopifyConnectionFetchOrInstallShopResult = {
-  __typename?: "ShopifyConnectionFetchOrInstallShopResult";
-  isAuthenticated: Scalars["Boolean"]["output"];
-  missingScopes: Array<Scalars["String"]["output"]>;
-  redirectToOauth: Scalars["Boolean"]["output"];
-};
-
-export type ShopifyConnectionMutations = {
-  __typename?: "ShopifyConnectionMutations";
-  fetchOrInstallShop?: Maybe<ShopifyConnectionFetchOrInstallShopResult>;
-};
-
-export type ShopifyConnectionMutationsFetchOrInstallShopArgs = {
-  shopifySessionToken: Scalars["String"]["input"];
-};
-
-export type ShopifyGdprRequest = {
-  __typename?: "ShopifyGdprRequest";
-  /** Get all the fields for this record. Useful for not having to list out all the fields you want to retrieve, but slower. */
-  _all: Scalars["JSONObject"]["output"];
-  /** The time at which this record was first created. Set once upon record creation and never changed. Managed by Gadget. */
-  createdAt: Scalars["DateTime"]["output"];
-  /** The globally unique, unchanging identifier for this record. Assigned and managed by Gadget. */
-  id: Scalars["GadgetID"]["output"];
-  payload?: Maybe<Scalars["JSON"]["output"]>;
-  shop: ShopifyShop;
-  shopId: Scalars["GadgetID"]["output"];
-  topic: Scalars["ShopifyGdprRequestTopicEnum"]["output"];
-  /** The time at which this record was last changed. Set each time the record is successfully acted upon by an action. Managed by Gadget. */
-  updatedAt: Scalars["DateTime"]["output"];
-};
-
-/** A connection to a list of ShopifyGdprRequest items. */
-export type ShopifyGdprRequestConnection = {
-  __typename?: "ShopifyGdprRequestConnection";
-  /** A list of edges. */
-  edges: Array<ShopifyGdprRequestEdge>;
-  /** Information to aid in pagination. */
-  pageInfo: PageInfo;
-};
-
-/** An edge in a ShopifyGdprRequest connection. */
-export type ShopifyGdprRequestEdge = {
-  __typename?: "ShopifyGdprRequestEdge";
-  /** A cursor for use in pagination */
-  cursor: Scalars["String"]["output"];
-  /** The item at the end of the edge */
-  node: ShopifyGdprRequest;
-};
-
-export type ShopifyGdprRequestFilter = {
-  AND?: InputMaybe<Array<InputMaybe<ShopifyGdprRequestFilter>>>;
-  NOT?: InputMaybe<Array<InputMaybe<ShopifyGdprRequestFilter>>>;
-  OR?: InputMaybe<Array<InputMaybe<ShopifyGdprRequestFilter>>>;
-  createdAt?: InputMaybe<DateTimeFilter>;
-  id?: InputMaybe<IdFilter>;
-  payload?: InputMaybe<JsonFilter>;
-  shop?: InputMaybe<IdFilter>;
-  shopId?: InputMaybe<IdFilter>;
-  topic?: InputMaybe<SingleEnumFilter>;
-  updatedAt?: InputMaybe<DateTimeFilter>;
-};
-
-export type ShopifyGdprRequestSort = {
-  /** Sort the results by the createdAt field. Defaults to ascending (smallest value first). */
-  createdAt?: InputMaybe<SortOrder>;
-  /** Sort the results by the id field. Defaults to ascending (smallest value first). */
-  id?: InputMaybe<SortOrder>;
-  /** Sort the results by the payload field. Defaults to ascending (smallest value first). */
-  payload?: InputMaybe<SortOrder>;
-  /** Sort the results by the topic field. Defaults to ascending (smallest value first). */
-  topic?: InputMaybe<SortOrder>;
-  /** Sort the results by the updatedAt field. Defaults to ascending (smallest value first). */
-  updatedAt?: InputMaybe<SortOrder>;
-};
-
-export type ShopifyProduct = {
-  __typename?: "ShopifyProduct";
-  /** Get all the fields for this record. Useful for not having to list out all the fields you want to retrieve, but slower. */
-  _all: Scalars["JSONObject"]["output"];
-  body?: Maybe<Scalars["String"]["output"]>;
-  category?: Maybe<Scalars["JSON"]["output"]>;
-  compareAtPriceRange?: Maybe<Scalars["JSON"]["output"]>;
-  /** The time at which this record was first created. Set once upon record creation and never changed. Managed by Gadget. */
-  createdAt: Scalars["DateTime"]["output"];
-  handle?: Maybe<Scalars["String"]["output"]>;
-  /** The globally unique, unchanging identifier for this record. Assigned and managed by Shopify. */
-  id: Scalars["GadgetID"]["output"];
-  images: ShopifyProductImageConnection;
-  options: ShopifyProductOptionConnection;
-  productCategory?: Maybe<Scalars["JSON"]["output"]>;
-  productType?: Maybe<Scalars["String"]["output"]>;
-  publishedAt?: Maybe<Scalars["DateTime"]["output"]>;
-  shop?: Maybe<ShopifyShop>;
-  shopId?: Maybe<Scalars["GadgetID"]["output"]>;
-  shopifyCreatedAt?: Maybe<Scalars["DateTime"]["output"]>;
-  shopifyUpdatedAt?: Maybe<Scalars["DateTime"]["output"]>;
-  status?: Maybe<Scalars["ShopifyProductStatusEnum"]["output"]>;
-  tags?: Maybe<Scalars["JSON"]["output"]>;
-  templateSuffix?: Maybe<Scalars["String"]["output"]>;
-  title?: Maybe<Scalars["String"]["output"]>;
-  /** The time at which this record was last changed. Set each time the record is successfully acted upon by an action. Managed by Gadget. */
-  updatedAt: Scalars["DateTime"]["output"];
-  variants: ShopifyProductVariantConnection;
-  vendor?: Maybe<Scalars["String"]["output"]>;
-};
-
-export type ShopifyProductImagesArgs = {
-  after?: InputMaybe<Scalars["String"]["input"]>;
-  before?: InputMaybe<Scalars["String"]["input"]>;
-  filter?: InputMaybe<Array<ShopifyProductImageFilter>>;
-  first?: InputMaybe<Scalars["Int"]["input"]>;
-  last?: InputMaybe<Scalars["Int"]["input"]>;
-  search?: InputMaybe<Scalars["String"]["input"]>;
-  sort?: InputMaybe<Array<ShopifyProductImageSort>>;
-};
-
-export type ShopifyProductOptionsArgs = {
-  after?: InputMaybe<Scalars["String"]["input"]>;
-  before?: InputMaybe<Scalars["String"]["input"]>;
-  filter?: InputMaybe<Array<ShopifyProductOptionFilter>>;
-  first?: InputMaybe<Scalars["Int"]["input"]>;
-  last?: InputMaybe<Scalars["Int"]["input"]>;
-  search?: InputMaybe<Scalars["String"]["input"]>;
-  sort?: InputMaybe<Array<ShopifyProductOptionSort>>;
-};
-
-export type ShopifyProductVariantsArgs = {
-  after?: InputMaybe<Scalars["String"]["input"]>;
-  before?: InputMaybe<Scalars["String"]["input"]>;
-  filter?: InputMaybe<Array<ShopifyProductVariantFilter>>;
-  first?: InputMaybe<Scalars["Int"]["input"]>;
-  last?: InputMaybe<Scalars["Int"]["input"]>;
-  search?: InputMaybe<Scalars["String"]["input"]>;
-  sort?: InputMaybe<Array<ShopifyProductVariantSort>>;
-};
-
-/** A connection to a list of ShopifyProduct items. */
-export type ShopifyProductConnection = {
-  __typename?: "ShopifyProductConnection";
-  /** A list of edges. */
-  edges: Array<ShopifyProductEdge>;
-  /** Information to aid in pagination. */
-  pageInfo: PageInfo;
-};
-
-/** An edge in a ShopifyProduct connection. */
-export type ShopifyProductEdge = {
-  __typename?: "ShopifyProductEdge";
-  /** A cursor for use in pagination */
-  cursor: Scalars["String"]["output"];
-  /** The item at the end of the edge */
-  node: ShopifyProduct;
-};
-
-export type ShopifyProductFilter = {
-  AND?: InputMaybe<Array<InputMaybe<ShopifyProductFilter>>>;
-  NOT?: InputMaybe<Array<InputMaybe<ShopifyProductFilter>>>;
-  OR?: InputMaybe<Array<InputMaybe<ShopifyProductFilter>>>;
-  body?: InputMaybe<StringFilter>;
-  category?: InputMaybe<JsonFilter>;
-  compareAtPriceRange?: InputMaybe<JsonFilter>;
-  createdAt?: InputMaybe<DateTimeFilter>;
-  handle?: InputMaybe<StringFilter>;
-  id?: InputMaybe<IdFilter>;
-  productCategory?: InputMaybe<JsonFilter>;
-  productType?: InputMaybe<StringFilter>;
-  publishedAt?: InputMaybe<DateTimeFilter>;
-  shop?: InputMaybe<IdFilter>;
-  shopId?: InputMaybe<IdFilter>;
-  shopifyCreatedAt?: InputMaybe<DateTimeFilter>;
-  shopifyUpdatedAt?: InputMaybe<DateTimeFilter>;
-  status?: InputMaybe<SingleEnumFilter>;
-  tags?: InputMaybe<JsonFilter>;
-  templateSuffix?: InputMaybe<StringFilter>;
-  title?: InputMaybe<StringFilter>;
-  updatedAt?: InputMaybe<DateTimeFilter>;
-  vendor?: InputMaybe<StringFilter>;
-};
-
-export type ShopifyProductImage = {
-  __typename?: "ShopifyProductImage";
-  /** Get all the fields for this record. Useful for not having to list out all the fields you want to retrieve, but slower. */
-  _all: Scalars["JSONObject"]["output"];
-  alt?: Maybe<Scalars["String"]["output"]>;
-  /** The time at which this record was first created. Set once upon record creation and never changed. Managed by Gadget. */
-  createdAt: Scalars["DateTime"]["output"];
-  height?: Maybe<Scalars["Float"]["output"]>;
-  /** The globally unique, unchanging identifier for this record. Assigned and managed by Shopify. */
-  id: Scalars["GadgetID"]["output"];
-  position?: Maybe<Scalars["Float"]["output"]>;
-  product?: Maybe<ShopifyProduct>;
-  productId?: Maybe<Scalars["GadgetID"]["output"]>;
-  shop?: Maybe<ShopifyShop>;
-  shopId?: Maybe<Scalars["GadgetID"]["output"]>;
-  shopifyCreatedAt?: Maybe<Scalars["DateTime"]["output"]>;
-  shopifyUpdatedAt?: Maybe<Scalars["DateTime"]["output"]>;
-  source?: Maybe<Scalars["String"]["output"]>;
-  /** The time at which this record was last changed. Set each time the record is successfully acted upon by an action. Managed by Gadget. */
-  updatedAt: Scalars["DateTime"]["output"];
-  variants: ShopifyProductVariantConnection;
-  width?: Maybe<Scalars["Float"]["output"]>;
-};
-
-export type ShopifyProductImageVariantsArgs = {
-  after?: InputMaybe<Scalars["String"]["input"]>;
-  before?: InputMaybe<Scalars["String"]["input"]>;
-  filter?: InputMaybe<Array<ShopifyProductVariantFilter>>;
-  first?: InputMaybe<Scalars["Int"]["input"]>;
-  last?: InputMaybe<Scalars["Int"]["input"]>;
-  search?: InputMaybe<Scalars["String"]["input"]>;
-  sort?: InputMaybe<Array<ShopifyProductVariantSort>>;
-};
-
-/** A connection to a list of ShopifyProductImage items. */
-export type ShopifyProductImageConnection = {
-  __typename?: "ShopifyProductImageConnection";
-  /** A list of edges. */
-  edges: Array<ShopifyProductImageEdge>;
-  /** Information to aid in pagination. */
-  pageInfo: PageInfo;
-};
-
-/** An edge in a ShopifyProductImage connection. */
-export type ShopifyProductImageEdge = {
-  __typename?: "ShopifyProductImageEdge";
-  /** A cursor for use in pagination */
-  cursor: Scalars["String"]["output"];
-  /** The item at the end of the edge */
-  node: ShopifyProductImage;
-};
-
-export type ShopifyProductImageFilter = {
-  AND?: InputMaybe<Array<InputMaybe<ShopifyProductImageFilter>>>;
-  NOT?: InputMaybe<Array<InputMaybe<ShopifyProductImageFilter>>>;
-  OR?: InputMaybe<Array<InputMaybe<ShopifyProductImageFilter>>>;
-  alt?: InputMaybe<StringFilter>;
-  createdAt?: InputMaybe<DateTimeFilter>;
-  height?: InputMaybe<FloatFilter>;
-  id?: InputMaybe<IdFilter>;
-  position?: InputMaybe<FloatFilter>;
-  product?: InputMaybe<IdFilter>;
-  productId?: InputMaybe<IdFilter>;
-  shop?: InputMaybe<IdFilter>;
-  shopId?: InputMaybe<IdFilter>;
-  shopifyCreatedAt?: InputMaybe<DateTimeFilter>;
-  shopifyUpdatedAt?: InputMaybe<DateTimeFilter>;
-  source?: InputMaybe<StringFilter>;
-  updatedAt?: InputMaybe<DateTimeFilter>;
-  width?: InputMaybe<FloatFilter>;
-};
-
-export type ShopifyProductImageSort = {
-  /** Sort the results by the alt field. Defaults to ascending (smallest value first). */
-  alt?: InputMaybe<SortOrder>;
-  /** Sort the results by the createdAt field. Defaults to ascending (smallest value first). */
-  createdAt?: InputMaybe<SortOrder>;
-  /** Sort the results by the height field. Defaults to ascending (smallest value first). */
-  height?: InputMaybe<SortOrder>;
-  /** Sort the results by the id field. Defaults to ascending (smallest value first). */
-  id?: InputMaybe<SortOrder>;
-  /** Sort the results by the position field. Defaults to ascending (smallest value first). */
-  position?: InputMaybe<SortOrder>;
-  /** Sort the results by the shopifyCreatedAt field. Defaults to ascending (smallest value first). */
-  shopifyCreatedAt?: InputMaybe<SortOrder>;
-  /** Sort the results by the shopifyUpdatedAt field. Defaults to ascending (smallest value first). */
-  shopifyUpdatedAt?: InputMaybe<SortOrder>;
-  /** Sort the results by the source field. Defaults to ascending (smallest value first). */
-  source?: InputMaybe<SortOrder>;
-  /** Sort the results by the updatedAt field. Defaults to ascending (smallest value first). */
-  updatedAt?: InputMaybe<SortOrder>;
-  /** Sort the results by the width field. Defaults to ascending (smallest value first). */
-  width?: InputMaybe<SortOrder>;
-};
-
-export type ShopifyProductOption = {
-  __typename?: "ShopifyProductOption";
-  /** Get all the fields for this record. Useful for not having to list out all the fields you want to retrieve, but slower. */
-  _all: Scalars["JSONObject"]["output"];
-  /** The time at which this record was first created. Set once upon record creation and never changed. Managed by Gadget. */
-  createdAt: Scalars["DateTime"]["output"];
-  /** The globally unique, unchanging identifier for this record. Assigned and managed by Shopify. */
-  id: Scalars["GadgetID"]["output"];
-  name?: Maybe<Scalars["String"]["output"]>;
-  position?: Maybe<Scalars["Float"]["output"]>;
-  product?: Maybe<ShopifyProduct>;
-  productId?: Maybe<Scalars["GadgetID"]["output"]>;
-  shop?: Maybe<ShopifyShop>;
-  shopId?: Maybe<Scalars["GadgetID"]["output"]>;
-  /** The time at which this record was last changed. Set each time the record is successfully acted upon by an action. Managed by Gadget. */
-  updatedAt: Scalars["DateTime"]["output"];
-  values?: Maybe<Scalars["JSON"]["output"]>;
-};
-
-/** A connection to a list of ShopifyProductOption items. */
-export type ShopifyProductOptionConnection = {
-  __typename?: "ShopifyProductOptionConnection";
-  /** A list of edges. */
-  edges: Array<ShopifyProductOptionEdge>;
-  /** Information to aid in pagination. */
-  pageInfo: PageInfo;
-};
-
-/** An edge in a ShopifyProductOption connection. */
-export type ShopifyProductOptionEdge = {
-  __typename?: "ShopifyProductOptionEdge";
-  /** A cursor for use in pagination */
-  cursor: Scalars["String"]["output"];
-  /** The item at the end of the edge */
-  node: ShopifyProductOption;
-};
-
-export type ShopifyProductOptionFilter = {
-  AND?: InputMaybe<Array<InputMaybe<ShopifyProductOptionFilter>>>;
-  NOT?: InputMaybe<Array<InputMaybe<ShopifyProductOptionFilter>>>;
-  OR?: InputMaybe<Array<InputMaybe<ShopifyProductOptionFilter>>>;
-  createdAt?: InputMaybe<DateTimeFilter>;
-  id?: InputMaybe<IdFilter>;
-  name?: InputMaybe<StringFilter>;
-  position?: InputMaybe<FloatFilter>;
-  product?: InputMaybe<IdFilter>;
-  productId?: InputMaybe<IdFilter>;
-  shop?: InputMaybe<IdFilter>;
-  shopId?: InputMaybe<IdFilter>;
-  updatedAt?: InputMaybe<DateTimeFilter>;
-  values?: InputMaybe<JsonFilter>;
-};
-
-export type ShopifyProductOptionSort = {
-  /** Sort the results by the createdAt field. Defaults to ascending (smallest value first). */
-  createdAt?: InputMaybe<SortOrder>;
-  /** Sort the results by the id field. Defaults to ascending (smallest value first). */
-  id?: InputMaybe<SortOrder>;
-  /** Sort the results by the name field. Defaults to ascending (smallest value first). */
-  name?: InputMaybe<SortOrder>;
-  /** Sort the results by the position field. Defaults to ascending (smallest value first). */
-  position?: InputMaybe<SortOrder>;
-  /** Sort the results by the updatedAt field. Defaults to ascending (smallest value first). */
-  updatedAt?: InputMaybe<SortOrder>;
-  /** Sort the results by the values field. Defaults to ascending (smallest value first). */
-  values?: InputMaybe<SortOrder>;
-};
-
-export type ShopifyProductSort = {
-  /** Sort the results by the body field. Defaults to ascending (smallest value first). */
-  body?: InputMaybe<SortOrder>;
-  /** Sort the results by the category field. Defaults to ascending (smallest value first). */
-  category?: InputMaybe<SortOrder>;
-  /** Sort the results by the compareAtPriceRange field. Defaults to ascending (smallest value first). */
-  compareAtPriceRange?: InputMaybe<SortOrder>;
-  /** Sort the results by the createdAt field. Defaults to ascending (smallest value first). */
-  createdAt?: InputMaybe<SortOrder>;
-  /** Sort the results by the handle field. Defaults to ascending (smallest value first). */
-  handle?: InputMaybe<SortOrder>;
-  /** Sort the results by the id field. Defaults to ascending (smallest value first). */
-  id?: InputMaybe<SortOrder>;
-  /** Sort the results by the productCategory field. Defaults to ascending (smallest value first). */
-  productCategory?: InputMaybe<SortOrder>;
-  /** Sort the results by the productType field. Defaults to ascending (smallest value first). */
-  productType?: InputMaybe<SortOrder>;
-  /** Sort the results by the publishedAt field. Defaults to ascending (smallest value first). */
-  publishedAt?: InputMaybe<SortOrder>;
-  /** Sort the results by the shopifyCreatedAt field. Defaults to ascending (smallest value first). */
-  shopifyCreatedAt?: InputMaybe<SortOrder>;
-  /** Sort the results by the shopifyUpdatedAt field. Defaults to ascending (smallest value first). */
-  shopifyUpdatedAt?: InputMaybe<SortOrder>;
-  /** Sort the results by the status field. Defaults to ascending (smallest value first). */
-  status?: InputMaybe<SortOrder>;
-  /** Sort the results by the tags field. Defaults to ascending (smallest value first). */
-  tags?: InputMaybe<SortOrder>;
-  /** Sort the results by the templateSuffix field. Defaults to ascending (smallest value first). */
-  templateSuffix?: InputMaybe<SortOrder>;
-  /** Sort the results by the title field. Defaults to ascending (smallest value first). */
-  title?: InputMaybe<SortOrder>;
-  /** Sort the results by the updatedAt field. Defaults to ascending (smallest value first). */
-  updatedAt?: InputMaybe<SortOrder>;
-  /** Sort the results by the vendor field. Defaults to ascending (smallest value first). */
-  vendor?: InputMaybe<SortOrder>;
-};
-
-export type ShopifyProductVariant = {
-  __typename?: "ShopifyProductVariant";
-  /** Get all the fields for this record. Useful for not having to list out all the fields you want to retrieve, but slower. */
-  _all: Scalars["JSONObject"]["output"];
-  barcode?: Maybe<Scalars["String"]["output"]>;
-  compareAtPrice?: Maybe<Scalars["String"]["output"]>;
-  /** The time at which this record was first created. Set once upon record creation and never changed. Managed by Gadget. */
-  createdAt: Scalars["DateTime"]["output"];
-  /** The globally unique, unchanging identifier for this record. Assigned and managed by Shopify. */
-  id: Scalars["GadgetID"]["output"];
-  inventoryPolicy?: Maybe<Scalars["String"]["output"]>;
-  inventoryQuantity?: Maybe<Scalars["Float"]["output"]>;
-  option1?: Maybe<Scalars["String"]["output"]>;
-  option2?: Maybe<Scalars["String"]["output"]>;
-  option3?: Maybe<Scalars["String"]["output"]>;
-  position?: Maybe<Scalars["Float"]["output"]>;
-  presentmentPrices?: Maybe<Scalars["JSON"]["output"]>;
-  price?: Maybe<Scalars["String"]["output"]>;
-  product?: Maybe<ShopifyProduct>;
-  productId?: Maybe<Scalars["GadgetID"]["output"]>;
-  productImage?: Maybe<ShopifyProductImage>;
-  productImageId?: Maybe<Scalars["GadgetID"]["output"]>;
-  selectedOptions?: Maybe<Scalars["JSON"]["output"]>;
-  shop?: Maybe<ShopifyShop>;
-  shopId?: Maybe<Scalars["GadgetID"]["output"]>;
-  shopifyCreatedAt?: Maybe<Scalars["DateTime"]["output"]>;
-  shopifyUpdatedAt?: Maybe<Scalars["DateTime"]["output"]>;
-  sku?: Maybe<Scalars["String"]["output"]>;
-  taxCode?: Maybe<Scalars["String"]["output"]>;
-  taxable?: Maybe<Scalars["Boolean"]["output"]>;
-  title?: Maybe<Scalars["String"]["output"]>;
-  /** The time at which this record was last changed. Set each time the record is successfully acted upon by an action. Managed by Gadget. */
-  updatedAt: Scalars["DateTime"]["output"];
-};
-
-/** A connection to a list of ShopifyProductVariant items. */
-export type ShopifyProductVariantConnection = {
-  __typename?: "ShopifyProductVariantConnection";
-  /** A list of edges. */
-  edges: Array<ShopifyProductVariantEdge>;
-  /** Information to aid in pagination. */
-  pageInfo: PageInfo;
-};
-
-/** An edge in a ShopifyProductVariant connection. */
-export type ShopifyProductVariantEdge = {
-  __typename?: "ShopifyProductVariantEdge";
-  /** A cursor for use in pagination */
-  cursor: Scalars["String"]["output"];
-  /** The item at the end of the edge */
-  node: ShopifyProductVariant;
-};
-
-export type ShopifyProductVariantFilter = {
-  AND?: InputMaybe<Array<InputMaybe<ShopifyProductVariantFilter>>>;
-  NOT?: InputMaybe<Array<InputMaybe<ShopifyProductVariantFilter>>>;
-  OR?: InputMaybe<Array<InputMaybe<ShopifyProductVariantFilter>>>;
-  barcode?: InputMaybe<StringFilter>;
-  compareAtPrice?: InputMaybe<StringFilter>;
-  createdAt?: InputMaybe<DateTimeFilter>;
-  id?: InputMaybe<IdFilter>;
-  inventoryPolicy?: InputMaybe<StringFilter>;
-  inventoryQuantity?: InputMaybe<FloatFilter>;
-  option1?: InputMaybe<StringFilter>;
-  option2?: InputMaybe<StringFilter>;
-  option3?: InputMaybe<StringFilter>;
-  position?: InputMaybe<FloatFilter>;
-  presentmentPrices?: InputMaybe<JsonFilter>;
-  price?: InputMaybe<StringFilter>;
-  product?: InputMaybe<IdFilter>;
-  productId?: InputMaybe<IdFilter>;
-  productImage?: InputMaybe<IdFilter>;
-  productImageId?: InputMaybe<IdFilter>;
-  selectedOptions?: InputMaybe<JsonFilter>;
-  shop?: InputMaybe<IdFilter>;
-  shopId?: InputMaybe<IdFilter>;
-  shopifyCreatedAt?: InputMaybe<DateTimeFilter>;
-  shopifyUpdatedAt?: InputMaybe<DateTimeFilter>;
-  sku?: InputMaybe<StringFilter>;
-  taxCode?: InputMaybe<StringFilter>;
-  taxable?: InputMaybe<BooleanFilter>;
-  title?: InputMaybe<StringFilter>;
-  updatedAt?: InputMaybe<DateTimeFilter>;
-};
-
-export type ShopifyProductVariantSort = {
-  /** Sort the results by the barcode field. Defaults to ascending (smallest value first). */
-  barcode?: InputMaybe<SortOrder>;
-  /** Sort the results by the compareAtPrice field. Defaults to ascending (smallest value first). */
-  compareAtPrice?: InputMaybe<SortOrder>;
-  /** Sort the results by the createdAt field. Defaults to ascending (smallest value first). */
-  createdAt?: InputMaybe<SortOrder>;
-  /** Sort the results by the id field. Defaults to ascending (smallest value first). */
-  id?: InputMaybe<SortOrder>;
-  /** Sort the results by the inventoryPolicy field. Defaults to ascending (smallest value first). */
-  inventoryPolicy?: InputMaybe<SortOrder>;
-  /** Sort the results by the inventoryQuantity field. Defaults to ascending (smallest value first). */
-  inventoryQuantity?: InputMaybe<SortOrder>;
-  /** Sort the results by the option1 field. Defaults to ascending (smallest value first). */
-  option1?: InputMaybe<SortOrder>;
-  /** Sort the results by the option2 field. Defaults to ascending (smallest value first). */
-  option2?: InputMaybe<SortOrder>;
-  /** Sort the results by the option3 field. Defaults to ascending (smallest value first). */
-  option3?: InputMaybe<SortOrder>;
-  /** Sort the results by the position field. Defaults to ascending (smallest value first). */
-  position?: InputMaybe<SortOrder>;
-  /** Sort the results by the presentmentPrices field. Defaults to ascending (smallest value first). */
-  presentmentPrices?: InputMaybe<SortOrder>;
-  /** Sort the results by the price field. Defaults to ascending (smallest value first). */
-  price?: InputMaybe<SortOrder>;
-  /** Sort the results by the selectedOptions field. Defaults to ascending (smallest value first). */
-  selectedOptions?: InputMaybe<SortOrder>;
-  /** Sort the results by the shopifyCreatedAt field. Defaults to ascending (smallest value first). */
-  shopifyCreatedAt?: InputMaybe<SortOrder>;
-  /** Sort the results by the shopifyUpdatedAt field. Defaults to ascending (smallest value first). */
-  shopifyUpdatedAt?: InputMaybe<SortOrder>;
-  /** Sort the results by the sku field. Defaults to ascending (smallest value first). */
-  sku?: InputMaybe<SortOrder>;
-  /** Sort the results by the taxCode field. Defaults to ascending (smallest value first). */
-  taxCode?: InputMaybe<SortOrder>;
-  /** Sort the results by the taxable field. Defaults to ascending (smallest value first). */
-  taxable?: InputMaybe<SortOrder>;
-  /** Sort the results by the title field. Defaults to ascending (smallest value first). */
-  title?: InputMaybe<SortOrder>;
-  /** Sort the results by the updatedAt field. Defaults to ascending (smallest value first). */
-  updatedAt?: InputMaybe<SortOrder>;
-};
-
-export type ShopifyShop = {
-  __typename?: "ShopifyShop";
-  /** Get all the fields for this record. Useful for not having to list out all the fields you want to retrieve, but slower. */
-  _all: Scalars["JSONObject"]["output"];
-  address1?: Maybe<Scalars["String"]["output"]>;
-  address2?: Maybe<Scalars["String"]["output"]>;
-  checkoutApiSupported?: Maybe<Scalars["Boolean"]["output"]>;
-  city?: Maybe<Scalars["String"]["output"]>;
-  cookieConsentLevel?: Maybe<Scalars["String"]["output"]>;
-  country?: Maybe<Scalars["String"]["output"]>;
-  countryCode?: Maybe<Scalars["String"]["output"]>;
-  countryName?: Maybe<Scalars["String"]["output"]>;
-  countyTaxes?: Maybe<Scalars["JSON"]["output"]>;
-  /** The time at which this record was first created. Set once upon record creation and never changed. Managed by Gadget. */
-  createdAt: Scalars["DateTime"]["output"];
-  currency?: Maybe<Scalars["String"]["output"]>;
-  customerAccountsV2?: Maybe<Scalars["JSON"]["output"]>;
-  customerEmail?: Maybe<Scalars["String"]["output"]>;
-  disabledWebhooks?: Maybe<Scalars["JSON"]["output"]>;
-  domain?: Maybe<Scalars["String"]["output"]>;
-  eligibleForCardReaderGiveaway?: Maybe<Scalars["Boolean"]["output"]>;
-  eligibleForPayments?: Maybe<Scalars["Boolean"]["output"]>;
-  email?: Maybe<Scalars["String"]["output"]>;
-  enabledPresentmentCurrencies?: Maybe<Scalars["JSON"]["output"]>;
-  finances?: Maybe<Scalars["Boolean"]["output"]>;
-  forceSsl?: Maybe<Scalars["Boolean"]["output"]>;
-  gdprRequests: ShopifyGdprRequestConnection;
-  googleAppsDomain?: Maybe<Scalars["String"]["output"]>;
-  googleAppsLoginEnabled?: Maybe<Scalars["Boolean"]["output"]>;
-  grantedScopes?: Maybe<Scalars["JSON"]["output"]>;
-  hasDiscounts?: Maybe<Scalars["Boolean"]["output"]>;
-  hasGiftCards?: Maybe<Scalars["Boolean"]["output"]>;
-  hasStorefront?: Maybe<Scalars["Boolean"]["output"]>;
-  ianaTimezone?: Maybe<Scalars["String"]["output"]>;
-  /** The globally unique, unchanging identifier for this record. Assigned and managed by Shopify. */
-  id: Scalars["GadgetID"]["output"];
-  installedViaApiKey?: Maybe<Scalars["String"]["output"]>;
-  latitude?: Maybe<Scalars["Float"]["output"]>;
-  longitude?: Maybe<Scalars["Float"]["output"]>;
-  marketingSmsContentEnabledAtCheckout?: Maybe<Scalars["Boolean"]["output"]>;
-  moneyFormat?: Maybe<Scalars["String"]["output"]>;
-  moneyInEmailsFormat?: Maybe<Scalars["String"]["output"]>;
-  moneyWithCurrencyFormat?: Maybe<Scalars["String"]["output"]>;
-  moneyWithCurrencyInEmailsFormat?: Maybe<Scalars["String"]["output"]>;
-  multiLocationEnabled?: Maybe<Scalars["Boolean"]["output"]>;
-  myshopifyDomain?: Maybe<Scalars["String"]["output"]>;
-  name?: Maybe<Scalars["String"]["output"]>;
-  passwordEnabled?: Maybe<Scalars["Boolean"]["output"]>;
-  phone?: Maybe<Scalars["String"]["output"]>;
-  planDisplayName?: Maybe<Scalars["String"]["output"]>;
-  planName?: Maybe<Scalars["String"]["output"]>;
-  preLaunchEnabled?: Maybe<Scalars["Boolean"]["output"]>;
-  primaryLocale?: Maybe<Scalars["String"]["output"]>;
-  productImages: ShopifyProductImageConnection;
-  productOptions: ShopifyProductOptionConnection;
-  productVariants: ShopifyProductVariantConnection;
-  products: ShopifyProductConnection;
-  province?: Maybe<Scalars["String"]["output"]>;
-  provinceCode?: Maybe<Scalars["String"]["output"]>;
-  registeredWebhooks?: Maybe<Scalars["JSON"]["output"]>;
-  requiresExtraPaymentsAgreement?: Maybe<Scalars["Boolean"]["output"]>;
-  setupRequired?: Maybe<Scalars["Boolean"]["output"]>;
-  shopOwner?: Maybe<Scalars["String"]["output"]>;
-  shopifyCreatedAt?: Maybe<Scalars["DateTime"]["output"]>;
-  shopifyUpdatedAt?: Maybe<Scalars["DateTime"]["output"]>;
-  source?: Maybe<Scalars["String"]["output"]>;
-  /** The current state this record is in. Changed by invoking actions. Managed by Gadget. */
-  state: Scalars["RecordState"]["output"];
-  syncs: ShopifySyncConnection;
-  taxShipping?: Maybe<Scalars["Boolean"]["output"]>;
-  taxesIncluded?: Maybe<Scalars["Boolean"]["output"]>;
-  timezone?: Maybe<Scalars["String"]["output"]>;
-  transactionalSmsDisabled?: Maybe<Scalars["Boolean"]["output"]>;
-  /** The time at which this record was last changed. Set each time the record is successfully acted upon by an action. Managed by Gadget. */
-  updatedAt: Scalars["DateTime"]["output"];
-  weightUnit?: Maybe<Scalars["String"]["output"]>;
-  zipCode?: Maybe<Scalars["String"]["output"]>;
-};
-
-export type ShopifyShopGdprRequestsArgs = {
-  after?: InputMaybe<Scalars["String"]["input"]>;
-  before?: InputMaybe<Scalars["String"]["input"]>;
-  filter?: InputMaybe<Array<ShopifyGdprRequestFilter>>;
-  first?: InputMaybe<Scalars["Int"]["input"]>;
-  last?: InputMaybe<Scalars["Int"]["input"]>;
-  search?: InputMaybe<Scalars["String"]["input"]>;
-  sort?: InputMaybe<Array<ShopifyGdprRequestSort>>;
-};
-
-export type ShopifyShopProductImagesArgs = {
-  after?: InputMaybe<Scalars["String"]["input"]>;
-  before?: InputMaybe<Scalars["String"]["input"]>;
-  filter?: InputMaybe<Array<ShopifyProductImageFilter>>;
-  first?: InputMaybe<Scalars["Int"]["input"]>;
-  last?: InputMaybe<Scalars["Int"]["input"]>;
-  search?: InputMaybe<Scalars["String"]["input"]>;
-  sort?: InputMaybe<Array<ShopifyProductImageSort>>;
-};
-
-export type ShopifyShopProductOptionsArgs = {
-  after?: InputMaybe<Scalars["String"]["input"]>;
-  before?: InputMaybe<Scalars["String"]["input"]>;
-  filter?: InputMaybe<Array<ShopifyProductOptionFilter>>;
-  first?: InputMaybe<Scalars["Int"]["input"]>;
-  last?: InputMaybe<Scalars["Int"]["input"]>;
-  search?: InputMaybe<Scalars["String"]["input"]>;
-  sort?: InputMaybe<Array<ShopifyProductOptionSort>>;
-};
-
-export type ShopifyShopProductVariantsArgs = {
-  after?: InputMaybe<Scalars["String"]["input"]>;
-  before?: InputMaybe<Scalars["String"]["input"]>;
-  filter?: InputMaybe<Array<ShopifyProductVariantFilter>>;
-  first?: InputMaybe<Scalars["Int"]["input"]>;
-  last?: InputMaybe<Scalars["Int"]["input"]>;
-  search?: InputMaybe<Scalars["String"]["input"]>;
-  sort?: InputMaybe<Array<ShopifyProductVariantSort>>;
-};
-
-export type ShopifyShopProductsArgs = {
-  after?: InputMaybe<Scalars["String"]["input"]>;
-  before?: InputMaybe<Scalars["String"]["input"]>;
-  filter?: InputMaybe<Array<ShopifyProductFilter>>;
-  first?: InputMaybe<Scalars["Int"]["input"]>;
-  last?: InputMaybe<Scalars["Int"]["input"]>;
-  search?: InputMaybe<Scalars["String"]["input"]>;
-  sort?: InputMaybe<Array<ShopifyProductSort>>;
-};
-
-export type ShopifyShopSyncsArgs = {
-  after?: InputMaybe<Scalars["String"]["input"]>;
-  before?: InputMaybe<Scalars["String"]["input"]>;
-  filter?: InputMaybe<Array<ShopifySyncFilter>>;
-  first?: InputMaybe<Scalars["Int"]["input"]>;
-  last?: InputMaybe<Scalars["Int"]["input"]>;
-  search?: InputMaybe<Scalars["String"]["input"]>;
-  sort?: InputMaybe<Array<ShopifySyncSort>>;
-};
-
-/** Input object supporting setting or updating related model record on a relationship field */
-export type ShopifyShopBelongsToInput = {
-  /** Existing ID of another record, which you would like to associate this record with */
-  _link?: InputMaybe<Scalars["GadgetID"]["input"]>;
-};
-
-/** A connection to a list of ShopifyShop items. */
-export type ShopifyShopConnection = {
-  __typename?: "ShopifyShopConnection";
-  /** A list of edges. */
-  edges: Array<ShopifyShopEdge>;
-  /** Information to aid in pagination. */
-  pageInfo: PageInfo;
-};
-
-/** An edge in a ShopifyShop connection. */
-export type ShopifyShopEdge = {
-  __typename?: "ShopifyShopEdge";
-  /** A cursor for use in pagination */
-  cursor: Scalars["String"]["output"];
-  /** The item at the end of the edge */
-  node: ShopifyShop;
-};
-
-export type ShopifyShopFilter = {
-  AND?: InputMaybe<Array<InputMaybe<ShopifyShopFilter>>>;
-  NOT?: InputMaybe<Array<InputMaybe<ShopifyShopFilter>>>;
-  OR?: InputMaybe<Array<InputMaybe<ShopifyShopFilter>>>;
-  address1?: InputMaybe<StringFilter>;
-  address2?: InputMaybe<StringFilter>;
-  checkoutApiSupported?: InputMaybe<BooleanFilter>;
-  city?: InputMaybe<StringFilter>;
-  cookieConsentLevel?: InputMaybe<StringFilter>;
-  country?: InputMaybe<StringFilter>;
-  countryCode?: InputMaybe<StringFilter>;
-  countryName?: InputMaybe<StringFilter>;
-  countyTaxes?: InputMaybe<JsonFilter>;
-  createdAt?: InputMaybe<DateTimeFilter>;
-  currency?: InputMaybe<StringFilter>;
-  customerAccountsV2?: InputMaybe<JsonFilter>;
-  customerEmail?: InputMaybe<StringFilter>;
-  disabledWebhooks?: InputMaybe<JsonFilter>;
-  domain?: InputMaybe<StringFilter>;
-  eligibleForCardReaderGiveaway?: InputMaybe<BooleanFilter>;
-  eligibleForPayments?: InputMaybe<BooleanFilter>;
-  email?: InputMaybe<StringFilter>;
-  enabledPresentmentCurrencies?: InputMaybe<JsonFilter>;
-  finances?: InputMaybe<BooleanFilter>;
-  forceSsl?: InputMaybe<BooleanFilter>;
-  googleAppsDomain?: InputMaybe<StringFilter>;
-  googleAppsLoginEnabled?: InputMaybe<BooleanFilter>;
-  grantedScopes?: InputMaybe<JsonFilter>;
-  hasDiscounts?: InputMaybe<BooleanFilter>;
-  hasGiftCards?: InputMaybe<BooleanFilter>;
-  hasStorefront?: InputMaybe<BooleanFilter>;
-  ianaTimezone?: InputMaybe<StringFilter>;
-  id?: InputMaybe<IdFilter>;
-  installedViaApiKey?: InputMaybe<StringFilter>;
-  latitude?: InputMaybe<FloatFilter>;
-  longitude?: InputMaybe<FloatFilter>;
-  marketingSmsContentEnabledAtCheckout?: InputMaybe<BooleanFilter>;
-  moneyFormat?: InputMaybe<StringFilter>;
-  moneyInEmailsFormat?: InputMaybe<StringFilter>;
-  moneyWithCurrencyFormat?: InputMaybe<StringFilter>;
-  moneyWithCurrencyInEmailsFormat?: InputMaybe<StringFilter>;
-  multiLocationEnabled?: InputMaybe<BooleanFilter>;
-  myshopifyDomain?: InputMaybe<StringFilter>;
-  name?: InputMaybe<StringFilter>;
-  passwordEnabled?: InputMaybe<BooleanFilter>;
-  phone?: InputMaybe<StringFilter>;
-  planDisplayName?: InputMaybe<StringFilter>;
-  planName?: InputMaybe<StringFilter>;
-  preLaunchEnabled?: InputMaybe<BooleanFilter>;
-  primaryLocale?: InputMaybe<StringFilter>;
-  province?: InputMaybe<StringFilter>;
-  provinceCode?: InputMaybe<StringFilter>;
-  registeredWebhooks?: InputMaybe<JsonFilter>;
-  requiresExtraPaymentsAgreement?: InputMaybe<BooleanFilter>;
-  setupRequired?: InputMaybe<BooleanFilter>;
-  shopOwner?: InputMaybe<StringFilter>;
-  shopifyCreatedAt?: InputMaybe<DateTimeFilter>;
-  shopifyUpdatedAt?: InputMaybe<DateTimeFilter>;
-  source?: InputMaybe<StringFilter>;
-  state?: InputMaybe<StateFilter>;
-  taxShipping?: InputMaybe<BooleanFilter>;
-  taxesIncluded?: InputMaybe<BooleanFilter>;
-  timezone?: InputMaybe<StringFilter>;
-  transactionalSmsDisabled?: InputMaybe<BooleanFilter>;
-  updatedAt?: InputMaybe<DateTimeFilter>;
-  weightUnit?: InputMaybe<StringFilter>;
-  zipCode?: InputMaybe<StringFilter>;
-};
-
-export type ShopifyShopSort = {
-  /** Sort the results by the address1 field. Defaults to ascending (smallest value first). */
-  address1?: InputMaybe<SortOrder>;
-  /** Sort the results by the address2 field. Defaults to ascending (smallest value first). */
-  address2?: InputMaybe<SortOrder>;
-  /** Sort the results by the checkoutApiSupported field. Defaults to ascending (smallest value first). */
-  checkoutApiSupported?: InputMaybe<SortOrder>;
-  /** Sort the results by the city field. Defaults to ascending (smallest value first). */
-  city?: InputMaybe<SortOrder>;
-  /** Sort the results by the cookieConsentLevel field. Defaults to ascending (smallest value first). */
-  cookieConsentLevel?: InputMaybe<SortOrder>;
-  /** Sort the results by the country field. Defaults to ascending (smallest value first). */
-  country?: InputMaybe<SortOrder>;
-  /** Sort the results by the countryCode field. Defaults to ascending (smallest value first). */
-  countryCode?: InputMaybe<SortOrder>;
-  /** Sort the results by the countryName field. Defaults to ascending (smallest value first). */
-  countryName?: InputMaybe<SortOrder>;
-  /** Sort the results by the countyTaxes field. Defaults to ascending (smallest value first). */
-  countyTaxes?: InputMaybe<SortOrder>;
-  /** Sort the results by the createdAt field. Defaults to ascending (smallest value first). */
-  createdAt?: InputMaybe<SortOrder>;
-  /** Sort the results by the currency field. Defaults to ascending (smallest value first). */
-  currency?: InputMaybe<SortOrder>;
-  /** Sort the results by the customerAccountsV2 field. Defaults to ascending (smallest value first). */
-  customerAccountsV2?: InputMaybe<SortOrder>;
-  /** Sort the results by the customerEmail field. Defaults to ascending (smallest value first). */
-  customerEmail?: InputMaybe<SortOrder>;
-  /** Sort the results by the disabledWebhooks field. Defaults to ascending (smallest value first). */
-  disabledWebhooks?: InputMaybe<SortOrder>;
-  /** Sort the results by the domain field. Defaults to ascending (smallest value first). */
-  domain?: InputMaybe<SortOrder>;
-  /** Sort the results by the eligibleForCardReaderGiveaway field. Defaults to ascending (smallest value first). */
-  eligibleForCardReaderGiveaway?: InputMaybe<SortOrder>;
-  /** Sort the results by the eligibleForPayments field. Defaults to ascending (smallest value first). */
-  eligibleForPayments?: InputMaybe<SortOrder>;
-  /** Sort the results by the email field. Defaults to ascending (smallest value first). */
-  email?: InputMaybe<SortOrder>;
-  /** Sort the results by the enabledPresentmentCurrencies field. Defaults to ascending (smallest value first). */
-  enabledPresentmentCurrencies?: InputMaybe<SortOrder>;
-  /** Sort the results by the finances field. Defaults to ascending (smallest value first). */
-  finances?: InputMaybe<SortOrder>;
-  /** Sort the results by the forceSsl field. Defaults to ascending (smallest value first). */
-  forceSsl?: InputMaybe<SortOrder>;
-  /** Sort the results by the googleAppsDomain field. Defaults to ascending (smallest value first). */
-  googleAppsDomain?: InputMaybe<SortOrder>;
-  /** Sort the results by the googleAppsLoginEnabled field. Defaults to ascending (smallest value first). */
-  googleAppsLoginEnabled?: InputMaybe<SortOrder>;
-  /** Sort the results by the grantedScopes field. Defaults to ascending (smallest value first). */
-  grantedScopes?: InputMaybe<SortOrder>;
-  /** Sort the results by the hasDiscounts field. Defaults to ascending (smallest value first). */
-  hasDiscounts?: InputMaybe<SortOrder>;
-  /** Sort the results by the hasGiftCards field. Defaults to ascending (smallest value first). */
-  hasGiftCards?: InputMaybe<SortOrder>;
-  /** Sort the results by the hasStorefront field. Defaults to ascending (smallest value first). */
-  hasStorefront?: InputMaybe<SortOrder>;
-  /** Sort the results by the ianaTimezone field. Defaults to ascending (smallest value first). */
-  ianaTimezone?: InputMaybe<SortOrder>;
-  /** Sort the results by the id field. Defaults to ascending (smallest value first). */
-  id?: InputMaybe<SortOrder>;
-  /** Sort the results by the installedViaApiKey field. Defaults to ascending (smallest value first). */
-  installedViaApiKey?: InputMaybe<SortOrder>;
-  /** Sort the results by the latitude field. Defaults to ascending (smallest value first). */
-  latitude?: InputMaybe<SortOrder>;
-  /** Sort the results by the longitude field. Defaults to ascending (smallest value first). */
-  longitude?: InputMaybe<SortOrder>;
-  /** Sort the results by the marketingSmsContentEnabledAtCheckout field. Defaults to ascending (smallest value first). */
-  marketingSmsContentEnabledAtCheckout?: InputMaybe<SortOrder>;
-  /** Sort the results by the moneyFormat field. Defaults to ascending (smallest value first). */
-  moneyFormat?: InputMaybe<SortOrder>;
-  /** Sort the results by the moneyInEmailsFormat field. Defaults to ascending (smallest value first). */
-  moneyInEmailsFormat?: InputMaybe<SortOrder>;
-  /** Sort the results by the moneyWithCurrencyFormat field. Defaults to ascending (smallest value first). */
-  moneyWithCurrencyFormat?: InputMaybe<SortOrder>;
-  /** Sort the results by the moneyWithCurrencyInEmailsFormat field. Defaults to ascending (smallest value first). */
-  moneyWithCurrencyInEmailsFormat?: InputMaybe<SortOrder>;
-  /** Sort the results by the multiLocationEnabled field. Defaults to ascending (smallest value first). */
-  multiLocationEnabled?: InputMaybe<SortOrder>;
-  /** Sort the results by the myshopifyDomain field. Defaults to ascending (smallest value first). */
-  myshopifyDomain?: InputMaybe<SortOrder>;
-  /** Sort the results by the name field. Defaults to ascending (smallest value first). */
-  name?: InputMaybe<SortOrder>;
-  /** Sort the results by the passwordEnabled field. Defaults to ascending (smallest value first). */
-  passwordEnabled?: InputMaybe<SortOrder>;
-  /** Sort the results by the phone field. Defaults to ascending (smallest value first). */
-  phone?: InputMaybe<SortOrder>;
-  /** Sort the results by the planDisplayName field. Defaults to ascending (smallest value first). */
-  planDisplayName?: InputMaybe<SortOrder>;
-  /** Sort the results by the planName field. Defaults to ascending (smallest value first). */
-  planName?: InputMaybe<SortOrder>;
-  /** Sort the results by the preLaunchEnabled field. Defaults to ascending (smallest value first). */
-  preLaunchEnabled?: InputMaybe<SortOrder>;
-  /** Sort the results by the primaryLocale field. Defaults to ascending (smallest value first). */
-  primaryLocale?: InputMaybe<SortOrder>;
-  /** Sort the results by the province field. Defaults to ascending (smallest value first). */
-  province?: InputMaybe<SortOrder>;
-  /** Sort the results by the provinceCode field. Defaults to ascending (smallest value first). */
-  provinceCode?: InputMaybe<SortOrder>;
-  /** Sort the results by the registeredWebhooks field. Defaults to ascending (smallest value first). */
-  registeredWebhooks?: InputMaybe<SortOrder>;
-  /** Sort the results by the requiresExtraPaymentsAgreement field. Defaults to ascending (smallest value first). */
-  requiresExtraPaymentsAgreement?: InputMaybe<SortOrder>;
-  /** Sort the results by the setupRequired field. Defaults to ascending (smallest value first). */
-  setupRequired?: InputMaybe<SortOrder>;
-  /** Sort the results by the shopOwner field. Defaults to ascending (smallest value first). */
-  shopOwner?: InputMaybe<SortOrder>;
-  /** Sort the results by the shopifyCreatedAt field. Defaults to ascending (smallest value first). */
-  shopifyCreatedAt?: InputMaybe<SortOrder>;
-  /** Sort the results by the shopifyUpdatedAt field. Defaults to ascending (smallest value first). */
-  shopifyUpdatedAt?: InputMaybe<SortOrder>;
-  /** Sort the results by the source field. Defaults to ascending (smallest value first). */
-  source?: InputMaybe<SortOrder>;
-  /** Sort the results by the state field. Defaults to ascending (smallest value first). */
-  state?: InputMaybe<SortOrder>;
-  /** Sort the results by the taxShipping field. Defaults to ascending (smallest value first). */
-  taxShipping?: InputMaybe<SortOrder>;
-  /** Sort the results by the taxesIncluded field. Defaults to ascending (smallest value first). */
-  taxesIncluded?: InputMaybe<SortOrder>;
-  /** Sort the results by the timezone field. Defaults to ascending (smallest value first). */
-  timezone?: InputMaybe<SortOrder>;
-  /** Sort the results by the transactionalSmsDisabled field. Defaults to ascending (smallest value first). */
-  transactionalSmsDisabled?: InputMaybe<SortOrder>;
-  /** Sort the results by the updatedAt field. Defaults to ascending (smallest value first). */
-  updatedAt?: InputMaybe<SortOrder>;
-  /** Sort the results by the weightUnit field. Defaults to ascending (smallest value first). */
-  weightUnit?: InputMaybe<SortOrder>;
-  /** Sort the results by the zipCode field. Defaults to ascending (smallest value first). */
-  zipCode?: InputMaybe<SortOrder>;
-};
-
-export type ShopifySync = {
-  __typename?: "ShopifySync";
-  /** Get all the fields for this record. Useful for not having to list out all the fields you want to retrieve, but slower. */
-  _all: Scalars["JSONObject"]["output"];
-  /** The time at which this record was first created. Set once upon record creation and never changed. Managed by Gadget. */
-  createdAt: Scalars["DateTime"]["output"];
-  domain: Scalars["String"]["output"];
-  errorDetails?: Maybe<Scalars["String"]["output"]>;
-  errorMessage?: Maybe<Scalars["String"]["output"]>;
-  force?: Maybe<Scalars["Boolean"]["output"]>;
-  /** The globally unique, unchanging identifier for this record. Assigned and managed by Gadget. */
-  id: Scalars["GadgetID"]["output"];
-  models?: Maybe<Scalars["JSON"]["output"]>;
-  shop: ShopifyShop;
-  shopId: Scalars["GadgetID"]["output"];
-  /** The current state this record is in. Changed by invoking actions. Managed by Gadget. */
-  state: Scalars["RecordState"]["output"];
-  /** DateTime that this sync was run from */
-  syncSince?: Maybe<Scalars["DateTime"]["output"]>;
-  /** The time at which this record was last changed. Set each time the record is successfully acted upon by an action. Managed by Gadget. */
-  updatedAt: Scalars["DateTime"]["output"];
-};
-
-/** A connection to a list of ShopifySync items. */
-export type ShopifySyncConnection = {
-  __typename?: "ShopifySyncConnection";
-  /** A list of edges. */
-  edges: Array<ShopifySyncEdge>;
-  /** Information to aid in pagination. */
-  pageInfo: PageInfo;
-};
-
-/** An edge in a ShopifySync connection. */
-export type ShopifySyncEdge = {
-  __typename?: "ShopifySyncEdge";
-  /** A cursor for use in pagination */
-  cursor: Scalars["String"]["output"];
-  /** The item at the end of the edge */
-  node: ShopifySync;
-};
-
-export type ShopifySyncFilter = {
-  AND?: InputMaybe<Array<InputMaybe<ShopifySyncFilter>>>;
-  NOT?: InputMaybe<Array<InputMaybe<ShopifySyncFilter>>>;
-  OR?: InputMaybe<Array<InputMaybe<ShopifySyncFilter>>>;
-  createdAt?: InputMaybe<DateTimeFilter>;
-  domain?: InputMaybe<StringFilter>;
-  errorDetails?: InputMaybe<StringFilter>;
-  errorMessage?: InputMaybe<StringFilter>;
-  force?: InputMaybe<BooleanFilter>;
-  id?: InputMaybe<IdFilter>;
-  models?: InputMaybe<JsonFilter>;
-  shop?: InputMaybe<IdFilter>;
-  shopId?: InputMaybe<IdFilter>;
-  state?: InputMaybe<StateFilter>;
-  syncSince?: InputMaybe<DateTimeFilter>;
-  updatedAt?: InputMaybe<DateTimeFilter>;
-};
-
-export type ShopifySyncSort = {
-  /** Sort the results by the createdAt field. Defaults to ascending (smallest value first). */
-  createdAt?: InputMaybe<SortOrder>;
-  /** Sort the results by the domain field. Defaults to ascending (smallest value first). */
-  domain?: InputMaybe<SortOrder>;
-  /** Sort the results by the errorDetails field. Defaults to ascending (smallest value first). */
-  errorDetails?: InputMaybe<SortOrder>;
-  /** Sort the results by the errorMessage field. Defaults to ascending (smallest value first). */
-  errorMessage?: InputMaybe<SortOrder>;
-  /** Sort the results by the force field. Defaults to ascending (smallest value first). */
-  force?: InputMaybe<SortOrder>;
-  /** Sort the results by the id field. Defaults to ascending (smallest value first). */
-  id?: InputMaybe<SortOrder>;
-  /** Sort the results by the models field. Defaults to ascending (smallest value first). */
-  models?: InputMaybe<SortOrder>;
-  /** Sort the results by the state field. Defaults to ascending (smallest value first). */
-  state?: InputMaybe<SortOrder>;
-  /** Sort the results by the syncSince field. Defaults to ascending (smallest value first). */
-  syncSince?: InputMaybe<SortOrder>;
-  /** Sort the results by the updatedAt field. Defaults to ascending (smallest value first). */
-  updatedAt?: InputMaybe<SortOrder>;
-};
-
-/** Input object supporting setting or updating related model record on a relationship field */
-export type SiblingModelBelongsToInput = {
-  /** Existing ID of another record, which you would like to associate this record with */
-  _link?: InputMaybe<Scalars["GadgetID"]["input"]>;
-  create?: InputMaybe<NestedSiblingModelCreateInput>;
-  delete?: InputMaybe<NestedSiblingModelDeleteInput>;
-  update?: InputMaybe<NestedSiblingModelUpdateInput>;
-};
-
-/** Input object supporting setting or updating related model record on a relationship field */
-export type SiblingModelHasManyThroughInput = {
-  create?: InputMaybe<NestedSiblingModelCreateInput>;
-  delete?: InputMaybe<NestedSiblingModelDeleteInput>;
-  update?: InputMaybe<NestedSiblingModelUpdateInput>;
-};
-
-export type SignInUserInput = {
-  email?: InputMaybe<Scalars["String"]["input"]>;
-  emailVerified?: InputMaybe<Scalars["Boolean"]["input"]>;
-  firstName?: InputMaybe<Scalars["String"]["input"]>;
-  googleImageUrl?: InputMaybe<Scalars["String"]["input"]>;
-  googleProfileId?: InputMaybe<Scalars["String"]["input"]>;
-  lastName?: InputMaybe<Scalars["String"]["input"]>;
-  lastSignedIn?: InputMaybe<Scalars["DateTime"]["input"]>;
-  password?: InputMaybe<Scalars["String"]["input"]>;
+export type SetBestNumberGamePlayerResult = {
+  __typename?: "SetBestNumberGamePlayerResult";
+  actionRun?: Maybe<Scalars["String"]["output"]>;
+  errors?: Maybe<Array<ExecutionError>>;
+  player?: Maybe<GamePlayer>;
+  success: Scalars["Boolean"]["output"];
 };
 
 export type SignInUserResult = {
@@ -10852,17 +11030,6 @@ export type SignInUserResult = {
   user?: Maybe<User>;
 };
 
-export type SignOutUserInput = {
-  email?: InputMaybe<Scalars["String"]["input"]>;
-  emailVerified?: InputMaybe<Scalars["Boolean"]["input"]>;
-  firstName?: InputMaybe<Scalars["String"]["input"]>;
-  googleImageUrl?: InputMaybe<Scalars["String"]["input"]>;
-  googleProfileId?: InputMaybe<Scalars["String"]["input"]>;
-  lastName?: InputMaybe<Scalars["String"]["input"]>;
-  lastSignedIn?: InputMaybe<Scalars["DateTime"]["input"]>;
-  password?: InputMaybe<Scalars["String"]["input"]>;
-};
-
 export type SignOutUserResult = {
   __typename?: "SignOutUserResult";
   actionRun?: Maybe<Scalars["String"]["output"]>;
@@ -10871,23 +11038,12 @@ export type SignOutUserResult = {
   user?: Maybe<User>;
 };
 
-export type SignUpUserInput = {
-  email?: InputMaybe<Scalars["String"]["input"]>;
-  emailVerified?: InputMaybe<Scalars["Boolean"]["input"]>;
-  firstName?: InputMaybe<Scalars["String"]["input"]>;
-  googleImageUrl?: InputMaybe<Scalars["String"]["input"]>;
-  googleProfileId?: InputMaybe<Scalars["String"]["input"]>;
-  lastName?: InputMaybe<Scalars["String"]["input"]>;
-  lastSignedIn?: InputMaybe<Scalars["DateTime"]["input"]>;
-  password?: InputMaybe<Scalars["String"]["input"]>;
-};
-
 export type SignUpUserResult = UpsertUserResult & {
   __typename?: "SignUpUserResult";
   actionRun?: Maybe<Scalars["String"]["output"]>;
   errors?: Maybe<Array<ExecutionError>>;
+  result?: Maybe<Scalars["JSON"]["output"]>;
   success: Scalars["Boolean"]["output"];
-  user?: Maybe<User>;
 };
 
 /** This Error object is returned for errors which don't have other specific handling. It has a message which is safe to display to users, but is often technical in nature. It also has a `code` field which is documented in the Gadget API Error Codes docs. */
@@ -10914,20 +11070,69 @@ export enum SortOrder {
   Descending = "Descending",
 }
 
-/** Input object supporting setting or updating related model record on a relationship field */
-export type StadiumBelongsToInput = {
-  /** Existing ID of another record, which you would like to associate this record with */
-  _link?: InputMaybe<Scalars["GadgetID"]["input"]>;
-  create?: InputMaybe<NestedStadiumCreateInput>;
-  delete?: InputMaybe<NestedStadiumDeleteInput>;
-  update?: InputMaybe<NestedStadiumUpdateInput>;
+export type Sprocket = {
+  __typename?: "Sprocket";
+  /** Get all the fields for this record. Useful for not having to list out all the fields you want to retrieve, but slower. */
+  _all: Scalars["JSONObject"]["output"];
+  /** The time at which this record was first created. Set once upon record creation and never changed. Managed by Gadget. */
+  createdAt: Scalars["DateTime"]["output"];
+  gizmo?: Maybe<Gizmo>;
+  gizmoId?: Maybe<Scalars["GadgetID"]["output"]>;
+  /** The globally unique, unchanging identifier for this record. Assigned and managed by Gadget. */
+  id: Scalars["GadgetID"]["output"];
+  ratio?: Maybe<Scalars["Float"]["output"]>;
+  /** The time at which this record was last changed. Set each time the record is successfully acted upon by an action. Managed by Gadget. */
+  updatedAt: Scalars["DateTime"]["output"];
+};
+
+/** A connection to a list of Sprocket items. */
+export type SprocketConnection = {
+  __typename?: "SprocketConnection";
+  /** A list of edges. */
+  edges: Array<SprocketEdge>;
+  /** Information to aid in pagination. */
+  pageInfo: PageInfo;
+};
+
+/** An edge in a Sprocket connection. */
+export type SprocketEdge = {
+  __typename?: "SprocketEdge";
+  /** A cursor for use in pagination */
+  cursor: Scalars["String"]["output"];
+  /** The item at the end of the edge */
+  node: Sprocket;
+};
+
+export type SprocketFilter = {
+  AND?: InputMaybe<Array<InputMaybe<SprocketFilter>>>;
+  NOT?: InputMaybe<Array<InputMaybe<SprocketFilter>>>;
+  OR?: InputMaybe<Array<InputMaybe<SprocketFilter>>>;
+  createdAt?: InputMaybe<DateTimeFilter>;
+  gizmo?: InputMaybe<IdFilter>;
+  gizmoId?: InputMaybe<IdFilter>;
+  id?: InputMaybe<IdFilter>;
+  ratio?: InputMaybe<FloatFilter>;
+  updatedAt?: InputMaybe<DateTimeFilter>;
 };
 
 /** Input object supporting setting or updating related model record on a relationship field */
-export type StadiumHasOneInput = {
-  create?: InputMaybe<NestedStadiumCreateInput>;
-  delete?: InputMaybe<NestedStadiumDeleteInput>;
-  update?: InputMaybe<NestedStadiumUpdateInput>;
+export type SprocketHasManyInput = {
+  /** Creates, updates, or deletes existing records in the database as needed to arrive at the list of records specified. */
+  _converge?: InputMaybe<ConvergeSprocketInput>;
+  create?: InputMaybe<NestedSprocketCreateInput>;
+  delete?: InputMaybe<NestedSprocketDeleteInput>;
+  update?: InputMaybe<NestedSprocketUpdateInput>;
+};
+
+export type SprocketSort = {
+  /** Sort the results by the createdAt field. Defaults to ascending (smallest value first). */
+  createdAt?: InputMaybe<SortOrder>;
+  /** Sort the results by the id field. Defaults to ascending (smallest value first). */
+  id?: InputMaybe<SortOrder>;
+  /** Sort the results by the ratio field. Defaults to ascending (smallest value first). */
+  ratio?: InputMaybe<SortOrder>;
+  /** Sort the results by the updatedAt field. Defaults to ascending (smallest value first). */
+  updatedAt?: InputMaybe<SortOrder>;
 };
 
 export type StateFilter = {
@@ -10966,6 +11171,21 @@ export type StoredFileInput = {
   mimeType?: InputMaybe<Scalars["String"]["input"]>;
 };
 
+export type StraightenGizmoInput = {
+  name?: InputMaybe<Scalars["String"]["input"]>;
+  sprockets?: InputMaybe<Array<InputMaybe<SprocketHasManyInput>>>;
+  state?: InputMaybe<Scalars["GizmoStateEnum"]["input"]>;
+  widget?: InputMaybe<WidgetBelongsToInput>;
+};
+
+export type StraightenGizmoResult = {
+  __typename?: "StraightenGizmoResult";
+  actionRun?: Maybe<Scalars["String"]["output"]>;
+  errors?: Maybe<Array<ExecutionError>>;
+  gizmo?: Maybe<Gizmo>;
+  success: Scalars["Boolean"]["output"];
+};
+
 export type StringEqualsFilter = {
   equals?: InputMaybe<Scalars["String"]["input"]>;
 };
@@ -10983,6 +11203,157 @@ export type StringFilter = {
   startsWith?: InputMaybe<Scalars["String"]["input"]>;
 };
 
+export type Student = {
+  __typename?: "Student";
+  /** Get all the fields for this record. Useful for not having to list out all the fields you want to retrieve, but slower. */
+  _all: Scalars["JSONObject"]["output"];
+  born?: Maybe<Scalars["Date"]["output"]>;
+  city?: Maybe<City>;
+  cityId?: Maybe<Scalars["GadgetID"]["output"]>;
+  courses: CourseConnection;
+  /** The time at which this record was first created. Set once upon record creation and never changed. Managed by Gadget. */
+  createdAt: Scalars["DateTime"]["output"];
+  followeeFriendships: FriendshipConnection;
+  followees: StudentConnection;
+  followerFriendships: FriendshipConnection;
+  followers: StudentConnection;
+  friendships: FriendshipConnection;
+  /** The globally unique, unchanging identifier for this record. Assigned and managed by Gadget. */
+  id: Scalars["GadgetID"]["output"];
+  male?: Maybe<Scalars["Boolean"]["output"]>;
+  name?: Maybe<Scalars["String"]["output"]>;
+  registrations: RegistrationConnection;
+  /** The time at which this record was last changed. Set each time the record is successfully acted upon by an action. Managed by Gadget. */
+  updatedAt: Scalars["DateTime"]["output"];
+};
+
+export type StudentCoursesArgs = {
+  after?: InputMaybe<Scalars["String"]["input"]>;
+  before?: InputMaybe<Scalars["String"]["input"]>;
+  first?: InputMaybe<Scalars["Int"]["input"]>;
+  last?: InputMaybe<Scalars["Int"]["input"]>;
+};
+
+export type StudentFolloweeFriendshipsArgs = {
+  after?: InputMaybe<Scalars["String"]["input"]>;
+  before?: InputMaybe<Scalars["String"]["input"]>;
+  filter?: InputMaybe<Array<FriendshipFilter>>;
+  first?: InputMaybe<Scalars["Int"]["input"]>;
+  last?: InputMaybe<Scalars["Int"]["input"]>;
+  search?: InputMaybe<Scalars["String"]["input"]>;
+  sort?: InputMaybe<Array<FriendshipSort>>;
+};
+
+export type StudentFolloweesArgs = {
+  after?: InputMaybe<Scalars["String"]["input"]>;
+  before?: InputMaybe<Scalars["String"]["input"]>;
+  first?: InputMaybe<Scalars["Int"]["input"]>;
+  last?: InputMaybe<Scalars["Int"]["input"]>;
+};
+
+export type StudentFollowerFriendshipsArgs = {
+  after?: InputMaybe<Scalars["String"]["input"]>;
+  before?: InputMaybe<Scalars["String"]["input"]>;
+  filter?: InputMaybe<Array<FriendshipFilter>>;
+  first?: InputMaybe<Scalars["Int"]["input"]>;
+  last?: InputMaybe<Scalars["Int"]["input"]>;
+  search?: InputMaybe<Scalars["String"]["input"]>;
+  sort?: InputMaybe<Array<FriendshipSort>>;
+};
+
+export type StudentFollowersArgs = {
+  after?: InputMaybe<Scalars["String"]["input"]>;
+  before?: InputMaybe<Scalars["String"]["input"]>;
+  first?: InputMaybe<Scalars["Int"]["input"]>;
+  last?: InputMaybe<Scalars["Int"]["input"]>;
+};
+
+export type StudentFriendshipsArgs = {
+  after?: InputMaybe<Scalars["String"]["input"]>;
+  before?: InputMaybe<Scalars["String"]["input"]>;
+  first?: InputMaybe<Scalars["Int"]["input"]>;
+  last?: InputMaybe<Scalars["Int"]["input"]>;
+};
+
+export type StudentRegistrationsArgs = {
+  after?: InputMaybe<Scalars["String"]["input"]>;
+  before?: InputMaybe<Scalars["String"]["input"]>;
+  first?: InputMaybe<Scalars["Int"]["input"]>;
+  last?: InputMaybe<Scalars["Int"]["input"]>;
+};
+
+/** Input object supporting setting or updating related model record on a relationship field */
+export type StudentBelongsToInput = {
+  /** Existing ID of another record, which you would like to associate this record with */
+  _link?: InputMaybe<Scalars["GadgetID"]["input"]>;
+  create?: InputMaybe<NestedStudentCreateInput>;
+  delete?: InputMaybe<NestedStudentDeleteInput>;
+  update?: InputMaybe<NestedStudentUpdateInput>;
+};
+
+/** A connection to a list of Student items. */
+export type StudentConnection = {
+  __typename?: "StudentConnection";
+  /** A list of edges. */
+  edges: Array<StudentEdge>;
+  /** Information to aid in pagination. */
+  pageInfo: PageInfo;
+};
+
+/** An edge in a Student connection. */
+export type StudentEdge = {
+  __typename?: "StudentEdge";
+  /** A cursor for use in pagination */
+  cursor: Scalars["String"]["output"];
+  /** The item at the end of the edge */
+  node: Student;
+};
+
+export type StudentFilter = {
+  AND?: InputMaybe<Array<InputMaybe<StudentFilter>>>;
+  NOT?: InputMaybe<Array<InputMaybe<StudentFilter>>>;
+  OR?: InputMaybe<Array<InputMaybe<StudentFilter>>>;
+  born?: InputMaybe<DateFilter>;
+  city?: InputMaybe<IdFilter>;
+  cityId?: InputMaybe<IdFilter>;
+  createdAt?: InputMaybe<DateTimeFilter>;
+  id?: InputMaybe<IdFilter>;
+  male?: InputMaybe<BooleanFilter>;
+  name?: InputMaybe<StringFilter>;
+  updatedAt?: InputMaybe<DateTimeFilter>;
+};
+
+/** Input object supporting setting or updating related model record on a relationship field */
+export type StudentHasManyInput = {
+  /** Creates, updates, or deletes existing records in the database as needed to arrive at the list of records specified. */
+  _converge?: InputMaybe<ConvergeStudentInput>;
+  create?: InputMaybe<NestedStudentCreateInput>;
+  delete?: InputMaybe<NestedStudentDeleteInput>;
+  update?: InputMaybe<NestedStudentUpdateInput>;
+};
+
+/** Input object supporting setting or updating related model record on a relationship field */
+export type StudentHasManyThroughInput = {
+  create?: InputMaybe<NestedStudentCreateInput>;
+  delete?: InputMaybe<NestedStudentDeleteInput>;
+  update?: InputMaybe<NestedStudentUpdateInput>;
+};
+
+export type StudentSort = {
+  /** Sort the results by the born field. Defaults to ascending (smallest value first). */
+  born?: InputMaybe<SortOrder>;
+  /** Sort the results by the createdAt field. Defaults to ascending (smallest value first). */
+  createdAt?: InputMaybe<SortOrder>;
+  /** Sort the results by the id field. Defaults to ascending (smallest value first). */
+  id?: InputMaybe<SortOrder>;
+  /** Sort the results by the male field. Defaults to ascending (smallest value first). */
+  male?: InputMaybe<SortOrder>;
+  /** Sort the results by the name field. Defaults to ascending (smallest value first). */
+  name?: InputMaybe<SortOrder>;
+  /** Sort the results by the updatedAt field. Defaults to ascending (smallest value first). */
+  updatedAt?: InputMaybe<SortOrder>;
+};
+
 export type Subscription = {
   __typename?: "Subscription";
   backgroundAction?: Maybe<BackgroundAction>;
@@ -10992,74 +11363,231 @@ export type SubscriptionBackgroundActionArgs = {
   id: Scalars["String"]["input"];
 };
 
-export type UninstallShopifyShopResult = {
-  __typename?: "UninstallShopifyShopResult";
+export type Teacher = {
+  __typename?: "Teacher";
+  /** Get all the fields for this record. Useful for not having to list out all the fields you want to retrieve, but slower. */
+  _all: Scalars["JSONObject"]["output"];
+  born?: Maybe<Scalars["Date"]["output"]>;
+  city?: Maybe<City>;
+  cityId?: Maybe<Scalars["GadgetID"]["output"]>;
+  courses: CourseConnection;
+  /** The time at which this record was first created. Set once upon record creation and never changed. Managed by Gadget. */
+  createdAt: Scalars["DateTime"]["output"];
+  /** The globally unique, unchanging identifier for this record. Assigned and managed by Gadget. */
+  id: Scalars["GadgetID"]["output"];
+  male?: Maybe<Scalars["Boolean"]["output"]>;
+  name?: Maybe<Scalars["String"]["output"]>;
+  /** The time at which this record was last changed. Set each time the record is successfully acted upon by an action. Managed by Gadget. */
+  updatedAt: Scalars["DateTime"]["output"];
+};
+
+export type TeacherCoursesArgs = {
+  after?: InputMaybe<Scalars["String"]["input"]>;
+  before?: InputMaybe<Scalars["String"]["input"]>;
+  filter?: InputMaybe<Array<CourseFilter>>;
+  first?: InputMaybe<Scalars["Int"]["input"]>;
+  last?: InputMaybe<Scalars["Int"]["input"]>;
+  search?: InputMaybe<Scalars["String"]["input"]>;
+  sort?: InputMaybe<Array<CourseSort>>;
+};
+
+/** Input object supporting setting or updating related model record on a relationship field */
+export type TeacherBelongsToInput = {
+  /** Existing ID of another record, which you would like to associate this record with */
+  _link?: InputMaybe<Scalars["GadgetID"]["input"]>;
+  create?: InputMaybe<NestedTeacherCreateInput>;
+  delete?: InputMaybe<NestedTeacherDeleteInput>;
+  update?: InputMaybe<NestedTeacherUpdateInput>;
+};
+
+/** A connection to a list of Teacher items. */
+export type TeacherConnection = {
+  __typename?: "TeacherConnection";
+  /** A list of edges. */
+  edges: Array<TeacherEdge>;
+  /** Information to aid in pagination. */
+  pageInfo: PageInfo;
+};
+
+/** An edge in a Teacher connection. */
+export type TeacherEdge = {
+  __typename?: "TeacherEdge";
+  /** A cursor for use in pagination */
+  cursor: Scalars["String"]["output"];
+  /** The item at the end of the edge */
+  node: Teacher;
+};
+
+export type TeacherFilter = {
+  AND?: InputMaybe<Array<InputMaybe<TeacherFilter>>>;
+  NOT?: InputMaybe<Array<InputMaybe<TeacherFilter>>>;
+  OR?: InputMaybe<Array<InputMaybe<TeacherFilter>>>;
+  born?: InputMaybe<DateFilter>;
+  city?: InputMaybe<IdFilter>;
+  cityId?: InputMaybe<IdFilter>;
+  createdAt?: InputMaybe<DateTimeFilter>;
+  id?: InputMaybe<IdFilter>;
+  male?: InputMaybe<BooleanFilter>;
+  name?: InputMaybe<StringFilter>;
+  updatedAt?: InputMaybe<DateTimeFilter>;
+};
+
+/** Input object supporting setting or updating related model record on a relationship field */
+export type TeacherHasManyInput = {
+  /** Creates, updates, or deletes existing records in the database as needed to arrive at the list of records specified. */
+  _converge?: InputMaybe<ConvergeTeacherInput>;
+  create?: InputMaybe<NestedTeacherCreateInput>;
+  delete?: InputMaybe<NestedTeacherDeleteInput>;
+  update?: InputMaybe<NestedTeacherUpdateInput>;
+};
+
+export type TeacherSort = {
+  /** Sort the results by the born field. Defaults to ascending (smallest value first). */
+  born?: InputMaybe<SortOrder>;
+  /** Sort the results by the createdAt field. Defaults to ascending (smallest value first). */
+  createdAt?: InputMaybe<SortOrder>;
+  /** Sort the results by the id field. Defaults to ascending (smallest value first). */
+  id?: InputMaybe<SortOrder>;
+  /** Sort the results by the male field. Defaults to ascending (smallest value first). */
+  male?: InputMaybe<SortOrder>;
+  /** Sort the results by the name field. Defaults to ascending (smallest value first). */
+  name?: InputMaybe<SortOrder>;
+  /** Sort the results by the updatedAt field. Defaults to ascending (smallest value first). */
+  updatedAt?: InputMaybe<SortOrder>;
+};
+
+export type TotalInStock = {
+  __typename?: "TotalInStock";
+  totalInStock?: Maybe<Scalars["Int"]["output"]>;
+};
+
+export type UnfoldGizmoInput = {
+  name?: InputMaybe<Scalars["String"]["input"]>;
+  sprockets?: InputMaybe<Array<InputMaybe<SprocketHasManyInput>>>;
+  state?: InputMaybe<Scalars["GizmoStateEnum"]["input"]>;
+  widget?: InputMaybe<WidgetBelongsToInput>;
+};
+
+export type UnfoldGizmoResult = {
+  __typename?: "UnfoldGizmoResult";
   actionRun?: Maybe<Scalars["String"]["output"]>;
   errors?: Maybe<Array<ExecutionError>>;
-  shopifyShop?: Maybe<ShopifyShop>;
+  gizmo?: Maybe<Gizmo>;
   success: Scalars["Boolean"]["output"];
 };
 
-export type UpdateAutoTableTestInput = {
-  bool?: InputMaybe<Scalars["Boolean"]["input"]>;
-  dt?: InputMaybe<Scalars["DateTime"]["input"]>;
+export type UntriggerableGizmoResult = {
+  __typename?: "UntriggerableGizmoResult";
+  actionRun?: Maybe<Scalars["String"]["output"]>;
+  errors?: Maybe<Array<ExecutionError>>;
+  gizmo?: Maybe<Gizmo>;
+  success: Scalars["Boolean"]["output"];
+};
+
+export type UntriggerableGlobalActionResult = {
+  __typename?: "UntriggerableGlobalActionResult";
+  errors?: Maybe<Array<ExecutionError>>;
+  result?: Maybe<Scalars["JSON"]["output"]>;
+  success: Scalars["Boolean"]["output"];
+};
+
+export type UpdateBillingAccountInput = {
+  balance?: InputMaybe<Scalars["Float"]["input"]>;
+  customer?: InputMaybe<CustomerBelongsToInput>;
+};
+
+export type UpdateBillingAccountResult = UpsertBillingAccountResult & {
+  __typename?: "UpdateBillingAccountResult";
+  actionRun?: Maybe<Scalars["String"]["output"]>;
+  billingAccount?: Maybe<BillingAccount>;
+  errors?: Maybe<Array<ExecutionError>>;
+  success: Scalars["Boolean"]["output"];
+};
+
+export type UpdateCityInput = {
+  name?: InputMaybe<Scalars["String"]["input"]>;
+  students?: InputMaybe<Array<InputMaybe<StudentHasManyInput>>>;
+  teachers?: InputMaybe<Array<InputMaybe<TeacherHasManyInput>>>;
+};
+
+export type UpdateCityResult = UpsertCityResult & {
+  __typename?: "UpdateCityResult";
+  actionRun?: Maybe<Scalars["String"]["output"]>;
+  city?: Maybe<City>;
+  errors?: Maybe<Array<ExecutionError>>;
+  success: Scalars["Boolean"]["output"];
+};
+
+export type UpdateCourseInput = {
+  offered?: InputMaybe<Scalars["Boolean"]["input"]>;
+  registration?: InputMaybe<Array<InputMaybe<RegistrationHasManyInput>>>;
+  registrations?: InputMaybe<Array<InputMaybe<RegistrationHasManyInput>>>;
+  students?: InputMaybe<Array<InputMaybe<StudentHasManyThroughInput>>>;
+  teacher?: InputMaybe<TeacherBelongsToInput>;
+  title?: InputMaybe<Scalars["String"]["input"]>;
+};
+
+export type UpdateCourseResult = UpsertCourseResult & {
+  __typename?: "UpdateCourseResult";
+  actionRun?: Maybe<Scalars["String"]["output"]>;
+  course?: Maybe<Course>;
+  errors?: Maybe<Array<ExecutionError>>;
+  success: Scalars["Boolean"]["output"];
+};
+
+export type UpdateCustomerInput = {
+  billingAccount?: InputMaybe<BillingAccountHasOneInput>;
   email?: InputMaybe<Scalars["String"]["input"]>;
-  enum?: InputMaybe<Array<Scalars["AutoTableTestEnumEnum"]["input"]>>;
-  es?: InputMaybe<Scalars["String"]["input"]>;
-  file?: InputMaybe<StoredFileInput>;
-  hasMany?: InputMaybe<Array<InputMaybe<AutoTableTestRelatedModelHasManyInput>>>;
-  hasOne?: InputMaybe<AutoTableTestRelatedModelHasOneInput>;
-  json?: InputMaybe<Scalars["JSON"]["input"]>;
-  num?: InputMaybe<Scalars["Float"]["input"]>;
-  pwd?: InputMaybe<Scalars["String"]["input"]>;
-  /** A string list of Gadget platform Role keys to assign to this record */
-  rl?: InputMaybe<Array<Scalars["String"]["input"]>>;
-  rt?: InputMaybe<RichTextInput>;
-  str?: InputMaybe<Scalars["String"]["input"]>;
-  url?: InputMaybe<Scalars["String"]["input"]>;
-  vect?: InputMaybe<Array<Scalars["Float"]["input"]>>;
 };
 
-export type UpdateAutoTableTestRelatedModelInput = {
-  belongsToParent?: InputMaybe<AutoTableTestBelongsToInput>;
-  manyBelongsToParent?: InputMaybe<AutoTableTestBelongsToInput>;
-  name?: InputMaybe<Scalars["String"]["input"]>;
-  someBool?: InputMaybe<Scalars["Boolean"]["input"]>;
-  someNumber?: InputMaybe<Scalars["Float"]["input"]>;
-};
-
-export type UpdateAutoTableTestRelatedModelResult = UpsertAutoTableTestRelatedModelResult & {
-  __typename?: "UpdateAutoTableTestRelatedModelResult";
-  _autoTableTestRelatedModel?: Maybe<AutoTableTestRelatedModel>;
+export type UpdateCustomerResult = UpsertCustomerResult & {
+  __typename?: "UpdateCustomerResult";
   actionRun?: Maybe<Scalars["String"]["output"]>;
+  customer?: Maybe<Customer>;
   errors?: Maybe<Array<ExecutionError>>;
   success: Scalars["Boolean"]["output"];
 };
 
-export type UpdateAutoTableTestResult = UpsertAutoTableTestResult & {
-  __typename?: "UpdateAutoTableTestResult";
+export type UpdateEphemeralInput = {
+  data?: InputMaybe<Scalars["String"]["input"]>;
+};
+
+export type UpdateEphemeralResult = UpsertEphemeralResult & {
+  __typename?: "UpdateEphemeralResult";
   actionRun?: Maybe<Scalars["String"]["output"]>;
-  autoTableTest?: Maybe<AutoTableTest>;
+  ephemeral?: Maybe<Ephemeral>;
   errors?: Maybe<Array<ExecutionError>>;
   success: Scalars["Boolean"]["output"];
 };
 
-export type UpdateGameCityInput = {
-  name?: InputMaybe<Scalars["String"]["input"]>;
-  stadium?: InputMaybe<StadiumHasOneInput>;
+export type UpdateFieldlessResult = UpsertFieldlessResult & {
+  __typename?: "UpdateFieldlessResult";
+  actionRun?: Maybe<Scalars["String"]["output"]>;
+  errors?: Maybe<Array<ExecutionError>>;
+  fieldless?: Maybe<Fieldless>;
+  success: Scalars["Boolean"]["output"];
 };
 
-export type UpdateGameCityResult = UpsertGameCityResult & {
-  __typename?: "UpdateGameCityResult";
+export type UpdateFriendshipInput = {
+  ended?: InputMaybe<Scalars["DateOrDateTime"]["input"]>;
+  followee?: InputMaybe<StudentBelongsToInput>;
+  follower?: InputMaybe<StudentBelongsToInput>;
+  started?: InputMaybe<Scalars["DateOrDateTime"]["input"]>;
+};
+
+export type UpdateFriendshipResult = UpsertFriendshipResult & {
+  __typename?: "UpdateFriendshipResult";
   actionRun?: Maybe<Scalars["String"]["output"]>;
-  city?: Maybe<GameCity>;
   errors?: Maybe<Array<ExecutionError>>;
+  friendship?: Maybe<Friendship>;
   success: Scalars["Boolean"]["output"];
 };
 
 export type UpdateGamePlayerInput = {
-  currentRound?: InputMaybe<RoundBelongsToInput>;
+  birthday?: InputMaybe<Scalars["DateTime"]["input"]>;
   name?: InputMaybe<Scalars["String"]["input"]>;
+  number?: InputMaybe<Scalars["Float"]["input"]>;
+  rounds?: InputMaybe<Array<InputMaybe<RoundHasManyInput>>>;
 };
 
 export type UpdateGamePlayerResult = UpsertGamePlayerResult & {
@@ -11071,9 +11599,8 @@ export type UpdateGamePlayerResult = UpsertGamePlayerResult & {
 };
 
 export type UpdateGameRoundInput = {
-  name?: InputMaybe<Scalars["String"]["input"]>;
-  players?: InputMaybe<Array<InputMaybe<PlayerHasManyInput>>>;
-  stadium?: InputMaybe<StadiumBelongsToInput>;
+  number?: InputMaybe<Scalars["Float"]["input"]>;
+  player?: InputMaybe<PlayerBelongsToInput>;
 };
 
 export type UpdateGameRoundResult = UpsertGameRoundResult & {
@@ -11085,12 +11612,7 @@ export type UpdateGameRoundResult = UpsertGameRoundResult & {
 };
 
 export type UpdateGameStadiumInput = {
-  city?: InputMaybe<CityBelongsToInput>;
   name?: InputMaybe<Scalars["String"]["input"]>;
-  photo?: InputMaybe<StoredFileInput>;
-  rounds?: InputMaybe<Array<InputMaybe<RoundHasManyInput>>>;
-  tags?: InputMaybe<Array<Scalars["StadiumTagsEnum"]["input"]>>;
-  type?: InputMaybe<Scalars["StadiumTypeEnum"]["input"]>;
 };
 
 export type UpdateGameStadiumResult = UpsertGameStadiumResult & {
@@ -11103,7 +11625,8 @@ export type UpdateGameStadiumResult = UpsertGameStadiumResult & {
 
 export type UpdateGizmoInput = {
   name?: InputMaybe<Scalars["String"]["input"]>;
-  orientation?: InputMaybe<Scalars["String"]["input"]>;
+  sprockets?: InputMaybe<Array<InputMaybe<SprocketHasManyInput>>>;
+  state?: InputMaybe<Scalars["GizmoStateEnum"]["input"]>;
   widget?: InputMaybe<WidgetBelongsToInput>;
 };
 
@@ -11115,72 +11638,45 @@ export type UpdateGizmoResult = UpsertGizmoResult & {
   success: Scalars["Boolean"]["output"];
 };
 
-export type UpdateHasManyThroughBaseModelInput = {
-  baseModelHmtField?: InputMaybe<Array<InputMaybe<SiblingModelHasManyThroughInput>>>;
-  baseModelName?: InputMaybe<Scalars["String"]["input"]>;
-  joinerModel?: InputMaybe<Array<InputMaybe<JoinerModelHasManyInput>>>;
-  joinerModels?: InputMaybe<Array<InputMaybe<JoinerModelHasManyInput>>>;
-};
-
-export type UpdateHasManyThroughBaseModelResult = UpsertHasManyThroughBaseModelResult & {
-  __typename?: "UpdateHasManyThroughBaseModelResult";
-  actionRun?: Maybe<Scalars["String"]["output"]>;
-  baseModel?: Maybe<HasManyThroughBaseModel>;
-  errors?: Maybe<Array<ExecutionError>>;
-  success: Scalars["Boolean"]["output"];
-};
-
-export type UpdateHasManyThroughJoinerModelInput = {
-  joinerBelongsToBase?: InputMaybe<BaseModelBelongsToInput>;
-  joinerBelongsToSibling?: InputMaybe<SiblingModelBelongsToInput>;
-};
-
-export type UpdateHasManyThroughJoinerModelResult = UpsertHasManyThroughJoinerModelResult & {
-  __typename?: "UpdateHasManyThroughJoinerModelResult";
-  actionRun?: Maybe<Scalars["String"]["output"]>;
-  errors?: Maybe<Array<ExecutionError>>;
-  joinerModel?: Maybe<HasManyThroughJoinerModel>;
-  success: Scalars["Boolean"]["output"];
-};
-
-export type UpdateHasManyThroughSiblingModelInput = {
-  joinerModel?: InputMaybe<Array<InputMaybe<JoinerModelHasManyInput>>>;
-  joinerModels?: InputMaybe<Array<InputMaybe<JoinerModelHasManyInput>>>;
-  siblingModelHmtField?: InputMaybe<Array<InputMaybe<BaseModelHasManyThroughInput>>>;
-};
-
-export type UpdateHasManyThroughSiblingModelResult = UpsertHasManyThroughSiblingModelResult & {
-  __typename?: "UpdateHasManyThroughSiblingModelResult";
-  actionRun?: Maybe<Scalars["String"]["output"]>;
-  errors?: Maybe<Array<ExecutionError>>;
-  siblingModel?: Maybe<HasManyThroughSiblingModel>;
-  success: Scalars["Boolean"]["output"];
-};
-
-export type UpdateModelAResult = UpsertModelAResult & {
-  __typename?: "UpdateModelAResult";
-  actionRun?: Maybe<Scalars["String"]["output"]>;
-  errors?: Maybe<Array<ExecutionError>>;
-  modelA?: Maybe<ModelA>;
-  success: Scalars["Boolean"]["output"];
-};
-
-export type UpdatePartInput = {
-  count?: InputMaybe<Scalars["Float"]["input"]>;
+export type UpdateLandmarkStadiumInput = {
   name?: InputMaybe<Scalars["String"]["input"]>;
-  notes?: InputMaybe<Scalars["String"]["input"]>;
 };
 
-export type UpdatePartResult = UpsertPartResult & {
-  __typename?: "UpdatePartResult";
+export type UpdateLandmarkStadiumResult = UpsertLandmarkStadiumResult & {
+  __typename?: "UpdateLandmarkStadiumResult";
   actionRun?: Maybe<Scalars["String"]["output"]>;
   errors?: Maybe<Array<ExecutionError>>;
-  part?: Maybe<Part>;
+  stadium?: Maybe<LandmarkStadium>;
+  success: Scalars["Boolean"]["output"];
+};
+
+export type UpdateRegistrationInput = {
+  course?: InputMaybe<CourseBelongsToInput>;
+  student?: InputMaybe<StudentBelongsToInput>;
+};
+
+export type UpdateRegistrationResult = UpsertRegistrationResult & {
+  __typename?: "UpdateRegistrationResult";
+  actionRun?: Maybe<Scalars["String"]["output"]>;
+  errors?: Maybe<Array<ExecutionError>>;
+  registration?: Maybe<Registration>;
+  success: Scalars["Boolean"]["output"];
+};
+
+export type UpdateSampleModelToTestReallyLongModelNamesInput = {
+  title?: InputMaybe<Scalars["String"]["input"]>;
+};
+
+export type UpdateSampleModelToTestReallyLongModelNamesResult = UpsertSampleModelToTestReallyLongModelNamesResult & {
+  __typename?: "UpdateSampleModelToTestReallyLongModelNamesResult";
+  actionRun?: Maybe<Scalars["String"]["output"]>;
+  errors?: Maybe<Array<ExecutionError>>;
+  sampleModelToTestReallyLongModelNames?: Maybe<SampleModelToTestReallyLongModelNames>;
   success: Scalars["Boolean"]["output"];
 };
 
 export type UpdateSectionInput = {
-  name?: InputMaybe<Scalars["String"]["input"]>;
+  title?: InputMaybe<Scalars["String"]["input"]>;
   widgets?: InputMaybe<Array<InputMaybe<WidgetHasManyInput>>>;
 };
 
@@ -11192,56 +11688,63 @@ export type UpdateSectionResult = UpsertSectionResult & {
   success: Scalars["Boolean"]["output"];
 };
 
-export type UpdateShopifyGdprRequestResult = UpsertShopifyGdprRequestResult & {
-  __typename?: "UpdateShopifyGdprRequestResult";
+export type UpdateSprocketInput = {
+  gizmo?: InputMaybe<GizmoBelongsToInput>;
+  ratio?: InputMaybe<Scalars["Float"]["input"]>;
+};
+
+export type UpdateSprocketResult = UpsertSprocketResult & {
+  __typename?: "UpdateSprocketResult";
   actionRun?: Maybe<Scalars["String"]["output"]>;
   errors?: Maybe<Array<ExecutionError>>;
-  shopifyGdprRequest?: Maybe<ShopifyGdprRequest>;
+  sprocket?: Maybe<Sprocket>;
   success: Scalars["Boolean"]["output"];
 };
 
-export type UpdateShopifyProductImageResult = UpsertShopifyProductImageResult & {
-  __typename?: "UpdateShopifyProductImageResult";
+export type UpdateStudentInput = {
+  born?: InputMaybe<Scalars["DateOrDateTime"]["input"]>;
+  city?: InputMaybe<CityBelongsToInput>;
+  courses?: InputMaybe<Array<InputMaybe<CourseHasManyThroughInput>>>;
+  followeeFriendships?: InputMaybe<Array<InputMaybe<FriendshipHasManyInput>>>;
+  followees?: InputMaybe<Array<InputMaybe<StudentHasManyThroughInput>>>;
+  followerFriendships?: InputMaybe<Array<InputMaybe<FriendshipHasManyInput>>>;
+  followers?: InputMaybe<Array<InputMaybe<StudentHasManyThroughInput>>>;
+  friendship?: InputMaybe<Array<InputMaybe<FriendshipHasManyInput>>>;
+  friendships?: InputMaybe<Array<InputMaybe<FriendshipHasManyInput>>>;
+  male?: InputMaybe<Scalars["Boolean"]["input"]>;
+  name?: InputMaybe<Scalars["String"]["input"]>;
+  registration?: InputMaybe<Array<InputMaybe<RegistrationHasManyInput>>>;
+  registrations?: InputMaybe<Array<InputMaybe<RegistrationHasManyInput>>>;
+};
+
+export type UpdateStudentResult = UpsertStudentResult & {
+  __typename?: "UpdateStudentResult";
   actionRun?: Maybe<Scalars["String"]["output"]>;
   errors?: Maybe<Array<ExecutionError>>;
-  shopifyProductImage?: Maybe<ShopifyProductImage>;
+  student?: Maybe<Student>;
   success: Scalars["Boolean"]["output"];
 };
 
-export type UpdateShopifyProductOptionResult = UpsertShopifyProductOptionResult & {
-  __typename?: "UpdateShopifyProductOptionResult";
-  actionRun?: Maybe<Scalars["String"]["output"]>;
-  errors?: Maybe<Array<ExecutionError>>;
-  shopifyProductOption?: Maybe<ShopifyProductOption>;
-  success: Scalars["Boolean"]["output"];
+export type UpdateTeacherInput = {
+  born?: InputMaybe<Scalars["DateOrDateTime"]["input"]>;
+  city?: InputMaybe<CityBelongsToInput>;
+  courses?: InputMaybe<Array<InputMaybe<CourseHasManyInput>>>;
+  male?: InputMaybe<Scalars["Boolean"]["input"]>;
+  name?: InputMaybe<Scalars["String"]["input"]>;
 };
 
-export type UpdateShopifyProductResult = UpsertShopifyProductResult & {
-  __typename?: "UpdateShopifyProductResult";
+export type UpdateTeacherResult = UpsertTeacherResult & {
+  __typename?: "UpdateTeacherResult";
   actionRun?: Maybe<Scalars["String"]["output"]>;
   errors?: Maybe<Array<ExecutionError>>;
-  shopifyProduct?: Maybe<ShopifyProduct>;
   success: Scalars["Boolean"]["output"];
-};
-
-export type UpdateShopifyProductVariantResult = UpsertShopifyProductVariantResult & {
-  __typename?: "UpdateShopifyProductVariantResult";
-  actionRun?: Maybe<Scalars["String"]["output"]>;
-  errors?: Maybe<Array<ExecutionError>>;
-  shopifyProductVariant?: Maybe<ShopifyProductVariant>;
-  success: Scalars["Boolean"]["output"];
-};
-
-export type UpdateShopifyShopResult = UpsertShopifyShopResult & {
-  __typename?: "UpdateShopifyShopResult";
-  actionRun?: Maybe<Scalars["String"]["output"]>;
-  errors?: Maybe<Array<ExecutionError>>;
-  shopifyShop?: Maybe<ShopifyShop>;
-  success: Scalars["Boolean"]["output"];
+  teacher?: Maybe<Teacher>;
 };
 
 export type UpdateUserInput = {
   email?: InputMaybe<Scalars["String"]["input"]>;
+  emailVerificationToken?: InputMaybe<Scalars["String"]["input"]>;
+  emailVerificationTokenExpiration?: InputMaybe<Scalars["DateTime"]["input"]>;
   emailVerified?: InputMaybe<Scalars["Boolean"]["input"]>;
   firstName?: InputMaybe<Scalars["String"]["input"]>;
   googleImageUrl?: InputMaybe<Scalars["String"]["input"]>;
@@ -11249,6 +11752,8 @@ export type UpdateUserInput = {
   lastName?: InputMaybe<Scalars["String"]["input"]>;
   lastSignedIn?: InputMaybe<Scalars["DateTime"]["input"]>;
   password?: InputMaybe<Scalars["String"]["input"]>;
+  resetPasswordToken?: InputMaybe<Scalars["String"]["input"]>;
+  resetPasswordTokenExpiration?: InputMaybe<Scalars["DateTime"]["input"]>;
 };
 
 export type UpdateUserResult = UpsertUserResult & {
@@ -11259,24 +11764,46 @@ export type UpdateUserResult = UpsertUserResult & {
   user?: Maybe<User>;
 };
 
+export type UpdateWidgetImageInput = {
+  altText?: InputMaybe<Scalars["String"]["input"]>;
+  image?: InputMaybe<StoredFileInput>;
+  order?: InputMaybe<Scalars["Float"]["input"]>;
+  widget?: InputMaybe<WidgetBelongsToInput>;
+};
+
+export type UpdateWidgetImageResult = UpsertWidgetImageResult & {
+  __typename?: "UpdateWidgetImageResult";
+  actionRun?: Maybe<Scalars["String"]["output"]>;
+  errors?: Maybe<Array<ExecutionError>>;
+  success: Scalars["Boolean"]["output"];
+  widgetImage?: Maybe<WidgetImage>;
+};
+
 export type UpdateWidgetInput = {
   anything?: InputMaybe<Scalars["JSON"]["input"]>;
   birthday?: InputMaybe<Scalars["DateOrDateTime"]["input"]>;
   category?: InputMaybe<Array<Scalars["WidgetCategoryEnum"]["input"]>>;
   color?: InputMaybe<Scalars["String"]["input"]>;
+  cost?: InputMaybe<Scalars["CADCurrencyAmount"]["input"]>;
   description?: InputMaybe<RichTextInput>;
+  email?: InputMaybe<Scalars["String"]["input"]>;
   embedding?: InputMaybe<Array<Scalars["Float"]["input"]>>;
   gizmos?: InputMaybe<Array<InputMaybe<GizmoHasManyInput>>>;
+  images?: InputMaybe<Array<InputMaybe<WidgetImageHasManyInput>>>;
   inventoryCount?: InputMaybe<Scalars["Float"]["input"]>;
   isChecked?: InputMaybe<Scalars["Boolean"]["input"]>;
   metafields?: InputMaybe<Scalars["JSON"]["input"]>;
-  mustBeLongString?: InputMaybe<Scalars["String"]["input"]>;
   name?: InputMaybe<Scalars["String"]["input"]>;
+  phase?: InputMaybe<Scalars["WidgetPhaseEnum"]["input"]>;
   /** A string list of Gadget platform Role keys to assign to this record */
   roles?: InputMaybe<Array<Scalars["String"]["input"]>>;
   secretKey?: InputMaybe<Scalars["String"]["input"]>;
   section?: InputMaybe<SectionBelongsToInput>;
+  slug?: InputMaybe<Scalars["String"]["input"]>;
   startsAt?: InputMaybe<Scalars["DateTime"]["input"]>;
+  state?: InputMaybe<Scalars["WidgetStateEnum"]["input"]>;
+  tagline?: InputMaybe<Scalars["String"]["input"]>;
+  url?: InputMaybe<Scalars["String"]["input"]>;
 };
 
 export type UpdateWidgetResult = UpsertWidgetResult & {
@@ -11287,97 +11814,90 @@ export type UpdateWidgetResult = UpsertWidgetResult & {
   widget?: Maybe<Widget>;
 };
 
-export type UpdateWithCustomParamsAutoTableTestInput = {
-  bool?: InputMaybe<Scalars["Boolean"]["input"]>;
-  dt?: InputMaybe<Scalars["DateTime"]["input"]>;
-  email?: InputMaybe<Scalars["String"]["input"]>;
-  enum?: InputMaybe<Array<Scalars["AutoTableTestEnumEnum"]["input"]>>;
-  es?: InputMaybe<Scalars["String"]["input"]>;
-  file?: InputMaybe<StoredFileInput>;
-  hasMany?: InputMaybe<Array<InputMaybe<AutoTableTestRelatedModelHasManyInput>>>;
-  hasOne?: InputMaybe<AutoTableTestRelatedModelHasOneInput>;
-  json?: InputMaybe<Scalars["JSON"]["input"]>;
-  num?: InputMaybe<Scalars["Float"]["input"]>;
-  pwd?: InputMaybe<Scalars["String"]["input"]>;
-  /** A string list of Gadget platform Role keys to assign to this record */
-  rl?: InputMaybe<Array<Scalars["String"]["input"]>>;
-  rt?: InputMaybe<RichTextInput>;
-  str?: InputMaybe<Scalars["String"]["input"]>;
-  url?: InputMaybe<Scalars["String"]["input"]>;
-  vect?: InputMaybe<Array<Scalars["Float"]["input"]>>;
+export type UpsertBillingAccountInput = {
+  balance?: InputMaybe<Scalars["Float"]["input"]>;
+  customer?: InputMaybe<CustomerBelongsToInput>;
+  id?: InputMaybe<Scalars["GadgetID"]["input"]>;
 };
 
-export type UpdateWithCustomParamsAutoTableTestResult = {
-  __typename?: "UpdateWithCustomParamsAutoTableTestResult";
+export type UpsertBillingAccountResult = {
   actionRun?: Maybe<Scalars["String"]["output"]>;
-  autoTableTest?: Maybe<AutoTableTest>;
   errors?: Maybe<Array<ExecutionError>>;
   success: Scalars["Boolean"]["output"];
 };
 
-export type UpsertAutoTableTestInput = {
-  bool?: InputMaybe<Scalars["Boolean"]["input"]>;
-  dt?: InputMaybe<Scalars["DateTime"]["input"]>;
-  email?: InputMaybe<Scalars["String"]["input"]>;
-  enum?: InputMaybe<Array<Scalars["AutoTableTestEnumEnum"]["input"]>>;
-  es?: InputMaybe<Scalars["String"]["input"]>;
-  file?: InputMaybe<StoredFileInput>;
-  hasMany?: InputMaybe<Array<InputMaybe<AutoTableTestRelatedModelHasManyInput>>>;
-  hasOne?: InputMaybe<AutoTableTestRelatedModelHasOneInput>;
+export type UpsertCityInput = {
   id?: InputMaybe<Scalars["GadgetID"]["input"]>;
-  json?: InputMaybe<Scalars["JSON"]["input"]>;
-  num?: InputMaybe<Scalars["Float"]["input"]>;
-  pwd?: InputMaybe<Scalars["String"]["input"]>;
-  /** A string list of Gadget platform Role keys to assign to this record */
-  rl?: InputMaybe<Array<Scalars["String"]["input"]>>;
-  rt?: InputMaybe<RichTextInput>;
-  str?: InputMaybe<Scalars["String"]["input"]>;
-  url?: InputMaybe<Scalars["String"]["input"]>;
-  vect?: InputMaybe<Array<Scalars["Float"]["input"]>>;
-};
-
-export type UpsertAutoTableTestRelatedModelInput = {
-  belongsToParent?: InputMaybe<AutoTableTestBelongsToInput>;
-  id?: InputMaybe<Scalars["GadgetID"]["input"]>;
-  manyBelongsToParent?: InputMaybe<AutoTableTestBelongsToInput>;
   name?: InputMaybe<Scalars["String"]["input"]>;
-  someBool?: InputMaybe<Scalars["Boolean"]["input"]>;
-  someNumber?: InputMaybe<Scalars["Float"]["input"]>;
+  students?: InputMaybe<Array<InputMaybe<StudentHasManyInput>>>;
+  teachers?: InputMaybe<Array<InputMaybe<TeacherHasManyInput>>>;
 };
 
-export type UpsertAutoTableTestRelatedModelResult = {
+export type UpsertCityResult = {
   actionRun?: Maybe<Scalars["String"]["output"]>;
   errors?: Maybe<Array<ExecutionError>>;
   success: Scalars["Boolean"]["output"];
 };
 
-export type UpsertAutoTableTestResult = {
+export type UpsertCourseInput = {
+  id?: InputMaybe<Scalars["GadgetID"]["input"]>;
+  offered?: InputMaybe<Scalars["Boolean"]["input"]>;
+  registration?: InputMaybe<Array<InputMaybe<RegistrationHasManyInput>>>;
+  registrations?: InputMaybe<Array<InputMaybe<RegistrationHasManyInput>>>;
+  students?: InputMaybe<Array<InputMaybe<StudentHasManyThroughInput>>>;
+  teacher?: InputMaybe<TeacherBelongsToInput>;
+  title?: InputMaybe<Scalars["String"]["input"]>;
+};
+
+export type UpsertCourseResult = {
   actionRun?: Maybe<Scalars["String"]["output"]>;
   errors?: Maybe<Array<ExecutionError>>;
   success: Scalars["Boolean"]["output"];
 };
 
-export type UpsertError = UpsertAutoTableTestRelatedModelResult &
-  UpsertAutoTableTestResult &
-  UpsertGameCityResult &
+export type UpsertCustomerInput = {
+  billingAccount?: InputMaybe<BillingAccountHasOneInput>;
+  email?: InputMaybe<Scalars["String"]["input"]>;
+  id?: InputMaybe<Scalars["GadgetID"]["input"]>;
+};
+
+export type UpsertCustomerResult = {
+  actionRun?: Maybe<Scalars["String"]["output"]>;
+  errors?: Maybe<Array<ExecutionError>>;
+  success: Scalars["Boolean"]["output"];
+};
+
+export type UpsertEphemeralInput = {
+  data?: InputMaybe<Scalars["String"]["input"]>;
+  id?: InputMaybe<Scalars["GadgetID"]["input"]>;
+};
+
+export type UpsertEphemeralResult = {
+  actionRun?: Maybe<Scalars["String"]["output"]>;
+  errors?: Maybe<Array<ExecutionError>>;
+  success: Scalars["Boolean"]["output"];
+};
+
+export type UpsertError = UpsertBillingAccountResult &
+  UpsertCityResult &
+  UpsertCourseResult &
+  UpsertCustomerResult &
+  UpsertEphemeralResult &
+  UpsertFieldlessResult &
+  UpsertFriendshipResult &
   UpsertGamePlayerResult &
   UpsertGameRoundResult &
   UpsertGameStadiumResult &
   UpsertGizmoResult &
-  UpsertHasManyThroughBaseModelResult &
-  UpsertHasManyThroughJoinerModelResult &
-  UpsertHasManyThroughSiblingModelResult &
-  UpsertModelAResult &
-  UpsertPartResult &
+  UpsertLandmarkStadiumResult &
+  UpsertRegistrationResult &
+  UpsertSampleModelToTestReallyLongModelNamesResult &
   UpsertSectionResult &
-  UpsertShopifyGdprRequestResult &
-  UpsertShopifyProductImageResult &
-  UpsertShopifyProductOptionResult &
-  UpsertShopifyProductResult &
-  UpsertShopifyProductVariantResult &
-  UpsertShopifyShopResult &
-  UpsertShopifySyncResult &
+  UpsertSprocketResult &
+  UpsertStudentResult &
+  UpsertTeacherResult &
   UpsertUserResult &
+  UpsertWidgetImageResult &
   UpsertWidgetResult & {
     __typename?: "UpsertError";
     actionRun?: Maybe<Scalars["String"]["output"]>;
@@ -11385,22 +11905,36 @@ export type UpsertError = UpsertAutoTableTestRelatedModelResult &
     success: Scalars["Boolean"]["output"];
   };
 
-export type UpsertGameCityInput = {
+export type UpsertFieldlessInput = {
   id?: InputMaybe<Scalars["GadgetID"]["input"]>;
-  name?: InputMaybe<Scalars["String"]["input"]>;
-  stadium?: InputMaybe<StadiumHasOneInput>;
 };
 
-export type UpsertGameCityResult = {
+export type UpsertFieldlessResult = {
+  actionRun?: Maybe<Scalars["String"]["output"]>;
+  errors?: Maybe<Array<ExecutionError>>;
+  success: Scalars["Boolean"]["output"];
+};
+
+export type UpsertFriendshipInput = {
+  ended?: InputMaybe<Scalars["DateOrDateTime"]["input"]>;
+  followee?: InputMaybe<StudentBelongsToInput>;
+  follower?: InputMaybe<StudentBelongsToInput>;
+  id?: InputMaybe<Scalars["GadgetID"]["input"]>;
+  started?: InputMaybe<Scalars["DateOrDateTime"]["input"]>;
+};
+
+export type UpsertFriendshipResult = {
   actionRun?: Maybe<Scalars["String"]["output"]>;
   errors?: Maybe<Array<ExecutionError>>;
   success: Scalars["Boolean"]["output"];
 };
 
 export type UpsertGamePlayerInput = {
-  currentRound?: InputMaybe<RoundBelongsToInput>;
+  birthday?: InputMaybe<Scalars["DateTime"]["input"]>;
   id?: InputMaybe<Scalars["GadgetID"]["input"]>;
   name?: InputMaybe<Scalars["String"]["input"]>;
+  number?: InputMaybe<Scalars["Float"]["input"]>;
+  rounds?: InputMaybe<Array<InputMaybe<RoundHasManyInput>>>;
 };
 
 export type UpsertGamePlayerResult = {
@@ -11411,9 +11945,8 @@ export type UpsertGamePlayerResult = {
 
 export type UpsertGameRoundInput = {
   id?: InputMaybe<Scalars["GadgetID"]["input"]>;
-  name?: InputMaybe<Scalars["String"]["input"]>;
-  players?: InputMaybe<Array<InputMaybe<PlayerHasManyInput>>>;
-  stadium?: InputMaybe<StadiumBelongsToInput>;
+  number?: InputMaybe<Scalars["Float"]["input"]>;
+  player?: InputMaybe<PlayerBelongsToInput>;
 };
 
 export type UpsertGameRoundResult = {
@@ -11423,13 +11956,8 @@ export type UpsertGameRoundResult = {
 };
 
 export type UpsertGameStadiumInput = {
-  city?: InputMaybe<CityBelongsToInput>;
   id?: InputMaybe<Scalars["GadgetID"]["input"]>;
   name?: InputMaybe<Scalars["String"]["input"]>;
-  photo?: InputMaybe<StoredFileInput>;
-  rounds?: InputMaybe<Array<InputMaybe<RoundHasManyInput>>>;
-  tags?: InputMaybe<Array<Scalars["StadiumTagsEnum"]["input"]>>;
-  type?: InputMaybe<Scalars["StadiumTypeEnum"]["input"]>;
 };
 
 export type UpsertGameStadiumResult = {
@@ -11441,7 +11969,8 @@ export type UpsertGameStadiumResult = {
 export type UpsertGizmoInput = {
   id?: InputMaybe<Scalars["GadgetID"]["input"]>;
   name?: InputMaybe<Scalars["String"]["input"]>;
-  orientation?: InputMaybe<Scalars["String"]["input"]>;
+  sprockets?: InputMaybe<Array<InputMaybe<SprocketHasManyInput>>>;
+  state?: InputMaybe<Scalars["GizmoStateEnum"]["input"]>;
   widget?: InputMaybe<WidgetBelongsToInput>;
 };
 
@@ -11451,63 +11980,35 @@ export type UpsertGizmoResult = {
   success: Scalars["Boolean"]["output"];
 };
 
-export type UpsertHasManyThroughBaseModelInput = {
-  baseModelHmtField?: InputMaybe<Array<InputMaybe<SiblingModelHasManyThroughInput>>>;
-  baseModelName?: InputMaybe<Scalars["String"]["input"]>;
-  id?: InputMaybe<Scalars["GadgetID"]["input"]>;
-  joinerModel?: InputMaybe<Array<InputMaybe<JoinerModelHasManyInput>>>;
-  joinerModels?: InputMaybe<Array<InputMaybe<JoinerModelHasManyInput>>>;
-};
-
-export type UpsertHasManyThroughBaseModelResult = {
-  actionRun?: Maybe<Scalars["String"]["output"]>;
-  errors?: Maybe<Array<ExecutionError>>;
-  success: Scalars["Boolean"]["output"];
-};
-
-export type UpsertHasManyThroughJoinerModelInput = {
-  id?: InputMaybe<Scalars["GadgetID"]["input"]>;
-  joinerBelongsToBase?: InputMaybe<BaseModelBelongsToInput>;
-  joinerBelongsToSibling?: InputMaybe<SiblingModelBelongsToInput>;
-};
-
-export type UpsertHasManyThroughJoinerModelResult = {
-  actionRun?: Maybe<Scalars["String"]["output"]>;
-  errors?: Maybe<Array<ExecutionError>>;
-  success: Scalars["Boolean"]["output"];
-};
-
-export type UpsertHasManyThroughSiblingModelInput = {
-  id?: InputMaybe<Scalars["GadgetID"]["input"]>;
-  joinerModel?: InputMaybe<Array<InputMaybe<JoinerModelHasManyInput>>>;
-  joinerModels?: InputMaybe<Array<InputMaybe<JoinerModelHasManyInput>>>;
-  siblingModelHmtField?: InputMaybe<Array<InputMaybe<BaseModelHasManyThroughInput>>>;
-};
-
-export type UpsertHasManyThroughSiblingModelResult = {
-  actionRun?: Maybe<Scalars["String"]["output"]>;
-  errors?: Maybe<Array<ExecutionError>>;
-  success: Scalars["Boolean"]["output"];
-};
-
-export type UpsertModelAInput = {
-  id?: InputMaybe<Scalars["GadgetID"]["input"]>;
-};
-
-export type UpsertModelAResult = {
-  actionRun?: Maybe<Scalars["String"]["output"]>;
-  errors?: Maybe<Array<ExecutionError>>;
-  success: Scalars["Boolean"]["output"];
-};
-
-export type UpsertPartInput = {
-  count?: InputMaybe<Scalars["Float"]["input"]>;
+export type UpsertLandmarkStadiumInput = {
   id?: InputMaybe<Scalars["GadgetID"]["input"]>;
   name?: InputMaybe<Scalars["String"]["input"]>;
-  notes?: InputMaybe<Scalars["String"]["input"]>;
 };
 
-export type UpsertPartResult = {
+export type UpsertLandmarkStadiumResult = {
+  actionRun?: Maybe<Scalars["String"]["output"]>;
+  errors?: Maybe<Array<ExecutionError>>;
+  success: Scalars["Boolean"]["output"];
+};
+
+export type UpsertRegistrationInput = {
+  course?: InputMaybe<CourseBelongsToInput>;
+  id?: InputMaybe<Scalars["GadgetID"]["input"]>;
+  student?: InputMaybe<StudentBelongsToInput>;
+};
+
+export type UpsertRegistrationResult = {
+  actionRun?: Maybe<Scalars["String"]["output"]>;
+  errors?: Maybe<Array<ExecutionError>>;
+  success: Scalars["Boolean"]["output"];
+};
+
+export type UpsertSampleModelToTestReallyLongModelNamesInput = {
+  id?: InputMaybe<Scalars["GadgetID"]["input"]>;
+  title?: InputMaybe<Scalars["String"]["input"]>;
+};
+
+export type UpsertSampleModelToTestReallyLongModelNamesResult = {
   actionRun?: Maybe<Scalars["String"]["output"]>;
   errors?: Maybe<Array<ExecutionError>>;
   success: Scalars["Boolean"]["output"];
@@ -11515,7 +12016,7 @@ export type UpsertPartResult = {
 
 export type UpsertSectionInput = {
   id?: InputMaybe<Scalars["GadgetID"]["input"]>;
-  name?: InputMaybe<Scalars["String"]["input"]>;
+  title?: InputMaybe<Scalars["String"]["input"]>;
   widgets?: InputMaybe<Array<InputMaybe<WidgetHasManyInput>>>;
 };
 
@@ -11525,61 +12026,62 @@ export type UpsertSectionResult = {
   success: Scalars["Boolean"]["output"];
 };
 
-export type UpsertShopifyGdprRequestResult = {
-  actionRun?: Maybe<Scalars["String"]["output"]>;
-  errors?: Maybe<Array<ExecutionError>>;
-  success: Scalars["Boolean"]["output"];
-};
-
-export type UpsertShopifyProductImageResult = {
-  actionRun?: Maybe<Scalars["String"]["output"]>;
-  errors?: Maybe<Array<ExecutionError>>;
-  success: Scalars["Boolean"]["output"];
-};
-
-export type UpsertShopifyProductOptionResult = {
-  actionRun?: Maybe<Scalars["String"]["output"]>;
-  errors?: Maybe<Array<ExecutionError>>;
-  success: Scalars["Boolean"]["output"];
-};
-
-export type UpsertShopifyProductResult = {
-  actionRun?: Maybe<Scalars["String"]["output"]>;
-  errors?: Maybe<Array<ExecutionError>>;
-  success: Scalars["Boolean"]["output"];
-};
-
-export type UpsertShopifyProductVariantResult = {
-  actionRun?: Maybe<Scalars["String"]["output"]>;
-  errors?: Maybe<Array<ExecutionError>>;
-  success: Scalars["Boolean"]["output"];
-};
-
-export type UpsertShopifyShopResult = {
-  actionRun?: Maybe<Scalars["String"]["output"]>;
-  errors?: Maybe<Array<ExecutionError>>;
-  success: Scalars["Boolean"]["output"];
-};
-
-export type UpsertShopifySyncInput = {
-  domain?: InputMaybe<Scalars["String"]["input"]>;
-  errorDetails?: InputMaybe<Scalars["String"]["input"]>;
-  errorMessage?: InputMaybe<Scalars["String"]["input"]>;
-  force?: InputMaybe<Scalars["Boolean"]["input"]>;
+export type UpsertSprocketInput = {
+  gizmo?: InputMaybe<GizmoBelongsToInput>;
   id?: InputMaybe<Scalars["GadgetID"]["input"]>;
-  models?: InputMaybe<Scalars["JSON"]["input"]>;
-  shop?: InputMaybe<ShopifyShopBelongsToInput>;
-  syncSince?: InputMaybe<Scalars["DateTime"]["input"]>;
+  ratio?: InputMaybe<Scalars["Float"]["input"]>;
 };
 
-export type UpsertShopifySyncResult = {
+export type UpsertSprocketResult = {
   actionRun?: Maybe<Scalars["String"]["output"]>;
   errors?: Maybe<Array<ExecutionError>>;
   success: Scalars["Boolean"]["output"];
 };
+
+export type UpsertStudentInput = {
+  born?: InputMaybe<Scalars["DateOrDateTime"]["input"]>;
+  city?: InputMaybe<CityBelongsToInput>;
+  courses?: InputMaybe<Array<InputMaybe<CourseHasManyThroughInput>>>;
+  followeeFriendships?: InputMaybe<Array<InputMaybe<FriendshipHasManyInput>>>;
+  followees?: InputMaybe<Array<InputMaybe<StudentHasManyThroughInput>>>;
+  followerFriendships?: InputMaybe<Array<InputMaybe<FriendshipHasManyInput>>>;
+  followers?: InputMaybe<Array<InputMaybe<StudentHasManyThroughInput>>>;
+  friendship?: InputMaybe<Array<InputMaybe<FriendshipHasManyInput>>>;
+  friendships?: InputMaybe<Array<InputMaybe<FriendshipHasManyInput>>>;
+  id?: InputMaybe<Scalars["GadgetID"]["input"]>;
+  male?: InputMaybe<Scalars["Boolean"]["input"]>;
+  name?: InputMaybe<Scalars["String"]["input"]>;
+  registration?: InputMaybe<Array<InputMaybe<RegistrationHasManyInput>>>;
+  registrations?: InputMaybe<Array<InputMaybe<RegistrationHasManyInput>>>;
+};
+
+export type UpsertStudentResult = {
+  actionRun?: Maybe<Scalars["String"]["output"]>;
+  errors?: Maybe<Array<ExecutionError>>;
+  success: Scalars["Boolean"]["output"];
+};
+
+export type UpsertTeacherInput = {
+  born?: InputMaybe<Scalars["DateOrDateTime"]["input"]>;
+  city?: InputMaybe<CityBelongsToInput>;
+  courses?: InputMaybe<Array<InputMaybe<CourseHasManyInput>>>;
+  id?: InputMaybe<Scalars["GadgetID"]["input"]>;
+  male?: InputMaybe<Scalars["Boolean"]["input"]>;
+  name?: InputMaybe<Scalars["String"]["input"]>;
+};
+
+export type UpsertTeacherResult = {
+  actionRun?: Maybe<Scalars["String"]["output"]>;
+  errors?: Maybe<Array<ExecutionError>>;
+  success: Scalars["Boolean"]["output"];
+};
+
+export type UpsertUser = UpsertUserReturnType | User;
 
 export type UpsertUserInput = {
   email?: InputMaybe<Scalars["String"]["input"]>;
+  emailVerificationToken?: InputMaybe<Scalars["String"]["input"]>;
+  emailVerificationTokenExpiration?: InputMaybe<Scalars["DateTime"]["input"]>;
   emailVerified?: InputMaybe<Scalars["Boolean"]["input"]>;
   firstName?: InputMaybe<Scalars["String"]["input"]>;
   googleImageUrl?: InputMaybe<Scalars["String"]["input"]>;
@@ -11588,6 +12090,8 @@ export type UpsertUserInput = {
   lastName?: InputMaybe<Scalars["String"]["input"]>;
   lastSignedIn?: InputMaybe<Scalars["DateTime"]["input"]>;
   password?: InputMaybe<Scalars["String"]["input"]>;
+  resetPasswordToken?: InputMaybe<Scalars["String"]["input"]>;
+  resetPasswordTokenExpiration?: InputMaybe<Scalars["DateTime"]["input"]>;
   /** A string list of Gadget platform Role keys to assign to this record */
   roles?: InputMaybe<Array<Scalars["String"]["input"]>>;
 };
@@ -11598,25 +12102,51 @@ export type UpsertUserResult = {
   success: Scalars["Boolean"]["output"];
 };
 
+export type UpsertUserReturnType = {
+  __typename?: "UpsertUserReturnType";
+  result?: Maybe<Scalars["JSON"]["output"]>;
+};
+
+export type UpsertWidgetImageInput = {
+  altText?: InputMaybe<Scalars["String"]["input"]>;
+  id?: InputMaybe<Scalars["GadgetID"]["input"]>;
+  image?: InputMaybe<StoredFileInput>;
+  order?: InputMaybe<Scalars["Float"]["input"]>;
+  widget?: InputMaybe<WidgetBelongsToInput>;
+};
+
+export type UpsertWidgetImageResult = {
+  actionRun?: Maybe<Scalars["String"]["output"]>;
+  errors?: Maybe<Array<ExecutionError>>;
+  success: Scalars["Boolean"]["output"];
+};
+
 export type UpsertWidgetInput = {
   anything?: InputMaybe<Scalars["JSON"]["input"]>;
   birthday?: InputMaybe<Scalars["DateOrDateTime"]["input"]>;
   category?: InputMaybe<Array<Scalars["WidgetCategoryEnum"]["input"]>>;
   color?: InputMaybe<Scalars["String"]["input"]>;
+  cost?: InputMaybe<Scalars["CADCurrencyAmount"]["input"]>;
   description?: InputMaybe<RichTextInput>;
+  email?: InputMaybe<Scalars["String"]["input"]>;
   embedding?: InputMaybe<Array<Scalars["Float"]["input"]>>;
   gizmos?: InputMaybe<Array<InputMaybe<GizmoHasManyInput>>>;
   id?: InputMaybe<Scalars["GadgetID"]["input"]>;
+  images?: InputMaybe<Array<InputMaybe<WidgetImageHasManyInput>>>;
   inventoryCount?: InputMaybe<Scalars["Float"]["input"]>;
   isChecked?: InputMaybe<Scalars["Boolean"]["input"]>;
   metafields?: InputMaybe<Scalars["JSON"]["input"]>;
-  mustBeLongString?: InputMaybe<Scalars["String"]["input"]>;
   name?: InputMaybe<Scalars["String"]["input"]>;
+  phase?: InputMaybe<Scalars["WidgetPhaseEnum"]["input"]>;
   /** A string list of Gadget platform Role keys to assign to this record */
   roles?: InputMaybe<Array<Scalars["String"]["input"]>>;
   secretKey?: InputMaybe<Scalars["String"]["input"]>;
   section?: InputMaybe<SectionBelongsToInput>;
+  slug?: InputMaybe<Scalars["String"]["input"]>;
   startsAt?: InputMaybe<Scalars["DateTime"]["input"]>;
+  state?: InputMaybe<Scalars["WidgetStateEnum"]["input"]>;
+  tagline?: InputMaybe<Scalars["String"]["input"]>;
+  url?: InputMaybe<Scalars["String"]["input"]>;
 };
 
 export type UpsertWidgetResult = {
@@ -11632,6 +12162,8 @@ export type User = {
   /** The time at which this record was first created. Set once upon record creation and never changed. Managed by Gadget. */
   createdAt: Scalars["DateTime"]["output"];
   email: Scalars["String"]["output"];
+  emailVerificationToken?: Maybe<Scalars["String"]["output"]>;
+  emailVerificationTokenExpiration?: Maybe<Scalars["DateTime"]["output"]>;
   emailVerified?: Maybe<Scalars["Boolean"]["output"]>;
   firstName?: Maybe<Scalars["String"]["output"]>;
   googleImageUrl?: Maybe<Scalars["String"]["output"]>;
@@ -11640,6 +12172,8 @@ export type User = {
   id: Scalars["GadgetID"]["output"];
   lastName?: Maybe<Scalars["String"]["output"]>;
   lastSignedIn?: Maybe<Scalars["DateTime"]["output"]>;
+  resetPasswordToken?: Maybe<Scalars["String"]["output"]>;
+  resetPasswordTokenExpiration?: Maybe<Scalars["DateTime"]["output"]>;
   roles?: Maybe<Array<Role>>;
   /** The time at which this record was last changed. Set each time the record is successfully acted upon by an action. Managed by Gadget. */
   updatedAt: Scalars["DateTime"]["output"];
@@ -11669,6 +12203,8 @@ export type UserFilter = {
   OR?: InputMaybe<Array<InputMaybe<UserFilter>>>;
   createdAt?: InputMaybe<DateTimeFilter>;
   email?: InputMaybe<StringFilter>;
+  emailVerificationToken?: InputMaybe<StringFilter>;
+  emailVerificationTokenExpiration?: InputMaybe<DateTimeFilter>;
   emailVerified?: InputMaybe<BooleanFilter>;
   firstName?: InputMaybe<StringFilter>;
   googleImageUrl?: InputMaybe<StringFilter>;
@@ -11676,6 +12212,8 @@ export type UserFilter = {
   id?: InputMaybe<IdFilter>;
   lastName?: InputMaybe<StringFilter>;
   lastSignedIn?: InputMaybe<DateTimeFilter>;
+  resetPasswordToken?: InputMaybe<StringFilter>;
+  resetPasswordTokenExpiration?: InputMaybe<DateTimeFilter>;
   updatedAt?: InputMaybe<DateTimeFilter>;
 };
 
@@ -11684,6 +12222,10 @@ export type UserSort = {
   createdAt?: InputMaybe<SortOrder>;
   /** Sort the results by the email field. Defaults to ascending (smallest value first). */
   email?: InputMaybe<SortOrder>;
+  /** Sort the results by the emailVerificationToken field. Defaults to ascending (smallest value first). */
+  emailVerificationToken?: InputMaybe<SortOrder>;
+  /** Sort the results by the emailVerificationTokenExpiration field. Defaults to ascending (smallest value first). */
+  emailVerificationTokenExpiration?: InputMaybe<SortOrder>;
   /** Sort the results by the emailVerified field. Defaults to ascending (smallest value first). */
   emailVerified?: InputMaybe<SortOrder>;
   /** Sort the results by the firstName field. Defaults to ascending (smallest value first). */
@@ -11698,6 +12240,10 @@ export type UserSort = {
   lastName?: InputMaybe<SortOrder>;
   /** Sort the results by the lastSignedIn field. Defaults to ascending (smallest value first). */
   lastSignedIn?: InputMaybe<SortOrder>;
+  /** Sort the results by the resetPasswordToken field. Defaults to ascending (smallest value first). */
+  resetPasswordToken?: InputMaybe<SortOrder>;
+  /** Sort the results by the resetPasswordTokenExpiration field. Defaults to ascending (smallest value first). */
+  resetPasswordTokenExpiration?: InputMaybe<SortOrder>;
   /** Sort the results by the updatedAt field. Defaults to ascending (smallest value first). */
   updatedAt?: InputMaybe<SortOrder>;
 };
@@ -11747,6 +12293,14 @@ export type VectorSortOrder = {
   order?: InputMaybe<SortOrder>;
 };
 
+export type VerifyEmailUserResult = {
+  __typename?: "VerifyEmailUserResult";
+  actionRun?: Maybe<Scalars["String"]["output"]>;
+  errors?: Maybe<Array<ExecutionError>>;
+  result?: Maybe<Scalars["JSON"]["output"]>;
+  success: Scalars["Boolean"]["output"];
+};
+
 export type Widget = {
   __typename?: "Widget";
   /** Get all the fields for this record. Useful for not having to list out all the fields you want to retrieve, but slower. */
@@ -11755,28 +12309,35 @@ export type Widget = {
   birthday?: Maybe<Scalars["Date"]["output"]>;
   category?: Maybe<Array<Scalars["WidgetCategoryEnum"]["output"]>>;
   color?: Maybe<Scalars["String"]["output"]>;
+  cost?: Maybe<Money>;
   /** The time at which this record was first created. Set once upon record creation and never changed. Managed by Gadget. */
   createdAt: Scalars["DateTime"]["output"];
   description?: Maybe<RichText>;
+  email?: Maybe<Scalars["String"]["output"]>;
   embedding?: Maybe<Array<Scalars["Float"]["output"]>>;
   embeddingCosineSimilarityTo?: Maybe<Scalars["Float"]["output"]>;
   embeddingL2DistanceTo?: Maybe<Scalars["Float"]["output"]>;
   gizmos: GizmoConnection;
   /** The globally unique, unchanging identifier for this record. Assigned and managed by Gadget. */
   id: Scalars["GadgetID"]["output"];
+  images: WidgetImageConnection;
   inStock?: Maybe<Scalars["JSON"]["output"]>;
   inventoryCount: Scalars["Float"]["output"];
   isChecked?: Maybe<Scalars["Boolean"]["output"]>;
   metafields?: Maybe<Scalars["JSON"]["output"]>;
-  mustBeLongString?: Maybe<Scalars["String"]["output"]>;
   name: Scalars["String"]["output"];
+  phase?: Maybe<Scalars["WidgetPhaseEnum"]["output"]>;
   roles?: Maybe<Array<Role>>;
   secretKey?: Maybe<Scalars["String"]["output"]>;
   section?: Maybe<Section>;
   sectionId?: Maybe<Scalars["GadgetID"]["output"]>;
+  slug?: Maybe<Scalars["String"]["output"]>;
   startsAt?: Maybe<Scalars["DateTime"]["output"]>;
+  state?: Maybe<Scalars["WidgetStateEnum"]["output"]>;
+  tagline?: Maybe<Scalars["String"]["output"]>;
   /** The time at which this record was last changed. Set each time the record is successfully acted upon by an action. Managed by Gadget. */
   updatedAt: Scalars["DateTime"]["output"];
+  url?: Maybe<Scalars["String"]["output"]>;
 };
 
 export type WidgetEmbeddingCosineSimilarityToArgs = {
@@ -11797,14 +12358,26 @@ export type WidgetGizmosArgs = {
   sort?: InputMaybe<Array<GizmoSort>>;
 };
 
+export type WidgetImagesArgs = {
+  after?: InputMaybe<Scalars["String"]["input"]>;
+  before?: InputMaybe<Scalars["String"]["input"]>;
+  filter?: InputMaybe<Array<WidgetImageFilter>>;
+  first?: InputMaybe<Scalars["Int"]["input"]>;
+  last?: InputMaybe<Scalars["Int"]["input"]>;
+  search?: InputMaybe<Scalars["String"]["input"]>;
+  sort?: InputMaybe<Array<WidgetImageSort>>;
+};
+
 /** Input object supporting setting or updating related model record on a relationship field */
 export type WidgetBelongsToInput = {
   /** Existing ID of another record, which you would like to associate this record with */
   _link?: InputMaybe<Scalars["GadgetID"]["input"]>;
   addInventory?: InputMaybe<NestedWidgetAddInventoryInput>;
-  alwaysThrowError?: InputMaybe<NestedWidgetAlwaysThrowErrorInput>;
+  addInventoryIfOutOfStock?: InputMaybe<NestedWidgetAddInventoryIfOutOfStockInput>;
   create?: InputMaybe<NestedWidgetCreateInput>;
   delete?: InputMaybe<NestedWidgetDeleteInput>;
+  flipDown?: InputMaybe<NestedWidgetFlipDownInput>;
+  flipUp?: InputMaybe<NestedWidgetFlipUpInput>;
   update?: InputMaybe<NestedWidgetUpdateInput>;
 };
 
@@ -11833,19 +12406,26 @@ export type WidgetFilter = {
   anything?: InputMaybe<JsonFilter>;
   birthday?: InputMaybe<DateFilter>;
   category?: InputMaybe<MultiEnumFilter>;
+  cost?: InputMaybe<IntFilter>;
   createdAt?: InputMaybe<DateTimeFilter>;
   description?: InputMaybe<StringFilter>;
+  email?: InputMaybe<StringFilter>;
   embedding?: InputMaybe<VectorFilter>;
   id?: InputMaybe<IdFilter>;
+  inStock?: InputMaybe<BooleanFilter>;
   inventoryCount?: InputMaybe<FloatFilter>;
   isChecked?: InputMaybe<BooleanFilter>;
   metafields?: InputMaybe<JsonFilter>;
-  mustBeLongString?: InputMaybe<StringFilter>;
   name?: InputMaybe<StringFilter>;
+  phase?: InputMaybe<SingleEnumFilter>;
   section?: InputMaybe<IdFilter>;
   sectionId?: InputMaybe<IdFilter>;
+  slug?: InputMaybe<StringFilter>;
   startsAt?: InputMaybe<DateTimeFilter>;
+  state?: InputMaybe<SingleEnumFilter>;
+  tagline?: InputMaybe<StringFilter>;
   updatedAt?: InputMaybe<DateTimeFilter>;
+  url?: InputMaybe<StringFilter>;
 };
 
 /** Input object supporting setting or updating related model record on a relationship field */
@@ -11853,10 +12433,82 @@ export type WidgetHasManyInput = {
   /** Creates, updates, or deletes existing records in the database as needed to arrive at the list of records specified. */
   _converge?: InputMaybe<ConvergeWidgetInput>;
   addInventory?: InputMaybe<NestedWidgetAddInventoryInput>;
-  alwaysThrowError?: InputMaybe<NestedWidgetAlwaysThrowErrorInput>;
+  addInventoryIfOutOfStock?: InputMaybe<NestedWidgetAddInventoryIfOutOfStockInput>;
   create?: InputMaybe<NestedWidgetCreateInput>;
   delete?: InputMaybe<NestedWidgetDeleteInput>;
+  flipDown?: InputMaybe<NestedWidgetFlipDownInput>;
+  flipUp?: InputMaybe<NestedWidgetFlipUpInput>;
   update?: InputMaybe<NestedWidgetUpdateInput>;
+};
+
+export type WidgetImage = {
+  __typename?: "WidgetImage";
+  /** Get all the fields for this record. Useful for not having to list out all the fields you want to retrieve, but slower. */
+  _all: Scalars["JSONObject"]["output"];
+  altText?: Maybe<Scalars["String"]["output"]>;
+  /** The time at which this record was first created. Set once upon record creation and never changed. Managed by Gadget. */
+  createdAt: Scalars["DateTime"]["output"];
+  /** The globally unique, unchanging identifier for this record. Assigned and managed by Gadget. */
+  id: Scalars["GadgetID"]["output"];
+  image?: Maybe<StoredFile>;
+  order?: Maybe<Scalars["Float"]["output"]>;
+  /** The time at which this record was last changed. Set each time the record is successfully acted upon by an action. Managed by Gadget. */
+  updatedAt: Scalars["DateTime"]["output"];
+  widget: Widget;
+  widgetId: Scalars["GadgetID"]["output"];
+};
+
+/** A connection to a list of WidgetImage items. */
+export type WidgetImageConnection = {
+  __typename?: "WidgetImageConnection";
+  /** A list of edges. */
+  edges: Array<WidgetImageEdge>;
+  /** Information to aid in pagination. */
+  pageInfo: PageInfo;
+};
+
+/** An edge in a WidgetImage connection. */
+export type WidgetImageEdge = {
+  __typename?: "WidgetImageEdge";
+  /** A cursor for use in pagination */
+  cursor: Scalars["String"]["output"];
+  /** The item at the end of the edge */
+  node: WidgetImage;
+};
+
+export type WidgetImageFilter = {
+  AND?: InputMaybe<Array<InputMaybe<WidgetImageFilter>>>;
+  NOT?: InputMaybe<Array<InputMaybe<WidgetImageFilter>>>;
+  OR?: InputMaybe<Array<InputMaybe<WidgetImageFilter>>>;
+  altText?: InputMaybe<StringFilter>;
+  createdAt?: InputMaybe<DateTimeFilter>;
+  id?: InputMaybe<IdFilter>;
+  order?: InputMaybe<FloatFilter>;
+  updatedAt?: InputMaybe<DateTimeFilter>;
+  widget?: InputMaybe<IdFilter>;
+  widgetId?: InputMaybe<IdFilter>;
+};
+
+/** Input object supporting setting or updating related model record on a relationship field */
+export type WidgetImageHasManyInput = {
+  /** Creates, updates, or deletes existing records in the database as needed to arrive at the list of records specified. */
+  _converge?: InputMaybe<ConvergeWidgetImageInput>;
+  create?: InputMaybe<NestedWidgetImageCreateInput>;
+  delete?: InputMaybe<NestedWidgetImageDeleteInput>;
+  update?: InputMaybe<NestedWidgetImageUpdateInput>;
+};
+
+export type WidgetImageSort = {
+  /** Sort the results by the altText field. Defaults to ascending (smallest value first). */
+  altText?: InputMaybe<SortOrder>;
+  /** Sort the results by the createdAt field. Defaults to ascending (smallest value first). */
+  createdAt?: InputMaybe<SortOrder>;
+  /** Sort the results by the id field. Defaults to ascending (smallest value first). */
+  id?: InputMaybe<SortOrder>;
+  /** Sort the results by the order field. Defaults to ascending (smallest value first). */
+  order?: InputMaybe<SortOrder>;
+  /** Sort the results by the updatedAt field. Defaults to ascending (smallest value first). */
+  updatedAt?: InputMaybe<SortOrder>;
 };
 
 export type WidgetSort = {
@@ -11868,10 +12520,14 @@ export type WidgetSort = {
   category?: InputMaybe<SortOrder>;
   /** Sort the results by the color field. Defaults to ascending (smallest value first). */
   color?: InputMaybe<SortOrder>;
+  /** Sort the results by the cost field. Defaults to ascending (smallest value first). */
+  cost?: InputMaybe<SortOrder>;
   /** Sort the results by the createdAt field. Defaults to ascending (smallest value first). */
   createdAt?: InputMaybe<SortOrder>;
   /** Sort the results by the description field. Defaults to ascending (smallest value first). */
   description?: InputMaybe<SortOrder>;
+  /** Sort the results by the email field. Defaults to ascending (smallest value first). */
+  email?: InputMaybe<SortOrder>;
   /** Sort the results by the embedding vector field. Sorts based on the distance between a given vector and the vector stored in embedding. */
   embedding?: InputMaybe<VectorSortOrder>;
   /** Sort the results by the id field. Defaults to ascending (smallest value first). */
@@ -11882,21 +12538,22 @@ export type WidgetSort = {
   isChecked?: InputMaybe<SortOrder>;
   /** Sort the results by the metafields field. Defaults to ascending (smallest value first). */
   metafields?: InputMaybe<SortOrder>;
-  /** Sort the results by the mustBeLongString field. Defaults to ascending (smallest value first). */
-  mustBeLongString?: InputMaybe<SortOrder>;
   /** Sort the results by the name field. Defaults to ascending (smallest value first). */
   name?: InputMaybe<SortOrder>;
+  /** Sort the results by the phase field. Defaults to ascending (smallest value first). */
+  phase?: InputMaybe<SortOrder>;
+  /** Sort the results by the slug field. Defaults to ascending (smallest value first). */
+  slug?: InputMaybe<SortOrder>;
   /** Sort the results by the startsAt field. Defaults to ascending (smallest value first). */
   startsAt?: InputMaybe<SortOrder>;
+  /** Sort the results by the state field. Defaults to ascending (smallest value first). */
+  state?: InputMaybe<SortOrder>;
+  /** Sort the results by the tagline field. Defaults to ascending (smallest value first). */
+  tagline?: InputMaybe<SortOrder>;
   /** Sort the results by the updatedAt field. Defaults to ascending (smallest value first). */
   updatedAt?: InputMaybe<SortOrder>;
-};
-
-export type RelatedModelFieldFragmentFragment = {
-  __typename?: "GadgetModelField";
-  name: string;
-  apiIdentifier: string;
-  fieldType: GadgetFieldType;
+  /** Sort the results by the url field. Defaults to ascending (smallest value first). */
+  url?: InputMaybe<SortOrder>;
 };
 
 type FieldMetadata_GadgetModelField_Fragment = {
@@ -11911,14 +12568,7 @@ type FieldMetadata_GadgetModelField_Fragment = {
     | {
         __typename: "GadgetBelongsToConfig";
         fieldType: GadgetFieldType;
-        relatedModel?: {
-          __typename?: "GadgetModel";
-          key: string;
-          apiIdentifier: string;
-          namespace?: Array<string> | null;
-          defaultDisplayField: { __typename?: "GadgetModelField"; name: string; apiIdentifier: string; fieldType: GadgetFieldType };
-          fields?: Array<{ __typename?: "GadgetModelField"; name: string; apiIdentifier: string; fieldType: GadgetFieldType }>;
-        } | null;
+        relatedModel?: { __typename?: "GadgetModel"; key: string; apiIdentifier: string; namespace?: Array<string> | null } | null;
         validations: Array<
           | { __typename: "GadgetGenericFieldValidation"; name: string; specID: string }
           | { __typename: "GadgetOnlyImageFileFieldValidation"; name: string; specID: string; allowAnimatedImages: boolean }
@@ -11971,10 +12621,9 @@ type FieldMetadata_GadgetModelField_Fragment = {
         relatedModel?: {
           __typename?: "GadgetModel";
           key: string;
+          name: string;
           apiIdentifier: string;
           namespace?: Array<string> | null;
-          defaultDisplayField: { __typename?: "GadgetModelField"; name: string; apiIdentifier: string; fieldType: GadgetFieldType };
-          fields?: Array<{ __typename?: "GadgetModelField"; name: string; apiIdentifier: string; fieldType: GadgetFieldType }>;
         } | null;
         inverseField?: { __typename?: "GadgetModelField"; apiIdentifier: string } | null;
         validations: Array<
@@ -11988,22 +12637,9 @@ type FieldMetadata_GadgetModelField_Fragment = {
     | {
         __typename: "GadgetHasManyThroughConfig";
         fieldType: GadgetFieldType;
-        relatedModel?: {
-          __typename?: "GadgetModel";
-          key: string;
-          apiIdentifier: string;
-          namespace?: Array<string> | null;
-          defaultDisplayField: { __typename?: "GadgetModelField"; name: string; apiIdentifier: string; fieldType: GadgetFieldType };
-          fields?: Array<{ __typename?: "GadgetModelField"; name: string; apiIdentifier: string; fieldType: GadgetFieldType }>;
-        } | null;
+        relatedModel?: { __typename?: "GadgetModel"; key: string; apiIdentifier: string; namespace?: Array<string> | null } | null;
         inverseField?: { __typename?: "GadgetModelField"; apiIdentifier: string } | null;
-        joinModel?: {
-          __typename?: "GadgetModel";
-          key: string;
-          apiIdentifier: string;
-          namespace?: Array<string> | null;
-          defaultDisplayField: { __typename?: "GadgetModelField"; name: string; apiIdentifier: string; fieldType: GadgetFieldType };
-        } | null;
+        joinModel?: { __typename?: "GadgetModel"; key: string; apiIdentifier: string; namespace?: Array<string> | null } | null;
         inverseJoinModelField?: { __typename?: "GadgetModelField"; apiIdentifier: string } | null;
         inverseRelatedModelField?: { __typename?: "GadgetModelField"; apiIdentifier: string } | null;
         validations: Array<
@@ -12017,14 +12653,7 @@ type FieldMetadata_GadgetModelField_Fragment = {
     | {
         __typename: "GadgetHasOneConfig";
         fieldType: GadgetFieldType;
-        relatedModel?: {
-          __typename?: "GadgetModel";
-          key: string;
-          apiIdentifier: string;
-          namespace?: Array<string> | null;
-          defaultDisplayField: { __typename?: "GadgetModelField"; name: string; apiIdentifier: string; fieldType: GadgetFieldType };
-          fields?: Array<{ __typename?: "GadgetModelField"; name: string; apiIdentifier: string; fieldType: GadgetFieldType }>;
-        } | null;
+        relatedModel?: { __typename?: "GadgetModel"; key: string; apiIdentifier: string; namespace?: Array<string> | null } | null;
         inverseField?: { __typename?: "GadgetModelField"; apiIdentifier: string } | null;
         validations: Array<
           | { __typename: "GadgetGenericFieldValidation"; name: string; specID: string }
@@ -12069,14 +12698,7 @@ type FieldMetadata_GadgetObjectField_Fragment = {
     | {
         __typename: "GadgetBelongsToConfig";
         fieldType: GadgetFieldType;
-        relatedModel?: {
-          __typename?: "GadgetModel";
-          key: string;
-          apiIdentifier: string;
-          namespace?: Array<string> | null;
-          defaultDisplayField: { __typename?: "GadgetModelField"; name: string; apiIdentifier: string; fieldType: GadgetFieldType };
-          fields?: Array<{ __typename?: "GadgetModelField"; name: string; apiIdentifier: string; fieldType: GadgetFieldType }>;
-        } | null;
+        relatedModel?: { __typename?: "GadgetModel"; key: string; apiIdentifier: string; namespace?: Array<string> | null } | null;
         validations: Array<
           | { __typename: "GadgetGenericFieldValidation"; name: string; specID: string }
           | { __typename: "GadgetOnlyImageFileFieldValidation"; name: string; specID: string; allowAnimatedImages: boolean }
@@ -12129,10 +12751,9 @@ type FieldMetadata_GadgetObjectField_Fragment = {
         relatedModel?: {
           __typename?: "GadgetModel";
           key: string;
+          name: string;
           apiIdentifier: string;
           namespace?: Array<string> | null;
-          defaultDisplayField: { __typename?: "GadgetModelField"; name: string; apiIdentifier: string; fieldType: GadgetFieldType };
-          fields?: Array<{ __typename?: "GadgetModelField"; name: string; apiIdentifier: string; fieldType: GadgetFieldType }>;
         } | null;
         inverseField?: { __typename?: "GadgetModelField"; apiIdentifier: string } | null;
         validations: Array<
@@ -12146,22 +12767,9 @@ type FieldMetadata_GadgetObjectField_Fragment = {
     | {
         __typename: "GadgetHasManyThroughConfig";
         fieldType: GadgetFieldType;
-        relatedModel?: {
-          __typename?: "GadgetModel";
-          key: string;
-          apiIdentifier: string;
-          namespace?: Array<string> | null;
-          defaultDisplayField: { __typename?: "GadgetModelField"; name: string; apiIdentifier: string; fieldType: GadgetFieldType };
-          fields?: Array<{ __typename?: "GadgetModelField"; name: string; apiIdentifier: string; fieldType: GadgetFieldType }>;
-        } | null;
+        relatedModel?: { __typename?: "GadgetModel"; key: string; apiIdentifier: string; namespace?: Array<string> | null } | null;
         inverseField?: { __typename?: "GadgetModelField"; apiIdentifier: string } | null;
-        joinModel?: {
-          __typename?: "GadgetModel";
-          key: string;
-          apiIdentifier: string;
-          namespace?: Array<string> | null;
-          defaultDisplayField: { __typename?: "GadgetModelField"; name: string; apiIdentifier: string; fieldType: GadgetFieldType };
-        } | null;
+        joinModel?: { __typename?: "GadgetModel"; key: string; apiIdentifier: string; namespace?: Array<string> | null } | null;
         inverseJoinModelField?: { __typename?: "GadgetModelField"; apiIdentifier: string } | null;
         inverseRelatedModelField?: { __typename?: "GadgetModelField"; apiIdentifier: string } | null;
         validations: Array<
@@ -12175,14 +12783,7 @@ type FieldMetadata_GadgetObjectField_Fragment = {
     | {
         __typename: "GadgetHasOneConfig";
         fieldType: GadgetFieldType;
-        relatedModel?: {
-          __typename?: "GadgetModel";
-          key: string;
-          apiIdentifier: string;
-          namespace?: Array<string> | null;
-          defaultDisplayField: { __typename?: "GadgetModelField"; name: string; apiIdentifier: string; fieldType: GadgetFieldType };
-          fields?: Array<{ __typename?: "GadgetModelField"; name: string; apiIdentifier: string; fieldType: GadgetFieldType }>;
-        } | null;
+        relatedModel?: { __typename?: "GadgetModel"; key: string; apiIdentifier: string; namespace?: Array<string> | null } | null;
         inverseField?: { __typename?: "GadgetModelField"; apiIdentifier: string } | null;
         validations: Array<
           | { __typename: "GadgetGenericFieldValidation"; name: string; specID: string }
@@ -12229,8 +12830,9 @@ export type GetModelMetadataQuery = {
   __typename?: "Query";
   gadgetMeta: {
     __typename?: "GadgetApplicationMeta";
-    model?: {
+    modelAndRelatedModels: Array<{
       __typename?: "GadgetModel";
+      key: string;
       apiIdentifier: string;
       namespace?: Array<string> | null;
       name: string;
@@ -12246,14 +12848,7 @@ export type GetModelMetadataQuery = {
           | {
               __typename: "GadgetBelongsToConfig";
               fieldType: GadgetFieldType;
-              relatedModel?: {
-                __typename?: "GadgetModel";
-                key: string;
-                apiIdentifier: string;
-                namespace?: Array<string> | null;
-                defaultDisplayField: { __typename?: "GadgetModelField"; name: string; apiIdentifier: string; fieldType: GadgetFieldType };
-                fields?: Array<{ __typename?: "GadgetModelField"; name: string; apiIdentifier: string; fieldType: GadgetFieldType }>;
-              } | null;
+              relatedModel?: { __typename?: "GadgetModel"; key: string; apiIdentifier: string; namespace?: Array<string> | null } | null;
               validations: Array<
                 | { __typename: "GadgetGenericFieldValidation"; name: string; specID: string }
                 | { __typename: "GadgetOnlyImageFileFieldValidation"; name: string; specID: string; allowAnimatedImages: boolean }
@@ -12306,10 +12901,9 @@ export type GetModelMetadataQuery = {
               relatedModel?: {
                 __typename?: "GadgetModel";
                 key: string;
+                name: string;
                 apiIdentifier: string;
                 namespace?: Array<string> | null;
-                defaultDisplayField: { __typename?: "GadgetModelField"; name: string; apiIdentifier: string; fieldType: GadgetFieldType };
-                fields?: Array<{ __typename?: "GadgetModelField"; name: string; apiIdentifier: string; fieldType: GadgetFieldType }>;
               } | null;
               inverseField?: { __typename?: "GadgetModelField"; apiIdentifier: string } | null;
               validations: Array<
@@ -12323,22 +12917,9 @@ export type GetModelMetadataQuery = {
           | {
               __typename: "GadgetHasManyThroughConfig";
               fieldType: GadgetFieldType;
-              relatedModel?: {
-                __typename?: "GadgetModel";
-                key: string;
-                apiIdentifier: string;
-                namespace?: Array<string> | null;
-                defaultDisplayField: { __typename?: "GadgetModelField"; name: string; apiIdentifier: string; fieldType: GadgetFieldType };
-                fields?: Array<{ __typename?: "GadgetModelField"; name: string; apiIdentifier: string; fieldType: GadgetFieldType }>;
-              } | null;
+              relatedModel?: { __typename?: "GadgetModel"; key: string; apiIdentifier: string; namespace?: Array<string> | null } | null;
               inverseField?: { __typename?: "GadgetModelField"; apiIdentifier: string } | null;
-              joinModel?: {
-                __typename?: "GadgetModel";
-                key: string;
-                apiIdentifier: string;
-                namespace?: Array<string> | null;
-                defaultDisplayField: { __typename?: "GadgetModelField"; name: string; apiIdentifier: string; fieldType: GadgetFieldType };
-              } | null;
+              joinModel?: { __typename?: "GadgetModel"; key: string; apiIdentifier: string; namespace?: Array<string> | null } | null;
               inverseJoinModelField?: { __typename?: "GadgetModelField"; apiIdentifier: string } | null;
               inverseRelatedModelField?: { __typename?: "GadgetModelField"; apiIdentifier: string } | null;
               validations: Array<
@@ -12352,14 +12933,7 @@ export type GetModelMetadataQuery = {
           | {
               __typename: "GadgetHasOneConfig";
               fieldType: GadgetFieldType;
-              relatedModel?: {
-                __typename?: "GadgetModel";
-                key: string;
-                apiIdentifier: string;
-                namespace?: Array<string> | null;
-                defaultDisplayField: { __typename?: "GadgetModelField"; name: string; apiIdentifier: string; fieldType: GadgetFieldType };
-                fields?: Array<{ __typename?: "GadgetModelField"; name: string; apiIdentifier: string; fieldType: GadgetFieldType }>;
-              } | null;
+              relatedModel?: { __typename?: "GadgetModel"; key: string; apiIdentifier: string; namespace?: Array<string> | null } | null;
               inverseField?: { __typename?: "GadgetModelField"; apiIdentifier: string } | null;
               validations: Array<
                 | { __typename: "GadgetGenericFieldValidation"; name: string; specID: string }
@@ -12393,7 +12967,8 @@ export type GetModelMetadataQuery = {
               >;
             };
       }>;
-    } | null;
+      defaultDisplayField: { __typename?: "GadgetModelField"; name: string; apiIdentifier: string; fieldType: GadgetFieldType };
+    }>;
   };
 };
 
@@ -12423,14 +12998,7 @@ type SubFields_GadgetModelField_Fragment = {
             | {
                 __typename: "GadgetBelongsToConfig";
                 fieldType: GadgetFieldType;
-                relatedModel?: {
-                  __typename?: "GadgetModel";
-                  key: string;
-                  apiIdentifier: string;
-                  namespace?: Array<string> | null;
-                  defaultDisplayField: { __typename?: "GadgetModelField"; name: string; apiIdentifier: string; fieldType: GadgetFieldType };
-                  fields?: Array<{ __typename?: "GadgetModelField"; name: string; apiIdentifier: string; fieldType: GadgetFieldType }>;
-                } | null;
+                relatedModel?: { __typename?: "GadgetModel"; key: string; apiIdentifier: string; namespace?: Array<string> | null } | null;
                 validations: Array<
                   | { __typename: "GadgetGenericFieldValidation"; name: string; specID: string }
                   | { __typename: "GadgetOnlyImageFileFieldValidation"; name: string; specID: string; allowAnimatedImages: boolean }
@@ -12483,10 +13051,9 @@ type SubFields_GadgetModelField_Fragment = {
                 relatedModel?: {
                   __typename?: "GadgetModel";
                   key: string;
+                  name: string;
                   apiIdentifier: string;
                   namespace?: Array<string> | null;
-                  defaultDisplayField: { __typename?: "GadgetModelField"; name: string; apiIdentifier: string; fieldType: GadgetFieldType };
-                  fields?: Array<{ __typename?: "GadgetModelField"; name: string; apiIdentifier: string; fieldType: GadgetFieldType }>;
                 } | null;
                 inverseField?: { __typename?: "GadgetModelField"; apiIdentifier: string } | null;
                 validations: Array<
@@ -12500,22 +13067,9 @@ type SubFields_GadgetModelField_Fragment = {
             | {
                 __typename: "GadgetHasManyThroughConfig";
                 fieldType: GadgetFieldType;
-                relatedModel?: {
-                  __typename?: "GadgetModel";
-                  key: string;
-                  apiIdentifier: string;
-                  namespace?: Array<string> | null;
-                  defaultDisplayField: { __typename?: "GadgetModelField"; name: string; apiIdentifier: string; fieldType: GadgetFieldType };
-                  fields?: Array<{ __typename?: "GadgetModelField"; name: string; apiIdentifier: string; fieldType: GadgetFieldType }>;
-                } | null;
+                relatedModel?: { __typename?: "GadgetModel"; key: string; apiIdentifier: string; namespace?: Array<string> | null } | null;
                 inverseField?: { __typename?: "GadgetModelField"; apiIdentifier: string } | null;
-                joinModel?: {
-                  __typename?: "GadgetModel";
-                  key: string;
-                  apiIdentifier: string;
-                  namespace?: Array<string> | null;
-                  defaultDisplayField: { __typename?: "GadgetModelField"; name: string; apiIdentifier: string; fieldType: GadgetFieldType };
-                } | null;
+                joinModel?: { __typename?: "GadgetModel"; key: string; apiIdentifier: string; namespace?: Array<string> | null } | null;
                 inverseJoinModelField?: { __typename?: "GadgetModelField"; apiIdentifier: string } | null;
                 inverseRelatedModelField?: { __typename?: "GadgetModelField"; apiIdentifier: string } | null;
                 validations: Array<
@@ -12529,14 +13083,7 @@ type SubFields_GadgetModelField_Fragment = {
             | {
                 __typename: "GadgetHasOneConfig";
                 fieldType: GadgetFieldType;
-                relatedModel?: {
-                  __typename?: "GadgetModel";
-                  key: string;
-                  apiIdentifier: string;
-                  namespace?: Array<string> | null;
-                  defaultDisplayField: { __typename?: "GadgetModelField"; name: string; apiIdentifier: string; fieldType: GadgetFieldType };
-                  fields?: Array<{ __typename?: "GadgetModelField"; name: string; apiIdentifier: string; fieldType: GadgetFieldType }>;
-                } | null;
+                relatedModel?: { __typename?: "GadgetModel"; key: string; apiIdentifier: string; namespace?: Array<string> | null } | null;
                 inverseField?: { __typename?: "GadgetModelField"; apiIdentifier: string } | null;
                 validations: Array<
                   | { __typename: "GadgetGenericFieldValidation"; name: string; specID: string }
@@ -12579,18 +13126,6 @@ type SubFields_GadgetModelField_Fragment = {
                           key: string;
                           apiIdentifier: string;
                           namespace?: Array<string> | null;
-                          defaultDisplayField: {
-                            __typename?: "GadgetModelField";
-                            name: string;
-                            apiIdentifier: string;
-                            fieldType: GadgetFieldType;
-                          };
-                          fields?: Array<{
-                            __typename?: "GadgetModelField";
-                            name: string;
-                            apiIdentifier: string;
-                            fieldType: GadgetFieldType;
-                          }>;
                         } | null;
                         validations: Array<
                           | { __typename: "GadgetGenericFieldValidation"; name: string; specID: string }
@@ -12668,20 +13203,9 @@ type SubFields_GadgetModelField_Fragment = {
                         relatedModel?: {
                           __typename?: "GadgetModel";
                           key: string;
+                          name: string;
                           apiIdentifier: string;
                           namespace?: Array<string> | null;
-                          defaultDisplayField: {
-                            __typename?: "GadgetModelField";
-                            name: string;
-                            apiIdentifier: string;
-                            fieldType: GadgetFieldType;
-                          };
-                          fields?: Array<{
-                            __typename?: "GadgetModelField";
-                            name: string;
-                            apiIdentifier: string;
-                            fieldType: GadgetFieldType;
-                          }>;
                         } | null;
                         inverseField?: { __typename?: "GadgetModelField"; apiIdentifier: string } | null;
                         validations: Array<
@@ -12706,18 +13230,6 @@ type SubFields_GadgetModelField_Fragment = {
                           key: string;
                           apiIdentifier: string;
                           namespace?: Array<string> | null;
-                          defaultDisplayField: {
-                            __typename?: "GadgetModelField";
-                            name: string;
-                            apiIdentifier: string;
-                            fieldType: GadgetFieldType;
-                          };
-                          fields?: Array<{
-                            __typename?: "GadgetModelField";
-                            name: string;
-                            apiIdentifier: string;
-                            fieldType: GadgetFieldType;
-                          }>;
                         } | null;
                         inverseField?: { __typename?: "GadgetModelField"; apiIdentifier: string } | null;
                         joinModel?: {
@@ -12725,12 +13237,6 @@ type SubFields_GadgetModelField_Fragment = {
                           key: string;
                           apiIdentifier: string;
                           namespace?: Array<string> | null;
-                          defaultDisplayField: {
-                            __typename?: "GadgetModelField";
-                            name: string;
-                            apiIdentifier: string;
-                            fieldType: GadgetFieldType;
-                          };
                         } | null;
                         inverseJoinModelField?: { __typename?: "GadgetModelField"; apiIdentifier: string } | null;
                         inverseRelatedModelField?: { __typename?: "GadgetModelField"; apiIdentifier: string } | null;
@@ -12756,18 +13262,6 @@ type SubFields_GadgetModelField_Fragment = {
                           key: string;
                           apiIdentifier: string;
                           namespace?: Array<string> | null;
-                          defaultDisplayField: {
-                            __typename?: "GadgetModelField";
-                            name: string;
-                            apiIdentifier: string;
-                            fieldType: GadgetFieldType;
-                          };
-                          fields?: Array<{
-                            __typename?: "GadgetModelField";
-                            name: string;
-                            apiIdentifier: string;
-                            fieldType: GadgetFieldType;
-                          }>;
                         } | null;
                         inverseField?: { __typename?: "GadgetModelField"; apiIdentifier: string } | null;
                         validations: Array<
@@ -12823,18 +13317,6 @@ type SubFields_GadgetModelField_Fragment = {
                                   key: string;
                                   apiIdentifier: string;
                                   namespace?: Array<string> | null;
-                                  defaultDisplayField: {
-                                    __typename?: "GadgetModelField";
-                                    name: string;
-                                    apiIdentifier: string;
-                                    fieldType: GadgetFieldType;
-                                  };
-                                  fields?: Array<{
-                                    __typename?: "GadgetModelField";
-                                    name: string;
-                                    apiIdentifier: string;
-                                    fieldType: GadgetFieldType;
-                                  }>;
                                 } | null;
                                 validations: Array<
                                   | { __typename: "GadgetGenericFieldValidation"; name: string; specID: string }
@@ -12932,20 +13414,9 @@ type SubFields_GadgetModelField_Fragment = {
                                 relatedModel?: {
                                   __typename?: "GadgetModel";
                                   key: string;
+                                  name: string;
                                   apiIdentifier: string;
                                   namespace?: Array<string> | null;
-                                  defaultDisplayField: {
-                                    __typename?: "GadgetModelField";
-                                    name: string;
-                                    apiIdentifier: string;
-                                    fieldType: GadgetFieldType;
-                                  };
-                                  fields?: Array<{
-                                    __typename?: "GadgetModelField";
-                                    name: string;
-                                    apiIdentifier: string;
-                                    fieldType: GadgetFieldType;
-                                  }>;
                                 } | null;
                                 inverseField?: { __typename?: "GadgetModelField"; apiIdentifier: string } | null;
                                 validations: Array<
@@ -12975,18 +13446,6 @@ type SubFields_GadgetModelField_Fragment = {
                                   key: string;
                                   apiIdentifier: string;
                                   namespace?: Array<string> | null;
-                                  defaultDisplayField: {
-                                    __typename?: "GadgetModelField";
-                                    name: string;
-                                    apiIdentifier: string;
-                                    fieldType: GadgetFieldType;
-                                  };
-                                  fields?: Array<{
-                                    __typename?: "GadgetModelField";
-                                    name: string;
-                                    apiIdentifier: string;
-                                    fieldType: GadgetFieldType;
-                                  }>;
                                 } | null;
                                 inverseField?: { __typename?: "GadgetModelField"; apiIdentifier: string } | null;
                                 joinModel?: {
@@ -12994,12 +13453,6 @@ type SubFields_GadgetModelField_Fragment = {
                                   key: string;
                                   apiIdentifier: string;
                                   namespace?: Array<string> | null;
-                                  defaultDisplayField: {
-                                    __typename?: "GadgetModelField";
-                                    name: string;
-                                    apiIdentifier: string;
-                                    fieldType: GadgetFieldType;
-                                  };
                                 } | null;
                                 inverseJoinModelField?: { __typename?: "GadgetModelField"; apiIdentifier: string } | null;
                                 inverseRelatedModelField?: { __typename?: "GadgetModelField"; apiIdentifier: string } | null;
@@ -13030,18 +13483,6 @@ type SubFields_GadgetModelField_Fragment = {
                                   key: string;
                                   apiIdentifier: string;
                                   namespace?: Array<string> | null;
-                                  defaultDisplayField: {
-                                    __typename?: "GadgetModelField";
-                                    name: string;
-                                    apiIdentifier: string;
-                                    fieldType: GadgetFieldType;
-                                  };
-                                  fields?: Array<{
-                                    __typename?: "GadgetModelField";
-                                    name: string;
-                                    apiIdentifier: string;
-                                    fieldType: GadgetFieldType;
-                                  }>;
                                 } | null;
                                 inverseField?: { __typename?: "GadgetModelField"; apiIdentifier: string } | null;
                                 validations: Array<
@@ -13162,14 +13603,7 @@ type SubFields_GadgetObjectField_Fragment = {
             | {
                 __typename: "GadgetBelongsToConfig";
                 fieldType: GadgetFieldType;
-                relatedModel?: {
-                  __typename?: "GadgetModel";
-                  key: string;
-                  apiIdentifier: string;
-                  namespace?: Array<string> | null;
-                  defaultDisplayField: { __typename?: "GadgetModelField"; name: string; apiIdentifier: string; fieldType: GadgetFieldType };
-                  fields?: Array<{ __typename?: "GadgetModelField"; name: string; apiIdentifier: string; fieldType: GadgetFieldType }>;
-                } | null;
+                relatedModel?: { __typename?: "GadgetModel"; key: string; apiIdentifier: string; namespace?: Array<string> | null } | null;
                 validations: Array<
                   | { __typename: "GadgetGenericFieldValidation"; name: string; specID: string }
                   | { __typename: "GadgetOnlyImageFileFieldValidation"; name: string; specID: string; allowAnimatedImages: boolean }
@@ -13222,10 +13656,9 @@ type SubFields_GadgetObjectField_Fragment = {
                 relatedModel?: {
                   __typename?: "GadgetModel";
                   key: string;
+                  name: string;
                   apiIdentifier: string;
                   namespace?: Array<string> | null;
-                  defaultDisplayField: { __typename?: "GadgetModelField"; name: string; apiIdentifier: string; fieldType: GadgetFieldType };
-                  fields?: Array<{ __typename?: "GadgetModelField"; name: string; apiIdentifier: string; fieldType: GadgetFieldType }>;
                 } | null;
                 inverseField?: { __typename?: "GadgetModelField"; apiIdentifier: string } | null;
                 validations: Array<
@@ -13239,22 +13672,9 @@ type SubFields_GadgetObjectField_Fragment = {
             | {
                 __typename: "GadgetHasManyThroughConfig";
                 fieldType: GadgetFieldType;
-                relatedModel?: {
-                  __typename?: "GadgetModel";
-                  key: string;
-                  apiIdentifier: string;
-                  namespace?: Array<string> | null;
-                  defaultDisplayField: { __typename?: "GadgetModelField"; name: string; apiIdentifier: string; fieldType: GadgetFieldType };
-                  fields?: Array<{ __typename?: "GadgetModelField"; name: string; apiIdentifier: string; fieldType: GadgetFieldType }>;
-                } | null;
+                relatedModel?: { __typename?: "GadgetModel"; key: string; apiIdentifier: string; namespace?: Array<string> | null } | null;
                 inverseField?: { __typename?: "GadgetModelField"; apiIdentifier: string } | null;
-                joinModel?: {
-                  __typename?: "GadgetModel";
-                  key: string;
-                  apiIdentifier: string;
-                  namespace?: Array<string> | null;
-                  defaultDisplayField: { __typename?: "GadgetModelField"; name: string; apiIdentifier: string; fieldType: GadgetFieldType };
-                } | null;
+                joinModel?: { __typename?: "GadgetModel"; key: string; apiIdentifier: string; namespace?: Array<string> | null } | null;
                 inverseJoinModelField?: { __typename?: "GadgetModelField"; apiIdentifier: string } | null;
                 inverseRelatedModelField?: { __typename?: "GadgetModelField"; apiIdentifier: string } | null;
                 validations: Array<
@@ -13268,14 +13688,7 @@ type SubFields_GadgetObjectField_Fragment = {
             | {
                 __typename: "GadgetHasOneConfig";
                 fieldType: GadgetFieldType;
-                relatedModel?: {
-                  __typename?: "GadgetModel";
-                  key: string;
-                  apiIdentifier: string;
-                  namespace?: Array<string> | null;
-                  defaultDisplayField: { __typename?: "GadgetModelField"; name: string; apiIdentifier: string; fieldType: GadgetFieldType };
-                  fields?: Array<{ __typename?: "GadgetModelField"; name: string; apiIdentifier: string; fieldType: GadgetFieldType }>;
-                } | null;
+                relatedModel?: { __typename?: "GadgetModel"; key: string; apiIdentifier: string; namespace?: Array<string> | null } | null;
                 inverseField?: { __typename?: "GadgetModelField"; apiIdentifier: string } | null;
                 validations: Array<
                   | { __typename: "GadgetGenericFieldValidation"; name: string; specID: string }
@@ -13318,18 +13731,6 @@ type SubFields_GadgetObjectField_Fragment = {
                           key: string;
                           apiIdentifier: string;
                           namespace?: Array<string> | null;
-                          defaultDisplayField: {
-                            __typename?: "GadgetModelField";
-                            name: string;
-                            apiIdentifier: string;
-                            fieldType: GadgetFieldType;
-                          };
-                          fields?: Array<{
-                            __typename?: "GadgetModelField";
-                            name: string;
-                            apiIdentifier: string;
-                            fieldType: GadgetFieldType;
-                          }>;
                         } | null;
                         validations: Array<
                           | { __typename: "GadgetGenericFieldValidation"; name: string; specID: string }
@@ -13407,20 +13808,9 @@ type SubFields_GadgetObjectField_Fragment = {
                         relatedModel?: {
                           __typename?: "GadgetModel";
                           key: string;
+                          name: string;
                           apiIdentifier: string;
                           namespace?: Array<string> | null;
-                          defaultDisplayField: {
-                            __typename?: "GadgetModelField";
-                            name: string;
-                            apiIdentifier: string;
-                            fieldType: GadgetFieldType;
-                          };
-                          fields?: Array<{
-                            __typename?: "GadgetModelField";
-                            name: string;
-                            apiIdentifier: string;
-                            fieldType: GadgetFieldType;
-                          }>;
                         } | null;
                         inverseField?: { __typename?: "GadgetModelField"; apiIdentifier: string } | null;
                         validations: Array<
@@ -13445,18 +13835,6 @@ type SubFields_GadgetObjectField_Fragment = {
                           key: string;
                           apiIdentifier: string;
                           namespace?: Array<string> | null;
-                          defaultDisplayField: {
-                            __typename?: "GadgetModelField";
-                            name: string;
-                            apiIdentifier: string;
-                            fieldType: GadgetFieldType;
-                          };
-                          fields?: Array<{
-                            __typename?: "GadgetModelField";
-                            name: string;
-                            apiIdentifier: string;
-                            fieldType: GadgetFieldType;
-                          }>;
                         } | null;
                         inverseField?: { __typename?: "GadgetModelField"; apiIdentifier: string } | null;
                         joinModel?: {
@@ -13464,12 +13842,6 @@ type SubFields_GadgetObjectField_Fragment = {
                           key: string;
                           apiIdentifier: string;
                           namespace?: Array<string> | null;
-                          defaultDisplayField: {
-                            __typename?: "GadgetModelField";
-                            name: string;
-                            apiIdentifier: string;
-                            fieldType: GadgetFieldType;
-                          };
                         } | null;
                         inverseJoinModelField?: { __typename?: "GadgetModelField"; apiIdentifier: string } | null;
                         inverseRelatedModelField?: { __typename?: "GadgetModelField"; apiIdentifier: string } | null;
@@ -13495,18 +13867,6 @@ type SubFields_GadgetObjectField_Fragment = {
                           key: string;
                           apiIdentifier: string;
                           namespace?: Array<string> | null;
-                          defaultDisplayField: {
-                            __typename?: "GadgetModelField";
-                            name: string;
-                            apiIdentifier: string;
-                            fieldType: GadgetFieldType;
-                          };
-                          fields?: Array<{
-                            __typename?: "GadgetModelField";
-                            name: string;
-                            apiIdentifier: string;
-                            fieldType: GadgetFieldType;
-                          }>;
                         } | null;
                         inverseField?: { __typename?: "GadgetModelField"; apiIdentifier: string } | null;
                         validations: Array<
@@ -13562,18 +13922,6 @@ type SubFields_GadgetObjectField_Fragment = {
                                   key: string;
                                   apiIdentifier: string;
                                   namespace?: Array<string> | null;
-                                  defaultDisplayField: {
-                                    __typename?: "GadgetModelField";
-                                    name: string;
-                                    apiIdentifier: string;
-                                    fieldType: GadgetFieldType;
-                                  };
-                                  fields?: Array<{
-                                    __typename?: "GadgetModelField";
-                                    name: string;
-                                    apiIdentifier: string;
-                                    fieldType: GadgetFieldType;
-                                  }>;
                                 } | null;
                                 validations: Array<
                                   | { __typename: "GadgetGenericFieldValidation"; name: string; specID: string }
@@ -13671,20 +14019,9 @@ type SubFields_GadgetObjectField_Fragment = {
                                 relatedModel?: {
                                   __typename?: "GadgetModel";
                                   key: string;
+                                  name: string;
                                   apiIdentifier: string;
                                   namespace?: Array<string> | null;
-                                  defaultDisplayField: {
-                                    __typename?: "GadgetModelField";
-                                    name: string;
-                                    apiIdentifier: string;
-                                    fieldType: GadgetFieldType;
-                                  };
-                                  fields?: Array<{
-                                    __typename?: "GadgetModelField";
-                                    name: string;
-                                    apiIdentifier: string;
-                                    fieldType: GadgetFieldType;
-                                  }>;
                                 } | null;
                                 inverseField?: { __typename?: "GadgetModelField"; apiIdentifier: string } | null;
                                 validations: Array<
@@ -13714,18 +14051,6 @@ type SubFields_GadgetObjectField_Fragment = {
                                   key: string;
                                   apiIdentifier: string;
                                   namespace?: Array<string> | null;
-                                  defaultDisplayField: {
-                                    __typename?: "GadgetModelField";
-                                    name: string;
-                                    apiIdentifier: string;
-                                    fieldType: GadgetFieldType;
-                                  };
-                                  fields?: Array<{
-                                    __typename?: "GadgetModelField";
-                                    name: string;
-                                    apiIdentifier: string;
-                                    fieldType: GadgetFieldType;
-                                  }>;
                                 } | null;
                                 inverseField?: { __typename?: "GadgetModelField"; apiIdentifier: string } | null;
                                 joinModel?: {
@@ -13733,12 +14058,6 @@ type SubFields_GadgetObjectField_Fragment = {
                                   key: string;
                                   apiIdentifier: string;
                                   namespace?: Array<string> | null;
-                                  defaultDisplayField: {
-                                    __typename?: "GadgetModelField";
-                                    name: string;
-                                    apiIdentifier: string;
-                                    fieldType: GadgetFieldType;
-                                  };
                                 } | null;
                                 inverseJoinModelField?: { __typename?: "GadgetModelField"; apiIdentifier: string } | null;
                                 inverseRelatedModelField?: { __typename?: "GadgetModelField"; apiIdentifier: string } | null;
@@ -13769,18 +14088,6 @@ type SubFields_GadgetObjectField_Fragment = {
                                   key: string;
                                   apiIdentifier: string;
                                   namespace?: Array<string> | null;
-                                  defaultDisplayField: {
-                                    __typename?: "GadgetModelField";
-                                    name: string;
-                                    apiIdentifier: string;
-                                    fieldType: GadgetFieldType;
-                                  };
-                                  fields?: Array<{
-                                    __typename?: "GadgetModelField";
-                                    name: string;
-                                    apiIdentifier: string;
-                                    fieldType: GadgetFieldType;
-                                  }>;
                                 } | null;
                                 inverseField?: { __typename?: "GadgetModelField"; apiIdentifier: string } | null;
                                 validations: Array<
@@ -13888,8 +14195,901 @@ export type ModelActionMetadataQuery = {
   __typename?: "Query";
   gadgetMeta: {
     __typename?: "GadgetApplicationMeta";
+    modelAndRelatedModels: Array<{
+      __typename?: "GadgetModel";
+      key: string;
+      name: string;
+      apiIdentifier: string;
+      defaultRecord: any;
+      fields: Array<{
+        __typename?: "GadgetModelField";
+        sortable: boolean;
+        filterable: boolean;
+        name: string;
+        apiIdentifier: string;
+        fieldType: GadgetFieldType;
+        requiredArgumentForInput: boolean;
+        configuration:
+          | {
+              __typename: "GadgetBelongsToConfig";
+              fieldType: GadgetFieldType;
+              relatedModel?: { __typename?: "GadgetModel"; key: string; apiIdentifier: string; namespace?: Array<string> | null } | null;
+              validations: Array<
+                | { __typename: "GadgetGenericFieldValidation"; name: string; specID: string }
+                | { __typename: "GadgetOnlyImageFileFieldValidation"; name: string; specID: string; allowAnimatedImages: boolean }
+                | { __typename: "GadgetRangeFieldValidation"; name: string; specID: string; min?: number | null; max?: number | null }
+                | { __typename: "GadgetRegexFieldValidation"; name: string; specID: string; pattern?: string | null }
+                | null
+              >;
+            }
+          | {
+              __typename: "GadgetDateTimeConfig";
+              includeTime: boolean;
+              fieldType: GadgetFieldType;
+              validations: Array<
+                | { __typename: "GadgetGenericFieldValidation"; name: string; specID: string }
+                | { __typename: "GadgetOnlyImageFileFieldValidation"; name: string; specID: string; allowAnimatedImages: boolean }
+                | { __typename: "GadgetRangeFieldValidation"; name: string; specID: string; min?: number | null; max?: number | null }
+                | { __typename: "GadgetRegexFieldValidation"; name: string; specID: string; pattern?: string | null }
+                | null
+              >;
+            }
+          | {
+              __typename: "GadgetEnumConfig";
+              allowMultiple: boolean;
+              allowOther: boolean;
+              fieldType: GadgetFieldType;
+              options: Array<{ __typename?: "GadgetEnumOption"; name: string; color: string }>;
+              validations: Array<
+                | { __typename: "GadgetGenericFieldValidation"; name: string; specID: string }
+                | { __typename: "GadgetOnlyImageFileFieldValidation"; name: string; specID: string; allowAnimatedImages: boolean }
+                | { __typename: "GadgetRangeFieldValidation"; name: string; specID: string; min?: number | null; max?: number | null }
+                | { __typename: "GadgetRegexFieldValidation"; name: string; specID: string; pattern?: string | null }
+                | null
+              >;
+            }
+          | {
+              __typename: "GadgetGenericFieldConfig";
+              fieldType: GadgetFieldType;
+              validations: Array<
+                | { __typename: "GadgetGenericFieldValidation"; name: string; specID: string }
+                | { __typename: "GadgetOnlyImageFileFieldValidation"; name: string; specID: string; allowAnimatedImages: boolean }
+                | { __typename: "GadgetRangeFieldValidation"; name: string; specID: string; min?: number | null; max?: number | null }
+                | { __typename: "GadgetRegexFieldValidation"; name: string; specID: string; pattern?: string | null }
+                | null
+              >;
+            }
+          | {
+              __typename: "GadgetHasManyConfig";
+              isJoinModelHasManyField: boolean;
+              fieldType: GadgetFieldType;
+              relatedModel?: {
+                __typename?: "GadgetModel";
+                key: string;
+                name: string;
+                apiIdentifier: string;
+                namespace?: Array<string> | null;
+              } | null;
+              inverseField?: { __typename?: "GadgetModelField"; apiIdentifier: string } | null;
+              validations: Array<
+                | { __typename: "GadgetGenericFieldValidation"; name: string; specID: string }
+                | { __typename: "GadgetOnlyImageFileFieldValidation"; name: string; specID: string; allowAnimatedImages: boolean }
+                | { __typename: "GadgetRangeFieldValidation"; name: string; specID: string; min?: number | null; max?: number | null }
+                | { __typename: "GadgetRegexFieldValidation"; name: string; specID: string; pattern?: string | null }
+                | null
+              >;
+            }
+          | {
+              __typename: "GadgetHasManyThroughConfig";
+              fieldType: GadgetFieldType;
+              relatedModel?: { __typename?: "GadgetModel"; key: string; apiIdentifier: string; namespace?: Array<string> | null } | null;
+              inverseField?: { __typename?: "GadgetModelField"; apiIdentifier: string } | null;
+              joinModel?: { __typename?: "GadgetModel"; key: string; apiIdentifier: string; namespace?: Array<string> | null } | null;
+              inverseJoinModelField?: { __typename?: "GadgetModelField"; apiIdentifier: string } | null;
+              inverseRelatedModelField?: { __typename?: "GadgetModelField"; apiIdentifier: string } | null;
+              validations: Array<
+                | { __typename: "GadgetGenericFieldValidation"; name: string; specID: string }
+                | { __typename: "GadgetOnlyImageFileFieldValidation"; name: string; specID: string; allowAnimatedImages: boolean }
+                | { __typename: "GadgetRangeFieldValidation"; name: string; specID: string; min?: number | null; max?: number | null }
+                | { __typename: "GadgetRegexFieldValidation"; name: string; specID: string; pattern?: string | null }
+                | null
+              >;
+            }
+          | {
+              __typename: "GadgetHasOneConfig";
+              fieldType: GadgetFieldType;
+              relatedModel?: { __typename?: "GadgetModel"; key: string; apiIdentifier: string; namespace?: Array<string> | null } | null;
+              inverseField?: { __typename?: "GadgetModelField"; apiIdentifier: string } | null;
+              validations: Array<
+                | { __typename: "GadgetGenericFieldValidation"; name: string; specID: string }
+                | { __typename: "GadgetOnlyImageFileFieldValidation"; name: string; specID: string; allowAnimatedImages: boolean }
+                | { __typename: "GadgetRangeFieldValidation"; name: string; specID: string; min?: number | null; max?: number | null }
+                | { __typename: "GadgetRegexFieldValidation"; name: string; specID: string; pattern?: string | null }
+                | null
+              >;
+            }
+          | {
+              __typename: "GadgetNumberConfig";
+              decimals?: number | null;
+              fieldType: GadgetFieldType;
+              validations: Array<
+                | { __typename: "GadgetGenericFieldValidation"; name: string; specID: string }
+                | { __typename: "GadgetOnlyImageFileFieldValidation"; name: string; specID: string; allowAnimatedImages: boolean }
+                | { __typename: "GadgetRangeFieldValidation"; name: string; specID: string; min?: number | null; max?: number | null }
+                | { __typename: "GadgetRegexFieldValidation"; name: string; specID: string; pattern?: string | null }
+                | null
+              >;
+            }
+          | {
+              __typename: "GadgetObjectFieldConfig";
+              name?: string | null;
+              fieldType: GadgetFieldType;
+              fields: Array<{
+                __typename?: "GadgetModelField";
+                sortable: boolean;
+                filterable: boolean;
+                name: string;
+                apiIdentifier: string;
+                fieldType: GadgetFieldType;
+                requiredArgumentForInput: boolean;
+                configuration:
+                  | {
+                      __typename: "GadgetBelongsToConfig";
+                      fieldType: GadgetFieldType;
+                      relatedModel?: {
+                        __typename?: "GadgetModel";
+                        key: string;
+                        apiIdentifier: string;
+                        namespace?: Array<string> | null;
+                      } | null;
+                      validations: Array<
+                        | { __typename: "GadgetGenericFieldValidation"; name: string; specID: string }
+                        | { __typename: "GadgetOnlyImageFileFieldValidation"; name: string; specID: string; allowAnimatedImages: boolean }
+                        | {
+                            __typename: "GadgetRangeFieldValidation";
+                            name: string;
+                            specID: string;
+                            min?: number | null;
+                            max?: number | null;
+                          }
+                        | { __typename: "GadgetRegexFieldValidation"; name: string; specID: string; pattern?: string | null }
+                        | null
+                      >;
+                    }
+                  | {
+                      __typename: "GadgetDateTimeConfig";
+                      includeTime: boolean;
+                      fieldType: GadgetFieldType;
+                      validations: Array<
+                        | { __typename: "GadgetGenericFieldValidation"; name: string; specID: string }
+                        | { __typename: "GadgetOnlyImageFileFieldValidation"; name: string; specID: string; allowAnimatedImages: boolean }
+                        | {
+                            __typename: "GadgetRangeFieldValidation";
+                            name: string;
+                            specID: string;
+                            min?: number | null;
+                            max?: number | null;
+                          }
+                        | { __typename: "GadgetRegexFieldValidation"; name: string; specID: string; pattern?: string | null }
+                        | null
+                      >;
+                    }
+                  | {
+                      __typename: "GadgetEnumConfig";
+                      allowMultiple: boolean;
+                      allowOther: boolean;
+                      fieldType: GadgetFieldType;
+                      options: Array<{ __typename?: "GadgetEnumOption"; name: string; color: string }>;
+                      validations: Array<
+                        | { __typename: "GadgetGenericFieldValidation"; name: string; specID: string }
+                        | { __typename: "GadgetOnlyImageFileFieldValidation"; name: string; specID: string; allowAnimatedImages: boolean }
+                        | {
+                            __typename: "GadgetRangeFieldValidation";
+                            name: string;
+                            specID: string;
+                            min?: number | null;
+                            max?: number | null;
+                          }
+                        | { __typename: "GadgetRegexFieldValidation"; name: string; specID: string; pattern?: string | null }
+                        | null
+                      >;
+                    }
+                  | {
+                      __typename: "GadgetGenericFieldConfig";
+                      fieldType: GadgetFieldType;
+                      validations: Array<
+                        | { __typename: "GadgetGenericFieldValidation"; name: string; specID: string }
+                        | { __typename: "GadgetOnlyImageFileFieldValidation"; name: string; specID: string; allowAnimatedImages: boolean }
+                        | {
+                            __typename: "GadgetRangeFieldValidation";
+                            name: string;
+                            specID: string;
+                            min?: number | null;
+                            max?: number | null;
+                          }
+                        | { __typename: "GadgetRegexFieldValidation"; name: string; specID: string; pattern?: string | null }
+                        | null
+                      >;
+                    }
+                  | {
+                      __typename: "GadgetHasManyConfig";
+                      isJoinModelHasManyField: boolean;
+                      fieldType: GadgetFieldType;
+                      relatedModel?: {
+                        __typename?: "GadgetModel";
+                        key: string;
+                        name: string;
+                        apiIdentifier: string;
+                        namespace?: Array<string> | null;
+                      } | null;
+                      inverseField?: { __typename?: "GadgetModelField"; apiIdentifier: string } | null;
+                      validations: Array<
+                        | { __typename: "GadgetGenericFieldValidation"; name: string; specID: string }
+                        | { __typename: "GadgetOnlyImageFileFieldValidation"; name: string; specID: string; allowAnimatedImages: boolean }
+                        | {
+                            __typename: "GadgetRangeFieldValidation";
+                            name: string;
+                            specID: string;
+                            min?: number | null;
+                            max?: number | null;
+                          }
+                        | { __typename: "GadgetRegexFieldValidation"; name: string; specID: string; pattern?: string | null }
+                        | null
+                      >;
+                    }
+                  | {
+                      __typename: "GadgetHasManyThroughConfig";
+                      fieldType: GadgetFieldType;
+                      relatedModel?: {
+                        __typename?: "GadgetModel";
+                        key: string;
+                        apiIdentifier: string;
+                        namespace?: Array<string> | null;
+                      } | null;
+                      inverseField?: { __typename?: "GadgetModelField"; apiIdentifier: string } | null;
+                      joinModel?: {
+                        __typename?: "GadgetModel";
+                        key: string;
+                        apiIdentifier: string;
+                        namespace?: Array<string> | null;
+                      } | null;
+                      inverseJoinModelField?: { __typename?: "GadgetModelField"; apiIdentifier: string } | null;
+                      inverseRelatedModelField?: { __typename?: "GadgetModelField"; apiIdentifier: string } | null;
+                      validations: Array<
+                        | { __typename: "GadgetGenericFieldValidation"; name: string; specID: string }
+                        | { __typename: "GadgetOnlyImageFileFieldValidation"; name: string; specID: string; allowAnimatedImages: boolean }
+                        | {
+                            __typename: "GadgetRangeFieldValidation";
+                            name: string;
+                            specID: string;
+                            min?: number | null;
+                            max?: number | null;
+                          }
+                        | { __typename: "GadgetRegexFieldValidation"; name: string; specID: string; pattern?: string | null }
+                        | null
+                      >;
+                    }
+                  | {
+                      __typename: "GadgetHasOneConfig";
+                      fieldType: GadgetFieldType;
+                      relatedModel?: {
+                        __typename?: "GadgetModel";
+                        key: string;
+                        apiIdentifier: string;
+                        namespace?: Array<string> | null;
+                      } | null;
+                      inverseField?: { __typename?: "GadgetModelField"; apiIdentifier: string } | null;
+                      validations: Array<
+                        | { __typename: "GadgetGenericFieldValidation"; name: string; specID: string }
+                        | { __typename: "GadgetOnlyImageFileFieldValidation"; name: string; specID: string; allowAnimatedImages: boolean }
+                        | {
+                            __typename: "GadgetRangeFieldValidation";
+                            name: string;
+                            specID: string;
+                            min?: number | null;
+                            max?: number | null;
+                          }
+                        | { __typename: "GadgetRegexFieldValidation"; name: string; specID: string; pattern?: string | null }
+                        | null
+                      >;
+                    }
+                  | {
+                      __typename: "GadgetNumberConfig";
+                      decimals?: number | null;
+                      fieldType: GadgetFieldType;
+                      validations: Array<
+                        | { __typename: "GadgetGenericFieldValidation"; name: string; specID: string }
+                        | { __typename: "GadgetOnlyImageFileFieldValidation"; name: string; specID: string; allowAnimatedImages: boolean }
+                        | {
+                            __typename: "GadgetRangeFieldValidation";
+                            name: string;
+                            specID: string;
+                            min?: number | null;
+                            max?: number | null;
+                          }
+                        | { __typename: "GadgetRegexFieldValidation"; name: string; specID: string; pattern?: string | null }
+                        | null
+                      >;
+                    }
+                  | {
+                      __typename: "GadgetObjectFieldConfig";
+                      name?: string | null;
+                      fieldType: GadgetFieldType;
+                      fields: Array<{
+                        __typename?: "GadgetModelField";
+                        sortable: boolean;
+                        filterable: boolean;
+                        name: string;
+                        apiIdentifier: string;
+                        fieldType: GadgetFieldType;
+                        requiredArgumentForInput: boolean;
+                        configuration:
+                          | {
+                              __typename: "GadgetBelongsToConfig";
+                              fieldType: GadgetFieldType;
+                              relatedModel?: {
+                                __typename?: "GadgetModel";
+                                key: string;
+                                apiIdentifier: string;
+                                namespace?: Array<string> | null;
+                              } | null;
+                              validations: Array<
+                                | { __typename: "GadgetGenericFieldValidation"; name: string; specID: string }
+                                | {
+                                    __typename: "GadgetOnlyImageFileFieldValidation";
+                                    name: string;
+                                    specID: string;
+                                    allowAnimatedImages: boolean;
+                                  }
+                                | {
+                                    __typename: "GadgetRangeFieldValidation";
+                                    name: string;
+                                    specID: string;
+                                    min?: number | null;
+                                    max?: number | null;
+                                  }
+                                | { __typename: "GadgetRegexFieldValidation"; name: string; specID: string; pattern?: string | null }
+                                | null
+                              >;
+                            }
+                          | {
+                              __typename: "GadgetDateTimeConfig";
+                              includeTime: boolean;
+                              fieldType: GadgetFieldType;
+                              validations: Array<
+                                | { __typename: "GadgetGenericFieldValidation"; name: string; specID: string }
+                                | {
+                                    __typename: "GadgetOnlyImageFileFieldValidation";
+                                    name: string;
+                                    specID: string;
+                                    allowAnimatedImages: boolean;
+                                  }
+                                | {
+                                    __typename: "GadgetRangeFieldValidation";
+                                    name: string;
+                                    specID: string;
+                                    min?: number | null;
+                                    max?: number | null;
+                                  }
+                                | { __typename: "GadgetRegexFieldValidation"; name: string; specID: string; pattern?: string | null }
+                                | null
+                              >;
+                            }
+                          | {
+                              __typename: "GadgetEnumConfig";
+                              allowMultiple: boolean;
+                              allowOther: boolean;
+                              fieldType: GadgetFieldType;
+                              options: Array<{ __typename?: "GadgetEnumOption"; name: string; color: string }>;
+                              validations: Array<
+                                | { __typename: "GadgetGenericFieldValidation"; name: string; specID: string }
+                                | {
+                                    __typename: "GadgetOnlyImageFileFieldValidation";
+                                    name: string;
+                                    specID: string;
+                                    allowAnimatedImages: boolean;
+                                  }
+                                | {
+                                    __typename: "GadgetRangeFieldValidation";
+                                    name: string;
+                                    specID: string;
+                                    min?: number | null;
+                                    max?: number | null;
+                                  }
+                                | { __typename: "GadgetRegexFieldValidation"; name: string; specID: string; pattern?: string | null }
+                                | null
+                              >;
+                            }
+                          | {
+                              __typename: "GadgetGenericFieldConfig";
+                              fieldType: GadgetFieldType;
+                              validations: Array<
+                                | { __typename: "GadgetGenericFieldValidation"; name: string; specID: string }
+                                | {
+                                    __typename: "GadgetOnlyImageFileFieldValidation";
+                                    name: string;
+                                    specID: string;
+                                    allowAnimatedImages: boolean;
+                                  }
+                                | {
+                                    __typename: "GadgetRangeFieldValidation";
+                                    name: string;
+                                    specID: string;
+                                    min?: number | null;
+                                    max?: number | null;
+                                  }
+                                | { __typename: "GadgetRegexFieldValidation"; name: string; specID: string; pattern?: string | null }
+                                | null
+                              >;
+                            }
+                          | {
+                              __typename: "GadgetHasManyConfig";
+                              isJoinModelHasManyField: boolean;
+                              fieldType: GadgetFieldType;
+                              relatedModel?: {
+                                __typename?: "GadgetModel";
+                                key: string;
+                                name: string;
+                                apiIdentifier: string;
+                                namespace?: Array<string> | null;
+                              } | null;
+                              inverseField?: { __typename?: "GadgetModelField"; apiIdentifier: string } | null;
+                              validations: Array<
+                                | { __typename: "GadgetGenericFieldValidation"; name: string; specID: string }
+                                | {
+                                    __typename: "GadgetOnlyImageFileFieldValidation";
+                                    name: string;
+                                    specID: string;
+                                    allowAnimatedImages: boolean;
+                                  }
+                                | {
+                                    __typename: "GadgetRangeFieldValidation";
+                                    name: string;
+                                    specID: string;
+                                    min?: number | null;
+                                    max?: number | null;
+                                  }
+                                | { __typename: "GadgetRegexFieldValidation"; name: string; specID: string; pattern?: string | null }
+                                | null
+                              >;
+                            }
+                          | {
+                              __typename: "GadgetHasManyThroughConfig";
+                              fieldType: GadgetFieldType;
+                              relatedModel?: {
+                                __typename?: "GadgetModel";
+                                key: string;
+                                apiIdentifier: string;
+                                namespace?: Array<string> | null;
+                              } | null;
+                              inverseField?: { __typename?: "GadgetModelField"; apiIdentifier: string } | null;
+                              joinModel?: {
+                                __typename?: "GadgetModel";
+                                key: string;
+                                apiIdentifier: string;
+                                namespace?: Array<string> | null;
+                              } | null;
+                              inverseJoinModelField?: { __typename?: "GadgetModelField"; apiIdentifier: string } | null;
+                              inverseRelatedModelField?: { __typename?: "GadgetModelField"; apiIdentifier: string } | null;
+                              validations: Array<
+                                | { __typename: "GadgetGenericFieldValidation"; name: string; specID: string }
+                                | {
+                                    __typename: "GadgetOnlyImageFileFieldValidation";
+                                    name: string;
+                                    specID: string;
+                                    allowAnimatedImages: boolean;
+                                  }
+                                | {
+                                    __typename: "GadgetRangeFieldValidation";
+                                    name: string;
+                                    specID: string;
+                                    min?: number | null;
+                                    max?: number | null;
+                                  }
+                                | { __typename: "GadgetRegexFieldValidation"; name: string; specID: string; pattern?: string | null }
+                                | null
+                              >;
+                            }
+                          | {
+                              __typename: "GadgetHasOneConfig";
+                              fieldType: GadgetFieldType;
+                              relatedModel?: {
+                                __typename?: "GadgetModel";
+                                key: string;
+                                apiIdentifier: string;
+                                namespace?: Array<string> | null;
+                              } | null;
+                              inverseField?: { __typename?: "GadgetModelField"; apiIdentifier: string } | null;
+                              validations: Array<
+                                | { __typename: "GadgetGenericFieldValidation"; name: string; specID: string }
+                                | {
+                                    __typename: "GadgetOnlyImageFileFieldValidation";
+                                    name: string;
+                                    specID: string;
+                                    allowAnimatedImages: boolean;
+                                  }
+                                | {
+                                    __typename: "GadgetRangeFieldValidation";
+                                    name: string;
+                                    specID: string;
+                                    min?: number | null;
+                                    max?: number | null;
+                                  }
+                                | { __typename: "GadgetRegexFieldValidation"; name: string; specID: string; pattern?: string | null }
+                                | null
+                              >;
+                            }
+                          | {
+                              __typename: "GadgetNumberConfig";
+                              decimals?: number | null;
+                              fieldType: GadgetFieldType;
+                              validations: Array<
+                                | { __typename: "GadgetGenericFieldValidation"; name: string; specID: string }
+                                | {
+                                    __typename: "GadgetOnlyImageFileFieldValidation";
+                                    name: string;
+                                    specID: string;
+                                    allowAnimatedImages: boolean;
+                                  }
+                                | {
+                                    __typename: "GadgetRangeFieldValidation";
+                                    name: string;
+                                    specID: string;
+                                    min?: number | null;
+                                    max?: number | null;
+                                  }
+                                | { __typename: "GadgetRegexFieldValidation"; name: string; specID: string; pattern?: string | null }
+                                | null
+                              >;
+                            }
+                          | {
+                              __typename: "GadgetObjectFieldConfig";
+                              name?: string | null;
+                              fieldType: GadgetFieldType;
+                              fields: Array<{
+                                __typename?: "GadgetModelField";
+                                sortable: boolean;
+                                filterable: boolean;
+                                name: string;
+                                apiIdentifier: string;
+                                fieldType: GadgetFieldType;
+                                requiredArgumentForInput: boolean;
+                                configuration:
+                                  | {
+                                      __typename: "GadgetBelongsToConfig";
+                                      fieldType: GadgetFieldType;
+                                      relatedModel?: {
+                                        __typename?: "GadgetModel";
+                                        key: string;
+                                        apiIdentifier: string;
+                                        namespace?: Array<string> | null;
+                                      } | null;
+                                      validations: Array<
+                                        | { __typename: "GadgetGenericFieldValidation"; name: string; specID: string }
+                                        | {
+                                            __typename: "GadgetOnlyImageFileFieldValidation";
+                                            name: string;
+                                            specID: string;
+                                            allowAnimatedImages: boolean;
+                                          }
+                                        | {
+                                            __typename: "GadgetRangeFieldValidation";
+                                            name: string;
+                                            specID: string;
+                                            min?: number | null;
+                                            max?: number | null;
+                                          }
+                                        | {
+                                            __typename: "GadgetRegexFieldValidation";
+                                            name: string;
+                                            specID: string;
+                                            pattern?: string | null;
+                                          }
+                                        | null
+                                      >;
+                                    }
+                                  | {
+                                      __typename: "GadgetDateTimeConfig";
+                                      includeTime: boolean;
+                                      fieldType: GadgetFieldType;
+                                      validations: Array<
+                                        | { __typename: "GadgetGenericFieldValidation"; name: string; specID: string }
+                                        | {
+                                            __typename: "GadgetOnlyImageFileFieldValidation";
+                                            name: string;
+                                            specID: string;
+                                            allowAnimatedImages: boolean;
+                                          }
+                                        | {
+                                            __typename: "GadgetRangeFieldValidation";
+                                            name: string;
+                                            specID: string;
+                                            min?: number | null;
+                                            max?: number | null;
+                                          }
+                                        | {
+                                            __typename: "GadgetRegexFieldValidation";
+                                            name: string;
+                                            specID: string;
+                                            pattern?: string | null;
+                                          }
+                                        | null
+                                      >;
+                                    }
+                                  | {
+                                      __typename: "GadgetEnumConfig";
+                                      allowMultiple: boolean;
+                                      allowOther: boolean;
+                                      fieldType: GadgetFieldType;
+                                      options: Array<{ __typename?: "GadgetEnumOption"; name: string; color: string }>;
+                                      validations: Array<
+                                        | { __typename: "GadgetGenericFieldValidation"; name: string; specID: string }
+                                        | {
+                                            __typename: "GadgetOnlyImageFileFieldValidation";
+                                            name: string;
+                                            specID: string;
+                                            allowAnimatedImages: boolean;
+                                          }
+                                        | {
+                                            __typename: "GadgetRangeFieldValidation";
+                                            name: string;
+                                            specID: string;
+                                            min?: number | null;
+                                            max?: number | null;
+                                          }
+                                        | {
+                                            __typename: "GadgetRegexFieldValidation";
+                                            name: string;
+                                            specID: string;
+                                            pattern?: string | null;
+                                          }
+                                        | null
+                                      >;
+                                    }
+                                  | {
+                                      __typename: "GadgetGenericFieldConfig";
+                                      fieldType: GadgetFieldType;
+                                      validations: Array<
+                                        | { __typename: "GadgetGenericFieldValidation"; name: string; specID: string }
+                                        | {
+                                            __typename: "GadgetOnlyImageFileFieldValidation";
+                                            name: string;
+                                            specID: string;
+                                            allowAnimatedImages: boolean;
+                                          }
+                                        | {
+                                            __typename: "GadgetRangeFieldValidation";
+                                            name: string;
+                                            specID: string;
+                                            min?: number | null;
+                                            max?: number | null;
+                                          }
+                                        | {
+                                            __typename: "GadgetRegexFieldValidation";
+                                            name: string;
+                                            specID: string;
+                                            pattern?: string | null;
+                                          }
+                                        | null
+                                      >;
+                                    }
+                                  | {
+                                      __typename: "GadgetHasManyConfig";
+                                      isJoinModelHasManyField: boolean;
+                                      fieldType: GadgetFieldType;
+                                      relatedModel?: {
+                                        __typename?: "GadgetModel";
+                                        key: string;
+                                        name: string;
+                                        apiIdentifier: string;
+                                        namespace?: Array<string> | null;
+                                      } | null;
+                                      inverseField?: { __typename?: "GadgetModelField"; apiIdentifier: string } | null;
+                                      validations: Array<
+                                        | { __typename: "GadgetGenericFieldValidation"; name: string; specID: string }
+                                        | {
+                                            __typename: "GadgetOnlyImageFileFieldValidation";
+                                            name: string;
+                                            specID: string;
+                                            allowAnimatedImages: boolean;
+                                          }
+                                        | {
+                                            __typename: "GadgetRangeFieldValidation";
+                                            name: string;
+                                            specID: string;
+                                            min?: number | null;
+                                            max?: number | null;
+                                          }
+                                        | {
+                                            __typename: "GadgetRegexFieldValidation";
+                                            name: string;
+                                            specID: string;
+                                            pattern?: string | null;
+                                          }
+                                        | null
+                                      >;
+                                    }
+                                  | {
+                                      __typename: "GadgetHasManyThroughConfig";
+                                      fieldType: GadgetFieldType;
+                                      relatedModel?: {
+                                        __typename?: "GadgetModel";
+                                        key: string;
+                                        apiIdentifier: string;
+                                        namespace?: Array<string> | null;
+                                      } | null;
+                                      inverseField?: { __typename?: "GadgetModelField"; apiIdentifier: string } | null;
+                                      joinModel?: {
+                                        __typename?: "GadgetModel";
+                                        key: string;
+                                        apiIdentifier: string;
+                                        namespace?: Array<string> | null;
+                                      } | null;
+                                      inverseJoinModelField?: { __typename?: "GadgetModelField"; apiIdentifier: string } | null;
+                                      inverseRelatedModelField?: { __typename?: "GadgetModelField"; apiIdentifier: string } | null;
+                                      validations: Array<
+                                        | { __typename: "GadgetGenericFieldValidation"; name: string; specID: string }
+                                        | {
+                                            __typename: "GadgetOnlyImageFileFieldValidation";
+                                            name: string;
+                                            specID: string;
+                                            allowAnimatedImages: boolean;
+                                          }
+                                        | {
+                                            __typename: "GadgetRangeFieldValidation";
+                                            name: string;
+                                            specID: string;
+                                            min?: number | null;
+                                            max?: number | null;
+                                          }
+                                        | {
+                                            __typename: "GadgetRegexFieldValidation";
+                                            name: string;
+                                            specID: string;
+                                            pattern?: string | null;
+                                          }
+                                        | null
+                                      >;
+                                    }
+                                  | {
+                                      __typename: "GadgetHasOneConfig";
+                                      fieldType: GadgetFieldType;
+                                      relatedModel?: {
+                                        __typename?: "GadgetModel";
+                                        key: string;
+                                        apiIdentifier: string;
+                                        namespace?: Array<string> | null;
+                                      } | null;
+                                      inverseField?: { __typename?: "GadgetModelField"; apiIdentifier: string } | null;
+                                      validations: Array<
+                                        | { __typename: "GadgetGenericFieldValidation"; name: string; specID: string }
+                                        | {
+                                            __typename: "GadgetOnlyImageFileFieldValidation";
+                                            name: string;
+                                            specID: string;
+                                            allowAnimatedImages: boolean;
+                                          }
+                                        | {
+                                            __typename: "GadgetRangeFieldValidation";
+                                            name: string;
+                                            specID: string;
+                                            min?: number | null;
+                                            max?: number | null;
+                                          }
+                                        | {
+                                            __typename: "GadgetRegexFieldValidation";
+                                            name: string;
+                                            specID: string;
+                                            pattern?: string | null;
+                                          }
+                                        | null
+                                      >;
+                                    }
+                                  | {
+                                      __typename: "GadgetNumberConfig";
+                                      decimals?: number | null;
+                                      fieldType: GadgetFieldType;
+                                      validations: Array<
+                                        | { __typename: "GadgetGenericFieldValidation"; name: string; specID: string }
+                                        | {
+                                            __typename: "GadgetOnlyImageFileFieldValidation";
+                                            name: string;
+                                            specID: string;
+                                            allowAnimatedImages: boolean;
+                                          }
+                                        | {
+                                            __typename: "GadgetRangeFieldValidation";
+                                            name: string;
+                                            specID: string;
+                                            min?: number | null;
+                                            max?: number | null;
+                                          }
+                                        | {
+                                            __typename: "GadgetRegexFieldValidation";
+                                            name: string;
+                                            specID: string;
+                                            pattern?: string | null;
+                                          }
+                                        | null
+                                      >;
+                                    }
+                                  | {
+                                      __typename: "GadgetObjectFieldConfig";
+                                      fieldType: GadgetFieldType;
+                                      validations: Array<
+                                        | { __typename: "GadgetGenericFieldValidation"; name: string; specID: string }
+                                        | {
+                                            __typename: "GadgetOnlyImageFileFieldValidation";
+                                            name: string;
+                                            specID: string;
+                                            allowAnimatedImages: boolean;
+                                          }
+                                        | {
+                                            __typename: "GadgetRangeFieldValidation";
+                                            name: string;
+                                            specID: string;
+                                            min?: number | null;
+                                            max?: number | null;
+                                          }
+                                        | {
+                                            __typename: "GadgetRegexFieldValidation";
+                                            name: string;
+                                            specID: string;
+                                            pattern?: string | null;
+                                          }
+                                        | null
+                                      >;
+                                    };
+                              }>;
+                              validations: Array<
+                                | { __typename: "GadgetGenericFieldValidation"; name: string; specID: string }
+                                | {
+                                    __typename: "GadgetOnlyImageFileFieldValidation";
+                                    name: string;
+                                    specID: string;
+                                    allowAnimatedImages: boolean;
+                                  }
+                                | {
+                                    __typename: "GadgetRangeFieldValidation";
+                                    name: string;
+                                    specID: string;
+                                    min?: number | null;
+                                    max?: number | null;
+                                  }
+                                | { __typename: "GadgetRegexFieldValidation"; name: string; specID: string; pattern?: string | null }
+                                | null
+                              >;
+                            };
+                      }>;
+                      validations: Array<
+                        | { __typename: "GadgetGenericFieldValidation"; name: string; specID: string }
+                        | { __typename: "GadgetOnlyImageFileFieldValidation"; name: string; specID: string; allowAnimatedImages: boolean }
+                        | {
+                            __typename: "GadgetRangeFieldValidation";
+                            name: string;
+                            specID: string;
+                            min?: number | null;
+                            max?: number | null;
+                          }
+                        | { __typename: "GadgetRegexFieldValidation"; name: string; specID: string; pattern?: string | null }
+                        | null
+                      >;
+                    };
+              }>;
+              validations: Array<
+                | { __typename: "GadgetGenericFieldValidation"; name: string; specID: string }
+                | { __typename: "GadgetOnlyImageFileFieldValidation"; name: string; specID: string; allowAnimatedImages: boolean }
+                | { __typename: "GadgetRangeFieldValidation"; name: string; specID: string; min?: number | null; max?: number | null }
+                | { __typename: "GadgetRegexFieldValidation"; name: string; specID: string; pattern?: string | null }
+                | null
+              >;
+            };
+      }>;
+      defaultDisplayField: { __typename?: "GadgetModelField"; name: string; apiIdentifier: string; fieldType: GadgetFieldType };
+    }>;
     model?: {
       __typename?: "GadgetModel";
+      key: string;
       name: string;
       apiIdentifier: string;
       defaultRecord: any;
@@ -13909,14 +15109,7 @@ export type ModelActionMetadataQuery = {
             | {
                 __typename: "GadgetBelongsToConfig";
                 fieldType: GadgetFieldType;
-                relatedModel?: {
-                  __typename?: "GadgetModel";
-                  key: string;
-                  apiIdentifier: string;
-                  namespace?: Array<string> | null;
-                  defaultDisplayField: { __typename?: "GadgetModelField"; name: string; apiIdentifier: string; fieldType: GadgetFieldType };
-                  fields?: Array<{ __typename?: "GadgetModelField"; name: string; apiIdentifier: string; fieldType: GadgetFieldType }>;
-                } | null;
+                relatedModel?: { __typename?: "GadgetModel"; key: string; apiIdentifier: string; namespace?: Array<string> | null } | null;
                 validations: Array<
                   | { __typename: "GadgetGenericFieldValidation"; name: string; specID: string }
                   | { __typename: "GadgetOnlyImageFileFieldValidation"; name: string; specID: string; allowAnimatedImages: boolean }
@@ -13969,10 +15162,9 @@ export type ModelActionMetadataQuery = {
                 relatedModel?: {
                   __typename?: "GadgetModel";
                   key: string;
+                  name: string;
                   apiIdentifier: string;
                   namespace?: Array<string> | null;
-                  defaultDisplayField: { __typename?: "GadgetModelField"; name: string; apiIdentifier: string; fieldType: GadgetFieldType };
-                  fields?: Array<{ __typename?: "GadgetModelField"; name: string; apiIdentifier: string; fieldType: GadgetFieldType }>;
                 } | null;
                 inverseField?: { __typename?: "GadgetModelField"; apiIdentifier: string } | null;
                 validations: Array<
@@ -13986,22 +15178,9 @@ export type ModelActionMetadataQuery = {
             | {
                 __typename: "GadgetHasManyThroughConfig";
                 fieldType: GadgetFieldType;
-                relatedModel?: {
-                  __typename?: "GadgetModel";
-                  key: string;
-                  apiIdentifier: string;
-                  namespace?: Array<string> | null;
-                  defaultDisplayField: { __typename?: "GadgetModelField"; name: string; apiIdentifier: string; fieldType: GadgetFieldType };
-                  fields?: Array<{ __typename?: "GadgetModelField"; name: string; apiIdentifier: string; fieldType: GadgetFieldType }>;
-                } | null;
+                relatedModel?: { __typename?: "GadgetModel"; key: string; apiIdentifier: string; namespace?: Array<string> | null } | null;
                 inverseField?: { __typename?: "GadgetModelField"; apiIdentifier: string } | null;
-                joinModel?: {
-                  __typename?: "GadgetModel";
-                  key: string;
-                  apiIdentifier: string;
-                  namespace?: Array<string> | null;
-                  defaultDisplayField: { __typename?: "GadgetModelField"; name: string; apiIdentifier: string; fieldType: GadgetFieldType };
-                } | null;
+                joinModel?: { __typename?: "GadgetModel"; key: string; apiIdentifier: string; namespace?: Array<string> | null } | null;
                 inverseJoinModelField?: { __typename?: "GadgetModelField"; apiIdentifier: string } | null;
                 inverseRelatedModelField?: { __typename?: "GadgetModelField"; apiIdentifier: string } | null;
                 validations: Array<
@@ -14015,14 +15194,7 @@ export type ModelActionMetadataQuery = {
             | {
                 __typename: "GadgetHasOneConfig";
                 fieldType: GadgetFieldType;
-                relatedModel?: {
-                  __typename?: "GadgetModel";
-                  key: string;
-                  apiIdentifier: string;
-                  namespace?: Array<string> | null;
-                  defaultDisplayField: { __typename?: "GadgetModelField"; name: string; apiIdentifier: string; fieldType: GadgetFieldType };
-                  fields?: Array<{ __typename?: "GadgetModelField"; name: string; apiIdentifier: string; fieldType: GadgetFieldType }>;
-                } | null;
+                relatedModel?: { __typename?: "GadgetModel"; key: string; apiIdentifier: string; namespace?: Array<string> | null } | null;
                 inverseField?: { __typename?: "GadgetModelField"; apiIdentifier: string } | null;
                 validations: Array<
                   | { __typename: "GadgetGenericFieldValidation"; name: string; specID: string }
@@ -14065,18 +15237,6 @@ export type ModelActionMetadataQuery = {
                           key: string;
                           apiIdentifier: string;
                           namespace?: Array<string> | null;
-                          defaultDisplayField: {
-                            __typename?: "GadgetModelField";
-                            name: string;
-                            apiIdentifier: string;
-                            fieldType: GadgetFieldType;
-                          };
-                          fields?: Array<{
-                            __typename?: "GadgetModelField";
-                            name: string;
-                            apiIdentifier: string;
-                            fieldType: GadgetFieldType;
-                          }>;
                         } | null;
                         validations: Array<
                           | { __typename: "GadgetGenericFieldValidation"; name: string; specID: string }
@@ -14154,20 +15314,9 @@ export type ModelActionMetadataQuery = {
                         relatedModel?: {
                           __typename?: "GadgetModel";
                           key: string;
+                          name: string;
                           apiIdentifier: string;
                           namespace?: Array<string> | null;
-                          defaultDisplayField: {
-                            __typename?: "GadgetModelField";
-                            name: string;
-                            apiIdentifier: string;
-                            fieldType: GadgetFieldType;
-                          };
-                          fields?: Array<{
-                            __typename?: "GadgetModelField";
-                            name: string;
-                            apiIdentifier: string;
-                            fieldType: GadgetFieldType;
-                          }>;
                         } | null;
                         inverseField?: { __typename?: "GadgetModelField"; apiIdentifier: string } | null;
                         validations: Array<
@@ -14192,18 +15341,6 @@ export type ModelActionMetadataQuery = {
                           key: string;
                           apiIdentifier: string;
                           namespace?: Array<string> | null;
-                          defaultDisplayField: {
-                            __typename?: "GadgetModelField";
-                            name: string;
-                            apiIdentifier: string;
-                            fieldType: GadgetFieldType;
-                          };
-                          fields?: Array<{
-                            __typename?: "GadgetModelField";
-                            name: string;
-                            apiIdentifier: string;
-                            fieldType: GadgetFieldType;
-                          }>;
                         } | null;
                         inverseField?: { __typename?: "GadgetModelField"; apiIdentifier: string } | null;
                         joinModel?: {
@@ -14211,12 +15348,6 @@ export type ModelActionMetadataQuery = {
                           key: string;
                           apiIdentifier: string;
                           namespace?: Array<string> | null;
-                          defaultDisplayField: {
-                            __typename?: "GadgetModelField";
-                            name: string;
-                            apiIdentifier: string;
-                            fieldType: GadgetFieldType;
-                          };
                         } | null;
                         inverseJoinModelField?: { __typename?: "GadgetModelField"; apiIdentifier: string } | null;
                         inverseRelatedModelField?: { __typename?: "GadgetModelField"; apiIdentifier: string } | null;
@@ -14242,18 +15373,6 @@ export type ModelActionMetadataQuery = {
                           key: string;
                           apiIdentifier: string;
                           namespace?: Array<string> | null;
-                          defaultDisplayField: {
-                            __typename?: "GadgetModelField";
-                            name: string;
-                            apiIdentifier: string;
-                            fieldType: GadgetFieldType;
-                          };
-                          fields?: Array<{
-                            __typename?: "GadgetModelField";
-                            name: string;
-                            apiIdentifier: string;
-                            fieldType: GadgetFieldType;
-                          }>;
                         } | null;
                         inverseField?: { __typename?: "GadgetModelField"; apiIdentifier: string } | null;
                         validations: Array<
@@ -14309,18 +15428,6 @@ export type ModelActionMetadataQuery = {
                                   key: string;
                                   apiIdentifier: string;
                                   namespace?: Array<string> | null;
-                                  defaultDisplayField: {
-                                    __typename?: "GadgetModelField";
-                                    name: string;
-                                    apiIdentifier: string;
-                                    fieldType: GadgetFieldType;
-                                  };
-                                  fields?: Array<{
-                                    __typename?: "GadgetModelField";
-                                    name: string;
-                                    apiIdentifier: string;
-                                    fieldType: GadgetFieldType;
-                                  }>;
                                 } | null;
                                 validations: Array<
                                   | { __typename: "GadgetGenericFieldValidation"; name: string; specID: string }
@@ -14418,20 +15525,9 @@ export type ModelActionMetadataQuery = {
                                 relatedModel?: {
                                   __typename?: "GadgetModel";
                                   key: string;
+                                  name: string;
                                   apiIdentifier: string;
                                   namespace?: Array<string> | null;
-                                  defaultDisplayField: {
-                                    __typename?: "GadgetModelField";
-                                    name: string;
-                                    apiIdentifier: string;
-                                    fieldType: GadgetFieldType;
-                                  };
-                                  fields?: Array<{
-                                    __typename?: "GadgetModelField";
-                                    name: string;
-                                    apiIdentifier: string;
-                                    fieldType: GadgetFieldType;
-                                  }>;
                                 } | null;
                                 inverseField?: { __typename?: "GadgetModelField"; apiIdentifier: string } | null;
                                 validations: Array<
@@ -14461,18 +15557,6 @@ export type ModelActionMetadataQuery = {
                                   key: string;
                                   apiIdentifier: string;
                                   namespace?: Array<string> | null;
-                                  defaultDisplayField: {
-                                    __typename?: "GadgetModelField";
-                                    name: string;
-                                    apiIdentifier: string;
-                                    fieldType: GadgetFieldType;
-                                  };
-                                  fields?: Array<{
-                                    __typename?: "GadgetModelField";
-                                    name: string;
-                                    apiIdentifier: string;
-                                    fieldType: GadgetFieldType;
-                                  }>;
                                 } | null;
                                 inverseField?: { __typename?: "GadgetModelField"; apiIdentifier: string } | null;
                                 joinModel?: {
@@ -14480,12 +15564,6 @@ export type ModelActionMetadataQuery = {
                                   key: string;
                                   apiIdentifier: string;
                                   namespace?: Array<string> | null;
-                                  defaultDisplayField: {
-                                    __typename?: "GadgetModelField";
-                                    name: string;
-                                    apiIdentifier: string;
-                                    fieldType: GadgetFieldType;
-                                  };
                                 } | null;
                                 inverseJoinModelField?: { __typename?: "GadgetModelField"; apiIdentifier: string } | null;
                                 inverseRelatedModelField?: { __typename?: "GadgetModelField"; apiIdentifier: string } | null;
@@ -14516,18 +15594,6 @@ export type ModelActionMetadataQuery = {
                                   key: string;
                                   apiIdentifier: string;
                                   namespace?: Array<string> | null;
-                                  defaultDisplayField: {
-                                    __typename?: "GadgetModelField";
-                                    name: string;
-                                    apiIdentifier: string;
-                                    fieldType: GadgetFieldType;
-                                  };
-                                  fields?: Array<{
-                                    __typename?: "GadgetModelField";
-                                    name: string;
-                                    apiIdentifier: string;
-                                    fieldType: GadgetFieldType;
-                                  }>;
                                 } | null;
                                 inverseField?: { __typename?: "GadgetModelField"; apiIdentifier: string } | null;
                                 validations: Array<
@@ -14593,18 +15659,6 @@ export type ModelActionMetadataQuery = {
                                           key: string;
                                           apiIdentifier: string;
                                           namespace?: Array<string> | null;
-                                          defaultDisplayField: {
-                                            __typename?: "GadgetModelField";
-                                            name: string;
-                                            apiIdentifier: string;
-                                            fieldType: GadgetFieldType;
-                                          };
-                                          fields?: Array<{
-                                            __typename?: "GadgetModelField";
-                                            name: string;
-                                            apiIdentifier: string;
-                                            fieldType: GadgetFieldType;
-                                          }>;
                                         } | null;
                                         validations: Array<
                                           | { __typename: "GadgetGenericFieldValidation"; name: string; specID: string }
@@ -14722,20 +15776,9 @@ export type ModelActionMetadataQuery = {
                                         relatedModel?: {
                                           __typename?: "GadgetModel";
                                           key: string;
+                                          name: string;
                                           apiIdentifier: string;
                                           namespace?: Array<string> | null;
-                                          defaultDisplayField: {
-                                            __typename?: "GadgetModelField";
-                                            name: string;
-                                            apiIdentifier: string;
-                                            fieldType: GadgetFieldType;
-                                          };
-                                          fields?: Array<{
-                                            __typename?: "GadgetModelField";
-                                            name: string;
-                                            apiIdentifier: string;
-                                            fieldType: GadgetFieldType;
-                                          }>;
                                         } | null;
                                         inverseField?: { __typename?: "GadgetModelField"; apiIdentifier: string } | null;
                                         validations: Array<
@@ -14770,18 +15813,6 @@ export type ModelActionMetadataQuery = {
                                           key: string;
                                           apiIdentifier: string;
                                           namespace?: Array<string> | null;
-                                          defaultDisplayField: {
-                                            __typename?: "GadgetModelField";
-                                            name: string;
-                                            apiIdentifier: string;
-                                            fieldType: GadgetFieldType;
-                                          };
-                                          fields?: Array<{
-                                            __typename?: "GadgetModelField";
-                                            name: string;
-                                            apiIdentifier: string;
-                                            fieldType: GadgetFieldType;
-                                          }>;
                                         } | null;
                                         inverseField?: { __typename?: "GadgetModelField"; apiIdentifier: string } | null;
                                         joinModel?: {
@@ -14789,12 +15820,6 @@ export type ModelActionMetadataQuery = {
                                           key: string;
                                           apiIdentifier: string;
                                           namespace?: Array<string> | null;
-                                          defaultDisplayField: {
-                                            __typename?: "GadgetModelField";
-                                            name: string;
-                                            apiIdentifier: string;
-                                            fieldType: GadgetFieldType;
-                                          };
                                         } | null;
                                         inverseJoinModelField?: { __typename?: "GadgetModelField"; apiIdentifier: string } | null;
                                         inverseRelatedModelField?: { __typename?: "GadgetModelField"; apiIdentifier: string } | null;
@@ -14830,18 +15855,6 @@ export type ModelActionMetadataQuery = {
                                           key: string;
                                           apiIdentifier: string;
                                           namespace?: Array<string> | null;
-                                          defaultDisplayField: {
-                                            __typename?: "GadgetModelField";
-                                            name: string;
-                                            apiIdentifier: string;
-                                            fieldType: GadgetFieldType;
-                                          };
-                                          fields?: Array<{
-                                            __typename?: "GadgetModelField";
-                                            name: string;
-                                            apiIdentifier: string;
-                                            fieldType: GadgetFieldType;
-                                          }>;
                                         } | null;
                                         inverseField?: { __typename?: "GadgetModelField"; apiIdentifier: string } | null;
                                         validations: Array<
@@ -14998,14 +16011,7 @@ export type GlobalActionMetadataQuery = {
           | {
               __typename: "GadgetBelongsToConfig";
               fieldType: GadgetFieldType;
-              relatedModel?: {
-                __typename?: "GadgetModel";
-                key: string;
-                apiIdentifier: string;
-                namespace?: Array<string> | null;
-                defaultDisplayField: { __typename?: "GadgetModelField"; name: string; apiIdentifier: string; fieldType: GadgetFieldType };
-                fields?: Array<{ __typename?: "GadgetModelField"; name: string; apiIdentifier: string; fieldType: GadgetFieldType }>;
-              } | null;
+              relatedModel?: { __typename?: "GadgetModel"; key: string; apiIdentifier: string; namespace?: Array<string> | null } | null;
               validations: Array<
                 | { __typename: "GadgetGenericFieldValidation"; name: string; specID: string }
                 | { __typename: "GadgetOnlyImageFileFieldValidation"; name: string; specID: string; allowAnimatedImages: boolean }
@@ -15058,10 +16064,9 @@ export type GlobalActionMetadataQuery = {
               relatedModel?: {
                 __typename?: "GadgetModel";
                 key: string;
+                name: string;
                 apiIdentifier: string;
                 namespace?: Array<string> | null;
-                defaultDisplayField: { __typename?: "GadgetModelField"; name: string; apiIdentifier: string; fieldType: GadgetFieldType };
-                fields?: Array<{ __typename?: "GadgetModelField"; name: string; apiIdentifier: string; fieldType: GadgetFieldType }>;
               } | null;
               inverseField?: { __typename?: "GadgetModelField"; apiIdentifier: string } | null;
               validations: Array<
@@ -15075,22 +16080,9 @@ export type GlobalActionMetadataQuery = {
           | {
               __typename: "GadgetHasManyThroughConfig";
               fieldType: GadgetFieldType;
-              relatedModel?: {
-                __typename?: "GadgetModel";
-                key: string;
-                apiIdentifier: string;
-                namespace?: Array<string> | null;
-                defaultDisplayField: { __typename?: "GadgetModelField"; name: string; apiIdentifier: string; fieldType: GadgetFieldType };
-                fields?: Array<{ __typename?: "GadgetModelField"; name: string; apiIdentifier: string; fieldType: GadgetFieldType }>;
-              } | null;
+              relatedModel?: { __typename?: "GadgetModel"; key: string; apiIdentifier: string; namespace?: Array<string> | null } | null;
               inverseField?: { __typename?: "GadgetModelField"; apiIdentifier: string } | null;
-              joinModel?: {
-                __typename?: "GadgetModel";
-                key: string;
-                apiIdentifier: string;
-                namespace?: Array<string> | null;
-                defaultDisplayField: { __typename?: "GadgetModelField"; name: string; apiIdentifier: string; fieldType: GadgetFieldType };
-              } | null;
+              joinModel?: { __typename?: "GadgetModel"; key: string; apiIdentifier: string; namespace?: Array<string> | null } | null;
               inverseJoinModelField?: { __typename?: "GadgetModelField"; apiIdentifier: string } | null;
               inverseRelatedModelField?: { __typename?: "GadgetModelField"; apiIdentifier: string } | null;
               validations: Array<
@@ -15104,14 +16096,7 @@ export type GlobalActionMetadataQuery = {
           | {
               __typename: "GadgetHasOneConfig";
               fieldType: GadgetFieldType;
-              relatedModel?: {
-                __typename?: "GadgetModel";
-                key: string;
-                apiIdentifier: string;
-                namespace?: Array<string> | null;
-                defaultDisplayField: { __typename?: "GadgetModelField"; name: string; apiIdentifier: string; fieldType: GadgetFieldType };
-                fields?: Array<{ __typename?: "GadgetModelField"; name: string; apiIdentifier: string; fieldType: GadgetFieldType }>;
-              } | null;
+              relatedModel?: { __typename?: "GadgetModel"; key: string; apiIdentifier: string; namespace?: Array<string> | null } | null;
               inverseField?: { __typename?: "GadgetModelField"; apiIdentifier: string } | null;
               validations: Array<
                 | { __typename: "GadgetGenericFieldValidation"; name: string; specID: string }
@@ -15154,18 +16139,6 @@ export type GlobalActionMetadataQuery = {
                         key: string;
                         apiIdentifier: string;
                         namespace?: Array<string> | null;
-                        defaultDisplayField: {
-                          __typename?: "GadgetModelField";
-                          name: string;
-                          apiIdentifier: string;
-                          fieldType: GadgetFieldType;
-                        };
-                        fields?: Array<{
-                          __typename?: "GadgetModelField";
-                          name: string;
-                          apiIdentifier: string;
-                          fieldType: GadgetFieldType;
-                        }>;
                       } | null;
                       validations: Array<
                         | { __typename: "GadgetGenericFieldValidation"; name: string; specID: string }
@@ -15243,20 +16216,9 @@ export type GlobalActionMetadataQuery = {
                       relatedModel?: {
                         __typename?: "GadgetModel";
                         key: string;
+                        name: string;
                         apiIdentifier: string;
                         namespace?: Array<string> | null;
-                        defaultDisplayField: {
-                          __typename?: "GadgetModelField";
-                          name: string;
-                          apiIdentifier: string;
-                          fieldType: GadgetFieldType;
-                        };
-                        fields?: Array<{
-                          __typename?: "GadgetModelField";
-                          name: string;
-                          apiIdentifier: string;
-                          fieldType: GadgetFieldType;
-                        }>;
                       } | null;
                       inverseField?: { __typename?: "GadgetModelField"; apiIdentifier: string } | null;
                       validations: Array<
@@ -15281,18 +16243,6 @@ export type GlobalActionMetadataQuery = {
                         key: string;
                         apiIdentifier: string;
                         namespace?: Array<string> | null;
-                        defaultDisplayField: {
-                          __typename?: "GadgetModelField";
-                          name: string;
-                          apiIdentifier: string;
-                          fieldType: GadgetFieldType;
-                        };
-                        fields?: Array<{
-                          __typename?: "GadgetModelField";
-                          name: string;
-                          apiIdentifier: string;
-                          fieldType: GadgetFieldType;
-                        }>;
                       } | null;
                       inverseField?: { __typename?: "GadgetModelField"; apiIdentifier: string } | null;
                       joinModel?: {
@@ -15300,12 +16250,6 @@ export type GlobalActionMetadataQuery = {
                         key: string;
                         apiIdentifier: string;
                         namespace?: Array<string> | null;
-                        defaultDisplayField: {
-                          __typename?: "GadgetModelField";
-                          name: string;
-                          apiIdentifier: string;
-                          fieldType: GadgetFieldType;
-                        };
                       } | null;
                       inverseJoinModelField?: { __typename?: "GadgetModelField"; apiIdentifier: string } | null;
                       inverseRelatedModelField?: { __typename?: "GadgetModelField"; apiIdentifier: string } | null;
@@ -15331,18 +16275,6 @@ export type GlobalActionMetadataQuery = {
                         key: string;
                         apiIdentifier: string;
                         namespace?: Array<string> | null;
-                        defaultDisplayField: {
-                          __typename?: "GadgetModelField";
-                          name: string;
-                          apiIdentifier: string;
-                          fieldType: GadgetFieldType;
-                        };
-                        fields?: Array<{
-                          __typename?: "GadgetModelField";
-                          name: string;
-                          apiIdentifier: string;
-                          fieldType: GadgetFieldType;
-                        }>;
                       } | null;
                       inverseField?: { __typename?: "GadgetModelField"; apiIdentifier: string } | null;
                       validations: Array<
@@ -15398,18 +16330,6 @@ export type GlobalActionMetadataQuery = {
                                 key: string;
                                 apiIdentifier: string;
                                 namespace?: Array<string> | null;
-                                defaultDisplayField: {
-                                  __typename?: "GadgetModelField";
-                                  name: string;
-                                  apiIdentifier: string;
-                                  fieldType: GadgetFieldType;
-                                };
-                                fields?: Array<{
-                                  __typename?: "GadgetModelField";
-                                  name: string;
-                                  apiIdentifier: string;
-                                  fieldType: GadgetFieldType;
-                                }>;
                               } | null;
                               validations: Array<
                                 | { __typename: "GadgetGenericFieldValidation"; name: string; specID: string }
@@ -15507,20 +16427,9 @@ export type GlobalActionMetadataQuery = {
                               relatedModel?: {
                                 __typename?: "GadgetModel";
                                 key: string;
+                                name: string;
                                 apiIdentifier: string;
                                 namespace?: Array<string> | null;
-                                defaultDisplayField: {
-                                  __typename?: "GadgetModelField";
-                                  name: string;
-                                  apiIdentifier: string;
-                                  fieldType: GadgetFieldType;
-                                };
-                                fields?: Array<{
-                                  __typename?: "GadgetModelField";
-                                  name: string;
-                                  apiIdentifier: string;
-                                  fieldType: GadgetFieldType;
-                                }>;
                               } | null;
                               inverseField?: { __typename?: "GadgetModelField"; apiIdentifier: string } | null;
                               validations: Array<
@@ -15550,18 +16459,6 @@ export type GlobalActionMetadataQuery = {
                                 key: string;
                                 apiIdentifier: string;
                                 namespace?: Array<string> | null;
-                                defaultDisplayField: {
-                                  __typename?: "GadgetModelField";
-                                  name: string;
-                                  apiIdentifier: string;
-                                  fieldType: GadgetFieldType;
-                                };
-                                fields?: Array<{
-                                  __typename?: "GadgetModelField";
-                                  name: string;
-                                  apiIdentifier: string;
-                                  fieldType: GadgetFieldType;
-                                }>;
                               } | null;
                               inverseField?: { __typename?: "GadgetModelField"; apiIdentifier: string } | null;
                               joinModel?: {
@@ -15569,12 +16466,6 @@ export type GlobalActionMetadataQuery = {
                                 key: string;
                                 apiIdentifier: string;
                                 namespace?: Array<string> | null;
-                                defaultDisplayField: {
-                                  __typename?: "GadgetModelField";
-                                  name: string;
-                                  apiIdentifier: string;
-                                  fieldType: GadgetFieldType;
-                                };
                               } | null;
                               inverseJoinModelField?: { __typename?: "GadgetModelField"; apiIdentifier: string } | null;
                               inverseRelatedModelField?: { __typename?: "GadgetModelField"; apiIdentifier: string } | null;
@@ -15605,18 +16496,6 @@ export type GlobalActionMetadataQuery = {
                                 key: string;
                                 apiIdentifier: string;
                                 namespace?: Array<string> | null;
-                                defaultDisplayField: {
-                                  __typename?: "GadgetModelField";
-                                  name: string;
-                                  apiIdentifier: string;
-                                  fieldType: GadgetFieldType;
-                                };
-                                fields?: Array<{
-                                  __typename?: "GadgetModelField";
-                                  name: string;
-                                  apiIdentifier: string;
-                                  fieldType: GadgetFieldType;
-                                }>;
                               } | null;
                               inverseField?: { __typename?: "GadgetModelField"; apiIdentifier: string } | null;
                               validations: Array<
@@ -15682,18 +16561,6 @@ export type GlobalActionMetadataQuery = {
                                         key: string;
                                         apiIdentifier: string;
                                         namespace?: Array<string> | null;
-                                        defaultDisplayField: {
-                                          __typename?: "GadgetModelField";
-                                          name: string;
-                                          apiIdentifier: string;
-                                          fieldType: GadgetFieldType;
-                                        };
-                                        fields?: Array<{
-                                          __typename?: "GadgetModelField";
-                                          name: string;
-                                          apiIdentifier: string;
-                                          fieldType: GadgetFieldType;
-                                        }>;
                                       } | null;
                                       validations: Array<
                                         | { __typename: "GadgetGenericFieldValidation"; name: string; specID: string }
@@ -15811,20 +16678,9 @@ export type GlobalActionMetadataQuery = {
                                       relatedModel?: {
                                         __typename?: "GadgetModel";
                                         key: string;
+                                        name: string;
                                         apiIdentifier: string;
                                         namespace?: Array<string> | null;
-                                        defaultDisplayField: {
-                                          __typename?: "GadgetModelField";
-                                          name: string;
-                                          apiIdentifier: string;
-                                          fieldType: GadgetFieldType;
-                                        };
-                                        fields?: Array<{
-                                          __typename?: "GadgetModelField";
-                                          name: string;
-                                          apiIdentifier: string;
-                                          fieldType: GadgetFieldType;
-                                        }>;
                                       } | null;
                                       inverseField?: { __typename?: "GadgetModelField"; apiIdentifier: string } | null;
                                       validations: Array<
@@ -15859,18 +16715,6 @@ export type GlobalActionMetadataQuery = {
                                         key: string;
                                         apiIdentifier: string;
                                         namespace?: Array<string> | null;
-                                        defaultDisplayField: {
-                                          __typename?: "GadgetModelField";
-                                          name: string;
-                                          apiIdentifier: string;
-                                          fieldType: GadgetFieldType;
-                                        };
-                                        fields?: Array<{
-                                          __typename?: "GadgetModelField";
-                                          name: string;
-                                          apiIdentifier: string;
-                                          fieldType: GadgetFieldType;
-                                        }>;
                                       } | null;
                                       inverseField?: { __typename?: "GadgetModelField"; apiIdentifier: string } | null;
                                       joinModel?: {
@@ -15878,12 +16722,6 @@ export type GlobalActionMetadataQuery = {
                                         key: string;
                                         apiIdentifier: string;
                                         namespace?: Array<string> | null;
-                                        defaultDisplayField: {
-                                          __typename?: "GadgetModelField";
-                                          name: string;
-                                          apiIdentifier: string;
-                                          fieldType: GadgetFieldType;
-                                        };
                                       } | null;
                                       inverseJoinModelField?: { __typename?: "GadgetModelField"; apiIdentifier: string } | null;
                                       inverseRelatedModelField?: { __typename?: "GadgetModelField"; apiIdentifier: string } | null;
@@ -15919,18 +16757,6 @@ export type GlobalActionMetadataQuery = {
                                         key: string;
                                         apiIdentifier: string;
                                         namespace?: Array<string> | null;
-                                        defaultDisplayField: {
-                                          __typename?: "GadgetModelField";
-                                          name: string;
-                                          apiIdentifier: string;
-                                          fieldType: GadgetFieldType;
-                                        };
-                                        fields?: Array<{
-                                          __typename?: "GadgetModelField";
-                                          name: string;
-                                          apiIdentifier: string;
-                                          fieldType: GadgetFieldType;
-                                        }>;
                                       } | null;
                                       inverseField?: { __typename?: "GadgetModelField"; apiIdentifier: string } | null;
                                       validations: Array<
@@ -16072,24 +16898,6 @@ export type RolesMetadataQuery = {
   };
 };
 
-export const RelatedModelFieldFragmentFragmentDoc = {
-  kind: "Document",
-  definitions: [
-    {
-      kind: "FragmentDefinition",
-      name: { kind: "Name", value: "RelatedModelFieldFragment" },
-      typeCondition: { kind: "NamedType", name: { kind: "Name", value: "GadgetModelField" } },
-      selectionSet: {
-        kind: "SelectionSet",
-        selections: [
-          { kind: "Field", name: { kind: "Name", value: "name" } },
-          { kind: "Field", name: { kind: "Name", value: "apiIdentifier" } },
-          { kind: "Field", name: { kind: "Name", value: "fieldType" } },
-        ],
-      },
-    },
-  ],
-} as unknown as DocumentNode<RelatedModelFieldFragmentFragment, unknown>;
 export const FieldMetadataFragmentDoc = {
   kind: "Document",
   definitions: [
@@ -16196,39 +17004,6 @@ export const FieldMetadataFragmentDoc = {
                             { kind: "Field", name: { kind: "Name", value: "key" } },
                             { kind: "Field", name: { kind: "Name", value: "apiIdentifier" } },
                             { kind: "Field", name: { kind: "Name", value: "namespace" } },
-                            {
-                              kind: "Field",
-                              name: { kind: "Name", value: "defaultDisplayField" },
-                              selectionSet: {
-                                kind: "SelectionSet",
-                                selections: [
-                                  { kind: "Field", name: { kind: "Name", value: "name" } },
-                                  { kind: "Field", name: { kind: "Name", value: "apiIdentifier" } },
-                                  { kind: "Field", name: { kind: "Name", value: "fieldType" } },
-                                ],
-                              },
-                            },
-                            {
-                              kind: "Field",
-                              name: { kind: "Name", value: "fields" },
-                              directives: [
-                                {
-                                  kind: "Directive",
-                                  name: { kind: "Name", value: "include" },
-                                  arguments: [
-                                    {
-                                      kind: "Argument",
-                                      name: { kind: "Name", value: "if" },
-                                      value: { kind: "Variable", name: { kind: "Name", value: "includeRelatedFields" } },
-                                    },
-                                  ],
-                                },
-                              ],
-                              selectionSet: {
-                                kind: "SelectionSet",
-                                selections: [{ kind: "FragmentSpread", name: { kind: "Name", value: "RelatedModelFieldFragment" } }],
-                              },
-                            },
                           ],
                         },
                       },
@@ -16249,18 +17024,6 @@ export const FieldMetadataFragmentDoc = {
                             { kind: "Field", name: { kind: "Name", value: "key" } },
                             { kind: "Field", name: { kind: "Name", value: "apiIdentifier" } },
                             { kind: "Field", name: { kind: "Name", value: "namespace" } },
-                            {
-                              kind: "Field",
-                              name: { kind: "Name", value: "defaultDisplayField" },
-                              selectionSet: {
-                                kind: "SelectionSet",
-                                selections: [
-                                  { kind: "Field", name: { kind: "Name", value: "name" } },
-                                  { kind: "Field", name: { kind: "Name", value: "apiIdentifier" } },
-                                  { kind: "Field", name: { kind: "Name", value: "fieldType" } },
-                                ],
-                              },
-                            },
                           ],
                         },
                       },
@@ -16297,41 +17060,9 @@ export const FieldMetadataFragmentDoc = {
                           kind: "SelectionSet",
                           selections: [
                             { kind: "Field", name: { kind: "Name", value: "key" } },
+                            { kind: "Field", name: { kind: "Name", value: "name" } },
                             { kind: "Field", name: { kind: "Name", value: "apiIdentifier" } },
                             { kind: "Field", name: { kind: "Name", value: "namespace" } },
-                            {
-                              kind: "Field",
-                              name: { kind: "Name", value: "defaultDisplayField" },
-                              selectionSet: {
-                                kind: "SelectionSet",
-                                selections: [
-                                  { kind: "Field", name: { kind: "Name", value: "name" } },
-                                  { kind: "Field", name: { kind: "Name", value: "apiIdentifier" } },
-                                  { kind: "Field", name: { kind: "Name", value: "fieldType" } },
-                                ],
-                              },
-                            },
-                            {
-                              kind: "Field",
-                              name: { kind: "Name", value: "fields" },
-                              directives: [
-                                {
-                                  kind: "Directive",
-                                  name: { kind: "Name", value: "include" },
-                                  arguments: [
-                                    {
-                                      kind: "Argument",
-                                      name: { kind: "Name", value: "if" },
-                                      value: { kind: "Variable", name: { kind: "Name", value: "includeRelatedFields" } },
-                                    },
-                                  ],
-                                },
-                              ],
-                              selectionSet: {
-                                kind: "SelectionSet",
-                                selections: [{ kind: "FragmentSpread", name: { kind: "Name", value: "RelatedModelFieldFragment" } }],
-                              },
-                            },
                           ],
                         },
                       },
@@ -16361,39 +17092,6 @@ export const FieldMetadataFragmentDoc = {
                             { kind: "Field", name: { kind: "Name", value: "key" } },
                             { kind: "Field", name: { kind: "Name", value: "apiIdentifier" } },
                             { kind: "Field", name: { kind: "Name", value: "namespace" } },
-                            {
-                              kind: "Field",
-                              name: { kind: "Name", value: "defaultDisplayField" },
-                              selectionSet: {
-                                kind: "SelectionSet",
-                                selections: [
-                                  { kind: "Field", name: { kind: "Name", value: "name" } },
-                                  { kind: "Field", name: { kind: "Name", value: "apiIdentifier" } },
-                                  { kind: "Field", name: { kind: "Name", value: "fieldType" } },
-                                ],
-                              },
-                            },
-                            {
-                              kind: "Field",
-                              name: { kind: "Name", value: "fields" },
-                              directives: [
-                                {
-                                  kind: "Directive",
-                                  name: { kind: "Name", value: "include" },
-                                  arguments: [
-                                    {
-                                      kind: "Argument",
-                                      name: { kind: "Name", value: "if" },
-                                      value: { kind: "Variable", name: { kind: "Name", value: "includeRelatedFields" } },
-                                    },
-                                  ],
-                                },
-                              ],
-                              selectionSet: {
-                                kind: "SelectionSet",
-                                selections: [{ kind: "FragmentSpread", name: { kind: "Name", value: "RelatedModelFieldFragment" } }],
-                              },
-                            },
                           ],
                         },
                       },
@@ -16423,39 +17121,6 @@ export const FieldMetadataFragmentDoc = {
                             { kind: "Field", name: { kind: "Name", value: "key" } },
                             { kind: "Field", name: { kind: "Name", value: "apiIdentifier" } },
                             { kind: "Field", name: { kind: "Name", value: "namespace" } },
-                            {
-                              kind: "Field",
-                              name: { kind: "Name", value: "defaultDisplayField" },
-                              selectionSet: {
-                                kind: "SelectionSet",
-                                selections: [
-                                  { kind: "Field", name: { kind: "Name", value: "name" } },
-                                  { kind: "Field", name: { kind: "Name", value: "apiIdentifier" } },
-                                  { kind: "Field", name: { kind: "Name", value: "fieldType" } },
-                                ],
-                              },
-                            },
-                            {
-                              kind: "Field",
-                              name: { kind: "Name", value: "fields" },
-                              directives: [
-                                {
-                                  kind: "Directive",
-                                  name: { kind: "Name", value: "include" },
-                                  arguments: [
-                                    {
-                                      kind: "Argument",
-                                      name: { kind: "Name", value: "if" },
-                                      value: { kind: "Variable", name: { kind: "Name", value: "includeRelatedFields" } },
-                                    },
-                                  ],
-                                },
-                              ],
-                              selectionSet: {
-                                kind: "SelectionSet",
-                                selections: [{ kind: "FragmentSpread", name: { kind: "Name", value: "RelatedModelFieldFragment" } }],
-                              },
-                            },
                           ],
                         },
                       },
@@ -16497,19 +17162,6 @@ export const FieldMetadataFragmentDoc = {
               ],
             },
           },
-        ],
-      },
-    },
-    {
-      kind: "FragmentDefinition",
-      name: { kind: "Name", value: "RelatedModelFieldFragment" },
-      typeCondition: { kind: "NamedType", name: { kind: "Name", value: "GadgetModelField" } },
-      selectionSet: {
-        kind: "SelectionSet",
-        selections: [
-          { kind: "Field", name: { kind: "Name", value: "name" } },
-          { kind: "Field", name: { kind: "Name", value: "apiIdentifier" } },
-          { kind: "Field", name: { kind: "Name", value: "fieldType" } },
         ],
       },
     },
@@ -16623,19 +17275,6 @@ export const SubFieldsFragmentDoc = {
     },
     {
       kind: "FragmentDefinition",
-      name: { kind: "Name", value: "RelatedModelFieldFragment" },
-      typeCondition: { kind: "NamedType", name: { kind: "Name", value: "GadgetModelField" } },
-      selectionSet: {
-        kind: "SelectionSet",
-        selections: [
-          { kind: "Field", name: { kind: "Name", value: "name" } },
-          { kind: "Field", name: { kind: "Name", value: "apiIdentifier" } },
-          { kind: "Field", name: { kind: "Name", value: "fieldType" } },
-        ],
-      },
-    },
-    {
-      kind: "FragmentDefinition",
       name: { kind: "Name", value: "FieldMetadata" },
       typeCondition: { kind: "NamedType", name: { kind: "Name", value: "GadgetField" } },
       selectionSet: {
@@ -16737,39 +17376,6 @@ export const SubFieldsFragmentDoc = {
                             { kind: "Field", name: { kind: "Name", value: "key" } },
                             { kind: "Field", name: { kind: "Name", value: "apiIdentifier" } },
                             { kind: "Field", name: { kind: "Name", value: "namespace" } },
-                            {
-                              kind: "Field",
-                              name: { kind: "Name", value: "defaultDisplayField" },
-                              selectionSet: {
-                                kind: "SelectionSet",
-                                selections: [
-                                  { kind: "Field", name: { kind: "Name", value: "name" } },
-                                  { kind: "Field", name: { kind: "Name", value: "apiIdentifier" } },
-                                  { kind: "Field", name: { kind: "Name", value: "fieldType" } },
-                                ],
-                              },
-                            },
-                            {
-                              kind: "Field",
-                              name: { kind: "Name", value: "fields" },
-                              directives: [
-                                {
-                                  kind: "Directive",
-                                  name: { kind: "Name", value: "include" },
-                                  arguments: [
-                                    {
-                                      kind: "Argument",
-                                      name: { kind: "Name", value: "if" },
-                                      value: { kind: "Variable", name: { kind: "Name", value: "includeRelatedFields" } },
-                                    },
-                                  ],
-                                },
-                              ],
-                              selectionSet: {
-                                kind: "SelectionSet",
-                                selections: [{ kind: "FragmentSpread", name: { kind: "Name", value: "RelatedModelFieldFragment" } }],
-                              },
-                            },
                           ],
                         },
                       },
@@ -16790,18 +17396,6 @@ export const SubFieldsFragmentDoc = {
                             { kind: "Field", name: { kind: "Name", value: "key" } },
                             { kind: "Field", name: { kind: "Name", value: "apiIdentifier" } },
                             { kind: "Field", name: { kind: "Name", value: "namespace" } },
-                            {
-                              kind: "Field",
-                              name: { kind: "Name", value: "defaultDisplayField" },
-                              selectionSet: {
-                                kind: "SelectionSet",
-                                selections: [
-                                  { kind: "Field", name: { kind: "Name", value: "name" } },
-                                  { kind: "Field", name: { kind: "Name", value: "apiIdentifier" } },
-                                  { kind: "Field", name: { kind: "Name", value: "fieldType" } },
-                                ],
-                              },
-                            },
                           ],
                         },
                       },
@@ -16838,41 +17432,9 @@ export const SubFieldsFragmentDoc = {
                           kind: "SelectionSet",
                           selections: [
                             { kind: "Field", name: { kind: "Name", value: "key" } },
+                            { kind: "Field", name: { kind: "Name", value: "name" } },
                             { kind: "Field", name: { kind: "Name", value: "apiIdentifier" } },
                             { kind: "Field", name: { kind: "Name", value: "namespace" } },
-                            {
-                              kind: "Field",
-                              name: { kind: "Name", value: "defaultDisplayField" },
-                              selectionSet: {
-                                kind: "SelectionSet",
-                                selections: [
-                                  { kind: "Field", name: { kind: "Name", value: "name" } },
-                                  { kind: "Field", name: { kind: "Name", value: "apiIdentifier" } },
-                                  { kind: "Field", name: { kind: "Name", value: "fieldType" } },
-                                ],
-                              },
-                            },
-                            {
-                              kind: "Field",
-                              name: { kind: "Name", value: "fields" },
-                              directives: [
-                                {
-                                  kind: "Directive",
-                                  name: { kind: "Name", value: "include" },
-                                  arguments: [
-                                    {
-                                      kind: "Argument",
-                                      name: { kind: "Name", value: "if" },
-                                      value: { kind: "Variable", name: { kind: "Name", value: "includeRelatedFields" } },
-                                    },
-                                  ],
-                                },
-                              ],
-                              selectionSet: {
-                                kind: "SelectionSet",
-                                selections: [{ kind: "FragmentSpread", name: { kind: "Name", value: "RelatedModelFieldFragment" } }],
-                              },
-                            },
                           ],
                         },
                       },
@@ -16902,39 +17464,6 @@ export const SubFieldsFragmentDoc = {
                             { kind: "Field", name: { kind: "Name", value: "key" } },
                             { kind: "Field", name: { kind: "Name", value: "apiIdentifier" } },
                             { kind: "Field", name: { kind: "Name", value: "namespace" } },
-                            {
-                              kind: "Field",
-                              name: { kind: "Name", value: "defaultDisplayField" },
-                              selectionSet: {
-                                kind: "SelectionSet",
-                                selections: [
-                                  { kind: "Field", name: { kind: "Name", value: "name" } },
-                                  { kind: "Field", name: { kind: "Name", value: "apiIdentifier" } },
-                                  { kind: "Field", name: { kind: "Name", value: "fieldType" } },
-                                ],
-                              },
-                            },
-                            {
-                              kind: "Field",
-                              name: { kind: "Name", value: "fields" },
-                              directives: [
-                                {
-                                  kind: "Directive",
-                                  name: { kind: "Name", value: "include" },
-                                  arguments: [
-                                    {
-                                      kind: "Argument",
-                                      name: { kind: "Name", value: "if" },
-                                      value: { kind: "Variable", name: { kind: "Name", value: "includeRelatedFields" } },
-                                    },
-                                  ],
-                                },
-                              ],
-                              selectionSet: {
-                                kind: "SelectionSet",
-                                selections: [{ kind: "FragmentSpread", name: { kind: "Name", value: "RelatedModelFieldFragment" } }],
-                              },
-                            },
                           ],
                         },
                       },
@@ -16964,39 +17493,6 @@ export const SubFieldsFragmentDoc = {
                             { kind: "Field", name: { kind: "Name", value: "key" } },
                             { kind: "Field", name: { kind: "Name", value: "apiIdentifier" } },
                             { kind: "Field", name: { kind: "Name", value: "namespace" } },
-                            {
-                              kind: "Field",
-                              name: { kind: "Name", value: "defaultDisplayField" },
-                              selectionSet: {
-                                kind: "SelectionSet",
-                                selections: [
-                                  { kind: "Field", name: { kind: "Name", value: "name" } },
-                                  { kind: "Field", name: { kind: "Name", value: "apiIdentifier" } },
-                                  { kind: "Field", name: { kind: "Name", value: "fieldType" } },
-                                ],
-                              },
-                            },
-                            {
-                              kind: "Field",
-                              name: { kind: "Name", value: "fields" },
-                              directives: [
-                                {
-                                  kind: "Directive",
-                                  name: { kind: "Name", value: "include" },
-                                  arguments: [
-                                    {
-                                      kind: "Argument",
-                                      name: { kind: "Name", value: "if" },
-                                      value: { kind: "Variable", name: { kind: "Name", value: "includeRelatedFields" } },
-                                    },
-                                  ],
-                                },
-                              ],
-                              selectionSet: {
-                                kind: "SelectionSet",
-                                selections: [{ kind: "FragmentSpread", name: { kind: "Name", value: "RelatedModelFieldFragment" } }],
-                              },
-                            },
                           ],
                         },
                       },
@@ -17078,7 +17574,7 @@ export const GetModelMetadataDocument = {
               selections: [
                 {
                   kind: "Field",
-                  name: { kind: "Name", value: "model" },
+                  name: { kind: "Name", value: "modelAndRelatedModels" },
                   arguments: [
                     {
                       kind: "Argument",
@@ -17094,6 +17590,7 @@ export const GetModelMetadataDocument = {
                   selectionSet: {
                     kind: "SelectionSet",
                     selections: [
+                      { kind: "Field", name: { kind: "Name", value: "key" } },
                       { kind: "Field", name: { kind: "Name", value: "apiIdentifier" } },
                       { kind: "Field", name: { kind: "Name", value: "namespace" } },
                       { kind: "Field", name: { kind: "Name", value: "name" } },
@@ -17105,25 +17602,24 @@ export const GetModelMetadataDocument = {
                           selections: [{ kind: "FragmentSpread", name: { kind: "Name", value: "FieldMetadata" } }],
                         },
                       },
+                      {
+                        kind: "Field",
+                        name: { kind: "Name", value: "defaultDisplayField" },
+                        selectionSet: {
+                          kind: "SelectionSet",
+                          selections: [
+                            { kind: "Field", name: { kind: "Name", value: "name" } },
+                            { kind: "Field", name: { kind: "Name", value: "apiIdentifier" } },
+                            { kind: "Field", name: { kind: "Name", value: "fieldType" } },
+                          ],
+                        },
+                      },
                     ],
                   },
                 },
               ],
             },
           },
-        ],
-      },
-    },
-    {
-      kind: "FragmentDefinition",
-      name: { kind: "Name", value: "RelatedModelFieldFragment" },
-      typeCondition: { kind: "NamedType", name: { kind: "Name", value: "GadgetModelField" } },
-      selectionSet: {
-        kind: "SelectionSet",
-        selections: [
-          { kind: "Field", name: { kind: "Name", value: "name" } },
-          { kind: "Field", name: { kind: "Name", value: "apiIdentifier" } },
-          { kind: "Field", name: { kind: "Name", value: "fieldType" } },
         ],
       },
     },
@@ -17230,39 +17726,6 @@ export const GetModelMetadataDocument = {
                             { kind: "Field", name: { kind: "Name", value: "key" } },
                             { kind: "Field", name: { kind: "Name", value: "apiIdentifier" } },
                             { kind: "Field", name: { kind: "Name", value: "namespace" } },
-                            {
-                              kind: "Field",
-                              name: { kind: "Name", value: "defaultDisplayField" },
-                              selectionSet: {
-                                kind: "SelectionSet",
-                                selections: [
-                                  { kind: "Field", name: { kind: "Name", value: "name" } },
-                                  { kind: "Field", name: { kind: "Name", value: "apiIdentifier" } },
-                                  { kind: "Field", name: { kind: "Name", value: "fieldType" } },
-                                ],
-                              },
-                            },
-                            {
-                              kind: "Field",
-                              name: { kind: "Name", value: "fields" },
-                              directives: [
-                                {
-                                  kind: "Directive",
-                                  name: { kind: "Name", value: "include" },
-                                  arguments: [
-                                    {
-                                      kind: "Argument",
-                                      name: { kind: "Name", value: "if" },
-                                      value: { kind: "Variable", name: { kind: "Name", value: "includeRelatedFields" } },
-                                    },
-                                  ],
-                                },
-                              ],
-                              selectionSet: {
-                                kind: "SelectionSet",
-                                selections: [{ kind: "FragmentSpread", name: { kind: "Name", value: "RelatedModelFieldFragment" } }],
-                              },
-                            },
                           ],
                         },
                       },
@@ -17283,18 +17746,6 @@ export const GetModelMetadataDocument = {
                             { kind: "Field", name: { kind: "Name", value: "key" } },
                             { kind: "Field", name: { kind: "Name", value: "apiIdentifier" } },
                             { kind: "Field", name: { kind: "Name", value: "namespace" } },
-                            {
-                              kind: "Field",
-                              name: { kind: "Name", value: "defaultDisplayField" },
-                              selectionSet: {
-                                kind: "SelectionSet",
-                                selections: [
-                                  { kind: "Field", name: { kind: "Name", value: "name" } },
-                                  { kind: "Field", name: { kind: "Name", value: "apiIdentifier" } },
-                                  { kind: "Field", name: { kind: "Name", value: "fieldType" } },
-                                ],
-                              },
-                            },
                           ],
                         },
                       },
@@ -17331,41 +17782,9 @@ export const GetModelMetadataDocument = {
                           kind: "SelectionSet",
                           selections: [
                             { kind: "Field", name: { kind: "Name", value: "key" } },
+                            { kind: "Field", name: { kind: "Name", value: "name" } },
                             { kind: "Field", name: { kind: "Name", value: "apiIdentifier" } },
                             { kind: "Field", name: { kind: "Name", value: "namespace" } },
-                            {
-                              kind: "Field",
-                              name: { kind: "Name", value: "defaultDisplayField" },
-                              selectionSet: {
-                                kind: "SelectionSet",
-                                selections: [
-                                  { kind: "Field", name: { kind: "Name", value: "name" } },
-                                  { kind: "Field", name: { kind: "Name", value: "apiIdentifier" } },
-                                  { kind: "Field", name: { kind: "Name", value: "fieldType" } },
-                                ],
-                              },
-                            },
-                            {
-                              kind: "Field",
-                              name: { kind: "Name", value: "fields" },
-                              directives: [
-                                {
-                                  kind: "Directive",
-                                  name: { kind: "Name", value: "include" },
-                                  arguments: [
-                                    {
-                                      kind: "Argument",
-                                      name: { kind: "Name", value: "if" },
-                                      value: { kind: "Variable", name: { kind: "Name", value: "includeRelatedFields" } },
-                                    },
-                                  ],
-                                },
-                              ],
-                              selectionSet: {
-                                kind: "SelectionSet",
-                                selections: [{ kind: "FragmentSpread", name: { kind: "Name", value: "RelatedModelFieldFragment" } }],
-                              },
-                            },
                           ],
                         },
                       },
@@ -17395,39 +17814,6 @@ export const GetModelMetadataDocument = {
                             { kind: "Field", name: { kind: "Name", value: "key" } },
                             { kind: "Field", name: { kind: "Name", value: "apiIdentifier" } },
                             { kind: "Field", name: { kind: "Name", value: "namespace" } },
-                            {
-                              kind: "Field",
-                              name: { kind: "Name", value: "defaultDisplayField" },
-                              selectionSet: {
-                                kind: "SelectionSet",
-                                selections: [
-                                  { kind: "Field", name: { kind: "Name", value: "name" } },
-                                  { kind: "Field", name: { kind: "Name", value: "apiIdentifier" } },
-                                  { kind: "Field", name: { kind: "Name", value: "fieldType" } },
-                                ],
-                              },
-                            },
-                            {
-                              kind: "Field",
-                              name: { kind: "Name", value: "fields" },
-                              directives: [
-                                {
-                                  kind: "Directive",
-                                  name: { kind: "Name", value: "include" },
-                                  arguments: [
-                                    {
-                                      kind: "Argument",
-                                      name: { kind: "Name", value: "if" },
-                                      value: { kind: "Variable", name: { kind: "Name", value: "includeRelatedFields" } },
-                                    },
-                                  ],
-                                },
-                              ],
-                              selectionSet: {
-                                kind: "SelectionSet",
-                                selections: [{ kind: "FragmentSpread", name: { kind: "Name", value: "RelatedModelFieldFragment" } }],
-                              },
-                            },
                           ],
                         },
                       },
@@ -17457,39 +17843,6 @@ export const GetModelMetadataDocument = {
                             { kind: "Field", name: { kind: "Name", value: "key" } },
                             { kind: "Field", name: { kind: "Name", value: "apiIdentifier" } },
                             { kind: "Field", name: { kind: "Name", value: "namespace" } },
-                            {
-                              kind: "Field",
-                              name: { kind: "Name", value: "defaultDisplayField" },
-                              selectionSet: {
-                                kind: "SelectionSet",
-                                selections: [
-                                  { kind: "Field", name: { kind: "Name", value: "name" } },
-                                  { kind: "Field", name: { kind: "Name", value: "apiIdentifier" } },
-                                  { kind: "Field", name: { kind: "Name", value: "fieldType" } },
-                                ],
-                              },
-                            },
-                            {
-                              kind: "Field",
-                              name: { kind: "Name", value: "fields" },
-                              directives: [
-                                {
-                                  kind: "Directive",
-                                  name: { kind: "Name", value: "include" },
-                                  arguments: [
-                                    {
-                                      kind: "Argument",
-                                      name: { kind: "Name", value: "if" },
-                                      value: { kind: "Variable", name: { kind: "Name", value: "includeRelatedFields" } },
-                                    },
-                                  ],
-                                },
-                              ],
-                              selectionSet: {
-                                kind: "SelectionSet",
-                                selections: [{ kind: "FragmentSpread", name: { kind: "Name", value: "RelatedModelFieldFragment" } }],
-                              },
-                            },
                           ],
                         },
                       },
@@ -17576,6 +17929,54 @@ export const ModelActionMetadataDocument = {
               selections: [
                 {
                   kind: "Field",
+                  name: { kind: "Name", value: "modelAndRelatedModels" },
+                  arguments: [
+                    {
+                      kind: "Argument",
+                      name: { kind: "Name", value: "apiIdentifier" },
+                      value: { kind: "Variable", name: { kind: "Name", value: "modelApiIdentifier" } },
+                    },
+                    {
+                      kind: "Argument",
+                      name: { kind: "Name", value: "namespace" },
+                      value: { kind: "Variable", name: { kind: "Name", value: "modelNamespace" } },
+                    },
+                  ],
+                  selectionSet: {
+                    kind: "SelectionSet",
+                    selections: [
+                      { kind: "Field", name: { kind: "Name", value: "key" } },
+                      { kind: "Field", name: { kind: "Name", value: "name" } },
+                      { kind: "Field", name: { kind: "Name", value: "apiIdentifier" } },
+                      { kind: "Field", name: { kind: "Name", value: "defaultRecord" } },
+                      {
+                        kind: "Field",
+                        name: { kind: "Name", value: "fields" },
+                        selectionSet: {
+                          kind: "SelectionSet",
+                          selections: [
+                            { kind: "FragmentSpread", name: { kind: "Name", value: "FieldMetadata" } },
+                            { kind: "FragmentSpread", name: { kind: "Name", value: "SubFields" } },
+                          ],
+                        },
+                      },
+                      {
+                        kind: "Field",
+                        name: { kind: "Name", value: "defaultDisplayField" },
+                        selectionSet: {
+                          kind: "SelectionSet",
+                          selections: [
+                            { kind: "Field", name: { kind: "Name", value: "name" } },
+                            { kind: "Field", name: { kind: "Name", value: "apiIdentifier" } },
+                            { kind: "Field", name: { kind: "Name", value: "fieldType" } },
+                          ],
+                        },
+                      },
+                    ],
+                  },
+                },
+                {
+                  kind: "Field",
                   name: { kind: "Name", value: "model" },
                   arguments: [
                     {
@@ -17592,6 +17993,7 @@ export const ModelActionMetadataDocument = {
                   selectionSet: {
                     kind: "SelectionSet",
                     selections: [
+                      { kind: "Field", name: { kind: "Name", value: "key" } },
                       { kind: "Field", name: { kind: "Name", value: "name" } },
                       { kind: "Field", name: { kind: "Name", value: "apiIdentifier" } },
                       { kind: "Field", name: { kind: "Name", value: "defaultRecord" } },
@@ -17640,19 +18042,6 @@ export const ModelActionMetadataDocument = {
               ],
             },
           },
-        ],
-      },
-    },
-    {
-      kind: "FragmentDefinition",
-      name: { kind: "Name", value: "RelatedModelFieldFragment" },
-      typeCondition: { kind: "NamedType", name: { kind: "Name", value: "GadgetModelField" } },
-      selectionSet: {
-        kind: "SelectionSet",
-        selections: [
-          { kind: "Field", name: { kind: "Name", value: "name" } },
-          { kind: "Field", name: { kind: "Name", value: "apiIdentifier" } },
-          { kind: "Field", name: { kind: "Name", value: "fieldType" } },
         ],
       },
     },
@@ -17759,39 +18148,6 @@ export const ModelActionMetadataDocument = {
                             { kind: "Field", name: { kind: "Name", value: "key" } },
                             { kind: "Field", name: { kind: "Name", value: "apiIdentifier" } },
                             { kind: "Field", name: { kind: "Name", value: "namespace" } },
-                            {
-                              kind: "Field",
-                              name: { kind: "Name", value: "defaultDisplayField" },
-                              selectionSet: {
-                                kind: "SelectionSet",
-                                selections: [
-                                  { kind: "Field", name: { kind: "Name", value: "name" } },
-                                  { kind: "Field", name: { kind: "Name", value: "apiIdentifier" } },
-                                  { kind: "Field", name: { kind: "Name", value: "fieldType" } },
-                                ],
-                              },
-                            },
-                            {
-                              kind: "Field",
-                              name: { kind: "Name", value: "fields" },
-                              directives: [
-                                {
-                                  kind: "Directive",
-                                  name: { kind: "Name", value: "include" },
-                                  arguments: [
-                                    {
-                                      kind: "Argument",
-                                      name: { kind: "Name", value: "if" },
-                                      value: { kind: "Variable", name: { kind: "Name", value: "includeRelatedFields" } },
-                                    },
-                                  ],
-                                },
-                              ],
-                              selectionSet: {
-                                kind: "SelectionSet",
-                                selections: [{ kind: "FragmentSpread", name: { kind: "Name", value: "RelatedModelFieldFragment" } }],
-                              },
-                            },
                           ],
                         },
                       },
@@ -17812,18 +18168,6 @@ export const ModelActionMetadataDocument = {
                             { kind: "Field", name: { kind: "Name", value: "key" } },
                             { kind: "Field", name: { kind: "Name", value: "apiIdentifier" } },
                             { kind: "Field", name: { kind: "Name", value: "namespace" } },
-                            {
-                              kind: "Field",
-                              name: { kind: "Name", value: "defaultDisplayField" },
-                              selectionSet: {
-                                kind: "SelectionSet",
-                                selections: [
-                                  { kind: "Field", name: { kind: "Name", value: "name" } },
-                                  { kind: "Field", name: { kind: "Name", value: "apiIdentifier" } },
-                                  { kind: "Field", name: { kind: "Name", value: "fieldType" } },
-                                ],
-                              },
-                            },
                           ],
                         },
                       },
@@ -17860,41 +18204,9 @@ export const ModelActionMetadataDocument = {
                           kind: "SelectionSet",
                           selections: [
                             { kind: "Field", name: { kind: "Name", value: "key" } },
+                            { kind: "Field", name: { kind: "Name", value: "name" } },
                             { kind: "Field", name: { kind: "Name", value: "apiIdentifier" } },
                             { kind: "Field", name: { kind: "Name", value: "namespace" } },
-                            {
-                              kind: "Field",
-                              name: { kind: "Name", value: "defaultDisplayField" },
-                              selectionSet: {
-                                kind: "SelectionSet",
-                                selections: [
-                                  { kind: "Field", name: { kind: "Name", value: "name" } },
-                                  { kind: "Field", name: { kind: "Name", value: "apiIdentifier" } },
-                                  { kind: "Field", name: { kind: "Name", value: "fieldType" } },
-                                ],
-                              },
-                            },
-                            {
-                              kind: "Field",
-                              name: { kind: "Name", value: "fields" },
-                              directives: [
-                                {
-                                  kind: "Directive",
-                                  name: { kind: "Name", value: "include" },
-                                  arguments: [
-                                    {
-                                      kind: "Argument",
-                                      name: { kind: "Name", value: "if" },
-                                      value: { kind: "Variable", name: { kind: "Name", value: "includeRelatedFields" } },
-                                    },
-                                  ],
-                                },
-                              ],
-                              selectionSet: {
-                                kind: "SelectionSet",
-                                selections: [{ kind: "FragmentSpread", name: { kind: "Name", value: "RelatedModelFieldFragment" } }],
-                              },
-                            },
                           ],
                         },
                       },
@@ -17924,39 +18236,6 @@ export const ModelActionMetadataDocument = {
                             { kind: "Field", name: { kind: "Name", value: "key" } },
                             { kind: "Field", name: { kind: "Name", value: "apiIdentifier" } },
                             { kind: "Field", name: { kind: "Name", value: "namespace" } },
-                            {
-                              kind: "Field",
-                              name: { kind: "Name", value: "defaultDisplayField" },
-                              selectionSet: {
-                                kind: "SelectionSet",
-                                selections: [
-                                  { kind: "Field", name: { kind: "Name", value: "name" } },
-                                  { kind: "Field", name: { kind: "Name", value: "apiIdentifier" } },
-                                  { kind: "Field", name: { kind: "Name", value: "fieldType" } },
-                                ],
-                              },
-                            },
-                            {
-                              kind: "Field",
-                              name: { kind: "Name", value: "fields" },
-                              directives: [
-                                {
-                                  kind: "Directive",
-                                  name: { kind: "Name", value: "include" },
-                                  arguments: [
-                                    {
-                                      kind: "Argument",
-                                      name: { kind: "Name", value: "if" },
-                                      value: { kind: "Variable", name: { kind: "Name", value: "includeRelatedFields" } },
-                                    },
-                                  ],
-                                },
-                              ],
-                              selectionSet: {
-                                kind: "SelectionSet",
-                                selections: [{ kind: "FragmentSpread", name: { kind: "Name", value: "RelatedModelFieldFragment" } }],
-                              },
-                            },
                           ],
                         },
                       },
@@ -17986,39 +18265,6 @@ export const ModelActionMetadataDocument = {
                             { kind: "Field", name: { kind: "Name", value: "key" } },
                             { kind: "Field", name: { kind: "Name", value: "apiIdentifier" } },
                             { kind: "Field", name: { kind: "Name", value: "namespace" } },
-                            {
-                              kind: "Field",
-                              name: { kind: "Name", value: "defaultDisplayField" },
-                              selectionSet: {
-                                kind: "SelectionSet",
-                                selections: [
-                                  { kind: "Field", name: { kind: "Name", value: "name" } },
-                                  { kind: "Field", name: { kind: "Name", value: "apiIdentifier" } },
-                                  { kind: "Field", name: { kind: "Name", value: "fieldType" } },
-                                ],
-                              },
-                            },
-                            {
-                              kind: "Field",
-                              name: { kind: "Name", value: "fields" },
-                              directives: [
-                                {
-                                  kind: "Directive",
-                                  name: { kind: "Name", value: "include" },
-                                  arguments: [
-                                    {
-                                      kind: "Argument",
-                                      name: { kind: "Name", value: "if" },
-                                      value: { kind: "Variable", name: { kind: "Name", value: "includeRelatedFields" } },
-                                    },
-                                  ],
-                                },
-                              ],
-                              selectionSet: {
-                                kind: "SelectionSet",
-                                selections: [{ kind: "FragmentSpread", name: { kind: "Name", value: "RelatedModelFieldFragment" } }],
-                              },
-                            },
                           ],
                         },
                       },
@@ -18249,19 +18495,6 @@ export const GlobalActionMetadataDocument = {
     },
     {
       kind: "FragmentDefinition",
-      name: { kind: "Name", value: "RelatedModelFieldFragment" },
-      typeCondition: { kind: "NamedType", name: { kind: "Name", value: "GadgetModelField" } },
-      selectionSet: {
-        kind: "SelectionSet",
-        selections: [
-          { kind: "Field", name: { kind: "Name", value: "name" } },
-          { kind: "Field", name: { kind: "Name", value: "apiIdentifier" } },
-          { kind: "Field", name: { kind: "Name", value: "fieldType" } },
-        ],
-      },
-    },
-    {
-      kind: "FragmentDefinition",
       name: { kind: "Name", value: "FieldMetadata" },
       typeCondition: { kind: "NamedType", name: { kind: "Name", value: "GadgetField" } },
       selectionSet: {
@@ -18363,39 +18596,6 @@ export const GlobalActionMetadataDocument = {
                             { kind: "Field", name: { kind: "Name", value: "key" } },
                             { kind: "Field", name: { kind: "Name", value: "apiIdentifier" } },
                             { kind: "Field", name: { kind: "Name", value: "namespace" } },
-                            {
-                              kind: "Field",
-                              name: { kind: "Name", value: "defaultDisplayField" },
-                              selectionSet: {
-                                kind: "SelectionSet",
-                                selections: [
-                                  { kind: "Field", name: { kind: "Name", value: "name" } },
-                                  { kind: "Field", name: { kind: "Name", value: "apiIdentifier" } },
-                                  { kind: "Field", name: { kind: "Name", value: "fieldType" } },
-                                ],
-                              },
-                            },
-                            {
-                              kind: "Field",
-                              name: { kind: "Name", value: "fields" },
-                              directives: [
-                                {
-                                  kind: "Directive",
-                                  name: { kind: "Name", value: "include" },
-                                  arguments: [
-                                    {
-                                      kind: "Argument",
-                                      name: { kind: "Name", value: "if" },
-                                      value: { kind: "Variable", name: { kind: "Name", value: "includeRelatedFields" } },
-                                    },
-                                  ],
-                                },
-                              ],
-                              selectionSet: {
-                                kind: "SelectionSet",
-                                selections: [{ kind: "FragmentSpread", name: { kind: "Name", value: "RelatedModelFieldFragment" } }],
-                              },
-                            },
                           ],
                         },
                       },
@@ -18416,18 +18616,6 @@ export const GlobalActionMetadataDocument = {
                             { kind: "Field", name: { kind: "Name", value: "key" } },
                             { kind: "Field", name: { kind: "Name", value: "apiIdentifier" } },
                             { kind: "Field", name: { kind: "Name", value: "namespace" } },
-                            {
-                              kind: "Field",
-                              name: { kind: "Name", value: "defaultDisplayField" },
-                              selectionSet: {
-                                kind: "SelectionSet",
-                                selections: [
-                                  { kind: "Field", name: { kind: "Name", value: "name" } },
-                                  { kind: "Field", name: { kind: "Name", value: "apiIdentifier" } },
-                                  { kind: "Field", name: { kind: "Name", value: "fieldType" } },
-                                ],
-                              },
-                            },
                           ],
                         },
                       },
@@ -18464,41 +18652,9 @@ export const GlobalActionMetadataDocument = {
                           kind: "SelectionSet",
                           selections: [
                             { kind: "Field", name: { kind: "Name", value: "key" } },
+                            { kind: "Field", name: { kind: "Name", value: "name" } },
                             { kind: "Field", name: { kind: "Name", value: "apiIdentifier" } },
                             { kind: "Field", name: { kind: "Name", value: "namespace" } },
-                            {
-                              kind: "Field",
-                              name: { kind: "Name", value: "defaultDisplayField" },
-                              selectionSet: {
-                                kind: "SelectionSet",
-                                selections: [
-                                  { kind: "Field", name: { kind: "Name", value: "name" } },
-                                  { kind: "Field", name: { kind: "Name", value: "apiIdentifier" } },
-                                  { kind: "Field", name: { kind: "Name", value: "fieldType" } },
-                                ],
-                              },
-                            },
-                            {
-                              kind: "Field",
-                              name: { kind: "Name", value: "fields" },
-                              directives: [
-                                {
-                                  kind: "Directive",
-                                  name: { kind: "Name", value: "include" },
-                                  arguments: [
-                                    {
-                                      kind: "Argument",
-                                      name: { kind: "Name", value: "if" },
-                                      value: { kind: "Variable", name: { kind: "Name", value: "includeRelatedFields" } },
-                                    },
-                                  ],
-                                },
-                              ],
-                              selectionSet: {
-                                kind: "SelectionSet",
-                                selections: [{ kind: "FragmentSpread", name: { kind: "Name", value: "RelatedModelFieldFragment" } }],
-                              },
-                            },
                           ],
                         },
                       },
@@ -18528,39 +18684,6 @@ export const GlobalActionMetadataDocument = {
                             { kind: "Field", name: { kind: "Name", value: "key" } },
                             { kind: "Field", name: { kind: "Name", value: "apiIdentifier" } },
                             { kind: "Field", name: { kind: "Name", value: "namespace" } },
-                            {
-                              kind: "Field",
-                              name: { kind: "Name", value: "defaultDisplayField" },
-                              selectionSet: {
-                                kind: "SelectionSet",
-                                selections: [
-                                  { kind: "Field", name: { kind: "Name", value: "name" } },
-                                  { kind: "Field", name: { kind: "Name", value: "apiIdentifier" } },
-                                  { kind: "Field", name: { kind: "Name", value: "fieldType" } },
-                                ],
-                              },
-                            },
-                            {
-                              kind: "Field",
-                              name: { kind: "Name", value: "fields" },
-                              directives: [
-                                {
-                                  kind: "Directive",
-                                  name: { kind: "Name", value: "include" },
-                                  arguments: [
-                                    {
-                                      kind: "Argument",
-                                      name: { kind: "Name", value: "if" },
-                                      value: { kind: "Variable", name: { kind: "Name", value: "includeRelatedFields" } },
-                                    },
-                                  ],
-                                },
-                              ],
-                              selectionSet: {
-                                kind: "SelectionSet",
-                                selections: [{ kind: "FragmentSpread", name: { kind: "Name", value: "RelatedModelFieldFragment" } }],
-                              },
-                            },
                           ],
                         },
                       },
@@ -18590,39 +18713,6 @@ export const GlobalActionMetadataDocument = {
                             { kind: "Field", name: { kind: "Name", value: "key" } },
                             { kind: "Field", name: { kind: "Name", value: "apiIdentifier" } },
                             { kind: "Field", name: { kind: "Name", value: "namespace" } },
-                            {
-                              kind: "Field",
-                              name: { kind: "Name", value: "defaultDisplayField" },
-                              selectionSet: {
-                                kind: "SelectionSet",
-                                selections: [
-                                  { kind: "Field", name: { kind: "Name", value: "name" } },
-                                  { kind: "Field", name: { kind: "Name", value: "apiIdentifier" } },
-                                  { kind: "Field", name: { kind: "Name", value: "fieldType" } },
-                                ],
-                              },
-                            },
-                            {
-                              kind: "Field",
-                              name: { kind: "Name", value: "fields" },
-                              directives: [
-                                {
-                                  kind: "Directive",
-                                  name: { kind: "Name", value: "include" },
-                                  arguments: [
-                                    {
-                                      kind: "Argument",
-                                      name: { kind: "Name", value: "if" },
-                                      value: { kind: "Variable", name: { kind: "Name", value: "includeRelatedFields" } },
-                                    },
-                                  ],
-                                },
-                              ],
-                              selectionSet: {
-                                kind: "SelectionSet",
-                                selections: [{ kind: "FragmentSpread", name: { kind: "Name", value: "RelatedModelFieldFragment" } }],
-                              },
-                            },
                           ],
                         },
                       },

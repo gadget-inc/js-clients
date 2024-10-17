@@ -1,7 +1,7 @@
 import type { TextFieldProps } from "@mui/material";
 import { TextField } from "@mui/material";
 import React from "react";
-import type { Control } from "react-hook-form";
+import type { Control } from "../../../useActionForm.js";
 import { useFocus } from "../../../useFocus.js";
 import { useJSONInputController } from "../../hooks/useJSONInputController.js";
 

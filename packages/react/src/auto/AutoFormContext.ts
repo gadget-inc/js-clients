@@ -1,6 +1,6 @@
 import React, { useContext } from "react";
-import type { RecordIdentifier, UseActionFormSubmit } from "src/use-action-form/types.js";
-import type { ActionMetadata, GlobalActionMetadata } from "../metadata.js";
+import type { FieldMetadata, GlobalActionMetadata, ModelWithOneActionMetadata } from "../metadata.js";
+import type { RecordIdentifier, UseActionFormSubmit } from "../use-action-form/types.js";
 
 export interface AutoFormSubmitResult {
   isSuccessful?: boolean;
@@ -10,17 +10,17 @@ export interface AutoFormSubmitResult {
 
 export interface AutoFormMetadataContext {
   findBy?: RecordIdentifier;
-  metadata: ActionMetadata | GlobalActionMetadata | undefined;
+  metadata: ModelWithOneActionMetadata | GlobalActionMetadata | undefined;
   submit: UseActionFormSubmit<any>;
   submitResult?: AutoFormSubmitResult;
   model?: {
     namespace?: string | string[] | null;
     apiIdentifier?: string;
   };
-  options?: {
-    include?: string[];
-    exclude?: string[];
-  };
+  fields: readonly {
+    path: string;
+    metadata: FieldMetadata;
+  }[];
 }
 /**
  * React context that stores an instance of the metadata loaded for a particular form action

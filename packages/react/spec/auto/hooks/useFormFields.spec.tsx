@@ -2,7 +2,7 @@ import { jest } from "@jest/globals";
 import { renderHook } from "@testing-library/react";
 import { useFormFields } from "../../../src/auto/AutoForm.js";
 import { useAutoFormMetadata } from "../../../src/auto/AutoFormContext.js";
-import type { ActionMetadata } from "../../../src/metadata.js";
+import type { ModelWithOneActionMetadata } from "../../../src/metadata.js";
 import { MockForm } from "../MockForm.js";
 
 const shopifyShopModelKey = "DataModel-Shopify-Shop";
@@ -96,7 +96,7 @@ describe("useFormFields hook", () => {
   });
 });
 
-const metadata: ActionMetadata = {
+const metadata: ModelWithOneActionMetadata = {
   name: "Widget",
   apiIdentifier: "widget",
   action: {
@@ -239,7 +239,7 @@ const metadata: ActionMetadata = {
     __typename: "GadgetAction",
   },
   __typename: "GadgetModel",
-} as ActionMetadata;
+} as ModelWithOneActionMetadata;
 
 const autoFormMetadataWithDuplicateInputFields = {
   name: "Auto table test",

@@ -1,13 +1,13 @@
 import type { FieldSelection, GadgetRecord } from "@gadgetinc/api-client-core";
 import React from "react";
-import type { FieldMetadataFragment } from "../internal/gql/graphql.js";
 import { GadgetFieldType } from "../internal/gql/graphql.js";
+import type { FieldMetadata } from "../metadata.js";
 import { acceptedAutoTableFieldTypes, filterAutoTableFieldList } from "../metadata.js";
 import { get, set } from "../utils.js";
 import type {
   CellDetailColumn,
   CustomCellColumn,
-  FieldMetadataFragmentWithRelationshipConfig,
+  FieldMetadataWithRelationshipConfig,
   RelationshipType,
   TableColumn,
   TableOptions,
@@ -16,7 +16,7 @@ import type {
 } from "./types.js";
 
 export const getTableSpec = (
-  fieldMetadataArray: FieldMetadataFragment[],
+  fieldMetadataArray: FieldMetadata[],
   columns: TableOptions["columns"],
   excludeColumns: TableOptions["excludeColumns"],
   defaultSelection: Record<string, any>
@@ -277,8 +277,8 @@ const getCellDetailColumnByColumnValue = (column: string | CellDetailColumn): Ce
   throw new Error(`Invalid column value: ${JSON.stringify(column)}`);
 };
 
-const isColumnSortable = (fieldMetadata: FieldMetadataFragment, sortable: boolean | undefined) => {
-  return sortable ?? ("sortable" in fieldMetadata && fieldMetadata.sortable);
+const isColumnSortable = (fieldMetadata: FieldMetadata, sortable: boolean | undefined) => {
+  return sortable ?? !!("sortable" in fieldMetadata && fieldMetadata.sortable);
 };
 
 const mergeColumnPathByFieldType = (columnPath: string, newSegment: string, field: { fieldType: GadgetFieldType }) => {
@@ -297,6 +297,10 @@ const isHasManyOrHasManyThroughField = (field: { fieldType: GadgetFieldType }) =
   return field.fieldType === GadgetFieldType.HasMany || field.fieldType === GadgetFieldType.HasManyThrough;
 };
 
+const isRelationshipField = (field: { fieldType: GadgetFieldType }) => {
+  return isHasOneOrBelongsToField(field) || isHasManyOrHasManyThroughField(field);
+};
+
 const richTextSelection = {
   markdown: true,
   truncatedHTML: true,
@@ -313,7 +317,7 @@ const roleAssignmentsSelection = {
   name: true,
 };
 
-const getNonRelationshipSelectionValue = (field: FieldMetadataFragment) => {
+const getNonRelationshipSelectionValue = (field: FieldMetadata) => {
   switch (field.fieldType) {
     case GadgetFieldType.RichText:
       return richTextSelection;
@@ -336,12 +340,12 @@ const maybeGetDefaultDisplayFieldMetadata = (fieldMetadataTree: TableSpec["field
   }
 };
 
-export const fieldMetadataArrayToFieldMetadataTree = (fieldMetadataArray: FieldMetadataFragment[]) => {
+export const fieldMetadataArrayToFieldMetadataTree = (fieldMetadataArray: FieldMetadata[]) => {
   const map: Record<string, any> = {};
 
-  const getRelatedModelFields = (field: FieldMetadataFragment) => {
+  const getRelatedModelFields = (field: FieldMetadata) => {
     if (!("configuration" in field)) return [];
-    return (field as FieldMetadataFragmentWithRelationshipConfig).configuration.relatedModel?.fields ?? [];
+    return (field as FieldMetadataWithRelationshipConfig).configuration.relatedModel?.fields ?? [];
   };
 
   for (const field of fieldMetadataArray) {
@@ -368,11 +372,11 @@ export const fieldMetadataArrayToFieldMetadataTree = (fieldMetadataArray: FieldM
 };
 
 const maybeGetFieldMetadataByColumnPath = (fieldMetadataTree: TableSpec["fieldMetadataTree"], columnPath: string) => {
-  const field: FieldMetadataFragment | { $field: FieldMetadataFragment } | undefined = get(fieldMetadataTree, columnPath);
+  const field: FieldMetadata | { $field: FieldMetadata } | undefined = get(fieldMetadataTree, columnPath);
   return field ? ("$field" in field ? field.$field : field) : undefined;
 };
 
-const getFieldMetadataByColumnPath = (fieldMetadataTree: TableSpec["fieldMetadataTree"], columnPath: string): FieldMetadataFragment => {
+const getFieldMetadataByColumnPath = (fieldMetadataTree: TableSpec["fieldMetadataTree"], columnPath: string): FieldMetadata => {
   const field = maybeGetFieldMetadataByColumnPath(fieldMetadataTree, columnPath);
 
   if (!field) {
@@ -382,9 +386,9 @@ const getFieldMetadataByColumnPath = (fieldMetadataTree: TableSpec["fieldMetadat
   return field;
 };
 
-const maybeGetRelatedModelFromRelationshipField = (field: FieldMetadataFragment) => {
+const maybeGetRelatedModelFromRelationshipField = (field: FieldMetadata) => {
   if ((isHasOneOrBelongsToField(field) || isHasManyOrHasManyThroughField(field)) && "configuration" in field) {
-    return (field as FieldMetadataFragmentWithRelationshipConfig).configuration.relatedModel;
+    return (field as FieldMetadataWithRelationshipConfig).configuration.relatedModel;
   }
 };
 
@@ -394,4 +398,56 @@ const getFieldSelectionErrorMessage = (columnPath: string) => {
     RELATED_HAS_MANY_FIELD_NOT_EXIST: `Field '${columnPath}' does not exist in the related model. hasMany fields require 'edges.node' segment before the related field.`,
     RELATED_HAS_ONE_OR_BELONGS_TO_FIELD_NOT_EXIST: `Field '${columnPath}' does not exist in the related model`,
   } as const;
+};
+
+export const pathListToSelection = (modelIdentifier: string, pathList: string[], fieldMetadataArray: FieldMetadata[]) => {
+  const selection: FieldSelection = {
+    id: true,
+  };
+
+  const pathGroups: Record<string, string[]> = {};
+
+  for (const path of pathList) {
+    const [rootSegment, ...childSegments] = path.split(".");
+
+    pathGroups[rootSegment] ??= [];
+
+    if (childSegments.length) {
+      pathGroups[rootSegment].push(childSegments.join("."));
+    }
+  }
+
+  for (const [rootPath, childPaths] of Object.entries(pathGroups)) {
+    const field = fieldMetadataArray.find((metadata) => metadata.apiIdentifier == rootPath);
+
+    if (!field) {
+      throw new Error(`No metadata found for ${rootPath}`);
+    }
+
+    if (isRelationshipField(field)) {
+      const configuration = field.configuration;
+      if (configuration && "relatedModel" in configuration && configuration.relatedModel) {
+        const relatedModel = configuration.relatedModel;
+        const relatedSelection = {
+          id: true,
+          [relatedModel?.defaultDisplayField.apiIdentifier]: true,
+          ...(childPaths.length && relatedModel.fields ? pathListToSelection(rootPath, childPaths, relatedModel.fields) : {}),
+        };
+
+        if (isHasManyOrHasManyThroughField(field)) {
+          selection[field.apiIdentifier] = {
+            edges: {
+              node: relatedSelection,
+            },
+          };
+        } else {
+          selection[field.apiIdentifier] = relatedSelection;
+        }
+      }
+    } else {
+      selection[field.apiIdentifier] = getNonRelationshipSelectionValue(field);
+    }
+  }
+
+  return selection;
 };

@@ -1,7 +1,7 @@
 import type { TextFieldProps } from "@mui/material";
 import { IconButton } from "@mui/material";
 import React, { useState } from "react";
-import { useController, type Control } from "react-hook-form";
+import { useController, type Control } from "../../../useActionForm.js";
 import { useAutoFormMetadata } from "../../AutoFormContext.js";
 import { useFieldMetadata } from "../../hooks/useFieldMetadata.js";
 import { MUIAutoEncryptedStringInput } from "./MUIAutoEncryptedStringInput.js";

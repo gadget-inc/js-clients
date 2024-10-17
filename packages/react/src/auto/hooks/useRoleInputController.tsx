@@ -1,7 +1,7 @@
 import { useMemo } from "react";
-import type { Control } from "react-hook-form";
-import { useController } from "react-hook-form";
 import { useRolesMetadata } from "../../metadata.js";
+import type { Control } from "../../useActionForm.js";
+import { useController } from "../../useActionForm.js";
 import { useFieldMetadata } from "./useFieldMetadata.js";
 
 export const useRoleInputController = (props: {
