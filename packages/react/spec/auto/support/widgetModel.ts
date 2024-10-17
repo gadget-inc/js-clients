@@ -341,19 +341,23 @@ export const getWidgetModelMetadata = (
   inputFields = [widgetModelInputFields] as any[],
   triggers = apiTriggerOnly
 ) => {
+  const meta = {
+    name: "Widget",
+    apiIdentifier: "widget",
+    fields: [],
+    action: {
+      ...action,
+      inputFields: action.operatesWithRecordIdentity ? [recordIdInputField, ...inputFields] : inputFields,
+      triggers,
+      __typename: "GadgetAction",
+    },
+    __typename: "GadgetModel",
+  };
+
   return {
     gadgetMeta: {
-      model: {
-        name: "Widget",
-        apiIdentifier: "widget",
-        action: {
-          ...action,
-          inputFields: action.operatesWithRecordIdentity ? [recordIdInputField, ...inputFields] : inputFields,
-          triggers,
-          __typename: "GadgetAction",
-        },
-        __typename: "GadgetModel",
-      },
+      model: meta,
+      modelAndRelatedModels: [meta],
       __typename: "GadgetApplicationMeta",
     },
   };

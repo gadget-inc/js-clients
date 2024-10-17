@@ -3,7 +3,7 @@ import type { RenderResult } from "@testing-library/react";
 import { render } from "@testing-library/react";
 import React from "react";
 import { PolarisAutoEncryptedStringInput } from "../../../src/auto/polaris/inputs/PolarisAutoEncryptedStringInput.js";
-import type { ActionMetadata } from "../../../src/metadata.js";
+import { GadgetFieldType } from "../../../src/internal/gql/graphql.js";
 import { MockForm } from "../MockForm.js";
 import { apiTriggerOnly } from "../support/Triggers.js";
 
@@ -13,7 +13,7 @@ describe("PolarisEncryptedStringInput", () => {
   const getCreateWrapper = () => ({
     wrapper: MockForm({
       submit: jest.fn<any>(),
-      metadata,
+      metadata: metadata as any,
     }),
   });
 
@@ -34,7 +34,7 @@ describe("PolarisEncryptedStringInput", () => {
   });
 });
 
-const metadata: ActionMetadata = {
+const metadata = {
   name: "Widget",
   apiIdentifier: "widget",
   action: {
@@ -45,11 +45,11 @@ const metadata: ActionMetadata = {
       {
         name: "Widget",
         apiIdentifier: "widget",
-        fieldType: "Object",
+        fieldType: GadgetFieldType.Object,
         requiredArgumentForInput: false,
         configuration: {
           __typename: "GadgetObjectFieldConfig",
-          fieldType: "Object",
+          fieldType: GadgetFieldType.Object,
           name: null,
           fields: [
             {
@@ -151,4 +151,4 @@ const metadata: ActionMetadata = {
     __typename: "GadgetAction",
   },
   __typename: "GadgetModel",
-} as ActionMetadata;
+};

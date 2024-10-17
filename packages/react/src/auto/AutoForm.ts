@@ -3,8 +3,8 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import type { ReactNode } from "react";
 import React, { useEffect, useMemo, useRef } from "react";
 import type { GadgetObjectFieldConfig } from "../internal/gql/graphql.js";
-import type { ActionMetadata, FieldMetadata, GlobalActionMetadata } from "../metadata.js";
-import { FieldType, buildAutoFormFieldList, isActionMetadata, useActionMetadata } from "../metadata.js";
+import type { FieldMetadata, GlobalActionMetadata, ModelWithOneActionMetadata } from "../metadata.js";
+import { FieldType, buildAutoFormFieldList, isModelActionMetadata, useActionMetadata } from "../metadata.js";
 import type { AnyActionWithId, RecordIdentifier, UseActionFormHookStateData, UseActionFormSubmit } from "../use-action-form/types.js";
 import { pathListToSelection } from "../use-table/helpers.js";
 import type { FieldErrors, FieldValues, UseFormReturn } from "../useActionForm.js";
@@ -63,10 +63,10 @@ export type AutoFormProps<
 /**
  * React hook for getting the validation schema for a list of fields
  */
-const useValidationResolver = (metadata: ActionMetadata | GlobalActionMetadata | undefined, pathsToValidate: string[]) => {
+const useValidationResolver = (metadata: ModelWithOneActionMetadata | GlobalActionMetadata | undefined, pathsToValidate: string[]) => {
   return useMemo(() => {
     if (!metadata) return undefined;
-    const action = isActionMetadata(metadata) ? metadata.action : metadata;
+    const action = isModelActionMetadata(metadata) ? metadata.action : metadata;
     return yupResolver(validationSchema(action.inputFields, pathsToValidate));
   }, [metadata, pathsToValidate]);
 };
@@ -75,12 +75,12 @@ const useValidationResolver = (metadata: ActionMetadata | GlobalActionMetadata |
  * React hook for getting a list of fields to use in a form (given include/exclude options)
  */
 export const useFormFields = (
-  metadata: ActionMetadata | GlobalActionMetadata | undefined | null,
+  metadata: ModelWithOneActionMetadata | GlobalActionMetadata | undefined | null,
   options: { include?: string[]; exclude?: string[] }
 ): readonly { path: string; metadata: FieldMetadata }[] => {
   return useMemo(() => {
     if (!metadata) return [];
-    const action = isActionMetadata(metadata) ? metadata.action : metadata;
+    const action = isModelActionMetadata(metadata) ? metadata.action : metadata;
 
     const isModelMetadata = metadata.__typename === "GadgetModel";
 
@@ -157,7 +157,7 @@ export const useAutoForm = <
 >(
   props: AutoFormProps<GivenOptions, SchemaT, ActionFunc, any, any> & { findBy?: any }
 ): {
-  metadata: ActionMetadata | GlobalActionMetadata | undefined;
+  metadata: ModelWithOneActionMetadata | GlobalActionMetadata | undefined;
   fetchingMetadata: boolean;
   metadataError: ErrorWrapper | undefined;
   fields: readonly { path: string; metadata: FieldMetadata }[];
@@ -190,12 +190,13 @@ export const useAutoForm = <
   const fields = useFormFields(metadata, { include, exclude });
   validateFindByObjectWithMetadata(fields, findBy);
 
-  const isDeleteAction = metadata && isActionMetadata(metadata) && metadata.action.isDeleteAction;
+  const isDeleteAction = metadata && isModelActionMetadata(metadata) && metadata.action.isDeleteAction;
   const isGlobalAction = action.type === "globalAction";
-  const operatesWithRecordId = !!(metadata && isActionMetadata(metadata) && metadata.action.operatesWithRecordIdentity);
+  const operatesWithRecordId = !!(metadata && isModelActionMetadata(metadata) && metadata.action.operatesWithRecordIdentity);
   const modelApiIdentifier = isModelAction ? action.modelApiIdentifier : undefined;
   const selection = useFormSelection(modelApiIdentifier, fields);
-  const isUpsertMetaAction = metadata && isActionMetadata(metadata) && fields.some((field) => field.metadata.fieldType === FieldType.Id);
+  const isUpsertMetaAction =
+    metadata && isModelActionMetadata(metadata) && fields.some((field) => field.metadata.fieldType === FieldType.Id);
   const isUpsertWithFindBy = isUpsertMetaAction && !!findBy;
   const hasCustomChildren = !!props.children;
   const fieldPathsToValidate = useMemo(
@@ -214,7 +215,7 @@ export const useAutoForm = <
         : {
             [modelApiIdentifier!]:
               record ??
-              (!(operatesWithRecordId || isUpsertWithFindBy) && metadata && isActionMetadata(metadata) && metadata?.defaultRecord),
+              (!(operatesWithRecordId || isUpsertWithFindBy) && metadata && isModelActionMetadata(metadata) && metadata?.defaultRecord),
             id:
               typeof findBy === "string"
                 ? findBy // ID is given directly

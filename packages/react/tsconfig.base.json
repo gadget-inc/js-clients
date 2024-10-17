@@ -6,7 +6,6 @@
     "baseUrl": "./",
     "target": "es2020",
     "types": ["jest", "node"],
-    "importHelpers": true,
-    "declaration": false
+    "importHelpers": true
   }
 }

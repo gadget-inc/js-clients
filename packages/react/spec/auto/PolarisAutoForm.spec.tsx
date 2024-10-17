@@ -1,7 +1,7 @@
 import { AppProvider } from "@shopify/polaris";
 import translations from "@shopify/polaris/locales/en.json";
 import type { RenderResult } from "@testing-library/react";
-import { act, render, screen } from "@testing-library/react";
+import { act, render, screen, waitFor } from "@testing-library/react";
 import type { UserEvent } from "@testing-library/user-event";
 import { userEvent } from "@testing-library/user-event";
 import type { ReactNode } from "react";
@@ -75,6 +75,8 @@ describe("PolarisAutoForm", () => {
       const { getByLabelText, queryAllByText } = result;
 
       loadMockWidgetUpdateMetadataWithFindBy();
+
+      await waitFor(() => expect(getByLabelText("Name")).toBeInTheDocument());
 
       const submitButton = queryAllByText("Submit")[0];
       expect(submitButton).toHaveTextContent("Submit");
@@ -183,6 +185,8 @@ describe("PolarisAutoForm", () => {
       });
 
       loadMockGizmoCreateMetadata();
+
+      await waitFor(() => expect(getByLabelText("Name")).toBeInTheDocument());
 
       await act(async () => {
         const nameElement = getByLabelText("Name");
@@ -708,7 +712,7 @@ function loadMockGizmoCreateMetadata() {
     modelApiIdentifier: "gizmo",
     modelNamespace: null,
     action: "create",
-    includeRelatedFields: false,
+    includeRelatedFields: true,
   });
 
   mockUrqlClient.executeQuery.pushResponse("ModelActionMetadata", {
@@ -727,7 +731,7 @@ function loadMockWidgetCreateMetadata(opts?: { inputFields?: any[]; triggers?: a
     modelApiIdentifier: "widget",
     modelNamespace: null,
     action: "create",
-    includeRelatedFields: false,
+    includeRelatedFields: true,
   });
 
   mockUrqlClient.executeQuery.pushResponse("ModelActionMetadata", {
@@ -752,8 +756,8 @@ function loadMockWidgetUpdateMetadata() {
 
 function loadMockWidgetUpdateMetadataWithFindBy() {
   mockWidgetUpdateHelperFunctions.expectMetadataRequest();
-  mockWidgetUpdateHelperFunctions.mockFindByResponse();
   mockWidgetUpdateHelperFunctions.mockMetadataResponse();
+  mockWidgetUpdateHelperFunctions.mockFindByResponse();
 }
 
 const mockWidgetUpdateHelperFunctions = {
@@ -783,7 +787,7 @@ const mockWidgetUpdateHelperFunctions = {
       modelApiIdentifier: "widget",
       modelNamespace: null,
       action: "update",
-      includeRelatedFields: false,
+      includeRelatedFields: true,
     });
   },
 };
@@ -793,7 +797,7 @@ function loadMockWidgetDeleteMetadata() {
     modelApiIdentifier: "widget",
     modelNamespace: null,
     action: "delete",
-    includeRelatedFields: false,
+    includeRelatedFields: true,
   });
 
   mockUrqlClient.executeQuery.pushResponse("ModelActionMetadata", {

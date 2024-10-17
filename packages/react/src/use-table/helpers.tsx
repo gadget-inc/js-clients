@@ -1,13 +1,13 @@
 import type { FieldSelection, GadgetRecord } from "@gadgetinc/api-client-core";
 import React from "react";
-import type { FieldMetadataFragment } from "../internal/gql/graphql.js";
 import { GadgetFieldType } from "../internal/gql/graphql.js";
+import type { FieldMetadata } from "../metadata.js";
 import { acceptedAutoTableFieldTypes, filterAutoTableFieldList } from "../metadata.js";
 import { get, set } from "../utils.js";
 import type {
   CellDetailColumn,
   CustomCellColumn,
-  FieldMetadataFragmentWithRelationshipConfig,
+  FieldMetadataWithRelationshipConfig,
   RelationshipType,
   TableColumn,
   TableOptions,
@@ -16,7 +16,7 @@ import type {
 } from "./types.js";
 
 export const getTableSpec = (
-  fieldMetadataArray: FieldMetadataFragment[],
+  fieldMetadataArray: FieldMetadata[],
   columns: TableOptions["columns"],
   excludeColumns: TableOptions["excludeColumns"],
   defaultSelection: Record<string, any>
@@ -277,8 +277,8 @@ const getCellDetailColumnByColumnValue = (column: string | CellDetailColumn): Ce
   throw new Error(`Invalid column value: ${JSON.stringify(column)}`);
 };
 
-const isColumnSortable = (fieldMetadata: FieldMetadataFragment, sortable: boolean | undefined) => {
-  return sortable ?? ("sortable" in fieldMetadata && fieldMetadata.sortable);
+const isColumnSortable = (fieldMetadata: FieldMetadata, sortable: boolean | undefined) => {
+  return sortable ?? !!("sortable" in fieldMetadata && fieldMetadata.sortable);
 };
 
 const mergeColumnPathByFieldType = (columnPath: string, newSegment: string, field: { fieldType: GadgetFieldType }) => {
@@ -317,7 +317,7 @@ const roleAssignmentsSelection = {
   name: true,
 };
 
-const getNonRelationshipSelectionValue = (field: FieldMetadataFragment) => {
+const getNonRelationshipSelectionValue = (field: FieldMetadata) => {
   switch (field.fieldType) {
     case GadgetFieldType.RichText:
       return richTextSelection;
@@ -340,12 +340,12 @@ const maybeGetDefaultDisplayFieldMetadata = (fieldMetadataTree: TableSpec["field
   }
 };
 
-export const fieldMetadataArrayToFieldMetadataTree = (fieldMetadataArray: FieldMetadataFragment[]) => {
+export const fieldMetadataArrayToFieldMetadataTree = (fieldMetadataArray: FieldMetadata[]) => {
   const map: Record<string, any> = {};
 
-  const getRelatedModelFields = (field: FieldMetadataFragment) => {
+  const getRelatedModelFields = (field: FieldMetadata) => {
     if (!("configuration" in field)) return [];
-    return (field as FieldMetadataFragmentWithRelationshipConfig).configuration.relatedModel?.fields ?? [];
+    return (field as FieldMetadataWithRelationshipConfig).configuration.relatedModel?.fields ?? [];
   };
 
   for (const field of fieldMetadataArray) {
@@ -372,11 +372,11 @@ export const fieldMetadataArrayToFieldMetadataTree = (fieldMetadataArray: FieldM
 };
 
 const maybeGetFieldMetadataByColumnPath = (fieldMetadataTree: TableSpec["fieldMetadataTree"], columnPath: string) => {
-  const field: FieldMetadataFragment | { $field: FieldMetadataFragment } | undefined = get(fieldMetadataTree, columnPath);
+  const field: FieldMetadata | { $field: FieldMetadata } | undefined = get(fieldMetadataTree, columnPath);
   return field ? ("$field" in field ? field.$field : field) : undefined;
 };
 
-const getFieldMetadataByColumnPath = (fieldMetadataTree: TableSpec["fieldMetadataTree"], columnPath: string): FieldMetadataFragment => {
+const getFieldMetadataByColumnPath = (fieldMetadataTree: TableSpec["fieldMetadataTree"], columnPath: string): FieldMetadata => {
   const field = maybeGetFieldMetadataByColumnPath(fieldMetadataTree, columnPath);
 
   if (!field) {
@@ -386,9 +386,9 @@ const getFieldMetadataByColumnPath = (fieldMetadataTree: TableSpec["fieldMetadat
   return field;
 };
 
-const maybeGetRelatedModelFromRelationshipField = (field: FieldMetadataFragment) => {
+const maybeGetRelatedModelFromRelationshipField = (field: FieldMetadata) => {
   if ((isHasOneOrBelongsToField(field) || isHasManyOrHasManyThroughField(field)) && "configuration" in field) {
-    return (field as FieldMetadataFragmentWithRelationshipConfig).configuration.relatedModel;
+    return (field as FieldMetadataWithRelationshipConfig).configuration.relatedModel;
   }
 };
 
@@ -400,7 +400,7 @@ const getFieldSelectionErrorMessage = (columnPath: string) => {
   } as const;
 };
 
-export const pathListToSelection = (modelIdentifier: string, pathList: string[], fieldMetadataArray: FieldMetadataFragment[]) => {
+export const pathListToSelection = (modelIdentifier: string, pathList: string[], fieldMetadataArray: FieldMetadata[]) => {
   const selection: FieldSelection = {
     id: true,
   };
