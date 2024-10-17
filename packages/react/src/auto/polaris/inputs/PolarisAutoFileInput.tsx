@@ -7,7 +7,7 @@ import type { Control } from "react-hook-form";
 import { isAutoFileFieldValue } from "../../../validationSchema.js";
 import { getFileSizeValidationMessage, imageFileTypes, useFileInputController } from "../../hooks/useFileInputController.js";
 
-export const PolarisAutoFileInput = (props: { field: string; control?: Control<any> } & DropZoneProps) => {
+export const PolarisAutoFileInput = (props: { field: string; control?: Control<any> } & Omit<DropZoneProps, "allowMultiple">) => {
   const { field: fieldApiIdentifier, control, ...rest } = props;
   const { fieldProps, errorMessage, imageThumbnailURL, onFileUpload, clearFileValue, canClearFileValue, validations, metadata } =
     useFileInputController({
