@@ -1,8 +1,8 @@
 import type { CheckboxProps } from "@shopify/polaris";
 import { Checkbox } from "@shopify/polaris";
 import React from "react";
-import type { Control } from "react-hook-form";
-import { useController } from "react-hook-form";
+import type { Control } from "../../../useActionForm.js";
+import { useController } from "../../../useActionForm.js";
 import { useFieldMetadata } from "../../hooks/useFieldMetadata.js";
 
 export const PolarisAutoBooleanInput = (props: { field: string; control?: Control<any> } & Partial<CheckboxProps>) => {

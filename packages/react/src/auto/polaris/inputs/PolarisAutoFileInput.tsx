@@ -3,7 +3,7 @@ import { Box, Button, DropZone, InlineError, InlineStack, Thumbnail } from "@sho
 import { DeleteIcon, NoteIcon } from "@shopify/polaris-icons";
 import { filesize } from "filesize";
 import React, { useMemo } from "react";
-import type { Control } from "react-hook-form";
+import type { Control } from "../../../useActionForm.js";
 import { isAutoFileFieldValue } from "../../../validationSchema.js";
 import { getFileSizeValidationMessage, imageFileTypes, useFileInputController } from "../../hooks/useFileInputController.js";
 

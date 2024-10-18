@@ -1,6 +1,6 @@
 import type { TextFieldProps } from "@shopify/polaris";
 import React from "react";
-import type { Control } from "react-hook-form";
+import type { Control } from "../../../useActionForm.js";
 import { useStringInputController } from "../../hooks/useStringInputController.js";
 import { PolarisAutoTextInput } from "./PolarisAutoTextInput.js";
 

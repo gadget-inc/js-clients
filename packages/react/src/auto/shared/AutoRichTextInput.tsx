@@ -1,9 +1,9 @@
 import React, { useEffect, useRef, useState } from "react";
-import { useFormContext } from "react-hook-form";
+import { useFormContext } from "../../useActionForm.js";
 import { get } from "../../utils.js";
 import { useStringInputController } from "../hooks/useStringInputController.js";
 import { multiref } from "../hooks/utils.js";
-import { AutoRichTextInputProps, MDXEditorMethods } from "./AutoRichTextInputProps.js";
+import type { AutoRichTextInputProps, MDXEditorMethods } from "./AutoRichTextInputProps.js";
 
 const AutoRichTextInput: React.FC<AutoRichTextInputProps> = (props) => {
   const { formState } = useFormContext();

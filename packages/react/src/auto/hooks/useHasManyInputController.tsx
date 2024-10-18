@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useMemo } from "react";
-import { useFieldArray, useFormContext } from "react-hook-form";
 import type { GadgetHasManyConfig } from "../../internal/gql/graphql.js";
+import { useFieldArray, useFormContext } from "../../useActionForm.js";
 import { uniq } from "../../utils.js";
 import type { AutoRelationshipInputProps } from "../interfaces/AutoRelationshipInputProps.js";
 import { useFieldMetadata } from "./useFieldMetadata.js";

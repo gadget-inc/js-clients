@@ -1,7 +1,7 @@
 import type { ComboboxProps } from "@shopify/polaris";
 import { AutoSelection, Box, Combobox, InlineStack, Listbox, Tag, Text } from "@shopify/polaris";
 import React, { useCallback } from "react";
-import { type Control } from "react-hook-form";
+import type { Control } from "../../../useActionForm.js";
 import { useEnumInputController } from "../../hooks/useEnumInputController.js";
 
 export const PolarisAutoEnumInput = (props: { field: string; control?: Control<any>; label?: string } & Partial<ComboboxProps>) => {

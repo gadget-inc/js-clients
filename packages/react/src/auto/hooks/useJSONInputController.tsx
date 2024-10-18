@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useState } from "react";
 import deepEqual from "react-fast-compare";
-import type { UseControllerProps } from "react-hook-form";
+import type { UseControllerProps } from "../../useActionForm.js";
 import { isFailedJSONParse, type FailedJSONParse } from "../../validationSchema.js";
 import { useStringInputController } from "./useStringInputController.js";
 

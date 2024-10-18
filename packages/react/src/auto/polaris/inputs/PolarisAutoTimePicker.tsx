@@ -2,8 +2,8 @@ import type { TextFieldProps } from "@shopify/polaris";
 import { Box, Icon, Listbox, Popover, Scrollable, Text, TextField } from "@shopify/polaris";
 import { ClockIcon } from "@shopify/polaris-icons";
 import React, { useEffect, useState } from "react";
-import type { ControllerRenderProps, FieldValues } from "react-hook-form";
 import { zonedTimeToUtc } from "../../../dateTimeUtils.js";
+import type { ControllerRenderProps, FieldValues } from "../../../useActionForm.js";
 import { copyTime, getDateFromDateTimeObject, getDateTimeObjectFromDate } from "./PolarisAutoDateTimePicker.js";
 
 const createMarkup = (

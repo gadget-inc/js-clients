@@ -1,7 +1,7 @@
-import type { UseControllerProps } from "react-hook-form";
-import { useController } from "react-hook-form";
 import type { GadgetFieldType } from "../../internal/gql/graphql.js";
 import { FieldType } from "../../metadata.js";
+import type { UseControllerProps } from "../../useActionForm.js";
+import { useController } from "../../useActionForm.js";
 import { useFieldMetadata } from "./useFieldMetadata.js";
 
 export const FieldTypeToInputType: Partial<Record<GadgetFieldType, string>> = {
