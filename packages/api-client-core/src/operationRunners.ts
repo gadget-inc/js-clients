@@ -19,6 +19,7 @@ import type { AnyModelManager } from "./ModelManager.js";
 import {
   actionOperation,
   backgroundActionResultOperation,
+  computedViewOperation,
   enqueueActionOperation,
   findManyOperation,
   findOneByFieldOperation,
@@ -382,6 +383,19 @@ export const globalActionRunner = async (
   const response = await connection.currentClient.mutation(plan.query, plan.variables).toPromise();
   const dataPath = namespaceDataPath([operation], namespace);
   return assertMutationSuccess(response, dataPath).result;
+};
+
+export const computedViewRunner = async (
+  connection: GadgetConnection,
+  operation: string,
+  variables: VariablesOptions,
+  defaultSelection: FieldSelection,
+  namespace?: string | string[] | null
+) => {
+  const plan = computedViewOperation(operation, variables, defaultSelection, namespace);
+  const response = await connection.currentClient.query(plan.query, plan.variables);
+  const dataPath = namespaceDataPath([operation], namespace);
+  return assertOperationSuccess(response, dataPath).result;
 };
 
 export async function enqueueActionRunner<SchemaT, Action extends AnyBulkActionFunction, Result = BackgroundActionHandle<SchemaT, Action>>(
