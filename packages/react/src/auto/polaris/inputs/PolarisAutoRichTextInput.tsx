@@ -1,6 +1,7 @@
 import { Label } from "@shopify/polaris";
 import type { ComponentProps } from "react";
 import React from "react";
+import { autoInput } from "../../AutoInput.js";
 import { useStringInputController } from "../../hooks/useStringInputController.js";
 import AutoRichTextInput from "../../shared/AutoRichTextInput.js";
 import "../styles/rich-text.css";
@@ -8,7 +9,7 @@ import "../styles/rich-text.css";
 /**
  * Prefer using the LazyLoadedMUIAutoRichTextInput.tsx variant of this component to reduce the bundle size by default.
  */
-export default function PolarisAutoRichTextInput(props: ComponentProps<typeof AutoRichTextInput>) {
+const PolarisAutoRichTextInput = autoInput((props: ComponentProps<typeof AutoRichTextInput>) => {
   const controller = useStringInputController({ field: props.field, control: props.control });
 
   return (
@@ -23,4 +24,6 @@ export default function PolarisAutoRichTextInput(props: ComponentProps<typeof Au
       </div>
     </div>
   );
-}
+});
+
+export default PolarisAutoRichTextInput;
