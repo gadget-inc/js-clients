@@ -9,7 +9,6 @@ import React from "react";
 import { PolarisAutoForm } from "../../../src/auto/polaris/PolarisAutoForm.js";
 import { PolarisAutoNumberInput } from "../../../src/auto/polaris/inputs/PolarisAutoNumberInput.js";
 import { PolarisAutoTextInput } from "../../../src/auto/polaris/inputs/PolarisAutoTextInput.js";
-import type { ActionMetadata } from "../../../src/metadata.js";
 import { testApi as api } from "../../apis.js";
 import { MockClientProvider, mockUrqlClient } from "../../testWrappers.js";
 import { MockForm } from "../MockForm.js";
@@ -22,7 +21,7 @@ describe("PolarisAutoTextInput", () => {
     const getCreateWrapper = () => ({
       wrapper: MockForm({
         submit: jest.fn<any>(),
-        metadata,
+        metadata: metadata as any,
       }),
     });
 
@@ -92,7 +91,7 @@ describe("PolarisAutoTextInput", () => {
               },
             };
           },
-          metadata,
+          metadata: metadata as any,
         }),
       });
 
@@ -184,7 +183,7 @@ describe("PolarisAutoTextInput", () => {
             __typename: "GadgetAction",
           },
           __typename: "GadgetModel",
-        } as ActionMetadata,
+        } as any,
       }),
     });
 
@@ -330,7 +329,7 @@ const metadata = {
     __typename: "GadgetAction",
   },
   __typename: "GadgetModel",
-} as ActionMetadata;
+};
 
 const mockFindBy = () => {
   mockUrqlClient.executeQuery.pushResponse("widget", {
@@ -369,6 +368,14 @@ const mockFindBy = () => {
     hasNext: false,
     data: {
       gadgetMeta: {
+        modelAndRelatedModels: [
+          {
+            name: "Widget",
+            apiIdentifier: "widget",
+            fields: updateMetadata.action.inputFields,
+            __typename: "GadgetModel",
+          },
+        ],
         model: updateMetadata,
         __typename: "GadgetApplicationMeta",
       },

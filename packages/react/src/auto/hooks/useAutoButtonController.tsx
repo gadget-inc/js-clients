@@ -1,6 +1,6 @@
 import type { ActionFunction, GlobalActionFunction } from "@gadgetinc/api-client-core";
 import { useCallback } from "react";
-import { isActionMetadata, useActionMetadata } from "../../metadata.js";
+import { isModelActionMetadata, useActionMetadata } from "../../metadata.js";
 import { useAction } from "../../useAction.js";
 import { useGlobalAction } from "../../useGlobalAction.js";
 import type { ActionHookState } from "../../utils.js";
@@ -44,7 +44,7 @@ export const useAutoButtonController = <
   let label;
   let isDestructive = false;
   if (metadata) {
-    if (isActionMetadata(metadata)) {
+    if (isModelActionMetadata(metadata)) {
       label = `${metadata.action.name} ${metadata.name}`;
       isDestructive = metadata.action.isDeleteAction;
     } else {

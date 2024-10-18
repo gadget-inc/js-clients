@@ -69,6 +69,14 @@ export const getGizmoModelMetadata = (
 ) => {
   return {
     gadgetMeta: {
+      modelAndRelatedModels: [
+        {
+          name: "Gizmo",
+          apiIdentifier: "gizmo",
+          fields: inputFields,
+          __typename: "GadgetModel",
+        },
+      ],
       model: {
         name: "Gizmo",
         apiIdentifier: "gizmo",

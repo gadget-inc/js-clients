@@ -104,6 +104,14 @@ export const getStadiumModelMetadata = (
 ) => {
   return {
     gadgetMeta: {
+      modelAndRelatedModels: [
+        {
+          name: "Stadium",
+          apiIdentifier: "stadium",
+          fields: [stadiumModelInputFields],
+          __typename: "GadgetModel",
+        },
+      ],
       model: {
         name: "Stadium",
         apiIdentifier: "stadium",

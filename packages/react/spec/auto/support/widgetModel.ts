@@ -343,7 +343,18 @@ export const getWidgetModelMetadata = (
 ) => {
   return {
     gadgetMeta: {
+      modelAndRelatedModels: [
+        {
+          key: "DataModel-widget",
+          name: "Widget",
+          apiIdentifier: "widget",
+          fields: widgetModelInputFields.configuration.fields,
+          __typename: "GadgetModel",
+          defaultDisplayField: widgetModelInputFields.configuration.fields.find((field) => field.apiIdentifier === "name"),
+        },
+      ],
       model: {
+        key: "DataModel-widget",
         name: "Widget",
         apiIdentifier: "widget",
         action: {

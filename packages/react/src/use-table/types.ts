@@ -1,8 +1,8 @@
 import type { GadgetRecord, SortOrder } from "@gadgetinc/api-client-core";
 import type { OperationContext } from "@urql/core";
 import type { ReactNode } from "react";
-import type { FieldMetadataFragment, GadgetFieldType } from "../internal/gql/graphql.js";
-import type { ModelMetadata } from "../metadata.js";
+import type { GadgetFieldType } from "../internal/gql/graphql.js";
+import type { FieldMetadata, ModelMetadata } from "../metadata.js";
 import type { SearchResult } from "../useDebouncedSearch.js";
 import type { PaginationResult } from "../useList.js";
 import type { RecordSelection } from "../useSelectedRecordsController.js";
@@ -15,7 +15,7 @@ export type ColumnsOption = Exclude<TableOptions["columns"], undefined>;
 export type TableSpec = {
   targetColumns: ColumnsOption;
   /** Use the `getFieldMetadataByColumnPath` function to get the field metadata by column path for type safety. */
-  fieldMetadataTree: Record<string, FieldMetadataFragment | { $field: FieldMetadataFragment }>;
+  fieldMetadataTree: Record<string, FieldMetadata | { $field: FieldMetadata }>;
   defaultSelection: Record<string, any>;
 };
 
@@ -119,9 +119,9 @@ export type CellDetailColumn = {
   style?: React.CSSProperties;
 };
 
-export type FieldMetadataFragmentWithRelationshipConfig = FieldMetadataFragment & {
+export type FieldMetadataWithRelationshipConfig = FieldMetadata & {
   configuration: Extract<
-    FieldMetadataFragment["configuration"],
+    FieldMetadata["configuration"],
     { __typename: "GadgetHasOneConfig" | "GadgetHasManyConfig" | "GadgetBelongsToConfig" }
   >;
 };
