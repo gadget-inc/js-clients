@@ -1,13 +1,13 @@
 import { jest } from "@jest/globals";
 import { renderHook } from "@testing-library/react";
 import { useFieldMetadata } from "../../../src/auto/hooks/useFieldMetadata.js";
-import type { ActionMetadata } from "../../../src/metadata.js";
+import { GadgetFieldType } from "../../../src/internal/gql/graphql.js";
 import { MockForm } from "../MockForm.js";
 
 describe("useFieldMetadata hook", () => {
   const getUseFieldMetadataResult = (fieldApiId: string) => {
     const { result } = renderHook(() => useFieldMetadata(fieldApiId), {
-      wrapper: MockForm({ submit: jest.fn<any>(), metadata }),
+      wrapper: MockForm({ submit: jest.fn<any>(), metadata: metadata as any }),
     });
 
     return result.current;
@@ -62,7 +62,7 @@ describe("useFieldMetadata hook", () => {
   });
 });
 
-const metadata: ActionMetadata = {
+const metadata = {
   name: "Widget",
   apiIdentifier: "widget",
   action: {
@@ -72,11 +72,11 @@ const metadata: ActionMetadata = {
       {
         name: "Widget",
         apiIdentifier: "widget",
-        fieldType: "Object",
+        fieldType: GadgetFieldType.Object,
         requiredArgumentForInput: false,
         configuration: {
           __typename: "GadgetObjectFieldConfig",
-          fieldType: "Object",
+          fieldType: GadgetFieldType.Object,
           name: null,
           fields: [
             {
@@ -115,4 +115,4 @@ const metadata: ActionMetadata = {
     __typename: "GadgetAction",
   },
   __typename: "GadgetModel",
-} as ActionMetadata;
+};

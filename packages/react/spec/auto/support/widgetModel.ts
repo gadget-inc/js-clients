@@ -343,6 +343,14 @@ export const getWidgetModelMetadata = (
 ) => {
   return {
     gadgetMeta: {
+      modelAndRelatedModels: [
+        {
+          name: "Widget",
+          apiIdentifier: "widget",
+          fields: [widgetModelInputFields],
+          __typename: "GadgetModel",
+        },
+      ],
       model: {
         name: "Widget",
         apiIdentifier: "widget",

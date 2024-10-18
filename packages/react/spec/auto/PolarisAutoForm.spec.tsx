@@ -708,7 +708,6 @@ function loadMockGizmoCreateMetadata() {
     modelApiIdentifier: "gizmo",
     modelNamespace: null,
     action: "create",
-    includeRelatedFields: false,
   });
 
   mockUrqlClient.executeQuery.pushResponse("ModelActionMetadata", {
@@ -727,7 +726,6 @@ function loadMockWidgetCreateMetadata(opts?: { inputFields?: any[]; triggers?: a
     modelApiIdentifier: "widget",
     modelNamespace: null,
     action: "create",
-    includeRelatedFields: false,
   });
 
   mockUrqlClient.executeQuery.pushResponse("ModelActionMetadata", {
@@ -783,7 +781,6 @@ const mockWidgetUpdateHelperFunctions = {
       modelApiIdentifier: "widget",
       modelNamespace: null,
       action: "update",
-      includeRelatedFields: false,
     });
   },
 };
@@ -793,7 +790,6 @@ function loadMockWidgetDeleteMetadata() {
     modelApiIdentifier: "widget",
     modelNamespace: null,
     action: "delete",
-    includeRelatedFields: false,
   });
 
   mockUrqlClient.executeQuery.pushResponse("ModelActionMetadata", {
@@ -814,7 +810,6 @@ function loadMockFlipAllMetadata(opts?: { triggers?: any[] }) {
   expect(mockUrqlClient.executeQuery.mock.calls[0][0].variables).toEqual({
     namespace: null,
     apiIdentifier: "flipAll",
-    includeRelatedFields: false,
   });
 
   mockUrqlClient.executeQuery.pushResponse("GlobalActionMetadata", {

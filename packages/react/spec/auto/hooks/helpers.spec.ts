@@ -1,6 +1,6 @@
-import { GadgetRecord } from "@gadgetinc/api-client-core";
-import type { FieldMetadataFragment } from "../../../src/internal/gql/graphql.js";
+import type { GadgetRecord } from "@gadgetinc/api-client-core";
 import { GadgetFieldType } from "../../../src/internal/gql/graphql.js";
+import type { FieldMetadata } from "../../../src/metadata.js";
 import {
   fieldMetadataArrayToFieldMetadataTree,
   getTableColumns,
@@ -511,7 +511,7 @@ const getSimpleFieldMetadata = (name: string, apiIdentifier: string, fieldType: 
     fieldType,
     configuration: gadgetGenericFieldConfig,
     sortable: sortable ?? true,
-  } as FieldMetadataFragment;
+  } as FieldMetadata;
 };
 
 const getRelationshipFieldMetadata = (props: {
@@ -539,7 +539,7 @@ const getRelationshipFieldMetadata = (props: {
         defaultDisplayField,
       },
     },
-  } as FieldMetadataFragment;
+  } as FieldMetadata;
 };
 
 const fieldMetadataTreeWithRelationship = fieldMetadataArrayToFieldMetadataTree([

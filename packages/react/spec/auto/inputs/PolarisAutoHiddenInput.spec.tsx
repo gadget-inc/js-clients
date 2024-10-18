@@ -172,7 +172,6 @@ describe("PolarisAutoHiddenInput", () => {
 
 function loadMockWidgetCreateMetadata() {
   expect(mockUrqlClient.executeQuery.mock.calls[0][0].variables).toEqual({
-    includeRelatedFields: false,
     modelApiIdentifier: "widget",
     modelNamespace: null,
     action: "create",
