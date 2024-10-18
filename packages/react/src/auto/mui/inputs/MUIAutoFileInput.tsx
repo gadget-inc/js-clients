@@ -1,6 +1,7 @@
 import { Button, styled } from "@mui/material";
 import React from "react";
 import type { Control } from "../../../useActionForm.js";
+import { autoInput } from "../../AutoInput.js";
 import { useFileInputController } from "../../hooks/useFileInputController.js";
 import { MUIAutoFormControl } from "./MUIAutoFormControl.js";
 
@@ -21,7 +22,7 @@ const VisuallyHiddenInput = styled("input")({
   width: 1,
 });
 
-export const MUIAutoFileInput = (props: { field: string; control?: Control<any>; label?: string }) => {
+export const MUIAutoFileInput = autoInput((props: { field: string; control?: Control<any>; label?: string }) => {
   const { field: fieldApiIdentifier, control, label } = props;
   const { onFileUpload, metadata } = useFileInputController({
     field: fieldApiIdentifier,
@@ -43,4 +44,4 @@ export const MUIAutoFileInput = (props: { field: string; control?: Control<any>;
       </Button>
     </MUIAutoFormControl>
   );
-};
+});

@@ -1,5 +1,6 @@
 import { Alert, Autocomplete, Box, TextField, Typography } from "@mui/material";
 import React from "react";
+import { autoInput } from "../../../AutoInput.js";
 import { useHasOneInputController } from "../../../hooks/useHasOneInputController.js";
 import type { AutoRelationshipInputProps } from "../../../interfaces/AutoRelationshipInputProps.js";
 
@@ -8,7 +9,7 @@ import type { AutoRelationshipInputProps } from "../../../interfaces/AutoRelatio
  */
 const showErrorBannerWhenTooManyRelatedRecords = false;
 
-export const MUIAutoHasOneInput = (props: AutoRelationshipInputProps) => {
+export const MUIAutoHasOneInput = autoInput((props: AutoRelationshipInputProps) => {
   const { field } = props;
   const {
     fieldMetadata: { path, metadata },
@@ -60,6 +61,6 @@ export const MUIAutoHasOneInput = (props: AutoRelationshipInputProps) => {
       )}
     ></Autocomplete>
   );
-};
+});
 
 const showMoreHoverOption = { recordId: "-1", label: "Show more" };

@@ -1,9 +1,10 @@
 import { Autocomplete, Box, TextField, Typography } from "@mui/material";
 import React from "react";
+import { autoInput } from "../../../AutoInput.js";
 import { useBelongsToInputController } from "../../../hooks/useBelongsToInputController.js";
 import type { AutoRelationshipInputProps } from "../../../interfaces/AutoRelationshipInputProps.js";
 
-export const MUIAutoBelongsToInput = (props: AutoRelationshipInputProps) => {
+export const MUIAutoBelongsToInput = autoInput((props: AutoRelationshipInputProps) => {
   const {
     fieldMetadata: { path, metadata },
     relatedModelOptions: { options, pagination, search },
@@ -54,6 +55,6 @@ export const MUIAutoBelongsToInput = (props: AutoRelationshipInputProps) => {
       )}
     ></Autocomplete>
   );
-};
+});
 
 const showMoreHoverOption = { recordId: "-1", label: "Show more" };

@@ -1,11 +1,12 @@
 import React, { useEffect, useRef, useState } from "react";
 import { useFormContext } from "../../useActionForm.js";
 import { get } from "../../utils.js";
+import { autoInput } from "../AutoInput.js";
 import { useStringInputController } from "../hooks/useStringInputController.js";
 import { multiref } from "../hooks/utils.js";
 import type { AutoRichTextInputProps, MDXEditorMethods } from "./AutoRichTextInputProps.js";
 
-const AutoRichTextInput: React.FC<AutoRichTextInputProps> = (props) => {
+const AutoRichTextInput = autoInput<AutoRichTextInputProps>((props) => {
   const { formState } = useFormContext();
   const { field, control, editorRef, ...rest } = props;
   const controller = useStringInputController({ field, control });
@@ -93,6 +94,6 @@ const AutoRichTextInput: React.FC<AutoRichTextInputProps> = (props) => {
       {...rest}
     />
   );
-};
+});
 
 export default AutoRichTextInput;

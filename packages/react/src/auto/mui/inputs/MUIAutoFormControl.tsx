@@ -2,9 +2,10 @@ import { FormControl, FormControlLabel, FormGroup, FormHelperText } from "@mui/m
 import type { ReactElement } from "react";
 import React from "react";
 import { useController } from "../../../useActionForm.js";
+import { autoInput } from "../../AutoInput.js";
 import { useFieldMetadata } from "../../hooks/useFieldMetadata.js";
 
-export const MUIAutoFormControl = (props: { field: string; children: ReactElement; label?: string }) => {
+export const MUIAutoFormControl = autoInput((props: { field: string; children: ReactElement; label?: string }) => {
   const { path, metadata } = useFieldMetadata(props.field);
   const {
     fieldState: { error },
@@ -20,4 +21,4 @@ export const MUIAutoFormControl = (props: { field: string; children: ReactElemen
       {error && <FormHelperText>{error?.message}</FormHelperText>}
     </FormControl>
   );
-};
+});
