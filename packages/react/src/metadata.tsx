@@ -4,7 +4,7 @@ import type { ResultOf } from "@graphql-typed-document-node/core";
 import type { DocumentNode } from "graphql";
 import { useApi } from "./GadgetProvider.js";
 import { graphql } from "./internal/gql/gql.js";
-import { GadgetFieldType } from "./internal/gql/graphql.js";
+import { GadgetFieldType, type FieldMetadataFragment as FieldMetadataFragmentType } from "./internal/gql/graphql.js";
 import { useGadgetQuery } from "./useGadgetQuery.js";
 import { ErrorWrapper, getModelManager } from "./utils.js";
 
@@ -17,15 +17,7 @@ export const FieldType = GadgetFieldType;
 type WithRequired<T, K extends keyof T> = T & { [P in K]-?: Exclude<T[P], null> };
 type Clarify<T> = T extends Record<string, unknown> ? { [Key in keyof T]: T[Key] } : T;
 
-const RelatedModelFieldFragment = graphql(/* GraphQL */ `
-  fragment RelatedModelFieldFragment on GadgetModelField {
-    name
-    apiIdentifier
-    fieldType
-  }
-`);
-
-const FieldMetadataFragment = graphql(/* GraphQL */ `
+const _FieldMetadataFragment = graphql(/* GraphQL */ `
   fragment FieldMetadata on GadgetField {
     name
     apiIdentifier
@@ -66,14 +58,6 @@ const FieldMetadataFragment = graphql(/* GraphQL */ `
           key
           apiIdentifier
           namespace
-          defaultDisplayField {
-            name
-            apiIdentifier
-            fieldType
-          }
-          fields @include(if: $includeRelatedFields) {
-            ...RelatedModelFieldFragment
-          }
         }
         inverseField {
           apiIdentifier
@@ -82,11 +66,6 @@ const FieldMetadataFragment = graphql(/* GraphQL */ `
           key
           apiIdentifier
           namespace
-          defaultDisplayField {
-            name
-            apiIdentifier
-            fieldType
-          }
         }
         inverseJoinModelField {
           apiIdentifier
@@ -99,16 +78,9 @@ const FieldMetadataFragment = graphql(/* GraphQL */ `
         isJoinModelHasManyField
         relatedModel {
           key
+          name
           apiIdentifier
           namespace
-          defaultDisplayField {
-            name
-            apiIdentifier
-            fieldType
-          }
-          fields @include(if: $includeRelatedFields) {
-            ...RelatedModelFieldFragment
-          }
         }
         inverseField {
           apiIdentifier
@@ -119,14 +91,6 @@ const FieldMetadataFragment = graphql(/* GraphQL */ `
           key
           apiIdentifier
           namespace
-          defaultDisplayField {
-            name
-            apiIdentifier
-            fieldType
-          }
-          fields @include(if: $includeRelatedFields) {
-            ...RelatedModelFieldFragment
-          }
         }
         inverseField {
           apiIdentifier
@@ -137,14 +101,6 @@ const FieldMetadataFragment = graphql(/* GraphQL */ `
           key
           apiIdentifier
           namespace
-          defaultDisplayField {
-            name
-            apiIdentifier
-            fieldType
-          }
-          fields @include(if: $includeRelatedFields) {
-            ...RelatedModelFieldFragment
-          }
         }
       }
       ... on GadgetEnumConfig {
@@ -168,12 +124,18 @@ const FieldMetadataFragment = graphql(/* GraphQL */ `
 const ModelMetadataQuery = graphql(/* GraphQL */ `
   query GetModelMetadata($apiIdentifier: String!, $namespace: [String!], $includeRelatedFields: Boolean!) {
     gadgetMeta {
-      model(apiIdentifier: $apiIdentifier, namespace: $namespace) {
+      modelAndRelatedModels(apiIdentifier: $apiIdentifier, namespace: $namespace) {
+        key
         apiIdentifier
         namespace
         name
         fields {
           ...FieldMetadata
+        }
+        defaultDisplayField {
+          name
+          apiIdentifier
+          fieldType
         }
       }
     }
@@ -215,7 +177,23 @@ const _SubFieldsFragment = graphql(/* GraphQL */ `
 const ModelActionMetadataQuery = graphql(/* GraphQL */ `
   query ModelActionMetadata($modelApiIdentifier: String!, $modelNamespace: [String!], $action: String!, $includeRelatedFields: Boolean!) {
     gadgetMeta {
+      modelAndRelatedModels(apiIdentifier: $modelApiIdentifier, namespace: $modelNamespace) {
+        key
+        name
+        apiIdentifier
+        defaultRecord
+        fields {
+          ...FieldMetadata
+          ...SubFields
+        }
+        defaultDisplayField {
+          name
+          apiIdentifier
+          fieldType
+        }
+      }
       model(apiIdentifier: $modelApiIdentifier, namespace: $modelNamespace) {
+        key
         name
         apiIdentifier
         defaultRecord
@@ -270,21 +248,89 @@ const RolesMetadataQuery = graphql(/* GraphQL */ `
   }
 `);
 
-export type ModelMetadata = Exclude<ResultOf<typeof ModelMetadataQuery>["gadgetMeta"]["model"], null | undefined>;
-export type ActionMetadata = Clarify<
-  WithRequired<Exclude<ResultOf<typeof ModelActionMetadataQuery>["gadgetMeta"]["model"], null | undefined>, "action">
->;
-export type GlobalActionMetadata = Clarify<
-  Exclude<ResultOf<typeof GlobalActionMetadataQuery>["gadgetMeta"]["globalAction"], null | undefined>
+type MapConfigurationKey<T, K extends string, NewType> = T extends any
+  ? {
+      [P in keyof T]: P extends K ? NewType : T[P];
+    }
+  : never;
+
+type MapUnionConfigurationKey<U, K extends string, NewType> = U extends any ? MapConfigurationKey<U, K, NewType> : never;
+
+/**
+ * The metadata blob retrieved for one field from the backend
+ * Uses this weird typescript type to augment the raw GraphQL return type with the effect of the treeification which points to rich related model metadata
+ */
+export interface FieldMetadata {
+  __typename?: "GadgetModelField" | "GadgetObjectField";
+  name: string;
+  apiIdentifier: string;
+  fieldType: GadgetFieldType;
+  requiredArgumentForInput: boolean;
+  sortable?: boolean;
+  filterable?: boolean;
+  configuration: MapUnionConfigurationKey<FieldMetadataFragmentType["configuration"], "relatedModel", ModelMetadata>;
+}
+
+/**
+ * The metadata blob retrieved for one model from the backend
+ */
+export type ModelMetadata = Clarify<
+  Omit<Exclude<ResultOf<typeof ModelMetadataQuery>["gadgetMeta"]["modelAndRelatedModels"][number], null | undefined>, "fields"> & {
+    fields: FieldMetadata[];
+  }
 >;
 
-export type FieldMetadata = ResultOf<typeof FieldMetadataFragment>;
+/**
+ * The metadata blob retrieved for one model action from the backend
+ */
+export type ActionMetadata = Clarify<
+  Omit<
+    Exclude<Exclude<ResultOf<typeof ModelActionMetadataQuery>["gadgetMeta"]["model"], null | undefined>["action"], null | undefined>,
+    "inputFields"
+  > & {
+    inputFields: FieldMetadata[];
+  }
+>;
+
+/**
+ * The metadata blob retrieved for one model with one specific action from the backend
+ */
+export type ModelWithOneActionMetadata = Clarify<
+  Omit<Exclude<ResultOf<typeof ModelActionMetadataQuery>["gadgetMeta"]["model"], null | undefined>, "action"> & { action: ActionMetadata }
+>;
+
+export type GlobalActionMetadata = Clarify<
+  Omit<Exclude<ResultOf<typeof GlobalActionMetadataQuery>["gadgetMeta"]["globalAction"], null | undefined>, "inputFields"> & {
+    inputFields: FieldMetadata[];
+  }
+>;
+
+/** The gadget metaschema returns models as a flat list of models to avoid infinite recursion. Re-build the circular references among all the related models client side here */
+const treeifyModelMetadata = <T extends { key: string; fields: FieldMetadata[] }>(models: T[]): T => {
+  const modelsByKey: Record<string, T> = {};
+  for (const model of models) {
+    modelsByKey[model.key] = model;
+  }
+
+  for (const model of models) {
+    for (const field of model.fields) {
+      if ("relatedModel" in field.configuration && field.configuration.relatedModel) {
+        (field.configuration as any).relatedModel = modelsByKey[field.configuration.relatedModel.key];
+      }
+    }
+  }
+
+  return models[0];
+};
 
 /**
  * Retrieve a given Gadget model's metadata from the backend
  * @internal
  */
-export const useModelMetadata = (apiIdentifier: string, namespace: string[]) => {
+export const useModelMetadata = (
+  apiIdentifier: string,
+  namespace: string[]
+): { metadata: ModelMetadata | undefined; fetching: boolean; error: ErrorWrapper | undefined } => {
   const [{ data, fetching, error }] = useGadgetQuery({
     query: ModelMetadataQuery,
     variables: {
@@ -295,7 +341,12 @@ export const useModelMetadata = (apiIdentifier: string, namespace: string[]) => 
   });
 
   return {
-    metadata: data ? assert(data.gadgetMeta.model, "no model metadata found from Gadget API") : data,
+    metadata: data
+      ? assert(
+          treeifyModelMetadata(data.gadgetMeta.modelAndRelatedModels as unknown as ModelMetadata[]),
+          "no model metadata found in response from Gadget API"
+        )
+      : data,
     fetching,
     error: error ? ErrorWrapper.forClientSideError(error) : undefined,
   };
@@ -320,7 +371,9 @@ const getGlobalActionApiIdentifier = (api: AnyClient, fn: GlobalActionFunction<a
  * Retrieve a given Gadget model action's metadata from the backend
  * @internal
  */
-export const useActionMetadata = (actionFunction: ActionFunction<any, any, any, any, any> | GlobalActionFunction<any>) => {
+export const useActionMetadata = (
+  actionFunction: ActionFunction<any, any, any, any, any> | GlobalActionFunction<any>
+): { metadata: ModelWithOneActionMetadata | GlobalActionMetadata | undefined; fetching: boolean; error: ErrorWrapper | undefined } => {
   const api = useApi();
 
   let query: DocumentNode;
@@ -354,7 +407,7 @@ export const useActionMetadata = (actionFunction: ActionFunction<any, any, any, 
       modelApiIdentifier: actionFunction.modelApiIdentifier,
       modelNamespace: actionFunction.namespace,
       action: actionName,
-      includeRelatedFields: false,
+      includeRelatedFields: true,
     };
   } else {
     throw new Error(`Invalid action function type`);
@@ -365,14 +418,26 @@ export const useActionMetadata = (actionFunction: ActionFunction<any, any, any, 
     variables,
   });
 
-  let metadata: ActionMetadata | GlobalActionMetadata | undefined = undefined;
+  let metadata: ModelWithOneActionMetadata | GlobalActionMetadata | undefined = undefined;
 
   if (data && !error) {
-    if (actionFunction.type === "globalAction") {
-      metadata = assert(data.gadgetMeta.globalAction, "no global action metadata found from Gadget API");
+    if ("globalAction" in data.gadgetMeta) {
+      metadata = assert(
+        (data as ResultOf<typeof GlobalActionMetadataQuery>).gadgetMeta.globalAction,
+        "no global action metadata found from Gadget API"
+      ) as GlobalActionMetadata;
     } else {
-      metadata = data.gadgetMeta.model as ActionMetadata;
-      assert(metadata?.action, "no model metadata found from Gadget API");
+      const typedData = data as ResultOf<typeof ModelActionMetadataQuery>;
+      assert(typedData.gadgetMeta.model?.action, "no model metadata found from Gadget API");
+
+      // merge fields fetched from one spot with action fetched from the other spot
+      const mainModel = {
+        ...typedData.gadgetMeta.model,
+        ...typedData.gadgetMeta.modelAndRelatedModels[0],
+      };
+
+      const models: ModelMetadata[] = [mainModel, ...typedData.gadgetMeta.modelAndRelatedModels.slice(1)] as any;
+      metadata = treeifyModelMetadata(models) as unknown as ModelWithOneActionMetadata;
     }
   }
 
@@ -386,47 +451,75 @@ export const useActionMetadata = (actionFunction: ActionFunction<any, any, any, 
 /**
  * @internal
  */
-export const filterAutoFormFieldList = (
+export const buildAutoFormFieldList = (
   fields: FieldMetadata[] | undefined,
   options?: { include?: string[]; exclude?: string[]; isUpsertAction?: boolean }
-): FieldMetadata[] => {
+): [string, FieldMetadata][] => {
   if (!fields) {
     return [];
   }
 
-  let subset = fields;
+  let subset: [string, FieldMetadata][] = fields.map((field) => [field.apiIdentifier, field]);
 
   if (options?.include && options?.exclude) {
     throw new Error("Cannot use both 'include' and 'exclude' options at the same time");
   }
-
   if (options?.include) {
     // When including fields, the order will match the order of the `include` array
     subset = [];
     const includes = new Set(options.include);
 
-    for (const includedFieldApiId of Array.from(includes)) {
-      const metadataField = fields.find((field) => field.apiIdentifier === includedFieldApiId);
+    const includeGroups: Record<string, string[]> = {};
+
+    for (const path of Array.from(includes)) {
+      const [rootSegment, ...childSegments] = path.split(".");
+
+      includeGroups[rootSegment] ??= [];
+
+      if (childSegments.length) {
+        includeGroups[rootSegment].push(childSegments.join("."));
+      }
+    }
+
+    for (const [rootApiIdentifier, childIdentifiers] of Object.entries(includeGroups)) {
+      const metadataField = fields.find((field) => field.apiIdentifier === rootApiIdentifier);
       if (metadataField) {
-        subset.push(metadataField);
+        subset.push([rootApiIdentifier, metadataField]);
+
+        if (
+          childIdentifiers.length > 0 &&
+          "relatedModel" in metadataField.configuration &&
+          metadataField.configuration.relatedModel?.fields
+        ) {
+          const childFields = buildAutoFormFieldList(metadataField.configuration.relatedModel.fields, {
+            include: childIdentifiers,
+          });
+          subset.push(
+            ...childFields.map(
+              ([childApiIdentifier, childField]) => [`${rootApiIdentifier}.${childApiIdentifier}`, childField] as [string, FieldMetadata]
+            )
+          );
+        }
       }
     }
   }
 
   if (options?.exclude) {
     const excludes = new Set(options.exclude);
-    subset = subset.filter((field) => !excludes.has(field.apiIdentifier));
+    subset = subset.filter(([_, field]) => !excludes.has(field.apiIdentifier));
   }
 
   // Remove `hasMany` fields that emerge from `hasManyThrough` fields that are not actually model fields
-  subset = subset.filter((field) => !isJoinModelHasManyField(field));
+  subset = subset.filter(([_, field]) => !isJoinModelHasManyField(field));
 
   // Filter out fields that are not supported by the form
-  const validFieldTypeSubset = subset.filter(options?.isUpsertAction ? isAcceptedUpsertFieldType : isAcceptedFieldType);
+  const validFieldTypeSubset = subset.filter(([_, field]) =>
+    options?.isUpsertAction ? isAcceptedUpsertFieldType(field) : isAcceptedFieldType(field)
+  );
 
   return options?.include
     ? validFieldTypeSubset // Everything explicitly included is valid
-    : validFieldTypeSubset.filter(isNotRelatedToSpecialModelFilter); // Without explicit includes, filter out relationships to special models
+    : validFieldTypeSubset.filter(([_, field]) => isNotRelatedToSpecialModelFilter(field)); // Without explicit includes, filter out relationships to special models
 };
 
 /**
@@ -532,6 +625,8 @@ export const useRolesMetadata = () => {
   };
 };
 
-export const isActionMetadata = (metadata: ActionMetadata | GlobalActionMetadata): metadata is ActionMetadata => {
+export const isModelActionMetadata = (
+  metadata: ModelWithOneActionMetadata | GlobalActionMetadata
+): metadata is ModelWithOneActionMetadata => {
   return "action" in metadata;
 };
