@@ -3,6 +3,7 @@ import { IconButton } from "@mui/material";
 import React, { useState } from "react";
 import { useController, type Control } from "../../../useActionForm.js";
 import { useAutoFormMetadata } from "../../AutoFormContext.js";
+import { autoInput } from "../../AutoInput.js";
 import { useFieldMetadata } from "../../hooks/useFieldMetadata.js";
 import { MUIAutoEncryptedStringInput } from "./MUIAutoEncryptedStringInput.js";
 
@@ -13,39 +14,41 @@ import { MUIAutoEncryptedStringInput } from "./MUIAutoEncryptedStringInput.js";
 const existingPasswordPlaceholder = "********";
 const pencilEmoji = `✏️`;
 
-export const MUIAutoPasswordInput = (
-  props: {
-    field: string; // The field API identifier
-    control?: Control<any>;
-  } & Partial<TextFieldProps>
-) => {
-  const { findBy } = useAutoFormMetadata();
-  const { path } = useFieldMetadata(props.field);
-  const { field: fieldProps } = useController({ name: path });
+export const MUIAutoPasswordInput = autoInput(
+  (
+    props: {
+      field: string; // The field API identifier
+      control?: Control<any>;
+    } & Partial<TextFieldProps>
+  ) => {
+    const { findBy } = useAutoFormMetadata();
+    const { path } = useFieldMetadata(props.field);
+    const { field: fieldProps } = useController({ name: path });
 
-  const [isEditing, setIsEditing] = useState(!findBy);
+    const [isEditing, setIsEditing] = useState(!findBy);
 
-  const startEditing = () => {
-    fieldProps.onChange(""); // Touch the field to mark it as dirty
-    setIsEditing(true);
-  };
+    const startEditing = () => {
+      fieldProps.onChange(""); // Touch the field to mark it as dirty
+      setIsEditing(true);
+    };
 
-  const startEditingButton = (
-    <IconButton onClick={startEditing} role={`${props.field}EditPasswordButton`}>
-      {pencilEmoji}
-    </IconButton>
-  );
+    const startEditingButton = (
+      <IconButton onClick={startEditing} role={`${props.field}EditPasswordButton`}>
+        {pencilEmoji}
+      </IconButton>
+    );
 
-  return (
-    <MUIAutoEncryptedStringInput
-      {...(isEditing
-        ? { placeholder: "Password" }
-        : {
-            InputProps: { endAdornment: startEditingButton },
-            placeholder: existingPasswordPlaceholder,
-            disabled: true,
-          })}
-      {...props}
-    />
-  );
-};
+    return (
+      <MUIAutoEncryptedStringInput
+        {...(isEditing
+          ? { placeholder: "Password" }
+          : {
+              InputProps: { endAdornment: startEditingButton },
+              placeholder: existingPasswordPlaceholder,
+              disabled: true,
+            })}
+        {...props}
+      />
+    );
+  }
+);

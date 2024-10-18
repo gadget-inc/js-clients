@@ -3,9 +3,10 @@ import { Checkbox } from "@shopify/polaris";
 import React from "react";
 import type { Control } from "../../../useActionForm.js";
 import { useController } from "../../../useActionForm.js";
+import { autoInput } from "../../AutoInput.js";
 import { useFieldMetadata } from "../../hooks/useFieldMetadata.js";
 
-export const PolarisAutoBooleanInput = (props: { field: string; control?: Control<any> } & Partial<CheckboxProps>) => {
+export const PolarisAutoBooleanInput = autoInput((props: { field: string; control?: Control<any> } & Partial<CheckboxProps>) => {
   const { field: fieldApiIdentifier, control, ...rest } = props;
 
   const { path, metadata } = useFieldMetadata(fieldApiIdentifier);
@@ -22,4 +23,4 @@ export const PolarisAutoBooleanInput = (props: { field: string; control?: Contro
   const { value: _value, ...restFieldProps } = fieldProps;
 
   return <Checkbox {...restFieldProps} checked={!!fieldProps.value} error={error?.message} {...rest} label={label} />;
-};
+});

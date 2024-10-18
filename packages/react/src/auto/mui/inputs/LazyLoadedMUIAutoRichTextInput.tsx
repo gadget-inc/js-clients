@@ -1,13 +1,14 @@
 import React from "react";
-import { AutoRichTextInputProps } from "../../../auto/shared/AutoRichTextInputProps.js";
+import type { AutoRichTextInputProps } from "../../../auto/shared/AutoRichTextInputProps.js";
+import { autoInput } from "../../AutoInput.js";
 
 // lazy import for smaller bundle size by default
 const LazyLoadedMUIAutoRichTextInput = React.lazy(() => import("./MUIAutoRichTextInput.js"));
 
-export const MUIAutoRichTextInput = (props: AutoRichTextInputProps) => {
+export const MUIAutoRichTextInput = autoInput((props: AutoRichTextInputProps) => {
   return (
     <>
       <LazyLoadedMUIAutoRichTextInput {...props} />
     </>
   );
-};
+});
