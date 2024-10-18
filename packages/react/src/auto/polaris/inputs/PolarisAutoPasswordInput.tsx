@@ -2,7 +2,7 @@ import type { TextFieldProps } from "@shopify/polaris";
 import { Button } from "@shopify/polaris";
 import { EditIcon } from "@shopify/polaris-icons";
 import React, { useState } from "react";
-import { useController, type Control } from "react-hook-form";
+import { useController, type Control } from "../../../useActionForm.js";
 import { useAutoFormMetadata } from "../../AutoFormContext.js";
 import { useFieldMetadata } from "../../hooks/useFieldMetadata.js";
 import { PolarisAutoEncryptedStringInput } from "./PolarisAutoEncryptedStringInput.js";

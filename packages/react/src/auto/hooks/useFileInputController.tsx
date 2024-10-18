@@ -1,8 +1,8 @@
 import { filesize } from "filesize";
 import { useCallback, useEffect, useMemo, useState } from "react";
-import { useController, useFormContext, type Control } from "react-hook-form";
 import { useApi } from "../../GadgetProvider.js";
 import type { GadgetOnlyImageFileFieldValidation, GadgetRangeFieldValidation } from "../../internal/gql/graphql.js";
+import { useController, useFormContext, type Control } from "../../useActionForm.js";
 import type { AutoFileFieldValue } from "../../validationSchema.js";
 import { RequiredValidationSpecId, isAutoFileFieldValue } from "../../validationSchema.js";
 import { useFieldMetadata } from "./useFieldMetadata.js";
