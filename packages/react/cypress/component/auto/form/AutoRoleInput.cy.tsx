@@ -121,6 +121,36 @@ const rolesMetadataResponse = {
 const modelActionMetadataResponse = {
   data: {
     gadgetMeta: {
+      modelAndRelatedModels: [
+        {
+          name: "Widget",
+          apiIdentifier: "widget",
+          defaultRecord: {
+            description: {
+              markdown: "# awd",
+            },
+            category: [],
+            __typename: "Widget",
+          },
+          fields: [
+            {
+              name: "Roles",
+              apiIdentifier: "roles",
+              fieldType: "RoleAssignments",
+              requiredArgumentForInput: false,
+              sortable: false,
+              filterable: true,
+              __typename: "GadgetModelField",
+              configuration: {
+                __typename: "GadgetGenericFieldConfig",
+                fieldType: "RoleAssignments",
+                validations: [],
+              },
+            },
+          ],
+          __typename: "GadgetModel",
+        },
+      ],
       model: {
         name: "Widget",
         apiIdentifier: "widget",

@@ -190,6 +190,85 @@ describeForEachAutoAdapter("AutoForm - Upsert Action", ({ name, adapter: { AutoF
 const upsertModelActionMetadataResponse = {
   data: {
     gadgetMeta: {
+      modelAndRelatedModels: [
+        {
+          name: "Widget",
+          apiIdentifier: "widget",
+          defaultRecord: {
+            name: "",
+            description: {
+              markdown: "",
+            },
+            category: [],
+            __typename: "Widget",
+          },
+          fields: [
+            {
+              name: "Id",
+              apiIdentifier: "id",
+              fieldType: "ID",
+              requiredArgumentForInput: false,
+              sortable: true,
+              filterable: true,
+              __typename: "GadgetModelField",
+              configuration: {
+                __typename: "GadgetGenericFieldConfig",
+                fieldType: "ID",
+                validations: [],
+              },
+            },
+            {
+              name: "Name",
+              apiIdentifier: "name",
+              fieldType: "String",
+              requiredArgumentForInput: true,
+              sortable: true,
+              filterable: true,
+              __typename: "GadgetModelField",
+              configuration: {
+                __typename: "GadgetGenericFieldConfig",
+                fieldType: "String",
+                validations: [
+                  {
+                    __typename: "GadgetGenericFieldValidation",
+                    name: "Required",
+                    specID: "gadget/validation/required",
+                  },
+                ],
+              },
+            },
+            {
+              name: "Inventory count",
+              apiIdentifier: "inventoryCount",
+              fieldType: "Number",
+              requiredArgumentForInput: true,
+              sortable: true,
+              filterable: true,
+              __typename: "GadgetModelField",
+              configuration: {
+                __typename: "GadgetNumberConfig",
+                fieldType: "Number",
+                validations: [
+                  {
+                    __typename: "GadgetRangeFieldValidation",
+                    name: "Number range",
+                    specID: "gadget/validation/number-range",
+                    min: 0,
+                    max: null,
+                  },
+                  {
+                    __typename: "GadgetGenericFieldValidation",
+                    name: "Required",
+                    specID: "gadget/validation/required",
+                  },
+                ],
+                decimals: null,
+              },
+            },
+          ],
+          __typename: "GadgetModel",
+        },
+      ],
       model: {
         name: "Widget",
         apiIdentifier: "widget",

@@ -1,6 +1,6 @@
 import React, { useContext } from "react";
 import type { RecordIdentifier, UseActionFormSubmit } from "src/use-action-form/types.js";
-import type { ActionMetadata, GlobalActionMetadata } from "../metadata.js";
+import type { GlobalActionMetadata, ModelWithOneActionMetadata } from "../metadata.js";
 
 export interface AutoFormSubmitResult {
   isSuccessful?: boolean;
@@ -10,7 +10,7 @@ export interface AutoFormSubmitResult {
 
 export interface AutoFormMetadataContext {
   findBy?: RecordIdentifier;
-  metadata: ActionMetadata | GlobalActionMetadata | undefined;
+  metadata: ModelWithOneActionMetadata | GlobalActionMetadata | undefined;
   submit: UseActionFormSubmit<any>;
   submitResult?: AutoFormSubmitResult;
   model?: {

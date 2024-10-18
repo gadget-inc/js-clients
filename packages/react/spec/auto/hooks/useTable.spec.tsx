@@ -979,6 +979,14 @@ const loadMockWidgetModelMetadata = () => {
     hasNext: false,
     data: {
       gadgetMeta: {
+        modelAndRelatedModels: [
+          {
+            name: "Widget",
+            apiIdentifier: "widget",
+            fields: [recordIdInputField, ...widgetModelInputFields.configuration.fields],
+            __typename: "GadgetModel",
+          },
+        ],
         model: {
           apiIdentifier: "widget",
           namespace: [],
@@ -1061,6 +1069,391 @@ const loadMockWidgetModelMetadataForRelationship = () => {
     hasNext: false,
     data: {
       gadgetMeta: {
+        modelAndRelatedModels: [
+          {
+            key: "DataModel-wudget",
+            apiIdentifier: "widget",
+            namespace: [],
+            name: "Wudget",
+            fields: [
+              recordIdInputField,
+              {
+                name: "Name",
+                apiIdentifier: "name",
+                fieldType: "String",
+                requiredArgumentForInput: true,
+                sortable: true,
+                filterable: true,
+                configuration: {
+                  __typename: "GadgetGenericFieldConfig",
+                  fieldType: "String",
+                  validations: [
+                    {
+                      name: "Required",
+                      specID: "gadget/validation/required",
+                      __typename: "GadgetGenericFieldValidation",
+                    },
+                  ],
+                },
+              },
+              {
+                name: "Field that never selected",
+                apiIdentifier: "fieldThatNeverSelected",
+                fieldType: "String",
+                requiredArgumentForInput: true,
+                sortable: true,
+                filterable: true,
+                configuration: {
+                  __typename: "GadgetGenericFieldConfig",
+                  fieldType: "String",
+                  validations: [
+                    {
+                      name: "Required",
+                      specID: "gadget/validation/required",
+                      __typename: "GadgetGenericFieldValidation",
+                    },
+                  ],
+                },
+              },
+              {
+                name: "Has one",
+                apiIdentifier: "hasOne",
+                fieldType: "HasOne",
+                requiredArgumentForInput: false,
+                sortable: false,
+                filterable: false,
+                __typename: "GadgetModelField",
+                configuration: {
+                  __typename: "GadgetHasOneConfig",
+                  fieldType: "HasOne",
+                  validations: [],
+                  relatedModel: {
+                    key: "DataModel-_autoTableTestRelatedModel",
+                    apiIdentifier: "_autoTableTestRelatedModel",
+                    namespace: [],
+                    defaultDisplayField: {
+                      apiIdentifier: "name",
+                      fieldType: "String",
+                      __typename: "GadgetModelField",
+                    },
+                    fields: [
+                      {
+                        name: "Id",
+                        apiIdentifier: "id",
+                        fieldType: "ID",
+                        __typename: "GadgetModelField",
+                      },
+                      {
+                        name: "Name",
+                        apiIdentifier: "name",
+                        fieldType: "String",
+                        __typename: "GadgetModelField",
+                      },
+                    ],
+                    __typename: "GadgetModel",
+                  },
+                  inverseField: {
+                    apiIdentifier: "belongsToParent",
+                    __typename: "GadgetModelField",
+                  },
+                },
+              },
+              {
+                name: "Has many",
+                apiIdentifier: "hasMany",
+                fieldType: "HasMany",
+                requiredArgumentForInput: false,
+                sortable: false,
+                filterable: false,
+                __typename: "GadgetModelField",
+                configuration: {
+                  __typename: "GadgetHasManyConfig",
+                  fieldType: "HasMany",
+                  validations: [],
+                  relatedModel: {
+                    key: "DataModel-_autoTableTestRelatedModel",
+                    apiIdentifier: "_autoTableTestRelatedModel",
+                    namespace: [],
+                    defaultDisplayField: {
+                      apiIdentifier: "name",
+                      fieldType: "String",
+                      __typename: "GadgetModelField",
+                    },
+                    fields: [
+                      {
+                        name: "Id",
+                        apiIdentifier: "id",
+                        fieldType: "ID",
+                        __typename: "GadgetModelField",
+                      },
+                      {
+                        name: "Name",
+                        apiIdentifier: "name",
+                        fieldType: "String",
+                        __typename: "GadgetModelField",
+                      },
+                    ],
+                    __typename: "GadgetModel",
+                  },
+                  inverseField: {
+                    apiIdentifier: "manyBelongsToParent",
+                    __typename: "GadgetModelField",
+                  },
+                },
+              },
+              {
+                name: "Belongs to",
+                apiIdentifier: "belongsTo",
+                fieldType: "BelongsTo",
+                requiredArgumentForInput: false,
+                sortable: false,
+                filterable: true,
+                __typename: "GadgetModelField",
+                configuration: {
+                  __typename: "GadgetBelongsToConfig",
+                  fieldType: "BelongsTo",
+                  validations: [],
+                  relatedModel: {
+                    key: "DataModel-widget",
+                    apiIdentifier: "widgetOther",
+                    namespace: [],
+                    defaultDisplayField: {
+                      apiIdentifier: "email",
+                      fieldType: "Email",
+                      __typename: "GadgetModelField",
+                    },
+                    fields: [
+                      {
+                        name: "Id",
+                        apiIdentifier: "id",
+                        fieldType: "ID",
+                        __typename: "GadgetModelField",
+                      },
+                      {
+                        name: "Str",
+                        apiIdentifier: "str",
+                        fieldType: "String",
+                        __typename: "GadgetModelField",
+                      },
+                      {
+                        name: "Email",
+                        apiIdentifier: "email",
+                        fieldType: "Email",
+                        __typename: "GadgetModelField",
+                      },
+                    ],
+                    __typename: "GadgetModel",
+                  },
+                },
+              },
+              {
+                name: "Base model hmt field",
+                apiIdentifier: "baseModelHmtField",
+                fieldType: "HasManyThrough",
+                requiredArgumentForInput: false,
+                sortable: false,
+                filterable: false,
+                __typename: "GadgetModelField",
+                configuration: {
+                  __typename: "GadgetHasManyThroughConfig",
+                  fieldType: "HasManyThrough",
+                  validations: [],
+                  relatedModel: {
+                    key: "Oss4sCDW-DJU",
+                    apiIdentifier: "siblingModel",
+                    namespace: ["hasManyThrough"],
+                    defaultDisplayField: {
+                      name: "Sibling name",
+                      apiIdentifier: "siblingName",
+                      fieldType: "String",
+                      __typename: "GadgetModelField",
+                    },
+                    fields: [
+                      {
+                        name: "Id",
+                        apiIdentifier: "id",
+                        fieldType: "ID",
+                        __typename: "GadgetModelField",
+                      },
+                      {
+                        name: "Sibling name",
+                        apiIdentifier: "siblingName",
+                        fieldType: "String",
+                        __typename: "GadgetModelField",
+                      },
+                      {
+                        name: "Sibling model hmt field",
+                        apiIdentifier: "siblingModelHmtField",
+                        fieldType: "HasManyThrough",
+                        __typename: "GadgetModelField",
+                      },
+                      {
+                        name: "Created at",
+                        apiIdentifier: "createdAt",
+                        fieldType: "DateTime",
+                        __typename: "GadgetModelField",
+                      },
+                      {
+                        name: "Updated at",
+                        apiIdentifier: "updatedAt",
+                        fieldType: "DateTime",
+                        __typename: "GadgetModelField",
+                      },
+                    ],
+                    __typename: "GadgetModel",
+                  },
+                  inverseField: {
+                    apiIdentifier: "siblingModelHmtField",
+                    __typename: "GadgetModelField",
+                  },
+                  joinModel: {
+                    key: "tJDsf_FvYqsi",
+                    apiIdentifier: "joinerModel",
+                    namespace: ["hasManyThrough"],
+                    defaultDisplayField: {
+                      name: "Id",
+                      apiIdentifier: "id",
+                      fieldType: "ID",
+                      __typename: "GadgetModelField",
+                    },
+                    __typename: "GadgetModel",
+                  },
+                  inverseJoinModelField: {
+                    apiIdentifier: "joinerBelongsToBase",
+                    __typename: "GadgetModelField",
+                  },
+                  inverseRelatedModelField: {
+                    apiIdentifier: "joinerBelongsToSibling",
+                    __typename: "GadgetModelField",
+                  },
+                },
+              },
+            ],
+            __typename: "GadgetModel",
+          },
+          {
+            key: "DataModel-_autoTableTestRelatedModel",
+            apiIdentifier: "_autoTableTestRelatedModel",
+            namespace: [],
+            defaultDisplayField: {
+              apiIdentifier: "name",
+              fieldType: "String",
+              __typename: "GadgetModelField",
+            },
+            fields: [
+              recordIdInputField,
+              {
+                name: "Name",
+                apiIdentifier: "name",
+                fieldType: "String",
+                configuration: {
+                  __typename: "GadgetGenericFieldConfig",
+                  fieldType: "String",
+                  validations: [
+                    {
+                      name: "Required",
+                      specID: "gadget/validation/required",
+                      __typename: "GadgetGenericFieldValidation",
+                    },
+                  ],
+                },
+                __typename: "GadgetModelField",
+              },
+            ],
+            __typename: "GadgetModel",
+          },
+          {
+            key: "DataModel-widget",
+            apiIdentifier: "widgetOther",
+            namespace: [],
+            defaultDisplayField: {
+              apiIdentifier: "email",
+              fieldType: "String",
+              __typename: "GadgetModelField",
+              configuration: {
+                __typename: "GadgetGenericFieldConfig",
+                fieldType: "String",
+                validations: [
+                  {
+                    name: "Required",
+                    specID: "gadget/validation/required",
+                    __typename: "GadgetGenericFieldValidation",
+                  },
+                ],
+              },
+            },
+            fields: [
+              recordIdInputField,
+              {
+                name: "Str",
+                apiIdentifier: "str",
+                fieldType: "String",
+                __typename: "GadgetModelField",
+                configuration: {
+                  __typename: "GadgetGenericFieldConfig",
+                  fieldType: "String",
+                  validations: [
+                    {
+                      name: "Required",
+                      specID: "gadget/validation/required",
+                      __typename: "GadgetGenericFieldValidation",
+                    },
+                  ],
+                },
+              },
+              {
+                name: "Email",
+                apiIdentifier: "email",
+                fieldType: "String",
+                __typename: "GadgetModelField",
+                configuration: {
+                  __typename: "GadgetGenericFieldConfig",
+                  fieldType: "String",
+                  validations: [
+                    {
+                      name: "Required",
+                      specID: "gadget/validation/required",
+                      __typename: "GadgetGenericFieldValidation",
+                    },
+                  ],
+                },
+              },
+            ],
+            __typename: "GadgetModel",
+          },
+          {
+            key: "Oss4sCDW-DJU",
+            apiIdentifier: "siblingModel",
+            namespace: ["hasManyThrough"],
+            defaultDisplayField: {
+              name: "Sibling name",
+              apiIdentifier: "siblingName",
+              fieldType: "String",
+              __typename: "GadgetModelField",
+            },
+            fields: [
+              recordIdInputField,
+              {
+                name: "Sibling name",
+                apiIdentifier: "siblingName",
+                fieldType: "String",
+                __typename: "GadgetModelField",
+                configuration: {
+                  __typename: "GadgetGenericFieldConfig",
+                  fieldType: "String",
+                  validations: [
+                    {
+                      name: "Required",
+                      specID: "gadget/validation/required",
+                      __typename: "GadgetGenericFieldValidation",
+                    },
+                  ],
+                },
+              },
+            ],
+            __typename: "GadgetModel",
+          },
+        ],
         model: {
           apiIdentifier: "widget",
           namespace: [],
@@ -1409,6 +1802,51 @@ const loadMockWidgetModelMetadataForInvalidFields = () => {
     hasNext: false,
     data: {
       gadgetMeta: {
+        modelAndRelatedModels: [
+          {
+            apiIdentifier: "widget",
+            namespace: [],
+            name: "Wudget",
+            fields: [
+              recordIdInputField,
+              {
+                name: "Password field",
+                apiIdentifier: "passwordField",
+                fieldType: "Password",
+                requiredArgumentForInput: false,
+                sortable: false,
+                filterable: false,
+                __typename: "GadgetModelField",
+                configuration: {
+                  __typename: "GadgetGenericFieldConfig",
+                  fieldType: "Password",
+                  validations: [
+                    {
+                      __typename: "GadgetGenericFieldValidation",
+                      name: "Strong password",
+                      specID: "gadget/validation/password",
+                    },
+                  ],
+                },
+              },
+              {
+                name: "Has many through field",
+                apiIdentifier: "hasManyThroughField",
+                fieldType: "HasManyThrough",
+                requiredArgumentForInput: false,
+                sortable: false,
+                filterable: false,
+                __typename: "GadgetModelField",
+                configuration: {
+                  __typename: "GadgetGenericFieldConfig",
+                  fieldType: "HasManyThrough",
+                  validations: [],
+                },
+              },
+            ],
+            __typename: "GadgetModel",
+          },
+        ],
         model: {
           apiIdentifier: "widget",
           namespace: [],

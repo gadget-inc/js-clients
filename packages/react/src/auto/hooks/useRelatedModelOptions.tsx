@@ -1,7 +1,7 @@
 import { assert } from "@gadgetinc/api-client-core";
 import { useCallback, useEffect, useState } from "react";
 import { FieldType } from "../../metadata.js";
-import { RecordIdentifier } from "../../use-action-form/types.js";
+import type { RecordIdentifier } from "../../use-action-form/types.js";
 import { useFindExistingRecord } from "../../use-action-form/utils.js";
 import { useFindMany } from "../../useFindMany.js";
 import { sortByProperty, uniqByProperty } from "../../utils.js";
