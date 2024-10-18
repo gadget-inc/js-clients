@@ -37,7 +37,6 @@ describe("PolarisAutoRolesInput", () => {
       action: "update",
       modelApiIdentifier: "widget",
       modelNamespace: null,
-      includeRelatedFields: false,
     });
     expect(mockUrqlClient.executeQuery.mock.calls[0][0].query.definitions[0].name.value).toEqual("ModelActionMetadata");
 

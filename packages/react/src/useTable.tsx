@@ -61,6 +61,7 @@ export const useTable = <
     fetching: fetchingMetadata,
     error: metadataError,
   } = useModelMetadata(manager.findMany.modelApiIdentifier, namespaceAsArray);
+
   const [sort, setSort] = useState<OptionsType["sort"] | undefined>(options?.initialSort);
 
   const [sortColumnApiIdentifier, setSortColumnApiIdentifier] = useState<string | undefined>(

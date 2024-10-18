@@ -28,7 +28,7 @@ describe("PolarisAutoForm", () => {
   describe("when used as a one liner", () => {
     describe("for widget create", () => {
       test("it renders the name input", async () => {
-        render(<PolarisAutoForm action={api.widget.create} />, { wrapper: PolarisMockedProviders });
+        render(<PolarisAutoForm action={api.widget.create} exclude={["section", "gizmos"]} />, { wrapper: PolarisMockedProviders });
         loadMockWidgetCreateMetadata();
         expect(await screen.findByLabelText("Name")).toBeInTheDocument();
       });
@@ -69,7 +69,7 @@ describe("PolarisAutoForm", () => {
     test("it includes the record ID when submitting a form that updates a record", async () => {
       const user = userEvent.setup();
 
-      const result = render(<PolarisAutoForm action={api.widget.update} exclude={["gizmos"]} findBy="1145" />, {
+      const result = render(<PolarisAutoForm action={api.widget.update} exclude={["section", "gizmos"]} findBy="1145" />, {
         wrapper: PolarisMockedProviders,
       });
       const { getByLabelText, queryAllByText } = result;
@@ -266,7 +266,7 @@ describe("PolarisAutoForm", () => {
     test("it should include fields that are not dirty when submitting an update form", async () => {
       const user = userEvent.setup();
 
-      const result = render(<PolarisAutoForm action={api.widget.update} exclude={["gizmos"]} findBy="1145" />, {
+      const result = render(<PolarisAutoForm action={api.widget.update} exclude={["section", "gizmos"]} findBy="1145" />, {
         wrapper: PolarisMockedProviders,
       });
       const { getByLabelText, queryAllByText } = result;
@@ -311,9 +311,6 @@ describe("PolarisAutoForm", () => {
         name: "Test Widget",
         roles: [],
         secretKey: null,
-        section: {
-          _link: undefined,
-        },
         startsAt: null,
       });
       expect(recordId).toEqual("1145");
@@ -619,7 +616,7 @@ describe("PolarisAutoForm", () => {
       beforeEach(() => {
         user = userEvent.setup();
 
-        renderResult = render(<PolarisAutoForm action={api.widget.update} exclude={["gizmos"]} findBy="1145" />, {
+        renderResult = render(<PolarisAutoForm action={api.widget.update} exclude={["section", "gizmos"]} findBy="1145" />, {
           wrapper: PolarisMockedProviders,
         });
 
@@ -708,7 +705,6 @@ function loadMockGizmoCreateMetadata() {
     modelApiIdentifier: "gizmo",
     modelNamespace: null,
     action: "create",
-    includeRelatedFields: false,
   });
 
   mockUrqlClient.executeQuery.pushResponse("ModelActionMetadata", {
@@ -727,7 +723,6 @@ function loadMockWidgetCreateMetadata(opts?: { inputFields?: any[]; triggers?: a
     modelApiIdentifier: "widget",
     modelNamespace: null,
     action: "create",
-    includeRelatedFields: false,
   });
 
   mockUrqlClient.executeQuery.pushResponse("ModelActionMetadata", {
@@ -783,7 +778,6 @@ const mockWidgetUpdateHelperFunctions = {
       modelApiIdentifier: "widget",
       modelNamespace: null,
       action: "update",
-      includeRelatedFields: false,
     });
   },
 };
@@ -793,7 +787,6 @@ function loadMockWidgetDeleteMetadata() {
     modelApiIdentifier: "widget",
     modelNamespace: null,
     action: "delete",
-    includeRelatedFields: false,
   });
 
   mockUrqlClient.executeQuery.pushResponse("ModelActionMetadata", {
@@ -814,7 +807,6 @@ function loadMockFlipAllMetadata(opts?: { triggers?: any[] }) {
   expect(mockUrqlClient.executeQuery.mock.calls[0][0].variables).toEqual({
     namespace: null,
     apiIdentifier: "flipAll",
-    includeRelatedFields: false,
   });
 
   mockUrqlClient.executeQuery.pushResponse("GlobalActionMetadata", {

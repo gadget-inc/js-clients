@@ -1,5 +1,5 @@
 import type { ActionFunction, GlobalActionFunction } from "@gadgetinc/api-client-core";
-import { FieldMetadata, type ActionMetadata, type GlobalActionMetadata } from "../metadata.js";
+import { FieldMetadata, type GlobalActionMetadata, type ModelWithOneActionMetadata } from "../metadata.js";
 import { RecordIdentifier } from "../use-action-form/types.js";
 import { isPlainObject } from "../use-action-form/utils.js";
 import type { useAutoForm } from "./AutoForm.js";
@@ -45,7 +45,7 @@ export const validateAutoFormProps = (props: Parameters<typeof useAutoForm>[0]) 
   }
 };
 
-export const validateTriggersFromMetadata = (metadata?: ActionMetadata | GlobalActionMetadata) => {
+export const validateTriggersFromMetadata = (metadata?: ModelWithOneActionMetadata | GlobalActionMetadata) => {
   if (!metadata) {
     return;
   }

@@ -149,6 +149,14 @@ export const getUserModelMetadata = (
 ) => {
   return {
     gadgetMeta: {
+      modelAndRelatedModels: [
+        {
+          name: "User",
+          apiIdentifier: "user",
+          fields: inputFields,
+          __typename: "GadgetModel",
+        },
+      ],
       model: {
         name: "User",
         apiIdentifier: "user",
