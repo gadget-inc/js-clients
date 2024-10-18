@@ -1,11 +1,12 @@
 import { Combobox, Tag } from "@shopify/polaris";
 import React from "react";
+import { autoInput } from "../../../AutoInput.js";
 import { useBelongsToInputController } from "../../../hooks/useBelongsToInputController.js";
 import { optionRecordsToLoadCount } from "../../../hooks/useRelatedModelOptions.js";
 import type { AutoRelationshipInputProps } from "../../../interfaces/AutoRelationshipInputProps.js";
 import { RelatedModelOptions } from "./RelatedModelOptions.js";
 
-export const PolarisAutoBelongsToInput = (props: AutoRelationshipInputProps) => {
+export const PolarisAutoBelongsToInput = autoInput((props: AutoRelationshipInputProps) => {
   const {
     fieldMetadata: { path, metadata },
     relatedModelOptions: { options, searchFilterOptions, pagination, search },
@@ -68,4 +69,4 @@ export const PolarisAutoBelongsToInput = (props: AutoRelationshipInputProps) => 
       </Combobox>
     </>
   );
-};
+});

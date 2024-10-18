@@ -1,5 +1,6 @@
 import React from "react";
 import { FieldType } from "../../../metadata.js";
+import { autoInput } from "../../AutoInput.js";
 import { useFieldMetadata } from "../../hooks/useFieldMetadata.js";
 import { MUIAutoRichTextInput } from "./LazyLoadedMUIAutoRichTextInput.js";
 import { MUIAutoBooleanInput } from "./MUIAutoBooleanInput.js";
@@ -15,7 +16,7 @@ import { MUIAutoTextInput } from "./MUIAutoTextInput.js";
 import { MUIAutoBelongsToInput } from "./relationships/MUIAutoBelongsToInput.js";
 import { MUIAutoHasManyInput } from "./relationships/MUIAutoHasManyInput.js";
 
-export const MUIAutoInput = (props: { field: string; label?: string }) => {
+export const MUIAutoInput = autoInput((props: { field: string; label?: string }) => {
   const { metadata } = useFieldMetadata(props.field);
   const config = metadata.configuration;
 
@@ -85,4 +86,4 @@ export const MUIAutoInput = (props: { field: string; label?: string }) => {
       throw new Error(`Unsupported field type for MUI AutoForm: ${metadata.fieldType}`);
     }
   }
-};
+});

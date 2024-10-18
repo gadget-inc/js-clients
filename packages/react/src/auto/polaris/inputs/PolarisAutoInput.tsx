@@ -1,5 +1,6 @@
 import React from "react";
 import { FieldType } from "../../../metadata.js";
+import { autoInput } from "../../AutoInput.js";
 import { useFieldMetadata } from "../../hooks/useFieldMetadata.js";
 import { PolarisAutoRichTextInput } from "./LazyLoadedPolarisAutoRichTextInput.js";
 import { PolarisAutoBooleanInput } from "./PolarisAutoBooleanInput.js";
@@ -16,7 +17,7 @@ import { PolarisAutoTextInput } from "./PolarisAutoTextInput.js";
 import { PolarisAutoBelongsToInput } from "./relationships/PolarisAutoBelongsToInput.js";
 import { PolarisAutoHasManyInput } from "./relationships/PolarisAutoHasManyInput.js";
 
-export const PolarisAutoInput = (props: { field: string; label?: string }) => {
+export const PolarisAutoInput = autoInput((props: { field: string; label?: string }) => {
   const { metadata } = useFieldMetadata(props.field);
   const config = metadata.configuration;
 
@@ -88,4 +89,4 @@ export const PolarisAutoInput = (props: { field: string; label?: string }) => {
       throw new Error(`Unsupported field type for Polaris AutoForm: ${metadata.fieldType}`);
     }
   }
-};
+});
