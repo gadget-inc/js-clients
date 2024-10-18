@@ -3,7 +3,20 @@ import { Autocomplete, TextField } from "@mui/material";
 import React from "react";
 import { autoInput } from "../../AutoInput.js";
 import { useEnumInputController } from "../../hooks/useEnumInputController.js";
+import { AutoEnumInputProps } from "../../shared/AutoInputTypes.js";
 
+/**
+ * An enum option picker for use within <AutoForm></AutoForm> components.
+ * @example
+ * ```tsx
+ * <AutoForm action={api.modelA.create}>
+ *   <AutoEnumInput field="enumField" />
+ * </AutoForm>
+ * ```
+ * @param props.field - The API identifier for the Enum field.
+ * @param props.label - The label of the input.
+ * @returns The AutoEnumInput component.
+ */
 export const MUIAutoEnumInput = autoInput(
   <
     Value,
@@ -12,7 +25,7 @@ export const MUIAutoEnumInput = autoInput(
     FreeSolo extends boolean | undefined = false,
     ChipComponent extends React.ElementType = ChipTypeMap["defaultComponent"]
   >(
-    props: { field: string; label?: string } & Partial<AutocompleteProps<Value, Multiple, DisableClearable, FreeSolo, ChipComponent>>
+    props: AutoEnumInputProps & Partial<AutocompleteProps<Value, Multiple, DisableClearable, FreeSolo, ChipComponent>>
   ) => {
     const { allowMultiple, selectedOptions, onSelectionChange, allOptions, label } = useEnumInputController(props);
 

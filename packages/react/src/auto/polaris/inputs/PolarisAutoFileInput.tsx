@@ -3,12 +3,27 @@ import { Box, Button, DropZone, InlineError, InlineStack, Thumbnail } from "@sho
 import { DeleteIcon, NoteIcon } from "@shopify/polaris-icons";
 import { filesize } from "filesize";
 import React, { useMemo } from "react";
-import type { Control } from "../../../useActionForm.js";
 import { isAutoFileFieldValue } from "../../../validationSchema.js";
 import { autoInput } from "../../AutoInput.js";
 import { getFileSizeValidationMessage, imageFileTypes, useFileInputController } from "../../hooks/useFileInputController.js";
+import { AutoFileInputProps } from "../../shared/AutoInputTypes.js";
 
-export const PolarisAutoFileInput = autoInput((props: { field: string; control?: Control<any> } & Omit<DropZoneProps, "allowMultiple">) => {
+export type PolarisAutoFileInputProps = AutoFileInputProps & Omit<DropZoneProps, "allowMultiple">;
+
+/**
+ * A file input for use within <AutoForm></AutoForm> components
+ * @example
+ * ```tsx
+ * <AutoForm action={api.modelA.create}>
+ *   <AutoFileInput field="fileField" />
+ * </AutoForm>
+ * ```
+ * @param props.field - The API identifier of the File field
+ * @param props.label - The label of the File field
+ * @param props.onChange - called when the file input changes
+ * @returns The file input component
+ */
+export const PolarisAutoFileInput = autoInput((props: PolarisAutoFileInputProps) => {
   const { field: fieldApiIdentifier, control, ...rest } = props;
   const { fieldProps, errorMessage, imageThumbnailURL, onFileUpload, clearFileValue, canClearFileValue, validations, metadata } =
     useFileInputController({

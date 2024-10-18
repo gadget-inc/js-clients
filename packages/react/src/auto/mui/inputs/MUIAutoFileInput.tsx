@@ -1,14 +1,14 @@
 import { Button, styled } from "@mui/material";
 import React from "react";
-import type { Control } from "../../../useActionForm.js";
 import { autoInput } from "../../AutoInput.js";
 import { useFileInputController } from "../../hooks/useFileInputController.js";
+import { AutoFileInputProps, InputLabel } from "../../shared/AutoInputTypes.js";
 import { MUIAutoFormControl } from "./MUIAutoFormControl.js";
 
 export interface MUIFileInputProps {
-  label?: string;
+  label?: InputLabel;
   value?: File;
-  onChange: (value: File) => void;
+  onChange?: (value: File) => void;
 }
 const VisuallyHiddenInput = styled("input")({
   clip: "rect(0 0 0 0)",
@@ -22,7 +22,22 @@ const VisuallyHiddenInput = styled("input")({
   width: 1,
 });
 
-export const MUIAutoFileInput = autoInput((props: { field: string; control?: Control<any>; label?: string }) => {
+export type MUIAutoFileInputProps = AutoFileInputProps & MUIFileInputProps;
+
+/**
+ * A file input for use within <AutoForm></AutoForm> components
+ * @example
+ * ```tsx
+ * <AutoForm action={api.modelA.create}>
+ *   <AutoFileInput field="fileField" />
+ * </AutoForm>
+ * ```
+ * @param props.field - The API identifier of the File field
+ * @param props.label - The label of the File field
+ * @param props.onChange - called when the file input changes
+ * @returns The file input component
+ */
+export const MUIAutoFileInput = autoInput((props: MUIAutoFileInputProps) => {
   const { field: fieldApiIdentifier, control, label } = props;
   const { onFileUpload, metadata } = useFileInputController({
     field: fieldApiIdentifier,
