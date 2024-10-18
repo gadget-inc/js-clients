@@ -1,5 +1,44 @@
 # @gadgetinc/react
 
+## 0.18.0
+
+### Patch Changes
+
+- Removed `AutoTextInput` from the package export because this component is made redundant by the Gadget field specific inputs (Breaking change)
+- Removed `allowMultiple` from `AutoFileInput` input props since multiple file fields are not supported (Breaking change)
+- Updated `AutoForm` HasManyThrough fields so that no inputs are shown. They would previously show a hasMany field for the join model, which corresponds to the API, but was confusing in an `AutoForm` context
+- Updated `AutoForm` enum inputs such that their search value does not get pre-populated
+- Fixed the `findBy` object parameter for the `AutoForm` component such that related records are correctly shown and forms can be properly submitted
+- Fixed bug with `AutoForm` belongsTo field inputs occasionally not showing their related record upon component re-render
+- Made `AutoRichTextInput` available in `@gadgetinc/react/auto/polaris` to be used in `AutoForm` components
+- Added required indicator and required error message to date/time, belongsTo, and JSON fields in <AutoForm/> contexts
+- Added a new error thrown in `AutoForm` when passing in `include/exclude` options alongside child components
+- Fixed a bug where `AutoForm` components with custom children were blocked from sending requests when omitting required fields on from the Gadget model action
+- Updated `AutoButton` such that the loading state is dependant only on fetching the action result instead of also being dependant on fetching action metadata
+- Added `HasManyThrough` field support to AutoTable column selection
+- Updated `AutoTable` bulk actions with custom callbacks to de-select all records to match the behavior of Gadget bulk actions
+- Added proper Gadget record type to `AutoTable` onClick prop callback arguments
+- Added custom style support to custom column controls in `AutoTable`
+
+  ```jsx
+  const MyAutoTable = () => {
+    const columns = [
+      {
+        header: "Custom header",
+        field: "fieldApiIdentifier",
+        style: { backgroundColor: "red" },
+      },
+      {
+        header: "Custom cell renderer",
+        render: ({ record }) => <div>{record.name}</div>,
+        style: { backgroundColor: "blue" },
+      },
+    ];
+
+    return <AutoTable model={api.myModel} columns={columns} />;
+  };
+  ```
+
 ## 0.17.2
 
 ### Patch Changes
