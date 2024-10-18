@@ -1,5 +1,5 @@
 import { useCallback, useMemo, useState } from "react";
-import { useController, type Control } from "react-hook-form";
+import { useController, type Control } from "../../useActionForm.js";
 import { useFieldMetadata } from "./useFieldMetadata.js";
 
 export const useEnumInputController = (props: {

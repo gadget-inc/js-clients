@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useMemo } from "react";
-import { useController, useFormContext } from "react-hook-form";
+import { useController, useFormContext } from "../../useActionForm.js";
 import { useAutoFormMetadata } from "../AutoFormContext.js";
 import type { AutoRelationshipInputProps } from "../interfaces/AutoRelationshipInputProps.js";
 import { useFieldMetadata } from "./useFieldMetadata.js";

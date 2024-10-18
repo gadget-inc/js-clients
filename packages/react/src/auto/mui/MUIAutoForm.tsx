@@ -2,7 +2,7 @@ import type { ActionFunction } from "@gadgetinc/api-client-core";
 import type { GridProps } from "@mui/material";
 import { Grid, Skeleton, Typography } from "@mui/material";
 import React from "react";
-import { FormProvider } from "react-hook-form";
+import { FormProvider } from "../../useActionForm.js";
 import { humanizeCamelCase, type OptionsType } from "../../utils.js";
 import { useAutoForm, type AutoFormProps } from "../AutoForm.js";
 import { validateAutoFormProps } from "../AutoFormActionValidators.js";

@@ -1,5 +1,5 @@
 import React from "react";
-import { useFormContext } from "react-hook-form";
+import { useFormContext } from "../../src/useActionForm.js";
 
 /** debug component for explicitly rendering out the form state for visual inspection in tests */
 export const DebugFormState = () => {

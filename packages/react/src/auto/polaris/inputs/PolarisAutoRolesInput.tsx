@@ -1,5 +1,5 @@
 import React from "react";
-import type { Control } from "react-hook-form";
+import type { Control } from "../../../useActionForm.js";
 import { getPropsWithoutRef } from "../../../utils.js";
 import { useRoleInputController } from "../../hooks/useRoleInputController.js";
 import type { PolarisFixedOptionsMultiComboboxProps } from "../PolarisFixedOptionsCombobox.js";
