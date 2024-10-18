@@ -9,18 +9,16 @@ export const MUIAutoBelongsToInput = autoInput((props: AutoRelationshipInputProp
     fieldMetadata: { path, metadata },
     relatedModelOptions: { options, pagination, search },
 
-    selectedRecordId,
+    selectedRecord,
     onSelectRecord,
   } = useBelongsToInputController(props);
-
-  const selectedRecord = options.find((option) => option.id === selectedRecordId);
 
   return (
     <Autocomplete
       id={`${selectedRecord?.id}_${selectedRecord?.label}`}
       renderOption={(props, option) => {
         const isShowMoreButton = option.recordId === "-1";
-        const isSelected = selectedRecordId === option.recordId;
+        const isSelected = selectedRecord?.id === option.id;
         return !isShowMoreButton ? (
           <Box component="li" {...props}>
             {isSelected && `✔️ `}
@@ -42,7 +40,7 @@ export const MUIAutoBelongsToInput = autoInput((props: AutoRelationshipInputProp
         ) : null; // No more records to load
       }}
       options={[...options, showMoreHoverOption]}
-      onChange={(e, selectedValue) => onSelectRecord(selectedValue.id)}
+      onChange={(e, selectedValue) => onSelectRecord(selectedValue)}
       onClose={() => search.set()}
       renderInput={(params) => (
         <TextField

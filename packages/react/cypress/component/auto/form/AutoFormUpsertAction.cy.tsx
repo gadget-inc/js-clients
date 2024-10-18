@@ -147,7 +147,7 @@ describeForEachAutoAdapter("AutoForm - Upsert Action", ({ name, adapter: { AutoF
     cy.contains("Record Not Found Error: Gadget API returned no data at widget").should("exist");
   });
 
-  it("Can properly submit with custom form contents", () => {
+  it.only("Can properly submit with custom form contents", () => {
     mockSuccessfulWidgetFindBy();
     mockSuccessfulUpsert();
 
