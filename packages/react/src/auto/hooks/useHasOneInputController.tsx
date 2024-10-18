@@ -1,101 +1,81 @@
 import { useCallback, useMemo } from "react";
 import type { GadgetHasOneConfig } from "../../internal/gql/graphql.js";
-import { useFieldArray } from "../../useActionForm.js";
-import { uniq } from "../../utils.js";
+import { useController } from "../../useActionForm.js";
 import type { AutoRelationshipInputProps } from "../interfaces/AutoRelationshipInputProps.js";
 import { useFieldMetadata } from "./useFieldMetadata.js";
-import { useRelatedModelOptions } from "./useRelatedModelOptions.js";
+import { useRelatedModelOptions } from "./useRelatedModel.js";
 
 export const useHasOneInputController = (props: AutoRelationshipInputProps) => {
-  const { field } = props;
+  const { field, control } = props;
   const fieldMetadata = useFieldMetadata(field);
   const { metadata, path } = fieldMetadata;
+
+  const {
+    field: fieldProps,
+    fieldState: { error: fieldError },
+  } = useController({
+    name: path,
+    control,
+  });
+
+  const value: Record<string, any> | undefined = fieldProps.value;
+
+  const selectedRecord = useMemo(() => {
+    if (!value) {
+      return undefined;
+    }
+
+    return "_unlink" in value && value._unlink ? undefined : value;
+  }, [value]);
+
+  console.log({ metadata, path, value, selectedRecord });
 
   const inverseFieldApiIdentifier = useMemo(() => {
     return (metadata.configuration as GadgetHasOneConfig).inverseField?.apiIdentifier;
   }, [metadata.configuration]);
 
-  const { fields, remove, append, replace } = useFieldArray({
-    /**
-     * Currently, directly using the path will break the submit button.
-     * This feels like a good way to store the state of the hasOne selection, but hasOne fields can't send with array values
-     */
-    name: fieldMetadata.path + "__RemoveOnceWeUpdateHasOneApiToMaintainOneToOneRelationships",
-  });
   const relatedModelOptions = useRelatedModelOptions(props);
-  const { options, selected, pagination, search, relatedModel } = relatedModelOptions;
+  const { options, pagination, search, relatedModel } = relatedModelOptions;
 
-  const errorMessage = relatedModel.error?.message ?? selected.error?.message;
-  const isLoading = relatedModel.fetching || selected.fetching;
-
-  const retrievedSelectedRecordIds = selected.records?.map((record: { id: string }) => record.id) ?? [];
-  const unlinkedRecordIds = fields.filter((field: any) => field.__unlinkedInverseField).map((field: any) => field.__id);
-
-  const selectedRecordIds = uniq(
-    [
-      ...fields.map((field, i) => (field as any).__id), // To be selected upon submit
-      ...retrievedSelectedRecordIds, // From related model records in DB
-    ].filter((id) => !unlinkedRecordIds.includes(id))
-  );
-
-  const removeFromFieldsByRecordId = useCallback(
-    (recordId: string) => {
-      const index = fields.findIndex((entry) => (entry as any).__id === recordId);
-      if (index > -1) {
-        remove(index);
-      }
-    },
-    [fields]
-  );
-
-  const getUnselectedExistingRetrievedRecordsFieldValues = (excludedId?: string) =>
-    retrievedSelectedRecordIds
-      .filter((recordId) => recordId !== excludedId)
-      .map((recordId) => ({ __id: recordId, __unlinkedInverseField: inverseFieldApiIdentifier! }));
+  const errorMessage = fieldError?.message || relatedModel.error?.message;
+  const isLoading = relatedModel.fetching;
 
   const onSelectRecord = useCallback(
-    (recordId: string) => {
-      const isAlreadySelected = selectedRecordIds.includes(recordId);
-      if (isAlreadySelected) {
-        onRemoveRecord(recordId);
-        return;
+    (record: Record<string, any>) => {
+      const isAlreadySelected = value?.id === record.id;
+
+      if (value && isAlreadySelected) {
+        if ("_unlink" in value && value._unlink) {
+          const { _unlink, ...rest } = value;
+          fieldProps.onChange(rest);
+        } else {
+          fieldProps.onChange({ ...value, _unlink: { id: record.id, inverseFieldApiIdentifier } });
+        }
+      } else {
+        fieldProps.onChange({ ...record, _link: record.id });
       }
-
-      const isRetrievedValueReselect = retrievedSelectedRecordIds.includes(recordId);
-
-      replace(
-        isRetrievedValueReselect
-          ? getUnselectedExistingRetrievedRecordsFieldValues(recordId)
-          : [{ __id: recordId }, ...getUnselectedExistingRetrievedRecordsFieldValues()]
-      );
     },
-    [retrievedSelectedRecordIds, selectedRecordIds]
+    [value, inverseFieldApiIdentifier, fieldProps]
   );
 
   const onRemoveRecord = useCallback(
-    (recordId: string) => {
-      const isSelectedInBackend = retrievedSelectedRecordIds.includes(recordId);
-
-      if (isSelectedInBackend) {
-        append({ __id: recordId, __unlinkedInverseField: inverseFieldApiIdentifier! });
+    (record: Record<string, any>) => {
+      if (value && "_unlink" in value && value._unlink) {
+        const { _unlink, ...rest } = value;
+        fieldProps.onChange(rest);
       } else {
-        // Only selected in frontend
-        removeFromFieldsByRecordId(recordId);
+        fieldProps.onChange({ ...value, _unlink: { id: record.id, inverseFieldApiIdentifier } });
       }
     },
-    [retrievedSelectedRecordIds, inverseFieldApiIdentifier]
+    [value, inverseFieldApiIdentifier, fieldProps]
   );
 
   return {
     fieldMetadata,
-
     relatedModelOptions,
-
-    selectedRecordIds,
-
+    selectedRecord,
     errorMessage,
     isLoading,
-
     onSelectRecord,
     onRemoveRecord,
   };

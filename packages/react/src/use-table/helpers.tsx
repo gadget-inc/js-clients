@@ -293,8 +293,20 @@ const isHasOneOrBelongsToField = (field: { fieldType: GadgetFieldType }) => {
   return field.fieldType === GadgetFieldType.HasOne || field.fieldType === GadgetFieldType.BelongsTo;
 };
 
+const isHasManyField = (field: { fieldType: GadgetFieldType }) => {
+  return field.fieldType === GadgetFieldType.HasMany;
+};
+
+const isHasManyThroughField = (field: { fieldType: GadgetFieldType }) => {
+  return field.fieldType === GadgetFieldType.HasManyThrough;
+};
+
 const isHasManyOrHasManyThroughField = (field: { fieldType: GadgetFieldType }) => {
-  return field.fieldType === GadgetFieldType.HasMany || field.fieldType === GadgetFieldType.HasManyThrough;
+  return isHasManyField(field) || isHasManyThroughField(field);
+};
+
+const isRelationshipField = (field: { fieldType: GadgetFieldType }) => {
+  return isHasOneOrBelongsToField(field) || isHasManyOrHasManyThroughField(field);
 };
 
 const richTextSelection = {
@@ -394,4 +406,66 @@ const getFieldSelectionErrorMessage = (columnPath: string) => {
     RELATED_HAS_MANY_FIELD_NOT_EXIST: `Field '${columnPath}' does not exist in the related model. hasMany fields require 'edges.node' segment before the related field.`,
     RELATED_HAS_ONE_OR_BELONGS_TO_FIELD_NOT_EXIST: `Field '${columnPath}' does not exist in the related model`,
   } as const;
+};
+
+export const pathListToSelection = (modelIdentifier: string, pathList: string[], fieldMetadataArray: FieldMetadataFragment[]) => {
+  const selection: FieldSelection = {
+    id: true,
+  };
+
+  const pathGroups: Record<string, string[]> = {};
+
+  for (const path of pathList) {
+    const [rootSegment, ...childSegments] = path.split(".");
+
+    pathGroups[rootSegment] ??= [];
+
+    if (childSegments.length) {
+      pathGroups[rootSegment].push(childSegments.join("."));
+    }
+  }
+
+  for (const [rootPath, childPaths] of Object.entries(pathGroups)) {
+    const field = fieldMetadataArray.find((metadata) => metadata.apiIdentifier == rootPath);
+
+    if (!field) {
+      throw new Error(`No metadata found for ${rootPath}`);
+    }
+
+    if (isRelationshipField(field)) {
+      const configuration = field.configuration;
+      if (configuration && "relatedModel" in configuration && configuration.relatedModel) {
+        const relatedModel = configuration.relatedModel;
+        const relatedSelection = {
+          id: true,
+          [relatedModel?.defaultDisplayField.apiIdentifier]: true,
+          ...(childPaths.length && relatedModel.fields ? pathListToSelection(rootPath, childPaths, relatedModel.fields) : {}),
+        };
+
+        if (isHasManyField(field)) {
+          selection[field.apiIdentifier] = {
+            edges: {
+              node: relatedSelection,
+            },
+          };
+        } else if (isHasManyThroughField(field) && "joinModel" in configuration && configuration.joinModel) {
+          const joinModelHasManyFieldApiIdentifier = (configuration as any).joinModelHasManyFieldApiIdentifier;
+          selection[joinModelHasManyFieldApiIdentifier] = {
+            edges: {
+              node: {
+                id: true,
+                [configuration.inverseRelatedModelField!.apiIdentifier]: relatedSelection,
+              },
+            },
+          };
+        } else {
+          selection[field.apiIdentifier] = relatedSelection;
+        }
+      }
+    } else {
+      selection[field.apiIdentifier] = getNonRelationshipSelectionValue(field);
+    }
+  }
+
+  return selection;
 };

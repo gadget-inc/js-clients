@@ -11,4 +11,4 @@ export interface AutoRelationshipInputProps {
 /**
  * Type for the option label when displaying a list of records from a related model
  */
-export type OptionLabel = string | ((record: Record<string, any>) => ReactNode);
+export type OptionLabel = string | string[] | ((record: Record<string, any>) => ReactNode);
