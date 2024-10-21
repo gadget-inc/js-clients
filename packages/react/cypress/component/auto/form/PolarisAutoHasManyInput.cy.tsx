@@ -68,7 +68,7 @@ describe("PolarisAutoHasManyInput", () => {
         url: `${api.connection.endpoint}?operation=gizmos`,
       },
       (req) => {
-        const queryIsForSelectedRecords = get(req.body.variables, "filter.widget.equals") === "42";
+        const queryIsForSelectedRecords = get(req.body.variables, "filter.widgetId.equals") === "42";
 
         req.reply({
           data: {
