@@ -67,6 +67,7 @@ before(() => {
 
 beforeEach(() => {
   cy.window().then((win) => {
+    if (!win) return;
     const mockToasts = win.document.getElementsByClassName("mock-toast");
     while (mockToasts.length > 0) {
       try {
