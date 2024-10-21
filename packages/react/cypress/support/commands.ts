@@ -14,6 +14,28 @@ Cypress.Commands.add("mockModelActionMetadata", (api: AnyClient, props) => {
     {
       data: {
         gadgetMeta: {
+          modelAndRelatedModels: [
+            {
+              name: modelName,
+              apiIdentifier: modelApiIdentifier,
+              fields: inputFields[0]?.configuration?.fields ?? [],
+              defaultRecord,
+              defaultDisplayField: inputFields[0]?.configuration?.fields?.[0] ?? {
+                apiIdentifier: "id",
+              },
+              __typename: "GadgetModel",
+            },
+            ...(inputFields?.[0]?.configuration?.fields?.flatMap((field: any) => {
+              if (field.configuration && field.configuration.relatedModel) {
+                return {
+                  fields: [],
+                  ...field.configuration.relatedModel,
+                };
+              } else {
+                return [];
+              }
+            }) ?? []),
+          ],
           model: {
             name: modelName,
             apiIdentifier: modelApiIdentifier,

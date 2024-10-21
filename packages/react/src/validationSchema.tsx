@@ -2,7 +2,6 @@ import type { ISchema } from "yup";
 import { MixedSchema, NumberSchema, StringSchema, array, boolean, date, mixed, number, object, string } from "yup";
 import { fileSizeValidationErrorMessage } from "./auto/hooks/useFileInputController.js";
 import type {
-  FieldMetadataFragment,
   GadgetEnumConfig,
   GadgetGenericFieldValidation,
   GadgetObjectFieldConfig,
@@ -137,7 +136,7 @@ const validatorForField = (field: FieldMetadata, pathsToValidate: string[] = [],
   return validator;
 };
 
-const applyValidationsToInputField = (field: FieldMetadataFragment, validator: any, pathRequiresValidation: boolean) => {
+const applyValidationsToInputField = (field: FieldMetadata, validator: any, pathRequiresValidation: boolean) => {
   if (field.requiredArgumentForInput && pathRequiresValidation) {
     if (field.fieldType === GadgetFieldType.RichText) {
       validator = object({ markdown: string().required() });

@@ -51,6 +51,167 @@ describeForEachAutoAdapter("AutoForm - FindBy object parameters", ({ name, adapt
 const uniqueFieldsMainModelMetadata = {
   data: {
     gadgetMeta: {
+      modelAndRelatedModels: [
+        {
+          name: "Main model",
+          apiIdentifier: "mainModel",
+          defaultRecord: {
+            __typename: "UniqueFieldsMainModel",
+          },
+          fields: [
+            {
+              name: "Unique string",
+              apiIdentifier: "uniqueString",
+              fieldType: "String",
+              requiredArgumentForInput: false,
+              sortable: true,
+              filterable: true,
+              __typename: "GadgetModelField",
+              configuration: {
+                __typename: "GadgetGenericFieldConfig",
+                fieldType: "String",
+                validations: [
+                  {
+                    __typename: "GadgetGenericFieldValidation",
+                    name: "Uniqueness",
+                    specID: "gadget/validation/unique",
+                  },
+                ],
+              },
+            },
+            {
+              name: "Unique email",
+              apiIdentifier: "uniqueEmail",
+              fieldType: "Email",
+              requiredArgumentForInput: false,
+              sortable: true,
+              filterable: true,
+              __typename: "GadgetModelField",
+              configuration: {
+                __typename: "GadgetGenericFieldConfig",
+                fieldType: "Email",
+                validations: [
+                  {
+                    __typename: "GadgetGenericFieldValidation",
+                    name: "Uniqueness",
+                    specID: "gadget/validation/unique",
+                  },
+                ],
+              },
+            },
+            {
+              name: "Unique belongs to",
+              apiIdentifier: "uniqueBelongsTo",
+              fieldType: "BelongsTo",
+              requiredArgumentForInput: false,
+              sortable: false,
+              filterable: true,
+              __typename: "GadgetModelField",
+              configuration: {
+                __typename: "GadgetBelongsToConfig",
+                fieldType: "BelongsTo",
+                validations: [
+                  {
+                    __typename: "GadgetGenericFieldValidation",
+                    name: "Uniqueness",
+                    specID: "gadget/validation/unique",
+                  },
+                ],
+                relatedModel: {
+                  key: "RK96To6wLTyn",
+                  apiIdentifier: "parentModel",
+                  namespace: ["uniqueFields"],
+                  defaultDisplayField: {
+                    name: "Parent unique string",
+                    apiIdentifier: "parentUniqueString",
+                    fieldType: "String",
+                    __typename: "GadgetModelField",
+                  },
+                  __typename: "GadgetModel",
+                },
+              },
+            },
+            {
+              name: "Non unique string",
+              apiIdentifier: "nonUniqueString",
+              fieldType: "String",
+              requiredArgumentForInput: false,
+              sortable: true,
+              filterable: true,
+              __typename: "GadgetModelField",
+              configuration: {
+                __typename: "GadgetGenericFieldConfig",
+                fieldType: "String",
+                validations: [],
+              },
+            },
+            {
+              name: "Child model entries",
+              apiIdentifier: "childModelEntries",
+              fieldType: "HasMany",
+              requiredArgumentForInput: false,
+              sortable: false,
+              filterable: false,
+              __typename: "GadgetModelField",
+              configuration: {
+                __typename: "GadgetHasManyConfig",
+                fieldType: "HasMany",
+                validations: [],
+                isJoinModelHasManyField: false,
+                relatedModel: {
+                  key: "ZOw07DfjlSXQ",
+                  apiIdentifier: "childModel",
+                  namespace: ["uniqueFields"],
+                  defaultDisplayField: {
+                    name: "Alias",
+                    apiIdentifier: "alias",
+                    fieldType: "String",
+                    __typename: "GadgetModelField",
+                  },
+                  __typename: "GadgetModel",
+                },
+                inverseField: {
+                  apiIdentifier: "mainModelParent",
+                  __typename: "GadgetModelField",
+                },
+              },
+            },
+          ],
+          defaultDisplayField: {
+            name: "Id",
+            apiIdentifier: "id",
+            fieldType: "ID",
+            __typename: "GadgetModelField",
+          },
+          __typename: "GadgetModel",
+        },
+        {
+          key: "RK96To6wLTyn",
+          apiIdentifier: "parentModel",
+          namespace: ["uniqueFields"],
+          defaultDisplayField: {
+            name: "Parent unique string",
+            apiIdentifier: "parentUniqueString",
+            fieldType: "String",
+            __typename: "GadgetModelField",
+          },
+          fields: [],
+          __typename: "GadgetModel",
+        },
+        {
+          key: "ZOw07DfjlSXQ",
+          apiIdentifier: "childModel",
+          namespace: ["uniqueFields"],
+          defaultDisplayField: {
+            name: "Alias",
+            apiIdentifier: "alias",
+            fieldType: "String",
+            __typename: "GadgetModelField",
+          },
+          fields: [],
+          __typename: "GadgetModel",
+        },
+      ],
       model: {
         name: "Main model",
         apiIdentifier: "mainModel",
@@ -215,6 +376,12 @@ const uniqueFieldsMainModelMetadata = {
             },
           ],
           __typename: "GadgetAction",
+        },
+        defaultDisplayField: {
+          name: "Id",
+          apiIdentifier: "id",
+          fieldType: "ID",
+          __typename: "GadgetModelField",
         },
         __typename: "GadgetModel",
       },

@@ -3,7 +3,7 @@ import { render } from "@testing-library/react";
 import React from "react";
 import type { AutoFormSubmitResult } from "../../../src/auto/AutoFormContext.js";
 import { PolarisSubmitResultBanner } from "../../../src/auto/polaris/submit/PolarisSubmitResultBanner.js";
-import type { ActionMetadata } from "../../../src/metadata.js";
+import type { ModelWithOneActionMetadata } from "../../../src/metadata.js";
 import { MockForm } from "../MockForm.js";
 
 describe("PolarisSubmitResultBanner", () => {
@@ -67,7 +67,7 @@ describe("PolarisSubmitResultBanner", () => {
   });
 });
 
-const metadata: ActionMetadata = {
+const metadata: ModelWithOneActionMetadata = {
   name: "Widget",
   apiIdentifier: "widget",
   action: {
@@ -76,4 +76,4 @@ const metadata: ActionMetadata = {
     __typename: "GadgetAction",
   },
   __typename: "GadgetModel",
-} as ActionMetadata;
+} as ModelWithOneActionMetadata;

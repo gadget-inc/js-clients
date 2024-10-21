@@ -4,8 +4,8 @@ import type { ReactNode } from "react";
 import { useEffect, useMemo, useRef } from "react";
 import type { AnyActionWithId, RecordIdentifier, UseActionFormHookStateData } from "src/use-action-form/types.js";
 import type { GadgetObjectFieldConfig } from "../internal/gql/graphql.js";
-import type { ActionMetadata, FieldMetadata, GlobalActionMetadata } from "../metadata.js";
-import { FieldType, filterAutoFormFieldList, isActionMetadata, useActionMetadata } from "../metadata.js";
+import type { FieldMetadata, GlobalActionMetadata, ModelWithOneActionMetadata } from "../metadata.js";
+import { FieldType, filterAutoFormFieldList, isModelActionMetadata, useActionMetadata } from "../metadata.js";
 import type { FieldErrors, FieldValues } from "../useActionForm.js";
 import { useActionForm } from "../useActionForm.js";
 import { get, getFlattenedObjectKeys, type OptionsType } from "../utils.js";
@@ -61,10 +61,10 @@ export type AutoFormProps<
 /**
  * React hook for getting the validation schema for a list of fields
  */
-const useValidationResolver = (metadata: ActionMetadata | GlobalActionMetadata | undefined, pathsToValidate: string[]) => {
+const useValidationResolver = (metadata: ModelWithOneActionMetadata | GlobalActionMetadata | undefined, pathsToValidate: string[]) => {
   return useMemo(() => {
     if (!metadata) return undefined;
-    const action = isActionMetadata(metadata) ? metadata.action : metadata;
+    const action = isModelActionMetadata(metadata) ? metadata.action : metadata;
     return yupResolver(validationSchema(action.inputFields, pathsToValidate));
   }, [metadata, pathsToValidate]);
 };
@@ -73,12 +73,12 @@ const useValidationResolver = (metadata: ActionMetadata | GlobalActionMetadata |
  * React hook for getting a list of fields to use in a form (given include/exclude options)
  */
 export const useFormFields = (
-  metadata: ActionMetadata | GlobalActionMetadata | undefined | null,
+  metadata: ModelWithOneActionMetadata | GlobalActionMetadata | undefined | null,
   options: { include?: string[]; exclude?: string[] }
 ): readonly { path: string; metadata: FieldMetadata }[] => {
   return useMemo(() => {
     if (!metadata) return [];
-    const action = isActionMetadata(metadata) ? metadata.action : metadata;
+    const action = isModelActionMetadata(metadata) ? metadata.action : metadata;
 
     const isModelMetadata = metadata.__typename === "GadgetModel";
 
@@ -154,11 +154,12 @@ export const useAutoForm = <
   // filter down the fields to render only what we want to render for this form
   const fields = useFormFields(metadata, props);
   validateFindByObjectWithMetadata(fields, findBy);
-  const isDeleteAction = metadata && isActionMetadata(metadata) && metadata.action.isDeleteAction;
+  const isDeleteAction = metadata && isModelActionMetadata(metadata) && metadata.action.isDeleteAction;
   const isGlobalAction = action.type === "globalAction";
-  const operatesWithRecordId = !!(metadata && isActionMetadata(metadata) && metadata.action.operatesWithRecordIdentity);
+  const operatesWithRecordId = !!(metadata && isModelActionMetadata(metadata) && metadata.action.operatesWithRecordIdentity);
   const modelApiIdentifier = action.type == "action" ? action.modelApiIdentifier : undefined;
-  const isUpsertMetaAction = metadata && isActionMetadata(metadata) && fields.some((field) => field.metadata.fieldType === FieldType.Id);
+  const isUpsertMetaAction =
+    metadata && isModelActionMetadata(metadata) && fields.some((field) => field.metadata.fieldType === FieldType.Id);
   const isUpsertWithFindBy = isUpsertMetaAction && !!findBy;
   const hasCustomChildren = !!props.children;
   const fieldPathsToValidate = useMemo(
@@ -177,7 +178,7 @@ export const useAutoForm = <
         : {
             [modelApiIdentifier!]:
               record ??
-              (!(operatesWithRecordId || isUpsertWithFindBy) && metadata && isActionMetadata(metadata) && metadata?.defaultRecord),
+              (!(operatesWithRecordId || isUpsertWithFindBy) && metadata && isModelActionMetadata(metadata) && metadata?.defaultRecord),
             id:
               typeof findBy === "string"
                 ? findBy // ID is given directly

@@ -61,6 +61,14 @@ export const gameCityModelInputFields = {
 export const getGameCityModelMetadata = (action: { name: string; apiIdentifier: string; operatesWithRecordIdentity: boolean }) => {
   return {
     gadgetMeta: {
+      modelAndRelatedModels: [
+        {
+          name: "City",
+          apiIdentifier: "city",
+          fields: [gameCityModelInputFields],
+          __typename: "GadgetModel",
+        },
+      ],
       model: {
         name: "City",
         action: {

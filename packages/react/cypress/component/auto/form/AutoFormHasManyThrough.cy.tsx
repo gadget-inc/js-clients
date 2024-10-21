@@ -37,6 +37,119 @@ describeForEachAutoAdapter("AutoForm - HasManyThrough fields", ({ name, adapter:
 const modelActionMetadataResponse = {
   data: {
     gadgetMeta: {
+      modelAndRelatedModels: [
+        {
+          name: "Base model",
+          apiIdentifier: "baseModel",
+          defaultRecord: {
+            __typename: "HasManyThroughBaseModel",
+          },
+          fields: [
+            {
+              name: "Base model name",
+              apiIdentifier: "baseModelName",
+              fieldType: "String",
+              requiredArgumentForInput: false,
+              sortable: true,
+              filterable: true,
+              __typename: "GadgetModelField",
+              configuration: {
+                __typename: "GadgetGenericFieldConfig",
+                fieldType: "String",
+                validations: [],
+              },
+            },
+            {
+              name: "Joiner models",
+              apiIdentifier: "joinerModels",
+              fieldType: "HasMany",
+              requiredArgumentForInput: false,
+              sortable: false,
+              filterable: false,
+              __typename: "GadgetModelField",
+              configuration: {
+                __typename: "GadgetHasManyConfig",
+                fieldType: "HasMany",
+                validations: [],
+                isJoinModelHasManyField: true,
+                relatedModel: {
+                  key: "tJDsf_FvYqsi",
+                  apiIdentifier: "joinerModel",
+                  namespace: ["hasManyThrough"],
+                  defaultDisplayField: {
+                    name: "Id",
+                    apiIdentifier: "id",
+                    fieldType: "ID",
+                    __typename: "GadgetModelField",
+                  },
+                  __typename: "GadgetModel",
+                },
+                inverseField: {
+                  apiIdentifier: "joinerBelongsToBase",
+                  __typename: "GadgetModelField",
+                },
+              },
+            },
+            {
+              name: "Base model hmt field",
+              apiIdentifier: "baseModelHmtField",
+              fieldType: "HasManyThrough",
+              requiredArgumentForInput: false,
+              sortable: false,
+              filterable: false,
+              __typename: "GadgetModelField",
+              configuration: {
+                __typename: "GadgetHasManyThroughConfig",
+                fieldType: "HasManyThrough",
+                validations: [],
+                relatedModel: {
+                  key: "Oss4sCDW-DJU",
+                  apiIdentifier: "siblingModel",
+                  namespace: ["hasManyThrough"],
+                  defaultDisplayField: {
+                    name: "Id",
+                    apiIdentifier: "id",
+                    fieldType: "ID",
+                    __typename: "GadgetModelField",
+                  },
+                  __typename: "GadgetModel",
+                },
+                inverseField: {
+                  apiIdentifier: "siblingModelHmtField",
+                  __typename: "GadgetModelField",
+                },
+                joinModel: {
+                  key: "tJDsf_FvYqsi",
+                  apiIdentifier: "joinerModel",
+                  namespace: ["hasManyThrough"],
+                  defaultDisplayField: {
+                    name: "Id",
+                    apiIdentifier: "id",
+                    fieldType: "ID",
+                    __typename: "GadgetModelField",
+                  },
+                  __typename: "GadgetModel",
+                },
+                inverseJoinModelField: {
+                  apiIdentifier: "joinerBelongsToBase",
+                  __typename: "GadgetModelField",
+                },
+                inverseRelatedModelField: {
+                  apiIdentifier: "joinerBelongsToSibling",
+                  __typename: "GadgetModelField",
+                },
+              },
+            },
+          ],
+          defaultDisplayField: {
+            name: "Id",
+            apiIdentifier: "id",
+            fieldType: "ID",
+            __typename: "GadgetModelField",
+          },
+          __typename: "GadgetModel",
+        },
+      ],
       model: {
         name: "Base model",
         apiIdentifier: "baseModel",

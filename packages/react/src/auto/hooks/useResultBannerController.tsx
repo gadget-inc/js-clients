@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useState } from "react";
-import { isActionMetadata } from "../../metadata.js";
+import { isModelActionMetadata } from "../../metadata.js";
 import { useAutoFormMetadata } from "../AutoFormContext.js";
 
 export const useResultBannerController = () => {
@@ -14,7 +14,7 @@ export const useResultBannerController = () => {
 
   let title;
   if (submitResult?.isSuccessful) {
-    title = metadata && isActionMetadata(metadata) ? `Saved ${`${metadata?.name} `}successfully.` : `${metadata?.name} succeeded.`;
+    title = metadata && isModelActionMetadata(metadata) ? `Saved ${`${metadata?.name} `}successfully.` : `${metadata?.name} succeeded.`;
   } else {
     title = submitResult?.error?.message;
   }

@@ -121,6 +121,66 @@ describe("AutoTable - Sort", () => {
 const sortTestWidgetModelMetadata = {
   data: {
     gadgetMeta: {
+      modelAndRelatedModels: [
+        {
+          apiIdentifier: "sortWidget",
+          namespace: [],
+          name: "Sort Widget",
+          fields: [
+            {
+              name: "ID",
+              apiIdentifier: "id",
+              fieldType: "ID",
+              requiredArgumentForInput: true,
+              sortable: true,
+              filterable: true,
+              __typename: "GadgetModelField",
+              configuration: {
+                __typename: "GadgetGenericFieldConfig",
+                fieldType: "ID",
+                validations: [
+                  {
+                    __typename: "GadgetGenericFieldValidation",
+                    name: "Uniqueness",
+                    specID: "gadget/validation/unique",
+                  },
+                  {
+                    __typename: "GadgetGenericFieldValidation",
+                    name: "Required",
+                    specID: "gadget/validation/required",
+                  },
+                ],
+              },
+            },
+            {
+              name: "Inventory count",
+              apiIdentifier: "inventoryCount",
+              fieldType: "Number",
+              requiredArgumentForInput: true,
+              sortable: true,
+              filterable: true,
+              __typename: "GadgetModelField",
+              configuration: {
+                __typename: "GadgetGenericFieldConfig",
+                fieldType: "ID",
+                validations: [
+                  {
+                    __typename: "GadgetGenericFieldValidation",
+                    name: "Uniqueness",
+                    specID: "gadget/validation/unique",
+                  },
+                  {
+                    __typename: "GadgetGenericFieldValidation",
+                    name: "Required",
+                    specID: "gadget/validation/required",
+                  },
+                ],
+              },
+            },
+          ],
+          __typename: "GadgetModel",
+        },
+      ],
       model: {
         apiIdentifier: "sortWidget",
         namespace: [],

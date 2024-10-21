@@ -30,21 +30,21 @@ export type Scalars = {
   InternalAutoTableTestRecord: { input: any; output: any };
   /** Represents one _autoTableTestRelatedModel result record in internal api calls. Returns a JSON blob of all the record's fields. */
   InternalAutoTableTestRelatedModelRecord: { input: any; output: any };
-  /** Represents one city result record in internal api calls. Returns a JSON blob of all the record's fields. */
+  /** Represents one game/city result record in internal api calls. Returns a JSON blob of all the record's fields. */
   InternalGameCityRecord: { input: any; output: any };
-  /** Represents one player result record in internal api calls. Returns a JSON blob of all the record's fields. */
+  /** Represents one game/player result record in internal api calls. Returns a JSON blob of all the record's fields. */
   InternalGamePlayerRecord: { input: any; output: any };
-  /** Represents one round result record in internal api calls. Returns a JSON blob of all the record's fields. */
+  /** Represents one game/round result record in internal api calls. Returns a JSON blob of all the record's fields. */
   InternalGameRoundRecord: { input: any; output: any };
-  /** Represents one stadium result record in internal api calls. Returns a JSON blob of all the record's fields. */
+  /** Represents one game/stadium result record in internal api calls. Returns a JSON blob of all the record's fields. */
   InternalGameStadiumRecord: { input: any; output: any };
   /** Represents one gizmo result record in internal api calls. Returns a JSON blob of all the record's fields. */
   InternalGizmoRecord: { input: any; output: any };
-  /** Represents one baseModel result record in internal api calls. Returns a JSON blob of all the record's fields. */
+  /** Represents one hasManyThrough/baseModel result record in internal api calls. Returns a JSON blob of all the record's fields. */
   InternalHasManyThroughBaseModelRecord: { input: any; output: any };
-  /** Represents one joinerModel result record in internal api calls. Returns a JSON blob of all the record's fields. */
+  /** Represents one hasManyThrough/joinerModel result record in internal api calls. Returns a JSON blob of all the record's fields. */
   InternalHasManyThroughJoinerModelRecord: { input: any; output: any };
-  /** Represents one siblingModel result record in internal api calls. Returns a JSON blob of all the record's fields. */
+  /** Represents one hasManyThrough/siblingModel result record in internal api calls. Returns a JSON blob of all the record's fields. */
   InternalHasManyThroughSiblingModelRecord: { input: any; output: any };
   /** Represents one modelA result record in internal api calls. Returns a JSON blob of all the record's fields. */
   InternalModelARecord: { input: any; output: any };
@@ -68,6 +68,12 @@ export type Scalars = {
   InternalShopifyShopRecord: { input: any; output: any };
   /** Represents one shopifySync result record in internal api calls. Returns a JSON blob of all the record's fields. */
   InternalShopifySyncRecord: { input: any; output: any };
+  /** Represents one uniqueFields/childModel result record in internal api calls. Returns a JSON blob of all the record's fields. */
+  InternalUniqueFieldsChildModelRecord: { input: any; output: any };
+  /** Represents one uniqueFields/mainModel result record in internal api calls. Returns a JSON blob of all the record's fields. */
+  InternalUniqueFieldsMainModelRecord: { input: any; output: any };
+  /** Represents one uniqueFields/parentModel result record in internal api calls. Returns a JSON blob of all the record's fields. */
+  InternalUniqueFieldsParentModelRecord: { input: any; output: any };
   /** Represents one user result record in internal api calls. Returns a JSON blob of all the record's fields. */
   InternalUserRecord: { input: any; output: any };
   /** Represents one widget result record in internal api calls. Returns a JSON blob of all the record's fields. */
@@ -418,6 +424,9 @@ export type BackgroundActionResult =
   | CreatePartResult
   | CreateSectionResult
   | CreateTestDataResult
+  | CreateUniqueFieldsChildModelResult
+  | CreateUniqueFieldsMainModelResult
+  | CreateUniqueFieldsParentModelResult
   | CreateWidgetResult
   | CustomActionAutoTableTestResult
   | CustomActionWithParamsAutoTableTestResult
@@ -435,6 +444,9 @@ export type BackgroundActionResult =
   | DeleteModelAResult
   | DeletePartResult
   | DeleteSectionResult
+  | DeleteUniqueFieldsChildModelResult
+  | DeleteUniqueFieldsMainModelResult
+  | DeleteUniqueFieldsParentModelResult
   | DeleteUserResult
   | DeleteWidgetResult
   | ErrorShopifySyncResult
@@ -458,6 +470,9 @@ export type BackgroundActionResult =
   | UpdateModelAResult
   | UpdatePartResult
   | UpdateSectionResult
+  | UpdateUniqueFieldsChildModelResult
+  | UpdateUniqueFieldsMainModelResult
+  | UpdateUniqueFieldsParentModelResult
   | UpdateUserResult
   | UpdateWidgetResult
   | UpdateWithCustomParamsAutoTableTestResult;
@@ -925,6 +940,7 @@ export type BackgroundMutations = {
   signInUser: EnqueueBackgroundActionResult;
   signOutUser: EnqueueBackgroundActionResult;
   signUpUser: EnqueueBackgroundActionResult;
+  uniqueFields: BackgroundUniqueFieldsMutations;
   updateAutoTableTest: EnqueueBackgroundActionResult;
   updateAutoTableTestRelatedModel: EnqueueBackgroundActionResult;
   updateGizmo: EnqueueBackgroundActionResult;
@@ -1446,6 +1462,160 @@ export type BackgroundNameSpacedMutationsCustomObjectParamsArgs = {
   rootLevelStr?: InputMaybe<Scalars["String"]["input"]>;
 };
 
+export type BackgroundUniqueFieldsMutations = {
+  __typename?: "BackgroundUniqueFieldsMutations";
+  bulkCreateChildModels: BulkEnqueueBackgroundActionResult;
+  bulkCreateMainModels: BulkEnqueueBackgroundActionResult;
+  bulkCreateParentModels: BulkEnqueueBackgroundActionResult;
+  bulkDeleteChildModels: BulkEnqueueBackgroundActionResult;
+  bulkDeleteMainModels: BulkEnqueueBackgroundActionResult;
+  bulkDeleteParentModels: BulkEnqueueBackgroundActionResult;
+  bulkUpdateChildModels: BulkEnqueueBackgroundActionResult;
+  bulkUpdateMainModels: BulkEnqueueBackgroundActionResult;
+  bulkUpdateParentModels: BulkEnqueueBackgroundActionResult;
+  bulkUpsertChildModels: BulkEnqueueBackgroundActionResult;
+  bulkUpsertMainModels: BulkEnqueueBackgroundActionResult;
+  bulkUpsertParentModels: BulkEnqueueBackgroundActionResult;
+  createChildModel: EnqueueBackgroundActionResult;
+  createMainModel: EnqueueBackgroundActionResult;
+  createParentModel: EnqueueBackgroundActionResult;
+  deleteChildModel: EnqueueBackgroundActionResult;
+  deleteMainModel: EnqueueBackgroundActionResult;
+  deleteParentModel: EnqueueBackgroundActionResult;
+  updateChildModel: EnqueueBackgroundActionResult;
+  updateMainModel: EnqueueBackgroundActionResult;
+  updateParentModel: EnqueueBackgroundActionResult;
+  upsertChildModel: EnqueueBackgroundActionResult;
+  upsertMainModel: EnqueueBackgroundActionResult;
+  upsertParentModel: EnqueueBackgroundActionResult;
+};
+
+export type BackgroundUniqueFieldsMutationsBulkCreateChildModelsArgs = {
+  backgroundOptions?: InputMaybe<EnqueueBackgroundActionOptions>;
+  inputs: Array<BulkCreateUniqueFieldsChildModelsInput>;
+};
+
+export type BackgroundUniqueFieldsMutationsBulkCreateMainModelsArgs = {
+  backgroundOptions?: InputMaybe<EnqueueBackgroundActionOptions>;
+  inputs: Array<BulkCreateUniqueFieldsMainModelsInput>;
+};
+
+export type BackgroundUniqueFieldsMutationsBulkCreateParentModelsArgs = {
+  backgroundOptions?: InputMaybe<EnqueueBackgroundActionOptions>;
+  inputs: Array<BulkCreateUniqueFieldsParentModelsInput>;
+};
+
+export type BackgroundUniqueFieldsMutationsBulkDeleteChildModelsArgs = {
+  backgroundOptions?: InputMaybe<EnqueueBackgroundActionOptions>;
+  ids: Array<Scalars["GadgetID"]["input"]>;
+};
+
+export type BackgroundUniqueFieldsMutationsBulkDeleteMainModelsArgs = {
+  backgroundOptions?: InputMaybe<EnqueueBackgroundActionOptions>;
+  ids: Array<Scalars["GadgetID"]["input"]>;
+};
+
+export type BackgroundUniqueFieldsMutationsBulkDeleteParentModelsArgs = {
+  backgroundOptions?: InputMaybe<EnqueueBackgroundActionOptions>;
+  ids: Array<Scalars["GadgetID"]["input"]>;
+};
+
+export type BackgroundUniqueFieldsMutationsBulkUpdateChildModelsArgs = {
+  backgroundOptions?: InputMaybe<EnqueueBackgroundActionOptions>;
+  inputs: Array<BulkUpdateUniqueFieldsChildModelsInput>;
+};
+
+export type BackgroundUniqueFieldsMutationsBulkUpdateMainModelsArgs = {
+  backgroundOptions?: InputMaybe<EnqueueBackgroundActionOptions>;
+  inputs: Array<BulkUpdateUniqueFieldsMainModelsInput>;
+};
+
+export type BackgroundUniqueFieldsMutationsBulkUpdateParentModelsArgs = {
+  backgroundOptions?: InputMaybe<EnqueueBackgroundActionOptions>;
+  inputs: Array<BulkUpdateUniqueFieldsParentModelsInput>;
+};
+
+export type BackgroundUniqueFieldsMutationsBulkUpsertChildModelsArgs = {
+  backgroundOptions?: InputMaybe<EnqueueBackgroundActionOptions>;
+  inputs: Array<BulkUpsertUniqueFieldsChildModelsInput>;
+};
+
+export type BackgroundUniqueFieldsMutationsBulkUpsertMainModelsArgs = {
+  backgroundOptions?: InputMaybe<EnqueueBackgroundActionOptions>;
+  inputs: Array<BulkUpsertUniqueFieldsMainModelsInput>;
+};
+
+export type BackgroundUniqueFieldsMutationsBulkUpsertParentModelsArgs = {
+  backgroundOptions?: InputMaybe<EnqueueBackgroundActionOptions>;
+  inputs: Array<BulkUpsertUniqueFieldsParentModelsInput>;
+};
+
+export type BackgroundUniqueFieldsMutationsCreateChildModelArgs = {
+  backgroundOptions?: InputMaybe<EnqueueBackgroundActionOptions>;
+  childModel?: InputMaybe<CreateUniqueFieldsChildModelInput>;
+};
+
+export type BackgroundUniqueFieldsMutationsCreateMainModelArgs = {
+  backgroundOptions?: InputMaybe<EnqueueBackgroundActionOptions>;
+  mainModel?: InputMaybe<CreateUniqueFieldsMainModelInput>;
+};
+
+export type BackgroundUniqueFieldsMutationsCreateParentModelArgs = {
+  backgroundOptions?: InputMaybe<EnqueueBackgroundActionOptions>;
+  parentModel?: InputMaybe<CreateUniqueFieldsParentModelInput>;
+};
+
+export type BackgroundUniqueFieldsMutationsDeleteChildModelArgs = {
+  backgroundOptions?: InputMaybe<EnqueueBackgroundActionOptions>;
+  id: Scalars["GadgetID"]["input"];
+};
+
+export type BackgroundUniqueFieldsMutationsDeleteMainModelArgs = {
+  backgroundOptions?: InputMaybe<EnqueueBackgroundActionOptions>;
+  id: Scalars["GadgetID"]["input"];
+};
+
+export type BackgroundUniqueFieldsMutationsDeleteParentModelArgs = {
+  backgroundOptions?: InputMaybe<EnqueueBackgroundActionOptions>;
+  id: Scalars["GadgetID"]["input"];
+};
+
+export type BackgroundUniqueFieldsMutationsUpdateChildModelArgs = {
+  backgroundOptions?: InputMaybe<EnqueueBackgroundActionOptions>;
+  childModel?: InputMaybe<UpdateUniqueFieldsChildModelInput>;
+  id: Scalars["GadgetID"]["input"];
+};
+
+export type BackgroundUniqueFieldsMutationsUpdateMainModelArgs = {
+  backgroundOptions?: InputMaybe<EnqueueBackgroundActionOptions>;
+  id: Scalars["GadgetID"]["input"];
+  mainModel?: InputMaybe<UpdateUniqueFieldsMainModelInput>;
+};
+
+export type BackgroundUniqueFieldsMutationsUpdateParentModelArgs = {
+  backgroundOptions?: InputMaybe<EnqueueBackgroundActionOptions>;
+  id: Scalars["GadgetID"]["input"];
+  parentModel?: InputMaybe<UpdateUniqueFieldsParentModelInput>;
+};
+
+export type BackgroundUniqueFieldsMutationsUpsertChildModelArgs = {
+  backgroundOptions?: InputMaybe<EnqueueBackgroundActionOptions>;
+  childModel?: InputMaybe<UpsertUniqueFieldsChildModelInput>;
+  on?: InputMaybe<Array<Scalars["String"]["input"]>>;
+};
+
+export type BackgroundUniqueFieldsMutationsUpsertMainModelArgs = {
+  backgroundOptions?: InputMaybe<EnqueueBackgroundActionOptions>;
+  mainModel?: InputMaybe<UpsertUniqueFieldsMainModelInput>;
+  on?: InputMaybe<Array<Scalars["String"]["input"]>>;
+};
+
+export type BackgroundUniqueFieldsMutationsUpsertParentModelArgs = {
+  backgroundOptions?: InputMaybe<EnqueueBackgroundActionOptions>;
+  on?: InputMaybe<Array<Scalars["String"]["input"]>>;
+  parentModel?: InputMaybe<UpsertUniqueFieldsParentModelInput>;
+};
+
 /** Input object supporting setting or updating related model record on a relationship field */
 export type BaseModelBelongsToInput = {
   /** Existing ID of another record, which you would like to associate this record with */
@@ -1565,10 +1735,10 @@ export type BulkCreateGameCitiesInput = {
   city?: InputMaybe<CreateGameCityInput>;
 };
 
-/** The output when running the create on the city model in bulk. */
+/** The output when running the create on the game/city model in bulk. */
 export type BulkCreateGameCitiesResult = {
   __typename?: "BulkCreateGameCitiesResult";
-  /** The list of all changed city records by each sent bulk action. Returned in the same order as the input bulk action params. */
+  /** The list of all changed game/city records by each sent bulk action. Returned in the same order as the input bulk action params. */
   cities?: Maybe<Array<Maybe<GameCity>>>;
   /** Aggregated list of errors that any bulk action encountered while processing */
   errors?: Maybe<Array<ExecutionError>>;
@@ -1580,12 +1750,12 @@ export type BulkCreateGamePlayersInput = {
   player?: InputMaybe<CreateGamePlayerInput>;
 };
 
-/** The output when running the create on the player model in bulk. */
+/** The output when running the create on the game/player model in bulk. */
 export type BulkCreateGamePlayersResult = {
   __typename?: "BulkCreateGamePlayersResult";
   /** Aggregated list of errors that any bulk action encountered while processing */
   errors?: Maybe<Array<ExecutionError>>;
-  /** The list of all changed player records by each sent bulk action. Returned in the same order as the input bulk action params. */
+  /** The list of all changed game/player records by each sent bulk action. Returned in the same order as the input bulk action params. */
   players?: Maybe<Array<Maybe<GamePlayer>>>;
   /** Boolean describing if all the bulk actions succeeded or not */
   success: Scalars["Boolean"]["output"];
@@ -1595,12 +1765,12 @@ export type BulkCreateGameRoundsInput = {
   round?: InputMaybe<CreateGameRoundInput>;
 };
 
-/** The output when running the create on the round model in bulk. */
+/** The output when running the create on the game/round model in bulk. */
 export type BulkCreateGameRoundsResult = {
   __typename?: "BulkCreateGameRoundsResult";
   /** Aggregated list of errors that any bulk action encountered while processing */
   errors?: Maybe<Array<ExecutionError>>;
-  /** The list of all changed round records by each sent bulk action. Returned in the same order as the input bulk action params. */
+  /** The list of all changed game/round records by each sent bulk action. Returned in the same order as the input bulk action params. */
   rounds?: Maybe<Array<Maybe<GameRound>>>;
   /** Boolean describing if all the bulk actions succeeded or not */
   success: Scalars["Boolean"]["output"];
@@ -1610,12 +1780,12 @@ export type BulkCreateGameStadiaInput = {
   stadium?: InputMaybe<CreateGameStadiumInput>;
 };
 
-/** The output when running the create on the stadium model in bulk. */
+/** The output when running the create on the game/stadium model in bulk. */
 export type BulkCreateGameStadiaResult = {
   __typename?: "BulkCreateGameStadiaResult";
   /** Aggregated list of errors that any bulk action encountered while processing */
   errors?: Maybe<Array<ExecutionError>>;
-  /** The list of all changed stadium records by each sent bulk action. Returned in the same order as the input bulk action params. */
+  /** The list of all changed game/stadium records by each sent bulk action. Returned in the same order as the input bulk action params. */
   stadia?: Maybe<Array<Maybe<GameStadium>>>;
   /** Boolean describing if all the bulk actions succeeded or not */
   success: Scalars["Boolean"]["output"];
@@ -1640,10 +1810,10 @@ export type BulkCreateHasManyThroughBaseModelsInput = {
   baseModel?: InputMaybe<CreateHasManyThroughBaseModelInput>;
 };
 
-/** The output when running the create on the baseModel model in bulk. */
+/** The output when running the create on the hasManyThrough/baseModel model in bulk. */
 export type BulkCreateHasManyThroughBaseModelsResult = {
   __typename?: "BulkCreateHasManyThroughBaseModelsResult";
-  /** The list of all changed baseModel records by each sent bulk action. Returned in the same order as the input bulk action params. */
+  /** The list of all changed hasManyThrough/baseModel records by each sent bulk action. Returned in the same order as the input bulk action params. */
   baseModels?: Maybe<Array<Maybe<HasManyThroughBaseModel>>>;
   /** Aggregated list of errors that any bulk action encountered while processing */
   errors?: Maybe<Array<ExecutionError>>;
@@ -1655,12 +1825,12 @@ export type BulkCreateHasManyThroughJoinerModelsInput = {
   joinerModel?: InputMaybe<CreateHasManyThroughJoinerModelInput>;
 };
 
-/** The output when running the create on the joinerModel model in bulk. */
+/** The output when running the create on the hasManyThrough/joinerModel model in bulk. */
 export type BulkCreateHasManyThroughJoinerModelsResult = {
   __typename?: "BulkCreateHasManyThroughJoinerModelsResult";
   /** Aggregated list of errors that any bulk action encountered while processing */
   errors?: Maybe<Array<ExecutionError>>;
-  /** The list of all changed joinerModel records by each sent bulk action. Returned in the same order as the input bulk action params. */
+  /** The list of all changed hasManyThrough/joinerModel records by each sent bulk action. Returned in the same order as the input bulk action params. */
   joinerModels?: Maybe<Array<Maybe<HasManyThroughJoinerModel>>>;
   /** Boolean describing if all the bulk actions succeeded or not */
   success: Scalars["Boolean"]["output"];
@@ -1670,12 +1840,12 @@ export type BulkCreateHasManyThroughSiblingModelsInput = {
   siblingModel?: InputMaybe<CreateHasManyThroughSiblingModelInput>;
 };
 
-/** The output when running the create on the siblingModel model in bulk. */
+/** The output when running the create on the hasManyThrough/siblingModel model in bulk. */
 export type BulkCreateHasManyThroughSiblingModelsResult = {
   __typename?: "BulkCreateHasManyThroughSiblingModelsResult";
   /** Aggregated list of errors that any bulk action encountered while processing */
   errors?: Maybe<Array<ExecutionError>>;
-  /** The list of all changed siblingModel records by each sent bulk action. Returned in the same order as the input bulk action params. */
+  /** The list of all changed hasManyThrough/siblingModel records by each sent bulk action. Returned in the same order as the input bulk action params. */
   siblingModels?: Maybe<Array<Maybe<HasManyThroughSiblingModel>>>;
   /** Boolean describing if all the bulk actions succeeded or not */
   success: Scalars["Boolean"]["output"];
@@ -1718,6 +1888,51 @@ export type BulkCreateSectionsResult = {
   errors?: Maybe<Array<ExecutionError>>;
   /** The list of all changed section records by each sent bulk action. Returned in the same order as the input bulk action params. */
   sections?: Maybe<Array<Maybe<Section>>>;
+  /** Boolean describing if all the bulk actions succeeded or not */
+  success: Scalars["Boolean"]["output"];
+};
+
+export type BulkCreateUniqueFieldsChildModelsInput = {
+  childModel?: InputMaybe<CreateUniqueFieldsChildModelInput>;
+};
+
+/** The output when running the create on the uniqueFields/childModel model in bulk. */
+export type BulkCreateUniqueFieldsChildModelsResult = {
+  __typename?: "BulkCreateUniqueFieldsChildModelsResult";
+  /** The list of all changed uniqueFields/childModel records by each sent bulk action. Returned in the same order as the input bulk action params. */
+  childModels?: Maybe<Array<Maybe<UniqueFieldsChildModel>>>;
+  /** Aggregated list of errors that any bulk action encountered while processing */
+  errors?: Maybe<Array<ExecutionError>>;
+  /** Boolean describing if all the bulk actions succeeded or not */
+  success: Scalars["Boolean"]["output"];
+};
+
+export type BulkCreateUniqueFieldsMainModelsInput = {
+  mainModel?: InputMaybe<CreateUniqueFieldsMainModelInput>;
+};
+
+/** The output when running the create on the uniqueFields/mainModel model in bulk. */
+export type BulkCreateUniqueFieldsMainModelsResult = {
+  __typename?: "BulkCreateUniqueFieldsMainModelsResult";
+  /** Aggregated list of errors that any bulk action encountered while processing */
+  errors?: Maybe<Array<ExecutionError>>;
+  /** The list of all changed uniqueFields/mainModel records by each sent bulk action. Returned in the same order as the input bulk action params. */
+  mainModels?: Maybe<Array<Maybe<UniqueFieldsMainModel>>>;
+  /** Boolean describing if all the bulk actions succeeded or not */
+  success: Scalars["Boolean"]["output"];
+};
+
+export type BulkCreateUniqueFieldsParentModelsInput = {
+  parentModel?: InputMaybe<CreateUniqueFieldsParentModelInput>;
+};
+
+/** The output when running the create on the uniqueFields/parentModel model in bulk. */
+export type BulkCreateUniqueFieldsParentModelsResult = {
+  __typename?: "BulkCreateUniqueFieldsParentModelsResult";
+  /** Aggregated list of errors that any bulk action encountered while processing */
+  errors?: Maybe<Array<ExecutionError>>;
+  /** The list of all changed uniqueFields/parentModel records by each sent bulk action. Returned in the same order as the input bulk action params. */
+  parentModels?: Maybe<Array<Maybe<UniqueFieldsParentModel>>>;
   /** Boolean describing if all the bulk actions succeeded or not */
   success: Scalars["Boolean"]["output"];
 };
@@ -1772,10 +1987,10 @@ export type BulkCustomObjectParamsGameCitiesInput = {
   rootLevelStr?: InputMaybe<Scalars["String"]["input"]>;
 };
 
-/** The output when running the customObjectParams on the city model in bulk. */
+/** The output when running the customObjectParams on the game/city model in bulk. */
 export type BulkCustomObjectParamsGameCitiesResult = {
   __typename?: "BulkCustomObjectParamsGameCitiesResult";
-  /** The list of all changed city records by each sent bulk action. Returned in the same order as the input bulk action params. */
+  /** The list of all changed game/city records by each sent bulk action. Returned in the same order as the input bulk action params. */
   cities?: Maybe<Array<Maybe<GameCity>>>;
   /** Aggregated list of errors that any bulk action encountered while processing */
   errors?: Maybe<Array<ExecutionError>>;
@@ -1801,7 +2016,7 @@ export type BulkDeleteAutoTableTestsResult = {
   success: Scalars["Boolean"]["output"];
 };
 
-/** The output when running the delete on the city model in bulk. */
+/** The output when running the delete on the game/city model in bulk. */
 export type BulkDeleteGameCitiesResult = {
   __typename?: "BulkDeleteGameCitiesResult";
   /** Aggregated list of errors that any bulk action encountered while processing */
@@ -1810,7 +2025,7 @@ export type BulkDeleteGameCitiesResult = {
   success: Scalars["Boolean"]["output"];
 };
 
-/** The output when running the delete on the player model in bulk. */
+/** The output when running the delete on the game/player model in bulk. */
 export type BulkDeleteGamePlayersResult = {
   __typename?: "BulkDeleteGamePlayersResult";
   /** Aggregated list of errors that any bulk action encountered while processing */
@@ -1819,7 +2034,7 @@ export type BulkDeleteGamePlayersResult = {
   success: Scalars["Boolean"]["output"];
 };
 
-/** The output when running the delete on the round model in bulk. */
+/** The output when running the delete on the game/round model in bulk. */
 export type BulkDeleteGameRoundsResult = {
   __typename?: "BulkDeleteGameRoundsResult";
   /** Aggregated list of errors that any bulk action encountered while processing */
@@ -1828,7 +2043,7 @@ export type BulkDeleteGameRoundsResult = {
   success: Scalars["Boolean"]["output"];
 };
 
-/** The output when running the delete on the stadium model in bulk. */
+/** The output when running the delete on the game/stadium model in bulk. */
 export type BulkDeleteGameStadiaResult = {
   __typename?: "BulkDeleteGameStadiaResult";
   /** Aggregated list of errors that any bulk action encountered while processing */
@@ -1846,7 +2061,7 @@ export type BulkDeleteGizmosResult = {
   success: Scalars["Boolean"]["output"];
 };
 
-/** The output when running the delete on the baseModel model in bulk. */
+/** The output when running the delete on the hasManyThrough/baseModel model in bulk. */
 export type BulkDeleteHasManyThroughBaseModelsResult = {
   __typename?: "BulkDeleteHasManyThroughBaseModelsResult";
   /** Aggregated list of errors that any bulk action encountered while processing */
@@ -1855,7 +2070,7 @@ export type BulkDeleteHasManyThroughBaseModelsResult = {
   success: Scalars["Boolean"]["output"];
 };
 
-/** The output when running the delete on the joinerModel model in bulk. */
+/** The output when running the delete on the hasManyThrough/joinerModel model in bulk. */
 export type BulkDeleteHasManyThroughJoinerModelsResult = {
   __typename?: "BulkDeleteHasManyThroughJoinerModelsResult";
   /** Aggregated list of errors that any bulk action encountered while processing */
@@ -1864,7 +2079,7 @@ export type BulkDeleteHasManyThroughJoinerModelsResult = {
   success: Scalars["Boolean"]["output"];
 };
 
-/** The output when running the delete on the siblingModel model in bulk. */
+/** The output when running the delete on the hasManyThrough/siblingModel model in bulk. */
 export type BulkDeleteHasManyThroughSiblingModelsResult = {
   __typename?: "BulkDeleteHasManyThroughSiblingModelsResult";
   /** Aggregated list of errors that any bulk action encountered while processing */
@@ -1894,6 +2109,33 @@ export type BulkDeletePartsResult = {
 /** The output when running the delete on the section model in bulk. */
 export type BulkDeleteSectionsResult = {
   __typename?: "BulkDeleteSectionsResult";
+  /** Aggregated list of errors that any bulk action encountered while processing */
+  errors?: Maybe<Array<ExecutionError>>;
+  /** Boolean describing if all the bulk actions succeeded or not */
+  success: Scalars["Boolean"]["output"];
+};
+
+/** The output when running the delete on the uniqueFields/childModel model in bulk. */
+export type BulkDeleteUniqueFieldsChildModelsResult = {
+  __typename?: "BulkDeleteUniqueFieldsChildModelsResult";
+  /** Aggregated list of errors that any bulk action encountered while processing */
+  errors?: Maybe<Array<ExecutionError>>;
+  /** Boolean describing if all the bulk actions succeeded or not */
+  success: Scalars["Boolean"]["output"];
+};
+
+/** The output when running the delete on the uniqueFields/mainModel model in bulk. */
+export type BulkDeleteUniqueFieldsMainModelsResult = {
+  __typename?: "BulkDeleteUniqueFieldsMainModelsResult";
+  /** Aggregated list of errors that any bulk action encountered while processing */
+  errors?: Maybe<Array<ExecutionError>>;
+  /** Boolean describing if all the bulk actions succeeded or not */
+  success: Scalars["Boolean"]["output"];
+};
+
+/** The output when running the delete on the uniqueFields/parentModel model in bulk. */
+export type BulkDeleteUniqueFieldsParentModelsResult = {
+  __typename?: "BulkDeleteUniqueFieldsParentModelsResult";
   /** Aggregated list of errors that any bulk action encountered while processing */
   errors?: Maybe<Array<ExecutionError>>;
   /** Boolean describing if all the bulk actions succeeded or not */
@@ -2042,10 +2284,10 @@ export type BulkUpdateGameCitiesInput = {
   id: Scalars["GadgetID"]["input"];
 };
 
-/** The output when running the update on the city model in bulk. */
+/** The output when running the update on the game/city model in bulk. */
 export type BulkUpdateGameCitiesResult = {
   __typename?: "BulkUpdateGameCitiesResult";
-  /** The list of all changed city records by each sent bulk action. Returned in the same order as the input bulk action params. */
+  /** The list of all changed game/city records by each sent bulk action. Returned in the same order as the input bulk action params. */
   cities?: Maybe<Array<Maybe<GameCity>>>;
   /** Aggregated list of errors that any bulk action encountered while processing */
   errors?: Maybe<Array<ExecutionError>>;
@@ -2058,12 +2300,12 @@ export type BulkUpdateGamePlayersInput = {
   player?: InputMaybe<UpdateGamePlayerInput>;
 };
 
-/** The output when running the update on the player model in bulk. */
+/** The output when running the update on the game/player model in bulk. */
 export type BulkUpdateGamePlayersResult = {
   __typename?: "BulkUpdateGamePlayersResult";
   /** Aggregated list of errors that any bulk action encountered while processing */
   errors?: Maybe<Array<ExecutionError>>;
-  /** The list of all changed player records by each sent bulk action. Returned in the same order as the input bulk action params. */
+  /** The list of all changed game/player records by each sent bulk action. Returned in the same order as the input bulk action params. */
   players?: Maybe<Array<Maybe<GamePlayer>>>;
   /** Boolean describing if all the bulk actions succeeded or not */
   success: Scalars["Boolean"]["output"];
@@ -2074,12 +2316,12 @@ export type BulkUpdateGameRoundsInput = {
   round?: InputMaybe<UpdateGameRoundInput>;
 };
 
-/** The output when running the update on the round model in bulk. */
+/** The output when running the update on the game/round model in bulk. */
 export type BulkUpdateGameRoundsResult = {
   __typename?: "BulkUpdateGameRoundsResult";
   /** Aggregated list of errors that any bulk action encountered while processing */
   errors?: Maybe<Array<ExecutionError>>;
-  /** The list of all changed round records by each sent bulk action. Returned in the same order as the input bulk action params. */
+  /** The list of all changed game/round records by each sent bulk action. Returned in the same order as the input bulk action params. */
   rounds?: Maybe<Array<Maybe<GameRound>>>;
   /** Boolean describing if all the bulk actions succeeded or not */
   success: Scalars["Boolean"]["output"];
@@ -2090,12 +2332,12 @@ export type BulkUpdateGameStadiaInput = {
   stadium?: InputMaybe<UpdateGameStadiumInput>;
 };
 
-/** The output when running the update on the stadium model in bulk. */
+/** The output when running the update on the game/stadium model in bulk. */
 export type BulkUpdateGameStadiaResult = {
   __typename?: "BulkUpdateGameStadiaResult";
   /** Aggregated list of errors that any bulk action encountered while processing */
   errors?: Maybe<Array<ExecutionError>>;
-  /** The list of all changed stadium records by each sent bulk action. Returned in the same order as the input bulk action params. */
+  /** The list of all changed game/stadium records by each sent bulk action. Returned in the same order as the input bulk action params. */
   stadia?: Maybe<Array<Maybe<GameStadium>>>;
   /** Boolean describing if all the bulk actions succeeded or not */
   success: Scalars["Boolean"]["output"];
@@ -2122,10 +2364,10 @@ export type BulkUpdateHasManyThroughBaseModelsInput = {
   id: Scalars["GadgetID"]["input"];
 };
 
-/** The output when running the update on the baseModel model in bulk. */
+/** The output when running the update on the hasManyThrough/baseModel model in bulk. */
 export type BulkUpdateHasManyThroughBaseModelsResult = {
   __typename?: "BulkUpdateHasManyThroughBaseModelsResult";
-  /** The list of all changed baseModel records by each sent bulk action. Returned in the same order as the input bulk action params. */
+  /** The list of all changed hasManyThrough/baseModel records by each sent bulk action. Returned in the same order as the input bulk action params. */
   baseModels?: Maybe<Array<Maybe<HasManyThroughBaseModel>>>;
   /** Aggregated list of errors that any bulk action encountered while processing */
   errors?: Maybe<Array<ExecutionError>>;
@@ -2138,12 +2380,12 @@ export type BulkUpdateHasManyThroughJoinerModelsInput = {
   joinerModel?: InputMaybe<UpdateHasManyThroughJoinerModelInput>;
 };
 
-/** The output when running the update on the joinerModel model in bulk. */
+/** The output when running the update on the hasManyThrough/joinerModel model in bulk. */
 export type BulkUpdateHasManyThroughJoinerModelsResult = {
   __typename?: "BulkUpdateHasManyThroughJoinerModelsResult";
   /** Aggregated list of errors that any bulk action encountered while processing */
   errors?: Maybe<Array<ExecutionError>>;
-  /** The list of all changed joinerModel records by each sent bulk action. Returned in the same order as the input bulk action params. */
+  /** The list of all changed hasManyThrough/joinerModel records by each sent bulk action. Returned in the same order as the input bulk action params. */
   joinerModels?: Maybe<Array<Maybe<HasManyThroughJoinerModel>>>;
   /** Boolean describing if all the bulk actions succeeded or not */
   success: Scalars["Boolean"]["output"];
@@ -2154,12 +2396,12 @@ export type BulkUpdateHasManyThroughSiblingModelsInput = {
   siblingModel?: InputMaybe<UpdateHasManyThroughSiblingModelInput>;
 };
 
-/** The output when running the update on the siblingModel model in bulk. */
+/** The output when running the update on the hasManyThrough/siblingModel model in bulk. */
 export type BulkUpdateHasManyThroughSiblingModelsResult = {
   __typename?: "BulkUpdateHasManyThroughSiblingModelsResult";
   /** Aggregated list of errors that any bulk action encountered while processing */
   errors?: Maybe<Array<ExecutionError>>;
-  /** The list of all changed siblingModel records by each sent bulk action. Returned in the same order as the input bulk action params. */
+  /** The list of all changed hasManyThrough/siblingModel records by each sent bulk action. Returned in the same order as the input bulk action params. */
   siblingModels?: Maybe<Array<Maybe<HasManyThroughSiblingModel>>>;
   /** Boolean describing if all the bulk actions succeeded or not */
   success: Scalars["Boolean"]["output"];
@@ -2204,6 +2446,54 @@ export type BulkUpdateSectionsResult = {
   errors?: Maybe<Array<ExecutionError>>;
   /** The list of all changed section records by each sent bulk action. Returned in the same order as the input bulk action params. */
   sections?: Maybe<Array<Maybe<Section>>>;
+  /** Boolean describing if all the bulk actions succeeded or not */
+  success: Scalars["Boolean"]["output"];
+};
+
+export type BulkUpdateUniqueFieldsChildModelsInput = {
+  childModel?: InputMaybe<UpdateUniqueFieldsChildModelInput>;
+  id: Scalars["GadgetID"]["input"];
+};
+
+/** The output when running the update on the uniqueFields/childModel model in bulk. */
+export type BulkUpdateUniqueFieldsChildModelsResult = {
+  __typename?: "BulkUpdateUniqueFieldsChildModelsResult";
+  /** The list of all changed uniqueFields/childModel records by each sent bulk action. Returned in the same order as the input bulk action params. */
+  childModels?: Maybe<Array<Maybe<UniqueFieldsChildModel>>>;
+  /** Aggregated list of errors that any bulk action encountered while processing */
+  errors?: Maybe<Array<ExecutionError>>;
+  /** Boolean describing if all the bulk actions succeeded or not */
+  success: Scalars["Boolean"]["output"];
+};
+
+export type BulkUpdateUniqueFieldsMainModelsInput = {
+  id: Scalars["GadgetID"]["input"];
+  mainModel?: InputMaybe<UpdateUniqueFieldsMainModelInput>;
+};
+
+/** The output when running the update on the uniqueFields/mainModel model in bulk. */
+export type BulkUpdateUniqueFieldsMainModelsResult = {
+  __typename?: "BulkUpdateUniqueFieldsMainModelsResult";
+  /** Aggregated list of errors that any bulk action encountered while processing */
+  errors?: Maybe<Array<ExecutionError>>;
+  /** The list of all changed uniqueFields/mainModel records by each sent bulk action. Returned in the same order as the input bulk action params. */
+  mainModels?: Maybe<Array<Maybe<UniqueFieldsMainModel>>>;
+  /** Boolean describing if all the bulk actions succeeded or not */
+  success: Scalars["Boolean"]["output"];
+};
+
+export type BulkUpdateUniqueFieldsParentModelsInput = {
+  id: Scalars["GadgetID"]["input"];
+  parentModel?: InputMaybe<UpdateUniqueFieldsParentModelInput>;
+};
+
+/** The output when running the update on the uniqueFields/parentModel model in bulk. */
+export type BulkUpdateUniqueFieldsParentModelsResult = {
+  __typename?: "BulkUpdateUniqueFieldsParentModelsResult";
+  /** Aggregated list of errors that any bulk action encountered while processing */
+  errors?: Maybe<Array<ExecutionError>>;
+  /** The list of all changed uniqueFields/parentModel records by each sent bulk action. Returned in the same order as the input bulk action params. */
+  parentModels?: Maybe<Array<Maybe<UniqueFieldsParentModel>>>;
   /** Boolean describing if all the bulk actions succeeded or not */
   success: Scalars["Boolean"]["output"];
 };
@@ -2266,7 +2556,7 @@ export type BulkUpsertAutoTableTestRelatedModelsInput = {
   on?: InputMaybe<Array<Scalars["String"]["input"]>>;
 };
 
-/** The result of a bulk upsert operation for the _autoTableTestRelatedModel */
+/** The result of a bulk upsert operation for the _autoTableTestRelatedModel model */
 export type BulkUpsertAutoTableTestRelatedModelsResult = {
   __typename?: "BulkUpsertAutoTableTestRelatedModelsResult";
   /** The results of each upsert action in the bulk operation */
@@ -2283,7 +2573,7 @@ export type BulkUpsertAutoTableTestsInput = {
   on?: InputMaybe<Array<Scalars["String"]["input"]>>;
 };
 
-/** The result of a bulk upsert operation for the autoTableTest */
+/** The result of a bulk upsert operation for the autoTableTest model */
 export type BulkUpsertAutoTableTestsResult = {
   __typename?: "BulkUpsertAutoTableTestsResult";
   /** The results of each upsert action in the bulk operation */
@@ -2300,7 +2590,7 @@ export type BulkUpsertGameCitiesInput = {
   on?: InputMaybe<Array<Scalars["String"]["input"]>>;
 };
 
-/** The result of a bulk upsert operation for the city */
+/** The result of a bulk upsert operation for the game/city model */
 export type BulkUpsertGameCitiesResult = {
   __typename?: "BulkUpsertGameCitiesResult";
   /** The results of each upsert action in the bulk operation */
@@ -2317,7 +2607,7 @@ export type BulkUpsertGamePlayersInput = {
   player?: InputMaybe<UpsertGamePlayerInput>;
 };
 
-/** The result of a bulk upsert operation for the player */
+/** The result of a bulk upsert operation for the game/player model */
 export type BulkUpsertGamePlayersResult = {
   __typename?: "BulkUpsertGamePlayersResult";
   /** Aggregated list of errors that any bulk action encountered while processing */
@@ -2334,7 +2624,7 @@ export type BulkUpsertGameRoundsInput = {
   round?: InputMaybe<UpsertGameRoundInput>;
 };
 
-/** The result of a bulk upsert operation for the round */
+/** The result of a bulk upsert operation for the game/round model */
 export type BulkUpsertGameRoundsResult = {
   __typename?: "BulkUpsertGameRoundsResult";
   /** Aggregated list of errors that any bulk action encountered while processing */
@@ -2351,7 +2641,7 @@ export type BulkUpsertGameStadiaInput = {
   stadium?: InputMaybe<UpsertGameStadiumInput>;
 };
 
-/** The result of a bulk upsert operation for the stadium */
+/** The result of a bulk upsert operation for the game/stadium model */
 export type BulkUpsertGameStadiaResult = {
   __typename?: "BulkUpsertGameStadiaResult";
   /** Aggregated list of errors that any bulk action encountered while processing */
@@ -2368,7 +2658,7 @@ export type BulkUpsertGizmosInput = {
   on?: InputMaybe<Array<Scalars["String"]["input"]>>;
 };
 
-/** The result of a bulk upsert operation for the gizmo */
+/** The result of a bulk upsert operation for the gizmo model */
 export type BulkUpsertGizmosResult = {
   __typename?: "BulkUpsertGizmosResult";
   /** Aggregated list of errors that any bulk action encountered while processing */
@@ -2385,7 +2675,7 @@ export type BulkUpsertHasManyThroughBaseModelsInput = {
   on?: InputMaybe<Array<Scalars["String"]["input"]>>;
 };
 
-/** The result of a bulk upsert operation for the baseModel */
+/** The result of a bulk upsert operation for the hasManyThrough/baseModel model */
 export type BulkUpsertHasManyThroughBaseModelsResult = {
   __typename?: "BulkUpsertHasManyThroughBaseModelsResult";
   /** The results of each upsert action in the bulk operation */
@@ -2402,7 +2692,7 @@ export type BulkUpsertHasManyThroughJoinerModelsInput = {
   on?: InputMaybe<Array<Scalars["String"]["input"]>>;
 };
 
-/** The result of a bulk upsert operation for the joinerModel */
+/** The result of a bulk upsert operation for the hasManyThrough/joinerModel model */
 export type BulkUpsertHasManyThroughJoinerModelsResult = {
   __typename?: "BulkUpsertHasManyThroughJoinerModelsResult";
   /** Aggregated list of errors that any bulk action encountered while processing */
@@ -2419,7 +2709,7 @@ export type BulkUpsertHasManyThroughSiblingModelsInput = {
   siblingModel?: InputMaybe<UpsertHasManyThroughSiblingModelInput>;
 };
 
-/** The result of a bulk upsert operation for the siblingModel */
+/** The result of a bulk upsert operation for the hasManyThrough/siblingModel model */
 export type BulkUpsertHasManyThroughSiblingModelsResult = {
   __typename?: "BulkUpsertHasManyThroughSiblingModelsResult";
   /** Aggregated list of errors that any bulk action encountered while processing */
@@ -2436,7 +2726,7 @@ export type BulkUpsertModelAsInput = {
   on?: InputMaybe<Array<Scalars["String"]["input"]>>;
 };
 
-/** The result of a bulk upsert operation for the modelA */
+/** The result of a bulk upsert operation for the modelA model */
 export type BulkUpsertModelAsResult = {
   __typename?: "BulkUpsertModelAsResult";
   /** Aggregated list of errors that any bulk action encountered while processing */
@@ -2453,7 +2743,7 @@ export type BulkUpsertPartsInput = {
   part?: InputMaybe<UpsertPartInput>;
 };
 
-/** The result of a bulk upsert operation for the part */
+/** The result of a bulk upsert operation for the part model */
 export type BulkUpsertPartsResult = {
   __typename?: "BulkUpsertPartsResult";
   /** Aggregated list of errors that any bulk action encountered while processing */
@@ -2470,7 +2760,7 @@ export type BulkUpsertSectionsInput = {
   section?: InputMaybe<UpsertSectionInput>;
 };
 
-/** The result of a bulk upsert operation for the section */
+/** The result of a bulk upsert operation for the section model */
 export type BulkUpsertSectionsResult = {
   __typename?: "BulkUpsertSectionsResult";
   /** Aggregated list of errors that any bulk action encountered while processing */
@@ -2488,7 +2778,7 @@ export type BulkUpsertShopifySyncsInput = {
   startReason?: InputMaybe<Scalars["String"]["input"]>;
 };
 
-/** The result of a bulk upsert operation for the shopifySync */
+/** The result of a bulk upsert operation for the shopifySync model */
 export type BulkUpsertShopifySyncsResult = {
   __typename?: "BulkUpsertShopifySyncsResult";
   /** Aggregated list of errors that any bulk action encountered while processing */
@@ -2499,13 +2789,64 @@ export type BulkUpsertShopifySyncsResult = {
   success: Scalars["Boolean"]["output"];
 };
 
+export type BulkUpsertUniqueFieldsChildModelsInput = {
+  childModel?: InputMaybe<UpsertUniqueFieldsChildModelInput>;
+  /** An array of Strings */
+  on?: InputMaybe<Array<Scalars["String"]["input"]>>;
+};
+
+/** The result of a bulk upsert operation for the uniqueFields/childModel model */
+export type BulkUpsertUniqueFieldsChildModelsResult = {
+  __typename?: "BulkUpsertUniqueFieldsChildModelsResult";
+  /** The results of each upsert action in the bulk operation */
+  childModels?: Maybe<Array<Maybe<UniqueFieldsChildModel>>>;
+  /** Aggregated list of errors that any bulk action encountered while processing */
+  errors?: Maybe<Array<ExecutionError>>;
+  /** Boolean describing if all the bulk actions succeeded or not */
+  success: Scalars["Boolean"]["output"];
+};
+
+export type BulkUpsertUniqueFieldsMainModelsInput = {
+  mainModel?: InputMaybe<UpsertUniqueFieldsMainModelInput>;
+  /** An array of Strings */
+  on?: InputMaybe<Array<Scalars["String"]["input"]>>;
+};
+
+/** The result of a bulk upsert operation for the uniqueFields/mainModel model */
+export type BulkUpsertUniqueFieldsMainModelsResult = {
+  __typename?: "BulkUpsertUniqueFieldsMainModelsResult";
+  /** Aggregated list of errors that any bulk action encountered while processing */
+  errors?: Maybe<Array<ExecutionError>>;
+  /** The results of each upsert action in the bulk operation */
+  mainModels?: Maybe<Array<Maybe<UniqueFieldsMainModel>>>;
+  /** Boolean describing if all the bulk actions succeeded or not */
+  success: Scalars["Boolean"]["output"];
+};
+
+export type BulkUpsertUniqueFieldsParentModelsInput = {
+  /** An array of Strings */
+  on?: InputMaybe<Array<Scalars["String"]["input"]>>;
+  parentModel?: InputMaybe<UpsertUniqueFieldsParentModelInput>;
+};
+
+/** The result of a bulk upsert operation for the uniqueFields/parentModel model */
+export type BulkUpsertUniqueFieldsParentModelsResult = {
+  __typename?: "BulkUpsertUniqueFieldsParentModelsResult";
+  /** Aggregated list of errors that any bulk action encountered while processing */
+  errors?: Maybe<Array<ExecutionError>>;
+  /** The results of each upsert action in the bulk operation */
+  parentModels?: Maybe<Array<Maybe<UniqueFieldsParentModel>>>;
+  /** Boolean describing if all the bulk actions succeeded or not */
+  success: Scalars["Boolean"]["output"];
+};
+
 export type BulkUpsertUsersInput = {
   /** An array of Strings */
   on?: InputMaybe<Array<Scalars["String"]["input"]>>;
   user?: InputMaybe<UpsertUserInput>;
 };
 
-/** The result of a bulk upsert operation for the user */
+/** The result of a bulk upsert operation for the user model */
 export type BulkUpsertUsersResult = {
   __typename?: "BulkUpsertUsersResult";
   /** Aggregated list of errors that any bulk action encountered while processing */
@@ -2522,7 +2863,7 @@ export type BulkUpsertWidgetsInput = {
   widget?: InputMaybe<UpsertWidgetInput>;
 };
 
-/** The result of a bulk upsert operation for the widget */
+/** The result of a bulk upsert operation for the widget model */
 export type BulkUpsertWidgetsResult = {
   __typename?: "BulkUpsertWidgetsResult";
   /** Aggregated list of errors that any bulk action encountered while processing */
@@ -2531,6 +2872,15 @@ export type BulkUpsertWidgetsResult = {
   success: Scalars["Boolean"]["output"];
   /** The results of each upsert action in the bulk operation */
   widgets?: Maybe<Array<Maybe<Widget>>>;
+};
+
+/** Input object supporting setting or updating related model record on a relationship field */
+export type ChildModelHasManyInput = {
+  /** Creates, updates, or deletes existing records in the database as needed to arrive at the list of records specified. */
+  _converge?: InputMaybe<ConvergeChildModelInput>;
+  create?: InputMaybe<NestedChildModelCreateInput>;
+  delete?: InputMaybe<NestedChildModelDeleteInput>;
+  update?: InputMaybe<NestedChildModelUpdateInput>;
 };
 
 /** Input object supporting setting or updating related model record on a relationship field */
@@ -2590,6 +2940,21 @@ export type ConvergeAutoTableTestRelatedModelValues = {
 };
 
 /** Declaratively specifies the list of records a relationship should become and invokes the given actions in order to change the current state to get to the newly specified state. */
+export type ConvergeChildModelInput = {
+  /** An optional partial set of action api identifiers to use when creating, updating, and deleting records to converge to the new list. */
+  actions?: InputMaybe<ConvergeActionMap>;
+  /** The new list of records to converge to */
+  values: Array<InputMaybe<ConvergeChildModelValues>>;
+};
+
+/** One element of a ConvergeChildModelInput record converge list */
+export type ConvergeChildModelValues = {
+  alias?: InputMaybe<Scalars["String"]["input"]>;
+  id?: InputMaybe<Scalars["GadgetID"]["input"]>;
+  mainModelParent?: InputMaybe<MainModelBelongsToInput>;
+};
+
+/** Declaratively specifies the list of records a relationship should become and invokes the given actions in order to change the current state to get to the newly specified state. */
 export type ConvergeGizmoInput = {
   /** An optional partial set of action api identifiers to use when creating, updating, and deleting records to converge to the new list. */
   actions?: InputMaybe<ConvergeActionMap>;
@@ -2599,6 +2964,7 @@ export type ConvergeGizmoInput = {
 
 /** One element of a ConvergeGizmoInput record converge list */
 export type ConvergeGizmoValues = {
+  attachment?: InputMaybe<StoredFileInput>;
   id?: InputMaybe<Scalars["GadgetID"]["input"]>;
   name?: InputMaybe<Scalars["String"]["input"]>;
   orientation?: InputMaybe<Scalars["String"]["input"]>;
@@ -2783,6 +3149,7 @@ export type CreateGameStadiumResult = UpsertGameStadiumResult & {
 };
 
 export type CreateGizmoInput = {
+  attachment?: InputMaybe<StoredFileInput>;
   name?: InputMaybe<Scalars["String"]["input"]>;
   orientation?: InputMaybe<Scalars["String"]["input"]>;
   widget?: InputMaybe<WidgetBelongsToInput>;
@@ -2828,6 +3195,7 @@ export type CreateHasManyThroughSiblingModelInput = {
   joinerModel?: InputMaybe<Array<InputMaybe<JoinerModelHasManyInput>>>;
   joinerModels?: InputMaybe<Array<InputMaybe<JoinerModelHasManyInput>>>;
   siblingModelHmtField?: InputMaybe<Array<InputMaybe<BaseModelHasManyThroughInput>>>;
+  siblingName?: InputMaybe<Scalars["String"]["input"]>;
 };
 
 export type CreateHasManyThroughSiblingModelResult = UpsertHasManyThroughSiblingModelResult & {
@@ -2861,6 +3229,7 @@ export type CreatePartResult = UpsertPartResult & {
 };
 
 export type CreateSectionInput = {
+  label?: InputMaybe<Scalars["String"]["input"]>;
   name?: InputMaybe<Scalars["String"]["input"]>;
   widgets?: InputMaybe<Array<InputMaybe<WidgetHasManyInput>>>;
 };
@@ -2917,6 +3286,49 @@ export type CreateTestDataResult = {
   __typename?: "CreateTestDataResult";
   errors?: Maybe<Array<ExecutionError>>;
   result?: Maybe<Scalars["JSON"]["output"]>;
+  success: Scalars["Boolean"]["output"];
+};
+
+export type CreateUniqueFieldsChildModelInput = {
+  alias?: InputMaybe<Scalars["String"]["input"]>;
+  mainModelParent?: InputMaybe<MainModelBelongsToInput>;
+};
+
+export type CreateUniqueFieldsChildModelResult = UpsertUniqueFieldsChildModelResult & {
+  __typename?: "CreateUniqueFieldsChildModelResult";
+  actionRun?: Maybe<Scalars["String"]["output"]>;
+  childModel?: Maybe<UniqueFieldsChildModel>;
+  errors?: Maybe<Array<ExecutionError>>;
+  success: Scalars["Boolean"]["output"];
+};
+
+export type CreateUniqueFieldsMainModelInput = {
+  childModelEntries?: InputMaybe<Array<InputMaybe<ChildModelHasManyInput>>>;
+  nonUniqueString?: InputMaybe<Scalars["String"]["input"]>;
+  uniqueBelongsTo?: InputMaybe<ParentModelBelongsToInput>;
+  uniqueEmail?: InputMaybe<Scalars["String"]["input"]>;
+  uniqueString?: InputMaybe<Scalars["String"]["input"]>;
+};
+
+export type CreateUniqueFieldsMainModelResult = UpsertUniqueFieldsMainModelResult & {
+  __typename?: "CreateUniqueFieldsMainModelResult";
+  actionRun?: Maybe<Scalars["String"]["output"]>;
+  errors?: Maybe<Array<ExecutionError>>;
+  mainModel?: Maybe<UniqueFieldsMainModel>;
+  success: Scalars["Boolean"]["output"];
+};
+
+export type CreateUniqueFieldsParentModelInput = {
+  baseModel?: InputMaybe<MainModelHasOneInput>;
+  parentNonUniqueString?: InputMaybe<Scalars["String"]["input"]>;
+  parentUniqueString?: InputMaybe<Scalars["String"]["input"]>;
+};
+
+export type CreateUniqueFieldsParentModelResult = UpsertUniqueFieldsParentModelResult & {
+  __typename?: "CreateUniqueFieldsParentModelResult";
+  actionRun?: Maybe<Scalars["String"]["output"]>;
+  errors?: Maybe<Array<ExecutionError>>;
+  parentModel?: Maybe<UniqueFieldsParentModel>;
   success: Scalars["Boolean"]["output"];
 };
 
@@ -3140,6 +3552,27 @@ export type DeleteShopifyProductVariantResult = {
   success: Scalars["Boolean"]["output"];
 };
 
+export type DeleteUniqueFieldsChildModelResult = {
+  __typename?: "DeleteUniqueFieldsChildModelResult";
+  actionRun?: Maybe<Scalars["String"]["output"]>;
+  errors?: Maybe<Array<ExecutionError>>;
+  success: Scalars["Boolean"]["output"];
+};
+
+export type DeleteUniqueFieldsMainModelResult = {
+  __typename?: "DeleteUniqueFieldsMainModelResult";
+  actionRun?: Maybe<Scalars["String"]["output"]>;
+  errors?: Maybe<Array<ExecutionError>>;
+  success: Scalars["Boolean"]["output"];
+};
+
+export type DeleteUniqueFieldsParentModelResult = {
+  __typename?: "DeleteUniqueFieldsParentModelResult";
+  actionRun?: Maybe<Scalars["String"]["output"]>;
+  errors?: Maybe<Array<ExecutionError>>;
+  success: Scalars["Boolean"]["output"];
+};
+
 export type DeleteUserResult = {
   __typename?: "DeleteUserResult";
   actionRun?: Maybe<Scalars["String"]["output"]>;
@@ -3304,6 +3737,8 @@ export type GadgetApplicationMeta = {
   jsPackageIdentifier: Scalars["String"]["output"];
   jsPackageTarballURL: Scalars["String"]["output"];
   model?: Maybe<GadgetModel>;
+  /** Get the same metadata blob for a model and all the models reachable from it via relationships */
+  modelAndRelatedModels: Array<GadgetModel>;
   models: Array<GadgetModel>;
   name: Scalars["String"]["output"];
   productionGraphQLEndpoint: Scalars["String"]["output"];
@@ -3333,6 +3768,11 @@ export type GadgetApplicationMetaHydrationsArgs = {
 export type GadgetApplicationMetaModelArgs = {
   apiIdentifier?: InputMaybe<Scalars["String"]["input"]>;
   key?: InputMaybe<Scalars["String"]["input"]>;
+  namespace?: InputMaybe<Array<Scalars["String"]["input"]>>;
+};
+
+export type GadgetApplicationMetaModelAndRelatedModelsArgs = {
+  apiIdentifier?: InputMaybe<Scalars["String"]["input"]>;
   namespace?: InputMaybe<Array<Scalars["String"]["input"]>>;
 };
 
@@ -4159,6 +4599,7 @@ export type Gizmo = {
   __typename?: "Gizmo";
   /** Get all the fields for this record. Useful for not having to list out all the fields you want to retrieve, but slower. */
   _all: Scalars["JSONObject"]["output"];
+  attachment?: Maybe<StoredFile>;
   /** The time at which this record was first created. Set once upon record creation and never changed. Managed by Gadget. */
   createdAt: Scalars["DateTime"]["output"];
   /** The globally unique, unchanging identifier for this record. Assigned and managed by Gadget. */
@@ -4540,6 +4981,7 @@ export type HasManyThroughSiblingModel = {
   id: Scalars["GadgetID"]["output"];
   joinerModels: HasManyThroughJoinerModelConnection;
   siblingModelHmtField: HasManyThroughBaseModelConnection;
+  siblingName?: Maybe<Scalars["String"]["output"]>;
   /** The time at which this record was last changed. Set each time the record is successfully acted upon by an action. Managed by Gadget. */
   updatedAt: Scalars["DateTime"]["output"];
 };
@@ -4582,6 +5024,7 @@ export type HasManyThroughSiblingModelFilter = {
   OR?: InputMaybe<Array<InputMaybe<HasManyThroughSiblingModelFilter>>>;
   createdAt?: InputMaybe<DateTimeFilter>;
   id?: InputMaybe<IdFilter>;
+  siblingName?: InputMaybe<StringFilter>;
   updatedAt?: InputMaybe<DateTimeFilter>;
 };
 
@@ -4590,6 +5033,8 @@ export type HasManyThroughSiblingModelSort = {
   createdAt?: InputMaybe<SortOrder>;
   /** Sort the results by the id field. Defaults to ascending (smallest value first). */
   id?: InputMaybe<SortOrder>;
+  /** Sort the results by the siblingName field. Defaults to ascending (smallest value first). */
+  siblingName?: InputMaybe<SortOrder>;
   /** Sort the results by the updatedAt field. Defaults to ascending (smallest value first). */
   updatedAt?: InputMaybe<SortOrder>;
 };
@@ -4857,6 +5302,27 @@ export type InternalBulkCreateShopifySyncsResult = {
   success: Scalars["Boolean"]["output"];
 };
 
+export type InternalBulkCreateUniqueFieldsChildModelsResult = {
+  __typename?: "InternalBulkCreateUniqueFieldsChildModelsResult";
+  childModels?: Maybe<Array<Maybe<Scalars["InternalUniqueFieldsChildModelRecord"]["output"]>>>;
+  errors?: Maybe<Array<ExecutionError>>;
+  success: Scalars["Boolean"]["output"];
+};
+
+export type InternalBulkCreateUniqueFieldsMainModelsResult = {
+  __typename?: "InternalBulkCreateUniqueFieldsMainModelsResult";
+  errors?: Maybe<Array<ExecutionError>>;
+  mainModels?: Maybe<Array<Maybe<Scalars["InternalUniqueFieldsMainModelRecord"]["output"]>>>;
+  success: Scalars["Boolean"]["output"];
+};
+
+export type InternalBulkCreateUniqueFieldsParentModelsResult = {
+  __typename?: "InternalBulkCreateUniqueFieldsParentModelsResult";
+  errors?: Maybe<Array<ExecutionError>>;
+  parentModels?: Maybe<Array<Maybe<Scalars["InternalUniqueFieldsParentModelRecord"]["output"]>>>;
+  success: Scalars["Boolean"]["output"];
+};
+
 export type InternalBulkCreateUsersResult = {
   __typename?: "InternalBulkCreateUsersResult";
   errors?: Maybe<Array<ExecutionError>>;
@@ -5015,6 +5481,27 @@ export type InternalCreateShopifySyncResult = {
   __typename?: "InternalCreateShopifySyncResult";
   errors?: Maybe<Array<ExecutionError>>;
   shopifySync?: Maybe<Scalars["InternalShopifySyncRecord"]["output"]>;
+  success: Scalars["Boolean"]["output"];
+};
+
+export type InternalCreateUniqueFieldsChildModelResult = {
+  __typename?: "InternalCreateUniqueFieldsChildModelResult";
+  childModel?: Maybe<Scalars["InternalUniqueFieldsChildModelRecord"]["output"]>;
+  errors?: Maybe<Array<ExecutionError>>;
+  success: Scalars["Boolean"]["output"];
+};
+
+export type InternalCreateUniqueFieldsMainModelResult = {
+  __typename?: "InternalCreateUniqueFieldsMainModelResult";
+  errors?: Maybe<Array<ExecutionError>>;
+  mainModel?: Maybe<Scalars["InternalUniqueFieldsMainModelRecord"]["output"]>;
+  success: Scalars["Boolean"]["output"];
+};
+
+export type InternalCreateUniqueFieldsParentModelResult = {
+  __typename?: "InternalCreateUniqueFieldsParentModelResult";
+  errors?: Maybe<Array<ExecutionError>>;
+  parentModel?: Maybe<Scalars["InternalUniqueFieldsParentModelRecord"]["output"]>;
   success: Scalars["Boolean"]["output"];
 };
 
@@ -5228,6 +5715,24 @@ export type InternalDeleteManyShopifySyncResult = {
   success: Scalars["Boolean"]["output"];
 };
 
+export type InternalDeleteManyUniqueFieldsChildModelResult = {
+  __typename?: "InternalDeleteManyUniqueFieldsChildModelResult";
+  errors?: Maybe<Array<ExecutionError>>;
+  success: Scalars["Boolean"]["output"];
+};
+
+export type InternalDeleteManyUniqueFieldsMainModelResult = {
+  __typename?: "InternalDeleteManyUniqueFieldsMainModelResult";
+  errors?: Maybe<Array<ExecutionError>>;
+  success: Scalars["Boolean"]["output"];
+};
+
+export type InternalDeleteManyUniqueFieldsParentModelResult = {
+  __typename?: "InternalDeleteManyUniqueFieldsParentModelResult";
+  errors?: Maybe<Array<ExecutionError>>;
+  success: Scalars["Boolean"]["output"];
+};
+
 export type InternalDeleteManyUserResult = {
   __typename?: "InternalDeleteManyUserResult";
   errors?: Maybe<Array<ExecutionError>>;
@@ -5314,6 +5819,27 @@ export type InternalDeleteShopifySyncResult = {
   __typename?: "InternalDeleteShopifySyncResult";
   errors?: Maybe<Array<ExecutionError>>;
   shopifySync?: Maybe<Scalars["InternalShopifySyncRecord"]["output"]>;
+  success: Scalars["Boolean"]["output"];
+};
+
+export type InternalDeleteUniqueFieldsChildModelResult = {
+  __typename?: "InternalDeleteUniqueFieldsChildModelResult";
+  childModel?: Maybe<Scalars["InternalUniqueFieldsChildModelRecord"]["output"]>;
+  errors?: Maybe<Array<ExecutionError>>;
+  success: Scalars["Boolean"]["output"];
+};
+
+export type InternalDeleteUniqueFieldsMainModelResult = {
+  __typename?: "InternalDeleteUniqueFieldsMainModelResult";
+  errors?: Maybe<Array<ExecutionError>>;
+  mainModel?: Maybe<Scalars["InternalUniqueFieldsMainModelRecord"]["output"]>;
+  success: Scalars["Boolean"]["output"];
+};
+
+export type InternalDeleteUniqueFieldsParentModelResult = {
+  __typename?: "InternalDeleteUniqueFieldsParentModelResult";
+  errors?: Maybe<Array<ExecutionError>>;
+  parentModel?: Maybe<Scalars["InternalUniqueFieldsParentModelRecord"]["output"]>;
   success: Scalars["Boolean"]["output"];
 };
 
@@ -5764,6 +6290,7 @@ export type InternalGameStadiumRecordEdge = {
 };
 
 export type InternalGizmoInput = {
+  attachment?: InputMaybe<InternalStoredFileInput>;
   createdAt?: InputMaybe<Scalars["DateTime"]["input"]>;
   id?: InputMaybe<Scalars["GadgetID"]["input"]>;
   name?: InputMaybe<Scalars["String"]["input"]>;
@@ -6085,6 +6612,7 @@ export type InternalHasManyThroughQueriesSiblingModelArgs = {
 export type InternalHasManyThroughSiblingModelInput = {
   createdAt?: InputMaybe<Scalars["DateTime"]["input"]>;
   id?: InputMaybe<Scalars["GadgetID"]["input"]>;
+  siblingName?: InputMaybe<Scalars["String"]["input"]>;
   state?: InputMaybe<Scalars["RecordState"]["input"]>;
   stateHistory?: InputMaybe<Scalars["RecordState"]["input"]>;
   updatedAt?: InputMaybe<Scalars["DateTime"]["input"]>;
@@ -6265,6 +6793,7 @@ export type InternalMutations = {
   triggerUpdateUser?: Maybe<UpdateUserResult>;
   triggerUpdateWidget?: Maybe<UpdateWidgetResult>;
   triggerUpdateWithCustomParamsAutoTableTest?: Maybe<UpdateWithCustomParamsAutoTableTestResult>;
+  uniqueFields: InternalUniqueFieldsMutations;
   updateAutoTableTest?: Maybe<InternalUpdateAutoTableTestResult>;
   updateAutoTableTestRelatedModel?: Maybe<InternalUpdateAutoTableTestRelatedModelResult>;
   updateGizmo?: Maybe<InternalUpdateGizmoResult>;
@@ -7230,6 +7759,7 @@ export type InternalQueries = {
   shopifyProductVariant?: Maybe<Scalars["InternalShopifyProductVariantRecord"]["output"]>;
   shopifyShop?: Maybe<Scalars["InternalShopifyShopRecord"]["output"]>;
   shopifySync?: Maybe<Scalars["InternalShopifySyncRecord"]["output"]>;
+  uniqueFields: InternalUniqueFieldsQueries;
   user?: Maybe<Scalars["InternalUserRecord"]["output"]>;
   widget?: Maybe<Scalars["InternalWidgetRecord"]["output"]>;
 };
@@ -7491,6 +8021,7 @@ export type InternalQueriesWidgetArgs = {
 export type InternalSectionInput = {
   createdAt?: InputMaybe<Scalars["DateTime"]["input"]>;
   id?: InputMaybe<Scalars["GadgetID"]["input"]>;
+  label?: InputMaybe<Scalars["String"]["input"]>;
   name?: InputMaybe<Scalars["String"]["input"]>;
   state?: InputMaybe<Scalars["RecordState"]["input"]>;
   stateHistory?: InputMaybe<Scalars["RecordState"]["input"]>;
@@ -7897,6 +8428,327 @@ export type InternalStoredFileInput = {
   url?: InputMaybe<Scalars["String"]["input"]>;
 };
 
+export type InternalUniqueFieldsChildModelInput = {
+  alias?: InputMaybe<Scalars["String"]["input"]>;
+  createdAt?: InputMaybe<Scalars["DateTime"]["input"]>;
+  id?: InputMaybe<Scalars["GadgetID"]["input"]>;
+  mainModelParent?: InputMaybe<InternalBelongsToInput>;
+  state?: InputMaybe<Scalars["RecordState"]["input"]>;
+  stateHistory?: InputMaybe<Scalars["RecordState"]["input"]>;
+  updatedAt?: InputMaybe<Scalars["DateTime"]["input"]>;
+};
+
+/** A connection to a list of InternalUniqueFieldsChildModelRecord items. */
+export type InternalUniqueFieldsChildModelRecordConnection = {
+  __typename?: "InternalUniqueFieldsChildModelRecordConnection";
+  /** A list of edges. */
+  edges: Array<InternalUniqueFieldsChildModelRecordEdge>;
+  /** Information to aid in pagination. */
+  pageInfo: PageInfo;
+};
+
+/** An edge in a InternalUniqueFieldsChildModelRecord connection. */
+export type InternalUniqueFieldsChildModelRecordEdge = {
+  __typename?: "InternalUniqueFieldsChildModelRecordEdge";
+  /** A cursor for use in pagination */
+  cursor: Scalars["String"]["output"];
+  /** The item at the end of the edge */
+  node: Scalars["InternalUniqueFieldsChildModelRecord"]["output"];
+};
+
+export type InternalUniqueFieldsMainModelInput = {
+  createdAt?: InputMaybe<Scalars["DateTime"]["input"]>;
+  id?: InputMaybe<Scalars["GadgetID"]["input"]>;
+  nonUniqueString?: InputMaybe<Scalars["String"]["input"]>;
+  state?: InputMaybe<Scalars["RecordState"]["input"]>;
+  stateHistory?: InputMaybe<Scalars["RecordState"]["input"]>;
+  uniqueBelongsTo?: InputMaybe<InternalBelongsToInput>;
+  uniqueEmail?: InputMaybe<Scalars["String"]["input"]>;
+  uniqueString?: InputMaybe<Scalars["String"]["input"]>;
+  updatedAt?: InputMaybe<Scalars["DateTime"]["input"]>;
+};
+
+/** A connection to a list of InternalUniqueFieldsMainModelRecord items. */
+export type InternalUniqueFieldsMainModelRecordConnection = {
+  __typename?: "InternalUniqueFieldsMainModelRecordConnection";
+  /** A list of edges. */
+  edges: Array<InternalUniqueFieldsMainModelRecordEdge>;
+  /** Information to aid in pagination. */
+  pageInfo: PageInfo;
+};
+
+/** An edge in a InternalUniqueFieldsMainModelRecord connection. */
+export type InternalUniqueFieldsMainModelRecordEdge = {
+  __typename?: "InternalUniqueFieldsMainModelRecordEdge";
+  /** A cursor for use in pagination */
+  cursor: Scalars["String"]["output"];
+  /** The item at the end of the edge */
+  node: Scalars["InternalUniqueFieldsMainModelRecord"]["output"];
+};
+
+export type InternalUniqueFieldsMutations = {
+  __typename?: "InternalUniqueFieldsMutations";
+  bulkCreateChildModels?: Maybe<InternalBulkCreateUniqueFieldsChildModelsResult>;
+  bulkCreateMainModels?: Maybe<InternalBulkCreateUniqueFieldsMainModelsResult>;
+  bulkCreateParentModels?: Maybe<InternalBulkCreateUniqueFieldsParentModelsResult>;
+  createChildModel?: Maybe<InternalCreateUniqueFieldsChildModelResult>;
+  createMainModel?: Maybe<InternalCreateUniqueFieldsMainModelResult>;
+  createParentModel?: Maybe<InternalCreateUniqueFieldsParentModelResult>;
+  deleteChildModel?: Maybe<InternalDeleteUniqueFieldsChildModelResult>;
+  deleteMainModel?: Maybe<InternalDeleteUniqueFieldsMainModelResult>;
+  deleteManyChildModel?: Maybe<InternalDeleteManyUniqueFieldsChildModelResult>;
+  deleteManyMainModel?: Maybe<InternalDeleteManyUniqueFieldsMainModelResult>;
+  deleteManyParentModel?: Maybe<InternalDeleteManyUniqueFieldsParentModelResult>;
+  deleteParentModel?: Maybe<InternalDeleteUniqueFieldsParentModelResult>;
+  triggerCreateChildModel?: Maybe<CreateUniqueFieldsChildModelResult>;
+  triggerCreateMainModel?: Maybe<CreateUniqueFieldsMainModelResult>;
+  triggerCreateParentModel?: Maybe<CreateUniqueFieldsParentModelResult>;
+  triggerDeleteChildModel?: Maybe<DeleteUniqueFieldsChildModelResult>;
+  triggerDeleteMainModel?: Maybe<DeleteUniqueFieldsMainModelResult>;
+  triggerDeleteParentModel?: Maybe<DeleteUniqueFieldsParentModelResult>;
+  triggerUpdateChildModel?: Maybe<UpdateUniqueFieldsChildModelResult>;
+  triggerUpdateMainModel?: Maybe<UpdateUniqueFieldsMainModelResult>;
+  triggerUpdateParentModel?: Maybe<UpdateUniqueFieldsParentModelResult>;
+  updateChildModel?: Maybe<InternalUpdateUniqueFieldsChildModelResult>;
+  updateMainModel?: Maybe<InternalUpdateUniqueFieldsMainModelResult>;
+  updateParentModel?: Maybe<InternalUpdateUniqueFieldsParentModelResult>;
+  upsertChildModel?: Maybe<InternalUpsertUniqueFieldsChildModelResult>;
+  upsertMainModel?: Maybe<InternalUpsertUniqueFieldsMainModelResult>;
+  upsertParentModel?: Maybe<InternalUpsertUniqueFieldsParentModelResult>;
+};
+
+export type InternalUniqueFieldsMutationsBulkCreateChildModelsArgs = {
+  childModels: Array<InputMaybe<InternalUniqueFieldsChildModelInput>>;
+};
+
+export type InternalUniqueFieldsMutationsBulkCreateMainModelsArgs = {
+  mainModels: Array<InputMaybe<InternalUniqueFieldsMainModelInput>>;
+};
+
+export type InternalUniqueFieldsMutationsBulkCreateParentModelsArgs = {
+  parentModels: Array<InputMaybe<InternalUniqueFieldsParentModelInput>>;
+};
+
+export type InternalUniqueFieldsMutationsCreateChildModelArgs = {
+  childModel?: InputMaybe<InternalUniqueFieldsChildModelInput>;
+};
+
+export type InternalUniqueFieldsMutationsCreateMainModelArgs = {
+  mainModel?: InputMaybe<InternalUniqueFieldsMainModelInput>;
+};
+
+export type InternalUniqueFieldsMutationsCreateParentModelArgs = {
+  parentModel?: InputMaybe<InternalUniqueFieldsParentModelInput>;
+};
+
+export type InternalUniqueFieldsMutationsDeleteChildModelArgs = {
+  id: Scalars["GadgetID"]["input"];
+};
+
+export type InternalUniqueFieldsMutationsDeleteMainModelArgs = {
+  id: Scalars["GadgetID"]["input"];
+};
+
+export type InternalUniqueFieldsMutationsDeleteManyChildModelArgs = {
+  filter?: InputMaybe<Array<UniqueFieldsChildModelFilter>>;
+  search?: InputMaybe<Scalars["String"]["input"]>;
+};
+
+export type InternalUniqueFieldsMutationsDeleteManyMainModelArgs = {
+  filter?: InputMaybe<Array<UniqueFieldsMainModelFilter>>;
+  search?: InputMaybe<Scalars["String"]["input"]>;
+};
+
+export type InternalUniqueFieldsMutationsDeleteManyParentModelArgs = {
+  filter?: InputMaybe<Array<UniqueFieldsParentModelFilter>>;
+  search?: InputMaybe<Scalars["String"]["input"]>;
+};
+
+export type InternalUniqueFieldsMutationsDeleteParentModelArgs = {
+  id: Scalars["GadgetID"]["input"];
+};
+
+export type InternalUniqueFieldsMutationsTriggerCreateChildModelArgs = {
+  context?: InputMaybe<AppGraphQlTriggerMutationContext>;
+  params?: InputMaybe<Scalars["JSONObject"]["input"]>;
+  trigger?: InputMaybe<Scalars["JSONObject"]["input"]>;
+  verifyTriggerExists?: InputMaybe<Scalars["Boolean"]["input"]>;
+};
+
+export type InternalUniqueFieldsMutationsTriggerCreateMainModelArgs = {
+  context?: InputMaybe<AppGraphQlTriggerMutationContext>;
+  params?: InputMaybe<Scalars["JSONObject"]["input"]>;
+  trigger?: InputMaybe<Scalars["JSONObject"]["input"]>;
+  verifyTriggerExists?: InputMaybe<Scalars["Boolean"]["input"]>;
+};
+
+export type InternalUniqueFieldsMutationsTriggerCreateParentModelArgs = {
+  context?: InputMaybe<AppGraphQlTriggerMutationContext>;
+  params?: InputMaybe<Scalars["JSONObject"]["input"]>;
+  trigger?: InputMaybe<Scalars["JSONObject"]["input"]>;
+  verifyTriggerExists?: InputMaybe<Scalars["Boolean"]["input"]>;
+};
+
+export type InternalUniqueFieldsMutationsTriggerDeleteChildModelArgs = {
+  context?: InputMaybe<AppGraphQlTriggerMutationContext>;
+  params?: InputMaybe<Scalars["JSONObject"]["input"]>;
+  trigger?: InputMaybe<Scalars["JSONObject"]["input"]>;
+  verifyTriggerExists?: InputMaybe<Scalars["Boolean"]["input"]>;
+};
+
+export type InternalUniqueFieldsMutationsTriggerDeleteMainModelArgs = {
+  context?: InputMaybe<AppGraphQlTriggerMutationContext>;
+  params?: InputMaybe<Scalars["JSONObject"]["input"]>;
+  trigger?: InputMaybe<Scalars["JSONObject"]["input"]>;
+  verifyTriggerExists?: InputMaybe<Scalars["Boolean"]["input"]>;
+};
+
+export type InternalUniqueFieldsMutationsTriggerDeleteParentModelArgs = {
+  context?: InputMaybe<AppGraphQlTriggerMutationContext>;
+  params?: InputMaybe<Scalars["JSONObject"]["input"]>;
+  trigger?: InputMaybe<Scalars["JSONObject"]["input"]>;
+  verifyTriggerExists?: InputMaybe<Scalars["Boolean"]["input"]>;
+};
+
+export type InternalUniqueFieldsMutationsTriggerUpdateChildModelArgs = {
+  context?: InputMaybe<AppGraphQlTriggerMutationContext>;
+  params?: InputMaybe<Scalars["JSONObject"]["input"]>;
+  trigger?: InputMaybe<Scalars["JSONObject"]["input"]>;
+  verifyTriggerExists?: InputMaybe<Scalars["Boolean"]["input"]>;
+};
+
+export type InternalUniqueFieldsMutationsTriggerUpdateMainModelArgs = {
+  context?: InputMaybe<AppGraphQlTriggerMutationContext>;
+  params?: InputMaybe<Scalars["JSONObject"]["input"]>;
+  trigger?: InputMaybe<Scalars["JSONObject"]["input"]>;
+  verifyTriggerExists?: InputMaybe<Scalars["Boolean"]["input"]>;
+};
+
+export type InternalUniqueFieldsMutationsTriggerUpdateParentModelArgs = {
+  context?: InputMaybe<AppGraphQlTriggerMutationContext>;
+  params?: InputMaybe<Scalars["JSONObject"]["input"]>;
+  trigger?: InputMaybe<Scalars["JSONObject"]["input"]>;
+  verifyTriggerExists?: InputMaybe<Scalars["Boolean"]["input"]>;
+};
+
+export type InternalUniqueFieldsMutationsUpdateChildModelArgs = {
+  childModel?: InputMaybe<InternalUniqueFieldsChildModelInput>;
+  id: Scalars["GadgetID"]["input"];
+};
+
+export type InternalUniqueFieldsMutationsUpdateMainModelArgs = {
+  id: Scalars["GadgetID"]["input"];
+  mainModel?: InputMaybe<InternalUniqueFieldsMainModelInput>;
+};
+
+export type InternalUniqueFieldsMutationsUpdateParentModelArgs = {
+  id: Scalars["GadgetID"]["input"];
+  parentModel?: InputMaybe<InternalUniqueFieldsParentModelInput>;
+};
+
+export type InternalUniqueFieldsMutationsUpsertChildModelArgs = {
+  childModel?: InputMaybe<InternalUniqueFieldsChildModelInput>;
+  on?: InputMaybe<Array<Scalars["String"]["input"]>>;
+};
+
+export type InternalUniqueFieldsMutationsUpsertMainModelArgs = {
+  mainModel?: InputMaybe<InternalUniqueFieldsMainModelInput>;
+  on?: InputMaybe<Array<Scalars["String"]["input"]>>;
+};
+
+export type InternalUniqueFieldsMutationsUpsertParentModelArgs = {
+  on?: InputMaybe<Array<Scalars["String"]["input"]>>;
+  parentModel?: InputMaybe<InternalUniqueFieldsParentModelInput>;
+};
+
+export type InternalUniqueFieldsParentModelInput = {
+  createdAt?: InputMaybe<Scalars["DateTime"]["input"]>;
+  id?: InputMaybe<Scalars["GadgetID"]["input"]>;
+  parentNonUniqueString?: InputMaybe<Scalars["String"]["input"]>;
+  parentUniqueString?: InputMaybe<Scalars["String"]["input"]>;
+  state?: InputMaybe<Scalars["RecordState"]["input"]>;
+  stateHistory?: InputMaybe<Scalars["RecordState"]["input"]>;
+  updatedAt?: InputMaybe<Scalars["DateTime"]["input"]>;
+};
+
+/** A connection to a list of InternalUniqueFieldsParentModelRecord items. */
+export type InternalUniqueFieldsParentModelRecordConnection = {
+  __typename?: "InternalUniqueFieldsParentModelRecordConnection";
+  /** A list of edges. */
+  edges: Array<InternalUniqueFieldsParentModelRecordEdge>;
+  /** Information to aid in pagination. */
+  pageInfo: PageInfo;
+};
+
+/** An edge in a InternalUniqueFieldsParentModelRecord connection. */
+export type InternalUniqueFieldsParentModelRecordEdge = {
+  __typename?: "InternalUniqueFieldsParentModelRecordEdge";
+  /** A cursor for use in pagination */
+  cursor: Scalars["String"]["output"];
+  /** The item at the end of the edge */
+  node: Scalars["InternalUniqueFieldsParentModelRecord"]["output"];
+};
+
+export type InternalUniqueFieldsQueries = {
+  __typename?: "InternalUniqueFieldsQueries";
+  childModel?: Maybe<Scalars["InternalUniqueFieldsChildModelRecord"]["output"]>;
+  /** Currently open platform transaction details, or null if no transaction is open */
+  currentTransactionDetails?: Maybe<Scalars["JSONObject"]["output"]>;
+  listChildModel: InternalUniqueFieldsChildModelRecordConnection;
+  listMainModel: InternalUniqueFieldsMainModelRecordConnection;
+  listParentModel: InternalUniqueFieldsParentModelRecordConnection;
+  mainModel?: Maybe<Scalars["InternalUniqueFieldsMainModelRecord"]["output"]>;
+  parentModel?: Maybe<Scalars["InternalUniqueFieldsParentModelRecord"]["output"]>;
+};
+
+export type InternalUniqueFieldsQueriesChildModelArgs = {
+  id: Scalars["GadgetID"]["input"];
+  select?: InputMaybe<Array<Scalars["String"]["input"]>>;
+};
+
+export type InternalUniqueFieldsQueriesListChildModelArgs = {
+  after?: InputMaybe<Scalars["String"]["input"]>;
+  before?: InputMaybe<Scalars["String"]["input"]>;
+  filter?: InputMaybe<Array<UniqueFieldsChildModelFilter>>;
+  first?: InputMaybe<Scalars["Int"]["input"]>;
+  last?: InputMaybe<Scalars["Int"]["input"]>;
+  search?: InputMaybe<Scalars["String"]["input"]>;
+  select?: InputMaybe<Array<Scalars["String"]["input"]>>;
+  sort?: InputMaybe<Array<UniqueFieldsChildModelSort>>;
+};
+
+export type InternalUniqueFieldsQueriesListMainModelArgs = {
+  after?: InputMaybe<Scalars["String"]["input"]>;
+  before?: InputMaybe<Scalars["String"]["input"]>;
+  filter?: InputMaybe<Array<UniqueFieldsMainModelFilter>>;
+  first?: InputMaybe<Scalars["Int"]["input"]>;
+  last?: InputMaybe<Scalars["Int"]["input"]>;
+  search?: InputMaybe<Scalars["String"]["input"]>;
+  select?: InputMaybe<Array<Scalars["String"]["input"]>>;
+  sort?: InputMaybe<Array<UniqueFieldsMainModelSort>>;
+};
+
+export type InternalUniqueFieldsQueriesListParentModelArgs = {
+  after?: InputMaybe<Scalars["String"]["input"]>;
+  before?: InputMaybe<Scalars["String"]["input"]>;
+  filter?: InputMaybe<Array<UniqueFieldsParentModelFilter>>;
+  first?: InputMaybe<Scalars["Int"]["input"]>;
+  last?: InputMaybe<Scalars["Int"]["input"]>;
+  search?: InputMaybe<Scalars["String"]["input"]>;
+  select?: InputMaybe<Array<Scalars["String"]["input"]>>;
+  sort?: InputMaybe<Array<UniqueFieldsParentModelSort>>;
+};
+
+export type InternalUniqueFieldsQueriesMainModelArgs = {
+  id: Scalars["GadgetID"]["input"];
+  select?: InputMaybe<Array<Scalars["String"]["input"]>>;
+};
+
+export type InternalUniqueFieldsQueriesParentModelArgs = {
+  id: Scalars["GadgetID"]["input"];
+  select?: InputMaybe<Array<Scalars["String"]["input"]>>;
+};
+
 export type InternalUpdateAutoTableTestRelatedModelResult = {
   __typename?: "InternalUpdateAutoTableTestRelatedModelResult";
   _autoTableTestRelatedModel?: Maybe<Scalars["InternalAutoTableTestRelatedModelRecord"]["output"]>;
@@ -8041,6 +8893,27 @@ export type InternalUpdateShopifySyncResult = {
   __typename?: "InternalUpdateShopifySyncResult";
   errors?: Maybe<Array<ExecutionError>>;
   shopifySync?: Maybe<Scalars["InternalShopifySyncRecord"]["output"]>;
+  success: Scalars["Boolean"]["output"];
+};
+
+export type InternalUpdateUniqueFieldsChildModelResult = {
+  __typename?: "InternalUpdateUniqueFieldsChildModelResult";
+  childModel?: Maybe<Scalars["InternalUniqueFieldsChildModelRecord"]["output"]>;
+  errors?: Maybe<Array<ExecutionError>>;
+  success: Scalars["Boolean"]["output"];
+};
+
+export type InternalUpdateUniqueFieldsMainModelResult = {
+  __typename?: "InternalUpdateUniqueFieldsMainModelResult";
+  errors?: Maybe<Array<ExecutionError>>;
+  mainModel?: Maybe<Scalars["InternalUniqueFieldsMainModelRecord"]["output"]>;
+  success: Scalars["Boolean"]["output"];
+};
+
+export type InternalUpdateUniqueFieldsParentModelResult = {
+  __typename?: "InternalUpdateUniqueFieldsParentModelResult";
+  errors?: Maybe<Array<ExecutionError>>;
+  parentModel?: Maybe<Scalars["InternalUniqueFieldsParentModelRecord"]["output"]>;
   success: Scalars["Boolean"]["output"];
 };
 
@@ -8205,6 +9078,27 @@ export type InternalUpsertShopifySyncResult = {
   success: Scalars["Boolean"]["output"];
 };
 
+export type InternalUpsertUniqueFieldsChildModelResult = {
+  __typename?: "InternalUpsertUniqueFieldsChildModelResult";
+  childModel?: Maybe<Scalars["InternalUniqueFieldsChildModelRecord"]["output"]>;
+  errors?: Maybe<Array<ExecutionError>>;
+  success: Scalars["Boolean"]["output"];
+};
+
+export type InternalUpsertUniqueFieldsMainModelResult = {
+  __typename?: "InternalUpsertUniqueFieldsMainModelResult";
+  errors?: Maybe<Array<ExecutionError>>;
+  mainModel?: Maybe<Scalars["InternalUniqueFieldsMainModelRecord"]["output"]>;
+  success: Scalars["Boolean"]["output"];
+};
+
+export type InternalUpsertUniqueFieldsParentModelResult = {
+  __typename?: "InternalUpsertUniqueFieldsParentModelResult";
+  errors?: Maybe<Array<ExecutionError>>;
+  parentModel?: Maybe<Scalars["InternalUniqueFieldsParentModelRecord"]["output"]>;
+  success: Scalars["Boolean"]["output"];
+};
+
 export type InternalUpsertUserResult = {
   __typename?: "InternalUpsertUserResult";
   errors?: Maybe<Array<ExecutionError>>;
@@ -8358,6 +9252,22 @@ export type LockOperationResult = {
   success: Scalars["Boolean"]["output"];
 };
 
+/** Input object supporting setting or updating related model record on a relationship field */
+export type MainModelBelongsToInput = {
+  /** Existing ID of another record, which you would like to associate this record with */
+  _link?: InputMaybe<Scalars["GadgetID"]["input"]>;
+  create?: InputMaybe<NestedMainModelCreateInput>;
+  delete?: InputMaybe<NestedMainModelDeleteInput>;
+  update?: InputMaybe<NestedMainModelUpdateInput>;
+};
+
+/** Input object supporting setting or updating related model record on a relationship field */
+export type MainModelHasOneInput = {
+  create?: InputMaybe<NestedMainModelCreateInput>;
+  delete?: InputMaybe<NestedMainModelDeleteInput>;
+  update?: InputMaybe<NestedMainModelUpdateInput>;
+};
+
 export type ModelA = {
   __typename?: "ModelA";
   /** Get all the fields for this record. Useful for not having to list out all the fields you want to retrieve, but slower. */
@@ -8495,6 +9405,7 @@ export type Mutation = {
   signInUser?: Maybe<SignInUserResult>;
   signOutUser?: Maybe<SignOutUserResult>;
   signUpUser?: Maybe<SignUpUserResult>;
+  uniqueFields: UniqueFieldsMutations;
   updateAutoTableTest?: Maybe<UpdateAutoTableTestResult>;
   updateAutoTableTestRelatedModel?: Maybe<UpdateAutoTableTestRelatedModelResult>;
   updateGizmo?: Maybe<UpdateGizmoResult>;
@@ -8913,15 +9824,15 @@ export type NameSpacedActionAResult = {
 
 export type NameSpacedCustomObjectParamsObjParamInput = {
   firstLevelStr?: InputMaybe<Scalars["String"]["input"]>;
-  objProperty1?: InputMaybe<NameSpacedCustomObjectParamsObjProperty1Input>;
+  objProperty1?: InputMaybe<NameSpacedCustomObjectParamsObjParamObjProperty1Input>;
 };
 
-export type NameSpacedCustomObjectParamsObjProperty1Input = {
-  objProperty2?: InputMaybe<NameSpacedCustomObjectParamsObjProperty2Input>;
+export type NameSpacedCustomObjectParamsObjParamObjProperty1Input = {
+  objProperty2?: InputMaybe<NameSpacedCustomObjectParamsObjParamObjProperty1ObjProperty2Input>;
   secondLevelStr?: InputMaybe<Scalars["String"]["input"]>;
 };
 
-export type NameSpacedCustomObjectParamsObjProperty2Input = {
+export type NameSpacedCustomObjectParamsObjParamObjProperty1ObjProperty2Input = {
   thirdLevelStr?: InputMaybe<Scalars["String"]["input"]>;
 };
 
@@ -9068,6 +9979,21 @@ export type NestedBaseModelUpdateInput = {
   joinerModels?: InputMaybe<Array<InputMaybe<JoinerModelHasManyInput>>>;
 };
 
+export type NestedChildModelCreateInput = {
+  alias?: InputMaybe<Scalars["String"]["input"]>;
+  mainModelParent?: InputMaybe<MainModelBelongsToInput>;
+};
+
+export type NestedChildModelDeleteInput = {
+  id: Scalars["GadgetID"]["input"];
+};
+
+export type NestedChildModelUpdateInput = {
+  alias?: InputMaybe<Scalars["String"]["input"]>;
+  id: Scalars["GadgetID"]["input"];
+  mainModelParent?: InputMaybe<MainModelBelongsToInput>;
+};
+
 export type NestedCityCreateInput = {
   name?: InputMaybe<Scalars["String"]["input"]>;
   stadium?: InputMaybe<StadiumHasOneInput>;
@@ -9106,6 +10032,7 @@ export type NestedCustomObjectParamsObjProperty2Input = {
 };
 
 export type NestedGizmoCreateInput = {
+  attachment?: InputMaybe<StoredFileInput>;
   name?: InputMaybe<Scalars["String"]["input"]>;
   orientation?: InputMaybe<Scalars["String"]["input"]>;
   widget?: InputMaybe<WidgetBelongsToInput>;
@@ -9116,6 +10043,7 @@ export type NestedGizmoDeleteInput = {
 };
 
 export type NestedGizmoUpdateInput = {
+  attachment?: InputMaybe<StoredFileInput>;
   id: Scalars["GadgetID"]["input"];
   name?: InputMaybe<Scalars["String"]["input"]>;
   orientation?: InputMaybe<Scalars["String"]["input"]>;
@@ -9135,6 +10063,44 @@ export type NestedJoinerModelUpdateInput = {
   id: Scalars["GadgetID"]["input"];
   joinerBelongsToBase?: InputMaybe<BaseModelBelongsToInput>;
   joinerBelongsToSibling?: InputMaybe<SiblingModelBelongsToInput>;
+};
+
+export type NestedMainModelCreateInput = {
+  childModelEntries?: InputMaybe<Array<InputMaybe<ChildModelHasManyInput>>>;
+  nonUniqueString?: InputMaybe<Scalars["String"]["input"]>;
+  uniqueBelongsTo?: InputMaybe<ParentModelBelongsToInput>;
+  uniqueEmail?: InputMaybe<Scalars["String"]["input"]>;
+  uniqueString?: InputMaybe<Scalars["String"]["input"]>;
+};
+
+export type NestedMainModelDeleteInput = {
+  id: Scalars["GadgetID"]["input"];
+};
+
+export type NestedMainModelUpdateInput = {
+  childModelEntries?: InputMaybe<Array<InputMaybe<ChildModelHasManyInput>>>;
+  id: Scalars["GadgetID"]["input"];
+  nonUniqueString?: InputMaybe<Scalars["String"]["input"]>;
+  uniqueBelongsTo?: InputMaybe<ParentModelBelongsToInput>;
+  uniqueEmail?: InputMaybe<Scalars["String"]["input"]>;
+  uniqueString?: InputMaybe<Scalars["String"]["input"]>;
+};
+
+export type NestedParentModelCreateInput = {
+  baseModel?: InputMaybe<MainModelHasOneInput>;
+  parentNonUniqueString?: InputMaybe<Scalars["String"]["input"]>;
+  parentUniqueString?: InputMaybe<Scalars["String"]["input"]>;
+};
+
+export type NestedParentModelDeleteInput = {
+  id: Scalars["GadgetID"]["input"];
+};
+
+export type NestedParentModelUpdateInput = {
+  baseModel?: InputMaybe<MainModelHasOneInput>;
+  id: Scalars["GadgetID"]["input"];
+  parentNonUniqueString?: InputMaybe<Scalars["String"]["input"]>;
+  parentUniqueString?: InputMaybe<Scalars["String"]["input"]>;
 };
 
 export type NestedPlayerCreateInput = {
@@ -9170,6 +10136,7 @@ export type NestedRoundUpdateInput = {
 };
 
 export type NestedSectionCreateInput = {
+  label?: InputMaybe<Scalars["String"]["input"]>;
   name?: InputMaybe<Scalars["String"]["input"]>;
   widgets?: InputMaybe<Array<InputMaybe<WidgetHasManyInput>>>;
 };
@@ -9180,6 +10147,7 @@ export type NestedSectionDeleteInput = {
 
 export type NestedSectionUpdateInput = {
   id: Scalars["GadgetID"]["input"];
+  label?: InputMaybe<Scalars["String"]["input"]>;
   name?: InputMaybe<Scalars["String"]["input"]>;
   widgets?: InputMaybe<Array<InputMaybe<WidgetHasManyInput>>>;
 };
@@ -9188,6 +10156,7 @@ export type NestedSiblingModelCreateInput = {
   joinerModel?: InputMaybe<Array<InputMaybe<JoinerModelHasManyInput>>>;
   joinerModels?: InputMaybe<Array<InputMaybe<JoinerModelHasManyInput>>>;
   siblingModelHmtField?: InputMaybe<Array<InputMaybe<BaseModelHasManyThroughInput>>>;
+  siblingName?: InputMaybe<Scalars["String"]["input"]>;
 };
 
 export type NestedSiblingModelDeleteInput = {
@@ -9199,6 +10168,7 @@ export type NestedSiblingModelUpdateInput = {
   joinerModel?: InputMaybe<Array<InputMaybe<JoinerModelHasManyInput>>>;
   joinerModels?: InputMaybe<Array<InputMaybe<JoinerModelHasManyInput>>>;
   siblingModelHmtField?: InputMaybe<Array<InputMaybe<BaseModelHasManyThroughInput>>>;
+  siblingName?: InputMaybe<Scalars["String"]["input"]>;
 };
 
 export type NestedStadiumCreateInput = {
@@ -9330,6 +10300,15 @@ export type PageInfo = {
   startCursor?: Maybe<Scalars["String"]["output"]>;
 };
 
+/** Input object supporting setting or updating related model record on a relationship field */
+export type ParentModelBelongsToInput = {
+  /** Existing ID of another record, which you would like to associate this record with */
+  _link?: InputMaybe<Scalars["GadgetID"]["input"]>;
+  create?: InputMaybe<NestedParentModelCreateInput>;
+  delete?: InputMaybe<NestedParentModelDeleteInput>;
+  update?: InputMaybe<NestedParentModelUpdateInput>;
+};
+
 export type Part = {
   __typename?: "Part";
   /** Get all the fields for this record. Useful for not having to list out all the fields you want to retrieve, but slower. */
@@ -9436,6 +10415,7 @@ export type Query = {
   shopifyShops: ShopifyShopConnection;
   shopifySync?: Maybe<ShopifySync>;
   shopifySyncs: ShopifySyncConnection;
+  uniqueFields: UniqueFieldsQueries;
   user?: Maybe<User>;
   users: UserConnection;
   widget?: Maybe<Widget>;
@@ -9746,6 +10726,7 @@ export type Section = {
   createdAt: Scalars["DateTime"]["output"];
   /** The globally unique, unchanging identifier for this record. Assigned and managed by Gadget. */
   id: Scalars["GadgetID"]["output"];
+  label?: Maybe<Scalars["String"]["output"]>;
   name?: Maybe<Scalars["String"]["output"]>;
   /** The time at which this record was last changed. Set each time the record is successfully acted upon by an action. Managed by Gadget. */
   updatedAt: Scalars["DateTime"]["output"];
@@ -9795,6 +10776,7 @@ export type SectionFilter = {
   OR?: InputMaybe<Array<InputMaybe<SectionFilter>>>;
   createdAt?: InputMaybe<DateTimeFilter>;
   id?: InputMaybe<IdFilter>;
+  label?: InputMaybe<StringFilter>;
   name?: InputMaybe<StringFilter>;
   updatedAt?: InputMaybe<DateTimeFilter>;
 };
@@ -9804,6 +10786,8 @@ export type SectionSort = {
   createdAt?: InputMaybe<SortOrder>;
   /** Sort the results by the id field. Defaults to ascending (smallest value first). */
   id?: InputMaybe<SortOrder>;
+  /** Sort the results by the label field. Defaults to ascending (smallest value first). */
+  label?: InputMaybe<SortOrder>;
   /** Sort the results by the name field. Defaults to ascending (smallest value first). */
   name?: InputMaybe<SortOrder>;
   /** Sort the results by the updatedAt field. Defaults to ascending (smallest value first). */
@@ -11000,6 +11984,376 @@ export type UninstallShopifyShopResult = {
   success: Scalars["Boolean"]["output"];
 };
 
+export type UniqueFieldsChildModel = {
+  __typename?: "UniqueFieldsChildModel";
+  /** Get all the fields for this record. Useful for not having to list out all the fields you want to retrieve, but slower. */
+  _all: Scalars["JSONObject"]["output"];
+  alias?: Maybe<Scalars["String"]["output"]>;
+  /** The time at which this record was first created. Set once upon record creation and never changed. Managed by Gadget. */
+  createdAt: Scalars["DateTime"]["output"];
+  /** The globally unique, unchanging identifier for this record. Assigned and managed by Gadget. */
+  id: Scalars["GadgetID"]["output"];
+  mainModelParent?: Maybe<UniqueFieldsMainModel>;
+  mainModelParentId?: Maybe<Scalars["GadgetID"]["output"]>;
+  /** The time at which this record was last changed. Set each time the record is successfully acted upon by an action. Managed by Gadget. */
+  updatedAt: Scalars["DateTime"]["output"];
+};
+
+/** A connection to a list of UniqueFieldsChildModel items. */
+export type UniqueFieldsChildModelConnection = {
+  __typename?: "UniqueFieldsChildModelConnection";
+  /** A list of edges. */
+  edges: Array<UniqueFieldsChildModelEdge>;
+  /** Information to aid in pagination. */
+  pageInfo: PageInfo;
+};
+
+/** An edge in a UniqueFieldsChildModel connection. */
+export type UniqueFieldsChildModelEdge = {
+  __typename?: "UniqueFieldsChildModelEdge";
+  /** A cursor for use in pagination */
+  cursor: Scalars["String"]["output"];
+  /** The item at the end of the edge */
+  node: UniqueFieldsChildModel;
+};
+
+export type UniqueFieldsChildModelFilter = {
+  AND?: InputMaybe<Array<InputMaybe<UniqueFieldsChildModelFilter>>>;
+  NOT?: InputMaybe<Array<InputMaybe<UniqueFieldsChildModelFilter>>>;
+  OR?: InputMaybe<Array<InputMaybe<UniqueFieldsChildModelFilter>>>;
+  alias?: InputMaybe<StringFilter>;
+  createdAt?: InputMaybe<DateTimeFilter>;
+  id?: InputMaybe<IdFilter>;
+  mainModelParent?: InputMaybe<IdFilter>;
+  mainModelParentId?: InputMaybe<IdFilter>;
+  updatedAt?: InputMaybe<DateTimeFilter>;
+};
+
+export type UniqueFieldsChildModelSort = {
+  /** Sort the results by the alias field. Defaults to ascending (smallest value first). */
+  alias?: InputMaybe<SortOrder>;
+  /** Sort the results by the createdAt field. Defaults to ascending (smallest value first). */
+  createdAt?: InputMaybe<SortOrder>;
+  /** Sort the results by the id field. Defaults to ascending (smallest value first). */
+  id?: InputMaybe<SortOrder>;
+  /** Sort the results by the updatedAt field. Defaults to ascending (smallest value first). */
+  updatedAt?: InputMaybe<SortOrder>;
+};
+
+export type UniqueFieldsMainModel = {
+  __typename?: "UniqueFieldsMainModel";
+  /** Get all the fields for this record. Useful for not having to list out all the fields you want to retrieve, but slower. */
+  _all: Scalars["JSONObject"]["output"];
+  childModelEntries: UniqueFieldsChildModelConnection;
+  /** The time at which this record was first created. Set once upon record creation and never changed. Managed by Gadget. */
+  createdAt: Scalars["DateTime"]["output"];
+  /** The globally unique, unchanging identifier for this record. Assigned and managed by Gadget. */
+  id: Scalars["GadgetID"]["output"];
+  nonUniqueString?: Maybe<Scalars["String"]["output"]>;
+  uniqueBelongsTo?: Maybe<UniqueFieldsParentModel>;
+  uniqueBelongsToId?: Maybe<Scalars["GadgetID"]["output"]>;
+  uniqueEmail?: Maybe<Scalars["String"]["output"]>;
+  uniqueString?: Maybe<Scalars["String"]["output"]>;
+  /** The time at which this record was last changed. Set each time the record is successfully acted upon by an action. Managed by Gadget. */
+  updatedAt: Scalars["DateTime"]["output"];
+};
+
+export type UniqueFieldsMainModelChildModelEntriesArgs = {
+  after?: InputMaybe<Scalars["String"]["input"]>;
+  before?: InputMaybe<Scalars["String"]["input"]>;
+  filter?: InputMaybe<Array<UniqueFieldsChildModelFilter>>;
+  first?: InputMaybe<Scalars["Int"]["input"]>;
+  last?: InputMaybe<Scalars["Int"]["input"]>;
+  search?: InputMaybe<Scalars["String"]["input"]>;
+  sort?: InputMaybe<Array<UniqueFieldsChildModelSort>>;
+};
+
+/** A connection to a list of UniqueFieldsMainModel items. */
+export type UniqueFieldsMainModelConnection = {
+  __typename?: "UniqueFieldsMainModelConnection";
+  /** A list of edges. */
+  edges: Array<UniqueFieldsMainModelEdge>;
+  /** Information to aid in pagination. */
+  pageInfo: PageInfo;
+};
+
+/** An edge in a UniqueFieldsMainModel connection. */
+export type UniqueFieldsMainModelEdge = {
+  __typename?: "UniqueFieldsMainModelEdge";
+  /** A cursor for use in pagination */
+  cursor: Scalars["String"]["output"];
+  /** The item at the end of the edge */
+  node: UniqueFieldsMainModel;
+};
+
+export type UniqueFieldsMainModelFilter = {
+  AND?: InputMaybe<Array<InputMaybe<UniqueFieldsMainModelFilter>>>;
+  NOT?: InputMaybe<Array<InputMaybe<UniqueFieldsMainModelFilter>>>;
+  OR?: InputMaybe<Array<InputMaybe<UniqueFieldsMainModelFilter>>>;
+  createdAt?: InputMaybe<DateTimeFilter>;
+  id?: InputMaybe<IdFilter>;
+  nonUniqueString?: InputMaybe<StringFilter>;
+  uniqueBelongsTo?: InputMaybe<IdFilter>;
+  uniqueBelongsToId?: InputMaybe<IdFilter>;
+  uniqueEmail?: InputMaybe<StringFilter>;
+  uniqueString?: InputMaybe<StringFilter>;
+  updatedAt?: InputMaybe<DateTimeFilter>;
+};
+
+export type UniqueFieldsMainModelSort = {
+  /** Sort the results by the createdAt field. Defaults to ascending (smallest value first). */
+  createdAt?: InputMaybe<SortOrder>;
+  /** Sort the results by the id field. Defaults to ascending (smallest value first). */
+  id?: InputMaybe<SortOrder>;
+  /** Sort the results by the nonUniqueString field. Defaults to ascending (smallest value first). */
+  nonUniqueString?: InputMaybe<SortOrder>;
+  /** Sort the results by the uniqueEmail field. Defaults to ascending (smallest value first). */
+  uniqueEmail?: InputMaybe<SortOrder>;
+  /** Sort the results by the uniqueString field. Defaults to ascending (smallest value first). */
+  uniqueString?: InputMaybe<SortOrder>;
+  /** Sort the results by the updatedAt field. Defaults to ascending (smallest value first). */
+  updatedAt?: InputMaybe<SortOrder>;
+};
+
+export type UniqueFieldsMutations = {
+  __typename?: "UniqueFieldsMutations";
+  bulkCreateChildModels?: Maybe<BulkCreateUniqueFieldsChildModelsResult>;
+  bulkCreateMainModels?: Maybe<BulkCreateUniqueFieldsMainModelsResult>;
+  bulkCreateParentModels?: Maybe<BulkCreateUniqueFieldsParentModelsResult>;
+  bulkDeleteChildModels?: Maybe<BulkDeleteUniqueFieldsChildModelsResult>;
+  bulkDeleteMainModels?: Maybe<BulkDeleteUniqueFieldsMainModelsResult>;
+  bulkDeleteParentModels?: Maybe<BulkDeleteUniqueFieldsParentModelsResult>;
+  bulkUpdateChildModels?: Maybe<BulkUpdateUniqueFieldsChildModelsResult>;
+  bulkUpdateMainModels?: Maybe<BulkUpdateUniqueFieldsMainModelsResult>;
+  bulkUpdateParentModels?: Maybe<BulkUpdateUniqueFieldsParentModelsResult>;
+  bulkUpsertChildModels: BulkUpsertUniqueFieldsChildModelsResult;
+  bulkUpsertMainModels: BulkUpsertUniqueFieldsMainModelsResult;
+  bulkUpsertParentModels: BulkUpsertUniqueFieldsParentModelsResult;
+  createChildModel?: Maybe<CreateUniqueFieldsChildModelResult>;
+  createMainModel?: Maybe<CreateUniqueFieldsMainModelResult>;
+  createParentModel?: Maybe<CreateUniqueFieldsParentModelResult>;
+  deleteChildModel?: Maybe<DeleteUniqueFieldsChildModelResult>;
+  deleteMainModel?: Maybe<DeleteUniqueFieldsMainModelResult>;
+  deleteParentModel?: Maybe<DeleteUniqueFieldsParentModelResult>;
+  updateChildModel?: Maybe<UpdateUniqueFieldsChildModelResult>;
+  updateMainModel?: Maybe<UpdateUniqueFieldsMainModelResult>;
+  updateParentModel?: Maybe<UpdateUniqueFieldsParentModelResult>;
+  upsertChildModel?: Maybe<UpsertUniqueFieldsChildModelResult>;
+  upsertMainModel?: Maybe<UpsertUniqueFieldsMainModelResult>;
+  upsertParentModel?: Maybe<UpsertUniqueFieldsParentModelResult>;
+};
+
+export type UniqueFieldsMutationsBulkCreateChildModelsArgs = {
+  inputs: Array<BulkCreateUniqueFieldsChildModelsInput>;
+};
+
+export type UniqueFieldsMutationsBulkCreateMainModelsArgs = {
+  inputs: Array<BulkCreateUniqueFieldsMainModelsInput>;
+};
+
+export type UniqueFieldsMutationsBulkCreateParentModelsArgs = {
+  inputs: Array<BulkCreateUniqueFieldsParentModelsInput>;
+};
+
+export type UniqueFieldsMutationsBulkDeleteChildModelsArgs = {
+  ids: Array<Scalars["GadgetID"]["input"]>;
+};
+
+export type UniqueFieldsMutationsBulkDeleteMainModelsArgs = {
+  ids: Array<Scalars["GadgetID"]["input"]>;
+};
+
+export type UniqueFieldsMutationsBulkDeleteParentModelsArgs = {
+  ids: Array<Scalars["GadgetID"]["input"]>;
+};
+
+export type UniqueFieldsMutationsBulkUpdateChildModelsArgs = {
+  inputs: Array<BulkUpdateUniqueFieldsChildModelsInput>;
+};
+
+export type UniqueFieldsMutationsBulkUpdateMainModelsArgs = {
+  inputs: Array<BulkUpdateUniqueFieldsMainModelsInput>;
+};
+
+export type UniqueFieldsMutationsBulkUpdateParentModelsArgs = {
+  inputs: Array<BulkUpdateUniqueFieldsParentModelsInput>;
+};
+
+export type UniqueFieldsMutationsBulkUpsertChildModelsArgs = {
+  inputs: Array<BulkUpsertUniqueFieldsChildModelsInput>;
+};
+
+export type UniqueFieldsMutationsBulkUpsertMainModelsArgs = {
+  inputs: Array<BulkUpsertUniqueFieldsMainModelsInput>;
+};
+
+export type UniqueFieldsMutationsBulkUpsertParentModelsArgs = {
+  inputs: Array<BulkUpsertUniqueFieldsParentModelsInput>;
+};
+
+export type UniqueFieldsMutationsCreateChildModelArgs = {
+  childModel?: InputMaybe<CreateUniqueFieldsChildModelInput>;
+};
+
+export type UniqueFieldsMutationsCreateMainModelArgs = {
+  mainModel?: InputMaybe<CreateUniqueFieldsMainModelInput>;
+};
+
+export type UniqueFieldsMutationsCreateParentModelArgs = {
+  parentModel?: InputMaybe<CreateUniqueFieldsParentModelInput>;
+};
+
+export type UniqueFieldsMutationsDeleteChildModelArgs = {
+  id: Scalars["GadgetID"]["input"];
+};
+
+export type UniqueFieldsMutationsDeleteMainModelArgs = {
+  id: Scalars["GadgetID"]["input"];
+};
+
+export type UniqueFieldsMutationsDeleteParentModelArgs = {
+  id: Scalars["GadgetID"]["input"];
+};
+
+export type UniqueFieldsMutationsUpdateChildModelArgs = {
+  childModel?: InputMaybe<UpdateUniqueFieldsChildModelInput>;
+  id: Scalars["GadgetID"]["input"];
+};
+
+export type UniqueFieldsMutationsUpdateMainModelArgs = {
+  id: Scalars["GadgetID"]["input"];
+  mainModel?: InputMaybe<UpdateUniqueFieldsMainModelInput>;
+};
+
+export type UniqueFieldsMutationsUpdateParentModelArgs = {
+  id: Scalars["GadgetID"]["input"];
+  parentModel?: InputMaybe<UpdateUniqueFieldsParentModelInput>;
+};
+
+export type UniqueFieldsMutationsUpsertChildModelArgs = {
+  childModel?: InputMaybe<UpsertUniqueFieldsChildModelInput>;
+  on?: InputMaybe<Array<Scalars["String"]["input"]>>;
+};
+
+export type UniqueFieldsMutationsUpsertMainModelArgs = {
+  mainModel?: InputMaybe<UpsertUniqueFieldsMainModelInput>;
+  on?: InputMaybe<Array<Scalars["String"]["input"]>>;
+};
+
+export type UniqueFieldsMutationsUpsertParentModelArgs = {
+  on?: InputMaybe<Array<Scalars["String"]["input"]>>;
+  parentModel?: InputMaybe<UpsertUniqueFieldsParentModelInput>;
+};
+
+export type UniqueFieldsParentModel = {
+  __typename?: "UniqueFieldsParentModel";
+  /** Get all the fields for this record. Useful for not having to list out all the fields you want to retrieve, but slower. */
+  _all: Scalars["JSONObject"]["output"];
+  baseModel?: Maybe<UniqueFieldsMainModel>;
+  /** The time at which this record was first created. Set once upon record creation and never changed. Managed by Gadget. */
+  createdAt: Scalars["DateTime"]["output"];
+  /** The globally unique, unchanging identifier for this record. Assigned and managed by Gadget. */
+  id: Scalars["GadgetID"]["output"];
+  parentNonUniqueString?: Maybe<Scalars["String"]["output"]>;
+  parentUniqueString?: Maybe<Scalars["String"]["output"]>;
+  /** The time at which this record was last changed. Set each time the record is successfully acted upon by an action. Managed by Gadget. */
+  updatedAt: Scalars["DateTime"]["output"];
+};
+
+/** A connection to a list of UniqueFieldsParentModel items. */
+export type UniqueFieldsParentModelConnection = {
+  __typename?: "UniqueFieldsParentModelConnection";
+  /** A list of edges. */
+  edges: Array<UniqueFieldsParentModelEdge>;
+  /** Information to aid in pagination. */
+  pageInfo: PageInfo;
+};
+
+/** An edge in a UniqueFieldsParentModel connection. */
+export type UniqueFieldsParentModelEdge = {
+  __typename?: "UniqueFieldsParentModelEdge";
+  /** A cursor for use in pagination */
+  cursor: Scalars["String"]["output"];
+  /** The item at the end of the edge */
+  node: UniqueFieldsParentModel;
+};
+
+export type UniqueFieldsParentModelFilter = {
+  AND?: InputMaybe<Array<InputMaybe<UniqueFieldsParentModelFilter>>>;
+  NOT?: InputMaybe<Array<InputMaybe<UniqueFieldsParentModelFilter>>>;
+  OR?: InputMaybe<Array<InputMaybe<UniqueFieldsParentModelFilter>>>;
+  createdAt?: InputMaybe<DateTimeFilter>;
+  id?: InputMaybe<IdFilter>;
+  parentNonUniqueString?: InputMaybe<StringFilter>;
+  parentUniqueString?: InputMaybe<StringFilter>;
+  updatedAt?: InputMaybe<DateTimeFilter>;
+};
+
+export type UniqueFieldsParentModelSort = {
+  /** Sort the results by the createdAt field. Defaults to ascending (smallest value first). */
+  createdAt?: InputMaybe<SortOrder>;
+  /** Sort the results by the id field. Defaults to ascending (smallest value first). */
+  id?: InputMaybe<SortOrder>;
+  /** Sort the results by the parentNonUniqueString field. Defaults to ascending (smallest value first). */
+  parentNonUniqueString?: InputMaybe<SortOrder>;
+  /** Sort the results by the parentUniqueString field. Defaults to ascending (smallest value first). */
+  parentUniqueString?: InputMaybe<SortOrder>;
+  /** Sort the results by the updatedAt field. Defaults to ascending (smallest value first). */
+  updatedAt?: InputMaybe<SortOrder>;
+};
+
+export type UniqueFieldsQueries = {
+  __typename?: "UniqueFieldsQueries";
+  childModel?: Maybe<UniqueFieldsChildModel>;
+  childModels: UniqueFieldsChildModelConnection;
+  mainModel?: Maybe<UniqueFieldsMainModel>;
+  mainModels: UniqueFieldsMainModelConnection;
+  parentModel?: Maybe<UniqueFieldsParentModel>;
+  parentModels: UniqueFieldsParentModelConnection;
+};
+
+export type UniqueFieldsQueriesChildModelArgs = {
+  id: Scalars["GadgetID"]["input"];
+};
+
+export type UniqueFieldsQueriesChildModelsArgs = {
+  after?: InputMaybe<Scalars["String"]["input"]>;
+  before?: InputMaybe<Scalars["String"]["input"]>;
+  filter?: InputMaybe<Array<UniqueFieldsChildModelFilter>>;
+  first?: InputMaybe<Scalars["Int"]["input"]>;
+  last?: InputMaybe<Scalars["Int"]["input"]>;
+  search?: InputMaybe<Scalars["String"]["input"]>;
+  sort?: InputMaybe<Array<UniqueFieldsChildModelSort>>;
+};
+
+export type UniqueFieldsQueriesMainModelArgs = {
+  id: Scalars["GadgetID"]["input"];
+};
+
+export type UniqueFieldsQueriesMainModelsArgs = {
+  after?: InputMaybe<Scalars["String"]["input"]>;
+  before?: InputMaybe<Scalars["String"]["input"]>;
+  filter?: InputMaybe<Array<UniqueFieldsMainModelFilter>>;
+  first?: InputMaybe<Scalars["Int"]["input"]>;
+  last?: InputMaybe<Scalars["Int"]["input"]>;
+  search?: InputMaybe<Scalars["String"]["input"]>;
+  sort?: InputMaybe<Array<UniqueFieldsMainModelSort>>;
+};
+
+export type UniqueFieldsQueriesParentModelArgs = {
+  id: Scalars["GadgetID"]["input"];
+};
+
+export type UniqueFieldsQueriesParentModelsArgs = {
+  after?: InputMaybe<Scalars["String"]["input"]>;
+  before?: InputMaybe<Scalars["String"]["input"]>;
+  filter?: InputMaybe<Array<UniqueFieldsParentModelFilter>>;
+  first?: InputMaybe<Scalars["Int"]["input"]>;
+  last?: InputMaybe<Scalars["Int"]["input"]>;
+  search?: InputMaybe<Scalars["String"]["input"]>;
+  sort?: InputMaybe<Array<UniqueFieldsParentModelSort>>;
+};
+
 export type UpdateAutoTableTestInput = {
   bool?: InputMaybe<Scalars["Boolean"]["input"]>;
   dt?: InputMaybe<Scalars["DateTime"]["input"]>;
@@ -11102,6 +12456,7 @@ export type UpdateGameStadiumResult = UpsertGameStadiumResult & {
 };
 
 export type UpdateGizmoInput = {
+  attachment?: InputMaybe<StoredFileInput>;
   name?: InputMaybe<Scalars["String"]["input"]>;
   orientation?: InputMaybe<Scalars["String"]["input"]>;
   widget?: InputMaybe<WidgetBelongsToInput>;
@@ -11147,6 +12502,7 @@ export type UpdateHasManyThroughSiblingModelInput = {
   joinerModel?: InputMaybe<Array<InputMaybe<JoinerModelHasManyInput>>>;
   joinerModels?: InputMaybe<Array<InputMaybe<JoinerModelHasManyInput>>>;
   siblingModelHmtField?: InputMaybe<Array<InputMaybe<BaseModelHasManyThroughInput>>>;
+  siblingName?: InputMaybe<Scalars["String"]["input"]>;
 };
 
 export type UpdateHasManyThroughSiblingModelResult = UpsertHasManyThroughSiblingModelResult & {
@@ -11180,6 +12536,7 @@ export type UpdatePartResult = UpsertPartResult & {
 };
 
 export type UpdateSectionInput = {
+  label?: InputMaybe<Scalars["String"]["input"]>;
   name?: InputMaybe<Scalars["String"]["input"]>;
   widgets?: InputMaybe<Array<InputMaybe<WidgetHasManyInput>>>;
 };
@@ -11237,6 +12594,49 @@ export type UpdateShopifyShopResult = UpsertShopifyShopResult & {
   actionRun?: Maybe<Scalars["String"]["output"]>;
   errors?: Maybe<Array<ExecutionError>>;
   shopifyShop?: Maybe<ShopifyShop>;
+  success: Scalars["Boolean"]["output"];
+};
+
+export type UpdateUniqueFieldsChildModelInput = {
+  alias?: InputMaybe<Scalars["String"]["input"]>;
+  mainModelParent?: InputMaybe<MainModelBelongsToInput>;
+};
+
+export type UpdateUniqueFieldsChildModelResult = UpsertUniqueFieldsChildModelResult & {
+  __typename?: "UpdateUniqueFieldsChildModelResult";
+  actionRun?: Maybe<Scalars["String"]["output"]>;
+  childModel?: Maybe<UniqueFieldsChildModel>;
+  errors?: Maybe<Array<ExecutionError>>;
+  success: Scalars["Boolean"]["output"];
+};
+
+export type UpdateUniqueFieldsMainModelInput = {
+  childModelEntries?: InputMaybe<Array<InputMaybe<ChildModelHasManyInput>>>;
+  nonUniqueString?: InputMaybe<Scalars["String"]["input"]>;
+  uniqueBelongsTo?: InputMaybe<ParentModelBelongsToInput>;
+  uniqueEmail?: InputMaybe<Scalars["String"]["input"]>;
+  uniqueString?: InputMaybe<Scalars["String"]["input"]>;
+};
+
+export type UpdateUniqueFieldsMainModelResult = UpsertUniqueFieldsMainModelResult & {
+  __typename?: "UpdateUniqueFieldsMainModelResult";
+  actionRun?: Maybe<Scalars["String"]["output"]>;
+  errors?: Maybe<Array<ExecutionError>>;
+  mainModel?: Maybe<UniqueFieldsMainModel>;
+  success: Scalars["Boolean"]["output"];
+};
+
+export type UpdateUniqueFieldsParentModelInput = {
+  baseModel?: InputMaybe<MainModelHasOneInput>;
+  parentNonUniqueString?: InputMaybe<Scalars["String"]["input"]>;
+  parentUniqueString?: InputMaybe<Scalars["String"]["input"]>;
+};
+
+export type UpdateUniqueFieldsParentModelResult = UpsertUniqueFieldsParentModelResult & {
+  __typename?: "UpdateUniqueFieldsParentModelResult";
+  actionRun?: Maybe<Scalars["String"]["output"]>;
+  errors?: Maybe<Array<ExecutionError>>;
+  parentModel?: Maybe<UniqueFieldsParentModel>;
   success: Scalars["Boolean"]["output"];
 };
 
@@ -11377,6 +12777,9 @@ export type UpsertError = UpsertAutoTableTestRelatedModelResult &
   UpsertShopifyProductVariantResult &
   UpsertShopifyShopResult &
   UpsertShopifySyncResult &
+  UpsertUniqueFieldsChildModelResult &
+  UpsertUniqueFieldsMainModelResult &
+  UpsertUniqueFieldsParentModelResult &
   UpsertUserResult &
   UpsertWidgetResult & {
     __typename?: "UpsertError";
@@ -11439,6 +12842,7 @@ export type UpsertGameStadiumResult = {
 };
 
 export type UpsertGizmoInput = {
+  attachment?: InputMaybe<StoredFileInput>;
   id?: InputMaybe<Scalars["GadgetID"]["input"]>;
   name?: InputMaybe<Scalars["String"]["input"]>;
   orientation?: InputMaybe<Scalars["String"]["input"]>;
@@ -11482,6 +12886,7 @@ export type UpsertHasManyThroughSiblingModelInput = {
   joinerModel?: InputMaybe<Array<InputMaybe<JoinerModelHasManyInput>>>;
   joinerModels?: InputMaybe<Array<InputMaybe<JoinerModelHasManyInput>>>;
   siblingModelHmtField?: InputMaybe<Array<InputMaybe<BaseModelHasManyThroughInput>>>;
+  siblingName?: InputMaybe<Scalars["String"]["input"]>;
 };
 
 export type UpsertHasManyThroughSiblingModelResult = {
@@ -11515,6 +12920,7 @@ export type UpsertPartResult = {
 
 export type UpsertSectionInput = {
   id?: InputMaybe<Scalars["GadgetID"]["input"]>;
+  label?: InputMaybe<Scalars["String"]["input"]>;
   name?: InputMaybe<Scalars["String"]["input"]>;
   widgets?: InputMaybe<Array<InputMaybe<WidgetHasManyInput>>>;
 };
@@ -11573,6 +12979,46 @@ export type UpsertShopifySyncInput = {
 };
 
 export type UpsertShopifySyncResult = {
+  actionRun?: Maybe<Scalars["String"]["output"]>;
+  errors?: Maybe<Array<ExecutionError>>;
+  success: Scalars["Boolean"]["output"];
+};
+
+export type UpsertUniqueFieldsChildModelInput = {
+  alias?: InputMaybe<Scalars["String"]["input"]>;
+  id?: InputMaybe<Scalars["GadgetID"]["input"]>;
+  mainModelParent?: InputMaybe<MainModelBelongsToInput>;
+};
+
+export type UpsertUniqueFieldsChildModelResult = {
+  actionRun?: Maybe<Scalars["String"]["output"]>;
+  errors?: Maybe<Array<ExecutionError>>;
+  success: Scalars["Boolean"]["output"];
+};
+
+export type UpsertUniqueFieldsMainModelInput = {
+  childModelEntries?: InputMaybe<Array<InputMaybe<ChildModelHasManyInput>>>;
+  id?: InputMaybe<Scalars["GadgetID"]["input"]>;
+  nonUniqueString?: InputMaybe<Scalars["String"]["input"]>;
+  uniqueBelongsTo?: InputMaybe<ParentModelBelongsToInput>;
+  uniqueEmail?: InputMaybe<Scalars["String"]["input"]>;
+  uniqueString?: InputMaybe<Scalars["String"]["input"]>;
+};
+
+export type UpsertUniqueFieldsMainModelResult = {
+  actionRun?: Maybe<Scalars["String"]["output"]>;
+  errors?: Maybe<Array<ExecutionError>>;
+  success: Scalars["Boolean"]["output"];
+};
+
+export type UpsertUniqueFieldsParentModelInput = {
+  baseModel?: InputMaybe<MainModelHasOneInput>;
+  id?: InputMaybe<Scalars["GadgetID"]["input"]>;
+  parentNonUniqueString?: InputMaybe<Scalars["String"]["input"]>;
+  parentUniqueString?: InputMaybe<Scalars["String"]["input"]>;
+};
+
+export type UpsertUniqueFieldsParentModelResult = {
   actionRun?: Maybe<Scalars["String"]["output"]>;
   errors?: Maybe<Array<ExecutionError>>;
   success: Scalars["Boolean"]["output"];
@@ -11892,13 +13338,6 @@ export type WidgetSort = {
   updatedAt?: InputMaybe<SortOrder>;
 };
 
-export type RelatedModelFieldFragmentFragment = {
-  __typename?: "GadgetModelField";
-  name: string;
-  apiIdentifier: string;
-  fieldType: GadgetFieldType;
-};
-
 type FieldMetadata_GadgetModelField_Fragment = {
   __typename?: "GadgetModelField";
   sortable: boolean;
@@ -11914,10 +13353,9 @@ type FieldMetadata_GadgetModelField_Fragment = {
         relatedModel?: {
           __typename?: "GadgetModel";
           key: string;
+          name: string;
           apiIdentifier: string;
           namespace?: Array<string> | null;
-          defaultDisplayField: { __typename?: "GadgetModelField"; name: string; apiIdentifier: string; fieldType: GadgetFieldType };
-          fields?: Array<{ __typename?: "GadgetModelField"; name: string; apiIdentifier: string; fieldType: GadgetFieldType }>;
         } | null;
         validations: Array<
           | { __typename: "GadgetGenericFieldValidation"; name: string; specID: string }
@@ -11971,10 +13409,9 @@ type FieldMetadata_GadgetModelField_Fragment = {
         relatedModel?: {
           __typename?: "GadgetModel";
           key: string;
+          name: string;
           apiIdentifier: string;
           namespace?: Array<string> | null;
-          defaultDisplayField: { __typename?: "GadgetModelField"; name: string; apiIdentifier: string; fieldType: GadgetFieldType };
-          fields?: Array<{ __typename?: "GadgetModelField"; name: string; apiIdentifier: string; fieldType: GadgetFieldType }>;
         } | null;
         inverseField?: { __typename?: "GadgetModelField"; apiIdentifier: string } | null;
         validations: Array<
@@ -11991,19 +13428,12 @@ type FieldMetadata_GadgetModelField_Fragment = {
         relatedModel?: {
           __typename?: "GadgetModel";
           key: string;
+          name: string;
           apiIdentifier: string;
           namespace?: Array<string> | null;
-          defaultDisplayField: { __typename?: "GadgetModelField"; name: string; apiIdentifier: string; fieldType: GadgetFieldType };
-          fields?: Array<{ __typename?: "GadgetModelField"; name: string; apiIdentifier: string; fieldType: GadgetFieldType }>;
         } | null;
         inverseField?: { __typename?: "GadgetModelField"; apiIdentifier: string } | null;
-        joinModel?: {
-          __typename?: "GadgetModel";
-          key: string;
-          apiIdentifier: string;
-          namespace?: Array<string> | null;
-          defaultDisplayField: { __typename?: "GadgetModelField"; name: string; apiIdentifier: string; fieldType: GadgetFieldType };
-        } | null;
+        joinModel?: { __typename?: "GadgetModel"; key: string; apiIdentifier: string; namespace?: Array<string> | null } | null;
         inverseJoinModelField?: { __typename?: "GadgetModelField"; apiIdentifier: string } | null;
         inverseRelatedModelField?: { __typename?: "GadgetModelField"; apiIdentifier: string } | null;
         validations: Array<
@@ -12020,10 +13450,9 @@ type FieldMetadata_GadgetModelField_Fragment = {
         relatedModel?: {
           __typename?: "GadgetModel";
           key: string;
+          name: string;
           apiIdentifier: string;
           namespace?: Array<string> | null;
-          defaultDisplayField: { __typename?: "GadgetModelField"; name: string; apiIdentifier: string; fieldType: GadgetFieldType };
-          fields?: Array<{ __typename?: "GadgetModelField"; name: string; apiIdentifier: string; fieldType: GadgetFieldType }>;
         } | null;
         inverseField?: { __typename?: "GadgetModelField"; apiIdentifier: string } | null;
         validations: Array<
@@ -12072,10 +13501,9 @@ type FieldMetadata_GadgetObjectField_Fragment = {
         relatedModel?: {
           __typename?: "GadgetModel";
           key: string;
+          name: string;
           apiIdentifier: string;
           namespace?: Array<string> | null;
-          defaultDisplayField: { __typename?: "GadgetModelField"; name: string; apiIdentifier: string; fieldType: GadgetFieldType };
-          fields?: Array<{ __typename?: "GadgetModelField"; name: string; apiIdentifier: string; fieldType: GadgetFieldType }>;
         } | null;
         validations: Array<
           | { __typename: "GadgetGenericFieldValidation"; name: string; specID: string }
@@ -12129,10 +13557,9 @@ type FieldMetadata_GadgetObjectField_Fragment = {
         relatedModel?: {
           __typename?: "GadgetModel";
           key: string;
+          name: string;
           apiIdentifier: string;
           namespace?: Array<string> | null;
-          defaultDisplayField: { __typename?: "GadgetModelField"; name: string; apiIdentifier: string; fieldType: GadgetFieldType };
-          fields?: Array<{ __typename?: "GadgetModelField"; name: string; apiIdentifier: string; fieldType: GadgetFieldType }>;
         } | null;
         inverseField?: { __typename?: "GadgetModelField"; apiIdentifier: string } | null;
         validations: Array<
@@ -12149,19 +13576,12 @@ type FieldMetadata_GadgetObjectField_Fragment = {
         relatedModel?: {
           __typename?: "GadgetModel";
           key: string;
+          name: string;
           apiIdentifier: string;
           namespace?: Array<string> | null;
-          defaultDisplayField: { __typename?: "GadgetModelField"; name: string; apiIdentifier: string; fieldType: GadgetFieldType };
-          fields?: Array<{ __typename?: "GadgetModelField"; name: string; apiIdentifier: string; fieldType: GadgetFieldType }>;
         } | null;
         inverseField?: { __typename?: "GadgetModelField"; apiIdentifier: string } | null;
-        joinModel?: {
-          __typename?: "GadgetModel";
-          key: string;
-          apiIdentifier: string;
-          namespace?: Array<string> | null;
-          defaultDisplayField: { __typename?: "GadgetModelField"; name: string; apiIdentifier: string; fieldType: GadgetFieldType };
-        } | null;
+        joinModel?: { __typename?: "GadgetModel"; key: string; apiIdentifier: string; namespace?: Array<string> | null } | null;
         inverseJoinModelField?: { __typename?: "GadgetModelField"; apiIdentifier: string } | null;
         inverseRelatedModelField?: { __typename?: "GadgetModelField"; apiIdentifier: string } | null;
         validations: Array<
@@ -12178,10 +13598,9 @@ type FieldMetadata_GadgetObjectField_Fragment = {
         relatedModel?: {
           __typename?: "GadgetModel";
           key: string;
+          name: string;
           apiIdentifier: string;
           namespace?: Array<string> | null;
-          defaultDisplayField: { __typename?: "GadgetModelField"; name: string; apiIdentifier: string; fieldType: GadgetFieldType };
-          fields?: Array<{ __typename?: "GadgetModelField"; name: string; apiIdentifier: string; fieldType: GadgetFieldType }>;
         } | null;
         inverseField?: { __typename?: "GadgetModelField"; apiIdentifier: string } | null;
         validations: Array<
@@ -12222,15 +13641,15 @@ export type FieldMetadataFragment = FieldMetadata_GadgetModelField_Fragment | Fi
 export type GetModelMetadataQueryVariables = Exact<{
   apiIdentifier: Scalars["String"]["input"];
   namespace?: InputMaybe<Array<Scalars["String"]["input"]> | Scalars["String"]["input"]>;
-  includeRelatedFields: Scalars["Boolean"]["input"];
 }>;
 
 export type GetModelMetadataQuery = {
   __typename?: "Query";
   gadgetMeta: {
     __typename?: "GadgetApplicationMeta";
-    model?: {
+    modelAndRelatedModels: Array<{
       __typename?: "GadgetModel";
+      key: string;
       apiIdentifier: string;
       namespace?: Array<string> | null;
       name: string;
@@ -12249,10 +13668,9 @@ export type GetModelMetadataQuery = {
               relatedModel?: {
                 __typename?: "GadgetModel";
                 key: string;
+                name: string;
                 apiIdentifier: string;
                 namespace?: Array<string> | null;
-                defaultDisplayField: { __typename?: "GadgetModelField"; name: string; apiIdentifier: string; fieldType: GadgetFieldType };
-                fields?: Array<{ __typename?: "GadgetModelField"; name: string; apiIdentifier: string; fieldType: GadgetFieldType }>;
               } | null;
               validations: Array<
                 | { __typename: "GadgetGenericFieldValidation"; name: string; specID: string }
@@ -12306,10 +13724,9 @@ export type GetModelMetadataQuery = {
               relatedModel?: {
                 __typename?: "GadgetModel";
                 key: string;
+                name: string;
                 apiIdentifier: string;
                 namespace?: Array<string> | null;
-                defaultDisplayField: { __typename?: "GadgetModelField"; name: string; apiIdentifier: string; fieldType: GadgetFieldType };
-                fields?: Array<{ __typename?: "GadgetModelField"; name: string; apiIdentifier: string; fieldType: GadgetFieldType }>;
               } | null;
               inverseField?: { __typename?: "GadgetModelField"; apiIdentifier: string } | null;
               validations: Array<
@@ -12326,19 +13743,12 @@ export type GetModelMetadataQuery = {
               relatedModel?: {
                 __typename?: "GadgetModel";
                 key: string;
+                name: string;
                 apiIdentifier: string;
                 namespace?: Array<string> | null;
-                defaultDisplayField: { __typename?: "GadgetModelField"; name: string; apiIdentifier: string; fieldType: GadgetFieldType };
-                fields?: Array<{ __typename?: "GadgetModelField"; name: string; apiIdentifier: string; fieldType: GadgetFieldType }>;
               } | null;
               inverseField?: { __typename?: "GadgetModelField"; apiIdentifier: string } | null;
-              joinModel?: {
-                __typename?: "GadgetModel";
-                key: string;
-                apiIdentifier: string;
-                namespace?: Array<string> | null;
-                defaultDisplayField: { __typename?: "GadgetModelField"; name: string; apiIdentifier: string; fieldType: GadgetFieldType };
-              } | null;
+              joinModel?: { __typename?: "GadgetModel"; key: string; apiIdentifier: string; namespace?: Array<string> | null } | null;
               inverseJoinModelField?: { __typename?: "GadgetModelField"; apiIdentifier: string } | null;
               inverseRelatedModelField?: { __typename?: "GadgetModelField"; apiIdentifier: string } | null;
               validations: Array<
@@ -12355,10 +13765,9 @@ export type GetModelMetadataQuery = {
               relatedModel?: {
                 __typename?: "GadgetModel";
                 key: string;
+                name: string;
                 apiIdentifier: string;
                 namespace?: Array<string> | null;
-                defaultDisplayField: { __typename?: "GadgetModelField"; name: string; apiIdentifier: string; fieldType: GadgetFieldType };
-                fields?: Array<{ __typename?: "GadgetModelField"; name: string; apiIdentifier: string; fieldType: GadgetFieldType }>;
               } | null;
               inverseField?: { __typename?: "GadgetModelField"; apiIdentifier: string } | null;
               validations: Array<
@@ -12393,7 +13802,8 @@ export type GetModelMetadataQuery = {
               >;
             };
       }>;
-    } | null;
+      defaultDisplayField: { __typename?: "GadgetModelField"; name: string; apiIdentifier: string; fieldType: GadgetFieldType };
+    }>;
   };
 };
 
@@ -12426,10 +13836,9 @@ type SubFields_GadgetModelField_Fragment = {
                 relatedModel?: {
                   __typename?: "GadgetModel";
                   key: string;
+                  name: string;
                   apiIdentifier: string;
                   namespace?: Array<string> | null;
-                  defaultDisplayField: { __typename?: "GadgetModelField"; name: string; apiIdentifier: string; fieldType: GadgetFieldType };
-                  fields?: Array<{ __typename?: "GadgetModelField"; name: string; apiIdentifier: string; fieldType: GadgetFieldType }>;
                 } | null;
                 validations: Array<
                   | { __typename: "GadgetGenericFieldValidation"; name: string; specID: string }
@@ -12483,10 +13892,9 @@ type SubFields_GadgetModelField_Fragment = {
                 relatedModel?: {
                   __typename?: "GadgetModel";
                   key: string;
+                  name: string;
                   apiIdentifier: string;
                   namespace?: Array<string> | null;
-                  defaultDisplayField: { __typename?: "GadgetModelField"; name: string; apiIdentifier: string; fieldType: GadgetFieldType };
-                  fields?: Array<{ __typename?: "GadgetModelField"; name: string; apiIdentifier: string; fieldType: GadgetFieldType }>;
                 } | null;
                 inverseField?: { __typename?: "GadgetModelField"; apiIdentifier: string } | null;
                 validations: Array<
@@ -12503,19 +13911,12 @@ type SubFields_GadgetModelField_Fragment = {
                 relatedModel?: {
                   __typename?: "GadgetModel";
                   key: string;
+                  name: string;
                   apiIdentifier: string;
                   namespace?: Array<string> | null;
-                  defaultDisplayField: { __typename?: "GadgetModelField"; name: string; apiIdentifier: string; fieldType: GadgetFieldType };
-                  fields?: Array<{ __typename?: "GadgetModelField"; name: string; apiIdentifier: string; fieldType: GadgetFieldType }>;
                 } | null;
                 inverseField?: { __typename?: "GadgetModelField"; apiIdentifier: string } | null;
-                joinModel?: {
-                  __typename?: "GadgetModel";
-                  key: string;
-                  apiIdentifier: string;
-                  namespace?: Array<string> | null;
-                  defaultDisplayField: { __typename?: "GadgetModelField"; name: string; apiIdentifier: string; fieldType: GadgetFieldType };
-                } | null;
+                joinModel?: { __typename?: "GadgetModel"; key: string; apiIdentifier: string; namespace?: Array<string> | null } | null;
                 inverseJoinModelField?: { __typename?: "GadgetModelField"; apiIdentifier: string } | null;
                 inverseRelatedModelField?: { __typename?: "GadgetModelField"; apiIdentifier: string } | null;
                 validations: Array<
@@ -12532,10 +13933,9 @@ type SubFields_GadgetModelField_Fragment = {
                 relatedModel?: {
                   __typename?: "GadgetModel";
                   key: string;
+                  name: string;
                   apiIdentifier: string;
                   namespace?: Array<string> | null;
-                  defaultDisplayField: { __typename?: "GadgetModelField"; name: string; apiIdentifier: string; fieldType: GadgetFieldType };
-                  fields?: Array<{ __typename?: "GadgetModelField"; name: string; apiIdentifier: string; fieldType: GadgetFieldType }>;
                 } | null;
                 inverseField?: { __typename?: "GadgetModelField"; apiIdentifier: string } | null;
                 validations: Array<
@@ -12577,20 +13977,9 @@ type SubFields_GadgetModelField_Fragment = {
                         relatedModel?: {
                           __typename?: "GadgetModel";
                           key: string;
+                          name: string;
                           apiIdentifier: string;
                           namespace?: Array<string> | null;
-                          defaultDisplayField: {
-                            __typename?: "GadgetModelField";
-                            name: string;
-                            apiIdentifier: string;
-                            fieldType: GadgetFieldType;
-                          };
-                          fields?: Array<{
-                            __typename?: "GadgetModelField";
-                            name: string;
-                            apiIdentifier: string;
-                            fieldType: GadgetFieldType;
-                          }>;
                         } | null;
                         validations: Array<
                           | { __typename: "GadgetGenericFieldValidation"; name: string; specID: string }
@@ -12668,20 +14057,9 @@ type SubFields_GadgetModelField_Fragment = {
                         relatedModel?: {
                           __typename?: "GadgetModel";
                           key: string;
+                          name: string;
                           apiIdentifier: string;
                           namespace?: Array<string> | null;
-                          defaultDisplayField: {
-                            __typename?: "GadgetModelField";
-                            name: string;
-                            apiIdentifier: string;
-                            fieldType: GadgetFieldType;
-                          };
-                          fields?: Array<{
-                            __typename?: "GadgetModelField";
-                            name: string;
-                            apiIdentifier: string;
-                            fieldType: GadgetFieldType;
-                          }>;
                         } | null;
                         inverseField?: { __typename?: "GadgetModelField"; apiIdentifier: string } | null;
                         validations: Array<
@@ -12704,20 +14082,9 @@ type SubFields_GadgetModelField_Fragment = {
                         relatedModel?: {
                           __typename?: "GadgetModel";
                           key: string;
+                          name: string;
                           apiIdentifier: string;
                           namespace?: Array<string> | null;
-                          defaultDisplayField: {
-                            __typename?: "GadgetModelField";
-                            name: string;
-                            apiIdentifier: string;
-                            fieldType: GadgetFieldType;
-                          };
-                          fields?: Array<{
-                            __typename?: "GadgetModelField";
-                            name: string;
-                            apiIdentifier: string;
-                            fieldType: GadgetFieldType;
-                          }>;
                         } | null;
                         inverseField?: { __typename?: "GadgetModelField"; apiIdentifier: string } | null;
                         joinModel?: {
@@ -12725,12 +14092,6 @@ type SubFields_GadgetModelField_Fragment = {
                           key: string;
                           apiIdentifier: string;
                           namespace?: Array<string> | null;
-                          defaultDisplayField: {
-                            __typename?: "GadgetModelField";
-                            name: string;
-                            apiIdentifier: string;
-                            fieldType: GadgetFieldType;
-                          };
                         } | null;
                         inverseJoinModelField?: { __typename?: "GadgetModelField"; apiIdentifier: string } | null;
                         inverseRelatedModelField?: { __typename?: "GadgetModelField"; apiIdentifier: string } | null;
@@ -12754,20 +14115,9 @@ type SubFields_GadgetModelField_Fragment = {
                         relatedModel?: {
                           __typename?: "GadgetModel";
                           key: string;
+                          name: string;
                           apiIdentifier: string;
                           namespace?: Array<string> | null;
-                          defaultDisplayField: {
-                            __typename?: "GadgetModelField";
-                            name: string;
-                            apiIdentifier: string;
-                            fieldType: GadgetFieldType;
-                          };
-                          fields?: Array<{
-                            __typename?: "GadgetModelField";
-                            name: string;
-                            apiIdentifier: string;
-                            fieldType: GadgetFieldType;
-                          }>;
                         } | null;
                         inverseField?: { __typename?: "GadgetModelField"; apiIdentifier: string } | null;
                         validations: Array<
@@ -12821,20 +14171,9 @@ type SubFields_GadgetModelField_Fragment = {
                                 relatedModel?: {
                                   __typename?: "GadgetModel";
                                   key: string;
+                                  name: string;
                                   apiIdentifier: string;
                                   namespace?: Array<string> | null;
-                                  defaultDisplayField: {
-                                    __typename?: "GadgetModelField";
-                                    name: string;
-                                    apiIdentifier: string;
-                                    fieldType: GadgetFieldType;
-                                  };
-                                  fields?: Array<{
-                                    __typename?: "GadgetModelField";
-                                    name: string;
-                                    apiIdentifier: string;
-                                    fieldType: GadgetFieldType;
-                                  }>;
                                 } | null;
                                 validations: Array<
                                   | { __typename: "GadgetGenericFieldValidation"; name: string; specID: string }
@@ -12932,20 +14271,9 @@ type SubFields_GadgetModelField_Fragment = {
                                 relatedModel?: {
                                   __typename?: "GadgetModel";
                                   key: string;
+                                  name: string;
                                   apiIdentifier: string;
                                   namespace?: Array<string> | null;
-                                  defaultDisplayField: {
-                                    __typename?: "GadgetModelField";
-                                    name: string;
-                                    apiIdentifier: string;
-                                    fieldType: GadgetFieldType;
-                                  };
-                                  fields?: Array<{
-                                    __typename?: "GadgetModelField";
-                                    name: string;
-                                    apiIdentifier: string;
-                                    fieldType: GadgetFieldType;
-                                  }>;
                                 } | null;
                                 inverseField?: { __typename?: "GadgetModelField"; apiIdentifier: string } | null;
                                 validations: Array<
@@ -12973,20 +14301,9 @@ type SubFields_GadgetModelField_Fragment = {
                                 relatedModel?: {
                                   __typename?: "GadgetModel";
                                   key: string;
+                                  name: string;
                                   apiIdentifier: string;
                                   namespace?: Array<string> | null;
-                                  defaultDisplayField: {
-                                    __typename?: "GadgetModelField";
-                                    name: string;
-                                    apiIdentifier: string;
-                                    fieldType: GadgetFieldType;
-                                  };
-                                  fields?: Array<{
-                                    __typename?: "GadgetModelField";
-                                    name: string;
-                                    apiIdentifier: string;
-                                    fieldType: GadgetFieldType;
-                                  }>;
                                 } | null;
                                 inverseField?: { __typename?: "GadgetModelField"; apiIdentifier: string } | null;
                                 joinModel?: {
@@ -12994,12 +14311,6 @@ type SubFields_GadgetModelField_Fragment = {
                                   key: string;
                                   apiIdentifier: string;
                                   namespace?: Array<string> | null;
-                                  defaultDisplayField: {
-                                    __typename?: "GadgetModelField";
-                                    name: string;
-                                    apiIdentifier: string;
-                                    fieldType: GadgetFieldType;
-                                  };
                                 } | null;
                                 inverseJoinModelField?: { __typename?: "GadgetModelField"; apiIdentifier: string } | null;
                                 inverseRelatedModelField?: { __typename?: "GadgetModelField"; apiIdentifier: string } | null;
@@ -13028,20 +14339,9 @@ type SubFields_GadgetModelField_Fragment = {
                                 relatedModel?: {
                                   __typename?: "GadgetModel";
                                   key: string;
+                                  name: string;
                                   apiIdentifier: string;
                                   namespace?: Array<string> | null;
-                                  defaultDisplayField: {
-                                    __typename?: "GadgetModelField";
-                                    name: string;
-                                    apiIdentifier: string;
-                                    fieldType: GadgetFieldType;
-                                  };
-                                  fields?: Array<{
-                                    __typename?: "GadgetModelField";
-                                    name: string;
-                                    apiIdentifier: string;
-                                    fieldType: GadgetFieldType;
-                                  }>;
                                 } | null;
                                 inverseField?: { __typename?: "GadgetModelField"; apiIdentifier: string } | null;
                                 validations: Array<
@@ -13165,10 +14465,9 @@ type SubFields_GadgetObjectField_Fragment = {
                 relatedModel?: {
                   __typename?: "GadgetModel";
                   key: string;
+                  name: string;
                   apiIdentifier: string;
                   namespace?: Array<string> | null;
-                  defaultDisplayField: { __typename?: "GadgetModelField"; name: string; apiIdentifier: string; fieldType: GadgetFieldType };
-                  fields?: Array<{ __typename?: "GadgetModelField"; name: string; apiIdentifier: string; fieldType: GadgetFieldType }>;
                 } | null;
                 validations: Array<
                   | { __typename: "GadgetGenericFieldValidation"; name: string; specID: string }
@@ -13222,10 +14521,9 @@ type SubFields_GadgetObjectField_Fragment = {
                 relatedModel?: {
                   __typename?: "GadgetModel";
                   key: string;
+                  name: string;
                   apiIdentifier: string;
                   namespace?: Array<string> | null;
-                  defaultDisplayField: { __typename?: "GadgetModelField"; name: string; apiIdentifier: string; fieldType: GadgetFieldType };
-                  fields?: Array<{ __typename?: "GadgetModelField"; name: string; apiIdentifier: string; fieldType: GadgetFieldType }>;
                 } | null;
                 inverseField?: { __typename?: "GadgetModelField"; apiIdentifier: string } | null;
                 validations: Array<
@@ -13242,19 +14540,12 @@ type SubFields_GadgetObjectField_Fragment = {
                 relatedModel?: {
                   __typename?: "GadgetModel";
                   key: string;
+                  name: string;
                   apiIdentifier: string;
                   namespace?: Array<string> | null;
-                  defaultDisplayField: { __typename?: "GadgetModelField"; name: string; apiIdentifier: string; fieldType: GadgetFieldType };
-                  fields?: Array<{ __typename?: "GadgetModelField"; name: string; apiIdentifier: string; fieldType: GadgetFieldType }>;
                 } | null;
                 inverseField?: { __typename?: "GadgetModelField"; apiIdentifier: string } | null;
-                joinModel?: {
-                  __typename?: "GadgetModel";
-                  key: string;
-                  apiIdentifier: string;
-                  namespace?: Array<string> | null;
-                  defaultDisplayField: { __typename?: "GadgetModelField"; name: string; apiIdentifier: string; fieldType: GadgetFieldType };
-                } | null;
+                joinModel?: { __typename?: "GadgetModel"; key: string; apiIdentifier: string; namespace?: Array<string> | null } | null;
                 inverseJoinModelField?: { __typename?: "GadgetModelField"; apiIdentifier: string } | null;
                 inverseRelatedModelField?: { __typename?: "GadgetModelField"; apiIdentifier: string } | null;
                 validations: Array<
@@ -13271,10 +14562,9 @@ type SubFields_GadgetObjectField_Fragment = {
                 relatedModel?: {
                   __typename?: "GadgetModel";
                   key: string;
+                  name: string;
                   apiIdentifier: string;
                   namespace?: Array<string> | null;
-                  defaultDisplayField: { __typename?: "GadgetModelField"; name: string; apiIdentifier: string; fieldType: GadgetFieldType };
-                  fields?: Array<{ __typename?: "GadgetModelField"; name: string; apiIdentifier: string; fieldType: GadgetFieldType }>;
                 } | null;
                 inverseField?: { __typename?: "GadgetModelField"; apiIdentifier: string } | null;
                 validations: Array<
@@ -13316,20 +14606,9 @@ type SubFields_GadgetObjectField_Fragment = {
                         relatedModel?: {
                           __typename?: "GadgetModel";
                           key: string;
+                          name: string;
                           apiIdentifier: string;
                           namespace?: Array<string> | null;
-                          defaultDisplayField: {
-                            __typename?: "GadgetModelField";
-                            name: string;
-                            apiIdentifier: string;
-                            fieldType: GadgetFieldType;
-                          };
-                          fields?: Array<{
-                            __typename?: "GadgetModelField";
-                            name: string;
-                            apiIdentifier: string;
-                            fieldType: GadgetFieldType;
-                          }>;
                         } | null;
                         validations: Array<
                           | { __typename: "GadgetGenericFieldValidation"; name: string; specID: string }
@@ -13407,20 +14686,9 @@ type SubFields_GadgetObjectField_Fragment = {
                         relatedModel?: {
                           __typename?: "GadgetModel";
                           key: string;
+                          name: string;
                           apiIdentifier: string;
                           namespace?: Array<string> | null;
-                          defaultDisplayField: {
-                            __typename?: "GadgetModelField";
-                            name: string;
-                            apiIdentifier: string;
-                            fieldType: GadgetFieldType;
-                          };
-                          fields?: Array<{
-                            __typename?: "GadgetModelField";
-                            name: string;
-                            apiIdentifier: string;
-                            fieldType: GadgetFieldType;
-                          }>;
                         } | null;
                         inverseField?: { __typename?: "GadgetModelField"; apiIdentifier: string } | null;
                         validations: Array<
@@ -13443,20 +14711,9 @@ type SubFields_GadgetObjectField_Fragment = {
                         relatedModel?: {
                           __typename?: "GadgetModel";
                           key: string;
+                          name: string;
                           apiIdentifier: string;
                           namespace?: Array<string> | null;
-                          defaultDisplayField: {
-                            __typename?: "GadgetModelField";
-                            name: string;
-                            apiIdentifier: string;
-                            fieldType: GadgetFieldType;
-                          };
-                          fields?: Array<{
-                            __typename?: "GadgetModelField";
-                            name: string;
-                            apiIdentifier: string;
-                            fieldType: GadgetFieldType;
-                          }>;
                         } | null;
                         inverseField?: { __typename?: "GadgetModelField"; apiIdentifier: string } | null;
                         joinModel?: {
@@ -13464,12 +14721,6 @@ type SubFields_GadgetObjectField_Fragment = {
                           key: string;
                           apiIdentifier: string;
                           namespace?: Array<string> | null;
-                          defaultDisplayField: {
-                            __typename?: "GadgetModelField";
-                            name: string;
-                            apiIdentifier: string;
-                            fieldType: GadgetFieldType;
-                          };
                         } | null;
                         inverseJoinModelField?: { __typename?: "GadgetModelField"; apiIdentifier: string } | null;
                         inverseRelatedModelField?: { __typename?: "GadgetModelField"; apiIdentifier: string } | null;
@@ -13493,20 +14744,9 @@ type SubFields_GadgetObjectField_Fragment = {
                         relatedModel?: {
                           __typename?: "GadgetModel";
                           key: string;
+                          name: string;
                           apiIdentifier: string;
                           namespace?: Array<string> | null;
-                          defaultDisplayField: {
-                            __typename?: "GadgetModelField";
-                            name: string;
-                            apiIdentifier: string;
-                            fieldType: GadgetFieldType;
-                          };
-                          fields?: Array<{
-                            __typename?: "GadgetModelField";
-                            name: string;
-                            apiIdentifier: string;
-                            fieldType: GadgetFieldType;
-                          }>;
                         } | null;
                         inverseField?: { __typename?: "GadgetModelField"; apiIdentifier: string } | null;
                         validations: Array<
@@ -13560,20 +14800,9 @@ type SubFields_GadgetObjectField_Fragment = {
                                 relatedModel?: {
                                   __typename?: "GadgetModel";
                                   key: string;
+                                  name: string;
                                   apiIdentifier: string;
                                   namespace?: Array<string> | null;
-                                  defaultDisplayField: {
-                                    __typename?: "GadgetModelField";
-                                    name: string;
-                                    apiIdentifier: string;
-                                    fieldType: GadgetFieldType;
-                                  };
-                                  fields?: Array<{
-                                    __typename?: "GadgetModelField";
-                                    name: string;
-                                    apiIdentifier: string;
-                                    fieldType: GadgetFieldType;
-                                  }>;
                                 } | null;
                                 validations: Array<
                                   | { __typename: "GadgetGenericFieldValidation"; name: string; specID: string }
@@ -13671,20 +14900,9 @@ type SubFields_GadgetObjectField_Fragment = {
                                 relatedModel?: {
                                   __typename?: "GadgetModel";
                                   key: string;
+                                  name: string;
                                   apiIdentifier: string;
                                   namespace?: Array<string> | null;
-                                  defaultDisplayField: {
-                                    __typename?: "GadgetModelField";
-                                    name: string;
-                                    apiIdentifier: string;
-                                    fieldType: GadgetFieldType;
-                                  };
-                                  fields?: Array<{
-                                    __typename?: "GadgetModelField";
-                                    name: string;
-                                    apiIdentifier: string;
-                                    fieldType: GadgetFieldType;
-                                  }>;
                                 } | null;
                                 inverseField?: { __typename?: "GadgetModelField"; apiIdentifier: string } | null;
                                 validations: Array<
@@ -13712,20 +14930,9 @@ type SubFields_GadgetObjectField_Fragment = {
                                 relatedModel?: {
                                   __typename?: "GadgetModel";
                                   key: string;
+                                  name: string;
                                   apiIdentifier: string;
                                   namespace?: Array<string> | null;
-                                  defaultDisplayField: {
-                                    __typename?: "GadgetModelField";
-                                    name: string;
-                                    apiIdentifier: string;
-                                    fieldType: GadgetFieldType;
-                                  };
-                                  fields?: Array<{
-                                    __typename?: "GadgetModelField";
-                                    name: string;
-                                    apiIdentifier: string;
-                                    fieldType: GadgetFieldType;
-                                  }>;
                                 } | null;
                                 inverseField?: { __typename?: "GadgetModelField"; apiIdentifier: string } | null;
                                 joinModel?: {
@@ -13733,12 +14940,6 @@ type SubFields_GadgetObjectField_Fragment = {
                                   key: string;
                                   apiIdentifier: string;
                                   namespace?: Array<string> | null;
-                                  defaultDisplayField: {
-                                    __typename?: "GadgetModelField";
-                                    name: string;
-                                    apiIdentifier: string;
-                                    fieldType: GadgetFieldType;
-                                  };
                                 } | null;
                                 inverseJoinModelField?: { __typename?: "GadgetModelField"; apiIdentifier: string } | null;
                                 inverseRelatedModelField?: { __typename?: "GadgetModelField"; apiIdentifier: string } | null;
@@ -13767,20 +14968,9 @@ type SubFields_GadgetObjectField_Fragment = {
                                 relatedModel?: {
                                   __typename?: "GadgetModel";
                                   key: string;
+                                  name: string;
                                   apiIdentifier: string;
                                   namespace?: Array<string> | null;
-                                  defaultDisplayField: {
-                                    __typename?: "GadgetModelField";
-                                    name: string;
-                                    apiIdentifier: string;
-                                    fieldType: GadgetFieldType;
-                                  };
-                                  fields?: Array<{
-                                    __typename?: "GadgetModelField";
-                                    name: string;
-                                    apiIdentifier: string;
-                                    fieldType: GadgetFieldType;
-                                  }>;
                                 } | null;
                                 inverseField?: { __typename?: "GadgetModelField"; apiIdentifier: string } | null;
                                 validations: Array<
@@ -13881,16 +15071,937 @@ export type ModelActionMetadataQueryVariables = Exact<{
   modelApiIdentifier: Scalars["String"]["input"];
   modelNamespace?: InputMaybe<Array<Scalars["String"]["input"]> | Scalars["String"]["input"]>;
   action: Scalars["String"]["input"];
-  includeRelatedFields: Scalars["Boolean"]["input"];
 }>;
 
 export type ModelActionMetadataQuery = {
   __typename?: "Query";
   gadgetMeta: {
     __typename?: "GadgetApplicationMeta";
+    modelAndRelatedModels: Array<{
+      __typename?: "GadgetModel";
+      key: string;
+      name: string;
+      namespace?: Array<string> | null;
+      apiIdentifier: string;
+      defaultRecord: any;
+      fields: Array<{
+        __typename?: "GadgetModelField";
+        sortable: boolean;
+        filterable: boolean;
+        name: string;
+        apiIdentifier: string;
+        fieldType: GadgetFieldType;
+        requiredArgumentForInput: boolean;
+        configuration:
+          | {
+              __typename: "GadgetBelongsToConfig";
+              fieldType: GadgetFieldType;
+              relatedModel?: {
+                __typename?: "GadgetModel";
+                key: string;
+                name: string;
+                apiIdentifier: string;
+                namespace?: Array<string> | null;
+              } | null;
+              validations: Array<
+                | { __typename: "GadgetGenericFieldValidation"; name: string; specID: string }
+                | { __typename: "GadgetOnlyImageFileFieldValidation"; name: string; specID: string; allowAnimatedImages: boolean }
+                | { __typename: "GadgetRangeFieldValidation"; name: string; specID: string; min?: number | null; max?: number | null }
+                | { __typename: "GadgetRegexFieldValidation"; name: string; specID: string; pattern?: string | null }
+                | null
+              >;
+            }
+          | {
+              __typename: "GadgetDateTimeConfig";
+              includeTime: boolean;
+              fieldType: GadgetFieldType;
+              validations: Array<
+                | { __typename: "GadgetGenericFieldValidation"; name: string; specID: string }
+                | { __typename: "GadgetOnlyImageFileFieldValidation"; name: string; specID: string; allowAnimatedImages: boolean }
+                | { __typename: "GadgetRangeFieldValidation"; name: string; specID: string; min?: number | null; max?: number | null }
+                | { __typename: "GadgetRegexFieldValidation"; name: string; specID: string; pattern?: string | null }
+                | null
+              >;
+            }
+          | {
+              __typename: "GadgetEnumConfig";
+              allowMultiple: boolean;
+              allowOther: boolean;
+              fieldType: GadgetFieldType;
+              options: Array<{ __typename?: "GadgetEnumOption"; name: string; color: string }>;
+              validations: Array<
+                | { __typename: "GadgetGenericFieldValidation"; name: string; specID: string }
+                | { __typename: "GadgetOnlyImageFileFieldValidation"; name: string; specID: string; allowAnimatedImages: boolean }
+                | { __typename: "GadgetRangeFieldValidation"; name: string; specID: string; min?: number | null; max?: number | null }
+                | { __typename: "GadgetRegexFieldValidation"; name: string; specID: string; pattern?: string | null }
+                | null
+              >;
+            }
+          | {
+              __typename: "GadgetGenericFieldConfig";
+              fieldType: GadgetFieldType;
+              validations: Array<
+                | { __typename: "GadgetGenericFieldValidation"; name: string; specID: string }
+                | { __typename: "GadgetOnlyImageFileFieldValidation"; name: string; specID: string; allowAnimatedImages: boolean }
+                | { __typename: "GadgetRangeFieldValidation"; name: string; specID: string; min?: number | null; max?: number | null }
+                | { __typename: "GadgetRegexFieldValidation"; name: string; specID: string; pattern?: string | null }
+                | null
+              >;
+            }
+          | {
+              __typename: "GadgetHasManyConfig";
+              isJoinModelHasManyField: boolean;
+              fieldType: GadgetFieldType;
+              relatedModel?: {
+                __typename?: "GadgetModel";
+                key: string;
+                name: string;
+                apiIdentifier: string;
+                namespace?: Array<string> | null;
+              } | null;
+              inverseField?: { __typename?: "GadgetModelField"; apiIdentifier: string } | null;
+              validations: Array<
+                | { __typename: "GadgetGenericFieldValidation"; name: string; specID: string }
+                | { __typename: "GadgetOnlyImageFileFieldValidation"; name: string; specID: string; allowAnimatedImages: boolean }
+                | { __typename: "GadgetRangeFieldValidation"; name: string; specID: string; min?: number | null; max?: number | null }
+                | { __typename: "GadgetRegexFieldValidation"; name: string; specID: string; pattern?: string | null }
+                | null
+              >;
+            }
+          | {
+              __typename: "GadgetHasManyThroughConfig";
+              fieldType: GadgetFieldType;
+              relatedModel?: {
+                __typename?: "GadgetModel";
+                key: string;
+                name: string;
+                apiIdentifier: string;
+                namespace?: Array<string> | null;
+              } | null;
+              inverseField?: { __typename?: "GadgetModelField"; apiIdentifier: string } | null;
+              joinModel?: { __typename?: "GadgetModel"; key: string; apiIdentifier: string; namespace?: Array<string> | null } | null;
+              inverseJoinModelField?: { __typename?: "GadgetModelField"; apiIdentifier: string } | null;
+              inverseRelatedModelField?: { __typename?: "GadgetModelField"; apiIdentifier: string } | null;
+              validations: Array<
+                | { __typename: "GadgetGenericFieldValidation"; name: string; specID: string }
+                | { __typename: "GadgetOnlyImageFileFieldValidation"; name: string; specID: string; allowAnimatedImages: boolean }
+                | { __typename: "GadgetRangeFieldValidation"; name: string; specID: string; min?: number | null; max?: number | null }
+                | { __typename: "GadgetRegexFieldValidation"; name: string; specID: string; pattern?: string | null }
+                | null
+              >;
+            }
+          | {
+              __typename: "GadgetHasOneConfig";
+              fieldType: GadgetFieldType;
+              relatedModel?: {
+                __typename?: "GadgetModel";
+                key: string;
+                name: string;
+                apiIdentifier: string;
+                namespace?: Array<string> | null;
+              } | null;
+              inverseField?: { __typename?: "GadgetModelField"; apiIdentifier: string } | null;
+              validations: Array<
+                | { __typename: "GadgetGenericFieldValidation"; name: string; specID: string }
+                | { __typename: "GadgetOnlyImageFileFieldValidation"; name: string; specID: string; allowAnimatedImages: boolean }
+                | { __typename: "GadgetRangeFieldValidation"; name: string; specID: string; min?: number | null; max?: number | null }
+                | { __typename: "GadgetRegexFieldValidation"; name: string; specID: string; pattern?: string | null }
+                | null
+              >;
+            }
+          | {
+              __typename: "GadgetNumberConfig";
+              decimals?: number | null;
+              fieldType: GadgetFieldType;
+              validations: Array<
+                | { __typename: "GadgetGenericFieldValidation"; name: string; specID: string }
+                | { __typename: "GadgetOnlyImageFileFieldValidation"; name: string; specID: string; allowAnimatedImages: boolean }
+                | { __typename: "GadgetRangeFieldValidation"; name: string; specID: string; min?: number | null; max?: number | null }
+                | { __typename: "GadgetRegexFieldValidation"; name: string; specID: string; pattern?: string | null }
+                | null
+              >;
+            }
+          | {
+              __typename: "GadgetObjectFieldConfig";
+              name?: string | null;
+              fieldType: GadgetFieldType;
+              fields: Array<{
+                __typename?: "GadgetModelField";
+                sortable: boolean;
+                filterable: boolean;
+                name: string;
+                apiIdentifier: string;
+                fieldType: GadgetFieldType;
+                requiredArgumentForInput: boolean;
+                configuration:
+                  | {
+                      __typename: "GadgetBelongsToConfig";
+                      fieldType: GadgetFieldType;
+                      relatedModel?: {
+                        __typename?: "GadgetModel";
+                        key: string;
+                        name: string;
+                        apiIdentifier: string;
+                        namespace?: Array<string> | null;
+                      } | null;
+                      validations: Array<
+                        | { __typename: "GadgetGenericFieldValidation"; name: string; specID: string }
+                        | { __typename: "GadgetOnlyImageFileFieldValidation"; name: string; specID: string; allowAnimatedImages: boolean }
+                        | {
+                            __typename: "GadgetRangeFieldValidation";
+                            name: string;
+                            specID: string;
+                            min?: number | null;
+                            max?: number | null;
+                          }
+                        | { __typename: "GadgetRegexFieldValidation"; name: string; specID: string; pattern?: string | null }
+                        | null
+                      >;
+                    }
+                  | {
+                      __typename: "GadgetDateTimeConfig";
+                      includeTime: boolean;
+                      fieldType: GadgetFieldType;
+                      validations: Array<
+                        | { __typename: "GadgetGenericFieldValidation"; name: string; specID: string }
+                        | { __typename: "GadgetOnlyImageFileFieldValidation"; name: string; specID: string; allowAnimatedImages: boolean }
+                        | {
+                            __typename: "GadgetRangeFieldValidation";
+                            name: string;
+                            specID: string;
+                            min?: number | null;
+                            max?: number | null;
+                          }
+                        | { __typename: "GadgetRegexFieldValidation"; name: string; specID: string; pattern?: string | null }
+                        | null
+                      >;
+                    }
+                  | {
+                      __typename: "GadgetEnumConfig";
+                      allowMultiple: boolean;
+                      allowOther: boolean;
+                      fieldType: GadgetFieldType;
+                      options: Array<{ __typename?: "GadgetEnumOption"; name: string; color: string }>;
+                      validations: Array<
+                        | { __typename: "GadgetGenericFieldValidation"; name: string; specID: string }
+                        | { __typename: "GadgetOnlyImageFileFieldValidation"; name: string; specID: string; allowAnimatedImages: boolean }
+                        | {
+                            __typename: "GadgetRangeFieldValidation";
+                            name: string;
+                            specID: string;
+                            min?: number | null;
+                            max?: number | null;
+                          }
+                        | { __typename: "GadgetRegexFieldValidation"; name: string; specID: string; pattern?: string | null }
+                        | null
+                      >;
+                    }
+                  | {
+                      __typename: "GadgetGenericFieldConfig";
+                      fieldType: GadgetFieldType;
+                      validations: Array<
+                        | { __typename: "GadgetGenericFieldValidation"; name: string; specID: string }
+                        | { __typename: "GadgetOnlyImageFileFieldValidation"; name: string; specID: string; allowAnimatedImages: boolean }
+                        | {
+                            __typename: "GadgetRangeFieldValidation";
+                            name: string;
+                            specID: string;
+                            min?: number | null;
+                            max?: number | null;
+                          }
+                        | { __typename: "GadgetRegexFieldValidation"; name: string; specID: string; pattern?: string | null }
+                        | null
+                      >;
+                    }
+                  | {
+                      __typename: "GadgetHasManyConfig";
+                      isJoinModelHasManyField: boolean;
+                      fieldType: GadgetFieldType;
+                      relatedModel?: {
+                        __typename?: "GadgetModel";
+                        key: string;
+                        name: string;
+                        apiIdentifier: string;
+                        namespace?: Array<string> | null;
+                      } | null;
+                      inverseField?: { __typename?: "GadgetModelField"; apiIdentifier: string } | null;
+                      validations: Array<
+                        | { __typename: "GadgetGenericFieldValidation"; name: string; specID: string }
+                        | { __typename: "GadgetOnlyImageFileFieldValidation"; name: string; specID: string; allowAnimatedImages: boolean }
+                        | {
+                            __typename: "GadgetRangeFieldValidation";
+                            name: string;
+                            specID: string;
+                            min?: number | null;
+                            max?: number | null;
+                          }
+                        | { __typename: "GadgetRegexFieldValidation"; name: string; specID: string; pattern?: string | null }
+                        | null
+                      >;
+                    }
+                  | {
+                      __typename: "GadgetHasManyThroughConfig";
+                      fieldType: GadgetFieldType;
+                      relatedModel?: {
+                        __typename?: "GadgetModel";
+                        key: string;
+                        name: string;
+                        apiIdentifier: string;
+                        namespace?: Array<string> | null;
+                      } | null;
+                      inverseField?: { __typename?: "GadgetModelField"; apiIdentifier: string } | null;
+                      joinModel?: {
+                        __typename?: "GadgetModel";
+                        key: string;
+                        apiIdentifier: string;
+                        namespace?: Array<string> | null;
+                      } | null;
+                      inverseJoinModelField?: { __typename?: "GadgetModelField"; apiIdentifier: string } | null;
+                      inverseRelatedModelField?: { __typename?: "GadgetModelField"; apiIdentifier: string } | null;
+                      validations: Array<
+                        | { __typename: "GadgetGenericFieldValidation"; name: string; specID: string }
+                        | { __typename: "GadgetOnlyImageFileFieldValidation"; name: string; specID: string; allowAnimatedImages: boolean }
+                        | {
+                            __typename: "GadgetRangeFieldValidation";
+                            name: string;
+                            specID: string;
+                            min?: number | null;
+                            max?: number | null;
+                          }
+                        | { __typename: "GadgetRegexFieldValidation"; name: string; specID: string; pattern?: string | null }
+                        | null
+                      >;
+                    }
+                  | {
+                      __typename: "GadgetHasOneConfig";
+                      fieldType: GadgetFieldType;
+                      relatedModel?: {
+                        __typename?: "GadgetModel";
+                        key: string;
+                        name: string;
+                        apiIdentifier: string;
+                        namespace?: Array<string> | null;
+                      } | null;
+                      inverseField?: { __typename?: "GadgetModelField"; apiIdentifier: string } | null;
+                      validations: Array<
+                        | { __typename: "GadgetGenericFieldValidation"; name: string; specID: string }
+                        | { __typename: "GadgetOnlyImageFileFieldValidation"; name: string; specID: string; allowAnimatedImages: boolean }
+                        | {
+                            __typename: "GadgetRangeFieldValidation";
+                            name: string;
+                            specID: string;
+                            min?: number | null;
+                            max?: number | null;
+                          }
+                        | { __typename: "GadgetRegexFieldValidation"; name: string; specID: string; pattern?: string | null }
+                        | null
+                      >;
+                    }
+                  | {
+                      __typename: "GadgetNumberConfig";
+                      decimals?: number | null;
+                      fieldType: GadgetFieldType;
+                      validations: Array<
+                        | { __typename: "GadgetGenericFieldValidation"; name: string; specID: string }
+                        | { __typename: "GadgetOnlyImageFileFieldValidation"; name: string; specID: string; allowAnimatedImages: boolean }
+                        | {
+                            __typename: "GadgetRangeFieldValidation";
+                            name: string;
+                            specID: string;
+                            min?: number | null;
+                            max?: number | null;
+                          }
+                        | { __typename: "GadgetRegexFieldValidation"; name: string; specID: string; pattern?: string | null }
+                        | null
+                      >;
+                    }
+                  | {
+                      __typename: "GadgetObjectFieldConfig";
+                      name?: string | null;
+                      fieldType: GadgetFieldType;
+                      fields: Array<{
+                        __typename?: "GadgetModelField";
+                        sortable: boolean;
+                        filterable: boolean;
+                        name: string;
+                        apiIdentifier: string;
+                        fieldType: GadgetFieldType;
+                        requiredArgumentForInput: boolean;
+                        configuration:
+                          | {
+                              __typename: "GadgetBelongsToConfig";
+                              fieldType: GadgetFieldType;
+                              relatedModel?: {
+                                __typename?: "GadgetModel";
+                                key: string;
+                                name: string;
+                                apiIdentifier: string;
+                                namespace?: Array<string> | null;
+                              } | null;
+                              validations: Array<
+                                | { __typename: "GadgetGenericFieldValidation"; name: string; specID: string }
+                                | {
+                                    __typename: "GadgetOnlyImageFileFieldValidation";
+                                    name: string;
+                                    specID: string;
+                                    allowAnimatedImages: boolean;
+                                  }
+                                | {
+                                    __typename: "GadgetRangeFieldValidation";
+                                    name: string;
+                                    specID: string;
+                                    min?: number | null;
+                                    max?: number | null;
+                                  }
+                                | { __typename: "GadgetRegexFieldValidation"; name: string; specID: string; pattern?: string | null }
+                                | null
+                              >;
+                            }
+                          | {
+                              __typename: "GadgetDateTimeConfig";
+                              includeTime: boolean;
+                              fieldType: GadgetFieldType;
+                              validations: Array<
+                                | { __typename: "GadgetGenericFieldValidation"; name: string; specID: string }
+                                | {
+                                    __typename: "GadgetOnlyImageFileFieldValidation";
+                                    name: string;
+                                    specID: string;
+                                    allowAnimatedImages: boolean;
+                                  }
+                                | {
+                                    __typename: "GadgetRangeFieldValidation";
+                                    name: string;
+                                    specID: string;
+                                    min?: number | null;
+                                    max?: number | null;
+                                  }
+                                | { __typename: "GadgetRegexFieldValidation"; name: string; specID: string; pattern?: string | null }
+                                | null
+                              >;
+                            }
+                          | {
+                              __typename: "GadgetEnumConfig";
+                              allowMultiple: boolean;
+                              allowOther: boolean;
+                              fieldType: GadgetFieldType;
+                              options: Array<{ __typename?: "GadgetEnumOption"; name: string; color: string }>;
+                              validations: Array<
+                                | { __typename: "GadgetGenericFieldValidation"; name: string; specID: string }
+                                | {
+                                    __typename: "GadgetOnlyImageFileFieldValidation";
+                                    name: string;
+                                    specID: string;
+                                    allowAnimatedImages: boolean;
+                                  }
+                                | {
+                                    __typename: "GadgetRangeFieldValidation";
+                                    name: string;
+                                    specID: string;
+                                    min?: number | null;
+                                    max?: number | null;
+                                  }
+                                | { __typename: "GadgetRegexFieldValidation"; name: string; specID: string; pattern?: string | null }
+                                | null
+                              >;
+                            }
+                          | {
+                              __typename: "GadgetGenericFieldConfig";
+                              fieldType: GadgetFieldType;
+                              validations: Array<
+                                | { __typename: "GadgetGenericFieldValidation"; name: string; specID: string }
+                                | {
+                                    __typename: "GadgetOnlyImageFileFieldValidation";
+                                    name: string;
+                                    specID: string;
+                                    allowAnimatedImages: boolean;
+                                  }
+                                | {
+                                    __typename: "GadgetRangeFieldValidation";
+                                    name: string;
+                                    specID: string;
+                                    min?: number | null;
+                                    max?: number | null;
+                                  }
+                                | { __typename: "GadgetRegexFieldValidation"; name: string; specID: string; pattern?: string | null }
+                                | null
+                              >;
+                            }
+                          | {
+                              __typename: "GadgetHasManyConfig";
+                              isJoinModelHasManyField: boolean;
+                              fieldType: GadgetFieldType;
+                              relatedModel?: {
+                                __typename?: "GadgetModel";
+                                key: string;
+                                name: string;
+                                apiIdentifier: string;
+                                namespace?: Array<string> | null;
+                              } | null;
+                              inverseField?: { __typename?: "GadgetModelField"; apiIdentifier: string } | null;
+                              validations: Array<
+                                | { __typename: "GadgetGenericFieldValidation"; name: string; specID: string }
+                                | {
+                                    __typename: "GadgetOnlyImageFileFieldValidation";
+                                    name: string;
+                                    specID: string;
+                                    allowAnimatedImages: boolean;
+                                  }
+                                | {
+                                    __typename: "GadgetRangeFieldValidation";
+                                    name: string;
+                                    specID: string;
+                                    min?: number | null;
+                                    max?: number | null;
+                                  }
+                                | { __typename: "GadgetRegexFieldValidation"; name: string; specID: string; pattern?: string | null }
+                                | null
+                              >;
+                            }
+                          | {
+                              __typename: "GadgetHasManyThroughConfig";
+                              fieldType: GadgetFieldType;
+                              relatedModel?: {
+                                __typename?: "GadgetModel";
+                                key: string;
+                                name: string;
+                                apiIdentifier: string;
+                                namespace?: Array<string> | null;
+                              } | null;
+                              inverseField?: { __typename?: "GadgetModelField"; apiIdentifier: string } | null;
+                              joinModel?: {
+                                __typename?: "GadgetModel";
+                                key: string;
+                                apiIdentifier: string;
+                                namespace?: Array<string> | null;
+                              } | null;
+                              inverseJoinModelField?: { __typename?: "GadgetModelField"; apiIdentifier: string } | null;
+                              inverseRelatedModelField?: { __typename?: "GadgetModelField"; apiIdentifier: string } | null;
+                              validations: Array<
+                                | { __typename: "GadgetGenericFieldValidation"; name: string; specID: string }
+                                | {
+                                    __typename: "GadgetOnlyImageFileFieldValidation";
+                                    name: string;
+                                    specID: string;
+                                    allowAnimatedImages: boolean;
+                                  }
+                                | {
+                                    __typename: "GadgetRangeFieldValidation";
+                                    name: string;
+                                    specID: string;
+                                    min?: number | null;
+                                    max?: number | null;
+                                  }
+                                | { __typename: "GadgetRegexFieldValidation"; name: string; specID: string; pattern?: string | null }
+                                | null
+                              >;
+                            }
+                          | {
+                              __typename: "GadgetHasOneConfig";
+                              fieldType: GadgetFieldType;
+                              relatedModel?: {
+                                __typename?: "GadgetModel";
+                                key: string;
+                                name: string;
+                                apiIdentifier: string;
+                                namespace?: Array<string> | null;
+                              } | null;
+                              inverseField?: { __typename?: "GadgetModelField"; apiIdentifier: string } | null;
+                              validations: Array<
+                                | { __typename: "GadgetGenericFieldValidation"; name: string; specID: string }
+                                | {
+                                    __typename: "GadgetOnlyImageFileFieldValidation";
+                                    name: string;
+                                    specID: string;
+                                    allowAnimatedImages: boolean;
+                                  }
+                                | {
+                                    __typename: "GadgetRangeFieldValidation";
+                                    name: string;
+                                    specID: string;
+                                    min?: number | null;
+                                    max?: number | null;
+                                  }
+                                | { __typename: "GadgetRegexFieldValidation"; name: string; specID: string; pattern?: string | null }
+                                | null
+                              >;
+                            }
+                          | {
+                              __typename: "GadgetNumberConfig";
+                              decimals?: number | null;
+                              fieldType: GadgetFieldType;
+                              validations: Array<
+                                | { __typename: "GadgetGenericFieldValidation"; name: string; specID: string }
+                                | {
+                                    __typename: "GadgetOnlyImageFileFieldValidation";
+                                    name: string;
+                                    specID: string;
+                                    allowAnimatedImages: boolean;
+                                  }
+                                | {
+                                    __typename: "GadgetRangeFieldValidation";
+                                    name: string;
+                                    specID: string;
+                                    min?: number | null;
+                                    max?: number | null;
+                                  }
+                                | { __typename: "GadgetRegexFieldValidation"; name: string; specID: string; pattern?: string | null }
+                                | null
+                              >;
+                            }
+                          | {
+                              __typename: "GadgetObjectFieldConfig";
+                              name?: string | null;
+                              fieldType: GadgetFieldType;
+                              fields: Array<{
+                                __typename?: "GadgetModelField";
+                                sortable: boolean;
+                                filterable: boolean;
+                                name: string;
+                                apiIdentifier: string;
+                                fieldType: GadgetFieldType;
+                                requiredArgumentForInput: boolean;
+                                configuration:
+                                  | {
+                                      __typename: "GadgetBelongsToConfig";
+                                      fieldType: GadgetFieldType;
+                                      relatedModel?: {
+                                        __typename?: "GadgetModel";
+                                        key: string;
+                                        name: string;
+                                        apiIdentifier: string;
+                                        namespace?: Array<string> | null;
+                                      } | null;
+                                      validations: Array<
+                                        | { __typename: "GadgetGenericFieldValidation"; name: string; specID: string }
+                                        | {
+                                            __typename: "GadgetOnlyImageFileFieldValidation";
+                                            name: string;
+                                            specID: string;
+                                            allowAnimatedImages: boolean;
+                                          }
+                                        | {
+                                            __typename: "GadgetRangeFieldValidation";
+                                            name: string;
+                                            specID: string;
+                                            min?: number | null;
+                                            max?: number | null;
+                                          }
+                                        | {
+                                            __typename: "GadgetRegexFieldValidation";
+                                            name: string;
+                                            specID: string;
+                                            pattern?: string | null;
+                                          }
+                                        | null
+                                      >;
+                                    }
+                                  | {
+                                      __typename: "GadgetDateTimeConfig";
+                                      includeTime: boolean;
+                                      fieldType: GadgetFieldType;
+                                      validations: Array<
+                                        | { __typename: "GadgetGenericFieldValidation"; name: string; specID: string }
+                                        | {
+                                            __typename: "GadgetOnlyImageFileFieldValidation";
+                                            name: string;
+                                            specID: string;
+                                            allowAnimatedImages: boolean;
+                                          }
+                                        | {
+                                            __typename: "GadgetRangeFieldValidation";
+                                            name: string;
+                                            specID: string;
+                                            min?: number | null;
+                                            max?: number | null;
+                                          }
+                                        | {
+                                            __typename: "GadgetRegexFieldValidation";
+                                            name: string;
+                                            specID: string;
+                                            pattern?: string | null;
+                                          }
+                                        | null
+                                      >;
+                                    }
+                                  | {
+                                      __typename: "GadgetEnumConfig";
+                                      allowMultiple: boolean;
+                                      allowOther: boolean;
+                                      fieldType: GadgetFieldType;
+                                      options: Array<{ __typename?: "GadgetEnumOption"; name: string; color: string }>;
+                                      validations: Array<
+                                        | { __typename: "GadgetGenericFieldValidation"; name: string; specID: string }
+                                        | {
+                                            __typename: "GadgetOnlyImageFileFieldValidation";
+                                            name: string;
+                                            specID: string;
+                                            allowAnimatedImages: boolean;
+                                          }
+                                        | {
+                                            __typename: "GadgetRangeFieldValidation";
+                                            name: string;
+                                            specID: string;
+                                            min?: number | null;
+                                            max?: number | null;
+                                          }
+                                        | {
+                                            __typename: "GadgetRegexFieldValidation";
+                                            name: string;
+                                            specID: string;
+                                            pattern?: string | null;
+                                          }
+                                        | null
+                                      >;
+                                    }
+                                  | {
+                                      __typename: "GadgetGenericFieldConfig";
+                                      fieldType: GadgetFieldType;
+                                      validations: Array<
+                                        | { __typename: "GadgetGenericFieldValidation"; name: string; specID: string }
+                                        | {
+                                            __typename: "GadgetOnlyImageFileFieldValidation";
+                                            name: string;
+                                            specID: string;
+                                            allowAnimatedImages: boolean;
+                                          }
+                                        | {
+                                            __typename: "GadgetRangeFieldValidation";
+                                            name: string;
+                                            specID: string;
+                                            min?: number | null;
+                                            max?: number | null;
+                                          }
+                                        | {
+                                            __typename: "GadgetRegexFieldValidation";
+                                            name: string;
+                                            specID: string;
+                                            pattern?: string | null;
+                                          }
+                                        | null
+                                      >;
+                                    }
+                                  | {
+                                      __typename: "GadgetHasManyConfig";
+                                      isJoinModelHasManyField: boolean;
+                                      fieldType: GadgetFieldType;
+                                      relatedModel?: {
+                                        __typename?: "GadgetModel";
+                                        key: string;
+                                        name: string;
+                                        apiIdentifier: string;
+                                        namespace?: Array<string> | null;
+                                      } | null;
+                                      inverseField?: { __typename?: "GadgetModelField"; apiIdentifier: string } | null;
+                                      validations: Array<
+                                        | { __typename: "GadgetGenericFieldValidation"; name: string; specID: string }
+                                        | {
+                                            __typename: "GadgetOnlyImageFileFieldValidation";
+                                            name: string;
+                                            specID: string;
+                                            allowAnimatedImages: boolean;
+                                          }
+                                        | {
+                                            __typename: "GadgetRangeFieldValidation";
+                                            name: string;
+                                            specID: string;
+                                            min?: number | null;
+                                            max?: number | null;
+                                          }
+                                        | {
+                                            __typename: "GadgetRegexFieldValidation";
+                                            name: string;
+                                            specID: string;
+                                            pattern?: string | null;
+                                          }
+                                        | null
+                                      >;
+                                    }
+                                  | {
+                                      __typename: "GadgetHasManyThroughConfig";
+                                      fieldType: GadgetFieldType;
+                                      relatedModel?: {
+                                        __typename?: "GadgetModel";
+                                        key: string;
+                                        name: string;
+                                        apiIdentifier: string;
+                                        namespace?: Array<string> | null;
+                                      } | null;
+                                      inverseField?: { __typename?: "GadgetModelField"; apiIdentifier: string } | null;
+                                      joinModel?: {
+                                        __typename?: "GadgetModel";
+                                        key: string;
+                                        apiIdentifier: string;
+                                        namespace?: Array<string> | null;
+                                      } | null;
+                                      inverseJoinModelField?: { __typename?: "GadgetModelField"; apiIdentifier: string } | null;
+                                      inverseRelatedModelField?: { __typename?: "GadgetModelField"; apiIdentifier: string } | null;
+                                      validations: Array<
+                                        | { __typename: "GadgetGenericFieldValidation"; name: string; specID: string }
+                                        | {
+                                            __typename: "GadgetOnlyImageFileFieldValidation";
+                                            name: string;
+                                            specID: string;
+                                            allowAnimatedImages: boolean;
+                                          }
+                                        | {
+                                            __typename: "GadgetRangeFieldValidation";
+                                            name: string;
+                                            specID: string;
+                                            min?: number | null;
+                                            max?: number | null;
+                                          }
+                                        | {
+                                            __typename: "GadgetRegexFieldValidation";
+                                            name: string;
+                                            specID: string;
+                                            pattern?: string | null;
+                                          }
+                                        | null
+                                      >;
+                                    }
+                                  | {
+                                      __typename: "GadgetHasOneConfig";
+                                      fieldType: GadgetFieldType;
+                                      relatedModel?: {
+                                        __typename?: "GadgetModel";
+                                        key: string;
+                                        name: string;
+                                        apiIdentifier: string;
+                                        namespace?: Array<string> | null;
+                                      } | null;
+                                      inverseField?: { __typename?: "GadgetModelField"; apiIdentifier: string } | null;
+                                      validations: Array<
+                                        | { __typename: "GadgetGenericFieldValidation"; name: string; specID: string }
+                                        | {
+                                            __typename: "GadgetOnlyImageFileFieldValidation";
+                                            name: string;
+                                            specID: string;
+                                            allowAnimatedImages: boolean;
+                                          }
+                                        | {
+                                            __typename: "GadgetRangeFieldValidation";
+                                            name: string;
+                                            specID: string;
+                                            min?: number | null;
+                                            max?: number | null;
+                                          }
+                                        | {
+                                            __typename: "GadgetRegexFieldValidation";
+                                            name: string;
+                                            specID: string;
+                                            pattern?: string | null;
+                                          }
+                                        | null
+                                      >;
+                                    }
+                                  | {
+                                      __typename: "GadgetNumberConfig";
+                                      decimals?: number | null;
+                                      fieldType: GadgetFieldType;
+                                      validations: Array<
+                                        | { __typename: "GadgetGenericFieldValidation"; name: string; specID: string }
+                                        | {
+                                            __typename: "GadgetOnlyImageFileFieldValidation";
+                                            name: string;
+                                            specID: string;
+                                            allowAnimatedImages: boolean;
+                                          }
+                                        | {
+                                            __typename: "GadgetRangeFieldValidation";
+                                            name: string;
+                                            specID: string;
+                                            min?: number | null;
+                                            max?: number | null;
+                                          }
+                                        | {
+                                            __typename: "GadgetRegexFieldValidation";
+                                            name: string;
+                                            specID: string;
+                                            pattern?: string | null;
+                                          }
+                                        | null
+                                      >;
+                                    }
+                                  | {
+                                      __typename: "GadgetObjectFieldConfig";
+                                      fieldType: GadgetFieldType;
+                                      validations: Array<
+                                        | { __typename: "GadgetGenericFieldValidation"; name: string; specID: string }
+                                        | {
+                                            __typename: "GadgetOnlyImageFileFieldValidation";
+                                            name: string;
+                                            specID: string;
+                                            allowAnimatedImages: boolean;
+                                          }
+                                        | {
+                                            __typename: "GadgetRangeFieldValidation";
+                                            name: string;
+                                            specID: string;
+                                            min?: number | null;
+                                            max?: number | null;
+                                          }
+                                        | {
+                                            __typename: "GadgetRegexFieldValidation";
+                                            name: string;
+                                            specID: string;
+                                            pattern?: string | null;
+                                          }
+                                        | null
+                                      >;
+                                    };
+                              }>;
+                              validations: Array<
+                                | { __typename: "GadgetGenericFieldValidation"; name: string; specID: string }
+                                | {
+                                    __typename: "GadgetOnlyImageFileFieldValidation";
+                                    name: string;
+                                    specID: string;
+                                    allowAnimatedImages: boolean;
+                                  }
+                                | {
+                                    __typename: "GadgetRangeFieldValidation";
+                                    name: string;
+                                    specID: string;
+                                    min?: number | null;
+                                    max?: number | null;
+                                  }
+                                | { __typename: "GadgetRegexFieldValidation"; name: string; specID: string; pattern?: string | null }
+                                | null
+                              >;
+                            };
+                      }>;
+                      validations: Array<
+                        | { __typename: "GadgetGenericFieldValidation"; name: string; specID: string }
+                        | { __typename: "GadgetOnlyImageFileFieldValidation"; name: string; specID: string; allowAnimatedImages: boolean }
+                        | {
+                            __typename: "GadgetRangeFieldValidation";
+                            name: string;
+                            specID: string;
+                            min?: number | null;
+                            max?: number | null;
+                          }
+                        | { __typename: "GadgetRegexFieldValidation"; name: string; specID: string; pattern?: string | null }
+                        | null
+                      >;
+                    };
+              }>;
+              validations: Array<
+                | { __typename: "GadgetGenericFieldValidation"; name: string; specID: string }
+                | { __typename: "GadgetOnlyImageFileFieldValidation"; name: string; specID: string; allowAnimatedImages: boolean }
+                | { __typename: "GadgetRangeFieldValidation"; name: string; specID: string; min?: number | null; max?: number | null }
+                | { __typename: "GadgetRegexFieldValidation"; name: string; specID: string; pattern?: string | null }
+                | null
+              >;
+            };
+      }>;
+      defaultDisplayField: { __typename?: "GadgetModelField"; name: string; apiIdentifier: string; fieldType: GadgetFieldType };
+    }>;
     model?: {
       __typename?: "GadgetModel";
+      key: string;
       name: string;
+      namespace?: Array<string> | null;
       apiIdentifier: string;
       defaultRecord: any;
       action?: {
@@ -13912,10 +16023,9 @@ export type ModelActionMetadataQuery = {
                 relatedModel?: {
                   __typename?: "GadgetModel";
                   key: string;
+                  name: string;
                   apiIdentifier: string;
                   namespace?: Array<string> | null;
-                  defaultDisplayField: { __typename?: "GadgetModelField"; name: string; apiIdentifier: string; fieldType: GadgetFieldType };
-                  fields?: Array<{ __typename?: "GadgetModelField"; name: string; apiIdentifier: string; fieldType: GadgetFieldType }>;
                 } | null;
                 validations: Array<
                   | { __typename: "GadgetGenericFieldValidation"; name: string; specID: string }
@@ -13969,10 +16079,9 @@ export type ModelActionMetadataQuery = {
                 relatedModel?: {
                   __typename?: "GadgetModel";
                   key: string;
+                  name: string;
                   apiIdentifier: string;
                   namespace?: Array<string> | null;
-                  defaultDisplayField: { __typename?: "GadgetModelField"; name: string; apiIdentifier: string; fieldType: GadgetFieldType };
-                  fields?: Array<{ __typename?: "GadgetModelField"; name: string; apiIdentifier: string; fieldType: GadgetFieldType }>;
                 } | null;
                 inverseField?: { __typename?: "GadgetModelField"; apiIdentifier: string } | null;
                 validations: Array<
@@ -13989,19 +16098,12 @@ export type ModelActionMetadataQuery = {
                 relatedModel?: {
                   __typename?: "GadgetModel";
                   key: string;
+                  name: string;
                   apiIdentifier: string;
                   namespace?: Array<string> | null;
-                  defaultDisplayField: { __typename?: "GadgetModelField"; name: string; apiIdentifier: string; fieldType: GadgetFieldType };
-                  fields?: Array<{ __typename?: "GadgetModelField"; name: string; apiIdentifier: string; fieldType: GadgetFieldType }>;
                 } | null;
                 inverseField?: { __typename?: "GadgetModelField"; apiIdentifier: string } | null;
-                joinModel?: {
-                  __typename?: "GadgetModel";
-                  key: string;
-                  apiIdentifier: string;
-                  namespace?: Array<string> | null;
-                  defaultDisplayField: { __typename?: "GadgetModelField"; name: string; apiIdentifier: string; fieldType: GadgetFieldType };
-                } | null;
+                joinModel?: { __typename?: "GadgetModel"; key: string; apiIdentifier: string; namespace?: Array<string> | null } | null;
                 inverseJoinModelField?: { __typename?: "GadgetModelField"; apiIdentifier: string } | null;
                 inverseRelatedModelField?: { __typename?: "GadgetModelField"; apiIdentifier: string } | null;
                 validations: Array<
@@ -14018,10 +16120,9 @@ export type ModelActionMetadataQuery = {
                 relatedModel?: {
                   __typename?: "GadgetModel";
                   key: string;
+                  name: string;
                   apiIdentifier: string;
                   namespace?: Array<string> | null;
-                  defaultDisplayField: { __typename?: "GadgetModelField"; name: string; apiIdentifier: string; fieldType: GadgetFieldType };
-                  fields?: Array<{ __typename?: "GadgetModelField"; name: string; apiIdentifier: string; fieldType: GadgetFieldType }>;
                 } | null;
                 inverseField?: { __typename?: "GadgetModelField"; apiIdentifier: string } | null;
                 validations: Array<
@@ -14063,20 +16164,9 @@ export type ModelActionMetadataQuery = {
                         relatedModel?: {
                           __typename?: "GadgetModel";
                           key: string;
+                          name: string;
                           apiIdentifier: string;
                           namespace?: Array<string> | null;
-                          defaultDisplayField: {
-                            __typename?: "GadgetModelField";
-                            name: string;
-                            apiIdentifier: string;
-                            fieldType: GadgetFieldType;
-                          };
-                          fields?: Array<{
-                            __typename?: "GadgetModelField";
-                            name: string;
-                            apiIdentifier: string;
-                            fieldType: GadgetFieldType;
-                          }>;
                         } | null;
                         validations: Array<
                           | { __typename: "GadgetGenericFieldValidation"; name: string; specID: string }
@@ -14154,20 +16244,9 @@ export type ModelActionMetadataQuery = {
                         relatedModel?: {
                           __typename?: "GadgetModel";
                           key: string;
+                          name: string;
                           apiIdentifier: string;
                           namespace?: Array<string> | null;
-                          defaultDisplayField: {
-                            __typename?: "GadgetModelField";
-                            name: string;
-                            apiIdentifier: string;
-                            fieldType: GadgetFieldType;
-                          };
-                          fields?: Array<{
-                            __typename?: "GadgetModelField";
-                            name: string;
-                            apiIdentifier: string;
-                            fieldType: GadgetFieldType;
-                          }>;
                         } | null;
                         inverseField?: { __typename?: "GadgetModelField"; apiIdentifier: string } | null;
                         validations: Array<
@@ -14190,20 +16269,9 @@ export type ModelActionMetadataQuery = {
                         relatedModel?: {
                           __typename?: "GadgetModel";
                           key: string;
+                          name: string;
                           apiIdentifier: string;
                           namespace?: Array<string> | null;
-                          defaultDisplayField: {
-                            __typename?: "GadgetModelField";
-                            name: string;
-                            apiIdentifier: string;
-                            fieldType: GadgetFieldType;
-                          };
-                          fields?: Array<{
-                            __typename?: "GadgetModelField";
-                            name: string;
-                            apiIdentifier: string;
-                            fieldType: GadgetFieldType;
-                          }>;
                         } | null;
                         inverseField?: { __typename?: "GadgetModelField"; apiIdentifier: string } | null;
                         joinModel?: {
@@ -14211,12 +16279,6 @@ export type ModelActionMetadataQuery = {
                           key: string;
                           apiIdentifier: string;
                           namespace?: Array<string> | null;
-                          defaultDisplayField: {
-                            __typename?: "GadgetModelField";
-                            name: string;
-                            apiIdentifier: string;
-                            fieldType: GadgetFieldType;
-                          };
                         } | null;
                         inverseJoinModelField?: { __typename?: "GadgetModelField"; apiIdentifier: string } | null;
                         inverseRelatedModelField?: { __typename?: "GadgetModelField"; apiIdentifier: string } | null;
@@ -14240,20 +16302,9 @@ export type ModelActionMetadataQuery = {
                         relatedModel?: {
                           __typename?: "GadgetModel";
                           key: string;
+                          name: string;
                           apiIdentifier: string;
                           namespace?: Array<string> | null;
-                          defaultDisplayField: {
-                            __typename?: "GadgetModelField";
-                            name: string;
-                            apiIdentifier: string;
-                            fieldType: GadgetFieldType;
-                          };
-                          fields?: Array<{
-                            __typename?: "GadgetModelField";
-                            name: string;
-                            apiIdentifier: string;
-                            fieldType: GadgetFieldType;
-                          }>;
                         } | null;
                         inverseField?: { __typename?: "GadgetModelField"; apiIdentifier: string } | null;
                         validations: Array<
@@ -14307,20 +16358,9 @@ export type ModelActionMetadataQuery = {
                                 relatedModel?: {
                                   __typename?: "GadgetModel";
                                   key: string;
+                                  name: string;
                                   apiIdentifier: string;
                                   namespace?: Array<string> | null;
-                                  defaultDisplayField: {
-                                    __typename?: "GadgetModelField";
-                                    name: string;
-                                    apiIdentifier: string;
-                                    fieldType: GadgetFieldType;
-                                  };
-                                  fields?: Array<{
-                                    __typename?: "GadgetModelField";
-                                    name: string;
-                                    apiIdentifier: string;
-                                    fieldType: GadgetFieldType;
-                                  }>;
                                 } | null;
                                 validations: Array<
                                   | { __typename: "GadgetGenericFieldValidation"; name: string; specID: string }
@@ -14418,20 +16458,9 @@ export type ModelActionMetadataQuery = {
                                 relatedModel?: {
                                   __typename?: "GadgetModel";
                                   key: string;
+                                  name: string;
                                   apiIdentifier: string;
                                   namespace?: Array<string> | null;
-                                  defaultDisplayField: {
-                                    __typename?: "GadgetModelField";
-                                    name: string;
-                                    apiIdentifier: string;
-                                    fieldType: GadgetFieldType;
-                                  };
-                                  fields?: Array<{
-                                    __typename?: "GadgetModelField";
-                                    name: string;
-                                    apiIdentifier: string;
-                                    fieldType: GadgetFieldType;
-                                  }>;
                                 } | null;
                                 inverseField?: { __typename?: "GadgetModelField"; apiIdentifier: string } | null;
                                 validations: Array<
@@ -14459,20 +16488,9 @@ export type ModelActionMetadataQuery = {
                                 relatedModel?: {
                                   __typename?: "GadgetModel";
                                   key: string;
+                                  name: string;
                                   apiIdentifier: string;
                                   namespace?: Array<string> | null;
-                                  defaultDisplayField: {
-                                    __typename?: "GadgetModelField";
-                                    name: string;
-                                    apiIdentifier: string;
-                                    fieldType: GadgetFieldType;
-                                  };
-                                  fields?: Array<{
-                                    __typename?: "GadgetModelField";
-                                    name: string;
-                                    apiIdentifier: string;
-                                    fieldType: GadgetFieldType;
-                                  }>;
                                 } | null;
                                 inverseField?: { __typename?: "GadgetModelField"; apiIdentifier: string } | null;
                                 joinModel?: {
@@ -14480,12 +16498,6 @@ export type ModelActionMetadataQuery = {
                                   key: string;
                                   apiIdentifier: string;
                                   namespace?: Array<string> | null;
-                                  defaultDisplayField: {
-                                    __typename?: "GadgetModelField";
-                                    name: string;
-                                    apiIdentifier: string;
-                                    fieldType: GadgetFieldType;
-                                  };
                                 } | null;
                                 inverseJoinModelField?: { __typename?: "GadgetModelField"; apiIdentifier: string } | null;
                                 inverseRelatedModelField?: { __typename?: "GadgetModelField"; apiIdentifier: string } | null;
@@ -14514,20 +16526,9 @@ export type ModelActionMetadataQuery = {
                                 relatedModel?: {
                                   __typename?: "GadgetModel";
                                   key: string;
+                                  name: string;
                                   apiIdentifier: string;
                                   namespace?: Array<string> | null;
-                                  defaultDisplayField: {
-                                    __typename?: "GadgetModelField";
-                                    name: string;
-                                    apiIdentifier: string;
-                                    fieldType: GadgetFieldType;
-                                  };
-                                  fields?: Array<{
-                                    __typename?: "GadgetModelField";
-                                    name: string;
-                                    apiIdentifier: string;
-                                    fieldType: GadgetFieldType;
-                                  }>;
                                 } | null;
                                 inverseField?: { __typename?: "GadgetModelField"; apiIdentifier: string } | null;
                                 validations: Array<
@@ -14591,20 +16592,9 @@ export type ModelActionMetadataQuery = {
                                         relatedModel?: {
                                           __typename?: "GadgetModel";
                                           key: string;
+                                          name: string;
                                           apiIdentifier: string;
                                           namespace?: Array<string> | null;
-                                          defaultDisplayField: {
-                                            __typename?: "GadgetModelField";
-                                            name: string;
-                                            apiIdentifier: string;
-                                            fieldType: GadgetFieldType;
-                                          };
-                                          fields?: Array<{
-                                            __typename?: "GadgetModelField";
-                                            name: string;
-                                            apiIdentifier: string;
-                                            fieldType: GadgetFieldType;
-                                          }>;
                                         } | null;
                                         validations: Array<
                                           | { __typename: "GadgetGenericFieldValidation"; name: string; specID: string }
@@ -14722,20 +16712,9 @@ export type ModelActionMetadataQuery = {
                                         relatedModel?: {
                                           __typename?: "GadgetModel";
                                           key: string;
+                                          name: string;
                                           apiIdentifier: string;
                                           namespace?: Array<string> | null;
-                                          defaultDisplayField: {
-                                            __typename?: "GadgetModelField";
-                                            name: string;
-                                            apiIdentifier: string;
-                                            fieldType: GadgetFieldType;
-                                          };
-                                          fields?: Array<{
-                                            __typename?: "GadgetModelField";
-                                            name: string;
-                                            apiIdentifier: string;
-                                            fieldType: GadgetFieldType;
-                                          }>;
                                         } | null;
                                         inverseField?: { __typename?: "GadgetModelField"; apiIdentifier: string } | null;
                                         validations: Array<
@@ -14768,20 +16747,9 @@ export type ModelActionMetadataQuery = {
                                         relatedModel?: {
                                           __typename?: "GadgetModel";
                                           key: string;
+                                          name: string;
                                           apiIdentifier: string;
                                           namespace?: Array<string> | null;
-                                          defaultDisplayField: {
-                                            __typename?: "GadgetModelField";
-                                            name: string;
-                                            apiIdentifier: string;
-                                            fieldType: GadgetFieldType;
-                                          };
-                                          fields?: Array<{
-                                            __typename?: "GadgetModelField";
-                                            name: string;
-                                            apiIdentifier: string;
-                                            fieldType: GadgetFieldType;
-                                          }>;
                                         } | null;
                                         inverseField?: { __typename?: "GadgetModelField"; apiIdentifier: string } | null;
                                         joinModel?: {
@@ -14789,12 +16757,6 @@ export type ModelActionMetadataQuery = {
                                           key: string;
                                           apiIdentifier: string;
                                           namespace?: Array<string> | null;
-                                          defaultDisplayField: {
-                                            __typename?: "GadgetModelField";
-                                            name: string;
-                                            apiIdentifier: string;
-                                            fieldType: GadgetFieldType;
-                                          };
                                         } | null;
                                         inverseJoinModelField?: { __typename?: "GadgetModelField"; apiIdentifier: string } | null;
                                         inverseRelatedModelField?: { __typename?: "GadgetModelField"; apiIdentifier: string } | null;
@@ -14828,20 +16790,9 @@ export type ModelActionMetadataQuery = {
                                         relatedModel?: {
                                           __typename?: "GadgetModel";
                                           key: string;
+                                          name: string;
                                           apiIdentifier: string;
                                           namespace?: Array<string> | null;
-                                          defaultDisplayField: {
-                                            __typename?: "GadgetModelField";
-                                            name: string;
-                                            apiIdentifier: string;
-                                            fieldType: GadgetFieldType;
-                                          };
-                                          fields?: Array<{
-                                            __typename?: "GadgetModelField";
-                                            name: string;
-                                            apiIdentifier: string;
-                                            fieldType: GadgetFieldType;
-                                          }>;
                                         } | null;
                                         inverseField?: { __typename?: "GadgetModelField"; apiIdentifier: string } | null;
                                         validations: Array<
@@ -14977,7 +16928,6 @@ export type ModelActionMetadataQuery = {
 export type GlobalActionMetadataQueryVariables = Exact<{
   apiIdentifier: Scalars["String"]["input"];
   namespace?: InputMaybe<Array<Scalars["String"]["input"]> | Scalars["String"]["input"]>;
-  includeRelatedFields?: InputMaybe<Scalars["Boolean"]["input"]>;
 }>;
 
 export type GlobalActionMetadataQuery = {
@@ -15001,10 +16951,9 @@ export type GlobalActionMetadataQuery = {
               relatedModel?: {
                 __typename?: "GadgetModel";
                 key: string;
+                name: string;
                 apiIdentifier: string;
                 namespace?: Array<string> | null;
-                defaultDisplayField: { __typename?: "GadgetModelField"; name: string; apiIdentifier: string; fieldType: GadgetFieldType };
-                fields?: Array<{ __typename?: "GadgetModelField"; name: string; apiIdentifier: string; fieldType: GadgetFieldType }>;
               } | null;
               validations: Array<
                 | { __typename: "GadgetGenericFieldValidation"; name: string; specID: string }
@@ -15058,10 +17007,9 @@ export type GlobalActionMetadataQuery = {
               relatedModel?: {
                 __typename?: "GadgetModel";
                 key: string;
+                name: string;
                 apiIdentifier: string;
                 namespace?: Array<string> | null;
-                defaultDisplayField: { __typename?: "GadgetModelField"; name: string; apiIdentifier: string; fieldType: GadgetFieldType };
-                fields?: Array<{ __typename?: "GadgetModelField"; name: string; apiIdentifier: string; fieldType: GadgetFieldType }>;
               } | null;
               inverseField?: { __typename?: "GadgetModelField"; apiIdentifier: string } | null;
               validations: Array<
@@ -15078,19 +17026,12 @@ export type GlobalActionMetadataQuery = {
               relatedModel?: {
                 __typename?: "GadgetModel";
                 key: string;
+                name: string;
                 apiIdentifier: string;
                 namespace?: Array<string> | null;
-                defaultDisplayField: { __typename?: "GadgetModelField"; name: string; apiIdentifier: string; fieldType: GadgetFieldType };
-                fields?: Array<{ __typename?: "GadgetModelField"; name: string; apiIdentifier: string; fieldType: GadgetFieldType }>;
               } | null;
               inverseField?: { __typename?: "GadgetModelField"; apiIdentifier: string } | null;
-              joinModel?: {
-                __typename?: "GadgetModel";
-                key: string;
-                apiIdentifier: string;
-                namespace?: Array<string> | null;
-                defaultDisplayField: { __typename?: "GadgetModelField"; name: string; apiIdentifier: string; fieldType: GadgetFieldType };
-              } | null;
+              joinModel?: { __typename?: "GadgetModel"; key: string; apiIdentifier: string; namespace?: Array<string> | null } | null;
               inverseJoinModelField?: { __typename?: "GadgetModelField"; apiIdentifier: string } | null;
               inverseRelatedModelField?: { __typename?: "GadgetModelField"; apiIdentifier: string } | null;
               validations: Array<
@@ -15107,10 +17048,9 @@ export type GlobalActionMetadataQuery = {
               relatedModel?: {
                 __typename?: "GadgetModel";
                 key: string;
+                name: string;
                 apiIdentifier: string;
                 namespace?: Array<string> | null;
-                defaultDisplayField: { __typename?: "GadgetModelField"; name: string; apiIdentifier: string; fieldType: GadgetFieldType };
-                fields?: Array<{ __typename?: "GadgetModelField"; name: string; apiIdentifier: string; fieldType: GadgetFieldType }>;
               } | null;
               inverseField?: { __typename?: "GadgetModelField"; apiIdentifier: string } | null;
               validations: Array<
@@ -15152,20 +17092,9 @@ export type GlobalActionMetadataQuery = {
                       relatedModel?: {
                         __typename?: "GadgetModel";
                         key: string;
+                        name: string;
                         apiIdentifier: string;
                         namespace?: Array<string> | null;
-                        defaultDisplayField: {
-                          __typename?: "GadgetModelField";
-                          name: string;
-                          apiIdentifier: string;
-                          fieldType: GadgetFieldType;
-                        };
-                        fields?: Array<{
-                          __typename?: "GadgetModelField";
-                          name: string;
-                          apiIdentifier: string;
-                          fieldType: GadgetFieldType;
-                        }>;
                       } | null;
                       validations: Array<
                         | { __typename: "GadgetGenericFieldValidation"; name: string; specID: string }
@@ -15243,20 +17172,9 @@ export type GlobalActionMetadataQuery = {
                       relatedModel?: {
                         __typename?: "GadgetModel";
                         key: string;
+                        name: string;
                         apiIdentifier: string;
                         namespace?: Array<string> | null;
-                        defaultDisplayField: {
-                          __typename?: "GadgetModelField";
-                          name: string;
-                          apiIdentifier: string;
-                          fieldType: GadgetFieldType;
-                        };
-                        fields?: Array<{
-                          __typename?: "GadgetModelField";
-                          name: string;
-                          apiIdentifier: string;
-                          fieldType: GadgetFieldType;
-                        }>;
                       } | null;
                       inverseField?: { __typename?: "GadgetModelField"; apiIdentifier: string } | null;
                       validations: Array<
@@ -15279,20 +17197,9 @@ export type GlobalActionMetadataQuery = {
                       relatedModel?: {
                         __typename?: "GadgetModel";
                         key: string;
+                        name: string;
                         apiIdentifier: string;
                         namespace?: Array<string> | null;
-                        defaultDisplayField: {
-                          __typename?: "GadgetModelField";
-                          name: string;
-                          apiIdentifier: string;
-                          fieldType: GadgetFieldType;
-                        };
-                        fields?: Array<{
-                          __typename?: "GadgetModelField";
-                          name: string;
-                          apiIdentifier: string;
-                          fieldType: GadgetFieldType;
-                        }>;
                       } | null;
                       inverseField?: { __typename?: "GadgetModelField"; apiIdentifier: string } | null;
                       joinModel?: {
@@ -15300,12 +17207,6 @@ export type GlobalActionMetadataQuery = {
                         key: string;
                         apiIdentifier: string;
                         namespace?: Array<string> | null;
-                        defaultDisplayField: {
-                          __typename?: "GadgetModelField";
-                          name: string;
-                          apiIdentifier: string;
-                          fieldType: GadgetFieldType;
-                        };
                       } | null;
                       inverseJoinModelField?: { __typename?: "GadgetModelField"; apiIdentifier: string } | null;
                       inverseRelatedModelField?: { __typename?: "GadgetModelField"; apiIdentifier: string } | null;
@@ -15329,20 +17230,9 @@ export type GlobalActionMetadataQuery = {
                       relatedModel?: {
                         __typename?: "GadgetModel";
                         key: string;
+                        name: string;
                         apiIdentifier: string;
                         namespace?: Array<string> | null;
-                        defaultDisplayField: {
-                          __typename?: "GadgetModelField";
-                          name: string;
-                          apiIdentifier: string;
-                          fieldType: GadgetFieldType;
-                        };
-                        fields?: Array<{
-                          __typename?: "GadgetModelField";
-                          name: string;
-                          apiIdentifier: string;
-                          fieldType: GadgetFieldType;
-                        }>;
                       } | null;
                       inverseField?: { __typename?: "GadgetModelField"; apiIdentifier: string } | null;
                       validations: Array<
@@ -15396,20 +17286,9 @@ export type GlobalActionMetadataQuery = {
                               relatedModel?: {
                                 __typename?: "GadgetModel";
                                 key: string;
+                                name: string;
                                 apiIdentifier: string;
                                 namespace?: Array<string> | null;
-                                defaultDisplayField: {
-                                  __typename?: "GadgetModelField";
-                                  name: string;
-                                  apiIdentifier: string;
-                                  fieldType: GadgetFieldType;
-                                };
-                                fields?: Array<{
-                                  __typename?: "GadgetModelField";
-                                  name: string;
-                                  apiIdentifier: string;
-                                  fieldType: GadgetFieldType;
-                                }>;
                               } | null;
                               validations: Array<
                                 | { __typename: "GadgetGenericFieldValidation"; name: string; specID: string }
@@ -15507,20 +17386,9 @@ export type GlobalActionMetadataQuery = {
                               relatedModel?: {
                                 __typename?: "GadgetModel";
                                 key: string;
+                                name: string;
                                 apiIdentifier: string;
                                 namespace?: Array<string> | null;
-                                defaultDisplayField: {
-                                  __typename?: "GadgetModelField";
-                                  name: string;
-                                  apiIdentifier: string;
-                                  fieldType: GadgetFieldType;
-                                };
-                                fields?: Array<{
-                                  __typename?: "GadgetModelField";
-                                  name: string;
-                                  apiIdentifier: string;
-                                  fieldType: GadgetFieldType;
-                                }>;
                               } | null;
                               inverseField?: { __typename?: "GadgetModelField"; apiIdentifier: string } | null;
                               validations: Array<
@@ -15548,20 +17416,9 @@ export type GlobalActionMetadataQuery = {
                               relatedModel?: {
                                 __typename?: "GadgetModel";
                                 key: string;
+                                name: string;
                                 apiIdentifier: string;
                                 namespace?: Array<string> | null;
-                                defaultDisplayField: {
-                                  __typename?: "GadgetModelField";
-                                  name: string;
-                                  apiIdentifier: string;
-                                  fieldType: GadgetFieldType;
-                                };
-                                fields?: Array<{
-                                  __typename?: "GadgetModelField";
-                                  name: string;
-                                  apiIdentifier: string;
-                                  fieldType: GadgetFieldType;
-                                }>;
                               } | null;
                               inverseField?: { __typename?: "GadgetModelField"; apiIdentifier: string } | null;
                               joinModel?: {
@@ -15569,12 +17426,6 @@ export type GlobalActionMetadataQuery = {
                                 key: string;
                                 apiIdentifier: string;
                                 namespace?: Array<string> | null;
-                                defaultDisplayField: {
-                                  __typename?: "GadgetModelField";
-                                  name: string;
-                                  apiIdentifier: string;
-                                  fieldType: GadgetFieldType;
-                                };
                               } | null;
                               inverseJoinModelField?: { __typename?: "GadgetModelField"; apiIdentifier: string } | null;
                               inverseRelatedModelField?: { __typename?: "GadgetModelField"; apiIdentifier: string } | null;
@@ -15603,20 +17454,9 @@ export type GlobalActionMetadataQuery = {
                               relatedModel?: {
                                 __typename?: "GadgetModel";
                                 key: string;
+                                name: string;
                                 apiIdentifier: string;
                                 namespace?: Array<string> | null;
-                                defaultDisplayField: {
-                                  __typename?: "GadgetModelField";
-                                  name: string;
-                                  apiIdentifier: string;
-                                  fieldType: GadgetFieldType;
-                                };
-                                fields?: Array<{
-                                  __typename?: "GadgetModelField";
-                                  name: string;
-                                  apiIdentifier: string;
-                                  fieldType: GadgetFieldType;
-                                }>;
                               } | null;
                               inverseField?: { __typename?: "GadgetModelField"; apiIdentifier: string } | null;
                               validations: Array<
@@ -15680,20 +17520,9 @@ export type GlobalActionMetadataQuery = {
                                       relatedModel?: {
                                         __typename?: "GadgetModel";
                                         key: string;
+                                        name: string;
                                         apiIdentifier: string;
                                         namespace?: Array<string> | null;
-                                        defaultDisplayField: {
-                                          __typename?: "GadgetModelField";
-                                          name: string;
-                                          apiIdentifier: string;
-                                          fieldType: GadgetFieldType;
-                                        };
-                                        fields?: Array<{
-                                          __typename?: "GadgetModelField";
-                                          name: string;
-                                          apiIdentifier: string;
-                                          fieldType: GadgetFieldType;
-                                        }>;
                                       } | null;
                                       validations: Array<
                                         | { __typename: "GadgetGenericFieldValidation"; name: string; specID: string }
@@ -15811,20 +17640,9 @@ export type GlobalActionMetadataQuery = {
                                       relatedModel?: {
                                         __typename?: "GadgetModel";
                                         key: string;
+                                        name: string;
                                         apiIdentifier: string;
                                         namespace?: Array<string> | null;
-                                        defaultDisplayField: {
-                                          __typename?: "GadgetModelField";
-                                          name: string;
-                                          apiIdentifier: string;
-                                          fieldType: GadgetFieldType;
-                                        };
-                                        fields?: Array<{
-                                          __typename?: "GadgetModelField";
-                                          name: string;
-                                          apiIdentifier: string;
-                                          fieldType: GadgetFieldType;
-                                        }>;
                                       } | null;
                                       inverseField?: { __typename?: "GadgetModelField"; apiIdentifier: string } | null;
                                       validations: Array<
@@ -15857,20 +17675,9 @@ export type GlobalActionMetadataQuery = {
                                       relatedModel?: {
                                         __typename?: "GadgetModel";
                                         key: string;
+                                        name: string;
                                         apiIdentifier: string;
                                         namespace?: Array<string> | null;
-                                        defaultDisplayField: {
-                                          __typename?: "GadgetModelField";
-                                          name: string;
-                                          apiIdentifier: string;
-                                          fieldType: GadgetFieldType;
-                                        };
-                                        fields?: Array<{
-                                          __typename?: "GadgetModelField";
-                                          name: string;
-                                          apiIdentifier: string;
-                                          fieldType: GadgetFieldType;
-                                        }>;
                                       } | null;
                                       inverseField?: { __typename?: "GadgetModelField"; apiIdentifier: string } | null;
                                       joinModel?: {
@@ -15878,12 +17685,6 @@ export type GlobalActionMetadataQuery = {
                                         key: string;
                                         apiIdentifier: string;
                                         namespace?: Array<string> | null;
-                                        defaultDisplayField: {
-                                          __typename?: "GadgetModelField";
-                                          name: string;
-                                          apiIdentifier: string;
-                                          fieldType: GadgetFieldType;
-                                        };
                                       } | null;
                                       inverseJoinModelField?: { __typename?: "GadgetModelField"; apiIdentifier: string } | null;
                                       inverseRelatedModelField?: { __typename?: "GadgetModelField"; apiIdentifier: string } | null;
@@ -15917,20 +17718,9 @@ export type GlobalActionMetadataQuery = {
                                       relatedModel?: {
                                         __typename?: "GadgetModel";
                                         key: string;
+                                        name: string;
                                         apiIdentifier: string;
                                         namespace?: Array<string> | null;
-                                        defaultDisplayField: {
-                                          __typename?: "GadgetModelField";
-                                          name: string;
-                                          apiIdentifier: string;
-                                          fieldType: GadgetFieldType;
-                                        };
-                                        fields?: Array<{
-                                          __typename?: "GadgetModelField";
-                                          name: string;
-                                          apiIdentifier: string;
-                                          fieldType: GadgetFieldType;
-                                        }>;
                                       } | null;
                                       inverseField?: { __typename?: "GadgetModelField"; apiIdentifier: string } | null;
                                       validations: Array<
@@ -16072,24 +17862,6 @@ export type RolesMetadataQuery = {
   };
 };
 
-export const RelatedModelFieldFragmentFragmentDoc = {
-  kind: "Document",
-  definitions: [
-    {
-      kind: "FragmentDefinition",
-      name: { kind: "Name", value: "RelatedModelFieldFragment" },
-      typeCondition: { kind: "NamedType", name: { kind: "Name", value: "GadgetModelField" } },
-      selectionSet: {
-        kind: "SelectionSet",
-        selections: [
-          { kind: "Field", name: { kind: "Name", value: "name" } },
-          { kind: "Field", name: { kind: "Name", value: "apiIdentifier" } },
-          { kind: "Field", name: { kind: "Name", value: "fieldType" } },
-        ],
-      },
-    },
-  ],
-} as unknown as DocumentNode<RelatedModelFieldFragmentFragment, unknown>;
 export const FieldMetadataFragmentDoc = {
   kind: "Document",
   definitions: [
@@ -16194,41 +17966,9 @@ export const FieldMetadataFragmentDoc = {
                           kind: "SelectionSet",
                           selections: [
                             { kind: "Field", name: { kind: "Name", value: "key" } },
+                            { kind: "Field", name: { kind: "Name", value: "name" } },
                             { kind: "Field", name: { kind: "Name", value: "apiIdentifier" } },
                             { kind: "Field", name: { kind: "Name", value: "namespace" } },
-                            {
-                              kind: "Field",
-                              name: { kind: "Name", value: "defaultDisplayField" },
-                              selectionSet: {
-                                kind: "SelectionSet",
-                                selections: [
-                                  { kind: "Field", name: { kind: "Name", value: "name" } },
-                                  { kind: "Field", name: { kind: "Name", value: "apiIdentifier" } },
-                                  { kind: "Field", name: { kind: "Name", value: "fieldType" } },
-                                ],
-                              },
-                            },
-                            {
-                              kind: "Field",
-                              name: { kind: "Name", value: "fields" },
-                              directives: [
-                                {
-                                  kind: "Directive",
-                                  name: { kind: "Name", value: "include" },
-                                  arguments: [
-                                    {
-                                      kind: "Argument",
-                                      name: { kind: "Name", value: "if" },
-                                      value: { kind: "Variable", name: { kind: "Name", value: "includeRelatedFields" } },
-                                    },
-                                  ],
-                                },
-                              ],
-                              selectionSet: {
-                                kind: "SelectionSet",
-                                selections: [{ kind: "FragmentSpread", name: { kind: "Name", value: "RelatedModelFieldFragment" } }],
-                              },
-                            },
                           ],
                         },
                       },
@@ -16249,18 +17989,6 @@ export const FieldMetadataFragmentDoc = {
                             { kind: "Field", name: { kind: "Name", value: "key" } },
                             { kind: "Field", name: { kind: "Name", value: "apiIdentifier" } },
                             { kind: "Field", name: { kind: "Name", value: "namespace" } },
-                            {
-                              kind: "Field",
-                              name: { kind: "Name", value: "defaultDisplayField" },
-                              selectionSet: {
-                                kind: "SelectionSet",
-                                selections: [
-                                  { kind: "Field", name: { kind: "Name", value: "name" } },
-                                  { kind: "Field", name: { kind: "Name", value: "apiIdentifier" } },
-                                  { kind: "Field", name: { kind: "Name", value: "fieldType" } },
-                                ],
-                              },
-                            },
                           ],
                         },
                       },
@@ -16297,41 +18025,9 @@ export const FieldMetadataFragmentDoc = {
                           kind: "SelectionSet",
                           selections: [
                             { kind: "Field", name: { kind: "Name", value: "key" } },
+                            { kind: "Field", name: { kind: "Name", value: "name" } },
                             { kind: "Field", name: { kind: "Name", value: "apiIdentifier" } },
                             { kind: "Field", name: { kind: "Name", value: "namespace" } },
-                            {
-                              kind: "Field",
-                              name: { kind: "Name", value: "defaultDisplayField" },
-                              selectionSet: {
-                                kind: "SelectionSet",
-                                selections: [
-                                  { kind: "Field", name: { kind: "Name", value: "name" } },
-                                  { kind: "Field", name: { kind: "Name", value: "apiIdentifier" } },
-                                  { kind: "Field", name: { kind: "Name", value: "fieldType" } },
-                                ],
-                              },
-                            },
-                            {
-                              kind: "Field",
-                              name: { kind: "Name", value: "fields" },
-                              directives: [
-                                {
-                                  kind: "Directive",
-                                  name: { kind: "Name", value: "include" },
-                                  arguments: [
-                                    {
-                                      kind: "Argument",
-                                      name: { kind: "Name", value: "if" },
-                                      value: { kind: "Variable", name: { kind: "Name", value: "includeRelatedFields" } },
-                                    },
-                                  ],
-                                },
-                              ],
-                              selectionSet: {
-                                kind: "SelectionSet",
-                                selections: [{ kind: "FragmentSpread", name: { kind: "Name", value: "RelatedModelFieldFragment" } }],
-                              },
-                            },
                           ],
                         },
                       },
@@ -16359,41 +18055,9 @@ export const FieldMetadataFragmentDoc = {
                           kind: "SelectionSet",
                           selections: [
                             { kind: "Field", name: { kind: "Name", value: "key" } },
+                            { kind: "Field", name: { kind: "Name", value: "name" } },
                             { kind: "Field", name: { kind: "Name", value: "apiIdentifier" } },
                             { kind: "Field", name: { kind: "Name", value: "namespace" } },
-                            {
-                              kind: "Field",
-                              name: { kind: "Name", value: "defaultDisplayField" },
-                              selectionSet: {
-                                kind: "SelectionSet",
-                                selections: [
-                                  { kind: "Field", name: { kind: "Name", value: "name" } },
-                                  { kind: "Field", name: { kind: "Name", value: "apiIdentifier" } },
-                                  { kind: "Field", name: { kind: "Name", value: "fieldType" } },
-                                ],
-                              },
-                            },
-                            {
-                              kind: "Field",
-                              name: { kind: "Name", value: "fields" },
-                              directives: [
-                                {
-                                  kind: "Directive",
-                                  name: { kind: "Name", value: "include" },
-                                  arguments: [
-                                    {
-                                      kind: "Argument",
-                                      name: { kind: "Name", value: "if" },
-                                      value: { kind: "Variable", name: { kind: "Name", value: "includeRelatedFields" } },
-                                    },
-                                  ],
-                                },
-                              ],
-                              selectionSet: {
-                                kind: "SelectionSet",
-                                selections: [{ kind: "FragmentSpread", name: { kind: "Name", value: "RelatedModelFieldFragment" } }],
-                              },
-                            },
                           ],
                         },
                       },
@@ -16421,41 +18085,9 @@ export const FieldMetadataFragmentDoc = {
                           kind: "SelectionSet",
                           selections: [
                             { kind: "Field", name: { kind: "Name", value: "key" } },
+                            { kind: "Field", name: { kind: "Name", value: "name" } },
                             { kind: "Field", name: { kind: "Name", value: "apiIdentifier" } },
                             { kind: "Field", name: { kind: "Name", value: "namespace" } },
-                            {
-                              kind: "Field",
-                              name: { kind: "Name", value: "defaultDisplayField" },
-                              selectionSet: {
-                                kind: "SelectionSet",
-                                selections: [
-                                  { kind: "Field", name: { kind: "Name", value: "name" } },
-                                  { kind: "Field", name: { kind: "Name", value: "apiIdentifier" } },
-                                  { kind: "Field", name: { kind: "Name", value: "fieldType" } },
-                                ],
-                              },
-                            },
-                            {
-                              kind: "Field",
-                              name: { kind: "Name", value: "fields" },
-                              directives: [
-                                {
-                                  kind: "Directive",
-                                  name: { kind: "Name", value: "include" },
-                                  arguments: [
-                                    {
-                                      kind: "Argument",
-                                      name: { kind: "Name", value: "if" },
-                                      value: { kind: "Variable", name: { kind: "Name", value: "includeRelatedFields" } },
-                                    },
-                                  ],
-                                },
-                              ],
-                              selectionSet: {
-                                kind: "SelectionSet",
-                                selections: [{ kind: "FragmentSpread", name: { kind: "Name", value: "RelatedModelFieldFragment" } }],
-                              },
-                            },
                           ],
                         },
                       },
@@ -16497,19 +18129,6 @@ export const FieldMetadataFragmentDoc = {
               ],
             },
           },
-        ],
-      },
-    },
-    {
-      kind: "FragmentDefinition",
-      name: { kind: "Name", value: "RelatedModelFieldFragment" },
-      typeCondition: { kind: "NamedType", name: { kind: "Name", value: "GadgetModelField" } },
-      selectionSet: {
-        kind: "SelectionSet",
-        selections: [
-          { kind: "Field", name: { kind: "Name", value: "name" } },
-          { kind: "Field", name: { kind: "Name", value: "apiIdentifier" } },
-          { kind: "Field", name: { kind: "Name", value: "fieldType" } },
         ],
       },
     },
@@ -16623,19 +18242,6 @@ export const SubFieldsFragmentDoc = {
     },
     {
       kind: "FragmentDefinition",
-      name: { kind: "Name", value: "RelatedModelFieldFragment" },
-      typeCondition: { kind: "NamedType", name: { kind: "Name", value: "GadgetModelField" } },
-      selectionSet: {
-        kind: "SelectionSet",
-        selections: [
-          { kind: "Field", name: { kind: "Name", value: "name" } },
-          { kind: "Field", name: { kind: "Name", value: "apiIdentifier" } },
-          { kind: "Field", name: { kind: "Name", value: "fieldType" } },
-        ],
-      },
-    },
-    {
-      kind: "FragmentDefinition",
       name: { kind: "Name", value: "FieldMetadata" },
       typeCondition: { kind: "NamedType", name: { kind: "Name", value: "GadgetField" } },
       selectionSet: {
@@ -16735,41 +18341,9 @@ export const SubFieldsFragmentDoc = {
                           kind: "SelectionSet",
                           selections: [
                             { kind: "Field", name: { kind: "Name", value: "key" } },
+                            { kind: "Field", name: { kind: "Name", value: "name" } },
                             { kind: "Field", name: { kind: "Name", value: "apiIdentifier" } },
                             { kind: "Field", name: { kind: "Name", value: "namespace" } },
-                            {
-                              kind: "Field",
-                              name: { kind: "Name", value: "defaultDisplayField" },
-                              selectionSet: {
-                                kind: "SelectionSet",
-                                selections: [
-                                  { kind: "Field", name: { kind: "Name", value: "name" } },
-                                  { kind: "Field", name: { kind: "Name", value: "apiIdentifier" } },
-                                  { kind: "Field", name: { kind: "Name", value: "fieldType" } },
-                                ],
-                              },
-                            },
-                            {
-                              kind: "Field",
-                              name: { kind: "Name", value: "fields" },
-                              directives: [
-                                {
-                                  kind: "Directive",
-                                  name: { kind: "Name", value: "include" },
-                                  arguments: [
-                                    {
-                                      kind: "Argument",
-                                      name: { kind: "Name", value: "if" },
-                                      value: { kind: "Variable", name: { kind: "Name", value: "includeRelatedFields" } },
-                                    },
-                                  ],
-                                },
-                              ],
-                              selectionSet: {
-                                kind: "SelectionSet",
-                                selections: [{ kind: "FragmentSpread", name: { kind: "Name", value: "RelatedModelFieldFragment" } }],
-                              },
-                            },
                           ],
                         },
                       },
@@ -16790,18 +18364,6 @@ export const SubFieldsFragmentDoc = {
                             { kind: "Field", name: { kind: "Name", value: "key" } },
                             { kind: "Field", name: { kind: "Name", value: "apiIdentifier" } },
                             { kind: "Field", name: { kind: "Name", value: "namespace" } },
-                            {
-                              kind: "Field",
-                              name: { kind: "Name", value: "defaultDisplayField" },
-                              selectionSet: {
-                                kind: "SelectionSet",
-                                selections: [
-                                  { kind: "Field", name: { kind: "Name", value: "name" } },
-                                  { kind: "Field", name: { kind: "Name", value: "apiIdentifier" } },
-                                  { kind: "Field", name: { kind: "Name", value: "fieldType" } },
-                                ],
-                              },
-                            },
                           ],
                         },
                       },
@@ -16838,41 +18400,9 @@ export const SubFieldsFragmentDoc = {
                           kind: "SelectionSet",
                           selections: [
                             { kind: "Field", name: { kind: "Name", value: "key" } },
+                            { kind: "Field", name: { kind: "Name", value: "name" } },
                             { kind: "Field", name: { kind: "Name", value: "apiIdentifier" } },
                             { kind: "Field", name: { kind: "Name", value: "namespace" } },
-                            {
-                              kind: "Field",
-                              name: { kind: "Name", value: "defaultDisplayField" },
-                              selectionSet: {
-                                kind: "SelectionSet",
-                                selections: [
-                                  { kind: "Field", name: { kind: "Name", value: "name" } },
-                                  { kind: "Field", name: { kind: "Name", value: "apiIdentifier" } },
-                                  { kind: "Field", name: { kind: "Name", value: "fieldType" } },
-                                ],
-                              },
-                            },
-                            {
-                              kind: "Field",
-                              name: { kind: "Name", value: "fields" },
-                              directives: [
-                                {
-                                  kind: "Directive",
-                                  name: { kind: "Name", value: "include" },
-                                  arguments: [
-                                    {
-                                      kind: "Argument",
-                                      name: { kind: "Name", value: "if" },
-                                      value: { kind: "Variable", name: { kind: "Name", value: "includeRelatedFields" } },
-                                    },
-                                  ],
-                                },
-                              ],
-                              selectionSet: {
-                                kind: "SelectionSet",
-                                selections: [{ kind: "FragmentSpread", name: { kind: "Name", value: "RelatedModelFieldFragment" } }],
-                              },
-                            },
                           ],
                         },
                       },
@@ -16900,41 +18430,9 @@ export const SubFieldsFragmentDoc = {
                           kind: "SelectionSet",
                           selections: [
                             { kind: "Field", name: { kind: "Name", value: "key" } },
+                            { kind: "Field", name: { kind: "Name", value: "name" } },
                             { kind: "Field", name: { kind: "Name", value: "apiIdentifier" } },
                             { kind: "Field", name: { kind: "Name", value: "namespace" } },
-                            {
-                              kind: "Field",
-                              name: { kind: "Name", value: "defaultDisplayField" },
-                              selectionSet: {
-                                kind: "SelectionSet",
-                                selections: [
-                                  { kind: "Field", name: { kind: "Name", value: "name" } },
-                                  { kind: "Field", name: { kind: "Name", value: "apiIdentifier" } },
-                                  { kind: "Field", name: { kind: "Name", value: "fieldType" } },
-                                ],
-                              },
-                            },
-                            {
-                              kind: "Field",
-                              name: { kind: "Name", value: "fields" },
-                              directives: [
-                                {
-                                  kind: "Directive",
-                                  name: { kind: "Name", value: "include" },
-                                  arguments: [
-                                    {
-                                      kind: "Argument",
-                                      name: { kind: "Name", value: "if" },
-                                      value: { kind: "Variable", name: { kind: "Name", value: "includeRelatedFields" } },
-                                    },
-                                  ],
-                                },
-                              ],
-                              selectionSet: {
-                                kind: "SelectionSet",
-                                selections: [{ kind: "FragmentSpread", name: { kind: "Name", value: "RelatedModelFieldFragment" } }],
-                              },
-                            },
                           ],
                         },
                       },
@@ -16962,41 +18460,9 @@ export const SubFieldsFragmentDoc = {
                           kind: "SelectionSet",
                           selections: [
                             { kind: "Field", name: { kind: "Name", value: "key" } },
+                            { kind: "Field", name: { kind: "Name", value: "name" } },
                             { kind: "Field", name: { kind: "Name", value: "apiIdentifier" } },
                             { kind: "Field", name: { kind: "Name", value: "namespace" } },
-                            {
-                              kind: "Field",
-                              name: { kind: "Name", value: "defaultDisplayField" },
-                              selectionSet: {
-                                kind: "SelectionSet",
-                                selections: [
-                                  { kind: "Field", name: { kind: "Name", value: "name" } },
-                                  { kind: "Field", name: { kind: "Name", value: "apiIdentifier" } },
-                                  { kind: "Field", name: { kind: "Name", value: "fieldType" } },
-                                ],
-                              },
-                            },
-                            {
-                              kind: "Field",
-                              name: { kind: "Name", value: "fields" },
-                              directives: [
-                                {
-                                  kind: "Directive",
-                                  name: { kind: "Name", value: "include" },
-                                  arguments: [
-                                    {
-                                      kind: "Argument",
-                                      name: { kind: "Name", value: "if" },
-                                      value: { kind: "Variable", name: { kind: "Name", value: "includeRelatedFields" } },
-                                    },
-                                  ],
-                                },
-                              ],
-                              selectionSet: {
-                                kind: "SelectionSet",
-                                selections: [{ kind: "FragmentSpread", name: { kind: "Name", value: "RelatedModelFieldFragment" } }],
-                              },
-                            },
                           ],
                         },
                       },
@@ -17061,11 +18527,6 @@ export const GetModelMetadataDocument = {
           variable: { kind: "Variable", name: { kind: "Name", value: "namespace" } },
           type: { kind: "ListType", type: { kind: "NonNullType", type: { kind: "NamedType", name: { kind: "Name", value: "String" } } } },
         },
-        {
-          kind: "VariableDefinition",
-          variable: { kind: "Variable", name: { kind: "Name", value: "includeRelatedFields" } },
-          type: { kind: "NonNullType", type: { kind: "NamedType", name: { kind: "Name", value: "Boolean" } } },
-        },
       ],
       selectionSet: {
         kind: "SelectionSet",
@@ -17078,7 +18539,7 @@ export const GetModelMetadataDocument = {
               selections: [
                 {
                   kind: "Field",
-                  name: { kind: "Name", value: "model" },
+                  name: { kind: "Name", value: "modelAndRelatedModels" },
                   arguments: [
                     {
                       kind: "Argument",
@@ -17094,6 +18555,7 @@ export const GetModelMetadataDocument = {
                   selectionSet: {
                     kind: "SelectionSet",
                     selections: [
+                      { kind: "Field", name: { kind: "Name", value: "key" } },
                       { kind: "Field", name: { kind: "Name", value: "apiIdentifier" } },
                       { kind: "Field", name: { kind: "Name", value: "namespace" } },
                       { kind: "Field", name: { kind: "Name", value: "name" } },
@@ -17105,25 +18567,24 @@ export const GetModelMetadataDocument = {
                           selections: [{ kind: "FragmentSpread", name: { kind: "Name", value: "FieldMetadata" } }],
                         },
                       },
+                      {
+                        kind: "Field",
+                        name: { kind: "Name", value: "defaultDisplayField" },
+                        selectionSet: {
+                          kind: "SelectionSet",
+                          selections: [
+                            { kind: "Field", name: { kind: "Name", value: "name" } },
+                            { kind: "Field", name: { kind: "Name", value: "apiIdentifier" } },
+                            { kind: "Field", name: { kind: "Name", value: "fieldType" } },
+                          ],
+                        },
+                      },
                     ],
                   },
                 },
               ],
             },
           },
-        ],
-      },
-    },
-    {
-      kind: "FragmentDefinition",
-      name: { kind: "Name", value: "RelatedModelFieldFragment" },
-      typeCondition: { kind: "NamedType", name: { kind: "Name", value: "GadgetModelField" } },
-      selectionSet: {
-        kind: "SelectionSet",
-        selections: [
-          { kind: "Field", name: { kind: "Name", value: "name" } },
-          { kind: "Field", name: { kind: "Name", value: "apiIdentifier" } },
-          { kind: "Field", name: { kind: "Name", value: "fieldType" } },
         ],
       },
     },
@@ -17228,41 +18689,9 @@ export const GetModelMetadataDocument = {
                           kind: "SelectionSet",
                           selections: [
                             { kind: "Field", name: { kind: "Name", value: "key" } },
+                            { kind: "Field", name: { kind: "Name", value: "name" } },
                             { kind: "Field", name: { kind: "Name", value: "apiIdentifier" } },
                             { kind: "Field", name: { kind: "Name", value: "namespace" } },
-                            {
-                              kind: "Field",
-                              name: { kind: "Name", value: "defaultDisplayField" },
-                              selectionSet: {
-                                kind: "SelectionSet",
-                                selections: [
-                                  { kind: "Field", name: { kind: "Name", value: "name" } },
-                                  { kind: "Field", name: { kind: "Name", value: "apiIdentifier" } },
-                                  { kind: "Field", name: { kind: "Name", value: "fieldType" } },
-                                ],
-                              },
-                            },
-                            {
-                              kind: "Field",
-                              name: { kind: "Name", value: "fields" },
-                              directives: [
-                                {
-                                  kind: "Directive",
-                                  name: { kind: "Name", value: "include" },
-                                  arguments: [
-                                    {
-                                      kind: "Argument",
-                                      name: { kind: "Name", value: "if" },
-                                      value: { kind: "Variable", name: { kind: "Name", value: "includeRelatedFields" } },
-                                    },
-                                  ],
-                                },
-                              ],
-                              selectionSet: {
-                                kind: "SelectionSet",
-                                selections: [{ kind: "FragmentSpread", name: { kind: "Name", value: "RelatedModelFieldFragment" } }],
-                              },
-                            },
                           ],
                         },
                       },
@@ -17283,18 +18712,6 @@ export const GetModelMetadataDocument = {
                             { kind: "Field", name: { kind: "Name", value: "key" } },
                             { kind: "Field", name: { kind: "Name", value: "apiIdentifier" } },
                             { kind: "Field", name: { kind: "Name", value: "namespace" } },
-                            {
-                              kind: "Field",
-                              name: { kind: "Name", value: "defaultDisplayField" },
-                              selectionSet: {
-                                kind: "SelectionSet",
-                                selections: [
-                                  { kind: "Field", name: { kind: "Name", value: "name" } },
-                                  { kind: "Field", name: { kind: "Name", value: "apiIdentifier" } },
-                                  { kind: "Field", name: { kind: "Name", value: "fieldType" } },
-                                ],
-                              },
-                            },
                           ],
                         },
                       },
@@ -17331,41 +18748,9 @@ export const GetModelMetadataDocument = {
                           kind: "SelectionSet",
                           selections: [
                             { kind: "Field", name: { kind: "Name", value: "key" } },
+                            { kind: "Field", name: { kind: "Name", value: "name" } },
                             { kind: "Field", name: { kind: "Name", value: "apiIdentifier" } },
                             { kind: "Field", name: { kind: "Name", value: "namespace" } },
-                            {
-                              kind: "Field",
-                              name: { kind: "Name", value: "defaultDisplayField" },
-                              selectionSet: {
-                                kind: "SelectionSet",
-                                selections: [
-                                  { kind: "Field", name: { kind: "Name", value: "name" } },
-                                  { kind: "Field", name: { kind: "Name", value: "apiIdentifier" } },
-                                  { kind: "Field", name: { kind: "Name", value: "fieldType" } },
-                                ],
-                              },
-                            },
-                            {
-                              kind: "Field",
-                              name: { kind: "Name", value: "fields" },
-                              directives: [
-                                {
-                                  kind: "Directive",
-                                  name: { kind: "Name", value: "include" },
-                                  arguments: [
-                                    {
-                                      kind: "Argument",
-                                      name: { kind: "Name", value: "if" },
-                                      value: { kind: "Variable", name: { kind: "Name", value: "includeRelatedFields" } },
-                                    },
-                                  ],
-                                },
-                              ],
-                              selectionSet: {
-                                kind: "SelectionSet",
-                                selections: [{ kind: "FragmentSpread", name: { kind: "Name", value: "RelatedModelFieldFragment" } }],
-                              },
-                            },
                           ],
                         },
                       },
@@ -17393,41 +18778,9 @@ export const GetModelMetadataDocument = {
                           kind: "SelectionSet",
                           selections: [
                             { kind: "Field", name: { kind: "Name", value: "key" } },
+                            { kind: "Field", name: { kind: "Name", value: "name" } },
                             { kind: "Field", name: { kind: "Name", value: "apiIdentifier" } },
                             { kind: "Field", name: { kind: "Name", value: "namespace" } },
-                            {
-                              kind: "Field",
-                              name: { kind: "Name", value: "defaultDisplayField" },
-                              selectionSet: {
-                                kind: "SelectionSet",
-                                selections: [
-                                  { kind: "Field", name: { kind: "Name", value: "name" } },
-                                  { kind: "Field", name: { kind: "Name", value: "apiIdentifier" } },
-                                  { kind: "Field", name: { kind: "Name", value: "fieldType" } },
-                                ],
-                              },
-                            },
-                            {
-                              kind: "Field",
-                              name: { kind: "Name", value: "fields" },
-                              directives: [
-                                {
-                                  kind: "Directive",
-                                  name: { kind: "Name", value: "include" },
-                                  arguments: [
-                                    {
-                                      kind: "Argument",
-                                      name: { kind: "Name", value: "if" },
-                                      value: { kind: "Variable", name: { kind: "Name", value: "includeRelatedFields" } },
-                                    },
-                                  ],
-                                },
-                              ],
-                              selectionSet: {
-                                kind: "SelectionSet",
-                                selections: [{ kind: "FragmentSpread", name: { kind: "Name", value: "RelatedModelFieldFragment" } }],
-                              },
-                            },
                           ],
                         },
                       },
@@ -17455,41 +18808,9 @@ export const GetModelMetadataDocument = {
                           kind: "SelectionSet",
                           selections: [
                             { kind: "Field", name: { kind: "Name", value: "key" } },
+                            { kind: "Field", name: { kind: "Name", value: "name" } },
                             { kind: "Field", name: { kind: "Name", value: "apiIdentifier" } },
                             { kind: "Field", name: { kind: "Name", value: "namespace" } },
-                            {
-                              kind: "Field",
-                              name: { kind: "Name", value: "defaultDisplayField" },
-                              selectionSet: {
-                                kind: "SelectionSet",
-                                selections: [
-                                  { kind: "Field", name: { kind: "Name", value: "name" } },
-                                  { kind: "Field", name: { kind: "Name", value: "apiIdentifier" } },
-                                  { kind: "Field", name: { kind: "Name", value: "fieldType" } },
-                                ],
-                              },
-                            },
-                            {
-                              kind: "Field",
-                              name: { kind: "Name", value: "fields" },
-                              directives: [
-                                {
-                                  kind: "Directive",
-                                  name: { kind: "Name", value: "include" },
-                                  arguments: [
-                                    {
-                                      kind: "Argument",
-                                      name: { kind: "Name", value: "if" },
-                                      value: { kind: "Variable", name: { kind: "Name", value: "includeRelatedFields" } },
-                                    },
-                                  ],
-                                },
-                              ],
-                              selectionSet: {
-                                kind: "SelectionSet",
-                                selections: [{ kind: "FragmentSpread", name: { kind: "Name", value: "RelatedModelFieldFragment" } }],
-                              },
-                            },
                           ],
                         },
                       },
@@ -17559,11 +18880,6 @@ export const ModelActionMetadataDocument = {
           variable: { kind: "Variable", name: { kind: "Name", value: "action" } },
           type: { kind: "NonNullType", type: { kind: "NamedType", name: { kind: "Name", value: "String" } } },
         },
-        {
-          kind: "VariableDefinition",
-          variable: { kind: "Variable", name: { kind: "Name", value: "includeRelatedFields" } },
-          type: { kind: "NonNullType", type: { kind: "NamedType", name: { kind: "Name", value: "Boolean" } } },
-        },
       ],
       selectionSet: {
         kind: "SelectionSet",
@@ -17574,6 +18890,55 @@ export const ModelActionMetadataDocument = {
             selectionSet: {
               kind: "SelectionSet",
               selections: [
+                {
+                  kind: "Field",
+                  name: { kind: "Name", value: "modelAndRelatedModels" },
+                  arguments: [
+                    {
+                      kind: "Argument",
+                      name: { kind: "Name", value: "apiIdentifier" },
+                      value: { kind: "Variable", name: { kind: "Name", value: "modelApiIdentifier" } },
+                    },
+                    {
+                      kind: "Argument",
+                      name: { kind: "Name", value: "namespace" },
+                      value: { kind: "Variable", name: { kind: "Name", value: "modelNamespace" } },
+                    },
+                  ],
+                  selectionSet: {
+                    kind: "SelectionSet",
+                    selections: [
+                      { kind: "Field", name: { kind: "Name", value: "key" } },
+                      { kind: "Field", name: { kind: "Name", value: "name" } },
+                      { kind: "Field", name: { kind: "Name", value: "namespace" } },
+                      { kind: "Field", name: { kind: "Name", value: "apiIdentifier" } },
+                      { kind: "Field", name: { kind: "Name", value: "defaultRecord" } },
+                      {
+                        kind: "Field",
+                        name: { kind: "Name", value: "fields" },
+                        selectionSet: {
+                          kind: "SelectionSet",
+                          selections: [
+                            { kind: "FragmentSpread", name: { kind: "Name", value: "FieldMetadata" } },
+                            { kind: "FragmentSpread", name: { kind: "Name", value: "SubFields" } },
+                          ],
+                        },
+                      },
+                      {
+                        kind: "Field",
+                        name: { kind: "Name", value: "defaultDisplayField" },
+                        selectionSet: {
+                          kind: "SelectionSet",
+                          selections: [
+                            { kind: "Field", name: { kind: "Name", value: "name" } },
+                            { kind: "Field", name: { kind: "Name", value: "apiIdentifier" } },
+                            { kind: "Field", name: { kind: "Name", value: "fieldType" } },
+                          ],
+                        },
+                      },
+                    ],
+                  },
+                },
                 {
                   kind: "Field",
                   name: { kind: "Name", value: "model" },
@@ -17592,7 +18957,9 @@ export const ModelActionMetadataDocument = {
                   selectionSet: {
                     kind: "SelectionSet",
                     selections: [
+                      { kind: "Field", name: { kind: "Name", value: "key" } },
                       { kind: "Field", name: { kind: "Name", value: "name" } },
+                      { kind: "Field", name: { kind: "Name", value: "namespace" } },
                       { kind: "Field", name: { kind: "Name", value: "apiIdentifier" } },
                       { kind: "Field", name: { kind: "Name", value: "defaultRecord" } },
                       {
@@ -17640,19 +19007,6 @@ export const ModelActionMetadataDocument = {
               ],
             },
           },
-        ],
-      },
-    },
-    {
-      kind: "FragmentDefinition",
-      name: { kind: "Name", value: "RelatedModelFieldFragment" },
-      typeCondition: { kind: "NamedType", name: { kind: "Name", value: "GadgetModelField" } },
-      selectionSet: {
-        kind: "SelectionSet",
-        selections: [
-          { kind: "Field", name: { kind: "Name", value: "name" } },
-          { kind: "Field", name: { kind: "Name", value: "apiIdentifier" } },
-          { kind: "Field", name: { kind: "Name", value: "fieldType" } },
         ],
       },
     },
@@ -17757,41 +19111,9 @@ export const ModelActionMetadataDocument = {
                           kind: "SelectionSet",
                           selections: [
                             { kind: "Field", name: { kind: "Name", value: "key" } },
+                            { kind: "Field", name: { kind: "Name", value: "name" } },
                             { kind: "Field", name: { kind: "Name", value: "apiIdentifier" } },
                             { kind: "Field", name: { kind: "Name", value: "namespace" } },
-                            {
-                              kind: "Field",
-                              name: { kind: "Name", value: "defaultDisplayField" },
-                              selectionSet: {
-                                kind: "SelectionSet",
-                                selections: [
-                                  { kind: "Field", name: { kind: "Name", value: "name" } },
-                                  { kind: "Field", name: { kind: "Name", value: "apiIdentifier" } },
-                                  { kind: "Field", name: { kind: "Name", value: "fieldType" } },
-                                ],
-                              },
-                            },
-                            {
-                              kind: "Field",
-                              name: { kind: "Name", value: "fields" },
-                              directives: [
-                                {
-                                  kind: "Directive",
-                                  name: { kind: "Name", value: "include" },
-                                  arguments: [
-                                    {
-                                      kind: "Argument",
-                                      name: { kind: "Name", value: "if" },
-                                      value: { kind: "Variable", name: { kind: "Name", value: "includeRelatedFields" } },
-                                    },
-                                  ],
-                                },
-                              ],
-                              selectionSet: {
-                                kind: "SelectionSet",
-                                selections: [{ kind: "FragmentSpread", name: { kind: "Name", value: "RelatedModelFieldFragment" } }],
-                              },
-                            },
                           ],
                         },
                       },
@@ -17812,18 +19134,6 @@ export const ModelActionMetadataDocument = {
                             { kind: "Field", name: { kind: "Name", value: "key" } },
                             { kind: "Field", name: { kind: "Name", value: "apiIdentifier" } },
                             { kind: "Field", name: { kind: "Name", value: "namespace" } },
-                            {
-                              kind: "Field",
-                              name: { kind: "Name", value: "defaultDisplayField" },
-                              selectionSet: {
-                                kind: "SelectionSet",
-                                selections: [
-                                  { kind: "Field", name: { kind: "Name", value: "name" } },
-                                  { kind: "Field", name: { kind: "Name", value: "apiIdentifier" } },
-                                  { kind: "Field", name: { kind: "Name", value: "fieldType" } },
-                                ],
-                              },
-                            },
                           ],
                         },
                       },
@@ -17860,41 +19170,9 @@ export const ModelActionMetadataDocument = {
                           kind: "SelectionSet",
                           selections: [
                             { kind: "Field", name: { kind: "Name", value: "key" } },
+                            { kind: "Field", name: { kind: "Name", value: "name" } },
                             { kind: "Field", name: { kind: "Name", value: "apiIdentifier" } },
                             { kind: "Field", name: { kind: "Name", value: "namespace" } },
-                            {
-                              kind: "Field",
-                              name: { kind: "Name", value: "defaultDisplayField" },
-                              selectionSet: {
-                                kind: "SelectionSet",
-                                selections: [
-                                  { kind: "Field", name: { kind: "Name", value: "name" } },
-                                  { kind: "Field", name: { kind: "Name", value: "apiIdentifier" } },
-                                  { kind: "Field", name: { kind: "Name", value: "fieldType" } },
-                                ],
-                              },
-                            },
-                            {
-                              kind: "Field",
-                              name: { kind: "Name", value: "fields" },
-                              directives: [
-                                {
-                                  kind: "Directive",
-                                  name: { kind: "Name", value: "include" },
-                                  arguments: [
-                                    {
-                                      kind: "Argument",
-                                      name: { kind: "Name", value: "if" },
-                                      value: { kind: "Variable", name: { kind: "Name", value: "includeRelatedFields" } },
-                                    },
-                                  ],
-                                },
-                              ],
-                              selectionSet: {
-                                kind: "SelectionSet",
-                                selections: [{ kind: "FragmentSpread", name: { kind: "Name", value: "RelatedModelFieldFragment" } }],
-                              },
-                            },
                           ],
                         },
                       },
@@ -17922,41 +19200,9 @@ export const ModelActionMetadataDocument = {
                           kind: "SelectionSet",
                           selections: [
                             { kind: "Field", name: { kind: "Name", value: "key" } },
+                            { kind: "Field", name: { kind: "Name", value: "name" } },
                             { kind: "Field", name: { kind: "Name", value: "apiIdentifier" } },
                             { kind: "Field", name: { kind: "Name", value: "namespace" } },
-                            {
-                              kind: "Field",
-                              name: { kind: "Name", value: "defaultDisplayField" },
-                              selectionSet: {
-                                kind: "SelectionSet",
-                                selections: [
-                                  { kind: "Field", name: { kind: "Name", value: "name" } },
-                                  { kind: "Field", name: { kind: "Name", value: "apiIdentifier" } },
-                                  { kind: "Field", name: { kind: "Name", value: "fieldType" } },
-                                ],
-                              },
-                            },
-                            {
-                              kind: "Field",
-                              name: { kind: "Name", value: "fields" },
-                              directives: [
-                                {
-                                  kind: "Directive",
-                                  name: { kind: "Name", value: "include" },
-                                  arguments: [
-                                    {
-                                      kind: "Argument",
-                                      name: { kind: "Name", value: "if" },
-                                      value: { kind: "Variable", name: { kind: "Name", value: "includeRelatedFields" } },
-                                    },
-                                  ],
-                                },
-                              ],
-                              selectionSet: {
-                                kind: "SelectionSet",
-                                selections: [{ kind: "FragmentSpread", name: { kind: "Name", value: "RelatedModelFieldFragment" } }],
-                              },
-                            },
                           ],
                         },
                       },
@@ -17984,41 +19230,9 @@ export const ModelActionMetadataDocument = {
                           kind: "SelectionSet",
                           selections: [
                             { kind: "Field", name: { kind: "Name", value: "key" } },
+                            { kind: "Field", name: { kind: "Name", value: "name" } },
                             { kind: "Field", name: { kind: "Name", value: "apiIdentifier" } },
                             { kind: "Field", name: { kind: "Name", value: "namespace" } },
-                            {
-                              kind: "Field",
-                              name: { kind: "Name", value: "defaultDisplayField" },
-                              selectionSet: {
-                                kind: "SelectionSet",
-                                selections: [
-                                  { kind: "Field", name: { kind: "Name", value: "name" } },
-                                  { kind: "Field", name: { kind: "Name", value: "apiIdentifier" } },
-                                  { kind: "Field", name: { kind: "Name", value: "fieldType" } },
-                                ],
-                              },
-                            },
-                            {
-                              kind: "Field",
-                              name: { kind: "Name", value: "fields" },
-                              directives: [
-                                {
-                                  kind: "Directive",
-                                  name: { kind: "Name", value: "include" },
-                                  arguments: [
-                                    {
-                                      kind: "Argument",
-                                      name: { kind: "Name", value: "if" },
-                                      value: { kind: "Variable", name: { kind: "Name", value: "includeRelatedFields" } },
-                                    },
-                                  ],
-                                },
-                              ],
-                              selectionSet: {
-                                kind: "SelectionSet",
-                                selections: [{ kind: "FragmentSpread", name: { kind: "Name", value: "RelatedModelFieldFragment" } }],
-                              },
-                            },
                           ],
                         },
                       },
@@ -18186,12 +19400,6 @@ export const GlobalActionMetadataDocument = {
           variable: { kind: "Variable", name: { kind: "Name", value: "namespace" } },
           type: { kind: "ListType", type: { kind: "NonNullType", type: { kind: "NamedType", name: { kind: "Name", value: "String" } } } },
         },
-        {
-          kind: "VariableDefinition",
-          variable: { kind: "Variable", name: { kind: "Name", value: "includeRelatedFields" } },
-          type: { kind: "NamedType", name: { kind: "Name", value: "Boolean" } },
-          defaultValue: { kind: "BooleanValue", value: false },
-        },
       ],
       selectionSet: {
         kind: "SelectionSet",
@@ -18244,19 +19452,6 @@ export const GlobalActionMetadataDocument = {
               ],
             },
           },
-        ],
-      },
-    },
-    {
-      kind: "FragmentDefinition",
-      name: { kind: "Name", value: "RelatedModelFieldFragment" },
-      typeCondition: { kind: "NamedType", name: { kind: "Name", value: "GadgetModelField" } },
-      selectionSet: {
-        kind: "SelectionSet",
-        selections: [
-          { kind: "Field", name: { kind: "Name", value: "name" } },
-          { kind: "Field", name: { kind: "Name", value: "apiIdentifier" } },
-          { kind: "Field", name: { kind: "Name", value: "fieldType" } },
         ],
       },
     },
@@ -18361,41 +19556,9 @@ export const GlobalActionMetadataDocument = {
                           kind: "SelectionSet",
                           selections: [
                             { kind: "Field", name: { kind: "Name", value: "key" } },
+                            { kind: "Field", name: { kind: "Name", value: "name" } },
                             { kind: "Field", name: { kind: "Name", value: "apiIdentifier" } },
                             { kind: "Field", name: { kind: "Name", value: "namespace" } },
-                            {
-                              kind: "Field",
-                              name: { kind: "Name", value: "defaultDisplayField" },
-                              selectionSet: {
-                                kind: "SelectionSet",
-                                selections: [
-                                  { kind: "Field", name: { kind: "Name", value: "name" } },
-                                  { kind: "Field", name: { kind: "Name", value: "apiIdentifier" } },
-                                  { kind: "Field", name: { kind: "Name", value: "fieldType" } },
-                                ],
-                              },
-                            },
-                            {
-                              kind: "Field",
-                              name: { kind: "Name", value: "fields" },
-                              directives: [
-                                {
-                                  kind: "Directive",
-                                  name: { kind: "Name", value: "include" },
-                                  arguments: [
-                                    {
-                                      kind: "Argument",
-                                      name: { kind: "Name", value: "if" },
-                                      value: { kind: "Variable", name: { kind: "Name", value: "includeRelatedFields" } },
-                                    },
-                                  ],
-                                },
-                              ],
-                              selectionSet: {
-                                kind: "SelectionSet",
-                                selections: [{ kind: "FragmentSpread", name: { kind: "Name", value: "RelatedModelFieldFragment" } }],
-                              },
-                            },
                           ],
                         },
                       },
@@ -18416,18 +19579,6 @@ export const GlobalActionMetadataDocument = {
                             { kind: "Field", name: { kind: "Name", value: "key" } },
                             { kind: "Field", name: { kind: "Name", value: "apiIdentifier" } },
                             { kind: "Field", name: { kind: "Name", value: "namespace" } },
-                            {
-                              kind: "Field",
-                              name: { kind: "Name", value: "defaultDisplayField" },
-                              selectionSet: {
-                                kind: "SelectionSet",
-                                selections: [
-                                  { kind: "Field", name: { kind: "Name", value: "name" } },
-                                  { kind: "Field", name: { kind: "Name", value: "apiIdentifier" } },
-                                  { kind: "Field", name: { kind: "Name", value: "fieldType" } },
-                                ],
-                              },
-                            },
                           ],
                         },
                       },
@@ -18464,41 +19615,9 @@ export const GlobalActionMetadataDocument = {
                           kind: "SelectionSet",
                           selections: [
                             { kind: "Field", name: { kind: "Name", value: "key" } },
+                            { kind: "Field", name: { kind: "Name", value: "name" } },
                             { kind: "Field", name: { kind: "Name", value: "apiIdentifier" } },
                             { kind: "Field", name: { kind: "Name", value: "namespace" } },
-                            {
-                              kind: "Field",
-                              name: { kind: "Name", value: "defaultDisplayField" },
-                              selectionSet: {
-                                kind: "SelectionSet",
-                                selections: [
-                                  { kind: "Field", name: { kind: "Name", value: "name" } },
-                                  { kind: "Field", name: { kind: "Name", value: "apiIdentifier" } },
-                                  { kind: "Field", name: { kind: "Name", value: "fieldType" } },
-                                ],
-                              },
-                            },
-                            {
-                              kind: "Field",
-                              name: { kind: "Name", value: "fields" },
-                              directives: [
-                                {
-                                  kind: "Directive",
-                                  name: { kind: "Name", value: "include" },
-                                  arguments: [
-                                    {
-                                      kind: "Argument",
-                                      name: { kind: "Name", value: "if" },
-                                      value: { kind: "Variable", name: { kind: "Name", value: "includeRelatedFields" } },
-                                    },
-                                  ],
-                                },
-                              ],
-                              selectionSet: {
-                                kind: "SelectionSet",
-                                selections: [{ kind: "FragmentSpread", name: { kind: "Name", value: "RelatedModelFieldFragment" } }],
-                              },
-                            },
                           ],
                         },
                       },
@@ -18526,41 +19645,9 @@ export const GlobalActionMetadataDocument = {
                           kind: "SelectionSet",
                           selections: [
                             { kind: "Field", name: { kind: "Name", value: "key" } },
+                            { kind: "Field", name: { kind: "Name", value: "name" } },
                             { kind: "Field", name: { kind: "Name", value: "apiIdentifier" } },
                             { kind: "Field", name: { kind: "Name", value: "namespace" } },
-                            {
-                              kind: "Field",
-                              name: { kind: "Name", value: "defaultDisplayField" },
-                              selectionSet: {
-                                kind: "SelectionSet",
-                                selections: [
-                                  { kind: "Field", name: { kind: "Name", value: "name" } },
-                                  { kind: "Field", name: { kind: "Name", value: "apiIdentifier" } },
-                                  { kind: "Field", name: { kind: "Name", value: "fieldType" } },
-                                ],
-                              },
-                            },
-                            {
-                              kind: "Field",
-                              name: { kind: "Name", value: "fields" },
-                              directives: [
-                                {
-                                  kind: "Directive",
-                                  name: { kind: "Name", value: "include" },
-                                  arguments: [
-                                    {
-                                      kind: "Argument",
-                                      name: { kind: "Name", value: "if" },
-                                      value: { kind: "Variable", name: { kind: "Name", value: "includeRelatedFields" } },
-                                    },
-                                  ],
-                                },
-                              ],
-                              selectionSet: {
-                                kind: "SelectionSet",
-                                selections: [{ kind: "FragmentSpread", name: { kind: "Name", value: "RelatedModelFieldFragment" } }],
-                              },
-                            },
                           ],
                         },
                       },
@@ -18588,41 +19675,9 @@ export const GlobalActionMetadataDocument = {
                           kind: "SelectionSet",
                           selections: [
                             { kind: "Field", name: { kind: "Name", value: "key" } },
+                            { kind: "Field", name: { kind: "Name", value: "name" } },
                             { kind: "Field", name: { kind: "Name", value: "apiIdentifier" } },
                             { kind: "Field", name: { kind: "Name", value: "namespace" } },
-                            {
-                              kind: "Field",
-                              name: { kind: "Name", value: "defaultDisplayField" },
-                              selectionSet: {
-                                kind: "SelectionSet",
-                                selections: [
-                                  { kind: "Field", name: { kind: "Name", value: "name" } },
-                                  { kind: "Field", name: { kind: "Name", value: "apiIdentifier" } },
-                                  { kind: "Field", name: { kind: "Name", value: "fieldType" } },
-                                ],
-                              },
-                            },
-                            {
-                              kind: "Field",
-                              name: { kind: "Name", value: "fields" },
-                              directives: [
-                                {
-                                  kind: "Directive",
-                                  name: { kind: "Name", value: "include" },
-                                  arguments: [
-                                    {
-                                      kind: "Argument",
-                                      name: { kind: "Name", value: "if" },
-                                      value: { kind: "Variable", name: { kind: "Name", value: "includeRelatedFields" } },
-                                    },
-                                  ],
-                                },
-                              ],
-                              selectionSet: {
-                                kind: "SelectionSet",
-                                selections: [{ kind: "FragmentSpread", name: { kind: "Name", value: "RelatedModelFieldFragment" } }],
-                              },
-                            },
                           ],
                         },
                       },
