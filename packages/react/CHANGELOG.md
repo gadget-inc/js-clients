@@ -1,5 +1,11 @@
 # @gadgetinc/react
 
+## 0.18.1
+
+### Patch Changes
+
+- Fixed bug with loading selected related model records in AutoForm HasMany inputs in framework version 1.3
+
 ## 0.18.0
 
 ### Patch Changes
