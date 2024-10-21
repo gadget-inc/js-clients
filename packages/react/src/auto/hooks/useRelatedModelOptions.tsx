@@ -186,11 +186,13 @@ export const useLinkedParentModelRelatedModelRecords = (props: {
     );
   }
 
+  const filterField = `${inverseFieldApiIdentifier}Id`; // Filter on the `Id` suffixed inverse field for compatibility before and after framework version v1.3
+
   const [{ data: selectedRecords, fetching: fetchingSelected, error: fetchSelectedRecordError }] = useFindMany(relatedModelManager as any, {
     pause: !currentRecordId || fetchingCurrentRecord, // HasOne/HasMany need the current record to query the inverse field in the related model
 
     first: selectedRecordsToLoadCount, // Many records can point to the current record in hasOne/hasMany
-    filter: { [inverseFieldApiIdentifier]: { equals: currentRecordId } }, // Filter by the inverse field belongsTo field value
+    filter: { [filterField]: { equals: currentRecordId } }, // Filter by the inverse field belongsTo field value
   });
 
   return {
