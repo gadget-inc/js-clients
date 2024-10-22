@@ -462,47 +462,91 @@ export const useActionMetadata = (
 /**
  * @internal
  */
-export const filterAutoFormFieldList = (
+export const buildAutoFormFieldList = (
   fields: FieldMetadata[] | undefined,
   options?: { include?: string[]; exclude?: string[]; isUpsertAction?: boolean }
-): FieldMetadata[] => {
+): [string, FieldMetadata][] => {
   if (!fields) {
     return [];
   }
 
-  let subset = fields;
+  let subset: [string, FieldMetadata][] = fields.map((field) => [field.apiIdentifier, field]);
 
   if (options?.include && options?.exclude) {
     throw new Error("Cannot use both 'include' and 'exclude' options at the same time");
   }
-
   if (options?.include) {
     // When including fields, the order will match the order of the `include` array
     subset = [];
     const includes = new Set(options.include);
 
-    for (const includedFieldApiId of Array.from(includes)) {
-      const metadataField = fields.find((field) => field.apiIdentifier === includedFieldApiId);
+    const includeGroups: Record<string, string[]> = {};
+
+    for (const path of Array.from(includes)) {
+      const [rootSegment, ...childSegments] = path.split(".");
+
+      includeGroups[rootSegment] ??= [];
+
+      if (childSegments.length) {
+        includeGroups[rootSegment].push(childSegments.join("."));
+      }
+    }
+
+    for (const [rootApiIdentifier, childIdentifiers] of Object.entries(includeGroups)) {
+      const metadataField = fields.find((field) => field.apiIdentifier === rootApiIdentifier);
       if (metadataField) {
-        subset.push(metadataField);
+        subset.push([rootApiIdentifier, metadataField]);
+
+        if (
+          childIdentifiers.length > 0 &&
+          "relatedModel" in metadataField.configuration &&
+          metadataField.configuration.relatedModel?.fields
+        ) {
+          const childFields = buildAutoFormFieldList(metadataField.configuration.relatedModel.fields, {
+            include: childIdentifiers,
+          });
+          subset.push(
+            ...childFields.map(
+              ([childApiIdentifier, childField]) => [`${rootApiIdentifier}.${childApiIdentifier}`, childField] as [string, FieldMetadata]
+            )
+          );
+        }
       }
     }
   }
 
   if (options?.exclude) {
     const excludes = new Set(options.exclude);
-    subset = subset.filter((field) => !excludes.has(field.apiIdentifier));
+    subset = subset.filter(([_, field]) => !excludes.has(field.apiIdentifier));
   }
 
   // Remove `hasMany` fields that emerge from `hasManyThrough` fields that are not actually model fields
-  subset = subset.filter((field) => !isJoinModelHasManyField(field));
+  const joinModelHasManyFields = subset.filter(([_, field]) => isJoinModelHasManyField(field));
+  subset = subset.filter(([_, field]) => !isJoinModelHasManyField(field));
+
+  for (const fieldMeta of subset) {
+    const [_, field] = fieldMeta;
+
+    if (field.configuration.__typename === "GadgetHasManyThroughConfig") {
+      const joinModelApiIdentifier = field.configuration.joinModel?.apiIdentifier;
+
+      const relatedJoinModelHasManyFieldMeta = joinModelHasManyFields.find(
+        ([_, f]) =>
+          f.configuration.__typename === "GadgetHasManyConfig" && joinModelApiIdentifier === f.configuration.relatedModel?.apiIdentifier
+      );
+
+      (field.configuration as any).joinModelHasManyFieldApiIdentifier = relatedJoinModelHasManyFieldMeta?.[0];
+    }
+  }
 
   // Filter out fields that are not supported by the form
-  const validFieldTypeSubset = subset.filter(options?.isUpsertAction ? isAcceptedUpsertFieldType : isAcceptedFieldType);
+  const validFieldTypeSubset = subset.filter(([_, field]) =>
+    options?.isUpsertAction ? isAcceptedUpsertFieldType(field) : isAcceptedFieldType(field)
+  );
 
   return options?.include
     ? validFieldTypeSubset // Everything explicitly included is valid
-    : validFieldTypeSubset.filter(isNotRelatedToSpecialModelFilter); // Without explicit includes, filter out relationships to special models
+    : validFieldTypeSubset.filter(([_, field]) => isNotRelatedToSpecialModelFilter(field)); // Without explicit includes, filter out relationships to special models
 };
 
 /**
@@ -550,6 +594,7 @@ const acceptedAutoFormFieldTypes = new Set([
   FieldType.BelongsTo,
   FieldType.HasMany,
   FieldType.HasOne,
+  FieldType.HasManyThrough,
 ]);
 
 export const filterAutoTableFieldList = (fields: FieldMetadata[]) => {

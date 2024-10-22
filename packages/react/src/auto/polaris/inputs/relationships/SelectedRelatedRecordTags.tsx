@@ -1,12 +1,14 @@
 import { Tag } from "@shopify/polaris";
 import React from "react";
+import { getRecordsAsOptions } from "../../../hooks/useRelatedModel.js";
+import type { OptionLabel } from "../../../interfaces/AutoRelationshipInputProps.js";
 
 export const getSelectedRelatedRecordTags = (props: {
-  selectedRecordIds: string[];
-  options: { id: string; label: string }[];
-  onRemoveRecord: (id: string) => void;
+  selectedRecords: Record<string, any>[];
+  optionLabel: OptionLabel;
+  onRemoveRecord: (record: Record<string, any>) => void;
 }) => {
-  if (!props.selectedRecordIds.length) {
+  if (!props.selectedRecords.length) {
     // A separate component getter is used here to return null instead of <>null</> which adds extra height to the text field
     return null;
   }
@@ -14,18 +16,25 @@ export const getSelectedRelatedRecordTags = (props: {
 };
 
 export const SelectedRelatedRecordTags = (props: {
-  selectedRecordIds: string[];
-  options: { id: string; label: string }[];
-  onRemoveRecord: (id: string) => void;
+  selectedRecords: Record<string, any>[];
+  optionLabel: OptionLabel;
+  onRemoveRecord: (record: Record<string, any>) => void;
 }) => {
-  const { selectedRecordIds, options, onRemoveRecord } = props;
+  const { selectedRecords, optionLabel, onRemoveRecord } = props;
 
-  return selectedRecordIds.length
-    ? selectedRecordIds.map((id) => {
-        const option = options.find((option) => option.id === id);
+  const options = getRecordsAsOptions(selectedRecords, optionLabel);
+
+  return options.length
+    ? options.map((option) => {
         return (
-          <Tag key={`option${id}`} onRemove={() => onRemoveRecord(id)}>
-            {option ? option.label : `id: ${id}`}
+          <Tag
+            key={`option${option.id}`}
+            onRemove={() => {
+              const record = selectedRecords.find((record) => record.id === option.id);
+              onRemoveRecord(record ?? { id: option.id });
+            }}
+          >
+            {option.label}
           </Tag>
         );
       })
