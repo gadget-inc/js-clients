@@ -413,7 +413,11 @@ export const useActionMetadata = (
       }
     }
     if (!actionName) {
-      throw new Error("action function not found on model manager");
+      // Fallback to string parsing if the action name is not found
+      actionName = actionFunction.operationName.slice(0, -actionFunction.modelApiIdentifier.length);
+      if (!actionName || !(actionName in modelManager)) {
+        throw new Error("action function not found on model manager");
+      }
     }
     variables = {
       modelApiIdentifier: actionFunction.modelApiIdentifier,
