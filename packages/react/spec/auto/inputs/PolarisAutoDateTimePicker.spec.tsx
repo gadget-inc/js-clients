@@ -16,11 +16,11 @@ describe("PolarisDateTimePicker", () => {
     const originalDateResolvedOptions = new Intl.DateTimeFormat().resolvedOptions();
     jest.spyOn(Intl.DateTimeFormat.prototype, "resolvedOptions").mockReturnValue({
       ...originalDateResolvedOptions,
-      timeZone: "America/New_York",
+      timeZone: "Etc/UTC",
     });
 
     const today = new Date();
-    today.setHours(15);
+    today.setHours(11);
     today.setMinutes(0);
     today.setSeconds(0);
     today.setMilliseconds(0);
