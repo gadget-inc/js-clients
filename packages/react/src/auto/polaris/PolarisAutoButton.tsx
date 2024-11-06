@@ -16,7 +16,8 @@ export const PolarisAutoButton = <
   SchemaT,
   ActionFunc extends ActionFunction<GivenOptions, any, any, SchemaT, any> | GlobalActionFunction<any>
 >(
-  props: AutoButtonProps<GivenOptions, SchemaT, ActionFunc> & ComponentProps<typeof Button>
+  props: AutoButtonProps<GivenOptions, SchemaT, ActionFunc> &
+    Omit<ComponentProps<typeof Button>, "children"> & { children?: React.ReactNode }
 ) => {
   const { fetching, running, isDestructive, run, label, buttonProps } = useAutoButtonController({
     onSuccess: (_result) => {
@@ -38,6 +39,7 @@ export const PolarisAutoButton = <
 
   return (
     <Button loading={running} disabled={fetching} tone={isDestructive ? "critical" : undefined} onClick={run} {...buttonProps}>
+      {/* @ts-expect-error  // Polaris Button children types demands strings, but ReactComponents work*/}
       {props?.children ?? label}
     </Button>
   );
