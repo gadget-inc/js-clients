@@ -3627,9 +3627,7 @@ describe("useActionFormNested", () => {
           {
             "answer": {
               "question": {
-                "delete": {
-                  "id": "1",
-                },
+                "_link": null,
               },
               "text": "Answer create",
             },
