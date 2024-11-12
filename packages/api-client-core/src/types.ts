@@ -122,34 +122,20 @@ export type NonNeverKeys<Selection> = {
  */
 export type FilterNever<T extends Record<string, unknown>> = NonNeverKeys<T> extends never ? never : { [Key in NonNeverKeys<T>]: T[Key] };
 
-type InnerSelect<Schema, Selection extends FieldSelection | null | undefined> = Selection extends null | undefined
-  ? never
-  : Schema extends (infer T)[]
-  ? InnerSelect<T, Selection>[]
-  : Schema extends null
-  ? InnerSelect<Exclude<Schema, null>, Selection> | null
-  : {
-      [Key in keyof Selection & keyof Schema]: Selection[Key] extends true
-        ? Schema[Key]
-        : Selection[Key] extends FieldSelection
-        ? InnerSelect<Schema[Key], Selection[Key]>
-        : never;
-    };
-
-type InnerSelect2<Schema, Selection extends FieldSelection | null | undefined> = IfAny<
+type InnerSelect<Schema, Selection extends FieldSelection | null | undefined> = IfAny<
   Selection,
   never,
   Selection extends null | undefined
     ? never
     : Schema extends (infer T)[]
-    ? InnerSelect2<T, Selection>[]
+    ? InnerSelect<T, Selection>[]
     : Schema extends null
-    ? InnerSelect2<Exclude<Schema, null>, Selection> | null
+    ? InnerSelect<Exclude<Schema, null>, Selection> | null
     : {
         [Key in keyof Selection & keyof Schema]: Selection[Key] extends true
           ? Schema[Key]
           : Selection[Key] extends FieldSelection
-          ? InnerSelect2<Schema[Key], Selection[Key]>
+          ? InnerSelect<Schema[Key], Selection[Key]>
           : never;
       }
 >;
@@ -180,7 +166,6 @@ export type DeepFilterNever<T> = T extends Record<string, unknown>
  * ```
  */
 export type Select<Schema, Selection extends FieldSelection | null | undefined> = DeepFilterNever<InnerSelect<Schema, Selection>>;
-export type Select2<Schema, Selection extends FieldSelection | null | undefined> = DeepFilterNever<InnerSelect2<Schema, Selection>>;
 
 /** Represents an amount of some currency. Specified as a string so user's aren't tempted to do math on the value. */
 export type CurrencyAmount = string;
