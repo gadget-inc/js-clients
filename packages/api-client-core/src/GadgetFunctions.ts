@@ -1,7 +1,7 @@
 import type { FieldSelection } from "./FieldSelection.js";
 import type { GadgetRecord, RecordShape } from "./GadgetRecord.js";
 import type { GadgetRecordList } from "./GadgetRecordList.js";
-import type { AllFieldsSelected, AvailableSelection, DefaultSelection2, LimitToKnownKeys, Select, VariablesOptions } from "./types.js";
+import type { AllFieldsSelected, AvailableSelection, DefaultSelection, LimitToKnownKeys, Select, VariablesOptions } from "./types.js";
 
 export type PromiseOrLiveIterator<T> = Promise<T> | AsyncIterable<T>;
 export type AsyncRecord<T extends RecordShape> = PromiseOrLiveIterator<GadgetRecord<T>>;
@@ -222,7 +222,7 @@ export type ComputedViewFunctionWithoutVariables<Result> =
     Defaults extends AllFieldsSelected<Available>
   >(
     options?: Options
-  ) => Promise<Select<Result, DefaultSelection2<Available, Options, Defaults>>>;
+  ) => Promise<Select<Result, DefaultSelection<Available, Options, Defaults>>>;
 
 // Represents a computed view that doesn't take any input parameters/variables.
 // It includes the view function and the view metadata.
@@ -252,7 +252,7 @@ export type ComputedViewFunctionWithVariables<Variables, Result> =
   >(
     variables: Variables,
     options?: Options
-  ) => Promise<Select<Result, DefaultSelection2<Available, Options, Defaults>>>;
+  ) => Promise<Select<Result, DefaultSelection<Available, Options, Defaults>>>;
 
 // Represents a computed view that takes input parameters/variables.
 // It includes the view function and the view metadata.

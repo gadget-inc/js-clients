@@ -66,12 +66,6 @@ export type AvailableSelection<Schema> = Schema extends Array<infer T>
  */
 
 export type DefaultSelection<
-  SelectionType,
-  Options extends { select?: SelectionType | null },
-  Defaults extends SelectionType
-> = Options["select"] extends SelectionType ? Options["select"] : Defaults;
-
-export type DefaultSelection2<
   Available extends FieldSelection,
   Options extends { select?: Available | null },
   Defaults extends SomeFieldsSelected<Available>

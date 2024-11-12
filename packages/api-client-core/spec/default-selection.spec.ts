@@ -1,7 +1,7 @@
 import type { AssertTrue, Has, IsExact } from "conditional-type-checks";
 import type { FieldSelection } from "src/FieldSelection.js";
 import type { ComputedViewFunctionWithVariables, ComputedViewFunctionWithoutVariables } from "src/GadgetFunctions.js";
-import type { AllFieldsSelected, AvailableSelection, DefaultSelection, DefaultSelection2 } from "../src/types.js";
+import type { AllFieldsSelected, AvailableSelection, DefaultSelection, DefaultSelection } from "../src/types.js";
 import type { AvailableTestSchemaSelection, TestSchema } from "./TestSchema.js";
 import type { ExpandRecursively } from "./helpers.js";
 
@@ -16,7 +16,7 @@ test("DefaultSelection", () => {
   type undefinedDefault2 = DefaultSelection<AvailableTestSchemaSelection, {}, { num: true }>;
   type _TestDefaultsUndefinedToTheDefault2 = AssertTrue<IsExact<undefinedDefault2, { num: true }>>;
 
-  type anyDefault = DefaultSelection2<AvailableTestSchemaSelection, { select: any }, { num: true }>;
+  type anyDefault = DefaultSelection<AvailableTestSchemaSelection, { select: any }, { num: true }>;
   type _TestDefaultsAnyToTheDefault = AssertTrue<IsExact<anyDefault, { num: true }>>;
 
   type nonDefault = DefaultSelection<AvailableTestSchemaSelection, { select: { num: false; str: true } }, { num: true }>;
