@@ -55,14 +55,10 @@ type IfAny<T, Y, N> = 0 extends 1 & T ? Y : N;
  *   }
  * }
  */
-export type AvailableSelection<Schema> = Schema extends string | number | bigint | null | undefined
-  ? boolean | null | undefined
-  : { [key in keyof Schema]?: AvailableSelection<Schema[key]> };
-
-export type AvailableSelection2<Schema> = Schema extends Array<infer T>
-  ? AvailableSelection2<T>
+export type AvailableSelection<Schema> = Schema extends Array<infer T>
+  ? AvailableSelection<T>
   : Schema extends object
-  ? { [key in keyof Schema]?: AvailableSelection2<Schema[key]> }
+  ? { [key in keyof Schema]?: AvailableSelection<Schema[key]> }
   : boolean | null | undefined;
 
 /**

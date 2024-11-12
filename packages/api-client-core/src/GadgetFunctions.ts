@@ -1,7 +1,7 @@
 import type { FieldSelection } from "./FieldSelection.js";
 import type { GadgetRecord, RecordShape } from "./GadgetRecord.js";
 import type { GadgetRecordList } from "./GadgetRecordList.js";
-import type { AllFieldsSelected, AvailableSelection2, DefaultSelection2, LimitToKnownKeys, Select2, VariablesOptions } from "./types.js";
+import type { AllFieldsSelected, AvailableSelection, DefaultSelection2, LimitToKnownKeys, Select2, VariablesOptions } from "./types.js";
 
 export type PromiseOrLiveIterator<T> = Promise<T> | AsyncIterable<T>;
 export type AsyncRecord<T extends RecordShape> = PromiseOrLiveIterator<GadgetRecord<T>>;
@@ -214,7 +214,7 @@ export type ComputedViewFunctionWithoutVariables<Result> =
   // Available, Options and Defaults are inferred at call time.
   <
     // Available is the full FieldSelection type derived from the shape of the Result type, i.e. all possible selections.
-    Available extends AvailableSelection2<Result> & FieldSelection,
+    Available extends AvailableSelection<Result> & FieldSelection,
     // Options holds the actual selection at call time.
     Options extends { select?: Available | null },
     // Defaults is the default selection to be used when one is not provided at call time,
@@ -232,7 +232,7 @@ export interface ComputedViewWithoutVariables<Result> extends ComputedViewFuncti
   namespace: string | string[] | null;
   defaultSelection: FieldSelection;
   selection?: FieldSelection;
-  selectionType: AvailableSelection2<Result>;
+  selectionType: AvailableSelection<Result>;
   resultType: Result;
 }
 
@@ -243,7 +243,7 @@ export type ComputedViewFunctionWithVariables<Variables, Result> =
   // Available, Options and Defaults are inferred at call time.
   <
     // Available is the full FieldSelection type derived from the shape of the Result type, i.e. all possible selections.
-    Available extends AvailableSelection2<Result> & FieldSelection,
+    Available extends AvailableSelection<Result> & FieldSelection,
     // Options holds the actual selection at call time.
     Options extends { select?: Available | null },
     // Defaults is the default selection to be used when one is not provided at call time,
@@ -264,6 +264,6 @@ export interface ComputedViewWithVariables<Variables, Result> extends ComputedVi
   variablesType: Variables;
   defaultSelection: FieldSelection;
   selection?: FieldSelection;
-  selectionType: AvailableSelection2<Result>;
+  selectionType: AvailableSelection<Result>;
   resultType: Result;
 }

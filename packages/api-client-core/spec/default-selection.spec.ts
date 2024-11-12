@@ -1,7 +1,7 @@
 import type { AssertTrue, Has, IsExact } from "conditional-type-checks";
 import type { FieldSelection } from "src/FieldSelection.js";
 import type { ComputedViewFunctionWithVariables, ComputedViewFunctionWithoutVariables } from "src/GadgetFunctions.js";
-import type { AllFieldsSelected, AvailableSelection2, DefaultSelection, DefaultSelection2 } from "../src/types.js";
+import type { AllFieldsSelected, AvailableSelection, DefaultSelection, DefaultSelection2 } from "../src/types.js";
 import type { AvailableTestSchemaSelection, TestSchema } from "./TestSchema.js";
 import type { ExpandRecursively } from "./helpers.js";
 
@@ -27,11 +27,11 @@ test("DefaultSelection", () => {
 });
 
 test("AvailableSelection", () => {
-  type availableTestSchemaSelection = AvailableSelection2<TestSchema>;
+  type availableTestSchemaSelection = AvailableSelection<TestSchema>;
   type _TestAvailableTestSchemaSelection = Has<FieldSelection, availableTestSchemaSelection>;
 
   type testType = { a: number; b: { c: string; d: { e: boolean } } };
-  type availableSelection = AvailableSelection2<testType>;
+  type availableSelection = AvailableSelection<testType>;
   type _TestAvailableSelection = AssertTrue<
     IsExact<
       availableSelection,
@@ -54,7 +54,7 @@ test("AvailableSelection", () => {
 
 test("AllFieldsSelected", () => {
   type testType = { a: number; b: { c: string; d: { e: boolean } } };
-  type availableSelection = AvailableSelection2<testType>;
+  type availableSelection = AvailableSelection<testType>;
   type allFieldsSelected = ExpandRecursively<AllFieldsSelected<availableSelection>>;
   type _TestAllFieldsSelected = AssertTrue<IsExact<allFieldsSelected, { a: true; b: { c: true; d: { e: true } } }>>;
 });
