@@ -1,5 +1,5 @@
 import type { GadgetRecord } from "src/index.js";
-import type { AvailableSelection, DeepFilterNever, DefaultSelection, Select, Selectable } from "../src/types.js";
+import type { AvailableSelection2, DeepFilterNever, DefaultSelection, Select, Selectable } from "../src/types.js";
 
 export type NestedThing = {
   bool: boolean;
@@ -48,7 +48,7 @@ export type TestSchema = {
   };
 };
 
-export type AvailableTestSchemaSelection = AvailableSelection<TestSchema>;
+export type AvailableTestSchemaSelection = AvailableSelection2<TestSchema>;
 
 export const DefaultPostSelection = {
   __typename: true,
