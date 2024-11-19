@@ -442,4 +442,165 @@ describe("GadgetRecord", () => {
     product.setField("changed", true);
     expect(product.getField("changed")).toEqual(true);
   });
+
+  describe("record changes for current Date values against previous string value", () => {
+    it("correctly calculates hasChanges when the current value is the same Date as the previous value", () => {
+      const dateStr = "2024-04-19T21:03:37.000Z";
+
+      productBaseRecord = {
+        id: "123",
+        name: "A cool product",
+        body: "A description of why it's cool",
+        publishedAt: dateStr,
+      };
+
+      const product = new GadgetRecord<SampleBaseRecord>(productBaseRecord);
+      expect(product.changed()).toBe(false);
+
+      product.publishedAt = new Date(dateStr);
+      expect(product.changed()).toBe(false);
+    });
+
+    it("correctly calculates record changed when the current value is a Date and is the same date as the previous value", () => {
+      const dateStr = "2024-04-19T21:03:37.000Z";
+
+      productBaseRecord = {
+        id: "123",
+        name: "A cool product",
+        body: "A description of why it's cool",
+        publishedAt: dateStr,
+      };
+
+      const product = new GadgetRecord<SampleBaseRecord>(productBaseRecord);
+      expect(product.changed("publishedAt")).toBe(false);
+
+      product.publishedAt = new Date(dateStr);
+      expect(product.changed("publishedAt")).toBe(false);
+    });
+
+    it("correctly calculates record changed when the current value is a string and is the same date as the previous value", () => {
+      const dateStr = "2024-04-19T21:03:37.000Z";
+
+      productBaseRecord = {
+        id: "123",
+        name: "A cool product",
+        body: "A description of why it's cool",
+        publishedAt: new Date(dateStr),
+      };
+
+      const product = new GadgetRecord<SampleBaseRecord>(productBaseRecord);
+      expect(product.changed("publishedAt")).toBe(false);
+
+      product.publishedAt = dateStr;
+      expect(product.changed("publishedAt")).toBe(false);
+    });
+
+    it("correctly calculates hasChanges when the current value is a newer Date than the previous value", () => {
+      const oldDateStr = "2024-04-19T21:03:37.000Z";
+      const newDateStr = "2024-11-19T21:03:37.000Z";
+
+      productBaseRecord = {
+        id: "123",
+        name: "A cool product",
+        body: "A description of why it's cool",
+        publishedAt: oldDateStr,
+      };
+
+      const product = new GadgetRecord<SampleBaseRecord>(productBaseRecord);
+      expect(product.changed()).toBe(false);
+
+      product.publishedAt = new Date(newDateStr);
+      expect(product.changed()).toBe(true);
+    });
+
+    it("correctly calculates record changed when the current value is a Date and is a newer date than the previous value", () => {
+      const oldDateStr = "2024-04-19T21:03:37.000Z";
+      const newDateStr = "2024-11-19T21:03:37.000Z";
+
+      productBaseRecord = {
+        id: "123",
+        name: "A cool product",
+        body: "A description of why it's cool",
+        publishedAt: oldDateStr,
+      };
+
+      const product = new GadgetRecord<SampleBaseRecord>(productBaseRecord);
+      expect(product.changed("publishedAt")).toBe(false);
+
+      product.publishedAt = new Date(newDateStr);
+      expect(product.changed("publishedAt")).toBe(true);
+    });
+
+    it("correctly calculates record changed when the current value is a string and is a newer date than the previous value", () => {
+      const oldDateStr = "2024-04-19T21:03:37.000Z";
+      const newDateStr = "2024-11-19T21:03:37.000Z";
+
+      productBaseRecord = {
+        id: "123",
+        name: "A cool product",
+        body: "A description of why it's cool",
+        publishedAt: new Date(oldDateStr),
+      };
+
+      const product = new GadgetRecord<SampleBaseRecord>(productBaseRecord);
+      expect(product.changed("publishedAt")).toBe(false);
+
+      product.publishedAt = newDateStr;
+      expect(product.changed("publishedAt")).toBe(true);
+    });
+
+    it("correctly calculates hasChanges when the current value is an older Date than the previous value", () => {
+      const oldDateStr = "2024-04-19T21:03:37.000Z";
+      const newDateStr = "2024-11-19T21:03:37.000Z";
+
+      productBaseRecord = {
+        id: "123",
+        name: "A cool product",
+        body: "A description of why it's cool",
+        publishedAt: newDateStr,
+      };
+
+      const product = new GadgetRecord<SampleBaseRecord>(productBaseRecord);
+      expect(product.changed()).toBe(false);
+
+      product.publishedAt = new Date(oldDateStr);
+      expect(product.changed()).toBe(true);
+    });
+
+    it("correctly calculates record changed when the current value is a Date and is an older date than the previous value", () => {
+      const oldDateStr = "2024-04-19T21:03:37.000Z";
+      const newDateStr = "2024-11-19T21:03:37.000Z";
+
+      productBaseRecord = {
+        id: "123",
+        name: "A cool product",
+        body: "A description of why it's cool",
+        publishedAt: newDateStr,
+      };
+
+      const product = new GadgetRecord<SampleBaseRecord>(productBaseRecord);
+      expect(product.changed("publishedAt")).toBe(false);
+
+      product.publishedAt = new Date(oldDateStr);
+      expect(product.changed("publishedAt")).toBe(true);
+    });
+
+    it("correctly calculates record changed when the current value is a string and is an older date than the previous value", () => {
+      const oldDateStr = "2024-04-19T21:03:37.000Z";
+      const newDateStr = "2024-11-19T21:03:37.000Z";
+
+      productBaseRecord = {
+        id: "123",
+        name: "A cool product",
+        body: "A description of why it's cool",
+        publishedAt: new Date(newDateStr),
+      };
+
+      const product = new GadgetRecord<SampleBaseRecord>(productBaseRecord);
+      expect(product.changed("publishedAt")).toBe(false);
+
+      product.publishedAt = oldDateStr;
+      expect(product.changed("publishedAt")).toBe(true);
+    });
+  });
 });
