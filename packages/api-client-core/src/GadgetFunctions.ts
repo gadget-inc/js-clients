@@ -1,7 +1,6 @@
-import type { FieldSelection } from "./FieldSelection.js";
 import type { GadgetRecord, RecordShape } from "./GadgetRecord.js";
 import type { GadgetRecordList } from "./GadgetRecordList.js";
-import type { AllFieldsSelected, AvailableSelection2, DefaultSelection2, LimitToKnownKeys, Select2, VariablesOptions } from "./types.js";
+import type { LimitToKnownKeys, VariablesOptions } from "./types.js";
 
 export type PromiseOrLiveIterator<T> = Promise<T> | AsyncIterable<T>;
 export type AsyncRecord<T extends RecordShape> = PromiseOrLiveIterator<GadgetRecord<T>>;
@@ -207,63 +206,3 @@ export interface GlobalActionFunction<VariablesT> {
 
 export type AnyActionFunction = ActionFunctionMetadata<any, any, any, any, any, any> | GlobalActionFunction<any>;
 export type AnyBulkActionFunction = ActionFunctionMetadata<any, any, any, any, any, true>;
-
-// This is a function that represents a computed view that doesn't take any input parameters/variables.
-// Result is an explicit type parameter defining the shape of the full result.
-export type ComputedViewFunctionWithoutVariables<Result> =
-  // Available, Options and Defaults are inferred at call time.
-  <
-    // Available is the full FieldSelection type derived from the shape of the Result type, i.e. all possible selections.
-    Available extends AvailableSelection2<Result> & FieldSelection,
-    // Options holds the actual selection at call time.
-    Options extends { select?: Available | null },
-    // Defaults is the default selection to be used when one is not provided at call time,
-    // for views we default to everything being selected.
-    Defaults extends AllFieldsSelected<Available>
-  >(
-    options?: Options
-  ) => Promise<Select2<Result, DefaultSelection2<Available, Options, Defaults>>>;
-
-// Represents a computed view that doesn't take any input parameters/variables.
-// It includes the view function and the view metadata.
-export interface ComputedViewWithoutVariables<Result> extends ComputedViewFunctionWithoutVariables<Result> {
-  type: "computedView";
-  operationName: string;
-  namespace: string | string[] | null;
-  defaultSelection: FieldSelection;
-  selection?: FieldSelection;
-  selectionType: AvailableSelection2<Result>;
-  resultType: Result;
-}
-
-// This is a function that represents a computed view that takes input parameters/variables.
-// Result is an explicit type parameter defining the shape of the full result.
-// Variables is an explicit type parameter that describes the shape of the variables parameter.
-export type ComputedViewFunctionWithVariables<Variables, Result> =
-  // Available, Options and Defaults are inferred at call time.
-  <
-    // Available is the full FieldSelection type derived from the shape of the Result type, i.e. all possible selections.
-    Available extends AvailableSelection2<Result> & FieldSelection,
-    // Options holds the actual selection at call time.
-    Options extends { select?: Available | null },
-    // Defaults is the default selection to be used when one is not provided at call time,
-    // for views we default to everything being selected.
-    Defaults extends AllFieldsSelected<Available>
-  >(
-    variables: Variables,
-    options?: Options
-  ) => Promise<Select2<Result, DefaultSelection2<Available, Options, Defaults>>>;
-
-// Represents a computed view that takes input parameters/variables.
-// It includes the view function and the view metadata.
-export interface ComputedViewWithVariables<Variables, Result> extends ComputedViewFunctionWithVariables<Variables, Result> {
-  type: "computedView";
-  operationName: string;
-  namespace: string | string[] | null;
-  variables: VariablesOptions;
-  variablesType: Variables;
-  defaultSelection: FieldSelection;
-  selection?: FieldSelection;
-  selectionType: AvailableSelection2<Result>;
-  resultType: Result;
-}

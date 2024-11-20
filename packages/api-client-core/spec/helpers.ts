@@ -47,19 +47,3 @@ export const waitForExpectationToPass = async (run: () => void | Promise<void>, 
     })
   );
 };
-
-/**
- * Debugging type that will display a fully resolved type
- * in Intellisense instead of just the type aliases
- *
- * @type {T} The type to expand out
- */
-export type ExpandRecursively<T> = T extends (...args: infer A) => infer R
-  ? (...args: ExpandRecursively<A>) => ExpandRecursively<R>
-  : T extends Array<infer E>
-  ? ExpandRecursively<E>[]
-  : T extends object
-  ? T extends infer O
-    ? { [K in keyof O]: ExpandRecursively<O[K]> }
-    : never
-  : T;
