@@ -22,64 +22,13 @@ export type LimitToKnownKeys<T, U> = {
 export type VariablesOptions = Record<string, VariableOptions>;
 
 /**
- * Allows detecting an any type, this is rather tricky:
- * The type constraint 0 extends 1 is not satisfied (0 is not assignable to 1),
- * so it should be impossible for 0 extends (1 & T) to be satisfied either, since (1 & T) should be even narrower than 1.
- * However, when T is any, it reduces 0 extends (1 & any) to 0 extends any, which is satisfied.
- * That's because any is intentionally unsound and acts as both a supertype and subtype of almost every other type.
- * source: https://stackoverflow.com/questions/49927523/disallow-call-with-any/49928360#49928360
- */
-
-type IfAny<T, Y, N> = 0 extends 1 & T ? Y : N;
-
-/**
- * Convert a schema type into the type that a selection of it must extend
- *
- * Example Schema:
- *
- * {
- *   foo: boolean;
- *   bar?: string;
- *   nested?: {
- *     count: number
- *   }
- * }
- *
- * Example available selection:
- *
- * {
- *   foo?: boolean | null | undefined;
- *   bar?: boolean | null | undefined;
- *   nested?: {
- *     count: boolean | null | undefined
- *   }
- * }
- */
-export type AvailableSelection<Schema> = Schema extends string | number | bigint | null | undefined
-  ? boolean | null | undefined
-  : { [key in keyof Schema]?: AvailableSelection<Schema[key]> };
-
-export type AvailableSelection2<Schema> = Schema extends Array<infer T>
-  ? AvailableSelection2<T>
-  : Schema extends object
-  ? { [key in keyof Schema]?: AvailableSelection2<Schema[key]> }
-  : boolean | null | undefined;
-
-/**
  * Given an options object from a find method, default the type of the selection to a default if no selection is passed
  */
-
 export type DefaultSelection<
   SelectionType,
   Options extends { select?: SelectionType | null },
   Defaults extends SelectionType
 > = Options["select"] extends SelectionType ? Options["select"] : Defaults;
-
-export type DefaultSelection2<
-  Available extends FieldSelection,
-  Options extends { select?: Available | null },
-  Defaults extends SomeFieldsSelected<Available>
-> = IfAny<Options, Defaults, IfAny<Options["select"], Defaults, Options["select"] extends Available ? Options["select"] : Defaults>>;
 
 /**
  * Describes an option set that accepts a selection
@@ -88,21 +37,6 @@ export interface Selectable<SelectionType = any> {
   /** Select fields other than the defaults of the record to return */
   select?: SelectionType | null;
 }
-
-/**
- * Take a FieldSelection type and construct a type with all its fields required and selected.
- */
-export type AllFieldsSelected<Selection extends FieldSelection> = {
-  [K in keyof Selection]-?: NonNullable<Selection[K]> extends FieldSelection ? AllFieldsSelected<NonNullable<Selection[K]>> : true;
-};
-
-/**
- * Take a FieldSelection type and construct a type with its fields set to true
- * rather than (boolean | null | undefined)
- */
-export type SomeFieldsSelected<Selection extends FieldSelection> = {
-  [K in keyof Selection]?: NonNullable<Selection[K]> extends FieldSelection ? SomeFieldsSelected<NonNullable<Selection[K]>> : true;
-};
 
 /**
  * Describes the base options that many record finders accept
@@ -140,24 +74,6 @@ type InnerSelect<Schema, Selection extends FieldSelection | null | undefined> = 
         : never;
     };
 
-type InnerSelect2<Schema, Selection extends FieldSelection | null | undefined> = IfAny<
-  Selection,
-  never,
-  Selection extends null | undefined
-    ? never
-    : Schema extends (infer T)[]
-    ? InnerSelect2<T, Selection>[]
-    : Schema extends null
-    ? InnerSelect2<Exclude<Schema, null>, Selection> | null
-    : {
-        [Key in keyof Selection & keyof Schema]: Selection[Key] extends true
-          ? Schema[Key]
-          : Selection[Key] extends FieldSelection
-          ? InnerSelect2<Schema[Key], Selection[Key]>
-          : never;
-      }
->;
-
 /**
  * Filter out any keys in `T` that are mapped to `never` recursively. Any nested objects that are empty after having never valued keys removed are also removed.
  *
@@ -184,7 +100,6 @@ export type DeepFilterNever<T> = T extends Record<string, unknown>
  * ```
  */
 export type Select<Schema, Selection extends FieldSelection | null | undefined> = DeepFilterNever<InnerSelect<Schema, Selection>>;
-export type Select2<Schema, Selection extends FieldSelection | null | undefined> = DeepFilterNever<InnerSelect2<Schema, Selection>>;
 
 /** Represents an amount of some currency. Specified as a string so user's aren't tempted to do math on the value. */
 export type CurrencyAmount = string;
@@ -833,6 +748,33 @@ export type PaginateOptions = {
   last?: number | null;
   select?: AnySelection | InternalFieldSelection | null;
 };
+
+/**
+ * Convert a schema type into the type that a selection of it must extend
+ *
+ * Example Schema:
+ *
+ * {
+ *   foo: boolean;
+ *   bar?: string;
+ *   nested?: {
+ *     count: number
+ *   }
+ * }
+ *
+ * Example available selection:
+ *
+ * {
+ *   foo?: boolean | null | undefined;
+ *   bar?: boolean | null | undefined;
+ *   nested?: {
+ *     count: boolean | null | undefined
+ *   }
+ * }
+ */
+export type AvailableSelection<Schema> = Schema extends string | number | bigint | null | undefined
+  ? boolean | null | undefined
+  : { [key in keyof Schema]?: AvailableSelection<Schema[key]> };
 
 /** Options for configuring the queue for a background action */
 export interface BackgroundActionQueue {

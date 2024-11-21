@@ -9,7 +9,6 @@ import {
   GadgetConnection,
   actionRunner,
   backgroundActionResultRunner,
-  computedViewRunner,
   enqueueActionRunner,
   findManyRunner,
   findOneByFieldRunner,
@@ -2039,26 +2038,6 @@ describe("operationRunners", () => {
         expect(value[2].id).toEqual("789");
         expect(value[2].name).toEqual(null);
       });
-    });
-  });
-  describe("computedViewRunner", () => {
-    test("global view", () => {
-      const _promise = computedViewRunner(
-        connection,
-        "boom",
-        { a: true, b: true },
-        { a: { required: false, type: "Int", value: 42 }, b: { required: false, type: "String", value: "fortytwo" } },
-        { a: true }
-      );
-
-      expect(query).toMatchInlineSnapshot(`
-        "query boom($a: Int, $b: String) {
-          boom(a: $a, b: $b) {
-            a
-            __typename
-          }
-        }"
-      `);
     });
   });
 });
