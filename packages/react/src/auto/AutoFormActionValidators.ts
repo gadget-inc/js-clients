@@ -1,6 +1,7 @@
 import type { ActionFunction, GlobalActionFunction } from "@gadgetinc/api-client-core";
-import { FieldMetadata, type GlobalActionMetadata, type ModelWithOneActionMetadata } from "../metadata.js";
-import { RecordIdentifier } from "../use-action-form/types.js";
+import type { FieldMetadata} from "../metadata.js";
+import { type GlobalActionMetadata, type ModelWithOneActionMetadata } from "../metadata.js";
+import type { RecordIdentifier } from "../use-action-form/types.js";
 import { isPlainObject } from "../use-action-form/utils.js";
 import type { useAutoForm } from "./AutoForm.js";
 
