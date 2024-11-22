@@ -38,12 +38,14 @@ export const createApplyLiveQueryPatch =
           const valueToPublish: ExecutionLivePatchResult = {};
 
           if (next.value.revision === 1) {
-            if (!next.value.data) {
+            if (next.value.data !== undefined) {
+              valueToPublish.data = next.value.data;
+
+              mutableData = next.value.data;
+              lastRevision = 1;
+            } else {
               throw new Error("Missing data.");
             }
-            valueToPublish.data = next.value.data;
-            mutableData = next.value.data;
-            lastRevision = 1;
           } else {
             if (!mutableData) {
               throw new Error("No previousData available.");
