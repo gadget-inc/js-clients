@@ -190,4 +190,36 @@ describe("live queries", () => {
 
     await waitFor(() => expect(container).toHaveTextContent("Users: 2, Products: 0"));
   });
+
+  test("live queries can propagate graphql errors", async () => {
+    const { result } = renderHook(() => useFindMany(api.user, { live: true }), {
+      wrapper: MockGraphQLWSClientWrapper(api),
+    });
+
+    expect(result.current[0].data).toBeFalsy();
+    expect(result.current[0].fetching).toBe(true);
+    expect(result.current[0].error).toBeFalsy();
+
+    await waitFor(() => expect(mockGraphQLWSClient.subscribe.subscriptions).toHaveLength(1));
+
+    const subscription = mockGraphQLWSClient.subscribe.subscriptions[0];
+    expect(subscription.payload.query).toContain("@live");
+
+    subscription.push({
+      data: null,
+      errors: [
+        {
+          message: "GGT_PERMISSION_DENIED: Permission has been denied.",
+          locations: [{ line: 2, column: 3 }],
+          path: ["posts"],
+        },
+      ],
+      revision: 1,
+    } as any);
+
+    await waitFor(() => expect(result.current[0].fetching).toBe(false));
+
+    expect(result.current[0].error!.message).toEqual("[GraphQL] GGT_PERMISSION_DENIED: Permission has been denied.");
+    expect(result.current[0].data).toBeNull();
+  });
 });
