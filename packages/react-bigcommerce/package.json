@@ -1,6 +1,6 @@
 {
   "name": "@gadgetinc/react-bigcommerce",
-  "version": "0.1.4",
+  "version": "0.1.5",
   "files": [
     "README.md",
     "dist/**/*"
@@ -27,7 +27,7 @@
     "prerelease": "gitpkg publish"
   },
   "dependencies": {
-    "@gadgetinc/api-client-core": "^0.15.34"
+    "@gadgetinc/api-client-core": "^0.15.35"
   },
   "devDependencies": {
     "@gadgetinc/api-client-core": "workspace:*",
@@ -41,6 +41,6 @@
   "peerDependencies": {
     "react": "^18.0.0",
     "react-dom": "^18.0.0",
-    "@gadgetinc/react": "^0.18.2"
+    "@gadgetinc/react": "^0.18.3"
   }
 }
