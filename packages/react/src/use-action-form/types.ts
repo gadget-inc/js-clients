@@ -41,13 +41,25 @@ export type FormInput<InputT, Depth extends number = 9, CurrentDepth extends num
   ? { [K in keyof InputT]: FormInput<InputT[K], Depth, Increment<CurrentDepth>> }
   : InputT | null | undefined;
 
+/**
+ * Type helper to convert `null` to undefined recursively within the form values type
+ * Many Gadget users use Shopify Polaris as a design system, and many of its input components do not accept `null` values. For maximum compatibility with Polaris, we convert `null` to `undefined` within the form values type, knowing that the Polaris components handle both at runtime just fine.
+ */
+export type StripNulls<T> = T extends null
+  ? undefined
+  : T extends (infer U)[]
+  ? StripNulls<U>[]
+  : T extends object
+  ? { [K in keyof T]: StripNulls<T[K]> }
+  : T;
+
 export type UseActionFormResult<
   GivenOptions extends OptionsType,
   SchemaT,
   ActionFunc extends ActionFunction<GivenOptions, any, any, SchemaT, any> | GlobalActionFunction<any>,
   FormVariables extends FieldValues,
   FormContext = any
-> = Omit<UseFormReturn<FormVariables & FormInput<ActionFunc["variablesType"]>, FormContext>, "handleSubmit" | "formState"> & {
+> = Omit<UseFormReturn<FormVariables & StripNulls<FormInput<ActionFunc["variablesType"]>>, FormContext>, "handleSubmit" | "formState"> & {
   formState: UseActionFormState<ActionFunc, FormVariables, FormContext> & { isReady: boolean };
   /**
    * Any error that occurred during initial data fetching or action submission
