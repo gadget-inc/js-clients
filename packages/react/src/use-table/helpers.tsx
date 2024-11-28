@@ -166,23 +166,34 @@ export const getTableColumns = (spec: Pick<TableSpec, "fieldMetadataTree" | "tar
     }
 
     const { header, field: columnPath, sortable, style } = getCellDetailColumnByColumnValue(targetColumn);
-    const { firstField, targetField, isHasMany, isHasOneOrBelongsTo } = getFieldInformationByColumnPath(spec.fieldMetadataTree, columnPath);
+    const { firstField, targetField, isHasManyOrHasManyThrough, isHasOneOrBelongsTo } = getFieldInformationByColumnPath(
+      spec.fieldMetadataTree,
+      columnPath
+    );
 
     const column: TableColumn = {
       identifier: columnPath,
       header: header ?? firstField.name,
       field: columnPath,
       type: targetField.fieldType,
-      sortable: isColumnSortable(targetField, sortable),
+      sortable: isColumnSortable({
+        fieldMetadata: { ...targetField, apiIdentifier: columnPath },
+        sortable,
+        isRelationshipField: isHasOneOrBelongsTo || isHasManyOrHasManyThrough,
+      }),
       style,
     };
 
     // The column path doesn't specify a related field, so we need to get the default display field
-    if (isHasOneOrBelongsTo || isHasMany) {
+    if (isHasOneOrBelongsTo || isHasManyOrHasManyThrough) {
       const defaultRelatedField = maybeGetDefaultDisplayFieldMetadata(spec.fieldMetadataTree, columnPath);
       if (defaultRelatedField) {
         column.type = defaultRelatedField.fieldType;
-        column.sortable = isColumnSortable(defaultRelatedField, sortable);
+        column.sortable = isColumnSortable({
+          fieldMetadata: { ...defaultRelatedField, apiIdentifier: columnPath },
+          sortable,
+          isRelationshipField: true,
+        });
       }
       column.relationshipType = firstField.fieldType as RelationshipType;
     }
@@ -222,15 +233,15 @@ const recordToRow = (
       continue;
     }
     const { field: columnPath } = getCellDetailColumnByColumnValue(targetColumn);
-    const { firstPathSegment, targetField, isHasMany, isHasOneOrBelongsTo } = getFieldInformationByColumnPath(
+    const { firstPathSegment, targetField, isHasManyOrHasManyThrough, isHasOneOrBelongsTo } = getFieldInformationByColumnPath(
       spec.fieldMetadataTree,
       columnPath
     );
 
     // The column path doesn't specify a related field, so we need to get the default display field
-    if (isHasOneOrBelongsTo || isHasMany) {
+    if (isHasOneOrBelongsTo || isHasManyOrHasManyThrough) {
       const relatedField = maybeGetDefaultDisplayFieldMetadata(spec.fieldMetadataTree, columnPath) ?? targetField;
-      if (isHasMany) {
+      if (isHasManyOrHasManyThrough) {
         row[columnPath] = get(record, firstPathSegment)?.edges.map((edge: any) => edge.node[relatedField.apiIdentifier]);
       } else {
         row[columnPath] = get(record, firstPathSegment)?.[relatedField.apiIdentifier];
@@ -249,7 +260,7 @@ const getFieldInformationByColumnPath = (fieldMetadataTree: TableSpec["fieldMeta
   const targetField = getFieldMetadataByColumnPath(fieldMetadataTree, columnPath);
 
   const isHasOneOrBelongsTo = isHasOneOrBelongsToField(firstField);
-  const isHasMany = isHasManyOrHasManyThroughField(firstField);
+  const isHasManyOrHasManyThrough = isHasManyOrHasManyThroughField(firstField);
 
   return {
     firstPathSegment,
@@ -257,7 +268,7 @@ const getFieldInformationByColumnPath = (fieldMetadataTree: TableSpec["fieldMeta
     targetField,
 
     isHasOneOrBelongsTo,
-    isHasMany,
+    isHasManyOrHasManyThrough,
   };
 };
 
@@ -277,8 +288,15 @@ const getCellDetailColumnByColumnValue = (column: string | CellDetailColumn): Ce
   throw new Error(`Invalid column value: ${JSON.stringify(column)}`);
 };
 
-const isColumnSortable = (fieldMetadata: FieldMetadata, sortable: boolean | undefined) => {
-  return sortable ?? !!("sortable" in fieldMetadata && fieldMetadata.sortable);
+const isColumnSortable = (props: { fieldMetadata: FieldMetadata; sortable?: boolean; isRelationshipField?: boolean }) => {
+  const { fieldMetadata, sortable, isRelationshipField } = props;
+  const isGadgetFieldSortable = isRelationshipField !== true && "sortable" in fieldMetadata && !!fieldMetadata.sortable;
+
+  if (sortable && !isGadgetFieldSortable) {
+    throw new Error(`Field '${fieldMetadata.apiIdentifier}' is not sortable`);
+  }
+
+  return sortable ?? isGadgetFieldSortable;
 };
 
 const mergeColumnPathByFieldType = (columnPath: string, newSegment: string, field: { fieldType: GadgetFieldType }) => {
