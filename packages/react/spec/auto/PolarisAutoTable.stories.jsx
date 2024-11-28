@@ -98,7 +98,13 @@ export const SelectRichTextField = {
 export const SelectFileField = {
   args: {
     model: api.autoTableTest,
-    columns: ["str", "file"],
+    columns: [
+      "str",
+      {
+        field: "file",
+        sortable: false,
+      },
+    ],
   },
 };
 
@@ -343,6 +349,7 @@ export const HasManyThroughFields = {
       {
         header: "Sibling ID",
         field: "baseModelHmtField.edges.node.id",
+        sortable: false,
       },
     ],
   },
