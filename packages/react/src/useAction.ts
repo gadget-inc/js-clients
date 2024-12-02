@@ -11,8 +11,8 @@ import {
   capitalizeIdentifier,
   disambiguateActionVariables,
   get,
-  hydrateRecord,
   namespaceDataPath,
+  processActionResponse,
 } from "@gadgetinc/api-client-core";
 import { useCallback, useContext, useEffect, useMemo } from "react";
 import type { AnyVariables, OperationContext, UseMutationState } from "urql";
@@ -142,14 +142,13 @@ const processResult = <Data, Variables extends AnyVariables>(
   let data = null;
   if (result.data) {
     const dataPath = namespaceDataPath([action.operationName], action.namespace);
-
     const mutationData = get(result.data, dataPath);
     if (mutationData) {
       const errors = mutationData["errors"];
       if (errors && errors[0]) {
         error = ErrorWrapper.forErrorsResponse(errors, error?.response);
       } else {
-        data = action.hasReturnType ? mutationData.result : hydrateRecord(result, mutationData[action.modelSelectionField]);
+        data = processActionResponse(action.defaultSelection, result, mutationData, action.modelSelectionField, action.hasReturnType);
       }
     }
   }
