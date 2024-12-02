@@ -40,5 +40,6 @@ export type AutoTableProps<
   resourceName?: { singular: string; plural: string };
   condensed?: boolean;
   searchable?: boolean;
+  searchValue?: string;
   paginate?: boolean;
 };
