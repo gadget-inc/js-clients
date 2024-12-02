@@ -92,6 +92,7 @@ const PolarisAutoTableComponent = <
     live: props.live,
     initialSort: props.initialSort,
     filter: props.filter,
+    search: props.searchValue,
   } as any);
 
   const { columns, rows, page, fetching, error, search, selection, sort, metadata, data: rawRecords } = methods;
