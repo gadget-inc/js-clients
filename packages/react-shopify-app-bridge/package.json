@@ -27,7 +27,7 @@
     "prerelease": "gitpkg publish"
   },
   "dependencies": {
-    "@gadgetinc/api-client-core": "^0.15.35",
+    "@gadgetinc/api-client-core": "^0.15.36",
     "crypto-js": "^4.2.0",
     "tslib": "^2.6.2"
   },

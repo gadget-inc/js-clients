@@ -841,4 +841,48 @@ describe("useAction", () => {
       },
     });
   });
+
+  test("handles upsert data response", async () => {
+    const { result } = renderHook(() => useAction(kitchenSinkApi.widget.upsert), { wrapper: MockClientWrapper(relatedProductsApi) });
+
+    let mutationPromise: any;
+    act(() => {
+      mutationPromise = result.current[1]({ id: "123", widget: { name: "Something new", inventoryCount: 100 } });
+    });
+
+    expect(result.current[0].data).toBeFalsy();
+    expect(result.current[0].fetching).toBe(true);
+    expect(result.current[0].error).toBeFalsy();
+
+    expect(mockUrqlClient.executeMutation).toBeCalledTimes(1);
+
+    mockUrqlClient.executeMutation.pushResponse("upsertWidget", {
+      data: {
+        upsertWidget: {
+          success: true,
+          widget: {
+            id: "123",
+            name: "Something new",
+            inventoryCount: 101,
+          },
+        },
+      },
+      stale: false,
+      hasNext: false,
+    });
+
+    await act(async () => {
+      const promiseResult = await mutationPromise;
+
+      expect(promiseResult.data!.id).toEqual("123");
+      expect(promiseResult.data!.name).toEqual("Something new");
+      expect(promiseResult.fetching).toBe(false);
+      expect(promiseResult.error).toBeFalsy();
+    });
+
+    expect(result.current[0].data?.id).toEqual("123");
+    expect(result.current[0].data?.name).toEqual("Something new");
+    expect(result.current[0].fetching).toBe(false);
+    expect(result.current[0].error).toBeFalsy();
+  });
 });
