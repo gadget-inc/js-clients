@@ -341,7 +341,7 @@ const processBulkActionResponse = <Shape extends RecordShape = any>(
   }
 };
 
-const processActionResponse = <Shape extends RecordShape = any>(
+export const processActionResponse = <Shape extends RecordShape = any>(
   defaultSelection: FieldSelection | null,
   response: any,
   record: any,
