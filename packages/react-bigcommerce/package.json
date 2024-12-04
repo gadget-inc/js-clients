@@ -27,7 +27,7 @@
     "prerelease": "gitpkg publish"
   },
   "dependencies": {
-    "@gadgetinc/api-client-core": "^0.15.35"
+    "@gadgetinc/api-client-core": "^0.15.36"
   },
   "devDependencies": {
     "@gadgetinc/api-client-core": "workspace:*",
