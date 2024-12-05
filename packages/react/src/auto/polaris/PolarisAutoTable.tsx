@@ -54,6 +54,11 @@ const getColumnIndex = (columns: TableColumn[], apiIdentifier: string | undefine
 
 /**
  * Renders a table of records from the backend automatically for a given model using Polaris
+ * @example
+ * ```tsx
+ * <AutoTable model={api.user} />
+ * ```
+ * @param props.model - The Gadget model to show in the table
  */
 export const PolarisAutoTable = <
   GivenOptions extends OptionsType,

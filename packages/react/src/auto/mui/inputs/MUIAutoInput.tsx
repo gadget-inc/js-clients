@@ -2,6 +2,7 @@ import React from "react";
 import { FieldType } from "../../../metadata.js";
 import { autoInput } from "../../AutoInput.js";
 import { useFieldMetadata } from "../../hooks/useFieldMetadata.js";
+import { AutoInputProps } from "../../shared/AutoInputTypes.js";
 import { MUIAutoRichTextInput } from "./LazyLoadedMUIAutoRichTextInput.js";
 import { MUIAutoBooleanInput } from "./MUIAutoBooleanInput.js";
 import MUIAutoDateTimePicker from "./MUIAutoDateTimePicker.js";
@@ -16,7 +17,21 @@ import { MUIAutoTextInput } from "./MUIAutoTextInput.js";
 import { MUIAutoBelongsToInput } from "./relationships/MUIAutoBelongsToInput.js";
 import { MUIAutoHasManyInput } from "./relationships/MUIAutoHasManyInput.js";
 
-export const MUIAutoInput = autoInput((props: { field: string; label?: string }) => {
+/**
+ * An automatically generated input component based on the given field's type for use within <AutoForm></AutoForm> components
+ * @example
+ * ```tsx
+ * <AutoForm action={api.modelA.create}>
+ *   <AutoInput field="stringField" />
+ *   <AutoInput field="booleanField" />
+ *   <AutoInput field="numberField" label="Count" />
+ * </AutoForm>
+ * ```
+ * @param props.field The API identifier of the field
+ * @param props.label The label of the field
+ * @returns The input component
+ */
+export const MUIAutoInput = autoInput((props: AutoInputProps) => {
   const { metadata } = useFieldMetadata(props.field);
   const config = metadata.configuration;
 

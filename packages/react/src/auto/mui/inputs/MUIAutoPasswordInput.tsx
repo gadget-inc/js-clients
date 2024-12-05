@@ -1,10 +1,11 @@
 import type { TextFieldProps } from "@mui/material";
 import { IconButton } from "@mui/material";
 import React, { useState } from "react";
-import { useController, type Control } from "../../../useActionForm.js";
+import { useController } from "../../../useActionForm.js";
 import { useAutoFormMetadata } from "../../AutoFormContext.js";
 import { autoInput } from "../../AutoInput.js";
 import { useFieldMetadata } from "../../hooks/useFieldMetadata.js";
+import { AutoPasswordInputProps } from "../../shared/AutoInputTypes.js";
 import { MUIAutoEncryptedStringInput } from "./MUIAutoEncryptedStringInput.js";
 
 /**
@@ -14,41 +15,48 @@ import { MUIAutoEncryptedStringInput } from "./MUIAutoEncryptedStringInput.js";
 const existingPasswordPlaceholder = "********";
 const pencilEmoji = `✏️`;
 
-export const MUIAutoPasswordInput = autoInput(
-  (
-    props: {
-      field: string; // The field API identifier
-      control?: Control<any>;
-    } & Partial<TextFieldProps>
-  ) => {
-    const { findBy } = useAutoFormMetadata();
-    const { path } = useFieldMetadata(props.field);
-    const { field: fieldProps } = useController({ name: path });
+type MUIAutoPasswordInputProps = AutoPasswordInputProps & Partial<TextFieldProps>;
 
-    const [isEditing, setIsEditing] = useState(!findBy);
+/**
+ * A password input component for use within <AutoForm></AutoForm> components.
+ * @example
+ * ```tsx
+ * <AutoForm action={api.modelA.create}>
+ *   <AutoPasswordInput field="passwordFieldApiId" />
+ * </AutoForm>
+ * ```
+ * @param props.field - The password field API identifier
+ * @param props.label - The label of the password input component
+ * @returns The password input component
+ */
+export const MUIAutoPasswordInput = autoInput((props: MUIAutoPasswordInputProps) => {
+  const { findBy } = useAutoFormMetadata();
+  const { path } = useFieldMetadata(props.field);
+  const { field: fieldProps } = useController({ name: path });
 
-    const startEditing = () => {
-      fieldProps.onChange(""); // Touch the field to mark it as dirty
-      setIsEditing(true);
-    };
+  const [isEditing, setIsEditing] = useState(!findBy);
 
-    const startEditingButton = (
-      <IconButton onClick={startEditing} role={`${props.field}EditPasswordButton`}>
-        {pencilEmoji}
-      </IconButton>
-    );
+  const startEditing = () => {
+    fieldProps.onChange(""); // Touch the field to mark it as dirty
+    setIsEditing(true);
+  };
 
-    return (
-      <MUIAutoEncryptedStringInput
-        {...(isEditing
-          ? { placeholder: "Password" }
-          : {
-              InputProps: { endAdornment: startEditingButton },
-              placeholder: existingPasswordPlaceholder,
-              disabled: true,
-            })}
-        {...props}
-      />
-    );
-  }
-);
+  const startEditingButton = (
+    <IconButton onClick={startEditing} role={`${props.field}EditPasswordButton`}>
+      {pencilEmoji}
+    </IconButton>
+  );
+
+  return (
+    <MUIAutoEncryptedStringInput
+      {...(isEditing
+        ? { placeholder: "Password" }
+        : {
+            InputProps: { endAdornment: startEditingButton },
+            placeholder: existingPasswordPlaceholder,
+            disabled: true,
+          })}
+      {...props}
+    />
+  );
+});
