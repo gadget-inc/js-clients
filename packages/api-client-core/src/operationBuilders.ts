@@ -1,5 +1,5 @@
 import type { FieldSelection as BuilderFieldSelection, BuilderOperation, Variable } from "tiny-graphql-query-compiler";
-import { Call, Var, compileWithVariableValues } from "tiny-graphql-query-compiler";
+import { Call, Var, compile, compileWithVariableValues } from "tiny-graphql-query-compiler";
 import type { FieldSelection } from "./FieldSelection.js";
 import type { AnyActionFunction, HasReturnType } from "./index.js";
 import {
@@ -284,6 +284,29 @@ export const globalActionOperation = (
     fields,
     directives: directivesForOptions(options),
   });
+};
+
+export const computedViewOperation = (
+  operation: string,
+  defaultSelection: FieldSelection,
+  variables?: VariablesOptions,
+  selection?: FieldSelection,
+  namespace?: string | string[] | null
+) => {
+  let fields = {
+    [operation]: Call(
+      variables ? variableOptionsToVariables(variables) : {},
+      fieldSelectionToQueryCompilerFields(selection ?? defaultSelection, true)
+    ),
+  };
+
+  if (namespace) {
+    fields = namespacify(namespace, fields);
+  }
+
+  return variables
+    ? compileWithVariableValues({ type: "query", name: operation, fields })
+    : { query: compile({ type: "query", name: operation, fields }), variables: {} };
 };
 
 export interface GraphQLBackgroundActionOptions {

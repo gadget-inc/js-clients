@@ -1,6 +1,7 @@
 import {
   actionOperation,
   backgroundActionResultOperation,
+  computedViewOperation,
   enqueueActionOperation,
   findManyOperation,
   findOneByFieldOperation,
@@ -1487,6 +1488,91 @@ describe("operation builders", () => {
           }
         }",
           "variables": {},
+        }
+      `);
+    });
+  });
+  describe("computedViewOperation", () => {
+    test("global view without variables", () => {
+      expect(computedViewOperation("boom", { a: true, b: true })).toMatchInlineSnapshot(`
+        {
+          "query": "query boom {
+          boom {
+            a
+            b
+            __typename
+          }
+        }",
+          "variables": {},
+        }
+      `);
+      expect(computedViewOperation("boom", { a: true, b: true }, {}, { a: true })).toMatchInlineSnapshot(`
+        {
+          "query": "query boom {
+          boom {
+            a
+            __typename
+          }
+        }",
+          "variables": {},
+        }
+      `);
+      expect(computedViewOperation("boom", { a: true, b: true }, undefined, { a: true })).toMatchInlineSnapshot(`
+        {
+          "query": "query boom {
+          boom {
+            a
+            __typename
+          }
+        }",
+          "variables": {},
+        }
+      `);
+    });
+
+    test("global view without selection", () => {
+      expect(
+        computedViewOperation(
+          "boom",
+          { a: true, b: true },
+          { a: { required: false, type: "Int", value: 42 }, b: { required: false, type: "String", value: "fortytwo" } }
+        )
+      ).toMatchInlineSnapshot(`
+        {
+          "query": "query boom($a: Int, $b: String) {
+          boom(a: $a, b: $b) {
+            a
+            b
+            __typename
+          }
+        }",
+          "variables": {
+            "a": 42,
+            "b": "fortytwo",
+          },
+        }
+      `);
+    });
+    test("global view with selection", () => {
+      expect(
+        computedViewOperation(
+          "boom",
+          { a: true, b: true },
+          { a: { required: false, type: "Int", value: 42 }, b: { required: false, type: "String", value: "fortytwo" } },
+          { a: true }
+        )
+      ).toMatchInlineSnapshot(`
+        {
+          "query": "query boom($a: Int, $b: String) {
+          boom(a: $a, b: $b) {
+            a
+            __typename
+          }
+        }",
+          "variables": {
+            "a": 42,
+            "b": "fortytwo",
+          },
         }
       `);
     });
