@@ -45,7 +45,6 @@ describe("PolarisAutoBelongsToInput", () => {
                 // This simulates the response when the related record is queried to get the related model record value
                 id: "42",
                 sectionId: "1",
-                section: { id: "1", name: "Section 1" },
                 __typename: "Widget",
               }
             : {
@@ -133,7 +132,7 @@ describe("PolarisAutoBelongsToInput", () => {
     cy.contains(`Section 3`).click();
     cy.get(`[id="3_Section 3"]`);
 
-    expectUpdateActionSubmissionVariables({ id: "42", widget: { section: { _link: "3" } } });
+    expectUpdateActionSubmissionVariables({ id: "42", widget: { section: { update: { id: "3", name: "Section 1" } } } });
     cy.getSubmitButton().click();
     cy.contains("Saved Widget successfully");
   });

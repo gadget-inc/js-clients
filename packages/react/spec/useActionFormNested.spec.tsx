@@ -4,7 +4,7 @@ import type { MODE } from "@pollyjs/core";
 import { act, renderHook, waitFor } from "@testing-library/react";
 import { useActionForm, useFieldArray } from "../src/useActionForm.js";
 import { useFindFirst } from "../src/useFindFirst.js";
-import { bulkExampleApi, hasManyThroughApi, nestedExampleApi } from "./apis.js";
+import { bulkExampleApi, hasManyThroughApi, nestedExampleApi, testApi } from "./apis.js";
 import { startPolly } from "./polly.js";
 import { LiveClientWrapper, MockClientWrapper, mockUrqlClient } from "./testWrappers.js";
 
@@ -2069,6 +2069,274 @@ describe("useActionFormNested", () => {
           "id": "123",
         }
       `);
+    });
+
+    test("can delete, update and create child has many through relationships", async () => {
+      const { result: useActionFormHook } = renderHook(
+        () =>
+          useActionForm(testApi.game.city.update, {
+            findBy: "1",
+            select: {
+              id: true,
+              name: true,
+              tweeters: {
+                edges: {
+                  node: {
+                    id: true,
+                    name: true,
+                    followerFriendships: {
+                      edges: {
+                        node: {
+                          id: true,
+                          follower: {
+                            id: true,
+                            name: true,
+                          },
+                        },
+                      },
+                    },
+                  },
+                },
+              },
+            },
+            onError: (error) => {
+              expect(error).toBeUndefined();
+            },
+          }),
+        {
+          wrapper: MockClientWrapper(testApi),
+        }
+      );
+
+      expect(mockUrqlClient.executeQuery).toBeCalledTimes(1);
+
+      mockUrqlClient.executeQuery.pushResponse("city", {
+        stale: false,
+        hasNext: false,
+        data: {
+          game: {
+            city: {
+              __typename: "GameCity",
+              id: "1",
+              name: "Ottawa",
+              tweeters: {
+                edges: [
+                  {
+                    node: {
+                      id: "1",
+                      name: "John Doe",
+                      followerFriendships: {
+                        edges: [
+                          {
+                            node: {
+                              id: "1",
+                              follower: {
+                                id: "100",
+                                name: "Jane Doe",
+                              },
+                            },
+                          },
+                          {
+                            node: {
+                              id: "2",
+                              follower: {
+                                id: "101",
+                                name: "John Smith",
+                              },
+                            },
+                          },
+                        ],
+                      },
+                    },
+                  },
+                  {
+                    node: {
+                      id: "2",
+                      name: "Bob Sacamano",
+                      followerFriendships: {
+                        edges: [
+                          {
+                            node: {
+                              id: "3",
+                              follower: {
+                                id: "102",
+                                name: "Jim Doe",
+                              },
+                            },
+                          },
+                          {
+                            node: {
+                              id: "4",
+                              follower: {
+                                id: "103",
+                                name: "Jill Doe",
+                              },
+                            },
+                          },
+                        ],
+                      },
+                    },
+                  },
+                ],
+              },
+            },
+          },
+        },
+      });
+
+      let formValues: any;
+
+      await act(async () => {
+        formValues = useActionFormHook.current.getValues();
+      });
+
+      expect(formValues.city).toBeDefined();
+
+      const { result: tweetersFieldArrayHook } = renderHook(() =>
+        useFieldArray({ control: useActionFormHook.current.control, name: "city.tweeters" })
+      );
+
+      await act(async () => {
+        tweetersFieldArrayHook.current.remove(0);
+        tweetersFieldArrayHook.current.append({
+          name: "Joe Davola",
+          followerFriendships: [{ followerId: "1001" }],
+        } as any);
+      });
+
+      let submitPromise: Promise<any>;
+
+      await act(async () => {
+        submitPromise = useActionFormHook.current.submit();
+      });
+
+      expect(mockUrqlClient.executeMutation).toBeCalledTimes(1);
+      expect(mockUrqlClient.executeMutation.mock.calls[0][0].variables).toMatchInlineSnapshot(`
+        {
+          "city": {
+            "name": "Ottawa",
+            "tweeters": [
+              {
+                "delete": {
+                  "id": "1",
+                },
+              },
+              {
+                "update": {
+                  "followerFriendships": [
+                    {
+                      "update": {
+                        "follower": {
+                          "update": {
+                            "id": "102",
+                            "name": "Jim Doe",
+                          },
+                        },
+                        "id": "3",
+                      },
+                    },
+                    {
+                      "update": {
+                        "follower": {
+                          "update": {
+                            "id": "103",
+                            "name": "Jill Doe",
+                          },
+                        },
+                        "id": "4",
+                      },
+                    },
+                  ],
+                  "id": "2",
+                  "name": "Bob Sacamano",
+                },
+              },
+              {
+                "create": {
+                  "followerFriendships": [
+                    {
+                      "create": {
+                        "follower": {
+                          "_link": "1001",
+                        },
+                      },
+                    },
+                  ],
+                  "name": "Joe Davola",
+                },
+              },
+            ],
+          },
+          "id": "1",
+        }
+      `);
+
+      mockUrqlClient.executeMutation.pushResponse("updateCity", {
+        data: {
+          city: {
+            __typename: "GameCity",
+            id: "1",
+            name: "Ottawa",
+            tweeters: {
+              edges: [
+                {
+                  node: {
+                    id: "2",
+                    name: "Bob Sacamano",
+                    followerFriendships: {
+                      edges: [
+                        {
+                          node: {
+                            id: "3",
+                            follower: {
+                              id: "102",
+                              name: "Jim Doe",
+                            },
+                          },
+                        },
+                        {
+                          node: {
+                            id: "4",
+                            follower: {
+                              id: "103",
+                              name: "Jill Doe",
+                            },
+                          },
+                        },
+                      ],
+                    },
+                  },
+                },
+                {
+                  node: {
+                    id: "3",
+                    name: "Joe Davola",
+                    followerFriendships: {
+                      edges: [
+                        {
+                          node: {
+                            id: "5",
+                            follower: {
+                              id: "1001",
+                              name: null,
+                            },
+                          },
+                        },
+                      ],
+                    },
+                  },
+                },
+              ],
+            },
+          },
+        },
+        stale: false,
+        hasNext: false,
+      });
+
+      await act(async () => {
+        await submitPromise;
+      });
     });
 
     describe("with HasManyThrough relationship", () => {

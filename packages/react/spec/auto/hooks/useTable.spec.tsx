@@ -788,6 +788,7 @@ describe("useTable hook", () => {
                   name
                 }
                 secretKey
+                sectionId
                 startsAt
                 updatedAt
               }
