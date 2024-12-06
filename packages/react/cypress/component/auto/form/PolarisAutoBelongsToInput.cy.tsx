@@ -132,7 +132,7 @@ describe("PolarisAutoBelongsToInput", () => {
     cy.contains(`Section 3`).click();
     cy.get(`[id="3_Section 3"]`);
 
-    expectUpdateActionSubmissionVariables({ id: "42", widget: { section: { update: { id: "3", name: "Section 1" } } } });
+    expectUpdateActionSubmissionVariables({ id: "42", widget: { section: { _link: "3" } } });
     cy.getSubmitButton().click();
     cy.contains("Saved Widget successfully");
   });
