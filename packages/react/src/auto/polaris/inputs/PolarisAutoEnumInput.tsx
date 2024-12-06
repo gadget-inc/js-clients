@@ -6,7 +6,7 @@ import { autoInput } from "../../AutoInput.js";
 import { useEnumInputController } from "../../hooks/useEnumInputController.js";
 
 export const PolarisAutoEnumInput = autoInput(
-  (props: { field: string; control?: Control<any>; label?: string } & Partial<ComboboxProps>) => {
+  (props: { field: string; control?: Control<any>; label?: string } & Partial<Omit<ComboboxProps, "allowMultiple">>) => {
     const { field: fieldApiIdentifier, control, label: labelProp, ...comboboxProps } = props;
     const {
       allowMultiple,
