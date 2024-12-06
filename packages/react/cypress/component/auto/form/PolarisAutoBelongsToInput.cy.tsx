@@ -45,7 +45,6 @@ describe("PolarisAutoBelongsToInput", () => {
                 // This simulates the response when the related record is queried to get the related model record value
                 id: "42",
                 sectionId: "1",
-                section: { id: "1", name: "Section 1" },
                 __typename: "Widget",
               }
             : {
