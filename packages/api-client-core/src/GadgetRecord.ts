@@ -73,11 +73,27 @@ export class GadgetRecord_<Shape extends RecordShape> {
     this[kFieldKeys].add(trackingKey);
   }
 
+  /** Helper method to compare values with special handling for Date vs string comparisons in either direction */
+  private hasValueChanged(current: any, previous: any): boolean {
+    if ((current instanceof Date && typeof previous === "string") || (previous instanceof Date && typeof current === "string")) {
+      const currentDate = current instanceof Date ? current : new Date(current);
+      const previousDate = previous instanceof Date ? previous : new Date(previous);
+
+      // Check if both dates are valid before comparing
+      if (!isNaN(currentDate.getTime()) && !isNaN(previousDate.getTime())) {
+        return currentDate.getTime() !== previousDate.getTime();
+      }
+      return true; // If either can't be converted to a valid date, they're different
+    }
+    return !isEqual(current, previous);
+  }
+
   /** Returns true if even a single field has changed */
   private hasChanges(tracking = ChangeTracking.SinceLoaded) {
     if (this[kTouched]) return true;
     const diffFields = tracking == ChangeTracking.SinceLoaded ? this[kInstantiatedFields] : this[kPersistedFields];
-    return [...this[kFieldKeys]].some((key) => !isEqual(diffFields[key], this[kFields][key]));
+
+    return [...this[kFieldKeys]].some((key) => this.hasValueChanged(this[kFields][key], diffFields[key]));
   }
 
   /** Checks if the original constructor data was empty or not */
@@ -110,8 +126,7 @@ export class GadgetRecord_<Shape extends RecordShape> {
       const previous = diffFields[prop];
       const current = this[kFields][prop];
 
-      const changed = !isEqual(current, previous);
-
+      const changed = this.hasValueChanged(current, previous);
       return changed ? { changed, current, previous } : { changed };
     } else {
       const diff = {} as Record<string, { current: any; previous: any }>;
