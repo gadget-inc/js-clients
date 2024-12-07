@@ -719,12 +719,6 @@ function loadMockGizmoCreateMetadata() {
 }
 
 function loadMockWidgetCreateMetadata(opts?: { inputFields?: any[]; triggers?: any[] }) {
-  expect(mockUrqlClient.executeQuery.mock.calls[0][0].variables).toEqual({
-    modelApiIdentifier: "widget",
-    modelNamespace: null,
-    action: "create",
-  });
-
   mockUrqlClient.executeQuery.pushResponse("ModelActionMetadata", {
     stale: false,
     hasNext: false,
@@ -738,6 +732,12 @@ function loadMockWidgetCreateMetadata(opts?: { inputFields?: any[]; triggers?: a
       opts?.triggers
     ),
   });
+
+  expect(mockUrqlClient.executeQuery.mock.calls[0][0].variables).toEqual({
+    modelApiIdentifier: "widget",
+    modelNamespace: null,
+    action: "create",
+  });
 }
 
 function loadMockWidgetUpdateMetadata() {
@@ -747,8 +747,8 @@ function loadMockWidgetUpdateMetadata() {
 
 function loadMockWidgetUpdateMetadataWithFindBy() {
   mockWidgetUpdateHelperFunctions.expectMetadataRequest();
-  mockWidgetUpdateHelperFunctions.mockFindByResponse();
   mockWidgetUpdateHelperFunctions.mockMetadataResponse();
+  mockWidgetUpdateHelperFunctions.mockFindByResponse();
 }
 
 const mockWidgetUpdateHelperFunctions = {

@@ -20,7 +20,7 @@ describeForEachAutoAdapter("AutoForm - HasManyThrough fields", ({ name, adapter:
   it("does not render the hasMany->joinModel input field", () => {
     interceptModelActionMetadataRequest();
 
-    cy.mountWithWrapper(<AutoForm action={api.widget.create} />, wrapper);
+    cy.mountWithWrapper(<AutoForm action={api.hasManyThrough.baseModel.create} />, wrapper);
     cy.wait("@ModelActionMetadata");
 
     // Name field input is shown
@@ -147,6 +147,32 @@ const modelActionMetadataResponse = {
             fieldType: "ID",
             __typename: "GadgetModelField",
           },
+          __typename: "GadgetModel",
+        },
+        {
+          key: "tJDsf_FvYqsi",
+          apiIdentifier: "joinerModel",
+          namespace: ["hasManyThrough"],
+          defaultDisplayField: {
+            name: "Id",
+            apiIdentifier: "id",
+            fieldType: "ID",
+            __typename: "GadgetModelField",
+          },
+          fields: [],
+          __typename: "GadgetModel",
+        },
+        {
+          key: "Oss4sCDW-DJU",
+          apiIdentifier: "siblingModel",
+          namespace: ["hasManyThrough"],
+          defaultDisplayField: {
+            name: "Id",
+            apiIdentifier: "id",
+            fieldType: "ID",
+            __typename: "GadgetModelField",
+          },
+          fields: [],
           __typename: "GadgetModel",
         },
       ],

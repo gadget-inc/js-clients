@@ -1,74 +1,49 @@
-import { useCallback, useEffect, useMemo } from "react";
-import { useController, useFormContext } from "../../useActionForm.js";
-import { useAutoFormMetadata } from "../AutoFormContext.js";
+import { useCallback } from "react";
+import { useFormContext, useWatch } from "../../useActionForm.js";
 import type { AutoRelationshipInputProps } from "../interfaces/AutoRelationshipInputProps.js";
 import { useFieldMetadata } from "./useFieldMetadata.js";
-import { useRelatedModelOptions } from "./useRelatedModelOptions.js";
+import { useRelatedModelOptions } from "./useRelatedModel.js";
 
 export const useBelongsToInputController = (props: AutoRelationshipInputProps) => {
-  const { field, control } = props;
+  const { field } = props;
   const fieldMetadata = useFieldMetadata(field);
   const { path } = fieldMetadata;
-  const { findBy } = useAutoFormMetadata();
+  const { setValue } = useFormContext();
 
   const relatedModelOptions = useRelatedModelOptions(props);
-  const { selected, relatedModel } = relatedModelOptions;
+  const { relatedModel } = relatedModelOptions;
 
-  const {
-    formState: { defaultValues },
-  } = useFormContext();
+  const value = useWatch({ name: path });
 
-  const {
-    field: fieldProps,
-    fieldState: { error: fieldError },
-  } = useController({
-    name: path + ".id",
-    control,
-  });
+  const selectedRecord: Record<string, any> | undefined = value?.id ? value : undefined;
 
-  const isLoading = selected.fetching || relatedModel.fetching;
-  const errorMessage = fieldError?.message || selected.error?.message || relatedModel.error?.message;
+  const isLoading = relatedModel.fetching;
+  const errorMessage = relatedModel.error?.message;
 
-  const retrievedSelectedRecordId = useMemo(() => {
-    return !selected.fetching && selected.records && selected.records.length ? selected.records[0][`${field}Id`] : null;
-  }, [selected.fetching, selected.records]);
-
-  const selectedRelatedModelRecordMissing = useMemo(() => {
-    if (!findBy) {
-      // Without a find by, there is no retrieved record ID
-      return false;
-    }
-
-    return !selected.fetching && selected.records && selected.records.length
-      ? !selected.records[0].id && !relatedModel.records.map((r) => r.id).includes(fieldProps.value)
-      : true;
-  }, [findBy, selected.fetching, fieldProps.value, relatedModel.records, retrievedSelectedRecordId]);
-
-  useEffect(() => {
-    // Initializing the controller with the selected record ID from the DB
-    if (!selected.fetching && retrievedSelectedRecordId) {
-      fieldProps.onChange(retrievedSelectedRecordId);
-    }
-  }, [selected.fetching, retrievedSelectedRecordId, defaultValues]);
-
-  const onSelectRecord = useCallback((recordId: string) => {
-    fieldProps.onChange(recordId);
-  }, []);
+  const onSelectRecord = useCallback(
+    (record: Record<string, any>) => {
+      setValue(path, record);
+    },
+    [path, setValue]
+  );
 
   const onRemoveRecord = useCallback(() => {
-    fieldProps.onChange(null);
-  }, []);
+    const { __typename, ...rest } = value;
+
+    const nullifiedRest = Object.keys(rest).reduce((acc, key) => {
+      acc[key] = null;
+      return acc;
+    }, {} as Record<string, null>);
+
+    setValue(path, { ...nullifiedRest, id: null, __typename });
+  }, [path, setValue, value]);
 
   return {
     fieldMetadata,
     relatedModelOptions,
-
     onSelectRecord,
     onRemoveRecord,
-
-    selectedRecordId: fieldProps.value,
-    selectedRelatedModelRecordMissing,
-
+    selectedRecord,
     isLoading,
     errorMessage,
   };
