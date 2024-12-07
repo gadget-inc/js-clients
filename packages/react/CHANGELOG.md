@@ -1,5 +1,12 @@
 # @gadgetinc/react
 
+## 0.18.3
+
+### Patch Changes
+
+- Updated AutoBooleanInput to default to a `false` value when the field has a `required` validation
+- Fixed bug with AutoForm where the action api identifiers could not be properly determined in Gadget framework version 1.0.0
+
 ## 0.18.1
 
 ### Patch Changes
