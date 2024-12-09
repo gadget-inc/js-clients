@@ -1,7 +1,7 @@
 import { Autocomplete, Box, TextField, Typography } from "@mui/material";
 import React from "react";
 import { autoInput } from "../../../AutoInput.js";
-import { useBelongsToInputController } from "../../../hooks/useBelongsToInputController.js";
+import { useBelongsToInputController } from "../../../hooks/useBelongsToController.js";
 import type { AutoRelationshipInputProps } from "../../../interfaces/AutoRelationshipInputProps.js";
 
 export const MUIAutoBelongsToInput = autoInput((props: AutoRelationshipInputProps) => {
@@ -9,18 +9,16 @@ export const MUIAutoBelongsToInput = autoInput((props: AutoRelationshipInputProp
     fieldMetadata: { path, metadata },
     relatedModelOptions: { options, pagination, search },
 
-    selectedRecordId,
+    selectedRecord,
     onSelectRecord,
   } = useBelongsToInputController(props);
-
-  const selectedRecord = options.find((option) => option.id === selectedRecordId);
 
   return (
     <Autocomplete
       id={`${selectedRecord?.id}_${selectedRecord?.label}`}
       renderOption={(props, option) => {
-        const isShowMoreButton = option.recordId === "-1";
-        const isSelected = selectedRecordId === option.recordId;
+        const isShowMoreButton = option.id === "-1";
+        const isSelected = selectedRecord?.id === option.id;
         return !isShowMoreButton ? (
           <Box component="li" {...props}>
             {isSelected && `✔️ `}
@@ -42,7 +40,7 @@ export const MUIAutoBelongsToInput = autoInput((props: AutoRelationshipInputProp
         ) : null; // No more records to load
       }}
       options={[...options, showMoreHoverOption]}
-      onChange={(e, selectedValue) => onSelectRecord(selectedValue.id)}
+      onChange={(e, selectedValue) => selectedValue && onSelectRecord({ id: selectedValue.id })}
       onClose={() => search.set()}
       renderInput={(params) => (
         <TextField
@@ -57,4 +55,4 @@ export const MUIAutoBelongsToInput = autoInput((props: AutoRelationshipInputProp
   );
 });
 
-const showMoreHoverOption = { recordId: "-1", label: "Show more" };
+const showMoreHoverOption = { id: "-1", label: "Show more" };

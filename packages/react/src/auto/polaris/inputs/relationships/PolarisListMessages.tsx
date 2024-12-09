@@ -1,12 +1,16 @@
 import { Listbox, Text } from "@shopify/polaris";
 import React from "react";
 
-export const SelectableOption = (props: { label: string; id: string; selected: boolean }) => {
+export const SelectableOption = (props: { label: React.ReactNode; id: string; selected: boolean }) => {
   const { label, id, selected } = props;
-  return (
+  return typeof label === "string" ? (
     <Listbox.Option key={id} value={id} selected={selected}>
       {label}
     </Listbox.Option>
+  ) : (
+    <Listbox.Action key={id} value={id} selected={selected}>
+      {label}
+    </Listbox.Action>
   );
 };
 

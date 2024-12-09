@@ -1,7 +1,7 @@
-import { Alert, Autocomplete, Box, TextField, Typography } from "@mui/material";
+import { Autocomplete, Box, TextField, Typography } from "@mui/material";
 import React from "react";
 import { autoInput } from "../../../AutoInput.js";
-import { useHasOneInputController } from "../../../hooks/useHasOneInputController.js";
+import { useHasOneInputController } from "../../../hooks/useHasOneController.js";
 import type { AutoRelationshipInputProps } from "../../../interfaces/AutoRelationshipInputProps.js";
 
 /**
@@ -13,26 +13,17 @@ export const MUIAutoHasOneInput = autoInput((props: AutoRelationshipInputProps) 
   const { field } = props;
   const {
     fieldMetadata: { path, metadata },
-    relatedModelOptions: { options, selected, search, pagination, relatedModel },
-    selectedRecordIds,
-    errorMessage,
-    isLoading,
-
+    relatedModelOptions: { options, search, pagination },
+    selectedRecord,
     onSelectRecord,
     onRemoveRecord,
   } = useHasOneInputController(props);
 
-  const hasMultipleRelatedRecords = selected.records && selected.records.length > 1;
-
-  if (showErrorBannerWhenTooManyRelatedRecords && hasMultipleRelatedRecords) {
-    return <Alert>{`Multiple related records for hasOne field "${field}"`}</Alert>;
-  }
-
   return (
     <Autocomplete
       renderOption={(props, option) => {
-        const isShowMoreButton = option.recordId === "-1";
-        const isSelected = selectedRecordIds === option.recordId;
+        const isShowMoreButton = option.id === "-1";
+        const isSelected = selectedRecord?.id === option.id;
         return !isShowMoreButton ? (
           <Box component="li" {...props}>
             {isSelected && `✔️ `}
@@ -54,7 +45,7 @@ export const MUIAutoHasOneInput = autoInput((props: AutoRelationshipInputProps) 
         ) : null; // No more records to load
       }}
       options={[...options, showMoreHoverOption]}
-      onChange={(e, selectedValue) => onSelectRecord(selectedValue.recordId)}
+      onChange={(e, selectedValue) => selectedValue && onSelectRecord({ id: selectedValue.id })}
       onClose={() => search.set()}
       renderInput={(params) => (
         <TextField {...params} value={search.value} label={metadata.name} onChange={(e) => search.set(e.target.value)} name={path} />
@@ -63,4 +54,4 @@ export const MUIAutoHasOneInput = autoInput((props: AutoRelationshipInputProps) 
   );
 });
 
-const showMoreHoverOption = { recordId: "-1", label: "Show more" };
+const showMoreHoverOption = { id: "-1", label: "Show more" };
