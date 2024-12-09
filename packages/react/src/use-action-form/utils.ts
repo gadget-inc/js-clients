@@ -157,13 +157,18 @@ export const disambiguateDefaultValues = (data: any, initialData: any, action: a
   return result;
 };
 
-function getUpdates(data: any): Record<string, number[]> {
+function getRecordIdsAtPath(data: any): Record<string, number[]> {
   const updateList: Record<string, number[]> = {};
 
   function traverse(input: any, path: string | undefined = undefined, depth = 0, isInArray?: boolean): any {
     if (Array.isArray(input)) {
-      return input.map((item: any, index) => {
-        const currentPath = path ? `${path}.${index}` : index.toString();
+      return input.flatMap((item: any) => {
+        const indexId = isPlainObject(item) && "id" in item ? item.id : undefined;
+        if (!indexId) {
+          return [];
+        }
+
+        const currentPath = path ? `${path}.${indexId}` : indexId.toString();
         return traverse(item, currentPath, depth + 1, true);
       });
     } else if (input !== undefined && input !== null && typeof input === "object") {
@@ -200,6 +205,7 @@ class ReshapeDataContext {
   constructor(
     public readonly depth: number,
     public readonly path?: string,
+    public readonly idPath?: string,
     public readonly fieldType?: { type: string; model: string } | null,
     public readonly fieldRelationships?: Record<string, { type: string; model: string }> | null,
     public readonly parent?: ReshapeDataContext | null
@@ -247,23 +253,23 @@ export const reshapeDataForGraphqlApi = async (client: AnyClient, defaultValues:
     throw new Error("No Gadget model metadata found -- please ensure you are using the latest version of the API client for your app");
   }
 
-  const updates = getUpdates(defaultValues); // grab the updates from default values to see what needs to be created, updated, or deleted
+  const recordIdsAtPath = getRecordIdsAtPath(defaultValues); // grab the updates from default values to see what needs to be created, updated, or deleted
 
   function transform(input: any, context: ReshapeDataContext): any {
-    const { depth, path, fieldType, fieldRelationships } = context;
+    const { depth, path, fieldType, fieldRelationships, idPath } = context;
 
     if (path && Array.isArray(input)) {
       // If the input is an array, we need to handle it differently
       const results: any[] = [];
       let edge: number[] | undefined = undefined;
 
-      if (fieldType && (fieldType.type == "HasMany" || fieldType.type == "HasManyThrough")) {
-        edge = updates[path]; // grab the list of ids from the updates object, based on the path
+      if (fieldType && idPath && (fieldType.type == "HasMany" || fieldType.type == "HasManyThrough")) {
+        edge = recordIdsAtPath[idPath]; // grab the list of ids from the updates object, based on the path
       }
 
       const handled: number[] = [];
 
-      if (edge) {
+      if (edge && idPath) {
         // if there are ids in the updates object, we need to handle them first
         results.push(
           edge.map((nodeId: any, nodeIndex: number) => {
@@ -272,24 +278,32 @@ export const reshapeDataForGraphqlApi = async (client: AnyClient, defaultValues:
 
             if (!item) {
               // if the item is not found, we need to delete it from the updates object as well as anything that references it
-              const updateEntries = Object.entries(updates); // grab all the entries from the updates object
-              const updateEntry = updateEntries.find(([key, _ids]) => key.includes(path + "." + nodeIndex));
+              const updateEntries = Object.entries(recordIdsAtPath); // grab all the entries from the updates object
+              const updateEntry = updateEntries.find(([key, _ids]) => key.includes(path + "." + nodeId));
 
               if (updateEntry) {
                 // if we find an entry that matches the path, we need to delete it from the updates object
                 const { 0: updatePath, 1: _ } = updateEntry;
-                delete updates[updatePath];
+                delete recordIdsAtPath[updatePath];
               }
 
               return { delete: { id: nodeId } };
             } else {
               const index = input.findIndex((item: any) => item.id == nodeId);
-              delete updates[path][nodeIndex]; // delete the id from the updates object so it's not handled again
+              delete recordIdsAtPath[idPath][nodeIndex]; // delete the id from the updates object so it's not handled again
 
               handled.push(index);
 
               const currentPath = path ? `${path}.${index}` : index.toString();
-              return transform(item, { depth: depth + 1, path: currentPath, fieldType, fieldRelationships, parent: context }); // transform the item
+              const currentIdPath = idPath && isPlainObject(item) && item.id ? `${idPath}.${item.id}` : undefined;
+              return transform(item, {
+                depth: depth + 1,
+                path: currentPath,
+                idPath: currentIdPath,
+                fieldType,
+                fieldRelationships,
+                parent: context,
+              }); // transform the item
             }
           })
         );
@@ -301,7 +315,15 @@ export const reshapeDataForGraphqlApi = async (client: AnyClient, defaultValues:
           .filter((_item, index) => !handled.includes(index))
           .map((item: any, index) => {
             const currentPath = path ? `${path}.${index}` : index.toString();
-            return transform(item, { depth: depth + 1, path: currentPath, fieldType, fieldRelationships, parent: context });
+            const currentIdPath = idPath && isPlainObject(item) && item.id ? `${idPath}.${item.id}` : undefined;
+            return transform(item, {
+              depth: depth + 1,
+              path: currentPath,
+              idPath: currentIdPath,
+              fieldType,
+              fieldRelationships,
+              parent: context,
+            });
           })
       );
 
@@ -312,13 +334,14 @@ export const reshapeDataForGraphqlApi = async (client: AnyClient, defaultValues:
 
       for (const key of Object.keys(input)) {
         const currentPath = path ? `${path}.${key}` : key;
-
+        const currentIdPath = idPath ? `${idPath}.${key}` : key;
         const fieldType = fieldRelationships ? fieldRelationships[key] : null;
         const relationships = fieldType ? referencedTypes?.[fieldType.model] : referencedTypes?.[key];
 
         result[key] = transform(input[key], {
           depth: depth + 1,
           path: currentPath,
+          idPath: currentIdPath,
           fieldType,
           fieldRelationships: relationships,
           parent: context,
@@ -365,7 +388,8 @@ export const reshapeDataForGraphqlApi = async (client: AnyClient, defaultValues:
 
       const inputHasId = "id" in input;
       const inputHasMoreFields = Object.keys(input).filter((field) => field !== "__typename").length > 1;
-      const inputUpdateId = updates[path!]?.[0];
+      const inputUpdateId =
+        idPath && recordIdsAtPath[idPath] && recordIdsAtPath[idPath].length > 0 ? recordIdsAtPath[idPath][0] : undefined;
 
       switch (fieldType.type) {
         case "HasMany":
