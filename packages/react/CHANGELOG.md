@@ -1,5 +1,16 @@
 # @gadgetinc/react
 
+## 0.18.5
+
+### Patch Changes
+
+- Fixed bug with AutoForm where the action api identifiers could not be properly determined in Gadget framework version 1.0.0
+- Updated AutoBooleanInput to default to a `false` value when the field has a `required` validation
+- Added `searchValue` property to `AutoTable` component to control the table's search value
+- Added an error in AutoTable for adding `sortable:true` to field columns that are not sortable
+- Updated `AutoEnumInput` props type to no longer include `allowMultiple` as it could not override the configuration of the corresponding Gadget field
+- fixed bug with double delete entries useActionForm graphql calls with doubly nested children
+
 ## 0.18.1
 
 ### Patch Changes
