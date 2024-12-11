@@ -52,8 +52,8 @@ export const useAuth = <
   isSignedIn: boolean;
   configuration: GadgetAuthConfiguration;
 } => {
-  const session = useSession(client);
-  const user = useUser(client);
+  const [session] = useSession(client);
+  const [user] = useUser(client);
   const context = useContext(GadgetConfigurationContext);
 
   if (!context) {

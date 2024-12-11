@@ -7,6 +7,7 @@ import type {
   LimitToKnownKeys,
   Select,
 } from "@gadgetinc/api-client-core";
+import { useCallback } from "react";
 import { useApi } from "../GadgetProvider.js";
 import { useGet } from "../useGet.js";
 import type { OptionsType, ReadOperationOptions } from "../utils.js";
@@ -35,20 +36,23 @@ export function useSession<
 >(
   client?: ClientType,
   options?: LimitToKnownKeys<Options, Client["currentSession"]["get"]["optionsType"] & ReadOperationOptions>
-): undefined extends ClientType
-  ? GadgetSession
-  : GadgetRecord<
-      Select<
-        Exclude<Exclude<ClientType, undefined>["currentSession"]["get"]["schemaType"], null | undefined>,
-        DefaultSelection<
-          Exclude<ClientType, undefined>["currentSession"]["get"]["selectionType"],
-          Options,
-          Exclude<ClientType, undefined>["currentSession"]["get"]["defaultSelection"] & {
-            user: Exclude<ClientType, undefined>["user"]["findMany"]["defaultSelection"];
-          }
+): [
+  undefined extends ClientType
+    ? GadgetSession
+    : GadgetRecord<
+        Select<
+          Exclude<Exclude<ClientType, undefined>["currentSession"]["get"]["schemaType"], null | undefined>,
+          DefaultSelection<
+            Exclude<ClientType, undefined>["currentSession"]["get"]["selectionType"],
+            Options,
+            Exclude<ClientType, undefined>["currentSession"]["get"]["defaultSelection"] & {
+              user: Exclude<ClientType, undefined>["user"]["findMany"]["defaultSelection"];
+            }
+          >
         >
-      >
-    > {
+      >,
+  () => void
+] {
   const fallbackApi = useApi();
   const api = client ?? (fallbackApi as ClientType);
 
@@ -67,12 +71,13 @@ export function useSession<
       ...(restOptions ?? {}),
     };
 
-    const [{ data: session, error }] = useGet(api.currentSession, opts);
+    const [{ data: session, error }, refresh] = useGet(api.currentSession, opts);
+    const refreshFunction = useCallback(() => refresh(opts), [refresh, opts]);
 
     if (error) throw error;
     if (!session) throw new Error("currentSession not found but should be present");
     // eslint-disable-next-line @typescript-eslint/no-unnecessary-type-assertion
-    return typeof client == "undefined" ? session : (session as any);
+    return [typeof client == "undefined" ? session : (session as any), refreshFunction];
   } else {
     throw new Error("api client does not have a Session model");
   }
