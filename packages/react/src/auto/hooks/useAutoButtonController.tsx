@@ -16,6 +16,10 @@ export type AutoButtonProps<
   /** The variables to pass to the action when run */
   variables?: ActionFunc["variablesType"];
   /**
+   * Callback function to run when the button is clicked. The action will run after this is called.
+   */
+  onStart?: () => void;
+  /**
    * Callback function to run when the button succeeded at running the action
    * Overrides the default behavior of rendering a message to the user to display success
    **/
@@ -34,7 +38,7 @@ export const useAutoButtonController = <
 >(
   props: AutoButtonProps<GivenOptions, SchemaT, ActionFunc>
 ) => {
-  const { action, variables, onSuccess, onError, ...buttonProps } = props;
+  const { action, variables, onStart, onSuccess, onError, ...buttonProps } = props;
   const { metadata, fetching: fetchingMetadata, error: metadataError } = useActionMetadata(action);
 
   const [{ data: result, fetching: fetchingActionResult, error }, runAction] =
@@ -55,13 +59,15 @@ export const useAutoButtonController = <
   }
 
   const run = useCallback(async () => {
+    onStart?.();
+
     const result = await runAction(variables);
     if (result.error) {
       onError?.(result.error, result);
     } else {
       onSuccess?.(result);
     }
-  }, [runAction, variables, onSuccess, onError]) as () => void;
+  }, [onStart, runAction, variables, onError, onSuccess]) as () => void;
 
   return {
     result,
