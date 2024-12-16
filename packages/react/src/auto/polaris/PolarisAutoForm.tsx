@@ -60,8 +60,35 @@ const PolarisAutoFormComponent = <
     findBy,
     ...rest
   } = props as AutoFormProps<GivenOptions, SchemaT, ActionFunc> & Omit<Partial<FormProps>, "action"> & { findBy: any };
-  const { metadata, fetchingMetadata, metadataError, fields, submit, formError, isSubmitting, isSubmitSuccessful, originalFormMethods } =
-    useAutoForm(props);
+
+  const {
+    metadata,
+    fetchingMetadata,
+    isLoading,
+    metadataError,
+    fields,
+    submit,
+    formError,
+    isSubmitting,
+    isSubmitSuccessful,
+    originalFormMethods,
+  } = useAutoForm(props);
+
+  const formTitle = props.title === undefined ? humanizeCamelCase(action.operationName) : props.title;
+
+  if (props.successContent && isSubmitSuccessful) {
+    return props.successContent;
+  }
+
+  if (fetchingMetadata || isLoading) {
+    return (
+      <Form {...rest} onSubmit={submit}>
+        <FormLayout>
+          <PolarisAutoFormSkeleton />
+        </FormLayout>
+      </Form>
+    );
+  }
 
   const autoFormMetadataContext: AutoFormMetadataContext = {
     findBy,
@@ -76,27 +103,8 @@ const PolarisAutoFormComponent = <
       apiIdentifier: action.modelApiIdentifier,
       namespace: action.namespace,
     },
-    options: {
-      include: props.include,
-      exclude: props.exclude,
-    },
+    fields,
   };
-
-  const formTitle = props.title === undefined ? humanizeCamelCase(action.operationName) : props.title;
-
-  if (props.successContent && isSubmitSuccessful) {
-    return props.successContent;
-  }
-
-  if (fetchingMetadata) {
-    return (
-      <Form {...rest} onSubmit={submit}>
-        <FormLayout>
-          <PolarisAutoFormSkeleton />
-        </FormLayout>
-      </Form>
-    );
-  }
 
   const formContent = props.children ?? (
     <>
