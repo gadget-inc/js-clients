@@ -20,7 +20,7 @@ export const PolarisAutoSubmit = (
   } & Omit<ButtonProps, "children">
 ) => {
   const { submitResult } = useAutoFormMetadata();
-  const isSubmitting = submitResult?.isSubmitting;
+  const isSubmitting = submitResult.isSubmitting;
 
   return (
     <Button submit loading={props.isSubmitting ?? isSubmitting} {...props}>
