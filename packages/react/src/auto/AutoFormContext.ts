@@ -12,7 +12,7 @@ export interface AutoFormMetadataContext {
   findBy?: RecordIdentifier;
   metadata: ModelWithOneActionMetadata | GlobalActionMetadata | undefined;
   submit: UseActionFormSubmit<any>;
-  submitResult?: AutoFormSubmitResult;
+  submitResult: AutoFormSubmitResult;
   model?: {
     namespace?: string | string[] | null;
     apiIdentifier?: string;
