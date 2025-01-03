@@ -291,7 +291,7 @@ describe("useActionFormNFiles", () => {
             __typename: "StoredFile",
           },
           body: {
-            markdown: "example _rich_ **text**",
+            markdown: "example *rich* **text**",
             truncatedHTML: "<p>example <em>rich</em> <strong>text</strong></p> ",
             __typename: "RichText",
           },
@@ -314,7 +314,7 @@ describe("useActionFormNFiles", () => {
     });
 
     expect(result.current.getValues("post.title")).toBe("example value for title");
-    expect(result.current.getValues("post.body.markdown")).toBe("example _rich_ **text**");
+    expect(result.current.getValues("post.body.markdown")).toBe("example *rich* **text**");
 
     let submitPromise: Promise<any>;
 

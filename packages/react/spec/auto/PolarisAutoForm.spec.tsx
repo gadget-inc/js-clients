@@ -301,7 +301,7 @@ describe("PolarisAutoForm", () => {
         category: [],
         color: null,
         description: {
-          markdown: "example _rich_ **text**",
+          markdown: "example *rich* **text**",
         },
         embedding: null,
         inventoryCount: 1234,

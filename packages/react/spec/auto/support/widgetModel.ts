@@ -405,7 +405,7 @@ export const getWidgetRecord = (overrides?: {
       color: null,
       createdAt: "2024-06-25T13:39:19.645Z",
       description: {
-        markdown: "example _rich_ **text**",
+        markdown: "example *rich* **text**",
         truncatedHTML: "<p>example <em>rich</em> <strong>text</strong></p> ",
         __typename: "RichText",
       },
