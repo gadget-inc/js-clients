@@ -17,7 +17,7 @@ import React, { useEffect, useState } from "react";
 import { useFormContext } from "../../../../useActionForm.js";
 import { get } from "../../../../utils.js";
 import { autoInput } from "../../../AutoInput.js";
-import { RelationshipContext, useAutoRelationship } from "../../../hooks/useAutoRelationship.js";
+import { RelationshipContext, useAutoRelationship, useRelationshipContext } from "../../../hooks/useAutoRelationship.js";
 import { useBelongsToController } from "../../../hooks/useBelongsToController.js";
 import { getRecordAsOption, useOptionLabelForField } from "../../../hooks/useRelatedModel.js";
 import type { OptionLabel } from "../../../interfaces/AutoRelationshipInputProps.js";
@@ -34,7 +34,7 @@ export const PolarisAutoBelongsToForm = autoInput(
     tertiaryLabel?: OptionLabel;
   }) => {
     const { field } = props;
-    const { pathPrefix, path, metadata } = useAutoRelationship({ field });
+    const { path, metadata } = useAutoRelationship({ field });
     const {
       setValue,
       getValues,
@@ -50,6 +50,8 @@ export const PolarisAutoBelongsToForm = autoInput(
       pagination,
       relatedModel: { records, fetching: isLoading },
     } = relatedModelOptions;
+    const relationshipContext = useRelationshipContext();
+    const pathPrefix = relationshipContext?.transformPath ? relationshipContext.transformPath(props.field) : props.field;
 
     const primaryLabel = useOptionLabelForField(field, props.primaryLabel);
     const hasRecord = !!(record && !("_unlink" in record && record._unlink));

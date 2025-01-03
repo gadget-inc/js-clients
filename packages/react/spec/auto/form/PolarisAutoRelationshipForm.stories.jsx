@@ -57,6 +57,10 @@ const ExampleWidgetAutoRelatedForm = (props) => {
             <PolarisAutoInput field="name" />
             <PolarisAutoInput field="orientation" />
             <PolarisAutoInput field="attachment" />
+            <PolarisAutoHasManyForm field="doodads" selectPaths={["name", "weight"]} primaryLabel="name" secondaryLabel="weight">
+              <PolarisAutoInput field="name" />
+              <PolarisAutoInput field="weight" />
+            </PolarisAutoHasManyForm>
           </PolarisAutoHasManyForm>
         </Card>
         <PolarisAutoSubmit />

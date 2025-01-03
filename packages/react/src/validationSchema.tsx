@@ -150,7 +150,7 @@ const childValidatorsForField = (path: string, field: FieldMetadata, pathsToVali
       const childField = childFields.find((field) => field.apiIdentifier === childApiIdentifier);
 
       if (childField) {
-        childValidators[childApiIdentifier] = validatorForField(childField, pathsToValidate, childPath);
+        childValidators[childApiIdentifier] = validatorForField(childField, childPaths, path);
       }
     }
   }

@@ -20,15 +20,12 @@ export const useAutoRelationship = (props: { field: string }) => {
   const { field } = props;
   const formMetadata = useAutoFormMetadata();
 
-  const model = assert(formMetadata.model, "useAutoRelationship must be used within an AutoForm for a model");
+  assert(formMetadata.model, "useAutoRelationship must be used within an AutoForm for a model");
 
   const { path, metadata } = useFieldMetadata(field);
-
-  const pathPrefix = path.replace(new RegExp(`^${model.apiIdentifier}\\.`), "");
 
   return {
     path,
     metadata,
-    pathPrefix,
   };
 };

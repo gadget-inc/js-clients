@@ -4,7 +4,7 @@ import React, { useEffect, useMemo, useState } from "react";
 import { useFormContext } from "../../../../useActionForm.js";
 import { extractPathsFromChildren } from "../../../AutoForm.js";
 import { autoInput } from "../../../AutoInput.js";
-import { RelationshipContext, useAutoRelationship } from "../../../hooks/useAutoRelationship.js";
+import { RelationshipContext, useAutoRelationship, useRelationshipContext } from "../../../hooks/useAutoRelationship.js";
 import { useHasManyThroughController } from "../../../hooks/useHasManyThroughController.js";
 import { getRecordAsOption, useOptionLabelForField } from "../../../hooks/useRelatedModel.js";
 import type { OptionLabel } from "../../../interfaces/AutoRelationshipInputProps.js";
@@ -20,13 +20,15 @@ export const PolarisAutoHasManyThroughForm = autoInput(
     tertiaryLabel?: OptionLabel;
   }) => {
     const { field, children } = props;
-    const { pathPrefix, metadata } = useAutoRelationship({ field });
+    const { metadata } = useAutoRelationship({ field });
     const { setValue } = useFormContext();
     const childPaths = children && extractPathsFromChildren(children);
     const hasChildForm = childPaths && childPaths.length > 0;
     const { fieldArrayPath, fieldArray, records, relatedModelOptions, inverseRelatedModelField, joinModelField, joinModelApiIdentifier } =
       useHasManyThroughController(props);
     const { fields, append, remove } = fieldArray;
+    const relationshipContext = useRelationshipContext();
+    const pathPrefix = relationshipContext?.transformPath ? relationshipContext.transformPath(props.field) : props.field;
 
     useEffect(() => {
       for (const [index, field] of fields.entries()) {

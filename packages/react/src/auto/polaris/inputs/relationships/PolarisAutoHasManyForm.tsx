@@ -3,7 +3,7 @@ import { PlusCircleIcon } from "@shopify/polaris-icons";
 import React, { useState } from "react";
 import { useFormContext } from "../../../../useActionForm.js";
 import { autoInput } from "../../../AutoInput.js";
-import { RelationshipContext, useAutoRelationship } from "../../../hooks/useAutoRelationship.js";
+import { RelationshipContext, useAutoRelationship, useRelationshipContext } from "../../../hooks/useAutoRelationship.js";
 import { useHasManyController } from "../../../hooks/useHasManyController.js";
 import { getRecordAsOption, useOptionLabelForField } from "../../../hooks/useRelatedModel.js";
 import type { OptionLabel } from "../../../interfaces/AutoRelationshipInputProps.js";
@@ -17,11 +17,11 @@ export const PolarisAutoHasManyForm = autoInput(
     secondaryLabel?: OptionLabel;
     tertiaryLabel?: OptionLabel;
   }) => {
-    const { field } = props;
-    const { pathPrefix, metadata } = useAutoRelationship({ field });
+    const { metadata } = useAutoRelationship({ field: props.field });
     const { getValues } = useFormContext();
-    const { fieldArray, fieldArrayPath } = useHasManyController({ field });
+    const { fieldArray, fieldArrayPath } = useHasManyController({ field: props.field });
     const { fields, append, remove } = fieldArray;
+    const relationshipContext = useRelationshipContext();
 
     if (metadata.configuration.__typename !== "GadgetHasManyConfig") {
       throw new Error("PolarisAutoHasManyForm can only be used for HasMany fields");
@@ -29,7 +29,7 @@ export const PolarisAutoHasManyForm = autoInput(
 
     const modelName = metadata.configuration.relatedModel?.name;
 
-    const primaryLabel = useOptionLabelForField(field, props.primaryLabel);
+    const primaryLabel = useOptionLabelForField(props.field, props.primaryLabel);
 
     const [editingIndex, setEditingIndex] = useState<number | null>(null);
 
@@ -47,6 +47,11 @@ export const PolarisAutoHasManyForm = autoInput(
 
             const option = getRecordAsOption(record, primaryLabel, props.secondaryLabel, props.tertiaryLabel);
 
+            const pathPrefix = relationshipContext?.transformPath ? relationshipContext.transformPath(props.field) : props.field;
+            const metadataPathPrefix = relationshipContext?.transformMetadataPath
+              ? relationshipContext.transformMetadataPath(props.field)
+              : props.field;
+
             return (
               <Box key={field._fieldArrayKey} borderColor="border" borderBlockEndWidth="025">
                 {editingIndex == idx ? (
@@ -55,7 +60,7 @@ export const PolarisAutoHasManyForm = autoInput(
                       <RelationshipContext.Provider
                         value={{
                           transformPath: (path) => `${pathPrefix}.${idx}.${path}`,
-                          transformMetadataPath: (path) => `${pathPrefix}.${path}`,
+                          transformMetadataPath: (path) => `${metadataPathPrefix}.${path}`,
                           fieldArray,
                         }}
                       >
