@@ -14,7 +14,7 @@ import { useAutoFormMetadata } from "../../AutoFormContext.js";
  */
 export const MUIAutoSubmit = (props: LoadingButtonProps) => {
   const { submitResult } = useAutoFormMetadata();
-  const isSubmitting = submitResult?.isSubmitting;
+  const isSubmitting = submitResult.isSubmitting;
 
   return (
     <LoadingButton type="submit" loading={isSubmitting} {...props}>
