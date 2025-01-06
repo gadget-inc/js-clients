@@ -183,4 +183,45 @@ describeForEachAutoAdapter("AutoButton", ({ name, adapter: { AutoButton }, wrapp
 
     cy.contains("Flip all succeeded.");
   });
+
+  it("runs the onAction callback when the button is clicked, then runs the action as normal", () => {
+    let onActionCalled = false;
+    cy.mountWithWrapper(
+      <AutoButton
+        action={api.widget.create}
+        variables={{ widget: { name: "foobar" } }}
+        onAction={() => {
+          onActionCalled = true;
+        }}
+      />,
+      wrapper
+    );
+    cy.contains("Create Widget");
+
+    cy.intercept("POST", `${api.connection.options.endpoint}?operation=createWidget`, {
+      body: {
+        data: {
+          widget: {
+            __typename: "Widget",
+            id: "123",
+          },
+        },
+      },
+    }).as("createWidget");
+
+    cy.get("button")
+      .click()
+      .then(() => {
+        expect(onActionCalled).to.be.true;
+      });
+
+    cy.wait("@createWidget");
+    cy.get("@createWidget")
+      .its("request.body.variables")
+      .should("deep.equal", {
+        widget: { name: "foobar" },
+      });
+
+    cy.contains("Create Widget succeeded.");
+  });
 });
