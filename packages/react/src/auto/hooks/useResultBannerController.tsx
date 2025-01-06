@@ -10,19 +10,19 @@ export const useResultBannerController = () => {
 
   useEffect(() => {
     setIsDismissed(false);
-  }, [submitResult?.isSuccessful, submitResult?.error]);
+  }, [submitResult.isSuccessful, submitResult.error]);
 
   let title;
-  if (submitResult?.isSuccessful) {
+  if (submitResult.isSuccessful) {
     title = metadata && isModelActionMetadata(metadata) ? `Saved ${`${metadata?.name} `}successfully.` : `${metadata?.name} succeeded.`;
   } else {
-    title = submitResult?.error?.message;
+    title = submitResult.error?.message;
   }
 
   return {
-    show: !isDismissed && (submitResult?.isSuccessful || submitResult?.error),
+    show: !isDismissed && (submitResult.isSuccessful || submitResult.error),
     hide,
-    successful: submitResult?.isSuccessful,
+    successful: submitResult.isSuccessful,
     title,
   };
 };

@@ -15,7 +15,13 @@ export const MockForm = ({ submit, metadata, submitResult, resolver }: Partial<A
     return (
       <MockClientProvider api={api}>
         <FormProvider {...methods}>
-          <AutoFormMetadataContext.Provider value={{ submit: submit!, metadata, submitResult }}>
+          <AutoFormMetadataContext.Provider
+            value={{
+              submit: submit!,
+              metadata,
+              submitResult: submitResult ?? {},
+            }}
+          >
             <AppProvider i18n={translations}>
               {/* eslint-disable-next-line @typescript-eslint/no-misused-promises */}
               <form onSubmit={methods.handleSubmit(submit as any)}>
