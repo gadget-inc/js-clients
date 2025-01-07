@@ -2177,6 +2177,62 @@ describe("useActionFormNested", () => {
                       },
                     },
                   },
+                  {
+                    node: {
+                      id: "11",
+                      name: "John Doe",
+                      followerFriendships: {
+                        edges: [
+                          {
+                            node: {
+                              id: "11",
+                              follower: {
+                                id: "1100",
+                                name: "Jane Doe",
+                              },
+                            },
+                          },
+                          {
+                            node: {
+                              id: "12",
+                              follower: {
+                                id: "1101",
+                                name: "John Smith",
+                              },
+                            },
+                          },
+                        ],
+                      },
+                    },
+                  },
+                  {
+                    node: {
+                      id: "12",
+                      name: "Bob Sacamano",
+                      followerFriendships: {
+                        edges: [
+                          {
+                            node: {
+                              id: "13",
+                              follower: {
+                                id: "1102",
+                                name: "Jim Doe",
+                              },
+                            },
+                          },
+                          {
+                            node: {
+                              id: "14",
+                              follower: {
+                                id: "1103",
+                                name: "Jill Doe",
+                              },
+                            },
+                          },
+                        ],
+                      },
+                    },
+                  },
                 ],
               },
             },
@@ -2198,6 +2254,7 @@ describe("useActionFormNested", () => {
 
       await act(async () => {
         tweetersFieldArrayHook.current.remove(0);
+        tweetersFieldArrayHook.current.remove(2);
         tweetersFieldArrayHook.current.append({
           name: "Joe Davola",
           followerFriendships: [{ followerId: "1001" }],
@@ -2249,6 +2306,41 @@ describe("useActionFormNested", () => {
                   ],
                   "id": "2",
                   "name": "Bob Sacamano",
+                },
+              },
+              {
+                "update": {
+                  "followerFriendships": [
+                    {
+                      "update": {
+                        "follower": {
+                          "update": {
+                            "id": "1100",
+                            "name": "Jane Doe",
+                          },
+                        },
+                        "id": "11",
+                      },
+                    },
+                    {
+                      "update": {
+                        "follower": {
+                          "update": {
+                            "id": "1101",
+                            "name": "John Smith",
+                          },
+                        },
+                        "id": "12",
+                      },
+                    },
+                  ],
+                  "id": "11",
+                  "name": "John Doe",
+                },
+              },
+              {
+                "delete": {
+                  "id": "12",
                 },
               },
               {
