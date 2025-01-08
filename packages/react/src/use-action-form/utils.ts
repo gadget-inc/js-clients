@@ -180,7 +180,7 @@ function getRecordIdsAtPath(data: any): Record<string, number[]> {
       }
 
       if (depth > 1) {
-        const newPath = isInArray ? path?.substring(0, path.length - 2) : path;
+        const newPath = isInArray ? path?.split(".").slice(0, -1).join(".") : path;
 
         if ("id" in input) {
           if (!updateList[newPath!]) {

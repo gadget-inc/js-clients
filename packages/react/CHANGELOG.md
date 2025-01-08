@@ -1,5 +1,11 @@
 # @gadgetinc/react
 
+## 0.18.6
+
+### Patch Changes
+
+- Fixed bug with `useActionForm` hook where it failed to properly update or delete records in `hasMany` fields if the IDs have more than 2 digits
+
 ## 0.18.5
 
 ### Patch Changes
