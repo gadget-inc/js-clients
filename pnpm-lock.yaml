@@ -144,8 +144,8 @@ importers:
         specifier: ^16.8.1
         version: 16.8.1
       graphql-ws:
-        specifier: ^5.13.1
-        version: 5.13.1(graphql@16.8.1)
+        specifier: ^5.16.1
+        version: 5.16.1(graphql@16.8.1)
       isomorphic-ws:
         specifier: ^5.0.0
         version: 5.0.0(ws@8.17.0)
@@ -405,8 +405,8 @@ importers:
         specifier: ^16.8.1
         version: 16.8.1
       graphql-ws:
-        specifier: ^5.13.1
-        version: 5.13.1(graphql@16.8.1)
+        specifier: ^5.16.1
+        version: 5.16.1(graphql@16.8.1)
       libnpmpack:
         specifier: ^7.0.4
         version: 7.0.4
@@ -4304,7 +4304,7 @@ packages:
       '@graphql-tools/utils': 10.2.2(graphql@16.8.1)
       '@types/ws': 8.5.10
       graphql: 16.8.1
-      graphql-ws: 5.16.0(graphql@16.8.1)
+      graphql-ws: 5.16.1(graphql@16.8.1)
       isomorphic-ws: 5.0.0(ws@8.17.0)
       tslib: 2.6.2
       ws: 8.17.0
@@ -5445,7 +5445,7 @@ packages:
       '@types/react':
         optional: true
     dependencies:
-      '@babel/runtime': 7.24.4
+      '@babel/runtime': 7.24.7
       '@floating-ui/react-dom': 2.1.0(react-dom@18.2.0)(react@18.2.0)
       '@mui/types': 7.2.14(@types/react@18.2.79)
       '@mui/utils': 5.15.14(@types/react@18.2.79)(react@18.2.0)
@@ -6165,7 +6165,7 @@ packages:
   /@radix-ui/primitive@1.0.1:
     resolution: {integrity: sha512-yQ8oGX2GVsEYMWGxcovu1uGWPCxV5BFfeeYxqPmuAzUyLT9qmaMXSAhXpb0WrspIeqYzdJpkh2vHModJPgRIaw==}
     dependencies:
-      '@babel/runtime': 7.24.4
+      '@babel/runtime': 7.24.7
     dev: true
 
   /@radix-ui/primitive@1.1.0:
@@ -6224,7 +6224,7 @@ packages:
       '@types/react':
         optional: true
     dependencies:
-      '@babel/runtime': 7.24.4
+      '@babel/runtime': 7.24.7
       '@types/react': 18.2.79
       react: 18.2.0
     dev: true
@@ -6251,7 +6251,7 @@ packages:
       '@types/react':
         optional: true
     dependencies:
-      '@babel/runtime': 7.24.4
+      '@babel/runtime': 7.24.7
       '@types/react': 18.2.79
       react: 18.2.0
     dev: true
@@ -6282,7 +6282,7 @@ packages:
       '@types/react-dom':
         optional: true
     dependencies:
-      '@babel/runtime': 7.24.4
+      '@babel/runtime': 7.24.7
       '@radix-ui/primitive': 1.0.1
       '@radix-ui/react-compose-refs': 1.0.1(@types/react@18.2.79)(react@18.2.0)
       '@radix-ui/react-context': 1.0.1(@types/react@18.2.79)(react@18.2.0)
@@ -6329,7 +6329,7 @@ packages:
       '@types/react-dom':
         optional: true
     dependencies:
-      '@babel/runtime': 7.24.4
+      '@babel/runtime': 7.24.7
       '@radix-ui/primitive': 1.0.1
       '@radix-ui/react-compose-refs': 1.0.1(@types/react@18.2.79)(react@18.2.0)
       '@radix-ui/react-primitive': 1.0.3(@types/react-dom@18.2.25)(@types/react@18.2.79)(react-dom@18.2.0)(react@18.2.0)
@@ -6374,7 +6374,7 @@ packages:
       '@types/react':
         optional: true
     dependencies:
-      '@babel/runtime': 7.24.4
+      '@babel/runtime': 7.24.7
       '@types/react': 18.2.79
       react: 18.2.0
     dev: true
@@ -6405,7 +6405,7 @@ packages:
       '@types/react-dom':
         optional: true
     dependencies:
-      '@babel/runtime': 7.24.4
+      '@babel/runtime': 7.24.7
       '@radix-ui/react-compose-refs': 1.0.1(@types/react@18.2.79)(react@18.2.0)
       '@radix-ui/react-primitive': 1.0.3(@types/react-dom@18.2.25)(@types/react@18.2.79)(react-dom@18.2.0)(react@18.2.0)
       '@radix-ui/react-use-callback-ref': 1.0.1(@types/react@18.2.79)(react@18.2.0)
@@ -6454,7 +6454,7 @@ packages:
       '@types/react':
         optional: true
     dependencies:
-      '@babel/runtime': 7.24.4
+      '@babel/runtime': 7.24.7
       '@radix-ui/react-use-layout-effect': 1.0.1(@types/react@18.2.79)(react@18.2.0)
       '@types/react': 18.2.79
       react: 18.2.0
@@ -6550,7 +6550,7 @@ packages:
       '@types/react-dom':
         optional: true
     dependencies:
-      '@babel/runtime': 7.24.4
+      '@babel/runtime': 7.24.7
       '@radix-ui/react-primitive': 1.0.3(@types/react-dom@18.2.25)(@types/react@18.2.79)(react-dom@18.2.0)(react@18.2.0)
       '@types/react': 18.2.79
       '@types/react-dom': 18.2.25
@@ -6592,7 +6592,7 @@ packages:
       '@types/react-dom':
         optional: true
     dependencies:
-      '@babel/runtime': 7.24.4
+      '@babel/runtime': 7.24.7
       '@radix-ui/react-compose-refs': 1.0.1(@types/react@18.2.79)(react@18.2.0)
       '@radix-ui/react-use-layout-effect': 1.0.1(@types/react@18.2.79)(react@18.2.0)
       '@types/react': 18.2.79
@@ -6635,7 +6635,7 @@ packages:
       '@types/react-dom':
         optional: true
     dependencies:
-      '@babel/runtime': 7.24.4
+      '@babel/runtime': 7.24.7
       '@radix-ui/react-slot': 1.0.2(@types/react@18.2.79)(react@18.2.0)
       '@types/react': 18.2.79
       '@types/react-dom': 18.2.25
@@ -6760,7 +6760,7 @@ packages:
       '@types/react':
         optional: true
     dependencies:
-      '@babel/runtime': 7.24.4
+      '@babel/runtime': 7.24.7
       '@radix-ui/react-compose-refs': 1.0.1(@types/react@18.2.79)(react@18.2.0)
       '@types/react': 18.2.79
       react: 18.2.0
@@ -6921,7 +6921,7 @@ packages:
       '@types/react':
         optional: true
     dependencies:
-      '@babel/runtime': 7.24.4
+      '@babel/runtime': 7.24.7
       '@radix-ui/react-use-callback-ref': 1.0.1(@types/react@18.2.79)(react@18.2.0)
       '@types/react': 18.2.79
       react: 18.2.0
@@ -8431,7 +8431,7 @@ packages:
     engines: {node: '>=14'}
     dependencies:
       '@babel/code-frame': 7.24.7
-      '@babel/runtime': 7.24.4
+      '@babel/runtime': 7.24.7
       '@types/aria-query': 5.0.4
       aria-query: 5.1.3
       chalk: 4.1.2
@@ -8477,7 +8477,7 @@ packages:
         optional: true
     dependencies:
       '@adobe/css-tools': 4.4.0
-      '@babel/runtime': 7.24.4
+      '@babel/runtime': 7.24.7
       '@types/jest': 29.5.12
       aria-query: 5.3.0
       chalk: 3.0.0
@@ -10912,11 +10912,6 @@ packages:
     resolution: {integrity: sha512-oIPzksmTg4/MriiaYGO+okXDT7ztn/w3Eptv/+gSIdMdKsJo0u4CfYNFJPy+4SKMuCqGw2wxnA+URMg3t8a/bQ==}
     dev: true
 
-  /deepmerge@4.2.2:
-    resolution: {integrity: sha512-FJ3UgI4gIl+PHZm53knsuSFpE+nESMr7M4v9QcgB7S63Kj/6WqMiFQJpBBYz1Pt+66bZpP3Q7Lye0Oo9MPKEdg==}
-    engines: {node: '>=0.10.0'}
-    dev: true
-
   /deepmerge@4.3.1:
     resolution: {integrity: sha512-3sUqbMEc77XqpdNO7FRyRog+eW3ph+GYCbj+rK+uYyRMuwsVy0rMiVtPn+QJlKFvWP/1PYpapqYn0Me2knFn+A==}
     engines: {node: '>=0.10.0'}
@@ -11101,7 +11096,7 @@ packages:
   /dom-helpers@5.2.1:
     resolution: {integrity: sha512-nRCa7CK3VTrM2NmGkIy4cbK7IZlgBE/PYMn55rrXefr5xXDP0LdtfPnblFDoVdcAfslJ7or6iqAUnx0CCGIWQA==}
     dependencies:
-      '@babel/runtime': 7.24.4
+      '@babel/runtime': 7.24.7
       csstype: 3.1.3
 
   /domexception@4.0.0:
@@ -12784,22 +12779,13 @@ packages:
       tslib: 2.6.2
     dev: true
 
-  /graphql-ws@5.13.1(graphql@16.8.1):
-    resolution: {integrity: sha512-eiX7ES/ZQr0q7hSM5UBOEIFfaAUmAY9/CSDyAnsETuybByU7l/v46drRg9DQoTvVABEHp3QnrvwgTRMhqy7zxQ==}
+  /graphql-ws@5.16.1(graphql@16.8.1):
+    resolution: {integrity: sha512-/U3sZOhiZ36ZtSFhdnT8Fj5novy2E+Fnr6P5KjMSDv6E72yfvnWRJN7hll9G/mlzhWPuK+8xRtZ8RJIw++vV3w==}
     engines: {node: '>=10'}
     peerDependencies:
       graphql: '>=0.11 <=16'
     dependencies:
       graphql: 16.8.1
-
-  /graphql-ws@5.16.0(graphql@16.8.1):
-    resolution: {integrity: sha512-Ju2RCU2dQMgSKtArPbEtsK5gNLnsQyTNIo/T7cZNp96niC1x0KdJNZV0TIoilceBPQwfb5itrGl8pkFeOUMl4A==}
-    engines: {node: '>=10'}
-    peerDependencies:
-      graphql: '>=0.11 <=16'
-    dependencies:
-      graphql: 16.8.1
-    dev: true
 
   /graphql@16.8.1:
     resolution: {integrity: sha512-59LZHPdGZVh695Ud9lRzPBVTtlX9ZCV150Er2W43ro37wVof0ctenSaskPPjN7lVTIN8mSZt8PHUNKZuNQUuxw==}
@@ -13769,7 +13755,7 @@ packages:
       babel-jest: 29.7.0(@babel/core@7.19.0)
       chalk: 4.1.2
       ci-info: 3.3.1
-      deepmerge: 4.2.2
+      deepmerge: 4.3.1
       glob: 7.2.3
       graceful-fs: 4.2.10
       jest-circus: 29.7.0
@@ -13809,7 +13795,7 @@ packages:
       babel-jest: 29.7.0(@babel/core@7.19.0)
       chalk: 4.1.2
       ci-info: 3.3.1
-      deepmerge: 4.2.2
+      deepmerge: 4.3.1
       glob: 7.2.3
       graceful-fs: 4.2.10
       jest-circus: 29.7.0
@@ -16823,7 +16809,7 @@ packages:
       react: '>=16.6.0'
       react-dom: '>=16.6.0'
     dependencies:
-      '@babel/runtime': 7.24.4
+      '@babel/runtime': 7.24.7
       dom-helpers: 5.2.1
       loose-envify: 1.4.0
       prop-types: 15.8.1
