@@ -1,11 +1,13 @@
 import type { ReactNode } from "react";
 import type { Control } from "../../useActionForm.js";
+import { AnyModelFinderMetadata, FindManyOptions } from "@gadgetinc/api-client-core";
 
 export interface AutoRelationshipInputProps {
   field: string;
   control?: Control<any>;
   optionLabel?: OptionLabel;
   label?: string;
+  relatedModelRecordFilter?: { relatedModelManager?: AnyModelFinderMetadata["modelApiIdentifier"]; filter: FindManyOptions["filter"] };
 }
 
 export interface Option {
