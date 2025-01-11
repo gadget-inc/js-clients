@@ -40,7 +40,12 @@ describeForEachAutoAdapter("AutoForm - FindBy object parameters", ({ name, adapt
         mainModel: {
           childModelEntries: null,
           nonUniqueString: "example",
-          uniqueBelongsTo: {},
+          uniqueBelongsTo: {
+            update: {
+              id: "22",
+              parentUniqueString: "parent-example",
+            },
+          },
           uniqueEmail: "u2@email.com",
           uniqueString: "u2",
         },
@@ -411,6 +416,11 @@ const mainModelQueryDefaultValuesResponse = {
               nonUniqueString: "example",
               uniqueEmail: "u2@email.com",
               uniqueString: "u2",
+              uniqueBelongsTo: {
+                __typename: "UniqueFieldsParentModel",
+                id: "22",
+                parentUniqueString: "parent-example",
+              },
               updatedAt: "2024-10-01T20:58:39.300Z",
             },
             __typename: "UniqueFieldsMainModelEdge",
