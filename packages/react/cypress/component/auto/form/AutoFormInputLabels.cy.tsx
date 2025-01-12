@@ -1,6 +1,5 @@
 /* eslint-disable jest/valid-expect */
 import React from "react";
-import { MUIAutoInput } from "../../../../src/auto/mui/inputs/MUIAutoInput.js";
 import { PolarisAutoInput } from "../../../../src/auto/polaris/inputs/PolarisAutoInput.js";
 import { humanizeCamelCase } from "../../../../src/utils.js";
 import { api } from "../../../support/api.js";
@@ -9,10 +8,6 @@ import { describeForEachAutoAdapter } from "../../../support/auto.js";
 const AutoInput = (props: { suiteName: string; field: string; label?: string }) => {
   if (props.suiteName === "Polaris") {
     return <PolarisAutoInput {...props} />;
-  }
-
-  if (props.suiteName === "MUI") {
-    return <MUIAutoInput {...props} />;
   }
 
   throw new Error("Invalid suite name");

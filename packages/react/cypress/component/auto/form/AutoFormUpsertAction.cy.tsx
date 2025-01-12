@@ -1,7 +1,5 @@
 import React from "react";
 import { apiTriggerOnly } from "../../../../spec/auto/support/Triggers.js";
-import { MUIAutoInput } from "../../../../src/auto/mui/inputs/MUIAutoInput.js";
-import { MUIAutoSubmit } from "../../../../src/auto/mui/submit/MUIAutoSubmit.js";
 import { PolarisAutoInput } from "../../../../src/auto/polaris/inputs/PolarisAutoInput.js";
 import { PolarisAutoSubmit } from "../../../../src/auto/polaris/submit/PolarisAutoSubmit.js";
 import { api } from "../../../support/api.js";
@@ -159,13 +157,8 @@ describeForEachAutoAdapter("AutoForm - Upsert Action", ({ name, adapter: { AutoF
             <PolarisAutoInput field="inventoryCount" />
             <PolarisAutoSubmit />
           </>
-        ) : (
-          <>
-            <MUIAutoInput field="name" />
-            <MUIAutoInput field="inventoryCount" />
-            <MUIAutoSubmit />
-          </>
-        )}
+        ) : // todo: shadcn
+        null}
       </AutoForm>,
       wrapper
     );
