@@ -3,12 +3,12 @@ import { act, render, screen } from "@testing-library/react";
 import type { UserEvent } from "@testing-library/user-event";
 import { userEvent } from "@testing-library/user-event";
 import React from "react";
-import { PolarisAutoForm } from "../../../src/auto/polaris/PolarisAutoForm.js";
-import { PolarisAutoRolesInput } from "../../../src/auto/polaris/inputs/PolarisAutoRolesInput.js";
-import { PolarisAutoSubmit } from "../../../src/auto/polaris/submit/PolarisAutoSubmit.js";
-import { testApi as api } from "../../apis.js";
-import { mockUrqlClient } from "../../testWrappers.js";
-import { mockWidgetFindBy } from "../support/helper.js";
+import { PolarisAutoForm } from "../../../../src/auto/polaris/PolarisAutoForm.js";
+import { PolarisAutoRolesInput } from "../../../../src/auto/polaris/inputs/PolarisAutoRolesInput.js";
+import { PolarisAutoSubmit } from "../../../../src/auto/polaris/submit/PolarisAutoSubmit.js";
+import { testApi as api } from "../../../apis.js";
+import { mockUrqlClient } from "../../../testWrappers.js";
+import { mockWidgetFindBy } from "../../support/helper.js";
 import { PolarisMockedProviders } from "./PolarisMockedProviders.js";
 
 describe("PolarisAutoRolesInput", () => {

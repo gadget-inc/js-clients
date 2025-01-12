@@ -3,10 +3,10 @@ import { act, render } from "@testing-library/react";
 import type { UserEvent } from "@testing-library/user-event";
 import { userEvent } from "@testing-library/user-event";
 import React from "react";
-import { InvalidModelErrorMessage } from "../../../src/auto/AutoTableValidators.js";
-import { GadgetFieldType } from "../../../src/internal/gql/graphql.js";
-import type { TableColumn } from "../../../src/use-table/types.js";
-import { testApi as api } from "../../apis.js";
+import { InvalidModelErrorMessage } from "../../../../src/auto/AutoTableValidators.js";
+import { GadgetFieldType } from "../../../../src/internal/gql/graphql.js";
+import type { TableColumn } from "../../../../src/use-table/types.js";
+import { testApi as api } from "../../../apis.js";
 import { PolarisMockedProviders } from "../inputs/PolarisMockedProviders.js";
 
 const sampleUUID1 = "000-000-000-000-001";
@@ -104,7 +104,7 @@ jest.unstable_mockModule("../src/useTable", () => ({
 }));
 
 // We are mocking the useTable hook that is used by PolarisAutoTable, so we need to import it dynamically
-const { PolarisAutoTable } = await import("../../../src/auto/polaris/PolarisAutoTable.js");
+const { PolarisAutoTable } = await import("../../../../src/auto/polaris/PolarisAutoTable.js");
 
 describe("PolarisAutoTable", () => {
   let user: UserEvent;

@@ -6,13 +6,13 @@ import { act, render, screen } from "@testing-library/react";
 import { userEvent } from "@testing-library/user-event";
 import type { ReactNode } from "react";
 import React from "react";
-import { PolarisAutoForm } from "../../../src/auto/polaris/PolarisAutoForm.js";
-import { PolarisAutoNumberInput } from "../../../src/auto/polaris/inputs/PolarisAutoNumberInput.js";
-import { PolarisAutoTextInput } from "../../../src/auto/polaris/inputs/PolarisAutoTextInput.js";
-import { testApi as api } from "../../apis.js";
-import { MockClientProvider, mockUrqlClient } from "../../testWrappers.js";
-import { MockForm } from "../MockForm.js";
-import { apiTriggerOnly } from "../support/Triggers.js";
+import { PolarisAutoForm } from "../../../../src/auto/polaris/PolarisAutoForm.js";
+import { PolarisAutoNumberInput } from "../../../../src/auto/polaris/inputs/PolarisAutoNumberInput.js";
+import { PolarisAutoTextInput } from "../../../../src/auto/polaris/inputs/PolarisAutoTextInput.js";
+import { testApi as api } from "../../../apis.js";
+import { MockClientProvider, mockUrqlClient } from "../../../testWrappers.js";
+import { MockForm } from "../../MockForm.js";
+import { apiTriggerOnly } from "../../support/Triggers.js";
 
 describe("PolarisAutoTextInput", () => {
   let result: RenderResult;

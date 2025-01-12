@@ -2,11 +2,11 @@ import { AppProvider, BlockStack, Box, Button, Checkbox, LegacyCard } from "@sho
 import { DeleteIcon } from "@shopify/polaris-icons";
 import translations from "@shopify/polaris/locales/en.json";
 import React, { useEffect } from "react";
-import { Provider } from "../../src/GadgetProvider.tsx";
-import { PolarisAutoTable } from "../../src/auto/polaris/PolarisAutoTable.tsx";
-import { useAction } from "../../src/useAction.ts";
-import { testApi as api } from "../apis.ts";
-import { StorybookErrorBoundary } from "./StorybookErrorBoundary.tsx";
+import { Provider } from "../../../src/GadgetProvider.js";
+import { PolarisAutoTable } from "../../../src/auto/polaris/PolarisAutoTable.js";
+import { useAction } from "../../../src/useAction.js";
+import { testApi as api } from "../../apis.js";
+import { StorybookErrorBoundary } from "../StorybookErrorBoundary.js";
 
 const CustomEmptyStateMarkup = <p>This is a custom empty state. Bazinga.</p>;
 

@@ -1,10 +1,10 @@
 import { AppProvider, Card, Page } from "@shopify/polaris";
 import translations from "@shopify/polaris/locales/en.json";
 import React from "react";
-import { Provider } from "../../../src/GadgetProvider.tsx";
-import { PolarisAutoForm } from "../../../src/auto/polaris/PolarisAutoForm.tsx";
-import { FormProvider, useForm } from "../../../src/useActionForm.ts";
-import { testApi as api } from "../../apis.ts";
+import { Provider } from "../../../../src/GadgetProvider.js";
+import { PolarisAutoForm } from "../../../../src/auto/polaris/PolarisAutoForm.js";
+import { FormProvider, useForm } from "../../../../src/useActionForm.js";
+import { testApi as api } from "../../../apis.js";
 
 export default {
   title: "Polaris/AutoForm/FindByUniqueField",

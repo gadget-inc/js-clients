@@ -4,13 +4,13 @@ import { act, render } from "@testing-library/react";
 import { userEvent } from "@testing-library/user-event";
 import type { ReactNode } from "react";
 import React from "react";
-import { PolarisAutoForm } from "../../../src/auto/polaris/PolarisAutoForm.js";
-import { PolarisAutoHiddenInput } from "../../../src/auto/polaris/inputs/PolarisAutoHiddenInput.js";
-import { PolarisAutoSubmit } from "../../../src/auto/polaris/submit/PolarisAutoSubmit.js";
-import { testApi as api } from "../../apis.js";
-import { MockClientProvider, mockUrqlClient } from "../../testWrappers.js";
-import { mockGameStadiumFindBy, mockWidgetFindBy } from "../support/helper.js";
-import { getWidgetModelMetadata } from "../support/widgetModel.js";
+import { PolarisAutoForm } from "../../../../src/auto/polaris/PolarisAutoForm.js";
+import { PolarisAutoHiddenInput } from "../../../../src/auto/polaris/inputs/PolarisAutoHiddenInput.js";
+import { PolarisAutoSubmit } from "../../../../src/auto/polaris/submit/PolarisAutoSubmit.js";
+import { testApi as api } from "../../../apis.js";
+import { MockClientProvider, mockUrqlClient } from "../../../testWrappers.js";
+import { mockGameStadiumFindBy, mockWidgetFindBy } from "../../support/helper.js";
+import { getWidgetModelMetadata } from "../../support/widgetModel.js";
 
 const PolarisMockedProviders = (props: { children: ReactNode }) => {
   return (

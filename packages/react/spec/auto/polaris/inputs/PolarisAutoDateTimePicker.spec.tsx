@@ -2,13 +2,13 @@ import { jest } from "@jest/globals";
 import { act, render, screen } from "@testing-library/react";
 import { userEvent } from "@testing-library/user-event";
 import React from "react";
-import { PolarisAutoForm } from "../../../src/auto/polaris/PolarisAutoForm.js";
-import { PolarisAutoDateTimePicker } from "../../../src/auto/polaris/inputs/PolarisAutoDateTimePicker.js";
-import { PolarisAutoSubmit } from "../../../src/auto/polaris/submit/PolarisAutoSubmit.js";
-import { testApi as api } from "../../apis.js";
-import { mockUrqlClient } from "../../testWrappers.js";
-import { sleep } from "../../utils.js";
-import { mockWidgetFindBy } from "../support/helper.js";
+import { PolarisAutoForm } from "../../../../src/auto/polaris/PolarisAutoForm.js";
+import { PolarisAutoDateTimePicker } from "../../../../src/auto/polaris/inputs/PolarisAutoDateTimePicker.js";
+import { PolarisAutoSubmit } from "../../../../src/auto/polaris/submit/PolarisAutoSubmit.js";
+import { testApi as api } from "../../../apis.js";
+import { mockUrqlClient } from "../../../testWrappers.js";
+import { sleep } from "../../../utils.js";
+import { mockWidgetFindBy } from "../../support/helper.js";
 import { PolarisMockedProviders } from "./PolarisMockedProviders.js";
 
 describe("PolarisDateTimePicker", () => {

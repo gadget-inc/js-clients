@@ -6,15 +6,15 @@ import type { UserEvent } from "@testing-library/user-event";
 import { userEvent } from "@testing-library/user-event";
 import type { ReactNode } from "react";
 import React from "react";
-import { MissingApiTriggerErrorMessage } from "../../src/auto/AutoFormActionValidators.js";
-import { PolarisAutoForm } from "../../src/auto/polaris/PolarisAutoForm.js";
-import { PolarisAutoInput } from "../../src/auto/polaris/inputs/PolarisAutoInput.js";
-import { PolarisAutoSubmit } from "../../src/auto/polaris/submit/PolarisAutoSubmit.js";
-import { testApi as api } from "../apis.js";
-import { MockClientProvider, mockUrqlClient } from "../testWrappers.js";
-import { getGizmoModelMetadata } from "./support/gizmoModel.js";
-import { getGlobalActionMetadata } from "./support/globalActions.js";
-import { getWidgetModelMetadata, getWidgetRecord } from "./support/widgetModel.js";
+import { MissingApiTriggerErrorMessage } from "../../../src/auto/AutoFormActionValidators.js";
+import { PolarisAutoForm } from "../../../src/auto/polaris/PolarisAutoForm.js";
+import { PolarisAutoInput } from "../../../src/auto/polaris/inputs/PolarisAutoInput.js";
+import { PolarisAutoSubmit } from "../../../src/auto/polaris/submit/PolarisAutoSubmit.js";
+import { testApi as api } from "../../apis.js";
+import { MockClientProvider, mockUrqlClient } from "../../testWrappers.js";
+import { getGizmoModelMetadata } from "../support/gizmoModel.js";
+import { getGlobalActionMetadata } from "../support/globalActions.js";
+import { getWidgetModelMetadata, getWidgetRecord } from "../support/widgetModel.js";
 
 const PolarisMockedProviders = (props: { children: ReactNode }) => {
   return (

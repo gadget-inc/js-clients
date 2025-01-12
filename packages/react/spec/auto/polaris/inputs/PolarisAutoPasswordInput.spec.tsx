@@ -1,10 +1,10 @@
 import type { RenderResult } from "@testing-library/react";
 import { render } from "@testing-library/react";
 import React from "react";
-import { PolarisAutoForm } from "../../../src/auto/polaris/PolarisAutoForm.js";
-import { PolarisAutoPasswordInput } from "../../../src/auto/polaris/inputs/PolarisAutoPasswordInput.js";
-import { testApi as api } from "../../apis.js";
-import { mockUserFindBy } from "../support/helper.js";
+import { PolarisAutoForm } from "../../../../src/auto/polaris/PolarisAutoForm.js";
+import { PolarisAutoPasswordInput } from "../../../../src/auto/polaris/inputs/PolarisAutoPasswordInput.js";
+import { testApi as api } from "../../../apis.js";
+import { mockUserFindBy } from "../../support/helper.js";
 import { PolarisMockedProviders } from "./PolarisMockedProviders.js";
 
 describe("PolarisPasswordInput", () => {

@@ -3,9 +3,9 @@ import { jest } from "@jest/globals";
 import type { RenderResult } from "@testing-library/react";
 import { render } from "@testing-library/react";
 import React from "react";
-import { PolarisAutoEncryptedStringInput } from "../../../src/auto/polaris/inputs/PolarisAutoEncryptedStringInput.js";
-import { MockForm } from "../MockForm.js";
-import { apiTriggerOnly } from "../support/Triggers.js";
+import { PolarisAutoEncryptedStringInput } from "../../../../src/auto/polaris/inputs/PolarisAutoEncryptedStringInput.js";
+import { MockForm } from "../../MockForm.js";
+import { apiTriggerOnly } from "../../support/Triggers.js";
 
 describe("PolarisEncryptedStringInput", () => {
   let result: RenderResult;

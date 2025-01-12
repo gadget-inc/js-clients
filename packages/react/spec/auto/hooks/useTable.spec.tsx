@@ -5,7 +5,7 @@ import { useTable } from "../../../src/useTable.js";
 import { testApi as api } from "../../apis.js";
 import { mockUrqlClient } from "../../testWrappers.js";
 import { MockTable } from "../MockTable.js";
-import { PolarisMockedProviders } from "../inputs/PolarisMockedProviders.js";
+import { PolarisMockedProviders } from "../polaris/inputs/PolarisMockedProviders.js";
 import { recordIdInputField } from "../support/shared.js";
 import { widgetModelInputFields } from "../support/widgetModel.js";
 
