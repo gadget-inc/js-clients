@@ -1,19 +1,19 @@
 /* eslint-disable @typescript-eslint/no-non-null-assertion */
-import type { DefinitionNode, DirectiveNode, OperationDefinitionNode } from "@0no-co/graphql.web";
 import type { ClientOptions, RequestPolicy } from "@urql/core";
-import { Client, cacheExchange, fetchExchange, subscriptionExchange } from "@urql/core";
+import { Client, fetchExchange, subscriptionExchange } from "@urql/core";
 import type { ExecutionResult } from "graphql";
 import type { Sink, Client as SubscriptionClient, ClientOptions as SubscriptionClientOptions } from "graphql-ws";
 import { CloseCode, createClient as createSubscriptionClient } from "graphql-ws";
-import type { Maybe } from "graphql/jsutils/Maybe.js";
 import WebSocket from "isomorphic-ws";
 import type { AuthenticationModeOptions, BrowserSessionAuthenticationModeOptions, Exchanges } from "./ClientOptions.js";
 import { BrowserSessionStorageType } from "./ClientOptions.js";
 import { GadgetTransaction, TransactionRolledBack } from "./GadgetTransaction.js";
 import type { BrowserStorage } from "./InMemoryStorage.js";
 import { InMemoryStorage } from "./InMemoryStorage.js";
+import { cacheExchange } from "./exchanges/cacheExchange.js";
 import { operationNameExchange } from "./exchanges/operationNameExchange.js";
 import { addUrlParams, urlParamExchange } from "./exchanges/urlParamExchange.js";
+import { isLiveQueryOperationDefinitionNode } from "./graphql-live-query-utils/index.js";
 import {
   GadgetTooManyRequestsError,
   GadgetUnexpectedCloseError,
@@ -628,14 +628,3 @@ function processMaybeRelativeInput(input: RequestInfo | URL, endpoint: string): 
 function isRelativeUrl(url: string) {
   return url.startsWith("/") && !url.startsWith("//");
 }
-
-const getLiveDirectiveNode = (input: DefinitionNode): Maybe<DirectiveNode> => {
-  if (input.kind !== "OperationDefinition" || input.operation !== "query") {
-    return null;
-  }
-  return input.directives?.find((d) => d.name.value === "live");
-};
-
-const isLiveQueryOperationDefinitionNode = (input: DefinitionNode): input is OperationDefinitionNode => {
-  return !!getLiveDirectiveNode(input);
-};
