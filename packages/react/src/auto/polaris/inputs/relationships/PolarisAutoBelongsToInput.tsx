@@ -1,44 +1,46 @@
 import { Combobox, Tag } from "@shopify/polaris";
 import React from "react";
 import { autoInput } from "../../../AutoInput.js";
-import { useBelongsToInputController } from "../../../hooks/useBelongsToInputController.js";
-import { optionRecordsToLoadCount } from "../../../hooks/useRelatedModelOptions.js";
+import { useBelongsToInputController } from "../../../hooks/useBelongsToController.js";
+import { getRecordAsOption, optionRecordsToLoadCount, useOptionLabelForField } from "../../../hooks/useRelatedModel.js";
 import type { AutoRelationshipInputProps } from "../../../interfaces/AutoRelationshipInputProps.js";
 import { RelatedModelOptions } from "./RelatedModelOptions.js";
 
 export const PolarisAutoBelongsToInput = autoInput((props: AutoRelationshipInputProps) => {
   const {
     fieldMetadata: { path, metadata },
-    relatedModelOptions: { options, searchFilterOptions, pagination, search },
-
+    relatedModelOptions: { options, searchFilterOptions, pagination, search, relatedModel },
     isLoading,
     errorMessage,
-
-    selectedRecordId,
-    selectedRelatedModelRecordMissing,
-
+    selectedRecord,
+    danglingSelectedRecordId,
     onSelectRecord,
     onRemoveRecord,
   } = useBelongsToInputController(props);
 
-  const selectedRecordLabel = selectedRecordId
-    ? options.find((option) => option.id === selectedRecordId)?.label ?? `id: ${selectedRecordId}`
-    : null;
+  const optionLabel = useOptionLabelForField(props.field, props.optionLabel);
+  const selectedOption = selectedRecord ? getRecordAsOption(selectedRecord, optionLabel) : null;
 
-  const selectedRecordTag = selectedRecordId ? (
-    <Tag onRemove={onRemoveRecord} key={`selectedRecordTag_${selectedRecordId}`}>
-      <p style={{ color: selectedRelatedModelRecordMissing ? "red" : undefined }} id={`${selectedRecordId}_${selectedRecordLabel}`}>
-        {selectedRecordLabel}
-      </p>
-    </Tag>
-  ) : null;
+  const selectedRecordTag =
+    selectedOption && selectedOption.id ? (
+      <Tag onRemove={onRemoveRecord} key={`selectedRecordTag_${selectedOption.id}`}>
+        <p id={`${selectedOption.id}_${selectedOption.label}`}>{selectedOption.label}</p>
+      </Tag>
+    ) : danglingSelectedRecordId ? (
+      <Tag onRemove={onRemoveRecord} key={`selectedRecordTag_${danglingSelectedRecordId}`}>
+        <p id={`${danglingSelectedRecordId}`} style={{ color: "red" }}>
+          id: {danglingSelectedRecordId}
+        </p>
+      </Tag>
+    ) : null;
 
-  const onSelect = (recordId: string) => {
-    const idIsAlreadySelected = selectedRecordId === recordId;
+  const onSelect = (record: Record<string, any>) => {
+    const recordId = record.id;
+    const idIsAlreadySelected = selectedRecord?.id === recordId;
 
     idIsAlreadySelected
       ? onRemoveRecord() // clear selection
-      : onSelectRecord(recordId); // make single selection
+      : onSelectRecord(record); // make single selection
   };
 
   return (
@@ -62,9 +64,10 @@ export const PolarisAutoBelongsToInput = autoInput((props: AutoRelationshipInput
         <RelatedModelOptions
           isLoading={isLoading}
           errorMessage={errorMessage}
-          checkSelected={(id) => id === selectedRecordId}
+          checkSelected={(id) => id === selectedRecord?.id}
           onSelect={onSelect}
           options={searchFilterOptions}
+          records={relatedModel.records}
         />
       </Combobox>
     </>

@@ -1,6 +1,7 @@
 import React from "react";
 import { api } from "../../../support/api.js";
 import { describeForEachAutoAdapter } from "../../../support/auto.js";
+
 describeForEachAutoAdapter("AutoForm - FindBy object parameters", ({ name, adapter: { AutoForm }, wrapper }) => {
   const interceptModelActionMetadata = () =>
     cy
@@ -30,6 +31,7 @@ describeForEachAutoAdapter("AutoForm - FindBy object parameters", ({ name, adapt
     cy.wait(["@ModelActionMetadata", "@mainModelQueryDefaultValues"]);
 
     mockSuccessfulUpdate();
+    cy.wait(300); // It takes some time to load in the findBy object
 
     cy.contains("Submit").click({ force: true });
 
@@ -38,9 +40,8 @@ describeForEachAutoAdapter("AutoForm - FindBy object parameters", ({ name, adapt
       .should("deep.equal", {
         id: "2",
         mainModel: {
-          childModelEntries: null,
+          childModelEntries: [],
           nonUniqueString: "example",
-          uniqueBelongsTo: {},
           uniqueEmail: "u2@email.com",
           uniqueString: "u2",
         },
@@ -53,28 +54,35 @@ const uniqueFieldsMainModelMetadata = {
     gadgetMeta: {
       modelAndRelatedModels: [
         {
+          key: "nu84_-GxRnkx",
           name: "Main model",
+          namespace: ["uniqueFields"],
           apiIdentifier: "mainModel",
           defaultRecord: {
             __typename: "UniqueFieldsMainModel",
           },
           fields: [
             {
-              name: "Unique string",
-              apiIdentifier: "uniqueString",
-              fieldType: "String",
-              requiredArgumentForInput: false,
+              name: "Id",
+              apiIdentifier: "id",
+              fieldType: "ID",
+              requiredArgumentForInput: true,
               sortable: true,
               filterable: true,
               __typename: "GadgetModelField",
               configuration: {
                 __typename: "GadgetGenericFieldConfig",
-                fieldType: "String",
+                fieldType: "ID",
                 validations: [
                   {
                     __typename: "GadgetGenericFieldValidation",
                     name: "Uniqueness",
                     specID: "gadget/validation/unique",
+                  },
+                  {
+                    __typename: "GadgetGenericFieldValidation",
+                    name: "Required",
+                    specID: "gadget/validation/required",
                   },
                 ],
               },
@@ -100,6 +108,40 @@ const uniqueFieldsMainModelMetadata = {
               },
             },
             {
+              name: "Unique string",
+              apiIdentifier: "uniqueString",
+              fieldType: "String",
+              requiredArgumentForInput: false,
+              sortable: true,
+              filterable: true,
+              __typename: "GadgetModelField",
+              configuration: {
+                __typename: "GadgetGenericFieldConfig",
+                fieldType: "String",
+                validations: [
+                  {
+                    __typename: "GadgetGenericFieldValidation",
+                    name: "Uniqueness",
+                    specID: "gadget/validation/unique",
+                  },
+                ],
+              },
+            },
+            {
+              name: "Non unique string",
+              apiIdentifier: "nonUniqueString",
+              fieldType: "String",
+              requiredArgumentForInput: false,
+              sortable: true,
+              filterable: true,
+              __typename: "GadgetModelField",
+              configuration: {
+                __typename: "GadgetGenericFieldConfig",
+                fieldType: "String",
+                validations: [],
+              },
+            },
+            {
               name: "Unique belongs to",
               apiIdentifier: "uniqueBelongsTo",
               fieldType: "BelongsTo",
@@ -119,30 +161,11 @@ const uniqueFieldsMainModelMetadata = {
                 ],
                 relatedModel: {
                   key: "RK96To6wLTyn",
+                  name: "Parent model",
                   apiIdentifier: "parentModel",
                   namespace: ["uniqueFields"],
-                  defaultDisplayField: {
-                    name: "Parent unique string",
-                    apiIdentifier: "parentUniqueString",
-                    fieldType: "String",
-                    __typename: "GadgetModelField",
-                  },
                   __typename: "GadgetModel",
                 },
-              },
-            },
-            {
-              name: "Non unique string",
-              apiIdentifier: "nonUniqueString",
-              fieldType: "String",
-              requiredArgumentForInput: false,
-              sortable: true,
-              filterable: true,
-              __typename: "GadgetModelField",
-              configuration: {
-                __typename: "GadgetGenericFieldConfig",
-                fieldType: "String",
-                validations: [],
               },
             },
             {
@@ -160,14 +183,9 @@ const uniqueFieldsMainModelMetadata = {
                 isJoinModelHasManyField: false,
                 relatedModel: {
                   key: "ZOw07DfjlSXQ",
+                  name: "Child model",
                   apiIdentifier: "childModel",
                   namespace: ["uniqueFields"],
-                  defaultDisplayField: {
-                    name: "Alias",
-                    apiIdentifier: "alias",
-                    fieldType: "String",
-                    __typename: "GadgetModelField",
-                  },
                   __typename: "GadgetModel",
                 },
                 inverseField: {
@@ -176,44 +194,326 @@ const uniqueFieldsMainModelMetadata = {
                 },
               },
             },
+            {
+              name: "Created at",
+              apiIdentifier: "createdAt",
+              fieldType: "DateTime",
+              requiredArgumentForInput: true,
+              sortable: true,
+              filterable: true,
+              __typename: "GadgetModelField",
+              configuration: {
+                __typename: "GadgetDateTimeConfig",
+                fieldType: "DateTime",
+                validations: [
+                  {
+                    __typename: "GadgetGenericFieldValidation",
+                    name: "Required",
+                    specID: "gadget/validation/required",
+                  },
+                ],
+                includeTime: true,
+              },
+            },
+            {
+              name: "Updated at",
+              apiIdentifier: "updatedAt",
+              fieldType: "DateTime",
+              requiredArgumentForInput: true,
+              sortable: true,
+              filterable: true,
+              __typename: "GadgetModelField",
+              configuration: {
+                __typename: "GadgetDateTimeConfig",
+                fieldType: "DateTime",
+                validations: [
+                  {
+                    __typename: "GadgetGenericFieldValidation",
+                    name: "Required",
+                    specID: "gadget/validation/required",
+                  },
+                ],
+                includeTime: true,
+              },
+            },
           ],
           defaultDisplayField: {
-            name: "Id",
-            apiIdentifier: "id",
-            fieldType: "ID",
-            __typename: "GadgetModelField",
-          },
-          __typename: "GadgetModel",
-        },
-        {
-          key: "RK96To6wLTyn",
-          apiIdentifier: "parentModel",
-          namespace: ["uniqueFields"],
-          defaultDisplayField: {
-            name: "Parent unique string",
-            apiIdentifier: "parentUniqueString",
+            name: "Unique string",
+            apiIdentifier: "uniqueString",
             fieldType: "String",
             __typename: "GadgetModelField",
           },
-          fields: [],
           __typename: "GadgetModel",
         },
         {
           key: "ZOw07DfjlSXQ",
-          apiIdentifier: "childModel",
+          name: "Child model",
           namespace: ["uniqueFields"],
+          apiIdentifier: "childModel",
+          defaultRecord: {
+            __typename: "UniqueFieldsChildModel",
+          },
+          fields: [
+            {
+              name: "Id",
+              apiIdentifier: "id",
+              fieldType: "ID",
+              requiredArgumentForInput: true,
+              sortable: true,
+              filterable: true,
+              __typename: "GadgetModelField",
+              configuration: {
+                __typename: "GadgetGenericFieldConfig",
+                fieldType: "ID",
+                validations: [
+                  {
+                    __typename: "GadgetGenericFieldValidation",
+                    name: "Uniqueness",
+                    specID: "gadget/validation/unique",
+                  },
+                  {
+                    __typename: "GadgetGenericFieldValidation",
+                    name: "Required",
+                    specID: "gadget/validation/required",
+                  },
+                ],
+              },
+            },
+            {
+              name: "Alias",
+              apiIdentifier: "alias",
+              fieldType: "String",
+              requiredArgumentForInput: false,
+              sortable: true,
+              filterable: true,
+              __typename: "GadgetModelField",
+              configuration: {
+                __typename: "GadgetGenericFieldConfig",
+                fieldType: "String",
+                validations: [],
+              },
+            },
+            {
+              name: "Main model parent",
+              apiIdentifier: "mainModelParent",
+              fieldType: "BelongsTo",
+              requiredArgumentForInput: false,
+              sortable: false,
+              filterable: true,
+              __typename: "GadgetModelField",
+              configuration: {
+                __typename: "GadgetBelongsToConfig",
+                fieldType: "BelongsTo",
+                validations: [],
+                relatedModel: {
+                  key: "nu84_-GxRnkx",
+                  name: "Main model",
+                  apiIdentifier: "mainModel",
+                  namespace: ["uniqueFields"],
+                  __typename: "GadgetModel",
+                },
+              },
+            },
+            {
+              name: "Created at",
+              apiIdentifier: "createdAt",
+              fieldType: "DateTime",
+              requiredArgumentForInput: true,
+              sortable: true,
+              filterable: true,
+              __typename: "GadgetModelField",
+              configuration: {
+                __typename: "GadgetDateTimeConfig",
+                fieldType: "DateTime",
+                validations: [
+                  {
+                    __typename: "GadgetGenericFieldValidation",
+                    name: "Required",
+                    specID: "gadget/validation/required",
+                  },
+                ],
+                includeTime: true,
+              },
+            },
+            {
+              name: "Updated at",
+              apiIdentifier: "updatedAt",
+              fieldType: "DateTime",
+              requiredArgumentForInput: true,
+              sortable: true,
+              filterable: true,
+              __typename: "GadgetModelField",
+              configuration: {
+                __typename: "GadgetDateTimeConfig",
+                fieldType: "DateTime",
+                validations: [
+                  {
+                    __typename: "GadgetGenericFieldValidation",
+                    name: "Required",
+                    specID: "gadget/validation/required",
+                  },
+                ],
+                includeTime: true,
+              },
+            },
+          ],
           defaultDisplayField: {
             name: "Alias",
             apiIdentifier: "alias",
             fieldType: "String",
             __typename: "GadgetModelField",
           },
-          fields: [],
+          __typename: "GadgetModel",
+        },
+        {
+          key: "RK96To6wLTyn",
+          name: "Parent model",
+          namespace: ["uniqueFields"],
+          apiIdentifier: "parentModel",
+          defaultRecord: {
+            __typename: "UniqueFieldsParentModel",
+          },
+          fields: [
+            {
+              name: "Id",
+              apiIdentifier: "id",
+              fieldType: "ID",
+              requiredArgumentForInput: true,
+              sortable: true,
+              filterable: true,
+              __typename: "GadgetModelField",
+              configuration: {
+                __typename: "GadgetGenericFieldConfig",
+                fieldType: "ID",
+                validations: [
+                  {
+                    __typename: "GadgetGenericFieldValidation",
+                    name: "Uniqueness",
+                    specID: "gadget/validation/unique",
+                  },
+                  {
+                    __typename: "GadgetGenericFieldValidation",
+                    name: "Required",
+                    specID: "gadget/validation/required",
+                  },
+                ],
+              },
+            },
+            {
+              name: "Parent unique string",
+              apiIdentifier: "parentUniqueString",
+              fieldType: "String",
+              requiredArgumentForInput: false,
+              sortable: true,
+              filterable: true,
+              __typename: "GadgetModelField",
+              configuration: {
+                __typename: "GadgetGenericFieldConfig",
+                fieldType: "String",
+                validations: [
+                  {
+                    __typename: "GadgetGenericFieldValidation",
+                    name: "Uniqueness",
+                    specID: "gadget/validation/unique",
+                  },
+                ],
+              },
+            },
+            {
+              name: "Parent non unique string",
+              apiIdentifier: "parentNonUniqueString",
+              fieldType: "String",
+              requiredArgumentForInput: false,
+              sortable: true,
+              filterable: true,
+              __typename: "GadgetModelField",
+              configuration: {
+                __typename: "GadgetGenericFieldConfig",
+                fieldType: "String",
+                validations: [],
+              },
+            },
+            {
+              name: "Base model",
+              apiIdentifier: "baseModel",
+              fieldType: "HasOne",
+              requiredArgumentForInput: false,
+              sortable: false,
+              filterable: false,
+              __typename: "GadgetModelField",
+              configuration: {
+                __typename: "GadgetHasOneConfig",
+                fieldType: "HasOne",
+                validations: [],
+                relatedModel: {
+                  key: "nu84_-GxRnkx",
+                  name: "Main model",
+                  apiIdentifier: "mainModel",
+                  namespace: ["uniqueFields"],
+                  __typename: "GadgetModel",
+                },
+                inverseField: {
+                  apiIdentifier: "uniqueBelongsTo",
+                  __typename: "GadgetModelField",
+                },
+              },
+            },
+            {
+              name: "Created at",
+              apiIdentifier: "createdAt",
+              fieldType: "DateTime",
+              requiredArgumentForInput: true,
+              sortable: true,
+              filterable: true,
+              __typename: "GadgetModelField",
+              configuration: {
+                __typename: "GadgetDateTimeConfig",
+                fieldType: "DateTime",
+                validations: [
+                  {
+                    __typename: "GadgetGenericFieldValidation",
+                    name: "Required",
+                    specID: "gadget/validation/required",
+                  },
+                ],
+                includeTime: true,
+              },
+            },
+            {
+              name: "Updated at",
+              apiIdentifier: "updatedAt",
+              fieldType: "DateTime",
+              requiredArgumentForInput: true,
+              sortable: true,
+              filterable: true,
+              __typename: "GadgetModelField",
+              configuration: {
+                __typename: "GadgetDateTimeConfig",
+                fieldType: "DateTime",
+                validations: [
+                  {
+                    __typename: "GadgetGenericFieldValidation",
+                    name: "Required",
+                    specID: "gadget/validation/required",
+                  },
+                ],
+                includeTime: true,
+              },
+            },
+          ],
+          defaultDisplayField: {
+            name: "Parent unique string",
+            apiIdentifier: "parentUniqueString",
+            fieldType: "String",
+            __typename: "GadgetModelField",
+          },
           __typename: "GadgetModel",
         },
       ],
       model: {
+        key: "nu84_-GxRnkx",
         name: "Main model",
+        namespace: ["uniqueFields"],
         apiIdentifier: "mainModel",
         defaultRecord: {
           __typename: "UniqueFieldsMainModel",
@@ -295,14 +595,9 @@ const uniqueFieldsMainModelMetadata = {
                       ],
                       relatedModel: {
                         key: "RK96To6wLTyn",
+                        name: "Parent model",
                         apiIdentifier: "parentModel",
                         namespace: ["uniqueFields"],
-                        defaultDisplayField: {
-                          name: "Parent unique string",
-                          apiIdentifier: "parentUniqueString",
-                          fieldType: "String",
-                          __typename: "GadgetModelField",
-                        },
                         __typename: "GadgetModel",
                       },
                     },
@@ -336,14 +631,9 @@ const uniqueFieldsMainModelMetadata = {
                       isJoinModelHasManyField: false,
                       relatedModel: {
                         key: "ZOw07DfjlSXQ",
+                        name: "Child model",
                         apiIdentifier: "childModel",
                         namespace: ["uniqueFields"],
-                        defaultDisplayField: {
-                          name: "Alias",
-                          apiIdentifier: "alias",
-                          fieldType: "String",
-                          __typename: "GadgetModelField",
-                        },
                         __typename: "GadgetModel",
                       },
                       inverseField: {
@@ -377,12 +667,6 @@ const uniqueFieldsMainModelMetadata = {
           ],
           __typename: "GadgetAction",
         },
-        defaultDisplayField: {
-          name: "Id",
-          apiIdentifier: "id",
-          fieldType: "ID",
-          __typename: "GadgetModelField",
-        },
         __typename: "GadgetModel",
       },
       __typename: "GadgetApplicationMeta",
@@ -405,15 +689,16 @@ const mainModelQueryDefaultValuesResponse = {
           {
             cursor: "eyJpZCI6IjIifQ==",
             node: {
-              __typename: "UniqueFieldsMainModel",
               id: "2",
-              createdAt: "2024-09-30T20:52:14.419Z",
-              nonUniqueString: "example",
-              uniqueEmail: "u2@email.com",
               uniqueString: "u2",
-              updatedAt: "2024-10-01T20:58:39.300Z",
+              uniqueEmail: "u2@email.com",
+              uniqueBelongsTo: null,
+              uniqueBelongsToId: "22",
+              nonUniqueString: "example",
+              childModelEntries: {
+                edges: [],
+              },
             },
-            __typename: "UniqueFieldsMainModelEdge",
           },
         ],
         __typename: "UniqueFieldsMainModelConnection",

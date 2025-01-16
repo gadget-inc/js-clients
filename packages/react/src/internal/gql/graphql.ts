@@ -22,6 +22,8 @@ export type Scalars = {
   DateOrDateTime: { input: any; output: any };
   /** A date-time string at UTC, such as 2007-12-03T10:15:30Z, compliant with the `date-time` format outlined in section 5.6 of the RFC 3339 profile of the ISO 8601 standard for representation of dates and times using the Gregorian calendar. */
   DateTime: { input: any; output: any };
+  /** Represents the possible values of the size enum. */
+  DoodadSizeEnum: { input: any; output: any };
   /** The ID of a record in Gadget */
   GadgetID: { input: any; output: any };
   /** Instructions for a client to turn raw transport types (like strings) into useful client side types (like Dates). Unstable and not intended for developer use. */
@@ -30,6 +32,10 @@ export type Scalars = {
   InternalAutoTableTestRecord: { input: any; output: any };
   /** Represents one _autoTableTestRelatedModel result record in internal api calls. Returns a JSON blob of all the record's fields. */
   InternalAutoTableTestRelatedModelRecord: { input: any; output: any };
+  /** Represents one doodad result record in internal api calls. Returns a JSON blob of all the record's fields. */
+  InternalDoodadRecord: { input: any; output: any };
+  /** Represents one friendship result record in internal api calls. Returns a JSON blob of all the record's fields. */
+  InternalFriendshipRecord: { input: any; output: any };
   /** Represents one game/city result record in internal api calls. Returns a JSON blob of all the record's fields. */
   InternalGameCityRecord: { input: any; output: any };
   /** Represents one game/player result record in internal api calls. Returns a JSON blob of all the record's fields. */
@@ -68,12 +74,24 @@ export type Scalars = {
   InternalShopifyShopRecord: { input: any; output: any };
   /** Represents one shopifySync result record in internal api calls. Returns a JSON blob of all the record's fields. */
   InternalShopifySyncRecord: { input: any; output: any };
+  /** Represents one tweeter result record in internal api calls. Returns a JSON blob of all the record's fields. */
+  InternalTweeterRecord: { input: any; output: any };
   /** Represents one uniqueFields/childModel result record in internal api calls. Returns a JSON blob of all the record's fields. */
   InternalUniqueFieldsChildModelRecord: { input: any; output: any };
   /** Represents one uniqueFields/mainModel result record in internal api calls. Returns a JSON blob of all the record's fields. */
   InternalUniqueFieldsMainModelRecord: { input: any; output: any };
   /** Represents one uniqueFields/parentModel result record in internal api calls. Returns a JSON blob of all the record's fields. */
   InternalUniqueFieldsParentModelRecord: { input: any; output: any };
+  /** Represents one university/assignment result record in internal api calls. Returns a JSON blob of all the record's fields. */
+  InternalUniversityAssignmentRecord: { input: any; output: any };
+  /** Represents one university/course result record in internal api calls. Returns a JSON blob of all the record's fields. */
+  InternalUniversityCourseRecord: { input: any; output: any };
+  /** Represents one university/professor result record in internal api calls. Returns a JSON blob of all the record's fields. */
+  InternalUniversityProfessorRecord: { input: any; output: any };
+  /** Represents one university/registration result record in internal api calls. Returns a JSON blob of all the record's fields. */
+  InternalUniversityRegistrationRecord: { input: any; output: any };
+  /** Represents one university/student result record in internal api calls. Returns a JSON blob of all the record's fields. */
+  InternalUniversityStudentRecord: { input: any; output: any };
   /** Represents one user result record in internal api calls. Returns a JSON blob of all the record's fields. */
   InternalUserRecord: { input: any; output: any };
   /** Represents one widget result record in internal api calls. Returns a JSON blob of all the record's fields. */
@@ -82,6 +100,8 @@ export type Scalars = {
   JSON: { input: any; output: any };
   /** The `JSONObject` scalar type represents JSON objects as specified by [ECMA-404](http://www.ecma-international.org/publications/files/ECMA-ST/ECMA-404.pdf). */
   JSONObject: { input: any; output: any };
+  /** Represents the possible values of the title enum. */
+  ProfessorTitleEnum: { input: any; output: any };
   /** Represents the state of one record in a Gadget database. Represented as either a string or set of strings nested in objects. */
   RecordState: { input: any; output: any };
   /** Represents the possible values of the Topic enum. */
@@ -92,6 +112,8 @@ export type Scalars = {
   StadiumTagsEnum: { input: any; output: any };
   /** Represents the possible values of the type enum. */
   StadiumTypeEnum: { input: any; output: any };
+  /** Represents the possible values of the department enum. */
+  StudentDepartmentEnum: { input: any; output: any };
   /** A field whose value conforms to the standard URL format as specified in RFC3986: https://www.ietf.org/rfc/rfc3986.txt. */
   URL: { input: any; output: any };
   /** The `Upload` scalar type represents a file upload. */
@@ -132,6 +154,7 @@ export type AlwaysThrowErrorWidgetInput = {
   category?: InputMaybe<Array<Scalars["WidgetCategoryEnum"]["input"]>>;
   color?: InputMaybe<Scalars["String"]["input"]>;
   description?: InputMaybe<RichTextInput>;
+  doodad?: InputMaybe<DoodadHasOneInput>;
   embedding?: InputMaybe<Array<Scalars["Float"]["input"]>>;
   gizmos?: InputMaybe<Array<InputMaybe<GizmoHasManyInput>>>;
   inventoryCount?: InputMaybe<Scalars["Float"]["input"]>;
@@ -158,6 +181,15 @@ export type AlwaysThrowErrorWidgetResult = {
 export type AppGraphQlTriggerMutationContext = {
   /** The ID of the session that triggered this mutation. Will be the session that's loaded in the mutation context. */
   sessionID?: InputMaybe<Scalars["GadgetID"]["input"]>;
+};
+
+/** Input object supporting setting or updating related model record on a relationship field */
+export type AssignmentHasManyInput = {
+  /** Creates, updates, or deletes existing records in the database as needed to arrive at the list of records specified. */
+  _converge?: InputMaybe<ConvergeAssignmentInput>;
+  create?: InputMaybe<NestedAssignmentCreateInput>;
+  delete?: InputMaybe<NestedAssignmentDeleteInput>;
+  update?: InputMaybe<NestedAssignmentUpdateInput>;
 };
 
 export type AutoTableTest = {
@@ -250,6 +282,7 @@ export type AutoTableTestFilter = {
   id?: InputMaybe<IdFilter>;
   json?: InputMaybe<JsonFilter>;
   num?: InputMaybe<FloatFilter>;
+  rl?: InputMaybe<RoleAssignmentFilter>;
   rt?: InputMaybe<StringFilter>;
   str?: InputMaybe<StringFilter>;
   updatedAt?: InputMaybe<DateTimeFilter>;
@@ -321,6 +354,10 @@ export type AutoTableTestRelatedModelHasManyInput = {
 
 /** Input object supporting setting or updating related model record on a relationship field */
 export type AutoTableTestRelatedModelHasOneInput = {
+  /** Existing ID of another record, which you would like to relink to this record */
+  _relink?: InputMaybe<HasOneRelinkInput>;
+  /** Existing ID of another record, which you would like to unlink from this record */
+  _unlink?: InputMaybe<Scalars["GadgetID"]["input"]>;
   create?: InputMaybe<NestedAutoTableTestRelatedModelCreateInput>;
   delete?: InputMaybe<NestedAutoTableTestRelatedModelDeleteInput>;
   update?: InputMaybe<NestedAutoTableTestRelatedModelUpdateInput>;
@@ -412,6 +449,8 @@ export type BackgroundActionResult =
   | CompleteShopifySyncResult
   | CreateAutoTableTestRelatedModelResult
   | CreateAutoTableTestResult
+  | CreateDoodadResult
+  | CreateFriendshipResult
   | CreateGameCityResult
   | CreateGamePlayerResult
   | CreateGameRoundResult
@@ -424,15 +463,23 @@ export type BackgroundActionResult =
   | CreatePartResult
   | CreateSectionResult
   | CreateTestDataResult
+  | CreateTweeterResult
   | CreateUniqueFieldsChildModelResult
   | CreateUniqueFieldsMainModelResult
   | CreateUniqueFieldsParentModelResult
+  | CreateUniversityAssignmentResult
+  | CreateUniversityCourseResult
+  | CreateUniversityProfessorResult
+  | CreateUniversityRegistrationResult
+  | CreateUniversityStudentResult
   | CreateWidgetResult
   | CustomActionAutoTableTestResult
   | CustomActionWithParamsAutoTableTestResult
   | CustomObjectParamsGameCityResult
   | DeleteAutoTableTestRelatedModelResult
   | DeleteAutoTableTestResult
+  | DeleteDoodadResult
+  | DeleteFriendshipResult
   | DeleteGameCityResult
   | DeleteGamePlayerResult
   | DeleteGameRoundResult
@@ -444,9 +491,15 @@ export type BackgroundActionResult =
   | DeleteModelAResult
   | DeletePartResult
   | DeleteSectionResult
+  | DeleteTweeterResult
   | DeleteUniqueFieldsChildModelResult
   | DeleteUniqueFieldsMainModelResult
   | DeleteUniqueFieldsParentModelResult
+  | DeleteUniversityAssignmentResult
+  | DeleteUniversityCourseResult
+  | DeleteUniversityProfessorResult
+  | DeleteUniversityRegistrationResult
+  | DeleteUniversityStudentResult
   | DeleteUserResult
   | DeleteWidgetResult
   | ErrorShopifySyncResult
@@ -459,6 +512,8 @@ export type BackgroundActionResult =
   | SignUpUserResult
   | UpdateAutoTableTestRelatedModelResult
   | UpdateAutoTableTestResult
+  | UpdateDoodadResult
+  | UpdateFriendshipResult
   | UpdateGameCityResult
   | UpdateGamePlayerResult
   | UpdateGameRoundResult
@@ -470,9 +525,15 @@ export type BackgroundActionResult =
   | UpdateModelAResult
   | UpdatePartResult
   | UpdateSectionResult
+  | UpdateTweeterResult
   | UpdateUniqueFieldsChildModelResult
   | UpdateUniqueFieldsMainModelResult
   | UpdateUniqueFieldsParentModelResult
+  | UpdateUniversityAssignmentResult
+  | UpdateUniversityCourseResult
+  | UpdateUniversityProfessorResult
+  | UpdateUniversityRegistrationResult
+  | UpdateUniversityStudentResult
   | UpdateUserResult
   | UpdateWidgetResult
   | UpdateWithCustomParamsAutoTableTestResult;
@@ -874,19 +935,25 @@ export type BackgroundMutations = {
   bulkCompleteShopifySyncs: BulkEnqueueBackgroundActionResult;
   bulkCreateAutoTableTestRelatedModels: BulkEnqueueBackgroundActionResult;
   bulkCreateAutoTableTests: BulkEnqueueBackgroundActionResult;
+  bulkCreateDoodads: BulkEnqueueBackgroundActionResult;
+  bulkCreateFriendships: BulkEnqueueBackgroundActionResult;
   bulkCreateGizmos: BulkEnqueueBackgroundActionResult;
   bulkCreateModelAs: BulkEnqueueBackgroundActionResult;
   bulkCreateParts: BulkEnqueueBackgroundActionResult;
   bulkCreateSections: BulkEnqueueBackgroundActionResult;
+  bulkCreateTweeters: BulkEnqueueBackgroundActionResult;
   bulkCreateWidgets: BulkEnqueueBackgroundActionResult;
   bulkCustomActionAutoTableTests: BulkEnqueueBackgroundActionResult;
   bulkCustomActionWithParamsAutoTableTests: BulkEnqueueBackgroundActionResult;
   bulkDeleteAutoTableTestRelatedModels: BulkEnqueueBackgroundActionResult;
   bulkDeleteAutoTableTests: BulkEnqueueBackgroundActionResult;
+  bulkDeleteDoodads: BulkEnqueueBackgroundActionResult;
+  bulkDeleteFriendships: BulkEnqueueBackgroundActionResult;
   bulkDeleteGizmos: BulkEnqueueBackgroundActionResult;
   bulkDeleteModelAs: BulkEnqueueBackgroundActionResult;
   bulkDeleteParts: BulkEnqueueBackgroundActionResult;
   bulkDeleteSections: BulkEnqueueBackgroundActionResult;
+  bulkDeleteTweeters: BulkEnqueueBackgroundActionResult;
   bulkDeleteUsers: BulkEnqueueBackgroundActionResult;
   bulkDeleteWidgets: BulkEnqueueBackgroundActionResult;
   bulkErrorShopifySyncs: BulkEnqueueBackgroundActionResult;
@@ -896,39 +963,51 @@ export type BackgroundMutations = {
   bulkSignUpUsers: BulkEnqueueBackgroundActionResult;
   bulkUpdateAutoTableTestRelatedModels: BulkEnqueueBackgroundActionResult;
   bulkUpdateAutoTableTests: BulkEnqueueBackgroundActionResult;
+  bulkUpdateDoodads: BulkEnqueueBackgroundActionResult;
+  bulkUpdateFriendships: BulkEnqueueBackgroundActionResult;
   bulkUpdateGizmos: BulkEnqueueBackgroundActionResult;
   bulkUpdateModelAs: BulkEnqueueBackgroundActionResult;
   bulkUpdateParts: BulkEnqueueBackgroundActionResult;
   bulkUpdateSections: BulkEnqueueBackgroundActionResult;
+  bulkUpdateTweeters: BulkEnqueueBackgroundActionResult;
   bulkUpdateUsers: BulkEnqueueBackgroundActionResult;
   bulkUpdateWidgets: BulkEnqueueBackgroundActionResult;
   bulkUpdateWithCustomParamsAutoTableTests: BulkEnqueueBackgroundActionResult;
   bulkUpsertAutoTableTestRelatedModels: BulkEnqueueBackgroundActionResult;
   bulkUpsertAutoTableTests: BulkEnqueueBackgroundActionResult;
+  bulkUpsertDoodads: BulkEnqueueBackgroundActionResult;
+  bulkUpsertFriendships: BulkEnqueueBackgroundActionResult;
   bulkUpsertGizmos: BulkEnqueueBackgroundActionResult;
   bulkUpsertModelAs: BulkEnqueueBackgroundActionResult;
   bulkUpsertParts: BulkEnqueueBackgroundActionResult;
   bulkUpsertSections: BulkEnqueueBackgroundActionResult;
   bulkUpsertShopifySyncs: BulkEnqueueBackgroundActionResult;
+  bulkUpsertTweeters: BulkEnqueueBackgroundActionResult;
   bulkUpsertUsers: BulkEnqueueBackgroundActionResult;
   bulkUpsertWidgets: BulkEnqueueBackgroundActionResult;
   completeShopifySync: EnqueueBackgroundActionResult;
   createAutoTableTest: EnqueueBackgroundActionResult;
   createAutoTableTestRelatedModel: EnqueueBackgroundActionResult;
+  createDoodad: EnqueueBackgroundActionResult;
+  createFriendship: EnqueueBackgroundActionResult;
   createGizmo: EnqueueBackgroundActionResult;
   createModelA: EnqueueBackgroundActionResult;
   createPart: EnqueueBackgroundActionResult;
   createSection: EnqueueBackgroundActionResult;
   createTestData: EnqueueBackgroundActionResult;
+  createTweeter: EnqueueBackgroundActionResult;
   createWidget: EnqueueBackgroundActionResult;
   customActionAutoTableTest: EnqueueBackgroundActionResult;
   customActionWithParamsAutoTableTest: EnqueueBackgroundActionResult;
   deleteAutoTableTest: EnqueueBackgroundActionResult;
   deleteAutoTableTestRelatedModel: EnqueueBackgroundActionResult;
+  deleteDoodad: EnqueueBackgroundActionResult;
+  deleteFriendship: EnqueueBackgroundActionResult;
   deleteGizmo: EnqueueBackgroundActionResult;
   deleteModelA: EnqueueBackgroundActionResult;
   deletePart: EnqueueBackgroundActionResult;
   deleteSection: EnqueueBackgroundActionResult;
+  deleteTweeter: EnqueueBackgroundActionResult;
   deleteUser: EnqueueBackgroundActionResult;
   deleteWidget: EnqueueBackgroundActionResult;
   errorShopifySync: EnqueueBackgroundActionResult;
@@ -941,22 +1020,29 @@ export type BackgroundMutations = {
   signOutUser: EnqueueBackgroundActionResult;
   signUpUser: EnqueueBackgroundActionResult;
   uniqueFields: BackgroundUniqueFieldsMutations;
+  university: BackgroundUniversityMutations;
   updateAutoTableTest: EnqueueBackgroundActionResult;
   updateAutoTableTestRelatedModel: EnqueueBackgroundActionResult;
+  updateDoodad: EnqueueBackgroundActionResult;
+  updateFriendship: EnqueueBackgroundActionResult;
   updateGizmo: EnqueueBackgroundActionResult;
   updateModelA: EnqueueBackgroundActionResult;
   updatePart: EnqueueBackgroundActionResult;
   updateSection: EnqueueBackgroundActionResult;
+  updateTweeter: EnqueueBackgroundActionResult;
   updateUser: EnqueueBackgroundActionResult;
   updateWidget: EnqueueBackgroundActionResult;
   updateWithCustomParamsAutoTableTest: EnqueueBackgroundActionResult;
   upsertAutoTableTest: EnqueueBackgroundActionResult;
   upsertAutoTableTestRelatedModel: EnqueueBackgroundActionResult;
+  upsertDoodad: EnqueueBackgroundActionResult;
+  upsertFriendship: EnqueueBackgroundActionResult;
   upsertGizmo: EnqueueBackgroundActionResult;
   upsertModelA: EnqueueBackgroundActionResult;
   upsertPart: EnqueueBackgroundActionResult;
   upsertSection: EnqueueBackgroundActionResult;
   upsertShopifySync: EnqueueBackgroundActionResult;
+  upsertTweeter: EnqueueBackgroundActionResult;
   upsertUser: EnqueueBackgroundActionResult;
   upsertWidget: EnqueueBackgroundActionResult;
 };
@@ -1008,6 +1094,16 @@ export type BackgroundMutationsBulkCreateAutoTableTestsArgs = {
   inputs: Array<BulkCreateAutoTableTestsInput>;
 };
 
+export type BackgroundMutationsBulkCreateDoodadsArgs = {
+  backgroundOptions?: InputMaybe<EnqueueBackgroundActionOptions>;
+  inputs: Array<BulkCreateDoodadsInput>;
+};
+
+export type BackgroundMutationsBulkCreateFriendshipsArgs = {
+  backgroundOptions?: InputMaybe<EnqueueBackgroundActionOptions>;
+  inputs: Array<BulkCreateFriendshipsInput>;
+};
+
 export type BackgroundMutationsBulkCreateGizmosArgs = {
   backgroundOptions?: InputMaybe<EnqueueBackgroundActionOptions>;
   inputs: Array<BulkCreateGizmosInput>;
@@ -1026,6 +1122,11 @@ export type BackgroundMutationsBulkCreatePartsArgs = {
 export type BackgroundMutationsBulkCreateSectionsArgs = {
   backgroundOptions?: InputMaybe<EnqueueBackgroundActionOptions>;
   inputs: Array<BulkCreateSectionsInput>;
+};
+
+export type BackgroundMutationsBulkCreateTweetersArgs = {
+  backgroundOptions?: InputMaybe<EnqueueBackgroundActionOptions>;
+  inputs: Array<BulkCreateTweetersInput>;
 };
 
 export type BackgroundMutationsBulkCreateWidgetsArgs = {
@@ -1053,6 +1154,16 @@ export type BackgroundMutationsBulkDeleteAutoTableTestsArgs = {
   ids: Array<Scalars["GadgetID"]["input"]>;
 };
 
+export type BackgroundMutationsBulkDeleteDoodadsArgs = {
+  backgroundOptions?: InputMaybe<EnqueueBackgroundActionOptions>;
+  ids: Array<Scalars["GadgetID"]["input"]>;
+};
+
+export type BackgroundMutationsBulkDeleteFriendshipsArgs = {
+  backgroundOptions?: InputMaybe<EnqueueBackgroundActionOptions>;
+  ids: Array<Scalars["GadgetID"]["input"]>;
+};
+
 export type BackgroundMutationsBulkDeleteGizmosArgs = {
   backgroundOptions?: InputMaybe<EnqueueBackgroundActionOptions>;
   ids: Array<Scalars["GadgetID"]["input"]>;
@@ -1069,6 +1180,11 @@ export type BackgroundMutationsBulkDeletePartsArgs = {
 };
 
 export type BackgroundMutationsBulkDeleteSectionsArgs = {
+  backgroundOptions?: InputMaybe<EnqueueBackgroundActionOptions>;
+  ids: Array<Scalars["GadgetID"]["input"]>;
+};
+
+export type BackgroundMutationsBulkDeleteTweetersArgs = {
   backgroundOptions?: InputMaybe<EnqueueBackgroundActionOptions>;
   ids: Array<Scalars["GadgetID"]["input"]>;
 };
@@ -1118,6 +1234,16 @@ export type BackgroundMutationsBulkUpdateAutoTableTestsArgs = {
   inputs: Array<BulkUpdateAutoTableTestsInput>;
 };
 
+export type BackgroundMutationsBulkUpdateDoodadsArgs = {
+  backgroundOptions?: InputMaybe<EnqueueBackgroundActionOptions>;
+  inputs: Array<BulkUpdateDoodadsInput>;
+};
+
+export type BackgroundMutationsBulkUpdateFriendshipsArgs = {
+  backgroundOptions?: InputMaybe<EnqueueBackgroundActionOptions>;
+  inputs: Array<BulkUpdateFriendshipsInput>;
+};
+
 export type BackgroundMutationsBulkUpdateGizmosArgs = {
   backgroundOptions?: InputMaybe<EnqueueBackgroundActionOptions>;
   inputs: Array<BulkUpdateGizmosInput>;
@@ -1136,6 +1262,11 @@ export type BackgroundMutationsBulkUpdatePartsArgs = {
 export type BackgroundMutationsBulkUpdateSectionsArgs = {
   backgroundOptions?: InputMaybe<EnqueueBackgroundActionOptions>;
   inputs: Array<BulkUpdateSectionsInput>;
+};
+
+export type BackgroundMutationsBulkUpdateTweetersArgs = {
+  backgroundOptions?: InputMaybe<EnqueueBackgroundActionOptions>;
+  inputs: Array<BulkUpdateTweetersInput>;
 };
 
 export type BackgroundMutationsBulkUpdateUsersArgs = {
@@ -1163,6 +1294,16 @@ export type BackgroundMutationsBulkUpsertAutoTableTestsArgs = {
   inputs: Array<BulkUpsertAutoTableTestsInput>;
 };
 
+export type BackgroundMutationsBulkUpsertDoodadsArgs = {
+  backgroundOptions?: InputMaybe<EnqueueBackgroundActionOptions>;
+  inputs: Array<BulkUpsertDoodadsInput>;
+};
+
+export type BackgroundMutationsBulkUpsertFriendshipsArgs = {
+  backgroundOptions?: InputMaybe<EnqueueBackgroundActionOptions>;
+  inputs: Array<BulkUpsertFriendshipsInput>;
+};
+
 export type BackgroundMutationsBulkUpsertGizmosArgs = {
   backgroundOptions?: InputMaybe<EnqueueBackgroundActionOptions>;
   inputs: Array<BulkUpsertGizmosInput>;
@@ -1186,6 +1327,11 @@ export type BackgroundMutationsBulkUpsertSectionsArgs = {
 export type BackgroundMutationsBulkUpsertShopifySyncsArgs = {
   backgroundOptions?: InputMaybe<EnqueueBackgroundActionOptions>;
   inputs: Array<BulkUpsertShopifySyncsInput>;
+};
+
+export type BackgroundMutationsBulkUpsertTweetersArgs = {
+  backgroundOptions?: InputMaybe<EnqueueBackgroundActionOptions>;
+  inputs: Array<BulkUpsertTweetersInput>;
 };
 
 export type BackgroundMutationsBulkUpsertUsersArgs = {
@@ -1214,6 +1360,16 @@ export type BackgroundMutationsCreateAutoTableTestRelatedModelArgs = {
   backgroundOptions?: InputMaybe<EnqueueBackgroundActionOptions>;
 };
 
+export type BackgroundMutationsCreateDoodadArgs = {
+  backgroundOptions?: InputMaybe<EnqueueBackgroundActionOptions>;
+  doodad?: InputMaybe<CreateDoodadInput>;
+};
+
+export type BackgroundMutationsCreateFriendshipArgs = {
+  backgroundOptions?: InputMaybe<EnqueueBackgroundActionOptions>;
+  friendship?: InputMaybe<CreateFriendshipInput>;
+};
+
 export type BackgroundMutationsCreateGizmoArgs = {
   backgroundOptions?: InputMaybe<EnqueueBackgroundActionOptions>;
   gizmo?: InputMaybe<CreateGizmoInput>;
@@ -1235,6 +1391,11 @@ export type BackgroundMutationsCreateSectionArgs = {
 
 export type BackgroundMutationsCreateTestDataArgs = {
   backgroundOptions?: InputMaybe<EnqueueBackgroundActionOptions>;
+};
+
+export type BackgroundMutationsCreateTweeterArgs = {
+  backgroundOptions?: InputMaybe<EnqueueBackgroundActionOptions>;
+  tweeter?: InputMaybe<CreateTweeterInput>;
 };
 
 export type BackgroundMutationsCreateWidgetArgs = {
@@ -1264,6 +1425,16 @@ export type BackgroundMutationsDeleteAutoTableTestRelatedModelArgs = {
   id: Scalars["GadgetID"]["input"];
 };
 
+export type BackgroundMutationsDeleteDoodadArgs = {
+  backgroundOptions?: InputMaybe<EnqueueBackgroundActionOptions>;
+  id: Scalars["GadgetID"]["input"];
+};
+
+export type BackgroundMutationsDeleteFriendshipArgs = {
+  backgroundOptions?: InputMaybe<EnqueueBackgroundActionOptions>;
+  id: Scalars["GadgetID"]["input"];
+};
+
 export type BackgroundMutationsDeleteGizmoArgs = {
   backgroundOptions?: InputMaybe<EnqueueBackgroundActionOptions>;
   id: Scalars["GadgetID"]["input"];
@@ -1280,6 +1451,11 @@ export type BackgroundMutationsDeletePartArgs = {
 };
 
 export type BackgroundMutationsDeleteSectionArgs = {
+  backgroundOptions?: InputMaybe<EnqueueBackgroundActionOptions>;
+  id: Scalars["GadgetID"]["input"];
+};
+
+export type BackgroundMutationsDeleteTweeterArgs = {
   backgroundOptions?: InputMaybe<EnqueueBackgroundActionOptions>;
   id: Scalars["GadgetID"]["input"];
 };
@@ -1341,6 +1517,18 @@ export type BackgroundMutationsUpdateAutoTableTestRelatedModelArgs = {
   id: Scalars["GadgetID"]["input"];
 };
 
+export type BackgroundMutationsUpdateDoodadArgs = {
+  backgroundOptions?: InputMaybe<EnqueueBackgroundActionOptions>;
+  doodad?: InputMaybe<UpdateDoodadInput>;
+  id: Scalars["GadgetID"]["input"];
+};
+
+export type BackgroundMutationsUpdateFriendshipArgs = {
+  backgroundOptions?: InputMaybe<EnqueueBackgroundActionOptions>;
+  friendship?: InputMaybe<UpdateFriendshipInput>;
+  id: Scalars["GadgetID"]["input"];
+};
+
 export type BackgroundMutationsUpdateGizmoArgs = {
   backgroundOptions?: InputMaybe<EnqueueBackgroundActionOptions>;
   gizmo?: InputMaybe<UpdateGizmoInput>;
@@ -1362,6 +1550,12 @@ export type BackgroundMutationsUpdateSectionArgs = {
   backgroundOptions?: InputMaybe<EnqueueBackgroundActionOptions>;
   id: Scalars["GadgetID"]["input"];
   section?: InputMaybe<UpdateSectionInput>;
+};
+
+export type BackgroundMutationsUpdateTweeterArgs = {
+  backgroundOptions?: InputMaybe<EnqueueBackgroundActionOptions>;
+  id: Scalars["GadgetID"]["input"];
+  tweeter?: InputMaybe<UpdateTweeterInput>;
 };
 
 export type BackgroundMutationsUpdateUserArgs = {
@@ -1398,6 +1592,18 @@ export type BackgroundMutationsUpsertAutoTableTestRelatedModelArgs = {
   on?: InputMaybe<Array<Scalars["String"]["input"]>>;
 };
 
+export type BackgroundMutationsUpsertDoodadArgs = {
+  backgroundOptions?: InputMaybe<EnqueueBackgroundActionOptions>;
+  doodad?: InputMaybe<UpsertDoodadInput>;
+  on?: InputMaybe<Array<Scalars["String"]["input"]>>;
+};
+
+export type BackgroundMutationsUpsertFriendshipArgs = {
+  backgroundOptions?: InputMaybe<EnqueueBackgroundActionOptions>;
+  friendship?: InputMaybe<UpsertFriendshipInput>;
+  on?: InputMaybe<Array<Scalars["String"]["input"]>>;
+};
+
 export type BackgroundMutationsUpsertGizmoArgs = {
   backgroundOptions?: InputMaybe<EnqueueBackgroundActionOptions>;
   gizmo?: InputMaybe<UpsertGizmoInput>;
@@ -1427,6 +1633,12 @@ export type BackgroundMutationsUpsertShopifySyncArgs = {
   on?: InputMaybe<Array<Scalars["String"]["input"]>>;
   shopifySync?: InputMaybe<UpsertShopifySyncInput>;
   startReason?: InputMaybe<Scalars["String"]["input"]>;
+};
+
+export type BackgroundMutationsUpsertTweeterArgs = {
+  backgroundOptions?: InputMaybe<EnqueueBackgroundActionOptions>;
+  on?: InputMaybe<Array<Scalars["String"]["input"]>>;
+  tweeter?: InputMaybe<UpsertTweeterInput>;
 };
 
 export type BackgroundMutationsUpsertUserArgs = {
@@ -1616,6 +1828,260 @@ export type BackgroundUniqueFieldsMutationsUpsertParentModelArgs = {
   parentModel?: InputMaybe<UpsertUniqueFieldsParentModelInput>;
 };
 
+export type BackgroundUniversityMutations = {
+  __typename?: "BackgroundUniversityMutations";
+  bulkCreateAssignments: BulkEnqueueBackgroundActionResult;
+  bulkCreateCourses: BulkEnqueueBackgroundActionResult;
+  bulkCreateProfessors: BulkEnqueueBackgroundActionResult;
+  bulkCreateRegistrations: BulkEnqueueBackgroundActionResult;
+  bulkCreateStudents: BulkEnqueueBackgroundActionResult;
+  bulkDeleteAssignments: BulkEnqueueBackgroundActionResult;
+  bulkDeleteCourses: BulkEnqueueBackgroundActionResult;
+  bulkDeleteProfessors: BulkEnqueueBackgroundActionResult;
+  bulkDeleteRegistrations: BulkEnqueueBackgroundActionResult;
+  bulkDeleteStudents: BulkEnqueueBackgroundActionResult;
+  bulkUpdateAssignments: BulkEnqueueBackgroundActionResult;
+  bulkUpdateCourses: BulkEnqueueBackgroundActionResult;
+  bulkUpdateProfessors: BulkEnqueueBackgroundActionResult;
+  bulkUpdateRegistrations: BulkEnqueueBackgroundActionResult;
+  bulkUpdateStudents: BulkEnqueueBackgroundActionResult;
+  bulkUpsertAssignments: BulkEnqueueBackgroundActionResult;
+  bulkUpsertCourses: BulkEnqueueBackgroundActionResult;
+  bulkUpsertProfessors: BulkEnqueueBackgroundActionResult;
+  bulkUpsertRegistrations: BulkEnqueueBackgroundActionResult;
+  bulkUpsertStudents: BulkEnqueueBackgroundActionResult;
+  createAssignment: EnqueueBackgroundActionResult;
+  createCourse: EnqueueBackgroundActionResult;
+  createProfessor: EnqueueBackgroundActionResult;
+  createRegistration: EnqueueBackgroundActionResult;
+  createStudent: EnqueueBackgroundActionResult;
+  deleteAssignment: EnqueueBackgroundActionResult;
+  deleteCourse: EnqueueBackgroundActionResult;
+  deleteProfessor: EnqueueBackgroundActionResult;
+  deleteRegistration: EnqueueBackgroundActionResult;
+  deleteStudent: EnqueueBackgroundActionResult;
+  updateAssignment: EnqueueBackgroundActionResult;
+  updateCourse: EnqueueBackgroundActionResult;
+  updateProfessor: EnqueueBackgroundActionResult;
+  updateRegistration: EnqueueBackgroundActionResult;
+  updateStudent: EnqueueBackgroundActionResult;
+  upsertAssignment: EnqueueBackgroundActionResult;
+  upsertCourse: EnqueueBackgroundActionResult;
+  upsertProfessor: EnqueueBackgroundActionResult;
+  upsertRegistration: EnqueueBackgroundActionResult;
+  upsertStudent: EnqueueBackgroundActionResult;
+};
+
+export type BackgroundUniversityMutationsBulkCreateAssignmentsArgs = {
+  backgroundOptions?: InputMaybe<EnqueueBackgroundActionOptions>;
+  inputs: Array<BulkCreateUniversityAssignmentsInput>;
+};
+
+export type BackgroundUniversityMutationsBulkCreateCoursesArgs = {
+  backgroundOptions?: InputMaybe<EnqueueBackgroundActionOptions>;
+  inputs: Array<BulkCreateUniversityCoursesInput>;
+};
+
+export type BackgroundUniversityMutationsBulkCreateProfessorsArgs = {
+  backgroundOptions?: InputMaybe<EnqueueBackgroundActionOptions>;
+  inputs: Array<BulkCreateUniversityProfessorsInput>;
+};
+
+export type BackgroundUniversityMutationsBulkCreateRegistrationsArgs = {
+  backgroundOptions?: InputMaybe<EnqueueBackgroundActionOptions>;
+  inputs: Array<BulkCreateUniversityRegistrationsInput>;
+};
+
+export type BackgroundUniversityMutationsBulkCreateStudentsArgs = {
+  backgroundOptions?: InputMaybe<EnqueueBackgroundActionOptions>;
+  inputs: Array<BulkCreateUniversityStudentsInput>;
+};
+
+export type BackgroundUniversityMutationsBulkDeleteAssignmentsArgs = {
+  backgroundOptions?: InputMaybe<EnqueueBackgroundActionOptions>;
+  ids: Array<Scalars["GadgetID"]["input"]>;
+};
+
+export type BackgroundUniversityMutationsBulkDeleteCoursesArgs = {
+  backgroundOptions?: InputMaybe<EnqueueBackgroundActionOptions>;
+  ids: Array<Scalars["GadgetID"]["input"]>;
+};
+
+export type BackgroundUniversityMutationsBulkDeleteProfessorsArgs = {
+  backgroundOptions?: InputMaybe<EnqueueBackgroundActionOptions>;
+  ids: Array<Scalars["GadgetID"]["input"]>;
+};
+
+export type BackgroundUniversityMutationsBulkDeleteRegistrationsArgs = {
+  backgroundOptions?: InputMaybe<EnqueueBackgroundActionOptions>;
+  ids: Array<Scalars["GadgetID"]["input"]>;
+};
+
+export type BackgroundUniversityMutationsBulkDeleteStudentsArgs = {
+  backgroundOptions?: InputMaybe<EnqueueBackgroundActionOptions>;
+  ids: Array<Scalars["GadgetID"]["input"]>;
+};
+
+export type BackgroundUniversityMutationsBulkUpdateAssignmentsArgs = {
+  backgroundOptions?: InputMaybe<EnqueueBackgroundActionOptions>;
+  inputs: Array<BulkUpdateUniversityAssignmentsInput>;
+};
+
+export type BackgroundUniversityMutationsBulkUpdateCoursesArgs = {
+  backgroundOptions?: InputMaybe<EnqueueBackgroundActionOptions>;
+  inputs: Array<BulkUpdateUniversityCoursesInput>;
+};
+
+export type BackgroundUniversityMutationsBulkUpdateProfessorsArgs = {
+  backgroundOptions?: InputMaybe<EnqueueBackgroundActionOptions>;
+  inputs: Array<BulkUpdateUniversityProfessorsInput>;
+};
+
+export type BackgroundUniversityMutationsBulkUpdateRegistrationsArgs = {
+  backgroundOptions?: InputMaybe<EnqueueBackgroundActionOptions>;
+  inputs: Array<BulkUpdateUniversityRegistrationsInput>;
+};
+
+export type BackgroundUniversityMutationsBulkUpdateStudentsArgs = {
+  backgroundOptions?: InputMaybe<EnqueueBackgroundActionOptions>;
+  inputs: Array<BulkUpdateUniversityStudentsInput>;
+};
+
+export type BackgroundUniversityMutationsBulkUpsertAssignmentsArgs = {
+  backgroundOptions?: InputMaybe<EnqueueBackgroundActionOptions>;
+  inputs: Array<BulkUpsertUniversityAssignmentsInput>;
+};
+
+export type BackgroundUniversityMutationsBulkUpsertCoursesArgs = {
+  backgroundOptions?: InputMaybe<EnqueueBackgroundActionOptions>;
+  inputs: Array<BulkUpsertUniversityCoursesInput>;
+};
+
+export type BackgroundUniversityMutationsBulkUpsertProfessorsArgs = {
+  backgroundOptions?: InputMaybe<EnqueueBackgroundActionOptions>;
+  inputs: Array<BulkUpsertUniversityProfessorsInput>;
+};
+
+export type BackgroundUniversityMutationsBulkUpsertRegistrationsArgs = {
+  backgroundOptions?: InputMaybe<EnqueueBackgroundActionOptions>;
+  inputs: Array<BulkUpsertUniversityRegistrationsInput>;
+};
+
+export type BackgroundUniversityMutationsBulkUpsertStudentsArgs = {
+  backgroundOptions?: InputMaybe<EnqueueBackgroundActionOptions>;
+  inputs: Array<BulkUpsertUniversityStudentsInput>;
+};
+
+export type BackgroundUniversityMutationsCreateAssignmentArgs = {
+  assignment?: InputMaybe<CreateUniversityAssignmentInput>;
+  backgroundOptions?: InputMaybe<EnqueueBackgroundActionOptions>;
+};
+
+export type BackgroundUniversityMutationsCreateCourseArgs = {
+  backgroundOptions?: InputMaybe<EnqueueBackgroundActionOptions>;
+  course?: InputMaybe<CreateUniversityCourseInput>;
+};
+
+export type BackgroundUniversityMutationsCreateProfessorArgs = {
+  backgroundOptions?: InputMaybe<EnqueueBackgroundActionOptions>;
+  professor?: InputMaybe<CreateUniversityProfessorInput>;
+};
+
+export type BackgroundUniversityMutationsCreateRegistrationArgs = {
+  backgroundOptions?: InputMaybe<EnqueueBackgroundActionOptions>;
+  registration?: InputMaybe<CreateUniversityRegistrationInput>;
+};
+
+export type BackgroundUniversityMutationsCreateStudentArgs = {
+  backgroundOptions?: InputMaybe<EnqueueBackgroundActionOptions>;
+  student?: InputMaybe<CreateUniversityStudentInput>;
+};
+
+export type BackgroundUniversityMutationsDeleteAssignmentArgs = {
+  backgroundOptions?: InputMaybe<EnqueueBackgroundActionOptions>;
+  id: Scalars["GadgetID"]["input"];
+};
+
+export type BackgroundUniversityMutationsDeleteCourseArgs = {
+  backgroundOptions?: InputMaybe<EnqueueBackgroundActionOptions>;
+  id: Scalars["GadgetID"]["input"];
+};
+
+export type BackgroundUniversityMutationsDeleteProfessorArgs = {
+  backgroundOptions?: InputMaybe<EnqueueBackgroundActionOptions>;
+  id: Scalars["GadgetID"]["input"];
+};
+
+export type BackgroundUniversityMutationsDeleteRegistrationArgs = {
+  backgroundOptions?: InputMaybe<EnqueueBackgroundActionOptions>;
+  id: Scalars["GadgetID"]["input"];
+};
+
+export type BackgroundUniversityMutationsDeleteStudentArgs = {
+  backgroundOptions?: InputMaybe<EnqueueBackgroundActionOptions>;
+  id: Scalars["GadgetID"]["input"];
+};
+
+export type BackgroundUniversityMutationsUpdateAssignmentArgs = {
+  assignment?: InputMaybe<UpdateUniversityAssignmentInput>;
+  backgroundOptions?: InputMaybe<EnqueueBackgroundActionOptions>;
+  id: Scalars["GadgetID"]["input"];
+};
+
+export type BackgroundUniversityMutationsUpdateCourseArgs = {
+  backgroundOptions?: InputMaybe<EnqueueBackgroundActionOptions>;
+  course?: InputMaybe<UpdateUniversityCourseInput>;
+  id: Scalars["GadgetID"]["input"];
+};
+
+export type BackgroundUniversityMutationsUpdateProfessorArgs = {
+  backgroundOptions?: InputMaybe<EnqueueBackgroundActionOptions>;
+  id: Scalars["GadgetID"]["input"];
+  professor?: InputMaybe<UpdateUniversityProfessorInput>;
+};
+
+export type BackgroundUniversityMutationsUpdateRegistrationArgs = {
+  backgroundOptions?: InputMaybe<EnqueueBackgroundActionOptions>;
+  id: Scalars["GadgetID"]["input"];
+  registration?: InputMaybe<UpdateUniversityRegistrationInput>;
+};
+
+export type BackgroundUniversityMutationsUpdateStudentArgs = {
+  backgroundOptions?: InputMaybe<EnqueueBackgroundActionOptions>;
+  id: Scalars["GadgetID"]["input"];
+  student?: InputMaybe<UpdateUniversityStudentInput>;
+};
+
+export type BackgroundUniversityMutationsUpsertAssignmentArgs = {
+  assignment?: InputMaybe<UpsertUniversityAssignmentInput>;
+  backgroundOptions?: InputMaybe<EnqueueBackgroundActionOptions>;
+  on?: InputMaybe<Array<Scalars["String"]["input"]>>;
+};
+
+export type BackgroundUniversityMutationsUpsertCourseArgs = {
+  backgroundOptions?: InputMaybe<EnqueueBackgroundActionOptions>;
+  course?: InputMaybe<UpsertUniversityCourseInput>;
+  on?: InputMaybe<Array<Scalars["String"]["input"]>>;
+};
+
+export type BackgroundUniversityMutationsUpsertProfessorArgs = {
+  backgroundOptions?: InputMaybe<EnqueueBackgroundActionOptions>;
+  on?: InputMaybe<Array<Scalars["String"]["input"]>>;
+  professor?: InputMaybe<UpsertUniversityProfessorInput>;
+};
+
+export type BackgroundUniversityMutationsUpsertRegistrationArgs = {
+  backgroundOptions?: InputMaybe<EnqueueBackgroundActionOptions>;
+  on?: InputMaybe<Array<Scalars["String"]["input"]>>;
+  registration?: InputMaybe<UpsertUniversityRegistrationInput>;
+};
+
+export type BackgroundUniversityMutationsUpsertStudentArgs = {
+  backgroundOptions?: InputMaybe<EnqueueBackgroundActionOptions>;
+  on?: InputMaybe<Array<Scalars["String"]["input"]>>;
+  student?: InputMaybe<UpsertUniversityStudentInput>;
+};
+
 /** Input object supporting setting or updating related model record on a relationship field */
 export type BaseModelBelongsToInput = {
   /** Existing ID of another record, which you would like to associate this record with */
@@ -1727,6 +2193,36 @@ export type BulkCreateAutoTableTestsResult = {
   autoTableTests?: Maybe<Array<Maybe<AutoTableTest>>>;
   /** Aggregated list of errors that any bulk action encountered while processing */
   errors?: Maybe<Array<ExecutionError>>;
+  /** Boolean describing if all the bulk actions succeeded or not */
+  success: Scalars["Boolean"]["output"];
+};
+
+export type BulkCreateDoodadsInput = {
+  doodad?: InputMaybe<CreateDoodadInput>;
+};
+
+/** The output when running the create on the doodad model in bulk. */
+export type BulkCreateDoodadsResult = {
+  __typename?: "BulkCreateDoodadsResult";
+  /** The list of all changed doodad records by each sent bulk action. Returned in the same order as the input bulk action params. */
+  doodads?: Maybe<Array<Maybe<Doodad>>>;
+  /** Aggregated list of errors that any bulk action encountered while processing */
+  errors?: Maybe<Array<ExecutionError>>;
+  /** Boolean describing if all the bulk actions succeeded or not */
+  success: Scalars["Boolean"]["output"];
+};
+
+export type BulkCreateFriendshipsInput = {
+  friendship?: InputMaybe<CreateFriendshipInput>;
+};
+
+/** The output when running the create on the friendship model in bulk. */
+export type BulkCreateFriendshipsResult = {
+  __typename?: "BulkCreateFriendshipsResult";
+  /** Aggregated list of errors that any bulk action encountered while processing */
+  errors?: Maybe<Array<ExecutionError>>;
+  /** The list of all changed friendship records by each sent bulk action. Returned in the same order as the input bulk action params. */
+  friendships?: Maybe<Array<Maybe<Friendship>>>;
   /** Boolean describing if all the bulk actions succeeded or not */
   success: Scalars["Boolean"]["output"];
 };
@@ -1892,6 +2388,21 @@ export type BulkCreateSectionsResult = {
   success: Scalars["Boolean"]["output"];
 };
 
+export type BulkCreateTweetersInput = {
+  tweeter?: InputMaybe<CreateTweeterInput>;
+};
+
+/** The output when running the create on the tweeter model in bulk. */
+export type BulkCreateTweetersResult = {
+  __typename?: "BulkCreateTweetersResult";
+  /** Aggregated list of errors that any bulk action encountered while processing */
+  errors?: Maybe<Array<ExecutionError>>;
+  /** Boolean describing if all the bulk actions succeeded or not */
+  success: Scalars["Boolean"]["output"];
+  /** The list of all changed tweeter records by each sent bulk action. Returned in the same order as the input bulk action params. */
+  tweeters?: Maybe<Array<Maybe<Tweeter>>>;
+};
+
 export type BulkCreateUniqueFieldsChildModelsInput = {
   childModel?: InputMaybe<CreateUniqueFieldsChildModelInput>;
 };
@@ -1933,6 +2444,81 @@ export type BulkCreateUniqueFieldsParentModelsResult = {
   errors?: Maybe<Array<ExecutionError>>;
   /** The list of all changed uniqueFields/parentModel records by each sent bulk action. Returned in the same order as the input bulk action params. */
   parentModels?: Maybe<Array<Maybe<UniqueFieldsParentModel>>>;
+  /** Boolean describing if all the bulk actions succeeded or not */
+  success: Scalars["Boolean"]["output"];
+};
+
+export type BulkCreateUniversityAssignmentsInput = {
+  assignment?: InputMaybe<CreateUniversityAssignmentInput>;
+};
+
+/** The output when running the create on the university/assignment model in bulk. */
+export type BulkCreateUniversityAssignmentsResult = {
+  __typename?: "BulkCreateUniversityAssignmentsResult";
+  /** The list of all changed university/assignment records by each sent bulk action. Returned in the same order as the input bulk action params. */
+  assignments?: Maybe<Array<Maybe<UniversityAssignment>>>;
+  /** Aggregated list of errors that any bulk action encountered while processing */
+  errors?: Maybe<Array<ExecutionError>>;
+  /** Boolean describing if all the bulk actions succeeded or not */
+  success: Scalars["Boolean"]["output"];
+};
+
+export type BulkCreateUniversityCoursesInput = {
+  course?: InputMaybe<CreateUniversityCourseInput>;
+};
+
+/** The output when running the create on the university/course model in bulk. */
+export type BulkCreateUniversityCoursesResult = {
+  __typename?: "BulkCreateUniversityCoursesResult";
+  /** The list of all changed university/course records by each sent bulk action. Returned in the same order as the input bulk action params. */
+  courses?: Maybe<Array<Maybe<UniversityCourse>>>;
+  /** Aggregated list of errors that any bulk action encountered while processing */
+  errors?: Maybe<Array<ExecutionError>>;
+  /** Boolean describing if all the bulk actions succeeded or not */
+  success: Scalars["Boolean"]["output"];
+};
+
+export type BulkCreateUniversityProfessorsInput = {
+  professor?: InputMaybe<CreateUniversityProfessorInput>;
+};
+
+/** The output when running the create on the university/professor model in bulk. */
+export type BulkCreateUniversityProfessorsResult = {
+  __typename?: "BulkCreateUniversityProfessorsResult";
+  /** Aggregated list of errors that any bulk action encountered while processing */
+  errors?: Maybe<Array<ExecutionError>>;
+  /** The list of all changed university/professor records by each sent bulk action. Returned in the same order as the input bulk action params. */
+  professors?: Maybe<Array<Maybe<UniversityProfessor>>>;
+  /** Boolean describing if all the bulk actions succeeded or not */
+  success: Scalars["Boolean"]["output"];
+};
+
+export type BulkCreateUniversityRegistrationsInput = {
+  registration?: InputMaybe<CreateUniversityRegistrationInput>;
+};
+
+/** The output when running the create on the university/registration model in bulk. */
+export type BulkCreateUniversityRegistrationsResult = {
+  __typename?: "BulkCreateUniversityRegistrationsResult";
+  /** Aggregated list of errors that any bulk action encountered while processing */
+  errors?: Maybe<Array<ExecutionError>>;
+  /** The list of all changed university/registration records by each sent bulk action. Returned in the same order as the input bulk action params. */
+  registrations?: Maybe<Array<Maybe<UniversityRegistration>>>;
+  /** Boolean describing if all the bulk actions succeeded or not */
+  success: Scalars["Boolean"]["output"];
+};
+
+export type BulkCreateUniversityStudentsInput = {
+  student?: InputMaybe<CreateUniversityStudentInput>;
+};
+
+/** The output when running the create on the university/student model in bulk. */
+export type BulkCreateUniversityStudentsResult = {
+  __typename?: "BulkCreateUniversityStudentsResult";
+  /** Aggregated list of errors that any bulk action encountered while processing */
+  errors?: Maybe<Array<ExecutionError>>;
+  /** The list of all changed university/student records by each sent bulk action. Returned in the same order as the input bulk action params. */
+  students?: Maybe<Array<Maybe<UniversityStudent>>>;
   /** Boolean describing if all the bulk actions succeeded or not */
   success: Scalars["Boolean"]["output"];
 };
@@ -2010,6 +2596,24 @@ export type BulkDeleteAutoTableTestRelatedModelsResult = {
 /** The output when running the delete on the autoTableTest model in bulk. */
 export type BulkDeleteAutoTableTestsResult = {
   __typename?: "BulkDeleteAutoTableTestsResult";
+  /** Aggregated list of errors that any bulk action encountered while processing */
+  errors?: Maybe<Array<ExecutionError>>;
+  /** Boolean describing if all the bulk actions succeeded or not */
+  success: Scalars["Boolean"]["output"];
+};
+
+/** The output when running the delete on the doodad model in bulk. */
+export type BulkDeleteDoodadsResult = {
+  __typename?: "BulkDeleteDoodadsResult";
+  /** Aggregated list of errors that any bulk action encountered while processing */
+  errors?: Maybe<Array<ExecutionError>>;
+  /** Boolean describing if all the bulk actions succeeded or not */
+  success: Scalars["Boolean"]["output"];
+};
+
+/** The output when running the delete on the friendship model in bulk. */
+export type BulkDeleteFriendshipsResult = {
+  __typename?: "BulkDeleteFriendshipsResult";
   /** Aggregated list of errors that any bulk action encountered while processing */
   errors?: Maybe<Array<ExecutionError>>;
   /** Boolean describing if all the bulk actions succeeded or not */
@@ -2115,6 +2719,15 @@ export type BulkDeleteSectionsResult = {
   success: Scalars["Boolean"]["output"];
 };
 
+/** The output when running the delete on the tweeter model in bulk. */
+export type BulkDeleteTweetersResult = {
+  __typename?: "BulkDeleteTweetersResult";
+  /** Aggregated list of errors that any bulk action encountered while processing */
+  errors?: Maybe<Array<ExecutionError>>;
+  /** Boolean describing if all the bulk actions succeeded or not */
+  success: Scalars["Boolean"]["output"];
+};
+
 /** The output when running the delete on the uniqueFields/childModel model in bulk. */
 export type BulkDeleteUniqueFieldsChildModelsResult = {
   __typename?: "BulkDeleteUniqueFieldsChildModelsResult";
@@ -2136,6 +2749,51 @@ export type BulkDeleteUniqueFieldsMainModelsResult = {
 /** The output when running the delete on the uniqueFields/parentModel model in bulk. */
 export type BulkDeleteUniqueFieldsParentModelsResult = {
   __typename?: "BulkDeleteUniqueFieldsParentModelsResult";
+  /** Aggregated list of errors that any bulk action encountered while processing */
+  errors?: Maybe<Array<ExecutionError>>;
+  /** Boolean describing if all the bulk actions succeeded or not */
+  success: Scalars["Boolean"]["output"];
+};
+
+/** The output when running the delete on the university/assignment model in bulk. */
+export type BulkDeleteUniversityAssignmentsResult = {
+  __typename?: "BulkDeleteUniversityAssignmentsResult";
+  /** Aggregated list of errors that any bulk action encountered while processing */
+  errors?: Maybe<Array<ExecutionError>>;
+  /** Boolean describing if all the bulk actions succeeded or not */
+  success: Scalars["Boolean"]["output"];
+};
+
+/** The output when running the delete on the university/course model in bulk. */
+export type BulkDeleteUniversityCoursesResult = {
+  __typename?: "BulkDeleteUniversityCoursesResult";
+  /** Aggregated list of errors that any bulk action encountered while processing */
+  errors?: Maybe<Array<ExecutionError>>;
+  /** Boolean describing if all the bulk actions succeeded or not */
+  success: Scalars["Boolean"]["output"];
+};
+
+/** The output when running the delete on the university/professor model in bulk. */
+export type BulkDeleteUniversityProfessorsResult = {
+  __typename?: "BulkDeleteUniversityProfessorsResult";
+  /** Aggregated list of errors that any bulk action encountered while processing */
+  errors?: Maybe<Array<ExecutionError>>;
+  /** Boolean describing if all the bulk actions succeeded or not */
+  success: Scalars["Boolean"]["output"];
+};
+
+/** The output when running the delete on the university/registration model in bulk. */
+export type BulkDeleteUniversityRegistrationsResult = {
+  __typename?: "BulkDeleteUniversityRegistrationsResult";
+  /** Aggregated list of errors that any bulk action encountered while processing */
+  errors?: Maybe<Array<ExecutionError>>;
+  /** Boolean describing if all the bulk actions succeeded or not */
+  success: Scalars["Boolean"]["output"];
+};
+
+/** The output when running the delete on the university/student model in bulk. */
+export type BulkDeleteUniversityStudentsResult = {
+  __typename?: "BulkDeleteUniversityStudentsResult";
   /** Aggregated list of errors that any bulk action encountered while processing */
   errors?: Maybe<Array<ExecutionError>>;
   /** Boolean describing if all the bulk actions succeeded or not */
@@ -2275,6 +2933,38 @@ export type BulkUpdateAutoTableTestsResult = {
   autoTableTests?: Maybe<Array<Maybe<AutoTableTest>>>;
   /** Aggregated list of errors that any bulk action encountered while processing */
   errors?: Maybe<Array<ExecutionError>>;
+  /** Boolean describing if all the bulk actions succeeded or not */
+  success: Scalars["Boolean"]["output"];
+};
+
+export type BulkUpdateDoodadsInput = {
+  doodad?: InputMaybe<UpdateDoodadInput>;
+  id: Scalars["GadgetID"]["input"];
+};
+
+/** The output when running the update on the doodad model in bulk. */
+export type BulkUpdateDoodadsResult = {
+  __typename?: "BulkUpdateDoodadsResult";
+  /** The list of all changed doodad records by each sent bulk action. Returned in the same order as the input bulk action params. */
+  doodads?: Maybe<Array<Maybe<Doodad>>>;
+  /** Aggregated list of errors that any bulk action encountered while processing */
+  errors?: Maybe<Array<ExecutionError>>;
+  /** Boolean describing if all the bulk actions succeeded or not */
+  success: Scalars["Boolean"]["output"];
+};
+
+export type BulkUpdateFriendshipsInput = {
+  friendship?: InputMaybe<UpdateFriendshipInput>;
+  id: Scalars["GadgetID"]["input"];
+};
+
+/** The output when running the update on the friendship model in bulk. */
+export type BulkUpdateFriendshipsResult = {
+  __typename?: "BulkUpdateFriendshipsResult";
+  /** Aggregated list of errors that any bulk action encountered while processing */
+  errors?: Maybe<Array<ExecutionError>>;
+  /** The list of all changed friendship records by each sent bulk action. Returned in the same order as the input bulk action params. */
+  friendships?: Maybe<Array<Maybe<Friendship>>>;
   /** Boolean describing if all the bulk actions succeeded or not */
   success: Scalars["Boolean"]["output"];
 };
@@ -2450,6 +3140,22 @@ export type BulkUpdateSectionsResult = {
   success: Scalars["Boolean"]["output"];
 };
 
+export type BulkUpdateTweetersInput = {
+  id: Scalars["GadgetID"]["input"];
+  tweeter?: InputMaybe<UpdateTweeterInput>;
+};
+
+/** The output when running the update on the tweeter model in bulk. */
+export type BulkUpdateTweetersResult = {
+  __typename?: "BulkUpdateTweetersResult";
+  /** Aggregated list of errors that any bulk action encountered while processing */
+  errors?: Maybe<Array<ExecutionError>>;
+  /** Boolean describing if all the bulk actions succeeded or not */
+  success: Scalars["Boolean"]["output"];
+  /** The list of all changed tweeter records by each sent bulk action. Returned in the same order as the input bulk action params. */
+  tweeters?: Maybe<Array<Maybe<Tweeter>>>;
+};
+
 export type BulkUpdateUniqueFieldsChildModelsInput = {
   childModel?: InputMaybe<UpdateUniqueFieldsChildModelInput>;
   id: Scalars["GadgetID"]["input"];
@@ -2494,6 +3200,86 @@ export type BulkUpdateUniqueFieldsParentModelsResult = {
   errors?: Maybe<Array<ExecutionError>>;
   /** The list of all changed uniqueFields/parentModel records by each sent bulk action. Returned in the same order as the input bulk action params. */
   parentModels?: Maybe<Array<Maybe<UniqueFieldsParentModel>>>;
+  /** Boolean describing if all the bulk actions succeeded or not */
+  success: Scalars["Boolean"]["output"];
+};
+
+export type BulkUpdateUniversityAssignmentsInput = {
+  assignment?: InputMaybe<UpdateUniversityAssignmentInput>;
+  id: Scalars["GadgetID"]["input"];
+};
+
+/** The output when running the update on the university/assignment model in bulk. */
+export type BulkUpdateUniversityAssignmentsResult = {
+  __typename?: "BulkUpdateUniversityAssignmentsResult";
+  /** The list of all changed university/assignment records by each sent bulk action. Returned in the same order as the input bulk action params. */
+  assignments?: Maybe<Array<Maybe<UniversityAssignment>>>;
+  /** Aggregated list of errors that any bulk action encountered while processing */
+  errors?: Maybe<Array<ExecutionError>>;
+  /** Boolean describing if all the bulk actions succeeded or not */
+  success: Scalars["Boolean"]["output"];
+};
+
+export type BulkUpdateUniversityCoursesInput = {
+  course?: InputMaybe<UpdateUniversityCourseInput>;
+  id: Scalars["GadgetID"]["input"];
+};
+
+/** The output when running the update on the university/course model in bulk. */
+export type BulkUpdateUniversityCoursesResult = {
+  __typename?: "BulkUpdateUniversityCoursesResult";
+  /** The list of all changed university/course records by each sent bulk action. Returned in the same order as the input bulk action params. */
+  courses?: Maybe<Array<Maybe<UniversityCourse>>>;
+  /** Aggregated list of errors that any bulk action encountered while processing */
+  errors?: Maybe<Array<ExecutionError>>;
+  /** Boolean describing if all the bulk actions succeeded or not */
+  success: Scalars["Boolean"]["output"];
+};
+
+export type BulkUpdateUniversityProfessorsInput = {
+  id: Scalars["GadgetID"]["input"];
+  professor?: InputMaybe<UpdateUniversityProfessorInput>;
+};
+
+/** The output when running the update on the university/professor model in bulk. */
+export type BulkUpdateUniversityProfessorsResult = {
+  __typename?: "BulkUpdateUniversityProfessorsResult";
+  /** Aggregated list of errors that any bulk action encountered while processing */
+  errors?: Maybe<Array<ExecutionError>>;
+  /** The list of all changed university/professor records by each sent bulk action. Returned in the same order as the input bulk action params. */
+  professors?: Maybe<Array<Maybe<UniversityProfessor>>>;
+  /** Boolean describing if all the bulk actions succeeded or not */
+  success: Scalars["Boolean"]["output"];
+};
+
+export type BulkUpdateUniversityRegistrationsInput = {
+  id: Scalars["GadgetID"]["input"];
+  registration?: InputMaybe<UpdateUniversityRegistrationInput>;
+};
+
+/** The output when running the update on the university/registration model in bulk. */
+export type BulkUpdateUniversityRegistrationsResult = {
+  __typename?: "BulkUpdateUniversityRegistrationsResult";
+  /** Aggregated list of errors that any bulk action encountered while processing */
+  errors?: Maybe<Array<ExecutionError>>;
+  /** The list of all changed university/registration records by each sent bulk action. Returned in the same order as the input bulk action params. */
+  registrations?: Maybe<Array<Maybe<UniversityRegistration>>>;
+  /** Boolean describing if all the bulk actions succeeded or not */
+  success: Scalars["Boolean"]["output"];
+};
+
+export type BulkUpdateUniversityStudentsInput = {
+  id: Scalars["GadgetID"]["input"];
+  student?: InputMaybe<UpdateUniversityStudentInput>;
+};
+
+/** The output when running the update on the university/student model in bulk. */
+export type BulkUpdateUniversityStudentsResult = {
+  __typename?: "BulkUpdateUniversityStudentsResult";
+  /** Aggregated list of errors that any bulk action encountered while processing */
+  errors?: Maybe<Array<ExecutionError>>;
+  /** The list of all changed university/student records by each sent bulk action. Returned in the same order as the input bulk action params. */
+  students?: Maybe<Array<Maybe<UniversityStudent>>>;
   /** Boolean describing if all the bulk actions succeeded or not */
   success: Scalars["Boolean"]["output"];
 };
@@ -2580,6 +3366,40 @@ export type BulkUpsertAutoTableTestsResult = {
   autoTableTests?: Maybe<Array<Maybe<AutoTableTest>>>;
   /** Aggregated list of errors that any bulk action encountered while processing */
   errors?: Maybe<Array<ExecutionError>>;
+  /** Boolean describing if all the bulk actions succeeded or not */
+  success: Scalars["Boolean"]["output"];
+};
+
+export type BulkUpsertDoodadsInput = {
+  doodad?: InputMaybe<UpsertDoodadInput>;
+  /** An array of Strings */
+  on?: InputMaybe<Array<Scalars["String"]["input"]>>;
+};
+
+/** The result of a bulk upsert operation for the doodad model */
+export type BulkUpsertDoodadsResult = {
+  __typename?: "BulkUpsertDoodadsResult";
+  /** The results of each upsert action in the bulk operation */
+  doodads?: Maybe<Array<Maybe<Doodad>>>;
+  /** Aggregated list of errors that any bulk action encountered while processing */
+  errors?: Maybe<Array<ExecutionError>>;
+  /** Boolean describing if all the bulk actions succeeded or not */
+  success: Scalars["Boolean"]["output"];
+};
+
+export type BulkUpsertFriendshipsInput = {
+  friendship?: InputMaybe<UpsertFriendshipInput>;
+  /** An array of Strings */
+  on?: InputMaybe<Array<Scalars["String"]["input"]>>;
+};
+
+/** The result of a bulk upsert operation for the friendship model */
+export type BulkUpsertFriendshipsResult = {
+  __typename?: "BulkUpsertFriendshipsResult";
+  /** Aggregated list of errors that any bulk action encountered while processing */
+  errors?: Maybe<Array<ExecutionError>>;
+  /** The results of each upsert action in the bulk operation */
+  friendships?: Maybe<Array<Maybe<Friendship>>>;
   /** Boolean describing if all the bulk actions succeeded or not */
   success: Scalars["Boolean"]["output"];
 };
@@ -2789,6 +3609,23 @@ export type BulkUpsertShopifySyncsResult = {
   success: Scalars["Boolean"]["output"];
 };
 
+export type BulkUpsertTweetersInput = {
+  /** An array of Strings */
+  on?: InputMaybe<Array<Scalars["String"]["input"]>>;
+  tweeter?: InputMaybe<UpsertTweeterInput>;
+};
+
+/** The result of a bulk upsert operation for the tweeter model */
+export type BulkUpsertTweetersResult = {
+  __typename?: "BulkUpsertTweetersResult";
+  /** Aggregated list of errors that any bulk action encountered while processing */
+  errors?: Maybe<Array<ExecutionError>>;
+  /** Boolean describing if all the bulk actions succeeded or not */
+  success: Scalars["Boolean"]["output"];
+  /** The results of each upsert action in the bulk operation */
+  tweeters?: Maybe<Array<Maybe<Tweeter>>>;
+};
+
 export type BulkUpsertUniqueFieldsChildModelsInput = {
   childModel?: InputMaybe<UpsertUniqueFieldsChildModelInput>;
   /** An array of Strings */
@@ -2836,6 +3673,91 @@ export type BulkUpsertUniqueFieldsParentModelsResult = {
   errors?: Maybe<Array<ExecutionError>>;
   /** The results of each upsert action in the bulk operation */
   parentModels?: Maybe<Array<Maybe<UniqueFieldsParentModel>>>;
+  /** Boolean describing if all the bulk actions succeeded or not */
+  success: Scalars["Boolean"]["output"];
+};
+
+export type BulkUpsertUniversityAssignmentsInput = {
+  assignment?: InputMaybe<UpsertUniversityAssignmentInput>;
+  /** An array of Strings */
+  on?: InputMaybe<Array<Scalars["String"]["input"]>>;
+};
+
+/** The result of a bulk upsert operation for the university/assignment model */
+export type BulkUpsertUniversityAssignmentsResult = {
+  __typename?: "BulkUpsertUniversityAssignmentsResult";
+  /** The results of each upsert action in the bulk operation */
+  assignments?: Maybe<Array<Maybe<UniversityAssignment>>>;
+  /** Aggregated list of errors that any bulk action encountered while processing */
+  errors?: Maybe<Array<ExecutionError>>;
+  /** Boolean describing if all the bulk actions succeeded or not */
+  success: Scalars["Boolean"]["output"];
+};
+
+export type BulkUpsertUniversityCoursesInput = {
+  course?: InputMaybe<UpsertUniversityCourseInput>;
+  /** An array of Strings */
+  on?: InputMaybe<Array<Scalars["String"]["input"]>>;
+};
+
+/** The result of a bulk upsert operation for the university/course model */
+export type BulkUpsertUniversityCoursesResult = {
+  __typename?: "BulkUpsertUniversityCoursesResult";
+  /** The results of each upsert action in the bulk operation */
+  courses?: Maybe<Array<Maybe<UniversityCourse>>>;
+  /** Aggregated list of errors that any bulk action encountered while processing */
+  errors?: Maybe<Array<ExecutionError>>;
+  /** Boolean describing if all the bulk actions succeeded or not */
+  success: Scalars["Boolean"]["output"];
+};
+
+export type BulkUpsertUniversityProfessorsInput = {
+  /** An array of Strings */
+  on?: InputMaybe<Array<Scalars["String"]["input"]>>;
+  professor?: InputMaybe<UpsertUniversityProfessorInput>;
+};
+
+/** The result of a bulk upsert operation for the university/professor model */
+export type BulkUpsertUniversityProfessorsResult = {
+  __typename?: "BulkUpsertUniversityProfessorsResult";
+  /** Aggregated list of errors that any bulk action encountered while processing */
+  errors?: Maybe<Array<ExecutionError>>;
+  /** The results of each upsert action in the bulk operation */
+  professors?: Maybe<Array<Maybe<UniversityProfessor>>>;
+  /** Boolean describing if all the bulk actions succeeded or not */
+  success: Scalars["Boolean"]["output"];
+};
+
+export type BulkUpsertUniversityRegistrationsInput = {
+  /** An array of Strings */
+  on?: InputMaybe<Array<Scalars["String"]["input"]>>;
+  registration?: InputMaybe<UpsertUniversityRegistrationInput>;
+};
+
+/** The result of a bulk upsert operation for the university/registration model */
+export type BulkUpsertUniversityRegistrationsResult = {
+  __typename?: "BulkUpsertUniversityRegistrationsResult";
+  /** Aggregated list of errors that any bulk action encountered while processing */
+  errors?: Maybe<Array<ExecutionError>>;
+  /** The results of each upsert action in the bulk operation */
+  registrations?: Maybe<Array<Maybe<UniversityRegistration>>>;
+  /** Boolean describing if all the bulk actions succeeded or not */
+  success: Scalars["Boolean"]["output"];
+};
+
+export type BulkUpsertUniversityStudentsInput = {
+  /** An array of Strings */
+  on?: InputMaybe<Array<Scalars["String"]["input"]>>;
+  student?: InputMaybe<UpsertUniversityStudentInput>;
+};
+
+/** The result of a bulk upsert operation for the university/student model */
+export type BulkUpsertUniversityStudentsResult = {
+  __typename?: "BulkUpsertUniversityStudentsResult";
+  /** Aggregated list of errors that any bulk action encountered while processing */
+  errors?: Maybe<Array<ExecutionError>>;
+  /** The results of each upsert action in the bulk operation */
+  students?: Maybe<Array<Maybe<UniversityStudent>>>;
   /** Boolean describing if all the bulk actions succeeded or not */
   success: Scalars["Boolean"]["output"];
 };
@@ -2922,6 +3844,21 @@ export type ConvergeActionMap = {
 };
 
 /** Declaratively specifies the list of records a relationship should become and invokes the given actions in order to change the current state to get to the newly specified state. */
+export type ConvergeAssignmentInput = {
+  /** An optional partial set of action api identifiers to use when creating, updating, and deleting records to converge to the new list. */
+  actions?: InputMaybe<ConvergeActionMap>;
+  /** The new list of records to converge to */
+  values: Array<InputMaybe<ConvergeAssignmentValues>>;
+};
+
+/** One element of a ConvergeAssignmentInput record converge list */
+export type ConvergeAssignmentValues = {
+  course?: InputMaybe<CourseBelongsToInput>;
+  id?: InputMaybe<Scalars["GadgetID"]["input"]>;
+  professor?: InputMaybe<ProfessorBelongsToInput>;
+};
+
+/** Declaratively specifies the list of records a relationship should become and invokes the given actions in order to change the current state to get to the newly specified state. */
 export type ConvergeAutoTableTestRelatedModelInput = {
   /** An optional partial set of action api identifiers to use when creating, updating, and deleting records to converge to the new list. */
   actions?: InputMaybe<ConvergeActionMap>;
@@ -2955,6 +3892,42 @@ export type ConvergeChildModelValues = {
 };
 
 /** Declaratively specifies the list of records a relationship should become and invokes the given actions in order to change the current state to get to the newly specified state. */
+export type ConvergeDoodadInput = {
+  /** An optional partial set of action api identifiers to use when creating, updating, and deleting records to converge to the new list. */
+  actions?: InputMaybe<ConvergeActionMap>;
+  /** The new list of records to converge to */
+  values: Array<InputMaybe<ConvergeDoodadValues>>;
+};
+
+/** One element of a ConvergeDoodadInput record converge list */
+export type ConvergeDoodadValues = {
+  active?: InputMaybe<Scalars["Boolean"]["input"]>;
+  gizmo?: InputMaybe<GizmoBelongsToInput>;
+  id?: InputMaybe<Scalars["GadgetID"]["input"]>;
+  name?: InputMaybe<Scalars["String"]["input"]>;
+  size?: InputMaybe<Scalars["DoodadSizeEnum"]["input"]>;
+  weight?: InputMaybe<Scalars["Float"]["input"]>;
+  widget?: InputMaybe<WidgetBelongsToInput>;
+};
+
+/** Declaratively specifies the list of records a relationship should become and invokes the given actions in order to change the current state to get to the newly specified state. */
+export type ConvergeFriendshipInput = {
+  /** An optional partial set of action api identifiers to use when creating, updating, and deleting records to converge to the new list. */
+  actions?: InputMaybe<ConvergeActionMap>;
+  /** The new list of records to converge to */
+  values: Array<InputMaybe<ConvergeFriendshipValues>>;
+};
+
+/** One element of a ConvergeFriendshipInput record converge list */
+export type ConvergeFriendshipValues = {
+  ended?: InputMaybe<Scalars["DateOrDateTime"]["input"]>;
+  followee?: InputMaybe<TweeterBelongsToInput>;
+  follower?: InputMaybe<TweeterBelongsToInput>;
+  id?: InputMaybe<Scalars["GadgetID"]["input"]>;
+  started?: InputMaybe<Scalars["DateOrDateTime"]["input"]>;
+};
+
+/** Declaratively specifies the list of records a relationship should become and invokes the given actions in order to change the current state to get to the newly specified state. */
 export type ConvergeGizmoInput = {
   /** An optional partial set of action api identifiers to use when creating, updating, and deleting records to converge to the new list. */
   actions?: InputMaybe<ConvergeActionMap>;
@@ -2965,6 +3938,7 @@ export type ConvergeGizmoInput = {
 /** One element of a ConvergeGizmoInput record converge list */
 export type ConvergeGizmoValues = {
   attachment?: InputMaybe<StoredFileInput>;
+  doodads?: InputMaybe<Array<InputMaybe<DoodadHasManyInput>>>;
   id?: InputMaybe<Scalars["GadgetID"]["input"]>;
   name?: InputMaybe<Scalars["String"]["input"]>;
   orientation?: InputMaybe<Scalars["String"]["input"]>;
@@ -3002,6 +3976,23 @@ export type ConvergePlayerValues = {
 };
 
 /** Declaratively specifies the list of records a relationship should become and invokes the given actions in order to change the current state to get to the newly specified state. */
+export type ConvergeRegistrationInput = {
+  /** An optional partial set of action api identifiers to use when creating, updating, and deleting records to converge to the new list. */
+  actions?: InputMaybe<ConvergeActionMap>;
+  /** The new list of records to converge to */
+  values: Array<InputMaybe<ConvergeRegistrationValues>>;
+};
+
+/** One element of a ConvergeRegistrationInput record converge list */
+export type ConvergeRegistrationValues = {
+  course?: InputMaybe<CourseBelongsToInput>;
+  effectiveFrom?: InputMaybe<Scalars["DateOrDateTime"]["input"]>;
+  effectiveTo?: InputMaybe<Scalars["DateOrDateTime"]["input"]>;
+  id?: InputMaybe<Scalars["GadgetID"]["input"]>;
+  student?: InputMaybe<StudentBelongsToInput>;
+};
+
+/** Declaratively specifies the list of records a relationship should become and invokes the given actions in order to change the current state to get to the newly specified state. */
 export type ConvergeRoundInput = {
   /** An optional partial set of action api identifiers to use when creating, updating, and deleting records to converge to the new list. */
   actions?: InputMaybe<ConvergeActionMap>;
@@ -3015,6 +4006,23 @@ export type ConvergeRoundValues = {
   name?: InputMaybe<Scalars["String"]["input"]>;
   players?: InputMaybe<Array<InputMaybe<PlayerHasManyInput>>>;
   stadium?: InputMaybe<StadiumBelongsToInput>;
+};
+
+/** Declaratively specifies the list of records a relationship should become and invokes the given actions in order to change the current state to get to the newly specified state. */
+export type ConvergeTweeterInput = {
+  /** An optional partial set of action api identifiers to use when creating, updating, and deleting records to converge to the new list. */
+  actions?: InputMaybe<ConvergeActionMap>;
+  /** The new list of records to converge to */
+  values: Array<InputMaybe<ConvergeTweeterValues>>;
+};
+
+/** One element of a ConvergeTweeterInput record converge list */
+export type ConvergeTweeterValues = {
+  city?: InputMaybe<CityBelongsToInput>;
+  followees?: InputMaybe<Array<InputMaybe<TweeterHasManyThroughInput>>>;
+  followers?: InputMaybe<Array<InputMaybe<TweeterHasManyThroughInput>>>;
+  id?: InputMaybe<Scalars["GadgetID"]["input"]>;
+  name?: InputMaybe<Scalars["String"]["input"]>;
 };
 
 /** Declaratively specifies the list of records a relationship should become and invokes the given actions in order to change the current state to get to the newly specified state. */
@@ -3032,6 +4040,7 @@ export type ConvergeWidgetValues = {
   category?: InputMaybe<Array<Scalars["WidgetCategoryEnum"]["input"]>>;
   color?: InputMaybe<Scalars["String"]["input"]>;
   description?: InputMaybe<RichTextInput>;
+  doodad?: InputMaybe<DoodadHasOneInput>;
   embedding?: InputMaybe<Array<Scalars["Float"]["input"]>>;
   gizmos?: InputMaybe<Array<InputMaybe<GizmoHasManyInput>>>;
   id?: InputMaybe<Scalars["GadgetID"]["input"]>;
@@ -3045,6 +4054,22 @@ export type ConvergeWidgetValues = {
   secretKey?: InputMaybe<Scalars["String"]["input"]>;
   section?: InputMaybe<SectionBelongsToInput>;
   startsAt?: InputMaybe<Scalars["DateTime"]["input"]>;
+};
+
+/** Input object supporting setting or updating related model record on a relationship field */
+export type CourseBelongsToInput = {
+  /** Existing ID of another record, which you would like to associate this record with */
+  _link?: InputMaybe<Scalars["GadgetID"]["input"]>;
+  create?: InputMaybe<NestedCourseCreateInput>;
+  delete?: InputMaybe<NestedCourseDeleteInput>;
+  update?: InputMaybe<NestedCourseUpdateInput>;
+};
+
+/** Input object supporting setting or updating related model record on a relationship field */
+export type CourseHasManyThroughInput = {
+  create?: InputMaybe<NestedCourseCreateInput>;
+  delete?: InputMaybe<NestedCourseDeleteInput>;
+  update?: InputMaybe<NestedCourseUpdateInput>;
 };
 
 export type CreateAutoTableTestInput = {
@@ -3091,9 +4116,42 @@ export type CreateAutoTableTestResult = UpsertAutoTableTestResult & {
   success: Scalars["Boolean"]["output"];
 };
 
+export type CreateDoodadInput = {
+  active?: InputMaybe<Scalars["Boolean"]["input"]>;
+  gizmo?: InputMaybe<GizmoBelongsToInput>;
+  name?: InputMaybe<Scalars["String"]["input"]>;
+  size?: InputMaybe<Scalars["DoodadSizeEnum"]["input"]>;
+  weight?: InputMaybe<Scalars["Float"]["input"]>;
+  widget?: InputMaybe<WidgetBelongsToInput>;
+};
+
+export type CreateDoodadResult = UpsertDoodadResult & {
+  __typename?: "CreateDoodadResult";
+  actionRun?: Maybe<Scalars["String"]["output"]>;
+  doodad?: Maybe<Doodad>;
+  errors?: Maybe<Array<ExecutionError>>;
+  success: Scalars["Boolean"]["output"];
+};
+
+export type CreateFriendshipInput = {
+  ended?: InputMaybe<Scalars["DateOrDateTime"]["input"]>;
+  followee?: InputMaybe<TweeterBelongsToInput>;
+  follower?: InputMaybe<TweeterBelongsToInput>;
+  started?: InputMaybe<Scalars["DateOrDateTime"]["input"]>;
+};
+
+export type CreateFriendshipResult = UpsertFriendshipResult & {
+  __typename?: "CreateFriendshipResult";
+  actionRun?: Maybe<Scalars["String"]["output"]>;
+  errors?: Maybe<Array<ExecutionError>>;
+  friendship?: Maybe<Friendship>;
+  success: Scalars["Boolean"]["output"];
+};
+
 export type CreateGameCityInput = {
   name?: InputMaybe<Scalars["String"]["input"]>;
   stadium?: InputMaybe<StadiumHasOneInput>;
+  tweeters?: InputMaybe<Array<InputMaybe<TweeterHasManyInput>>>;
 };
 
 export type CreateGameCityResult = UpsertGameCityResult & {
@@ -3150,6 +4208,7 @@ export type CreateGameStadiumResult = UpsertGameStadiumResult & {
 
 export type CreateGizmoInput = {
   attachment?: InputMaybe<StoredFileInput>;
+  doodads?: InputMaybe<Array<InputMaybe<DoodadHasManyInput>>>;
   name?: InputMaybe<Scalars["String"]["input"]>;
   orientation?: InputMaybe<Scalars["String"]["input"]>;
   widget?: InputMaybe<WidgetBelongsToInput>;
@@ -3166,7 +4225,6 @@ export type CreateGizmoResult = UpsertGizmoResult & {
 export type CreateHasManyThroughBaseModelInput = {
   baseModelHmtField?: InputMaybe<Array<InputMaybe<SiblingModelHasManyThroughInput>>>;
   baseModelName?: InputMaybe<Scalars["String"]["input"]>;
-  joinerModel?: InputMaybe<Array<InputMaybe<JoinerModelHasManyInput>>>;
   joinerModels?: InputMaybe<Array<InputMaybe<JoinerModelHasManyInput>>>;
 };
 
@@ -3192,7 +4250,6 @@ export type CreateHasManyThroughJoinerModelResult = UpsertHasManyThroughJoinerMo
 };
 
 export type CreateHasManyThroughSiblingModelInput = {
-  joinerModel?: InputMaybe<Array<InputMaybe<JoinerModelHasManyInput>>>;
   joinerModels?: InputMaybe<Array<InputMaybe<JoinerModelHasManyInput>>>;
   siblingModelHmtField?: InputMaybe<Array<InputMaybe<BaseModelHasManyThroughInput>>>;
   siblingName?: InputMaybe<Scalars["String"]["input"]>;
@@ -3289,6 +4346,23 @@ export type CreateTestDataResult = {
   success: Scalars["Boolean"]["output"];
 };
 
+export type CreateTweeterInput = {
+  city?: InputMaybe<CityBelongsToInput>;
+  followeeFriendships?: InputMaybe<Array<InputMaybe<FriendshipHasManyInput>>>;
+  followees?: InputMaybe<Array<InputMaybe<TweeterHasManyThroughInput>>>;
+  followerFriendships?: InputMaybe<Array<InputMaybe<FriendshipHasManyInput>>>;
+  followers?: InputMaybe<Array<InputMaybe<TweeterHasManyThroughInput>>>;
+  name?: InputMaybe<Scalars["String"]["input"]>;
+};
+
+export type CreateTweeterResult = UpsertTweeterResult & {
+  __typename?: "CreateTweeterResult";
+  actionRun?: Maybe<Scalars["String"]["output"]>;
+  errors?: Maybe<Array<ExecutionError>>;
+  success: Scalars["Boolean"]["output"];
+  tweeter?: Maybe<Tweeter>;
+};
+
 export type CreateUniqueFieldsChildModelInput = {
   alias?: InputMaybe<Scalars["String"]["input"]>;
   mainModelParent?: InputMaybe<MainModelBelongsToInput>;
@@ -3332,12 +4406,91 @@ export type CreateUniqueFieldsParentModelResult = UpsertUniqueFieldsParentModelR
   success: Scalars["Boolean"]["output"];
 };
 
+export type CreateUniversityAssignmentInput = {
+  course?: InputMaybe<CourseBelongsToInput>;
+  professor?: InputMaybe<ProfessorBelongsToInput>;
+};
+
+export type CreateUniversityAssignmentResult = UpsertUniversityAssignmentResult & {
+  __typename?: "CreateUniversityAssignmentResult";
+  actionRun?: Maybe<Scalars["String"]["output"]>;
+  assignment?: Maybe<UniversityAssignment>;
+  errors?: Maybe<Array<ExecutionError>>;
+  success: Scalars["Boolean"]["output"];
+};
+
+export type CreateUniversityCourseInput = {
+  assignments?: InputMaybe<Array<InputMaybe<AssignmentHasManyInput>>>;
+  description?: InputMaybe<RichTextInput>;
+  professors?: InputMaybe<Array<InputMaybe<ProfessorHasManyThroughInput>>>;
+  registrations?: InputMaybe<Array<InputMaybe<RegistrationHasManyInput>>>;
+  students?: InputMaybe<Array<InputMaybe<StudentHasManyThroughInput>>>;
+  title?: InputMaybe<Scalars["String"]["input"]>;
+};
+
+export type CreateUniversityCourseResult = UpsertUniversityCourseResult & {
+  __typename?: "CreateUniversityCourseResult";
+  actionRun?: Maybe<Scalars["String"]["output"]>;
+  course?: Maybe<UniversityCourse>;
+  errors?: Maybe<Array<ExecutionError>>;
+  success: Scalars["Boolean"]["output"];
+};
+
+export type CreateUniversityProfessorInput = {
+  assignments?: InputMaybe<Array<InputMaybe<AssignmentHasManyInput>>>;
+  courses?: InputMaybe<Array<InputMaybe<CourseHasManyThroughInput>>>;
+  firstName?: InputMaybe<Scalars["String"]["input"]>;
+  lastName?: InputMaybe<Scalars["String"]["input"]>;
+  title?: InputMaybe<Scalars["ProfessorTitleEnum"]["input"]>;
+};
+
+export type CreateUniversityProfessorResult = UpsertUniversityProfessorResult & {
+  __typename?: "CreateUniversityProfessorResult";
+  actionRun?: Maybe<Scalars["String"]["output"]>;
+  errors?: Maybe<Array<ExecutionError>>;
+  professor?: Maybe<UniversityProfessor>;
+  success: Scalars["Boolean"]["output"];
+};
+
+export type CreateUniversityRegistrationInput = {
+  course?: InputMaybe<CourseBelongsToInput>;
+  effectiveFrom?: InputMaybe<Scalars["DateOrDateTime"]["input"]>;
+  effectiveTo?: InputMaybe<Scalars["DateOrDateTime"]["input"]>;
+  student?: InputMaybe<StudentBelongsToInput>;
+};
+
+export type CreateUniversityRegistrationResult = UpsertUniversityRegistrationResult & {
+  __typename?: "CreateUniversityRegistrationResult";
+  actionRun?: Maybe<Scalars["String"]["output"]>;
+  errors?: Maybe<Array<ExecutionError>>;
+  registration?: Maybe<UniversityRegistration>;
+  success: Scalars["Boolean"]["output"];
+};
+
+export type CreateUniversityStudentInput = {
+  courses?: InputMaybe<Array<InputMaybe<CourseHasManyThroughInput>>>;
+  department?: InputMaybe<Scalars["StudentDepartmentEnum"]["input"]>;
+  firstName?: InputMaybe<Scalars["String"]["input"]>;
+  lastName?: InputMaybe<Scalars["String"]["input"]>;
+  registrations?: InputMaybe<Array<InputMaybe<RegistrationHasManyInput>>>;
+  year?: InputMaybe<Scalars["Int"]["input"]>;
+};
+
+export type CreateUniversityStudentResult = UpsertUniversityStudentResult & {
+  __typename?: "CreateUniversityStudentResult";
+  actionRun?: Maybe<Scalars["String"]["output"]>;
+  errors?: Maybe<Array<ExecutionError>>;
+  student?: Maybe<UniversityStudent>;
+  success: Scalars["Boolean"]["output"];
+};
+
 export type CreateWidgetInput = {
   anything?: InputMaybe<Scalars["JSON"]["input"]>;
   birthday?: InputMaybe<Scalars["DateOrDateTime"]["input"]>;
   category?: InputMaybe<Array<Scalars["WidgetCategoryEnum"]["input"]>>;
   color?: InputMaybe<Scalars["String"]["input"]>;
   description?: InputMaybe<RichTextInput>;
+  doodad?: InputMaybe<DoodadHasOneInput>;
   embedding?: InputMaybe<Array<Scalars["Float"]["input"]>>;
   gizmos?: InputMaybe<Array<InputMaybe<GizmoHasManyInput>>>;
   inventoryCount?: InputMaybe<Scalars["Float"]["input"]>;
@@ -3379,6 +4532,7 @@ export type CustomActionWithParamsAutoTableTestResult = {
 export type CustomObjectParamsGameCityInput = {
   name?: InputMaybe<Scalars["String"]["input"]>;
   stadium?: InputMaybe<StadiumHasOneInput>;
+  tweeters?: InputMaybe<Array<InputMaybe<TweeterHasManyInput>>>;
 };
 
 export type CustomObjectParamsGameCityResult = {
@@ -3391,15 +4545,15 @@ export type CustomObjectParamsGameCityResult = {
 
 export type CustomObjectParamsObjParamInput = {
   firstLevelStr?: InputMaybe<Scalars["String"]["input"]>;
-  objProperty1?: InputMaybe<CustomObjectParamsObjProperty1Input>;
+  objProperty1?: InputMaybe<CustomObjectParamsObjParamObjProperty1Input>;
 };
 
-export type CustomObjectParamsObjProperty1Input = {
-  objProperty2?: InputMaybe<CustomObjectParamsObjProperty2Input>;
+export type CustomObjectParamsObjParamObjProperty1Input = {
+  objProperty2?: InputMaybe<CustomObjectParamsObjParamObjProperty1ObjProperty2Input>;
   secondLevelStr?: InputMaybe<Scalars["String"]["input"]>;
 };
 
-export type CustomObjectParamsObjProperty2Input = {
+export type CustomObjectParamsObjParamObjProperty1ObjProperty2Input = {
   thirdLevelStr?: InputMaybe<Scalars["String"]["input"]>;
 };
 
@@ -3442,6 +4596,20 @@ export type DeleteAutoTableTestRelatedModelResult = {
 
 export type DeleteAutoTableTestResult = {
   __typename?: "DeleteAutoTableTestResult";
+  actionRun?: Maybe<Scalars["String"]["output"]>;
+  errors?: Maybe<Array<ExecutionError>>;
+  success: Scalars["Boolean"]["output"];
+};
+
+export type DeleteDoodadResult = {
+  __typename?: "DeleteDoodadResult";
+  actionRun?: Maybe<Scalars["String"]["output"]>;
+  errors?: Maybe<Array<ExecutionError>>;
+  success: Scalars["Boolean"]["output"];
+};
+
+export type DeleteFriendshipResult = {
+  __typename?: "DeleteFriendshipResult";
   actionRun?: Maybe<Scalars["String"]["output"]>;
   errors?: Maybe<Array<ExecutionError>>;
   success: Scalars["Boolean"]["output"];
@@ -3552,6 +4720,13 @@ export type DeleteShopifyProductVariantResult = {
   success: Scalars["Boolean"]["output"];
 };
 
+export type DeleteTweeterResult = {
+  __typename?: "DeleteTweeterResult";
+  actionRun?: Maybe<Scalars["String"]["output"]>;
+  errors?: Maybe<Array<ExecutionError>>;
+  success: Scalars["Boolean"]["output"];
+};
+
 export type DeleteUniqueFieldsChildModelResult = {
   __typename?: "DeleteUniqueFieldsChildModelResult";
   actionRun?: Maybe<Scalars["String"]["output"]>;
@@ -3568,6 +4743,41 @@ export type DeleteUniqueFieldsMainModelResult = {
 
 export type DeleteUniqueFieldsParentModelResult = {
   __typename?: "DeleteUniqueFieldsParentModelResult";
+  actionRun?: Maybe<Scalars["String"]["output"]>;
+  errors?: Maybe<Array<ExecutionError>>;
+  success: Scalars["Boolean"]["output"];
+};
+
+export type DeleteUniversityAssignmentResult = {
+  __typename?: "DeleteUniversityAssignmentResult";
+  actionRun?: Maybe<Scalars["String"]["output"]>;
+  errors?: Maybe<Array<ExecutionError>>;
+  success: Scalars["Boolean"]["output"];
+};
+
+export type DeleteUniversityCourseResult = {
+  __typename?: "DeleteUniversityCourseResult";
+  actionRun?: Maybe<Scalars["String"]["output"]>;
+  errors?: Maybe<Array<ExecutionError>>;
+  success: Scalars["Boolean"]["output"];
+};
+
+export type DeleteUniversityProfessorResult = {
+  __typename?: "DeleteUniversityProfessorResult";
+  actionRun?: Maybe<Scalars["String"]["output"]>;
+  errors?: Maybe<Array<ExecutionError>>;
+  success: Scalars["Boolean"]["output"];
+};
+
+export type DeleteUniversityRegistrationResult = {
+  __typename?: "DeleteUniversityRegistrationResult";
+  actionRun?: Maybe<Scalars["String"]["output"]>;
+  errors?: Maybe<Array<ExecutionError>>;
+  success: Scalars["Boolean"]["output"];
+};
+
+export type DeleteUniversityStudentResult = {
+  __typename?: "DeleteUniversityStudentResult";
   actionRun?: Maybe<Scalars["String"]["output"]>;
   errors?: Maybe<Array<ExecutionError>>;
   success: Scalars["Boolean"]["output"];
@@ -3594,6 +4804,98 @@ export type DirectUploadToken = {
   token: Scalars["String"]["output"];
   /** The URL to upload a file to. */
   url: Scalars["String"]["output"];
+};
+
+export type Doodad = {
+  __typename?: "Doodad";
+  /** Get all the fields for this record. Useful for not having to list out all the fields you want to retrieve, but slower. */
+  _all: Scalars["JSONObject"]["output"];
+  active?: Maybe<Scalars["Boolean"]["output"]>;
+  /** The time at which this record was first created. Set once upon record creation and never changed. Managed by Gadget. */
+  createdAt: Scalars["DateTime"]["output"];
+  gizmo?: Maybe<Gizmo>;
+  gizmoId?: Maybe<Scalars["GadgetID"]["output"]>;
+  /** The globally unique, unchanging identifier for this record. Assigned and managed by Gadget. */
+  id: Scalars["GadgetID"]["output"];
+  name?: Maybe<Scalars["String"]["output"]>;
+  size?: Maybe<Scalars["DoodadSizeEnum"]["output"]>;
+  /** The time at which this record was last changed. Set each time the record is successfully acted upon by an action. Managed by Gadget. */
+  updatedAt: Scalars["DateTime"]["output"];
+  weight?: Maybe<Scalars["Float"]["output"]>;
+  widget?: Maybe<Widget>;
+  widgetId?: Maybe<Scalars["GadgetID"]["output"]>;
+};
+
+/** A connection to a list of Doodad items. */
+export type DoodadConnection = {
+  __typename?: "DoodadConnection";
+  /** A list of edges. */
+  edges: Array<DoodadEdge>;
+  /** Information to aid in pagination. */
+  pageInfo: PageInfo;
+};
+
+/** An edge in a Doodad connection. */
+export type DoodadEdge = {
+  __typename?: "DoodadEdge";
+  /** A cursor for use in pagination */
+  cursor: Scalars["String"]["output"];
+  /** The item at the end of the edge */
+  node: Doodad;
+};
+
+export type DoodadFilter = {
+  AND?: InputMaybe<Array<InputMaybe<DoodadFilter>>>;
+  NOT?: InputMaybe<Array<InputMaybe<DoodadFilter>>>;
+  OR?: InputMaybe<Array<InputMaybe<DoodadFilter>>>;
+  active?: InputMaybe<BooleanFilter>;
+  createdAt?: InputMaybe<DateTimeFilter>;
+  gizmo?: InputMaybe<IdFilter>;
+  gizmoId?: InputMaybe<IdFilter>;
+  id?: InputMaybe<IdFilter>;
+  name?: InputMaybe<StringFilter>;
+  size?: InputMaybe<SingleEnumFilter>;
+  updatedAt?: InputMaybe<DateTimeFilter>;
+  weight?: InputMaybe<FloatFilter>;
+  widget?: InputMaybe<IdFilter>;
+  widgetId?: InputMaybe<IdFilter>;
+};
+
+/** Input object supporting setting or updating related model record on a relationship field */
+export type DoodadHasManyInput = {
+  /** Creates, updates, or deletes existing records in the database as needed to arrive at the list of records specified. */
+  _converge?: InputMaybe<ConvergeDoodadInput>;
+  create?: InputMaybe<NestedDoodadCreateInput>;
+  delete?: InputMaybe<NestedDoodadDeleteInput>;
+  update?: InputMaybe<NestedDoodadUpdateInput>;
+};
+
+/** Input object supporting setting or updating related model record on a relationship field */
+export type DoodadHasOneInput = {
+  /** Existing ID of another record, which you would like to relink to this record */
+  _relink?: InputMaybe<HasOneRelinkInput>;
+  /** Existing ID of another record, which you would like to unlink from this record */
+  _unlink?: InputMaybe<Scalars["GadgetID"]["input"]>;
+  create?: InputMaybe<NestedDoodadCreateInput>;
+  delete?: InputMaybe<NestedDoodadDeleteInput>;
+  update?: InputMaybe<NestedDoodadUpdateInput>;
+};
+
+export type DoodadSort = {
+  /** Sort the results by the active field. Defaults to ascending (smallest value first). */
+  active?: InputMaybe<SortOrder>;
+  /** Sort the results by the createdAt field. Defaults to ascending (smallest value first). */
+  createdAt?: InputMaybe<SortOrder>;
+  /** Sort the results by the id field. Defaults to ascending (smallest value first). */
+  id?: InputMaybe<SortOrder>;
+  /** Sort the results by the name field. Defaults to ascending (smallest value first). */
+  name?: InputMaybe<SortOrder>;
+  /** Sort the results by the size field. Defaults to ascending (smallest value first). */
+  size?: InputMaybe<SortOrder>;
+  /** Sort the results by the updatedAt field. Defaults to ascending (smallest value first). */
+  updatedAt?: InputMaybe<SortOrder>;
+  /** Sort the results by the weight field. Defaults to ascending (smallest value first). */
+  weight?: InputMaybe<SortOrder>;
 };
 
 export type EnqueueBackgroundActionOptions = {
@@ -3663,6 +4965,79 @@ export type FloatFilter = {
   notIn?: InputMaybe<Array<InputMaybe<Scalars["Float"]["input"]>>>;
 };
 
+export type Friendship = {
+  __typename?: "Friendship";
+  /** Get all the fields for this record. Useful for not having to list out all the fields you want to retrieve, but slower. */
+  _all: Scalars["JSONObject"]["output"];
+  /** The time at which this record was first created. Set once upon record creation and never changed. Managed by Gadget. */
+  createdAt: Scalars["DateTime"]["output"];
+  ended?: Maybe<Scalars["Date"]["output"]>;
+  followee?: Maybe<Tweeter>;
+  followeeId?: Maybe<Scalars["GadgetID"]["output"]>;
+  follower?: Maybe<Tweeter>;
+  followerId?: Maybe<Scalars["GadgetID"]["output"]>;
+  /** The globally unique, unchanging identifier for this record. Assigned and managed by Gadget. */
+  id: Scalars["GadgetID"]["output"];
+  started?: Maybe<Scalars["Date"]["output"]>;
+  /** The time at which this record was last changed. Set each time the record is successfully acted upon by an action. Managed by Gadget. */
+  updatedAt: Scalars["DateTime"]["output"];
+};
+
+/** A connection to a list of Friendship items. */
+export type FriendshipConnection = {
+  __typename?: "FriendshipConnection";
+  /** A list of edges. */
+  edges: Array<FriendshipEdge>;
+  /** Information to aid in pagination. */
+  pageInfo: PageInfo;
+};
+
+/** An edge in a Friendship connection. */
+export type FriendshipEdge = {
+  __typename?: "FriendshipEdge";
+  /** A cursor for use in pagination */
+  cursor: Scalars["String"]["output"];
+  /** The item at the end of the edge */
+  node: Friendship;
+};
+
+export type FriendshipFilter = {
+  AND?: InputMaybe<Array<InputMaybe<FriendshipFilter>>>;
+  NOT?: InputMaybe<Array<InputMaybe<FriendshipFilter>>>;
+  OR?: InputMaybe<Array<InputMaybe<FriendshipFilter>>>;
+  createdAt?: InputMaybe<DateTimeFilter>;
+  ended?: InputMaybe<DateFilter>;
+  followee?: InputMaybe<IdFilter>;
+  followeeId?: InputMaybe<IdFilter>;
+  follower?: InputMaybe<IdFilter>;
+  followerId?: InputMaybe<IdFilter>;
+  id?: InputMaybe<IdFilter>;
+  started?: InputMaybe<DateFilter>;
+  updatedAt?: InputMaybe<DateTimeFilter>;
+};
+
+/** Input object supporting setting or updating related model record on a relationship field */
+export type FriendshipHasManyInput = {
+  /** Creates, updates, or deletes existing records in the database as needed to arrive at the list of records specified. */
+  _converge?: InputMaybe<ConvergeFriendshipInput>;
+  create?: InputMaybe<NestedFriendshipCreateInput>;
+  delete?: InputMaybe<NestedFriendshipDeleteInput>;
+  update?: InputMaybe<NestedFriendshipUpdateInput>;
+};
+
+export type FriendshipSort = {
+  /** Sort the results by the createdAt field. Defaults to ascending (smallest value first). */
+  createdAt?: InputMaybe<SortOrder>;
+  /** Sort the results by the ended field. Defaults to ascending (smallest value first). */
+  ended?: InputMaybe<SortOrder>;
+  /** Sort the results by the id field. Defaults to ascending (smallest value first). */
+  id?: InputMaybe<SortOrder>;
+  /** Sort the results by the started field. Defaults to ascending (smallest value first). */
+  started?: InputMaybe<SortOrder>;
+  /** Sort the results by the updatedAt field. Defaults to ascending (smallest value first). */
+  updatedAt?: InputMaybe<SortOrder>;
+};
+
 export type GadgetAction = {
   __typename?: "GadgetAction";
   acceptsInput: Scalars["Boolean"]["output"];
@@ -3679,6 +5054,7 @@ export type GadgetAction = {
   inputFields: Array<GadgetObjectField>;
   isCreateOrUpdateAction: Scalars["Boolean"]["output"];
   isDeleteAction: Scalars["Boolean"]["output"];
+  isUpsertMetaAction: Scalars["Boolean"]["output"];
   name: Scalars["String"]["output"];
   namespace: Array<Scalars["String"]["output"]>;
   operatesWithRecordIdentity: Scalars["Boolean"]["output"];
@@ -3717,6 +5093,7 @@ export type GadgetApplicationMeta = {
   assignedRoles: Array<GadgetRole>;
   canonicalRenderURL: Scalars["String"]["output"];
   currentEnvironmentRenderURL: Scalars["String"]["output"];
+  defaultFileExtension: Scalars["String"]["output"];
   developmentGraphQLEndpoint: Scalars["String"]["output"];
   developmentRenderURL: Scalars["String"]["output"];
   directUploadToken?: Maybe<DirectUploadToken>;
@@ -3736,6 +5113,7 @@ export type GadgetApplicationMeta = {
   id: Scalars["GadgetID"]["output"];
   jsPackageIdentifier: Scalars["String"]["output"];
   jsPackageTarballURL: Scalars["String"]["output"];
+  languagePreference: Scalars["String"]["output"];
   model?: Maybe<GadgetModel>;
   /** Get the same metadata blob for a model and all the models reachable from it via relationships */
   modelAndRelatedModels: Array<GadgetModel>;
@@ -3936,6 +5314,7 @@ export type GadgetHasManyThroughConfig = GadgetFieldConfigInterface & {
   isConfigured: Scalars["Boolean"]["output"];
   isInverseConfigured: Scalars["Boolean"]["output"];
   joinModel?: Maybe<GadgetModel>;
+  joinModelHasManyFieldApiIdentifier?: Maybe<Scalars["String"]["output"]>;
   joinModelKey?: Maybe<Scalars["String"]["output"]>;
   relatedModel?: Maybe<GadgetModel>;
   relatedModelKey?: Maybe<Scalars["String"]["output"]>;
@@ -4100,8 +5479,19 @@ export type GameCity = {
   id: Scalars["GadgetID"]["output"];
   name?: Maybe<Scalars["String"]["output"]>;
   stadium?: Maybe<GameStadium>;
+  tweeters: TweeterConnection;
   /** The time at which this record was last changed. Set each time the record is successfully acted upon by an action. Managed by Gadget. */
   updatedAt: Scalars["DateTime"]["output"];
+};
+
+export type GameCityTweetersArgs = {
+  after?: InputMaybe<Scalars["String"]["input"]>;
+  before?: InputMaybe<Scalars["String"]["input"]>;
+  filter?: InputMaybe<Array<TweeterFilter>>;
+  first?: InputMaybe<Scalars["Int"]["input"]>;
+  last?: InputMaybe<Scalars["Int"]["input"]>;
+  search?: InputMaybe<Scalars["String"]["input"]>;
+  sort?: InputMaybe<Array<TweeterSort>>;
 };
 
 /** A connection to a list of GameCity items. */
@@ -4602,6 +5992,7 @@ export type Gizmo = {
   attachment?: Maybe<StoredFile>;
   /** The time at which this record was first created. Set once upon record creation and never changed. Managed by Gadget. */
   createdAt: Scalars["DateTime"]["output"];
+  doodads: DoodadConnection;
   /** The globally unique, unchanging identifier for this record. Assigned and managed by Gadget. */
   id: Scalars["GadgetID"]["output"];
   name?: Maybe<Scalars["String"]["output"]>;
@@ -4610,6 +6001,25 @@ export type Gizmo = {
   updatedAt: Scalars["DateTime"]["output"];
   widget?: Maybe<Widget>;
   widgetId?: Maybe<Scalars["GadgetID"]["output"]>;
+};
+
+export type GizmoDoodadsArgs = {
+  after?: InputMaybe<Scalars["String"]["input"]>;
+  before?: InputMaybe<Scalars["String"]["input"]>;
+  filter?: InputMaybe<Array<DoodadFilter>>;
+  first?: InputMaybe<Scalars["Int"]["input"]>;
+  last?: InputMaybe<Scalars["Int"]["input"]>;
+  search?: InputMaybe<Scalars["String"]["input"]>;
+  sort?: InputMaybe<Array<DoodadSort>>;
+};
+
+/** Input object supporting setting or updating related model record on a relationship field */
+export type GizmoBelongsToInput = {
+  /** Existing ID of another record, which you would like to associate this record with */
+  _link?: InputMaybe<Scalars["GadgetID"]["input"]>;
+  create?: InputMaybe<NestedGizmoCreateInput>;
+  delete?: InputMaybe<NestedGizmoDeleteInput>;
+  update?: InputMaybe<NestedGizmoUpdateInput>;
 };
 
 /** A connection to a list of Gizmo items. */
@@ -5039,6 +6449,11 @@ export type HasManyThroughSiblingModelSort = {
   updatedAt?: InputMaybe<SortOrder>;
 };
 
+export type HasOneRelinkInput = {
+  _link?: InputMaybe<Scalars["GadgetID"]["input"]>;
+  id?: InputMaybe<Scalars["GadgetID"]["input"]>;
+};
+
 export type IdEqualsFilter = {
   equals?: InputMaybe<Scalars["GadgetID"]["input"]>;
 };
@@ -5061,6 +6476,18 @@ export type InstallShopifyShopResult = UpsertShopifyShopResult & {
   errors?: Maybe<Array<ExecutionError>>;
   shopifyShop?: Maybe<ShopifyShop>;
   success: Scalars["Boolean"]["output"];
+};
+
+export type IntFilter = {
+  equals?: InputMaybe<Scalars["Int"]["input"]>;
+  greaterThan?: InputMaybe<Scalars["Int"]["input"]>;
+  greaterThanOrEqual?: InputMaybe<Scalars["Int"]["input"]>;
+  in?: InputMaybe<Array<InputMaybe<Scalars["Int"]["input"]>>>;
+  isSet?: InputMaybe<Scalars["Boolean"]["input"]>;
+  lessThan?: InputMaybe<Scalars["Int"]["input"]>;
+  lessThanOrEqual?: InputMaybe<Scalars["Int"]["input"]>;
+  notEquals?: InputMaybe<Scalars["Int"]["input"]>;
+  notIn?: InputMaybe<Array<InputMaybe<Scalars["Int"]["input"]>>>;
 };
 
 export type InternalAutoTableTestAtomicsInput = {
@@ -5166,6 +6593,20 @@ export type InternalBulkCreateAutoTableTestsResult = {
   __typename?: "InternalBulkCreateAutoTableTestsResult";
   autoTableTests?: Maybe<Array<Maybe<Scalars["InternalAutoTableTestRecord"]["output"]>>>;
   errors?: Maybe<Array<ExecutionError>>;
+  success: Scalars["Boolean"]["output"];
+};
+
+export type InternalBulkCreateDoodadsResult = {
+  __typename?: "InternalBulkCreateDoodadsResult";
+  doodads?: Maybe<Array<Maybe<Scalars["InternalDoodadRecord"]["output"]>>>;
+  errors?: Maybe<Array<ExecutionError>>;
+  success: Scalars["Boolean"]["output"];
+};
+
+export type InternalBulkCreateFriendshipsResult = {
+  __typename?: "InternalBulkCreateFriendshipsResult";
+  errors?: Maybe<Array<ExecutionError>>;
+  friendships?: Maybe<Array<Maybe<Scalars["InternalFriendshipRecord"]["output"]>>>;
   success: Scalars["Boolean"]["output"];
 };
 
@@ -5302,6 +6743,13 @@ export type InternalBulkCreateShopifySyncsResult = {
   success: Scalars["Boolean"]["output"];
 };
 
+export type InternalBulkCreateTweetersResult = {
+  __typename?: "InternalBulkCreateTweetersResult";
+  errors?: Maybe<Array<ExecutionError>>;
+  success: Scalars["Boolean"]["output"];
+  tweeters?: Maybe<Array<Maybe<Scalars["InternalTweeterRecord"]["output"]>>>;
+};
+
 export type InternalBulkCreateUniqueFieldsChildModelsResult = {
   __typename?: "InternalBulkCreateUniqueFieldsChildModelsResult";
   childModels?: Maybe<Array<Maybe<Scalars["InternalUniqueFieldsChildModelRecord"]["output"]>>>;
@@ -5323,6 +6771,41 @@ export type InternalBulkCreateUniqueFieldsParentModelsResult = {
   success: Scalars["Boolean"]["output"];
 };
 
+export type InternalBulkCreateUniversityAssignmentsResult = {
+  __typename?: "InternalBulkCreateUniversityAssignmentsResult";
+  assignments?: Maybe<Array<Maybe<Scalars["InternalUniversityAssignmentRecord"]["output"]>>>;
+  errors?: Maybe<Array<ExecutionError>>;
+  success: Scalars["Boolean"]["output"];
+};
+
+export type InternalBulkCreateUniversityCoursesResult = {
+  __typename?: "InternalBulkCreateUniversityCoursesResult";
+  courses?: Maybe<Array<Maybe<Scalars["InternalUniversityCourseRecord"]["output"]>>>;
+  errors?: Maybe<Array<ExecutionError>>;
+  success: Scalars["Boolean"]["output"];
+};
+
+export type InternalBulkCreateUniversityProfessorsResult = {
+  __typename?: "InternalBulkCreateUniversityProfessorsResult";
+  errors?: Maybe<Array<ExecutionError>>;
+  professors?: Maybe<Array<Maybe<Scalars["InternalUniversityProfessorRecord"]["output"]>>>;
+  success: Scalars["Boolean"]["output"];
+};
+
+export type InternalBulkCreateUniversityRegistrationsResult = {
+  __typename?: "InternalBulkCreateUniversityRegistrationsResult";
+  errors?: Maybe<Array<ExecutionError>>;
+  registrations?: Maybe<Array<Maybe<Scalars["InternalUniversityRegistrationRecord"]["output"]>>>;
+  success: Scalars["Boolean"]["output"];
+};
+
+export type InternalBulkCreateUniversityStudentsResult = {
+  __typename?: "InternalBulkCreateUniversityStudentsResult";
+  errors?: Maybe<Array<ExecutionError>>;
+  students?: Maybe<Array<Maybe<Scalars["InternalUniversityStudentRecord"]["output"]>>>;
+  success: Scalars["Boolean"]["output"];
+};
+
 export type InternalBulkCreateUsersResult = {
   __typename?: "InternalBulkCreateUsersResult";
   errors?: Maybe<Array<ExecutionError>>;
@@ -5340,6 +6823,8 @@ export type InternalBulkCreateWidgetsResult = {
 export type InternalCreateAutoTableTestRelatedModelResult = {
   __typename?: "InternalCreateAutoTableTestRelatedModelResult";
   _autoTableTestRelatedModel?: Maybe<Scalars["InternalAutoTableTestRelatedModelRecord"]["output"]>;
+  /** Whether the record was created by this upsert operation */
+  created: Scalars["Boolean"]["output"];
   errors?: Maybe<Array<ExecutionError>>;
   success: Scalars["Boolean"]["output"];
 };
@@ -5347,19 +6832,43 @@ export type InternalCreateAutoTableTestRelatedModelResult = {
 export type InternalCreateAutoTableTestResult = {
   __typename?: "InternalCreateAutoTableTestResult";
   autoTableTest?: Maybe<Scalars["InternalAutoTableTestRecord"]["output"]>;
+  /** Whether the record was created by this upsert operation */
+  created: Scalars["Boolean"]["output"];
   errors?: Maybe<Array<ExecutionError>>;
+  success: Scalars["Boolean"]["output"];
+};
+
+export type InternalCreateDoodadResult = {
+  __typename?: "InternalCreateDoodadResult";
+  /** Whether the record was created by this upsert operation */
+  created: Scalars["Boolean"]["output"];
+  doodad?: Maybe<Scalars["InternalDoodadRecord"]["output"]>;
+  errors?: Maybe<Array<ExecutionError>>;
+  success: Scalars["Boolean"]["output"];
+};
+
+export type InternalCreateFriendshipResult = {
+  __typename?: "InternalCreateFriendshipResult";
+  /** Whether the record was created by this upsert operation */
+  created: Scalars["Boolean"]["output"];
+  errors?: Maybe<Array<ExecutionError>>;
+  friendship?: Maybe<Scalars["InternalFriendshipRecord"]["output"]>;
   success: Scalars["Boolean"]["output"];
 };
 
 export type InternalCreateGameCityResult = {
   __typename?: "InternalCreateGameCityResult";
   city?: Maybe<Scalars["InternalGameCityRecord"]["output"]>;
+  /** Whether the record was created by this upsert operation */
+  created: Scalars["Boolean"]["output"];
   errors?: Maybe<Array<ExecutionError>>;
   success: Scalars["Boolean"]["output"];
 };
 
 export type InternalCreateGamePlayerResult = {
   __typename?: "InternalCreateGamePlayerResult";
+  /** Whether the record was created by this upsert operation */
+  created: Scalars["Boolean"]["output"];
   errors?: Maybe<Array<ExecutionError>>;
   player?: Maybe<Scalars["InternalGamePlayerRecord"]["output"]>;
   success: Scalars["Boolean"]["output"];
@@ -5367,6 +6876,8 @@ export type InternalCreateGamePlayerResult = {
 
 export type InternalCreateGameRoundResult = {
   __typename?: "InternalCreateGameRoundResult";
+  /** Whether the record was created by this upsert operation */
+  created: Scalars["Boolean"]["output"];
   errors?: Maybe<Array<ExecutionError>>;
   round?: Maybe<Scalars["InternalGameRoundRecord"]["output"]>;
   success: Scalars["Boolean"]["output"];
@@ -5374,6 +6885,8 @@ export type InternalCreateGameRoundResult = {
 
 export type InternalCreateGameStadiumResult = {
   __typename?: "InternalCreateGameStadiumResult";
+  /** Whether the record was created by this upsert operation */
+  created: Scalars["Boolean"]["output"];
   errors?: Maybe<Array<ExecutionError>>;
   stadium?: Maybe<Scalars["InternalGameStadiumRecord"]["output"]>;
   success: Scalars["Boolean"]["output"];
@@ -5381,6 +6894,8 @@ export type InternalCreateGameStadiumResult = {
 
 export type InternalCreateGizmoResult = {
   __typename?: "InternalCreateGizmoResult";
+  /** Whether the record was created by this upsert operation */
+  created: Scalars["Boolean"]["output"];
   errors?: Maybe<Array<ExecutionError>>;
   gizmo?: Maybe<Scalars["InternalGizmoRecord"]["output"]>;
   success: Scalars["Boolean"]["output"];
@@ -5389,12 +6904,16 @@ export type InternalCreateGizmoResult = {
 export type InternalCreateHasManyThroughBaseModelResult = {
   __typename?: "InternalCreateHasManyThroughBaseModelResult";
   baseModel?: Maybe<Scalars["InternalHasManyThroughBaseModelRecord"]["output"]>;
+  /** Whether the record was created by this upsert operation */
+  created: Scalars["Boolean"]["output"];
   errors?: Maybe<Array<ExecutionError>>;
   success: Scalars["Boolean"]["output"];
 };
 
 export type InternalCreateHasManyThroughJoinerModelResult = {
   __typename?: "InternalCreateHasManyThroughJoinerModelResult";
+  /** Whether the record was created by this upsert operation */
+  created: Scalars["Boolean"]["output"];
   errors?: Maybe<Array<ExecutionError>>;
   joinerModel?: Maybe<Scalars["InternalHasManyThroughJoinerModelRecord"]["output"]>;
   success: Scalars["Boolean"]["output"];
@@ -5402,6 +6921,8 @@ export type InternalCreateHasManyThroughJoinerModelResult = {
 
 export type InternalCreateHasManyThroughSiblingModelResult = {
   __typename?: "InternalCreateHasManyThroughSiblingModelResult";
+  /** Whether the record was created by this upsert operation */
+  created: Scalars["Boolean"]["output"];
   errors?: Maybe<Array<ExecutionError>>;
   siblingModel?: Maybe<Scalars["InternalHasManyThroughSiblingModelRecord"]["output"]>;
   success: Scalars["Boolean"]["output"];
@@ -5409,6 +6930,8 @@ export type InternalCreateHasManyThroughSiblingModelResult = {
 
 export type InternalCreateModelAResult = {
   __typename?: "InternalCreateModelAResult";
+  /** Whether the record was created by this upsert operation */
+  created: Scalars["Boolean"]["output"];
   errors?: Maybe<Array<ExecutionError>>;
   modelA?: Maybe<Scalars["InternalModelARecord"]["output"]>;
   success: Scalars["Boolean"]["output"];
@@ -5416,6 +6939,8 @@ export type InternalCreateModelAResult = {
 
 export type InternalCreatePartResult = {
   __typename?: "InternalCreatePartResult";
+  /** Whether the record was created by this upsert operation */
+  created: Scalars["Boolean"]["output"];
   errors?: Maybe<Array<ExecutionError>>;
   part?: Maybe<Scalars["InternalPartRecord"]["output"]>;
   success: Scalars["Boolean"]["output"];
@@ -5423,6 +6948,8 @@ export type InternalCreatePartResult = {
 
 export type InternalCreateSectionResult = {
   __typename?: "InternalCreateSectionResult";
+  /** Whether the record was created by this upsert operation */
+  created: Scalars["Boolean"]["output"];
   errors?: Maybe<Array<ExecutionError>>;
   section?: Maybe<Scalars["InternalSectionRecord"]["output"]>;
   success: Scalars["Boolean"]["output"];
@@ -5430,6 +6957,8 @@ export type InternalCreateSectionResult = {
 
 export type InternalCreateSessionResult = {
   __typename?: "InternalCreateSessionResult";
+  /** Whether the record was created by this upsert operation */
+  created: Scalars["Boolean"]["output"];
   errors?: Maybe<Array<ExecutionError>>;
   session?: Maybe<Scalars["InternalSessionRecord"]["output"]>;
   success: Scalars["Boolean"]["output"];
@@ -5437,6 +6966,8 @@ export type InternalCreateSessionResult = {
 
 export type InternalCreateShopifyGdprRequestResult = {
   __typename?: "InternalCreateShopifyGdprRequestResult";
+  /** Whether the record was created by this upsert operation */
+  created: Scalars["Boolean"]["output"];
   errors?: Maybe<Array<ExecutionError>>;
   shopifyGdprRequest?: Maybe<Scalars["InternalShopifyGdprRequestRecord"]["output"]>;
   success: Scalars["Boolean"]["output"];
@@ -5444,6 +6975,8 @@ export type InternalCreateShopifyGdprRequestResult = {
 
 export type InternalCreateShopifyProductImageResult = {
   __typename?: "InternalCreateShopifyProductImageResult";
+  /** Whether the record was created by this upsert operation */
+  created: Scalars["Boolean"]["output"];
   errors?: Maybe<Array<ExecutionError>>;
   shopifyProductImage?: Maybe<Scalars["InternalShopifyProductImageRecord"]["output"]>;
   success: Scalars["Boolean"]["output"];
@@ -5451,6 +6984,8 @@ export type InternalCreateShopifyProductImageResult = {
 
 export type InternalCreateShopifyProductOptionResult = {
   __typename?: "InternalCreateShopifyProductOptionResult";
+  /** Whether the record was created by this upsert operation */
+  created: Scalars["Boolean"]["output"];
   errors?: Maybe<Array<ExecutionError>>;
   shopifyProductOption?: Maybe<Scalars["InternalShopifyProductOptionRecord"]["output"]>;
   success: Scalars["Boolean"]["output"];
@@ -5458,6 +6993,8 @@ export type InternalCreateShopifyProductOptionResult = {
 
 export type InternalCreateShopifyProductResult = {
   __typename?: "InternalCreateShopifyProductResult";
+  /** Whether the record was created by this upsert operation */
+  created: Scalars["Boolean"]["output"];
   errors?: Maybe<Array<ExecutionError>>;
   shopifyProduct?: Maybe<Scalars["InternalShopifyProductRecord"]["output"]>;
   success: Scalars["Boolean"]["output"];
@@ -5465,6 +7002,8 @@ export type InternalCreateShopifyProductResult = {
 
 export type InternalCreateShopifyProductVariantResult = {
   __typename?: "InternalCreateShopifyProductVariantResult";
+  /** Whether the record was created by this upsert operation */
+  created: Scalars["Boolean"]["output"];
   errors?: Maybe<Array<ExecutionError>>;
   shopifyProductVariant?: Maybe<Scalars["InternalShopifyProductVariantRecord"]["output"]>;
   success: Scalars["Boolean"]["output"];
@@ -5472,6 +7011,8 @@ export type InternalCreateShopifyProductVariantResult = {
 
 export type InternalCreateShopifyShopResult = {
   __typename?: "InternalCreateShopifyShopResult";
+  /** Whether the record was created by this upsert operation */
+  created: Scalars["Boolean"]["output"];
   errors?: Maybe<Array<ExecutionError>>;
   shopifyShop?: Maybe<Scalars["InternalShopifyShopRecord"]["output"]>;
   success: Scalars["Boolean"]["output"];
@@ -5479,20 +7020,35 @@ export type InternalCreateShopifyShopResult = {
 
 export type InternalCreateShopifySyncResult = {
   __typename?: "InternalCreateShopifySyncResult";
+  /** Whether the record was created by this upsert operation */
+  created: Scalars["Boolean"]["output"];
   errors?: Maybe<Array<ExecutionError>>;
   shopifySync?: Maybe<Scalars["InternalShopifySyncRecord"]["output"]>;
   success: Scalars["Boolean"]["output"];
 };
 
+export type InternalCreateTweeterResult = {
+  __typename?: "InternalCreateTweeterResult";
+  /** Whether the record was created by this upsert operation */
+  created: Scalars["Boolean"]["output"];
+  errors?: Maybe<Array<ExecutionError>>;
+  success: Scalars["Boolean"]["output"];
+  tweeter?: Maybe<Scalars["InternalTweeterRecord"]["output"]>;
+};
+
 export type InternalCreateUniqueFieldsChildModelResult = {
   __typename?: "InternalCreateUniqueFieldsChildModelResult";
   childModel?: Maybe<Scalars["InternalUniqueFieldsChildModelRecord"]["output"]>;
+  /** Whether the record was created by this upsert operation */
+  created: Scalars["Boolean"]["output"];
   errors?: Maybe<Array<ExecutionError>>;
   success: Scalars["Boolean"]["output"];
 };
 
 export type InternalCreateUniqueFieldsMainModelResult = {
   __typename?: "InternalCreateUniqueFieldsMainModelResult";
+  /** Whether the record was created by this upsert operation */
+  created: Scalars["Boolean"]["output"];
   errors?: Maybe<Array<ExecutionError>>;
   mainModel?: Maybe<Scalars["InternalUniqueFieldsMainModelRecord"]["output"]>;
   success: Scalars["Boolean"]["output"];
@@ -5500,13 +7056,62 @@ export type InternalCreateUniqueFieldsMainModelResult = {
 
 export type InternalCreateUniqueFieldsParentModelResult = {
   __typename?: "InternalCreateUniqueFieldsParentModelResult";
+  /** Whether the record was created by this upsert operation */
+  created: Scalars["Boolean"]["output"];
   errors?: Maybe<Array<ExecutionError>>;
   parentModel?: Maybe<Scalars["InternalUniqueFieldsParentModelRecord"]["output"]>;
   success: Scalars["Boolean"]["output"];
 };
 
+export type InternalCreateUniversityAssignmentResult = {
+  __typename?: "InternalCreateUniversityAssignmentResult";
+  assignment?: Maybe<Scalars["InternalUniversityAssignmentRecord"]["output"]>;
+  /** Whether the record was created by this upsert operation */
+  created: Scalars["Boolean"]["output"];
+  errors?: Maybe<Array<ExecutionError>>;
+  success: Scalars["Boolean"]["output"];
+};
+
+export type InternalCreateUniversityCourseResult = {
+  __typename?: "InternalCreateUniversityCourseResult";
+  course?: Maybe<Scalars["InternalUniversityCourseRecord"]["output"]>;
+  /** Whether the record was created by this upsert operation */
+  created: Scalars["Boolean"]["output"];
+  errors?: Maybe<Array<ExecutionError>>;
+  success: Scalars["Boolean"]["output"];
+};
+
+export type InternalCreateUniversityProfessorResult = {
+  __typename?: "InternalCreateUniversityProfessorResult";
+  /** Whether the record was created by this upsert operation */
+  created: Scalars["Boolean"]["output"];
+  errors?: Maybe<Array<ExecutionError>>;
+  professor?: Maybe<Scalars["InternalUniversityProfessorRecord"]["output"]>;
+  success: Scalars["Boolean"]["output"];
+};
+
+export type InternalCreateUniversityRegistrationResult = {
+  __typename?: "InternalCreateUniversityRegistrationResult";
+  /** Whether the record was created by this upsert operation */
+  created: Scalars["Boolean"]["output"];
+  errors?: Maybe<Array<ExecutionError>>;
+  registration?: Maybe<Scalars["InternalUniversityRegistrationRecord"]["output"]>;
+  success: Scalars["Boolean"]["output"];
+};
+
+export type InternalCreateUniversityStudentResult = {
+  __typename?: "InternalCreateUniversityStudentResult";
+  /** Whether the record was created by this upsert operation */
+  created: Scalars["Boolean"]["output"];
+  errors?: Maybe<Array<ExecutionError>>;
+  student?: Maybe<Scalars["InternalUniversityStudentRecord"]["output"]>;
+  success: Scalars["Boolean"]["output"];
+};
+
 export type InternalCreateUserResult = {
   __typename?: "InternalCreateUserResult";
+  /** Whether the record was created by this upsert operation */
+  created: Scalars["Boolean"]["output"];
   errors?: Maybe<Array<ExecutionError>>;
   success: Scalars["Boolean"]["output"];
   user?: Maybe<Scalars["InternalUserRecord"]["output"]>;
@@ -5514,6 +7119,8 @@ export type InternalCreateUserResult = {
 
 export type InternalCreateWidgetResult = {
   __typename?: "InternalCreateWidgetResult";
+  /** Whether the record was created by this upsert operation */
+  created: Scalars["Boolean"]["output"];
   errors?: Maybe<Array<ExecutionError>>;
   success: Scalars["Boolean"]["output"];
   widget?: Maybe<Scalars["InternalWidgetRecord"]["output"]>;
@@ -5522,6 +7129,8 @@ export type InternalCreateWidgetResult = {
 export type InternalDeleteAutoTableTestRelatedModelResult = {
   __typename?: "InternalDeleteAutoTableTestRelatedModelResult";
   _autoTableTestRelatedModel?: Maybe<Scalars["InternalAutoTableTestRelatedModelRecord"]["output"]>;
+  /** Whether the record was created by this upsert operation */
+  created: Scalars["Boolean"]["output"];
   errors?: Maybe<Array<ExecutionError>>;
   success: Scalars["Boolean"]["output"];
 };
@@ -5529,19 +7138,43 @@ export type InternalDeleteAutoTableTestRelatedModelResult = {
 export type InternalDeleteAutoTableTestResult = {
   __typename?: "InternalDeleteAutoTableTestResult";
   autoTableTest?: Maybe<Scalars["InternalAutoTableTestRecord"]["output"]>;
+  /** Whether the record was created by this upsert operation */
+  created: Scalars["Boolean"]["output"];
   errors?: Maybe<Array<ExecutionError>>;
+  success: Scalars["Boolean"]["output"];
+};
+
+export type InternalDeleteDoodadResult = {
+  __typename?: "InternalDeleteDoodadResult";
+  /** Whether the record was created by this upsert operation */
+  created: Scalars["Boolean"]["output"];
+  doodad?: Maybe<Scalars["InternalDoodadRecord"]["output"]>;
+  errors?: Maybe<Array<ExecutionError>>;
+  success: Scalars["Boolean"]["output"];
+};
+
+export type InternalDeleteFriendshipResult = {
+  __typename?: "InternalDeleteFriendshipResult";
+  /** Whether the record was created by this upsert operation */
+  created: Scalars["Boolean"]["output"];
+  errors?: Maybe<Array<ExecutionError>>;
+  friendship?: Maybe<Scalars["InternalFriendshipRecord"]["output"]>;
   success: Scalars["Boolean"]["output"];
 };
 
 export type InternalDeleteGameCityResult = {
   __typename?: "InternalDeleteGameCityResult";
   city?: Maybe<Scalars["InternalGameCityRecord"]["output"]>;
+  /** Whether the record was created by this upsert operation */
+  created: Scalars["Boolean"]["output"];
   errors?: Maybe<Array<ExecutionError>>;
   success: Scalars["Boolean"]["output"];
 };
 
 export type InternalDeleteGamePlayerResult = {
   __typename?: "InternalDeleteGamePlayerResult";
+  /** Whether the record was created by this upsert operation */
+  created: Scalars["Boolean"]["output"];
   errors?: Maybe<Array<ExecutionError>>;
   player?: Maybe<Scalars["InternalGamePlayerRecord"]["output"]>;
   success: Scalars["Boolean"]["output"];
@@ -5549,6 +7182,8 @@ export type InternalDeleteGamePlayerResult = {
 
 export type InternalDeleteGameRoundResult = {
   __typename?: "InternalDeleteGameRoundResult";
+  /** Whether the record was created by this upsert operation */
+  created: Scalars["Boolean"]["output"];
   errors?: Maybe<Array<ExecutionError>>;
   round?: Maybe<Scalars["InternalGameRoundRecord"]["output"]>;
   success: Scalars["Boolean"]["output"];
@@ -5556,6 +7191,8 @@ export type InternalDeleteGameRoundResult = {
 
 export type InternalDeleteGameStadiumResult = {
   __typename?: "InternalDeleteGameStadiumResult";
+  /** Whether the record was created by this upsert operation */
+  created: Scalars["Boolean"]["output"];
   errors?: Maybe<Array<ExecutionError>>;
   stadium?: Maybe<Scalars["InternalGameStadiumRecord"]["output"]>;
   success: Scalars["Boolean"]["output"];
@@ -5563,6 +7200,8 @@ export type InternalDeleteGameStadiumResult = {
 
 export type InternalDeleteGizmoResult = {
   __typename?: "InternalDeleteGizmoResult";
+  /** Whether the record was created by this upsert operation */
+  created: Scalars["Boolean"]["output"];
   errors?: Maybe<Array<ExecutionError>>;
   gizmo?: Maybe<Scalars["InternalGizmoRecord"]["output"]>;
   success: Scalars["Boolean"]["output"];
@@ -5571,12 +7210,16 @@ export type InternalDeleteGizmoResult = {
 export type InternalDeleteHasManyThroughBaseModelResult = {
   __typename?: "InternalDeleteHasManyThroughBaseModelResult";
   baseModel?: Maybe<Scalars["InternalHasManyThroughBaseModelRecord"]["output"]>;
+  /** Whether the record was created by this upsert operation */
+  created: Scalars["Boolean"]["output"];
   errors?: Maybe<Array<ExecutionError>>;
   success: Scalars["Boolean"]["output"];
 };
 
 export type InternalDeleteHasManyThroughJoinerModelResult = {
   __typename?: "InternalDeleteHasManyThroughJoinerModelResult";
+  /** Whether the record was created by this upsert operation */
+  created: Scalars["Boolean"]["output"];
   errors?: Maybe<Array<ExecutionError>>;
   joinerModel?: Maybe<Scalars["InternalHasManyThroughJoinerModelRecord"]["output"]>;
   success: Scalars["Boolean"]["output"];
@@ -5584,6 +7227,8 @@ export type InternalDeleteHasManyThroughJoinerModelResult = {
 
 export type InternalDeleteHasManyThroughSiblingModelResult = {
   __typename?: "InternalDeleteHasManyThroughSiblingModelResult";
+  /** Whether the record was created by this upsert operation */
+  created: Scalars["Boolean"]["output"];
   errors?: Maybe<Array<ExecutionError>>;
   siblingModel?: Maybe<Scalars["InternalHasManyThroughSiblingModelRecord"]["output"]>;
   success: Scalars["Boolean"]["output"];
@@ -5597,6 +7242,18 @@ export type InternalDeleteManyAutoTableTestRelatedModelResult = {
 
 export type InternalDeleteManyAutoTableTestResult = {
   __typename?: "InternalDeleteManyAutoTableTestResult";
+  errors?: Maybe<Array<ExecutionError>>;
+  success: Scalars["Boolean"]["output"];
+};
+
+export type InternalDeleteManyDoodadResult = {
+  __typename?: "InternalDeleteManyDoodadResult";
+  errors?: Maybe<Array<ExecutionError>>;
+  success: Scalars["Boolean"]["output"];
+};
+
+export type InternalDeleteManyFriendshipResult = {
+  __typename?: "InternalDeleteManyFriendshipResult";
   errors?: Maybe<Array<ExecutionError>>;
   success: Scalars["Boolean"]["output"];
 };
@@ -5715,6 +7372,12 @@ export type InternalDeleteManyShopifySyncResult = {
   success: Scalars["Boolean"]["output"];
 };
 
+export type InternalDeleteManyTweeterResult = {
+  __typename?: "InternalDeleteManyTweeterResult";
+  errors?: Maybe<Array<ExecutionError>>;
+  success: Scalars["Boolean"]["output"];
+};
+
 export type InternalDeleteManyUniqueFieldsChildModelResult = {
   __typename?: "InternalDeleteManyUniqueFieldsChildModelResult";
   errors?: Maybe<Array<ExecutionError>>;
@@ -5733,6 +7396,36 @@ export type InternalDeleteManyUniqueFieldsParentModelResult = {
   success: Scalars["Boolean"]["output"];
 };
 
+export type InternalDeleteManyUniversityAssignmentResult = {
+  __typename?: "InternalDeleteManyUniversityAssignmentResult";
+  errors?: Maybe<Array<ExecutionError>>;
+  success: Scalars["Boolean"]["output"];
+};
+
+export type InternalDeleteManyUniversityCourseResult = {
+  __typename?: "InternalDeleteManyUniversityCourseResult";
+  errors?: Maybe<Array<ExecutionError>>;
+  success: Scalars["Boolean"]["output"];
+};
+
+export type InternalDeleteManyUniversityProfessorResult = {
+  __typename?: "InternalDeleteManyUniversityProfessorResult";
+  errors?: Maybe<Array<ExecutionError>>;
+  success: Scalars["Boolean"]["output"];
+};
+
+export type InternalDeleteManyUniversityRegistrationResult = {
+  __typename?: "InternalDeleteManyUniversityRegistrationResult";
+  errors?: Maybe<Array<ExecutionError>>;
+  success: Scalars["Boolean"]["output"];
+};
+
+export type InternalDeleteManyUniversityStudentResult = {
+  __typename?: "InternalDeleteManyUniversityStudentResult";
+  errors?: Maybe<Array<ExecutionError>>;
+  success: Scalars["Boolean"]["output"];
+};
+
 export type InternalDeleteManyUserResult = {
   __typename?: "InternalDeleteManyUserResult";
   errors?: Maybe<Array<ExecutionError>>;
@@ -5747,6 +7440,8 @@ export type InternalDeleteManyWidgetResult = {
 
 export type InternalDeleteModelAResult = {
   __typename?: "InternalDeleteModelAResult";
+  /** Whether the record was created by this upsert operation */
+  created: Scalars["Boolean"]["output"];
   errors?: Maybe<Array<ExecutionError>>;
   modelA?: Maybe<Scalars["InternalModelARecord"]["output"]>;
   success: Scalars["Boolean"]["output"];
@@ -5754,6 +7449,8 @@ export type InternalDeleteModelAResult = {
 
 export type InternalDeletePartResult = {
   __typename?: "InternalDeletePartResult";
+  /** Whether the record was created by this upsert operation */
+  created: Scalars["Boolean"]["output"];
   errors?: Maybe<Array<ExecutionError>>;
   part?: Maybe<Scalars["InternalPartRecord"]["output"]>;
   success: Scalars["Boolean"]["output"];
@@ -5761,6 +7458,8 @@ export type InternalDeletePartResult = {
 
 export type InternalDeleteSectionResult = {
   __typename?: "InternalDeleteSectionResult";
+  /** Whether the record was created by this upsert operation */
+  created: Scalars["Boolean"]["output"];
   errors?: Maybe<Array<ExecutionError>>;
   section?: Maybe<Scalars["InternalSectionRecord"]["output"]>;
   success: Scalars["Boolean"]["output"];
@@ -5768,6 +7467,8 @@ export type InternalDeleteSectionResult = {
 
 export type InternalDeleteSessionResult = {
   __typename?: "InternalDeleteSessionResult";
+  /** Whether the record was created by this upsert operation */
+  created: Scalars["Boolean"]["output"];
   errors?: Maybe<Array<ExecutionError>>;
   session?: Maybe<Scalars["InternalSessionRecord"]["output"]>;
   success: Scalars["Boolean"]["output"];
@@ -5775,6 +7476,8 @@ export type InternalDeleteSessionResult = {
 
 export type InternalDeleteShopifyGdprRequestResult = {
   __typename?: "InternalDeleteShopifyGdprRequestResult";
+  /** Whether the record was created by this upsert operation */
+  created: Scalars["Boolean"]["output"];
   errors?: Maybe<Array<ExecutionError>>;
   shopifyGdprRequest?: Maybe<Scalars["InternalShopifyGdprRequestRecord"]["output"]>;
   success: Scalars["Boolean"]["output"];
@@ -5782,6 +7485,8 @@ export type InternalDeleteShopifyGdprRequestResult = {
 
 export type InternalDeleteShopifyProductImageResult = {
   __typename?: "InternalDeleteShopifyProductImageResult";
+  /** Whether the record was created by this upsert operation */
+  created: Scalars["Boolean"]["output"];
   errors?: Maybe<Array<ExecutionError>>;
   shopifyProductImage?: Maybe<Scalars["InternalShopifyProductImageRecord"]["output"]>;
   success: Scalars["Boolean"]["output"];
@@ -5789,6 +7494,8 @@ export type InternalDeleteShopifyProductImageResult = {
 
 export type InternalDeleteShopifyProductOptionResult = {
   __typename?: "InternalDeleteShopifyProductOptionResult";
+  /** Whether the record was created by this upsert operation */
+  created: Scalars["Boolean"]["output"];
   errors?: Maybe<Array<ExecutionError>>;
   shopifyProductOption?: Maybe<Scalars["InternalShopifyProductOptionRecord"]["output"]>;
   success: Scalars["Boolean"]["output"];
@@ -5796,6 +7503,8 @@ export type InternalDeleteShopifyProductOptionResult = {
 
 export type InternalDeleteShopifyProductResult = {
   __typename?: "InternalDeleteShopifyProductResult";
+  /** Whether the record was created by this upsert operation */
+  created: Scalars["Boolean"]["output"];
   errors?: Maybe<Array<ExecutionError>>;
   shopifyProduct?: Maybe<Scalars["InternalShopifyProductRecord"]["output"]>;
   success: Scalars["Boolean"]["output"];
@@ -5803,6 +7512,8 @@ export type InternalDeleteShopifyProductResult = {
 
 export type InternalDeleteShopifyProductVariantResult = {
   __typename?: "InternalDeleteShopifyProductVariantResult";
+  /** Whether the record was created by this upsert operation */
+  created: Scalars["Boolean"]["output"];
   errors?: Maybe<Array<ExecutionError>>;
   shopifyProductVariant?: Maybe<Scalars["InternalShopifyProductVariantRecord"]["output"]>;
   success: Scalars["Boolean"]["output"];
@@ -5810,6 +7521,8 @@ export type InternalDeleteShopifyProductVariantResult = {
 
 export type InternalDeleteShopifyShopResult = {
   __typename?: "InternalDeleteShopifyShopResult";
+  /** Whether the record was created by this upsert operation */
+  created: Scalars["Boolean"]["output"];
   errors?: Maybe<Array<ExecutionError>>;
   shopifyShop?: Maybe<Scalars["InternalShopifyShopRecord"]["output"]>;
   success: Scalars["Boolean"]["output"];
@@ -5817,20 +7530,35 @@ export type InternalDeleteShopifyShopResult = {
 
 export type InternalDeleteShopifySyncResult = {
   __typename?: "InternalDeleteShopifySyncResult";
+  /** Whether the record was created by this upsert operation */
+  created: Scalars["Boolean"]["output"];
   errors?: Maybe<Array<ExecutionError>>;
   shopifySync?: Maybe<Scalars["InternalShopifySyncRecord"]["output"]>;
   success: Scalars["Boolean"]["output"];
 };
 
+export type InternalDeleteTweeterResult = {
+  __typename?: "InternalDeleteTweeterResult";
+  /** Whether the record was created by this upsert operation */
+  created: Scalars["Boolean"]["output"];
+  errors?: Maybe<Array<ExecutionError>>;
+  success: Scalars["Boolean"]["output"];
+  tweeter?: Maybe<Scalars["InternalTweeterRecord"]["output"]>;
+};
+
 export type InternalDeleteUniqueFieldsChildModelResult = {
   __typename?: "InternalDeleteUniqueFieldsChildModelResult";
   childModel?: Maybe<Scalars["InternalUniqueFieldsChildModelRecord"]["output"]>;
+  /** Whether the record was created by this upsert operation */
+  created: Scalars["Boolean"]["output"];
   errors?: Maybe<Array<ExecutionError>>;
   success: Scalars["Boolean"]["output"];
 };
 
 export type InternalDeleteUniqueFieldsMainModelResult = {
   __typename?: "InternalDeleteUniqueFieldsMainModelResult";
+  /** Whether the record was created by this upsert operation */
+  created: Scalars["Boolean"]["output"];
   errors?: Maybe<Array<ExecutionError>>;
   mainModel?: Maybe<Scalars["InternalUniqueFieldsMainModelRecord"]["output"]>;
   success: Scalars["Boolean"]["output"];
@@ -5838,13 +7566,62 @@ export type InternalDeleteUniqueFieldsMainModelResult = {
 
 export type InternalDeleteUniqueFieldsParentModelResult = {
   __typename?: "InternalDeleteUniqueFieldsParentModelResult";
+  /** Whether the record was created by this upsert operation */
+  created: Scalars["Boolean"]["output"];
   errors?: Maybe<Array<ExecutionError>>;
   parentModel?: Maybe<Scalars["InternalUniqueFieldsParentModelRecord"]["output"]>;
   success: Scalars["Boolean"]["output"];
 };
 
+export type InternalDeleteUniversityAssignmentResult = {
+  __typename?: "InternalDeleteUniversityAssignmentResult";
+  assignment?: Maybe<Scalars["InternalUniversityAssignmentRecord"]["output"]>;
+  /** Whether the record was created by this upsert operation */
+  created: Scalars["Boolean"]["output"];
+  errors?: Maybe<Array<ExecutionError>>;
+  success: Scalars["Boolean"]["output"];
+};
+
+export type InternalDeleteUniversityCourseResult = {
+  __typename?: "InternalDeleteUniversityCourseResult";
+  course?: Maybe<Scalars["InternalUniversityCourseRecord"]["output"]>;
+  /** Whether the record was created by this upsert operation */
+  created: Scalars["Boolean"]["output"];
+  errors?: Maybe<Array<ExecutionError>>;
+  success: Scalars["Boolean"]["output"];
+};
+
+export type InternalDeleteUniversityProfessorResult = {
+  __typename?: "InternalDeleteUniversityProfessorResult";
+  /** Whether the record was created by this upsert operation */
+  created: Scalars["Boolean"]["output"];
+  errors?: Maybe<Array<ExecutionError>>;
+  professor?: Maybe<Scalars["InternalUniversityProfessorRecord"]["output"]>;
+  success: Scalars["Boolean"]["output"];
+};
+
+export type InternalDeleteUniversityRegistrationResult = {
+  __typename?: "InternalDeleteUniversityRegistrationResult";
+  /** Whether the record was created by this upsert operation */
+  created: Scalars["Boolean"]["output"];
+  errors?: Maybe<Array<ExecutionError>>;
+  registration?: Maybe<Scalars["InternalUniversityRegistrationRecord"]["output"]>;
+  success: Scalars["Boolean"]["output"];
+};
+
+export type InternalDeleteUniversityStudentResult = {
+  __typename?: "InternalDeleteUniversityStudentResult";
+  /** Whether the record was created by this upsert operation */
+  created: Scalars["Boolean"]["output"];
+  errors?: Maybe<Array<ExecutionError>>;
+  student?: Maybe<Scalars["InternalUniversityStudentRecord"]["output"]>;
+  success: Scalars["Boolean"]["output"];
+};
+
 export type InternalDeleteUserResult = {
   __typename?: "InternalDeleteUserResult";
+  /** Whether the record was created by this upsert operation */
+  created: Scalars["Boolean"]["output"];
   errors?: Maybe<Array<ExecutionError>>;
   success: Scalars["Boolean"]["output"];
   user?: Maybe<Scalars["InternalUserRecord"]["output"]>;
@@ -5852,9 +7629,80 @@ export type InternalDeleteUserResult = {
 
 export type InternalDeleteWidgetResult = {
   __typename?: "InternalDeleteWidgetResult";
+  /** Whether the record was created by this upsert operation */
+  created: Scalars["Boolean"]["output"];
   errors?: Maybe<Array<ExecutionError>>;
   success: Scalars["Boolean"]["output"];
   widget?: Maybe<Scalars["InternalWidgetRecord"]["output"]>;
+};
+
+export type InternalDoodadAtomicsInput = {
+  /** Numeric atomic commands for operating on weight. */
+  weight?: InputMaybe<Array<NumericAtomicFieldUpdateInput>>;
+};
+
+export type InternalDoodadInput = {
+  /** An optional list of atomically applied commands for race-safe mutations of the record */
+  _atomics?: InputMaybe<InternalDoodadAtomicsInput>;
+  active?: InputMaybe<Scalars["Boolean"]["input"]>;
+  createdAt?: InputMaybe<Scalars["DateTime"]["input"]>;
+  gizmo?: InputMaybe<InternalBelongsToInput>;
+  id?: InputMaybe<Scalars["GadgetID"]["input"]>;
+  name?: InputMaybe<Scalars["String"]["input"]>;
+  size?: InputMaybe<Scalars["DoodadSizeEnum"]["input"]>;
+  state?: InputMaybe<Scalars["RecordState"]["input"]>;
+  stateHistory?: InputMaybe<Scalars["RecordState"]["input"]>;
+  updatedAt?: InputMaybe<Scalars["DateTime"]["input"]>;
+  weight?: InputMaybe<Scalars["Float"]["input"]>;
+  widget?: InputMaybe<InternalBelongsToInput>;
+};
+
+/** A connection to a list of InternalDoodadRecord items. */
+export type InternalDoodadRecordConnection = {
+  __typename?: "InternalDoodadRecordConnection";
+  /** A list of edges. */
+  edges: Array<InternalDoodadRecordEdge>;
+  /** Information to aid in pagination. */
+  pageInfo: PageInfo;
+};
+
+/** An edge in a InternalDoodadRecord connection. */
+export type InternalDoodadRecordEdge = {
+  __typename?: "InternalDoodadRecordEdge";
+  /** A cursor for use in pagination */
+  cursor: Scalars["String"]["output"];
+  /** The item at the end of the edge */
+  node: Scalars["InternalDoodadRecord"]["output"];
+};
+
+export type InternalFriendshipInput = {
+  createdAt?: InputMaybe<Scalars["DateTime"]["input"]>;
+  ended?: InputMaybe<Scalars["DateOrDateTime"]["input"]>;
+  followee?: InputMaybe<InternalBelongsToInput>;
+  follower?: InputMaybe<InternalBelongsToInput>;
+  id?: InputMaybe<Scalars["GadgetID"]["input"]>;
+  started?: InputMaybe<Scalars["DateOrDateTime"]["input"]>;
+  state?: InputMaybe<Scalars["RecordState"]["input"]>;
+  stateHistory?: InputMaybe<Scalars["RecordState"]["input"]>;
+  updatedAt?: InputMaybe<Scalars["DateTime"]["input"]>;
+};
+
+/** A connection to a list of InternalFriendshipRecord items. */
+export type InternalFriendshipRecordConnection = {
+  __typename?: "InternalFriendshipRecordConnection";
+  /** A list of edges. */
+  edges: Array<InternalFriendshipRecordEdge>;
+  /** Information to aid in pagination. */
+  pageInfo: PageInfo;
+};
+
+/** An edge in a InternalFriendshipRecord connection. */
+export type InternalFriendshipRecordEdge = {
+  __typename?: "InternalFriendshipRecordEdge";
+  /** A cursor for use in pagination */
+  cursor: Scalars["String"]["output"];
+  /** The item at the end of the edge */
+  node: Scalars["InternalFriendshipRecord"]["output"];
 };
 
 export type InternalGameCityInput = {
@@ -6668,6 +8516,8 @@ export type InternalMutations = {
   acquireLock: LockOperationResult;
   bulkCreateAutoTableTestRelatedModels?: Maybe<InternalBulkCreateAutoTableTestRelatedModelsResult>;
   bulkCreateAutoTableTests?: Maybe<InternalBulkCreateAutoTableTestsResult>;
+  bulkCreateDoodads?: Maybe<InternalBulkCreateDoodadsResult>;
+  bulkCreateFriendships?: Maybe<InternalBulkCreateFriendshipsResult>;
   bulkCreateGizmos?: Maybe<InternalBulkCreateGizmosResult>;
   bulkCreateModelAs?: Maybe<InternalBulkCreateModelAsResult>;
   bulkCreateParts?: Maybe<InternalBulkCreatePartsResult>;
@@ -6680,11 +8530,14 @@ export type InternalMutations = {
   bulkCreateShopifyProducts?: Maybe<InternalBulkCreateShopifyProductsResult>;
   bulkCreateShopifyShops?: Maybe<InternalBulkCreateShopifyShopsResult>;
   bulkCreateShopifySyncs?: Maybe<InternalBulkCreateShopifySyncsResult>;
+  bulkCreateTweeters?: Maybe<InternalBulkCreateTweetersResult>;
   bulkCreateUsers?: Maybe<InternalBulkCreateUsersResult>;
   bulkCreateWidgets?: Maybe<InternalBulkCreateWidgetsResult>;
   commitTransaction: Scalars["String"]["output"];
   createAutoTableTest?: Maybe<InternalCreateAutoTableTestResult>;
   createAutoTableTestRelatedModel?: Maybe<InternalCreateAutoTableTestRelatedModelResult>;
+  createDoodad?: Maybe<InternalCreateDoodadResult>;
+  createFriendship?: Maybe<InternalCreateFriendshipResult>;
   createGizmo?: Maybe<InternalCreateGizmoResult>;
   createModelA?: Maybe<InternalCreateModelAResult>;
   createPart?: Maybe<InternalCreatePartResult>;
@@ -6697,13 +8550,18 @@ export type InternalMutations = {
   createShopifyProductVariant?: Maybe<InternalCreateShopifyProductVariantResult>;
   createShopifyShop?: Maybe<InternalCreateShopifyShopResult>;
   createShopifySync?: Maybe<InternalCreateShopifySyncResult>;
+  createTweeter?: Maybe<InternalCreateTweeterResult>;
   createUser?: Maybe<InternalCreateUserResult>;
   createWidget?: Maybe<InternalCreateWidgetResult>;
   deleteAutoTableTest?: Maybe<InternalDeleteAutoTableTestResult>;
   deleteAutoTableTestRelatedModel?: Maybe<InternalDeleteAutoTableTestRelatedModelResult>;
+  deleteDoodad?: Maybe<InternalDeleteDoodadResult>;
+  deleteFriendship?: Maybe<InternalDeleteFriendshipResult>;
   deleteGizmo?: Maybe<InternalDeleteGizmoResult>;
   deleteManyAutoTableTest?: Maybe<InternalDeleteManyAutoTableTestResult>;
   deleteManyAutoTableTestRelatedModel?: Maybe<InternalDeleteManyAutoTableTestRelatedModelResult>;
+  deleteManyDoodad?: Maybe<InternalDeleteManyDoodadResult>;
+  deleteManyFriendship?: Maybe<InternalDeleteManyFriendshipResult>;
   deleteManyGizmo?: Maybe<InternalDeleteManyGizmoResult>;
   deleteManyModelA?: Maybe<InternalDeleteManyModelAResult>;
   deleteManyPart?: Maybe<InternalDeleteManyPartResult>;
@@ -6716,6 +8574,7 @@ export type InternalMutations = {
   deleteManyShopifyProductVariant?: Maybe<InternalDeleteManyShopifyProductVariantResult>;
   deleteManyShopifyShop?: Maybe<InternalDeleteManyShopifyShopResult>;
   deleteManyShopifySync?: Maybe<InternalDeleteManyShopifySyncResult>;
+  deleteManyTweeter?: Maybe<InternalDeleteManyTweeterResult>;
   deleteManyUser?: Maybe<InternalDeleteManyUserResult>;
   deleteManyWidget?: Maybe<InternalDeleteManyWidgetResult>;
   deleteModelA?: Maybe<InternalDeleteModelAResult>;
@@ -6729,6 +8588,7 @@ export type InternalMutations = {
   deleteShopifyProductVariant?: Maybe<InternalDeleteShopifyProductVariantResult>;
   deleteShopifyShop?: Maybe<InternalDeleteShopifyShopResult>;
   deleteShopifySync?: Maybe<InternalDeleteShopifySyncResult>;
+  deleteTweeter?: Maybe<InternalDeleteTweeterResult>;
   deleteUser?: Maybe<InternalDeleteUserResult>;
   deleteWidget?: Maybe<InternalDeleteWidgetResult>;
   game: InternalGameMutations;
@@ -6742,6 +8602,8 @@ export type InternalMutations = {
   triggerCompleteShopifySync?: Maybe<CompleteShopifySyncResult>;
   triggerCreateAutoTableTest?: Maybe<CreateAutoTableTestResult>;
   triggerCreateAutoTableTestRelatedModel?: Maybe<CreateAutoTableTestRelatedModelResult>;
+  triggerCreateDoodad?: Maybe<CreateDoodadResult>;
+  triggerCreateFriendship?: Maybe<CreateFriendshipResult>;
   triggerCreateGizmo?: Maybe<CreateGizmoResult>;
   triggerCreateModelA?: Maybe<CreateModelAResult>;
   triggerCreatePart?: Maybe<CreatePartResult>;
@@ -6752,11 +8614,14 @@ export type InternalMutations = {
   triggerCreateShopifyProductOption?: Maybe<CreateShopifyProductOptionResult>;
   triggerCreateShopifyProductVariant?: Maybe<CreateShopifyProductVariantResult>;
   triggerCreateTestData?: Maybe<CreateTestDataResult>;
+  triggerCreateTweeter?: Maybe<CreateTweeterResult>;
   triggerCreateWidget?: Maybe<CreateWidgetResult>;
   triggerCustomActionAutoTableTest?: Maybe<CustomActionAutoTableTestResult>;
   triggerCustomActionWithParamsAutoTableTest?: Maybe<CustomActionWithParamsAutoTableTestResult>;
   triggerDeleteAutoTableTest?: Maybe<DeleteAutoTableTestResult>;
   triggerDeleteAutoTableTestRelatedModel?: Maybe<DeleteAutoTableTestRelatedModelResult>;
+  triggerDeleteDoodad?: Maybe<DeleteDoodadResult>;
+  triggerDeleteFriendship?: Maybe<DeleteFriendshipResult>;
   triggerDeleteGizmo?: Maybe<DeleteGizmoResult>;
   triggerDeleteModelA?: Maybe<DeleteModelAResult>;
   triggerDeletePart?: Maybe<DeletePartResult>;
@@ -6765,6 +8630,7 @@ export type InternalMutations = {
   triggerDeleteShopifyProductImage?: Maybe<DeleteShopifyProductImageResult>;
   triggerDeleteShopifyProductOption?: Maybe<DeleteShopifyProductOptionResult>;
   triggerDeleteShopifyProductVariant?: Maybe<DeleteShopifyProductVariantResult>;
+  triggerDeleteTweeter?: Maybe<DeleteTweeterResult>;
   triggerDeleteUser?: Maybe<DeleteUserResult>;
   triggerDeleteWidget?: Maybe<DeleteWidgetResult>;
   triggerErrorShopifySync?: Maybe<ErrorShopifySyncResult>;
@@ -6780,6 +8646,8 @@ export type InternalMutations = {
   triggerUninstallShopifyShop?: Maybe<UninstallShopifyShopResult>;
   triggerUpdateAutoTableTest?: Maybe<UpdateAutoTableTestResult>;
   triggerUpdateAutoTableTestRelatedModel?: Maybe<UpdateAutoTableTestRelatedModelResult>;
+  triggerUpdateDoodad?: Maybe<UpdateDoodadResult>;
+  triggerUpdateFriendship?: Maybe<UpdateFriendshipResult>;
   triggerUpdateGizmo?: Maybe<UpdateGizmoResult>;
   triggerUpdateModelA?: Maybe<UpdateModelAResult>;
   triggerUpdatePart?: Maybe<UpdatePartResult>;
@@ -6790,12 +8658,16 @@ export type InternalMutations = {
   triggerUpdateShopifyProductOption?: Maybe<UpdateShopifyProductOptionResult>;
   triggerUpdateShopifyProductVariant?: Maybe<UpdateShopifyProductVariantResult>;
   triggerUpdateShopifyShop?: Maybe<UpdateShopifyShopResult>;
+  triggerUpdateTweeter?: Maybe<UpdateTweeterResult>;
   triggerUpdateUser?: Maybe<UpdateUserResult>;
   triggerUpdateWidget?: Maybe<UpdateWidgetResult>;
   triggerUpdateWithCustomParamsAutoTableTest?: Maybe<UpdateWithCustomParamsAutoTableTestResult>;
   uniqueFields: InternalUniqueFieldsMutations;
+  university: InternalUniversityMutations;
   updateAutoTableTest?: Maybe<InternalUpdateAutoTableTestResult>;
   updateAutoTableTestRelatedModel?: Maybe<InternalUpdateAutoTableTestRelatedModelResult>;
+  updateDoodad?: Maybe<InternalUpdateDoodadResult>;
+  updateFriendship?: Maybe<InternalUpdateFriendshipResult>;
   updateGizmo?: Maybe<InternalUpdateGizmoResult>;
   updateModelA?: Maybe<InternalUpdateModelAResult>;
   updatePart?: Maybe<InternalUpdatePartResult>;
@@ -6808,10 +8680,13 @@ export type InternalMutations = {
   updateShopifyProductVariant?: Maybe<InternalUpdateShopifyProductVariantResult>;
   updateShopifyShop?: Maybe<InternalUpdateShopifyShopResult>;
   updateShopifySync?: Maybe<InternalUpdateShopifySyncResult>;
+  updateTweeter?: Maybe<InternalUpdateTweeterResult>;
   updateUser?: Maybe<InternalUpdateUserResult>;
   updateWidget?: Maybe<InternalUpdateWidgetResult>;
   upsertAutoTableTest?: Maybe<InternalUpsertAutoTableTestResult>;
   upsertAutoTableTestRelatedModel?: Maybe<InternalUpsertAutoTableTestRelatedModelResult>;
+  upsertDoodad?: Maybe<InternalUpsertDoodadResult>;
+  upsertFriendship?: Maybe<InternalUpsertFriendshipResult>;
   upsertGizmo?: Maybe<InternalUpsertGizmoResult>;
   upsertModelA?: Maybe<InternalUpsertModelAResult>;
   upsertPart?: Maybe<InternalUpsertPartResult>;
@@ -6824,6 +8699,7 @@ export type InternalMutations = {
   upsertShopifyProductVariant?: Maybe<InternalUpsertShopifyProductVariantResult>;
   upsertShopifyShop?: Maybe<InternalUpsertShopifyShopResult>;
   upsertShopifySync?: Maybe<InternalUpsertShopifySyncResult>;
+  upsertTweeter?: Maybe<InternalUpsertTweeterResult>;
   upsertUser?: Maybe<InternalUpsertUserResult>;
   upsertWidget?: Maybe<InternalUpsertWidgetResult>;
 };
@@ -6838,6 +8714,14 @@ export type InternalMutationsBulkCreateAutoTableTestRelatedModelsArgs = {
 
 export type InternalMutationsBulkCreateAutoTableTestsArgs = {
   autoTableTests: Array<InputMaybe<InternalAutoTableTestInput>>;
+};
+
+export type InternalMutationsBulkCreateDoodadsArgs = {
+  doodads: Array<InputMaybe<InternalDoodadInput>>;
+};
+
+export type InternalMutationsBulkCreateFriendshipsArgs = {
+  friendships: Array<InputMaybe<InternalFriendshipInput>>;
 };
 
 export type InternalMutationsBulkCreateGizmosArgs = {
@@ -6888,6 +8772,10 @@ export type InternalMutationsBulkCreateShopifySyncsArgs = {
   shopifySyncs: Array<InputMaybe<InternalShopifySyncInput>>;
 };
 
+export type InternalMutationsBulkCreateTweetersArgs = {
+  tweeters: Array<InputMaybe<InternalTweeterInput>>;
+};
+
 export type InternalMutationsBulkCreateUsersArgs = {
   users: Array<InputMaybe<InternalUserInput>>;
 };
@@ -6902,6 +8790,14 @@ export type InternalMutationsCreateAutoTableTestArgs = {
 
 export type InternalMutationsCreateAutoTableTestRelatedModelArgs = {
   _autoTableTestRelatedModel?: InputMaybe<InternalAutoTableTestRelatedModelInput>;
+};
+
+export type InternalMutationsCreateDoodadArgs = {
+  doodad?: InputMaybe<InternalDoodadInput>;
+};
+
+export type InternalMutationsCreateFriendshipArgs = {
+  friendship?: InputMaybe<InternalFriendshipInput>;
 };
 
 export type InternalMutationsCreateGizmoArgs = {
@@ -6952,6 +8848,10 @@ export type InternalMutationsCreateShopifySyncArgs = {
   shopifySync?: InputMaybe<InternalShopifySyncInput>;
 };
 
+export type InternalMutationsCreateTweeterArgs = {
+  tweeter?: InputMaybe<InternalTweeterInput>;
+};
+
 export type InternalMutationsCreateUserArgs = {
   user?: InputMaybe<InternalUserInput>;
 };
@@ -6968,6 +8868,14 @@ export type InternalMutationsDeleteAutoTableTestRelatedModelArgs = {
   id: Scalars["GadgetID"]["input"];
 };
 
+export type InternalMutationsDeleteDoodadArgs = {
+  id: Scalars["GadgetID"]["input"];
+};
+
+export type InternalMutationsDeleteFriendshipArgs = {
+  id: Scalars["GadgetID"]["input"];
+};
+
 export type InternalMutationsDeleteGizmoArgs = {
   id: Scalars["GadgetID"]["input"];
 };
@@ -6979,6 +8887,16 @@ export type InternalMutationsDeleteManyAutoTableTestArgs = {
 
 export type InternalMutationsDeleteManyAutoTableTestRelatedModelArgs = {
   filter?: InputMaybe<Array<AutoTableTestRelatedModelFilter>>;
+  search?: InputMaybe<Scalars["String"]["input"]>;
+};
+
+export type InternalMutationsDeleteManyDoodadArgs = {
+  filter?: InputMaybe<Array<DoodadFilter>>;
+  search?: InputMaybe<Scalars["String"]["input"]>;
+};
+
+export type InternalMutationsDeleteManyFriendshipArgs = {
+  filter?: InputMaybe<Array<FriendshipFilter>>;
   search?: InputMaybe<Scalars["String"]["input"]>;
 };
 
@@ -7041,6 +8959,11 @@ export type InternalMutationsDeleteManyShopifySyncArgs = {
   search?: InputMaybe<Scalars["String"]["input"]>;
 };
 
+export type InternalMutationsDeleteManyTweeterArgs = {
+  filter?: InputMaybe<Array<TweeterFilter>>;
+  search?: InputMaybe<Scalars["String"]["input"]>;
+};
+
 export type InternalMutationsDeleteManyUserArgs = {
   filter?: InputMaybe<Array<UserFilter>>;
   search?: InputMaybe<Scalars["String"]["input"]>;
@@ -7095,6 +9018,10 @@ export type InternalMutationsDeleteShopifySyncArgs = {
   id: Scalars["GadgetID"]["input"];
 };
 
+export type InternalMutationsDeleteTweeterArgs = {
+  id: Scalars["GadgetID"]["input"];
+};
+
 export type InternalMutationsDeleteUserArgs = {
   id: Scalars["GadgetID"]["input"];
 };
@@ -7139,6 +9066,20 @@ export type InternalMutationsTriggerCreateAutoTableTestArgs = {
 };
 
 export type InternalMutationsTriggerCreateAutoTableTestRelatedModelArgs = {
+  context?: InputMaybe<AppGraphQlTriggerMutationContext>;
+  params?: InputMaybe<Scalars["JSONObject"]["input"]>;
+  trigger?: InputMaybe<Scalars["JSONObject"]["input"]>;
+  verifyTriggerExists?: InputMaybe<Scalars["Boolean"]["input"]>;
+};
+
+export type InternalMutationsTriggerCreateDoodadArgs = {
+  context?: InputMaybe<AppGraphQlTriggerMutationContext>;
+  params?: InputMaybe<Scalars["JSONObject"]["input"]>;
+  trigger?: InputMaybe<Scalars["JSONObject"]["input"]>;
+  verifyTriggerExists?: InputMaybe<Scalars["Boolean"]["input"]>;
+};
+
+export type InternalMutationsTriggerCreateFriendshipArgs = {
   context?: InputMaybe<AppGraphQlTriggerMutationContext>;
   params?: InputMaybe<Scalars["JSONObject"]["input"]>;
   trigger?: InputMaybe<Scalars["JSONObject"]["input"]>;
@@ -7213,6 +9154,13 @@ export type InternalMutationsTriggerCreateTestDataArgs = {
   verifyTriggerExists?: InputMaybe<Scalars["Boolean"]["input"]>;
 };
 
+export type InternalMutationsTriggerCreateTweeterArgs = {
+  context?: InputMaybe<AppGraphQlTriggerMutationContext>;
+  params?: InputMaybe<Scalars["JSONObject"]["input"]>;
+  trigger?: InputMaybe<Scalars["JSONObject"]["input"]>;
+  verifyTriggerExists?: InputMaybe<Scalars["Boolean"]["input"]>;
+};
+
 export type InternalMutationsTriggerCreateWidgetArgs = {
   context?: InputMaybe<AppGraphQlTriggerMutationContext>;
   params?: InputMaybe<Scalars["JSONObject"]["input"]>;
@@ -7242,6 +9190,20 @@ export type InternalMutationsTriggerDeleteAutoTableTestArgs = {
 };
 
 export type InternalMutationsTriggerDeleteAutoTableTestRelatedModelArgs = {
+  context?: InputMaybe<AppGraphQlTriggerMutationContext>;
+  params?: InputMaybe<Scalars["JSONObject"]["input"]>;
+  trigger?: InputMaybe<Scalars["JSONObject"]["input"]>;
+  verifyTriggerExists?: InputMaybe<Scalars["Boolean"]["input"]>;
+};
+
+export type InternalMutationsTriggerDeleteDoodadArgs = {
+  context?: InputMaybe<AppGraphQlTriggerMutationContext>;
+  params?: InputMaybe<Scalars["JSONObject"]["input"]>;
+  trigger?: InputMaybe<Scalars["JSONObject"]["input"]>;
+  verifyTriggerExists?: InputMaybe<Scalars["Boolean"]["input"]>;
+};
+
+export type InternalMutationsTriggerDeleteFriendshipArgs = {
   context?: InputMaybe<AppGraphQlTriggerMutationContext>;
   params?: InputMaybe<Scalars["JSONObject"]["input"]>;
   trigger?: InputMaybe<Scalars["JSONObject"]["input"]>;
@@ -7298,6 +9260,13 @@ export type InternalMutationsTriggerDeleteShopifyProductOptionArgs = {
 };
 
 export type InternalMutationsTriggerDeleteShopifyProductVariantArgs = {
+  context?: InputMaybe<AppGraphQlTriggerMutationContext>;
+  params?: InputMaybe<Scalars["JSONObject"]["input"]>;
+  trigger?: InputMaybe<Scalars["JSONObject"]["input"]>;
+  verifyTriggerExists?: InputMaybe<Scalars["Boolean"]["input"]>;
+};
+
+export type InternalMutationsTriggerDeleteTweeterArgs = {
   context?: InputMaybe<AppGraphQlTriggerMutationContext>;
   params?: InputMaybe<Scalars["JSONObject"]["input"]>;
   trigger?: InputMaybe<Scalars["JSONObject"]["input"]>;
@@ -7407,6 +9376,20 @@ export type InternalMutationsTriggerUpdateAutoTableTestRelatedModelArgs = {
   verifyTriggerExists?: InputMaybe<Scalars["Boolean"]["input"]>;
 };
 
+export type InternalMutationsTriggerUpdateDoodadArgs = {
+  context?: InputMaybe<AppGraphQlTriggerMutationContext>;
+  params?: InputMaybe<Scalars["JSONObject"]["input"]>;
+  trigger?: InputMaybe<Scalars["JSONObject"]["input"]>;
+  verifyTriggerExists?: InputMaybe<Scalars["Boolean"]["input"]>;
+};
+
+export type InternalMutationsTriggerUpdateFriendshipArgs = {
+  context?: InputMaybe<AppGraphQlTriggerMutationContext>;
+  params?: InputMaybe<Scalars["JSONObject"]["input"]>;
+  trigger?: InputMaybe<Scalars["JSONObject"]["input"]>;
+  verifyTriggerExists?: InputMaybe<Scalars["Boolean"]["input"]>;
+};
+
 export type InternalMutationsTriggerUpdateGizmoArgs = {
   context?: InputMaybe<AppGraphQlTriggerMutationContext>;
   params?: InputMaybe<Scalars["JSONObject"]["input"]>;
@@ -7477,6 +9460,13 @@ export type InternalMutationsTriggerUpdateShopifyShopArgs = {
   verifyTriggerExists?: InputMaybe<Scalars["Boolean"]["input"]>;
 };
 
+export type InternalMutationsTriggerUpdateTweeterArgs = {
+  context?: InputMaybe<AppGraphQlTriggerMutationContext>;
+  params?: InputMaybe<Scalars["JSONObject"]["input"]>;
+  trigger?: InputMaybe<Scalars["JSONObject"]["input"]>;
+  verifyTriggerExists?: InputMaybe<Scalars["Boolean"]["input"]>;
+};
+
 export type InternalMutationsTriggerUpdateUserArgs = {
   context?: InputMaybe<AppGraphQlTriggerMutationContext>;
   params?: InputMaybe<Scalars["JSONObject"]["input"]>;
@@ -7505,6 +9495,16 @@ export type InternalMutationsUpdateAutoTableTestArgs = {
 
 export type InternalMutationsUpdateAutoTableTestRelatedModelArgs = {
   _autoTableTestRelatedModel?: InputMaybe<InternalAutoTableTestRelatedModelInput>;
+  id: Scalars["GadgetID"]["input"];
+};
+
+export type InternalMutationsUpdateDoodadArgs = {
+  doodad?: InputMaybe<InternalDoodadInput>;
+  id: Scalars["GadgetID"]["input"];
+};
+
+export type InternalMutationsUpdateFriendshipArgs = {
+  friendship?: InputMaybe<InternalFriendshipInput>;
   id: Scalars["GadgetID"]["input"];
 };
 
@@ -7568,6 +9568,11 @@ export type InternalMutationsUpdateShopifySyncArgs = {
   shopifySync?: InputMaybe<InternalShopifySyncInput>;
 };
 
+export type InternalMutationsUpdateTweeterArgs = {
+  id: Scalars["GadgetID"]["input"];
+  tweeter?: InputMaybe<InternalTweeterInput>;
+};
+
 export type InternalMutationsUpdateUserArgs = {
   id: Scalars["GadgetID"]["input"];
   user?: InputMaybe<InternalUserInput>;
@@ -7585,6 +9590,16 @@ export type InternalMutationsUpsertAutoTableTestArgs = {
 
 export type InternalMutationsUpsertAutoTableTestRelatedModelArgs = {
   _autoTableTestRelatedModel?: InputMaybe<InternalAutoTableTestRelatedModelInput>;
+  on?: InputMaybe<Array<Scalars["String"]["input"]>>;
+};
+
+export type InternalMutationsUpsertDoodadArgs = {
+  doodad?: InputMaybe<InternalDoodadInput>;
+  on?: InputMaybe<Array<Scalars["String"]["input"]>>;
+};
+
+export type InternalMutationsUpsertFriendshipArgs = {
+  friendship?: InputMaybe<InternalFriendshipInput>;
   on?: InputMaybe<Array<Scalars["String"]["input"]>>;
 };
 
@@ -7646,6 +9661,11 @@ export type InternalMutationsUpsertShopifyShopArgs = {
 export type InternalMutationsUpsertShopifySyncArgs = {
   on?: InputMaybe<Array<Scalars["String"]["input"]>>;
   shopifySync?: InputMaybe<InternalShopifySyncInput>;
+};
+
+export type InternalMutationsUpsertTweeterArgs = {
+  on?: InputMaybe<Array<Scalars["String"]["input"]>>;
+  tweeter?: InputMaybe<InternalTweeterInput>;
 };
 
 export type InternalMutationsUpsertUserArgs = {
@@ -7729,11 +9749,15 @@ export type InternalQueries = {
   autoTableTest?: Maybe<Scalars["InternalAutoTableTestRecord"]["output"]>;
   /** Currently open platform transaction details, or null if no transaction is open */
   currentTransactionDetails?: Maybe<Scalars["JSONObject"]["output"]>;
+  doodad?: Maybe<Scalars["InternalDoodadRecord"]["output"]>;
+  friendship?: Maybe<Scalars["InternalFriendshipRecord"]["output"]>;
   game: InternalGameQueries;
   gizmo?: Maybe<Scalars["InternalGizmoRecord"]["output"]>;
   hasManyThrough: InternalHasManyThroughQueries;
   listAutoTableTest: InternalAutoTableTestRecordConnection;
   listAutoTableTestRelatedModel: InternalAutoTableTestRelatedModelRecordConnection;
+  listDoodad: InternalDoodadRecordConnection;
+  listFriendship: InternalFriendshipRecordConnection;
   listGizmo: InternalGizmoRecordConnection;
   listModelA: InternalModelARecordConnection;
   listPart: InternalPartRecordConnection;
@@ -7746,6 +9770,7 @@ export type InternalQueries = {
   listShopifyProductVariant: InternalShopifyProductVariantRecordConnection;
   listShopifyShop: InternalShopifyShopRecordConnection;
   listShopifySync: InternalShopifySyncRecordConnection;
+  listTweeter: InternalTweeterRecordConnection;
   listUser: InternalUserRecordConnection;
   listWidget: InternalWidgetRecordConnection;
   modelA?: Maybe<Scalars["InternalModelARecord"]["output"]>;
@@ -7759,7 +9784,9 @@ export type InternalQueries = {
   shopifyProductVariant?: Maybe<Scalars["InternalShopifyProductVariantRecord"]["output"]>;
   shopifyShop?: Maybe<Scalars["InternalShopifyShopRecord"]["output"]>;
   shopifySync?: Maybe<Scalars["InternalShopifySyncRecord"]["output"]>;
+  tweeter?: Maybe<Scalars["InternalTweeterRecord"]["output"]>;
   uniqueFields: InternalUniqueFieldsQueries;
+  university: InternalUniversityQueries;
   user?: Maybe<Scalars["InternalUserRecord"]["output"]>;
   widget?: Maybe<Scalars["InternalWidgetRecord"]["output"]>;
 };
@@ -7770,6 +9797,16 @@ export type InternalQueries_AutoTableTestRelatedModelArgs = {
 };
 
 export type InternalQueriesAutoTableTestArgs = {
+  id: Scalars["GadgetID"]["input"];
+  select?: InputMaybe<Array<Scalars["String"]["input"]>>;
+};
+
+export type InternalQueriesDoodadArgs = {
+  id: Scalars["GadgetID"]["input"];
+  select?: InputMaybe<Array<Scalars["String"]["input"]>>;
+};
+
+export type InternalQueriesFriendshipArgs = {
   id: Scalars["GadgetID"]["input"];
   select?: InputMaybe<Array<Scalars["String"]["input"]>>;
 };
@@ -7799,6 +9836,28 @@ export type InternalQueriesListAutoTableTestRelatedModelArgs = {
   search?: InputMaybe<Scalars["String"]["input"]>;
   select?: InputMaybe<Array<Scalars["String"]["input"]>>;
   sort?: InputMaybe<Array<AutoTableTestRelatedModelSort>>;
+};
+
+export type InternalQueriesListDoodadArgs = {
+  after?: InputMaybe<Scalars["String"]["input"]>;
+  before?: InputMaybe<Scalars["String"]["input"]>;
+  filter?: InputMaybe<Array<DoodadFilter>>;
+  first?: InputMaybe<Scalars["Int"]["input"]>;
+  last?: InputMaybe<Scalars["Int"]["input"]>;
+  search?: InputMaybe<Scalars["String"]["input"]>;
+  select?: InputMaybe<Array<Scalars["String"]["input"]>>;
+  sort?: InputMaybe<Array<DoodadSort>>;
+};
+
+export type InternalQueriesListFriendshipArgs = {
+  after?: InputMaybe<Scalars["String"]["input"]>;
+  before?: InputMaybe<Scalars["String"]["input"]>;
+  filter?: InputMaybe<Array<FriendshipFilter>>;
+  first?: InputMaybe<Scalars["Int"]["input"]>;
+  last?: InputMaybe<Scalars["Int"]["input"]>;
+  search?: InputMaybe<Scalars["String"]["input"]>;
+  select?: InputMaybe<Array<Scalars["String"]["input"]>>;
+  sort?: InputMaybe<Array<FriendshipSort>>;
 };
 
 export type InternalQueriesListGizmoArgs = {
@@ -7931,6 +9990,17 @@ export type InternalQueriesListShopifySyncArgs = {
   sort?: InputMaybe<Array<ShopifySyncSort>>;
 };
 
+export type InternalQueriesListTweeterArgs = {
+  after?: InputMaybe<Scalars["String"]["input"]>;
+  before?: InputMaybe<Scalars["String"]["input"]>;
+  filter?: InputMaybe<Array<TweeterFilter>>;
+  first?: InputMaybe<Scalars["Int"]["input"]>;
+  last?: InputMaybe<Scalars["Int"]["input"]>;
+  search?: InputMaybe<Scalars["String"]["input"]>;
+  select?: InputMaybe<Array<Scalars["String"]["input"]>>;
+  sort?: InputMaybe<Array<TweeterSort>>;
+};
+
 export type InternalQueriesListUserArgs = {
   after?: InputMaybe<Scalars["String"]["input"]>;
   before?: InputMaybe<Scalars["String"]["input"]>;
@@ -8004,6 +10074,11 @@ export type InternalQueriesShopifyShopArgs = {
 };
 
 export type InternalQueriesShopifySyncArgs = {
+  id: Scalars["GadgetID"]["input"];
+  select?: InputMaybe<Array<Scalars["String"]["input"]>>;
+};
+
+export type InternalQueriesTweeterArgs = {
   id: Scalars["GadgetID"]["input"];
   select?: InputMaybe<Array<Scalars["String"]["input"]>>;
 };
@@ -8428,6 +10503,34 @@ export type InternalStoredFileInput = {
   url?: InputMaybe<Scalars["String"]["input"]>;
 };
 
+export type InternalTweeterInput = {
+  city?: InputMaybe<InternalBelongsToInput>;
+  createdAt?: InputMaybe<Scalars["DateTime"]["input"]>;
+  id?: InputMaybe<Scalars["GadgetID"]["input"]>;
+  name?: InputMaybe<Scalars["String"]["input"]>;
+  state?: InputMaybe<Scalars["RecordState"]["input"]>;
+  stateHistory?: InputMaybe<Scalars["RecordState"]["input"]>;
+  updatedAt?: InputMaybe<Scalars["DateTime"]["input"]>;
+};
+
+/** A connection to a list of InternalTweeterRecord items. */
+export type InternalTweeterRecordConnection = {
+  __typename?: "InternalTweeterRecordConnection";
+  /** A list of edges. */
+  edges: Array<InternalTweeterRecordEdge>;
+  /** Information to aid in pagination. */
+  pageInfo: PageInfo;
+};
+
+/** An edge in a InternalTweeterRecord connection. */
+export type InternalTweeterRecordEdge = {
+  __typename?: "InternalTweeterRecordEdge";
+  /** A cursor for use in pagination */
+  cursor: Scalars["String"]["output"];
+  /** The item at the end of the edge */
+  node: Scalars["InternalTweeterRecord"]["output"];
+};
+
 export type InternalUniqueFieldsChildModelInput = {
   alias?: InputMaybe<Scalars["String"]["input"]>;
   createdAt?: InputMaybe<Scalars["DateTime"]["input"]>;
@@ -8749,9 +10852,548 @@ export type InternalUniqueFieldsQueriesParentModelArgs = {
   select?: InputMaybe<Array<Scalars["String"]["input"]>>;
 };
 
+export type InternalUniversityAssignmentInput = {
+  course?: InputMaybe<InternalBelongsToInput>;
+  createdAt?: InputMaybe<Scalars["DateTime"]["input"]>;
+  id?: InputMaybe<Scalars["GadgetID"]["input"]>;
+  professor?: InputMaybe<InternalBelongsToInput>;
+  state?: InputMaybe<Scalars["RecordState"]["input"]>;
+  stateHistory?: InputMaybe<Scalars["RecordState"]["input"]>;
+  updatedAt?: InputMaybe<Scalars["DateTime"]["input"]>;
+};
+
+/** A connection to a list of InternalUniversityAssignmentRecord items. */
+export type InternalUniversityAssignmentRecordConnection = {
+  __typename?: "InternalUniversityAssignmentRecordConnection";
+  /** A list of edges. */
+  edges: Array<InternalUniversityAssignmentRecordEdge>;
+  /** Information to aid in pagination. */
+  pageInfo: PageInfo;
+};
+
+/** An edge in a InternalUniversityAssignmentRecord connection. */
+export type InternalUniversityAssignmentRecordEdge = {
+  __typename?: "InternalUniversityAssignmentRecordEdge";
+  /** A cursor for use in pagination */
+  cursor: Scalars["String"]["output"];
+  /** The item at the end of the edge */
+  node: Scalars["InternalUniversityAssignmentRecord"]["output"];
+};
+
+export type InternalUniversityCourseInput = {
+  createdAt?: InputMaybe<Scalars["DateTime"]["input"]>;
+  description?: InputMaybe<RichTextInput>;
+  id?: InputMaybe<Scalars["GadgetID"]["input"]>;
+  state?: InputMaybe<Scalars["RecordState"]["input"]>;
+  stateHistory?: InputMaybe<Scalars["RecordState"]["input"]>;
+  title?: InputMaybe<Scalars["String"]["input"]>;
+  updatedAt?: InputMaybe<Scalars["DateTime"]["input"]>;
+};
+
+/** A connection to a list of InternalUniversityCourseRecord items. */
+export type InternalUniversityCourseRecordConnection = {
+  __typename?: "InternalUniversityCourseRecordConnection";
+  /** A list of edges. */
+  edges: Array<InternalUniversityCourseRecordEdge>;
+  /** Information to aid in pagination. */
+  pageInfo: PageInfo;
+};
+
+/** An edge in a InternalUniversityCourseRecord connection. */
+export type InternalUniversityCourseRecordEdge = {
+  __typename?: "InternalUniversityCourseRecordEdge";
+  /** A cursor for use in pagination */
+  cursor: Scalars["String"]["output"];
+  /** The item at the end of the edge */
+  node: Scalars["InternalUniversityCourseRecord"]["output"];
+};
+
+export type InternalUniversityMutations = {
+  __typename?: "InternalUniversityMutations";
+  bulkCreateAssignments?: Maybe<InternalBulkCreateUniversityAssignmentsResult>;
+  bulkCreateCourses?: Maybe<InternalBulkCreateUniversityCoursesResult>;
+  bulkCreateProfessors?: Maybe<InternalBulkCreateUniversityProfessorsResult>;
+  bulkCreateRegistrations?: Maybe<InternalBulkCreateUniversityRegistrationsResult>;
+  bulkCreateStudents?: Maybe<InternalBulkCreateUniversityStudentsResult>;
+  createAssignment?: Maybe<InternalCreateUniversityAssignmentResult>;
+  createCourse?: Maybe<InternalCreateUniversityCourseResult>;
+  createProfessor?: Maybe<InternalCreateUniversityProfessorResult>;
+  createRegistration?: Maybe<InternalCreateUniversityRegistrationResult>;
+  createStudent?: Maybe<InternalCreateUniversityStudentResult>;
+  deleteAssignment?: Maybe<InternalDeleteUniversityAssignmentResult>;
+  deleteCourse?: Maybe<InternalDeleteUniversityCourseResult>;
+  deleteManyAssignment?: Maybe<InternalDeleteManyUniversityAssignmentResult>;
+  deleteManyCourse?: Maybe<InternalDeleteManyUniversityCourseResult>;
+  deleteManyProfessor?: Maybe<InternalDeleteManyUniversityProfessorResult>;
+  deleteManyRegistration?: Maybe<InternalDeleteManyUniversityRegistrationResult>;
+  deleteManyStudent?: Maybe<InternalDeleteManyUniversityStudentResult>;
+  deleteProfessor?: Maybe<InternalDeleteUniversityProfessorResult>;
+  deleteRegistration?: Maybe<InternalDeleteUniversityRegistrationResult>;
+  deleteStudent?: Maybe<InternalDeleteUniversityStudentResult>;
+  triggerCreateAssignment?: Maybe<CreateUniversityAssignmentResult>;
+  triggerCreateCourse?: Maybe<CreateUniversityCourseResult>;
+  triggerCreateProfessor?: Maybe<CreateUniversityProfessorResult>;
+  triggerCreateRegistration?: Maybe<CreateUniversityRegistrationResult>;
+  triggerCreateStudent?: Maybe<CreateUniversityStudentResult>;
+  triggerDeleteAssignment?: Maybe<DeleteUniversityAssignmentResult>;
+  triggerDeleteCourse?: Maybe<DeleteUniversityCourseResult>;
+  triggerDeleteProfessor?: Maybe<DeleteUniversityProfessorResult>;
+  triggerDeleteRegistration?: Maybe<DeleteUniversityRegistrationResult>;
+  triggerDeleteStudent?: Maybe<DeleteUniversityStudentResult>;
+  triggerUpdateAssignment?: Maybe<UpdateUniversityAssignmentResult>;
+  triggerUpdateCourse?: Maybe<UpdateUniversityCourseResult>;
+  triggerUpdateProfessor?: Maybe<UpdateUniversityProfessorResult>;
+  triggerUpdateRegistration?: Maybe<UpdateUniversityRegistrationResult>;
+  triggerUpdateStudent?: Maybe<UpdateUniversityStudentResult>;
+  updateAssignment?: Maybe<InternalUpdateUniversityAssignmentResult>;
+  updateCourse?: Maybe<InternalUpdateUniversityCourseResult>;
+  updateProfessor?: Maybe<InternalUpdateUniversityProfessorResult>;
+  updateRegistration?: Maybe<InternalUpdateUniversityRegistrationResult>;
+  updateStudent?: Maybe<InternalUpdateUniversityStudentResult>;
+  upsertAssignment?: Maybe<InternalUpsertUniversityAssignmentResult>;
+  upsertCourse?: Maybe<InternalUpsertUniversityCourseResult>;
+  upsertProfessor?: Maybe<InternalUpsertUniversityProfessorResult>;
+  upsertRegistration?: Maybe<InternalUpsertUniversityRegistrationResult>;
+  upsertStudent?: Maybe<InternalUpsertUniversityStudentResult>;
+};
+
+export type InternalUniversityMutationsBulkCreateAssignmentsArgs = {
+  assignments: Array<InputMaybe<InternalUniversityAssignmentInput>>;
+};
+
+export type InternalUniversityMutationsBulkCreateCoursesArgs = {
+  courses: Array<InputMaybe<InternalUniversityCourseInput>>;
+};
+
+export type InternalUniversityMutationsBulkCreateProfessorsArgs = {
+  professors: Array<InputMaybe<InternalUniversityProfessorInput>>;
+};
+
+export type InternalUniversityMutationsBulkCreateRegistrationsArgs = {
+  registrations: Array<InputMaybe<InternalUniversityRegistrationInput>>;
+};
+
+export type InternalUniversityMutationsBulkCreateStudentsArgs = {
+  students: Array<InputMaybe<InternalUniversityStudentInput>>;
+};
+
+export type InternalUniversityMutationsCreateAssignmentArgs = {
+  assignment?: InputMaybe<InternalUniversityAssignmentInput>;
+};
+
+export type InternalUniversityMutationsCreateCourseArgs = {
+  course?: InputMaybe<InternalUniversityCourseInput>;
+};
+
+export type InternalUniversityMutationsCreateProfessorArgs = {
+  professor?: InputMaybe<InternalUniversityProfessorInput>;
+};
+
+export type InternalUniversityMutationsCreateRegistrationArgs = {
+  registration?: InputMaybe<InternalUniversityRegistrationInput>;
+};
+
+export type InternalUniversityMutationsCreateStudentArgs = {
+  student?: InputMaybe<InternalUniversityStudentInput>;
+};
+
+export type InternalUniversityMutationsDeleteAssignmentArgs = {
+  id: Scalars["GadgetID"]["input"];
+};
+
+export type InternalUniversityMutationsDeleteCourseArgs = {
+  id: Scalars["GadgetID"]["input"];
+};
+
+export type InternalUniversityMutationsDeleteManyAssignmentArgs = {
+  filter?: InputMaybe<Array<UniversityAssignmentFilter>>;
+  search?: InputMaybe<Scalars["String"]["input"]>;
+};
+
+export type InternalUniversityMutationsDeleteManyCourseArgs = {
+  filter?: InputMaybe<Array<UniversityCourseFilter>>;
+  search?: InputMaybe<Scalars["String"]["input"]>;
+};
+
+export type InternalUniversityMutationsDeleteManyProfessorArgs = {
+  filter?: InputMaybe<Array<UniversityProfessorFilter>>;
+  search?: InputMaybe<Scalars["String"]["input"]>;
+};
+
+export type InternalUniversityMutationsDeleteManyRegistrationArgs = {
+  filter?: InputMaybe<Array<UniversityRegistrationFilter>>;
+  search?: InputMaybe<Scalars["String"]["input"]>;
+};
+
+export type InternalUniversityMutationsDeleteManyStudentArgs = {
+  filter?: InputMaybe<Array<UniversityStudentFilter>>;
+  search?: InputMaybe<Scalars["String"]["input"]>;
+};
+
+export type InternalUniversityMutationsDeleteProfessorArgs = {
+  id: Scalars["GadgetID"]["input"];
+};
+
+export type InternalUniversityMutationsDeleteRegistrationArgs = {
+  id: Scalars["GadgetID"]["input"];
+};
+
+export type InternalUniversityMutationsDeleteStudentArgs = {
+  id: Scalars["GadgetID"]["input"];
+};
+
+export type InternalUniversityMutationsTriggerCreateAssignmentArgs = {
+  context?: InputMaybe<AppGraphQlTriggerMutationContext>;
+  params?: InputMaybe<Scalars["JSONObject"]["input"]>;
+  trigger?: InputMaybe<Scalars["JSONObject"]["input"]>;
+  verifyTriggerExists?: InputMaybe<Scalars["Boolean"]["input"]>;
+};
+
+export type InternalUniversityMutationsTriggerCreateCourseArgs = {
+  context?: InputMaybe<AppGraphQlTriggerMutationContext>;
+  params?: InputMaybe<Scalars["JSONObject"]["input"]>;
+  trigger?: InputMaybe<Scalars["JSONObject"]["input"]>;
+  verifyTriggerExists?: InputMaybe<Scalars["Boolean"]["input"]>;
+};
+
+export type InternalUniversityMutationsTriggerCreateProfessorArgs = {
+  context?: InputMaybe<AppGraphQlTriggerMutationContext>;
+  params?: InputMaybe<Scalars["JSONObject"]["input"]>;
+  trigger?: InputMaybe<Scalars["JSONObject"]["input"]>;
+  verifyTriggerExists?: InputMaybe<Scalars["Boolean"]["input"]>;
+};
+
+export type InternalUniversityMutationsTriggerCreateRegistrationArgs = {
+  context?: InputMaybe<AppGraphQlTriggerMutationContext>;
+  params?: InputMaybe<Scalars["JSONObject"]["input"]>;
+  trigger?: InputMaybe<Scalars["JSONObject"]["input"]>;
+  verifyTriggerExists?: InputMaybe<Scalars["Boolean"]["input"]>;
+};
+
+export type InternalUniversityMutationsTriggerCreateStudentArgs = {
+  context?: InputMaybe<AppGraphQlTriggerMutationContext>;
+  params?: InputMaybe<Scalars["JSONObject"]["input"]>;
+  trigger?: InputMaybe<Scalars["JSONObject"]["input"]>;
+  verifyTriggerExists?: InputMaybe<Scalars["Boolean"]["input"]>;
+};
+
+export type InternalUniversityMutationsTriggerDeleteAssignmentArgs = {
+  context?: InputMaybe<AppGraphQlTriggerMutationContext>;
+  params?: InputMaybe<Scalars["JSONObject"]["input"]>;
+  trigger?: InputMaybe<Scalars["JSONObject"]["input"]>;
+  verifyTriggerExists?: InputMaybe<Scalars["Boolean"]["input"]>;
+};
+
+export type InternalUniversityMutationsTriggerDeleteCourseArgs = {
+  context?: InputMaybe<AppGraphQlTriggerMutationContext>;
+  params?: InputMaybe<Scalars["JSONObject"]["input"]>;
+  trigger?: InputMaybe<Scalars["JSONObject"]["input"]>;
+  verifyTriggerExists?: InputMaybe<Scalars["Boolean"]["input"]>;
+};
+
+export type InternalUniversityMutationsTriggerDeleteProfessorArgs = {
+  context?: InputMaybe<AppGraphQlTriggerMutationContext>;
+  params?: InputMaybe<Scalars["JSONObject"]["input"]>;
+  trigger?: InputMaybe<Scalars["JSONObject"]["input"]>;
+  verifyTriggerExists?: InputMaybe<Scalars["Boolean"]["input"]>;
+};
+
+export type InternalUniversityMutationsTriggerDeleteRegistrationArgs = {
+  context?: InputMaybe<AppGraphQlTriggerMutationContext>;
+  params?: InputMaybe<Scalars["JSONObject"]["input"]>;
+  trigger?: InputMaybe<Scalars["JSONObject"]["input"]>;
+  verifyTriggerExists?: InputMaybe<Scalars["Boolean"]["input"]>;
+};
+
+export type InternalUniversityMutationsTriggerDeleteStudentArgs = {
+  context?: InputMaybe<AppGraphQlTriggerMutationContext>;
+  params?: InputMaybe<Scalars["JSONObject"]["input"]>;
+  trigger?: InputMaybe<Scalars["JSONObject"]["input"]>;
+  verifyTriggerExists?: InputMaybe<Scalars["Boolean"]["input"]>;
+};
+
+export type InternalUniversityMutationsTriggerUpdateAssignmentArgs = {
+  context?: InputMaybe<AppGraphQlTriggerMutationContext>;
+  params?: InputMaybe<Scalars["JSONObject"]["input"]>;
+  trigger?: InputMaybe<Scalars["JSONObject"]["input"]>;
+  verifyTriggerExists?: InputMaybe<Scalars["Boolean"]["input"]>;
+};
+
+export type InternalUniversityMutationsTriggerUpdateCourseArgs = {
+  context?: InputMaybe<AppGraphQlTriggerMutationContext>;
+  params?: InputMaybe<Scalars["JSONObject"]["input"]>;
+  trigger?: InputMaybe<Scalars["JSONObject"]["input"]>;
+  verifyTriggerExists?: InputMaybe<Scalars["Boolean"]["input"]>;
+};
+
+export type InternalUniversityMutationsTriggerUpdateProfessorArgs = {
+  context?: InputMaybe<AppGraphQlTriggerMutationContext>;
+  params?: InputMaybe<Scalars["JSONObject"]["input"]>;
+  trigger?: InputMaybe<Scalars["JSONObject"]["input"]>;
+  verifyTriggerExists?: InputMaybe<Scalars["Boolean"]["input"]>;
+};
+
+export type InternalUniversityMutationsTriggerUpdateRegistrationArgs = {
+  context?: InputMaybe<AppGraphQlTriggerMutationContext>;
+  params?: InputMaybe<Scalars["JSONObject"]["input"]>;
+  trigger?: InputMaybe<Scalars["JSONObject"]["input"]>;
+  verifyTriggerExists?: InputMaybe<Scalars["Boolean"]["input"]>;
+};
+
+export type InternalUniversityMutationsTriggerUpdateStudentArgs = {
+  context?: InputMaybe<AppGraphQlTriggerMutationContext>;
+  params?: InputMaybe<Scalars["JSONObject"]["input"]>;
+  trigger?: InputMaybe<Scalars["JSONObject"]["input"]>;
+  verifyTriggerExists?: InputMaybe<Scalars["Boolean"]["input"]>;
+};
+
+export type InternalUniversityMutationsUpdateAssignmentArgs = {
+  assignment?: InputMaybe<InternalUniversityAssignmentInput>;
+  id: Scalars["GadgetID"]["input"];
+};
+
+export type InternalUniversityMutationsUpdateCourseArgs = {
+  course?: InputMaybe<InternalUniversityCourseInput>;
+  id: Scalars["GadgetID"]["input"];
+};
+
+export type InternalUniversityMutationsUpdateProfessorArgs = {
+  id: Scalars["GadgetID"]["input"];
+  professor?: InputMaybe<InternalUniversityProfessorInput>;
+};
+
+export type InternalUniversityMutationsUpdateRegistrationArgs = {
+  id: Scalars["GadgetID"]["input"];
+  registration?: InputMaybe<InternalUniversityRegistrationInput>;
+};
+
+export type InternalUniversityMutationsUpdateStudentArgs = {
+  id: Scalars["GadgetID"]["input"];
+  student?: InputMaybe<InternalUniversityStudentInput>;
+};
+
+export type InternalUniversityMutationsUpsertAssignmentArgs = {
+  assignment?: InputMaybe<InternalUniversityAssignmentInput>;
+  on?: InputMaybe<Array<Scalars["String"]["input"]>>;
+};
+
+export type InternalUniversityMutationsUpsertCourseArgs = {
+  course?: InputMaybe<InternalUniversityCourseInput>;
+  on?: InputMaybe<Array<Scalars["String"]["input"]>>;
+};
+
+export type InternalUniversityMutationsUpsertProfessorArgs = {
+  on?: InputMaybe<Array<Scalars["String"]["input"]>>;
+  professor?: InputMaybe<InternalUniversityProfessorInput>;
+};
+
+export type InternalUniversityMutationsUpsertRegistrationArgs = {
+  on?: InputMaybe<Array<Scalars["String"]["input"]>>;
+  registration?: InputMaybe<InternalUniversityRegistrationInput>;
+};
+
+export type InternalUniversityMutationsUpsertStudentArgs = {
+  on?: InputMaybe<Array<Scalars["String"]["input"]>>;
+  student?: InputMaybe<InternalUniversityStudentInput>;
+};
+
+export type InternalUniversityProfessorInput = {
+  createdAt?: InputMaybe<Scalars["DateTime"]["input"]>;
+  firstName?: InputMaybe<Scalars["String"]["input"]>;
+  id?: InputMaybe<Scalars["GadgetID"]["input"]>;
+  lastName?: InputMaybe<Scalars["String"]["input"]>;
+  state?: InputMaybe<Scalars["RecordState"]["input"]>;
+  stateHistory?: InputMaybe<Scalars["RecordState"]["input"]>;
+  title?: InputMaybe<Scalars["ProfessorTitleEnum"]["input"]>;
+  updatedAt?: InputMaybe<Scalars["DateTime"]["input"]>;
+};
+
+/** A connection to a list of InternalUniversityProfessorRecord items. */
+export type InternalUniversityProfessorRecordConnection = {
+  __typename?: "InternalUniversityProfessorRecordConnection";
+  /** A list of edges. */
+  edges: Array<InternalUniversityProfessorRecordEdge>;
+  /** Information to aid in pagination. */
+  pageInfo: PageInfo;
+};
+
+/** An edge in a InternalUniversityProfessorRecord connection. */
+export type InternalUniversityProfessorRecordEdge = {
+  __typename?: "InternalUniversityProfessorRecordEdge";
+  /** A cursor for use in pagination */
+  cursor: Scalars["String"]["output"];
+  /** The item at the end of the edge */
+  node: Scalars["InternalUniversityProfessorRecord"]["output"];
+};
+
+export type InternalUniversityQueries = {
+  __typename?: "InternalUniversityQueries";
+  assignment?: Maybe<Scalars["InternalUniversityAssignmentRecord"]["output"]>;
+  course?: Maybe<Scalars["InternalUniversityCourseRecord"]["output"]>;
+  /** Currently open platform transaction details, or null if no transaction is open */
+  currentTransactionDetails?: Maybe<Scalars["JSONObject"]["output"]>;
+  listAssignment: InternalUniversityAssignmentRecordConnection;
+  listCourse: InternalUniversityCourseRecordConnection;
+  listProfessor: InternalUniversityProfessorRecordConnection;
+  listRegistration: InternalUniversityRegistrationRecordConnection;
+  listStudent: InternalUniversityStudentRecordConnection;
+  professor?: Maybe<Scalars["InternalUniversityProfessorRecord"]["output"]>;
+  registration?: Maybe<Scalars["InternalUniversityRegistrationRecord"]["output"]>;
+  student?: Maybe<Scalars["InternalUniversityStudentRecord"]["output"]>;
+};
+
+export type InternalUniversityQueriesAssignmentArgs = {
+  id: Scalars["GadgetID"]["input"];
+  select?: InputMaybe<Array<Scalars["String"]["input"]>>;
+};
+
+export type InternalUniversityQueriesCourseArgs = {
+  id: Scalars["GadgetID"]["input"];
+  select?: InputMaybe<Array<Scalars["String"]["input"]>>;
+};
+
+export type InternalUniversityQueriesListAssignmentArgs = {
+  after?: InputMaybe<Scalars["String"]["input"]>;
+  before?: InputMaybe<Scalars["String"]["input"]>;
+  filter?: InputMaybe<Array<UniversityAssignmentFilter>>;
+  first?: InputMaybe<Scalars["Int"]["input"]>;
+  last?: InputMaybe<Scalars["Int"]["input"]>;
+  search?: InputMaybe<Scalars["String"]["input"]>;
+  select?: InputMaybe<Array<Scalars["String"]["input"]>>;
+  sort?: InputMaybe<Array<UniversityAssignmentSort>>;
+};
+
+export type InternalUniversityQueriesListCourseArgs = {
+  after?: InputMaybe<Scalars["String"]["input"]>;
+  before?: InputMaybe<Scalars["String"]["input"]>;
+  filter?: InputMaybe<Array<UniversityCourseFilter>>;
+  first?: InputMaybe<Scalars["Int"]["input"]>;
+  last?: InputMaybe<Scalars["Int"]["input"]>;
+  search?: InputMaybe<Scalars["String"]["input"]>;
+  select?: InputMaybe<Array<Scalars["String"]["input"]>>;
+  sort?: InputMaybe<Array<UniversityCourseSort>>;
+};
+
+export type InternalUniversityQueriesListProfessorArgs = {
+  after?: InputMaybe<Scalars["String"]["input"]>;
+  before?: InputMaybe<Scalars["String"]["input"]>;
+  filter?: InputMaybe<Array<UniversityProfessorFilter>>;
+  first?: InputMaybe<Scalars["Int"]["input"]>;
+  last?: InputMaybe<Scalars["Int"]["input"]>;
+  search?: InputMaybe<Scalars["String"]["input"]>;
+  select?: InputMaybe<Array<Scalars["String"]["input"]>>;
+  sort?: InputMaybe<Array<UniversityProfessorSort>>;
+};
+
+export type InternalUniversityQueriesListRegistrationArgs = {
+  after?: InputMaybe<Scalars["String"]["input"]>;
+  before?: InputMaybe<Scalars["String"]["input"]>;
+  filter?: InputMaybe<Array<UniversityRegistrationFilter>>;
+  first?: InputMaybe<Scalars["Int"]["input"]>;
+  last?: InputMaybe<Scalars["Int"]["input"]>;
+  search?: InputMaybe<Scalars["String"]["input"]>;
+  select?: InputMaybe<Array<Scalars["String"]["input"]>>;
+  sort?: InputMaybe<Array<UniversityRegistrationSort>>;
+};
+
+export type InternalUniversityQueriesListStudentArgs = {
+  after?: InputMaybe<Scalars["String"]["input"]>;
+  before?: InputMaybe<Scalars["String"]["input"]>;
+  filter?: InputMaybe<Array<UniversityStudentFilter>>;
+  first?: InputMaybe<Scalars["Int"]["input"]>;
+  last?: InputMaybe<Scalars["Int"]["input"]>;
+  search?: InputMaybe<Scalars["String"]["input"]>;
+  select?: InputMaybe<Array<Scalars["String"]["input"]>>;
+  sort?: InputMaybe<Array<UniversityStudentSort>>;
+};
+
+export type InternalUniversityQueriesProfessorArgs = {
+  id: Scalars["GadgetID"]["input"];
+  select?: InputMaybe<Array<Scalars["String"]["input"]>>;
+};
+
+export type InternalUniversityQueriesRegistrationArgs = {
+  id: Scalars["GadgetID"]["input"];
+  select?: InputMaybe<Array<Scalars["String"]["input"]>>;
+};
+
+export type InternalUniversityQueriesStudentArgs = {
+  id: Scalars["GadgetID"]["input"];
+  select?: InputMaybe<Array<Scalars["String"]["input"]>>;
+};
+
+export type InternalUniversityRegistrationInput = {
+  course?: InputMaybe<InternalBelongsToInput>;
+  createdAt?: InputMaybe<Scalars["DateTime"]["input"]>;
+  effectiveFrom?: InputMaybe<Scalars["DateOrDateTime"]["input"]>;
+  effectiveTo?: InputMaybe<Scalars["DateOrDateTime"]["input"]>;
+  id?: InputMaybe<Scalars["GadgetID"]["input"]>;
+  state?: InputMaybe<Scalars["RecordState"]["input"]>;
+  stateHistory?: InputMaybe<Scalars["RecordState"]["input"]>;
+  student?: InputMaybe<InternalBelongsToInput>;
+  updatedAt?: InputMaybe<Scalars["DateTime"]["input"]>;
+};
+
+/** A connection to a list of InternalUniversityRegistrationRecord items. */
+export type InternalUniversityRegistrationRecordConnection = {
+  __typename?: "InternalUniversityRegistrationRecordConnection";
+  /** A list of edges. */
+  edges: Array<InternalUniversityRegistrationRecordEdge>;
+  /** Information to aid in pagination. */
+  pageInfo: PageInfo;
+};
+
+/** An edge in a InternalUniversityRegistrationRecord connection. */
+export type InternalUniversityRegistrationRecordEdge = {
+  __typename?: "InternalUniversityRegistrationRecordEdge";
+  /** A cursor for use in pagination */
+  cursor: Scalars["String"]["output"];
+  /** The item at the end of the edge */
+  node: Scalars["InternalUniversityRegistrationRecord"]["output"];
+};
+
+export type InternalUniversityStudentAtomicsInput = {
+  /** Numeric atomic commands for operating on year. */
+  year?: InputMaybe<Array<NumericAtomicFieldUpdateInput>>;
+};
+
+export type InternalUniversityStudentInput = {
+  /** An optional list of atomically applied commands for race-safe mutations of the record */
+  _atomics?: InputMaybe<InternalUniversityStudentAtomicsInput>;
+  createdAt?: InputMaybe<Scalars["DateTime"]["input"]>;
+  department?: InputMaybe<Scalars["StudentDepartmentEnum"]["input"]>;
+  firstName?: InputMaybe<Scalars["String"]["input"]>;
+  id?: InputMaybe<Scalars["GadgetID"]["input"]>;
+  lastName?: InputMaybe<Scalars["String"]["input"]>;
+  state?: InputMaybe<Scalars["RecordState"]["input"]>;
+  stateHistory?: InputMaybe<Scalars["RecordState"]["input"]>;
+  updatedAt?: InputMaybe<Scalars["DateTime"]["input"]>;
+  year?: InputMaybe<Scalars["Int"]["input"]>;
+};
+
+/** A connection to a list of InternalUniversityStudentRecord items. */
+export type InternalUniversityStudentRecordConnection = {
+  __typename?: "InternalUniversityStudentRecordConnection";
+  /** A list of edges. */
+  edges: Array<InternalUniversityStudentRecordEdge>;
+  /** Information to aid in pagination. */
+  pageInfo: PageInfo;
+};
+
+/** An edge in a InternalUniversityStudentRecord connection. */
+export type InternalUniversityStudentRecordEdge = {
+  __typename?: "InternalUniversityStudentRecordEdge";
+  /** A cursor for use in pagination */
+  cursor: Scalars["String"]["output"];
+  /** The item at the end of the edge */
+  node: Scalars["InternalUniversityStudentRecord"]["output"];
+};
+
 export type InternalUpdateAutoTableTestRelatedModelResult = {
   __typename?: "InternalUpdateAutoTableTestRelatedModelResult";
   _autoTableTestRelatedModel?: Maybe<Scalars["InternalAutoTableTestRelatedModelRecord"]["output"]>;
+  /** Whether the record was created by this upsert operation */
+  created: Scalars["Boolean"]["output"];
   errors?: Maybe<Array<ExecutionError>>;
   success: Scalars["Boolean"]["output"];
 };
@@ -8759,19 +11401,43 @@ export type InternalUpdateAutoTableTestRelatedModelResult = {
 export type InternalUpdateAutoTableTestResult = {
   __typename?: "InternalUpdateAutoTableTestResult";
   autoTableTest?: Maybe<Scalars["InternalAutoTableTestRecord"]["output"]>;
+  /** Whether the record was created by this upsert operation */
+  created: Scalars["Boolean"]["output"];
   errors?: Maybe<Array<ExecutionError>>;
+  success: Scalars["Boolean"]["output"];
+};
+
+export type InternalUpdateDoodadResult = {
+  __typename?: "InternalUpdateDoodadResult";
+  /** Whether the record was created by this upsert operation */
+  created: Scalars["Boolean"]["output"];
+  doodad?: Maybe<Scalars["InternalDoodadRecord"]["output"]>;
+  errors?: Maybe<Array<ExecutionError>>;
+  success: Scalars["Boolean"]["output"];
+};
+
+export type InternalUpdateFriendshipResult = {
+  __typename?: "InternalUpdateFriendshipResult";
+  /** Whether the record was created by this upsert operation */
+  created: Scalars["Boolean"]["output"];
+  errors?: Maybe<Array<ExecutionError>>;
+  friendship?: Maybe<Scalars["InternalFriendshipRecord"]["output"]>;
   success: Scalars["Boolean"]["output"];
 };
 
 export type InternalUpdateGameCityResult = {
   __typename?: "InternalUpdateGameCityResult";
   city?: Maybe<Scalars["InternalGameCityRecord"]["output"]>;
+  /** Whether the record was created by this upsert operation */
+  created: Scalars["Boolean"]["output"];
   errors?: Maybe<Array<ExecutionError>>;
   success: Scalars["Boolean"]["output"];
 };
 
 export type InternalUpdateGamePlayerResult = {
   __typename?: "InternalUpdateGamePlayerResult";
+  /** Whether the record was created by this upsert operation */
+  created: Scalars["Boolean"]["output"];
   errors?: Maybe<Array<ExecutionError>>;
   player?: Maybe<Scalars["InternalGamePlayerRecord"]["output"]>;
   success: Scalars["Boolean"]["output"];
@@ -8779,6 +11445,8 @@ export type InternalUpdateGamePlayerResult = {
 
 export type InternalUpdateGameRoundResult = {
   __typename?: "InternalUpdateGameRoundResult";
+  /** Whether the record was created by this upsert operation */
+  created: Scalars["Boolean"]["output"];
   errors?: Maybe<Array<ExecutionError>>;
   round?: Maybe<Scalars["InternalGameRoundRecord"]["output"]>;
   success: Scalars["Boolean"]["output"];
@@ -8786,6 +11454,8 @@ export type InternalUpdateGameRoundResult = {
 
 export type InternalUpdateGameStadiumResult = {
   __typename?: "InternalUpdateGameStadiumResult";
+  /** Whether the record was created by this upsert operation */
+  created: Scalars["Boolean"]["output"];
   errors?: Maybe<Array<ExecutionError>>;
   stadium?: Maybe<Scalars["InternalGameStadiumRecord"]["output"]>;
   success: Scalars["Boolean"]["output"];
@@ -8793,6 +11463,8 @@ export type InternalUpdateGameStadiumResult = {
 
 export type InternalUpdateGizmoResult = {
   __typename?: "InternalUpdateGizmoResult";
+  /** Whether the record was created by this upsert operation */
+  created: Scalars["Boolean"]["output"];
   errors?: Maybe<Array<ExecutionError>>;
   gizmo?: Maybe<Scalars["InternalGizmoRecord"]["output"]>;
   success: Scalars["Boolean"]["output"];
@@ -8801,12 +11473,16 @@ export type InternalUpdateGizmoResult = {
 export type InternalUpdateHasManyThroughBaseModelResult = {
   __typename?: "InternalUpdateHasManyThroughBaseModelResult";
   baseModel?: Maybe<Scalars["InternalHasManyThroughBaseModelRecord"]["output"]>;
+  /** Whether the record was created by this upsert operation */
+  created: Scalars["Boolean"]["output"];
   errors?: Maybe<Array<ExecutionError>>;
   success: Scalars["Boolean"]["output"];
 };
 
 export type InternalUpdateHasManyThroughJoinerModelResult = {
   __typename?: "InternalUpdateHasManyThroughJoinerModelResult";
+  /** Whether the record was created by this upsert operation */
+  created: Scalars["Boolean"]["output"];
   errors?: Maybe<Array<ExecutionError>>;
   joinerModel?: Maybe<Scalars["InternalHasManyThroughJoinerModelRecord"]["output"]>;
   success: Scalars["Boolean"]["output"];
@@ -8814,6 +11490,8 @@ export type InternalUpdateHasManyThroughJoinerModelResult = {
 
 export type InternalUpdateHasManyThroughSiblingModelResult = {
   __typename?: "InternalUpdateHasManyThroughSiblingModelResult";
+  /** Whether the record was created by this upsert operation */
+  created: Scalars["Boolean"]["output"];
   errors?: Maybe<Array<ExecutionError>>;
   siblingModel?: Maybe<Scalars["InternalHasManyThroughSiblingModelRecord"]["output"]>;
   success: Scalars["Boolean"]["output"];
@@ -8821,6 +11499,8 @@ export type InternalUpdateHasManyThroughSiblingModelResult = {
 
 export type InternalUpdateModelAResult = {
   __typename?: "InternalUpdateModelAResult";
+  /** Whether the record was created by this upsert operation */
+  created: Scalars["Boolean"]["output"];
   errors?: Maybe<Array<ExecutionError>>;
   modelA?: Maybe<Scalars["InternalModelARecord"]["output"]>;
   success: Scalars["Boolean"]["output"];
@@ -8828,6 +11508,8 @@ export type InternalUpdateModelAResult = {
 
 export type InternalUpdatePartResult = {
   __typename?: "InternalUpdatePartResult";
+  /** Whether the record was created by this upsert operation */
+  created: Scalars["Boolean"]["output"];
   errors?: Maybe<Array<ExecutionError>>;
   part?: Maybe<Scalars["InternalPartRecord"]["output"]>;
   success: Scalars["Boolean"]["output"];
@@ -8835,6 +11517,8 @@ export type InternalUpdatePartResult = {
 
 export type InternalUpdateSectionResult = {
   __typename?: "InternalUpdateSectionResult";
+  /** Whether the record was created by this upsert operation */
+  created: Scalars["Boolean"]["output"];
   errors?: Maybe<Array<ExecutionError>>;
   section?: Maybe<Scalars["InternalSectionRecord"]["output"]>;
   success: Scalars["Boolean"]["output"];
@@ -8842,6 +11526,8 @@ export type InternalUpdateSectionResult = {
 
 export type InternalUpdateSessionResult = {
   __typename?: "InternalUpdateSessionResult";
+  /** Whether the record was created by this upsert operation */
+  created: Scalars["Boolean"]["output"];
   errors?: Maybe<Array<ExecutionError>>;
   session?: Maybe<Scalars["InternalSessionRecord"]["output"]>;
   success: Scalars["Boolean"]["output"];
@@ -8849,6 +11535,8 @@ export type InternalUpdateSessionResult = {
 
 export type InternalUpdateShopifyGdprRequestResult = {
   __typename?: "InternalUpdateShopifyGdprRequestResult";
+  /** Whether the record was created by this upsert operation */
+  created: Scalars["Boolean"]["output"];
   errors?: Maybe<Array<ExecutionError>>;
   shopifyGdprRequest?: Maybe<Scalars["InternalShopifyGdprRequestRecord"]["output"]>;
   success: Scalars["Boolean"]["output"];
@@ -8856,6 +11544,8 @@ export type InternalUpdateShopifyGdprRequestResult = {
 
 export type InternalUpdateShopifyProductImageResult = {
   __typename?: "InternalUpdateShopifyProductImageResult";
+  /** Whether the record was created by this upsert operation */
+  created: Scalars["Boolean"]["output"];
   errors?: Maybe<Array<ExecutionError>>;
   shopifyProductImage?: Maybe<Scalars["InternalShopifyProductImageRecord"]["output"]>;
   success: Scalars["Boolean"]["output"];
@@ -8863,6 +11553,8 @@ export type InternalUpdateShopifyProductImageResult = {
 
 export type InternalUpdateShopifyProductOptionResult = {
   __typename?: "InternalUpdateShopifyProductOptionResult";
+  /** Whether the record was created by this upsert operation */
+  created: Scalars["Boolean"]["output"];
   errors?: Maybe<Array<ExecutionError>>;
   shopifyProductOption?: Maybe<Scalars["InternalShopifyProductOptionRecord"]["output"]>;
   success: Scalars["Boolean"]["output"];
@@ -8870,6 +11562,8 @@ export type InternalUpdateShopifyProductOptionResult = {
 
 export type InternalUpdateShopifyProductResult = {
   __typename?: "InternalUpdateShopifyProductResult";
+  /** Whether the record was created by this upsert operation */
+  created: Scalars["Boolean"]["output"];
   errors?: Maybe<Array<ExecutionError>>;
   shopifyProduct?: Maybe<Scalars["InternalShopifyProductRecord"]["output"]>;
   success: Scalars["Boolean"]["output"];
@@ -8877,6 +11571,8 @@ export type InternalUpdateShopifyProductResult = {
 
 export type InternalUpdateShopifyProductVariantResult = {
   __typename?: "InternalUpdateShopifyProductVariantResult";
+  /** Whether the record was created by this upsert operation */
+  created: Scalars["Boolean"]["output"];
   errors?: Maybe<Array<ExecutionError>>;
   shopifyProductVariant?: Maybe<Scalars["InternalShopifyProductVariantRecord"]["output"]>;
   success: Scalars["Boolean"]["output"];
@@ -8884,6 +11580,8 @@ export type InternalUpdateShopifyProductVariantResult = {
 
 export type InternalUpdateShopifyShopResult = {
   __typename?: "InternalUpdateShopifyShopResult";
+  /** Whether the record was created by this upsert operation */
+  created: Scalars["Boolean"]["output"];
   errors?: Maybe<Array<ExecutionError>>;
   shopifyShop?: Maybe<Scalars["InternalShopifyShopRecord"]["output"]>;
   success: Scalars["Boolean"]["output"];
@@ -8891,20 +11589,35 @@ export type InternalUpdateShopifyShopResult = {
 
 export type InternalUpdateShopifySyncResult = {
   __typename?: "InternalUpdateShopifySyncResult";
+  /** Whether the record was created by this upsert operation */
+  created: Scalars["Boolean"]["output"];
   errors?: Maybe<Array<ExecutionError>>;
   shopifySync?: Maybe<Scalars["InternalShopifySyncRecord"]["output"]>;
   success: Scalars["Boolean"]["output"];
 };
 
+export type InternalUpdateTweeterResult = {
+  __typename?: "InternalUpdateTweeterResult";
+  /** Whether the record was created by this upsert operation */
+  created: Scalars["Boolean"]["output"];
+  errors?: Maybe<Array<ExecutionError>>;
+  success: Scalars["Boolean"]["output"];
+  tweeter?: Maybe<Scalars["InternalTweeterRecord"]["output"]>;
+};
+
 export type InternalUpdateUniqueFieldsChildModelResult = {
   __typename?: "InternalUpdateUniqueFieldsChildModelResult";
   childModel?: Maybe<Scalars["InternalUniqueFieldsChildModelRecord"]["output"]>;
+  /** Whether the record was created by this upsert operation */
+  created: Scalars["Boolean"]["output"];
   errors?: Maybe<Array<ExecutionError>>;
   success: Scalars["Boolean"]["output"];
 };
 
 export type InternalUpdateUniqueFieldsMainModelResult = {
   __typename?: "InternalUpdateUniqueFieldsMainModelResult";
+  /** Whether the record was created by this upsert operation */
+  created: Scalars["Boolean"]["output"];
   errors?: Maybe<Array<ExecutionError>>;
   mainModel?: Maybe<Scalars["InternalUniqueFieldsMainModelRecord"]["output"]>;
   success: Scalars["Boolean"]["output"];
@@ -8912,13 +11625,62 @@ export type InternalUpdateUniqueFieldsMainModelResult = {
 
 export type InternalUpdateUniqueFieldsParentModelResult = {
   __typename?: "InternalUpdateUniqueFieldsParentModelResult";
+  /** Whether the record was created by this upsert operation */
+  created: Scalars["Boolean"]["output"];
   errors?: Maybe<Array<ExecutionError>>;
   parentModel?: Maybe<Scalars["InternalUniqueFieldsParentModelRecord"]["output"]>;
   success: Scalars["Boolean"]["output"];
 };
 
+export type InternalUpdateUniversityAssignmentResult = {
+  __typename?: "InternalUpdateUniversityAssignmentResult";
+  assignment?: Maybe<Scalars["InternalUniversityAssignmentRecord"]["output"]>;
+  /** Whether the record was created by this upsert operation */
+  created: Scalars["Boolean"]["output"];
+  errors?: Maybe<Array<ExecutionError>>;
+  success: Scalars["Boolean"]["output"];
+};
+
+export type InternalUpdateUniversityCourseResult = {
+  __typename?: "InternalUpdateUniversityCourseResult";
+  course?: Maybe<Scalars["InternalUniversityCourseRecord"]["output"]>;
+  /** Whether the record was created by this upsert operation */
+  created: Scalars["Boolean"]["output"];
+  errors?: Maybe<Array<ExecutionError>>;
+  success: Scalars["Boolean"]["output"];
+};
+
+export type InternalUpdateUniversityProfessorResult = {
+  __typename?: "InternalUpdateUniversityProfessorResult";
+  /** Whether the record was created by this upsert operation */
+  created: Scalars["Boolean"]["output"];
+  errors?: Maybe<Array<ExecutionError>>;
+  professor?: Maybe<Scalars["InternalUniversityProfessorRecord"]["output"]>;
+  success: Scalars["Boolean"]["output"];
+};
+
+export type InternalUpdateUniversityRegistrationResult = {
+  __typename?: "InternalUpdateUniversityRegistrationResult";
+  /** Whether the record was created by this upsert operation */
+  created: Scalars["Boolean"]["output"];
+  errors?: Maybe<Array<ExecutionError>>;
+  registration?: Maybe<Scalars["InternalUniversityRegistrationRecord"]["output"]>;
+  success: Scalars["Boolean"]["output"];
+};
+
+export type InternalUpdateUniversityStudentResult = {
+  __typename?: "InternalUpdateUniversityStudentResult";
+  /** Whether the record was created by this upsert operation */
+  created: Scalars["Boolean"]["output"];
+  errors?: Maybe<Array<ExecutionError>>;
+  student?: Maybe<Scalars["InternalUniversityStudentRecord"]["output"]>;
+  success: Scalars["Boolean"]["output"];
+};
+
 export type InternalUpdateUserResult = {
   __typename?: "InternalUpdateUserResult";
+  /** Whether the record was created by this upsert operation */
+  created: Scalars["Boolean"]["output"];
   errors?: Maybe<Array<ExecutionError>>;
   success: Scalars["Boolean"]["output"];
   user?: Maybe<Scalars["InternalUserRecord"]["output"]>;
@@ -8926,6 +11688,8 @@ export type InternalUpdateUserResult = {
 
 export type InternalUpdateWidgetResult = {
   __typename?: "InternalUpdateWidgetResult";
+  /** Whether the record was created by this upsert operation */
+  created: Scalars["Boolean"]["output"];
   errors?: Maybe<Array<ExecutionError>>;
   success: Scalars["Boolean"]["output"];
   widget?: Maybe<Scalars["InternalWidgetRecord"]["output"]>;
@@ -8934,6 +11698,8 @@ export type InternalUpdateWidgetResult = {
 export type InternalUpsertAutoTableTestRelatedModelResult = {
   __typename?: "InternalUpsertAutoTableTestRelatedModelResult";
   _autoTableTestRelatedModel?: Maybe<Scalars["InternalAutoTableTestRelatedModelRecord"]["output"]>;
+  /** Whether the record was created by this upsert operation */
+  created: Scalars["Boolean"]["output"];
   errors?: Maybe<Array<ExecutionError>>;
   success: Scalars["Boolean"]["output"];
 };
@@ -8941,19 +11707,43 @@ export type InternalUpsertAutoTableTestRelatedModelResult = {
 export type InternalUpsertAutoTableTestResult = {
   __typename?: "InternalUpsertAutoTableTestResult";
   autoTableTest?: Maybe<Scalars["InternalAutoTableTestRecord"]["output"]>;
+  /** Whether the record was created by this upsert operation */
+  created: Scalars["Boolean"]["output"];
   errors?: Maybe<Array<ExecutionError>>;
+  success: Scalars["Boolean"]["output"];
+};
+
+export type InternalUpsertDoodadResult = {
+  __typename?: "InternalUpsertDoodadResult";
+  /** Whether the record was created by this upsert operation */
+  created: Scalars["Boolean"]["output"];
+  doodad?: Maybe<Scalars["InternalDoodadRecord"]["output"]>;
+  errors?: Maybe<Array<ExecutionError>>;
+  success: Scalars["Boolean"]["output"];
+};
+
+export type InternalUpsertFriendshipResult = {
+  __typename?: "InternalUpsertFriendshipResult";
+  /** Whether the record was created by this upsert operation */
+  created: Scalars["Boolean"]["output"];
+  errors?: Maybe<Array<ExecutionError>>;
+  friendship?: Maybe<Scalars["InternalFriendshipRecord"]["output"]>;
   success: Scalars["Boolean"]["output"];
 };
 
 export type InternalUpsertGameCityResult = {
   __typename?: "InternalUpsertGameCityResult";
   city?: Maybe<Scalars["InternalGameCityRecord"]["output"]>;
+  /** Whether the record was created by this upsert operation */
+  created: Scalars["Boolean"]["output"];
   errors?: Maybe<Array<ExecutionError>>;
   success: Scalars["Boolean"]["output"];
 };
 
 export type InternalUpsertGamePlayerResult = {
   __typename?: "InternalUpsertGamePlayerResult";
+  /** Whether the record was created by this upsert operation */
+  created: Scalars["Boolean"]["output"];
   errors?: Maybe<Array<ExecutionError>>;
   player?: Maybe<Scalars["InternalGamePlayerRecord"]["output"]>;
   success: Scalars["Boolean"]["output"];
@@ -8961,6 +11751,8 @@ export type InternalUpsertGamePlayerResult = {
 
 export type InternalUpsertGameRoundResult = {
   __typename?: "InternalUpsertGameRoundResult";
+  /** Whether the record was created by this upsert operation */
+  created: Scalars["Boolean"]["output"];
   errors?: Maybe<Array<ExecutionError>>;
   round?: Maybe<Scalars["InternalGameRoundRecord"]["output"]>;
   success: Scalars["Boolean"]["output"];
@@ -8968,6 +11760,8 @@ export type InternalUpsertGameRoundResult = {
 
 export type InternalUpsertGameStadiumResult = {
   __typename?: "InternalUpsertGameStadiumResult";
+  /** Whether the record was created by this upsert operation */
+  created: Scalars["Boolean"]["output"];
   errors?: Maybe<Array<ExecutionError>>;
   stadium?: Maybe<Scalars["InternalGameStadiumRecord"]["output"]>;
   success: Scalars["Boolean"]["output"];
@@ -8975,6 +11769,8 @@ export type InternalUpsertGameStadiumResult = {
 
 export type InternalUpsertGizmoResult = {
   __typename?: "InternalUpsertGizmoResult";
+  /** Whether the record was created by this upsert operation */
+  created: Scalars["Boolean"]["output"];
   errors?: Maybe<Array<ExecutionError>>;
   gizmo?: Maybe<Scalars["InternalGizmoRecord"]["output"]>;
   success: Scalars["Boolean"]["output"];
@@ -8983,12 +11779,16 @@ export type InternalUpsertGizmoResult = {
 export type InternalUpsertHasManyThroughBaseModelResult = {
   __typename?: "InternalUpsertHasManyThroughBaseModelResult";
   baseModel?: Maybe<Scalars["InternalHasManyThroughBaseModelRecord"]["output"]>;
+  /** Whether the record was created by this upsert operation */
+  created: Scalars["Boolean"]["output"];
   errors?: Maybe<Array<ExecutionError>>;
   success: Scalars["Boolean"]["output"];
 };
 
 export type InternalUpsertHasManyThroughJoinerModelResult = {
   __typename?: "InternalUpsertHasManyThroughJoinerModelResult";
+  /** Whether the record was created by this upsert operation */
+  created: Scalars["Boolean"]["output"];
   errors?: Maybe<Array<ExecutionError>>;
   joinerModel?: Maybe<Scalars["InternalHasManyThroughJoinerModelRecord"]["output"]>;
   success: Scalars["Boolean"]["output"];
@@ -8996,6 +11796,8 @@ export type InternalUpsertHasManyThroughJoinerModelResult = {
 
 export type InternalUpsertHasManyThroughSiblingModelResult = {
   __typename?: "InternalUpsertHasManyThroughSiblingModelResult";
+  /** Whether the record was created by this upsert operation */
+  created: Scalars["Boolean"]["output"];
   errors?: Maybe<Array<ExecutionError>>;
   siblingModel?: Maybe<Scalars["InternalHasManyThroughSiblingModelRecord"]["output"]>;
   success: Scalars["Boolean"]["output"];
@@ -9003,6 +11805,8 @@ export type InternalUpsertHasManyThroughSiblingModelResult = {
 
 export type InternalUpsertModelAResult = {
   __typename?: "InternalUpsertModelAResult";
+  /** Whether the record was created by this upsert operation */
+  created: Scalars["Boolean"]["output"];
   errors?: Maybe<Array<ExecutionError>>;
   modelA?: Maybe<Scalars["InternalModelARecord"]["output"]>;
   success: Scalars["Boolean"]["output"];
@@ -9010,6 +11814,8 @@ export type InternalUpsertModelAResult = {
 
 export type InternalUpsertPartResult = {
   __typename?: "InternalUpsertPartResult";
+  /** Whether the record was created by this upsert operation */
+  created: Scalars["Boolean"]["output"];
   errors?: Maybe<Array<ExecutionError>>;
   part?: Maybe<Scalars["InternalPartRecord"]["output"]>;
   success: Scalars["Boolean"]["output"];
@@ -9017,6 +11823,8 @@ export type InternalUpsertPartResult = {
 
 export type InternalUpsertSectionResult = {
   __typename?: "InternalUpsertSectionResult";
+  /** Whether the record was created by this upsert operation */
+  created: Scalars["Boolean"]["output"];
   errors?: Maybe<Array<ExecutionError>>;
   section?: Maybe<Scalars["InternalSectionRecord"]["output"]>;
   success: Scalars["Boolean"]["output"];
@@ -9024,6 +11832,8 @@ export type InternalUpsertSectionResult = {
 
 export type InternalUpsertSessionResult = {
   __typename?: "InternalUpsertSessionResult";
+  /** Whether the record was created by this upsert operation */
+  created: Scalars["Boolean"]["output"];
   errors?: Maybe<Array<ExecutionError>>;
   session?: Maybe<Scalars["InternalSessionRecord"]["output"]>;
   success: Scalars["Boolean"]["output"];
@@ -9031,6 +11841,8 @@ export type InternalUpsertSessionResult = {
 
 export type InternalUpsertShopifyGdprRequestResult = {
   __typename?: "InternalUpsertShopifyGdprRequestResult";
+  /** Whether the record was created by this upsert operation */
+  created: Scalars["Boolean"]["output"];
   errors?: Maybe<Array<ExecutionError>>;
   shopifyGdprRequest?: Maybe<Scalars["InternalShopifyGdprRequestRecord"]["output"]>;
   success: Scalars["Boolean"]["output"];
@@ -9038,6 +11850,8 @@ export type InternalUpsertShopifyGdprRequestResult = {
 
 export type InternalUpsertShopifyProductImageResult = {
   __typename?: "InternalUpsertShopifyProductImageResult";
+  /** Whether the record was created by this upsert operation */
+  created: Scalars["Boolean"]["output"];
   errors?: Maybe<Array<ExecutionError>>;
   shopifyProductImage?: Maybe<Scalars["InternalShopifyProductImageRecord"]["output"]>;
   success: Scalars["Boolean"]["output"];
@@ -9045,6 +11859,8 @@ export type InternalUpsertShopifyProductImageResult = {
 
 export type InternalUpsertShopifyProductOptionResult = {
   __typename?: "InternalUpsertShopifyProductOptionResult";
+  /** Whether the record was created by this upsert operation */
+  created: Scalars["Boolean"]["output"];
   errors?: Maybe<Array<ExecutionError>>;
   shopifyProductOption?: Maybe<Scalars["InternalShopifyProductOptionRecord"]["output"]>;
   success: Scalars["Boolean"]["output"];
@@ -9052,6 +11868,8 @@ export type InternalUpsertShopifyProductOptionResult = {
 
 export type InternalUpsertShopifyProductResult = {
   __typename?: "InternalUpsertShopifyProductResult";
+  /** Whether the record was created by this upsert operation */
+  created: Scalars["Boolean"]["output"];
   errors?: Maybe<Array<ExecutionError>>;
   shopifyProduct?: Maybe<Scalars["InternalShopifyProductRecord"]["output"]>;
   success: Scalars["Boolean"]["output"];
@@ -9059,6 +11877,8 @@ export type InternalUpsertShopifyProductResult = {
 
 export type InternalUpsertShopifyProductVariantResult = {
   __typename?: "InternalUpsertShopifyProductVariantResult";
+  /** Whether the record was created by this upsert operation */
+  created: Scalars["Boolean"]["output"];
   errors?: Maybe<Array<ExecutionError>>;
   shopifyProductVariant?: Maybe<Scalars["InternalShopifyProductVariantRecord"]["output"]>;
   success: Scalars["Boolean"]["output"];
@@ -9066,6 +11886,8 @@ export type InternalUpsertShopifyProductVariantResult = {
 
 export type InternalUpsertShopifyShopResult = {
   __typename?: "InternalUpsertShopifyShopResult";
+  /** Whether the record was created by this upsert operation */
+  created: Scalars["Boolean"]["output"];
   errors?: Maybe<Array<ExecutionError>>;
   shopifyShop?: Maybe<Scalars["InternalShopifyShopRecord"]["output"]>;
   success: Scalars["Boolean"]["output"];
@@ -9073,20 +11895,35 @@ export type InternalUpsertShopifyShopResult = {
 
 export type InternalUpsertShopifySyncResult = {
   __typename?: "InternalUpsertShopifySyncResult";
+  /** Whether the record was created by this upsert operation */
+  created: Scalars["Boolean"]["output"];
   errors?: Maybe<Array<ExecutionError>>;
   shopifySync?: Maybe<Scalars["InternalShopifySyncRecord"]["output"]>;
   success: Scalars["Boolean"]["output"];
 };
 
+export type InternalUpsertTweeterResult = {
+  __typename?: "InternalUpsertTweeterResult";
+  /** Whether the record was created by this upsert operation */
+  created: Scalars["Boolean"]["output"];
+  errors?: Maybe<Array<ExecutionError>>;
+  success: Scalars["Boolean"]["output"];
+  tweeter?: Maybe<Scalars["InternalTweeterRecord"]["output"]>;
+};
+
 export type InternalUpsertUniqueFieldsChildModelResult = {
   __typename?: "InternalUpsertUniqueFieldsChildModelResult";
   childModel?: Maybe<Scalars["InternalUniqueFieldsChildModelRecord"]["output"]>;
+  /** Whether the record was created by this upsert operation */
+  created: Scalars["Boolean"]["output"];
   errors?: Maybe<Array<ExecutionError>>;
   success: Scalars["Boolean"]["output"];
 };
 
 export type InternalUpsertUniqueFieldsMainModelResult = {
   __typename?: "InternalUpsertUniqueFieldsMainModelResult";
+  /** Whether the record was created by this upsert operation */
+  created: Scalars["Boolean"]["output"];
   errors?: Maybe<Array<ExecutionError>>;
   mainModel?: Maybe<Scalars["InternalUniqueFieldsMainModelRecord"]["output"]>;
   success: Scalars["Boolean"]["output"];
@@ -9094,13 +11931,62 @@ export type InternalUpsertUniqueFieldsMainModelResult = {
 
 export type InternalUpsertUniqueFieldsParentModelResult = {
   __typename?: "InternalUpsertUniqueFieldsParentModelResult";
+  /** Whether the record was created by this upsert operation */
+  created: Scalars["Boolean"]["output"];
   errors?: Maybe<Array<ExecutionError>>;
   parentModel?: Maybe<Scalars["InternalUniqueFieldsParentModelRecord"]["output"]>;
   success: Scalars["Boolean"]["output"];
 };
 
+export type InternalUpsertUniversityAssignmentResult = {
+  __typename?: "InternalUpsertUniversityAssignmentResult";
+  assignment?: Maybe<Scalars["InternalUniversityAssignmentRecord"]["output"]>;
+  /** Whether the record was created by this upsert operation */
+  created: Scalars["Boolean"]["output"];
+  errors?: Maybe<Array<ExecutionError>>;
+  success: Scalars["Boolean"]["output"];
+};
+
+export type InternalUpsertUniversityCourseResult = {
+  __typename?: "InternalUpsertUniversityCourseResult";
+  course?: Maybe<Scalars["InternalUniversityCourseRecord"]["output"]>;
+  /** Whether the record was created by this upsert operation */
+  created: Scalars["Boolean"]["output"];
+  errors?: Maybe<Array<ExecutionError>>;
+  success: Scalars["Boolean"]["output"];
+};
+
+export type InternalUpsertUniversityProfessorResult = {
+  __typename?: "InternalUpsertUniversityProfessorResult";
+  /** Whether the record was created by this upsert operation */
+  created: Scalars["Boolean"]["output"];
+  errors?: Maybe<Array<ExecutionError>>;
+  professor?: Maybe<Scalars["InternalUniversityProfessorRecord"]["output"]>;
+  success: Scalars["Boolean"]["output"];
+};
+
+export type InternalUpsertUniversityRegistrationResult = {
+  __typename?: "InternalUpsertUniversityRegistrationResult";
+  /** Whether the record was created by this upsert operation */
+  created: Scalars["Boolean"]["output"];
+  errors?: Maybe<Array<ExecutionError>>;
+  registration?: Maybe<Scalars["InternalUniversityRegistrationRecord"]["output"]>;
+  success: Scalars["Boolean"]["output"];
+};
+
+export type InternalUpsertUniversityStudentResult = {
+  __typename?: "InternalUpsertUniversityStudentResult";
+  /** Whether the record was created by this upsert operation */
+  created: Scalars["Boolean"]["output"];
+  errors?: Maybe<Array<ExecutionError>>;
+  student?: Maybe<Scalars["InternalUniversityStudentRecord"]["output"]>;
+  success: Scalars["Boolean"]["output"];
+};
+
 export type InternalUpsertUserResult = {
   __typename?: "InternalUpsertUserResult";
+  /** Whether the record was created by this upsert operation */
+  created: Scalars["Boolean"]["output"];
   errors?: Maybe<Array<ExecutionError>>;
   success: Scalars["Boolean"]["output"];
   user?: Maybe<Scalars["InternalUserRecord"]["output"]>;
@@ -9108,6 +11994,8 @@ export type InternalUpsertUserResult = {
 
 export type InternalUpsertWidgetResult = {
   __typename?: "InternalUpsertWidgetResult";
+  /** Whether the record was created by this upsert operation */
+  created: Scalars["Boolean"]["output"];
   errors?: Maybe<Array<ExecutionError>>;
   success: Scalars["Boolean"]["output"];
   widget?: Maybe<Scalars["InternalWidgetRecord"]["output"]>;
@@ -9263,6 +12151,10 @@ export type MainModelBelongsToInput = {
 
 /** Input object supporting setting or updating related model record on a relationship field */
 export type MainModelHasOneInput = {
+  /** Existing ID of another record, which you would like to relink to this record */
+  _relink?: InputMaybe<HasOneRelinkInput>;
+  /** Existing ID of another record, which you would like to unlink from this record */
+  _unlink?: InputMaybe<Scalars["GadgetID"]["input"]>;
   create?: InputMaybe<NestedMainModelCreateInput>;
   delete?: InputMaybe<NestedMainModelDeleteInput>;
   update?: InputMaybe<NestedMainModelUpdateInput>;
@@ -9335,19 +12227,25 @@ export type Mutation = {
   bulkCompleteShopifySyncs?: Maybe<BulkCompleteShopifySyncsResult>;
   bulkCreateAutoTableTestRelatedModels?: Maybe<BulkCreateAutoTableTestRelatedModelsResult>;
   bulkCreateAutoTableTests?: Maybe<BulkCreateAutoTableTestsResult>;
+  bulkCreateDoodads?: Maybe<BulkCreateDoodadsResult>;
+  bulkCreateFriendships?: Maybe<BulkCreateFriendshipsResult>;
   bulkCreateGizmos?: Maybe<BulkCreateGizmosResult>;
   bulkCreateModelAs?: Maybe<BulkCreateModelAsResult>;
   bulkCreateParts?: Maybe<BulkCreatePartsResult>;
   bulkCreateSections?: Maybe<BulkCreateSectionsResult>;
+  bulkCreateTweeters?: Maybe<BulkCreateTweetersResult>;
   bulkCreateWidgets?: Maybe<BulkCreateWidgetsResult>;
   bulkCustomActionAutoTableTests?: Maybe<BulkCustomActionAutoTableTestsResult>;
   bulkCustomActionWithParamsAutoTableTests?: Maybe<BulkCustomActionWithParamsAutoTableTestsResult>;
   bulkDeleteAutoTableTestRelatedModels?: Maybe<BulkDeleteAutoTableTestRelatedModelsResult>;
   bulkDeleteAutoTableTests?: Maybe<BulkDeleteAutoTableTestsResult>;
+  bulkDeleteDoodads?: Maybe<BulkDeleteDoodadsResult>;
+  bulkDeleteFriendships?: Maybe<BulkDeleteFriendshipsResult>;
   bulkDeleteGizmos?: Maybe<BulkDeleteGizmosResult>;
   bulkDeleteModelAs?: Maybe<BulkDeleteModelAsResult>;
   bulkDeleteParts?: Maybe<BulkDeletePartsResult>;
   bulkDeleteSections?: Maybe<BulkDeleteSectionsResult>;
+  bulkDeleteTweeters?: Maybe<BulkDeleteTweetersResult>;
   bulkDeleteUsers?: Maybe<BulkDeleteUsersResult>;
   bulkDeleteWidgets?: Maybe<BulkDeleteWidgetsResult>;
   bulkErrorShopifySyncs?: Maybe<BulkErrorShopifySyncsResult>;
@@ -9357,39 +12255,51 @@ export type Mutation = {
   bulkSignUpUsers?: Maybe<BulkSignUpUsersResult>;
   bulkUpdateAutoTableTestRelatedModels?: Maybe<BulkUpdateAutoTableTestRelatedModelsResult>;
   bulkUpdateAutoTableTests?: Maybe<BulkUpdateAutoTableTestsResult>;
+  bulkUpdateDoodads?: Maybe<BulkUpdateDoodadsResult>;
+  bulkUpdateFriendships?: Maybe<BulkUpdateFriendshipsResult>;
   bulkUpdateGizmos?: Maybe<BulkUpdateGizmosResult>;
   bulkUpdateModelAs?: Maybe<BulkUpdateModelAsResult>;
   bulkUpdateParts?: Maybe<BulkUpdatePartsResult>;
   bulkUpdateSections?: Maybe<BulkUpdateSectionsResult>;
+  bulkUpdateTweeters?: Maybe<BulkUpdateTweetersResult>;
   bulkUpdateUsers?: Maybe<BulkUpdateUsersResult>;
   bulkUpdateWidgets?: Maybe<BulkUpdateWidgetsResult>;
   bulkUpdateWithCustomParamsAutoTableTests?: Maybe<BulkUpdateWithCustomParamsAutoTableTestsResult>;
   bulkUpsertAutoTableTestRelatedModels: BulkUpsertAutoTableTestRelatedModelsResult;
   bulkUpsertAutoTableTests: BulkUpsertAutoTableTestsResult;
+  bulkUpsertDoodads: BulkUpsertDoodadsResult;
+  bulkUpsertFriendships: BulkUpsertFriendshipsResult;
   bulkUpsertGizmos: BulkUpsertGizmosResult;
   bulkUpsertModelAs: BulkUpsertModelAsResult;
   bulkUpsertParts: BulkUpsertPartsResult;
   bulkUpsertSections: BulkUpsertSectionsResult;
   bulkUpsertShopifySyncs: BulkUpsertShopifySyncsResult;
+  bulkUpsertTweeters: BulkUpsertTweetersResult;
   bulkUpsertUsers: BulkUpsertUsersResult;
   bulkUpsertWidgets: BulkUpsertWidgetsResult;
   completeShopifySync?: Maybe<CompleteShopifySyncResult>;
   createAutoTableTest?: Maybe<CreateAutoTableTestResult>;
   createAutoTableTestRelatedModel?: Maybe<CreateAutoTableTestRelatedModelResult>;
+  createDoodad?: Maybe<CreateDoodadResult>;
+  createFriendship?: Maybe<CreateFriendshipResult>;
   createGizmo?: Maybe<CreateGizmoResult>;
   createModelA?: Maybe<CreateModelAResult>;
   createPart?: Maybe<CreatePartResult>;
   createSection?: Maybe<CreateSectionResult>;
   createTestData?: Maybe<CreateTestDataResult>;
+  createTweeter?: Maybe<CreateTweeterResult>;
   createWidget?: Maybe<CreateWidgetResult>;
   customActionAutoTableTest?: Maybe<CustomActionAutoTableTestResult>;
   customActionWithParamsAutoTableTest?: Maybe<CustomActionWithParamsAutoTableTestResult>;
   deleteAutoTableTest?: Maybe<DeleteAutoTableTestResult>;
   deleteAutoTableTestRelatedModel?: Maybe<DeleteAutoTableTestRelatedModelResult>;
+  deleteDoodad?: Maybe<DeleteDoodadResult>;
+  deleteFriendship?: Maybe<DeleteFriendshipResult>;
   deleteGizmo?: Maybe<DeleteGizmoResult>;
   deleteModelA?: Maybe<DeleteModelAResult>;
   deletePart?: Maybe<DeletePartResult>;
   deleteSection?: Maybe<DeleteSectionResult>;
+  deleteTweeter?: Maybe<DeleteTweeterResult>;
   deleteUser?: Maybe<DeleteUserResult>;
   deleteWidget?: Maybe<DeleteWidgetResult>;
   errorShopifySync?: Maybe<ErrorShopifySyncResult>;
@@ -9406,22 +12316,29 @@ export type Mutation = {
   signOutUser?: Maybe<SignOutUserResult>;
   signUpUser?: Maybe<SignUpUserResult>;
   uniqueFields: UniqueFieldsMutations;
+  university: UniversityMutations;
   updateAutoTableTest?: Maybe<UpdateAutoTableTestResult>;
   updateAutoTableTestRelatedModel?: Maybe<UpdateAutoTableTestRelatedModelResult>;
+  updateDoodad?: Maybe<UpdateDoodadResult>;
+  updateFriendship?: Maybe<UpdateFriendshipResult>;
   updateGizmo?: Maybe<UpdateGizmoResult>;
   updateModelA?: Maybe<UpdateModelAResult>;
   updatePart?: Maybe<UpdatePartResult>;
   updateSection?: Maybe<UpdateSectionResult>;
+  updateTweeter?: Maybe<UpdateTweeterResult>;
   updateUser?: Maybe<UpdateUserResult>;
   updateWidget?: Maybe<UpdateWidgetResult>;
   updateWithCustomParamsAutoTableTest?: Maybe<UpdateWithCustomParamsAutoTableTestResult>;
   upsertAutoTableTest?: Maybe<UpsertAutoTableTestResult>;
   upsertAutoTableTestRelatedModel?: Maybe<UpsertAutoTableTestRelatedModelResult>;
+  upsertDoodad?: Maybe<UpsertDoodadResult>;
+  upsertFriendship?: Maybe<UpsertFriendshipResult>;
   upsertGizmo?: Maybe<UpsertGizmoResult>;
   upsertModelA?: Maybe<UpsertModelAResult>;
   upsertPart?: Maybe<UpsertPartResult>;
   upsertSection?: Maybe<UpsertSectionResult>;
   upsertShopifySync?: Maybe<UpsertShopifySyncResult>;
+  upsertTweeter?: Maybe<UpsertTweeterResult>;
   upsertUser?: Maybe<UpsertUserResult>;
   upsertWidget?: Maybe<UpsertWidgetResult>;
 };
@@ -9464,6 +12381,14 @@ export type MutationBulkCreateAutoTableTestsArgs = {
   inputs: Array<BulkCreateAutoTableTestsInput>;
 };
 
+export type MutationBulkCreateDoodadsArgs = {
+  inputs: Array<BulkCreateDoodadsInput>;
+};
+
+export type MutationBulkCreateFriendshipsArgs = {
+  inputs: Array<BulkCreateFriendshipsInput>;
+};
+
 export type MutationBulkCreateGizmosArgs = {
   inputs: Array<BulkCreateGizmosInput>;
 };
@@ -9478,6 +12403,10 @@ export type MutationBulkCreatePartsArgs = {
 
 export type MutationBulkCreateSectionsArgs = {
   inputs: Array<BulkCreateSectionsInput>;
+};
+
+export type MutationBulkCreateTweetersArgs = {
+  inputs: Array<BulkCreateTweetersInput>;
 };
 
 export type MutationBulkCreateWidgetsArgs = {
@@ -9500,6 +12429,14 @@ export type MutationBulkDeleteAutoTableTestsArgs = {
   ids: Array<Scalars["GadgetID"]["input"]>;
 };
 
+export type MutationBulkDeleteDoodadsArgs = {
+  ids: Array<Scalars["GadgetID"]["input"]>;
+};
+
+export type MutationBulkDeleteFriendshipsArgs = {
+  ids: Array<Scalars["GadgetID"]["input"]>;
+};
+
 export type MutationBulkDeleteGizmosArgs = {
   ids: Array<Scalars["GadgetID"]["input"]>;
 };
@@ -9513,6 +12450,10 @@ export type MutationBulkDeletePartsArgs = {
 };
 
 export type MutationBulkDeleteSectionsArgs = {
+  ids: Array<Scalars["GadgetID"]["input"]>;
+};
+
+export type MutationBulkDeleteTweetersArgs = {
   ids: Array<Scalars["GadgetID"]["input"]>;
 };
 
@@ -9552,6 +12493,14 @@ export type MutationBulkUpdateAutoTableTestsArgs = {
   inputs: Array<BulkUpdateAutoTableTestsInput>;
 };
 
+export type MutationBulkUpdateDoodadsArgs = {
+  inputs: Array<BulkUpdateDoodadsInput>;
+};
+
+export type MutationBulkUpdateFriendshipsArgs = {
+  inputs: Array<BulkUpdateFriendshipsInput>;
+};
+
 export type MutationBulkUpdateGizmosArgs = {
   inputs: Array<BulkUpdateGizmosInput>;
 };
@@ -9566,6 +12515,10 @@ export type MutationBulkUpdatePartsArgs = {
 
 export type MutationBulkUpdateSectionsArgs = {
   inputs: Array<BulkUpdateSectionsInput>;
+};
+
+export type MutationBulkUpdateTweetersArgs = {
+  inputs: Array<BulkUpdateTweetersInput>;
 };
 
 export type MutationBulkUpdateUsersArgs = {
@@ -9588,6 +12541,14 @@ export type MutationBulkUpsertAutoTableTestsArgs = {
   inputs: Array<BulkUpsertAutoTableTestsInput>;
 };
 
+export type MutationBulkUpsertDoodadsArgs = {
+  inputs: Array<BulkUpsertDoodadsInput>;
+};
+
+export type MutationBulkUpsertFriendshipsArgs = {
+  inputs: Array<BulkUpsertFriendshipsInput>;
+};
+
 export type MutationBulkUpsertGizmosArgs = {
   inputs: Array<BulkUpsertGizmosInput>;
 };
@@ -9606,6 +12567,10 @@ export type MutationBulkUpsertSectionsArgs = {
 
 export type MutationBulkUpsertShopifySyncsArgs = {
   inputs: Array<BulkUpsertShopifySyncsInput>;
+};
+
+export type MutationBulkUpsertTweetersArgs = {
+  inputs: Array<BulkUpsertTweetersInput>;
 };
 
 export type MutationBulkUpsertUsersArgs = {
@@ -9629,6 +12594,14 @@ export type MutationCreateAutoTableTestRelatedModelArgs = {
   _autoTableTestRelatedModel?: InputMaybe<CreateAutoTableTestRelatedModelInput>;
 };
 
+export type MutationCreateDoodadArgs = {
+  doodad?: InputMaybe<CreateDoodadInput>;
+};
+
+export type MutationCreateFriendshipArgs = {
+  friendship?: InputMaybe<CreateFriendshipInput>;
+};
+
 export type MutationCreateGizmoArgs = {
   gizmo?: InputMaybe<CreateGizmoInput>;
 };
@@ -9639,6 +12612,10 @@ export type MutationCreatePartArgs = {
 
 export type MutationCreateSectionArgs = {
   section?: InputMaybe<CreateSectionInput>;
+};
+
+export type MutationCreateTweeterArgs = {
+  tweeter?: InputMaybe<CreateTweeterInput>;
 };
 
 export type MutationCreateWidgetArgs = {
@@ -9663,6 +12640,14 @@ export type MutationDeleteAutoTableTestRelatedModelArgs = {
   id: Scalars["GadgetID"]["input"];
 };
 
+export type MutationDeleteDoodadArgs = {
+  id: Scalars["GadgetID"]["input"];
+};
+
+export type MutationDeleteFriendshipArgs = {
+  id: Scalars["GadgetID"]["input"];
+};
+
 export type MutationDeleteGizmoArgs = {
   id: Scalars["GadgetID"]["input"];
 };
@@ -9676,6 +12661,10 @@ export type MutationDeletePartArgs = {
 };
 
 export type MutationDeleteSectionArgs = {
+  id: Scalars["GadgetID"]["input"];
+};
+
+export type MutationDeleteTweeterArgs = {
   id: Scalars["GadgetID"]["input"];
 };
 
@@ -9726,6 +12715,16 @@ export type MutationUpdateAutoTableTestRelatedModelArgs = {
   id: Scalars["GadgetID"]["input"];
 };
 
+export type MutationUpdateDoodadArgs = {
+  doodad?: InputMaybe<UpdateDoodadInput>;
+  id: Scalars["GadgetID"]["input"];
+};
+
+export type MutationUpdateFriendshipArgs = {
+  friendship?: InputMaybe<UpdateFriendshipInput>;
+  id: Scalars["GadgetID"]["input"];
+};
+
 export type MutationUpdateGizmoArgs = {
   gizmo?: InputMaybe<UpdateGizmoInput>;
   id: Scalars["GadgetID"]["input"];
@@ -9743,6 +12742,11 @@ export type MutationUpdatePartArgs = {
 export type MutationUpdateSectionArgs = {
   id: Scalars["GadgetID"]["input"];
   section?: InputMaybe<UpdateSectionInput>;
+};
+
+export type MutationUpdateTweeterArgs = {
+  id: Scalars["GadgetID"]["input"];
+  tweeter?: InputMaybe<UpdateTweeterInput>;
 };
 
 export type MutationUpdateUserArgs = {
@@ -9774,6 +12778,16 @@ export type MutationUpsertAutoTableTestRelatedModelArgs = {
   on?: InputMaybe<Array<Scalars["String"]["input"]>>;
 };
 
+export type MutationUpsertDoodadArgs = {
+  doodad?: InputMaybe<UpsertDoodadInput>;
+  on?: InputMaybe<Array<Scalars["String"]["input"]>>;
+};
+
+export type MutationUpsertFriendshipArgs = {
+  friendship?: InputMaybe<UpsertFriendshipInput>;
+  on?: InputMaybe<Array<Scalars["String"]["input"]>>;
+};
+
 export type MutationUpsertGizmoArgs = {
   gizmo?: InputMaybe<UpsertGizmoInput>;
   on?: InputMaybe<Array<Scalars["String"]["input"]>>;
@@ -9798,6 +12812,11 @@ export type MutationUpsertShopifySyncArgs = {
   on?: InputMaybe<Array<Scalars["String"]["input"]>>;
   shopifySync?: InputMaybe<UpsertShopifySyncInput>;
   startReason?: InputMaybe<Scalars["String"]["input"]>;
+};
+
+export type MutationUpsertTweeterArgs = {
+  on?: InputMaybe<Array<Scalars["String"]["input"]>>;
+  tweeter?: InputMaybe<UpsertTweeterInput>;
 };
 
 export type MutationUpsertUserArgs = {
@@ -9859,6 +12878,21 @@ export type NameSpacedNoTriggerGlobalActionResult = {
   errors?: Maybe<Array<ExecutionError>>;
   result?: Maybe<Scalars["JSON"]["output"]>;
   success: Scalars["Boolean"]["output"];
+};
+
+export type NestedAssignmentCreateInput = {
+  course?: InputMaybe<CourseBelongsToInput>;
+  professor?: InputMaybe<ProfessorBelongsToInput>;
+};
+
+export type NestedAssignmentDeleteInput = {
+  id: Scalars["GadgetID"]["input"];
+};
+
+export type NestedAssignmentUpdateInput = {
+  course?: InputMaybe<CourseBelongsToInput>;
+  id: Scalars["GadgetID"]["input"];
+  professor?: InputMaybe<ProfessorBelongsToInput>;
 };
 
 export type NestedAutoTableTestCreateInput = {
@@ -9963,7 +12997,6 @@ export type NestedAutoTableTestUpdateWithCustomParamsInput = {
 export type NestedBaseModelCreateInput = {
   baseModelHmtField?: InputMaybe<Array<InputMaybe<SiblingModelHasManyThroughInput>>>;
   baseModelName?: InputMaybe<Scalars["String"]["input"]>;
-  joinerModel?: InputMaybe<Array<InputMaybe<JoinerModelHasManyInput>>>;
   joinerModels?: InputMaybe<Array<InputMaybe<JoinerModelHasManyInput>>>;
 };
 
@@ -9975,7 +13008,6 @@ export type NestedBaseModelUpdateInput = {
   baseModelHmtField?: InputMaybe<Array<InputMaybe<SiblingModelHasManyThroughInput>>>;
   baseModelName?: InputMaybe<Scalars["String"]["input"]>;
   id: Scalars["GadgetID"]["input"];
-  joinerModel?: InputMaybe<Array<InputMaybe<JoinerModelHasManyInput>>>;
   joinerModels?: InputMaybe<Array<InputMaybe<JoinerModelHasManyInput>>>;
 };
 
@@ -9997,6 +13029,7 @@ export type NestedChildModelUpdateInput = {
 export type NestedCityCreateInput = {
   name?: InputMaybe<Scalars["String"]["input"]>;
   stadium?: InputMaybe<StadiumHasOneInput>;
+  tweeters?: InputMaybe<Array<InputMaybe<TweeterHasManyInput>>>;
 };
 
 export type NestedCityCustomObjectParamsInput = {
@@ -10005,6 +13038,7 @@ export type NestedCityCustomObjectParamsInput = {
   objParam?: InputMaybe<NestedCustomObjectParamsObjParamInput>;
   rootLevelStr?: InputMaybe<Scalars["String"]["input"]>;
   stadium?: InputMaybe<StadiumHasOneInput>;
+  tweeters?: InputMaybe<Array<InputMaybe<TweeterHasManyInput>>>;
 };
 
 export type NestedCityDeleteInput = {
@@ -10015,24 +13049,91 @@ export type NestedCityUpdateInput = {
   id: Scalars["GadgetID"]["input"];
   name?: InputMaybe<Scalars["String"]["input"]>;
   stadium?: InputMaybe<StadiumHasOneInput>;
+  tweeters?: InputMaybe<Array<InputMaybe<TweeterHasManyInput>>>;
+};
+
+export type NestedCourseCreateInput = {
+  assignments?: InputMaybe<Array<InputMaybe<AssignmentHasManyInput>>>;
+  description?: InputMaybe<RichTextInput>;
+  professors?: InputMaybe<Array<InputMaybe<ProfessorHasManyThroughInput>>>;
+  registrations?: InputMaybe<Array<InputMaybe<RegistrationHasManyInput>>>;
+  students?: InputMaybe<Array<InputMaybe<StudentHasManyThroughInput>>>;
+  title?: InputMaybe<Scalars["String"]["input"]>;
+};
+
+export type NestedCourseDeleteInput = {
+  id: Scalars["GadgetID"]["input"];
+};
+
+export type NestedCourseUpdateInput = {
+  assignments?: InputMaybe<Array<InputMaybe<AssignmentHasManyInput>>>;
+  description?: InputMaybe<RichTextInput>;
+  id: Scalars["GadgetID"]["input"];
+  professors?: InputMaybe<Array<InputMaybe<ProfessorHasManyThroughInput>>>;
+  registrations?: InputMaybe<Array<InputMaybe<RegistrationHasManyInput>>>;
+  students?: InputMaybe<Array<InputMaybe<StudentHasManyThroughInput>>>;
+  title?: InputMaybe<Scalars["String"]["input"]>;
 };
 
 export type NestedCustomObjectParamsObjParamInput = {
   firstLevelStr?: InputMaybe<Scalars["String"]["input"]>;
-  objProperty1?: InputMaybe<NestedCustomObjectParamsObjProperty1Input>;
+  objProperty1?: InputMaybe<NestedCustomObjectParamsObjParamObjProperty1Input>;
 };
 
-export type NestedCustomObjectParamsObjProperty1Input = {
-  objProperty2?: InputMaybe<NestedCustomObjectParamsObjProperty2Input>;
+export type NestedCustomObjectParamsObjParamObjProperty1Input = {
+  objProperty2?: InputMaybe<NestedCustomObjectParamsObjParamObjProperty1ObjProperty2Input>;
   secondLevelStr?: InputMaybe<Scalars["String"]["input"]>;
 };
 
-export type NestedCustomObjectParamsObjProperty2Input = {
+export type NestedCustomObjectParamsObjParamObjProperty1ObjProperty2Input = {
   thirdLevelStr?: InputMaybe<Scalars["String"]["input"]>;
+};
+
+export type NestedDoodadCreateInput = {
+  active?: InputMaybe<Scalars["Boolean"]["input"]>;
+  gizmo?: InputMaybe<GizmoBelongsToInput>;
+  name?: InputMaybe<Scalars["String"]["input"]>;
+  size?: InputMaybe<Scalars["DoodadSizeEnum"]["input"]>;
+  weight?: InputMaybe<Scalars["Float"]["input"]>;
+  widget?: InputMaybe<WidgetBelongsToInput>;
+};
+
+export type NestedDoodadDeleteInput = {
+  id: Scalars["GadgetID"]["input"];
+};
+
+export type NestedDoodadUpdateInput = {
+  active?: InputMaybe<Scalars["Boolean"]["input"]>;
+  gizmo?: InputMaybe<GizmoBelongsToInput>;
+  id: Scalars["GadgetID"]["input"];
+  name?: InputMaybe<Scalars["String"]["input"]>;
+  size?: InputMaybe<Scalars["DoodadSizeEnum"]["input"]>;
+  weight?: InputMaybe<Scalars["Float"]["input"]>;
+  widget?: InputMaybe<WidgetBelongsToInput>;
+};
+
+export type NestedFriendshipCreateInput = {
+  ended?: InputMaybe<Scalars["DateOrDateTime"]["input"]>;
+  followee?: InputMaybe<TweeterBelongsToInput>;
+  follower?: InputMaybe<TweeterBelongsToInput>;
+  started?: InputMaybe<Scalars["DateOrDateTime"]["input"]>;
+};
+
+export type NestedFriendshipDeleteInput = {
+  id: Scalars["GadgetID"]["input"];
+};
+
+export type NestedFriendshipUpdateInput = {
+  ended?: InputMaybe<Scalars["DateOrDateTime"]["input"]>;
+  followee?: InputMaybe<TweeterBelongsToInput>;
+  follower?: InputMaybe<TweeterBelongsToInput>;
+  id: Scalars["GadgetID"]["input"];
+  started?: InputMaybe<Scalars["DateOrDateTime"]["input"]>;
 };
 
 export type NestedGizmoCreateInput = {
   attachment?: InputMaybe<StoredFileInput>;
+  doodads?: InputMaybe<Array<InputMaybe<DoodadHasManyInput>>>;
   name?: InputMaybe<Scalars["String"]["input"]>;
   orientation?: InputMaybe<Scalars["String"]["input"]>;
   widget?: InputMaybe<WidgetBelongsToInput>;
@@ -10044,6 +13145,7 @@ export type NestedGizmoDeleteInput = {
 
 export type NestedGizmoUpdateInput = {
   attachment?: InputMaybe<StoredFileInput>;
+  doodads?: InputMaybe<Array<InputMaybe<DoodadHasManyInput>>>;
   id: Scalars["GadgetID"]["input"];
   name?: InputMaybe<Scalars["String"]["input"]>;
   orientation?: InputMaybe<Scalars["String"]["input"]>;
@@ -10118,6 +13220,46 @@ export type NestedPlayerUpdateInput = {
   name?: InputMaybe<Scalars["String"]["input"]>;
 };
 
+export type NestedProfessorCreateInput = {
+  assignments?: InputMaybe<Array<InputMaybe<AssignmentHasManyInput>>>;
+  courses?: InputMaybe<Array<InputMaybe<CourseHasManyThroughInput>>>;
+  firstName?: InputMaybe<Scalars["String"]["input"]>;
+  lastName?: InputMaybe<Scalars["String"]["input"]>;
+  title?: InputMaybe<Scalars["ProfessorTitleEnum"]["input"]>;
+};
+
+export type NestedProfessorDeleteInput = {
+  id: Scalars["GadgetID"]["input"];
+};
+
+export type NestedProfessorUpdateInput = {
+  assignments?: InputMaybe<Array<InputMaybe<AssignmentHasManyInput>>>;
+  courses?: InputMaybe<Array<InputMaybe<CourseHasManyThroughInput>>>;
+  firstName?: InputMaybe<Scalars["String"]["input"]>;
+  id: Scalars["GadgetID"]["input"];
+  lastName?: InputMaybe<Scalars["String"]["input"]>;
+  title?: InputMaybe<Scalars["ProfessorTitleEnum"]["input"]>;
+};
+
+export type NestedRegistrationCreateInput = {
+  course?: InputMaybe<CourseBelongsToInput>;
+  effectiveFrom?: InputMaybe<Scalars["DateOrDateTime"]["input"]>;
+  effectiveTo?: InputMaybe<Scalars["DateOrDateTime"]["input"]>;
+  student?: InputMaybe<StudentBelongsToInput>;
+};
+
+export type NestedRegistrationDeleteInput = {
+  id: Scalars["GadgetID"]["input"];
+};
+
+export type NestedRegistrationUpdateInput = {
+  course?: InputMaybe<CourseBelongsToInput>;
+  effectiveFrom?: InputMaybe<Scalars["DateOrDateTime"]["input"]>;
+  effectiveTo?: InputMaybe<Scalars["DateOrDateTime"]["input"]>;
+  id: Scalars["GadgetID"]["input"];
+  student?: InputMaybe<StudentBelongsToInput>;
+};
+
 export type NestedRoundCreateInput = {
   name?: InputMaybe<Scalars["String"]["input"]>;
   players?: InputMaybe<Array<InputMaybe<PlayerHasManyInput>>>;
@@ -10153,7 +13295,6 @@ export type NestedSectionUpdateInput = {
 };
 
 export type NestedSiblingModelCreateInput = {
-  joinerModel?: InputMaybe<Array<InputMaybe<JoinerModelHasManyInput>>>;
   joinerModels?: InputMaybe<Array<InputMaybe<JoinerModelHasManyInput>>>;
   siblingModelHmtField?: InputMaybe<Array<InputMaybe<BaseModelHasManyThroughInput>>>;
   siblingName?: InputMaybe<Scalars["String"]["input"]>;
@@ -10165,7 +13306,6 @@ export type NestedSiblingModelDeleteInput = {
 
 export type NestedSiblingModelUpdateInput = {
   id: Scalars["GadgetID"]["input"];
-  joinerModel?: InputMaybe<Array<InputMaybe<JoinerModelHasManyInput>>>;
   joinerModels?: InputMaybe<Array<InputMaybe<JoinerModelHasManyInput>>>;
   siblingModelHmtField?: InputMaybe<Array<InputMaybe<BaseModelHasManyThroughInput>>>;
   siblingName?: InputMaybe<Scalars["String"]["input"]>;
@@ -10194,6 +13334,52 @@ export type NestedStadiumUpdateInput = {
   type?: InputMaybe<Scalars["StadiumTypeEnum"]["input"]>;
 };
 
+export type NestedStudentCreateInput = {
+  courses?: InputMaybe<Array<InputMaybe<CourseHasManyThroughInput>>>;
+  department?: InputMaybe<Scalars["StudentDepartmentEnum"]["input"]>;
+  firstName?: InputMaybe<Scalars["String"]["input"]>;
+  lastName?: InputMaybe<Scalars["String"]["input"]>;
+  registrations?: InputMaybe<Array<InputMaybe<RegistrationHasManyInput>>>;
+  year?: InputMaybe<Scalars["Int"]["input"]>;
+};
+
+export type NestedStudentDeleteInput = {
+  id: Scalars["GadgetID"]["input"];
+};
+
+export type NestedStudentUpdateInput = {
+  courses?: InputMaybe<Array<InputMaybe<CourseHasManyThroughInput>>>;
+  department?: InputMaybe<Scalars["StudentDepartmentEnum"]["input"]>;
+  firstName?: InputMaybe<Scalars["String"]["input"]>;
+  id: Scalars["GadgetID"]["input"];
+  lastName?: InputMaybe<Scalars["String"]["input"]>;
+  registrations?: InputMaybe<Array<InputMaybe<RegistrationHasManyInput>>>;
+  year?: InputMaybe<Scalars["Int"]["input"]>;
+};
+
+export type NestedTweeterCreateInput = {
+  city?: InputMaybe<CityBelongsToInput>;
+  followeeFriendships?: InputMaybe<Array<InputMaybe<FriendshipHasManyInput>>>;
+  followees?: InputMaybe<Array<InputMaybe<TweeterHasManyThroughInput>>>;
+  followerFriendships?: InputMaybe<Array<InputMaybe<FriendshipHasManyInput>>>;
+  followers?: InputMaybe<Array<InputMaybe<TweeterHasManyThroughInput>>>;
+  name?: InputMaybe<Scalars["String"]["input"]>;
+};
+
+export type NestedTweeterDeleteInput = {
+  id: Scalars["GadgetID"]["input"];
+};
+
+export type NestedTweeterUpdateInput = {
+  city?: InputMaybe<CityBelongsToInput>;
+  followeeFriendships?: InputMaybe<Array<InputMaybe<FriendshipHasManyInput>>>;
+  followees?: InputMaybe<Array<InputMaybe<TweeterHasManyThroughInput>>>;
+  followerFriendships?: InputMaybe<Array<InputMaybe<FriendshipHasManyInput>>>;
+  followers?: InputMaybe<Array<InputMaybe<TweeterHasManyThroughInput>>>;
+  id: Scalars["GadgetID"]["input"];
+  name?: InputMaybe<Scalars["String"]["input"]>;
+};
+
 export type NestedWidgetAddInventoryInput = {
   count?: InputMaybe<Scalars["Float"]["input"]>;
   id: Scalars["GadgetID"]["input"];
@@ -10205,6 +13391,7 @@ export type NestedWidgetAlwaysThrowErrorInput = {
   category?: InputMaybe<Array<Scalars["WidgetCategoryEnum"]["input"]>>;
   color?: InputMaybe<Scalars["String"]["input"]>;
   description?: InputMaybe<RichTextInput>;
+  doodad?: InputMaybe<DoodadHasOneInput>;
   embedding?: InputMaybe<Array<Scalars["Float"]["input"]>>;
   gizmos?: InputMaybe<Array<InputMaybe<GizmoHasManyInput>>>;
   inventoryCount?: InputMaybe<Scalars["Float"]["input"]>;
@@ -10225,6 +13412,7 @@ export type NestedWidgetCreateInput = {
   category?: InputMaybe<Array<Scalars["WidgetCategoryEnum"]["input"]>>;
   color?: InputMaybe<Scalars["String"]["input"]>;
   description?: InputMaybe<RichTextInput>;
+  doodad?: InputMaybe<DoodadHasOneInput>;
   embedding?: InputMaybe<Array<Scalars["Float"]["input"]>>;
   gizmos?: InputMaybe<Array<InputMaybe<GizmoHasManyInput>>>;
   inventoryCount?: InputMaybe<Scalars["Float"]["input"]>;
@@ -10249,6 +13437,7 @@ export type NestedWidgetUpdateInput = {
   category?: InputMaybe<Array<Scalars["WidgetCategoryEnum"]["input"]>>;
   color?: InputMaybe<Scalars["String"]["input"]>;
   description?: InputMaybe<RichTextInput>;
+  doodad?: InputMaybe<DoodadHasOneInput>;
   embedding?: InputMaybe<Array<Scalars["Float"]["input"]>>;
   gizmos?: InputMaybe<Array<InputMaybe<GizmoHasManyInput>>>;
   id: Scalars["GadgetID"]["input"];
@@ -10378,6 +13567,22 @@ export type PlayerHasManyInput = {
   update?: InputMaybe<NestedPlayerUpdateInput>;
 };
 
+/** Input object supporting setting or updating related model record on a relationship field */
+export type ProfessorBelongsToInput = {
+  /** Existing ID of another record, which you would like to associate this record with */
+  _link?: InputMaybe<Scalars["GadgetID"]["input"]>;
+  create?: InputMaybe<NestedProfessorCreateInput>;
+  delete?: InputMaybe<NestedProfessorDeleteInput>;
+  update?: InputMaybe<NestedProfessorUpdateInput>;
+};
+
+/** Input object supporting setting or updating related model record on a relationship field */
+export type ProfessorHasManyThroughInput = {
+  create?: InputMaybe<NestedProfessorCreateInput>;
+  delete?: InputMaybe<NestedProfessorDeleteInput>;
+  update?: InputMaybe<NestedProfessorUpdateInput>;
+};
+
 export type Query = {
   __typename?: "Query";
   _autoTableTestRelatedModel?: Maybe<AutoTableTestRelatedModel>;
@@ -10385,6 +13590,10 @@ export type Query = {
   autoTableTest?: Maybe<AutoTableTest>;
   autoTableTests: AutoTableTestConnection;
   currentSession?: Maybe<Session>;
+  doodad?: Maybe<Doodad>;
+  doodads: DoodadConnection;
+  friendship?: Maybe<Friendship>;
+  friendships: FriendshipConnection;
   /** Meta information about the application, like it's name, schema, and other internal details. */
   gadgetMeta: GadgetApplicationMeta;
   game: GameQueries;
@@ -10415,7 +13624,10 @@ export type Query = {
   shopifyShops: ShopifyShopConnection;
   shopifySync?: Maybe<ShopifySync>;
   shopifySyncs: ShopifySyncConnection;
+  tweeter?: Maybe<Tweeter>;
+  tweeters: TweeterConnection;
   uniqueFields: UniqueFieldsQueries;
+  university: UniversityQueries;
   user?: Maybe<User>;
   users: UserConnection;
   widget?: Maybe<Widget>;
@@ -10448,6 +13660,34 @@ export type QueryAutoTableTestsArgs = {
   last?: InputMaybe<Scalars["Int"]["input"]>;
   search?: InputMaybe<Scalars["String"]["input"]>;
   sort?: InputMaybe<Array<AutoTableTestSort>>;
+};
+
+export type QueryDoodadArgs = {
+  id: Scalars["GadgetID"]["input"];
+};
+
+export type QueryDoodadsArgs = {
+  after?: InputMaybe<Scalars["String"]["input"]>;
+  before?: InputMaybe<Scalars["String"]["input"]>;
+  filter?: InputMaybe<Array<DoodadFilter>>;
+  first?: InputMaybe<Scalars["Int"]["input"]>;
+  last?: InputMaybe<Scalars["Int"]["input"]>;
+  search?: InputMaybe<Scalars["String"]["input"]>;
+  sort?: InputMaybe<Array<DoodadSort>>;
+};
+
+export type QueryFriendshipArgs = {
+  id: Scalars["GadgetID"]["input"];
+};
+
+export type QueryFriendshipsArgs = {
+  after?: InputMaybe<Scalars["String"]["input"]>;
+  before?: InputMaybe<Scalars["String"]["input"]>;
+  filter?: InputMaybe<Array<FriendshipFilter>>;
+  first?: InputMaybe<Scalars["Int"]["input"]>;
+  last?: InputMaybe<Scalars["Int"]["input"]>;
+  search?: InputMaybe<Scalars["String"]["input"]>;
+  sort?: InputMaybe<Array<FriendshipSort>>;
 };
 
 export type QueryGizmoArgs = {
@@ -10616,6 +13856,20 @@ export type QueryShopifySyncsArgs = {
   sort?: InputMaybe<Array<ShopifySyncSort>>;
 };
 
+export type QueryTweeterArgs = {
+  id: Scalars["GadgetID"]["input"];
+};
+
+export type QueryTweetersArgs = {
+  after?: InputMaybe<Scalars["String"]["input"]>;
+  before?: InputMaybe<Scalars["String"]["input"]>;
+  filter?: InputMaybe<Array<TweeterFilter>>;
+  first?: InputMaybe<Scalars["Int"]["input"]>;
+  last?: InputMaybe<Scalars["Int"]["input"]>;
+  search?: InputMaybe<Scalars["String"]["input"]>;
+  sort?: InputMaybe<Array<TweeterSort>>;
+};
+
 export type QueryUserArgs = {
   id: Scalars["GadgetID"]["input"];
 };
@@ -10642,6 +13896,15 @@ export type QueryWidgetsArgs = {
   last?: InputMaybe<Scalars["Int"]["input"]>;
   search?: InputMaybe<Scalars["String"]["input"]>;
   sort?: InputMaybe<Array<WidgetSort>>;
+};
+
+/** Input object supporting setting or updating related model record on a relationship field */
+export type RegistrationHasManyInput = {
+  /** Creates, updates, or deletes existing records in the database as needed to arrive at the list of records specified. */
+  _converge?: InputMaybe<ConvergeRegistrationInput>;
+  create?: InputMaybe<NestedRegistrationCreateInput>;
+  delete?: InputMaybe<NestedRegistrationDeleteInput>;
+  update?: InputMaybe<NestedRegistrationUpdateInput>;
 };
 
 export type ReinstallShopifyShopResult = {
@@ -10680,6 +13943,13 @@ export type Role = {
   key: Scalars["String"]["output"];
   /** The human readable name for this role. Can be changed. */
   name: Scalars["String"]["output"];
+};
+
+export type RoleAssignmentFilter = {
+  contains?: InputMaybe<Array<InputMaybe<Scalars["String"]["input"]>>>;
+  equals?: InputMaybe<Array<InputMaybe<Scalars["String"]["input"]>>>;
+  isSet?: InputMaybe<Scalars["Boolean"]["input"]>;
+  notEquals?: InputMaybe<Array<InputMaybe<Scalars["String"]["input"]>>>;
 };
 
 /** Input object supporting setting or updating related model record on a relationship field */
@@ -11909,6 +15179,10 @@ export type StadiumBelongsToInput = {
 
 /** Input object supporting setting or updating related model record on a relationship field */
 export type StadiumHasOneInput = {
+  /** Existing ID of another record, which you would like to relink to this record */
+  _relink?: InputMaybe<HasOneRelinkInput>;
+  /** Existing ID of another record, which you would like to unlink from this record */
+  _unlink?: InputMaybe<Scalars["GadgetID"]["input"]>;
   create?: InputMaybe<NestedStadiumCreateInput>;
   delete?: InputMaybe<NestedStadiumDeleteInput>;
   update?: InputMaybe<NestedStadiumUpdateInput>;
@@ -11967,6 +15241,22 @@ export type StringFilter = {
   startsWith?: InputMaybe<Scalars["String"]["input"]>;
 };
 
+/** Input object supporting setting or updating related model record on a relationship field */
+export type StudentBelongsToInput = {
+  /** Existing ID of another record, which you would like to associate this record with */
+  _link?: InputMaybe<Scalars["GadgetID"]["input"]>;
+  create?: InputMaybe<NestedStudentCreateInput>;
+  delete?: InputMaybe<NestedStudentDeleteInput>;
+  update?: InputMaybe<NestedStudentUpdateInput>;
+};
+
+/** Input object supporting setting or updating related model record on a relationship field */
+export type StudentHasManyThroughInput = {
+  create?: InputMaybe<NestedStudentCreateInput>;
+  delete?: InputMaybe<NestedStudentDeleteInput>;
+  update?: InputMaybe<NestedStudentUpdateInput>;
+};
+
 export type Subscription = {
   __typename?: "Subscription";
   backgroundAction?: Maybe<BackgroundAction>;
@@ -11974,6 +15264,119 @@ export type Subscription = {
 
 export type SubscriptionBackgroundActionArgs = {
   id: Scalars["String"]["input"];
+};
+
+export type Tweeter = {
+  __typename?: "Tweeter";
+  /** Get all the fields for this record. Useful for not having to list out all the fields you want to retrieve, but slower. */
+  _all: Scalars["JSONObject"]["output"];
+  city?: Maybe<GameCity>;
+  cityId?: Maybe<Scalars["GadgetID"]["output"]>;
+  /** The time at which this record was first created. Set once upon record creation and never changed. Managed by Gadget. */
+  createdAt: Scalars["DateTime"]["output"];
+  followeeFriendships: FriendshipConnection;
+  followees: TweeterConnection;
+  followerFriendships: FriendshipConnection;
+  followers: TweeterConnection;
+  /** The globally unique, unchanging identifier for this record. Assigned and managed by Gadget. */
+  id: Scalars["GadgetID"]["output"];
+  name?: Maybe<Scalars["String"]["output"]>;
+  /** The time at which this record was last changed. Set each time the record is successfully acted upon by an action. Managed by Gadget. */
+  updatedAt: Scalars["DateTime"]["output"];
+};
+
+export type TweeterFolloweeFriendshipsArgs = {
+  after?: InputMaybe<Scalars["String"]["input"]>;
+  before?: InputMaybe<Scalars["String"]["input"]>;
+  first?: InputMaybe<Scalars["Int"]["input"]>;
+  last?: InputMaybe<Scalars["Int"]["input"]>;
+};
+
+export type TweeterFolloweesArgs = {
+  after?: InputMaybe<Scalars["String"]["input"]>;
+  before?: InputMaybe<Scalars["String"]["input"]>;
+  first?: InputMaybe<Scalars["Int"]["input"]>;
+  last?: InputMaybe<Scalars["Int"]["input"]>;
+};
+
+export type TweeterFollowerFriendshipsArgs = {
+  after?: InputMaybe<Scalars["String"]["input"]>;
+  before?: InputMaybe<Scalars["String"]["input"]>;
+  first?: InputMaybe<Scalars["Int"]["input"]>;
+  last?: InputMaybe<Scalars["Int"]["input"]>;
+};
+
+export type TweeterFollowersArgs = {
+  after?: InputMaybe<Scalars["String"]["input"]>;
+  before?: InputMaybe<Scalars["String"]["input"]>;
+  first?: InputMaybe<Scalars["Int"]["input"]>;
+  last?: InputMaybe<Scalars["Int"]["input"]>;
+};
+
+/** Input object supporting setting or updating related model record on a relationship field */
+export type TweeterBelongsToInput = {
+  /** Existing ID of another record, which you would like to associate this record with */
+  _link?: InputMaybe<Scalars["GadgetID"]["input"]>;
+  create?: InputMaybe<NestedTweeterCreateInput>;
+  delete?: InputMaybe<NestedTweeterDeleteInput>;
+  update?: InputMaybe<NestedTweeterUpdateInput>;
+};
+
+/** A connection to a list of Tweeter items. */
+export type TweeterConnection = {
+  __typename?: "TweeterConnection";
+  /** A list of edges. */
+  edges: Array<TweeterEdge>;
+  /** Information to aid in pagination. */
+  pageInfo: PageInfo;
+};
+
+/** An edge in a Tweeter connection. */
+export type TweeterEdge = {
+  __typename?: "TweeterEdge";
+  /** A cursor for use in pagination */
+  cursor: Scalars["String"]["output"];
+  /** The item at the end of the edge */
+  node: Tweeter;
+};
+
+export type TweeterFilter = {
+  AND?: InputMaybe<Array<InputMaybe<TweeterFilter>>>;
+  NOT?: InputMaybe<Array<InputMaybe<TweeterFilter>>>;
+  OR?: InputMaybe<Array<InputMaybe<TweeterFilter>>>;
+  city?: InputMaybe<IdFilter>;
+  cityId?: InputMaybe<IdFilter>;
+  createdAt?: InputMaybe<DateTimeFilter>;
+  id?: InputMaybe<IdFilter>;
+  name?: InputMaybe<StringFilter>;
+  updatedAt?: InputMaybe<DateTimeFilter>;
+};
+
+/** Input object supporting setting or updating related model record on a relationship field */
+export type TweeterHasManyInput = {
+  /** Creates, updates, or deletes existing records in the database as needed to arrive at the list of records specified. */
+  _converge?: InputMaybe<ConvergeTweeterInput>;
+  create?: InputMaybe<NestedTweeterCreateInput>;
+  delete?: InputMaybe<NestedTweeterDeleteInput>;
+  update?: InputMaybe<NestedTweeterUpdateInput>;
+};
+
+/** Input object supporting setting or updating related model record on a relationship field */
+export type TweeterHasManyThroughInput = {
+  create?: InputMaybe<NestedTweeterCreateInput>;
+  delete?: InputMaybe<NestedTweeterDeleteInput>;
+  update?: InputMaybe<NestedTweeterUpdateInput>;
+};
+
+export type TweeterSort = {
+  /** Sort the results by the createdAt field. Defaults to ascending (smallest value first). */
+  createdAt?: InputMaybe<SortOrder>;
+  /** Sort the results by the id field. Defaults to ascending (smallest value first). */
+  id?: InputMaybe<SortOrder>;
+  /** Sort the results by the name field. Defaults to ascending (smallest value first). */
+  name?: InputMaybe<SortOrder>;
+  /** Sort the results by the updatedAt field. Defaults to ascending (smallest value first). */
+  updatedAt?: InputMaybe<SortOrder>;
 };
 
 export type UninstallShopifyShopResult = {
@@ -12354,6 +15757,668 @@ export type UniqueFieldsQueriesParentModelsArgs = {
   sort?: InputMaybe<Array<UniqueFieldsParentModelSort>>;
 };
 
+export type UniversityAssignment = {
+  __typename?: "UniversityAssignment";
+  /** Get all the fields for this record. Useful for not having to list out all the fields you want to retrieve, but slower. */
+  _all: Scalars["JSONObject"]["output"];
+  course?: Maybe<UniversityCourse>;
+  courseId?: Maybe<Scalars["GadgetID"]["output"]>;
+  /** The time at which this record was first created. Set once upon record creation and never changed. Managed by Gadget. */
+  createdAt: Scalars["DateTime"]["output"];
+  /** The globally unique, unchanging identifier for this record. Assigned and managed by Gadget. */
+  id: Scalars["GadgetID"]["output"];
+  professor?: Maybe<UniversityProfessor>;
+  professorId?: Maybe<Scalars["GadgetID"]["output"]>;
+  /** The time at which this record was last changed. Set each time the record is successfully acted upon by an action. Managed by Gadget. */
+  updatedAt: Scalars["DateTime"]["output"];
+};
+
+/** A connection to a list of UniversityAssignment items. */
+export type UniversityAssignmentConnection = {
+  __typename?: "UniversityAssignmentConnection";
+  /** A list of edges. */
+  edges: Array<UniversityAssignmentEdge>;
+  /** Information to aid in pagination. */
+  pageInfo: PageInfo;
+};
+
+/** An edge in a UniversityAssignment connection. */
+export type UniversityAssignmentEdge = {
+  __typename?: "UniversityAssignmentEdge";
+  /** A cursor for use in pagination */
+  cursor: Scalars["String"]["output"];
+  /** The item at the end of the edge */
+  node: UniversityAssignment;
+};
+
+export type UniversityAssignmentFilter = {
+  AND?: InputMaybe<Array<InputMaybe<UniversityAssignmentFilter>>>;
+  NOT?: InputMaybe<Array<InputMaybe<UniversityAssignmentFilter>>>;
+  OR?: InputMaybe<Array<InputMaybe<UniversityAssignmentFilter>>>;
+  course?: InputMaybe<IdFilter>;
+  courseId?: InputMaybe<IdFilter>;
+  createdAt?: InputMaybe<DateTimeFilter>;
+  id?: InputMaybe<IdFilter>;
+  professor?: InputMaybe<IdFilter>;
+  professorId?: InputMaybe<IdFilter>;
+  updatedAt?: InputMaybe<DateTimeFilter>;
+};
+
+export type UniversityAssignmentSort = {
+  /** Sort the results by the createdAt field. Defaults to ascending (smallest value first). */
+  createdAt?: InputMaybe<SortOrder>;
+  /** Sort the results by the id field. Defaults to ascending (smallest value first). */
+  id?: InputMaybe<SortOrder>;
+  /** Sort the results by the updatedAt field. Defaults to ascending (smallest value first). */
+  updatedAt?: InputMaybe<SortOrder>;
+};
+
+export type UniversityCourse = {
+  __typename?: "UniversityCourse";
+  /** Get all the fields for this record. Useful for not having to list out all the fields you want to retrieve, but slower. */
+  _all: Scalars["JSONObject"]["output"];
+  assignments: UniversityAssignmentConnection;
+  /** The time at which this record was first created. Set once upon record creation and never changed. Managed by Gadget. */
+  createdAt: Scalars["DateTime"]["output"];
+  description?: Maybe<RichText>;
+  /** The globally unique, unchanging identifier for this record. Assigned and managed by Gadget. */
+  id: Scalars["GadgetID"]["output"];
+  professors: UniversityProfessorConnection;
+  registrations: UniversityRegistrationConnection;
+  students: UniversityStudentConnection;
+  title?: Maybe<Scalars["String"]["output"]>;
+  /** The time at which this record was last changed. Set each time the record is successfully acted upon by an action. Managed by Gadget. */
+  updatedAt: Scalars["DateTime"]["output"];
+};
+
+export type UniversityCourseAssignmentsArgs = {
+  after?: InputMaybe<Scalars["String"]["input"]>;
+  before?: InputMaybe<Scalars["String"]["input"]>;
+  first?: InputMaybe<Scalars["Int"]["input"]>;
+  last?: InputMaybe<Scalars["Int"]["input"]>;
+};
+
+export type UniversityCourseProfessorsArgs = {
+  after?: InputMaybe<Scalars["String"]["input"]>;
+  before?: InputMaybe<Scalars["String"]["input"]>;
+  first?: InputMaybe<Scalars["Int"]["input"]>;
+  last?: InputMaybe<Scalars["Int"]["input"]>;
+};
+
+export type UniversityCourseRegistrationsArgs = {
+  after?: InputMaybe<Scalars["String"]["input"]>;
+  before?: InputMaybe<Scalars["String"]["input"]>;
+  first?: InputMaybe<Scalars["Int"]["input"]>;
+  last?: InputMaybe<Scalars["Int"]["input"]>;
+};
+
+export type UniversityCourseStudentsArgs = {
+  after?: InputMaybe<Scalars["String"]["input"]>;
+  before?: InputMaybe<Scalars["String"]["input"]>;
+  first?: InputMaybe<Scalars["Int"]["input"]>;
+  last?: InputMaybe<Scalars["Int"]["input"]>;
+};
+
+/** A connection to a list of UniversityCourse items. */
+export type UniversityCourseConnection = {
+  __typename?: "UniversityCourseConnection";
+  /** A list of edges. */
+  edges: Array<UniversityCourseEdge>;
+  /** Information to aid in pagination. */
+  pageInfo: PageInfo;
+};
+
+/** An edge in a UniversityCourse connection. */
+export type UniversityCourseEdge = {
+  __typename?: "UniversityCourseEdge";
+  /** A cursor for use in pagination */
+  cursor: Scalars["String"]["output"];
+  /** The item at the end of the edge */
+  node: UniversityCourse;
+};
+
+export type UniversityCourseFilter = {
+  AND?: InputMaybe<Array<InputMaybe<UniversityCourseFilter>>>;
+  NOT?: InputMaybe<Array<InputMaybe<UniversityCourseFilter>>>;
+  OR?: InputMaybe<Array<InputMaybe<UniversityCourseFilter>>>;
+  createdAt?: InputMaybe<DateTimeFilter>;
+  description?: InputMaybe<StringFilter>;
+  id?: InputMaybe<IdFilter>;
+  title?: InputMaybe<StringFilter>;
+  updatedAt?: InputMaybe<DateTimeFilter>;
+};
+
+export type UniversityCourseSort = {
+  /** Sort the results by the createdAt field. Defaults to ascending (smallest value first). */
+  createdAt?: InputMaybe<SortOrder>;
+  /** Sort the results by the description field. Defaults to ascending (smallest value first). */
+  description?: InputMaybe<SortOrder>;
+  /** Sort the results by the id field. Defaults to ascending (smallest value first). */
+  id?: InputMaybe<SortOrder>;
+  /** Sort the results by the title field. Defaults to ascending (smallest value first). */
+  title?: InputMaybe<SortOrder>;
+  /** Sort the results by the updatedAt field. Defaults to ascending (smallest value first). */
+  updatedAt?: InputMaybe<SortOrder>;
+};
+
+export type UniversityMutations = {
+  __typename?: "UniversityMutations";
+  bulkCreateAssignments?: Maybe<BulkCreateUniversityAssignmentsResult>;
+  bulkCreateCourses?: Maybe<BulkCreateUniversityCoursesResult>;
+  bulkCreateProfessors?: Maybe<BulkCreateUniversityProfessorsResult>;
+  bulkCreateRegistrations?: Maybe<BulkCreateUniversityRegistrationsResult>;
+  bulkCreateStudents?: Maybe<BulkCreateUniversityStudentsResult>;
+  bulkDeleteAssignments?: Maybe<BulkDeleteUniversityAssignmentsResult>;
+  bulkDeleteCourses?: Maybe<BulkDeleteUniversityCoursesResult>;
+  bulkDeleteProfessors?: Maybe<BulkDeleteUniversityProfessorsResult>;
+  bulkDeleteRegistrations?: Maybe<BulkDeleteUniversityRegistrationsResult>;
+  bulkDeleteStudents?: Maybe<BulkDeleteUniversityStudentsResult>;
+  bulkUpdateAssignments?: Maybe<BulkUpdateUniversityAssignmentsResult>;
+  bulkUpdateCourses?: Maybe<BulkUpdateUniversityCoursesResult>;
+  bulkUpdateProfessors?: Maybe<BulkUpdateUniversityProfessorsResult>;
+  bulkUpdateRegistrations?: Maybe<BulkUpdateUniversityRegistrationsResult>;
+  bulkUpdateStudents?: Maybe<BulkUpdateUniversityStudentsResult>;
+  bulkUpsertAssignments: BulkUpsertUniversityAssignmentsResult;
+  bulkUpsertCourses: BulkUpsertUniversityCoursesResult;
+  bulkUpsertProfessors: BulkUpsertUniversityProfessorsResult;
+  bulkUpsertRegistrations: BulkUpsertUniversityRegistrationsResult;
+  bulkUpsertStudents: BulkUpsertUniversityStudentsResult;
+  createAssignment?: Maybe<CreateUniversityAssignmentResult>;
+  createCourse?: Maybe<CreateUniversityCourseResult>;
+  createProfessor?: Maybe<CreateUniversityProfessorResult>;
+  createRegistration?: Maybe<CreateUniversityRegistrationResult>;
+  createStudent?: Maybe<CreateUniversityStudentResult>;
+  deleteAssignment?: Maybe<DeleteUniversityAssignmentResult>;
+  deleteCourse?: Maybe<DeleteUniversityCourseResult>;
+  deleteProfessor?: Maybe<DeleteUniversityProfessorResult>;
+  deleteRegistration?: Maybe<DeleteUniversityRegistrationResult>;
+  deleteStudent?: Maybe<DeleteUniversityStudentResult>;
+  updateAssignment?: Maybe<UpdateUniversityAssignmentResult>;
+  updateCourse?: Maybe<UpdateUniversityCourseResult>;
+  updateProfessor?: Maybe<UpdateUniversityProfessorResult>;
+  updateRegistration?: Maybe<UpdateUniversityRegistrationResult>;
+  updateStudent?: Maybe<UpdateUniversityStudentResult>;
+  upsertAssignment?: Maybe<UpsertUniversityAssignmentResult>;
+  upsertCourse?: Maybe<UpsertUniversityCourseResult>;
+  upsertProfessor?: Maybe<UpsertUniversityProfessorResult>;
+  upsertRegistration?: Maybe<UpsertUniversityRegistrationResult>;
+  upsertStudent?: Maybe<UpsertUniversityStudentResult>;
+};
+
+export type UniversityMutationsBulkCreateAssignmentsArgs = {
+  inputs: Array<BulkCreateUniversityAssignmentsInput>;
+};
+
+export type UniversityMutationsBulkCreateCoursesArgs = {
+  inputs: Array<BulkCreateUniversityCoursesInput>;
+};
+
+export type UniversityMutationsBulkCreateProfessorsArgs = {
+  inputs: Array<BulkCreateUniversityProfessorsInput>;
+};
+
+export type UniversityMutationsBulkCreateRegistrationsArgs = {
+  inputs: Array<BulkCreateUniversityRegistrationsInput>;
+};
+
+export type UniversityMutationsBulkCreateStudentsArgs = {
+  inputs: Array<BulkCreateUniversityStudentsInput>;
+};
+
+export type UniversityMutationsBulkDeleteAssignmentsArgs = {
+  ids: Array<Scalars["GadgetID"]["input"]>;
+};
+
+export type UniversityMutationsBulkDeleteCoursesArgs = {
+  ids: Array<Scalars["GadgetID"]["input"]>;
+};
+
+export type UniversityMutationsBulkDeleteProfessorsArgs = {
+  ids: Array<Scalars["GadgetID"]["input"]>;
+};
+
+export type UniversityMutationsBulkDeleteRegistrationsArgs = {
+  ids: Array<Scalars["GadgetID"]["input"]>;
+};
+
+export type UniversityMutationsBulkDeleteStudentsArgs = {
+  ids: Array<Scalars["GadgetID"]["input"]>;
+};
+
+export type UniversityMutationsBulkUpdateAssignmentsArgs = {
+  inputs: Array<BulkUpdateUniversityAssignmentsInput>;
+};
+
+export type UniversityMutationsBulkUpdateCoursesArgs = {
+  inputs: Array<BulkUpdateUniversityCoursesInput>;
+};
+
+export type UniversityMutationsBulkUpdateProfessorsArgs = {
+  inputs: Array<BulkUpdateUniversityProfessorsInput>;
+};
+
+export type UniversityMutationsBulkUpdateRegistrationsArgs = {
+  inputs: Array<BulkUpdateUniversityRegistrationsInput>;
+};
+
+export type UniversityMutationsBulkUpdateStudentsArgs = {
+  inputs: Array<BulkUpdateUniversityStudentsInput>;
+};
+
+export type UniversityMutationsBulkUpsertAssignmentsArgs = {
+  inputs: Array<BulkUpsertUniversityAssignmentsInput>;
+};
+
+export type UniversityMutationsBulkUpsertCoursesArgs = {
+  inputs: Array<BulkUpsertUniversityCoursesInput>;
+};
+
+export type UniversityMutationsBulkUpsertProfessorsArgs = {
+  inputs: Array<BulkUpsertUniversityProfessorsInput>;
+};
+
+export type UniversityMutationsBulkUpsertRegistrationsArgs = {
+  inputs: Array<BulkUpsertUniversityRegistrationsInput>;
+};
+
+export type UniversityMutationsBulkUpsertStudentsArgs = {
+  inputs: Array<BulkUpsertUniversityStudentsInput>;
+};
+
+export type UniversityMutationsCreateAssignmentArgs = {
+  assignment?: InputMaybe<CreateUniversityAssignmentInput>;
+};
+
+export type UniversityMutationsCreateCourseArgs = {
+  course?: InputMaybe<CreateUniversityCourseInput>;
+};
+
+export type UniversityMutationsCreateProfessorArgs = {
+  professor?: InputMaybe<CreateUniversityProfessorInput>;
+};
+
+export type UniversityMutationsCreateRegistrationArgs = {
+  registration?: InputMaybe<CreateUniversityRegistrationInput>;
+};
+
+export type UniversityMutationsCreateStudentArgs = {
+  student?: InputMaybe<CreateUniversityStudentInput>;
+};
+
+export type UniversityMutationsDeleteAssignmentArgs = {
+  id: Scalars["GadgetID"]["input"];
+};
+
+export type UniversityMutationsDeleteCourseArgs = {
+  id: Scalars["GadgetID"]["input"];
+};
+
+export type UniversityMutationsDeleteProfessorArgs = {
+  id: Scalars["GadgetID"]["input"];
+};
+
+export type UniversityMutationsDeleteRegistrationArgs = {
+  id: Scalars["GadgetID"]["input"];
+};
+
+export type UniversityMutationsDeleteStudentArgs = {
+  id: Scalars["GadgetID"]["input"];
+};
+
+export type UniversityMutationsUpdateAssignmentArgs = {
+  assignment?: InputMaybe<UpdateUniversityAssignmentInput>;
+  id: Scalars["GadgetID"]["input"];
+};
+
+export type UniversityMutationsUpdateCourseArgs = {
+  course?: InputMaybe<UpdateUniversityCourseInput>;
+  id: Scalars["GadgetID"]["input"];
+};
+
+export type UniversityMutationsUpdateProfessorArgs = {
+  id: Scalars["GadgetID"]["input"];
+  professor?: InputMaybe<UpdateUniversityProfessorInput>;
+};
+
+export type UniversityMutationsUpdateRegistrationArgs = {
+  id: Scalars["GadgetID"]["input"];
+  registration?: InputMaybe<UpdateUniversityRegistrationInput>;
+};
+
+export type UniversityMutationsUpdateStudentArgs = {
+  id: Scalars["GadgetID"]["input"];
+  student?: InputMaybe<UpdateUniversityStudentInput>;
+};
+
+export type UniversityMutationsUpsertAssignmentArgs = {
+  assignment?: InputMaybe<UpsertUniversityAssignmentInput>;
+  on?: InputMaybe<Array<Scalars["String"]["input"]>>;
+};
+
+export type UniversityMutationsUpsertCourseArgs = {
+  course?: InputMaybe<UpsertUniversityCourseInput>;
+  on?: InputMaybe<Array<Scalars["String"]["input"]>>;
+};
+
+export type UniversityMutationsUpsertProfessorArgs = {
+  on?: InputMaybe<Array<Scalars["String"]["input"]>>;
+  professor?: InputMaybe<UpsertUniversityProfessorInput>;
+};
+
+export type UniversityMutationsUpsertRegistrationArgs = {
+  on?: InputMaybe<Array<Scalars["String"]["input"]>>;
+  registration?: InputMaybe<UpsertUniversityRegistrationInput>;
+};
+
+export type UniversityMutationsUpsertStudentArgs = {
+  on?: InputMaybe<Array<Scalars["String"]["input"]>>;
+  student?: InputMaybe<UpsertUniversityStudentInput>;
+};
+
+export type UniversityProfessor = {
+  __typename?: "UniversityProfessor";
+  /** Get all the fields for this record. Useful for not having to list out all the fields you want to retrieve, but slower. */
+  _all: Scalars["JSONObject"]["output"];
+  assignments: UniversityAssignmentConnection;
+  courses: UniversityCourseConnection;
+  /** The time at which this record was first created. Set once upon record creation and never changed. Managed by Gadget. */
+  createdAt: Scalars["DateTime"]["output"];
+  firstName?: Maybe<Scalars["String"]["output"]>;
+  /** The globally unique, unchanging identifier for this record. Assigned and managed by Gadget. */
+  id: Scalars["GadgetID"]["output"];
+  lastName?: Maybe<Scalars["String"]["output"]>;
+  title?: Maybe<Scalars["ProfessorTitleEnum"]["output"]>;
+  /** The time at which this record was last changed. Set each time the record is successfully acted upon by an action. Managed by Gadget. */
+  updatedAt: Scalars["DateTime"]["output"];
+};
+
+export type UniversityProfessorAssignmentsArgs = {
+  after?: InputMaybe<Scalars["String"]["input"]>;
+  before?: InputMaybe<Scalars["String"]["input"]>;
+  first?: InputMaybe<Scalars["Int"]["input"]>;
+  last?: InputMaybe<Scalars["Int"]["input"]>;
+};
+
+export type UniversityProfessorCoursesArgs = {
+  after?: InputMaybe<Scalars["String"]["input"]>;
+  before?: InputMaybe<Scalars["String"]["input"]>;
+  first?: InputMaybe<Scalars["Int"]["input"]>;
+  last?: InputMaybe<Scalars["Int"]["input"]>;
+};
+
+/** A connection to a list of UniversityProfessor items. */
+export type UniversityProfessorConnection = {
+  __typename?: "UniversityProfessorConnection";
+  /** A list of edges. */
+  edges: Array<UniversityProfessorEdge>;
+  /** Information to aid in pagination. */
+  pageInfo: PageInfo;
+};
+
+/** An edge in a UniversityProfessor connection. */
+export type UniversityProfessorEdge = {
+  __typename?: "UniversityProfessorEdge";
+  /** A cursor for use in pagination */
+  cursor: Scalars["String"]["output"];
+  /** The item at the end of the edge */
+  node: UniversityProfessor;
+};
+
+export type UniversityProfessorFilter = {
+  AND?: InputMaybe<Array<InputMaybe<UniversityProfessorFilter>>>;
+  NOT?: InputMaybe<Array<InputMaybe<UniversityProfessorFilter>>>;
+  OR?: InputMaybe<Array<InputMaybe<UniversityProfessorFilter>>>;
+  createdAt?: InputMaybe<DateTimeFilter>;
+  firstName?: InputMaybe<StringFilter>;
+  id?: InputMaybe<IdFilter>;
+  lastName?: InputMaybe<StringFilter>;
+  title?: InputMaybe<SingleEnumFilter>;
+  updatedAt?: InputMaybe<DateTimeFilter>;
+};
+
+export type UniversityProfessorSort = {
+  /** Sort the results by the createdAt field. Defaults to ascending (smallest value first). */
+  createdAt?: InputMaybe<SortOrder>;
+  /** Sort the results by the firstName field. Defaults to ascending (smallest value first). */
+  firstName?: InputMaybe<SortOrder>;
+  /** Sort the results by the id field. Defaults to ascending (smallest value first). */
+  id?: InputMaybe<SortOrder>;
+  /** Sort the results by the lastName field. Defaults to ascending (smallest value first). */
+  lastName?: InputMaybe<SortOrder>;
+  /** Sort the results by the title field. Defaults to ascending (smallest value first). */
+  title?: InputMaybe<SortOrder>;
+  /** Sort the results by the updatedAt field. Defaults to ascending (smallest value first). */
+  updatedAt?: InputMaybe<SortOrder>;
+};
+
+export type UniversityQueries = {
+  __typename?: "UniversityQueries";
+  assignment?: Maybe<UniversityAssignment>;
+  assignments: UniversityAssignmentConnection;
+  course?: Maybe<UniversityCourse>;
+  courses: UniversityCourseConnection;
+  professor?: Maybe<UniversityProfessor>;
+  professors: UniversityProfessorConnection;
+  registration?: Maybe<UniversityRegistration>;
+  registrations: UniversityRegistrationConnection;
+  student?: Maybe<UniversityStudent>;
+  students: UniversityStudentConnection;
+};
+
+export type UniversityQueriesAssignmentArgs = {
+  id: Scalars["GadgetID"]["input"];
+};
+
+export type UniversityQueriesAssignmentsArgs = {
+  after?: InputMaybe<Scalars["String"]["input"]>;
+  before?: InputMaybe<Scalars["String"]["input"]>;
+  filter?: InputMaybe<Array<UniversityAssignmentFilter>>;
+  first?: InputMaybe<Scalars["Int"]["input"]>;
+  last?: InputMaybe<Scalars["Int"]["input"]>;
+  search?: InputMaybe<Scalars["String"]["input"]>;
+  sort?: InputMaybe<Array<UniversityAssignmentSort>>;
+};
+
+export type UniversityQueriesCourseArgs = {
+  id: Scalars["GadgetID"]["input"];
+};
+
+export type UniversityQueriesCoursesArgs = {
+  after?: InputMaybe<Scalars["String"]["input"]>;
+  before?: InputMaybe<Scalars["String"]["input"]>;
+  filter?: InputMaybe<Array<UniversityCourseFilter>>;
+  first?: InputMaybe<Scalars["Int"]["input"]>;
+  last?: InputMaybe<Scalars["Int"]["input"]>;
+  search?: InputMaybe<Scalars["String"]["input"]>;
+  sort?: InputMaybe<Array<UniversityCourseSort>>;
+};
+
+export type UniversityQueriesProfessorArgs = {
+  id: Scalars["GadgetID"]["input"];
+};
+
+export type UniversityQueriesProfessorsArgs = {
+  after?: InputMaybe<Scalars["String"]["input"]>;
+  before?: InputMaybe<Scalars["String"]["input"]>;
+  filter?: InputMaybe<Array<UniversityProfessorFilter>>;
+  first?: InputMaybe<Scalars["Int"]["input"]>;
+  last?: InputMaybe<Scalars["Int"]["input"]>;
+  search?: InputMaybe<Scalars["String"]["input"]>;
+  sort?: InputMaybe<Array<UniversityProfessorSort>>;
+};
+
+export type UniversityQueriesRegistrationArgs = {
+  id: Scalars["GadgetID"]["input"];
+};
+
+export type UniversityQueriesRegistrationsArgs = {
+  after?: InputMaybe<Scalars["String"]["input"]>;
+  before?: InputMaybe<Scalars["String"]["input"]>;
+  filter?: InputMaybe<Array<UniversityRegistrationFilter>>;
+  first?: InputMaybe<Scalars["Int"]["input"]>;
+  last?: InputMaybe<Scalars["Int"]["input"]>;
+  search?: InputMaybe<Scalars["String"]["input"]>;
+  sort?: InputMaybe<Array<UniversityRegistrationSort>>;
+};
+
+export type UniversityQueriesStudentArgs = {
+  id: Scalars["GadgetID"]["input"];
+};
+
+export type UniversityQueriesStudentsArgs = {
+  after?: InputMaybe<Scalars["String"]["input"]>;
+  before?: InputMaybe<Scalars["String"]["input"]>;
+  filter?: InputMaybe<Array<UniversityStudentFilter>>;
+  first?: InputMaybe<Scalars["Int"]["input"]>;
+  last?: InputMaybe<Scalars["Int"]["input"]>;
+  search?: InputMaybe<Scalars["String"]["input"]>;
+  sort?: InputMaybe<Array<UniversityStudentSort>>;
+};
+
+export type UniversityRegistration = {
+  __typename?: "UniversityRegistration";
+  /** Get all the fields for this record. Useful for not having to list out all the fields you want to retrieve, but slower. */
+  _all: Scalars["JSONObject"]["output"];
+  course?: Maybe<UniversityCourse>;
+  courseId?: Maybe<Scalars["GadgetID"]["output"]>;
+  /** The time at which this record was first created. Set once upon record creation and never changed. Managed by Gadget. */
+  createdAt: Scalars["DateTime"]["output"];
+  effectiveFrom?: Maybe<Scalars["Date"]["output"]>;
+  effectiveTo?: Maybe<Scalars["Date"]["output"]>;
+  /** The globally unique, unchanging identifier for this record. Assigned and managed by Gadget. */
+  id: Scalars["GadgetID"]["output"];
+  student?: Maybe<UniversityStudent>;
+  studentId?: Maybe<Scalars["GadgetID"]["output"]>;
+  /** The time at which this record was last changed. Set each time the record is successfully acted upon by an action. Managed by Gadget. */
+  updatedAt: Scalars["DateTime"]["output"];
+};
+
+/** A connection to a list of UniversityRegistration items. */
+export type UniversityRegistrationConnection = {
+  __typename?: "UniversityRegistrationConnection";
+  /** A list of edges. */
+  edges: Array<UniversityRegistrationEdge>;
+  /** Information to aid in pagination. */
+  pageInfo: PageInfo;
+};
+
+/** An edge in a UniversityRegistration connection. */
+export type UniversityRegistrationEdge = {
+  __typename?: "UniversityRegistrationEdge";
+  /** A cursor for use in pagination */
+  cursor: Scalars["String"]["output"];
+  /** The item at the end of the edge */
+  node: UniversityRegistration;
+};
+
+export type UniversityRegistrationFilter = {
+  AND?: InputMaybe<Array<InputMaybe<UniversityRegistrationFilter>>>;
+  NOT?: InputMaybe<Array<InputMaybe<UniversityRegistrationFilter>>>;
+  OR?: InputMaybe<Array<InputMaybe<UniversityRegistrationFilter>>>;
+  course?: InputMaybe<IdFilter>;
+  courseId?: InputMaybe<IdFilter>;
+  createdAt?: InputMaybe<DateTimeFilter>;
+  effectiveFrom?: InputMaybe<DateFilter>;
+  effectiveTo?: InputMaybe<DateFilter>;
+  id?: InputMaybe<IdFilter>;
+  student?: InputMaybe<IdFilter>;
+  studentId?: InputMaybe<IdFilter>;
+  updatedAt?: InputMaybe<DateTimeFilter>;
+};
+
+export type UniversityRegistrationSort = {
+  /** Sort the results by the createdAt field. Defaults to ascending (smallest value first). */
+  createdAt?: InputMaybe<SortOrder>;
+  /** Sort the results by the effectiveFrom field. Defaults to ascending (smallest value first). */
+  effectiveFrom?: InputMaybe<SortOrder>;
+  /** Sort the results by the effectiveTo field. Defaults to ascending (smallest value first). */
+  effectiveTo?: InputMaybe<SortOrder>;
+  /** Sort the results by the id field. Defaults to ascending (smallest value first). */
+  id?: InputMaybe<SortOrder>;
+  /** Sort the results by the updatedAt field. Defaults to ascending (smallest value first). */
+  updatedAt?: InputMaybe<SortOrder>;
+};
+
+export type UniversityStudent = {
+  __typename?: "UniversityStudent";
+  /** Get all the fields for this record. Useful for not having to list out all the fields you want to retrieve, but slower. */
+  _all: Scalars["JSONObject"]["output"];
+  courses: UniversityCourseConnection;
+  /** The time at which this record was first created. Set once upon record creation and never changed. Managed by Gadget. */
+  createdAt: Scalars["DateTime"]["output"];
+  department?: Maybe<Scalars["StudentDepartmentEnum"]["output"]>;
+  firstName?: Maybe<Scalars["String"]["output"]>;
+  /** The globally unique, unchanging identifier for this record. Assigned and managed by Gadget. */
+  id: Scalars["GadgetID"]["output"];
+  lastName?: Maybe<Scalars["String"]["output"]>;
+  registrations: UniversityRegistrationConnection;
+  /** The time at which this record was last changed. Set each time the record is successfully acted upon by an action. Managed by Gadget. */
+  updatedAt: Scalars["DateTime"]["output"];
+  year?: Maybe<Scalars["Int"]["output"]>;
+};
+
+export type UniversityStudentCoursesArgs = {
+  after?: InputMaybe<Scalars["String"]["input"]>;
+  before?: InputMaybe<Scalars["String"]["input"]>;
+  first?: InputMaybe<Scalars["Int"]["input"]>;
+  last?: InputMaybe<Scalars["Int"]["input"]>;
+};
+
+export type UniversityStudentRegistrationsArgs = {
+  after?: InputMaybe<Scalars["String"]["input"]>;
+  before?: InputMaybe<Scalars["String"]["input"]>;
+  first?: InputMaybe<Scalars["Int"]["input"]>;
+  last?: InputMaybe<Scalars["Int"]["input"]>;
+};
+
+/** A connection to a list of UniversityStudent items. */
+export type UniversityStudentConnection = {
+  __typename?: "UniversityStudentConnection";
+  /** A list of edges. */
+  edges: Array<UniversityStudentEdge>;
+  /** Information to aid in pagination. */
+  pageInfo: PageInfo;
+};
+
+/** An edge in a UniversityStudent connection. */
+export type UniversityStudentEdge = {
+  __typename?: "UniversityStudentEdge";
+  /** A cursor for use in pagination */
+  cursor: Scalars["String"]["output"];
+  /** The item at the end of the edge */
+  node: UniversityStudent;
+};
+
+export type UniversityStudentFilter = {
+  AND?: InputMaybe<Array<InputMaybe<UniversityStudentFilter>>>;
+  NOT?: InputMaybe<Array<InputMaybe<UniversityStudentFilter>>>;
+  OR?: InputMaybe<Array<InputMaybe<UniversityStudentFilter>>>;
+  createdAt?: InputMaybe<DateTimeFilter>;
+  department?: InputMaybe<SingleEnumFilter>;
+  firstName?: InputMaybe<StringFilter>;
+  id?: InputMaybe<IdFilter>;
+  lastName?: InputMaybe<StringFilter>;
+  updatedAt?: InputMaybe<DateTimeFilter>;
+  year?: InputMaybe<IntFilter>;
+};
+
+export type UniversityStudentSort = {
+  /** Sort the results by the createdAt field. Defaults to ascending (smallest value first). */
+  createdAt?: InputMaybe<SortOrder>;
+  /** Sort the results by the department field. Defaults to ascending (smallest value first). */
+  department?: InputMaybe<SortOrder>;
+  /** Sort the results by the firstName field. Defaults to ascending (smallest value first). */
+  firstName?: InputMaybe<SortOrder>;
+  /** Sort the results by the id field. Defaults to ascending (smallest value first). */
+  id?: InputMaybe<SortOrder>;
+  /** Sort the results by the lastName field. Defaults to ascending (smallest value first). */
+  lastName?: InputMaybe<SortOrder>;
+  /** Sort the results by the updatedAt field. Defaults to ascending (smallest value first). */
+  updatedAt?: InputMaybe<SortOrder>;
+  /** Sort the results by the year field. Defaults to ascending (smallest value first). */
+  year?: InputMaybe<SortOrder>;
+};
+
 export type UpdateAutoTableTestInput = {
   bool?: InputMaybe<Scalars["Boolean"]["input"]>;
   dt?: InputMaybe<Scalars["DateTime"]["input"]>;
@@ -12398,9 +16463,42 @@ export type UpdateAutoTableTestResult = UpsertAutoTableTestResult & {
   success: Scalars["Boolean"]["output"];
 };
 
+export type UpdateDoodadInput = {
+  active?: InputMaybe<Scalars["Boolean"]["input"]>;
+  gizmo?: InputMaybe<GizmoBelongsToInput>;
+  name?: InputMaybe<Scalars["String"]["input"]>;
+  size?: InputMaybe<Scalars["DoodadSizeEnum"]["input"]>;
+  weight?: InputMaybe<Scalars["Float"]["input"]>;
+  widget?: InputMaybe<WidgetBelongsToInput>;
+};
+
+export type UpdateDoodadResult = UpsertDoodadResult & {
+  __typename?: "UpdateDoodadResult";
+  actionRun?: Maybe<Scalars["String"]["output"]>;
+  doodad?: Maybe<Doodad>;
+  errors?: Maybe<Array<ExecutionError>>;
+  success: Scalars["Boolean"]["output"];
+};
+
+export type UpdateFriendshipInput = {
+  ended?: InputMaybe<Scalars["DateOrDateTime"]["input"]>;
+  followee?: InputMaybe<TweeterBelongsToInput>;
+  follower?: InputMaybe<TweeterBelongsToInput>;
+  started?: InputMaybe<Scalars["DateOrDateTime"]["input"]>;
+};
+
+export type UpdateFriendshipResult = UpsertFriendshipResult & {
+  __typename?: "UpdateFriendshipResult";
+  actionRun?: Maybe<Scalars["String"]["output"]>;
+  errors?: Maybe<Array<ExecutionError>>;
+  friendship?: Maybe<Friendship>;
+  success: Scalars["Boolean"]["output"];
+};
+
 export type UpdateGameCityInput = {
   name?: InputMaybe<Scalars["String"]["input"]>;
   stadium?: InputMaybe<StadiumHasOneInput>;
+  tweeters?: InputMaybe<Array<InputMaybe<TweeterHasManyInput>>>;
 };
 
 export type UpdateGameCityResult = UpsertGameCityResult & {
@@ -12457,6 +16555,7 @@ export type UpdateGameStadiumResult = UpsertGameStadiumResult & {
 
 export type UpdateGizmoInput = {
   attachment?: InputMaybe<StoredFileInput>;
+  doodads?: InputMaybe<Array<InputMaybe<DoodadHasManyInput>>>;
   name?: InputMaybe<Scalars["String"]["input"]>;
   orientation?: InputMaybe<Scalars["String"]["input"]>;
   widget?: InputMaybe<WidgetBelongsToInput>;
@@ -12473,7 +16572,6 @@ export type UpdateGizmoResult = UpsertGizmoResult & {
 export type UpdateHasManyThroughBaseModelInput = {
   baseModelHmtField?: InputMaybe<Array<InputMaybe<SiblingModelHasManyThroughInput>>>;
   baseModelName?: InputMaybe<Scalars["String"]["input"]>;
-  joinerModel?: InputMaybe<Array<InputMaybe<JoinerModelHasManyInput>>>;
   joinerModels?: InputMaybe<Array<InputMaybe<JoinerModelHasManyInput>>>;
 };
 
@@ -12499,7 +16597,6 @@ export type UpdateHasManyThroughJoinerModelResult = UpsertHasManyThroughJoinerMo
 };
 
 export type UpdateHasManyThroughSiblingModelInput = {
-  joinerModel?: InputMaybe<Array<InputMaybe<JoinerModelHasManyInput>>>;
   joinerModels?: InputMaybe<Array<InputMaybe<JoinerModelHasManyInput>>>;
   siblingModelHmtField?: InputMaybe<Array<InputMaybe<BaseModelHasManyThroughInput>>>;
   siblingName?: InputMaybe<Scalars["String"]["input"]>;
@@ -12597,6 +16694,23 @@ export type UpdateShopifyShopResult = UpsertShopifyShopResult & {
   success: Scalars["Boolean"]["output"];
 };
 
+export type UpdateTweeterInput = {
+  city?: InputMaybe<CityBelongsToInput>;
+  followeeFriendships?: InputMaybe<Array<InputMaybe<FriendshipHasManyInput>>>;
+  followees?: InputMaybe<Array<InputMaybe<TweeterHasManyThroughInput>>>;
+  followerFriendships?: InputMaybe<Array<InputMaybe<FriendshipHasManyInput>>>;
+  followers?: InputMaybe<Array<InputMaybe<TweeterHasManyThroughInput>>>;
+  name?: InputMaybe<Scalars["String"]["input"]>;
+};
+
+export type UpdateTweeterResult = UpsertTweeterResult & {
+  __typename?: "UpdateTweeterResult";
+  actionRun?: Maybe<Scalars["String"]["output"]>;
+  errors?: Maybe<Array<ExecutionError>>;
+  success: Scalars["Boolean"]["output"];
+  tweeter?: Maybe<Tweeter>;
+};
+
 export type UpdateUniqueFieldsChildModelInput = {
   alias?: InputMaybe<Scalars["String"]["input"]>;
   mainModelParent?: InputMaybe<MainModelBelongsToInput>;
@@ -12640,6 +16754,84 @@ export type UpdateUniqueFieldsParentModelResult = UpsertUniqueFieldsParentModelR
   success: Scalars["Boolean"]["output"];
 };
 
+export type UpdateUniversityAssignmentInput = {
+  course?: InputMaybe<CourseBelongsToInput>;
+  professor?: InputMaybe<ProfessorBelongsToInput>;
+};
+
+export type UpdateUniversityAssignmentResult = UpsertUniversityAssignmentResult & {
+  __typename?: "UpdateUniversityAssignmentResult";
+  actionRun?: Maybe<Scalars["String"]["output"]>;
+  assignment?: Maybe<UniversityAssignment>;
+  errors?: Maybe<Array<ExecutionError>>;
+  success: Scalars["Boolean"]["output"];
+};
+
+export type UpdateUniversityCourseInput = {
+  assignments?: InputMaybe<Array<InputMaybe<AssignmentHasManyInput>>>;
+  description?: InputMaybe<RichTextInput>;
+  professors?: InputMaybe<Array<InputMaybe<ProfessorHasManyThroughInput>>>;
+  registrations?: InputMaybe<Array<InputMaybe<RegistrationHasManyInput>>>;
+  students?: InputMaybe<Array<InputMaybe<StudentHasManyThroughInput>>>;
+  title?: InputMaybe<Scalars["String"]["input"]>;
+};
+
+export type UpdateUniversityCourseResult = UpsertUniversityCourseResult & {
+  __typename?: "UpdateUniversityCourseResult";
+  actionRun?: Maybe<Scalars["String"]["output"]>;
+  course?: Maybe<UniversityCourse>;
+  errors?: Maybe<Array<ExecutionError>>;
+  success: Scalars["Boolean"]["output"];
+};
+
+export type UpdateUniversityProfessorInput = {
+  assignments?: InputMaybe<Array<InputMaybe<AssignmentHasManyInput>>>;
+  courses?: InputMaybe<Array<InputMaybe<CourseHasManyThroughInput>>>;
+  firstName?: InputMaybe<Scalars["String"]["input"]>;
+  lastName?: InputMaybe<Scalars["String"]["input"]>;
+  title?: InputMaybe<Scalars["ProfessorTitleEnum"]["input"]>;
+};
+
+export type UpdateUniversityProfessorResult = UpsertUniversityProfessorResult & {
+  __typename?: "UpdateUniversityProfessorResult";
+  actionRun?: Maybe<Scalars["String"]["output"]>;
+  errors?: Maybe<Array<ExecutionError>>;
+  professor?: Maybe<UniversityProfessor>;
+  success: Scalars["Boolean"]["output"];
+};
+
+export type UpdateUniversityRegistrationInput = {
+  course?: InputMaybe<CourseBelongsToInput>;
+  effectiveFrom?: InputMaybe<Scalars["DateOrDateTime"]["input"]>;
+  effectiveTo?: InputMaybe<Scalars["DateOrDateTime"]["input"]>;
+  student?: InputMaybe<StudentBelongsToInput>;
+};
+
+export type UpdateUniversityRegistrationResult = UpsertUniversityRegistrationResult & {
+  __typename?: "UpdateUniversityRegistrationResult";
+  actionRun?: Maybe<Scalars["String"]["output"]>;
+  errors?: Maybe<Array<ExecutionError>>;
+  registration?: Maybe<UniversityRegistration>;
+  success: Scalars["Boolean"]["output"];
+};
+
+export type UpdateUniversityStudentInput = {
+  courses?: InputMaybe<Array<InputMaybe<CourseHasManyThroughInput>>>;
+  department?: InputMaybe<Scalars["StudentDepartmentEnum"]["input"]>;
+  firstName?: InputMaybe<Scalars["String"]["input"]>;
+  lastName?: InputMaybe<Scalars["String"]["input"]>;
+  registrations?: InputMaybe<Array<InputMaybe<RegistrationHasManyInput>>>;
+  year?: InputMaybe<Scalars["Int"]["input"]>;
+};
+
+export type UpdateUniversityStudentResult = UpsertUniversityStudentResult & {
+  __typename?: "UpdateUniversityStudentResult";
+  actionRun?: Maybe<Scalars["String"]["output"]>;
+  errors?: Maybe<Array<ExecutionError>>;
+  student?: Maybe<UniversityStudent>;
+  success: Scalars["Boolean"]["output"];
+};
+
 export type UpdateUserInput = {
   email?: InputMaybe<Scalars["String"]["input"]>;
   emailVerified?: InputMaybe<Scalars["Boolean"]["input"]>;
@@ -12665,6 +16857,7 @@ export type UpdateWidgetInput = {
   category?: InputMaybe<Array<Scalars["WidgetCategoryEnum"]["input"]>>;
   color?: InputMaybe<Scalars["String"]["input"]>;
   description?: InputMaybe<RichTextInput>;
+  doodad?: InputMaybe<DoodadHasOneInput>;
   embedding?: InputMaybe<Array<Scalars["Float"]["input"]>>;
   gizmos?: InputMaybe<Array<InputMaybe<GizmoHasManyInput>>>;
   inventoryCount?: InputMaybe<Scalars["Float"]["input"]>;
@@ -12757,8 +16950,26 @@ export type UpsertAutoTableTestResult = {
   success: Scalars["Boolean"]["output"];
 };
 
+export type UpsertDoodadInput = {
+  active?: InputMaybe<Scalars["Boolean"]["input"]>;
+  gizmo?: InputMaybe<GizmoBelongsToInput>;
+  id?: InputMaybe<Scalars["GadgetID"]["input"]>;
+  name?: InputMaybe<Scalars["String"]["input"]>;
+  size?: InputMaybe<Scalars["DoodadSizeEnum"]["input"]>;
+  weight?: InputMaybe<Scalars["Float"]["input"]>;
+  widget?: InputMaybe<WidgetBelongsToInput>;
+};
+
+export type UpsertDoodadResult = {
+  actionRun?: Maybe<Scalars["String"]["output"]>;
+  errors?: Maybe<Array<ExecutionError>>;
+  success: Scalars["Boolean"]["output"];
+};
+
 export type UpsertError = UpsertAutoTableTestRelatedModelResult &
   UpsertAutoTableTestResult &
+  UpsertDoodadResult &
+  UpsertFriendshipResult &
   UpsertGameCityResult &
   UpsertGamePlayerResult &
   UpsertGameRoundResult &
@@ -12777,9 +16988,15 @@ export type UpsertError = UpsertAutoTableTestRelatedModelResult &
   UpsertShopifyProductVariantResult &
   UpsertShopifyShopResult &
   UpsertShopifySyncResult &
+  UpsertTweeterResult &
   UpsertUniqueFieldsChildModelResult &
   UpsertUniqueFieldsMainModelResult &
   UpsertUniqueFieldsParentModelResult &
+  UpsertUniversityAssignmentResult &
+  UpsertUniversityCourseResult &
+  UpsertUniversityProfessorResult &
+  UpsertUniversityRegistrationResult &
+  UpsertUniversityStudentResult &
   UpsertUserResult &
   UpsertWidgetResult & {
     __typename?: "UpsertError";
@@ -12788,10 +17005,25 @@ export type UpsertError = UpsertAutoTableTestRelatedModelResult &
     success: Scalars["Boolean"]["output"];
   };
 
+export type UpsertFriendshipInput = {
+  ended?: InputMaybe<Scalars["DateOrDateTime"]["input"]>;
+  followee?: InputMaybe<TweeterBelongsToInput>;
+  follower?: InputMaybe<TweeterBelongsToInput>;
+  id?: InputMaybe<Scalars["GadgetID"]["input"]>;
+  started?: InputMaybe<Scalars["DateOrDateTime"]["input"]>;
+};
+
+export type UpsertFriendshipResult = {
+  actionRun?: Maybe<Scalars["String"]["output"]>;
+  errors?: Maybe<Array<ExecutionError>>;
+  success: Scalars["Boolean"]["output"];
+};
+
 export type UpsertGameCityInput = {
   id?: InputMaybe<Scalars["GadgetID"]["input"]>;
   name?: InputMaybe<Scalars["String"]["input"]>;
   stadium?: InputMaybe<StadiumHasOneInput>;
+  tweeters?: InputMaybe<Array<InputMaybe<TweeterHasManyInput>>>;
 };
 
 export type UpsertGameCityResult = {
@@ -12843,6 +17075,7 @@ export type UpsertGameStadiumResult = {
 
 export type UpsertGizmoInput = {
   attachment?: InputMaybe<StoredFileInput>;
+  doodads?: InputMaybe<Array<InputMaybe<DoodadHasManyInput>>>;
   id?: InputMaybe<Scalars["GadgetID"]["input"]>;
   name?: InputMaybe<Scalars["String"]["input"]>;
   orientation?: InputMaybe<Scalars["String"]["input"]>;
@@ -12859,7 +17092,6 @@ export type UpsertHasManyThroughBaseModelInput = {
   baseModelHmtField?: InputMaybe<Array<InputMaybe<SiblingModelHasManyThroughInput>>>;
   baseModelName?: InputMaybe<Scalars["String"]["input"]>;
   id?: InputMaybe<Scalars["GadgetID"]["input"]>;
-  joinerModel?: InputMaybe<Array<InputMaybe<JoinerModelHasManyInput>>>;
   joinerModels?: InputMaybe<Array<InputMaybe<JoinerModelHasManyInput>>>;
 };
 
@@ -12883,7 +17115,6 @@ export type UpsertHasManyThroughJoinerModelResult = {
 
 export type UpsertHasManyThroughSiblingModelInput = {
   id?: InputMaybe<Scalars["GadgetID"]["input"]>;
-  joinerModel?: InputMaybe<Array<InputMaybe<JoinerModelHasManyInput>>>;
   joinerModels?: InputMaybe<Array<InputMaybe<JoinerModelHasManyInput>>>;
   siblingModelHmtField?: InputMaybe<Array<InputMaybe<BaseModelHasManyThroughInput>>>;
   siblingName?: InputMaybe<Scalars["String"]["input"]>;
@@ -12984,6 +17215,22 @@ export type UpsertShopifySyncResult = {
   success: Scalars["Boolean"]["output"];
 };
 
+export type UpsertTweeterInput = {
+  city?: InputMaybe<CityBelongsToInput>;
+  followeeFriendships?: InputMaybe<Array<InputMaybe<FriendshipHasManyInput>>>;
+  followees?: InputMaybe<Array<InputMaybe<TweeterHasManyThroughInput>>>;
+  followerFriendships?: InputMaybe<Array<InputMaybe<FriendshipHasManyInput>>>;
+  followers?: InputMaybe<Array<InputMaybe<TweeterHasManyThroughInput>>>;
+  id?: InputMaybe<Scalars["GadgetID"]["input"]>;
+  name?: InputMaybe<Scalars["String"]["input"]>;
+};
+
+export type UpsertTweeterResult = {
+  actionRun?: Maybe<Scalars["String"]["output"]>;
+  errors?: Maybe<Array<ExecutionError>>;
+  success: Scalars["Boolean"]["output"];
+};
+
 export type UpsertUniqueFieldsChildModelInput = {
   alias?: InputMaybe<Scalars["String"]["input"]>;
   id?: InputMaybe<Scalars["GadgetID"]["input"]>;
@@ -13024,6 +17271,79 @@ export type UpsertUniqueFieldsParentModelResult = {
   success: Scalars["Boolean"]["output"];
 };
 
+export type UpsertUniversityAssignmentInput = {
+  course?: InputMaybe<CourseBelongsToInput>;
+  id?: InputMaybe<Scalars["GadgetID"]["input"]>;
+  professor?: InputMaybe<ProfessorBelongsToInput>;
+};
+
+export type UpsertUniversityAssignmentResult = {
+  actionRun?: Maybe<Scalars["String"]["output"]>;
+  errors?: Maybe<Array<ExecutionError>>;
+  success: Scalars["Boolean"]["output"];
+};
+
+export type UpsertUniversityCourseInput = {
+  assignments?: InputMaybe<Array<InputMaybe<AssignmentHasManyInput>>>;
+  description?: InputMaybe<RichTextInput>;
+  id?: InputMaybe<Scalars["GadgetID"]["input"]>;
+  professors?: InputMaybe<Array<InputMaybe<ProfessorHasManyThroughInput>>>;
+  registrations?: InputMaybe<Array<InputMaybe<RegistrationHasManyInput>>>;
+  students?: InputMaybe<Array<InputMaybe<StudentHasManyThroughInput>>>;
+  title?: InputMaybe<Scalars["String"]["input"]>;
+};
+
+export type UpsertUniversityCourseResult = {
+  actionRun?: Maybe<Scalars["String"]["output"]>;
+  errors?: Maybe<Array<ExecutionError>>;
+  success: Scalars["Boolean"]["output"];
+};
+
+export type UpsertUniversityProfessorInput = {
+  assignments?: InputMaybe<Array<InputMaybe<AssignmentHasManyInput>>>;
+  courses?: InputMaybe<Array<InputMaybe<CourseHasManyThroughInput>>>;
+  firstName?: InputMaybe<Scalars["String"]["input"]>;
+  id?: InputMaybe<Scalars["GadgetID"]["input"]>;
+  lastName?: InputMaybe<Scalars["String"]["input"]>;
+  title?: InputMaybe<Scalars["ProfessorTitleEnum"]["input"]>;
+};
+
+export type UpsertUniversityProfessorResult = {
+  actionRun?: Maybe<Scalars["String"]["output"]>;
+  errors?: Maybe<Array<ExecutionError>>;
+  success: Scalars["Boolean"]["output"];
+};
+
+export type UpsertUniversityRegistrationInput = {
+  course?: InputMaybe<CourseBelongsToInput>;
+  effectiveFrom?: InputMaybe<Scalars["DateOrDateTime"]["input"]>;
+  effectiveTo?: InputMaybe<Scalars["DateOrDateTime"]["input"]>;
+  id?: InputMaybe<Scalars["GadgetID"]["input"]>;
+  student?: InputMaybe<StudentBelongsToInput>;
+};
+
+export type UpsertUniversityRegistrationResult = {
+  actionRun?: Maybe<Scalars["String"]["output"]>;
+  errors?: Maybe<Array<ExecutionError>>;
+  success: Scalars["Boolean"]["output"];
+};
+
+export type UpsertUniversityStudentInput = {
+  courses?: InputMaybe<Array<InputMaybe<CourseHasManyThroughInput>>>;
+  department?: InputMaybe<Scalars["StudentDepartmentEnum"]["input"]>;
+  firstName?: InputMaybe<Scalars["String"]["input"]>;
+  id?: InputMaybe<Scalars["GadgetID"]["input"]>;
+  lastName?: InputMaybe<Scalars["String"]["input"]>;
+  registrations?: InputMaybe<Array<InputMaybe<RegistrationHasManyInput>>>;
+  year?: InputMaybe<Scalars["Int"]["input"]>;
+};
+
+export type UpsertUniversityStudentResult = {
+  actionRun?: Maybe<Scalars["String"]["output"]>;
+  errors?: Maybe<Array<ExecutionError>>;
+  success: Scalars["Boolean"]["output"];
+};
+
 export type UpsertUserInput = {
   email?: InputMaybe<Scalars["String"]["input"]>;
   emailVerified?: InputMaybe<Scalars["Boolean"]["input"]>;
@@ -13050,6 +17370,7 @@ export type UpsertWidgetInput = {
   category?: InputMaybe<Array<Scalars["WidgetCategoryEnum"]["input"]>>;
   color?: InputMaybe<Scalars["String"]["input"]>;
   description?: InputMaybe<RichTextInput>;
+  doodad?: InputMaybe<DoodadHasOneInput>;
   embedding?: InputMaybe<Array<Scalars["Float"]["input"]>>;
   gizmos?: InputMaybe<Array<InputMaybe<GizmoHasManyInput>>>;
   id?: InputMaybe<Scalars["GadgetID"]["input"]>;
@@ -13122,6 +17443,7 @@ export type UserFilter = {
   id?: InputMaybe<IdFilter>;
   lastName?: InputMaybe<StringFilter>;
   lastSignedIn?: InputMaybe<DateTimeFilter>;
+  roles?: InputMaybe<RoleAssignmentFilter>;
   updatedAt?: InputMaybe<DateTimeFilter>;
 };
 
@@ -13204,6 +17526,7 @@ export type Widget = {
   /** The time at which this record was first created. Set once upon record creation and never changed. Managed by Gadget. */
   createdAt: Scalars["DateTime"]["output"];
   description?: Maybe<RichText>;
+  doodad?: Maybe<Doodad>;
   embedding?: Maybe<Array<Scalars["Float"]["output"]>>;
   embeddingCosineSimilarityTo?: Maybe<Scalars["Float"]["output"]>;
   embeddingL2DistanceTo?: Maybe<Scalars["Float"]["output"]>;
@@ -13288,6 +17611,7 @@ export type WidgetFilter = {
   metafields?: InputMaybe<JsonFilter>;
   mustBeLongString?: InputMaybe<StringFilter>;
   name?: InputMaybe<StringFilter>;
+  roles?: InputMaybe<RoleAssignmentFilter>;
   section?: InputMaybe<IdFilter>;
   sectionId?: InputMaybe<IdFilter>;
   startsAt?: InputMaybe<DateTimeFilter>;
@@ -13424,6 +17748,7 @@ type FieldMetadata_GadgetModelField_Fragment = {
       }
     | {
         __typename: "GadgetHasManyThroughConfig";
+        joinModelHasManyFieldApiIdentifier?: string | null;
         fieldType: GadgetFieldType;
         relatedModel?: {
           __typename?: "GadgetModel";
@@ -13572,6 +17897,7 @@ type FieldMetadata_GadgetObjectField_Fragment = {
       }
     | {
         __typename: "GadgetHasManyThroughConfig";
+        joinModelHasManyFieldApiIdentifier?: string | null;
         fieldType: GadgetFieldType;
         relatedModel?: {
           __typename?: "GadgetModel";
@@ -13739,6 +18065,7 @@ export type GetModelMetadataQuery = {
             }
           | {
               __typename: "GadgetHasManyThroughConfig";
+              joinModelHasManyFieldApiIdentifier?: string | null;
               fieldType: GadgetFieldType;
               relatedModel?: {
                 __typename?: "GadgetModel";
@@ -13907,6 +18234,7 @@ type SubFields_GadgetModelField_Fragment = {
               }
             | {
                 __typename: "GadgetHasManyThroughConfig";
+                joinModelHasManyFieldApiIdentifier?: string | null;
                 fieldType: GadgetFieldType;
                 relatedModel?: {
                   __typename?: "GadgetModel";
@@ -14078,6 +18406,7 @@ type SubFields_GadgetModelField_Fragment = {
                       }
                     | {
                         __typename: "GadgetHasManyThroughConfig";
+                        joinModelHasManyFieldApiIdentifier?: string | null;
                         fieldType: GadgetFieldType;
                         relatedModel?: {
                           __typename?: "GadgetModel";
@@ -14297,6 +18626,7 @@ type SubFields_GadgetModelField_Fragment = {
                               }
                             | {
                                 __typename: "GadgetHasManyThroughConfig";
+                                joinModelHasManyFieldApiIdentifier?: string | null;
                                 fieldType: GadgetFieldType;
                                 relatedModel?: {
                                   __typename?: "GadgetModel";
@@ -14536,6 +18866,7 @@ type SubFields_GadgetObjectField_Fragment = {
               }
             | {
                 __typename: "GadgetHasManyThroughConfig";
+                joinModelHasManyFieldApiIdentifier?: string | null;
                 fieldType: GadgetFieldType;
                 relatedModel?: {
                   __typename?: "GadgetModel";
@@ -14707,6 +19038,7 @@ type SubFields_GadgetObjectField_Fragment = {
                       }
                     | {
                         __typename: "GadgetHasManyThroughConfig";
+                        joinModelHasManyFieldApiIdentifier?: string | null;
                         fieldType: GadgetFieldType;
                         relatedModel?: {
                           __typename?: "GadgetModel";
@@ -14926,6 +19258,7 @@ type SubFields_GadgetObjectField_Fragment = {
                               }
                             | {
                                 __typename: "GadgetHasManyThroughConfig";
+                                joinModelHasManyFieldApiIdentifier?: string | null;
                                 fieldType: GadgetFieldType;
                                 relatedModel?: {
                                   __typename?: "GadgetModel";
@@ -15170,6 +19503,7 @@ export type ModelActionMetadataQuery = {
             }
           | {
               __typename: "GadgetHasManyThroughConfig";
+              joinModelHasManyFieldApiIdentifier?: string | null;
               fieldType: GadgetFieldType;
               relatedModel?: {
                 __typename?: "GadgetModel";
@@ -15341,6 +19675,7 @@ export type ModelActionMetadataQuery = {
                     }
                   | {
                       __typename: "GadgetHasManyThroughConfig";
+                      joinModelHasManyFieldApiIdentifier?: string | null;
                       fieldType: GadgetFieldType;
                       relatedModel?: {
                         __typename?: "GadgetModel";
@@ -15560,6 +19895,7 @@ export type ModelActionMetadataQuery = {
                             }
                           | {
                               __typename: "GadgetHasManyThroughConfig";
+                              joinModelHasManyFieldApiIdentifier?: string | null;
                               fieldType: GadgetFieldType;
                               relatedModel?: {
                                 __typename?: "GadgetModel";
@@ -15819,6 +20155,7 @@ export type ModelActionMetadataQuery = {
                                     }
                                   | {
                                       __typename: "GadgetHasManyThroughConfig";
+                                      joinModelHasManyFieldApiIdentifier?: string | null;
                                       fieldType: GadgetFieldType;
                                       relatedModel?: {
                                         __typename?: "GadgetModel";
@@ -16094,6 +20431,7 @@ export type ModelActionMetadataQuery = {
               }
             | {
                 __typename: "GadgetHasManyThroughConfig";
+                joinModelHasManyFieldApiIdentifier?: string | null;
                 fieldType: GadgetFieldType;
                 relatedModel?: {
                   __typename?: "GadgetModel";
@@ -16265,6 +20603,7 @@ export type ModelActionMetadataQuery = {
                       }
                     | {
                         __typename: "GadgetHasManyThroughConfig";
+                        joinModelHasManyFieldApiIdentifier?: string | null;
                         fieldType: GadgetFieldType;
                         relatedModel?: {
                           __typename?: "GadgetModel";
@@ -16484,6 +20823,7 @@ export type ModelActionMetadataQuery = {
                               }
                             | {
                                 __typename: "GadgetHasManyThroughConfig";
+                                joinModelHasManyFieldApiIdentifier?: string | null;
                                 fieldType: GadgetFieldType;
                                 relatedModel?: {
                                   __typename?: "GadgetModel";
@@ -16743,6 +21083,7 @@ export type ModelActionMetadataQuery = {
                                       }
                                     | {
                                         __typename: "GadgetHasManyThroughConfig";
+                                        joinModelHasManyFieldApiIdentifier?: string | null;
                                         fieldType: GadgetFieldType;
                                         relatedModel?: {
                                           __typename?: "GadgetModel";
@@ -17022,6 +21363,7 @@ export type GlobalActionMetadataQuery = {
             }
           | {
               __typename: "GadgetHasManyThroughConfig";
+              joinModelHasManyFieldApiIdentifier?: string | null;
               fieldType: GadgetFieldType;
               relatedModel?: {
                 __typename?: "GadgetModel";
@@ -17193,6 +21535,7 @@ export type GlobalActionMetadataQuery = {
                     }
                   | {
                       __typename: "GadgetHasManyThroughConfig";
+                      joinModelHasManyFieldApiIdentifier?: string | null;
                       fieldType: GadgetFieldType;
                       relatedModel?: {
                         __typename?: "GadgetModel";
@@ -17412,6 +21755,7 @@ export type GlobalActionMetadataQuery = {
                             }
                           | {
                               __typename: "GadgetHasManyThroughConfig";
+                              joinModelHasManyFieldApiIdentifier?: string | null;
                               fieldType: GadgetFieldType;
                               relatedModel?: {
                                 __typename?: "GadgetModel";
@@ -17671,6 +22015,7 @@ export type GlobalActionMetadataQuery = {
                                     }
                                   | {
                                       __typename: "GadgetHasManyThroughConfig";
+                                      joinModelHasManyFieldApiIdentifier?: string | null;
                                       fieldType: GadgetFieldType;
                                       relatedModel?: {
                                         __typename?: "GadgetModel";
@@ -18008,6 +22353,7 @@ export const FieldMetadataFragmentDoc = {
                           selections: [{ kind: "Field", name: { kind: "Name", value: "apiIdentifier" } }],
                         },
                       },
+                      { kind: "Field", name: { kind: "Name", value: "joinModelHasManyFieldApiIdentifier" } },
                     ],
                   },
                 },
@@ -18383,6 +22729,7 @@ export const SubFieldsFragmentDoc = {
                           selections: [{ kind: "Field", name: { kind: "Name", value: "apiIdentifier" } }],
                         },
                       },
+                      { kind: "Field", name: { kind: "Name", value: "joinModelHasManyFieldApiIdentifier" } },
                     ],
                   },
                 },
@@ -18731,6 +23078,7 @@ export const GetModelMetadataDocument = {
                           selections: [{ kind: "Field", name: { kind: "Name", value: "apiIdentifier" } }],
                         },
                       },
+                      { kind: "Field", name: { kind: "Name", value: "joinModelHasManyFieldApiIdentifier" } },
                     ],
                   },
                 },
@@ -19153,6 +23501,7 @@ export const ModelActionMetadataDocument = {
                           selections: [{ kind: "Field", name: { kind: "Name", value: "apiIdentifier" } }],
                         },
                       },
+                      { kind: "Field", name: { kind: "Name", value: "joinModelHasManyFieldApiIdentifier" } },
                     ],
                   },
                 },
@@ -19598,6 +23947,7 @@ export const GlobalActionMetadataDocument = {
                           selections: [{ kind: "Field", name: { kind: "Name", value: "apiIdentifier" } }],
                         },
                       },
+                      { kind: "Field", name: { kind: "Name", value: "joinModelHasManyFieldApiIdentifier" } },
                     ],
                   },
                 },

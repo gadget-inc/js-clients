@@ -747,8 +747,8 @@ function loadMockWidgetUpdateMetadata() {
 
 function loadMockWidgetUpdateMetadataWithFindBy() {
   mockWidgetUpdateHelperFunctions.expectMetadataRequest();
-  mockWidgetUpdateHelperFunctions.mockFindByResponse();
   mockWidgetUpdateHelperFunctions.mockMetadataResponse();
+  mockWidgetUpdateHelperFunctions.mockFindByResponse();
 }
 
 const mockWidgetUpdateHelperFunctions = {

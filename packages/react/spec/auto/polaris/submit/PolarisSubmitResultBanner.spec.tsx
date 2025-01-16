@@ -68,11 +68,62 @@ describe("PolarisSubmitResultBanner", () => {
 });
 
 const metadata: ModelWithOneActionMetadata = {
+  key: "DataModel-Widget",
   name: "Widget",
+  namespace: [],
   apiIdentifier: "widget",
+  defaultRecord: {
+    name: "",
+    __typename: "Widget",
+  },
   action: {
     name: "Create",
     apiIdentifier: "create",
+    operatesWithRecordIdentity: false,
+    isDeleteAction: false,
+    inputFields: [
+      {
+        name: "Widget",
+        apiIdentifier: "widget",
+        fieldType: "Object",
+        requiredArgumentForInput: false,
+        configuration: {
+          __typename: "GadgetObjectFieldConfig",
+          fieldType: "Object",
+          validations: [],
+
+          fields: [
+            {
+              name: "name",
+              apiIdentifier: "name",
+              fieldType: "String",
+              requiredArgumentForInput: true,
+              sortable: true,
+              filterable: true,
+              __typename: "GadgetModelField",
+              configuration: {
+                __typename: "GadgetGenericFieldConfig",
+                fieldType: "String",
+                validations: [
+                  {
+                    __typename: "GadgetGenericFieldValidation",
+                    name: "Required",
+                    specID: "gadget/validation/required",
+                  },
+                ],
+              },
+            },
+          ],
+        },
+        __typename: "GadgetObjectField",
+      },
+    ],
+    triggers: [
+      {
+        specID: "gadget/trigger/graphql_api",
+        __typename: "GadgetTrigger",
+      },
+    ],
     __typename: "GadgetAction",
   },
   __typename: "GadgetModel",
