@@ -348,6 +348,11 @@ const roleAssignmentsSelection = {
 };
 
 const getNonRelationshipSelectionValue = (field: FieldMetadata) => {
+  if (field.__typename !== "GadgetModelField") {
+    // Only model fields are selectable
+    return false;
+  }
+
   switch (field.fieldType) {
     case GadgetFieldType.RichText:
       return richTextSelection;
