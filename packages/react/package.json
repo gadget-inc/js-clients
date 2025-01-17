@@ -74,6 +74,7 @@
     "@pollyjs/adapter-xhr": "^6.0.6",
     "@pollyjs/core": "^6.0.6",
     "@pollyjs/persister-fs": "^6.0.6",
+    "@radix-ui/react-label": "^2.1.1",
     "@radix-ui/react-toast": "^1.2.4",
     "@shopify/polaris": "^12.0.0",
     "@shopify/polaris-icons": "^8.1.0",
