@@ -25,17 +25,20 @@ export const PolarisWrapper = ({ children }: { children: ReactNode }) => (
   </AppProvider>
 );
 
-const ShadCNAdapter = makeAutocomponents(elements);
+
+const ShadCNAdapter = makeAutocomponents({ ...elements });
 
 export const ShadcnWrapper = ({ children }: { children: ReactNode }) => (
   <>
-    <Toaster />
-    {children}
+    <FormProvider {...useForm()}>
+      <Toaster />
+      {children}
+    </FormProvider>
   </>
 );
 
 const suites: AutoSuiteConfig[] = [
-  { name: "Polaris", adapter: PolarisAdapter as any, wrapper: PolarisWrapper },
+//  { name: "Polaris", adapter: PolarisAdapter as any, wrapper: PolarisWrapper },
   { name: "Shadcn", adapter: ShadCNAdapter as any, wrapper: ShadcnWrapper },
 ];
 

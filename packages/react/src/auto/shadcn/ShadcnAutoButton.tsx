@@ -34,7 +34,7 @@ export const makeAutoButton =
     });
 
     return (
-      <Button disabled={fetching} variant={isDestructive ? "destructive" : undefined} onClick={run} {...buttonProps}>
+      <Button disabled={fetching} variant={isDestructive ? "destructive" : undefined} onClick={run} {...buttonProps }>
         {props?.children ?? label}
       </Button>
     );

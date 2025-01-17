@@ -1,5 +1,6 @@
 import type { ShadcnElements } from "./elements.js";
 import { makeAutoButton } from "./ShadcnAutoButton.js";
+import { makeAutoForm } from "./ShadcnAutoForm.js";
 export * from "./elements.js";
 
 /**
@@ -11,6 +12,6 @@ export const makeAutocomponents = (elements: ShadcnElements) => {
     AutoButton: makeAutoButton(elements),
     //TODO:
     // AutoTable: makeAutoTable(elements),
-    // AutoForm: makeAutoForm(elements),
+    AutoForm: makeAutoForm(elements),
   };
 };
