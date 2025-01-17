@@ -84,17 +84,7 @@ const isMetadataForUpsertAction = (metadata: ModelWithOneActionMetadata | Global
     return false;
   }
 
-  const modelFields = metadata.action.inputFields.find(
-    (field) => field.configuration.__typename === "GadgetObjectFieldConfig" && field.apiIdentifier === metadata.apiIdentifier
-  )?.configuration.fields;
-
-  if (!modelFields) {
-    return false;
-  }
-
-  // Only upsert actions have an ID field in the model object field object
-  // Other actions keep the ID at the root level separate form the model object
-  return modelFields.some((field) => field.fieldType === FieldType.Id);
+  return metadata.action.isUpsertMetaAction;
 };
 
 /**

@@ -208,6 +208,7 @@ const ModelActionMetadataQuery = graphql(/* GraphQL */ `
           apiIdentifier
           operatesWithRecordIdentity
           isDeleteAction
+          isUpsertMetaAction
           inputFields {
             ...FieldMetadata
             ...SubFields
