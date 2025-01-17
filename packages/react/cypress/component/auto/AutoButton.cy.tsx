@@ -9,7 +9,7 @@ describeForEachAutoAdapter("AutoButton", ({ name, adapter: { AutoButton }, wrapp
   });
 
   it("shows a button, runs a create action with no variables, and reports success", () => {
-    cy.mountWithWrapper(<AutoButton action={api.widget.create} />, wrapper);
+    cy.mountWithWrapper(<AutoButton id="auto" action={api.widget.create} />, wrapper);
     cy.contains("Create Widget");
 
     cy.intercept("POST", `${api.connection.options.endpoint}?operation=createWidget`, {
@@ -23,7 +23,7 @@ describeForEachAutoAdapter("AutoButton", ({ name, adapter: { AutoButton }, wrapp
       },
     }).as("createWidget");
 
-    cy.get("button").click();
+    cy.get("#auto").click();
 
     cy.wait("@createWidget");
     cy.get("@createWidget").its("request.body.variables").should("deep.equal", { widget: {} });
@@ -32,7 +32,7 @@ describeForEachAutoAdapter("AutoButton", ({ name, adapter: { AutoButton }, wrapp
   });
 
   it("shows a button, runs a create action with variables, and reports success", () => {
-    cy.mountWithWrapper(<AutoButton action={api.widget.create} variables={{ widget: { name: "foobar" } }} />, wrapper);
+    cy.mountWithWrapper(<AutoButton id="auto" action={api.widget.create} variables={{ widget: { name: "foobar" } }} />, wrapper);
     cy.contains("Create Widget");
 
     cy.intercept("POST", `${api.connection.options.endpoint}?operation=createWidget`, {
@@ -46,7 +46,7 @@ describeForEachAutoAdapter("AutoButton", ({ name, adapter: { AutoButton }, wrapp
       },
     }).as("createWidget");
 
-    cy.get("button").click();
+    cy.get("#auto").click();
 
     cy.wait("@createWidget");
     cy.get("@createWidget")
@@ -59,14 +59,14 @@ describeForEachAutoAdapter("AutoButton", ({ name, adapter: { AutoButton }, wrapp
   });
 
   it("shows a button, runs a create action with no variables, and reports an error if the network call fails", () => {
-    cy.mountWithWrapper(<AutoButton action={api.widget.create} />, wrapper);
+    cy.mountWithWrapper(<AutoButton id="auto" action={api.widget.create} />, wrapper);
     cy.contains("Create Widget");
 
     cy.intercept("POST", `${api.connection.options.endpoint}?operation=createWidget`, {
       forceNetworkError: true,
     }).as("createWidget");
 
-    cy.get("button").click();
+    cy.get("#auto").click();
 
     cy.wait("@createWidget");
 
@@ -74,7 +74,7 @@ describeForEachAutoAdapter("AutoButton", ({ name, adapter: { AutoButton }, wrapp
   });
 
   it("shows a button, runs an update action with variables, and reports success", () => {
-    cy.mountWithWrapper(<AutoButton action={api.widget.update} variables={{ id: "123", widget: { name: "foobar" } }} />, wrapper);
+    cy.mountWithWrapper(<AutoButton id="auto" action={api.widget.update} variables={{ id: "123", widget: { name: "foobar" } }} />, wrapper);
     cy.contains("Update Widget");
 
     cy.intercept("POST", `${api.connection.options.endpoint}?operation=updateWidget`, {
@@ -88,7 +88,7 @@ describeForEachAutoAdapter("AutoButton", ({ name, adapter: { AutoButton }, wrapp
       },
     }).as("updateWidget");
 
-    cy.get("button").click();
+    cy.get("#auto").click();
 
     cy.wait("@updateWidget");
     cy.get("@updateWidget")
@@ -102,7 +102,12 @@ describeForEachAutoAdapter("AutoButton", ({ name, adapter: { AutoButton }, wrapp
   });
 
   it("allows overriding the label", () => {
-    cy.mountWithWrapper(<AutoButton action={api.widget.create}>Whizbang the flimflam</AutoButton>, wrapper);
+    cy.mountWithWrapper(
+      <AutoButton id="auto" action={api.widget.create}>
+        Whizbang the flimflam
+      </AutoButton>,
+      wrapper
+    );
     cy.contains("Whizbang the flimflam");
   });
 
@@ -110,6 +115,7 @@ describeForEachAutoAdapter("AutoButton", ({ name, adapter: { AutoButton }, wrapp
     let onSuccessCalled = false;
     cy.mountWithWrapper(
       <AutoButton
+        id="auto"
         action={api.widget.update}
         variables={{ id: "123", widget: { name: "foobar" } }}
         onSuccess={(result: any) => {
@@ -131,7 +137,7 @@ describeForEachAutoAdapter("AutoButton", ({ name, adapter: { AutoButton }, wrapp
       },
     }).as("updateWidget");
 
-    cy.get("button").click();
+    cy.get("#auto").click();
 
     cy.wait("@updateWidget").then(() => {
       expect(onSuccessCalled).to.be.true;
@@ -142,6 +148,7 @@ describeForEachAutoAdapter("AutoButton", ({ name, adapter: { AutoButton }, wrapp
     let onErrorCalled = false;
     cy.mountWithWrapper(
       <AutoButton
+        id="auto"
         action={api.widget.update}
         variables={{ id: "123", widget: { name: "foobar" } }}
         onError={(error: Error) => {
@@ -157,7 +164,7 @@ describeForEachAutoAdapter("AutoButton", ({ name, adapter: { AutoButton }, wrapp
       forceNetworkError: true,
     }).as("updateWidget");
 
-    cy.get("button").click();
+    cy.get("#auto").click();
 
     cy.wait("@updateWidget").then(() => {
       expect(onErrorCalled).to.be.true;
@@ -165,7 +172,7 @@ describeForEachAutoAdapter("AutoButton", ({ name, adapter: { AutoButton }, wrapp
   });
 
   it("shows a button, runs an global action with no variables, and reports success", () => {
-    cy.mountWithWrapper(<AutoButton action={api.flipAll} />, wrapper);
+    cy.mountWithWrapper(<AutoButton id="auto" action={api.flipAll} />, wrapper);
     cy.contains("Flip all");
 
     cy.intercept("POST", `${api.connection.options.endpoint}?operation=flipAll`, {
@@ -176,7 +183,7 @@ describeForEachAutoAdapter("AutoButton", ({ name, adapter: { AutoButton }, wrapp
       },
     }).as("flipAll");
 
-    cy.get("button").click();
+    cy.get("#auto").click();
 
     cy.wait("@flipAll");
     cy.get("@flipAll").its("request.body.variables").should("deep.equal", {});
