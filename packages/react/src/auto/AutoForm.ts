@@ -1,7 +1,7 @@
 import type { ActionFunction, FieldSelection, GadgetRecord, GlobalActionFunction } from "@gadgetinc/api-client-core";
 import { yupResolver } from "@hookform/resolvers/yup";
 import type { ReactNode } from "react";
-import React, { useEffect, useMemo, useRef } from "react";
+import { useEffect, useMemo, useRef } from "react";
 import type { GadgetHasManyThroughConfig, GadgetObjectFieldConfig } from "../internal/gql/graphql.js";
 import type { FieldMetadata, GlobalActionMetadata, ModelWithOneActionMetadata } from "../metadata.js";
 import { FieldType, buildAutoFormFieldList, isModelActionMetadata, useActionMetadata } from "../metadata.js";
@@ -18,7 +18,7 @@ import {
   validateTriggersFromApiClient,
   validateTriggersFromMetadata,
 } from "./AutoFormActionValidators.js";
-import { isAutoInput } from "./AutoInput.js";
+import { useFieldsFromChildComponents } from "./AutoFormContext.js";
 
 /** The props that any <AutoForm/> component accepts */
 export type AutoFormProps<
@@ -164,9 +164,6 @@ const validateFormFieldApiIdentifierUniqueness = (
   }
 };
 
-// TODO - re-enable this once the child based field selection is fixed with an approach that avoids React.Children
-const enableExtractPathsFromChildren = false;
-
 /**
  * Internal React hook for sharing logic between different `AutoForm` components.
  * @internal
@@ -189,12 +186,15 @@ export const useAutoForm = <
   isLoading: boolean;
   originalFormMethods: UseFormReturn<any, any>;
 } => {
-  const { action, record, onSuccess, onFailure, findBy, children } = props;
+  const { action, record, onSuccess, onFailure, findBy } = props;
   let include = props.include;
   let exclude = props.exclude;
 
-  if (enableExtractPathsFromChildren && children) {
-    include = extractPathsFromChildren(children);
+  const { hasChildren, fieldSet } = useFieldsFromChildComponents();
+  const hasRegisteredFieldsFromChildren = hasChildren && fieldSet.size > 0;
+
+  if (hasChildren) {
+    include = Array.from(fieldSet);
     exclude = undefined;
   }
 
@@ -236,6 +236,10 @@ export const useAutoForm = <
     [props.defaultValues, action.type, modelApiIdentifier, record, operatesWithRecordId, metadata, findBy]
   );
 
+  const pauseExistingRecordLookup = !("findBy" in props)
+    ? true // Always pause without findBy. No need to do a lookup
+    : fetchingMetadata || !hasRegisteredFieldsFromChildren; // Pause until we have the field selection to include in the lookup
+
   // setup the form state for the action
   const {
     submit,
@@ -250,7 +254,7 @@ export const useAutoForm = <
     defaultValues: defaultValues as any,
     findBy: "findBy" in props ? props.findBy : undefined,
     throwOnInvalidFindByObject: false,
-    pause: "findBy" in props ? fetchingMetadata : undefined,
+    pause: pauseExistingRecordLookup,
     select: selection as any,
     resolver: useValidationResolver(metadata, fieldPathsToValidate),
     send: () => {
@@ -423,44 +427,6 @@ const resetValuesForDefaultValues = (modelApiIdentifier: string, defaultValues: 
       ...extractResetArrayPathsFromSelection(selection),
     },
   };
-};
-
-export const extractPathsFromChildren = (children: React.ReactNode) => {
-  const paths = new Set<string>();
-
-  for (const child of React.Children.toArray(children)) {
-    if (React.isValidElement(child)) {
-      const grandChildren = child.props.children as React.ReactNode | undefined;
-      let childPaths: string[] = [];
-
-      if (grandChildren) {
-        childPaths = extractPathsFromChildren(grandChildren);
-      }
-
-      let field: string | undefined = undefined;
-
-      if (isAutoInput(child)) {
-        const props = child.props as { field: string; selectPaths?: string[]; children?: React.ReactNode };
-        field = props.field;
-
-        paths.add(field);
-
-        if (props.selectPaths && Array.isArray(props.selectPaths)) {
-          props.selectPaths.forEach((selectPath) => {
-            paths.add(`${field}.${selectPath}`);
-          });
-        }
-      }
-
-      if (childPaths.length > 0) {
-        for (const childPath of childPaths) {
-          paths.add(field ? `${field}.${childPath}` : childPath);
-        }
-      }
-    }
-  }
-
-  return Array.from(paths);
 };
 
 const removeIdFieldsUnlessUpsertWithoutFindBy = (isUpsertWithFindBy?: boolean) => {
