@@ -4,7 +4,6 @@ import { fileSizeValidationErrorMessage } from "./auto/hooks/useFileInputControl
 import type {
   GadgetEnumConfig,
   GadgetGenericFieldValidation,
-  GadgetObjectFieldConfig,
   GadgetOnlyImageFileFieldValidation,
   GadgetRangeFieldValidation,
   GadgetRegexFieldValidation,
@@ -92,7 +91,7 @@ const validatorForField = (field: FieldMetadata, pathsToValidate: string[] = [],
       break;
     }
     case GadgetFieldType.Object: {
-      const config = field.configuration as GadgetObjectFieldConfig;
+      const config = field.configuration;
       validator = validationSchema(config.fields as any, pathsToValidate, path);
       break;
     }

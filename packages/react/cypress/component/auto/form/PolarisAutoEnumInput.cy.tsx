@@ -135,25 +135,41 @@ describe("PolarisEnumInput", () => {
 
   describe("allow other options", () => {
     it("should allow adding an option if allowOther is enabled", () => {
-      cy.mockModelActionMetadata(api, {
+      const mockedMetadata = {
         ...baseModelActionMetadata,
         inputFields: [
           {
-            ...baseTypeInputField,
+            name: "Stadium",
+            apiIdentifier: "stadium",
+            fieldType: "Object",
+            requiredArgumentForInput: false,
             configuration: {
-              ...baseTypeInputField.configuration,
-              allowOther: true,
-            },
-          },
-          {
-            ...baseTagsInputField,
-            configuration: {
-              ...baseTagsInputField.configuration,
-              allowOther: true,
+              __typename: "GadgetObjectFieldConfig",
+              fieldType: "Object",
+              validations: [],
+              name: null,
+              fields: [
+                {
+                  ...baseTypeInputField,
+                  configuration: {
+                    ...baseTypeInputField.configuration,
+                    allowOther: true,
+                  },
+                },
+                {
+                  ...baseTagsInputField,
+                  configuration: {
+                    ...baseTagsInputField.configuration,
+                    allowOther: true,
+                  },
+                },
+              ],
             },
           },
         ],
-      });
+      };
+
+      cy.mockModelActionMetadata(api, mockedMetadata);
 
       cy.mountWithWrapper(<PolarisAutoForm action={api.game.stadium.create} />, PolarisWrapper);
       cy.get("#type-combobox-textfield").type("extra");
@@ -180,17 +196,31 @@ describe("PolarisEnumInput", () => {
         ...baseModelActionMetadata,
         inputFields: [
           {
-            ...baseTypeInputField,
+            name: "Stadium",
+            apiIdentifier: "stadium",
+            fieldType: "Object",
+            requiredArgumentForInput: false,
             configuration: {
-              ...baseTypeInputField.configuration,
-              allowOther: false,
-            },
-          },
-          {
-            ...baseTagsInputField,
-            configuration: {
-              ...baseTagsInputField.configuration,
-              allowOther: false,
+              __typename: "GadgetObjectFieldConfig",
+              fieldType: "Object",
+              validations: [],
+              name: null,
+              fields: [
+                {
+                  ...baseTypeInputField,
+                  configuration: {
+                    ...baseTypeInputField.configuration,
+                    allowOther: false,
+                  },
+                },
+                {
+                  ...baseTagsInputField,
+                  configuration: {
+                    ...baseTagsInputField.configuration,
+                    allowOther: false,
+                  },
+                },
+              ],
             },
           },
         ],

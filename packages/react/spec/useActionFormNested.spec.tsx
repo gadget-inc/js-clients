@@ -3919,7 +3919,7 @@ describe("useActionFormNested", () => {
         });
       });
 
-      test("can delete BelongsTo", async () => {
+      test("can unlink BelongsTo", async () => {
         const queryResponse = {
           data: {
             answer: {
@@ -3987,9 +3987,7 @@ describe("useActionFormNested", () => {
           {
             "answer": {
               "question": {
-                "delete": {
-                  "id": "1",
-                },
+                "_link": null,
               },
               "text": "Answer create",
             },
