@@ -454,7 +454,7 @@ const getBelongsToGraphqlApiInput = (props: {
 
   const inputUpdateId = idPath && recordIdsAtPath[idPath] && recordIdsAtPath[idPath].length > 0 ? recordIdsAtPath[idPath][0] : undefined;
   if (inputUpdateId && !inputHasMoreNonIdFields) {
-    return { delete: { id: inputUpdateId } };
+    return { _link: null };
   }
 
   return { create: { ...rest } };
