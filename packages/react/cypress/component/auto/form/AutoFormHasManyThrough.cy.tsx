@@ -162,6 +162,7 @@ const modelActionMetadataResponse = {
           apiIdentifier: "create",
           operatesWithRecordIdentity: false,
           isDeleteAction: false,
+          isUpsertMetaAction: false,
           inputFields: [
             {
               name: "Base model",

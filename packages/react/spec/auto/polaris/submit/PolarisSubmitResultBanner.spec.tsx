@@ -81,6 +81,7 @@ const metadata: ModelWithOneActionMetadata = {
     apiIdentifier: "create",
     operatesWithRecordIdentity: false,
     isDeleteAction: false,
+    isUpsertMetaAction: false,
     inputFields: [
       {
         name: "Widget",

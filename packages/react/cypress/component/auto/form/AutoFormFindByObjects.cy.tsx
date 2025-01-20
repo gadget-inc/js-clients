@@ -523,6 +523,7 @@ const uniqueFieldsMainModelMetadata = {
           apiIdentifier: "update",
           operatesWithRecordIdentity: true,
           isDeleteAction: false,
+          isUpsertMetaAction: false,
           inputFields: [
             {
               name: "Main model",
