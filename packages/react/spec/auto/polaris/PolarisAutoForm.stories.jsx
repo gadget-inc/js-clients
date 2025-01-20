@@ -51,9 +51,22 @@ export const Primary = {
   },
 };
 
+export const CreateWithCustomParams = {
+  args: {
+    action: api.widget.createWithCustomParams,
+  },
+};
+
 export const UpdateRecord = {
   args: {
     action: api.widget.update,
+    findBy: "999",
+  },
+};
+
+export const UpdateRecordWithCustomParams = {
+  args: {
+    action: api.widget.updateWithCustomParams,
     findBy: "999",
   },
 };
