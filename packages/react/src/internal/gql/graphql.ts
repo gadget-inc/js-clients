@@ -30,10 +30,10 @@ export type Scalars = {
   HydrationPlan: { input: any; output: any };
   /** Represents one autoTableTest result record in internal api calls. Returns a JSON blob of all the record's fields. */
   InternalAutoTableTestRecord: { input: any; output: any };
-  /** Represents one _autoTableTestRelatedModel result record in internal api calls. Returns a JSON blob of all the record's fields. */
-  InternalAutoTableTestRelatedModelRecord: { input: any; output: any };
   /** Represents one doodad result record in internal api calls. Returns a JSON blob of all the record's fields. */
   InternalDoodadRecord: { input: any; output: any };
+  /** Represents one foo result record in internal api calls. Returns a JSON blob of all the record's fields. */
+  InternalFooRecord: { input: any; output: any };
   /** Represents one friendship result record in internal api calls. Returns a JSON blob of all the record's fields. */
   InternalFriendshipRecord: { input: any; output: any };
   /** Represents one game/city result record in internal api calls. Returns a JSON blob of all the record's fields. */
@@ -82,18 +82,18 @@ export type Scalars = {
   InternalUniqueFieldsMainModelRecord: { input: any; output: any };
   /** Represents one uniqueFields/parentModel result record in internal api calls. Returns a JSON blob of all the record's fields. */
   InternalUniqueFieldsParentModelRecord: { input: any; output: any };
-  /** Represents one university/assignment result record in internal api calls. Returns a JSON blob of all the record's fields. */
-  InternalUniversityAssignmentRecord: { input: any; output: any };
-  /** Represents one university/course result record in internal api calls. Returns a JSON blob of all the record's fields. */
-  InternalUniversityCourseRecord: { input: any; output: any };
-  /** Represents one university/professor result record in internal api calls. Returns a JSON blob of all the record's fields. */
-  InternalUniversityProfessorRecord: { input: any; output: any };
-  /** Represents one university/registration result record in internal api calls. Returns a JSON blob of all the record's fields. */
-  InternalUniversityRegistrationRecord: { input: any; output: any };
-  /** Represents one university/student result record in internal api calls. Returns a JSON blob of all the record's fields. */
-  InternalUniversityStudentRecord: { input: any; output: any };
   /** Represents one user result record in internal api calls. Returns a JSON blob of all the record's fields. */
   InternalUserRecord: { input: any; output: any };
+  /** Represents one whatever/university/assignment result record in internal api calls. Returns a JSON blob of all the record's fields. */
+  InternalWhateverUniversityAssignmentRecord: { input: any; output: any };
+  /** Represents one whatever/university/course result record in internal api calls. Returns a JSON blob of all the record's fields. */
+  InternalWhateverUniversityCourseRecord: { input: any; output: any };
+  /** Represents one whatever/university/professor result record in internal api calls. Returns a JSON blob of all the record's fields. */
+  InternalWhateverUniversityProfessorRecord: { input: any; output: any };
+  /** Represents one whatever/university/registration result record in internal api calls. Returns a JSON blob of all the record's fields. */
+  InternalWhateverUniversityRegistrationRecord: { input: any; output: any };
+  /** Represents one whatever/university/student result record in internal api calls. Returns a JSON blob of all the record's fields. */
+  InternalWhateverUniversityStudentRecord: { input: any; output: any };
   /** Represents one widget result record in internal api calls. Returns a JSON blob of all the record's fields. */
   InternalWidgetRecord: { input: any; output: any };
   /** The `JSON` scalar type represents JSON values as specified by [ECMA-404](http://www.ecma-international.org/publications/files/ECMA-ST/ECMA-404.pdf). */
@@ -205,8 +205,8 @@ export type AutoTableTest = {
   enum?: Maybe<Array<Scalars["AutoTableTestEnumEnum"]["output"]>>;
   es?: Maybe<Scalars["String"]["output"]>;
   file?: Maybe<StoredFile>;
-  hasMany: AutoTableTestRelatedModelConnection;
-  hasOne?: Maybe<AutoTableTestRelatedModel>;
+  hasMany: FooConnection;
+  hasOne?: Maybe<Foo>;
   /** The globally unique, unchanging identifier for this record. Assigned and managed by Gadget. */
   id: Scalars["GadgetID"]["output"];
   json?: Maybe<Scalars["JSON"]["output"]>;
@@ -225,11 +225,11 @@ export type AutoTableTest = {
 export type AutoTableTestHasManyArgs = {
   after?: InputMaybe<Scalars["String"]["input"]>;
   before?: InputMaybe<Scalars["String"]["input"]>;
-  filter?: InputMaybe<Array<AutoTableTestRelatedModelFilter>>;
+  filter?: InputMaybe<Array<FooFilter>>;
   first?: InputMaybe<Scalars["Int"]["input"]>;
   last?: InputMaybe<Scalars["Int"]["input"]>;
   search?: InputMaybe<Scalars["String"]["input"]>;
-  sort?: InputMaybe<Array<AutoTableTestRelatedModelSort>>;
+  sort?: InputMaybe<Array<FooSort>>;
 };
 
 export type AutoTableTestVectCosineSimilarityToArgs = {
@@ -288,94 +288,6 @@ export type AutoTableTestFilter = {
   updatedAt?: InputMaybe<DateTimeFilter>;
   url?: InputMaybe<StringFilter>;
   vect?: InputMaybe<VectorFilter>;
-};
-
-export type AutoTableTestRelatedModel = {
-  __typename?: "AutoTableTestRelatedModel";
-  /** Get all the fields for this record. Useful for not having to list out all the fields you want to retrieve, but slower. */
-  _all: Scalars["JSONObject"]["output"];
-  belongsToParent?: Maybe<AutoTableTest>;
-  belongsToParentId?: Maybe<Scalars["GadgetID"]["output"]>;
-  /** The time at which this record was first created. Set once upon record creation and never changed. Managed by Gadget. */
-  createdAt: Scalars["DateTime"]["output"];
-  /** The globally unique, unchanging identifier for this record. Assigned and managed by Gadget. */
-  id: Scalars["GadgetID"]["output"];
-  manyBelongsToParent?: Maybe<AutoTableTest>;
-  manyBelongsToParentId?: Maybe<Scalars["GadgetID"]["output"]>;
-  name?: Maybe<Scalars["String"]["output"]>;
-  someBool?: Maybe<Scalars["Boolean"]["output"]>;
-  someNumber?: Maybe<Scalars["Float"]["output"]>;
-  /** The time at which this record was last changed. Set each time the record is successfully acted upon by an action. Managed by Gadget. */
-  updatedAt: Scalars["DateTime"]["output"];
-};
-
-/** A connection to a list of AutoTableTestRelatedModel items. */
-export type AutoTableTestRelatedModelConnection = {
-  __typename?: "AutoTableTestRelatedModelConnection";
-  /** A list of edges. */
-  edges: Array<AutoTableTestRelatedModelEdge>;
-  /** Information to aid in pagination. */
-  pageInfo: PageInfo;
-};
-
-/** An edge in a AutoTableTestRelatedModel connection. */
-export type AutoTableTestRelatedModelEdge = {
-  __typename?: "AutoTableTestRelatedModelEdge";
-  /** A cursor for use in pagination */
-  cursor: Scalars["String"]["output"];
-  /** The item at the end of the edge */
-  node: AutoTableTestRelatedModel;
-};
-
-export type AutoTableTestRelatedModelFilter = {
-  AND?: InputMaybe<Array<InputMaybe<AutoTableTestRelatedModelFilter>>>;
-  NOT?: InputMaybe<Array<InputMaybe<AutoTableTestRelatedModelFilter>>>;
-  OR?: InputMaybe<Array<InputMaybe<AutoTableTestRelatedModelFilter>>>;
-  belongsToParent?: InputMaybe<IdFilter>;
-  belongsToParentId?: InputMaybe<IdFilter>;
-  createdAt?: InputMaybe<DateTimeFilter>;
-  id?: InputMaybe<IdFilter>;
-  manyBelongsToParent?: InputMaybe<IdFilter>;
-  manyBelongsToParentId?: InputMaybe<IdFilter>;
-  name?: InputMaybe<StringFilter>;
-  someBool?: InputMaybe<BooleanFilter>;
-  someNumber?: InputMaybe<FloatFilter>;
-  updatedAt?: InputMaybe<DateTimeFilter>;
-};
-
-/** Input object supporting setting or updating related model record on a relationship field */
-export type AutoTableTestRelatedModelHasManyInput = {
-  /** Creates, updates, or deletes existing records in the database as needed to arrive at the list of records specified. */
-  _converge?: InputMaybe<ConvergeAutoTableTestRelatedModelInput>;
-  create?: InputMaybe<NestedAutoTableTestRelatedModelCreateInput>;
-  delete?: InputMaybe<NestedAutoTableTestRelatedModelDeleteInput>;
-  update?: InputMaybe<NestedAutoTableTestRelatedModelUpdateInput>;
-};
-
-/** Input object supporting setting or updating related model record on a relationship field */
-export type AutoTableTestRelatedModelHasOneInput = {
-  /** Existing ID of another record, which you would like to relink to this record */
-  _relink?: InputMaybe<HasOneRelinkInput>;
-  /** Existing ID of another record, which you would like to unlink from this record */
-  _unlink?: InputMaybe<Scalars["GadgetID"]["input"]>;
-  create?: InputMaybe<NestedAutoTableTestRelatedModelCreateInput>;
-  delete?: InputMaybe<NestedAutoTableTestRelatedModelDeleteInput>;
-  update?: InputMaybe<NestedAutoTableTestRelatedModelUpdateInput>;
-};
-
-export type AutoTableTestRelatedModelSort = {
-  /** Sort the results by the createdAt field. Defaults to ascending (smallest value first). */
-  createdAt?: InputMaybe<SortOrder>;
-  /** Sort the results by the id field. Defaults to ascending (smallest value first). */
-  id?: InputMaybe<SortOrder>;
-  /** Sort the results by the name field. Defaults to ascending (smallest value first). */
-  name?: InputMaybe<SortOrder>;
-  /** Sort the results by the someBool field. Defaults to ascending (smallest value first). */
-  someBool?: InputMaybe<SortOrder>;
-  /** Sort the results by the someNumber field. Defaults to ascending (smallest value first). */
-  someNumber?: InputMaybe<SortOrder>;
-  /** Sort the results by the updatedAt field. Defaults to ascending (smallest value first). */
-  updatedAt?: InputMaybe<SortOrder>;
 };
 
 export type AutoTableTestSort = {
@@ -447,9 +359,9 @@ export type BackgroundActionResult =
   | AddInventoryWidgetResult
   | AlwaysThrowErrorWidgetResult
   | CompleteShopifySyncResult
-  | CreateAutoTableTestRelatedModelResult
   | CreateAutoTableTestResult
   | CreateDoodadResult
+  | CreateFooResult
   | CreateFriendshipResult
   | CreateGameCityResult
   | CreateGamePlayerResult
@@ -467,19 +379,19 @@ export type BackgroundActionResult =
   | CreateUniqueFieldsChildModelResult
   | CreateUniqueFieldsMainModelResult
   | CreateUniqueFieldsParentModelResult
-  | CreateUniversityAssignmentResult
-  | CreateUniversityCourseResult
-  | CreateUniversityProfessorResult
-  | CreateUniversityRegistrationResult
-  | CreateUniversityStudentResult
+  | CreateWhateverUniversityAssignmentResult
+  | CreateWhateverUniversityCourseResult
+  | CreateWhateverUniversityProfessorResult
+  | CreateWhateverUniversityRegistrationResult
+  | CreateWhateverUniversityStudentResult
   | CreateWidgetResult
   | CreateWithCustomParamsWidgetResult
   | CustomActionAutoTableTestResult
   | CustomActionWithParamsAutoTableTestResult
   | CustomObjectParamsGameCityResult
-  | DeleteAutoTableTestRelatedModelResult
   | DeleteAutoTableTestResult
   | DeleteDoodadResult
+  | DeleteFooResult
   | DeleteFriendshipResult
   | DeleteGameCityResult
   | DeleteGamePlayerResult
@@ -496,12 +408,12 @@ export type BackgroundActionResult =
   | DeleteUniqueFieldsChildModelResult
   | DeleteUniqueFieldsMainModelResult
   | DeleteUniqueFieldsParentModelResult
-  | DeleteUniversityAssignmentResult
-  | DeleteUniversityCourseResult
-  | DeleteUniversityProfessorResult
-  | DeleteUniversityRegistrationResult
-  | DeleteUniversityStudentResult
   | DeleteUserResult
+  | DeleteWhateverUniversityAssignmentResult
+  | DeleteWhateverUniversityCourseResult
+  | DeleteWhateverUniversityProfessorResult
+  | DeleteWhateverUniversityRegistrationResult
+  | DeleteWhateverUniversityStudentResult
   | DeleteWidgetResult
   | ErrorShopifySyncResult
   | FlipAllResult
@@ -511,9 +423,9 @@ export type BackgroundActionResult =
   | SignInUserResult
   | SignOutUserResult
   | SignUpUserResult
-  | UpdateAutoTableTestRelatedModelResult
   | UpdateAutoTableTestResult
   | UpdateDoodadResult
+  | UpdateFooResult
   | UpdateFriendshipResult
   | UpdateGameCityResult
   | UpdateGamePlayerResult
@@ -530,15 +442,16 @@ export type BackgroundActionResult =
   | UpdateUniqueFieldsChildModelResult
   | UpdateUniqueFieldsMainModelResult
   | UpdateUniqueFieldsParentModelResult
-  | UpdateUniversityAssignmentResult
-  | UpdateUniversityCourseResult
-  | UpdateUniversityProfessorResult
-  | UpdateUniversityRegistrationResult
-  | UpdateUniversityStudentResult
   | UpdateUserResult
+  | UpdateWhateverUniversityAssignmentResult
+  | UpdateWhateverUniversityCourseResult
+  | UpdateWhateverUniversityProfessorResult
+  | UpdateWhateverUniversityRegistrationResult
+  | UpdateWhateverUniversityStudentResult
   | UpdateWidgetResult
   | UpdateWithCustomParamsAutoTableTestResult
-  | UpdateWithCustomParamsWidgetResult;
+  | UpdateWithCustomParamsWidgetResult
+  | WhateverPartResult;
 
 export type BackgroundActionRetryPolicy = {
   /** The exponential backoff factor to use for calculating the retry delay for successive retries. Set this higher to grow the delay faster with each retry attempt. Default is 2. */
@@ -935,9 +848,9 @@ export type BackgroundMutations = {
   bulkAddInventoryWidgets: BulkEnqueueBackgroundActionResult;
   bulkAlwaysThrowErrorWidgets: BulkEnqueueBackgroundActionResult;
   bulkCompleteShopifySyncs: BulkEnqueueBackgroundActionResult;
-  bulkCreateAutoTableTestRelatedModels: BulkEnqueueBackgroundActionResult;
   bulkCreateAutoTableTests: BulkEnqueueBackgroundActionResult;
   bulkCreateDoodads: BulkEnqueueBackgroundActionResult;
+  bulkCreateFoos: BulkEnqueueBackgroundActionResult;
   bulkCreateFriendships: BulkEnqueueBackgroundActionResult;
   bulkCreateGizmos: BulkEnqueueBackgroundActionResult;
   bulkCreateModelAs: BulkEnqueueBackgroundActionResult;
@@ -948,9 +861,9 @@ export type BackgroundMutations = {
   bulkCreateWithCustomParamsWidgets: BulkEnqueueBackgroundActionResult;
   bulkCustomActionAutoTableTests: BulkEnqueueBackgroundActionResult;
   bulkCustomActionWithParamsAutoTableTests: BulkEnqueueBackgroundActionResult;
-  bulkDeleteAutoTableTestRelatedModels: BulkEnqueueBackgroundActionResult;
   bulkDeleteAutoTableTests: BulkEnqueueBackgroundActionResult;
   bulkDeleteDoodads: BulkEnqueueBackgroundActionResult;
+  bulkDeleteFoos: BulkEnqueueBackgroundActionResult;
   bulkDeleteFriendships: BulkEnqueueBackgroundActionResult;
   bulkDeleteGizmos: BulkEnqueueBackgroundActionResult;
   bulkDeleteModelAs: BulkEnqueueBackgroundActionResult;
@@ -964,9 +877,9 @@ export type BackgroundMutations = {
   bulkSignInUsers: BulkEnqueueBackgroundActionResult;
   bulkSignOutUsers: BulkEnqueueBackgroundActionResult;
   bulkSignUpUsers: BulkEnqueueBackgroundActionResult;
-  bulkUpdateAutoTableTestRelatedModels: BulkEnqueueBackgroundActionResult;
   bulkUpdateAutoTableTests: BulkEnqueueBackgroundActionResult;
   bulkUpdateDoodads: BulkEnqueueBackgroundActionResult;
+  bulkUpdateFoos: BulkEnqueueBackgroundActionResult;
   bulkUpdateFriendships: BulkEnqueueBackgroundActionResult;
   bulkUpdateGizmos: BulkEnqueueBackgroundActionResult;
   bulkUpdateModelAs: BulkEnqueueBackgroundActionResult;
@@ -977,9 +890,9 @@ export type BackgroundMutations = {
   bulkUpdateWidgets: BulkEnqueueBackgroundActionResult;
   bulkUpdateWithCustomParamsAutoTableTests: BulkEnqueueBackgroundActionResult;
   bulkUpdateWithCustomParamsWidgets: BulkEnqueueBackgroundActionResult;
-  bulkUpsertAutoTableTestRelatedModels: BulkEnqueueBackgroundActionResult;
   bulkUpsertAutoTableTests: BulkEnqueueBackgroundActionResult;
   bulkUpsertDoodads: BulkEnqueueBackgroundActionResult;
+  bulkUpsertFoos: BulkEnqueueBackgroundActionResult;
   bulkUpsertFriendships: BulkEnqueueBackgroundActionResult;
   bulkUpsertGizmos: BulkEnqueueBackgroundActionResult;
   bulkUpsertModelAs: BulkEnqueueBackgroundActionResult;
@@ -989,10 +902,11 @@ export type BackgroundMutations = {
   bulkUpsertTweeters: BulkEnqueueBackgroundActionResult;
   bulkUpsertUsers: BulkEnqueueBackgroundActionResult;
   bulkUpsertWidgets: BulkEnqueueBackgroundActionResult;
+  bulkWhateverParts: BulkEnqueueBackgroundActionResult;
   completeShopifySync: EnqueueBackgroundActionResult;
   createAutoTableTest: EnqueueBackgroundActionResult;
-  createAutoTableTestRelatedModel: EnqueueBackgroundActionResult;
   createDoodad: EnqueueBackgroundActionResult;
+  createFoo: EnqueueBackgroundActionResult;
   createFriendship: EnqueueBackgroundActionResult;
   createGizmo: EnqueueBackgroundActionResult;
   createModelA: EnqueueBackgroundActionResult;
@@ -1005,8 +919,8 @@ export type BackgroundMutations = {
   customActionAutoTableTest: EnqueueBackgroundActionResult;
   customActionWithParamsAutoTableTest: EnqueueBackgroundActionResult;
   deleteAutoTableTest: EnqueueBackgroundActionResult;
-  deleteAutoTableTestRelatedModel: EnqueueBackgroundActionResult;
   deleteDoodad: EnqueueBackgroundActionResult;
+  deleteFoo: EnqueueBackgroundActionResult;
   deleteFriendship: EnqueueBackgroundActionResult;
   deleteGizmo: EnqueueBackgroundActionResult;
   deleteModelA: EnqueueBackgroundActionResult;
@@ -1025,10 +939,9 @@ export type BackgroundMutations = {
   signOutUser: EnqueueBackgroundActionResult;
   signUpUser: EnqueueBackgroundActionResult;
   uniqueFields: BackgroundUniqueFieldsMutations;
-  university: BackgroundUniversityMutations;
   updateAutoTableTest: EnqueueBackgroundActionResult;
-  updateAutoTableTestRelatedModel: EnqueueBackgroundActionResult;
   updateDoodad: EnqueueBackgroundActionResult;
+  updateFoo: EnqueueBackgroundActionResult;
   updateFriendship: EnqueueBackgroundActionResult;
   updateGizmo: EnqueueBackgroundActionResult;
   updateModelA: EnqueueBackgroundActionResult;
@@ -1040,8 +953,8 @@ export type BackgroundMutations = {
   updateWithCustomParamsAutoTableTest: EnqueueBackgroundActionResult;
   updateWithCustomParamsWidget: EnqueueBackgroundActionResult;
   upsertAutoTableTest: EnqueueBackgroundActionResult;
-  upsertAutoTableTestRelatedModel: EnqueueBackgroundActionResult;
   upsertDoodad: EnqueueBackgroundActionResult;
+  upsertFoo: EnqueueBackgroundActionResult;
   upsertFriendship: EnqueueBackgroundActionResult;
   upsertGizmo: EnqueueBackgroundActionResult;
   upsertModelA: EnqueueBackgroundActionResult;
@@ -1051,6 +964,8 @@ export type BackgroundMutations = {
   upsertTweeter: EnqueueBackgroundActionResult;
   upsertUser: EnqueueBackgroundActionResult;
   upsertWidget: EnqueueBackgroundActionResult;
+  whatever: BackgroundWhateverMutations;
+  whateverPart: EnqueueBackgroundActionResult;
 };
 
 export type BackgroundMutationsAbortShopifySyncArgs = {
@@ -1090,11 +1005,6 @@ export type BackgroundMutationsBulkCompleteShopifySyncsArgs = {
   inputs: Array<BulkCompleteShopifySyncsInput>;
 };
 
-export type BackgroundMutationsBulkCreateAutoTableTestRelatedModelsArgs = {
-  backgroundOptions?: InputMaybe<EnqueueBackgroundActionOptions>;
-  inputs: Array<BulkCreateAutoTableTestRelatedModelsInput>;
-};
-
 export type BackgroundMutationsBulkCreateAutoTableTestsArgs = {
   backgroundOptions?: InputMaybe<EnqueueBackgroundActionOptions>;
   inputs: Array<BulkCreateAutoTableTestsInput>;
@@ -1103,6 +1013,11 @@ export type BackgroundMutationsBulkCreateAutoTableTestsArgs = {
 export type BackgroundMutationsBulkCreateDoodadsArgs = {
   backgroundOptions?: InputMaybe<EnqueueBackgroundActionOptions>;
   inputs: Array<BulkCreateDoodadsInput>;
+};
+
+export type BackgroundMutationsBulkCreateFoosArgs = {
+  backgroundOptions?: InputMaybe<EnqueueBackgroundActionOptions>;
+  inputs: Array<BulkCreateFoosInput>;
 };
 
 export type BackgroundMutationsBulkCreateFriendshipsArgs = {
@@ -1155,17 +1070,17 @@ export type BackgroundMutationsBulkCustomActionWithParamsAutoTableTestsArgs = {
   inputs: Array<BulkCustomActionWithParamsAutoTableTestsInput>;
 };
 
-export type BackgroundMutationsBulkDeleteAutoTableTestRelatedModelsArgs = {
-  backgroundOptions?: InputMaybe<EnqueueBackgroundActionOptions>;
-  ids: Array<Scalars["GadgetID"]["input"]>;
-};
-
 export type BackgroundMutationsBulkDeleteAutoTableTestsArgs = {
   backgroundOptions?: InputMaybe<EnqueueBackgroundActionOptions>;
   ids: Array<Scalars["GadgetID"]["input"]>;
 };
 
 export type BackgroundMutationsBulkDeleteDoodadsArgs = {
+  backgroundOptions?: InputMaybe<EnqueueBackgroundActionOptions>;
+  ids: Array<Scalars["GadgetID"]["input"]>;
+};
+
+export type BackgroundMutationsBulkDeleteFoosArgs = {
   backgroundOptions?: InputMaybe<EnqueueBackgroundActionOptions>;
   ids: Array<Scalars["GadgetID"]["input"]>;
 };
@@ -1235,11 +1150,6 @@ export type BackgroundMutationsBulkSignUpUsersArgs = {
   inputs: Array<BulkSignUpUsersInput>;
 };
 
-export type BackgroundMutationsBulkUpdateAutoTableTestRelatedModelsArgs = {
-  backgroundOptions?: InputMaybe<EnqueueBackgroundActionOptions>;
-  inputs: Array<BulkUpdateAutoTableTestRelatedModelsInput>;
-};
-
 export type BackgroundMutationsBulkUpdateAutoTableTestsArgs = {
   backgroundOptions?: InputMaybe<EnqueueBackgroundActionOptions>;
   inputs: Array<BulkUpdateAutoTableTestsInput>;
@@ -1248,6 +1158,11 @@ export type BackgroundMutationsBulkUpdateAutoTableTestsArgs = {
 export type BackgroundMutationsBulkUpdateDoodadsArgs = {
   backgroundOptions?: InputMaybe<EnqueueBackgroundActionOptions>;
   inputs: Array<BulkUpdateDoodadsInput>;
+};
+
+export type BackgroundMutationsBulkUpdateFoosArgs = {
+  backgroundOptions?: InputMaybe<EnqueueBackgroundActionOptions>;
+  inputs: Array<BulkUpdateFoosInput>;
 };
 
 export type BackgroundMutationsBulkUpdateFriendshipsArgs = {
@@ -1300,11 +1215,6 @@ export type BackgroundMutationsBulkUpdateWithCustomParamsWidgetsArgs = {
   inputs: Array<BulkUpdateWithCustomParamsWidgetsInput>;
 };
 
-export type BackgroundMutationsBulkUpsertAutoTableTestRelatedModelsArgs = {
-  backgroundOptions?: InputMaybe<EnqueueBackgroundActionOptions>;
-  inputs: Array<BulkUpsertAutoTableTestRelatedModelsInput>;
-};
-
 export type BackgroundMutationsBulkUpsertAutoTableTestsArgs = {
   backgroundOptions?: InputMaybe<EnqueueBackgroundActionOptions>;
   inputs: Array<BulkUpsertAutoTableTestsInput>;
@@ -1313,6 +1223,11 @@ export type BackgroundMutationsBulkUpsertAutoTableTestsArgs = {
 export type BackgroundMutationsBulkUpsertDoodadsArgs = {
   backgroundOptions?: InputMaybe<EnqueueBackgroundActionOptions>;
   inputs: Array<BulkUpsertDoodadsInput>;
+};
+
+export type BackgroundMutationsBulkUpsertFoosArgs = {
+  backgroundOptions?: InputMaybe<EnqueueBackgroundActionOptions>;
+  inputs: Array<BulkUpsertFoosInput>;
 };
 
 export type BackgroundMutationsBulkUpsertFriendshipsArgs = {
@@ -1360,6 +1275,11 @@ export type BackgroundMutationsBulkUpsertWidgetsArgs = {
   inputs: Array<BulkUpsertWidgetsInput>;
 };
 
+export type BackgroundMutationsBulkWhateverPartsArgs = {
+  backgroundOptions?: InputMaybe<EnqueueBackgroundActionOptions>;
+  inputs: Array<BulkWhateverPartsInput>;
+};
+
 export type BackgroundMutationsCompleteShopifySyncArgs = {
   backgroundOptions?: InputMaybe<EnqueueBackgroundActionOptions>;
   id: Scalars["GadgetID"]["input"];
@@ -1371,14 +1291,14 @@ export type BackgroundMutationsCreateAutoTableTestArgs = {
   backgroundOptions?: InputMaybe<EnqueueBackgroundActionOptions>;
 };
 
-export type BackgroundMutationsCreateAutoTableTestRelatedModelArgs = {
-  _autoTableTestRelatedModel?: InputMaybe<CreateAutoTableTestRelatedModelInput>;
-  backgroundOptions?: InputMaybe<EnqueueBackgroundActionOptions>;
-};
-
 export type BackgroundMutationsCreateDoodadArgs = {
   backgroundOptions?: InputMaybe<EnqueueBackgroundActionOptions>;
   doodad?: InputMaybe<CreateDoodadInput>;
+};
+
+export type BackgroundMutationsCreateFooArgs = {
+  backgroundOptions?: InputMaybe<EnqueueBackgroundActionOptions>;
+  foo?: InputMaybe<CreateFooInput>;
 };
 
 export type BackgroundMutationsCreateFriendshipArgs = {
@@ -1444,12 +1364,12 @@ export type BackgroundMutationsDeleteAutoTableTestArgs = {
   id: Scalars["GadgetID"]["input"];
 };
 
-export type BackgroundMutationsDeleteAutoTableTestRelatedModelArgs = {
+export type BackgroundMutationsDeleteDoodadArgs = {
   backgroundOptions?: InputMaybe<EnqueueBackgroundActionOptions>;
   id: Scalars["GadgetID"]["input"];
 };
 
-export type BackgroundMutationsDeleteDoodadArgs = {
+export type BackgroundMutationsDeleteFooArgs = {
   backgroundOptions?: InputMaybe<EnqueueBackgroundActionOptions>;
   id: Scalars["GadgetID"]["input"];
 };
@@ -1535,15 +1455,15 @@ export type BackgroundMutationsUpdateAutoTableTestArgs = {
   id: Scalars["GadgetID"]["input"];
 };
 
-export type BackgroundMutationsUpdateAutoTableTestRelatedModelArgs = {
-  _autoTableTestRelatedModel?: InputMaybe<UpdateAutoTableTestRelatedModelInput>;
-  backgroundOptions?: InputMaybe<EnqueueBackgroundActionOptions>;
-  id: Scalars["GadgetID"]["input"];
-};
-
 export type BackgroundMutationsUpdateDoodadArgs = {
   backgroundOptions?: InputMaybe<EnqueueBackgroundActionOptions>;
   doodad?: InputMaybe<UpdateDoodadInput>;
+  id: Scalars["GadgetID"]["input"];
+};
+
+export type BackgroundMutationsUpdateFooArgs = {
+  backgroundOptions?: InputMaybe<EnqueueBackgroundActionOptions>;
+  foo?: InputMaybe<UpdateFooInput>;
   id: Scalars["GadgetID"]["input"];
 };
 
@@ -1619,15 +1539,15 @@ export type BackgroundMutationsUpsertAutoTableTestArgs = {
   on?: InputMaybe<Array<Scalars["String"]["input"]>>;
 };
 
-export type BackgroundMutationsUpsertAutoTableTestRelatedModelArgs = {
-  _autoTableTestRelatedModel?: InputMaybe<UpsertAutoTableTestRelatedModelInput>;
-  backgroundOptions?: InputMaybe<EnqueueBackgroundActionOptions>;
-  on?: InputMaybe<Array<Scalars["String"]["input"]>>;
-};
-
 export type BackgroundMutationsUpsertDoodadArgs = {
   backgroundOptions?: InputMaybe<EnqueueBackgroundActionOptions>;
   doodad?: InputMaybe<UpsertDoodadInput>;
+  on?: InputMaybe<Array<Scalars["String"]["input"]>>;
+};
+
+export type BackgroundMutationsUpsertFooArgs = {
+  backgroundOptions?: InputMaybe<EnqueueBackgroundActionOptions>;
+  foo?: InputMaybe<UpsertFooInput>;
   on?: InputMaybe<Array<Scalars["String"]["input"]>>;
 };
 
@@ -1684,6 +1604,12 @@ export type BackgroundMutationsUpsertWidgetArgs = {
   backgroundOptions?: InputMaybe<EnqueueBackgroundActionOptions>;
   on?: InputMaybe<Array<Scalars["String"]["input"]>>;
   widget?: InputMaybe<UpsertWidgetInput>;
+};
+
+export type BackgroundMutationsWhateverPartArgs = {
+  backgroundOptions?: InputMaybe<EnqueueBackgroundActionOptions>;
+  id: Scalars["GadgetID"]["input"];
+  part?: InputMaybe<WhateverPartInput>;
 };
 
 export type BackgroundNameMutations = {
@@ -1861,8 +1787,13 @@ export type BackgroundUniqueFieldsMutationsUpsertParentModelArgs = {
   parentModel?: InputMaybe<UpsertUniqueFieldsParentModelInput>;
 };
 
-export type BackgroundUniversityMutations = {
-  __typename?: "BackgroundUniversityMutations";
+export type BackgroundWhateverMutations = {
+  __typename?: "BackgroundWhateverMutations";
+  university: BackgroundWhateverUniversityMutations;
+};
+
+export type BackgroundWhateverUniversityMutations = {
+  __typename?: "BackgroundWhateverUniversityMutations";
   bulkCreateAssignments: BulkEnqueueBackgroundActionResult;
   bulkCreateCourses: BulkEnqueueBackgroundActionResult;
   bulkCreateProfessors: BulkEnqueueBackgroundActionResult;
@@ -1905,214 +1836,214 @@ export type BackgroundUniversityMutations = {
   upsertStudent: EnqueueBackgroundActionResult;
 };
 
-export type BackgroundUniversityMutationsBulkCreateAssignmentsArgs = {
+export type BackgroundWhateverUniversityMutationsBulkCreateAssignmentsArgs = {
   backgroundOptions?: InputMaybe<EnqueueBackgroundActionOptions>;
-  inputs: Array<BulkCreateUniversityAssignmentsInput>;
+  inputs: Array<BulkCreateWhateverUniversityAssignmentsInput>;
 };
 
-export type BackgroundUniversityMutationsBulkCreateCoursesArgs = {
+export type BackgroundWhateverUniversityMutationsBulkCreateCoursesArgs = {
   backgroundOptions?: InputMaybe<EnqueueBackgroundActionOptions>;
-  inputs: Array<BulkCreateUniversityCoursesInput>;
+  inputs: Array<BulkCreateWhateverUniversityCoursesInput>;
 };
 
-export type BackgroundUniversityMutationsBulkCreateProfessorsArgs = {
+export type BackgroundWhateverUniversityMutationsBulkCreateProfessorsArgs = {
   backgroundOptions?: InputMaybe<EnqueueBackgroundActionOptions>;
-  inputs: Array<BulkCreateUniversityProfessorsInput>;
+  inputs: Array<BulkCreateWhateverUniversityProfessorsInput>;
 };
 
-export type BackgroundUniversityMutationsBulkCreateRegistrationsArgs = {
+export type BackgroundWhateverUniversityMutationsBulkCreateRegistrationsArgs = {
   backgroundOptions?: InputMaybe<EnqueueBackgroundActionOptions>;
-  inputs: Array<BulkCreateUniversityRegistrationsInput>;
+  inputs: Array<BulkCreateWhateverUniversityRegistrationsInput>;
 };
 
-export type BackgroundUniversityMutationsBulkCreateStudentsArgs = {
+export type BackgroundWhateverUniversityMutationsBulkCreateStudentsArgs = {
   backgroundOptions?: InputMaybe<EnqueueBackgroundActionOptions>;
-  inputs: Array<BulkCreateUniversityStudentsInput>;
+  inputs: Array<BulkCreateWhateverUniversityStudentsInput>;
 };
 
-export type BackgroundUniversityMutationsBulkDeleteAssignmentsArgs = {
+export type BackgroundWhateverUniversityMutationsBulkDeleteAssignmentsArgs = {
   backgroundOptions?: InputMaybe<EnqueueBackgroundActionOptions>;
   ids: Array<Scalars["GadgetID"]["input"]>;
 };
 
-export type BackgroundUniversityMutationsBulkDeleteCoursesArgs = {
+export type BackgroundWhateverUniversityMutationsBulkDeleteCoursesArgs = {
   backgroundOptions?: InputMaybe<EnqueueBackgroundActionOptions>;
   ids: Array<Scalars["GadgetID"]["input"]>;
 };
 
-export type BackgroundUniversityMutationsBulkDeleteProfessorsArgs = {
+export type BackgroundWhateverUniversityMutationsBulkDeleteProfessorsArgs = {
   backgroundOptions?: InputMaybe<EnqueueBackgroundActionOptions>;
   ids: Array<Scalars["GadgetID"]["input"]>;
 };
 
-export type BackgroundUniversityMutationsBulkDeleteRegistrationsArgs = {
+export type BackgroundWhateverUniversityMutationsBulkDeleteRegistrationsArgs = {
   backgroundOptions?: InputMaybe<EnqueueBackgroundActionOptions>;
   ids: Array<Scalars["GadgetID"]["input"]>;
 };
 
-export type BackgroundUniversityMutationsBulkDeleteStudentsArgs = {
+export type BackgroundWhateverUniversityMutationsBulkDeleteStudentsArgs = {
   backgroundOptions?: InputMaybe<EnqueueBackgroundActionOptions>;
   ids: Array<Scalars["GadgetID"]["input"]>;
 };
 
-export type BackgroundUniversityMutationsBulkUpdateAssignmentsArgs = {
+export type BackgroundWhateverUniversityMutationsBulkUpdateAssignmentsArgs = {
   backgroundOptions?: InputMaybe<EnqueueBackgroundActionOptions>;
-  inputs: Array<BulkUpdateUniversityAssignmentsInput>;
+  inputs: Array<BulkUpdateWhateverUniversityAssignmentsInput>;
 };
 
-export type BackgroundUniversityMutationsBulkUpdateCoursesArgs = {
+export type BackgroundWhateverUniversityMutationsBulkUpdateCoursesArgs = {
   backgroundOptions?: InputMaybe<EnqueueBackgroundActionOptions>;
-  inputs: Array<BulkUpdateUniversityCoursesInput>;
+  inputs: Array<BulkUpdateWhateverUniversityCoursesInput>;
 };
 
-export type BackgroundUniversityMutationsBulkUpdateProfessorsArgs = {
+export type BackgroundWhateverUniversityMutationsBulkUpdateProfessorsArgs = {
   backgroundOptions?: InputMaybe<EnqueueBackgroundActionOptions>;
-  inputs: Array<BulkUpdateUniversityProfessorsInput>;
+  inputs: Array<BulkUpdateWhateverUniversityProfessorsInput>;
 };
 
-export type BackgroundUniversityMutationsBulkUpdateRegistrationsArgs = {
+export type BackgroundWhateverUniversityMutationsBulkUpdateRegistrationsArgs = {
   backgroundOptions?: InputMaybe<EnqueueBackgroundActionOptions>;
-  inputs: Array<BulkUpdateUniversityRegistrationsInput>;
+  inputs: Array<BulkUpdateWhateverUniversityRegistrationsInput>;
 };
 
-export type BackgroundUniversityMutationsBulkUpdateStudentsArgs = {
+export type BackgroundWhateverUniversityMutationsBulkUpdateStudentsArgs = {
   backgroundOptions?: InputMaybe<EnqueueBackgroundActionOptions>;
-  inputs: Array<BulkUpdateUniversityStudentsInput>;
+  inputs: Array<BulkUpdateWhateverUniversityStudentsInput>;
 };
 
-export type BackgroundUniversityMutationsBulkUpsertAssignmentsArgs = {
+export type BackgroundWhateverUniversityMutationsBulkUpsertAssignmentsArgs = {
   backgroundOptions?: InputMaybe<EnqueueBackgroundActionOptions>;
-  inputs: Array<BulkUpsertUniversityAssignmentsInput>;
+  inputs: Array<BulkUpsertWhateverUniversityAssignmentsInput>;
 };
 
-export type BackgroundUniversityMutationsBulkUpsertCoursesArgs = {
+export type BackgroundWhateverUniversityMutationsBulkUpsertCoursesArgs = {
   backgroundOptions?: InputMaybe<EnqueueBackgroundActionOptions>;
-  inputs: Array<BulkUpsertUniversityCoursesInput>;
+  inputs: Array<BulkUpsertWhateverUniversityCoursesInput>;
 };
 
-export type BackgroundUniversityMutationsBulkUpsertProfessorsArgs = {
+export type BackgroundWhateverUniversityMutationsBulkUpsertProfessorsArgs = {
   backgroundOptions?: InputMaybe<EnqueueBackgroundActionOptions>;
-  inputs: Array<BulkUpsertUniversityProfessorsInput>;
+  inputs: Array<BulkUpsertWhateverUniversityProfessorsInput>;
 };
 
-export type BackgroundUniversityMutationsBulkUpsertRegistrationsArgs = {
+export type BackgroundWhateverUniversityMutationsBulkUpsertRegistrationsArgs = {
   backgroundOptions?: InputMaybe<EnqueueBackgroundActionOptions>;
-  inputs: Array<BulkUpsertUniversityRegistrationsInput>;
+  inputs: Array<BulkUpsertWhateverUniversityRegistrationsInput>;
 };
 
-export type BackgroundUniversityMutationsBulkUpsertStudentsArgs = {
+export type BackgroundWhateverUniversityMutationsBulkUpsertStudentsArgs = {
   backgroundOptions?: InputMaybe<EnqueueBackgroundActionOptions>;
-  inputs: Array<BulkUpsertUniversityStudentsInput>;
+  inputs: Array<BulkUpsertWhateverUniversityStudentsInput>;
 };
 
-export type BackgroundUniversityMutationsCreateAssignmentArgs = {
-  assignment?: InputMaybe<CreateUniversityAssignmentInput>;
+export type BackgroundWhateverUniversityMutationsCreateAssignmentArgs = {
+  assignment?: InputMaybe<CreateWhateverUniversityAssignmentInput>;
   backgroundOptions?: InputMaybe<EnqueueBackgroundActionOptions>;
 };
 
-export type BackgroundUniversityMutationsCreateCourseArgs = {
+export type BackgroundWhateverUniversityMutationsCreateCourseArgs = {
   backgroundOptions?: InputMaybe<EnqueueBackgroundActionOptions>;
-  course?: InputMaybe<CreateUniversityCourseInput>;
+  course?: InputMaybe<CreateWhateverUniversityCourseInput>;
 };
 
-export type BackgroundUniversityMutationsCreateProfessorArgs = {
+export type BackgroundWhateverUniversityMutationsCreateProfessorArgs = {
   backgroundOptions?: InputMaybe<EnqueueBackgroundActionOptions>;
-  professor?: InputMaybe<CreateUniversityProfessorInput>;
+  professor?: InputMaybe<CreateWhateverUniversityProfessorInput>;
 };
 
-export type BackgroundUniversityMutationsCreateRegistrationArgs = {
+export type BackgroundWhateverUniversityMutationsCreateRegistrationArgs = {
   backgroundOptions?: InputMaybe<EnqueueBackgroundActionOptions>;
-  registration?: InputMaybe<CreateUniversityRegistrationInput>;
+  registration?: InputMaybe<CreateWhateverUniversityRegistrationInput>;
 };
 
-export type BackgroundUniversityMutationsCreateStudentArgs = {
+export type BackgroundWhateverUniversityMutationsCreateStudentArgs = {
   backgroundOptions?: InputMaybe<EnqueueBackgroundActionOptions>;
-  student?: InputMaybe<CreateUniversityStudentInput>;
+  student?: InputMaybe<CreateWhateverUniversityStudentInput>;
 };
 
-export type BackgroundUniversityMutationsDeleteAssignmentArgs = {
-  backgroundOptions?: InputMaybe<EnqueueBackgroundActionOptions>;
-  id: Scalars["GadgetID"]["input"];
-};
-
-export type BackgroundUniversityMutationsDeleteCourseArgs = {
+export type BackgroundWhateverUniversityMutationsDeleteAssignmentArgs = {
   backgroundOptions?: InputMaybe<EnqueueBackgroundActionOptions>;
   id: Scalars["GadgetID"]["input"];
 };
 
-export type BackgroundUniversityMutationsDeleteProfessorArgs = {
+export type BackgroundWhateverUniversityMutationsDeleteCourseArgs = {
   backgroundOptions?: InputMaybe<EnqueueBackgroundActionOptions>;
   id: Scalars["GadgetID"]["input"];
 };
 
-export type BackgroundUniversityMutationsDeleteRegistrationArgs = {
+export type BackgroundWhateverUniversityMutationsDeleteProfessorArgs = {
   backgroundOptions?: InputMaybe<EnqueueBackgroundActionOptions>;
   id: Scalars["GadgetID"]["input"];
 };
 
-export type BackgroundUniversityMutationsDeleteStudentArgs = {
+export type BackgroundWhateverUniversityMutationsDeleteRegistrationArgs = {
   backgroundOptions?: InputMaybe<EnqueueBackgroundActionOptions>;
   id: Scalars["GadgetID"]["input"];
 };
 
-export type BackgroundUniversityMutationsUpdateAssignmentArgs = {
-  assignment?: InputMaybe<UpdateUniversityAssignmentInput>;
+export type BackgroundWhateverUniversityMutationsDeleteStudentArgs = {
   backgroundOptions?: InputMaybe<EnqueueBackgroundActionOptions>;
   id: Scalars["GadgetID"]["input"];
 };
 
-export type BackgroundUniversityMutationsUpdateCourseArgs = {
+export type BackgroundWhateverUniversityMutationsUpdateAssignmentArgs = {
+  assignment?: InputMaybe<UpdateWhateverUniversityAssignmentInput>;
   backgroundOptions?: InputMaybe<EnqueueBackgroundActionOptions>;
-  course?: InputMaybe<UpdateUniversityCourseInput>;
   id: Scalars["GadgetID"]["input"];
 };
 
-export type BackgroundUniversityMutationsUpdateProfessorArgs = {
+export type BackgroundWhateverUniversityMutationsUpdateCourseArgs = {
   backgroundOptions?: InputMaybe<EnqueueBackgroundActionOptions>;
+  course?: InputMaybe<UpdateWhateverUniversityCourseInput>;
   id: Scalars["GadgetID"]["input"];
-  professor?: InputMaybe<UpdateUniversityProfessorInput>;
 };
 
-export type BackgroundUniversityMutationsUpdateRegistrationArgs = {
+export type BackgroundWhateverUniversityMutationsUpdateProfessorArgs = {
   backgroundOptions?: InputMaybe<EnqueueBackgroundActionOptions>;
   id: Scalars["GadgetID"]["input"];
-  registration?: InputMaybe<UpdateUniversityRegistrationInput>;
+  professor?: InputMaybe<UpdateWhateverUniversityProfessorInput>;
 };
 
-export type BackgroundUniversityMutationsUpdateStudentArgs = {
+export type BackgroundWhateverUniversityMutationsUpdateRegistrationArgs = {
   backgroundOptions?: InputMaybe<EnqueueBackgroundActionOptions>;
   id: Scalars["GadgetID"]["input"];
-  student?: InputMaybe<UpdateUniversityStudentInput>;
+  registration?: InputMaybe<UpdateWhateverUniversityRegistrationInput>;
 };
 
-export type BackgroundUniversityMutationsUpsertAssignmentArgs = {
-  assignment?: InputMaybe<UpsertUniversityAssignmentInput>;
+export type BackgroundWhateverUniversityMutationsUpdateStudentArgs = {
+  backgroundOptions?: InputMaybe<EnqueueBackgroundActionOptions>;
+  id: Scalars["GadgetID"]["input"];
+  student?: InputMaybe<UpdateWhateverUniversityStudentInput>;
+};
+
+export type BackgroundWhateverUniversityMutationsUpsertAssignmentArgs = {
+  assignment?: InputMaybe<UpsertWhateverUniversityAssignmentInput>;
   backgroundOptions?: InputMaybe<EnqueueBackgroundActionOptions>;
   on?: InputMaybe<Array<Scalars["String"]["input"]>>;
 };
 
-export type BackgroundUniversityMutationsUpsertCourseArgs = {
+export type BackgroundWhateverUniversityMutationsUpsertCourseArgs = {
   backgroundOptions?: InputMaybe<EnqueueBackgroundActionOptions>;
-  course?: InputMaybe<UpsertUniversityCourseInput>;
+  course?: InputMaybe<UpsertWhateverUniversityCourseInput>;
   on?: InputMaybe<Array<Scalars["String"]["input"]>>;
 };
 
-export type BackgroundUniversityMutationsUpsertProfessorArgs = {
+export type BackgroundWhateverUniversityMutationsUpsertProfessorArgs = {
   backgroundOptions?: InputMaybe<EnqueueBackgroundActionOptions>;
   on?: InputMaybe<Array<Scalars["String"]["input"]>>;
-  professor?: InputMaybe<UpsertUniversityProfessorInput>;
+  professor?: InputMaybe<UpsertWhateverUniversityProfessorInput>;
 };
 
-export type BackgroundUniversityMutationsUpsertRegistrationArgs = {
+export type BackgroundWhateverUniversityMutationsUpsertRegistrationArgs = {
   backgroundOptions?: InputMaybe<EnqueueBackgroundActionOptions>;
   on?: InputMaybe<Array<Scalars["String"]["input"]>>;
-  registration?: InputMaybe<UpsertUniversityRegistrationInput>;
+  registration?: InputMaybe<UpsertWhateverUniversityRegistrationInput>;
 };
 
-export type BackgroundUniversityMutationsUpsertStudentArgs = {
+export type BackgroundWhateverUniversityMutationsUpsertStudentArgs = {
   backgroundOptions?: InputMaybe<EnqueueBackgroundActionOptions>;
   on?: InputMaybe<Array<Scalars["String"]["input"]>>;
-  student?: InputMaybe<UpsertUniversityStudentInput>;
+  student?: InputMaybe<UpsertWhateverUniversityStudentInput>;
 };
 
 /** Input object supporting setting or updating related model record on a relationship field */
@@ -2200,21 +2131,6 @@ export type BulkCompleteShopifySyncsResult = {
   success: Scalars["Boolean"]["output"];
 };
 
-export type BulkCreateAutoTableTestRelatedModelsInput = {
-  _autoTableTestRelatedModel?: InputMaybe<CreateAutoTableTestRelatedModelInput>;
-};
-
-/** The output when running the create on the _autoTableTestRelatedModel model in bulk. */
-export type BulkCreateAutoTableTestRelatedModelsResult = {
-  __typename?: "BulkCreateAutoTableTestRelatedModelsResult";
-  /** The list of all changed _autoTableTestRelatedModel records by each sent bulk action. Returned in the same order as the input bulk action params. */
-  _autoTableTestRelatedModels?: Maybe<Array<Maybe<AutoTableTestRelatedModel>>>;
-  /** Aggregated list of errors that any bulk action encountered while processing */
-  errors?: Maybe<Array<ExecutionError>>;
-  /** Boolean describing if all the bulk actions succeeded or not */
-  success: Scalars["Boolean"]["output"];
-};
-
 export type BulkCreateAutoTableTestsInput = {
   autoTableTest?: InputMaybe<CreateAutoTableTestInput>;
 };
@@ -2241,6 +2157,21 @@ export type BulkCreateDoodadsResult = {
   doodads?: Maybe<Array<Maybe<Doodad>>>;
   /** Aggregated list of errors that any bulk action encountered while processing */
   errors?: Maybe<Array<ExecutionError>>;
+  /** Boolean describing if all the bulk actions succeeded or not */
+  success: Scalars["Boolean"]["output"];
+};
+
+export type BulkCreateFoosInput = {
+  foo?: InputMaybe<CreateFooInput>;
+};
+
+/** The output when running the create on the foo model in bulk. */
+export type BulkCreateFoosResult = {
+  __typename?: "BulkCreateFoosResult";
+  /** Aggregated list of errors that any bulk action encountered while processing */
+  errors?: Maybe<Array<ExecutionError>>;
+  /** The list of all changed foo records by each sent bulk action. Returned in the same order as the input bulk action params. */
+  foos?: Maybe<Array<Maybe<Foo>>>;
   /** Boolean describing if all the bulk actions succeeded or not */
   success: Scalars["Boolean"]["output"];
 };
@@ -2481,77 +2412,77 @@ export type BulkCreateUniqueFieldsParentModelsResult = {
   success: Scalars["Boolean"]["output"];
 };
 
-export type BulkCreateUniversityAssignmentsInput = {
-  assignment?: InputMaybe<CreateUniversityAssignmentInput>;
+export type BulkCreateWhateverUniversityAssignmentsInput = {
+  assignment?: InputMaybe<CreateWhateverUniversityAssignmentInput>;
 };
 
-/** The output when running the create on the university/assignment model in bulk. */
-export type BulkCreateUniversityAssignmentsResult = {
-  __typename?: "BulkCreateUniversityAssignmentsResult";
-  /** The list of all changed university/assignment records by each sent bulk action. Returned in the same order as the input bulk action params. */
-  assignments?: Maybe<Array<Maybe<UniversityAssignment>>>;
+/** The output when running the create on the whatever/university/assignment model in bulk. */
+export type BulkCreateWhateverUniversityAssignmentsResult = {
+  __typename?: "BulkCreateWhateverUniversityAssignmentsResult";
+  /** The list of all changed whatever/university/assignment records by each sent bulk action. Returned in the same order as the input bulk action params. */
+  assignments?: Maybe<Array<Maybe<WhateverUniversityAssignment>>>;
   /** Aggregated list of errors that any bulk action encountered while processing */
   errors?: Maybe<Array<ExecutionError>>;
   /** Boolean describing if all the bulk actions succeeded or not */
   success: Scalars["Boolean"]["output"];
 };
 
-export type BulkCreateUniversityCoursesInput = {
-  course?: InputMaybe<CreateUniversityCourseInput>;
+export type BulkCreateWhateverUniversityCoursesInput = {
+  course?: InputMaybe<CreateWhateverUniversityCourseInput>;
 };
 
-/** The output when running the create on the university/course model in bulk. */
-export type BulkCreateUniversityCoursesResult = {
-  __typename?: "BulkCreateUniversityCoursesResult";
-  /** The list of all changed university/course records by each sent bulk action. Returned in the same order as the input bulk action params. */
-  courses?: Maybe<Array<Maybe<UniversityCourse>>>;
+/** The output when running the create on the whatever/university/course model in bulk. */
+export type BulkCreateWhateverUniversityCoursesResult = {
+  __typename?: "BulkCreateWhateverUniversityCoursesResult";
+  /** The list of all changed whatever/university/course records by each sent bulk action. Returned in the same order as the input bulk action params. */
+  courses?: Maybe<Array<Maybe<WhateverUniversityCourse>>>;
   /** Aggregated list of errors that any bulk action encountered while processing */
   errors?: Maybe<Array<ExecutionError>>;
   /** Boolean describing if all the bulk actions succeeded or not */
   success: Scalars["Boolean"]["output"];
 };
 
-export type BulkCreateUniversityProfessorsInput = {
-  professor?: InputMaybe<CreateUniversityProfessorInput>;
+export type BulkCreateWhateverUniversityProfessorsInput = {
+  professor?: InputMaybe<CreateWhateverUniversityProfessorInput>;
 };
 
-/** The output when running the create on the university/professor model in bulk. */
-export type BulkCreateUniversityProfessorsResult = {
-  __typename?: "BulkCreateUniversityProfessorsResult";
+/** The output when running the create on the whatever/university/professor model in bulk. */
+export type BulkCreateWhateverUniversityProfessorsResult = {
+  __typename?: "BulkCreateWhateverUniversityProfessorsResult";
   /** Aggregated list of errors that any bulk action encountered while processing */
   errors?: Maybe<Array<ExecutionError>>;
-  /** The list of all changed university/professor records by each sent bulk action. Returned in the same order as the input bulk action params. */
-  professors?: Maybe<Array<Maybe<UniversityProfessor>>>;
+  /** The list of all changed whatever/university/professor records by each sent bulk action. Returned in the same order as the input bulk action params. */
+  professors?: Maybe<Array<Maybe<WhateverUniversityProfessor>>>;
   /** Boolean describing if all the bulk actions succeeded or not */
   success: Scalars["Boolean"]["output"];
 };
 
-export type BulkCreateUniversityRegistrationsInput = {
-  registration?: InputMaybe<CreateUniversityRegistrationInput>;
+export type BulkCreateWhateverUniversityRegistrationsInput = {
+  registration?: InputMaybe<CreateWhateverUniversityRegistrationInput>;
 };
 
-/** The output when running the create on the university/registration model in bulk. */
-export type BulkCreateUniversityRegistrationsResult = {
-  __typename?: "BulkCreateUniversityRegistrationsResult";
+/** The output when running the create on the whatever/university/registration model in bulk. */
+export type BulkCreateWhateverUniversityRegistrationsResult = {
+  __typename?: "BulkCreateWhateverUniversityRegistrationsResult";
   /** Aggregated list of errors that any bulk action encountered while processing */
   errors?: Maybe<Array<ExecutionError>>;
-  /** The list of all changed university/registration records by each sent bulk action. Returned in the same order as the input bulk action params. */
-  registrations?: Maybe<Array<Maybe<UniversityRegistration>>>;
+  /** The list of all changed whatever/university/registration records by each sent bulk action. Returned in the same order as the input bulk action params. */
+  registrations?: Maybe<Array<Maybe<WhateverUniversityRegistration>>>;
   /** Boolean describing if all the bulk actions succeeded or not */
   success: Scalars["Boolean"]["output"];
 };
 
-export type BulkCreateUniversityStudentsInput = {
-  student?: InputMaybe<CreateUniversityStudentInput>;
+export type BulkCreateWhateverUniversityStudentsInput = {
+  student?: InputMaybe<CreateWhateverUniversityStudentInput>;
 };
 
-/** The output when running the create on the university/student model in bulk. */
-export type BulkCreateUniversityStudentsResult = {
-  __typename?: "BulkCreateUniversityStudentsResult";
+/** The output when running the create on the whatever/university/student model in bulk. */
+export type BulkCreateWhateverUniversityStudentsResult = {
+  __typename?: "BulkCreateWhateverUniversityStudentsResult";
   /** Aggregated list of errors that any bulk action encountered while processing */
   errors?: Maybe<Array<ExecutionError>>;
-  /** The list of all changed university/student records by each sent bulk action. Returned in the same order as the input bulk action params. */
-  students?: Maybe<Array<Maybe<UniversityStudent>>>;
+  /** The list of all changed whatever/university/student records by each sent bulk action. Returned in the same order as the input bulk action params. */
+  students?: Maybe<Array<Maybe<WhateverUniversityStudent>>>;
   /** Boolean describing if all the bulk actions succeeded or not */
   success: Scalars["Boolean"]["output"];
 };
@@ -2635,15 +2566,6 @@ export type BulkCustomObjectParamsGameCitiesResult = {
   success: Scalars["Boolean"]["output"];
 };
 
-/** The output when running the delete on the _autoTableTestRelatedModel model in bulk. */
-export type BulkDeleteAutoTableTestRelatedModelsResult = {
-  __typename?: "BulkDeleteAutoTableTestRelatedModelsResult";
-  /** Aggregated list of errors that any bulk action encountered while processing */
-  errors?: Maybe<Array<ExecutionError>>;
-  /** Boolean describing if all the bulk actions succeeded or not */
-  success: Scalars["Boolean"]["output"];
-};
-
 /** The output when running the delete on the autoTableTest model in bulk. */
 export type BulkDeleteAutoTableTestsResult = {
   __typename?: "BulkDeleteAutoTableTestsResult";
@@ -2656,6 +2578,15 @@ export type BulkDeleteAutoTableTestsResult = {
 /** The output when running the delete on the doodad model in bulk. */
 export type BulkDeleteDoodadsResult = {
   __typename?: "BulkDeleteDoodadsResult";
+  /** Aggregated list of errors that any bulk action encountered while processing */
+  errors?: Maybe<Array<ExecutionError>>;
+  /** Boolean describing if all the bulk actions succeeded or not */
+  success: Scalars["Boolean"]["output"];
+};
+
+/** The output when running the delete on the foo model in bulk. */
+export type BulkDeleteFoosResult = {
+  __typename?: "BulkDeleteFoosResult";
   /** Aggregated list of errors that any bulk action encountered while processing */
   errors?: Maybe<Array<ExecutionError>>;
   /** Boolean describing if all the bulk actions succeeded or not */
@@ -2806,54 +2737,54 @@ export type BulkDeleteUniqueFieldsParentModelsResult = {
   success: Scalars["Boolean"]["output"];
 };
 
-/** The output when running the delete on the university/assignment model in bulk. */
-export type BulkDeleteUniversityAssignmentsResult = {
-  __typename?: "BulkDeleteUniversityAssignmentsResult";
-  /** Aggregated list of errors that any bulk action encountered while processing */
-  errors?: Maybe<Array<ExecutionError>>;
-  /** Boolean describing if all the bulk actions succeeded or not */
-  success: Scalars["Boolean"]["output"];
-};
-
-/** The output when running the delete on the university/course model in bulk. */
-export type BulkDeleteUniversityCoursesResult = {
-  __typename?: "BulkDeleteUniversityCoursesResult";
-  /** Aggregated list of errors that any bulk action encountered while processing */
-  errors?: Maybe<Array<ExecutionError>>;
-  /** Boolean describing if all the bulk actions succeeded or not */
-  success: Scalars["Boolean"]["output"];
-};
-
-/** The output when running the delete on the university/professor model in bulk. */
-export type BulkDeleteUniversityProfessorsResult = {
-  __typename?: "BulkDeleteUniversityProfessorsResult";
-  /** Aggregated list of errors that any bulk action encountered while processing */
-  errors?: Maybe<Array<ExecutionError>>;
-  /** Boolean describing if all the bulk actions succeeded or not */
-  success: Scalars["Boolean"]["output"];
-};
-
-/** The output when running the delete on the university/registration model in bulk. */
-export type BulkDeleteUniversityRegistrationsResult = {
-  __typename?: "BulkDeleteUniversityRegistrationsResult";
-  /** Aggregated list of errors that any bulk action encountered while processing */
-  errors?: Maybe<Array<ExecutionError>>;
-  /** Boolean describing if all the bulk actions succeeded or not */
-  success: Scalars["Boolean"]["output"];
-};
-
-/** The output when running the delete on the university/student model in bulk. */
-export type BulkDeleteUniversityStudentsResult = {
-  __typename?: "BulkDeleteUniversityStudentsResult";
-  /** Aggregated list of errors that any bulk action encountered while processing */
-  errors?: Maybe<Array<ExecutionError>>;
-  /** Boolean describing if all the bulk actions succeeded or not */
-  success: Scalars["Boolean"]["output"];
-};
-
 /** The output when running the delete on the user model in bulk. */
 export type BulkDeleteUsersResult = {
   __typename?: "BulkDeleteUsersResult";
+  /** Aggregated list of errors that any bulk action encountered while processing */
+  errors?: Maybe<Array<ExecutionError>>;
+  /** Boolean describing if all the bulk actions succeeded or not */
+  success: Scalars["Boolean"]["output"];
+};
+
+/** The output when running the delete on the whatever/university/assignment model in bulk. */
+export type BulkDeleteWhateverUniversityAssignmentsResult = {
+  __typename?: "BulkDeleteWhateverUniversityAssignmentsResult";
+  /** Aggregated list of errors that any bulk action encountered while processing */
+  errors?: Maybe<Array<ExecutionError>>;
+  /** Boolean describing if all the bulk actions succeeded or not */
+  success: Scalars["Boolean"]["output"];
+};
+
+/** The output when running the delete on the whatever/university/course model in bulk. */
+export type BulkDeleteWhateverUniversityCoursesResult = {
+  __typename?: "BulkDeleteWhateverUniversityCoursesResult";
+  /** Aggregated list of errors that any bulk action encountered while processing */
+  errors?: Maybe<Array<ExecutionError>>;
+  /** Boolean describing if all the bulk actions succeeded or not */
+  success: Scalars["Boolean"]["output"];
+};
+
+/** The output when running the delete on the whatever/university/professor model in bulk. */
+export type BulkDeleteWhateverUniversityProfessorsResult = {
+  __typename?: "BulkDeleteWhateverUniversityProfessorsResult";
+  /** Aggregated list of errors that any bulk action encountered while processing */
+  errors?: Maybe<Array<ExecutionError>>;
+  /** Boolean describing if all the bulk actions succeeded or not */
+  success: Scalars["Boolean"]["output"];
+};
+
+/** The output when running the delete on the whatever/university/registration model in bulk. */
+export type BulkDeleteWhateverUniversityRegistrationsResult = {
+  __typename?: "BulkDeleteWhateverUniversityRegistrationsResult";
+  /** Aggregated list of errors that any bulk action encountered while processing */
+  errors?: Maybe<Array<ExecutionError>>;
+  /** Boolean describing if all the bulk actions succeeded or not */
+  success: Scalars["Boolean"]["output"];
+};
+
+/** The output when running the delete on the whatever/university/student model in bulk. */
+export type BulkDeleteWhateverUniversityStudentsResult = {
+  __typename?: "BulkDeleteWhateverUniversityStudentsResult";
   /** Aggregated list of errors that any bulk action encountered while processing */
   errors?: Maybe<Array<ExecutionError>>;
   /** Boolean describing if all the bulk actions succeeded or not */
@@ -2956,22 +2887,6 @@ export type BulkSignUpUsersResult = {
   users?: Maybe<Array<Maybe<User>>>;
 };
 
-export type BulkUpdateAutoTableTestRelatedModelsInput = {
-  _autoTableTestRelatedModel?: InputMaybe<UpdateAutoTableTestRelatedModelInput>;
-  id: Scalars["GadgetID"]["input"];
-};
-
-/** The output when running the update on the _autoTableTestRelatedModel model in bulk. */
-export type BulkUpdateAutoTableTestRelatedModelsResult = {
-  __typename?: "BulkUpdateAutoTableTestRelatedModelsResult";
-  /** The list of all changed _autoTableTestRelatedModel records by each sent bulk action. Returned in the same order as the input bulk action params. */
-  _autoTableTestRelatedModels?: Maybe<Array<Maybe<AutoTableTestRelatedModel>>>;
-  /** Aggregated list of errors that any bulk action encountered while processing */
-  errors?: Maybe<Array<ExecutionError>>;
-  /** Boolean describing if all the bulk actions succeeded or not */
-  success: Scalars["Boolean"]["output"];
-};
-
 export type BulkUpdateAutoTableTestsInput = {
   autoTableTest?: InputMaybe<UpdateAutoTableTestInput>;
   id: Scalars["GadgetID"]["input"];
@@ -3000,6 +2915,22 @@ export type BulkUpdateDoodadsResult = {
   doodads?: Maybe<Array<Maybe<Doodad>>>;
   /** Aggregated list of errors that any bulk action encountered while processing */
   errors?: Maybe<Array<ExecutionError>>;
+  /** Boolean describing if all the bulk actions succeeded or not */
+  success: Scalars["Boolean"]["output"];
+};
+
+export type BulkUpdateFoosInput = {
+  foo?: InputMaybe<UpdateFooInput>;
+  id: Scalars["GadgetID"]["input"];
+};
+
+/** The output when running the update on the foo model in bulk. */
+export type BulkUpdateFoosResult = {
+  __typename?: "BulkUpdateFoosResult";
+  /** Aggregated list of errors that any bulk action encountered while processing */
+  errors?: Maybe<Array<ExecutionError>>;
+  /** The list of all changed foo records by each sent bulk action. Returned in the same order as the input bulk action params. */
+  foos?: Maybe<Array<Maybe<Foo>>>;
   /** Boolean describing if all the bulk actions succeeded or not */
   success: Scalars["Boolean"]["output"];
 };
@@ -3255,86 +3186,6 @@ export type BulkUpdateUniqueFieldsParentModelsResult = {
   success: Scalars["Boolean"]["output"];
 };
 
-export type BulkUpdateUniversityAssignmentsInput = {
-  assignment?: InputMaybe<UpdateUniversityAssignmentInput>;
-  id: Scalars["GadgetID"]["input"];
-};
-
-/** The output when running the update on the university/assignment model in bulk. */
-export type BulkUpdateUniversityAssignmentsResult = {
-  __typename?: "BulkUpdateUniversityAssignmentsResult";
-  /** The list of all changed university/assignment records by each sent bulk action. Returned in the same order as the input bulk action params. */
-  assignments?: Maybe<Array<Maybe<UniversityAssignment>>>;
-  /** Aggregated list of errors that any bulk action encountered while processing */
-  errors?: Maybe<Array<ExecutionError>>;
-  /** Boolean describing if all the bulk actions succeeded or not */
-  success: Scalars["Boolean"]["output"];
-};
-
-export type BulkUpdateUniversityCoursesInput = {
-  course?: InputMaybe<UpdateUniversityCourseInput>;
-  id: Scalars["GadgetID"]["input"];
-};
-
-/** The output when running the update on the university/course model in bulk. */
-export type BulkUpdateUniversityCoursesResult = {
-  __typename?: "BulkUpdateUniversityCoursesResult";
-  /** The list of all changed university/course records by each sent bulk action. Returned in the same order as the input bulk action params. */
-  courses?: Maybe<Array<Maybe<UniversityCourse>>>;
-  /** Aggregated list of errors that any bulk action encountered while processing */
-  errors?: Maybe<Array<ExecutionError>>;
-  /** Boolean describing if all the bulk actions succeeded or not */
-  success: Scalars["Boolean"]["output"];
-};
-
-export type BulkUpdateUniversityProfessorsInput = {
-  id: Scalars["GadgetID"]["input"];
-  professor?: InputMaybe<UpdateUniversityProfessorInput>;
-};
-
-/** The output when running the update on the university/professor model in bulk. */
-export type BulkUpdateUniversityProfessorsResult = {
-  __typename?: "BulkUpdateUniversityProfessorsResult";
-  /** Aggregated list of errors that any bulk action encountered while processing */
-  errors?: Maybe<Array<ExecutionError>>;
-  /** The list of all changed university/professor records by each sent bulk action. Returned in the same order as the input bulk action params. */
-  professors?: Maybe<Array<Maybe<UniversityProfessor>>>;
-  /** Boolean describing if all the bulk actions succeeded or not */
-  success: Scalars["Boolean"]["output"];
-};
-
-export type BulkUpdateUniversityRegistrationsInput = {
-  id: Scalars["GadgetID"]["input"];
-  registration?: InputMaybe<UpdateUniversityRegistrationInput>;
-};
-
-/** The output when running the update on the university/registration model in bulk. */
-export type BulkUpdateUniversityRegistrationsResult = {
-  __typename?: "BulkUpdateUniversityRegistrationsResult";
-  /** Aggregated list of errors that any bulk action encountered while processing */
-  errors?: Maybe<Array<ExecutionError>>;
-  /** The list of all changed university/registration records by each sent bulk action. Returned in the same order as the input bulk action params. */
-  registrations?: Maybe<Array<Maybe<UniversityRegistration>>>;
-  /** Boolean describing if all the bulk actions succeeded or not */
-  success: Scalars["Boolean"]["output"];
-};
-
-export type BulkUpdateUniversityStudentsInput = {
-  id: Scalars["GadgetID"]["input"];
-  student?: InputMaybe<UpdateUniversityStudentInput>;
-};
-
-/** The output when running the update on the university/student model in bulk. */
-export type BulkUpdateUniversityStudentsResult = {
-  __typename?: "BulkUpdateUniversityStudentsResult";
-  /** Aggregated list of errors that any bulk action encountered while processing */
-  errors?: Maybe<Array<ExecutionError>>;
-  /** The list of all changed university/student records by each sent bulk action. Returned in the same order as the input bulk action params. */
-  students?: Maybe<Array<Maybe<UniversityStudent>>>;
-  /** Boolean describing if all the bulk actions succeeded or not */
-  success: Scalars["Boolean"]["output"];
-};
-
 export type BulkUpdateUsersInput = {
   id: Scalars["GadgetID"]["input"];
   user?: InputMaybe<UpdateUserInput>;
@@ -3349,6 +3200,86 @@ export type BulkUpdateUsersResult = {
   success: Scalars["Boolean"]["output"];
   /** The list of all changed user records by each sent bulk action. Returned in the same order as the input bulk action params. */
   users?: Maybe<Array<Maybe<User>>>;
+};
+
+export type BulkUpdateWhateverUniversityAssignmentsInput = {
+  assignment?: InputMaybe<UpdateWhateverUniversityAssignmentInput>;
+  id: Scalars["GadgetID"]["input"];
+};
+
+/** The output when running the update on the whatever/university/assignment model in bulk. */
+export type BulkUpdateWhateverUniversityAssignmentsResult = {
+  __typename?: "BulkUpdateWhateverUniversityAssignmentsResult";
+  /** The list of all changed whatever/university/assignment records by each sent bulk action. Returned in the same order as the input bulk action params. */
+  assignments?: Maybe<Array<Maybe<WhateverUniversityAssignment>>>;
+  /** Aggregated list of errors that any bulk action encountered while processing */
+  errors?: Maybe<Array<ExecutionError>>;
+  /** Boolean describing if all the bulk actions succeeded or not */
+  success: Scalars["Boolean"]["output"];
+};
+
+export type BulkUpdateWhateverUniversityCoursesInput = {
+  course?: InputMaybe<UpdateWhateverUniversityCourseInput>;
+  id: Scalars["GadgetID"]["input"];
+};
+
+/** The output when running the update on the whatever/university/course model in bulk. */
+export type BulkUpdateWhateverUniversityCoursesResult = {
+  __typename?: "BulkUpdateWhateverUniversityCoursesResult";
+  /** The list of all changed whatever/university/course records by each sent bulk action. Returned in the same order as the input bulk action params. */
+  courses?: Maybe<Array<Maybe<WhateverUniversityCourse>>>;
+  /** Aggregated list of errors that any bulk action encountered while processing */
+  errors?: Maybe<Array<ExecutionError>>;
+  /** Boolean describing if all the bulk actions succeeded or not */
+  success: Scalars["Boolean"]["output"];
+};
+
+export type BulkUpdateWhateverUniversityProfessorsInput = {
+  id: Scalars["GadgetID"]["input"];
+  professor?: InputMaybe<UpdateWhateverUniversityProfessorInput>;
+};
+
+/** The output when running the update on the whatever/university/professor model in bulk. */
+export type BulkUpdateWhateverUniversityProfessorsResult = {
+  __typename?: "BulkUpdateWhateverUniversityProfessorsResult";
+  /** Aggregated list of errors that any bulk action encountered while processing */
+  errors?: Maybe<Array<ExecutionError>>;
+  /** The list of all changed whatever/university/professor records by each sent bulk action. Returned in the same order as the input bulk action params. */
+  professors?: Maybe<Array<Maybe<WhateverUniversityProfessor>>>;
+  /** Boolean describing if all the bulk actions succeeded or not */
+  success: Scalars["Boolean"]["output"];
+};
+
+export type BulkUpdateWhateverUniversityRegistrationsInput = {
+  id: Scalars["GadgetID"]["input"];
+  registration?: InputMaybe<UpdateWhateverUniversityRegistrationInput>;
+};
+
+/** The output when running the update on the whatever/university/registration model in bulk. */
+export type BulkUpdateWhateverUniversityRegistrationsResult = {
+  __typename?: "BulkUpdateWhateverUniversityRegistrationsResult";
+  /** Aggregated list of errors that any bulk action encountered while processing */
+  errors?: Maybe<Array<ExecutionError>>;
+  /** The list of all changed whatever/university/registration records by each sent bulk action. Returned in the same order as the input bulk action params. */
+  registrations?: Maybe<Array<Maybe<WhateverUniversityRegistration>>>;
+  /** Boolean describing if all the bulk actions succeeded or not */
+  success: Scalars["Boolean"]["output"];
+};
+
+export type BulkUpdateWhateverUniversityStudentsInput = {
+  id: Scalars["GadgetID"]["input"];
+  student?: InputMaybe<UpdateWhateverUniversityStudentInput>;
+};
+
+/** The output when running the update on the whatever/university/student model in bulk. */
+export type BulkUpdateWhateverUniversityStudentsResult = {
+  __typename?: "BulkUpdateWhateverUniversityStudentsResult";
+  /** Aggregated list of errors that any bulk action encountered while processing */
+  errors?: Maybe<Array<ExecutionError>>;
+  /** The list of all changed whatever/university/student records by each sent bulk action. Returned in the same order as the input bulk action params. */
+  students?: Maybe<Array<Maybe<WhateverUniversityStudent>>>;
+  /** Boolean describing if all the bulk actions succeeded or not */
+  success: Scalars["Boolean"]["output"];
 };
 
 export type BulkUpdateWidgetsInput = {
@@ -3406,23 +3337,6 @@ export type BulkUpdateWithCustomParamsWidgetsResult = {
   widgets?: Maybe<Array<Maybe<Widget>>>;
 };
 
-export type BulkUpsertAutoTableTestRelatedModelsInput = {
-  _autoTableTestRelatedModel?: InputMaybe<UpsertAutoTableTestRelatedModelInput>;
-  /** An array of Strings */
-  on?: InputMaybe<Array<Scalars["String"]["input"]>>;
-};
-
-/** The result of a bulk upsert operation for the _autoTableTestRelatedModel model */
-export type BulkUpsertAutoTableTestRelatedModelsResult = {
-  __typename?: "BulkUpsertAutoTableTestRelatedModelsResult";
-  /** The results of each upsert action in the bulk operation */
-  _autoTableTestRelatedModels?: Maybe<Array<Maybe<AutoTableTestRelatedModel>>>;
-  /** Aggregated list of errors that any bulk action encountered while processing */
-  errors?: Maybe<Array<ExecutionError>>;
-  /** Boolean describing if all the bulk actions succeeded or not */
-  success: Scalars["Boolean"]["output"];
-};
-
 export type BulkUpsertAutoTableTestsInput = {
   autoTableTest?: InputMaybe<UpsertAutoTableTestInput>;
   /** An array of Strings */
@@ -3453,6 +3367,23 @@ export type BulkUpsertDoodadsResult = {
   doodads?: Maybe<Array<Maybe<Doodad>>>;
   /** Aggregated list of errors that any bulk action encountered while processing */
   errors?: Maybe<Array<ExecutionError>>;
+  /** Boolean describing if all the bulk actions succeeded or not */
+  success: Scalars["Boolean"]["output"];
+};
+
+export type BulkUpsertFoosInput = {
+  foo?: InputMaybe<UpsertFooInput>;
+  /** An array of Strings */
+  on?: InputMaybe<Array<Scalars["String"]["input"]>>;
+};
+
+/** The result of a bulk upsert operation for the foo model */
+export type BulkUpsertFoosResult = {
+  __typename?: "BulkUpsertFoosResult";
+  /** Aggregated list of errors that any bulk action encountered while processing */
+  errors?: Maybe<Array<ExecutionError>>;
+  /** The results of each upsert action in the bulk operation */
+  foos?: Maybe<Array<Maybe<Foo>>>;
   /** Boolean describing if all the bulk actions succeeded or not */
   success: Scalars["Boolean"]["output"];
 };
@@ -3747,91 +3678,6 @@ export type BulkUpsertUniqueFieldsParentModelsResult = {
   success: Scalars["Boolean"]["output"];
 };
 
-export type BulkUpsertUniversityAssignmentsInput = {
-  assignment?: InputMaybe<UpsertUniversityAssignmentInput>;
-  /** An array of Strings */
-  on?: InputMaybe<Array<Scalars["String"]["input"]>>;
-};
-
-/** The result of a bulk upsert operation for the university/assignment model */
-export type BulkUpsertUniversityAssignmentsResult = {
-  __typename?: "BulkUpsertUniversityAssignmentsResult";
-  /** The results of each upsert action in the bulk operation */
-  assignments?: Maybe<Array<Maybe<UniversityAssignment>>>;
-  /** Aggregated list of errors that any bulk action encountered while processing */
-  errors?: Maybe<Array<ExecutionError>>;
-  /** Boolean describing if all the bulk actions succeeded or not */
-  success: Scalars["Boolean"]["output"];
-};
-
-export type BulkUpsertUniversityCoursesInput = {
-  course?: InputMaybe<UpsertUniversityCourseInput>;
-  /** An array of Strings */
-  on?: InputMaybe<Array<Scalars["String"]["input"]>>;
-};
-
-/** The result of a bulk upsert operation for the university/course model */
-export type BulkUpsertUniversityCoursesResult = {
-  __typename?: "BulkUpsertUniversityCoursesResult";
-  /** The results of each upsert action in the bulk operation */
-  courses?: Maybe<Array<Maybe<UniversityCourse>>>;
-  /** Aggregated list of errors that any bulk action encountered while processing */
-  errors?: Maybe<Array<ExecutionError>>;
-  /** Boolean describing if all the bulk actions succeeded or not */
-  success: Scalars["Boolean"]["output"];
-};
-
-export type BulkUpsertUniversityProfessorsInput = {
-  /** An array of Strings */
-  on?: InputMaybe<Array<Scalars["String"]["input"]>>;
-  professor?: InputMaybe<UpsertUniversityProfessorInput>;
-};
-
-/** The result of a bulk upsert operation for the university/professor model */
-export type BulkUpsertUniversityProfessorsResult = {
-  __typename?: "BulkUpsertUniversityProfessorsResult";
-  /** Aggregated list of errors that any bulk action encountered while processing */
-  errors?: Maybe<Array<ExecutionError>>;
-  /** The results of each upsert action in the bulk operation */
-  professors?: Maybe<Array<Maybe<UniversityProfessor>>>;
-  /** Boolean describing if all the bulk actions succeeded or not */
-  success: Scalars["Boolean"]["output"];
-};
-
-export type BulkUpsertUniversityRegistrationsInput = {
-  /** An array of Strings */
-  on?: InputMaybe<Array<Scalars["String"]["input"]>>;
-  registration?: InputMaybe<UpsertUniversityRegistrationInput>;
-};
-
-/** The result of a bulk upsert operation for the university/registration model */
-export type BulkUpsertUniversityRegistrationsResult = {
-  __typename?: "BulkUpsertUniversityRegistrationsResult";
-  /** Aggregated list of errors that any bulk action encountered while processing */
-  errors?: Maybe<Array<ExecutionError>>;
-  /** The results of each upsert action in the bulk operation */
-  registrations?: Maybe<Array<Maybe<UniversityRegistration>>>;
-  /** Boolean describing if all the bulk actions succeeded or not */
-  success: Scalars["Boolean"]["output"];
-};
-
-export type BulkUpsertUniversityStudentsInput = {
-  /** An array of Strings */
-  on?: InputMaybe<Array<Scalars["String"]["input"]>>;
-  student?: InputMaybe<UpsertUniversityStudentInput>;
-};
-
-/** The result of a bulk upsert operation for the university/student model */
-export type BulkUpsertUniversityStudentsResult = {
-  __typename?: "BulkUpsertUniversityStudentsResult";
-  /** Aggregated list of errors that any bulk action encountered while processing */
-  errors?: Maybe<Array<ExecutionError>>;
-  /** The results of each upsert action in the bulk operation */
-  students?: Maybe<Array<Maybe<UniversityStudent>>>;
-  /** Boolean describing if all the bulk actions succeeded or not */
-  success: Scalars["Boolean"]["output"];
-};
-
 export type BulkUpsertUsersInput = {
   /** An array of Strings */
   on?: InputMaybe<Array<Scalars["String"]["input"]>>;
@@ -3849,6 +3695,91 @@ export type BulkUpsertUsersResult = {
   users?: Maybe<Array<Maybe<User>>>;
 };
 
+export type BulkUpsertWhateverUniversityAssignmentsInput = {
+  assignment?: InputMaybe<UpsertWhateverUniversityAssignmentInput>;
+  /** An array of Strings */
+  on?: InputMaybe<Array<Scalars["String"]["input"]>>;
+};
+
+/** The result of a bulk upsert operation for the whatever/university/assignment model */
+export type BulkUpsertWhateverUniversityAssignmentsResult = {
+  __typename?: "BulkUpsertWhateverUniversityAssignmentsResult";
+  /** The results of each upsert action in the bulk operation */
+  assignments?: Maybe<Array<Maybe<WhateverUniversityAssignment>>>;
+  /** Aggregated list of errors that any bulk action encountered while processing */
+  errors?: Maybe<Array<ExecutionError>>;
+  /** Boolean describing if all the bulk actions succeeded or not */
+  success: Scalars["Boolean"]["output"];
+};
+
+export type BulkUpsertWhateverUniversityCoursesInput = {
+  course?: InputMaybe<UpsertWhateverUniversityCourseInput>;
+  /** An array of Strings */
+  on?: InputMaybe<Array<Scalars["String"]["input"]>>;
+};
+
+/** The result of a bulk upsert operation for the whatever/university/course model */
+export type BulkUpsertWhateverUniversityCoursesResult = {
+  __typename?: "BulkUpsertWhateverUniversityCoursesResult";
+  /** The results of each upsert action in the bulk operation */
+  courses?: Maybe<Array<Maybe<WhateverUniversityCourse>>>;
+  /** Aggregated list of errors that any bulk action encountered while processing */
+  errors?: Maybe<Array<ExecutionError>>;
+  /** Boolean describing if all the bulk actions succeeded or not */
+  success: Scalars["Boolean"]["output"];
+};
+
+export type BulkUpsertWhateverUniversityProfessorsInput = {
+  /** An array of Strings */
+  on?: InputMaybe<Array<Scalars["String"]["input"]>>;
+  professor?: InputMaybe<UpsertWhateverUniversityProfessorInput>;
+};
+
+/** The result of a bulk upsert operation for the whatever/university/professor model */
+export type BulkUpsertWhateverUniversityProfessorsResult = {
+  __typename?: "BulkUpsertWhateverUniversityProfessorsResult";
+  /** Aggregated list of errors that any bulk action encountered while processing */
+  errors?: Maybe<Array<ExecutionError>>;
+  /** The results of each upsert action in the bulk operation */
+  professors?: Maybe<Array<Maybe<WhateverUniversityProfessor>>>;
+  /** Boolean describing if all the bulk actions succeeded or not */
+  success: Scalars["Boolean"]["output"];
+};
+
+export type BulkUpsertWhateverUniversityRegistrationsInput = {
+  /** An array of Strings */
+  on?: InputMaybe<Array<Scalars["String"]["input"]>>;
+  registration?: InputMaybe<UpsertWhateverUniversityRegistrationInput>;
+};
+
+/** The result of a bulk upsert operation for the whatever/university/registration model */
+export type BulkUpsertWhateverUniversityRegistrationsResult = {
+  __typename?: "BulkUpsertWhateverUniversityRegistrationsResult";
+  /** Aggregated list of errors that any bulk action encountered while processing */
+  errors?: Maybe<Array<ExecutionError>>;
+  /** The results of each upsert action in the bulk operation */
+  registrations?: Maybe<Array<Maybe<WhateverUniversityRegistration>>>;
+  /** Boolean describing if all the bulk actions succeeded or not */
+  success: Scalars["Boolean"]["output"];
+};
+
+export type BulkUpsertWhateverUniversityStudentsInput = {
+  /** An array of Strings */
+  on?: InputMaybe<Array<Scalars["String"]["input"]>>;
+  student?: InputMaybe<UpsertWhateverUniversityStudentInput>;
+};
+
+/** The result of a bulk upsert operation for the whatever/university/student model */
+export type BulkUpsertWhateverUniversityStudentsResult = {
+  __typename?: "BulkUpsertWhateverUniversityStudentsResult";
+  /** Aggregated list of errors that any bulk action encountered while processing */
+  errors?: Maybe<Array<ExecutionError>>;
+  /** The results of each upsert action in the bulk operation */
+  students?: Maybe<Array<Maybe<WhateverUniversityStudent>>>;
+  /** Boolean describing if all the bulk actions succeeded or not */
+  success: Scalars["Boolean"]["output"];
+};
+
 export type BulkUpsertWidgetsInput = {
   /** An array of Strings */
   on?: InputMaybe<Array<Scalars["String"]["input"]>>;
@@ -3864,6 +3795,22 @@ export type BulkUpsertWidgetsResult = {
   success: Scalars["Boolean"]["output"];
   /** The results of each upsert action in the bulk operation */
   widgets?: Maybe<Array<Maybe<Widget>>>;
+};
+
+export type BulkWhateverPartsInput = {
+  id: Scalars["GadgetID"]["input"];
+  part?: InputMaybe<WhateverPartInput>;
+};
+
+/** The output when running the whatever on the part model in bulk. */
+export type BulkWhateverPartsResult = {
+  __typename?: "BulkWhateverPartsResult";
+  /** Aggregated list of errors that any bulk action encountered while processing */
+  errors?: Maybe<Array<ExecutionError>>;
+  /** The list of all changed part records by each sent bulk action. Returned in the same order as the input bulk action params. */
+  parts?: Maybe<Array<Maybe<Part>>>;
+  /** Boolean describing if all the bulk actions succeeded or not */
+  success: Scalars["Boolean"]["output"];
 };
 
 /** Input object supporting setting or updating related model record on a relationship field */
@@ -3929,24 +3876,6 @@ export type ConvergeAssignmentValues = {
 };
 
 /** Declaratively specifies the list of records a relationship should become and invokes the given actions in order to change the current state to get to the newly specified state. */
-export type ConvergeAutoTableTestRelatedModelInput = {
-  /** An optional partial set of action api identifiers to use when creating, updating, and deleting records to converge to the new list. */
-  actions?: InputMaybe<ConvergeActionMap>;
-  /** The new list of records to converge to */
-  values: Array<InputMaybe<ConvergeAutoTableTestRelatedModelValues>>;
-};
-
-/** One element of a ConvergeAutoTableTestRelatedModelInput record converge list */
-export type ConvergeAutoTableTestRelatedModelValues = {
-  belongsToParent?: InputMaybe<AutoTableTestBelongsToInput>;
-  id?: InputMaybe<Scalars["GadgetID"]["input"]>;
-  manyBelongsToParent?: InputMaybe<AutoTableTestBelongsToInput>;
-  name?: InputMaybe<Scalars["String"]["input"]>;
-  someBool?: InputMaybe<Scalars["Boolean"]["input"]>;
-  someNumber?: InputMaybe<Scalars["Float"]["input"]>;
-};
-
-/** Declaratively specifies the list of records a relationship should become and invokes the given actions in order to change the current state to get to the newly specified state. */
 export type ConvergeChildModelInput = {
   /** An optional partial set of action api identifiers to use when creating, updating, and deleting records to converge to the new list. */
   actions?: InputMaybe<ConvergeActionMap>;
@@ -3978,6 +3907,24 @@ export type ConvergeDoodadValues = {
   size?: InputMaybe<Scalars["DoodadSizeEnum"]["input"]>;
   weight?: InputMaybe<Scalars["Float"]["input"]>;
   widget?: InputMaybe<WidgetBelongsToInput>;
+};
+
+/** Declaratively specifies the list of records a relationship should become and invokes the given actions in order to change the current state to get to the newly specified state. */
+export type ConvergeFooInput = {
+  /** An optional partial set of action api identifiers to use when creating, updating, and deleting records to converge to the new list. */
+  actions?: InputMaybe<ConvergeActionMap>;
+  /** The new list of records to converge to */
+  values: Array<InputMaybe<ConvergeFooValues>>;
+};
+
+/** One element of a ConvergeFooInput record converge list */
+export type ConvergeFooValues = {
+  belongsToParent?: InputMaybe<AutoTableTestBelongsToInput>;
+  id?: InputMaybe<Scalars["GadgetID"]["input"]>;
+  manyBelongsToParent?: InputMaybe<AutoTableTestBelongsToInput>;
+  name?: InputMaybe<Scalars["String"]["input"]>;
+  someBool?: InputMaybe<Scalars["Boolean"]["input"]>;
+  someNumber?: InputMaybe<Scalars["Float"]["input"]>;
 };
 
 /** Declaratively specifies the list of records a relationship should become and invokes the given actions in order to change the current state to get to the newly specified state. */
@@ -4149,8 +4096,8 @@ export type CreateAutoTableTestInput = {
   enum?: InputMaybe<Array<Scalars["AutoTableTestEnumEnum"]["input"]>>;
   es?: InputMaybe<Scalars["String"]["input"]>;
   file?: InputMaybe<StoredFileInput>;
-  hasMany?: InputMaybe<Array<InputMaybe<AutoTableTestRelatedModelHasManyInput>>>;
-  hasOne?: InputMaybe<AutoTableTestRelatedModelHasOneInput>;
+  hasMany?: InputMaybe<Array<InputMaybe<FooHasManyInput>>>;
+  hasOne?: InputMaybe<FooHasOneInput>;
   json?: InputMaybe<Scalars["JSON"]["input"]>;
   num?: InputMaybe<Scalars["Float"]["input"]>;
   pwd?: InputMaybe<Scalars["String"]["input"]>;
@@ -4160,22 +4107,6 @@ export type CreateAutoTableTestInput = {
   str?: InputMaybe<Scalars["String"]["input"]>;
   url?: InputMaybe<Scalars["String"]["input"]>;
   vect?: InputMaybe<Array<Scalars["Float"]["input"]>>;
-};
-
-export type CreateAutoTableTestRelatedModelInput = {
-  belongsToParent?: InputMaybe<AutoTableTestBelongsToInput>;
-  manyBelongsToParent?: InputMaybe<AutoTableTestBelongsToInput>;
-  name?: InputMaybe<Scalars["String"]["input"]>;
-  someBool?: InputMaybe<Scalars["Boolean"]["input"]>;
-  someNumber?: InputMaybe<Scalars["Float"]["input"]>;
-};
-
-export type CreateAutoTableTestRelatedModelResult = UpsertAutoTableTestRelatedModelResult & {
-  __typename?: "CreateAutoTableTestRelatedModelResult";
-  _autoTableTestRelatedModel?: Maybe<AutoTableTestRelatedModel>;
-  actionRun?: Maybe<Scalars["String"]["output"]>;
-  errors?: Maybe<Array<ExecutionError>>;
-  success: Scalars["Boolean"]["output"];
 };
 
 export type CreateAutoTableTestResult = UpsertAutoTableTestResult & {
@@ -4200,6 +4131,22 @@ export type CreateDoodadResult = UpsertDoodadResult & {
   actionRun?: Maybe<Scalars["String"]["output"]>;
   doodad?: Maybe<Doodad>;
   errors?: Maybe<Array<ExecutionError>>;
+  success: Scalars["Boolean"]["output"];
+};
+
+export type CreateFooInput = {
+  belongsToParent?: InputMaybe<AutoTableTestBelongsToInput>;
+  manyBelongsToParent?: InputMaybe<AutoTableTestBelongsToInput>;
+  name?: InputMaybe<Scalars["String"]["input"]>;
+  someBool?: InputMaybe<Scalars["Boolean"]["input"]>;
+  someNumber?: InputMaybe<Scalars["Float"]["input"]>;
+};
+
+export type CreateFooResult = UpsertFooResult & {
+  __typename?: "CreateFooResult";
+  actionRun?: Maybe<Scalars["String"]["output"]>;
+  errors?: Maybe<Array<ExecutionError>>;
+  foo?: Maybe<Foo>;
   success: Scalars["Boolean"]["output"];
 };
 
@@ -4476,20 +4423,20 @@ export type CreateUniqueFieldsParentModelResult = UpsertUniqueFieldsParentModelR
   success: Scalars["Boolean"]["output"];
 };
 
-export type CreateUniversityAssignmentInput = {
+export type CreateWhateverUniversityAssignmentInput = {
   course?: InputMaybe<CourseBelongsToInput>;
   professor?: InputMaybe<ProfessorBelongsToInput>;
 };
 
-export type CreateUniversityAssignmentResult = UpsertUniversityAssignmentResult & {
-  __typename?: "CreateUniversityAssignmentResult";
+export type CreateWhateverUniversityAssignmentResult = UpsertWhateverUniversityAssignmentResult & {
+  __typename?: "CreateWhateverUniversityAssignmentResult";
   actionRun?: Maybe<Scalars["String"]["output"]>;
-  assignment?: Maybe<UniversityAssignment>;
+  assignment?: Maybe<WhateverUniversityAssignment>;
   errors?: Maybe<Array<ExecutionError>>;
   success: Scalars["Boolean"]["output"];
 };
 
-export type CreateUniversityCourseInput = {
+export type CreateWhateverUniversityCourseInput = {
   assignments?: InputMaybe<Array<InputMaybe<AssignmentHasManyInput>>>;
   description?: InputMaybe<RichTextInput>;
   professors?: InputMaybe<Array<InputMaybe<ProfessorHasManyThroughInput>>>;
@@ -4498,15 +4445,15 @@ export type CreateUniversityCourseInput = {
   title?: InputMaybe<Scalars["String"]["input"]>;
 };
 
-export type CreateUniversityCourseResult = UpsertUniversityCourseResult & {
-  __typename?: "CreateUniversityCourseResult";
+export type CreateWhateverUniversityCourseResult = UpsertWhateverUniversityCourseResult & {
+  __typename?: "CreateWhateverUniversityCourseResult";
   actionRun?: Maybe<Scalars["String"]["output"]>;
-  course?: Maybe<UniversityCourse>;
+  course?: Maybe<WhateverUniversityCourse>;
   errors?: Maybe<Array<ExecutionError>>;
   success: Scalars["Boolean"]["output"];
 };
 
-export type CreateUniversityProfessorInput = {
+export type CreateWhateverUniversityProfessorInput = {
   assignments?: InputMaybe<Array<InputMaybe<AssignmentHasManyInput>>>;
   courses?: InputMaybe<Array<InputMaybe<CourseHasManyThroughInput>>>;
   firstName?: InputMaybe<Scalars["String"]["input"]>;
@@ -4514,30 +4461,30 @@ export type CreateUniversityProfessorInput = {
   title?: InputMaybe<Scalars["ProfessorTitleEnum"]["input"]>;
 };
 
-export type CreateUniversityProfessorResult = UpsertUniversityProfessorResult & {
-  __typename?: "CreateUniversityProfessorResult";
+export type CreateWhateverUniversityProfessorResult = UpsertWhateverUniversityProfessorResult & {
+  __typename?: "CreateWhateverUniversityProfessorResult";
   actionRun?: Maybe<Scalars["String"]["output"]>;
   errors?: Maybe<Array<ExecutionError>>;
-  professor?: Maybe<UniversityProfessor>;
+  professor?: Maybe<WhateverUniversityProfessor>;
   success: Scalars["Boolean"]["output"];
 };
 
-export type CreateUniversityRegistrationInput = {
+export type CreateWhateverUniversityRegistrationInput = {
   course?: InputMaybe<CourseBelongsToInput>;
   effectiveFrom?: InputMaybe<Scalars["DateOrDateTime"]["input"]>;
   effectiveTo?: InputMaybe<Scalars["DateOrDateTime"]["input"]>;
   student?: InputMaybe<StudentBelongsToInput>;
 };
 
-export type CreateUniversityRegistrationResult = UpsertUniversityRegistrationResult & {
-  __typename?: "CreateUniversityRegistrationResult";
+export type CreateWhateverUniversityRegistrationResult = UpsertWhateverUniversityRegistrationResult & {
+  __typename?: "CreateWhateverUniversityRegistrationResult";
   actionRun?: Maybe<Scalars["String"]["output"]>;
   errors?: Maybe<Array<ExecutionError>>;
-  registration?: Maybe<UniversityRegistration>;
+  registration?: Maybe<WhateverUniversityRegistration>;
   success: Scalars["Boolean"]["output"];
 };
 
-export type CreateUniversityStudentInput = {
+export type CreateWhateverUniversityStudentInput = {
   courses?: InputMaybe<Array<InputMaybe<CourseHasManyThroughInput>>>;
   department?: InputMaybe<Scalars["StudentDepartmentEnum"]["input"]>;
   firstName?: InputMaybe<Scalars["String"]["input"]>;
@@ -4546,11 +4493,11 @@ export type CreateUniversityStudentInput = {
   year?: InputMaybe<Scalars["Int"]["input"]>;
 };
 
-export type CreateUniversityStudentResult = UpsertUniversityStudentResult & {
-  __typename?: "CreateUniversityStudentResult";
+export type CreateWhateverUniversityStudentResult = UpsertWhateverUniversityStudentResult & {
+  __typename?: "CreateWhateverUniversityStudentResult";
   actionRun?: Maybe<Scalars["String"]["output"]>;
   errors?: Maybe<Array<ExecutionError>>;
-  student?: Maybe<UniversityStudent>;
+  student?: Maybe<WhateverUniversityStudent>;
   success: Scalars["Boolean"]["output"];
 };
 
@@ -4686,13 +4633,6 @@ export type DateTimeFilter = {
   notIn?: InputMaybe<Array<InputMaybe<Scalars["DateTime"]["input"]>>>;
 };
 
-export type DeleteAutoTableTestRelatedModelResult = {
-  __typename?: "DeleteAutoTableTestRelatedModelResult";
-  actionRun?: Maybe<Scalars["String"]["output"]>;
-  errors?: Maybe<Array<ExecutionError>>;
-  success: Scalars["Boolean"]["output"];
-};
-
 export type DeleteAutoTableTestResult = {
   __typename?: "DeleteAutoTableTestResult";
   actionRun?: Maybe<Scalars["String"]["output"]>;
@@ -4702,6 +4642,13 @@ export type DeleteAutoTableTestResult = {
 
 export type DeleteDoodadResult = {
   __typename?: "DeleteDoodadResult";
+  actionRun?: Maybe<Scalars["String"]["output"]>;
+  errors?: Maybe<Array<ExecutionError>>;
+  success: Scalars["Boolean"]["output"];
+};
+
+export type DeleteFooResult = {
+  __typename?: "DeleteFooResult";
   actionRun?: Maybe<Scalars["String"]["output"]>;
   errors?: Maybe<Array<ExecutionError>>;
   success: Scalars["Boolean"]["output"];
@@ -4847,43 +4794,43 @@ export type DeleteUniqueFieldsParentModelResult = {
   success: Scalars["Boolean"]["output"];
 };
 
-export type DeleteUniversityAssignmentResult = {
-  __typename?: "DeleteUniversityAssignmentResult";
-  actionRun?: Maybe<Scalars["String"]["output"]>;
-  errors?: Maybe<Array<ExecutionError>>;
-  success: Scalars["Boolean"]["output"];
-};
-
-export type DeleteUniversityCourseResult = {
-  __typename?: "DeleteUniversityCourseResult";
-  actionRun?: Maybe<Scalars["String"]["output"]>;
-  errors?: Maybe<Array<ExecutionError>>;
-  success: Scalars["Boolean"]["output"];
-};
-
-export type DeleteUniversityProfessorResult = {
-  __typename?: "DeleteUniversityProfessorResult";
-  actionRun?: Maybe<Scalars["String"]["output"]>;
-  errors?: Maybe<Array<ExecutionError>>;
-  success: Scalars["Boolean"]["output"];
-};
-
-export type DeleteUniversityRegistrationResult = {
-  __typename?: "DeleteUniversityRegistrationResult";
-  actionRun?: Maybe<Scalars["String"]["output"]>;
-  errors?: Maybe<Array<ExecutionError>>;
-  success: Scalars["Boolean"]["output"];
-};
-
-export type DeleteUniversityStudentResult = {
-  __typename?: "DeleteUniversityStudentResult";
-  actionRun?: Maybe<Scalars["String"]["output"]>;
-  errors?: Maybe<Array<ExecutionError>>;
-  success: Scalars["Boolean"]["output"];
-};
-
 export type DeleteUserResult = {
   __typename?: "DeleteUserResult";
+  actionRun?: Maybe<Scalars["String"]["output"]>;
+  errors?: Maybe<Array<ExecutionError>>;
+  success: Scalars["Boolean"]["output"];
+};
+
+export type DeleteWhateverUniversityAssignmentResult = {
+  __typename?: "DeleteWhateverUniversityAssignmentResult";
+  actionRun?: Maybe<Scalars["String"]["output"]>;
+  errors?: Maybe<Array<ExecutionError>>;
+  success: Scalars["Boolean"]["output"];
+};
+
+export type DeleteWhateverUniversityCourseResult = {
+  __typename?: "DeleteWhateverUniversityCourseResult";
+  actionRun?: Maybe<Scalars["String"]["output"]>;
+  errors?: Maybe<Array<ExecutionError>>;
+  success: Scalars["Boolean"]["output"];
+};
+
+export type DeleteWhateverUniversityProfessorResult = {
+  __typename?: "DeleteWhateverUniversityProfessorResult";
+  actionRun?: Maybe<Scalars["String"]["output"]>;
+  errors?: Maybe<Array<ExecutionError>>;
+  success: Scalars["Boolean"]["output"];
+};
+
+export type DeleteWhateverUniversityRegistrationResult = {
+  __typename?: "DeleteWhateverUniversityRegistrationResult";
+  actionRun?: Maybe<Scalars["String"]["output"]>;
+  errors?: Maybe<Array<ExecutionError>>;
+  success: Scalars["Boolean"]["output"];
+};
+
+export type DeleteWhateverUniversityStudentResult = {
+  __typename?: "DeleteWhateverUniversityStudentResult";
   actionRun?: Maybe<Scalars["String"]["output"]>;
   errors?: Maybe<Array<ExecutionError>>;
   success: Scalars["Boolean"]["output"];
@@ -5062,6 +5009,94 @@ export type FloatFilter = {
   lessThanOrEqual?: InputMaybe<Scalars["Float"]["input"]>;
   notEquals?: InputMaybe<Scalars["Float"]["input"]>;
   notIn?: InputMaybe<Array<InputMaybe<Scalars["Float"]["input"]>>>;
+};
+
+export type Foo = {
+  __typename?: "Foo";
+  /** Get all the fields for this record. Useful for not having to list out all the fields you want to retrieve, but slower. */
+  _all: Scalars["JSONObject"]["output"];
+  belongsToParent?: Maybe<AutoTableTest>;
+  belongsToParentId?: Maybe<Scalars["GadgetID"]["output"]>;
+  /** The time at which this record was first created. Set once upon record creation and never changed. Managed by Gadget. */
+  createdAt: Scalars["DateTime"]["output"];
+  /** The globally unique, unchanging identifier for this record. Assigned and managed by Gadget. */
+  id: Scalars["GadgetID"]["output"];
+  manyBelongsToParent?: Maybe<AutoTableTest>;
+  manyBelongsToParentId?: Maybe<Scalars["GadgetID"]["output"]>;
+  name?: Maybe<Scalars["String"]["output"]>;
+  someBool?: Maybe<Scalars["Boolean"]["output"]>;
+  someNumber?: Maybe<Scalars["Float"]["output"]>;
+  /** The time at which this record was last changed. Set each time the record is successfully acted upon by an action. Managed by Gadget. */
+  updatedAt: Scalars["DateTime"]["output"];
+};
+
+/** A connection to a list of Foo items. */
+export type FooConnection = {
+  __typename?: "FooConnection";
+  /** A list of edges. */
+  edges: Array<FooEdge>;
+  /** Information to aid in pagination. */
+  pageInfo: PageInfo;
+};
+
+/** An edge in a Foo connection. */
+export type FooEdge = {
+  __typename?: "FooEdge";
+  /** A cursor for use in pagination */
+  cursor: Scalars["String"]["output"];
+  /** The item at the end of the edge */
+  node: Foo;
+};
+
+export type FooFilter = {
+  AND?: InputMaybe<Array<InputMaybe<FooFilter>>>;
+  NOT?: InputMaybe<Array<InputMaybe<FooFilter>>>;
+  OR?: InputMaybe<Array<InputMaybe<FooFilter>>>;
+  belongsToParent?: InputMaybe<IdFilter>;
+  belongsToParentId?: InputMaybe<IdFilter>;
+  createdAt?: InputMaybe<DateTimeFilter>;
+  id?: InputMaybe<IdFilter>;
+  manyBelongsToParent?: InputMaybe<IdFilter>;
+  manyBelongsToParentId?: InputMaybe<IdFilter>;
+  name?: InputMaybe<StringFilter>;
+  someBool?: InputMaybe<BooleanFilter>;
+  someNumber?: InputMaybe<FloatFilter>;
+  updatedAt?: InputMaybe<DateTimeFilter>;
+};
+
+/** Input object supporting setting or updating related model record on a relationship field */
+export type FooHasManyInput = {
+  /** Creates, updates, or deletes existing records in the database as needed to arrive at the list of records specified. */
+  _converge?: InputMaybe<ConvergeFooInput>;
+  create?: InputMaybe<NestedFooCreateInput>;
+  delete?: InputMaybe<NestedFooDeleteInput>;
+  update?: InputMaybe<NestedFooUpdateInput>;
+};
+
+/** Input object supporting setting or updating related model record on a relationship field */
+export type FooHasOneInput = {
+  /** Existing ID of another record, which you would like to relink to this record */
+  _relink?: InputMaybe<HasOneRelinkInput>;
+  /** Existing ID of another record, which you would like to unlink from this record */
+  _unlink?: InputMaybe<Scalars["GadgetID"]["input"]>;
+  create?: InputMaybe<NestedFooCreateInput>;
+  delete?: InputMaybe<NestedFooDeleteInput>;
+  update?: InputMaybe<NestedFooUpdateInput>;
+};
+
+export type FooSort = {
+  /** Sort the results by the createdAt field. Defaults to ascending (smallest value first). */
+  createdAt?: InputMaybe<SortOrder>;
+  /** Sort the results by the id field. Defaults to ascending (smallest value first). */
+  id?: InputMaybe<SortOrder>;
+  /** Sort the results by the name field. Defaults to ascending (smallest value first). */
+  name?: InputMaybe<SortOrder>;
+  /** Sort the results by the someBool field. Defaults to ascending (smallest value first). */
+  someBool?: InputMaybe<SortOrder>;
+  /** Sort the results by the someNumber field. Defaults to ascending (smallest value first). */
+  someNumber?: InputMaybe<SortOrder>;
+  /** Sort the results by the updatedAt field. Defaults to ascending (smallest value first). */
+  updatedAt?: InputMaybe<SortOrder>;
 };
 
 export type Friendship = {
@@ -6637,55 +6672,10 @@ export type InternalAutoTableTestRecordEdge = {
   node: Scalars["InternalAutoTableTestRecord"]["output"];
 };
 
-export type InternalAutoTableTestRelatedModelAtomicsInput = {
-  /** Numeric atomic commands for operating on someNumber. */
-  someNumber?: InputMaybe<Array<NumericAtomicFieldUpdateInput>>;
-};
-
-export type InternalAutoTableTestRelatedModelInput = {
-  /** An optional list of atomically applied commands for race-safe mutations of the record */
-  _atomics?: InputMaybe<InternalAutoTableTestRelatedModelAtomicsInput>;
-  belongsToParent?: InputMaybe<InternalBelongsToInput>;
-  createdAt?: InputMaybe<Scalars["DateTime"]["input"]>;
-  id?: InputMaybe<Scalars["GadgetID"]["input"]>;
-  manyBelongsToParent?: InputMaybe<InternalBelongsToInput>;
-  name?: InputMaybe<Scalars["String"]["input"]>;
-  someBool?: InputMaybe<Scalars["Boolean"]["input"]>;
-  someNumber?: InputMaybe<Scalars["Float"]["input"]>;
-  state?: InputMaybe<Scalars["RecordState"]["input"]>;
-  stateHistory?: InputMaybe<Scalars["RecordState"]["input"]>;
-  updatedAt?: InputMaybe<Scalars["DateTime"]["input"]>;
-};
-
-/** A connection to a list of InternalAutoTableTestRelatedModelRecord items. */
-export type InternalAutoTableTestRelatedModelRecordConnection = {
-  __typename?: "InternalAutoTableTestRelatedModelRecordConnection";
-  /** A list of edges. */
-  edges: Array<InternalAutoTableTestRelatedModelRecordEdge>;
-  /** Information to aid in pagination. */
-  pageInfo: PageInfo;
-};
-
-/** An edge in a InternalAutoTableTestRelatedModelRecord connection. */
-export type InternalAutoTableTestRelatedModelRecordEdge = {
-  __typename?: "InternalAutoTableTestRelatedModelRecordEdge";
-  /** A cursor for use in pagination */
-  cursor: Scalars["String"]["output"];
-  /** The item at the end of the edge */
-  node: Scalars["InternalAutoTableTestRelatedModelRecord"]["output"];
-};
-
 /** Input object to set the link between this field and the model it belongs to */
 export type InternalBelongsToInput = {
   /** Existing ID of another record, which you would like to associate this record with */
   _link?: InputMaybe<Scalars["GadgetID"]["input"]>;
-};
-
-export type InternalBulkCreateAutoTableTestRelatedModelsResult = {
-  __typename?: "InternalBulkCreateAutoTableTestRelatedModelsResult";
-  _autoTableTestRelatedModels?: Maybe<Array<Maybe<Scalars["InternalAutoTableTestRelatedModelRecord"]["output"]>>>;
-  errors?: Maybe<Array<ExecutionError>>;
-  success: Scalars["Boolean"]["output"];
 };
 
 export type InternalBulkCreateAutoTableTestsResult = {
@@ -6699,6 +6689,13 @@ export type InternalBulkCreateDoodadsResult = {
   __typename?: "InternalBulkCreateDoodadsResult";
   doodads?: Maybe<Array<Maybe<Scalars["InternalDoodadRecord"]["output"]>>>;
   errors?: Maybe<Array<ExecutionError>>;
+  success: Scalars["Boolean"]["output"];
+};
+
+export type InternalBulkCreateFoosResult = {
+  __typename?: "InternalBulkCreateFoosResult";
+  errors?: Maybe<Array<ExecutionError>>;
+  foos?: Maybe<Array<Maybe<Scalars["InternalFooRecord"]["output"]>>>;
   success: Scalars["Boolean"]["output"];
 };
 
@@ -6870,41 +6867,6 @@ export type InternalBulkCreateUniqueFieldsParentModelsResult = {
   success: Scalars["Boolean"]["output"];
 };
 
-export type InternalBulkCreateUniversityAssignmentsResult = {
-  __typename?: "InternalBulkCreateUniversityAssignmentsResult";
-  assignments?: Maybe<Array<Maybe<Scalars["InternalUniversityAssignmentRecord"]["output"]>>>;
-  errors?: Maybe<Array<ExecutionError>>;
-  success: Scalars["Boolean"]["output"];
-};
-
-export type InternalBulkCreateUniversityCoursesResult = {
-  __typename?: "InternalBulkCreateUniversityCoursesResult";
-  courses?: Maybe<Array<Maybe<Scalars["InternalUniversityCourseRecord"]["output"]>>>;
-  errors?: Maybe<Array<ExecutionError>>;
-  success: Scalars["Boolean"]["output"];
-};
-
-export type InternalBulkCreateUniversityProfessorsResult = {
-  __typename?: "InternalBulkCreateUniversityProfessorsResult";
-  errors?: Maybe<Array<ExecutionError>>;
-  professors?: Maybe<Array<Maybe<Scalars["InternalUniversityProfessorRecord"]["output"]>>>;
-  success: Scalars["Boolean"]["output"];
-};
-
-export type InternalBulkCreateUniversityRegistrationsResult = {
-  __typename?: "InternalBulkCreateUniversityRegistrationsResult";
-  errors?: Maybe<Array<ExecutionError>>;
-  registrations?: Maybe<Array<Maybe<Scalars["InternalUniversityRegistrationRecord"]["output"]>>>;
-  success: Scalars["Boolean"]["output"];
-};
-
-export type InternalBulkCreateUniversityStudentsResult = {
-  __typename?: "InternalBulkCreateUniversityStudentsResult";
-  errors?: Maybe<Array<ExecutionError>>;
-  students?: Maybe<Array<Maybe<Scalars["InternalUniversityStudentRecord"]["output"]>>>;
-  success: Scalars["Boolean"]["output"];
-};
-
 export type InternalBulkCreateUsersResult = {
   __typename?: "InternalBulkCreateUsersResult";
   errors?: Maybe<Array<ExecutionError>>;
@@ -6912,20 +6874,46 @@ export type InternalBulkCreateUsersResult = {
   users?: Maybe<Array<Maybe<Scalars["InternalUserRecord"]["output"]>>>;
 };
 
+export type InternalBulkCreateWhateverUniversityAssignmentsResult = {
+  __typename?: "InternalBulkCreateWhateverUniversityAssignmentsResult";
+  assignments?: Maybe<Array<Maybe<Scalars["InternalWhateverUniversityAssignmentRecord"]["output"]>>>;
+  errors?: Maybe<Array<ExecutionError>>;
+  success: Scalars["Boolean"]["output"];
+};
+
+export type InternalBulkCreateWhateverUniversityCoursesResult = {
+  __typename?: "InternalBulkCreateWhateverUniversityCoursesResult";
+  courses?: Maybe<Array<Maybe<Scalars["InternalWhateverUniversityCourseRecord"]["output"]>>>;
+  errors?: Maybe<Array<ExecutionError>>;
+  success: Scalars["Boolean"]["output"];
+};
+
+export type InternalBulkCreateWhateverUniversityProfessorsResult = {
+  __typename?: "InternalBulkCreateWhateverUniversityProfessorsResult";
+  errors?: Maybe<Array<ExecutionError>>;
+  professors?: Maybe<Array<Maybe<Scalars["InternalWhateverUniversityProfessorRecord"]["output"]>>>;
+  success: Scalars["Boolean"]["output"];
+};
+
+export type InternalBulkCreateWhateverUniversityRegistrationsResult = {
+  __typename?: "InternalBulkCreateWhateverUniversityRegistrationsResult";
+  errors?: Maybe<Array<ExecutionError>>;
+  registrations?: Maybe<Array<Maybe<Scalars["InternalWhateverUniversityRegistrationRecord"]["output"]>>>;
+  success: Scalars["Boolean"]["output"];
+};
+
+export type InternalBulkCreateWhateverUniversityStudentsResult = {
+  __typename?: "InternalBulkCreateWhateverUniversityStudentsResult";
+  errors?: Maybe<Array<ExecutionError>>;
+  students?: Maybe<Array<Maybe<Scalars["InternalWhateverUniversityStudentRecord"]["output"]>>>;
+  success: Scalars["Boolean"]["output"];
+};
+
 export type InternalBulkCreateWidgetsResult = {
   __typename?: "InternalBulkCreateWidgetsResult";
   errors?: Maybe<Array<ExecutionError>>;
   success: Scalars["Boolean"]["output"];
   widgets?: Maybe<Array<Maybe<Scalars["InternalWidgetRecord"]["output"]>>>;
-};
-
-export type InternalCreateAutoTableTestRelatedModelResult = {
-  __typename?: "InternalCreateAutoTableTestRelatedModelResult";
-  _autoTableTestRelatedModel?: Maybe<Scalars["InternalAutoTableTestRelatedModelRecord"]["output"]>;
-  /** Whether the record was created by this upsert operation */
-  created: Scalars["Boolean"]["output"];
-  errors?: Maybe<Array<ExecutionError>>;
-  success: Scalars["Boolean"]["output"];
 };
 
 export type InternalCreateAutoTableTestResult = {
@@ -6943,6 +6931,15 @@ export type InternalCreateDoodadResult = {
   created: Scalars["Boolean"]["output"];
   doodad?: Maybe<Scalars["InternalDoodadRecord"]["output"]>;
   errors?: Maybe<Array<ExecutionError>>;
+  success: Scalars["Boolean"]["output"];
+};
+
+export type InternalCreateFooResult = {
+  __typename?: "InternalCreateFooResult";
+  /** Whether the record was created by this upsert operation */
+  created: Scalars["Boolean"]["output"];
+  errors?: Maybe<Array<ExecutionError>>;
+  foo?: Maybe<Scalars["InternalFooRecord"]["output"]>;
   success: Scalars["Boolean"]["output"];
 };
 
@@ -7162,51 +7159,6 @@ export type InternalCreateUniqueFieldsParentModelResult = {
   success: Scalars["Boolean"]["output"];
 };
 
-export type InternalCreateUniversityAssignmentResult = {
-  __typename?: "InternalCreateUniversityAssignmentResult";
-  assignment?: Maybe<Scalars["InternalUniversityAssignmentRecord"]["output"]>;
-  /** Whether the record was created by this upsert operation */
-  created: Scalars["Boolean"]["output"];
-  errors?: Maybe<Array<ExecutionError>>;
-  success: Scalars["Boolean"]["output"];
-};
-
-export type InternalCreateUniversityCourseResult = {
-  __typename?: "InternalCreateUniversityCourseResult";
-  course?: Maybe<Scalars["InternalUniversityCourseRecord"]["output"]>;
-  /** Whether the record was created by this upsert operation */
-  created: Scalars["Boolean"]["output"];
-  errors?: Maybe<Array<ExecutionError>>;
-  success: Scalars["Boolean"]["output"];
-};
-
-export type InternalCreateUniversityProfessorResult = {
-  __typename?: "InternalCreateUniversityProfessorResult";
-  /** Whether the record was created by this upsert operation */
-  created: Scalars["Boolean"]["output"];
-  errors?: Maybe<Array<ExecutionError>>;
-  professor?: Maybe<Scalars["InternalUniversityProfessorRecord"]["output"]>;
-  success: Scalars["Boolean"]["output"];
-};
-
-export type InternalCreateUniversityRegistrationResult = {
-  __typename?: "InternalCreateUniversityRegistrationResult";
-  /** Whether the record was created by this upsert operation */
-  created: Scalars["Boolean"]["output"];
-  errors?: Maybe<Array<ExecutionError>>;
-  registration?: Maybe<Scalars["InternalUniversityRegistrationRecord"]["output"]>;
-  success: Scalars["Boolean"]["output"];
-};
-
-export type InternalCreateUniversityStudentResult = {
-  __typename?: "InternalCreateUniversityStudentResult";
-  /** Whether the record was created by this upsert operation */
-  created: Scalars["Boolean"]["output"];
-  errors?: Maybe<Array<ExecutionError>>;
-  student?: Maybe<Scalars["InternalUniversityStudentRecord"]["output"]>;
-  success: Scalars["Boolean"]["output"];
-};
-
 export type InternalCreateUserResult = {
   __typename?: "InternalCreateUserResult";
   /** Whether the record was created by this upsert operation */
@@ -7216,6 +7168,51 @@ export type InternalCreateUserResult = {
   user?: Maybe<Scalars["InternalUserRecord"]["output"]>;
 };
 
+export type InternalCreateWhateverUniversityAssignmentResult = {
+  __typename?: "InternalCreateWhateverUniversityAssignmentResult";
+  assignment?: Maybe<Scalars["InternalWhateverUniversityAssignmentRecord"]["output"]>;
+  /** Whether the record was created by this upsert operation */
+  created: Scalars["Boolean"]["output"];
+  errors?: Maybe<Array<ExecutionError>>;
+  success: Scalars["Boolean"]["output"];
+};
+
+export type InternalCreateWhateverUniversityCourseResult = {
+  __typename?: "InternalCreateWhateverUniversityCourseResult";
+  course?: Maybe<Scalars["InternalWhateverUniversityCourseRecord"]["output"]>;
+  /** Whether the record was created by this upsert operation */
+  created: Scalars["Boolean"]["output"];
+  errors?: Maybe<Array<ExecutionError>>;
+  success: Scalars["Boolean"]["output"];
+};
+
+export type InternalCreateWhateverUniversityProfessorResult = {
+  __typename?: "InternalCreateWhateverUniversityProfessorResult";
+  /** Whether the record was created by this upsert operation */
+  created: Scalars["Boolean"]["output"];
+  errors?: Maybe<Array<ExecutionError>>;
+  professor?: Maybe<Scalars["InternalWhateverUniversityProfessorRecord"]["output"]>;
+  success: Scalars["Boolean"]["output"];
+};
+
+export type InternalCreateWhateverUniversityRegistrationResult = {
+  __typename?: "InternalCreateWhateverUniversityRegistrationResult";
+  /** Whether the record was created by this upsert operation */
+  created: Scalars["Boolean"]["output"];
+  errors?: Maybe<Array<ExecutionError>>;
+  registration?: Maybe<Scalars["InternalWhateverUniversityRegistrationRecord"]["output"]>;
+  success: Scalars["Boolean"]["output"];
+};
+
+export type InternalCreateWhateverUniversityStudentResult = {
+  __typename?: "InternalCreateWhateverUniversityStudentResult";
+  /** Whether the record was created by this upsert operation */
+  created: Scalars["Boolean"]["output"];
+  errors?: Maybe<Array<ExecutionError>>;
+  student?: Maybe<Scalars["InternalWhateverUniversityStudentRecord"]["output"]>;
+  success: Scalars["Boolean"]["output"];
+};
+
 export type InternalCreateWidgetResult = {
   __typename?: "InternalCreateWidgetResult";
   /** Whether the record was created by this upsert operation */
@@ -7223,15 +7220,6 @@ export type InternalCreateWidgetResult = {
   errors?: Maybe<Array<ExecutionError>>;
   success: Scalars["Boolean"]["output"];
   widget?: Maybe<Scalars["InternalWidgetRecord"]["output"]>;
-};
-
-export type InternalDeleteAutoTableTestRelatedModelResult = {
-  __typename?: "InternalDeleteAutoTableTestRelatedModelResult";
-  _autoTableTestRelatedModel?: Maybe<Scalars["InternalAutoTableTestRelatedModelRecord"]["output"]>;
-  /** Whether the record was created by this upsert operation */
-  created: Scalars["Boolean"]["output"];
-  errors?: Maybe<Array<ExecutionError>>;
-  success: Scalars["Boolean"]["output"];
 };
 
 export type InternalDeleteAutoTableTestResult = {
@@ -7249,6 +7237,15 @@ export type InternalDeleteDoodadResult = {
   created: Scalars["Boolean"]["output"];
   doodad?: Maybe<Scalars["InternalDoodadRecord"]["output"]>;
   errors?: Maybe<Array<ExecutionError>>;
+  success: Scalars["Boolean"]["output"];
+};
+
+export type InternalDeleteFooResult = {
+  __typename?: "InternalDeleteFooResult";
+  /** Whether the record was created by this upsert operation */
+  created: Scalars["Boolean"]["output"];
+  errors?: Maybe<Array<ExecutionError>>;
+  foo?: Maybe<Scalars["InternalFooRecord"]["output"]>;
   success: Scalars["Boolean"]["output"];
 };
 
@@ -7333,12 +7330,6 @@ export type InternalDeleteHasManyThroughSiblingModelResult = {
   success: Scalars["Boolean"]["output"];
 };
 
-export type InternalDeleteManyAutoTableTestRelatedModelResult = {
-  __typename?: "InternalDeleteManyAutoTableTestRelatedModelResult";
-  errors?: Maybe<Array<ExecutionError>>;
-  success: Scalars["Boolean"]["output"];
-};
-
 export type InternalDeleteManyAutoTableTestResult = {
   __typename?: "InternalDeleteManyAutoTableTestResult";
   errors?: Maybe<Array<ExecutionError>>;
@@ -7347,6 +7338,12 @@ export type InternalDeleteManyAutoTableTestResult = {
 
 export type InternalDeleteManyDoodadResult = {
   __typename?: "InternalDeleteManyDoodadResult";
+  errors?: Maybe<Array<ExecutionError>>;
+  success: Scalars["Boolean"]["output"];
+};
+
+export type InternalDeleteManyFooResult = {
+  __typename?: "InternalDeleteManyFooResult";
   errors?: Maybe<Array<ExecutionError>>;
   success: Scalars["Boolean"]["output"];
 };
@@ -7495,38 +7492,38 @@ export type InternalDeleteManyUniqueFieldsParentModelResult = {
   success: Scalars["Boolean"]["output"];
 };
 
-export type InternalDeleteManyUniversityAssignmentResult = {
-  __typename?: "InternalDeleteManyUniversityAssignmentResult";
-  errors?: Maybe<Array<ExecutionError>>;
-  success: Scalars["Boolean"]["output"];
-};
-
-export type InternalDeleteManyUniversityCourseResult = {
-  __typename?: "InternalDeleteManyUniversityCourseResult";
-  errors?: Maybe<Array<ExecutionError>>;
-  success: Scalars["Boolean"]["output"];
-};
-
-export type InternalDeleteManyUniversityProfessorResult = {
-  __typename?: "InternalDeleteManyUniversityProfessorResult";
-  errors?: Maybe<Array<ExecutionError>>;
-  success: Scalars["Boolean"]["output"];
-};
-
-export type InternalDeleteManyUniversityRegistrationResult = {
-  __typename?: "InternalDeleteManyUniversityRegistrationResult";
-  errors?: Maybe<Array<ExecutionError>>;
-  success: Scalars["Boolean"]["output"];
-};
-
-export type InternalDeleteManyUniversityStudentResult = {
-  __typename?: "InternalDeleteManyUniversityStudentResult";
-  errors?: Maybe<Array<ExecutionError>>;
-  success: Scalars["Boolean"]["output"];
-};
-
 export type InternalDeleteManyUserResult = {
   __typename?: "InternalDeleteManyUserResult";
+  errors?: Maybe<Array<ExecutionError>>;
+  success: Scalars["Boolean"]["output"];
+};
+
+export type InternalDeleteManyWhateverUniversityAssignmentResult = {
+  __typename?: "InternalDeleteManyWhateverUniversityAssignmentResult";
+  errors?: Maybe<Array<ExecutionError>>;
+  success: Scalars["Boolean"]["output"];
+};
+
+export type InternalDeleteManyWhateverUniversityCourseResult = {
+  __typename?: "InternalDeleteManyWhateverUniversityCourseResult";
+  errors?: Maybe<Array<ExecutionError>>;
+  success: Scalars["Boolean"]["output"];
+};
+
+export type InternalDeleteManyWhateverUniversityProfessorResult = {
+  __typename?: "InternalDeleteManyWhateverUniversityProfessorResult";
+  errors?: Maybe<Array<ExecutionError>>;
+  success: Scalars["Boolean"]["output"];
+};
+
+export type InternalDeleteManyWhateverUniversityRegistrationResult = {
+  __typename?: "InternalDeleteManyWhateverUniversityRegistrationResult";
+  errors?: Maybe<Array<ExecutionError>>;
+  success: Scalars["Boolean"]["output"];
+};
+
+export type InternalDeleteManyWhateverUniversityStudentResult = {
+  __typename?: "InternalDeleteManyWhateverUniversityStudentResult";
   errors?: Maybe<Array<ExecutionError>>;
   success: Scalars["Boolean"]["output"];
 };
@@ -7672,51 +7669,6 @@ export type InternalDeleteUniqueFieldsParentModelResult = {
   success: Scalars["Boolean"]["output"];
 };
 
-export type InternalDeleteUniversityAssignmentResult = {
-  __typename?: "InternalDeleteUniversityAssignmentResult";
-  assignment?: Maybe<Scalars["InternalUniversityAssignmentRecord"]["output"]>;
-  /** Whether the record was created by this upsert operation */
-  created: Scalars["Boolean"]["output"];
-  errors?: Maybe<Array<ExecutionError>>;
-  success: Scalars["Boolean"]["output"];
-};
-
-export type InternalDeleteUniversityCourseResult = {
-  __typename?: "InternalDeleteUniversityCourseResult";
-  course?: Maybe<Scalars["InternalUniversityCourseRecord"]["output"]>;
-  /** Whether the record was created by this upsert operation */
-  created: Scalars["Boolean"]["output"];
-  errors?: Maybe<Array<ExecutionError>>;
-  success: Scalars["Boolean"]["output"];
-};
-
-export type InternalDeleteUniversityProfessorResult = {
-  __typename?: "InternalDeleteUniversityProfessorResult";
-  /** Whether the record was created by this upsert operation */
-  created: Scalars["Boolean"]["output"];
-  errors?: Maybe<Array<ExecutionError>>;
-  professor?: Maybe<Scalars["InternalUniversityProfessorRecord"]["output"]>;
-  success: Scalars["Boolean"]["output"];
-};
-
-export type InternalDeleteUniversityRegistrationResult = {
-  __typename?: "InternalDeleteUniversityRegistrationResult";
-  /** Whether the record was created by this upsert operation */
-  created: Scalars["Boolean"]["output"];
-  errors?: Maybe<Array<ExecutionError>>;
-  registration?: Maybe<Scalars["InternalUniversityRegistrationRecord"]["output"]>;
-  success: Scalars["Boolean"]["output"];
-};
-
-export type InternalDeleteUniversityStudentResult = {
-  __typename?: "InternalDeleteUniversityStudentResult";
-  /** Whether the record was created by this upsert operation */
-  created: Scalars["Boolean"]["output"];
-  errors?: Maybe<Array<ExecutionError>>;
-  student?: Maybe<Scalars["InternalUniversityStudentRecord"]["output"]>;
-  success: Scalars["Boolean"]["output"];
-};
-
 export type InternalDeleteUserResult = {
   __typename?: "InternalDeleteUserResult";
   /** Whether the record was created by this upsert operation */
@@ -7724,6 +7676,51 @@ export type InternalDeleteUserResult = {
   errors?: Maybe<Array<ExecutionError>>;
   success: Scalars["Boolean"]["output"];
   user?: Maybe<Scalars["InternalUserRecord"]["output"]>;
+};
+
+export type InternalDeleteWhateverUniversityAssignmentResult = {
+  __typename?: "InternalDeleteWhateverUniversityAssignmentResult";
+  assignment?: Maybe<Scalars["InternalWhateverUniversityAssignmentRecord"]["output"]>;
+  /** Whether the record was created by this upsert operation */
+  created: Scalars["Boolean"]["output"];
+  errors?: Maybe<Array<ExecutionError>>;
+  success: Scalars["Boolean"]["output"];
+};
+
+export type InternalDeleteWhateverUniversityCourseResult = {
+  __typename?: "InternalDeleteWhateverUniversityCourseResult";
+  course?: Maybe<Scalars["InternalWhateverUniversityCourseRecord"]["output"]>;
+  /** Whether the record was created by this upsert operation */
+  created: Scalars["Boolean"]["output"];
+  errors?: Maybe<Array<ExecutionError>>;
+  success: Scalars["Boolean"]["output"];
+};
+
+export type InternalDeleteWhateverUniversityProfessorResult = {
+  __typename?: "InternalDeleteWhateverUniversityProfessorResult";
+  /** Whether the record was created by this upsert operation */
+  created: Scalars["Boolean"]["output"];
+  errors?: Maybe<Array<ExecutionError>>;
+  professor?: Maybe<Scalars["InternalWhateverUniversityProfessorRecord"]["output"]>;
+  success: Scalars["Boolean"]["output"];
+};
+
+export type InternalDeleteWhateverUniversityRegistrationResult = {
+  __typename?: "InternalDeleteWhateverUniversityRegistrationResult";
+  /** Whether the record was created by this upsert operation */
+  created: Scalars["Boolean"]["output"];
+  errors?: Maybe<Array<ExecutionError>>;
+  registration?: Maybe<Scalars["InternalWhateverUniversityRegistrationRecord"]["output"]>;
+  success: Scalars["Boolean"]["output"];
+};
+
+export type InternalDeleteWhateverUniversityStudentResult = {
+  __typename?: "InternalDeleteWhateverUniversityStudentResult";
+  /** Whether the record was created by this upsert operation */
+  created: Scalars["Boolean"]["output"];
+  errors?: Maybe<Array<ExecutionError>>;
+  student?: Maybe<Scalars["InternalWhateverUniversityStudentRecord"]["output"]>;
+  success: Scalars["Boolean"]["output"];
 };
 
 export type InternalDeleteWidgetResult = {
@@ -7772,6 +7769,44 @@ export type InternalDoodadRecordEdge = {
   cursor: Scalars["String"]["output"];
   /** The item at the end of the edge */
   node: Scalars["InternalDoodadRecord"]["output"];
+};
+
+export type InternalFooAtomicsInput = {
+  /** Numeric atomic commands for operating on someNumber. */
+  someNumber?: InputMaybe<Array<NumericAtomicFieldUpdateInput>>;
+};
+
+export type InternalFooInput = {
+  /** An optional list of atomically applied commands for race-safe mutations of the record */
+  _atomics?: InputMaybe<InternalFooAtomicsInput>;
+  belongsToParent?: InputMaybe<InternalBelongsToInput>;
+  createdAt?: InputMaybe<Scalars["DateTime"]["input"]>;
+  id?: InputMaybe<Scalars["GadgetID"]["input"]>;
+  manyBelongsToParent?: InputMaybe<InternalBelongsToInput>;
+  name?: InputMaybe<Scalars["String"]["input"]>;
+  someBool?: InputMaybe<Scalars["Boolean"]["input"]>;
+  someNumber?: InputMaybe<Scalars["Float"]["input"]>;
+  state?: InputMaybe<Scalars["RecordState"]["input"]>;
+  stateHistory?: InputMaybe<Scalars["RecordState"]["input"]>;
+  updatedAt?: InputMaybe<Scalars["DateTime"]["input"]>;
+};
+
+/** A connection to a list of InternalFooRecord items. */
+export type InternalFooRecordConnection = {
+  __typename?: "InternalFooRecordConnection";
+  /** A list of edges. */
+  edges: Array<InternalFooRecordEdge>;
+  /** Information to aid in pagination. */
+  pageInfo: PageInfo;
+};
+
+/** An edge in a InternalFooRecord connection. */
+export type InternalFooRecordEdge = {
+  __typename?: "InternalFooRecordEdge";
+  /** A cursor for use in pagination */
+  cursor: Scalars["String"]["output"];
+  /** The item at the end of the edge */
+  node: Scalars["InternalFooRecord"]["output"];
 };
 
 export type InternalFriendshipInput = {
@@ -8613,9 +8648,9 @@ export type InternalMutations = {
   __typename?: "InternalMutations";
   /** Acquire a backend lock, returning only once the lock has been acquired */
   acquireLock: LockOperationResult;
-  bulkCreateAutoTableTestRelatedModels?: Maybe<InternalBulkCreateAutoTableTestRelatedModelsResult>;
   bulkCreateAutoTableTests?: Maybe<InternalBulkCreateAutoTableTestsResult>;
   bulkCreateDoodads?: Maybe<InternalBulkCreateDoodadsResult>;
+  bulkCreateFoos?: Maybe<InternalBulkCreateFoosResult>;
   bulkCreateFriendships?: Maybe<InternalBulkCreateFriendshipsResult>;
   bulkCreateGizmos?: Maybe<InternalBulkCreateGizmosResult>;
   bulkCreateModelAs?: Maybe<InternalBulkCreateModelAsResult>;
@@ -8634,8 +8669,8 @@ export type InternalMutations = {
   bulkCreateWidgets?: Maybe<InternalBulkCreateWidgetsResult>;
   commitTransaction: Scalars["String"]["output"];
   createAutoTableTest?: Maybe<InternalCreateAutoTableTestResult>;
-  createAutoTableTestRelatedModel?: Maybe<InternalCreateAutoTableTestRelatedModelResult>;
   createDoodad?: Maybe<InternalCreateDoodadResult>;
+  createFoo?: Maybe<InternalCreateFooResult>;
   createFriendship?: Maybe<InternalCreateFriendshipResult>;
   createGizmo?: Maybe<InternalCreateGizmoResult>;
   createModelA?: Maybe<InternalCreateModelAResult>;
@@ -8653,13 +8688,13 @@ export type InternalMutations = {
   createUser?: Maybe<InternalCreateUserResult>;
   createWidget?: Maybe<InternalCreateWidgetResult>;
   deleteAutoTableTest?: Maybe<InternalDeleteAutoTableTestResult>;
-  deleteAutoTableTestRelatedModel?: Maybe<InternalDeleteAutoTableTestRelatedModelResult>;
   deleteDoodad?: Maybe<InternalDeleteDoodadResult>;
+  deleteFoo?: Maybe<InternalDeleteFooResult>;
   deleteFriendship?: Maybe<InternalDeleteFriendshipResult>;
   deleteGizmo?: Maybe<InternalDeleteGizmoResult>;
   deleteManyAutoTableTest?: Maybe<InternalDeleteManyAutoTableTestResult>;
-  deleteManyAutoTableTestRelatedModel?: Maybe<InternalDeleteManyAutoTableTestRelatedModelResult>;
   deleteManyDoodad?: Maybe<InternalDeleteManyDoodadResult>;
+  deleteManyFoo?: Maybe<InternalDeleteManyFooResult>;
   deleteManyFriendship?: Maybe<InternalDeleteManyFriendshipResult>;
   deleteManyGizmo?: Maybe<InternalDeleteManyGizmoResult>;
   deleteManyModelA?: Maybe<InternalDeleteManyModelAResult>;
@@ -8700,8 +8735,8 @@ export type InternalMutations = {
   triggerAlwaysThrowErrorWidget?: Maybe<AlwaysThrowErrorWidgetResult>;
   triggerCompleteShopifySync?: Maybe<CompleteShopifySyncResult>;
   triggerCreateAutoTableTest?: Maybe<CreateAutoTableTestResult>;
-  triggerCreateAutoTableTestRelatedModel?: Maybe<CreateAutoTableTestRelatedModelResult>;
   triggerCreateDoodad?: Maybe<CreateDoodadResult>;
+  triggerCreateFoo?: Maybe<CreateFooResult>;
   triggerCreateFriendship?: Maybe<CreateFriendshipResult>;
   triggerCreateGizmo?: Maybe<CreateGizmoResult>;
   triggerCreateModelA?: Maybe<CreateModelAResult>;
@@ -8719,8 +8754,8 @@ export type InternalMutations = {
   triggerCustomActionAutoTableTest?: Maybe<CustomActionAutoTableTestResult>;
   triggerCustomActionWithParamsAutoTableTest?: Maybe<CustomActionWithParamsAutoTableTestResult>;
   triggerDeleteAutoTableTest?: Maybe<DeleteAutoTableTestResult>;
-  triggerDeleteAutoTableTestRelatedModel?: Maybe<DeleteAutoTableTestRelatedModelResult>;
   triggerDeleteDoodad?: Maybe<DeleteDoodadResult>;
+  triggerDeleteFoo?: Maybe<DeleteFooResult>;
   triggerDeleteFriendship?: Maybe<DeleteFriendshipResult>;
   triggerDeleteGizmo?: Maybe<DeleteGizmoResult>;
   triggerDeleteModelA?: Maybe<DeleteModelAResult>;
@@ -8745,8 +8780,8 @@ export type InternalMutations = {
   triggerSignUpUser?: Maybe<SignUpUserResult>;
   triggerUninstallShopifyShop?: Maybe<UninstallShopifyShopResult>;
   triggerUpdateAutoTableTest?: Maybe<UpdateAutoTableTestResult>;
-  triggerUpdateAutoTableTestRelatedModel?: Maybe<UpdateAutoTableTestRelatedModelResult>;
   triggerUpdateDoodad?: Maybe<UpdateDoodadResult>;
+  triggerUpdateFoo?: Maybe<UpdateFooResult>;
   triggerUpdateFriendship?: Maybe<UpdateFriendshipResult>;
   triggerUpdateGizmo?: Maybe<UpdateGizmoResult>;
   triggerUpdateModelA?: Maybe<UpdateModelAResult>;
@@ -8763,11 +8798,11 @@ export type InternalMutations = {
   triggerUpdateWidget?: Maybe<UpdateWidgetResult>;
   triggerUpdateWithCustomParamsAutoTableTest?: Maybe<UpdateWithCustomParamsAutoTableTestResult>;
   triggerUpdateWithCustomParamsWidget?: Maybe<UpdateWithCustomParamsWidgetResult>;
+  triggerWhateverPart?: Maybe<WhateverPartResult>;
   uniqueFields: InternalUniqueFieldsMutations;
-  university: InternalUniversityMutations;
   updateAutoTableTest?: Maybe<InternalUpdateAutoTableTestResult>;
-  updateAutoTableTestRelatedModel?: Maybe<InternalUpdateAutoTableTestRelatedModelResult>;
   updateDoodad?: Maybe<InternalUpdateDoodadResult>;
+  updateFoo?: Maybe<InternalUpdateFooResult>;
   updateFriendship?: Maybe<InternalUpdateFriendshipResult>;
   updateGizmo?: Maybe<InternalUpdateGizmoResult>;
   updateModelA?: Maybe<InternalUpdateModelAResult>;
@@ -8785,8 +8820,8 @@ export type InternalMutations = {
   updateUser?: Maybe<InternalUpdateUserResult>;
   updateWidget?: Maybe<InternalUpdateWidgetResult>;
   upsertAutoTableTest?: Maybe<InternalUpsertAutoTableTestResult>;
-  upsertAutoTableTestRelatedModel?: Maybe<InternalUpsertAutoTableTestRelatedModelResult>;
   upsertDoodad?: Maybe<InternalUpsertDoodadResult>;
+  upsertFoo?: Maybe<InternalUpsertFooResult>;
   upsertFriendship?: Maybe<InternalUpsertFriendshipResult>;
   upsertGizmo?: Maybe<InternalUpsertGizmoResult>;
   upsertModelA?: Maybe<InternalUpsertModelAResult>;
@@ -8803,14 +8838,11 @@ export type InternalMutations = {
   upsertTweeter?: Maybe<InternalUpsertTweeterResult>;
   upsertUser?: Maybe<InternalUpsertUserResult>;
   upsertWidget?: Maybe<InternalUpsertWidgetResult>;
+  whatever: InternalWhateverMutations;
 };
 
 export type InternalMutationsAcquireLockArgs = {
   lock: Scalars["String"]["input"];
-};
-
-export type InternalMutationsBulkCreateAutoTableTestRelatedModelsArgs = {
-  _autoTableTestRelatedModels: Array<InputMaybe<InternalAutoTableTestRelatedModelInput>>;
 };
 
 export type InternalMutationsBulkCreateAutoTableTestsArgs = {
@@ -8819,6 +8851,10 @@ export type InternalMutationsBulkCreateAutoTableTestsArgs = {
 
 export type InternalMutationsBulkCreateDoodadsArgs = {
   doodads: Array<InputMaybe<InternalDoodadInput>>;
+};
+
+export type InternalMutationsBulkCreateFoosArgs = {
+  foos: Array<InputMaybe<InternalFooInput>>;
 };
 
 export type InternalMutationsBulkCreateFriendshipsArgs = {
@@ -8889,12 +8925,12 @@ export type InternalMutationsCreateAutoTableTestArgs = {
   autoTableTest?: InputMaybe<InternalAutoTableTestInput>;
 };
 
-export type InternalMutationsCreateAutoTableTestRelatedModelArgs = {
-  _autoTableTestRelatedModel?: InputMaybe<InternalAutoTableTestRelatedModelInput>;
-};
-
 export type InternalMutationsCreateDoodadArgs = {
   doodad?: InputMaybe<InternalDoodadInput>;
+};
+
+export type InternalMutationsCreateFooArgs = {
+  foo?: InputMaybe<InternalFooInput>;
 };
 
 export type InternalMutationsCreateFriendshipArgs = {
@@ -8965,11 +9001,11 @@ export type InternalMutationsDeleteAutoTableTestArgs = {
   id: Scalars["GadgetID"]["input"];
 };
 
-export type InternalMutationsDeleteAutoTableTestRelatedModelArgs = {
+export type InternalMutationsDeleteDoodadArgs = {
   id: Scalars["GadgetID"]["input"];
 };
 
-export type InternalMutationsDeleteDoodadArgs = {
+export type InternalMutationsDeleteFooArgs = {
   id: Scalars["GadgetID"]["input"];
 };
 
@@ -8986,13 +9022,13 @@ export type InternalMutationsDeleteManyAutoTableTestArgs = {
   search?: InputMaybe<Scalars["String"]["input"]>;
 };
 
-export type InternalMutationsDeleteManyAutoTableTestRelatedModelArgs = {
-  filter?: InputMaybe<Array<AutoTableTestRelatedModelFilter>>;
+export type InternalMutationsDeleteManyDoodadArgs = {
+  filter?: InputMaybe<Array<DoodadFilter>>;
   search?: InputMaybe<Scalars["String"]["input"]>;
 };
 
-export type InternalMutationsDeleteManyDoodadArgs = {
-  filter?: InputMaybe<Array<DoodadFilter>>;
+export type InternalMutationsDeleteManyFooArgs = {
+  filter?: InputMaybe<Array<FooFilter>>;
   search?: InputMaybe<Scalars["String"]["input"]>;
 };
 
@@ -9166,14 +9202,14 @@ export type InternalMutationsTriggerCreateAutoTableTestArgs = {
   verifyTriggerExists?: InputMaybe<Scalars["Boolean"]["input"]>;
 };
 
-export type InternalMutationsTriggerCreateAutoTableTestRelatedModelArgs = {
+export type InternalMutationsTriggerCreateDoodadArgs = {
   context?: InputMaybe<AppGraphQlTriggerMutationContext>;
   params?: InputMaybe<Scalars["JSONObject"]["input"]>;
   trigger?: InputMaybe<Scalars["JSONObject"]["input"]>;
   verifyTriggerExists?: InputMaybe<Scalars["Boolean"]["input"]>;
 };
 
-export type InternalMutationsTriggerCreateDoodadArgs = {
+export type InternalMutationsTriggerCreateFooArgs = {
   context?: InputMaybe<AppGraphQlTriggerMutationContext>;
   params?: InputMaybe<Scalars["JSONObject"]["input"]>;
   trigger?: InputMaybe<Scalars["JSONObject"]["input"]>;
@@ -9297,14 +9333,14 @@ export type InternalMutationsTriggerDeleteAutoTableTestArgs = {
   verifyTriggerExists?: InputMaybe<Scalars["Boolean"]["input"]>;
 };
 
-export type InternalMutationsTriggerDeleteAutoTableTestRelatedModelArgs = {
+export type InternalMutationsTriggerDeleteDoodadArgs = {
   context?: InputMaybe<AppGraphQlTriggerMutationContext>;
   params?: InputMaybe<Scalars["JSONObject"]["input"]>;
   trigger?: InputMaybe<Scalars["JSONObject"]["input"]>;
   verifyTriggerExists?: InputMaybe<Scalars["Boolean"]["input"]>;
 };
 
-export type InternalMutationsTriggerDeleteDoodadArgs = {
+export type InternalMutationsTriggerDeleteFooArgs = {
   context?: InputMaybe<AppGraphQlTriggerMutationContext>;
   params?: InputMaybe<Scalars["JSONObject"]["input"]>;
   trigger?: InputMaybe<Scalars["JSONObject"]["input"]>;
@@ -9477,14 +9513,14 @@ export type InternalMutationsTriggerUpdateAutoTableTestArgs = {
   verifyTriggerExists?: InputMaybe<Scalars["Boolean"]["input"]>;
 };
 
-export type InternalMutationsTriggerUpdateAutoTableTestRelatedModelArgs = {
+export type InternalMutationsTriggerUpdateDoodadArgs = {
   context?: InputMaybe<AppGraphQlTriggerMutationContext>;
   params?: InputMaybe<Scalars["JSONObject"]["input"]>;
   trigger?: InputMaybe<Scalars["JSONObject"]["input"]>;
   verifyTriggerExists?: InputMaybe<Scalars["Boolean"]["input"]>;
 };
 
-export type InternalMutationsTriggerUpdateDoodadArgs = {
+export type InternalMutationsTriggerUpdateFooArgs = {
   context?: InputMaybe<AppGraphQlTriggerMutationContext>;
   params?: InputMaybe<Scalars["JSONObject"]["input"]>;
   trigger?: InputMaybe<Scalars["JSONObject"]["input"]>;
@@ -9603,18 +9639,25 @@ export type InternalMutationsTriggerUpdateWithCustomParamsWidgetArgs = {
   verifyTriggerExists?: InputMaybe<Scalars["Boolean"]["input"]>;
 };
 
+export type InternalMutationsTriggerWhateverPartArgs = {
+  context?: InputMaybe<AppGraphQlTriggerMutationContext>;
+  params?: InputMaybe<Scalars["JSONObject"]["input"]>;
+  trigger?: InputMaybe<Scalars["JSONObject"]["input"]>;
+  verifyTriggerExists?: InputMaybe<Scalars["Boolean"]["input"]>;
+};
+
 export type InternalMutationsUpdateAutoTableTestArgs = {
   autoTableTest?: InputMaybe<InternalAutoTableTestInput>;
   id: Scalars["GadgetID"]["input"];
 };
 
-export type InternalMutationsUpdateAutoTableTestRelatedModelArgs = {
-  _autoTableTestRelatedModel?: InputMaybe<InternalAutoTableTestRelatedModelInput>;
+export type InternalMutationsUpdateDoodadArgs = {
+  doodad?: InputMaybe<InternalDoodadInput>;
   id: Scalars["GadgetID"]["input"];
 };
 
-export type InternalMutationsUpdateDoodadArgs = {
-  doodad?: InputMaybe<InternalDoodadInput>;
+export type InternalMutationsUpdateFooArgs = {
+  foo?: InputMaybe<InternalFooInput>;
   id: Scalars["GadgetID"]["input"];
 };
 
@@ -9703,13 +9746,13 @@ export type InternalMutationsUpsertAutoTableTestArgs = {
   on?: InputMaybe<Array<Scalars["String"]["input"]>>;
 };
 
-export type InternalMutationsUpsertAutoTableTestRelatedModelArgs = {
-  _autoTableTestRelatedModel?: InputMaybe<InternalAutoTableTestRelatedModelInput>;
+export type InternalMutationsUpsertDoodadArgs = {
+  doodad?: InputMaybe<InternalDoodadInput>;
   on?: InputMaybe<Array<Scalars["String"]["input"]>>;
 };
 
-export type InternalMutationsUpsertDoodadArgs = {
-  doodad?: InputMaybe<InternalDoodadInput>;
+export type InternalMutationsUpsertFooArgs = {
+  foo?: InputMaybe<InternalFooInput>;
   on?: InputMaybe<Array<Scalars["String"]["input"]>>;
 };
 
@@ -9860,18 +9903,18 @@ export type InternalPartRecordEdge = {
 
 export type InternalQueries = {
   __typename?: "InternalQueries";
-  _autoTableTestRelatedModel?: Maybe<Scalars["InternalAutoTableTestRelatedModelRecord"]["output"]>;
   autoTableTest?: Maybe<Scalars["InternalAutoTableTestRecord"]["output"]>;
   /** Currently open platform transaction details, or null if no transaction is open */
   currentTransactionDetails?: Maybe<Scalars["JSONObject"]["output"]>;
   doodad?: Maybe<Scalars["InternalDoodadRecord"]["output"]>;
+  foo?: Maybe<Scalars["InternalFooRecord"]["output"]>;
   friendship?: Maybe<Scalars["InternalFriendshipRecord"]["output"]>;
   game: InternalGameQueries;
   gizmo?: Maybe<Scalars["InternalGizmoRecord"]["output"]>;
   hasManyThrough: InternalHasManyThroughQueries;
   listAutoTableTest: InternalAutoTableTestRecordConnection;
-  listAutoTableTestRelatedModel: InternalAutoTableTestRelatedModelRecordConnection;
   listDoodad: InternalDoodadRecordConnection;
+  listFoo: InternalFooRecordConnection;
   listFriendship: InternalFriendshipRecordConnection;
   listGizmo: InternalGizmoRecordConnection;
   listModelA: InternalModelARecordConnection;
@@ -9901,14 +9944,9 @@ export type InternalQueries = {
   shopifySync?: Maybe<Scalars["InternalShopifySyncRecord"]["output"]>;
   tweeter?: Maybe<Scalars["InternalTweeterRecord"]["output"]>;
   uniqueFields: InternalUniqueFieldsQueries;
-  university: InternalUniversityQueries;
   user?: Maybe<Scalars["InternalUserRecord"]["output"]>;
+  whatever: InternalWhateverQueries;
   widget?: Maybe<Scalars["InternalWidgetRecord"]["output"]>;
-};
-
-export type InternalQueries_AutoTableTestRelatedModelArgs = {
-  id: Scalars["GadgetID"]["input"];
-  select?: InputMaybe<Array<Scalars["String"]["input"]>>;
 };
 
 export type InternalQueriesAutoTableTestArgs = {
@@ -9917,6 +9955,11 @@ export type InternalQueriesAutoTableTestArgs = {
 };
 
 export type InternalQueriesDoodadArgs = {
+  id: Scalars["GadgetID"]["input"];
+  select?: InputMaybe<Array<Scalars["String"]["input"]>>;
+};
+
+export type InternalQueriesFooArgs = {
   id: Scalars["GadgetID"]["input"];
   select?: InputMaybe<Array<Scalars["String"]["input"]>>;
 };
@@ -9942,17 +9985,6 @@ export type InternalQueriesListAutoTableTestArgs = {
   sort?: InputMaybe<Array<AutoTableTestSort>>;
 };
 
-export type InternalQueriesListAutoTableTestRelatedModelArgs = {
-  after?: InputMaybe<Scalars["String"]["input"]>;
-  before?: InputMaybe<Scalars["String"]["input"]>;
-  filter?: InputMaybe<Array<AutoTableTestRelatedModelFilter>>;
-  first?: InputMaybe<Scalars["Int"]["input"]>;
-  last?: InputMaybe<Scalars["Int"]["input"]>;
-  search?: InputMaybe<Scalars["String"]["input"]>;
-  select?: InputMaybe<Array<Scalars["String"]["input"]>>;
-  sort?: InputMaybe<Array<AutoTableTestRelatedModelSort>>;
-};
-
 export type InternalQueriesListDoodadArgs = {
   after?: InputMaybe<Scalars["String"]["input"]>;
   before?: InputMaybe<Scalars["String"]["input"]>;
@@ -9962,6 +9994,17 @@ export type InternalQueriesListDoodadArgs = {
   search?: InputMaybe<Scalars["String"]["input"]>;
   select?: InputMaybe<Array<Scalars["String"]["input"]>>;
   sort?: InputMaybe<Array<DoodadSort>>;
+};
+
+export type InternalQueriesListFooArgs = {
+  after?: InputMaybe<Scalars["String"]["input"]>;
+  before?: InputMaybe<Scalars["String"]["input"]>;
+  filter?: InputMaybe<Array<FooFilter>>;
+  first?: InputMaybe<Scalars["Int"]["input"]>;
+  last?: InputMaybe<Scalars["Int"]["input"]>;
+  search?: InputMaybe<Scalars["String"]["input"]>;
+  select?: InputMaybe<Array<Scalars["String"]["input"]>>;
+  sort?: InputMaybe<Array<FooSort>>;
 };
 
 export type InternalQueriesListFriendshipArgs = {
@@ -10967,552 +11010,6 @@ export type InternalUniqueFieldsQueriesParentModelArgs = {
   select?: InputMaybe<Array<Scalars["String"]["input"]>>;
 };
 
-export type InternalUniversityAssignmentInput = {
-  course?: InputMaybe<InternalBelongsToInput>;
-  createdAt?: InputMaybe<Scalars["DateTime"]["input"]>;
-  id?: InputMaybe<Scalars["GadgetID"]["input"]>;
-  professor?: InputMaybe<InternalBelongsToInput>;
-  state?: InputMaybe<Scalars["RecordState"]["input"]>;
-  stateHistory?: InputMaybe<Scalars["RecordState"]["input"]>;
-  updatedAt?: InputMaybe<Scalars["DateTime"]["input"]>;
-};
-
-/** A connection to a list of InternalUniversityAssignmentRecord items. */
-export type InternalUniversityAssignmentRecordConnection = {
-  __typename?: "InternalUniversityAssignmentRecordConnection";
-  /** A list of edges. */
-  edges: Array<InternalUniversityAssignmentRecordEdge>;
-  /** Information to aid in pagination. */
-  pageInfo: PageInfo;
-};
-
-/** An edge in a InternalUniversityAssignmentRecord connection. */
-export type InternalUniversityAssignmentRecordEdge = {
-  __typename?: "InternalUniversityAssignmentRecordEdge";
-  /** A cursor for use in pagination */
-  cursor: Scalars["String"]["output"];
-  /** The item at the end of the edge */
-  node: Scalars["InternalUniversityAssignmentRecord"]["output"];
-};
-
-export type InternalUniversityCourseInput = {
-  createdAt?: InputMaybe<Scalars["DateTime"]["input"]>;
-  description?: InputMaybe<RichTextInput>;
-  id?: InputMaybe<Scalars["GadgetID"]["input"]>;
-  state?: InputMaybe<Scalars["RecordState"]["input"]>;
-  stateHistory?: InputMaybe<Scalars["RecordState"]["input"]>;
-  title?: InputMaybe<Scalars["String"]["input"]>;
-  updatedAt?: InputMaybe<Scalars["DateTime"]["input"]>;
-};
-
-/** A connection to a list of InternalUniversityCourseRecord items. */
-export type InternalUniversityCourseRecordConnection = {
-  __typename?: "InternalUniversityCourseRecordConnection";
-  /** A list of edges. */
-  edges: Array<InternalUniversityCourseRecordEdge>;
-  /** Information to aid in pagination. */
-  pageInfo: PageInfo;
-};
-
-/** An edge in a InternalUniversityCourseRecord connection. */
-export type InternalUniversityCourseRecordEdge = {
-  __typename?: "InternalUniversityCourseRecordEdge";
-  /** A cursor for use in pagination */
-  cursor: Scalars["String"]["output"];
-  /** The item at the end of the edge */
-  node: Scalars["InternalUniversityCourseRecord"]["output"];
-};
-
-export type InternalUniversityMutations = {
-  __typename?: "InternalUniversityMutations";
-  bulkCreateAssignments?: Maybe<InternalBulkCreateUniversityAssignmentsResult>;
-  bulkCreateCourses?: Maybe<InternalBulkCreateUniversityCoursesResult>;
-  bulkCreateProfessors?: Maybe<InternalBulkCreateUniversityProfessorsResult>;
-  bulkCreateRegistrations?: Maybe<InternalBulkCreateUniversityRegistrationsResult>;
-  bulkCreateStudents?: Maybe<InternalBulkCreateUniversityStudentsResult>;
-  createAssignment?: Maybe<InternalCreateUniversityAssignmentResult>;
-  createCourse?: Maybe<InternalCreateUniversityCourseResult>;
-  createProfessor?: Maybe<InternalCreateUniversityProfessorResult>;
-  createRegistration?: Maybe<InternalCreateUniversityRegistrationResult>;
-  createStudent?: Maybe<InternalCreateUniversityStudentResult>;
-  deleteAssignment?: Maybe<InternalDeleteUniversityAssignmentResult>;
-  deleteCourse?: Maybe<InternalDeleteUniversityCourseResult>;
-  deleteManyAssignment?: Maybe<InternalDeleteManyUniversityAssignmentResult>;
-  deleteManyCourse?: Maybe<InternalDeleteManyUniversityCourseResult>;
-  deleteManyProfessor?: Maybe<InternalDeleteManyUniversityProfessorResult>;
-  deleteManyRegistration?: Maybe<InternalDeleteManyUniversityRegistrationResult>;
-  deleteManyStudent?: Maybe<InternalDeleteManyUniversityStudentResult>;
-  deleteProfessor?: Maybe<InternalDeleteUniversityProfessorResult>;
-  deleteRegistration?: Maybe<InternalDeleteUniversityRegistrationResult>;
-  deleteStudent?: Maybe<InternalDeleteUniversityStudentResult>;
-  triggerCreateAssignment?: Maybe<CreateUniversityAssignmentResult>;
-  triggerCreateCourse?: Maybe<CreateUniversityCourseResult>;
-  triggerCreateProfessor?: Maybe<CreateUniversityProfessorResult>;
-  triggerCreateRegistration?: Maybe<CreateUniversityRegistrationResult>;
-  triggerCreateStudent?: Maybe<CreateUniversityStudentResult>;
-  triggerDeleteAssignment?: Maybe<DeleteUniversityAssignmentResult>;
-  triggerDeleteCourse?: Maybe<DeleteUniversityCourseResult>;
-  triggerDeleteProfessor?: Maybe<DeleteUniversityProfessorResult>;
-  triggerDeleteRegistration?: Maybe<DeleteUniversityRegistrationResult>;
-  triggerDeleteStudent?: Maybe<DeleteUniversityStudentResult>;
-  triggerUpdateAssignment?: Maybe<UpdateUniversityAssignmentResult>;
-  triggerUpdateCourse?: Maybe<UpdateUniversityCourseResult>;
-  triggerUpdateProfessor?: Maybe<UpdateUniversityProfessorResult>;
-  triggerUpdateRegistration?: Maybe<UpdateUniversityRegistrationResult>;
-  triggerUpdateStudent?: Maybe<UpdateUniversityStudentResult>;
-  updateAssignment?: Maybe<InternalUpdateUniversityAssignmentResult>;
-  updateCourse?: Maybe<InternalUpdateUniversityCourseResult>;
-  updateProfessor?: Maybe<InternalUpdateUniversityProfessorResult>;
-  updateRegistration?: Maybe<InternalUpdateUniversityRegistrationResult>;
-  updateStudent?: Maybe<InternalUpdateUniversityStudentResult>;
-  upsertAssignment?: Maybe<InternalUpsertUniversityAssignmentResult>;
-  upsertCourse?: Maybe<InternalUpsertUniversityCourseResult>;
-  upsertProfessor?: Maybe<InternalUpsertUniversityProfessorResult>;
-  upsertRegistration?: Maybe<InternalUpsertUniversityRegistrationResult>;
-  upsertStudent?: Maybe<InternalUpsertUniversityStudentResult>;
-};
-
-export type InternalUniversityMutationsBulkCreateAssignmentsArgs = {
-  assignments: Array<InputMaybe<InternalUniversityAssignmentInput>>;
-};
-
-export type InternalUniversityMutationsBulkCreateCoursesArgs = {
-  courses: Array<InputMaybe<InternalUniversityCourseInput>>;
-};
-
-export type InternalUniversityMutationsBulkCreateProfessorsArgs = {
-  professors: Array<InputMaybe<InternalUniversityProfessorInput>>;
-};
-
-export type InternalUniversityMutationsBulkCreateRegistrationsArgs = {
-  registrations: Array<InputMaybe<InternalUniversityRegistrationInput>>;
-};
-
-export type InternalUniversityMutationsBulkCreateStudentsArgs = {
-  students: Array<InputMaybe<InternalUniversityStudentInput>>;
-};
-
-export type InternalUniversityMutationsCreateAssignmentArgs = {
-  assignment?: InputMaybe<InternalUniversityAssignmentInput>;
-};
-
-export type InternalUniversityMutationsCreateCourseArgs = {
-  course?: InputMaybe<InternalUniversityCourseInput>;
-};
-
-export type InternalUniversityMutationsCreateProfessorArgs = {
-  professor?: InputMaybe<InternalUniversityProfessorInput>;
-};
-
-export type InternalUniversityMutationsCreateRegistrationArgs = {
-  registration?: InputMaybe<InternalUniversityRegistrationInput>;
-};
-
-export type InternalUniversityMutationsCreateStudentArgs = {
-  student?: InputMaybe<InternalUniversityStudentInput>;
-};
-
-export type InternalUniversityMutationsDeleteAssignmentArgs = {
-  id: Scalars["GadgetID"]["input"];
-};
-
-export type InternalUniversityMutationsDeleteCourseArgs = {
-  id: Scalars["GadgetID"]["input"];
-};
-
-export type InternalUniversityMutationsDeleteManyAssignmentArgs = {
-  filter?: InputMaybe<Array<UniversityAssignmentFilter>>;
-  search?: InputMaybe<Scalars["String"]["input"]>;
-};
-
-export type InternalUniversityMutationsDeleteManyCourseArgs = {
-  filter?: InputMaybe<Array<UniversityCourseFilter>>;
-  search?: InputMaybe<Scalars["String"]["input"]>;
-};
-
-export type InternalUniversityMutationsDeleteManyProfessorArgs = {
-  filter?: InputMaybe<Array<UniversityProfessorFilter>>;
-  search?: InputMaybe<Scalars["String"]["input"]>;
-};
-
-export type InternalUniversityMutationsDeleteManyRegistrationArgs = {
-  filter?: InputMaybe<Array<UniversityRegistrationFilter>>;
-  search?: InputMaybe<Scalars["String"]["input"]>;
-};
-
-export type InternalUniversityMutationsDeleteManyStudentArgs = {
-  filter?: InputMaybe<Array<UniversityStudentFilter>>;
-  search?: InputMaybe<Scalars["String"]["input"]>;
-};
-
-export type InternalUniversityMutationsDeleteProfessorArgs = {
-  id: Scalars["GadgetID"]["input"];
-};
-
-export type InternalUniversityMutationsDeleteRegistrationArgs = {
-  id: Scalars["GadgetID"]["input"];
-};
-
-export type InternalUniversityMutationsDeleteStudentArgs = {
-  id: Scalars["GadgetID"]["input"];
-};
-
-export type InternalUniversityMutationsTriggerCreateAssignmentArgs = {
-  context?: InputMaybe<AppGraphQlTriggerMutationContext>;
-  params?: InputMaybe<Scalars["JSONObject"]["input"]>;
-  trigger?: InputMaybe<Scalars["JSONObject"]["input"]>;
-  verifyTriggerExists?: InputMaybe<Scalars["Boolean"]["input"]>;
-};
-
-export type InternalUniversityMutationsTriggerCreateCourseArgs = {
-  context?: InputMaybe<AppGraphQlTriggerMutationContext>;
-  params?: InputMaybe<Scalars["JSONObject"]["input"]>;
-  trigger?: InputMaybe<Scalars["JSONObject"]["input"]>;
-  verifyTriggerExists?: InputMaybe<Scalars["Boolean"]["input"]>;
-};
-
-export type InternalUniversityMutationsTriggerCreateProfessorArgs = {
-  context?: InputMaybe<AppGraphQlTriggerMutationContext>;
-  params?: InputMaybe<Scalars["JSONObject"]["input"]>;
-  trigger?: InputMaybe<Scalars["JSONObject"]["input"]>;
-  verifyTriggerExists?: InputMaybe<Scalars["Boolean"]["input"]>;
-};
-
-export type InternalUniversityMutationsTriggerCreateRegistrationArgs = {
-  context?: InputMaybe<AppGraphQlTriggerMutationContext>;
-  params?: InputMaybe<Scalars["JSONObject"]["input"]>;
-  trigger?: InputMaybe<Scalars["JSONObject"]["input"]>;
-  verifyTriggerExists?: InputMaybe<Scalars["Boolean"]["input"]>;
-};
-
-export type InternalUniversityMutationsTriggerCreateStudentArgs = {
-  context?: InputMaybe<AppGraphQlTriggerMutationContext>;
-  params?: InputMaybe<Scalars["JSONObject"]["input"]>;
-  trigger?: InputMaybe<Scalars["JSONObject"]["input"]>;
-  verifyTriggerExists?: InputMaybe<Scalars["Boolean"]["input"]>;
-};
-
-export type InternalUniversityMutationsTriggerDeleteAssignmentArgs = {
-  context?: InputMaybe<AppGraphQlTriggerMutationContext>;
-  params?: InputMaybe<Scalars["JSONObject"]["input"]>;
-  trigger?: InputMaybe<Scalars["JSONObject"]["input"]>;
-  verifyTriggerExists?: InputMaybe<Scalars["Boolean"]["input"]>;
-};
-
-export type InternalUniversityMutationsTriggerDeleteCourseArgs = {
-  context?: InputMaybe<AppGraphQlTriggerMutationContext>;
-  params?: InputMaybe<Scalars["JSONObject"]["input"]>;
-  trigger?: InputMaybe<Scalars["JSONObject"]["input"]>;
-  verifyTriggerExists?: InputMaybe<Scalars["Boolean"]["input"]>;
-};
-
-export type InternalUniversityMutationsTriggerDeleteProfessorArgs = {
-  context?: InputMaybe<AppGraphQlTriggerMutationContext>;
-  params?: InputMaybe<Scalars["JSONObject"]["input"]>;
-  trigger?: InputMaybe<Scalars["JSONObject"]["input"]>;
-  verifyTriggerExists?: InputMaybe<Scalars["Boolean"]["input"]>;
-};
-
-export type InternalUniversityMutationsTriggerDeleteRegistrationArgs = {
-  context?: InputMaybe<AppGraphQlTriggerMutationContext>;
-  params?: InputMaybe<Scalars["JSONObject"]["input"]>;
-  trigger?: InputMaybe<Scalars["JSONObject"]["input"]>;
-  verifyTriggerExists?: InputMaybe<Scalars["Boolean"]["input"]>;
-};
-
-export type InternalUniversityMutationsTriggerDeleteStudentArgs = {
-  context?: InputMaybe<AppGraphQlTriggerMutationContext>;
-  params?: InputMaybe<Scalars["JSONObject"]["input"]>;
-  trigger?: InputMaybe<Scalars["JSONObject"]["input"]>;
-  verifyTriggerExists?: InputMaybe<Scalars["Boolean"]["input"]>;
-};
-
-export type InternalUniversityMutationsTriggerUpdateAssignmentArgs = {
-  context?: InputMaybe<AppGraphQlTriggerMutationContext>;
-  params?: InputMaybe<Scalars["JSONObject"]["input"]>;
-  trigger?: InputMaybe<Scalars["JSONObject"]["input"]>;
-  verifyTriggerExists?: InputMaybe<Scalars["Boolean"]["input"]>;
-};
-
-export type InternalUniversityMutationsTriggerUpdateCourseArgs = {
-  context?: InputMaybe<AppGraphQlTriggerMutationContext>;
-  params?: InputMaybe<Scalars["JSONObject"]["input"]>;
-  trigger?: InputMaybe<Scalars["JSONObject"]["input"]>;
-  verifyTriggerExists?: InputMaybe<Scalars["Boolean"]["input"]>;
-};
-
-export type InternalUniversityMutationsTriggerUpdateProfessorArgs = {
-  context?: InputMaybe<AppGraphQlTriggerMutationContext>;
-  params?: InputMaybe<Scalars["JSONObject"]["input"]>;
-  trigger?: InputMaybe<Scalars["JSONObject"]["input"]>;
-  verifyTriggerExists?: InputMaybe<Scalars["Boolean"]["input"]>;
-};
-
-export type InternalUniversityMutationsTriggerUpdateRegistrationArgs = {
-  context?: InputMaybe<AppGraphQlTriggerMutationContext>;
-  params?: InputMaybe<Scalars["JSONObject"]["input"]>;
-  trigger?: InputMaybe<Scalars["JSONObject"]["input"]>;
-  verifyTriggerExists?: InputMaybe<Scalars["Boolean"]["input"]>;
-};
-
-export type InternalUniversityMutationsTriggerUpdateStudentArgs = {
-  context?: InputMaybe<AppGraphQlTriggerMutationContext>;
-  params?: InputMaybe<Scalars["JSONObject"]["input"]>;
-  trigger?: InputMaybe<Scalars["JSONObject"]["input"]>;
-  verifyTriggerExists?: InputMaybe<Scalars["Boolean"]["input"]>;
-};
-
-export type InternalUniversityMutationsUpdateAssignmentArgs = {
-  assignment?: InputMaybe<InternalUniversityAssignmentInput>;
-  id: Scalars["GadgetID"]["input"];
-};
-
-export type InternalUniversityMutationsUpdateCourseArgs = {
-  course?: InputMaybe<InternalUniversityCourseInput>;
-  id: Scalars["GadgetID"]["input"];
-};
-
-export type InternalUniversityMutationsUpdateProfessorArgs = {
-  id: Scalars["GadgetID"]["input"];
-  professor?: InputMaybe<InternalUniversityProfessorInput>;
-};
-
-export type InternalUniversityMutationsUpdateRegistrationArgs = {
-  id: Scalars["GadgetID"]["input"];
-  registration?: InputMaybe<InternalUniversityRegistrationInput>;
-};
-
-export type InternalUniversityMutationsUpdateStudentArgs = {
-  id: Scalars["GadgetID"]["input"];
-  student?: InputMaybe<InternalUniversityStudentInput>;
-};
-
-export type InternalUniversityMutationsUpsertAssignmentArgs = {
-  assignment?: InputMaybe<InternalUniversityAssignmentInput>;
-  on?: InputMaybe<Array<Scalars["String"]["input"]>>;
-};
-
-export type InternalUniversityMutationsUpsertCourseArgs = {
-  course?: InputMaybe<InternalUniversityCourseInput>;
-  on?: InputMaybe<Array<Scalars["String"]["input"]>>;
-};
-
-export type InternalUniversityMutationsUpsertProfessorArgs = {
-  on?: InputMaybe<Array<Scalars["String"]["input"]>>;
-  professor?: InputMaybe<InternalUniversityProfessorInput>;
-};
-
-export type InternalUniversityMutationsUpsertRegistrationArgs = {
-  on?: InputMaybe<Array<Scalars["String"]["input"]>>;
-  registration?: InputMaybe<InternalUniversityRegistrationInput>;
-};
-
-export type InternalUniversityMutationsUpsertStudentArgs = {
-  on?: InputMaybe<Array<Scalars["String"]["input"]>>;
-  student?: InputMaybe<InternalUniversityStudentInput>;
-};
-
-export type InternalUniversityProfessorInput = {
-  createdAt?: InputMaybe<Scalars["DateTime"]["input"]>;
-  firstName?: InputMaybe<Scalars["String"]["input"]>;
-  id?: InputMaybe<Scalars["GadgetID"]["input"]>;
-  lastName?: InputMaybe<Scalars["String"]["input"]>;
-  state?: InputMaybe<Scalars["RecordState"]["input"]>;
-  stateHistory?: InputMaybe<Scalars["RecordState"]["input"]>;
-  title?: InputMaybe<Scalars["ProfessorTitleEnum"]["input"]>;
-  updatedAt?: InputMaybe<Scalars["DateTime"]["input"]>;
-};
-
-/** A connection to a list of InternalUniversityProfessorRecord items. */
-export type InternalUniversityProfessorRecordConnection = {
-  __typename?: "InternalUniversityProfessorRecordConnection";
-  /** A list of edges. */
-  edges: Array<InternalUniversityProfessorRecordEdge>;
-  /** Information to aid in pagination. */
-  pageInfo: PageInfo;
-};
-
-/** An edge in a InternalUniversityProfessorRecord connection. */
-export type InternalUniversityProfessorRecordEdge = {
-  __typename?: "InternalUniversityProfessorRecordEdge";
-  /** A cursor for use in pagination */
-  cursor: Scalars["String"]["output"];
-  /** The item at the end of the edge */
-  node: Scalars["InternalUniversityProfessorRecord"]["output"];
-};
-
-export type InternalUniversityQueries = {
-  __typename?: "InternalUniversityQueries";
-  assignment?: Maybe<Scalars["InternalUniversityAssignmentRecord"]["output"]>;
-  course?: Maybe<Scalars["InternalUniversityCourseRecord"]["output"]>;
-  /** Currently open platform transaction details, or null if no transaction is open */
-  currentTransactionDetails?: Maybe<Scalars["JSONObject"]["output"]>;
-  listAssignment: InternalUniversityAssignmentRecordConnection;
-  listCourse: InternalUniversityCourseRecordConnection;
-  listProfessor: InternalUniversityProfessorRecordConnection;
-  listRegistration: InternalUniversityRegistrationRecordConnection;
-  listStudent: InternalUniversityStudentRecordConnection;
-  professor?: Maybe<Scalars["InternalUniversityProfessorRecord"]["output"]>;
-  registration?: Maybe<Scalars["InternalUniversityRegistrationRecord"]["output"]>;
-  student?: Maybe<Scalars["InternalUniversityStudentRecord"]["output"]>;
-};
-
-export type InternalUniversityQueriesAssignmentArgs = {
-  id: Scalars["GadgetID"]["input"];
-  select?: InputMaybe<Array<Scalars["String"]["input"]>>;
-};
-
-export type InternalUniversityQueriesCourseArgs = {
-  id: Scalars["GadgetID"]["input"];
-  select?: InputMaybe<Array<Scalars["String"]["input"]>>;
-};
-
-export type InternalUniversityQueriesListAssignmentArgs = {
-  after?: InputMaybe<Scalars["String"]["input"]>;
-  before?: InputMaybe<Scalars["String"]["input"]>;
-  filter?: InputMaybe<Array<UniversityAssignmentFilter>>;
-  first?: InputMaybe<Scalars["Int"]["input"]>;
-  last?: InputMaybe<Scalars["Int"]["input"]>;
-  search?: InputMaybe<Scalars["String"]["input"]>;
-  select?: InputMaybe<Array<Scalars["String"]["input"]>>;
-  sort?: InputMaybe<Array<UniversityAssignmentSort>>;
-};
-
-export type InternalUniversityQueriesListCourseArgs = {
-  after?: InputMaybe<Scalars["String"]["input"]>;
-  before?: InputMaybe<Scalars["String"]["input"]>;
-  filter?: InputMaybe<Array<UniversityCourseFilter>>;
-  first?: InputMaybe<Scalars["Int"]["input"]>;
-  last?: InputMaybe<Scalars["Int"]["input"]>;
-  search?: InputMaybe<Scalars["String"]["input"]>;
-  select?: InputMaybe<Array<Scalars["String"]["input"]>>;
-  sort?: InputMaybe<Array<UniversityCourseSort>>;
-};
-
-export type InternalUniversityQueriesListProfessorArgs = {
-  after?: InputMaybe<Scalars["String"]["input"]>;
-  before?: InputMaybe<Scalars["String"]["input"]>;
-  filter?: InputMaybe<Array<UniversityProfessorFilter>>;
-  first?: InputMaybe<Scalars["Int"]["input"]>;
-  last?: InputMaybe<Scalars["Int"]["input"]>;
-  search?: InputMaybe<Scalars["String"]["input"]>;
-  select?: InputMaybe<Array<Scalars["String"]["input"]>>;
-  sort?: InputMaybe<Array<UniversityProfessorSort>>;
-};
-
-export type InternalUniversityQueriesListRegistrationArgs = {
-  after?: InputMaybe<Scalars["String"]["input"]>;
-  before?: InputMaybe<Scalars["String"]["input"]>;
-  filter?: InputMaybe<Array<UniversityRegistrationFilter>>;
-  first?: InputMaybe<Scalars["Int"]["input"]>;
-  last?: InputMaybe<Scalars["Int"]["input"]>;
-  search?: InputMaybe<Scalars["String"]["input"]>;
-  select?: InputMaybe<Array<Scalars["String"]["input"]>>;
-  sort?: InputMaybe<Array<UniversityRegistrationSort>>;
-};
-
-export type InternalUniversityQueriesListStudentArgs = {
-  after?: InputMaybe<Scalars["String"]["input"]>;
-  before?: InputMaybe<Scalars["String"]["input"]>;
-  filter?: InputMaybe<Array<UniversityStudentFilter>>;
-  first?: InputMaybe<Scalars["Int"]["input"]>;
-  last?: InputMaybe<Scalars["Int"]["input"]>;
-  search?: InputMaybe<Scalars["String"]["input"]>;
-  select?: InputMaybe<Array<Scalars["String"]["input"]>>;
-  sort?: InputMaybe<Array<UniversityStudentSort>>;
-};
-
-export type InternalUniversityQueriesProfessorArgs = {
-  id: Scalars["GadgetID"]["input"];
-  select?: InputMaybe<Array<Scalars["String"]["input"]>>;
-};
-
-export type InternalUniversityQueriesRegistrationArgs = {
-  id: Scalars["GadgetID"]["input"];
-  select?: InputMaybe<Array<Scalars["String"]["input"]>>;
-};
-
-export type InternalUniversityQueriesStudentArgs = {
-  id: Scalars["GadgetID"]["input"];
-  select?: InputMaybe<Array<Scalars["String"]["input"]>>;
-};
-
-export type InternalUniversityRegistrationInput = {
-  course?: InputMaybe<InternalBelongsToInput>;
-  createdAt?: InputMaybe<Scalars["DateTime"]["input"]>;
-  effectiveFrom?: InputMaybe<Scalars["DateOrDateTime"]["input"]>;
-  effectiveTo?: InputMaybe<Scalars["DateOrDateTime"]["input"]>;
-  id?: InputMaybe<Scalars["GadgetID"]["input"]>;
-  state?: InputMaybe<Scalars["RecordState"]["input"]>;
-  stateHistory?: InputMaybe<Scalars["RecordState"]["input"]>;
-  student?: InputMaybe<InternalBelongsToInput>;
-  updatedAt?: InputMaybe<Scalars["DateTime"]["input"]>;
-};
-
-/** A connection to a list of InternalUniversityRegistrationRecord items. */
-export type InternalUniversityRegistrationRecordConnection = {
-  __typename?: "InternalUniversityRegistrationRecordConnection";
-  /** A list of edges. */
-  edges: Array<InternalUniversityRegistrationRecordEdge>;
-  /** Information to aid in pagination. */
-  pageInfo: PageInfo;
-};
-
-/** An edge in a InternalUniversityRegistrationRecord connection. */
-export type InternalUniversityRegistrationRecordEdge = {
-  __typename?: "InternalUniversityRegistrationRecordEdge";
-  /** A cursor for use in pagination */
-  cursor: Scalars["String"]["output"];
-  /** The item at the end of the edge */
-  node: Scalars["InternalUniversityRegistrationRecord"]["output"];
-};
-
-export type InternalUniversityStudentAtomicsInput = {
-  /** Numeric atomic commands for operating on year. */
-  year?: InputMaybe<Array<NumericAtomicFieldUpdateInput>>;
-};
-
-export type InternalUniversityStudentInput = {
-  /** An optional list of atomically applied commands for race-safe mutations of the record */
-  _atomics?: InputMaybe<InternalUniversityStudentAtomicsInput>;
-  createdAt?: InputMaybe<Scalars["DateTime"]["input"]>;
-  department?: InputMaybe<Scalars["StudentDepartmentEnum"]["input"]>;
-  firstName?: InputMaybe<Scalars["String"]["input"]>;
-  id?: InputMaybe<Scalars["GadgetID"]["input"]>;
-  lastName?: InputMaybe<Scalars["String"]["input"]>;
-  state?: InputMaybe<Scalars["RecordState"]["input"]>;
-  stateHistory?: InputMaybe<Scalars["RecordState"]["input"]>;
-  updatedAt?: InputMaybe<Scalars["DateTime"]["input"]>;
-  year?: InputMaybe<Scalars["Int"]["input"]>;
-};
-
-/** A connection to a list of InternalUniversityStudentRecord items. */
-export type InternalUniversityStudentRecordConnection = {
-  __typename?: "InternalUniversityStudentRecordConnection";
-  /** A list of edges. */
-  edges: Array<InternalUniversityStudentRecordEdge>;
-  /** Information to aid in pagination. */
-  pageInfo: PageInfo;
-};
-
-/** An edge in a InternalUniversityStudentRecord connection. */
-export type InternalUniversityStudentRecordEdge = {
-  __typename?: "InternalUniversityStudentRecordEdge";
-  /** A cursor for use in pagination */
-  cursor: Scalars["String"]["output"];
-  /** The item at the end of the edge */
-  node: Scalars["InternalUniversityStudentRecord"]["output"];
-};
-
-export type InternalUpdateAutoTableTestRelatedModelResult = {
-  __typename?: "InternalUpdateAutoTableTestRelatedModelResult";
-  _autoTableTestRelatedModel?: Maybe<Scalars["InternalAutoTableTestRelatedModelRecord"]["output"]>;
-  /** Whether the record was created by this upsert operation */
-  created: Scalars["Boolean"]["output"];
-  errors?: Maybe<Array<ExecutionError>>;
-  success: Scalars["Boolean"]["output"];
-};
-
 export type InternalUpdateAutoTableTestResult = {
   __typename?: "InternalUpdateAutoTableTestResult";
   autoTableTest?: Maybe<Scalars["InternalAutoTableTestRecord"]["output"]>;
@@ -11528,6 +11025,15 @@ export type InternalUpdateDoodadResult = {
   created: Scalars["Boolean"]["output"];
   doodad?: Maybe<Scalars["InternalDoodadRecord"]["output"]>;
   errors?: Maybe<Array<ExecutionError>>;
+  success: Scalars["Boolean"]["output"];
+};
+
+export type InternalUpdateFooResult = {
+  __typename?: "InternalUpdateFooResult";
+  /** Whether the record was created by this upsert operation */
+  created: Scalars["Boolean"]["output"];
+  errors?: Maybe<Array<ExecutionError>>;
+  foo?: Maybe<Scalars["InternalFooRecord"]["output"]>;
   success: Scalars["Boolean"]["output"];
 };
 
@@ -11747,51 +11253,6 @@ export type InternalUpdateUniqueFieldsParentModelResult = {
   success: Scalars["Boolean"]["output"];
 };
 
-export type InternalUpdateUniversityAssignmentResult = {
-  __typename?: "InternalUpdateUniversityAssignmentResult";
-  assignment?: Maybe<Scalars["InternalUniversityAssignmentRecord"]["output"]>;
-  /** Whether the record was created by this upsert operation */
-  created: Scalars["Boolean"]["output"];
-  errors?: Maybe<Array<ExecutionError>>;
-  success: Scalars["Boolean"]["output"];
-};
-
-export type InternalUpdateUniversityCourseResult = {
-  __typename?: "InternalUpdateUniversityCourseResult";
-  course?: Maybe<Scalars["InternalUniversityCourseRecord"]["output"]>;
-  /** Whether the record was created by this upsert operation */
-  created: Scalars["Boolean"]["output"];
-  errors?: Maybe<Array<ExecutionError>>;
-  success: Scalars["Boolean"]["output"];
-};
-
-export type InternalUpdateUniversityProfessorResult = {
-  __typename?: "InternalUpdateUniversityProfessorResult";
-  /** Whether the record was created by this upsert operation */
-  created: Scalars["Boolean"]["output"];
-  errors?: Maybe<Array<ExecutionError>>;
-  professor?: Maybe<Scalars["InternalUniversityProfessorRecord"]["output"]>;
-  success: Scalars["Boolean"]["output"];
-};
-
-export type InternalUpdateUniversityRegistrationResult = {
-  __typename?: "InternalUpdateUniversityRegistrationResult";
-  /** Whether the record was created by this upsert operation */
-  created: Scalars["Boolean"]["output"];
-  errors?: Maybe<Array<ExecutionError>>;
-  registration?: Maybe<Scalars["InternalUniversityRegistrationRecord"]["output"]>;
-  success: Scalars["Boolean"]["output"];
-};
-
-export type InternalUpdateUniversityStudentResult = {
-  __typename?: "InternalUpdateUniversityStudentResult";
-  /** Whether the record was created by this upsert operation */
-  created: Scalars["Boolean"]["output"];
-  errors?: Maybe<Array<ExecutionError>>;
-  student?: Maybe<Scalars["InternalUniversityStudentRecord"]["output"]>;
-  success: Scalars["Boolean"]["output"];
-};
-
 export type InternalUpdateUserResult = {
   __typename?: "InternalUpdateUserResult";
   /** Whether the record was created by this upsert operation */
@@ -11801,6 +11262,51 @@ export type InternalUpdateUserResult = {
   user?: Maybe<Scalars["InternalUserRecord"]["output"]>;
 };
 
+export type InternalUpdateWhateverUniversityAssignmentResult = {
+  __typename?: "InternalUpdateWhateverUniversityAssignmentResult";
+  assignment?: Maybe<Scalars["InternalWhateverUniversityAssignmentRecord"]["output"]>;
+  /** Whether the record was created by this upsert operation */
+  created: Scalars["Boolean"]["output"];
+  errors?: Maybe<Array<ExecutionError>>;
+  success: Scalars["Boolean"]["output"];
+};
+
+export type InternalUpdateWhateverUniversityCourseResult = {
+  __typename?: "InternalUpdateWhateverUniversityCourseResult";
+  course?: Maybe<Scalars["InternalWhateverUniversityCourseRecord"]["output"]>;
+  /** Whether the record was created by this upsert operation */
+  created: Scalars["Boolean"]["output"];
+  errors?: Maybe<Array<ExecutionError>>;
+  success: Scalars["Boolean"]["output"];
+};
+
+export type InternalUpdateWhateverUniversityProfessorResult = {
+  __typename?: "InternalUpdateWhateverUniversityProfessorResult";
+  /** Whether the record was created by this upsert operation */
+  created: Scalars["Boolean"]["output"];
+  errors?: Maybe<Array<ExecutionError>>;
+  professor?: Maybe<Scalars["InternalWhateverUniversityProfessorRecord"]["output"]>;
+  success: Scalars["Boolean"]["output"];
+};
+
+export type InternalUpdateWhateverUniversityRegistrationResult = {
+  __typename?: "InternalUpdateWhateverUniversityRegistrationResult";
+  /** Whether the record was created by this upsert operation */
+  created: Scalars["Boolean"]["output"];
+  errors?: Maybe<Array<ExecutionError>>;
+  registration?: Maybe<Scalars["InternalWhateverUniversityRegistrationRecord"]["output"]>;
+  success: Scalars["Boolean"]["output"];
+};
+
+export type InternalUpdateWhateverUniversityStudentResult = {
+  __typename?: "InternalUpdateWhateverUniversityStudentResult";
+  /** Whether the record was created by this upsert operation */
+  created: Scalars["Boolean"]["output"];
+  errors?: Maybe<Array<ExecutionError>>;
+  student?: Maybe<Scalars["InternalWhateverUniversityStudentRecord"]["output"]>;
+  success: Scalars["Boolean"]["output"];
+};
+
 export type InternalUpdateWidgetResult = {
   __typename?: "InternalUpdateWidgetResult";
   /** Whether the record was created by this upsert operation */
@@ -11808,15 +11314,6 @@ export type InternalUpdateWidgetResult = {
   errors?: Maybe<Array<ExecutionError>>;
   success: Scalars["Boolean"]["output"];
   widget?: Maybe<Scalars["InternalWidgetRecord"]["output"]>;
-};
-
-export type InternalUpsertAutoTableTestRelatedModelResult = {
-  __typename?: "InternalUpsertAutoTableTestRelatedModelResult";
-  _autoTableTestRelatedModel?: Maybe<Scalars["InternalAutoTableTestRelatedModelRecord"]["output"]>;
-  /** Whether the record was created by this upsert operation */
-  created: Scalars["Boolean"]["output"];
-  errors?: Maybe<Array<ExecutionError>>;
-  success: Scalars["Boolean"]["output"];
 };
 
 export type InternalUpsertAutoTableTestResult = {
@@ -11834,6 +11331,15 @@ export type InternalUpsertDoodadResult = {
   created: Scalars["Boolean"]["output"];
   doodad?: Maybe<Scalars["InternalDoodadRecord"]["output"]>;
   errors?: Maybe<Array<ExecutionError>>;
+  success: Scalars["Boolean"]["output"];
+};
+
+export type InternalUpsertFooResult = {
+  __typename?: "InternalUpsertFooResult";
+  /** Whether the record was created by this upsert operation */
+  created: Scalars["Boolean"]["output"];
+  errors?: Maybe<Array<ExecutionError>>;
+  foo?: Maybe<Scalars["InternalFooRecord"]["output"]>;
   success: Scalars["Boolean"]["output"];
 };
 
@@ -12053,51 +11559,6 @@ export type InternalUpsertUniqueFieldsParentModelResult = {
   success: Scalars["Boolean"]["output"];
 };
 
-export type InternalUpsertUniversityAssignmentResult = {
-  __typename?: "InternalUpsertUniversityAssignmentResult";
-  assignment?: Maybe<Scalars["InternalUniversityAssignmentRecord"]["output"]>;
-  /** Whether the record was created by this upsert operation */
-  created: Scalars["Boolean"]["output"];
-  errors?: Maybe<Array<ExecutionError>>;
-  success: Scalars["Boolean"]["output"];
-};
-
-export type InternalUpsertUniversityCourseResult = {
-  __typename?: "InternalUpsertUniversityCourseResult";
-  course?: Maybe<Scalars["InternalUniversityCourseRecord"]["output"]>;
-  /** Whether the record was created by this upsert operation */
-  created: Scalars["Boolean"]["output"];
-  errors?: Maybe<Array<ExecutionError>>;
-  success: Scalars["Boolean"]["output"];
-};
-
-export type InternalUpsertUniversityProfessorResult = {
-  __typename?: "InternalUpsertUniversityProfessorResult";
-  /** Whether the record was created by this upsert operation */
-  created: Scalars["Boolean"]["output"];
-  errors?: Maybe<Array<ExecutionError>>;
-  professor?: Maybe<Scalars["InternalUniversityProfessorRecord"]["output"]>;
-  success: Scalars["Boolean"]["output"];
-};
-
-export type InternalUpsertUniversityRegistrationResult = {
-  __typename?: "InternalUpsertUniversityRegistrationResult";
-  /** Whether the record was created by this upsert operation */
-  created: Scalars["Boolean"]["output"];
-  errors?: Maybe<Array<ExecutionError>>;
-  registration?: Maybe<Scalars["InternalUniversityRegistrationRecord"]["output"]>;
-  success: Scalars["Boolean"]["output"];
-};
-
-export type InternalUpsertUniversityStudentResult = {
-  __typename?: "InternalUpsertUniversityStudentResult";
-  /** Whether the record was created by this upsert operation */
-  created: Scalars["Boolean"]["output"];
-  errors?: Maybe<Array<ExecutionError>>;
-  student?: Maybe<Scalars["InternalUniversityStudentRecord"]["output"]>;
-  success: Scalars["Boolean"]["output"];
-};
-
 export type InternalUpsertUserResult = {
   __typename?: "InternalUpsertUserResult";
   /** Whether the record was created by this upsert operation */
@@ -12105,6 +11566,51 @@ export type InternalUpsertUserResult = {
   errors?: Maybe<Array<ExecutionError>>;
   success: Scalars["Boolean"]["output"];
   user?: Maybe<Scalars["InternalUserRecord"]["output"]>;
+};
+
+export type InternalUpsertWhateverUniversityAssignmentResult = {
+  __typename?: "InternalUpsertWhateverUniversityAssignmentResult";
+  assignment?: Maybe<Scalars["InternalWhateverUniversityAssignmentRecord"]["output"]>;
+  /** Whether the record was created by this upsert operation */
+  created: Scalars["Boolean"]["output"];
+  errors?: Maybe<Array<ExecutionError>>;
+  success: Scalars["Boolean"]["output"];
+};
+
+export type InternalUpsertWhateverUniversityCourseResult = {
+  __typename?: "InternalUpsertWhateverUniversityCourseResult";
+  course?: Maybe<Scalars["InternalWhateverUniversityCourseRecord"]["output"]>;
+  /** Whether the record was created by this upsert operation */
+  created: Scalars["Boolean"]["output"];
+  errors?: Maybe<Array<ExecutionError>>;
+  success: Scalars["Boolean"]["output"];
+};
+
+export type InternalUpsertWhateverUniversityProfessorResult = {
+  __typename?: "InternalUpsertWhateverUniversityProfessorResult";
+  /** Whether the record was created by this upsert operation */
+  created: Scalars["Boolean"]["output"];
+  errors?: Maybe<Array<ExecutionError>>;
+  professor?: Maybe<Scalars["InternalWhateverUniversityProfessorRecord"]["output"]>;
+  success: Scalars["Boolean"]["output"];
+};
+
+export type InternalUpsertWhateverUniversityRegistrationResult = {
+  __typename?: "InternalUpsertWhateverUniversityRegistrationResult";
+  /** Whether the record was created by this upsert operation */
+  created: Scalars["Boolean"]["output"];
+  errors?: Maybe<Array<ExecutionError>>;
+  registration?: Maybe<Scalars["InternalWhateverUniversityRegistrationRecord"]["output"]>;
+  success: Scalars["Boolean"]["output"];
+};
+
+export type InternalUpsertWhateverUniversityStudentResult = {
+  __typename?: "InternalUpsertWhateverUniversityStudentResult";
+  /** Whether the record was created by this upsert operation */
+  created: Scalars["Boolean"]["output"];
+  errors?: Maybe<Array<ExecutionError>>;
+  student?: Maybe<Scalars["InternalWhateverUniversityStudentRecord"]["output"]>;
+  success: Scalars["Boolean"]["output"];
 };
 
 export type InternalUpsertWidgetResult = {
@@ -12150,6 +11656,553 @@ export type InternalUserRecordEdge = {
   cursor: Scalars["String"]["output"];
   /** The item at the end of the edge */
   node: Scalars["InternalUserRecord"]["output"];
+};
+
+export type InternalWhateverMutations = {
+  __typename?: "InternalWhateverMutations";
+  university: InternalWhateverUniversityMutations;
+};
+
+export type InternalWhateverQueries = {
+  __typename?: "InternalWhateverQueries";
+  university: InternalWhateverUniversityQueries;
+};
+
+export type InternalWhateverUniversityAssignmentInput = {
+  course?: InputMaybe<InternalBelongsToInput>;
+  createdAt?: InputMaybe<Scalars["DateTime"]["input"]>;
+  id?: InputMaybe<Scalars["GadgetID"]["input"]>;
+  professor?: InputMaybe<InternalBelongsToInput>;
+  state?: InputMaybe<Scalars["RecordState"]["input"]>;
+  stateHistory?: InputMaybe<Scalars["RecordState"]["input"]>;
+  updatedAt?: InputMaybe<Scalars["DateTime"]["input"]>;
+};
+
+/** A connection to a list of InternalWhateverUniversityAssignmentRecord items. */
+export type InternalWhateverUniversityAssignmentRecordConnection = {
+  __typename?: "InternalWhateverUniversityAssignmentRecordConnection";
+  /** A list of edges. */
+  edges: Array<InternalWhateverUniversityAssignmentRecordEdge>;
+  /** Information to aid in pagination. */
+  pageInfo: PageInfo;
+};
+
+/** An edge in a InternalWhateverUniversityAssignmentRecord connection. */
+export type InternalWhateverUniversityAssignmentRecordEdge = {
+  __typename?: "InternalWhateverUniversityAssignmentRecordEdge";
+  /** A cursor for use in pagination */
+  cursor: Scalars["String"]["output"];
+  /** The item at the end of the edge */
+  node: Scalars["InternalWhateverUniversityAssignmentRecord"]["output"];
+};
+
+export type InternalWhateverUniversityCourseInput = {
+  createdAt?: InputMaybe<Scalars["DateTime"]["input"]>;
+  description?: InputMaybe<RichTextInput>;
+  id?: InputMaybe<Scalars["GadgetID"]["input"]>;
+  state?: InputMaybe<Scalars["RecordState"]["input"]>;
+  stateHistory?: InputMaybe<Scalars["RecordState"]["input"]>;
+  title?: InputMaybe<Scalars["String"]["input"]>;
+  updatedAt?: InputMaybe<Scalars["DateTime"]["input"]>;
+};
+
+/** A connection to a list of InternalWhateverUniversityCourseRecord items. */
+export type InternalWhateverUniversityCourseRecordConnection = {
+  __typename?: "InternalWhateverUniversityCourseRecordConnection";
+  /** A list of edges. */
+  edges: Array<InternalWhateverUniversityCourseRecordEdge>;
+  /** Information to aid in pagination. */
+  pageInfo: PageInfo;
+};
+
+/** An edge in a InternalWhateverUniversityCourseRecord connection. */
+export type InternalWhateverUniversityCourseRecordEdge = {
+  __typename?: "InternalWhateverUniversityCourseRecordEdge";
+  /** A cursor for use in pagination */
+  cursor: Scalars["String"]["output"];
+  /** The item at the end of the edge */
+  node: Scalars["InternalWhateverUniversityCourseRecord"]["output"];
+};
+
+export type InternalWhateverUniversityMutations = {
+  __typename?: "InternalWhateverUniversityMutations";
+  bulkCreateAssignments?: Maybe<InternalBulkCreateWhateverUniversityAssignmentsResult>;
+  bulkCreateCourses?: Maybe<InternalBulkCreateWhateverUniversityCoursesResult>;
+  bulkCreateProfessors?: Maybe<InternalBulkCreateWhateverUniversityProfessorsResult>;
+  bulkCreateRegistrations?: Maybe<InternalBulkCreateWhateverUniversityRegistrationsResult>;
+  bulkCreateStudents?: Maybe<InternalBulkCreateWhateverUniversityStudentsResult>;
+  createAssignment?: Maybe<InternalCreateWhateverUniversityAssignmentResult>;
+  createCourse?: Maybe<InternalCreateWhateverUniversityCourseResult>;
+  createProfessor?: Maybe<InternalCreateWhateverUniversityProfessorResult>;
+  createRegistration?: Maybe<InternalCreateWhateverUniversityRegistrationResult>;
+  createStudent?: Maybe<InternalCreateWhateverUniversityStudentResult>;
+  deleteAssignment?: Maybe<InternalDeleteWhateverUniversityAssignmentResult>;
+  deleteCourse?: Maybe<InternalDeleteWhateverUniversityCourseResult>;
+  deleteManyAssignment?: Maybe<InternalDeleteManyWhateverUniversityAssignmentResult>;
+  deleteManyCourse?: Maybe<InternalDeleteManyWhateverUniversityCourseResult>;
+  deleteManyProfessor?: Maybe<InternalDeleteManyWhateverUniversityProfessorResult>;
+  deleteManyRegistration?: Maybe<InternalDeleteManyWhateverUniversityRegistrationResult>;
+  deleteManyStudent?: Maybe<InternalDeleteManyWhateverUniversityStudentResult>;
+  deleteProfessor?: Maybe<InternalDeleteWhateverUniversityProfessorResult>;
+  deleteRegistration?: Maybe<InternalDeleteWhateverUniversityRegistrationResult>;
+  deleteStudent?: Maybe<InternalDeleteWhateverUniversityStudentResult>;
+  triggerCreateAssignment?: Maybe<CreateWhateverUniversityAssignmentResult>;
+  triggerCreateCourse?: Maybe<CreateWhateverUniversityCourseResult>;
+  triggerCreateProfessor?: Maybe<CreateWhateverUniversityProfessorResult>;
+  triggerCreateRegistration?: Maybe<CreateWhateverUniversityRegistrationResult>;
+  triggerCreateStudent?: Maybe<CreateWhateverUniversityStudentResult>;
+  triggerDeleteAssignment?: Maybe<DeleteWhateverUniversityAssignmentResult>;
+  triggerDeleteCourse?: Maybe<DeleteWhateverUniversityCourseResult>;
+  triggerDeleteProfessor?: Maybe<DeleteWhateverUniversityProfessorResult>;
+  triggerDeleteRegistration?: Maybe<DeleteWhateverUniversityRegistrationResult>;
+  triggerDeleteStudent?: Maybe<DeleteWhateverUniversityStudentResult>;
+  triggerUpdateAssignment?: Maybe<UpdateWhateverUniversityAssignmentResult>;
+  triggerUpdateCourse?: Maybe<UpdateWhateverUniversityCourseResult>;
+  triggerUpdateProfessor?: Maybe<UpdateWhateverUniversityProfessorResult>;
+  triggerUpdateRegistration?: Maybe<UpdateWhateverUniversityRegistrationResult>;
+  triggerUpdateStudent?: Maybe<UpdateWhateverUniversityStudentResult>;
+  updateAssignment?: Maybe<InternalUpdateWhateverUniversityAssignmentResult>;
+  updateCourse?: Maybe<InternalUpdateWhateverUniversityCourseResult>;
+  updateProfessor?: Maybe<InternalUpdateWhateverUniversityProfessorResult>;
+  updateRegistration?: Maybe<InternalUpdateWhateverUniversityRegistrationResult>;
+  updateStudent?: Maybe<InternalUpdateWhateverUniversityStudentResult>;
+  upsertAssignment?: Maybe<InternalUpsertWhateverUniversityAssignmentResult>;
+  upsertCourse?: Maybe<InternalUpsertWhateverUniversityCourseResult>;
+  upsertProfessor?: Maybe<InternalUpsertWhateverUniversityProfessorResult>;
+  upsertRegistration?: Maybe<InternalUpsertWhateverUniversityRegistrationResult>;
+  upsertStudent?: Maybe<InternalUpsertWhateverUniversityStudentResult>;
+};
+
+export type InternalWhateverUniversityMutationsBulkCreateAssignmentsArgs = {
+  assignments: Array<InputMaybe<InternalWhateverUniversityAssignmentInput>>;
+};
+
+export type InternalWhateverUniversityMutationsBulkCreateCoursesArgs = {
+  courses: Array<InputMaybe<InternalWhateverUniversityCourseInput>>;
+};
+
+export type InternalWhateverUniversityMutationsBulkCreateProfessorsArgs = {
+  professors: Array<InputMaybe<InternalWhateverUniversityProfessorInput>>;
+};
+
+export type InternalWhateverUniversityMutationsBulkCreateRegistrationsArgs = {
+  registrations: Array<InputMaybe<InternalWhateverUniversityRegistrationInput>>;
+};
+
+export type InternalWhateverUniversityMutationsBulkCreateStudentsArgs = {
+  students: Array<InputMaybe<InternalWhateverUniversityStudentInput>>;
+};
+
+export type InternalWhateverUniversityMutationsCreateAssignmentArgs = {
+  assignment?: InputMaybe<InternalWhateverUniversityAssignmentInput>;
+};
+
+export type InternalWhateverUniversityMutationsCreateCourseArgs = {
+  course?: InputMaybe<InternalWhateverUniversityCourseInput>;
+};
+
+export type InternalWhateverUniversityMutationsCreateProfessorArgs = {
+  professor?: InputMaybe<InternalWhateverUniversityProfessorInput>;
+};
+
+export type InternalWhateverUniversityMutationsCreateRegistrationArgs = {
+  registration?: InputMaybe<InternalWhateverUniversityRegistrationInput>;
+};
+
+export type InternalWhateverUniversityMutationsCreateStudentArgs = {
+  student?: InputMaybe<InternalWhateverUniversityStudentInput>;
+};
+
+export type InternalWhateverUniversityMutationsDeleteAssignmentArgs = {
+  id: Scalars["GadgetID"]["input"];
+};
+
+export type InternalWhateverUniversityMutationsDeleteCourseArgs = {
+  id: Scalars["GadgetID"]["input"];
+};
+
+export type InternalWhateverUniversityMutationsDeleteManyAssignmentArgs = {
+  filter?: InputMaybe<Array<WhateverUniversityAssignmentFilter>>;
+  search?: InputMaybe<Scalars["String"]["input"]>;
+};
+
+export type InternalWhateverUniversityMutationsDeleteManyCourseArgs = {
+  filter?: InputMaybe<Array<WhateverUniversityCourseFilter>>;
+  search?: InputMaybe<Scalars["String"]["input"]>;
+};
+
+export type InternalWhateverUniversityMutationsDeleteManyProfessorArgs = {
+  filter?: InputMaybe<Array<WhateverUniversityProfessorFilter>>;
+  search?: InputMaybe<Scalars["String"]["input"]>;
+};
+
+export type InternalWhateverUniversityMutationsDeleteManyRegistrationArgs = {
+  filter?: InputMaybe<Array<WhateverUniversityRegistrationFilter>>;
+  search?: InputMaybe<Scalars["String"]["input"]>;
+};
+
+export type InternalWhateverUniversityMutationsDeleteManyStudentArgs = {
+  filter?: InputMaybe<Array<WhateverUniversityStudentFilter>>;
+  search?: InputMaybe<Scalars["String"]["input"]>;
+};
+
+export type InternalWhateverUniversityMutationsDeleteProfessorArgs = {
+  id: Scalars["GadgetID"]["input"];
+};
+
+export type InternalWhateverUniversityMutationsDeleteRegistrationArgs = {
+  id: Scalars["GadgetID"]["input"];
+};
+
+export type InternalWhateverUniversityMutationsDeleteStudentArgs = {
+  id: Scalars["GadgetID"]["input"];
+};
+
+export type InternalWhateverUniversityMutationsTriggerCreateAssignmentArgs = {
+  context?: InputMaybe<AppGraphQlTriggerMutationContext>;
+  params?: InputMaybe<Scalars["JSONObject"]["input"]>;
+  trigger?: InputMaybe<Scalars["JSONObject"]["input"]>;
+  verifyTriggerExists?: InputMaybe<Scalars["Boolean"]["input"]>;
+};
+
+export type InternalWhateverUniversityMutationsTriggerCreateCourseArgs = {
+  context?: InputMaybe<AppGraphQlTriggerMutationContext>;
+  params?: InputMaybe<Scalars["JSONObject"]["input"]>;
+  trigger?: InputMaybe<Scalars["JSONObject"]["input"]>;
+  verifyTriggerExists?: InputMaybe<Scalars["Boolean"]["input"]>;
+};
+
+export type InternalWhateverUniversityMutationsTriggerCreateProfessorArgs = {
+  context?: InputMaybe<AppGraphQlTriggerMutationContext>;
+  params?: InputMaybe<Scalars["JSONObject"]["input"]>;
+  trigger?: InputMaybe<Scalars["JSONObject"]["input"]>;
+  verifyTriggerExists?: InputMaybe<Scalars["Boolean"]["input"]>;
+};
+
+export type InternalWhateverUniversityMutationsTriggerCreateRegistrationArgs = {
+  context?: InputMaybe<AppGraphQlTriggerMutationContext>;
+  params?: InputMaybe<Scalars["JSONObject"]["input"]>;
+  trigger?: InputMaybe<Scalars["JSONObject"]["input"]>;
+  verifyTriggerExists?: InputMaybe<Scalars["Boolean"]["input"]>;
+};
+
+export type InternalWhateverUniversityMutationsTriggerCreateStudentArgs = {
+  context?: InputMaybe<AppGraphQlTriggerMutationContext>;
+  params?: InputMaybe<Scalars["JSONObject"]["input"]>;
+  trigger?: InputMaybe<Scalars["JSONObject"]["input"]>;
+  verifyTriggerExists?: InputMaybe<Scalars["Boolean"]["input"]>;
+};
+
+export type InternalWhateverUniversityMutationsTriggerDeleteAssignmentArgs = {
+  context?: InputMaybe<AppGraphQlTriggerMutationContext>;
+  params?: InputMaybe<Scalars["JSONObject"]["input"]>;
+  trigger?: InputMaybe<Scalars["JSONObject"]["input"]>;
+  verifyTriggerExists?: InputMaybe<Scalars["Boolean"]["input"]>;
+};
+
+export type InternalWhateverUniversityMutationsTriggerDeleteCourseArgs = {
+  context?: InputMaybe<AppGraphQlTriggerMutationContext>;
+  params?: InputMaybe<Scalars["JSONObject"]["input"]>;
+  trigger?: InputMaybe<Scalars["JSONObject"]["input"]>;
+  verifyTriggerExists?: InputMaybe<Scalars["Boolean"]["input"]>;
+};
+
+export type InternalWhateverUniversityMutationsTriggerDeleteProfessorArgs = {
+  context?: InputMaybe<AppGraphQlTriggerMutationContext>;
+  params?: InputMaybe<Scalars["JSONObject"]["input"]>;
+  trigger?: InputMaybe<Scalars["JSONObject"]["input"]>;
+  verifyTriggerExists?: InputMaybe<Scalars["Boolean"]["input"]>;
+};
+
+export type InternalWhateverUniversityMutationsTriggerDeleteRegistrationArgs = {
+  context?: InputMaybe<AppGraphQlTriggerMutationContext>;
+  params?: InputMaybe<Scalars["JSONObject"]["input"]>;
+  trigger?: InputMaybe<Scalars["JSONObject"]["input"]>;
+  verifyTriggerExists?: InputMaybe<Scalars["Boolean"]["input"]>;
+};
+
+export type InternalWhateverUniversityMutationsTriggerDeleteStudentArgs = {
+  context?: InputMaybe<AppGraphQlTriggerMutationContext>;
+  params?: InputMaybe<Scalars["JSONObject"]["input"]>;
+  trigger?: InputMaybe<Scalars["JSONObject"]["input"]>;
+  verifyTriggerExists?: InputMaybe<Scalars["Boolean"]["input"]>;
+};
+
+export type InternalWhateverUniversityMutationsTriggerUpdateAssignmentArgs = {
+  context?: InputMaybe<AppGraphQlTriggerMutationContext>;
+  params?: InputMaybe<Scalars["JSONObject"]["input"]>;
+  trigger?: InputMaybe<Scalars["JSONObject"]["input"]>;
+  verifyTriggerExists?: InputMaybe<Scalars["Boolean"]["input"]>;
+};
+
+export type InternalWhateverUniversityMutationsTriggerUpdateCourseArgs = {
+  context?: InputMaybe<AppGraphQlTriggerMutationContext>;
+  params?: InputMaybe<Scalars["JSONObject"]["input"]>;
+  trigger?: InputMaybe<Scalars["JSONObject"]["input"]>;
+  verifyTriggerExists?: InputMaybe<Scalars["Boolean"]["input"]>;
+};
+
+export type InternalWhateverUniversityMutationsTriggerUpdateProfessorArgs = {
+  context?: InputMaybe<AppGraphQlTriggerMutationContext>;
+  params?: InputMaybe<Scalars["JSONObject"]["input"]>;
+  trigger?: InputMaybe<Scalars["JSONObject"]["input"]>;
+  verifyTriggerExists?: InputMaybe<Scalars["Boolean"]["input"]>;
+};
+
+export type InternalWhateverUniversityMutationsTriggerUpdateRegistrationArgs = {
+  context?: InputMaybe<AppGraphQlTriggerMutationContext>;
+  params?: InputMaybe<Scalars["JSONObject"]["input"]>;
+  trigger?: InputMaybe<Scalars["JSONObject"]["input"]>;
+  verifyTriggerExists?: InputMaybe<Scalars["Boolean"]["input"]>;
+};
+
+export type InternalWhateverUniversityMutationsTriggerUpdateStudentArgs = {
+  context?: InputMaybe<AppGraphQlTriggerMutationContext>;
+  params?: InputMaybe<Scalars["JSONObject"]["input"]>;
+  trigger?: InputMaybe<Scalars["JSONObject"]["input"]>;
+  verifyTriggerExists?: InputMaybe<Scalars["Boolean"]["input"]>;
+};
+
+export type InternalWhateverUniversityMutationsUpdateAssignmentArgs = {
+  assignment?: InputMaybe<InternalWhateverUniversityAssignmentInput>;
+  id: Scalars["GadgetID"]["input"];
+};
+
+export type InternalWhateverUniversityMutationsUpdateCourseArgs = {
+  course?: InputMaybe<InternalWhateverUniversityCourseInput>;
+  id: Scalars["GadgetID"]["input"];
+};
+
+export type InternalWhateverUniversityMutationsUpdateProfessorArgs = {
+  id: Scalars["GadgetID"]["input"];
+  professor?: InputMaybe<InternalWhateverUniversityProfessorInput>;
+};
+
+export type InternalWhateverUniversityMutationsUpdateRegistrationArgs = {
+  id: Scalars["GadgetID"]["input"];
+  registration?: InputMaybe<InternalWhateverUniversityRegistrationInput>;
+};
+
+export type InternalWhateverUniversityMutationsUpdateStudentArgs = {
+  id: Scalars["GadgetID"]["input"];
+  student?: InputMaybe<InternalWhateverUniversityStudentInput>;
+};
+
+export type InternalWhateverUniversityMutationsUpsertAssignmentArgs = {
+  assignment?: InputMaybe<InternalWhateverUniversityAssignmentInput>;
+  on?: InputMaybe<Array<Scalars["String"]["input"]>>;
+};
+
+export type InternalWhateverUniversityMutationsUpsertCourseArgs = {
+  course?: InputMaybe<InternalWhateverUniversityCourseInput>;
+  on?: InputMaybe<Array<Scalars["String"]["input"]>>;
+};
+
+export type InternalWhateverUniversityMutationsUpsertProfessorArgs = {
+  on?: InputMaybe<Array<Scalars["String"]["input"]>>;
+  professor?: InputMaybe<InternalWhateverUniversityProfessorInput>;
+};
+
+export type InternalWhateverUniversityMutationsUpsertRegistrationArgs = {
+  on?: InputMaybe<Array<Scalars["String"]["input"]>>;
+  registration?: InputMaybe<InternalWhateverUniversityRegistrationInput>;
+};
+
+export type InternalWhateverUniversityMutationsUpsertStudentArgs = {
+  on?: InputMaybe<Array<Scalars["String"]["input"]>>;
+  student?: InputMaybe<InternalWhateverUniversityStudentInput>;
+};
+
+export type InternalWhateverUniversityProfessorInput = {
+  createdAt?: InputMaybe<Scalars["DateTime"]["input"]>;
+  firstName?: InputMaybe<Scalars["String"]["input"]>;
+  id?: InputMaybe<Scalars["GadgetID"]["input"]>;
+  lastName?: InputMaybe<Scalars["String"]["input"]>;
+  state?: InputMaybe<Scalars["RecordState"]["input"]>;
+  stateHistory?: InputMaybe<Scalars["RecordState"]["input"]>;
+  title?: InputMaybe<Scalars["ProfessorTitleEnum"]["input"]>;
+  updatedAt?: InputMaybe<Scalars["DateTime"]["input"]>;
+};
+
+/** A connection to a list of InternalWhateverUniversityProfessorRecord items. */
+export type InternalWhateverUniversityProfessorRecordConnection = {
+  __typename?: "InternalWhateverUniversityProfessorRecordConnection";
+  /** A list of edges. */
+  edges: Array<InternalWhateverUniversityProfessorRecordEdge>;
+  /** Information to aid in pagination. */
+  pageInfo: PageInfo;
+};
+
+/** An edge in a InternalWhateverUniversityProfessorRecord connection. */
+export type InternalWhateverUniversityProfessorRecordEdge = {
+  __typename?: "InternalWhateverUniversityProfessorRecordEdge";
+  /** A cursor for use in pagination */
+  cursor: Scalars["String"]["output"];
+  /** The item at the end of the edge */
+  node: Scalars["InternalWhateverUniversityProfessorRecord"]["output"];
+};
+
+export type InternalWhateverUniversityQueries = {
+  __typename?: "InternalWhateverUniversityQueries";
+  assignment?: Maybe<Scalars["InternalWhateverUniversityAssignmentRecord"]["output"]>;
+  course?: Maybe<Scalars["InternalWhateverUniversityCourseRecord"]["output"]>;
+  /** Currently open platform transaction details, or null if no transaction is open */
+  currentTransactionDetails?: Maybe<Scalars["JSONObject"]["output"]>;
+  listAssignment: InternalWhateverUniversityAssignmentRecordConnection;
+  listCourse: InternalWhateverUniversityCourseRecordConnection;
+  listProfessor: InternalWhateverUniversityProfessorRecordConnection;
+  listRegistration: InternalWhateverUniversityRegistrationRecordConnection;
+  listStudent: InternalWhateverUniversityStudentRecordConnection;
+  professor?: Maybe<Scalars["InternalWhateverUniversityProfessorRecord"]["output"]>;
+  registration?: Maybe<Scalars["InternalWhateverUniversityRegistrationRecord"]["output"]>;
+  student?: Maybe<Scalars["InternalWhateverUniversityStudentRecord"]["output"]>;
+};
+
+export type InternalWhateverUniversityQueriesAssignmentArgs = {
+  id: Scalars["GadgetID"]["input"];
+  select?: InputMaybe<Array<Scalars["String"]["input"]>>;
+};
+
+export type InternalWhateverUniversityQueriesCourseArgs = {
+  id: Scalars["GadgetID"]["input"];
+  select?: InputMaybe<Array<Scalars["String"]["input"]>>;
+};
+
+export type InternalWhateverUniversityQueriesListAssignmentArgs = {
+  after?: InputMaybe<Scalars["String"]["input"]>;
+  before?: InputMaybe<Scalars["String"]["input"]>;
+  filter?: InputMaybe<Array<WhateverUniversityAssignmentFilter>>;
+  first?: InputMaybe<Scalars["Int"]["input"]>;
+  last?: InputMaybe<Scalars["Int"]["input"]>;
+  search?: InputMaybe<Scalars["String"]["input"]>;
+  select?: InputMaybe<Array<Scalars["String"]["input"]>>;
+  sort?: InputMaybe<Array<WhateverUniversityAssignmentSort>>;
+};
+
+export type InternalWhateverUniversityQueriesListCourseArgs = {
+  after?: InputMaybe<Scalars["String"]["input"]>;
+  before?: InputMaybe<Scalars["String"]["input"]>;
+  filter?: InputMaybe<Array<WhateverUniversityCourseFilter>>;
+  first?: InputMaybe<Scalars["Int"]["input"]>;
+  last?: InputMaybe<Scalars["Int"]["input"]>;
+  search?: InputMaybe<Scalars["String"]["input"]>;
+  select?: InputMaybe<Array<Scalars["String"]["input"]>>;
+  sort?: InputMaybe<Array<WhateverUniversityCourseSort>>;
+};
+
+export type InternalWhateverUniversityQueriesListProfessorArgs = {
+  after?: InputMaybe<Scalars["String"]["input"]>;
+  before?: InputMaybe<Scalars["String"]["input"]>;
+  filter?: InputMaybe<Array<WhateverUniversityProfessorFilter>>;
+  first?: InputMaybe<Scalars["Int"]["input"]>;
+  last?: InputMaybe<Scalars["Int"]["input"]>;
+  search?: InputMaybe<Scalars["String"]["input"]>;
+  select?: InputMaybe<Array<Scalars["String"]["input"]>>;
+  sort?: InputMaybe<Array<WhateverUniversityProfessorSort>>;
+};
+
+export type InternalWhateverUniversityQueriesListRegistrationArgs = {
+  after?: InputMaybe<Scalars["String"]["input"]>;
+  before?: InputMaybe<Scalars["String"]["input"]>;
+  filter?: InputMaybe<Array<WhateverUniversityRegistrationFilter>>;
+  first?: InputMaybe<Scalars["Int"]["input"]>;
+  last?: InputMaybe<Scalars["Int"]["input"]>;
+  search?: InputMaybe<Scalars["String"]["input"]>;
+  select?: InputMaybe<Array<Scalars["String"]["input"]>>;
+  sort?: InputMaybe<Array<WhateverUniversityRegistrationSort>>;
+};
+
+export type InternalWhateverUniversityQueriesListStudentArgs = {
+  after?: InputMaybe<Scalars["String"]["input"]>;
+  before?: InputMaybe<Scalars["String"]["input"]>;
+  filter?: InputMaybe<Array<WhateverUniversityStudentFilter>>;
+  first?: InputMaybe<Scalars["Int"]["input"]>;
+  last?: InputMaybe<Scalars["Int"]["input"]>;
+  search?: InputMaybe<Scalars["String"]["input"]>;
+  select?: InputMaybe<Array<Scalars["String"]["input"]>>;
+  sort?: InputMaybe<Array<WhateverUniversityStudentSort>>;
+};
+
+export type InternalWhateverUniversityQueriesProfessorArgs = {
+  id: Scalars["GadgetID"]["input"];
+  select?: InputMaybe<Array<Scalars["String"]["input"]>>;
+};
+
+export type InternalWhateverUniversityQueriesRegistrationArgs = {
+  id: Scalars["GadgetID"]["input"];
+  select?: InputMaybe<Array<Scalars["String"]["input"]>>;
+};
+
+export type InternalWhateverUniversityQueriesStudentArgs = {
+  id: Scalars["GadgetID"]["input"];
+  select?: InputMaybe<Array<Scalars["String"]["input"]>>;
+};
+
+export type InternalWhateverUniversityRegistrationInput = {
+  course?: InputMaybe<InternalBelongsToInput>;
+  createdAt?: InputMaybe<Scalars["DateTime"]["input"]>;
+  effectiveFrom?: InputMaybe<Scalars["DateOrDateTime"]["input"]>;
+  effectiveTo?: InputMaybe<Scalars["DateOrDateTime"]["input"]>;
+  id?: InputMaybe<Scalars["GadgetID"]["input"]>;
+  state?: InputMaybe<Scalars["RecordState"]["input"]>;
+  stateHistory?: InputMaybe<Scalars["RecordState"]["input"]>;
+  student?: InputMaybe<InternalBelongsToInput>;
+  updatedAt?: InputMaybe<Scalars["DateTime"]["input"]>;
+};
+
+/** A connection to a list of InternalWhateverUniversityRegistrationRecord items. */
+export type InternalWhateverUniversityRegistrationRecordConnection = {
+  __typename?: "InternalWhateverUniversityRegistrationRecordConnection";
+  /** A list of edges. */
+  edges: Array<InternalWhateverUniversityRegistrationRecordEdge>;
+  /** Information to aid in pagination. */
+  pageInfo: PageInfo;
+};
+
+/** An edge in a InternalWhateverUniversityRegistrationRecord connection. */
+export type InternalWhateverUniversityRegistrationRecordEdge = {
+  __typename?: "InternalWhateverUniversityRegistrationRecordEdge";
+  /** A cursor for use in pagination */
+  cursor: Scalars["String"]["output"];
+  /** The item at the end of the edge */
+  node: Scalars["InternalWhateverUniversityRegistrationRecord"]["output"];
+};
+
+export type InternalWhateverUniversityStudentAtomicsInput = {
+  /** Numeric atomic commands for operating on year. */
+  year?: InputMaybe<Array<NumericAtomicFieldUpdateInput>>;
+};
+
+export type InternalWhateverUniversityStudentInput = {
+  /** An optional list of atomically applied commands for race-safe mutations of the record */
+  _atomics?: InputMaybe<InternalWhateverUniversityStudentAtomicsInput>;
+  createdAt?: InputMaybe<Scalars["DateTime"]["input"]>;
+  department?: InputMaybe<Scalars["StudentDepartmentEnum"]["input"]>;
+  firstName?: InputMaybe<Scalars["String"]["input"]>;
+  id?: InputMaybe<Scalars["GadgetID"]["input"]>;
+  lastName?: InputMaybe<Scalars["String"]["input"]>;
+  state?: InputMaybe<Scalars["RecordState"]["input"]>;
+  stateHistory?: InputMaybe<Scalars["RecordState"]["input"]>;
+  updatedAt?: InputMaybe<Scalars["DateTime"]["input"]>;
+  year?: InputMaybe<Scalars["Int"]["input"]>;
+};
+
+/** A connection to a list of InternalWhateverUniversityStudentRecord items. */
+export type InternalWhateverUniversityStudentRecordConnection = {
+  __typename?: "InternalWhateverUniversityStudentRecordConnection";
+  /** A list of edges. */
+  edges: Array<InternalWhateverUniversityStudentRecordEdge>;
+  /** Information to aid in pagination. */
+  pageInfo: PageInfo;
+};
+
+/** An edge in a InternalWhateverUniversityStudentRecord connection. */
+export type InternalWhateverUniversityStudentRecordEdge = {
+  __typename?: "InternalWhateverUniversityStudentRecordEdge";
+  /** A cursor for use in pagination */
+  cursor: Scalars["String"]["output"];
+  /** The item at the end of the edge */
+  node: Scalars["InternalWhateverUniversityStudentRecord"]["output"];
 };
 
 export type InternalWidgetAtomicsInput = {
@@ -12340,9 +12393,9 @@ export type Mutation = {
   bulkAddInventoryWidgets?: Maybe<BulkAddInventoryWidgetsResult>;
   bulkAlwaysThrowErrorWidgets?: Maybe<BulkAlwaysThrowErrorWidgetsResult>;
   bulkCompleteShopifySyncs?: Maybe<BulkCompleteShopifySyncsResult>;
-  bulkCreateAutoTableTestRelatedModels?: Maybe<BulkCreateAutoTableTestRelatedModelsResult>;
   bulkCreateAutoTableTests?: Maybe<BulkCreateAutoTableTestsResult>;
   bulkCreateDoodads?: Maybe<BulkCreateDoodadsResult>;
+  bulkCreateFoos?: Maybe<BulkCreateFoosResult>;
   bulkCreateFriendships?: Maybe<BulkCreateFriendshipsResult>;
   bulkCreateGizmos?: Maybe<BulkCreateGizmosResult>;
   bulkCreateModelAs?: Maybe<BulkCreateModelAsResult>;
@@ -12353,9 +12406,9 @@ export type Mutation = {
   bulkCreateWithCustomParamsWidgets?: Maybe<BulkCreateWithCustomParamsWidgetsResult>;
   bulkCustomActionAutoTableTests?: Maybe<BulkCustomActionAutoTableTestsResult>;
   bulkCustomActionWithParamsAutoTableTests?: Maybe<BulkCustomActionWithParamsAutoTableTestsResult>;
-  bulkDeleteAutoTableTestRelatedModels?: Maybe<BulkDeleteAutoTableTestRelatedModelsResult>;
   bulkDeleteAutoTableTests?: Maybe<BulkDeleteAutoTableTestsResult>;
   bulkDeleteDoodads?: Maybe<BulkDeleteDoodadsResult>;
+  bulkDeleteFoos?: Maybe<BulkDeleteFoosResult>;
   bulkDeleteFriendships?: Maybe<BulkDeleteFriendshipsResult>;
   bulkDeleteGizmos?: Maybe<BulkDeleteGizmosResult>;
   bulkDeleteModelAs?: Maybe<BulkDeleteModelAsResult>;
@@ -12369,9 +12422,9 @@ export type Mutation = {
   bulkSignInUsers?: Maybe<BulkSignInUsersResult>;
   bulkSignOutUsers?: Maybe<BulkSignOutUsersResult>;
   bulkSignUpUsers?: Maybe<BulkSignUpUsersResult>;
-  bulkUpdateAutoTableTestRelatedModels?: Maybe<BulkUpdateAutoTableTestRelatedModelsResult>;
   bulkUpdateAutoTableTests?: Maybe<BulkUpdateAutoTableTestsResult>;
   bulkUpdateDoodads?: Maybe<BulkUpdateDoodadsResult>;
+  bulkUpdateFoos?: Maybe<BulkUpdateFoosResult>;
   bulkUpdateFriendships?: Maybe<BulkUpdateFriendshipsResult>;
   bulkUpdateGizmos?: Maybe<BulkUpdateGizmosResult>;
   bulkUpdateModelAs?: Maybe<BulkUpdateModelAsResult>;
@@ -12382,9 +12435,9 @@ export type Mutation = {
   bulkUpdateWidgets?: Maybe<BulkUpdateWidgetsResult>;
   bulkUpdateWithCustomParamsAutoTableTests?: Maybe<BulkUpdateWithCustomParamsAutoTableTestsResult>;
   bulkUpdateWithCustomParamsWidgets?: Maybe<BulkUpdateWithCustomParamsWidgetsResult>;
-  bulkUpsertAutoTableTestRelatedModels: BulkUpsertAutoTableTestRelatedModelsResult;
   bulkUpsertAutoTableTests: BulkUpsertAutoTableTestsResult;
   bulkUpsertDoodads: BulkUpsertDoodadsResult;
+  bulkUpsertFoos: BulkUpsertFoosResult;
   bulkUpsertFriendships: BulkUpsertFriendshipsResult;
   bulkUpsertGizmos: BulkUpsertGizmosResult;
   bulkUpsertModelAs: BulkUpsertModelAsResult;
@@ -12394,10 +12447,11 @@ export type Mutation = {
   bulkUpsertTweeters: BulkUpsertTweetersResult;
   bulkUpsertUsers: BulkUpsertUsersResult;
   bulkUpsertWidgets: BulkUpsertWidgetsResult;
+  bulkWhateverParts?: Maybe<BulkWhateverPartsResult>;
   completeShopifySync?: Maybe<CompleteShopifySyncResult>;
   createAutoTableTest?: Maybe<CreateAutoTableTestResult>;
-  createAutoTableTestRelatedModel?: Maybe<CreateAutoTableTestRelatedModelResult>;
   createDoodad?: Maybe<CreateDoodadResult>;
+  createFoo?: Maybe<CreateFooResult>;
   createFriendship?: Maybe<CreateFriendshipResult>;
   createGizmo?: Maybe<CreateGizmoResult>;
   createModelA?: Maybe<CreateModelAResult>;
@@ -12410,8 +12464,8 @@ export type Mutation = {
   customActionAutoTableTest?: Maybe<CustomActionAutoTableTestResult>;
   customActionWithParamsAutoTableTest?: Maybe<CustomActionWithParamsAutoTableTestResult>;
   deleteAutoTableTest?: Maybe<DeleteAutoTableTestResult>;
-  deleteAutoTableTestRelatedModel?: Maybe<DeleteAutoTableTestRelatedModelResult>;
   deleteDoodad?: Maybe<DeleteDoodadResult>;
+  deleteFoo?: Maybe<DeleteFooResult>;
   deleteFriendship?: Maybe<DeleteFriendshipResult>;
   deleteGizmo?: Maybe<DeleteGizmoResult>;
   deleteModelA?: Maybe<DeleteModelAResult>;
@@ -12434,10 +12488,9 @@ export type Mutation = {
   signOutUser?: Maybe<SignOutUserResult>;
   signUpUser?: Maybe<SignUpUserResult>;
   uniqueFields: UniqueFieldsMutations;
-  university: UniversityMutations;
   updateAutoTableTest?: Maybe<UpdateAutoTableTestResult>;
-  updateAutoTableTestRelatedModel?: Maybe<UpdateAutoTableTestRelatedModelResult>;
   updateDoodad?: Maybe<UpdateDoodadResult>;
+  updateFoo?: Maybe<UpdateFooResult>;
   updateFriendship?: Maybe<UpdateFriendshipResult>;
   updateGizmo?: Maybe<UpdateGizmoResult>;
   updateModelA?: Maybe<UpdateModelAResult>;
@@ -12449,8 +12502,8 @@ export type Mutation = {
   updateWithCustomParamsAutoTableTest?: Maybe<UpdateWithCustomParamsAutoTableTestResult>;
   updateWithCustomParamsWidget?: Maybe<UpdateWithCustomParamsWidgetResult>;
   upsertAutoTableTest?: Maybe<UpsertAutoTableTestResult>;
-  upsertAutoTableTestRelatedModel?: Maybe<UpsertAutoTableTestRelatedModelResult>;
   upsertDoodad?: Maybe<UpsertDoodadResult>;
+  upsertFoo?: Maybe<UpsertFooResult>;
   upsertFriendship?: Maybe<UpsertFriendshipResult>;
   upsertGizmo?: Maybe<UpsertGizmoResult>;
   upsertModelA?: Maybe<UpsertModelAResult>;
@@ -12460,6 +12513,8 @@ export type Mutation = {
   upsertTweeter?: Maybe<UpsertTweeterResult>;
   upsertUser?: Maybe<UpsertUserResult>;
   upsertWidget?: Maybe<UpsertWidgetResult>;
+  whatever: WhateverMutations;
+  whateverPart?: Maybe<WhateverPartResult>;
 };
 
 export type MutationAbortShopifySyncArgs = {
@@ -12492,16 +12547,16 @@ export type MutationBulkCompleteShopifySyncsArgs = {
   inputs: Array<BulkCompleteShopifySyncsInput>;
 };
 
-export type MutationBulkCreateAutoTableTestRelatedModelsArgs = {
-  inputs: Array<BulkCreateAutoTableTestRelatedModelsInput>;
-};
-
 export type MutationBulkCreateAutoTableTestsArgs = {
   inputs: Array<BulkCreateAutoTableTestsInput>;
 };
 
 export type MutationBulkCreateDoodadsArgs = {
   inputs: Array<BulkCreateDoodadsInput>;
+};
+
+export type MutationBulkCreateFoosArgs = {
+  inputs: Array<BulkCreateFoosInput>;
 };
 
 export type MutationBulkCreateFriendshipsArgs = {
@@ -12544,15 +12599,15 @@ export type MutationBulkCustomActionWithParamsAutoTableTestsArgs = {
   inputs: Array<BulkCustomActionWithParamsAutoTableTestsInput>;
 };
 
-export type MutationBulkDeleteAutoTableTestRelatedModelsArgs = {
-  ids: Array<Scalars["GadgetID"]["input"]>;
-};
-
 export type MutationBulkDeleteAutoTableTestsArgs = {
   ids: Array<Scalars["GadgetID"]["input"]>;
 };
 
 export type MutationBulkDeleteDoodadsArgs = {
+  ids: Array<Scalars["GadgetID"]["input"]>;
+};
+
+export type MutationBulkDeleteFoosArgs = {
   ids: Array<Scalars["GadgetID"]["input"]>;
 };
 
@@ -12608,16 +12663,16 @@ export type MutationBulkSignUpUsersArgs = {
   inputs: Array<BulkSignUpUsersInput>;
 };
 
-export type MutationBulkUpdateAutoTableTestRelatedModelsArgs = {
-  inputs: Array<BulkUpdateAutoTableTestRelatedModelsInput>;
-};
-
 export type MutationBulkUpdateAutoTableTestsArgs = {
   inputs: Array<BulkUpdateAutoTableTestsInput>;
 };
 
 export type MutationBulkUpdateDoodadsArgs = {
   inputs: Array<BulkUpdateDoodadsInput>;
+};
+
+export type MutationBulkUpdateFoosArgs = {
+  inputs: Array<BulkUpdateFoosInput>;
 };
 
 export type MutationBulkUpdateFriendshipsArgs = {
@@ -12660,16 +12715,16 @@ export type MutationBulkUpdateWithCustomParamsWidgetsArgs = {
   inputs: Array<BulkUpdateWithCustomParamsWidgetsInput>;
 };
 
-export type MutationBulkUpsertAutoTableTestRelatedModelsArgs = {
-  inputs: Array<BulkUpsertAutoTableTestRelatedModelsInput>;
-};
-
 export type MutationBulkUpsertAutoTableTestsArgs = {
   inputs: Array<BulkUpsertAutoTableTestsInput>;
 };
 
 export type MutationBulkUpsertDoodadsArgs = {
   inputs: Array<BulkUpsertDoodadsInput>;
+};
+
+export type MutationBulkUpsertFoosArgs = {
+  inputs: Array<BulkUpsertFoosInput>;
 };
 
 export type MutationBulkUpsertFriendshipsArgs = {
@@ -12708,6 +12763,10 @@ export type MutationBulkUpsertWidgetsArgs = {
   inputs: Array<BulkUpsertWidgetsInput>;
 };
 
+export type MutationBulkWhateverPartsArgs = {
+  inputs: Array<BulkWhateverPartsInput>;
+};
+
 export type MutationCompleteShopifySyncArgs = {
   id: Scalars["GadgetID"]["input"];
   shopifySync?: InputMaybe<CompleteShopifySyncInput>;
@@ -12717,12 +12776,12 @@ export type MutationCreateAutoTableTestArgs = {
   autoTableTest?: InputMaybe<CreateAutoTableTestInput>;
 };
 
-export type MutationCreateAutoTableTestRelatedModelArgs = {
-  _autoTableTestRelatedModel?: InputMaybe<CreateAutoTableTestRelatedModelInput>;
-};
-
 export type MutationCreateDoodadArgs = {
   doodad?: InputMaybe<CreateDoodadInput>;
+};
+
+export type MutationCreateFooArgs = {
+  foo?: InputMaybe<CreateFooInput>;
 };
 
 export type MutationCreateFriendshipArgs = {
@@ -12770,11 +12829,11 @@ export type MutationDeleteAutoTableTestArgs = {
   id: Scalars["GadgetID"]["input"];
 };
 
-export type MutationDeleteAutoTableTestRelatedModelArgs = {
+export type MutationDeleteDoodadArgs = {
   id: Scalars["GadgetID"]["input"];
 };
 
-export type MutationDeleteDoodadArgs = {
+export type MutationDeleteFooArgs = {
   id: Scalars["GadgetID"]["input"];
 };
 
@@ -12844,13 +12903,13 @@ export type MutationUpdateAutoTableTestArgs = {
   id: Scalars["GadgetID"]["input"];
 };
 
-export type MutationUpdateAutoTableTestRelatedModelArgs = {
-  _autoTableTestRelatedModel?: InputMaybe<UpdateAutoTableTestRelatedModelInput>;
+export type MutationUpdateDoodadArgs = {
+  doodad?: InputMaybe<UpdateDoodadInput>;
   id: Scalars["GadgetID"]["input"];
 };
 
-export type MutationUpdateDoodadArgs = {
-  doodad?: InputMaybe<UpdateDoodadInput>;
+export type MutationUpdateFooArgs = {
+  foo?: InputMaybe<UpdateFooInput>;
   id: Scalars["GadgetID"]["input"];
 };
 
@@ -12915,13 +12974,13 @@ export type MutationUpsertAutoTableTestArgs = {
   on?: InputMaybe<Array<Scalars["String"]["input"]>>;
 };
 
-export type MutationUpsertAutoTableTestRelatedModelArgs = {
-  _autoTableTestRelatedModel?: InputMaybe<UpsertAutoTableTestRelatedModelInput>;
+export type MutationUpsertDoodadArgs = {
+  doodad?: InputMaybe<UpsertDoodadInput>;
   on?: InputMaybe<Array<Scalars["String"]["input"]>>;
 };
 
-export type MutationUpsertDoodadArgs = {
-  doodad?: InputMaybe<UpsertDoodadInput>;
+export type MutationUpsertFooArgs = {
+  foo?: InputMaybe<UpsertFooInput>;
   on?: InputMaybe<Array<Scalars["String"]["input"]>>;
 };
 
@@ -12969,6 +13028,11 @@ export type MutationUpsertUserArgs = {
 export type MutationUpsertWidgetArgs = {
   on?: InputMaybe<Array<Scalars["String"]["input"]>>;
   widget?: InputMaybe<UpsertWidgetInput>;
+};
+
+export type MutationWhateverPartArgs = {
+  id: Scalars["GadgetID"]["input"];
+  part?: InputMaybe<WhateverPartInput>;
 };
 
 export type NameMutations = {
@@ -13044,8 +13108,8 @@ export type NestedAutoTableTestCreateInput = {
   enum?: InputMaybe<Array<Scalars["AutoTableTestEnumEnum"]["input"]>>;
   es?: InputMaybe<Scalars["String"]["input"]>;
   file?: InputMaybe<StoredFileInput>;
-  hasMany?: InputMaybe<Array<InputMaybe<AutoTableTestRelatedModelHasManyInput>>>;
-  hasOne?: InputMaybe<AutoTableTestRelatedModelHasOneInput>;
+  hasMany?: InputMaybe<Array<InputMaybe<FooHasManyInput>>>;
+  hasOne?: InputMaybe<FooHasOneInput>;
   json?: InputMaybe<Scalars["JSON"]["input"]>;
   num?: InputMaybe<Scalars["Float"]["input"]>;
   pwd?: InputMaybe<Scalars["String"]["input"]>;
@@ -13071,27 +13135,6 @@ export type NestedAutoTableTestDeleteInput = {
   id: Scalars["GadgetID"]["input"];
 };
 
-export type NestedAutoTableTestRelatedModelCreateInput = {
-  belongsToParent?: InputMaybe<AutoTableTestBelongsToInput>;
-  manyBelongsToParent?: InputMaybe<AutoTableTestBelongsToInput>;
-  name?: InputMaybe<Scalars["String"]["input"]>;
-  someBool?: InputMaybe<Scalars["Boolean"]["input"]>;
-  someNumber?: InputMaybe<Scalars["Float"]["input"]>;
-};
-
-export type NestedAutoTableTestRelatedModelDeleteInput = {
-  id: Scalars["GadgetID"]["input"];
-};
-
-export type NestedAutoTableTestRelatedModelUpdateInput = {
-  belongsToParent?: InputMaybe<AutoTableTestBelongsToInput>;
-  id: Scalars["GadgetID"]["input"];
-  manyBelongsToParent?: InputMaybe<AutoTableTestBelongsToInput>;
-  name?: InputMaybe<Scalars["String"]["input"]>;
-  someBool?: InputMaybe<Scalars["Boolean"]["input"]>;
-  someNumber?: InputMaybe<Scalars["Float"]["input"]>;
-};
-
 export type NestedAutoTableTestUpdateInput = {
   bool?: InputMaybe<Scalars["Boolean"]["input"]>;
   dt?: InputMaybe<Scalars["DateTime"]["input"]>;
@@ -13099,8 +13142,8 @@ export type NestedAutoTableTestUpdateInput = {
   enum?: InputMaybe<Array<Scalars["AutoTableTestEnumEnum"]["input"]>>;
   es?: InputMaybe<Scalars["String"]["input"]>;
   file?: InputMaybe<StoredFileInput>;
-  hasMany?: InputMaybe<Array<InputMaybe<AutoTableTestRelatedModelHasManyInput>>>;
-  hasOne?: InputMaybe<AutoTableTestRelatedModelHasOneInput>;
+  hasMany?: InputMaybe<Array<InputMaybe<FooHasManyInput>>>;
+  hasOne?: InputMaybe<FooHasOneInput>;
   id: Scalars["GadgetID"]["input"];
   json?: InputMaybe<Scalars["JSON"]["input"]>;
   num?: InputMaybe<Scalars["Float"]["input"]>;
@@ -13120,8 +13163,8 @@ export type NestedAutoTableTestUpdateWithCustomParamsInput = {
   enum?: InputMaybe<Array<Scalars["AutoTableTestEnumEnum"]["input"]>>;
   es?: InputMaybe<Scalars["String"]["input"]>;
   file?: InputMaybe<StoredFileInput>;
-  hasMany?: InputMaybe<Array<InputMaybe<AutoTableTestRelatedModelHasManyInput>>>;
-  hasOne?: InputMaybe<AutoTableTestRelatedModelHasOneInput>;
+  hasMany?: InputMaybe<Array<InputMaybe<FooHasManyInput>>>;
+  hasOne?: InputMaybe<FooHasOneInput>;
   id: Scalars["GadgetID"]["input"];
   json?: InputMaybe<Scalars["JSON"]["input"]>;
   num?: InputMaybe<Scalars["Float"]["input"]>;
@@ -13252,6 +13295,27 @@ export type NestedDoodadUpdateInput = {
   size?: InputMaybe<Scalars["DoodadSizeEnum"]["input"]>;
   weight?: InputMaybe<Scalars["Float"]["input"]>;
   widget?: InputMaybe<WidgetBelongsToInput>;
+};
+
+export type NestedFooCreateInput = {
+  belongsToParent?: InputMaybe<AutoTableTestBelongsToInput>;
+  manyBelongsToParent?: InputMaybe<AutoTableTestBelongsToInput>;
+  name?: InputMaybe<Scalars["String"]["input"]>;
+  someBool?: InputMaybe<Scalars["Boolean"]["input"]>;
+  someNumber?: InputMaybe<Scalars["Float"]["input"]>;
+};
+
+export type NestedFooDeleteInput = {
+  id: Scalars["GadgetID"]["input"];
+};
+
+export type NestedFooUpdateInput = {
+  belongsToParent?: InputMaybe<AutoTableTestBelongsToInput>;
+  id: Scalars["GadgetID"]["input"];
+  manyBelongsToParent?: InputMaybe<AutoTableTestBelongsToInput>;
+  name?: InputMaybe<Scalars["String"]["input"]>;
+  someBool?: InputMaybe<Scalars["Boolean"]["input"]>;
+  someNumber?: InputMaybe<Scalars["Float"]["input"]>;
 };
 
 export type NestedFriendshipCreateInput = {
@@ -13776,13 +13840,13 @@ export type ProfessorHasManyThroughInput = {
 
 export type Query = {
   __typename?: "Query";
-  _autoTableTestRelatedModel?: Maybe<AutoTableTestRelatedModel>;
-  _autoTableTestRelatedModels: AutoTableTestRelatedModelConnection;
   autoTableTest?: Maybe<AutoTableTest>;
   autoTableTests: AutoTableTestConnection;
   currentSession?: Maybe<Session>;
   doodad?: Maybe<Doodad>;
   doodads: DoodadConnection;
+  foo?: Maybe<Foo>;
+  foos: FooConnection;
   friendship?: Maybe<Friendship>;
   friendships: FriendshipConnection;
   /** Meta information about the application, like it's name, schema, and other internal details. */
@@ -13818,25 +13882,11 @@ export type Query = {
   tweeter?: Maybe<Tweeter>;
   tweeters: TweeterConnection;
   uniqueFields: UniqueFieldsQueries;
-  university: UniversityQueries;
   user?: Maybe<User>;
   users: UserConnection;
+  whatever: WhateverQueries;
   widget?: Maybe<Widget>;
   widgets: WidgetConnection;
-};
-
-export type Query_AutoTableTestRelatedModelArgs = {
-  id: Scalars["GadgetID"]["input"];
-};
-
-export type Query_AutoTableTestRelatedModelsArgs = {
-  after?: InputMaybe<Scalars["String"]["input"]>;
-  before?: InputMaybe<Scalars["String"]["input"]>;
-  filter?: InputMaybe<Array<AutoTableTestRelatedModelFilter>>;
-  first?: InputMaybe<Scalars["Int"]["input"]>;
-  last?: InputMaybe<Scalars["Int"]["input"]>;
-  search?: InputMaybe<Scalars["String"]["input"]>;
-  sort?: InputMaybe<Array<AutoTableTestRelatedModelSort>>;
 };
 
 export type QueryAutoTableTestArgs = {
@@ -13865,6 +13915,20 @@ export type QueryDoodadsArgs = {
   last?: InputMaybe<Scalars["Int"]["input"]>;
   search?: InputMaybe<Scalars["String"]["input"]>;
   sort?: InputMaybe<Array<DoodadSort>>;
+};
+
+export type QueryFooArgs = {
+  id: Scalars["GadgetID"]["input"];
+};
+
+export type QueryFoosArgs = {
+  after?: InputMaybe<Scalars["String"]["input"]>;
+  before?: InputMaybe<Scalars["String"]["input"]>;
+  filter?: InputMaybe<Array<FooFilter>>;
+  first?: InputMaybe<Scalars["Int"]["input"]>;
+  last?: InputMaybe<Scalars["Int"]["input"]>;
+  search?: InputMaybe<Scalars["String"]["input"]>;
+  sort?: InputMaybe<Array<FooSort>>;
 };
 
 export type QueryFriendshipArgs = {
@@ -15948,668 +16012,6 @@ export type UniqueFieldsQueriesParentModelsArgs = {
   sort?: InputMaybe<Array<UniqueFieldsParentModelSort>>;
 };
 
-export type UniversityAssignment = {
-  __typename?: "UniversityAssignment";
-  /** Get all the fields for this record. Useful for not having to list out all the fields you want to retrieve, but slower. */
-  _all: Scalars["JSONObject"]["output"];
-  course?: Maybe<UniversityCourse>;
-  courseId?: Maybe<Scalars["GadgetID"]["output"]>;
-  /** The time at which this record was first created. Set once upon record creation and never changed. Managed by Gadget. */
-  createdAt: Scalars["DateTime"]["output"];
-  /** The globally unique, unchanging identifier for this record. Assigned and managed by Gadget. */
-  id: Scalars["GadgetID"]["output"];
-  professor?: Maybe<UniversityProfessor>;
-  professorId?: Maybe<Scalars["GadgetID"]["output"]>;
-  /** The time at which this record was last changed. Set each time the record is successfully acted upon by an action. Managed by Gadget. */
-  updatedAt: Scalars["DateTime"]["output"];
-};
-
-/** A connection to a list of UniversityAssignment items. */
-export type UniversityAssignmentConnection = {
-  __typename?: "UniversityAssignmentConnection";
-  /** A list of edges. */
-  edges: Array<UniversityAssignmentEdge>;
-  /** Information to aid in pagination. */
-  pageInfo: PageInfo;
-};
-
-/** An edge in a UniversityAssignment connection. */
-export type UniversityAssignmentEdge = {
-  __typename?: "UniversityAssignmentEdge";
-  /** A cursor for use in pagination */
-  cursor: Scalars["String"]["output"];
-  /** The item at the end of the edge */
-  node: UniversityAssignment;
-};
-
-export type UniversityAssignmentFilter = {
-  AND?: InputMaybe<Array<InputMaybe<UniversityAssignmentFilter>>>;
-  NOT?: InputMaybe<Array<InputMaybe<UniversityAssignmentFilter>>>;
-  OR?: InputMaybe<Array<InputMaybe<UniversityAssignmentFilter>>>;
-  course?: InputMaybe<IdFilter>;
-  courseId?: InputMaybe<IdFilter>;
-  createdAt?: InputMaybe<DateTimeFilter>;
-  id?: InputMaybe<IdFilter>;
-  professor?: InputMaybe<IdFilter>;
-  professorId?: InputMaybe<IdFilter>;
-  updatedAt?: InputMaybe<DateTimeFilter>;
-};
-
-export type UniversityAssignmentSort = {
-  /** Sort the results by the createdAt field. Defaults to ascending (smallest value first). */
-  createdAt?: InputMaybe<SortOrder>;
-  /** Sort the results by the id field. Defaults to ascending (smallest value first). */
-  id?: InputMaybe<SortOrder>;
-  /** Sort the results by the updatedAt field. Defaults to ascending (smallest value first). */
-  updatedAt?: InputMaybe<SortOrder>;
-};
-
-export type UniversityCourse = {
-  __typename?: "UniversityCourse";
-  /** Get all the fields for this record. Useful for not having to list out all the fields you want to retrieve, but slower. */
-  _all: Scalars["JSONObject"]["output"];
-  assignments: UniversityAssignmentConnection;
-  /** The time at which this record was first created. Set once upon record creation and never changed. Managed by Gadget. */
-  createdAt: Scalars["DateTime"]["output"];
-  description?: Maybe<RichText>;
-  /** The globally unique, unchanging identifier for this record. Assigned and managed by Gadget. */
-  id: Scalars["GadgetID"]["output"];
-  professors: UniversityProfessorConnection;
-  registrations: UniversityRegistrationConnection;
-  students: UniversityStudentConnection;
-  title?: Maybe<Scalars["String"]["output"]>;
-  /** The time at which this record was last changed. Set each time the record is successfully acted upon by an action. Managed by Gadget. */
-  updatedAt: Scalars["DateTime"]["output"];
-};
-
-export type UniversityCourseAssignmentsArgs = {
-  after?: InputMaybe<Scalars["String"]["input"]>;
-  before?: InputMaybe<Scalars["String"]["input"]>;
-  first?: InputMaybe<Scalars["Int"]["input"]>;
-  last?: InputMaybe<Scalars["Int"]["input"]>;
-};
-
-export type UniversityCourseProfessorsArgs = {
-  after?: InputMaybe<Scalars["String"]["input"]>;
-  before?: InputMaybe<Scalars["String"]["input"]>;
-  first?: InputMaybe<Scalars["Int"]["input"]>;
-  last?: InputMaybe<Scalars["Int"]["input"]>;
-};
-
-export type UniversityCourseRegistrationsArgs = {
-  after?: InputMaybe<Scalars["String"]["input"]>;
-  before?: InputMaybe<Scalars["String"]["input"]>;
-  first?: InputMaybe<Scalars["Int"]["input"]>;
-  last?: InputMaybe<Scalars["Int"]["input"]>;
-};
-
-export type UniversityCourseStudentsArgs = {
-  after?: InputMaybe<Scalars["String"]["input"]>;
-  before?: InputMaybe<Scalars["String"]["input"]>;
-  first?: InputMaybe<Scalars["Int"]["input"]>;
-  last?: InputMaybe<Scalars["Int"]["input"]>;
-};
-
-/** A connection to a list of UniversityCourse items. */
-export type UniversityCourseConnection = {
-  __typename?: "UniversityCourseConnection";
-  /** A list of edges. */
-  edges: Array<UniversityCourseEdge>;
-  /** Information to aid in pagination. */
-  pageInfo: PageInfo;
-};
-
-/** An edge in a UniversityCourse connection. */
-export type UniversityCourseEdge = {
-  __typename?: "UniversityCourseEdge";
-  /** A cursor for use in pagination */
-  cursor: Scalars["String"]["output"];
-  /** The item at the end of the edge */
-  node: UniversityCourse;
-};
-
-export type UniversityCourseFilter = {
-  AND?: InputMaybe<Array<InputMaybe<UniversityCourseFilter>>>;
-  NOT?: InputMaybe<Array<InputMaybe<UniversityCourseFilter>>>;
-  OR?: InputMaybe<Array<InputMaybe<UniversityCourseFilter>>>;
-  createdAt?: InputMaybe<DateTimeFilter>;
-  description?: InputMaybe<StringFilter>;
-  id?: InputMaybe<IdFilter>;
-  title?: InputMaybe<StringFilter>;
-  updatedAt?: InputMaybe<DateTimeFilter>;
-};
-
-export type UniversityCourseSort = {
-  /** Sort the results by the createdAt field. Defaults to ascending (smallest value first). */
-  createdAt?: InputMaybe<SortOrder>;
-  /** Sort the results by the description field. Defaults to ascending (smallest value first). */
-  description?: InputMaybe<SortOrder>;
-  /** Sort the results by the id field. Defaults to ascending (smallest value first). */
-  id?: InputMaybe<SortOrder>;
-  /** Sort the results by the title field. Defaults to ascending (smallest value first). */
-  title?: InputMaybe<SortOrder>;
-  /** Sort the results by the updatedAt field. Defaults to ascending (smallest value first). */
-  updatedAt?: InputMaybe<SortOrder>;
-};
-
-export type UniversityMutations = {
-  __typename?: "UniversityMutations";
-  bulkCreateAssignments?: Maybe<BulkCreateUniversityAssignmentsResult>;
-  bulkCreateCourses?: Maybe<BulkCreateUniversityCoursesResult>;
-  bulkCreateProfessors?: Maybe<BulkCreateUniversityProfessorsResult>;
-  bulkCreateRegistrations?: Maybe<BulkCreateUniversityRegistrationsResult>;
-  bulkCreateStudents?: Maybe<BulkCreateUniversityStudentsResult>;
-  bulkDeleteAssignments?: Maybe<BulkDeleteUniversityAssignmentsResult>;
-  bulkDeleteCourses?: Maybe<BulkDeleteUniversityCoursesResult>;
-  bulkDeleteProfessors?: Maybe<BulkDeleteUniversityProfessorsResult>;
-  bulkDeleteRegistrations?: Maybe<BulkDeleteUniversityRegistrationsResult>;
-  bulkDeleteStudents?: Maybe<BulkDeleteUniversityStudentsResult>;
-  bulkUpdateAssignments?: Maybe<BulkUpdateUniversityAssignmentsResult>;
-  bulkUpdateCourses?: Maybe<BulkUpdateUniversityCoursesResult>;
-  bulkUpdateProfessors?: Maybe<BulkUpdateUniversityProfessorsResult>;
-  bulkUpdateRegistrations?: Maybe<BulkUpdateUniversityRegistrationsResult>;
-  bulkUpdateStudents?: Maybe<BulkUpdateUniversityStudentsResult>;
-  bulkUpsertAssignments: BulkUpsertUniversityAssignmentsResult;
-  bulkUpsertCourses: BulkUpsertUniversityCoursesResult;
-  bulkUpsertProfessors: BulkUpsertUniversityProfessorsResult;
-  bulkUpsertRegistrations: BulkUpsertUniversityRegistrationsResult;
-  bulkUpsertStudents: BulkUpsertUniversityStudentsResult;
-  createAssignment?: Maybe<CreateUniversityAssignmentResult>;
-  createCourse?: Maybe<CreateUniversityCourseResult>;
-  createProfessor?: Maybe<CreateUniversityProfessorResult>;
-  createRegistration?: Maybe<CreateUniversityRegistrationResult>;
-  createStudent?: Maybe<CreateUniversityStudentResult>;
-  deleteAssignment?: Maybe<DeleteUniversityAssignmentResult>;
-  deleteCourse?: Maybe<DeleteUniversityCourseResult>;
-  deleteProfessor?: Maybe<DeleteUniversityProfessorResult>;
-  deleteRegistration?: Maybe<DeleteUniversityRegistrationResult>;
-  deleteStudent?: Maybe<DeleteUniversityStudentResult>;
-  updateAssignment?: Maybe<UpdateUniversityAssignmentResult>;
-  updateCourse?: Maybe<UpdateUniversityCourseResult>;
-  updateProfessor?: Maybe<UpdateUniversityProfessorResult>;
-  updateRegistration?: Maybe<UpdateUniversityRegistrationResult>;
-  updateStudent?: Maybe<UpdateUniversityStudentResult>;
-  upsertAssignment?: Maybe<UpsertUniversityAssignmentResult>;
-  upsertCourse?: Maybe<UpsertUniversityCourseResult>;
-  upsertProfessor?: Maybe<UpsertUniversityProfessorResult>;
-  upsertRegistration?: Maybe<UpsertUniversityRegistrationResult>;
-  upsertStudent?: Maybe<UpsertUniversityStudentResult>;
-};
-
-export type UniversityMutationsBulkCreateAssignmentsArgs = {
-  inputs: Array<BulkCreateUniversityAssignmentsInput>;
-};
-
-export type UniversityMutationsBulkCreateCoursesArgs = {
-  inputs: Array<BulkCreateUniversityCoursesInput>;
-};
-
-export type UniversityMutationsBulkCreateProfessorsArgs = {
-  inputs: Array<BulkCreateUniversityProfessorsInput>;
-};
-
-export type UniversityMutationsBulkCreateRegistrationsArgs = {
-  inputs: Array<BulkCreateUniversityRegistrationsInput>;
-};
-
-export type UniversityMutationsBulkCreateStudentsArgs = {
-  inputs: Array<BulkCreateUniversityStudentsInput>;
-};
-
-export type UniversityMutationsBulkDeleteAssignmentsArgs = {
-  ids: Array<Scalars["GadgetID"]["input"]>;
-};
-
-export type UniversityMutationsBulkDeleteCoursesArgs = {
-  ids: Array<Scalars["GadgetID"]["input"]>;
-};
-
-export type UniversityMutationsBulkDeleteProfessorsArgs = {
-  ids: Array<Scalars["GadgetID"]["input"]>;
-};
-
-export type UniversityMutationsBulkDeleteRegistrationsArgs = {
-  ids: Array<Scalars["GadgetID"]["input"]>;
-};
-
-export type UniversityMutationsBulkDeleteStudentsArgs = {
-  ids: Array<Scalars["GadgetID"]["input"]>;
-};
-
-export type UniversityMutationsBulkUpdateAssignmentsArgs = {
-  inputs: Array<BulkUpdateUniversityAssignmentsInput>;
-};
-
-export type UniversityMutationsBulkUpdateCoursesArgs = {
-  inputs: Array<BulkUpdateUniversityCoursesInput>;
-};
-
-export type UniversityMutationsBulkUpdateProfessorsArgs = {
-  inputs: Array<BulkUpdateUniversityProfessorsInput>;
-};
-
-export type UniversityMutationsBulkUpdateRegistrationsArgs = {
-  inputs: Array<BulkUpdateUniversityRegistrationsInput>;
-};
-
-export type UniversityMutationsBulkUpdateStudentsArgs = {
-  inputs: Array<BulkUpdateUniversityStudentsInput>;
-};
-
-export type UniversityMutationsBulkUpsertAssignmentsArgs = {
-  inputs: Array<BulkUpsertUniversityAssignmentsInput>;
-};
-
-export type UniversityMutationsBulkUpsertCoursesArgs = {
-  inputs: Array<BulkUpsertUniversityCoursesInput>;
-};
-
-export type UniversityMutationsBulkUpsertProfessorsArgs = {
-  inputs: Array<BulkUpsertUniversityProfessorsInput>;
-};
-
-export type UniversityMutationsBulkUpsertRegistrationsArgs = {
-  inputs: Array<BulkUpsertUniversityRegistrationsInput>;
-};
-
-export type UniversityMutationsBulkUpsertStudentsArgs = {
-  inputs: Array<BulkUpsertUniversityStudentsInput>;
-};
-
-export type UniversityMutationsCreateAssignmentArgs = {
-  assignment?: InputMaybe<CreateUniversityAssignmentInput>;
-};
-
-export type UniversityMutationsCreateCourseArgs = {
-  course?: InputMaybe<CreateUniversityCourseInput>;
-};
-
-export type UniversityMutationsCreateProfessorArgs = {
-  professor?: InputMaybe<CreateUniversityProfessorInput>;
-};
-
-export type UniversityMutationsCreateRegistrationArgs = {
-  registration?: InputMaybe<CreateUniversityRegistrationInput>;
-};
-
-export type UniversityMutationsCreateStudentArgs = {
-  student?: InputMaybe<CreateUniversityStudentInput>;
-};
-
-export type UniversityMutationsDeleteAssignmentArgs = {
-  id: Scalars["GadgetID"]["input"];
-};
-
-export type UniversityMutationsDeleteCourseArgs = {
-  id: Scalars["GadgetID"]["input"];
-};
-
-export type UniversityMutationsDeleteProfessorArgs = {
-  id: Scalars["GadgetID"]["input"];
-};
-
-export type UniversityMutationsDeleteRegistrationArgs = {
-  id: Scalars["GadgetID"]["input"];
-};
-
-export type UniversityMutationsDeleteStudentArgs = {
-  id: Scalars["GadgetID"]["input"];
-};
-
-export type UniversityMutationsUpdateAssignmentArgs = {
-  assignment?: InputMaybe<UpdateUniversityAssignmentInput>;
-  id: Scalars["GadgetID"]["input"];
-};
-
-export type UniversityMutationsUpdateCourseArgs = {
-  course?: InputMaybe<UpdateUniversityCourseInput>;
-  id: Scalars["GadgetID"]["input"];
-};
-
-export type UniversityMutationsUpdateProfessorArgs = {
-  id: Scalars["GadgetID"]["input"];
-  professor?: InputMaybe<UpdateUniversityProfessorInput>;
-};
-
-export type UniversityMutationsUpdateRegistrationArgs = {
-  id: Scalars["GadgetID"]["input"];
-  registration?: InputMaybe<UpdateUniversityRegistrationInput>;
-};
-
-export type UniversityMutationsUpdateStudentArgs = {
-  id: Scalars["GadgetID"]["input"];
-  student?: InputMaybe<UpdateUniversityStudentInput>;
-};
-
-export type UniversityMutationsUpsertAssignmentArgs = {
-  assignment?: InputMaybe<UpsertUniversityAssignmentInput>;
-  on?: InputMaybe<Array<Scalars["String"]["input"]>>;
-};
-
-export type UniversityMutationsUpsertCourseArgs = {
-  course?: InputMaybe<UpsertUniversityCourseInput>;
-  on?: InputMaybe<Array<Scalars["String"]["input"]>>;
-};
-
-export type UniversityMutationsUpsertProfessorArgs = {
-  on?: InputMaybe<Array<Scalars["String"]["input"]>>;
-  professor?: InputMaybe<UpsertUniversityProfessorInput>;
-};
-
-export type UniversityMutationsUpsertRegistrationArgs = {
-  on?: InputMaybe<Array<Scalars["String"]["input"]>>;
-  registration?: InputMaybe<UpsertUniversityRegistrationInput>;
-};
-
-export type UniversityMutationsUpsertStudentArgs = {
-  on?: InputMaybe<Array<Scalars["String"]["input"]>>;
-  student?: InputMaybe<UpsertUniversityStudentInput>;
-};
-
-export type UniversityProfessor = {
-  __typename?: "UniversityProfessor";
-  /** Get all the fields for this record. Useful for not having to list out all the fields you want to retrieve, but slower. */
-  _all: Scalars["JSONObject"]["output"];
-  assignments: UniversityAssignmentConnection;
-  courses: UniversityCourseConnection;
-  /** The time at which this record was first created. Set once upon record creation and never changed. Managed by Gadget. */
-  createdAt: Scalars["DateTime"]["output"];
-  firstName?: Maybe<Scalars["String"]["output"]>;
-  /** The globally unique, unchanging identifier for this record. Assigned and managed by Gadget. */
-  id: Scalars["GadgetID"]["output"];
-  lastName?: Maybe<Scalars["String"]["output"]>;
-  title?: Maybe<Scalars["ProfessorTitleEnum"]["output"]>;
-  /** The time at which this record was last changed. Set each time the record is successfully acted upon by an action. Managed by Gadget. */
-  updatedAt: Scalars["DateTime"]["output"];
-};
-
-export type UniversityProfessorAssignmentsArgs = {
-  after?: InputMaybe<Scalars["String"]["input"]>;
-  before?: InputMaybe<Scalars["String"]["input"]>;
-  first?: InputMaybe<Scalars["Int"]["input"]>;
-  last?: InputMaybe<Scalars["Int"]["input"]>;
-};
-
-export type UniversityProfessorCoursesArgs = {
-  after?: InputMaybe<Scalars["String"]["input"]>;
-  before?: InputMaybe<Scalars["String"]["input"]>;
-  first?: InputMaybe<Scalars["Int"]["input"]>;
-  last?: InputMaybe<Scalars["Int"]["input"]>;
-};
-
-/** A connection to a list of UniversityProfessor items. */
-export type UniversityProfessorConnection = {
-  __typename?: "UniversityProfessorConnection";
-  /** A list of edges. */
-  edges: Array<UniversityProfessorEdge>;
-  /** Information to aid in pagination. */
-  pageInfo: PageInfo;
-};
-
-/** An edge in a UniversityProfessor connection. */
-export type UniversityProfessorEdge = {
-  __typename?: "UniversityProfessorEdge";
-  /** A cursor for use in pagination */
-  cursor: Scalars["String"]["output"];
-  /** The item at the end of the edge */
-  node: UniversityProfessor;
-};
-
-export type UniversityProfessorFilter = {
-  AND?: InputMaybe<Array<InputMaybe<UniversityProfessorFilter>>>;
-  NOT?: InputMaybe<Array<InputMaybe<UniversityProfessorFilter>>>;
-  OR?: InputMaybe<Array<InputMaybe<UniversityProfessorFilter>>>;
-  createdAt?: InputMaybe<DateTimeFilter>;
-  firstName?: InputMaybe<StringFilter>;
-  id?: InputMaybe<IdFilter>;
-  lastName?: InputMaybe<StringFilter>;
-  title?: InputMaybe<SingleEnumFilter>;
-  updatedAt?: InputMaybe<DateTimeFilter>;
-};
-
-export type UniversityProfessorSort = {
-  /** Sort the results by the createdAt field. Defaults to ascending (smallest value first). */
-  createdAt?: InputMaybe<SortOrder>;
-  /** Sort the results by the firstName field. Defaults to ascending (smallest value first). */
-  firstName?: InputMaybe<SortOrder>;
-  /** Sort the results by the id field. Defaults to ascending (smallest value first). */
-  id?: InputMaybe<SortOrder>;
-  /** Sort the results by the lastName field. Defaults to ascending (smallest value first). */
-  lastName?: InputMaybe<SortOrder>;
-  /** Sort the results by the title field. Defaults to ascending (smallest value first). */
-  title?: InputMaybe<SortOrder>;
-  /** Sort the results by the updatedAt field. Defaults to ascending (smallest value first). */
-  updatedAt?: InputMaybe<SortOrder>;
-};
-
-export type UniversityQueries = {
-  __typename?: "UniversityQueries";
-  assignment?: Maybe<UniversityAssignment>;
-  assignments: UniversityAssignmentConnection;
-  course?: Maybe<UniversityCourse>;
-  courses: UniversityCourseConnection;
-  professor?: Maybe<UniversityProfessor>;
-  professors: UniversityProfessorConnection;
-  registration?: Maybe<UniversityRegistration>;
-  registrations: UniversityRegistrationConnection;
-  student?: Maybe<UniversityStudent>;
-  students: UniversityStudentConnection;
-};
-
-export type UniversityQueriesAssignmentArgs = {
-  id: Scalars["GadgetID"]["input"];
-};
-
-export type UniversityQueriesAssignmentsArgs = {
-  after?: InputMaybe<Scalars["String"]["input"]>;
-  before?: InputMaybe<Scalars["String"]["input"]>;
-  filter?: InputMaybe<Array<UniversityAssignmentFilter>>;
-  first?: InputMaybe<Scalars["Int"]["input"]>;
-  last?: InputMaybe<Scalars["Int"]["input"]>;
-  search?: InputMaybe<Scalars["String"]["input"]>;
-  sort?: InputMaybe<Array<UniversityAssignmentSort>>;
-};
-
-export type UniversityQueriesCourseArgs = {
-  id: Scalars["GadgetID"]["input"];
-};
-
-export type UniversityQueriesCoursesArgs = {
-  after?: InputMaybe<Scalars["String"]["input"]>;
-  before?: InputMaybe<Scalars["String"]["input"]>;
-  filter?: InputMaybe<Array<UniversityCourseFilter>>;
-  first?: InputMaybe<Scalars["Int"]["input"]>;
-  last?: InputMaybe<Scalars["Int"]["input"]>;
-  search?: InputMaybe<Scalars["String"]["input"]>;
-  sort?: InputMaybe<Array<UniversityCourseSort>>;
-};
-
-export type UniversityQueriesProfessorArgs = {
-  id: Scalars["GadgetID"]["input"];
-};
-
-export type UniversityQueriesProfessorsArgs = {
-  after?: InputMaybe<Scalars["String"]["input"]>;
-  before?: InputMaybe<Scalars["String"]["input"]>;
-  filter?: InputMaybe<Array<UniversityProfessorFilter>>;
-  first?: InputMaybe<Scalars["Int"]["input"]>;
-  last?: InputMaybe<Scalars["Int"]["input"]>;
-  search?: InputMaybe<Scalars["String"]["input"]>;
-  sort?: InputMaybe<Array<UniversityProfessorSort>>;
-};
-
-export type UniversityQueriesRegistrationArgs = {
-  id: Scalars["GadgetID"]["input"];
-};
-
-export type UniversityQueriesRegistrationsArgs = {
-  after?: InputMaybe<Scalars["String"]["input"]>;
-  before?: InputMaybe<Scalars["String"]["input"]>;
-  filter?: InputMaybe<Array<UniversityRegistrationFilter>>;
-  first?: InputMaybe<Scalars["Int"]["input"]>;
-  last?: InputMaybe<Scalars["Int"]["input"]>;
-  search?: InputMaybe<Scalars["String"]["input"]>;
-  sort?: InputMaybe<Array<UniversityRegistrationSort>>;
-};
-
-export type UniversityQueriesStudentArgs = {
-  id: Scalars["GadgetID"]["input"];
-};
-
-export type UniversityQueriesStudentsArgs = {
-  after?: InputMaybe<Scalars["String"]["input"]>;
-  before?: InputMaybe<Scalars["String"]["input"]>;
-  filter?: InputMaybe<Array<UniversityStudentFilter>>;
-  first?: InputMaybe<Scalars["Int"]["input"]>;
-  last?: InputMaybe<Scalars["Int"]["input"]>;
-  search?: InputMaybe<Scalars["String"]["input"]>;
-  sort?: InputMaybe<Array<UniversityStudentSort>>;
-};
-
-export type UniversityRegistration = {
-  __typename?: "UniversityRegistration";
-  /** Get all the fields for this record. Useful for not having to list out all the fields you want to retrieve, but slower. */
-  _all: Scalars["JSONObject"]["output"];
-  course?: Maybe<UniversityCourse>;
-  courseId?: Maybe<Scalars["GadgetID"]["output"]>;
-  /** The time at which this record was first created. Set once upon record creation and never changed. Managed by Gadget. */
-  createdAt: Scalars["DateTime"]["output"];
-  effectiveFrom?: Maybe<Scalars["Date"]["output"]>;
-  effectiveTo?: Maybe<Scalars["Date"]["output"]>;
-  /** The globally unique, unchanging identifier for this record. Assigned and managed by Gadget. */
-  id: Scalars["GadgetID"]["output"];
-  student?: Maybe<UniversityStudent>;
-  studentId?: Maybe<Scalars["GadgetID"]["output"]>;
-  /** The time at which this record was last changed. Set each time the record is successfully acted upon by an action. Managed by Gadget. */
-  updatedAt: Scalars["DateTime"]["output"];
-};
-
-/** A connection to a list of UniversityRegistration items. */
-export type UniversityRegistrationConnection = {
-  __typename?: "UniversityRegistrationConnection";
-  /** A list of edges. */
-  edges: Array<UniversityRegistrationEdge>;
-  /** Information to aid in pagination. */
-  pageInfo: PageInfo;
-};
-
-/** An edge in a UniversityRegistration connection. */
-export type UniversityRegistrationEdge = {
-  __typename?: "UniversityRegistrationEdge";
-  /** A cursor for use in pagination */
-  cursor: Scalars["String"]["output"];
-  /** The item at the end of the edge */
-  node: UniversityRegistration;
-};
-
-export type UniversityRegistrationFilter = {
-  AND?: InputMaybe<Array<InputMaybe<UniversityRegistrationFilter>>>;
-  NOT?: InputMaybe<Array<InputMaybe<UniversityRegistrationFilter>>>;
-  OR?: InputMaybe<Array<InputMaybe<UniversityRegistrationFilter>>>;
-  course?: InputMaybe<IdFilter>;
-  courseId?: InputMaybe<IdFilter>;
-  createdAt?: InputMaybe<DateTimeFilter>;
-  effectiveFrom?: InputMaybe<DateFilter>;
-  effectiveTo?: InputMaybe<DateFilter>;
-  id?: InputMaybe<IdFilter>;
-  student?: InputMaybe<IdFilter>;
-  studentId?: InputMaybe<IdFilter>;
-  updatedAt?: InputMaybe<DateTimeFilter>;
-};
-
-export type UniversityRegistrationSort = {
-  /** Sort the results by the createdAt field. Defaults to ascending (smallest value first). */
-  createdAt?: InputMaybe<SortOrder>;
-  /** Sort the results by the effectiveFrom field. Defaults to ascending (smallest value first). */
-  effectiveFrom?: InputMaybe<SortOrder>;
-  /** Sort the results by the effectiveTo field. Defaults to ascending (smallest value first). */
-  effectiveTo?: InputMaybe<SortOrder>;
-  /** Sort the results by the id field. Defaults to ascending (smallest value first). */
-  id?: InputMaybe<SortOrder>;
-  /** Sort the results by the updatedAt field. Defaults to ascending (smallest value first). */
-  updatedAt?: InputMaybe<SortOrder>;
-};
-
-export type UniversityStudent = {
-  __typename?: "UniversityStudent";
-  /** Get all the fields for this record. Useful for not having to list out all the fields you want to retrieve, but slower. */
-  _all: Scalars["JSONObject"]["output"];
-  courses: UniversityCourseConnection;
-  /** The time at which this record was first created. Set once upon record creation and never changed. Managed by Gadget. */
-  createdAt: Scalars["DateTime"]["output"];
-  department?: Maybe<Scalars["StudentDepartmentEnum"]["output"]>;
-  firstName?: Maybe<Scalars["String"]["output"]>;
-  /** The globally unique, unchanging identifier for this record. Assigned and managed by Gadget. */
-  id: Scalars["GadgetID"]["output"];
-  lastName?: Maybe<Scalars["String"]["output"]>;
-  registrations: UniversityRegistrationConnection;
-  /** The time at which this record was last changed. Set each time the record is successfully acted upon by an action. Managed by Gadget. */
-  updatedAt: Scalars["DateTime"]["output"];
-  year?: Maybe<Scalars["Int"]["output"]>;
-};
-
-export type UniversityStudentCoursesArgs = {
-  after?: InputMaybe<Scalars["String"]["input"]>;
-  before?: InputMaybe<Scalars["String"]["input"]>;
-  first?: InputMaybe<Scalars["Int"]["input"]>;
-  last?: InputMaybe<Scalars["Int"]["input"]>;
-};
-
-export type UniversityStudentRegistrationsArgs = {
-  after?: InputMaybe<Scalars["String"]["input"]>;
-  before?: InputMaybe<Scalars["String"]["input"]>;
-  first?: InputMaybe<Scalars["Int"]["input"]>;
-  last?: InputMaybe<Scalars["Int"]["input"]>;
-};
-
-/** A connection to a list of UniversityStudent items. */
-export type UniversityStudentConnection = {
-  __typename?: "UniversityStudentConnection";
-  /** A list of edges. */
-  edges: Array<UniversityStudentEdge>;
-  /** Information to aid in pagination. */
-  pageInfo: PageInfo;
-};
-
-/** An edge in a UniversityStudent connection. */
-export type UniversityStudentEdge = {
-  __typename?: "UniversityStudentEdge";
-  /** A cursor for use in pagination */
-  cursor: Scalars["String"]["output"];
-  /** The item at the end of the edge */
-  node: UniversityStudent;
-};
-
-export type UniversityStudentFilter = {
-  AND?: InputMaybe<Array<InputMaybe<UniversityStudentFilter>>>;
-  NOT?: InputMaybe<Array<InputMaybe<UniversityStudentFilter>>>;
-  OR?: InputMaybe<Array<InputMaybe<UniversityStudentFilter>>>;
-  createdAt?: InputMaybe<DateTimeFilter>;
-  department?: InputMaybe<SingleEnumFilter>;
-  firstName?: InputMaybe<StringFilter>;
-  id?: InputMaybe<IdFilter>;
-  lastName?: InputMaybe<StringFilter>;
-  updatedAt?: InputMaybe<DateTimeFilter>;
-  year?: InputMaybe<IntFilter>;
-};
-
-export type UniversityStudentSort = {
-  /** Sort the results by the createdAt field. Defaults to ascending (smallest value first). */
-  createdAt?: InputMaybe<SortOrder>;
-  /** Sort the results by the department field. Defaults to ascending (smallest value first). */
-  department?: InputMaybe<SortOrder>;
-  /** Sort the results by the firstName field. Defaults to ascending (smallest value first). */
-  firstName?: InputMaybe<SortOrder>;
-  /** Sort the results by the id field. Defaults to ascending (smallest value first). */
-  id?: InputMaybe<SortOrder>;
-  /** Sort the results by the lastName field. Defaults to ascending (smallest value first). */
-  lastName?: InputMaybe<SortOrder>;
-  /** Sort the results by the updatedAt field. Defaults to ascending (smallest value first). */
-  updatedAt?: InputMaybe<SortOrder>;
-  /** Sort the results by the year field. Defaults to ascending (smallest value first). */
-  year?: InputMaybe<SortOrder>;
-};
-
 export type UpdateAutoTableTestInput = {
   bool?: InputMaybe<Scalars["Boolean"]["input"]>;
   dt?: InputMaybe<Scalars["DateTime"]["input"]>;
@@ -16617,8 +16019,8 @@ export type UpdateAutoTableTestInput = {
   enum?: InputMaybe<Array<Scalars["AutoTableTestEnumEnum"]["input"]>>;
   es?: InputMaybe<Scalars["String"]["input"]>;
   file?: InputMaybe<StoredFileInput>;
-  hasMany?: InputMaybe<Array<InputMaybe<AutoTableTestRelatedModelHasManyInput>>>;
-  hasOne?: InputMaybe<AutoTableTestRelatedModelHasOneInput>;
+  hasMany?: InputMaybe<Array<InputMaybe<FooHasManyInput>>>;
+  hasOne?: InputMaybe<FooHasOneInput>;
   json?: InputMaybe<Scalars["JSON"]["input"]>;
   num?: InputMaybe<Scalars["Float"]["input"]>;
   pwd?: InputMaybe<Scalars["String"]["input"]>;
@@ -16628,22 +16030,6 @@ export type UpdateAutoTableTestInput = {
   str?: InputMaybe<Scalars["String"]["input"]>;
   url?: InputMaybe<Scalars["String"]["input"]>;
   vect?: InputMaybe<Array<Scalars["Float"]["input"]>>;
-};
-
-export type UpdateAutoTableTestRelatedModelInput = {
-  belongsToParent?: InputMaybe<AutoTableTestBelongsToInput>;
-  manyBelongsToParent?: InputMaybe<AutoTableTestBelongsToInput>;
-  name?: InputMaybe<Scalars["String"]["input"]>;
-  someBool?: InputMaybe<Scalars["Boolean"]["input"]>;
-  someNumber?: InputMaybe<Scalars["Float"]["input"]>;
-};
-
-export type UpdateAutoTableTestRelatedModelResult = UpsertAutoTableTestRelatedModelResult & {
-  __typename?: "UpdateAutoTableTestRelatedModelResult";
-  _autoTableTestRelatedModel?: Maybe<AutoTableTestRelatedModel>;
-  actionRun?: Maybe<Scalars["String"]["output"]>;
-  errors?: Maybe<Array<ExecutionError>>;
-  success: Scalars["Boolean"]["output"];
 };
 
 export type UpdateAutoTableTestResult = UpsertAutoTableTestResult & {
@@ -16668,6 +16054,22 @@ export type UpdateDoodadResult = UpsertDoodadResult & {
   actionRun?: Maybe<Scalars["String"]["output"]>;
   doodad?: Maybe<Doodad>;
   errors?: Maybe<Array<ExecutionError>>;
+  success: Scalars["Boolean"]["output"];
+};
+
+export type UpdateFooInput = {
+  belongsToParent?: InputMaybe<AutoTableTestBelongsToInput>;
+  manyBelongsToParent?: InputMaybe<AutoTableTestBelongsToInput>;
+  name?: InputMaybe<Scalars["String"]["input"]>;
+  someBool?: InputMaybe<Scalars["Boolean"]["input"]>;
+  someNumber?: InputMaybe<Scalars["Float"]["input"]>;
+};
+
+export type UpdateFooResult = UpsertFooResult & {
+  __typename?: "UpdateFooResult";
+  actionRun?: Maybe<Scalars["String"]["output"]>;
+  errors?: Maybe<Array<ExecutionError>>;
+  foo?: Maybe<Foo>;
   success: Scalars["Boolean"]["output"];
 };
 
@@ -16945,84 +16347,6 @@ export type UpdateUniqueFieldsParentModelResult = UpsertUniqueFieldsParentModelR
   success: Scalars["Boolean"]["output"];
 };
 
-export type UpdateUniversityAssignmentInput = {
-  course?: InputMaybe<CourseBelongsToInput>;
-  professor?: InputMaybe<ProfessorBelongsToInput>;
-};
-
-export type UpdateUniversityAssignmentResult = UpsertUniversityAssignmentResult & {
-  __typename?: "UpdateUniversityAssignmentResult";
-  actionRun?: Maybe<Scalars["String"]["output"]>;
-  assignment?: Maybe<UniversityAssignment>;
-  errors?: Maybe<Array<ExecutionError>>;
-  success: Scalars["Boolean"]["output"];
-};
-
-export type UpdateUniversityCourseInput = {
-  assignments?: InputMaybe<Array<InputMaybe<AssignmentHasManyInput>>>;
-  description?: InputMaybe<RichTextInput>;
-  professors?: InputMaybe<Array<InputMaybe<ProfessorHasManyThroughInput>>>;
-  registrations?: InputMaybe<Array<InputMaybe<RegistrationHasManyInput>>>;
-  students?: InputMaybe<Array<InputMaybe<StudentHasManyThroughInput>>>;
-  title?: InputMaybe<Scalars["String"]["input"]>;
-};
-
-export type UpdateUniversityCourseResult = UpsertUniversityCourseResult & {
-  __typename?: "UpdateUniversityCourseResult";
-  actionRun?: Maybe<Scalars["String"]["output"]>;
-  course?: Maybe<UniversityCourse>;
-  errors?: Maybe<Array<ExecutionError>>;
-  success: Scalars["Boolean"]["output"];
-};
-
-export type UpdateUniversityProfessorInput = {
-  assignments?: InputMaybe<Array<InputMaybe<AssignmentHasManyInput>>>;
-  courses?: InputMaybe<Array<InputMaybe<CourseHasManyThroughInput>>>;
-  firstName?: InputMaybe<Scalars["String"]["input"]>;
-  lastName?: InputMaybe<Scalars["String"]["input"]>;
-  title?: InputMaybe<Scalars["ProfessorTitleEnum"]["input"]>;
-};
-
-export type UpdateUniversityProfessorResult = UpsertUniversityProfessorResult & {
-  __typename?: "UpdateUniversityProfessorResult";
-  actionRun?: Maybe<Scalars["String"]["output"]>;
-  errors?: Maybe<Array<ExecutionError>>;
-  professor?: Maybe<UniversityProfessor>;
-  success: Scalars["Boolean"]["output"];
-};
-
-export type UpdateUniversityRegistrationInput = {
-  course?: InputMaybe<CourseBelongsToInput>;
-  effectiveFrom?: InputMaybe<Scalars["DateOrDateTime"]["input"]>;
-  effectiveTo?: InputMaybe<Scalars["DateOrDateTime"]["input"]>;
-  student?: InputMaybe<StudentBelongsToInput>;
-};
-
-export type UpdateUniversityRegistrationResult = UpsertUniversityRegistrationResult & {
-  __typename?: "UpdateUniversityRegistrationResult";
-  actionRun?: Maybe<Scalars["String"]["output"]>;
-  errors?: Maybe<Array<ExecutionError>>;
-  registration?: Maybe<UniversityRegistration>;
-  success: Scalars["Boolean"]["output"];
-};
-
-export type UpdateUniversityStudentInput = {
-  courses?: InputMaybe<Array<InputMaybe<CourseHasManyThroughInput>>>;
-  department?: InputMaybe<Scalars["StudentDepartmentEnum"]["input"]>;
-  firstName?: InputMaybe<Scalars["String"]["input"]>;
-  lastName?: InputMaybe<Scalars["String"]["input"]>;
-  registrations?: InputMaybe<Array<InputMaybe<RegistrationHasManyInput>>>;
-  year?: InputMaybe<Scalars["Int"]["input"]>;
-};
-
-export type UpdateUniversityStudentResult = UpsertUniversityStudentResult & {
-  __typename?: "UpdateUniversityStudentResult";
-  actionRun?: Maybe<Scalars["String"]["output"]>;
-  errors?: Maybe<Array<ExecutionError>>;
-  student?: Maybe<UniversityStudent>;
-  success: Scalars["Boolean"]["output"];
-};
-
 export type UpdateUserInput = {
   email?: InputMaybe<Scalars["String"]["input"]>;
   emailVerified?: InputMaybe<Scalars["Boolean"]["input"]>;
@@ -17040,6 +16364,84 @@ export type UpdateUserResult = UpsertUserResult & {
   errors?: Maybe<Array<ExecutionError>>;
   success: Scalars["Boolean"]["output"];
   user?: Maybe<User>;
+};
+
+export type UpdateWhateverUniversityAssignmentInput = {
+  course?: InputMaybe<CourseBelongsToInput>;
+  professor?: InputMaybe<ProfessorBelongsToInput>;
+};
+
+export type UpdateWhateverUniversityAssignmentResult = UpsertWhateverUniversityAssignmentResult & {
+  __typename?: "UpdateWhateverUniversityAssignmentResult";
+  actionRun?: Maybe<Scalars["String"]["output"]>;
+  assignment?: Maybe<WhateverUniversityAssignment>;
+  errors?: Maybe<Array<ExecutionError>>;
+  success: Scalars["Boolean"]["output"];
+};
+
+export type UpdateWhateverUniversityCourseInput = {
+  assignments?: InputMaybe<Array<InputMaybe<AssignmentHasManyInput>>>;
+  description?: InputMaybe<RichTextInput>;
+  professors?: InputMaybe<Array<InputMaybe<ProfessorHasManyThroughInput>>>;
+  registrations?: InputMaybe<Array<InputMaybe<RegistrationHasManyInput>>>;
+  students?: InputMaybe<Array<InputMaybe<StudentHasManyThroughInput>>>;
+  title?: InputMaybe<Scalars["String"]["input"]>;
+};
+
+export type UpdateWhateverUniversityCourseResult = UpsertWhateverUniversityCourseResult & {
+  __typename?: "UpdateWhateverUniversityCourseResult";
+  actionRun?: Maybe<Scalars["String"]["output"]>;
+  course?: Maybe<WhateverUniversityCourse>;
+  errors?: Maybe<Array<ExecutionError>>;
+  success: Scalars["Boolean"]["output"];
+};
+
+export type UpdateWhateverUniversityProfessorInput = {
+  assignments?: InputMaybe<Array<InputMaybe<AssignmentHasManyInput>>>;
+  courses?: InputMaybe<Array<InputMaybe<CourseHasManyThroughInput>>>;
+  firstName?: InputMaybe<Scalars["String"]["input"]>;
+  lastName?: InputMaybe<Scalars["String"]["input"]>;
+  title?: InputMaybe<Scalars["ProfessorTitleEnum"]["input"]>;
+};
+
+export type UpdateWhateverUniversityProfessorResult = UpsertWhateverUniversityProfessorResult & {
+  __typename?: "UpdateWhateverUniversityProfessorResult";
+  actionRun?: Maybe<Scalars["String"]["output"]>;
+  errors?: Maybe<Array<ExecutionError>>;
+  professor?: Maybe<WhateverUniversityProfessor>;
+  success: Scalars["Boolean"]["output"];
+};
+
+export type UpdateWhateverUniversityRegistrationInput = {
+  course?: InputMaybe<CourseBelongsToInput>;
+  effectiveFrom?: InputMaybe<Scalars["DateOrDateTime"]["input"]>;
+  effectiveTo?: InputMaybe<Scalars["DateOrDateTime"]["input"]>;
+  student?: InputMaybe<StudentBelongsToInput>;
+};
+
+export type UpdateWhateverUniversityRegistrationResult = UpsertWhateverUniversityRegistrationResult & {
+  __typename?: "UpdateWhateverUniversityRegistrationResult";
+  actionRun?: Maybe<Scalars["String"]["output"]>;
+  errors?: Maybe<Array<ExecutionError>>;
+  registration?: Maybe<WhateverUniversityRegistration>;
+  success: Scalars["Boolean"]["output"];
+};
+
+export type UpdateWhateverUniversityStudentInput = {
+  courses?: InputMaybe<Array<InputMaybe<CourseHasManyThroughInput>>>;
+  department?: InputMaybe<Scalars["StudentDepartmentEnum"]["input"]>;
+  firstName?: InputMaybe<Scalars["String"]["input"]>;
+  lastName?: InputMaybe<Scalars["String"]["input"]>;
+  registrations?: InputMaybe<Array<InputMaybe<RegistrationHasManyInput>>>;
+  year?: InputMaybe<Scalars["Int"]["input"]>;
+};
+
+export type UpdateWhateverUniversityStudentResult = UpsertWhateverUniversityStudentResult & {
+  __typename?: "UpdateWhateverUniversityStudentResult";
+  actionRun?: Maybe<Scalars["String"]["output"]>;
+  errors?: Maybe<Array<ExecutionError>>;
+  student?: Maybe<WhateverUniversityStudent>;
+  success: Scalars["Boolean"]["output"];
 };
 
 export type UpdateWidgetInput = {
@@ -17078,8 +16480,8 @@ export type UpdateWithCustomParamsAutoTableTestInput = {
   enum?: InputMaybe<Array<Scalars["AutoTableTestEnumEnum"]["input"]>>;
   es?: InputMaybe<Scalars["String"]["input"]>;
   file?: InputMaybe<StoredFileInput>;
-  hasMany?: InputMaybe<Array<InputMaybe<AutoTableTestRelatedModelHasManyInput>>>;
-  hasOne?: InputMaybe<AutoTableTestRelatedModelHasOneInput>;
+  hasMany?: InputMaybe<Array<InputMaybe<FooHasManyInput>>>;
+  hasOne?: InputMaybe<FooHasOneInput>;
   json?: InputMaybe<Scalars["JSON"]["input"]>;
   num?: InputMaybe<Scalars["Float"]["input"]>;
   pwd?: InputMaybe<Scalars["String"]["input"]>;
@@ -17135,8 +16537,8 @@ export type UpsertAutoTableTestInput = {
   enum?: InputMaybe<Array<Scalars["AutoTableTestEnumEnum"]["input"]>>;
   es?: InputMaybe<Scalars["String"]["input"]>;
   file?: InputMaybe<StoredFileInput>;
-  hasMany?: InputMaybe<Array<InputMaybe<AutoTableTestRelatedModelHasManyInput>>>;
-  hasOne?: InputMaybe<AutoTableTestRelatedModelHasOneInput>;
+  hasMany?: InputMaybe<Array<InputMaybe<FooHasManyInput>>>;
+  hasOne?: InputMaybe<FooHasOneInput>;
   id?: InputMaybe<Scalars["GadgetID"]["input"]>;
   json?: InputMaybe<Scalars["JSON"]["input"]>;
   num?: InputMaybe<Scalars["Float"]["input"]>;
@@ -17147,21 +16549,6 @@ export type UpsertAutoTableTestInput = {
   str?: InputMaybe<Scalars["String"]["input"]>;
   url?: InputMaybe<Scalars["String"]["input"]>;
   vect?: InputMaybe<Array<Scalars["Float"]["input"]>>;
-};
-
-export type UpsertAutoTableTestRelatedModelInput = {
-  belongsToParent?: InputMaybe<AutoTableTestBelongsToInput>;
-  id?: InputMaybe<Scalars["GadgetID"]["input"]>;
-  manyBelongsToParent?: InputMaybe<AutoTableTestBelongsToInput>;
-  name?: InputMaybe<Scalars["String"]["input"]>;
-  someBool?: InputMaybe<Scalars["Boolean"]["input"]>;
-  someNumber?: InputMaybe<Scalars["Float"]["input"]>;
-};
-
-export type UpsertAutoTableTestRelatedModelResult = {
-  actionRun?: Maybe<Scalars["String"]["output"]>;
-  errors?: Maybe<Array<ExecutionError>>;
-  success: Scalars["Boolean"]["output"];
 };
 
 export type UpsertAutoTableTestResult = {
@@ -17186,9 +16573,9 @@ export type UpsertDoodadResult = {
   success: Scalars["Boolean"]["output"];
 };
 
-export type UpsertError = UpsertAutoTableTestRelatedModelResult &
-  UpsertAutoTableTestResult &
+export type UpsertError = UpsertAutoTableTestResult &
   UpsertDoodadResult &
+  UpsertFooResult &
   UpsertFriendshipResult &
   UpsertGameCityResult &
   UpsertGamePlayerResult &
@@ -17212,18 +16599,33 @@ export type UpsertError = UpsertAutoTableTestRelatedModelResult &
   UpsertUniqueFieldsChildModelResult &
   UpsertUniqueFieldsMainModelResult &
   UpsertUniqueFieldsParentModelResult &
-  UpsertUniversityAssignmentResult &
-  UpsertUniversityCourseResult &
-  UpsertUniversityProfessorResult &
-  UpsertUniversityRegistrationResult &
-  UpsertUniversityStudentResult &
   UpsertUserResult &
+  UpsertWhateverUniversityAssignmentResult &
+  UpsertWhateverUniversityCourseResult &
+  UpsertWhateverUniversityProfessorResult &
+  UpsertWhateverUniversityRegistrationResult &
+  UpsertWhateverUniversityStudentResult &
   UpsertWidgetResult & {
     __typename?: "UpsertError";
     actionRun?: Maybe<Scalars["String"]["output"]>;
     errors?: Maybe<Array<ExecutionError>>;
     success: Scalars["Boolean"]["output"];
   };
+
+export type UpsertFooInput = {
+  belongsToParent?: InputMaybe<AutoTableTestBelongsToInput>;
+  id?: InputMaybe<Scalars["GadgetID"]["input"]>;
+  manyBelongsToParent?: InputMaybe<AutoTableTestBelongsToInput>;
+  name?: InputMaybe<Scalars["String"]["input"]>;
+  someBool?: InputMaybe<Scalars["Boolean"]["input"]>;
+  someNumber?: InputMaybe<Scalars["Float"]["input"]>;
+};
+
+export type UpsertFooResult = {
+  actionRun?: Maybe<Scalars["String"]["output"]>;
+  errors?: Maybe<Array<ExecutionError>>;
+  success: Scalars["Boolean"]["output"];
+};
 
 export type UpsertFriendshipInput = {
   ended?: InputMaybe<Scalars["DateOrDateTime"]["input"]>;
@@ -17491,79 +16893,6 @@ export type UpsertUniqueFieldsParentModelResult = {
   success: Scalars["Boolean"]["output"];
 };
 
-export type UpsertUniversityAssignmentInput = {
-  course?: InputMaybe<CourseBelongsToInput>;
-  id?: InputMaybe<Scalars["GadgetID"]["input"]>;
-  professor?: InputMaybe<ProfessorBelongsToInput>;
-};
-
-export type UpsertUniversityAssignmentResult = {
-  actionRun?: Maybe<Scalars["String"]["output"]>;
-  errors?: Maybe<Array<ExecutionError>>;
-  success: Scalars["Boolean"]["output"];
-};
-
-export type UpsertUniversityCourseInput = {
-  assignments?: InputMaybe<Array<InputMaybe<AssignmentHasManyInput>>>;
-  description?: InputMaybe<RichTextInput>;
-  id?: InputMaybe<Scalars["GadgetID"]["input"]>;
-  professors?: InputMaybe<Array<InputMaybe<ProfessorHasManyThroughInput>>>;
-  registrations?: InputMaybe<Array<InputMaybe<RegistrationHasManyInput>>>;
-  students?: InputMaybe<Array<InputMaybe<StudentHasManyThroughInput>>>;
-  title?: InputMaybe<Scalars["String"]["input"]>;
-};
-
-export type UpsertUniversityCourseResult = {
-  actionRun?: Maybe<Scalars["String"]["output"]>;
-  errors?: Maybe<Array<ExecutionError>>;
-  success: Scalars["Boolean"]["output"];
-};
-
-export type UpsertUniversityProfessorInput = {
-  assignments?: InputMaybe<Array<InputMaybe<AssignmentHasManyInput>>>;
-  courses?: InputMaybe<Array<InputMaybe<CourseHasManyThroughInput>>>;
-  firstName?: InputMaybe<Scalars["String"]["input"]>;
-  id?: InputMaybe<Scalars["GadgetID"]["input"]>;
-  lastName?: InputMaybe<Scalars["String"]["input"]>;
-  title?: InputMaybe<Scalars["ProfessorTitleEnum"]["input"]>;
-};
-
-export type UpsertUniversityProfessorResult = {
-  actionRun?: Maybe<Scalars["String"]["output"]>;
-  errors?: Maybe<Array<ExecutionError>>;
-  success: Scalars["Boolean"]["output"];
-};
-
-export type UpsertUniversityRegistrationInput = {
-  course?: InputMaybe<CourseBelongsToInput>;
-  effectiveFrom?: InputMaybe<Scalars["DateOrDateTime"]["input"]>;
-  effectiveTo?: InputMaybe<Scalars["DateOrDateTime"]["input"]>;
-  id?: InputMaybe<Scalars["GadgetID"]["input"]>;
-  student?: InputMaybe<StudentBelongsToInput>;
-};
-
-export type UpsertUniversityRegistrationResult = {
-  actionRun?: Maybe<Scalars["String"]["output"]>;
-  errors?: Maybe<Array<ExecutionError>>;
-  success: Scalars["Boolean"]["output"];
-};
-
-export type UpsertUniversityStudentInput = {
-  courses?: InputMaybe<Array<InputMaybe<CourseHasManyThroughInput>>>;
-  department?: InputMaybe<Scalars["StudentDepartmentEnum"]["input"]>;
-  firstName?: InputMaybe<Scalars["String"]["input"]>;
-  id?: InputMaybe<Scalars["GadgetID"]["input"]>;
-  lastName?: InputMaybe<Scalars["String"]["input"]>;
-  registrations?: InputMaybe<Array<InputMaybe<RegistrationHasManyInput>>>;
-  year?: InputMaybe<Scalars["Int"]["input"]>;
-};
-
-export type UpsertUniversityStudentResult = {
-  actionRun?: Maybe<Scalars["String"]["output"]>;
-  errors?: Maybe<Array<ExecutionError>>;
-  success: Scalars["Boolean"]["output"];
-};
-
 export type UpsertUserInput = {
   email?: InputMaybe<Scalars["String"]["input"]>;
   emailVerified?: InputMaybe<Scalars["Boolean"]["input"]>;
@@ -17579,6 +16908,79 @@ export type UpsertUserInput = {
 };
 
 export type UpsertUserResult = {
+  actionRun?: Maybe<Scalars["String"]["output"]>;
+  errors?: Maybe<Array<ExecutionError>>;
+  success: Scalars["Boolean"]["output"];
+};
+
+export type UpsertWhateverUniversityAssignmentInput = {
+  course?: InputMaybe<CourseBelongsToInput>;
+  id?: InputMaybe<Scalars["GadgetID"]["input"]>;
+  professor?: InputMaybe<ProfessorBelongsToInput>;
+};
+
+export type UpsertWhateverUniversityAssignmentResult = {
+  actionRun?: Maybe<Scalars["String"]["output"]>;
+  errors?: Maybe<Array<ExecutionError>>;
+  success: Scalars["Boolean"]["output"];
+};
+
+export type UpsertWhateverUniversityCourseInput = {
+  assignments?: InputMaybe<Array<InputMaybe<AssignmentHasManyInput>>>;
+  description?: InputMaybe<RichTextInput>;
+  id?: InputMaybe<Scalars["GadgetID"]["input"]>;
+  professors?: InputMaybe<Array<InputMaybe<ProfessorHasManyThroughInput>>>;
+  registrations?: InputMaybe<Array<InputMaybe<RegistrationHasManyInput>>>;
+  students?: InputMaybe<Array<InputMaybe<StudentHasManyThroughInput>>>;
+  title?: InputMaybe<Scalars["String"]["input"]>;
+};
+
+export type UpsertWhateverUniversityCourseResult = {
+  actionRun?: Maybe<Scalars["String"]["output"]>;
+  errors?: Maybe<Array<ExecutionError>>;
+  success: Scalars["Boolean"]["output"];
+};
+
+export type UpsertWhateverUniversityProfessorInput = {
+  assignments?: InputMaybe<Array<InputMaybe<AssignmentHasManyInput>>>;
+  courses?: InputMaybe<Array<InputMaybe<CourseHasManyThroughInput>>>;
+  firstName?: InputMaybe<Scalars["String"]["input"]>;
+  id?: InputMaybe<Scalars["GadgetID"]["input"]>;
+  lastName?: InputMaybe<Scalars["String"]["input"]>;
+  title?: InputMaybe<Scalars["ProfessorTitleEnum"]["input"]>;
+};
+
+export type UpsertWhateverUniversityProfessorResult = {
+  actionRun?: Maybe<Scalars["String"]["output"]>;
+  errors?: Maybe<Array<ExecutionError>>;
+  success: Scalars["Boolean"]["output"];
+};
+
+export type UpsertWhateverUniversityRegistrationInput = {
+  course?: InputMaybe<CourseBelongsToInput>;
+  effectiveFrom?: InputMaybe<Scalars["DateOrDateTime"]["input"]>;
+  effectiveTo?: InputMaybe<Scalars["DateOrDateTime"]["input"]>;
+  id?: InputMaybe<Scalars["GadgetID"]["input"]>;
+  student?: InputMaybe<StudentBelongsToInput>;
+};
+
+export type UpsertWhateverUniversityRegistrationResult = {
+  actionRun?: Maybe<Scalars["String"]["output"]>;
+  errors?: Maybe<Array<ExecutionError>>;
+  success: Scalars["Boolean"]["output"];
+};
+
+export type UpsertWhateverUniversityStudentInput = {
+  courses?: InputMaybe<Array<InputMaybe<CourseHasManyThroughInput>>>;
+  department?: InputMaybe<Scalars["StudentDepartmentEnum"]["input"]>;
+  firstName?: InputMaybe<Scalars["String"]["input"]>;
+  id?: InputMaybe<Scalars["GadgetID"]["input"]>;
+  lastName?: InputMaybe<Scalars["String"]["input"]>;
+  registrations?: InputMaybe<Array<InputMaybe<RegistrationHasManyInput>>>;
+  year?: InputMaybe<Scalars["Int"]["input"]>;
+};
+
+export type UpsertWhateverUniversityStudentResult = {
   actionRun?: Maybe<Scalars["String"]["output"]>;
   errors?: Maybe<Array<ExecutionError>>;
   success: Scalars["Boolean"]["output"];
@@ -17733,6 +17135,692 @@ export type VectorSortOrder = {
   l2DistanceTo?: InputMaybe<Array<Scalars["Float"]["input"]>>;
   /** Sort ascending or descending by the distance to the given vector. */
   order?: InputMaybe<SortOrder>;
+};
+
+export type WhateverMutations = {
+  __typename?: "WhateverMutations";
+  university: WhateverUniversityMutations;
+};
+
+export type WhateverPartInput = {
+  count?: InputMaybe<Scalars["Float"]["input"]>;
+  name?: InputMaybe<Scalars["String"]["input"]>;
+  notes?: InputMaybe<Scalars["String"]["input"]>;
+};
+
+export type WhateverPartResult = {
+  __typename?: "WhateverPartResult";
+  actionRun?: Maybe<Scalars["String"]["output"]>;
+  errors?: Maybe<Array<ExecutionError>>;
+  part?: Maybe<Part>;
+  success: Scalars["Boolean"]["output"];
+};
+
+export type WhateverQueries = {
+  __typename?: "WhateverQueries";
+  university: WhateverUniversityQueries;
+};
+
+export type WhateverUniversityAssignment = {
+  __typename?: "WhateverUniversityAssignment";
+  /** Get all the fields for this record. Useful for not having to list out all the fields you want to retrieve, but slower. */
+  _all: Scalars["JSONObject"]["output"];
+  course?: Maybe<WhateverUniversityCourse>;
+  courseId?: Maybe<Scalars["GadgetID"]["output"]>;
+  /** The time at which this record was first created. Set once upon record creation and never changed. Managed by Gadget. */
+  createdAt: Scalars["DateTime"]["output"];
+  /** The globally unique, unchanging identifier for this record. Assigned and managed by Gadget. */
+  id: Scalars["GadgetID"]["output"];
+  professor?: Maybe<WhateverUniversityProfessor>;
+  professorId?: Maybe<Scalars["GadgetID"]["output"]>;
+  /** The time at which this record was last changed. Set each time the record is successfully acted upon by an action. Managed by Gadget. */
+  updatedAt: Scalars["DateTime"]["output"];
+};
+
+/** A connection to a list of WhateverUniversityAssignment items. */
+export type WhateverUniversityAssignmentConnection = {
+  __typename?: "WhateverUniversityAssignmentConnection";
+  /** A list of edges. */
+  edges: Array<WhateverUniversityAssignmentEdge>;
+  /** Information to aid in pagination. */
+  pageInfo: PageInfo;
+};
+
+/** An edge in a WhateverUniversityAssignment connection. */
+export type WhateverUniversityAssignmentEdge = {
+  __typename?: "WhateverUniversityAssignmentEdge";
+  /** A cursor for use in pagination */
+  cursor: Scalars["String"]["output"];
+  /** The item at the end of the edge */
+  node: WhateverUniversityAssignment;
+};
+
+export type WhateverUniversityAssignmentFilter = {
+  AND?: InputMaybe<Array<InputMaybe<WhateverUniversityAssignmentFilter>>>;
+  NOT?: InputMaybe<Array<InputMaybe<WhateverUniversityAssignmentFilter>>>;
+  OR?: InputMaybe<Array<InputMaybe<WhateverUniversityAssignmentFilter>>>;
+  course?: InputMaybe<IdFilter>;
+  courseId?: InputMaybe<IdFilter>;
+  createdAt?: InputMaybe<DateTimeFilter>;
+  id?: InputMaybe<IdFilter>;
+  professor?: InputMaybe<IdFilter>;
+  professorId?: InputMaybe<IdFilter>;
+  updatedAt?: InputMaybe<DateTimeFilter>;
+};
+
+export type WhateverUniversityAssignmentSort = {
+  /** Sort the results by the createdAt field. Defaults to ascending (smallest value first). */
+  createdAt?: InputMaybe<SortOrder>;
+  /** Sort the results by the id field. Defaults to ascending (smallest value first). */
+  id?: InputMaybe<SortOrder>;
+  /** Sort the results by the updatedAt field. Defaults to ascending (smallest value first). */
+  updatedAt?: InputMaybe<SortOrder>;
+};
+
+export type WhateverUniversityCourse = {
+  __typename?: "WhateverUniversityCourse";
+  /** Get all the fields for this record. Useful for not having to list out all the fields you want to retrieve, but slower. */
+  _all: Scalars["JSONObject"]["output"];
+  assignments: WhateverUniversityAssignmentConnection;
+  /** The time at which this record was first created. Set once upon record creation and never changed. Managed by Gadget. */
+  createdAt: Scalars["DateTime"]["output"];
+  description?: Maybe<RichText>;
+  /** The globally unique, unchanging identifier for this record. Assigned and managed by Gadget. */
+  id: Scalars["GadgetID"]["output"];
+  professors: WhateverUniversityProfessorConnection;
+  registrations: WhateverUniversityRegistrationConnection;
+  students: WhateverUniversityStudentConnection;
+  title?: Maybe<Scalars["String"]["output"]>;
+  /** The time at which this record was last changed. Set each time the record is successfully acted upon by an action. Managed by Gadget. */
+  updatedAt: Scalars["DateTime"]["output"];
+};
+
+export type WhateverUniversityCourseAssignmentsArgs = {
+  after?: InputMaybe<Scalars["String"]["input"]>;
+  before?: InputMaybe<Scalars["String"]["input"]>;
+  first?: InputMaybe<Scalars["Int"]["input"]>;
+  last?: InputMaybe<Scalars["Int"]["input"]>;
+};
+
+export type WhateverUniversityCourseProfessorsArgs = {
+  after?: InputMaybe<Scalars["String"]["input"]>;
+  before?: InputMaybe<Scalars["String"]["input"]>;
+  first?: InputMaybe<Scalars["Int"]["input"]>;
+  last?: InputMaybe<Scalars["Int"]["input"]>;
+};
+
+export type WhateverUniversityCourseRegistrationsArgs = {
+  after?: InputMaybe<Scalars["String"]["input"]>;
+  before?: InputMaybe<Scalars["String"]["input"]>;
+  first?: InputMaybe<Scalars["Int"]["input"]>;
+  last?: InputMaybe<Scalars["Int"]["input"]>;
+};
+
+export type WhateverUniversityCourseStudentsArgs = {
+  after?: InputMaybe<Scalars["String"]["input"]>;
+  before?: InputMaybe<Scalars["String"]["input"]>;
+  first?: InputMaybe<Scalars["Int"]["input"]>;
+  last?: InputMaybe<Scalars["Int"]["input"]>;
+};
+
+/** A connection to a list of WhateverUniversityCourse items. */
+export type WhateverUniversityCourseConnection = {
+  __typename?: "WhateverUniversityCourseConnection";
+  /** A list of edges. */
+  edges: Array<WhateverUniversityCourseEdge>;
+  /** Information to aid in pagination. */
+  pageInfo: PageInfo;
+};
+
+/** An edge in a WhateverUniversityCourse connection. */
+export type WhateverUniversityCourseEdge = {
+  __typename?: "WhateverUniversityCourseEdge";
+  /** A cursor for use in pagination */
+  cursor: Scalars["String"]["output"];
+  /** The item at the end of the edge */
+  node: WhateverUniversityCourse;
+};
+
+export type WhateverUniversityCourseFilter = {
+  AND?: InputMaybe<Array<InputMaybe<WhateverUniversityCourseFilter>>>;
+  NOT?: InputMaybe<Array<InputMaybe<WhateverUniversityCourseFilter>>>;
+  OR?: InputMaybe<Array<InputMaybe<WhateverUniversityCourseFilter>>>;
+  createdAt?: InputMaybe<DateTimeFilter>;
+  description?: InputMaybe<StringFilter>;
+  id?: InputMaybe<IdFilter>;
+  title?: InputMaybe<StringFilter>;
+  updatedAt?: InputMaybe<DateTimeFilter>;
+};
+
+export type WhateverUniversityCourseSort = {
+  /** Sort the results by the createdAt field. Defaults to ascending (smallest value first). */
+  createdAt?: InputMaybe<SortOrder>;
+  /** Sort the results by the description field. Defaults to ascending (smallest value first). */
+  description?: InputMaybe<SortOrder>;
+  /** Sort the results by the id field. Defaults to ascending (smallest value first). */
+  id?: InputMaybe<SortOrder>;
+  /** Sort the results by the title field. Defaults to ascending (smallest value first). */
+  title?: InputMaybe<SortOrder>;
+  /** Sort the results by the updatedAt field. Defaults to ascending (smallest value first). */
+  updatedAt?: InputMaybe<SortOrder>;
+};
+
+export type WhateverUniversityMutations = {
+  __typename?: "WhateverUniversityMutations";
+  bulkCreateAssignments?: Maybe<BulkCreateWhateverUniversityAssignmentsResult>;
+  bulkCreateCourses?: Maybe<BulkCreateWhateverUniversityCoursesResult>;
+  bulkCreateProfessors?: Maybe<BulkCreateWhateverUniversityProfessorsResult>;
+  bulkCreateRegistrations?: Maybe<BulkCreateWhateverUniversityRegistrationsResult>;
+  bulkCreateStudents?: Maybe<BulkCreateWhateverUniversityStudentsResult>;
+  bulkDeleteAssignments?: Maybe<BulkDeleteWhateverUniversityAssignmentsResult>;
+  bulkDeleteCourses?: Maybe<BulkDeleteWhateverUniversityCoursesResult>;
+  bulkDeleteProfessors?: Maybe<BulkDeleteWhateverUniversityProfessorsResult>;
+  bulkDeleteRegistrations?: Maybe<BulkDeleteWhateverUniversityRegistrationsResult>;
+  bulkDeleteStudents?: Maybe<BulkDeleteWhateverUniversityStudentsResult>;
+  bulkUpdateAssignments?: Maybe<BulkUpdateWhateverUniversityAssignmentsResult>;
+  bulkUpdateCourses?: Maybe<BulkUpdateWhateverUniversityCoursesResult>;
+  bulkUpdateProfessors?: Maybe<BulkUpdateWhateverUniversityProfessorsResult>;
+  bulkUpdateRegistrations?: Maybe<BulkUpdateWhateverUniversityRegistrationsResult>;
+  bulkUpdateStudents?: Maybe<BulkUpdateWhateverUniversityStudentsResult>;
+  bulkUpsertAssignments: BulkUpsertWhateverUniversityAssignmentsResult;
+  bulkUpsertCourses: BulkUpsertWhateverUniversityCoursesResult;
+  bulkUpsertProfessors: BulkUpsertWhateverUniversityProfessorsResult;
+  bulkUpsertRegistrations: BulkUpsertWhateverUniversityRegistrationsResult;
+  bulkUpsertStudents: BulkUpsertWhateverUniversityStudentsResult;
+  createAssignment?: Maybe<CreateWhateverUniversityAssignmentResult>;
+  createCourse?: Maybe<CreateWhateverUniversityCourseResult>;
+  createProfessor?: Maybe<CreateWhateverUniversityProfessorResult>;
+  createRegistration?: Maybe<CreateWhateverUniversityRegistrationResult>;
+  createStudent?: Maybe<CreateWhateverUniversityStudentResult>;
+  deleteAssignment?: Maybe<DeleteWhateverUniversityAssignmentResult>;
+  deleteCourse?: Maybe<DeleteWhateverUniversityCourseResult>;
+  deleteProfessor?: Maybe<DeleteWhateverUniversityProfessorResult>;
+  deleteRegistration?: Maybe<DeleteWhateverUniversityRegistrationResult>;
+  deleteStudent?: Maybe<DeleteWhateverUniversityStudentResult>;
+  updateAssignment?: Maybe<UpdateWhateverUniversityAssignmentResult>;
+  updateCourse?: Maybe<UpdateWhateverUniversityCourseResult>;
+  updateProfessor?: Maybe<UpdateWhateverUniversityProfessorResult>;
+  updateRegistration?: Maybe<UpdateWhateverUniversityRegistrationResult>;
+  updateStudent?: Maybe<UpdateWhateverUniversityStudentResult>;
+  upsertAssignment?: Maybe<UpsertWhateverUniversityAssignmentResult>;
+  upsertCourse?: Maybe<UpsertWhateverUniversityCourseResult>;
+  upsertProfessor?: Maybe<UpsertWhateverUniversityProfessorResult>;
+  upsertRegistration?: Maybe<UpsertWhateverUniversityRegistrationResult>;
+  upsertStudent?: Maybe<UpsertWhateverUniversityStudentResult>;
+};
+
+export type WhateverUniversityMutationsBulkCreateAssignmentsArgs = {
+  inputs: Array<BulkCreateWhateverUniversityAssignmentsInput>;
+};
+
+export type WhateverUniversityMutationsBulkCreateCoursesArgs = {
+  inputs: Array<BulkCreateWhateverUniversityCoursesInput>;
+};
+
+export type WhateverUniversityMutationsBulkCreateProfessorsArgs = {
+  inputs: Array<BulkCreateWhateverUniversityProfessorsInput>;
+};
+
+export type WhateverUniversityMutationsBulkCreateRegistrationsArgs = {
+  inputs: Array<BulkCreateWhateverUniversityRegistrationsInput>;
+};
+
+export type WhateverUniversityMutationsBulkCreateStudentsArgs = {
+  inputs: Array<BulkCreateWhateverUniversityStudentsInput>;
+};
+
+export type WhateverUniversityMutationsBulkDeleteAssignmentsArgs = {
+  ids: Array<Scalars["GadgetID"]["input"]>;
+};
+
+export type WhateverUniversityMutationsBulkDeleteCoursesArgs = {
+  ids: Array<Scalars["GadgetID"]["input"]>;
+};
+
+export type WhateverUniversityMutationsBulkDeleteProfessorsArgs = {
+  ids: Array<Scalars["GadgetID"]["input"]>;
+};
+
+export type WhateverUniversityMutationsBulkDeleteRegistrationsArgs = {
+  ids: Array<Scalars["GadgetID"]["input"]>;
+};
+
+export type WhateverUniversityMutationsBulkDeleteStudentsArgs = {
+  ids: Array<Scalars["GadgetID"]["input"]>;
+};
+
+export type WhateverUniversityMutationsBulkUpdateAssignmentsArgs = {
+  inputs: Array<BulkUpdateWhateverUniversityAssignmentsInput>;
+};
+
+export type WhateverUniversityMutationsBulkUpdateCoursesArgs = {
+  inputs: Array<BulkUpdateWhateverUniversityCoursesInput>;
+};
+
+export type WhateverUniversityMutationsBulkUpdateProfessorsArgs = {
+  inputs: Array<BulkUpdateWhateverUniversityProfessorsInput>;
+};
+
+export type WhateverUniversityMutationsBulkUpdateRegistrationsArgs = {
+  inputs: Array<BulkUpdateWhateverUniversityRegistrationsInput>;
+};
+
+export type WhateverUniversityMutationsBulkUpdateStudentsArgs = {
+  inputs: Array<BulkUpdateWhateverUniversityStudentsInput>;
+};
+
+export type WhateverUniversityMutationsBulkUpsertAssignmentsArgs = {
+  inputs: Array<BulkUpsertWhateverUniversityAssignmentsInput>;
+};
+
+export type WhateverUniversityMutationsBulkUpsertCoursesArgs = {
+  inputs: Array<BulkUpsertWhateverUniversityCoursesInput>;
+};
+
+export type WhateverUniversityMutationsBulkUpsertProfessorsArgs = {
+  inputs: Array<BulkUpsertWhateverUniversityProfessorsInput>;
+};
+
+export type WhateverUniversityMutationsBulkUpsertRegistrationsArgs = {
+  inputs: Array<BulkUpsertWhateverUniversityRegistrationsInput>;
+};
+
+export type WhateverUniversityMutationsBulkUpsertStudentsArgs = {
+  inputs: Array<BulkUpsertWhateverUniversityStudentsInput>;
+};
+
+export type WhateverUniversityMutationsCreateAssignmentArgs = {
+  assignment?: InputMaybe<CreateWhateverUniversityAssignmentInput>;
+};
+
+export type WhateverUniversityMutationsCreateCourseArgs = {
+  course?: InputMaybe<CreateWhateverUniversityCourseInput>;
+};
+
+export type WhateverUniversityMutationsCreateProfessorArgs = {
+  professor?: InputMaybe<CreateWhateverUniversityProfessorInput>;
+};
+
+export type WhateverUniversityMutationsCreateRegistrationArgs = {
+  registration?: InputMaybe<CreateWhateverUniversityRegistrationInput>;
+};
+
+export type WhateverUniversityMutationsCreateStudentArgs = {
+  student?: InputMaybe<CreateWhateverUniversityStudentInput>;
+};
+
+export type WhateverUniversityMutationsDeleteAssignmentArgs = {
+  id: Scalars["GadgetID"]["input"];
+};
+
+export type WhateverUniversityMutationsDeleteCourseArgs = {
+  id: Scalars["GadgetID"]["input"];
+};
+
+export type WhateverUniversityMutationsDeleteProfessorArgs = {
+  id: Scalars["GadgetID"]["input"];
+};
+
+export type WhateverUniversityMutationsDeleteRegistrationArgs = {
+  id: Scalars["GadgetID"]["input"];
+};
+
+export type WhateverUniversityMutationsDeleteStudentArgs = {
+  id: Scalars["GadgetID"]["input"];
+};
+
+export type WhateverUniversityMutationsUpdateAssignmentArgs = {
+  assignment?: InputMaybe<UpdateWhateverUniversityAssignmentInput>;
+  id: Scalars["GadgetID"]["input"];
+};
+
+export type WhateverUniversityMutationsUpdateCourseArgs = {
+  course?: InputMaybe<UpdateWhateverUniversityCourseInput>;
+  id: Scalars["GadgetID"]["input"];
+};
+
+export type WhateverUniversityMutationsUpdateProfessorArgs = {
+  id: Scalars["GadgetID"]["input"];
+  professor?: InputMaybe<UpdateWhateverUniversityProfessorInput>;
+};
+
+export type WhateverUniversityMutationsUpdateRegistrationArgs = {
+  id: Scalars["GadgetID"]["input"];
+  registration?: InputMaybe<UpdateWhateverUniversityRegistrationInput>;
+};
+
+export type WhateverUniversityMutationsUpdateStudentArgs = {
+  id: Scalars["GadgetID"]["input"];
+  student?: InputMaybe<UpdateWhateverUniversityStudentInput>;
+};
+
+export type WhateverUniversityMutationsUpsertAssignmentArgs = {
+  assignment?: InputMaybe<UpsertWhateverUniversityAssignmentInput>;
+  on?: InputMaybe<Array<Scalars["String"]["input"]>>;
+};
+
+export type WhateverUniversityMutationsUpsertCourseArgs = {
+  course?: InputMaybe<UpsertWhateverUniversityCourseInput>;
+  on?: InputMaybe<Array<Scalars["String"]["input"]>>;
+};
+
+export type WhateverUniversityMutationsUpsertProfessorArgs = {
+  on?: InputMaybe<Array<Scalars["String"]["input"]>>;
+  professor?: InputMaybe<UpsertWhateverUniversityProfessorInput>;
+};
+
+export type WhateverUniversityMutationsUpsertRegistrationArgs = {
+  on?: InputMaybe<Array<Scalars["String"]["input"]>>;
+  registration?: InputMaybe<UpsertWhateverUniversityRegistrationInput>;
+};
+
+export type WhateverUniversityMutationsUpsertStudentArgs = {
+  on?: InputMaybe<Array<Scalars["String"]["input"]>>;
+  student?: InputMaybe<UpsertWhateverUniversityStudentInput>;
+};
+
+export type WhateverUniversityProfessor = {
+  __typename?: "WhateverUniversityProfessor";
+  /** Get all the fields for this record. Useful for not having to list out all the fields you want to retrieve, but slower. */
+  _all: Scalars["JSONObject"]["output"];
+  assignments: WhateverUniversityAssignmentConnection;
+  courses: WhateverUniversityCourseConnection;
+  /** The time at which this record was first created. Set once upon record creation and never changed. Managed by Gadget. */
+  createdAt: Scalars["DateTime"]["output"];
+  firstName?: Maybe<Scalars["String"]["output"]>;
+  /** The globally unique, unchanging identifier for this record. Assigned and managed by Gadget. */
+  id: Scalars["GadgetID"]["output"];
+  lastName?: Maybe<Scalars["String"]["output"]>;
+  title?: Maybe<Scalars["ProfessorTitleEnum"]["output"]>;
+  /** The time at which this record was last changed. Set each time the record is successfully acted upon by an action. Managed by Gadget. */
+  updatedAt: Scalars["DateTime"]["output"];
+};
+
+export type WhateverUniversityProfessorAssignmentsArgs = {
+  after?: InputMaybe<Scalars["String"]["input"]>;
+  before?: InputMaybe<Scalars["String"]["input"]>;
+  first?: InputMaybe<Scalars["Int"]["input"]>;
+  last?: InputMaybe<Scalars["Int"]["input"]>;
+};
+
+export type WhateverUniversityProfessorCoursesArgs = {
+  after?: InputMaybe<Scalars["String"]["input"]>;
+  before?: InputMaybe<Scalars["String"]["input"]>;
+  first?: InputMaybe<Scalars["Int"]["input"]>;
+  last?: InputMaybe<Scalars["Int"]["input"]>;
+};
+
+/** A connection to a list of WhateverUniversityProfessor items. */
+export type WhateverUniversityProfessorConnection = {
+  __typename?: "WhateverUniversityProfessorConnection";
+  /** A list of edges. */
+  edges: Array<WhateverUniversityProfessorEdge>;
+  /** Information to aid in pagination. */
+  pageInfo: PageInfo;
+};
+
+/** An edge in a WhateverUniversityProfessor connection. */
+export type WhateverUniversityProfessorEdge = {
+  __typename?: "WhateverUniversityProfessorEdge";
+  /** A cursor for use in pagination */
+  cursor: Scalars["String"]["output"];
+  /** The item at the end of the edge */
+  node: WhateverUniversityProfessor;
+};
+
+export type WhateverUniversityProfessorFilter = {
+  AND?: InputMaybe<Array<InputMaybe<WhateverUniversityProfessorFilter>>>;
+  NOT?: InputMaybe<Array<InputMaybe<WhateverUniversityProfessorFilter>>>;
+  OR?: InputMaybe<Array<InputMaybe<WhateverUniversityProfessorFilter>>>;
+  createdAt?: InputMaybe<DateTimeFilter>;
+  firstName?: InputMaybe<StringFilter>;
+  id?: InputMaybe<IdFilter>;
+  lastName?: InputMaybe<StringFilter>;
+  title?: InputMaybe<SingleEnumFilter>;
+  updatedAt?: InputMaybe<DateTimeFilter>;
+};
+
+export type WhateverUniversityProfessorSort = {
+  /** Sort the results by the createdAt field. Defaults to ascending (smallest value first). */
+  createdAt?: InputMaybe<SortOrder>;
+  /** Sort the results by the firstName field. Defaults to ascending (smallest value first). */
+  firstName?: InputMaybe<SortOrder>;
+  /** Sort the results by the id field. Defaults to ascending (smallest value first). */
+  id?: InputMaybe<SortOrder>;
+  /** Sort the results by the lastName field. Defaults to ascending (smallest value first). */
+  lastName?: InputMaybe<SortOrder>;
+  /** Sort the results by the title field. Defaults to ascending (smallest value first). */
+  title?: InputMaybe<SortOrder>;
+  /** Sort the results by the updatedAt field. Defaults to ascending (smallest value first). */
+  updatedAt?: InputMaybe<SortOrder>;
+};
+
+export type WhateverUniversityQueries = {
+  __typename?: "WhateverUniversityQueries";
+  assignment?: Maybe<WhateverUniversityAssignment>;
+  assignments: WhateverUniversityAssignmentConnection;
+  course?: Maybe<WhateverUniversityCourse>;
+  courses: WhateverUniversityCourseConnection;
+  professor?: Maybe<WhateverUniversityProfessor>;
+  professors: WhateverUniversityProfessorConnection;
+  registration?: Maybe<WhateverUniversityRegistration>;
+  registrations: WhateverUniversityRegistrationConnection;
+  student?: Maybe<WhateverUniversityStudent>;
+  students: WhateverUniversityStudentConnection;
+};
+
+export type WhateverUniversityQueriesAssignmentArgs = {
+  id: Scalars["GadgetID"]["input"];
+};
+
+export type WhateverUniversityQueriesAssignmentsArgs = {
+  after?: InputMaybe<Scalars["String"]["input"]>;
+  before?: InputMaybe<Scalars["String"]["input"]>;
+  filter?: InputMaybe<Array<WhateverUniversityAssignmentFilter>>;
+  first?: InputMaybe<Scalars["Int"]["input"]>;
+  last?: InputMaybe<Scalars["Int"]["input"]>;
+  search?: InputMaybe<Scalars["String"]["input"]>;
+  sort?: InputMaybe<Array<WhateverUniversityAssignmentSort>>;
+};
+
+export type WhateverUniversityQueriesCourseArgs = {
+  id: Scalars["GadgetID"]["input"];
+};
+
+export type WhateverUniversityQueriesCoursesArgs = {
+  after?: InputMaybe<Scalars["String"]["input"]>;
+  before?: InputMaybe<Scalars["String"]["input"]>;
+  filter?: InputMaybe<Array<WhateverUniversityCourseFilter>>;
+  first?: InputMaybe<Scalars["Int"]["input"]>;
+  last?: InputMaybe<Scalars["Int"]["input"]>;
+  search?: InputMaybe<Scalars["String"]["input"]>;
+  sort?: InputMaybe<Array<WhateverUniversityCourseSort>>;
+};
+
+export type WhateverUniversityQueriesProfessorArgs = {
+  id: Scalars["GadgetID"]["input"];
+};
+
+export type WhateverUniversityQueriesProfessorsArgs = {
+  after?: InputMaybe<Scalars["String"]["input"]>;
+  before?: InputMaybe<Scalars["String"]["input"]>;
+  filter?: InputMaybe<Array<WhateverUniversityProfessorFilter>>;
+  first?: InputMaybe<Scalars["Int"]["input"]>;
+  last?: InputMaybe<Scalars["Int"]["input"]>;
+  search?: InputMaybe<Scalars["String"]["input"]>;
+  sort?: InputMaybe<Array<WhateverUniversityProfessorSort>>;
+};
+
+export type WhateverUniversityQueriesRegistrationArgs = {
+  id: Scalars["GadgetID"]["input"];
+};
+
+export type WhateverUniversityQueriesRegistrationsArgs = {
+  after?: InputMaybe<Scalars["String"]["input"]>;
+  before?: InputMaybe<Scalars["String"]["input"]>;
+  filter?: InputMaybe<Array<WhateverUniversityRegistrationFilter>>;
+  first?: InputMaybe<Scalars["Int"]["input"]>;
+  last?: InputMaybe<Scalars["Int"]["input"]>;
+  search?: InputMaybe<Scalars["String"]["input"]>;
+  sort?: InputMaybe<Array<WhateverUniversityRegistrationSort>>;
+};
+
+export type WhateverUniversityQueriesStudentArgs = {
+  id: Scalars["GadgetID"]["input"];
+};
+
+export type WhateverUniversityQueriesStudentsArgs = {
+  after?: InputMaybe<Scalars["String"]["input"]>;
+  before?: InputMaybe<Scalars["String"]["input"]>;
+  filter?: InputMaybe<Array<WhateverUniversityStudentFilter>>;
+  first?: InputMaybe<Scalars["Int"]["input"]>;
+  last?: InputMaybe<Scalars["Int"]["input"]>;
+  search?: InputMaybe<Scalars["String"]["input"]>;
+  sort?: InputMaybe<Array<WhateverUniversityStudentSort>>;
+};
+
+export type WhateverUniversityRegistration = {
+  __typename?: "WhateverUniversityRegistration";
+  /** Get all the fields for this record. Useful for not having to list out all the fields you want to retrieve, but slower. */
+  _all: Scalars["JSONObject"]["output"];
+  course?: Maybe<WhateverUniversityCourse>;
+  courseId?: Maybe<Scalars["GadgetID"]["output"]>;
+  /** The time at which this record was first created. Set once upon record creation and never changed. Managed by Gadget. */
+  createdAt: Scalars["DateTime"]["output"];
+  effectiveFrom?: Maybe<Scalars["Date"]["output"]>;
+  effectiveTo?: Maybe<Scalars["Date"]["output"]>;
+  /** The globally unique, unchanging identifier for this record. Assigned and managed by Gadget. */
+  id: Scalars["GadgetID"]["output"];
+  student?: Maybe<WhateverUniversityStudent>;
+  studentId?: Maybe<Scalars["GadgetID"]["output"]>;
+  /** The time at which this record was last changed. Set each time the record is successfully acted upon by an action. Managed by Gadget. */
+  updatedAt: Scalars["DateTime"]["output"];
+};
+
+/** A connection to a list of WhateverUniversityRegistration items. */
+export type WhateverUniversityRegistrationConnection = {
+  __typename?: "WhateverUniversityRegistrationConnection";
+  /** A list of edges. */
+  edges: Array<WhateverUniversityRegistrationEdge>;
+  /** Information to aid in pagination. */
+  pageInfo: PageInfo;
+};
+
+/** An edge in a WhateverUniversityRegistration connection. */
+export type WhateverUniversityRegistrationEdge = {
+  __typename?: "WhateverUniversityRegistrationEdge";
+  /** A cursor for use in pagination */
+  cursor: Scalars["String"]["output"];
+  /** The item at the end of the edge */
+  node: WhateverUniversityRegistration;
+};
+
+export type WhateverUniversityRegistrationFilter = {
+  AND?: InputMaybe<Array<InputMaybe<WhateverUniversityRegistrationFilter>>>;
+  NOT?: InputMaybe<Array<InputMaybe<WhateverUniversityRegistrationFilter>>>;
+  OR?: InputMaybe<Array<InputMaybe<WhateverUniversityRegistrationFilter>>>;
+  course?: InputMaybe<IdFilter>;
+  courseId?: InputMaybe<IdFilter>;
+  createdAt?: InputMaybe<DateTimeFilter>;
+  effectiveFrom?: InputMaybe<DateFilter>;
+  effectiveTo?: InputMaybe<DateFilter>;
+  id?: InputMaybe<IdFilter>;
+  student?: InputMaybe<IdFilter>;
+  studentId?: InputMaybe<IdFilter>;
+  updatedAt?: InputMaybe<DateTimeFilter>;
+};
+
+export type WhateverUniversityRegistrationSort = {
+  /** Sort the results by the createdAt field. Defaults to ascending (smallest value first). */
+  createdAt?: InputMaybe<SortOrder>;
+  /** Sort the results by the effectiveFrom field. Defaults to ascending (smallest value first). */
+  effectiveFrom?: InputMaybe<SortOrder>;
+  /** Sort the results by the effectiveTo field. Defaults to ascending (smallest value first). */
+  effectiveTo?: InputMaybe<SortOrder>;
+  /** Sort the results by the id field. Defaults to ascending (smallest value first). */
+  id?: InputMaybe<SortOrder>;
+  /** Sort the results by the updatedAt field. Defaults to ascending (smallest value first). */
+  updatedAt?: InputMaybe<SortOrder>;
+};
+
+export type WhateverUniversityStudent = {
+  __typename?: "WhateverUniversityStudent";
+  /** Get all the fields for this record. Useful for not having to list out all the fields you want to retrieve, but slower. */
+  _all: Scalars["JSONObject"]["output"];
+  courses: WhateverUniversityCourseConnection;
+  /** The time at which this record was first created. Set once upon record creation and never changed. Managed by Gadget. */
+  createdAt: Scalars["DateTime"]["output"];
+  department?: Maybe<Scalars["StudentDepartmentEnum"]["output"]>;
+  firstName?: Maybe<Scalars["String"]["output"]>;
+  /** The globally unique, unchanging identifier for this record. Assigned and managed by Gadget. */
+  id: Scalars["GadgetID"]["output"];
+  lastName?: Maybe<Scalars["String"]["output"]>;
+  registrations: WhateverUniversityRegistrationConnection;
+  /** The time at which this record was last changed. Set each time the record is successfully acted upon by an action. Managed by Gadget. */
+  updatedAt: Scalars["DateTime"]["output"];
+  year?: Maybe<Scalars["Int"]["output"]>;
+};
+
+export type WhateverUniversityStudentCoursesArgs = {
+  after?: InputMaybe<Scalars["String"]["input"]>;
+  before?: InputMaybe<Scalars["String"]["input"]>;
+  first?: InputMaybe<Scalars["Int"]["input"]>;
+  last?: InputMaybe<Scalars["Int"]["input"]>;
+};
+
+export type WhateverUniversityStudentRegistrationsArgs = {
+  after?: InputMaybe<Scalars["String"]["input"]>;
+  before?: InputMaybe<Scalars["String"]["input"]>;
+  first?: InputMaybe<Scalars["Int"]["input"]>;
+  last?: InputMaybe<Scalars["Int"]["input"]>;
+};
+
+/** A connection to a list of WhateverUniversityStudent items. */
+export type WhateverUniversityStudentConnection = {
+  __typename?: "WhateverUniversityStudentConnection";
+  /** A list of edges. */
+  edges: Array<WhateverUniversityStudentEdge>;
+  /** Information to aid in pagination. */
+  pageInfo: PageInfo;
+};
+
+/** An edge in a WhateverUniversityStudent connection. */
+export type WhateverUniversityStudentEdge = {
+  __typename?: "WhateverUniversityStudentEdge";
+  /** A cursor for use in pagination */
+  cursor: Scalars["String"]["output"];
+  /** The item at the end of the edge */
+  node: WhateverUniversityStudent;
+};
+
+export type WhateverUniversityStudentFilter = {
+  AND?: InputMaybe<Array<InputMaybe<WhateverUniversityStudentFilter>>>;
+  NOT?: InputMaybe<Array<InputMaybe<WhateverUniversityStudentFilter>>>;
+  OR?: InputMaybe<Array<InputMaybe<WhateverUniversityStudentFilter>>>;
+  createdAt?: InputMaybe<DateTimeFilter>;
+  department?: InputMaybe<SingleEnumFilter>;
+  firstName?: InputMaybe<StringFilter>;
+  id?: InputMaybe<IdFilter>;
+  lastName?: InputMaybe<StringFilter>;
+  updatedAt?: InputMaybe<DateTimeFilter>;
+  year?: InputMaybe<IntFilter>;
+};
+
+export type WhateverUniversityStudentSort = {
+  /** Sort the results by the createdAt field. Defaults to ascending (smallest value first). */
+  createdAt?: InputMaybe<SortOrder>;
+  /** Sort the results by the department field. Defaults to ascending (smallest value first). */
+  department?: InputMaybe<SortOrder>;
+  /** Sort the results by the firstName field. Defaults to ascending (smallest value first). */
+  firstName?: InputMaybe<SortOrder>;
+  /** Sort the results by the id field. Defaults to ascending (smallest value first). */
+  id?: InputMaybe<SortOrder>;
+  /** Sort the results by the lastName field. Defaults to ascending (smallest value first). */
+  lastName?: InputMaybe<SortOrder>;
+  /** Sort the results by the updatedAt field. Defaults to ascending (smallest value first). */
+  updatedAt?: InputMaybe<SortOrder>;
+  /** Sort the results by the year field. Defaults to ascending (smallest value first). */
+  year?: InputMaybe<SortOrder>;
 };
 
 export type Widget = {
