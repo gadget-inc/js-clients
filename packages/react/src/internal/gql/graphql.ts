@@ -473,6 +473,7 @@ export type BackgroundActionResult =
   | CreateUniversityRegistrationResult
   | CreateUniversityStudentResult
   | CreateWidgetResult
+  | CreateWithCustomParamsWidgetResult
   | CustomActionAutoTableTestResult
   | CustomActionWithParamsAutoTableTestResult
   | CustomObjectParamsGameCityResult
@@ -536,7 +537,8 @@ export type BackgroundActionResult =
   | UpdateUniversityStudentResult
   | UpdateUserResult
   | UpdateWidgetResult
-  | UpdateWithCustomParamsAutoTableTestResult;
+  | UpdateWithCustomParamsAutoTableTestResult
+  | UpdateWithCustomParamsWidgetResult;
 
 export type BackgroundActionRetryPolicy = {
   /** The exponential backoff factor to use for calculating the retry delay for successive retries. Set this higher to grow the delay faster with each retry attempt. Default is 2. */
@@ -943,6 +945,7 @@ export type BackgroundMutations = {
   bulkCreateSections: BulkEnqueueBackgroundActionResult;
   bulkCreateTweeters: BulkEnqueueBackgroundActionResult;
   bulkCreateWidgets: BulkEnqueueBackgroundActionResult;
+  bulkCreateWithCustomParamsWidgets: BulkEnqueueBackgroundActionResult;
   bulkCustomActionAutoTableTests: BulkEnqueueBackgroundActionResult;
   bulkCustomActionWithParamsAutoTableTests: BulkEnqueueBackgroundActionResult;
   bulkDeleteAutoTableTestRelatedModels: BulkEnqueueBackgroundActionResult;
@@ -973,6 +976,7 @@ export type BackgroundMutations = {
   bulkUpdateUsers: BulkEnqueueBackgroundActionResult;
   bulkUpdateWidgets: BulkEnqueueBackgroundActionResult;
   bulkUpdateWithCustomParamsAutoTableTests: BulkEnqueueBackgroundActionResult;
+  bulkUpdateWithCustomParamsWidgets: BulkEnqueueBackgroundActionResult;
   bulkUpsertAutoTableTestRelatedModels: BulkEnqueueBackgroundActionResult;
   bulkUpsertAutoTableTests: BulkEnqueueBackgroundActionResult;
   bulkUpsertDoodads: BulkEnqueueBackgroundActionResult;
@@ -997,6 +1001,7 @@ export type BackgroundMutations = {
   createTestData: EnqueueBackgroundActionResult;
   createTweeter: EnqueueBackgroundActionResult;
   createWidget: EnqueueBackgroundActionResult;
+  createWithCustomParamsWidget: EnqueueBackgroundActionResult;
   customActionAutoTableTest: EnqueueBackgroundActionResult;
   customActionWithParamsAutoTableTest: EnqueueBackgroundActionResult;
   deleteAutoTableTest: EnqueueBackgroundActionResult;
@@ -1033,6 +1038,7 @@ export type BackgroundMutations = {
   updateUser: EnqueueBackgroundActionResult;
   updateWidget: EnqueueBackgroundActionResult;
   updateWithCustomParamsAutoTableTest: EnqueueBackgroundActionResult;
+  updateWithCustomParamsWidget: EnqueueBackgroundActionResult;
   upsertAutoTableTest: EnqueueBackgroundActionResult;
   upsertAutoTableTestRelatedModel: EnqueueBackgroundActionResult;
   upsertDoodad: EnqueueBackgroundActionResult;
@@ -1132,6 +1138,11 @@ export type BackgroundMutationsBulkCreateTweetersArgs = {
 export type BackgroundMutationsBulkCreateWidgetsArgs = {
   backgroundOptions?: InputMaybe<EnqueueBackgroundActionOptions>;
   inputs: Array<BulkCreateWidgetsInput>;
+};
+
+export type BackgroundMutationsBulkCreateWithCustomParamsWidgetsArgs = {
+  backgroundOptions?: InputMaybe<EnqueueBackgroundActionOptions>;
+  inputs: Array<BulkCreateWithCustomParamsWidgetsInput>;
 };
 
 export type BackgroundMutationsBulkCustomActionAutoTableTestsArgs = {
@@ -1284,6 +1295,11 @@ export type BackgroundMutationsBulkUpdateWithCustomParamsAutoTableTestsArgs = {
   inputs: Array<BulkUpdateWithCustomParamsAutoTableTestsInput>;
 };
 
+export type BackgroundMutationsBulkUpdateWithCustomParamsWidgetsArgs = {
+  backgroundOptions?: InputMaybe<EnqueueBackgroundActionOptions>;
+  inputs: Array<BulkUpdateWithCustomParamsWidgetsInput>;
+};
+
 export type BackgroundMutationsBulkUpsertAutoTableTestRelatedModelsArgs = {
   backgroundOptions?: InputMaybe<EnqueueBackgroundActionOptions>;
   inputs: Array<BulkUpsertAutoTableTestRelatedModelsInput>;
@@ -1401,6 +1417,14 @@ export type BackgroundMutationsCreateTweeterArgs = {
 export type BackgroundMutationsCreateWidgetArgs = {
   backgroundOptions?: InputMaybe<EnqueueBackgroundActionOptions>;
   widget?: InputMaybe<CreateWidgetInput>;
+};
+
+export type BackgroundMutationsCreateWithCustomParamsWidgetArgs = {
+  backgroundOptions?: InputMaybe<EnqueueBackgroundActionOptions>;
+  customBooleanParam?: InputMaybe<Scalars["Boolean"]["input"]>;
+  customNumberParam?: InputMaybe<Scalars["Float"]["input"]>;
+  customStringParam?: InputMaybe<Scalars["String"]["input"]>;
+  widget?: InputMaybe<CreateWithCustomParamsWidgetInput>;
 };
 
 export type BackgroundMutationsCustomActionAutoTableTestArgs = {
@@ -1578,6 +1602,15 @@ export type BackgroundMutationsUpdateWithCustomParamsAutoTableTestArgs = {
   numberParam1?: InputMaybe<Scalars["Float"]["input"]>;
   str?: InputMaybe<Scalars["String"]["input"]>;
   stringParam1?: InputMaybe<Scalars["String"]["input"]>;
+};
+
+export type BackgroundMutationsUpdateWithCustomParamsWidgetArgs = {
+  backgroundOptions?: InputMaybe<EnqueueBackgroundActionOptions>;
+  customBooleanParam?: InputMaybe<Scalars["Boolean"]["input"]>;
+  customNumberParam?: InputMaybe<Scalars["Float"]["input"]>;
+  customStringParam?: InputMaybe<Scalars["String"]["input"]>;
+  id: Scalars["GadgetID"]["input"];
+  widget?: InputMaybe<UpdateWithCustomParamsWidgetInput>;
 };
 
 export type BackgroundMutationsUpsertAutoTableTestArgs = {
@@ -2538,6 +2571,24 @@ export type BulkCreateWidgetsResult = {
   widgets?: Maybe<Array<Maybe<Widget>>>;
 };
 
+export type BulkCreateWithCustomParamsWidgetsInput = {
+  customBooleanParam?: InputMaybe<Scalars["Boolean"]["input"]>;
+  customNumberParam?: InputMaybe<Scalars["Float"]["input"]>;
+  customStringParam?: InputMaybe<Scalars["String"]["input"]>;
+  widget?: InputMaybe<CreateWithCustomParamsWidgetInput>;
+};
+
+/** The output when running the createWithCustomParams on the widget model in bulk. */
+export type BulkCreateWithCustomParamsWidgetsResult = {
+  __typename?: "BulkCreateWithCustomParamsWidgetsResult";
+  /** Aggregated list of errors that any bulk action encountered while processing */
+  errors?: Maybe<Array<ExecutionError>>;
+  /** Boolean describing if all the bulk actions succeeded or not */
+  success: Scalars["Boolean"]["output"];
+  /** The list of all changed widget records by each sent bulk action. Returned in the same order as the input bulk action params. */
+  widgets?: Maybe<Array<Maybe<Widget>>>;
+};
+
 /** The output when running the customAction on the autoTableTest model in bulk. */
 export type BulkCustomActionAutoTableTestsResult = {
   __typename?: "BulkCustomActionAutoTableTestsResult";
@@ -3334,6 +3385,25 @@ export type BulkUpdateWithCustomParamsAutoTableTestsResult = {
   errors?: Maybe<Array<ExecutionError>>;
   /** Boolean describing if all the bulk actions succeeded or not */
   success: Scalars["Boolean"]["output"];
+};
+
+export type BulkUpdateWithCustomParamsWidgetsInput = {
+  customBooleanParam?: InputMaybe<Scalars["Boolean"]["input"]>;
+  customNumberParam?: InputMaybe<Scalars["Float"]["input"]>;
+  customStringParam?: InputMaybe<Scalars["String"]["input"]>;
+  id: Scalars["GadgetID"]["input"];
+  widget?: InputMaybe<UpdateWithCustomParamsWidgetInput>;
+};
+
+/** The output when running the updateWithCustomParams on the widget model in bulk. */
+export type BulkUpdateWithCustomParamsWidgetsResult = {
+  __typename?: "BulkUpdateWithCustomParamsWidgetsResult";
+  /** Aggregated list of errors that any bulk action encountered while processing */
+  errors?: Maybe<Array<ExecutionError>>;
+  /** Boolean describing if all the bulk actions succeeded or not */
+  success: Scalars["Boolean"]["output"];
+  /** The list of all changed widget records by each sent bulk action. Returned in the same order as the input bulk action params. */
+  widgets?: Maybe<Array<Maybe<Widget>>>;
 };
 
 export type BulkUpsertAutoTableTestRelatedModelsInput = {
@@ -4507,6 +4577,35 @@ export type CreateWidgetInput = {
 
 export type CreateWidgetResult = UpsertWidgetResult & {
   __typename?: "CreateWidgetResult";
+  actionRun?: Maybe<Scalars["String"]["output"]>;
+  errors?: Maybe<Array<ExecutionError>>;
+  success: Scalars["Boolean"]["output"];
+  widget?: Maybe<Widget>;
+};
+
+export type CreateWithCustomParamsWidgetInput = {
+  anything?: InputMaybe<Scalars["JSON"]["input"]>;
+  birthday?: InputMaybe<Scalars["DateOrDateTime"]["input"]>;
+  category?: InputMaybe<Array<Scalars["WidgetCategoryEnum"]["input"]>>;
+  color?: InputMaybe<Scalars["String"]["input"]>;
+  description?: InputMaybe<RichTextInput>;
+  doodad?: InputMaybe<DoodadHasOneInput>;
+  embedding?: InputMaybe<Array<Scalars["Float"]["input"]>>;
+  gizmos?: InputMaybe<Array<InputMaybe<GizmoHasManyInput>>>;
+  inventoryCount?: InputMaybe<Scalars["Float"]["input"]>;
+  isChecked?: InputMaybe<Scalars["Boolean"]["input"]>;
+  metafields?: InputMaybe<Scalars["JSON"]["input"]>;
+  mustBeLongString?: InputMaybe<Scalars["String"]["input"]>;
+  name?: InputMaybe<Scalars["String"]["input"]>;
+  /** A string list of Gadget platform Role keys to assign to this record */
+  roles?: InputMaybe<Array<Scalars["String"]["input"]>>;
+  secretKey?: InputMaybe<Scalars["String"]["input"]>;
+  section?: InputMaybe<SectionBelongsToInput>;
+  startsAt?: InputMaybe<Scalars["DateTime"]["input"]>;
+};
+
+export type CreateWithCustomParamsWidgetResult = {
+  __typename?: "CreateWithCustomParamsWidgetResult";
   actionRun?: Maybe<Scalars["String"]["output"]>;
   errors?: Maybe<Array<ExecutionError>>;
   success: Scalars["Boolean"]["output"];
@@ -8616,6 +8715,7 @@ export type InternalMutations = {
   triggerCreateTestData?: Maybe<CreateTestDataResult>;
   triggerCreateTweeter?: Maybe<CreateTweeterResult>;
   triggerCreateWidget?: Maybe<CreateWidgetResult>;
+  triggerCreateWithCustomParamsWidget?: Maybe<CreateWithCustomParamsWidgetResult>;
   triggerCustomActionAutoTableTest?: Maybe<CustomActionAutoTableTestResult>;
   triggerCustomActionWithParamsAutoTableTest?: Maybe<CustomActionWithParamsAutoTableTestResult>;
   triggerDeleteAutoTableTest?: Maybe<DeleteAutoTableTestResult>;
@@ -8662,6 +8762,7 @@ export type InternalMutations = {
   triggerUpdateUser?: Maybe<UpdateUserResult>;
   triggerUpdateWidget?: Maybe<UpdateWidgetResult>;
   triggerUpdateWithCustomParamsAutoTableTest?: Maybe<UpdateWithCustomParamsAutoTableTestResult>;
+  triggerUpdateWithCustomParamsWidget?: Maybe<UpdateWithCustomParamsWidgetResult>;
   uniqueFields: InternalUniqueFieldsMutations;
   university: InternalUniversityMutations;
   updateAutoTableTest?: Maybe<InternalUpdateAutoTableTestResult>;
@@ -9168,6 +9269,13 @@ export type InternalMutationsTriggerCreateWidgetArgs = {
   verifyTriggerExists?: InputMaybe<Scalars["Boolean"]["input"]>;
 };
 
+export type InternalMutationsTriggerCreateWithCustomParamsWidgetArgs = {
+  context?: InputMaybe<AppGraphQlTriggerMutationContext>;
+  params?: InputMaybe<Scalars["JSONObject"]["input"]>;
+  trigger?: InputMaybe<Scalars["JSONObject"]["input"]>;
+  verifyTriggerExists?: InputMaybe<Scalars["Boolean"]["input"]>;
+};
+
 export type InternalMutationsTriggerCustomActionAutoTableTestArgs = {
   context?: InputMaybe<AppGraphQlTriggerMutationContext>;
   params?: InputMaybe<Scalars["JSONObject"]["input"]>;
@@ -9482,6 +9590,13 @@ export type InternalMutationsTriggerUpdateWidgetArgs = {
 };
 
 export type InternalMutationsTriggerUpdateWithCustomParamsAutoTableTestArgs = {
+  context?: InputMaybe<AppGraphQlTriggerMutationContext>;
+  params?: InputMaybe<Scalars["JSONObject"]["input"]>;
+  trigger?: InputMaybe<Scalars["JSONObject"]["input"]>;
+  verifyTriggerExists?: InputMaybe<Scalars["Boolean"]["input"]>;
+};
+
+export type InternalMutationsTriggerUpdateWithCustomParamsWidgetArgs = {
   context?: InputMaybe<AppGraphQlTriggerMutationContext>;
   params?: InputMaybe<Scalars["JSONObject"]["input"]>;
   trigger?: InputMaybe<Scalars["JSONObject"]["input"]>;
@@ -12235,6 +12350,7 @@ export type Mutation = {
   bulkCreateSections?: Maybe<BulkCreateSectionsResult>;
   bulkCreateTweeters?: Maybe<BulkCreateTweetersResult>;
   bulkCreateWidgets?: Maybe<BulkCreateWidgetsResult>;
+  bulkCreateWithCustomParamsWidgets?: Maybe<BulkCreateWithCustomParamsWidgetsResult>;
   bulkCustomActionAutoTableTests?: Maybe<BulkCustomActionAutoTableTestsResult>;
   bulkCustomActionWithParamsAutoTableTests?: Maybe<BulkCustomActionWithParamsAutoTableTestsResult>;
   bulkDeleteAutoTableTestRelatedModels?: Maybe<BulkDeleteAutoTableTestRelatedModelsResult>;
@@ -12265,6 +12381,7 @@ export type Mutation = {
   bulkUpdateUsers?: Maybe<BulkUpdateUsersResult>;
   bulkUpdateWidgets?: Maybe<BulkUpdateWidgetsResult>;
   bulkUpdateWithCustomParamsAutoTableTests?: Maybe<BulkUpdateWithCustomParamsAutoTableTestsResult>;
+  bulkUpdateWithCustomParamsWidgets?: Maybe<BulkUpdateWithCustomParamsWidgetsResult>;
   bulkUpsertAutoTableTestRelatedModels: BulkUpsertAutoTableTestRelatedModelsResult;
   bulkUpsertAutoTableTests: BulkUpsertAutoTableTestsResult;
   bulkUpsertDoodads: BulkUpsertDoodadsResult;
@@ -12289,6 +12406,7 @@ export type Mutation = {
   createTestData?: Maybe<CreateTestDataResult>;
   createTweeter?: Maybe<CreateTweeterResult>;
   createWidget?: Maybe<CreateWidgetResult>;
+  createWithCustomParamsWidget?: Maybe<CreateWithCustomParamsWidgetResult>;
   customActionAutoTableTest?: Maybe<CustomActionAutoTableTestResult>;
   customActionWithParamsAutoTableTest?: Maybe<CustomActionWithParamsAutoTableTestResult>;
   deleteAutoTableTest?: Maybe<DeleteAutoTableTestResult>;
@@ -12329,6 +12447,7 @@ export type Mutation = {
   updateUser?: Maybe<UpdateUserResult>;
   updateWidget?: Maybe<UpdateWidgetResult>;
   updateWithCustomParamsAutoTableTest?: Maybe<UpdateWithCustomParamsAutoTableTestResult>;
+  updateWithCustomParamsWidget?: Maybe<UpdateWithCustomParamsWidgetResult>;
   upsertAutoTableTest?: Maybe<UpsertAutoTableTestResult>;
   upsertAutoTableTestRelatedModel?: Maybe<UpsertAutoTableTestRelatedModelResult>;
   upsertDoodad?: Maybe<UpsertDoodadResult>;
@@ -12411,6 +12530,10 @@ export type MutationBulkCreateTweetersArgs = {
 
 export type MutationBulkCreateWidgetsArgs = {
   inputs: Array<BulkCreateWidgetsInput>;
+};
+
+export type MutationBulkCreateWithCustomParamsWidgetsArgs = {
+  inputs: Array<BulkCreateWithCustomParamsWidgetsInput>;
 };
 
 export type MutationBulkCustomActionAutoTableTestsArgs = {
@@ -12533,6 +12656,10 @@ export type MutationBulkUpdateWithCustomParamsAutoTableTestsArgs = {
   inputs: Array<BulkUpdateWithCustomParamsAutoTableTestsInput>;
 };
 
+export type MutationBulkUpdateWithCustomParamsWidgetsArgs = {
+  inputs: Array<BulkUpdateWithCustomParamsWidgetsInput>;
+};
+
 export type MutationBulkUpsertAutoTableTestRelatedModelsArgs = {
   inputs: Array<BulkUpsertAutoTableTestRelatedModelsInput>;
 };
@@ -12620,6 +12747,13 @@ export type MutationCreateTweeterArgs = {
 
 export type MutationCreateWidgetArgs = {
   widget?: InputMaybe<CreateWidgetInput>;
+};
+
+export type MutationCreateWithCustomParamsWidgetArgs = {
+  customBooleanParam?: InputMaybe<Scalars["Boolean"]["input"]>;
+  customNumberParam?: InputMaybe<Scalars["Float"]["input"]>;
+  customStringParam?: InputMaybe<Scalars["String"]["input"]>;
+  widget?: InputMaybe<CreateWithCustomParamsWidgetInput>;
 };
 
 export type MutationCustomActionAutoTableTestArgs = {
@@ -12766,6 +12900,14 @@ export type MutationUpdateWithCustomParamsAutoTableTestArgs = {
   numberParam1?: InputMaybe<Scalars["Float"]["input"]>;
   str?: InputMaybe<Scalars["String"]["input"]>;
   stringParam1?: InputMaybe<Scalars["String"]["input"]>;
+};
+
+export type MutationUpdateWithCustomParamsWidgetArgs = {
+  customBooleanParam?: InputMaybe<Scalars["Boolean"]["input"]>;
+  customNumberParam?: InputMaybe<Scalars["Float"]["input"]>;
+  customStringParam?: InputMaybe<Scalars["String"]["input"]>;
+  id: Scalars["GadgetID"]["input"];
+  widget?: InputMaybe<UpdateWithCustomParamsWidgetInput>;
 };
 
 export type MutationUpsertAutoTableTestArgs = {
@@ -13427,6 +13569,30 @@ export type NestedWidgetCreateInput = {
   startsAt?: InputMaybe<Scalars["DateTime"]["input"]>;
 };
 
+export type NestedWidgetCreateWithCustomParamsInput = {
+  anything?: InputMaybe<Scalars["JSON"]["input"]>;
+  birthday?: InputMaybe<Scalars["DateOrDateTime"]["input"]>;
+  category?: InputMaybe<Array<Scalars["WidgetCategoryEnum"]["input"]>>;
+  color?: InputMaybe<Scalars["String"]["input"]>;
+  customBooleanParam?: InputMaybe<Scalars["Boolean"]["input"]>;
+  customNumberParam?: InputMaybe<Scalars["Float"]["input"]>;
+  customStringParam?: InputMaybe<Scalars["String"]["input"]>;
+  description?: InputMaybe<RichTextInput>;
+  doodad?: InputMaybe<DoodadHasOneInput>;
+  embedding?: InputMaybe<Array<Scalars["Float"]["input"]>>;
+  gizmos?: InputMaybe<Array<InputMaybe<GizmoHasManyInput>>>;
+  inventoryCount?: InputMaybe<Scalars["Float"]["input"]>;
+  isChecked?: InputMaybe<Scalars["Boolean"]["input"]>;
+  metafields?: InputMaybe<Scalars["JSON"]["input"]>;
+  mustBeLongString?: InputMaybe<Scalars["String"]["input"]>;
+  name?: InputMaybe<Scalars["String"]["input"]>;
+  /** A string list of Gadget platform Role keys to assign to this record */
+  roles?: InputMaybe<Array<Scalars["String"]["input"]>>;
+  secretKey?: InputMaybe<Scalars["String"]["input"]>;
+  section?: InputMaybe<SectionBelongsToInput>;
+  startsAt?: InputMaybe<Scalars["DateTime"]["input"]>;
+};
+
 export type NestedWidgetDeleteInput = {
   id: Scalars["GadgetID"]["input"];
 };
@@ -13436,6 +13602,31 @@ export type NestedWidgetUpdateInput = {
   birthday?: InputMaybe<Scalars["DateOrDateTime"]["input"]>;
   category?: InputMaybe<Array<Scalars["WidgetCategoryEnum"]["input"]>>;
   color?: InputMaybe<Scalars["String"]["input"]>;
+  description?: InputMaybe<RichTextInput>;
+  doodad?: InputMaybe<DoodadHasOneInput>;
+  embedding?: InputMaybe<Array<Scalars["Float"]["input"]>>;
+  gizmos?: InputMaybe<Array<InputMaybe<GizmoHasManyInput>>>;
+  id: Scalars["GadgetID"]["input"];
+  inventoryCount?: InputMaybe<Scalars["Float"]["input"]>;
+  isChecked?: InputMaybe<Scalars["Boolean"]["input"]>;
+  metafields?: InputMaybe<Scalars["JSON"]["input"]>;
+  mustBeLongString?: InputMaybe<Scalars["String"]["input"]>;
+  name?: InputMaybe<Scalars["String"]["input"]>;
+  /** A string list of Gadget platform Role keys to assign to this record */
+  roles?: InputMaybe<Array<Scalars["String"]["input"]>>;
+  secretKey?: InputMaybe<Scalars["String"]["input"]>;
+  section?: InputMaybe<SectionBelongsToInput>;
+  startsAt?: InputMaybe<Scalars["DateTime"]["input"]>;
+};
+
+export type NestedWidgetUpdateWithCustomParamsInput = {
+  anything?: InputMaybe<Scalars["JSON"]["input"]>;
+  birthday?: InputMaybe<Scalars["DateOrDateTime"]["input"]>;
+  category?: InputMaybe<Array<Scalars["WidgetCategoryEnum"]["input"]>>;
+  color?: InputMaybe<Scalars["String"]["input"]>;
+  customBooleanParam?: InputMaybe<Scalars["Boolean"]["input"]>;
+  customNumberParam?: InputMaybe<Scalars["Float"]["input"]>;
+  customStringParam?: InputMaybe<Scalars["String"]["input"]>;
   description?: InputMaybe<RichTextInput>;
   doodad?: InputMaybe<DoodadHasOneInput>;
   embedding?: InputMaybe<Array<Scalars["Float"]["input"]>>;
@@ -16908,6 +17099,35 @@ export type UpdateWithCustomParamsAutoTableTestResult = {
   success: Scalars["Boolean"]["output"];
 };
 
+export type UpdateWithCustomParamsWidgetInput = {
+  anything?: InputMaybe<Scalars["JSON"]["input"]>;
+  birthday?: InputMaybe<Scalars["DateOrDateTime"]["input"]>;
+  category?: InputMaybe<Array<Scalars["WidgetCategoryEnum"]["input"]>>;
+  color?: InputMaybe<Scalars["String"]["input"]>;
+  description?: InputMaybe<RichTextInput>;
+  doodad?: InputMaybe<DoodadHasOneInput>;
+  embedding?: InputMaybe<Array<Scalars["Float"]["input"]>>;
+  gizmos?: InputMaybe<Array<InputMaybe<GizmoHasManyInput>>>;
+  inventoryCount?: InputMaybe<Scalars["Float"]["input"]>;
+  isChecked?: InputMaybe<Scalars["Boolean"]["input"]>;
+  metafields?: InputMaybe<Scalars["JSON"]["input"]>;
+  mustBeLongString?: InputMaybe<Scalars["String"]["input"]>;
+  name?: InputMaybe<Scalars["String"]["input"]>;
+  /** A string list of Gadget platform Role keys to assign to this record */
+  roles?: InputMaybe<Array<Scalars["String"]["input"]>>;
+  secretKey?: InputMaybe<Scalars["String"]["input"]>;
+  section?: InputMaybe<SectionBelongsToInput>;
+  startsAt?: InputMaybe<Scalars["DateTime"]["input"]>;
+};
+
+export type UpdateWithCustomParamsWidgetResult = {
+  __typename?: "UpdateWithCustomParamsWidgetResult";
+  actionRun?: Maybe<Scalars["String"]["output"]>;
+  errors?: Maybe<Array<ExecutionError>>;
+  success: Scalars["Boolean"]["output"];
+  widget?: Maybe<Widget>;
+};
+
 export type UpsertAutoTableTestInput = {
   bool?: InputMaybe<Scalars["Boolean"]["input"]>;
   dt?: InputMaybe<Scalars["DateTime"]["input"]>;
@@ -17573,8 +17793,10 @@ export type WidgetBelongsToInput = {
   addInventory?: InputMaybe<NestedWidgetAddInventoryInput>;
   alwaysThrowError?: InputMaybe<NestedWidgetAlwaysThrowErrorInput>;
   create?: InputMaybe<NestedWidgetCreateInput>;
+  createWithCustomParams?: InputMaybe<NestedWidgetCreateWithCustomParamsInput>;
   delete?: InputMaybe<NestedWidgetDeleteInput>;
   update?: InputMaybe<NestedWidgetUpdateInput>;
+  updateWithCustomParams?: InputMaybe<NestedWidgetUpdateWithCustomParamsInput>;
 };
 
 /** A connection to a list of Widget items. */
@@ -17625,8 +17847,10 @@ export type WidgetHasManyInput = {
   addInventory?: InputMaybe<NestedWidgetAddInventoryInput>;
   alwaysThrowError?: InputMaybe<NestedWidgetAlwaysThrowErrorInput>;
   create?: InputMaybe<NestedWidgetCreateInput>;
+  createWithCustomParams?: InputMaybe<NestedWidgetCreateWithCustomParamsInput>;
   delete?: InputMaybe<NestedWidgetDeleteInput>;
   update?: InputMaybe<NestedWidgetUpdateInput>;
+  updateWithCustomParams?: InputMaybe<NestedWidgetUpdateWithCustomParamsInput>;
 };
 
 export type WidgetSort = {
@@ -20347,6 +20571,7 @@ export type ModelActionMetadataQuery = {
         apiIdentifier: string;
         operatesWithRecordIdentity: boolean;
         isDeleteAction: boolean;
+        isUpsertMetaAction: boolean;
         inputFields: Array<{
           __typename?: "GadgetObjectField";
           name: string;
@@ -23327,6 +23552,7 @@ export const ModelActionMetadataDocument = {
                             { kind: "Field", name: { kind: "Name", value: "apiIdentifier" } },
                             { kind: "Field", name: { kind: "Name", value: "operatesWithRecordIdentity" } },
                             { kind: "Field", name: { kind: "Name", value: "isDeleteAction" } },
+                            { kind: "Field", name: { kind: "Name", value: "isUpsertMetaAction" } },
                             {
                               kind: "Field",
                               name: { kind: "Name", value: "inputFields" },

@@ -278,6 +278,7 @@ const upsertModelActionMetadataResponse = {
           apiIdentifier: "upsert",
           operatesWithRecordIdentity: false,
           isDeleteAction: false,
+          isUpsertMetaAction: true,
           inputFields: [
             {
               name: "On",
