@@ -347,7 +347,12 @@ const roleAssignmentsSelection = {
   name: true,
 };
 
-const getNonRelationshipSelectionValue = (field: FieldMetadata) => {
+const getNonRelationshipSelectionValue = (field: FieldMetadata, onlyAllowModelFields = false) => {
+  if (field.__typename !== "GadgetModelField" && onlyAllowModelFields) {
+    // Only model fields are selectable
+    return false;
+  }
+
   switch (field.fieldType) {
     case GadgetFieldType.RichText:
       return richTextSelection;
@@ -524,7 +529,7 @@ export const pathListToSelection = (modelIdentifier: string, pathList: string[],
       }
     } else {
       // Non relationship field
-      selection[field.apiIdentifier] = getNonRelationshipSelectionValue(field);
+      selection[field.apiIdentifier] = getNonRelationshipSelectionValue(field, true);
     }
   }
 
