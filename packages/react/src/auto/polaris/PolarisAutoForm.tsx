@@ -7,11 +7,7 @@ import { humanizeCamelCase, type OptionsType } from "../../utils.js";
 import type { AutoFormProps } from "../AutoForm.js";
 import { useAutoForm } from "../AutoForm.js";
 import { validateAutoFormProps } from "../AutoFormActionValidators.js";
-import {
-  AutoFormFieldsFromChildComponentsContext,
-  AutoFormMetadataContext,
-  useInitializeFieldsFromChildComponents,
-} from "../AutoFormContext.js";
+import { AutoFormFieldsFromChildComponentsProvider, AutoFormMetadataContext } from "../AutoFormContext.js";
 import { PolarisAutoInput } from "./inputs/PolarisAutoInput.js";
 import { PolarisAutoSubmit } from "./submit/PolarisAutoSubmit.js";
 import { PolarisSubmitErrorBanner, PolarisSubmitSuccessfulBanner } from "./submit/PolarisSubmitResultBanner.js";
@@ -39,18 +35,16 @@ export const PolarisAutoForm = <
 
   validateAutoFormProps(props);
 
-  const fieldsFromChildComponents = useInitializeFieldsFromChildComponents(!!props.children);
-
   // Component key to force re-render when the action or findBy changes
   const componentKey = `${action.modelApiIdentifier ?? ""}.${action.operationName}.${JSON.stringify(findBy)}`;
 
   return (
-    <AutoFormFieldsFromChildComponentsContext.Provider value={fieldsFromChildComponents}>
+    <AutoFormFieldsFromChildComponentsProvider>
       <PolarisAutoFormComponent
         key={componentKey}
         {...(props as AutoFormProps<GivenOptions, SchemaT, ActionFunc> & Omit<Partial<FormProps>, "action"> & { findBy: any })}
       />
-    </AutoFormFieldsFromChildComponentsContext.Provider>
+    </AutoFormFieldsFromChildComponentsProvider>
   );
 };
 

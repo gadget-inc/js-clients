@@ -63,11 +63,16 @@ export const useFieldsFromChildComponents = () => {
 
 export const AutoFormFieldsFromChildComponentsContext = React.createContext<AutoFormFieldsFromChildComponents | undefined>(undefined);
 
-/**
- * Context hook that manages the registration of form fields when using child components within an AutoForm.
- * Registered fields are used to determine which fields should be included in form state
- */
-export const useInitializeFieldsFromChildComponents = (hasChildren: boolean): AutoFormFieldsFromChildComponents => {
+export const AutoFormFieldsFromChildComponentsProvider = ({ children }: { children: React.ReactNode }) => {
+  const fieldsFromChildComponents = useInitializeFieldsFromChildComponents(React.Children.count(children) > 0);
+  return (
+    <AutoFormFieldsFromChildComponentsContext.Provider value={fieldsFromChildComponents}>
+      {children}
+    </AutoFormFieldsFromChildComponentsContext.Provider>
+  );
+};
+
+const useInitializeFieldsFromChildComponents = (hasChildren: boolean): AutoFormFieldsFromChildComponents => {
   const [fieldSet, setFieldSet] = useState<Set<string>>(new Set());
 
   const registerField = useCallback(
