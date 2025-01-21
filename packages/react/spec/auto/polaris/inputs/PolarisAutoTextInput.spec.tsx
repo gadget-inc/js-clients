@@ -147,6 +147,7 @@ describe("PolarisAutoTextInput", () => {
             apiIdentifier: "create",
             operatesWithRecordIdentity: false,
             isDeleteAction: false,
+            isUpsertMetaAction: false,
             triggers: apiTriggerOnly,
             inputFields: [
               {
@@ -210,6 +211,7 @@ const metadata = {
     apiIdentifier: "create",
     operatesWithRecordIdentity: false,
     isDeleteAction: false,
+    isUpsertMetaAction: false,
     triggers: apiTriggerOnly,
     inputFields: [
       {
@@ -332,6 +334,26 @@ const metadata = {
 };
 
 const mockFindBy = () => {
+  const updateMetadata = { ...metadata, action: { ...metadata.action, apiIdentifier: "update", operatesWithRecordIdentity: true } };
+  mockUrqlClient.executeQuery.pushResponse("ModelActionMetadata", {
+    stale: false,
+    hasNext: false,
+    data: {
+      gadgetMeta: {
+        modelAndRelatedModels: [
+          {
+            name: "Widget",
+            apiIdentifier: "widget",
+            fields: updateMetadata.action.inputFields,
+            __typename: "GadgetModel",
+          },
+        ],
+        model: updateMetadata,
+        __typename: "GadgetApplicationMeta",
+      },
+    },
+  });
+
   mockUrqlClient.executeQuery.pushResponse("widget", {
     stale: false,
     hasNext: false,
@@ -357,26 +379,6 @@ const mockFindBy = () => {
           birthday: "DateTime",
           createdAt: "DateTime",
         },
-        __typename: "GadgetApplicationMeta",
-      },
-    },
-  });
-
-  const updateMetadata = { ...metadata, action: { ...metadata.action, apiIdentifier: "update", operatesWithRecordIdentity: true } };
-  mockUrqlClient.executeQuery.pushResponse("ModelActionMetadata", {
-    stale: false,
-    hasNext: false,
-    data: {
-      gadgetMeta: {
-        modelAndRelatedModels: [
-          {
-            name: "Widget",
-            apiIdentifier: "widget",
-            fields: updateMetadata.action.inputFields,
-            __typename: "GadgetModel",
-          },
-        ],
-        model: updateMetadata,
         __typename: "GadgetApplicationMeta",
       },
     },

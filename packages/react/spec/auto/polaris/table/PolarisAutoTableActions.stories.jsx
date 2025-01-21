@@ -1,10 +1,11 @@
 import { AppProvider, BlockStack, Box, LegacyCard } from "@shopify/polaris";
 import translations from "@shopify/polaris/locales/en.json";
 import React from "react";
-import { Provider } from "../../../src/GadgetProvider.tsx";
-import { PolarisAutoTable } from "../../../src/auto/polaris/PolarisAutoTable.tsx";
-import { testApi as api } from "../../apis.ts";
-import { StorybookErrorBoundary } from "../StorybookErrorBoundary.tsx";
+import { Provider } from "../../../../src/GadgetProvider.tsx";
+import { PolarisAutoTable } from "../../../../src/auto/polaris/PolarisAutoTable.tsx";
+import { testApi as api } from "../../../apis.ts";
+import { StorybookErrorBoundary } from "../../StorybookErrorBoundary.tsx";
+
 // More on how to set up stories at: https://storybook.js.org/docs/writing-stories#default-export
 export default {
   title: "Polaris/AutoTable/ActionParameters",

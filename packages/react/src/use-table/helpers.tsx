@@ -3,7 +3,7 @@ import React from "react";
 import { GadgetFieldType } from "../internal/gql/graphql.js";
 import type { FieldMetadata } from "../metadata.js";
 import { acceptedAutoTableFieldTypes, filterAutoTableFieldList } from "../metadata.js";
-import { get, set } from "../utils.js";
+import { get, groupPaths, set } from "../utils.js";
 import type {
   CellDetailColumn,
   CustomCellColumn,
@@ -307,12 +307,28 @@ const mergeColumnPathByFieldType = (columnPath: string, newSegment: string, fiel
   return `${columnPath}.${newSegment}`;
 };
 
+const isBelongsToField = (field: { fieldType: GadgetFieldType }) => {
+  return field.fieldType === GadgetFieldType.BelongsTo;
+};
+
 const isHasOneOrBelongsToField = (field: { fieldType: GadgetFieldType }) => {
-  return field.fieldType === GadgetFieldType.HasOne || field.fieldType === GadgetFieldType.BelongsTo;
+  return field.fieldType === GadgetFieldType.HasOne || isBelongsToField(field);
+};
+
+const isHasManyField = (field: { fieldType: GadgetFieldType }) => {
+  return field.fieldType === GadgetFieldType.HasMany;
+};
+
+const isHasManyThroughField = (field: { fieldType: GadgetFieldType }) => {
+  return field.fieldType === GadgetFieldType.HasManyThrough;
 };
 
 const isHasManyOrHasManyThroughField = (field: { fieldType: GadgetFieldType }) => {
-  return field.fieldType === GadgetFieldType.HasMany || field.fieldType === GadgetFieldType.HasManyThrough;
+  return isHasManyField(field) || isHasManyThroughField(field);
+};
+
+const isRelationshipField = (field: { fieldType: GadgetFieldType }) => {
+  return isHasOneOrBelongsToField(field) || isHasManyOrHasManyThroughField(field);
 };
 
 const richTextSelection = {
@@ -331,7 +347,12 @@ const roleAssignmentsSelection = {
   name: true,
 };
 
-const getNonRelationshipSelectionValue = (field: FieldMetadata) => {
+const getNonRelationshipSelectionValue = (field: FieldMetadata, onlyAllowModelFields = false) => {
+  if (field.__typename !== "GadgetModelField" && onlyAllowModelFields) {
+    // Only model fields are selectable
+    return false;
+  }
+
   switch (field.fieldType) {
     case GadgetFieldType.RichText:
       return richTextSelection;
@@ -339,6 +360,8 @@ const getNonRelationshipSelectionValue = (field: FieldMetadata) => {
       return fileSelection;
     case GadgetFieldType.RoleAssignments:
       return roleAssignmentsSelection;
+    case GadgetFieldType.Password:
+      return false; // API error if password fields are selected
     default:
       return true;
   }
@@ -417,4 +440,98 @@ const getFieldSelectionErrorMessage = (columnPath: string) => {
     RELATED_HAS_MANY_FIELD_NOT_EXIST: `Field '${columnPath}' does not exist in the related model. hasMany fields require 'edges.node' segment before the related field.`,
     RELATED_HAS_ONE_OR_BELONGS_TO_FIELD_NOT_EXIST: `Field '${columnPath}' does not exist in the related model`,
   } as const;
+};
+
+/**
+ * This function takes a list of field paths and converts them into a structured field selection for a model
+ * It handles:
+ * - Basic fields
+ * - Relationship fields (hasOne, belongsTo, hasMany)
+ * - Nested fields through relationships
+ * - Join model relationships in hasManyThrough fields
+ *
+ * The resulting selection object will always include the 'id' field and handles proper nesting
+ * of relationship selections including edges/node structure for hasMany relationships.
+ */
+export const pathListToSelection = (modelIdentifier: string, pathList: string[], fieldMetadataArray: FieldMetadata[]) => {
+  const selection: FieldSelection = {
+    id: true,
+  };
+
+  const pathGroups = groupPaths(pathList, false);
+
+  for (const [rootPath, childPaths] of Object.entries(pathGroups)) {
+    const field = fieldMetadataArray.find((metadata) => metadata.apiIdentifier == rootPath);
+
+    if (!field) {
+      throw new Error(`No metadata found for ${rootPath}`);
+    }
+
+    if (isRelationshipField(field)) {
+      const configuration = field.configuration;
+
+      if (configuration && "joinModel" in configuration && configuration.joinModel) {
+        const joinModel = configuration.joinModel;
+        const relatedModel = configuration.relatedModel;
+        const joinModelHasManyFieldApiIdentifier = configuration.joinModelHasManyFieldApiIdentifier;
+
+        const joinModelPaths = childPaths
+          .filter((path) => path.startsWith(`${joinModel.apiIdentifier}.`))
+          .map((path) => {
+            return path.replace(`${joinModel.apiIdentifier}.`, "");
+          });
+        const relatedModelPaths = childPaths.filter((path) => !path.startsWith(`${joinModel.apiIdentifier}.`));
+
+        let relatedSelection: FieldSelection = {};
+
+        if (relatedModel) {
+          relatedSelection = {
+            id: true,
+            [relatedModel.defaultDisplayField.apiIdentifier]: true,
+            ...(childPaths.length && relatedModel.fields ? pathListToSelection(rootPath, relatedModelPaths, relatedModel.fields) : {}),
+          };
+        }
+
+        selection[joinModelHasManyFieldApiIdentifier!] = {
+          edges: {
+            node: {
+              id: true,
+              [joinModel.defaultDisplayField.apiIdentifier]: true,
+              ...(joinModelPaths.length && joinModel.fields
+                ? pathListToSelection(joinModel.apiIdentifier, joinModelPaths, joinModel.fields)
+                : {}),
+              [configuration.inverseRelatedModelField!.apiIdentifier]: relatedSelection,
+            },
+          },
+        };
+      } else if (configuration && "relatedModel" in configuration && configuration.relatedModel) {
+        const relatedModel = configuration.relatedModel;
+
+        const relatedSelection = {
+          id: true,
+          [relatedModel?.defaultDisplayField.apiIdentifier]: true,
+          ...(childPaths.length && relatedModel.fields ? pathListToSelection(rootPath, childPaths, relatedModel.fields) : {}),
+        };
+
+        if (isHasManyField(field)) {
+          selection[field.apiIdentifier] = {
+            edges: {
+              node: relatedSelection,
+            },
+          };
+        } else {
+          selection[field.apiIdentifier] = relatedSelection;
+          if (isBelongsToField(field)) {
+            // Select the raw ID value so dangling belongsTo relationships can be shown
+            selection[`${field.apiIdentifier}Id`] = true;
+          }
+        }
+      }
+    } else {
+      // Non relationship field
+      selection[field.apiIdentifier] = getNonRelationshipSelectionValue(field, true);
+    }
+  }
+
+  return selection;
 };

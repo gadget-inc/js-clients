@@ -250,6 +250,7 @@ const autoFormMetadataWithDuplicateInputFields = {
     apiIdentifier: "updateWithCustomParams",
     operatesWithRecordIdentity: true,
     isDeleteAction: false,
+    isUpsertMetaAction: false,
     inputFields: [
       {
         name: "Auto table test",

@@ -32,30 +32,30 @@ describe("PolarisAutoBelongsToInput", () => {
       /**
        * sectionId -> the raw id value stored in the DB. Returned regardless of if the record actually exists
        *
-       * section{
-       *   ...
-       * } -> the related record value. Only returned when the related record actually exists
+       * section{...} -> the related record value. Only returned when the related record actually exists
        */
-      const isRelatedModelRecordQuery = req.body.query.includes("sectionId");
 
       req.reply({
         data: {
-          widget: isRelatedModelRecordQuery
-            ? {
-                // This simulates the response when the related record is queried to get the related model record value
-                id: "42",
-                sectionId: "1",
-                __typename: "Widget",
-              }
-            : {
-                // When doing the typical findBy query, all non-relationship field values are returned
-                __typename: "Widget",
-                id: "42",
-                name: "test record",
-              },
+          widget: {
+            section: makeSectionRecord(1),
+            sectionId: "1",
+            __typename: "Widget",
+          },
         },
       });
     }).as("widget");
+  };
+
+  const makeSectionRecord = (id: number) => {
+    return {
+      __typename: "Section",
+      id: `${id}`,
+      createdAt: "2024-06-13T16:04:34.448Z",
+      name: `Section ${id}`,
+      otherField: `Section ${id} other field`,
+      updatedAt: "2024-06-13T16:04:34.448Z",
+    };
   };
 
   const interceptSectionOptionsQuery = (sectionCount: number) => {
@@ -63,14 +63,7 @@ describe("PolarisAutoBelongsToInput", () => {
     for (let i = 1; i <= sectionCount; i++) {
       sections.push({
         cursor: "eyJpZCI6IjEifQ==",
-        node: {
-          __typename: "Section",
-          id: `${i}`,
-          createdAt: "2024-06-13T16:04:34.448Z",
-          name: `Section ${i}`,
-          otherField: `Section ${i} other field`,
-          updatedAt: "2024-06-13T16:04:34.448Z",
-        },
+        node: makeSectionRecord(i),
         __typename: "SectionEdge",
       });
     }

@@ -1,21 +1,47 @@
+import type { AutoSelection } from "@shopify/polaris";
 import { Listbox } from "@shopify/polaris";
 import React from "react";
+import type { Option } from "../../../interfaces/AutoRelationshipInputProps.js";
 import { ListMessage, NoRecordsMessage, SelectableOption, getErrorMessage } from "./PolarisListMessages.js";
 
-export const RelatedModelOptions = (props: {
-  options: { id: string; label: string }[];
+type RelatedModelOptionsProps = {
+  options: Option[];
+  records?: Record<string, any>[];
   isLoading?: boolean;
   errorMessage?: string;
 
   checkSelected?: (id: string) => boolean;
-  onSelect: (recordId: string) => void;
-}) => {
-  const { checkSelected, onSelect, isLoading, errorMessage, options } = props;
+  onSelect: (record: Record<string, any>) => void;
+  autoSelection?: AutoSelection;
+  actions?: React.ReactNode[];
+  renderOption?: (option: Option) => React.ReactNode;
+};
+
+export const RelatedModelOptions = (props: RelatedModelOptionsProps) => {
+  const { checkSelected, onSelect, isLoading, errorMessage, options, records, actions } = props;
+
+  const listBoxOptions = [
+    ...(actions ?? []),
+    ...options.map((option) => {
+      return props.renderOption ? (
+        props.renderOption(option)
+      ) : (
+        <SelectableOption {...option} selected={checkSelected?.(option.id) ?? false} key={option.id} />
+      );
+    }),
+  ];
 
   return (
-    <Listbox onSelect={onSelect}>
-      {options.length ? (
-        options.map((option) => <SelectableOption {...option} selected={checkSelected?.(option.id) ?? false} key={option.id} />)
+    <Listbox
+      autoSelection={props.autoSelection}
+      onSelect={(id) => {
+        const record = records?.find((record) => record.id === id) ?? { id };
+        const { createdAt: _createdAt, updatedAt: _updatedAt, ...recordWithoutTimestamps } = record;
+        onSelect(recordWithoutTimestamps);
+      }}
+    >
+      {listBoxOptions.length ? (
+        listBoxOptions
       ) : errorMessage ? (
         <ListMessage message={getErrorMessage(errorMessage)} />
       ) : (

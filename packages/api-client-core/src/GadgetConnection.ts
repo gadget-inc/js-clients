@@ -441,6 +441,18 @@ export class GadgetConnection {
       requestPolicy: this.requestPolicy,
     });
     (client as any)[$gadgetConnection] = this;
+
+    const reexecuteOperation = client.reexecuteOperation.bind(client);
+    client.reexecuteOperation = (operation) => {
+      if (operation.query.definitions.some(isLiveQueryOperationDefinitionNode)) {
+        // live queries don't cleanup properly when reexecuted, plus
+        // they should never need to be reexecuted since they receive
+        // updates from the server, so we noop here
+        return;
+      }
+      reexecuteOperation(operation);
+    };
+
     return client;
   }
 

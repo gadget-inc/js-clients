@@ -620,3 +620,21 @@ export const deepFlattenObject = (obj: any, parentKey = "", separator = "."): Re
 export const getFlattenedObjectKeys = (obj: any) => {
   return Object.keys(deepFlattenObject(obj));
 };
+
+export const groupPaths = (paths: string[], uniquePaths = true) => {
+  const groups: Record<string, string[]> = {};
+
+  const pathsToGroup = uniquePaths ? Array.from(new Set(paths)) : paths;
+
+  for (const path of pathsToGroup) {
+    const [rootSegment, ...childSegments] = path.split(".");
+
+    groups[rootSegment] ??= [];
+
+    if (childSegments.length) {
+      groups[rootSegment].push(childSegments.join("."));
+    }
+  }
+
+  return groups;
+};
