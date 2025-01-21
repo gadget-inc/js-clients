@@ -1,9 +1,8 @@
 import React from "react";
-import type { ShadcnElements } from "../elements.js";
 import { useResultBannerController } from "../../hooks/useResultBannerController.js";
+import type { ShadcnElements } from "../elements.js";
 
 export const makeSubmitResultBanner = <Elements extends Partial<ShadcnElements>>({ Alert, AlertTitle, AlertDescription }: Elements) => {
-  
   if (!Alert || !AlertTitle || !AlertDescription) {
     throw new Error("Alert components are required");
   }
@@ -18,16 +17,16 @@ export const makeSubmitResultBanner = <Elements extends Partial<ShadcnElements>>
     return (
       <Alert {...props}>
         <AlertTitle>Success</AlertTitle>
-        <AlertDescription>
-          {title || "Operation completed successfully"}
-        </AlertDescription>
-        <button aria-label="Dismiss notification" onClick={hide}>Dismiss</button>
+        <AlertDescription>{title || "Operation completed successfully"}</AlertDescription>
+        <button aria-label="Dismiss notification" onClick={hide}>
+          Dismiss
+        </button>
       </Alert>
     );
   };
 
   const ShadcnSubmitErrorBanner = (props: any) => {
-    const { show, successful, hide, title} = useResultBannerController();
+    const { show, successful, hide, title } = useResultBannerController();
 
     if (!show || successful) {
       return null;
@@ -35,10 +34,10 @@ export const makeSubmitResultBanner = <Elements extends Partial<ShadcnElements>>
     return (
       <Alert variant="destructive" {...props} {...props}>
         <AlertTitle>Error</AlertTitle>
-        <AlertDescription>
-          {title || "An error occurred"}
-        </AlertDescription>
-        <button aria-label="Dismiss notification" onClick={hide}>Dismiss</button>
+        <AlertDescription>{title || "An error occurred"}</AlertDescription>
+        <button aria-label="Dismiss notification" onClick={hide}>
+          Dismiss
+        </button>
       </Alert>
     );
   };

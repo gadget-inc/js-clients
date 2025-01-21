@@ -20,5 +20,6 @@ declare namespace Cypress {
     mockGetDirectUploadToken(api: any, customToken?: string): Chainable<void>;
     mockUploadFile: (customToken?: string) => Chainable<void>;
     getSubmitButton: () => Chainable<JQuery<HTMLElement>>;
+    clickAndType: (selector: string, text: string, clear?: boolean) => Chainable<void>;
   }
 }

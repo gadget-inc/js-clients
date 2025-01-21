@@ -1,13 +1,24 @@
 /* eslint-disable jest/valid-expect */
 import React from "react";
 import { PolarisAutoInput } from "../../../../src/auto/polaris/inputs/PolarisAutoInput.js";
+import { makeShadcnAutoInput } from "../../../../src/auto/shadcn/inputs/ShadcnAutoInput.js";
 import { humanizeCamelCase } from "../../../../src/utils.js";
 import { api } from "../../../support/api.js";
 import { describeForEachAutoAdapter } from "../../../support/auto.js";
 
+import { Button } from "../../../../spec/auto/shadcn-defaults/components/Button.js";
+import { Checkbox } from "../../../../spec/auto/shadcn-defaults/components/Checkbox.js";
+import { Input } from "../../../../spec/auto/shadcn-defaults/components/Input.js";
+import { Label } from "../../../../spec/auto/shadcn-defaults/components/Label.js";
+
 const AutoInput = (props: { suiteName: string; field: string; label?: string }) => {
   if (props.suiteName === "Polaris") {
     return <PolarisAutoInput {...props} />;
+  }
+
+  if (props.suiteName === "Shadcn") {
+    const ShadcnAutoInput = makeShadcnAutoInput({ Input: Input, Label: Label, Checkbox: Checkbox, Button: Button });
+    return <ShadcnAutoInput {...props} />;
   }
 
   throw new Error("Invalid suite name");

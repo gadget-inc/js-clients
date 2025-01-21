@@ -1,7 +1,6 @@
-import React from "react";
 import { cva, type VariantProps } from "class-variance-authority";
+import React from "react";
 import { cn } from "../utils.js";
-
 
 const skeletonVariants = cva("animate-pulse rounded-md bg-primary/10", {
   variants: {
