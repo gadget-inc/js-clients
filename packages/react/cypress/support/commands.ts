@@ -98,7 +98,7 @@ Cypress.Commands.add("getSubmitButton", () => {
  * Click on an element and type text into it
  * This command is used to simulate user interaction with the UI due to the fact that Cypress kept seeing some input elements as disabled
  * more on the issue here: https://github.com/cypress-io/cypress/issues/5830 and https://github.com/cypress-io/cypress/issues/5827
- * 
+ *
  * @param selector - The selector of the element to click and type into
  * @param text - The text to type into the element
  * @param clear - Whether to clear the element before typing

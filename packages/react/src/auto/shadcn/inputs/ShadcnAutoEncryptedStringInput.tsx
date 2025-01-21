@@ -25,8 +25,6 @@ export const makeShadcnAutoEncryptedStringInput = ({ Input, Label, Button }: Pic
       </Button>
     );
 
-    return (
-       <TextInput {...restProps} type={isShown ? "text" : "password"} suffix={suffix ?? showHideToggleButton} />
-    );
+    return <TextInput {...restProps} type={isShown ? "text" : "password"} suffix={suffix ?? showHideToggleButton} />;
   });
 };

@@ -1,5 +1,6 @@
 import type { ActionFunction } from "@gadgetinc/api-client-core";
-import React, { ComponentProps } from "react";
+import type { ComponentProps } from "react";
+import React from "react";
 import { FormProvider } from "../../useActionForm.js";
 import { humanizeCamelCase, type OptionsType } from "../../utils.js";
 import type { AutoFormProps } from "../AutoForm.js";
@@ -99,7 +100,7 @@ const ShadcnAutoFormComponent = <
       {!metadataError && (
         <>
           {fields.map(({ metadata }) => (
-            <ShadcnAutoInput field={metadata.apiIdentifier} key={metadata.apiIdentifier}  />
+            <ShadcnAutoInput field={metadata.apiIdentifier} key={metadata.apiIdentifier} />
           ))}
           <ShadcnAutoSubmit>{props.submitLabel ?? "Submit"}</ShadcnAutoSubmit>
         </>

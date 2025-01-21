@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { isModelActionMetadata } from "../../metadata.js";
-import { AutoFormSubmitResult, useAutoFormMetadata } from "../AutoFormContext.js";
+import type { AutoFormSubmitResult } from "../AutoFormContext.js";
+import { useAutoFormMetadata } from "../AutoFormContext.js";
 
 export const useResultBannerController = () => {
   const { metadata, submitResult } = useAutoFormMetadata();

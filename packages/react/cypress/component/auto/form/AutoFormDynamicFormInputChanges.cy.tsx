@@ -10,10 +10,10 @@ describeForEachAutoAdapter("AutoForm", ({ name, adapter: { AutoForm }, wrapper }
     return (
       <>
         <AutoForm action={api.widget.update} findBy={findBy} />
-        
+
         <div>
-          <button style={{width:1, height: 1}} id="setFindById1" onClick={() => setFindBy("1")} />
-          <button style={{width:1, height: 1}} id="setFindById2" onClick={() => setFindBy("2")} />
+          <button style={{ width: 1, height: 1 }} id="setFindById1" onClick={() => setFindBy("1")} />
+          <button style={{ width: 1, height: 1 }} id="setFindById2" onClick={() => setFindBy("2")} />
         </div>
       </>
     );
@@ -59,8 +59,6 @@ describeForEachAutoAdapter("AutoForm", ({ name, adapter: { AutoForm }, wrapper }
     cy.get(`input[name="widget.inventoryCount"]`).should("have.value", "1");
 
     cy.clickAndType(`input[name="widget.name"]`, "Dirty the value");
-
-
 
     cy.clickAndType(`input[name="widget.inventoryCount"]`, "123546");
 

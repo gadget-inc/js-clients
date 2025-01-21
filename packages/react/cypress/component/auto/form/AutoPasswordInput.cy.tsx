@@ -58,7 +58,6 @@ describeForEachAutoAdapter("AutoPasswordInput", ({ name, adapter: { AutoForm }, 
     cy.get(`input[name="user.password"]`).should("be.enabled");
 
     cy.clickAndType(`input[name="user.password"]`, updatedPassword);
-   
 
     expectUpdateActionSubmissionVariables(expectedVariables); // Password field is changed and included
     submit("User", expectedVariables);

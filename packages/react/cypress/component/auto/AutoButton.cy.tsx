@@ -3,7 +3,7 @@ import React from "react";
 import { api } from "../../support/api.js";
 import { describeForEachAutoAdapter } from "../../support/auto.js";
 
-describeForEachAutoAdapter("AutoButton", ({ name, adapter: { AutoButton }, wrapper }) => {
+describeForEachAutoAdapter("AutoButton", ({ adapter: { AutoButton }, wrapper }) => {
   beforeEach(() => {
     cy.viewport("macbook-13");
   });

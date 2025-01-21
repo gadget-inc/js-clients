@@ -129,7 +129,6 @@ describeForEachAutoAdapter("AutoForm", ({ name, adapter: { AutoForm }, wrapper }
   });
 
   it("can render a form to update model and submit it", () => {
-
     /**
      * This test is disabled for Shadcn because it's not supported yet. We need to have a list component for this to work properly
      */

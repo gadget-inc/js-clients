@@ -16,12 +16,13 @@ interface AutoSuiteConfig {
 }
 
 const ONLY_RUN_SUITES = {
-  "Shadcn": ["AutoForm", 
-    "AutoButton", 
-    "AutoForm - input labels", 
-    "AutoForm - Default model field values", 
-    "AutoForm - FindBy object parameters", 
-    "AutoForm - Global actions", 
+  Shadcn: [
+    "AutoForm",
+    "AutoButton",
+    "AutoForm - input labels",
+    "AutoForm - Default model field values",
+    "AutoForm - FindBy object parameters",
+    "AutoForm - Global actions",
     "AutoForm - HasManyThrough fields",
     "AutoForm - Dynamic form input changes",
     "AutoForm - Dynamic form input changes - FindBy object parameters",
@@ -30,8 +31,8 @@ const ONLY_RUN_SUITES = {
     "AutoForm titles",
     "AutoForm - ID field",
     "AutoForm - Upsert Action",
-    "AutoPasswordInput"
-  ]
+    "AutoPasswordInput",
+  ],
 };
 
 export const PolarisWrapper = ({ children }: { children: ReactNode }) => (
@@ -49,11 +50,9 @@ const ShadCNAdapter = makeAutocomponents({ ...elements });
 export const ShadcnWrapper = ({ children }: { children: ReactNode }) => (
   <>
     <FormProvider {...useForm()}>
-    <Toaster />
-      <elements.Card  className="max-w-2xl mx-auto my-4">
-        <elements.CardContent className="p-6">
-           {children}
-        </elements.CardContent>
+      <Toaster />
+      <elements.Card className="max-w-2xl mx-auto my-4">
+        <elements.CardContent className="p-6">{children}</elements.CardContent>
       </elements.Card>
     </FormProvider>
   </>
@@ -67,9 +66,7 @@ const suites: AutoSuiteConfig[] = [
 export const adapters = [PolarisAdapter];
 
 export const describeForEachAutoAdapter = (suiteName: string, suite: (config: AutoSuiteConfig) => void) => {
-  const filteredSuites = suites.filter(config => 
-    config.name !== "Shadcn" || ONLY_RUN_SUITES["Shadcn"].includes(suiteName)
-  );
-  
+  const filteredSuites = suites.filter((config) => config.name !== "Shadcn" || ONLY_RUN_SUITES["Shadcn"].includes(suiteName));
+  // eslint-disable-next-line jest/valid-describe-callback, jest/valid-title
   describe.each(filteredSuites)((({ name }: { name: string }) => `${suiteName} - ${name}`) as any, suite);
 };

@@ -38,11 +38,7 @@ export const makeShadcnAutoTextInput = ({ Input, Label }: Pick<ShadcnElements, "
               placeholder={stringInputController.placeholder || label}
               className={cn(props.className, stringInputController.errorMessage && "border-red-500")}
             />
-            {suffix && (
-                <div className="">
-                  {suffix}
-                </div>
-              )}
+            {suffix && <div className="">{suffix}</div>}
           </div>
           {stringInputController.errorMessage && <p className="text-sm text-red-500">{stringInputController.errorMessage}</p>}
         </div>

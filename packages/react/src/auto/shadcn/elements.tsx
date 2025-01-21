@@ -1,4 +1,4 @@
-import * as CheckboxPrimitive from "@radix-ui/react-checkbox";
+import type * as CheckboxPrimitive from "@radix-ui/react-checkbox";
 import type React from "react";
 import type { PropsWithChildren } from "react";
 
@@ -15,7 +15,7 @@ export interface ButtonProps extends BaseProps, React.ButtonHTMLAttributes<HTMLB
 }
 
 /** The props that a skeleton component injected into autocomponent's shadcn must support */
-export interface SkeletonProps extends Pick<BaseProps, "className"> {}
+export type SkeletonProps = Pick<BaseProps, "className">;
 
 /** The props that an alert component injected into autocomponent's shadcn must support */
 export interface AlertProps extends Omit<BaseProps, "variant"> {
@@ -23,19 +23,19 @@ export interface AlertProps extends Omit<BaseProps, "variant"> {
 }
 
 /** The props that an alert title component injected into autocomponent's shadcn must support */
-export interface AlertTitleProps extends Pick<BaseProps, "className" | "children"> {}
+export type AlertTitleProps = Pick<BaseProps, "className" | "children">;
 
 /** The props that an alert description component injected into autocomponent's shadcn must support */
-export interface AlertDescriptionProps extends Pick<BaseProps, "className" | "children"> {}
+export type AlertDescriptionProps = Pick<BaseProps, "className" | "children">;
 
 /** The props that a form component injected into autocomponent's shadcn must support */
-export interface FormProps extends Pick<BaseProps, "className" | "children"> {}
+export type FormProps = Pick<BaseProps, "className" | "children">;
 
 /** The props that an input component injected into autocomponent's shadcn must support */
 export interface InputProps extends Pick<BaseProps, "className">, React.InputHTMLAttributes<HTMLInputElement> {}
 
 /** The props that a label component injected into autocomponent's shadcn must support */
-export interface LabelProps extends React.LabelHTMLAttributes<HTMLLabelElement> {}
+export type LabelProps = React.LabelHTMLAttributes<HTMLLabelElement>;
 
 /** The props that a checkbox component injected into autocomponent's shadcn must support */
 export interface CheckboxProps extends Omit<React.ComponentPropsWithoutRef<typeof CheckboxPrimitive.Root>, "type"> {
