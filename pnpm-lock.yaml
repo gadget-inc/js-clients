@@ -235,9 +235,6 @@ importers:
       '@gadgetinc/api-client-core':
         specifier: workspace:*
         version: link:../api-client-core
-      '@gadgetinc/react':
-        specifier: workspace:*
-        version: 'link:'
       '@hookform/resolvers':
         specifier: ^3.3.1
         version: 3.6.0(react-hook-form@7.48.2)
