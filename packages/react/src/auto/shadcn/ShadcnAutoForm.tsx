@@ -74,10 +74,7 @@ const ShadcnAutoFormComponent = <
       apiIdentifier: action.modelApiIdentifier,
       namespace: action.namespace,
     },
-    options: {
-      include: props.include,
-      exclude: props.exclude,
-    },
+    fields,
   };
 
   const formTitle = props.title === undefined ? humanizeCamelCase(action.operationName) : props.title;
