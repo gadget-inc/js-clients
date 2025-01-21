@@ -4,8 +4,6 @@ import { useController, useFormContext } from "../../../useActionForm.js";
 import { get } from "../../../utils.js";
 import { autoInput } from "../../AutoInput.js";
 import { useFieldMetadata } from "../../hooks/useFieldMetadata.js";
-// should we move this to a shared location?
-import { cn } from "../../../../spec/auto/shadcn-defaults/utils.js";
 import type { CheckboxProps, ShadcnElements } from "../elements.js";
 
 export const makeShadcnAutoBooleanInput = ({ Checkbox, Label }: Pick<ShadcnElements, "Checkbox" | "Label">) => {
@@ -48,7 +46,7 @@ export const makeShadcnAutoBooleanInput = ({ Checkbox, Label }: Pick<ShadcnEleme
       return (
         <div className="flex items-center space-x-2">
           <Checkbox {...restFieldProps} id={path} checked={!!fieldProps.value} aria-invalid={!!error} {...rest} />
-          <Label htmlFor={path} className={cn(props.className, error ? "text-red-500" : undefined)}>
+          <Label htmlFor={path} className={`${props.className ?? ""} ${error ? "text-red-500" : ""}`}>
             {label}
           </Label>
           {error && <span className="text-sm text-red-500">{error.message}</span>}
