@@ -1,4 +1,4 @@
-import React, { useCallback, useContext, useState } from "react";
+import React, { useCallback, useContext, useReducer } from "react";
 import type { FieldMetadata, GlobalActionMetadata, ModelWithOneActionMetadata } from "../metadata.js";
 import type { RecordIdentifier, UseActionFormSubmit } from "../use-action-form/types.js";
 
@@ -72,24 +72,32 @@ export const AutoFormFieldsFromChildComponentsProvider = ({ children }: { childr
   );
 };
 
-const useInitializeFieldsFromChildComponents = (hasChildren: boolean): AutoFormFieldsFromChildComponents => {
-  const [fieldSet, setFieldSet] = useState<Set<string>>(new Set());
+const fieldSetReducer = (state: Set<string>, action: { type: "add"; fields: string[] }): Set<string> => {
+  return new Set([...state, ...action.fields]);
+};
 
-  const registerField = useCallback(
-    (field: string) => {
+const useInitializeFieldsFromChildComponents = (hasChildren: boolean): AutoFormFieldsFromChildComponents => {
+  const [fieldSet, dispatch] = useReducer(fieldSetReducer, new Set<string>());
+
+  const registerFields = useCallback(
+    (fields: string[]) => {
       if (!hasChildren) {
-        return;
+        return; // Registration is only necessary with custom children in the form
       }
-      setFieldSet((prev) => new Set([...prev, field]));
+      dispatch({ type: "add", fields });
     },
-    [hasChildren, setFieldSet]
+    [hasChildren, dispatch]
   );
 
-  return { hasChildren, fieldSet, registerField };
+  return {
+    hasChildren,
+    fieldSet,
+    registerFields,
+  };
 };
 
 export interface AutoFormFieldsFromChildComponents {
   hasChildren: boolean;
   fieldSet: Set<string>;
-  registerField: (field: string) => void;
+  registerFields: (fields: string[]) => void;
 }

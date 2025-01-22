@@ -157,7 +157,7 @@ export const Expanded = {
 export const ExpandedWithExplicitSelect = {
   // The explicit select for the conditionally rendered AutoInputs will prevent additional lookups in the useActionForm findBy
   args: {
-    action: api.widget.update,
+    action: api.widget.updateWithCustomParams,
     select: {
       name: true,
       inventoryCount: true,
