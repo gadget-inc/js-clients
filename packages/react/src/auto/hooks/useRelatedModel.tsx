@@ -1,5 +1,6 @@
 import { assert, type FieldSelection } from "@gadgetinc/api-client-core";
-import React, { useCallback, useEffect, useState } from "react";
+import type React from "react";
+import { useCallback, useEffect, useState } from "react";
 import { FieldType } from "../../metadata.js";
 import { type RecordIdentifier } from "../../use-action-form/types.js";
 import { useFindMany } from "../../useFindMany.js";

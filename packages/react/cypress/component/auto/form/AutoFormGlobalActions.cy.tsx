@@ -13,8 +13,8 @@ describeForEachAutoAdapter("AutoForm - Global actions", ({ name, adapter: { Auto
     cy.get(`input[name="title"]`).should("have.value", "");
     cy.get(`input[name="inventoryCount"]`).should("have.value", "");
 
-    cy.get(`input[name="title"]`).type("foo");
-    cy.get(`input[name="inventoryCount"]`).type("42");
+    cy.clickAndType(`input[name="title"]`, "foo");
+    cy.clickAndType(`input[name="inventoryCount"]`, "42");
 
     cy.intercept("POST", `${api.connection.options.endpoint}?operation=flipAll`, {
       body: {
@@ -45,8 +45,8 @@ describeForEachAutoAdapter("AutoForm - Global actions", ({ name, adapter: { Auto
     cy.get(`input[name="title"]`).should("have.value", "");
     cy.get(`input[name="inventoryCount"]`).should("have.value", "");
 
-    cy.get(`input[name="title"]`).type("foo");
-    cy.get(`input[name="inventoryCount"]`).type("42");
+    cy.clickAndType(`input[name="title"]`, "foo");
+    cy.clickAndType(`input[name="inventoryCount"]`, "42");
 
     cy.intercept("POST", `${api.connection.options.endpoint}?operation=flipAll`, {
       times: 1,
