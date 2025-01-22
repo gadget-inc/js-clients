@@ -3,6 +3,7 @@ import type { ReactNode } from "react";
 import React from "react";
 import { Provider } from "../../src/index.js";
 import "./commands.js";
+import "./cypress.css";
 
 import { mount } from "cypress/react18";
 import { api } from "./api.js";
@@ -57,7 +58,11 @@ before(() => {
           message.innerHTML = msg;
           document.body.appendChild(message);
           setTimeout(() => {
-            document.body.removeChild(message);
+            try {
+              document.body.removeChild(message);
+            } catch (e) {
+              // don't worry if the element has already been removed or changed parents
+            }
           }, 3000);
         },
       },

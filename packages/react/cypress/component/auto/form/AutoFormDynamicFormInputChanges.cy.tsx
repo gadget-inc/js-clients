@@ -12,8 +12,8 @@ describeForEachAutoAdapter("AutoForm", ({ name, adapter: { AutoForm }, wrapper }
         <AutoForm action={api.widget.update} findBy={findBy} />
 
         <div>
-          <button id="setFindById1" onClick={() => setFindBy("1")} />
-          <button id="setFindById2" onClick={() => setFindBy("2")} />
+          <button style={{ width: 1, height: 1 }} id="setFindById1" onClick={() => setFindBy("1")} />
+          <button style={{ width: 1, height: 1 }} id="setFindById2" onClick={() => setFindBy("2")} />
         </div>
       </>
     );
