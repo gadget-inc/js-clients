@@ -10,9 +10,10 @@ export const makeShadcnAutoTextInput = ({ Input, Label }: Pick<ShadcnElements, "
       field: string;
       control?: Control<any>;
       label?: string;
+      suffix?: React.ReactNode;
     } & Partial<InputHTMLAttributes<HTMLInputElement>>
   ) {
-    const { field, control, label: customLabel, ...restProps } = props;
+    const { field, control, label: customLabel, suffix, ...restProps } = props;
     const stringInputController = useStringInputController({ field, control });
     const id = `${field}-input`;
     const {
@@ -46,6 +47,7 @@ export const makeShadcnAutoTextInput = ({ Input, Label }: Pick<ShadcnElements, "
             {...restProps}
             placeholder={placeholder || inputLabel}
           />
+          {suffix && <div className="">{suffix}</div>}
         </div>
         {errorMessage && <p className="text-sm text-red-500">{errorMessage}</p>}
       </div>
