@@ -13,6 +13,14 @@ export type InputProps = React.InputHTMLAttributes<HTMLInputElement>;
 /** The props that a label component injected into autocomponent's shadcn must support */
 export type LabelProps = React.LabelHTMLAttributes<HTMLLabelElement>;
 
+/** The props that a checkbox component injected into autocomponent's shadcn must support */
+export interface CheckboxProps extends Omit<ButtonProps, "checked" | "defaultChecked"> {
+  checked?: boolean | "indeterminate";
+  defaultChecked?: boolean | "indeterminate";
+  required?: boolean;
+  onCheckedChange?(checked: boolean | "indeterminate"): void;
+}
+
 /** One toast for showing via the toasting system */
 export type ToasterToast = {
   className?: string;
@@ -25,6 +33,9 @@ export type ToasterToast = {
 export interface ShadcnElements {
   /** The Button component from shadcn */
   Button: React.ForwardRefExoticComponent<ButtonProps & React.RefAttributes<HTMLButtonElement>>;
+
+  /** The Checkbox component from shadcn */
+  Checkbox: React.ForwardRefExoticComponent<CheckboxProps & React.RefAttributes<HTMLButtonElement>>;
 
   /** The Input component from shadcn */
   Input: React.ComponentType<InputProps>;

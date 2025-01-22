@@ -2,10 +2,12 @@ import { FieldType } from "../../../metadata.js";
 import { autoInput } from "../../AutoInput.js";
 import { useFieldMetadata } from "../../hooks/useFieldMetadata.js";
 import type { ShadcnElements } from "../elements.js";
+import { makeShadcnAutoBooleanInput } from "./ShadcnAutoBooleanInput.js";
 import { makeShadcnAutoIdInput } from "./ShadcnAutoIdInput.js";
+import { makeShadcnAutoNumberInput } from "./ShadcnAutoNumberInput.js";
 import { makeShadcnAutoTextInput } from "./ShadcnAutoTextInput.js";
 
-export const makeShadcnAutoInput = ({ Input, Label }: Pick<ShadcnElements, "Input" | "Label">) => {
+export const makeShadcnAutoInput = ({ Input, Label, Checkbox }: Pick<ShadcnElements, "Input" | "Label" | "Checkbox">) => {
   function ShadcnAutoInput(props: { field: string; label?: string }) {
     const { metadata } = useFieldMetadata(props.field);
     const config = metadata.configuration;
@@ -19,6 +21,13 @@ export const makeShadcnAutoInput = ({ Input, Label }: Pick<ShadcnElements, "Inpu
       case FieldType.Color:
       case FieldType.Url: {
         return makeShadcnAutoTextInput({ Input, Label })(props);
+      }
+      case FieldType.Number: {
+        return makeShadcnAutoNumberInput({ Input, Label })(props);
+      }
+
+      case FieldType.Boolean: {
+        return makeShadcnAutoBooleanInput({ Checkbox, Label })(props);
       }
 
       default:
