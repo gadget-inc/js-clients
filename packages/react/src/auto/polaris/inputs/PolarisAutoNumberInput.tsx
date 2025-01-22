@@ -1,6 +1,7 @@
 import type { TextFieldProps } from "@shopify/polaris";
 import React from "react";
 import type { Control } from "../../../useActionForm.js";
+import { countNumberOfDecimals, getStepFromNumberOfDecimals } from "../../../utils.js";
 import { autoInput } from "../../AutoInput.js";
 import { useStringInputController } from "../../hooks/useStringInputController.js";
 import { PolarisAutoTextInput } from "./PolarisAutoTextInput.js";
@@ -29,15 +30,3 @@ export const PolarisAutoNumberInput = autoInput(
     return <PolarisAutoTextInput step={step} {...props} />;
   }
 );
-
-const getStepFromNumberOfDecimals = (numberOfDecimals: number) =>
-  numberOfDecimals === 0 ? 1 : Number(`0.${"0".repeat(numberOfDecimals - 1)}1`);
-
-const countNumberOfDecimals = (value: string) => {
-  if (value.includes("e")) {
-    // +e scientific notation for large numbers does not get decimal steps
-    return 0;
-  }
-  const [, decimals] = value.split(".");
-  return decimals?.length ?? 0;
-};

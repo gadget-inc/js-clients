@@ -1,5 +1,6 @@
 /* eslint-disable jest/valid-expect */
 import React from "react";
+import { Checkbox } from "../../../../spec/auto/shadcn-defaults/components/Checkbox.js";
 import { Input } from "../../../../spec/auto/shadcn-defaults/components/Input.js";
 import { Label } from "../../../../spec/auto/shadcn-defaults/components/Label.js";
 import { PolarisAutoInput } from "../../../../src/auto/polaris/inputs/PolarisAutoInput.js";
@@ -9,7 +10,7 @@ import { api } from "../../../support/api.js";
 import { describeForEachAutoAdapter } from "../../../support/auto.js";
 import { SUITE_NAMES } from "../../../support/constants.js";
 
-const ShadcnAutoInput = makeShadcnAutoInput({ Input, Label });
+const ShadcnAutoInput = makeShadcnAutoInput({ Input, Label, Checkbox });
 
 const AutoInput = (props: { suiteName: string; field: string; label?: string }) => {
   if (props.suiteName === SUITE_NAMES.POLARIS) {
