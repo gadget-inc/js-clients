@@ -1,5 +1,11 @@
 # @gadgetinc/react
 
+## 0.18.7
+
+### Patch Changes
+
+- Bump `@gadgetinc/api-client-core` to v0.15.38
+
 ## 0.18.6
 
 ### Patch Changes

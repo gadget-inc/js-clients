@@ -1,15 +1,27 @@
 import { AppProvider, Card, Page } from "@shopify/polaris";
 import React from "react";
-import { Provider } from "../../../src/GadgetProvider.tsx";
-import { PolarisAutoForm } from "../../../src/auto/polaris/PolarisAutoForm.tsx";
-import { PolarisAutoEnumInput } from "../../../src/auto/polaris/inputs/PolarisAutoEnumInput.tsx";
-import { FormProvider, useForm } from "../../../src/useActionForm.ts";
-import { testApi as api } from "../../apis.ts";
+import { Provider } from "../../../../src/GadgetProvider.tsx";
+import { PolarisAutoForm } from "../../../../src/auto/polaris/PolarisAutoForm.tsx";
+import { PolarisAutoEnumInput } from "../../../../src/auto/polaris/inputs/PolarisAutoEnumInput.tsx";
+import { FormProvider, useForm } from "../../../../src/useActionForm.ts";
+import { testApi as api } from "../../../apis.ts";
+
+const Component = ({ field }) => {
+  return (
+    <PolarisAutoForm action={api.game.stadium.create}>
+      <Page>
+        <Card>
+          <PolarisAutoEnumInput field={field} />
+        </Card>
+      </Page>
+    </PolarisAutoForm>
+  );
+};
 
 // More on how to set up stories at: https://storybook.js.org/docs/writing-stories#default-export
 export default {
   title: "Polaris/EnumInput",
-  component: PolarisAutoEnumInput,
+  component: Component,
   decorators: [
     // 👇 Defining the decorator in the preview file applies it to all stories
     (Story, { parameters }) => {
@@ -19,13 +31,7 @@ export default {
         <Provider api={api}>
           <AppProvider>
             <FormProvider {...useForm()}>
-              <PolarisAutoForm action={api.game.stadium.create}>
-                <Page>
-                  <Card>
-                    <Story />
-                  </Card>
-                </Page>
-              </PolarisAutoForm>
+              <Story />
             </FormProvider>
           </AppProvider>
         </Provider>

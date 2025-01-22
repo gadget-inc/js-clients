@@ -4,7 +4,7 @@ export interface AutoInputComponent<P> extends React.FC<P> {
   __autoInput: true;
 }
 
-export function autoInput<P extends { field: string }>(Component: React.FC<P>): AutoInputComponent<P> {
+export function autoInput<P extends { field: string }>(Component: React.FC<P>): AutoInputComponent<P & { selectPaths?: string[] }> {
   const WrappedComponent: React.FC<P> = (props) => {
     return <Component {...props} />;
   };

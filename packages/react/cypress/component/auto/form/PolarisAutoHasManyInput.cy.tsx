@@ -8,6 +8,11 @@ import { get } from "../../../../src/utils.js";
 import { api } from "../../../support/api.js";
 import { PolarisWrapper } from "../../../support/auto.js";
 
+const originalGizmosLinkedToWidget = [
+  { id: "1", name: "Gizmo 1", otherField: "Gizmo 1 other field" },
+  { id: "2", name: "Gizmo 2", otherField: "Gizmo 2 other field" },
+];
+
 describe("PolarisAutoHasManyInput", () => {
   const interceptModelUpdateActionMetadata = () => {
     cy.mockModelActionMetadata(api, {
@@ -34,10 +39,13 @@ describe("PolarisAutoHasManyInput", () => {
       req.reply({
         data: {
           widget: {
-            // When doing the typical findBy query, all non-relationship field values are returned
             __typename: "Widget",
             id: "42",
             name: "test record",
+            gizmos: {
+              edges: originalGizmosLinkedToWidget.map((gizmo) => ({ node: gizmo })),
+              __typename: "GizmoConnection",
+            },
           },
         },
       });
@@ -143,10 +151,16 @@ describe("PolarisAutoHasManyInput", () => {
     cy.contains("Saved Widget successfully");
   });
 
-  it("does not include anything for hasMany fields when the input is untouched", () => {
+  it("does not change anything for hasMany fields when the input is untouched", () => {
     cy.mountWithWrapper(<PolarisAutoForm action={api.widget.update} findBy="42" />, PolarisWrapper);
 
-    expectUpdateActionSubmissionVariables({ id: "42", widget: { gizmos: null } });
+    expectUpdateActionSubmissionVariables({
+      id: "42",
+      widget: {
+        // update is called with params that match the existing values
+        gizmos: originalGizmosLinkedToWidget.map((gizmo) => ({ update: gizmo })),
+      },
+    });
     cy.getSubmitButton().click();
     cy.contains("Saved Widget successfully");
   });
@@ -166,7 +180,18 @@ describe("PolarisAutoHasManyInput", () => {
       cy.get(`input[name="widget.gizmos"]`).focus();
       cy.get(`input[name="widget.gizmos"]`).blur();
 
-      expectUpdateActionSubmissionVariables({ id: "42", widget: { gizmos: [{ update: { id: "3" } }] } });
+      expectUpdateActionSubmissionVariables({
+        id: "42",
+        widget: {
+          gizmos: [
+            // update is called with params that match the existing values
+            ...originalGizmosLinkedToWidget.map((gizmo) => ({ update: gizmo })),
+
+            // Selected includes ID only. Do not change anything on the selected record other than the related field link
+            { update: { id: "3" } },
+          ],
+        },
+      });
       cy.getSubmitButton().click();
       cy.contains("Saved Widget successfully");
     });
@@ -185,7 +210,18 @@ describe("PolarisAutoHasManyInput", () => {
       cy.get(`input[name="widget.gizmos"]`).focus();
       cy.get(`input[name="widget.gizmos"]`).blur();
 
-      expectUpdateActionSubmissionVariables({ id: "42", widget: { gizmos: [{ update: { id: "3" } }] } });
+      expectUpdateActionSubmissionVariables({
+        id: "42",
+        widget: {
+          gizmos: [
+            // update is called with params that match the existing values
+            ...originalGizmosLinkedToWidget.map((gizmo) => ({ update: gizmo })),
+
+            // Selected includes ID only. Do not change anything on the selected record other than the related field link
+            { update: { id: "3" } },
+          ],
+        },
+      });
       cy.getSubmitButton().click();
       cy.contains("Saved Widget successfully");
     });

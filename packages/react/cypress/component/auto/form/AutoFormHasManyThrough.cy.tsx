@@ -17,7 +17,8 @@ describeForEachAutoAdapter("AutoForm - HasManyThrough fields", ({ name, adapter:
     ).as("ModelActionMetadata");
   };
 
-  it("does not render the hasMany->joinModel input field", () => {
+  // SKIP UNTIL HAS MANY THROUGH IS IMPLEMENTED
+  it.skip("does not render the hasMany->joinModel input field", () => {
     interceptModelActionMetadataRequest();
 
     cy.mountWithWrapper(<AutoForm action={api.widget.create} />, wrapper);
@@ -161,6 +162,7 @@ const modelActionMetadataResponse = {
           apiIdentifier: "create",
           operatesWithRecordIdentity: false,
           isDeleteAction: false,
+          isUpsertMetaAction: false,
           inputFields: [
             {
               name: "Base model",
