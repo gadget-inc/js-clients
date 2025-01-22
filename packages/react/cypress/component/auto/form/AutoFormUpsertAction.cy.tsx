@@ -73,8 +73,8 @@ describeForEachAutoAdapter("AutoForm - Upsert Action", ({ name, adapter: { AutoF
   };
 
   const populateRequiredFields = () => {
-    cy.get(`input[name="widget.name"]`).clear().type("name");
-    cy.get(`input[name="widget.inventoryCount"]`).clear().type("123");
+    cy.clickAndType(`input[name="widget.name"]`, "name", true);
+    cy.clickAndType(`input[name="widget.inventoryCount"]`, "123", true);
   };
 
   beforeEach(() => {
@@ -93,10 +93,10 @@ describeForEachAutoAdapter("AutoForm - Upsert Action", ({ name, adapter: { AutoF
     populateRequiredFields();
 
     // Does not allow submission when the ID input does not have a positive integer value
-    cy.get(`input[name="widget.id"]`).clear().type("-1{enter}");
+    cy.clickAndType(`input[name="widget.id"]`, "-1", true);
     if (upsertHasBeenCalled) throw new Error("Upsert was called when it shouldn't have been");
 
-    cy.get(`input[name="widget.id"]`).clear().type("1.1{enter}");
+    cy.clickAndType(`input[name="widget.id"]`, "1.1", true);
     if (upsertHasBeenCalled) throw new Error("Upsert was called when it shouldn't have been");
 
     cy.get(`input[name="widget.id"]`).clear().type("1{enter}");

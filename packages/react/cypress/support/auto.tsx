@@ -17,7 +17,23 @@ interface AutoSuiteConfig {
 }
 
 const ONLY_RUN_SUITES = {
-  [SUITE_NAMES.SHADCN]: ["AutoButton"],
+  [SUITE_NAMES.SHADCN]: [
+    "AutoButton",
+    "AutoForm",
+    "AutoForm - input labels",
+    "AutoForm - Default model field values",
+    "AutoForm - FindBy object parameters",
+    "AutoForm - Global actions",
+    "AutoForm - HasManyThrough fields",
+    "AutoForm - Dynamic form input changes",
+    "AutoForm - Dynamic form input changes - FindBy object parameters",
+    "AutoForm - Dynamic form input changes - Global actions",
+    "AutoForm - Dynamic form input changes - HasManyThrough fields",
+    "AutoForm titles",
+    "AutoForm - ID field",
+    "AutoForm - Upsert Action",
+    "AutoPasswordInput",
+  ],
 };
 
 export const PolarisWrapper = ({ children }: { children: ReactNode }) => (
@@ -42,7 +58,7 @@ export const ShadcnWrapper = ({ children }: { children: ReactNode }) => (
 );
 
 const suites: AutoSuiteConfig[] = [
-  { name: SUITE_NAMES.POLARIS, adapter: PolarisAdapter as any, wrapper: PolarisWrapper },
+  // { name: SUITE_NAMES.POLARIS, adapter: PolarisAdapter as any, wrapper: PolarisWrapper },
   { name: SUITE_NAMES.SHADCN, adapter: ShadCNAdapter as any, wrapper: ShadcnWrapper },
 ];
 

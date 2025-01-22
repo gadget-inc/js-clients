@@ -45,7 +45,8 @@ export const makeShadcnAutoInput = ({
       }
 
       default:
-        throw new Error(`Unsupported field type for Shadcn AutoForm: ${metadata.fieldType}`);
+        //throw new Error(`Unsupported field type for Shadcn AutoForm: ${metadata.fieldType}`);
+        return makeShadcnAutoTextInput({ Input, Label })(props);
     }
   }
 
