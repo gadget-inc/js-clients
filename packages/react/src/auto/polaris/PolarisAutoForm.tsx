@@ -7,15 +7,17 @@ import { humanizeCamelCase, type OptionsType } from "../../utils.js";
 import type { AutoFormProps } from "../AutoForm.js";
 import { useAutoForm } from "../AutoForm.js";
 import { validateAutoFormProps } from "../AutoFormActionValidators.js";
-import { AutoFormMetadataContext } from "../AutoFormContext.js";
+import { AutoFormFieldsFromChildComponentsProvider, AutoFormMetadataContext } from "../AutoFormContext.js";
 import { PolarisAutoInput } from "./inputs/PolarisAutoInput.js";
 import { PolarisAutoSubmit } from "./submit/PolarisAutoSubmit.js";
 import { PolarisSubmitErrorBanner, PolarisSubmitSuccessfulBanner } from "./submit/PolarisSubmitResultBanner.js";
 
 export const PolarisAutoFormSkeleton = () => (
   <>
-    <SkeletonDisplayText size="medium" />
-    <SkeletonBodyText />
+    <FormLayout>
+      <SkeletonDisplayText size="medium" />
+      <SkeletonBodyText />
+    </FormLayout>
   </>
 );
 
@@ -39,10 +41,12 @@ export const PolarisAutoForm = <
   const componentKey = `${action.modelApiIdentifier ?? ""}.${action.operationName}.${JSON.stringify(findBy)}`;
 
   return (
-    <PolarisAutoFormComponent
-      key={componentKey}
-      {...(props as AutoFormProps<GivenOptions, SchemaT, ActionFunc> & Omit<Partial<FormProps>, "action"> & { findBy: any })}
-    />
+    <AutoFormFieldsFromChildComponentsProvider>
+      <PolarisAutoFormComponent
+        key={componentKey}
+        {...(props as AutoFormProps<GivenOptions, SchemaT, ActionFunc> & Omit<Partial<FormProps>, "action"> & { findBy: any })}
+      />
+    </AutoFormFieldsFromChildComponentsProvider>
   );
 };
 
@@ -80,16 +84,6 @@ const PolarisAutoFormComponent = <
     return props.successContent;
   }
 
-  if (fetchingMetadata || isLoading) {
-    return (
-      <Form {...rest} onSubmit={submit}>
-        <FormLayout>
-          <PolarisAutoFormSkeleton />
-        </FormLayout>
-      </Form>
-    );
-  }
-
   const autoFormMetadataContext: AutoFormMetadataContext = {
     findBy,
     submit,
@@ -105,6 +99,14 @@ const PolarisAutoFormComponent = <
     },
     fields,
   };
+
+  if (fetchingMetadata) {
+    return (
+      <Form {...rest} onSubmit={submit}>
+        <PolarisAutoFormSkeleton />
+      </Form>
+    );
+  }
 
   const formContent = props.children ?? (
     <>
@@ -131,9 +133,12 @@ const PolarisAutoFormComponent = <
   return (
     <AutoFormMetadataContext.Provider value={autoFormMetadataContext}>
       <FormProvider {...originalFormMethods}>
-        <Form {...rest} onSubmit={submit}>
-          <BlockStack gap="400">{formContent}</BlockStack>
-        </Form>
+        {isLoading && <PolarisAutoFormSkeleton />}
+        <div hidden={isLoading}>
+          <Form {...rest} onSubmit={submit}>
+            <BlockStack gap="400">{formContent}</BlockStack>
+          </Form>
+        </div>
       </FormProvider>
     </AutoFormMetadataContext.Provider>
   );

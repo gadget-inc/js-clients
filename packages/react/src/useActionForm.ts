@@ -382,5 +382,6 @@ export const useActionForm = <
     submit: submit as unknown as UseActionFormSubmit<ActionFunc>,
     actionData: actionResult.data,
     originalFormMethods,
+    findResult,
   };
 };
