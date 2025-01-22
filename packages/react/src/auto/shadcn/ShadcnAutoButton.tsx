@@ -1,10 +1,9 @@
 import type { ActionFunction, GlobalActionFunction } from "@gadgetinc/api-client-core";
-import type { ComponentProps } from "react";
-import React from "react";
+import React, { type ComponentProps } from "react";
 import type { OptionsType } from "../../utils.js";
 import type { AutoButtonProps } from "../hooks/useAutoButtonController.js";
 import { useAutoButtonController } from "../hooks/useAutoButtonController.js";
-import type { ShadcnElements } from "./elements.js";
+import { type ShadcnElements } from "./elements.js";
 
 /**
  * Render a button that invokes an action when clicked, and shows a toast notification when the action succeeds or encounters an error by default.
@@ -34,7 +33,7 @@ export const makeAutoButton =
     });
 
     return (
-      <Button disabled={fetching} variant={isDestructive ? "destructive" : undefined} onClick={run} {...buttonProps}>
+      <Button disabled={fetching} variant={isDestructive ? "destructive" : "default"} onClick={run} {...buttonProps}>
         {props?.children ?? label}
       </Button>
     );
