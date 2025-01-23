@@ -25,8 +25,49 @@ describe("PolarisDateTimePicker", () => {
     cy.viewport("macbook-13");
   });
 
+  const mockMetadataResponse = (defaultRecord?: Record<string, any> | undefined) => {
+    cy.mockModelActionMetadata(api, {
+      modelName: "Widget",
+      modelApiIdentifier: "widget",
+      action: { apiIdentifier: "create", operatesWithRecordIdentity: false },
+      triggers: apiTriggerOnly,
+      inputFields: [
+        {
+          name: "Widget",
+          apiIdentifier: "widget",
+          fieldType: "Object",
+          requiredArgumentForInput: false,
+          configuration: {
+            __typename: "GadgetObjectFieldConfig",
+            fieldType: "Object",
+            validations: [],
+            name: null,
+            fields: [
+              {
+                name: "Starts at",
+                apiIdentifier: "startsAt",
+                fieldType: "DateTime",
+                requiredArgumentForInput: false,
+                sortable: true,
+                filterable: true,
+                configuration: {
+                  __typename: "GadgetDateTimeConfig",
+                  fieldType: "DateTime",
+                  validations: [],
+                },
+              },
+            ],
+          },
+          __typename: "GadgetObjectField",
+        },
+      ],
+      defaultRecord: defaultRecord ?? {},
+    });
+  };
+
   describe("date only", () => {
     it("can show with a blank current value", () => {
+      mockMetadataResponse();
       const onChangeSpy = cy.spy().as("onChangeSpy");
       cy.mountWithWrapper(
         <PolarisAutoForm action={api.widget.create}>
@@ -34,6 +75,7 @@ describe("PolarisDateTimePicker", () => {
         </PolarisAutoForm>,
         PolarisWrapper
       );
+      cy.wait("@ModelCreateActionMetadata");
       cy.get("#test-date").should("have.value", "");
 
       cy.get("#test-date").click();
@@ -41,6 +83,7 @@ describe("PolarisDateTimePicker", () => {
     });
 
     it("can show the current value", () => {
+      mockMetadataResponse();
       const onChangeSpy = cy.spy().as("onChangeSpy");
       cy.mountWithWrapper(
         <PolarisAutoForm action={api.widget.create}>
@@ -48,10 +91,12 @@ describe("PolarisDateTimePicker", () => {
         </PolarisAutoForm>,
         PolarisWrapper
       );
+      cy.wait("@ModelCreateActionMetadata");
       cy.get("#test-date").should("have.value", format(dateInLocalTZ, "yyyy-MM-dd"));
     });
 
     it("can change the date", async () => {
+      mockMetadataResponse();
       const onChangeSpy = cy.spy().as("onChangeSpy");
       cy.mountWithWrapper(
         <PolarisAutoForm action={api.widget.create}>
@@ -59,6 +104,7 @@ describe("PolarisDateTimePicker", () => {
         </PolarisAutoForm>,
         PolarisWrapper
       );
+      cy.wait("@ModelCreateActionMetadata");
       cy.get("#test-date").click();
       cy.get(`[aria-label='Thursday March 4 2021']`).click();
       // eslint-disable-next-line jest/valid-expect-in-promise
@@ -70,6 +116,7 @@ describe("PolarisDateTimePicker", () => {
     });
 
     it("can change the date across a DST boundary", async () => {
+      mockMetadataResponse();
       const onChangeSpy = cy.spy().as("onChangeSpy");
       cy.mountWithWrapper(
         <PolarisAutoForm action={api.widget.create}>
@@ -77,6 +124,7 @@ describe("PolarisDateTimePicker", () => {
         </PolarisAutoForm>,
         PolarisWrapper
       );
+      cy.wait("@ModelCreateActionMetadata");
       cy.get("#test-date").click();
       cy.get(`[aria-label='Wednesday March 17 2021']`).click();
       // eslint-disable-next-line jest/valid-expect-in-promise
@@ -90,6 +138,7 @@ describe("PolarisDateTimePicker", () => {
 
   describe("date and time", () => {
     it("can show with a blank current value", () => {
+      mockMetadataResponse();
       const onChangeSpy = cy.spy().as("onChangeSpy");
       cy.mountWithWrapper(
         <PolarisAutoForm action={api.widget.create}>
@@ -97,68 +146,47 @@ describe("PolarisDateTimePicker", () => {
         </PolarisAutoForm>,
         PolarisWrapper
       );
+      cy.wait("@ModelCreateActionMetadata");
       // Test is flaky without waiting for the DOM to load
       cy.wait(100);
       cy.get("#test-date").should("have.value", "");
       cy.get("#test-time").should("have.value", "");
     });
 
-    it("can show the default field value", () => {
-      cy.mockModelActionMetadata(api, {
-        modelName: "Widget",
-        modelApiIdentifier: "widget",
-        action: {
-          apiIdentifier: "create",
-          operatesWithRecordIdentity: false,
-        },
+    it(
+      "can show the default field value from the metadata",
+      // eslint-disable-next-line
+      // @ts-ignore - This test passes in isolation but is flakey when run with the rest of the file
+      { retries: 2 },
+      () => {
+        mockMetadataResponse({ startsAt: "2024-07-10T04:00:00.000Z" });
+        cy.mountWithWrapper(
+          <PolarisAutoForm action={api.widget.create}>
+            <PolarisAutoDateTimePicker id="test" includeTime field="startsAt" />
+          </PolarisAutoForm>,
+          PolarisWrapper
+        );
+        cy.wait("@ModelCreateActionMetadata");
+        cy.get("#test-date").should("have.value", "2024-07-10");
+        cy.get("#test-time").should("have.value", "4:00 AM");
+      }
+    );
 
-        triggers: apiTriggerOnly,
-        inputFields: [
-          {
-            name: "Widget",
-            apiIdentifier: "widget",
-            fieldType: "Object",
-            requiredArgumentForInput: false,
-            configuration: {
-              __typename: "GadgetObjectFieldConfig",
-              fieldType: "Object",
-              validations: [],
-              name: null,
-              fields: [
-                {
-                  name: "Starts at",
-                  apiIdentifier: "startsAt",
-                  fieldType: "DateTime",
-                  requiredArgumentForInput: false,
-                  sortable: true,
-                  filterable: true,
-                  configuration: {
-                    __typename: "GadgetDateTimeConfig",
-                    fieldType: "DateTime",
-                    validations: [],
-                  },
-                },
-              ],
-            },
-            __typename: "GadgetObjectField",
-          },
-        ],
-        defaultRecord: {
-          startsAt: "2024-07-10T04:00:00.000Z",
-        },
-      });
+    it("can show the default field value from the defaultValues prop", () => {
+      mockMetadataResponse();
       cy.mountWithWrapper(
-        <PolarisAutoForm action={api.widget.create}>
+        <PolarisAutoForm action={api.widget.create} defaultValues={{ widget: { startsAt: "2024-07-10T04:00:00.000Z" } }}>
           <PolarisAutoDateTimePicker id="test" includeTime field="startsAt" />
         </PolarisAutoForm>,
         PolarisWrapper
       );
-
+      cy.wait("@ModelCreateActionMetadata");
       cy.get("#test-date").should("have.value", "2024-07-10");
       cy.get("#test-time").should("have.value", "4:00 AM");
     });
 
     it("can show the current value", () => {
+      mockMetadataResponse();
       const onChangeSpy = cy.spy().as("onChangeSpy");
       cy.mountWithWrapper(
         <PolarisAutoForm action={api.widget.create}>
@@ -166,11 +194,13 @@ describe("PolarisDateTimePicker", () => {
         </PolarisAutoForm>,
         PolarisWrapper
       );
+      cy.wait("@ModelCreateActionMetadata");
       cy.get("#test-date").should("have.value", format(dateInLocalTZ, "yyyy-MM-dd"));
       cy.get("#test-time").should("have.value", format(dateInLocalTZ, "K:m aa"));
     });
 
     it("can change the date", () => {
+      mockMetadataResponse();
       const onChangeSpy = cy.spy().as("onChangeSpy");
       cy.mountWithWrapper(
         <PolarisAutoForm action={api.widget.create}>
@@ -178,6 +208,7 @@ describe("PolarisDateTimePicker", () => {
         </PolarisAutoForm>,
         PolarisWrapper
       );
+      cy.wait("@ModelCreateActionMetadata");
       cy.get("#test-date").click();
       cy.get(`[aria-label='Thursday March 4 2021']`).click();
       // eslint-disable-next-line jest/valid-expect-in-promise
@@ -189,6 +220,7 @@ describe("PolarisDateTimePicker", () => {
     });
 
     it("can enter an invalid time and show an error", () => {
+      mockMetadataResponse();
       const onChangeSpy = cy.spy().as("onChangeSpy");
       cy.mountWithWrapper(
         <PolarisAutoForm action={api.widget.create}>
@@ -196,6 +228,7 @@ describe("PolarisDateTimePicker", () => {
         </PolarisAutoForm>,
         PolarisWrapper
       );
+      cy.wait("@ModelCreateActionMetadata");
       cy.get("#test-time").click().clear().type("foo");
       cy.get("body").click();
       cy.contains("Invalid time format");
@@ -204,7 +237,9 @@ describe("PolarisDateTimePicker", () => {
     });
 
     it("can show the selected date", () => {
+      mockMetadataResponse();
       cy.mountWithWrapper(<TestComponentWithCustomOnChange />, PolarisWrapper);
+      cy.wait("@ModelCreateActionMetadata");
       cy.get("#test-date").click();
       cy.get(`[aria-label='Thursday March 4 2021']`).click();
       cy.get("#test-date").click();

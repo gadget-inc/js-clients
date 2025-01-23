@@ -12,6 +12,7 @@ import type { FieldValues, UseFormReturn } from "react-hook-form";
 import type { useAction } from "../useAction.js";
 import type { useGlobalAction } from "../useGlobalAction.js";
 import type { ActionHookState, ErrorWrapper, OptionsType } from "../utils.js";
+import { type useFindExistingRecord } from "./utils.js";
 
 /**
  * The identity of a record to build a form for
@@ -77,6 +78,10 @@ export type UseActionFormResult<
     : ReturnType<typeof useGlobalAction<any>>[0]["data"];
 
   originalFormMethods: UseFormReturn<FormVariables, FormContext>;
+  /**
+   * The existing record found when using the `findBy` prop
+   */
+  findResult?: ReturnType<typeof useFindExistingRecord>[0];
 };
 
 export type UseActionFormHookState<F extends ActionFunction<any, any, any, any, any> | GlobalActionFunction<any>> = ActionHookState<

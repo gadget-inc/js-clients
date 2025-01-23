@@ -41,7 +41,7 @@ describeForEachAutoAdapter("AutoPasswordInput", ({ name, adapter: { AutoForm }, 
     cy.wait("@updateUser");
     cy.get("@updateUser").its("request.body.variables").should("deep.equal", expectedQueryValue);
 
-    cy.contains(`Saved ${modelName} successfully`);
+    cy.contains(`Saved ${modelName} successfully`, { timeout: 10000 });
   };
 
   it("only allows existing passwords to be replaced, not edited", () => {

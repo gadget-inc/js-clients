@@ -1,4 +1,5 @@
-import React from "react";
+import React, { useEffect } from "react";
+import { useFieldsFromChildComponents } from "./AutoFormContext.js";
 
 export interface AutoInputComponent<P> extends React.FC<P> {
   __autoInput: true;
@@ -6,6 +7,17 @@ export interface AutoInputComponent<P> extends React.FC<P> {
 
 export function autoInput<P extends { field: string }>(Component: React.FC<P>): AutoInputComponent<P & { selectPaths?: string[] }> {
   const WrappedComponent: React.FC<P> = (props) => {
+    const { registerFields, fieldSet } = useFieldsFromChildComponents();
+
+    useEffect(() => {
+      registerFields([props.field]);
+    }, [registerFields]);
+
+    if (!fieldSet.has(props.field)) {
+      // Do not render before registration
+      return null;
+    }
+
     return <Component {...props} />;
   };
 

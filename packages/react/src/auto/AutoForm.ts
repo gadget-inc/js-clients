@@ -1,12 +1,12 @@
 import type { ActionFunction, FieldSelection, GadgetRecord, GlobalActionFunction } from "@gadgetinc/api-client-core";
 import { yupResolver } from "@hookform/resolvers/yup";
 import type { ReactNode } from "react";
-import React, { useEffect, useMemo, useRef } from "react";
+import { useEffect, useMemo, useRef } from "react";
 import type { GadgetHasManyThroughConfig, GadgetObjectFieldConfig } from "../internal/gql/graphql.js";
 import type { FieldMetadata, GlobalActionMetadata, ModelWithOneActionMetadata } from "../metadata.js";
 import { FieldType, buildAutoFormFieldList, isModelActionMetadata, useActionMetadata } from "../metadata.js";
 import type { AnyActionWithId, RecordIdentifier, UseActionFormHookStateData, UseActionFormSubmit } from "../use-action-form/types.js";
-import { isPlainObject } from "../use-action-form/utils.js";
+import { isPlainObject, processDefaultValues } from "../use-action-form/utils.js";
 import { pathListToSelection } from "../use-table/helpers.js";
 import type { FieldErrors, FieldValues, UseFormReturn } from "../useActionForm.js";
 import { useActionForm } from "../useActionForm.js";
@@ -18,7 +18,7 @@ import {
   validateTriggersFromApiClient,
   validateTriggersFromMetadata,
 } from "./AutoFormActionValidators.js";
-import { isAutoInput } from "./AutoInput.js";
+import { useFieldsFromChildComponents } from "./AutoFormContext.js";
 
 /** The props that any <AutoForm/> component accepts */
 export type AutoFormProps<
@@ -44,6 +44,8 @@ export type AutoFormProps<
   successContent?: ReactNode;
   /** The title at the top of the form. False to omit */
   title?: string | false;
+  /** Selection object to pass to the form to retrieve existing values. This will override the default selection based on included fields */
+  select?: GivenOptions["select"];
   /** Called when the form submission completes successfully on the backend */
   onSuccess?: (record: UseActionFormHookStateData<ActionFunc>) => void;
   /** Called when the form submission errors before sending, during the API call, or if the API call returns an error. */
@@ -135,12 +137,20 @@ export const useFormFields = (
   }, [metadata, options]);
 };
 
-export const useFormSelection = (
-  modelApiIdentifier: string | undefined,
-  fields: readonly { path: string; metadata: FieldMetadata }[]
-): FieldSelection | undefined => {
-  if (!modelApiIdentifier) return;
-  if (!fields.length) return;
+const useFormSelection = (props: {
+  modelApiIdentifier: string | undefined;
+  fields: readonly { path: string; metadata: FieldMetadata }[];
+  select?: FieldSelection;
+}): FieldSelection | undefined => {
+  const { modelApiIdentifier, fields, select } = props;
+
+  if (select) {
+    return select;
+  }
+
+  if (!modelApiIdentifier || !fields.length) {
+    return;
+  }
 
   const paths = fields.map((f) => f.path.replace(new RegExp(`^${modelApiIdentifier}\\.`), ""));
   const fieldMetaData = fields.map((f) => f.metadata);
@@ -164,9 +174,6 @@ const validateFormFieldApiIdentifierUniqueness = (
   }
 };
 
-// TODO - re-enable this once the child based field selection is fixed with an approach that avoids React.Children
-const enableExtractPathsFromChildren = false;
-
 /**
  * Internal React hook for sharing logic between different `AutoForm` components.
  * @internal
@@ -178,6 +185,7 @@ export const useAutoForm = <
 >(
   props: AutoFormProps<GivenOptions, SchemaT, ActionFunc, any, any> & { findBy?: any }
 ): {
+  select?: GivenOptions["select"];
   metadata: ModelWithOneActionMetadata | GlobalActionMetadata | undefined;
   fetchingMetadata: boolean;
   metadataError: ErrorWrapper | undefined;
@@ -189,12 +197,15 @@ export const useAutoForm = <
   isLoading: boolean;
   originalFormMethods: UseFormReturn<any, any>;
 } => {
-  const { action, record, onSuccess, onFailure, findBy, children } = props;
+  const { action, record, onSuccess, onFailure, findBy, select } = props;
   let include = props.include;
   let exclude = props.exclude;
 
-  if (enableExtractPathsFromChildren && children) {
-    include = extractPathsFromChildren(children);
+  const { hasChildren, fieldSet } = useFieldsFromChildComponents();
+  const hasRegisteredFieldsFromChildren = hasChildren && fieldSet.size > 0;
+
+  if (hasRegisteredFieldsFromChildren) {
+    include = Array.from(fieldSet);
     exclude = undefined;
   }
 
@@ -214,27 +225,30 @@ export const useAutoForm = <
   const operatesWithRecordId = !!(metadata && isModelActionMetadata(metadata) && metadata.action.operatesWithRecordIdentity);
   const modelApiIdentifier = action.type == "action" ? action.modelApiIdentifier : undefined;
   const isUpsertMetaAction = isMetadataForUpsertAction(metadata);
-
-  const selection = useFormSelection(modelApiIdentifier, fields);
+  const selection = useFormSelection({ modelApiIdentifier, fields, select });
   const isUpsertWithFindBy = isUpsertMetaAction && !!findBy;
   const fieldPathsToValidate = useMemo(() => fields.map(({ path }) => path), [fields]);
 
-  const defaultValues: Record<string, unknown> = useMemo(
-    () =>
+  const defaultValues: Record<string, unknown> = useMemo(() => {
+    return (
       props.defaultValues ??
       (action.type === "globalAction"
         ? {}
         : {
             [modelApiIdentifier!]:
               record ??
-              (!(operatesWithRecordId || isUpsertWithFindBy) && metadata && isModelActionMetadata(metadata) && metadata?.defaultRecord),
+              (!(operatesWithRecordId || isUpsertWithFindBy) && metadata && isModelActionMetadata(metadata) && metadata.defaultRecord),
             id:
               typeof findBy === "string"
                 ? findBy // ID is given directly
                 : undefined, // Set by the retrieved existing record if object based findBy value
-          }),
-    [props.defaultValues, action.type, modelApiIdentifier, record, operatesWithRecordId, metadata, findBy]
-  );
+          })
+    );
+  }, [props.defaultValues, action.type, modelApiIdentifier, record, operatesWithRecordId, metadata, isUpsertWithFindBy, findBy]);
+
+  const pauseExistingRecordLookup = !("findBy" in props)
+    ? true // Always pause without findBy. No need to do a lookup
+    : fetchingMetadata || !selection || !hasRegisteredFieldsFromChildren; // Pause until we have the field selection to include in the lookup
 
   // setup the form state for the action
   const {
@@ -243,14 +257,14 @@ export const useAutoForm = <
     reset,
     setValue,
     getValues,
-
+    findResult,
     formState: { isSubmitSuccessful, submitCount, isLoading, isReady, isSubmitting, touchedFields, errors },
     originalFormMethods,
   } = useActionForm(action, {
     defaultValues: defaultValues as any,
     findBy: "findBy" in props ? props.findBy : undefined,
     throwOnInvalidFindByObject: false,
-    pause: "findBy" in props ? fetchingMetadata : undefined,
+    pause: pauseExistingRecordLookup,
     select: selection as any,
     resolver: useValidationResolver(metadata, fieldPathsToValidate),
     send: () => {
@@ -342,6 +356,7 @@ export const useAutoForm = <
   const isCreateAction = !operatesWithRecordId && !isDeleteAction && !isGlobalAction && !isUpsertMetaAction;
   const isUpsertWithoutFindBy = isUpsertMetaAction && !isUpsertWithFindBy;
 
+  // Post submit form reset
   useEffect(() => {
     if (isSubmitSuccessful) {
       if (isCreateAction || isUpsertWithoutFindBy || isGlobalAction) {
@@ -381,6 +396,27 @@ export const useAutoForm = <
       setValue(`${modelApiIdentifier!}.id`, findBy); // Upsert actions use model.id instead of use root level api value
     }
   }, [getValues(`${modelApiIdentifier!}.id`), isUpsertWithFindBy]);
+
+  // Update the form state with the lookup result when the form conditional changes the set of registered AutoInputs
+  useEffect(() => {
+    if (!findBy || !hasRegisteredFieldsFromChildren || select || !action || !("modelApiIdentifier" in action)) {
+      // No AutoInput children need to be updated
+      return;
+    }
+
+    if (!findResult || findResult.fetching || findResult.error || !findResult.data) {
+      return;
+    }
+
+    const newDefaultValues = processDefaultValues({
+      data: findResult.data,
+      defaultValues: props.defaultValues,
+      modelApiIdentifier: action.modelApiIdentifier,
+      hasAmbiguousDefaultValues: action.hasAmbiguousIdentifier ?? false,
+    });
+
+    reset(newDefaultValues, { keepDirtyValues: true, keepTouched: true });
+  }, [Array.from(fieldSet).join(","), findResult?.fetching]);
 
   return {
     metadata,
@@ -423,44 +459,6 @@ const resetValuesForDefaultValues = (modelApiIdentifier: string, defaultValues: 
       ...extractResetArrayPathsFromSelection(selection),
     },
   };
-};
-
-export const extractPathsFromChildren = (children: React.ReactNode) => {
-  const paths = new Set<string>();
-
-  for (const child of React.Children.toArray(children)) {
-    if (React.isValidElement(child)) {
-      const grandChildren = child.props.children as React.ReactNode | undefined;
-      let childPaths: string[] = [];
-
-      if (grandChildren) {
-        childPaths = extractPathsFromChildren(grandChildren);
-      }
-
-      let field: string | undefined = undefined;
-
-      if (isAutoInput(child)) {
-        const props = child.props as { field: string; selectPaths?: string[]; children?: React.ReactNode };
-        field = props.field;
-
-        paths.add(field);
-
-        if (props.selectPaths && Array.isArray(props.selectPaths)) {
-          props.selectPaths.forEach((selectPath) => {
-            paths.add(`${field}.${selectPath}`);
-          });
-        }
-      }
-
-      if (childPaths.length > 0) {
-        for (const childPath of childPaths) {
-          paths.add(field ? `${field}.${childPath}` : childPath);
-        }
-      }
-    }
-  }
-
-  return Array.from(paths);
 };
 
 const removeIdFieldsUnlessUpsertWithoutFindBy = (isUpsertWithFindBy?: boolean) => {

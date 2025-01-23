@@ -125,6 +125,7 @@ const ConditionalAppearingAutoInput = () => {
           <PolarisAutoInput field="isChecked" />
           <PolarisAutoInput field="section" />
           <PolarisAutoInput field="gizmos" />
+          <PolarisAutoInput field="customStringParam" />
         </>
       )}
     </>
@@ -142,8 +143,8 @@ const CustomComponentWithAutoInputs = () => {
 
 export const Expanded = {
   args: {
-    action: api.widget.update,
-    findBy: "1",
+    action: api.widget.updateWithCustomParams,
+    findBy: "999",
     children: (
       <>
         <CustomComponentWithAutoInputs />
@@ -151,9 +152,27 @@ export const Expanded = {
       </>
     ),
   },
-  tags: ["!autodocs"],
-  docs: {
-    source: { language: "tsx", code: "hi world" },
+};
+
+export const ExpandedWithExplicitSelect = {
+  // The explicit select for the conditionally rendered AutoInputs will prevent additional lookups in the useActionForm findBy
+  args: {
+    action: api.widget.updateWithCustomParams,
+    select: {
+      name: true,
+      inventoryCount: true,
+      isChecked: true,
+      sectionId: true,
+      section: { id: true, name: true },
+      gizmos: { edges: { node: { id: true, name: true } } },
+    },
+    findBy: "999",
+    children: (
+      <>
+        <CustomComponentWithAutoInputs />
+        <PolarisAutoSubmit />
+      </>
+    ),
   },
 };
 

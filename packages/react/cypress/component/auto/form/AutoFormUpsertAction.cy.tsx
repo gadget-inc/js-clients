@@ -172,7 +172,6 @@ describeForEachAutoAdapter("AutoForm - Upsert Action", ({ name, adapter: { AutoF
       .should("deep.equal", {
         id: "1",
         widget: {
-          id: "1",
           name: "name",
           inventoryCount: 123,
         },
