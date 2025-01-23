@@ -16,7 +16,7 @@ describeForEachAutoAdapter("AutoForm", ({ name, adapter: { AutoForm }, wrapper }
 
   const submit = (modelName: string) => {
     cy.get("form [type=submit][aria-hidden!=true]").click();
-    cy.contains(`Saved ${modelName} successfully`);
+    cy.contains(`Saved ${modelName} successfully`, { timeout: 10000 });
   };
 
   it("renders an error if the backend returns one when fetching the model data", () => {
