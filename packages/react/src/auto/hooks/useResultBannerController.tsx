@@ -17,7 +17,6 @@ export const useResultBannerController = () => {
     }
     setMostRecentSubmitResult(submitResult);
     setIsDismissed(false);
-    console.log(submitResult, "submitResult", mostRecentSubmitResult);
   }, [submitResult]);
 
   const title = useMemo(() => {
@@ -28,8 +27,6 @@ export const useResultBannerController = () => {
       return mostRecentSubmitResult?.error?.message;
     }
   }, [mostRecentSubmitResult, metadata]);
-
-  console.log(title, "title", !isDismissed, mostRecentSubmitResult?.isSuccessful);
 
   return {
     show: !isDismissed,

@@ -30,11 +30,13 @@ export const makeAutoForm =
 
     const ShadcnAutoInput = makeShadcnAutoInput({ Input, Label, Button, Checkbox });
 
+    const ShadcnAutoSubmit = makeShadcnAutoSubmit({ Button });
+
     return (
       <ShadcnAutoFormComponent
         key={componentKey}
         {...(props as AutoFormProps<GivenOptions, SchemaT, ActionFunc> & Omit<Partial<FormProps>, "action"> & { findBy: any })}
-        elements={{ Form, Input, Button, Alert, Skeleton, AlertTitle, AlertDescription, ShadcnAutoInput }}
+        elements={{ Form, Input, Button, Alert, Skeleton, AlertTitle, AlertDescription, ShadcnAutoInput, ShadcnAutoSubmit }}
       />
     );
   };
@@ -54,13 +56,45 @@ function ShadcnAutoFormComponent<
     findBy,
     ...rest
   } = props as AutoFormProps<GivenOptions, SchemaT, ActionFunc> & Omit<Partial<FormProps>, "action"> & { findBy: any };
-  const { Form, Button, Alert, Skeleton, AlertTitle, AlertDescription, ShadcnAutoInput } = props.elements;
+  const { Form, Alert, Skeleton, AlertTitle, AlertDescription, ShadcnAutoInput, ShadcnAutoSubmit, Button } = props.elements;
 
-  const { metadata, fetchingMetadata, metadataError, fields, submit, formError, isSubmitting, isSubmitSuccessful, originalFormMethods } =
-    useAutoForm(props);
+  const {
+    metadata,
+    fetchingMetadata,
+    metadataError,
+    fields,
+    submit,
+    formError,
+    isSubmitting,
+    isSubmitSuccessful,
+    originalFormMethods,
+    isLoading,
+  } = useAutoForm(props);
 
-  const { ShadcnSubmitSuccessfulBanner, ShadcnSubmitErrorBanner } = makeSubmitResultBanner({ Alert, AlertTitle, AlertDescription });
-  const ShadcnAutoSubmit = makeShadcnAutoSubmit({ Button });
+  const { ShadcnSubmitSuccessfulBanner, ShadcnSubmitErrorBanner } = React.useMemo(
+    () =>
+      makeSubmitResultBanner({
+        Alert,
+        AlertTitle,
+        AlertDescription,
+        Button,
+      }),
+    []
+  );
+
+  const formTitle = props.title === undefined ? humanizeCamelCase(action.operationName) : props.title;
+
+  if (props.successContent && isSubmitSuccessful) {
+    return props.successContent;
+  }
+
+  if (fetchingMetadata || isLoading) {
+    return (
+      <Form {...rest} onSubmit={submit}>
+        <Skeleton />
+      </Form>
+    );
+  }
 
   const autoFormMetadataContext: AutoFormMetadataContext = {
     findBy,
@@ -77,20 +111,6 @@ function ShadcnAutoFormComponent<
     },
     fields,
   };
-
-  const formTitle = props.title === undefined ? humanizeCamelCase(action.operationName) : props.title;
-
-  if (props.successContent && isSubmitSuccessful) {
-    return props.successContent;
-  }
-
-  if (fetchingMetadata) {
-    return (
-      <Form {...rest} onSubmit={submit}>
-        <Skeleton />
-      </Form>
-    );
-  }
 
   const formContent = props.children ?? (
     <>

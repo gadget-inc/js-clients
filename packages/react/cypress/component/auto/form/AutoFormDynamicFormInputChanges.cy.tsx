@@ -57,8 +57,8 @@ describeForEachAutoAdapter("AutoForm", ({ name, adapter: { AutoForm }, wrapper }
 
     cy.get(`input[name="widget.name"]`).should("have.value", "test record 1");
     cy.get(`input[name="widget.inventoryCount"]`).should("have.value", "1");
-    cy.get(`input[name="widget.name"]`).type("Dirty the value");
-    cy.get(`input[name="widget.inventoryCount"]`).type("123546");
+    cy.clickAndType(`input[name="widget.name"]`, "Dirty the value");
+    cy.clickAndType(`input[name="widget.inventoryCount"]`, "123546");
 
     cy.get("#setFindById2").click();
 
