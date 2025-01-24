@@ -7,13 +7,13 @@ export interface AutoInputComponent<P> extends React.FC<P> {
 
 export function autoInput<P extends { field: string }>(Component: React.FC<P>): AutoInputComponent<P & { selectPaths?: string[] }> {
   const WrappedComponent: React.FC<P> = (props) => {
-    const { registerFields, fieldSet } = useFieldsFromChildComponents();
+    const { hasCustomFormChildren, registerFields, fieldSet } = useFieldsFromChildComponents();
 
     useEffect(() => {
       registerFields([props.field]);
     }, [registerFields]);
 
-    if (!fieldSet.has(props.field)) {
+    if (hasCustomFormChildren && !fieldSet.has(props.field)) {
       // Do not render before registration
       return null;
     }

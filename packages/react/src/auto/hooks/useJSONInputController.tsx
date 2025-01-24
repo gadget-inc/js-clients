@@ -19,7 +19,7 @@ export const useJSONInputController = (
   useEffect(() => {
     if (typeof jsonValue != "undefined" && jsonValue != null && !isParseError) {
       try {
-        const stringJSONValue = JSON.parse(string);
+        const stringJSONValue = JSON.parse(jsonValue);
         if (!deepEqual(stringJSONValue, jsonValue)) {
           setString(JSON.stringify(jsonValue, null, 2));
         }

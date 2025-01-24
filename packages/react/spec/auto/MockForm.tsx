@@ -32,7 +32,7 @@ export const MockForm = ({
     return (
       <MockClientProvider api={api}>
         <FormProvider {...methods}>
-          <AutoFormFieldsFromChildComponentsProvider>
+          <AutoFormFieldsFromChildComponentsProvider hasCustomFormChildren={React.Children.count(props.children) > 0}>
             <AutoFormMetadataContext.Provider
               value={{
                 submit: submit!,

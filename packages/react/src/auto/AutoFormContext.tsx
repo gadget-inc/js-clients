@@ -63,8 +63,14 @@ export const useFieldsFromChildComponents = () => {
 
 export const AutoFormFieldsFromChildComponentsContext = React.createContext<AutoFormFieldsFromChildComponents | undefined>(undefined);
 
-export const AutoFormFieldsFromChildComponentsProvider = ({ children }: { children: React.ReactNode }) => {
-  const fieldsFromChildComponents = useInitializeFieldsFromChildComponents(React.Children.count(children) > 0);
+export const AutoFormFieldsFromChildComponentsProvider = ({
+  children,
+  hasCustomFormChildren,
+}: {
+  children: React.ReactNode;
+  hasCustomFormChildren: boolean;
+}) => {
+  const fieldsFromChildComponents = useInitializeFieldsFromChildComponents(hasCustomFormChildren);
   return (
     <AutoFormFieldsFromChildComponentsContext.Provider value={fieldsFromChildComponents}>
       {children}
@@ -76,28 +82,28 @@ const fieldSetReducer = (state: Set<string>, action: { type: "add"; fields: stri
   return new Set([...state, ...action.fields]);
 };
 
-const useInitializeFieldsFromChildComponents = (hasChildren: boolean): AutoFormFieldsFromChildComponents => {
+const useInitializeFieldsFromChildComponents = (hasCustomFormChildren: boolean): AutoFormFieldsFromChildComponents => {
   const [fieldSet, dispatch] = useReducer(fieldSetReducer, new Set<string>());
 
   const registerFields = useCallback(
     (fields: string[]) => {
-      if (!hasChildren) {
+      if (!hasCustomFormChildren) {
         return; // Registration is only necessary with custom children in the form
       }
       dispatch({ type: "add", fields });
     },
-    [hasChildren, dispatch]
+    [hasCustomFormChildren, dispatch]
   );
 
   return {
-    hasChildren,
+    hasCustomFormChildren,
     fieldSet,
     registerFields,
   };
 };
 
 export interface AutoFormFieldsFromChildComponents {
-  hasChildren: boolean;
+  hasCustomFormChildren: boolean;
   fieldSet: Set<string>;
   registerFields: (fields: string[]) => void;
 }

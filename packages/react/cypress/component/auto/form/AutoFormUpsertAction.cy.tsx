@@ -1,9 +1,18 @@
 import React from "react";
+import { Button } from "../../../../spec/auto/shadcn-defaults/components/Button.js";
+import { Checkbox } from "../../../../spec/auto/shadcn-defaults/components/Checkbox.js";
+import { Input } from "../../../../spec/auto/shadcn-defaults/components/Input.js";
+import { Label } from "../../../../spec/auto/shadcn-defaults/components/Label.js";
 import { apiTriggerOnly } from "../../../../spec/auto/support/Triggers.js";
 import { PolarisAutoInput } from "../../../../src/auto/polaris/inputs/PolarisAutoInput.js";
 import { PolarisAutoSubmit } from "../../../../src/auto/polaris/submit/PolarisAutoSubmit.js";
+import { makeShadcnAutoInput } from "../../../../src/auto/shadcn/inputs/ShadcnAutoInput.js";
+import { makeShadcnAutoSubmit } from "../../../../src/auto/shadcn/submit/ShadcnAutoSubmit.js";
 import { api } from "../../../support/api.js";
 import { describeForEachAutoAdapter } from "../../../support/auto.js";
+
+const ShadcnAutoInput = makeShadcnAutoInput({ Input, Label, Checkbox, Button });
+const ShadcnAutoSubmit = makeShadcnAutoSubmit({ Button });
 
 describeForEachAutoAdapter("AutoForm - ID field", ({ name, adapter: { AutoForm }, wrapper }) => {
   it("does not render an input for ID when the action is not upsert", () => {
@@ -157,8 +166,13 @@ describeForEachAutoAdapter("AutoForm - Upsert Action", ({ name, adapter: { AutoF
             <PolarisAutoInput field="inventoryCount" />
             <PolarisAutoSubmit />
           </>
-        ) : // todo: shadcn
-        null}
+        ) : name === "Shadcn" ? (
+          <>
+            <ShadcnAutoInput field="name" />
+            <ShadcnAutoInput field="inventoryCount" />
+            <ShadcnAutoSubmit />
+          </>
+        ) : null}
       </AutoForm>,
       wrapper
     );
