@@ -90,7 +90,7 @@ function ShadcnAutoFormComponent<
     return props.successContent;
   }
 
-  if (fetchingMetadata || isLoading) {
+  if (fetchingMetadata) {
     return (
       <Form {...rest} onSubmit={submit}>
         <Skeleton />
@@ -133,9 +133,12 @@ function ShadcnAutoFormComponent<
   return (
     <AutoFormMetadataContext.Provider value={autoFormMetadataContext}>
       <FormProvider {...originalFormMethods}>
-        <Form {...rest} onSubmit={submit}>
-          {formContent}
-        </Form>
+        {isLoading && <Skeleton />}
+        <div hidden={isLoading}>
+          <Form {...rest} onSubmit={submit}>
+            {formContent}
+          </Form>
+        </div>
       </FormProvider>
     </AutoFormMetadataContext.Provider>
   );
