@@ -229,22 +229,22 @@ export const useAutoForm = <
   const isUpsertWithFindBy = isUpsertMetaAction && !!findBy;
   const fieldPathsToValidate = useMemo(() => fields.map(({ path }) => path), [fields]);
 
-  const defaultValues: Record<string, unknown> = useMemo(
-    () =>
+  const defaultValues: Record<string, unknown> = useMemo(() => {
+    return (
       props.defaultValues ??
       (action.type === "globalAction"
         ? {}
         : {
             [modelApiIdentifier!]:
               record ??
-              (!(operatesWithRecordId || isUpsertWithFindBy) && metadata && isModelActionMetadata(metadata) && metadata?.defaultRecord),
+              (!(operatesWithRecordId || isUpsertWithFindBy) && metadata && isModelActionMetadata(metadata) && metadata.defaultRecord),
             id:
               typeof findBy === "string"
                 ? findBy // ID is given directly
                 : undefined, // Set by the retrieved existing record if object based findBy value
-          }),
-    [props.defaultValues, action.type, modelApiIdentifier, record, operatesWithRecordId, metadata, findBy]
-  );
+          })
+    );
+  }, [props.defaultValues, action.type, modelApiIdentifier, record, operatesWithRecordId, metadata, isUpsertWithFindBy, findBy]);
 
   const pauseExistingRecordLookup = !("findBy" in props)
     ? true // Always pause without findBy. No need to do a lookup

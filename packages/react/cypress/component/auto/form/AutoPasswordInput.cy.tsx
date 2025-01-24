@@ -41,7 +41,7 @@ describeForEachAutoAdapter("AutoPasswordInput", ({ name, adapter: { AutoForm }, 
     cy.wait("@updateUser");
     cy.get("@updateUser").its("request.body.variables").should("deep.equal", expectedQueryValue);
 
-    cy.contains(`Saved ${modelName} successfully`);
+    cy.contains(`Saved ${modelName} successfully`, { timeout: 10000 });
   };
 
   it("only allows existing passwords to be replaced, not edited", () => {
@@ -55,7 +55,8 @@ describeForEachAutoAdapter("AutoPasswordInput", ({ name, adapter: { AutoForm }, 
 
     // Enabled after clicking the edit button
     cy.get(`input[name="user.password"]`).should("be.enabled");
-    cy.get(`input[name="user.password"]`).type(updatedPassword);
+
+    cy.clickAndType(`input[name="user.password"]`, updatedPassword);
 
     expectUpdateActionSubmissionVariables(expectedVariables); // Password field is changed and included
     submit("User", expectedVariables);

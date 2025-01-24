@@ -72,8 +72,8 @@ before(() => {
 
 beforeEach(() => {
   cy.window().then((win) => {
-    const mockToasts = win.document.getElementsByClassName("mock-toast");
-    while (mockToasts.length > 0) {
+    const mockToasts = win?.document?.getElementsByClassName("mock-toast");
+    while (mockToasts?.length > 0) {
       try {
         mockToasts[0].parentNode?.removeChild(mockToasts[0]);
       } catch (e) {
