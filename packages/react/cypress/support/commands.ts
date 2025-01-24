@@ -108,5 +108,5 @@ Cypress.Commands.add("clickAndType", { prevSubject: false }, (selector: string, 
   if (clear) {
     cy.get(selector).clear();
   }
-  cy.get(selector).type(text);
+  cy.get(selector).type(text, { force: true });
 });

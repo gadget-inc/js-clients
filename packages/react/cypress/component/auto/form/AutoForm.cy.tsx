@@ -201,7 +201,7 @@ describeForEachAutoAdapter("AutoForm", ({ name, adapter: { AutoForm }, wrapper }
     cy.mountWithWrapper(<AutoForm action={api.game.stadium.create} exclude={["rounds"]} />, wrapper);
 
     cy.contains("Name");
-    cy.get(`input[name="stadium.name"]`).type("test stadium record");
+    cy.clickAndType(`input[name="stadium.name"]`, "test stadium record");
 
     submit("Stadium");
   });
@@ -212,17 +212,18 @@ describeForEachAutoAdapter("AutoForm", ({ name, adapter: { AutoForm }, wrapper }
     ensureFieldInputLabelsExist();
 
     // fill in name but not inventoryCount
-    cy.get(`input[name="widget.name"]`).type("test record");
+    cy.clickAndType(`input[name="widget.name"]`, "test record");
 
     cy.get("form [type=submit][aria-hidden!=true]").click();
     cy.contains("Inventory count is required");
 
-    cy.get(`input[name="widget.inventoryCount"]`).type("42");
+    cy.clickAndType(`input[name="widget.inventoryCount"]`, "42");
 
-    cy.get(`input[name="widget.mustBeLongString"]`).type("short");
+    cy.clickAndType(`input[name="widget.mustBeLongString"]`, "short");
+
     cy.contains("must be at least 20 characters");
 
-    cy.get(`input[name="widget.mustBeLongString"]`).type(` l${"o".repeat(20)}ng enough`);
+    cy.clickAndType(`input[name="widget.mustBeLongString"]`, ` l${"o".repeat(20)}ng enough`);
 
     submit("Widget");
   });
@@ -244,7 +245,7 @@ describeForEachAutoAdapter("AutoForm", ({ name, adapter: { AutoForm }, wrapper }
   it("can render a rich text editor for markdown content", async () => {
     cy.mountWithWrapper(<AutoForm action={api.widget.create} include={["description"]} />, wrapper);
 
-    cy.get(`[aria-label="editable markdown"] > p`).type("# foobar\n## foobaz");
+    cy.clickAndType(`[aria-label="editable markdown"] > p`, "# foobar\n## foobaz");
 
     cy.intercept("POST", `${api.connection.options.endpoint}?operation=createWidget`, {
       body: {

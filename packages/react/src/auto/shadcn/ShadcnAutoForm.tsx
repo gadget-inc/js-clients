@@ -6,7 +6,7 @@ import { humanizeCamelCase, type OptionsType } from "../../utils.js";
 import type { AutoFormProps } from "../AutoForm.js";
 import { useAutoForm } from "../AutoForm.js";
 import { validateAutoFormProps } from "../AutoFormActionValidators.js";
-import { AutoFormMetadataContext } from "../AutoFormContext.js";
+import { AutoFormFieldsFromChildComponentsProvider, AutoFormMetadataContext } from "../AutoFormContext.js";
 import type { FormProps, ShadcnElements } from "./elements.js";
 import { makeShadcnAutoInput } from "./inputs/ShadcnAutoInput.js";
 import { makeShadcnAutoSubmit } from "./submit/ShadcnAutoSubmit.js";
@@ -33,11 +33,13 @@ export const makeAutoForm =
     const ShadcnAutoSubmit = makeShadcnAutoSubmit({ Button });
 
     return (
-      <ShadcnAutoFormComponent
-        key={componentKey}
-        {...(props as AutoFormProps<GivenOptions, SchemaT, ActionFunc> & Omit<Partial<FormProps>, "action"> & { findBy: any })}
-        elements={{ Form, Input, Button, Alert, Skeleton, AlertTitle, AlertDescription, ShadcnAutoInput, ShadcnAutoSubmit }}
-      />
+      <AutoFormFieldsFromChildComponentsProvider>
+        <ShadcnAutoFormComponent
+          key={componentKey}
+          {...(props as AutoFormProps<GivenOptions, SchemaT, ActionFunc> & Omit<Partial<FormProps>, "action"> & { findBy: any })}
+          elements={{ Form, Input, Button, Alert, Skeleton, AlertTitle, AlertDescription, ShadcnAutoInput, ShadcnAutoSubmit }}
+        />
+      </AutoFormFieldsFromChildComponentsProvider>
     );
   };
 
