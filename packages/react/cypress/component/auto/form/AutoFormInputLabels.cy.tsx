@@ -11,9 +11,13 @@ import { api } from "../../../support/api.js";
 import { describeForEachAutoAdapter } from "../../../support/auto.js";
 import { SUITE_NAMES } from "../../../support/constants.js";
 
-const ShadcnAutoInput = makeShadcnAutoInput({ Input, Label, Checkbox, Button });
+function useShadcnAutoInput() {
+  return React.useMemo(() => makeShadcnAutoInput({ Input, Label, Checkbox, Button }), []);
+}
 
 const AutoInput = (props: { suiteName: string; field: string; label?: string }) => {
+  const ShadcnAutoInput = useShadcnAutoInput();
+
   if (props.suiteName === SUITE_NAMES.POLARIS) {
     return <PolarisAutoInput {...props} />;
   }
