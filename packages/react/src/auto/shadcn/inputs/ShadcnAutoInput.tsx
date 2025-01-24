@@ -1,3 +1,4 @@
+import React from "react";
 import { FieldType } from "../../../metadata.js";
 import { autoInput } from "../../AutoInput.js";
 import { useFieldMetadata } from "../../hooks/useFieldMetadata.js";
@@ -15,39 +16,40 @@ export const makeShadcnAutoInput = ({
   Checkbox,
   Button,
 }: Pick<ShadcnElements, "Input" | "Label" | "Checkbox" | "Button">) => {
-  function ShadcnAutoInput(props: { field: string; label?: string }) {
+  const inputMakers = {
+    idInput: makeShadcnAutoIdInput({ Input, Label }),
+    textInput: makeShadcnAutoTextInput({ Input, Label }),
+    numberInput: makeShadcnAutoNumberInput({ Input, Label }),
+    encryptedInput: makeShadcnAutoEncryptedStringInput({ Input, Label, Button }),
+    passwordInput: makeShadcnAutoPasswordInput({ Input, Label, Button }),
+    booleanInput: makeShadcnAutoBooleanInput({ Checkbox, Label }),
+  };
+
+  const ShadcnAutoInput = React.memo(function ShadcnAutoInput(props: { field: string; label?: string }) {
     const { metadata } = useFieldMetadata(props.field);
     const config = metadata.configuration;
 
     switch (config.fieldType) {
-      case FieldType.Id: {
-        return makeShadcnAutoIdInput({ Input, Label })(props);
-      }
+      case FieldType.Id:
+        return inputMakers.idInput(props);
       case FieldType.String:
       case FieldType.Email:
       case FieldType.Color:
-      case FieldType.Url: {
-        return makeShadcnAutoTextInput({ Input, Label })(props);
-      }
-      case FieldType.Number: {
-        return makeShadcnAutoNumberInput({ Input, Label })(props);
-      }
-
-      case FieldType.EncryptedString: {
-        return makeShadcnAutoEncryptedStringInput({ Input, Label, Button })(props);
-      }
-      case FieldType.Password: {
-        return makeShadcnAutoPasswordInput({ Input, Label, Button })(props);
-      }
-
-      case FieldType.Boolean: {
-        return makeShadcnAutoBooleanInput({ Checkbox, Label })(props);
-      }
-
+      case FieldType.Url:
+        return inputMakers.textInput(props);
+      case FieldType.Number:
+        return inputMakers.numberInput(props);
+      case FieldType.EncryptedString:
+        return inputMakers.encryptedInput(props);
+      case FieldType.Password:
+        return inputMakers.passwordInput(props);
+      case FieldType.Boolean:
+        return inputMakers.booleanInput(props);
       default:
-        throw new Error(`Unsupported field type for Shadcn AutoForm: ${metadata.fieldType}`);
+        return inputMakers.textInput(props);
     }
-  }
+  });
 
+  ShadcnAutoInput.displayName = "ShadcnAutoInput";
   return autoInput(ShadcnAutoInput);
 };

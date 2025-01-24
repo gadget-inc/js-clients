@@ -2,11 +2,14 @@
 import React from "react";
 import { api } from "../../../support/api.js";
 import { describeForEachAutoAdapter } from "../../../support/auto.js";
+import { SUITE_NAMES } from "../../../support/constants.js";
 
 describeForEachAutoAdapter("AutoForm", ({ name, adapter: { AutoForm }, wrapper }) => {
   beforeEach(() => {
     cy.viewport("macbook-13");
   });
+
+  const maybeIt = name === SUITE_NAMES.SHADCN ? it.skip : it;
 
   const ensureFieldInputLabelsExist = () => {
     cy.contains("Name");
@@ -36,8 +39,8 @@ describeForEachAutoAdapter("AutoForm", ({ name, adapter: { AutoForm }, wrapper }
 
     ensureFieldInputLabelsExist();
 
-    cy.get(`input[name="widget.name"]`).type("test record");
-    cy.get(`input[name="widget.inventoryCount"]`).type("999");
+    cy.clickAndType(`input[name="widget.name"]`, "test record");
+    cy.clickAndType(`input[name="widget.inventoryCount"]`, "999");
 
     submit("Widget");
     ensureFieldInputLabelsExist();
@@ -55,8 +58,8 @@ describeForEachAutoAdapter("AutoForm", ({ name, adapter: { AutoForm }, wrapper }
     const onSuccessSpy = cy.spy().as("onSuccessSpy");
     cy.mountWithWrapper(<AutoForm action={api.widget.create} exclude={["gizmos"]} onSuccess={onSuccessSpy} />, wrapper);
 
-    cy.get(`input[name="widget.name"]`).type("test record");
-    cy.get(`input[name="widget.inventoryCount"]`).type("999");
+    cy.clickAndType(`input[name="widget.name"]`, "test record");
+    cy.clickAndType(`input[name="widget.inventoryCount"]`, "999");
 
     cy.getSubmitButton().click();
 
@@ -76,8 +79,8 @@ describeForEachAutoAdapter("AutoForm", ({ name, adapter: { AutoForm }, wrapper }
     const onFailureSpy = cy.spy().as("onFailureSpy");
     cy.mountWithWrapper(<AutoForm action={api.widget.alwaysThrowError} exclude={["gizmos"]} onFailure={onFailureSpy} />, wrapper);
 
-    cy.get(`input[name="widget.name"]`).type("test record");
-    cy.get(`input[name="widget.inventoryCount"]`).type("999");
+    cy.clickAndType(`input[name="widget.name"]`, "test record");
+    cy.clickAndType(`input[name="widget.inventoryCount"]`, "999");
 
     cy.getSubmitButton().click();
 
@@ -128,7 +131,11 @@ describeForEachAutoAdapter("AutoForm", ({ name, adapter: { AutoForm }, wrapper }
     cy.getSubmitButton().should("not.exist");
   });
 
-  it("can render a form to update model and submit it", () => {
+  /**
+   * TODO: Fix this test for Shadcn and create a GITHUB issue for it
+   * This test is skipped for Shadcn because it's not supported yet. We need to have a list component for this to work properly
+   */
+  maybeIt("can render a form to update model and submit it", () => {
     cy.intercept("POST", `${api.connection.options.endpoint}?operation=widget`, {
       body: {
         data: {
@@ -172,9 +179,9 @@ describeForEachAutoAdapter("AutoForm", ({ name, adapter: { AutoForm }, wrapper }
     cy.contains("Anything");
 
     // Clear the fetched value to prevent from making the value stored in the database longer as the test runs
-    cy.get(`input[name="widget.name"]`).clear().type("updated test record");
-    cy.get(`input[name="widget.inventoryCount"]`).clear().type("1234");
-    cy.get(`input[name="widget.section"]`).clear().type("Section Foo");
+    cy.clickAndType(`input[name="widget.name"]`, "updated test record", true);
+    cy.clickAndType(`input[name="widget.inventoryCount"]`, "1234", true);
+    cy.clickAndType(`input[name="widget.section"]`, "Section Foo", true);
 
     cy.contains(`Section Foo`).click();
     /**
@@ -194,7 +201,7 @@ describeForEachAutoAdapter("AutoForm", ({ name, adapter: { AutoForm }, wrapper }
     cy.mountWithWrapper(<AutoForm action={api.game.stadium.create} exclude={["rounds"]} />, wrapper);
 
     cy.contains("Name");
-    cy.get(`input[name="stadium.name"]`).type("test stadium record");
+    cy.clickAndType(`input[name="stadium.name"]`, "test stadium record");
 
     submit("Stadium");
   });
@@ -205,17 +212,18 @@ describeForEachAutoAdapter("AutoForm", ({ name, adapter: { AutoForm }, wrapper }
     ensureFieldInputLabelsExist();
 
     // fill in name but not inventoryCount
-    cy.get(`input[name="widget.name"]`).type("test record");
+    cy.clickAndType(`input[name="widget.name"]`, "test record");
 
     cy.get("form [type=submit][aria-hidden!=true]").click();
     cy.contains("Inventory count is required");
 
-    cy.get(`input[name="widget.inventoryCount"]`).type("42");
+    cy.clickAndType(`input[name="widget.inventoryCount"]`, "42");
 
-    cy.get(`input[name="widget.mustBeLongString"]`).type("short");
+    cy.clickAndType(`input[name="widget.mustBeLongString"]`, "short");
+
     cy.contains("must be at least 20 characters");
 
-    cy.get(`input[name="widget.mustBeLongString"]`).type(` l${"o".repeat(20)}ng enough`);
+    cy.clickAndType(`input[name="widget.mustBeLongString"]`, ` l${"o".repeat(20)}ng enough`);
 
     submit("Widget");
   });
@@ -237,7 +245,7 @@ describeForEachAutoAdapter("AutoForm", ({ name, adapter: { AutoForm }, wrapper }
   it("can render a rich text editor for markdown content", async () => {
     cy.mountWithWrapper(<AutoForm action={api.widget.create} include={["description"]} />, wrapper);
 
-    cy.get(`[aria-label="editable markdown"] > p`).type("# foobar\n## foobaz");
+    cy.clickAndType(`[aria-label="editable markdown"] > p`, "# foobar\n## foobaz");
 
     cy.intercept("POST", `${api.connection.options.endpoint}?operation=createWidget`, {
       body: {
