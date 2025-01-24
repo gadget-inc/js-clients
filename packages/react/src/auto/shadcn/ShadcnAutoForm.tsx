@@ -46,7 +46,7 @@ export const makeAutoForm = <Elements extends ShadcnElements>({
     const componentKey = `${action.modelApiIdentifier ?? ""}.${action.operationName}.${JSON.stringify(findBy)}`;
 
     return (
-      <AutoFormFieldsFromChildComponentsProvider>
+      <AutoFormFieldsFromChildComponentsProvider hasCustomFormChildren={React.Children.count(props.children) > 0}>
         <ShadcnAutoFormComponent
           key={componentKey}
           {...(props as AutoFormProps<GivenOptions, SchemaT, ActionFunc> & Omit<Partial<FormProps>, "action"> & { findBy: any })}

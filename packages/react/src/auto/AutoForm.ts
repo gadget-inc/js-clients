@@ -1,7 +1,7 @@
 import type { ActionFunction, FieldSelection, GadgetRecord, GlobalActionFunction } from "@gadgetinc/api-client-core";
 import { yupResolver } from "@hookform/resolvers/yup";
 import type { ReactNode } from "react";
-import { useEffect, useMemo, useRef } from "react";
+import React, { useEffect, useMemo, useRef } from "react";
 import type { GadgetHasManyThroughConfig, GadgetObjectFieldConfig } from "../internal/gql/graphql.js";
 import type { FieldMetadata, GlobalActionMetadata, ModelWithOneActionMetadata } from "../metadata.js";
 import { FieldType, buildAutoFormFieldList, isModelActionMetadata, useActionMetadata } from "../metadata.js";
@@ -19,6 +19,7 @@ import {
   validateTriggersFromMetadata,
 } from "./AutoFormActionValidators.js";
 import { useFieldsFromChildComponents } from "./AutoFormContext.js";
+import { isAutoInput } from "./AutoInput.js";
 
 /** The props that any <AutoForm/> component accepts */
 export type AutoFormProps<
@@ -194,6 +195,7 @@ export const useAutoForm = <
   formError: Error | ErrorWrapper | null | undefined;
   isSubmitting: boolean;
   isSubmitSuccessful: boolean;
+  pauseExistingRecordLookup: boolean;
   isLoading: boolean;
   originalFormMethods: UseFormReturn<any, any>;
 } => {
@@ -201,8 +203,13 @@ export const useAutoForm = <
   let include = props.include;
   let exclude = props.exclude;
 
-  const { hasChildren, fieldSet } = useFieldsFromChildComponents();
-  const hasRegisteredFieldsFromChildren = hasChildren && fieldSet.size > 0;
+  const { hasCustomFormChildren, fieldSet, registerFields } = useFieldsFromChildComponents();
+  const hasRegisteredFieldsFromChildren = hasCustomFormChildren && fieldSet.size > 0;
+  const registeredFieldsFromChildren = hasCustomFormChildren ? extractPathsFromChildren(props.children) : [];
+
+  useEffect(() => {
+    registerFields(registeredFieldsFromChildren);
+  }, [registeredFieldsFromChildren.join(","), registerFields]);
 
   if (hasRegisteredFieldsFromChildren) {
     include = Array.from(fieldSet);
@@ -248,7 +255,7 @@ export const useAutoForm = <
 
   const pauseExistingRecordLookup = !("findBy" in props)
     ? true // Always pause without findBy. No need to do a lookup
-    : fetchingMetadata || !selection || !hasRegisteredFieldsFromChildren; // Pause until we have the field selection to include in the lookup
+    : fetchingMetadata || !selection; // Pause until we have the field selection to include in the lookup
 
   // setup the form state for the action
   const {
@@ -425,6 +432,7 @@ export const useAutoForm = <
     fields: fields.filter(removeIdFieldsUnlessUpsertWithoutFindBy(isUpsertWithFindBy)),
     submit,
     formError,
+    pauseExistingRecordLookup,
     isSubmitting,
     isSubmitSuccessful,
     isLoading,
@@ -459,6 +467,44 @@ const resetValuesForDefaultValues = (modelApiIdentifier: string, defaultValues: 
       ...extractResetArrayPathsFromSelection(selection),
     },
   };
+};
+
+export const extractPathsFromChildren = (children: React.ReactNode) => {
+  const paths = new Set<string>();
+
+  React.Children.forEach(children, (child) => {
+    if (React.isValidElement(child)) {
+      const grandChildren = child.props.children as React.ReactNode | undefined;
+      let childPaths: string[] = [];
+
+      if (grandChildren) {
+        childPaths = extractPathsFromChildren(grandChildren);
+      }
+
+      let field: string | undefined = undefined;
+
+      if (isAutoInput(child)) {
+        const props = child.props as { field: string; selectPaths?: string[]; children?: React.ReactNode };
+        field = props.field;
+
+        paths.add(field);
+
+        if (props.selectPaths && Array.isArray(props.selectPaths)) {
+          props.selectPaths.forEach((selectPath) => {
+            paths.add(`${field}.${selectPath}`);
+          });
+        }
+      }
+
+      if (childPaths.length > 0) {
+        for (const childPath of childPaths) {
+          paths.add(field ? `${field}.${childPath}` : childPath);
+        }
+      }
+    }
+  });
+
+  return Array.from(paths);
 };
 
 const removeIdFieldsUnlessUpsertWithoutFindBy = (isUpsertWithFindBy?: boolean) => {

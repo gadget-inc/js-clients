@@ -41,7 +41,7 @@ export const PolarisAutoForm = <
   const componentKey = `${action.modelApiIdentifier ?? ""}.${action.operationName}.${JSON.stringify(findBy)}`;
 
   return (
-    <AutoFormFieldsFromChildComponentsProvider>
+    <AutoFormFieldsFromChildComponentsProvider hasCustomFormChildren={React.Children.count(props.children) > 0}>
       <PolarisAutoFormComponent
         key={componentKey}
         {...(props as AutoFormProps<GivenOptions, SchemaT, ActionFunc> & Omit<Partial<FormProps>, "action"> & { findBy: any })}
@@ -75,6 +75,7 @@ const PolarisAutoFormComponent = <
     formError,
     isSubmitting,
     isSubmitSuccessful,
+    pauseExistingRecordLookup,
     originalFormMethods,
   } = useAutoForm(props);
 
@@ -100,7 +101,7 @@ const PolarisAutoFormComponent = <
     fields,
   };
 
-  if (fetchingMetadata) {
+  if (fetchingMetadata || (findBy && pauseExistingRecordLookup)) {
     return (
       <Form {...rest} onSubmit={submit}>
         <PolarisAutoFormSkeleton />

@@ -72,7 +72,6 @@ describe("PolarisJSONInput", () => {
       {
         method: "POST",
         url: `${api.connection.options.endpoint}?operation=widget`,
-        times: 1,
       },
       {
         body: {
@@ -91,7 +90,7 @@ describe("PolarisJSONInput", () => {
           },
         },
       }
-    );
+    ).as("widget");
 
     cy.mountWithWrapper(
       <PolarisAutoForm action={api.widget.update} findBy="1">
@@ -101,6 +100,7 @@ describe("PolarisJSONInput", () => {
       PolarisWrapper
     );
 
+    cy.wait("@widget");
     cy.get(`textarea[name="widget.metafields"]`).should(
       "have.value",
       `{
@@ -114,7 +114,6 @@ describe("PolarisJSONInput", () => {
       {
         method: "POST",
         url: `${api.connection.options.endpoint}?operation=widget`,
-        times: 1,
       },
       {
         body: {
@@ -131,7 +130,7 @@ describe("PolarisJSONInput", () => {
           },
         },
       }
-    );
+    ).as("widget");
 
     cy.mountWithWrapper(
       <PolarisAutoForm action={api.widget.update} findBy="2">
@@ -140,6 +139,7 @@ describe("PolarisJSONInput", () => {
       </PolarisAutoForm>,
       PolarisWrapper
     );
+    cy.wait("@widget");
 
     cy.get(`textarea[name="widget.metafields"]`).should(
       "have.value",
@@ -168,7 +168,7 @@ describe("PolarisJSONInput", () => {
           },
         },
       }
-    );
+    ).as("widget");
 
     cy.mountWithWrapper(
       <PolarisAutoForm action={api.widget.update} findBy="3">
@@ -177,6 +177,7 @@ describe("PolarisJSONInput", () => {
       </PolarisAutoForm>,
       PolarisWrapper
     );
+    cy.wait("@widget");
 
     cy.get(`textarea[name="widget.metafields"]`).should("have.value", ``);
   });
@@ -240,7 +241,7 @@ describe("PolarisJSONInput", () => {
           },
         },
       }
-    );
+    ).as("widget");
 
     cy.mountWithWrapper(
       <PolarisAutoForm action={api.widget.update} findBy="1">
@@ -250,22 +251,23 @@ describe("PolarisJSONInput", () => {
       PolarisWrapper
     );
 
+    cy.wait("@widget");
+
     cy.get(`textarea[name="widget.metafields"]`).clear();
     cy.get(`textarea[name="widget.metafields"]`).should("have.value", "");
 
     cy.intercept(
       {
         method: "POST",
-        url: `${api.connection.options.endpoint}?operation=createWidget`,
-        times: 1,
+        url: `${api.connection.options.endpoint}?operation=updateWidget`,
       },
       (req) => {
-        expect(req.body.variables.input.metafields).to.be.null;
+        expect(req.body.variables.widget.metafields).to.be.null;
 
         return {
           body: {
             data: {
-              createWidget: {
+              updateWidget: {
                 success: true,
                 errors: null,
                 widget: {
@@ -279,8 +281,9 @@ describe("PolarisJSONInput", () => {
           },
         };
       }
-    );
+    ).as("updateWidget");
 
     cy.get(`button.Polaris-Button[type="submit"]`).click();
+    cy.wait("@updateWidget");
   });
 });
