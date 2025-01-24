@@ -32,34 +32,41 @@ export const makeRelatedModelOption = ({
   CommandEmpty,
   CommandGroup,
 }: Pick<ShadcnElements, "Command" | "CommandItem" | "CommandList" | "CommandEmpty" | "CommandGroup">) => {
-  function RelatedModelOption(props: RelatedModelOptionsProps) {
+  const RelatedModelOption = React.memo(function RelatedModelOption(props: RelatedModelOptionsProps) {
     const { checkSelected, onSelect, isLoading, errorMessage, options, records, actions } = props;
 
-    const { ListMessage, NoRecordsMessage, ShadcnSelectableOption, getErrorMessage } = makeShadcnListMessages({
-      CommandItem,
-      CommandList,
-      CommandEmpty,
-    });
+    const { ListMessage, NoRecordsMessage, ShadcnSelectableOption, getErrorMessage } = React.useMemo(
+      () =>
+        makeShadcnListMessages({
+          CommandItem,
+          CommandList,
+          CommandEmpty,
+        }),
+      [CommandItem, CommandList, CommandEmpty]
+    );
 
-    const listBoxOptions = [
-      ...(actions ?? []),
-      ...options.map((option) => {
-        return props.renderOption ? (
-          props.renderOption(option)
-        ) : (
-          <ShadcnSelectableOption
-            {...option}
-            selected={checkSelected?.(option.id) ?? false}
-            onSelect={(id) => {
-              const record = records?.find((record) => record.id === id) ?? { id };
-              const { createdAt: _createdAt, updatedAt: _updatedAt, ...recordWithoutTimestamps } = record;
-              onSelect(recordWithoutTimestamps);
-            }}
-            key={option.id}
-          />
-        );
-      }),
-    ];
+    const listBoxOptions = React.useMemo(
+      () => [
+        ...(actions ?? []),
+        ...options.map((option) => {
+          return props.renderOption ? (
+            props.renderOption(option)
+          ) : (
+            <ShadcnSelectableOption
+              {...option}
+              selected={checkSelected?.(option.id) ?? false}
+              onSelect={(id) => {
+                const record = records?.find((record) => record.id === id) ?? { id };
+                const { createdAt: _createdAt, updatedAt: _updatedAt, ...recordWithoutTimestamps } = record;
+                onSelect(recordWithoutTimestamps);
+              }}
+              key={option.id}
+            />
+          );
+        }),
+      ],
+      [actions, options, props.renderOption, records, checkSelected, onSelect]
+    );
 
     return (
       <Command>
@@ -76,7 +83,9 @@ export const makeRelatedModelOption = ({
         </CommandList>
       </Command>
     );
-  }
+  });
+
+  RelatedModelOption.displayName = "RelatedModelOption";
 
   return RelatedModelOption;
 };

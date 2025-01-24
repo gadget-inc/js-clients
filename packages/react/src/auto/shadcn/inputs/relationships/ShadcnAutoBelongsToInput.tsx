@@ -4,8 +4,33 @@ import { useBelongsToInputController } from "../../../hooks/useBelongsToControll
 import { getRecordAsOption, useOptionLabelForField } from "../../../hooks/useRelatedModel.js";
 import type { AutoRelationshipInputProps } from "../../../interfaces/AutoRelationshipInputProps.js";
 import type { ShadcnElements } from "../../elements.js";
+import { makeShadcnAutoTextInput } from "../ShadcnAutoTextInput.js";
+import { makeRelatedModelOption } from "./RelatedModelOption.js";
 
-export const makeShadcnAutoBelongsToInput = ({ Input, Badge, Button }: Pick<ShadcnElements, "Input" | "Badge" | "Button">) => {
+export const makeShadcnAutoBelongsToInput = ({
+  Input,
+  Badge,
+  Button,
+  Command,
+  CommandItem,
+  Label,
+  CommandList,
+  CommandEmpty,
+  CommandGroup,
+}: Pick<
+  ShadcnElements,
+  "Input" | "Badge" | "Button" | "Command" | "CommandItem" | "CommandList" | "CommandEmpty" | "CommandGroup" | "Label"
+>) => {
+  const RelatedModelOption = makeRelatedModelOption({
+    Command,
+    CommandItem,
+    CommandList,
+    CommandEmpty,
+    CommandGroup,
+  });
+
+  const TextInput = makeShadcnAutoTextInput({ Input, Label });
+
   function ShadcnAutoBelongsToInput(props: AutoRelationshipInputProps) {
     const {
       fieldMetadata: { path, metadata },
@@ -37,10 +62,40 @@ export const makeShadcnAutoBelongsToInput = ({ Input, Badge, Button }: Pick<Shad
         </Badge>
       ) : null;
 
+    const onSelect = (record: Record<string, any>) => {
+      const recordId = record.id;
+      const idIsAlreadySelected = selectedRecord?.id === recordId;
+
+      idIsAlreadySelected
+        ? onRemoveRecord() // clear selection
+        : onSelectRecord(record); // make single selection
+    };
+
     return (
       <div>
-        <div></div>
-        <Input />
+        <div>{selectedRecordTag}</div>
+        <TextInput
+          required={metadata.requiredArgumentForInput}
+          onFocus={() => {
+            console.log("focus");
+          }}
+          onBlur={() => {
+            console.log("blur");
+          }}
+          value={search.value}
+          name={path}
+          label={props.label ?? metadata.name}
+          placeholder="Search"
+          autoComplete="off"
+          {...props}
+        />
+        <RelatedModelOption
+          isLoading={isLoading}
+          errorMessage={errorMessage}
+          options={searchFilterOptions}
+          records={relatedModel.records}
+          onSelect={onSelect}
+        />
       </div>
     );
   }
