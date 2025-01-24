@@ -16,18 +16,14 @@ export const makeShadcnAutoInput = ({
   Checkbox,
   Button,
 }: Pick<ShadcnElements, "Input" | "Label" | "Checkbox" | "Button">) => {
-  // Memoize the input makers
-  const memoizedInputs = React.useMemo(
-    () => ({
-      idInput: makeShadcnAutoIdInput({ Input, Label }),
-      textInput: makeShadcnAutoTextInput({ Input, Label }),
-      numberInput: makeShadcnAutoNumberInput({ Input, Label }),
-      encryptedInput: makeShadcnAutoEncryptedStringInput({ Input, Label, Button }),
-      passwordInput: makeShadcnAutoPasswordInput({ Input, Label, Button }),
-      booleanInput: makeShadcnAutoBooleanInput({ Checkbox, Label }),
-    }),
-    [Input, Label, Checkbox, Button]
-  );
+  const inputMakers = {
+    idInput: makeShadcnAutoIdInput({ Input, Label }),
+    textInput: makeShadcnAutoTextInput({ Input, Label }),
+    numberInput: makeShadcnAutoNumberInput({ Input, Label }),
+    encryptedInput: makeShadcnAutoEncryptedStringInput({ Input, Label, Button }),
+    passwordInput: makeShadcnAutoPasswordInput({ Input, Label, Button }),
+    booleanInput: makeShadcnAutoBooleanInput({ Checkbox, Label }),
+  };
 
   const ShadcnAutoInput = React.memo(function ShadcnAutoInput(props: { field: string; label?: string }) {
     const { metadata } = useFieldMetadata(props.field);
@@ -35,22 +31,22 @@ export const makeShadcnAutoInput = ({
 
     switch (config.fieldType) {
       case FieldType.Id:
-        return memoizedInputs.idInput(props);
+        return inputMakers.idInput(props);
       case FieldType.String:
       case FieldType.Email:
       case FieldType.Color:
       case FieldType.Url:
-        return memoizedInputs.textInput(props);
+        return inputMakers.textInput(props);
       case FieldType.Number:
-        return memoizedInputs.numberInput(props);
+        return inputMakers.numberInput(props);
       case FieldType.EncryptedString:
-        return memoizedInputs.encryptedInput(props);
+        return inputMakers.encryptedInput(props);
       case FieldType.Password:
-        return memoizedInputs.passwordInput(props);
+        return inputMakers.passwordInput(props);
       case FieldType.Boolean:
-        return memoizedInputs.booleanInput(props);
+        return inputMakers.booleanInput(props);
       default:
-        return memoizedInputs.textInput(props);
+        return inputMakers.textInput(props);
     }
   });
 
