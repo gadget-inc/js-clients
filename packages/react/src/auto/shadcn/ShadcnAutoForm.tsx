@@ -28,6 +28,12 @@ export const makeAutoForm = <Elements extends ShadcnElements>({
 }: Elements) => {
   const ShadcnAutoInput = makeShadcnAutoInput({ Input, Label, Button, Checkbox });
   const ShadcnAutoSubmit = makeShadcnAutoSubmit({ Button });
+  const { ShadcnSubmitSuccessfulBanner, ShadcnSubmitErrorBanner } = makeSubmitResultBanner({
+    Alert,
+    AlertTitle,
+    AlertDescription,
+    Button,
+  });
 
   return <GivenOptions extends OptionsType, SchemaT, ActionFunc extends ActionFunction<GivenOptions, any, any, SchemaT, any>>(
     props: AutoFormProps<GivenOptions, SchemaT, ActionFunc> & ComponentProps<typeof Form>
@@ -79,17 +85,6 @@ export const makeAutoForm = <Elements extends ShadcnElements>({
       originalFormMethods,
       isLoading,
     } = useAutoForm(props);
-
-    const { ShadcnSubmitSuccessfulBanner, ShadcnSubmitErrorBanner } = React.useMemo(
-      () =>
-        makeSubmitResultBanner({
-          Alert,
-          AlertTitle,
-          AlertDescription,
-          Button,
-        }),
-      []
-    );
 
     const formTitle = props.title === undefined ? humanizeCamelCase(action.operationName) : props.title;
 
