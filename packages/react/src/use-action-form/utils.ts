@@ -13,7 +13,7 @@ const noopUseFindExistingRecordResponse = [
 export const useFindExistingRecord = (
   modelManager: AnyModelManager | undefined,
   findBy: string | { [key: string]: any } | undefined,
-  options: { select?: Record<string, any>; pause?: boolean; throwOnInvalidFindByObject?: boolean },
+  options: { select?: Record<string, any>; pause?: boolean; throwOnInvalidFindByObject?: boolean }
 ): [{ data?: GadgetRecord<any>; fetching: boolean; error?: ErrorWrapper }, () => void] => {
   if (!modelManager || !findBy) {
     return noopUseFindExistingRecordResponse;
@@ -33,7 +33,7 @@ export const useFindExistingRecord = (
     if (!(findByOperationName in modelManager)) {
       if (options.throwOnInvalidFindByObject === undefined || options.throwOnInvalidFindByObject) {
         throw new Error(
-          `Invalid findBy object: ${JSON.stringify(findBy)}. ${findByOperationName} is not a valid findBy operation for this model.`,
+          `Invalid findBy object: ${JSON.stringify(findBy)}. ${findByOperationName} is not a valid findBy operation for this model.`
         );
       }
       return noopUseFindExistingRecordResponse;
@@ -131,7 +131,7 @@ export const disambiguateDefaultValues = (data: any, initialData: any, action: a
       }
 
       return [[key, value]];
-    }),
+    })
   );
 
   const modelData = { ...data[action.modelApiIdentifier] };
@@ -208,7 +208,7 @@ class ReshapeDataContext {
     public readonly idPath?: string,
     public readonly fieldType?: { type: string; model: string } | null,
     public readonly fieldRelationships?: Record<string, { type: string; model: string }> | null,
-    public readonly parent?: ReshapeDataContext | null,
+    public readonly parent?: ReshapeDataContext | null
   ) {}
 }
 
@@ -305,7 +305,7 @@ export const reshapeDataForGraphqlApi = async (client: AnyClient, defaultValues:
                 parent: context,
               }); // transform the item
             }
-          }),
+          })
         );
       }
 
@@ -324,7 +324,7 @@ export const reshapeDataForGraphqlApi = async (client: AnyClient, defaultValues:
               fieldRelationships,
               parent: context,
             });
-          }),
+          })
       );
 
       return results.flatMap((result) => result);
@@ -360,13 +360,10 @@ export const reshapeDataForGraphqlApi = async (client: AnyClient, defaultValues:
       const belongsToRelationships: Record<string, { type: string; model: string }> | null = fieldRelationships // grab the belongsTo relationships from the fieldRelationships object
         ? Object.entries(fieldRelationships)
             .filter(([_key, value]) => value.type === "BelongsTo")
-            .reduce(
-              (obj, [key, value]) => {
-                obj[key] = value;
-                return obj;
-              },
-              {} as Record<string, { type: string; model: string }>,
-            )
+            .reduce((obj, [key, value]) => {
+              obj[key] = value;
+              return obj;
+            }, {} as Record<string, { type: string; model: string }>)
         : null;
 
       for (const key of Object.keys(belongsToRelationships ?? {})) {
@@ -408,8 +405,8 @@ export const reshapeDataForGraphqlApi = async (client: AnyClient, defaultValues:
                 referencedTypes,
               },
               null,
-              2,
-            )}`,
+              2
+            )}`
           );
       }
     }
