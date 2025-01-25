@@ -1,9 +1,8 @@
+import { FindManyOptions } from "@gadgetinc/api-client-core";
 import type { ReactNode } from "react";
 import type { Control } from "../../useActionForm.js";
-import { AnyModelFinderMetadata, FindManyOptions } from "@gadgetinc/api-client-core";
 
 export type RelatedModelRecordFilter = {
-  relatedModelManager?: AnyModelFinderMetadata["modelApiIdentifier"];
   filter: FindManyOptions["filter"];
 };
 
