@@ -1,5 +1,5 @@
 import type { DefaultSelection, FindOneFunction, GadgetRecord, LimitToKnownKeys, Select } from "@gadgetinc/api-client-core";
-import { findOneOperation, get, hydrateRecord, namespaceDataPath } from "@gadgetinc/api-client-core";
+import { get, hydrateRecord, namespaceDataPath } from "@gadgetinc/api-client-core";
 import { useMemo } from "react";
 import { useGadgetQuery } from "./useGadgetQuery.js";
 import { useStructuralMemo } from "./useStructuralMemo.js";
@@ -44,14 +44,11 @@ export const useMaybeFindOne = <
 >> => {
   const memoizedOptions = useStructuralMemo(options);
   const plan = useMemo(() => {
-    return findOneOperation(
-      manager.findOne.operationName,
-      id,
-      manager.findOne.defaultSelection,
-      manager.findOne.modelApiIdentifier,
-      memoizedOptions,
-      manager.findOne.namespace
-    );
+    if (manager.findOne.plan) {
+      return manager.findOne.plan(id, memoizedOptions);
+    } else {
+      throw new Error("Incompatible client passed to useMaybeFindOne hook, please use an api client with version >= 0.17.0")
+    }
   }, [manager, id, memoizedOptions]);
 
   const [rawResult, refresh] = useGadgetQuery(useQueryArgs(plan, options));
