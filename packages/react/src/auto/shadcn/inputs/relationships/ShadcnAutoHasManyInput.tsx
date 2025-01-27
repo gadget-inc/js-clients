@@ -2,7 +2,7 @@ import React, { useMemo } from "react";
 import { autoInput } from "../../../AutoInput.js";
 import { useHasManyInputController } from "../../../hooks/useHasManyController.js";
 import { useOptionLabelForField } from "../../../hooks/useRelatedModel.js";
-import { AutoRelationshipInputProps } from "../../../interfaces/AutoRelationshipInputProps.js";
+import type { AutoRelationshipInputProps } from "../../../interfaces/AutoRelationshipInputProps.js";
 import type { ShadcnElements } from "../../elements.js";
 import { makeShadcnAutoComboInput } from "../ShadcnAutoComboInput.js";
 import { makeSelectedRecordTags } from "./SelectedRelatedRecordTags.js";

@@ -3,7 +3,7 @@ import type { Control } from "../../../useActionForm.js";
 import { getPropsWithoutRef } from "../../../utils.js";
 import { autoInput } from "../../AutoInput.js";
 import { useRoleInputController } from "../../hooks/useRoleInputController.js";
-import { AutoRelationshipInputProps } from "../../interfaces/AutoRelationshipInputProps.js";
+import type { AutoRelationshipInputProps } from "../../interfaces/AutoRelationshipInputProps.js";
 import type { ShadcnElements } from "../elements.js";
 import { makeShadcnAutoComboInput } from "./ShadcnAutoComboInput.js";
 import { makeSelectedRecordTags } from "./relationships/SelectedRelatedRecordTags.js";

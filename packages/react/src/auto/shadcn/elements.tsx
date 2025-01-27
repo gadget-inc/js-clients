@@ -32,19 +32,19 @@ export interface CardProps extends BaseProps {
 }
 
 /** The props that a card header component injected into autocomponent's shadcn must support */
-export interface CardHeaderProps extends BaseProps {}
+export type CardHeaderProps = BaseProps;
 
 /** The props that a card footer component injected into autocomponent's shadcn must support */
-export interface CardFooterProps extends BaseProps {}
+export type CardFooterProps = BaseProps;
 
 /** The props that a card title component injected into autocomponent's shadcn must support */
-export interface CardTitleProps extends BaseProps {}
+export type CardTitleProps = BaseProps;
 
 /** The props that a card description component injected into autocomponent's shadcn must support */
-export interface CardDescriptionProps extends BaseProps {}
+export type CardDescriptionProps = BaseProps;
 
 /** The props that a card content component injected into autocomponent's shadcn must support */
-export interface CardContentProps extends BaseProps {}
+export type CardContentProps = BaseProps;
 
 /** The props that an alert title component injected into autocomponent's shadcn must support */
 export type AlertTitleProps = BaseProps;
@@ -77,13 +77,13 @@ export interface PopoverProps extends React.HTMLAttributes<HTMLDivElement> {
 }
 
 /** The props that a popover anchor component injected into autocomponent's shadcn must support */
-export interface PopoverAnchorProps extends React.HTMLAttributes<HTMLDivElement> {}
+export type PopoverAnchorProps = React.HTMLAttributes<HTMLDivElement>;
 
 /** The props that a popover content component injected into autocomponent's shadcn must support */
-export interface PopoverContentProps extends React.HTMLAttributes<HTMLDivElement> {}
+export type PopoverContentProps = React.HTMLAttributes<HTMLDivElement>;
 
 /** The props that a popover trigger component injected into autocomponent's shadcn must support */
-export interface PopoverTriggerProps extends React.HTMLAttributes<HTMLDivElement> {}
+export type PopoverTriggerProps = React.HTMLAttributes<HTMLDivElement>;
 
 /** The props that a skeleton component injected into autocomponent's shadcn must support */
 export type SkeletonProps = Pick<React.HTMLAttributes<HTMLDivElement>, "className">;
