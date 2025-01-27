@@ -34,7 +34,7 @@ export const SelectedRelatedRecordTags = (props: {
               onRemoveRecord(record ?? { id: option.id });
             }}
           >
-            {option.label}
+            {option.label ?? `id: ${option.id}`}
           </Tag>
         );
       })

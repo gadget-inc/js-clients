@@ -107,6 +107,14 @@ export const Included = {
   },
 };
 
+export const IncludedWithFindBy = {
+  args: {
+    action: api.widget.update,
+    findBy: "999",
+    include: ["name", "inventoryCount"],
+  },
+};
+
 export const IncludedWithDefaultValues = {
   args: {
     action: api.widget.create,
