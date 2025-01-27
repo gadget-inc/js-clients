@@ -33,6 +33,7 @@ const ONLY_RUN_SUITES = {
     "AutoForm - ID field",
     "AutoForm - Upsert Action",
     "AutoPasswordInput",
+    "AutoRoleInput",
   ],
 };
 
@@ -67,6 +68,7 @@ export const describeForEachAutoAdapter = (suiteName: string, suite: (config: Au
   const filteredSuites = suites.filter(
     (config) => config.name !== SUITE_NAMES.SHADCN || ONLY_RUN_SUITES[SUITE_NAMES.SHADCN].includes(suiteName)
   );
+
   // eslint-disable-next-line jest/valid-describe-callback, jest/valid-title
   describe.each(filteredSuites)((({ name }: { name: string }) => `${suiteName} - ${name}`) as any, suite);
 };

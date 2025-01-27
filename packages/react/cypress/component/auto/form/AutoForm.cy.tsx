@@ -9,8 +9,6 @@ describeForEachAutoAdapter("AutoForm", ({ name, adapter: { AutoForm }, wrapper }
     cy.viewport("macbook-13");
   });
 
-  const maybeIt = name === SUITE_NAMES.SHADCN ? it.skip : it;
-
   const ensureFieldInputLabelsExist = () => {
     cy.contains("Name");
     cy.contains("Inventory count");
@@ -131,11 +129,7 @@ describeForEachAutoAdapter("AutoForm", ({ name, adapter: { AutoForm }, wrapper }
     cy.getSubmitButton().should("not.exist");
   });
 
-  /**
-   * TODO: Fix this test for Shadcn and create a GITHUB issue for it
-   * This test is skipped for Shadcn because it's not supported yet. We need to have a list component for this to work properly
-   */
-  maybeIt("can render a form to update model and submit it", () => {
+  it("can render a form to update model and submit it", () => {
     cy.intercept("POST", `${api.connection.options.endpoint}?operation=widget`, {
       body: {
         data: {
@@ -188,7 +182,12 @@ describeForEachAutoAdapter("AutoForm", ({ name, adapter: { AutoForm }, wrapper }
      * This relies on the existence of `section` model record with {id:1, name:"Section Foo"}
      * This proves the selection of the correct record
      */
-    cy.get(`[id="1_Section Foo"]`);
+
+    if (name === SUITE_NAMES.SHADCN) {
+      cy.get('[cmdk-item][data-value="Section Foo"]');
+    } else {
+      cy.get(`[id="1_Section Foo"]`);
+    }
 
     submit("Widget");
 

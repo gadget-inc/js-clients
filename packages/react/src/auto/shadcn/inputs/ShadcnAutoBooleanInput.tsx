@@ -44,7 +44,15 @@ export const makeShadcnAutoBooleanInput = ({ Checkbox, Label }: Pick<ShadcnEleme
 
     return (
       <div className="flex items-center space-x-2">
-        <Checkbox {...restFieldProps} id={path} checked={!!fieldProps.value} aria-invalid={!!error} {...rest} />
+        <Checkbox
+          {...restFieldProps}
+          id={path}
+          checked={_value}
+          aria-invalid={!!error}
+          {...rest}
+          disabled={props.disabled ?? false}
+          onCheckedChange={fieldProps.onChange}
+        />
         <Label htmlFor={path} className={`${props.className ?? ""} ${error ? "text-red-500" : ""}`}>
           {label}
         </Label>

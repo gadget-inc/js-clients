@@ -25,8 +25,27 @@ export const makeAutoForm = <Elements extends ShadcnElements>({
   AlertDescription,
   Label,
   Checkbox,
+  Badge,
+  Command,
+  CommandInput,
+  CommandItem,
+  CommandList,
+  CommandEmpty,
+  CommandGroup,
 }: Elements) => {
-  const ShadcnAutoInput = makeShadcnAutoInput({ Input, Label, Button, Checkbox });
+  const ShadcnAutoInput = makeShadcnAutoInput({
+    Input,
+    Label,
+    Button,
+    Checkbox,
+    Badge,
+    Command,
+    CommandInput,
+    CommandItem,
+    CommandList,
+    CommandEmpty,
+    CommandGroup,
+  });
   const ShadcnAutoSubmit = makeShadcnAutoSubmit({ Button });
   const { ShadcnSubmitSuccessfulBanner, ShadcnSubmitErrorBanner } = makeSubmitResultBanner({
     Alert,
@@ -71,7 +90,7 @@ export const makeAutoForm = <Elements extends ShadcnElements>({
       findBy,
       ...rest
     } = props as AutoFormProps<GivenOptions, SchemaT, ActionFunc> & Omit<Partial<FormProps>, "action"> & { findBy: any };
-    const { Form, Alert, Skeleton, AlertTitle, AlertDescription, ShadcnAutoInput, ShadcnAutoSubmit, Button } = props.elements;
+    const { Form, Skeleton, ShadcnAutoInput, ShadcnAutoSubmit } = props.elements;
 
     const {
       metadata,

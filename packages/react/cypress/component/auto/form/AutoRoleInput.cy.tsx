@@ -2,6 +2,7 @@ import React from "react";
 import { apiTriggerOnly } from "../../../../spec/auto/support/Triggers.js";
 import { api } from "../../../support/api.js";
 import { describeForEachAutoAdapter } from "../../../support/auto.js";
+import { SUITE_NAMES } from "../../../support/constants.js";
 
 describeForEachAutoAdapter("AutoRoleInput", ({ name, adapter: { AutoForm }, wrapper }) => {
   beforeEach(() => {
@@ -11,6 +12,53 @@ describeForEachAutoAdapter("AutoRoleInput", ({ name, adapter: { AutoForm }, wrap
   const submit = (modelName: string) => {
     cy.get("form [type=submit][aria-hidden!=true]").click();
     cy.contains(`Saved ${modelName} successfully`);
+  };
+
+  const polarisAutoRoleInput = () => {
+    cy.get(`input[id="Roles_Autocomplete_Textfield"]`).click();
+
+    // All options are loaded initially
+    cy.get(`li[data-listbox-option-value="signed-in"]`).should("exist");
+    cy.get(`li[data-listbox-option-value="unauthenticated"]`).should("exist");
+    cy.get(`li[data-listbox-option-value="Role-abc123abc"]`).should("exist");
+
+    cy.get(`input[id="Roles_Autocomplete_Textfield"]`).click().type("test"); // To search for "test-api-key"
+    cy.get(`li[data-listbox-option-value="Role-abc123abc"]`).click(); // select
+
+    cy.get(`li[data-listbox-option-value="signed-in"]`).should("not.exist"); // Filtered out by search
+    cy.get(`li[data-listbox-option-value="unauthenticated"]`).should("not.exist"); // Filtered out by search
+
+    cy.get(`input[id="Roles_Autocomplete_Textfield"]`).click().clear().blur();
+    cy.get(`span`).contains("test-api-key").should("exist"); // Chip to show the selected role
+  };
+
+  const shadcnAutoRoleInput = () => {
+    cy.get(`[cmdk-input]`).click(); // Click to focus the input field
+
+    // All options should be loaded initially
+    cy.get(`[cmdk-item][data-value="signed-in"]`).should("exist");
+    cy.get(`[cmdk-item][data-value="unauthenticated"]`).should("exist");
+    cy.get(`[cmdk-item][data-value="test-api-key"]`).should("exist");
+
+    // Type "test" in the input to search
+    cy.get(`[cmdk-input]`).type("test");
+
+    // Ensure filtered options are shown
+    cy.get(`[cmdk-item][data-value="test-api-key"]`).should("exist");
+    cy.get(`[cmdk-item][data-value="signed-in"]`).should("not.exist");
+    cy.get(`[cmdk-item][data-value="unauthenticated"]`).should("not.exist");
+
+    // Select the filtered option
+    cy.get(`[cmdk-item][data-value="test-api-key"]`).click();
+
+    // Verify that the chip/tag appears after selection
+    cy.get(`div`)
+      .contains("test-api-key")
+      .should("exist") // Ensure the chip is rendered
+      .within(() => {
+        // Verify that the close button exists within the chip
+        cy.get(`button`).should("exist").and("be.visible");
+      });
   };
 
   const interceptRolesMetadataRequest = () => {
@@ -56,21 +104,13 @@ describeForEachAutoAdapter("AutoRoleInput", ({ name, adapter: { AutoForm }, wrap
     interceptRolesMetadataRequest();
     cy.mountWithWrapper(<AutoForm action={api.widget.create} />, wrapper);
 
-    cy.get(`input[id="Roles_Autocomplete_Textfield"]`).click();
+    if (name === SUITE_NAMES.POLARIS) {
+      polarisAutoRoleInput();
+    }
 
-    // All options are loaded initially
-    cy.get(`li[data-listbox-option-value="signed-in"]`).should("exist");
-    cy.get(`li[data-listbox-option-value="unauthenticated"]`).should("exist");
-    cy.get(`li[data-listbox-option-value="Role-abc123abc"]`).should("exist");
-
-    cy.get(`input[id="Roles_Autocomplete_Textfield"]`).click().type("test"); // To search for "test-api-key"
-    cy.get(`li[data-listbox-option-value="Role-abc123abc"]`).click(); // select
-
-    cy.get(`li[data-listbox-option-value="signed-in"]`).should("not.exist"); // Filtered out by search
-    cy.get(`li[data-listbox-option-value="unauthenticated"]`).should("not.exist"); // Filtered out by search
-
-    cy.get(`input[id="Roles_Autocomplete_Textfield"]`).click().clear().blur();
-    cy.get(`span`).contains("test-api-key").should("exist"); // Chip to show the selected role
+    if (name === SUITE_NAMES.SHADCN) {
+      shadcnAutoRoleInput();
+    }
 
     expectCreateActionSubmissionVariables({
       widget: {

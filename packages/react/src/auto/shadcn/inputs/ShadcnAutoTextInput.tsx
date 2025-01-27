@@ -34,22 +34,25 @@ export const makeShadcnAutoTextInput = ({ Input, Label }: Pick<ShadcnElements, "
     return (
       <div>
         <Label htmlFor={id}>{inputLabel}</Label>
-        <div className="relative flex items-center">
-          <Input
-            name={name}
-            type={type || "text"}
-            id={id}
-            value={value ?? ""}
-            autoComplete={autoComplete}
-            onChange={onChange}
-            onBlur={onBlur}
-            required={metadata.requiredArgumentForInput || false}
-            {...restProps}
-            placeholder={placeholder || inputLabel}
-          />
-          {suffix && <div className="">{suffix}</div>}
+        <div className={suffix ? "relative group border border-input rounded-md focus-within:ring-1 focus-within:ring-ring " : "relative"}>
+          <div className="relative flex items-center">
+            <Input
+              name={name}
+              type={type || "text"}
+              id={id}
+              value={value ?? ""}
+              autoComplete={autoComplete}
+              onChange={onChange}
+              onBlur={onBlur}
+              required={metadata.requiredArgumentForInput || false}
+              className={suffix ? "border-0 shadow-none rounded-none focus:ring-0 focus-visible:ring-0" : ""}
+              {...restProps}
+              placeholder={placeholder || inputLabel}
+            />
+            {suffix && <div className=" h-10 flex items-center px-3">{suffix}</div>}
+          </div>
+          {errorMessage && <p className="text-sm text-red-500">{errorMessage}</p>}
         </div>
-        {errorMessage && <p className="text-sm text-red-500">{errorMessage}</p>}
       </div>
     );
   }

@@ -1,7 +1,16 @@
 /* eslint-disable jest/valid-expect */
 import React from "react";
+import { Badge } from "../../../../spec/auto/shadcn-defaults/components/Badge.js";
 import { Button } from "../../../../spec/auto/shadcn-defaults/components/Button.js";
 import { Checkbox } from "../../../../spec/auto/shadcn-defaults/components/Checkbox.js";
+import {
+  Command,
+  CommandEmpty,
+  CommandGroup,
+  CommandInput,
+  CommandItem,
+  CommandList,
+} from "../../../../spec/auto/shadcn-defaults/components/Command.js";
 import { Input } from "../../../../spec/auto/shadcn-defaults/components/Input.js";
 import { Label } from "../../../../spec/auto/shadcn-defaults/components/Label.js";
 import { PolarisAutoInput } from "../../../../src/auto/polaris/inputs/PolarisAutoInput.js";
@@ -11,7 +20,19 @@ import { api } from "../../../support/api.js";
 import { describeForEachAutoAdapter } from "../../../support/auto.js";
 import { SUITE_NAMES } from "../../../support/constants.js";
 
-const ShadcnAutoInput = makeShadcnAutoInput({ Input, Label, Checkbox, Button });
+const ShadcnAutoInput = makeShadcnAutoInput({
+  Input,
+  Label,
+  Checkbox,
+  Button,
+  Badge,
+  Command,
+  CommandItem,
+  CommandList,
+  CommandEmpty,
+  CommandGroup,
+  CommandInput,
+});
 
 const AutoInput = (props: { suiteName: string; field: string; label?: string }) => {
   if (props.suiteName === SUITE_NAMES.POLARIS) {
