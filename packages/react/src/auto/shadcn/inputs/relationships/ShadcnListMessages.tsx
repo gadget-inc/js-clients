@@ -48,7 +48,7 @@ export const makeShadcnListMessages = ({
             <>
               <Checkbox
                 id={id}
-                defaultChecked={selected}
+                checked={selected}
                 onCheckedChange={(_state) => {
                   onSelect?.(id);
                 }}

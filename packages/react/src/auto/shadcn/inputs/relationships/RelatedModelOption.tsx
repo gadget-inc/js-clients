@@ -20,10 +20,10 @@ export const makeRelatedModelOption = (
 ) => {
   const { CommandList, CommandEmpty, CommandGroup } = elements;
 
-  const { ListMessage, NoRecordsMessage, ShadcnSelectableOption, getErrorMessage } = makeShadcnListMessages(elements);
-
   function RelatedModelOption(props: RelatedModelOptionsProps) {
     const { checkSelected, onSelect, isLoading, errorMessage, options, records, actions } = props;
+
+    const { ListMessage, NoRecordsMessage, ShadcnSelectableOption, getErrorMessage } = makeShadcnListMessages(elements);
 
     const listBoxOptions = useMemo(
       () => [
