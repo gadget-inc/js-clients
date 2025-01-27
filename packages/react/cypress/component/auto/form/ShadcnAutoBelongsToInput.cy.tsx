@@ -7,7 +7,6 @@ import { makeShadcnAutoSubmit } from "../../../../src/auto/shadcn/submit/ShadcnA
 import { makeSubmitResultBanner } from "../../../../src/auto/shadcn/submit/ShadcnSubmitResultBanner.js";
 import { api } from "../../../support/api.js";
 import { ShadcnWrapper } from "../../../support/auto.js";
-import { getInputFieldsWithCustomValidations } from "./PolarisAutoBelongsToInput.cy.js";
 
 const ShadcnAutoForm = makeAutocomponents(elements).AutoForm;
 const ShadcnAutoSubmit = makeShadcnAutoSubmit(elements);
@@ -177,3 +176,44 @@ describe("ShadcnAutoBelongsToInput", () => {
     ).as("sections");
   };
 });
+
+const getInputFieldsWithCustomValidations = () => {
+  return [
+    {
+      name: "Widget",
+      apiIdentifier: "widget",
+      fieldType: "Object",
+      requiredArgumentForInput: false,
+      configuration: {
+        __typename: "GadgetObjectFieldConfig",
+        fieldType: "Object",
+        name: null,
+        validations: [],
+        fields: [
+          {
+            name: "Section",
+            apiIdentifier: "section",
+            fieldType: "BelongsTo",
+            requiredArgumentForInput: false,
+            sortable: false,
+            filterable: true,
+            configuration: {
+              __typename: "GadgetBelongsToConfig",
+              fieldType: "BelongsTo",
+              validations: [],
+              relatedModel: {
+                key: "DataModel-section",
+                apiIdentifier: "section",
+                namespace: [],
+                defaultDisplayField: {
+                  apiIdentifier: "name",
+                },
+              },
+            },
+          },
+        ],
+      },
+      __typename: "GadgetObjectField",
+    },
+  ];
+};

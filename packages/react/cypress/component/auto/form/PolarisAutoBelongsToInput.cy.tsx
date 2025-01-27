@@ -167,7 +167,7 @@ describe("PolarisAutoBelongsToInput", () => {
   });
 });
 
-export const getInputFieldsWithCustomValidations = () => {
+const getInputFieldsWithCustomValidations = () => {
   return [
     {
       name: "Widget",
