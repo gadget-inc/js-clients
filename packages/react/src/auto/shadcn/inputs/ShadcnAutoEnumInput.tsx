@@ -126,8 +126,6 @@ export const makeShadcnAutoEnumInput = ({
       emptyStateElement = <CommandEmpty>{`No options found matching "${searchValue}"`}</CommandEmpty>;
     }
 
-    console.log(filteredOptions, allOptions, "Difference", allowOther);
-
     return (
       <ShadcnComboInput
         {...props}

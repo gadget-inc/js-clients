@@ -65,12 +65,6 @@ export const makeShadcnListMessages = ({
       );
     }
 
-    //TODO: ask for an example of what a listbox action looks like
-    /**
-     *  <Listbox.Action key={id} value={id} selected={selected}>
-          {label}
-        </Listbox.Action>
-     */
     return null;
   }
 
