@@ -166,9 +166,22 @@ const validateFormFieldApiIdentifierUniqueness = (
   const seenPaths = new Set<string>();
   const seenMetadataApiIds = new Set<string>();
 
-  for (const { path, metadata } of inputApiIdentifiers) {
-    if (seenMetadataApiIds.has(metadata.apiIdentifier) || seenPaths.has(path)) {
+  // Sorted by length because longer names need to be checked later against the shorter names
+  const sortedInputApiIdentifiers = [...inputApiIdentifiers].sort((a, b) => a.path.length - b.path.length);
+  for (const { path, metadata } of sortedInputApiIdentifiers) {
+    const hasSeenPaths = seenPaths.has(path);
+    if (hasSeenPaths) {
       throw new Error(`Input "${metadata.apiIdentifier}" is not unique for action "${actionApiIdentifier}"`);
+    }
+
+    const hasSeenMetadataApiIds = seenMetadataApiIds.has(metadata.apiIdentifier);
+    if (hasSeenMetadataApiIds) {
+      // Disallow custom params that match model field api IDs
+      const prefixRemovedPath = hasSeenMetadataApiIds ? path.replace(`${path.split(".")[0]}.`, "") : "";
+      const hasSeenPrefixRemovedPath = prefixRemovedPath && seenPaths.has(prefixRemovedPath);
+      if (hasSeenPrefixRemovedPath) {
+        throw new Error(`Input "${metadata.apiIdentifier}" is not unique for action "${actionApiIdentifier}"`);
+      }
     }
     seenMetadataApiIds.add(metadata.apiIdentifier);
     seenPaths.add(path);
