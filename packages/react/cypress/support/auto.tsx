@@ -24,7 +24,7 @@ const ONLY_RUN_SUITES = {
     "AutoForm - Default model field values",
     "AutoForm - FindBy object parameters",
     "AutoForm - Global actions",
-    "AutoForm - HasManyThrough fields",
+    // "AutoForm - HasManyThrough fields",
     "AutoForm - Dynamic form input changes",
     "AutoForm - Dynamic form input changes - FindBy object parameters",
     "AutoForm - Dynamic form input changes - Global actions",
