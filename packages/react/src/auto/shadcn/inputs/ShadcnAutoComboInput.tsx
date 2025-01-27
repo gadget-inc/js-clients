@@ -2,7 +2,7 @@ import React, { useRef, useState } from "react";
 import type { FieldMetadata } from "../../../metadata.js";
 import type { AutoRelationshipInputProps } from "../../interfaces/AutoRelationshipInputProps.js";
 import type { ShadcnElements } from "../elements.js";
-import type { RelatedModelOptionsProps} from "./relationships/RelatedModelOption.js";
+import type { RelatedModelOptionsProps } from "./relationships/RelatedModelOption.js";
 import { makeRelatedModelOption } from "./relationships/RelatedModelOption.js";
 
 interface ShadcnComboInputProps extends AutoRelationshipInputProps, RelatedModelOptionsProps {
