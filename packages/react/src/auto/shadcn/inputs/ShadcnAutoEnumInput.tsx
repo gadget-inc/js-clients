@@ -1,5 +1,5 @@
 import { XIcon } from "lucide-react";
-import React, { ReactNode, useCallback } from "react";
+import React, { useCallback } from "react";
 import type { Control } from "../../../useActionForm.js";
 import { autoInput } from "../../AutoInput.js";
 import { useEnumInputController } from "../../hooks/useEnumInputController.js";
@@ -88,24 +88,6 @@ export const makeShadcnAutoEnumInput = ({
       [searchValue]
     );
 
-    const renderOption = useCallback(
-      (option: { id: string; label: ReactNode }) => (
-        <CommandItem
-          key={option.id}
-          value={option.id}
-          onSelect={() => {
-            console.log("onSelect", option.id);
-            onSelectionChange(option.id);
-          }}
-          accessibilityLabel={option.label}
-          selected={selectedOptions.includes(String(option.label))}
-        >
-          {formatOptionText(String(option.label))}
-        </CommandItem>
-      ),
-      [selectedOptions, formatOptionText]
-    );
-
     let emptyStateElement = null;
     if (!allowOther && (!allOptions.length || allOptions.length === 0) && searchValue) {
       emptyStateElement = <CommandEmpty>{`No options found matching "${searchValue}"`}</CommandEmpty>;
@@ -119,7 +101,9 @@ export const makeShadcnAutoEnumInput = ({
         metadata={metadata}
         label={label ?? labelProp}
         selectedRecordTag={selectedTagsElement}
-        onSelect={() => ""}
+        onSelect={(option) => {
+          onSelectionChange(option.id);
+        }}
         isLoading={false}
         checkSelected={(id) => {
           return selectedOptions.includes(id);
@@ -127,11 +111,11 @@ export const makeShadcnAutoEnumInput = ({
         errorMessage={errorMessage}
         allowMultiple={allowMultiple}
         records={[]}
-        renderOption={renderOption}
         allowOther={allowOther}
         onAddExtraOption={(value) => {
           onSelectionChange(value);
         }}
+        formatOptionText={formatOptionText}
       />
     );
   }

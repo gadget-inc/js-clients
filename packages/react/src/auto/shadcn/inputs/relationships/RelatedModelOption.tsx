@@ -16,6 +16,7 @@ export type RelatedModelOptionsProps = {
   allowOther?: boolean;
   searchValue?: string;
   onAddExtraOption?: (value: string) => void;
+  formatOptionText?: (option: string) => React.ReactNode;
 };
 
 export const makeRelatedModelOption = (

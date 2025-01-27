@@ -8,6 +8,7 @@ export interface SelectableOptionProps {
   selected?: boolean;
   onSelect?: (id: string) => void;
   allowMultiple?: boolean;
+  formatOptionText?: (option: string) => React.ReactNode;
 }
 
 export const makeShadcnListMessages = ({
@@ -22,7 +23,7 @@ export const makeShadcnListMessages = ({
   }
 
   function ShadcnSelectableOption(props: SelectableOptionProps) {
-    const { label, id, selected, onSelect, allowMultiple } = props;
+    const { label, id, selected, onSelect, allowMultiple, formatOptionText } = props;
     const className = selected ? "bg-muted" : "";
 
     if (typeof label === "string") {
@@ -55,9 +56,11 @@ export const makeShadcnListMessages = ({
                 }}
               />
               <Label htmlFor={id} className={"flex-1 ml-2"}>
-                {label}
+                {formatOptionText ? formatOptionText(label) : label}
               </Label>
             </>
+          ) : formatOptionText ? (
+            formatOptionText(label)
           ) : (
             label
           )}
