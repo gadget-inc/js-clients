@@ -109,14 +109,14 @@ const validatorForField = (field: FieldMetadata, pathsToValidate: string[] = [],
     }
     case GadgetFieldType.BelongsTo:
     case GadgetFieldType.HasOne: {
-      // TODO: implement relationship validations
-      validator = object();
+      const childValidators = childValidatorsForField(path, field, pathsToValidate);
+      validator = object(childValidators);
       break;
     }
     case GadgetFieldType.HasManyThrough:
     case GadgetFieldType.HasMany: {
-      // TODO: implement relationship validations
-      validator = array();
+      const childValidators = childValidatorsForField(path, field, pathsToValidate);
+      validator = array(object(childValidators));
       break;
     }
 
@@ -133,6 +133,25 @@ const validatorForField = (field: FieldMetadata, pathsToValidate: string[] = [],
   validator = applyValidationsToInputField(field, validator, pathsToValidate.includes(path));
 
   return validator;
+};
+
+const childValidatorsForField = (path: string, field: FieldMetadata, pathsToValidate: string[]) => {
+  const childPaths = pathsToValidate.filter((childPath) => childPath.startsWith(`${path}.`));
+  const childValidators: Record<string, ISchema<any>> = {};
+
+  const childFields = field.configuration && "relatedModel" in field.configuration && field.configuration.relatedModel?.fields;
+
+  if (childFields) {
+    for (const childPath of childPaths) {
+      const childApiIdentifier = childPath.replace(`${path}.`, "");
+      const childField = childFields.find((field) => field.apiIdentifier === childApiIdentifier);
+
+      if (childField) {
+        childValidators[childApiIdentifier] = validatorForField(childField, childPaths, path);
+      }
+    }
+  }
+  return childValidators;
 };
 
 const applyValidationsToInputField = (field: FieldMetadata, validator: any, pathRequiresValidation: boolean) => {
@@ -267,7 +286,8 @@ export const validationSchema = (fields: FieldMetadata[], pathsToValidate: strin
   for (const field of fields) {
     validators[field.apiIdentifier] = validatorForField(field, pathsToValidate, currentPath);
   }
-  return object(validators);
+  const validator = object(validators);
+  return validator;
 };
 
 export interface AutoFileFieldValue {

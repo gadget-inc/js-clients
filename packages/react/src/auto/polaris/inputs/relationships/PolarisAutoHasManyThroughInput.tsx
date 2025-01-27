@@ -1,32 +1,29 @@
-import { Combobox, Tag } from "@shopify/polaris";
-import React from "react";
+import { Combobox } from "@shopify/polaris";
+import React, { useMemo } from "react";
 import { autoInput } from "../../../AutoInput.js";
-import { useHasOneInputController } from "../../../hooks/useHasOneController.js";
-import { getRecordAsOption, optionRecordsToLoadCount, useOptionLabelForField } from "../../../hooks/useRelatedModel.js";
+import { useHasManyThroughInputController } from "../../../hooks/useHasManyThroughController.js";
+import { optionRecordsToLoadCount, useOptionLabelForField } from "../../../hooks/useRelatedModel.js";
 import type { AutoRelationshipInputProps } from "../../../interfaces/AutoRelationshipInputProps.js";
 import { RelatedModelOptions } from "./RelatedModelOptions.js";
+import { getSelectedRelatedRecordTags } from "./SelectedRelatedRecordTags.js";
 
-export const PolarisAutoHasOneInput = autoInput((props: AutoRelationshipInputProps) => {
+export const PolarisAutoHasManyThroughInput = autoInput((props: AutoRelationshipInputProps) => {
   const { field } = props;
   const {
     fieldMetadata: { path, metadata },
     relatedModelOptions: { options, searchFilterOptions, search, pagination, relatedModel },
-    selectedRecord,
+    selectedRecords,
     errorMessage,
     isLoading,
-    onSelectRecord,
     onRemoveRecord,
-  } = useHasOneInputController(props);
+    onSelectRecord,
+  } = useHasManyThroughInputController(props);
 
   const optionLabel = useOptionLabelForField(field, props.optionLabel);
 
-  const selectedOption = selectedRecord ? getRecordAsOption(selectedRecord, optionLabel) : null;
-
-  const selectedRecordTag = selectedOption ? (
-    <Tag onRemove={() => selectedRecord && onRemoveRecord(selectedRecord)} key={`selectedRecordTag_${selectedOption.id}`}>
-      <p id={`${selectedOption.id}_${selectedOption.label}`}>{selectedOption.label ?? `id: ${selectedOption.id}`}</p>
-    </Tag>
-  ) : null;
+  const selectedRecordIds = useMemo(() => {
+    return selectedRecords.map((record) => record.id).filter((id) => !!id) as string[];
+  }, [selectedRecords]);
 
   return (
     <>
@@ -35,23 +32,28 @@ export const PolarisAutoHasOneInput = autoInput((props: AutoRelationshipInputPro
           <Combobox.TextField
             onChange={search.set}
             value={search.value}
-            label={metadata.name}
+            label={props.label ?? metadata.name}
             name={path}
             placeholder="Search"
             autoComplete="off"
-            verticalContent={selectedRecordTag}
+            verticalContent={getSelectedRelatedRecordTags({
+              selectedRecords,
+              onRemoveRecord,
+              optionLabel,
+            })}
           />
         }
         onScrolledToBottom={pagination.loadNextPage}
+        allowMultiple
         willLoadMoreOptions={pagination.hasNextPage && options.length >= optionRecordsToLoadCount}
       >
         <RelatedModelOptions
-          isLoading={isLoading}
-          errorMessage={errorMessage}
-          checkSelected={(id) => selectedRecord?.id === id}
           onSelect={onSelectRecord}
           records={relatedModel.records}
           options={searchFilterOptions}
+          checkSelected={(id) => selectedRecordIds.includes(id)}
+          errorMessage={errorMessage}
+          isLoading={isLoading}
         />
       </Combobox>
     </>
