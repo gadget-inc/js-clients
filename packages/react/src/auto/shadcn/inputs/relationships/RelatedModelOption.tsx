@@ -15,6 +15,7 @@ export type RelatedModelOptionsProps = {
   allowMultiple?: boolean;
   allowOther?: boolean;
   searchValue?: string;
+  onAddExtraOption?: (value: string) => void;
 };
 
 export const makeRelatedModelOption = (
@@ -56,7 +57,7 @@ export const makeRelatedModelOption = (
         {isLoading ? (
           <CommandEmpty>Loading...</CommandEmpty>
         ) : props.allowMultiple ? (
-          <ListMessage message={`Add "${props.searchValue}"`} />
+          <ListMessage message={`Add "${props.searchValue}"`} onSelect={() => props.onAddExtraOption?.(props.searchValue ?? "")} />
         ) : (
           <NoRecordsMessage />
         )}

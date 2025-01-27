@@ -68,9 +68,9 @@ export const makeShadcnListMessages = ({
     return null;
   }
 
-  function ListMessage(props: { message: string }) {
-    const { message } = props;
-    return <CommandEmpty>{message}</CommandEmpty>;
+  function ListMessage(props: { message: string; onSelect?: () => void }) {
+    const { message, onSelect } = props;
+    return <CommandEmpty onSelect={onSelect}>{message}</CommandEmpty>;
   }
 
   return {

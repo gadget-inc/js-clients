@@ -11,6 +11,7 @@ interface ShadcnComboInputProps extends AutoRelationshipInputProps, RelatedModel
   metadata: FieldMetadata;
   allowMultiple?: boolean;
   allowOther?: boolean;
+  onAddExtraOption?: (value: string) => void;
 }
 
 export const makeShadcnAutoComboInput = ({
@@ -68,6 +69,7 @@ export const makeShadcnAutoComboInput = ({
               {open && props.options.length > 0 ? (
                 <div className="">
                   <RelatedModelOption
+                    onAddExtraOption={props.onAddExtraOption}
                     isLoading={props.isLoading}
                     errorMessage={props.errorMessage}
                     options={props.options}

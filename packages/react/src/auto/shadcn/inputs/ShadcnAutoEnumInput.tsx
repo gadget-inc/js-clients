@@ -94,6 +94,7 @@ export const makeShadcnAutoEnumInput = ({
           key={option.id}
           value={option.id}
           onSelect={() => {
+            console.log("onSelect", option.id);
             onSelectionChange(option.id);
           }}
           accessibilityLabel={option.label}
@@ -105,22 +106,6 @@ export const makeShadcnAutoEnumInput = ({
       [selectedOptions, formatOptionText]
     );
 
-    let addExtraOptionElement = null;
-
-    if (allowOther && searchValue && !allOptions.includes(searchValue) && searchValue.trim().length > 0) {
-      addExtraOptionElement = (
-        <CommandItem
-          onSelect={() => {
-            onSelectionChange(searchValue);
-            if (allowMultiple) {
-              setSearchValue("");
-            }
-          }}
-          value={searchValue}
-        >{`Add "${searchValue}"`}</CommandItem>
-      );
-    }
-
     let emptyStateElement = null;
     if (!allowOther && (!allOptions.length || allOptions.length === 0) && searchValue) {
       emptyStateElement = <CommandEmpty>{`No options found matching "${searchValue}"`}</CommandEmpty>;
@@ -130,7 +115,7 @@ export const makeShadcnAutoEnumInput = ({
       <ShadcnComboInput
         {...props}
         options={filteredOptions.map((option) => ({ id: option, label: option }))}
-        path={""}
+        path={label ?? labelProp}
         metadata={metadata}
         label={label ?? labelProp}
         selectedRecordTag={selectedTagsElement}
@@ -143,8 +128,10 @@ export const makeShadcnAutoEnumInput = ({
         allowMultiple={allowMultiple}
         records={[]}
         renderOption={renderOption}
-        actions={addExtraOptionElement ? [addExtraOptionElement] : []}
         allowOther={allowOther}
+        onAddExtraOption={(value) => {
+          onSelectionChange(value);
+        }}
       />
     );
   }
