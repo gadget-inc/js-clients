@@ -12,75 +12,32 @@ import { makeShadcnAutoRolesInput } from "./ShadcnAutoRolesInput.js";
 import { makeShadcnAutoTextInput } from "./ShadcnAutoTextInput.js";
 import { makeShadcnAutoBelongsToInput } from "./relationships/ShadcnAutoBelongsToInput.js";
 import { makeShadcnAutoHasManyInput } from "./relationships/ShadcnAutoHasManyInput.js";
-export const makeShadcnAutoInput = ({
-  Input,
-  Label,
-  Checkbox,
-  Button,
-  Badge,
-  Command,
-  CommandInput,
-  CommandItem,
-  CommandList,
-  CommandEmpty,
-  CommandGroup,
-}: Pick<
-  ShadcnElements,
-  | "Input"
-  | "Label"
-  | "Checkbox"
-  | "Button"
-  | "Badge"
-  | "Command"
-  | "CommandInput"
-  | "CommandItem"
-  | "CommandList"
-  | "CommandEmpty"
-  | "CommandGroup"
->) => {
+export const makeShadcnAutoInput = (
+  elements: Pick<
+    ShadcnElements,
+    | "Input"
+    | "Label"
+    | "Checkbox"
+    | "Button"
+    | "Badge"
+    | "Command"
+    | "CommandInput"
+    | "CommandItem"
+    | "CommandList"
+    | "CommandEmpty"
+    | "CommandGroup"
+  >
+) => {
   const inputComponents = {
-    idInput: makeShadcnAutoIdInput({ Input, Label }),
-    textInput: makeShadcnAutoTextInput({ Input, Label }),
-    numberInput: makeShadcnAutoNumberInput({ Input, Label }),
-    encryptedInput: makeShadcnAutoEncryptedStringInput({ Input, Label, Button }),
-    passwordInput: makeShadcnAutoPasswordInput({ Input, Label, Button }),
-    booleanInput: makeShadcnAutoBooleanInput({ Checkbox, Label }),
-    belongsToInput: makeShadcnAutoBelongsToInput({
-      Label,
-      Button,
-      Badge,
-      Command,
-      CommandInput,
-      CommandItem,
-      CommandList,
-      CommandEmpty,
-      CommandGroup,
-      Checkbox,
-    }),
-    hasManyInput: makeShadcnAutoHasManyInput({
-      Label,
-      Button,
-      Badge,
-      Command,
-      CommandInput,
-      CommandItem,
-      CommandList,
-      CommandEmpty,
-      CommandGroup,
-      Checkbox,
-    }),
-    rolesInput: makeShadcnAutoRolesInput({
-      Label,
-      Button,
-      Badge,
-      Command,
-      CommandInput,
-      CommandItem,
-      CommandList,
-      CommandEmpty,
-      CommandGroup,
-      Checkbox,
-    }),
+    idInput: makeShadcnAutoIdInput(elements),
+    textInput: makeShadcnAutoTextInput(elements),
+    numberInput: makeShadcnAutoNumberInput(elements),
+    encryptedInput: makeShadcnAutoEncryptedStringInput(elements),
+    passwordInput: makeShadcnAutoPasswordInput(elements),
+    booleanInput: makeShadcnAutoBooleanInput(elements),
+    belongsToInput: makeShadcnAutoBelongsToInput(elements),
+    hasManyInput: makeShadcnAutoHasManyInput(elements),
+    rolesInput: makeShadcnAutoRolesInput(elements),
   };
 
   const ShadcnAutoInput = React.memo(function ShadcnAutoInput(props: { field: string; label?: string }) {

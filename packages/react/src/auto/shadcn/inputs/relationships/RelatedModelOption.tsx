@@ -1,17 +1,7 @@
-import React from "react";
+import React, { useMemo } from "react";
 import type { Option } from "../../../interfaces/AutoRelationshipInputProps.js";
 import type { ShadcnElements } from "../../elements.js";
 import { makeShadcnListMessages } from "./ShadcnListMessages.js";
-
-// TODO: This is Polaris's AutoSelection enum, but it might not be needed for shadcn.
-export declare enum AutoSelection {
-  /** Default active option is the first selected option. If no options are selected, defaults to first interactive option. */
-  FirstSelected = "FIRST_SELECTED",
-  /** Default active option is always the first interactive option. */
-  First = "FIRST",
-  /** Default to the manual selection pattern. */
-  None = "NONE",
-}
 
 export type RelatedModelOptionsProps = {
   options: Option[];
@@ -20,7 +10,6 @@ export type RelatedModelOptionsProps = {
   errorMessage?: string;
   checkSelected?: (id: string) => boolean;
   onSelect: (record: Record<string, any>) => void;
-  autoSelection?: AutoSelection;
   actions?: React.ReactNode[];
   renderOption?: (option: Option) => React.ReactNode;
   allowMultiple?: boolean;
@@ -28,29 +17,17 @@ export type RelatedModelOptionsProps = {
   searchValue?: string;
 };
 
-export const makeRelatedModelOption = ({
-  CommandItem,
-  CommandList,
-  CommandEmpty,
-  CommandGroup,
-  Checkbox,
-  Label,
-}: Pick<ShadcnElements, "CommandItem" | "CommandList" | "CommandEmpty" | "CommandGroup" | "Checkbox" | "Label">) => {
-  const RelatedModelOption = React.memo(function RelatedModelOption(props: RelatedModelOptionsProps) {
+export const makeRelatedModelOption = (
+  elements: Pick<ShadcnElements, "CommandItem" | "CommandList" | "CommandEmpty" | "CommandGroup" | "Checkbox" | "Label">
+) => {
+  const { CommandList, CommandEmpty, CommandGroup } = elements;
+
+  const { ListMessage, NoRecordsMessage, ShadcnSelectableOption, getErrorMessage } = makeShadcnListMessages(elements);
+
+  function RelatedModelOption(props: RelatedModelOptionsProps) {
     const { checkSelected, onSelect, isLoading, errorMessage, options, records, actions } = props;
 
-    const { ListMessage, NoRecordsMessage, ShadcnSelectableOption, getErrorMessage } = React.useMemo(
-      () =>
-        makeShadcnListMessages({
-          CommandItem,
-          CommandEmpty,
-          Checkbox,
-          Label,
-        }),
-      [CommandItem, CommandEmpty, Checkbox, Label]
-    );
-
-    const listBoxOptions = React.useMemo(
+    const listBoxOptions = useMemo(
       () => [
         ...(actions ?? []),
         ...options.map((option) => {
@@ -92,7 +69,7 @@ export const makeRelatedModelOption = ({
         )}
       </CommandList>
     );
-  });
+  }
 
   RelatedModelOption.displayName = "RelatedModelOption";
 

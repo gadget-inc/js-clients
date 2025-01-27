@@ -72,7 +72,7 @@ export const makeShadcnAutoRolesInput = ({
       callOnChange(newValues);
     };
 
-    const roleOptions = React.useMemo(
+    const roleOptions = useMemo(
       () =>
         options?.map((option) => ({
           id: option.value,
@@ -81,7 +81,7 @@ export const makeShadcnAutoRolesInput = ({
       [options]
     );
 
-    const recordOptions = React.useMemo(
+    const recordOptions = useMemo(
       () =>
         options?.map((option) => ({
           id: option.value,
@@ -107,7 +107,7 @@ export const makeShadcnAutoRolesInput = ({
       <ShadcnComboInput
         {...props}
         options={roleOptions}
-        path={""}
+        path={fieldProps.name}
         metadata={metadata}
         selectedRecordTag={
           <SelectedRecordTags

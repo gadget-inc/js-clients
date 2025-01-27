@@ -69,6 +69,7 @@ export const makeShadcnAutoHasManyInput = ({
         }}
         isLoading={isLoading}
         errorMessage={errorMessage}
+        allowMultiple={true}
         records={relatedModel.records}
       />
     );
