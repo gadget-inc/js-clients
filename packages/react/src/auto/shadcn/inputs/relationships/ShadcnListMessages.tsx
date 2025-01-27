@@ -30,6 +30,7 @@ export const makeShadcnListMessages = ({
         <CommandItem
           key={id}
           id={id}
+          selected={selected}
           className={className}
           onMouseDown={(e: React.MouseEvent) => {
             e.preventDefault();

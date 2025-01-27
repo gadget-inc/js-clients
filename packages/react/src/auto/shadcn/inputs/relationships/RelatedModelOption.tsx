@@ -24,6 +24,8 @@ export type RelatedModelOptionsProps = {
   actions?: React.ReactNode[];
   renderOption?: (option: Option) => React.ReactNode;
   allowMultiple?: boolean;
+  allowOther?: boolean;
+  searchValue?: string;
 };
 
 export const makeRelatedModelOption = ({
@@ -74,7 +76,13 @@ export const makeRelatedModelOption = ({
 
     return (
       <CommandList>
-        {isLoading ? <CommandEmpty>Loading...</CommandEmpty> : <NoRecordsMessage />}
+        {isLoading ? (
+          <CommandEmpty>Loading...</CommandEmpty>
+        ) : props.allowMultiple ? (
+          <ListMessage message={`Add "${props.searchValue}"`} />
+        ) : (
+          <NoRecordsMessage />
+        )}
         {listBoxOptions.length ? (
           <CommandGroup>{listBoxOptions}</CommandGroup>
         ) : errorMessage ? (

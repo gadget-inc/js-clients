@@ -10,6 +10,7 @@ interface ShadcnComboInputProps extends AutoRelationshipInputProps, RelatedModel
   path: string;
   metadata: FieldMetadata;
   allowMultiple?: boolean;
+  allowOther?: boolean;
 }
 
 export const makeShadcnAutoComboInput = ({
@@ -41,9 +42,15 @@ export const makeShadcnAutoComboInput = ({
     const id = `${props.path}-input`;
     const inputLabel = props.label || props.metadata.name;
 
+    const requiredIndicator = props.metadata.requiredArgumentForInput ? (
+      <span style={{ color: "var(--p-color-text-critical)" }}>*</span>
+    ) : null;
+
     return (
       <div>
-        <Label htmlFor={id}>{inputLabel}</Label>
+        <Label htmlFor={id}>
+          {inputLabel} {requiredIndicator}
+        </Label>
         <div className={`relative ${open ? "ring-1 ring-ring rounded-md border" : "border rounded-md"}`}>
           {props.selectedRecordTag && <div className="py-2 px-2 pt-2 pb-1">{props.selectedRecordTag}</div>}
           <Command className="overflow-visible z-50 h-[300px]">
@@ -68,6 +75,9 @@ export const makeShadcnAutoComboInput = ({
                     onSelect={props.onSelect}
                     checkSelected={props.checkSelected}
                     allowMultiple={props.allowMultiple}
+                    renderOption={props.renderOption}
+                    allowOther={props.allowOther}
+                    searchValue={inputValue}
                   />
                 </div>
               ) : null}
