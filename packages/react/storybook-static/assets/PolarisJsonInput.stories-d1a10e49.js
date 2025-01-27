@@ -1,5 +1,0 @@
-import{t as i}from"./en-a85f1ff1.js";import{R as r}from"./index-7c191284.js";import{P as n,t as m,F as p,u as c}from"./apis-0ee9c31a.js";import{P as l,h as d}from"./PolarisAutoForm-84285966.js";import{A as u}from"./dateTimeUtils-a817f99d.js";import"./iframe-62c9fb2a.js";import"./useResultBannerController-11e12512.js";import"./useAction-55edd440.js";import"./useEnumInputController-efe83819.js";import"./index-363833c6.js";const P=t=>r.createElement(l,{action:m.widget.create},r.createElement(d,{...t})),O={title:"Polaris/JsonInput",component:P,decorators:[(t,{parameters:f})=>r.createElement(n,{api:m},r.createElement(u,{i18n:i},r.createElement(p,{...c()},r.createElement(t,null))))],parameters:{layout:"centered"},tags:["autodocs"]},e={args:{field:"metafields"}};var o,a,s;e.parameters={...e.parameters,docs:{...(o=e.parameters)==null?void 0:o.docs,source:{originalSource:`{
-  args: {
-    field: "metafields"
-  }
-}`,...(s=(a=e.parameters)==null?void 0:a.docs)==null?void 0:s.source}}};const R=["Primary"];export{e as Primary,R as __namedExportsOrder,O as default};

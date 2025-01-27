@@ -1,5 +1,0 @@
-import{t as i}from"./en-a85f1ff1.js";import{R as r}from"./index-7c191284.js";import{F as n,u as p,P as c,t as m}from"./apis-0ee9c31a.js";import{P as l,g as u}from"./PolarisAutoForm-84285966.js";import{A as d}from"./dateTimeUtils-a817f99d.js";import"./iframe-62c9fb2a.js";import"./useResultBannerController-11e12512.js";import"./useAction-55edd440.js";import"./useEnumInputController-efe83819.js";import"./index-363833c6.js";const P=t=>r.createElement(l,{action:m.game.stadium.create},r.createElement(u,{...t})),R={title:"Polaris/FileInput",component:P,decorators:[(t,{parameters:f})=>r.createElement(d,{i18n:i},r.createElement(n,{...p()},r.createElement(c,{api:m},r.createElement(t,null))))],parameters:{layout:"centered"},tags:["autodocs"]},e={args:{field:"photo"}};var o,a,s;e.parameters={...e.parameters,docs:{...(o=e.parameters)==null?void 0:o.docs,source:{originalSource:`{
-  args: {
-    field: "photo"
-  }
-}`,...(s=(a=e.parameters)==null?void 0:a.docs)==null?void 0:s.source}}};const C=["Primary"];export{e as Primary,C as __namedExportsOrder,R as default};
