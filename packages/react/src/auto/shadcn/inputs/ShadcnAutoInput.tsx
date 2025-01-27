@@ -8,21 +8,79 @@ import { makeShadcnAutoEncryptedStringInput } from "./ShadcnAutoEncryptedStringI
 import { makeShadcnAutoIdInput } from "./ShadcnAutoIdInput.js";
 import { makeShadcnAutoNumberInput } from "./ShadcnAutoNumberInput.js";
 import { makeShadcnAutoPasswordInput } from "./ShadcnAutoPasswordInput.js";
+import { makeShadcnAutoRolesInput } from "./ShadcnAutoRolesInput.js";
 import { makeShadcnAutoTextInput } from "./ShadcnAutoTextInput.js";
-
+import { makeShadcnAutoBelongsToInput } from "./relationships/ShadcnAutoBelongsToInput.js";
+import { makeShadcnAutoHasManyInput } from "./relationships/ShadcnAutoHasManyInput.js";
 export const makeShadcnAutoInput = ({
   Input,
   Label,
   Checkbox,
   Button,
-}: Pick<ShadcnElements, "Input" | "Label" | "Checkbox" | "Button">) => {
-  const inputMakers = {
+  Badge,
+  Command,
+  CommandInput,
+  CommandItem,
+  CommandList,
+  CommandEmpty,
+  CommandGroup,
+}: Pick<
+  ShadcnElements,
+  | "Input"
+  | "Label"
+  | "Checkbox"
+  | "Button"
+  | "Badge"
+  | "Command"
+  | "CommandInput"
+  | "CommandItem"
+  | "CommandList"
+  | "CommandEmpty"
+  | "CommandGroup"
+>) => {
+  const inputComponents = {
     idInput: makeShadcnAutoIdInput({ Input, Label }),
     textInput: makeShadcnAutoTextInput({ Input, Label }),
     numberInput: makeShadcnAutoNumberInput({ Input, Label }),
     encryptedInput: makeShadcnAutoEncryptedStringInput({ Input, Label, Button }),
     passwordInput: makeShadcnAutoPasswordInput({ Input, Label, Button }),
     booleanInput: makeShadcnAutoBooleanInput({ Checkbox, Label }),
+    belongsToInput: makeShadcnAutoBelongsToInput({
+      Label,
+      Button,
+      Badge,
+      Command,
+      CommandInput,
+      CommandItem,
+      CommandList,
+      CommandEmpty,
+      CommandGroup,
+      Checkbox,
+    }),
+    hasManyInput: makeShadcnAutoHasManyInput({
+      Label,
+      Button,
+      Badge,
+      Command,
+      CommandInput,
+      CommandItem,
+      CommandList,
+      CommandEmpty,
+      CommandGroup,
+      Checkbox,
+    }),
+    rolesInput: makeShadcnAutoRolesInput({
+      Label,
+      Button,
+      Badge,
+      Command,
+      CommandInput,
+      CommandItem,
+      CommandList,
+      CommandEmpty,
+      CommandGroup,
+      Checkbox,
+    }),
   };
 
   const ShadcnAutoInput = React.memo(function ShadcnAutoInput(props: { field: string; label?: string }) {
@@ -31,22 +89,33 @@ export const makeShadcnAutoInput = ({
 
     switch (config.fieldType) {
       case FieldType.Id:
-        return inputMakers.idInput(props);
+        return inputComponents.idInput(props);
       case FieldType.String:
       case FieldType.Email:
       case FieldType.Color:
       case FieldType.Url:
-        return inputMakers.textInput(props);
+        return inputComponents.textInput(props);
       case FieldType.Number:
-        return inputMakers.numberInput(props);
+        return inputComponents.numberInput(props);
+
+      case FieldType.RoleAssignments:
+        return inputComponents.rolesInput(props);
+      case FieldType.HasOne:
+        return null;
+      case FieldType.HasMany:
+        return inputComponents.hasManyInput(props);
+      case FieldType.HasManyThrough:
+        return null;
       case FieldType.EncryptedString:
-        return inputMakers.encryptedInput(props);
+        return inputComponents.encryptedInput(props);
+      case FieldType.BelongsTo:
+        return inputComponents.belongsToInput(props);
       case FieldType.Password:
-        return inputMakers.passwordInput(props);
+        return inputComponents.passwordInput(props);
       case FieldType.Boolean:
-        return inputMakers.booleanInput(props);
+        return inputComponents.booleanInput(props);
       default:
-        return inputMakers.textInput(props);
+        return inputComponents.textInput(props);
     }
   });
 

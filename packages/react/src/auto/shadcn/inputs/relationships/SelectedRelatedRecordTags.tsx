@@ -18,11 +18,12 @@ export const makeSelectedRecordTags = ({ Badge, Button }: Pick<ShadcnElements, "
       return null;
     }
 
+    //TODO: why is the key not the id?
     return (
       <>
-        {options.map((option) => {
+        {options.map((option, index) => {
           return (
-            <Badge key={`option-${option.id}`}>
+            <Badge key={`option-${option.id || index}`} variant={"outline"}>
               {option.label}
               <Button
                 onClick={() => {
@@ -30,6 +31,7 @@ export const makeSelectedRecordTags = ({ Badge, Button }: Pick<ShadcnElements, "
                   onRemoveRecord(record ?? { id: option.id });
                 }}
                 variant="ghost"
+                aria-label={`Remove`}
                 size="icon"
               >
                 <XIcon />

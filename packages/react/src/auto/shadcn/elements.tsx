@@ -26,6 +26,26 @@ export interface AlertProps extends BaseProps {
   variant?: "default" | "destructive" | null;
 }
 
+/** The props that a card component injected into autocomponent's shadcn must support */
+export interface CardProps extends BaseProps {
+  variant?: "default" | "destructive" | null;
+}
+
+/** The props that a card header component injected into autocomponent's shadcn must support */
+export interface CardHeaderProps extends BaseProps {}
+
+/** The props that a card footer component injected into autocomponent's shadcn must support */
+export interface CardFooterProps extends BaseProps {}
+
+/** The props that a card title component injected into autocomponent's shadcn must support */
+export interface CardTitleProps extends BaseProps {}
+
+/** The props that a card description component injected into autocomponent's shadcn must support */
+export interface CardDescriptionProps extends BaseProps {}
+
+/** The props that a card content component injected into autocomponent's shadcn must support */
+export interface CardContentProps extends BaseProps {}
+
 /** The props that an alert title component injected into autocomponent's shadcn must support */
 export type AlertTitleProps = BaseProps;
 
@@ -48,6 +68,22 @@ export interface CheckboxProps extends Omit<ButtonProps, "checked" | "defaultChe
   required?: boolean;
   onCheckedChange?(checked: boolean | "indeterminate"): void;
 }
+
+/** The props that a popover component injected into autocomponent's shadcn must support */
+export interface PopoverProps extends React.HTMLAttributes<HTMLDivElement> {
+  open?: boolean;
+  defaultOpen?: boolean;
+  onOpenChange?: (open: boolean) => void;
+}
+
+/** The props that a popover anchor component injected into autocomponent's shadcn must support */
+export interface PopoverAnchorProps extends React.HTMLAttributes<HTMLDivElement> {}
+
+/** The props that a popover content component injected into autocomponent's shadcn must support */
+export interface PopoverContentProps extends React.HTMLAttributes<HTMLDivElement> {}
+
+/** The props that a popover trigger component injected into autocomponent's shadcn must support */
+export interface PopoverTriggerProps extends React.HTMLAttributes<HTMLDivElement> {}
 
 /** The props that a skeleton component injected into autocomponent's shadcn must support */
 export type SkeletonProps = Pick<React.HTMLAttributes<HTMLDivElement>, "className">;
@@ -78,6 +114,24 @@ export interface ShadcnElements {
   /** The Button component from shadcn */
   Button: React.ForwardRefExoticComponent<ButtonProps & React.RefAttributes<HTMLButtonElement>>;
 
+  /** The Card component from shadcn */
+  Card: React.ComponentType<CardProps>;
+
+  /** The CardHeader component from shadcn */
+  CardHeader: React.ComponentType<CardHeaderProps>;
+
+  /** The CardFooter component from shadcn */
+  CardFooter: React.ComponentType<CardFooterProps>;
+
+  /** The CardTitle component from shadcn */
+  CardTitle: React.ComponentType<CardTitleProps>;
+
+  /** The CardDescription component from shadcn */
+  CardDescription: React.ComponentType<CardDescriptionProps>;
+
+  /** The CardContent component from shadcn */
+  CardContent: React.ComponentType<CardContentProps>;
+
   /** The Command component from shadcn */
   //:TODO: This is a hack to get the Command component to work with the CommandItem component. please fix this.
   Command: React.ForwardRefExoticComponent<React.ComponentType<CommandProps> & React.RefAttributes<HTMLDivElement> & any>;
@@ -88,8 +142,9 @@ export interface ShadcnElements {
   /** The CommandGroup component from shadcn */
   CommandGroup: React.ComponentType<React.HTMLAttributes<HTMLDivElement>>;
 
-  /** The CommandInput component from shadcn */
-  CommandInput: React.ComponentType<React.HTMLAttributes<HTMLDivElement>>;
+  // /** The CommandInput component from shadcn */
+  // CommandInput: React.ComponentType<React.HTMLAttributes<HTMLDivElement>>;
+  CommandInput: any;
 
   /** The CommandItem component from shadcn */
   CommandItem: React.ComponentType<React.ComponentPropsWithoutRef<any>>;
@@ -111,6 +166,22 @@ export interface ShadcnElements {
 
   /** The Label component from shadcn */
   Label: React.ComponentType<LabelProps>;
+
+  //TODO: Remove these as they are not used
+  /** The Popover component from shadcn */
+  Popover: React.ComponentType<PopoverProps>;
+
+  //TODO: Remove these as they are not used
+  /** The PopoverAnchor component from shadcn */
+  PopoverAnchor: React.ComponentType<PopoverAnchorProps>;
+
+  //TODO: Remove these as they are not used
+  /** The PopoverContent component from shadcn */
+  PopoverContent: React.ComponentType<PopoverContentProps>;
+
+  /** The PopoverTrigger component from shadcn */
+  //:TODO: This is a hack to get the PopoverTrigger component to work with the Popover component. please fix this.
+  PopoverTrigger: React.ForwardRefExoticComponent<PopoverTriggerProps & React.RefAttributes<HTMLButtonElement> & any>;
 
   /** The Skeleton component from shadcn */
   Skeleton: React.ComponentType<SkeletonProps>;

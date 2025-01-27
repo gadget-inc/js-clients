@@ -3,6 +3,7 @@ import React from "react";
 import { getErrorMessage } from "../../../../utils.js";
 export const SelectableOption = (props: { label: React.ReactNode; id: string; selected: boolean }) => {
   const { label, id, selected } = props;
+
   return typeof label === "string" ? (
     <Listbox.Option key={id} value={id} selected={selected}>
       {label}

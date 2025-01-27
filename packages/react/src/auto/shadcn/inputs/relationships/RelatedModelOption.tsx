@@ -13,7 +13,7 @@ export declare enum AutoSelection {
   None = "NONE",
 }
 
-type RelatedModelOptionsProps = {
+export type RelatedModelOptionsProps = {
   options: Option[];
   records?: Record<string, any>[];
   isLoading?: boolean;
@@ -23,15 +23,17 @@ type RelatedModelOptionsProps = {
   autoSelection?: AutoSelection;
   actions?: React.ReactNode[];
   renderOption?: (option: Option) => React.ReactNode;
+  allowMultiple?: boolean;
 };
 
 export const makeRelatedModelOption = ({
-  Command,
   CommandItem,
   CommandList,
   CommandEmpty,
   CommandGroup,
-}: Pick<ShadcnElements, "Command" | "CommandItem" | "CommandList" | "CommandEmpty" | "CommandGroup">) => {
+  Checkbox,
+  Label,
+}: Pick<ShadcnElements, "CommandItem" | "CommandList" | "CommandEmpty" | "CommandGroup" | "Checkbox" | "Label">) => {
   const RelatedModelOption = React.memo(function RelatedModelOption(props: RelatedModelOptionsProps) {
     const { checkSelected, onSelect, isLoading, errorMessage, options, records, actions } = props;
 
@@ -39,10 +41,11 @@ export const makeRelatedModelOption = ({
       () =>
         makeShadcnListMessages({
           CommandItem,
-          CommandList,
           CommandEmpty,
+          Checkbox,
+          Label,
         }),
-      [CommandItem, CommandList, CommandEmpty]
+      [CommandItem, CommandEmpty, Checkbox, Label]
     );
 
     const listBoxOptions = React.useMemo(
@@ -55,6 +58,7 @@ export const makeRelatedModelOption = ({
             <ShadcnSelectableOption
               {...option}
               selected={checkSelected?.(option.id) ?? false}
+              allowMultiple={props.allowMultiple}
               onSelect={(id) => {
                 const record = records?.find((record) => record.id === id) ?? { id };
                 const { createdAt: _createdAt, updatedAt: _updatedAt, ...recordWithoutTimestamps } = record;
@@ -69,19 +73,16 @@ export const makeRelatedModelOption = ({
     );
 
     return (
-      <Command>
-        <CommandList>
-          {isLoading ? (
-            <CommandEmpty>Loading...</CommandEmpty>
-          ) : listBoxOptions.length ? (
-            <CommandGroup>{listBoxOptions}</CommandGroup>
-          ) : errorMessage ? (
-            <ListMessage message={getErrorMessage(errorMessage)} />
-          ) : (
-            <NoRecordsMessage />
-          )}
-        </CommandList>
-      </Command>
+      <CommandList>
+        {isLoading ? <CommandEmpty>Loading...</CommandEmpty> : <NoRecordsMessage />}
+        {listBoxOptions.length ? (
+          <CommandGroup>{listBoxOptions}</CommandGroup>
+        ) : errorMessage ? (
+          <ListMessage message={getErrorMessage(errorMessage)} />
+        ) : (
+          <NoRecordsMessage />
+        )}
+      </CommandList>
     );
   });
 
