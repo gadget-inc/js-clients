@@ -13,6 +13,12 @@ export type RelatedModelOptionsProps = {
   actions?: React.ReactNode[];
   renderOption?: (option: Option) => React.ReactNode;
   allowMultiple?: boolean;
+  allowOther?: boolean;
+  searchValue?: string;
+  onAddExtraOption?: (value: string) => void;
+  formatOptionText?: (option: string) => React.ReactNode;
+  setSearchValue?: (value: string) => void;
+  emptyMessage?: string;
 };
 
 export const makeRelatedModelOption = (
@@ -23,7 +29,7 @@ export const makeRelatedModelOption = (
   function RelatedModelOption(props: RelatedModelOptionsProps) {
     const { checkSelected, onSelect, isLoading, errorMessage, options, records, actions } = props;
 
-    const { ListMessage, NoRecordsMessage, ShadcnSelectableOption, getErrorMessage } = makeShadcnListMessages(elements);
+    const { ListMessage, NoRecordsMessage, ShadcnSelectableOption, getErrorMessage, AddExtraOption } = makeShadcnListMessages(elements);
 
     const listBoxOptions = useMemo(
       () => [
@@ -51,9 +57,32 @@ export const makeRelatedModelOption = (
 
     return (
       <CommandList>
-        {isLoading ? <CommandEmpty>Loading...</CommandEmpty> : <NoRecordsMessage />}
+        {isLoading ? (
+          <CommandEmpty>Loading...</CommandEmpty>
+        ) : props.allowOther ? (
+          <ListMessage
+            message={`Add "${props.searchValue}"`}
+            onSelect={() => {
+              props.onAddExtraOption?.(props.searchValue ?? "");
+              props.setSearchValue?.("");
+            }}
+          />
+        ) : (
+          <NoRecordsMessage message={props.emptyMessage} />
+        )}
         {listBoxOptions.length ? (
-          <CommandGroup>{listBoxOptions}</CommandGroup>
+          <CommandGroup>
+            {listBoxOptions}
+            {props.allowOther && props.searchValue && (
+              <AddExtraOption
+                message={`Add "${props.searchValue}"`}
+                onSelect={() => {
+                  props.onAddExtraOption?.(props.searchValue ?? "");
+                  props.setSearchValue?.("");
+                }}
+              />
+            )}
+          </CommandGroup>
         ) : errorMessage ? (
           <ListMessage message={getErrorMessage(errorMessage)} />
         ) : (

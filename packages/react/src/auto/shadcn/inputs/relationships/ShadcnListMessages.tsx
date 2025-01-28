@@ -8,6 +8,7 @@ export interface SelectableOptionProps {
   selected?: boolean;
   onSelect?: (id: string) => void;
   allowMultiple?: boolean;
+  formatOptionText?: (option: string) => React.ReactNode;
 }
 
 export const makeShadcnListMessages = ({
@@ -21,8 +22,30 @@ export const makeShadcnListMessages = ({
     return <CommandEmpty>{message}</CommandEmpty>;
   }
 
+  function AddExtraOption(props: { message?: string; onSelect?: () => void }) {
+    const { message = "Add extra option", onSelect } = props;
+    return (
+      <CommandItem
+        onMouseDown={(e: React.MouseEvent) => {
+          e.preventDefault();
+          e.stopPropagation();
+        }}
+        onKeyDown={(e: React.KeyboardEvent) => {
+          if (e.key === "Enter") {
+            onSelect?.();
+          }
+        }}
+        onSelect={() => {
+          onSelect?.();
+        }}
+      >
+        {message}
+      </CommandItem>
+    );
+  }
+
   function ShadcnSelectableOption(props: SelectableOptionProps) {
-    const { label, id, selected, onSelect, allowMultiple } = props;
+    const { label, id, selected, onSelect, allowMultiple, formatOptionText } = props;
     const className = selected ? "bg-muted" : "";
 
     if (typeof label === "string") {
@@ -30,6 +53,7 @@ export const makeShadcnListMessages = ({
         <CommandItem
           key={id}
           id={id}
+          selected={selected}
           className={className}
           onMouseDown={(e: React.MouseEvent) => {
             e.preventDefault();
@@ -54,9 +78,11 @@ export const makeShadcnListMessages = ({
                 }}
               />
               <Label htmlFor={id} className={"flex-1 ml-2"}>
-                {label}
+                {formatOptionText ? formatOptionText(label) : label}
               </Label>
             </>
+          ) : formatOptionText ? (
+            formatOptionText(label)
           ) : (
             label
           )}
@@ -64,18 +90,20 @@ export const makeShadcnListMessages = ({
       );
     }
 
-    //TODO: ask for an example of what a listbox action looks like
-    /**
-     *  <Listbox.Action key={id} value={id} selected={selected}>
-          {label}
-        </Listbox.Action>
-     */
     return null;
   }
 
-  function ListMessage(props: { message: string }) {
-    const { message } = props;
-    return <CommandEmpty>{message}</CommandEmpty>;
+  function ListMessage(props: { message: string; onSelect?: () => void }) {
+    const { message, onSelect } = props;
+    return (
+      <CommandEmpty
+        onMouseDown={(e: React.MouseEvent) => {
+          onSelect?.();
+        }}
+      >
+        {message}
+      </CommandEmpty>
+    );
   }
 
   return {
@@ -83,5 +111,6 @@ export const makeShadcnListMessages = ({
     NoRecordsMessage,
     ShadcnSelectableOption,
     getErrorMessage,
+    AddExtraOption,
   };
 };
