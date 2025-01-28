@@ -177,7 +177,7 @@ describe("ShadcnAutoBelongsToInput", () => {
   };
 });
 
-export const getInputFieldsWithCustomValidations = () => {
+const getInputFieldsWithCustomValidations = () => {
   return [
     {
       name: "Widget",
