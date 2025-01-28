@@ -17,6 +17,8 @@ export type RelatedModelOptionsProps = {
   searchValue?: string;
   onAddExtraOption?: (value: string) => void;
   formatOptionText?: (option: string) => React.ReactNode;
+  setSearchValue?: (value: string) => void;
+  emptyMessage?: string;
 };
 
 export const makeRelatedModelOption = (
@@ -57,10 +59,16 @@ export const makeRelatedModelOption = (
       <CommandList>
         {isLoading ? (
           <CommandEmpty>Loading...</CommandEmpty>
-        ) : props.allowMultiple ? (
-          <ListMessage message={`Add "${props.searchValue}"`} onSelect={() => props.onAddExtraOption?.(props.searchValue ?? "")} />
+        ) : props.allowOther ? (
+          <ListMessage
+            message={`Add "${props.searchValue}"`}
+            onSelect={() => {
+              props.onAddExtraOption?.(props.searchValue ?? "");
+              props.setSearchValue?.("");
+            }}
+          />
         ) : (
-          <NoRecordsMessage />
+          <NoRecordsMessage message={props.emptyMessage} />
         )}
         {listBoxOptions.length ? (
           <CommandGroup>{listBoxOptions}</CommandGroup>

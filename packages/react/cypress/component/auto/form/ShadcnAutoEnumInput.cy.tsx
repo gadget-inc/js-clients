@@ -1,14 +1,25 @@
 import React from "react";
-import { apiTriggerOnly } from "../../../../spec/auto/support/Triggers.js";
+import { elements } from "../../../../spec/auto/shadcn-defaults/index.js";
 import { getStadiumRecord } from "../../../../spec/auto/support/stadiumModel.js";
-import { PolarisAutoForm } from "../../../../src/auto/polaris/PolarisAutoForm.js";
+import { makeAutocomponents } from "../../../../src/auto/shadcn/index.js";
 import { api } from "../../../support/api.js";
-import { PolarisWrapper } from "../../../support/auto.js";
+import { ShadcnWrapper } from "../../../support/auto.js";
+import { baseModelActionMetadata, baseTagsInputField, baseTypeInputField } from "./PolarisAutoEnumInput.cy.js";
 
-describe("PolarisEnumInput", () => {
+const ShadcnAutoForm = makeAutocomponents(elements).AutoForm;
+
+describe("ShadcnAutoEnumInput", () => {
   const blurComboboxes = () => {
-    cy.get("#type-combobox-textfield").blur({ force: true });
-    cy.get("#tags-combobox-textfield").blur({ force: true });
+    cy.get("body").click({ force: true });
+  };
+
+  const checkBadgeWithButton = (value: string) => {
+    cy.get(`div`)
+      .contains(value)
+      .should("exist")
+      .within(() => {
+        cy.get(`button`).should("exist").and("be.visible");
+      });
   };
 
   beforeEach(() => {
@@ -58,32 +69,31 @@ describe("PolarisEnumInput", () => {
   it("should include the enum options in the dropdown", () => {
     cy.mockModelActionMetadata(api, baseModelActionMetadata);
 
-    cy.mountWithWrapper(<PolarisAutoForm action={api.game.stadium.create} />, PolarisWrapper);
-    cy.get("#type-combobox-textfield").click();
-    cy.contains("football").should("exist");
-    cy.contains("basketball").should("exist");
-    cy.contains("baseball").should("exist");
-    // Close the "type" dropdown
-    blurComboboxes();
+    cy.mountWithWrapper(<ShadcnAutoForm action={api.game.stadium.create} />, ShadcnWrapper);
+    cy.get(`[cmdk-input]`).first().click(); // Open dropdown
+    cy.get('[cmdk-item][data-value="football"]').should("exist");
+    cy.get('[cmdk-item][data-value="basketball"]').should("exist");
+    cy.get('[cmdk-item][data-value="baseball"]').should("exist");
+    blurComboboxes(); // Close dropdown
 
-    cy.get("#tags-combobox-textfield").click();
-    cy.contains("hello").should("exist");
-    cy.contains("world").should("exist");
+    cy.get(`[cmdk-input]`).eq(1).click(); // Open dropdown for tags
+    cy.get('[cmdk-item][data-value="hello"]').should("exist");
+    cy.get('[cmdk-item][data-value="world"]').should("exist");
   });
 
   describe("searching for an option", () => {
     it("should show the selected value in the dropdown for single select enum", () => {
       cy.mockModelActionMetadata(api, baseModelActionMetadata);
 
-      cy.mountWithWrapper(<PolarisAutoForm action={api.game.stadium.create} />, PolarisWrapper);
-      cy.get("#type-combobox-textfield").click();
-      cy.contains("football").click();
-      cy.get(".Polaris-InlineStack").should("contain", "football");
+      cy.mountWithWrapper(<ShadcnAutoForm action={api.game.stadium.create} />, ShadcnWrapper);
+      cy.get("[cmdk-input]").first().click();
+      cy.get('[cmdk-item][data-value="football"]').click();
+      cy.get('[role="presentation"]').should("contain", "football");
 
-      cy.get("#tags-combobox-textfield").click();
-      cy.contains("hello").parent().parent().click();
-      cy.get(".Polaris-InlineStack").should("contain", "hello");
-      cy.get(".Polaris-InlineStack").should("not.contain", "world");
+      cy.get("[cmdk-input]").eq(1).click();
+      cy.get('[cmdk-item][data-value="hello"]').click();
+      cy.get('[cmdk-item][data-value="hello"][data-selected="true"]').should("exist");
+      cy.get('[cmdk-item][data-value="world"][data-selected="true"]').should("not.exist");
 
       blurComboboxes();
 
@@ -99,27 +109,30 @@ describe("PolarisEnumInput", () => {
     it("should allow searching for options in the dropdown", () => {
       cy.mockModelActionMetadata(api, baseModelActionMetadata);
 
-      cy.mountWithWrapper(<PolarisAutoForm action={api.game.stadium.create} />, PolarisWrapper);
+      cy.mountWithWrapper(<ShadcnAutoForm action={api.game.stadium.create} />, ShadcnWrapper);
       // For single select enums
-      cy.get("#type-combobox-textfield").type("foot");
+      cy.get("[cmdk-input]").first().type("foot");
 
       // The dropdown items should be filtered
-      cy.contains("football").should("exist");
-      cy.contains("basketball").should("not.exist");
-      cy.contains("baseball").should("not.exist");
+      cy.get('[cmdk-item][data-value="football"]').should("exist");
+      cy.get('[cmdk-item][data-value="basketball"]').should("not.exist");
+      cy.get('[cmdk-item][data-value="baseball"]').should("not.exist");
 
-      cy.contains("football").click();
-      cy.get(".Polaris-InlineStack").should("contain", "football");
+      cy.get('[cmdk-item][data-value="football"]').click();
+      cy.get('[role="presentation"]').should("contain", "football");
 
       // For multi-select enums
-      cy.get("#tags-combobox-textfield").type("hel");
+      cy.get("[cmdk-input]").eq(1).type("hel");
 
       // The dropdown items should be filtered
-      cy.contains("hello").should("exist");
-      cy.contains("world").should("not.exist");
+      cy.get('[cmdk-item][data-value="hello"]').should("exist");
+      cy.get('[cmdk-item][data-value="world"]').should("not.exist");
 
-      cy.contains("hello").parent().parent().click();
-      cy.get(".Polaris-InlineStack").should("contain", "hello");
+      cy.get('[cmdk-item][data-value="hello"]').click();
+      // Verify that the chip/tag appears after selection
+      checkBadgeWithButton("hello");
+
+      cy.get("[cmdk-empty]").should("contain", 'Add "hel"');
 
       blurComboboxes();
 
@@ -171,14 +184,16 @@ describe("PolarisEnumInput", () => {
 
       cy.mockModelActionMetadata(api, mockedMetadata);
 
-      cy.mountWithWrapper(<PolarisAutoForm action={api.game.stadium.create} />, PolarisWrapper);
-      cy.get("#type-combobox-textfield").type("extra");
+      cy.mountWithWrapper(<ShadcnAutoForm action={api.game.stadium.create} />, ShadcnWrapper);
+      cy.get("[cmdk-input]").first().type("extra");
       cy.contains(`Add "extra"`).click();
-      cy.get(".Polaris-InlineStack").should("contain", "extra");
 
-      cy.get("#tags-combobox-textfield").type("more");
+      checkBadgeWithButton("extra");
+
+      cy.get("[cmdk-input]").eq(1).type("more");
       cy.contains(`Add "more"`).click();
-      cy.get(".Polaris-InlineStack").should("contain", "more");
+
+      checkBadgeWithButton("more");
 
       blurComboboxes();
 
@@ -226,14 +241,14 @@ describe("PolarisEnumInput", () => {
         ],
       });
 
-      cy.mountWithWrapper(<PolarisAutoForm action={api.game.stadium.create} />, PolarisWrapper);
-      cy.get("#type-combobox-textfield").type("hello");
+      cy.mountWithWrapper(<ShadcnAutoForm action={api.game.stadium.create} />, ShadcnWrapper);
+      cy.get("[cmdk-input]").first().type("hello");
       cy.contains(`Add "hello"`).should("not.exist");
       cy.contains(`No options found matching "hello"`).should("exist");
 
       blurComboboxes();
 
-      cy.get("#tags-combobox-textfield").type("nope");
+      cy.get("[cmdk-input]").eq(1).type("nope");
       cy.contains(`Add "nope"`).should("not.exist");
       cy.contains(`No options found matching "nope"`).should("exist");
     });
@@ -264,10 +279,12 @@ describe("PolarisEnumInput", () => {
         },
       });
 
-      cy.mountWithWrapper(<PolarisAutoForm action={api.game.stadium.update} findBy="42" />, PolarisWrapper);
-      cy.get(".Polaris-InlineStack").should("contain", "football");
-      cy.get(".Polaris-InlineStack").should("contain", "hello");
-      cy.get(".Polaris-InlineStack").should("contain", "world");
+      cy.mountWithWrapper(<ShadcnAutoForm action={api.game.stadium.update} findBy="42" />, ShadcnWrapper);
+      checkBadgeWithButton("football");
+
+      checkBadgeWithButton("hello");
+
+      checkBadgeWithButton("world");
     });
 
     it("should be able to clear the value", () => {
@@ -279,13 +296,13 @@ describe("PolarisEnumInput", () => {
         },
       });
 
-      cy.mountWithWrapper(<PolarisAutoForm action={api.game.stadium.update} findBy="42" />, PolarisWrapper);
-      cy.get("#type-combobox-textfield").click();
+      cy.mountWithWrapper(<ShadcnAutoForm action={api.game.stadium.update} findBy="42" />, ShadcnWrapper);
+      cy.get("[cmdk-input]").first().click();
       cy.get('[aria-label="Remove football"]').click();
 
       blurComboboxes();
 
-      cy.get("#tags-combobox-textfield").click();
+      cy.get("[cmdk-input]").eq(1).click();
       cy.get('[aria-label="Remove hello"]').click();
       cy.get('[aria-label="Remove world"]').click();
 
@@ -299,80 +316,3 @@ describe("PolarisEnumInput", () => {
     });
   });
 });
-
-export const baseTypeInputField = {
-  name: "Type",
-  apiIdentifier: "type",
-  fieldType: "Enum",
-  requiredArgumentForInput: false,
-  sortable: true,
-  filterable: true,
-  configuration: {
-    __typename: "GadgetEnumConfig",
-    fieldType: "Enum",
-    validations: [],
-    allowMultiple: false,
-    allowOther: true,
-    options: [
-      {
-        name: "football",
-      },
-      {
-        name: "basketball",
-      },
-      {
-        name: "baseball",
-      },
-    ],
-  },
-};
-
-export const baseTagsInputField = {
-  name: "Tags",
-  apiIdentifier: "tags",
-  fieldType: "Enum",
-  requiredArgumentForInput: false,
-  sortable: true,
-  filterable: true,
-  configuration: {
-    __typename: "GadgetEnumConfig",
-    fieldType: "Enum",
-    validations: [],
-    allowMultiple: true,
-    allowOther: true,
-    options: [
-      {
-        name: "hello",
-      },
-      {
-        name: "world",
-      },
-    ],
-  },
-};
-
-export const baseModelActionMetadata = {
-  modelName: "Stadium",
-  modelApiIdentifier: "stadium",
-  action: {
-    apiIdentifier: "create",
-    operatesWithRecordIdentity: false,
-  },
-  triggers: apiTriggerOnly,
-  inputFields: [
-    {
-      name: "Stadium",
-      apiIdentifier: "stadium",
-      fieldType: "Object",
-      requiredArgumentForInput: false,
-      configuration: {
-        __typename: "GadgetObjectFieldConfig",
-        fieldType: "Object",
-        validations: [],
-        name: null,
-        fields: [baseTypeInputField, baseTagsInputField],
-      },
-      __typename: "GadgetObjectField",
-    },
-  ],
-};

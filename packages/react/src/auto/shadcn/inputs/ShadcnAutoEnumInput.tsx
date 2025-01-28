@@ -57,7 +57,7 @@ export const makeShadcnAutoEnumInput = ({
           {selectedOptions.map((tag) => (
             <Badge key={`option-${tag}`} variant={"outline"}>
               {tag}
-              <Button variant="ghost" size="icon" onClick={() => onSelectionChange(tag)}>
+              <Button variant="ghost" size="icon" aria-label={`Remove ${tag}`} onClick={() => onSelectionChange(tag)}>
                 <XIcon />
               </Button>
             </Badge>
@@ -88,11 +88,6 @@ export const makeShadcnAutoEnumInput = ({
       [searchValue]
     );
 
-    let emptyStateElement = null;
-    if (!allowOther && (!allOptions.length || allOptions.length === 0) && searchValue) {
-      emptyStateElement = <CommandEmpty>{`No options found matching "${searchValue}"`}</CommandEmpty>;
-    }
-
     return (
       <ShadcnComboInput
         {...props}
@@ -108,6 +103,7 @@ export const makeShadcnAutoEnumInput = ({
         checkSelected={(id) => {
           return selectedOptions.includes(id);
         }}
+        id={`${props.field}-combobox-textfield`}
         errorMessage={errorMessage}
         allowMultiple={allowMultiple}
         records={[]}
@@ -116,6 +112,7 @@ export const makeShadcnAutoEnumInput = ({
           onSelectionChange(value);
         }}
         formatOptionText={formatOptionText}
+        emptyMessage={`No options found matching `}
       />
     );
   }

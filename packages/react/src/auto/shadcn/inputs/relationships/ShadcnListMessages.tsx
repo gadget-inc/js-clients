@@ -73,7 +73,15 @@ export const makeShadcnListMessages = ({
 
   function ListMessage(props: { message: string; onSelect?: () => void }) {
     const { message, onSelect } = props;
-    return <CommandEmpty onSelect={onSelect}>{message}</CommandEmpty>;
+    return (
+      <CommandEmpty
+        onMouseDown={(e: React.MouseEvent) => {
+          onSelect?.();
+        }}
+      >
+        {message}
+      </CommandEmpty>
+    );
   }
 
   return {

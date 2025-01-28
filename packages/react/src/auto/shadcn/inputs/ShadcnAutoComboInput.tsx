@@ -8,11 +8,13 @@ import { makeRelatedModelOption } from "./relationships/RelatedModelOption.js";
 interface ShadcnComboInputProps extends AutoRelationshipInputProps, RelatedModelOptionsProps {
   selectedRecordTag: React.JSX.Element | null;
   path: string;
+  id?: string; // This is used to set the id of the input field
   metadata: FieldMetadata;
   allowMultiple?: boolean;
   allowOther?: boolean;
   onAddExtraOption?: (value: string) => void;
   formatOptionText?: (option: string) => React.ReactNode;
+  emptyMessage?: string;
 }
 
 export const makeShadcnAutoComboInput = ({
@@ -41,12 +43,10 @@ export const makeShadcnAutoComboInput = ({
     const inputRef = useRef<HTMLInputElement>(null);
     const [open, setOpen] = useState(false);
     const [inputValue, setInputValue] = useState("");
-    const id = `${props.path}-input`;
+    const id = props.id || `${props.path}-input`;
     const inputLabel = props.label || props.metadata.name;
 
-    const requiredIndicator = props.metadata.requiredArgumentForInput ? (
-      <span style={{ color: "var(--p-color-text-critical)" }}>*</span>
-    ) : null;
+    const requiredIndicator = props.metadata.requiredArgumentForInput ? <span className="text-red-500">*</span> : null;
 
     return (
       <div>
@@ -59,6 +59,7 @@ export const makeShadcnAutoComboInput = ({
             <CommandInput
               name={props.path}
               ref={inputRef}
+              id={id}
               value={inputValue}
               onValueChange={setInputValue}
               onBlur={() => setOpen(false)}
@@ -81,7 +82,9 @@ export const makeShadcnAutoComboInput = ({
                     renderOption={props.renderOption}
                     allowOther={props.allowOther}
                     searchValue={inputValue}
+                    setSearchValue={setInputValue}
                     formatOptionText={props.formatOptionText}
+                    emptyMessage={props.emptyMessage ? `${props.emptyMessage} "${inputValue}"` : ""}
                   />
                 </div>
               ) : null}
