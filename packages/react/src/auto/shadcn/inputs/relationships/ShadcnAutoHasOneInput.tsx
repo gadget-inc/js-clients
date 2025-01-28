@@ -3,8 +3,8 @@ import React from "react";
 import { autoInput } from "../../../AutoInput.js";
 import { useHasOneInputController } from "../../../hooks/useHasOneController.js";
 import { getRecordAsOption, useOptionLabelForField } from "../../../hooks/useRelatedModel.js";
-import { AutoRelationshipInputProps } from "../../../interfaces/AutoRelationshipInputProps.js";
-import { ShadcnElements } from "../../elements.js";
+import type { AutoRelationshipInputProps } from "../../../interfaces/AutoRelationshipInputProps.js";
+import type { ShadcnElements } from "../../elements.js";
 import { makeShadcnAutoComboInput } from "../ShadcnAutoComboInput.js";
 
 export const makeShadcnAutoHasOneInput = ({

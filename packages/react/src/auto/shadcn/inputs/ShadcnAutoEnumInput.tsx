@@ -3,7 +3,7 @@ import React, { useCallback } from "react";
 import type { Control } from "../../../useActionForm.js";
 import { autoInput } from "../../AutoInput.js";
 import { useEnumInputController } from "../../hooks/useEnumInputController.js";
-import { ShadcnElements } from "../elements.js";
+import type { ShadcnElements } from "../elements.js";
 import { makeShadcnAutoComboInput } from "./ShadcnAutoComboInput.js";
 
 export const makeShadcnAutoEnumInput = ({
@@ -92,9 +92,9 @@ export const makeShadcnAutoEnumInput = ({
       <ShadcnComboInput
         {...props}
         options={filteredOptions.map((option) => ({ id: option, label: option }))}
-        path={label ?? labelProp}
+        path={labelProp ?? label}
         metadata={metadata}
-        label={label ?? labelProp}
+        label={labelProp ?? label}
         selectedRecordTag={selectedTagsElement}
         onSelect={(option) => {
           onSelectionChange(option.id);
