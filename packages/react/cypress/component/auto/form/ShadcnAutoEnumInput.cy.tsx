@@ -1,10 +1,10 @@
 import React from "react";
 import { elements } from "../../../../spec/auto/shadcn-defaults/index.js";
+import { apiTriggerOnly } from "../../../../spec/auto/support/Triggers.js";
 import { getStadiumRecord } from "../../../../spec/auto/support/stadiumModel.js";
 import { makeAutocomponents } from "../../../../src/auto/shadcn/index.js";
 import { api } from "../../../support/api.js";
 import { ShadcnWrapper } from "../../../support/auto.js";
-import { baseModelActionMetadata, baseTagsInputField, baseTypeInputField } from "./PolarisAutoEnumInput.cy.js";
 
 const ShadcnAutoForm = makeAutocomponents(elements).AutoForm;
 
@@ -316,3 +316,80 @@ describe("ShadcnAutoEnumInput", () => {
     });
   });
 });
+
+const baseTypeInputField = {
+  name: "Type",
+  apiIdentifier: "type",
+  fieldType: "Enum",
+  requiredArgumentForInput: false,
+  sortable: true,
+  filterable: true,
+  configuration: {
+    __typename: "GadgetEnumConfig",
+    fieldType: "Enum",
+    validations: [],
+    allowMultiple: false,
+    allowOther: true,
+    options: [
+      {
+        name: "football",
+      },
+      {
+        name: "basketball",
+      },
+      {
+        name: "baseball",
+      },
+    ],
+  },
+};
+
+const baseTagsInputField = {
+  name: "Tags",
+  apiIdentifier: "tags",
+  fieldType: "Enum",
+  requiredArgumentForInput: false,
+  sortable: true,
+  filterable: true,
+  configuration: {
+    __typename: "GadgetEnumConfig",
+    fieldType: "Enum",
+    validations: [],
+    allowMultiple: true,
+    allowOther: true,
+    options: [
+      {
+        name: "hello",
+      },
+      {
+        name: "world",
+      },
+    ],
+  },
+};
+
+const baseModelActionMetadata = {
+  modelName: "Stadium",
+  modelApiIdentifier: "stadium",
+  action: {
+    apiIdentifier: "create",
+    operatesWithRecordIdentity: false,
+  },
+  triggers: apiTriggerOnly,
+  inputFields: [
+    {
+      name: "Stadium",
+      apiIdentifier: "stadium",
+      fieldType: "Object",
+      requiredArgumentForInput: false,
+      configuration: {
+        __typename: "GadgetObjectFieldConfig",
+        fieldType: "Object",
+        validations: [],
+        name: null,
+        fields: [baseTypeInputField, baseTagsInputField],
+      },
+      __typename: "GadgetObjectField",
+    },
+  ],
+};

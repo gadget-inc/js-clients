@@ -300,7 +300,7 @@ describe("PolarisEnumInput", () => {
   });
 });
 
-export const baseTypeInputField = {
+const baseTypeInputField = {
   name: "Type",
   apiIdentifier: "type",
   fieldType: "Enum",
@@ -327,7 +327,7 @@ export const baseTypeInputField = {
   },
 };
 
-export const baseTagsInputField = {
+const baseTagsInputField = {
   name: "Tags",
   apiIdentifier: "tags",
   fieldType: "Enum",
@@ -351,7 +351,7 @@ export const baseTagsInputField = {
   },
 };
 
-export const baseModelActionMetadata = {
+const baseModelActionMetadata = {
   modelName: "Stadium",
   modelApiIdentifier: "stadium",
   action: {
