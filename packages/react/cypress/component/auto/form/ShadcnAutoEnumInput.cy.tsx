@@ -132,7 +132,7 @@ describe("ShadcnAutoEnumInput", () => {
       // Verify that the chip/tag appears after selection
       checkBadgeWithButton("hello");
 
-      cy.get("[cmdk-empty]").should("contain", 'Add "hel"');
+      cy.contains('Add "hel"').should("exist");
 
       blurComboboxes();
 
