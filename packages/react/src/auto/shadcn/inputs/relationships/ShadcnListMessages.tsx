@@ -22,6 +22,28 @@ export const makeShadcnListMessages = ({
     return <CommandEmpty>{message}</CommandEmpty>;
   }
 
+  function AddExtraOption(props: { message?: string; onSelect?: () => void }) {
+    const { message = "Add extra option", onSelect } = props;
+    return (
+      <CommandItem
+        onMouseDown={(e: React.MouseEvent) => {
+          e.preventDefault();
+          e.stopPropagation();
+        }}
+        onKeyDown={(e: React.KeyboardEvent) => {
+          if (e.key === "Enter") {
+            onSelect?.();
+          }
+        }}
+        onSelect={() => {
+          onSelect?.();
+        }}
+      >
+        {message}
+      </CommandItem>
+    );
+  }
+
   function ShadcnSelectableOption(props: SelectableOptionProps) {
     const { label, id, selected, onSelect, allowMultiple, formatOptionText } = props;
     const className = selected ? "bg-muted" : "";
@@ -89,5 +111,6 @@ export const makeShadcnListMessages = ({
     NoRecordsMessage,
     ShadcnSelectableOption,
     getErrorMessage,
+    AddExtraOption,
   };
 };

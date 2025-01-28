@@ -33,8 +33,6 @@ export const makeShadcnAutoHasOneInput = ({
     Checkbox,
   });
 
-  // TODO: There is an update on this so it is commented out in PolarisAutoHasOneInput.tsx for now
-
   function ShadcnAutoHasOneInput(props: AutoRelationshipInputProps) {
     const { field } = props;
     const {
