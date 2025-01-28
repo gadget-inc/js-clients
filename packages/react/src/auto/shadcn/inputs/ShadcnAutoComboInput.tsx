@@ -15,6 +15,7 @@ interface ShadcnComboInputProps extends AutoRelationshipInputProps, RelatedModel
   onAddExtraOption?: (value: string) => void;
   formatOptionText?: (option: string) => React.ReactNode;
   emptyMessage?: string;
+  defaultValue?: string;
 }
 
 export const makeShadcnAutoComboInput = ({
@@ -42,7 +43,7 @@ export const makeShadcnAutoComboInput = ({
   function ShadcnAutoComboInput(props: ShadcnComboInputProps) {
     const inputRef = useRef<HTMLInputElement>(null);
     const [open, setOpen] = useState(false);
-    const [inputValue, setInputValue] = useState("");
+    const [inputValue, setInputValue] = useState(props.defaultValue || "");
     const id = props.id || `${props.path}-input`;
     const inputLabel = props.label || props.metadata.name;
 
