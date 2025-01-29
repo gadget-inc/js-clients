@@ -5,6 +5,7 @@ import { elements } from "../../../../spec/auto/shadcn-defaults/index.js";
 import { apiTriggerOnly } from "../../../../spec/auto/support/Triggers.js";
 import { PolarisAutoForm } from "../../../../src/auto/polaris/PolarisAutoForm.js";
 import { PolarisAutoDateTimePicker } from "../../../../src/auto/polaris/inputs/PolarisAutoDateTimePicker.js";
+import { makeAutoForm } from "../../../../src/auto/shadcn/ShadcnAutoForm.js";
 import { makeShadcnAutoDateTimePicker } from "../../../../src/auto/shadcn/inputs/ShadcnAutoDateTimePicker.js";
 import { api } from "../../../support/api.js";
 import { describeForEachAutoAdapter } from "../../../support/auto.js";
@@ -15,14 +16,28 @@ const localTz = Intl.DateTimeFormat().resolvedOptions().timeZone;
 const dateInLocalTZ = utcToZonedTime(baseDate, localTz);
 
 const ShadcnAutoDateTimePicker = makeShadcnAutoDateTimePicker(elements);
+const ShadcnAutoForm = makeAutoForm(elements);
 
-const TestComponentWithCustomOnChange = () => {
+const TestComponentWithCustomOnChange = ({ suiteName }: { suiteName: string }) => {
   const [date, setDate] = useState(baseDate);
-  return (
-    <PolarisAutoForm action={api.widget.create}>
-      <PolarisAutoDateTimePicker id="test" value={date} onChange={setDate} field="startsAt" />
-    </PolarisAutoForm>
-  );
+
+  if (suiteName === SUITE_NAMES.POLARIS) {
+    return (
+      <PolarisAutoForm action={api.widget.create}>
+        <PolarisAutoDateTimePicker id="test" value={date} onChange={setDate} field="startsAt" />
+      </PolarisAutoForm>
+    );
+  }
+
+  if (suiteName === SUITE_NAMES.SHADCN) {
+    return (
+      <ShadcnAutoForm action={api.widget.create}>
+        <ShadcnAutoDateTimePicker id="test" value={date} onChange={setDate} field="startsAt" />
+      </ShadcnAutoForm>
+    );
+  }
+
+  throw new Error("Invalid suite name");
 };
 
 const AutoDateTimePicker = (props: {
@@ -175,114 +190,179 @@ describeForEachAutoAdapter("AutoFormDateTimePicker", ({ name, adapter: { AutoFor
         });
     });
 
-    // describe("date and time", () => {
-    //   it("can show with a blank current value", () => {
-    //     mockMetadataResponse();
-    //     const onChangeSpy = cy.spy().as("onChangeSpy");
-    //     cy.mountWithWrapper(
-    //       <AutoForm action={api.widget.create}>
-    //         <AutoDateTimePicker suiteName={name} id="test" includeTime onChange={onChangeSpy} field="startsAt" />
-    //       </AutoForm>,
-    //       wrapper
-    //     );
-    //     cy.wait("@ModelCreateActionMetadata");
-    //     // Test is flaky without waiting for the DOM to load
-    //     cy.wait(100);
-    //     cy.get("#test-date").should("have.value", "");
-    //     cy.get("#test-time").should("have.value", "");
-    //   });
+    describe("date and time", () => {
+      it("can show with a blank current value", () => {
+        mockMetadataResponse();
+        const onChangeSpy = cy.spy().as("onChangeSpy");
+        cy.mountWithWrapper(
+          <AutoForm action={api.widget.create}>
+            <AutoDateTimePicker suiteName={name} id="test" includeTime onChange={onChangeSpy} field="startsAt" />
+          </AutoForm>,
+          wrapper
+        );
+        cy.wait("@ModelCreateActionMetadata");
+        // Test is flaky without waiting for the DOM to load
+        cy.wait(100);
 
-    //   it(
-    //     "can show the default field value from the metadata",
-    //     // eslint-disable-next-line
-    //     // @ts-ignore - This test passes in isolation but is flakey when run with the rest of the file
-    //     { retries: 2 },
-    //     () => {
-    //       mockMetadataResponse({ startsAt: "2024-07-10T04:00:00.000Z" });
-    //       cy.mountWithWrapper(
-    //         <AutoForm action={api.widget.create}>
-    //           <AutoDateTimePicker suiteName={name} id="test" includeTime field="startsAt" />
-    //         </AutoForm>,
-    //         wrapper
-    //       );
-    //       cy.wait("@ModelCreateActionMetadata");
-    //       cy.get("#test-date").should("have.value", "2024-07-10");
-    //       cy.get("#test-time").should("have.value", "4:00 AM");
-    //     }
-    //   );
+        if (name === SUITE_NAMES.POLARIS) {
+          cy.get("#test-date").should("have.value", "");
+          cy.get("#test-time").should("have.value", "");
+        }
 
-    //   it("can show the default field value from the defaultValues prop", () => {
-    //     mockMetadataResponse();
-    //     cy.mountWithWrapper(
-    //       <AutoForm action={api.widget.create} defaultValues={{ widget: { startsAt: "2024-07-10T04:00:00.000Z" } }}>
-    //         <AutoDateTimePicker suiteName={name} id="test" includeTime field="startsAt" />
-    //       </AutoForm>,
-    //       wrapper
-    //     );
-    //     cy.wait("@ModelCreateActionMetadata");
-    //     cy.get("#test-date").should("have.value", "2024-07-10");
-    //     cy.get("#test-time").should("have.value", "4:00 AM");
-    //   });
+        if (name === SUITE_NAMES.SHADCN) {
+          cy.get("#test-date").contains("YYYY-MM-DD hh:mm aa");
+          cy.get("#test-date").click();
+          cy.get("#test-time").should("have.value", "");
+        }
+      });
 
-    //   it("can show the current value", () => {
-    //     mockMetadataResponse();
-    //     const onChangeSpy = cy.spy().as("onChangeSpy");
-    //     cy.mountWithWrapper(
-    //       <AutoForm action={api.widget.create}>
-    //         <AutoDateTimePicker suiteName={name} id="test" includeTime value={baseDate} onChange={onChangeSpy} field="startsAt" />
-    //       </AutoForm>,
-    //       wrapper
-    //     );
-    //     cy.wait("@ModelCreateActionMetadata");
-    //     cy.get("#test-date").should("have.value", format(dateInLocalTZ, "yyyy-MM-dd"));
-    //     cy.get("#test-time").should("have.value", format(dateInLocalTZ, "K:m aa"));
-    //   });
+      it(
+        "can show the default field value from the metadata",
+        // eslint-disable-next-line
+        // @ts-ignore - This test passes in isolation but is flakey when run with the rest of the file
+        { retries: 2 },
+        () => {
+          mockMetadataResponse({ startsAt: "2024-07-10T04:00:00.000Z" });
+          cy.mountWithWrapper(
+            <AutoForm action={api.widget.create}>
+              <AutoDateTimePicker suiteName={name} id="test" includeTime field="startsAt" />
+            </AutoForm>,
+            wrapper
+          );
+          cy.wait("@ModelCreateActionMetadata");
 
-    //   it("can change the date", () => {
-    //     mockMetadataResponse();
-    //     const onChangeSpy = cy.spy().as("onChangeSpy");
-    //     cy.mountWithWrapper(
-    //       <AutoForm action={api.widget.create}>
-    //         <AutoDateTimePicker suiteName={name} id="test" includeTime value={baseDate} onChange={onChangeSpy} field="startsAt" />
-    //       </AutoForm>,
-    //       wrapper
-    //     );
-    //     cy.wait("@ModelCreateActionMetadata");
-    //     cy.get("#test-date").click();
-    //     cy.get(`[aria-label='Thursday March 4 2021']`).click();
-    //     // eslint-disable-next-line jest/valid-expect-in-promise
-    //     cy.get("@onChangeSpy")
-    //       .should("have.been.called")
-    //       .then(() => {
-    //         expect(onChangeSpy.getCalls()[0].args[0].toISOString()).equal(new Date("2021-03-04T11:23:00.000Z").toISOString());
-    //       });
-    //   });
+          if (name === SUITE_NAMES.POLARIS) {
+            cy.get("#test-date").should("have.value", "2024-07-10");
+            cy.get("#test-time").should("have.value", "4:00 AM");
+          }
 
-    //   it("can enter an invalid time and show an error", () => {
-    //     mockMetadataResponse();
-    //     const onChangeSpy = cy.spy().as("onChangeSpy");
-    //     cy.mountWithWrapper(
-    //       <AutoForm action={api.widget.create}>
-    //         <AutoDateTimePicker suiteName={name} id="test" includeTime value={baseDate} onChange={onChangeSpy} field="startsAt" />
-    //       </AutoForm>,
-    //       wrapper
-    //     );
-    //     cy.wait("@ModelCreateActionMetadata");
-    //     cy.get("#test-time").click().clear().type("foo");
-    //     cy.get("body").click();
-    //     cy.contains("Invalid time format");
-    //     cy.get("#test-time").click().clear().type("12:21 AM");
-    //     cy.contains("Invalid time format").should("not.exist");
-    //   });
+          if (name === SUITE_NAMES.SHADCN) {
+            cy.get("#test-date").contains("2024-07-10");
+            cy.get("#test-date").click();
+            cy.get("#test-time").should("have.value", "4:00 AM");
+          }
+        }
+      );
 
-    // it("can show the selected date", () => {
-    //   mockMetadataResponse();
-    //   cy.mountWithWrapper(<TestComponentWithCustomOnChange />, PolarisWrapper);
-    //   cy.wait("@ModelCreateActionMetadata");
-    //   cy.get("#test-date").click();
-    //   cy.get(`[aria-label='Thursday March 4 2021']`).click();
-    //   cy.get("#test-date").click();
-    //   cy.get(`[aria-label='Thursday March 4 2021']`).should("have.attr", "aria-pressed", "true");
-    // });
+      it("can show the default field value from the defaultValues prop", () => {
+        mockMetadataResponse();
+        cy.mountWithWrapper(
+          <AutoForm action={api.widget.create} defaultValues={{ widget: { startsAt: "2024-07-10T04:00:00.000Z" } }}>
+            <AutoDateTimePicker suiteName={name} id="test" includeTime field="startsAt" />
+          </AutoForm>,
+          wrapper
+        );
+        cy.wait("@ModelCreateActionMetadata");
+
+        if (name === SUITE_NAMES.POLARIS) {
+          cy.get("#test-date").should("have.value", "2024-07-10");
+          cy.get("#test-time").should("have.value", "4:00 AM");
+        }
+
+        if (name === SUITE_NAMES.SHADCN) {
+          cy.get("#test-date").contains("2024-07-10");
+          cy.get("#test-date").click();
+          cy.get("#test-time").should("have.value", "4:00 AM");
+        }
+      });
+
+      it("can show the current value", () => {
+        mockMetadataResponse();
+        const onChangeSpy = cy.spy().as("onChangeSpy");
+        cy.mountWithWrapper(
+          <AutoForm action={api.widget.create}>
+            <AutoDateTimePicker suiteName={name} id="test" includeTime value={baseDate} onChange={onChangeSpy} field="startsAt" />
+          </AutoForm>,
+          wrapper
+        );
+        cy.wait("@ModelCreateActionMetadata");
+
+        if (name === SUITE_NAMES.POLARIS) {
+          cy.get("#test-date").should("have.value", format(dateInLocalTZ, "yyyy-MM-dd"));
+          cy.get("#test-time").should("have.value", format(dateInLocalTZ, "K:m aa"));
+        }
+
+        if (name === SUITE_NAMES.SHADCN) {
+          cy.get("#test-date").contains(format(dateInLocalTZ, "yyyy-MM-dd"));
+          cy.get("#test-date").click();
+          cy.get("#test-time").should("have.value", format(dateInLocalTZ, "K:m aa"));
+        }
+      });
+
+      it("can change the date", () => {
+        mockMetadataResponse();
+        const onChangeSpy = cy.spy().as("onChangeSpy");
+        cy.mountWithWrapper(
+          <AutoForm action={api.widget.create}>
+            <AutoDateTimePicker suiteName={name} id="test" includeTime value={baseDate} onChange={onChangeSpy} field="startsAt" />
+          </AutoForm>,
+          wrapper
+        );
+        cy.wait("@ModelCreateActionMetadata");
+        cy.get("#test-date").click();
+
+        if (name === SUITE_NAMES.POLARIS) {
+          cy.get(`[aria-label='Thursday March 4 2021']`).click();
+        }
+
+        if (name === SUITE_NAMES.SHADCN) {
+          cy.get(`[aria-label='Thursday, March 4th, 2021']`).click();
+        }
+        // eslint-disable-next-line jest/valid-expect-in-promise
+        cy.get("@onChangeSpy")
+          .should("have.been.called")
+          .then(() => {
+            expect(onChangeSpy.getCalls()[0].args[0].toISOString()).equal(new Date("2021-03-04T11:23:00.000Z").toISOString());
+          });
+      });
+
+      it("can enter an invalid time and show an error", () => {
+        mockMetadataResponse();
+        const onChangeSpy = cy.spy().as("onChangeSpy");
+        cy.mountWithWrapper(
+          <AutoForm action={api.widget.create}>
+            <AutoDateTimePicker suiteName={name} id="test" includeTime value={baseDate} onChange={onChangeSpy} field="startsAt" />
+          </AutoForm>,
+          wrapper
+        );
+        cy.wait("@ModelCreateActionMetadata");
+
+        if (name === SUITE_NAMES.POLARIS) {
+          cy.get("#test-time").click().clear().type("foo");
+          cy.get("body").click();
+
+          cy.contains("Invalid time format");
+          cy.get("#test-time").click().clear().type("12:21 AM");
+          cy.contains("Invalid time format").should("not.exist");
+        }
+
+        if (name === SUITE_NAMES.SHADCN) {
+          cy.get("#test-date").click();
+          cy.get("#test-time").click().clear().type("foo");
+          cy.contains("Please use format: 12:00 PM");
+          cy.get("#test-time").click().clear().type("12:21 AM");
+          cy.contains("Please use format: 12:00 PM").should("not.exist");
+        }
+      });
+
+      it("can show the selected date", () => {
+        mockMetadataResponse();
+        cy.mountWithWrapper(<TestComponentWithCustomOnChange suiteName={name} />, wrapper);
+        cy.wait("@ModelCreateActionMetadata");
+        cy.get("#test-date").click();
+
+        if (name === SUITE_NAMES.POLARIS) {
+          cy.get(`[aria-label='Thursday March 4 2021']`).click();
+          cy.get(`[aria-label='Thursday March 4 2021']`).should("have.attr", "aria-pressed", "true");
+        }
+
+        cy.get("#test-date").click();
+
+        if (name === SUITE_NAMES.SHADCN) {
+          cy.get(`[aria-label='Thursday, March 4th, 2021']`).click();
+          cy.get(`[aria-label='Thursday, March 4th, 2021, selected']`).should("exist");
+        }
+      });
+    });
   });
 });

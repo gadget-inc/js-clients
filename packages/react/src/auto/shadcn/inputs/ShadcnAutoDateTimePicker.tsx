@@ -153,7 +153,13 @@ export const makeShadcnAutoDateTimePicker = ({
         </PopoverTrigger>
         <PopoverContent className="w-auto p-0">
           <div className="flex flex-row flex-nowrap">
-            <Calendar mode="single" selected={date} onSelect={handleDateSelect} initialFocus />
+            <Calendar
+              mode="single"
+              defaultMonth={localTime ?? date}
+              selected={localTime ?? date}
+              onSelect={handleDateSelect}
+              initialFocus
+            />
             {(props.includeTime ?? (config as GadgetDateTimeConfig).includeTime) && (
               <div className="flex flex-col p-4 bg-white border-l">
                 <Label htmlFor={props.id ? `${props.id}-time` : undefined} data-testid={props.id ? `${props.id}-time` : undefined}>
