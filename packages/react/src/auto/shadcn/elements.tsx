@@ -31,15 +31,6 @@ export interface CardProps extends BaseProps {
   variant?: "default" | "destructive" | null;
 }
 
-/** The props that a calendar component injected into autocomponent's shadcn must support */
-export interface CalendarProps extends BaseProps {
-  mode?: "single" | "multiple" | "range" | null;
-  selected?: Date | Range;
-  onSelect?: (date: Date | undefined) => void;
-  initialFocus?: boolean;
-  defaultMonth?: Date;
-}
-
 /** The props that a card header component injected into autocomponent's shadcn must support */
 export type CardHeaderProps = BaseProps;
 
@@ -135,7 +126,7 @@ export interface ShadcnElements {
   Card: React.ComponentType<CardProps>;
 
   /** The Calendar component from shadcn */
-  Calendar: React.ComponentType<CalendarProps>;
+  Calendar: React.ComponentType<any>;
 
   /** The CardHeader component from shadcn */
   CardHeader: React.ComponentType<CardHeaderProps>;
@@ -204,7 +195,7 @@ export interface ShadcnElements {
   PopoverTrigger: React.ForwardRefExoticComponent<PopoverTriggerProps & React.RefAttributes<HTMLButtonElement> & any>;
 
   /** The ScrollArea component from shadcn */
-  ScrollArea: React.ComponentType<ScrollAreaProps>;
+  ScrollArea: React.ForwardRefExoticComponent<ScrollAreaProps & React.RefAttributes<HTMLDivElement> & any>;
 
   /** The ScrollBar component from shadcn */
   ScrollBar: React.ComponentType<ScrollBarProps>;
