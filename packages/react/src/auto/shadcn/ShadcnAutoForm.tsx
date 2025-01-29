@@ -32,6 +32,12 @@ export const makeAutoForm = <Elements extends ShadcnElements>({
   CommandList,
   CommandEmpty,
   CommandGroup,
+  Calendar,
+  Popover,
+  PopoverTrigger,
+  PopoverContent,
+  ScrollArea,
+  ScrollBar,
 }: Elements) => {
   const ShadcnAutoInput = makeShadcnAutoInput({
     Input,
@@ -45,6 +51,12 @@ export const makeAutoForm = <Elements extends ShadcnElements>({
     CommandList,
     CommandEmpty,
     CommandGroup,
+    Calendar,
+    Popover,
+    PopoverTrigger,
+    PopoverContent,
+    ScrollArea,
+    ScrollBar,
   });
   const ShadcnAutoSubmit = makeShadcnAutoSubmit({ Button });
   const { ShadcnSubmitSuccessfulBanner, ShadcnSubmitErrorBanner } = makeSubmitResultBanner({

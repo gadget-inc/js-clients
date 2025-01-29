@@ -1,3 +1,5 @@
+import type { DateTimeState } from "./auto/polaris/inputs/PolarisAutoTimePicker.js";
+
 /**
  * Formats a date object in a "yyyy-MM-dd" format
  * Ex: 2000-01-30
@@ -372,4 +374,91 @@ const hackyOffset = (dtf: Intl.DateTimeFormat, date: Date) => {
     parseInt(parsed[5], 10),
     parseInt(parsed[6], 10),
   ];
+};
+
+/**
+ * Regex to validate time format
+ * @example
+ *    timeFormatRegex.test("12:00 AM") => true
+ *    timeFormatRegex.test("12:00 PM") => true
+ *    timeFormatRegex.test("12:00") => false
+ */
+export const timeFormatRegex = new RegExp(/((1[0-2]|0?[1-9]):([0-5][0-9]) ?([AaPp][Mm]))/);
+
+/**
+ * Copies the time from one date to another
+ * @param to
+ * @param input
+ */
+
+export const copyTime = (to: Date, input: Date) => {
+  to.setHours(input.getHours());
+  to.setMinutes(input.getMinutes());
+  to.setSeconds(input.getSeconds());
+  to.setMilliseconds(input.getMilliseconds());
+};
+
+/**
+ * Gets the date time object from a date
+ * @param dateTime
+ * @returns
+ */
+export const getDateTimeObjectFromDate = (dateTime: Date) => {
+  return {
+    month: dateTime.getMonth(),
+    year: dateTime.getFullYear(),
+    day: dateTime.getDay(),
+    hour: dateTime.getHours() > 12 ? (dateTime.getHours() - 12).toString() : dateTime.getHours().toString(),
+    minute: dateTime.getMinutes().toString().padStart(2, "0"),
+    ampm: dateTime.getHours() >= 12 ? "PM" : "AM",
+  };
+};
+
+/**
+ * Gets the date from a date time object
+ * @param dateTime
+ * @returns
+ */
+export const getDateFromDateTimeObject = (dateTime: DateTimeState) => {
+  const date = new Date();
+  date.setMonth(dateTime.month);
+  date.setFullYear(dateTime.year);
+  date.setDate(dateTime.day);
+  date.setHours(dateTime.ampm === "PM" ? parseInt(dateTime.hour) + 12 : parseInt(dateTime.hour));
+  date.setMinutes(parseInt(dateTime.minute));
+  date.setSeconds(0);
+  date.setMilliseconds(0);
+  return date;
+};
+
+export const formatDate = (date: Date): string => {
+  // Extract year, month, and day
+  const year = date.getFullYear();
+
+  // Months are zero-indexed in JavaScript, so add 1 and pad with leading zero if necessary
+  const month = String(date.getMonth() + 1).padStart(2, "0");
+
+  // Get the day of the month and pad with leading zero if necessary
+  const day = String(date.getDate()).padStart(2, "0");
+
+  // Extract hours in 24-hour format
+  let hours = date.getHours();
+
+  // Determine AM or PM
+  const ampm = hours >= 12 ? "PM" : "AM";
+
+  // Convert to 12-hour format
+  hours = hours % 12;
+  hours = hours ? hours : 12; // If hours is 0, set to 12
+
+  // Pad hours with leading zero if necessary
+  const hoursStr = String(hours).padStart(2, "0");
+
+  // Extract minutes and pad with leading zero if necessary
+  const minutes = String(date.getMinutes()).padStart(2, "0");
+
+  // Construct the formatted date string
+  const formattedDate = `${year}-${month}-${day} ${hoursStr}:${minutes} ${ampm}`;
+
+  return formattedDate;
 };

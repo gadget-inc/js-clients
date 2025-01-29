@@ -31,6 +31,14 @@ export interface CardProps extends BaseProps {
   variant?: "default" | "destructive" | null;
 }
 
+/** The props that a calendar component injected into autocomponent's shadcn must support */
+export interface CalendarProps extends BaseProps {
+  mode?: "single" | "multiple" | "range" | null;
+  selected?: Date | Range;
+  onSelect?: (date: Date | undefined) => void;
+  initialFocus?: boolean;
+}
+
 /** The props that a card header component injected into autocomponent's shadcn must support */
 export type CardHeaderProps = BaseProps;
 
@@ -60,6 +68,14 @@ export type InputProps = React.InputHTMLAttributes<HTMLInputElement>;
 
 /** The props that a label component injected into autocomponent's shadcn must support */
 export type LabelProps = React.LabelHTMLAttributes<HTMLLabelElement>;
+
+/** The props that a scroll area component injected into autocomponent's shadcn must support */
+export type ScrollAreaProps = React.HTMLAttributes<HTMLDivElement>;
+
+/** The props that a scroll bar component injected into autocomponent's shadcn must support */
+export interface ScrollBarProps extends React.HTMLAttributes<HTMLDivElement> {
+  orientation?: "vertical" | "horizontal";
+}
 
 /** The props that a checkbox component injected into autocomponent's shadcn must support */
 export interface CheckboxProps extends Omit<ButtonProps, "checked" | "defaultChecked"> {
@@ -116,6 +132,9 @@ export interface ShadcnElements {
 
   /** The Card component from shadcn */
   Card: React.ComponentType<CardProps>;
+
+  /** The Calendar component from shadcn */
+  Calendar: React.ComponentType<CalendarProps>;
 
   /** The CardHeader component from shadcn */
   CardHeader: React.ComponentType<CardHeaderProps>;
@@ -182,6 +201,12 @@ export interface ShadcnElements {
   /** The PopoverTrigger component from shadcn */
   //:TODO: This is a hack to get the PopoverTrigger component to work with the Popover component. please fix this.
   PopoverTrigger: React.ForwardRefExoticComponent<PopoverTriggerProps & React.RefAttributes<HTMLButtonElement> & any>;
+
+  /** The ScrollArea component from shadcn */
+  ScrollArea: React.ComponentType<ScrollAreaProps>;
+
+  /** The ScrollBar component from shadcn */
+  ScrollBar: React.ComponentType<ScrollBarProps>;
 
   /** The Skeleton component from shadcn */
   Skeleton: React.ComponentType<SkeletonProps>;
