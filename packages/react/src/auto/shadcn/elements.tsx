@@ -37,6 +37,7 @@ export interface CalendarProps extends BaseProps {
   selected?: Date | Range;
   onSelect?: (date: Date | undefined) => void;
   initialFocus?: boolean;
+  defaultMonth?: Date;
 }
 
 /** The props that a card header component injected into autocomponent's shadcn must support */

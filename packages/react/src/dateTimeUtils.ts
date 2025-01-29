@@ -462,3 +462,15 @@ export const formatDate = (date: Date): string => {
 
   return formattedDate;
 };
+
+/**
+ * Gets the time string from a date time object
+ * @param dateTime
+ * @returns
+ */
+export const getTimeString = (dateTime: DateTimeState) => {
+  if (parseInt(dateTime.hour, 10) === 0) {
+    return `12:${dateTime.minute.padStart(2, "0")} AM`;
+  }
+  return `${dateTime.hour}:${dateTime.minute.padStart(2, "0")} ${dateTime.ampm}`;
+};

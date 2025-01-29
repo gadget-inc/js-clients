@@ -1,11 +1,18 @@
 import { CalendarIcon } from "@radix-ui/react-icons";
 import React, { useCallback, useMemo, useState } from "react";
-import { copyTime, formatDate, getDateTimeObjectFromDate, isValidDate, timeFormatRegex, zonedTimeToUtc } from "../../../dateTimeUtils.js";
+import {
+  copyTime,
+  formatDate,
+  getDateTimeObjectFromDate,
+  getTimeString,
+  isValidDate,
+  timeFormatRegex,
+  zonedTimeToUtc,
+} from "../../../dateTimeUtils.js";
 import type { GadgetDateTimeConfig } from "../../../internal/gql/graphql.js";
 import { useController } from "../../../useActionForm.js";
 import { autoInput } from "../../AutoInput.js";
 import { useFieldMetadata } from "../../hooks/useFieldMetadata.js";
-import { getTimeString } from "../../polaris/inputs/PolarisAutoTimePicker.js";
 import type { ShadcnElements } from "../elements.js";
 
 export interface Range {

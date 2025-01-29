@@ -2,7 +2,14 @@ import type { TextFieldProps } from "@shopify/polaris";
 import { Box, Icon, Listbox, Popover, Scrollable, Text, TextField } from "@shopify/polaris";
 import { ClockIcon } from "@shopify/polaris-icons";
 import React, { useEffect, useState } from "react";
-import { copyTime, getDateFromDateTimeObject, getDateTimeObjectFromDate, timeFormatRegex, zonedTimeToUtc } from "../../../dateTimeUtils.js";
+import {
+  copyTime,
+  getDateFromDateTimeObject,
+  getDateTimeObjectFromDate,
+  getTimeString,
+  timeFormatRegex,
+  zonedTimeToUtc,
+} from "../../../dateTimeUtils.js";
 import type { ControllerRenderProps, FieldValues } from "../../../useActionForm.js";
 
 const createMarkup = (
@@ -44,13 +51,6 @@ const createMarkup = (
 const hoursArr = Array.from({ length: 12 }, (_, i) => (i + 1).toString().padStart(2, "0"));
 const minsArr = Array.from({ length: 60 }, (_, i) => i.toString().padStart(2, "0"));
 const ampmArr = ["AM", "PM"];
-
-export const getTimeString = (dateTime: DateTimeState) => {
-  if (parseInt(dateTime.hour, 10) === 0) {
-    return `12:${dateTime.minute.padStart(2, "0")} AM`;
-  }
-  return `${dateTime.hour}:${dateTime.minute.padStart(2, "0")} ${dateTime.ampm}`;
-};
 
 export interface DateTimeState {
   month: number;
