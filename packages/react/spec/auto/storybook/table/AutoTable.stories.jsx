@@ -1,40 +1,32 @@
-import { Button, Checkbox } from "@shopify/polaris";
+import { AppProvider, Button, Checkbox } from "@shopify/polaris";
 import { DeleteIcon } from "@shopify/polaris-icons";
+import translations from "@shopify/polaris/locales/en.json";
 import React, { useEffect } from "react";
-import { Provider } from "../../../src/GadgetProvider.tsx";
-import { makeAutocomponents } from "../../../src/auto/shadcn/index.ts";
-import { useAction } from "../../../src/useAction.ts";
-import { testApi as api } from "../../apis.ts";
+import { Provider } from "../../../../src/GadgetProvider.tsx";
+import { useAction } from "../../../../src/useAction.ts";
+import { testApi as api } from "../../../apis.ts";
 import { StorybookErrorBoundary } from "../StorybookErrorBoundary.tsx";
-import { elements } from "./index.tsx";
-
-const ShadcnAutoTable = makeAutocomponents(elements).AutoTable;
+import { SelectableDesignSystemAutoTableStory } from "./SelectableDesignSystemAutoTableStory.tsx";
 
 const CustomEmptyStateMarkup = <p>This is a custom empty state. Bazinga.</p>;
 
 // More on how to set up stories at: https://storybook.js.org/docs/writing-stories#default-export
 export default {
-  title: "Shadcn/AutoTable",
-  component: ShadcnAutoTable,
+  title: "AutoTable/Table",
+  component: SelectableDesignSystemAutoTableStory,
 
   decorators: [
     // 👇 Defining the decorator in the preview file applies it to all stories
     (Story) => {
       // 👇 Make it configurable by reading the theme value from parameters
+
       return (
         <Provider api={api}>
-          <StorybookErrorBoundary>
-            <div
-              style={{
-                height: "100%",
-                width: "100%",
-                backgroundColor: "#ffffff",
-                padding: "16px",
-              }}
-            >
+          <AppProvider i18n={translations}>
+            <StorybookErrorBoundary>
               <Story />
-            </div>
-          </StorybookErrorBoundary>
+            </StorybookErrorBoundary>
+          </AppProvider>
         </Provider>
       );
     },
@@ -64,12 +56,7 @@ export const Namespaced = {
 export const SelectFields = {
   args: {
     model: api.autoTableTest,
-    columns: [
-      //
-      "str",
-      "createdAt",
-      "num",
-    ],
+    columns: ["str", "num"],
   },
 };
 

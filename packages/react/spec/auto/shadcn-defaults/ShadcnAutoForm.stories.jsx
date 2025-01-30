@@ -1,10 +1,10 @@
 import React, { useState } from "react";
 import { Provider } from "../../../src/GadgetProvider.tsx";
+import { makeAutocomponents } from "../../../src/auto/shadcn/index.ts";
 import { FormProvider, useForm } from "../../../src/useActionForm.ts";
 import { testApi as api } from "../../apis.ts";
-import { StorybookErrorBoundary } from "../StorybookErrorBoundary.tsx";
-import { makeAutocomponents } from "../../../src/auto/shadcn/index.ts";
-import { elements } from "./index";
+import { StorybookErrorBoundary } from "../storybook/StorybookErrorBoundary.tsx";
+import { elements } from "./index.tsx";
 
 import { makeShadcnAutoInput } from "../../../src/auto/shadcn/inputs/ShadcnAutoInput.tsx";
 import { makeShadcnAutoSubmit } from "../../../src/auto/shadcn/submit/ShadcnAutoSubmit.tsx";
@@ -25,7 +25,7 @@ export default {
         <div style={{ width: "600px", backgroundColor: "white" }}>
           <Provider api={api}>
             <FormProvider {...useForm()}>
-              <StorybookErrorBoundary >
+              <StorybookErrorBoundary>
                 <elements.Card className="p-6 w-full bg-white shadow-lg rounded-lg">
                   <Story />
                 </elements.Card>
@@ -45,8 +45,6 @@ export default {
   tags: ["autodocs"],
   // More on argTypes: https://storybook.js.org/docs/api/argtypes
 };
-
-
 
 export const Primary = {
   args: {
@@ -117,7 +115,6 @@ export const IncludedWithDefaultValues = {
     defaultValues: { widget: { name: "Name from default when there is no field input component" } },
   },
 };
-
 
 const ConditionalAppearingAutoInput = () => {
   const [showMoreInputs, setShowMoreInputs] = useState(false);
