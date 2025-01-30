@@ -28,9 +28,10 @@ export const makeShadcnAutoComboInput = ({
   CommandEmpty,
   CommandGroup,
   Checkbox,
+  ScrollArea,
 }: Pick<
   ShadcnElements,
-  "Command" | "CommandInput" | "Label" | "CommandItem" | "CommandList" | "CommandEmpty" | "CommandGroup" | "Checkbox" | "CommandGroup"
+  "Command" | "CommandInput" | "Label" | "CommandItem" | "CommandList" | "CommandEmpty" | "CommandGroup" | "Checkbox" | "ScrollArea"
 >) => {
   const RelatedModelOption = makeRelatedModelOption({
     CommandItem,
@@ -72,22 +73,29 @@ export const makeShadcnAutoComboInput = ({
             <div className="relative">
               {open && props.options.length > 0 ? (
                 <div className="">
-                  <RelatedModelOption
-                    onAddExtraOption={props.onAddExtraOption}
-                    isLoading={props.isLoading}
-                    errorMessage={props.errorMessage}
-                    options={props.options}
-                    records={props.records}
-                    onSelect={props.onSelect}
-                    checkSelected={props.checkSelected}
-                    allowMultiple={props.allowMultiple}
-                    renderOption={props.renderOption}
-                    allowOther={props.allowOther}
-                    searchValue={inputValue}
-                    setSearchValue={setInputValue}
-                    formatOptionText={props.formatOptionText}
-                    emptyMessage={props.emptyMessage ? `${props.emptyMessage} "${inputValue}"` : ""}
-                  />
+                  <ScrollArea
+                    onScrollEnded={() => {
+                      console.log("scroll ended");
+                    }}
+                    className="h-[300px]"
+                  >
+                    <RelatedModelOption
+                      onAddExtraOption={props.onAddExtraOption}
+                      isLoading={props.isLoading}
+                      errorMessage={props.errorMessage}
+                      options={props.options}
+                      records={props.records}
+                      onSelect={props.onSelect}
+                      checkSelected={props.checkSelected}
+                      allowMultiple={props.allowMultiple}
+                      renderOption={props.renderOption}
+                      allowOther={props.allowOther}
+                      searchValue={inputValue}
+                      setSearchValue={setInputValue}
+                      formatOptionText={props.formatOptionText}
+                      emptyMessage={props.emptyMessage ? `${props.emptyMessage} "${inputValue}"` : ""}
+                    />
+                  </ScrollArea>
                 </div>
               ) : null}
             </div>

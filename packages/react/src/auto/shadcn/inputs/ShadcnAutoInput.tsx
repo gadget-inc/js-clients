@@ -7,6 +7,7 @@ import { makeShadcnAutoBooleanInput } from "./ShadcnAutoBooleanInput.js";
 import { makeShadcnAutoDateTimePicker } from "./ShadcnAutoDateTimePicker.js";
 import { makeShadcnAutoEncryptedStringInput } from "./ShadcnAutoEncryptedStringInput.js";
 import { makeShadcnAutoEnumInput } from "./ShadcnAutoEnumInput.js";
+import { makeShadcnAutoFileInput } from "./ShadcnAutoFileInput.js";
 import { makeShadcnAutoIdInput } from "./ShadcnAutoIdInput.js";
 import { makeShadcnAutoJSONInput } from "./ShadcnAutoJSONInput.js";
 import { makeShadcnAutoNumberInput } from "./ShadcnAutoNumberInput.js";
@@ -53,6 +54,7 @@ export const makeShadcnAutoInput = (
     dateTimeInput: makeShadcnAutoDateTimePicker(elements),
     jsonInput: makeShadcnAutoJSONInput(elements),
     richTextInput: makeShadcnAutoRichTextInput(elements),
+    fileInput: makeShadcnAutoFileInput(elements),
   };
 
   const ShadcnAutoInput = React.memo(function ShadcnAutoInput(props: { field: string; label?: string }) {
@@ -79,6 +81,8 @@ export const makeShadcnAutoInput = (
         return inputComponents.rolesInput(props);
       case FieldType.HasOne:
         return null;
+      case FieldType.File:
+        return inputComponents.fileInput(props);
       case FieldType.HasMany:
         return inputComponents.hasManyInput(props);
       case FieldType.HasManyThrough:
