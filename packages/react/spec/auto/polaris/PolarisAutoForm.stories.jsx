@@ -7,7 +7,7 @@ import { PolarisAutoInput } from "../../../src/auto/polaris/inputs/PolarisAutoIn
 import { PolarisAutoSubmit } from "../../../src/auto/polaris/submit/PolarisAutoSubmit.tsx";
 import { FormProvider, useForm } from "../../../src/useActionForm.ts";
 import { testApi as api } from "../../apis.ts";
-import { StorybookErrorBoundary } from "../StorybookErrorBoundary.tsx";
+import { StorybookErrorBoundary } from "../storybook/StorybookErrorBoundary.tsx";
 
 // More on how to set up stories at: https://storybook.js.org/docs/writing-stories#default-export
 export default {

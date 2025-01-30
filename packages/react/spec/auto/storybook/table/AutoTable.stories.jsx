@@ -1,19 +1,19 @@
-import { AppProvider, BlockStack, Box, Button, Checkbox, LegacyCard } from "@shopify/polaris";
+import { AppProvider, Button, Checkbox } from "@shopify/polaris";
 import { DeleteIcon } from "@shopify/polaris-icons";
 import translations from "@shopify/polaris/locales/en.json";
 import React, { useEffect } from "react";
-import { Provider } from "../../../src/GadgetProvider.tsx";
-import { PolarisAutoTable } from "../../../src/auto/polaris/PolarisAutoTable.tsx";
-import { useAction } from "../../../src/useAction.ts";
-import { testApi as api } from "../../apis.ts";
+import { Provider } from "../../../../src/GadgetProvider.tsx";
+import { useAction } from "../../../../src/useAction.ts";
+import { testApi as api } from "../../../apis.ts";
 import { StorybookErrorBoundary } from "../StorybookErrorBoundary.tsx";
+import { SelectableDesignSystemAutoTableStory } from "./SelectableDesignSystemAutoTableStory.tsx";
 
 const CustomEmptyStateMarkup = <p>This is a custom empty state. Bazinga.</p>;
 
 // More on how to set up stories at: https://storybook.js.org/docs/writing-stories#default-export
 export default {
-  title: "Polaris/AutoTable",
-  component: PolarisAutoTable,
+  title: "AutoTable/Table",
+  component: SelectableDesignSystemAutoTableStory,
 
   decorators: [
     // 👇 Defining the decorator in the preview file applies it to all stories
@@ -23,17 +23,9 @@ export default {
       return (
         <Provider api={api}>
           <AppProvider i18n={translations}>
-            <div style={{ width: "100%" }}>
-              <Box paddingBlockEnd="400">
-                <BlockStack gap="200">
-                  <LegacyCard>
-                    <StorybookErrorBoundary>
-                      <Story />
-                    </StorybookErrorBoundary>
-                  </LegacyCard>
-                </BlockStack>
-              </Box>
-            </div>
+            <StorybookErrorBoundary>
+              <Story />
+            </StorybookErrorBoundary>
           </AppProvider>
         </Provider>
       );

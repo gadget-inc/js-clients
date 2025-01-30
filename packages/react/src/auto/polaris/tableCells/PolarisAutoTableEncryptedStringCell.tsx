@@ -1,6 +1,7 @@
 import { Icon, Tag, Text } from "@shopify/polaris";
 import { HideIcon, ViewIcon } from "@shopify/polaris-icons";
 import React, { useState } from "react";
+import { defaultPlaceholderHiddenText } from "../../shared/defaults.js";
 
 export const PolarisAutoTableEncryptedStringCell = (props: { value: any }) => {
   const { value } = props;
@@ -28,12 +29,14 @@ export const PolarisAutoTableEncryptedStringCell = (props: { value: any }) => {
   );
 
   return (
-    <div style={{ display: "flex" }}>
-      <Tag>
-        <Text as="span" tone="subdued" truncate>
-          {isShown ? value : "•".repeat(value.length)}
-        </Text>
-      </Tag>
+    <div style={{ display: "flex", width: "100%" }}>
+      <div style={{ minWidth: 0, flex: 1 }}>
+        <Tag>
+          <Text as="span" tone="subdued" truncate>
+            {isShown ? value : defaultPlaceholderHiddenText}
+          </Text>
+        </Tag>
+      </div>
       {showHideToggleButton}
     </div>
   );
