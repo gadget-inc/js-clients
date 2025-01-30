@@ -8,12 +8,14 @@ import { makeShadcnAutoDateTimePicker } from "./ShadcnAutoDateTimePicker.js";
 import { makeShadcnAutoEncryptedStringInput } from "./ShadcnAutoEncryptedStringInput.js";
 import { makeShadcnAutoEnumInput } from "./ShadcnAutoEnumInput.js";
 import { makeShadcnAutoIdInput } from "./ShadcnAutoIdInput.js";
+import { makeShadcnAutoJSONInput } from "./ShadcnAutoJSONInput.js";
 import { makeShadcnAutoNumberInput } from "./ShadcnAutoNumberInput.js";
 import { makeShadcnAutoPasswordInput } from "./ShadcnAutoPasswordInput.js";
 import { makeShadcnAutoRolesInput } from "./ShadcnAutoRolesInput.js";
 import { makeShadcnAutoTextInput } from "./ShadcnAutoTextInput.js";
 import { makeShadcnAutoBelongsToInput } from "./relationships/ShadcnAutoBelongsToInput.js";
 import { makeShadcnAutoHasManyInput } from "./relationships/ShadcnAutoHasManyInput.js";
+
 export const makeShadcnAutoInput = (
   elements: Pick<
     ShadcnElements,
@@ -48,6 +50,7 @@ export const makeShadcnAutoInput = (
     rolesInput: makeShadcnAutoRolesInput(elements),
     enumInput: makeShadcnAutoEnumInput(elements),
     dateTimeInput: makeShadcnAutoDateTimePicker(elements),
+    jsonInput: makeShadcnAutoJSONInput(elements),
   };
 
   const ShadcnAutoInput = React.memo(function ShadcnAutoInput(props: { field: string; label?: string }) {
@@ -66,6 +69,8 @@ export const makeShadcnAutoInput = (
         return inputComponents.numberInput(props);
       case FieldType.DateTime:
         return inputComponents.dateTimeInput(props);
+      case FieldType.Json:
+        return inputComponents.jsonInput(props);
       case FieldType.Enum:
         return inputComponents.enumInput(props);
       case FieldType.RoleAssignments:
