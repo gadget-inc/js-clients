@@ -353,6 +353,7 @@ describeForEachAutoAdapter("AutoFormDateTimePicker", ({ name, adapter: { AutoFor
 
         if (name === SUITE_NAMES.POLARIS) {
           cy.get(`[aria-label='Thursday March 4 2021']`).click();
+          cy.get("#test-date").click();
           cy.get(`[aria-label='Thursday March 4 2021']`).should("have.attr", "aria-pressed", "true");
         }
 
