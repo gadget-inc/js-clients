@@ -4,7 +4,7 @@ import React from "react";
 import { autoInput } from "../../AutoInput.js";
 import { useStringInputController } from "../../hooks/useStringInputController.js";
 import AutoRichTextInput from "../../shared/AutoRichTextInput.js";
-import "../styles/rich-text.css";
+import "../../shared/styles/rich-text.css";
 
 /**
  * Prefer using the LazyLoadedMUIAutoRichTextInput.tsx variant of this component to reduce the bundle size by default.

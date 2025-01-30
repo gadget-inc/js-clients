@@ -1,6 +1,7 @@
 import React, { useRef, useState } from "react";
 import type { FieldMetadata } from "../../../metadata.js";
 import type { AutoRelationshipInputProps } from "../../interfaces/AutoRelationshipInputProps.js";
+import { ShadcnRequired } from "../ShadcnRequired.js";
 import type { ShadcnElements } from "../elements.js";
 import type { RelatedModelOptionsProps } from "./relationships/RelatedModelOption.js";
 import { makeRelatedModelOption } from "./relationships/RelatedModelOption.js";
@@ -47,7 +48,7 @@ export const makeShadcnAutoComboInput = ({
     const id = props.id || `${props.path}-input`;
     const inputLabel = props.label || props.metadata.name;
 
-    const requiredIndicator = props.metadata.requiredArgumentForInput ? <span className="text-red-500">*</span> : null;
+    const requiredIndicator = props.metadata.requiredArgumentForInput ? <ShadcnRequired>*</ShadcnRequired> : null;
 
     return (
       <div>

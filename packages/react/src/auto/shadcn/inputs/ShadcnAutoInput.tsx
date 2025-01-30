@@ -13,9 +13,9 @@ import { makeShadcnAutoNumberInput } from "./ShadcnAutoNumberInput.js";
 import { makeShadcnAutoPasswordInput } from "./ShadcnAutoPasswordInput.js";
 import { makeShadcnAutoRolesInput } from "./ShadcnAutoRolesInput.js";
 import { makeShadcnAutoTextInput } from "./ShadcnAutoTextInput.js";
+import { makeShadcnAutoRichTextInput } from "./ShadcnautoRichTextInput.js";
 import { makeShadcnAutoBelongsToInput } from "./relationships/ShadcnAutoBelongsToInput.js";
 import { makeShadcnAutoHasManyInput } from "./relationships/ShadcnAutoHasManyInput.js";
-
 export const makeShadcnAutoInput = (
   elements: Pick<
     ShadcnElements,
@@ -52,6 +52,7 @@ export const makeShadcnAutoInput = (
     enumInput: makeShadcnAutoEnumInput(elements),
     dateTimeInput: makeShadcnAutoDateTimePicker(elements),
     jsonInput: makeShadcnAutoJSONInput(elements),
+    richTextInput: makeShadcnAutoRichTextInput(elements),
   };
 
   const ShadcnAutoInput = React.memo(function ShadcnAutoInput(props: { field: string; label?: string }) {
@@ -84,6 +85,8 @@ export const makeShadcnAutoInput = (
         return null;
       case FieldType.EncryptedString:
         return inputComponents.encryptedInput(props);
+      case FieldType.RichText:
+        return inputComponents.richTextInput(props);
       case FieldType.BelongsTo:
         return inputComponents.belongsToInput(props);
       case FieldType.Password:

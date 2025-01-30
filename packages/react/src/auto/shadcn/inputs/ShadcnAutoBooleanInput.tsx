@@ -4,6 +4,7 @@ import { useController, useFormContext } from "../../../useActionForm.js";
 import { get } from "../../../utils.js";
 import { autoInput } from "../../AutoInput.js";
 import { useFieldMetadata } from "../../hooks/useFieldMetadata.js";
+import { ShadcnRequired } from "../ShadcnRequired.js";
 import type { CheckboxProps, ShadcnElements } from "../elements.js";
 
 export const makeShadcnAutoBooleanInput = ({ Checkbox, Label }: Pick<ShadcnElements, "Checkbox" | "Label">) => {
@@ -56,7 +57,7 @@ export const makeShadcnAutoBooleanInput = ({ Checkbox, Label }: Pick<ShadcnEleme
         <Label htmlFor={path} className={`${props.className ?? ""} ${error ? "text-red-500" : ""}`}>
           {label}
         </Label>
-        {error && <span className="text-sm text-red-500">{error.message}</span>}
+        {error && <ShadcnRequired>{error.message}</ShadcnRequired>}
       </div>
     );
   }
