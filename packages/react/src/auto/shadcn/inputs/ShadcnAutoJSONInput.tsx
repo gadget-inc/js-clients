@@ -35,7 +35,7 @@ export const makeShadcnAutoJSONInput = ({ Label, Textarea }: Pick<ShadcnElements
           }}
           id={id}
         />
-        {!isFocused && errorMessage && <p className="text-sm text-red-500">{errorMessage}</p>}
+        {!isFocused && errorMessage && <p className="text-sm text-red-500">{`Invalid JSON: ${errorMessage}`}</p>}
       </div>
     );
   }
