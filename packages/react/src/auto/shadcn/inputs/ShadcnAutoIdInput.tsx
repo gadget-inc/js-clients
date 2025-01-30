@@ -5,8 +5,8 @@ import { useStringInputController } from "../../hooks/useStringInputController.j
 import type { ShadcnElements } from "../elements.js";
 import { makeShadcnAutoTextInput } from "./ShadcnAutoTextInput.js";
 
-export const makeShadcnAutoIdInput = ({ Input, Label }: Pick<ShadcnElements, "Input" | "Label">) => {
-  const ShadcnAutoTextInput = makeShadcnAutoTextInput({ Input, Label });
+export const makeShadcnAutoIdInput = (elements: Pick<ShadcnElements, "Input" | "Label">) => {
+  const ShadcnAutoTextInput = makeShadcnAutoTextInput(elements);
 
   function ShadcnAutoIdInput(props: { field: string; label?: string }) {
     const { field, label } = props;

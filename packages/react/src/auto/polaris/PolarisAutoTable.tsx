@@ -22,6 +22,7 @@ import { AutoTableContext } from "../AutoTableContext.js";
 import { validateAutoTableProps } from "../AutoTableValidators.js";
 import type { BulkActionOption } from "../hooks/useTableBulkActions.js";
 import { useTableBulkActions } from "../hooks/useTableBulkActions.js";
+import { defaultCellStyle } from "../shared/defaultTableCellStyle.js";
 import { PolarisAutoBulkActionModal } from "./PolarisAutoBulkActionModal.js";
 import { PolarisAutoTableCellRenderer } from "./tableCells/PolarisAutoTableCellRenderer.js";
 
@@ -65,7 +66,7 @@ export const PolarisAutoTable = <
 ) => {
   const { model } = props;
 
-  validateAutoTableProps(props.model);
+  validateAutoTableProps(model);
 
   const componentKey = `${[model.findMany.namespace, model.findMany.modelApiIdentifier].join("_")}AutoTable`;
 
@@ -258,14 +259,6 @@ const PolarisAutoTableComponent = <
     </AutoTableContext.Provider>
   );
 };
-
-const defaultCellStyle: React.CSSProperties = {
-  maxWidth: "200px",
-  padding: "0.375rem",
-  overflow: "hidden",
-  textOverflow: "ellipsis",
-  whiteSpace: "nowrap",
-} as const;
 
 const PolarisIndexTableCellStyleOverride = () => {
   // !important to override the default padding from a class that gets applied afterwards

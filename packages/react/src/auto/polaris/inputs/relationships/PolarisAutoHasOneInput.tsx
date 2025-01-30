@@ -24,7 +24,7 @@ export const PolarisAutoHasOneInput = autoInput((props: AutoRelationshipInputPro
 
   const selectedRecordTag = selectedOption ? (
     <Tag onRemove={() => selectedRecord && onRemoveRecord(selectedRecord)} key={`selectedRecordTag_${selectedOption.id}`}>
-      <p id={`${selectedOption.id}_${selectedOption.label}`}>{selectedOption.label}</p>
+      <p id={`${selectedOption.id}_${selectedOption.label}`}>{selectedOption.label ?? `id: ${selectedOption.id}`}</p>
     </Tag>
   ) : null;
 

@@ -2,9 +2,15 @@ import type { TextFieldProps } from "@shopify/polaris";
 import { Box, Icon, Listbox, Popover, Scrollable, Text, TextField } from "@shopify/polaris";
 import { ClockIcon } from "@shopify/polaris-icons";
 import React, { useEffect, useState } from "react";
-import { zonedTimeToUtc } from "../../../dateTimeUtils.js";
+import {
+  copyTime,
+  getDateFromDateTimeObject,
+  getDateTimeObjectFromDate,
+  getTimeString,
+  timeFormatRegex,
+  zonedTimeToUtc,
+} from "../../../dateTimeUtils.js";
 import type { ControllerRenderProps, FieldValues } from "../../../useActionForm.js";
-import { copyTime, getDateFromDateTimeObject, getDateTimeObjectFromDate } from "./PolarisAutoDateTimePicker.js";
 
 const createMarkup = (
   items: string[],
@@ -46,15 +52,6 @@ const hoursArr = Array.from({ length: 12 }, (_, i) => (i + 1).toString().padStar
 const minsArr = Array.from({ length: 60 }, (_, i) => i.toString().padStart(2, "0"));
 const ampmArr = ["AM", "PM"];
 
-const timeFormatRegex = new RegExp(/((1[0-2]|0?[1-9]):([0-5][0-9]) ?([AaPp][Mm]))/);
-
-const getTimeString = (dateTime: DateTimeState) => {
-  if (parseInt(dateTime.hour, 10) === 0) {
-    return `12:${dateTime.minute.padStart(2, "0")} AM`;
-  }
-  return `${dateTime.hour}:${dateTime.minute.padStart(2, "0")} ${dateTime.ampm}`;
-};
-
 export interface DateTimeState {
   month: number;
   year: number;
@@ -81,6 +78,7 @@ const PolarisAutoTimePicker = (props: {
   const [timePopoverActive, setTimePopoverActive] = useState(false);
   const [timeParseError, setTimeParseError] = useState(false);
   const [selectCoord, setSelectCoord] = useState({ col: -1, row: -1 });
+
   const setHourSelected = (hour: string) => {
     if (valueProp) {
       props.onChange?.(getDateFromDateTimeObject({ ...getDateTimeObjectFromDate(valueProp), hour }));

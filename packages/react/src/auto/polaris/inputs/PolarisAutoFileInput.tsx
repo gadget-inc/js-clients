@@ -71,17 +71,18 @@ export const PolarisAutoFileInput = autoInput((props: { field: string; control?:
     );
   }, [canClearFileValue, clearFileValue, fieldApiIdentifier, fieldProps.value, imageThumbnailURL]);
 
-  const inputLabel = (
-    <>
-      {metadata.name} {metadata.requiredArgumentForInput ? <span style={{ color: "var(--p-color-text-critical)" }}>*</span> : null}
-    </>
+  const inputLabel = props.label ?? (
+    <div style={{ display: "flex", gap: "4px" }}>
+      {metadata.name}
+      {metadata.requiredArgumentForInput ? <span style={{ color: "var(--p-color-text-critical)" }}>{"*"}</span> : null}
+    </div>
   );
 
   return (
     <>
+      {inputLabel}
       <DropZone
         variableHeight
-        label={inputLabel}
         allowMultiple={false}
         onDrop={(_droppedFiles, acceptedFiles) => {
           void onFileUpload(acceptedFiles);

@@ -1,0 +1,23 @@
+.shadcn-auto-table-cell {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.shadcn-auto-table-tooltip-trigger {
+  max-width: 100%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.shadcn-auto-table-cell-tooltip-content {
+  max-width: 150px;
+  max-height: 100px;
+  overflow-y: auto;
+  overflow-x: hidden;
+  background-color: #ffffff;
+  border: 1px solid #cdcdcd;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+  white-space: normal;
+  word-wrap: break-word;
+}

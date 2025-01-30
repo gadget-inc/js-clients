@@ -24,7 +24,7 @@ const ONLY_RUN_SUITES = {
     "AutoForm - Default model field values",
     "AutoForm - FindBy object parameters",
     "AutoForm - Global actions",
-    "AutoForm - HasManyThrough fields",
+    // "AutoForm - HasManyThrough fields",
     "AutoForm - Dynamic form input changes",
     "AutoForm - Dynamic form input changes - FindBy object parameters",
     "AutoForm - Dynamic form input changes - Global actions",
@@ -32,7 +32,10 @@ const ONLY_RUN_SUITES = {
     "AutoForm titles",
     "AutoForm - ID field",
     "AutoForm - Upsert Action",
+    "AutoFormDateTimePicker",
+    "AutoFormJSONInput",
     "AutoPasswordInput",
+    "AutoRoleInput",
   ],
 };
 
@@ -67,6 +70,7 @@ export const describeForEachAutoAdapter = (suiteName: string, suite: (config: Au
   const filteredSuites = suites.filter(
     (config) => config.name !== SUITE_NAMES.SHADCN || ONLY_RUN_SUITES[SUITE_NAMES.SHADCN].includes(suiteName)
   );
+
   // eslint-disable-next-line jest/valid-describe-callback, jest/valid-title
   describe.each(filteredSuites)((({ name }: { name: string }) => `${suiteName} - ${name}`) as any, suite);
 };

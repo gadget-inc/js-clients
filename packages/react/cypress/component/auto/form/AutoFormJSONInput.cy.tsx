@@ -1,14 +1,76 @@
 /* eslint-disable jest/valid-expect */
 import React from "react";
-import { PolarisAutoForm } from "../../../../src/auto/polaris/PolarisAutoForm.js";
-import { PolarisAutoInput } from "../../../../src/auto/polaris/inputs/PolarisAutoInput.js";
+import { elements } from "../../../../spec/auto/shadcn-defaults/index.js";
 import { PolarisAutoJSONInput } from "../../../../src/auto/polaris/inputs/PolarisAutoJSONInput.js";
 import { PolarisAutoSubmit } from "../../../../src/auto/polaris/submit/PolarisAutoSubmit.js";
-import { PolarisSubmitResultBanner } from "../../../../src/auto/polaris/submit/PolarisSubmitResultBanner.js";
 import { api } from "../../../support/api.js";
-import { PolarisWrapper } from "../../../support/auto.js";
+import { describeForEachAutoAdapter } from "../../../support/auto.js";
+import { SUITE_NAMES } from "../../../support/constants.js";
 
-describe("PolarisJSONInput", () => {
+import { PolarisAutoInput } from "../../../../src/auto/polaris/inputs/PolarisAutoInput.js";
+import { PolarisSubmitResultBanner } from "../../../../src/auto/polaris/submit/PolarisSubmitResultBanner.js";
+import { makeShadcnAutoInput } from "../../../../src/auto/shadcn/inputs/ShadcnAutoInput.js";
+import { makeShadcnAutoJSONInput } from "../../../../src/auto/shadcn/inputs/ShadcnAutoJSONInput.js";
+import { makeShadcnAutoSubmit } from "../../../../src/auto/shadcn/submit/ShadcnAutoSubmit.js";
+import { makeSubmitResultBanner } from "../../../../src/auto/shadcn/submit/ShadcnSubmitResultBanner.js";
+
+const ShadcnAutoJSONInput = makeShadcnAutoJSONInput(elements);
+const ShadcnAutoSubmit = makeShadcnAutoSubmit(elements);
+const ShadcnAutoInput = makeShadcnAutoInput(elements);
+const { ShadcnSubmitResultBanner } = makeSubmitResultBanner(elements);
+
+describeForEachAutoAdapter("AutoFormJSONInput", ({ name, adapter: { AutoForm }, wrapper }) => {
+  const AutoJSONInputWithSubmit = (props: { field: string }) => {
+    if (name === SUITE_NAMES.POLARIS) {
+      return (
+        <>
+          <PolarisAutoJSONInput {...props} />
+          <PolarisAutoSubmit id="auto" />
+        </>
+      );
+    }
+
+    if (name === SUITE_NAMES.SHADCN) {
+      return (
+        <>
+          <ShadcnAutoJSONInput {...props} />
+          <ShadcnAutoSubmit id="auto" />
+        </>
+      );
+    }
+
+    throw new Error("Invalid suite name");
+  };
+
+  const AutoInputWithSubmit = () => {
+    if (name === SUITE_NAMES.POLARIS) {
+      return (
+        <>
+          <PolarisSubmitResultBanner />
+          <PolarisAutoJSONInput field="metafields" />
+          <PolarisAutoInput field="name" />
+          <PolarisAutoInput field="inventoryCount" />
+          <PolarisAutoSubmit id="auto" />
+          <PolarisAutoSubmit id="auto" />
+        </>
+      );
+    }
+
+    if (name === SUITE_NAMES.SHADCN) {
+      return (
+        <>
+          <ShadcnSubmitResultBanner />
+          <ShadcnAutoJSONInput field="metafields" />
+          <ShadcnAutoInput field="name" />
+          <ShadcnAutoInput field="inventoryCount" />
+          <ShadcnAutoSubmit id="auto" />
+        </>
+      );
+    }
+
+    throw new Error("Invalid suite name");
+  };
+
   beforeEach(() => {
     cy.viewport("macbook-13");
   });
@@ -39,14 +101,10 @@ describe("PolarisJSONInput", () => {
     );
 
     cy.mountWithWrapper(
-      <PolarisAutoForm action={api.widget.create}>
-        <PolarisSubmitResultBanner />
-        <PolarisAutoJSONInput field="metafields" />
-        <PolarisAutoInput field="name" />
-        <PolarisAutoInput field="inventoryCount" />
-        <PolarisAutoSubmit />
-      </PolarisAutoForm>,
-      PolarisWrapper
+      <AutoForm action={api.widget.create}>
+        <AutoInputWithSubmit />
+      </AutoForm>,
+      wrapper
     );
 
     cy.get(`textarea[name="widget.metafields"]`).type("not a valid JSON");
@@ -56,13 +114,13 @@ describe("PolarisJSONInput", () => {
     cy.get(`input[name="widget.name"]`).type("foobar");
 
     // try to submit form, but it shouldn't submit as the json field is invalid
-    cy.get(`button.Polaris-Button[type="submit"]`).click();
+    cy.get(`#auto`).click();
 
     cy.contains(`Invalid JSON: Unexpected token 'o', "not a valid JSON" is not valid JSON`);
 
     cy.get(`textarea[name="widget.metafields"]`).clear().type(`{"foo": "bar"}`, { parseSpecialCharSequences: false });
 
-    cy.get(`button.Polaris-Button[type="submit"]`).click();
+    cy.get(`#auto`).click();
 
     cy.contains(`Saved Widget successfully`);
   });
@@ -93,11 +151,10 @@ describe("PolarisJSONInput", () => {
     ).as("widget");
 
     cy.mountWithWrapper(
-      <PolarisAutoForm action={api.widget.update} findBy="1">
-        <PolarisAutoJSONInput field="metafields" />
-        <PolarisAutoSubmit />
-      </PolarisAutoForm>,
-      PolarisWrapper
+      <AutoForm action={api.widget.update} findBy="1">
+        <AutoJSONInputWithSubmit field="metafields" />
+      </AutoForm>,
+      wrapper
     );
 
     cy.wait("@widget");
@@ -133,11 +190,10 @@ describe("PolarisJSONInput", () => {
     ).as("widget");
 
     cy.mountWithWrapper(
-      <PolarisAutoForm action={api.widget.update} findBy="2">
-        <PolarisAutoJSONInput field="metafields" />
-        <PolarisAutoSubmit />
-      </PolarisAutoForm>,
-      PolarisWrapper
+      <AutoForm action={api.widget.update} findBy="2">
+        <AutoJSONInputWithSubmit field="metafields" />
+      </AutoForm>,
+      wrapper
     );
     cy.wait("@widget");
 
@@ -171,11 +227,10 @@ describe("PolarisJSONInput", () => {
     ).as("widget");
 
     cy.mountWithWrapper(
-      <PolarisAutoForm action={api.widget.update} findBy="3">
-        <PolarisAutoJSONInput field="metafields" />
-        <PolarisAutoSubmit />
-      </PolarisAutoForm>,
-      PolarisWrapper
+      <AutoForm action={api.widget.update} findBy="3">
+        <AutoJSONInputWithSubmit field="metafields" />
+      </AutoForm>,
+      wrapper
     );
     cy.wait("@widget");
 
@@ -207,11 +262,10 @@ describe("PolarisJSONInput", () => {
     );
 
     cy.mountWithWrapper(
-      <PolarisAutoForm action={api.widget.update} findBy="3">
-        <PolarisAutoJSONInput field="metafields" />
-        <PolarisAutoSubmit />
-      </PolarisAutoForm>,
-      PolarisWrapper
+      <AutoForm action={api.widget.update} findBy="3">
+        <AutoJSONInputWithSubmit field="metafields" />
+      </AutoForm>,
+      wrapper
     );
 
     cy.get(`textarea[name="widget.metafields"]`).should("have.value", ``);
@@ -244,11 +298,10 @@ describe("PolarisJSONInput", () => {
     ).as("widget");
 
     cy.mountWithWrapper(
-      <PolarisAutoForm action={api.widget.update} findBy="1">
-        <PolarisAutoJSONInput field="metafields" />
-        <PolarisAutoSubmit />
-      </PolarisAutoForm>,
-      PolarisWrapper
+      <AutoForm action={api.widget.update} findBy="1">
+        <AutoJSONInputWithSubmit field="metafields" />
+      </AutoForm>,
+      wrapper
     );
 
     cy.wait("@widget");
@@ -283,7 +336,7 @@ describe("PolarisJSONInput", () => {
       }
     ).as("updateWidget");
 
-    cy.get(`button.Polaris-Button[type="submit"]`).click();
+    cy.get(`#auto`).click();
     cy.wait("@updateWidget");
   });
 });

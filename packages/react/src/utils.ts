@@ -660,3 +660,16 @@ export const countNumberOfDecimals = (value: string) => {
   const [, decimals] = value.split(".");
   return decimals?.length ?? 0;
 };
+
+/**
+ * Get an error message from an error string
+ * @param errorString - The error string
+ * @returns The error message
+ */
+export const getErrorMessage = (errorString: string) => {
+  if (errorString.includes("GGT_PERMISSION_DENIED")) return `Missing permissions. Cannot read related model`;
+
+  if (errorString.includes("GGT_INVALID_STORED_DATA")) return `Invalid records found in related model`;
+
+  return "Cannot retrieve records from related model";
+};

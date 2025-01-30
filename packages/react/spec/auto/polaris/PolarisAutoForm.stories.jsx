@@ -10,6 +10,7 @@ import { testApi as api } from "../../apis.ts";
 import { StorybookErrorBoundary } from "../StorybookErrorBoundary.tsx";
 import { PolarisAutoHasManyInput } from "../../../src/auto/polaris/inputs/relationships/PolarisAutoHasManyInput.tsx";
 
+
 // More on how to set up stories at: https://storybook.js.org/docs/writing-stories#default-export
 export default {
   title: "Polaris/AutoForm",
@@ -105,6 +106,14 @@ export const Included = {
     action: api.widget.create,
     // Inventory is required and  not included. This will be a server-side error since it can be set in the action file code
     include: ["name"],
+  },
+};
+
+export const IncludedWithFindBy = {
+  args: {
+    action: api.widget.update,
+    findBy: "999",
+    include: ["name", "inventoryCount"],
   },
 };
 
