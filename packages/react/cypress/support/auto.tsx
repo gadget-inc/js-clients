@@ -32,6 +32,7 @@ const ONLY_RUN_SUITES = {
     "AutoForm titles",
     "AutoForm - ID field",
     "AutoForm - Upsert Action",
+    "AutoFormDateTimePicker",
     "AutoPasswordInput",
     "AutoRoleInput",
   ],

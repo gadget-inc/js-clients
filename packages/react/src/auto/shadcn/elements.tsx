@@ -61,6 +61,14 @@ export type InputProps = React.InputHTMLAttributes<HTMLInputElement>;
 /** The props that a label component injected into autocomponent's shadcn must support */
 export type LabelProps = React.LabelHTMLAttributes<HTMLLabelElement>;
 
+/** The props that a scroll area component injected into autocomponent's shadcn must support */
+export type ScrollAreaProps = React.HTMLAttributes<HTMLDivElement>;
+
+/** The props that a scroll bar component injected into autocomponent's shadcn must support */
+export interface ScrollBarProps extends React.HTMLAttributes<HTMLDivElement> {
+  orientation?: "vertical" | "horizontal";
+}
+
 /** The props that a checkbox component injected into autocomponent's shadcn must support */
 export interface CheckboxProps extends Omit<ButtonProps, "checked" | "defaultChecked"> {
   checked?: boolean | "indeterminate";
@@ -116,6 +124,9 @@ export interface ShadcnElements {
 
   /** The Card component from shadcn */
   Card: React.ComponentType<CardProps>;
+
+  /** The Calendar component from shadcn */
+  Calendar: React.ComponentType<any>;
 
   /** The CardHeader component from shadcn */
   CardHeader: React.ComponentType<CardHeaderProps>;
@@ -179,9 +190,18 @@ export interface ShadcnElements {
   /** The PopoverContent component from shadcn */
   PopoverContent: React.ComponentType<PopoverContentProps>;
 
+  /** The Textarea component from shadcn */
+  Textarea: React.ComponentType<React.HTMLAttributes<HTMLTextAreaElement>>;
+
   /** The PopoverTrigger component from shadcn */
   //:TODO: This is a hack to get the PopoverTrigger component to work with the Popover component. please fix this.
   PopoverTrigger: React.ForwardRefExoticComponent<PopoverTriggerProps & React.RefAttributes<HTMLButtonElement> & any>;
+
+  /** The ScrollArea component from shadcn */
+  ScrollArea: React.ForwardRefExoticComponent<ScrollAreaProps & React.RefAttributes<HTMLDivElement> & any>;
+
+  /** The ScrollBar component from shadcn */
+  ScrollBar: React.ComponentType<ScrollBarProps>;
 
   /** The Skeleton component from shadcn */
   Skeleton: React.ComponentType<SkeletonProps>;
