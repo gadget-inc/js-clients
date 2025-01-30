@@ -92,6 +92,7 @@ describe("ShadcnAutoEnumInput", () => {
 
       cy.get("[cmdk-input]").eq(1).click();
       cy.get('[cmdk-item][data-value="hello"]').click();
+      cy.get("[cmdk-input]").eq(1).click();
       cy.get('[cmdk-item][data-value="hello"][data-selected="true"]').should("exist");
       cy.get('[cmdk-item][data-value="world"][data-selected="true"]').should("not.exist");
 
@@ -131,6 +132,8 @@ describe("ShadcnAutoEnumInput", () => {
       cy.get('[cmdk-item][data-value="hello"]').click();
       // Verify that the chip/tag appears after selection
       checkBadgeWithButton("hello");
+
+      cy.get("[cmdk-input]").eq(1).click();
 
       cy.contains('Add "hel"').should("exist");
 
