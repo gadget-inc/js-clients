@@ -46,7 +46,5 @@ export const makeShadcnAutoTableTagCell = (elements: ShadcnElements) => {
     );
   }
 
-  return (props: { value: any }) => {
-    return <ShadcnAutoTableTagCell {...props} />;
-  };
+  return ShadcnAutoTableTagCell;
 };

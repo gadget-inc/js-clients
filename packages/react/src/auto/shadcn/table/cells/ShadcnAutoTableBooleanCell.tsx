@@ -16,9 +16,7 @@ export const makeShadcnAutoTableBooleanCell = (elements: Pick<ShadcnElements, "L
     );
   }
 
-  return (props: { value: any }) => {
-    return <ShadcnAutoTableBooleanCell {...props} />;
-  };
+  return ShadcnAutoTableBooleanCell;
 };
 
 const Checkmark = "✓";

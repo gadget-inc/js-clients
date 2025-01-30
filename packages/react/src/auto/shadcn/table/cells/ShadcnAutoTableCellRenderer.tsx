@@ -68,7 +68,5 @@ export const makeShadcnAutoTableCellRenderer = (elements: ShadcnElements) => {
     }
   }
 
-  return (props: { column: TableColumn; value: ColumnValueType }) => {
-    return <ShadcnAutoTableCellRenderer {...props} />;
-  };
+  return ShadcnAutoTableCellRenderer;
 };

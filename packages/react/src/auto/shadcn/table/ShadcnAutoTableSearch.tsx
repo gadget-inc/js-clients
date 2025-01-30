@@ -22,7 +22,5 @@ export const makeShadcnAutoTableSearch = (elements: ShadcnElements) => {
     );
   }
 
-  return (props: { search: SearchResult }) => {
-    return <ShadcnAutoTableSearch {...props} />;
-  };
+  return ShadcnAutoTableSearch;
 };

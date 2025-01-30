@@ -1,6 +1,7 @@
 import { type FindManyFunction, type GadgetRecord } from "@gadgetinc/api-client-core";
+import pluralize from "pluralize";
 import * as React from "react";
-import { useCallback } from "react";
+import { useCallback, useMemo } from "react";
 import { useTable } from "../../useTable.js";
 import { type ColumnValueType, type OptionsType } from "../../utils.js";
 import { type AutoTableProps } from "../AutoTable.js";
@@ -50,7 +51,7 @@ export const makeAutoTable = (elements: ShadcnElements) => {
       error, // TODO - add an error state
       selection, // TODO - add record selection and bulk action system
       sort, // TODO - add column sorting
-
+      metadata,
       data: rawRecords, // TODO - use this to get direct record access in callbacks
     } = methods;
 
@@ -66,6 +67,15 @@ export const makeAutoTable = (elements: ShadcnElements) => {
         return () => onClick?.(row, rawRecord);
       },
       [onClick]
+    );
+
+    const resourceName = useMemo(
+      () =>
+        props.resourceName ?? {
+          singular: metadata?.name ?? "",
+          plural: metadata ? pluralize(metadata.name) : "",
+        },
+      [props.resourceName, metadata]
     );
 
     if (error) {
@@ -105,7 +115,7 @@ export const makeAutoTable = (elements: ShadcnElements) => {
               ) : (
                 <TableRow>
                   <TableCell colSpan={columns.length} className="h-24 text-center">
-                    No results.
+                    {`No ${resourceName.plural} yet`}
                   </TableCell>
                 </TableRow>
               )}

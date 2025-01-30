@@ -23,7 +23,5 @@ export const makeShadcnAutoTablePagination = (elements: ShadcnElements) => {
     );
   }
 
-  return (props: { page: PaginationResult }) => {
-    return <ShadcnAutoTablePagination {...props} />;
-  };
+  return ShadcnAutoTablePagination;
 };

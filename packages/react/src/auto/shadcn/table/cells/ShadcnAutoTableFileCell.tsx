@@ -21,9 +21,8 @@ export const makeShadcnAutoTableFileCell = (elements: Pick<ShadcnElements, "Labe
       </div>
     );
   }
-  return (props: { value: FileValueType }) => {
-    return <ShadcnAutoTableFileCell {...props} />;
-  };
+
+  return ShadcnAutoTableFileCell;
 };
 
 const nonImageFileIndicator = <FileIcon />;

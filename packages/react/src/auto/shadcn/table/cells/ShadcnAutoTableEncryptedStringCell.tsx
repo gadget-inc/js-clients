@@ -28,9 +28,7 @@ export const makeShadcnAutoTableEncryptedStringCell = (elements: Pick<ShadcnElem
     );
   }
 
-  return (props: { value: any }) => {
-    return <ShadcnAutoTableEncryptedStringCell {...props} />;
-  };
+  return ShadcnAutoTableEncryptedStringCell;
 };
 
 const showButtonContent = <Eye />;

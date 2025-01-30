@@ -11,7 +11,5 @@ export const makeShadcnAutoTableDateTimeCell = (elements: ShadcnAutoTableTextCel
     return value instanceof Date ? <ShadcnAutoTableTextCell value={formatLongDateTimeString(value, includeTime)} /> : null;
   }
 
-  return (props: { value: any; includeTime: boolean }) => {
-    return <ShadcnAutoTableDateTimeCell {...props} />;
-  };
+  return ShadcnAutoTableDateTimeCell;
 };

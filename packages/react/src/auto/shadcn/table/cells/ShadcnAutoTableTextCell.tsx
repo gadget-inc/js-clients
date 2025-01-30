@@ -33,7 +33,5 @@ export const makeShadcnAutoTableTextCell = (elements: ShadcnAutoTableTextCellEle
     );
   }
 
-  return (props: { value: any }) => {
-    return <ShadcnAutoTableTextCell {...props} />;
-  };
+  return ShadcnAutoTableTextCell;
 };
