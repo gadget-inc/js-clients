@@ -8,7 +8,7 @@ import { api } from "../../../support/api.js";
 import { describeForEachAutoAdapter } from "../../../support/auto.js";
 import { SUITE_NAMES } from "../../../support/constants.js";
 
-export const ShadcnAutoInput = makeShadcnAutoInput(elements);
+const ShadcnAutoInput = makeShadcnAutoInput(elements);
 
 const AutoInput = (props: { suiteName: string; field: string; label?: string }) => {
   if (props.suiteName === SUITE_NAMES.POLARIS) {
