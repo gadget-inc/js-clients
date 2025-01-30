@@ -12,6 +12,7 @@ import { Label } from "./components/Label.js";
 import { Popover, PopoverAnchor, PopoverContent, PopoverTrigger } from "./components/Popover.js";
 import { ScrollArea, ScrollBar } from "./components/ScrollArea.js";
 import { Skeleton } from "./components/Skeleton.js";
+import { Textarea } from "./components/TextArea.js";
 import { Toaster } from "./components/Toaster.js";
 import { toast } from "./hooks/useToast.js";
 import { cn } from "./utils.js";
@@ -46,6 +47,7 @@ export const elements: ShadcnElements & { mergeClassNames: MergeClassNames } = {
   ScrollBar,
   Input,
   Label,
+  Textarea,
   Form,
   Skeleton,
   toast,

@@ -190,6 +190,9 @@ export interface ShadcnElements {
   /** The PopoverContent component from shadcn */
   PopoverContent: React.ComponentType<PopoverContentProps>;
 
+  /** The Textarea component from shadcn */
+  Textarea: React.ComponentType<React.HTMLAttributes<HTMLTextAreaElement>>;
+
   /** The PopoverTrigger component from shadcn */
   //:TODO: This is a hack to get the PopoverTrigger component to work with the Popover component. please fix this.
   PopoverTrigger: React.ForwardRefExoticComponent<PopoverTriggerProps & React.RefAttributes<HTMLButtonElement> & any>;
