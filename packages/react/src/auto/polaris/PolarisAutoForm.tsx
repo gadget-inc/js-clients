@@ -79,7 +79,7 @@ const PolarisAutoFormComponent = <
     originalFormMethods,
   } = useAutoForm(props);
 
-  const formTitle = props.title === undefined ? humanizeCamelCase(action.operationName) : props.title;
+  const formTitle = "title" in props && props.title !== undefined ? props.title : humanizeCamelCase(action.operationName);
 
   if (props.successContent && isSubmitSuccessful) {
     return props.successContent;
@@ -124,7 +124,7 @@ const PolarisAutoFormComponent = <
             <PolarisAutoInput field={metadata.apiIdentifier} key={metadata.apiIdentifier} />
           ))}
           <div>
-            <PolarisAutoSubmit>{props.submitLabel ?? "Submit"} </PolarisAutoSubmit>
+            <PolarisAutoSubmit>{"submitLabel" in props && props.submitLabel ? props.submitLabel : "Submit"} </PolarisAutoSubmit>
           </div>
         </>
       )}
