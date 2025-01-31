@@ -1,4 +1,4 @@
-import React, { useMemo } from "react";
+import React, { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import type { Option } from "../../../interfaces/AutoRelationshipInputProps.js";
 import type { ShadcnElements } from "../../elements.js";
 import { makeShadcnListMessages } from "./ShadcnListMessages.js";
@@ -19,6 +19,7 @@ export type RelatedModelOptionsProps = {
   formatOptionText?: (option: string) => React.ReactNode;
   setSearchValue?: (value: string) => void;
   emptyMessage?: string;
+  onScrolledToBottom?: () => void;
 };
 
 export const makeRelatedModelOption = (
@@ -26,8 +27,65 @@ export const makeRelatedModelOption = (
 ) => {
   const { CommandList, CommandEmpty, CommandGroup } = elements;
 
+  const IntersectionObserverComponent = ({
+    onIntersect,
+    listBoxRef,
+  }: {
+    onIntersect: () => void;
+    listBoxRef: React.RefObject<HTMLDivElement>;
+  }) => {
+    const [isFetching, setIsFetching] = useState(false);
+    const observerRef = useRef<IntersectionObserver | null>(null);
+
+    const handleIntersection = useCallback(
+      (entries: IntersectionObserverEntry[]) => {
+        if (entries[0].isIntersecting && !isFetching) {
+          setIsFetching(true);
+        }
+      },
+      [isFetching]
+    );
+
+    const handleFetch = useCallback(() => {
+      if (isFetching === true) {
+        listBoxRef.current?.scrollTo({ top: 0, behavior: "smooth" });
+        onIntersect();
+        setIsFetching(false);
+      }
+    }, [isFetching, onIntersect, listBoxRef]);
+
+    useEffect(() => {
+      handleFetch();
+    }, [handleFetch]);
+
+    useEffect(() => {
+      return () => {
+        if (observerRef.current) {
+          observerRef.current.disconnect();
+        }
+      };
+    }, []);
+
+    if (isFetching) {
+      return null;
+    }
+
+    return (
+      <div
+        ref={(el) => {
+          if (!el) return;
+          observerRef.current = new IntersectionObserver(handleIntersection, { threshold: 1.0 });
+          observerRef.current.observe(el);
+        }}
+        className="h-4"
+      />
+    );
+  };
+
   function RelatedModelOption(props: RelatedModelOptionsProps) {
     const { checkSelected, onSelect, isLoading, errorMessage, options, records, actions } = props;
+
+    const listBoxRef = useRef<HTMLDivElement>(null);
 
     const { ListMessage, NoRecordsMessage, ShadcnSelectableOption, getErrorMessage, AddExtraOption } = makeShadcnListMessages(elements);
 
@@ -54,6 +112,29 @@ export const makeRelatedModelOption = (
       ],
       [actions, options, props.renderOption, records, checkSelected, onSelect]
     );
+
+    const handleScrollAndFetch = () => {
+      if (listBoxRef.current) {
+        props.onScrolledToBottom?.();
+      }
+    };
+
+    // return (
+    //   <div ref={listBoxRef}>
+    //     <CommandList>
+    //       <CommandGroup>
+    //         {listBoxOptions}
+    //         {isLoading ? (
+    //           <AddExtraOption message="Loading..." />
+    //         ) : (
+    //           <IntersectionObserverComponent onIntersect={handleScrollAndFetch} listBoxRef={listBoxRef} />
+    //         )}
+    //       </CommandGroup>
+    //     </CommandList>
+    //   </div>
+    // );
+
+    console.log("listBoxOptions", listBoxOptions, isLoading);
 
     return (
       <CommandList>
@@ -82,6 +163,7 @@ export const makeRelatedModelOption = (
                 }}
               />
             )}
+            <IntersectionObserverComponent onIntersect={handleScrollAndFetch} listBoxRef={listBoxRef} />
           </CommandGroup>
         ) : errorMessage ? (
           <ListMessage message={getErrorMessage(errorMessage)} />

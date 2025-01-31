@@ -18,9 +18,20 @@ export const makeShadcnAutoBelongsToInput = ({
   CommandEmpty,
   CommandGroup,
   Checkbox,
+  ScrollArea,
 }: Pick<
   ShadcnElements,
-  "Badge" | "Button" | "Command" | "CommandItem" | "CommandList" | "CommandEmpty" | "CommandGroup" | "CommandInput" | "Label" | "Checkbox"
+  | "Badge"
+  | "Button"
+  | "Command"
+  | "CommandItem"
+  | "CommandList"
+  | "CommandEmpty"
+  | "CommandGroup"
+  | "CommandInput"
+  | "Label"
+  | "Checkbox"
+  | "ScrollArea"
 >) => {
   const ShadcnComboInput = makeShadcnAutoComboInput({
     Command,
@@ -31,6 +42,7 @@ export const makeShadcnAutoBelongsToInput = ({
     CommandEmpty,
     CommandGroup,
     Checkbox,
+    ScrollArea,
   });
 
   function ShadcnAutoBelongsToInput(props: AutoRelationshipInputProps) {

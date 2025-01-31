@@ -1,7 +1,7 @@
 import React, { useMemo } from "react";
 import { autoInput } from "../../../AutoInput.js";
 import { useHasManyInputController } from "../../../hooks/useHasManyController.js";
-import { useOptionLabelForField } from "../../../hooks/useRelatedModel.js";
+import { optionRecordsToLoadCount, useOptionLabelForField } from "../../../hooks/useRelatedModel.js";
 import type { AutoRelationshipInputProps } from "../../../interfaces/AutoRelationshipInputProps.js";
 import type { ShadcnElements } from "../../elements.js";
 import { makeShadcnAutoComboInput } from "../ShadcnAutoComboInput.js";
@@ -18,9 +18,20 @@ export const makeShadcnAutoHasManyInput = ({
   CommandEmpty,
   CommandGroup,
   Checkbox,
+  ScrollArea,
 }: Pick<
   ShadcnElements,
-  "Badge" | "Button" | "Command" | "CommandItem" | "CommandList" | "CommandEmpty" | "CommandGroup" | "CommandInput" | "Label" | "Checkbox"
+  | "Badge"
+  | "Button"
+  | "Command"
+  | "CommandItem"
+  | "CommandList"
+  | "CommandEmpty"
+  | "CommandGroup"
+  | "CommandInput"
+  | "Label"
+  | "Checkbox"
+  | "ScrollArea"
 >) => {
   const { SelectedRecordTags } = makeSelectedRecordTags({ Badge, Button });
   const ShadcnComboInput = makeShadcnAutoComboInput({
@@ -32,6 +43,7 @@ export const makeShadcnAutoHasManyInput = ({
     CommandEmpty,
     CommandGroup,
     Checkbox,
+    ScrollArea,
   });
 
   function ShadcnAutoHasManyInput(props: AutoRelationshipInputProps) {
@@ -57,13 +69,18 @@ export const makeShadcnAutoHasManyInput = ({
     return (
       <ShadcnComboInput
         {...props}
-        options={options}
+        options={searchFilterOptions}
         path={path}
         metadata={metadata}
+        onChange={(value) => {
+          //search.set(value);
+        }}
         selectedRecordTag={
           <SelectedRecordTags selectedRecords={selectedRecords} optionLabel={optionLabel} onRemoveRecord={onRemoveRecord} />
         }
         onSelect={onSelectRecord}
+        onScrolledToBottom={pagination.loadNextPage}
+        willLoadMoreOptions={pagination.hasNextPage && options.length >= optionRecordsToLoadCount}
         checkSelected={(id) => {
           return selectedRecordIds.includes(id);
         }}

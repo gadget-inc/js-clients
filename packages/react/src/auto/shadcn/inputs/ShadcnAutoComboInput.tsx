@@ -17,6 +17,9 @@ interface ShadcnComboInputProps extends AutoRelationshipInputProps, RelatedModel
   formatOptionText?: (option: string) => React.ReactNode;
   emptyMessage?: string;
   defaultValue?: string;
+  onScrolledToBottom?: () => void;
+  willLoadMoreOptions?: boolean;
+  onChange?: (value: string) => void;
 }
 
 export const makeShadcnAutoComboInput = ({
@@ -64,7 +67,10 @@ export const makeShadcnAutoComboInput = ({
               ref={inputRef}
               id={id}
               value={inputValue}
-              onValueChange={setInputValue}
+              onValueChange={(value: string) => {
+                setInputValue(value);
+                props.onChange?.(value);
+              }}
               onBlur={() => setOpen(false)}
               onFocus={() => setOpen(true)}
               placeholder={"Search"}
@@ -73,29 +79,27 @@ export const makeShadcnAutoComboInput = ({
             <div className="relative">
               {open && props.options.length > 0 ? (
                 <div className="">
-                  <ScrollArea
-                    onScrollEnded={() => {
-                      console.log("scroll ended");
+                  <RelatedModelOption
+                    onAddExtraOption={props.onAddExtraOption}
+                    isLoading={props.isLoading}
+                    errorMessage={props.errorMessage}
+                    options={props.options}
+                    records={props.records}
+                    onSelect={props.onSelect}
+                    checkSelected={props.checkSelected}
+                    allowMultiple={props.allowMultiple}
+                    renderOption={props.renderOption}
+                    allowOther={props.allowOther}
+                    searchValue={inputValue}
+                    setSearchValue={setInputValue}
+                    formatOptionText={props.formatOptionText}
+                    emptyMessage={props.emptyMessage ? `${props.emptyMessage} "${inputValue}"` : ""}
+                    onScrolledToBottom={() => {
+                      if (props.willLoadMoreOptions && !props.isLoading) {
+                        props.onScrolledToBottom?.();
+                      }
                     }}
-                    className="h-[300px]"
-                  >
-                    <RelatedModelOption
-                      onAddExtraOption={props.onAddExtraOption}
-                      isLoading={props.isLoading}
-                      errorMessage={props.errorMessage}
-                      options={props.options}
-                      records={props.records}
-                      onSelect={props.onSelect}
-                      checkSelected={props.checkSelected}
-                      allowMultiple={props.allowMultiple}
-                      renderOption={props.renderOption}
-                      allowOther={props.allowOther}
-                      searchValue={inputValue}
-                      setSearchValue={setInputValue}
-                      formatOptionText={props.formatOptionText}
-                      emptyMessage={props.emptyMessage ? `${props.emptyMessage} "${inputValue}"` : ""}
-                    />
-                  </ScrollArea>
+                  />
                 </div>
               ) : null}
             </div>

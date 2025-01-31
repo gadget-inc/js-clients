@@ -17,6 +17,7 @@ export const makeShadcnAutoEnumInput = ({
   CommandEmpty,
   CommandGroup,
   Checkbox,
+  ScrollArea,
 }: Pick<
   ShadcnElements,
   | "Badge"
