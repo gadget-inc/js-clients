@@ -3,7 +3,7 @@ import { PlusCircleIcon, XCircleIcon } from "@shopify/polaris-icons";
 import React, { useEffect, useMemo, useState } from "react";
 import { useFormContext } from "../../../../useActionForm.js";
 import { extractPathsFromChildren } from "../../..//AutoForm.js";
-import { autoInput } from "../../../AutoInput.js";
+import { autoRelationshipForm } from "../../../AutoInput.js";
 import { RelationshipContext, useAutoRelationship, useRelationshipContext } from "../../../hooks/useAutoRelationship.js";
 import { useHasManyThroughController } from "../../../hooks/useHasManyThroughController.js";
 import { getRecordAsOption, useOptionLabelForField } from "../../../hooks/useRelatedModel.js";
@@ -11,7 +11,7 @@ import type { OptionLabel } from "../../../interfaces/AutoRelationshipInputProps
 import { RelatedModelOptionsPopover, RelatedModelOptionsSearch } from "./RelatedModelOptions.js";
 import { renderOptionLabel } from "./utils.js";
 
-export const PolarisAutoHasManyThroughForm = autoInput(
+export const PolarisAutoHasManyThroughForm = autoRelationshipForm(
   (props: {
     field: string;
     children: React.ReactNode;
