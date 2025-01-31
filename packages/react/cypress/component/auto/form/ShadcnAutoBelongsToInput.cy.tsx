@@ -2,17 +2,10 @@ import React from "react";
 import { elements } from "../../../../spec/auto/shadcn-defaults/index.js";
 import { apiTriggerOnly } from "../../../../spec/auto/support/Triggers.js";
 import { makeAutocomponents } from "../../../../src/auto/shadcn/index.js";
-import { makeShadcnAutoBelongsToInput } from "../../../../src/auto/shadcn/inputs/relationships/ShadcnAutoBelongsToInput.js";
-import { makeShadcnAutoSubmit } from "../../../../src/auto/shadcn/submit/ShadcnAutoSubmit.js";
-import { makeSubmitResultBanner } from "../../../../src/auto/shadcn/submit/ShadcnSubmitResultBanner.js";
 import { api } from "../../../support/api.js";
 import { ShadcnWrapper } from "../../../support/auto.js";
 
-const ShadcnAutoForm = makeAutocomponents(elements).AutoForm;
-const ShadcnAutoSubmit = makeShadcnAutoSubmit(elements);
-const { ShadcnSubmitResultBanner } = makeSubmitResultBanner(elements);
-
-const ShadcnAutoBelongsToInput = makeShadcnAutoBelongsToInput(elements);
+const { AutoForm, AutoSubmit, SubmitResultBanner, AutoBelongsToInput } = makeAutocomponents(elements);
 
 describe("ShadcnAutoBelongsToInput", () => {
   const interceptModelUpdateActionMetadata = () => {
@@ -75,7 +68,7 @@ describe("ShadcnAutoBelongsToInput", () => {
   });
 
   it("can deselect a related record and submit it", () => {
-    cy.mountWithWrapper(<ShadcnAutoForm action={api.widget.update} findBy="42" />, ShadcnWrapper);
+    cy.mountWithWrapper(<AutoForm action={api.widget.update} findBy="42" />, ShadcnWrapper);
 
     cy.get(`[cmdk-input]`).click(); // Click to focus the input field
     cy.get('[cmdk-item][data-value="Section 1"][data-selected="true"]').should("exist");
@@ -87,7 +80,7 @@ describe("ShadcnAutoBelongsToInput", () => {
   });
 
   it("can select a related record and submit it", () => {
-    cy.mountWithWrapper(<ShadcnAutoForm action={api.widget.update} findBy="42" />, ShadcnWrapper);
+    cy.mountWithWrapper(<AutoForm action={api.widget.update} findBy="42" />, ShadcnWrapper);
 
     cy.get(`input[name="widget.section"]`).click(); // Click to focus the input field (works either using cmdk-input or input[name="widget.section"])
     cy.contains(`Section 3`).click();
@@ -101,11 +94,11 @@ describe("ShadcnAutoBelongsToInput", () => {
   describe("optionLabel", () => {
     it("should use the field api id of the string option label as the option display label", () => {
       cy.mountWithWrapper(
-        <ShadcnAutoForm action={api.widget.update} findBy="42">
-          <ShadcnSubmitResultBanner />
-          <ShadcnAutoBelongsToInput field="section" optionLabel="otherField" />
-          <ShadcnAutoSubmit />
-        </ShadcnAutoForm>,
+        <AutoForm action={api.widget.update} findBy="42">
+          <SubmitResultBanner />
+          <AutoBelongsToInput field="section" optionLabel="otherField" />
+          <AutoSubmit />
+        </AutoForm>,
         ShadcnWrapper
       );
       cy.get(`input[name="widget.section"]`).click();
@@ -118,11 +111,11 @@ describe("ShadcnAutoBelongsToInput", () => {
 
     it("should use call the option label function to generate the option labels", () => {
       cy.mountWithWrapper(
-        <ShadcnAutoForm action={api.widget.update} findBy="42">
-          <ShadcnSubmitResultBanner />
-          <ShadcnAutoBelongsToInput field="section" optionLabel={(record) => `Custom label for ${record.id}`} />
-          <ShadcnAutoSubmit />
-        </ShadcnAutoForm>,
+        <AutoForm action={api.widget.update} findBy="42">
+          <SubmitResultBanner />
+          <AutoBelongsToInput field="section" optionLabel={(record) => `Custom label for ${record.id}`} />
+          <AutoSubmit />
+        </AutoForm>,
         ShadcnWrapper
       );
       cy.get(`input[name="widget.section"]`).click();

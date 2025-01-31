@@ -60,7 +60,7 @@ export const makeShadcnAutoComboInput = ({
             <CommandInput
               name={props.path}
               ref={inputRef}
-              id={id}
+              data-testid={id}
               value={inputValue}
               onValueChange={setInputValue}
               onBlur={() => setOpen(false)}

@@ -11,7 +11,7 @@ export * from "./elements.js";
 export const makeAutocomponents = (elements: ShadcnElements) => {
   return {
     AutoButton: makeAutoButton(elements),
-    AutoForm: makeAutoForm(elements),
     AutoTable: makeAutoTable(elements),
+    ...makeAutoForm(elements),
   };
 };

@@ -1,14 +1,11 @@
 import React from "react";
-import { elements } from "../../../../spec/auto/shadcn-defaults/index.js";
 import { apiTriggerOnly } from "../../../../spec/auto/support/Triggers.js";
 import { getStadiumRecord } from "../../../../spec/auto/support/stadiumModel.js";
-import { makeAutocomponents } from "../../../../src/auto/shadcn/index.js";
 import { api } from "../../../support/api.js";
-import { ShadcnWrapper } from "../../../support/auto.js";
+import { describeForEachAutoAdapter } from "../../../support/auto.js";
+import { SUITE_NAMES } from "../../../support/constants.js";
 
-const ShadcnAutoForm = makeAutocomponents(elements).AutoForm;
-
-describe("ShadcnAutoEnumInput", () => {
+describeForEachAutoAdapter("AutoEnumInput", ({ name, adapter: { AutoForm }, wrapper }) => {
   const blurComboboxes = () => {
     cy.get("body").click({ force: true });
   };
@@ -66,35 +63,49 @@ describe("ShadcnAutoEnumInput", () => {
     ).as("updateStadium");
   });
 
+  const getInputSelector = (id: string) => {
+    return name == SUITE_NAMES.SHADCN ? `[data-testid='${id}-combobox-textfield']` : `#${id}-combobox-textfield`;
+  };
+
+  const selectedItemsSelector = name == SUITE_NAMES.SHADCN ? `[role="presentation"]` : ".Polaris-InlineStack";
+
   it("should include the enum options in the dropdown", () => {
     cy.mockModelActionMetadata(api, baseModelActionMetadata);
 
-    cy.mountWithWrapper(<ShadcnAutoForm action={api.game.stadium.create} />, ShadcnWrapper);
-    cy.get(`[cmdk-input]`).first().click(); // Open dropdown
-    cy.get('[cmdk-item][data-value="football"]').should("exist");
-    cy.get('[cmdk-item][data-value="basketball"]').should("exist");
-    cy.get('[cmdk-item][data-value="baseball"]').should("exist");
-    blurComboboxes(); // Close dropdown
+    cy.mountWithWrapper(<AutoForm action={api.game.stadium.create} />, wrapper);
+    cy.get(getInputSelector("type")).click();
+    cy.contains("football").should("exist");
+    cy.contains("basketball").should("exist");
+    cy.contains("baseball").should("exist");
+    // Close the "type" dropdown
+    blurComboboxes();
 
-    cy.get(`[cmdk-input]`).eq(1).click(); // Open dropdown for tags
-    cy.get('[cmdk-item][data-value="hello"]').should("exist");
-    cy.get('[cmdk-item][data-value="world"]').should("exist");
+    cy.get(getInputSelector("tags")).click();
+    cy.contains("hello").should("exist");
+    cy.contains("world").should("exist");
   });
 
   describe("searching for an option", () => {
     it("should show the selected value in the dropdown for single select enum", () => {
       cy.mockModelActionMetadata(api, baseModelActionMetadata);
 
-      cy.mountWithWrapper(<ShadcnAutoForm action={api.game.stadium.create} />, ShadcnWrapper);
-      cy.get("[cmdk-input]").first().click();
-      cy.get('[cmdk-item][data-value="football"]').click();
-      cy.get('[role="presentation"]').should("contain", "football");
+      cy.mountWithWrapper(<AutoForm action={api.game.stadium.create} />, wrapper);
+      cy.get(getInputSelector("type")).click();
+      cy.contains("football").click();
+      cy.get(selectedItemsSelector).should("contain", "football");
 
-      cy.get("[cmdk-input]").eq(1).click();
-      cy.get('[cmdk-item][data-value="hello"]').click();
-      cy.get("[cmdk-input]").eq(1).click();
-      cy.get('[cmdk-item][data-value="hello"][data-selected="true"]').should("exist");
-      cy.get('[cmdk-item][data-value="world"][data-selected="true"]').should("not.exist");
+      if (name == SUITE_NAMES.SHADCN) {
+        cy.get("[cmdk-input]").eq(1).click();
+        cy.get('[cmdk-item][data-value="hello"]').click();
+        cy.get("[cmdk-input]").eq(1).click();
+        cy.get('[cmdk-item][data-value="hello"][data-selected="true"]').should("exist");
+        cy.get('[cmdk-item][data-value="world"][data-selected="true"]').should("not.exist");
+      } else {
+        cy.get(getInputSelector("tags")).click();
+        cy.contains("hello").parent().parent().click();
+        cy.get(selectedItemsSelector).should("contain", "hello");
+        cy.get(selectedItemsSelector).should("not.contain", "world");
+      }
 
       blurComboboxes();
 
@@ -110,32 +121,37 @@ describe("ShadcnAutoEnumInput", () => {
     it("should allow searching for options in the dropdown", () => {
       cy.mockModelActionMetadata(api, baseModelActionMetadata);
 
-      cy.mountWithWrapper(<ShadcnAutoForm action={api.game.stadium.create} />, ShadcnWrapper);
+      cy.mountWithWrapper(<AutoForm action={api.game.stadium.create} />, wrapper);
       // For single select enums
-      cy.get("[cmdk-input]").first().type("foot");
+      cy.get(getInputSelector("type")).type("foot");
 
       // The dropdown items should be filtered
-      cy.get('[cmdk-item][data-value="football"]').should("exist");
-      cy.get('[cmdk-item][data-value="basketball"]').should("not.exist");
-      cy.get('[cmdk-item][data-value="baseball"]').should("not.exist");
+      cy.contains("football").should("exist");
+      cy.contains("basketball").should("not.exist");
+      cy.contains("baseball").should("not.exist");
 
-      cy.get('[cmdk-item][data-value="football"]').click();
-      cy.get('[role="presentation"]').should("contain", "football");
+      cy.contains("football").click();
+      cy.get(selectedItemsSelector).should("contain", "football");
 
       // For multi-select enums
-      cy.get("[cmdk-input]").eq(1).type("hel");
+      cy.get(getInputSelector("tags")).type("hel");
 
       // The dropdown items should be filtered
-      cy.get('[cmdk-item][data-value="hello"]').should("exist");
-      cy.get('[cmdk-item][data-value="world"]').should("not.exist");
+      cy.contains("hello").should("exist");
+      cy.contains("world").should("not.exist");
 
-      cy.get('[cmdk-item][data-value="hello"]').click();
-      // Verify that the chip/tag appears after selection
-      checkBadgeWithButton("hello");
+      if (name == SUITE_NAMES.SHADCN) {
+        cy.get('[cmdk-item][data-value="hello"]').click();
+        // Verify that the chip/tag appears after selection
+        checkBadgeWithButton("hello");
 
-      cy.get("[cmdk-input]").eq(1).click();
+        cy.get("[cmdk-input]").eq(1).click();
 
-      cy.contains('Add "hel"').should("exist");
+        cy.contains('Add "hel"').should("exist");
+      } else {
+        cy.contains("hello").parent().parent().click();
+        cy.get(selectedItemsSelector).should("contain", "hello");
+      }
 
       blurComboboxes();
 
@@ -187,16 +203,14 @@ describe("ShadcnAutoEnumInput", () => {
 
       cy.mockModelActionMetadata(api, mockedMetadata);
 
-      cy.mountWithWrapper(<ShadcnAutoForm action={api.game.stadium.create} />, ShadcnWrapper);
-      cy.get("[cmdk-input]").first().type("extra");
+      cy.mountWithWrapper(<AutoForm action={api.game.stadium.create} />, wrapper);
+      cy.get(getInputSelector("type")).type("extra");
       cy.contains(`Add "extra"`).click();
+      cy.get(selectedItemsSelector).should("contain", "extra");
 
-      checkBadgeWithButton("extra");
-
-      cy.get("[cmdk-input]").eq(1).type("more");
+      cy.get(getInputSelector("tags")).type("more");
       cy.contains(`Add "more"`).click();
-
-      checkBadgeWithButton("more");
+      cy.get(selectedItemsSelector).should("contain", "more");
 
       blurComboboxes();
 
@@ -244,14 +258,14 @@ describe("ShadcnAutoEnumInput", () => {
         ],
       });
 
-      cy.mountWithWrapper(<ShadcnAutoForm action={api.game.stadium.create} />, ShadcnWrapper);
-      cy.get("[cmdk-input]").first().type("hello");
+      cy.mountWithWrapper(<AutoForm action={api.game.stadium.create} />, wrapper);
+      cy.get(getInputSelector("type")).type("hello");
       cy.contains(`Add "hello"`).should("not.exist");
       cy.contains(`No options found matching "hello"`).should("exist");
 
       blurComboboxes();
 
-      cy.get("[cmdk-input]").eq(1).type("nope");
+      cy.get(getInputSelector("tags")).type("nope");
       cy.contains(`Add "nope"`).should("not.exist");
       cy.contains(`No options found matching "nope"`).should("exist");
     });
@@ -282,12 +296,17 @@ describe("ShadcnAutoEnumInput", () => {
         },
       });
 
-      cy.mountWithWrapper(<ShadcnAutoForm action={api.game.stadium.update} findBy="42" />, ShadcnWrapper);
-      checkBadgeWithButton("football");
+      cy.mountWithWrapper(<AutoForm action={api.game.stadium.update} findBy="42" />, wrapper);
 
-      checkBadgeWithButton("hello");
-
-      checkBadgeWithButton("world");
+      if (name == SUITE_NAMES.SHADCN) {
+        checkBadgeWithButton("football");
+        checkBadgeWithButton("hello");
+        checkBadgeWithButton("world");
+      } else {
+        cy.get(".Polaris-InlineStack").should("contain", "football");
+        cy.get(".Polaris-InlineStack").should("contain", "hello");
+        cy.get(".Polaris-InlineStack").should("contain", "world");
+      }
     });
 
     it("should be able to clear the value", () => {
@@ -299,13 +318,13 @@ describe("ShadcnAutoEnumInput", () => {
         },
       });
 
-      cy.mountWithWrapper(<ShadcnAutoForm action={api.game.stadium.update} findBy="42" />, ShadcnWrapper);
-      cy.get("[cmdk-input]").first().click();
+      cy.mountWithWrapper(<AutoForm action={api.game.stadium.update} findBy="42" />, wrapper);
+      cy.get(getInputSelector("type")).click();
       cy.get('[aria-label="Remove football"]').click();
 
       blurComboboxes();
 
-      cy.get("[cmdk-input]").eq(1).click();
+      cy.get(getInputSelector("tags")).click();
       cy.get('[aria-label="Remove hello"]').click();
       cy.get('[aria-label="Remove world"]').click();
 

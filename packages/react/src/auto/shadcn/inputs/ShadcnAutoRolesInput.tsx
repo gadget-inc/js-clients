@@ -3,7 +3,6 @@ import type { Control } from "../../../useActionForm.js";
 import { getPropsWithoutRef } from "../../../utils.js";
 import { autoInput } from "../../AutoInput.js";
 import { useRoleInputController } from "../../hooks/useRoleInputController.js";
-import type { AutoRelationshipInputProps } from "../../interfaces/AutoRelationshipInputProps.js";
 import type { ShadcnElements } from "../elements.js";
 import { makeShadcnAutoComboInput } from "./ShadcnAutoComboInput.js";
 import { makeSelectedRecordTags } from "./relationships/SelectedRelatedRecordTags.js";
@@ -13,11 +12,11 @@ export interface EnumOption {
   value: string;
 }
 
-type AutoRolesInputProps = {
+export type AutoRolesInputProps = {
   field: string; // Field API identifier
   control?: Control<any>;
   label?: string;
-  options: EnumOption[];
+  options?: EnumOption[];
 };
 
 export const makeShadcnAutoRolesInput = ({
@@ -36,7 +35,7 @@ export const makeShadcnAutoRolesInput = ({
   "Badge" | "Button" | "Command" | "CommandItem" | "CommandList" | "CommandEmpty" | "CommandGroup" | "CommandInput" | "Label" | "Checkbox"
 >) => {
   const { SelectedRecordTags } = makeSelectedRecordTags({ Badge, Button });
-  const ShadcnComboInput = makeShadcnAutoComboInput({
+  const ComboInput = makeShadcnAutoComboInput({
     Command,
     CommandInput,
     Label,
@@ -47,7 +46,7 @@ export const makeShadcnAutoRolesInput = ({
     Checkbox,
   });
 
-  function ShadcnAutoRolesInput(props: AutoRelationshipInputProps) {
+  function AutoRolesInput(props: AutoRolesInputProps) {
     const { field } = props;
     const { options, loading, rolesError, fieldError, selectedRoleKeys, fieldProps, metadata } = useRoleInputController(props);
 
@@ -104,7 +103,7 @@ export const makeShadcnAutoRolesInput = ({
     }
 
     return (
-      <ShadcnComboInput
+      <ComboInput
         {...props}
         options={roleOptions}
         path={fieldProps.name}
@@ -131,5 +130,5 @@ export const makeShadcnAutoRolesInput = ({
     );
   }
 
-  return autoInput(ShadcnAutoRolesInput);
+  return autoInput(AutoRolesInput);
 };
