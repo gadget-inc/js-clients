@@ -35,7 +35,7 @@ export const PolarisAutoHasOneInput = autoInput((props: AutoRelationshipInputPro
           <Combobox.TextField
             onChange={search.set}
             value={search.value}
-            label={metadata.name}
+            label={props.label ?? metadata.name}
             name={path}
             placeholder="Search"
             autoComplete="off"
