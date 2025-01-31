@@ -36,6 +36,8 @@ const ONLY_RUN_SUITES = {
     "AutoFormJSONInput",
     "AutoPasswordInput",
     "AutoRoleInput",
+    "AutoEnumInput",
+    "AutoBelongsToInput",
   ],
 };
 

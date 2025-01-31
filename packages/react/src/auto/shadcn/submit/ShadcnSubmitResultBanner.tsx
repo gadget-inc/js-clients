@@ -13,7 +13,7 @@ export const makeSubmitResultBanner = <Elements extends Partial<ShadcnElements>>
     throw new Error("Alert components are required");
   }
 
-  const ShadcnSubmitSuccessfulBanner = (props: any) => {
+  const SubmitSuccessfulBanner = (props: any) => {
     const { show, successful, title, hide } = useResultBannerController();
 
     if (!show || !successful) {
@@ -37,7 +37,7 @@ export const makeSubmitResultBanner = <Elements extends Partial<ShadcnElements>>
     );
   };
 
-  const ShadcnSubmitErrorBanner = (props: any) => {
+  const SubmitErrorBanner = (props: any) => {
     const { show, successful, hide, title } = useResultBannerController();
 
     if (!show || successful) {
@@ -61,18 +61,18 @@ export const makeSubmitResultBanner = <Elements extends Partial<ShadcnElements>>
     );
   };
 
-  const ShadcnSubmitResultBanner = (props: { successBannerProps?: any; errorBannerProps?: any }) => {
+  const SubmitResultBanner = (props: { successBannerProps?: any; errorBannerProps?: any }) => {
     return (
       <>
-        <ShadcnSubmitSuccessfulBanner {...props.successBannerProps} />
-        <ShadcnSubmitErrorBanner {...props.errorBannerProps} />
+        <SubmitSuccessfulBanner {...props.successBannerProps} />
+        <SubmitErrorBanner {...props.errorBannerProps} />
       </>
     );
   };
 
   return {
-    ShadcnSubmitResultBanner,
-    ShadcnSubmitSuccessfulBanner,
-    ShadcnSubmitErrorBanner,
+    SubmitResultBanner,
+    SubmitSuccessfulBanner,
+    SubmitErrorBanner,
   };
 };

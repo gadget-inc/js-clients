@@ -1,15 +1,7 @@
 import React from "react";
-import { elements } from "../../../../spec/auto/shadcn-defaults/index.js";
 import { apiTriggerOnly } from "../../../../spec/auto/support/Triggers.js";
-import { PolarisAutoInput } from "../../../../src/auto/polaris/inputs/PolarisAutoInput.js";
-import { PolarisAutoSubmit } from "../../../../src/auto/polaris/submit/PolarisAutoSubmit.js";
-import { makeShadcnAutoInput } from "../../../../src/auto/shadcn/inputs/ShadcnAutoInput.js";
-import { makeShadcnAutoSubmit } from "../../../../src/auto/shadcn/submit/ShadcnAutoSubmit.js";
 import { api } from "../../../support/api.js";
 import { describeForEachAutoAdapter } from "../../../support/auto.js";
-
-const ShadcnAutoInput = makeShadcnAutoInput(elements);
-const ShadcnAutoSubmit = makeShadcnAutoSubmit(elements);
 
 describeForEachAutoAdapter("AutoForm - ID field", ({ name, adapter: { AutoForm }, wrapper }) => {
   it("does not render an input for ID when the action is not upsert", () => {
@@ -26,7 +18,7 @@ describeForEachAutoAdapter("AutoForm - ID field", ({ name, adapter: { AutoForm }
   });
 });
 
-describeForEachAutoAdapter("AutoForm - Upsert Action", ({ name, adapter: { AutoForm }, wrapper }) => {
+describeForEachAutoAdapter("AutoForm - Upsert Action", ({ name, adapter: { AutoForm, AutoInput, AutoSubmit }, wrapper }) => {
   let upsertHasBeenCalled: boolean;
 
   const interceptModelUpsertActionMetadata = () => {
@@ -157,19 +149,9 @@ describeForEachAutoAdapter("AutoForm - Upsert Action", ({ name, adapter: { AutoF
 
     cy.mountWithWrapper(
       <AutoForm action={api.widget.upsert} findBy="1">
-        {name === "Polaris" ? (
-          <>
-            <PolarisAutoInput field="name" />
-            <PolarisAutoInput field="inventoryCount" />
-            <PolarisAutoSubmit />
-          </>
-        ) : name === "Shadcn" ? (
-          <>
-            <ShadcnAutoInput field="name" />
-            <ShadcnAutoInput field="inventoryCount" />
-            <ShadcnAutoSubmit />
-          </>
-        ) : null}
+        <AutoInput field="name" />
+        <AutoInput field="inventoryCount" />
+        <AutoSubmit />
       </AutoForm>,
       wrapper
     );
