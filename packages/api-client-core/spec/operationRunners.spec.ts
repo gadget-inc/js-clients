@@ -4,7 +4,7 @@ import { diff } from "@n1ru4l/json-patch-plus";
 import { CombinedError } from "@urql/core";
 import nock from "nock";
 import { BackgroundActionHandle } from "../src/BackgroundActionHandle.js";
-import type { AnyModelManager, GadgetErrorGroup, LimitToKnownKeys } from "../src/index.js";
+import type { AnyPublicModelManager, GadgetErrorGroup, LimitToKnownKeys } from "../src/index.js";
 import {
   GadgetConnection,
   actionRunner,
@@ -30,7 +30,7 @@ describe("type checks", () => {
       options?: LimitToKnownKeys<Options, CreatePostOptions>
     ): Promise<CreatePostResult<Options>> {
       return await actionRunner<SelectedPostOrDefault<Options>>(
-        this,
+        this, // This is a problem...
         "createPost",
         DefaultPostSelection,
         "post",
@@ -48,6 +48,7 @@ describe("type checks", () => {
 // eslint-disable-next-line jest/no-export
 describe("operationRunners", () => {
   let connection: GadgetConnection;
+  let manager: AnyPublicModelManager;
   let query: string | undefined;
   let mockUrqlClient: MockUrqlClient;
 
@@ -60,6 +61,7 @@ describe("operationRunners", () => {
       },
     });
     jest.spyOn(connection, "currentClient" as any, "get").mockReturnValue(mockUrqlClient as any);
+    manager = { connection } as AnyPublicModelManager;
   });
 
   describe("findOneRunner", () => {
@@ -74,7 +76,7 @@ describe("operationRunners", () => {
                   __typename
                 }
                 gadgetMeta {
-                  hydrations(modelName: 
+                  hydrations(modelName:
               "widget")
                 }
               }"
@@ -114,7 +116,7 @@ describe("operationRunners", () => {
             }
           }
           gadgetMeta {
-            hydrations(modelName: 
+            hydrations(modelName:
         "outer.inner.widget")
           }
         }"
@@ -170,7 +172,7 @@ describe("operationRunners", () => {
             }
           }
           gadgetMeta {
-            hydrations(modelName: 
+            hydrations(modelName:
         "widget")
           }
         }"
@@ -240,7 +242,7 @@ describe("operationRunners", () => {
             }
           }
           gadgetMeta {
-            hydrations(modelName: 
+            hydrations(modelName:
         "outer.inner.widget")
           }
         }"
@@ -316,7 +318,7 @@ describe("operationRunners", () => {
 
   describe("findManyRunner", () => {
     test("can execute a findMany operation against a model", async () => {
-      const promise = findManyRunner({ connection } as AnyModelManager, "widgets", { id: true, name: true }, "widget");
+      const promise = findManyRunner({ connection } as AnyPublicModelManager, "widgets", { id: true, name: true }, "widget");
 
       expect(query).toMatchInlineSnapshot(`
               "query widgets($after: String, $first: Int, $before: String, $last: Int) {
@@ -337,7 +339,7 @@ describe("operationRunners", () => {
                   }
                 }
                 gadgetMeta {
-                  hydrations(modelName: 
+                  hydrations(modelName:
               "widget")
                 }
               }"
@@ -369,7 +371,7 @@ describe("operationRunners", () => {
 
     test("can execute a findMany operation against a namespaced model", async () => {
       const promise = findManyRunner(
-        { connection } as AnyModelManager,
+        { connection } as AnyPublicModelManager,
         "widgets",
         { id: true, name: true },
         "widget",
@@ -400,7 +402,7 @@ describe("operationRunners", () => {
             }
           }
           gadgetMeta {
-            hydrations(modelName: 
+            hydrations(modelName:
         "outer.inner.widget")
           }
         }"
@@ -436,7 +438,7 @@ describe("operationRunners", () => {
 
     test("can execute a findMany operation against a namespaced model when the namespace is a string", async () => {
       const promise = findManyRunner(
-        { connection } as AnyModelManager,
+        { connection } as AnyPublicModelManager,
         "widgets",
         { id: true, name: true },
         "widget",
@@ -466,7 +468,7 @@ describe("operationRunners", () => {
             }
           }
           gadgetMeta {
-            hydrations(modelName: 
+            hydrations(modelName:
         "outer.widget")
           }
         }"
@@ -502,9 +504,7 @@ describe("operationRunners", () => {
   describe("actionRunner", () => {
     test("can run a single create action", async () => {
       const promise = actionRunner<{ id: string; name: string }>(
-        {
-          connection,
-        },
+        manager,
         "createWidget",
         { id: true, name: true },
         "widget",
@@ -544,9 +544,7 @@ describe("operationRunners", () => {
 
     test("can run a single update action", async () => {
       const promise = actionRunner<{ id: string; name: string }>(
-        {
-          connection,
-        },
+        manager,
         "updateWidget",
         { id: true, name: true },
         "widget",
@@ -591,9 +589,7 @@ describe("operationRunners", () => {
 
     test("can run a single action with an object result type", async () => {
       const promise = actionRunner(
-        {
-          connection,
-        },
+        manager,
         "upsertWidget",
         { id: true, name: true, eventAt: true },
         "widget",
@@ -646,9 +642,7 @@ describe("operationRunners", () => {
 
     test("can run a single action with an object result type that has an inner return type", async () => {
       const promise = actionRunner(
-        {
-          connection,
-        },
+        manager,
         "upsertWidget",
         { id: true, name: true, eventAt: true },
         "widget",
@@ -693,9 +687,7 @@ describe("operationRunners", () => {
 
     test("can run an action with hasReturnType", async () => {
       const promise = actionRunner(
-        {
-          connection,
-        },
+        manager,
         "createWidget",
         { id: true, name: true },
         "widget",
@@ -733,9 +725,7 @@ describe("operationRunners", () => {
 
     test("can throw the error returned by the server for a single action", async () => {
       const promise = actionRunner<{ id: string; name: string }>(
-        {
-          connection,
-        },
+        manager,
         "updateWidget",
         { id: true, name: true },
         "widget",
@@ -780,9 +770,7 @@ describe("operationRunners", () => {
 
     test("can run a bulk action by ids", async () => {
       const promise = actionRunner<{ id: string; name: string }>(
-        {
-          connection,
-        },
+        manager,
         "bulkFlipWidgets",
         { id: true, name: true },
         "widget",
@@ -830,9 +818,7 @@ describe("operationRunners", () => {
 
     test("can run a bulk action with params", async () => {
       const promise = actionRunner<{ id: string; name: string }>(
-        {
-          connection,
-        },
+        manager,
         "bulkCreateWidgets",
         { id: true, name: true },
         "widget",
@@ -880,9 +866,7 @@ describe("operationRunners", () => {
 
     test("can run a bulk action with a returnType", async () => {
       const promise = actionRunner(
-        {
-          connection,
-        },
+        manager,
         "bulkCreateWidgets",
         { id: true, name: true },
         "widget",
@@ -921,9 +905,7 @@ describe("operationRunners", () => {
 
     test("can run a bulk action with an object returnType", async () => {
       const promise = actionRunner(
-        {
-          connection,
-        },
+        manager,
         "bulkUpsertWidgets",
         { id: true, name: true },
         "widget",
@@ -970,9 +952,7 @@ describe("operationRunners", () => {
 
     test("throws a nice error when a bulk action returns errors", async () => {
       const promise = actionRunner<{ id: string; name: string }>(
-        {
-          connection,
-        },
+        manager,
         "bulkCreateWidgets",
         { id: true, name: true },
         "widget",
@@ -1010,9 +990,7 @@ describe("operationRunners", () => {
 
     test("throws a nice error when a bulk action returns errors and data", async () => {
       const promise = actionRunner<{ id: string; name: string }>(
-        {
-          connection,
-        },
+        manager,
         "bulkCreateWidgets",
         { id: true, name: true },
         "widget",
@@ -1057,9 +1035,7 @@ describe("operationRunners", () => {
 
     test("returns undefined when bulk action does not have a result", async () => {
       const promise = actionRunner<{ id: string; name: string }>(
-        {
-          connection,
-        },
+        manager,
         "bulkDeleteWidgets",
         null,
         "widget",
@@ -1958,7 +1934,7 @@ describe("operationRunners", () => {
       test("can run a live findMany", async () => {
         const iterator = asyncIterableToIterator(
           findManyRunner<{ id: string; name: string }, { live: true }>(
-            { connection } as AnyModelManager,
+            { connection } as AnyPublicModelManager,
             "widgets",
             { id: true, name: true },
             "widget",

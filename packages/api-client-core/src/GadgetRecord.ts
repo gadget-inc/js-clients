@@ -1,5 +1,6 @@
 import { klona as cloneDeep } from "klona";
 import type { Jsonify } from "type-fest";
+import type { AnyModelManager } from "./AnyModelManager.js";
 import { isEqual, toPrimitiveObject } from "./support.js";
 
 export enum ChangeTracking {
@@ -29,7 +30,7 @@ export class GadgetRecord_<Shape extends RecordShape> {
 
   private empty = false;
 
-  constructor(data: Shape) {
+  constructor(data: Shape, readonly modelManager?: AnyModelManager) {
     this[kInstantiatedFields] = cloneDeep(data) ?? {};
     this[kPersistedFields] = cloneDeep(data) ?? {};
     Object.assign(this[kFields], data);
@@ -221,7 +222,8 @@ export type GadgetRecord<Shape extends RecordShape> = GadgetRecord_<Shape> & Sha
 /**
  * Instantiates a `GadgetRecord` with the attributes of your model. A `GadgetRecord` can be used to track changes to your model and persist those changes via Gadget actions.
  **/
-export const GadgetRecord: new <Shape extends RecordShape>(data: Shape) => GadgetRecord_<Shape> & Shape = GadgetRecord_ as any;
+export const GadgetRecord: new <Shape extends RecordShape>(data: Shape, modelManager?: AnyModelManager) => GadgetRecord_<Shape> & Shape =
+  GadgetRecord_ as any;
 
 /**
  * Legacy export for old generated clients expecting to find the class named this

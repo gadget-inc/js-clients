@@ -1,4 +1,4 @@
-import type { DefaultSelection, FindManyFunction, GadgetRecord, LimitToKnownKeys, Select } from "@gadgetinc/api-client-core";
+import type { AnyPublicModelManager, DefaultSelection, FindManyFunction, GadgetRecord, LimitToKnownKeys, Select } from "@gadgetinc/api-client-core";
 import type { OperationContext } from "@urql/core";
 import { useCallback, useMemo, useState } from "react";
 import type { SearchResult } from "./useDebouncedSearch.js";
@@ -46,7 +46,7 @@ export const useList = <
   F extends FindManyFunction<GivenOptions, any, SchemaT, any>,
   Options extends F["optionsType"] & ReadOperationOptions & ListOptions
 >(
-  manager: { findMany: F },
+  manager: { findMany: F } & AnyPublicModelManager,
   options?: LimitToKnownKeys<Options, F["optionsType"] & ReadOperationOptions & ListOptions>
 ): ListResult<
   Array<
