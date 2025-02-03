@@ -94,7 +94,6 @@ export const makeShadcnListMessages = ({
     return null;
   }
 
-
   return {
     NoRecordsMessage,
     ShadcnSelectableOption,

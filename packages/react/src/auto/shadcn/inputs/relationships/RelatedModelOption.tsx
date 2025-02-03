@@ -60,11 +60,7 @@ export const makeRelatedModelOption = (
     return (
       <CommandList>
         {isLoading && <CommandEmpty>Loading...</CommandEmpty>}
-        {listBoxOptions.length > 0 ? (
-          <CommandGroup>
-            {listBoxOptions}
-          </CommandGroup>
-        ) : null}
+        {listBoxOptions.length > 0 ? <CommandGroup>{listBoxOptions}</CommandGroup> : null}
         {props.allowOther && props.searchValue && (
           <AddExtraOption
             message={`Add "${props.searchValue}"`}

@@ -205,7 +205,6 @@ const useAllRelatedModelRecords = (props: {
     setSearchValue(emptySearch ? undefined : search);
   }, []);
 
-
   /**
    * This useEffect appends the newly fetched records to the list of records that have already been loaded
    * `numberOfRecordsToLoad` are retrieved per `useFindMany` call
