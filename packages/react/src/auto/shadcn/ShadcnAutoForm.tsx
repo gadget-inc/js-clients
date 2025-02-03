@@ -98,17 +98,6 @@ export const makeAutoForm = <Elements extends ShadcnElements>({
         <AutoFormInner
           key={componentKey}
           {...(props as AutoFormProps<GivenOptions, SchemaT, ActionFunc> & Omit<Partial<FormProps>, "action"> & { findBy: any })}
-          elements={{
-            Form,
-            Input,
-            Button,
-            Alert,
-            Skeleton,
-            AlertTitle,
-            AlertDescription,
-            ShadcnAutoInput: AutoInput,
-            ShadcnAutoSubmit: AutoSubmit,
-          }}
         />
       </AutoFormFieldsFromChildComponentsProvider>
     );
@@ -118,18 +107,13 @@ export const makeAutoForm = <Elements extends ShadcnElements>({
     GivenOptions extends OptionsType,
     SchemaT,
     ActionFunc extends ActionFunction<GivenOptions, any, any, SchemaT, any>
-  >(
-    props: AutoFormProps<GivenOptions, SchemaT, ActionFunc> & {
-      elements: ShadcnElements;
-    } & ComponentProps<any>
-  ) {
+  >(props: AutoFormProps<GivenOptions, SchemaT, ActionFunc> & ComponentProps<typeof Form>) {
     const {
       record: _record,
       action,
       findBy,
       ...rest
     } = props as AutoFormProps<GivenOptions, SchemaT, ActionFunc> & Omit<Partial<FormProps>, "action"> & { findBy: any };
-    const { Form, Skeleton, ShadcnAutoInput, ShadcnAutoSubmit } = props.elements;
 
     const {
       metadata,
@@ -144,7 +128,7 @@ export const makeAutoForm = <Elements extends ShadcnElements>({
       isLoading,
     } = useAutoForm(props);
 
-    const formTitle = props.title === undefined ? humanizeCamelCase(action.operationName) : props.title;
+    const formTitle = "title" in props && props.title !== undefined ? props.title : humanizeCamelCase(action.operationName);
 
     if (props.successContent && isSubmitSuccessful) {
       return props.successContent;
@@ -182,9 +166,9 @@ export const makeAutoForm = <Elements extends ShadcnElements>({
         {!metadataError && (
           <>
             {fields.map(({ metadata }) => (
-              <ShadcnAutoInput field={metadata.apiIdentifier} key={metadata.apiIdentifier} />
+              <AutoInput field={metadata.apiIdentifier} key={metadata.apiIdentifier} />
             ))}
-            <ShadcnAutoSubmit>{props.submitLabel ?? "Submit"}</ShadcnAutoSubmit>
+            <AutoSubmit>{"submitLabel" in props && props.submitLabel ? props.submitLabel : "Submit"}</AutoSubmit>
           </>
         )}
       </>
