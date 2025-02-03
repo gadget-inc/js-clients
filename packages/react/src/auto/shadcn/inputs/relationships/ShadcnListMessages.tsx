@@ -55,6 +55,7 @@ export const makeShadcnListMessages = ({
           id={id}
           selected={selected}
           className={className}
+          value={label}
           onMouseDown={(e: React.MouseEvent) => {
             e.preventDefault();
             e.stopPropagation();

@@ -1,4 +1,6 @@
-import React, { useMemo } from "react";
+import React, { useCallback, useEffect, useMemo } from "react";
+
+import { debounce } from "../../../../utils.js";
 import { autoInput } from "../../../AutoInput.js";
 import { useHasManyInputController } from "../../../hooks/useHasManyController.js";
 import { optionRecordsToLoadCount, useOptionLabelForField } from "../../../hooks/useRelatedModel.js";
@@ -15,6 +17,7 @@ export const makeShadcnAutoHasManyInput = ({
   CommandInput,
   Label,
   CommandList,
+  CommandLoading,
   CommandEmpty,
   CommandGroup,
   Checkbox,
@@ -26,6 +29,7 @@ export const makeShadcnAutoHasManyInput = ({
   | "Command"
   | "CommandItem"
   | "CommandList"
+  | "CommandLoading"
   | "CommandEmpty"
   | "CommandGroup"
   | "CommandInput"
@@ -41,6 +45,7 @@ export const makeShadcnAutoHasManyInput = ({
     CommandItem,
     CommandList,
     CommandEmpty,
+    CommandLoading,
     CommandGroup,
     Checkbox,
     ScrollArea,
@@ -55,7 +60,6 @@ export const makeShadcnAutoHasManyInput = ({
       selectedRecords,
       errorMessage,
       isLoading,
-
       onSelectRecord,
       onRemoveRecord,
     } = useHasManyInputController(props);
@@ -66,27 +70,46 @@ export const makeShadcnAutoHasManyInput = ({
       return selectedRecords.map((record) => record.id).filter((id) => !!id) as string[];
     }, [selectedRecords]);
 
+    const debouncedSearch = useCallback(
+      debounce((value: string) => {
+        search.set(value);
+      }, 1000),
+      [search]
+    );
+
+    const handleScrolledToBottom = useCallback(
+      debounce(() => {
+        if (pagination.hasNextPage && options.length >= optionRecordsToLoadCount) {
+          pagination.loadNextPage();
+        }
+      }, 300),
+      [pagination, options.length]
+    );
+
+    useEffect(() => {
+      return () => {};
+    }, [handleScrolledToBottom]);
+
     return (
       <ShadcnComboInput
         {...props}
         options={searchFilterOptions}
         path={path}
         metadata={metadata}
-        onChange={(value) => {
-          //search.set(value);
-        }}
+        onChange={debouncedSearch}
         selectedRecordTag={
           <SelectedRecordTags selectedRecords={selectedRecords} optionLabel={optionLabel} onRemoveRecord={onRemoveRecord} />
         }
         onSelect={onSelectRecord}
         onScrolledToBottom={pagination.loadNextPage}
+        defaultValue={search.value}
         willLoadMoreOptions={pagination.hasNextPage && options.length >= optionRecordsToLoadCount}
         checkSelected={(id) => {
           return selectedRecordIds.includes(id);
         }}
         isLoading={isLoading}
         errorMessage={errorMessage}
-        allowMultiple={true}
+        allowMultiple
         records={relatedModel.records}
       />
     );

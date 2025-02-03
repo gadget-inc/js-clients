@@ -27,6 +27,7 @@ export const makeShadcnAutoInput = (
     | "Badge"
     | "Command"
     | "CommandInput"
+    | "CommandLoading"
     | "CommandItem"
     | "CommandList"
     | "CommandEmpty"

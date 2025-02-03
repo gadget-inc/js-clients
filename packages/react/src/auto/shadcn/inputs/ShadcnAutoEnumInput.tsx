@@ -11,6 +11,7 @@ export const makeShadcnAutoEnumInput = ({
   Button,
   Command,
   CommandItem,
+  CommandLoading,
   CommandInput,
   Label,
   CommandList,
@@ -26,6 +27,7 @@ export const makeShadcnAutoEnumInput = ({
   | "CommandItem"
   | "CommandList"
   | "CommandEmpty"
+  | "CommandLoading"
   | "CommandGroup"
   | "CommandInput"
   | "Label"
@@ -35,6 +37,7 @@ export const makeShadcnAutoEnumInput = ({
   const ShadcnComboInput = makeShadcnAutoComboInput({
     Command,
     CommandInput,
+    CommandLoading,
     Label,
     CommandItem,
     CommandList,

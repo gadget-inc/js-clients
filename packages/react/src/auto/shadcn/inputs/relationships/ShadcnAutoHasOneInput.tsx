@@ -16,6 +16,7 @@ export const makeShadcnAutoHasOneInput = ({
   Label,
   CommandList,
   CommandEmpty,
+  CommandLoading,
   CommandGroup,
   Checkbox,
   ScrollArea,
@@ -26,6 +27,7 @@ export const makeShadcnAutoHasOneInput = ({
   | "Command"
   | "CommandItem"
   | "CommandList"
+  | "CommandLoading"
   | "CommandEmpty"
   | "CommandGroup"
   | "CommandInput"
@@ -39,6 +41,7 @@ export const makeShadcnAutoHasOneInput = ({
     Label,
     CommandItem,
     CommandList,
+    CommandLoading,
     CommandEmpty,
     CommandGroup,
     Checkbox,

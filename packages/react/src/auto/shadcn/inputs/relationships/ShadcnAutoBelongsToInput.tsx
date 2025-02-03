@@ -16,6 +16,7 @@ export const makeShadcnAutoBelongsToInput = ({
   Label,
   CommandList,
   CommandEmpty,
+  CommandLoading,
   CommandGroup,
   Checkbox,
   ScrollArea,
@@ -26,6 +27,7 @@ export const makeShadcnAutoBelongsToInput = ({
   | "Command"
   | "CommandItem"
   | "CommandList"
+  | "CommandLoading"
   | "CommandEmpty"
   | "CommandGroup"
   | "CommandInput"
@@ -39,6 +41,7 @@ export const makeShadcnAutoBelongsToInput = ({
     Label,
     CommandItem,
     CommandList,
+    CommandLoading,
     CommandEmpty,
     CommandGroup,
     Checkbox,

@@ -32,11 +32,13 @@ export const makeShadcnAutoRolesInput = ({
   CommandGroup,
   Checkbox,
   ScrollArea,
+  CommandLoading,
 }: Pick<
   ShadcnElements,
   | "Badge"
   | "Button"
   | "Command"
+  | "CommandLoading"
   | "CommandItem"
   | "CommandList"
   | "CommandEmpty"
@@ -50,6 +52,7 @@ export const makeShadcnAutoRolesInput = ({
   const ShadcnComboInput = makeShadcnAutoComboInput({
     Command,
     CommandInput,
+    CommandLoading,
     Label,
     CommandItem,
     CommandList,

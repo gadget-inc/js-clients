@@ -205,6 +205,10 @@ const useAllRelatedModelRecords = (props: {
     setSearchValue(emptySearch ? undefined : search);
   }, []);
 
+  useEffect(() => {
+    console.log(paginationPage, "paginationPage");
+  }, [paginationPage]);
+
   /**
    * This useEffect appends the newly fetched records to the list of records that have already been loaded
    * `numberOfRecordsToLoad` are retrieved per `useFindMany` call

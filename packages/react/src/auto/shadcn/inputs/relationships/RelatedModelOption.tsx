@@ -1,4 +1,5 @@
-import React, { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { LoaderIcon } from "lucide-react";
+import React, { useCallback, useEffect, useMemo, useRef } from "react";
 import type { Option } from "../../../interfaces/AutoRelationshipInputProps.js";
 import type { ShadcnElements } from "../../elements.js";
 import { makeShadcnListMessages } from "./ShadcnListMessages.js";
@@ -19,13 +20,14 @@ export type RelatedModelOptionsProps = {
   formatOptionText?: (option: string) => React.ReactNode;
   setSearchValue?: (value: string) => void;
   emptyMessage?: string;
+  listBoxRef?: React.RefObject<HTMLDivElement>;
   onScrolledToBottom?: () => void;
 };
 
 export const makeRelatedModelOption = (
-  elements: Pick<ShadcnElements, "CommandItem" | "CommandList" | "CommandEmpty" | "CommandGroup" | "Checkbox" | "Label">
+  elements: Pick<ShadcnElements, "CommandItem" | "CommandList" | "CommandEmpty" | "CommandGroup" | "Checkbox" | "Label" | "CommandLoading">
 ) => {
-  const { CommandList, CommandEmpty, CommandGroup } = elements;
+  const { CommandList, CommandEmpty, CommandGroup, CommandItem } = elements;
 
   const IntersectionObserverComponent = ({
     onIntersect,
@@ -34,60 +36,47 @@ export const makeRelatedModelOption = (
     onIntersect: () => void;
     listBoxRef: React.RefObject<HTMLDivElement>;
   }) => {
-    const [isFetching, setIsFetching] = useState(false);
-    const observerRef = useRef<IntersectionObserver | null>(null);
+    const observerRef = useRef<any>(null);
 
-    const handleIntersection = useCallback(
-      (entries: IntersectionObserverEntry[]) => {
-        if (entries[0].isIntersecting && !isFetching) {
-          setIsFetching(true);
-        }
-      },
-      [isFetching]
-    );
-
-    const handleFetch = useCallback(() => {
-      if (isFetching === true) {
-        listBoxRef.current?.scrollTo({ top: 0, behavior: "smooth" });
+    const handleIntersection = useCallback((entries: IntersectionObserverEntry[]) => {
+      if (entries[0].isIntersecting) {
+        console.log("intersecting");
         onIntersect();
-        setIsFetching(false);
       }
-    }, [isFetching, onIntersect, listBoxRef]);
-
-    useEffect(() => {
-      handleFetch();
-    }, [handleFetch]);
-
-    useEffect(() => {
-      return () => {
-        if (observerRef.current) {
-          observerRef.current.disconnect();
-        }
-      };
     }, []);
 
-    if (isFetching) {
-      return null;
-    }
+    useEffect(() => {
+      const observer = new IntersectionObserver(handleIntersection, {
+        threshold: 1.0,
+        root: listBoxRef.current,
+      });
+
+      const element = observerRef.current;
+      if (element) {
+        observer.observe(element);
+      }
+
+      return () => observer.disconnect();
+    }, [handleIntersection]);
 
     return (
-      <div
-        ref={(el) => {
-          if (!el) return;
-          observerRef.current = new IntersectionObserver(handleIntersection, { threshold: 1.0 });
-          observerRef.current.observe(el);
-        }}
-        className="h-4"
-      />
+      <CommandItem
+        ref={observerRef}
+        key="intersection-trigger"
+        className="p-1 w-full flex items-center justify-center intersection-trigger"
+      >
+        <LoaderIcon className="w-4 h-4 animate-spin" />
+      </CommandItem>
     );
   };
 
   function RelatedModelOption(props: RelatedModelOptionsProps) {
     const { checkSelected, onSelect, isLoading, errorMessage, options, records, actions } = props;
 
-    const listBoxRef = useRef<HTMLDivElement>(null);
-
-    const { ListMessage, NoRecordsMessage, ShadcnSelectableOption, getErrorMessage, AddExtraOption } = makeShadcnListMessages(elements);
+    const { ListMessage, NoRecordsMessage, ShadcnSelectableOption, getErrorMessage, AddExtraOption } = useMemo(
+      () => makeShadcnListMessages(elements),
+      [props.onSelect]
+    );
 
     const listBoxOptions = useMemo(
       () => [
@@ -113,45 +102,10 @@ export const makeRelatedModelOption = (
       [actions, options, props.renderOption, records, checkSelected, onSelect]
     );
 
-    const handleScrollAndFetch = () => {
-      if (listBoxRef.current) {
-        props.onScrolledToBottom?.();
-      }
-    };
-
-    // return (
-    //   <div ref={listBoxRef}>
-    //     <CommandList>
-    //       <CommandGroup>
-    //         {listBoxOptions}
-    //         {isLoading ? (
-    //           <AddExtraOption message="Loading..." />
-    //         ) : (
-    //           <IntersectionObserverComponent onIntersect={handleScrollAndFetch} listBoxRef={listBoxRef} />
-    //         )}
-    //       </CommandGroup>
-    //     </CommandList>
-    //   </div>
-    // );
-
-    console.log("listBoxOptions", listBoxOptions, isLoading);
-
     return (
       <CommandList>
-        {isLoading ? (
-          <CommandEmpty>Loading...</CommandEmpty>
-        ) : props.allowOther ? (
-          <ListMessage
-            message={`Add "${props.searchValue}"`}
-            onSelect={() => {
-              props.onAddExtraOption?.(props.searchValue ?? "");
-              props.setSearchValue?.("");
-            }}
-          />
-        ) : (
-          <NoRecordsMessage message={props.emptyMessage} />
-        )}
-        {listBoxOptions.length ? (
+        {isLoading && <CommandEmpty>Loading...</CommandEmpty>}
+        {listBoxOptions.length > 0 ? (
           <CommandGroup>
             {listBoxOptions}
             {props.allowOther && props.searchValue && (
@@ -163,12 +117,19 @@ export const makeRelatedModelOption = (
                 }}
               />
             )}
-            <IntersectionObserverComponent onIntersect={handleScrollAndFetch} listBoxRef={listBoxRef} />
           </CommandGroup>
         ) : errorMessage ? (
           <ListMessage message={getErrorMessage(errorMessage)} />
         ) : (
           <NoRecordsMessage />
+        )}
+        {props.listBoxRef && (
+          <IntersectionObserverComponent
+            onIntersect={() => {
+              props.onScrolledToBottom?.();
+            }}
+            listBoxRef={props.listBoxRef}
+          />
         )}
       </CommandList>
     );
