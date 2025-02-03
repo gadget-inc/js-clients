@@ -4,8 +4,8 @@ import { autoInput } from "../../AutoInput.js";
 import { useStringInputController } from "../../hooks/useStringInputController.js";
 import type { ShadcnElements } from "../elements.js";
 
-export const makeShadcnAutoTextInput = ({ Input, Label }: Pick<ShadcnElements, "Input" | "Label">) => {
-  function ShadcnAutoTextInput(
+export const makeShadcnAutoStringInput = ({ Input, Label }: Pick<ShadcnElements, "Input" | "Label">) => {
+  function ShadcnAutoStringInput(
     props: {
       field: string;
       control?: Control<any>;
@@ -57,5 +57,5 @@ export const makeShadcnAutoTextInput = ({ Input, Label }: Pick<ShadcnElements, "
     );
   }
 
-  return autoInput(ShadcnAutoTextInput);
+  return autoInput(ShadcnAutoStringInput);
 };

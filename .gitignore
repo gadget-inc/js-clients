@@ -22,3 +22,5 @@ packages/react/src/internal/gql
 packages/react/auto
 
 *storybook.log
+
+packages/react/cypress/screenshots/

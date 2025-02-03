@@ -1,12 +1,7 @@
 import { format } from "date-fns";
 import { utcToZonedTime } from "date-fns-tz";
 import React, { useState } from "react";
-import { elements } from "../../../../spec/auto/shadcn-defaults/index.js";
 import { apiTriggerOnly } from "../../../../spec/auto/support/Triggers.js";
-import { PolarisAutoForm } from "../../../../src/auto/polaris/PolarisAutoForm.js";
-import { PolarisAutoDateTimePicker } from "../../../../src/auto/polaris/inputs/PolarisAutoDateTimePicker.js";
-import { makeAutoForm } from "../../../../src/auto/shadcn/ShadcnAutoForm.js";
-import { makeShadcnAutoDateTimePicker } from "../../../../src/auto/shadcn/inputs/ShadcnAutoDateTimePicker.js";
 import { api } from "../../../support/api.js";
 import { describeForEachAutoAdapter } from "../../../support/auto.js";
 import { SUITE_NAMES } from "../../../support/constants.js";
@@ -15,52 +10,17 @@ const baseDate = new Date("2021-03-05T11:23:00.000Z");
 const localTz = Intl.DateTimeFormat().resolvedOptions().timeZone;
 const dateInLocalTZ = utcToZonedTime(baseDate, localTz);
 
-const ShadcnAutoDateTimePicker = makeShadcnAutoDateTimePicker(elements);
-const ShadcnAutoForm = makeAutoForm(elements);
+describeForEachAutoAdapter("AutoFormDateTimePicker", ({ name, adapter: { AutoForm, AutoDateTimePicker }, wrapper }) => {
+  const TestComponentWithCustomOnChange = () => {
+    const [date, setDate] = useState(baseDate);
 
-const TestComponentWithCustomOnChange = ({ suiteName }: { suiteName: string }) => {
-  const [date, setDate] = useState(baseDate);
-
-  if (suiteName === SUITE_NAMES.POLARIS) {
     return (
-      <PolarisAutoForm action={api.widget.create}>
-        <PolarisAutoDateTimePicker id="test" value={date} onChange={setDate} field="startsAt" />
-      </PolarisAutoForm>
+      <AutoForm action={api.widget.create}>
+        <AutoDateTimePicker id="test" value={date} onChange={setDate} field="startsAt" />
+      </AutoForm>
     );
-  }
+  };
 
-  if (suiteName === SUITE_NAMES.SHADCN) {
-    return (
-      <ShadcnAutoForm action={api.widget.create}>
-        <ShadcnAutoDateTimePicker id="test" value={date} onChange={setDate} field="startsAt" />
-      </ShadcnAutoForm>
-    );
-  }
-
-  throw new Error("Invalid suite name");
-};
-
-const AutoDateTimePicker = (props: {
-  suiteName?: string;
-  field: string;
-  label?: string;
-  id?: string;
-  onChange?: (date: Date) => void;
-  value?: Date;
-  includeTime?: boolean;
-}) => {
-  if (props.suiteName === SUITE_NAMES.POLARIS) {
-    return <PolarisAutoDateTimePicker {...props} />;
-  }
-
-  if (props.suiteName === SUITE_NAMES.SHADCN) {
-    return <ShadcnAutoDateTimePicker {...props} />;
-  }
-
-  throw new Error("Invalid suite name");
-};
-
-describeForEachAutoAdapter("AutoFormDateTimePicker", ({ name, adapter: { AutoForm }, wrapper }) => {
   beforeEach(() => {
     cy.viewport("macbook-13");
   });
@@ -347,7 +307,7 @@ describeForEachAutoAdapter("AutoFormDateTimePicker", ({ name, adapter: { AutoFor
 
       it("can show the selected date", () => {
         mockMetadataResponse();
-        cy.mountWithWrapper(<TestComponentWithCustomOnChange suiteName={name} />, wrapper);
+        cy.mountWithWrapper(<TestComponentWithCustomOnChange />, wrapper);
         cy.wait("@ModelCreateActionMetadata");
         cy.get("#test-date").click();
 

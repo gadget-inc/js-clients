@@ -64,7 +64,7 @@ export const makeShadcnAutoComboInput = ({
         props.onScrolledToBottom?.();
       },
       outsideBoxRef,
-      { threshold: 0.1 }
+      { threshold: 1.0 }
     );
     const [open, setOpen] = useState(false);
     const [inputValue, setInputValue] = useState(props.defaultValue || "");
@@ -90,7 +90,7 @@ export const makeShadcnAutoComboInput = ({
             <CommandInput
               name={props.path}
               ref={inputRef}
-              id={id}
+              data-testid={id}
               value={inputValue}
               onValueChange={(value: string) => {
                 setInputValue(value);

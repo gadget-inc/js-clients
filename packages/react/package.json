@@ -44,7 +44,7 @@
     "storybook": "storybook dev -p 6006",
     "build-storybook": "storybook build",
     "cypress:open": "TZ=UTC cypress open",
-    "cypress:run": "TZ=UTC cypress run"
+    "cypress:run": "TZ=UTC cypress run --component"
   },
   "dependencies": {
     "@0no-co/graphql.web": "^1.0.4",

@@ -2,14 +2,14 @@ import { BlockStack, Box, Button, Icon, InlineStack, ResourceItem, Text } from "
 import { PlusCircleIcon } from "@shopify/polaris-icons";
 import React, { useState } from "react";
 import { useFormContext } from "../../../../useActionForm.js";
-import { autoInput } from "../../../AutoInput.js";
+import { autoRelationshipForm } from "../../../AutoInput.js";
 import { RelationshipContext, useAutoRelationship, useRelationshipContext } from "../../../hooks/useAutoRelationship.js";
 import { useHasManyController } from "../../../hooks/useHasManyController.js";
 import { getRecordAsOption, useOptionLabelForField } from "../../../hooks/useRelatedModel.js";
 import type { OptionLabel } from "../../../interfaces/AutoRelationshipInputProps.js";
 import { renderOptionLabel } from "./utils.js";
 
-export const PolarisAutoHasManyForm = autoInput(
+export const PolarisAutoHasManyForm = autoRelationshipForm(
   (props: {
     field: string;
     children: React.ReactNode;

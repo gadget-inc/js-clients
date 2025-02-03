@@ -13,7 +13,7 @@ import { makeShadcnAutoJSONInput } from "./ShadcnAutoJSONInput.js";
 import { makeShadcnAutoNumberInput } from "./ShadcnAutoNumberInput.js";
 import { makeShadcnAutoPasswordInput } from "./ShadcnAutoPasswordInput.js";
 import { makeShadcnAutoRolesInput } from "./ShadcnAutoRolesInput.js";
-import { makeShadcnAutoTextInput } from "./ShadcnAutoTextInput.js";
+import { makeShadcnAutoStringInput } from "./ShadcnAutoStringInput.js";
 import { makeShadcnAutoRichTextInput } from "./ShadcnautoRichTextInput.js";
 import { makeShadcnAutoBelongsToInput } from "./relationships/ShadcnAutoBelongsToInput.js";
 import { makeShadcnAutoHasManyInput } from "./relationships/ShadcnAutoHasManyInput.js";
@@ -41,68 +41,81 @@ export const makeShadcnAutoInput = (
     | "Textarea"
   >
 ) => {
-  const inputComponents = {
-    idInput: makeShadcnAutoIdInput(elements),
-    textInput: makeShadcnAutoTextInput(elements),
-    numberInput: makeShadcnAutoNumberInput(elements),
-    encryptedInput: makeShadcnAutoEncryptedStringInput(elements),
-    passwordInput: makeShadcnAutoPasswordInput(elements),
-    booleanInput: makeShadcnAutoBooleanInput(elements),
-    belongsToInput: makeShadcnAutoBelongsToInput(elements),
-    hasManyInput: makeShadcnAutoHasManyInput(elements),
-    rolesInput: makeShadcnAutoRolesInput(elements),
-    enumInput: makeShadcnAutoEnumInput(elements),
-    dateTimeInput: makeShadcnAutoDateTimePicker(elements),
-    jsonInput: makeShadcnAutoJSONInput(elements),
-    richTextInput: makeShadcnAutoRichTextInput(elements),
-    fileInput: makeShadcnAutoFileInput(elements),
-  };
+  const AutoIdInput = makeShadcnAutoIdInput(elements);
+  const AutoStringInput = makeShadcnAutoStringInput(elements);
+  const AutoNumberInput = makeShadcnAutoNumberInput(elements);
+  const AutoEncryptedStringInput = makeShadcnAutoEncryptedStringInput(elements);
+  const AutoPasswordInput = makeShadcnAutoPasswordInput(elements);
+  const AutoBooleanInput = makeShadcnAutoBooleanInput(elements);
+  const AutoBelongsToInput = makeShadcnAutoBelongsToInput(elements);
+  const AutoHasManyInput = makeShadcnAutoHasManyInput(elements);
+  const AutoRolesInput = makeShadcnAutoRolesInput(elements);
+  const AutoEnumInput = makeShadcnAutoEnumInput(elements);
+  const AutoDateTimePicker = makeShadcnAutoDateTimePicker(elements);
+  const AutoJSONInput = makeShadcnAutoJSONInput(elements);
+  const AutoRichTextInput = makeShadcnAutoRichTextInput(elements);
+  const AutoFileInput = makeShadcnAutoFileInput(elements);
 
-  const ShadcnAutoInput = React.memo(function ShadcnAutoInput(props: { field: string; label?: string }) {
+  const AutoInput = autoInput(function AutoInput(props: { field: string; label?: string }) {
     const { metadata } = useFieldMetadata(props.field);
     const config = metadata.configuration;
 
     switch (config.fieldType) {
       case FieldType.Id:
-        return inputComponents.idInput(props);
+        return <AutoIdInput {...props} />;
       case FieldType.String:
       case FieldType.Email:
       case FieldType.Color:
       case FieldType.Url:
-        return inputComponents.textInput(props);
+        return <AutoStringInput {...props} />;
       case FieldType.Number:
-        return inputComponents.numberInput(props);
+        return <AutoNumberInput {...props} />;
       case FieldType.DateTime:
-        return inputComponents.dateTimeInput(props);
+        return <AutoDateTimePicker {...props} />;
       case FieldType.Json:
-        return inputComponents.jsonInput(props);
+        return <AutoJSONInput {...props} />;
       case FieldType.Enum:
-        return inputComponents.enumInput(props);
+        return <AutoEnumInput {...props} />;
       case FieldType.RoleAssignments:
-        return inputComponents.rolesInput(props);
+        return <AutoRolesInput {...props} />;
       case FieldType.HasOne:
         return null;
+      case FieldType.RichText:
+        return <AutoRichTextInput {...props} />;
       case FieldType.File:
-        return inputComponents.fileInput(props);
+        return <AutoFileInput {...props} />;
       case FieldType.HasMany:
-        return inputComponents.hasManyInput(props);
+        return <AutoHasManyInput {...props} />;
       case FieldType.HasManyThrough:
         return null;
       case FieldType.EncryptedString:
-        return inputComponents.encryptedInput(props);
-      case FieldType.RichText:
-        return inputComponents.richTextInput(props);
+        return <AutoEncryptedStringInput {...props} />;
       case FieldType.BelongsTo:
-        return inputComponents.belongsToInput(props);
+        return <AutoBelongsToInput {...props} />;
       case FieldType.Password:
-        return inputComponents.passwordInput(props);
+        return <AutoPasswordInput {...props} />;
       case FieldType.Boolean:
-        return inputComponents.booleanInput(props);
+        return <AutoBooleanInput {...props} />;
       default:
-        return inputComponents.textInput(props);
+        return <AutoStringInput {...props} />;
     }
   });
 
-  ShadcnAutoInput.displayName = "ShadcnAutoInput";
-  return autoInput(ShadcnAutoInput);
+  AutoInput.displayName = "AutoInput";
+
+  return {
+    AutoInput,
+    AutoBelongsToInput,
+    AutoHasManyInput,
+    AutoRolesInput,
+    AutoEnumInput,
+    AutoJSONInput,
+    AutoDateTimePicker,
+    AutoPasswordInput,
+    AutoBooleanInput,
+    AutoEncryptedStringInput,
+    AutoStringInput,
+    AutoNumberInput,
+    AutoIdInput,
+  };
 };

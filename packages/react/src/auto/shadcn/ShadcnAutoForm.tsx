@@ -41,7 +41,21 @@ export const makeAutoForm = <Elements extends ShadcnElements>({
   ScrollBar,
   Textarea,
 }: Elements) => {
-  const ShadcnAutoInput = makeShadcnAutoInput({
+  const {
+    AutoInput,
+    AutoBelongsToInput,
+    AutoHasManyInput,
+    AutoRolesInput,
+    AutoEnumInput,
+    AutoJSONInput,
+    AutoDateTimePicker,
+    AutoPasswordInput,
+    AutoBooleanInput,
+    AutoEncryptedStringInput,
+    AutoStringInput,
+    AutoNumberInput,
+    AutoIdInput,
+  } = makeShadcnAutoInput({
     Input,
     Label,
     Button,
@@ -62,17 +76,18 @@ export const makeAutoForm = <Elements extends ShadcnElements>({
     ScrollBar,
     Textarea,
   });
-  const ShadcnAutoSubmit = makeShadcnAutoSubmit({ Button });
-  const { ShadcnSubmitSuccessfulBanner, ShadcnSubmitErrorBanner } = makeSubmitResultBanner({
+
+  const AutoSubmit = makeShadcnAutoSubmit({ Button });
+  const { SubmitSuccessfulBanner, SubmitErrorBanner, SubmitResultBanner } = makeSubmitResultBanner({
     Alert,
     AlertTitle,
     AlertDescription,
     Button,
   });
 
-  return <GivenOptions extends OptionsType, SchemaT, ActionFunc extends ActionFunction<GivenOptions, any, any, SchemaT, any>>(
+  function AutoForm<GivenOptions extends OptionsType, SchemaT, ActionFunc extends ActionFunction<GivenOptions, any, any, SchemaT, any>>(
     props: AutoFormProps<GivenOptions, SchemaT, ActionFunc> & ComponentProps<typeof Form>
-  ) => {
+  ) {
     const { action, findBy } = props as AutoFormProps<GivenOptions, SchemaT, ActionFunc> &
       Omit<Partial<FormProps>, "action"> & { findBy: any };
     validateAutoFormProps(props);
@@ -82,16 +97,26 @@ export const makeAutoForm = <Elements extends ShadcnElements>({
 
     return (
       <AutoFormFieldsFromChildComponentsProvider hasCustomFormChildren={React.Children.count(props.children) > 0}>
-        <ShadcnAutoFormComponent
+        <AutoFormInner
           key={componentKey}
           {...(props as AutoFormProps<GivenOptions, SchemaT, ActionFunc> & Omit<Partial<FormProps>, "action"> & { findBy: any })}
-          elements={{ Form, Input, Button, Alert, Skeleton, AlertTitle, AlertDescription, ShadcnAutoInput, ShadcnAutoSubmit }}
+          elements={{
+            Form,
+            Input,
+            Button,
+            Alert,
+            Skeleton,
+            AlertTitle,
+            AlertDescription,
+            ShadcnAutoInput: AutoInput,
+            ShadcnAutoSubmit: AutoSubmit,
+          }}
         />
       </AutoFormFieldsFromChildComponentsProvider>
     );
-  };
+  }
 
-  function ShadcnAutoFormComponent<
+  function AutoFormInner<
     GivenOptions extends OptionsType,
     SchemaT,
     ActionFunc extends ActionFunction<GivenOptions, any, any, SchemaT, any>
@@ -154,8 +179,8 @@ export const makeAutoForm = <Elements extends ShadcnElements>({
     const formContent = props.children ?? (
       <>
         {formTitle && <h2 className="text-2xl font-bold">{formTitle}</h2>}
-        {!props.onSuccess && <ShadcnSubmitSuccessfulBanner />}
-        {!props.onFailure && <ShadcnSubmitErrorBanner />}
+        {!props.onSuccess && <SubmitSuccessfulBanner />}
+        {!props.onFailure && <SubmitErrorBanner />}
         {!metadataError && (
           <>
             {fields.map(({ metadata }) => (
@@ -180,4 +205,25 @@ export const makeAutoForm = <Elements extends ShadcnElements>({
       </AutoFormMetadataContext.Provider>
     );
   }
+
+  return {
+    AutoForm,
+    AutoInput,
+    AutoSubmit,
+    SubmitResultBanner,
+    SubmitSuccessfulBanner,
+    SubmitErrorBanner,
+    AutoBelongsToInput,
+    AutoHasManyInput,
+    AutoRolesInput,
+    AutoEnumInput,
+    AutoJSONInput,
+    AutoDateTimePicker,
+    AutoPasswordInput,
+    AutoBooleanInput,
+    AutoEncryptedStringInput,
+    AutoStringInput,
+    AutoNumberInput,
+    AutoIdInput,
+  };
 };

@@ -38,6 +38,8 @@ export const makeShadcnAutoFileInput = ({ Input, Label }: Pick<ShadcnElements, "
         if (message) actionHintParts.push(message);
       }
 
+      console.log(actionHintParts, "actionHintParts");
+
       return (
         <div>
           <Label>

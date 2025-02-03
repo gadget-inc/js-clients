@@ -31,10 +31,7 @@ export const makeRelatedModelOption = (
   function RelatedModelOption(props: RelatedModelOptionsProps) {
     const { checkSelected, onSelect, isLoading, errorMessage, options, records, actions } = props;
 
-    const { ListMessage, NoRecordsMessage, ShadcnSelectableOption, getErrorMessage, AddExtraOption } = useMemo(
-      () => makeShadcnListMessages(elements),
-      [props.onSelect]
-    );
+    const { NoRecordsMessage, ShadcnSelectableOption, getErrorMessage, AddExtraOption } = makeShadcnListMessages(elements);
 
     const listBoxOptions = useMemo(
       () => [
@@ -66,20 +63,21 @@ export const makeRelatedModelOption = (
         {listBoxOptions.length > 0 ? (
           <CommandGroup>
             {listBoxOptions}
-            {props.allowOther && props.searchValue && (
-              <AddExtraOption
-                message={`Add "${props.searchValue}"`}
-                onSelect={() => {
-                  props.onAddExtraOption?.(props.searchValue ?? "");
-                  props.setSearchValue?.("");
-                }}
-              />
-            )}
           </CommandGroup>
-        ) : errorMessage ? (
-          <ListMessage message={getErrorMessage(errorMessage)} />
+        ) : null}
+        {props.allowOther && props.searchValue && (
+          <AddExtraOption
+            message={`Add "${props.searchValue}"`}
+            onSelect={() => {
+              props.onAddExtraOption?.(props.searchValue ?? "");
+              props.setSearchValue?.("");
+            }}
+          />
+        )}
+        {errorMessage ? (
+          <NoRecordsMessage message={getErrorMessage(errorMessage)} />
         ) : (
-          <NoRecordsMessage />
+          !isLoading && <NoRecordsMessage message={props.emptyMessage ?? undefined} />
         )}
         {props.loadMoreRef && (
           <CommandItem

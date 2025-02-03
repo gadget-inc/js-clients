@@ -16,7 +16,7 @@ import { MenuHorizontalIcon, PlusCircleIcon } from "@shopify/polaris-icons";
 import React, { useEffect, useState } from "react";
 import { useFormContext } from "../../../../useActionForm.js";
 import { get } from "../../../../utils.js";
-import { autoInput } from "../../../AutoInput.js";
+import { autoRelationshipForm } from "../../../AutoInput.js";
 import { RelationshipContext, useAutoRelationship, useRelationshipContext } from "../../../hooks/useAutoRelationship.js";
 import { useHasOneController } from "../../../hooks/useHasOneController.js";
 import { getRecordAsOption, useOptionLabelForField } from "../../../hooks/useRelatedModel.js";
@@ -24,7 +24,7 @@ import type { OptionLabel } from "../../../interfaces/AutoRelationshipInputProps
 import { RelatedModelOptionsPopover, RelatedModelOptionsSearch } from "./RelatedModelOptions.js";
 import { renderOptionLabel } from "./utils.js";
 
-export const PolarisAutoHasOneForm = autoInput(
+export const PolarisAutoHasOneForm = autoRelationshipForm(
   (props: {
     field: string;
     children: React.ReactNode;

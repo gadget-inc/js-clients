@@ -41,7 +41,6 @@ export const useFindMany = <
 ): ReadHookResult<
   GadgetRecordList<Select<Exclude<F["schemaType"], null | undefined>, DefaultSelection<F["selectionType"], Options, F["defaultSelection"]>>>
 > => {
-  console.log(options, "Options Code");
   const memoizedOptions = useStructuralMemo(options);
   const plan = useMemo(() => {
     return findManyOperation(

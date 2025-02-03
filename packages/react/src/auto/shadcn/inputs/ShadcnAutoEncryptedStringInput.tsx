@@ -3,10 +3,10 @@ import React, { useState } from "react";
 import type { Control } from "../../../useActionForm.js";
 import { autoInput } from "../../AutoInput.js";
 import type { ShadcnElements } from "../elements.js";
-import { makeShadcnAutoTextInput } from "./ShadcnAutoTextInput.js";
+import { makeShadcnAutoStringInput } from "./ShadcnAutoStringInput.js";
 
 export const makeShadcnAutoEncryptedStringInput = ({ Input, Label, Button }: Pick<ShadcnElements, "Input" | "Label" | "Button">) => {
-  const TextInput = makeShadcnAutoTextInput({ Input, Label });
+  const TextInput = makeShadcnAutoStringInput({ Input, Label });
 
   function ShadcnAutoEncryptedStringInput(props: { field: string; control?: Control<any>; className?: string; suffix?: React.ReactNode }) {
     const [isShown, setIsShown] = useState(false);

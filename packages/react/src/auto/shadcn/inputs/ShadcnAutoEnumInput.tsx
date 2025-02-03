@@ -1,5 +1,6 @@
 import { XIcon } from "lucide-react";
 import React, { useCallback } from "react";
+import { debounce } from "../../../utils.js";
 import type { Control } from "../../../useActionForm.js";
 import { autoInput } from "../../AutoInput.js";
 import { useEnumInputController } from "../../hooks/useEnumInputController.js";
@@ -103,6 +104,13 @@ export const makeShadcnAutoEnumInput = ({
       [searchValue]
     );
 
+    const debouncedSearch = useCallback(
+      debounce((value: string) => {
+        setSearchValue(value);
+      }, 400),
+      [setSearchValue]
+    );
+
     return (
       <ShadcnComboInput
         {...props}
@@ -110,6 +118,7 @@ export const makeShadcnAutoEnumInput = ({
         path={labelProp ?? label}
         metadata={metadata}
         label={labelProp ?? label}
+        onChange={debouncedSearch}
         selectedRecordTag={selectedTagsElement}
         onSelect={(option) => {
           onSelectionChange(option.id);
@@ -125,6 +134,7 @@ export const makeShadcnAutoEnumInput = ({
         allowOther={allowOther}
         onAddExtraOption={(value) => {
           onSelectionChange(value);
+          setSearchValue("");
         }}
         formatOptionText={formatOptionText}
         emptyMessage={`No options found matching `}
