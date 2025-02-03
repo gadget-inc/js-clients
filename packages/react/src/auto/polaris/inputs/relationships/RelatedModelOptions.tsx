@@ -44,9 +44,9 @@ export const RelatedModelOptions = (props: RelatedModelOptionsProps) => {
         listBoxOptions
       ) : errorMessage ? (
         <ListMessage message={getErrorMessage(errorMessage)} />
-      ) : (
+      ) : !isLoading ? (
         <NoRecordsMessage />
-      )}
+      ) : null}
       {isLoading && <Listbox.Loading accessibilityLabel="Loading" />}
     </Listbox>
   );

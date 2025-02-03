@@ -3,6 +3,7 @@ import type React from "react";
 import { useCallback, useEffect, useState } from "react";
 import { FieldType } from "../../metadata.js";
 import { type RecordIdentifier } from "../../use-action-form/types.js";
+import { useDebouncedSearch } from "../../useDebouncedSearch.js";
 import { useFindMany } from "../../useFindMany.js";
 import { sortByProperty, uniqByProperty } from "../../utils.js";
 import { useAutoFormMetadata } from "../AutoFormContext.js";
@@ -176,13 +177,19 @@ const useAllRelatedModelRecords = (props: {
 
   const [loadedRecords, setLoadedRecords] = useState<any[]>([]);
   const [paginationPage, setPaginationPage] = useState<any>(undefined);
-  const [searchValue, setSearchValue] = useState<string | undefined>();
+  const {
+    value: searchValue,
+    debouncedValue: debouncedSearchValue,
+    set: setSearchValue,
+  } = useDebouncedSearch({
+    debounceMilliseconds: 400,
+  });
 
   const [{ data: newlyFetchedRecords, fetching, error }, _refetch] = useFindMany(relatedModelManager as any, {
     first: optionRecordsToLoadCount,
     ...(props.filter && { filter: props.filter }),
     ...(paginationPage && { after: paginationPage }),
-    ...(searchValue && { search: searchValue }),
+    ...(debouncedSearchValue && { search: debouncedSearchValue }),
     ...(optionLabelSelection && { select: optionLabelSelection }),
   });
 
@@ -201,8 +208,7 @@ const useAllRelatedModelRecords = (props: {
 
   const setSearch = useCallback((search?: string) => {
     clearPagination();
-    const emptySearch = search === "";
-    setSearchValue(emptySearch ? undefined : search);
+    setSearchValue(search ?? "");
   }, []);
 
   /**
@@ -229,7 +235,7 @@ const useAllRelatedModelRecords = (props: {
     relatedModel: {
       records: loadedRecords,
       error,
-      fetching,
+      fetching: fetching || searchValue !== debouncedSearchValue,
     },
 
     pagination: {
