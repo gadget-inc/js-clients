@@ -1,5 +1,5 @@
 import { LoaderIcon } from "lucide-react";
-import React, { useCallback, useEffect, useMemo, useRef } from "react";
+import React, { useMemo } from "react";
 import type { Option } from "../../../interfaces/AutoRelationshipInputProps.js";
 import type { ShadcnElements } from "../../elements.js";
 import { makeShadcnListMessages } from "./ShadcnListMessages.js";
@@ -20,55 +20,13 @@ export type RelatedModelOptionsProps = {
   formatOptionText?: (option: string) => React.ReactNode;
   setSearchValue?: (value: string) => void;
   emptyMessage?: string;
-  listBoxRef?: React.RefObject<HTMLDivElement>;
-  onScrolledToBottom?: () => void;
+  loadMoreRef?: React.RefObject<HTMLDivElement>;
 };
 
 export const makeRelatedModelOption = (
   elements: Pick<ShadcnElements, "CommandItem" | "CommandList" | "CommandEmpty" | "CommandGroup" | "Checkbox" | "Label" | "CommandLoading">
 ) => {
   const { CommandList, CommandEmpty, CommandGroup, CommandItem } = elements;
-
-  const IntersectionObserverComponent = ({
-    onIntersect,
-    listBoxRef,
-  }: {
-    onIntersect: () => void;
-    listBoxRef: React.RefObject<HTMLDivElement>;
-  }) => {
-    const observerRef = useRef<any>(null);
-
-    const handleIntersection = useCallback((entries: IntersectionObserverEntry[]) => {
-      if (entries[0].isIntersecting) {
-        console.log("intersecting");
-        onIntersect();
-      }
-    }, []);
-
-    useEffect(() => {
-      const observer = new IntersectionObserver(handleIntersection, {
-        threshold: 1.0,
-        root: listBoxRef.current,
-      });
-
-      const element = observerRef.current;
-      if (element) {
-        observer.observe(element);
-      }
-
-      return () => observer.disconnect();
-    }, [handleIntersection]);
-
-    return (
-      <CommandItem
-        ref={observerRef}
-        key="intersection-trigger"
-        className="p-1 w-full flex items-center justify-center intersection-trigger"
-      >
-        <LoaderIcon className="w-4 h-4 animate-spin" />
-      </CommandItem>
-    );
-  };
 
   function RelatedModelOption(props: RelatedModelOptionsProps) {
     const { checkSelected, onSelect, isLoading, errorMessage, options, records, actions } = props;
@@ -123,13 +81,14 @@ export const makeRelatedModelOption = (
         ) : (
           <NoRecordsMessage />
         )}
-        {props.listBoxRef && (
-          <IntersectionObserverComponent
-            onIntersect={() => {
-              props.onScrolledToBottom?.();
-            }}
-            listBoxRef={props.listBoxRef}
-          />
+        {props.loadMoreRef && (
+          <CommandItem
+            ref={props.loadMoreRef}
+            key="intersection-trigger"
+            className="p-1 w-full flex items-center justify-center intersection-trigger"
+          >
+            <LoaderIcon className="w-4 h-4 animate-spin" />
+          </CommandItem>
         )}
       </CommandList>
     );

@@ -1,5 +1,4 @@
-import React, { useCallback, useEffect, useMemo } from "react";
-
+import React, { useCallback, useMemo } from "react";
 import { debounce } from "../../../../utils.js";
 import { autoInput } from "../../../AutoInput.js";
 import { useHasManyInputController } from "../../../hooks/useHasManyController.js";
@@ -38,6 +37,7 @@ export const makeShadcnAutoHasManyInput = ({
   | "ScrollArea"
 >) => {
   const { SelectedRecordTags } = makeSelectedRecordTags({ Badge, Button });
+
   const ShadcnComboInput = makeShadcnAutoComboInput({
     Command,
     CommandInput,
@@ -73,7 +73,7 @@ export const makeShadcnAutoHasManyInput = ({
     const debouncedSearch = useCallback(
       debounce((value: string) => {
         search.set(value);
-      }, 1000),
+      }, 400),
       [search]
     );
 
@@ -86,10 +86,6 @@ export const makeShadcnAutoHasManyInput = ({
       [pagination, options.length]
     );
 
-    useEffect(() => {
-      return () => {};
-    }, [handleScrolledToBottom]);
-
     return (
       <ShadcnComboInput
         {...props}
@@ -101,7 +97,7 @@ export const makeShadcnAutoHasManyInput = ({
           <SelectedRecordTags selectedRecords={selectedRecords} optionLabel={optionLabel} onRemoveRecord={onRemoveRecord} />
         }
         onSelect={onSelectRecord}
-        onScrolledToBottom={pagination.loadNextPage}
+        onScrolledToBottom={handleScrolledToBottom}
         defaultValue={search.value}
         willLoadMoreOptions={pagination.hasNextPage && options.length >= optionRecordsToLoadCount}
         checkSelected={(id) => {

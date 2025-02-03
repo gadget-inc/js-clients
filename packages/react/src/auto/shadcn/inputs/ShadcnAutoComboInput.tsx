@@ -1,12 +1,12 @@
 import React, { useRef, useState } from "react";
 import type { FieldMetadata } from "../../../metadata.js";
 import { useClickOutside } from "../../../useClickOutside.js";
+import { useIntersectionObserver } from "../../../useIntersectionObserver.js";
 import type { AutoRelationshipInputProps } from "../../interfaces/AutoRelationshipInputProps.js";
 import { ShadcnRequired } from "../ShadcnRequired.js";
 import type { ShadcnElements } from "../elements.js";
 import type { RelatedModelOptionsProps } from "./relationships/RelatedModelOption.js";
 import { makeRelatedModelOption } from "./relationships/RelatedModelOption.js";
-
 interface ShadcnComboInputProps extends AutoRelationshipInputProps, RelatedModelOptionsProps {
   selectedRecordTag: React.JSX.Element | null;
   path: string;
@@ -33,7 +33,6 @@ export const makeShadcnAutoComboInput = ({
   CommandEmpty,
   CommandGroup,
   Checkbox,
-  ScrollArea,
 }: Pick<
   ShadcnElements,
   | "Command"
@@ -60,6 +59,13 @@ export const makeShadcnAutoComboInput = ({
   function ShadcnAutoComboInput(props: ShadcnComboInputProps) {
     const inputRef = useRef<HTMLInputElement>(null);
     const outsideBoxRef = useRef<HTMLDivElement>(null);
+    const sentinelRef = useIntersectionObserver(
+      () => {
+        props.onScrolledToBottom?.();
+      },
+      outsideBoxRef,
+      { threshold: 0.1 }
+    );
     const [open, setOpen] = useState(false);
     const [inputValue, setInputValue] = useState(props.defaultValue || "");
     const id = props.id || `${props.path}-input`;
@@ -110,9 +116,8 @@ export const makeShadcnAutoComboInput = ({
                   searchValue={inputValue}
                   setSearchValue={setInputValue}
                   formatOptionText={props.formatOptionText}
-                  listBoxRef={outsideBoxRef}
                   emptyMessage={props.emptyMessage ? `${props.emptyMessage} "${inputValue}"` : undefined}
-                  onScrolledToBottom={props.onScrolledToBottom}
+                  loadMoreRef={props.willLoadMoreOptions ? sentinelRef : undefined}
                 />
               </>
             )}
