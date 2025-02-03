@@ -17,6 +17,8 @@ import { makeShadcnAutoStringInput } from "./ShadcnAutoStringInput.js";
 import { makeShadcnAutoRichTextInput } from "./ShadcnautoRichTextInput.js";
 import { makeShadcnAutoBelongsToInput } from "./relationships/ShadcnAutoBelongsToInput.js";
 import { makeShadcnAutoHasManyInput } from "./relationships/ShadcnAutoHasManyInput.js";
+import { makeShadcnAutoHasManyThroughInput } from "./relationships/ShadcnAutoHasManyThroughInput.js";
+import { makeShadcnAutoHasOneInput } from "./relationships/ShadcnAutoHasOneInput.js";
 export const makeShadcnAutoInput = (
   elements: Pick<
     ShadcnElements,
@@ -49,12 +51,14 @@ export const makeShadcnAutoInput = (
   const AutoBooleanInput = makeShadcnAutoBooleanInput(elements);
   const AutoBelongsToInput = makeShadcnAutoBelongsToInput(elements);
   const AutoHasManyInput = makeShadcnAutoHasManyInput(elements);
+  const AutoHasOneInput = makeShadcnAutoHasOneInput(elements);
   const AutoRolesInput = makeShadcnAutoRolesInput(elements);
   const AutoEnumInput = makeShadcnAutoEnumInput(elements);
   const AutoDateTimePicker = makeShadcnAutoDateTimePicker(elements);
   const AutoJSONInput = makeShadcnAutoJSONInput(elements);
   const AutoRichTextInput = makeShadcnAutoRichTextInput(elements);
   const AutoFileInput = makeShadcnAutoFileInput(elements);
+  const AutoHasManyThroughInput = makeShadcnAutoHasManyThroughInput(elements);
 
   const AutoInput = autoInput(function AutoInput(props: { field: string; label?: string }) {
     const { metadata } = useFieldMetadata(props.field);
@@ -79,15 +83,13 @@ export const makeShadcnAutoInput = (
       case FieldType.RoleAssignments:
         return <AutoRolesInput {...props} />;
       case FieldType.HasOne:
-        return null;
+        return <AutoHasOneInput {...props} />;
       case FieldType.RichText:
         return <AutoRichTextInput {...props} />;
       case FieldType.File:
         return <AutoFileInput {...props} />;
       case FieldType.HasMany:
         return <AutoHasManyInput {...props} />;
-      case FieldType.HasManyThrough:
-        return null;
       case FieldType.EncryptedString:
         return <AutoEncryptedStringInput {...props} />;
       case FieldType.BelongsTo:
@@ -96,6 +98,8 @@ export const makeShadcnAutoInput = (
         return <AutoPasswordInput {...props} />;
       case FieldType.Boolean:
         return <AutoBooleanInput {...props} />;
+      case FieldType.HasManyThrough:
+        return <AutoHasManyThroughInput {...props} />;
       default:
         return <AutoStringInput {...props} />;
     }

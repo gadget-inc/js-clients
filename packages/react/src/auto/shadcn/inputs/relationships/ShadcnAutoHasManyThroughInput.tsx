@@ -1,14 +1,14 @@
-import { XIcon } from "lucide-react";
-import React, { useCallback } from "react";
+import React, { useCallback, useMemo } from "react";
 import { debounce } from "../../../../utils.js";
 import { autoInput } from "../../../AutoInput.js";
-import { useHasOneInputController } from "../../../hooks/useHasOneController.js";
-import { getRecordAsOption, optionRecordsToLoadCount, useOptionLabelForField } from "../../../hooks/useRelatedModel.js";
+import { useHasManyThroughInputController } from "../../../hooks/useHasManyThroughController.js";
+import { optionRecordsToLoadCount, useOptionLabelForField } from "../../../hooks/useRelatedModel.js";
 import type { AutoRelationshipInputProps } from "../../../interfaces/AutoRelationshipInputProps.js";
 import type { ShadcnElements } from "../../elements.js";
 import { makeShadcnAutoComboInput } from "../ShadcnAutoComboInput.js";
+import { makeSelectedRecordTags } from "./SelectedRelatedRecordTags.js";
 
-export const makeShadcnAutoHasOneInput = ({
+export const makeShadcnAutoHasManyThroughInput = ({
   Badge,
   Button,
   Command,
@@ -36,6 +36,8 @@ export const makeShadcnAutoHasOneInput = ({
   | "Checkbox"
   | "ScrollArea"
 >) => {
+  const { SelectedRecordTags } = makeSelectedRecordTags({ Badge, Button });
+
   const ShadcnComboInput = makeShadcnAutoComboInput({
     Command,
     CommandInput,
@@ -49,30 +51,23 @@ export const makeShadcnAutoHasOneInput = ({
     ScrollArea,
   });
 
-  function ShadcnAutoHasOneInput(props: AutoRelationshipInputProps) {
+  function ShadcnAutoHasManyThroughInput(props: AutoRelationshipInputProps) {
     const { field } = props;
     const {
       fieldMetadata: { path, metadata },
       relatedModelOptions: { options, searchFilterOptions, search, pagination, relatedModel },
-      selectedRecord,
+      selectedRecords,
       errorMessage,
       isLoading,
-      onSelectRecord,
       onRemoveRecord,
-    } = useHasOneInputController(props);
+      onSelectRecord,
+    } = useHasManyThroughInputController(props);
 
     const optionLabel = useOptionLabelForField(field, props.optionLabel);
 
-    const selectedOption = selectedRecord ? getRecordAsOption(selectedRecord, optionLabel) : null;
-
-    const selectedRecordTag = selectedOption ? (
-      <Badge variant={"outline"} key={`selectedRecordTag_${selectedOption.id}`}>
-        <p id={`${selectedOption.id}_${selectedOption.label}`}>{selectedOption.label ?? `id: ${selectedOption.id}`}</p>
-        <Button aria-label={`Remove`} onClick={() => selectedRecord && onRemoveRecord(selectedRecord)} variant="ghost" size="icon">
-          <XIcon />
-        </Button>
-      </Badge>
-    ) : null;
+    const selectedRecordIds = useMemo(() => {
+      return selectedRecords.map((record) => record.id).filter((id) => !!id) as string[];
+    }, [selectedRecords]);
 
     const handleScrolledToBottom = useCallback(
       debounce(() => {
@@ -91,11 +86,16 @@ export const makeShadcnAutoHasOneInput = ({
         metadata={metadata}
         onChange={search.set}
         defaultValue={search.value}
+        selectedRecordTag={
+          <SelectedRecordTags selectedRecords={selectedRecords} optionLabel={optionLabel} onRemoveRecord={onRemoveRecord} />
+        }
+        onSelect={onSelectRecord}
+        checkSelected={(id) => {
+          return selectedRecordIds.includes(id);
+        }}
+        allowMultiple
         onScrolledToBottom={handleScrolledToBottom}
         willLoadMoreOptions={pagination.hasNextPage && options.length >= optionRecordsToLoadCount}
-        selectedRecordTag={selectedRecordTag}
-        onSelect={onSelectRecord}
-        checkSelected={(id) => selectedRecord?.id === id}
         isLoading={isLoading}
         errorMessage={errorMessage}
         records={relatedModel.records}
@@ -103,5 +103,5 @@ export const makeShadcnAutoHasOneInput = ({
     );
   }
 
-  return autoInput(ShadcnAutoHasOneInput);
+  return autoInput(ShadcnAutoHasManyThroughInput);
 };

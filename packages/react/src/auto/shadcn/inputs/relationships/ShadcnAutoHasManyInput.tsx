@@ -70,13 +70,6 @@ export const makeShadcnAutoHasManyInput = ({
       return selectedRecords.map((record) => record.id).filter((id) => !!id) as string[];
     }, [selectedRecords]);
 
-    const debouncedSearch = useCallback(
-      debounce((value: string) => {
-        search.set(value);
-      }, 400),
-      [search]
-    );
-
     const handleScrolledToBottom = useCallback(
       debounce(() => {
         if (pagination.hasNextPage && options.length >= optionRecordsToLoadCount) {
@@ -92,7 +85,7 @@ export const makeShadcnAutoHasManyInput = ({
         options={searchFilterOptions}
         path={path}
         metadata={metadata}
-        onChange={debouncedSearch}
+        onChange={search.set}
         selectedRecordTag={
           <SelectedRecordTags selectedRecords={selectedRecords} optionLabel={optionLabel} onRemoveRecord={onRemoveRecord} />
         }

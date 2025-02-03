@@ -1,8 +1,9 @@
 import { XIcon } from "lucide-react";
-import React from "react";
+import React, { useCallback } from "react";
+import { debounce } from "../../../../utils.js";
 import { autoInput } from "../../../AutoInput.js";
 import { useBelongsToInputController } from "../../../hooks/useBelongsToController.js";
-import { getRecordAsOption, useOptionLabelForField } from "../../../hooks/useRelatedModel.js";
+import { getRecordAsOption, optionRecordsToLoadCount, useOptionLabelForField } from "../../../hooks/useRelatedModel.js";
 import type { AutoRelationshipInputProps } from "../../../interfaces/AutoRelationshipInputProps.js";
 import type { ShadcnElements } from "../../elements.js";
 import { makeShadcnAutoComboInput } from "../ShadcnAutoComboInput.js";
@@ -49,7 +50,6 @@ export const makeShadcnAutoBelongsToInput = ({
   });
 
   function ShadcnAutoBelongsToInput(props: AutoRelationshipInputProps) {
-    //TODO: Implement Load More
     const {
       fieldMetadata: { path, metadata },
       relatedModelOptions: { options, searchFilterOptions, pagination, search, relatedModel },
@@ -92,13 +92,26 @@ export const makeShadcnAutoBelongsToInput = ({
         : onSelectRecord(record); // make single selection
     };
 
+    const handleScrolledToBottom = useCallback(
+      debounce(() => {
+        if (pagination.hasNextPage && options.length >= optionRecordsToLoadCount) {
+          pagination.loadNextPage();
+        }
+      }, 300),
+      [pagination, options.length]
+    );
+
     return (
       <ShadcnComboInput
         {...props}
-        options={options}
+        options={searchFilterOptions}
         path={path}
         metadata={metadata}
+        onChange={search.set}
+        defaultValue={search.value}
         selectedRecordTag={selectedRecordTag}
+        onScrolledToBottom={handleScrolledToBottom}
+        willLoadMoreOptions={pagination.hasNextPage && options.length >= optionRecordsToLoadCount}
         onSelect={onSelect}
         isLoading={isLoading}
         errorMessage={errorMessage}
