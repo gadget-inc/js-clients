@@ -21,6 +21,22 @@ import {
 import { useFieldsFromChildComponents } from "./AutoFormContext.js";
 import { isAutoInput } from "./AutoInput.js";
 
+/** When the AutoForm does not have children, these properties are available to control the rendering of the form */
+type AutoFormPropsWithoutChildren = {
+  children?: never;
+
+  /** The title at the top of the form. False to omit */
+  title?: string | false;
+
+  /** The label to use for the submit button at the bottom of the form */
+  submitLabel?: ReactNode;
+};
+
+type AutoFormPropsWithChildren = {
+  /** Custom components to render within the form. Using this will override all default field rendering.   */
+  children?: ReactNode;
+};
+
 /** The props that any <AutoForm/> component accepts */
 export type AutoFormProps<
   GivenOptions extends OptionsType,
@@ -28,7 +44,7 @@ export type AutoFormProps<
   ActionFunc extends ActionFunction<GivenOptions, any, any, SchemaT, any> | GlobalActionFunction<any>,
   ExtraFormVariables extends FieldValues = Record<string, unknown>,
   DefaultValues = ActionFunc["variablesType"] & ExtraFormVariables
-> = {
+> = (AutoFormPropsWithChildren | AutoFormPropsWithoutChildren) & {
   /** Which action this fom will run on submit */
   action: ActionFunc;
   /** A record for this form to act on */
@@ -39,32 +55,26 @@ export type AutoFormProps<
   exclude?: string[];
   /** A set of field values to pre-populate the form with on load. Only applies to create forms. */
   defaultValues?: DefaultValues;
-  /** The label to use for the submit button at the bottom of the form */
-  submitLabel?: ReactNode;
   /** What to show the user once the form has been submitted successfully */
   successContent?: ReactNode;
-  /** The title at the top of the form. False to omit */
-  title?: string | false;
   /** Selection object to pass to the form to retrieve existing values. This will override the default selection based on included fields */
   select?: GivenOptions["select"];
   /** Called when the form submission completes successfully on the backend */
   onSuccess?: (record: UseActionFormHookStateData<ActionFunc>) => void;
   /** Called when the form submission errors before sending, during the API call, or if the API call returns an error. */
   onFailure?: (error: Error | FieldErrors<ActionFunc["variablesType"]>) => void;
-  /** Custom components to render within the form. Using this will override all default field rendering.   */
-  children?: ReactNode;
   /** Enable debug logging for this form */
   debug?: boolean;
 } & (ActionFunc extends AnyActionWithId<GivenOptions>
-  ? {
-      /**
-       * The record identifier to run this action on, if it already exists.
-       * Should be undefined for create actions, or a record ID (or finder) for update / etc actions
-       **/
-      findBy?: RecordIdentifier;
-    }
-  : // eslint-disable-next-line @typescript-eslint/ban-types
-    {});
+    ? {
+        /**
+         * The record identifier to run this action on, if it already exists.
+         * Should be undefined for create actions, or a record ID (or finder) for update / etc actions
+         **/
+        findBy?: RecordIdentifier;
+      }
+    : // eslint-disable-next-line @typescript-eslint/ban-types
+      {});
 
 /**
  * React hook for getting the validation schema for a list of fields
@@ -218,7 +228,9 @@ export const useAutoForm = <
 
   const { hasCustomFormChildren, fieldSet, registerFields } = useFieldsFromChildComponents();
   const hasRegisteredFieldsFromChildren = hasCustomFormChildren && fieldSet.size > 0;
-  const registeredFieldsFromChildren = hasCustomFormChildren ? extractPathsFromChildren(props.children) : [];
+  const registeredFieldsFromChildren = hasCustomFormChildren
+    ? extractPathsFromChildren("children" in props ? props.children : undefined)
+    : [];
 
   useEffect(() => {
     registerFields(registeredFieldsFromChildren);

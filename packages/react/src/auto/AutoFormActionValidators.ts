@@ -36,7 +36,7 @@ export const validateAutoFormProps = (props: Parameters<typeof useAutoForm>[0]) 
     throw new Error(InvalidActionErrorMessage);
   }
 
-  if (props.children) {
+  if ("children" in props && props.children) {
     if (props.include) {
       throw new Error(`AutoForm components with children cannot use the include option`);
     }
