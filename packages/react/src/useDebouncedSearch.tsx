@@ -8,7 +8,7 @@ export interface SearchResult {
   clear: () => void;
 }
 
-export const useDebouncedSearch = (props: { onDebouncedSearchValueChange: () => void; debounceMilliseconds?: number }) => {
+export const useDebouncedSearch = (props: { onDebouncedSearchValueChange?: () => void; debounceMilliseconds?: number }) => {
   const { onDebouncedSearchValueChange, debounceMilliseconds } = props;
   const [searchValue, setSearchValue] = useState<string>("");
   const [debouncedSearchValue, setDebouncedSearchValue] = useState<string>("");
@@ -16,7 +16,7 @@ export const useDebouncedSearch = (props: { onDebouncedSearchValueChange: () => 
   const debouncedSetSearchValue = useCallback(
     debounce((query: string) => {
       setDebouncedSearchValue(query);
-      onDebouncedSearchValueChange();
+      onDebouncedSearchValueChange?.();
     }, debounceMilliseconds),
     []
   );
@@ -32,7 +32,7 @@ export const useDebouncedSearch = (props: { onDebouncedSearchValueChange: () => 
       // Instant without debounce
       setSearchValue("");
       setDebouncedSearchValue("");
-      onDebouncedSearchValueChange();
+      onDebouncedSearchValueChange?.();
     },
   };
 
