@@ -1,6 +1,7 @@
-import React, { useMemo } from "react";
+import React, { useCallback, useEffect, useMemo } from "react";
 import deepEqual from "react-fast-compare";
-import type { ActionCallback, TableOptions } from "../../use-table/types.js";
+import type { ActionCallback, TableOptions, TableRow } from "../../use-table/types.js";
+import { useBulkAction } from "../../useBulkAction.js";
 import { humanizeCamelCase } from "../../utils.js";
 import { validateAutoTableProps } from "../AutoTableValidators.js";
 
@@ -172,4 +173,97 @@ const getValidatedBulkModelActionOption = (gadgetModelActionsAsBulkActionOptions
     throw new Error(`'${action}' is not a valid action on the model`);
   }
   return modelAction;
+};
+
+export const getBulkActionOptionCallback = (option: BulkActionOption, selectedRows: TableRow[], clearSelection: () => void) =>
+  option.action
+    ? () => {
+        option.action?.(selectedRows);
+        clearSelection();
+      }
+    : option.selectModelAction ?? (() => undefined);
+
+export type AutoBulkActionModal = {
+  model: any;
+  modelActionDetails?: ModelActionDetails;
+  ids: string[];
+  clearSelection: () => void;
+};
+
+export const useAutoTableBulkActionModal = (props: AutoBulkActionModal) => {
+  const { model, modelActionDetails, clearSelection } = props;
+
+  const [showModal, setShowModal] = React.useState(!!modelActionDetails);
+  const [actionName, setActionName] = React.useState(modelActionDetails?.apiIdentifier);
+
+  useEffect(() => {
+    if (!modelActionDetails) {
+      return;
+    }
+    setShowModal(true);
+    setActionName(modelActionDetails.apiIdentifier);
+  }, [modelActionDetails]);
+
+  const actionIsLoaded = modelActionDetails && actionName;
+  const isBulkGadgetAction = actionIsLoaded && model[actionName] && modelActionDetails.isGadgetAction && modelActionDetails.isBulk;
+
+  const modalTitle = useMemo(() => humanizeCamelCase(actionName ?? "").replace("Bulk ", ""), [actionName]);
+
+  const closeAndClear = useCallback(() => {
+    setShowModal(false);
+    clearSelection();
+  }, [setShowModal, clearSelection]);
+
+  return {
+    showModal,
+
+    actionIsLoaded,
+    isBulkGadgetAction,
+    modalTitle,
+    closeAndClear,
+  };
+};
+
+export type GadgetBulkActionModalContentProps = {
+  model: any;
+  modelActionDetails: ModelActionDetails;
+  actionLabel: string;
+  ids: string[];
+  close: () => void;
+};
+
+export const ActionSuccessMessage = ` completed`;
+export const ActionErrorMessage = ` failed`;
+
+export const getRunActionConfirmationText = (count: number) =>
+  `Are you sure you want to run this action on ${count} record${count === 1 ? "" : `s`}?`;
+
+export const useGadgetBulkActionModalContent = (props: GadgetBulkActionModalContentProps) => {
+  const { model, modelActionDetails, actionLabel: actionName, ids, close } = props;
+
+  const [hasRun, setHasRun] = React.useState(false);
+
+  // eslint-disable-next-line
+  // @ts-ignore:next-line
+  const [{ fetching, data, error }, runBulkAction] = useBulkAction(model[modelActionDetails.apiIdentifier], {});
+
+  const hasError = !!(error || (data && (data as any).success === false));
+
+  const actionResultMessage = useMemo(
+    () => (hasError ? `${actionName}${ActionErrorMessage}` : `${actionName}${ActionSuccessMessage}`),
+    [hasError]
+  );
+
+  const runAction = useCallback(() => {
+    void runBulkAction(ids);
+    setHasRun(true);
+  }, [runBulkAction, ids]);
+
+  return {
+    hasRun,
+    fetching,
+    hasError,
+    runAction,
+    actionResultMessage,
+  };
 };
