@@ -1,6 +1,7 @@
 import React from "react";
 import { api } from "../../../support/api.js";
 import { describeForEachAutoAdapter } from "../../../support/auto.js";
+import { SUITE_NAMES } from "../../../support/constants.js";
 
 const originalDoodadLinkedToWidget = {
   id: "1",
@@ -20,8 +21,13 @@ describeForEachAutoAdapter(
       );
     };
 
+    const getDropdownMenuTriggerSelector = () => {
+      return name == SUITE_NAMES.SHADCN ? "[data-testid='widget.doodad-dropdown-menu-trigger']" : ".Polaris-Button__Icon";
+    };
+
     const expectUpdateActionSubmissionVariables = (expectedQueryValue?: any) => {
       cy.intercept({ method: "POST", url: `${api.connection.endpoint}?operation=updateWidget` }, (req) => {
+        console.log(req.body.variables, expectedQueryValue);
         // eslint-disable-next-line
         expect(req.body.variables).to.deep.equal(expectedQueryValue);
         req.reply({ data: { updateWidget: { success: true, errors: null, x: {} } } });
@@ -126,12 +132,11 @@ describeForEachAutoAdapter(
       cy.contains("Weight:333"); // secondary label
       cy.contains("Large"); // tertiary label
 
-      cy.get(".Polaris-Button__Icon").first().click();
+      cy.get(getDropdownMenuTriggerSelector()).first().click();
       cy.contains("Edit doodad").click();
 
-      cy.get('input[id="widget.doodad.name"]').should("exist").click().type(" - updated");
-      cy.get('input[id="widget.doodad.weight"]').should("exist").click().type("123");
-
+      cy.clickAndType('input[id="widget.doodad.name"]', "Doodad 1 - updated", true);
+      cy.clickAndType('input[id="widget.doodad.weight"]', "333123", true);
       cy.contains("Save").click();
 
       expectUpdateActionSubmissionVariables({
@@ -171,7 +176,7 @@ describeForEachAutoAdapter(
       cy.contains("Weight:333"); // secondary label
       cy.contains("Large"); // tertiary label
 
-      cy.get(".Polaris-Button__Icon").first().click();
+      cy.get(getDropdownMenuTriggerSelector()).first().click();
       cy.contains("Remove doodad").click();
 
       expectUpdateActionSubmissionVariables({

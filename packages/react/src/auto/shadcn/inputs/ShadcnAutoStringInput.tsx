@@ -15,7 +15,6 @@ export const makeShadcnAutoStringInput = ({ Input, Label }: Pick<ShadcnElements,
   ) {
     const { field, control, label: customLabel, suffix, ...restProps } = props;
     const stringInputController = useStringInputController({ field, control });
-    const id = `${field}-input`;
     const {
       name,
       placeholder,
@@ -28,6 +27,8 @@ export const makeShadcnAutoStringInput = ({ Input, Label }: Pick<ShadcnElements,
       onChange,
       onBlur,
     } = stringInputController;
+
+    const id = name || `${field}-input`;
 
     const inputLabel = customLabel || controllerLabel || metadata.name;
 

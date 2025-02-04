@@ -109,7 +109,7 @@ export const makeShadcnAutoComboInput = ({
         )}
         <div className={`relative ${open ? "ring-1 ring-ring rounded-md border" : "border rounded-md"}`}>
           {props.selectedRecordTag && <div className="py-2 px-2 pt-2 pb-1">{props.selectedRecordTag}</div>}
-          <Command className="overflow-visible z-50 h-[300px]">
+          <Command className="overflow-visible z-50">
             <CommandInput
               name={props.path}
               ref={inputRef}

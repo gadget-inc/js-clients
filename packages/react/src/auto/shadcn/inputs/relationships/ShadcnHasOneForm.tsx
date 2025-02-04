@@ -11,7 +11,6 @@ import type { OptionLabel } from "../../../interfaces/AutoRelationshipInputProps
 import type { ShadcnElements } from "../../elements.js";
 import { makeShadcnRenderOptionLabel } from "../../utils.js";
 import { makeShadcnAutoComboInput } from "../ShadcnAutoComboInput.js";
-import { makeRelatedModelOption } from "./RelatedModelOption.js";
 
 export const makeShadcnHasOneForm = ({
   Badge,
@@ -78,21 +77,6 @@ export const makeShadcnHasOneForm = ({
   | "DialogClose"
 >) => {
   const renderOptionLabel = makeShadcnRenderOptionLabel({ Label, Badge, Button });
-
-  const { RelatedModelOptionPopover, RelatedModelOptionsSearch } = makeRelatedModelOption({
-    CommandItem,
-    CommandList,
-    CommandEmpty,
-    Input,
-    CommandLoading,
-    ScrollArea,
-    CommandGroup,
-    Popover,
-    PopoverContent,
-    PopoverTrigger,
-    Checkbox,
-    Label,
-  });
 
   const ShadcnComboInput = makeShadcnAutoComboInput({
     Command,
@@ -176,7 +160,7 @@ export const makeShadcnHasOneForm = ({
             <h2 className="text-lg font-medium">{childName}</h2>
             {hasRecord && (
               <DropdownMenu open={actionsOpen} onOpenChange={setActionsOpen}>
-                <DropdownMenuTrigger asChild>
+                <DropdownMenuTrigger data-testid={`${path}-dropdown-menu-trigger`} asChild>
                   <Button variant="ghost">
                     <EllipsisVerticalIcon className="w-4 h-4" />
                   </Button>
@@ -291,40 +275,3 @@ export const makeShadcnHasOneForm = ({
 
   return autoRelationshipForm(ShadcnHasOneForm);
 };
-
-/**
- *  <RelatedModelOptionPopover
-              options={searchFilterOptions}
-              isLoading={isLoading}
-              active={searchOpen}
-              activator={
-                <RelatedModelOptionsSearch
-                  modelName={childName}
-                  value={search.value}
-                  onChange={search.set}
-                  onFocus={() => setSearchOpen(true)}
-                />
-              }
-              onClose={() => setSearchOpen(false)}
-              onScrolledToBottom={pagination.loadNextPage}
-              actions={[
-                <Button
-                  key="add-new-record"
-                  variant="outline"
-                  onClick={() => {
-                    alert("add new record");
-                  }}
-                >
-                  Add {childName}
-                </Button>,
-              ]}
-              records={records}
-              onSelect={(record) => {
-                if (record.id === "add-new-record") {
-                  setModalOpen(true);
-                } else {
-                  setValue(path, { ...record, _link: record.id });
-                }
-              }}
-            />
- */
