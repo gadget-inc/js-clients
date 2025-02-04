@@ -358,7 +358,7 @@ export class InternalModelManager<Shape extends RecordShape = RecordData> {
    * @param options Options for the find operation, like sorts, filters, and pagination
    * @returns The record, if found, null otherwise
    */
-  async findMany(options?: InternalFindManyOptions): Promise<GadgetRecordList<Shape, InternalModelManager<Shape>>> {
+  async findMany(options?: InternalFindManyOptions): Promise<GadgetRecordList<Shape>> {
     const plan = internalFindManyQuery(this.apiIdentifier, this.namespace, options);
     const response = await this.connection.currentClient.query(plan.query, plan.variables).toPromise();
     const connection = assertNullableOperationSuccess(response, this.dataPath(`list${this.capitalizedApiIdentifier}`));

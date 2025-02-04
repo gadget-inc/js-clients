@@ -177,7 +177,7 @@ export const findManyRunner = <Shape extends RecordShape = any, Options extends 
       }
 
       const records = hydrateConnection<Shape>(response, connectionObject);
-      return GadgetRecordList.boot<Shape, AnyPublicModelManager>(modelManager, records, { options, pageInfo: connectionObject.pageInfo });
+      return GadgetRecordList.boot<Shape>(modelManager, records, { options, pageInfo: connectionObject.pageInfo });
     },
     options
   );

@@ -13,19 +13,17 @@ type PaginationConfig = {
 };
 
 /** Represents a list of objects returned from the API. Facilitates iterating and paginating. */
-export class GadgetRecordList<Shape extends RecordShape, Manager extends AnyPublicModelManager | InternalModelManager<Shape>> extends Array<
-  GadgetRecord<Shape>
-> {
-  modelManager!: Manager;
+export class GadgetRecordList<Shape extends RecordShape> extends Array<GadgetRecord<Shape>> {
+  modelManager!: AnyPublicModelManager | InternalModelManager<Shape>;
   pagination!: PaginationConfig;
 
   /** Internal method used to create a list. Should not be used by applications. */
-  static boot<Shape extends RecordShape, Manager extends AnyPublicModelManager | InternalModelManager<Shape>>(
-    modelManager: Manager,
+  static boot<Shape extends RecordShape>(
+    modelManager: AnyPublicModelManager | InternalModelManager<Shape>,
     records: GadgetRecord<Shape>[],
     pagination: PaginationConfig
   ) {
-    const list = new GadgetRecordList<Shape, Manager>();
+    const list = new GadgetRecordList<Shape>();
     list.push(...records);
     list.modelManager = modelManager;
     list.pagination = pagination;
@@ -73,7 +71,7 @@ export class GadgetRecordList<Shape extends RecordShape, Manager extends AnyPubl
       ...options,
       after: this.pagination.pageInfo.endCursor,
       first: first || last,
-    }) as Promise<GadgetRecordList<Shape, Manager>>;
+    }) as Promise<GadgetRecordList<Shape>>;
     return await nextPage;
   }
 
@@ -88,7 +86,7 @@ export class GadgetRecordList<Shape extends RecordShape, Manager extends AnyPubl
       ...options,
       before: this.pagination.pageInfo.startCursor,
       last: last || first,
-    }) as Promise<GadgetRecordList<Shape, Manager>>;
+    }) as Promise<GadgetRecordList<Shape>>;
     return await prevPage;
   }
 }
