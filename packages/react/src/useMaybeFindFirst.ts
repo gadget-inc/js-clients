@@ -1,4 +1,6 @@
 import type {
+  AnyFindManyFunc,
+  AnyFindOneFunc,
   AnyPublicModelManager,
   DefaultSelection,
   FindFirstFunction,
@@ -43,7 +45,7 @@ export const useMaybeFindFirst = <
   F extends FindFirstFunction<GivenOptions, any, SchemaT, any>,
   Options extends F["optionsType"] & ReadOperationOptions
 >(
-  manager: { findFirst: F } & AnyPublicModelManager,
+  manager: { findFirst: F } & AnyPublicModelManager<AnyFindOneFunc, AnyFindManyFunc, F>,
   options?: LimitToKnownKeys<Options, F["optionsType"] & ReadOperationOptions>
 ): ReadHookResult<null | GadgetRecord<
   Select<Exclude<F["schemaType"], null | undefined>, DefaultSelection<F["selectionType"], Options, F["defaultSelection"]>>

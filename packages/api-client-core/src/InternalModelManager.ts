@@ -22,7 +22,13 @@ import {
   namespacify,
   sortTypeName,
 } from "./support.js";
-import type { AnySelection, InternalFieldSelection, InternalFindListOptions, InternalFindManyOptions, InternalFindOneOptions } from "./types.js";
+import type {
+  AnySelection,
+  InternalFieldSelection,
+  InternalFindListOptions,
+  InternalFindManyOptions,
+  InternalFindOneOptions,
+} from "./types.js";
 
 export const internalFindOneQuery = (apiIdentifier: string, id: string, namespace: string[], select?: InternalFieldSelection) => {
   const capitalizedApiIdentifier = capitalizeIdentifier(apiIdentifier);

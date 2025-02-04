@@ -1,7 +1,6 @@
 import type { GadgetConnection } from "./GadgetConnection.js";
-import { FindManyFunction, GetFunction } from "./GadgetFunctions.js";
+import { FindFirstFunction, FindManyFunction, FindOneFunction, GetFunction } from "./GadgetFunctions.js";
 import type { GadgetRecord } from "./GadgetRecord.js";
-import type { GadgetRecordList } from "./GadgetRecordList.js";
 import type { InternalModelManager } from "./InternalModelManager.js";
 
 export type AnyModelFinderMetadata = {
@@ -21,15 +20,22 @@ export type AnyModelFinderMetadata = {
   schemaType: any | null;
 };
 
+export type AnyFindOneFunc = FindOneFunction<any, any, any, any>;
+export type AnyFindManyFunc = FindManyFunction<any, any, any, any>;
+export type AnyFindFirstFunc = FindFirstFunction<any, any, any, any>;
+
 /**
  * The manager class for a given model that uses the Public API, like `api.post` or `api.user`
  **/
-export interface AnyPublicModelManager<F = FindManyFunction<any, any, any, any>> {
+export interface AnyPublicModelManager<
+  FindOneFunc extends AnyFindOneFunc = AnyFindOneFunc,
+  FindManyFunc extends AnyFindManyFunc = AnyFindManyFunc,
+  FindFirstFunc extends AnyFindFirstFunc = AnyFindFirstFunc
+> {
   connection: GadgetConnection;
-  findOne: ((id: string, options: any) => Promise<GadgetRecord<any>>) & AnyModelFinderMetadata;
-  // findMany: ((options: any) => Promise<GadgetRecordList<any>>) & AnyModelFinderMetadata;
-  findMany: F;
-  findFirst: ((options: any) => Promise<GadgetRecord<any>>) & AnyModelFinderMetadata;
+  findOne: FindOneFunc;
+  findMany: FindManyFunc;
+  findFirst: FindFirstFunc;
   maybeFindFirst(options: any): Promise<GadgetRecord<any> | null>;
   maybeFindOne(id: string, options: any): Promise<GadgetRecord<any> | null>;
 }
@@ -37,10 +43,9 @@ export interface AnyPublicModelManager<F = FindManyFunction<any, any, any, any>>
 /**
  * The manager class for a given single model that uses the Public API, like `api.session`
  **/
-export interface AnyPublicSingletonModelManager<F extends GetFunction<any, any, any, any>> {
+export interface AnyPublicSingletonModelManager<GetFunc extends GetFunction<any, any, any, any> = GetFunction<any, any, any, any>> {
   connection: GadgetConnection;
-  // get(): Promise<GadgetRecord<any>>;
-  get: F;
+  get: GetFunc;
 }
 
 /**
@@ -53,4 +58,4 @@ export interface AnyLegacyModelManager {
 /**
  * Any model manager, either public or internal
  */
-export type AnyModelManager = AnyPublicModelManager | AnyPublicSingletonModelManager<GetFunction<any, any, any, any>> | AnyLegacyModelManager | InternalModelManager;
+export type AnyModelManager = AnyPublicModelManager | AnyPublicSingletonModelManager | AnyLegacyModelManager | InternalModelManager;

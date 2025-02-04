@@ -43,7 +43,7 @@ export const useMaybeFindOne = <
   F extends FindOneFunction<GivenOptions, any, SchemaT, any>,
   Options extends F["optionsType"] & ReadOperationOptions
 >(
-  manager: { findOne: F } & AnyPublicModelManager,
+  manager: { findOne: F } & AnyPublicModelManager<F>,
   id: string,
   options?: LimitToKnownKeys<Options, F["optionsType"] & ReadOperationOptions>
 ): ReadHookResult<null | GadgetRecord<

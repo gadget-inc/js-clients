@@ -1,4 +1,11 @@
-import type { AnyPublicModelManager, DefaultSelection, FindManyFunction, LimitToKnownKeys, Select } from "@gadgetinc/api-client-core";
+import type {
+  AnyPublicModelManager,
+  DefaultSelection,
+  FindManyFunction,
+  FindOneFunction,
+  LimitToKnownKeys,
+  Select,
+} from "@gadgetinc/api-client-core";
 import { GadgetRecordList, findManyOperation, get, hydrateConnection, namespaceDataPath } from "@gadgetinc/api-client-core";
 import { useMemo } from "react";
 import { useGadgetQuery } from "./useGadgetQuery.js";
@@ -36,10 +43,13 @@ export const useFindMany = <
   F extends FindManyFunction<GivenOptions, any, SchemaT, any>,
   Options extends F["optionsType"] & ReadOperationOptions
 >(
-  manager: { findMany: F } & AnyPublicModelManager<F>,
+  manager: { findMany: F } & AnyPublicModelManager<FindOneFunction<any, any, any, any>, F>,
   options?: LimitToKnownKeys<Options, F["optionsType"] & ReadOperationOptions>
 ): ReadHookResult<
-  GadgetRecordList<Select<Exclude<F["schemaType"], null | undefined>, DefaultSelection<F["selectionType"], Options, F["defaultSelection"]>>, AnyPublicModelManager<F>>
+  GadgetRecordList<
+    Select<Exclude<F["schemaType"], null | undefined>, DefaultSelection<F["selectionType"], Options, F["defaultSelection"]>>,
+    AnyPublicModelManager<FindOneFunction<any, any, any, any>, F>
+  >
 > => {
   const memoizedOptions = useStructuralMemo(options);
   const plan = useMemo(() => {

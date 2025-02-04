@@ -1,4 +1,4 @@
-import type { AnyPublicModelManager, SortOrder } from "@gadgetinc/api-client-core";
+import type { AnyFindOneFunc, AnyPublicModelManager, SortOrder } from "@gadgetinc/api-client-core";
 import {
   type DefaultSelection,
   type FindManyFunction,
@@ -44,7 +44,7 @@ export const useTable = <
   F extends FindManyFunction<GivenOptions, any, SchemaT, any>,
   Options extends F["optionsType"] & ReadOperationOptions & TableOptions
 >(
-  manager: { findMany: F } & AnyPublicModelManager<F>,
+  manager: { findMany: F } & AnyPublicModelManager<AnyFindOneFunc, F>,
   options?: LimitToKnownKeys<
     Options,
     Omit<F["optionsType"], "sort" | "first" | "last" | "after" | "before"> & ReadOperationOptions & TableOptions

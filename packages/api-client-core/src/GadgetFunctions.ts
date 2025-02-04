@@ -7,7 +7,9 @@ import type { LimitToKnownKeys, VariablesOptions } from "./types.js";
 export type PromiseOrLiveIterator<T> = Promise<T> | AsyncIterable<T>;
 export type AsyncRecord<T extends RecordShape> = PromiseOrLiveIterator<GadgetRecord<T>>;
 export type AsyncNullableRecord<T extends RecordShape> = PromiseOrLiveIterator<GadgetRecord<T> | null>;
-export type AsyncRecordList<T extends RecordShape> = PromiseOrLiveIterator<GadgetRecordList<T, AnyPublicModelManager | InternalModelManager<T>>>;
+export type AsyncRecordList<T extends RecordShape> = PromiseOrLiveIterator<
+  GadgetRecordList<T, AnyPublicModelManager | InternalModelManager<T>>
+>;
 
 export interface GQLBuilderResult {
   query: string;

@@ -6,7 +6,6 @@ import type { GadgetRecord, RecordShape } from "./GadgetRecord.js";
 import type { InternalModelManager } from "./InternalModelManager.js";
 import { GadgetClientError, GadgetOperationError } from "./support.js";
 import type { PaginateOptions } from "./types.js";
-import { FindManyFunction } from "./GadgetFunctions.js";
 
 type PaginationConfig = {
   pageInfo: { hasNextPage: boolean; hasPreviousPage: boolean; startCursor: string; endCursor: string };
@@ -14,7 +13,9 @@ type PaginationConfig = {
 };
 
 /** Represents a list of objects returned from the API. Facilitates iterating and paginating. */
-export class GadgetRecordList<Shape extends RecordShape, Manager extends AnyPublicModelManager | InternalModelManager<Shape>> extends Array<GadgetRecord<Shape>> {
+export class GadgetRecordList<Shape extends RecordShape, Manager extends AnyPublicModelManager | InternalModelManager<Shape>> extends Array<
+  GadgetRecord<Shape>
+> {
   modelManager!: Manager;
   pagination!: PaginationConfig;
 
