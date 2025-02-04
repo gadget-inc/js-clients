@@ -28,15 +28,26 @@ export const makeShadcnAutoComboInput = ({
   CommandInput,
   Label,
   CommandItem,
+  Dialog,
+  DialogContent,
+  DialogTrigger,
   CommandList,
   CommandLoading,
   CommandEmpty,
   CommandGroup,
   Checkbox,
+  ScrollArea,
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+  Input,
 }: Pick<
   ShadcnElements,
   | "Command"
   | "CommandInput"
+  | "Dialog"
+  | "DialogContent"
+  | "DialogTrigger"
   | "Label"
   | "CommandItem"
   | "CommandList"
@@ -45,15 +56,24 @@ export const makeShadcnAutoComboInput = ({
   | "Checkbox"
   | "ScrollArea"
   | "CommandLoading"
+  | "Popover"
+  | "PopoverContent"
+  | "PopoverTrigger"
+  | "Input"
 >) => {
-  const RelatedModelOption = makeRelatedModelOption({
+  const { RelatedModelOption } = makeRelatedModelOption({
     CommandItem,
     CommandList,
     CommandEmpty,
+    ScrollArea,
     CommandGroup,
     Checkbox,
     Label,
     CommandLoading,
+    Popover,
+    PopoverContent,
+    PopoverTrigger,
+    Input,
   });
 
   function ShadcnAutoComboInput(props: ShadcnComboInputProps) {

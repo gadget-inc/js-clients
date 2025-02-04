@@ -21,6 +21,13 @@ export const makeShadcnAutoHasManyThroughInput = ({
   CommandGroup,
   Checkbox,
   ScrollArea,
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+  Input,
+  Dialog,
+  DialogContent,
+  DialogTrigger,
 }: Pick<
   ShadcnElements,
   | "Badge"
@@ -35,6 +42,13 @@ export const makeShadcnAutoHasManyThroughInput = ({
   | "Label"
   | "Checkbox"
   | "ScrollArea"
+  | "Popover"
+  | "PopoverContent"
+  | "PopoverTrigger"
+  | "Input"
+  | "Dialog"
+  | "DialogContent"
+  | "DialogTrigger"
 >) => {
   const { SelectedRecordTags } = makeSelectedRecordTags({ Badge, Button });
 
@@ -49,6 +63,13 @@ export const makeShadcnAutoHasManyThroughInput = ({
     CommandGroup,
     Checkbox,
     ScrollArea,
+    Popover,
+    PopoverContent,
+    PopoverTrigger,
+    Input,
+    Dialog,
+    DialogContent,
+    DialogTrigger,
   });
 
   function ShadcnAutoHasManyThroughInput(props: AutoRelationshipInputProps) {

@@ -28,6 +28,29 @@ export interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElemen
   size?: "default" | "sm" | "lg" | "icon" | null;
 }
 
+type Direction = "ltr" | "rtl";
+
+export interface DropdownMenuProps {
+  children?: React.ReactNode;
+  dir?: Direction;
+  open?: boolean;
+  defaultOpen?: boolean;
+  onOpenChange?(open: boolean): void;
+  modal?: boolean;
+}
+
+export interface DialogProps {
+  children?: React.ReactNode;
+  open?: boolean;
+  defaultOpen?: boolean;
+  onOpenChange?(open: boolean): void;
+  modal?: boolean;
+}
+
+export interface DialogTriggerProps {
+  children?: React.ReactNode;
+}
+
 /** The props that a command component injected into autocomponent's shadcn must support */
 export interface CommandProps extends React.HTMLAttributes<HTMLDivElement> {
   children?: React.ReactNode;
@@ -172,6 +195,40 @@ export interface ShadcnElements {
 
   /** The Checkbox component from shadcn */
   Checkbox: React.ForwardRefExoticComponent<CheckboxProps & React.RefAttributes<HTMLButtonElement>>;
+
+  /** The Dialog component from shadcn */
+  Dialog: React.ComponentType<DialogProps>;
+  /** The DialogTrigger component from shadcn */
+  DialogTrigger: React.ComponentType<DialogTriggerProps>;
+  /** The DialogClose component from shadcn */
+  DialogClose: React.ComponentType<any>;
+  /** The DialogContent component from shadcn */
+  DialogContent: React.ComponentType<any>;
+  /** The DialogDescription component from shadcn */
+  DialogDescription: React.ComponentType<any>;
+  /** The DialogFooter component from shadcn */
+  DialogFooter: React.ComponentType<any>;
+  /** The DialogHeader component from shadcn */
+  DialogHeader: React.ComponentType<any>;
+  /** The DialogOverlay component from shadcn */
+  DialogOverlay: React.ComponentType<any>;
+  /** The DialogPortal component from shadcn */
+  DialogPortal: React.ComponentType<any>;
+  /** The DialogTitle component from shadcn */
+  DialogTitle: React.ComponentType<any>;
+
+  /** The DropdownMenu component from shadcn */
+  DropdownMenu: React.ComponentType<DropdownMenuProps>;
+  /** The DropdownMenuTrigger component from shadcn */
+  DropdownMenuTrigger: React.ComponentType<any>;
+  /** The DropdownMenuContent component from shadcn */
+  DropdownMenuContent: React.ComponentType<React.HTMLAttributes<HTMLDivElement>>;
+  /** The DropdownMenuItem component from shadcn */
+  DropdownMenuItem: React.ComponentType<any>;
+  /** The DropdownMenuLabel component from shadcn */
+  DropdownMenuLabel: React.ComponentType<React.HTMLAttributes<HTMLDivElement>>;
+  /** The DropdownMenuSeparator component from shadcn */
+  DropdownMenuSeparator: React.ComponentType<React.HTMLAttributes<HTMLDivElement>>;
 
   /** The Form component from shadcn */
   Form: React.ComponentType<FormProps>;

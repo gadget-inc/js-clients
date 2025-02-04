@@ -41,6 +41,9 @@ export const makeShadcnAutoInput = (
     | "ScrollArea"
     | "ScrollBar"
     | "Textarea"
+    | "Dialog"
+    | "DialogContent"
+    | "DialogTrigger"
   >
 ) => {
   const AutoIdInput = makeShadcnAutoIdInput(elements);
