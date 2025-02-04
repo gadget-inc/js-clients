@@ -36,10 +36,10 @@ export const useFindMany = <
   F extends FindManyFunction<GivenOptions, any, SchemaT, any>,
   Options extends F["optionsType"] & ReadOperationOptions
 >(
-  manager: { findMany: F } & AnyPublicModelManager,
+  manager: { findMany: F } & AnyPublicModelManager<F>,
   options?: LimitToKnownKeys<Options, F["optionsType"] & ReadOperationOptions>
 ): ReadHookResult<
-  GadgetRecordList<Select<Exclude<F["schemaType"], null | undefined>, DefaultSelection<F["selectionType"], Options, F["defaultSelection"]>>>
+  GadgetRecordList<Select<Exclude<F["schemaType"], null | undefined>, DefaultSelection<F["selectionType"], Options, F["defaultSelection"]>>, AnyPublicModelManager<F>>
 > => {
   const memoizedOptions = useStructuralMemo(options);
   const plan = useMemo(() => {

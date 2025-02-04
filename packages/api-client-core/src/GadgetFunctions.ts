@@ -1,12 +1,13 @@
 import type { AnyPublicModelManager, AnyPublicSingletonModelManager } from "./AnyModelManager.js";
 import type { GadgetRecord, RecordShape } from "./GadgetRecord.js";
 import type { GadgetRecordList } from "./GadgetRecordList.js";
+import { InternalModelManager } from "./InternalModelManager.js";
 import type { LimitToKnownKeys, VariablesOptions } from "./types.js";
 
 export type PromiseOrLiveIterator<T> = Promise<T> | AsyncIterable<T>;
 export type AsyncRecord<T extends RecordShape> = PromiseOrLiveIterator<GadgetRecord<T>>;
 export type AsyncNullableRecord<T extends RecordShape> = PromiseOrLiveIterator<GadgetRecord<T> | null>;
-export type AsyncRecordList<T extends RecordShape> = PromiseOrLiveIterator<GadgetRecordList<T>>;
+export type AsyncRecordList<T extends RecordShape> = PromiseOrLiveIterator<GadgetRecordList<T, AnyPublicModelManager | InternalModelManager<T>>>;
 
 export interface GQLBuilderResult {
   query: string;
@@ -196,7 +197,7 @@ export interface GetFunction<OptionsT, SelectionT, SchemaT, DefaultsT> {
   optionsType: OptionsT;
   schemaType: SchemaT | null;
   plan?: <Options extends OptionsT>(options?: LimitToKnownKeys<Options, OptionsT>) => GQLBuilderResult;
-  modelManager?: AnyPublicSingletonModelManager;
+  modelManager?: AnyPublicSingletonModelManager<GetFunction<any, any, any, any>>;
 }
 
 export interface GlobalActionFunction<VariablesT> {

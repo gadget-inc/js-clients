@@ -11,6 +11,8 @@ import type {
   ActionFunctionMetadata,
   AnyActionFunction,
   AnyBulkActionFunction,
+  FindManyFunction,
+  GetFunction,
   GlobalActionFunction,
   HasReturnType,
 } from "./GadgetFunctions.js";
@@ -93,7 +95,7 @@ function maybeLiveStream<T extends OperationResult, U, LiveOptions extends { liv
 }
 
 export const findOneRunner = <Shape extends RecordShape = any, Options extends BaseFindOptions = {}>(
-  modelManager: { connection: GadgetConnection },
+  modelManager: AnyPublicModelManager | AnyPublicSingletonModelManager<GetFunction<any, any, any, any>> | AnyLegacyModelManager,
   operation: string,
   id: string | undefined,
   defaultSelection: FieldSelection,
@@ -118,7 +120,7 @@ export const findOneRunner = <Shape extends RecordShape = any, Options extends B
 };
 
 export const findOneByFieldRunner = <Shape extends RecordShape = any, Options extends FindManyOptions = {}>(
-  modelManager: { connection: GadgetConnection },
+  modelManager: AnyPublicModelManager | AnyLegacyModelManager,
   operation: string,
   fieldName: string,
   fieldValue: string,
@@ -152,7 +154,7 @@ export const findOneByFieldRunner = <Shape extends RecordShape = any, Options ex
 };
 
 export const findManyRunner = <Shape extends RecordShape = any, Options extends FindManyOptions = {}>(
-  modelManager: AnyPublicModelManager | InternalModelManager<Shape>,
+  modelManager: AnyPublicModelManager,
   operation: string,
   defaultSelection: FieldSelection,
   modelApiIdentifier: string,
@@ -178,7 +180,7 @@ export const findManyRunner = <Shape extends RecordShape = any, Options extends 
       }
 
       const records = hydrateConnection<Shape>(response, connectionObject);
-      return GadgetRecordList.boot<Shape>(modelManager, records, { options, pageInfo: connectionObject.pageInfo });
+      return GadgetRecordList.boot<Shape, AnyPublicModelManager>(modelManager, records, { options, pageInfo: connectionObject.pageInfo });
     },
     options
   );
@@ -186,7 +188,7 @@ export const findManyRunner = <Shape extends RecordShape = any, Options extends 
 
 export interface ActionRunner {
   (
-    modelManager: AnyModelManager,
+    modelManager: AnyPublicModelManager | AnyPublicSingletonModelManager<GetFunction<any, any, any, any>> | AnyLegacyModelManager,
     operation: string,
     defaultSelection: FieldSelection | null,
     modelApiIdentifier: string,
@@ -199,7 +201,7 @@ export interface ActionRunner {
   ): Promise<any>;
 
   <Shape extends RecordShape = any>(
-    modelManager: AnyModelManager,
+    modelManager: AnyPublicModelManager | AnyPublicSingletonModelManager<GetFunction<any, any, any, any>> | AnyLegacyModelManager,
     operation: string,
     defaultSelection: FieldSelection | null,
     modelApiIdentifier: string,
@@ -212,7 +214,7 @@ export interface ActionRunner {
   ): Promise<Shape extends void ? void : GadgetRecord<Shape>>;
 
   <Shape extends RecordShape = any>(
-    modelManager: AnyModelManager,
+    modelManager: AnyPublicModelManager | AnyPublicSingletonModelManager<GetFunction<any, any, any, any>> | AnyLegacyModelManager,
     operation: string,
     defaultSelection: FieldSelection | null,
     modelApiIdentifier: string,
@@ -224,7 +226,7 @@ export interface ActionRunner {
   ): Promise<Shape extends void ? void : GadgetRecord<Shape>>;
 
   <Shape extends RecordShape = any>(
-    modelManager: AnyModelManager,
+    modelManager: AnyPublicModelManager | AnyPublicSingletonModelManager<GetFunction<any, any, any, any>> | AnyLegacyModelManager,
     operation: string,
     defaultSelection: FieldSelection | null,
     modelApiIdentifier: string,
@@ -236,7 +238,7 @@ export interface ActionRunner {
   ): Promise<Shape extends void ? void : GadgetRecord<Shape>[]>;
 
   (
-    modelManager: AnyModelManager,
+    modelManager: AnyPublicModelManager | AnyPublicSingletonModelManager<GetFunction<any, any, any, any>> | AnyLegacyModelManager,
     operation: string,
     defaultSelection: FieldSelection | null,
     modelApiIdentifier: string,
@@ -249,7 +251,7 @@ export interface ActionRunner {
   ): Promise<any[]>;
 
   <Shape extends RecordShape = any>(
-    modelManager: AnyModelManager,
+    modelManager: AnyPublicModelManager | AnyPublicSingletonModelManager<GetFunction<any, any, any, any>> | AnyLegacyModelManager,
     operation: string,
     defaultSelection: FieldSelection | null,
     modelApiIdentifier: string,
@@ -263,7 +265,7 @@ export interface ActionRunner {
 }
 
 export const actionRunner: ActionRunner = async (
-  modelManager: AnyModelManager,
+  modelManager: AnyPublicModelManager | AnyPublicSingletonModelManager<GetFunction<any, any, any, any>> | AnyLegacyModelManager,
   operation: string,
   defaultSelection: FieldSelection | null,
   modelApiIdentifier: string,
@@ -314,7 +316,7 @@ const processBulkActionResponse = <Shape extends RecordShape = any>(
   records: any,
   modelSelectionField: string,
   hasReturnType?: HasReturnType | null,
-  modelManager?: AnyPublicModelManager | AnyPublicSingletonModelManager | AnyLegacyModelManager
+  modelManager?: AnyPublicModelManager | AnyPublicSingletonModelManager<GetFunction<any, any, any, any>> | AnyLegacyModelManager
 ) => {
   if (defaultSelection == null) return;
   if (!hasReturnType) {
@@ -349,7 +351,7 @@ export const processActionResponse = <Shape extends RecordShape = any>(
   record: any,
   modelSelectionField: string,
   hasReturnType?: HasReturnType | null,
-  modelManager?: AnyPublicModelManager | AnyPublicSingletonModelManager | AnyLegacyModelManager
+  modelManager?: AnyPublicModelManager | AnyPublicSingletonModelManager<GetFunction<any, any, any, any>> | AnyLegacyModelManager
 ): any => {
   // Delete actions have a null selection. We do an early return for this because `hydrateRecordArray` will fail
   // if there's nothing at `mutationResult[modelSelectionField]`, but the caller isn't expecting a return (void).

@@ -1,6 +1,7 @@
 import type {
   AnyPublicModelManager,
   DefaultSelection,
+  FindManyFunction,
   FindOneFunction,
   GadgetRecord,
   LimitToKnownKeys,

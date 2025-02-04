@@ -4,7 +4,7 @@ import { diff } from "@n1ru4l/json-patch-plus";
 import { CombinedError } from "@urql/core";
 import nock from "nock";
 import { BackgroundActionHandle } from "../src/BackgroundActionHandle.js";
-import type { AnyPublicModelManager, GadgetErrorGroup, LimitToKnownKeys } from "../src/index.js";
+import type { AnyPublicModelManager, FindManyFunction, GadgetErrorGroup, LimitToKnownKeys } from "../src/index.js";
 import {
   GadgetConnection,
   actionRunner,

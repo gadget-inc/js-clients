@@ -22,7 +22,7 @@ import {
   namespacify,
   sortTypeName,
 } from "./support.js";
-import type { InternalFieldSelection, InternalFindListOptions, InternalFindManyOptions, InternalFindOneOptions } from "./types.js";
+import type { AnySelection, InternalFieldSelection, InternalFindListOptions, InternalFindManyOptions, InternalFindOneOptions } from "./types.js";
 
 export const internalFindOneQuery = (apiIdentifier: string, id: string, namespace: string[], select?: InternalFieldSelection) => {
   const capitalizedApiIdentifier = capitalizeIdentifier(apiIdentifier);
@@ -271,7 +271,7 @@ export class InternalModelManager<Shape extends RecordShape = RecordData> {
   private readonly namespace: string[];
 
   constructor(
-    private readonly apiIdentifier: string,
+    readonly apiIdentifier: string,
     readonly connection: GadgetConnection,
     readonly options?: { pluralApiIdentifier: string; hasAmbiguousIdentifiers?: boolean; namespace?: string[] }
   ) {
@@ -352,7 +352,7 @@ export class InternalModelManager<Shape extends RecordShape = RecordData> {
    * @param options Options for the find operation, like sorts, filters, and pagination
    * @returns The record, if found, null otherwise
    */
-  async findMany(options?: InternalFindManyOptions): Promise<GadgetRecordList<Shape>> {
+  async findMany(options?: InternalFindManyOptions): Promise<GadgetRecordList<Shape, InternalModelManager<Shape>>> {
     const plan = internalFindManyQuery(this.apiIdentifier, this.namespace, options);
     const response = await this.connection.currentClient.query(plan.query, plan.variables).toPromise();
     const connection = assertNullableOperationSuccess(response, this.dataPath(`list${this.capitalizedApiIdentifier}`));
@@ -544,7 +544,7 @@ export class InternalModelManager<Shape extends RecordShape = RecordData> {
   }
 }
 
-function formatInternalSelectVariable(select: InternalFieldSelection | undefined): undefined | string[] {
+function formatInternalSelectVariable(select?: AnySelection | InternalFieldSelection | null): undefined | string[] {
   if (!select) return;
   if (Array.isArray(select)) return select;
   const result: string[] = [];

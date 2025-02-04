@@ -1,4 +1,5 @@
 import type { GadgetConnection } from "./GadgetConnection.js";
+import { FindManyFunction, GetFunction } from "./GadgetFunctions.js";
 import type { GadgetRecord } from "./GadgetRecord.js";
 import type { GadgetRecordList } from "./GadgetRecordList.js";
 import type { InternalModelManager } from "./InternalModelManager.js";
@@ -23,11 +24,11 @@ export type AnyModelFinderMetadata = {
 /**
  * The manager class for a given model that uses the Public API, like `api.post` or `api.user`
  **/
-export interface AnyPublicModelManager {
+export interface AnyPublicModelManager<F = FindManyFunction<any, any, any, any>> {
   connection: GadgetConnection;
-  apiIdentifier?: string;
   findOne: ((id: string, options: any) => Promise<GadgetRecord<any>>) & AnyModelFinderMetadata;
-  findMany: ((options: any) => Promise<GadgetRecordList<any>>) & AnyModelFinderMetadata;
+  // findMany: ((options: any) => Promise<GadgetRecordList<any>>) & AnyModelFinderMetadata;
+  findMany: F;
   findFirst: ((options: any) => Promise<GadgetRecord<any>>) & AnyModelFinderMetadata;
   maybeFindFirst(options: any): Promise<GadgetRecord<any> | null>;
   maybeFindOne(id: string, options: any): Promise<GadgetRecord<any> | null>;
@@ -36,10 +37,10 @@ export interface AnyPublicModelManager {
 /**
  * The manager class for a given single model that uses the Public API, like `api.session`
  **/
-export interface AnyPublicSingletonModelManager {
+export interface AnyPublicSingletonModelManager<F extends GetFunction<any, any, any, any>> {
   connection: GadgetConnection;
-  apiIdentifier?: string;
-  get(): Promise<GadgetRecord<any>>;
+  // get(): Promise<GadgetRecord<any>>;
+  get: F;
 }
 
 /**
@@ -52,4 +53,4 @@ export interface AnyLegacyModelManager {
 /**
  * Any model manager, either public or internal
  */
-export type AnyModelManager = AnyPublicModelManager | AnyPublicSingletonModelManager | AnyLegacyModelManager | InternalModelManager;
+export type AnyModelManager = AnyPublicModelManager | AnyPublicSingletonModelManager<GetFunction<any, any, any, any>> | AnyLegacyModelManager | InternalModelManager;

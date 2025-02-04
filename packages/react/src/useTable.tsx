@@ -44,7 +44,7 @@ export const useTable = <
   F extends FindManyFunction<GivenOptions, any, SchemaT, any>,
   Options extends F["optionsType"] & ReadOperationOptions & TableOptions
 >(
-  manager: { findMany: F } & AnyPublicModelManager,
+  manager: { findMany: F } & AnyPublicModelManager<F>,
   options?: LimitToKnownKeys<
     Options,
     Omit<F["optionsType"], "sort" | "first" | "last" | "after" | "before"> & ReadOperationOptions & TableOptions

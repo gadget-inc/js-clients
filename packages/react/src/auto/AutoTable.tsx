@@ -12,7 +12,7 @@ export type AutoTableProps<
   FinderFunction extends FindManyFunction<GivenOptions, any, SchemaT, any>,
   Options extends FinderFunction["optionsType"]
 > = {
-  model: { findMany: FinderFunction } & AnyPublicModelManager;
+  model: { findMany: FinderFunction } & AnyPublicModelManager<FinderFunction>;
   select?: Options["select"];
   pageSize?: number;
   initialCursor?: string;

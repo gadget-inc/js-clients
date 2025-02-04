@@ -700,7 +700,7 @@ export interface InternalFindListOptions {
    * What fields to retrieve from the API for this API call
    * __Note__: This selection is different than the top level select option -- it just accepts a list of string fields, and not a nested selection. To use a nested selection, use the top level API.
    **/
-  select?: InternalFieldSelection;
+  select?: AnySelection | InternalFieldSelection | null;
 }
 
 /** Options for functions that return a paginated list of records from an InternalModelManager */

@@ -46,7 +46,7 @@ export const useList = <
   F extends FindManyFunction<GivenOptions, any, SchemaT, any>,
   Options extends F["optionsType"] & ReadOperationOptions & ListOptions
 >(
-  manager: { findMany: F } & AnyPublicModelManager,
+  manager: { findMany: F } & AnyPublicModelManager<F>,
   options?: LimitToKnownKeys<Options, F["optionsType"] & ReadOperationOptions & ListOptions>
 ): ListResult<
   Array<
@@ -93,6 +93,7 @@ export const useList = <
     ...(search.debouncedValue && { search: search.debouncedValue }),
   });
 
+  // eslint-disable-next-line @typescript-eslint/no-unnecessary-type-assertion
   const selection = useSelectedRecordsController({ currentPageIds: data?.map((record) => (record as any).id) ?? [] });
 
   const goToNextPage = useCallback(() => {

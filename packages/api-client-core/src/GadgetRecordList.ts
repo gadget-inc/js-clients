@@ -6,6 +6,7 @@ import type { GadgetRecord, RecordShape } from "./GadgetRecord.js";
 import type { InternalModelManager } from "./InternalModelManager.js";
 import { GadgetClientError, GadgetOperationError } from "./support.js";
 import type { PaginateOptions } from "./types.js";
+import { FindManyFunction } from "./GadgetFunctions.js";
 
 type PaginationConfig = {
   pageInfo: { hasNextPage: boolean; hasPreviousPage: boolean; startCursor: string; endCursor: string };
@@ -13,17 +14,17 @@ type PaginationConfig = {
 };
 
 /** Represents a list of objects returned from the API. Facilitates iterating and paginating. */
-export class GadgetRecordList<Shape extends RecordShape> extends Array<GadgetRecord<Shape>> {
-  modelManager!: AnyPublicModelManager | InternalModelManager;
+export class GadgetRecordList<Shape extends RecordShape, Manager extends AnyPublicModelManager | InternalModelManager<Shape>> extends Array<GadgetRecord<Shape>> {
+  modelManager!: Manager;
   pagination!: PaginationConfig;
 
   /** Internal method used to create a list. Should not be used by applications. */
-  static boot<Shape extends RecordShape>(
-    modelManager: AnyPublicModelManager | InternalModelManager,
+  static boot<Shape extends RecordShape, Manager extends AnyPublicModelManager | InternalModelManager<Shape>>(
+    modelManager: Manager,
     records: GadgetRecord<Shape>[],
     pagination: PaginationConfig
   ) {
-    const list = new GadgetRecordList<Shape>();
+    const list = new GadgetRecordList<Shape, Manager>();
     list.push(...records);
     list.modelManager = modelManager;
     list.pagination = pagination;
@@ -71,7 +72,7 @@ export class GadgetRecordList<Shape extends RecordShape> extends Array<GadgetRec
       ...options,
       after: this.pagination.pageInfo.endCursor,
       first: first || last,
-    }) as Promise<GadgetRecordList<Shape>>;
+    }) as Promise<GadgetRecordList<Shape, Manager>>;
     return await nextPage;
   }
 
@@ -86,7 +87,7 @@ export class GadgetRecordList<Shape extends RecordShape> extends Array<GadgetRec
       ...options,
       before: this.pagination.pageInfo.startCursor,
       last: last || first,
-    }) as Promise<GadgetRecordList<Shape>>;
+    }) as Promise<GadgetRecordList<Shape, Manager>>;
     return await prevPage;
   }
 }

@@ -43,7 +43,7 @@ export const useGet = <
   F extends GetFunction<GivenOptions, any, SchemaT, any>,
   Options extends F["optionsType"] & ReadOperationOptions
 >(
-  manager: { get: F } & AnyPublicSingletonModelManager,
+  manager: { get: F } & AnyPublicSingletonModelManager<F>,
   options?: LimitToKnownKeys<Options, F["optionsType"] & ReadOperationOptions>
 ): ReadHookResult<
   GadgetRecord<Select<Exclude<F["schemaType"], null | undefined>, DefaultSelection<F["selectionType"], Options, F["defaultSelection"]>>>
