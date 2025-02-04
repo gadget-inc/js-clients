@@ -9,7 +9,7 @@ import { validateAutoFormProps } from "../AutoFormActionValidators.js";
 import { AutoFormFieldsFromChildComponentsProvider, AutoFormMetadataContext } from "../AutoFormContext.js";
 import type { FormProps, ShadcnElements } from "./elements.js";
 import { makeShadcnAutoInput } from "./inputs/ShadcnAutoInput.js";
-import { makeShadcnHasOneForm } from "./inputs/relationships/ShadcnHasOneForm.js";
+import { makeShadcnAutoHasOneForm } from "./inputs/relationships/ShadcnAutoHasOneForm.js";
 import { makeShadcnAutoSubmit } from "./submit/ShadcnAutoSubmit.js";
 import { makeSubmitResultBanner } from "./submit/ShadcnSubmitResultBanner.js";
 
@@ -100,7 +100,7 @@ export const makeAutoForm = <Elements extends ShadcnElements>({
     Button,
   });
 
-  const AutoHasOneForm = makeShadcnHasOneForm({
+  const AutoHasOneForm = makeShadcnAutoHasOneForm({
     Badge,
     Button,
     Command,

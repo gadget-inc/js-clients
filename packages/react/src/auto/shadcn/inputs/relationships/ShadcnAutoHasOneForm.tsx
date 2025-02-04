@@ -12,7 +12,7 @@ import type { ShadcnElements } from "../../elements.js";
 import { makeShadcnRenderOptionLabel } from "../../utils.js";
 import { makeShadcnAutoComboInput } from "../ShadcnAutoComboInput.js";
 
-export const makeShadcnHasOneForm = ({
+export const makeShadcnAutoHasOneForm = ({
   Badge,
   Button,
   Command,
