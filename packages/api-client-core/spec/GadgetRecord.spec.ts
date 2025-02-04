@@ -55,7 +55,7 @@ describe("GadgetRecord", () => {
     const product = new GadgetRecord<SampleBaseRecord>(productBaseRecord);
     expect(product.id).toEqual("123");
     expect(product.name).toEqual("A cool product");
-    expect(product.modelManager).toEqual(null);
+    expect(product.modelManager).toBeUndefined();
   });
 
   it("can be constructed with a base record and a model manager", () => {
