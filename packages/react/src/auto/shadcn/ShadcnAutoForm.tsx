@@ -9,6 +9,7 @@ import { validateAutoFormProps } from "../AutoFormActionValidators.js";
 import { AutoFormFieldsFromChildComponentsProvider, AutoFormMetadataContext } from "../AutoFormContext.js";
 import type { FormProps, ShadcnElements } from "./elements.js";
 import { makeShadcnAutoInput } from "./inputs/ShadcnAutoInput.js";
+import { makeShadcnHasOneForm } from "./inputs/relationships/ShadcnHasOneForm.js";
 import { makeShadcnAutoSubmit } from "./submit/ShadcnAutoSubmit.js";
 import { makeSubmitResultBanner } from "./submit/ShadcnSubmitResultBanner.js";
 
@@ -40,6 +41,20 @@ export const makeAutoForm = <Elements extends ShadcnElements>({
   ScrollArea,
   ScrollBar,
   Textarea,
+  Dialog,
+  DialogContent,
+  DialogTrigger,
+  DialogClose,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+  DialogDescription,
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
 }: Elements) => {
   const {
     AutoInput,
@@ -75,6 +90,9 @@ export const makeAutoForm = <Elements extends ShadcnElements>({
     ScrollArea,
     ScrollBar,
     Textarea,
+    Dialog,
+    DialogContent,
+    DialogTrigger,
   });
 
   const AutoSubmit = makeShadcnAutoSubmit({ Button });
@@ -83,6 +101,39 @@ export const makeAutoForm = <Elements extends ShadcnElements>({
     AlertTitle,
     AlertDescription,
     Button,
+  });
+
+  const AutoHasOneForm = makeShadcnHasOneForm({
+    Badge,
+    Button,
+    Command,
+    CommandItem,
+    CommandInput,
+    CommandLoading,
+    DropdownMenu,
+    DropdownMenuContent,
+    DropdownMenuItem,
+    DropdownMenuLabel,
+    DropdownMenuSeparator,
+    DropdownMenuTrigger,
+    Input,
+    Label,
+    CommandList,
+    CommandEmpty,
+    CommandGroup,
+    Checkbox,
+    ScrollArea,
+    Popover,
+    PopoverContent,
+    PopoverTrigger,
+    Dialog,
+    DialogContent,
+    DialogClose,
+    DialogFooter,
+    DialogHeader,
+    DialogTitle,
+    DialogDescription,
+    DialogTrigger,
   });
 
   function AutoForm<GivenOptions extends OptionsType, SchemaT, ActionFunc extends ActionFunction<GivenOptions, any, any, SchemaT, any>>(
@@ -197,6 +248,7 @@ export const makeAutoForm = <Elements extends ShadcnElements>({
     SubmitResultBanner,
     SubmitSuccessfulBanner,
     SubmitErrorBanner,
+    AutoHasOneForm,
     AutoBelongsToInput,
     AutoHasManyInput,
     AutoRolesInput,

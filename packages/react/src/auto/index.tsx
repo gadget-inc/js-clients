@@ -10,6 +10,7 @@ export interface AutoAdapter<T = any, F = any, B = any> {
   AutoJSONInput: React.ComponentType<any>;
   AutoSubmit: React.ComponentType<any>;
   SubmitResultBanner: React.ComponentType<any>;
+  AutoHasOneForm: React.ComponentType<any>;
   AutoDateTimePicker: React.ComponentType<{
     suiteName?: string;
     field: string;

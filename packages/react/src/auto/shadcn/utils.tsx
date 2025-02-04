@@ -7,11 +7,13 @@ export const makeShadcnRenderOptionLabel = ({ Label, Badge, Button }: Pick<Shadc
     if (typeof label === "string") {
       switch (type) {
         case "primary":
-          return <Label>{label}</Label>;
+          return <Label className="font-semibold">{label}</Label>;
         case "secondary":
-          return <Badge>{label}</Badge>;
+          return <Label className="text-sm text-gray-500">{label}</Label>;
         case "tertiary":
-          return <Button variant="outline">{label}</Button>;
+          return <Badge variant={"outline"}>{label}</Badge>;
+        default:
+          throw new Error("Invalid option type");
       }
     }
     return label;

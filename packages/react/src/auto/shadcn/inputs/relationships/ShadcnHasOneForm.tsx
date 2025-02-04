@@ -1,12 +1,16 @@
-import React, { useEffect, useState } from "react";
+import { CommandSeparator } from "cmdk";
+import { EllipsisVerticalIcon, PlusIcon } from "lucide-react";
+import React, { useCallback, useEffect, useState } from "react";
 import { useFormContext } from "../../../../useActionForm.js";
-import { get } from "../../../../utils.js";
+import { debounce, get } from "../../../../utils.js";
+import { autoRelationshipForm } from "../../../AutoInput.js";
 import { RelationshipContext, useAutoRelationship, useRelationshipContext } from "../../../hooks/useAutoRelationship.js";
 import { useHasOneController } from "../../../hooks/useHasOneController.js";
-import { getRecordAsOption, useOptionLabelForField } from "../../../hooks/useRelatedModel.js";
+import { getRecordAsOption, optionRecordsToLoadCount, useOptionLabelForField } from "../../../hooks/useRelatedModel.js";
 import type { OptionLabel } from "../../../interfaces/AutoRelationshipInputProps.js";
 import type { ShadcnElements } from "../../elements.js";
 import { makeShadcnRenderOptionLabel } from "../../utils.js";
+import { makeShadcnAutoComboInput } from "../ShadcnAutoComboInput.js";
 import { makeRelatedModelOption } from "./RelatedModelOption.js";
 
 export const makeShadcnHasOneForm = ({
@@ -39,6 +43,7 @@ export const makeShadcnHasOneForm = ({
   DialogHeader,
   DialogTitle,
   DialogDescription,
+  DialogTrigger,
 }: Pick<
   ShadcnElements,
   | "Badge"
@@ -89,6 +94,26 @@ export const makeShadcnHasOneForm = ({
     Label,
   });
 
+  const ShadcnComboInput = makeShadcnAutoComboInput({
+    Command,
+    CommandInput,
+    Label,
+    CommandItem,
+    CommandList,
+    CommandEmpty,
+    CommandLoading,
+    CommandGroup,
+    Checkbox,
+    ScrollArea,
+    Popover,
+    PopoverContent,
+    PopoverTrigger,
+    Input,
+    Dialog,
+    DialogContent,
+    DialogTrigger,
+  });
+
   function ShadcnHasOneForm(props: {
     field: string;
     children: React.ReactNode;
@@ -135,24 +160,36 @@ export const makeShadcnHasOneForm = ({
 
     const childName = metadata.name ?? "Unknown";
 
+    const handleScrolledToBottom = useCallback(
+      debounce(() => {
+        if (pagination.hasNextPage && searchFilterOptions.length >= optionRecordsToLoadCount) {
+          pagination.loadNextPage();
+        }
+      }, 300),
+      [pagination, searchFilterOptions.length]
+    );
+
     return (
       <RelationshipContext.Provider value={{ transformPath: (path) => pathPrefix + "." + path }}>
         <div>
           <div className="flex flex-row justify-between items-center">
             <h2 className="text-lg font-medium">{childName}</h2>
             {hasRecord && (
-              <DropdownMenu>
+              <DropdownMenu open={actionsOpen} onOpenChange={setActionsOpen}>
                 <DropdownMenuTrigger asChild>
-                  <Button variant="outline">Open</Button>
+                  <Button variant="ghost">
+                    <EllipsisVerticalIcon className="w-4 h-4" />
+                  </Button>
                 </DropdownMenuTrigger>
-                <DropdownMenuContent>
+                <DropdownMenuContent className="bg-white">
                   <DropdownMenuItem
                     value="edit"
                     onSelect={() => {
                       setModalOpen(true);
+                      setActionsOpen(false);
                     }}
                   >
-                    Edit ${childName.toLocaleLowerCase()}
+                    Edit {childName.toLocaleLowerCase()}
                   </DropdownMenuItem>
                   <DropdownMenuItem
                     value="remove"
@@ -163,7 +200,7 @@ export const makeShadcnHasOneForm = ({
                     }}
                     variant="destructive"
                   >
-                    Remove ${childName.toLocaleLowerCase()}
+                    Remove {childName.toLocaleLowerCase()}
                   </DropdownMenuItem>
                 </DropdownMenuContent>
               </DropdownMenu>
@@ -173,14 +210,90 @@ export const makeShadcnHasOneForm = ({
             props.renderSelectedRecord ? (
               props.renderSelectedRecord(record)
             ) : (
-              <div className="flex flex-row justify-between items-center">
-                {renderOptionLabel(recordOption!.label, "primary")}
+              <div className="flex flex-col gap-2">
+                <div className="flex flex-row justify-between gap-2 mt-2">
+                  {renderOptionLabel(recordOption!.label, "primary")}
+                  {recordOption!.tertiaryLabel && renderOptionLabel(recordOption!.tertiaryLabel, "tertiary")}
+                </div>
                 {recordOption!.secondaryLabel && renderOptionLabel(recordOption!.secondaryLabel, "secondary")}
-                {recordOption!.tertiaryLabel && renderOptionLabel(recordOption!.tertiaryLabel, "tertiary")}
               </div>
             )
           ) : (
-            <RelatedModelOptionPopover
+            <ShadcnComboInput
+              selectedRecordTag={null}
+              path={path}
+              hideLabel
+              metadata={metadata}
+              field={field}
+              options={searchFilterOptions}
+              onSelect={(record) => {
+                setValue(path, { ...record, _link: record.id });
+              }}
+              isLoading={isLoading}
+              errorMessage={""}
+              actions={[
+                <CommandGroup>
+                  <CommandItem
+                    onSelect={() => {
+                      setModalOpen(true);
+                    }}
+                  >
+                    <div className="flex flex-row items-center gap-2">
+                      <PlusIcon className="w-4 h-4" />
+                      Add {childName}
+                    </div>
+                  </CommandItem>
+                  <CommandSeparator />
+                </CommandGroup>,
+              ]}
+              records={records}
+              checkSelected={() => false}
+              allowMultiple={false}
+              willLoadMoreOptions={pagination.hasNextPage && searchFilterOptions.length >= optionRecordsToLoadCount}
+              onScrolledToBottom={handleScrolledToBottom}
+              onChange={search.set}
+              defaultValue={search.value}
+            />
+          )}
+        </div>
+        {
+          <Dialog open={modalOpen} onOpenChange={() => setModalOpen(!modalOpen)}>
+            <DialogContent className="bg-white">
+              <DialogHeader>
+                <DialogTitle>Add {childName}</DialogTitle>
+              </DialogHeader>
+              <div>{props.children}</div>
+              <DialogFooter className="">
+                <DialogClose asChild>
+                  <Button type="button" variant="secondary">
+                    Close
+                  </Button>
+                </DialogClose>
+                <Button
+                  type="button"
+                  variant="default"
+                  onClick={() => {
+                    const { _unlink, _link, ...rest } = getValues(path);
+                    setValue(path, rest);
+
+                    setModalOpen(false);
+                  }}
+                >
+                  Save
+                </Button>
+              </DialogFooter>
+            </DialogContent>
+          </Dialog>
+        }
+      </RelationshipContext.Provider>
+    );
+  }
+
+  return autoRelationshipForm(ShadcnHasOneForm);
+};
+
+/**
+ *  <RelatedModelOptionPopover
               options={searchFilterOptions}
               isLoading={isLoading}
               active={searchOpen}
@@ -214,26 +327,4 @@ export const makeShadcnHasOneForm = ({
                 }
               }}
             />
-          )}
-        </div>
-        <Dialog open={modalOpen} onOpenChange={() => setModalOpen(!modalOpen)}>
-          <DialogContent>
-            <DialogHeader>
-              <DialogTitle>Add {childName}</DialogTitle>
-            </DialogHeader>
-            <div>{props.children}</div>
-            <DialogFooter className="sm:justify-start">
-              <DialogClose asChild>
-                <Button type="button" variant="secondary">
-                  Close
-                </Button>
-              </DialogClose>
-            </DialogFooter>
-          </DialogContent>
-        </Dialog>
-      </RelationshipContext.Provider>
-    );
-  }
-
-  return ShadcnHasOneForm;
-};
+ */
