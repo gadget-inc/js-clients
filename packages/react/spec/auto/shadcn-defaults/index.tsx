@@ -6,7 +6,16 @@ import { Button } from "./components/Button.js";
 import { Calendar } from "./components/Calendar.js";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "./components/Card.js";
 import { Checkbox } from "./components/Checkbox.js";
-import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem, CommandList, CommandSeparator } from "./components/Command.js";
+import {
+  Command,
+  CommandEmpty,
+  CommandGroup,
+  CommandInput,
+  CommandItem,
+  CommandList,
+  CommandLoading,
+  CommandSeparator,
+} from "./components/Command.js";
 import { Form } from "./components/Form.js";
 import { Input } from "./components/Input.js";
 import { Label } from "./components/Label.js";
@@ -47,7 +56,7 @@ export const elements: ShadcnElements = {
   CommandItem,
   CommandList,
   CommandSeparator,
-
+  CommandLoading,
   Popover,
   PopoverAnchor,
   PopoverContent,

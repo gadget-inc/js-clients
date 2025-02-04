@@ -1,6 +1,7 @@
 import { XIcon } from "lucide-react";
 import React, { useCallback } from "react";
 import type { Control } from "../../../useActionForm.js";
+import { debounce } from "../../../utils.js";
 import { autoInput } from "../../AutoInput.js";
 import { useEnumInputController } from "../../hooks/useEnumInputController.js";
 import type { ShadcnElements } from "../elements.js";
@@ -11,25 +12,40 @@ export const makeShadcnAutoEnumInput = ({
   Button,
   Command,
   CommandItem,
+  CommandLoading,
   CommandInput,
   Label,
   CommandList,
   CommandEmpty,
   CommandGroup,
   Checkbox,
+  ScrollArea,
 }: Pick<
   ShadcnElements,
-  "Badge" | "Button" | "Command" | "CommandItem" | "CommandList" | "CommandEmpty" | "CommandGroup" | "CommandInput" | "Label" | "Checkbox"
+  | "Badge"
+  | "Button"
+  | "Command"
+  | "CommandItem"
+  | "CommandList"
+  | "CommandEmpty"
+  | "CommandLoading"
+  | "CommandGroup"
+  | "CommandInput"
+  | "Label"
+  | "Checkbox"
+  | "ScrollArea"
 >) => {
   const ShadcnComboInput = makeShadcnAutoComboInput({
     Command,
     CommandInput,
+    CommandLoading,
     Label,
     CommandItem,
     CommandList,
     CommandEmpty,
     CommandGroup,
     Checkbox,
+    ScrollArea,
   });
 
   function ShadcnAutoEnumInput(props: { field: string; control?: Control<any>; label?: string }) {
@@ -88,6 +104,13 @@ export const makeShadcnAutoEnumInput = ({
       [searchValue]
     );
 
+    const debouncedSearch = useCallback(
+      debounce((value: string) => {
+        setSearchValue(value);
+      }, 400),
+      [setSearchValue]
+    );
+
     return (
       <ShadcnComboInput
         {...props}
@@ -95,6 +118,7 @@ export const makeShadcnAutoEnumInput = ({
         path={labelProp ?? label}
         metadata={metadata}
         label={labelProp ?? label}
+        onChange={debouncedSearch}
         selectedRecordTag={selectedTagsElement}
         onSelect={(option) => {
           onSelectionChange(option.id);
@@ -110,6 +134,7 @@ export const makeShadcnAutoEnumInput = ({
         allowOther={allowOther}
         onAddExtraOption={(value) => {
           onSelectionChange(value);
+          setSearchValue("");
         }}
         formatOptionText={formatOptionText}
         emptyMessage={`No options found matching `}

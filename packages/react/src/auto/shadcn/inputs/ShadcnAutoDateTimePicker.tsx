@@ -13,6 +13,7 @@ import type { GadgetDateTimeConfig } from "../../../internal/gql/graphql.js";
 import { useController } from "../../../useActionForm.js";
 import { autoInput } from "../../AutoInput.js";
 import { useFieldMetadata } from "../../hooks/useFieldMetadata.js";
+import { ShadcnRequired } from "../ShadcnRequired.js";
 import type { ShadcnElements } from "../elements.js";
 
 export interface Range {
@@ -137,7 +138,7 @@ export const makeShadcnAutoDateTimePicker = ({
           <div>
             <Label htmlFor={props.id ? `${props.id}-date` : undefined}>
               {props.label ?? metadata.name ?? "Date"}
-              {metadata.requiredArgumentForInput && <span className="text-red-500 ml-1">*</span>}
+              {metadata.requiredArgumentForInput && <ShadcnRequired>*</ShadcnRequired>}
             </Label>
             <Button
               id={props.id ? `${props.id}-date` : undefined}

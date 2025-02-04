@@ -1,3 +1,4 @@
+import { LoaderIcon } from "lucide-react";
 import React, { useMemo } from "react";
 import type { Option } from "../../../interfaces/AutoRelationshipInputProps.js";
 import type { ShadcnElements } from "../../elements.js";
@@ -19,17 +20,18 @@ export type RelatedModelOptionsProps = {
   formatOptionText?: (option: string) => React.ReactNode;
   setSearchValue?: (value: string) => void;
   emptyMessage?: string;
+  loadMoreRef?: React.RefObject<HTMLDivElement>;
 };
 
 export const makeRelatedModelOption = (
-  elements: Pick<ShadcnElements, "CommandItem" | "CommandList" | "CommandEmpty" | "CommandGroup" | "Checkbox" | "Label">
+  elements: Pick<ShadcnElements, "CommandItem" | "CommandList" | "CommandEmpty" | "CommandGroup" | "Checkbox" | "Label" | "CommandLoading">
 ) => {
-  const { CommandList, CommandEmpty, CommandGroup } = elements;
+  const { CommandList, CommandEmpty, CommandGroup, CommandItem } = elements;
 
   function RelatedModelOption(props: RelatedModelOptionsProps) {
     const { checkSelected, onSelect, isLoading, errorMessage, options, records, actions } = props;
 
-    const { ListMessage, NoRecordsMessage, ShadcnSelectableOption, getErrorMessage, AddExtraOption } = makeShadcnListMessages(elements);
+    const { NoRecordsMessage, ShadcnSelectableOption, getErrorMessage, AddExtraOption } = makeShadcnListMessages(elements);
 
     const listBoxOptions = useMemo(
       () => [
@@ -57,36 +59,30 @@ export const makeRelatedModelOption = (
 
     return (
       <CommandList>
-        {isLoading ? (
-          <CommandEmpty>Loading...</CommandEmpty>
-        ) : props.allowOther ? (
-          <ListMessage
+        {isLoading && <CommandEmpty>Loading...</CommandEmpty>}
+        {listBoxOptions.length > 0 ? <CommandGroup>{listBoxOptions}</CommandGroup> : null}
+        {props.allowOther && props.searchValue && (
+          <AddExtraOption
             message={`Add "${props.searchValue}"`}
             onSelect={() => {
               props.onAddExtraOption?.(props.searchValue ?? "");
               props.setSearchValue?.("");
             }}
           />
-        ) : (
-          <NoRecordsMessage message={props.emptyMessage} />
         )}
-        {listBoxOptions.length ? (
-          <CommandGroup>
-            {listBoxOptions}
-            {props.allowOther && props.searchValue && (
-              <AddExtraOption
-                message={`Add "${props.searchValue}"`}
-                onSelect={() => {
-                  props.onAddExtraOption?.(props.searchValue ?? "");
-                  props.setSearchValue?.("");
-                }}
-              />
-            )}
-          </CommandGroup>
-        ) : errorMessage ? (
-          <ListMessage message={getErrorMessage(errorMessage)} />
+        {errorMessage ? (
+          <NoRecordsMessage message={getErrorMessage(errorMessage)} />
         ) : (
-          <NoRecordsMessage />
+          !isLoading && <NoRecordsMessage message={props.emptyMessage ?? undefined} />
+        )}
+        {props.loadMoreRef && (
+          <CommandItem
+            ref={props.loadMoreRef}
+            key="intersection-trigger"
+            className="p-1 w-full flex items-center justify-center intersection-trigger"
+          >
+            <LoaderIcon className="w-4 h-4 animate-spin" />
+          </CommandItem>
         )}
       </CommandList>
     );

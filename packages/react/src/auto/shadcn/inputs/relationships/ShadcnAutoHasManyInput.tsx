@@ -1,7 +1,8 @@
-import React, { useMemo } from "react";
+import React, { useCallback, useMemo } from "react";
+import { debounce } from "../../../../utils.js";
 import { autoInput } from "../../../AutoInput.js";
 import { useHasManyInputController } from "../../../hooks/useHasManyController.js";
-import { useOptionLabelForField } from "../../../hooks/useRelatedModel.js";
+import { optionRecordsToLoadCount, useOptionLabelForField } from "../../../hooks/useRelatedModel.js";
 import type { AutoRelationshipInputProps } from "../../../interfaces/AutoRelationshipInputProps.js";
 import type { ShadcnElements } from "../../elements.js";
 import { makeShadcnAutoComboInput } from "../ShadcnAutoComboInput.js";
@@ -15,14 +16,28 @@ export const makeShadcnAutoHasManyInput = ({
   CommandInput,
   Label,
   CommandList,
+  CommandLoading,
   CommandEmpty,
   CommandGroup,
   Checkbox,
+  ScrollArea,
 }: Pick<
   ShadcnElements,
-  "Badge" | "Button" | "Command" | "CommandItem" | "CommandList" | "CommandEmpty" | "CommandGroup" | "CommandInput" | "Label" | "Checkbox"
+  | "Badge"
+  | "Button"
+  | "Command"
+  | "CommandItem"
+  | "CommandList"
+  | "CommandLoading"
+  | "CommandEmpty"
+  | "CommandGroup"
+  | "CommandInput"
+  | "Label"
+  | "Checkbox"
+  | "ScrollArea"
 >) => {
   const { SelectedRecordTags } = makeSelectedRecordTags({ Badge, Button });
+
   const ShadcnComboInput = makeShadcnAutoComboInput({
     Command,
     CommandInput,
@@ -30,8 +45,10 @@ export const makeShadcnAutoHasManyInput = ({
     CommandItem,
     CommandList,
     CommandEmpty,
+    CommandLoading,
     CommandGroup,
     Checkbox,
+    ScrollArea,
   });
 
   function ShadcnAutoHasManyInput(props: AutoRelationshipInputProps) {
@@ -43,7 +60,6 @@ export const makeShadcnAutoHasManyInput = ({
       selectedRecords,
       errorMessage,
       isLoading,
-
       onSelectRecord,
       onRemoveRecord,
     } = useHasManyInputController(props);
@@ -54,22 +70,35 @@ export const makeShadcnAutoHasManyInput = ({
       return selectedRecords.map((record) => record.id).filter((id) => !!id) as string[];
     }, [selectedRecords]);
 
+    const handleScrolledToBottom = useCallback(
+      debounce(() => {
+        if (pagination.hasNextPage && options.length >= optionRecordsToLoadCount) {
+          pagination.loadNextPage();
+        }
+      }, 300),
+      [pagination, options.length]
+    );
+
     return (
       <ShadcnComboInput
         {...props}
-        options={options}
+        options={searchFilterOptions}
         path={path}
         metadata={metadata}
+        onChange={search.set}
         selectedRecordTag={
           <SelectedRecordTags selectedRecords={selectedRecords} optionLabel={optionLabel} onRemoveRecord={onRemoveRecord} />
         }
         onSelect={onSelectRecord}
+        onScrolledToBottom={handleScrolledToBottom}
+        defaultValue={search.value}
+        willLoadMoreOptions={pagination.hasNextPage && options.length >= optionRecordsToLoadCount}
         checkSelected={(id) => {
           return selectedRecordIds.includes(id);
         }}
         isLoading={isLoading}
         errorMessage={errorMessage}
-        allowMultiple={true}
+        allowMultiple
         records={relatedModel.records}
       />
     );

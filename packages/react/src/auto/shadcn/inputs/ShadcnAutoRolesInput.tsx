@@ -30,20 +30,35 @@ export const makeShadcnAutoRolesInput = ({
   CommandEmpty,
   CommandGroup,
   Checkbox,
+  ScrollArea,
+  CommandLoading,
 }: Pick<
   ShadcnElements,
-  "Badge" | "Button" | "Command" | "CommandItem" | "CommandList" | "CommandEmpty" | "CommandGroup" | "CommandInput" | "Label" | "Checkbox"
+  | "Badge"
+  | "Button"
+  | "Command"
+  | "CommandLoading"
+  | "CommandItem"
+  | "CommandList"
+  | "CommandEmpty"
+  | "CommandGroup"
+  | "CommandInput"
+  | "Label"
+  | "Checkbox"
+  | "ScrollArea"
 >) => {
   const { SelectedRecordTags } = makeSelectedRecordTags({ Badge, Button });
   const ComboInput = makeShadcnAutoComboInput({
     Command,
     CommandInput,
+    CommandLoading,
     Label,
     CommandItem,
     CommandList,
     CommandEmpty,
     CommandGroup,
     Checkbox,
+    ScrollArea,
   });
 
   function AutoRolesInput(props: AutoRolesInputProps) {

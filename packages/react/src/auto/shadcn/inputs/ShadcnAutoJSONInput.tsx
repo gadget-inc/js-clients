@@ -4,6 +4,7 @@ import { useFocus } from "../../../useFocus.js";
 import { getPropsWithoutRef } from "../../../utils.js";
 import { autoInput } from "../../AutoInput.js";
 import { useJSONInputController } from "../../hooks/useJSONInputController.js";
+import { ShadcnRequired } from "../ShadcnRequired.js";
 import type { ShadcnElements } from "../elements.js";
 
 export const makeShadcnAutoJSONInput = ({ Label, Textarea }: Pick<ShadcnElements, "Input" | "Label" | "Textarea">) => {
@@ -17,7 +18,7 @@ export const makeShadcnAutoJSONInput = ({ Label, Textarea }: Pick<ShadcnElements
     const [isFocused, focusProps] = useFocus();
     const { field: _field, control: _control, ...restOfProps } = props;
     const { type: _type, errorMessage, ...controller } = useJSONInputController(props);
-    const requiredIndicator = controller.metadata.requiredArgumentForInput ? <span className="text-red-500">*</span> : null;
+    const requiredIndicator = controller.metadata.requiredArgumentForInput ? <ShadcnRequired>*</ShadcnRequired> : null;
     const label = props.label ?? controller.label;
     const id = props.id ?? `${props.field}-input`;
     return (

@@ -55,6 +55,7 @@ export const makeShadcnListMessages = ({
           id={id}
           selected={selected}
           className={className}
+          value={label}
           onMouseDown={(e: React.MouseEvent) => {
             e.preventDefault();
             e.stopPropagation();
@@ -93,21 +94,7 @@ export const makeShadcnListMessages = ({
     return null;
   }
 
-  function ListMessage(props: { message: string; onSelect?: () => void }) {
-    const { message, onSelect } = props;
-    return (
-      <CommandEmpty
-        onMouseDown={(e: React.MouseEvent) => {
-          onSelect?.();
-        }}
-      >
-        {message}
-      </CommandEmpty>
-    );
-  }
-
   return {
-    ListMessage,
     NoRecordsMessage,
     ShadcnSelectableOption,
     getErrorMessage,
