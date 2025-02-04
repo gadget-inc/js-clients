@@ -27,7 +27,6 @@ describeForEachAutoAdapter(
 
     const expectUpdateActionSubmissionVariables = (expectedQueryValue?: any) => {
       cy.intercept({ method: "POST", url: `${api.connection.endpoint}?operation=updateWidget` }, (req) => {
-        console.log(req.body.variables, expectedQueryValue);
         // eslint-disable-next-line
         expect(req.body.variables).to.deep.equal(expectedQueryValue);
         req.reply({ data: { updateWidget: { success: true, errors: null, x: {} } } });
