@@ -213,7 +213,7 @@ export const makeShadcnHasOneForm = ({
               isLoading={isLoading}
               errorMessage={""}
               actions={[
-                <CommandGroup>
+                <CommandGroup key={"add-record"}>
                   <CommandItem
                     onSelect={() => {
                       setModalOpen(true);
