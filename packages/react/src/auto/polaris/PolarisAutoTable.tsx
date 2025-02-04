@@ -21,7 +21,7 @@ import type { AutoTableProps } from "../AutoTable.js";
 import { AutoTableContext } from "../AutoTableContext.js";
 import { validateAutoTableProps } from "../AutoTableValidators.js";
 import type { BulkActionOption } from "../hooks/useTableBulkActions.js";
-import { useTableBulkActions } from "../hooks/useTableBulkActions.js";
+import { getBulkActionOptionCallback, useTableBulkActions } from "../hooks/useTableBulkActions.js";
 import { defaultCellStyle } from "../shared/defaultTableCellStyle.js";
 import { PolarisAutoBulkActionModal } from "./PolarisAutoBulkActionModal.js";
 import { PolarisAutoTableCellRenderer } from "./tableCells/PolarisAutoTableCellRenderer.js";
@@ -162,7 +162,6 @@ const PolarisAutoTableComponent = <
           model={props.model}
           modelActionDetails={selectedModelActionDetails}
           ids={selection.recordIds}
-          selectedRows={selectedRows}
           clearSelection={selection.clearAll}
         />
         {searchable && (
@@ -279,11 +278,6 @@ const bulkActionOptionMapper = (selectedRows: TableRow[], clearSelection: () => 
     id: option.humanizedName,
     destructive: "isDeleter" in option ? option.isDeleter : false,
     content: option.humanizedName,
-    onAction: option.action
-      ? () => {
-          option.action?.(selectedRows);
-          clearSelection();
-        }
-      : option.selectModelAction ?? (() => undefined),
+    onAction: getBulkActionOptionCallback(option, selectedRows, clearSelection),
   });
 };

@@ -1,12 +1,24 @@
 /* eslint-disable jest/valid-expect */
 import React from "react";
-import { ActionErrorMessage, ActionSuccessMessage } from "../../../../src/auto/polaris/PolarisAutoBulkActionModal.js";
-import { PolarisAutoTable } from "../../../../src/auto/polaris/PolarisAutoTable.js";
+import { ActionErrorMessage, ActionSuccessMessage } from "../../../../src/auto/hooks/useTableBulkActions.js";
 import { api } from "../../../support/api.js";
-import { PolarisWrapper } from "../../../support/auto.js";
+import { describeForEachAutoAdapter } from "../../../support/auto.js";
+import { SUITE_NAMES } from "../../../support/constants.js";
 import { first50WidgetRecords, widgetModelMetadata } from "./metadata/widgetMetadata.js";
 
-describe("AutoTable - Bulk actions", () => {
+describeForEachAutoAdapter("AutoTable - Bulk actions", ({ name, adapter: { AutoTable }, wrapper }) => {
+  const componentIdentifiers =
+    name === SUITE_NAMES.POLARIS
+      ? {
+          selectAllCheckbox: `input[id=":r3:"]`,
+          singleRowCheckbox: (recordId: string | number) => `input[id="Select-${recordId}"]`,
+        }
+      : {
+          // SHADCN
+          selectAllCheckbox: `button[id="AutoTableSelectAllCheckbox"]`,
+          singleRowCheckbox: (recordId: string | number) => `button[id="AutoTableSingleRowCheckbox-${recordId}"]`,
+        };
+
   const mockModelMetadata = () => {
     cy.intercept(
       {
@@ -50,13 +62,14 @@ describe("AutoTable - Bulk actions", () => {
     if (isPromoted) {
       return cy.contains(label).click({ force: true });
     }
-    cy.get(`button[aria-label="More actions"]`).eq(1).click();
+
+    cy.get(`button[aria-label="More actions"]`).click({ multiple: true, force: true });
     return cy.contains(label).click({ force: true });
   };
 
   const selectRecordIds = (ids: string[]) => {
     for (const id of ids) {
-      cy.get(`input[id="Select-${id}"]`).eq(0).click();
+      cy.get(componentIdentifiers.singleRowCheckbox(id)).eq(0).click();
     }
   };
 
@@ -69,7 +82,7 @@ describe("AutoTable - Bulk actions", () => {
 
     stubCallback = cy.stub();
     cy.mountWithWrapper(
-      <PolarisAutoTable
+      <AutoTable
         model={api.widget}
         actions={[
           "delete",
@@ -79,7 +92,7 @@ describe("AutoTable - Bulk actions", () => {
           { promoted: true, label: "(Promoted)Relabeled model action", action: "delete" },
         ]}
       />,
-      PolarisWrapper
+      wrapper
     );
 
     cy.wait("@getModelMetadata");
@@ -87,15 +100,15 @@ describe("AutoTable - Bulk actions", () => {
   });
 
   it("can select and deselect all records on the current page", () => {
-    cy.get(`input[id=":r3:"]`).eq(0).click();
+    cy.get(componentIdentifiers.selectAllCheckbox).eq(0).click();
     cy.contains("50 selected").should("exist");
 
     openBulkAction("Delete");
 
     cy.contains("Are you sure you want to run this action on 50 records?").should("exist");
-    cy.get("button").contains("Close").click();
+    cy.get("button").contains("Close").click({ force: true });
 
-    cy.get(`input[id=":r3:"]`).eq(0).click();
+    cy.get(componentIdentifiers.selectAllCheckbox).eq(0).click();
     cy.get(`button[aria-label="Actions"]`).should("not.exist");
   });
 
@@ -115,7 +128,7 @@ describe("AutoTable - Bulk actions", () => {
     cy.wait("@getWidgets").its("request.body.variables").should("deep.equal", { first: 50 }); // No search value
 
     cy.contains(ActionSuccessMessage);
-    cy.get("button").contains("Close").click();
+    cy.get("button").contains("Close").click({ force: true });
 
     // Now ensure that error response appears in the modal
     selectRecordIds(["20", "21", "22"]);
@@ -153,7 +166,7 @@ describe("AutoTable - Bulk actions", () => {
       cy.wait("@getWidgets").its("request.body.variables").should("deep.equal", { first: 50 }); // No search value
 
       cy.contains(ActionSuccessMessage);
-      cy.get("button").contains("Close").click();
+      cy.get("button").contains("Close").click({ force: true });
     });
   });
 });

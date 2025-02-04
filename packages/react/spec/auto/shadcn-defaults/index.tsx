@@ -16,6 +16,18 @@ import {
   CommandLoading,
   CommandSeparator,
 } from "./components/Command.js";
+import {
+  Dialog,
+  DialogClose,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogOverlay,
+  DialogPortal,
+  DialogTitle,
+  DialogTrigger,
+} from "./components/Dialog.js";
 import { Form } from "./components/Form.js";
 import { Input } from "./components/Input.js";
 import { Label } from "./components/Label.js";
@@ -90,6 +102,17 @@ export const elements: ShadcnElements = {
   Avatar,
   AvatarImage,
   AvatarFallback,
+
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+  DialogClose,
+  DialogFooter,
+  DialogPortal,
+  DialogOverlay,
 
   toast,
   cn,
