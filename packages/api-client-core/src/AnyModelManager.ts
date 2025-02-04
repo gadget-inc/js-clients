@@ -1,5 +1,5 @@
 import type { GadgetConnection } from "./GadgetConnection.js";
-import { FindFirstFunction, FindManyFunction, FindOneFunction, GetFunction } from "./GadgetFunctions.js";
+import type { FindFirstFunction, FindManyFunction, FindOneFunction, GetFunction } from "./GadgetFunctions.js";
 import type { GadgetRecord } from "./GadgetRecord.js";
 import type { InternalModelManager } from "./InternalModelManager.js";
 

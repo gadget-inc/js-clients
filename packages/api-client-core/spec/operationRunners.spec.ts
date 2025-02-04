@@ -69,18 +69,18 @@ describe("operationRunners", () => {
       const promise = findOneRunner({ connection }, "widget", "123", { id: true, name: true }, "widget");
 
       expect(query).toMatchInlineSnapshot(`
-              "query widget($id: GadgetID!) {
-                widget(id: $id) {
-                  id
-                  name
-                  __typename
-                }
-                gadgetMeta {
-                  hydrations(modelName:
-              "widget")
-                }
-              }"
-            `);
+        "query widget($id: GadgetID!) {
+          widget(id: $id) {
+            id
+            name
+            __typename
+          }
+          gadgetMeta {
+            hydrations(modelName: 
+        "widget")
+          }
+        }"
+      `);
 
       mockUrqlClient.executeQuery.pushResponse("widget", {
         data: {
@@ -116,7 +116,7 @@ describe("operationRunners", () => {
             }
           }
           gadgetMeta {
-            hydrations(modelName:
+            hydrations(modelName: 
         "outer.inner.widget")
           }
         }"
@@ -172,7 +172,7 @@ describe("operationRunners", () => {
             }
           }
           gadgetMeta {
-            hydrations(modelName:
+            hydrations(modelName: 
         "widget")
           }
         }"
@@ -242,7 +242,7 @@ describe("operationRunners", () => {
             }
           }
           gadgetMeta {
-            hydrations(modelName:
+            hydrations(modelName: 
         "outer.inner.widget")
           }
         }"
@@ -321,29 +321,29 @@ describe("operationRunners", () => {
       const promise = findManyRunner({ connection } as AnyPublicModelManager, "widgets", { id: true, name: true }, "widget");
 
       expect(query).toMatchInlineSnapshot(`
-              "query widgets($after: String, $first: Int, $before: String, $last: Int) {
-                widgets(after: $after, first: $first, before: $before, last: $last) {
-                  pageInfo {
-                    hasNextPage
-                    hasPreviousPage
-                    startCursor
-                    endCursor
-                  }
-                  edges {
-                    cursor
-                    node {
-                      id
-                      name
-                      __typename
-                    }
-                  }
-                }
-                gadgetMeta {
-                  hydrations(modelName:
-              "widget")
-                }
-              }"
-            `);
+        "query widgets($after: String, $first: Int, $before: String, $last: Int) {
+          widgets(after: $after, first: $first, before: $before, last: $last) {
+            pageInfo {
+              hasNextPage
+              hasPreviousPage
+              startCursor
+              endCursor
+            }
+            edges {
+              cursor
+              node {
+                id
+                name
+                __typename
+              }
+            }
+          }
+          gadgetMeta {
+            hydrations(modelName: 
+        "widget")
+          }
+        }"
+      `);
 
       mockUrqlClient.executeQuery.pushResponse("widgets", {
         data: {
@@ -402,7 +402,7 @@ describe("operationRunners", () => {
             }
           }
           gadgetMeta {
-            hydrations(modelName:
+            hydrations(modelName: 
         "outer.inner.widget")
           }
         }"
@@ -468,7 +468,7 @@ describe("operationRunners", () => {
             }
           }
           gadgetMeta {
-            hydrations(modelName:
+            hydrations(modelName: 
         "outer.widget")
           }
         }"
