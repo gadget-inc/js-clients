@@ -30,7 +30,7 @@ describe("type checks", () => {
       options?: LimitToKnownKeys<Options, CreatePostOptions>
     ): Promise<CreatePostResult<Options>> {
       return await actionRunner<SelectedPostOrDefault<Options>>(
-        this, // This is a problem...
+        this,
         "createPost",
         DefaultPostSelection,
         "post",
@@ -76,7 +76,7 @@ describe("operationRunners", () => {
             __typename
           }
           gadgetMeta {
-            hydrations(modelName: 
+            hydrations(modelName:
         "widget")
           }
         }"
@@ -116,7 +116,7 @@ describe("operationRunners", () => {
             }
           }
           gadgetMeta {
-            hydrations(modelName: 
+            hydrations(modelName:
         "outer.inner.widget")
           }
         }"
@@ -172,7 +172,7 @@ describe("operationRunners", () => {
             }
           }
           gadgetMeta {
-            hydrations(modelName: 
+            hydrations(modelName:
         "widget")
           }
         }"
@@ -242,7 +242,7 @@ describe("operationRunners", () => {
             }
           }
           gadgetMeta {
-            hydrations(modelName: 
+            hydrations(modelName:
         "outer.inner.widget")
           }
         }"
@@ -339,7 +339,7 @@ describe("operationRunners", () => {
             }
           }
           gadgetMeta {
-            hydrations(modelName: 
+            hydrations(modelName:
         "widget")
           }
         }"
@@ -402,7 +402,7 @@ describe("operationRunners", () => {
             }
           }
           gadgetMeta {
-            hydrations(modelName: 
+            hydrations(modelName:
         "outer.inner.widget")
           }
         }"
@@ -468,7 +468,7 @@ describe("operationRunners", () => {
             }
           }
           gadgetMeta {
-            hydrations(modelName: 
+            hydrations(modelName:
         "outer.widget")
           }
         }"
