@@ -90,9 +90,6 @@ export const makeAutoForm = <Elements extends ShadcnElements>({
     ScrollArea,
     ScrollBar,
     Textarea,
-    Dialog,
-    DialogContent,
-    DialogTrigger,
   });
 
   const AutoSubmit = makeShadcnAutoSubmit({ Button });

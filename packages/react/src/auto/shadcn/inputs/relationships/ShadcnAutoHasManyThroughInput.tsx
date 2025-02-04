@@ -25,9 +25,6 @@ export const makeShadcnAutoHasManyThroughInput = ({
   PopoverContent,
   PopoverTrigger,
   Input,
-  Dialog,
-  DialogContent,
-  DialogTrigger,
 }: Pick<
   ShadcnElements,
   | "Badge"
@@ -46,9 +43,6 @@ export const makeShadcnAutoHasManyThroughInput = ({
   | "PopoverContent"
   | "PopoverTrigger"
   | "Input"
-  | "Dialog"
-  | "DialogContent"
-  | "DialogTrigger"
 >) => {
   const { SelectedRecordTags } = makeSelectedRecordTags({ Badge, Button });
 
@@ -67,9 +61,6 @@ export const makeShadcnAutoHasManyThroughInput = ({
     PopoverContent,
     PopoverTrigger,
     Input,
-    Dialog,
-    DialogContent,
-    DialogTrigger,
   });
 
   function ShadcnAutoHasManyThroughInput(props: AutoRelationshipInputProps) {

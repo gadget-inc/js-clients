@@ -32,6 +32,10 @@ export const makeShadcnAutoRolesInput = ({
   Checkbox,
   ScrollArea,
   CommandLoading,
+  Input,
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
 }: Pick<
   ShadcnElements,
   | "Badge"
@@ -46,6 +50,10 @@ export const makeShadcnAutoRolesInput = ({
   | "Label"
   | "Checkbox"
   | "ScrollArea"
+  | "Input"
+  | "Popover"
+  | "PopoverContent"
+  | "PopoverTrigger"
 >) => {
   const { SelectedRecordTags } = makeSelectedRecordTags({ Badge, Button });
   const ComboInput = makeShadcnAutoComboInput({
@@ -59,6 +67,10 @@ export const makeShadcnAutoRolesInput = ({
     CommandGroup,
     Checkbox,
     ScrollArea,
+    Input,
+    Popover,
+    PopoverContent,
+    PopoverTrigger,
   });
 
   function AutoRolesInput(props: AutoRolesInputProps) {

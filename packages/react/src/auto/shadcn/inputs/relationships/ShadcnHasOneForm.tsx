@@ -93,9 +93,6 @@ export const makeShadcnHasOneForm = ({
     PopoverContent,
     PopoverTrigger,
     Input,
-    Dialog,
-    DialogContent,
-    DialogTrigger,
   });
 
   function ShadcnHasOneForm(props: {

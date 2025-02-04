@@ -25,9 +25,6 @@ export const makeShadcnAutoBelongsToInput = ({
   PopoverContent,
   PopoverTrigger,
   Input,
-  Dialog,
-  DialogContent,
-  DialogTrigger,
 }: Pick<
   ShadcnElements,
   | "Badge"
@@ -46,9 +43,6 @@ export const makeShadcnAutoBelongsToInput = ({
   | "PopoverContent"
   | "PopoverTrigger"
   | "Input"
-  | "Dialog"
-  | "DialogContent"
-  | "DialogTrigger"
 >) => {
   const ShadcnComboInput = makeShadcnAutoComboInput({
     Command,
@@ -65,9 +59,6 @@ export const makeShadcnAutoBelongsToInput = ({
     PopoverContent,
     PopoverTrigger,
     Input,
-    Dialog,
-    DialogContent,
-    DialogTrigger,
   });
 
   function ShadcnAutoBelongsToInput(props: AutoRelationshipInputProps) {

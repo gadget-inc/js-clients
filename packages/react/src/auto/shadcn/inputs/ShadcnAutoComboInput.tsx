@@ -29,9 +29,6 @@ export const makeShadcnAutoComboInput = ({
   CommandInput,
   Label,
   CommandItem,
-  Dialog,
-  DialogContent,
-  DialogTrigger,
   CommandList,
   CommandLoading,
   CommandEmpty,
@@ -46,9 +43,6 @@ export const makeShadcnAutoComboInput = ({
   ShadcnElements,
   | "Command"
   | "CommandInput"
-  | "Dialog"
-  | "DialogContent"
-  | "DialogTrigger"
   | "Label"
   | "CommandItem"
   | "CommandList"
