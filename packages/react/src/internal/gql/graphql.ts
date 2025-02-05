@@ -26,10 +26,24 @@ export type Scalars = {
   DoodadSizeEnum: { input: any; output: any };
   /** The ID of a record in Gadget */
   GadgetID: { input: any; output: any };
+  /** Represents the possible values of the tags enum. */
+  GameStadiumTagsEnum: { input: any; output: any };
+  /** Represents the possible values of the type enum. */
+  GameStadiumTypeEnum: { input: any; output: any };
   /** Instructions for a client to turn raw transport types (like strings) into useful client side types (like Dates). Unstable and not intended for developer use. */
   HydrationPlan: { input: any; output: any };
   /** Represents one autoTableTest result record in internal api calls. Returns a JSON blob of all the record's fields. */
   InternalAutoTableTestRecord: { input: any; output: any };
+  /** Represents one deepRelationshipChain/citizen result record in internal api calls. Returns a JSON blob of all the record's fields. */
+  InternalDeepRelationshipChainCitizenRecord: { input: any; output: any };
+  /** Represents one deepRelationshipChain/city result record in internal api calls. Returns a JSON blob of all the record's fields. */
+  InternalDeepRelationshipChainCityRecord: { input: any; output: any };
+  /** Represents one deepRelationshipChain/continent result record in internal api calls. Returns a JSON blob of all the record's fields. */
+  InternalDeepRelationshipChainContinentRecord: { input: any; output: any };
+  /** Represents one deepRelationshipChain/country result record in internal api calls. Returns a JSON blob of all the record's fields. */
+  InternalDeepRelationshipChainCountryRecord: { input: any; output: any };
+  /** Represents one deepRelationshipChain/planet result record in internal api calls. Returns a JSON blob of all the record's fields. */
+  InternalDeepRelationshipChainPlanetRecord: { input: any; output: any };
   /** Represents one doodad result record in internal api calls. Returns a JSON blob of all the record's fields. */
   InternalDoodadRecord: { input: any; output: any };
   /** Represents one foo result record in internal api calls. Returns a JSON blob of all the record's fields. */
@@ -100,22 +114,18 @@ export type Scalars = {
   JSON: { input: any; output: any };
   /** The `JSONObject` scalar type represents JSON objects as specified by [ECMA-404](http://www.ecma-international.org/publications/files/ECMA-ST/ECMA-404.pdf). */
   JSONObject: { input: any; output: any };
-  /** Represents the possible values of the title enum. */
-  ProfessorTitleEnum: { input: any; output: any };
   /** Represents the state of one record in a Gadget database. Represented as either a string or set of strings nested in objects. */
   RecordState: { input: any; output: any };
   /** Represents the possible values of the Topic enum. */
   ShopifyGdprRequestTopicEnum: { input: any; output: any };
   /** Represents the possible values of the Status enum. */
   ShopifyProductStatusEnum: { input: any; output: any };
-  /** Represents the possible values of the tags enum. */
-  StadiumTagsEnum: { input: any; output: any };
-  /** Represents the possible values of the type enum. */
-  StadiumTypeEnum: { input: any; output: any };
-  /** Represents the possible values of the department enum. */
-  StudentDepartmentEnum: { input: any; output: any };
   /** A field whose value conforms to the standard URL format as specified in RFC3986: https://www.ietf.org/rfc/rfc3986.txt. */
   URL: { input: any; output: any };
+  /** Represents the possible values of the title enum. */
+  UniversityProfessorTitleEnum: { input: any; output: any };
+  /** Represents the possible values of the department enum. */
+  UniversityStudentDepartmentEnum: { input: any; output: any };
   /** The `Upload` scalar type represents a file upload. */
   Upload: { input: any; output: any };
   /** Represents the possible values of the fieldA enum. */
@@ -183,15 +193,6 @@ export type AppGraphQlTriggerMutationContext = {
   sessionID?: InputMaybe<Scalars["GadgetID"]["input"]>;
 };
 
-/** Input object supporting setting or updating related model record on a relationship field */
-export type AssignmentHasManyInput = {
-  /** Creates, updates, or deletes existing records in the database as needed to arrive at the list of records specified. */
-  _converge?: InputMaybe<ConvergeAssignmentInput>;
-  create?: InputMaybe<NestedAssignmentCreateInput>;
-  delete?: InputMaybe<NestedAssignmentDeleteInput>;
-  update?: InputMaybe<NestedAssignmentUpdateInput>;
-};
-
 export type AutoTableTest = {
   __typename?: "AutoTableTest";
   /** Get all the fields for this record. Useful for not having to list out all the fields you want to retrieve, but slower. */
@@ -244,12 +245,12 @@ export type AutoTableTestVectL2DistanceToArgs = {
 export type AutoTableTestBelongsToInput = {
   /** Existing ID of another record, which you would like to associate this record with */
   _link?: InputMaybe<Scalars["GadgetID"]["input"]>;
-  create?: InputMaybe<NestedAutoTableTestCreateInput>;
-  customAction?: InputMaybe<NestedAutoTableTestCustomActionInput>;
-  customActionWithParams?: InputMaybe<NestedAutoTableTestCustomActionWithParamsInput>;
-  delete?: InputMaybe<NestedAutoTableTestDeleteInput>;
-  update?: InputMaybe<NestedAutoTableTestUpdateInput>;
-  updateWithCustomParams?: InputMaybe<NestedAutoTableTestUpdateWithCustomParamsInput>;
+  create?: InputMaybe<NestedCreateAutoTableTestInput>;
+  customAction?: InputMaybe<NestedCustomActionAutoTableTestInput>;
+  customActionWithParams?: InputMaybe<NestedCustomActionWithParamsAutoTableTestInput>;
+  delete?: InputMaybe<NestedDeleteAutoTableTestInput>;
+  update?: InputMaybe<NestedUpdateAutoTableTestInput>;
+  updateWithCustomParams?: InputMaybe<NestedUpdateWithCustomParamsAutoTableTestInput>;
 };
 
 /** A connection to a list of AutoTableTest items. */
@@ -279,7 +280,32 @@ export type AutoTableTestFilter = {
   dt?: InputMaybe<DateTimeFilter>;
   email?: InputMaybe<StringFilter>;
   enum?: InputMaybe<MultiEnumFilter>;
+  hasMany?: InputMaybe<FoosRelationshipFilter>;
+  hasOne?: InputMaybe<FooRelationshipFilter>;
   id?: InputMaybe<IdFilter>;
+  json?: InputMaybe<JsonFilter>;
+  num?: InputMaybe<FloatFilter>;
+  rl?: InputMaybe<RoleAssignmentFilter>;
+  rt?: InputMaybe<StringFilter>;
+  str?: InputMaybe<StringFilter>;
+  updatedAt?: InputMaybe<DateTimeFilter>;
+  url?: InputMaybe<StringFilter>;
+  vect?: InputMaybe<VectorFilter>;
+};
+
+export type AutoTableTestRelationshipFilter = {
+  AND?: InputMaybe<Array<InputMaybe<AutoTableTestRelationshipFilter>>>;
+  NOT?: InputMaybe<Array<InputMaybe<AutoTableTestRelationshipFilter>>>;
+  OR?: InputMaybe<Array<InputMaybe<AutoTableTestRelationshipFilter>>>;
+  bool?: InputMaybe<BooleanFilter>;
+  createdAt?: InputMaybe<DateTimeFilter>;
+  dt?: InputMaybe<DateTimeFilter>;
+  email?: InputMaybe<StringFilter>;
+  enum?: InputMaybe<MultiEnumFilter>;
+  hasMany?: InputMaybe<FoosRelationshipFilter>;
+  hasOne?: InputMaybe<FooRelationshipFilter>;
+  id?: InputMaybe<IdFilter>;
+  isSet?: InputMaybe<Scalars["Boolean"]["input"]>;
   json?: InputMaybe<JsonFilter>;
   num?: InputMaybe<FloatFilter>;
   rl?: InputMaybe<RoleAssignmentFilter>;
@@ -360,6 +386,11 @@ export type BackgroundActionResult =
   | AlwaysThrowErrorWidgetResult
   | CompleteShopifySyncResult
   | CreateAutoTableTestResult
+  | CreateDeepRelationshipChainCitizenResult
+  | CreateDeepRelationshipChainCityResult
+  | CreateDeepRelationshipChainContinentResult
+  | CreateDeepRelationshipChainCountryResult
+  | CreateDeepRelationshipChainPlanetResult
   | CreateDoodadResult
   | CreateFooResult
   | CreateFriendshipResult
@@ -390,6 +421,11 @@ export type BackgroundActionResult =
   | CustomActionWithParamsAutoTableTestResult
   | CustomObjectParamsGameCityResult
   | DeleteAutoTableTestResult
+  | DeleteDeepRelationshipChainCitizenResult
+  | DeleteDeepRelationshipChainCityResult
+  | DeleteDeepRelationshipChainContinentResult
+  | DeleteDeepRelationshipChainCountryResult
+  | DeleteDeepRelationshipChainPlanetResult
   | DeleteDoodadResult
   | DeleteFooResult
   | DeleteFriendshipResult
@@ -424,6 +460,11 @@ export type BackgroundActionResult =
   | SignOutUserResult
   | SignUpUserResult
   | UpdateAutoTableTestResult
+  | UpdateDeepRelationshipChainCitizenResult
+  | UpdateDeepRelationshipChainCityResult
+  | UpdateDeepRelationshipChainContinentResult
+  | UpdateDeepRelationshipChainCountryResult
+  | UpdateDeepRelationshipChainPlanetResult
   | UpdateDoodadResult
   | UpdateFooResult
   | UpdateFriendshipResult
@@ -464,6 +505,260 @@ export type BackgroundActionRetryPolicy = {
   randomizeInterval?: InputMaybe<Scalars["Boolean"]["input"]>;
   /** The number of repeat attempts to make if the initial attempt fails. Defaults to 10. Note: the total number of attempts will be this number plus one -- this counts the number of retries *after* the first attempt. */
   retryCount?: InputMaybe<Scalars["Int"]["input"]>;
+};
+
+export type BackgroundDeepRelationshipChainMutations = {
+  __typename?: "BackgroundDeepRelationshipChainMutations";
+  bulkCreateCities: BulkEnqueueBackgroundActionResult;
+  bulkCreateCitizens: BulkEnqueueBackgroundActionResult;
+  bulkCreateContinents: BulkEnqueueBackgroundActionResult;
+  bulkCreateCountries: BulkEnqueueBackgroundActionResult;
+  bulkCreatePlanets: BulkEnqueueBackgroundActionResult;
+  bulkDeleteCities: BulkEnqueueBackgroundActionResult;
+  bulkDeleteCitizens: BulkEnqueueBackgroundActionResult;
+  bulkDeleteContinents: BulkEnqueueBackgroundActionResult;
+  bulkDeleteCountries: BulkEnqueueBackgroundActionResult;
+  bulkDeletePlanets: BulkEnqueueBackgroundActionResult;
+  bulkUpdateCities: BulkEnqueueBackgroundActionResult;
+  bulkUpdateCitizens: BulkEnqueueBackgroundActionResult;
+  bulkUpdateContinents: BulkEnqueueBackgroundActionResult;
+  bulkUpdateCountries: BulkEnqueueBackgroundActionResult;
+  bulkUpdatePlanets: BulkEnqueueBackgroundActionResult;
+  bulkUpsertCities: BulkEnqueueBackgroundActionResult;
+  bulkUpsertCitizens: BulkEnqueueBackgroundActionResult;
+  bulkUpsertContinents: BulkEnqueueBackgroundActionResult;
+  bulkUpsertCountries: BulkEnqueueBackgroundActionResult;
+  bulkUpsertPlanets: BulkEnqueueBackgroundActionResult;
+  createCitizen: EnqueueBackgroundActionResult;
+  createCity: EnqueueBackgroundActionResult;
+  createContinent: EnqueueBackgroundActionResult;
+  createCountry: EnqueueBackgroundActionResult;
+  createPlanet: EnqueueBackgroundActionResult;
+  deleteCitizen: EnqueueBackgroundActionResult;
+  deleteCity: EnqueueBackgroundActionResult;
+  deleteContinent: EnqueueBackgroundActionResult;
+  deleteCountry: EnqueueBackgroundActionResult;
+  deletePlanet: EnqueueBackgroundActionResult;
+  updateCitizen: EnqueueBackgroundActionResult;
+  updateCity: EnqueueBackgroundActionResult;
+  updateContinent: EnqueueBackgroundActionResult;
+  updateCountry: EnqueueBackgroundActionResult;
+  updatePlanet: EnqueueBackgroundActionResult;
+  upsertCitizen: EnqueueBackgroundActionResult;
+  upsertCity: EnqueueBackgroundActionResult;
+  upsertContinent: EnqueueBackgroundActionResult;
+  upsertCountry: EnqueueBackgroundActionResult;
+  upsertPlanet: EnqueueBackgroundActionResult;
+};
+
+export type BackgroundDeepRelationshipChainMutationsBulkCreateCitiesArgs = {
+  backgroundOptions?: InputMaybe<EnqueueBackgroundActionOptions>;
+  inputs: Array<BulkCreateDeepRelationshipChainCitiesInput>;
+};
+
+export type BackgroundDeepRelationshipChainMutationsBulkCreateCitizensArgs = {
+  backgroundOptions?: InputMaybe<EnqueueBackgroundActionOptions>;
+  inputs: Array<BulkCreateDeepRelationshipChainCitizensInput>;
+};
+
+export type BackgroundDeepRelationshipChainMutationsBulkCreateContinentsArgs = {
+  backgroundOptions?: InputMaybe<EnqueueBackgroundActionOptions>;
+  inputs: Array<BulkCreateDeepRelationshipChainContinentsInput>;
+};
+
+export type BackgroundDeepRelationshipChainMutationsBulkCreateCountriesArgs = {
+  backgroundOptions?: InputMaybe<EnqueueBackgroundActionOptions>;
+  inputs: Array<BulkCreateDeepRelationshipChainCountriesInput>;
+};
+
+export type BackgroundDeepRelationshipChainMutationsBulkCreatePlanetsArgs = {
+  backgroundOptions?: InputMaybe<EnqueueBackgroundActionOptions>;
+  inputs: Array<BulkCreateDeepRelationshipChainPlanetsInput>;
+};
+
+export type BackgroundDeepRelationshipChainMutationsBulkDeleteCitiesArgs = {
+  backgroundOptions?: InputMaybe<EnqueueBackgroundActionOptions>;
+  ids: Array<Scalars["GadgetID"]["input"]>;
+};
+
+export type BackgroundDeepRelationshipChainMutationsBulkDeleteCitizensArgs = {
+  backgroundOptions?: InputMaybe<EnqueueBackgroundActionOptions>;
+  ids: Array<Scalars["GadgetID"]["input"]>;
+};
+
+export type BackgroundDeepRelationshipChainMutationsBulkDeleteContinentsArgs = {
+  backgroundOptions?: InputMaybe<EnqueueBackgroundActionOptions>;
+  ids: Array<Scalars["GadgetID"]["input"]>;
+};
+
+export type BackgroundDeepRelationshipChainMutationsBulkDeleteCountriesArgs = {
+  backgroundOptions?: InputMaybe<EnqueueBackgroundActionOptions>;
+  ids: Array<Scalars["GadgetID"]["input"]>;
+};
+
+export type BackgroundDeepRelationshipChainMutationsBulkDeletePlanetsArgs = {
+  backgroundOptions?: InputMaybe<EnqueueBackgroundActionOptions>;
+  ids: Array<Scalars["GadgetID"]["input"]>;
+};
+
+export type BackgroundDeepRelationshipChainMutationsBulkUpdateCitiesArgs = {
+  backgroundOptions?: InputMaybe<EnqueueBackgroundActionOptions>;
+  inputs: Array<BulkUpdateDeepRelationshipChainCitiesInput>;
+};
+
+export type BackgroundDeepRelationshipChainMutationsBulkUpdateCitizensArgs = {
+  backgroundOptions?: InputMaybe<EnqueueBackgroundActionOptions>;
+  inputs: Array<BulkUpdateDeepRelationshipChainCitizensInput>;
+};
+
+export type BackgroundDeepRelationshipChainMutationsBulkUpdateContinentsArgs = {
+  backgroundOptions?: InputMaybe<EnqueueBackgroundActionOptions>;
+  inputs: Array<BulkUpdateDeepRelationshipChainContinentsInput>;
+};
+
+export type BackgroundDeepRelationshipChainMutationsBulkUpdateCountriesArgs = {
+  backgroundOptions?: InputMaybe<EnqueueBackgroundActionOptions>;
+  inputs: Array<BulkUpdateDeepRelationshipChainCountriesInput>;
+};
+
+export type BackgroundDeepRelationshipChainMutationsBulkUpdatePlanetsArgs = {
+  backgroundOptions?: InputMaybe<EnqueueBackgroundActionOptions>;
+  inputs: Array<BulkUpdateDeepRelationshipChainPlanetsInput>;
+};
+
+export type BackgroundDeepRelationshipChainMutationsBulkUpsertCitiesArgs = {
+  backgroundOptions?: InputMaybe<EnqueueBackgroundActionOptions>;
+  inputs: Array<BulkUpsertDeepRelationshipChainCitiesInput>;
+};
+
+export type BackgroundDeepRelationshipChainMutationsBulkUpsertCitizensArgs = {
+  backgroundOptions?: InputMaybe<EnqueueBackgroundActionOptions>;
+  inputs: Array<BulkUpsertDeepRelationshipChainCitizensInput>;
+};
+
+export type BackgroundDeepRelationshipChainMutationsBulkUpsertContinentsArgs = {
+  backgroundOptions?: InputMaybe<EnqueueBackgroundActionOptions>;
+  inputs: Array<BulkUpsertDeepRelationshipChainContinentsInput>;
+};
+
+export type BackgroundDeepRelationshipChainMutationsBulkUpsertCountriesArgs = {
+  backgroundOptions?: InputMaybe<EnqueueBackgroundActionOptions>;
+  inputs: Array<BulkUpsertDeepRelationshipChainCountriesInput>;
+};
+
+export type BackgroundDeepRelationshipChainMutationsBulkUpsertPlanetsArgs = {
+  backgroundOptions?: InputMaybe<EnqueueBackgroundActionOptions>;
+  inputs: Array<BulkUpsertDeepRelationshipChainPlanetsInput>;
+};
+
+export type BackgroundDeepRelationshipChainMutationsCreateCitizenArgs = {
+  backgroundOptions?: InputMaybe<EnqueueBackgroundActionOptions>;
+  citizen?: InputMaybe<CreateDeepRelationshipChainCitizenInput>;
+};
+
+export type BackgroundDeepRelationshipChainMutationsCreateCityArgs = {
+  backgroundOptions?: InputMaybe<EnqueueBackgroundActionOptions>;
+  city?: InputMaybe<CreateDeepRelationshipChainCityInput>;
+};
+
+export type BackgroundDeepRelationshipChainMutationsCreateContinentArgs = {
+  backgroundOptions?: InputMaybe<EnqueueBackgroundActionOptions>;
+  continent?: InputMaybe<CreateDeepRelationshipChainContinentInput>;
+};
+
+export type BackgroundDeepRelationshipChainMutationsCreateCountryArgs = {
+  backgroundOptions?: InputMaybe<EnqueueBackgroundActionOptions>;
+  country?: InputMaybe<CreateDeepRelationshipChainCountryInput>;
+};
+
+export type BackgroundDeepRelationshipChainMutationsCreatePlanetArgs = {
+  backgroundOptions?: InputMaybe<EnqueueBackgroundActionOptions>;
+  planet?: InputMaybe<CreateDeepRelationshipChainPlanetInput>;
+};
+
+export type BackgroundDeepRelationshipChainMutationsDeleteCitizenArgs = {
+  backgroundOptions?: InputMaybe<EnqueueBackgroundActionOptions>;
+  id: Scalars["GadgetID"]["input"];
+};
+
+export type BackgroundDeepRelationshipChainMutationsDeleteCityArgs = {
+  backgroundOptions?: InputMaybe<EnqueueBackgroundActionOptions>;
+  id: Scalars["GadgetID"]["input"];
+};
+
+export type BackgroundDeepRelationshipChainMutationsDeleteContinentArgs = {
+  backgroundOptions?: InputMaybe<EnqueueBackgroundActionOptions>;
+  id: Scalars["GadgetID"]["input"];
+};
+
+export type BackgroundDeepRelationshipChainMutationsDeleteCountryArgs = {
+  backgroundOptions?: InputMaybe<EnqueueBackgroundActionOptions>;
+  id: Scalars["GadgetID"]["input"];
+};
+
+export type BackgroundDeepRelationshipChainMutationsDeletePlanetArgs = {
+  backgroundOptions?: InputMaybe<EnqueueBackgroundActionOptions>;
+  id: Scalars["GadgetID"]["input"];
+};
+
+export type BackgroundDeepRelationshipChainMutationsUpdateCitizenArgs = {
+  backgroundOptions?: InputMaybe<EnqueueBackgroundActionOptions>;
+  citizen?: InputMaybe<UpdateDeepRelationshipChainCitizenInput>;
+  id: Scalars["GadgetID"]["input"];
+};
+
+export type BackgroundDeepRelationshipChainMutationsUpdateCityArgs = {
+  backgroundOptions?: InputMaybe<EnqueueBackgroundActionOptions>;
+  city?: InputMaybe<UpdateDeepRelationshipChainCityInput>;
+  id: Scalars["GadgetID"]["input"];
+};
+
+export type BackgroundDeepRelationshipChainMutationsUpdateContinentArgs = {
+  backgroundOptions?: InputMaybe<EnqueueBackgroundActionOptions>;
+  continent?: InputMaybe<UpdateDeepRelationshipChainContinentInput>;
+  id: Scalars["GadgetID"]["input"];
+};
+
+export type BackgroundDeepRelationshipChainMutationsUpdateCountryArgs = {
+  backgroundOptions?: InputMaybe<EnqueueBackgroundActionOptions>;
+  country?: InputMaybe<UpdateDeepRelationshipChainCountryInput>;
+  id: Scalars["GadgetID"]["input"];
+};
+
+export type BackgroundDeepRelationshipChainMutationsUpdatePlanetArgs = {
+  backgroundOptions?: InputMaybe<EnqueueBackgroundActionOptions>;
+  id: Scalars["GadgetID"]["input"];
+  planet?: InputMaybe<UpdateDeepRelationshipChainPlanetInput>;
+};
+
+export type BackgroundDeepRelationshipChainMutationsUpsertCitizenArgs = {
+  backgroundOptions?: InputMaybe<EnqueueBackgroundActionOptions>;
+  citizen?: InputMaybe<UpsertDeepRelationshipChainCitizenInput>;
+  on?: InputMaybe<Array<Scalars["String"]["input"]>>;
+};
+
+export type BackgroundDeepRelationshipChainMutationsUpsertCityArgs = {
+  backgroundOptions?: InputMaybe<EnqueueBackgroundActionOptions>;
+  city?: InputMaybe<UpsertDeepRelationshipChainCityInput>;
+  on?: InputMaybe<Array<Scalars["String"]["input"]>>;
+};
+
+export type BackgroundDeepRelationshipChainMutationsUpsertContinentArgs = {
+  backgroundOptions?: InputMaybe<EnqueueBackgroundActionOptions>;
+  continent?: InputMaybe<UpsertDeepRelationshipChainContinentInput>;
+  on?: InputMaybe<Array<Scalars["String"]["input"]>>;
+};
+
+export type BackgroundDeepRelationshipChainMutationsUpsertCountryArgs = {
+  backgroundOptions?: InputMaybe<EnqueueBackgroundActionOptions>;
+  country?: InputMaybe<UpsertDeepRelationshipChainCountryInput>;
+  on?: InputMaybe<Array<Scalars["String"]["input"]>>;
+};
+
+export type BackgroundDeepRelationshipChainMutationsUpsertPlanetArgs = {
+  backgroundOptions?: InputMaybe<EnqueueBackgroundActionOptions>;
+  on?: InputMaybe<Array<Scalars["String"]["input"]>>;
+  planet?: InputMaybe<UpsertDeepRelationshipChainPlanetInput>;
 };
 
 export type BackgroundGameMutations = {
@@ -918,6 +1213,7 @@ export type BackgroundMutations = {
   createWithCustomParamsWidget: EnqueueBackgroundActionResult;
   customActionAutoTableTest: EnqueueBackgroundActionResult;
   customActionWithParamsAutoTableTest: EnqueueBackgroundActionResult;
+  deepRelationshipChain: BackgroundDeepRelationshipChainMutations;
   deleteAutoTableTest: EnqueueBackgroundActionResult;
   deleteDoodad: EnqueueBackgroundActionResult;
   deleteFoo: EnqueueBackgroundActionResult;
@@ -2041,22 +2337,6 @@ export type BackgroundUniversityMutationsUpsertStudentArgs = {
   student?: InputMaybe<UpsertUniversityStudentInput>;
 };
 
-/** Input object supporting setting or updating related model record on a relationship field */
-export type BaseModelBelongsToInput = {
-  /** Existing ID of another record, which you would like to associate this record with */
-  _link?: InputMaybe<Scalars["GadgetID"]["input"]>;
-  create?: InputMaybe<NestedBaseModelCreateInput>;
-  delete?: InputMaybe<NestedBaseModelDeleteInput>;
-  update?: InputMaybe<NestedBaseModelUpdateInput>;
-};
-
-/** Input object supporting setting or updating related model record on a relationship field */
-export type BaseModelHasManyThroughInput = {
-  create?: InputMaybe<NestedBaseModelCreateInput>;
-  delete?: InputMaybe<NestedBaseModelDeleteInput>;
-  update?: InputMaybe<NestedBaseModelUpdateInput>;
-};
-
 export type BooleanFilter = {
   equals?: InputMaybe<Scalars["Boolean"]["input"]>;
   isSet?: InputMaybe<Scalars["Boolean"]["input"]>;
@@ -2137,6 +2417,81 @@ export type BulkCreateAutoTableTestsResult = {
   autoTableTests?: Maybe<Array<Maybe<AutoTableTest>>>;
   /** Aggregated list of errors that any bulk action encountered while processing */
   errors?: Maybe<Array<ExecutionError>>;
+  /** Boolean describing if all the bulk actions succeeded or not */
+  success: Scalars["Boolean"]["output"];
+};
+
+export type BulkCreateDeepRelationshipChainCitiesInput = {
+  city?: InputMaybe<CreateDeepRelationshipChainCityInput>;
+};
+
+/** The output when running the create on the deepRelationshipChain/city model in bulk. */
+export type BulkCreateDeepRelationshipChainCitiesResult = {
+  __typename?: "BulkCreateDeepRelationshipChainCitiesResult";
+  /** The list of all changed deepRelationshipChain/city records by each sent bulk action. Returned in the same order as the input bulk action params. */
+  cities?: Maybe<Array<Maybe<DeepRelationshipChainCity>>>;
+  /** Aggregated list of errors that any bulk action encountered while processing */
+  errors?: Maybe<Array<ExecutionError>>;
+  /** Boolean describing if all the bulk actions succeeded or not */
+  success: Scalars["Boolean"]["output"];
+};
+
+export type BulkCreateDeepRelationshipChainCitizensInput = {
+  citizen?: InputMaybe<CreateDeepRelationshipChainCitizenInput>;
+};
+
+/** The output when running the create on the deepRelationshipChain/citizen model in bulk. */
+export type BulkCreateDeepRelationshipChainCitizensResult = {
+  __typename?: "BulkCreateDeepRelationshipChainCitizensResult";
+  /** The list of all changed deepRelationshipChain/citizen records by each sent bulk action. Returned in the same order as the input bulk action params. */
+  citizens?: Maybe<Array<Maybe<DeepRelationshipChainCitizen>>>;
+  /** Aggregated list of errors that any bulk action encountered while processing */
+  errors?: Maybe<Array<ExecutionError>>;
+  /** Boolean describing if all the bulk actions succeeded or not */
+  success: Scalars["Boolean"]["output"];
+};
+
+export type BulkCreateDeepRelationshipChainContinentsInput = {
+  continent?: InputMaybe<CreateDeepRelationshipChainContinentInput>;
+};
+
+/** The output when running the create on the deepRelationshipChain/continent model in bulk. */
+export type BulkCreateDeepRelationshipChainContinentsResult = {
+  __typename?: "BulkCreateDeepRelationshipChainContinentsResult";
+  /** The list of all changed deepRelationshipChain/continent records by each sent bulk action. Returned in the same order as the input bulk action params. */
+  continents?: Maybe<Array<Maybe<DeepRelationshipChainContinent>>>;
+  /** Aggregated list of errors that any bulk action encountered while processing */
+  errors?: Maybe<Array<ExecutionError>>;
+  /** Boolean describing if all the bulk actions succeeded or not */
+  success: Scalars["Boolean"]["output"];
+};
+
+export type BulkCreateDeepRelationshipChainCountriesInput = {
+  country?: InputMaybe<CreateDeepRelationshipChainCountryInput>;
+};
+
+/** The output when running the create on the deepRelationshipChain/country model in bulk. */
+export type BulkCreateDeepRelationshipChainCountriesResult = {
+  __typename?: "BulkCreateDeepRelationshipChainCountriesResult";
+  /** The list of all changed deepRelationshipChain/country records by each sent bulk action. Returned in the same order as the input bulk action params. */
+  countries?: Maybe<Array<Maybe<DeepRelationshipChainCountry>>>;
+  /** Aggregated list of errors that any bulk action encountered while processing */
+  errors?: Maybe<Array<ExecutionError>>;
+  /** Boolean describing if all the bulk actions succeeded or not */
+  success: Scalars["Boolean"]["output"];
+};
+
+export type BulkCreateDeepRelationshipChainPlanetsInput = {
+  planet?: InputMaybe<CreateDeepRelationshipChainPlanetInput>;
+};
+
+/** The output when running the create on the deepRelationshipChain/planet model in bulk. */
+export type BulkCreateDeepRelationshipChainPlanetsResult = {
+  __typename?: "BulkCreateDeepRelationshipChainPlanetsResult";
+  /** Aggregated list of errors that any bulk action encountered while processing */
+  errors?: Maybe<Array<ExecutionError>>;
+  /** The list of all changed deepRelationshipChain/planet records by each sent bulk action. Returned in the same order as the input bulk action params. */
+  planets?: Maybe<Array<Maybe<DeepRelationshipChainPlanet>>>;
   /** Boolean describing if all the bulk actions succeeded or not */
   success: Scalars["Boolean"]["output"];
 };
@@ -2570,6 +2925,51 @@ export type BulkDeleteAutoTableTestsResult = {
   success: Scalars["Boolean"]["output"];
 };
 
+/** The output when running the delete on the deepRelationshipChain/city model in bulk. */
+export type BulkDeleteDeepRelationshipChainCitiesResult = {
+  __typename?: "BulkDeleteDeepRelationshipChainCitiesResult";
+  /** Aggregated list of errors that any bulk action encountered while processing */
+  errors?: Maybe<Array<ExecutionError>>;
+  /** Boolean describing if all the bulk actions succeeded or not */
+  success: Scalars["Boolean"]["output"];
+};
+
+/** The output when running the delete on the deepRelationshipChain/citizen model in bulk. */
+export type BulkDeleteDeepRelationshipChainCitizensResult = {
+  __typename?: "BulkDeleteDeepRelationshipChainCitizensResult";
+  /** Aggregated list of errors that any bulk action encountered while processing */
+  errors?: Maybe<Array<ExecutionError>>;
+  /** Boolean describing if all the bulk actions succeeded or not */
+  success: Scalars["Boolean"]["output"];
+};
+
+/** The output when running the delete on the deepRelationshipChain/continent model in bulk. */
+export type BulkDeleteDeepRelationshipChainContinentsResult = {
+  __typename?: "BulkDeleteDeepRelationshipChainContinentsResult";
+  /** Aggregated list of errors that any bulk action encountered while processing */
+  errors?: Maybe<Array<ExecutionError>>;
+  /** Boolean describing if all the bulk actions succeeded or not */
+  success: Scalars["Boolean"]["output"];
+};
+
+/** The output when running the delete on the deepRelationshipChain/country model in bulk. */
+export type BulkDeleteDeepRelationshipChainCountriesResult = {
+  __typename?: "BulkDeleteDeepRelationshipChainCountriesResult";
+  /** Aggregated list of errors that any bulk action encountered while processing */
+  errors?: Maybe<Array<ExecutionError>>;
+  /** Boolean describing if all the bulk actions succeeded or not */
+  success: Scalars["Boolean"]["output"];
+};
+
+/** The output when running the delete on the deepRelationshipChain/planet model in bulk. */
+export type BulkDeleteDeepRelationshipChainPlanetsResult = {
+  __typename?: "BulkDeleteDeepRelationshipChainPlanetsResult";
+  /** Aggregated list of errors that any bulk action encountered while processing */
+  errors?: Maybe<Array<ExecutionError>>;
+  /** Boolean describing if all the bulk actions succeeded or not */
+  success: Scalars["Boolean"]["output"];
+};
+
 /** The output when running the delete on the doodad model in bulk. */
 export type BulkDeleteDoodadsResult = {
   __typename?: "BulkDeleteDoodadsResult";
@@ -2894,6 +3294,86 @@ export type BulkUpdateAutoTableTestsResult = {
   autoTableTests?: Maybe<Array<Maybe<AutoTableTest>>>;
   /** Aggregated list of errors that any bulk action encountered while processing */
   errors?: Maybe<Array<ExecutionError>>;
+  /** Boolean describing if all the bulk actions succeeded or not */
+  success: Scalars["Boolean"]["output"];
+};
+
+export type BulkUpdateDeepRelationshipChainCitiesInput = {
+  city?: InputMaybe<UpdateDeepRelationshipChainCityInput>;
+  id: Scalars["GadgetID"]["input"];
+};
+
+/** The output when running the update on the deepRelationshipChain/city model in bulk. */
+export type BulkUpdateDeepRelationshipChainCitiesResult = {
+  __typename?: "BulkUpdateDeepRelationshipChainCitiesResult";
+  /** The list of all changed deepRelationshipChain/city records by each sent bulk action. Returned in the same order as the input bulk action params. */
+  cities?: Maybe<Array<Maybe<DeepRelationshipChainCity>>>;
+  /** Aggregated list of errors that any bulk action encountered while processing */
+  errors?: Maybe<Array<ExecutionError>>;
+  /** Boolean describing if all the bulk actions succeeded or not */
+  success: Scalars["Boolean"]["output"];
+};
+
+export type BulkUpdateDeepRelationshipChainCitizensInput = {
+  citizen?: InputMaybe<UpdateDeepRelationshipChainCitizenInput>;
+  id: Scalars["GadgetID"]["input"];
+};
+
+/** The output when running the update on the deepRelationshipChain/citizen model in bulk. */
+export type BulkUpdateDeepRelationshipChainCitizensResult = {
+  __typename?: "BulkUpdateDeepRelationshipChainCitizensResult";
+  /** The list of all changed deepRelationshipChain/citizen records by each sent bulk action. Returned in the same order as the input bulk action params. */
+  citizens?: Maybe<Array<Maybe<DeepRelationshipChainCitizen>>>;
+  /** Aggregated list of errors that any bulk action encountered while processing */
+  errors?: Maybe<Array<ExecutionError>>;
+  /** Boolean describing if all the bulk actions succeeded or not */
+  success: Scalars["Boolean"]["output"];
+};
+
+export type BulkUpdateDeepRelationshipChainContinentsInput = {
+  continent?: InputMaybe<UpdateDeepRelationshipChainContinentInput>;
+  id: Scalars["GadgetID"]["input"];
+};
+
+/** The output when running the update on the deepRelationshipChain/continent model in bulk. */
+export type BulkUpdateDeepRelationshipChainContinentsResult = {
+  __typename?: "BulkUpdateDeepRelationshipChainContinentsResult";
+  /** The list of all changed deepRelationshipChain/continent records by each sent bulk action. Returned in the same order as the input bulk action params. */
+  continents?: Maybe<Array<Maybe<DeepRelationshipChainContinent>>>;
+  /** Aggregated list of errors that any bulk action encountered while processing */
+  errors?: Maybe<Array<ExecutionError>>;
+  /** Boolean describing if all the bulk actions succeeded or not */
+  success: Scalars["Boolean"]["output"];
+};
+
+export type BulkUpdateDeepRelationshipChainCountriesInput = {
+  country?: InputMaybe<UpdateDeepRelationshipChainCountryInput>;
+  id: Scalars["GadgetID"]["input"];
+};
+
+/** The output when running the update on the deepRelationshipChain/country model in bulk. */
+export type BulkUpdateDeepRelationshipChainCountriesResult = {
+  __typename?: "BulkUpdateDeepRelationshipChainCountriesResult";
+  /** The list of all changed deepRelationshipChain/country records by each sent bulk action. Returned in the same order as the input bulk action params. */
+  countries?: Maybe<Array<Maybe<DeepRelationshipChainCountry>>>;
+  /** Aggregated list of errors that any bulk action encountered while processing */
+  errors?: Maybe<Array<ExecutionError>>;
+  /** Boolean describing if all the bulk actions succeeded or not */
+  success: Scalars["Boolean"]["output"];
+};
+
+export type BulkUpdateDeepRelationshipChainPlanetsInput = {
+  id: Scalars["GadgetID"]["input"];
+  planet?: InputMaybe<UpdateDeepRelationshipChainPlanetInput>;
+};
+
+/** The output when running the update on the deepRelationshipChain/planet model in bulk. */
+export type BulkUpdateDeepRelationshipChainPlanetsResult = {
+  __typename?: "BulkUpdateDeepRelationshipChainPlanetsResult";
+  /** Aggregated list of errors that any bulk action encountered while processing */
+  errors?: Maybe<Array<ExecutionError>>;
+  /** The list of all changed deepRelationshipChain/planet records by each sent bulk action. Returned in the same order as the input bulk action params. */
+  planets?: Maybe<Array<Maybe<DeepRelationshipChainPlanet>>>;
   /** Boolean describing if all the bulk actions succeeded or not */
   success: Scalars["Boolean"]["output"];
 };
@@ -3345,6 +3825,91 @@ export type BulkUpsertAutoTableTestsResult = {
   autoTableTests?: Maybe<Array<Maybe<AutoTableTest>>>;
   /** Aggregated list of errors that any bulk action encountered while processing */
   errors?: Maybe<Array<ExecutionError>>;
+  /** Boolean describing if all the bulk actions succeeded or not */
+  success: Scalars["Boolean"]["output"];
+};
+
+export type BulkUpsertDeepRelationshipChainCitiesInput = {
+  city?: InputMaybe<UpsertDeepRelationshipChainCityInput>;
+  /** An array of Strings */
+  on?: InputMaybe<Array<Scalars["String"]["input"]>>;
+};
+
+/** The result of a bulk upsert operation for the deepRelationshipChain/city model */
+export type BulkUpsertDeepRelationshipChainCitiesResult = {
+  __typename?: "BulkUpsertDeepRelationshipChainCitiesResult";
+  /** The results of each upsert action in the bulk operation */
+  cities?: Maybe<Array<Maybe<DeepRelationshipChainCity>>>;
+  /** Aggregated list of errors that any bulk action encountered while processing */
+  errors?: Maybe<Array<ExecutionError>>;
+  /** Boolean describing if all the bulk actions succeeded or not */
+  success: Scalars["Boolean"]["output"];
+};
+
+export type BulkUpsertDeepRelationshipChainCitizensInput = {
+  citizen?: InputMaybe<UpsertDeepRelationshipChainCitizenInput>;
+  /** An array of Strings */
+  on?: InputMaybe<Array<Scalars["String"]["input"]>>;
+};
+
+/** The result of a bulk upsert operation for the deepRelationshipChain/citizen model */
+export type BulkUpsertDeepRelationshipChainCitizensResult = {
+  __typename?: "BulkUpsertDeepRelationshipChainCitizensResult";
+  /** The results of each upsert action in the bulk operation */
+  citizens?: Maybe<Array<Maybe<DeepRelationshipChainCitizen>>>;
+  /** Aggregated list of errors that any bulk action encountered while processing */
+  errors?: Maybe<Array<ExecutionError>>;
+  /** Boolean describing if all the bulk actions succeeded or not */
+  success: Scalars["Boolean"]["output"];
+};
+
+export type BulkUpsertDeepRelationshipChainContinentsInput = {
+  continent?: InputMaybe<UpsertDeepRelationshipChainContinentInput>;
+  /** An array of Strings */
+  on?: InputMaybe<Array<Scalars["String"]["input"]>>;
+};
+
+/** The result of a bulk upsert operation for the deepRelationshipChain/continent model */
+export type BulkUpsertDeepRelationshipChainContinentsResult = {
+  __typename?: "BulkUpsertDeepRelationshipChainContinentsResult";
+  /** The results of each upsert action in the bulk operation */
+  continents?: Maybe<Array<Maybe<DeepRelationshipChainContinent>>>;
+  /** Aggregated list of errors that any bulk action encountered while processing */
+  errors?: Maybe<Array<ExecutionError>>;
+  /** Boolean describing if all the bulk actions succeeded or not */
+  success: Scalars["Boolean"]["output"];
+};
+
+export type BulkUpsertDeepRelationshipChainCountriesInput = {
+  country?: InputMaybe<UpsertDeepRelationshipChainCountryInput>;
+  /** An array of Strings */
+  on?: InputMaybe<Array<Scalars["String"]["input"]>>;
+};
+
+/** The result of a bulk upsert operation for the deepRelationshipChain/country model */
+export type BulkUpsertDeepRelationshipChainCountriesResult = {
+  __typename?: "BulkUpsertDeepRelationshipChainCountriesResult";
+  /** The results of each upsert action in the bulk operation */
+  countries?: Maybe<Array<Maybe<DeepRelationshipChainCountry>>>;
+  /** Aggregated list of errors that any bulk action encountered while processing */
+  errors?: Maybe<Array<ExecutionError>>;
+  /** Boolean describing if all the bulk actions succeeded or not */
+  success: Scalars["Boolean"]["output"];
+};
+
+export type BulkUpsertDeepRelationshipChainPlanetsInput = {
+  /** An array of Strings */
+  on?: InputMaybe<Array<Scalars["String"]["input"]>>;
+  planet?: InputMaybe<UpsertDeepRelationshipChainPlanetInput>;
+};
+
+/** The result of a bulk upsert operation for the deepRelationshipChain/planet model */
+export type BulkUpsertDeepRelationshipChainPlanetsResult = {
+  __typename?: "BulkUpsertDeepRelationshipChainPlanetsResult";
+  /** Aggregated list of errors that any bulk action encountered while processing */
+  errors?: Maybe<Array<ExecutionError>>;
+  /** The results of each upsert action in the bulk operation */
+  planets?: Maybe<Array<Maybe<DeepRelationshipChainPlanet>>>;
   /** Boolean describing if all the bulk actions succeeded or not */
   success: Scalars["Boolean"]["output"];
 };
@@ -3808,25 +4373,6 @@ export type BulkWhateverPartsResult = {
   success: Scalars["Boolean"]["output"];
 };
 
-/** Input object supporting setting or updating related model record on a relationship field */
-export type ChildModelHasManyInput = {
-  /** Creates, updates, or deletes existing records in the database as needed to arrive at the list of records specified. */
-  _converge?: InputMaybe<ConvergeChildModelInput>;
-  create?: InputMaybe<NestedChildModelCreateInput>;
-  delete?: InputMaybe<NestedChildModelDeleteInput>;
-  update?: InputMaybe<NestedChildModelUpdateInput>;
-};
-
-/** Input object supporting setting or updating related model record on a relationship field */
-export type CityBelongsToInput = {
-  /** Existing ID of another record, which you would like to associate this record with */
-  _link?: InputMaybe<Scalars["GadgetID"]["input"]>;
-  create?: InputMaybe<NestedCityCreateInput>;
-  customObjectParams?: InputMaybe<NestedCityCustomObjectParamsInput>;
-  delete?: InputMaybe<NestedCityDeleteInput>;
-  update?: InputMaybe<NestedCityUpdateInput>;
-};
-
 export type CompleteShopifySyncInput = {
   domain?: InputMaybe<Scalars["String"]["input"]>;
   errorDetails?: InputMaybe<Scalars["String"]["input"]>;
@@ -3856,33 +4402,75 @@ export type ConvergeActionMap = {
 };
 
 /** Declaratively specifies the list of records a relationship should become and invokes the given actions in order to change the current state to get to the newly specified state. */
-export type ConvergeAssignmentInput = {
+export type ConvergeDeepRelationshipChainCitizenInput = {
   /** An optional partial set of action api identifiers to use when creating, updating, and deleting records to converge to the new list. */
   actions?: InputMaybe<ConvergeActionMap>;
   /** The new list of records to converge to */
-  values: Array<InputMaybe<ConvergeAssignmentValues>>;
+  values: Array<InputMaybe<ConvergeDeepRelationshipChainCitizenValues>>;
 };
 
-/** One element of a ConvergeAssignmentInput record converge list */
-export type ConvergeAssignmentValues = {
-  course?: InputMaybe<CourseBelongsToInput>;
+/** One element of a ConvergeDeepRelationshipChainCitizenInput record converge list */
+export type ConvergeDeepRelationshipChainCitizenValues = {
+  cityOfMayorDuty?: InputMaybe<DeepRelationshipChainCityBelongsToInput>;
+  firstName?: InputMaybe<Scalars["String"]["input"]>;
+  homeCity?: InputMaybe<DeepRelationshipChainCityBelongsToInput>;
   id?: InputMaybe<Scalars["GadgetID"]["input"]>;
-  professor?: InputMaybe<ProfessorBelongsToInput>;
+  lastName?: InputMaybe<Scalars["String"]["input"]>;
 };
 
 /** Declaratively specifies the list of records a relationship should become and invokes the given actions in order to change the current state to get to the newly specified state. */
-export type ConvergeChildModelInput = {
+export type ConvergeDeepRelationshipChainCityInput = {
   /** An optional partial set of action api identifiers to use when creating, updating, and deleting records to converge to the new list. */
   actions?: InputMaybe<ConvergeActionMap>;
   /** The new list of records to converge to */
-  values: Array<InputMaybe<ConvergeChildModelValues>>;
+  values: Array<InputMaybe<ConvergeDeepRelationshipChainCityValues>>;
 };
 
-/** One element of a ConvergeChildModelInput record converge list */
-export type ConvergeChildModelValues = {
-  alias?: InputMaybe<Scalars["String"]["input"]>;
+/** One element of a ConvergeDeepRelationshipChainCityInput record converge list */
+export type ConvergeDeepRelationshipChainCityValues = {
+  citizens?: InputMaybe<Array<InputMaybe<DeepRelationshipChainCitizenHasManyInput>>>;
+  country?: InputMaybe<DeepRelationshipChainCountryBelongsToInput>;
+  englishName?: InputMaybe<Scalars["String"]["input"]>;
   id?: InputMaybe<Scalars["GadgetID"]["input"]>;
-  mainModelParent?: InputMaybe<MainModelBelongsToInput>;
+  localName?: InputMaybe<Scalars["String"]["input"]>;
+  mayor?: InputMaybe<DeepRelationshipChainCitizenHasOneInput>;
+};
+
+/** Declaratively specifies the list of records a relationship should become and invokes the given actions in order to change the current state to get to the newly specified state. */
+export type ConvergeDeepRelationshipChainContinentInput = {
+  /** An optional partial set of action api identifiers to use when creating, updating, and deleting records to converge to the new list. */
+  actions?: InputMaybe<ConvergeActionMap>;
+  /** The new list of records to converge to */
+  values: Array<InputMaybe<ConvergeDeepRelationshipChainContinentValues>>;
+};
+
+/** One element of a ConvergeDeepRelationshipChainContinentInput record converge list */
+export type ConvergeDeepRelationshipChainContinentValues = {
+  areaInSquareKm?: InputMaybe<Scalars["Float"]["input"]>;
+  countries?: InputMaybe<Array<InputMaybe<DeepRelationshipChainCountryHasManyInput>>>;
+  englishName?: InputMaybe<Scalars["String"]["input"]>;
+  frenchName?: InputMaybe<Scalars["String"]["input"]>;
+  id?: InputMaybe<Scalars["GadgetID"]["input"]>;
+  planet?: InputMaybe<DeepRelationshipChainPlanetBelongsToInput>;
+};
+
+/** Declaratively specifies the list of records a relationship should become and invokes the given actions in order to change the current state to get to the newly specified state. */
+export type ConvergeDeepRelationshipChainCountryInput = {
+  /** An optional partial set of action api identifiers to use when creating, updating, and deleting records to converge to the new list. */
+  actions?: InputMaybe<ConvergeActionMap>;
+  /** The new list of records to converge to */
+  values: Array<InputMaybe<ConvergeDeepRelationshipChainCountryValues>>;
+};
+
+/** One element of a ConvergeDeepRelationshipChainCountryInput record converge list */
+export type ConvergeDeepRelationshipChainCountryValues = {
+  cities?: InputMaybe<Array<InputMaybe<DeepRelationshipChainCityHasManyInput>>>;
+  continent?: InputMaybe<DeepRelationshipChainContinentBelongsToInput>;
+  dominantLanguage?: InputMaybe<Scalars["String"]["input"]>;
+  englishName?: InputMaybe<Scalars["String"]["input"]>;
+  id?: InputMaybe<Scalars["GadgetID"]["input"]>;
+  nativeLanguageName?: InputMaybe<Scalars["String"]["input"]>;
+  population?: InputMaybe<Scalars["Float"]["input"]>;
 };
 
 /** Declaratively specifies the list of records a relationship should become and invokes the given actions in order to change the current state to get to the newly specified state. */
@@ -3940,6 +4528,37 @@ export type ConvergeFriendshipValues = {
 };
 
 /** Declaratively specifies the list of records a relationship should become and invokes the given actions in order to change the current state to get to the newly specified state. */
+export type ConvergeGamePlayerInput = {
+  /** An optional partial set of action api identifiers to use when creating, updating, and deleting records to converge to the new list. */
+  actions?: InputMaybe<ConvergeActionMap>;
+  /** The new list of records to converge to */
+  values: Array<InputMaybe<ConvergeGamePlayerValues>>;
+};
+
+/** One element of a ConvergeGamePlayerInput record converge list */
+export type ConvergeGamePlayerValues = {
+  currentRound?: InputMaybe<GameRoundBelongsToInput>;
+  id?: InputMaybe<Scalars["GadgetID"]["input"]>;
+  name?: InputMaybe<Scalars["String"]["input"]>;
+};
+
+/** Declaratively specifies the list of records a relationship should become and invokes the given actions in order to change the current state to get to the newly specified state. */
+export type ConvergeGameRoundInput = {
+  /** An optional partial set of action api identifiers to use when creating, updating, and deleting records to converge to the new list. */
+  actions?: InputMaybe<ConvergeActionMap>;
+  /** The new list of records to converge to */
+  values: Array<InputMaybe<ConvergeGameRoundValues>>;
+};
+
+/** One element of a ConvergeGameRoundInput record converge list */
+export type ConvergeGameRoundValues = {
+  id?: InputMaybe<Scalars["GadgetID"]["input"]>;
+  name?: InputMaybe<Scalars["String"]["input"]>;
+  players?: InputMaybe<Array<InputMaybe<GamePlayerHasManyInput>>>;
+  stadium?: InputMaybe<GameStadiumBelongsToInput>;
+};
+
+/** Declaratively specifies the list of records a relationship should become and invokes the given actions in order to change the current state to get to the newly specified state. */
 export type ConvergeGizmoInput = {
   /** An optional partial set of action api identifiers to use when creating, updating, and deleting records to converge to the new list. */
   actions?: InputMaybe<ConvergeActionMap>;
@@ -3958,66 +4577,18 @@ export type ConvergeGizmoValues = {
 };
 
 /** Declaratively specifies the list of records a relationship should become and invokes the given actions in order to change the current state to get to the newly specified state. */
-export type ConvergeJoinerModelInput = {
+export type ConvergeHasManyThroughJoinerModelInput = {
   /** An optional partial set of action api identifiers to use when creating, updating, and deleting records to converge to the new list. */
   actions?: InputMaybe<ConvergeActionMap>;
   /** The new list of records to converge to */
-  values: Array<InputMaybe<ConvergeJoinerModelValues>>;
+  values: Array<InputMaybe<ConvergeHasManyThroughJoinerModelValues>>;
 };
 
-/** One element of a ConvergeJoinerModelInput record converge list */
-export type ConvergeJoinerModelValues = {
+/** One element of a ConvergeHasManyThroughJoinerModelInput record converge list */
+export type ConvergeHasManyThroughJoinerModelValues = {
   id?: InputMaybe<Scalars["GadgetID"]["input"]>;
-  joinerBelongsToBase?: InputMaybe<BaseModelBelongsToInput>;
-  joinerBelongsToSibling?: InputMaybe<SiblingModelBelongsToInput>;
-};
-
-/** Declaratively specifies the list of records a relationship should become and invokes the given actions in order to change the current state to get to the newly specified state. */
-export type ConvergePlayerInput = {
-  /** An optional partial set of action api identifiers to use when creating, updating, and deleting records to converge to the new list. */
-  actions?: InputMaybe<ConvergeActionMap>;
-  /** The new list of records to converge to */
-  values: Array<InputMaybe<ConvergePlayerValues>>;
-};
-
-/** One element of a ConvergePlayerInput record converge list */
-export type ConvergePlayerValues = {
-  currentRound?: InputMaybe<RoundBelongsToInput>;
-  id?: InputMaybe<Scalars["GadgetID"]["input"]>;
-  name?: InputMaybe<Scalars["String"]["input"]>;
-};
-
-/** Declaratively specifies the list of records a relationship should become and invokes the given actions in order to change the current state to get to the newly specified state. */
-export type ConvergeRegistrationInput = {
-  /** An optional partial set of action api identifiers to use when creating, updating, and deleting records to converge to the new list. */
-  actions?: InputMaybe<ConvergeActionMap>;
-  /** The new list of records to converge to */
-  values: Array<InputMaybe<ConvergeRegistrationValues>>;
-};
-
-/** One element of a ConvergeRegistrationInput record converge list */
-export type ConvergeRegistrationValues = {
-  course?: InputMaybe<CourseBelongsToInput>;
-  effectiveFrom?: InputMaybe<Scalars["DateOrDateTime"]["input"]>;
-  effectiveTo?: InputMaybe<Scalars["DateOrDateTime"]["input"]>;
-  id?: InputMaybe<Scalars["GadgetID"]["input"]>;
-  student?: InputMaybe<StudentBelongsToInput>;
-};
-
-/** Declaratively specifies the list of records a relationship should become and invokes the given actions in order to change the current state to get to the newly specified state. */
-export type ConvergeRoundInput = {
-  /** An optional partial set of action api identifiers to use when creating, updating, and deleting records to converge to the new list. */
-  actions?: InputMaybe<ConvergeActionMap>;
-  /** The new list of records to converge to */
-  values: Array<InputMaybe<ConvergeRoundValues>>;
-};
-
-/** One element of a ConvergeRoundInput record converge list */
-export type ConvergeRoundValues = {
-  id?: InputMaybe<Scalars["GadgetID"]["input"]>;
-  name?: InputMaybe<Scalars["String"]["input"]>;
-  players?: InputMaybe<Array<InputMaybe<PlayerHasManyInput>>>;
-  stadium?: InputMaybe<StadiumBelongsToInput>;
+  joinerBelongsToBase?: InputMaybe<HasManyThroughBaseModelBelongsToInput>;
+  joinerBelongsToSibling?: InputMaybe<HasManyThroughSiblingModelBelongsToInput>;
 };
 
 /** Declaratively specifies the list of records a relationship should become and invokes the given actions in order to change the current state to get to the newly specified state. */
@@ -4030,11 +4601,58 @@ export type ConvergeTweeterInput = {
 
 /** One element of a ConvergeTweeterInput record converge list */
 export type ConvergeTweeterValues = {
-  city?: InputMaybe<CityBelongsToInput>;
+  city?: InputMaybe<GameCityBelongsToInput>;
   followees?: InputMaybe<Array<InputMaybe<TweeterHasManyThroughInput>>>;
   followers?: InputMaybe<Array<InputMaybe<TweeterHasManyThroughInput>>>;
   id?: InputMaybe<Scalars["GadgetID"]["input"]>;
   name?: InputMaybe<Scalars["String"]["input"]>;
+};
+
+/** Declaratively specifies the list of records a relationship should become and invokes the given actions in order to change the current state to get to the newly specified state. */
+export type ConvergeUniqueFieldsChildModelInput = {
+  /** An optional partial set of action api identifiers to use when creating, updating, and deleting records to converge to the new list. */
+  actions?: InputMaybe<ConvergeActionMap>;
+  /** The new list of records to converge to */
+  values: Array<InputMaybe<ConvergeUniqueFieldsChildModelValues>>;
+};
+
+/** One element of a ConvergeUniqueFieldsChildModelInput record converge list */
+export type ConvergeUniqueFieldsChildModelValues = {
+  alias?: InputMaybe<Scalars["String"]["input"]>;
+  id?: InputMaybe<Scalars["GadgetID"]["input"]>;
+  mainModelParent?: InputMaybe<UniqueFieldsMainModelBelongsToInput>;
+};
+
+/** Declaratively specifies the list of records a relationship should become and invokes the given actions in order to change the current state to get to the newly specified state. */
+export type ConvergeUniversityAssignmentInput = {
+  /** An optional partial set of action api identifiers to use when creating, updating, and deleting records to converge to the new list. */
+  actions?: InputMaybe<ConvergeActionMap>;
+  /** The new list of records to converge to */
+  values: Array<InputMaybe<ConvergeUniversityAssignmentValues>>;
+};
+
+/** One element of a ConvergeUniversityAssignmentInput record converge list */
+export type ConvergeUniversityAssignmentValues = {
+  course?: InputMaybe<UniversityCourseBelongsToInput>;
+  id?: InputMaybe<Scalars["GadgetID"]["input"]>;
+  professor?: InputMaybe<UniversityProfessorBelongsToInput>;
+};
+
+/** Declaratively specifies the list of records a relationship should become and invokes the given actions in order to change the current state to get to the newly specified state. */
+export type ConvergeUniversityRegistrationInput = {
+  /** An optional partial set of action api identifiers to use when creating, updating, and deleting records to converge to the new list. */
+  actions?: InputMaybe<ConvergeActionMap>;
+  /** The new list of records to converge to */
+  values: Array<InputMaybe<ConvergeUniversityRegistrationValues>>;
+};
+
+/** One element of a ConvergeUniversityRegistrationInput record converge list */
+export type ConvergeUniversityRegistrationValues = {
+  course?: InputMaybe<UniversityCourseBelongsToInput>;
+  effectiveFrom?: InputMaybe<Scalars["DateOrDateTime"]["input"]>;
+  effectiveTo?: InputMaybe<Scalars["DateOrDateTime"]["input"]>;
+  id?: InputMaybe<Scalars["GadgetID"]["input"]>;
+  student?: InputMaybe<UniversityStudentBelongsToInput>;
 };
 
 /** Declaratively specifies the list of records a relationship should become and invokes the given actions in order to change the current state to get to the newly specified state. */
@@ -4068,22 +4686,6 @@ export type ConvergeWidgetValues = {
   startsAt?: InputMaybe<Scalars["DateTime"]["input"]>;
 };
 
-/** Input object supporting setting or updating related model record on a relationship field */
-export type CourseBelongsToInput = {
-  /** Existing ID of another record, which you would like to associate this record with */
-  _link?: InputMaybe<Scalars["GadgetID"]["input"]>;
-  create?: InputMaybe<NestedCourseCreateInput>;
-  delete?: InputMaybe<NestedCourseDeleteInput>;
-  update?: InputMaybe<NestedCourseUpdateInput>;
-};
-
-/** Input object supporting setting or updating related model record on a relationship field */
-export type CourseHasManyThroughInput = {
-  create?: InputMaybe<NestedCourseCreateInput>;
-  delete?: InputMaybe<NestedCourseDeleteInput>;
-  update?: InputMaybe<NestedCourseUpdateInput>;
-};
-
 export type CreateAutoTableTestInput = {
   bool?: InputMaybe<Scalars["Boolean"]["input"]>;
   dt?: InputMaybe<Scalars["DateTime"]["input"]>;
@@ -4109,6 +4711,84 @@ export type CreateAutoTableTestResult = UpsertAutoTableTestResult & {
   actionRun?: Maybe<Scalars["String"]["output"]>;
   autoTableTest?: Maybe<AutoTableTest>;
   errors?: Maybe<Array<ExecutionError>>;
+  success: Scalars["Boolean"]["output"];
+};
+
+export type CreateDeepRelationshipChainCitizenInput = {
+  cityOfMayorDuty?: InputMaybe<DeepRelationshipChainCityBelongsToInput>;
+  firstName?: InputMaybe<Scalars["String"]["input"]>;
+  homeCity?: InputMaybe<DeepRelationshipChainCityBelongsToInput>;
+  lastName?: InputMaybe<Scalars["String"]["input"]>;
+};
+
+export type CreateDeepRelationshipChainCitizenResult = UpsertDeepRelationshipChainCitizenResult & {
+  __typename?: "CreateDeepRelationshipChainCitizenResult";
+  actionRun?: Maybe<Scalars["String"]["output"]>;
+  citizen?: Maybe<DeepRelationshipChainCitizen>;
+  errors?: Maybe<Array<ExecutionError>>;
+  success: Scalars["Boolean"]["output"];
+};
+
+export type CreateDeepRelationshipChainCityInput = {
+  citizens?: InputMaybe<Array<InputMaybe<DeepRelationshipChainCitizenHasManyInput>>>;
+  country?: InputMaybe<DeepRelationshipChainCountryBelongsToInput>;
+  englishName?: InputMaybe<Scalars["String"]["input"]>;
+  localName?: InputMaybe<Scalars["String"]["input"]>;
+  mayor?: InputMaybe<DeepRelationshipChainCitizenHasOneInput>;
+};
+
+export type CreateDeepRelationshipChainCityResult = UpsertDeepRelationshipChainCityResult & {
+  __typename?: "CreateDeepRelationshipChainCityResult";
+  actionRun?: Maybe<Scalars["String"]["output"]>;
+  city?: Maybe<DeepRelationshipChainCity>;
+  errors?: Maybe<Array<ExecutionError>>;
+  success: Scalars["Boolean"]["output"];
+};
+
+export type CreateDeepRelationshipChainContinentInput = {
+  areaInSquareKm?: InputMaybe<Scalars["Float"]["input"]>;
+  countries?: InputMaybe<Array<InputMaybe<DeepRelationshipChainCountryHasManyInput>>>;
+  englishName?: InputMaybe<Scalars["String"]["input"]>;
+  frenchName?: InputMaybe<Scalars["String"]["input"]>;
+  planet?: InputMaybe<DeepRelationshipChainPlanetBelongsToInput>;
+};
+
+export type CreateDeepRelationshipChainContinentResult = UpsertDeepRelationshipChainContinentResult & {
+  __typename?: "CreateDeepRelationshipChainContinentResult";
+  actionRun?: Maybe<Scalars["String"]["output"]>;
+  continent?: Maybe<DeepRelationshipChainContinent>;
+  errors?: Maybe<Array<ExecutionError>>;
+  success: Scalars["Boolean"]["output"];
+};
+
+export type CreateDeepRelationshipChainCountryInput = {
+  cities?: InputMaybe<Array<InputMaybe<DeepRelationshipChainCityHasManyInput>>>;
+  continent?: InputMaybe<DeepRelationshipChainContinentBelongsToInput>;
+  dominantLanguage?: InputMaybe<Scalars["String"]["input"]>;
+  englishName?: InputMaybe<Scalars["String"]["input"]>;
+  nativeLanguageName?: InputMaybe<Scalars["String"]["input"]>;
+  population?: InputMaybe<Scalars["Float"]["input"]>;
+};
+
+export type CreateDeepRelationshipChainCountryResult = UpsertDeepRelationshipChainCountryResult & {
+  __typename?: "CreateDeepRelationshipChainCountryResult";
+  actionRun?: Maybe<Scalars["String"]["output"]>;
+  country?: Maybe<DeepRelationshipChainCountry>;
+  errors?: Maybe<Array<ExecutionError>>;
+  success: Scalars["Boolean"]["output"];
+};
+
+export type CreateDeepRelationshipChainPlanetInput = {
+  continents?: InputMaybe<Array<InputMaybe<DeepRelationshipChainContinentHasManyInput>>>;
+  englishName?: InputMaybe<Scalars["String"]["input"]>;
+  size?: InputMaybe<Scalars["Float"]["input"]>;
+};
+
+export type CreateDeepRelationshipChainPlanetResult = UpsertDeepRelationshipChainPlanetResult & {
+  __typename?: "CreateDeepRelationshipChainPlanetResult";
+  actionRun?: Maybe<Scalars["String"]["output"]>;
+  errors?: Maybe<Array<ExecutionError>>;
+  planet?: Maybe<DeepRelationshipChainPlanet>;
   success: Scalars["Boolean"]["output"];
 };
 
@@ -4162,7 +4842,7 @@ export type CreateFriendshipResult = UpsertFriendshipResult & {
 
 export type CreateGameCityInput = {
   name?: InputMaybe<Scalars["String"]["input"]>;
-  stadium?: InputMaybe<StadiumHasOneInput>;
+  stadium?: InputMaybe<GameStadiumHasOneInput>;
   tweeters?: InputMaybe<Array<InputMaybe<TweeterHasManyInput>>>;
 };
 
@@ -4175,7 +4855,7 @@ export type CreateGameCityResult = UpsertGameCityResult & {
 };
 
 export type CreateGamePlayerInput = {
-  currentRound?: InputMaybe<RoundBelongsToInput>;
+  currentRound?: InputMaybe<GameRoundBelongsToInput>;
   name?: InputMaybe<Scalars["String"]["input"]>;
 };
 
@@ -4189,8 +4869,8 @@ export type CreateGamePlayerResult = UpsertGamePlayerResult & {
 
 export type CreateGameRoundInput = {
   name?: InputMaybe<Scalars["String"]["input"]>;
-  players?: InputMaybe<Array<InputMaybe<PlayerHasManyInput>>>;
-  stadium?: InputMaybe<StadiumBelongsToInput>;
+  players?: InputMaybe<Array<InputMaybe<GamePlayerHasManyInput>>>;
+  stadium?: InputMaybe<GameStadiumBelongsToInput>;
 };
 
 export type CreateGameRoundResult = UpsertGameRoundResult & {
@@ -4202,12 +4882,12 @@ export type CreateGameRoundResult = UpsertGameRoundResult & {
 };
 
 export type CreateGameStadiumInput = {
-  city?: InputMaybe<CityBelongsToInput>;
+  city?: InputMaybe<GameCityBelongsToInput>;
   name?: InputMaybe<Scalars["String"]["input"]>;
   photo?: InputMaybe<StoredFileInput>;
-  rounds?: InputMaybe<Array<InputMaybe<RoundHasManyInput>>>;
-  tags?: InputMaybe<Array<Scalars["StadiumTagsEnum"]["input"]>>;
-  type?: InputMaybe<Scalars["StadiumTypeEnum"]["input"]>;
+  rounds?: InputMaybe<Array<InputMaybe<GameRoundHasManyInput>>>;
+  tags?: InputMaybe<Array<Scalars["GameStadiumTagsEnum"]["input"]>>;
+  type?: InputMaybe<Scalars["GameStadiumTypeEnum"]["input"]>;
 };
 
 export type CreateGameStadiumResult = UpsertGameStadiumResult & {
@@ -4235,9 +4915,9 @@ export type CreateGizmoResult = UpsertGizmoResult & {
 };
 
 export type CreateHasManyThroughBaseModelInput = {
-  baseModelHmtField?: InputMaybe<Array<InputMaybe<SiblingModelHasManyThroughInput>>>;
+  baseModelHmtField?: InputMaybe<Array<InputMaybe<HasManyThroughSiblingModelHasManyThroughInput>>>;
   baseModelName?: InputMaybe<Scalars["String"]["input"]>;
-  joinerModels?: InputMaybe<Array<InputMaybe<JoinerModelHasManyInput>>>;
+  joinerModels?: InputMaybe<Array<InputMaybe<HasManyThroughJoinerModelHasManyInput>>>;
 };
 
 export type CreateHasManyThroughBaseModelResult = UpsertHasManyThroughBaseModelResult & {
@@ -4249,8 +4929,8 @@ export type CreateHasManyThroughBaseModelResult = UpsertHasManyThroughBaseModelR
 };
 
 export type CreateHasManyThroughJoinerModelInput = {
-  joinerBelongsToBase?: InputMaybe<BaseModelBelongsToInput>;
-  joinerBelongsToSibling?: InputMaybe<SiblingModelBelongsToInput>;
+  joinerBelongsToBase?: InputMaybe<HasManyThroughBaseModelBelongsToInput>;
+  joinerBelongsToSibling?: InputMaybe<HasManyThroughSiblingModelBelongsToInput>;
 };
 
 export type CreateHasManyThroughJoinerModelResult = UpsertHasManyThroughJoinerModelResult & {
@@ -4262,8 +4942,8 @@ export type CreateHasManyThroughJoinerModelResult = UpsertHasManyThroughJoinerMo
 };
 
 export type CreateHasManyThroughSiblingModelInput = {
-  joinerModels?: InputMaybe<Array<InputMaybe<JoinerModelHasManyInput>>>;
-  siblingModelHmtField?: InputMaybe<Array<InputMaybe<BaseModelHasManyThroughInput>>>;
+  joinerModels?: InputMaybe<Array<InputMaybe<HasManyThroughJoinerModelHasManyInput>>>;
+  siblingModelHmtField?: InputMaybe<Array<InputMaybe<HasManyThroughBaseModelHasManyThroughInput>>>;
   siblingName?: InputMaybe<Scalars["String"]["input"]>;
 };
 
@@ -4359,7 +5039,7 @@ export type CreateTestDataResult = {
 };
 
 export type CreateTweeterInput = {
-  city?: InputMaybe<CityBelongsToInput>;
+  city?: InputMaybe<GameCityBelongsToInput>;
   followeeFriendships?: InputMaybe<Array<InputMaybe<FriendshipHasManyInput>>>;
   followees?: InputMaybe<Array<InputMaybe<TweeterHasManyThroughInput>>>;
   followerFriendships?: InputMaybe<Array<InputMaybe<FriendshipHasManyInput>>>;
@@ -4377,7 +5057,7 @@ export type CreateTweeterResult = UpsertTweeterResult & {
 
 export type CreateUniqueFieldsChildModelInput = {
   alias?: InputMaybe<Scalars["String"]["input"]>;
-  mainModelParent?: InputMaybe<MainModelBelongsToInput>;
+  mainModelParent?: InputMaybe<UniqueFieldsMainModelBelongsToInput>;
 };
 
 export type CreateUniqueFieldsChildModelResult = UpsertUniqueFieldsChildModelResult & {
@@ -4389,9 +5069,9 @@ export type CreateUniqueFieldsChildModelResult = UpsertUniqueFieldsChildModelRes
 };
 
 export type CreateUniqueFieldsMainModelInput = {
-  childModelEntries?: InputMaybe<Array<InputMaybe<ChildModelHasManyInput>>>;
+  childModelEntries?: InputMaybe<Array<InputMaybe<UniqueFieldsChildModelHasManyInput>>>;
   nonUniqueString?: InputMaybe<Scalars["String"]["input"]>;
-  uniqueBelongsTo?: InputMaybe<ParentModelBelongsToInput>;
+  uniqueBelongsTo?: InputMaybe<UniqueFieldsParentModelBelongsToInput>;
   uniqueEmail?: InputMaybe<Scalars["String"]["input"]>;
   uniqueString?: InputMaybe<Scalars["String"]["input"]>;
 };
@@ -4405,7 +5085,7 @@ export type CreateUniqueFieldsMainModelResult = UpsertUniqueFieldsMainModelResul
 };
 
 export type CreateUniqueFieldsParentModelInput = {
-  baseModel?: InputMaybe<MainModelHasOneInput>;
+  baseModel?: InputMaybe<UniqueFieldsMainModelHasOneInput>;
   parentNonUniqueString?: InputMaybe<Scalars["String"]["input"]>;
   parentUniqueString?: InputMaybe<Scalars["String"]["input"]>;
 };
@@ -4419,8 +5099,8 @@ export type CreateUniqueFieldsParentModelResult = UpsertUniqueFieldsParentModelR
 };
 
 export type CreateUniversityAssignmentInput = {
-  course?: InputMaybe<CourseBelongsToInput>;
-  professor?: InputMaybe<ProfessorBelongsToInput>;
+  course?: InputMaybe<UniversityCourseBelongsToInput>;
+  professor?: InputMaybe<UniversityProfessorBelongsToInput>;
 };
 
 export type CreateUniversityAssignmentResult = UpsertUniversityAssignmentResult & {
@@ -4432,11 +5112,11 @@ export type CreateUniversityAssignmentResult = UpsertUniversityAssignmentResult 
 };
 
 export type CreateUniversityCourseInput = {
-  assignments?: InputMaybe<Array<InputMaybe<AssignmentHasManyInput>>>;
+  assignments?: InputMaybe<Array<InputMaybe<UniversityAssignmentHasManyInput>>>;
   description?: InputMaybe<RichTextInput>;
-  professors?: InputMaybe<Array<InputMaybe<ProfessorHasManyThroughInput>>>;
-  registrations?: InputMaybe<Array<InputMaybe<RegistrationHasManyInput>>>;
-  students?: InputMaybe<Array<InputMaybe<StudentHasManyThroughInput>>>;
+  professors?: InputMaybe<Array<InputMaybe<UniversityProfessorHasManyThroughInput>>>;
+  registrations?: InputMaybe<Array<InputMaybe<UniversityRegistrationHasManyInput>>>;
+  students?: InputMaybe<Array<InputMaybe<UniversityStudentHasManyThroughInput>>>;
   title?: InputMaybe<Scalars["String"]["input"]>;
 };
 
@@ -4449,11 +5129,11 @@ export type CreateUniversityCourseResult = UpsertUniversityCourseResult & {
 };
 
 export type CreateUniversityProfessorInput = {
-  assignments?: InputMaybe<Array<InputMaybe<AssignmentHasManyInput>>>;
-  courses?: InputMaybe<Array<InputMaybe<CourseHasManyThroughInput>>>;
+  assignments?: InputMaybe<Array<InputMaybe<UniversityAssignmentHasManyInput>>>;
+  courses?: InputMaybe<Array<InputMaybe<UniversityCourseHasManyThroughInput>>>;
   firstName?: InputMaybe<Scalars["String"]["input"]>;
   lastName?: InputMaybe<Scalars["String"]["input"]>;
-  title?: InputMaybe<Scalars["ProfessorTitleEnum"]["input"]>;
+  title?: InputMaybe<Scalars["UniversityProfessorTitleEnum"]["input"]>;
 };
 
 export type CreateUniversityProfessorResult = UpsertUniversityProfessorResult & {
@@ -4465,10 +5145,10 @@ export type CreateUniversityProfessorResult = UpsertUniversityProfessorResult & 
 };
 
 export type CreateUniversityRegistrationInput = {
-  course?: InputMaybe<CourseBelongsToInput>;
+  course?: InputMaybe<UniversityCourseBelongsToInput>;
   effectiveFrom?: InputMaybe<Scalars["DateOrDateTime"]["input"]>;
   effectiveTo?: InputMaybe<Scalars["DateOrDateTime"]["input"]>;
-  student?: InputMaybe<StudentBelongsToInput>;
+  student?: InputMaybe<UniversityStudentBelongsToInput>;
 };
 
 export type CreateUniversityRegistrationResult = UpsertUniversityRegistrationResult & {
@@ -4480,11 +5160,11 @@ export type CreateUniversityRegistrationResult = UpsertUniversityRegistrationRes
 };
 
 export type CreateUniversityStudentInput = {
-  courses?: InputMaybe<Array<InputMaybe<CourseHasManyThroughInput>>>;
-  department?: InputMaybe<Scalars["StudentDepartmentEnum"]["input"]>;
+  courses?: InputMaybe<Array<InputMaybe<UniversityCourseHasManyThroughInput>>>;
+  department?: InputMaybe<Scalars["UniversityStudentDepartmentEnum"]["input"]>;
   firstName?: InputMaybe<Scalars["String"]["input"]>;
   lastName?: InputMaybe<Scalars["String"]["input"]>;
-  registrations?: InputMaybe<Array<InputMaybe<RegistrationHasManyInput>>>;
+  registrations?: InputMaybe<Array<InputMaybe<UniversityRegistrationHasManyInput>>>;
   year?: InputMaybe<Scalars["Int"]["input"]>;
 };
 
@@ -4572,7 +5252,7 @@ export type CustomActionWithParamsAutoTableTestResult = {
 
 export type CustomObjectParamsGameCityInput = {
   name?: InputMaybe<Scalars["String"]["input"]>;
-  stadium?: InputMaybe<StadiumHasOneInput>;
+  stadium?: InputMaybe<GameStadiumHasOneInput>;
   tweeters?: InputMaybe<Array<InputMaybe<TweeterHasManyInput>>>;
 };
 
@@ -4628,8 +5308,945 @@ export type DateTimeFilter = {
   notIn?: InputMaybe<Array<InputMaybe<Scalars["DateTime"]["input"]>>>;
 };
 
+export type DeepRelationshipChainCitiesInnerRelationshipFilter = {
+  AND?: InputMaybe<Array<InputMaybe<DeepRelationshipChainCitiesInnerRelationshipFilter>>>;
+  NOT?: InputMaybe<Array<InputMaybe<DeepRelationshipChainCitiesInnerRelationshipFilter>>>;
+  OR?: InputMaybe<Array<InputMaybe<DeepRelationshipChainCitiesInnerRelationshipFilter>>>;
+  citizens?: InputMaybe<DeepRelationshipChainCitizensRelationshipFilter>;
+  country?: InputMaybe<DeepRelationshipChainCountryRelationshipFilter>;
+  countryId?: InputMaybe<IdFilter>;
+  createdAt?: InputMaybe<DateTimeFilter>;
+  englishName?: InputMaybe<StringFilter>;
+  id?: InputMaybe<IdFilter>;
+  localName?: InputMaybe<StringFilter>;
+  mayor?: InputMaybe<DeepRelationshipChainCitizenRelationshipFilter>;
+  updatedAt?: InputMaybe<DateTimeFilter>;
+};
+
+export type DeepRelationshipChainCitiesRelationshipFilter = {
+  every?: InputMaybe<DeepRelationshipChainCitiesInnerRelationshipFilter>;
+  some?: InputMaybe<DeepRelationshipChainCitiesInnerRelationshipFilter>;
+};
+
+export type DeepRelationshipChainCitizen = {
+  __typename?: "DeepRelationshipChainCitizen";
+  /** Get all the fields for this record. Useful for not having to list out all the fields you want to retrieve, but slower. */
+  _all: Scalars["JSONObject"]["output"];
+  cityOfMayorDuty?: Maybe<DeepRelationshipChainCity>;
+  cityOfMayorDutyId?: Maybe<Scalars["GadgetID"]["output"]>;
+  /** The time at which this record was first created. Set once upon record creation and never changed. Managed by Gadget. */
+  createdAt: Scalars["DateTime"]["output"];
+  firstName?: Maybe<Scalars["String"]["output"]>;
+  homeCity?: Maybe<DeepRelationshipChainCity>;
+  homeCityId?: Maybe<Scalars["GadgetID"]["output"]>;
+  /** The globally unique, unchanging identifier for this record. Assigned and managed by Gadget. */
+  id: Scalars["GadgetID"]["output"];
+  lastName?: Maybe<Scalars["String"]["output"]>;
+  /** The time at which this record was last changed. Set each time the record is successfully acted upon by an action. Managed by Gadget. */
+  updatedAt: Scalars["DateTime"]["output"];
+};
+
+/** A connection to a list of DeepRelationshipChainCitizen items. */
+export type DeepRelationshipChainCitizenConnection = {
+  __typename?: "DeepRelationshipChainCitizenConnection";
+  /** A list of edges. */
+  edges: Array<DeepRelationshipChainCitizenEdge>;
+  /** Information to aid in pagination. */
+  pageInfo: PageInfo;
+};
+
+/** An edge in a DeepRelationshipChainCitizen connection. */
+export type DeepRelationshipChainCitizenEdge = {
+  __typename?: "DeepRelationshipChainCitizenEdge";
+  /** A cursor for use in pagination */
+  cursor: Scalars["String"]["output"];
+  /** The item at the end of the edge */
+  node: DeepRelationshipChainCitizen;
+};
+
+export type DeepRelationshipChainCitizenFilter = {
+  AND?: InputMaybe<Array<InputMaybe<DeepRelationshipChainCitizenFilter>>>;
+  NOT?: InputMaybe<Array<InputMaybe<DeepRelationshipChainCitizenFilter>>>;
+  OR?: InputMaybe<Array<InputMaybe<DeepRelationshipChainCitizenFilter>>>;
+  cityOfMayorDuty?: InputMaybe<DeepRelationshipChainCityRelationshipFilter>;
+  cityOfMayorDutyId?: InputMaybe<IdFilter>;
+  createdAt?: InputMaybe<DateTimeFilter>;
+  firstName?: InputMaybe<StringFilter>;
+  homeCity?: InputMaybe<DeepRelationshipChainCityRelationshipFilter>;
+  homeCityId?: InputMaybe<IdFilter>;
+  id?: InputMaybe<IdFilter>;
+  lastName?: InputMaybe<StringFilter>;
+  updatedAt?: InputMaybe<DateTimeFilter>;
+};
+
+/** Input object supporting setting or updating related model record on a relationship field */
+export type DeepRelationshipChainCitizenHasManyInput = {
+  /** Creates, updates, or deletes existing records in the database as needed to arrive at the list of records specified. */
+  _converge?: InputMaybe<ConvergeDeepRelationshipChainCitizenInput>;
+  create?: InputMaybe<NestedCreateDeepRelationshipChainCitizenInput>;
+  delete?: InputMaybe<NestedDeleteDeepRelationshipChainCitizenInput>;
+  update?: InputMaybe<NestedUpdateDeepRelationshipChainCitizenInput>;
+};
+
+/** Input object supporting setting or updating related model record on a relationship field */
+export type DeepRelationshipChainCitizenHasOneInput = {
+  /** Existing ID of another record, which you would like to relink to this record */
+  _relink?: InputMaybe<HasOneRelinkInput>;
+  /** Existing ID of another record, which you would like to unlink from this record */
+  _unlink?: InputMaybe<Scalars["GadgetID"]["input"]>;
+  create?: InputMaybe<NestedCreateDeepRelationshipChainCitizenInput>;
+  delete?: InputMaybe<NestedDeleteDeepRelationshipChainCitizenInput>;
+  update?: InputMaybe<NestedUpdateDeepRelationshipChainCitizenInput>;
+};
+
+export type DeepRelationshipChainCitizenRelationshipFilter = {
+  AND?: InputMaybe<Array<InputMaybe<DeepRelationshipChainCitizenRelationshipFilter>>>;
+  NOT?: InputMaybe<Array<InputMaybe<DeepRelationshipChainCitizenRelationshipFilter>>>;
+  OR?: InputMaybe<Array<InputMaybe<DeepRelationshipChainCitizenRelationshipFilter>>>;
+  cityOfMayorDuty?: InputMaybe<DeepRelationshipChainCityRelationshipFilter>;
+  cityOfMayorDutyId?: InputMaybe<IdFilter>;
+  createdAt?: InputMaybe<DateTimeFilter>;
+  firstName?: InputMaybe<StringFilter>;
+  homeCity?: InputMaybe<DeepRelationshipChainCityRelationshipFilter>;
+  homeCityId?: InputMaybe<IdFilter>;
+  id?: InputMaybe<IdFilter>;
+  isSet?: InputMaybe<Scalars["Boolean"]["input"]>;
+  lastName?: InputMaybe<StringFilter>;
+  updatedAt?: InputMaybe<DateTimeFilter>;
+};
+
+export type DeepRelationshipChainCitizenSort = {
+  /** Sort the results by the createdAt field. Defaults to ascending (smallest value first). */
+  createdAt?: InputMaybe<SortOrder>;
+  /** Sort the results by the firstName field. Defaults to ascending (smallest value first). */
+  firstName?: InputMaybe<SortOrder>;
+  /** Sort the results by the id field. Defaults to ascending (smallest value first). */
+  id?: InputMaybe<SortOrder>;
+  /** Sort the results by the lastName field. Defaults to ascending (smallest value first). */
+  lastName?: InputMaybe<SortOrder>;
+  /** Sort the results by the updatedAt field. Defaults to ascending (smallest value first). */
+  updatedAt?: InputMaybe<SortOrder>;
+};
+
+export type DeepRelationshipChainCitizensInnerRelationshipFilter = {
+  AND?: InputMaybe<Array<InputMaybe<DeepRelationshipChainCitizensInnerRelationshipFilter>>>;
+  NOT?: InputMaybe<Array<InputMaybe<DeepRelationshipChainCitizensInnerRelationshipFilter>>>;
+  OR?: InputMaybe<Array<InputMaybe<DeepRelationshipChainCitizensInnerRelationshipFilter>>>;
+  cityOfMayorDuty?: InputMaybe<DeepRelationshipChainCityRelationshipFilter>;
+  cityOfMayorDutyId?: InputMaybe<IdFilter>;
+  createdAt?: InputMaybe<DateTimeFilter>;
+  firstName?: InputMaybe<StringFilter>;
+  homeCity?: InputMaybe<DeepRelationshipChainCityRelationshipFilter>;
+  homeCityId?: InputMaybe<IdFilter>;
+  id?: InputMaybe<IdFilter>;
+  lastName?: InputMaybe<StringFilter>;
+  updatedAt?: InputMaybe<DateTimeFilter>;
+};
+
+export type DeepRelationshipChainCitizensRelationshipFilter = {
+  every?: InputMaybe<DeepRelationshipChainCitizensInnerRelationshipFilter>;
+  some?: InputMaybe<DeepRelationshipChainCitizensInnerRelationshipFilter>;
+};
+
+export type DeepRelationshipChainCity = {
+  __typename?: "DeepRelationshipChainCity";
+  /** Get all the fields for this record. Useful for not having to list out all the fields you want to retrieve, but slower. */
+  _all: Scalars["JSONObject"]["output"];
+  citizens: DeepRelationshipChainCitizenConnection;
+  country?: Maybe<DeepRelationshipChainCountry>;
+  countryId?: Maybe<Scalars["GadgetID"]["output"]>;
+  /** The time at which this record was first created. Set once upon record creation and never changed. Managed by Gadget. */
+  createdAt: Scalars["DateTime"]["output"];
+  englishName?: Maybe<Scalars["String"]["output"]>;
+  /** The globally unique, unchanging identifier for this record. Assigned and managed by Gadget. */
+  id: Scalars["GadgetID"]["output"];
+  localName?: Maybe<Scalars["String"]["output"]>;
+  mayor?: Maybe<DeepRelationshipChainCitizen>;
+  /** The time at which this record was last changed. Set each time the record is successfully acted upon by an action. Managed by Gadget. */
+  updatedAt: Scalars["DateTime"]["output"];
+};
+
+export type DeepRelationshipChainCityCitizensArgs = {
+  after?: InputMaybe<Scalars["String"]["input"]>;
+  before?: InputMaybe<Scalars["String"]["input"]>;
+  filter?: InputMaybe<Array<DeepRelationshipChainCitizenFilter>>;
+  first?: InputMaybe<Scalars["Int"]["input"]>;
+  last?: InputMaybe<Scalars["Int"]["input"]>;
+  search?: InputMaybe<Scalars["String"]["input"]>;
+  sort?: InputMaybe<Array<DeepRelationshipChainCitizenSort>>;
+};
+
+/** Input object supporting setting or updating related model record on a relationship field */
+export type DeepRelationshipChainCityBelongsToInput = {
+  /** Existing ID of another record, which you would like to associate this record with */
+  _link?: InputMaybe<Scalars["GadgetID"]["input"]>;
+  create?: InputMaybe<NestedCreateDeepRelationshipChainCityInput>;
+  delete?: InputMaybe<NestedDeleteDeepRelationshipChainCityInput>;
+  update?: InputMaybe<NestedUpdateDeepRelationshipChainCityInput>;
+};
+
+/** A connection to a list of DeepRelationshipChainCity items. */
+export type DeepRelationshipChainCityConnection = {
+  __typename?: "DeepRelationshipChainCityConnection";
+  /** A list of edges. */
+  edges: Array<DeepRelationshipChainCityEdge>;
+  /** Information to aid in pagination. */
+  pageInfo: PageInfo;
+};
+
+/** An edge in a DeepRelationshipChainCity connection. */
+export type DeepRelationshipChainCityEdge = {
+  __typename?: "DeepRelationshipChainCityEdge";
+  /** A cursor for use in pagination */
+  cursor: Scalars["String"]["output"];
+  /** The item at the end of the edge */
+  node: DeepRelationshipChainCity;
+};
+
+export type DeepRelationshipChainCityFilter = {
+  AND?: InputMaybe<Array<InputMaybe<DeepRelationshipChainCityFilter>>>;
+  NOT?: InputMaybe<Array<InputMaybe<DeepRelationshipChainCityFilter>>>;
+  OR?: InputMaybe<Array<InputMaybe<DeepRelationshipChainCityFilter>>>;
+  citizens?: InputMaybe<DeepRelationshipChainCitizensRelationshipFilter>;
+  country?: InputMaybe<DeepRelationshipChainCountryRelationshipFilter>;
+  countryId?: InputMaybe<IdFilter>;
+  createdAt?: InputMaybe<DateTimeFilter>;
+  englishName?: InputMaybe<StringFilter>;
+  id?: InputMaybe<IdFilter>;
+  localName?: InputMaybe<StringFilter>;
+  mayor?: InputMaybe<DeepRelationshipChainCitizenRelationshipFilter>;
+  updatedAt?: InputMaybe<DateTimeFilter>;
+};
+
+/** Input object supporting setting or updating related model record on a relationship field */
+export type DeepRelationshipChainCityHasManyInput = {
+  /** Creates, updates, or deletes existing records in the database as needed to arrive at the list of records specified. */
+  _converge?: InputMaybe<ConvergeDeepRelationshipChainCityInput>;
+  create?: InputMaybe<NestedCreateDeepRelationshipChainCityInput>;
+  delete?: InputMaybe<NestedDeleteDeepRelationshipChainCityInput>;
+  update?: InputMaybe<NestedUpdateDeepRelationshipChainCityInput>;
+};
+
+export type DeepRelationshipChainCityRelationshipFilter = {
+  AND?: InputMaybe<Array<InputMaybe<DeepRelationshipChainCityRelationshipFilter>>>;
+  NOT?: InputMaybe<Array<InputMaybe<DeepRelationshipChainCityRelationshipFilter>>>;
+  OR?: InputMaybe<Array<InputMaybe<DeepRelationshipChainCityRelationshipFilter>>>;
+  citizens?: InputMaybe<DeepRelationshipChainCitizensRelationshipFilter>;
+  country?: InputMaybe<DeepRelationshipChainCountryRelationshipFilter>;
+  countryId?: InputMaybe<IdFilter>;
+  createdAt?: InputMaybe<DateTimeFilter>;
+  englishName?: InputMaybe<StringFilter>;
+  id?: InputMaybe<IdFilter>;
+  isSet?: InputMaybe<Scalars["Boolean"]["input"]>;
+  localName?: InputMaybe<StringFilter>;
+  mayor?: InputMaybe<DeepRelationshipChainCitizenRelationshipFilter>;
+  updatedAt?: InputMaybe<DateTimeFilter>;
+};
+
+export type DeepRelationshipChainCitySort = {
+  /** Sort the results by the createdAt field. Defaults to ascending (smallest value first). */
+  createdAt?: InputMaybe<SortOrder>;
+  /** Sort the results by the englishName field. Defaults to ascending (smallest value first). */
+  englishName?: InputMaybe<SortOrder>;
+  /** Sort the results by the id field. Defaults to ascending (smallest value first). */
+  id?: InputMaybe<SortOrder>;
+  /** Sort the results by the localName field. Defaults to ascending (smallest value first). */
+  localName?: InputMaybe<SortOrder>;
+  /** Sort the results by the updatedAt field. Defaults to ascending (smallest value first). */
+  updatedAt?: InputMaybe<SortOrder>;
+};
+
+export type DeepRelationshipChainContinent = {
+  __typename?: "DeepRelationshipChainContinent";
+  /** Get all the fields for this record. Useful for not having to list out all the fields you want to retrieve, but slower. */
+  _all: Scalars["JSONObject"]["output"];
+  areaInSquareKm?: Maybe<Scalars["Float"]["output"]>;
+  countries: DeepRelationshipChainCountryConnection;
+  /** The time at which this record was first created. Set once upon record creation and never changed. Managed by Gadget. */
+  createdAt: Scalars["DateTime"]["output"];
+  englishName?: Maybe<Scalars["String"]["output"]>;
+  frenchName?: Maybe<Scalars["String"]["output"]>;
+  /** The globally unique, unchanging identifier for this record. Assigned and managed by Gadget. */
+  id: Scalars["GadgetID"]["output"];
+  planet?: Maybe<DeepRelationshipChainPlanet>;
+  planetId?: Maybe<Scalars["GadgetID"]["output"]>;
+  /** The time at which this record was last changed. Set each time the record is successfully acted upon by an action. Managed by Gadget. */
+  updatedAt: Scalars["DateTime"]["output"];
+};
+
+export type DeepRelationshipChainContinentCountriesArgs = {
+  after?: InputMaybe<Scalars["String"]["input"]>;
+  before?: InputMaybe<Scalars["String"]["input"]>;
+  filter?: InputMaybe<Array<DeepRelationshipChainCountryFilter>>;
+  first?: InputMaybe<Scalars["Int"]["input"]>;
+  last?: InputMaybe<Scalars["Int"]["input"]>;
+  search?: InputMaybe<Scalars["String"]["input"]>;
+  sort?: InputMaybe<Array<DeepRelationshipChainCountrySort>>;
+};
+
+/** Input object supporting setting or updating related model record on a relationship field */
+export type DeepRelationshipChainContinentBelongsToInput = {
+  /** Existing ID of another record, which you would like to associate this record with */
+  _link?: InputMaybe<Scalars["GadgetID"]["input"]>;
+  create?: InputMaybe<NestedCreateDeepRelationshipChainContinentInput>;
+  delete?: InputMaybe<NestedDeleteDeepRelationshipChainContinentInput>;
+  update?: InputMaybe<NestedUpdateDeepRelationshipChainContinentInput>;
+};
+
+/** A connection to a list of DeepRelationshipChainContinent items. */
+export type DeepRelationshipChainContinentConnection = {
+  __typename?: "DeepRelationshipChainContinentConnection";
+  /** A list of edges. */
+  edges: Array<DeepRelationshipChainContinentEdge>;
+  /** Information to aid in pagination. */
+  pageInfo: PageInfo;
+};
+
+/** An edge in a DeepRelationshipChainContinent connection. */
+export type DeepRelationshipChainContinentEdge = {
+  __typename?: "DeepRelationshipChainContinentEdge";
+  /** A cursor for use in pagination */
+  cursor: Scalars["String"]["output"];
+  /** The item at the end of the edge */
+  node: DeepRelationshipChainContinent;
+};
+
+export type DeepRelationshipChainContinentFilter = {
+  AND?: InputMaybe<Array<InputMaybe<DeepRelationshipChainContinentFilter>>>;
+  NOT?: InputMaybe<Array<InputMaybe<DeepRelationshipChainContinentFilter>>>;
+  OR?: InputMaybe<Array<InputMaybe<DeepRelationshipChainContinentFilter>>>;
+  areaInSquareKm?: InputMaybe<FloatFilter>;
+  countries?: InputMaybe<DeepRelationshipChainCountriesRelationshipFilter>;
+  createdAt?: InputMaybe<DateTimeFilter>;
+  englishName?: InputMaybe<StringFilter>;
+  frenchName?: InputMaybe<StringFilter>;
+  id?: InputMaybe<IdFilter>;
+  planet?: InputMaybe<DeepRelationshipChainPlanetRelationshipFilter>;
+  planetId?: InputMaybe<IdFilter>;
+  updatedAt?: InputMaybe<DateTimeFilter>;
+};
+
+/** Input object supporting setting or updating related model record on a relationship field */
+export type DeepRelationshipChainContinentHasManyInput = {
+  /** Creates, updates, or deletes existing records in the database as needed to arrive at the list of records specified. */
+  _converge?: InputMaybe<ConvergeDeepRelationshipChainContinentInput>;
+  create?: InputMaybe<NestedCreateDeepRelationshipChainContinentInput>;
+  delete?: InputMaybe<NestedDeleteDeepRelationshipChainContinentInput>;
+  update?: InputMaybe<NestedUpdateDeepRelationshipChainContinentInput>;
+};
+
+export type DeepRelationshipChainContinentRelationshipFilter = {
+  AND?: InputMaybe<Array<InputMaybe<DeepRelationshipChainContinentRelationshipFilter>>>;
+  NOT?: InputMaybe<Array<InputMaybe<DeepRelationshipChainContinentRelationshipFilter>>>;
+  OR?: InputMaybe<Array<InputMaybe<DeepRelationshipChainContinentRelationshipFilter>>>;
+  areaInSquareKm?: InputMaybe<FloatFilter>;
+  countries?: InputMaybe<DeepRelationshipChainCountriesRelationshipFilter>;
+  createdAt?: InputMaybe<DateTimeFilter>;
+  englishName?: InputMaybe<StringFilter>;
+  frenchName?: InputMaybe<StringFilter>;
+  id?: InputMaybe<IdFilter>;
+  isSet?: InputMaybe<Scalars["Boolean"]["input"]>;
+  planet?: InputMaybe<DeepRelationshipChainPlanetRelationshipFilter>;
+  planetId?: InputMaybe<IdFilter>;
+  updatedAt?: InputMaybe<DateTimeFilter>;
+};
+
+export type DeepRelationshipChainContinentSort = {
+  /** Sort the results by the areaInSquareKm field. Defaults to ascending (smallest value first). */
+  areaInSquareKm?: InputMaybe<SortOrder>;
+  /** Sort the results by the createdAt field. Defaults to ascending (smallest value first). */
+  createdAt?: InputMaybe<SortOrder>;
+  /** Sort the results by the englishName field. Defaults to ascending (smallest value first). */
+  englishName?: InputMaybe<SortOrder>;
+  /** Sort the results by the frenchName field. Defaults to ascending (smallest value first). */
+  frenchName?: InputMaybe<SortOrder>;
+  /** Sort the results by the id field. Defaults to ascending (smallest value first). */
+  id?: InputMaybe<SortOrder>;
+  /** Sort the results by the updatedAt field. Defaults to ascending (smallest value first). */
+  updatedAt?: InputMaybe<SortOrder>;
+};
+
+export type DeepRelationshipChainContinentsInnerRelationshipFilter = {
+  AND?: InputMaybe<Array<InputMaybe<DeepRelationshipChainContinentsInnerRelationshipFilter>>>;
+  NOT?: InputMaybe<Array<InputMaybe<DeepRelationshipChainContinentsInnerRelationshipFilter>>>;
+  OR?: InputMaybe<Array<InputMaybe<DeepRelationshipChainContinentsInnerRelationshipFilter>>>;
+  areaInSquareKm?: InputMaybe<FloatFilter>;
+  countries?: InputMaybe<DeepRelationshipChainCountriesRelationshipFilter>;
+  createdAt?: InputMaybe<DateTimeFilter>;
+  englishName?: InputMaybe<StringFilter>;
+  frenchName?: InputMaybe<StringFilter>;
+  id?: InputMaybe<IdFilter>;
+  planet?: InputMaybe<DeepRelationshipChainPlanetRelationshipFilter>;
+  planetId?: InputMaybe<IdFilter>;
+  updatedAt?: InputMaybe<DateTimeFilter>;
+};
+
+export type DeepRelationshipChainContinentsRelationshipFilter = {
+  every?: InputMaybe<DeepRelationshipChainContinentsInnerRelationshipFilter>;
+  some?: InputMaybe<DeepRelationshipChainContinentsInnerRelationshipFilter>;
+};
+
+export type DeepRelationshipChainCountriesInnerRelationshipFilter = {
+  AND?: InputMaybe<Array<InputMaybe<DeepRelationshipChainCountriesInnerRelationshipFilter>>>;
+  NOT?: InputMaybe<Array<InputMaybe<DeepRelationshipChainCountriesInnerRelationshipFilter>>>;
+  OR?: InputMaybe<Array<InputMaybe<DeepRelationshipChainCountriesInnerRelationshipFilter>>>;
+  cities?: InputMaybe<DeepRelationshipChainCitiesRelationshipFilter>;
+  continent?: InputMaybe<DeepRelationshipChainContinentRelationshipFilter>;
+  continentId?: InputMaybe<IdFilter>;
+  createdAt?: InputMaybe<DateTimeFilter>;
+  dominantLanguage?: InputMaybe<StringFilter>;
+  englishName?: InputMaybe<StringFilter>;
+  id?: InputMaybe<IdFilter>;
+  nativeLanguageName?: InputMaybe<StringFilter>;
+  population?: InputMaybe<FloatFilter>;
+  updatedAt?: InputMaybe<DateTimeFilter>;
+};
+
+export type DeepRelationshipChainCountriesRelationshipFilter = {
+  every?: InputMaybe<DeepRelationshipChainCountriesInnerRelationshipFilter>;
+  some?: InputMaybe<DeepRelationshipChainCountriesInnerRelationshipFilter>;
+};
+
+export type DeepRelationshipChainCountry = {
+  __typename?: "DeepRelationshipChainCountry";
+  /** Get all the fields for this record. Useful for not having to list out all the fields you want to retrieve, but slower. */
+  _all: Scalars["JSONObject"]["output"];
+  cities: DeepRelationshipChainCityConnection;
+  continent?: Maybe<DeepRelationshipChainContinent>;
+  continentId?: Maybe<Scalars["GadgetID"]["output"]>;
+  /** The time at which this record was first created. Set once upon record creation and never changed. Managed by Gadget. */
+  createdAt: Scalars["DateTime"]["output"];
+  dominantLanguage?: Maybe<Scalars["String"]["output"]>;
+  englishName?: Maybe<Scalars["String"]["output"]>;
+  /** The globally unique, unchanging identifier for this record. Assigned and managed by Gadget. */
+  id: Scalars["GadgetID"]["output"];
+  nativeLanguageName?: Maybe<Scalars["String"]["output"]>;
+  population?: Maybe<Scalars["Float"]["output"]>;
+  /** The time at which this record was last changed. Set each time the record is successfully acted upon by an action. Managed by Gadget. */
+  updatedAt: Scalars["DateTime"]["output"];
+};
+
+export type DeepRelationshipChainCountryCitiesArgs = {
+  after?: InputMaybe<Scalars["String"]["input"]>;
+  before?: InputMaybe<Scalars["String"]["input"]>;
+  filter?: InputMaybe<Array<DeepRelationshipChainCityFilter>>;
+  first?: InputMaybe<Scalars["Int"]["input"]>;
+  last?: InputMaybe<Scalars["Int"]["input"]>;
+  search?: InputMaybe<Scalars["String"]["input"]>;
+  sort?: InputMaybe<Array<DeepRelationshipChainCitySort>>;
+};
+
+/** Input object supporting setting or updating related model record on a relationship field */
+export type DeepRelationshipChainCountryBelongsToInput = {
+  /** Existing ID of another record, which you would like to associate this record with */
+  _link?: InputMaybe<Scalars["GadgetID"]["input"]>;
+  create?: InputMaybe<NestedCreateDeepRelationshipChainCountryInput>;
+  delete?: InputMaybe<NestedDeleteDeepRelationshipChainCountryInput>;
+  update?: InputMaybe<NestedUpdateDeepRelationshipChainCountryInput>;
+};
+
+/** A connection to a list of DeepRelationshipChainCountry items. */
+export type DeepRelationshipChainCountryConnection = {
+  __typename?: "DeepRelationshipChainCountryConnection";
+  /** A list of edges. */
+  edges: Array<DeepRelationshipChainCountryEdge>;
+  /** Information to aid in pagination. */
+  pageInfo: PageInfo;
+};
+
+/** An edge in a DeepRelationshipChainCountry connection. */
+export type DeepRelationshipChainCountryEdge = {
+  __typename?: "DeepRelationshipChainCountryEdge";
+  /** A cursor for use in pagination */
+  cursor: Scalars["String"]["output"];
+  /** The item at the end of the edge */
+  node: DeepRelationshipChainCountry;
+};
+
+export type DeepRelationshipChainCountryFilter = {
+  AND?: InputMaybe<Array<InputMaybe<DeepRelationshipChainCountryFilter>>>;
+  NOT?: InputMaybe<Array<InputMaybe<DeepRelationshipChainCountryFilter>>>;
+  OR?: InputMaybe<Array<InputMaybe<DeepRelationshipChainCountryFilter>>>;
+  cities?: InputMaybe<DeepRelationshipChainCitiesRelationshipFilter>;
+  continent?: InputMaybe<DeepRelationshipChainContinentRelationshipFilter>;
+  continentId?: InputMaybe<IdFilter>;
+  createdAt?: InputMaybe<DateTimeFilter>;
+  dominantLanguage?: InputMaybe<StringFilter>;
+  englishName?: InputMaybe<StringFilter>;
+  id?: InputMaybe<IdFilter>;
+  nativeLanguageName?: InputMaybe<StringFilter>;
+  population?: InputMaybe<FloatFilter>;
+  updatedAt?: InputMaybe<DateTimeFilter>;
+};
+
+/** Input object supporting setting or updating related model record on a relationship field */
+export type DeepRelationshipChainCountryHasManyInput = {
+  /** Creates, updates, or deletes existing records in the database as needed to arrive at the list of records specified. */
+  _converge?: InputMaybe<ConvergeDeepRelationshipChainCountryInput>;
+  create?: InputMaybe<NestedCreateDeepRelationshipChainCountryInput>;
+  delete?: InputMaybe<NestedDeleteDeepRelationshipChainCountryInput>;
+  update?: InputMaybe<NestedUpdateDeepRelationshipChainCountryInput>;
+};
+
+export type DeepRelationshipChainCountryRelationshipFilter = {
+  AND?: InputMaybe<Array<InputMaybe<DeepRelationshipChainCountryRelationshipFilter>>>;
+  NOT?: InputMaybe<Array<InputMaybe<DeepRelationshipChainCountryRelationshipFilter>>>;
+  OR?: InputMaybe<Array<InputMaybe<DeepRelationshipChainCountryRelationshipFilter>>>;
+  cities?: InputMaybe<DeepRelationshipChainCitiesRelationshipFilter>;
+  continent?: InputMaybe<DeepRelationshipChainContinentRelationshipFilter>;
+  continentId?: InputMaybe<IdFilter>;
+  createdAt?: InputMaybe<DateTimeFilter>;
+  dominantLanguage?: InputMaybe<StringFilter>;
+  englishName?: InputMaybe<StringFilter>;
+  id?: InputMaybe<IdFilter>;
+  isSet?: InputMaybe<Scalars["Boolean"]["input"]>;
+  nativeLanguageName?: InputMaybe<StringFilter>;
+  population?: InputMaybe<FloatFilter>;
+  updatedAt?: InputMaybe<DateTimeFilter>;
+};
+
+export type DeepRelationshipChainCountrySort = {
+  /** Sort the results by the createdAt field. Defaults to ascending (smallest value first). */
+  createdAt?: InputMaybe<SortOrder>;
+  /** Sort the results by the dominantLanguage field. Defaults to ascending (smallest value first). */
+  dominantLanguage?: InputMaybe<SortOrder>;
+  /** Sort the results by the englishName field. Defaults to ascending (smallest value first). */
+  englishName?: InputMaybe<SortOrder>;
+  /** Sort the results by the id field. Defaults to ascending (smallest value first). */
+  id?: InputMaybe<SortOrder>;
+  /** Sort the results by the nativeLanguageName field. Defaults to ascending (smallest value first). */
+  nativeLanguageName?: InputMaybe<SortOrder>;
+  /** Sort the results by the population field. Defaults to ascending (smallest value first). */
+  population?: InputMaybe<SortOrder>;
+  /** Sort the results by the updatedAt field. Defaults to ascending (smallest value first). */
+  updatedAt?: InputMaybe<SortOrder>;
+};
+
+export type DeepRelationshipChainMutations = {
+  __typename?: "DeepRelationshipChainMutations";
+  bulkCreateCities?: Maybe<BulkCreateDeepRelationshipChainCitiesResult>;
+  bulkCreateCitizens?: Maybe<BulkCreateDeepRelationshipChainCitizensResult>;
+  bulkCreateContinents?: Maybe<BulkCreateDeepRelationshipChainContinentsResult>;
+  bulkCreateCountries?: Maybe<BulkCreateDeepRelationshipChainCountriesResult>;
+  bulkCreatePlanets?: Maybe<BulkCreateDeepRelationshipChainPlanetsResult>;
+  bulkDeleteCities?: Maybe<BulkDeleteDeepRelationshipChainCitiesResult>;
+  bulkDeleteCitizens?: Maybe<BulkDeleteDeepRelationshipChainCitizensResult>;
+  bulkDeleteContinents?: Maybe<BulkDeleteDeepRelationshipChainContinentsResult>;
+  bulkDeleteCountries?: Maybe<BulkDeleteDeepRelationshipChainCountriesResult>;
+  bulkDeletePlanets?: Maybe<BulkDeleteDeepRelationshipChainPlanetsResult>;
+  bulkUpdateCities?: Maybe<BulkUpdateDeepRelationshipChainCitiesResult>;
+  bulkUpdateCitizens?: Maybe<BulkUpdateDeepRelationshipChainCitizensResult>;
+  bulkUpdateContinents?: Maybe<BulkUpdateDeepRelationshipChainContinentsResult>;
+  bulkUpdateCountries?: Maybe<BulkUpdateDeepRelationshipChainCountriesResult>;
+  bulkUpdatePlanets?: Maybe<BulkUpdateDeepRelationshipChainPlanetsResult>;
+  bulkUpsertCities: BulkUpsertDeepRelationshipChainCitiesResult;
+  bulkUpsertCitizens: BulkUpsertDeepRelationshipChainCitizensResult;
+  bulkUpsertContinents: BulkUpsertDeepRelationshipChainContinentsResult;
+  bulkUpsertCountries: BulkUpsertDeepRelationshipChainCountriesResult;
+  bulkUpsertPlanets: BulkUpsertDeepRelationshipChainPlanetsResult;
+  createCitizen?: Maybe<CreateDeepRelationshipChainCitizenResult>;
+  createCity?: Maybe<CreateDeepRelationshipChainCityResult>;
+  createContinent?: Maybe<CreateDeepRelationshipChainContinentResult>;
+  createCountry?: Maybe<CreateDeepRelationshipChainCountryResult>;
+  createPlanet?: Maybe<CreateDeepRelationshipChainPlanetResult>;
+  deleteCitizen?: Maybe<DeleteDeepRelationshipChainCitizenResult>;
+  deleteCity?: Maybe<DeleteDeepRelationshipChainCityResult>;
+  deleteContinent?: Maybe<DeleteDeepRelationshipChainContinentResult>;
+  deleteCountry?: Maybe<DeleteDeepRelationshipChainCountryResult>;
+  deletePlanet?: Maybe<DeleteDeepRelationshipChainPlanetResult>;
+  updateCitizen?: Maybe<UpdateDeepRelationshipChainCitizenResult>;
+  updateCity?: Maybe<UpdateDeepRelationshipChainCityResult>;
+  updateContinent?: Maybe<UpdateDeepRelationshipChainContinentResult>;
+  updateCountry?: Maybe<UpdateDeepRelationshipChainCountryResult>;
+  updatePlanet?: Maybe<UpdateDeepRelationshipChainPlanetResult>;
+  upsertCitizen?: Maybe<UpsertDeepRelationshipChainCitizenResult>;
+  upsertCity?: Maybe<UpsertDeepRelationshipChainCityResult>;
+  upsertContinent?: Maybe<UpsertDeepRelationshipChainContinentResult>;
+  upsertCountry?: Maybe<UpsertDeepRelationshipChainCountryResult>;
+  upsertPlanet?: Maybe<UpsertDeepRelationshipChainPlanetResult>;
+};
+
+export type DeepRelationshipChainMutationsBulkCreateCitiesArgs = {
+  inputs: Array<BulkCreateDeepRelationshipChainCitiesInput>;
+};
+
+export type DeepRelationshipChainMutationsBulkCreateCitizensArgs = {
+  inputs: Array<BulkCreateDeepRelationshipChainCitizensInput>;
+};
+
+export type DeepRelationshipChainMutationsBulkCreateContinentsArgs = {
+  inputs: Array<BulkCreateDeepRelationshipChainContinentsInput>;
+};
+
+export type DeepRelationshipChainMutationsBulkCreateCountriesArgs = {
+  inputs: Array<BulkCreateDeepRelationshipChainCountriesInput>;
+};
+
+export type DeepRelationshipChainMutationsBulkCreatePlanetsArgs = {
+  inputs: Array<BulkCreateDeepRelationshipChainPlanetsInput>;
+};
+
+export type DeepRelationshipChainMutationsBulkDeleteCitiesArgs = {
+  ids: Array<Scalars["GadgetID"]["input"]>;
+};
+
+export type DeepRelationshipChainMutationsBulkDeleteCitizensArgs = {
+  ids: Array<Scalars["GadgetID"]["input"]>;
+};
+
+export type DeepRelationshipChainMutationsBulkDeleteContinentsArgs = {
+  ids: Array<Scalars["GadgetID"]["input"]>;
+};
+
+export type DeepRelationshipChainMutationsBulkDeleteCountriesArgs = {
+  ids: Array<Scalars["GadgetID"]["input"]>;
+};
+
+export type DeepRelationshipChainMutationsBulkDeletePlanetsArgs = {
+  ids: Array<Scalars["GadgetID"]["input"]>;
+};
+
+export type DeepRelationshipChainMutationsBulkUpdateCitiesArgs = {
+  inputs: Array<BulkUpdateDeepRelationshipChainCitiesInput>;
+};
+
+export type DeepRelationshipChainMutationsBulkUpdateCitizensArgs = {
+  inputs: Array<BulkUpdateDeepRelationshipChainCitizensInput>;
+};
+
+export type DeepRelationshipChainMutationsBulkUpdateContinentsArgs = {
+  inputs: Array<BulkUpdateDeepRelationshipChainContinentsInput>;
+};
+
+export type DeepRelationshipChainMutationsBulkUpdateCountriesArgs = {
+  inputs: Array<BulkUpdateDeepRelationshipChainCountriesInput>;
+};
+
+export type DeepRelationshipChainMutationsBulkUpdatePlanetsArgs = {
+  inputs: Array<BulkUpdateDeepRelationshipChainPlanetsInput>;
+};
+
+export type DeepRelationshipChainMutationsBulkUpsertCitiesArgs = {
+  inputs: Array<BulkUpsertDeepRelationshipChainCitiesInput>;
+};
+
+export type DeepRelationshipChainMutationsBulkUpsertCitizensArgs = {
+  inputs: Array<BulkUpsertDeepRelationshipChainCitizensInput>;
+};
+
+export type DeepRelationshipChainMutationsBulkUpsertContinentsArgs = {
+  inputs: Array<BulkUpsertDeepRelationshipChainContinentsInput>;
+};
+
+export type DeepRelationshipChainMutationsBulkUpsertCountriesArgs = {
+  inputs: Array<BulkUpsertDeepRelationshipChainCountriesInput>;
+};
+
+export type DeepRelationshipChainMutationsBulkUpsertPlanetsArgs = {
+  inputs: Array<BulkUpsertDeepRelationshipChainPlanetsInput>;
+};
+
+export type DeepRelationshipChainMutationsCreateCitizenArgs = {
+  citizen?: InputMaybe<CreateDeepRelationshipChainCitizenInput>;
+};
+
+export type DeepRelationshipChainMutationsCreateCityArgs = {
+  city?: InputMaybe<CreateDeepRelationshipChainCityInput>;
+};
+
+export type DeepRelationshipChainMutationsCreateContinentArgs = {
+  continent?: InputMaybe<CreateDeepRelationshipChainContinentInput>;
+};
+
+export type DeepRelationshipChainMutationsCreateCountryArgs = {
+  country?: InputMaybe<CreateDeepRelationshipChainCountryInput>;
+};
+
+export type DeepRelationshipChainMutationsCreatePlanetArgs = {
+  planet?: InputMaybe<CreateDeepRelationshipChainPlanetInput>;
+};
+
+export type DeepRelationshipChainMutationsDeleteCitizenArgs = {
+  id: Scalars["GadgetID"]["input"];
+};
+
+export type DeepRelationshipChainMutationsDeleteCityArgs = {
+  id: Scalars["GadgetID"]["input"];
+};
+
+export type DeepRelationshipChainMutationsDeleteContinentArgs = {
+  id: Scalars["GadgetID"]["input"];
+};
+
+export type DeepRelationshipChainMutationsDeleteCountryArgs = {
+  id: Scalars["GadgetID"]["input"];
+};
+
+export type DeepRelationshipChainMutationsDeletePlanetArgs = {
+  id: Scalars["GadgetID"]["input"];
+};
+
+export type DeepRelationshipChainMutationsUpdateCitizenArgs = {
+  citizen?: InputMaybe<UpdateDeepRelationshipChainCitizenInput>;
+  id: Scalars["GadgetID"]["input"];
+};
+
+export type DeepRelationshipChainMutationsUpdateCityArgs = {
+  city?: InputMaybe<UpdateDeepRelationshipChainCityInput>;
+  id: Scalars["GadgetID"]["input"];
+};
+
+export type DeepRelationshipChainMutationsUpdateContinentArgs = {
+  continent?: InputMaybe<UpdateDeepRelationshipChainContinentInput>;
+  id: Scalars["GadgetID"]["input"];
+};
+
+export type DeepRelationshipChainMutationsUpdateCountryArgs = {
+  country?: InputMaybe<UpdateDeepRelationshipChainCountryInput>;
+  id: Scalars["GadgetID"]["input"];
+};
+
+export type DeepRelationshipChainMutationsUpdatePlanetArgs = {
+  id: Scalars["GadgetID"]["input"];
+  planet?: InputMaybe<UpdateDeepRelationshipChainPlanetInput>;
+};
+
+export type DeepRelationshipChainMutationsUpsertCitizenArgs = {
+  citizen?: InputMaybe<UpsertDeepRelationshipChainCitizenInput>;
+  on?: InputMaybe<Array<Scalars["String"]["input"]>>;
+};
+
+export type DeepRelationshipChainMutationsUpsertCityArgs = {
+  city?: InputMaybe<UpsertDeepRelationshipChainCityInput>;
+  on?: InputMaybe<Array<Scalars["String"]["input"]>>;
+};
+
+export type DeepRelationshipChainMutationsUpsertContinentArgs = {
+  continent?: InputMaybe<UpsertDeepRelationshipChainContinentInput>;
+  on?: InputMaybe<Array<Scalars["String"]["input"]>>;
+};
+
+export type DeepRelationshipChainMutationsUpsertCountryArgs = {
+  country?: InputMaybe<UpsertDeepRelationshipChainCountryInput>;
+  on?: InputMaybe<Array<Scalars["String"]["input"]>>;
+};
+
+export type DeepRelationshipChainMutationsUpsertPlanetArgs = {
+  on?: InputMaybe<Array<Scalars["String"]["input"]>>;
+  planet?: InputMaybe<UpsertDeepRelationshipChainPlanetInput>;
+};
+
+export type DeepRelationshipChainPlanet = {
+  __typename?: "DeepRelationshipChainPlanet";
+  /** Get all the fields for this record. Useful for not having to list out all the fields you want to retrieve, but slower. */
+  _all: Scalars["JSONObject"]["output"];
+  continents: DeepRelationshipChainContinentConnection;
+  /** The time at which this record was first created. Set once upon record creation and never changed. Managed by Gadget. */
+  createdAt: Scalars["DateTime"]["output"];
+  englishName?: Maybe<Scalars["String"]["output"]>;
+  /** The globally unique, unchanging identifier for this record. Assigned and managed by Gadget. */
+  id: Scalars["GadgetID"]["output"];
+  size?: Maybe<Scalars["Float"]["output"]>;
+  /** The time at which this record was last changed. Set each time the record is successfully acted upon by an action. Managed by Gadget. */
+  updatedAt: Scalars["DateTime"]["output"];
+};
+
+export type DeepRelationshipChainPlanetContinentsArgs = {
+  after?: InputMaybe<Scalars["String"]["input"]>;
+  before?: InputMaybe<Scalars["String"]["input"]>;
+  filter?: InputMaybe<Array<DeepRelationshipChainContinentFilter>>;
+  first?: InputMaybe<Scalars["Int"]["input"]>;
+  last?: InputMaybe<Scalars["Int"]["input"]>;
+  search?: InputMaybe<Scalars["String"]["input"]>;
+  sort?: InputMaybe<Array<DeepRelationshipChainContinentSort>>;
+};
+
+/** Input object supporting setting or updating related model record on a relationship field */
+export type DeepRelationshipChainPlanetBelongsToInput = {
+  /** Existing ID of another record, which you would like to associate this record with */
+  _link?: InputMaybe<Scalars["GadgetID"]["input"]>;
+  create?: InputMaybe<NestedCreateDeepRelationshipChainPlanetInput>;
+  delete?: InputMaybe<NestedDeleteDeepRelationshipChainPlanetInput>;
+  update?: InputMaybe<NestedUpdateDeepRelationshipChainPlanetInput>;
+};
+
+/** A connection to a list of DeepRelationshipChainPlanet items. */
+export type DeepRelationshipChainPlanetConnection = {
+  __typename?: "DeepRelationshipChainPlanetConnection";
+  /** A list of edges. */
+  edges: Array<DeepRelationshipChainPlanetEdge>;
+  /** Information to aid in pagination. */
+  pageInfo: PageInfo;
+};
+
+/** An edge in a DeepRelationshipChainPlanet connection. */
+export type DeepRelationshipChainPlanetEdge = {
+  __typename?: "DeepRelationshipChainPlanetEdge";
+  /** A cursor for use in pagination */
+  cursor: Scalars["String"]["output"];
+  /** The item at the end of the edge */
+  node: DeepRelationshipChainPlanet;
+};
+
+export type DeepRelationshipChainPlanetFilter = {
+  AND?: InputMaybe<Array<InputMaybe<DeepRelationshipChainPlanetFilter>>>;
+  NOT?: InputMaybe<Array<InputMaybe<DeepRelationshipChainPlanetFilter>>>;
+  OR?: InputMaybe<Array<InputMaybe<DeepRelationshipChainPlanetFilter>>>;
+  continents?: InputMaybe<DeepRelationshipChainContinentsRelationshipFilter>;
+  createdAt?: InputMaybe<DateTimeFilter>;
+  englishName?: InputMaybe<StringFilter>;
+  id?: InputMaybe<IdFilter>;
+  size?: InputMaybe<FloatFilter>;
+  updatedAt?: InputMaybe<DateTimeFilter>;
+};
+
+export type DeepRelationshipChainPlanetRelationshipFilter = {
+  AND?: InputMaybe<Array<InputMaybe<DeepRelationshipChainPlanetRelationshipFilter>>>;
+  NOT?: InputMaybe<Array<InputMaybe<DeepRelationshipChainPlanetRelationshipFilter>>>;
+  OR?: InputMaybe<Array<InputMaybe<DeepRelationshipChainPlanetRelationshipFilter>>>;
+  continents?: InputMaybe<DeepRelationshipChainContinentsRelationshipFilter>;
+  createdAt?: InputMaybe<DateTimeFilter>;
+  englishName?: InputMaybe<StringFilter>;
+  id?: InputMaybe<IdFilter>;
+  isSet?: InputMaybe<Scalars["Boolean"]["input"]>;
+  size?: InputMaybe<FloatFilter>;
+  updatedAt?: InputMaybe<DateTimeFilter>;
+};
+
+export type DeepRelationshipChainPlanetSort = {
+  /** Sort the results by the createdAt field. Defaults to ascending (smallest value first). */
+  createdAt?: InputMaybe<SortOrder>;
+  /** Sort the results by the englishName field. Defaults to ascending (smallest value first). */
+  englishName?: InputMaybe<SortOrder>;
+  /** Sort the results by the id field. Defaults to ascending (smallest value first). */
+  id?: InputMaybe<SortOrder>;
+  /** Sort the results by the size field. Defaults to ascending (smallest value first). */
+  size?: InputMaybe<SortOrder>;
+  /** Sort the results by the updatedAt field. Defaults to ascending (smallest value first). */
+  updatedAt?: InputMaybe<SortOrder>;
+};
+
+export type DeepRelationshipChainQueries = {
+  __typename?: "DeepRelationshipChainQueries";
+  cities: DeepRelationshipChainCityConnection;
+  citizen?: Maybe<DeepRelationshipChainCitizen>;
+  citizens: DeepRelationshipChainCitizenConnection;
+  city?: Maybe<DeepRelationshipChainCity>;
+  continent?: Maybe<DeepRelationshipChainContinent>;
+  continents: DeepRelationshipChainContinentConnection;
+  countries: DeepRelationshipChainCountryConnection;
+  country?: Maybe<DeepRelationshipChainCountry>;
+  planet?: Maybe<DeepRelationshipChainPlanet>;
+  planets: DeepRelationshipChainPlanetConnection;
+};
+
+export type DeepRelationshipChainQueriesCitiesArgs = {
+  after?: InputMaybe<Scalars["String"]["input"]>;
+  before?: InputMaybe<Scalars["String"]["input"]>;
+  filter?: InputMaybe<Array<DeepRelationshipChainCityFilter>>;
+  first?: InputMaybe<Scalars["Int"]["input"]>;
+  last?: InputMaybe<Scalars["Int"]["input"]>;
+  search?: InputMaybe<Scalars["String"]["input"]>;
+  sort?: InputMaybe<Array<DeepRelationshipChainCitySort>>;
+};
+
+export type DeepRelationshipChainQueriesCitizenArgs = {
+  id: Scalars["GadgetID"]["input"];
+};
+
+export type DeepRelationshipChainQueriesCitizensArgs = {
+  after?: InputMaybe<Scalars["String"]["input"]>;
+  before?: InputMaybe<Scalars["String"]["input"]>;
+  filter?: InputMaybe<Array<DeepRelationshipChainCitizenFilter>>;
+  first?: InputMaybe<Scalars["Int"]["input"]>;
+  last?: InputMaybe<Scalars["Int"]["input"]>;
+  search?: InputMaybe<Scalars["String"]["input"]>;
+  sort?: InputMaybe<Array<DeepRelationshipChainCitizenSort>>;
+};
+
+export type DeepRelationshipChainQueriesCityArgs = {
+  id: Scalars["GadgetID"]["input"];
+};
+
+export type DeepRelationshipChainQueriesContinentArgs = {
+  id: Scalars["GadgetID"]["input"];
+};
+
+export type DeepRelationshipChainQueriesContinentsArgs = {
+  after?: InputMaybe<Scalars["String"]["input"]>;
+  before?: InputMaybe<Scalars["String"]["input"]>;
+  filter?: InputMaybe<Array<DeepRelationshipChainContinentFilter>>;
+  first?: InputMaybe<Scalars["Int"]["input"]>;
+  last?: InputMaybe<Scalars["Int"]["input"]>;
+  search?: InputMaybe<Scalars["String"]["input"]>;
+  sort?: InputMaybe<Array<DeepRelationshipChainContinentSort>>;
+};
+
+export type DeepRelationshipChainQueriesCountriesArgs = {
+  after?: InputMaybe<Scalars["String"]["input"]>;
+  before?: InputMaybe<Scalars["String"]["input"]>;
+  filter?: InputMaybe<Array<DeepRelationshipChainCountryFilter>>;
+  first?: InputMaybe<Scalars["Int"]["input"]>;
+  last?: InputMaybe<Scalars["Int"]["input"]>;
+  search?: InputMaybe<Scalars["String"]["input"]>;
+  sort?: InputMaybe<Array<DeepRelationshipChainCountrySort>>;
+};
+
+export type DeepRelationshipChainQueriesCountryArgs = {
+  id: Scalars["GadgetID"]["input"];
+};
+
+export type DeepRelationshipChainQueriesPlanetArgs = {
+  id: Scalars["GadgetID"]["input"];
+};
+
+export type DeepRelationshipChainQueriesPlanetsArgs = {
+  after?: InputMaybe<Scalars["String"]["input"]>;
+  before?: InputMaybe<Scalars["String"]["input"]>;
+  filter?: InputMaybe<Array<DeepRelationshipChainPlanetFilter>>;
+  first?: InputMaybe<Scalars["Int"]["input"]>;
+  last?: InputMaybe<Scalars["Int"]["input"]>;
+  search?: InputMaybe<Scalars["String"]["input"]>;
+  sort?: InputMaybe<Array<DeepRelationshipChainPlanetSort>>;
+};
+
 export type DeleteAutoTableTestResult = {
   __typename?: "DeleteAutoTableTestResult";
+  actionRun?: Maybe<Scalars["String"]["output"]>;
+  errors?: Maybe<Array<ExecutionError>>;
+  success: Scalars["Boolean"]["output"];
+};
+
+export type DeleteDeepRelationshipChainCitizenResult = {
+  __typename?: "DeleteDeepRelationshipChainCitizenResult";
+  actionRun?: Maybe<Scalars["String"]["output"]>;
+  errors?: Maybe<Array<ExecutionError>>;
+  success: Scalars["Boolean"]["output"];
+};
+
+export type DeleteDeepRelationshipChainCityResult = {
+  __typename?: "DeleteDeepRelationshipChainCityResult";
+  actionRun?: Maybe<Scalars["String"]["output"]>;
+  errors?: Maybe<Array<ExecutionError>>;
+  success: Scalars["Boolean"]["output"];
+};
+
+export type DeleteDeepRelationshipChainContinentResult = {
+  __typename?: "DeleteDeepRelationshipChainContinentResult";
+  actionRun?: Maybe<Scalars["String"]["output"]>;
+  errors?: Maybe<Array<ExecutionError>>;
+  success: Scalars["Boolean"]["output"];
+};
+
+export type DeleteDeepRelationshipChainCountryResult = {
+  __typename?: "DeleteDeepRelationshipChainCountryResult";
+  actionRun?: Maybe<Scalars["String"]["output"]>;
+  errors?: Maybe<Array<ExecutionError>>;
+  success: Scalars["Boolean"]["output"];
+};
+
+export type DeleteDeepRelationshipChainPlanetResult = {
+  __typename?: "DeleteDeepRelationshipChainPlanetResult";
   actionRun?: Maybe<Scalars["String"]["output"]>;
   errors?: Maybe<Array<ExecutionError>>;
   success: Scalars["Boolean"]["output"];
@@ -4891,14 +6508,14 @@ export type DoodadFilter = {
   OR?: InputMaybe<Array<InputMaybe<DoodadFilter>>>;
   active?: InputMaybe<BooleanFilter>;
   createdAt?: InputMaybe<DateTimeFilter>;
-  gizmo?: InputMaybe<IdFilter>;
+  gizmo?: InputMaybe<GizmoRelationshipFilter>;
   gizmoId?: InputMaybe<IdFilter>;
   id?: InputMaybe<IdFilter>;
   name?: InputMaybe<StringFilter>;
   size?: InputMaybe<SingleEnumFilter>;
   updatedAt?: InputMaybe<DateTimeFilter>;
   weight?: InputMaybe<FloatFilter>;
-  widget?: InputMaybe<IdFilter>;
+  widget?: InputMaybe<WidgetRelationshipFilter>;
   widgetId?: InputMaybe<IdFilter>;
 };
 
@@ -4906,9 +6523,9 @@ export type DoodadFilter = {
 export type DoodadHasManyInput = {
   /** Creates, updates, or deletes existing records in the database as needed to arrive at the list of records specified. */
   _converge?: InputMaybe<ConvergeDoodadInput>;
-  create?: InputMaybe<NestedDoodadCreateInput>;
-  delete?: InputMaybe<NestedDoodadDeleteInput>;
-  update?: InputMaybe<NestedDoodadUpdateInput>;
+  create?: InputMaybe<NestedCreateDoodadInput>;
+  delete?: InputMaybe<NestedDeleteDoodadInput>;
+  update?: InputMaybe<NestedUpdateDoodadInput>;
 };
 
 /** Input object supporting setting or updating related model record on a relationship field */
@@ -4917,9 +6534,27 @@ export type DoodadHasOneInput = {
   _relink?: InputMaybe<HasOneRelinkInput>;
   /** Existing ID of another record, which you would like to unlink from this record */
   _unlink?: InputMaybe<Scalars["GadgetID"]["input"]>;
-  create?: InputMaybe<NestedDoodadCreateInput>;
-  delete?: InputMaybe<NestedDoodadDeleteInput>;
-  update?: InputMaybe<NestedDoodadUpdateInput>;
+  create?: InputMaybe<NestedCreateDoodadInput>;
+  delete?: InputMaybe<NestedDeleteDoodadInput>;
+  update?: InputMaybe<NestedUpdateDoodadInput>;
+};
+
+export type DoodadRelationshipFilter = {
+  AND?: InputMaybe<Array<InputMaybe<DoodadRelationshipFilter>>>;
+  NOT?: InputMaybe<Array<InputMaybe<DoodadRelationshipFilter>>>;
+  OR?: InputMaybe<Array<InputMaybe<DoodadRelationshipFilter>>>;
+  active?: InputMaybe<BooleanFilter>;
+  createdAt?: InputMaybe<DateTimeFilter>;
+  gizmo?: InputMaybe<GizmoRelationshipFilter>;
+  gizmoId?: InputMaybe<IdFilter>;
+  id?: InputMaybe<IdFilter>;
+  isSet?: InputMaybe<Scalars["Boolean"]["input"]>;
+  name?: InputMaybe<StringFilter>;
+  size?: InputMaybe<SingleEnumFilter>;
+  updatedAt?: InputMaybe<DateTimeFilter>;
+  weight?: InputMaybe<FloatFilter>;
+  widget?: InputMaybe<WidgetRelationshipFilter>;
+  widgetId?: InputMaybe<IdFilter>;
 };
 
 export type DoodadSort = {
@@ -4937,6 +6572,28 @@ export type DoodadSort = {
   updatedAt?: InputMaybe<SortOrder>;
   /** Sort the results by the weight field. Defaults to ascending (smallest value first). */
   weight?: InputMaybe<SortOrder>;
+};
+
+export type DoodadsInnerRelationshipFilter = {
+  AND?: InputMaybe<Array<InputMaybe<DoodadsInnerRelationshipFilter>>>;
+  NOT?: InputMaybe<Array<InputMaybe<DoodadsInnerRelationshipFilter>>>;
+  OR?: InputMaybe<Array<InputMaybe<DoodadsInnerRelationshipFilter>>>;
+  active?: InputMaybe<BooleanFilter>;
+  createdAt?: InputMaybe<DateTimeFilter>;
+  gizmo?: InputMaybe<GizmoRelationshipFilter>;
+  gizmoId?: InputMaybe<IdFilter>;
+  id?: InputMaybe<IdFilter>;
+  name?: InputMaybe<StringFilter>;
+  size?: InputMaybe<SingleEnumFilter>;
+  updatedAt?: InputMaybe<DateTimeFilter>;
+  weight?: InputMaybe<FloatFilter>;
+  widget?: InputMaybe<WidgetRelationshipFilter>;
+  widgetId?: InputMaybe<IdFilter>;
+};
+
+export type DoodadsRelationshipFilter = {
+  every?: InputMaybe<DoodadsInnerRelationshipFilter>;
+  some?: InputMaybe<DoodadsInnerRelationshipFilter>;
 };
 
 export type EnqueueBackgroundActionOptions = {
@@ -5047,11 +6704,11 @@ export type FooFilter = {
   AND?: InputMaybe<Array<InputMaybe<FooFilter>>>;
   NOT?: InputMaybe<Array<InputMaybe<FooFilter>>>;
   OR?: InputMaybe<Array<InputMaybe<FooFilter>>>;
-  belongsToParent?: InputMaybe<IdFilter>;
+  belongsToParent?: InputMaybe<AutoTableTestRelationshipFilter>;
   belongsToParentId?: InputMaybe<IdFilter>;
   createdAt?: InputMaybe<DateTimeFilter>;
   id?: InputMaybe<IdFilter>;
-  manyBelongsToParent?: InputMaybe<IdFilter>;
+  manyBelongsToParent?: InputMaybe<AutoTableTestRelationshipFilter>;
   manyBelongsToParentId?: InputMaybe<IdFilter>;
   name?: InputMaybe<StringFilter>;
   someBool?: InputMaybe<BooleanFilter>;
@@ -5063,9 +6720,9 @@ export type FooFilter = {
 export type FooHasManyInput = {
   /** Creates, updates, or deletes existing records in the database as needed to arrive at the list of records specified. */
   _converge?: InputMaybe<ConvergeFooInput>;
-  create?: InputMaybe<NestedFooCreateInput>;
-  delete?: InputMaybe<NestedFooDeleteInput>;
-  update?: InputMaybe<NestedFooUpdateInput>;
+  create?: InputMaybe<NestedCreateFooInput>;
+  delete?: InputMaybe<NestedDeleteFooInput>;
+  update?: InputMaybe<NestedUpdateFooInput>;
 };
 
 /** Input object supporting setting or updating related model record on a relationship field */
@@ -5074,9 +6731,26 @@ export type FooHasOneInput = {
   _relink?: InputMaybe<HasOneRelinkInput>;
   /** Existing ID of another record, which you would like to unlink from this record */
   _unlink?: InputMaybe<Scalars["GadgetID"]["input"]>;
-  create?: InputMaybe<NestedFooCreateInput>;
-  delete?: InputMaybe<NestedFooDeleteInput>;
-  update?: InputMaybe<NestedFooUpdateInput>;
+  create?: InputMaybe<NestedCreateFooInput>;
+  delete?: InputMaybe<NestedDeleteFooInput>;
+  update?: InputMaybe<NestedUpdateFooInput>;
+};
+
+export type FooRelationshipFilter = {
+  AND?: InputMaybe<Array<InputMaybe<FooRelationshipFilter>>>;
+  NOT?: InputMaybe<Array<InputMaybe<FooRelationshipFilter>>>;
+  OR?: InputMaybe<Array<InputMaybe<FooRelationshipFilter>>>;
+  belongsToParent?: InputMaybe<AutoTableTestRelationshipFilter>;
+  belongsToParentId?: InputMaybe<IdFilter>;
+  createdAt?: InputMaybe<DateTimeFilter>;
+  id?: InputMaybe<IdFilter>;
+  isSet?: InputMaybe<Scalars["Boolean"]["input"]>;
+  manyBelongsToParent?: InputMaybe<AutoTableTestRelationshipFilter>;
+  manyBelongsToParentId?: InputMaybe<IdFilter>;
+  name?: InputMaybe<StringFilter>;
+  someBool?: InputMaybe<BooleanFilter>;
+  someNumber?: InputMaybe<FloatFilter>;
+  updatedAt?: InputMaybe<DateTimeFilter>;
 };
 
 export type FooSort = {
@@ -5092,6 +6766,27 @@ export type FooSort = {
   someNumber?: InputMaybe<SortOrder>;
   /** Sort the results by the updatedAt field. Defaults to ascending (smallest value first). */
   updatedAt?: InputMaybe<SortOrder>;
+};
+
+export type FoosInnerRelationshipFilter = {
+  AND?: InputMaybe<Array<InputMaybe<FoosInnerRelationshipFilter>>>;
+  NOT?: InputMaybe<Array<InputMaybe<FoosInnerRelationshipFilter>>>;
+  OR?: InputMaybe<Array<InputMaybe<FoosInnerRelationshipFilter>>>;
+  belongsToParent?: InputMaybe<AutoTableTestRelationshipFilter>;
+  belongsToParentId?: InputMaybe<IdFilter>;
+  createdAt?: InputMaybe<DateTimeFilter>;
+  id?: InputMaybe<IdFilter>;
+  manyBelongsToParent?: InputMaybe<AutoTableTestRelationshipFilter>;
+  manyBelongsToParentId?: InputMaybe<IdFilter>;
+  name?: InputMaybe<StringFilter>;
+  someBool?: InputMaybe<BooleanFilter>;
+  someNumber?: InputMaybe<FloatFilter>;
+  updatedAt?: InputMaybe<DateTimeFilter>;
+};
+
+export type FoosRelationshipFilter = {
+  every?: InputMaybe<FoosInnerRelationshipFilter>;
+  some?: InputMaybe<FoosInnerRelationshipFilter>;
 };
 
 export type Friendship = {
@@ -5136,9 +6831,9 @@ export type FriendshipFilter = {
   OR?: InputMaybe<Array<InputMaybe<FriendshipFilter>>>;
   createdAt?: InputMaybe<DateTimeFilter>;
   ended?: InputMaybe<DateFilter>;
-  followee?: InputMaybe<IdFilter>;
+  followee?: InputMaybe<TweeterRelationshipFilter>;
   followeeId?: InputMaybe<IdFilter>;
-  follower?: InputMaybe<IdFilter>;
+  follower?: InputMaybe<TweeterRelationshipFilter>;
   followerId?: InputMaybe<IdFilter>;
   id?: InputMaybe<IdFilter>;
   started?: InputMaybe<DateFilter>;
@@ -5149,9 +6844,9 @@ export type FriendshipFilter = {
 export type FriendshipHasManyInput = {
   /** Creates, updates, or deletes existing records in the database as needed to arrive at the list of records specified. */
   _converge?: InputMaybe<ConvergeFriendshipInput>;
-  create?: InputMaybe<NestedFriendshipCreateInput>;
-  delete?: InputMaybe<NestedFriendshipDeleteInput>;
-  update?: InputMaybe<NestedFriendshipUpdateInput>;
+  create?: InputMaybe<NestedCreateFriendshipInput>;
+  delete?: InputMaybe<NestedDeleteFriendshipInput>;
+  update?: InputMaybe<NestedUpdateFriendshipInput>;
 };
 
 export type FriendshipSort = {
@@ -5623,6 +7318,16 @@ export type GameCityTweetersArgs = {
   sort?: InputMaybe<Array<TweeterSort>>;
 };
 
+/** Input object supporting setting or updating related model record on a relationship field */
+export type GameCityBelongsToInput = {
+  /** Existing ID of another record, which you would like to associate this record with */
+  _link?: InputMaybe<Scalars["GadgetID"]["input"]>;
+  create?: InputMaybe<NestedCreateGameCityInput>;
+  customObjectParams?: InputMaybe<NestedCustomObjectParamsGameCityInput>;
+  delete?: InputMaybe<NestedDeleteGameCityInput>;
+  update?: InputMaybe<NestedUpdateGameCityInput>;
+};
+
 /** A connection to a list of GameCity items. */
 export type GameCityConnection = {
   __typename?: "GameCityConnection";
@@ -5648,6 +7353,21 @@ export type GameCityFilter = {
   createdAt?: InputMaybe<DateTimeFilter>;
   id?: InputMaybe<IdFilter>;
   name?: InputMaybe<StringFilter>;
+  stadium?: InputMaybe<GameStadiumRelationshipFilter>;
+  tweeters?: InputMaybe<TweetersRelationshipFilter>;
+  updatedAt?: InputMaybe<DateTimeFilter>;
+};
+
+export type GameCityRelationshipFilter = {
+  AND?: InputMaybe<Array<InputMaybe<GameCityRelationshipFilter>>>;
+  NOT?: InputMaybe<Array<InputMaybe<GameCityRelationshipFilter>>>;
+  OR?: InputMaybe<Array<InputMaybe<GameCityRelationshipFilter>>>;
+  createdAt?: InputMaybe<DateTimeFilter>;
+  id?: InputMaybe<IdFilter>;
+  isSet?: InputMaybe<Scalars["Boolean"]["input"]>;
+  name?: InputMaybe<StringFilter>;
+  stadium?: InputMaybe<GameStadiumRelationshipFilter>;
+  tweeters?: InputMaybe<TweetersRelationshipFilter>;
   updatedAt?: InputMaybe<DateTimeFilter>;
 };
 
@@ -5885,11 +7605,20 @@ export type GamePlayerFilter = {
   NOT?: InputMaybe<Array<InputMaybe<GamePlayerFilter>>>;
   OR?: InputMaybe<Array<InputMaybe<GamePlayerFilter>>>;
   createdAt?: InputMaybe<DateTimeFilter>;
-  currentRound?: InputMaybe<IdFilter>;
+  currentRound?: InputMaybe<GameRoundRelationshipFilter>;
   currentRoundId?: InputMaybe<IdFilter>;
   id?: InputMaybe<IdFilter>;
   name?: InputMaybe<StringFilter>;
   updatedAt?: InputMaybe<DateTimeFilter>;
+};
+
+/** Input object supporting setting or updating related model record on a relationship field */
+export type GamePlayerHasManyInput = {
+  /** Creates, updates, or deletes existing records in the database as needed to arrive at the list of records specified. */
+  _converge?: InputMaybe<ConvergeGamePlayerInput>;
+  create?: InputMaybe<NestedCreateGamePlayerInput>;
+  delete?: InputMaybe<NestedDeleteGamePlayerInput>;
+  update?: InputMaybe<NestedUpdateGamePlayerInput>;
 };
 
 export type GamePlayerSort = {
@@ -5901,6 +7630,23 @@ export type GamePlayerSort = {
   name?: InputMaybe<SortOrder>;
   /** Sort the results by the updatedAt field. Defaults to ascending (smallest value first). */
   updatedAt?: InputMaybe<SortOrder>;
+};
+
+export type GamePlayersInnerRelationshipFilter = {
+  AND?: InputMaybe<Array<InputMaybe<GamePlayersInnerRelationshipFilter>>>;
+  NOT?: InputMaybe<Array<InputMaybe<GamePlayersInnerRelationshipFilter>>>;
+  OR?: InputMaybe<Array<InputMaybe<GamePlayersInnerRelationshipFilter>>>;
+  createdAt?: InputMaybe<DateTimeFilter>;
+  currentRound?: InputMaybe<GameRoundRelationshipFilter>;
+  currentRoundId?: InputMaybe<IdFilter>;
+  id?: InputMaybe<IdFilter>;
+  name?: InputMaybe<StringFilter>;
+  updatedAt?: InputMaybe<DateTimeFilter>;
+};
+
+export type GamePlayersRelationshipFilter = {
+  every?: InputMaybe<GamePlayersInnerRelationshipFilter>;
+  some?: InputMaybe<GamePlayersInnerRelationshipFilter>;
 };
 
 export type GameQueries = {
@@ -5997,6 +7743,15 @@ export type GameRoundPlayersArgs = {
   sort?: InputMaybe<Array<GamePlayerSort>>;
 };
 
+/** Input object supporting setting or updating related model record on a relationship field */
+export type GameRoundBelongsToInput = {
+  /** Existing ID of another record, which you would like to associate this record with */
+  _link?: InputMaybe<Scalars["GadgetID"]["input"]>;
+  create?: InputMaybe<NestedCreateGameRoundInput>;
+  delete?: InputMaybe<NestedDeleteGameRoundInput>;
+  update?: InputMaybe<NestedUpdateGameRoundInput>;
+};
+
 /** A connection to a list of GameRound items. */
 export type GameRoundConnection = {
   __typename?: "GameRoundConnection";
@@ -6022,7 +7777,31 @@ export type GameRoundFilter = {
   createdAt?: InputMaybe<DateTimeFilter>;
   id?: InputMaybe<IdFilter>;
   name?: InputMaybe<StringFilter>;
-  stadium?: InputMaybe<IdFilter>;
+  players?: InputMaybe<GamePlayersRelationshipFilter>;
+  stadium?: InputMaybe<GameStadiumRelationshipFilter>;
+  stadiumId?: InputMaybe<IdFilter>;
+  updatedAt?: InputMaybe<DateTimeFilter>;
+};
+
+/** Input object supporting setting or updating related model record on a relationship field */
+export type GameRoundHasManyInput = {
+  /** Creates, updates, or deletes existing records in the database as needed to arrive at the list of records specified. */
+  _converge?: InputMaybe<ConvergeGameRoundInput>;
+  create?: InputMaybe<NestedCreateGameRoundInput>;
+  delete?: InputMaybe<NestedDeleteGameRoundInput>;
+  update?: InputMaybe<NestedUpdateGameRoundInput>;
+};
+
+export type GameRoundRelationshipFilter = {
+  AND?: InputMaybe<Array<InputMaybe<GameRoundRelationshipFilter>>>;
+  NOT?: InputMaybe<Array<InputMaybe<GameRoundRelationshipFilter>>>;
+  OR?: InputMaybe<Array<InputMaybe<GameRoundRelationshipFilter>>>;
+  createdAt?: InputMaybe<DateTimeFilter>;
+  id?: InputMaybe<IdFilter>;
+  isSet?: InputMaybe<Scalars["Boolean"]["input"]>;
+  name?: InputMaybe<StringFilter>;
+  players?: InputMaybe<GamePlayersRelationshipFilter>;
+  stadium?: InputMaybe<GameStadiumRelationshipFilter>;
   stadiumId?: InputMaybe<IdFilter>;
   updatedAt?: InputMaybe<DateTimeFilter>;
 };
@@ -6038,6 +7817,24 @@ export type GameRoundSort = {
   updatedAt?: InputMaybe<SortOrder>;
 };
 
+export type GameRoundsInnerRelationshipFilter = {
+  AND?: InputMaybe<Array<InputMaybe<GameRoundsInnerRelationshipFilter>>>;
+  NOT?: InputMaybe<Array<InputMaybe<GameRoundsInnerRelationshipFilter>>>;
+  OR?: InputMaybe<Array<InputMaybe<GameRoundsInnerRelationshipFilter>>>;
+  createdAt?: InputMaybe<DateTimeFilter>;
+  id?: InputMaybe<IdFilter>;
+  name?: InputMaybe<StringFilter>;
+  players?: InputMaybe<GamePlayersRelationshipFilter>;
+  stadium?: InputMaybe<GameStadiumRelationshipFilter>;
+  stadiumId?: InputMaybe<IdFilter>;
+  updatedAt?: InputMaybe<DateTimeFilter>;
+};
+
+export type GameRoundsRelationshipFilter = {
+  every?: InputMaybe<GameRoundsInnerRelationshipFilter>;
+  some?: InputMaybe<GameRoundsInnerRelationshipFilter>;
+};
+
 export type GameStadium = {
   __typename?: "GameStadium";
   /** Get all the fields for this record. Useful for not having to list out all the fields you want to retrieve, but slower. */
@@ -6051,8 +7848,8 @@ export type GameStadium = {
   name?: Maybe<Scalars["String"]["output"]>;
   photo?: Maybe<StoredFile>;
   rounds: GameRoundConnection;
-  tags?: Maybe<Array<Scalars["StadiumTagsEnum"]["output"]>>;
-  type?: Maybe<Scalars["StadiumTypeEnum"]["output"]>;
+  tags?: Maybe<Array<Scalars["GameStadiumTagsEnum"]["output"]>>;
+  type?: Maybe<Scalars["GameStadiumTypeEnum"]["output"]>;
   /** The time at which this record was last changed. Set each time the record is successfully acted upon by an action. Managed by Gadget. */
   updatedAt: Scalars["DateTime"]["output"];
 };
@@ -6065,6 +7862,15 @@ export type GameStadiumRoundsArgs = {
   last?: InputMaybe<Scalars["Int"]["input"]>;
   search?: InputMaybe<Scalars["String"]["input"]>;
   sort?: InputMaybe<Array<GameRoundSort>>;
+};
+
+/** Input object supporting setting or updating related model record on a relationship field */
+export type GameStadiumBelongsToInput = {
+  /** Existing ID of another record, which you would like to associate this record with */
+  _link?: InputMaybe<Scalars["GadgetID"]["input"]>;
+  create?: InputMaybe<NestedCreateGameStadiumInput>;
+  delete?: InputMaybe<NestedDeleteGameStadiumInput>;
+  update?: InputMaybe<NestedUpdateGameStadiumInput>;
 };
 
 /** A connection to a list of GameStadium items. */
@@ -6089,11 +7895,39 @@ export type GameStadiumFilter = {
   AND?: InputMaybe<Array<InputMaybe<GameStadiumFilter>>>;
   NOT?: InputMaybe<Array<InputMaybe<GameStadiumFilter>>>;
   OR?: InputMaybe<Array<InputMaybe<GameStadiumFilter>>>;
-  city?: InputMaybe<IdFilter>;
+  city?: InputMaybe<GameCityRelationshipFilter>;
   cityId?: InputMaybe<IdFilter>;
   createdAt?: InputMaybe<DateTimeFilter>;
   id?: InputMaybe<IdFilter>;
   name?: InputMaybe<StringFilter>;
+  rounds?: InputMaybe<GameRoundsRelationshipFilter>;
+  tags?: InputMaybe<MultiEnumFilter>;
+  type?: InputMaybe<SingleEnumFilter>;
+  updatedAt?: InputMaybe<DateTimeFilter>;
+};
+
+/** Input object supporting setting or updating related model record on a relationship field */
+export type GameStadiumHasOneInput = {
+  /** Existing ID of another record, which you would like to relink to this record */
+  _relink?: InputMaybe<HasOneRelinkInput>;
+  /** Existing ID of another record, which you would like to unlink from this record */
+  _unlink?: InputMaybe<Scalars["GadgetID"]["input"]>;
+  create?: InputMaybe<NestedCreateGameStadiumInput>;
+  delete?: InputMaybe<NestedDeleteGameStadiumInput>;
+  update?: InputMaybe<NestedUpdateGameStadiumInput>;
+};
+
+export type GameStadiumRelationshipFilter = {
+  AND?: InputMaybe<Array<InputMaybe<GameStadiumRelationshipFilter>>>;
+  NOT?: InputMaybe<Array<InputMaybe<GameStadiumRelationshipFilter>>>;
+  OR?: InputMaybe<Array<InputMaybe<GameStadiumRelationshipFilter>>>;
+  city?: InputMaybe<GameCityRelationshipFilter>;
+  cityId?: InputMaybe<IdFilter>;
+  createdAt?: InputMaybe<DateTimeFilter>;
+  id?: InputMaybe<IdFilter>;
+  isSet?: InputMaybe<Scalars["Boolean"]["input"]>;
+  name?: InputMaybe<StringFilter>;
+  rounds?: InputMaybe<GameRoundsRelationshipFilter>;
   tags?: InputMaybe<MultiEnumFilter>;
   type?: InputMaybe<SingleEnumFilter>;
   updatedAt?: InputMaybe<DateTimeFilter>;
@@ -6146,9 +7980,9 @@ export type GizmoDoodadsArgs = {
 export type GizmoBelongsToInput = {
   /** Existing ID of another record, which you would like to associate this record with */
   _link?: InputMaybe<Scalars["GadgetID"]["input"]>;
-  create?: InputMaybe<NestedGizmoCreateInput>;
-  delete?: InputMaybe<NestedGizmoDeleteInput>;
-  update?: InputMaybe<NestedGizmoUpdateInput>;
+  create?: InputMaybe<NestedCreateGizmoInput>;
+  delete?: InputMaybe<NestedDeleteGizmoInput>;
+  update?: InputMaybe<NestedUpdateGizmoInput>;
 };
 
 /** A connection to a list of Gizmo items. */
@@ -6174,11 +8008,12 @@ export type GizmoFilter = {
   NOT?: InputMaybe<Array<InputMaybe<GizmoFilter>>>;
   OR?: InputMaybe<Array<InputMaybe<GizmoFilter>>>;
   createdAt?: InputMaybe<DateTimeFilter>;
+  doodads?: InputMaybe<DoodadsRelationshipFilter>;
   id?: InputMaybe<IdFilter>;
   name?: InputMaybe<StringFilter>;
   orientation?: InputMaybe<StringFilter>;
   updatedAt?: InputMaybe<DateTimeFilter>;
-  widget?: InputMaybe<IdFilter>;
+  widget?: InputMaybe<WidgetRelationshipFilter>;
   widgetId?: InputMaybe<IdFilter>;
 };
 
@@ -6186,9 +8021,24 @@ export type GizmoFilter = {
 export type GizmoHasManyInput = {
   /** Creates, updates, or deletes existing records in the database as needed to arrive at the list of records specified. */
   _converge?: InputMaybe<ConvergeGizmoInput>;
-  create?: InputMaybe<NestedGizmoCreateInput>;
-  delete?: InputMaybe<NestedGizmoDeleteInput>;
-  update?: InputMaybe<NestedGizmoUpdateInput>;
+  create?: InputMaybe<NestedCreateGizmoInput>;
+  delete?: InputMaybe<NestedDeleteGizmoInput>;
+  update?: InputMaybe<NestedUpdateGizmoInput>;
+};
+
+export type GizmoRelationshipFilter = {
+  AND?: InputMaybe<Array<InputMaybe<GizmoRelationshipFilter>>>;
+  NOT?: InputMaybe<Array<InputMaybe<GizmoRelationshipFilter>>>;
+  OR?: InputMaybe<Array<InputMaybe<GizmoRelationshipFilter>>>;
+  createdAt?: InputMaybe<DateTimeFilter>;
+  doodads?: InputMaybe<DoodadsRelationshipFilter>;
+  id?: InputMaybe<IdFilter>;
+  isSet?: InputMaybe<Scalars["Boolean"]["input"]>;
+  name?: InputMaybe<StringFilter>;
+  orientation?: InputMaybe<StringFilter>;
+  updatedAt?: InputMaybe<DateTimeFilter>;
+  widget?: InputMaybe<WidgetRelationshipFilter>;
+  widgetId?: InputMaybe<IdFilter>;
 };
 
 export type GizmoSort = {
@@ -6202,6 +8052,25 @@ export type GizmoSort = {
   orientation?: InputMaybe<SortOrder>;
   /** Sort the results by the updatedAt field. Defaults to ascending (smallest value first). */
   updatedAt?: InputMaybe<SortOrder>;
+};
+
+export type GizmosInnerRelationshipFilter = {
+  AND?: InputMaybe<Array<InputMaybe<GizmosInnerRelationshipFilter>>>;
+  NOT?: InputMaybe<Array<InputMaybe<GizmosInnerRelationshipFilter>>>;
+  OR?: InputMaybe<Array<InputMaybe<GizmosInnerRelationshipFilter>>>;
+  createdAt?: InputMaybe<DateTimeFilter>;
+  doodads?: InputMaybe<DoodadsRelationshipFilter>;
+  id?: InputMaybe<IdFilter>;
+  name?: InputMaybe<StringFilter>;
+  orientation?: InputMaybe<StringFilter>;
+  updatedAt?: InputMaybe<DateTimeFilter>;
+  widget?: InputMaybe<WidgetRelationshipFilter>;
+  widgetId?: InputMaybe<IdFilter>;
+};
+
+export type GizmosRelationshipFilter = {
+  every?: InputMaybe<GizmosInnerRelationshipFilter>;
+  some?: InputMaybe<GizmosInnerRelationshipFilter>;
 };
 
 export type HasManyThroughBaseModel = {
@@ -6233,6 +8102,15 @@ export type HasManyThroughBaseModelJoinerModelsArgs = {
   last?: InputMaybe<Scalars["Int"]["input"]>;
 };
 
+/** Input object supporting setting or updating related model record on a relationship field */
+export type HasManyThroughBaseModelBelongsToInput = {
+  /** Existing ID of another record, which you would like to associate this record with */
+  _link?: InputMaybe<Scalars["GadgetID"]["input"]>;
+  create?: InputMaybe<NestedCreateHasManyThroughBaseModelInput>;
+  delete?: InputMaybe<NestedDeleteHasManyThroughBaseModelInput>;
+  update?: InputMaybe<NestedUpdateHasManyThroughBaseModelInput>;
+};
+
 /** A connection to a list of HasManyThroughBaseModel items. */
 export type HasManyThroughBaseModelConnection = {
   __typename?: "HasManyThroughBaseModelConnection";
@@ -6255,9 +8133,29 @@ export type HasManyThroughBaseModelFilter = {
   AND?: InputMaybe<Array<InputMaybe<HasManyThroughBaseModelFilter>>>;
   NOT?: InputMaybe<Array<InputMaybe<HasManyThroughBaseModelFilter>>>;
   OR?: InputMaybe<Array<InputMaybe<HasManyThroughBaseModelFilter>>>;
+  baseModelHmtField?: InputMaybe<HasManyThroughSiblingModelsRelationshipFilter>;
   baseModelName?: InputMaybe<StringFilter>;
   createdAt?: InputMaybe<DateTimeFilter>;
   id?: InputMaybe<IdFilter>;
+  updatedAt?: InputMaybe<DateTimeFilter>;
+};
+
+/** Input object supporting setting or updating related model record on a relationship field */
+export type HasManyThroughBaseModelHasManyThroughInput = {
+  create?: InputMaybe<NestedCreateHasManyThroughBaseModelInput>;
+  delete?: InputMaybe<NestedDeleteHasManyThroughBaseModelInput>;
+  update?: InputMaybe<NestedUpdateHasManyThroughBaseModelInput>;
+};
+
+export type HasManyThroughBaseModelRelationshipFilter = {
+  AND?: InputMaybe<Array<InputMaybe<HasManyThroughBaseModelRelationshipFilter>>>;
+  NOT?: InputMaybe<Array<InputMaybe<HasManyThroughBaseModelRelationshipFilter>>>;
+  OR?: InputMaybe<Array<InputMaybe<HasManyThroughBaseModelRelationshipFilter>>>;
+  baseModelHmtField?: InputMaybe<HasManyThroughSiblingModelsRelationshipFilter>;
+  baseModelName?: InputMaybe<StringFilter>;
+  createdAt?: InputMaybe<DateTimeFilter>;
+  id?: InputMaybe<IdFilter>;
+  isSet?: InputMaybe<Scalars["Boolean"]["input"]>;
   updatedAt?: InputMaybe<DateTimeFilter>;
 };
 
@@ -6270,6 +8168,22 @@ export type HasManyThroughBaseModelSort = {
   id?: InputMaybe<SortOrder>;
   /** Sort the results by the updatedAt field. Defaults to ascending (smallest value first). */
   updatedAt?: InputMaybe<SortOrder>;
+};
+
+export type HasManyThroughBaseModelsInnerRelationshipFilter = {
+  AND?: InputMaybe<Array<InputMaybe<HasManyThroughBaseModelsInnerRelationshipFilter>>>;
+  NOT?: InputMaybe<Array<InputMaybe<HasManyThroughBaseModelsInnerRelationshipFilter>>>;
+  OR?: InputMaybe<Array<InputMaybe<HasManyThroughBaseModelsInnerRelationshipFilter>>>;
+  baseModelHmtField?: InputMaybe<HasManyThroughSiblingModelsRelationshipFilter>;
+  baseModelName?: InputMaybe<StringFilter>;
+  createdAt?: InputMaybe<DateTimeFilter>;
+  id?: InputMaybe<IdFilter>;
+  updatedAt?: InputMaybe<DateTimeFilter>;
+};
+
+export type HasManyThroughBaseModelsRelationshipFilter = {
+  every?: InputMaybe<HasManyThroughBaseModelsInnerRelationshipFilter>;
+  some?: InputMaybe<HasManyThroughBaseModelsInnerRelationshipFilter>;
 };
 
 export type HasManyThroughJoinerModel = {
@@ -6312,11 +8226,20 @@ export type HasManyThroughJoinerModelFilter = {
   OR?: InputMaybe<Array<InputMaybe<HasManyThroughJoinerModelFilter>>>;
   createdAt?: InputMaybe<DateTimeFilter>;
   id?: InputMaybe<IdFilter>;
-  joinerBelongsToBase?: InputMaybe<IdFilter>;
+  joinerBelongsToBase?: InputMaybe<HasManyThroughBaseModelRelationshipFilter>;
   joinerBelongsToBaseId?: InputMaybe<IdFilter>;
-  joinerBelongsToSibling?: InputMaybe<IdFilter>;
+  joinerBelongsToSibling?: InputMaybe<HasManyThroughSiblingModelRelationshipFilter>;
   joinerBelongsToSiblingId?: InputMaybe<IdFilter>;
   updatedAt?: InputMaybe<DateTimeFilter>;
+};
+
+/** Input object supporting setting or updating related model record on a relationship field */
+export type HasManyThroughJoinerModelHasManyInput = {
+  /** Creates, updates, or deletes existing records in the database as needed to arrive at the list of records specified. */
+  _converge?: InputMaybe<ConvergeHasManyThroughJoinerModelInput>;
+  create?: InputMaybe<NestedCreateHasManyThroughJoinerModelInput>;
+  delete?: InputMaybe<NestedDeleteHasManyThroughJoinerModelInput>;
+  update?: InputMaybe<NestedUpdateHasManyThroughJoinerModelInput>;
 };
 
 export type HasManyThroughJoinerModelSort = {
@@ -6539,6 +8462,15 @@ export type HasManyThroughSiblingModelSiblingModelHmtFieldArgs = {
   last?: InputMaybe<Scalars["Int"]["input"]>;
 };
 
+/** Input object supporting setting or updating related model record on a relationship field */
+export type HasManyThroughSiblingModelBelongsToInput = {
+  /** Existing ID of another record, which you would like to associate this record with */
+  _link?: InputMaybe<Scalars["GadgetID"]["input"]>;
+  create?: InputMaybe<NestedCreateHasManyThroughSiblingModelInput>;
+  delete?: InputMaybe<NestedDeleteHasManyThroughSiblingModelInput>;
+  update?: InputMaybe<NestedUpdateHasManyThroughSiblingModelInput>;
+};
+
 /** A connection to a list of HasManyThroughSiblingModel items. */
 export type HasManyThroughSiblingModelConnection = {
   __typename?: "HasManyThroughSiblingModelConnection";
@@ -6563,6 +8495,26 @@ export type HasManyThroughSiblingModelFilter = {
   OR?: InputMaybe<Array<InputMaybe<HasManyThroughSiblingModelFilter>>>;
   createdAt?: InputMaybe<DateTimeFilter>;
   id?: InputMaybe<IdFilter>;
+  siblingModelHmtField?: InputMaybe<HasManyThroughBaseModelsRelationshipFilter>;
+  siblingName?: InputMaybe<StringFilter>;
+  updatedAt?: InputMaybe<DateTimeFilter>;
+};
+
+/** Input object supporting setting or updating related model record on a relationship field */
+export type HasManyThroughSiblingModelHasManyThroughInput = {
+  create?: InputMaybe<NestedCreateHasManyThroughSiblingModelInput>;
+  delete?: InputMaybe<NestedDeleteHasManyThroughSiblingModelInput>;
+  update?: InputMaybe<NestedUpdateHasManyThroughSiblingModelInput>;
+};
+
+export type HasManyThroughSiblingModelRelationshipFilter = {
+  AND?: InputMaybe<Array<InputMaybe<HasManyThroughSiblingModelRelationshipFilter>>>;
+  NOT?: InputMaybe<Array<InputMaybe<HasManyThroughSiblingModelRelationshipFilter>>>;
+  OR?: InputMaybe<Array<InputMaybe<HasManyThroughSiblingModelRelationshipFilter>>>;
+  createdAt?: InputMaybe<DateTimeFilter>;
+  id?: InputMaybe<IdFilter>;
+  isSet?: InputMaybe<Scalars["Boolean"]["input"]>;
+  siblingModelHmtField?: InputMaybe<HasManyThroughBaseModelsRelationshipFilter>;
   siblingName?: InputMaybe<StringFilter>;
   updatedAt?: InputMaybe<DateTimeFilter>;
 };
@@ -6576,6 +8528,22 @@ export type HasManyThroughSiblingModelSort = {
   siblingName?: InputMaybe<SortOrder>;
   /** Sort the results by the updatedAt field. Defaults to ascending (smallest value first). */
   updatedAt?: InputMaybe<SortOrder>;
+};
+
+export type HasManyThroughSiblingModelsInnerRelationshipFilter = {
+  AND?: InputMaybe<Array<InputMaybe<HasManyThroughSiblingModelsInnerRelationshipFilter>>>;
+  NOT?: InputMaybe<Array<InputMaybe<HasManyThroughSiblingModelsInnerRelationshipFilter>>>;
+  OR?: InputMaybe<Array<InputMaybe<HasManyThroughSiblingModelsInnerRelationshipFilter>>>;
+  createdAt?: InputMaybe<DateTimeFilter>;
+  id?: InputMaybe<IdFilter>;
+  siblingModelHmtField?: InputMaybe<HasManyThroughBaseModelsRelationshipFilter>;
+  siblingName?: InputMaybe<StringFilter>;
+  updatedAt?: InputMaybe<DateTimeFilter>;
+};
+
+export type HasManyThroughSiblingModelsRelationshipFilter = {
+  every?: InputMaybe<HasManyThroughSiblingModelsInnerRelationshipFilter>;
+  some?: InputMaybe<HasManyThroughSiblingModelsInnerRelationshipFilter>;
 };
 
 export type HasOneRelinkInput = {
@@ -6677,6 +8645,41 @@ export type InternalBulkCreateAutoTableTestsResult = {
   __typename?: "InternalBulkCreateAutoTableTestsResult";
   autoTableTests?: Maybe<Array<Maybe<Scalars["InternalAutoTableTestRecord"]["output"]>>>;
   errors?: Maybe<Array<ExecutionError>>;
+  success: Scalars["Boolean"]["output"];
+};
+
+export type InternalBulkCreateDeepRelationshipChainCitiesResult = {
+  __typename?: "InternalBulkCreateDeepRelationshipChainCitiesResult";
+  cities?: Maybe<Array<Maybe<Scalars["InternalDeepRelationshipChainCityRecord"]["output"]>>>;
+  errors?: Maybe<Array<ExecutionError>>;
+  success: Scalars["Boolean"]["output"];
+};
+
+export type InternalBulkCreateDeepRelationshipChainCitizensResult = {
+  __typename?: "InternalBulkCreateDeepRelationshipChainCitizensResult";
+  citizens?: Maybe<Array<Maybe<Scalars["InternalDeepRelationshipChainCitizenRecord"]["output"]>>>;
+  errors?: Maybe<Array<ExecutionError>>;
+  success: Scalars["Boolean"]["output"];
+};
+
+export type InternalBulkCreateDeepRelationshipChainContinentsResult = {
+  __typename?: "InternalBulkCreateDeepRelationshipChainContinentsResult";
+  continents?: Maybe<Array<Maybe<Scalars["InternalDeepRelationshipChainContinentRecord"]["output"]>>>;
+  errors?: Maybe<Array<ExecutionError>>;
+  success: Scalars["Boolean"]["output"];
+};
+
+export type InternalBulkCreateDeepRelationshipChainCountriesResult = {
+  __typename?: "InternalBulkCreateDeepRelationshipChainCountriesResult";
+  countries?: Maybe<Array<Maybe<Scalars["InternalDeepRelationshipChainCountryRecord"]["output"]>>>;
+  errors?: Maybe<Array<ExecutionError>>;
+  success: Scalars["Boolean"]["output"];
+};
+
+export type InternalBulkCreateDeepRelationshipChainPlanetsResult = {
+  __typename?: "InternalBulkCreateDeepRelationshipChainPlanetsResult";
+  errors?: Maybe<Array<ExecutionError>>;
+  planets?: Maybe<Array<Maybe<Scalars["InternalDeepRelationshipChainPlanetRecord"]["output"]>>>;
   success: Scalars["Boolean"]["output"];
 };
 
@@ -6917,6 +8920,51 @@ export type InternalCreateAutoTableTestResult = {
   /** Whether the record was created by this upsert operation */
   created: Scalars["Boolean"]["output"];
   errors?: Maybe<Array<ExecutionError>>;
+  success: Scalars["Boolean"]["output"];
+};
+
+export type InternalCreateDeepRelationshipChainCitizenResult = {
+  __typename?: "InternalCreateDeepRelationshipChainCitizenResult";
+  citizen?: Maybe<Scalars["InternalDeepRelationshipChainCitizenRecord"]["output"]>;
+  /** Whether the record was created by this upsert operation */
+  created: Scalars["Boolean"]["output"];
+  errors?: Maybe<Array<ExecutionError>>;
+  success: Scalars["Boolean"]["output"];
+};
+
+export type InternalCreateDeepRelationshipChainCityResult = {
+  __typename?: "InternalCreateDeepRelationshipChainCityResult";
+  city?: Maybe<Scalars["InternalDeepRelationshipChainCityRecord"]["output"]>;
+  /** Whether the record was created by this upsert operation */
+  created: Scalars["Boolean"]["output"];
+  errors?: Maybe<Array<ExecutionError>>;
+  success: Scalars["Boolean"]["output"];
+};
+
+export type InternalCreateDeepRelationshipChainContinentResult = {
+  __typename?: "InternalCreateDeepRelationshipChainContinentResult";
+  continent?: Maybe<Scalars["InternalDeepRelationshipChainContinentRecord"]["output"]>;
+  /** Whether the record was created by this upsert operation */
+  created: Scalars["Boolean"]["output"];
+  errors?: Maybe<Array<ExecutionError>>;
+  success: Scalars["Boolean"]["output"];
+};
+
+export type InternalCreateDeepRelationshipChainCountryResult = {
+  __typename?: "InternalCreateDeepRelationshipChainCountryResult";
+  country?: Maybe<Scalars["InternalDeepRelationshipChainCountryRecord"]["output"]>;
+  /** Whether the record was created by this upsert operation */
+  created: Scalars["Boolean"]["output"];
+  errors?: Maybe<Array<ExecutionError>>;
+  success: Scalars["Boolean"]["output"];
+};
+
+export type InternalCreateDeepRelationshipChainPlanetResult = {
+  __typename?: "InternalCreateDeepRelationshipChainPlanetResult";
+  /** Whether the record was created by this upsert operation */
+  created: Scalars["Boolean"]["output"];
+  errors?: Maybe<Array<ExecutionError>>;
+  planet?: Maybe<Scalars["InternalDeepRelationshipChainPlanetRecord"]["output"]>;
   success: Scalars["Boolean"]["output"];
 };
 
@@ -7217,12 +9265,611 @@ export type InternalCreateWidgetResult = {
   widget?: Maybe<Scalars["InternalWidgetRecord"]["output"]>;
 };
 
+export type InternalDeepRelationshipChainCitizenInput = {
+  cityOfMayorDuty?: InputMaybe<InternalBelongsToInput>;
+  createdAt?: InputMaybe<Scalars["DateTime"]["input"]>;
+  firstName?: InputMaybe<Scalars["String"]["input"]>;
+  homeCity?: InputMaybe<InternalBelongsToInput>;
+  id?: InputMaybe<Scalars["GadgetID"]["input"]>;
+  lastName?: InputMaybe<Scalars["String"]["input"]>;
+  state?: InputMaybe<Scalars["RecordState"]["input"]>;
+  stateHistory?: InputMaybe<Scalars["RecordState"]["input"]>;
+  updatedAt?: InputMaybe<Scalars["DateTime"]["input"]>;
+};
+
+/** A connection to a list of InternalDeepRelationshipChainCitizenRecord items. */
+export type InternalDeepRelationshipChainCitizenRecordConnection = {
+  __typename?: "InternalDeepRelationshipChainCitizenRecordConnection";
+  /** A list of edges. */
+  edges: Array<InternalDeepRelationshipChainCitizenRecordEdge>;
+  /** Information to aid in pagination. */
+  pageInfo: PageInfo;
+};
+
+/** An edge in a InternalDeepRelationshipChainCitizenRecord connection. */
+export type InternalDeepRelationshipChainCitizenRecordEdge = {
+  __typename?: "InternalDeepRelationshipChainCitizenRecordEdge";
+  /** A cursor for use in pagination */
+  cursor: Scalars["String"]["output"];
+  /** The item at the end of the edge */
+  node: Scalars["InternalDeepRelationshipChainCitizenRecord"]["output"];
+};
+
+export type InternalDeepRelationshipChainCityInput = {
+  country?: InputMaybe<InternalBelongsToInput>;
+  createdAt?: InputMaybe<Scalars["DateTime"]["input"]>;
+  englishName?: InputMaybe<Scalars["String"]["input"]>;
+  id?: InputMaybe<Scalars["GadgetID"]["input"]>;
+  localName?: InputMaybe<Scalars["String"]["input"]>;
+  state?: InputMaybe<Scalars["RecordState"]["input"]>;
+  stateHistory?: InputMaybe<Scalars["RecordState"]["input"]>;
+  updatedAt?: InputMaybe<Scalars["DateTime"]["input"]>;
+};
+
+/** A connection to a list of InternalDeepRelationshipChainCityRecord items. */
+export type InternalDeepRelationshipChainCityRecordConnection = {
+  __typename?: "InternalDeepRelationshipChainCityRecordConnection";
+  /** A list of edges. */
+  edges: Array<InternalDeepRelationshipChainCityRecordEdge>;
+  /** Information to aid in pagination. */
+  pageInfo: PageInfo;
+};
+
+/** An edge in a InternalDeepRelationshipChainCityRecord connection. */
+export type InternalDeepRelationshipChainCityRecordEdge = {
+  __typename?: "InternalDeepRelationshipChainCityRecordEdge";
+  /** A cursor for use in pagination */
+  cursor: Scalars["String"]["output"];
+  /** The item at the end of the edge */
+  node: Scalars["InternalDeepRelationshipChainCityRecord"]["output"];
+};
+
+export type InternalDeepRelationshipChainContinentAtomicsInput = {
+  /** Numeric atomic commands for operating on areaInSquareKm. */
+  areaInSquareKm?: InputMaybe<Array<NumericAtomicFieldUpdateInput>>;
+};
+
+export type InternalDeepRelationshipChainContinentInput = {
+  /** An optional list of atomically applied commands for race-safe mutations of the record */
+  _atomics?: InputMaybe<InternalDeepRelationshipChainContinentAtomicsInput>;
+  areaInSquareKm?: InputMaybe<Scalars["Float"]["input"]>;
+  createdAt?: InputMaybe<Scalars["DateTime"]["input"]>;
+  englishName?: InputMaybe<Scalars["String"]["input"]>;
+  frenchName?: InputMaybe<Scalars["String"]["input"]>;
+  id?: InputMaybe<Scalars["GadgetID"]["input"]>;
+  planet?: InputMaybe<InternalBelongsToInput>;
+  state?: InputMaybe<Scalars["RecordState"]["input"]>;
+  stateHistory?: InputMaybe<Scalars["RecordState"]["input"]>;
+  updatedAt?: InputMaybe<Scalars["DateTime"]["input"]>;
+};
+
+/** A connection to a list of InternalDeepRelationshipChainContinentRecord items. */
+export type InternalDeepRelationshipChainContinentRecordConnection = {
+  __typename?: "InternalDeepRelationshipChainContinentRecordConnection";
+  /** A list of edges. */
+  edges: Array<InternalDeepRelationshipChainContinentRecordEdge>;
+  /** Information to aid in pagination. */
+  pageInfo: PageInfo;
+};
+
+/** An edge in a InternalDeepRelationshipChainContinentRecord connection. */
+export type InternalDeepRelationshipChainContinentRecordEdge = {
+  __typename?: "InternalDeepRelationshipChainContinentRecordEdge";
+  /** A cursor for use in pagination */
+  cursor: Scalars["String"]["output"];
+  /** The item at the end of the edge */
+  node: Scalars["InternalDeepRelationshipChainContinentRecord"]["output"];
+};
+
+export type InternalDeepRelationshipChainCountryAtomicsInput = {
+  /** Numeric atomic commands for operating on population. */
+  population?: InputMaybe<Array<NumericAtomicFieldUpdateInput>>;
+};
+
+export type InternalDeepRelationshipChainCountryInput = {
+  /** An optional list of atomically applied commands for race-safe mutations of the record */
+  _atomics?: InputMaybe<InternalDeepRelationshipChainCountryAtomicsInput>;
+  continent?: InputMaybe<InternalBelongsToInput>;
+  createdAt?: InputMaybe<Scalars["DateTime"]["input"]>;
+  dominantLanguage?: InputMaybe<Scalars["String"]["input"]>;
+  englishName?: InputMaybe<Scalars["String"]["input"]>;
+  id?: InputMaybe<Scalars["GadgetID"]["input"]>;
+  nativeLanguageName?: InputMaybe<Scalars["String"]["input"]>;
+  population?: InputMaybe<Scalars["Float"]["input"]>;
+  state?: InputMaybe<Scalars["RecordState"]["input"]>;
+  stateHistory?: InputMaybe<Scalars["RecordState"]["input"]>;
+  updatedAt?: InputMaybe<Scalars["DateTime"]["input"]>;
+};
+
+/** A connection to a list of InternalDeepRelationshipChainCountryRecord items. */
+export type InternalDeepRelationshipChainCountryRecordConnection = {
+  __typename?: "InternalDeepRelationshipChainCountryRecordConnection";
+  /** A list of edges. */
+  edges: Array<InternalDeepRelationshipChainCountryRecordEdge>;
+  /** Information to aid in pagination. */
+  pageInfo: PageInfo;
+};
+
+/** An edge in a InternalDeepRelationshipChainCountryRecord connection. */
+export type InternalDeepRelationshipChainCountryRecordEdge = {
+  __typename?: "InternalDeepRelationshipChainCountryRecordEdge";
+  /** A cursor for use in pagination */
+  cursor: Scalars["String"]["output"];
+  /** The item at the end of the edge */
+  node: Scalars["InternalDeepRelationshipChainCountryRecord"]["output"];
+};
+
+export type InternalDeepRelationshipChainMutations = {
+  __typename?: "InternalDeepRelationshipChainMutations";
+  bulkCreateCities?: Maybe<InternalBulkCreateDeepRelationshipChainCitiesResult>;
+  bulkCreateCitizens?: Maybe<InternalBulkCreateDeepRelationshipChainCitizensResult>;
+  bulkCreateContinents?: Maybe<InternalBulkCreateDeepRelationshipChainContinentsResult>;
+  bulkCreateCountries?: Maybe<InternalBulkCreateDeepRelationshipChainCountriesResult>;
+  bulkCreatePlanets?: Maybe<InternalBulkCreateDeepRelationshipChainPlanetsResult>;
+  createCitizen?: Maybe<InternalCreateDeepRelationshipChainCitizenResult>;
+  createCity?: Maybe<InternalCreateDeepRelationshipChainCityResult>;
+  createContinent?: Maybe<InternalCreateDeepRelationshipChainContinentResult>;
+  createCountry?: Maybe<InternalCreateDeepRelationshipChainCountryResult>;
+  createPlanet?: Maybe<InternalCreateDeepRelationshipChainPlanetResult>;
+  deleteCitizen?: Maybe<InternalDeleteDeepRelationshipChainCitizenResult>;
+  deleteCity?: Maybe<InternalDeleteDeepRelationshipChainCityResult>;
+  deleteContinent?: Maybe<InternalDeleteDeepRelationshipChainContinentResult>;
+  deleteCountry?: Maybe<InternalDeleteDeepRelationshipChainCountryResult>;
+  deleteManyCitizen?: Maybe<InternalDeleteManyDeepRelationshipChainCitizenResult>;
+  deleteManyCity?: Maybe<InternalDeleteManyDeepRelationshipChainCityResult>;
+  deleteManyContinent?: Maybe<InternalDeleteManyDeepRelationshipChainContinentResult>;
+  deleteManyCountry?: Maybe<InternalDeleteManyDeepRelationshipChainCountryResult>;
+  deleteManyPlanet?: Maybe<InternalDeleteManyDeepRelationshipChainPlanetResult>;
+  deletePlanet?: Maybe<InternalDeleteDeepRelationshipChainPlanetResult>;
+  triggerCreateCitizen?: Maybe<CreateDeepRelationshipChainCitizenResult>;
+  triggerCreateCity?: Maybe<CreateDeepRelationshipChainCityResult>;
+  triggerCreateContinent?: Maybe<CreateDeepRelationshipChainContinentResult>;
+  triggerCreateCountry?: Maybe<CreateDeepRelationshipChainCountryResult>;
+  triggerCreatePlanet?: Maybe<CreateDeepRelationshipChainPlanetResult>;
+  triggerDeleteCitizen?: Maybe<DeleteDeepRelationshipChainCitizenResult>;
+  triggerDeleteCity?: Maybe<DeleteDeepRelationshipChainCityResult>;
+  triggerDeleteContinent?: Maybe<DeleteDeepRelationshipChainContinentResult>;
+  triggerDeleteCountry?: Maybe<DeleteDeepRelationshipChainCountryResult>;
+  triggerDeletePlanet?: Maybe<DeleteDeepRelationshipChainPlanetResult>;
+  triggerUpdateCitizen?: Maybe<UpdateDeepRelationshipChainCitizenResult>;
+  triggerUpdateCity?: Maybe<UpdateDeepRelationshipChainCityResult>;
+  triggerUpdateContinent?: Maybe<UpdateDeepRelationshipChainContinentResult>;
+  triggerUpdateCountry?: Maybe<UpdateDeepRelationshipChainCountryResult>;
+  triggerUpdatePlanet?: Maybe<UpdateDeepRelationshipChainPlanetResult>;
+  updateCitizen?: Maybe<InternalUpdateDeepRelationshipChainCitizenResult>;
+  updateCity?: Maybe<InternalUpdateDeepRelationshipChainCityResult>;
+  updateContinent?: Maybe<InternalUpdateDeepRelationshipChainContinentResult>;
+  updateCountry?: Maybe<InternalUpdateDeepRelationshipChainCountryResult>;
+  updatePlanet?: Maybe<InternalUpdateDeepRelationshipChainPlanetResult>;
+  upsertCitizen?: Maybe<InternalUpsertDeepRelationshipChainCitizenResult>;
+  upsertCity?: Maybe<InternalUpsertDeepRelationshipChainCityResult>;
+  upsertContinent?: Maybe<InternalUpsertDeepRelationshipChainContinentResult>;
+  upsertCountry?: Maybe<InternalUpsertDeepRelationshipChainCountryResult>;
+  upsertPlanet?: Maybe<InternalUpsertDeepRelationshipChainPlanetResult>;
+};
+
+export type InternalDeepRelationshipChainMutationsBulkCreateCitiesArgs = {
+  cities: Array<InputMaybe<InternalDeepRelationshipChainCityInput>>;
+};
+
+export type InternalDeepRelationshipChainMutationsBulkCreateCitizensArgs = {
+  citizens: Array<InputMaybe<InternalDeepRelationshipChainCitizenInput>>;
+};
+
+export type InternalDeepRelationshipChainMutationsBulkCreateContinentsArgs = {
+  continents: Array<InputMaybe<InternalDeepRelationshipChainContinentInput>>;
+};
+
+export type InternalDeepRelationshipChainMutationsBulkCreateCountriesArgs = {
+  countries: Array<InputMaybe<InternalDeepRelationshipChainCountryInput>>;
+};
+
+export type InternalDeepRelationshipChainMutationsBulkCreatePlanetsArgs = {
+  planets: Array<InputMaybe<InternalDeepRelationshipChainPlanetInput>>;
+};
+
+export type InternalDeepRelationshipChainMutationsCreateCitizenArgs = {
+  citizen?: InputMaybe<InternalDeepRelationshipChainCitizenInput>;
+};
+
+export type InternalDeepRelationshipChainMutationsCreateCityArgs = {
+  city?: InputMaybe<InternalDeepRelationshipChainCityInput>;
+};
+
+export type InternalDeepRelationshipChainMutationsCreateContinentArgs = {
+  continent?: InputMaybe<InternalDeepRelationshipChainContinentInput>;
+};
+
+export type InternalDeepRelationshipChainMutationsCreateCountryArgs = {
+  country?: InputMaybe<InternalDeepRelationshipChainCountryInput>;
+};
+
+export type InternalDeepRelationshipChainMutationsCreatePlanetArgs = {
+  planet?: InputMaybe<InternalDeepRelationshipChainPlanetInput>;
+};
+
+export type InternalDeepRelationshipChainMutationsDeleteCitizenArgs = {
+  id: Scalars["GadgetID"]["input"];
+};
+
+export type InternalDeepRelationshipChainMutationsDeleteCityArgs = {
+  id: Scalars["GadgetID"]["input"];
+};
+
+export type InternalDeepRelationshipChainMutationsDeleteContinentArgs = {
+  id: Scalars["GadgetID"]["input"];
+};
+
+export type InternalDeepRelationshipChainMutationsDeleteCountryArgs = {
+  id: Scalars["GadgetID"]["input"];
+};
+
+export type InternalDeepRelationshipChainMutationsDeleteManyCitizenArgs = {
+  filter?: InputMaybe<Array<DeepRelationshipChainCitizenFilter>>;
+  search?: InputMaybe<Scalars["String"]["input"]>;
+};
+
+export type InternalDeepRelationshipChainMutationsDeleteManyCityArgs = {
+  filter?: InputMaybe<Array<DeepRelationshipChainCityFilter>>;
+  search?: InputMaybe<Scalars["String"]["input"]>;
+};
+
+export type InternalDeepRelationshipChainMutationsDeleteManyContinentArgs = {
+  filter?: InputMaybe<Array<DeepRelationshipChainContinentFilter>>;
+  search?: InputMaybe<Scalars["String"]["input"]>;
+};
+
+export type InternalDeepRelationshipChainMutationsDeleteManyCountryArgs = {
+  filter?: InputMaybe<Array<DeepRelationshipChainCountryFilter>>;
+  search?: InputMaybe<Scalars["String"]["input"]>;
+};
+
+export type InternalDeepRelationshipChainMutationsDeleteManyPlanetArgs = {
+  filter?: InputMaybe<Array<DeepRelationshipChainPlanetFilter>>;
+  search?: InputMaybe<Scalars["String"]["input"]>;
+};
+
+export type InternalDeepRelationshipChainMutationsDeletePlanetArgs = {
+  id: Scalars["GadgetID"]["input"];
+};
+
+export type InternalDeepRelationshipChainMutationsTriggerCreateCitizenArgs = {
+  context?: InputMaybe<AppGraphQlTriggerMutationContext>;
+  params?: InputMaybe<Scalars["JSONObject"]["input"]>;
+  trigger?: InputMaybe<Scalars["JSONObject"]["input"]>;
+  verifyTriggerExists?: InputMaybe<Scalars["Boolean"]["input"]>;
+};
+
+export type InternalDeepRelationshipChainMutationsTriggerCreateCityArgs = {
+  context?: InputMaybe<AppGraphQlTriggerMutationContext>;
+  params?: InputMaybe<Scalars["JSONObject"]["input"]>;
+  trigger?: InputMaybe<Scalars["JSONObject"]["input"]>;
+  verifyTriggerExists?: InputMaybe<Scalars["Boolean"]["input"]>;
+};
+
+export type InternalDeepRelationshipChainMutationsTriggerCreateContinentArgs = {
+  context?: InputMaybe<AppGraphQlTriggerMutationContext>;
+  params?: InputMaybe<Scalars["JSONObject"]["input"]>;
+  trigger?: InputMaybe<Scalars["JSONObject"]["input"]>;
+  verifyTriggerExists?: InputMaybe<Scalars["Boolean"]["input"]>;
+};
+
+export type InternalDeepRelationshipChainMutationsTriggerCreateCountryArgs = {
+  context?: InputMaybe<AppGraphQlTriggerMutationContext>;
+  params?: InputMaybe<Scalars["JSONObject"]["input"]>;
+  trigger?: InputMaybe<Scalars["JSONObject"]["input"]>;
+  verifyTriggerExists?: InputMaybe<Scalars["Boolean"]["input"]>;
+};
+
+export type InternalDeepRelationshipChainMutationsTriggerCreatePlanetArgs = {
+  context?: InputMaybe<AppGraphQlTriggerMutationContext>;
+  params?: InputMaybe<Scalars["JSONObject"]["input"]>;
+  trigger?: InputMaybe<Scalars["JSONObject"]["input"]>;
+  verifyTriggerExists?: InputMaybe<Scalars["Boolean"]["input"]>;
+};
+
+export type InternalDeepRelationshipChainMutationsTriggerDeleteCitizenArgs = {
+  context?: InputMaybe<AppGraphQlTriggerMutationContext>;
+  params?: InputMaybe<Scalars["JSONObject"]["input"]>;
+  trigger?: InputMaybe<Scalars["JSONObject"]["input"]>;
+  verifyTriggerExists?: InputMaybe<Scalars["Boolean"]["input"]>;
+};
+
+export type InternalDeepRelationshipChainMutationsTriggerDeleteCityArgs = {
+  context?: InputMaybe<AppGraphQlTriggerMutationContext>;
+  params?: InputMaybe<Scalars["JSONObject"]["input"]>;
+  trigger?: InputMaybe<Scalars["JSONObject"]["input"]>;
+  verifyTriggerExists?: InputMaybe<Scalars["Boolean"]["input"]>;
+};
+
+export type InternalDeepRelationshipChainMutationsTriggerDeleteContinentArgs = {
+  context?: InputMaybe<AppGraphQlTriggerMutationContext>;
+  params?: InputMaybe<Scalars["JSONObject"]["input"]>;
+  trigger?: InputMaybe<Scalars["JSONObject"]["input"]>;
+  verifyTriggerExists?: InputMaybe<Scalars["Boolean"]["input"]>;
+};
+
+export type InternalDeepRelationshipChainMutationsTriggerDeleteCountryArgs = {
+  context?: InputMaybe<AppGraphQlTriggerMutationContext>;
+  params?: InputMaybe<Scalars["JSONObject"]["input"]>;
+  trigger?: InputMaybe<Scalars["JSONObject"]["input"]>;
+  verifyTriggerExists?: InputMaybe<Scalars["Boolean"]["input"]>;
+};
+
+export type InternalDeepRelationshipChainMutationsTriggerDeletePlanetArgs = {
+  context?: InputMaybe<AppGraphQlTriggerMutationContext>;
+  params?: InputMaybe<Scalars["JSONObject"]["input"]>;
+  trigger?: InputMaybe<Scalars["JSONObject"]["input"]>;
+  verifyTriggerExists?: InputMaybe<Scalars["Boolean"]["input"]>;
+};
+
+export type InternalDeepRelationshipChainMutationsTriggerUpdateCitizenArgs = {
+  context?: InputMaybe<AppGraphQlTriggerMutationContext>;
+  params?: InputMaybe<Scalars["JSONObject"]["input"]>;
+  trigger?: InputMaybe<Scalars["JSONObject"]["input"]>;
+  verifyTriggerExists?: InputMaybe<Scalars["Boolean"]["input"]>;
+};
+
+export type InternalDeepRelationshipChainMutationsTriggerUpdateCityArgs = {
+  context?: InputMaybe<AppGraphQlTriggerMutationContext>;
+  params?: InputMaybe<Scalars["JSONObject"]["input"]>;
+  trigger?: InputMaybe<Scalars["JSONObject"]["input"]>;
+  verifyTriggerExists?: InputMaybe<Scalars["Boolean"]["input"]>;
+};
+
+export type InternalDeepRelationshipChainMutationsTriggerUpdateContinentArgs = {
+  context?: InputMaybe<AppGraphQlTriggerMutationContext>;
+  params?: InputMaybe<Scalars["JSONObject"]["input"]>;
+  trigger?: InputMaybe<Scalars["JSONObject"]["input"]>;
+  verifyTriggerExists?: InputMaybe<Scalars["Boolean"]["input"]>;
+};
+
+export type InternalDeepRelationshipChainMutationsTriggerUpdateCountryArgs = {
+  context?: InputMaybe<AppGraphQlTriggerMutationContext>;
+  params?: InputMaybe<Scalars["JSONObject"]["input"]>;
+  trigger?: InputMaybe<Scalars["JSONObject"]["input"]>;
+  verifyTriggerExists?: InputMaybe<Scalars["Boolean"]["input"]>;
+};
+
+export type InternalDeepRelationshipChainMutationsTriggerUpdatePlanetArgs = {
+  context?: InputMaybe<AppGraphQlTriggerMutationContext>;
+  params?: InputMaybe<Scalars["JSONObject"]["input"]>;
+  trigger?: InputMaybe<Scalars["JSONObject"]["input"]>;
+  verifyTriggerExists?: InputMaybe<Scalars["Boolean"]["input"]>;
+};
+
+export type InternalDeepRelationshipChainMutationsUpdateCitizenArgs = {
+  citizen?: InputMaybe<InternalDeepRelationshipChainCitizenInput>;
+  id: Scalars["GadgetID"]["input"];
+};
+
+export type InternalDeepRelationshipChainMutationsUpdateCityArgs = {
+  city?: InputMaybe<InternalDeepRelationshipChainCityInput>;
+  id: Scalars["GadgetID"]["input"];
+};
+
+export type InternalDeepRelationshipChainMutationsUpdateContinentArgs = {
+  continent?: InputMaybe<InternalDeepRelationshipChainContinentInput>;
+  id: Scalars["GadgetID"]["input"];
+};
+
+export type InternalDeepRelationshipChainMutationsUpdateCountryArgs = {
+  country?: InputMaybe<InternalDeepRelationshipChainCountryInput>;
+  id: Scalars["GadgetID"]["input"];
+};
+
+export type InternalDeepRelationshipChainMutationsUpdatePlanetArgs = {
+  id: Scalars["GadgetID"]["input"];
+  planet?: InputMaybe<InternalDeepRelationshipChainPlanetInput>;
+};
+
+export type InternalDeepRelationshipChainMutationsUpsertCitizenArgs = {
+  citizen?: InputMaybe<InternalDeepRelationshipChainCitizenInput>;
+  on?: InputMaybe<Array<Scalars["String"]["input"]>>;
+};
+
+export type InternalDeepRelationshipChainMutationsUpsertCityArgs = {
+  city?: InputMaybe<InternalDeepRelationshipChainCityInput>;
+  on?: InputMaybe<Array<Scalars["String"]["input"]>>;
+};
+
+export type InternalDeepRelationshipChainMutationsUpsertContinentArgs = {
+  continent?: InputMaybe<InternalDeepRelationshipChainContinentInput>;
+  on?: InputMaybe<Array<Scalars["String"]["input"]>>;
+};
+
+export type InternalDeepRelationshipChainMutationsUpsertCountryArgs = {
+  country?: InputMaybe<InternalDeepRelationshipChainCountryInput>;
+  on?: InputMaybe<Array<Scalars["String"]["input"]>>;
+};
+
+export type InternalDeepRelationshipChainMutationsUpsertPlanetArgs = {
+  on?: InputMaybe<Array<Scalars["String"]["input"]>>;
+  planet?: InputMaybe<InternalDeepRelationshipChainPlanetInput>;
+};
+
+export type InternalDeepRelationshipChainPlanetAtomicsInput = {
+  /** Numeric atomic commands for operating on size. */
+  size?: InputMaybe<Array<NumericAtomicFieldUpdateInput>>;
+};
+
+export type InternalDeepRelationshipChainPlanetInput = {
+  /** An optional list of atomically applied commands for race-safe mutations of the record */
+  _atomics?: InputMaybe<InternalDeepRelationshipChainPlanetAtomicsInput>;
+  createdAt?: InputMaybe<Scalars["DateTime"]["input"]>;
+  englishName?: InputMaybe<Scalars["String"]["input"]>;
+  id?: InputMaybe<Scalars["GadgetID"]["input"]>;
+  size?: InputMaybe<Scalars["Float"]["input"]>;
+  state?: InputMaybe<Scalars["RecordState"]["input"]>;
+  stateHistory?: InputMaybe<Scalars["RecordState"]["input"]>;
+  updatedAt?: InputMaybe<Scalars["DateTime"]["input"]>;
+};
+
+/** A connection to a list of InternalDeepRelationshipChainPlanetRecord items. */
+export type InternalDeepRelationshipChainPlanetRecordConnection = {
+  __typename?: "InternalDeepRelationshipChainPlanetRecordConnection";
+  /** A list of edges. */
+  edges: Array<InternalDeepRelationshipChainPlanetRecordEdge>;
+  /** Information to aid in pagination. */
+  pageInfo: PageInfo;
+};
+
+/** An edge in a InternalDeepRelationshipChainPlanetRecord connection. */
+export type InternalDeepRelationshipChainPlanetRecordEdge = {
+  __typename?: "InternalDeepRelationshipChainPlanetRecordEdge";
+  /** A cursor for use in pagination */
+  cursor: Scalars["String"]["output"];
+  /** The item at the end of the edge */
+  node: Scalars["InternalDeepRelationshipChainPlanetRecord"]["output"];
+};
+
+export type InternalDeepRelationshipChainQueries = {
+  __typename?: "InternalDeepRelationshipChainQueries";
+  citizen?: Maybe<Scalars["InternalDeepRelationshipChainCitizenRecord"]["output"]>;
+  city?: Maybe<Scalars["InternalDeepRelationshipChainCityRecord"]["output"]>;
+  continent?: Maybe<Scalars["InternalDeepRelationshipChainContinentRecord"]["output"]>;
+  country?: Maybe<Scalars["InternalDeepRelationshipChainCountryRecord"]["output"]>;
+  /** Currently open platform transaction details, or null if no transaction is open */
+  currentTransactionDetails?: Maybe<Scalars["JSONObject"]["output"]>;
+  listCitizen: InternalDeepRelationshipChainCitizenRecordConnection;
+  listCity: InternalDeepRelationshipChainCityRecordConnection;
+  listContinent: InternalDeepRelationshipChainContinentRecordConnection;
+  listCountry: InternalDeepRelationshipChainCountryRecordConnection;
+  listPlanet: InternalDeepRelationshipChainPlanetRecordConnection;
+  planet?: Maybe<Scalars["InternalDeepRelationshipChainPlanetRecord"]["output"]>;
+};
+
+export type InternalDeepRelationshipChainQueriesCitizenArgs = {
+  id: Scalars["GadgetID"]["input"];
+  select?: InputMaybe<Array<Scalars["String"]["input"]>>;
+};
+
+export type InternalDeepRelationshipChainQueriesCityArgs = {
+  id: Scalars["GadgetID"]["input"];
+  select?: InputMaybe<Array<Scalars["String"]["input"]>>;
+};
+
+export type InternalDeepRelationshipChainQueriesContinentArgs = {
+  id: Scalars["GadgetID"]["input"];
+  select?: InputMaybe<Array<Scalars["String"]["input"]>>;
+};
+
+export type InternalDeepRelationshipChainQueriesCountryArgs = {
+  id: Scalars["GadgetID"]["input"];
+  select?: InputMaybe<Array<Scalars["String"]["input"]>>;
+};
+
+export type InternalDeepRelationshipChainQueriesListCitizenArgs = {
+  after?: InputMaybe<Scalars["String"]["input"]>;
+  before?: InputMaybe<Scalars["String"]["input"]>;
+  filter?: InputMaybe<Array<DeepRelationshipChainCitizenFilter>>;
+  first?: InputMaybe<Scalars["Int"]["input"]>;
+  last?: InputMaybe<Scalars["Int"]["input"]>;
+  search?: InputMaybe<Scalars["String"]["input"]>;
+  select?: InputMaybe<Array<Scalars["String"]["input"]>>;
+  sort?: InputMaybe<Array<DeepRelationshipChainCitizenSort>>;
+};
+
+export type InternalDeepRelationshipChainQueriesListCityArgs = {
+  after?: InputMaybe<Scalars["String"]["input"]>;
+  before?: InputMaybe<Scalars["String"]["input"]>;
+  filter?: InputMaybe<Array<DeepRelationshipChainCityFilter>>;
+  first?: InputMaybe<Scalars["Int"]["input"]>;
+  last?: InputMaybe<Scalars["Int"]["input"]>;
+  search?: InputMaybe<Scalars["String"]["input"]>;
+  select?: InputMaybe<Array<Scalars["String"]["input"]>>;
+  sort?: InputMaybe<Array<DeepRelationshipChainCitySort>>;
+};
+
+export type InternalDeepRelationshipChainQueriesListContinentArgs = {
+  after?: InputMaybe<Scalars["String"]["input"]>;
+  before?: InputMaybe<Scalars["String"]["input"]>;
+  filter?: InputMaybe<Array<DeepRelationshipChainContinentFilter>>;
+  first?: InputMaybe<Scalars["Int"]["input"]>;
+  last?: InputMaybe<Scalars["Int"]["input"]>;
+  search?: InputMaybe<Scalars["String"]["input"]>;
+  select?: InputMaybe<Array<Scalars["String"]["input"]>>;
+  sort?: InputMaybe<Array<DeepRelationshipChainContinentSort>>;
+};
+
+export type InternalDeepRelationshipChainQueriesListCountryArgs = {
+  after?: InputMaybe<Scalars["String"]["input"]>;
+  before?: InputMaybe<Scalars["String"]["input"]>;
+  filter?: InputMaybe<Array<DeepRelationshipChainCountryFilter>>;
+  first?: InputMaybe<Scalars["Int"]["input"]>;
+  last?: InputMaybe<Scalars["Int"]["input"]>;
+  search?: InputMaybe<Scalars["String"]["input"]>;
+  select?: InputMaybe<Array<Scalars["String"]["input"]>>;
+  sort?: InputMaybe<Array<DeepRelationshipChainCountrySort>>;
+};
+
+export type InternalDeepRelationshipChainQueriesListPlanetArgs = {
+  after?: InputMaybe<Scalars["String"]["input"]>;
+  before?: InputMaybe<Scalars["String"]["input"]>;
+  filter?: InputMaybe<Array<DeepRelationshipChainPlanetFilter>>;
+  first?: InputMaybe<Scalars["Int"]["input"]>;
+  last?: InputMaybe<Scalars["Int"]["input"]>;
+  search?: InputMaybe<Scalars["String"]["input"]>;
+  select?: InputMaybe<Array<Scalars["String"]["input"]>>;
+  sort?: InputMaybe<Array<DeepRelationshipChainPlanetSort>>;
+};
+
+export type InternalDeepRelationshipChainQueriesPlanetArgs = {
+  id: Scalars["GadgetID"]["input"];
+  select?: InputMaybe<Array<Scalars["String"]["input"]>>;
+};
+
 export type InternalDeleteAutoTableTestResult = {
   __typename?: "InternalDeleteAutoTableTestResult";
   autoTableTest?: Maybe<Scalars["InternalAutoTableTestRecord"]["output"]>;
   /** Whether the record was created by this upsert operation */
   created: Scalars["Boolean"]["output"];
   errors?: Maybe<Array<ExecutionError>>;
+  success: Scalars["Boolean"]["output"];
+};
+
+export type InternalDeleteDeepRelationshipChainCitizenResult = {
+  __typename?: "InternalDeleteDeepRelationshipChainCitizenResult";
+  citizen?: Maybe<Scalars["InternalDeepRelationshipChainCitizenRecord"]["output"]>;
+  /** Whether the record was created by this upsert operation */
+  created: Scalars["Boolean"]["output"];
+  errors?: Maybe<Array<ExecutionError>>;
+  success: Scalars["Boolean"]["output"];
+};
+
+export type InternalDeleteDeepRelationshipChainCityResult = {
+  __typename?: "InternalDeleteDeepRelationshipChainCityResult";
+  city?: Maybe<Scalars["InternalDeepRelationshipChainCityRecord"]["output"]>;
+  /** Whether the record was created by this upsert operation */
+  created: Scalars["Boolean"]["output"];
+  errors?: Maybe<Array<ExecutionError>>;
+  success: Scalars["Boolean"]["output"];
+};
+
+export type InternalDeleteDeepRelationshipChainContinentResult = {
+  __typename?: "InternalDeleteDeepRelationshipChainContinentResult";
+  continent?: Maybe<Scalars["InternalDeepRelationshipChainContinentRecord"]["output"]>;
+  /** Whether the record was created by this upsert operation */
+  created: Scalars["Boolean"]["output"];
+  errors?: Maybe<Array<ExecutionError>>;
+  success: Scalars["Boolean"]["output"];
+};
+
+export type InternalDeleteDeepRelationshipChainCountryResult = {
+  __typename?: "InternalDeleteDeepRelationshipChainCountryResult";
+  country?: Maybe<Scalars["InternalDeepRelationshipChainCountryRecord"]["output"]>;
+  /** Whether the record was created by this upsert operation */
+  created: Scalars["Boolean"]["output"];
+  errors?: Maybe<Array<ExecutionError>>;
+  success: Scalars["Boolean"]["output"];
+};
+
+export type InternalDeleteDeepRelationshipChainPlanetResult = {
+  __typename?: "InternalDeleteDeepRelationshipChainPlanetResult";
+  /** Whether the record was created by this upsert operation */
+  created: Scalars["Boolean"]["output"];
+  errors?: Maybe<Array<ExecutionError>>;
+  planet?: Maybe<Scalars["InternalDeepRelationshipChainPlanetRecord"]["output"]>;
   success: Scalars["Boolean"]["output"];
 };
 
@@ -7327,6 +9974,36 @@ export type InternalDeleteHasManyThroughSiblingModelResult = {
 
 export type InternalDeleteManyAutoTableTestResult = {
   __typename?: "InternalDeleteManyAutoTableTestResult";
+  errors?: Maybe<Array<ExecutionError>>;
+  success: Scalars["Boolean"]["output"];
+};
+
+export type InternalDeleteManyDeepRelationshipChainCitizenResult = {
+  __typename?: "InternalDeleteManyDeepRelationshipChainCitizenResult";
+  errors?: Maybe<Array<ExecutionError>>;
+  success: Scalars["Boolean"]["output"];
+};
+
+export type InternalDeleteManyDeepRelationshipChainCityResult = {
+  __typename?: "InternalDeleteManyDeepRelationshipChainCityResult";
+  errors?: Maybe<Array<ExecutionError>>;
+  success: Scalars["Boolean"]["output"];
+};
+
+export type InternalDeleteManyDeepRelationshipChainContinentResult = {
+  __typename?: "InternalDeleteManyDeepRelationshipChainContinentResult";
+  errors?: Maybe<Array<ExecutionError>>;
+  success: Scalars["Boolean"]["output"];
+};
+
+export type InternalDeleteManyDeepRelationshipChainCountryResult = {
+  __typename?: "InternalDeleteManyDeepRelationshipChainCountryResult";
+  errors?: Maybe<Array<ExecutionError>>;
+  success: Scalars["Boolean"]["output"];
+};
+
+export type InternalDeleteManyDeepRelationshipChainPlanetResult = {
+  __typename?: "InternalDeleteManyDeepRelationshipChainPlanetResult";
   errors?: Maybe<Array<ExecutionError>>;
   success: Scalars["Boolean"]["output"];
 };
@@ -8243,8 +10920,8 @@ export type InternalGameStadiumInput = {
   photo?: InputMaybe<InternalStoredFileInput>;
   state?: InputMaybe<Scalars["RecordState"]["input"]>;
   stateHistory?: InputMaybe<Scalars["RecordState"]["input"]>;
-  tags?: InputMaybe<Array<Scalars["StadiumTagsEnum"]["input"]>>;
-  type?: InputMaybe<Scalars["StadiumTypeEnum"]["input"]>;
+  tags?: InputMaybe<Array<Scalars["GameStadiumTagsEnum"]["input"]>>;
+  type?: InputMaybe<Scalars["GameStadiumTypeEnum"]["input"]>;
   updatedAt?: InputMaybe<Scalars["DateTime"]["input"]>;
 };
 
@@ -8682,6 +11359,7 @@ export type InternalMutations = {
   createTweeter?: Maybe<InternalCreateTweeterResult>;
   createUser?: Maybe<InternalCreateUserResult>;
   createWidget?: Maybe<InternalCreateWidgetResult>;
+  deepRelationshipChain: InternalDeepRelationshipChainMutations;
   deleteAutoTableTest?: Maybe<InternalDeleteAutoTableTestResult>;
   deleteDoodad?: Maybe<InternalDeleteDoodadResult>;
   deleteFoo?: Maybe<InternalDeleteFooResult>;
@@ -9901,6 +12579,7 @@ export type InternalQueries = {
   autoTableTest?: Maybe<Scalars["InternalAutoTableTestRecord"]["output"]>;
   /** Currently open platform transaction details, or null if no transaction is open */
   currentTransactionDetails?: Maybe<Scalars["JSONObject"]["output"]>;
+  deepRelationshipChain: InternalDeepRelationshipChainQueries;
   doodad?: Maybe<Scalars["InternalDoodadRecord"]["output"]>;
   foo?: Maybe<Scalars["InternalFooRecord"]["output"]>;
   friendship?: Maybe<Scalars["InternalFriendshipRecord"]["output"]>;
@@ -11357,7 +14036,7 @@ export type InternalUniversityProfessorInput = {
   lastName?: InputMaybe<Scalars["String"]["input"]>;
   state?: InputMaybe<Scalars["RecordState"]["input"]>;
   stateHistory?: InputMaybe<Scalars["RecordState"]["input"]>;
-  title?: InputMaybe<Scalars["ProfessorTitleEnum"]["input"]>;
+  title?: InputMaybe<Scalars["UniversityProfessorTitleEnum"]["input"]>;
   updatedAt?: InputMaybe<Scalars["DateTime"]["input"]>;
 };
 
@@ -11514,7 +14193,7 @@ export type InternalUniversityStudentInput = {
   /** An optional list of atomically applied commands for race-safe mutations of the record */
   _atomics?: InputMaybe<InternalUniversityStudentAtomicsInput>;
   createdAt?: InputMaybe<Scalars["DateTime"]["input"]>;
-  department?: InputMaybe<Scalars["StudentDepartmentEnum"]["input"]>;
+  department?: InputMaybe<Scalars["UniversityStudentDepartmentEnum"]["input"]>;
   firstName?: InputMaybe<Scalars["String"]["input"]>;
   id?: InputMaybe<Scalars["GadgetID"]["input"]>;
   lastName?: InputMaybe<Scalars["String"]["input"]>;
@@ -11548,6 +14227,51 @@ export type InternalUpdateAutoTableTestResult = {
   /** Whether the record was created by this upsert operation */
   created: Scalars["Boolean"]["output"];
   errors?: Maybe<Array<ExecutionError>>;
+  success: Scalars["Boolean"]["output"];
+};
+
+export type InternalUpdateDeepRelationshipChainCitizenResult = {
+  __typename?: "InternalUpdateDeepRelationshipChainCitizenResult";
+  citizen?: Maybe<Scalars["InternalDeepRelationshipChainCitizenRecord"]["output"]>;
+  /** Whether the record was created by this upsert operation */
+  created: Scalars["Boolean"]["output"];
+  errors?: Maybe<Array<ExecutionError>>;
+  success: Scalars["Boolean"]["output"];
+};
+
+export type InternalUpdateDeepRelationshipChainCityResult = {
+  __typename?: "InternalUpdateDeepRelationshipChainCityResult";
+  city?: Maybe<Scalars["InternalDeepRelationshipChainCityRecord"]["output"]>;
+  /** Whether the record was created by this upsert operation */
+  created: Scalars["Boolean"]["output"];
+  errors?: Maybe<Array<ExecutionError>>;
+  success: Scalars["Boolean"]["output"];
+};
+
+export type InternalUpdateDeepRelationshipChainContinentResult = {
+  __typename?: "InternalUpdateDeepRelationshipChainContinentResult";
+  continent?: Maybe<Scalars["InternalDeepRelationshipChainContinentRecord"]["output"]>;
+  /** Whether the record was created by this upsert operation */
+  created: Scalars["Boolean"]["output"];
+  errors?: Maybe<Array<ExecutionError>>;
+  success: Scalars["Boolean"]["output"];
+};
+
+export type InternalUpdateDeepRelationshipChainCountryResult = {
+  __typename?: "InternalUpdateDeepRelationshipChainCountryResult";
+  country?: Maybe<Scalars["InternalDeepRelationshipChainCountryRecord"]["output"]>;
+  /** Whether the record was created by this upsert operation */
+  created: Scalars["Boolean"]["output"];
+  errors?: Maybe<Array<ExecutionError>>;
+  success: Scalars["Boolean"]["output"];
+};
+
+export type InternalUpdateDeepRelationshipChainPlanetResult = {
+  __typename?: "InternalUpdateDeepRelationshipChainPlanetResult";
+  /** Whether the record was created by this upsert operation */
+  created: Scalars["Boolean"]["output"];
+  errors?: Maybe<Array<ExecutionError>>;
+  planet?: Maybe<Scalars["InternalDeepRelationshipChainPlanetRecord"]["output"]>;
   success: Scalars["Boolean"]["output"];
 };
 
@@ -11854,6 +14578,51 @@ export type InternalUpsertAutoTableTestResult = {
   /** Whether the record was created by this upsert operation */
   created: Scalars["Boolean"]["output"];
   errors?: Maybe<Array<ExecutionError>>;
+  success: Scalars["Boolean"]["output"];
+};
+
+export type InternalUpsertDeepRelationshipChainCitizenResult = {
+  __typename?: "InternalUpsertDeepRelationshipChainCitizenResult";
+  citizen?: Maybe<Scalars["InternalDeepRelationshipChainCitizenRecord"]["output"]>;
+  /** Whether the record was created by this upsert operation */
+  created: Scalars["Boolean"]["output"];
+  errors?: Maybe<Array<ExecutionError>>;
+  success: Scalars["Boolean"]["output"];
+};
+
+export type InternalUpsertDeepRelationshipChainCityResult = {
+  __typename?: "InternalUpsertDeepRelationshipChainCityResult";
+  city?: Maybe<Scalars["InternalDeepRelationshipChainCityRecord"]["output"]>;
+  /** Whether the record was created by this upsert operation */
+  created: Scalars["Boolean"]["output"];
+  errors?: Maybe<Array<ExecutionError>>;
+  success: Scalars["Boolean"]["output"];
+};
+
+export type InternalUpsertDeepRelationshipChainContinentResult = {
+  __typename?: "InternalUpsertDeepRelationshipChainContinentResult";
+  continent?: Maybe<Scalars["InternalDeepRelationshipChainContinentRecord"]["output"]>;
+  /** Whether the record was created by this upsert operation */
+  created: Scalars["Boolean"]["output"];
+  errors?: Maybe<Array<ExecutionError>>;
+  success: Scalars["Boolean"]["output"];
+};
+
+export type InternalUpsertDeepRelationshipChainCountryResult = {
+  __typename?: "InternalUpsertDeepRelationshipChainCountryResult";
+  country?: Maybe<Scalars["InternalDeepRelationshipChainCountryRecord"]["output"]>;
+  /** Whether the record was created by this upsert operation */
+  created: Scalars["Boolean"]["output"];
+  errors?: Maybe<Array<ExecutionError>>;
+  success: Scalars["Boolean"]["output"];
+};
+
+export type InternalUpsertDeepRelationshipChainPlanetResult = {
+  __typename?: "InternalUpsertDeepRelationshipChainPlanetResult";
+  /** Whether the record was created by this upsert operation */
+  created: Scalars["Boolean"]["output"];
+  errors?: Maybe<Array<ExecutionError>>;
+  planet?: Maybe<Scalars["InternalDeepRelationshipChainPlanetRecord"]["output"]>;
   success: Scalars["Boolean"]["output"];
 };
 
@@ -12276,41 +15045,12 @@ export type JsonFilter = {
   notIn?: InputMaybe<Array<InputMaybe<Scalars["JSON"]["input"]>>>;
 };
 
-/** Input object supporting setting or updating related model record on a relationship field */
-export type JoinerModelHasManyInput = {
-  /** Creates, updates, or deletes existing records in the database as needed to arrive at the list of records specified. */
-  _converge?: InputMaybe<ConvergeJoinerModelInput>;
-  create?: InputMaybe<NestedJoinerModelCreateInput>;
-  delete?: InputMaybe<NestedJoinerModelDeleteInput>;
-  update?: InputMaybe<NestedJoinerModelUpdateInput>;
-};
-
 export type LockOperationResult = {
   __typename?: "LockOperationResult";
   /** Any errors encountered during the locking/unlocking operation */
   errors?: Maybe<Array<ExecutionError>>;
   /** Whether the lock operation succeeded */
   success: Scalars["Boolean"]["output"];
-};
-
-/** Input object supporting setting or updating related model record on a relationship field */
-export type MainModelBelongsToInput = {
-  /** Existing ID of another record, which you would like to associate this record with */
-  _link?: InputMaybe<Scalars["GadgetID"]["input"]>;
-  create?: InputMaybe<NestedMainModelCreateInput>;
-  delete?: InputMaybe<NestedMainModelDeleteInput>;
-  update?: InputMaybe<NestedMainModelUpdateInput>;
-};
-
-/** Input object supporting setting or updating related model record on a relationship field */
-export type MainModelHasOneInput = {
-  /** Existing ID of another record, which you would like to relink to this record */
-  _relink?: InputMaybe<HasOneRelinkInput>;
-  /** Existing ID of another record, which you would like to unlink from this record */
-  _unlink?: InputMaybe<Scalars["GadgetID"]["input"]>;
-  create?: InputMaybe<NestedMainModelCreateInput>;
-  delete?: InputMaybe<NestedMainModelDeleteInput>;
-  update?: InputMaybe<NestedMainModelUpdateInput>;
 };
 
 export type ModelA = {
@@ -12448,6 +15188,7 @@ export type Mutation = {
   createWithCustomParamsWidget?: Maybe<CreateWithCustomParamsWidgetResult>;
   customActionAutoTableTest?: Maybe<CustomActionAutoTableTestResult>;
   customActionWithParamsAutoTableTest?: Maybe<CustomActionWithParamsAutoTableTestResult>;
+  deepRelationshipChain: DeepRelationshipChainMutations;
   deleteAutoTableTest?: Maybe<DeleteAutoTableTestResult>;
   deleteDoodad?: Maybe<DeleteDoodadResult>;
   deleteFoo?: Maybe<DeleteFooResult>;
@@ -13071,512 +15812,12 @@ export type NameSpacedNoTriggerGlobalActionResult = {
   success: Scalars["Boolean"]["output"];
 };
 
-export type NestedAssignmentCreateInput = {
-  course?: InputMaybe<CourseBelongsToInput>;
-  professor?: InputMaybe<ProfessorBelongsToInput>;
-};
-
-export type NestedAssignmentDeleteInput = {
-  id: Scalars["GadgetID"]["input"];
-};
-
-export type NestedAssignmentUpdateInput = {
-  course?: InputMaybe<CourseBelongsToInput>;
-  id: Scalars["GadgetID"]["input"];
-  professor?: InputMaybe<ProfessorBelongsToInput>;
-};
-
-export type NestedAutoTableTestCreateInput = {
-  bool?: InputMaybe<Scalars["Boolean"]["input"]>;
-  dt?: InputMaybe<Scalars["DateTime"]["input"]>;
-  email?: InputMaybe<Scalars["String"]["input"]>;
-  enum?: InputMaybe<Array<Scalars["AutoTableTestEnumEnum"]["input"]>>;
-  es?: InputMaybe<Scalars["String"]["input"]>;
-  file?: InputMaybe<StoredFileInput>;
-  hasMany?: InputMaybe<Array<InputMaybe<FooHasManyInput>>>;
-  hasOne?: InputMaybe<FooHasOneInput>;
-  json?: InputMaybe<Scalars["JSON"]["input"]>;
-  num?: InputMaybe<Scalars["Float"]["input"]>;
-  pwd?: InputMaybe<Scalars["String"]["input"]>;
-  /** A string list of Gadget platform Role keys to assign to this record */
-  rl?: InputMaybe<Array<Scalars["String"]["input"]>>;
-  rt?: InputMaybe<RichTextInput>;
-  str?: InputMaybe<Scalars["String"]["input"]>;
-  url?: InputMaybe<Scalars["String"]["input"]>;
-  vect?: InputMaybe<Array<Scalars["Float"]["input"]>>;
-};
-
-export type NestedAutoTableTestCustomActionInput = {
-  id: Scalars["GadgetID"]["input"];
-};
-
-export type NestedAutoTableTestCustomActionWithParamsInput = {
-  id: Scalars["GadgetID"]["input"];
-  numberParam1?: InputMaybe<Scalars["Float"]["input"]>;
-  stringParam1?: InputMaybe<Scalars["String"]["input"]>;
-};
-
-export type NestedAutoTableTestDeleteInput = {
-  id: Scalars["GadgetID"]["input"];
-};
-
-export type NestedAutoTableTestUpdateInput = {
-  bool?: InputMaybe<Scalars["Boolean"]["input"]>;
-  dt?: InputMaybe<Scalars["DateTime"]["input"]>;
-  email?: InputMaybe<Scalars["String"]["input"]>;
-  enum?: InputMaybe<Array<Scalars["AutoTableTestEnumEnum"]["input"]>>;
-  es?: InputMaybe<Scalars["String"]["input"]>;
-  file?: InputMaybe<StoredFileInput>;
-  hasMany?: InputMaybe<Array<InputMaybe<FooHasManyInput>>>;
-  hasOne?: InputMaybe<FooHasOneInput>;
-  id: Scalars["GadgetID"]["input"];
-  json?: InputMaybe<Scalars["JSON"]["input"]>;
-  num?: InputMaybe<Scalars["Float"]["input"]>;
-  pwd?: InputMaybe<Scalars["String"]["input"]>;
-  /** A string list of Gadget platform Role keys to assign to this record */
-  rl?: InputMaybe<Array<Scalars["String"]["input"]>>;
-  rt?: InputMaybe<RichTextInput>;
-  str?: InputMaybe<Scalars["String"]["input"]>;
-  url?: InputMaybe<Scalars["String"]["input"]>;
-  vect?: InputMaybe<Array<Scalars["Float"]["input"]>>;
-};
-
-export type NestedAutoTableTestUpdateWithCustomParamsInput = {
-  bool?: InputMaybe<Scalars["Boolean"]["input"]>;
-  dt?: InputMaybe<Scalars["DateTime"]["input"]>;
-  email?: InputMaybe<Scalars["String"]["input"]>;
-  enum?: InputMaybe<Array<Scalars["AutoTableTestEnumEnum"]["input"]>>;
-  es?: InputMaybe<Scalars["String"]["input"]>;
-  file?: InputMaybe<StoredFileInput>;
-  hasMany?: InputMaybe<Array<InputMaybe<FooHasManyInput>>>;
-  hasOne?: InputMaybe<FooHasOneInput>;
-  id: Scalars["GadgetID"]["input"];
-  json?: InputMaybe<Scalars["JSON"]["input"]>;
-  num?: InputMaybe<Scalars["Float"]["input"]>;
-  numberParam1?: InputMaybe<Scalars["Float"]["input"]>;
-  pwd?: InputMaybe<Scalars["String"]["input"]>;
-  /** A string list of Gadget platform Role keys to assign to this record */
-  rl?: InputMaybe<Array<Scalars["String"]["input"]>>;
-  rt?: InputMaybe<RichTextInput>;
-  str?: InputMaybe<Scalars["String"]["input"]>;
-  stringParam1?: InputMaybe<Scalars["String"]["input"]>;
-  url?: InputMaybe<Scalars["String"]["input"]>;
-  vect?: InputMaybe<Array<Scalars["Float"]["input"]>>;
-};
-
-export type NestedBaseModelCreateInput = {
-  baseModelHmtField?: InputMaybe<Array<InputMaybe<SiblingModelHasManyThroughInput>>>;
-  baseModelName?: InputMaybe<Scalars["String"]["input"]>;
-  joinerModels?: InputMaybe<Array<InputMaybe<JoinerModelHasManyInput>>>;
-};
-
-export type NestedBaseModelDeleteInput = {
-  id: Scalars["GadgetID"]["input"];
-};
-
-export type NestedBaseModelUpdateInput = {
-  baseModelHmtField?: InputMaybe<Array<InputMaybe<SiblingModelHasManyThroughInput>>>;
-  baseModelName?: InputMaybe<Scalars["String"]["input"]>;
-  id: Scalars["GadgetID"]["input"];
-  joinerModels?: InputMaybe<Array<InputMaybe<JoinerModelHasManyInput>>>;
-};
-
-export type NestedChildModelCreateInput = {
-  alias?: InputMaybe<Scalars["String"]["input"]>;
-  mainModelParent?: InputMaybe<MainModelBelongsToInput>;
-};
-
-export type NestedChildModelDeleteInput = {
-  id: Scalars["GadgetID"]["input"];
-};
-
-export type NestedChildModelUpdateInput = {
-  alias?: InputMaybe<Scalars["String"]["input"]>;
-  id: Scalars["GadgetID"]["input"];
-  mainModelParent?: InputMaybe<MainModelBelongsToInput>;
-};
-
-export type NestedCityCreateInput = {
-  name?: InputMaybe<Scalars["String"]["input"]>;
-  stadium?: InputMaybe<StadiumHasOneInput>;
-  tweeters?: InputMaybe<Array<InputMaybe<TweeterHasManyInput>>>;
-};
-
-export type NestedCityCustomObjectParamsInput = {
-  id: Scalars["GadgetID"]["input"];
-  name?: InputMaybe<Scalars["String"]["input"]>;
-  objParam?: InputMaybe<NestedCustomObjectParamsObjParamInput>;
-  rootLevelStr?: InputMaybe<Scalars["String"]["input"]>;
-  stadium?: InputMaybe<StadiumHasOneInput>;
-  tweeters?: InputMaybe<Array<InputMaybe<TweeterHasManyInput>>>;
-};
-
-export type NestedCityDeleteInput = {
-  id: Scalars["GadgetID"]["input"];
-};
-
-export type NestedCityUpdateInput = {
-  id: Scalars["GadgetID"]["input"];
-  name?: InputMaybe<Scalars["String"]["input"]>;
-  stadium?: InputMaybe<StadiumHasOneInput>;
-  tweeters?: InputMaybe<Array<InputMaybe<TweeterHasManyInput>>>;
-};
-
-export type NestedCourseCreateInput = {
-  assignments?: InputMaybe<Array<InputMaybe<AssignmentHasManyInput>>>;
-  description?: InputMaybe<RichTextInput>;
-  professors?: InputMaybe<Array<InputMaybe<ProfessorHasManyThroughInput>>>;
-  registrations?: InputMaybe<Array<InputMaybe<RegistrationHasManyInput>>>;
-  students?: InputMaybe<Array<InputMaybe<StudentHasManyThroughInput>>>;
-  title?: InputMaybe<Scalars["String"]["input"]>;
-};
-
-export type NestedCourseDeleteInput = {
-  id: Scalars["GadgetID"]["input"];
-};
-
-export type NestedCourseUpdateInput = {
-  assignments?: InputMaybe<Array<InputMaybe<AssignmentHasManyInput>>>;
-  description?: InputMaybe<RichTextInput>;
-  id: Scalars["GadgetID"]["input"];
-  professors?: InputMaybe<Array<InputMaybe<ProfessorHasManyThroughInput>>>;
-  registrations?: InputMaybe<Array<InputMaybe<RegistrationHasManyInput>>>;
-  students?: InputMaybe<Array<InputMaybe<StudentHasManyThroughInput>>>;
-  title?: InputMaybe<Scalars["String"]["input"]>;
-};
-
-export type NestedCustomObjectParamsObjParamInput = {
-  firstLevelStr?: InputMaybe<Scalars["String"]["input"]>;
-  objProperty1?: InputMaybe<NestedCustomObjectParamsObjParamObjProperty1Input>;
-};
-
-export type NestedCustomObjectParamsObjParamObjProperty1Input = {
-  objProperty2?: InputMaybe<NestedCustomObjectParamsObjParamObjProperty1ObjProperty2Input>;
-  secondLevelStr?: InputMaybe<Scalars["String"]["input"]>;
-};
-
-export type NestedCustomObjectParamsObjParamObjProperty1ObjProperty2Input = {
-  thirdLevelStr?: InputMaybe<Scalars["String"]["input"]>;
-};
-
-export type NestedDoodadCreateInput = {
-  active?: InputMaybe<Scalars["Boolean"]["input"]>;
-  gizmo?: InputMaybe<GizmoBelongsToInput>;
-  name?: InputMaybe<Scalars["String"]["input"]>;
-  size?: InputMaybe<Scalars["DoodadSizeEnum"]["input"]>;
-  weight?: InputMaybe<Scalars["Float"]["input"]>;
-  widget?: InputMaybe<WidgetBelongsToInput>;
-};
-
-export type NestedDoodadDeleteInput = {
-  id: Scalars["GadgetID"]["input"];
-};
-
-export type NestedDoodadUpdateInput = {
-  active?: InputMaybe<Scalars["Boolean"]["input"]>;
-  gizmo?: InputMaybe<GizmoBelongsToInput>;
-  id: Scalars["GadgetID"]["input"];
-  name?: InputMaybe<Scalars["String"]["input"]>;
-  size?: InputMaybe<Scalars["DoodadSizeEnum"]["input"]>;
-  weight?: InputMaybe<Scalars["Float"]["input"]>;
-  widget?: InputMaybe<WidgetBelongsToInput>;
-};
-
-export type NestedFooCreateInput = {
-  belongsToParent?: InputMaybe<AutoTableTestBelongsToInput>;
-  manyBelongsToParent?: InputMaybe<AutoTableTestBelongsToInput>;
-  name?: InputMaybe<Scalars["String"]["input"]>;
-  someBool?: InputMaybe<Scalars["Boolean"]["input"]>;
-  someNumber?: InputMaybe<Scalars["Float"]["input"]>;
-};
-
-export type NestedFooDeleteInput = {
-  id: Scalars["GadgetID"]["input"];
-};
-
-export type NestedFooUpdateInput = {
-  belongsToParent?: InputMaybe<AutoTableTestBelongsToInput>;
-  id: Scalars["GadgetID"]["input"];
-  manyBelongsToParent?: InputMaybe<AutoTableTestBelongsToInput>;
-  name?: InputMaybe<Scalars["String"]["input"]>;
-  someBool?: InputMaybe<Scalars["Boolean"]["input"]>;
-  someNumber?: InputMaybe<Scalars["Float"]["input"]>;
-};
-
-export type NestedFriendshipCreateInput = {
-  ended?: InputMaybe<Scalars["DateOrDateTime"]["input"]>;
-  followee?: InputMaybe<TweeterBelongsToInput>;
-  follower?: InputMaybe<TweeterBelongsToInput>;
-  started?: InputMaybe<Scalars["DateOrDateTime"]["input"]>;
-};
-
-export type NestedFriendshipDeleteInput = {
-  id: Scalars["GadgetID"]["input"];
-};
-
-export type NestedFriendshipUpdateInput = {
-  ended?: InputMaybe<Scalars["DateOrDateTime"]["input"]>;
-  followee?: InputMaybe<TweeterBelongsToInput>;
-  follower?: InputMaybe<TweeterBelongsToInput>;
-  id: Scalars["GadgetID"]["input"];
-  started?: InputMaybe<Scalars["DateOrDateTime"]["input"]>;
-};
-
-export type NestedGizmoCreateInput = {
-  attachment?: InputMaybe<StoredFileInput>;
-  doodads?: InputMaybe<Array<InputMaybe<DoodadHasManyInput>>>;
-  name?: InputMaybe<Scalars["String"]["input"]>;
-  orientation?: InputMaybe<Scalars["String"]["input"]>;
-  widget?: InputMaybe<WidgetBelongsToInput>;
-};
-
-export type NestedGizmoDeleteInput = {
-  id: Scalars["GadgetID"]["input"];
-};
-
-export type NestedGizmoUpdateInput = {
-  attachment?: InputMaybe<StoredFileInput>;
-  doodads?: InputMaybe<Array<InputMaybe<DoodadHasManyInput>>>;
-  id: Scalars["GadgetID"]["input"];
-  name?: InputMaybe<Scalars["String"]["input"]>;
-  orientation?: InputMaybe<Scalars["String"]["input"]>;
-  widget?: InputMaybe<WidgetBelongsToInput>;
-};
-
-export type NestedJoinerModelCreateInput = {
-  joinerBelongsToBase?: InputMaybe<BaseModelBelongsToInput>;
-  joinerBelongsToSibling?: InputMaybe<SiblingModelBelongsToInput>;
-};
-
-export type NestedJoinerModelDeleteInput = {
-  id: Scalars["GadgetID"]["input"];
-};
-
-export type NestedJoinerModelUpdateInput = {
-  id: Scalars["GadgetID"]["input"];
-  joinerBelongsToBase?: InputMaybe<BaseModelBelongsToInput>;
-  joinerBelongsToSibling?: InputMaybe<SiblingModelBelongsToInput>;
-};
-
-export type NestedMainModelCreateInput = {
-  childModelEntries?: InputMaybe<Array<InputMaybe<ChildModelHasManyInput>>>;
-  nonUniqueString?: InputMaybe<Scalars["String"]["input"]>;
-  uniqueBelongsTo?: InputMaybe<ParentModelBelongsToInput>;
-  uniqueEmail?: InputMaybe<Scalars["String"]["input"]>;
-  uniqueString?: InputMaybe<Scalars["String"]["input"]>;
-};
-
-export type NestedMainModelDeleteInput = {
-  id: Scalars["GadgetID"]["input"];
-};
-
-export type NestedMainModelUpdateInput = {
-  childModelEntries?: InputMaybe<Array<InputMaybe<ChildModelHasManyInput>>>;
-  id: Scalars["GadgetID"]["input"];
-  nonUniqueString?: InputMaybe<Scalars["String"]["input"]>;
-  uniqueBelongsTo?: InputMaybe<ParentModelBelongsToInput>;
-  uniqueEmail?: InputMaybe<Scalars["String"]["input"]>;
-  uniqueString?: InputMaybe<Scalars["String"]["input"]>;
-};
-
-export type NestedParentModelCreateInput = {
-  baseModel?: InputMaybe<MainModelHasOneInput>;
-  parentNonUniqueString?: InputMaybe<Scalars["String"]["input"]>;
-  parentUniqueString?: InputMaybe<Scalars["String"]["input"]>;
-};
-
-export type NestedParentModelDeleteInput = {
-  id: Scalars["GadgetID"]["input"];
-};
-
-export type NestedParentModelUpdateInput = {
-  baseModel?: InputMaybe<MainModelHasOneInput>;
-  id: Scalars["GadgetID"]["input"];
-  parentNonUniqueString?: InputMaybe<Scalars["String"]["input"]>;
-  parentUniqueString?: InputMaybe<Scalars["String"]["input"]>;
-};
-
-export type NestedPlayerCreateInput = {
-  currentRound?: InputMaybe<RoundBelongsToInput>;
-  name?: InputMaybe<Scalars["String"]["input"]>;
-};
-
-export type NestedPlayerDeleteInput = {
-  id: Scalars["GadgetID"]["input"];
-};
-
-export type NestedPlayerUpdateInput = {
-  currentRound?: InputMaybe<RoundBelongsToInput>;
-  id: Scalars["GadgetID"]["input"];
-  name?: InputMaybe<Scalars["String"]["input"]>;
-};
-
-export type NestedProfessorCreateInput = {
-  assignments?: InputMaybe<Array<InputMaybe<AssignmentHasManyInput>>>;
-  courses?: InputMaybe<Array<InputMaybe<CourseHasManyThroughInput>>>;
-  firstName?: InputMaybe<Scalars["String"]["input"]>;
-  lastName?: InputMaybe<Scalars["String"]["input"]>;
-  title?: InputMaybe<Scalars["ProfessorTitleEnum"]["input"]>;
-};
-
-export type NestedProfessorDeleteInput = {
-  id: Scalars["GadgetID"]["input"];
-};
-
-export type NestedProfessorUpdateInput = {
-  assignments?: InputMaybe<Array<InputMaybe<AssignmentHasManyInput>>>;
-  courses?: InputMaybe<Array<InputMaybe<CourseHasManyThroughInput>>>;
-  firstName?: InputMaybe<Scalars["String"]["input"]>;
-  id: Scalars["GadgetID"]["input"];
-  lastName?: InputMaybe<Scalars["String"]["input"]>;
-  title?: InputMaybe<Scalars["ProfessorTitleEnum"]["input"]>;
-};
-
-export type NestedRegistrationCreateInput = {
-  course?: InputMaybe<CourseBelongsToInput>;
-  effectiveFrom?: InputMaybe<Scalars["DateOrDateTime"]["input"]>;
-  effectiveTo?: InputMaybe<Scalars["DateOrDateTime"]["input"]>;
-  student?: InputMaybe<StudentBelongsToInput>;
-};
-
-export type NestedRegistrationDeleteInput = {
-  id: Scalars["GadgetID"]["input"];
-};
-
-export type NestedRegistrationUpdateInput = {
-  course?: InputMaybe<CourseBelongsToInput>;
-  effectiveFrom?: InputMaybe<Scalars["DateOrDateTime"]["input"]>;
-  effectiveTo?: InputMaybe<Scalars["DateOrDateTime"]["input"]>;
-  id: Scalars["GadgetID"]["input"];
-  student?: InputMaybe<StudentBelongsToInput>;
-};
-
-export type NestedRoundCreateInput = {
-  name?: InputMaybe<Scalars["String"]["input"]>;
-  players?: InputMaybe<Array<InputMaybe<PlayerHasManyInput>>>;
-  stadium?: InputMaybe<StadiumBelongsToInput>;
-};
-
-export type NestedRoundDeleteInput = {
-  id: Scalars["GadgetID"]["input"];
-};
-
-export type NestedRoundUpdateInput = {
-  id: Scalars["GadgetID"]["input"];
-  name?: InputMaybe<Scalars["String"]["input"]>;
-  players?: InputMaybe<Array<InputMaybe<PlayerHasManyInput>>>;
-  stadium?: InputMaybe<StadiumBelongsToInput>;
-};
-
-export type NestedSectionCreateInput = {
-  label?: InputMaybe<Scalars["String"]["input"]>;
-  name?: InputMaybe<Scalars["String"]["input"]>;
-  widgets?: InputMaybe<Array<InputMaybe<WidgetHasManyInput>>>;
-};
-
-export type NestedSectionDeleteInput = {
-  id: Scalars["GadgetID"]["input"];
-};
-
-export type NestedSectionUpdateInput = {
-  id: Scalars["GadgetID"]["input"];
-  label?: InputMaybe<Scalars["String"]["input"]>;
-  name?: InputMaybe<Scalars["String"]["input"]>;
-  widgets?: InputMaybe<Array<InputMaybe<WidgetHasManyInput>>>;
-};
-
-export type NestedSiblingModelCreateInput = {
-  joinerModels?: InputMaybe<Array<InputMaybe<JoinerModelHasManyInput>>>;
-  siblingModelHmtField?: InputMaybe<Array<InputMaybe<BaseModelHasManyThroughInput>>>;
-  siblingName?: InputMaybe<Scalars["String"]["input"]>;
-};
-
-export type NestedSiblingModelDeleteInput = {
-  id: Scalars["GadgetID"]["input"];
-};
-
-export type NestedSiblingModelUpdateInput = {
-  id: Scalars["GadgetID"]["input"];
-  joinerModels?: InputMaybe<Array<InputMaybe<JoinerModelHasManyInput>>>;
-  siblingModelHmtField?: InputMaybe<Array<InputMaybe<BaseModelHasManyThroughInput>>>;
-  siblingName?: InputMaybe<Scalars["String"]["input"]>;
-};
-
-export type NestedStadiumCreateInput = {
-  city?: InputMaybe<CityBelongsToInput>;
-  name?: InputMaybe<Scalars["String"]["input"]>;
-  photo?: InputMaybe<StoredFileInput>;
-  rounds?: InputMaybe<Array<InputMaybe<RoundHasManyInput>>>;
-  tags?: InputMaybe<Array<Scalars["StadiumTagsEnum"]["input"]>>;
-  type?: InputMaybe<Scalars["StadiumTypeEnum"]["input"]>;
-};
-
-export type NestedStadiumDeleteInput = {
-  id: Scalars["GadgetID"]["input"];
-};
-
-export type NestedStadiumUpdateInput = {
-  city?: InputMaybe<CityBelongsToInput>;
-  id: Scalars["GadgetID"]["input"];
-  name?: InputMaybe<Scalars["String"]["input"]>;
-  photo?: InputMaybe<StoredFileInput>;
-  rounds?: InputMaybe<Array<InputMaybe<RoundHasManyInput>>>;
-  tags?: InputMaybe<Array<Scalars["StadiumTagsEnum"]["input"]>>;
-  type?: InputMaybe<Scalars["StadiumTypeEnum"]["input"]>;
-};
-
-export type NestedStudentCreateInput = {
-  courses?: InputMaybe<Array<InputMaybe<CourseHasManyThroughInput>>>;
-  department?: InputMaybe<Scalars["StudentDepartmentEnum"]["input"]>;
-  firstName?: InputMaybe<Scalars["String"]["input"]>;
-  lastName?: InputMaybe<Scalars["String"]["input"]>;
-  registrations?: InputMaybe<Array<InputMaybe<RegistrationHasManyInput>>>;
-  year?: InputMaybe<Scalars["Int"]["input"]>;
-};
-
-export type NestedStudentDeleteInput = {
-  id: Scalars["GadgetID"]["input"];
-};
-
-export type NestedStudentUpdateInput = {
-  courses?: InputMaybe<Array<InputMaybe<CourseHasManyThroughInput>>>;
-  department?: InputMaybe<Scalars["StudentDepartmentEnum"]["input"]>;
-  firstName?: InputMaybe<Scalars["String"]["input"]>;
-  id: Scalars["GadgetID"]["input"];
-  lastName?: InputMaybe<Scalars["String"]["input"]>;
-  registrations?: InputMaybe<Array<InputMaybe<RegistrationHasManyInput>>>;
-  year?: InputMaybe<Scalars["Int"]["input"]>;
-};
-
-export type NestedTweeterCreateInput = {
-  city?: InputMaybe<CityBelongsToInput>;
-  followeeFriendships?: InputMaybe<Array<InputMaybe<FriendshipHasManyInput>>>;
-  followees?: InputMaybe<Array<InputMaybe<TweeterHasManyThroughInput>>>;
-  followerFriendships?: InputMaybe<Array<InputMaybe<FriendshipHasManyInput>>>;
-  followers?: InputMaybe<Array<InputMaybe<TweeterHasManyThroughInput>>>;
-  name?: InputMaybe<Scalars["String"]["input"]>;
-};
-
-export type NestedTweeterDeleteInput = {
-  id: Scalars["GadgetID"]["input"];
-};
-
-export type NestedTweeterUpdateInput = {
-  city?: InputMaybe<CityBelongsToInput>;
-  followeeFriendships?: InputMaybe<Array<InputMaybe<FriendshipHasManyInput>>>;
-  followees?: InputMaybe<Array<InputMaybe<TweeterHasManyThroughInput>>>;
-  followerFriendships?: InputMaybe<Array<InputMaybe<FriendshipHasManyInput>>>;
-  followers?: InputMaybe<Array<InputMaybe<TweeterHasManyThroughInput>>>;
-  id: Scalars["GadgetID"]["input"];
-  name?: InputMaybe<Scalars["String"]["input"]>;
-};
-
-export type NestedWidgetAddInventoryInput = {
+export type NestedAddInventoryWidgetInput = {
   count?: InputMaybe<Scalars["Float"]["input"]>;
   id: Scalars["GadgetID"]["input"];
 };
 
-export type NestedWidgetAlwaysThrowErrorInput = {
+export type NestedAlwaysThrowErrorWidgetInput = {
   anything?: InputMaybe<Scalars["JSON"]["input"]>;
   birthday?: InputMaybe<Scalars["DateOrDateTime"]["input"]>;
   category?: InputMaybe<Array<Scalars["WidgetCategoryEnum"]["input"]>>;
@@ -13597,7 +15838,212 @@ export type NestedWidgetAlwaysThrowErrorInput = {
   startsAt?: InputMaybe<Scalars["DateTime"]["input"]>;
 };
 
-export type NestedWidgetCreateInput = {
+export type NestedCreateAutoTableTestInput = {
+  bool?: InputMaybe<Scalars["Boolean"]["input"]>;
+  dt?: InputMaybe<Scalars["DateTime"]["input"]>;
+  email?: InputMaybe<Scalars["String"]["input"]>;
+  enum?: InputMaybe<Array<Scalars["AutoTableTestEnumEnum"]["input"]>>;
+  es?: InputMaybe<Scalars["String"]["input"]>;
+  file?: InputMaybe<StoredFileInput>;
+  hasMany?: InputMaybe<Array<InputMaybe<FooHasManyInput>>>;
+  hasOne?: InputMaybe<FooHasOneInput>;
+  json?: InputMaybe<Scalars["JSON"]["input"]>;
+  num?: InputMaybe<Scalars["Float"]["input"]>;
+  pwd?: InputMaybe<Scalars["String"]["input"]>;
+  /** A string list of Gadget platform Role keys to assign to this record */
+  rl?: InputMaybe<Array<Scalars["String"]["input"]>>;
+  rt?: InputMaybe<RichTextInput>;
+  str?: InputMaybe<Scalars["String"]["input"]>;
+  url?: InputMaybe<Scalars["String"]["input"]>;
+  vect?: InputMaybe<Array<Scalars["Float"]["input"]>>;
+};
+
+export type NestedCreateDeepRelationshipChainCitizenInput = {
+  cityOfMayorDuty?: InputMaybe<DeepRelationshipChainCityBelongsToInput>;
+  firstName?: InputMaybe<Scalars["String"]["input"]>;
+  homeCity?: InputMaybe<DeepRelationshipChainCityBelongsToInput>;
+  lastName?: InputMaybe<Scalars["String"]["input"]>;
+};
+
+export type NestedCreateDeepRelationshipChainCityInput = {
+  citizens?: InputMaybe<Array<InputMaybe<DeepRelationshipChainCitizenHasManyInput>>>;
+  country?: InputMaybe<DeepRelationshipChainCountryBelongsToInput>;
+  englishName?: InputMaybe<Scalars["String"]["input"]>;
+  localName?: InputMaybe<Scalars["String"]["input"]>;
+  mayor?: InputMaybe<DeepRelationshipChainCitizenHasOneInput>;
+};
+
+export type NestedCreateDeepRelationshipChainContinentInput = {
+  areaInSquareKm?: InputMaybe<Scalars["Float"]["input"]>;
+  countries?: InputMaybe<Array<InputMaybe<DeepRelationshipChainCountryHasManyInput>>>;
+  englishName?: InputMaybe<Scalars["String"]["input"]>;
+  frenchName?: InputMaybe<Scalars["String"]["input"]>;
+  planet?: InputMaybe<DeepRelationshipChainPlanetBelongsToInput>;
+};
+
+export type NestedCreateDeepRelationshipChainCountryInput = {
+  cities?: InputMaybe<Array<InputMaybe<DeepRelationshipChainCityHasManyInput>>>;
+  continent?: InputMaybe<DeepRelationshipChainContinentBelongsToInput>;
+  dominantLanguage?: InputMaybe<Scalars["String"]["input"]>;
+  englishName?: InputMaybe<Scalars["String"]["input"]>;
+  nativeLanguageName?: InputMaybe<Scalars["String"]["input"]>;
+  population?: InputMaybe<Scalars["Float"]["input"]>;
+};
+
+export type NestedCreateDeepRelationshipChainPlanetInput = {
+  continents?: InputMaybe<Array<InputMaybe<DeepRelationshipChainContinentHasManyInput>>>;
+  englishName?: InputMaybe<Scalars["String"]["input"]>;
+  size?: InputMaybe<Scalars["Float"]["input"]>;
+};
+
+export type NestedCreateDoodadInput = {
+  active?: InputMaybe<Scalars["Boolean"]["input"]>;
+  gizmo?: InputMaybe<GizmoBelongsToInput>;
+  name?: InputMaybe<Scalars["String"]["input"]>;
+  size?: InputMaybe<Scalars["DoodadSizeEnum"]["input"]>;
+  weight?: InputMaybe<Scalars["Float"]["input"]>;
+  widget?: InputMaybe<WidgetBelongsToInput>;
+};
+
+export type NestedCreateFooInput = {
+  belongsToParent?: InputMaybe<AutoTableTestBelongsToInput>;
+  manyBelongsToParent?: InputMaybe<AutoTableTestBelongsToInput>;
+  name?: InputMaybe<Scalars["String"]["input"]>;
+  someBool?: InputMaybe<Scalars["Boolean"]["input"]>;
+  someNumber?: InputMaybe<Scalars["Float"]["input"]>;
+};
+
+export type NestedCreateFriendshipInput = {
+  ended?: InputMaybe<Scalars["DateOrDateTime"]["input"]>;
+  followee?: InputMaybe<TweeterBelongsToInput>;
+  follower?: InputMaybe<TweeterBelongsToInput>;
+  started?: InputMaybe<Scalars["DateOrDateTime"]["input"]>;
+};
+
+export type NestedCreateGameCityInput = {
+  name?: InputMaybe<Scalars["String"]["input"]>;
+  stadium?: InputMaybe<GameStadiumHasOneInput>;
+  tweeters?: InputMaybe<Array<InputMaybe<TweeterHasManyInput>>>;
+};
+
+export type NestedCreateGamePlayerInput = {
+  currentRound?: InputMaybe<GameRoundBelongsToInput>;
+  name?: InputMaybe<Scalars["String"]["input"]>;
+};
+
+export type NestedCreateGameRoundInput = {
+  name?: InputMaybe<Scalars["String"]["input"]>;
+  players?: InputMaybe<Array<InputMaybe<GamePlayerHasManyInput>>>;
+  stadium?: InputMaybe<GameStadiumBelongsToInput>;
+};
+
+export type NestedCreateGameStadiumInput = {
+  city?: InputMaybe<GameCityBelongsToInput>;
+  name?: InputMaybe<Scalars["String"]["input"]>;
+  photo?: InputMaybe<StoredFileInput>;
+  rounds?: InputMaybe<Array<InputMaybe<GameRoundHasManyInput>>>;
+  tags?: InputMaybe<Array<Scalars["GameStadiumTagsEnum"]["input"]>>;
+  type?: InputMaybe<Scalars["GameStadiumTypeEnum"]["input"]>;
+};
+
+export type NestedCreateGizmoInput = {
+  attachment?: InputMaybe<StoredFileInput>;
+  doodads?: InputMaybe<Array<InputMaybe<DoodadHasManyInput>>>;
+  name?: InputMaybe<Scalars["String"]["input"]>;
+  orientation?: InputMaybe<Scalars["String"]["input"]>;
+  widget?: InputMaybe<WidgetBelongsToInput>;
+};
+
+export type NestedCreateHasManyThroughBaseModelInput = {
+  baseModelHmtField?: InputMaybe<Array<InputMaybe<HasManyThroughSiblingModelHasManyThroughInput>>>;
+  baseModelName?: InputMaybe<Scalars["String"]["input"]>;
+  joinerModels?: InputMaybe<Array<InputMaybe<HasManyThroughJoinerModelHasManyInput>>>;
+};
+
+export type NestedCreateHasManyThroughJoinerModelInput = {
+  joinerBelongsToBase?: InputMaybe<HasManyThroughBaseModelBelongsToInput>;
+  joinerBelongsToSibling?: InputMaybe<HasManyThroughSiblingModelBelongsToInput>;
+};
+
+export type NestedCreateHasManyThroughSiblingModelInput = {
+  joinerModels?: InputMaybe<Array<InputMaybe<HasManyThroughJoinerModelHasManyInput>>>;
+  siblingModelHmtField?: InputMaybe<Array<InputMaybe<HasManyThroughBaseModelHasManyThroughInput>>>;
+  siblingName?: InputMaybe<Scalars["String"]["input"]>;
+};
+
+export type NestedCreateSectionInput = {
+  label?: InputMaybe<Scalars["String"]["input"]>;
+  name?: InputMaybe<Scalars["String"]["input"]>;
+  widgets?: InputMaybe<Array<InputMaybe<WidgetHasManyInput>>>;
+};
+
+export type NestedCreateTweeterInput = {
+  city?: InputMaybe<GameCityBelongsToInput>;
+  followeeFriendships?: InputMaybe<Array<InputMaybe<FriendshipHasManyInput>>>;
+  followees?: InputMaybe<Array<InputMaybe<TweeterHasManyThroughInput>>>;
+  followerFriendships?: InputMaybe<Array<InputMaybe<FriendshipHasManyInput>>>;
+  followers?: InputMaybe<Array<InputMaybe<TweeterHasManyThroughInput>>>;
+  name?: InputMaybe<Scalars["String"]["input"]>;
+};
+
+export type NestedCreateUniqueFieldsChildModelInput = {
+  alias?: InputMaybe<Scalars["String"]["input"]>;
+  mainModelParent?: InputMaybe<UniqueFieldsMainModelBelongsToInput>;
+};
+
+export type NestedCreateUniqueFieldsMainModelInput = {
+  childModelEntries?: InputMaybe<Array<InputMaybe<UniqueFieldsChildModelHasManyInput>>>;
+  nonUniqueString?: InputMaybe<Scalars["String"]["input"]>;
+  uniqueBelongsTo?: InputMaybe<UniqueFieldsParentModelBelongsToInput>;
+  uniqueEmail?: InputMaybe<Scalars["String"]["input"]>;
+  uniqueString?: InputMaybe<Scalars["String"]["input"]>;
+};
+
+export type NestedCreateUniqueFieldsParentModelInput = {
+  baseModel?: InputMaybe<UniqueFieldsMainModelHasOneInput>;
+  parentNonUniqueString?: InputMaybe<Scalars["String"]["input"]>;
+  parentUniqueString?: InputMaybe<Scalars["String"]["input"]>;
+};
+
+export type NestedCreateUniversityAssignmentInput = {
+  course?: InputMaybe<UniversityCourseBelongsToInput>;
+  professor?: InputMaybe<UniversityProfessorBelongsToInput>;
+};
+
+export type NestedCreateUniversityCourseInput = {
+  assignments?: InputMaybe<Array<InputMaybe<UniversityAssignmentHasManyInput>>>;
+  description?: InputMaybe<RichTextInput>;
+  professors?: InputMaybe<Array<InputMaybe<UniversityProfessorHasManyThroughInput>>>;
+  registrations?: InputMaybe<Array<InputMaybe<UniversityRegistrationHasManyInput>>>;
+  students?: InputMaybe<Array<InputMaybe<UniversityStudentHasManyThroughInput>>>;
+  title?: InputMaybe<Scalars["String"]["input"]>;
+};
+
+export type NestedCreateUniversityProfessorInput = {
+  assignments?: InputMaybe<Array<InputMaybe<UniversityAssignmentHasManyInput>>>;
+  courses?: InputMaybe<Array<InputMaybe<UniversityCourseHasManyThroughInput>>>;
+  firstName?: InputMaybe<Scalars["String"]["input"]>;
+  lastName?: InputMaybe<Scalars["String"]["input"]>;
+  title?: InputMaybe<Scalars["UniversityProfessorTitleEnum"]["input"]>;
+};
+
+export type NestedCreateUniversityRegistrationInput = {
+  course?: InputMaybe<UniversityCourseBelongsToInput>;
+  effectiveFrom?: InputMaybe<Scalars["DateOrDateTime"]["input"]>;
+  effectiveTo?: InputMaybe<Scalars["DateOrDateTime"]["input"]>;
+  student?: InputMaybe<UniversityStudentBelongsToInput>;
+};
+
+export type NestedCreateUniversityStudentInput = {
+  courses?: InputMaybe<Array<InputMaybe<UniversityCourseHasManyThroughInput>>>;
+  department?: InputMaybe<Scalars["UniversityStudentDepartmentEnum"]["input"]>;
+  firstName?: InputMaybe<Scalars["String"]["input"]>;
+  lastName?: InputMaybe<Scalars["String"]["input"]>;
+  registrations?: InputMaybe<Array<InputMaybe<UniversityRegistrationHasManyInput>>>;
+  year?: InputMaybe<Scalars["Int"]["input"]>;
+};
+
+export type NestedCreateWidgetInput = {
   anything?: InputMaybe<Scalars["JSON"]["input"]>;
   birthday?: InputMaybe<Scalars["DateOrDateTime"]["input"]>;
   category?: InputMaybe<Array<Scalars["WidgetCategoryEnum"]["input"]>>;
@@ -13618,7 +16064,7 @@ export type NestedWidgetCreateInput = {
   startsAt?: InputMaybe<Scalars["DateTime"]["input"]>;
 };
 
-export type NestedWidgetCreateWithCustomParamsInput = {
+export type NestedCreateWithCustomParamsWidgetInput = {
   anything?: InputMaybe<Scalars["JSON"]["input"]>;
   birthday?: InputMaybe<Scalars["DateOrDateTime"]["input"]>;
   category?: InputMaybe<Array<Scalars["WidgetCategoryEnum"]["input"]>>;
@@ -13642,11 +16088,384 @@ export type NestedWidgetCreateWithCustomParamsInput = {
   startsAt?: InputMaybe<Scalars["DateTime"]["input"]>;
 };
 
-export type NestedWidgetDeleteInput = {
+export type NestedCustomActionAutoTableTestInput = {
   id: Scalars["GadgetID"]["input"];
 };
 
-export type NestedWidgetUpdateInput = {
+export type NestedCustomActionWithParamsAutoTableTestInput = {
+  id: Scalars["GadgetID"]["input"];
+  numberParam1?: InputMaybe<Scalars["Float"]["input"]>;
+  stringParam1?: InputMaybe<Scalars["String"]["input"]>;
+};
+
+export type NestedCustomObjectParamsGameCityInput = {
+  id: Scalars["GadgetID"]["input"];
+  name?: InputMaybe<Scalars["String"]["input"]>;
+  objParam?: InputMaybe<NestedCustomObjectParamsObjParamInput>;
+  rootLevelStr?: InputMaybe<Scalars["String"]["input"]>;
+  stadium?: InputMaybe<GameStadiumHasOneInput>;
+  tweeters?: InputMaybe<Array<InputMaybe<TweeterHasManyInput>>>;
+};
+
+export type NestedCustomObjectParamsObjParamInput = {
+  firstLevelStr?: InputMaybe<Scalars["String"]["input"]>;
+  objProperty1?: InputMaybe<NestedCustomObjectParamsObjParamObjProperty1Input>;
+};
+
+export type NestedCustomObjectParamsObjParamObjProperty1Input = {
+  objProperty2?: InputMaybe<NestedCustomObjectParamsObjParamObjProperty1ObjProperty2Input>;
+  secondLevelStr?: InputMaybe<Scalars["String"]["input"]>;
+};
+
+export type NestedCustomObjectParamsObjParamObjProperty1ObjProperty2Input = {
+  thirdLevelStr?: InputMaybe<Scalars["String"]["input"]>;
+};
+
+export type NestedDeleteAutoTableTestInput = {
+  id: Scalars["GadgetID"]["input"];
+};
+
+export type NestedDeleteDeepRelationshipChainCitizenInput = {
+  id: Scalars["GadgetID"]["input"];
+};
+
+export type NestedDeleteDeepRelationshipChainCityInput = {
+  id: Scalars["GadgetID"]["input"];
+};
+
+export type NestedDeleteDeepRelationshipChainContinentInput = {
+  id: Scalars["GadgetID"]["input"];
+};
+
+export type NestedDeleteDeepRelationshipChainCountryInput = {
+  id: Scalars["GadgetID"]["input"];
+};
+
+export type NestedDeleteDeepRelationshipChainPlanetInput = {
+  id: Scalars["GadgetID"]["input"];
+};
+
+export type NestedDeleteDoodadInput = {
+  id: Scalars["GadgetID"]["input"];
+};
+
+export type NestedDeleteFooInput = {
+  id: Scalars["GadgetID"]["input"];
+};
+
+export type NestedDeleteFriendshipInput = {
+  id: Scalars["GadgetID"]["input"];
+};
+
+export type NestedDeleteGameCityInput = {
+  id: Scalars["GadgetID"]["input"];
+};
+
+export type NestedDeleteGamePlayerInput = {
+  id: Scalars["GadgetID"]["input"];
+};
+
+export type NestedDeleteGameRoundInput = {
+  id: Scalars["GadgetID"]["input"];
+};
+
+export type NestedDeleteGameStadiumInput = {
+  id: Scalars["GadgetID"]["input"];
+};
+
+export type NestedDeleteGizmoInput = {
+  id: Scalars["GadgetID"]["input"];
+};
+
+export type NestedDeleteHasManyThroughBaseModelInput = {
+  id: Scalars["GadgetID"]["input"];
+};
+
+export type NestedDeleteHasManyThroughJoinerModelInput = {
+  id: Scalars["GadgetID"]["input"];
+};
+
+export type NestedDeleteHasManyThroughSiblingModelInput = {
+  id: Scalars["GadgetID"]["input"];
+};
+
+export type NestedDeleteSectionInput = {
+  id: Scalars["GadgetID"]["input"];
+};
+
+export type NestedDeleteTweeterInput = {
+  id: Scalars["GadgetID"]["input"];
+};
+
+export type NestedDeleteUniqueFieldsChildModelInput = {
+  id: Scalars["GadgetID"]["input"];
+};
+
+export type NestedDeleteUniqueFieldsMainModelInput = {
+  id: Scalars["GadgetID"]["input"];
+};
+
+export type NestedDeleteUniqueFieldsParentModelInput = {
+  id: Scalars["GadgetID"]["input"];
+};
+
+export type NestedDeleteUniversityAssignmentInput = {
+  id: Scalars["GadgetID"]["input"];
+};
+
+export type NestedDeleteUniversityCourseInput = {
+  id: Scalars["GadgetID"]["input"];
+};
+
+export type NestedDeleteUniversityProfessorInput = {
+  id: Scalars["GadgetID"]["input"];
+};
+
+export type NestedDeleteUniversityRegistrationInput = {
+  id: Scalars["GadgetID"]["input"];
+};
+
+export type NestedDeleteUniversityStudentInput = {
+  id: Scalars["GadgetID"]["input"];
+};
+
+export type NestedDeleteWidgetInput = {
+  id: Scalars["GadgetID"]["input"];
+};
+
+export type NestedUpdateAutoTableTestInput = {
+  bool?: InputMaybe<Scalars["Boolean"]["input"]>;
+  dt?: InputMaybe<Scalars["DateTime"]["input"]>;
+  email?: InputMaybe<Scalars["String"]["input"]>;
+  enum?: InputMaybe<Array<Scalars["AutoTableTestEnumEnum"]["input"]>>;
+  es?: InputMaybe<Scalars["String"]["input"]>;
+  file?: InputMaybe<StoredFileInput>;
+  hasMany?: InputMaybe<Array<InputMaybe<FooHasManyInput>>>;
+  hasOne?: InputMaybe<FooHasOneInput>;
+  id: Scalars["GadgetID"]["input"];
+  json?: InputMaybe<Scalars["JSON"]["input"]>;
+  num?: InputMaybe<Scalars["Float"]["input"]>;
+  pwd?: InputMaybe<Scalars["String"]["input"]>;
+  /** A string list of Gadget platform Role keys to assign to this record */
+  rl?: InputMaybe<Array<Scalars["String"]["input"]>>;
+  rt?: InputMaybe<RichTextInput>;
+  str?: InputMaybe<Scalars["String"]["input"]>;
+  url?: InputMaybe<Scalars["String"]["input"]>;
+  vect?: InputMaybe<Array<Scalars["Float"]["input"]>>;
+};
+
+export type NestedUpdateDeepRelationshipChainCitizenInput = {
+  cityOfMayorDuty?: InputMaybe<DeepRelationshipChainCityBelongsToInput>;
+  firstName?: InputMaybe<Scalars["String"]["input"]>;
+  homeCity?: InputMaybe<DeepRelationshipChainCityBelongsToInput>;
+  id: Scalars["GadgetID"]["input"];
+  lastName?: InputMaybe<Scalars["String"]["input"]>;
+};
+
+export type NestedUpdateDeepRelationshipChainCityInput = {
+  citizens?: InputMaybe<Array<InputMaybe<DeepRelationshipChainCitizenHasManyInput>>>;
+  country?: InputMaybe<DeepRelationshipChainCountryBelongsToInput>;
+  englishName?: InputMaybe<Scalars["String"]["input"]>;
+  id: Scalars["GadgetID"]["input"];
+  localName?: InputMaybe<Scalars["String"]["input"]>;
+  mayor?: InputMaybe<DeepRelationshipChainCitizenHasOneInput>;
+};
+
+export type NestedUpdateDeepRelationshipChainContinentInput = {
+  areaInSquareKm?: InputMaybe<Scalars["Float"]["input"]>;
+  countries?: InputMaybe<Array<InputMaybe<DeepRelationshipChainCountryHasManyInput>>>;
+  englishName?: InputMaybe<Scalars["String"]["input"]>;
+  frenchName?: InputMaybe<Scalars["String"]["input"]>;
+  id: Scalars["GadgetID"]["input"];
+  planet?: InputMaybe<DeepRelationshipChainPlanetBelongsToInput>;
+};
+
+export type NestedUpdateDeepRelationshipChainCountryInput = {
+  cities?: InputMaybe<Array<InputMaybe<DeepRelationshipChainCityHasManyInput>>>;
+  continent?: InputMaybe<DeepRelationshipChainContinentBelongsToInput>;
+  dominantLanguage?: InputMaybe<Scalars["String"]["input"]>;
+  englishName?: InputMaybe<Scalars["String"]["input"]>;
+  id: Scalars["GadgetID"]["input"];
+  nativeLanguageName?: InputMaybe<Scalars["String"]["input"]>;
+  population?: InputMaybe<Scalars["Float"]["input"]>;
+};
+
+export type NestedUpdateDeepRelationshipChainPlanetInput = {
+  continents?: InputMaybe<Array<InputMaybe<DeepRelationshipChainContinentHasManyInput>>>;
+  englishName?: InputMaybe<Scalars["String"]["input"]>;
+  id: Scalars["GadgetID"]["input"];
+  size?: InputMaybe<Scalars["Float"]["input"]>;
+};
+
+export type NestedUpdateDoodadInput = {
+  active?: InputMaybe<Scalars["Boolean"]["input"]>;
+  gizmo?: InputMaybe<GizmoBelongsToInput>;
+  id: Scalars["GadgetID"]["input"];
+  name?: InputMaybe<Scalars["String"]["input"]>;
+  size?: InputMaybe<Scalars["DoodadSizeEnum"]["input"]>;
+  weight?: InputMaybe<Scalars["Float"]["input"]>;
+  widget?: InputMaybe<WidgetBelongsToInput>;
+};
+
+export type NestedUpdateFooInput = {
+  belongsToParent?: InputMaybe<AutoTableTestBelongsToInput>;
+  id: Scalars["GadgetID"]["input"];
+  manyBelongsToParent?: InputMaybe<AutoTableTestBelongsToInput>;
+  name?: InputMaybe<Scalars["String"]["input"]>;
+  someBool?: InputMaybe<Scalars["Boolean"]["input"]>;
+  someNumber?: InputMaybe<Scalars["Float"]["input"]>;
+};
+
+export type NestedUpdateFriendshipInput = {
+  ended?: InputMaybe<Scalars["DateOrDateTime"]["input"]>;
+  followee?: InputMaybe<TweeterBelongsToInput>;
+  follower?: InputMaybe<TweeterBelongsToInput>;
+  id: Scalars["GadgetID"]["input"];
+  started?: InputMaybe<Scalars["DateOrDateTime"]["input"]>;
+};
+
+export type NestedUpdateGameCityInput = {
+  id: Scalars["GadgetID"]["input"];
+  name?: InputMaybe<Scalars["String"]["input"]>;
+  stadium?: InputMaybe<GameStadiumHasOneInput>;
+  tweeters?: InputMaybe<Array<InputMaybe<TweeterHasManyInput>>>;
+};
+
+export type NestedUpdateGamePlayerInput = {
+  currentRound?: InputMaybe<GameRoundBelongsToInput>;
+  id: Scalars["GadgetID"]["input"];
+  name?: InputMaybe<Scalars["String"]["input"]>;
+};
+
+export type NestedUpdateGameRoundInput = {
+  id: Scalars["GadgetID"]["input"];
+  name?: InputMaybe<Scalars["String"]["input"]>;
+  players?: InputMaybe<Array<InputMaybe<GamePlayerHasManyInput>>>;
+  stadium?: InputMaybe<GameStadiumBelongsToInput>;
+};
+
+export type NestedUpdateGameStadiumInput = {
+  city?: InputMaybe<GameCityBelongsToInput>;
+  id: Scalars["GadgetID"]["input"];
+  name?: InputMaybe<Scalars["String"]["input"]>;
+  photo?: InputMaybe<StoredFileInput>;
+  rounds?: InputMaybe<Array<InputMaybe<GameRoundHasManyInput>>>;
+  tags?: InputMaybe<Array<Scalars["GameStadiumTagsEnum"]["input"]>>;
+  type?: InputMaybe<Scalars["GameStadiumTypeEnum"]["input"]>;
+};
+
+export type NestedUpdateGizmoInput = {
+  attachment?: InputMaybe<StoredFileInput>;
+  doodads?: InputMaybe<Array<InputMaybe<DoodadHasManyInput>>>;
+  id: Scalars["GadgetID"]["input"];
+  name?: InputMaybe<Scalars["String"]["input"]>;
+  orientation?: InputMaybe<Scalars["String"]["input"]>;
+  widget?: InputMaybe<WidgetBelongsToInput>;
+};
+
+export type NestedUpdateHasManyThroughBaseModelInput = {
+  baseModelHmtField?: InputMaybe<Array<InputMaybe<HasManyThroughSiblingModelHasManyThroughInput>>>;
+  baseModelName?: InputMaybe<Scalars["String"]["input"]>;
+  id: Scalars["GadgetID"]["input"];
+  joinerModels?: InputMaybe<Array<InputMaybe<HasManyThroughJoinerModelHasManyInput>>>;
+};
+
+export type NestedUpdateHasManyThroughJoinerModelInput = {
+  id: Scalars["GadgetID"]["input"];
+  joinerBelongsToBase?: InputMaybe<HasManyThroughBaseModelBelongsToInput>;
+  joinerBelongsToSibling?: InputMaybe<HasManyThroughSiblingModelBelongsToInput>;
+};
+
+export type NestedUpdateHasManyThroughSiblingModelInput = {
+  id: Scalars["GadgetID"]["input"];
+  joinerModels?: InputMaybe<Array<InputMaybe<HasManyThroughJoinerModelHasManyInput>>>;
+  siblingModelHmtField?: InputMaybe<Array<InputMaybe<HasManyThroughBaseModelHasManyThroughInput>>>;
+  siblingName?: InputMaybe<Scalars["String"]["input"]>;
+};
+
+export type NestedUpdateSectionInput = {
+  id: Scalars["GadgetID"]["input"];
+  label?: InputMaybe<Scalars["String"]["input"]>;
+  name?: InputMaybe<Scalars["String"]["input"]>;
+  widgets?: InputMaybe<Array<InputMaybe<WidgetHasManyInput>>>;
+};
+
+export type NestedUpdateTweeterInput = {
+  city?: InputMaybe<GameCityBelongsToInput>;
+  followeeFriendships?: InputMaybe<Array<InputMaybe<FriendshipHasManyInput>>>;
+  followees?: InputMaybe<Array<InputMaybe<TweeterHasManyThroughInput>>>;
+  followerFriendships?: InputMaybe<Array<InputMaybe<FriendshipHasManyInput>>>;
+  followers?: InputMaybe<Array<InputMaybe<TweeterHasManyThroughInput>>>;
+  id: Scalars["GadgetID"]["input"];
+  name?: InputMaybe<Scalars["String"]["input"]>;
+};
+
+export type NestedUpdateUniqueFieldsChildModelInput = {
+  alias?: InputMaybe<Scalars["String"]["input"]>;
+  id: Scalars["GadgetID"]["input"];
+  mainModelParent?: InputMaybe<UniqueFieldsMainModelBelongsToInput>;
+};
+
+export type NestedUpdateUniqueFieldsMainModelInput = {
+  childModelEntries?: InputMaybe<Array<InputMaybe<UniqueFieldsChildModelHasManyInput>>>;
+  id: Scalars["GadgetID"]["input"];
+  nonUniqueString?: InputMaybe<Scalars["String"]["input"]>;
+  uniqueBelongsTo?: InputMaybe<UniqueFieldsParentModelBelongsToInput>;
+  uniqueEmail?: InputMaybe<Scalars["String"]["input"]>;
+  uniqueString?: InputMaybe<Scalars["String"]["input"]>;
+};
+
+export type NestedUpdateUniqueFieldsParentModelInput = {
+  baseModel?: InputMaybe<UniqueFieldsMainModelHasOneInput>;
+  id: Scalars["GadgetID"]["input"];
+  parentNonUniqueString?: InputMaybe<Scalars["String"]["input"]>;
+  parentUniqueString?: InputMaybe<Scalars["String"]["input"]>;
+};
+
+export type NestedUpdateUniversityAssignmentInput = {
+  course?: InputMaybe<UniversityCourseBelongsToInput>;
+  id: Scalars["GadgetID"]["input"];
+  professor?: InputMaybe<UniversityProfessorBelongsToInput>;
+};
+
+export type NestedUpdateUniversityCourseInput = {
+  assignments?: InputMaybe<Array<InputMaybe<UniversityAssignmentHasManyInput>>>;
+  description?: InputMaybe<RichTextInput>;
+  id: Scalars["GadgetID"]["input"];
+  professors?: InputMaybe<Array<InputMaybe<UniversityProfessorHasManyThroughInput>>>;
+  registrations?: InputMaybe<Array<InputMaybe<UniversityRegistrationHasManyInput>>>;
+  students?: InputMaybe<Array<InputMaybe<UniversityStudentHasManyThroughInput>>>;
+  title?: InputMaybe<Scalars["String"]["input"]>;
+};
+
+export type NestedUpdateUniversityProfessorInput = {
+  assignments?: InputMaybe<Array<InputMaybe<UniversityAssignmentHasManyInput>>>;
+  courses?: InputMaybe<Array<InputMaybe<UniversityCourseHasManyThroughInput>>>;
+  firstName?: InputMaybe<Scalars["String"]["input"]>;
+  id: Scalars["GadgetID"]["input"];
+  lastName?: InputMaybe<Scalars["String"]["input"]>;
+  title?: InputMaybe<Scalars["UniversityProfessorTitleEnum"]["input"]>;
+};
+
+export type NestedUpdateUniversityRegistrationInput = {
+  course?: InputMaybe<UniversityCourseBelongsToInput>;
+  effectiveFrom?: InputMaybe<Scalars["DateOrDateTime"]["input"]>;
+  effectiveTo?: InputMaybe<Scalars["DateOrDateTime"]["input"]>;
+  id: Scalars["GadgetID"]["input"];
+  student?: InputMaybe<UniversityStudentBelongsToInput>;
+};
+
+export type NestedUpdateUniversityStudentInput = {
+  courses?: InputMaybe<Array<InputMaybe<UniversityCourseHasManyThroughInput>>>;
+  department?: InputMaybe<Scalars["UniversityStudentDepartmentEnum"]["input"]>;
+  firstName?: InputMaybe<Scalars["String"]["input"]>;
+  id: Scalars["GadgetID"]["input"];
+  lastName?: InputMaybe<Scalars["String"]["input"]>;
+  registrations?: InputMaybe<Array<InputMaybe<UniversityRegistrationHasManyInput>>>;
+  year?: InputMaybe<Scalars["Int"]["input"]>;
+};
+
+export type NestedUpdateWidgetInput = {
   anything?: InputMaybe<Scalars["JSON"]["input"]>;
   birthday?: InputMaybe<Scalars["DateOrDateTime"]["input"]>;
   category?: InputMaybe<Array<Scalars["WidgetCategoryEnum"]["input"]>>;
@@ -13668,7 +16487,30 @@ export type NestedWidgetUpdateInput = {
   startsAt?: InputMaybe<Scalars["DateTime"]["input"]>;
 };
 
-export type NestedWidgetUpdateWithCustomParamsInput = {
+export type NestedUpdateWithCustomParamsAutoTableTestInput = {
+  bool?: InputMaybe<Scalars["Boolean"]["input"]>;
+  dt?: InputMaybe<Scalars["DateTime"]["input"]>;
+  email?: InputMaybe<Scalars["String"]["input"]>;
+  enum?: InputMaybe<Array<Scalars["AutoTableTestEnumEnum"]["input"]>>;
+  es?: InputMaybe<Scalars["String"]["input"]>;
+  file?: InputMaybe<StoredFileInput>;
+  hasMany?: InputMaybe<Array<InputMaybe<FooHasManyInput>>>;
+  hasOne?: InputMaybe<FooHasOneInput>;
+  id: Scalars["GadgetID"]["input"];
+  json?: InputMaybe<Scalars["JSON"]["input"]>;
+  num?: InputMaybe<Scalars["Float"]["input"]>;
+  numberParam1?: InputMaybe<Scalars["Float"]["input"]>;
+  pwd?: InputMaybe<Scalars["String"]["input"]>;
+  /** A string list of Gadget platform Role keys to assign to this record */
+  rl?: InputMaybe<Array<Scalars["String"]["input"]>>;
+  rt?: InputMaybe<RichTextInput>;
+  str?: InputMaybe<Scalars["String"]["input"]>;
+  stringParam1?: InputMaybe<Scalars["String"]["input"]>;
+  url?: InputMaybe<Scalars["String"]["input"]>;
+  vect?: InputMaybe<Array<Scalars["Float"]["input"]>>;
+};
+
+export type NestedUpdateWithCustomParamsWidgetInput = {
   anything?: InputMaybe<Scalars["JSON"]["input"]>;
   birthday?: InputMaybe<Scalars["DateOrDateTime"]["input"]>;
   category?: InputMaybe<Array<Scalars["WidgetCategoryEnum"]["input"]>>;
@@ -13727,15 +16569,6 @@ export type PageInfo = {
   hasPreviousPage: Scalars["Boolean"]["output"];
   /** When paginating backwards, the cursor to continue. */
   startCursor?: Maybe<Scalars["String"]["output"]>;
-};
-
-/** Input object supporting setting or updating related model record on a relationship field */
-export type ParentModelBelongsToInput = {
-  /** Existing ID of another record, which you would like to associate this record with */
-  _link?: InputMaybe<Scalars["GadgetID"]["input"]>;
-  create?: InputMaybe<NestedParentModelCreateInput>;
-  delete?: InputMaybe<NestedParentModelDeleteInput>;
-  update?: InputMaybe<NestedParentModelUpdateInput>;
 };
 
 export type Part = {
@@ -13798,36 +16631,12 @@ export type PartSort = {
   updatedAt?: InputMaybe<SortOrder>;
 };
 
-/** Input object supporting setting or updating related model record on a relationship field */
-export type PlayerHasManyInput = {
-  /** Creates, updates, or deletes existing records in the database as needed to arrive at the list of records specified. */
-  _converge?: InputMaybe<ConvergePlayerInput>;
-  create?: InputMaybe<NestedPlayerCreateInput>;
-  delete?: InputMaybe<NestedPlayerDeleteInput>;
-  update?: InputMaybe<NestedPlayerUpdateInput>;
-};
-
-/** Input object supporting setting or updating related model record on a relationship field */
-export type ProfessorBelongsToInput = {
-  /** Existing ID of another record, which you would like to associate this record with */
-  _link?: InputMaybe<Scalars["GadgetID"]["input"]>;
-  create?: InputMaybe<NestedProfessorCreateInput>;
-  delete?: InputMaybe<NestedProfessorDeleteInput>;
-  update?: InputMaybe<NestedProfessorUpdateInput>;
-};
-
-/** Input object supporting setting or updating related model record on a relationship field */
-export type ProfessorHasManyThroughInput = {
-  create?: InputMaybe<NestedProfessorCreateInput>;
-  delete?: InputMaybe<NestedProfessorDeleteInput>;
-  update?: InputMaybe<NestedProfessorUpdateInput>;
-};
-
 export type Query = {
   __typename?: "Query";
   autoTableTest?: Maybe<AutoTableTest>;
   autoTableTests: AutoTableTestConnection;
   currentSession?: Maybe<Session>;
+  deepRelationshipChain: DeepRelationshipChainQueries;
   doodad?: Maybe<Doodad>;
   doodads: DoodadConnection;
   foo?: Maybe<Foo>;
@@ -14138,15 +16947,6 @@ export type QueryWidgetsArgs = {
   sort?: InputMaybe<Array<WidgetSort>>;
 };
 
-/** Input object supporting setting or updating related model record on a relationship field */
-export type RegistrationHasManyInput = {
-  /** Creates, updates, or deletes existing records in the database as needed to arrive at the list of records specified. */
-  _converge?: InputMaybe<ConvergeRegistrationInput>;
-  create?: InputMaybe<NestedRegistrationCreateInput>;
-  delete?: InputMaybe<NestedRegistrationDeleteInput>;
-  update?: InputMaybe<NestedRegistrationUpdateInput>;
-};
-
 export type ReinstallShopifyShopResult = {
   __typename?: "ReinstallShopifyShopResult";
   actionRun?: Maybe<Scalars["String"]["output"]>;
@@ -14190,24 +16990,6 @@ export type RoleAssignmentFilter = {
   equals?: InputMaybe<Array<InputMaybe<Scalars["String"]["input"]>>>;
   isSet?: InputMaybe<Scalars["Boolean"]["input"]>;
   notEquals?: InputMaybe<Array<InputMaybe<Scalars["String"]["input"]>>>;
-};
-
-/** Input object supporting setting or updating related model record on a relationship field */
-export type RoundBelongsToInput = {
-  /** Existing ID of another record, which you would like to associate this record with */
-  _link?: InputMaybe<Scalars["GadgetID"]["input"]>;
-  create?: InputMaybe<NestedRoundCreateInput>;
-  delete?: InputMaybe<NestedRoundDeleteInput>;
-  update?: InputMaybe<NestedRoundUpdateInput>;
-};
-
-/** Input object supporting setting or updating related model record on a relationship field */
-export type RoundHasManyInput = {
-  /** Creates, updates, or deletes existing records in the database as needed to arrive at the list of records specified. */
-  _converge?: InputMaybe<ConvergeRoundInput>;
-  create?: InputMaybe<NestedRoundCreateInput>;
-  delete?: InputMaybe<NestedRoundDeleteInput>;
-  update?: InputMaybe<NestedRoundUpdateInput>;
 };
 
 export type RunShopifySyncInput = {
@@ -14257,9 +17039,9 @@ export type SectionWidgetsArgs = {
 export type SectionBelongsToInput = {
   /** Existing ID of another record, which you would like to associate this record with */
   _link?: InputMaybe<Scalars["GadgetID"]["input"]>;
-  create?: InputMaybe<NestedSectionCreateInput>;
-  delete?: InputMaybe<NestedSectionDeleteInput>;
-  update?: InputMaybe<NestedSectionUpdateInput>;
+  create?: InputMaybe<NestedCreateSectionInput>;
+  delete?: InputMaybe<NestedDeleteSectionInput>;
+  update?: InputMaybe<NestedUpdateSectionInput>;
 };
 
 /** A connection to a list of Section items. */
@@ -14289,6 +17071,20 @@ export type SectionFilter = {
   label?: InputMaybe<StringFilter>;
   name?: InputMaybe<StringFilter>;
   updatedAt?: InputMaybe<DateTimeFilter>;
+  widgets?: InputMaybe<WidgetsRelationshipFilter>;
+};
+
+export type SectionRelationshipFilter = {
+  AND?: InputMaybe<Array<InputMaybe<SectionRelationshipFilter>>>;
+  NOT?: InputMaybe<Array<InputMaybe<SectionRelationshipFilter>>>;
+  OR?: InputMaybe<Array<InputMaybe<SectionRelationshipFilter>>>;
+  createdAt?: InputMaybe<DateTimeFilter>;
+  id?: InputMaybe<IdFilter>;
+  isSet?: InputMaybe<Scalars["Boolean"]["input"]>;
+  label?: InputMaybe<StringFilter>;
+  name?: InputMaybe<StringFilter>;
+  updatedAt?: InputMaybe<DateTimeFilter>;
+  widgets?: InputMaybe<WidgetsRelationshipFilter>;
 };
 
 export type SectionSort = {
@@ -14417,7 +17213,7 @@ export type ShopifyGdprRequestFilter = {
   createdAt?: InputMaybe<DateTimeFilter>;
   id?: InputMaybe<IdFilter>;
   payload?: InputMaybe<JsonFilter>;
-  shop?: InputMaybe<IdFilter>;
+  shop?: InputMaybe<ShopifyShopRelationshipFilter>;
   shopId?: InputMaybe<IdFilter>;
   topic?: InputMaybe<SingleEnumFilter>;
   updatedAt?: InputMaybe<DateTimeFilter>;
@@ -14434,6 +17230,24 @@ export type ShopifyGdprRequestSort = {
   topic?: InputMaybe<SortOrder>;
   /** Sort the results by the updatedAt field. Defaults to ascending (smallest value first). */
   updatedAt?: InputMaybe<SortOrder>;
+};
+
+export type ShopifyGdprRequestsInnerRelationshipFilter = {
+  AND?: InputMaybe<Array<InputMaybe<ShopifyGdprRequestsInnerRelationshipFilter>>>;
+  NOT?: InputMaybe<Array<InputMaybe<ShopifyGdprRequestsInnerRelationshipFilter>>>;
+  OR?: InputMaybe<Array<InputMaybe<ShopifyGdprRequestsInnerRelationshipFilter>>>;
+  createdAt?: InputMaybe<DateTimeFilter>;
+  id?: InputMaybe<IdFilter>;
+  payload?: InputMaybe<JsonFilter>;
+  shop?: InputMaybe<ShopifyShopRelationshipFilter>;
+  shopId?: InputMaybe<IdFilter>;
+  topic?: InputMaybe<SingleEnumFilter>;
+  updatedAt?: InputMaybe<DateTimeFilter>;
+};
+
+export type ShopifyGdprRequestsRelationshipFilter = {
+  every?: InputMaybe<ShopifyGdprRequestsInnerRelationshipFilter>;
+  some?: InputMaybe<ShopifyGdprRequestsInnerRelationshipFilter>;
 };
 
 export type ShopifyProduct = {
@@ -14525,10 +17339,12 @@ export type ShopifyProductFilter = {
   createdAt?: InputMaybe<DateTimeFilter>;
   handle?: InputMaybe<StringFilter>;
   id?: InputMaybe<IdFilter>;
+  images?: InputMaybe<ShopifyProductImagesRelationshipFilter>;
+  options?: InputMaybe<ShopifyProductOptionsRelationshipFilter>;
   productCategory?: InputMaybe<JsonFilter>;
   productType?: InputMaybe<StringFilter>;
   publishedAt?: InputMaybe<DateTimeFilter>;
-  shop?: InputMaybe<IdFilter>;
+  shop?: InputMaybe<ShopifyShopRelationshipFilter>;
   shopId?: InputMaybe<IdFilter>;
   shopifyCreatedAt?: InputMaybe<DateTimeFilter>;
   shopifyUpdatedAt?: InputMaybe<DateTimeFilter>;
@@ -14537,6 +17353,7 @@ export type ShopifyProductFilter = {
   templateSuffix?: InputMaybe<StringFilter>;
   title?: InputMaybe<StringFilter>;
   updatedAt?: InputMaybe<DateTimeFilter>;
+  variants?: InputMaybe<ShopifyProductVariantsRelationshipFilter>;
   vendor?: InputMaybe<StringFilter>;
 };
 
@@ -14601,14 +17418,37 @@ export type ShopifyProductImageFilter = {
   height?: InputMaybe<FloatFilter>;
   id?: InputMaybe<IdFilter>;
   position?: InputMaybe<FloatFilter>;
-  product?: InputMaybe<IdFilter>;
+  product?: InputMaybe<ShopifyProductRelationshipFilter>;
   productId?: InputMaybe<IdFilter>;
-  shop?: InputMaybe<IdFilter>;
+  shop?: InputMaybe<ShopifyShopRelationshipFilter>;
   shopId?: InputMaybe<IdFilter>;
   shopifyCreatedAt?: InputMaybe<DateTimeFilter>;
   shopifyUpdatedAt?: InputMaybe<DateTimeFilter>;
   source?: InputMaybe<StringFilter>;
   updatedAt?: InputMaybe<DateTimeFilter>;
+  variants?: InputMaybe<ShopifyProductVariantsRelationshipFilter>;
+  width?: InputMaybe<FloatFilter>;
+};
+
+export type ShopifyProductImageRelationshipFilter = {
+  AND?: InputMaybe<Array<InputMaybe<ShopifyProductImageRelationshipFilter>>>;
+  NOT?: InputMaybe<Array<InputMaybe<ShopifyProductImageRelationshipFilter>>>;
+  OR?: InputMaybe<Array<InputMaybe<ShopifyProductImageRelationshipFilter>>>;
+  alt?: InputMaybe<StringFilter>;
+  createdAt?: InputMaybe<DateTimeFilter>;
+  height?: InputMaybe<FloatFilter>;
+  id?: InputMaybe<IdFilter>;
+  isSet?: InputMaybe<Scalars["Boolean"]["input"]>;
+  position?: InputMaybe<FloatFilter>;
+  product?: InputMaybe<ShopifyProductRelationshipFilter>;
+  productId?: InputMaybe<IdFilter>;
+  shop?: InputMaybe<ShopifyShopRelationshipFilter>;
+  shopId?: InputMaybe<IdFilter>;
+  shopifyCreatedAt?: InputMaybe<DateTimeFilter>;
+  shopifyUpdatedAt?: InputMaybe<DateTimeFilter>;
+  source?: InputMaybe<StringFilter>;
+  updatedAt?: InputMaybe<DateTimeFilter>;
+  variants?: InputMaybe<ShopifyProductVariantsRelationshipFilter>;
   width?: InputMaybe<FloatFilter>;
 };
 
@@ -14633,6 +17473,32 @@ export type ShopifyProductImageSort = {
   updatedAt?: InputMaybe<SortOrder>;
   /** Sort the results by the width field. Defaults to ascending (smallest value first). */
   width?: InputMaybe<SortOrder>;
+};
+
+export type ShopifyProductImagesInnerRelationshipFilter = {
+  AND?: InputMaybe<Array<InputMaybe<ShopifyProductImagesInnerRelationshipFilter>>>;
+  NOT?: InputMaybe<Array<InputMaybe<ShopifyProductImagesInnerRelationshipFilter>>>;
+  OR?: InputMaybe<Array<InputMaybe<ShopifyProductImagesInnerRelationshipFilter>>>;
+  alt?: InputMaybe<StringFilter>;
+  createdAt?: InputMaybe<DateTimeFilter>;
+  height?: InputMaybe<FloatFilter>;
+  id?: InputMaybe<IdFilter>;
+  position?: InputMaybe<FloatFilter>;
+  product?: InputMaybe<ShopifyProductRelationshipFilter>;
+  productId?: InputMaybe<IdFilter>;
+  shop?: InputMaybe<ShopifyShopRelationshipFilter>;
+  shopId?: InputMaybe<IdFilter>;
+  shopifyCreatedAt?: InputMaybe<DateTimeFilter>;
+  shopifyUpdatedAt?: InputMaybe<DateTimeFilter>;
+  source?: InputMaybe<StringFilter>;
+  updatedAt?: InputMaybe<DateTimeFilter>;
+  variants?: InputMaybe<ShopifyProductVariantsRelationshipFilter>;
+  width?: InputMaybe<FloatFilter>;
+};
+
+export type ShopifyProductImagesRelationshipFilter = {
+  every?: InputMaybe<ShopifyProductImagesInnerRelationshipFilter>;
+  some?: InputMaybe<ShopifyProductImagesInnerRelationshipFilter>;
 };
 
 export type ShopifyProductOption = {
@@ -14680,9 +17546,9 @@ export type ShopifyProductOptionFilter = {
   id?: InputMaybe<IdFilter>;
   name?: InputMaybe<StringFilter>;
   position?: InputMaybe<FloatFilter>;
-  product?: InputMaybe<IdFilter>;
+  product?: InputMaybe<ShopifyProductRelationshipFilter>;
   productId?: InputMaybe<IdFilter>;
-  shop?: InputMaybe<IdFilter>;
+  shop?: InputMaybe<ShopifyShopRelationshipFilter>;
   shopId?: InputMaybe<IdFilter>;
   updatedAt?: InputMaybe<DateTimeFilter>;
   values?: InputMaybe<JsonFilter>;
@@ -14701,6 +17567,56 @@ export type ShopifyProductOptionSort = {
   updatedAt?: InputMaybe<SortOrder>;
   /** Sort the results by the values field. Defaults to ascending (smallest value first). */
   values?: InputMaybe<SortOrder>;
+};
+
+export type ShopifyProductOptionsInnerRelationshipFilter = {
+  AND?: InputMaybe<Array<InputMaybe<ShopifyProductOptionsInnerRelationshipFilter>>>;
+  NOT?: InputMaybe<Array<InputMaybe<ShopifyProductOptionsInnerRelationshipFilter>>>;
+  OR?: InputMaybe<Array<InputMaybe<ShopifyProductOptionsInnerRelationshipFilter>>>;
+  createdAt?: InputMaybe<DateTimeFilter>;
+  id?: InputMaybe<IdFilter>;
+  name?: InputMaybe<StringFilter>;
+  position?: InputMaybe<FloatFilter>;
+  product?: InputMaybe<ShopifyProductRelationshipFilter>;
+  productId?: InputMaybe<IdFilter>;
+  shop?: InputMaybe<ShopifyShopRelationshipFilter>;
+  shopId?: InputMaybe<IdFilter>;
+  updatedAt?: InputMaybe<DateTimeFilter>;
+  values?: InputMaybe<JsonFilter>;
+};
+
+export type ShopifyProductOptionsRelationshipFilter = {
+  every?: InputMaybe<ShopifyProductOptionsInnerRelationshipFilter>;
+  some?: InputMaybe<ShopifyProductOptionsInnerRelationshipFilter>;
+};
+
+export type ShopifyProductRelationshipFilter = {
+  AND?: InputMaybe<Array<InputMaybe<ShopifyProductRelationshipFilter>>>;
+  NOT?: InputMaybe<Array<InputMaybe<ShopifyProductRelationshipFilter>>>;
+  OR?: InputMaybe<Array<InputMaybe<ShopifyProductRelationshipFilter>>>;
+  body?: InputMaybe<StringFilter>;
+  category?: InputMaybe<JsonFilter>;
+  compareAtPriceRange?: InputMaybe<JsonFilter>;
+  createdAt?: InputMaybe<DateTimeFilter>;
+  handle?: InputMaybe<StringFilter>;
+  id?: InputMaybe<IdFilter>;
+  images?: InputMaybe<ShopifyProductImagesRelationshipFilter>;
+  isSet?: InputMaybe<Scalars["Boolean"]["input"]>;
+  options?: InputMaybe<ShopifyProductOptionsRelationshipFilter>;
+  productCategory?: InputMaybe<JsonFilter>;
+  productType?: InputMaybe<StringFilter>;
+  publishedAt?: InputMaybe<DateTimeFilter>;
+  shop?: InputMaybe<ShopifyShopRelationshipFilter>;
+  shopId?: InputMaybe<IdFilter>;
+  shopifyCreatedAt?: InputMaybe<DateTimeFilter>;
+  shopifyUpdatedAt?: InputMaybe<DateTimeFilter>;
+  status?: InputMaybe<SingleEnumFilter>;
+  tags?: InputMaybe<JsonFilter>;
+  templateSuffix?: InputMaybe<StringFilter>;
+  title?: InputMaybe<StringFilter>;
+  updatedAt?: InputMaybe<DateTimeFilter>;
+  variants?: InputMaybe<ShopifyProductVariantsRelationshipFilter>;
+  vendor?: InputMaybe<StringFilter>;
 };
 
 export type ShopifyProductSort = {
@@ -14809,12 +17725,12 @@ export type ShopifyProductVariantFilter = {
   position?: InputMaybe<FloatFilter>;
   presentmentPrices?: InputMaybe<JsonFilter>;
   price?: InputMaybe<StringFilter>;
-  product?: InputMaybe<IdFilter>;
+  product?: InputMaybe<ShopifyProductRelationshipFilter>;
   productId?: InputMaybe<IdFilter>;
-  productImage?: InputMaybe<IdFilter>;
+  productImage?: InputMaybe<ShopifyProductImageRelationshipFilter>;
   productImageId?: InputMaybe<IdFilter>;
   selectedOptions?: InputMaybe<JsonFilter>;
-  shop?: InputMaybe<IdFilter>;
+  shop?: InputMaybe<ShopifyShopRelationshipFilter>;
   shopId?: InputMaybe<IdFilter>;
   shopifyCreatedAt?: InputMaybe<DateTimeFilter>;
   shopifyUpdatedAt?: InputMaybe<DateTimeFilter>;
@@ -14866,6 +17782,76 @@ export type ShopifyProductVariantSort = {
   title?: InputMaybe<SortOrder>;
   /** Sort the results by the updatedAt field. Defaults to ascending (smallest value first). */
   updatedAt?: InputMaybe<SortOrder>;
+};
+
+export type ShopifyProductVariantsInnerRelationshipFilter = {
+  AND?: InputMaybe<Array<InputMaybe<ShopifyProductVariantsInnerRelationshipFilter>>>;
+  NOT?: InputMaybe<Array<InputMaybe<ShopifyProductVariantsInnerRelationshipFilter>>>;
+  OR?: InputMaybe<Array<InputMaybe<ShopifyProductVariantsInnerRelationshipFilter>>>;
+  barcode?: InputMaybe<StringFilter>;
+  compareAtPrice?: InputMaybe<StringFilter>;
+  createdAt?: InputMaybe<DateTimeFilter>;
+  id?: InputMaybe<IdFilter>;
+  inventoryPolicy?: InputMaybe<StringFilter>;
+  inventoryQuantity?: InputMaybe<FloatFilter>;
+  option1?: InputMaybe<StringFilter>;
+  option2?: InputMaybe<StringFilter>;
+  option3?: InputMaybe<StringFilter>;
+  position?: InputMaybe<FloatFilter>;
+  presentmentPrices?: InputMaybe<JsonFilter>;
+  price?: InputMaybe<StringFilter>;
+  product?: InputMaybe<ShopifyProductRelationshipFilter>;
+  productId?: InputMaybe<IdFilter>;
+  productImage?: InputMaybe<ShopifyProductImageRelationshipFilter>;
+  productImageId?: InputMaybe<IdFilter>;
+  selectedOptions?: InputMaybe<JsonFilter>;
+  shop?: InputMaybe<ShopifyShopRelationshipFilter>;
+  shopId?: InputMaybe<IdFilter>;
+  shopifyCreatedAt?: InputMaybe<DateTimeFilter>;
+  shopifyUpdatedAt?: InputMaybe<DateTimeFilter>;
+  sku?: InputMaybe<StringFilter>;
+  taxCode?: InputMaybe<StringFilter>;
+  taxable?: InputMaybe<BooleanFilter>;
+  title?: InputMaybe<StringFilter>;
+  updatedAt?: InputMaybe<DateTimeFilter>;
+};
+
+export type ShopifyProductVariantsRelationshipFilter = {
+  every?: InputMaybe<ShopifyProductVariantsInnerRelationshipFilter>;
+  some?: InputMaybe<ShopifyProductVariantsInnerRelationshipFilter>;
+};
+
+export type ShopifyProductsInnerRelationshipFilter = {
+  AND?: InputMaybe<Array<InputMaybe<ShopifyProductsInnerRelationshipFilter>>>;
+  NOT?: InputMaybe<Array<InputMaybe<ShopifyProductsInnerRelationshipFilter>>>;
+  OR?: InputMaybe<Array<InputMaybe<ShopifyProductsInnerRelationshipFilter>>>;
+  body?: InputMaybe<StringFilter>;
+  category?: InputMaybe<JsonFilter>;
+  compareAtPriceRange?: InputMaybe<JsonFilter>;
+  createdAt?: InputMaybe<DateTimeFilter>;
+  handle?: InputMaybe<StringFilter>;
+  id?: InputMaybe<IdFilter>;
+  images?: InputMaybe<ShopifyProductImagesRelationshipFilter>;
+  options?: InputMaybe<ShopifyProductOptionsRelationshipFilter>;
+  productCategory?: InputMaybe<JsonFilter>;
+  productType?: InputMaybe<StringFilter>;
+  publishedAt?: InputMaybe<DateTimeFilter>;
+  shop?: InputMaybe<ShopifyShopRelationshipFilter>;
+  shopId?: InputMaybe<IdFilter>;
+  shopifyCreatedAt?: InputMaybe<DateTimeFilter>;
+  shopifyUpdatedAt?: InputMaybe<DateTimeFilter>;
+  status?: InputMaybe<SingleEnumFilter>;
+  tags?: InputMaybe<JsonFilter>;
+  templateSuffix?: InputMaybe<StringFilter>;
+  title?: InputMaybe<StringFilter>;
+  updatedAt?: InputMaybe<DateTimeFilter>;
+  variants?: InputMaybe<ShopifyProductVariantsRelationshipFilter>;
+  vendor?: InputMaybe<StringFilter>;
+};
+
+export type ShopifyProductsRelationshipFilter = {
+  every?: InputMaybe<ShopifyProductsInnerRelationshipFilter>;
+  some?: InputMaybe<ShopifyProductsInnerRelationshipFilter>;
 };
 
 export type ShopifyShop = {
@@ -15056,6 +18042,7 @@ export type ShopifyShopFilter = {
   enabledPresentmentCurrencies?: InputMaybe<JsonFilter>;
   finances?: InputMaybe<BooleanFilter>;
   forceSsl?: InputMaybe<BooleanFilter>;
+  gdprRequests?: InputMaybe<ShopifyGdprRequestsRelationshipFilter>;
   googleAppsDomain?: InputMaybe<StringFilter>;
   googleAppsLoginEnabled?: InputMaybe<BooleanFilter>;
   grantedScopes?: InputMaybe<JsonFilter>;
@@ -15081,6 +18068,10 @@ export type ShopifyShopFilter = {
   planName?: InputMaybe<StringFilter>;
   preLaunchEnabled?: InputMaybe<BooleanFilter>;
   primaryLocale?: InputMaybe<StringFilter>;
+  productImages?: InputMaybe<ShopifyProductImagesRelationshipFilter>;
+  productOptions?: InputMaybe<ShopifyProductOptionsRelationshipFilter>;
+  productVariants?: InputMaybe<ShopifyProductVariantsRelationshipFilter>;
+  products?: InputMaybe<ShopifyProductsRelationshipFilter>;
   province?: InputMaybe<StringFilter>;
   provinceCode?: InputMaybe<StringFilter>;
   registeredWebhooks?: InputMaybe<JsonFilter>;
@@ -15091,6 +18082,83 @@ export type ShopifyShopFilter = {
   shopifyUpdatedAt?: InputMaybe<DateTimeFilter>;
   source?: InputMaybe<StringFilter>;
   state?: InputMaybe<StateFilter>;
+  syncs?: InputMaybe<ShopifySyncsRelationshipFilter>;
+  taxShipping?: InputMaybe<BooleanFilter>;
+  taxesIncluded?: InputMaybe<BooleanFilter>;
+  timezone?: InputMaybe<StringFilter>;
+  transactionalSmsDisabled?: InputMaybe<BooleanFilter>;
+  updatedAt?: InputMaybe<DateTimeFilter>;
+  weightUnit?: InputMaybe<StringFilter>;
+  zipCode?: InputMaybe<StringFilter>;
+};
+
+export type ShopifyShopRelationshipFilter = {
+  AND?: InputMaybe<Array<InputMaybe<ShopifyShopRelationshipFilter>>>;
+  NOT?: InputMaybe<Array<InputMaybe<ShopifyShopRelationshipFilter>>>;
+  OR?: InputMaybe<Array<InputMaybe<ShopifyShopRelationshipFilter>>>;
+  address1?: InputMaybe<StringFilter>;
+  address2?: InputMaybe<StringFilter>;
+  checkoutApiSupported?: InputMaybe<BooleanFilter>;
+  city?: InputMaybe<StringFilter>;
+  cookieConsentLevel?: InputMaybe<StringFilter>;
+  country?: InputMaybe<StringFilter>;
+  countryCode?: InputMaybe<StringFilter>;
+  countryName?: InputMaybe<StringFilter>;
+  countyTaxes?: InputMaybe<JsonFilter>;
+  createdAt?: InputMaybe<DateTimeFilter>;
+  currency?: InputMaybe<StringFilter>;
+  customerAccountsV2?: InputMaybe<JsonFilter>;
+  customerEmail?: InputMaybe<StringFilter>;
+  disabledWebhooks?: InputMaybe<JsonFilter>;
+  domain?: InputMaybe<StringFilter>;
+  eligibleForCardReaderGiveaway?: InputMaybe<BooleanFilter>;
+  eligibleForPayments?: InputMaybe<BooleanFilter>;
+  email?: InputMaybe<StringFilter>;
+  enabledPresentmentCurrencies?: InputMaybe<JsonFilter>;
+  finances?: InputMaybe<BooleanFilter>;
+  forceSsl?: InputMaybe<BooleanFilter>;
+  gdprRequests?: InputMaybe<ShopifyGdprRequestsRelationshipFilter>;
+  googleAppsDomain?: InputMaybe<StringFilter>;
+  googleAppsLoginEnabled?: InputMaybe<BooleanFilter>;
+  grantedScopes?: InputMaybe<JsonFilter>;
+  hasDiscounts?: InputMaybe<BooleanFilter>;
+  hasGiftCards?: InputMaybe<BooleanFilter>;
+  hasStorefront?: InputMaybe<BooleanFilter>;
+  ianaTimezone?: InputMaybe<StringFilter>;
+  id?: InputMaybe<IdFilter>;
+  installedViaApiKey?: InputMaybe<StringFilter>;
+  isSet?: InputMaybe<Scalars["Boolean"]["input"]>;
+  latitude?: InputMaybe<FloatFilter>;
+  longitude?: InputMaybe<FloatFilter>;
+  marketingSmsContentEnabledAtCheckout?: InputMaybe<BooleanFilter>;
+  moneyFormat?: InputMaybe<StringFilter>;
+  moneyInEmailsFormat?: InputMaybe<StringFilter>;
+  moneyWithCurrencyFormat?: InputMaybe<StringFilter>;
+  moneyWithCurrencyInEmailsFormat?: InputMaybe<StringFilter>;
+  multiLocationEnabled?: InputMaybe<BooleanFilter>;
+  myshopifyDomain?: InputMaybe<StringFilter>;
+  name?: InputMaybe<StringFilter>;
+  passwordEnabled?: InputMaybe<BooleanFilter>;
+  phone?: InputMaybe<StringFilter>;
+  planDisplayName?: InputMaybe<StringFilter>;
+  planName?: InputMaybe<StringFilter>;
+  preLaunchEnabled?: InputMaybe<BooleanFilter>;
+  primaryLocale?: InputMaybe<StringFilter>;
+  productImages?: InputMaybe<ShopifyProductImagesRelationshipFilter>;
+  productOptions?: InputMaybe<ShopifyProductOptionsRelationshipFilter>;
+  productVariants?: InputMaybe<ShopifyProductVariantsRelationshipFilter>;
+  products?: InputMaybe<ShopifyProductsRelationshipFilter>;
+  province?: InputMaybe<StringFilter>;
+  provinceCode?: InputMaybe<StringFilter>;
+  registeredWebhooks?: InputMaybe<JsonFilter>;
+  requiresExtraPaymentsAgreement?: InputMaybe<BooleanFilter>;
+  setupRequired?: InputMaybe<BooleanFilter>;
+  shopOwner?: InputMaybe<StringFilter>;
+  shopifyCreatedAt?: InputMaybe<DateTimeFilter>;
+  shopifyUpdatedAt?: InputMaybe<DateTimeFilter>;
+  source?: InputMaybe<StringFilter>;
+  state?: InputMaybe<StateFilter>;
+  syncs?: InputMaybe<ShopifySyncsRelationshipFilter>;
   taxShipping?: InputMaybe<BooleanFilter>;
   taxesIncluded?: InputMaybe<BooleanFilter>;
   timezone?: InputMaybe<StringFilter>;
@@ -15281,7 +18349,7 @@ export type ShopifySyncFilter = {
   force?: InputMaybe<BooleanFilter>;
   id?: InputMaybe<IdFilter>;
   models?: InputMaybe<JsonFilter>;
-  shop?: InputMaybe<IdFilter>;
+  shop?: InputMaybe<ShopifyShopRelationshipFilter>;
   shopId?: InputMaybe<IdFilter>;
   state?: InputMaybe<StateFilter>;
   syncSince?: InputMaybe<DateTimeFilter>;
@@ -15311,20 +18379,27 @@ export type ShopifySyncSort = {
   updatedAt?: InputMaybe<SortOrder>;
 };
 
-/** Input object supporting setting or updating related model record on a relationship field */
-export type SiblingModelBelongsToInput = {
-  /** Existing ID of another record, which you would like to associate this record with */
-  _link?: InputMaybe<Scalars["GadgetID"]["input"]>;
-  create?: InputMaybe<NestedSiblingModelCreateInput>;
-  delete?: InputMaybe<NestedSiblingModelDeleteInput>;
-  update?: InputMaybe<NestedSiblingModelUpdateInput>;
+export type ShopifySyncsInnerRelationshipFilter = {
+  AND?: InputMaybe<Array<InputMaybe<ShopifySyncsInnerRelationshipFilter>>>;
+  NOT?: InputMaybe<Array<InputMaybe<ShopifySyncsInnerRelationshipFilter>>>;
+  OR?: InputMaybe<Array<InputMaybe<ShopifySyncsInnerRelationshipFilter>>>;
+  createdAt?: InputMaybe<DateTimeFilter>;
+  domain?: InputMaybe<StringFilter>;
+  errorDetails?: InputMaybe<StringFilter>;
+  errorMessage?: InputMaybe<StringFilter>;
+  force?: InputMaybe<BooleanFilter>;
+  id?: InputMaybe<IdFilter>;
+  models?: InputMaybe<JsonFilter>;
+  shop?: InputMaybe<ShopifyShopRelationshipFilter>;
+  shopId?: InputMaybe<IdFilter>;
+  state?: InputMaybe<StateFilter>;
+  syncSince?: InputMaybe<DateTimeFilter>;
+  updatedAt?: InputMaybe<DateTimeFilter>;
 };
 
-/** Input object supporting setting or updating related model record on a relationship field */
-export type SiblingModelHasManyThroughInput = {
-  create?: InputMaybe<NestedSiblingModelCreateInput>;
-  delete?: InputMaybe<NestedSiblingModelDeleteInput>;
-  update?: InputMaybe<NestedSiblingModelUpdateInput>;
+export type ShopifySyncsRelationshipFilter = {
+  every?: InputMaybe<ShopifySyncsInnerRelationshipFilter>;
+  some?: InputMaybe<ShopifySyncsInnerRelationshipFilter>;
 };
 
 export type SignInUserInput = {
@@ -15408,26 +18483,6 @@ export enum SortOrder {
   Descending = "Descending",
 }
 
-/** Input object supporting setting or updating related model record on a relationship field */
-export type StadiumBelongsToInput = {
-  /** Existing ID of another record, which you would like to associate this record with */
-  _link?: InputMaybe<Scalars["GadgetID"]["input"]>;
-  create?: InputMaybe<NestedStadiumCreateInput>;
-  delete?: InputMaybe<NestedStadiumDeleteInput>;
-  update?: InputMaybe<NestedStadiumUpdateInput>;
-};
-
-/** Input object supporting setting or updating related model record on a relationship field */
-export type StadiumHasOneInput = {
-  /** Existing ID of another record, which you would like to relink to this record */
-  _relink?: InputMaybe<HasOneRelinkInput>;
-  /** Existing ID of another record, which you would like to unlink from this record */
-  _unlink?: InputMaybe<Scalars["GadgetID"]["input"]>;
-  create?: InputMaybe<NestedStadiumCreateInput>;
-  delete?: InputMaybe<NestedStadiumDeleteInput>;
-  update?: InputMaybe<NestedStadiumUpdateInput>;
-};
-
 export type StateFilter = {
   inState?: InputMaybe<Scalars["String"]["input"]>;
   isSet?: InputMaybe<Scalars["Boolean"]["input"]>;
@@ -15479,22 +18534,6 @@ export type StringFilter = {
   notEquals?: InputMaybe<Scalars["String"]["input"]>;
   notIn?: InputMaybe<Array<InputMaybe<Scalars["String"]["input"]>>>;
   startsWith?: InputMaybe<Scalars["String"]["input"]>;
-};
-
-/** Input object supporting setting or updating related model record on a relationship field */
-export type StudentBelongsToInput = {
-  /** Existing ID of another record, which you would like to associate this record with */
-  _link?: InputMaybe<Scalars["GadgetID"]["input"]>;
-  create?: InputMaybe<NestedStudentCreateInput>;
-  delete?: InputMaybe<NestedStudentDeleteInput>;
-  update?: InputMaybe<NestedStudentUpdateInput>;
-};
-
-/** Input object supporting setting or updating related model record on a relationship field */
-export type StudentHasManyThroughInput = {
-  create?: InputMaybe<NestedStudentCreateInput>;
-  delete?: InputMaybe<NestedStudentDeleteInput>;
-  update?: InputMaybe<NestedStudentUpdateInput>;
 };
 
 export type Subscription = {
@@ -15557,9 +18596,9 @@ export type TweeterFollowersArgs = {
 export type TweeterBelongsToInput = {
   /** Existing ID of another record, which you would like to associate this record with */
   _link?: InputMaybe<Scalars["GadgetID"]["input"]>;
-  create?: InputMaybe<NestedTweeterCreateInput>;
-  delete?: InputMaybe<NestedTweeterDeleteInput>;
-  update?: InputMaybe<NestedTweeterUpdateInput>;
+  create?: InputMaybe<NestedCreateTweeterInput>;
+  delete?: InputMaybe<NestedDeleteTweeterInput>;
+  update?: InputMaybe<NestedUpdateTweeterInput>;
 };
 
 /** A connection to a list of Tweeter items. */
@@ -15584,9 +18623,11 @@ export type TweeterFilter = {
   AND?: InputMaybe<Array<InputMaybe<TweeterFilter>>>;
   NOT?: InputMaybe<Array<InputMaybe<TweeterFilter>>>;
   OR?: InputMaybe<Array<InputMaybe<TweeterFilter>>>;
-  city?: InputMaybe<IdFilter>;
+  city?: InputMaybe<GameCityRelationshipFilter>;
   cityId?: InputMaybe<IdFilter>;
   createdAt?: InputMaybe<DateTimeFilter>;
+  followees?: InputMaybe<TweetersRelationshipFilter>;
+  followers?: InputMaybe<TweetersRelationshipFilter>;
   id?: InputMaybe<IdFilter>;
   name?: InputMaybe<StringFilter>;
   updatedAt?: InputMaybe<DateTimeFilter>;
@@ -15596,16 +18637,31 @@ export type TweeterFilter = {
 export type TweeterHasManyInput = {
   /** Creates, updates, or deletes existing records in the database as needed to arrive at the list of records specified. */
   _converge?: InputMaybe<ConvergeTweeterInput>;
-  create?: InputMaybe<NestedTweeterCreateInput>;
-  delete?: InputMaybe<NestedTweeterDeleteInput>;
-  update?: InputMaybe<NestedTweeterUpdateInput>;
+  create?: InputMaybe<NestedCreateTweeterInput>;
+  delete?: InputMaybe<NestedDeleteTweeterInput>;
+  update?: InputMaybe<NestedUpdateTweeterInput>;
 };
 
 /** Input object supporting setting or updating related model record on a relationship field */
 export type TweeterHasManyThroughInput = {
-  create?: InputMaybe<NestedTweeterCreateInput>;
-  delete?: InputMaybe<NestedTweeterDeleteInput>;
-  update?: InputMaybe<NestedTweeterUpdateInput>;
+  create?: InputMaybe<NestedCreateTweeterInput>;
+  delete?: InputMaybe<NestedDeleteTweeterInput>;
+  update?: InputMaybe<NestedUpdateTweeterInput>;
+};
+
+export type TweeterRelationshipFilter = {
+  AND?: InputMaybe<Array<InputMaybe<TweeterRelationshipFilter>>>;
+  NOT?: InputMaybe<Array<InputMaybe<TweeterRelationshipFilter>>>;
+  OR?: InputMaybe<Array<InputMaybe<TweeterRelationshipFilter>>>;
+  city?: InputMaybe<GameCityRelationshipFilter>;
+  cityId?: InputMaybe<IdFilter>;
+  createdAt?: InputMaybe<DateTimeFilter>;
+  followees?: InputMaybe<TweetersRelationshipFilter>;
+  followers?: InputMaybe<TweetersRelationshipFilter>;
+  id?: InputMaybe<IdFilter>;
+  isSet?: InputMaybe<Scalars["Boolean"]["input"]>;
+  name?: InputMaybe<StringFilter>;
+  updatedAt?: InputMaybe<DateTimeFilter>;
 };
 
 export type TweeterSort = {
@@ -15617,6 +18673,25 @@ export type TweeterSort = {
   name?: InputMaybe<SortOrder>;
   /** Sort the results by the updatedAt field. Defaults to ascending (smallest value first). */
   updatedAt?: InputMaybe<SortOrder>;
+};
+
+export type TweetersInnerRelationshipFilter = {
+  AND?: InputMaybe<Array<InputMaybe<TweetersInnerRelationshipFilter>>>;
+  NOT?: InputMaybe<Array<InputMaybe<TweetersInnerRelationshipFilter>>>;
+  OR?: InputMaybe<Array<InputMaybe<TweetersInnerRelationshipFilter>>>;
+  city?: InputMaybe<GameCityRelationshipFilter>;
+  cityId?: InputMaybe<IdFilter>;
+  createdAt?: InputMaybe<DateTimeFilter>;
+  followees?: InputMaybe<TweetersRelationshipFilter>;
+  followers?: InputMaybe<TweetersRelationshipFilter>;
+  id?: InputMaybe<IdFilter>;
+  name?: InputMaybe<StringFilter>;
+  updatedAt?: InputMaybe<DateTimeFilter>;
+};
+
+export type TweetersRelationshipFilter = {
+  every?: InputMaybe<TweetersInnerRelationshipFilter>;
+  some?: InputMaybe<TweetersInnerRelationshipFilter>;
 };
 
 export type UninstallShopifyShopResult = {
@@ -15667,9 +18742,18 @@ export type UniqueFieldsChildModelFilter = {
   alias?: InputMaybe<StringFilter>;
   createdAt?: InputMaybe<DateTimeFilter>;
   id?: InputMaybe<IdFilter>;
-  mainModelParent?: InputMaybe<IdFilter>;
+  mainModelParent?: InputMaybe<UniqueFieldsMainModelRelationshipFilter>;
   mainModelParentId?: InputMaybe<IdFilter>;
   updatedAt?: InputMaybe<DateTimeFilter>;
+};
+
+/** Input object supporting setting or updating related model record on a relationship field */
+export type UniqueFieldsChildModelHasManyInput = {
+  /** Creates, updates, or deletes existing records in the database as needed to arrive at the list of records specified. */
+  _converge?: InputMaybe<ConvergeUniqueFieldsChildModelInput>;
+  create?: InputMaybe<NestedCreateUniqueFieldsChildModelInput>;
+  delete?: InputMaybe<NestedDeleteUniqueFieldsChildModelInput>;
+  update?: InputMaybe<NestedUpdateUniqueFieldsChildModelInput>;
 };
 
 export type UniqueFieldsChildModelSort = {
@@ -15681,6 +18765,23 @@ export type UniqueFieldsChildModelSort = {
   id?: InputMaybe<SortOrder>;
   /** Sort the results by the updatedAt field. Defaults to ascending (smallest value first). */
   updatedAt?: InputMaybe<SortOrder>;
+};
+
+export type UniqueFieldsChildModelsInnerRelationshipFilter = {
+  AND?: InputMaybe<Array<InputMaybe<UniqueFieldsChildModelsInnerRelationshipFilter>>>;
+  NOT?: InputMaybe<Array<InputMaybe<UniqueFieldsChildModelsInnerRelationshipFilter>>>;
+  OR?: InputMaybe<Array<InputMaybe<UniqueFieldsChildModelsInnerRelationshipFilter>>>;
+  alias?: InputMaybe<StringFilter>;
+  createdAt?: InputMaybe<DateTimeFilter>;
+  id?: InputMaybe<IdFilter>;
+  mainModelParent?: InputMaybe<UniqueFieldsMainModelRelationshipFilter>;
+  mainModelParentId?: InputMaybe<IdFilter>;
+  updatedAt?: InputMaybe<DateTimeFilter>;
+};
+
+export type UniqueFieldsChildModelsRelationshipFilter = {
+  every?: InputMaybe<UniqueFieldsChildModelsInnerRelationshipFilter>;
+  some?: InputMaybe<UniqueFieldsChildModelsInnerRelationshipFilter>;
 };
 
 export type UniqueFieldsMainModel = {
@@ -15711,6 +18812,15 @@ export type UniqueFieldsMainModelChildModelEntriesArgs = {
   sort?: InputMaybe<Array<UniqueFieldsChildModelSort>>;
 };
 
+/** Input object supporting setting or updating related model record on a relationship field */
+export type UniqueFieldsMainModelBelongsToInput = {
+  /** Existing ID of another record, which you would like to associate this record with */
+  _link?: InputMaybe<Scalars["GadgetID"]["input"]>;
+  create?: InputMaybe<NestedCreateUniqueFieldsMainModelInput>;
+  delete?: InputMaybe<NestedDeleteUniqueFieldsMainModelInput>;
+  update?: InputMaybe<NestedUpdateUniqueFieldsMainModelInput>;
+};
+
 /** A connection to a list of UniqueFieldsMainModel items. */
 export type UniqueFieldsMainModelConnection = {
   __typename?: "UniqueFieldsMainModelConnection";
@@ -15733,10 +18843,38 @@ export type UniqueFieldsMainModelFilter = {
   AND?: InputMaybe<Array<InputMaybe<UniqueFieldsMainModelFilter>>>;
   NOT?: InputMaybe<Array<InputMaybe<UniqueFieldsMainModelFilter>>>;
   OR?: InputMaybe<Array<InputMaybe<UniqueFieldsMainModelFilter>>>;
+  childModelEntries?: InputMaybe<UniqueFieldsChildModelsRelationshipFilter>;
   createdAt?: InputMaybe<DateTimeFilter>;
   id?: InputMaybe<IdFilter>;
   nonUniqueString?: InputMaybe<StringFilter>;
-  uniqueBelongsTo?: InputMaybe<IdFilter>;
+  uniqueBelongsTo?: InputMaybe<UniqueFieldsParentModelRelationshipFilter>;
+  uniqueBelongsToId?: InputMaybe<IdFilter>;
+  uniqueEmail?: InputMaybe<StringFilter>;
+  uniqueString?: InputMaybe<StringFilter>;
+  updatedAt?: InputMaybe<DateTimeFilter>;
+};
+
+/** Input object supporting setting or updating related model record on a relationship field */
+export type UniqueFieldsMainModelHasOneInput = {
+  /** Existing ID of another record, which you would like to relink to this record */
+  _relink?: InputMaybe<HasOneRelinkInput>;
+  /** Existing ID of another record, which you would like to unlink from this record */
+  _unlink?: InputMaybe<Scalars["GadgetID"]["input"]>;
+  create?: InputMaybe<NestedCreateUniqueFieldsMainModelInput>;
+  delete?: InputMaybe<NestedDeleteUniqueFieldsMainModelInput>;
+  update?: InputMaybe<NestedUpdateUniqueFieldsMainModelInput>;
+};
+
+export type UniqueFieldsMainModelRelationshipFilter = {
+  AND?: InputMaybe<Array<InputMaybe<UniqueFieldsMainModelRelationshipFilter>>>;
+  NOT?: InputMaybe<Array<InputMaybe<UniqueFieldsMainModelRelationshipFilter>>>;
+  OR?: InputMaybe<Array<InputMaybe<UniqueFieldsMainModelRelationshipFilter>>>;
+  childModelEntries?: InputMaybe<UniqueFieldsChildModelsRelationshipFilter>;
+  createdAt?: InputMaybe<DateTimeFilter>;
+  id?: InputMaybe<IdFilter>;
+  isSet?: InputMaybe<Scalars["Boolean"]["input"]>;
+  nonUniqueString?: InputMaybe<StringFilter>;
+  uniqueBelongsTo?: InputMaybe<UniqueFieldsParentModelRelationshipFilter>;
   uniqueBelongsToId?: InputMaybe<IdFilter>;
   uniqueEmail?: InputMaybe<StringFilter>;
   uniqueString?: InputMaybe<StringFilter>;
@@ -15903,6 +19041,15 @@ export type UniqueFieldsParentModel = {
   updatedAt: Scalars["DateTime"]["output"];
 };
 
+/** Input object supporting setting or updating related model record on a relationship field */
+export type UniqueFieldsParentModelBelongsToInput = {
+  /** Existing ID of another record, which you would like to associate this record with */
+  _link?: InputMaybe<Scalars["GadgetID"]["input"]>;
+  create?: InputMaybe<NestedCreateUniqueFieldsParentModelInput>;
+  delete?: InputMaybe<NestedDeleteUniqueFieldsParentModelInput>;
+  update?: InputMaybe<NestedUpdateUniqueFieldsParentModelInput>;
+};
+
 /** A connection to a list of UniqueFieldsParentModel items. */
 export type UniqueFieldsParentModelConnection = {
   __typename?: "UniqueFieldsParentModelConnection";
@@ -15925,8 +19072,22 @@ export type UniqueFieldsParentModelFilter = {
   AND?: InputMaybe<Array<InputMaybe<UniqueFieldsParentModelFilter>>>;
   NOT?: InputMaybe<Array<InputMaybe<UniqueFieldsParentModelFilter>>>;
   OR?: InputMaybe<Array<InputMaybe<UniqueFieldsParentModelFilter>>>;
+  baseModel?: InputMaybe<UniqueFieldsMainModelRelationshipFilter>;
   createdAt?: InputMaybe<DateTimeFilter>;
   id?: InputMaybe<IdFilter>;
+  parentNonUniqueString?: InputMaybe<StringFilter>;
+  parentUniqueString?: InputMaybe<StringFilter>;
+  updatedAt?: InputMaybe<DateTimeFilter>;
+};
+
+export type UniqueFieldsParentModelRelationshipFilter = {
+  AND?: InputMaybe<Array<InputMaybe<UniqueFieldsParentModelRelationshipFilter>>>;
+  NOT?: InputMaybe<Array<InputMaybe<UniqueFieldsParentModelRelationshipFilter>>>;
+  OR?: InputMaybe<Array<InputMaybe<UniqueFieldsParentModelRelationshipFilter>>>;
+  baseModel?: InputMaybe<UniqueFieldsMainModelRelationshipFilter>;
+  createdAt?: InputMaybe<DateTimeFilter>;
+  id?: InputMaybe<IdFilter>;
+  isSet?: InputMaybe<Scalars["Boolean"]["input"]>;
   parentNonUniqueString?: InputMaybe<StringFilter>;
   parentUniqueString?: InputMaybe<StringFilter>;
   updatedAt?: InputMaybe<DateTimeFilter>;
@@ -16035,13 +19196,22 @@ export type UniversityAssignmentFilter = {
   AND?: InputMaybe<Array<InputMaybe<UniversityAssignmentFilter>>>;
   NOT?: InputMaybe<Array<InputMaybe<UniversityAssignmentFilter>>>;
   OR?: InputMaybe<Array<InputMaybe<UniversityAssignmentFilter>>>;
-  course?: InputMaybe<IdFilter>;
+  course?: InputMaybe<UniversityCourseRelationshipFilter>;
   courseId?: InputMaybe<IdFilter>;
   createdAt?: InputMaybe<DateTimeFilter>;
   id?: InputMaybe<IdFilter>;
-  professor?: InputMaybe<IdFilter>;
+  professor?: InputMaybe<UniversityProfessorRelationshipFilter>;
   professorId?: InputMaybe<IdFilter>;
   updatedAt?: InputMaybe<DateTimeFilter>;
+};
+
+/** Input object supporting setting or updating related model record on a relationship field */
+export type UniversityAssignmentHasManyInput = {
+  /** Creates, updates, or deletes existing records in the database as needed to arrive at the list of records specified. */
+  _converge?: InputMaybe<ConvergeUniversityAssignmentInput>;
+  create?: InputMaybe<NestedCreateUniversityAssignmentInput>;
+  delete?: InputMaybe<NestedDeleteUniversityAssignmentInput>;
+  update?: InputMaybe<NestedUpdateUniversityAssignmentInput>;
 };
 
 export type UniversityAssignmentSort = {
@@ -16099,6 +19269,15 @@ export type UniversityCourseStudentsArgs = {
   last?: InputMaybe<Scalars["Int"]["input"]>;
 };
 
+/** Input object supporting setting or updating related model record on a relationship field */
+export type UniversityCourseBelongsToInput = {
+  /** Existing ID of another record, which you would like to associate this record with */
+  _link?: InputMaybe<Scalars["GadgetID"]["input"]>;
+  create?: InputMaybe<NestedCreateUniversityCourseInput>;
+  delete?: InputMaybe<NestedDeleteUniversityCourseInput>;
+  update?: InputMaybe<NestedUpdateUniversityCourseInput>;
+};
+
 /** A connection to a list of UniversityCourse items. */
 export type UniversityCourseConnection = {
   __typename?: "UniversityCourseConnection";
@@ -16124,6 +19303,29 @@ export type UniversityCourseFilter = {
   createdAt?: InputMaybe<DateTimeFilter>;
   description?: InputMaybe<StringFilter>;
   id?: InputMaybe<IdFilter>;
+  professors?: InputMaybe<UniversityProfessorsRelationshipFilter>;
+  students?: InputMaybe<UniversityStudentsRelationshipFilter>;
+  title?: InputMaybe<StringFilter>;
+  updatedAt?: InputMaybe<DateTimeFilter>;
+};
+
+/** Input object supporting setting or updating related model record on a relationship field */
+export type UniversityCourseHasManyThroughInput = {
+  create?: InputMaybe<NestedCreateUniversityCourseInput>;
+  delete?: InputMaybe<NestedDeleteUniversityCourseInput>;
+  update?: InputMaybe<NestedUpdateUniversityCourseInput>;
+};
+
+export type UniversityCourseRelationshipFilter = {
+  AND?: InputMaybe<Array<InputMaybe<UniversityCourseRelationshipFilter>>>;
+  NOT?: InputMaybe<Array<InputMaybe<UniversityCourseRelationshipFilter>>>;
+  OR?: InputMaybe<Array<InputMaybe<UniversityCourseRelationshipFilter>>>;
+  createdAt?: InputMaybe<DateTimeFilter>;
+  description?: InputMaybe<StringFilter>;
+  id?: InputMaybe<IdFilter>;
+  isSet?: InputMaybe<Scalars["Boolean"]["input"]>;
+  professors?: InputMaybe<UniversityProfessorsRelationshipFilter>;
+  students?: InputMaybe<UniversityStudentsRelationshipFilter>;
   title?: InputMaybe<StringFilter>;
   updatedAt?: InputMaybe<DateTimeFilter>;
 };
@@ -16139,6 +19341,24 @@ export type UniversityCourseSort = {
   title?: InputMaybe<SortOrder>;
   /** Sort the results by the updatedAt field. Defaults to ascending (smallest value first). */
   updatedAt?: InputMaybe<SortOrder>;
+};
+
+export type UniversityCoursesInnerRelationshipFilter = {
+  AND?: InputMaybe<Array<InputMaybe<UniversityCoursesInnerRelationshipFilter>>>;
+  NOT?: InputMaybe<Array<InputMaybe<UniversityCoursesInnerRelationshipFilter>>>;
+  OR?: InputMaybe<Array<InputMaybe<UniversityCoursesInnerRelationshipFilter>>>;
+  createdAt?: InputMaybe<DateTimeFilter>;
+  description?: InputMaybe<StringFilter>;
+  id?: InputMaybe<IdFilter>;
+  professors?: InputMaybe<UniversityProfessorsRelationshipFilter>;
+  students?: InputMaybe<UniversityStudentsRelationshipFilter>;
+  title?: InputMaybe<StringFilter>;
+  updatedAt?: InputMaybe<DateTimeFilter>;
+};
+
+export type UniversityCoursesRelationshipFilter = {
+  every?: InputMaybe<UniversityCoursesInnerRelationshipFilter>;
+  some?: InputMaybe<UniversityCoursesInnerRelationshipFilter>;
 };
 
 export type UniversityMutations = {
@@ -16367,7 +19587,7 @@ export type UniversityProfessor = {
   /** The globally unique, unchanging identifier for this record. Assigned and managed by Gadget. */
   id: Scalars["GadgetID"]["output"];
   lastName?: Maybe<Scalars["String"]["output"]>;
-  title?: Maybe<Scalars["ProfessorTitleEnum"]["output"]>;
+  title?: Maybe<Scalars["UniversityProfessorTitleEnum"]["output"]>;
   /** The time at which this record was last changed. Set each time the record is successfully acted upon by an action. Managed by Gadget. */
   updatedAt: Scalars["DateTime"]["output"];
 };
@@ -16384,6 +19604,15 @@ export type UniversityProfessorCoursesArgs = {
   before?: InputMaybe<Scalars["String"]["input"]>;
   first?: InputMaybe<Scalars["Int"]["input"]>;
   last?: InputMaybe<Scalars["Int"]["input"]>;
+};
+
+/** Input object supporting setting or updating related model record on a relationship field */
+export type UniversityProfessorBelongsToInput = {
+  /** Existing ID of another record, which you would like to associate this record with */
+  _link?: InputMaybe<Scalars["GadgetID"]["input"]>;
+  create?: InputMaybe<NestedCreateUniversityProfessorInput>;
+  delete?: InputMaybe<NestedDeleteUniversityProfessorInput>;
+  update?: InputMaybe<NestedUpdateUniversityProfessorInput>;
 };
 
 /** A connection to a list of UniversityProfessor items. */
@@ -16408,9 +19637,31 @@ export type UniversityProfessorFilter = {
   AND?: InputMaybe<Array<InputMaybe<UniversityProfessorFilter>>>;
   NOT?: InputMaybe<Array<InputMaybe<UniversityProfessorFilter>>>;
   OR?: InputMaybe<Array<InputMaybe<UniversityProfessorFilter>>>;
+  courses?: InputMaybe<UniversityCoursesRelationshipFilter>;
   createdAt?: InputMaybe<DateTimeFilter>;
   firstName?: InputMaybe<StringFilter>;
   id?: InputMaybe<IdFilter>;
+  lastName?: InputMaybe<StringFilter>;
+  title?: InputMaybe<SingleEnumFilter>;
+  updatedAt?: InputMaybe<DateTimeFilter>;
+};
+
+/** Input object supporting setting or updating related model record on a relationship field */
+export type UniversityProfessorHasManyThroughInput = {
+  create?: InputMaybe<NestedCreateUniversityProfessorInput>;
+  delete?: InputMaybe<NestedDeleteUniversityProfessorInput>;
+  update?: InputMaybe<NestedUpdateUniversityProfessorInput>;
+};
+
+export type UniversityProfessorRelationshipFilter = {
+  AND?: InputMaybe<Array<InputMaybe<UniversityProfessorRelationshipFilter>>>;
+  NOT?: InputMaybe<Array<InputMaybe<UniversityProfessorRelationshipFilter>>>;
+  OR?: InputMaybe<Array<InputMaybe<UniversityProfessorRelationshipFilter>>>;
+  courses?: InputMaybe<UniversityCoursesRelationshipFilter>;
+  createdAt?: InputMaybe<DateTimeFilter>;
+  firstName?: InputMaybe<StringFilter>;
+  id?: InputMaybe<IdFilter>;
+  isSet?: InputMaybe<Scalars["Boolean"]["input"]>;
   lastName?: InputMaybe<StringFilter>;
   title?: InputMaybe<SingleEnumFilter>;
   updatedAt?: InputMaybe<DateTimeFilter>;
@@ -16429,6 +19680,24 @@ export type UniversityProfessorSort = {
   title?: InputMaybe<SortOrder>;
   /** Sort the results by the updatedAt field. Defaults to ascending (smallest value first). */
   updatedAt?: InputMaybe<SortOrder>;
+};
+
+export type UniversityProfessorsInnerRelationshipFilter = {
+  AND?: InputMaybe<Array<InputMaybe<UniversityProfessorsInnerRelationshipFilter>>>;
+  NOT?: InputMaybe<Array<InputMaybe<UniversityProfessorsInnerRelationshipFilter>>>;
+  OR?: InputMaybe<Array<InputMaybe<UniversityProfessorsInnerRelationshipFilter>>>;
+  courses?: InputMaybe<UniversityCoursesRelationshipFilter>;
+  createdAt?: InputMaybe<DateTimeFilter>;
+  firstName?: InputMaybe<StringFilter>;
+  id?: InputMaybe<IdFilter>;
+  lastName?: InputMaybe<StringFilter>;
+  title?: InputMaybe<SingleEnumFilter>;
+  updatedAt?: InputMaybe<DateTimeFilter>;
+};
+
+export type UniversityProfessorsRelationshipFilter = {
+  every?: InputMaybe<UniversityProfessorsInnerRelationshipFilter>;
+  some?: InputMaybe<UniversityProfessorsInnerRelationshipFilter>;
 };
 
 export type UniversityQueries = {
@@ -16555,15 +19824,24 @@ export type UniversityRegistrationFilter = {
   AND?: InputMaybe<Array<InputMaybe<UniversityRegistrationFilter>>>;
   NOT?: InputMaybe<Array<InputMaybe<UniversityRegistrationFilter>>>;
   OR?: InputMaybe<Array<InputMaybe<UniversityRegistrationFilter>>>;
-  course?: InputMaybe<IdFilter>;
+  course?: InputMaybe<UniversityCourseRelationshipFilter>;
   courseId?: InputMaybe<IdFilter>;
   createdAt?: InputMaybe<DateTimeFilter>;
   effectiveFrom?: InputMaybe<DateFilter>;
   effectiveTo?: InputMaybe<DateFilter>;
   id?: InputMaybe<IdFilter>;
-  student?: InputMaybe<IdFilter>;
+  student?: InputMaybe<UniversityStudentRelationshipFilter>;
   studentId?: InputMaybe<IdFilter>;
   updatedAt?: InputMaybe<DateTimeFilter>;
+};
+
+/** Input object supporting setting or updating related model record on a relationship field */
+export type UniversityRegistrationHasManyInput = {
+  /** Creates, updates, or deletes existing records in the database as needed to arrive at the list of records specified. */
+  _converge?: InputMaybe<ConvergeUniversityRegistrationInput>;
+  create?: InputMaybe<NestedCreateUniversityRegistrationInput>;
+  delete?: InputMaybe<NestedDeleteUniversityRegistrationInput>;
+  update?: InputMaybe<NestedUpdateUniversityRegistrationInput>;
 };
 
 export type UniversityRegistrationSort = {
@@ -16586,7 +19864,7 @@ export type UniversityStudent = {
   courses: UniversityCourseConnection;
   /** The time at which this record was first created. Set once upon record creation and never changed. Managed by Gadget. */
   createdAt: Scalars["DateTime"]["output"];
-  department?: Maybe<Scalars["StudentDepartmentEnum"]["output"]>;
+  department?: Maybe<Scalars["UniversityStudentDepartmentEnum"]["output"]>;
   firstName?: Maybe<Scalars["String"]["output"]>;
   /** The globally unique, unchanging identifier for this record. Assigned and managed by Gadget. */
   id: Scalars["GadgetID"]["output"];
@@ -16611,6 +19889,15 @@ export type UniversityStudentRegistrationsArgs = {
   last?: InputMaybe<Scalars["Int"]["input"]>;
 };
 
+/** Input object supporting setting or updating related model record on a relationship field */
+export type UniversityStudentBelongsToInput = {
+  /** Existing ID of another record, which you would like to associate this record with */
+  _link?: InputMaybe<Scalars["GadgetID"]["input"]>;
+  create?: InputMaybe<NestedCreateUniversityStudentInput>;
+  delete?: InputMaybe<NestedDeleteUniversityStudentInput>;
+  update?: InputMaybe<NestedUpdateUniversityStudentInput>;
+};
+
 /** A connection to a list of UniversityStudent items. */
 export type UniversityStudentConnection = {
   __typename?: "UniversityStudentConnection";
@@ -16633,10 +19920,33 @@ export type UniversityStudentFilter = {
   AND?: InputMaybe<Array<InputMaybe<UniversityStudentFilter>>>;
   NOT?: InputMaybe<Array<InputMaybe<UniversityStudentFilter>>>;
   OR?: InputMaybe<Array<InputMaybe<UniversityStudentFilter>>>;
+  courses?: InputMaybe<UniversityCoursesRelationshipFilter>;
   createdAt?: InputMaybe<DateTimeFilter>;
   department?: InputMaybe<SingleEnumFilter>;
   firstName?: InputMaybe<StringFilter>;
   id?: InputMaybe<IdFilter>;
+  lastName?: InputMaybe<StringFilter>;
+  updatedAt?: InputMaybe<DateTimeFilter>;
+  year?: InputMaybe<IntFilter>;
+};
+
+/** Input object supporting setting or updating related model record on a relationship field */
+export type UniversityStudentHasManyThroughInput = {
+  create?: InputMaybe<NestedCreateUniversityStudentInput>;
+  delete?: InputMaybe<NestedDeleteUniversityStudentInput>;
+  update?: InputMaybe<NestedUpdateUniversityStudentInput>;
+};
+
+export type UniversityStudentRelationshipFilter = {
+  AND?: InputMaybe<Array<InputMaybe<UniversityStudentRelationshipFilter>>>;
+  NOT?: InputMaybe<Array<InputMaybe<UniversityStudentRelationshipFilter>>>;
+  OR?: InputMaybe<Array<InputMaybe<UniversityStudentRelationshipFilter>>>;
+  courses?: InputMaybe<UniversityCoursesRelationshipFilter>;
+  createdAt?: InputMaybe<DateTimeFilter>;
+  department?: InputMaybe<SingleEnumFilter>;
+  firstName?: InputMaybe<StringFilter>;
+  id?: InputMaybe<IdFilter>;
+  isSet?: InputMaybe<Scalars["Boolean"]["input"]>;
   lastName?: InputMaybe<StringFilter>;
   updatedAt?: InputMaybe<DateTimeFilter>;
   year?: InputMaybe<IntFilter>;
@@ -16657,6 +19967,25 @@ export type UniversityStudentSort = {
   updatedAt?: InputMaybe<SortOrder>;
   /** Sort the results by the year field. Defaults to ascending (smallest value first). */
   year?: InputMaybe<SortOrder>;
+};
+
+export type UniversityStudentsInnerRelationshipFilter = {
+  AND?: InputMaybe<Array<InputMaybe<UniversityStudentsInnerRelationshipFilter>>>;
+  NOT?: InputMaybe<Array<InputMaybe<UniversityStudentsInnerRelationshipFilter>>>;
+  OR?: InputMaybe<Array<InputMaybe<UniversityStudentsInnerRelationshipFilter>>>;
+  courses?: InputMaybe<UniversityCoursesRelationshipFilter>;
+  createdAt?: InputMaybe<DateTimeFilter>;
+  department?: InputMaybe<SingleEnumFilter>;
+  firstName?: InputMaybe<StringFilter>;
+  id?: InputMaybe<IdFilter>;
+  lastName?: InputMaybe<StringFilter>;
+  updatedAt?: InputMaybe<DateTimeFilter>;
+  year?: InputMaybe<IntFilter>;
+};
+
+export type UniversityStudentsRelationshipFilter = {
+  every?: InputMaybe<UniversityStudentsInnerRelationshipFilter>;
+  some?: InputMaybe<UniversityStudentsInnerRelationshipFilter>;
 };
 
 export type UpdateAutoTableTestInput = {
@@ -16684,6 +20013,84 @@ export type UpdateAutoTableTestResult = UpsertAutoTableTestResult & {
   actionRun?: Maybe<Scalars["String"]["output"]>;
   autoTableTest?: Maybe<AutoTableTest>;
   errors?: Maybe<Array<ExecutionError>>;
+  success: Scalars["Boolean"]["output"];
+};
+
+export type UpdateDeepRelationshipChainCitizenInput = {
+  cityOfMayorDuty?: InputMaybe<DeepRelationshipChainCityBelongsToInput>;
+  firstName?: InputMaybe<Scalars["String"]["input"]>;
+  homeCity?: InputMaybe<DeepRelationshipChainCityBelongsToInput>;
+  lastName?: InputMaybe<Scalars["String"]["input"]>;
+};
+
+export type UpdateDeepRelationshipChainCitizenResult = UpsertDeepRelationshipChainCitizenResult & {
+  __typename?: "UpdateDeepRelationshipChainCitizenResult";
+  actionRun?: Maybe<Scalars["String"]["output"]>;
+  citizen?: Maybe<DeepRelationshipChainCitizen>;
+  errors?: Maybe<Array<ExecutionError>>;
+  success: Scalars["Boolean"]["output"];
+};
+
+export type UpdateDeepRelationshipChainCityInput = {
+  citizens?: InputMaybe<Array<InputMaybe<DeepRelationshipChainCitizenHasManyInput>>>;
+  country?: InputMaybe<DeepRelationshipChainCountryBelongsToInput>;
+  englishName?: InputMaybe<Scalars["String"]["input"]>;
+  localName?: InputMaybe<Scalars["String"]["input"]>;
+  mayor?: InputMaybe<DeepRelationshipChainCitizenHasOneInput>;
+};
+
+export type UpdateDeepRelationshipChainCityResult = UpsertDeepRelationshipChainCityResult & {
+  __typename?: "UpdateDeepRelationshipChainCityResult";
+  actionRun?: Maybe<Scalars["String"]["output"]>;
+  city?: Maybe<DeepRelationshipChainCity>;
+  errors?: Maybe<Array<ExecutionError>>;
+  success: Scalars["Boolean"]["output"];
+};
+
+export type UpdateDeepRelationshipChainContinentInput = {
+  areaInSquareKm?: InputMaybe<Scalars["Float"]["input"]>;
+  countries?: InputMaybe<Array<InputMaybe<DeepRelationshipChainCountryHasManyInput>>>;
+  englishName?: InputMaybe<Scalars["String"]["input"]>;
+  frenchName?: InputMaybe<Scalars["String"]["input"]>;
+  planet?: InputMaybe<DeepRelationshipChainPlanetBelongsToInput>;
+};
+
+export type UpdateDeepRelationshipChainContinentResult = UpsertDeepRelationshipChainContinentResult & {
+  __typename?: "UpdateDeepRelationshipChainContinentResult";
+  actionRun?: Maybe<Scalars["String"]["output"]>;
+  continent?: Maybe<DeepRelationshipChainContinent>;
+  errors?: Maybe<Array<ExecutionError>>;
+  success: Scalars["Boolean"]["output"];
+};
+
+export type UpdateDeepRelationshipChainCountryInput = {
+  cities?: InputMaybe<Array<InputMaybe<DeepRelationshipChainCityHasManyInput>>>;
+  continent?: InputMaybe<DeepRelationshipChainContinentBelongsToInput>;
+  dominantLanguage?: InputMaybe<Scalars["String"]["input"]>;
+  englishName?: InputMaybe<Scalars["String"]["input"]>;
+  nativeLanguageName?: InputMaybe<Scalars["String"]["input"]>;
+  population?: InputMaybe<Scalars["Float"]["input"]>;
+};
+
+export type UpdateDeepRelationshipChainCountryResult = UpsertDeepRelationshipChainCountryResult & {
+  __typename?: "UpdateDeepRelationshipChainCountryResult";
+  actionRun?: Maybe<Scalars["String"]["output"]>;
+  country?: Maybe<DeepRelationshipChainCountry>;
+  errors?: Maybe<Array<ExecutionError>>;
+  success: Scalars["Boolean"]["output"];
+};
+
+export type UpdateDeepRelationshipChainPlanetInput = {
+  continents?: InputMaybe<Array<InputMaybe<DeepRelationshipChainContinentHasManyInput>>>;
+  englishName?: InputMaybe<Scalars["String"]["input"]>;
+  size?: InputMaybe<Scalars["Float"]["input"]>;
+};
+
+export type UpdateDeepRelationshipChainPlanetResult = UpsertDeepRelationshipChainPlanetResult & {
+  __typename?: "UpdateDeepRelationshipChainPlanetResult";
+  actionRun?: Maybe<Scalars["String"]["output"]>;
+  errors?: Maybe<Array<ExecutionError>>;
+  planet?: Maybe<DeepRelationshipChainPlanet>;
   success: Scalars["Boolean"]["output"];
 };
 
@@ -16737,7 +20144,7 @@ export type UpdateFriendshipResult = UpsertFriendshipResult & {
 
 export type UpdateGameCityInput = {
   name?: InputMaybe<Scalars["String"]["input"]>;
-  stadium?: InputMaybe<StadiumHasOneInput>;
+  stadium?: InputMaybe<GameStadiumHasOneInput>;
   tweeters?: InputMaybe<Array<InputMaybe<TweeterHasManyInput>>>;
 };
 
@@ -16750,7 +20157,7 @@ export type UpdateGameCityResult = UpsertGameCityResult & {
 };
 
 export type UpdateGamePlayerInput = {
-  currentRound?: InputMaybe<RoundBelongsToInput>;
+  currentRound?: InputMaybe<GameRoundBelongsToInput>;
   name?: InputMaybe<Scalars["String"]["input"]>;
 };
 
@@ -16764,8 +20171,8 @@ export type UpdateGamePlayerResult = UpsertGamePlayerResult & {
 
 export type UpdateGameRoundInput = {
   name?: InputMaybe<Scalars["String"]["input"]>;
-  players?: InputMaybe<Array<InputMaybe<PlayerHasManyInput>>>;
-  stadium?: InputMaybe<StadiumBelongsToInput>;
+  players?: InputMaybe<Array<InputMaybe<GamePlayerHasManyInput>>>;
+  stadium?: InputMaybe<GameStadiumBelongsToInput>;
 };
 
 export type UpdateGameRoundResult = UpsertGameRoundResult & {
@@ -16777,12 +20184,12 @@ export type UpdateGameRoundResult = UpsertGameRoundResult & {
 };
 
 export type UpdateGameStadiumInput = {
-  city?: InputMaybe<CityBelongsToInput>;
+  city?: InputMaybe<GameCityBelongsToInput>;
   name?: InputMaybe<Scalars["String"]["input"]>;
   photo?: InputMaybe<StoredFileInput>;
-  rounds?: InputMaybe<Array<InputMaybe<RoundHasManyInput>>>;
-  tags?: InputMaybe<Array<Scalars["StadiumTagsEnum"]["input"]>>;
-  type?: InputMaybe<Scalars["StadiumTypeEnum"]["input"]>;
+  rounds?: InputMaybe<Array<InputMaybe<GameRoundHasManyInput>>>;
+  tags?: InputMaybe<Array<Scalars["GameStadiumTagsEnum"]["input"]>>;
+  type?: InputMaybe<Scalars["GameStadiumTypeEnum"]["input"]>;
 };
 
 export type UpdateGameStadiumResult = UpsertGameStadiumResult & {
@@ -16810,9 +20217,9 @@ export type UpdateGizmoResult = UpsertGizmoResult & {
 };
 
 export type UpdateHasManyThroughBaseModelInput = {
-  baseModelHmtField?: InputMaybe<Array<InputMaybe<SiblingModelHasManyThroughInput>>>;
+  baseModelHmtField?: InputMaybe<Array<InputMaybe<HasManyThroughSiblingModelHasManyThroughInput>>>;
   baseModelName?: InputMaybe<Scalars["String"]["input"]>;
-  joinerModels?: InputMaybe<Array<InputMaybe<JoinerModelHasManyInput>>>;
+  joinerModels?: InputMaybe<Array<InputMaybe<HasManyThroughJoinerModelHasManyInput>>>;
 };
 
 export type UpdateHasManyThroughBaseModelResult = UpsertHasManyThroughBaseModelResult & {
@@ -16824,8 +20231,8 @@ export type UpdateHasManyThroughBaseModelResult = UpsertHasManyThroughBaseModelR
 };
 
 export type UpdateHasManyThroughJoinerModelInput = {
-  joinerBelongsToBase?: InputMaybe<BaseModelBelongsToInput>;
-  joinerBelongsToSibling?: InputMaybe<SiblingModelBelongsToInput>;
+  joinerBelongsToBase?: InputMaybe<HasManyThroughBaseModelBelongsToInput>;
+  joinerBelongsToSibling?: InputMaybe<HasManyThroughSiblingModelBelongsToInput>;
 };
 
 export type UpdateHasManyThroughJoinerModelResult = UpsertHasManyThroughJoinerModelResult & {
@@ -16837,8 +20244,8 @@ export type UpdateHasManyThroughJoinerModelResult = UpsertHasManyThroughJoinerMo
 };
 
 export type UpdateHasManyThroughSiblingModelInput = {
-  joinerModels?: InputMaybe<Array<InputMaybe<JoinerModelHasManyInput>>>;
-  siblingModelHmtField?: InputMaybe<Array<InputMaybe<BaseModelHasManyThroughInput>>>;
+  joinerModels?: InputMaybe<Array<InputMaybe<HasManyThroughJoinerModelHasManyInput>>>;
+  siblingModelHmtField?: InputMaybe<Array<InputMaybe<HasManyThroughBaseModelHasManyThroughInput>>>;
   siblingName?: InputMaybe<Scalars["String"]["input"]>;
 };
 
@@ -16935,7 +20342,7 @@ export type UpdateShopifyShopResult = UpsertShopifyShopResult & {
 };
 
 export type UpdateTweeterInput = {
-  city?: InputMaybe<CityBelongsToInput>;
+  city?: InputMaybe<GameCityBelongsToInput>;
   followeeFriendships?: InputMaybe<Array<InputMaybe<FriendshipHasManyInput>>>;
   followees?: InputMaybe<Array<InputMaybe<TweeterHasManyThroughInput>>>;
   followerFriendships?: InputMaybe<Array<InputMaybe<FriendshipHasManyInput>>>;
@@ -16953,7 +20360,7 @@ export type UpdateTweeterResult = UpsertTweeterResult & {
 
 export type UpdateUniqueFieldsChildModelInput = {
   alias?: InputMaybe<Scalars["String"]["input"]>;
-  mainModelParent?: InputMaybe<MainModelBelongsToInput>;
+  mainModelParent?: InputMaybe<UniqueFieldsMainModelBelongsToInput>;
 };
 
 export type UpdateUniqueFieldsChildModelResult = UpsertUniqueFieldsChildModelResult & {
@@ -16965,9 +20372,9 @@ export type UpdateUniqueFieldsChildModelResult = UpsertUniqueFieldsChildModelRes
 };
 
 export type UpdateUniqueFieldsMainModelInput = {
-  childModelEntries?: InputMaybe<Array<InputMaybe<ChildModelHasManyInput>>>;
+  childModelEntries?: InputMaybe<Array<InputMaybe<UniqueFieldsChildModelHasManyInput>>>;
   nonUniqueString?: InputMaybe<Scalars["String"]["input"]>;
-  uniqueBelongsTo?: InputMaybe<ParentModelBelongsToInput>;
+  uniqueBelongsTo?: InputMaybe<UniqueFieldsParentModelBelongsToInput>;
   uniqueEmail?: InputMaybe<Scalars["String"]["input"]>;
   uniqueString?: InputMaybe<Scalars["String"]["input"]>;
 };
@@ -16981,7 +20388,7 @@ export type UpdateUniqueFieldsMainModelResult = UpsertUniqueFieldsMainModelResul
 };
 
 export type UpdateUniqueFieldsParentModelInput = {
-  baseModel?: InputMaybe<MainModelHasOneInput>;
+  baseModel?: InputMaybe<UniqueFieldsMainModelHasOneInput>;
   parentNonUniqueString?: InputMaybe<Scalars["String"]["input"]>;
   parentUniqueString?: InputMaybe<Scalars["String"]["input"]>;
 };
@@ -16995,8 +20402,8 @@ export type UpdateUniqueFieldsParentModelResult = UpsertUniqueFieldsParentModelR
 };
 
 export type UpdateUniversityAssignmentInput = {
-  course?: InputMaybe<CourseBelongsToInput>;
-  professor?: InputMaybe<ProfessorBelongsToInput>;
+  course?: InputMaybe<UniversityCourseBelongsToInput>;
+  professor?: InputMaybe<UniversityProfessorBelongsToInput>;
 };
 
 export type UpdateUniversityAssignmentResult = UpsertUniversityAssignmentResult & {
@@ -17008,11 +20415,11 @@ export type UpdateUniversityAssignmentResult = UpsertUniversityAssignmentResult 
 };
 
 export type UpdateUniversityCourseInput = {
-  assignments?: InputMaybe<Array<InputMaybe<AssignmentHasManyInput>>>;
+  assignments?: InputMaybe<Array<InputMaybe<UniversityAssignmentHasManyInput>>>;
   description?: InputMaybe<RichTextInput>;
-  professors?: InputMaybe<Array<InputMaybe<ProfessorHasManyThroughInput>>>;
-  registrations?: InputMaybe<Array<InputMaybe<RegistrationHasManyInput>>>;
-  students?: InputMaybe<Array<InputMaybe<StudentHasManyThroughInput>>>;
+  professors?: InputMaybe<Array<InputMaybe<UniversityProfessorHasManyThroughInput>>>;
+  registrations?: InputMaybe<Array<InputMaybe<UniversityRegistrationHasManyInput>>>;
+  students?: InputMaybe<Array<InputMaybe<UniversityStudentHasManyThroughInput>>>;
   title?: InputMaybe<Scalars["String"]["input"]>;
 };
 
@@ -17025,11 +20432,11 @@ export type UpdateUniversityCourseResult = UpsertUniversityCourseResult & {
 };
 
 export type UpdateUniversityProfessorInput = {
-  assignments?: InputMaybe<Array<InputMaybe<AssignmentHasManyInput>>>;
-  courses?: InputMaybe<Array<InputMaybe<CourseHasManyThroughInput>>>;
+  assignments?: InputMaybe<Array<InputMaybe<UniversityAssignmentHasManyInput>>>;
+  courses?: InputMaybe<Array<InputMaybe<UniversityCourseHasManyThroughInput>>>;
   firstName?: InputMaybe<Scalars["String"]["input"]>;
   lastName?: InputMaybe<Scalars["String"]["input"]>;
-  title?: InputMaybe<Scalars["ProfessorTitleEnum"]["input"]>;
+  title?: InputMaybe<Scalars["UniversityProfessorTitleEnum"]["input"]>;
 };
 
 export type UpdateUniversityProfessorResult = UpsertUniversityProfessorResult & {
@@ -17041,10 +20448,10 @@ export type UpdateUniversityProfessorResult = UpsertUniversityProfessorResult & 
 };
 
 export type UpdateUniversityRegistrationInput = {
-  course?: InputMaybe<CourseBelongsToInput>;
+  course?: InputMaybe<UniversityCourseBelongsToInput>;
   effectiveFrom?: InputMaybe<Scalars["DateOrDateTime"]["input"]>;
   effectiveTo?: InputMaybe<Scalars["DateOrDateTime"]["input"]>;
-  student?: InputMaybe<StudentBelongsToInput>;
+  student?: InputMaybe<UniversityStudentBelongsToInput>;
 };
 
 export type UpdateUniversityRegistrationResult = UpsertUniversityRegistrationResult & {
@@ -17056,11 +20463,11 @@ export type UpdateUniversityRegistrationResult = UpsertUniversityRegistrationRes
 };
 
 export type UpdateUniversityStudentInput = {
-  courses?: InputMaybe<Array<InputMaybe<CourseHasManyThroughInput>>>;
-  department?: InputMaybe<Scalars["StudentDepartmentEnum"]["input"]>;
+  courses?: InputMaybe<Array<InputMaybe<UniversityCourseHasManyThroughInput>>>;
+  department?: InputMaybe<Scalars["UniversityStudentDepartmentEnum"]["input"]>;
   firstName?: InputMaybe<Scalars["String"]["input"]>;
   lastName?: InputMaybe<Scalars["String"]["input"]>;
-  registrations?: InputMaybe<Array<InputMaybe<RegistrationHasManyInput>>>;
+  registrations?: InputMaybe<Array<InputMaybe<UniversityRegistrationHasManyInput>>>;
   year?: InputMaybe<Scalars["Int"]["input"]>;
 };
 
@@ -17204,6 +20611,79 @@ export type UpsertAutoTableTestResult = {
   success: Scalars["Boolean"]["output"];
 };
 
+export type UpsertDeepRelationshipChainCitizenInput = {
+  cityOfMayorDuty?: InputMaybe<DeepRelationshipChainCityBelongsToInput>;
+  firstName?: InputMaybe<Scalars["String"]["input"]>;
+  homeCity?: InputMaybe<DeepRelationshipChainCityBelongsToInput>;
+  id?: InputMaybe<Scalars["GadgetID"]["input"]>;
+  lastName?: InputMaybe<Scalars["String"]["input"]>;
+};
+
+export type UpsertDeepRelationshipChainCitizenResult = {
+  actionRun?: Maybe<Scalars["String"]["output"]>;
+  errors?: Maybe<Array<ExecutionError>>;
+  success: Scalars["Boolean"]["output"];
+};
+
+export type UpsertDeepRelationshipChainCityInput = {
+  citizens?: InputMaybe<Array<InputMaybe<DeepRelationshipChainCitizenHasManyInput>>>;
+  country?: InputMaybe<DeepRelationshipChainCountryBelongsToInput>;
+  englishName?: InputMaybe<Scalars["String"]["input"]>;
+  id?: InputMaybe<Scalars["GadgetID"]["input"]>;
+  localName?: InputMaybe<Scalars["String"]["input"]>;
+  mayor?: InputMaybe<DeepRelationshipChainCitizenHasOneInput>;
+};
+
+export type UpsertDeepRelationshipChainCityResult = {
+  actionRun?: Maybe<Scalars["String"]["output"]>;
+  errors?: Maybe<Array<ExecutionError>>;
+  success: Scalars["Boolean"]["output"];
+};
+
+export type UpsertDeepRelationshipChainContinentInput = {
+  areaInSquareKm?: InputMaybe<Scalars["Float"]["input"]>;
+  countries?: InputMaybe<Array<InputMaybe<DeepRelationshipChainCountryHasManyInput>>>;
+  englishName?: InputMaybe<Scalars["String"]["input"]>;
+  frenchName?: InputMaybe<Scalars["String"]["input"]>;
+  id?: InputMaybe<Scalars["GadgetID"]["input"]>;
+  planet?: InputMaybe<DeepRelationshipChainPlanetBelongsToInput>;
+};
+
+export type UpsertDeepRelationshipChainContinentResult = {
+  actionRun?: Maybe<Scalars["String"]["output"]>;
+  errors?: Maybe<Array<ExecutionError>>;
+  success: Scalars["Boolean"]["output"];
+};
+
+export type UpsertDeepRelationshipChainCountryInput = {
+  cities?: InputMaybe<Array<InputMaybe<DeepRelationshipChainCityHasManyInput>>>;
+  continent?: InputMaybe<DeepRelationshipChainContinentBelongsToInput>;
+  dominantLanguage?: InputMaybe<Scalars["String"]["input"]>;
+  englishName?: InputMaybe<Scalars["String"]["input"]>;
+  id?: InputMaybe<Scalars["GadgetID"]["input"]>;
+  nativeLanguageName?: InputMaybe<Scalars["String"]["input"]>;
+  population?: InputMaybe<Scalars["Float"]["input"]>;
+};
+
+export type UpsertDeepRelationshipChainCountryResult = {
+  actionRun?: Maybe<Scalars["String"]["output"]>;
+  errors?: Maybe<Array<ExecutionError>>;
+  success: Scalars["Boolean"]["output"];
+};
+
+export type UpsertDeepRelationshipChainPlanetInput = {
+  continents?: InputMaybe<Array<InputMaybe<DeepRelationshipChainContinentHasManyInput>>>;
+  englishName?: InputMaybe<Scalars["String"]["input"]>;
+  id?: InputMaybe<Scalars["GadgetID"]["input"]>;
+  size?: InputMaybe<Scalars["Float"]["input"]>;
+};
+
+export type UpsertDeepRelationshipChainPlanetResult = {
+  actionRun?: Maybe<Scalars["String"]["output"]>;
+  errors?: Maybe<Array<ExecutionError>>;
+  success: Scalars["Boolean"]["output"];
+};
+
 export type UpsertDoodadInput = {
   active?: InputMaybe<Scalars["Boolean"]["input"]>;
   gizmo?: InputMaybe<GizmoBelongsToInput>;
@@ -17221,6 +20701,11 @@ export type UpsertDoodadResult = {
 };
 
 export type UpsertError = UpsertAutoTableTestResult &
+  UpsertDeepRelationshipChainCitizenResult &
+  UpsertDeepRelationshipChainCityResult &
+  UpsertDeepRelationshipChainContinentResult &
+  UpsertDeepRelationshipChainCountryResult &
+  UpsertDeepRelationshipChainPlanetResult &
   UpsertDoodadResult &
   UpsertFooResult &
   UpsertFriendshipResult &
@@ -17291,7 +20776,7 @@ export type UpsertFriendshipResult = {
 export type UpsertGameCityInput = {
   id?: InputMaybe<Scalars["GadgetID"]["input"]>;
   name?: InputMaybe<Scalars["String"]["input"]>;
-  stadium?: InputMaybe<StadiumHasOneInput>;
+  stadium?: InputMaybe<GameStadiumHasOneInput>;
   tweeters?: InputMaybe<Array<InputMaybe<TweeterHasManyInput>>>;
 };
 
@@ -17302,7 +20787,7 @@ export type UpsertGameCityResult = {
 };
 
 export type UpsertGamePlayerInput = {
-  currentRound?: InputMaybe<RoundBelongsToInput>;
+  currentRound?: InputMaybe<GameRoundBelongsToInput>;
   id?: InputMaybe<Scalars["GadgetID"]["input"]>;
   name?: InputMaybe<Scalars["String"]["input"]>;
 };
@@ -17316,8 +20801,8 @@ export type UpsertGamePlayerResult = {
 export type UpsertGameRoundInput = {
   id?: InputMaybe<Scalars["GadgetID"]["input"]>;
   name?: InputMaybe<Scalars["String"]["input"]>;
-  players?: InputMaybe<Array<InputMaybe<PlayerHasManyInput>>>;
-  stadium?: InputMaybe<StadiumBelongsToInput>;
+  players?: InputMaybe<Array<InputMaybe<GamePlayerHasManyInput>>>;
+  stadium?: InputMaybe<GameStadiumBelongsToInput>;
 };
 
 export type UpsertGameRoundResult = {
@@ -17327,13 +20812,13 @@ export type UpsertGameRoundResult = {
 };
 
 export type UpsertGameStadiumInput = {
-  city?: InputMaybe<CityBelongsToInput>;
+  city?: InputMaybe<GameCityBelongsToInput>;
   id?: InputMaybe<Scalars["GadgetID"]["input"]>;
   name?: InputMaybe<Scalars["String"]["input"]>;
   photo?: InputMaybe<StoredFileInput>;
-  rounds?: InputMaybe<Array<InputMaybe<RoundHasManyInput>>>;
-  tags?: InputMaybe<Array<Scalars["StadiumTagsEnum"]["input"]>>;
-  type?: InputMaybe<Scalars["StadiumTypeEnum"]["input"]>;
+  rounds?: InputMaybe<Array<InputMaybe<GameRoundHasManyInput>>>;
+  tags?: InputMaybe<Array<Scalars["GameStadiumTagsEnum"]["input"]>>;
+  type?: InputMaybe<Scalars["GameStadiumTypeEnum"]["input"]>;
 };
 
 export type UpsertGameStadiumResult = {
@@ -17358,10 +20843,10 @@ export type UpsertGizmoResult = {
 };
 
 export type UpsertHasManyThroughBaseModelInput = {
-  baseModelHmtField?: InputMaybe<Array<InputMaybe<SiblingModelHasManyThroughInput>>>;
+  baseModelHmtField?: InputMaybe<Array<InputMaybe<HasManyThroughSiblingModelHasManyThroughInput>>>;
   baseModelName?: InputMaybe<Scalars["String"]["input"]>;
   id?: InputMaybe<Scalars["GadgetID"]["input"]>;
-  joinerModels?: InputMaybe<Array<InputMaybe<JoinerModelHasManyInput>>>;
+  joinerModels?: InputMaybe<Array<InputMaybe<HasManyThroughJoinerModelHasManyInput>>>;
 };
 
 export type UpsertHasManyThroughBaseModelResult = {
@@ -17372,8 +20857,8 @@ export type UpsertHasManyThroughBaseModelResult = {
 
 export type UpsertHasManyThroughJoinerModelInput = {
   id?: InputMaybe<Scalars["GadgetID"]["input"]>;
-  joinerBelongsToBase?: InputMaybe<BaseModelBelongsToInput>;
-  joinerBelongsToSibling?: InputMaybe<SiblingModelBelongsToInput>;
+  joinerBelongsToBase?: InputMaybe<HasManyThroughBaseModelBelongsToInput>;
+  joinerBelongsToSibling?: InputMaybe<HasManyThroughSiblingModelBelongsToInput>;
 };
 
 export type UpsertHasManyThroughJoinerModelResult = {
@@ -17384,8 +20869,8 @@ export type UpsertHasManyThroughJoinerModelResult = {
 
 export type UpsertHasManyThroughSiblingModelInput = {
   id?: InputMaybe<Scalars["GadgetID"]["input"]>;
-  joinerModels?: InputMaybe<Array<InputMaybe<JoinerModelHasManyInput>>>;
-  siblingModelHmtField?: InputMaybe<Array<InputMaybe<BaseModelHasManyThroughInput>>>;
+  joinerModels?: InputMaybe<Array<InputMaybe<HasManyThroughJoinerModelHasManyInput>>>;
+  siblingModelHmtField?: InputMaybe<Array<InputMaybe<HasManyThroughBaseModelHasManyThroughInput>>>;
   siblingName?: InputMaybe<Scalars["String"]["input"]>;
 };
 
@@ -17485,7 +20970,7 @@ export type UpsertShopifySyncResult = {
 };
 
 export type UpsertTweeterInput = {
-  city?: InputMaybe<CityBelongsToInput>;
+  city?: InputMaybe<GameCityBelongsToInput>;
   followeeFriendships?: InputMaybe<Array<InputMaybe<FriendshipHasManyInput>>>;
   followees?: InputMaybe<Array<InputMaybe<TweeterHasManyThroughInput>>>;
   followerFriendships?: InputMaybe<Array<InputMaybe<FriendshipHasManyInput>>>;
@@ -17503,7 +20988,7 @@ export type UpsertTweeterResult = {
 export type UpsertUniqueFieldsChildModelInput = {
   alias?: InputMaybe<Scalars["String"]["input"]>;
   id?: InputMaybe<Scalars["GadgetID"]["input"]>;
-  mainModelParent?: InputMaybe<MainModelBelongsToInput>;
+  mainModelParent?: InputMaybe<UniqueFieldsMainModelBelongsToInput>;
 };
 
 export type UpsertUniqueFieldsChildModelResult = {
@@ -17513,10 +20998,10 @@ export type UpsertUniqueFieldsChildModelResult = {
 };
 
 export type UpsertUniqueFieldsMainModelInput = {
-  childModelEntries?: InputMaybe<Array<InputMaybe<ChildModelHasManyInput>>>;
+  childModelEntries?: InputMaybe<Array<InputMaybe<UniqueFieldsChildModelHasManyInput>>>;
   id?: InputMaybe<Scalars["GadgetID"]["input"]>;
   nonUniqueString?: InputMaybe<Scalars["String"]["input"]>;
-  uniqueBelongsTo?: InputMaybe<ParentModelBelongsToInput>;
+  uniqueBelongsTo?: InputMaybe<UniqueFieldsParentModelBelongsToInput>;
   uniqueEmail?: InputMaybe<Scalars["String"]["input"]>;
   uniqueString?: InputMaybe<Scalars["String"]["input"]>;
 };
@@ -17528,7 +21013,7 @@ export type UpsertUniqueFieldsMainModelResult = {
 };
 
 export type UpsertUniqueFieldsParentModelInput = {
-  baseModel?: InputMaybe<MainModelHasOneInput>;
+  baseModel?: InputMaybe<UniqueFieldsMainModelHasOneInput>;
   id?: InputMaybe<Scalars["GadgetID"]["input"]>;
   parentNonUniqueString?: InputMaybe<Scalars["String"]["input"]>;
   parentUniqueString?: InputMaybe<Scalars["String"]["input"]>;
@@ -17541,9 +21026,9 @@ export type UpsertUniqueFieldsParentModelResult = {
 };
 
 export type UpsertUniversityAssignmentInput = {
-  course?: InputMaybe<CourseBelongsToInput>;
+  course?: InputMaybe<UniversityCourseBelongsToInput>;
   id?: InputMaybe<Scalars["GadgetID"]["input"]>;
-  professor?: InputMaybe<ProfessorBelongsToInput>;
+  professor?: InputMaybe<UniversityProfessorBelongsToInput>;
 };
 
 export type UpsertUniversityAssignmentResult = {
@@ -17553,12 +21038,12 @@ export type UpsertUniversityAssignmentResult = {
 };
 
 export type UpsertUniversityCourseInput = {
-  assignments?: InputMaybe<Array<InputMaybe<AssignmentHasManyInput>>>;
+  assignments?: InputMaybe<Array<InputMaybe<UniversityAssignmentHasManyInput>>>;
   description?: InputMaybe<RichTextInput>;
   id?: InputMaybe<Scalars["GadgetID"]["input"]>;
-  professors?: InputMaybe<Array<InputMaybe<ProfessorHasManyThroughInput>>>;
-  registrations?: InputMaybe<Array<InputMaybe<RegistrationHasManyInput>>>;
-  students?: InputMaybe<Array<InputMaybe<StudentHasManyThroughInput>>>;
+  professors?: InputMaybe<Array<InputMaybe<UniversityProfessorHasManyThroughInput>>>;
+  registrations?: InputMaybe<Array<InputMaybe<UniversityRegistrationHasManyInput>>>;
+  students?: InputMaybe<Array<InputMaybe<UniversityStudentHasManyThroughInput>>>;
   title?: InputMaybe<Scalars["String"]["input"]>;
 };
 
@@ -17569,12 +21054,12 @@ export type UpsertUniversityCourseResult = {
 };
 
 export type UpsertUniversityProfessorInput = {
-  assignments?: InputMaybe<Array<InputMaybe<AssignmentHasManyInput>>>;
-  courses?: InputMaybe<Array<InputMaybe<CourseHasManyThroughInput>>>;
+  assignments?: InputMaybe<Array<InputMaybe<UniversityAssignmentHasManyInput>>>;
+  courses?: InputMaybe<Array<InputMaybe<UniversityCourseHasManyThroughInput>>>;
   firstName?: InputMaybe<Scalars["String"]["input"]>;
   id?: InputMaybe<Scalars["GadgetID"]["input"]>;
   lastName?: InputMaybe<Scalars["String"]["input"]>;
-  title?: InputMaybe<Scalars["ProfessorTitleEnum"]["input"]>;
+  title?: InputMaybe<Scalars["UniversityProfessorTitleEnum"]["input"]>;
 };
 
 export type UpsertUniversityProfessorResult = {
@@ -17584,11 +21069,11 @@ export type UpsertUniversityProfessorResult = {
 };
 
 export type UpsertUniversityRegistrationInput = {
-  course?: InputMaybe<CourseBelongsToInput>;
+  course?: InputMaybe<UniversityCourseBelongsToInput>;
   effectiveFrom?: InputMaybe<Scalars["DateOrDateTime"]["input"]>;
   effectiveTo?: InputMaybe<Scalars["DateOrDateTime"]["input"]>;
   id?: InputMaybe<Scalars["GadgetID"]["input"]>;
-  student?: InputMaybe<StudentBelongsToInput>;
+  student?: InputMaybe<UniversityStudentBelongsToInput>;
 };
 
 export type UpsertUniversityRegistrationResult = {
@@ -17598,12 +21083,12 @@ export type UpsertUniversityRegistrationResult = {
 };
 
 export type UpsertUniversityStudentInput = {
-  courses?: InputMaybe<Array<InputMaybe<CourseHasManyThroughInput>>>;
-  department?: InputMaybe<Scalars["StudentDepartmentEnum"]["input"]>;
+  courses?: InputMaybe<Array<InputMaybe<UniversityCourseHasManyThroughInput>>>;
+  department?: InputMaybe<Scalars["UniversityStudentDepartmentEnum"]["input"]>;
   firstName?: InputMaybe<Scalars["String"]["input"]>;
   id?: InputMaybe<Scalars["GadgetID"]["input"]>;
   lastName?: InputMaybe<Scalars["String"]["input"]>;
-  registrations?: InputMaybe<Array<InputMaybe<RegistrationHasManyInput>>>;
+  registrations?: InputMaybe<Array<InputMaybe<UniversityRegistrationHasManyInput>>>;
   year?: InputMaybe<Scalars["Int"]["input"]>;
 };
 
@@ -17853,13 +21338,13 @@ export type WidgetGizmosArgs = {
 export type WidgetBelongsToInput = {
   /** Existing ID of another record, which you would like to associate this record with */
   _link?: InputMaybe<Scalars["GadgetID"]["input"]>;
-  addInventory?: InputMaybe<NestedWidgetAddInventoryInput>;
-  alwaysThrowError?: InputMaybe<NestedWidgetAlwaysThrowErrorInput>;
-  create?: InputMaybe<NestedWidgetCreateInput>;
-  createWithCustomParams?: InputMaybe<NestedWidgetCreateWithCustomParamsInput>;
-  delete?: InputMaybe<NestedWidgetDeleteInput>;
-  update?: InputMaybe<NestedWidgetUpdateInput>;
-  updateWithCustomParams?: InputMaybe<NestedWidgetUpdateWithCustomParamsInput>;
+  addInventory?: InputMaybe<NestedAddInventoryWidgetInput>;
+  alwaysThrowError?: InputMaybe<NestedAlwaysThrowErrorWidgetInput>;
+  create?: InputMaybe<NestedCreateWidgetInput>;
+  createWithCustomParams?: InputMaybe<NestedCreateWithCustomParamsWidgetInput>;
+  delete?: InputMaybe<NestedDeleteWidgetInput>;
+  update?: InputMaybe<NestedUpdateWidgetInput>;
+  updateWithCustomParams?: InputMaybe<NestedUpdateWithCustomParamsWidgetInput>;
 };
 
 /** A connection to a list of Widget items. */
@@ -17889,7 +21374,9 @@ export type WidgetFilter = {
   category?: InputMaybe<MultiEnumFilter>;
   createdAt?: InputMaybe<DateTimeFilter>;
   description?: InputMaybe<StringFilter>;
+  doodad?: InputMaybe<DoodadRelationshipFilter>;
   embedding?: InputMaybe<VectorFilter>;
+  gizmos?: InputMaybe<GizmosRelationshipFilter>;
   id?: InputMaybe<IdFilter>;
   inventoryCount?: InputMaybe<FloatFilter>;
   isChecked?: InputMaybe<BooleanFilter>;
@@ -17897,7 +21384,7 @@ export type WidgetFilter = {
   mustBeLongString?: InputMaybe<StringFilter>;
   name?: InputMaybe<StringFilter>;
   roles?: InputMaybe<RoleAssignmentFilter>;
-  section?: InputMaybe<IdFilter>;
+  section?: InputMaybe<SectionRelationshipFilter>;
   sectionId?: InputMaybe<IdFilter>;
   startsAt?: InputMaybe<DateTimeFilter>;
   updatedAt?: InputMaybe<DateTimeFilter>;
@@ -17907,13 +21394,39 @@ export type WidgetFilter = {
 export type WidgetHasManyInput = {
   /** Creates, updates, or deletes existing records in the database as needed to arrive at the list of records specified. */
   _converge?: InputMaybe<ConvergeWidgetInput>;
-  addInventory?: InputMaybe<NestedWidgetAddInventoryInput>;
-  alwaysThrowError?: InputMaybe<NestedWidgetAlwaysThrowErrorInput>;
-  create?: InputMaybe<NestedWidgetCreateInput>;
-  createWithCustomParams?: InputMaybe<NestedWidgetCreateWithCustomParamsInput>;
-  delete?: InputMaybe<NestedWidgetDeleteInput>;
-  update?: InputMaybe<NestedWidgetUpdateInput>;
-  updateWithCustomParams?: InputMaybe<NestedWidgetUpdateWithCustomParamsInput>;
+  addInventory?: InputMaybe<NestedAddInventoryWidgetInput>;
+  alwaysThrowError?: InputMaybe<NestedAlwaysThrowErrorWidgetInput>;
+  create?: InputMaybe<NestedCreateWidgetInput>;
+  createWithCustomParams?: InputMaybe<NestedCreateWithCustomParamsWidgetInput>;
+  delete?: InputMaybe<NestedDeleteWidgetInput>;
+  update?: InputMaybe<NestedUpdateWidgetInput>;
+  updateWithCustomParams?: InputMaybe<NestedUpdateWithCustomParamsWidgetInput>;
+};
+
+export type WidgetRelationshipFilter = {
+  AND?: InputMaybe<Array<InputMaybe<WidgetRelationshipFilter>>>;
+  NOT?: InputMaybe<Array<InputMaybe<WidgetRelationshipFilter>>>;
+  OR?: InputMaybe<Array<InputMaybe<WidgetRelationshipFilter>>>;
+  anything?: InputMaybe<JsonFilter>;
+  birthday?: InputMaybe<DateFilter>;
+  category?: InputMaybe<MultiEnumFilter>;
+  createdAt?: InputMaybe<DateTimeFilter>;
+  description?: InputMaybe<StringFilter>;
+  doodad?: InputMaybe<DoodadRelationshipFilter>;
+  embedding?: InputMaybe<VectorFilter>;
+  gizmos?: InputMaybe<GizmosRelationshipFilter>;
+  id?: InputMaybe<IdFilter>;
+  inventoryCount?: InputMaybe<FloatFilter>;
+  isChecked?: InputMaybe<BooleanFilter>;
+  isSet?: InputMaybe<Scalars["Boolean"]["input"]>;
+  metafields?: InputMaybe<JsonFilter>;
+  mustBeLongString?: InputMaybe<StringFilter>;
+  name?: InputMaybe<StringFilter>;
+  roles?: InputMaybe<RoleAssignmentFilter>;
+  section?: InputMaybe<SectionRelationshipFilter>;
+  sectionId?: InputMaybe<IdFilter>;
+  startsAt?: InputMaybe<DateTimeFilter>;
+  updatedAt?: InputMaybe<DateTimeFilter>;
 };
 
 export type WidgetSort = {
@@ -17947,6 +21460,36 @@ export type WidgetSort = {
   startsAt?: InputMaybe<SortOrder>;
   /** Sort the results by the updatedAt field. Defaults to ascending (smallest value first). */
   updatedAt?: InputMaybe<SortOrder>;
+};
+
+export type WidgetsInnerRelationshipFilter = {
+  AND?: InputMaybe<Array<InputMaybe<WidgetsInnerRelationshipFilter>>>;
+  NOT?: InputMaybe<Array<InputMaybe<WidgetsInnerRelationshipFilter>>>;
+  OR?: InputMaybe<Array<InputMaybe<WidgetsInnerRelationshipFilter>>>;
+  anything?: InputMaybe<JsonFilter>;
+  birthday?: InputMaybe<DateFilter>;
+  category?: InputMaybe<MultiEnumFilter>;
+  createdAt?: InputMaybe<DateTimeFilter>;
+  description?: InputMaybe<StringFilter>;
+  doodad?: InputMaybe<DoodadRelationshipFilter>;
+  embedding?: InputMaybe<VectorFilter>;
+  gizmos?: InputMaybe<GizmosRelationshipFilter>;
+  id?: InputMaybe<IdFilter>;
+  inventoryCount?: InputMaybe<FloatFilter>;
+  isChecked?: InputMaybe<BooleanFilter>;
+  metafields?: InputMaybe<JsonFilter>;
+  mustBeLongString?: InputMaybe<StringFilter>;
+  name?: InputMaybe<StringFilter>;
+  roles?: InputMaybe<RoleAssignmentFilter>;
+  section?: InputMaybe<SectionRelationshipFilter>;
+  sectionId?: InputMaybe<IdFilter>;
+  startsAt?: InputMaybe<DateTimeFilter>;
+  updatedAt?: InputMaybe<DateTimeFilter>;
+};
+
+export type WidgetsRelationshipFilter = {
+  every?: InputMaybe<WidgetsInnerRelationshipFilter>;
+  some?: InputMaybe<WidgetsInnerRelationshipFilter>;
 };
 
 type FieldMetadata_GadgetModelField_Fragment = {

@@ -54,6 +54,9 @@ export const PolarisAutoBelongsToForm = autoRelationshipForm(
     } = relatedModelOptions;
     const relationshipContext = useRelationshipContext();
     const pathPrefix = relationshipContext?.transformPath ? relationshipContext.transformPath(props.field) : props.field;
+    const metaDataPathPrefix = relationshipContext?.transformMetadataPath
+      ? relationshipContext.transformMetadataPath(props.field)
+      : pathPrefix;
 
     const primaryLabel = useOptionLabelForField(field, props.primaryLabel);
     const hasRecord = !!(record && !("_unlink" in record && record._unlink));
@@ -162,7 +165,9 @@ export const PolarisAutoBelongsToForm = autoRelationshipForm(
           )}
         </BlockStack>
         <Modal open={modalOpen} onClose={() => setModalOpen(false)} title={`Add ${parentName}`}>
-          <RelationshipContext.Provider value={{ transformPath: (path) => pathPrefix + "." + path }}>
+          <RelationshipContext.Provider
+            value={{ transformPath: (path) => pathPrefix + "." + path, transformMetadataPath: (path) => metaDataPathPrefix + "." + path }}
+          >
             <Modal.Section>{props.children}</Modal.Section>
             <Modal.Section>
               <div style={{ float: "right", paddingBottom: "16px" }}>
