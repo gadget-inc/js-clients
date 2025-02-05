@@ -33,6 +33,7 @@ const ONLY_RUN_SUITES = {
     "AutoForm - ID field",
     "AutoForm - Upsert Action",
     "AutoHasOneForm",
+    "AutoBelongsToForm",
     "AutoFormDateTimePicker",
     "AutoFormJSONInput",
     "AutoPasswordInput",

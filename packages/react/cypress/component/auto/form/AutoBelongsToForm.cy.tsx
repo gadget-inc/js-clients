@@ -1,170 +1,173 @@
 import React from "react";
-import { PolarisAutoForm } from "../../../../src/auto/polaris/PolarisAutoForm.js";
-import { PolarisAutoInput } from "../../../../src/auto/polaris/inputs/PolarisAutoInput.js";
-import { PolarisAutoBelongsToForm } from "../../../../src/auto/polaris/inputs/relationships/PolarisAutoBelongsToForm.js";
-import { PolarisAutoSubmit } from "../../../../src/auto/polaris/submit/PolarisAutoSubmit.js";
-import { PolarisSubmitResultBanner } from "../../../../src/auto/polaris/submit/PolarisSubmitResultBanner.js";
 import { api } from "../../../support/api.js";
-import { PolarisWrapper } from "../../../support/auto.js";
+import { describeForEachAutoAdapter } from "../../../support/auto.js";
+import { SUITE_NAMES } from "../../../support/constants.js";
 
 const originalSectionLinkedToWidget = { id: "1", name: "Section 1", label: "Label 1" };
 
-describe("PolarisAutoBelongsToForm", () => {
-  const interceptModelUpdateActionMetadata = () => {
-    cy.intercept({ method: "POST", url: `${api.connection.endpoint}?operation=ModelActionMetadata` }, RealWidgetMetadata).as(
-      "ModelCreateActionMetadata"
-    );
-  };
+describeForEachAutoAdapter(
+  "AutoBelongsToForm",
+  ({ name, adapter: { AutoForm, AutoInput, AutoSubmit, SubmitResultBanner, AutoBelongsToForm }, wrapper }) => {
+    const interceptModelUpdateActionMetadata = () => {
+      cy.intercept({ method: "POST", url: `${api.connection.endpoint}?operation=ModelActionMetadata` }, RealWidgetMetadata).as(
+        "ModelCreateActionMetadata"
+      );
+    };
 
-  const expectUpdateActionSubmissionVariables = (expectedQueryValue?: any) => {
-    cy.intercept({ method: "POST", url: `${api.connection.endpoint}?operation=updateWidget` }, (req) => {
-      // eslint-disable-next-line
-      expect(req.body.variables).to.deep.equal(expectedQueryValue);
-      req.reply({ data: { updateWidget: { success: true, errors: null, x: {} } } });
-    }).as("updateWidget");
-  };
+    const getDropdownMenuTriggerSelector = () => {
+      return name == SUITE_NAMES.SHADCN ? "[data-testid='widget.section-dropdown-menu-trigger']" : ".Polaris-Button__Icon";
+    };
 
-  const interceptWidgetQuery = () => {
-    cy.intercept({ method: "POST", url: `${api.connection.endpoint}?operation=widget` }, (req) => {
-      req.reply({
-        data: {
-          widget: {
-            __typename: "Widget",
-            id: "42",
-            name: "test record",
-            section: originalSectionLinkedToWidget,
-            sectionId: parseInt(originalSectionLinkedToWidget.id),
-          },
-        },
-      });
-    }).as("widget");
-  };
+    const expectUpdateActionSubmissionVariables = (expectedQueryValue?: any) => {
+      cy.intercept({ method: "POST", url: `${api.connection.endpoint}?operation=updateWidget` }, (req) => {
+        // eslint-disable-next-line
+        expect(req.body.variables).to.deep.equal(expectedQueryValue);
+        req.reply({ data: { updateWidget: { success: true, errors: null, x: {} } } });
+      }).as("updateWidget");
+    };
 
-  const interceptSectionsOptionsQuery = () => {
-    cy.intercept(
-      {
-        method: "POST",
-        url: `${api.connection.endpoint}?operation=sections`,
-      },
-      (req) => {
-        const sections = [
-          {
-            cursor: "eyJpZCI6IjEwODgifQ==",
-            node: {
-              __typename: "Section",
-              id: "1",
-              createdAt: "2023-09-07T19:18:50.742Z",
-              name: "Section 1",
-              label: "Label 1",
-              updatedAt: "2024-07-09T14:42:20.788Z",
-            },
-            __typename: "SectionEdge",
-          },
-        ];
-
+    const interceptWidgetQuery = () => {
+      cy.intercept({ method: "POST", url: `${api.connection.endpoint}?operation=widget` }, (req) => {
         req.reply({
           data: {
-            sections: {
-              pageInfo: {
-                hasNextPage: false,
-                hasPreviousPage: false,
-                startCursor: "eyJpZCI6IjEifQ==",
-                endCursor: "eyJpZCI6IjIifQ==",
-                __typename: "PageInfo",
-              },
-              edges: sections,
-              __typename: "SectionConnection",
-            },
-            gadgetMeta: {
-              hydrations: {
-                createdAt: "DateTime",
-                updatedAt: "DateTime",
-              },
-              __typename: "GadgetApplicationMeta",
+            widget: {
+              __typename: "Widget",
+              id: "42",
+              name: "test record",
+              section: originalSectionLinkedToWidget,
+              sectionId: parseInt(originalSectionLinkedToWidget.id),
             },
           },
         });
-      }
-    ).as("sections");
-  };
+      }).as("widget");
+    };
 
-  beforeEach(() => {
-    cy.viewport("macbook-13");
+    const interceptSectionsOptionsQuery = () => {
+      cy.intercept(
+        {
+          method: "POST",
+          url: `${api.connection.endpoint}?operation=sections`,
+        },
+        (req) => {
+          const sections = [
+            {
+              cursor: "eyJpZCI6IjEwODgifQ==",
+              node: {
+                __typename: "Section",
+                id: "1",
+                createdAt: "2023-09-07T19:18:50.742Z",
+                name: "Section 1",
+                label: "Label 1",
+                updatedAt: "2024-07-09T14:42:20.788Z",
+              },
+              __typename: "SectionEdge",
+            },
+          ];
 
-    interceptModelUpdateActionMetadata();
-    interceptSectionsOptionsQuery();
-    interceptWidgetQuery();
-  });
+          req.reply({
+            data: {
+              sections: {
+                pageInfo: {
+                  hasNextPage: false,
+                  hasPreviousPage: false,
+                  startCursor: "eyJpZCI6IjEifQ==",
+                  endCursor: "eyJpZCI6IjIifQ==",
+                  __typename: "PageInfo",
+                },
+                edges: sections,
+                __typename: "SectionConnection",
+              },
+              gadgetMeta: {
+                hydrations: {
+                  createdAt: "DateTime",
+                  updatedAt: "DateTime",
+                },
+                __typename: "GadgetApplicationMeta",
+              },
+            },
+          });
+        }
+      ).as("sections");
+    };
 
-  it("renders form fields for related record", () => {
-    cy.mountWithWrapper(
-      <PolarisAutoForm action={api.widget.update} findBy="42">
-        <PolarisSubmitResultBanner />
-        <PolarisAutoBelongsToForm field="section" primaryLabel="name" secondaryLabel="label">
-          <PolarisAutoInput field="name" />
-          <PolarisAutoInput field="label" />
-        </PolarisAutoBelongsToForm>
-        <PolarisAutoSubmit id="submit" />
-      </PolarisAutoForm>,
-      PolarisWrapper
-    );
+    beforeEach(() => {
+      cy.viewport("macbook-13");
 
-    cy.wait("@ModelCreateActionMetadata");
-    cy.wait("@widget");
-
-    cy.contains("Section 1"); // primary label
-    cy.contains("Label 1"); // secondary label
-
-    cy.get(".Polaris-Button__Icon").first().click();
-    cy.contains("Edit section").click();
-
-    cy.get('input[id="widget.section.name"]').should("exist").click().type(" - updated");
-    cy.get('input[id="widget.section.label"]').should("exist").click().type(" - updated");
-
-    cy.contains("Save").click();
-
-    expectUpdateActionSubmissionVariables({
-      id: "42",
-      widget: {
-        section: { update: { id: "1", name: "Section 1 - updated", label: "Label 1 - updated" } },
-      },
+      interceptModelUpdateActionMetadata();
+      interceptSectionsOptionsQuery();
+      interceptWidgetQuery();
     });
-    cy.get('[id="submit"]').click();
-    cy.wait("@updateWidget");
-  });
 
-  it("can unlink a belongsTo relationship", () => {
-    cy.mountWithWrapper(
-      <PolarisAutoForm action={api.widget.update} findBy="42">
-        <PolarisSubmitResultBanner />
-        <PolarisAutoBelongsToForm field="section" primaryLabel="name" secondaryLabel="label">
-          <PolarisAutoInput field="name" />
-          <PolarisAutoInput field="label" />
-        </PolarisAutoBelongsToForm>
-        <PolarisAutoSubmit id="submit" />
-      </PolarisAutoForm>,
-      PolarisWrapper
-    );
+    it("renders form fields for related record", () => {
+      cy.mountWithWrapper(
+        <AutoForm action={api.widget.update} findBy="42">
+          <SubmitResultBanner />
+          <AutoBelongsToForm field="section" primaryLabel="name" secondaryLabel="label">
+            <AutoInput field="name" />
+            <AutoInput field="label" />
+          </AutoBelongsToForm>
+          <AutoSubmit id="submit" />
+        </AutoForm>,
+        wrapper
+      );
 
-    cy.wait("@ModelCreateActionMetadata");
-    cy.wait("@widget");
+      cy.wait("@ModelCreateActionMetadata");
+      cy.wait("@widget");
 
-    cy.contains("Section 1"); // primary label
-    cy.contains("Label 1"); // secondary label
+      cy.contains("Section 1"); // primary label
+      cy.contains("Label 1"); // secondary label
 
-    cy.get(".Polaris-Button__Icon").first().click();
-    cy.contains("Remove section").click();
+      cy.get(getDropdownMenuTriggerSelector()).first().click();
+      cy.contains("Edit section").click();
 
-    expectUpdateActionSubmissionVariables({
-      id: "42",
-      widget: {
-        section: { _link: null },
-      },
+      cy.clickAndType('input[id="widget.section.name"]', "Section 1 - updated", true);
+      cy.clickAndType('input[id="widget.section.label"]', "Label 1 - updated", true);
+
+      cy.contains("Save").click();
+
+      expectUpdateActionSubmissionVariables({
+        id: "42",
+        widget: {
+          section: { update: { id: "1", name: "Section 1 - updated", label: "Label 1 - updated" } },
+        },
+      });
+      cy.get('[id="submit"]').click();
+      cy.wait("@updateWidget");
     });
-    cy.get('[id="submit"]').click();
-    cy.wait("@updateWidget");
-  });
-});
+
+    it("can unlink a belongsTo relationship", () => {
+      cy.mountWithWrapper(
+        <AutoForm action={api.widget.update} findBy="42">
+          <SubmitResultBanner />
+          <AutoBelongsToForm field="section" primaryLabel="name" secondaryLabel="label">
+            <AutoInput field="name" />
+            <AutoInput field="label" />
+          </AutoBelongsToForm>
+          <AutoSubmit id="submit" />
+        </AutoForm>,
+        wrapper
+      );
+
+      cy.wait("@ModelCreateActionMetadata");
+      cy.wait("@widget");
+
+      cy.contains("Section 1"); // primary label
+      cy.contains("Label 1"); // secondary label
+
+      cy.get(getDropdownMenuTriggerSelector()).first().click();
+      cy.contains("Remove section").click();
+
+      expectUpdateActionSubmissionVariables({
+        id: "42",
+        widget: {
+          section: { _link: null },
+        },
+      });
+      cy.get('[id="submit"]').click();
+      cy.wait("@updateWidget");
+    });
+  }
+);
 
 const RealWidgetMetadata = {
   data: {
