@@ -1,7 +1,6 @@
 import type { OperationResult } from "@urql/core";
 import { CombinedError } from "@urql/core";
 import { Call, type FieldSelection as BuilderFieldSelection } from "tiny-graphql-query-compiler";
-import type { AnyModelManager } from "./AnyModelManager.js";
 import { DataHydrator } from "./DataHydrator.js";
 import type { ActionFunctionMetadata, AnyActionFunction } from "./GadgetFunctions.js";
 import type { RecordShape } from "./GadgetRecord.js";
@@ -387,37 +386,25 @@ export const getHydrator = (response: Result) => {
   }
 };
 
-export const hydrateRecord = <Shape extends RecordShape = RecordShape>(
-  response: Result,
-  record: any,
-  modelManager?: AnyModelManager
-): GadgetRecord<Shape> => {
+export const hydrateRecord = <Shape extends RecordShape = RecordShape>(response: Result, record: any): GadgetRecord<Shape> => {
   const hydrator = getHydrator(response);
   if (hydrator) {
     record = hydrator.apply(record);
   }
-  return new GadgetRecord<Shape>(record, modelManager);
+  return new GadgetRecord<Shape>(record);
 };
 
-export const hydrateRecordArray = <Shape extends RecordShape = any>(
-  response: Result,
-  records: Array<any>,
-  modelManager?: AnyModelManager
-) => {
+export const hydrateRecordArray = <Shape extends RecordShape = any>(response: Result, records: Array<any>) => {
   const hydrator = getHydrator(response);
   if (hydrator) {
     records = hydrator.apply(records) as any;
   }
-  return records?.map((record) => new GadgetRecord<Shape>(record, modelManager));
+  return records?.map((record) => new GadgetRecord<Shape>(record));
 };
 
-export const hydrateConnection = <Shape extends RecordShape = any>(
-  response: Result,
-  connection: { edges: { node: Node }[] },
-  modelManager?: AnyModelManager
-) => {
+export const hydrateConnection = <Shape extends RecordShape = any>(response: Result, connection: { edges: { node: Node }[] }) => {
   const nodes = connection.edges.map((edge) => edge.node);
-  return hydrateRecordArray<Shape>(response, nodes, modelManager);
+  return hydrateRecordArray<Shape>(response, nodes);
 };
 
 const objObjType = "[object Object]";

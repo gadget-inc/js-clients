@@ -4,7 +4,6 @@ import { BackgroundActionHandle } from "./BackgroundActionHandle.js";
 /* eslint-disable @typescript-eslint/ban-types */
 import type { OperationResult } from "@urql/core";
 import type { Source } from "wonka";
-import type { AnyLegacyModelManager, AnyModelManager, AnyPublicModelManager, AnyPublicSingletonModelManager } from "./AnyModelManager.js";
 import type { FieldSelection } from "./FieldSelection.js";
 import type { GadgetConnection } from "./GadgetConnection.js";
 import type {
@@ -16,6 +15,7 @@ import type {
 } from "./GadgetFunctions.js";
 import type { GadgetRecord, RecordShape } from "./GadgetRecord.js";
 import { GadgetRecordList } from "./GadgetRecordList.js";
+import type { AnyModelManager } from "./ModelManager.js";
 import {
   actionOperation,
   backgroundActionResultOperation,
@@ -92,7 +92,7 @@ function maybeLiveStream<T extends OperationResult, U, LiveOptions extends { liv
 }
 
 export const findOneRunner = <Shape extends RecordShape = any, Options extends BaseFindOptions = {}>(
-  modelManager: AnyPublicModelManager | AnyPublicSingletonModelManager | AnyLegacyModelManager,
+  modelManager: { connection: GadgetConnection },
   operation: string,
   id: string | undefined,
   defaultSelection: FieldSelection,
@@ -110,14 +110,14 @@ export const findOneRunner = <Shape extends RecordShape = any, Options extends B
       const assertSuccess = throwOnEmptyData ? assertOperationSuccess : assertNullableOperationSuccess;
       const dataPath = namespaceDataPath([operation], namespace);
       const record = assertSuccess(response, dataPath);
-      return hydrateRecord<Shape>(response, record, modelManager);
+      return hydrateRecord<Shape>(response, record);
     },
     options
   );
 };
 
 export const findOneByFieldRunner = <Shape extends RecordShape = any, Options extends FindManyOptions = {}>(
-  modelManager: AnyPublicModelManager | AnyLegacyModelManager,
+  modelManager: { connection: GadgetConnection },
   operation: string,
   fieldName: string,
   fieldValue: string,
@@ -151,7 +151,7 @@ export const findOneByFieldRunner = <Shape extends RecordShape = any, Options ex
 };
 
 export const findManyRunner = <Shape extends RecordShape = any, Options extends FindManyOptions = {}>(
-  modelManager: AnyPublicModelManager,
+  modelManager: AnyModelManager,
   operation: string,
   defaultSelection: FieldSelection,
   modelApiIdentifier: string,
@@ -185,7 +185,7 @@ export const findManyRunner = <Shape extends RecordShape = any, Options extends 
 
 export interface ActionRunner {
   (
-    modelManager: AnyPublicModelManager | AnyPublicSingletonModelManager | AnyLegacyModelManager,
+    modelManager: { connection: GadgetConnection },
     operation: string,
     defaultSelection: FieldSelection | null,
     modelApiIdentifier: string,
@@ -198,7 +198,7 @@ export interface ActionRunner {
   ): Promise<any>;
 
   <Shape extends RecordShape = any>(
-    modelManager: AnyPublicModelManager | AnyPublicSingletonModelManager | AnyLegacyModelManager,
+    modelManager: { connection: GadgetConnection },
     operation: string,
     defaultSelection: FieldSelection | null,
     modelApiIdentifier: string,
@@ -211,7 +211,7 @@ export interface ActionRunner {
   ): Promise<Shape extends void ? void : GadgetRecord<Shape>>;
 
   <Shape extends RecordShape = any>(
-    modelManager: AnyPublicModelManager | AnyPublicSingletonModelManager | AnyLegacyModelManager,
+    modelManager: { connection: GadgetConnection },
     operation: string,
     defaultSelection: FieldSelection | null,
     modelApiIdentifier: string,
@@ -223,7 +223,7 @@ export interface ActionRunner {
   ): Promise<Shape extends void ? void : GadgetRecord<Shape>>;
 
   <Shape extends RecordShape = any>(
-    modelManager: AnyPublicModelManager | AnyPublicSingletonModelManager | AnyLegacyModelManager,
+    modelManager: { connection: GadgetConnection },
     operation: string,
     defaultSelection: FieldSelection | null,
     modelApiIdentifier: string,
@@ -235,7 +235,7 @@ export interface ActionRunner {
   ): Promise<Shape extends void ? void : GadgetRecord<Shape>[]>;
 
   (
-    modelManager: AnyPublicModelManager | AnyPublicSingletonModelManager | AnyLegacyModelManager,
+    modelManager: { connection: GadgetConnection },
     operation: string,
     defaultSelection: FieldSelection | null,
     modelApiIdentifier: string,
@@ -248,7 +248,7 @@ export interface ActionRunner {
   ): Promise<any[]>;
 
   <Shape extends RecordShape = any>(
-    modelManager: AnyPublicModelManager | AnyPublicSingletonModelManager | AnyLegacyModelManager,
+    modelManager: { connection: GadgetConnection },
     operation: string,
     defaultSelection: FieldSelection | null,
     modelApiIdentifier: string,
@@ -262,7 +262,7 @@ export interface ActionRunner {
 }
 
 export const actionRunner: ActionRunner = async (
-  modelManager: AnyPublicModelManager | AnyPublicSingletonModelManager | AnyLegacyModelManager,
+  modelManager: { connection: GadgetConnection },
   operation: string,
   defaultSelection: FieldSelection | null,
   modelApiIdentifier: string,
@@ -293,11 +293,11 @@ export const actionRunner: ActionRunner = async (
   if (!isBulkAction) {
     const mutationTriple = assertMutationSuccess(response, dataPath);
 
-    return processActionResponse(defaultSelection, response, mutationTriple, modelSelectionField, hasReturnType, modelManager);
+    return processActionResponse(defaultSelection, response, mutationTriple, modelSelectionField, hasReturnType);
   } else {
     const mutationTriple = get(response.data, dataPath);
 
-    const results = processBulkActionResponse(defaultSelection, response, mutationTriple, modelSelectionField, hasReturnType, modelManager);
+    const results = processBulkActionResponse(defaultSelection, response, mutationTriple, modelSelectionField, hasReturnType);
     if (mutationTriple.errors) {
       const errors = mutationTriple.errors.map((error: any) => gadgetErrorFor(error));
       throw new GadgetErrorGroup(errors, results);
@@ -312,12 +312,11 @@ const processBulkActionResponse = <Shape extends RecordShape = any>(
   response: any,
   records: any,
   modelSelectionField: string,
-  hasReturnType?: HasReturnType | null,
-  modelManager?: AnyPublicModelManager | AnyPublicSingletonModelManager | AnyLegacyModelManager
+  hasReturnType?: HasReturnType | null
 ) => {
   if (defaultSelection == null) return;
   if (!hasReturnType) {
-    return hydrateRecordArray<Shape>(response, records[modelSelectionField], modelManager);
+    return hydrateRecordArray<Shape>(response, records[modelSelectionField]);
   } else if (typeof hasReturnType == "boolean") {
     return records.results;
   } else {
@@ -333,7 +332,7 @@ const processBulkActionResponse = <Shape extends RecordShape = any>(
           "hasReturnType" in innerHasReturnType ? returnTypeForRecord(result, innerHasReturnType.hasReturnType) : false;
 
         if (!returnTypeForResult) {
-          return hydrateRecord<Shape>(response, result, modelManager);
+          return hydrateRecord<Shape>(response, result);
         } else {
           return processActionResponse(defaultSelection, response, result, modelSelectionField, returnTypeForResult);
         }
@@ -347,20 +346,19 @@ export const processActionResponse = <Shape extends RecordShape = any>(
   response: any,
   record: any,
   modelSelectionField: string,
-  hasReturnType?: HasReturnType | null,
-  modelManager?: AnyPublicModelManager | AnyPublicSingletonModelManager | AnyLegacyModelManager
+  hasReturnType?: HasReturnType | null
 ): any => {
   // Delete actions have a null selection. We do an early return for this because `hydrateRecordArray` will fail
   // if there's nothing at `mutationResult[modelSelectionField]`, but the caller isn't expecting a return (void).
   if (defaultSelection == null) return;
   if (!hasReturnType) {
-    return hydrateRecord<Shape>(response, record[modelSelectionField], modelManager);
+    return hydrateRecord<Shape>(response, record[modelSelectionField]);
   } else if (typeof hasReturnType == "boolean") {
     return record.result;
   } else {
     const innerReturnType = returnTypeForRecord(record, hasReturnType);
 
-    return processActionResponse(defaultSelection, response, record, modelSelectionField, innerReturnType, modelManager);
+    return processActionResponse(defaultSelection, response, record, modelSelectionField, innerReturnType);
   }
 };
 
@@ -437,8 +435,7 @@ export const backgroundActionResultRunner = async <
   connection: GadgetConnection,
   id: string,
   action: Action,
-  options?: Options,
-  modelManager?: AnyModelManager
+  options?: Options
 ): Promise<BackgroundActionResult<ResultData>> => {
   const plan = backgroundActionResultOperation(id, action, options);
   const subscription = connection.currentClient.subscription(plan.query, plan.variables);
@@ -461,8 +458,7 @@ export const backgroundActionResultRunner = async <
         response.data,
         backgroundAction.result,
         action.isBulk ? action.modelApiIdentifier : action.modelSelectionField,
-        action.hasReturnType,
-        modelManager
+        action.hasReturnType
       );
       break;
     }

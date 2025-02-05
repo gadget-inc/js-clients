@@ -1,7 +1,7 @@
 import { CircleX } from "lucide-react";
 import * as React from "react";
-import type { SearchResult } from "../../../useDebouncedSearch.js";
-import type { ShadcnElements } from "../elements.js";
+import { SearchResult } from "../../../useDebouncedSearch.js";
+import { ShadcnElements } from "../elements.js";
 
 /**
  * Renders table search controls for the ShadcnAutoTable

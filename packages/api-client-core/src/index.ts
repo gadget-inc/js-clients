@@ -1,5 +1,4 @@
 export * from "./AnyClient.js";
-export * from "./AnyModelManager.js";
 export * from "./BackgroundActionHandle.js";
 export * from "./ClientOptions.js";
 export * from "./DataHydrator.js";
@@ -11,6 +10,7 @@ export * from "./GadgetRecordList.js";
 export * from "./GadgetTransaction.js";
 export * from "./InMemoryStorage.js";
 export * from "./InternalModelManager.js";
+export * from "./ModelManager.js";
 export * from "./operationBuilders.js";
 export * from "./operationRunners.js";
 export * from "./support.js";

@@ -1,11 +1,4 @@
-import type {
-  AnyPublicModelManager,
-  DefaultSelection,
-  FindOneFunction,
-  GadgetRecord,
-  LimitToKnownKeys,
-  Select,
-} from "@gadgetinc/api-client-core";
+import type { DefaultSelection, FindOneFunction, GadgetRecord, LimitToKnownKeys, Select } from "@gadgetinc/api-client-core";
 import { findOneOperation, get, hydrateRecord, namespaceDataPath } from "@gadgetinc/api-client-core";
 import { useMemo } from "react";
 import { useGadgetQuery } from "./useGadgetQuery.js";
@@ -43,7 +36,7 @@ export const useMaybeFindOne = <
   F extends FindOneFunction<GivenOptions, any, SchemaT, any>,
   Options extends F["optionsType"] & ReadOperationOptions
 >(
-  manager: { findOne: F } & AnyPublicModelManager<F>,
+  manager: { findOne: F },
   id: string,
   options?: LimitToKnownKeys<Options, F["optionsType"] & ReadOperationOptions>
 ): ReadHookResult<null | GadgetRecord<
@@ -68,7 +61,7 @@ export const useMaybeFindOne = <
     if (data) {
       const dataPath = namespaceDataPath([manager.findOne.operationName], manager.findOne.namespace);
       const value = get(rawResult.data, dataPath);
-      data = value && "id" in value ? hydrateRecord(rawResult, value, manager) : null;
+      data = value && "id" in value ? hydrateRecord(rawResult, value) : null;
     }
     const error = ErrorWrapper.forMaybeCombinedError(rawResult.error);
     return {

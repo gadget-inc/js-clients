@@ -1,11 +1,4 @@
-import type {
-  AnyPublicModelManager,
-  DefaultSelection,
-  FindManyFunction,
-  FindOneFunction,
-  LimitToKnownKeys,
-  Select,
-} from "@gadgetinc/api-client-core";
+import type { AnyModelManager, DefaultSelection, FindManyFunction, LimitToKnownKeys, Select } from "@gadgetinc/api-client-core";
 import { GadgetRecordList, findManyOperation, get, hydrateConnection, namespaceDataPath } from "@gadgetinc/api-client-core";
 import { useMemo } from "react";
 import { useGadgetQuery } from "./useGadgetQuery.js";
@@ -43,7 +36,7 @@ export const useFindMany = <
   F extends FindManyFunction<GivenOptions, any, SchemaT, any>,
   Options extends F["optionsType"] & ReadOperationOptions
 >(
-  manager: { findMany: F } & AnyPublicModelManager<FindOneFunction<any, any, any, any>, F>,
+  manager: { findMany: F },
   options?: LimitToKnownKeys<Options, F["optionsType"] & ReadOperationOptions>
 ): ReadHookResult<
   GadgetRecordList<Select<Exclude<F["schemaType"], null | undefined>, DefaultSelection<F["selectionType"], Options, F["defaultSelection"]>>>
@@ -67,8 +60,8 @@ export const useFindMany = <
     if (data) {
       const connection = get(rawResult.data, dataPath);
       if (connection) {
-        const records = hydrateConnection(rawResult, connection, manager);
-        data = GadgetRecordList.boot(manager as unknown as AnyPublicModelManager, records, connection);
+        const records = hydrateConnection(rawResult, connection);
+        data = GadgetRecordList.boot(manager as unknown as AnyModelManager, records, connection);
       }
     }
 
