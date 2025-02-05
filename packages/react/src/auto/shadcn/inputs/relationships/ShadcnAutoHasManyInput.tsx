@@ -21,10 +21,6 @@ export const makeShadcnAutoHasManyInput = ({
   CommandGroup,
   Checkbox,
   ScrollArea,
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-  Input,
 }: Pick<
   ShadcnElements,
   | "Badge"
@@ -39,10 +35,6 @@ export const makeShadcnAutoHasManyInput = ({
   | "Label"
   | "Checkbox"
   | "ScrollArea"
-  | "Popover"
-  | "PopoverContent"
-  | "PopoverTrigger"
-  | "Input"
 >) => {
   const { SelectedRecordTags } = makeSelectedRecordTags({ Badge, Button });
 
@@ -57,10 +49,6 @@ export const makeShadcnAutoHasManyInput = ({
     CommandGroup,
     Checkbox,
     ScrollArea,
-    Popover,
-    PopoverContent,
-    PopoverTrigger,
-    Input,
   });
 
   function ShadcnAutoHasManyInput(props: AutoRelationshipInputProps) {

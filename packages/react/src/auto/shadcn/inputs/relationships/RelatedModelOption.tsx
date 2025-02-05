@@ -26,21 +26,10 @@ export type RelatedModelOptionsProps = {
 export const makeRelatedModelOption = (
   elements: Pick<
     ShadcnElements,
-    | "Input"
-    | "CommandItem"
-    | "CommandList"
-    | "CommandEmpty"
-    | "ScrollArea"
-    | "CommandGroup"
-    | "Checkbox"
-    | "Label"
-    | "CommandLoading"
-    | "Popover"
-    | "PopoverContent"
-    | "PopoverTrigger"
+    "CommandItem" | "CommandList" | "CommandEmpty" | "ScrollArea" | "CommandGroup" | "Checkbox" | "Label" | "CommandLoading"
   >
 ) => {
-  const { CommandList, CommandEmpty, CommandGroup, CommandItem, Popover, PopoverContent, PopoverTrigger, ScrollArea, Input } = elements;
+  const { CommandList, CommandEmpty, CommandGroup, CommandItem } = elements;
 
   function RelatedModelOption(props: RelatedModelOptionsProps) {
     const { checkSelected, onSelect, isLoading, errorMessage, options, records, actions } = props;
@@ -102,75 +91,7 @@ export const makeRelatedModelOption = (
     );
   }
 
-  const StopPropagation = ({ children }: React.PropsWithChildren<any>) => {
-    const stopEventPropagation = (event: React.MouseEvent | React.TouchEvent) => {
-      event.stopPropagation();
-    };
-
-    return (
-      <div onClick={stopEventPropagation} onTouchStart={stopEventPropagation}>
-        {children}
-      </div>
-    );
-  };
-
-  function RelatedModelOptionPopover(
-    props: RelatedModelOptionsProps & {
-      active: boolean;
-      activator: React.ReactElement;
-      onClose: () => void;
-      search?: React.ReactNode;
-      onScrolledToBottom?: () => void;
-    }
-  ) {
-    //TODO: Add a scroll area to the popover content
-    return (
-      <Popover open={props.active} onOpenChange={props.onClose}>
-        <PopoverTrigger asChild>{props.activator}</PopoverTrigger>
-        <PopoverContent>
-          {props.search}
-          <ScrollArea>
-            <RelatedModelOption
-              options={props.options}
-              records={props.records}
-              onSelect={props.onSelect}
-              isLoading={props.isLoading}
-              renderOption={props.renderOption}
-              actions={props.actions}
-            />
-          </ScrollArea>
-        </PopoverContent>
-      </Popover>
-    );
-  }
-
-  function RelatedModelOptionsSearch(props: {
-    modelName: string;
-    label?: string;
-    placeholder?: string;
-    autoComplete?: string;
-    value?: string;
-    onChange: (value: string) => void;
-    onFocus?: () => void;
-  }) {
-    const { modelName, label, placeholder, autoComplete, value, onChange, onFocus } = props;
-
-    return (
-      <div style={{ padding: "12px" }}>
-        <StopPropagation>
-          <Input
-            placeholder={placeholder ?? `Find ${modelName}`}
-            autoComplete={autoComplete ?? "off"}
-            defaultValue={value}
-            onChange={(e) => onChange(e.target.value)}
-            onFocus={() => onFocus?.()}
-          />
-        </StopPropagation>
-      </div>
-    );
-  }
-
   RelatedModelOption.displayName = "RelatedModelOption";
 
-  return { RelatedModelOption, RelatedModelOptionPopover, RelatedModelOptionsSearch };
+  return { RelatedModelOption };
 };

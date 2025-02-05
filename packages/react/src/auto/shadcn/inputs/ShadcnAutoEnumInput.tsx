@@ -20,10 +20,6 @@ export const makeShadcnAutoEnumInput = ({
   CommandGroup,
   Checkbox,
   ScrollArea,
-  Input,
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
 }: Pick<
   ShadcnElements,
   | "Badge"
@@ -39,9 +35,6 @@ export const makeShadcnAutoEnumInput = ({
   | "Checkbox"
   | "ScrollArea"
   | "Input"
-  | "Popover"
-  | "PopoverContent"
-  | "PopoverTrigger"
 >) => {
   const ShadcnComboInput = makeShadcnAutoComboInput({
     Command,
@@ -54,10 +47,6 @@ export const makeShadcnAutoEnumInput = ({
     CommandGroup,
     Checkbox,
     ScrollArea,
-    Input,
-    Popover,
-    PopoverContent,
-    PopoverTrigger,
   });
 
   function ShadcnAutoEnumInput(props: { field: string; control?: Control<any>; label?: string }) {

@@ -13,13 +13,10 @@ import {
   Text,
 } from "@shopify/polaris";
 import { MenuHorizontalIcon, PlusCircleIcon } from "@shopify/polaris-icons";
-import React, { useEffect, useState } from "react";
-import { useFormContext } from "../../../../useActionForm.js";
-import { get } from "../../../../utils.js";
+import React from "react";
+import { useHasOneForm } from "../../../../useHasOneForm.js";
 import { autoRelationshipForm } from "../../../AutoInput.js";
-import { RelationshipContext, useAutoRelationship, useRelationshipContext } from "../../../hooks/useAutoRelationship.js";
-import { useHasOneController } from "../../../hooks/useHasOneController.js";
-import { getRecordAsOption, useOptionLabelForField } from "../../../hooks/useRelatedModel.js";
+import { RelationshipContext } from "../../../hooks/useAutoRelationship.js";
 import type { OptionLabel } from "../../../interfaces/AutoRelationshipInputProps.js";
 import { RelatedModelOptionsPopover, RelatedModelOptionsSearch } from "./RelatedModelOptions.js";
 import { renderOptionLabel } from "./utils.js";
@@ -33,42 +30,27 @@ export const PolarisAutoHasOneForm = autoRelationshipForm(
     secondaryLabel?: OptionLabel;
     tertiaryLabel?: OptionLabel;
   }) => {
-    const { field } = props;
-    const { path, metadata } = useAutoRelationship({ field });
     const {
+      path,
       setValue,
       getValues,
-      formState: { defaultValues, submitCount, isSubmitSuccessful },
-    } = useFormContext();
-    const { record, relatedModelOptions } = useHasOneController(props);
-    const [actionsOpen, setActionsOpen] = useState(false);
-    const [searchOpen, setSearchOpen] = useState(false);
-    const [modalOpen, setModalOpen] = useState(false);
-
-    const {
+      record,
+      actionsOpen,
+      setActionsOpen,
+      modalOpen,
+      setModalOpen,
+      searchOpen,
+      setSearchOpen,
       search,
       searchFilterOptions,
       pagination,
-      relatedModel: { records, fetching: isLoading },
-    } = relatedModelOptions;
-    const relationshipContext = useRelationshipContext();
-    const pathPrefix = relationshipContext?.transformPath ? relationshipContext.transformPath(props.field) : props.field;
-
-    const defaultRecordId = get(defaultValues, path)?.id;
-
-    // each time the form is submitted if the child record is created we need to set the id to the default record id
-    // that comes from the response to the action mutation
-    useEffect(() => {
-      if (isSubmitSuccessful && record && !record.id && !("_link" in record) && !("_unlink" in record) && defaultRecordId) {
-        setValue(path + ".id", defaultRecordId);
-      }
-    }, [record, defaultRecordId, path, setValue, submitCount, isSubmitSuccessful]);
-
-    const primaryLabel = useOptionLabelForField(field, props.primaryLabel);
-    const hasRecord = !!(record && !("_unlink" in record && record._unlink));
-    const recordOption = record ? getRecordAsOption(record, primaryLabel, props.secondaryLabel, props.tertiaryLabel) : null;
-
-    const childName = metadata.name ?? "Unknown";
+      records,
+      isLoading,
+      pathPrefix,
+      hasRecord,
+      recordOption,
+      childName,
+    } = useHasOneForm(props);
 
     return (
       <>
@@ -97,6 +79,7 @@ export const PolarisAutoHasOneForm = autoRelationshipForm(
                       {
                         content: `Remove ${childName.toLocaleLowerCase()}`,
                         onAction: () => {
+                          if (!record) return;
                           const { __typename, id: recordId, ...rest } = record;
                           const nulledValues = Object.fromEntries(Object.keys(rest).map((key) => [key, null]));
                           setValue(path, { ...nulledValues, __typename, _unlink: recordId });
@@ -111,7 +94,7 @@ export const PolarisAutoHasOneForm = autoRelationshipForm(
             </InlineGrid>
             {hasRecord ? (
               props.renderSelectedRecord ? (
-                props.renderSelectedRecord(record)
+                props.renderSelectedRecord(record as Record<string, any>)
               ) : (
                 <InlineStack align="space-between">
                   <BlockStack gap="200">

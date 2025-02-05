@@ -21,10 +21,6 @@ export const makeShadcnAutoHasOneInput = ({
   CommandGroup,
   Checkbox,
   ScrollArea,
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-  Input,
 }: Pick<
   ShadcnElements,
   | "Badge"
@@ -39,10 +35,6 @@ export const makeShadcnAutoHasOneInput = ({
   | "Label"
   | "Checkbox"
   | "ScrollArea"
-  | "Popover"
-  | "PopoverContent"
-  | "PopoverTrigger"
-  | "Input"
 >) => {
   const ShadcnComboInput = makeShadcnAutoComboInput({
     Command,
@@ -55,10 +47,6 @@ export const makeShadcnAutoHasOneInput = ({
     CommandGroup,
     Checkbox,
     ScrollArea,
-    Popover,
-    PopoverContent,
-    PopoverTrigger,
-    Input,
   });
 
   function ShadcnAutoHasOneInput(props: AutoRelationshipInputProps) {

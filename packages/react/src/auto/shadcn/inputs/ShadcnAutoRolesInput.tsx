@@ -67,10 +67,6 @@ export const makeShadcnAutoRolesInput = ({
     CommandGroup,
     Checkbox,
     ScrollArea,
-    Input,
-    Popover,
-    PopoverContent,
-    PopoverTrigger,
   });
 
   function AutoRolesInput(props: AutoRolesInputProps) {
