@@ -1,10 +1,10 @@
 import React from "react";
 import { Provider } from "../../../../src/GadgetProvider.tsx";
+import { makeShadcnAutoJSONInput } from "../../../../src/auto/shadcn/inputs/ShadcnAutoJSONInput.tsx";
+import { makeAutocomponents } from "../../../../src/auto/shadcn/unreleasedIndex.js";
 import { FormProvider, useForm } from "../../../../src/useActionForm.ts";
 import { testApi as api } from "../../../apis.ts";
-import { makeAutocomponents } from "../../../../src/auto/shadcn/index.ts";
 import { elements } from "../index";
-import { makeShadcnAutoJSONInput } from "../../../../src/auto/shadcn/inputs/ShadcnAutoJSONInput.tsx";
 // More on how to set up stories at: https://storybook.js.org/docs/writing-stories#default-export
 
 const ShadcnAutoForm = makeAutocomponents(elements).AutoForm;
