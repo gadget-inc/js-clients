@@ -1,10 +1,10 @@
 import React from "react";
 import { Provider } from "../../../../../src/GadgetProvider.tsx";
 
+import { makeAutocomponents } from "../../../../../src/auto/shadcn/unreleasedIndex.js";
 import { FormProvider, useForm } from "../../../../../src/useActionForm.ts";
 import { testApi as api } from "../../../../apis.ts";
 import { StorybookErrorBoundary } from "../../../storybook/StorybookErrorBoundary.tsx";
-import { makeAutocomponents } from "../../../../../src/auto/shadcn/index.ts";
 import { elements } from "../../index.tsx";
 
 // More on how to set up stories at: https://storybook.js.org/docs/writing-stories#default-export
@@ -15,8 +15,11 @@ const Component = (props) => {
   return (
     <AutoForm {...props} action={api.widget.create}>
       <SubmitResultBanner />
-      <AutoHasOneForm field="doodad" primaryLabel="name"
-        secondaryLabel={(record) => `${record.weight ?? 'N/A'} (${record.active ?? 'N/A'})`} tertiaryLabel="size"
+      <AutoHasOneForm
+        field="doodad"
+        primaryLabel="name"
+        secondaryLabel={(record) => `${record.weight ?? "N/A"} (${record.active ?? "N/A"})`}
+        tertiaryLabel="size"
       >
         <div className="flex flex-col gap-4">
           <AutoInput field="name" />
@@ -57,8 +60,6 @@ export default {
   },
   tags: ["autodocs"],
 };
-
-
 
 export const Create = {
   args: {
