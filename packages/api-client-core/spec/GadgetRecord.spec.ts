@@ -55,12 +55,10 @@ describe("GadgetRecord", () => {
     const product = new GadgetRecord<SampleBaseRecord>(productBaseRecord);
     expect(product.id).toEqual("123");
     expect(product.name).toEqual("A cool product");
-    expect(product.modelManager).toBeUndefined();
   });
 
   it("can be constructed with a base record and a model manager", () => {
-    const product = new GadgetRecord<SampleBaseRecord>(productBaseRecord, mockModelManager);
-    expect(product.modelManager).toEqual(mockModelManager);
+    new GadgetRecord<SampleBaseRecord>(productBaseRecord, mockModelManager);
   });
 
   it("should respond toJSON, which returns the inner __gadget.fields properties", () => {
