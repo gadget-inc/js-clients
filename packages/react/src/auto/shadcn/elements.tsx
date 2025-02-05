@@ -1,6 +1,18 @@
 import type React from "react";
 import type { AvatarFallbackProps, AvatarImageProps, AvatarProps } from "./types/avatarTypes.js";
 import type {
+  DialogCloseProps,
+  DialogContentProps,
+  DialogDescriptionProps,
+  DialogFooterProps,
+  DialogHeaderProps,
+  DialogOverlayProps,
+  DialogPortalProps,
+  DialogProps,
+  DialogTitleProps,
+  DialogTriggerProps,
+} from "./types/dialogTypes.js";
+import type {
   TableBodyProps,
   TableCaptionProps,
   TableCellProps,
@@ -39,17 +51,9 @@ export interface DropdownMenuProps {
   modal?: boolean;
 }
 
-export interface DialogProps {
-  children?: React.ReactNode;
-  open?: boolean;
-  defaultOpen?: boolean;
-  onOpenChange?(open: boolean): void;
-  modal?: boolean;
-}
 
-export interface DialogTriggerProps {
-  children?: React.ReactNode;
-}
+
+
 
 /** The props that a command component injected into autocomponent's shadcn must support */
 export interface CommandProps extends React.HTMLAttributes<HTMLDivElement> {
@@ -196,27 +200,7 @@ export interface ShadcnElements {
   /** The Checkbox component from shadcn */
   Checkbox: React.ForwardRefExoticComponent<CheckboxProps & React.RefAttributes<HTMLButtonElement>>;
 
-  /** The Dialog component from shadcn */
-  Dialog: React.ComponentType<DialogProps>;
-  /** The DialogTrigger component from shadcn */
-  DialogTrigger: React.ComponentType<DialogTriggerProps>;
-  /** The DialogClose component from shadcn */
-  DialogClose: React.ComponentType<any>;
-  /** The DialogContent component from shadcn */
-  DialogContent: React.ComponentType<any>;
-  /** The DialogDescription component from shadcn */
-  DialogDescription: React.ComponentType<any>;
-  /** The DialogFooter component from shadcn */
-  DialogFooter: React.ComponentType<any>;
-  /** The DialogHeader component from shadcn */
-  DialogHeader: React.ComponentType<any>;
-  /** The DialogOverlay component from shadcn */
-  DialogOverlay: React.ComponentType<any>;
-  /** The DialogPortal component from shadcn */
-  DialogPortal: React.ComponentType<any>;
-  /** The DialogTitle component from shadcn */
-  DialogTitle: React.ComponentType<any>;
-
+ 
   /** The DropdownMenu component from shadcn */
   DropdownMenu: React.ComponentType<DropdownMenuProps>;
   /** The DropdownMenuTrigger component from shadcn */
@@ -239,6 +223,9 @@ export interface ShadcnElements {
   /** The Label component from shadcn */
   Label: React.ComponentType<LabelProps>;
 
+  /** The Textarea component from shadcn */
+  Textarea: React.ComponentType<React.HTMLAttributes<HTMLTextAreaElement>>;
+
   //TODO: Remove these as they are not used
   /** The Popover component from shadcn */
   Popover: React.ComponentType<PopoverProps>;
@@ -248,10 +235,6 @@ export interface ShadcnElements {
   //TODO: Remove these as they are not used
   /** The PopoverContent component from shadcn */
   PopoverContent: React.ComponentType<PopoverContentProps>;
-
-  /** The Textarea component from shadcn */
-  Textarea: React.ComponentType<React.HTMLAttributes<HTMLTextAreaElement>>;
-
   /** The PopoverTrigger component from shadcn */
   //:TODO: This is a hack to get the PopoverTrigger component to work with the Popover component. please fix this.
   PopoverTrigger: React.ForwardRefExoticComponent<PopoverTriggerProps & React.RefAttributes<HTMLButtonElement> & any>;
@@ -300,6 +283,27 @@ export interface ShadcnElements {
   AvatarImage: React.ComponentType<AvatarImageProps>;
   /** The AvatarFallback component from shadcn */
   AvatarFallback: React.ComponentType<AvatarFallbackProps>;
+
+  /** The Dialog component from shadcn that provides the root dialog functionality */
+  Dialog: React.ComponentType<DialogProps>;
+  /** The DialogTrigger component from shadcn that opens the dialog when clicked */
+  DialogTrigger: React.ComponentType<DialogTriggerProps>;
+  /** The DialogPortal component from shadcn that renders dialog content in a portal */
+  DialogPortal: React.ComponentType<DialogPortalProps>;
+  /** The DialogClose component from shadcn that closes the dialog when clicked */
+  DialogClose: React.ComponentType<DialogCloseProps>;
+  /** The DialogOverlay component from shadcn that provides the backdrop overlay */
+  DialogOverlay: React.ComponentType<DialogOverlayProps>;
+  /** The DialogContent component from shadcn that contains the main dialog content */
+  DialogContent: React.ComponentType<DialogContentProps>;
+  /** The DialogHeader component from shadcn that provides header styling and layout */
+  DialogHeader: React.ComponentType<DialogHeaderProps>;
+  /** The DialogFooter component from shadcn that provides footer styling and layout */
+  DialogFooter: React.ComponentType<DialogFooterProps>;
+  /** The DialogTitle component from shadcn that renders the dialog title */
+  DialogTitle: React.ComponentType<DialogTitleProps>;
+  /** The DialogDescription component from shadcn that renders descriptive text */
+  DialogDescription: React.ComponentType<DialogDescriptionProps>;
 
   cn: MergeClassNames;
 }
