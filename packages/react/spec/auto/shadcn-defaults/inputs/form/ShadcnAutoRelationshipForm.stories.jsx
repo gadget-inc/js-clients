@@ -10,6 +10,7 @@ import { elements } from "../../index.tsx";
 // More on how to set up stories at: https://storybook.js.org/docs/writing-stories#default-export
 
 const { AutoForm, AutoHasOneForm, AutoInput, AutoSubmit, SubmitResultBanner, AutoBelongsToForm } = makeAutocomponents(elements);
+const { Label } = elements;
 
 const Component = (props) => {
   return (
@@ -17,7 +18,7 @@ const Component = (props) => {
       <div className="flex flex-col gap-4">
         <div>
           <AutoBelongsToForm field="section" primaryLabel="name"
-            renderParent={(record) => <Text>this is a custom belongsTo render for {record.name}</Text>}
+            renderSelectedRecord={(record) => <Label>this is a custom belongsTo render for {record.name}</Label>}
           >
             <AutoInput field="name" />
           </AutoBelongsToForm>
