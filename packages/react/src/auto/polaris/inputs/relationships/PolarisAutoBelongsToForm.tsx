@@ -4,6 +4,7 @@ import {
   BlockStack,
   Button,
   ButtonGroup,
+  Divider,
   Icon,
   InlineGrid,
   InlineStack,
@@ -28,6 +29,7 @@ export const PolarisAutoBelongsToForm = autoRelationshipForm(
   (props: {
     field: string;
     children: React.ReactNode;
+    label?: React.ReactNode;
     renderSelectedRecord?: (record: Record<string, any>) => React.ReactNode;
     primaryLabel?: OptionLabel;
     secondaryLabel?: OptionLabel;
@@ -73,9 +75,11 @@ export const PolarisAutoBelongsToForm = autoRelationshipForm(
       <>
         <BlockStack gap="300">
           <InlineGrid columns="1fr auto">
-            <Text as="h2" variant="headingSm">
-              {parentName}
-            </Text>
+            {props.label ?? (
+              <Text as="h2" variant="headingSm">
+                {parentName}
+              </Text>
+            )}
             {hasRecord && (
               <Popover
                 active={actionsOpen}
@@ -111,13 +115,16 @@ export const PolarisAutoBelongsToForm = autoRelationshipForm(
             props.renderSelectedRecord ? (
               props.renderSelectedRecord(record)
             ) : (
-              <InlineStack align="space-between">
-                <BlockStack gap="200">
-                  {renderOptionLabel(recordOption!.label, "primary")}
-                  {recordOption!.secondaryLabel && renderOptionLabel(recordOption!.secondaryLabel, "secondary")}
-                </BlockStack>
-                {recordOption!.tertiaryLabel && renderOptionLabel(recordOption!.tertiaryLabel, "tertiary")}
-              </InlineStack>
+              <>
+                <Divider />
+                <InlineStack align="space-between">
+                  <BlockStack gap="200">
+                    {renderOptionLabel(recordOption!.label, "primary")}
+                    {recordOption!.secondaryLabel && renderOptionLabel(recordOption!.secondaryLabel, "secondary")}
+                  </BlockStack>
+                  {recordOption!.tertiaryLabel && renderOptionLabel(recordOption!.tertiaryLabel, "tertiary")}
+                </InlineStack>
+              </>
             )
           ) : (
             <RelatedModelOptionsPopover
