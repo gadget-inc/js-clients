@@ -71,7 +71,7 @@ export const useFindBy = <
     if (data) {
       const connection = get(rawResult.data, dataPath);
       if (connection) {
-        records = hydrateConnection(rawResult, connection);
+        records = hydrateConnection(rawResult, connection, finder.modelManager);
         data = records[0];
       }
     }

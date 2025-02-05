@@ -1,4 +1,4 @@
-import type { FindManyFunction, GadgetRecord } from "@gadgetinc/api-client-core";
+import type { AnyFindOneFunc, AnyPublicModelManager, FindManyFunction, GadgetRecord } from "@gadgetinc/api-client-core";
 import { type DefaultSelection, type Select } from "@gadgetinc/api-client-core";
 import type { TableOptions, TableRow } from "../use-table/types.js";
 import type { OptionsType } from "../utils.js";
@@ -12,7 +12,7 @@ export type AutoTableProps<
   FinderFunction extends FindManyFunction<GivenOptions, any, SchemaT, any>,
   Options extends FinderFunction["optionsType"]
 > = {
-  model: { findMany: FinderFunction };
+  model: { findMany: FinderFunction } & AnyPublicModelManager<AnyFindOneFunc, FinderFunction>;
   select?: Options["select"];
   pageSize?: number;
   initialCursor?: string;
