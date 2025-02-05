@@ -1,12 +1,11 @@
 import { CommandSeparator } from "cmdk";
 import { EllipsisVerticalIcon, PlusIcon } from "lucide-react";
-import React, { useCallback, useEffect, useState } from "react";
-import { useFormContext } from "../../../../useActionForm.js";
-import { debounce, get } from "../../../../utils.js";
+import React, { useCallback } from "react";
+import { useHasBelongsForm } from "../../../../useHasBelongsForm.js";
+import { debounce } from "../../../../utils.js";
 import { autoRelationshipForm } from "../../../AutoInput.js";
-import { RelationshipContext, useAutoRelationship, useRelationshipContext } from "../../../hooks/useAutoRelationship.js";
-import { useBelongsToController } from "../../../hooks/useBelongsToController.js";
-import { getRecordAsOption, optionRecordsToLoadCount, useOptionLabelForField } from "../../../hooks/useRelatedModel.js";
+import { RelationshipContext } from "../../../hooks/useAutoRelationship.js";
+import { optionRecordsToLoadCount } from "../../../hooks/useRelatedModel.js";
 import type { OptionLabel } from "../../../interfaces/AutoRelationshipInputProps.js";
 import type { ShadcnElements } from "../../elements.js";
 import { makeShadcnRenderOptionLabel } from "../../utils.js";
@@ -84,42 +83,26 @@ export const makeShadcnAutoBelongsToForm = ({
     tertiaryLabel?: OptionLabel;
   }) {
     const { field } = props;
-    const { path, metadata } = useAutoRelationship({ field });
     const {
-      setValue,
-      getValues,
-      formState: { defaultValues, submitCount, isSubmitSuccessful },
-    } = useFormContext();
-
-    const { record, relatedModelOptions } = useBelongsToController(props);
-    const [actionsOpen, setActionsOpen] = useState(false);
-    const [searchOpen, setSearchOpen] = useState(false);
-    const [modalOpen, setModalOpen] = useState(false);
-
-    const {
+      record,
+      actionsOpen,
+      modalOpen,
+      setActionsOpen,
+      setModalOpen,
       search,
       searchFilterOptions,
       pagination,
-      relatedModel: { records, fetching: isLoading },
-    } = relatedModelOptions;
-    const relationshipContext = useRelationshipContext();
-    const pathPrefix = relationshipContext?.transformPath ? relationshipContext.transformPath(props.field) : props.field;
-
-    const defaultRecordId = get(defaultValues, path)?.id;
-
-    // each time the form is submitted if the child record is created we need to set the id to the default record id
-    // that comes from the response to the action mutation
-    useEffect(() => {
-      if (isSubmitSuccessful && record && !record.id && !("_link" in record) && !("_unlink" in record) && defaultRecordId) {
-        setValue(path + ".id", defaultRecordId);
-      }
-    }, [record, defaultRecordId, path, setValue, submitCount, isSubmitSuccessful]);
-
-    const primaryLabel = useOptionLabelForField(field, props.primaryLabel);
-    const hasRecord = !!(record && !("_unlink" in record && record._unlink));
-    const recordOption = record ? getRecordAsOption(record, primaryLabel, props.secondaryLabel, props.tertiaryLabel) : null;
-
-    const parentName = metadata.name ?? "Unknown";
+      records,
+      isLoading,
+      pathPrefix,
+      hasRecord,
+      recordOption,
+      parentName,
+      path,
+      setValue,
+      getValues,
+      metadata,
+    } = useHasBelongsForm(props);
 
     const handleScrolledToBottom = useCallback(
       debounce(() => {
