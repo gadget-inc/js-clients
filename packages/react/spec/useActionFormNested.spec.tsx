@@ -2274,88 +2274,52 @@ describe("useActionFormNested", () => {
             "name": "Ottawa",
             "tweeters": [
               {
-                "delete": {
-                  "id": "1",
-                },
+                "followerFriendships": [
+                  {
+                    "follower": {
+                      "id": "102",
+                      "name": "Jim Doe",
+                    },
+                    "id": "3",
+                  },
+                  {
+                    "follower": {
+                      "id": "103",
+                      "name": "Jill Doe",
+                    },
+                    "id": "4",
+                  },
+                ],
+                "id": "2",
+                "name": "Bob Sacamano",
               },
               {
-                "update": {
-                  "followerFriendships": [
-                    {
-                      "update": {
-                        "follower": {
-                          "update": {
-                            "id": "102",
-                            "name": "Jim Doe",
-                          },
-                        },
-                        "id": "3",
-                      },
+                "followerFriendships": [
+                  {
+                    "follower": {
+                      "id": "1100",
+                      "name": "Jane Doe",
                     },
-                    {
-                      "update": {
-                        "follower": {
-                          "update": {
-                            "id": "103",
-                            "name": "Jill Doe",
-                          },
-                        },
-                        "id": "4",
-                      },
+                    "id": "11",
+                  },
+                  {
+                    "follower": {
+                      "id": "1101",
+                      "name": "John Smith",
                     },
-                  ],
-                  "id": "2",
-                  "name": "Bob Sacamano",
-                },
+                    "id": "12",
+                  },
+                ],
+                "id": "11",
+                "name": "John Doe",
               },
               {
-                "update": {
-                  "followerFriendships": [
-                    {
-                      "update": {
-                        "follower": {
-                          "update": {
-                            "id": "1100",
-                            "name": "Jane Doe",
-                          },
-                        },
-                        "id": "11",
-                      },
-                    },
-                    {
-                      "update": {
-                        "follower": {
-                          "update": {
-                            "id": "1101",
-                            "name": "John Smith",
-                          },
-                        },
-                        "id": "12",
-                      },
-                    },
-                  ],
-                  "id": "11",
-                  "name": "John Doe",
-                },
-              },
-              {
-                "delete": {
-                  "id": "12",
-                },
-              },
-              {
-                "create": {
-                  "followerFriendships": [
-                    {
-                      "create": {
-                        "follower": {
-                          "_link": "1001",
-                        },
-                      },
-                    },
-                  ],
-                  "name": "Joe Davola",
-                },
+                "followerFriendships": [
+                  {
+                    "followerId": "1001",
+                  },
+                ],
+                "name": "Joe Davola",
               },
             ],
           },

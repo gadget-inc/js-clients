@@ -49,6 +49,7 @@ export const PolarisAutoHasOneForm = autoRelationshipForm(
       records,
       isLoading,
       pathPrefix,
+      metaDataPathPrefix,
       hasRecord,
       recordOption,
       childName,
@@ -56,7 +57,12 @@ export const PolarisAutoHasOneForm = autoRelationshipForm(
 
     return (
       <>
-        <RelationshipContext.Provider value={{ transformPath: (path) => pathPrefix + "." + path }}>
+        <RelationshipContext.Provider
+          value={{
+            transformPath: (path) => pathPrefix + "." + path,
+            transformMetadataPath: (path) => metaDataPathPrefix + "." + path,
+          }}
+        >
           <BlockStack gap="300">
             <InlineGrid columns="1fr auto">
               {props.label ?? (

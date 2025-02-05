@@ -1,6 +1,7 @@
 import React, { useEffect, useMemo } from "react";
 import { useFieldsFromChildComponents } from "./AutoFormContext.js";
 import { useRelationshipContext } from "./hooks/useAutoRelationship.js";
+import { useRelationshipTransformedMetaDataPaths } from "./hooks/useFieldMetadata.js";
 
 export interface AutoInputComponent<P> extends React.FC<P> {
   __autoInput: true;
@@ -45,10 +46,13 @@ export function autoRelationshipForm<P extends { field: string }>(
   const WrappedComponent: React.FC<P> = (props) => {
     const { hasCustomFormChildren, registerFields, fieldSet } = useFieldsFromChildComponents();
 
+    const relationshipTransformedPaths = useRelationshipTransformedMetaDataPaths(props.field);
     const hasSelectPaths = "selectPaths" in props && props.selectPaths;
     const selectPathsToRegister = useMemo(
       () =>
-        hasSelectPaths && Array.isArray(props.selectPaths) ? props.selectPaths.map((selectPath) => `${props.field}.${selectPath}`) : [],
+        hasSelectPaths && Array.isArray(props.selectPaths)
+          ? props.selectPaths.map((selectPath) => `${relationshipTransformedPaths?.metaDataPath ?? props.field}.${selectPath}`)
+          : [],
       [hasSelectPaths, props.field]
     );
 

@@ -34,6 +34,9 @@ export const useHasOneForm = (props: {
 
   const relationshipContext = useRelationshipContext();
   const pathPrefix = relationshipContext?.transformPath ? relationshipContext.transformPath(props.field) : props.field;
+  const metaDataPathPrefix = relationshipContext?.transformMetadataPath
+    ? relationshipContext.transformMetadataPath(props.field)
+    : pathPrefix;
 
   const defaultRecordId = get(defaultValues, path)?.id;
 
@@ -69,6 +72,7 @@ export const useHasOneForm = (props: {
     records,
     isLoading,
     pathPrefix,
+    metaDataPathPrefix,
     hasRecord,
     recordOption,
     childName,

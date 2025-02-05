@@ -1,6 +1,6 @@
-import { AppProvider, BlockStack, Card, FormLayout, InlineStack, Page, Text } from "@shopify/polaris";
+import { AppProvider, BlockStack, Box, Button, Card, FormLayout, InlineStack, Page, Text } from "@shopify/polaris";
 import translations from "@shopify/polaris/locales/en.json";
-import React from "react";
+import React, { useState } from "react";
 import { Provider } from "../../../../src/GadgetProvider.tsx";
 import { PolarisAutoForm } from "../../../../src/auto/polaris/PolarisAutoForm.tsx";
 import { PolarisAutoInput } from "../../../../src/auto/polaris/inputs/PolarisAutoInput.tsx";
@@ -31,7 +31,7 @@ const ExampleWidgetAutoRelatedForm = (props) => {
           <PolarisAutoBelongsToForm
             field="section"
             primaryLabel="name"
-            renderParent={(record) => <Text>this is a custom belongsTo render for {record.name}</Text>}
+            renderSelectedRecord={(record) => <Text>this is a custom belongsTo render for {record.name}</Text>}
           >
             <PolarisAutoInput field="name" />
           </PolarisAutoBelongsToForm>
@@ -53,11 +53,7 @@ const ExampleWidgetAutoRelatedForm = (props) => {
 
         <Card>
           <PolarisAutoHasManyForm
-            label={
-              <Text as="h2" variant="headingSm">
-                Has Many Form -- Gizmos
-              </Text>
-            }
+            label={<Text as="h2" variant="headingSm">{`Has Many Form -- Gizmos`}</Text>}
             field="gizmos"
             selectPaths={["name", "orientation"]}
             primaryLabel="name"
@@ -269,5 +265,126 @@ const ExampleTweeterFollowerCreateRelatedForm = (props) => {
         <PolarisAutoSubmit />
       </PolarisAutoForm>
     </Page>
+  );
+};
+
+export const DeepRelationshipChain = {
+  render: (args) => {
+    return (
+      <>
+        <Page>
+          <PolarisAutoForm {...args}>
+            <PolarisSubmitResultBanner />
+
+            <Card>
+              <PolarisAutoInput field="englishName" />
+              <PolarisAutoInput field="size" />
+
+              {/* Root hasMany */}
+              <PolarisAutoHasManyForm field="continents">
+                <PolarisAutoInput field="englishName" />
+
+                {/* level 1 hasMany */}
+                <PolarisAutoHasManyForm field="countries">
+                  <PolarisAutoInput field="englishName" />
+
+                  {/* level 2 hasMany */}
+                  <PolarisAutoHasManyForm field="cities">
+                    <PolarisAutoInput field="englishName" />
+                    <PolarisAutoInput field="localName" />
+
+                    {/* level 3 hasMany || hasOne */}
+                    <MayorOrCitizenSelect />
+                  </PolarisAutoHasManyForm>
+                </PolarisAutoHasManyForm>
+              </PolarisAutoHasManyForm>
+            </Card>
+            <PolarisAutoSubmit />
+          </PolarisAutoForm>
+        </Page>
+      </>
+    );
+  },
+  args: {
+    action: api.deepRelationshipChain.planet.update,
+    findBy: "1",
+
+    // For advanced cases like this with deeply nested conditional appearing forms, a manual select is required to prevent unmounts as conditionally appearing inputs get registered in the form state
+    // `id` fields must be selected at every step of the relationship field chain because they control if a nested action will become an update or a create.
+    // If there is no ID, only creates nested actions will be used to create new nested records instead of updating existing ones.
+    select: {
+      id: true,
+      englishName: true,
+      size: true,
+      continents: {
+        edges: {
+          node: {
+            id: true,
+            englishName: true,
+            countries: {
+              edges: {
+                node: {
+                  id: true,
+                  englishName: true,
+                  cities: {
+                    edges: {
+                      node: {
+                        id: true,
+                        englishName: true,
+                        localName: true,
+                        citizens: {
+                          edges: {
+                            node: {
+                              id: true,
+                              firstName: true,
+                              lastName: true,
+                              cityOfMayorDuty: { id: true, englishName: true, localName: true },
+                            },
+                          },
+                        },
+                        mayor: { id: true, firstName: true, lastName: true },
+                      },
+                    },
+                  },
+                },
+              },
+            },
+          },
+        },
+      },
+    },
+  },
+};
+
+const MayorOrCitizenSelect = () => {
+  const [showMayor, setShowMayor] = useState(!false);
+
+  return (
+    <>
+      <Box>
+        <Text>Showing {showMayor ? "Mayor" : "Citizens"}</Text>
+        <Button onClick={() => setShowMayor(!showMayor)}>Toggle</Button>
+      </Box>
+      {showMayor ? (
+        <Card>
+          <PolarisAutoHasOneForm field="mayor" primaryLabel={["firstName", "lastName"]}>
+            <PolarisAutoInput field="firstName" />
+            <PolarisAutoInput field="lastName" />
+          </PolarisAutoHasOneForm>
+        </Card>
+      ) : (
+        <Card>
+          <PolarisAutoHasManyForm field="citizens" primaryLabel={["firstName", "lastName"]}>
+            <PolarisAutoInput field="firstName" />
+            <PolarisAutoInput field="lastName" />
+
+            <PolarisAutoBelongsToForm field="cityOfMayorDuty" primaryLabel={["englishName", "localName"]}>
+              <PolarisAutoInput field="englishName" />
+              <PolarisAutoInput field="localName" />
+            </PolarisAutoBelongsToForm>
+          </PolarisAutoHasManyForm>
+        </Card>
+      )}
+    </>
   );
 };
