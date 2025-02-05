@@ -1,6 +1,6 @@
 import { klona as cloneDeep } from "klona";
 import type { Jsonify } from "type-fest";
-import type { AnyModelManager } from "./AnyModelManager.js";
+import { isPublicModelManager, isPublicSingletonModelManager, type AnyModelManager } from "./AnyModelManager.js";
 import { isEqual, toPrimitiveObject } from "./support.js";
 
 export enum ChangeTracking {
@@ -211,6 +211,24 @@ export class GadgetRecord_<Shape extends RecordShape> {
   /** Marks this record as changed so that the next save will save it and adjust any `updatedAt` timestamps */
   touch(): void {
     this[kTouched] = true;
+  }
+
+  async reload() {
+    const modelManager = this[kModelManager];
+
+    if (!modelManager) {
+      throw new Error("Record can not be reloaded");
+    }
+
+    if (isPublicModelManager(modelManager)) {
+      return await modelManager.findOne(this.getField("id"));
+    }
+
+    if (isPublicSingletonModelManager(modelManager)) {
+      return await modelManager.get();
+    }
+
+    throw new Error("Record can not be reloaded");
   }
 }
 

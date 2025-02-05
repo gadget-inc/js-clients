@@ -59,3 +59,11 @@ export interface AnyLegacyModelManager {
  * Any model manager, either public or internal
  */
 export type AnyModelManager = AnyPublicModelManager | AnyPublicSingletonModelManager | AnyLegacyModelManager | InternalModelManager;
+
+export function isPublicModelManager(manager: AnyModelManager): manager is AnyPublicModelManager {
+  return "findOne" in manager;
+}
+
+export function isPublicSingletonModelManager(manager: AnyModelManager): manager is AnyPublicSingletonModelManager {
+  return "get" in manager;
+}
