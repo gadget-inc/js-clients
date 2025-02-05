@@ -9,23 +9,33 @@ import { elements } from "../../index.tsx";
 
 // More on how to set up stories at: https://storybook.js.org/docs/writing-stories#default-export
 
-const { AutoForm, AutoHasOneForm, AutoInput, AutoSubmit, SubmitResultBanner } = makeAutocomponents(elements);
+const { AutoForm, AutoHasOneForm, AutoInput, AutoSubmit, SubmitResultBanner, AutoBelongsToForm } = makeAutocomponents(elements);
 
 const Component = (props) => {
   return (
     <AutoForm {...props} action={api.widget.create}>
-      <SubmitResultBanner />
-      <AutoHasOneForm field="doodad" primaryLabel="name"
-        secondaryLabel={(record) => `${record.weight ?? 'N/A'} (${record.active ?? 'N/A'})`} tertiaryLabel="size"
-      >
-        <div className="flex flex-col gap-4">
-          <AutoInput field="name" />
-          <AutoInput field="weight" />
-          <AutoInput field="active" />
-          <AutoInput field="size" />
+      <div className="flex flex-col gap-4">
+        <div>
+          <AutoBelongsToForm field="section" primaryLabel="name"
+            renderParent={(record) => <Text>this is a custom belongsTo render for {record.name}</Text>}
+          >
+            <AutoInput field="name" />
+          </AutoBelongsToForm>
         </div>
-      </AutoHasOneForm>
-      <AutoSubmit />
+        <SubmitResultBanner />
+        <AutoHasOneForm field="doodad" primaryLabel="name"
+          secondaryLabel={(record) => `${record.weight ?? 'N/A'} (${record.active ?? 'N/A'})`} tertiaryLabel="size"
+        >
+
+          <div className="flex flex-col gap-4">
+            <AutoInput field="name" />
+            <AutoInput field="weight" />
+            <AutoInput field="active" />
+            <AutoInput field="size" />
+          </div>
+        </AutoHasOneForm>
+        <AutoSubmit />
+      </div>
     </AutoForm>
   );
 };
