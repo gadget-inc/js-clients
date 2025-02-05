@@ -51,10 +51,6 @@ export interface DropdownMenuProps {
   modal?: boolean;
 }
 
-
-
-
-
 /** The props that a command component injected into autocomponent's shadcn must support */
 export interface CommandProps extends React.HTMLAttributes<HTMLDivElement> {
   children?: React.ReactNode;
@@ -200,7 +196,6 @@ export interface ShadcnElements {
   /** The Checkbox component from shadcn */
   Checkbox: React.ForwardRefExoticComponent<CheckboxProps & React.RefAttributes<HTMLButtonElement>>;
 
- 
   /** The DropdownMenu component from shadcn */
   DropdownMenu: React.ComponentType<DropdownMenuProps>;
   /** The DropdownMenuTrigger component from shadcn */
