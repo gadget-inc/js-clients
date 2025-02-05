@@ -15,6 +15,7 @@ const kInstantiatedFields = Symbol.for("g/if");
 const kPersistedFields = Symbol.for("g/pf");
 const kFieldKeys = Symbol.for("g/fk");
 const kTouched = Symbol.for("g/t");
+const kModelManager = Symbol.for("g/mm");
 
 /** Represents one record returned from a high level Gadget API call */
 export class GadgetRecord_<Shape extends RecordShape> {
@@ -27,10 +28,12 @@ export class GadgetRecord_<Shape extends RecordShape> {
   /** Storage of the keys and values of this record at the time it was last persisted */
   [kFieldKeys]: Set<string>;
   [kTouched] = false;
+  [kModelManager]: AnyModelManager | undefined;
 
   private empty = false;
 
-  constructor(data: Shape, readonly modelManager?: AnyModelManager) {
+  constructor(data: Shape, modelManager?: AnyModelManager) {
+    this[kModelManager] = modelManager;
     this[kInstantiatedFields] = cloneDeep(data) ?? {};
     this[kPersistedFields] = cloneDeep(data) ?? {};
     Object.assign(this[kFields], data);
