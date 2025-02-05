@@ -52,10 +52,17 @@ const ExampleWidgetAutoRelatedForm = (props) => {
         </Card>
 
         <Card>
-          <Text as="h2" variant="headingSm">
-            Has Many Form -- Gizmos
-          </Text>
-          <PolarisAutoHasManyForm field="gizmos" selectPaths={["name", "orientation"]} primaryLabel="name" secondaryLabel="orientation">
+          <PolarisAutoHasManyForm
+            label={
+              <Text as="h2" variant="headingSm">
+                Has Many Form -- Gizmos
+              </Text>
+            }
+            field="gizmos"
+            selectPaths={["name", "orientation"]}
+            primaryLabel="name"
+            secondaryLabel="orientation"
+          >
             <PolarisAutoInput field="name" />
             <PolarisAutoInput field="orientation" />
             <PolarisAutoInput field="attachment" />
@@ -127,7 +134,7 @@ const ExampleSectionAutoRelatedForm = (props) => {
           <Text as="h2" variant="headingSm">
             Has Many Form -- Widgets
           </Text>
-          <PolarisAutoHasManyForm field="widgets">
+          <PolarisAutoHasManyForm field="widgets" label="Widgets">
             <PolarisAutoInput field="name" />
             <PolarisAutoInput field="inventoryCount" />
           </PolarisAutoHasManyForm>

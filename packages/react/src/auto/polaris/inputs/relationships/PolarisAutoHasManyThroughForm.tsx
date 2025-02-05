@@ -1,5 +1,5 @@
 import { AutoSelection, BlockStack, Box, Button, Icon, InlineGrid, InlineStack, Listbox, Text } from "@shopify/polaris";
-import { PlusCircleIcon, XCircleIcon } from "@shopify/polaris-icons";
+import { PlusIcon, XCircleIcon } from "@shopify/polaris-icons";
 import React, { useEffect, useMemo, useState } from "react";
 import { useFormContext } from "../../../../useActionForm.js";
 import { extractPathsFromChildren } from "../../..//AutoForm.js";
@@ -7,13 +7,14 @@ import { autoRelationshipForm } from "../../../AutoInput.js";
 import { RelationshipContext, useAutoRelationship, useRelationshipContext } from "../../../hooks/useAutoRelationship.js";
 import { useHasManyThroughController } from "../../../hooks/useHasManyThroughController.js";
 import { getRecordAsOption, useOptionLabelForField } from "../../../hooks/useRelatedModel.js";
-import type { OptionLabel } from "../../../interfaces/AutoRelationshipInputProps.js";
+import type { Option, OptionLabel } from "../../../interfaces/AutoRelationshipInputProps.js";
 import { RelatedModelOptionsPopover, RelatedModelOptionsSearch } from "./RelatedModelOptions.js";
 import { renderOptionLabel } from "./utils.js";
 
 export const PolarisAutoHasManyThroughForm = autoRelationshipForm(
   (props: {
     field: string;
+    label?: React.ReactNode;
     children: React.ReactNode;
     primaryLabel?: OptionLabel;
     secondaryLabel?: OptionLabel;
@@ -79,9 +80,11 @@ export const PolarisAutoHasManyThroughForm = autoRelationshipForm(
     return (
       <BlockStack gap="200">
         <InlineGrid columns="1fr auto">
-          <Text as="h2" variant="headingSm">
-            {siblingModelName}
-          </Text>
+          {props.label ?? (
+            <Text as="h2" variant="headingSm">
+              {siblingModelName}
+            </Text>
+          )}
           <RelatedModelOptionsPopover
             active={addingSibling}
             activator={
@@ -101,17 +104,7 @@ export const PolarisAutoHasManyThroughForm = autoRelationshipForm(
             }}
             isLoading={siblingRecordsLoading}
             autoSelection={AutoSelection.None}
-            renderOption={(option) => (
-              <Listbox.Action key={option.id} value={option.id}>
-                <InlineStack gap="200">
-                  <Icon source={PlusCircleIcon} />
-                  <BlockStack gap="050">
-                    {renderOptionLabel(option.label, "primary")}
-                    {option.secondaryLabel && renderOptionLabel(option.secondaryLabel, "secondary")}
-                  </BlockStack>
-                </InlineStack>
-              </Listbox.Action>
-            )}
+            renderOption={(option) => <SiblingOption option={option} />}
           />
         </InlineGrid>
 
@@ -126,13 +119,23 @@ export const PolarisAutoHasManyThroughForm = autoRelationshipForm(
                 <Box key={fieldKey} padding="300">
                   <InlineGrid columns="1fr auto" gap="200" alignItems="center">
                     <Box borderColor="border" borderWidth="025" borderRadius="200">
-                      <Box padding="200">
-                        <InlineGrid columns="1fr 1fr 1fr">
-                          {renderOptionLabel(siblingOption.label, "primary")}
+                      <div style={{ display: "flex", padding: "8px" }}>
+                        <Box>
+                          <InlineStack gap="200">
+                            {renderOptionLabel(siblingOption.label, "primary")}
+                            {siblingOption?.tertiaryLabel && renderOptionLabel(siblingOption.tertiaryLabel, "tertiary")}
+                          </InlineStack>
                           {siblingOption?.secondaryLabel && renderOptionLabel(siblingOption.secondaryLabel, "secondary")}
-                          {siblingOption?.tertiaryLabel && renderOptionLabel(siblingOption.tertiaryLabel, "tertiary")}
-                        </InlineGrid>
-                      </Box>
+                        </Box>
+                        <div style={{ marginLeft: "auto", alignSelf: "center" }}>
+                          <Button
+                            id={`deleteButton_${pathPrefix}.${idx}`}
+                            variant="tertiary"
+                            icon={XCircleIcon}
+                            onClick={() => remove(idx)}
+                          />
+                        </div>
+                      </div>
                       {hasChildForm && (
                         <Box borderColor="border" borderBlockStartWidth="025">
                           <Box padding="200">
@@ -148,16 +151,6 @@ export const PolarisAutoHasManyThroughForm = autoRelationshipForm(
                           </Box>
                         </Box>
                       )}
-                    </Box>
-                    <Box>
-                      <Button
-                        id={`deleteButton_${pathPrefix}.${idx}`}
-                        variant="tertiary"
-                        icon={XCircleIcon}
-                        onClick={() => {
-                          remove(idx);
-                        }}
-                      />
                     </Box>
                   </InlineGrid>
                 </Box>
@@ -179,3 +172,21 @@ export const PolarisAutoHasManyThroughForm = autoRelationshipForm(
     );
   }
 );
+
+const SiblingOption = (props: { option: Option }) => {
+  const { option } = props;
+
+  return (
+    <Listbox.Action key={option.id} value={option.id}>
+      <div style={{ display: "flex", gap: "200", width: "100%" }}>
+        <BlockStack gap="050">
+          {renderOptionLabel(option.label, "primary")}
+          {option.secondaryLabel && renderOptionLabel(option.secondaryLabel, "secondary")}
+        </BlockStack>
+        <div style={{ marginLeft: "auto", alignSelf: "center" }}>
+          <Icon source={PlusIcon} />
+        </div>
+      </div>
+    </Listbox.Action>
+  );
+};
