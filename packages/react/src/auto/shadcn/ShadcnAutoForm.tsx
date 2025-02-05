@@ -9,38 +9,14 @@ import { validateAutoFormProps } from "../AutoFormActionValidators.js";
 import { AutoFormFieldsFromChildComponentsProvider, AutoFormMetadataContext } from "../AutoFormContext.js";
 import type { FormProps, ShadcnElements } from "./elements.js";
 import { makeShadcnAutoInput } from "./inputs/ShadcnAutoInput.js";
+import { makeShadcnAutoHasOneForm } from "./inputs/relationships/ShadcnAutoHasOneForm.js";
 import { makeShadcnAutoSubmit } from "./submit/ShadcnAutoSubmit.js";
 import { makeSubmitResultBanner } from "./submit/ShadcnSubmitResultBanner.js";
 
 /**
  * Renders a form for an action on a model automatically using Shadcn
  */
-export const makeAutoForm = <Elements extends ShadcnElements>({
-  Form,
-  Input,
-  Button,
-  Alert,
-  Skeleton,
-  AlertTitle,
-  AlertDescription,
-  Label,
-  Checkbox,
-  Badge,
-  Command,
-  CommandInput,
-  CommandItem,
-  CommandList,
-  CommandLoading,
-  CommandEmpty,
-  CommandGroup,
-  Calendar,
-  Popover,
-  PopoverTrigger,
-  PopoverContent,
-  ScrollArea,
-  ScrollBar,
-  Textarea,
-}: Elements) => {
+export const makeAutoForm = <Elements extends ShadcnElements>(elements: Elements) => {
   const {
     AutoInput,
     AutoBelongsToInput,
@@ -55,35 +31,14 @@ export const makeAutoForm = <Elements extends ShadcnElements>({
     AutoStringInput,
     AutoNumberInput,
     AutoIdInput,
-  } = makeShadcnAutoInput({
-    Input,
-    Label,
-    Button,
-    Checkbox,
-    Badge,
-    Command,
-    CommandLoading,
-    CommandInput,
-    CommandItem,
-    CommandList,
-    CommandEmpty,
-    CommandGroup,
-    Calendar,
-    Popover,
-    PopoverTrigger,
-    PopoverContent,
-    ScrollArea,
-    ScrollBar,
-    Textarea,
-  });
+  } = makeShadcnAutoInput(elements);
 
-  const AutoSubmit = makeShadcnAutoSubmit({ Button });
-  const { SubmitSuccessfulBanner, SubmitErrorBanner, SubmitResultBanner } = makeSubmitResultBanner({
-    Alert,
-    AlertTitle,
-    AlertDescription,
-    Button,
-  });
+  const AutoSubmit = makeShadcnAutoSubmit(elements);
+  const { SubmitSuccessfulBanner, SubmitErrorBanner, SubmitResultBanner } = makeSubmitResultBanner(elements);
+
+  const { Form, Skeleton } = elements;
+
+  const AutoHasOneForm = makeShadcnAutoHasOneForm(elements);
 
   function AutoForm<GivenOptions extends OptionsType, SchemaT, ActionFunc extends ActionFunction<GivenOptions, any, any, SchemaT, any>>(
     props: AutoFormProps<GivenOptions, SchemaT, ActionFunc> & ComponentProps<typeof Form>
@@ -109,7 +64,7 @@ export const makeAutoForm = <Elements extends ShadcnElements>({
     GivenOptions extends OptionsType,
     SchemaT,
     ActionFunc extends ActionFunction<GivenOptions, any, any, SchemaT, any>
-  >(props: AutoFormProps<GivenOptions, SchemaT, ActionFunc> & ComponentProps<typeof Form>) {
+  >(props: AutoFormProps<GivenOptions, SchemaT, ActionFunc> & ComponentProps<typeof elements.Form>) {
     const {
       record: _record,
       action,
@@ -138,9 +93,9 @@ export const makeAutoForm = <Elements extends ShadcnElements>({
 
     if (fetchingMetadata) {
       return (
-        <Form {...rest} onSubmit={submit}>
-          <Skeleton />
-        </Form>
+        <elements.Form {...rest} onSubmit={submit}>
+          <elements.Skeleton />
+        </elements.Form>
       );
     }
 
@@ -197,6 +152,7 @@ export const makeAutoForm = <Elements extends ShadcnElements>({
     SubmitResultBanner,
     SubmitSuccessfulBanner,
     SubmitErrorBanner,
+    AutoHasOneForm,
     AutoBelongsToInput,
     AutoHasManyInput,
     AutoRolesInput,

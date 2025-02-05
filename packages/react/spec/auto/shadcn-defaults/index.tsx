@@ -28,6 +28,14 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "./components/Dialog.js";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "./components/DropdownMenu.js";
 import { Form } from "./components/Form.js";
 import { Input } from "./components/Input.js";
 import { Label } from "./components/Label.js";
@@ -45,22 +53,16 @@ export const elements: ShadcnElements = {
   Alert,
   AlertDescription,
   AlertTitle,
-
   Badge,
-
   Button,
-
   Calendar,
-
   Card,
   CardContent,
   CardDescription,
   CardFooter,
   CardHeader,
   CardTitle,
-
   Checkbox,
-
   Command,
   CommandEmpty,
   CommandGroup,
@@ -69,22 +71,33 @@ export const elements: ShadcnElements = {
   CommandList,
   CommandSeparator,
   CommandLoading,
+  Dialog,
+  DialogClose,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogOverlay,
+  DialogPortal,
+  DialogTitle,
+  DialogTrigger,
+  DropdownMenu,
+  DropdownMenuTrigger,
+  DropdownMenuContent,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuItem,
   Popover,
   PopoverAnchor,
   PopoverContent,
   PopoverTrigger,
   ScrollArea,
   ScrollBar,
-
   Input,
-
   Label,
   Textarea,
-
   Form,
-
   Skeleton,
-
   Table,
   TableBody,
   TableCaption,
@@ -93,27 +106,13 @@ export const elements: ShadcnElements = {
   TableHead,
   TableHeader,
   TableRow,
-
   TooltipProvider,
   Tooltip,
   TooltipTrigger,
   TooltipContent,
-
   Avatar,
   AvatarImage,
   AvatarFallback,
-
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-  DialogClose,
-  DialogFooter,
-  DialogPortal,
-  DialogOverlay,
-
   toast,
   cn,
 };

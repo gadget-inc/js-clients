@@ -34,6 +34,7 @@ export const makeShadcnAutoEnumInput = ({
   | "Label"
   | "Checkbox"
   | "ScrollArea"
+  | "Input"
 >) => {
   const ShadcnComboInput = makeShadcnAutoComboInput({
     Command,

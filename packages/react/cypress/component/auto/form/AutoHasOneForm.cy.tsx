@@ -1,11 +1,7 @@
 import React from "react";
-import { PolarisAutoForm } from "../../../../src/auto/polaris/PolarisAutoForm.js";
-import { PolarisAutoInput } from "../../../../src/auto/polaris/inputs/PolarisAutoInput.js";
-import { PolarisAutoHasOneForm } from "../../../../src/auto/polaris/inputs/relationships/PolarisAutoHasOneForm.js";
-import { PolarisAutoSubmit } from "../../../../src/auto/polaris/submit/PolarisAutoSubmit.js";
-import { PolarisSubmitResultBanner } from "../../../../src/auto/polaris/submit/PolarisSubmitResultBanner.js";
 import { api } from "../../../support/api.js";
-import { PolarisWrapper } from "../../../support/auto.js";
+import { describeForEachAutoAdapter } from "../../../support/auto.js";
+import { SUITE_NAMES } from "../../../support/constants.js";
 
 const originalDoodadLinkedToWidget = {
   id: "1",
@@ -16,177 +12,183 @@ const originalDoodadLinkedToWidget = {
   __typename: "Doodad",
 };
 
-describe("PolarisAutoHasOneForm", () => {
-  const interceptModelUpdateActionMetadata = () => {
-    cy.intercept({ method: "POST", url: `${api.connection.endpoint}?operation=ModelActionMetadata` }, RealWidgetMetadata).as(
-      "ModelCreateActionMetadata"
-    );
-  };
+describeForEachAutoAdapter(
+  "AutoHasOneForm",
+  ({ name, adapter: { AutoForm, AutoInput, AutoSubmit, SubmitResultBanner, AutoHasOneForm }, wrapper }) => {
+    const interceptModelUpdateActionMetadata = () => {
+      cy.intercept({ method: "POST", url: `${api.connection.endpoint}?operation=ModelActionMetadata` }, RealWidgetMetadata).as(
+        "ModelCreateActionMetadata"
+      );
+    };
 
-  const expectUpdateActionSubmissionVariables = (expectedQueryValue?: any) => {
-    cy.intercept({ method: "POST", url: `${api.connection.endpoint}?operation=updateWidget` }, (req) => {
-      // eslint-disable-next-line
-      expect(req.body.variables).to.deep.equal(expectedQueryValue);
-      req.reply({ data: { updateWidget: { success: true, errors: null, x: {} } } });
-    }).as("updateWidget");
-  };
+    const getDropdownMenuTriggerSelector = () => {
+      return name == SUITE_NAMES.SHADCN ? "[data-testid='widget.doodad-dropdown-menu-trigger']" : ".Polaris-Button__Icon";
+    };
 
-  const interceptWidgetQuery = () => {
-    cy.intercept({ method: "POST", url: `${api.connection.endpoint}?operation=widget` }, (req) => {
-      req.reply({
-        data: {
-          widget: {
-            __typename: "Widget",
-            id: "42",
-            name: "test record",
-            doodad: originalDoodadLinkedToWidget,
-          },
-        },
-      });
-    }).as("widget");
-  };
+    const expectUpdateActionSubmissionVariables = (expectedQueryValue?: any) => {
+      cy.intercept({ method: "POST", url: `${api.connection.endpoint}?operation=updateWidget` }, (req) => {
+        // eslint-disable-next-line
+        expect(req.body.variables).to.deep.equal(expectedQueryValue);
+        req.reply({ data: { updateWidget: { success: true, errors: null, x: {} } } });
+      }).as("updateWidget");
+    };
 
-  const interceptGizmosOptionsQuery = () => {
-    cy.intercept(
-      {
-        method: "POST",
-        url: `${api.connection.endpoint}?operation=gizmos`,
-      },
-      (req) => {
-        const gizmos = [
-          {
-            cursor: "eyJpZCI6IjEwODgifQ==",
-            node: {
-              __typename: "Gizmo",
-              id: "1",
-              createdAt: "2023-09-07T19:18:50.742Z",
-              name: "Gizmo 1",
-              orientation: "right side up",
-              updatedAt: "2024-07-09T14:42:20.788Z",
-            },
-            __typename: "GizmoEdge",
-          },
-        ];
-
+    const interceptWidgetQuery = () => {
+      cy.intercept({ method: "POST", url: `${api.connection.endpoint}?operation=widget` }, (req) => {
         req.reply({
           data: {
-            gizmos: {
-              pageInfo: {
-                hasNextPage: false,
-                hasPreviousPage: false,
-                startCursor: "eyJpZCI6IjEifQ==",
-                endCursor: "eyJpZCI6IjIifQ==",
-                __typename: "PageInfo",
-              },
-              edges: gizmos,
-              __typename: "SectionConnection",
-            },
-            gadgetMeta: {
-              hydrations: {
-                createdAt: "DateTime",
-                updatedAt: "DateTime",
-              },
-              __typename: "GadgetApplicationMeta",
+            widget: {
+              __typename: "Widget",
+              id: "42",
+              name: "test record",
+              doodad: originalDoodadLinkedToWidget,
             },
           },
         });
-      }
-    ).as("gizmos");
-  };
+      }).as("widget");
+    };
 
-  beforeEach(() => {
-    cy.viewport("macbook-13");
+    const interceptGizmosOptionsQuery = () => {
+      cy.intercept(
+        {
+          method: "POST",
+          url: `${api.connection.endpoint}?operation=gizmos`,
+        },
+        (req) => {
+          const gizmos = [
+            {
+              cursor: "eyJpZCI6IjEwODgifQ==",
+              node: {
+                __typename: "Gizmo",
+                id: "1",
+                createdAt: "2023-09-07T19:18:50.742Z",
+                name: "Gizmo 1",
+                orientation: "right side up",
+                updatedAt: "2024-07-09T14:42:20.788Z",
+              },
+              __typename: "GizmoEdge",
+            },
+          ];
 
-    interceptModelUpdateActionMetadata();
-    interceptGizmosOptionsQuery();
-    interceptWidgetQuery();
-  });
+          req.reply({
+            data: {
+              gizmos: {
+                pageInfo: {
+                  hasNextPage: false,
+                  hasPreviousPage: false,
+                  startCursor: "eyJpZCI6IjEifQ==",
+                  endCursor: "eyJpZCI6IjIifQ==",
+                  __typename: "PageInfo",
+                },
+                edges: gizmos,
+                __typename: "SectionConnection",
+              },
+              gadgetMeta: {
+                hydrations: {
+                  createdAt: "DateTime",
+                  updatedAt: "DateTime",
+                },
+                __typename: "GadgetApplicationMeta",
+              },
+            },
+          });
+        }
+      ).as("gizmos");
+    };
 
-  it("renders form fields for related record", () => {
-    cy.mountWithWrapper(
-      <PolarisAutoForm action={api.widget.update} findBy="42">
-        <PolarisSubmitResultBanner />
-        <PolarisAutoHasOneForm
-          field="doodad"
-          primaryLabel="name"
-          secondaryLabel={(record) => `Weight:${record.weight} (${record.active})`}
-          tertiaryLabel="size"
-        >
-          <PolarisAutoInput field="name" />
-          <PolarisAutoInput field="weight" />
-          <PolarisAutoInput field="active" />
-          <PolarisAutoInput field="size" />
-        </PolarisAutoHasOneForm>
-        <PolarisAutoSubmit id="submit" />
-      </PolarisAutoForm>,
-      PolarisWrapper
-    );
+    beforeEach(() => {
+      cy.viewport("macbook-13");
 
-    cy.wait("@ModelCreateActionMetadata");
-    cy.wait("@widget");
-
-    cy.contains("Doodad 1"); // primary label
-    cy.contains("Weight:333"); // secondary label
-    cy.contains("Large"); // tertiary label
-
-    cy.get(".Polaris-Button__Icon").first().click();
-    cy.contains("Edit doodad").click();
-
-    cy.get('input[id="widget.doodad.name"]').should("exist").click().type(" - updated");
-    cy.get('input[id="widget.doodad.weight"]').should("exist").click().type("123");
-
-    cy.contains("Save").click();
-
-    expectUpdateActionSubmissionVariables({
-      id: "42",
-      widget: {
-        doodad: { update: { active: true, id: "1", name: "Doodad 1 - updated", size: "Large", weight: 333123 } },
-      },
+      interceptModelUpdateActionMetadata();
+      interceptGizmosOptionsQuery();
+      interceptWidgetQuery();
     });
-    cy.get('[id="submit"]').click();
-    cy.wait("@updateWidget");
-  });
 
-  it("can unlink a hasOne relationship", () => {
-    cy.mountWithWrapper(
-      <PolarisAutoForm action={api.widget.update} findBy="42">
-        <PolarisSubmitResultBanner />
-        <PolarisAutoHasOneForm
-          field="doodad"
-          primaryLabel="name"
-          secondaryLabel={(record) => `Weight:${record.weight} (${record.active})`}
-          tertiaryLabel="size"
-        >
-          <PolarisAutoInput field="name" />
-          <PolarisAutoInput field="weight" />
-          <PolarisAutoInput field="active" />
-          <PolarisAutoInput field="size" />
-        </PolarisAutoHasOneForm>
-        <PolarisAutoSubmit id="submit" />
-      </PolarisAutoForm>,
-      PolarisWrapper
-    );
+    it("renders form fields for related record", () => {
+      cy.mountWithWrapper(
+        <AutoForm action={api.widget.update} findBy="42">
+          <SubmitResultBanner />
+          <AutoHasOneForm
+            field="doodad"
+            primaryLabel="name"
+            secondaryLabel={(record: any) => `Weight:${record.weight} (${record.active})`}
+            tertiaryLabel="size"
+          >
+            <AutoInput field="name" />
+            <AutoInput field="weight" />
+            <AutoInput field="active" />
+            <AutoInput field="size" />
+          </AutoHasOneForm>
+          <AutoSubmit id="submit" />
+        </AutoForm>,
+        wrapper
+      );
 
-    cy.wait("@ModelCreateActionMetadata");
-    cy.wait("@widget");
+      cy.wait("@ModelCreateActionMetadata");
+      cy.wait("@widget");
 
-    cy.contains("Doodad 1"); // primary label
-    cy.contains("Weight:333"); // secondary label
-    cy.contains("Large"); // tertiary label
+      cy.contains("Doodad 1"); // primary label
+      cy.contains("Weight:333"); // secondary label
+      cy.contains("Large"); // tertiary label
 
-    cy.get(".Polaris-Button__Icon").first().click();
-    cy.contains("Remove doodad").click();
+      cy.get(getDropdownMenuTriggerSelector()).first().click();
+      cy.contains("Edit doodad").click();
 
-    expectUpdateActionSubmissionVariables({
-      id: "42",
-      widget: {
-        doodad: { _unlink: "1" },
-      },
+      cy.clickAndType('input[id="widget.doodad.name"]', "Doodad 1 - updated", true);
+      cy.clickAndType('input[id="widget.doodad.weight"]', "333123", true);
+      cy.contains("Save").click();
+
+      expectUpdateActionSubmissionVariables({
+        id: "42",
+        widget: {
+          doodad: { update: { active: true, id: "1", name: "Doodad 1 - updated", size: "Large", weight: 333123 } },
+        },
+      });
+      cy.get('[id="submit"]').click();
+      cy.wait("@updateWidget");
     });
-    cy.get('[id="submit"]').click();
-    cy.wait("@updateWidget");
-  });
-});
+
+    it("can unlink a hasOne relationship", () => {
+      cy.mountWithWrapper(
+        <AutoForm action={api.widget.update} findBy="42">
+          <SubmitResultBanner />
+          <AutoHasOneForm
+            field="doodad"
+            primaryLabel="name"
+            secondaryLabel={(record: any) => `Weight:${record.weight} (${record.active})`}
+            tertiaryLabel="size"
+          >
+            <AutoInput field="name" />
+            <AutoInput field="weight" />
+            <AutoInput field="active" />
+            <AutoInput field="size" />
+          </AutoHasOneForm>
+          <AutoSubmit id="submit" />
+        </AutoForm>,
+        wrapper
+      );
+
+      cy.wait("@ModelCreateActionMetadata");
+      cy.wait("@widget");
+
+      cy.contains("Doodad 1"); // primary label
+      cy.contains("Weight:333"); // secondary label
+      cy.contains("Large"); // tertiary label
+
+      cy.get(getDropdownMenuTriggerSelector()).first().click();
+      cy.contains("Remove doodad").click();
+
+      expectUpdateActionSubmissionVariables({
+        id: "42",
+        widget: {
+          doodad: { _unlink: "1" },
+        },
+      });
+      cy.get('[id="submit"]').click();
+      cy.wait("@updateWidget");
+    });
+  }
+);
 
 const RealWidgetMetadata = {
   data: {

@@ -40,6 +40,17 @@ export interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElemen
   size?: "default" | "sm" | "lg" | "icon" | null;
 }
 
+type Direction = "ltr" | "rtl";
+
+export interface DropdownMenuProps {
+  children?: React.ReactNode;
+  dir?: Direction;
+  open?: boolean;
+  defaultOpen?: boolean;
+  onOpenChange?(open: boolean): void;
+  modal?: boolean;
+}
+
 /** The props that a command component injected into autocomponent's shadcn must support */
 export interface CommandProps extends React.HTMLAttributes<HTMLDivElement> {
   children?: React.ReactNode;
@@ -184,6 +195,19 @@ export interface ShadcnElements {
 
   /** The Checkbox component from shadcn */
   Checkbox: React.ForwardRefExoticComponent<CheckboxProps & React.RefAttributes<HTMLButtonElement>>;
+
+  /** The DropdownMenu component from shadcn */
+  DropdownMenu: React.ComponentType<DropdownMenuProps>;
+  /** The DropdownMenuTrigger component from shadcn */
+  DropdownMenuTrigger: React.ComponentType<any>;
+  /** The DropdownMenuContent component from shadcn */
+  DropdownMenuContent: React.ComponentType<React.HTMLAttributes<HTMLDivElement>>;
+  /** The DropdownMenuItem component from shadcn */
+  DropdownMenuItem: React.ComponentType<any>;
+  /** The DropdownMenuLabel component from shadcn */
+  DropdownMenuLabel: React.ComponentType<React.HTMLAttributes<HTMLDivElement>>;
+  /** The DropdownMenuSeparator component from shadcn */
+  DropdownMenuSeparator: React.ComponentType<React.HTMLAttributes<HTMLDivElement>>;
 
   /** The Form component from shadcn */
   Form: React.ComponentType<FormProps>;
