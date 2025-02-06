@@ -195,8 +195,12 @@ const ExampleCourseCreateRelatedForm = (props) => {
             tertiaryLabel="department"
           >
             <InlineStack>
+              {/* Fields on the join model. The prefix is the model API id of the join model */}
               <PolarisAutoInput field="registration.effectiveFrom" />
               <PolarisAutoInput field="registration.effectiveTo" />
+
+              {/* Fields on the sibling model. No prefix */}
+              <PolarisAutoInput field="firstName" />
             </InlineStack>
           </PolarisAutoHasManyThroughForm>
         </Card>

@@ -2663,7 +2663,7 @@ describe("useActionFormNested", () => {
                   edges: {
                     node: {
                       id: true,
-                      // courseId: true,
+                      courseId: true,
                       course: {
                         id: true,
                         title: true,
