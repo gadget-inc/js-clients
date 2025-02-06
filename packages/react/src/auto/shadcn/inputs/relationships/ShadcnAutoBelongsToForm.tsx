@@ -203,7 +203,9 @@ export const makeShadcnAutoBelongsToForm = ({
         </div>
 
         <Dialog open={modalOpen} onOpenChange={() => setModalOpen(!modalOpen)}>
-          <RelationshipContext.Provider value={{ transformPath: (path) => pathPrefix + "." + path, transformMetadataPath: (path) => metaDataPathPrefix + "." + path }}>
+          <RelationshipContext.Provider
+            value={{ transformPath: (path) => pathPrefix + "." + path, transformMetadataPath: (path) => metaDataPathPrefix + "." + path }}
+          >
             <DialogContent className="bg-white">
               <DialogHeader>
                 <DialogTitle>Add {parentName}</DialogTitle>

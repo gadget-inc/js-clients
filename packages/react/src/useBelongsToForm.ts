@@ -50,7 +50,9 @@ export const useBelongsToForm = (props: {
 
   const parentName = metadata.name ?? "Unknown";
 
-  const metaDataPathPrefix = relationshipContext?.transformMetadataPath ? relationshipContext.transformMetadataPath(props.field) : props.field;
+  const metaDataPathPrefix = relationshipContext?.transformMetadataPath
+    ? relationshipContext.transformMetadataPath(props.field)
+    : props.field;
 
   return {
     record,
