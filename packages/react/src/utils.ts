@@ -445,9 +445,14 @@ export const unset = (obj: any, path: string) => {
  * Omits the given properties from an object
  * From https://youmightnotneed.com/lodash
  */
-export const omit = (obj: any, omittedProperties: string[]) => {
+export const omit = (obj: any, omittedProperties: string[], safe = false) => {
   obj = { ...obj };
-  omittedProperties.forEach((prop) => delete obj[prop]);
+  omittedProperties.forEach((prop) => {
+    if (safe && !(prop in obj)) {
+      return;
+    }
+    delete obj[prop];
+  });
   return obj;
 };
 
