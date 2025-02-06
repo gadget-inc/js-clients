@@ -6,6 +6,7 @@ import { autoRelationshipForm } from "../../../AutoInput.js";
 import { RelationshipContext, useAutoRelationship, useRelationshipContext } from "../../../hooks/useAutoRelationship.js";
 import { useHasManyController } from "../../../hooks/useHasManyController.js";
 import { getRecordAsOption, useOptionLabelForField } from "../../../hooks/useRelatedModel.js";
+import { useRequiredChildComponentsValidator } from "../../../hooks/useRequiredChildComponentsValidator.js";
 import type { OptionLabel } from "../../../interfaces/AutoRelationshipInputProps.js";
 import { renderOptionLabel } from "./utils.js";
 
@@ -18,6 +19,7 @@ export const PolarisAutoHasManyForm = autoRelationshipForm(
     secondaryLabel?: OptionLabel;
     tertiaryLabel?: OptionLabel;
   }) => {
+    useRequiredChildComponentsValidator(props, "AutoHasManyForm");
     const { metadata } = useAutoRelationship({ field: props.field });
     const { getValues } = useFormContext();
 
