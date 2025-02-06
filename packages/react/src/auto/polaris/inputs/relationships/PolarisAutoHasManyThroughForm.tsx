@@ -147,6 +147,10 @@ export const PolarisAutoHasManyThroughForm = autoRelationshipForm(
                                 transformPath: (path) => `${joinModelField}.${idx}.${path.replace(`${joinModelApiIdentifier}.`, "")}`,
                                 transformMetadataPath: (path) => `${metaDataPathPrefix}.${path}`,
                                 fieldArray,
+                                hasManyThrough: {
+                                  joinModelApiIdentifier: joinModelApiIdentifier ?? "",
+                                  inverseRelatedModelField: inverseRelatedModelField ?? "",
+                                },
                               }}
                             >
                               {props.children}

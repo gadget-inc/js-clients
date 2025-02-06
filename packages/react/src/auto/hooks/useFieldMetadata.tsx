@@ -3,6 +3,7 @@ import { useAutoFormMetadata } from "../AutoFormContext.js";
 import { useRelationshipContext } from "../hooks/useAutoRelationship.js";
 
 export const useMaybeFieldMetadata = (fieldApiIdentifier: string) => {
+  fieldApiIdentifier = useFieldApiIdentifier(fieldApiIdentifier);
   const { fields } = useAutoFormMetadata();
   const { path, metaDataPath } = useGetPaths(fieldApiIdentifier);
 
@@ -24,6 +25,7 @@ export const useFieldMetadata = (fieldApiIdentifier: string) => {
 };
 
 const useGetPaths = (fieldApiIdentifier: string) => {
+  fieldApiIdentifier = useFieldApiIdentifier(fieldApiIdentifier);
   const { model } = useAutoFormMetadata();
 
   const relationshipTransformedPaths = useRelationshipTransformedMetaDataPaths(fieldApiIdentifier);
@@ -45,6 +47,7 @@ const useGetPaths = (fieldApiIdentifier: string) => {
 };
 
 export const useRelationshipTransformedMetaDataPaths = (fieldApiIdentifier: string) => {
+  fieldApiIdentifier = useFieldApiIdentifier(fieldApiIdentifier);
   const { model } = useAutoFormMetadata();
   const relationshipContext = useRelationshipContext();
 
@@ -53,7 +56,7 @@ export const useRelationshipTransformedMetaDataPaths = (fieldApiIdentifier: stri
   }
 
   const path = relationshipContext.transformPath(fieldApiIdentifier);
-  const metaDataPath = relationshipContext?.transformMetadataPath ? relationshipContext.transformMetadataPath(fieldApiIdentifier) : path;
+  const metaDataPath = relationshipContext.transformMetadataPath(fieldApiIdentifier);
 
   return { path, metaDataPath };
 };
@@ -65,3 +68,30 @@ const isFieldCustomParamOnModelAction = (
     metadata: FieldMetadata;
   }
 ) => fieldCandidate.metadata.__typename !== "GadgetModelField" && fieldCandidate.path === fieldApiIdentifier;
+
+export const useFieldApiIdentifier = (fieldApiIdentifier: string) => {
+  const relationshipContext = useRelationshipContext();
+
+  if (relationshipContext && relationshipContext.hasManyThrough) {
+    // Within AutoHasManyThroughForm - Special consideration needed for fields on the sibling model
+    return getFieldApiIdentifierWithinHasManyThroughForm(fieldApiIdentifier, relationshipContext.hasManyThrough);
+  }
+
+  return fieldApiIdentifier;
+};
+
+const getFieldApiIdentifierWithinHasManyThroughForm = (
+  fieldApiIdentifier: string,
+  hasManyThrough: { joinModelApiIdentifier: string; inverseRelatedModelField: string }
+) => {
+  const { joinModelApiIdentifier, inverseRelatedModelField } = hasManyThrough;
+
+  if (fieldApiIdentifier.startsWith(`${joinModelApiIdentifier}.`)) {
+    // Within a AutoHasManyThroughForm, and the field is on the join model
+    return fieldApiIdentifier;
+  }
+
+  // Within a AutoHasManyThroughForm - Assume field is on sibling model without joinModelApiIdentifier prefix
+  // The resulting API request variables will be apply these changes through a nested action on `joinModel.belongsToSiblingModelField`
+  return `${joinModelApiIdentifier}.${inverseRelatedModelField}.${fieldApiIdentifier}`;
+};
