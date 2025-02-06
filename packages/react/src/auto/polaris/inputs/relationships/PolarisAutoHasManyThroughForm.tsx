@@ -2,7 +2,7 @@ import { AutoSelection, BlockStack, Box, Button, Icon, InlineGrid, InlineStack, 
 import { PlusIcon, XCircleIcon } from "@shopify/polaris-icons";
 import React, { useEffect, useMemo, useState } from "react";
 import { useFormContext } from "../../../../useActionForm.js";
-import { extractPathsFromChildren } from "../../..//AutoForm.js";
+import { extractPathsFromChildren } from "../../../AutoForm.js";
 import { autoRelationshipForm } from "../../../AutoInput.js";
 import { RelationshipContext, useAutoRelationship, useRelationshipContext } from "../../../hooks/useAutoRelationship.js";
 import { useHasManyThroughController } from "../../../hooks/useHasManyThroughController.js";

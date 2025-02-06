@@ -1,4 +1,5 @@
 import type { ShadcnElements } from "../../../src/auto/shadcn/elements.js";
+import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "./components/Accordion.js";
 import { Alert, AlertDescription, AlertTitle } from "./components/Alert.js";
 import { Avatar, AvatarFallback, AvatarImage } from "./components/Avatar.js";
 import { Badge } from "./components/Badge.js";
@@ -50,6 +51,10 @@ import { toast } from "./hooks/useToast.js";
 import { cn } from "./utils.js";
 
 export const elements: ShadcnElements = {
+  Accordion,
+  AccordionContent,
+  AccordionItem,
+  AccordionTrigger,
   Alert,
   AlertDescription,
   AlertTitle,

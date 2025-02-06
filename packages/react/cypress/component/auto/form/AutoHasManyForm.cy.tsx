@@ -1,206 +1,206 @@
 import React from "react";
-import { PolarisAutoForm } from "../../../../src/auto/polaris/PolarisAutoForm.js";
-import { PolarisAutoInput } from "../../../../src/auto/polaris/inputs/PolarisAutoInput.js";
-import { PolarisAutoHasManyForm } from "../../../../src/auto/polaris/inputs/relationships/PolarisAutoHasManyForm.js";
-import { PolarisAutoSubmit } from "../../../../src/auto/polaris/submit/PolarisAutoSubmit.js";
-import { PolarisSubmitResultBanner } from "../../../../src/auto/polaris/submit/PolarisSubmitResultBanner.js";
 import { get } from "../../../../src/utils.js";
 import { api } from "../../../support/api.js";
-import { PolarisWrapper } from "../../../support/auto.js";
+import { describeForEachAutoAdapter } from "../../../support/auto.js";
 
 const originalGizmosLinkedToWidget = [
   { id: "1", name: "Gizmo 1", orientation: "up" },
   { id: "2", name: "Gizmo 2", orientation: "up" },
 ];
 
-describe("PolarisAutoHasManyForm", () => {
-  const interceptModelUpdateActionMetadata = () => {
-    cy.intercept({ method: "POST", url: `${api.connection.endpoint}?operation=ModelActionMetadata` }, RealWidgetMetadata).as(
-      "ModelCreateActionMetadata"
-    );
-  };
+describeForEachAutoAdapter(
+  "AutoHasManyForm",
+  ({ name, adapter: { AutoForm, AutoInput, AutoSubmit, SubmitResultBanner, AutoHasManyForm }, wrapper }) => {
+    const interceptModelUpdateActionMetadata = () => {
+      cy.intercept({ method: "POST", url: `${api.connection.endpoint}?operation=ModelActionMetadata` }, RealWidgetMetadata).as(
+        "ModelCreateActionMetadata"
+      );
+    };
 
-  const expectUpdateActionSubmissionVariables = (expectedQueryValue?: any) => {
-    cy.intercept({ method: "POST", url: `${api.connection.endpoint}?operation=updateWidget` }, (req) => {
-      // eslint-disable-next-line
-      expect(req.body.variables).to.deep.equal(expectedQueryValue);
+    const expectUpdateActionSubmissionVariables = (expectedQueryValue?: any) => {
+      cy.intercept({ method: "POST", url: `${api.connection.endpoint}?operation=updateWidget` }, (req) => {
+        // eslint-disable-next-line
+        expect(req.body.variables).to.deep.equal(expectedQueryValue);
 
-      // The response content doesn't matter for the tests __typename: "UpdateWidgetResult",
-      req.reply({ data: { updateWidget: { success: true, errors: null, x: {} } } });
-    }).as("updateWidget");
-  };
+        // The response content doesn't matter for the tests __typename: "UpdateWidgetResult",
+        req.reply({ data: { updateWidget: { success: true, errors: null, x: {} } } });
+      }).as("updateWidget");
+    };
 
-  const interceptWidgetQuery = () => {
-    cy.intercept({ method: "POST", url: `${api.connection.endpoint}?operation=widget` }, (req) => {
-      req.reply({
-        data: {
-          widget: {
-            __typename: "Widget",
-            id: "42",
-            name: "test record",
-            gizmos: {
-              edges: originalGizmosLinkedToWidget.map((gizmo) => ({ node: gizmo })),
-              __typename: "GizmoConnection",
-            },
-          },
-        },
-      });
-    }).as("widget");
-  };
-
-  const interceptGizmosOptionsQuery = (sectionCount: number) => {
-    const gizmos: any[] = [];
-    for (let i = 1; i <= sectionCount; i++) {
-      gizmos.push({
-        cursor: "eyJpZCI6IjEwODgifQ==",
-        node: {
-          __typename: "Gizmo",
-          id: `${i}`,
-          createdAt: "2023-09-07T19:18:50.742Z",
-          name: `Gizmo ${i}`,
-          otherField: `Gizmo ${i} other field`,
-          orientation: "right side up",
-          updatedAt: "2024-07-09T14:42:20.788Z",
-        },
-        __typename: "GizmoEdge",
-      });
-    }
-
-    cy.intercept(
-      {
-        method: "POST",
-        url: `${api.connection.endpoint}?operation=gizmos`,
-      },
-      (req) => {
-        const queryIsForSelectedRecords = get(req.body.variables, "filter.widgetId.equals") === "42";
-
+    const interceptWidgetQuery = () => {
+      cy.intercept({ method: "POST", url: `${api.connection.endpoint}?operation=widget` }, (req) => {
         req.reply({
           data: {
-            gizmos: {
-              pageInfo: {
-                hasNextPage: false,
-                hasPreviousPage: false,
-                startCursor: "eyJpZCI6IjEifQ==",
-                endCursor: "eyJpZCI6IjIifQ==",
-                __typename: "PageInfo",
+            widget: {
+              __typename: "Widget",
+              id: "42",
+              name: "test record",
+              gizmos: {
+                edges: originalGizmosLinkedToWidget.map((gizmo) => ({ node: gizmo })),
+                __typename: "GizmoConnection",
               },
-              edges: queryIsForSelectedRecords
-                ? gizmos.slice(0, 2) // First 2 gizmos when the query is for the already selected records
-                : gizmos, // All gizmos when the query is for the options
-              __typename: "SectionConnection",
-            },
-            gadgetMeta: {
-              hydrations: {
-                createdAt: "DateTime",
-                updatedAt: "DateTime",
-              },
-              __typename: "GadgetApplicationMeta",
             },
           },
         });
-      }
-    ).as("sections");
-  };
+      }).as("widget");
+    };
 
-  beforeEach(() => {
-    cy.viewport("macbook-13");
-
-    interceptModelUpdateActionMetadata();
-    interceptGizmosOptionsQuery(5);
-    interceptWidgetQuery();
-  });
-
-  it("renders nested form fields for related records", () => {
-    cy.mountWithWrapper(
-      <PolarisAutoForm action={api.widget.update} findBy="42">
-        <PolarisSubmitResultBanner />
-        <PolarisAutoHasManyForm field="gizmos" primaryLabel="name" secondaryLabel="orientation">
-          <PolarisAutoInput field="name" />
-          <PolarisAutoInput field="orientation" />
-          <PolarisAutoInput field="attachment" />
-        </PolarisAutoHasManyForm>
-        <PolarisAutoSubmit id="submit" />
-      </PolarisAutoForm>,
-      PolarisWrapper
-    );
-
-    cy.wait("@ModelCreateActionMetadata");
-    cy.wait("@widget");
-
-    cy.get('[id="gizmos.0"]').click();
-    cy.get('input[id="widget.gizmos.0.name"]').should("exist").click().type(" - updated");
-    cy.get('input[id="widget.gizmos.0.orientation"]').should("exist").click().type(" - updated");
-
-    cy.contains("Add Gizmo").click();
-    cy.get('input[id="widget.gizmos.2.name"]').should("exist").click().type("New gizmo");
-    cy.get('input[id="widget.gizmos.2.orientation"]').should("exist").click().type("New orientation");
-    cy.contains("Confirm").click();
-
-    cy.get('[id="gizmos.1"]').click();
-    cy.contains("Delete").click();
-    cy.contains("Confirm").click();
-
-    expectUpdateActionSubmissionVariables({
-      id: "42",
-      widget: {
-        gizmos: [
-          { update: { attachment: null, id: "1", name: "Gizmo 1 - updated", orientation: "up - updated" } },
-          { delete: { id: "2" } },
-          { create: { attachment: null, name: "New gizmo", orientation: "New orientation" } },
-        ],
-      },
-    });
-    cy.get('[id="submit"]').click();
-    cy.wait("@updateWidget");
-  });
-
-  it("supports nested has-many relationships", () => {
-    cy.mountWithWrapper(
-      <PolarisAutoForm action={api.widget.update} findBy="42">
-        <PolarisAutoHasManyForm field="gizmos">
-          <PolarisAutoInput field="name" />
-          <PolarisAutoHasManyForm field="doodads">
-            <PolarisAutoInput field="name" />
-            <PolarisAutoInput field="weight" />
-          </PolarisAutoHasManyForm>
-        </PolarisAutoHasManyForm>
-        <PolarisAutoSubmit id="submit" />
-      </PolarisAutoForm>,
-      PolarisWrapper
-    );
-
-    cy.wait("@ModelCreateActionMetadata");
-    cy.wait("@widget");
-
-    cy.get('[id="gizmos.0"]').click();
-    cy.get('input[id="widget.gizmos.0.name"]').should("exist").click().type(" - updated");
-
-    cy.contains("Add Doodad").should("exist").parent().click();
-
-    cy.get("input[id='widget.gizmos.0.doodads.0.name']").should("exist").click().type(" - updated");
-    cy.get("button[id='confirmButton_gizmos.doodads.0']").should("exist").click();
-    cy.contains("Confirm").click();
-
-    expectUpdateActionSubmissionVariables({
-      id: "42",
-      widget: {
-        gizmos: [
-          {
-            update: {
-              doodads: [{ create: { name: " - updated", weight: null } }],
-              id: "1",
-              name: "Gizmo 1 - updated",
-              orientation: "up",
-            },
+    const interceptGizmosOptionsQuery = (sectionCount: number) => {
+      const gizmos: any[] = [];
+      for (let i = 1; i <= sectionCount; i++) {
+        gizmos.push({
+          cursor: "eyJpZCI6IjEwODgifQ==",
+          node: {
+            __typename: "Gizmo",
+            id: `${i}`,
+            createdAt: "2023-09-07T19:18:50.742Z",
+            name: `Gizmo ${i}`,
+            otherField: `Gizmo ${i} other field`,
+            orientation: "right side up",
+            updatedAt: "2024-07-09T14:42:20.788Z",
           },
-          { update: { doodads: null, id: "2", name: "Gizmo 2", orientation: "up" } },
-        ],
-      },
+          __typename: "GizmoEdge",
+        });
+      }
+
+      cy.intercept(
+        {
+          method: "POST",
+          url: `${api.connection.endpoint}?operation=gizmos`,
+        },
+        (req) => {
+          const queryIsForSelectedRecords = get(req.body.variables, "filter.widgetId.equals") === "42";
+
+          req.reply({
+            data: {
+              gizmos: {
+                pageInfo: {
+                  hasNextPage: false,
+                  hasPreviousPage: false,
+                  startCursor: "eyJpZCI6IjEifQ==",
+                  endCursor: "eyJpZCI6IjIifQ==",
+                  __typename: "PageInfo",
+                },
+                edges: queryIsForSelectedRecords
+                  ? gizmos.slice(0, 2) // First 2 gizmos when the query is for the already selected records
+                  : gizmos, // All gizmos when the query is for the options
+                __typename: "SectionConnection",
+              },
+              gadgetMeta: {
+                hydrations: {
+                  createdAt: "DateTime",
+                  updatedAt: "DateTime",
+                },
+                __typename: "GadgetApplicationMeta",
+              },
+            },
+          });
+        }
+      ).as("sections");
+    };
+
+    beforeEach(() => {
+      cy.viewport("macbook-13");
+
+      interceptModelUpdateActionMetadata();
+      interceptGizmosOptionsQuery(5);
+      interceptWidgetQuery();
     });
-    cy.get('[id="submit"]').click();
-    cy.wait("@updateWidget");
-  });
-});
+
+    it("renders nested form fields for related records", () => {
+      cy.mountWithWrapper(
+        <AutoForm action={api.widget.update} findBy="42">
+          <SubmitResultBanner />
+          <AutoHasManyForm field="gizmos" primaryLabel="name" secondaryLabel="orientation">
+            <AutoInput field="name" />
+            <AutoInput field="orientation" />
+            <AutoInput field="attachment" />
+          </AutoHasManyForm>
+          <AutoSubmit id="submit" />
+        </AutoForm>,
+        wrapper
+      );
+
+      cy.wait("@ModelCreateActionMetadata");
+      cy.wait("@widget");
+
+      cy.get('[id="gizmos.0"]').click();
+      cy.get('input[id="widget.gizmos.0.name"]').should("exist").click().type(" - updated");
+      cy.get('input[id="widget.gizmos.0.orientation"]').should("exist").click().type(" - updated");
+
+      cy.contains("Add Gizmo").click();
+      cy.get('input[id="widget.gizmos.2.name"]').should("exist").click().type("New gizmo");
+      cy.get('input[id="widget.gizmos.2.orientation"]').should("exist").click().type("New orientation");
+      cy.contains("Confirm").click();
+
+      cy.get('[id="gizmos.1"]').click();
+      cy.contains("Delete").click();
+      cy.contains("Confirm").click();
+
+      expectUpdateActionSubmissionVariables({
+        id: "42",
+        widget: {
+          gizmos: [
+            { update: { attachment: null, id: "1", name: "Gizmo 1 - updated", orientation: "up - updated" } },
+            { delete: { id: "2" } },
+            { create: { attachment: null, name: "New gizmo", orientation: "New orientation" } },
+          ],
+        },
+      });
+      cy.get('[id="submit"]').click();
+      cy.wait("@updateWidget");
+    });
+
+    it("supports nested has-many relationships", () => {
+      cy.mountWithWrapper(
+        <AutoForm action={api.widget.update} findBy="42">
+          <SubmitResultBanner />
+          <AutoHasManyForm field="gizmos">
+            <AutoInput field="name" />
+            <AutoHasManyForm field="doodads">
+              <AutoInput field="name" />
+              <AutoInput field="weight" />
+            </AutoHasManyForm>
+          </AutoHasManyForm>
+          <AutoSubmit id="submit" />
+        </AutoForm>,
+        wrapper
+      );
+
+      cy.wait("@ModelCreateActionMetadata");
+      cy.wait("@widget");
+
+      cy.get('[id="gizmos.0"]').click();
+
+      cy.clickAndType('input[id="widget.gizmos.0.name"]', "Gizmo 1 - updated", true);
+
+      cy.contains("Add Doodad").should("exist").parent().click();
+
+      cy.get("input[id='widget.gizmos.0.doodads.0.name']").should("exist").click().type(" - updated");
+      cy.get("button[id='confirmButton_gizmos.doodads.0']").should("exist").click();
+      cy.contains("Confirm").click();
+
+      expectUpdateActionSubmissionVariables({
+        id: "42",
+        widget: {
+          gizmos: [
+            {
+              update: {
+                doodads: [{ create: { name: " - updated", weight: null } }],
+                id: "1",
+                name: "Gizmo 1 - updated",
+                orientation: "up",
+              },
+            },
+            { update: { doodads: null, id: "2", name: "Gizmo 2", orientation: "up" } },
+          ],
+        },
+      });
+      cy.get('[id="submit"]').click();
+      cy.wait("@updateWidget");
+    });
+  }
+);
 
 const RealWidgetMetadata = {
   data: {

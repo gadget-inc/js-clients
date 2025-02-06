@@ -1,4 +1,5 @@
 import type React from "react";
+import type { AccordionComponentProps, AccordionContentProps, AccordionItemProps, AccordionTriggerProps } from "./types/accordionTypes.js";
 import type { AvatarFallbackProps, AvatarImageProps, AvatarProps } from "./types/avatarTypes.js";
 import type {
   DialogCloseProps,
@@ -145,6 +146,15 @@ export type MergeClassNames = (defaultClassNames: string | string[], userClassNa
 export interface ShadcnElements {
   /** The Badge component from shadcn */
   Badge: React.ComponentType<BadgeProps>;
+
+  /** The Accordion component from shadcn */
+  Accordion: React.ForwardRefExoticComponent<AccordionComponentProps & React.RefAttributes<HTMLDivElement>>;
+  /** The AccordionItem component from shadcn */
+  AccordionItem: React.ForwardRefExoticComponent<AccordionItemProps & React.HTMLAttributes<HTMLDivElement>>;
+  /** The AccordionTrigger component from shadcn */
+  AccordionTrigger: React.ForwardRefExoticComponent<AccordionTriggerProps>;
+  /** The AccordionContent component from shadcn */
+  AccordionContent: React.ComponentType<AccordionContentProps>;
 
   /** The Alert component from shadcn */
   Alert: React.ComponentType<AlertProps>;

@@ -12,6 +12,7 @@ export interface AutoAdapter<T = any, F = any, B = any> {
   SubmitResultBanner: React.ComponentType<any>;
   AutoHasOneForm: React.ComponentType<any>;
   AutoBelongsToForm: React.ComponentType<any>;
+  AutoHasManyForm: React.ComponentType<any>;
   AutoDateTimePicker: React.ComponentType<{
     suiteName?: string;
     field: string;
