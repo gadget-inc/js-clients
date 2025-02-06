@@ -33,7 +33,7 @@
     "@gadgetinc/api-client-core": "workspace:*",
     "@gadgetinc/react": "workspace:*",
     "@types/react": "^18.2.79",
-    "@types/react-dom": "^18.2.25",
+    "@types/react-dom": "^18.3.1",
     "conditional-type-checks": "^1.0.6",
     "react": "^18.2.0",
     "react-dom": "^18.2.0"
