@@ -52,8 +52,7 @@ export const makeShadcnAutoHasManyForm = ({
           <Accordion
             type="single"
             collapsible
-            value={editingIndex ? `${fieldArrayPath}.${editingIndex}` : undefined}
-            defaultValue="add"
+            value={editingIndex !== null ? `${fieldArrayPath}.${editingIndex}` : undefined}
             className="w-full"
           >
             {fields.flatMap((field, idx) => {
@@ -101,8 +100,14 @@ export const makeShadcnAutoHasManyForm = ({
               }
 
               return (
-                <AccordionItem key={field._fieldArrayKey} value={`${fieldArrayPath}.${idx}`} id={`${pathPrefix}.${idx}`} className="">
-                  <AccordionTrigger onClick={() => setEditingIndex(idx)}>
+                <AccordionItem
+                  key={field._fieldArrayKey}
+                  value={`${fieldArrayPath}.${idx}`}
+                  id={`${pathPrefix}.${idx}`}
+                  onClick={() => setEditingIndex(idx)}
+                  className=""
+                >
+                  <AccordionTrigger>
                     {option.label ? (
                       <div className="flex justify-between">
                         <div className="flex flex-col gap-2">
@@ -129,20 +134,21 @@ export const makeShadcnAutoHasManyForm = ({
                 </AccordionItem>
               );
             })}
-            <AccordionItem
-              id="add"
-              value="add"
-              onClick={(e) => {
+          </Accordion>
+          <div>
+            <Button
+              type="button"
+              variant="default"
+              className="flex gap-1 border border-gray-300 rounded-md p-2 cursor-pointer"
+              onClick={() => {
                 append({});
                 setEditingIndex(fields.length);
               }}
             >
-              <div className="flex gap-1 border border-gray-300 rounded-md p-2 cursor-pointer">
-                <PlusCircleIcon className="w-4 h-4" />
-                <Label className="text-sm font-semibold">Add {modelName}</Label>
-              </div>
-            </AccordionItem>
-          </Accordion>
+              <PlusCircleIcon className="w-4 h-4" />
+              <Label className="text-sm font-semibold">Add {modelName}</Label>
+            </Button>
+          </div>
         </div>
       </div>
     );

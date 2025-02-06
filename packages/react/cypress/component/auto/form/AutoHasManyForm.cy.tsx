@@ -107,49 +107,49 @@ describeForEachAutoAdapter(
       interceptWidgetQuery();
     });
 
-    // it("renders nested form fields for related records", () => {
-    //   cy.mountWithWrapper(
-    //     <AutoForm action={api.widget.update} findBy="42">
-    //       <SubmitResultBanner />
-    //       <AutoHasManyForm field="gizmos" primaryLabel="name" secondaryLabel="orientation">
-    //         <AutoInput field="name" />
-    //         <AutoInput field="orientation" />
-    //         <AutoInput field="attachment" />
-    //       </AutoHasManyForm>
-    //       <AutoSubmit id="submit" />
-    //     </AutoForm>,
-    //     wrapper
-    //   );
+    it("renders nested form fields for related records", () => {
+      cy.mountWithWrapper(
+        <AutoForm action={api.widget.update} findBy="42">
+          <SubmitResultBanner />
+          <AutoHasManyForm field="gizmos" primaryLabel="name" secondaryLabel="orientation">
+            <AutoInput field="name" />
+            <AutoInput field="orientation" />
+            <AutoInput field="attachment" />
+          </AutoHasManyForm>
+          <AutoSubmit id="submit" />
+        </AutoForm>,
+        wrapper
+      );
 
-    //   cy.wait("@ModelCreateActionMetadata");
-    //   cy.wait("@widget");
+      cy.wait("@ModelCreateActionMetadata");
+      cy.wait("@widget");
 
-    //   cy.get('[id="gizmos.0"]').click();
-    //   cy.get('input[id="widget.gizmos.0.name"]').should("exist").click().type(" - updated");
-    //   cy.get('input[id="widget.gizmos.0.orientation"]').should("exist").click().type(" - updated");
+      cy.get('[id="gizmos.0"]').click();
+      cy.get('input[id="widget.gizmos.0.name"]').should("exist").click().type(" - updated");
+      cy.get('input[id="widget.gizmos.0.orientation"]').should("exist").click().type(" - updated");
 
-    //   cy.contains("Add Gizmo").click();
-    //   cy.get('input[id="widget.gizmos.2.name"]').should("exist").click().type("New gizmo");
-    //   cy.get('input[id="widget.gizmos.2.orientation"]').should("exist").click().type("New orientation");
-    //   cy.contains("Confirm").click();
+      cy.contains("Add Gizmo").click();
+      cy.get('input[id="widget.gizmos.2.name"]').should("exist").click().type("New gizmo");
+      cy.get('input[id="widget.gizmos.2.orientation"]').should("exist").click().type("New orientation");
+      cy.contains("Confirm").click();
 
-    //   cy.get('[id="gizmos.1"]').click();
-    //   cy.contains("Delete").click();
-    //   cy.contains("Confirm").click();
+      cy.get('[id="gizmos.1"]').click();
+      cy.contains("Delete").click();
+      cy.contains("Confirm").click();
 
-    //   expectUpdateActionSubmissionVariables({
-    //     id: "42",
-    //     widget: {
-    //       gizmos: [
-    //         { update: { attachment: null, id: "1", name: "Gizmo 1 - updated", orientation: "up - updated" } },
-    //         { delete: { id: "2" } },
-    //         { create: { attachment: null, name: "New gizmo", orientation: "New orientation" } },
-    //       ],
-    //     },
-    //   });
-    //   cy.get('[id="submit"]').click();
-    //   cy.wait("@updateWidget");
-    // });
+      expectUpdateActionSubmissionVariables({
+        id: "42",
+        widget: {
+          gizmos: [
+            { update: { attachment: null, id: "1", name: "Gizmo 1 - updated", orientation: "up - updated" } },
+            { delete: { id: "2" } },
+            { create: { attachment: null, name: "New gizmo", orientation: "New orientation" } },
+          ],
+        },
+      });
+      cy.get('[id="submit"]').click();
+      cy.wait("@updateWidget");
+    });
 
     it("supports nested has-many relationships", () => {
       cy.mountWithWrapper(
@@ -176,9 +176,9 @@ describeForEachAutoAdapter(
 
       cy.contains("Add Doodad").should("exist").parent().click();
 
-      // cy.get("input[id='widget.gizmos.0.doodads.0.name']").should("exist").click().type(" - updated");
-      // cy.get("button[id='confirmButton_gizmos.doodads.0']").should("exist").click();
-      // cy.contains("Confirm").click();
+      cy.get("input[id='widget.gizmos.0.doodads.0.name']").should("exist").click().type(" - updated");
+      cy.get("button[id='confirmButton_gizmos.doodads.0']").should("exist").click();
+      cy.contains("Confirm").click();
 
       expectUpdateActionSubmissionVariables({
         id: "42",

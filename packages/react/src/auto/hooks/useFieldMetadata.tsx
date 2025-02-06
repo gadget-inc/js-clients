@@ -4,7 +4,7 @@ import { useRelationshipContext } from "../hooks/useAutoRelationship.js";
 
 export const useMaybeFieldMetadata = (fieldApiIdentifier: string) => {
   const { fields } = useAutoFormMetadata();
-  console.log("fields", fields);
+
   const { path, metaDataPath } = useGetPaths(fieldApiIdentifier);
 
   const targetFieldMetadata = fields.find(
