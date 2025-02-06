@@ -194,6 +194,7 @@ const ExampleCourseCreateRelatedForm = (props) => {
             <InlineStack>
               <PolarisAutoInput field="registration.effectiveFrom" />
               <PolarisAutoInput field="registration.effectiveTo" />
+              <PolarisAutoInput field="registration.student.firstName" />
             </InlineStack>
           </PolarisAutoHasManyThroughForm>
         </Card>
