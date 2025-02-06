@@ -1,7 +1,7 @@
 import { CommandSeparator } from "cmdk";
 import { EllipsisVerticalIcon, PlusIcon } from "lucide-react";
 import React, { useCallback } from "react";
-import { useHasBelongsForm } from "../../../../useHasBelongsForm.js";
+import { useBelongsToForm } from "../../../../useBelongsToForm.js";
 import { debounce } from "../../../../utils.js";
 import { autoRelationshipForm } from "../../../AutoInput.js";
 import { RelationshipContext } from "../../../hooks/useAutoRelationship.js";
@@ -102,7 +102,8 @@ export const makeShadcnAutoBelongsToForm = ({
       setValue,
       getValues,
       metadata,
-    } = useHasBelongsForm(props);
+      metaDataPathPrefix,
+    } = useBelongsToForm(props);
 
     const handleScrolledToBottom = useCallback(
       debounce(() => {
@@ -202,7 +203,9 @@ export const makeShadcnAutoBelongsToForm = ({
         </div>
 
         <Dialog open={modalOpen} onOpenChange={() => setModalOpen(!modalOpen)}>
-          <RelationshipContext.Provider value={{ transformPath: (path) => pathPrefix + "." + path }}>
+          <RelationshipContext.Provider
+            value={{ transformPath: (path) => pathPrefix + "." + path, transformMetadataPath: (path) => metaDataPathPrefix + "." + path }}
+          >
             <DialogContent className="bg-white">
               <DialogHeader>
                 <DialogTitle>Add {parentName}</DialogTitle>

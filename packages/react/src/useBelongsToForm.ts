@@ -6,7 +6,7 @@ import { useFormContext } from "./useActionForm.js";
 import { get } from "./utils.js";
 
 import { useEffect, useState } from "react";
-export const useHasBelongsForm = (props: {
+export const useBelongsToForm = (props: {
   field: string;
   primaryLabel?: OptionLabel;
   secondaryLabel?: OptionLabel;
@@ -50,6 +50,10 @@ export const useHasBelongsForm = (props: {
 
   const parentName = metadata.name ?? "Unknown";
 
+  const metaDataPathPrefix = relationshipContext?.transformMetadataPath
+    ? relationshipContext.transformMetadataPath(props.field)
+    : props.field;
+
   return {
     record,
     relatedModelOptions,
@@ -74,5 +78,6 @@ export const useHasBelongsForm = (props: {
     setActionsOpen,
     setSearchOpen,
     setModalOpen,
+    metaDataPathPrefix,
   };
 };

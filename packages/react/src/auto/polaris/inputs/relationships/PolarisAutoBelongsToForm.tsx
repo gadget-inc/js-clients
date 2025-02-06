@@ -15,7 +15,7 @@ import {
 } from "@shopify/polaris";
 import { MenuHorizontalIcon, PlusCircleIcon } from "@shopify/polaris-icons";
 import React from "react";
-import { useHasBelongsForm } from "../../../../useHasBelongsForm.js";
+import { useBelongsToForm } from "../../../../useBelongsToForm.js";
 import { autoRelationshipForm } from "../../../AutoInput.js";
 import { RelationshipContext } from "../../../hooks/useAutoRelationship.js";
 import type { OptionLabel } from "../../../interfaces/AutoRelationshipInputProps.js";
@@ -52,7 +52,8 @@ export const PolarisAutoBelongsToForm = autoRelationshipForm(
       path,
       setValue,
       getValues,
-    } = useHasBelongsForm(props);
+      metaDataPathPrefix,
+    } = useBelongsToForm(props);
 
     return (
       <>
@@ -145,7 +146,9 @@ export const PolarisAutoBelongsToForm = autoRelationshipForm(
           )}
         </BlockStack>
         <Modal open={modalOpen} onClose={() => setModalOpen(false)} title={`Add ${parentName}`}>
-          <RelationshipContext.Provider value={{ transformPath: (path) => pathPrefix + "." + path }}>
+          <RelationshipContext.Provider
+            value={{ transformPath: (path) => pathPrefix + "." + path, transformMetadataPath: (path) => metaDataPathPrefix + "." + path }}
+          >
             <Modal.Section>{props.children}</Modal.Section>
             <Modal.Section>
               <div style={{ float: "right", paddingBottom: "16px" }}>

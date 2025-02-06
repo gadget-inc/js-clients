@@ -27,13 +27,11 @@ export const useFieldMetadata = (fieldApiIdentifier: string) => {
 const useGetPaths = (fieldApiIdentifier: string) => {
   const { model } = useAutoFormMetadata();
 
-  const relationshipContext = useRelationshipContext();
+  const relationshipTransformedPaths = useRelationshipTransformedMetaDataPaths(fieldApiIdentifier);
 
-  if (relationshipContext && model) {
-    const path = model.apiIdentifier + "." + relationshipContext.transformPath(fieldApiIdentifier);
-    const metaDataPath = relationshipContext?.transformMetadataPath
-      ? model.apiIdentifier + "." + relationshipContext.transformMetadataPath(fieldApiIdentifier)
-      : path;
+  if (relationshipTransformedPaths && model) {
+    const path = model.apiIdentifier + "." + relationshipTransformedPaths.path;
+    const metaDataPath = model.apiIdentifier + "." + relationshipTransformedPaths.metaDataPath;
 
     return { path, metaDataPath };
   }
@@ -45,6 +43,20 @@ const useGetPaths = (fieldApiIdentifier: string) => {
     : fieldApiIdentifier; // Global action
 
   return { path, metaDataPath: path };
+};
+
+export const useRelationshipTransformedMetaDataPaths = (fieldApiIdentifier: string) => {
+  const { model } = useAutoFormMetadata();
+  const relationshipContext = useRelationshipContext();
+
+  if (!relationshipContext || !model) {
+    return null;
+  }
+
+  const path = relationshipContext.transformPath(fieldApiIdentifier);
+  const metaDataPath = relationshipContext?.transformMetadataPath ? relationshipContext.transformMetadataPath(fieldApiIdentifier) : path;
+
+  return { path, metaDataPath };
 };
 
 const isFieldCustomParamOnModelAction = (

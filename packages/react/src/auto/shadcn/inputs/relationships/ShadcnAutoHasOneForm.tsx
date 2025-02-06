@@ -103,6 +103,7 @@ export const makeShadcnAutoHasOneForm = ({
       records,
       isLoading,
       pathPrefix,
+      metaDataPathPrefix,
       hasRecord,
       recordOption,
       childName,
@@ -118,7 +119,9 @@ export const makeShadcnAutoHasOneForm = ({
     );
 
     return (
-      <RelationshipContext.Provider value={{ transformPath: (path) => pathPrefix + "." + path }}>
+      <RelationshipContext.Provider
+        value={{ transformPath: (path) => pathPrefix + "." + path, transformMetadataPath: (path) => metaDataPathPrefix + "." + path }}
+      >
         <div>
           <div className="flex flex-row justify-between items-center">
             <h2 className="text-lg font-medium">{childName}</h2>

@@ -33,6 +33,9 @@ export const PolarisAutoHasManyThroughForm = autoRelationshipForm(
     const { fields, append, remove } = fieldArray;
     const relationshipContext = useRelationshipContext();
     const pathPrefix = relationshipContext?.transformPath ? relationshipContext.transformPath(props.field) : props.field;
+    const metaDataPathPrefix = relationshipContext?.transformMetadataPath
+      ? relationshipContext.transformMetadataPath(props.field)
+      : pathPrefix;
 
     useEffect(() => {
       for (const [index, field] of fields.entries()) {
@@ -142,7 +145,7 @@ export const PolarisAutoHasManyThroughForm = autoRelationshipForm(
                             <RelationshipContext.Provider
                               value={{
                                 transformPath: (path) => `${joinModelField}.${idx}.${path.replace(`${joinModelApiIdentifier}.`, "")}`,
-                                transformMetadataPath: (path) => `${pathPrefix}.${path}`,
+                                transformMetadataPath: (path) => `${metaDataPathPrefix}.${path}`,
                                 fieldArray,
                               }}
                             >
