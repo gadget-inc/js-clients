@@ -7,7 +7,7 @@ import { useDebouncedSearch } from "../../useDebouncedSearch.js";
 import { useFindMany } from "../../useFindMany.js";
 import { sortByProperty, uniqByProperty } from "../../utils.js";
 import { useAutoFormMetadata } from "../AutoFormContext.js";
-import type { Option, OptionLabel } from "../interfaces/AutoRelationshipInputProps.js";
+import type { Option, OptionLabel, RelatedModelRecordFilter } from "../interfaces/AutoRelationshipInputProps.js";
 import type { RelationshipFieldConfig } from "../interfaces/RelationshipFieldConfig.js";
 import { useFieldMetadata } from "./useFieldMetadata.js";
 import { useModelManager } from "./useModelManager.js";
@@ -15,7 +15,11 @@ import { useModelManager } from "./useModelManager.js";
 export const optionRecordsToLoadCount = 25;
 export const selectedRecordsToLoadCount = 25;
 
-const useRelatedModelRecords = (props: { field: string; optionLabel?: OptionLabel }) => {
+const useRelatedModelRecords = (props: {
+  field: string;
+  optionLabel?: OptionLabel;
+  relatedModelRecordFilter?: RelatedModelRecordFilter;
+}) => {
   const { field } = props;
   const { metadata } = useFieldMetadata(field);
   const { findBy } = useAutoFormMetadata();
@@ -31,9 +35,11 @@ const useRelatedModelRecords = (props: { field: string; optionLabel?: OptionLabe
   const relatedModelRecords = useAllRelatedModelRecords({
     relatedModel: { apiIdentifier: relatedModelApiIdentifier!, namespace: relatedModelNamespace },
 
-    filter: isHasManyField
-      ? omitRelatedModelRecordsAssociatedWithOtherRecords({ enabled: false, relatedModelInverseFieldApiId, findBy })
-      : undefined,
+    filter:
+      props?.relatedModelRecordFilter?.filter ??
+      (isHasManyField
+        ? omitRelatedModelRecordsAssociatedWithOtherRecords({ enabled: false, relatedModelInverseFieldApiId, findBy })
+        : undefined),
   });
 
   return {
@@ -80,6 +86,7 @@ export const useRelatedModelOptions = (props: {
   optionLabel?: OptionLabel; // The label to display for each related model record
   secondaryLabel?: OptionLabel;
   tertiaryLabel?: OptionLabel;
+  relatedModelRecordFilter?: RelatedModelRecordFilter;
 }) => {
   const { field } = props;
 
