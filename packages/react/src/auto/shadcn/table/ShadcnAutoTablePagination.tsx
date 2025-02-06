@@ -1,7 +1,7 @@
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import * as React from "react";
-import type { PaginationResult } from "../../../useList.js";
-import type { ShadcnElements } from "../elements.js";
+import { PaginationResult } from "../../../useList.js";
+import { ShadcnElements } from "../elements.js";
 
 /**
  * Renders pagination controls for the ShadcnAutoTable

@@ -1,11 +1,4 @@
-import type {
-  AnyPublicSingletonModelManager,
-  DefaultSelection,
-  GadgetRecord,
-  GetFunction,
-  LimitToKnownKeys,
-  Select,
-} from "@gadgetinc/api-client-core";
+import type { DefaultSelection, GadgetRecord, GetFunction, LimitToKnownKeys, Select } from "@gadgetinc/api-client-core";
 import { findOneOperation, get, hydrateRecord, namespaceDataPath } from "@gadgetinc/api-client-core";
 import { useMemo } from "react";
 import { useGadgetQuery } from "./useGadgetQuery.js";
@@ -43,7 +36,7 @@ export const useGet = <
   F extends GetFunction<GivenOptions, any, SchemaT, any>,
   Options extends F["optionsType"] & ReadOperationOptions
 >(
-  manager: { get: F } & AnyPublicSingletonModelManager<F>,
+  manager: { get: F },
   options?: LimitToKnownKeys<Options, F["optionsType"] & ReadOperationOptions>
 ): ReadHookResult<
   GadgetRecord<Select<Exclude<F["schemaType"], null | undefined>, DefaultSelection<F["selectionType"], Options, F["defaultSelection"]>>>
@@ -66,7 +59,7 @@ export const useGet = <
     let data = null;
     const rawRecord = rawResult.data && get(rawResult.data, dataPath);
     if (rawRecord) {
-      data = hydrateRecord(rawResult, rawRecord, manager);
+      data = hydrateRecord(rawResult, rawRecord);
     }
     const error = ErrorWrapper.forMaybeCombinedError(rawResult.error);
 

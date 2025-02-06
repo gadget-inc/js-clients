@@ -1,6 +1,5 @@
 import type {
   AnyClient,
-  AnyPublicSingletonModelManager,
   DefaultSelection,
   FindManyFunction,
   GadgetRecord,
@@ -17,7 +16,7 @@ export type GadgetSession = GadgetRecord<Record<string, any>>;
 export type GadgetUser = GadgetRecord<Record<string, any>>;
 
 export type ClientWithSessionAndUserManagers<SessionGivenOptions, SessionSchemaT, UserGivenOptions, UserSchemaT> = AnyClient & {
-  currentSession: AnyPublicSingletonModelManager<GetFunction<SessionGivenOptions, any, SessionSchemaT, any>>;
+  currentSession: { get: GetFunction<SessionGivenOptions, any, SessionSchemaT, any> };
   user: { findMany: FindManyFunction<UserGivenOptions, any, UserSchemaT, any> };
 };
 

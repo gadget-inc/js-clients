@@ -1,4 +1,3 @@
-import type { AnyPublicModelManager, AnyPublicSingletonModelManager } from "./AnyModelManager.js";
 import type { GadgetRecord, RecordShape } from "./GadgetRecord.js";
 import type { GadgetRecordList } from "./GadgetRecordList.js";
 import type { LimitToKnownKeys, VariablesOptions } from "./types.js";
@@ -25,7 +24,6 @@ export interface FindOneFunction<OptionsT, SelectionT, SchemaT, DefaultsT> {
   optionsType: OptionsT;
   schemaType: SchemaT | null;
   plan?: <Options extends OptionsT>(fieldValue: string, options?: LimitToKnownKeys<Options, OptionsT>) => GQLBuilderResult;
-  modelManager?: AnyPublicModelManager;
 }
 
 export interface MaybeFindOneFunction<OptionsT, SelectionT, SchemaT, DefaultsT> {
@@ -41,7 +39,6 @@ export interface MaybeFindOneFunction<OptionsT, SelectionT, SchemaT, DefaultsT> 
   optionsType: OptionsT;
   schemaType: SchemaT | null;
   plan?: <Options extends OptionsT>(fieldValue: string, options?: LimitToKnownKeys<Options, OptionsT>) => GQLBuilderResult;
-  modelManager?: AnyPublicModelManager;
 }
 
 export interface FindManyFunction<OptionsT, SelectionT, SchemaT, DefaultsT> {
@@ -56,7 +53,6 @@ export interface FindManyFunction<OptionsT, SelectionT, SchemaT, DefaultsT> {
   optionsType: OptionsT;
   schemaType: SchemaT | null;
   plan?: <Options extends OptionsT>(options?: LimitToKnownKeys<Options, OptionsT>) => GQLBuilderResult;
-  modelManager?: AnyPublicModelManager;
 }
 
 export interface FindFirstFunction<OptionsT, SelectionT, SchemaT, DefaultsT> {
@@ -71,7 +67,6 @@ export interface FindFirstFunction<OptionsT, SelectionT, SchemaT, DefaultsT> {
   optionsType: OptionsT;
   schemaType: SchemaT | null;
   plan?: <Options extends OptionsT>(options?: LimitToKnownKeys<Options, OptionsT>) => GQLBuilderResult;
-  modelManager?: AnyPublicModelManager;
 }
 
 export interface MaybeFindFirstFunction<OptionsT, SelectionT, SchemaT, DefaultsT> {
@@ -86,7 +81,6 @@ export interface MaybeFindFirstFunction<OptionsT, SelectionT, SchemaT, DefaultsT
   optionsType: OptionsT;
   schemaType: SchemaT | null;
   plan?: <Options extends OptionsT>(options?: LimitToKnownKeys<Options, OptionsT>) => GQLBuilderResult;
-  modelManager?: AnyPublicModelManager;
 }
 
 export interface ActionWithIdAndVariables<OptionsT, VariablesT> {
@@ -140,7 +134,6 @@ export interface ActionFunctionMetadata<OptionsT, VariablesT, SelectionT, Schema
   plan?: <Options extends OptionsT>(options?: LimitToKnownKeys<Options, OptionsT>) => GQLBuilderResult;
   /** @deprecated */
   hasCreateOrUpdateEffect?: boolean;
-  modelManager?: AnyPublicModelManager;
 }
 
 export type StubbedActionReason = "MissingApiTrigger";
@@ -196,7 +189,6 @@ export interface GetFunction<OptionsT, SelectionT, SchemaT, DefaultsT> {
   optionsType: OptionsT;
   schemaType: SchemaT | null;
   plan?: <Options extends OptionsT>(options?: LimitToKnownKeys<Options, OptionsT>) => GQLBuilderResult;
-  modelManager?: AnyPublicSingletonModelManager<GetFunction<any, any, any, any>>;
 }
 
 export interface GlobalActionFunction<VariablesT> {

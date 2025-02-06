@@ -1,12 +1,4 @@
-import type {
-  AnyFindOneFunc,
-  AnyPublicModelManager,
-  DefaultSelection,
-  FindManyFunction,
-  GadgetRecord,
-  LimitToKnownKeys,
-  Select,
-} from "@gadgetinc/api-client-core";
+import type { DefaultSelection, FindManyFunction, GadgetRecord, LimitToKnownKeys, Select } from "@gadgetinc/api-client-core";
 import type { OperationContext } from "@urql/core";
 import { useCallback, useMemo, useState } from "react";
 import type { SearchResult } from "./useDebouncedSearch.js";
@@ -54,7 +46,7 @@ export const useList = <
   F extends FindManyFunction<GivenOptions, any, SchemaT, any>,
   Options extends F["optionsType"] & ReadOperationOptions & ListOptions
 >(
-  manager: { findMany: F } & AnyPublicModelManager<AnyFindOneFunc, F>,
+  manager: { findMany: F },
   options?: LimitToKnownKeys<Options, F["optionsType"] & ReadOperationOptions & ListOptions>
 ): ListResult<
   Array<
@@ -101,7 +93,6 @@ export const useList = <
     ...(search.debouncedValue && { search: search.debouncedValue }),
   });
 
-  // eslint-disable-next-line @typescript-eslint/no-unnecessary-type-assertion
   const selection = useSelectedRecordsController({ currentPageIds: data?.map((record) => (record as any).id) ?? [] });
 
   const goToNextPage = useCallback(() => {
