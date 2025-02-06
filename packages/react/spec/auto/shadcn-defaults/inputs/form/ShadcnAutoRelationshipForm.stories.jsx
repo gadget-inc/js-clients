@@ -13,20 +13,24 @@ const { Label } = elements;
 
 const Component = (props) => {
   return (
-    <AutoForm {...props} action={api.widget.create}>
+    <AutoForm action={api.widget.create} {...props}>
       <div className="flex flex-col gap-4">
         <div>
-          <AutoBelongsToForm field="section" primaryLabel="name"
+          <AutoBelongsToForm
+            field="section"
+            primaryLabel="name"
             renderSelectedRecord={(record) => <Label>this is a custom belongsTo render for {record.name}</Label>}
           >
             <AutoInput field="name" />
           </AutoBelongsToForm>
         </div>
         <SubmitResultBanner />
-        <AutoHasOneForm field="doodad" primaryLabel="name"
-          secondaryLabel={(record) => `${record.weight ?? 'N/A'} (${record.active ?? 'N/A'})`} tertiaryLabel="size"
+        <AutoHasOneForm
+          field="doodad"
+          primaryLabel="name"
+          secondaryLabel={(record) => `${record.weight ?? "N/A"} (${record.active ?? "N/A"})`}
+          tertiaryLabel="size"
         >
-
           <div className="flex flex-col gap-4">
             <AutoInput field="name" />
             <AutoInput field="weight" />

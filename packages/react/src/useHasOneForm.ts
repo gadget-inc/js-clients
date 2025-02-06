@@ -1,6 +1,7 @@
 import { useAutoRelationship, useRelationshipContext } from "./auto/hooks/useAutoRelationship.js";
 import { useHasOneController } from "./auto/hooks/useHasOneController.js";
 import { getRecordAsOption, useOptionLabelForField } from "./auto/hooks/useRelatedModel.js";
+import { useRequiredChildComponentsValidator } from "./auto/hooks/useRequiredChildComponentsValidator.js";
 import type { OptionLabel } from "./auto/interfaces/AutoRelationshipInputProps.js";
 import { useFormContext } from "./useActionForm.js";
 import { get } from "./utils.js";
@@ -9,10 +10,12 @@ import { useEffect, useState } from "react";
 
 export const useHasOneForm = (props: {
   field: string;
+  children: React.ReactNode;
   primaryLabel?: OptionLabel;
   secondaryLabel?: OptionLabel;
   tertiaryLabel?: OptionLabel;
 }) => {
+  useRequiredChildComponentsValidator(props, "AutoHasOneForm");
   const { path, metadata } = useAutoRelationship({ field: props.field });
   const {
     setValue,
