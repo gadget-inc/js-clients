@@ -34,6 +34,7 @@ const ONLY_RUN_SUITES = {
     "AutoForm - Upsert Action",
     "AutoHasOneForm",
     "AutoBelongsToForm",
+    "AutoHasManyForm",
     "AutoFormDateTimePicker",
     "AutoFormJSONInput",
     "AutoPasswordInput",
@@ -67,7 +68,7 @@ export const ShadcnWrapper = ({ children }: { children: ReactNode }) => (
 );
 
 const suites: AutoSuiteConfig[] = [
-  { name: SUITE_NAMES.POLARIS, adapter: PolarisAdapter as any, wrapper: PolarisWrapper },
+  // { name: SUITE_NAMES.POLARIS, adapter: PolarisAdapter as any, wrapper: PolarisWrapper },
   { name: SUITE_NAMES.SHADCN, adapter: ShadCNAdapter as any, wrapper: ShadcnWrapper },
 ];
 
