@@ -1,3 +1,5 @@
+import { HTMLAttributes } from "react";
+
 export interface AccordionProps {
   /**
    * Render the component as a child rather than wrapping it in its own element.
@@ -39,11 +41,11 @@ export interface AccordionItemProps {
 }
 
 // For the single-value variant
-export interface SingleValueProps extends AccordionProps {
+export interface AccordionSingleProps extends AccordionProps {
   /**
    * A required property that should be one of the enum values.
    */
-  type: "single" | "multiple"; // adjust the enum values as needed
+  type: "single"; // adjust the enum values as needed
   /**
    * The current value.
    */
@@ -59,21 +61,30 @@ export interface SingleValueProps extends AccordionProps {
 }
 
 // For the multiple-value variant
-export interface MultipleValueProps extends AccordionProps {
+export interface AccordionMultipleProps extends AccordionProps {
   type: "multiple"; // adjust as needed
   /**
    * The current value as an array of strings.
    */
-  value?: string | string[];
+  value?: string[];
   /**
    * The default value as an array of strings.
    */
-  defaultValue?: string | string[];
+  defaultValue?: string[];
   /**
    * Called when the value changes.
    */
   onValueChange?: (value: string[]) => void;
 }
 
+export interface AccordionTriggerProps extends HTMLAttributes<HTMLButtonElement> {
+  asChild?: boolean;
+}
+
+export interface AccordionContentProps extends HTMLAttributes<HTMLDivElement> {
+  asChild?: boolean;
+  forceMount?: true | undefined;
+}
+
 // The component can accept either single or multiple values.
-export type MyAccordionComponentProps = SingleValueProps | MultipleValueProps;
+export type AccordionComponentProps = AccordionSingleProps | AccordionMultipleProps;
