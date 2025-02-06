@@ -10,12 +10,32 @@ export interface RelationshipContextValue {
    * Includes indexes for hasMany/hasManyThrough relationships
    */
   transformPath: (path: string) => string;
+
   /**
    * Path within the form metadata to the current relationship context.
    * Includes field names only and does not include indexes for hasMany/hasManyThrough relationships
    */
   transformMetadataPath: (path: string) => string;
+
+  /**
+   * Field array for the relationship
+   */
   fieldArray?: ReturnType<typeof useFieldArray>;
+
+  /**
+   * HasManyThrough relationship metadata
+   */
+  hasManyThrough?: {
+    /**
+     * The API identifier of the join model
+     */
+    joinModelApiIdentifier: string;
+
+    /**
+     * The API identifier of the `belongsTo` field on the join model pointing to the related model
+     */
+    inverseRelatedModelField: string;
+  };
 }
 
 export const RelationshipContext = React.createContext<RelationshipContextValue | undefined>(undefined);
