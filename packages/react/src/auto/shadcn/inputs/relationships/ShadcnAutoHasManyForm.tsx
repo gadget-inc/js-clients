@@ -5,6 +5,7 @@ import { autoRelationshipForm } from "../../../AutoInput.js";
 import { RelationshipContext, useAutoRelationship, useRelationshipContext } from "../../../hooks/useAutoRelationship.js";
 import { useHasManyController } from "../../../hooks/useHasManyController.js";
 import { getRecordAsOption, useOptionLabelForField } from "../../../hooks/useRelatedModel.js";
+import { useRequiredChildComponentsValidator } from "../../../hooks/useRequiredChildComponentsValidator.js";
 import type { OptionLabel } from "../../../interfaces/AutoRelationshipInputProps.js";
 import type { ShadcnElements } from "../../elements.js";
 import { makeShadcnRenderOptionLabel } from "../../utils.js";
@@ -28,6 +29,7 @@ export const makeShadcnAutoHasManyForm = ({
     secondaryLabel?: OptionLabel;
     tertiaryLabel?: OptionLabel;
   }) {
+    useRequiredChildComponentsValidator(props, "AutoHasManyForm");
     const { metadata } = useAutoRelationship({ field: props.field });
     const { getValues } = useFormContext();
 
@@ -90,7 +92,16 @@ export const makeShadcnAutoHasManyForm = ({
                         <Button variant="destructive" id={`deleteButton_${metadataPathPrefix}.${idx}`} onClick={() => remove(idx)}>
                           Delete
                         </Button>
-                        <Button variant="default" id={`confirmButton_${metadataPathPrefix}.${idx}`} onClick={() => setEditingIndex(null)}>
+                        <Button
+                          variant="default"
+                          type="button"
+                          id={`confirmButton_${metadataPathPrefix}.${idx}`}
+                          onClick={(e) => {
+                            e.preventDefault();
+                            e.stopPropagation();
+                            setEditingIndex(null);
+                          }}
+                        >
                           Confirm
                         </Button>
                       </div>
@@ -107,7 +118,7 @@ export const makeShadcnAutoHasManyForm = ({
                   onClick={() => setEditingIndex(idx)}
                   className=""
                 >
-                  <AccordionTrigger>
+                  <AccordionTrigger onClick={(e) => e.preventDefault()}>
                     {option.label ? (
                       <div className="flex justify-between">
                         <div className="flex flex-col gap-2">
