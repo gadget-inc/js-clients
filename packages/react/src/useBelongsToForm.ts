@@ -1,17 +1,20 @@
+import { useEffect, useState } from "react";
 import { useAutoRelationship, useRelationshipContext } from "./auto/hooks/useAutoRelationship.js";
 import { useBelongsToController } from "./auto/hooks/useBelongsToController.js";
 import { getRecordAsOption, useOptionLabelForField } from "./auto/hooks/useRelatedModel.js";
+import { useRequiredChildComponentsValidator } from "./auto/hooks/useRequiredChildComponentsValidator.js";
 import type { OptionLabel } from "./auto/interfaces/AutoRelationshipInputProps.js";
 import { useFormContext } from "./useActionForm.js";
 import { get } from "./utils.js";
 
-import { useEffect, useState } from "react";
 export const useBelongsToForm = (props: {
   field: string;
+  children: React.ReactNode;
   primaryLabel?: OptionLabel;
   secondaryLabel?: OptionLabel;
   tertiaryLabel?: OptionLabel;
 }) => {
+  useRequiredChildComponentsValidator(props, "AutoBelongsToForm");
   const { field } = props;
   const { path, metadata } = useAutoRelationship({ field });
   const {
