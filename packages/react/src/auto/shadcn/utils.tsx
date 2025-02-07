@@ -11,7 +11,11 @@ export const makeShadcnRenderOptionLabel = ({ Label, Badge, Button }: Pick<Shadc
         case "secondary":
           return <Label className="text-sm text-gray-500">{label}</Label>;
         case "tertiary":
-          return <Badge variant={"outline"}>{label}</Badge>;
+          return (
+            <Badge className="text-xs px-3 py-1 inline-flex items-center justify-center" variant={"outline"}>
+              {label}
+            </Badge>
+          );
         default:
           throw new Error("Invalid option type");
       }
