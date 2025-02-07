@@ -184,7 +184,7 @@ export const makeShadcnAutoHasManyThroughForm = ({
                   metadata={metadata}
                   field={field}
                   options={siblingModelOptions}
-                  onSelect={() => {}}
+                  onSelect={() => void 0}
                   willLoadMoreOptions={siblingPagination.hasNextPage && siblingModelOptions.length ? true : false}
                   isLoading={siblingRecordsLoading}
                   errorMessage={""}

@@ -431,7 +431,7 @@ export const getDateFromDateTimeObject = (dateTime: DateTimeState) => {
   return date;
 };
 
-export const formatDate = (date: Date, includeTime: boolean = true): string => {
+export const formatDate = (date: Date, includeTime: boolean): string => {
   // Extract year, month, and day
   const year = date.getFullYear();
 
