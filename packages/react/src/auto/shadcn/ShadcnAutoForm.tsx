@@ -11,6 +11,7 @@ import type { FormProps, ShadcnElements } from "./elements.js";
 import { makeShadcnAutoInput } from "./inputs/ShadcnAutoInput.js";
 import { makeShadcnAutoBelongsToForm } from "./inputs/relationships/ShadcnAutoBelongsToForm.js";
 import { makeShadcnAutoHasManyForm } from "./inputs/relationships/ShadcnAutoHasManyForm.js";
+import { makeShadcnAutoHasManyThroughForm } from "./inputs/relationships/ShadcnAutoHasManyThroughForm.js";
 import { makeShadcnAutoHasOneForm } from "./inputs/relationships/ShadcnAutoHasOneForm.js";
 import { makeShadcnAutoSubmit } from "./submit/ShadcnAutoSubmit.js";
 import { makeSubmitResultBanner } from "./submit/ShadcnSubmitResultBanner.js";
@@ -43,7 +44,7 @@ export const makeAutoForm = <Elements extends ShadcnElements>(elements: Elements
   const AutoHasOneForm = makeShadcnAutoHasOneForm(elements);
   const AutoBelongsToForm = makeShadcnAutoBelongsToForm(elements);
   const AutoHasManyForm = makeShadcnAutoHasManyForm(elements);
-
+  const AutoHasManyThroughForm = makeShadcnAutoHasManyThroughForm(elements);
   function AutoForm<GivenOptions extends OptionsType, SchemaT, ActionFunc extends ActionFunction<GivenOptions, any, any, SchemaT, any>>(
     props: AutoFormProps<GivenOptions, SchemaT, ActionFunc> & ComponentProps<typeof Form>
   ) {
@@ -159,6 +160,7 @@ export const makeAutoForm = <Elements extends ShadcnElements>(elements: Elements
     AutoHasOneForm,
     AutoBelongsToForm,
     AutoHasManyForm,
+    AutoHasManyThroughForm,
     AutoBelongsToInput,
     AutoHasManyInput,
     AutoRolesInput,

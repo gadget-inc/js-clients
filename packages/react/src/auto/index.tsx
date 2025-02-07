@@ -13,6 +13,7 @@ export interface AutoAdapter<T = any, F = any, B = any> {
   AutoHasOneForm: React.ComponentType<any>;
   AutoBelongsToForm: React.ComponentType<any>;
   AutoHasManyForm: React.ComponentType<any>;
+  AutoHasManyThroughForm: React.ComponentType<any>;
   AutoDateTimePicker: React.ComponentType<{
     suiteName?: string;
     field: string;

@@ -8,68 +8,68 @@ import { elements } from "../../index.tsx";
 
 // More on how to set up stories at: https://storybook.js.org/docs/writing-stories#default-export
 
-const { AutoForm, AutoHasOneForm, AutoInput, AutoSubmit, SubmitResultBanner, AutoBelongsToForm, AutoHasManyForm } = makeAutocomponents(elements);
+const { AutoForm, AutoHasOneForm, AutoInput, AutoSubmit, SubmitResultBanner, AutoBelongsToForm, AutoHasManyForm, AutoHasManyThroughForm } = makeAutocomponents(elements);
 const { Card, Label } = elements;
 
 const Component = (props) => {
   return (
     <AutoForm {...props} >
-      <div className="flex flex-col gap-6">
+      <div className="flex flex-col gap-8">
         <div className="bg-white p-4 rounded-md">
           <SubmitResultBanner />
         </div>
-        <div className="flex flex-col gap-4">
-          <Card className="p-6 w-full bg-white shadow-lg rounded-lg">
-            <AutoBelongsToForm field="section" primaryLabel="name"
-              renderSelectedRecord={(record) => <Label>this is a custom belongsTo render for {record.name}</Label>}
-            >
+
+        <Card className="p-6 w-full bg-white shadow-lg rounded-lg">
+          <AutoBelongsToForm field="section" primaryLabel="name"
+            renderSelectedRecord={(record) => <Label>this is a custom belongsTo render for {record.name}</Label>}
+          >
+            <AutoInput field="name" />
+          </AutoBelongsToForm>
+        </Card>
+
+
+
+        <Card className="p-6 w-full bg-white shadow-lg rounded-lg">
+          <AutoHasOneForm field="doodad" primaryLabel="name"
+            secondaryLabel={(record) => `${record.weight ?? 'N/A'} (${record.active ?? 'N/A'})`} tertiaryLabel="size"
+          >
+
+            <div className="flex flex-col gap-4">
               <AutoInput field="name" />
-            </AutoBelongsToForm>
-          </Card>
-        </div>
+              <AutoInput field="weight" />
+              <AutoInput field="active" />
+              <AutoInput field="size" />
+            </div>
+          </AutoHasOneForm>
+        </Card>
 
-        <div className="flex flex-col gap-4">
-          <Card className="p-6 w-full bg-white shadow-lg rounded-lg">
-            <AutoHasOneForm field="doodad" primaryLabel="name"
-              secondaryLabel={(record) => `${record.weight ?? 'N/A'} (${record.active ?? 'N/A'})`} tertiaryLabel="size"
-            >
 
-              <div className="flex flex-col gap-4">
-                <AutoInput field="name" />
-                <AutoInput field="weight" />
-                <AutoInput field="active" />
-                <AutoInput field="size" />
-              </div>
-            </AutoHasOneForm>
-          </Card>
-        </div>
-        <div>
-          <Card className="p-6 w-full bg-white shadow-lg rounded-lg">
-            <AutoHasManyForm
-              label={
-                <Label as="h2" variant="headingSm">
-                  Has Many Form -- Gizmos
-                </Label>
-              }
-              field="gizmos"
-              selectPaths={["name", "orientation"]}
-              primaryLabel="name"
-              secondaryLabel="orientation"
-            >
-              <div className="flex flex-col gap-4">
-                <AutoInput field="name" />
-                <AutoInput field="orientation" />
-                <AutoInput field="attachment" />
-                <AutoHasManyForm field="doodads" selectPaths={["name", "weight"]} primaryLabel="name" secondaryLabel="weight">
-                  <div className="flex flex-col gap-4">
-                    <AutoInput field="name" />
-                    <AutoInput field="weight" />
-                  </div>
-                </AutoHasManyForm>
-              </div>
-            </AutoHasManyForm>
-          </Card>
-        </div>
+        <Card className="p-6 w-full bg-white shadow-lg rounded-lg">
+          <AutoHasManyForm
+            label={
+              <Label as="h2" variant="headingSm">
+                Has Many Form -- Gizmos
+              </Label>
+            }
+            field="gizmos"
+            selectPaths={["name", "orientation"]}
+            primaryLabel="name"
+            secondaryLabel="orientation"
+          >
+            <div className="flex flex-col gap-4">
+              <AutoInput field="name" />
+              <AutoInput field="orientation" />
+              <AutoInput field="attachment" />
+              <AutoHasManyForm field="doodads" selectPaths={["name", "weight"]} primaryLabel="name" secondaryLabel="weight">
+                <div className="flex flex-col gap-4">
+                  <AutoInput field="name" />
+                  <AutoInput field="weight" />
+                </div>
+              </AutoHasManyForm>
+            </div>
+          </AutoHasManyForm>
+        </Card>
+
         <div className="mt-4">
           <AutoSubmit variant="default" className="w-full bg-white p-2 rounded-md" />
         </div>
@@ -85,7 +85,7 @@ export default {
     (Story, { parameters }) => {
       const { theme = "light" } = parameters;
       return (
-        <div style={{ width: "600px" }}>
+        <div style={{ width: "800px" }}>
           <Provider api={api}>
             <FormProvider {...useForm()}>
               <StorybookErrorBoundary>
@@ -125,6 +125,14 @@ export const CreateWithLargeHasMany = {
   },
 };
 
+export const CreateWithHasManyThrough = {
+  render: (args) => <ExampleCourseCreateRelatedForm {...args} />,
+  args: {
+    action: api.university.course.create,
+    debug: true,
+  },
+};
+
 const ExampleSectionAutoRelatedForm = (props) => {
   return (
     <div className="flex flex-col gap-4">
@@ -148,6 +156,66 @@ const ExampleSectionAutoRelatedForm = (props) => {
           </AutoHasManyForm>
         </Card>
         <AutoSubmit />
+      </AutoForm>
+    </div>
+  );
+};
+
+
+const ExampleCourseCreateRelatedForm = (props) => {
+  return (
+    <div className="flex flex-col gap-4  p-4 rounded-md">
+      <AutoForm {...props}>
+        <SubmitResultBanner />
+        <Card className="p-4 flex flex-col gap-4 bg-white">
+          <Label >
+            Top Level Form -- Course
+          </Label>
+          <AutoInput field="title" />
+          <AutoInput field="description" />
+        </Card>
+
+        <Card className="p-4 flex flex-col gap-4 bg-white">
+          <Label >
+            Has Many Through Form -- Students
+          </Label>
+          <AutoHasManyThroughForm
+            field="students"
+            selectPaths={["firstName", "lastName", "year", "department"]}
+            primaryLabel={["firstName", "lastName"]}
+            secondaryLabel={(record) => {
+              if (record.year <= 1) {
+                return "Freshman";
+              } else if (record.year <= 2) {
+                return "Sophomore";
+              } else if (record.year <= 3) {
+                return "Junior";
+              } else if (record.year <= 4) {
+                return "Senior";
+              } else {
+                return "Mature";
+              }
+            }}
+            tertiaryLabel="department"
+          >
+            <div className="flex flex-col gap-4">
+              <AutoInput field="registration.effectiveFrom" />
+              <AutoInput field="registration.effectiveTo" />
+            </div>
+          </AutoHasManyThroughForm>
+        </Card>
+
+        <Card className="p-4 flex flex-col gap-4 bg-white">
+          <Label >
+            Has Many Through Form -- Professors
+          </Label>
+          <AutoHasManyThroughForm
+            field="professors"
+            selectPaths={["title", "firstName", "lastName"]}
+            primaryLabel={["title", "firstName", "lastName"]}
+          />
+        </Card>
+        <AutoSubmit className="w-full bg-white p-2 rounded-md" />
       </AutoForm>
     </div>
   );
