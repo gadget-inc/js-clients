@@ -8,6 +8,7 @@ import { makeShadcnAutoDateTimePicker } from "./ShadcnAutoDateTimePicker.js";
 import { makeShadcnAutoEncryptedStringInput } from "./ShadcnAutoEncryptedStringInput.js";
 import { makeShadcnAutoEnumInput } from "./ShadcnAutoEnumInput.js";
 import { makeShadcnAutoFileInput } from "./ShadcnAutoFileInput.js";
+import { makeShadcnAutoHiddenInput } from "./ShadcnAutoHiddenInput.js";
 import { makeShadcnAutoIdInput } from "./ShadcnAutoIdInput.js";
 import { makeShadcnAutoJSONInput } from "./ShadcnAutoJSONInput.js";
 import { makeShadcnAutoNumberInput } from "./ShadcnAutoNumberInput.js";
@@ -19,6 +20,7 @@ import { makeShadcnAutoBelongsToInput } from "./relationships/ShadcnAutoBelongsT
 import { makeShadcnAutoHasManyInput } from "./relationships/ShadcnAutoHasManyInput.js";
 import { makeShadcnAutoHasManyThroughInput } from "./relationships/ShadcnAutoHasManyThroughInput.js";
 import { makeShadcnAutoHasOneInput } from "./relationships/ShadcnAutoHasOneInput.js";
+
 export const makeShadcnAutoInput = (
   elements: Pick<
     ShadcnElements,
@@ -59,6 +61,7 @@ export const makeShadcnAutoInput = (
   const AutoRichTextInput = makeShadcnAutoRichTextInput(elements);
   const AutoFileInput = makeShadcnAutoFileInput(elements);
   const AutoHasManyThroughInput = makeShadcnAutoHasManyThroughInput(elements);
+  const AutoHiddenInput = makeShadcnAutoHiddenInput(elements);
 
   const AutoInput = autoInput(function AutoInput(props: { field: string; label?: string }) {
     const { metadata } = useFieldMetadata(props.field);
@@ -121,5 +124,6 @@ export const makeShadcnAutoInput = (
     AutoStringInput,
     AutoNumberInput,
     AutoIdInput,
+    AutoHiddenInput,
   };
 };
