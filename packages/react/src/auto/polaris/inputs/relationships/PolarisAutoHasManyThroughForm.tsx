@@ -1,12 +1,10 @@
 import { AutoSelection, BlockStack, Box, Button, Icon, InlineGrid, InlineStack, Listbox, Text } from "@shopify/polaris";
 import { PlusIcon, XCircleIcon } from "@shopify/polaris-icons";
-import React, { useEffect, useMemo, useState } from "react";
-import { useFormContext } from "../../../../useActionForm.js";
-import { extractPathsFromChildren } from "../../../AutoForm.js";
+import React, { useState } from "react";
+import { useHasManyThroughForm } from "../../../../useHasManyThroughForm.js";
 import { autoRelationshipForm } from "../../../AutoInput.js";
-import { RelationshipContext, useAutoRelationship, useRelationshipContext } from "../../../hooks/useAutoRelationship.js";
-import { useHasManyThroughController } from "../../../hooks/useHasManyThroughController.js";
-import { getRecordAsOption, useOptionLabelForField } from "../../../hooks/useRelatedModel.js";
+import { RelationshipContext } from "../../../hooks/useAutoRelationship.js";
+import { getRecordAsOption } from "../../../hooks/useRelatedModel.js";
 import type { Option, OptionLabel } from "../../../interfaces/AutoRelationshipInputProps.js";
 import { RelatedModelOptionsPopover, RelatedModelOptionsSearch } from "./RelatedModelOptions.js";
 import { renderOptionLabel } from "./utils.js";
@@ -20,65 +18,27 @@ export const PolarisAutoHasManyThroughForm = autoRelationshipForm(
     secondaryLabel?: OptionLabel;
     tertiaryLabel?: OptionLabel;
   }) => {
-    const { field, children } = props;
-    const { metadata } = useAutoRelationship({ field });
-    const { setValue } = useFormContext();
-
-    const childPaths = children && extractPathsFromChildren(children);
-    const hasChildForm = childPaths && childPaths.length > 0;
-
-    const { fieldArrayPath, fieldArray, records, relatedModelOptions, inverseRelatedModelField, joinModelField, joinModelApiIdentifier } =
-      useHasManyThroughController(props);
-
-    const { fields, append, remove } = fieldArray;
-    const relationshipContext = useRelationshipContext();
-    const pathPrefix = relationshipContext?.transformPath ? relationshipContext.transformPath(props.field) : props.field;
-    const metaDataPathPrefix = relationshipContext?.transformMetadataPath
-      ? relationshipContext.transformMetadataPath(props.field)
-      : pathPrefix;
-
-    useEffect(() => {
-      for (const [index, field] of fields.entries()) {
-        if (
-          inverseRelatedModelField &&
-          (field as any)[inverseRelatedModelField] &&
-          (field as any)[inverseRelatedModelField].id &&
-          !("_link" in field)
-        ) {
-          // use setValue so that we don't trigger a re-render
-          setValue(`${fieldArrayPath}.${index}.${inverseRelatedModelField}._link`, (field as any)[inverseRelatedModelField].id);
-        }
-      }
-    }, [setValue, inverseRelatedModelField, fields, fieldArrayPath]);
-
     const [addingSibling, setAddingSibling] = useState(false);
-    const listboxId = `HasManyThroughListboxInPopover-${field}`;
-
-    if (metadata?.configuration.__typename !== "GadgetHasManyThroughConfig") {
-      throw new Error("PolarisAutoHasManyThroughForm can only be used for HasManyThrough fields");
-    }
-
     const {
+      append,
+      remove,
+      joinRecords,
+      primaryLabel,
+      hasChildForm,
+      listboxId,
+      pathPrefix,
+      metaDataPathPrefix,
+      siblingModelName,
+      siblingRecordsLoading,
+      siblingRecords,
+      siblingPagination,
       search,
-      searchFilterOptions: siblingModelOptions,
-      relatedModel: { fetching: siblingRecordsLoading, records: siblingRecords },
-      pagination: siblingPagination,
-    } = relatedModelOptions;
-    const siblingModelName = metadata.name ?? "Unknown";
-
-    const joinRecords = useMemo(() => {
-      return fields.flatMap((field, idx): [string, number, Record<string, any>][] => {
-        const record = records[idx];
-
-        if (!record) {
-          return [];
-        }
-
-        return [[field._fieldArrayKey, idx, record]];
-      });
-    }, [fields, records]);
-
-    const primaryLabel = useOptionLabelForField(field, props.primaryLabel);
+      joinModelField,
+      joinModelApiIdentifier,
+      siblingModelOptions,
+      inverseRelatedModelField,
+      fieldArray,
+    } = useHasManyThroughForm(props);
 
     return (
       <BlockStack gap="200">

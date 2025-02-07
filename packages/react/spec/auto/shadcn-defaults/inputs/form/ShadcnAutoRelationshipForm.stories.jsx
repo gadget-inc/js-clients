@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { Provider } from "../../../../../src/GadgetProvider.tsx";
 import { makeAutocomponents } from "../../../../../src/auto/shadcn/unreleasedIndex.ts";
 import { FormProvider, useForm } from "../../../../../src/useActionForm.ts";
@@ -8,68 +8,68 @@ import { elements } from "../../index.tsx";
 
 // More on how to set up stories at: https://storybook.js.org/docs/writing-stories#default-export
 
-const { AutoForm, AutoHasOneForm, AutoInput, AutoSubmit, SubmitResultBanner, AutoBelongsToForm, AutoHasManyForm } = makeAutocomponents(elements);
-const { Card, Label } = elements;
+const { AutoForm, AutoHasOneForm, AutoInput, AutoSubmit, SubmitResultBanner, AutoBelongsToForm, AutoHasManyForm, AutoHasManyThroughForm } = makeAutocomponents(elements);
+const { Card, Label, Button } = elements;
 
 const Component = (props) => {
   return (
     <AutoForm {...props} >
-      <div className="flex flex-col gap-6">
+      <div className="flex flex-col gap-8">
         <div className="bg-white p-4 rounded-md">
           <SubmitResultBanner />
         </div>
-        <div className="flex flex-col gap-4">
-          <Card className="p-6 w-full bg-white shadow-lg rounded-lg">
-            <AutoBelongsToForm field="section" primaryLabel="name"
-              renderSelectedRecord={(record) => <Label>this is a custom belongsTo render for {record.name}</Label>}
-            >
+
+        <Card className="p-6 w-full bg-white shadow-lg rounded-lg">
+          <AutoBelongsToForm field="section" primaryLabel="name"
+            renderSelectedRecord={(record) => <Label>this is a custom belongsTo render for {record.name}</Label>}
+          >
+            <AutoInput field="name" />
+          </AutoBelongsToForm>
+        </Card>
+
+
+
+        <Card className="p-6 w-full bg-white shadow-lg rounded-lg">
+          <AutoHasOneForm field="doodad" primaryLabel="name"
+            secondaryLabel={(record) => `${record.weight ?? 'N/A'} (${record.active ?? 'N/A'})`} tertiaryLabel="size"
+          >
+
+            <div className="flex flex-col gap-4">
               <AutoInput field="name" />
-            </AutoBelongsToForm>
-          </Card>
-        </div>
+              <AutoInput field="weight" />
+              <AutoInput field="active" />
+              <AutoInput field="size" />
+            </div>
+          </AutoHasOneForm>
+        </Card>
 
-        <div className="flex flex-col gap-4">
-          <Card className="p-6 w-full bg-white shadow-lg rounded-lg">
-            <AutoHasOneForm field="doodad" primaryLabel="name"
-              secondaryLabel={(record) => `${record.weight ?? 'N/A'} (${record.active ?? 'N/A'})`} tertiaryLabel="size"
-            >
 
-              <div className="flex flex-col gap-4">
-                <AutoInput field="name" />
-                <AutoInput field="weight" />
-                <AutoInput field="active" />
-                <AutoInput field="size" />
-              </div>
-            </AutoHasOneForm>
-          </Card>
-        </div>
-        <div>
-          <Card className="p-6 w-full bg-white shadow-lg rounded-lg">
-            <AutoHasManyForm
-              label={
-                <Label as="h2" variant="headingSm">
-                  Has Many Form -- Gizmos
-                </Label>
-              }
-              field="gizmos"
-              selectPaths={["name", "orientation"]}
-              primaryLabel="name"
-              secondaryLabel="orientation"
-            >
-              <div className="flex flex-col gap-4">
-                <AutoInput field="name" />
-                <AutoInput field="orientation" />
-                <AutoInput field="attachment" />
-                <AutoHasManyForm field="doodads" selectPaths={["name", "weight"]} primaryLabel="name" secondaryLabel="weight">
-                  <div className="flex flex-col gap-4">
-                    <AutoInput field="name" />
-                    <AutoInput field="weight" />
-                  </div>
-                </AutoHasManyForm>
-              </div>
-            </AutoHasManyForm>
-          </Card>
-        </div>
+        <Card className="p-6 w-full bg-white shadow-lg rounded-lg">
+          <AutoHasManyForm
+            label={
+              <Label as="h2" variant="headingSm">
+                Has Many Form -- Gizmos
+              </Label>
+            }
+            field="gizmos"
+            selectPaths={["name", "orientation"]}
+            primaryLabel="name"
+            secondaryLabel="orientation"
+          >
+            <div className="flex flex-col gap-4">
+              <AutoInput field="name" />
+              <AutoInput field="orientation" />
+              <AutoInput field="attachment" />
+              <AutoHasManyForm field="doodads" selectPaths={["name", "weight"]} primaryLabel="name" secondaryLabel="weight">
+                <div className="flex flex-col gap-4">
+                  <AutoInput field="name" />
+                  <AutoInput field="weight" />
+                </div>
+              </AutoHasManyForm>
+            </div>
+          </AutoHasManyForm>
+        </Card>
+
         <div className="mt-4">
           <AutoSubmit variant="default" className="w-full bg-white p-2 rounded-md" />
         </div>
@@ -85,7 +85,7 @@ export default {
     (Story, { parameters }) => {
       const { theme = "light" } = parameters;
       return (
-        <div style={{ width: "600px" }}>
+        <div style={{ width: "800px" }}>
           <Provider api={api}>
             <FormProvider {...useForm()}>
               <StorybookErrorBoundary>
@@ -125,6 +125,82 @@ export const CreateWithLargeHasMany = {
   },
 };
 
+export const CreateWithHasManyThrough = {
+  render: (args) => <ExampleCourseCreateRelatedForm {...args} />,
+  args: {
+    action: api.university.course.create,
+    debug: true,
+  },
+};
+
+export const UpdateWithHasManyThrough = {
+  render: (args) => <ExampleCourseCreateRelatedForm {...args} />,
+  args: {
+    action: api.university.course.update,
+    findBy: "3",
+  },
+};
+
+export const CreateWithHasManyThroughSelfReferential = {
+  render: (args) => <ExampleTweeterFollowerCreateRelatedForm {...args} />,
+  args: {
+    action: api.tweeter.create,
+  },
+};
+
+export const UpdateWithHasManyThroughSelfReferential = {
+  render: (args) => <ExampleTweeterFollowerCreateRelatedForm {...args} />,
+  args: {
+    action: api.tweeter.update,
+    findBy: "1",
+    debug: true,
+  },
+};
+
+const ExampleTweeterFollowerCreateRelatedForm = (props) => {
+  return (
+    <div className="flex flex-col gap-4">
+      <AutoForm {...props}>
+        <div className="bg-white p-4 rounded-md">
+          <SubmitResultBanner />
+        </div>
+        <Card className="p-6 w-full bg-white shadow-lg rounded-lg">
+          <div className="flex flex-col gap-4">
+            <Label as="h2" variant="headingSm">
+              Top Level Form -- Tweeter
+            </Label>
+            <div className="flex flex-col gap-4">
+              <AutoInput field="name" />
+            </div>
+          </div>
+        </Card>
+
+        <Card className="p-6 w-full bg-white shadow-lg rounded-lg">
+          <AutoHasManyThroughForm field="followers" selectPaths={["name"]} primaryLabel={"name"}>
+            <div className="flex flex-row gap-4">
+              <AutoInput field="friendship.started" />
+              <AutoInput field="friendship.ended" />
+            </div>
+          </AutoHasManyThroughForm>
+        </Card>
+
+        <Card className="p-6 w-full bg-white shadow-lg rounded-lg">
+          <AutoHasManyThroughForm field="followees" selectPaths={["name"]} primaryLabel={"name"}>
+            <div className="flex flex-row gap-4">
+              <AutoInput field="friendship.started" />
+              <AutoInput field="friendship.ended" />
+            </div>
+          </AutoHasManyThroughForm>
+        </Card>
+        <div className="mt-4">
+          <AutoSubmit variant="default" className="w-full bg-white p-2 rounded-md" />
+        </div>
+      </AutoForm>
+    </div>
+  );
+};
+
+
 const ExampleSectionAutoRelatedForm = (props) => {
   return (
     <div className="flex flex-col gap-4">
@@ -150,5 +226,192 @@ const ExampleSectionAutoRelatedForm = (props) => {
         <AutoSubmit />
       </AutoForm>
     </div>
+  );
+};
+
+
+const ExampleCourseCreateRelatedForm = (props) => {
+  return (
+    <div className="flex flex-col gap-4  p-4 rounded-md">
+      <AutoForm {...props}>
+        <div className="bg-white p-4 rounded-md">
+          <SubmitResultBanner />
+        </div>
+        <Card className="p-4 flex flex-col gap-4 bg-white">
+          <Label >
+            Top Level Form -- Course
+          </Label>
+          <AutoInput field="title" />
+          <AutoInput field="description" />
+        </Card>
+
+        <Card className="p-4 flex flex-col gap-4 bg-white">
+          <Label >
+            Has Many Through Form -- Students
+          </Label>
+          <AutoHasManyThroughForm
+            field="students"
+            selectPaths={["firstName", "lastName", "year", "department"]}
+            primaryLabel={["firstName", "lastName"]}
+            secondaryLabel={(record) => {
+              if (record.year <= 1) {
+                return "Freshman";
+              } else if (record.year <= 2) {
+                return "Sophomore";
+              } else if (record.year <= 3) {
+                return "Junior";
+              } else if (record.year <= 4) {
+                return "Senior";
+              } else {
+                return "Mature";
+              }
+            }}
+            tertiaryLabel="department"
+          >
+            <div className="flex flex-col gap-4">
+              <AutoInput field="registration.effectiveFrom" />
+              <AutoInput field="registration.effectiveTo" />
+            </div>
+          </AutoHasManyThroughForm>
+        </Card>
+
+        <Card className="p-4 flex flex-col gap-4 bg-white">
+          <Label >
+            Has Many Through Form -- Professors
+          </Label>
+          <AutoHasManyThroughForm
+            field="professors"
+            selectPaths={["title", "firstName", "lastName"]}
+            primaryLabel={["title", "firstName", "lastName"]}
+          />
+        </Card>
+        <AutoSubmit className="w-full bg-white p-2 rounded-md" />
+      </AutoForm>
+    </div>
+  );
+};
+
+export const DeepRelationshipChain = {
+  render: (args) => {
+    return (
+      <>
+        <div className="flex flex-col gap-4">
+          <AutoForm {...args}>
+            <div className="bg-white p-4 rounded-md">
+              <SubmitResultBanner />
+            </div>
+
+            <Card className="p-6 w-full bg-white shadow-lg rounded-lg">
+              <AutoInput field="englishName" />
+              <AutoInput field="size" />
+
+              {/* Root hasMany */}
+              <AutoHasManyForm field="continents">
+                <AutoInput field="englishName" />
+
+                {/* level 1 hasMany */}
+                <AutoHasManyForm field="countries">
+                  <AutoInput field="englishName" />
+
+                  {/* level 2 hasMany */}
+                  <AutoHasManyForm field="cities">
+                    <AutoInput field="englishName" />
+                    <AutoInput field="localName" />
+
+                    {/* level 3 hasMany || hasOne */}
+                    <MayorOrCitizenSelect />
+                  </AutoHasManyForm>
+                </AutoHasManyForm>
+              </AutoHasManyForm>
+            </Card>
+            <div className="mt-4">
+              <AutoSubmit variant="default" className="w-full bg-white p-2 rounded-md" />
+            </div>
+          </AutoForm>
+        </div>
+      </>
+    );
+  },
+  args: {
+    action: api.deepRelationshipChain.planet.update,
+    findBy: "1",
+
+    // For advanced cases like this with deeply nested conditional appearing forms, a manual select is required to prevent unmounts as conditionally appearing inputs get registered in the form state
+    // `id` fields must be selected at every step of the relationship field chain because they control if a nested action will become an update or a create.
+    // If there is no ID, only creates nested actions will be used to create new nested records instead of updating existing ones.
+    select: {
+      id: true,
+      englishName: true,
+      size: true,
+      continents: {
+        edges: {
+          node: {
+            id: true,
+            englishName: true,
+            countries: {
+              edges: {
+                node: {
+                  id: true,
+                  englishName: true,
+                  cities: {
+                    edges: {
+                      node: {
+                        id: true,
+                        englishName: true,
+                        localName: true,
+                        citizens: {
+                          edges: {
+                            node: {
+                              id: true,
+                              firstName: true,
+                              lastName: true,
+                              cityOfMayorDuty: { id: true, englishName: true, localName: true },
+                            },
+                          },
+                        },
+                        mayor: { id: true, firstName: true, lastName: true },
+                      },
+                    },
+                  },
+                },
+              },
+            },
+          },
+        },
+      },
+    },
+  },
+};
+
+const MayorOrCitizenSelect = () => {
+  const [showMayor, setShowMayor] = useState(!false);
+
+  return (
+    <>
+      <div className="flex flex-row gap-4">
+        <Label>Showing {showMayor ? "Mayor" : "Citizens"}</Label>
+        <Button type="button" onClick={() => setShowMayor(!showMayor)}>Toggle</Button>
+      </div>
+      {showMayor ? (
+        <Card className="p-6 w-full bg-white shadow-lg rounded-lg">
+          <AutoHasOneForm field="mayor" primaryLabel={["firstName", "lastName"]}>
+            <AutoInput field="firstName" />
+            <AutoInput field="lastName" />
+          </AutoHasOneForm>
+        </Card>
+      ) : (
+        <Card className="p-6 w-full bg-white shadow-lg rounded-lg"  >
+          <AutoHasManyForm field="citizens" primaryLabel={["firstName", "lastName"]}>
+            <AutoInput field="firstName" />
+            <AutoInput field="lastName" />
+
+            <AutoBelongsToForm field="cityOfMayorDuty" primaryLabel={["englishName", "localName"]}>
+              <AutoInput field="englishName" />
+              <AutoInput field="localName" />
+            </AutoBelongsToForm>
+          </AutoHasManyForm>
+        </Card>
+      )}
+    </>
   );
 };

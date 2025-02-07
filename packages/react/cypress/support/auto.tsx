@@ -34,6 +34,7 @@ const ONLY_RUN_SUITES = {
     "AutoForm - Upsert Action",
     "AutoHasOneForm",
     "AutoBelongsToForm",
+    "AutoHasManyThroughForm",
     "AutoHasManyForm",
     "AutoFormDateTimePicker",
     "AutoFormJSONInput",
