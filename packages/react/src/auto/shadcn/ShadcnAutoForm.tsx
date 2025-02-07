@@ -32,6 +32,7 @@ export const makeAutoForm = <Elements extends ShadcnElements>(elements: Elements
     AutoEncryptedStringInput,
     AutoStringInput,
     AutoNumberInput,
+    AutoHiddenInput,
     AutoIdInput,
   } = makeShadcnAutoInput(elements);
 
@@ -171,5 +172,6 @@ export const makeAutoForm = <Elements extends ShadcnElements>(elements: Elements
     AutoStringInput,
     AutoNumberInput,
     AutoIdInput,
+    AutoHiddenInput,
   };
 };
