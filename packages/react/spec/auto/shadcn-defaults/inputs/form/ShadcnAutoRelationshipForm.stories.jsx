@@ -390,7 +390,7 @@ const MayorOrCitizenSelect = () => {
     <>
       <div className="flex flex-row gap-4">
         <Label>Showing {showMayor ? "Mayor" : "Citizens"}</Label>
-        <Button onClick={() => setShowMayor(!showMayor)}>Toggle</Button>
+        <Button type="button" onClick={() => setShowMayor(!showMayor)}>Toggle</Button>
       </div>
       {showMayor ? (
         <Card className="p-6 w-full bg-white shadow-lg rounded-lg">
