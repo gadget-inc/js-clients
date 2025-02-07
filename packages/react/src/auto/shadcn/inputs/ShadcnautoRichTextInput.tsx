@@ -2,10 +2,11 @@ import type { ComponentProps } from "react";
 import React from "react";
 import { autoInput } from "../../AutoInput.js";
 import { useStringInputController } from "../../hooks/useStringInputController.js";
-import AutoRichTextInput from "../../shared/AutoRichTextInput.js";
-import "../../shared/styles/rich-text.css";
 import { ShadcnRequired } from "../ShadcnRequired.js";
 import type { ShadcnElements } from "../elements.js";
+
+// lazy load the component to reduce the bundle size and to avoid errors importing .css files in SSR bundles
+const AutoRichTextInput = React.lazy(() => import("../../shared/AutoRichTextInput.js"));
 
 export const makeShadcnAutoRichTextInput = ({ Label }: Pick<ShadcnElements, "Label">) => {
   function ShadcnAutoRichTextInput(props: ComponentProps<typeof AutoRichTextInput>) {

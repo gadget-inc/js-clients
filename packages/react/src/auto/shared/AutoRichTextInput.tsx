@@ -7,6 +7,7 @@ import { autoInput } from "../AutoInput.js";
 import { useStringInputController } from "../hooks/useStringInputController.js";
 import { multiref } from "../hooks/utils.js";
 import type { AutoRichTextInputProps, MDXEditorMethods } from "./AutoRichTextInputProps.js";
+import "./styles/rich-text.css";
 
 const {
   MDXEditor,
