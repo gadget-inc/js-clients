@@ -147,7 +147,7 @@ export const makeShadcnAutoDateTimePicker = ({
             >
               <CalendarIcon className="mr-2 h-4 w-4" />
               {localTime ? (
-                formatDate(localTime)
+                formatDate(localTime, props.includeTime ?? (config as GadgetDateTimeConfig).includeTime)
               ) : (
                 <span className="opacity-50">
                   {props.includeTime ?? (config as GadgetDateTimeConfig).includeTime ? "YYYY-MM-DD hh:mm aa" : "YYYY-MM-DD"}

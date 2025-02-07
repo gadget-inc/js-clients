@@ -166,7 +166,9 @@ const ExampleCourseCreateRelatedForm = (props) => {
   return (
     <div className="flex flex-col gap-4  p-4 rounded-md">
       <AutoForm {...props}>
-        <SubmitResultBanner />
+        <div className="bg-white p-4 rounded-md">
+          <SubmitResultBanner />
+        </div>
         <Card className="p-4 flex flex-col gap-4 bg-white">
           <Label >
             Top Level Form -- Course

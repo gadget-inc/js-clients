@@ -431,7 +431,7 @@ export const getDateFromDateTimeObject = (dateTime: DateTimeState) => {
   return date;
 };
 
-export const formatDate = (date: Date): string => {
+export const formatDate = (date: Date, includeTime: boolean = true): string => {
   // Extract year, month, and day
   const year = date.getFullYear();
 
@@ -458,7 +458,7 @@ export const formatDate = (date: Date): string => {
   const minutes = String(date.getMinutes()).padStart(2, "0");
 
   // Construct the formatted date string
-  const formattedDate = `${year}-${month}-${day} ${hoursStr}:${minutes} ${ampm}`;
+  const formattedDate = includeTime ? `${year}-${month}-${day} ${hoursStr}:${minutes} ${ampm}` : `${year}-${month}-${day}`;
 
   return formattedDate;
 };

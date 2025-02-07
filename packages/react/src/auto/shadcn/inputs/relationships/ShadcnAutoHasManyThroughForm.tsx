@@ -4,7 +4,7 @@ import { useFormContext } from "../../../../useActionForm.js";
 import { debounce } from "../../../../utils.js";
 import { extractPathsFromChildren } from "../../../AutoForm.js";
 import { autoRelationshipForm } from "../../../AutoInput.js";
-import { useAutoRelationship, useRelationshipContext } from "../../../hooks/useAutoRelationship.js";
+import { RelationshipContext, useAutoRelationship, useRelationshipContext } from "../../../hooks/useAutoRelationship.js";
 import { useHasManyThroughController } from "../../../hooks/useHasManyThroughController.js";
 import { getRecordAsOption, useOptionLabelForField } from "../../../hooks/useRelatedModel.js";
 import type { Option, OptionLabel } from "../../../interfaces/AutoRelationshipInputProps.js";
@@ -120,11 +120,10 @@ export const makeShadcnAutoHasManyThroughForm = ({
       }
     }, [setValue, inverseRelatedModelField, fields, fieldArrayPath]);
 
-    const [addingSibling, setAddingSibling] = useState(false);
     const listboxId = `HasManyThroughListboxInPopover-${field}`;
 
     if (metadata?.configuration.__typename !== "GadgetHasManyThroughConfig") {
-      throw new Error("PolarisAutoHasManyThroughForm can only be used for HasManyThrough fields");
+      throw new Error("ShadcnAutoHasManyThroughForm can only be used for HasManyThrough fields");
     }
 
     const {
@@ -158,14 +157,6 @@ export const makeShadcnAutoHasManyThroughForm = ({
       [siblingPagination, siblingModelOptions.length]
     );
 
-    useEffect(() => {
-      if (open) {
-        setAddingSibling((prev) => !prev);
-      } else {
-        setAddingSibling(false);
-      }
-    }, [open]);
-
     return (
       <div className="flex flex-col gap-2 ">
         <div className="flex justify-between flex-row">
@@ -174,10 +165,11 @@ export const makeShadcnAutoHasManyThroughForm = ({
             <Popover open={open} onOpenChange={setOpen}>
               <PopoverTrigger asChild>
                 <Button
+                  type="button"
                   variant="outline"
                   role="combobox"
                   aria-expanded={open}
-                  // onClick={() => setAddingSibling((prev) => !prev)}
+                  aria-controls={listboxId}
                   className="w-[300px] flex flex-row items-center justify-between"
                 >
                   <Label className="truncate flex-grow text-left">Add {siblingModelName ?? "related model"}</Label>
@@ -202,7 +194,7 @@ export const makeShadcnAutoHasManyThroughForm = ({
                   renderOption={(option) => (
                     <SiblingOption
                       onSelect={(option) => {
-                        const record = records?.find((record) => record.id === option.id) ?? { id: option.id };
+                        const record = siblingRecords?.find((record) => record.id === option.id) ?? { id: option.id };
                         const { createdAt: _createdAt, updatedAt: _updatedAt, ...recordWithoutTimestamps } = record;
                         inverseRelatedModelField &&
                           append({ [inverseRelatedModelField]: { ...recordWithoutTimestamps, _link: record.id } });
@@ -223,18 +215,22 @@ export const makeShadcnAutoHasManyThroughForm = ({
               const siblingOption = getRecordAsOption(siblingRecord, primaryLabel, props.secondaryLabel, props.tertiaryLabel);
 
               return (
-                <div className="flex flex-row gap-2 items-center" key={fieldKey}>
-                  <div className="flex flex-col gap-2 p-4">
-                    <div className="flex flex-row gap-2 justify-between">
-                      <div className="flex flex-row gap-2">
-                        {renderOptionLabel(siblingOption.label, "primary")}
-                        {siblingOption?.tertiaryLabel && renderOptionLabel(siblingOption.tertiaryLabel, "tertiary")}
-                      </div>
-                      <div className="flex flex-row gap-2">
+                <div className="flex items-center w-full border border-gray-300 rounded-md " key={fieldKey}>
+                  <div className="flex flex-col gap-4 w-full">
+                    <div className="flex-1 p-2">
+                      <div className="flex justify-between items-center w-full">
+                        <div className="flex flex-col gap-1">
+                          <div className="flex items-center gap-2">
+                            {renderOptionLabel(siblingOption.label, "primary")}
+                            {siblingOption?.tertiaryLabel && renderOptionLabel(siblingOption.tertiaryLabel, "tertiary")}
+                          </div>
+                          {siblingOption?.secondaryLabel && renderOptionLabel(siblingOption.secondaryLabel, "secondary")}
+                        </div>
                         <Button
                           id={`deleteButton_${pathPrefix}.${idx}`}
-                          className="border"
+                          className="border ml-auto"
                           variant="outline"
+                          type="button"
                           size="icon"
                           onClick={() => remove(idx)}
                         >
@@ -242,12 +238,35 @@ export const makeShadcnAutoHasManyThroughForm = ({
                         </Button>
                       </div>
                     </div>
+                    {hasChildForm && (
+                      <div
+                        className="flex-1 p-2 border-t border-gray-300"
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          e.preventDefault();
+                        }}
+                      >
+                        <RelationshipContext.Provider
+                          value={{
+                            transformPath: (path) => `${joinModelField}.${idx}.${path.replace(`${joinModelApiIdentifier}.`, "")}`,
+                            transformMetadataPath: (path) => `${metaDataPathPrefix}.${path}`,
+                            fieldArray,
+                          }}
+                        >
+                          {props.children}
+                        </RelationshipContext.Provider>
+                      </div>
+                    )}
                   </div>
                 </div>
               );
             })}
           </div>
-        ) : null}
+        ) : (
+          <div className="flex items-center justify-center border border-gray-300 rounded-md p-2 mt-4">
+            <Label className="text-sm text-gray-500">No {siblingModelName} yet</Label>
+          </div>
+        )}
       </div>
     );
   }

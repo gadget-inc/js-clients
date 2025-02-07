@@ -1,113 +1,114 @@
 import React from "react";
-import { PolarisAutoForm } from "../../../../src/auto/polaris/PolarisAutoForm.js";
-import { PolarisAutoInput } from "../../../../src/auto/polaris/inputs/PolarisAutoInput.js";
-import { PolarisAutoHasManyThroughForm } from "../../../../src/auto/polaris/inputs/relationships/PolarisAutoHasManyThroughForm.js";
-import { PolarisAutoSubmit } from "../../../../src/auto/polaris/submit/PolarisAutoSubmit.js";
+
+import { describeForEachAutoAdapter } from "../../../support/auto.js";
+
 import { api } from "../../../support/api.js";
-import { PolarisWrapper } from "../../../support/auto.js";
 
-describe("PolarisAutoHasManyThroughForm", () => {
-  const interceptModelUpdateActionMetadata = () => {
-    cy.intercept(
-      {
-        method: "POST",
-        url: `${api.connection.endpoint}?operation=ModelActionMetadata`,
-      },
-      RealUniversityCourseMetadata
-    ).as("ModelCreateActionMetadata");
-  };
+describeForEachAutoAdapter(
+  "AutoHasManyForm",
+  ({ name, adapter: { AutoForm, AutoInput, AutoSubmit, SubmitResultBanner, AutoHasManyThroughForm }, wrapper }) => {
+    const interceptModelUpdateActionMetadata = () => {
+      cy.intercept(
+        {
+          method: "POST",
+          url: `${api.connection.endpoint}?operation=ModelActionMetadata`,
+        },
+        RealUniversityCourseMetadata
+      ).as("ModelCreateActionMetadata");
+    };
 
-  const expectUpdateActionSubmissionVariables = (expectedQueryValue?: any) => {
-    cy.intercept(
-      {
-        method: "POST",
-        url: `${api.connection.endpoint}?operation=updateCourse`,
-      },
-      (req) => {
-        // eslint-disable-next-line
-        expect(req.body.variables).to.deep.equal(expectedQueryValue);
-        req.reply({ data: { updateCourse: { success: true, errors: null, x: {} } } });
-      }
-    ).as("updateCourse");
-  };
+    const expectUpdateActionSubmissionVariables = (expectedQueryValue?: any) => {
+      cy.intercept(
+        {
+          method: "POST",
+          url: `${api.connection.endpoint}?operation=updateCourse`,
+        },
+        (req) => {
+          // eslint-disable-next-line
+          expect(req.body.variables).to.deep.equal(expectedQueryValue);
+          req.reply({ data: { updateCourse: { success: true, errors: null, x: {} } } });
+        }
+      ).as("updateCourse");
+    };
 
-  const interceptCourseQuery = () => {
-    cy.intercept(
-      {
-        method: "POST",
-        url: `${api.connection.endpoint}?operation=course`,
-      },
-      (req) => {
-        req.reply(courseLookupResponse);
-      }
-    ).as("course");
-  };
+    const interceptCourseQuery = () => {
+      cy.intercept(
+        {
+          method: "POST",
+          url: `${api.connection.endpoint}?operation=course`,
+        },
+        (req) => {
+          req.reply(courseLookupResponse);
+        }
+      ).as("course");
+    };
 
-  const interceptStudentsOptionsQuery = () => {
-    cy.intercept(
-      {
-        method: "POST",
-        url: `${api.connection.endpoint}?operation=students`,
-      },
-      (req) => {
-        req.reply(studentsLookupResponse);
-      }
-    ).as("students");
-  };
+    const interceptStudentsOptionsQuery = () => {
+      cy.intercept(
+        {
+          method: "POST",
+          url: `${api.connection.endpoint}?operation=students`,
+        },
+        (req) => {
+          req.reply(studentsLookupResponse);
+        }
+      ).as("students");
+    };
 
-  beforeEach(() => {
-    cy.viewport("macbook-13");
+    beforeEach(() => {
+      cy.viewport("macbook-13");
 
-    interceptModelUpdateActionMetadata();
-    interceptStudentsOptionsQuery();
-    interceptCourseQuery();
-  });
-
-  it("renders form fields for related records through join table", () => {
-    cy.mountWithWrapper(
-      <PolarisAutoForm action={api.university.course.update} findBy="3">
-        <PolarisAutoHasManyThroughForm
-          field="students"
-          selectPaths={["firstName", "lastName", "year", "department"]}
-          primaryLabel={["firstName", "lastName"]}
-          secondaryLabel={(record) => `Year: ${record.year}`}
-          tertiaryLabel="department"
-        >
-          <PolarisAutoInput field="registration.effectiveFrom" />
-          <PolarisAutoInput field="registration.effectiveTo" />
-        </PolarisAutoHasManyThroughForm>
-        <PolarisAutoSubmit id="submit" />
-      </PolarisAutoForm>,
-      PolarisWrapper
-    );
-
-    cy.wait("@ModelCreateActionMetadata");
-    cy.wait("@course");
-    cy.wait("@students");
-
-    cy.contains("Add Students").click();
-    cy.contains("Emma Williams").click();
-    cy.contains("Add Students").click();
-
-    cy.get('[id="deleteButton_students.0"]').click();
-
-    expectUpdateActionSubmissionVariables({
-      id: "3",
-      course: {
-        registrations: [
-          // Deleted first
-          { delete: { id: "1" } },
-          // Updated second
-          { update: { effectiveFrom: "2024-03-17", effectiveTo: "2025-08-21", id: "25", student: { _link: "11" } } },
-          // Created third
-          { create: { student: { _link: "10" } } },
-        ],
-      },
+      interceptModelUpdateActionMetadata();
+      interceptStudentsOptionsQuery();
+      interceptCourseQuery();
     });
-    cy.get('[id="submit"]').click();
-    cy.wait("@updateCourse");
-  });
-});
+
+    it("renders form fields for related records through join table", () => {
+      cy.mountWithWrapper(
+        <AutoForm action={api.university.course.update} findBy="3">
+          <AutoHasManyThroughForm
+            field="students"
+            selectPaths={["firstName", "lastName", "year", "department"]}
+            primaryLabel={["firstName", "lastName"]}
+            secondaryLabel={(record: any) => `Year: ${record.year}`}
+            tertiaryLabel="department"
+          >
+            <AutoInput field="registration.effectiveFrom" />
+            <AutoInput field="registration.effectiveTo" />
+          </AutoHasManyThroughForm>
+          <AutoSubmit id="submit" />
+        </AutoForm>,
+        wrapper
+      );
+
+      cy.wait("@ModelCreateActionMetadata");
+      cy.wait("@course");
+      cy.wait("@students");
+
+      cy.contains("Add Students").click();
+      cy.contains("Emma Williams").click();
+      cy.contains("Add Students").click();
+
+      cy.get('[id="deleteButton_students.0"]').click();
+
+      expectUpdateActionSubmissionVariables({
+        id: "3",
+        course: {
+          registrations: [
+            // Deleted first
+            { delete: { id: "1" } },
+            // Updated second
+            { update: { effectiveFrom: "2024-03-17", effectiveTo: "2025-08-21", id: "25", student: { _link: "11" } } },
+            // Created third
+            { create: { student: { _link: "10" } } },
+          ],
+        },
+      });
+      cy.get('[id="submit"]').click();
+      cy.wait("@updateCourse");
+    });
+  }
+);
 
 const RealUniversityCourseMetadata = {
   data: {
