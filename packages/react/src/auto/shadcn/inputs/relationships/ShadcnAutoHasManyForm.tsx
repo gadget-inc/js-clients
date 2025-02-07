@@ -120,12 +120,15 @@ export const makeShadcnAutoHasManyForm = ({
                 >
                   <AccordionTrigger onClick={(e) => e.preventDefault()}>
                     {option.label ? (
-                      <div className="flex justify-between">
-                        <div className="flex flex-col gap-2">
-                          {renderOptionLabel(option.label, "primary")}
+                      <div className="flex justify-between w-full items-center">
+                        <div className="flex flex-col gap-1 items-start">
+                          {option.label && renderOptionLabel(option.label, "primary")}
                           {option.secondaryLabel && renderOptionLabel(option.secondaryLabel, "secondary")}
                         </div>
-                        {option.tertiaryLabel && renderOptionLabel(option.tertiaryLabel, "tertiary")}
+
+                        {option.tertiaryLabel && (
+                          <div className="flex items-center">{renderOptionLabel(option.tertiaryLabel, "tertiary")}</div>
+                        )}
                       </div>
                     ) : (
                       <Label>Click to edit...</Label>
@@ -146,20 +149,18 @@ export const makeShadcnAutoHasManyForm = ({
               );
             })}
           </Accordion>
-          <div>
-            <Button
-              type="button"
-              variant="default"
-              className="flex gap-1 border border-gray-300 rounded-md p-2 cursor-pointer"
-              onClick={() => {
-                append({});
-                setEditingIndex(fields.length);
-              }}
-            >
-              <PlusCircleIcon className="w-4 h-4" />
-              <Label className="text-sm font-semibold">Add {modelName}</Label>
-            </Button>
-          </div>
+          <Button
+            type="button"
+            variant="default"
+            className="flex gap-1 border border-gray-300 rounded-md p-2 cursor-pointer"
+            onClick={() => {
+              append({});
+              setEditingIndex(fields.length);
+            }}
+          >
+            <PlusCircleIcon className="w-4 h-4" />
+            <Label className="text-sm font-semibold">Add {modelName}</Label>
+          </Button>
         </div>
       </div>
     );
