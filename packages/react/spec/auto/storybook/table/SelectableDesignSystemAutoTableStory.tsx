@@ -4,7 +4,7 @@ import React, { useState } from "react";
 import { SUITE_NAMES } from "../../../../cypress/support/constants.js";
 import { type AutoTableProps } from "../../../../src/auto/AutoTable.js";
 import { PolarisAutoTable } from "../../../../src/auto/polaris/PolarisAutoTable.js";
-import { makeAutocomponents } from "../../../../src/auto/shadcn/unreleasedIndex.js";
+import { makeAutocomponents } from "../../../../src/auto/shadcn/index.js";
 import { type OptionsType } from "../../../../src/utils.js";
 import { elements } from "../../shadcn-defaults/index.js";
 

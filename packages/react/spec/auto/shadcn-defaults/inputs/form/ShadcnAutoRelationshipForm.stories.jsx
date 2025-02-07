@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { Provider } from "../../../../../src/GadgetProvider.tsx";
-import { makeAutocomponents } from "../../../../../src/auto/shadcn/unreleasedIndex.ts";
+import { makeAutocomponents } from "../../../../../src/auto/shadcn/index.ts";
 import { FormProvider, useForm } from "../../../../../src/useActionForm.ts";
 import { testApi as api } from "../../../../apis.ts";
 import { StorybookErrorBoundary } from "../../../storybook/StorybookErrorBoundary.tsx";
@@ -8,32 +8,35 @@ import { elements } from "../../index.tsx";
 
 // More on how to set up stories at: https://storybook.js.org/docs/writing-stories#default-export
 
-const { AutoForm, AutoHasOneForm, AutoInput, AutoSubmit, SubmitResultBanner, AutoBelongsToForm, AutoHasManyForm, AutoHasManyThroughForm } = makeAutocomponents(elements);
+const { AutoForm, AutoHasOneForm, AutoInput, AutoSubmit, SubmitResultBanner, AutoBelongsToForm, AutoHasManyForm, AutoHasManyThroughForm } =
+  makeAutocomponents(elements);
 const { Card, Label, Button } = elements;
 
 const Component = (props) => {
   return (
-    <AutoForm {...props} >
+    <AutoForm {...props}>
       <div className="flex flex-col gap-8">
         <div className="bg-white p-4 rounded-md">
           <SubmitResultBanner />
         </div>
 
         <Card className="p-6 w-full bg-white shadow-lg rounded-lg">
-          <AutoBelongsToForm field="section" primaryLabel="name"
+          <AutoBelongsToForm
+            field="section"
+            primaryLabel="name"
             renderSelectedRecord={(record) => <Label>this is a custom belongsTo render for {record.name}</Label>}
           >
             <AutoInput field="name" />
           </AutoBelongsToForm>
         </Card>
 
-
-
         <Card className="p-6 w-full bg-white shadow-lg rounded-lg">
-          <AutoHasOneForm field="doodad" primaryLabel="name"
-            secondaryLabel={(record) => `${record.weight ?? 'N/A'} (${record.active ?? 'N/A'})`} tertiaryLabel="size"
+          <AutoHasOneForm
+            field="doodad"
+            primaryLabel="name"
+            secondaryLabel={(record) => `${record.weight ?? "N/A"} (${record.active ?? "N/A"})`}
+            tertiaryLabel="size"
           >
-
             <div className="flex flex-col gap-4">
               <AutoInput field="name" />
               <AutoInput field="weight" />
@@ -42,7 +45,6 @@ const Component = (props) => {
             </div>
           </AutoHasOneForm>
         </Card>
-
 
         <Card className="p-6 w-full bg-white shadow-lg rounded-lg">
           <AutoHasManyForm
@@ -74,7 +76,7 @@ const Component = (props) => {
           <AutoSubmit variant="default" className="w-full bg-white p-2 rounded-md" />
         </div>
       </div>
-    </AutoForm >
+    </AutoForm>
   );
 };
 
@@ -200,24 +202,19 @@ const ExampleTweeterFollowerCreateRelatedForm = (props) => {
   );
 };
 
-
 const ExampleSectionAutoRelatedForm = (props) => {
   return (
     <div className="flex flex-col gap-4">
       <AutoForm {...props}>
         <SubmitResultBanner />
         <Card>
-          <Label >
-            Top Level Form -- Section
-          </Label>
+          <Label>Top Level Form -- Section</Label>
           <AutoInput field="name" />
           <AutoInput field="label" />
         </Card>
 
         <Card>
-          <Label >
-            Has Many Form -- Widgets
-          </Label>
+          <Label>Has Many Form -- Widgets</Label>
           <AutoHasManyForm field="widgets" label="Widgets">
             <AutoInput field="name" />
             <AutoInput field="inventoryCount" />
@@ -229,7 +226,6 @@ const ExampleSectionAutoRelatedForm = (props) => {
   );
 };
 
-
 const ExampleCourseCreateRelatedForm = (props) => {
   return (
     <div className="flex flex-col gap-4  p-4 rounded-md">
@@ -238,17 +234,13 @@ const ExampleCourseCreateRelatedForm = (props) => {
           <SubmitResultBanner />
         </div>
         <Card className="p-4 flex flex-col gap-4 bg-white">
-          <Label >
-            Top Level Form -- Course
-          </Label>
+          <Label>Top Level Form -- Course</Label>
           <AutoInput field="title" />
           <AutoInput field="description" />
         </Card>
 
         <Card className="p-4 flex flex-col gap-4 bg-white">
-          <Label >
-            Has Many Through Form -- Students
-          </Label>
+          <Label>Has Many Through Form -- Students</Label>
           <AutoHasManyThroughForm
             field="students"
             selectPaths={["firstName", "lastName", "year", "department"]}
@@ -276,9 +268,7 @@ const ExampleCourseCreateRelatedForm = (props) => {
         </Card>
 
         <Card className="p-4 flex flex-col gap-4 bg-white">
-          <Label >
-            Has Many Through Form -- Professors
-          </Label>
+          <Label>Has Many Through Form -- Professors</Label>
           <AutoHasManyThroughForm
             field="professors"
             selectPaths={["title", "firstName", "lastName"]}
@@ -390,7 +380,9 @@ const MayorOrCitizenSelect = () => {
     <>
       <div className="flex flex-row gap-4">
         <Label>Showing {showMayor ? "Mayor" : "Citizens"}</Label>
-        <Button type="button" onClick={() => setShowMayor(!showMayor)}>Toggle</Button>
+        <Button type="button" onClick={() => setShowMayor(!showMayor)}>
+          Toggle
+        </Button>
       </div>
       {showMayor ? (
         <Card className="p-6 w-full bg-white shadow-lg rounded-lg">
@@ -400,7 +392,7 @@ const MayorOrCitizenSelect = () => {
           </AutoHasOneForm>
         </Card>
       ) : (
-        <Card className="p-6 w-full bg-white shadow-lg rounded-lg"  >
+        <Card className="p-6 w-full bg-white shadow-lg rounded-lg">
           <AutoHasManyForm field="citizens" primaryLabel={["firstName", "lastName"]}>
             <AutoInput field="firstName" />
             <AutoInput field="lastName" />

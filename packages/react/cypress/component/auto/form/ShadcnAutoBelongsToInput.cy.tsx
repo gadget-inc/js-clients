@@ -1,7 +1,7 @@
 import React from "react";
 import { elements } from "../../../../spec/auto/shadcn-defaults/index.js";
 import { apiTriggerOnly } from "../../../../spec/auto/support/Triggers.js";
-import { makeAutocomponents } from "../../../../src/auto/shadcn/unreleasedIndex.js";
+import { makeAutocomponents } from "../../../../src/auto/shadcn/index.js";
 import { api } from "../../../support/api.js";
 import { ShadcnWrapper } from "../../../support/auto.js";
 
