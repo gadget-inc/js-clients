@@ -49,8 +49,7 @@ export const makeAutoForm = <Elements extends ShadcnElements>(elements: Elements
   function AutoForm<GivenOptions extends OptionsType, SchemaT, ActionFunc extends ActionFunction<GivenOptions, any, any, SchemaT, any>>(
     props: AutoFormProps<GivenOptions, SchemaT, ActionFunc> & ComponentProps<typeof Form>
   ) {
-    const { action, findBy } = props as AutoFormProps<GivenOptions, SchemaT, ActionFunc> &
-      Omit<Partial<FormProps>, "action"> & { findBy: any };
+    const { action, findBy } = props;
     validateAutoFormProps(props);
 
     // Component key to force re-render when the action or findBy changes
@@ -58,10 +57,7 @@ export const makeAutoForm = <Elements extends ShadcnElements>(elements: Elements
 
     return (
       <AutoFormFieldsFromChildComponentsProvider hasCustomFormChildren={React.Children.count(props.children) > 0}>
-        <AutoFormInner
-          key={componentKey}
-          {...(props as AutoFormProps<GivenOptions, SchemaT, ActionFunc> & Omit<Partial<FormProps>, "action"> & { findBy: any })}
-        />
+        <AutoFormInner key={componentKey} {...props} />
       </AutoFormFieldsFromChildComponentsProvider>
     );
   }
@@ -70,13 +66,8 @@ export const makeAutoForm = <Elements extends ShadcnElements>(elements: Elements
     GivenOptions extends OptionsType,
     SchemaT,
     ActionFunc extends ActionFunction<GivenOptions, any, any, SchemaT, any>
-  >(props: AutoFormProps<GivenOptions, SchemaT, ActionFunc> & ComponentProps<typeof elements.Form>) {
-    const {
-      record: _record,
-      action,
-      findBy,
-      ...rest
-    } = props as AutoFormProps<GivenOptions, SchemaT, ActionFunc> & Omit<Partial<FormProps>, "action"> & { findBy: any };
+  >(props: AutoFormProps<GivenOptions, SchemaT, ActionFunc> & Omit<ComponentProps<typeof FormContainer>, "action">) {
+    const { record: _record, action, findBy, ...rest } = props;
 
     const {
       metadata,

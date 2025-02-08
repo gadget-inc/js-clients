@@ -29,11 +29,11 @@ export const PolarisAutoForm = <
   SchemaT,
   ActionFunc extends ActionFunction<GivenOptions, any, any, SchemaT, any>
 >(
-  //polaris form props also take an 'action' property, which we need to omit here.
-  props: AutoFormProps<GivenOptions, SchemaT, ActionFunc> & Omit<Partial<FormProps>, "action">
+  props: AutoFormProps<GivenOptions, SchemaT, ActionFunc> &
+    // polaris form props also take an 'action' property, which we override with the Gadget form action
+    Omit<Partial<FormProps>, "action">
 ) => {
-  const { action, findBy } = props as AutoFormProps<GivenOptions, SchemaT, ActionFunc> &
-    Omit<Partial<FormProps>, "action"> & { findBy: any };
+  const { action, findBy } = props;
 
   validateAutoFormProps(props);
 
