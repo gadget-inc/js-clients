@@ -219,9 +219,6 @@ export interface ShadcnElements {
   /** The DropdownMenuSeparator component from shadcn */
   DropdownMenuSeparator: React.ComponentType<React.HTMLAttributes<HTMLDivElement>>;
 
-  /** The Form component from shadcn */
-  Form: React.ComponentType<FormProps>;
-
   /** The Input component from shadcn */
   Input: React.ComponentType<InputProps>;
 

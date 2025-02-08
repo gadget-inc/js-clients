@@ -74,7 +74,10 @@ export type AutoFormProps<
         findBy?: RecordIdentifier;
       }
     : // eslint-disable-next-line @typescript-eslint/ban-types
-      {});
+      {
+        /** This action doesn't run against existing records, so you can't pass a findBy option */
+        findBy?: never;
+      });
 
 /**
  * React hook for getting the validation schema for a list of fields
@@ -207,7 +210,7 @@ export const useAutoForm = <
   SchemaT,
   ActionFunc extends ActionFunction<GivenOptions, any, any, SchemaT, any> | GlobalActionFunction<any>
 >(
-  props: AutoFormProps<GivenOptions, SchemaT, ActionFunc, any, any> & { findBy?: any }
+  props: AutoFormProps<GivenOptions, SchemaT, ActionFunc, any, any>
 ): {
   select?: GivenOptions["select"];
   metadata: ModelWithOneActionMetadata | GlobalActionMetadata | undefined;

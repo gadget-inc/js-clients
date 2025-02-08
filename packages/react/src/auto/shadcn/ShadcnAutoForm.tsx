@@ -1,13 +1,13 @@
 import type { ActionFunction } from "@gadgetinc/api-client-core";
 import type { ComponentProps } from "react";
-import React from "react";
+import React, { forwardRef } from "react";
 import { FormProvider } from "../../useActionForm.js";
 import { humanizeCamelCase, type OptionsType } from "../../utils.js";
 import type { AutoFormProps } from "../AutoForm.js";
 import { useAutoForm } from "../AutoForm.js";
 import { validateAutoFormProps } from "../AutoFormActionValidators.js";
 import { AutoFormFieldsFromChildComponentsProvider, AutoFormMetadataContext } from "../AutoFormContext.js";
-import type { FormProps, ShadcnElements } from "./elements.js";
+import type { ShadcnElements } from "./elements.js";
 import { makeShadcnAutoInput } from "./inputs/ShadcnAutoInput.js";
 import { makeShadcnAutoBelongsToForm } from "./inputs/relationships/ShadcnAutoBelongsToForm.js";
 import { makeShadcnAutoHasManyForm } from "./inputs/relationships/ShadcnAutoHasManyForm.js";
@@ -20,6 +20,8 @@ import { makeSubmitResultBanner } from "./submit/ShadcnSubmitResultBanner.js";
  * Renders a form for an action on a model automatically using Shadcn
  */
 export const makeAutoForm = <Elements extends ShadcnElements>(elements: Elements) => {
+  const { Skeleton, cn } = elements;
+
   const {
     AutoInput,
     AutoBelongsToInput,
@@ -39,18 +41,19 @@ export const makeAutoForm = <Elements extends ShadcnElements>(elements: Elements
 
   const AutoSubmit = makeShadcnAutoSubmit(elements);
   const { SubmitSuccessfulBanner, SubmitErrorBanner, SubmitResultBanner } = makeSubmitResultBanner(elements);
-
-  const { Form, Skeleton } = elements;
-
   const AutoHasOneForm = makeShadcnAutoHasOneForm(elements);
   const AutoBelongsToForm = makeShadcnAutoBelongsToForm(elements);
   const AutoHasManyForm = makeShadcnAutoHasManyForm(elements);
   const AutoHasManyThroughForm = makeShadcnAutoHasManyThroughForm(elements);
+
+  const FormContainer = forwardRef<HTMLFormElement, React.FormHTMLAttributes<HTMLFormElement>>(({ className, ...props }, ref) => {
+    return <form ref={ref} noValidate className={cn("space-y-6", className)} {...props} />;
+  });
+
   function AutoForm<GivenOptions extends OptionsType, SchemaT, ActionFunc extends ActionFunction<GivenOptions, any, any, SchemaT, any>>(
-    props: AutoFormProps<GivenOptions, SchemaT, ActionFunc> & ComponentProps<typeof Form>
+    props: AutoFormProps<GivenOptions, SchemaT, ActionFunc> & Omit<ComponentProps<typeof FormContainer>, "action">
   ) {
-    const { action, findBy } = props as AutoFormProps<GivenOptions, SchemaT, ActionFunc> &
-      Omit<Partial<FormProps>, "action"> & { findBy: any };
+    const { action, findBy } = props;
     validateAutoFormProps(props);
 
     // Component key to force re-render when the action or findBy changes
@@ -58,10 +61,7 @@ export const makeAutoForm = <Elements extends ShadcnElements>(elements: Elements
 
     return (
       <AutoFormFieldsFromChildComponentsProvider hasCustomFormChildren={React.Children.count(props.children) > 0}>
-        <AutoFormInner
-          key={componentKey}
-          {...(props as AutoFormProps<GivenOptions, SchemaT, ActionFunc> & Omit<Partial<FormProps>, "action"> & { findBy: any })}
-        />
+        <AutoFormInner key={componentKey} {...props} />
       </AutoFormFieldsFromChildComponentsProvider>
     );
   }
@@ -70,13 +70,8 @@ export const makeAutoForm = <Elements extends ShadcnElements>(elements: Elements
     GivenOptions extends OptionsType,
     SchemaT,
     ActionFunc extends ActionFunction<GivenOptions, any, any, SchemaT, any>
-  >(props: AutoFormProps<GivenOptions, SchemaT, ActionFunc> & ComponentProps<typeof elements.Form>) {
-    const {
-      record: _record,
-      action,
-      findBy,
-      ...rest
-    } = props as AutoFormProps<GivenOptions, SchemaT, ActionFunc> & Omit<Partial<FormProps>, "action"> & { findBy: any };
+  >(props: AutoFormProps<GivenOptions, SchemaT, ActionFunc> & Omit<ComponentProps<typeof FormContainer>, "action">) {
+    const { record: _record, action, findBy, ...rest } = props;
 
     const {
       metadata,
@@ -99,9 +94,9 @@ export const makeAutoForm = <Elements extends ShadcnElements>(elements: Elements
 
     if (fetchingMetadata) {
       return (
-        <elements.Form {...rest} onSubmit={submit}>
-          <elements.Skeleton />
-        </elements.Form>
+        <FormContainer {...rest} onSubmit={submit as any}>
+          <Skeleton />
+        </FormContainer>
       );
     }
 
@@ -141,11 +136,9 @@ export const makeAutoForm = <Elements extends ShadcnElements>(elements: Elements
       <AutoFormMetadataContext.Provider value={autoFormMetadataContext}>
         <FormProvider {...originalFormMethods}>
           {isLoading && <Skeleton />}
-          <div hidden={isLoading}>
-            <Form {...rest} onSubmit={submit}>
-              {formContent}
-            </Form>
-          </div>
+          <FormContainer hidden={isLoading} {...rest} onSubmit={submit as any}>
+            {formContent}
+          </FormContainer>
         </FormProvider>
       </AutoFormMetadataContext.Provider>
     );

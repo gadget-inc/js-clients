@@ -60,12 +60,16 @@ export const PolarisWrapper = ({ children }: { children: ReactNode }) => (
 const ShadCNAdapter = makeAutocomponents(elements);
 
 export const ShadcnWrapper = ({ children }: { children: ReactNode }) => (
-  <>
-    <FormProvider {...useForm()}>
-      <Toaster />
-      {children}
-    </FormProvider>
-  </>
+  <div className="p-4">
+    <elements.Card className="bg-white">
+      <elements.CardContent>
+        <FormProvider {...useForm()}>
+          <Toaster />
+          {children}
+        </FormProvider>
+      </elements.CardContent>
+    </elements.Card>
+  </div>
 );
 
 const suites: AutoSuiteConfig[] = [
