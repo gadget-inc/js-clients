@@ -40,7 +40,13 @@ export const makeAutoTable = (elements: ShadcnElements) => {
       <>
         <Checkbox
           id="AutoTableSelectAllCheckbox"
-          checked={selection.recordIds.length === rows?.length ? true : selection.recordIds.length > 0 ? "indeterminate" : false}
+          checked={
+            selection.recordIds.length === rows?.length && rows?.length > 0
+              ? true
+              : selection.recordIds.length > 0
+              ? "indeterminate"
+              : false
+          }
           onCheckedChange={(value) => selection.onSelectionChange(SelectionType.Page, !!value)}
           onClick={(e) => e.stopPropagation()}
         />
@@ -194,9 +200,8 @@ export const makeAutoTable = (elements: ShadcnElements) => {
             clearSelection={selection.clearAll}
           />
 
-          {searchable && <ShadcnAutoTableSearch search={search} />}
-          {hasSelectedRecords && (
-            <div className="absolute flex flex-row items-center w-[100%] pl-2 bg-white border-b z-10">
+          {hasSelectedRecords ? (
+            <div className="absolute flex flex-row items-center w-[100%] pl-2 z-10">
               <AutoTableSelectAllCheckbox selection={selection} rows={rows} />
               <Label className="ml-2">{`${selection.recordIds.length} selected`}</Label>
 
@@ -204,7 +209,9 @@ export const makeAutoTable = (elements: ShadcnElements) => {
                 <ShadcnAutoTableBulkActionSelector bulkActionOptions={bulkActionOptions} selection={selection} rows={rows} />
               </div>
             </div>
-          )}
+          ) : searchable ? (
+            <ShadcnAutoTableSearch search={search} />
+          ) : null}
           <Table>
             <TableHeader>
               <TableRow className={`${hasSelectedRecords ? "opacity-0" : ""}`}>
