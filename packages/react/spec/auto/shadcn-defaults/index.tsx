@@ -37,7 +37,6 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "./components/DropdownMenu.js";
-import { Form } from "./components/Form.js";
 import { Input } from "./components/Input.js";
 import { Label } from "./components/Label.js";
 import { Popover, PopoverAnchor, PopoverContent, PopoverTrigger } from "./components/Popover.js";
@@ -101,7 +100,6 @@ export const elements: ShadcnElements = {
   Input,
   Label,
   Textarea,
-  Form,
   Skeleton,
   Table,
   TableBody,
