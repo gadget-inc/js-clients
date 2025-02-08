@@ -1,7 +1,6 @@
 import React from "react";
 import { useIsOverflowed } from "../../../hooks/useIsOverflowed.js";
 import type { ShadcnElements } from "../../elements.js";
-import "./ShadcnAutoTableStyles.css";
 
 export type ShadcnAutoTableTextCellElements = Pick<
   ShadcnElements,
@@ -21,8 +20,12 @@ export const makeShadcnAutoTableTextCell = (elements: ShadcnAutoTableTextCellEle
       <div style={{ maxWidth: "100%" }} ref={containerRef}>
         <TooltipProvider>
           <Tooltip>
-            {isOverflowed && <TooltipContent className="shadcn-auto-table-cell-tooltip-content">{stringifiedValue}</TooltipContent>}
-            <TooltipTrigger className="shadcn-auto-table-tooltip-trigger">
+            {isOverflowed && (
+              <TooltipContent className="max-w-[150px] max-h-[100px] overflow-y-auto overflow-x-hidden bg-white border border-neutral-300 shadow-md whitespace-normal break-words">
+                {stringifiedValue}
+              </TooltipContent>
+            )}
+            <TooltipTrigger className="max-w-full overflow-hidden text-ellipsis">
               <Label>
                 <span ref={childElementRef}>{stringifiedValue}</span>
               </Label>
