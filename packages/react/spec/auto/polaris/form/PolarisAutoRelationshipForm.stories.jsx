@@ -28,11 +28,7 @@ const ExampleWidgetAutoRelatedForm = (props) => {
         </Card>
 
         <Card>
-          <PolarisAutoBelongsToForm
-            field="section"
-            primaryLabel="name"
-            renderSelectedRecord={(record) => <Text>this is a custom belongsTo render for {record.name}</Text>}
-          >
+          <PolarisAutoBelongsToForm field="section" primaryLabel="name" secondaryLabel="name" tertiaryLabel="id">
             <PolarisAutoInput field="name" />
           </PolarisAutoBelongsToForm>
         </Card>
@@ -58,6 +54,7 @@ const ExampleWidgetAutoRelatedForm = (props) => {
             selectPaths={["name", "orientation"]}
             primaryLabel="name"
             secondaryLabel="orientation"
+            tertiaryLabel={(record) => <Text>{record.id}</Text>}
           >
             <PolarisAutoInput field="name" />
             <PolarisAutoInput field="orientation" />
