@@ -186,7 +186,7 @@ export const makeAutoTable = (elements: ShadcnElements) => {
 
     return (
       <>
-        <div className="rounded-md border sticky" ref={tableRef}>
+        <div className="sticky flex flex-col gap-2" ref={tableRef}>
           <ShadcnAutoTableBulkActionModal
             model={props.model}
             modelActionDetails={selectedModelActionDetails}
@@ -258,10 +258,6 @@ export const makeAutoTable = (elements: ShadcnElements) => {
     validateAutoTableProps(model);
     const componentKey = `${[model.findMany.namespace, model.findMany.modelApiIdentifier].join("_")}AutoTable`;
 
-    return (
-      <>
-        <ShadcnAutoTableComponent key={componentKey} {...props} />
-      </>
-    );
+    return <ShadcnAutoTableComponent key={componentKey} {...props} />;
   };
 };

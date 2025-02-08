@@ -1,7 +1,7 @@
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import * as React from "react";
-import { PaginationResult } from "../../../useList.js";
-import { ShadcnElements } from "../elements.js";
+import type { PaginationResult } from "../../../useList.js";
+import type { ShadcnElements } from "../elements.js";
 
 /**
  * Renders pagination controls for the ShadcnAutoTable
@@ -12,7 +12,7 @@ export const makeShadcnAutoTablePagination = (elements: ShadcnElements) => {
   function ShadcnAutoTablePagination(props: { page: PaginationResult }) {
     const { goToNextPage, goToPreviousPage, hasNextPage, hasPreviousPage } = props.page;
     return (
-      <div className="flex items-center justify-center">
+      <div className="flex flex-row items-center justify-center gap-2">
         <Button onClick={goToPreviousPage} disabled={!hasPreviousPage}>
           <ChevronLeft />
         </Button>
