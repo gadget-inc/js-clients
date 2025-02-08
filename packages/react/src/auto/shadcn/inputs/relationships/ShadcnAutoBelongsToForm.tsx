@@ -1,15 +1,12 @@
-import { CommandSeparator } from "cmdk";
-import { EllipsisVerticalIcon, PlusIcon } from "lucide-react";
-import React, { useCallback } from "react";
+import { EllipsisVerticalIcon } from "lucide-react";
+import React from "react";
 import { useBelongsToForm } from "../../../../useBelongsToForm.js";
-import { debounce } from "../../../../utils.js";
 import { autoRelationshipForm } from "../../../AutoInput.js";
 import { RelationshipContext } from "../../../hooks/useAutoRelationship.js";
-import { optionRecordsToLoadCount } from "../../../hooks/useRelatedModel.js";
 import type { OptionLabel } from "../../../interfaces/AutoRelationshipInputProps.js";
 import type { ShadcnElements } from "../../elements.js";
 import { makeShadcnRenderOptionLabel } from "../../utils.js";
-import { makeShadcnAutoComboInput } from "../ShadcnAutoComboInput.js";
+import { makeSearchableSingleRelatedModelRecordSelector } from "./SearchableSingleRelatedModelRecordSelector.js";
 
 export const makeShadcnAutoBelongsToForm = ({
   Badge,
@@ -61,14 +58,14 @@ export const makeShadcnAutoBelongsToForm = ({
 >) => {
   const renderOptionLabel = makeShadcnRenderOptionLabel({ Label, Badge, Button });
 
-  const ShadcnComboInput = makeShadcnAutoComboInput({
+  const SearchableSingleRelatedModelRecordSelector = makeSearchableSingleRelatedModelRecordSelector({
     Command,
-    CommandInput,
-    Label,
     CommandItem,
+    CommandInput,
+    CommandLoading,
+    Label,
     CommandList,
     CommandEmpty,
-    CommandLoading,
     CommandGroup,
     Checkbox,
     ScrollArea,
@@ -77,48 +74,34 @@ export const makeShadcnAutoBelongsToForm = ({
   function ShadcnAutoBelongsToForm(props: {
     field: string;
     children: React.ReactNode;
-    renderSelectedRecord?: (record: Record<string, any>) => React.ReactNode;
+
     primaryLabel?: OptionLabel;
     secondaryLabel?: OptionLabel;
     tertiaryLabel?: OptionLabel;
   }) {
     const { field } = props;
+    const form = useBelongsToForm(props);
     const {
       record,
       actionsOpen,
-      modalOpen,
       setActionsOpen,
-      setModalOpen,
-      search,
-      searchFilterOptions,
-      pagination,
-      records,
-      isLoading,
+      isEditing,
+      setIsEditing,
       pathPrefix,
       hasRecord,
       recordOption,
-      parentName,
+      relatedModelName,
       path,
       setValue,
       getValues,
-      metadata,
       metaDataPathPrefix,
-    } = useBelongsToForm(props);
-
-    const handleScrolledToBottom = useCallback(
-      debounce(() => {
-        if (pagination.hasNextPage && searchFilterOptions.length >= optionRecordsToLoadCount) {
-          pagination.loadNextPage();
-        }
-      }, 300),
-      [pagination, searchFilterOptions.length]
-    );
+    } = form;
 
     return (
       <div>
         <div>
           <div className="flex flex-row justify-between items-center">
-            <h2 className="text-lg font-medium">{parentName}</h2>
+            <h2 className="text-lg font-medium">{relatedModelName}</h2>
             {hasRecord && (
               <DropdownMenu open={actionsOpen} onOpenChange={setActionsOpen}>
                 <DropdownMenuTrigger data-testid={`${path}-dropdown-menu-trigger`} asChild>
@@ -130,11 +113,11 @@ export const makeShadcnAutoBelongsToForm = ({
                   <DropdownMenuItem
                     value="edit"
                     onSelect={() => {
-                      setModalOpen(true);
+                      setIsEditing(true);
                       setActionsOpen(false);
                     }}
                   >
-                    Edit {parentName.toLocaleLowerCase()}
+                    Edit {relatedModelName.toLocaleLowerCase()}
                   </DropdownMenuItem>
                   <DropdownMenuItem
                     value="remove"
@@ -145,70 +128,32 @@ export const makeShadcnAutoBelongsToForm = ({
                     }}
                     variant="destructive"
                   >
-                    Remove {parentName.toLocaleLowerCase()}
+                    Remove {relatedModelName.toLocaleLowerCase()}
                   </DropdownMenuItem>
                 </DropdownMenuContent>
               </DropdownMenu>
             )}
           </div>
           {hasRecord ? (
-            props.renderSelectedRecord ? (
-              props.renderSelectedRecord(record)
-            ) : (
-              <div className="flex flex-col gap-2">
-                <div className="flex flex-row justify-between gap-2 mt-2">
-                  {renderOptionLabel(recordOption!.label, "primary")}
-                  {recordOption!.tertiaryLabel && renderOptionLabel(recordOption!.tertiaryLabel, "tertiary")}
-                </div>
-                {recordOption!.secondaryLabel && renderOptionLabel(recordOption!.secondaryLabel, "secondary")}
+            <div className="flex flex-col gap-2">
+              <div className="flex flex-row justify-between gap-2 mt-2">
+                {renderOptionLabel(recordOption!.label, "primary")}
+                {recordOption!.tertiaryLabel && renderOptionLabel(recordOption!.tertiaryLabel, "tertiary")}
               </div>
-            )
+              {recordOption!.secondaryLabel && renderOptionLabel(recordOption!.secondaryLabel, "secondary")}
+            </div>
           ) : (
-            <ShadcnComboInput
-              selectedRecordTag={null}
-              path={path}
-              hideLabel
-              metadata={metadata}
-              field={field}
-              options={searchFilterOptions}
-              onSelect={(record) => {
-                setValue(path, { ...record, _link: record.id });
-              }}
-              isLoading={isLoading}
-              errorMessage={""}
-              actions={[
-                <CommandGroup key={"add-record"}>
-                  <CommandItem
-                    onSelect={() => {
-                      setModalOpen(true);
-                    }}
-                  >
-                    <div className="flex flex-row items-center gap-2">
-                      <PlusIcon className="w-4 h-4" />
-                      Add {parentName}
-                    </div>
-                  </CommandItem>
-                  <CommandSeparator />
-                </CommandGroup>,
-              ]}
-              records={records}
-              checkSelected={() => false}
-              allowMultiple={false}
-              willLoadMoreOptions={pagination.hasNextPage && searchFilterOptions.length >= optionRecordsToLoadCount}
-              onScrolledToBottom={handleScrolledToBottom}
-              onChange={search.set}
-              defaultValue={search.value}
-            />
+            <SearchableSingleRelatedModelRecordSelector form={form} field={field} />
           )}
         </div>
 
-        <Dialog open={modalOpen} onOpenChange={() => setModalOpen(!modalOpen)}>
+        <Dialog open={isEditing} onOpenChange={() => setIsEditing(!isEditing)}>
           <RelationshipContext.Provider
             value={{ transformPath: (path) => pathPrefix + "." + path, transformMetadataPath: (path) => metaDataPathPrefix + "." + path }}
           >
             <DialogContent className="bg-white">
               <DialogHeader>
-                <DialogTitle>Add {parentName}</DialogTitle>
+                <DialogTitle>Add {relatedModelName}</DialogTitle>
               </DialogHeader>
               <div>{props.children}</div>
               <DialogFooter className="">
@@ -223,8 +168,7 @@ export const makeShadcnAutoBelongsToForm = ({
                   onClick={() => {
                     const { _unlink, _link, ...rest } = getValues(path);
                     setValue(path, rest);
-
-                    setModalOpen(false);
+                    setIsEditing(false);
                   }}
                 >
                   Save

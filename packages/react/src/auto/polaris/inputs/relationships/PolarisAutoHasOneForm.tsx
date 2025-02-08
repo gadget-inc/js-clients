@@ -1,25 +1,11 @@
-import {
-  ActionList,
-  AutoSelection,
-  BlockStack,
-  Button,
-  ButtonGroup,
-  Divider,
-  Icon,
-  InlineGrid,
-  InlineStack,
-  Listbox,
-  Modal,
-  Popover,
-  Text,
-} from "@shopify/polaris";
-import { MenuHorizontalIcon, PlusCircleIcon } from "@shopify/polaris-icons";
+import { BlockStack, Box, Button, Icon, InlineGrid, InlineStack, ResourceItem, Text } from "@shopify/polaris";
+import { PlusCircleIcon } from "@shopify/polaris-icons";
 import React from "react";
 import { useHasOneForm } from "../../../../useHasOneForm.js";
 import { autoRelationshipForm } from "../../../AutoInput.js";
 import { RelationshipContext } from "../../../hooks/useAutoRelationship.js";
 import type { OptionLabel } from "../../../interfaces/AutoRelationshipInputProps.js";
-import { RelatedModelOptionsPopover, RelatedModelOptionsSearch } from "./RelatedModelOptions.js";
+import { SearchableSingleRelatedModelRecordSelector } from "./SearchableSingleRelatedModelRecordSelector.js";
 import { renderOptionLabel } from "./utils.js";
 
 export const PolarisAutoHasOneForm = autoRelationshipForm(
@@ -27,157 +13,122 @@ export const PolarisAutoHasOneForm = autoRelationshipForm(
     field: string;
     children: React.ReactNode;
     label?: React.ReactNode;
-    renderSelectedRecord?: (record: Record<string, any>) => React.ReactNode;
     primaryLabel?: OptionLabel;
     secondaryLabel?: OptionLabel;
     tertiaryLabel?: OptionLabel;
   }) => {
+    const hasOneForm = useHasOneForm(props);
     const {
-      path,
-      setValue,
-      getValues,
-      record,
-      actionsOpen,
-      setActionsOpen,
-      modalOpen,
-      setModalOpen,
-      searchOpen,
-      setSearchOpen,
-      search,
-      searchFilterOptions,
-      pagination,
-      records,
-      isLoading,
+      isEditing,
+      setIsEditing,
+      isCreatingRecord,
       pathPrefix,
       metaDataPathPrefix,
       hasRecord,
       recordOption,
-      childName,
-    } = useHasOneForm(props);
+      relatedModelName,
+      confirmEdit,
+      removeRecord,
+    } = hasOneForm;
 
     return (
       <>
         <RelationshipContext.Provider
-          value={{
-            transformPath: (path) => pathPrefix + "." + path,
-            transformMetadataPath: (path) => metaDataPathPrefix + "." + path,
-          }}
+          value={{ transformPath: (path) => pathPrefix + "." + path, transformMetadataPath: (path) => metaDataPathPrefix + "." + path }}
         >
           <BlockStack gap="300">
             <InlineGrid columns="1fr auto">
               {props.label ?? (
                 <Text as="h2" variant="headingSm">
-                  {childName}
+                  {relatedModelName}
                 </Text>
-              )}
-
-              {hasRecord && (
-                <Popover
-                  active={actionsOpen}
-                  activator={<Button onClick={() => setActionsOpen((prev) => !prev)} icon={MenuHorizontalIcon} />}
-                  onClose={() => setActionsOpen(false)}
-                >
-                  <ActionList
-                    actionRole="hasOneFormMenuItem"
-                    items={[
-                      {
-                        content: `Edit ${childName.toLocaleLowerCase()}`,
-                        onAction: () => {
-                          setModalOpen(true);
-                          setActionsOpen(false);
-                        },
-                      },
-                      {
-                        content: `Remove ${childName.toLocaleLowerCase()}`,
-                        onAction: () => {
-                          if (!record) return;
-                          const { __typename, id: recordId, ...rest } = record;
-                          const nulledValues = Object.fromEntries(Object.keys(rest).map((key) => [key, null]));
-                          setValue(path, { ...nulledValues, __typename, _unlink: recordId });
-                          setActionsOpen(false);
-                        },
-                        destructive: true,
-                      },
-                    ]}
-                  />
-                </Popover>
               )}
             </InlineGrid>
 
-            {hasRecord ? (
-              props.renderSelectedRecord ? (
-                props.renderSelectedRecord(record as Record<string, any>)
-              ) : (
-                <>
-                  <Divider />
-                  <InlineStack align="space-between">
-                    <BlockStack gap="200">
-                      {renderOptionLabel(recordOption!.label, "primary")}
-                      {recordOption!.secondaryLabel && renderOptionLabel(recordOption!.secondaryLabel, "secondary")}
+            {hasRecord || isCreatingRecord ? (
+              <>
+                <Box borderColor="border" borderWidth="025" borderRadius="200">
+                  {!isEditing ? (
+                    <BlockStack as="ul">
+                      <ResourceItem id={recordOption!.id} onClick={() => setIsEditing(true)}>
+                        <InlineStack align="space-between">
+                          <BlockStack gap="200">
+                            {renderOptionLabel(recordOption!.label, "primary")}
+                            {recordOption!.secondaryLabel && renderOptionLabel(recordOption!.secondaryLabel, "secondary")}
+                          </BlockStack>
+                          {recordOption!.tertiaryLabel && renderOptionLabel(recordOption!.tertiaryLabel, "tertiary")}
+                        </InlineStack>
+                      </ResourceItem>
                     </BlockStack>
-                    {recordOption!.tertiaryLabel && renderOptionLabel(recordOption!.tertiaryLabel, "tertiary")}
-                  </InlineStack>
-                </>
-              )
+                  ) : (
+                    <>
+                      <Box padding="300">
+                        <BlockStack gap="300">
+                          {props.children}
+                          <InlineStack align="space-between">
+                            <Button tone="critical" onClick={removeRecord}>
+                              Remove
+                            </Button>
+                            <Button variant="primary" onClick={confirmEdit}>
+                              Confirm
+                            </Button>
+                          </InlineStack>
+                        </BlockStack>
+                      </Box>
+                    </>
+                  )}
+                </Box>
+              </>
             ) : (
-              <RelatedModelOptionsPopover
-                active={searchOpen}
-                activator={
-                  <RelatedModelOptionsSearch
-                    modelName={childName}
-                    value={search.value}
-                    onChange={search.set}
-                    onFocus={() => setSearchOpen(true)}
-                  />
-                }
-                onClose={() => setSearchOpen(false)}
-                onScrolledToBottom={pagination.loadNextPage}
-                actions={[
-                  <Listbox.Action key="add-new-record" value="add-new-record" divider>
-                    <InlineStack gap="200">
-                      <Icon source={PlusCircleIcon} />
-                      Add {childName}
-                    </InlineStack>
-                  </Listbox.Action>,
-                ]}
-                options={searchFilterOptions}
-                records={records}
-                onSelect={(record) => {
-                  if (record.id === "add-new-record") {
-                    setModalOpen(true);
-                  } else {
-                    setValue(path, { ...record, _link: record.id });
-                  }
-                }}
-                isLoading={isLoading}
-                autoSelection={AutoSelection.None}
-              />
+              <EmptyFormComponent form={hasOneForm} />
             )}
           </BlockStack>
-          <Modal open={modalOpen} onClose={() => setModalOpen(false)} title={`Add ${childName}`}>
-            <Modal.Section>{props.children}</Modal.Section>
-            <Modal.Section>
-              <div style={{ float: "right", paddingBottom: "16px" }}>
-                <ButtonGroup>
-                  <Button variant="secondary" onClick={() => setModalOpen(false)}>
-                    Cancel
-                  </Button>
-                  <Button
-                    variant="primary"
-                    onClick={() => {
-                      const { _unlink, _link, ...rest } = getValues(path);
-                      setValue(path, rest);
-                      setModalOpen(false);
-                    }}
-                  >
-                    Save
-                  </Button>
-                </ButtonGroup>
-              </div>
-            </Modal.Section>
-          </Modal>
         </RelationshipContext.Provider>
       </>
     );
   }
 );
+
+/**
+ * TODO - If this gets enabled fix this:
+ *    - Workflow
+ *      - existingSelectedRecord
+ *      - removeSelection
+ *      - reselectTheSameRecordInDropdown
+ *      - removeSelection
+ *      - send
+ *    - Right now, this workflow sends null as the hasOne field value, which does nothing. It should be _unlink
+ */
+const canSelectExistingRecord = false;
+
+const EmptyFormComponent = (props: { form: ReturnType<typeof useHasOneForm> }) => {
+  const { form } = props;
+
+  if (canSelectExistingRecord) {
+    return <SearchableSingleRelatedModelRecordSelector form={form} override={{ addNewRecord: form.startCreatingRecord }} />;
+  }
+  return <CreateNewChildButton form={form} />;
+};
+
+const CreateNewChildButton = (props: { form: ReturnType<typeof useHasOneForm> }) => {
+  const { relatedModelName, startCreatingRecord } = props.form;
+
+  return (
+    <>
+      <Box borderColor="border" borderWidth="025" borderRadius="200">
+        <BlockStack as="ul">
+          <ResourceItem id={"add"} onClick={startCreatingRecord}>
+            <InlineStack align="start" gap="200">
+              <Box>
+                <Icon source={PlusCircleIcon} />
+              </Box>
+              <Text as="p" variant="bodyMd" fontWeight="semibold">
+                Add {relatedModelName}
+              </Text>
+            </InlineStack>
+          </ResourceItem>
+        </BlockStack>
+      </Box>
+    </>
+  );
+};

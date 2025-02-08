@@ -1,12 +1,9 @@
-import { useAutoRelationship, useRelationshipContext } from "./auto/hooks/useAutoRelationship.js";
+import { useCallback, useMemo } from "react";
+import { useAutoFormMetadata } from "./auto/AutoFormContext.js";
 import { useHasOneController } from "./auto/hooks/useHasOneController.js";
-import { getRecordAsOption, useOptionLabelForField } from "./auto/hooks/useRelatedModel.js";
 import { useRequiredChildComponentsValidator } from "./auto/hooks/useRequiredChildComponentsValidator.js";
 import type { OptionLabel } from "./auto/interfaces/AutoRelationshipInputProps.js";
-import { useFormContext } from "./useActionForm.js";
-import { get } from "./utils.js";
-
-import { useEffect, useState } from "react";
+import { useSingleRelatedRecordRelationshipForm } from "./useSingleRelatedRecordRelationshipForm.js";
 
 export const useHasOneForm = (props: {
   field: string;
@@ -16,73 +13,101 @@ export const useHasOneForm = (props: {
   tertiaryLabel?: OptionLabel;
 }) => {
   useRequiredChildComponentsValidator(props, "AutoHasOneForm");
-  const { path, metadata } = useAutoRelationship({ field: props.field });
-  const {
-    setValue,
-    getValues,
-    formState: { defaultValues, submitCount, isSubmitSuccessful },
-  } = useFormContext();
-
   const { record, relatedModelOptions } = useHasOneController(props);
-  const [actionsOpen, setActionsOpen] = useState(false);
-  const [searchOpen, setSearchOpen] = useState(false);
-  const [modalOpen, setModalOpen] = useState(false);
 
-  const {
-    search,
-    searchFilterOptions,
-    pagination,
-    relatedModel: { records, fetching: isLoading },
-  } = relatedModelOptions;
+  const form = useSingleRelatedRecordRelationshipForm({ ...props, relationshipController: { record, relatedModelOptions } });
 
-  const relationshipContext = useRelationshipContext();
-  const pathPrefix = relationshipContext?.transformPath ? relationshipContext.transformPath(props.field) : props.field;
-  const metaDataPathPrefix = relationshipContext?.transformMetadataPath
-    ? relationshipContext.transformMetadataPath(props.field)
-    : pathPrefix;
+  const { isEditing, setIsEditing, setActionsOpen, setValue, path, metaDataPathPrefix } = form;
+  const { fields, model } = useAutoFormMetadata();
 
-  const defaultRecordId = get(defaultValues, path)?.id;
-
-  // each time the form is submitted if the child record is created we need to set the id to the default record id
-  // that comes from the response to the action mutation
-  useEffect(() => {
-    if (isSubmitSuccessful && record && !record.id && !("_link" in record) && !("_unlink" in record) && defaultRecordId) {
-      setValue(path + ".id", defaultRecordId);
+  const newRecordInitialValues = useMemo(() => {
+    if (!model) {
+      return [];
     }
-  }, [record, defaultRecordId, path, setValue, submitCount, isSubmitSuccessful]);
+    const fullPathPrefix = model.apiIdentifier + "." + metaDataPathPrefix + ".";
+    const fieldsToInitialize = fields
+      .filter((field) => field.path.startsWith(fullPathPrefix))
+      .map((field) => field.path.replace(fullPathPrefix, ""));
 
-  const primaryLabel = useOptionLabelForField(props.field, props.primaryLabel);
-  const hasRecord = !!(record && !("_unlink" in record && record._unlink));
-  const recordOption = record ? getRecordAsOption(record, primaryLabel, props.secondaryLabel, props.tertiaryLabel) : null;
+    // Created records always start with all empty fields
+    const nullInitialValues = Object.fromEntries(fieldsToInitialize.map((key) => [key, null]));
 
-  const childName = metadata.name ?? "Unknown";
+    return nullInitialValues;
+  }, [fields, model?.apiIdentifier, metaDataPathPrefix]);
+
+  /**
+   * Initializes the form state to create a new record
+   * If the current record was previously linked, then it will be unlinked
+   */
+  const startCreatingRecord = useCallback(() => {
+    setIsEditing(true);
+    setActionsOpen(false);
+
+    // Maintain the unlink value if we are replacing the existing related record with a new one
+    const unlinkValue = record?._unlink ?? record?.id;
+
+    setValue(path, {
+      ...newRecordInitialValues,
+      ...(unlinkValue
+        ? {
+            __replace: true, // To indicate that we are replacing the current record with a new one
+            _unlink: unlinkValue,
+          }
+        : {}),
+    });
+  }, [setIsEditing, setActionsOpen, newRecordInitialValues, path, setValue, record]);
+
+  const confirmEdit = useCallback(() => {
+    setIsEditing(false);
+    setActionsOpen(false);
+  }, [setIsEditing, setActionsOpen]);
+
+  /**
+   * Unlinks existing related records and removes created & selected records from the form state
+   */
+  const removeRecord = useCallback(() => {
+    setIsEditing(false);
+    setActionsOpen(false);
+
+    if (!record) {
+      return;
+    }
+
+    const { _unlink, _link, id: recordId } = record;
+    const isRecordSelectedFromDropdown = !!_link;
+    const unlinkValue = _unlink ?? recordId;
+
+    setValue(
+      path,
+      unlinkValue && !isRecordSelectedFromDropdown
+        ? { _unlink: unlinkValue } // unlinking he related record that is already linked in the API DB
+        : null // Removing the created record in the form that is not in the API DB
+    );
+  }, [record, path, setValue, setIsEditing, setActionsOpen]);
+
+  const isNewRecordThatUnlinksExisting = useMemo(() => {
+    if (!record) {
+      return false;
+    }
+    const hasUnlink = "_unlink" in record && record._unlink;
+    if (!hasUnlink) {
+      return false;
+    }
+
+    const { __typename, _unlink, ...otherFields } = record;
+    return Object.keys(otherFields).length > 0;
+  }, [record]);
+
+  const hasRecord = !!(record && (!("_unlink" in record && record._unlink) || isNewRecordThatUnlinksExisting));
+  const isCreatingRecord = isEditing && !hasRecord;
 
   return {
-    path,
-    metadata,
-    setValue,
-    record,
-    relatedModelOptions,
-    actionsOpen,
-    setActionsOpen,
-    searchOpen,
-    setSearchOpen,
-    modalOpen,
-    setModalOpen,
-    search,
-    searchFilterOptions,
-    pagination,
-    records,
-    isLoading,
-    pathPrefix,
-    metaDataPathPrefix,
+    ...form,
+    confirmEdit,
+    removeRecord,
+    setIsEditing,
+    startCreatingRecord,
     hasRecord,
-    recordOption,
-    childName,
-    defaultRecordId,
-    primaryLabel,
-    secondaryLabel: props.secondaryLabel,
-    tertiaryLabel: props.tertiaryLabel,
-    getValues,
+    isCreatingRecord,
   };
 };

@@ -468,8 +468,22 @@ const getHasOneGraphqlApiInput = (props: { input: any; result: any; defaultValue
 
   const currentId = currentValue?.id;
   const newId = rest._link ?? input.id;
+
   if ("_unlink" in input && input._unlink) {
-    return { _unlink: input._unlink };
+    const {
+      _unlink,
+      __replace, // To indicate that we are replacing the current record with a new one
+      ...nonUnlinkParams
+    } = input;
+
+    const additionalActions =
+      !__replace || Object.keys(nonUnlinkParams).length === 0
+        ? {}
+        : "id" in nonUnlinkParams && nonUnlinkParams.id
+        ? { update: nonUnlinkParams }
+        : { create: nonUnlinkParams };
+
+    return { _unlink, ...additionalActions };
   }
 
   const unlink = currentId && currentId !== newId ? { _unlink: currentId } : undefined;

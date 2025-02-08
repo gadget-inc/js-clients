@@ -1,7 +1,6 @@
 import React from "react";
 import { api } from "../../../support/api.js";
 import { describeForEachAutoAdapter } from "../../../support/auto.js";
-import { SUITE_NAMES } from "../../../support/constants.js";
 
 const originalDoodadLinkedToWidget = {
   id: "1",
@@ -19,10 +18,6 @@ describeForEachAutoAdapter(
       cy.intercept({ method: "POST", url: `${api.connection.endpoint}?operation=ModelActionMetadata` }, RealWidgetMetadata).as(
         "ModelCreateActionMetadata"
       );
-    };
-
-    const getDropdownMenuTriggerSelector = () => {
-      return name == SUITE_NAMES.SHADCN ? "[data-testid='widget.doodad-dropdown-menu-trigger']" : ".Polaris-Button__Icon";
     };
 
     const expectUpdateActionSubmissionVariables = (expectedQueryValue?: any) => {
@@ -131,12 +126,11 @@ describeForEachAutoAdapter(
       cy.contains("Weight:333"); // secondary label
       cy.contains("Large"); // tertiary label
 
-      cy.get(getDropdownMenuTriggerSelector()).first().click();
-      cy.contains("Edit doodad").click();
+      cy.contains("Doodad 1").click();
 
       cy.clickAndType('input[id="widget.doodad.name"]', "Doodad 1 - updated", true);
       cy.clickAndType('input[id="widget.doodad.weight"]', "333123", true);
-      cy.contains("Save").click();
+      cy.contains("Confirm").click();
 
       expectUpdateActionSubmissionVariables({
         id: "42",
@@ -175,13 +169,59 @@ describeForEachAutoAdapter(
       cy.contains("Weight:333"); // secondary label
       cy.contains("Large"); // tertiary label
 
-      cy.get(getDropdownMenuTriggerSelector()).first().click();
-      cy.contains("Remove doodad").click();
+      cy.contains("Doodad 1").click();
+      cy.contains("Remove").click();
 
       expectUpdateActionSubmissionVariables({
         id: "42",
         widget: {
           doodad: { _unlink: "1" },
+        },
+      });
+      cy.get('[id="submit"]').click();
+      cy.wait("@updateWidget");
+    });
+
+    it("can unlink a hasOne relationship and replace it with a newly selected record", () => {
+      cy.mountWithWrapper(
+        <AutoForm action={api.widget.update} findBy="42">
+          <SubmitResultBanner />
+          <AutoHasOneForm
+            field="doodad"
+            primaryLabel="name"
+            secondaryLabel={(record: any) => `Weight:${record.weight} (${record.active})`}
+            tertiaryLabel="size"
+          >
+            <AutoInput field="name" />
+            <AutoInput field="weight" />
+            <AutoInput field="active" />
+            <AutoInput field="size" />
+          </AutoHasOneForm>
+          <AutoSubmit id="submit" />
+        </AutoForm>,
+        wrapper
+      );
+
+      cy.wait("@ModelCreateActionMetadata");
+      cy.wait("@widget");
+
+      cy.contains("Doodad 1"); // primary label
+      cy.contains("Weight:333"); // secondary label
+      cy.contains("Large"); // tertiary label
+
+      cy.contains("Doodad 1").click();
+
+      cy.contains("Remove").click();
+      cy.contains("Add Doodad").click();
+
+      cy.clickAndType('input[id="widget.doodad.name"]', "NEW Doodad", true);
+      cy.clickAndType('input[id="widget.doodad.weight"]', "987654321", true);
+      cy.contains("Confirm").click();
+
+      expectUpdateActionSubmissionVariables({
+        id: "42",
+        widget: {
+          doodad: { _unlink: "1", create: { name: "NEW Doodad", weight: 987654321, active: null, size: null } },
         },
       });
       cy.get('[id="submit"]').click();

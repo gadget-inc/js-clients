@@ -1,25 +1,11 @@
-import {
-  ActionList,
-  AutoSelection,
-  BlockStack,
-  Button,
-  ButtonGroup,
-  Divider,
-  Icon,
-  InlineGrid,
-  InlineStack,
-  Listbox,
-  Modal,
-  Popover,
-  Text,
-} from "@shopify/polaris";
-import { MenuHorizontalIcon, PlusCircleIcon } from "@shopify/polaris-icons";
+import { ActionList, BlockStack, Button, ButtonGroup, Divider, InlineGrid, InlineStack, Modal, Popover, Text } from "@shopify/polaris";
+import { MenuHorizontalIcon } from "@shopify/polaris-icons";
 import React from "react";
 import { useBelongsToForm } from "../../../../useBelongsToForm.js";
 import { autoRelationshipForm } from "../../../AutoInput.js";
 import { RelationshipContext } from "../../../hooks/useAutoRelationship.js";
 import type { OptionLabel } from "../../../interfaces/AutoRelationshipInputProps.js";
-import { RelatedModelOptionsPopover, RelatedModelOptionsSearch } from "./RelatedModelOptions.js";
+import { SearchableSingleRelatedModelRecordSelector } from "./SearchableSingleRelatedModelRecordSelector.js";
 import { renderOptionLabel } from "./utils.js";
 
 export const PolarisAutoBelongsToForm = autoRelationshipForm(
@@ -27,33 +13,27 @@ export const PolarisAutoBelongsToForm = autoRelationshipForm(
     field: string;
     children: React.ReactNode;
     label?: React.ReactNode;
-    renderSelectedRecord?: (record: Record<string, any>) => React.ReactNode;
     primaryLabel?: OptionLabel;
     secondaryLabel?: OptionLabel;
     tertiaryLabel?: OptionLabel;
   }) => {
+    const belongsToForm = useBelongsToForm(props);
+
     const {
       record,
       actionsOpen,
-      modalOpen,
+      isEditing,
       setActionsOpen,
-      searchOpen,
-      setSearchOpen,
-      setModalOpen,
-      search,
-      searchFilterOptions,
-      pagination,
-      records,
-      isLoading,
+      setIsEditing,
       pathPrefix,
       hasRecord,
       recordOption,
-      parentName,
+      relatedModelName: parentName,
       path,
       setValue,
       getValues,
       metaDataPathPrefix,
-    } = useBelongsToForm(props);
+    } = belongsToForm;
 
     return (
       <>
@@ -76,7 +56,7 @@ export const PolarisAutoBelongsToForm = autoRelationshipForm(
                     {
                       content: `Edit ${parentName.toLocaleLowerCase()}`,
                       onAction: () => {
-                        setModalOpen(true);
+                        setIsEditing(true);
                         setActionsOpen(false);
                       },
                     },
@@ -96,56 +76,21 @@ export const PolarisAutoBelongsToForm = autoRelationshipForm(
             )}
           </InlineGrid>
           {hasRecord ? (
-            props.renderSelectedRecord ? (
-              props.renderSelectedRecord(record)
-            ) : (
-              <>
-                <Divider />
-                <InlineStack align="space-between">
-                  <BlockStack gap="200">
-                    {renderOptionLabel(recordOption!.label, "primary")}
-                    {recordOption!.secondaryLabel && renderOptionLabel(recordOption!.secondaryLabel, "secondary")}
-                  </BlockStack>
-                  {recordOption!.tertiaryLabel && renderOptionLabel(recordOption!.tertiaryLabel, "tertiary")}
-                </InlineStack>
-              </>
-            )
+            <>
+              <Divider />
+              <InlineStack align="space-between">
+                <BlockStack gap="200">
+                  {renderOptionLabel(recordOption!.label, "primary")}
+                  {recordOption!.secondaryLabel && renderOptionLabel(recordOption!.secondaryLabel, "secondary")}
+                </BlockStack>
+                {recordOption!.tertiaryLabel && renderOptionLabel(recordOption!.tertiaryLabel, "tertiary")}
+              </InlineStack>
+            </>
           ) : (
-            <RelatedModelOptionsPopover
-              active={searchOpen}
-              activator={
-                <RelatedModelOptionsSearch
-                  modelName={parentName}
-                  value={search.value}
-                  onChange={search.set}
-                  onFocus={() => setSearchOpen(true)}
-                />
-              }
-              onClose={() => setSearchOpen(false)}
-              onScrolledToBottom={pagination.loadNextPage}
-              actions={[
-                <Listbox.Action key="add-new-record" value="add-new-record" divider>
-                  <InlineStack gap="200">
-                    <Icon source={PlusCircleIcon} />
-                    Add {parentName}
-                  </InlineStack>
-                </Listbox.Action>,
-              ]}
-              options={searchFilterOptions}
-              records={records}
-              onSelect={(record) => {
-                if (record.id === "add-new-record") {
-                  setModalOpen(true);
-                } else {
-                  setValue(path, { ...record, _link: record.id });
-                }
-              }}
-              isLoading={isLoading}
-              autoSelection={AutoSelection.None}
-            />
+            <SearchableSingleRelatedModelRecordSelector form={belongsToForm} />
           )}
         </BlockStack>
-        <Modal open={modalOpen} onClose={() => setModalOpen(false)} title={`Add ${parentName}`}>
+        <Modal open={isEditing} onClose={() => setIsEditing(false)} title={`Add ${parentName}`}>
           <RelationshipContext.Provider
             value={{ transformPath: (path) => pathPrefix + "." + path, transformMetadataPath: (path) => metaDataPathPrefix + "." + path }}
           >
@@ -153,7 +98,7 @@ export const PolarisAutoBelongsToForm = autoRelationshipForm(
             <Modal.Section>
               <div style={{ float: "right", paddingBottom: "16px" }}>
                 <ButtonGroup>
-                  <Button variant="secondary" onClick={() => setModalOpen(false)}>
+                  <Button variant="secondary" onClick={() => setIsEditing(false)}>
                     Cancel
                   </Button>
                   <Button
@@ -166,7 +111,7 @@ export const PolarisAutoBelongsToForm = autoRelationshipForm(
                       } else {
                         setValue(path, rest);
                       }
-                      setModalOpen(false);
+                      setIsEditing(false);
                     }}
                   >
                     Save
