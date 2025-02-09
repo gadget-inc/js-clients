@@ -34,9 +34,15 @@ export const PolarisAutoDateTimePicker = autoInput(
     const { field: fieldProps, fieldState } = useController({ name: path });
 
     const { onChange, value } = props;
+
     const localTz = Intl.DateTimeFormat().resolvedOptions().timeZone;
     const localTime = useMemo(() => {
-      return value ? value : isValidDate(new Date(fieldProps.value)) ? new Date(fieldProps.value) : undefined;
+      if (value) return value;
+
+      if (fieldProps.value == null) return undefined; // Prevents null from becoming 1970
+
+      const date = new Date(fieldProps.value);
+      return isValidDate(date) ? date : undefined;
     }, [value, fieldProps.value]);
 
     const [datePopoverActive, setDatePopoverActive] = useState(false);
