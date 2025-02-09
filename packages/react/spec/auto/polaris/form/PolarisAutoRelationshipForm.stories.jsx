@@ -198,6 +198,7 @@ const ExampleCourseCreateRelatedForm = (props) => {
 
               {/* Fields on the sibling model. No prefix */}
               <PolarisAutoInput field="firstName" />
+              <PolarisAutoInput field="lastName" />
             </InlineStack>
           </PolarisAutoHasManyThroughForm>
         </Card>
