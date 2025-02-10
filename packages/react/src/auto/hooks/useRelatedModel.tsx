@@ -7,7 +7,7 @@ import { useDebouncedSearch } from "../../useDebouncedSearch.js";
 import { useFindMany } from "../../useFindMany.js";
 import { sortByProperty, uniqByProperty } from "../../utils.js";
 import { useAutoFormMetadata } from "../AutoFormContext.js";
-import type { Option, OptionLabel } from "../interfaces/AutoRelationshipInputProps.js";
+import type { Option, OptionLabel, OptionFilter } from "../interfaces/AutoRelationshipInputProps.js";
 import type { RelationshipFieldConfig } from "../interfaces/RelationshipFieldConfig.js";
 import { useFieldMetadata } from "./useFieldMetadata.js";
 import { useModelManager } from "./useModelManager.js";
@@ -15,7 +15,7 @@ import { useModelManager } from "./useModelManager.js";
 export const optionRecordsToLoadCount = 25;
 export const selectedRecordsToLoadCount = 25;
 
-const useRelatedModelRecords = (props: { field: string; optionLabel?: OptionLabel }) => {
+const useRelatedModelRecords = (props: { field: string; optionLabel?: OptionLabel; optionFilter?: OptionFilter }) => {
   const { field } = props;
   const { metadata } = useFieldMetadata(field);
   const { findBy } = useAutoFormMetadata();
@@ -31,9 +31,11 @@ const useRelatedModelRecords = (props: { field: string; optionLabel?: OptionLabe
   const relatedModelRecords = useAllRelatedModelRecords({
     relatedModel: { apiIdentifier: relatedModelApiIdentifier!, namespace: relatedModelNamespace },
 
-    filter: isHasManyField
-      ? omitRelatedModelRecordsAssociatedWithOtherRecords({ enabled: false, relatedModelInverseFieldApiId, findBy })
-      : undefined,
+    filter:
+      props?.optionFilter ??
+      (isHasManyField
+        ? omitRelatedModelRecordsAssociatedWithOtherRecords({ enabled: false, relatedModelInverseFieldApiId, findBy })
+        : undefined),
   });
 
   return {
@@ -71,7 +73,7 @@ export const useOptionLabelForField = (field: string, optionLabel?: OptionLabel)
 
   return assert(
     optionLabel ?? relationshipFieldConfig.relatedModel?.defaultDisplayField.apiIdentifier,
-    "Option label is required for relationships"
+    "Option label is required for relationships",
   );
 };
 
@@ -80,6 +82,7 @@ export const useRelatedModelOptions = (props: {
   optionLabel?: OptionLabel; // The label to display for each related model record
   secondaryLabel?: OptionLabel;
   tertiaryLabel?: OptionLabel;
+  optionFilter?: OptionFilter;
 }) => {
   const { field } = props;
 
@@ -120,8 +123,8 @@ const getRecordLabel = (record: Record<string, any>, optionLabel: OptionLabel): 
   typeof optionLabel === "string"
     ? record[optionLabel] // Related model field API id
     : Array.isArray(optionLabel)
-    ? optionLabel.map((fieldName) => record[fieldName]).join(" ")
-    : optionLabel(record); // Callback on the whole related model record
+      ? optionLabel.map((fieldName) => record[fieldName]).join(" ")
+      : optionLabel(record); // Callback on the whole related model record
 
 const getRecordIdsAsString = (records?: { map: (mapperFunction: (record: { id: string }) => string) => string[] }) =>
   records
@@ -133,7 +136,7 @@ export const getRecordAsOption = (
   record: Record<string, any>,
   optionLabel: OptionLabel,
   secondaryLabel?: OptionLabel,
-  tertiaryLabel?: OptionLabel
+  tertiaryLabel?: OptionLabel,
 ): Option => {
   return {
     id: record.id as string,
@@ -147,7 +150,7 @@ export const getRecordsAsOptions = (
   records: Record<string, any>[],
   optionLabel: OptionLabel,
   secondaryLabel?: OptionLabel,
-  tertiaryLabel?: OptionLabel
+  tertiaryLabel?: OptionLabel,
 ) => {
   return records?.map((record: Record<string, any>) => getRecordAsOption(record, optionLabel, secondaryLabel, tertiaryLabel)) ?? [];
 };
@@ -169,7 +172,7 @@ const useAllRelatedModelRecords = (props: {
         acc[fieldName] = true;
         return acc;
       },
-      { id: true } as FieldSelection
+      { id: true } as FieldSelection,
     );
   }
 
