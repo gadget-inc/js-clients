@@ -73,7 +73,7 @@ export const useOptionLabelForField = (field: string, optionLabel?: OptionLabel)
 
   return assert(
     optionLabel ?? relationshipFieldConfig.relatedModel?.defaultDisplayField.apiIdentifier,
-    "Option label is required for relationships"
+    "Option label is required for relationships",
   );
 };
 
@@ -123,8 +123,8 @@ const getRecordLabel = (record: Record<string, any>, optionLabel: OptionLabel): 
   typeof optionLabel === "string"
     ? record[optionLabel] // Related model field API id
     : Array.isArray(optionLabel)
-    ? optionLabel.map((fieldName) => record[fieldName]).join(" ")
-    : optionLabel(record); // Callback on the whole related model record
+      ? optionLabel.map((fieldName) => record[fieldName]).join(" ")
+      : optionLabel(record); // Callback on the whole related model record
 
 const getRecordIdsAsString = (records?: { map: (mapperFunction: (record: { id: string }) => string) => string[] }) =>
   records
@@ -136,7 +136,7 @@ export const getRecordAsOption = (
   record: Record<string, any>,
   optionLabel: OptionLabel,
   secondaryLabel?: OptionLabel,
-  tertiaryLabel?: OptionLabel
+  tertiaryLabel?: OptionLabel,
 ): Option => {
   return {
     id: record.id as string,
@@ -150,7 +150,7 @@ export const getRecordsAsOptions = (
   records: Record<string, any>[],
   optionLabel: OptionLabel,
   secondaryLabel?: OptionLabel,
-  tertiaryLabel?: OptionLabel
+  tertiaryLabel?: OptionLabel,
 ) => {
   return records?.map((record: Record<string, any>) => getRecordAsOption(record, optionLabel, secondaryLabel, tertiaryLabel)) ?? [];
 };
@@ -172,7 +172,7 @@ const useAllRelatedModelRecords = (props: {
         acc[fieldName] = true;
         return acc;
       },
-      { id: true } as FieldSelection
+      { id: true } as FieldSelection,
     );
   }
 
