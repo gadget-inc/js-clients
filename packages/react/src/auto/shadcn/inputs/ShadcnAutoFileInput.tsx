@@ -23,8 +23,6 @@ export const makeShadcnAutoFileInput = ({ Input, Label, Button }: Pick<ShadcnEle
         control,
       });
 
-    console.log(validations, "What is the validation here", fieldApiIdentifier);
-
     const fileUploadContainer = useMemo(() => {
       if (fieldProps.value) return null;
 
@@ -32,8 +30,6 @@ export const makeShadcnAutoFileInput = ({ Input, Label, Button }: Pick<ShadcnEle
       if (validations.onlyImages) {
         actionHintParts.push(`.jpg, .webp, .svg${validations.onlyImages.allowAnimatedImages ? ", .gif" : ""}, and .png`);
       }
-
-      console.log(actionHintParts, "What is the action here");
 
       if (validations.fileSize) {
         const validation = validations.fileSize;

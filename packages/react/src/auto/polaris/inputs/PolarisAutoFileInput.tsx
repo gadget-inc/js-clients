@@ -17,8 +17,6 @@ export const PolarisAutoFileInput = autoInput((props: { field: string; control?:
       control,
     });
 
-  console.log(validations, "What is the validation here", fieldApiIdentifier);
-
   const fileUploadContainer = useMemo(() => {
     if (fieldProps.value) return null;
 
