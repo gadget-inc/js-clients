@@ -10,9 +10,8 @@ import {
   zonedTimeToUtc,
 } from "../../../dateTimeUtils.js";
 import type { GadgetDateTimeConfig } from "../../../internal/gql/graphql.js";
-import { useController } from "../../../useActionForm.js";
+import { useDateTimeField } from "../../../useDateTimeField.js";
 import { autoInput } from "../../AutoInput.js";
-import { useFieldMetadata } from "../../hooks/useFieldMetadata.js";
 import { ShadcnRequired } from "../ShadcnRequired.js";
 import type { ShadcnElements } from "../elements.js";
 
@@ -61,15 +60,12 @@ export const makeShadcnAutoDateTimePicker = ({
     datePickerProps?: Partial<DatePickerProps>;
     timePickerProps?: { label?: string; placeholder?: string };
   }) {
-    const { path, metadata } = useFieldMetadata(props.field);
-    const { field: fieldProps, fieldState } = useController({ name: path });
-    const { onChange, value } = props;
     const [timeParseError, setTimeParseError] = useState(false);
-
-    const localTz = Intl.DateTimeFormat().resolvedOptions().timeZone;
-    const localTime = useMemo(() => {
-      return value ? value : isValidDate(new Date(fieldProps.value)) ? new Date(fieldProps.value) : undefined;
-    }, [value, fieldProps.value]);
+    const { localTz, localTime, onChange, value, fieldProps, metadata, fieldState } = useDateTimeField({
+      field: props.field,
+      value: props.value,
+      onChange: props?.onChange,
+    });
 
     const config = metadata.configuration;
 
