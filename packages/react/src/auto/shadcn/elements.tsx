@@ -88,9 +88,6 @@ export type AlertTitleProps = BaseProps;
 /** The props that an alert description component injected into autocomponent's shadcn must support */
 export type AlertDescriptionProps = BaseProps;
 
-/** The props that a form component injected into autocomponent's shadcn must support */
-export type FormProps = BaseProps;
-
 /** The props that an input component injected into autocomponent's shadcn must support */
 export type InputProps = React.InputHTMLAttributes<HTMLInputElement>;
 
