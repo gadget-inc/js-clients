@@ -1,7 +1,7 @@
 import type { DatePickerProps, TextFieldProps } from "@shopify/polaris";
 import { DatePicker, Icon, InlineStack, Popover, TextField } from "@shopify/polaris";
 import { CalendarIcon } from "@shopify/polaris-icons";
-import React, { useCallback, useMemo, useState } from "react";
+import React, { useCallback, useState } from "react";
 import {
   copyTime,
   formatShortDateString,
@@ -11,9 +11,8 @@ import {
   zonedTimeToUtc,
 } from "../../../dateTimeUtils.js";
 import type { GadgetDateTimeConfig } from "../../../internal/gql/graphql.js";
-import { useController } from "../../../useActionForm.js";
+import { useDateTimeField } from "../../../useDateTimeField.js";
 import { autoInput } from "../../AutoInput.js";
-import { useFieldMetadata } from "../../hooks/useFieldMetadata.js";
 import PolarisAutoTimePicker from "./PolarisAutoTimePicker.js";
 
 export const PolarisAutoDateTimePicker = autoInput(
@@ -29,21 +28,11 @@ export const PolarisAutoDateTimePicker = autoInput(
     datePickerProps?: Partial<DatePickerProps>;
     timePickerProps?: Partial<TextFieldProps>;
   }) => {
-    const { path, metadata } = useFieldMetadata(props.field);
-
-    const { field: fieldProps, fieldState } = useController({ name: path });
-
-    const { onChange, value } = props;
-
-    const localTz = Intl.DateTimeFormat().resolvedOptions().timeZone;
-    const localTime = useMemo(() => {
-      if (value) return value;
-
-      if (fieldProps.value == null) return undefined; // Prevents null from becoming 1970
-
-      const date = new Date(fieldProps.value);
-      return isValidDate(date) ? date : undefined;
-    }, [value, fieldProps.value]);
+    const { localTz, localTime, onChange, value, fieldProps, metadata, fieldState } = useDateTimeField({
+      field: props.field,
+      value: props.value,
+      onChange: props?.onChange,
+    });
 
     const [datePopoverActive, setDatePopoverActive] = useState(false);
 
