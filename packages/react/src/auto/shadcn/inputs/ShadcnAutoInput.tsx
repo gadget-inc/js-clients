@@ -114,6 +114,8 @@ export const makeShadcnAutoInput = (
     AutoInput,
     AutoBelongsToInput,
     AutoHasManyInput,
+    AutoHasOneInput,
+    AutoHasManyThroughInput,
     AutoRolesInput,
     AutoEnumInput,
     AutoJSONInput,
