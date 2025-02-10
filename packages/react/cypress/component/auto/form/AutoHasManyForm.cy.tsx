@@ -111,7 +111,13 @@ describeForEachAutoAdapter(
       cy.mountWithWrapper(
         <AutoForm action={api.widget.update} findBy="42">
           <SubmitResultBanner />
-          <AutoHasManyForm field="gizmos" primaryLabel="name" secondaryLabel="orientation">
+          <AutoHasManyForm
+            field="gizmos"
+            displayRecord={{
+              primary: "name",
+              secondary: "orientation",
+            }}
+          >
             <AutoInput field="name" />
             <AutoInput field="orientation" />
             <AutoInput field="attachment" />

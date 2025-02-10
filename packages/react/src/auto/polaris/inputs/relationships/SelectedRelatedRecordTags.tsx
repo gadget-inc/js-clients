@@ -22,7 +22,7 @@ export const SelectedRelatedRecordTags = (props: {
 }) => {
   const { selectedRecords, optionLabel, onRemoveRecord } = props;
 
-  const options = getRecordsAsOptions(selectedRecords, optionLabel);
+  const options = getRecordsAsOptions(selectedRecords, { primary: optionLabel });
 
   return options.length
     ? options.map((option) => {
@@ -34,7 +34,7 @@ export const SelectedRelatedRecordTags = (props: {
               onRemoveRecord(record ?? { id: option.id });
             }}
           >
-            {option.label ?? `id: ${option.id}`}
+            {option.primary ?? `id: ${option.id}`}
           </Tag>
         );
       })

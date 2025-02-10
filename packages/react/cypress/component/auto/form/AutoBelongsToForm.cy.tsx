@@ -102,7 +102,13 @@ describeForEachAutoAdapter(
       cy.mountWithWrapper(
         <AutoForm action={api.widget.update} findBy="42">
           <SubmitResultBanner />
-          <AutoBelongsToForm field="section" primaryLabel="name" secondaryLabel="label">
+          <AutoBelongsToForm
+            field="section"
+            displayRecord={{
+              primary: "name",
+              secondary: "label",
+            }}
+          >
             <AutoInput field="name" />
             <AutoInput field="label" />
           </AutoBelongsToForm>
@@ -139,7 +145,13 @@ describeForEachAutoAdapter(
       cy.mountWithWrapper(
         <AutoForm action={api.widget.update} findBy="42">
           <SubmitResultBanner />
-          <AutoBelongsToForm field="section" primaryLabel="name" secondaryLabel="label">
+          <AutoBelongsToForm
+            field="section"
+            displayRecord={{
+              primary: "name",
+              secondary: "label",
+            }}
+          >
             <AutoInput field="name" />
             <AutoInput field="label" />
           </AutoBelongsToForm>

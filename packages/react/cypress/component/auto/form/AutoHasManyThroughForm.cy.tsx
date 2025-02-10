@@ -69,9 +69,11 @@ describeForEachAutoAdapter(
           <AutoHasManyThroughForm
             field="students"
             selectPaths={["firstName", "lastName", "year", "department"]}
-            primaryLabel={["firstName", "lastName"]}
-            secondaryLabel={(record: any) => `Year: ${record.year}`}
-            tertiaryLabel="department"
+            displayRecord={{
+              primary: ["firstName", "lastName"],
+              secondary: (record: any) => `Year: ${record.year}`,
+              tertiary: "department",
+            }}
           >
             <AutoInput field="registration.effectiveFrom" />
             <AutoInput field="registration.effectiveTo" />

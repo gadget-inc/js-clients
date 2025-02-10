@@ -7,7 +7,12 @@ import { useDebouncedSearch } from "../../useDebouncedSearch.js";
 import { useFindMany } from "../../useFindMany.js";
 import { sortByProperty, uniqByProperty } from "../../utils.js";
 import { useAutoFormMetadata } from "../AutoFormContext.js";
-import type { Option, OptionLabel } from "../interfaces/AutoRelationshipInputProps.js";
+import type {
+  AutoRelationshipFormProps,
+  DisplayRecord,
+  DisplayedRecordOption,
+  OptionLabel,
+} from "../interfaces/AutoRelationshipInputProps.js";
 import type { RelationshipFieldConfig } from "../interfaces/RelationshipFieldConfig.js";
 import { useFieldMetadata } from "./useFieldMetadata.js";
 import { useModelManager } from "./useModelManager.js";
@@ -75,21 +80,23 @@ export const useOptionLabelForField = (field: string, optionLabel?: OptionLabel)
   );
 };
 
-export const useRelatedModelOptions = (props: {
-  field: string; // Field API identifier
-  optionLabel?: OptionLabel; // The label to display for each related model record
-  secondaryLabel?: OptionLabel;
-  tertiaryLabel?: OptionLabel;
-}) => {
-  const { field } = props;
+export const useRelatedModelOptions = (props: Omit<AutoRelationshipFormProps, "children" | "label">) => {
+  const { field, displayRecord } = props;
 
-  const optionLabel = useOptionLabelForField(field, props.optionLabel);
+  const optionLabel = useOptionLabelForField(field, displayRecord?.primary);
   const { relatedModelRecords } = useRelatedModelRecords(props);
 
   const { relatedModel, pagination, search } = relatedModelRecords;
 
   const getOptions = () => {
-    const options = uniqByProperty(getRecordsAsOptions(relatedModel.records, optionLabel, props.secondaryLabel, props.tertiaryLabel), "id");
+    const options = uniqByProperty(
+      getRecordsAsOptions(relatedModel.records, {
+        primary: optionLabel,
+        secondary: displayRecord?.secondary,
+        tertiary: displayRecord?.tertiary,
+      }),
+      "id"
+    );
 
     return options as ReturnType<typeof getRecordsAsOptions>;
   };
@@ -108,7 +115,7 @@ export const useRelatedModelOptions = (props: {
   return {
     options,
     searchFilterOptions: options.filter((option) => {
-      return search.value ? `${option.label}`.toLowerCase().includes(search.value.toLowerCase()) : true;
+      return search.value ? `${option.primary}`.toLowerCase().includes(search.value.toLowerCase()) : true;
     }),
     relatedModel,
     pagination,
@@ -129,27 +136,18 @@ const getRecordIdsAsString = (records?: { map: (mapperFunction: (record: { id: s
     .sort()
     .join(",");
 
-export const getRecordAsOption = (
-  record: Record<string, any>,
-  optionLabel: OptionLabel,
-  secondaryLabel?: OptionLabel,
-  tertiaryLabel?: OptionLabel
-): Option => {
+export const getRecordAsOption = (record: Record<string, any>, displayRecord: DisplayRecord): DisplayedRecordOption => {
+  const { primary, secondary, tertiary } = displayRecord;
   return {
     id: record.id as string,
-    label: getRecordLabel(record, optionLabel),
-    secondaryLabel: secondaryLabel ? getRecordLabel(record, secondaryLabel) : undefined,
-    tertiaryLabel: tertiaryLabel ? getRecordLabel(record, tertiaryLabel) : undefined,
+    primary: getRecordLabel(record, primary ?? "id"),
+    secondary: secondary ? getRecordLabel(record, secondary) : undefined,
+    tertiary: tertiary ? getRecordLabel(record, tertiary) : undefined,
   };
 };
 
-export const getRecordsAsOptions = (
-  records: Record<string, any>[],
-  optionLabel: OptionLabel,
-  secondaryLabel?: OptionLabel,
-  tertiaryLabel?: OptionLabel
-) => {
-  return records?.map((record: Record<string, any>) => getRecordAsOption(record, optionLabel, secondaryLabel, tertiaryLabel)) ?? [];
+export const getRecordsAsOptions = (records: Record<string, any>[], displayRecord: DisplayRecord) => {
+  return records?.map((record: Record<string, any>) => getRecordAsOption(record, displayRecord)) ?? [];
 };
 
 const useAllRelatedModelRecords = (props: {

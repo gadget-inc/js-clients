@@ -4,17 +4,10 @@ import { extractPathsFromChildren } from "./auto/AutoForm.js";
 import { useAutoRelationship, useRelationshipContext } from "./auto/hooks/useAutoRelationship.js";
 import { useHasManyThroughController } from "./auto/hooks/useHasManyThroughController.js";
 import { useOptionLabelForField } from "./auto/hooks/useRelatedModel.js";
-import type { OptionLabel } from "./auto/interfaces/AutoRelationshipInputProps.js";
+import type { AutoRelationshipFormProps } from "./auto/interfaces/AutoRelationshipInputProps.js";
 import { useFormContext } from "./useActionForm.js";
 
-export const useHasManyThroughForm = (props: {
-  field: string;
-  label?: React.ReactNode;
-  children: React.ReactNode;
-  primaryLabel?: OptionLabel;
-  secondaryLabel?: OptionLabel;
-  tertiaryLabel?: OptionLabel;
-}) => {
+export const useHasManyThroughForm = (props: AutoRelationshipFormProps) => {
   const { field, children } = props;
   const { metadata } = useAutoRelationship({ field });
   const { setValue } = useFormContext();
@@ -71,7 +64,7 @@ export const useHasManyThroughForm = (props: {
     });
   }, [fields, records]);
 
-  const primaryLabel = useOptionLabelForField(field, props.primaryLabel);
+  const primaryLabel = useOptionLabelForField(field, props.displayRecord?.primary);
 
   return {
     fields,

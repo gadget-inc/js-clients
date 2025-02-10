@@ -70,7 +70,6 @@ export const makeShadcnAutoRolesInput = ({
   });
 
   function AutoRolesInput(props: AutoRolesInputProps) {
-    const { field } = props;
     const { options, loading, rolesError, fieldError, selectedRoleKeys, fieldProps, metadata } = useRoleInputController(props);
 
     const callOnChange = useCallback(
@@ -98,7 +97,7 @@ export const makeShadcnAutoRolesInput = ({
       () =>
         options?.map((option) => ({
           id: option.value,
-          label: option.label,
+          primary: option.label,
         })) ?? [],
       [options]
     );
@@ -107,7 +106,7 @@ export const makeShadcnAutoRolesInput = ({
       () =>
         options?.map((option) => ({
           id: option.value,
-          label: option.label,
+          primary: option.label,
           value: option.value,
         })) ?? [],
       [options]

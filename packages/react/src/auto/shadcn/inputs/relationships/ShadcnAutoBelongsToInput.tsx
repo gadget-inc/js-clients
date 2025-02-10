@@ -62,12 +62,12 @@ export const makeShadcnAutoBelongsToInput = ({
     } = useBelongsToInputController(props);
 
     const optionLabel = useOptionLabelForField(props.field, props.optionLabel);
-    const selectedOption = selectedRecord ? getRecordAsOption(selectedRecord, optionLabel) : null;
+    const selectedOption = selectedRecord ? getRecordAsOption(selectedRecord, { primary: optionLabel }) : null;
 
     const selectedRecordTag =
       selectedOption && selectedOption.id ? (
         <Badge key={`selectedRecordTag_${selectedOption.id}`} variant={"outline"}>
-          {selectedOption.label}
+          {selectedOption.primary}
           <Button
             aria-label={`Remove`}
             onClick={(e) => {

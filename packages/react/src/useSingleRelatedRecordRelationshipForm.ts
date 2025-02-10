@@ -1,21 +1,18 @@
 import { useEffect, useState } from "react";
 import { useAutoRelationship, useRelationshipContext } from "./auto/hooks/useAutoRelationship.js";
 import { getRecordAsOption, useOptionLabelForField, type useRelatedModelOptions } from "./auto/hooks/useRelatedModel.js";
-import type { OptionLabel } from "./auto/interfaces/AutoRelationshipInputProps.js";
+import type { AutoRelationshipFormProps } from "./auto/interfaces/AutoRelationshipInputProps.js";
 import { useFormContext } from "./useActionForm.js";
 import { get } from "./utils.js";
 
-export const useSingleRelatedRecordRelationshipForm = (props: {
-  field: string;
-  children: React.ReactNode;
-  primaryLabel?: OptionLabel;
-  secondaryLabel?: OptionLabel;
-  tertiaryLabel?: OptionLabel;
-  relationshipController: {
-    record: Record<string, any> | undefined;
-    relatedModelOptions: ReturnType<typeof useRelatedModelOptions>;
-  };
-}) => {
+export const useSingleRelatedRecordRelationshipForm = (
+  props: AutoRelationshipFormProps & {
+    relationshipController: {
+      record: Record<string, any> | undefined;
+      relatedModelOptions: ReturnType<typeof useRelatedModelOptions>;
+    };
+  }
+) => {
   const {
     field,
     relationshipController: { record, relatedModelOptions },
@@ -55,9 +52,15 @@ export const useSingleRelatedRecordRelationshipForm = (props: {
     }
   }, [record, defaultRecordId, path, setValue, submitCount, isSubmitSuccessful]);
 
-  const primaryLabel = useOptionLabelForField(props.field, props.primaryLabel);
+  const primaryLabel = useOptionLabelForField(props.field, props.displayRecord?.primary);
 
-  const recordOption = record ? getRecordAsOption(record, primaryLabel, props.secondaryLabel, props.tertiaryLabel) : null;
+  const recordOption = record
+    ? getRecordAsOption(record, {
+        primary: primaryLabel,
+        secondary: props.displayRecord?.secondary,
+        tertiary: props.displayRecord?.tertiary,
+      })
+    : null;
   const relatedModelName = metadata.name ?? "Unknown";
 
   return {
@@ -71,7 +74,6 @@ export const useSingleRelatedRecordRelationshipForm = (props: {
     pagination,
     path,
     pathPrefix,
-    primaryLabel,
     record,
     recordOption,
     records,
@@ -80,11 +82,9 @@ export const useSingleRelatedRecordRelationshipForm = (props: {
     search,
     searchFilterOptions,
     searchOpen,
-    secondaryLabel: props.secondaryLabel,
     setActionsOpen,
     setIsEditing,
     setSearchOpen,
     setValue,
-    tertiaryLabel: props.tertiaryLabel,
   };
 };

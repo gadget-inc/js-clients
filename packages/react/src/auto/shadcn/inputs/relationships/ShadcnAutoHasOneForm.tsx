@@ -3,7 +3,7 @@ import React, { useCallback } from "react";
 import { useHasOneForm } from "../../../../useHasOneForm.js";
 import { autoRelationshipForm } from "../../../AutoInput.js";
 import { RelationshipContext } from "../../../hooks/useAutoRelationship.js";
-import type { OptionLabel } from "../../../interfaces/AutoRelationshipInputProps.js";
+import type { AutoRelationshipFormProps } from "../../../interfaces/AutoRelationshipInputProps.js";
 import type { ShadcnElements } from "../../elements.js";
 import { makeShadcnRenderOptionLabel } from "../../utils.js";
 import { makeSearchableSingleRelatedModelRecordSelector } from "./SearchableSingleRelatedModelRecordSelector.js";
@@ -57,13 +57,7 @@ export const makeShadcnAutoHasOneForm = ({
     ScrollArea,
   });
 
-  function ShadcnHasOneForm(props: {
-    field: string;
-    children: React.ReactNode;
-    primaryLabel?: OptionLabel;
-    secondaryLabel?: OptionLabel;
-    tertiaryLabel?: OptionLabel;
-  }) {
+  function ShadcnHasOneForm(props: AutoRelationshipFormProps) {
     const { field } = props;
     const form = useHasOneForm(props);
     const {
@@ -118,12 +112,12 @@ export const makeShadcnAutoHasOneForm = ({
                   >
                     <div className="flex justify-between w-full items-center">
                       <div className="flex flex-col gap-1 items-start">
-                        {recordOption?.label && renderOptionLabel(recordOption?.label, "primary")}
-                        {recordOption?.secondaryLabel && renderOptionLabel(recordOption?.secondaryLabel, "secondary")}
+                        {recordOption?.primary && renderOptionLabel(recordOption?.primary, "primary")}
+                        {recordOption?.secondary && renderOptionLabel(recordOption?.secondary, "secondary")}
                       </div>
 
-                      {recordOption?.tertiaryLabel && (
-                        <div className="flex items-center">{renderOptionLabel(recordOption?.tertiaryLabel, "tertiary")}</div>
+                      {recordOption?.tertiary && (
+                        <div className="flex items-center">{renderOptionLabel(recordOption?.tertiary, "tertiary")}</div>
                       )}
                     </div>
                   </AccordionTrigger>

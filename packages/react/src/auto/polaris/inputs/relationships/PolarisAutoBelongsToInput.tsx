@@ -19,12 +19,12 @@ export const PolarisAutoBelongsToInput = autoInput((props: AutoRelationshipInput
   } = useBelongsToInputController(props);
 
   const optionLabel = useOptionLabelForField(props.field, props.optionLabel);
-  const selectedOption = selectedRecord ? getRecordAsOption(selectedRecord, optionLabel) : null;
+  const selectedOption = selectedRecord ? getRecordAsOption(selectedRecord, { primary: optionLabel }) : null;
 
   const selectedRecordTag =
     selectedOption && selectedOption.id ? (
       <Tag onRemove={onRemoveRecord} key={`selectedRecordTag_${selectedOption.id}`}>
-        <p id={`${selectedOption.id}_${selectedOption.label}`}>{selectedOption.label}</p>
+        <p id={`${selectedOption.id}_${selectedOption.primary}`}>{selectedOption.primary}</p>
       </Tag>
     ) : danglingSelectedRecordId ? (
       <Tag onRemove={onRemoveRecord} key={`selectedRecordTag_${danglingSelectedRecordId}`}>
