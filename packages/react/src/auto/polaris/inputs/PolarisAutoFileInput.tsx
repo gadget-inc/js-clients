@@ -10,11 +10,14 @@ import { getFileSizeValidationMessage, imageFileTypes, useFileInputController } 
 
 export const PolarisAutoFileInput = autoInput((props: { field: string; control?: Control<any> } & Omit<DropZoneProps, "allowMultiple">) => {
   const { field: fieldApiIdentifier, control, ...rest } = props;
+
   const { fieldProps, errorMessage, imageThumbnailURL, onFileUpload, clearFileValue, canClearFileValue, validations, metadata } =
     useFileInputController({
       field: fieldApiIdentifier,
       control,
     });
+
+  console.log(validations, "What is the validation here", fieldApiIdentifier);
 
   const fileUploadContainer = useMemo(() => {
     if (fieldProps.value) return null;
