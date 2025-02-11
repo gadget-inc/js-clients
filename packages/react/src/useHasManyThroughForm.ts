@@ -1,3 +1,4 @@
+import { assert } from "@gadgetinc/api-client-core";
 import { useEffect, useMemo } from "react";
 import { extractPathsFromChildren } from "./auto/AutoForm.js";
 import { useAutoRelationship, useRelationshipContext } from "./auto/hooks/useAutoRelationship.js";
@@ -91,8 +92,11 @@ export const useHasManyThroughForm = (props: {
     siblingModelOptions,
     metadata,
     joinModelField,
-    joinModelApiIdentifier,
-    inverseRelatedModelField,
+    joinModelApiIdentifier: assert(joinModelApiIdentifier, `The join model in the "${field}" hasManyThrough field is required`),
+    inverseRelatedModelField: assert(
+      inverseRelatedModelField,
+      `The belongsTo field between the join model and sibling model in the "${field}" hasManyThrough field is required`
+    ),
     fieldArrayPath,
     fieldArray,
     field,
