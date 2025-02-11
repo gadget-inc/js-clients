@@ -1,4 +1,4 @@
-import { FindManyOptions } from "@gadgetinc/api-client-core";
+import type { FindManyOptions } from "@gadgetinc/api-client-core";
 import type { ReactNode } from "react";
 import type { Control } from "../../useActionForm.js";
 
