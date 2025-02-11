@@ -1,7 +1,9 @@
 import { useMemo } from "react";
-import { useFieldMetadata } from "./auto/hooks/useFieldMetadata.js";
-import { isValidDate } from "./dateTimeUtils.js";
-import { useController } from "./useActionForm.js";
+import { isValidDate } from "../../dateTimeUtils.js";
+import { GadgetFieldType } from "../../internal/gql/graphql.js";
+import { useController } from "../../useActionForm.js";
+import { useFieldMetadata } from "./useFieldMetadata.js";
+import { assertFieldType } from "./utils.js";
 
 interface DateTimeFieldProps {
   field: string;
@@ -11,6 +13,13 @@ interface DateTimeFieldProps {
 
 export const useDateTimeField = (props: DateTimeFieldProps) => {
   const { path, metadata } = useFieldMetadata(props.field);
+
+  assertFieldType({
+    fieldApiIdentifier: props.field,
+    actualFieldType: metadata.fieldType,
+    expectedFieldType: GadgetFieldType.DateTime,
+  });
+
   const { field: fieldProps, fieldState } = useController({ name: path });
   const { onChange, value } = props;
 

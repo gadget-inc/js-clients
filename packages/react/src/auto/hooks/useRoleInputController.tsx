@@ -1,8 +1,10 @@
 import { useMemo } from "react";
+import { GadgetFieldType } from "../../internal/gql/graphql.js";
 import { useRolesMetadata } from "../../metadata.js";
 import type { Control } from "../../useActionForm.js";
 import { useController } from "../../useActionForm.js";
 import { useFieldMetadata } from "./useFieldMetadata.js";
+import { assertFieldType } from "./utils.js";
 
 export const useRoleInputController = (props: {
   field: string; // Field API identifier
@@ -10,6 +12,11 @@ export const useRoleInputController = (props: {
 }) => {
   const { field, control } = props;
   const { path, metadata } = useFieldMetadata(field);
+  assertFieldType({
+    fieldApiIdentifier: field,
+    actualFieldType: metadata.fieldType,
+    expectedFieldType: GadgetFieldType.RoleAssignments,
+  });
 
   const {
     field: fieldProps,

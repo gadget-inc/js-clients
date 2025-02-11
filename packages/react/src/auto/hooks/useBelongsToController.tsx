@@ -1,8 +1,10 @@
 import { useCallback } from "react";
+import { GadgetFieldType } from "../../internal/gql/graphql.js";
 import { useController, useFormContext, useWatch, type Control } from "../../useActionForm.js";
 import type { AutoRelationshipInputProps, OptionLabel } from "../interfaces/AutoRelationshipInputProps.js";
 import { useFieldMetadata } from "./useFieldMetadata.js";
 import { useRelatedModelOptions } from "./useRelatedModel.js";
+import { assertFieldType } from "./utils.js";
 
 export const useBelongsToController = (props: {
   field: string;
@@ -12,7 +14,12 @@ export const useBelongsToController = (props: {
 }) => {
   const { field, primaryLabel, secondaryLabel, tertiaryLabel } = props;
   const fieldMetadata = useFieldMetadata(field);
-  const { path } = fieldMetadata;
+  const { path, metadata } = fieldMetadata;
+  assertFieldType({
+    fieldApiIdentifier: field,
+    actualFieldType: metadata.fieldType,
+    expectedFieldType: GadgetFieldType.BelongsTo,
+  });
 
   const record = useWatch({ name: path });
 

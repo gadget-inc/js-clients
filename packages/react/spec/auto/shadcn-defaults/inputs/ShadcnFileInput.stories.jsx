@@ -13,7 +13,7 @@ const ShadcnAutoFileInput = makeShadcnAutoFileInput(elements);
 
 const Component = (props) => {
   return (
-    <ShadcnAutoForm action={api.widget.create}>
+    <ShadcnAutoForm action={api.game.stadium.create}>
       <ShadcnAutoFileInput {...props} />
     </ShadcnAutoForm>
   );
@@ -45,6 +45,6 @@ export default {
 
 export const Primary = {
   args: {
-    field: "metafields",
+    field: "photo",
   },
 };
