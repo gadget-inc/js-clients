@@ -92,17 +92,79 @@ describeForEachAutoAdapter(
       cy.get('[id="deleteButton_students.0"]').click();
 
       expectUpdateActionSubmissionVariables({
-        id: "3",
         course: {
           registrations: [
-            // Deleted first
+            //  Deleted first
             { delete: { id: "1" } },
             // Updated second
-            { update: { effectiveFrom: "2024-03-17", effectiveTo: "2025-08-21", id: "25", student: { _link: "11" } } },
+            {
+              update: {
+                effectiveFrom: "2025-02-18",
+                effectiveTo: "2025-02-22",
+                id: "50",
+                student: { update: { firstName: "Benjamin", id: "43", lastName: "Martin" } },
+              },
+            },
             // Created third
             { create: { student: { _link: "10" } } },
           ],
         },
+        id: "3",
+      });
+      cy.get('[id="submit"]').click();
+      cy.wait("@updateCourse");
+    });
+
+    it("can update fields on the sibling model", () => {
+      cy.mountWithWrapper(
+        <AutoForm action={api.university.course.update} findBy="3">
+          <AutoHasManyThroughForm
+            field="students"
+            selectPaths={["firstName", "lastName", "year", "department"]}
+            primaryLabel={["firstName", "lastName"]}
+            secondaryLabel={(record: any) => `Year: ${record.year}`}
+            tertiaryLabel="department"
+          >
+            <AutoInput field="firstName" />
+            <AutoInput field="lastName" />
+          </AutoHasManyThroughForm>
+          <AutoSubmit id="submit" />
+        </AutoForm>,
+        wrapper
+      );
+      cy.wait("@ModelCreateActionMetadata");
+      cy.wait("@course");
+      cy.wait("@students");
+
+      cy.get('[id="deleteButton_students.0"]').click();
+      cy.get('[name="course.registrations.0.student.firstName"]').click().type("- updated");
+      cy.get('[name="course.registrations.0.student.lastName"]').click().type("- updated");
+
+      expectUpdateActionSubmissionVariables({
+        course: {
+          registrations: [
+            {
+              delete: {
+                id: "1",
+              },
+            },
+            {
+              update: {
+                effectiveFrom: "2025-02-18",
+                effectiveTo: "2025-02-22",
+                id: "50",
+                student: {
+                  update: {
+                    firstName: "Benjamin- updated",
+                    id: "43",
+                    lastName: "Martin- updated",
+                  },
+                },
+              },
+            },
+          ],
+        },
+        id: "3",
       });
       cy.get('[id="submit"]').click();
       cy.wait("@updateCourse");
@@ -1336,44 +1398,67 @@ const courseLookupResponse = {
     university: {
       course: {
         id: "3",
+        title: "Math 101",
+        description: {
+          markdown: "This is an intro math course. We teach calculus",
+          truncatedHTML: "<p>This is an intro math course. We teach calculus</p> ",
+          __typename: "RichText",
+        },
         registrations: {
           edges: [
             {
               node: {
                 id: "1",
-                effectiveFrom: "2024-10-23",
-                effectiveTo: "2024-10-31",
+                effectiveFrom: "2024-11-12",
+                effectiveTo: "2024-10-17",
                 student: {
                   id: "1",
                   firstName: "Lucas",
                   lastName: "Hernandez",
-                  year: 6,
-                  department: "Arts",
                   __typename: "UniversityStudent",
                 },
+                studentId: "1",
                 __typename: "UniversityRegistration",
               },
               __typename: "UniversityRegistrationEdge",
             },
             {
               node: {
-                id: "25",
-                effectiveFrom: "2024-03-17",
-                effectiveTo: "2025-08-21",
+                id: "50",
+                effectiveFrom: "2025-02-18",
+                effectiveTo: "2025-02-22",
                 student: {
-                  id: "11",
+                  id: "43",
                   firstName: "Benjamin",
-                  lastName: "Moore",
-                  year: 10,
-                  department: "Science",
+                  lastName: "Martin",
                   __typename: "UniversityStudent",
                 },
+                studentId: "43",
                 __typename: "UniversityRegistration",
               },
               __typename: "UniversityRegistrationEdge",
             },
           ],
           __typename: "UniversityRegistrationConnection",
+        },
+        assignments: {
+          edges: [
+            {
+              node: {
+                id: "13",
+                professor: {
+                  id: "42",
+                  firstName: "Kevin",
+                  title: "Mrs",
+                  lastName: "Bailey",
+                  __typename: "UniversityProfessor",
+                },
+                __typename: "UniversityAssignment",
+              },
+              __typename: "UniversityAssignmentEdge",
+            },
+          ],
+          __typename: "UniversityAssignmentConnection",
         },
         __typename: "UniversityCourse",
       },
