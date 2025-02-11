@@ -58,7 +58,6 @@ const Component = (props) => {
               </Label>
             }
             field="gizmos"
-            selectPaths={["name", "orientation"]}
             displayRecord={{
               primary: "name",
               secondary: "orientation",
@@ -70,7 +69,6 @@ const Component = (props) => {
               <AutoInput field="attachment" />
               <AutoHasManyForm
                 field="doodads"
-                selectPaths={["name", "weight"]}
                 displayRecord={{
                   primary: "name",
                   secondary: "weight",
@@ -193,7 +191,6 @@ const ExampleTweeterFollowerCreateRelatedForm = (props) => {
         <Card className="p-6 w-full bg-white shadow-lg rounded-lg">
           <AutoHasManyThroughForm
             field="followers"
-            selectPaths={["name"]}
             displayRecord={{
               primary: "name",
             }}
@@ -208,7 +205,6 @@ const ExampleTweeterFollowerCreateRelatedForm = (props) => {
         <Card className="p-6 w-full bg-white shadow-lg rounded-lg">
           <AutoHasManyThroughForm
             field="followees"
-            selectPaths={["name"]}
             displayRecord={{
               primary: "name",
             }}
@@ -268,7 +264,6 @@ const ExampleCourseCreateRelatedForm = (props) => {
           <Label>Has Many Through Form -- Students</Label>
           <AutoHasManyThroughForm
             field="students"
-            selectPaths={["firstName", "lastName", "year", "department"]}
             displayRecord={{
               primary: ["firstName", "lastName"],
               secondary: (record) => {
@@ -298,7 +293,6 @@ const ExampleCourseCreateRelatedForm = (props) => {
           <Label>Has Many Through Form -- Professors</Label>
           <AutoHasManyThroughForm
             field="professors"
-            selectPaths={["title", "firstName", "lastName"]}
             displayRecord={{
               primary: ["title", "firstName", "lastName"],
             }}

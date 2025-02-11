@@ -1,6 +1,5 @@
 import { assert } from "@gadgetinc/api-client-core";
 import { useEffect, useMemo } from "react";
-import { extractPathsFromChildren } from "./auto/AutoForm.js";
 import { useAutoRelationship, useRelationshipContext } from "./auto/hooks/useAutoRelationship.js";
 import { useHasManyThroughController } from "./auto/hooks/useHasManyThroughController.js";
 import { useOptionLabelForField } from "./auto/hooks/useRelatedModel.js";
@@ -11,8 +10,6 @@ export const useHasManyThroughForm = (props: AutoRelationshipFormProps) => {
   const { field, children } = props;
   const { metadata } = useAutoRelationship({ field });
   const { setValue } = useFormContext();
-  const childPaths = children && extractPathsFromChildren(children);
-  const hasChildForm = childPaths && childPaths.length > 0;
 
   const { fieldArrayPath, fieldArray, records, relatedModelOptions, inverseRelatedModelField, joinModelField, joinModelApiIdentifier } =
     useHasManyThroughController(props);
@@ -72,8 +69,6 @@ export const useHasManyThroughForm = (props: AutoRelationshipFormProps) => {
     remove,
     joinRecords,
     primaryLabel,
-    hasChildForm,
-    childPaths,
     listboxId,
     pathPrefix,
     metaDataPathPrefix,

@@ -88,7 +88,6 @@ export const makeShadcnAutoHasManyThroughForm = ({
       joinRecords,
       metadata,
       primaryLabel,
-      hasChildForm,
       listboxId,
       pathPrefix,
       metaDataPathPrefix,
@@ -198,7 +197,7 @@ export const makeShadcnAutoHasManyThroughForm = ({
                         </Button>
                       </div>
                     </div>
-                    {hasChildForm && (
+                    {props.children && (
                       <div
                         className="flex-1 p-2 border-t border-gray-300"
                         onClick={(e) => {

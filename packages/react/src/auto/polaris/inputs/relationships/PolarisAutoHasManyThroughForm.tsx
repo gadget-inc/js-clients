@@ -16,7 +16,6 @@ export const PolarisAutoHasManyThroughForm = autoRelationshipForm((props: AutoRe
     remove,
     joinRecords,
     primaryLabel,
-    hasChildForm,
     listboxId,
     pathPrefix,
     metaDataPathPrefix,
@@ -95,7 +94,7 @@ export const PolarisAutoHasManyThroughForm = autoRelationshipForm((props: AutoRe
                         />
                       </div>
                     </div>
-                    {hasChildForm && (
+                    {props.children && (
                       <Box borderColor="border" borderBlockStartWidth="025">
                         <Box padding="200">
                           <RelationshipContext.Provider

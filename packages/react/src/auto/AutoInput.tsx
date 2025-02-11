@@ -2,6 +2,8 @@ import React, { useEffect, useMemo } from "react";
 import { useFieldsFromChildComponents } from "./AutoFormContext.js";
 import { useRelationshipContext } from "./hooks/useAutoRelationship.js";
 import { useFieldApiIdentifier, useRelationshipTransformedMetaDataPaths } from "./hooks/useFieldMetadata.js";
+import { useSelectedPathsFromDisplayRecord } from "./hooks/useSelectedPathsFromDisplayRecord.js";
+import type { AutoRelationshipFormProps } from "./interfaces/AutoRelationshipInputProps.js";
 
 export interface AutoInputComponent<P> extends React.FC<P> {
   __autoInput: true;
@@ -41,29 +43,23 @@ export function autoInput<P extends { field: string }>(Component: React.FC<P>): 
   return WrappedComponent as AutoInputComponent<P>;
 }
 
-export function autoRelationshipForm<P extends { field: string }>(
-  Component: React.FC<P>
-): AutoInputComponent<P & { selectPaths?: string[] }> {
+export function autoRelationshipForm<P extends AutoRelationshipFormProps>(Component: React.FC<P>): AutoInputComponent<P> {
   const WrappedComponent: React.FC<P> = (props) => {
     const { hasCustomFormChildren, registerFields, fieldSet } = useFieldsFromChildComponents();
 
+    const displayedRecordPaths = useSelectedPathsFromDisplayRecord(props);
+
     const relationshipTransformedPaths = useRelationshipTransformedMetaDataPaths(props.field);
-    const hasSelectPaths = "selectPaths" in props && props.selectPaths;
-    const selectPathsToRegister = useMemo(
-      () =>
-        hasSelectPaths && Array.isArray(props.selectPaths)
-          ? props.selectPaths.map((selectPath) => `${relationshipTransformedPaths?.metaDataPath ?? props.field}.${selectPath}`)
-          : [],
-      [hasSelectPaths, props.field]
+    const displayedRecordPathsToRegister = useMemo(
+      () => displayedRecordPaths.map((path) => `${relationshipTransformedPaths?.metaDataPath ?? props.field}.${path}`),
+      [displayedRecordPaths, props.field, relationshipTransformedPaths?.metaDataPath]
     );
 
     useEffect(() => {
-      if (hasSelectPaths) {
-        registerFields(selectPathsToRegister);
-      }
-    }, [hasSelectPaths, registerFields, selectPathsToRegister]);
+      registerFields(displayedRecordPathsToRegister);
+    }, [registerFields, displayedRecordPathsToRegister]);
 
-    if (hasCustomFormChildren && !selectPathsToRegister.every((field) => fieldSet.has(field))) {
+    if (hasCustomFormChildren && !displayedRecordPathsToRegister.every((field) => fieldSet.has(field))) {
       // Do not render before registration
       return null;
     }
