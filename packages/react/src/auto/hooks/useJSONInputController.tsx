@@ -1,8 +1,10 @@
 import { useCallback, useEffect, useState } from "react";
 import deepEqual from "react-fast-compare";
+import { GadgetFieldType } from "../../internal/gql/graphql.js";
 import type { UseControllerProps } from "../../useActionForm.js";
 import { isFailedJSONParse, type FailedJSONParse } from "../../validationSchema.js";
 import { useStringInputController } from "./useStringInputController.js";
+import { assertFieldType } from "./utils.js";
 
 export const useJSONInputController = (
   props: {
@@ -10,6 +12,12 @@ export const useJSONInputController = (
   } & Omit<UseControllerProps, "name">
 ) => {
   const stringInputController = useStringInputController(props);
+  assertFieldType({
+    fieldApiIdentifier: props.field,
+    actualFieldType: stringInputController.metadata.fieldType,
+    expectedFieldType: GadgetFieldType.Json,
+  });
+
   const jsonValue = stringInputController.value;
   const isParseError = isFailedJSONParse(jsonValue);
 

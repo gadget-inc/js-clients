@@ -1,14 +1,14 @@
 import * as mdxModule from "@mdxeditor/editor";
 import "@mdxeditor/editor/style.css";
 import React, { useEffect, useRef } from "react";
+import { GadgetFieldType } from "../../internal/gql/graphql.js";
 import { useFormContext } from "../../useActionForm.js";
 import { get } from "../../utils.js";
 import { autoInput } from "../AutoInput.js";
 import { useStringInputController } from "../hooks/useStringInputController.js";
-import { multiref } from "../hooks/utils.js";
+import { assertFieldType, multiref } from "../hooks/utils.js";
 import type { AutoRichTextInputProps, MDXEditorMethods } from "./AutoRichTextInputProps.js";
 import "./styles/rich-text.css";
-
 const {
   MDXEditor,
   BoldItalicUnderlineToggles,
@@ -33,6 +33,11 @@ const AutoRichTextInput = autoInput<AutoRichTextInputProps>((props) => {
   const { formState } = useFormContext();
   const { field, control, editorRef, ...rest } = props;
   const controller = useStringInputController({ field, control });
+  assertFieldType({
+    fieldApiIdentifier: field,
+    actualFieldType: controller.metadata.fieldType,
+    expectedFieldType: GadgetFieldType.RichText,
+  });
   const innerRef = useRef<MDXEditorMethods>(null);
 
   useEffect(() => {
