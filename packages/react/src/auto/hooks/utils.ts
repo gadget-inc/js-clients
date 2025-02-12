@@ -1,3 +1,5 @@
+import { type GadgetFieldType } from "../../internal/gql/graphql.js";
+
 /** Allows the use of multiple refs with one component */
 export const multiref = <T>(...refs: (React.Ref<T> | null | undefined)[]) => {
   return (value: T) => {
@@ -11,4 +13,18 @@ export const multiref = <T>(...refs: (React.Ref<T> | null | undefined)[]) => {
       }
     }
   };
+};
+
+export const assertFieldType = (props: {
+  fieldApiIdentifier: string;
+  actualFieldType: GadgetFieldType;
+  expectedFieldType: GadgetFieldType;
+}) => {
+  const { fieldApiIdentifier, actualFieldType, expectedFieldType } = props;
+
+  if (actualFieldType !== expectedFieldType) {
+    throw new Error(
+      `Field "${fieldApiIdentifier}" is not a ${expectedFieldType} field. Only ${expectedFieldType} fields are supported for this input type`
+    );
+  }
 };

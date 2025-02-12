@@ -214,6 +214,7 @@ export const makeShadcnAutoHasManyThroughForm = ({
                             transformPath: (path) => `${joinModelField}.${idx}.${path.replace(`${joinModelApiIdentifier}.`, "")}`,
                             transformMetadataPath: (path) => `${metaDataPathPrefix}.${path}`,
                             fieldArray,
+                            hasManyThrough: { joinModelApiIdentifier, inverseRelatedModelField },
                           }}
                         >
                           {props.children}

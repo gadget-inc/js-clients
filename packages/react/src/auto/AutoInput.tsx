@@ -1,7 +1,7 @@
 import React, { useEffect, useMemo } from "react";
 import { useFieldsFromChildComponents } from "./AutoFormContext.js";
 import { useRelationshipContext } from "./hooks/useAutoRelationship.js";
-import { useRelationshipTransformedMetaDataPaths } from "./hooks/useFieldMetadata.js";
+import { useFieldApiIdentifier, useRelationshipTransformedMetaDataPaths } from "./hooks/useFieldMetadata.js";
 
 export interface AutoInputComponent<P> extends React.FC<P> {
   __autoInput: true;
@@ -11,17 +11,18 @@ export function autoInput<P extends { field: string }>(Component: React.FC<P>): 
   const WrappedComponent: React.FC<P> = (props) => {
     const { hasCustomFormChildren, registerFields, fieldSet } = useFieldsFromChildComponents();
     const relationshipContext = useRelationshipContext();
+    const fieldApiIdentifier = useFieldApiIdentifier(props.field);
 
     const fieldSetPath = useMemo(() => {
       if (relationshipContext) {
         return relationshipContext?.transformMetadataPath
-          ? relationshipContext.transformMetadataPath(props.field)
-          : relationshipContext.transformPath(props.field);
+          ? relationshipContext.transformMetadataPath(fieldApiIdentifier)
+          : relationshipContext.transformPath(fieldApiIdentifier);
       }
 
       // Non relationship context - Use field name directly
-      return props.field;
-    }, [relationshipContext, props.field]);
+      return fieldApiIdentifier;
+    }, [relationshipContext, fieldApiIdentifier]);
 
     useEffect(() => {
       registerFields([fieldSetPath]);

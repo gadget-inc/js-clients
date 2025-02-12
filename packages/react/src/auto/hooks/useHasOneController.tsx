@@ -1,8 +1,10 @@
 import { useCallback, useMemo } from "react";
+import { GadgetFieldType } from "../../internal/gql/graphql.js";
 import { useController, useWatch } from "../../useActionForm.js";
 import type { AutoRelationshipInputProps, OptionLabel } from "../interfaces/AutoRelationshipInputProps.js";
 import { useFieldMetadata } from "./useFieldMetadata.js";
 import { useRelatedModelOptions } from "./useRelatedModel.js";
+import { assertFieldType } from "./utils.js";
 
 export const useHasOneController = (props: {
   field: string;
@@ -12,7 +14,13 @@ export const useHasOneController = (props: {
 }) => {
   const { field, primaryLabel, secondaryLabel, tertiaryLabel } = props;
   const fieldMetadata = useFieldMetadata(field);
-  const { path } = fieldMetadata;
+  const { path, metadata } = fieldMetadata;
+
+  assertFieldType({
+    fieldApiIdentifier: field,
+    actualFieldType: metadata.fieldType,
+    expectedFieldType: GadgetFieldType.HasOne,
+  });
 
   const record: Record<string, any> | undefined = useWatch({ name: path });
 

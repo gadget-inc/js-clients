@@ -1,14 +1,21 @@
 import { useCallback, useMemo } from "react";
-import type { GadgetHasManyConfig } from "../../internal/gql/graphql.js";
+import { GadgetFieldType, type GadgetHasManyConfig } from "../../internal/gql/graphql.js";
 import { useFieldArray } from "../../useActionForm.js";
 import type { AutoRelationshipInputProps } from "../interfaces/AutoRelationshipInputProps.js";
 import { useFieldMetadata } from "./useFieldMetadata.js";
 import { useRelatedModelOptions } from "./useRelatedModel.js";
+import { assertFieldType } from "./utils.js";
 
 export const useHasManyController = (props: { field: string }) => {
   const { field } = props;
   const fieldMetadata = useFieldMetadata(field);
-  const { path } = fieldMetadata;
+  const { path, metadata } = fieldMetadata;
+
+  assertFieldType({
+    fieldApiIdentifier: field,
+    actualFieldType: metadata.fieldType,
+    expectedFieldType: GadgetFieldType.HasMany,
+  });
 
   const fieldArray = useFieldArray({ name: path, keyName: "_fieldArrayKey" });
 

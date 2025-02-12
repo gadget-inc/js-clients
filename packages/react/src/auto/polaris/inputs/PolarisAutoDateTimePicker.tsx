@@ -11,8 +11,8 @@ import {
   zonedTimeToUtc,
 } from "../../../dateTimeUtils.js";
 import type { GadgetDateTimeConfig } from "../../../internal/gql/graphql.js";
-import { useDateTimeField } from "../../../useDateTimeField.js";
 import { autoInput } from "../../AutoInput.js";
+import { useDateTimeField } from "../../hooks/useDateTimeField.js";
 import PolarisAutoTimePicker from "./PolarisAutoTimePicker.js";
 
 export const PolarisAutoDateTimePicker = autoInput(

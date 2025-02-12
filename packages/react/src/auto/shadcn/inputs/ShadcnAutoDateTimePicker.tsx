@@ -10,8 +10,8 @@ import {
   zonedTimeToUtc,
 } from "../../../dateTimeUtils.js";
 import type { GadgetDateTimeConfig } from "../../../internal/gql/graphql.js";
-import { useDateTimeField } from "../../../useDateTimeField.js";
 import { autoInput } from "../../AutoInput.js";
+import { useDateTimeField } from "../../hooks/useDateTimeField.js";
 import { ShadcnRequired } from "../ShadcnRequired.js";
 import type { ShadcnElements } from "../elements.js";
 

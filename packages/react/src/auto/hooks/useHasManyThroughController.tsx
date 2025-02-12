@@ -1,10 +1,11 @@
 import { assert } from "@gadgetinc/api-client-core";
 import { useCallback, useMemo } from "react";
-import type { GadgetHasManyThroughConfig } from "src/internal/gql/graphql.js";
+import { GadgetFieldType, type GadgetHasManyThroughConfig } from "../../internal/gql/graphql.js";
 import { useFieldArray } from "../../useActionForm.js";
 import type { AutoRelationshipInputProps, OptionLabel } from "../interfaces/AutoRelationshipInputProps.js";
 import { useFieldMetadata } from "./useFieldMetadata.js";
 import { useRelatedModelOptions } from "./useRelatedModel.js";
+import { assertFieldType } from "./utils.js";
 
 export const useHasManyThroughController = (props: {
   field: string;
@@ -14,6 +15,13 @@ export const useHasManyThroughController = (props: {
 }) => {
   const fieldMetadata = useFieldMetadata(props.field);
   const { path, metadata } = fieldMetadata;
+
+  assertFieldType({
+    fieldApiIdentifier: props.field,
+    actualFieldType: metadata.fieldType,
+    expectedFieldType: GadgetFieldType.HasManyThrough,
+  });
+
   const configuration = metadata.configuration as GadgetHasManyThroughConfig;
   const joinModelHasManyFieldApiIdentifier = assert(
     configuration.joinModelHasManyFieldApiIdentifier,

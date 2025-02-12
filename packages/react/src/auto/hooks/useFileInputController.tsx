@@ -2,10 +2,12 @@ import { filesize } from "filesize";
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { useApi } from "../../GadgetProvider.js";
 import type { GadgetOnlyImageFileFieldValidation, GadgetRangeFieldValidation } from "../../internal/gql/graphql.js";
+import { GadgetFieldType } from "../../internal/gql/graphql.js";
 import { useController, useFormContext, type Control } from "../../useActionForm.js";
 import type { AutoFileFieldValue } from "../../validationSchema.js";
 import { RequiredValidationSpecId, isAutoFileFieldValue } from "../../validationSchema.js";
 import { useFieldMetadata } from "./useFieldMetadata.js";
+import { assertFieldType } from "./utils.js";
 
 export const imageFileTypes = ["image/jpeg", "image/png", "image/svg+xml", "image/webp"];
 
@@ -17,6 +19,9 @@ export const useFileInputController = (props: {
   // For showing a preview of the file
   const [imageThumbnailURL, setImageThumbnailURL] = useState<string>();
   const { path, metadata } = useFieldMetadata(fieldApiIdentifier);
+
+  assertFieldType({ fieldApiIdentifier, actualFieldType: metadata.fieldType, expectedFieldType: GadgetFieldType.File });
+
   const api = useApi();
 
   const {

@@ -2,7 +2,7 @@ import type { AnyClient, AnyModelManager, GadgetRecord } from "@gadgetinc/api-cl
 import { $modelRelationships, camelize, isEqual } from "@gadgetinc/api-client-core";
 import { useFindBy } from "../useFindBy.js";
 import { useFindOne } from "../useFindOne.js";
-import { get, set, unset, type ErrorWrapper } from "../utils.js";
+import { get, omit, set, unset, type ErrorWrapper } from "../utils.js";
 
 const noopUseFindExistingRecordResponse = [
   { fetching: false },
@@ -373,7 +373,15 @@ export const reshapeDataForGraphqlApi = async (client: AnyClient, defaultValues:
             belongsTo = {};
           }
 
-          belongsTo = { ...belongsTo, [key]: { _link: input[`${key}Id`] } };
+          const nestedBelongsToParams = getNestedBelongsToGraphqlApiInput({
+            input,
+            recordIdsAtPath,
+            idPath: `${idPath}.${key}`,
+            belongsToFieldName: key,
+          });
+
+          belongsTo = { ...belongsTo, [key]: nestedBelongsToParams };
+
           delete rest[`${key}Id`]; // delete the key from the rest object so it's not handled again
         }
       }
@@ -417,6 +425,27 @@ export const reshapeDataForGraphqlApi = async (client: AnyClient, defaultValues:
   const result = transform(data, { depth: 0 });
 
   return result;
+};
+
+const getNestedBelongsToGraphqlApiInput = (props: {
+  input: any;
+  recordIdsAtPath: Record<string, number[]>;
+  idPath: string | undefined;
+  belongsToFieldName: string;
+}) => {
+  const { input, recordIdsAtPath, idPath, belongsToFieldName } = props;
+
+  if (input[belongsToFieldName] && "__typename" in (input[belongsToFieldName] as object)) {
+    const result = omit(input[belongsToFieldName] as object, ["_link"], true);
+    return getBelongsToGraphqlApiInput({
+      input,
+      result,
+      recordIdsAtPath,
+      idPath: `${idPath}.${belongsToFieldName}`,
+    });
+  }
+
+  return { _link: input[`${belongsToFieldName}Id`] };
 };
 
 const getBelongsToGraphqlApiInput = (props: {

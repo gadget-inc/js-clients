@@ -1,6 +1,8 @@
 import { useCallback, useMemo, useState } from "react";
+import { GadgetFieldType } from "../../internal/gql/graphql.js";
 import { useController, type Control } from "../../useActionForm.js";
 import { useFieldMetadata } from "./useFieldMetadata.js";
+import { assertFieldType } from "./utils.js";
 
 export const useEnumInputController = (props: {
   field: string; // The field API identifier
@@ -8,6 +10,11 @@ export const useEnumInputController = (props: {
 }) => {
   const { field: fieldApiIdentifier, control } = props;
   const { path, metadata } = useFieldMetadata(fieldApiIdentifier);
+  assertFieldType({
+    fieldApiIdentifier,
+    actualFieldType: metadata.fieldType,
+    expectedFieldType: GadgetFieldType.Enum,
+  });
 
   const config = metadata.configuration;
   if (config.__typename !== "GadgetEnumConfig") {
