@@ -54,6 +54,8 @@
     "pluralize": "^8.0.0",
     "react-fast-compare": "^3.2.2",
     "react-hook-form": "~7.48.2",
+    "cmdk": "^1.0.4",
+    "lucide-react": "^0.471.0",
     "tslib": "^2.6.2",
     "urql": "^4.0.4",
     "yup": "^1.2.0"
