@@ -6,17 +6,11 @@ import { testApi as api } from "../../apis.ts";
 import { StorybookErrorBoundary } from "../storybook/StorybookErrorBoundary.tsx";
 import { elements } from "./index.tsx";
 
-import { makeShadcnAutoInput } from "../../../src/auto/shadcn/inputs/ShadcnAutoInput.tsx";
-import { makeShadcnAutoSubmit } from "../../../src/auto/shadcn/submit/ShadcnAutoSubmit.tsx";
-// More on how to set up stories at: https://storybook.js.org/docs/writing-stories#default-export
-
-const ShadcnAutoForm = makeAutocomponents(elements).AutoForm;
-const ShadcnAutoInput = makeShadcnAutoInput(elements);
-const ShadcnAutoSubmit = makeShadcnAutoSubmit(elements);
+const { AutoForm, AutoInput, AutoSubmit } = makeAutocomponents(elements);
 
 export default {
   title: "Shadcn/AutoForm",
-  component: ShadcnAutoForm,
+  component: AutoForm,
   decorators: [
     // 👇 Defining the decorator in the preview file applies it to all stories
     (Story) => {
@@ -123,10 +117,10 @@ const ConditionalAppearingAutoInput = () => {
       <elements.Button onClick={() => setShowMoreInputs(!showMoreInputs)}>{showMoreInputs ? "Hide" : "Show"} other inputs</elements.Button>
       {showMoreInputs && (
         <>
-          <ShadcnAutoInput field="isChecked" />
-          <ShadcnAutoInput field="section" />
-          <ShadcnAutoInput field="gizmos" />
-          <ShadcnAutoInput field="customStringParam" />
+          <AutoInput field="isChecked" />
+          <AutoInput field="section" />
+          <AutoInput field="gizmos" />
+          <AutoInput field="customStringParam" />
         </>
       )}
     </>
@@ -135,8 +129,8 @@ const ConditionalAppearingAutoInput = () => {
 const CustomComponentWithAutoInputs = () => {
   return (
     <>
-      <ShadcnAutoInput field="name" />
-      <ShadcnAutoInput field="inventoryCount" />
+      <AutoInput field="name" />
+      <AutoInput field="inventoryCount" />
       <ConditionalAppearingAutoInput />
     </>
   );
@@ -149,7 +143,7 @@ export const Expanded = {
     children: (
       <>
         <CustomComponentWithAutoInputs />
-        <ShadcnAutoSubmit />
+        <AutoSubmit />
       </>
     ),
   },
@@ -171,7 +165,7 @@ export const ExpandedWithExplicitSelect = {
     children: (
       <>
         <CustomComponentWithAutoInputs />
-        <ShadcnAutoSubmit />
+        <AutoSubmit />
       </>
     ),
   },
