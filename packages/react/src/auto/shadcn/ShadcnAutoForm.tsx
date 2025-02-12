@@ -54,7 +54,7 @@ export const makeAutoForm = <Elements extends ShadcnElements>(elements: Elements
     GivenOptions extends OptionsType,
     SchemaT,
     ActionFunc extends ActionFunction<GivenOptions, any, any, SchemaT, any> | GlobalActionFunction<any>
-  >(props: AutoFormProps<GivenOptions, SchemaT, ActionFunc> & Omit<ComponentProps<typeof FormContainer>, "action">) {
+  >(props: AutoFormProps<GivenOptions, SchemaT, ActionFunc> & Omit<ComponentProps<typeof FormContainer>, "action" | "defaultValue">) {
     const { action, findBy } = props;
     validateAutoFormProps(props);
 
