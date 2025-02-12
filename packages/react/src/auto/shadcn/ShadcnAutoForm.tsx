@@ -37,6 +37,7 @@ export const makeAutoForm = <Elements extends ShadcnElements>(elements: Elements
     AutoNumberInput,
     AutoHiddenInput,
     AutoIdInput,
+    AutoTextAreaInput,
   } = makeShadcnAutoInput(elements);
 
   const AutoSubmit = makeShadcnAutoSubmit(elements);
@@ -172,5 +173,6 @@ export const makeAutoForm = <Elements extends ShadcnElements>(elements: Elements
     AutoNumberInput,
     AutoIdInput,
     AutoHiddenInput,
+    AutoTextAreaInput,
   };
 };
