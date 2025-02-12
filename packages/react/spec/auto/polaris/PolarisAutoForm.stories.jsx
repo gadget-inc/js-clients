@@ -194,6 +194,7 @@ export const Namespaced = {
 export const GlobalAction = {
   args: {
     action: api.flipAll,
+    defaultValues: { title: "From defaultValue prop" },
   },
 };
 

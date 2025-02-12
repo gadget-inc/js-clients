@@ -1,4 +1,4 @@
-import type { ActionFunction } from "@gadgetinc/api-client-core";
+import type { ActionFunction, GlobalActionFunction } from "@gadgetinc/api-client-core";
 import type { ComponentProps } from "react";
 import React, { forwardRef } from "react";
 import { FormProvider } from "../../useActionForm.js";
@@ -50,14 +50,18 @@ export const makeAutoForm = <Elements extends ShadcnElements>(elements: Elements
     return <form ref={ref} noValidate className={cn("space-y-6", className)} {...props} />;
   });
 
-  function AutoForm<GivenOptions extends OptionsType, SchemaT, ActionFunc extends ActionFunction<GivenOptions, any, any, SchemaT, any>>(
-    props: AutoFormProps<GivenOptions, SchemaT, ActionFunc> & Omit<ComponentProps<typeof FormContainer>, "action">
-  ) {
+  function AutoForm<
+    GivenOptions extends OptionsType,
+    SchemaT,
+    ActionFunc extends ActionFunction<GivenOptions, any, any, SchemaT, any> | GlobalActionFunction<any>
+  >(props: AutoFormProps<GivenOptions, SchemaT, ActionFunc> & Omit<ComponentProps<typeof FormContainer>, "action">) {
     const { action, findBy } = props;
     validateAutoFormProps(props);
 
     // Component key to force re-render when the action or findBy changes
-    const componentKey = `${action.modelApiIdentifier ?? ""}.${action.operationName}.${JSON.stringify(findBy)}`;
+    const componentKey = `${"modelApiIdentifier" in action ? `${action.modelApiIdentifier}.` : ""}${action.operationName}.${JSON.stringify(
+      findBy
+    )}`;
 
     return (
       <AutoFormFieldsFromChildComponentsProvider hasCustomFormChildren={React.Children.count(props.children) > 0}>
@@ -69,7 +73,7 @@ export const makeAutoForm = <Elements extends ShadcnElements>(elements: Elements
   function AutoFormInner<
     GivenOptions extends OptionsType,
     SchemaT,
-    ActionFunc extends ActionFunction<GivenOptions, any, any, SchemaT, any>
+    ActionFunc extends ActionFunction<GivenOptions, any, any, SchemaT, any> | GlobalActionFunction<any>
   >(props: AutoFormProps<GivenOptions, SchemaT, ActionFunc> & Omit<ComponentProps<typeof FormContainer>, "action">) {
     const { record: _record, action, findBy, ...rest } = props;
 
@@ -110,7 +114,7 @@ export const makeAutoForm = <Elements extends ShadcnElements>(elements: Elements
         isSubmitting,
       },
       model: {
-        apiIdentifier: action.modelApiIdentifier,
+        apiIdentifier: "modelApiIdentifier" in action ? action.modelApiIdentifier : undefined,
         namespace: action.namespace,
       },
       fields,
