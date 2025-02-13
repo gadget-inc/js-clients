@@ -8,7 +8,14 @@ import { useHasManyController } from "../../../hooks/useHasManyController.js";
 import { getRecordAsOption, useOptionLabelForField } from "../../../hooks/useRelatedModel.js";
 import { useRequiredChildComponentsValidator } from "../../../hooks/useRequiredChildComponentsValidator.js";
 import type { AutoRelationshipFormProps } from "../../../interfaces/AutoRelationshipInputProps.js";
+import { getRecordLabelObject } from "../../../interfaces/AutoRelationshipInputProps.js";
 import { renderOptionLabel } from "./utils.js";
+
+export const useRecordLabelObjectFromProps = (props: AutoRelationshipFormProps) => {
+  const recordLabelObject = getRecordLabelObject(props.recordLabel);
+  const primaryLabel = useOptionLabelForField(props.field, recordLabelObject?.primary);
+  return { ...recordLabelObject, primary: primaryLabel };
+};
 
 export const PolarisAutoHasManyForm = autoRelationshipForm((props: AutoRelationshipFormProps) => {
   useRequiredChildComponentsValidator(props, "AutoHasManyForm");
@@ -25,7 +32,7 @@ export const PolarisAutoHasManyForm = autoRelationshipForm((props: AutoRelations
 
   const modelName = metadata.configuration.relatedModel?.name;
 
-  const primaryLabel = useOptionLabelForField(props.field, props.recordLabel?.primary);
+  const recordLabel = useRecordLabelObjectFromProps(props);
 
   const [editingIndex, setEditingIndex] = useState<number | null>(null);
 
@@ -49,11 +56,7 @@ export const PolarisAutoHasManyForm = autoRelationshipForm((props: AutoRelations
               return [];
             }
 
-            const option = getRecordAsOption(record, {
-              primary: primaryLabel,
-              secondary: props.recordLabel?.secondary,
-              tertiary: props.recordLabel?.tertiary,
-            });
+            const option = getRecordAsOption(record, recordLabel);
 
             const pathPrefix = relationshipContext?.transformPath ? relationshipContext.transformPath(props.field) : props.field;
             const metadataPathPrefix = relationshipContext?.transformMetadataPath

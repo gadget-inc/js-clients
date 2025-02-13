@@ -1,4 +1,4 @@
-import { AppProvider, BlockStack, Box, Button, Card, FormLayout, InlineStack, Page, Text } from "@shopify/polaris";
+import { AppProvider, BlockStack, Box, Button, Card, FormLayout, InlineStack, Label, Page, Text } from "@shopify/polaris";
 import translations from "@shopify/polaris/locales/en.json";
 import React, { useState } from "react";
 import { Provider } from "../../../../src/GadgetProvider.tsx";
@@ -30,11 +30,11 @@ const ExampleWidgetAutoRelatedForm = (props) => {
         <Card>
           <PolarisAutoBelongsToForm
             field="section"
-            recordLabel={{
-              primary: "name",
-              secondary: "name",
-              tertiary: "id",
-            }}
+            recordLabel={({ record }) => (
+              <Label>
+                {record.name} (id:{record.id})
+              </Label>
+            )}
           >
             <PolarisAutoInput field="name" />
           </PolarisAutoBelongsToForm>
@@ -192,7 +192,7 @@ const ExampleCourseCreateRelatedForm = (props) => {
             field="students"
             recordLabel={{
               primary: ["firstName", "lastName"],
-              secondary: (record) => {
+              secondary: ({ record }) => {
                 if (record.year <= 1) {
                   return "Freshman";
                 } else if (record.year <= 2) {
@@ -202,7 +202,7 @@ const ExampleCourseCreateRelatedForm = (props) => {
                 } else if (record.year <= 4) {
                   return "Senior";
                 } else {
-                  return "Mature";
+                  return `Mature (${record.year})`;
                 }
               },
               tertiary: "department",

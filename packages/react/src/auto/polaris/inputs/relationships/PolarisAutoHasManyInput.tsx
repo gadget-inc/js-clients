@@ -23,7 +23,6 @@ export const PolarisAutoHasManyInput = autoInput((props: AutoRelationshipInputPr
   } = useHasManyInputController(props);
 
   const optionLabel = useOptionLabelForField(field, props.optionLabel);
-  console.log("optionLabel :", optionLabel);
 
   const selectedRecordIds = useMemo(() => {
     return selectedRecords.map((record) => record.id).filter((id) => !!id) as string[];

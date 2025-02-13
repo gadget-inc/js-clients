@@ -23,10 +23,11 @@ const Component = (props) => {
         <Card className="p-6 w-full bg-white shadow-lg rounded-lg">
           <AutoBelongsToForm
             field="section"
-            recordLabel={{
-              primary: "name",
-            }}
-            renderSelectedRecord={(record) => <Label>this is a custom belongsTo render for {record.name}</Label>}
+            recordLabel={({ record }) => (
+              <Label>
+                {record.name} (id:{record.id})
+              </Label>
+            )}
           >
             <AutoInput field="name" />
           </AutoBelongsToForm>
@@ -266,7 +267,7 @@ const ExampleCourseCreateRelatedForm = (props) => {
             field="students"
             recordLabel={{
               primary: ["firstName", "lastName"],
-              secondary: (record) => {
+              secondary: ({ record }) => {
                 if (record.year <= 1) {
                   return "Freshman";
                 } else if (record.year <= 2) {
@@ -276,7 +277,7 @@ const ExampleCourseCreateRelatedForm = (props) => {
                 } else if (record.year <= 4) {
                   return "Senior";
                 } else {
-                  return "Mature";
+                  return `Mature (${record.year})`;
                 }
               },
               tertiary: "department",

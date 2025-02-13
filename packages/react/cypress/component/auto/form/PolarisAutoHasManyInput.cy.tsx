@@ -200,7 +200,7 @@ describe("PolarisAutoHasManyInput", () => {
       cy.mountWithWrapper(
         <PolarisAutoForm action={api.widget.update} findBy="42">
           <PolarisSubmitResultBanner />
-          <PolarisAutoHasManyInput field="gizmos" optionLabel={(record) => `Custom label for ${record.id}`} />
+          <PolarisAutoHasManyInput field="gizmos" optionLabel={({ record }) => `Custom label for ${record.id}`} />
           <PolarisAutoSubmit />
         </PolarisAutoForm>,
         PolarisWrapper

@@ -7,11 +7,12 @@ import { useDebouncedSearch } from "../../useDebouncedSearch.js";
 import { useFindMany } from "../../useFindMany.js";
 import { sortByProperty, uniqByProperty } from "../../utils.js";
 import { useAutoFormMetadata } from "../AutoFormContext.js";
-import type {
-  AutoRelationshipFormProps,
-  DisplayedRecordOption,
-  OptionLabel,
-  RecordLabel,
+import {
+  getRecordLabelObject,
+  type AutoRelationshipFormProps,
+  type DisplayedRecordOption,
+  type OptionLabel,
+  type RecordLabel,
 } from "../interfaces/AutoRelationshipInputProps.js";
 import type { RelationshipFieldConfig } from "../interfaces/RelationshipFieldConfig.js";
 import { useFieldMetadata } from "./useFieldMetadata.js";
@@ -70,6 +71,12 @@ const omitRelatedModelRecordsAssociatedWithOtherRecords = (props: {
   };
 };
 
+export const useRecordLabelObjectFromProps = (props: AutoRelationshipFormProps) => {
+  const recordLabelObject = getRecordLabelObject(props.recordLabel);
+  const primaryLabel = useOptionLabelForField(props.field, recordLabelObject?.primary);
+  return { ...recordLabelObject, primary: primaryLabel };
+};
+
 export const useOptionLabelForField = (field: string, optionLabel?: OptionLabel): OptionLabel => {
   const { metadata } = useFieldMetadata(field);
   const relationshipFieldConfig = metadata.configuration as RelationshipFieldConfig;
@@ -81,7 +88,8 @@ export const useOptionLabelForField = (field: string, optionLabel?: OptionLabel)
 };
 
 export const useRelatedModelOptions = (props: Omit<AutoRelationshipFormProps, "children" | "label">) => {
-  const { field, recordLabel } = props;
+  const { field } = props;
+  const recordLabel = getRecordLabelObject(props.recordLabel);
 
   const optionLabel = useOptionLabelForField(field, recordLabel?.primary);
   const { relatedModelRecords } = useRelatedModelRecords(props);
@@ -128,7 +136,7 @@ const getRecordLabel = (record: Record<string, any>, optionLabel: OptionLabel): 
     ? record[optionLabel] // Related model field API id
     : Array.isArray(optionLabel)
     ? optionLabel.map((fieldName) => record[fieldName]).join(" ")
-    : optionLabel(record); // Callback on the whole related model record
+    : optionLabel({ record }); // Callback on the whole related model record
 
 const getRecordIdsAsString = (records?: { map: (mapperFunction: (record: { id: string }) => string) => string[] }) =>
   records

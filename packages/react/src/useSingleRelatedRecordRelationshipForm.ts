@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { useAutoRelationship, useRelationshipContext } from "./auto/hooks/useAutoRelationship.js";
-import { getRecordAsOption, useOptionLabelForField, type useRelatedModelOptions } from "./auto/hooks/useRelatedModel.js";
+import { getRecordAsOption, useRecordLabelObjectFromProps, type useRelatedModelOptions } from "./auto/hooks/useRelatedModel.js";
 import type { AutoRelationshipFormProps } from "./auto/interfaces/AutoRelationshipInputProps.js";
 import { useFormContext } from "./useActionForm.js";
 import { get } from "./utils.js";
@@ -52,15 +52,9 @@ export const useSingleRelatedRecordRelationshipForm = (
     }
   }, [record, defaultRecordId, path, setValue, submitCount, isSubmitSuccessful]);
 
-  const primaryLabel = useOptionLabelForField(props.field, props.recordLabel?.primary);
+  const recordLabel = useRecordLabelObjectFromProps(props);
+  const recordOption = record ? getRecordAsOption(record, recordLabel) : null;
 
-  const recordOption = record
-    ? getRecordAsOption(record, {
-        primary: primaryLabel,
-        secondary: props.recordLabel?.secondary,
-        tertiary: props.recordLabel?.tertiary,
-      })
-    : null;
   const relatedModelName = metadata.name ?? "Unknown";
 
   return {

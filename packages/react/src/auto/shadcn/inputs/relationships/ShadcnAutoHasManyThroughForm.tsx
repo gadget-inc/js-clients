@@ -87,10 +87,10 @@ export const makeShadcnAutoHasManyThroughForm = ({
       remove,
       joinRecords,
       metadata,
-      primaryLabel,
       listboxId,
       pathPrefix,
       metaDataPathPrefix,
+      recordLabel,
       siblingModelName,
       siblingRecordsLoading,
       siblingRecords,
@@ -168,9 +168,9 @@ export const makeShadcnAutoHasManyThroughForm = ({
               const siblingRecord = inverseRelatedModelField && record[inverseRelatedModelField];
 
               const siblingOption = getRecordAsOption(siblingRecord, {
-                primary: primaryLabel,
-                secondary: props.recordLabel?.secondary,
-                tertiary: props.recordLabel?.tertiary,
+                primary: recordLabel.primary,
+                secondary: recordLabel.secondary,
+                tertiary: recordLabel.tertiary,
               });
 
               return (

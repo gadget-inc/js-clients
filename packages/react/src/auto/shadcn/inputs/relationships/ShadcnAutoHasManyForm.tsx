@@ -4,7 +4,7 @@ import { useFormContext } from "../../../../useActionForm.js";
 import { autoRelationshipForm } from "../../../AutoInput.js";
 import { RelationshipContext, useAutoRelationship, useRelationshipContext } from "../../../hooks/useAutoRelationship.js";
 import { useHasManyController } from "../../../hooks/useHasManyController.js";
-import { getRecordAsOption, useOptionLabelForField } from "../../../hooks/useRelatedModel.js";
+import { getRecordAsOption, useRecordLabelObjectFromProps } from "../../../hooks/useRelatedModel.js";
 import { useRequiredChildComponentsValidator } from "../../../hooks/useRequiredChildComponentsValidator.js";
 import type { AutoRelationshipFormProps } from "../../../interfaces/AutoRelationshipInputProps.js";
 import type { ShadcnElements } from "../../elements.js";
@@ -36,7 +36,7 @@ export const makeShadcnAutoHasManyForm = ({
 
     const modelName = metadata.configuration.relatedModel?.name;
 
-    const primaryLabel = useOptionLabelForField(props.field, props.recordLabel?.primary);
+    const recordLabel = useRecordLabelObjectFromProps(props);
 
     const [editingIndex, setEditingIndex] = useState<number | null>(null);
 
@@ -59,11 +59,7 @@ export const makeShadcnAutoHasManyForm = ({
                 return [];
               }
 
-              const option = getRecordAsOption(record, {
-                primary: primaryLabel,
-                secondary: props.recordLabel?.secondary,
-                tertiary: props.recordLabel?.tertiary,
-              });
+              const option = getRecordAsOption(record, recordLabel);
 
               const pathPrefix = relationshipContext?.transformPath ? relationshipContext.transformPath(props.field) : props.field;
               const metadataPathPrefix = relationshipContext?.transformMetadataPath

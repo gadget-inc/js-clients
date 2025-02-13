@@ -21,7 +21,7 @@ import {
 import { useFieldsFromChildComponents } from "./AutoFormContext.js";
 import { isAutoInput } from "./AutoInput.js";
 import { getSelectedPathsFromOptionLabel } from "./hooks/useSelectedPathsFromRecordLabel.js";
-import { type RecordLabel } from "./interfaces/AutoRelationshipInputProps.js";
+import { getOptionLabelsFromRecordLabel, type RecordLabel } from "./interfaces/AutoRelationshipInputProps.js";
 
 /** When the AutoForm does not have children, these properties are available to control the rendering of the form */
 type AutoFormPropsWithoutChildren = {
@@ -250,6 +250,7 @@ export const useAutoForm = <
     registerFields(registeredFieldsFromChildren);
   }, [registeredFieldsFromChildren.join(","), registerFields]);
 
+  console.log("registeredFieldsFromChildren :", registeredFieldsFromChildren);
   if (hasRegisteredFieldsFromChildren) {
     include = Array.from(fieldSet);
     exclude = undefined;
@@ -554,7 +555,7 @@ const extractPathsFromChildren = (props: {
 const aggregatePathsFromRecordLabel = (recordLabel: RecordLabel, getFieldsToSelectOnRecordLabelCallback: () => string[]) => {
   const selectedPaths = new Set<string>();
 
-  [recordLabel.primary, recordLabel.secondary, recordLabel.tertiary]
+  getOptionLabelsFromRecordLabel(recordLabel)
     .flatMap((optionLabel) => getSelectedPathsFromOptionLabel(optionLabel, getFieldsToSelectOnRecordLabelCallback))
     .forEach((path) => selectedPaths.add(path));
 

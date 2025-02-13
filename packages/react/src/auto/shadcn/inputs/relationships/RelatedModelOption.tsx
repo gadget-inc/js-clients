@@ -40,7 +40,6 @@ export const makeRelatedModelOption = (
       () => [
         ...(actions ?? []),
         ...options.map((option) => {
-          console.log("option :", option);
           return props.renderOption ? (
             props.renderOption(option)
           ) : (

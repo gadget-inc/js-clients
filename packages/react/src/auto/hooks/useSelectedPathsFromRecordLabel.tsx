@@ -7,7 +7,11 @@ import {
   type GadgetHasOneConfig,
 } from "../../internal/gql/graphql.js";
 import { isRelationshipField } from "../../use-table/helpers.js";
-import type { AutoRelationshipFormProps, OptionLabel } from "../interfaces/AutoRelationshipInputProps.js";
+import {
+  getOptionLabelsFromRecordLabel,
+  type AutoRelationshipFormProps,
+  type OptionLabel,
+} from "../interfaces/AutoRelationshipInputProps.js";
 import { useMaybeFieldMetadata } from "./useFieldMetadata.js";
 
 export const useSelectedPathsFromRecordLabel = (props: AutoRelationshipFormProps) => {
@@ -31,7 +35,7 @@ export const useSelectedPathsFromRecordLabel = (props: AutoRelationshipFormProps
         .filter((field) => !isRelationshipField(field) && field.fieldType !== GadgetFieldType.Password)
         .map((field) => field.apiIdentifier) ?? [];
 
-    [recordLabel.primary, recordLabel.secondary, recordLabel.tertiary]
+    getOptionLabelsFromRecordLabel(recordLabel)
       .flatMap((optionLabel) => getSelectedPathsFromOptionLabel(optionLabel, () => defaultFieldsToSelect))
       .forEach((path) => selectedPaths.add(path));
 

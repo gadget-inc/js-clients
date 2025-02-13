@@ -76,7 +76,6 @@ export const makeShadcnAutoComboInput = ({
 
     const requiredIndicator = props.metadata.requiredArgumentForInput ? <ShadcnRequired>*</ShadcnRequired> : null;
 
-    console.log("props :", props);
     useClickOutside(outsideBoxRef, () => {
       if (open) {
         setOpen(false);

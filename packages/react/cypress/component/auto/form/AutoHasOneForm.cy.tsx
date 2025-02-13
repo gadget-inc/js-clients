@@ -107,7 +107,7 @@ describeForEachAutoAdapter(
             field="doodad"
             recordLabel={{
               primary: "name",
-              secondary: (record: any) => `Weight:${record.weight} (${record.active})`,
+              secondary: ({ record }: { record: any }) => `Weight:${record.weight} (${record.active})`,
               tertiary: "size",
             }}
           >
@@ -152,7 +152,7 @@ describeForEachAutoAdapter(
             field="doodad"
             recordLabel={{
               primary: "name",
-              secondary: (record: any) => `Weight:${record.weight} (${record.active})`,
+              secondary: ({ record }: { record: any }) => `Weight:${record.weight} (${record.active})`,
               tertiary: "size",
             }}
           >
@@ -194,7 +194,7 @@ describeForEachAutoAdapter(
             field="doodad"
             recordLabel={{
               primary: "name",
-              secondary: (record: any) => `Weight:${record.weight} (${record.active})`,
+              secondary: ({ record }: { record: any }) => `Weight:${record.weight} (${record.active})`,
               tertiary: "size",
             }}
           >

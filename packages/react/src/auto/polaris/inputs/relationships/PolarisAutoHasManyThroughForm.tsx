@@ -15,10 +15,10 @@ export const PolarisAutoHasManyThroughForm = autoRelationshipForm((props: AutoRe
     append,
     remove,
     joinRecords,
-    primaryLabel,
     listboxId,
     pathPrefix,
     metaDataPathPrefix,
+    recordLabel,
     siblingModelName,
     siblingRecordsLoading,
     siblingRecords,
@@ -68,9 +68,9 @@ export const PolarisAutoHasManyThroughForm = autoRelationshipForm((props: AutoRe
             const siblingRecord = inverseRelatedModelField && record[inverseRelatedModelField];
 
             const siblingOption = getRecordAsOption(siblingRecord, {
-              primary: primaryLabel,
-              secondary: props.recordLabel?.secondary,
-              tertiary: props.recordLabel?.tertiary,
+              primary: recordLabel.primary,
+              secondary: recordLabel.secondary,
+              tertiary: recordLabel.tertiary,
             });
 
             return (
