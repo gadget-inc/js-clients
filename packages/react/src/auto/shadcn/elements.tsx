@@ -1,6 +1,7 @@
 import type React from "react";
 import type { AccordionComponentProps, AccordionContentProps, AccordionItemProps, AccordionTriggerProps } from "./types/accordionTypes.js";
 import type { AvatarFallbackProps, AvatarImageProps, AvatarProps } from "./types/avatarTypes.js";
+import type { CommandProps } from "./types/commandTypes.js";
 import type { DayPickerProps } from "./types/dateTypes.js";
 import type {
   DialogCloseProps,
@@ -78,11 +79,6 @@ export interface DropdownMenuContentProps extends AsChildProps {
   children?: React.ReactNode;
   side?: "top" | "right" | "bottom" | "left";
   sideOffset?: number;
-}
-
-/** The props that a command component injected into autocomponent's shadcn must support */
-export interface CommandProps extends React.HTMLAttributes<HTMLDivElement> {
-  children?: React.ReactNode;
 }
 
 /** The props that an alert component injected into autocomponent's shadcn must support */
@@ -200,8 +196,7 @@ export interface ShadcnElements {
   CardContent: React.ComponentType<CardContentProps>;
 
   /** The Command component from shadcn */
-  //:TODO: This is a hack to get the Command component to work with the CommandItem component. please fix this.
-  Command: React.ForwardRefExoticComponent<React.ComponentType<CommandProps> & React.RefAttributes<HTMLDivElement> & any>;
+  Command: React.ForwardRefExoticComponent<CommandProps & React.RefAttributes<HTMLDivElement>>;
   /** The CommandEmpty component from shadcn */
   CommandEmpty: React.ComponentType<React.HTMLAttributes<HTMLDivElement>>;
   /** The CommandGroup component from shadcn */
