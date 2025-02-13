@@ -1,6 +1,7 @@
 import type React from "react";
 import type { AccordionComponentProps, AccordionContentProps, AccordionItemProps, AccordionTriggerProps } from "./types/accordionTypes.js";
 import type { AvatarFallbackProps, AvatarImageProps, AvatarProps } from "./types/avatarTypes.js";
+import type { DayPickerProps } from "./types/dateTypes.js";
 import type {
   DialogCloseProps,
   DialogContentProps,
@@ -14,7 +15,6 @@ import type {
   DialogTriggerProps,
 } from "./types/dialogTypes.js";
 
-import { DayPickerProps } from "./types/calendarTypes.js";
 import type {
   TableBodyProps,
   TableCaptionProps,
@@ -59,9 +59,25 @@ interface AsChildProps {
 }
 
 export interface DropdownMenuItemProps extends AsChildProps {
+  className?: string;
+  children?: React.ReactNode;
   disabled?: boolean;
-  onSelect?: (value: string) => void;
+  onSelect?: (value: Event) => void;
   textValue?: string;
+  value?: string;
+  variant?: "default" | "destructive" | "secondary" | "ghost" | "link" | null;
+}
+
+export interface DropdownMenuTriggerProps extends AsChildProps {
+  className?: string;
+  children?: React.ReactNode;
+}
+
+export interface DropdownMenuContentProps extends AsChildProps {
+  className?: string;
+  children?: React.ReactNode;
+  side?: "top" | "right" | "bottom" | "left";
+  sideOffset?: number;
 }
 
 /** The props that a command component injected into autocomponent's shadcn must support */
@@ -218,9 +234,9 @@ export interface ShadcnElements {
   /** The DropdownMenu component from shadcn */
   DropdownMenu: React.ComponentType<DropdownMenuProps>;
   /** The DropdownMenuTrigger component from shadcn */
-  DropdownMenuTrigger: React.ComponentType<DropdownMenuItemProps>;
+  DropdownMenuTrigger: React.ComponentType<DropdownMenuTriggerProps>;
   /** The DropdownMenuContent component from shadcn */
-  DropdownMenuContent: React.ComponentType<AsChildProps>;
+  DropdownMenuContent: React.ComponentType<DropdownMenuContentProps>;
   /** The DropdownMenuItem component from shadcn */
   DropdownMenuItem: React.ComponentType<DropdownMenuItemProps>;
   /** The DropdownMenuLabel component from shadcn */
