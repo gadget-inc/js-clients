@@ -2,6 +2,7 @@ import React, { type InputHTMLAttributes } from "react";
 import type { Control } from "../../../useActionForm.js";
 import { autoInput } from "../../AutoInput.js";
 import { useStringInputController } from "../../hooks/useStringInputController.js";
+import { ShadcnRequired } from "../ShadcnRequired.js";
 import type { ShadcnElements } from "../elements.js";
 
 export const makeShadcnAutoStringInput = ({ Input, Label }: Pick<ShadcnElements, "Input" | "Label">) => {
@@ -32,9 +33,13 @@ export const makeShadcnAutoStringInput = ({ Input, Label }: Pick<ShadcnElements,
 
     const inputLabel = customLabel || controllerLabel || metadata.name;
 
+    const requiredIndicator = metadata.requiredArgumentForInput ? <ShadcnRequired>*</ShadcnRequired> : null;
+
     return (
       <div>
-        <Label htmlFor={id}>{inputLabel}</Label>
+        <Label htmlFor={id}>
+          {inputLabel} {requiredIndicator}
+        </Label>
         <div className={suffix ? "relative group border border-input rounded-md focus-within:ring-1 focus-within:ring-ring " : "relative"}>
           <div className="relative flex items-center">
             <Input
