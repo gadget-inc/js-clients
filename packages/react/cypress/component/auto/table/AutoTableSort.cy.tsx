@@ -16,7 +16,6 @@ describe("AutoTable - Sort", () => {
         times: 1,
       },
       (req) => {
-        console.log("fetch metadata");
         req.reply(sortTestWidgetModelMetadata);
       }
     ).as("getModelMetadata");
@@ -30,7 +29,6 @@ describe("AutoTable - Sort", () => {
         times: 1,
       },
       (req) => {
-        console.log("fetch unsorted data");
         req.reply(mockUnsortedIdContent);
       }
     ).as("getWidgets");
@@ -44,7 +42,6 @@ describe("AutoTable - Sort", () => {
         times: 1,
       },
       (req) => {
-        console.log("fetch sorted data");
         req.reply(mockDescendingSortedIdContent);
       }
     ).as("getWidgetsWithDescendingSort");
@@ -58,7 +55,6 @@ describe("AutoTable - Sort", () => {
         times: 1,
       },
       (req) => {
-        console.log("fetch sorted data");
         req.reply(mockAscendingSortedIdContent);
       }
     ).as("getWidgetsWithAscendingSort");

@@ -327,7 +327,7 @@ const isHasManyOrHasManyThroughField = (field: { fieldType: GadgetFieldType }) =
   return isHasManyField(field) || isHasManyThroughField(field);
 };
 
-const isRelationshipField = (field: { fieldType: GadgetFieldType }) => {
+export const isRelationshipField = (field: { fieldType: GadgetFieldType }) => {
   return isHasOneOrBelongsToField(field) || isHasManyOrHasManyThroughField(field);
 };
 

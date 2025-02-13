@@ -31,7 +31,6 @@ export const makeShadcnAutoJSONInput = ({ Label, Textarea }: Pick<ShadcnElements
           {...getPropsWithoutRef(focusProps)}
           {...restOfProps}
           onChange={(e) => {
-            console.log(e.currentTarget.value);
             controller.onChange(e.currentTarget.value);
           }}
           id={id}

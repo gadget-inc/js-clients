@@ -4,9 +4,9 @@ import { useFormContext } from "../../../../useActionForm.js";
 import { autoRelationshipForm } from "../../../AutoInput.js";
 import { RelationshipContext, useAutoRelationship, useRelationshipContext } from "../../../hooks/useAutoRelationship.js";
 import { useHasManyController } from "../../../hooks/useHasManyController.js";
-import { getRecordAsOption, useOptionLabelForField } from "../../../hooks/useRelatedModel.js";
+import { getRecordAsOption, useRecordLabelObjectFromProps } from "../../../hooks/useRelatedModel.js";
 import { useRequiredChildComponentsValidator } from "../../../hooks/useRequiredChildComponentsValidator.js";
-import type { OptionLabel } from "../../../interfaces/AutoRelationshipInputProps.js";
+import type { AutoRelationshipFormProps } from "../../../interfaces/AutoRelationshipInputProps.js";
 import type { ShadcnElements } from "../../elements.js";
 import { makeShadcnRenderOptionLabel } from "../../utils.js";
 
@@ -21,14 +21,7 @@ export const makeShadcnAutoHasManyForm = ({
 }: Pick<ShadcnElements, "Accordion" | "AccordionContent" | "AccordionItem" | "AccordionTrigger" | "Badge" | "Button" | "Label">) => {
   const renderOptionLabel = makeShadcnRenderOptionLabel({ Label, Badge, Button });
 
-  function ShadcnAutoHasManyForm(props: {
-    field: string;
-    label?: React.ReactNode;
-    children: React.ReactNode;
-    primaryLabel?: OptionLabel;
-    secondaryLabel?: OptionLabel;
-    tertiaryLabel?: OptionLabel;
-  }) {
+  function ShadcnAutoHasManyForm(props: AutoRelationshipFormProps) {
     useRequiredChildComponentsValidator(props, "AutoHasManyForm");
     const { metadata } = useAutoRelationship({ field: props.field });
     const { getValues } = useFormContext();
@@ -43,7 +36,7 @@ export const makeShadcnAutoHasManyForm = ({
 
     const modelName = metadata.configuration.relatedModel?.name;
 
-    const primaryLabel = useOptionLabelForField(props.field, props.primaryLabel);
+    const recordLabel = useRecordLabelObjectFromProps(props);
 
     const [editingIndex, setEditingIndex] = useState<number | null>(null);
 
@@ -66,7 +59,7 @@ export const makeShadcnAutoHasManyForm = ({
                 return [];
               }
 
-              const option = getRecordAsOption(record, primaryLabel, props.secondaryLabel, props.tertiaryLabel);
+              const option = getRecordAsOption(record, recordLabel);
 
               const pathPrefix = relationshipContext?.transformPath ? relationshipContext.transformPath(props.field) : props.field;
               const metadataPathPrefix = relationshipContext?.transformMetadataPath
@@ -119,16 +112,14 @@ export const makeShadcnAutoHasManyForm = ({
                   className=""
                 >
                   <AccordionTrigger onClick={(e) => e.preventDefault()}>
-                    {option.label ? (
+                    {option.primary ? (
                       <div className="flex justify-between w-full items-center">
                         <div className="flex flex-col gap-1 items-start">
-                          {option.label && renderOptionLabel(option.label, "primary")}
-                          {option.secondaryLabel && renderOptionLabel(option.secondaryLabel, "secondary")}
+                          {renderOptionLabel(option.primary, "primary")}
+                          {option.secondary && renderOptionLabel(option.secondary, "secondary")}
                         </div>
 
-                        {option.tertiaryLabel && (
-                          <div className="flex items-center">{renderOptionLabel(option.tertiaryLabel, "tertiary")}</div>
-                        )}
+                        {option.tertiary && <div className="flex items-center">{renderOptionLabel(option.tertiary, "tertiary")}</div>}
                       </div>
                     ) : (
                       <Label>Click to edit...</Label>

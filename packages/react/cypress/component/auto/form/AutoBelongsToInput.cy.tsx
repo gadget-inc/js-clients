@@ -179,7 +179,7 @@ describeForEachAutoAdapter(
         cy.mountWithWrapper(
           <AutoForm action={api.widget.update} findBy="42">
             <SubmitResultBanner />
-            <AutoBelongsToInput field="section" optionLabel={(record: any) => `Custom label for ${record.id}`} />
+            <AutoBelongsToInput field="section" optionLabel={({ record }: { record: any }) => `Custom label for ${record.id}`} />
             <AutoSubmit />
           </AutoForm>,
           wrapper

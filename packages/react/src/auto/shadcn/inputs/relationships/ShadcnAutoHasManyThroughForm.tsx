@@ -5,7 +5,7 @@ import { debounce } from "../../../../utils.js";
 import { autoRelationshipForm } from "../../../AutoInput.js";
 import { RelationshipContext } from "../../../hooks/useAutoRelationship.js";
 import { getRecordAsOption } from "../../../hooks/useRelatedModel.js";
-import type { Option, OptionLabel } from "../../../interfaces/AutoRelationshipInputProps.js";
+import type { AutoRelationshipFormProps, DisplayedRecordOption } from "../../../interfaces/AutoRelationshipInputProps.js";
 import type { ShadcnElements } from "../../elements.js";
 import { makeShadcnRenderOptionLabel } from "../../utils.js";
 import { makeShadcnAutoComboInput } from "../ShadcnAutoComboInput.js";
@@ -59,7 +59,7 @@ export const makeShadcnAutoHasManyThroughForm = ({
 
   const renderOptionLabel = makeShadcnRenderOptionLabel({ Label, Badge, Button });
 
-  const SiblingOption = (props: { option: Option; onSelect: (option: Option) => void }) => {
+  const SiblingOption = (props: { option: DisplayedRecordOption; onSelect: (option: DisplayedRecordOption) => void }) => {
     const { option, onSelect } = props;
 
     return (
@@ -70,8 +70,8 @@ export const makeShadcnAutoHasManyThroughForm = ({
       >
         <div className="flex justify-between items-center w-full">
           <div className="flex flex-row items-center gap-2">
-            {renderOptionLabel(option.label, "primary")}
-            {option.secondaryLabel && renderOptionLabel(option.secondaryLabel, "secondary")}
+            {renderOptionLabel(option.primary, "primary")}
+            {option.secondary && renderOptionLabel(option.secondary, "secondary")}
           </div>
           <PlusIcon className="w-4 h-4 shrink-0" />
         </div>
@@ -79,14 +79,7 @@ export const makeShadcnAutoHasManyThroughForm = ({
     );
   };
 
-  function ShadcnAutoHasManyThroughForm(props: {
-    field: string;
-    label?: React.ReactNode;
-    children: React.ReactNode;
-    primaryLabel?: OptionLabel;
-    secondaryLabel?: OptionLabel;
-    tertiaryLabel?: OptionLabel;
-  }) {
+  function ShadcnAutoHasManyThroughForm(props: AutoRelationshipFormProps) {
     const [open, setOpen] = useState(false);
     const {
       field,
@@ -94,11 +87,10 @@ export const makeShadcnAutoHasManyThroughForm = ({
       remove,
       joinRecords,
       metadata,
-      primaryLabel,
-      hasChildForm,
       listboxId,
       pathPrefix,
       metaDataPathPrefix,
+      recordLabel,
       siblingModelName,
       siblingRecordsLoading,
       siblingRecords,
@@ -175,7 +167,11 @@ export const makeShadcnAutoHasManyThroughForm = ({
             {joinRecords.map(([fieldKey, idx, record]) => {
               const siblingRecord = inverseRelatedModelField && record[inverseRelatedModelField];
 
-              const siblingOption = getRecordAsOption(siblingRecord, primaryLabel, props.secondaryLabel, props.tertiaryLabel);
+              const siblingOption = getRecordAsOption(siblingRecord, {
+                primary: recordLabel.primary,
+                secondary: recordLabel.secondary,
+                tertiary: recordLabel.tertiary,
+              });
 
               return (
                 <div className="flex items-center w-full border border-gray-300 rounded-md " key={fieldKey}>
@@ -184,10 +180,10 @@ export const makeShadcnAutoHasManyThroughForm = ({
                       <div className="flex justify-between items-center w-full">
                         <div className="flex flex-col gap-1">
                           <div className="flex items-center gap-2">
-                            {renderOptionLabel(siblingOption.label, "primary")}
-                            {siblingOption?.tertiaryLabel && renderOptionLabel(siblingOption.tertiaryLabel, "tertiary")}
+                            {renderOptionLabel(siblingOption.primary, "primary")}
+                            {siblingOption?.tertiary && renderOptionLabel(siblingOption.tertiary, "tertiary")}
                           </div>
-                          {siblingOption?.secondaryLabel && renderOptionLabel(siblingOption.secondaryLabel, "secondary")}
+                          {siblingOption?.secondary && renderOptionLabel(siblingOption.secondary, "secondary")}
                         </div>
                         <Button
                           id={`deleteButton_${pathPrefix}.${idx}`}
@@ -201,7 +197,7 @@ export const makeShadcnAutoHasManyThroughForm = ({
                         </Button>
                       </div>
                     </div>
-                    {hasChildForm && (
+                    {props.children && (
                       <div
                         className="flex-1 p-2 border-t border-gray-300"
                         onClick={(e) => {
