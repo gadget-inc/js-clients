@@ -250,7 +250,6 @@ export const useAutoForm = <
     registerFields(registeredFieldsFromChildren);
   }, [registeredFieldsFromChildren.join(","), registerFields]);
 
-  console.log("registeredFieldsFromChildren :", registeredFieldsFromChildren);
   if (hasRegisteredFieldsFromChildren) {
     include = Array.from(fieldSet);
     exclude = undefined;
