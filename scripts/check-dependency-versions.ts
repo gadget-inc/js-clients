@@ -18,7 +18,9 @@ for (const filepath of await globby("packages/*/package.json")) {
     for (const [target, requiredVersion] of Object.entries(targets)) {
       const dependencyVersion = manifest[key]?.[target];
       if (dependencyVersion) {
-        if (!semver.satisfies(requiredVersion, dependencyVersion)) {
+        // Parse the version range to handle pre-release versions
+        const range = semver.validRange(dependencyVersion);
+        if (!range || !semver.satisfies(requiredVersion, range, { includePrerelease: true })) {
           console.error(`${manifest.name} has an invalid version for ${key} on ${target}`);
           console.error(`${dependencyVersion} does not satisfy ${requiredVersion}`);
           process.exitCode = 1;
