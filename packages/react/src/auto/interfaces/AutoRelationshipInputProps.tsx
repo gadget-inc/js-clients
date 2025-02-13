@@ -2,14 +2,14 @@ import type { FindManyOptions } from "@gadgetinc/api-client-core";
 import type { ReactNode } from "react";
 import type { Control } from "../../useActionForm.js";
 
-export type OptionFilter = FindManyOptions["filter"];
+export type RecordFilter = FindManyOptions["filter"];
 
 export interface AutoRelationshipInputProps {
   field: string;
   control?: Control<any>;
   optionLabel?: OptionLabel;
   label?: string;
-  optionFilter?: OptionFilter;
+  recordFilter?: RecordFilter;
 }
 
 export interface Option {

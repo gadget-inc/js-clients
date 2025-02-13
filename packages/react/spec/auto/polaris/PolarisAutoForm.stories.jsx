@@ -133,7 +133,7 @@ const ConditionalAppearingAutoInput = () => {
         <>
           <PolarisAutoInput field="isChecked" />
           <PolarisAutoInput field="section" />
-          <PolarisAutoHasManyInput field="gizmos" optionFilter={{ name: { equals: "gizmo 2" } }} />
+          <PolarisAutoHasManyInput field="gizmos" recordFilter={{ name: { equals: "gizmo 2" } }} />
           <PolarisAutoInput field="customStringParam" />
         </>
       )}
