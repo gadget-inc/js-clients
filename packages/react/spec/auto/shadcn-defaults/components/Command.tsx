@@ -89,13 +89,6 @@ const CommandItem = React.forwardRef<
   />
 ));
 
-const CommandLoading = React.forwardRef<
-  React.ElementRef<typeof CommandPrimitive.Loading>,
-  React.ComponentPropsWithoutRef<typeof CommandPrimitive.Loading>
->((props, ref) => <CommandPrimitive.Loading ref={ref} className="py-6 text-center text-sm" {...props} />);
-
-CommandLoading.displayName = CommandPrimitive.Loading.displayName;
-
 CommandItem.displayName = CommandPrimitive.Item.displayName;
 
-export { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem, CommandList, CommandLoading, CommandSeparator };
+export { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem, CommandList, CommandSeparator };

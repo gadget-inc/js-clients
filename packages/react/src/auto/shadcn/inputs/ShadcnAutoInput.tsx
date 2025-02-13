@@ -31,7 +31,6 @@ export const makeShadcnAutoInput = (
     | "Badge"
     | "Command"
     | "CommandInput"
-    | "CommandLoading"
     | "CommandItem"
     | "CommandList"
     | "CommandEmpty"
@@ -40,7 +39,6 @@ export const makeShadcnAutoInput = (
     | "Popover"
     | "PopoverTrigger"
     | "PopoverContent"
-    | "ScrollArea"
     | "ScrollBar"
     | "Textarea"
   >

@@ -17,24 +17,11 @@ export const makeShadcnAutoHasManyThroughInput = ({
   Label,
   CommandList,
   CommandEmpty,
-  CommandLoading,
   CommandGroup,
   Checkbox,
-  ScrollArea,
 }: Pick<
   ShadcnElements,
-  | "Badge"
-  | "Button"
-  | "Command"
-  | "CommandItem"
-  | "CommandList"
-  | "CommandLoading"
-  | "CommandEmpty"
-  | "CommandGroup"
-  | "CommandInput"
-  | "Label"
-  | "Checkbox"
-  | "ScrollArea"
+  "Badge" | "Button" | "Command" | "CommandItem" | "CommandList" | "CommandEmpty" | "CommandGroup" | "CommandInput" | "Label" | "Checkbox"
 >) => {
   const { SelectedRecordTags } = makeSelectedRecordTags({ Badge, Button });
 
@@ -44,11 +31,9 @@ export const makeShadcnAutoHasManyThroughInput = ({
     Label,
     CommandItem,
     CommandList,
-    CommandLoading,
     CommandEmpty,
     CommandGroup,
     Checkbox,
-    ScrollArea,
   });
 
   function ShadcnAutoHasManyThroughInput(props: AutoRelationshipInputProps) {

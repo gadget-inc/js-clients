@@ -12,14 +12,12 @@ export const makeShadcnAutoEnumInput = ({
   Button,
   Command,
   CommandItem,
-  CommandLoading,
   CommandInput,
   Label,
   CommandList,
   CommandEmpty,
   CommandGroup,
   Checkbox,
-  ScrollArea,
 }: Pick<
   ShadcnElements,
   | "Badge"
@@ -28,25 +26,21 @@ export const makeShadcnAutoEnumInput = ({
   | "CommandItem"
   | "CommandList"
   | "CommandEmpty"
-  | "CommandLoading"
   | "CommandGroup"
   | "CommandInput"
   | "Label"
   | "Checkbox"
-  | "ScrollArea"
   | "Input"
 >) => {
   const ShadcnComboInput = makeShadcnAutoComboInput({
     Command,
     CommandInput,
-    CommandLoading,
     Label,
     CommandItem,
     CommandList,
     CommandEmpty,
     CommandGroup,
     Checkbox,
-    ScrollArea,
   });
 
   function ShadcnAutoEnumInput(props: { field: string; control?: Control<any>; label?: string }) {

@@ -33,16 +33,14 @@ export const makeShadcnAutoComboInput = ({
   CommandEmpty,
   CommandGroup,
   Checkbox,
-  ScrollArea,
 }: Pick<
   ShadcnElements,
-  "Command" | "CommandInput" | "Label" | "CommandItem" | "CommandList" | "CommandEmpty" | "CommandGroup" | "Checkbox" | "ScrollArea"
+  "Command" | "CommandInput" | "Label" | "CommandItem" | "CommandList" | "CommandEmpty" | "CommandGroup" | "Checkbox"
 >) => {
   const { RelatedModelOption } = makeRelatedModelOption({
     CommandItem,
     CommandList,
     CommandEmpty,
-    ScrollArea,
     CommandGroup,
     Checkbox,
     Label,

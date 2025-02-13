@@ -24,7 +24,7 @@ export type RelatedModelOptionsProps = {
 };
 
 export const makeRelatedModelOption = (
-  elements: Pick<ShadcnElements, "CommandItem" | "CommandList" | "CommandEmpty" | "ScrollArea" | "CommandGroup" | "Checkbox" | "Label">
+  elements: Pick<ShadcnElements, "CommandItem" | "CommandList" | "CommandEmpty" | "CommandGroup" | "Checkbox" | "Label">
 ) => {
   const { CommandList, CommandEmpty, CommandGroup, CommandItem } = elements;
 

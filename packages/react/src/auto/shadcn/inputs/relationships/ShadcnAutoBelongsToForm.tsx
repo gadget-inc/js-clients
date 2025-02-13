@@ -23,7 +23,6 @@ export const makeShadcnAutoBelongsToForm = ({
   CommandEmpty,
   CommandGroup,
   Checkbox,
-  ScrollArea,
   Dialog,
   DialogContent,
   DialogClose,
@@ -46,7 +45,6 @@ export const makeShadcnAutoBelongsToForm = ({
   | "DropdownMenuContent"
   | "DropdownMenuItem"
   | "DropdownMenuTrigger"
-  | "ScrollArea"
   | "Dialog"
   | "DialogContent"
   | "DialogHeader"
@@ -65,7 +63,6 @@ export const makeShadcnAutoBelongsToForm = ({
     CommandEmpty,
     CommandGroup,
     Checkbox,
-    ScrollArea,
   });
 
   function ShadcnAutoBelongsToForm(props: {

@@ -14,13 +14,11 @@ export const makeShadcnAutoHasOneForm = ({
   Command,
   CommandItem,
   CommandInput,
-  CommandLoading,
   Label,
   CommandList,
   CommandEmpty,
   CommandGroup,
   Checkbox,
-  ScrollArea,
   Accordion,
   AccordionItem,
   AccordionTrigger,
@@ -31,13 +29,11 @@ export const makeShadcnAutoHasOneForm = ({
   | "Command"
   | "CommandItem"
   | "CommandInput"
-  | "CommandLoading"
   | "Label"
   | "CommandList"
   | "CommandEmpty"
   | "CommandGroup"
   | "Checkbox"
-  | "ScrollArea"
   | "Accordion"
   | "AccordionItem"
   | "AccordionTrigger"
@@ -48,13 +44,11 @@ export const makeShadcnAutoHasOneForm = ({
     Command,
     CommandItem,
     CommandInput,
-    CommandLoading,
     Label,
     CommandList,
     CommandEmpty,
     CommandGroup,
     Checkbox,
-    ScrollArea,
   });
 
   function ShadcnHasOneForm(props: {

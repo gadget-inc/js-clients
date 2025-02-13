@@ -122,14 +122,6 @@ export type InputProps = React.InputHTMLAttributes<HTMLInputElement>;
 /** The props that a label component injected into autocomponent's shadcn must support */
 export type LabelProps = React.LabelHTMLAttributes<HTMLLabelElement>;
 
-/** The props that a scroll area component injected into autocomponent's shadcn must support */
-export type ScrollAreaProps = React.HTMLAttributes<HTMLDivElement>;
-
-/** The props that a scroll bar component injected into autocomponent's shadcn must support */
-export interface ScrollBarProps extends React.HTMLAttributes<HTMLDivElement> {
-  orientation?: "vertical" | "horizontal";
-}
-
 /** The props that a checkbox component injected into autocomponent's shadcn must support */
 export interface CheckboxProps extends Omit<ButtonProps, "checked" | "defaultChecked"> {
   checked?: boolean | "indeterminate";
@@ -145,14 +137,13 @@ export interface PopoverProps extends React.HTMLAttributes<HTMLDivElement> {
   onOpenChange?: (open: boolean) => void;
 }
 
-/** The props that a popover anchor component injected into autocomponent's shadcn must support */
-export type PopoverAnchorProps = React.HTMLAttributes<HTMLDivElement>;
-
 /** The props that a popover content component injected into autocomponent's shadcn must support */
 export type PopoverContentProps = React.HTMLAttributes<HTMLDivElement>;
 
 /** The props that a popover trigger component injected into autocomponent's shadcn must support */
-export type PopoverTriggerProps = React.HTMLAttributes<HTMLDivElement>;
+export type PopoverTriggerProps = React.HTMLAttributes<HTMLButtonElement> & {
+  asChild?: boolean;
+};
 
 /** The props that a skeleton component injected into autocomponent's shadcn must support */
 export type SkeletonProps = Pick<React.HTMLAttributes<HTMLDivElement>, "className">;
@@ -253,21 +244,12 @@ export interface ShadcnElements {
   //TODO: Remove these as they are not used
   /** The Popover component from shadcn */
   Popover: React.ComponentType<PopoverProps>;
-  //TODO: Remove these as they are not used
-  /** The PopoverAnchor component from shadcn */
-  PopoverAnchor: React.ComponentType<PopoverAnchorProps>;
-  //TODO: Remove these as they are not used
+
   /** The PopoverContent component from shadcn */
   PopoverContent: React.ComponentType<PopoverContentProps>;
   /** The PopoverTrigger component from shadcn */
-  //:TODO: This is a hack to get the PopoverTrigger component to work with the Popover component. please fix this.
-  PopoverTrigger: React.ForwardRefExoticComponent<PopoverTriggerProps & React.RefAttributes<HTMLButtonElement> & any>;
 
-  /** The ScrollArea component from shadcn */
-  ScrollArea: React.ForwardRefExoticComponent<ScrollAreaProps & React.RefAttributes<HTMLDivElement> & any>;
-
-  /** The ScrollBar component from shadcn */
-  ScrollBar: React.ComponentType<ScrollBarProps>;
+  PopoverTrigger: React.ForwardRefExoticComponent<PopoverTriggerProps>;
 
   /** The Skeleton component from shadcn */
   Skeleton: React.ComponentType<SkeletonProps>;
