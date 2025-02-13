@@ -105,7 +105,7 @@ describeForEachAutoAdapter(
           <SubmitResultBanner />
           <AutoHasOneForm
             field="doodad"
-            displayRecord={{
+            recordLabel={{
               primary: "name",
               secondary: (record: any) => `Weight:${record.weight} (${record.active})`,
               tertiary: "size",
@@ -150,7 +150,7 @@ describeForEachAutoAdapter(
           <SubmitResultBanner />
           <AutoHasOneForm
             field="doodad"
-            displayRecord={{
+            recordLabel={{
               primary: "name",
               secondary: (record: any) => `Weight:${record.weight} (${record.active})`,
               tertiary: "size",
@@ -192,7 +192,7 @@ describeForEachAutoAdapter(
           <SubmitResultBanner />
           <AutoHasOneForm
             field="doodad"
-            displayRecord={{
+            recordLabel={{
               primary: "name",
               secondary: (record: any) => `Weight:${record.weight} (${record.active})`,
               tertiary: "size",

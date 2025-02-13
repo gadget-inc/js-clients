@@ -61,7 +61,7 @@ export const useHasManyThroughForm = (props: AutoRelationshipFormProps) => {
     });
   }, [fields, records]);
 
-  const primaryLabel = useOptionLabelForField(field, props.displayRecord?.primary);
+  const primaryLabel = useOptionLabelForField(field, props.recordLabel?.primary);
 
   return {
     fields,

@@ -113,7 +113,7 @@ describeForEachAutoAdapter(
           <SubmitResultBanner />
           <AutoHasManyForm
             field="gizmos"
-            displayRecord={{
+            recordLabel={{
               primary: "name",
               secondary: "orientation",
             }}

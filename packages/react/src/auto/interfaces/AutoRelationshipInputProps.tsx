@@ -8,7 +8,7 @@ export interface AutoRelationshipInputProps {
   label?: string;
 }
 
-export interface DisplayedRecordOption extends DisplayRecord<ReactNode> {
+export interface DisplayedRecordOption extends RecordLabel<ReactNode> {
   id: string;
 }
 
@@ -17,7 +17,7 @@ export interface DisplayedRecordOption extends DisplayRecord<ReactNode> {
  */
 export type OptionLabel = string | string[] | ((record: Record<string, any>) => ReactNode);
 
-export type DisplayRecord<T = OptionLabel> = {
+export type RecordLabel<T = OptionLabel> = {
   primary?: T;
   secondary?: T;
   tertiary?: T;
@@ -27,5 +27,5 @@ export type AutoRelationshipFormProps = {
   field: string;
   label?: ReactNode;
   children: ReactNode;
-  displayRecord?: DisplayRecord;
+  recordLabel?: RecordLabel;
 };

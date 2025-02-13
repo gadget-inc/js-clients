@@ -68,7 +68,7 @@ describeForEachAutoAdapter(
         <AutoForm action={api.university.course.update} findBy="3">
           <AutoHasManyThroughForm
             field="students"
-            displayRecord={{
+            recordLabel={{
               primary: ["firstName", "lastName"],
               secondary: (record: any) => `Year: ${record.year}`,
               tertiary: "department",

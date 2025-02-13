@@ -2,7 +2,7 @@ import React, { useEffect, useMemo } from "react";
 import { useFieldsFromChildComponents } from "./AutoFormContext.js";
 import { useRelationshipContext } from "./hooks/useAutoRelationship.js";
 import { useFieldApiIdentifier, useRelationshipTransformedMetaDataPaths } from "./hooks/useFieldMetadata.js";
-import { useSelectedPathsFromDisplayRecord } from "./hooks/useSelectedPathsFromDisplayRecord.js";
+import { useSelectedPathsFromRecordLabel } from "./hooks/useSelectedPathsFromRecordLabel.js";
 import type { AutoRelationshipFormProps } from "./interfaces/AutoRelationshipInputProps.js";
 
 export interface AutoInputComponent<P> extends React.FC<P> {
@@ -47,7 +47,7 @@ export function autoRelationshipForm<P extends AutoRelationshipFormProps>(Compon
   const WrappedComponent: React.FC<P> = (props) => {
     const { hasCustomFormChildren, registerFields, fieldSet } = useFieldsFromChildComponents();
 
-    const displayedRecordPaths = useSelectedPathsFromDisplayRecord(props);
+    const displayedRecordPaths = useSelectedPathsFromRecordLabel(props);
 
     const relationshipTransformedPaths = useRelationshipTransformedMetaDataPaths(props.field);
     const displayedRecordPathsToRegister = useMemo(

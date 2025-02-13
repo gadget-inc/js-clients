@@ -169,8 +169,8 @@ export const makeShadcnAutoHasManyThroughForm = ({
 
               const siblingOption = getRecordAsOption(siblingRecord, {
                 primary: primaryLabel,
-                secondary: props.displayRecord?.secondary,
-                tertiary: props.displayRecord?.tertiary,
+                secondary: props.recordLabel?.secondary,
+                tertiary: props.recordLabel?.tertiary,
               });
 
               return (

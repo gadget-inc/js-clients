@@ -25,7 +25,7 @@ export const PolarisAutoHasManyForm = autoRelationshipForm((props: AutoRelations
 
   const modelName = metadata.configuration.relatedModel?.name;
 
-  const primaryLabel = useOptionLabelForField(props.field, props.displayRecord?.primary);
+  const primaryLabel = useOptionLabelForField(props.field, props.recordLabel?.primary);
 
   const [editingIndex, setEditingIndex] = useState<number | null>(null);
 
@@ -51,8 +51,8 @@ export const PolarisAutoHasManyForm = autoRelationshipForm((props: AutoRelations
 
             const option = getRecordAsOption(record, {
               primary: primaryLabel,
-              secondary: props.displayRecord?.secondary,
-              tertiary: props.displayRecord?.tertiary,
+              secondary: props.recordLabel?.secondary,
+              tertiary: props.recordLabel?.tertiary,
             });
 
             const pathPrefix = relationshipContext?.transformPath ? relationshipContext.transformPath(props.field) : props.field;

@@ -41,7 +41,7 @@ export const useHasOneInputController = (props: AutoRelationshipInputProps) => {
     relatedModelOptions,
   } = useHasOneController({
     field,
-    displayRecord: { primary: props.optionLabel },
+    recordLabel: { primary: props.optionLabel },
   });
 
   const { path } = fieldMetadata;

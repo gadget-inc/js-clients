@@ -36,7 +36,7 @@ export const useBelongsToInputController = (props: AutoRelationshipInputProps) =
   const { field, control, optionLabel } = props;
   const { fieldMetadata, relatedModelOptions, isLoading, errorMessage } = useBelongsToController({
     field,
-    displayRecord: { primary: optionLabel },
+    recordLabel: { primary: optionLabel },
   });
   const { path } = fieldMetadata;
 

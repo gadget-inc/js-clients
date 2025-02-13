@@ -30,7 +30,7 @@ const ExampleWidgetAutoRelatedForm = (props) => {
         <Card>
           <PolarisAutoBelongsToForm
             field="section"
-            displayRecord={{
+            recordLabel={{
               primary: "name",
               secondary: "name",
               tertiary: "id",
@@ -43,7 +43,7 @@ const ExampleWidgetAutoRelatedForm = (props) => {
         <Card>
           <PolarisAutoHasOneForm
             field="doodad"
-            displayRecord={{
+            recordLabel={{
               primary: "name",
               secondary: (record) => `${record.weight} (${record.active})`,
               tertiary: "size",
@@ -60,7 +60,7 @@ const ExampleWidgetAutoRelatedForm = (props) => {
           <PolarisAutoHasManyForm
             label={<Text as="h2" variant="headingSm">{`Has Many Form -- Gizmos`}</Text>}
             field="gizmos"
-            displayRecord={{
+            recordLabel={{
               primary: "name",
               secondary: "orientation",
               tertiary: (record) => <Text>{record.id}</Text>,
@@ -71,7 +71,7 @@ const ExampleWidgetAutoRelatedForm = (props) => {
             <PolarisAutoInput field="attachment" />
             <PolarisAutoHasManyForm
               field="doodads"
-              displayRecord={{
+              recordLabel={{
                 primary: "name",
                 secondary: "weight",
               }}
@@ -190,7 +190,7 @@ const ExampleCourseCreateRelatedForm = (props) => {
         <Card>
           <PolarisAutoHasManyThroughForm
             field="students"
-            displayRecord={{
+            recordLabel={{
               primary: ["firstName", "lastName"],
               secondary: (record) => {
                 if (record.year <= 1) {
@@ -223,7 +223,7 @@ const ExampleCourseCreateRelatedForm = (props) => {
         <Card>
           <PolarisAutoHasManyThroughForm
             field="professors"
-            displayRecord={{
+            recordLabel={{
               primary: ["title", "firstName", "lastName"],
             }}
           />
@@ -268,7 +268,7 @@ const ExampleTweeterFollowerCreateRelatedForm = (props) => {
         <Card>
           <PolarisAutoHasManyThroughForm
             field="followers"
-            displayRecord={{
+            recordLabel={{
               primary: "name",
             }}
           >
@@ -282,7 +282,7 @@ const ExampleTweeterFollowerCreateRelatedForm = (props) => {
         <Card>
           <PolarisAutoHasManyThroughForm
             field="followees"
-            displayRecord={{
+            recordLabel={{
               primary: "name",
             }}
           >
@@ -321,7 +321,7 @@ export const DeepRelationshipChain = {
                   {/* level 2 hasMany */}
                   <PolarisAutoHasManyForm
                     field="cities"
-                    displayRecord={{
+                    recordLabel={{
                       primary: (record) => `${record.englishName} ${record.localName ? `(${record.localName})` : ""}`,
                     }}
                   >
@@ -402,18 +402,18 @@ const MayorOrCitizenSelect = () => {
       </Box>
       {showMayor ? (
         <Card>
-          <PolarisAutoHasOneForm field="mayor" displayRecord={{ primary: ["firstName", "lastName"] }}>
+          <PolarisAutoHasOneForm field="mayor" recordLabel={{ primary: ["firstName", "lastName"] }}>
             <PolarisAutoInput field="firstName" />
             <PolarisAutoInput field="lastName" />
           </PolarisAutoHasOneForm>
         </Card>
       ) : (
         <Card>
-          <PolarisAutoHasManyForm field="citizens" displayRecord={{ primary: ["firstName", "lastName"] }}>
+          <PolarisAutoHasManyForm field="citizens" recordLabel={{ primary: ["firstName", "lastName"] }}>
             <PolarisAutoInput field="firstName" />
             <PolarisAutoInput field="lastName" />
 
-            <PolarisAutoBelongsToForm field="cityOfMayorDuty" displayRecord={{ primary: ["englishName", "localName"] }}>
+            <PolarisAutoBelongsToForm field="cityOfMayorDuty" recordLabel={{ primary: ["englishName", "localName"] }}>
               <PolarisAutoInput field="englishName" />
               <PolarisAutoInput field="localName" />
             </PolarisAutoBelongsToForm>

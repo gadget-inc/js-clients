@@ -52,13 +52,13 @@ export const useSingleRelatedRecordRelationshipForm = (
     }
   }, [record, defaultRecordId, path, setValue, submitCount, isSubmitSuccessful]);
 
-  const primaryLabel = useOptionLabelForField(props.field, props.displayRecord?.primary);
+  const primaryLabel = useOptionLabelForField(props.field, props.recordLabel?.primary);
 
   const recordOption = record
     ? getRecordAsOption(record, {
         primary: primaryLabel,
-        secondary: props.displayRecord?.secondary,
-        tertiary: props.displayRecord?.tertiary,
+        secondary: props.recordLabel?.secondary,
+        tertiary: props.recordLabel?.tertiary,
       })
     : null;
   const relatedModelName = metadata.name ?? "Unknown";

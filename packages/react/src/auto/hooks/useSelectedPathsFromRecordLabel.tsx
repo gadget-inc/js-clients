@@ -10,12 +10,12 @@ import { isRelationshipField } from "../../use-table/helpers.js";
 import type { AutoRelationshipFormProps, OptionLabel } from "../interfaces/AutoRelationshipInputProps.js";
 import { useMaybeFieldMetadata } from "./useFieldMetadata.js";
 
-export const useSelectedPathsFromDisplayRecord = (props: AutoRelationshipFormProps) => {
-  const { field, displayRecord } = props;
+export const useSelectedPathsFromRecordLabel = (props: AutoRelationshipFormProps) => {
+  const { field, recordLabel } = props;
   const { metadata } = useMaybeFieldMetadata(field);
 
   const selectedPaths = useMemo(() => {
-    if (!displayRecord || !metadata || !isRelationshipField(metadata)) {
+    if (!recordLabel || !metadata || !isRelationshipField(metadata)) {
       return [];
     }
     const fieldConfig = metadata.configuration as
@@ -31,17 +31,17 @@ export const useSelectedPathsFromDisplayRecord = (props: AutoRelationshipFormPro
         .filter((field) => !isRelationshipField(field) && field.fieldType !== GadgetFieldType.Password)
         .map((field) => field.apiIdentifier) ?? [];
 
-    [displayRecord.primary, displayRecord.secondary, displayRecord.tertiary]
+    [recordLabel.primary, recordLabel.secondary, recordLabel.tertiary]
       .flatMap((optionLabel) => getSelectedPathsFromOptionLabel(optionLabel, () => defaultFieldsToSelect))
       .forEach((path) => selectedPaths.add(path));
 
     return Array.from(selectedPaths);
-  }, [displayRecord, metadata]);
+  }, [recordLabel, metadata]);
 
   return selectedPaths;
 };
 
-export const getSelectedPathsFromOptionLabel = (optionLabel?: OptionLabel, getFieldsToSelectOnDisplayRecordCallback?: () => string[]) => {
+export const getSelectedPathsFromOptionLabel = (optionLabel?: OptionLabel, getFieldsToSelectOnRecordLabelCallback?: () => string[]) => {
   if (!optionLabel) {
     return [];
   }
@@ -55,7 +55,7 @@ export const getSelectedPathsFromOptionLabel = (optionLabel?: OptionLabel, getFi
   }
 
   // Callback instead of explicit selection
-  return getFieldsToSelectOnDisplayRecordCallback?.().filter((field) => !displayRecordCallbackOmittedFields.includes(field)) ?? [];
+  return getFieldsToSelectOnRecordLabelCallback?.().filter((field) => !recordLabelCallbackOmittedFields.includes(field)) ?? [];
 };
 
-const displayRecordCallbackOmittedFields = ["createdAt", "updatedAt"];
+const recordLabelCallbackOmittedFields = ["createdAt", "updatedAt"];

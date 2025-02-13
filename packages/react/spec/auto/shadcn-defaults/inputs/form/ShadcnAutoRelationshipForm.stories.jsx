@@ -23,7 +23,7 @@ const Component = (props) => {
         <Card className="p-6 w-full bg-white shadow-lg rounded-lg">
           <AutoBelongsToForm
             field="section"
-            displayRecord={{
+            recordLabel={{
               primary: "name",
             }}
             renderSelectedRecord={(record) => <Label>this is a custom belongsTo render for {record.name}</Label>}
@@ -35,7 +35,7 @@ const Component = (props) => {
         <Card className="p-6 w-full bg-white shadow-lg rounded-lg">
           <AutoHasOneForm
             field="doodad"
-            displayRecord={{
+            recordLabel={{
               primary: "name",
               secondary: (record) => `${record.weight ?? "N/A"} (${record.active ?? "N/A"})`,
               tertiary: "size",
@@ -58,7 +58,7 @@ const Component = (props) => {
               </Label>
             }
             field="gizmos"
-            displayRecord={{
+            recordLabel={{
               primary: "name",
               secondary: "orientation",
             }}
@@ -69,7 +69,7 @@ const Component = (props) => {
               <AutoInput field="attachment" />
               <AutoHasManyForm
                 field="doodads"
-                displayRecord={{
+                recordLabel={{
                   primary: "name",
                   secondary: "weight",
                 }}
@@ -191,7 +191,7 @@ const ExampleTweeterFollowerCreateRelatedForm = (props) => {
         <Card className="p-6 w-full bg-white shadow-lg rounded-lg">
           <AutoHasManyThroughForm
             field="followers"
-            displayRecord={{
+            recordLabel={{
               primary: "name",
             }}
           >
@@ -205,7 +205,7 @@ const ExampleTweeterFollowerCreateRelatedForm = (props) => {
         <Card className="p-6 w-full bg-white shadow-lg rounded-lg">
           <AutoHasManyThroughForm
             field="followees"
-            displayRecord={{
+            recordLabel={{
               primary: "name",
             }}
           >
@@ -264,7 +264,7 @@ const ExampleCourseCreateRelatedForm = (props) => {
           <Label>Has Many Through Form -- Students</Label>
           <AutoHasManyThroughForm
             field="students"
-            displayRecord={{
+            recordLabel={{
               primary: ["firstName", "lastName"],
               secondary: (record) => {
                 if (record.year <= 1) {
@@ -293,7 +293,7 @@ const ExampleCourseCreateRelatedForm = (props) => {
           <Label>Has Many Through Form -- Professors</Label>
           <AutoHasManyThroughForm
             field="professors"
-            displayRecord={{
+            recordLabel={{
               primary: ["title", "firstName", "lastName"],
             }}
           />
@@ -411,7 +411,7 @@ const MayorOrCitizenSelect = () => {
         <Card className="p-6 w-full bg-white shadow-lg rounded-lg">
           <AutoHasOneForm
             field="mayor"
-            displayRecord={{
+            recordLabel={{
               primary: ["firstName", "lastName"],
             }}
           >
@@ -423,7 +423,7 @@ const MayorOrCitizenSelect = () => {
         <Card className="p-6 w-full bg-white shadow-lg rounded-lg">
           <AutoHasManyForm
             field="citizens"
-            displayRecord={{
+            recordLabel={{
               primary: ["firstName", "lastName"],
             }}
           >
@@ -432,7 +432,7 @@ const MayorOrCitizenSelect = () => {
 
             <AutoBelongsToForm
               field="cityOfMayorDuty"
-              displayRecord={{
+              recordLabel={{
                 primary: ["englishName", "localName"],
               }}
             >

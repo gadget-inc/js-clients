@@ -20,8 +20,8 @@ import {
 } from "./AutoFormActionValidators.js";
 import { useFieldsFromChildComponents } from "./AutoFormContext.js";
 import { isAutoInput } from "./AutoInput.js";
-import { getSelectedPathsFromOptionLabel } from "./hooks/useSelectedPathsFromDisplayRecord.js";
-import { type DisplayRecord } from "./interfaces/AutoRelationshipInputProps.js";
+import { getSelectedPathsFromOptionLabel } from "./hooks/useSelectedPathsFromRecordLabel.js";
+import { type RecordLabel } from "./interfaces/AutoRelationshipInputProps.js";
 
 /** When the AutoForm does not have children, these properties are available to control the rendering of the form */
 type AutoFormPropsWithoutChildren = {
@@ -241,7 +241,7 @@ export const useAutoForm = <
   const registeredFieldsFromChildren = hasCustomFormChildren
     ? extractPathsFromChildren({
         children: "children" in props ? props.children : undefined,
-        getFieldsToSelectOnDisplayRecordCallback: (path) =>
+        getFieldsToSelectOnRecordLabelCallback: (path) =>
           getAllRelatedModelFieldApiIdentifiers({ path, rootFieldsMetadata: getRootFieldsFromMetadata(metadata) }),
       })
     : [];
@@ -504,9 +504,9 @@ const resetValuesForDefaultValues = (modelApiIdentifier: string, defaultValues: 
 const extractPathsFromChildren = (props: {
   children: React.ReactNode;
   currentPath?: string;
-  getFieldsToSelectOnDisplayRecordCallback?: (path: string) => string[];
+  getFieldsToSelectOnRecordLabelCallback?: (path: string) => string[];
 }) => {
-  const { children, currentPath, getFieldsToSelectOnDisplayRecordCallback } = props;
+  const { children, currentPath, getFieldsToSelectOnRecordLabelCallback } = props;
 
   const paths = new Set<string>();
 
@@ -521,23 +521,22 @@ const extractPathsFromChildren = (props: {
         childPaths = extractPathsFromChildren({
           children: grandChildren,
           currentPath: newCurrentPath,
-          getFieldsToSelectOnDisplayRecordCallback,
+          getFieldsToSelectOnRecordLabelCallback,
         });
       }
 
       let field: string | undefined = undefined;
 
       if (isAutoInput(child)) {
-        const props = child.props as { field: string; displayRecord?: DisplayRecord; children?: React.ReactNode };
+        const props = child.props as { field: string; recordLabel?: RecordLabel; children?: React.ReactNode };
         field = props.field;
 
         paths.add(field);
 
-        if (props.displayRecord) {
-          aggregatePathsFromDisplayRecord(
-            props.displayRecord,
-            () => getFieldsToSelectOnDisplayRecordCallback?.(newCurrentPath) ?? []
-          ).forEach((path) => paths.add(`${field}.${path}`));
+        if (props.recordLabel) {
+          aggregatePathsFromRecordLabel(props.recordLabel, () => getFieldsToSelectOnRecordLabelCallback?.(newCurrentPath) ?? []).forEach(
+            (path) => paths.add(`${field}.${path}`)
+          );
         }
       }
 
@@ -552,11 +551,11 @@ const extractPathsFromChildren = (props: {
   return Array.from(paths);
 };
 
-const aggregatePathsFromDisplayRecord = (displayRecord: DisplayRecord, getFieldsToSelectOnDisplayRecordCallback: () => string[]) => {
+const aggregatePathsFromRecordLabel = (recordLabel: RecordLabel, getFieldsToSelectOnRecordLabelCallback: () => string[]) => {
   const selectedPaths = new Set<string>();
 
-  [displayRecord.primary, displayRecord.secondary, displayRecord.tertiary]
-    .flatMap((optionLabel) => getSelectedPathsFromOptionLabel(optionLabel, getFieldsToSelectOnDisplayRecordCallback))
+  [recordLabel.primary, recordLabel.secondary, recordLabel.tertiary]
+    .flatMap((optionLabel) => getSelectedPathsFromOptionLabel(optionLabel, getFieldsToSelectOnRecordLabelCallback))
     .forEach((path) => selectedPaths.add(path));
 
   return Array.from(selectedPaths);

@@ -104,7 +104,7 @@ describeForEachAutoAdapter(
           <SubmitResultBanner />
           <AutoBelongsToForm
             field="section"
-            displayRecord={{
+            recordLabel={{
               primary: "name",
               secondary: "label",
             }}
@@ -147,7 +147,7 @@ describeForEachAutoAdapter(
           <SubmitResultBanner />
           <AutoBelongsToForm
             field="section"
-            displayRecord={{
+            recordLabel={{
               primary: "name",
               secondary: "label",
             }}

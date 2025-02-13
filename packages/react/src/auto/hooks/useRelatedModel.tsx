@@ -9,9 +9,9 @@ import { sortByProperty, uniqByProperty } from "../../utils.js";
 import { useAutoFormMetadata } from "../AutoFormContext.js";
 import type {
   AutoRelationshipFormProps,
-  DisplayRecord,
   DisplayedRecordOption,
   OptionLabel,
+  RecordLabel,
 } from "../interfaces/AutoRelationshipInputProps.js";
 import type { RelationshipFieldConfig } from "../interfaces/RelationshipFieldConfig.js";
 import { useFieldMetadata } from "./useFieldMetadata.js";
@@ -81,9 +81,9 @@ export const useOptionLabelForField = (field: string, optionLabel?: OptionLabel)
 };
 
 export const useRelatedModelOptions = (props: Omit<AutoRelationshipFormProps, "children" | "label">) => {
-  const { field, displayRecord } = props;
+  const { field, recordLabel } = props;
 
-  const optionLabel = useOptionLabelForField(field, displayRecord?.primary);
+  const optionLabel = useOptionLabelForField(field, recordLabel?.primary);
   const { relatedModelRecords } = useRelatedModelRecords(props);
 
   const { relatedModel, pagination, search } = relatedModelRecords;
@@ -92,8 +92,8 @@ export const useRelatedModelOptions = (props: Omit<AutoRelationshipFormProps, "c
     const options = uniqByProperty(
       getRecordsAsOptions(relatedModel.records, {
         primary: optionLabel,
-        secondary: displayRecord?.secondary,
-        tertiary: displayRecord?.tertiary,
+        secondary: recordLabel?.secondary,
+        tertiary: recordLabel?.tertiary,
       }),
       "id"
     );
@@ -136,8 +136,8 @@ const getRecordIdsAsString = (records?: { map: (mapperFunction: (record: { id: s
     .sort()
     .join(",");
 
-export const getRecordAsOption = (record: Record<string, any>, displayRecord: DisplayRecord): DisplayedRecordOption => {
-  const { primary, secondary, tertiary } = displayRecord;
+export const getRecordAsOption = (record: Record<string, any>, recordLabel: RecordLabel): DisplayedRecordOption => {
+  const { primary, secondary, tertiary } = recordLabel;
   return {
     id: record.id as string,
     primary: getRecordLabel(record, primary ?? "id"),
@@ -146,8 +146,8 @@ export const getRecordAsOption = (record: Record<string, any>, displayRecord: Di
   };
 };
 
-export const getRecordsAsOptions = (records: Record<string, any>[], displayRecord: DisplayRecord) => {
-  return records?.map((record: Record<string, any>) => getRecordAsOption(record, displayRecord)) ?? [];
+export const getRecordsAsOptions = (records: Record<string, any>[], recordLabel: RecordLabel) => {
+  return records?.map((record: Record<string, any>) => getRecordAsOption(record, recordLabel)) ?? [];
 };
 
 const useAllRelatedModelRecords = (props: {
