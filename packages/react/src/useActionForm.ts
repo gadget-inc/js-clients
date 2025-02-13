@@ -296,12 +296,12 @@ export const useActionForm = <
               if (findExistingRecord) {
                 const newDefaultValues = processDefaultValues({
                   data: result.data,
-                  defaultValues: options?.defaultValues,
+                  defaultValues: formHook.getValues(),
                   modelApiIdentifier: action.modelApiIdentifier,
                   hasAmbiguousDefaultValues: action.hasAmbiguousIdentifier ?? false,
                 });
 
-                formHook.reset(newDefaultValues, { keepValues: true });
+                formHook.reset(newDefaultValues);
               }
 
               if (options?.select) {

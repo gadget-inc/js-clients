@@ -180,7 +180,7 @@ describe("useActionFormNFiles", () => {
     });
 
     expect(result.current.getValues("post.title")).toBe("update post");
-    expect(result.current.getValues("post.publishedAt")).toEqual(new Date("2024-06-19T01:19:14.522Z"));
+    expect(new Date(result.current.getValues("post.publishedAt"))).toEqual(new Date("2024-06-19T01:19:14.522Z"));
   });
 
   test("can handle updating models that have a datetime field as a string", async () => {

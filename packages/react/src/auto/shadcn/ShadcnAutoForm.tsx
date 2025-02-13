@@ -140,8 +140,11 @@ export const makeAutoForm = <Elements extends ShadcnElements>(elements: Elements
     return (
       <AutoFormMetadataContext.Provider value={autoFormMetadataContext}>
         <FormProvider {...originalFormMethods}>
-          {isLoading && <Skeleton />}
-          <FormContainer hidden={isLoading} {...rest} onSubmit={submit as any}>
+          <FormContainer
+            {...rest}
+            className={cn(`${isLoading || isSubmitting ? "opacity-30" : ""} ${rest.className ?? ""}`)}
+            onSubmit={submit as any}
+          >
             {formContent}
           </FormContainer>
         </FormProvider>

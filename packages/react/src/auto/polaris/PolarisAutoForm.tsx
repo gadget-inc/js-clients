@@ -136,8 +136,7 @@ const PolarisAutoFormComponent = <
   return (
     <AutoFormMetadataContext.Provider value={autoFormMetadataContext}>
       <FormProvider {...originalFormMethods}>
-        {isLoading && <PolarisAutoFormSkeleton />}
-        <div hidden={isLoading}>
+        <div style={{ opacity: isLoading || isSubmitting ? 0.3 : 1 }}>
           <Form {...rest} onSubmit={submit}>
             <BlockStack gap="400">{formContent}</BlockStack>
           </Form>
