@@ -44,7 +44,7 @@ export const makeShadcnAutoDateTimePicker = ({
   Popover,
   PopoverTrigger,
   PopoverContent,
-}: Pick<ShadcnElements, "Button" | "Calendar" | "Label" | "Popover" | "PopoverTrigger" | "PopoverContent" | "ScrollBar">) => {
+}: Pick<ShadcnElements, "Button" | "Calendar" | "Label" | "Popover" | "PopoverTrigger" | "PopoverContent">) => {
   function ShadcnAutoDateTimePicker(props: {
     field: string;
     id?: string;

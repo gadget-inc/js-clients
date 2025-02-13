@@ -39,7 +39,6 @@ export const makeShadcnAutoInput = (
     | "Popover"
     | "PopoverTrigger"
     | "PopoverContent"
-    | "ScrollBar"
     | "Textarea"
   >
 ) => {
