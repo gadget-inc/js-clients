@@ -13,6 +13,8 @@ import type {
   DialogTitleProps,
   DialogTriggerProps,
 } from "./types/dialogTypes.js";
+
+import { DayPickerProps } from "./types/calendarTypes.js";
 import type {
   TableBodyProps,
   TableCaptionProps,
@@ -43,13 +45,23 @@ export interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElemen
 
 type Direction = "ltr" | "rtl";
 
-export interface DropdownMenuProps {
+export interface DropdownMenuProps extends AsChildProps {
   children?: React.ReactNode;
   dir?: Direction;
   open?: boolean;
   defaultOpen?: boolean;
   onOpenChange?(open: boolean): void;
   modal?: boolean;
+}
+
+interface AsChildProps {
+  asChild?: boolean;
+}
+
+export interface DropdownMenuItemProps extends AsChildProps {
+  disabled?: boolean;
+  onSelect?: (value: string) => void;
+  textValue?: string;
 }
 
 /** The props that a command component injected into autocomponent's shadcn must support */
@@ -167,7 +179,7 @@ export interface ShadcnElements {
   Card: React.ComponentType<CardProps>;
 
   /** The Calendar component from shadcn */
-  Calendar: React.ComponentType<any>;
+  Calendar: React.ComponentType<DayPickerProps>;
 
   /** The CommandLoading component from shadcn */
   CommandLoading: React.ComponentType<React.HTMLAttributes<HTMLDivElement>>;
@@ -206,11 +218,11 @@ export interface ShadcnElements {
   /** The DropdownMenu component from shadcn */
   DropdownMenu: React.ComponentType<DropdownMenuProps>;
   /** The DropdownMenuTrigger component from shadcn */
-  DropdownMenuTrigger: React.ComponentType<any>;
+  DropdownMenuTrigger: React.ComponentType<DropdownMenuItemProps>;
   /** The DropdownMenuContent component from shadcn */
-  DropdownMenuContent: React.ComponentType<React.HTMLAttributes<HTMLDivElement>>;
+  DropdownMenuContent: React.ComponentType<AsChildProps>;
   /** The DropdownMenuItem component from shadcn */
-  DropdownMenuItem: React.ComponentType<any>;
+  DropdownMenuItem: React.ComponentType<DropdownMenuItemProps>;
   /** The DropdownMenuLabel component from shadcn */
   DropdownMenuLabel: React.ComponentType<React.HTMLAttributes<HTMLDivElement>>;
   /** The DropdownMenuSeparator component from shadcn */
