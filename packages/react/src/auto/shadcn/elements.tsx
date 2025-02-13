@@ -197,9 +197,6 @@ export interface ShadcnElements {
   /** The Calendar component from shadcn */
   Calendar: React.ComponentType<DayPickerProps>;
 
-  /** The CommandLoading component from shadcn */
-  CommandLoading: React.ComponentType<React.HTMLAttributes<HTMLDivElement>>;
-
   /** The CardHeader component from shadcn */
   CardHeader: React.ComponentType<CardHeaderProps>;
   /** The CardFooter component from shadcn */

@@ -14,7 +14,6 @@ export const makeShadcnAutoBelongsToForm = ({
   Command,
   CommandItem,
   CommandInput,
-  CommandLoading,
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
@@ -38,7 +37,6 @@ export const makeShadcnAutoBelongsToForm = ({
   | "Command"
   | "CommandItem"
   | "CommandInput"
-  | "CommandLoading"
   | "Label"
   | "CommandList"
   | "CommandEmpty"
@@ -62,7 +60,6 @@ export const makeShadcnAutoBelongsToForm = ({
     Command,
     CommandItem,
     CommandInput,
-    CommandLoading,
     Label,
     CommandList,
     CommandEmpty,
