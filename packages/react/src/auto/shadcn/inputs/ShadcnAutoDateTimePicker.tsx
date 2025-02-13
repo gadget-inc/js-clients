@@ -130,7 +130,7 @@ export const makeShadcnAutoDateTimePicker = ({
 
     return (
       <Popover open={isOpen} onOpenChange={setIsOpen}>
-        <PopoverTrigger asChild>
+        <PopoverTrigger type="button" onClick={(e: React.MouseEvent<HTMLButtonElement>) => e.stopPropagation()} asChild>
           <div>
             <Label htmlFor={props.id ? `${props.id}-date` : undefined}>
               {props.label ?? metadata.name ?? "Date"}
@@ -155,7 +155,7 @@ export const makeShadcnAutoDateTimePicker = ({
             )}
           </div>
         </PopoverTrigger>
-        <PopoverContent className="w-auto p-0">
+        <PopoverContent className="w-auto p-0 bg-white">
           <div className="flex flex-row flex-nowrap">
             <Calendar
               mode="single"
