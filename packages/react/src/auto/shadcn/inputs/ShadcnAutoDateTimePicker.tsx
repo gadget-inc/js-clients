@@ -130,7 +130,7 @@ export const makeShadcnAutoDateTimePicker = ({
 
     return (
       <Popover open={isOpen} onOpenChange={setIsOpen}>
-        <PopoverTrigger type="button" onClick={(e: React.MouseEvent<HTMLButtonElement>) => e.stopPropagation()} asChild>
+        <PopoverTrigger asChild>
           <div>
             <Label htmlFor={props.id ? `${props.id}-date` : undefined}>
               {props.label ?? metadata.name ?? "Date"}
@@ -139,6 +139,7 @@ export const makeShadcnAutoDateTimePicker = ({
             <Button
               id={props.id ? `${props.id}-date` : undefined}
               variant="outline"
+              type="button"
               className={`w-full justify-start text-left font-normal ${!date ? "text-muted-foreground" : ""}`}
             >
               <CalendarIcon className="mr-2 h-4 w-4" />
@@ -155,7 +156,7 @@ export const makeShadcnAutoDateTimePicker = ({
             )}
           </div>
         </PopoverTrigger>
-        <PopoverContent className="w-auto p-0 bg-white">
+        <PopoverContent className="w-auto p-0">
           <div className="flex flex-row flex-nowrap">
             <Calendar
               mode="single"
@@ -163,6 +164,9 @@ export const makeShadcnAutoDateTimePicker = ({
               selected={localTime ?? date}
               onSelect={handleDateSelect}
               initialFocus
+              classNames={{
+                root: "bg-white",
+              }}
             />
             {(props.includeTime ?? (config as GadgetDateTimeConfig).includeTime) && (
               <div className="flex flex-col p-4 bg-white border-l">

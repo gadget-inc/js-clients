@@ -210,6 +210,7 @@ export interface PropsRange {
 export type PropsBase = {
   defaultMonth?: Date;
   initialFocus?: boolean;
+  classNames?: { [key: string]: string };
 };
 
 export type DayPickerProps = PropsBase &
