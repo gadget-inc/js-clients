@@ -2021,7 +2021,7 @@ describe("useActionForm", () => {
     expect(result.current.formState.isSubmitting).toBe(false);
     expect(result.current.error).toBeFalsy();
     expect(result.current.actionData).toEqual({ id: "123", email: "even-newer@test.com", password: "secret" });
-    expect(result.current.getValues("email")).toBe("new@test.com");
+    expect(result.current.getValues("email")).toBe("even-newer@test.com"); // Root level value now matches the submit response
     expect(result.current.getValues("user.email")).toBe("even-newer@test.com");
   });
 
@@ -2602,7 +2602,7 @@ describe("useActionForm", () => {
     expect(result.current.actionData).toEqual({ id: "123", email: "new@test.com", password: "newsecret" });
     expect(result.current.getValues("user.email")).toBe("new@test.com");
     expect(result.current.getValues("user.password")).toBe("newsecret");
-    expect(result.current.getValues("foo")).toBe("baz");
+    expect(result.current.getValues("foo")).toBe("baz"); // Maintains the value set by the user
   });
 
   test("can be used with an action when the default values has a role field", async () => {
@@ -2894,7 +2894,7 @@ describe("useActionForm", () => {
         },
         "question": {
           "__typename": "Question",
-          "id": "1",
+          "id": "2",
           "text": "totally different text",
         },
         "text": "Answer create",
