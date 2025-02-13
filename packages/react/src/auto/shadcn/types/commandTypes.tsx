@@ -42,3 +42,8 @@ export type CommandProps = Children &
      */
     vimBindings?: boolean;
   };
+
+export type InputProps = Omit<React.ComponentPropsWithoutRef<"input">, "value" | "onChange" | "type"> & {
+  value?: string;
+  onValueChange?: (search: string) => void;
+};

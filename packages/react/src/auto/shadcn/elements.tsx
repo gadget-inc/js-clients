@@ -1,7 +1,7 @@
 import type React from "react";
 import type { AccordionComponentProps, AccordionContentProps, AccordionItemProps, AccordionTriggerProps } from "./types/accordionTypes.js";
 import type { AvatarFallbackProps, AvatarImageProps, AvatarProps } from "./types/avatarTypes.js";
-import type { CommandProps } from "./types/commandTypes.js";
+import type { InputProps as CommandInputProps, CommandProps } from "./types/commandTypes.js";
 import type { DayPickerProps } from "./types/dateTypes.js";
 import type {
   DialogCloseProps,
@@ -201,9 +201,8 @@ export interface ShadcnElements {
   CommandEmpty: React.ComponentType<React.HTMLAttributes<HTMLDivElement>>;
   /** The CommandGroup component from shadcn */
   CommandGroup: React.ComponentType<React.HTMLAttributes<HTMLDivElement>>;
-  // /** The CommandInput component from shadcn */
-  // CommandInput: React.ComponentType<React.HTMLAttributes<HTMLDivElement>>;
-  CommandInput: any;
+  /** The CommandInput component from shadcn */
+  CommandInput: React.ForwardRefExoticComponent<CommandInputProps & React.RefAttributes<HTMLInputElement>>;
   /** The CommandItem component from shadcn */
   CommandItem: React.ComponentType<React.ComponentPropsWithoutRef<any>>;
   /** The CommandList component from shadcn */
