@@ -1,3 +1,4 @@
+import { LoaderIcon } from "lucide-react";
 import type { ReactNode } from "react";
 import React from "react";
 import { useAutoFormMetadata } from "../../AutoFormContext.js";
@@ -10,7 +11,7 @@ export const makeShadcnAutoSubmit = ({ Button }: Pick<ShadcnElements, "Button">)
 
     return (
       <Button type="submit" disabled={isSubmitting} {...props}>
-        {props.children ?? "Submit"}
+        {isSubmitting ? <LoaderIcon className="h-4 w-4 animate-spin" /> : props.children ?? "Submit"}
       </Button>
     );
   }
