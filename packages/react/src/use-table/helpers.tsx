@@ -311,7 +311,7 @@ const isBelongsToField = (field: { fieldType: GadgetFieldType }) => {
   return field.fieldType === GadgetFieldType.BelongsTo;
 };
 
-const isHasOneOrBelongsToField = (field: { fieldType: GadgetFieldType }) => {
+export const isHasOneOrBelongsToField = (field: { fieldType: GadgetFieldType }) => {
   return field.fieldType === GadgetFieldType.HasOne || isBelongsToField(field);
 };
 
@@ -323,7 +323,7 @@ const isHasManyThroughField = (field: { fieldType: GadgetFieldType }) => {
   return field.fieldType === GadgetFieldType.HasManyThrough;
 };
 
-const isHasManyOrHasManyThroughField = (field: { fieldType: GadgetFieldType }) => {
+export const isHasManyOrHasManyThroughField = (field: { fieldType: GadgetFieldType }) => {
   return isHasManyField(field) || isHasManyThroughField(field);
 };
 
@@ -385,11 +385,6 @@ export const fieldMetadataArrayToFieldMetadataTree = (fieldMetadataArray: FieldM
   depth += 1;
   const map: Record<string, any> = {};
 
-  const getRelatedModelFields = (field: FieldMetadata) => {
-    if (!("configuration" in field)) return [];
-    return (field as FieldMetadataWithRelationshipConfig).configuration.relatedModel?.fields ?? [];
-  };
-
   for (const field of fieldMetadataArray) {
     map[field.apiIdentifier] = {};
 
@@ -411,6 +406,13 @@ export const fieldMetadataArrayToFieldMetadataTree = (fieldMetadataArray: FieldM
   }
 
   return map;
+};
+
+export const getRelatedModelFields = (field: FieldMetadata) => {
+  if (!("configuration" in field) || !("relatedModel" in field.configuration)) {
+    return [];
+  }
+  return field.configuration.relatedModel?.fields ?? [];
 };
 
 const maybeGetFieldMetadataByColumnPath = (fieldMetadataTree: TableSpec["fieldMetadataTree"], columnPath: string) => {

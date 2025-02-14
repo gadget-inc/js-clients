@@ -313,4 +313,63 @@ describeForEachAutoAdapter("AutoForm", ({ name, adapter: { AutoForm }, wrapper }
       expect(variables).to.deep.equal({ widget: {} });
     });
   });
+
+  it("can pass in a `select` prop to the form that will control the selection and get IDs forcefully selected for relationships", () => {
+    const autoFormProps = {
+      action: api.widget.update,
+      findBy: "1",
+
+      // Note how there are no `id` values in this selection
+      select: {
+        name: true,
+        inventoryCount: true,
+        section: { name: true },
+        gizmos: { name: true },
+      },
+    };
+
+    // Observe how the `id` field is forced into the selection
+    const expectedQueryValue = `query widget($id: GadgetID!) {
+  widget(id: $id) {
+    name
+    inventoryCount
+    section {
+      name
+      id
+      __typename
+    }
+    gizmos {
+      name
+      edges {
+        node {
+          id
+          __typename
+        }
+        __typename
+      }
+      __typename
+    }
+    id
+    __typename
+  }
+  gadgetMeta {
+    hydrations(modelName: 
+"widget")
+    __typename
+  }
+}`;
+
+    const expectedRequestVariables = { id: "1" }; // Changing the `select` has no effect on the request variables
+
+    cy.intercept("POST", `${api.connection.options.endpoint}?operation=widget`, (req) => {
+      expect(req.body.query).to.deep.equal(expectedQueryValue);
+      expect(req.body.variables).to.deep.equal(expectedRequestVariables);
+      // Response is not important for this test to check the selection
+      req.reply({ body: { data: { widget: { __typename: "Widget" } } } });
+    }).as("getWidget");
+
+    cy.mountWithWrapper(<AutoForm {...autoFormProps} />, wrapper);
+
+    cy.wait("@getWidget");
+  });
 });
