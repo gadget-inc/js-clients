@@ -232,7 +232,7 @@ const useAllRelatedModelRecords = (props: {
     ];
 
     const updatedUniqueOptions = uniqByProperty(allOptions, "id");
-    const sortedUniqueOptions = sortByProperty(updatedUniqueOptions, "id");
+    const sortedUniqueOptions = sortByProperty(updatedUniqueOptions, "id", { transform: (value: any) => parseInt(value) });
 
     setLoadedRecords(sortedUniqueOptions);
   }, [paginationPage, searchValue, fetching]);
