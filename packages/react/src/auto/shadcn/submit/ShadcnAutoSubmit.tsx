@@ -4,6 +4,11 @@ import React from "react";
 import { useAutoFormMetadata } from "../../AutoFormContext.js";
 import type { ButtonProps, ShadcnElements } from "../elements.js";
 
+/**
+ * Make the Shadcn component for the auto submit button
+ * @param elements - The Shadcn elements to use
+ * @returns The Shadcn component for the auto submit button
+ */
 export const makeShadcnAutoSubmit = ({ Button }: Pick<ShadcnElements, "Button">) => {
   function ShadcnAutoSubmit(props: { children?: ReactNode; isSubmitting?: boolean; className?: string } & ButtonProps) {
     const { submitResult } = useAutoFormMetadata();
