@@ -1,18 +1,22 @@
-import type { ButtonHTMLAttributes, ReactNode } from "react";
+import { LoaderIcon } from "lucide-react";
+import type { ReactNode } from "react";
 import React from "react";
 import { useAutoFormMetadata } from "../../AutoFormContext.js";
-import type { ShadcnElements } from "../elements.js";
+import type { ButtonProps, ShadcnElements } from "../elements.js";
 
+/**
+ * Make the Shadcn component for the auto submit button
+ * @param elements - The Shadcn elements to use
+ * @returns The Shadcn component for the auto submit button
+ */
 export const makeShadcnAutoSubmit = ({ Button }: Pick<ShadcnElements, "Button">) => {
-  function ShadcnAutoSubmit(
-    props: { children?: ReactNode; isSubmitting?: boolean; className?: string } & Partial<ButtonHTMLAttributes<HTMLButtonElement>>
-  ) {
+  function ShadcnAutoSubmit(props: { children?: ReactNode; isSubmitting?: boolean; className?: string } & ButtonProps) {
     const { submitResult } = useAutoFormMetadata();
     const isSubmitting = props.isSubmitting ?? submitResult.isSubmitting;
 
     return (
       <Button type="submit" disabled={isSubmitting} {...props}>
-        {props.children ?? "Submit"}
+        {isSubmitting ? <LoaderIcon className="h-4 w-4 animate-spin" /> : props.children ?? "Submit"}
       </Button>
     );
   }
