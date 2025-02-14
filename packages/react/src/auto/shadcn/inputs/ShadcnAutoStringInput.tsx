@@ -5,6 +5,11 @@ import { useStringInputController } from "../../hooks/useStringInputController.j
 import { ShadcnRequired } from "../ShadcnRequired.js";
 import type { ShadcnElements } from "../elements.js";
 
+/**
+ * Make the Shadcn components for the auto string input
+ * @param elements - The Shadcn elements to use
+ * @returns The Shadcn components for the auto string input
+ */
 export const makeShadcnAutoStringInput = ({ Input, Label }: Pick<ShadcnElements, "Input" | "Label">) => {
   function ShadcnAutoStringInput(
     props: {
