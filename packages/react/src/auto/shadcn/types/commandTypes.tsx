@@ -1,3 +1,5 @@
+// https://github.com/pacocoursey/cmdk/blob/main/cmdk/src/index.tsx#L69
+
 type Children = { children?: React.ReactNode };
 
 export type CommandProps = Children &
@@ -47,3 +49,20 @@ export type InputProps = Omit<React.ComponentPropsWithoutRef<"input">, "value" |
   value?: string;
   onValueChange?: (search: string) => void;
 };
+
+export type ItemProps = Children &
+  Omit<React.HTMLAttributes<HTMLDivElement>, "disabled" | "onSelect" | "value"> & {
+    /** Whether this item is currently disabled. */
+    disabled?: boolean;
+    /** Event handler for when this item is selected, either via click or keyboard selection. */
+    onSelect?: (value: string) => void;
+    /**
+     * A unique value for this item.
+     * If no value is provided, it will be inferred from `children` or the rendered `textContent`. If your `textContent` changes between renders, you _must_ provide a stable, unique `value`.
+     */
+    value?: string;
+    /** Optional keywords to match against when filtering. */
+    keywords?: string[];
+    /** Whether this item is forcibly rendered regardless of filtering. */
+    forceMount?: boolean;
+  };
