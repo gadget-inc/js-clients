@@ -7,7 +7,7 @@ export const SelectableOption = (props: { primary?: React.ReactNode; id: string;
 
   return !primary ? (
     <Listbox.Option key={id} value={id} selected={selected}>
-      id: {id}
+      {`id: ${id}`}
     </Listbox.Option>
   ) : typeof primary === "string" ? (
     <Listbox.Option key={id} value={id} selected={selected}>
