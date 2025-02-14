@@ -24,8 +24,6 @@ export const makeAutoForm = <Elements extends ShadcnElements>(elements: Elements
 
   const {
     AutoInput,
-    AutoBelongsToInput,
-    AutoHasManyInput,
     AutoRolesInput,
     AutoEnumInput,
     AutoFileInput,
@@ -39,6 +37,11 @@ export const makeAutoForm = <Elements extends ShadcnElements>(elements: Elements
     AutoHiddenInput,
     AutoIdInput,
     AutoTextAreaInput,
+
+    AutoBelongsToInput,
+    AutoHasManyInput,
+    AutoHasManyThroughInput,
+    AutoHasOneInput,
   } = makeShadcnAutoInput(elements);
 
   const AutoSubmit = makeShadcnAutoSubmit(elements);
@@ -160,12 +163,6 @@ export const makeAutoForm = <Elements extends ShadcnElements>(elements: Elements
     SubmitResultBanner,
     SubmitSuccessfulBanner,
     SubmitErrorBanner,
-    AutoHasOneForm,
-    AutoBelongsToForm,
-    AutoHasManyForm,
-    AutoHasManyThroughForm,
-    AutoBelongsToInput,
-    AutoHasManyInput,
     AutoRolesInput,
     AutoEnumInput,
     AutoFileInput,
@@ -179,5 +176,15 @@ export const makeAutoForm = <Elements extends ShadcnElements>(elements: Elements
     AutoIdInput,
     AutoHiddenInput,
     AutoTextAreaInput,
+
+    AutoBelongsToInput,
+    AutoHasManyInput,
+    AutoHasManyThroughInput,
+    AutoHasOneInput,
+
+    AutoBelongsToForm,
+    AutoHasManyForm,
+    AutoHasManyThroughForm,
+    AutoHasOneForm,
   };
 };
