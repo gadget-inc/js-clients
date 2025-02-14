@@ -479,12 +479,17 @@ export const getModelManager = (
 };
 
 type SortOrder = "asc" | "desc";
-export const sortByProperty = <T>(arr: T[], property: keyof T, order: SortOrder = "asc"): T[] => {
+export const sortByProperty = <T>(arr: T[], property: keyof T, options?: { order?: SortOrder; transform?: (value: any) => any }): T[] => {
+  const { order = "asc", transform } = options ?? {};
+
   return arr.sort((a, b) => {
-    if (a[property] < b[property]) {
+    const aValue = transform ? transform(a[property]) : a[property];
+    const bValue = transform ? transform(b[property]) : b[property];
+
+    if (aValue < bValue) {
       return order === "asc" ? -1 : 1;
     }
-    if (a[property] > b[property]) {
+    if (aValue > bValue) {
       return order === "asc" ? 1 : -1;
     }
     return 0;

@@ -1,18 +1,18 @@
 import { LoaderIcon } from "lucide-react";
 import React, { useMemo } from "react";
-import type { Option } from "../../../interfaces/AutoRelationshipInputProps.js";
+import type { DisplayedRecordOption } from "../../../interfaces/AutoRelationshipInputProps.js";
 import type { ShadcnElements } from "../../elements.js";
 import { makeShadcnListMessages } from "./ShadcnListMessages.js";
 
 export type RelatedModelOptionsProps = {
-  options: Option[];
+  options: DisplayedRecordOption[];
   records?: Record<string, any>[];
   isLoading?: boolean;
   errorMessage?: string;
   checkSelected?: (id: string) => boolean;
   onSelect: (record: Record<string, any>) => void;
   actions?: React.ReactNode[];
-  renderOption?: (option: Option) => React.ReactNode;
+  renderOption?: (option: DisplayedRecordOption) => React.ReactNode;
   allowMultiple?: boolean;
   allowOther?: boolean;
   searchValue?: string;
@@ -42,6 +42,7 @@ export const makeRelatedModelOption = (
           ) : (
             <ShadcnSelectableOption
               {...option}
+              label={option.primary}
               selected={checkSelected?.(option.id) ?? false}
               allowMultiple={props.allowMultiple}
               onSelect={(id) => {

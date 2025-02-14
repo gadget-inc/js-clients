@@ -12,7 +12,7 @@ export const makeSelectedRecordTags = ({ Badge, Button }: Pick<ShadcnElements, "
   }) {
     const { selectedRecords, optionLabel, onRemoveRecord } = props;
 
-    const options = getRecordsAsOptions(selectedRecords, optionLabel);
+    const options = getRecordsAsOptions(selectedRecords, { primary: optionLabel });
 
     if (!options.length) {
       return null;
@@ -24,7 +24,7 @@ export const makeSelectedRecordTags = ({ Badge, Button }: Pick<ShadcnElements, "
         {options.map((option, index) => {
           return (
             <Badge key={`option-${option.id || index}`} variant={"outline"}>
-              {option.label}
+              {option.primary}
               <Button
                 onClick={() => {
                   const record = selectedRecords.find((record) => record.id === option.id);

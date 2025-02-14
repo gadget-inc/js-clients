@@ -144,6 +144,9 @@ export type PopoverTriggerProps = React.HTMLAttributes<HTMLButtonElement> & {
 /** The props that a skeleton component injected into autocomponent's shadcn must support */
 export type SkeletonProps = Pick<React.HTMLAttributes<HTMLDivElement>, "className">;
 
+/** The props that a textarea component injected into autocomponent's shadcn must support */
+export type TextareaProps = React.TextareaHTMLAttributes<HTMLTextAreaElement>;
+
 /** One toast for showing via the toasting system */
 export type ToasterToast = {
   className?: string;
@@ -153,7 +156,7 @@ export type ToasterToast = {
   variant?: any;
 };
 
-export type MergeClassNames = (defaultClassNames: string | string[], userClassName?: string) => string;
+export type MergeClassNamesFn = (defaultClassNames: string | string[], userClassName?: string) => string;
 
 export interface ShadcnElements {
   /** The Badge component from shadcn */
@@ -233,7 +236,7 @@ export interface ShadcnElements {
   Label: React.ComponentType<LabelProps>;
 
   /** The Textarea component from shadcn */
-  Textarea: React.ComponentType<React.HTMLAttributes<HTMLTextAreaElement>>;
+  Textarea: React.ComponentType<TextareaProps>;
 
   /** The Popover component from shadcn */
   Popover: React.ComponentType<PopoverProps>;
@@ -304,5 +307,5 @@ export interface ShadcnElements {
   /** The DialogDescription component from shadcn that renders descriptive text */
   DialogDescription: React.ComponentType<DialogDescriptionProps>;
 
-  cn: MergeClassNames;
+  cn: MergeClassNamesFn;
 }

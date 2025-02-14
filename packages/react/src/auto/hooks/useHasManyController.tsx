@@ -44,7 +44,7 @@ export const useHasManyInputController = (props: AutoRelationshipInputProps) => 
   }, [metadata.configuration]);
 
   const { remove, append, update } = fieldArray;
-  const relatedModelOptions = useRelatedModelOptions(props);
+  const relatedModelOptions = useRelatedModelOptions({ field, recordLabel: { primary: props.optionLabel } });
 
   const { relatedModel } = relatedModelOptions;
 

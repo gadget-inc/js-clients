@@ -109,7 +109,7 @@ export const makeShadcnAutoEnumInput = ({
     return (
       <ShadcnComboInput
         {...props}
-        options={filteredOptions.map((option) => ({ id: option, label: option }))}
+        options={filteredOptions.map((option) => ({ id: option, primary: option }))}
         path={labelProp ?? label}
         metadata={metadata}
         label={labelProp ?? label}

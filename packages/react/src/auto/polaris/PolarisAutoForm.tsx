@@ -1,4 +1,4 @@
-import type { ActionFunction } from "@gadgetinc/api-client-core";
+import type { ActionFunction, GlobalActionFunction } from "@gadgetinc/api-client-core";
 import type { FormProps } from "@shopify/polaris";
 import { BlockStack, Form, FormLayout, SkeletonBodyText, SkeletonDisplayText, Text } from "@shopify/polaris";
 import React from "react";
@@ -27,7 +27,7 @@ export const PolarisAutoFormSkeleton = () => (
 export const PolarisAutoForm = <
   GivenOptions extends OptionsType,
   SchemaT,
-  ActionFunc extends ActionFunction<GivenOptions, any, any, SchemaT, any>
+  ActionFunc extends ActionFunction<GivenOptions, any, any, SchemaT, any> | GlobalActionFunction<any>
 >(
   props: AutoFormProps<GivenOptions, SchemaT, ActionFunc> &
     // polaris form props also take an 'action' property, which we override with the Gadget form action
@@ -38,7 +38,9 @@ export const PolarisAutoForm = <
   validateAutoFormProps(props);
 
   // Component key to force re-render when the action or findBy changes
-  const componentKey = `${action.modelApiIdentifier ?? ""}.${action.operationName}.${JSON.stringify(findBy)}`;
+  const componentKey = `${"modelApiIdentifier" in action ? `${action.modelApiIdentifier}.` : ""}${action.operationName}.${JSON.stringify(
+    findBy
+  )}`;
 
   return (
     <AutoFormFieldsFromChildComponentsProvider hasCustomFormChildren={React.Children.count(props.children) > 0}>
@@ -53,7 +55,7 @@ export const PolarisAutoForm = <
 const PolarisAutoFormComponent = <
   GivenOptions extends OptionsType,
   SchemaT,
-  ActionFunc extends ActionFunction<GivenOptions, any, any, SchemaT, any>
+  ActionFunc extends ActionFunction<GivenOptions, any, any, SchemaT, any> | GlobalActionFunction<any>
 >(
   //polaris form props also take an 'action' property, which we need to omit here.
   props: AutoFormProps<GivenOptions, SchemaT, ActionFunc> & Omit<Partial<FormProps>, "action">
@@ -95,7 +97,7 @@ const PolarisAutoFormComponent = <
       isSubmitting,
     },
     model: {
-      apiIdentifier: action.modelApiIdentifier,
+      apiIdentifier: "modelApiIdentifier" in action ? action.modelApiIdentifier : undefined,
       namespace: action.namespace,
     },
     fields,
@@ -134,8 +136,7 @@ const PolarisAutoFormComponent = <
   return (
     <AutoFormMetadataContext.Provider value={autoFormMetadataContext}>
       <FormProvider {...originalFormMethods}>
-        {isLoading && <PolarisAutoFormSkeleton />}
-        <div hidden={isLoading}>
+        <div style={{ opacity: isLoading || isSubmitting ? 0.3 : 1 }}>
           <Form {...rest} onSubmit={submit}>
             <BlockStack gap="400">{formContent}</BlockStack>
           </Form>

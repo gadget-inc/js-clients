@@ -2,17 +2,12 @@ import { assert } from "@gadgetinc/api-client-core";
 import { useCallback, useMemo } from "react";
 import { GadgetFieldType, type GadgetHasManyThroughConfig } from "../../internal/gql/graphql.js";
 import { useFieldArray } from "../../useActionForm.js";
-import type { AutoRelationshipInputProps, OptionLabel } from "../interfaces/AutoRelationshipInputProps.js";
+import type { AutoRelationshipFormProps, AutoRelationshipInputProps } from "../interfaces/AutoRelationshipInputProps.js";
 import { useFieldMetadata } from "./useFieldMetadata.js";
 import { useRelatedModelOptions } from "./useRelatedModel.js";
 import { assertFieldType } from "./utils.js";
 
-export const useHasManyThroughController = (props: {
-  field: string;
-  primaryLabel?: OptionLabel;
-  secondaryLabel?: OptionLabel;
-  tertiaryLabel?: OptionLabel;
-}) => {
+export const useHasManyThroughController = (props: Omit<AutoRelationshipFormProps, "children" | "label">) => {
   const fieldMetadata = useFieldMetadata(props.field);
   const { path, metadata } = fieldMetadata;
 
@@ -28,12 +23,7 @@ export const useHasManyThroughController = (props: {
     "joinModelHasManyFieldApiIdentifier is required for hasManyThrough fields"
   );
 
-  const relatedModelOptions = useRelatedModelOptions({
-    field: props.field,
-    optionLabel: props.primaryLabel,
-    secondaryLabel: props.secondaryLabel,
-    tertiaryLabel: props.tertiaryLabel,
-  });
+  const relatedModelOptions = useRelatedModelOptions(props);
 
   const fieldArrayPath = path.replace(metadata.apiIdentifier, joinModelHasManyFieldApiIdentifier);
 
@@ -63,7 +53,10 @@ export const useHasManyThroughController = (props: {
 };
 
 export const useHasManyThroughInputController = (props: AutoRelationshipInputProps) => {
-  const { fieldMetadata, fieldArray, records, relatedModelOptions, inverseRelatedModelField } = useHasManyThroughController(props);
+  const { fieldMetadata, fieldArray, records, relatedModelOptions, inverseRelatedModelField } = useHasManyThroughController({
+    field: props.field,
+    recordLabel: props.optionLabel,
+  });
 
   const { relatedModel } = relatedModelOptions;
   const { remove, append } = fieldArray;

@@ -2,16 +2,10 @@ import { useCallback, useMemo } from "react";
 import { useAutoFormMetadata } from "./auto/AutoFormContext.js";
 import { useHasOneController } from "./auto/hooks/useHasOneController.js";
 import { useRequiredChildComponentsValidator } from "./auto/hooks/useRequiredChildComponentsValidator.js";
-import type { OptionLabel } from "./auto/interfaces/AutoRelationshipInputProps.js";
+import type { AutoRelationshipFormProps } from "./auto/interfaces/AutoRelationshipInputProps.js";
 import { useSingleRelatedRecordRelationshipForm } from "./useSingleRelatedRecordRelationshipForm.js";
 
-export const useHasOneForm = (props: {
-  field: string;
-  children: React.ReactNode;
-  primaryLabel?: OptionLabel;
-  secondaryLabel?: OptionLabel;
-  tertiaryLabel?: OptionLabel;
-}) => {
+export const useHasOneForm = (props: AutoRelationshipFormProps) => {
   useRequiredChildComponentsValidator(props, "AutoHasOneForm");
   const { record, relatedModelOptions } = useHasOneController(props);
 

@@ -68,10 +68,11 @@ describeForEachAutoAdapter(
         <AutoForm action={api.university.course.update} findBy="3">
           <AutoHasManyThroughForm
             field="students"
-            selectPaths={["firstName", "lastName", "year", "department"]}
-            primaryLabel={["firstName", "lastName"]}
-            secondaryLabel={(record: any) => `Year: ${record.year}`}
-            tertiaryLabel="department"
+            recordLabel={{
+              primary: ["firstName", "lastName"],
+              secondary: (record: any) => `Year: ${record.year}`,
+              tertiary: "department",
+            }}
           >
             <AutoInput field="registration.effectiveFrom" />
             <AutoInput field="registration.effectiveTo" />
@@ -120,7 +121,6 @@ describeForEachAutoAdapter(
         <AutoForm action={api.university.course.update} findBy="3">
           <AutoHasManyThroughForm
             field="students"
-            selectPaths={["firstName", "lastName", "year", "department"]}
             primaryLabel={["firstName", "lastName"]}
             secondaryLabel={(record: any) => `Year: ${record.year}`}
             tertiaryLabel="department"

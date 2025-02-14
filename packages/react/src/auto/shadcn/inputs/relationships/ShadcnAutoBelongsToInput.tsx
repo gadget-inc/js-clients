@@ -48,13 +48,21 @@ export const makeShadcnAutoBelongsToInput = ({
     } = useBelongsToInputController(props);
 
     const optionLabel = useOptionLabelForField(props.field, props.optionLabel);
-    const selectedOption = selectedRecord ? getRecordAsOption(selectedRecord, optionLabel) : null;
+    const selectedOption = selectedRecord ? getRecordAsOption(selectedRecord, { primary: optionLabel }) : null;
 
     const selectedRecordTag =
       selectedOption && selectedOption.id ? (
         <Badge key={`selectedRecordTag_${selectedOption.id}`} variant={"outline"}>
-          {selectedOption.label}
-          <Button aria-label={`Remove`} onClick={onRemoveRecord} variant="ghost" size="icon">
+          {selectedOption.primary}
+          <Button
+            aria-label={`Remove`}
+            onClick={(e) => {
+              e.preventDefault();
+              onRemoveRecord();
+            }}
+            variant="ghost"
+            size="icon"
+          >
             <XIcon />
           </Button>
         </Badge>
@@ -63,7 +71,15 @@ export const makeShadcnAutoBelongsToInput = ({
           <p id={`${danglingSelectedRecordId}`} style={{ color: "red" }}>
             id: {danglingSelectedRecordId}
           </p>
-          <Button aria-label={`Remove`} onClick={onRemoveRecord} variant="ghost" size="icon">
+          <Button
+            aria-label={`Remove`}
+            onClick={(e) => {
+              e.preventDefault();
+              onRemoveRecord();
+            }}
+            variant="ghost"
+            size="icon"
+          >
             <XIcon />
           </Button>
         </Badge>

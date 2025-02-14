@@ -13,21 +13,21 @@ describeForEachAutoAdapter(
   ({ name, adapter: { AutoForm, AutoInput, AutoSubmit, SubmitResultBanner, AutoHasManyForm }, wrapper }) => {
     const interceptModelUpdateActionMetadata = () => {
       cy.intercept({ method: "POST", url: `${api.connection.endpoint}?operation=ModelActionMetadata` }, RealWidgetMetadata).as(
-        "ModelCreateActionMetadata"
+        "ModelActionMetadata"
       );
     };
 
-    const expectUpdateActionSubmissionVariables = (expectedQueryValue?: any) => {
-      cy.intercept({ method: "POST", url: `${api.connection.endpoint}?operation=updateWidget` }, (req) => {
+    const expectUpdateActionSubmissionVariables = (props: { expectedQueryValue?: any; responseData?: any; as?: string }) => {
+      const { expectedQueryValue, responseData, as } = props;
+      cy.intercept({ method: "POST", url: `${api.connection.endpoint}?operation=updateWidget`, times: 1 }, (req) => {
         // eslint-disable-next-line
         expect(req.body.variables).to.deep.equal(expectedQueryValue);
 
-        // The response content doesn't matter for the tests __typename: "UpdateWidgetResult",
-        req.reply({ data: { updateWidget: { success: true, errors: null, x: {} } } });
-      }).as("updateWidget");
+        req.reply({ data: responseData ?? { updateWidget: { success: true, errors: null, widget: {} } } });
+      }).as(as ?? "updateWidget");
     };
 
-    const interceptWidgetQuery = () => {
+    const interceptWidgetQuery = (gizmoEdges = originalGizmosLinkedToWidget, as?: string) => {
       cy.intercept({ method: "POST", url: `${api.connection.endpoint}?operation=widget` }, (req) => {
         req.reply({
           data: {
@@ -36,13 +36,13 @@ describeForEachAutoAdapter(
               id: "42",
               name: "test record",
               gizmos: {
-                edges: originalGizmosLinkedToWidget.map((gizmo) => ({ node: gizmo })),
+                edges: gizmoEdges.map((gizmo) => ({ node: gizmo })),
                 __typename: "GizmoConnection",
               },
             },
           },
         });
-      }).as("widget");
+      }).as(as ?? "widget");
     };
 
     const interceptGizmosOptionsQuery = (sectionCount: number) => {
@@ -107,11 +107,17 @@ describeForEachAutoAdapter(
       interceptWidgetQuery();
     });
 
-    it("renders nested form fields for related records", () => {
+    it("renders nested form fields for related records and can submit multiple times", () => {
       cy.mountWithWrapper(
         <AutoForm action={api.widget.update} findBy="42">
           <SubmitResultBanner />
-          <AutoHasManyForm field="gizmos" primaryLabel="name" secondaryLabel="orientation">
+          <AutoHasManyForm
+            field="gizmos"
+            recordLabel={{
+              primary: "name",
+              secondary: "orientation",
+            }}
+          >
             <AutoInput field="name" />
             <AutoInput field="orientation" />
             <AutoInput field="attachment" />
@@ -121,7 +127,7 @@ describeForEachAutoAdapter(
         wrapper
       );
 
-      cy.wait("@ModelCreateActionMetadata");
+      cy.wait("@ModelActionMetadata");
       cy.wait("@widget");
 
       cy.get('[id="gizmos.0"]').click();
@@ -138,17 +144,73 @@ describeForEachAutoAdapter(
       cy.contains("Confirm").click();
 
       expectUpdateActionSubmissionVariables({
-        id: "42",
-        widget: {
-          gizmos: [
-            { update: { attachment: null, id: "1", name: "Gizmo 1 - updated", orientation: "up - updated" } },
-            { delete: { id: "2" } },
-            { create: { attachment: null, name: "New gizmo", orientation: "New orientation" } },
-          ],
+        expectedQueryValue: {
+          id: "42",
+          widget: {
+            gizmos: [
+              { update: { attachment: null, id: "1", name: "Gizmo 1 - updated", orientation: "up - updated" } },
+              { delete: { id: "2" } },
+              { create: { attachment: null, name: "New gizmo", orientation: "New orientation" } },
+            ],
+          },
+        },
+        responseData: {
+          updateWidget: {
+            success: true,
+            errors: null,
+            widget: {
+              id: "42",
+              gizmos: {
+                edges: [
+                  {
+                    node: { id: "1", attachment: null, name: "Gizmo 1 - updated", orientation: "up - updated", __typename: "Gizmo" },
+                    __typename: "GizmoEdge",
+                  },
+                  // id:"2" was deleted
+                  {
+                    node: { id: "3", attachment: null, name: "New gizmo", orientation: "New orientation", __typename: "Gizmo" },
+                    __typename: "GizmoEdge",
+                  },
+                ],
+                __typename: "GizmoConnection",
+              },
+              __typename: "Widget",
+            },
+            __typename: "UpdateWidgetResult",
+          },
         },
       });
+
+      interceptWidgetQuery(
+        [
+          { id: "1", name: "Gizmo 1 - updated", orientation: "up - updated" },
+          { id: "3", name: "New gizmo", orientation: "New orientation" },
+        ],
+        "widget2"
+      );
+
       cy.get('[id="submit"]').click();
       cy.wait("@updateWidget");
+      cy.wait("@ModelActionMetadata");
+      cy.wait("@widget2");
+
+      cy.contains("Saved Widget successfully").should("exist");
+
+      // Seconds submit - The previously created gizmo now has an ID and is resubmitted as an update
+      expectUpdateActionSubmissionVariables({
+        expectedQueryValue: {
+          id: "42",
+          widget: {
+            gizmos: [
+              { update: { id: "1", attachment: null, name: "Gizmo 1 - updated", orientation: "up - updated" } },
+              { update: { id: "3", attachment: null, name: "New gizmo", orientation: "New orientation" } },
+            ],
+          },
+        },
+        as: "updateWidget2",
+      });
+      cy.get('[id="submit"]').click();
+      cy.wait("@updateWidget2");
     });
 
     it("supports nested has-many relationships", () => {
@@ -167,7 +229,7 @@ describeForEachAutoAdapter(
         wrapper
       );
 
-      cy.wait("@ModelCreateActionMetadata");
+      cy.wait("@ModelActionMetadata");
       cy.wait("@widget");
 
       cy.get('[id="gizmos.0"]').click();
@@ -181,19 +243,21 @@ describeForEachAutoAdapter(
       cy.contains("Confirm").click();
 
       expectUpdateActionSubmissionVariables({
-        id: "42",
-        widget: {
-          gizmos: [
-            {
-              update: {
-                doodads: [{ create: { name: " - updated", weight: null } }],
-                id: "1",
-                name: "Gizmo 1 - updated",
-                orientation: "up",
+        expectedQueryValue: {
+          id: "42",
+          widget: {
+            gizmos: [
+              {
+                update: {
+                  doodads: [{ create: { name: " - updated", weight: null } }],
+                  id: "1",
+                  name: "Gizmo 1 - updated",
+                  orientation: "up",
+                },
               },
-            },
-            { update: { doodads: null, id: "2", name: "Gizmo 2", orientation: "up" } },
-          ],
+              { update: { doodads: null, id: "2", name: "Gizmo 2", orientation: "up" } },
+            ],
+          },
         },
       });
       cy.get('[id="submit"]').click();
@@ -1317,5 +1381,31 @@ const RealWidgetMetadata = {
       },
       __typename: "GadgetApplicationMeta",
     },
+  },
+};
+
+const x = {
+  updateWidget: {
+    success: true,
+    errors: null,
+    widget: {
+      id: "42",
+      gizmos: {
+        edges: [
+          {
+            node: { id: "1", attachment: null, name: "Gizmo 1 - updated", orientation: "up - updated", __typename: "Gizmo" },
+            __typename: "GizmoEdge",
+          },
+          // id:"2" was deleted
+          {
+            node: { id: "3", attachment: null, name: "New gizmo", orientation: "New orientation", __typename: "Gizmo" },
+            __typename: "GizmoEdge",
+          },
+        ],
+        __typename: "GizmoConnection",
+      },
+      __typename: "Widget",
+    },
+    __typename: "UpdateWidgetResult",
   },
 };

@@ -7,8 +7,8 @@ import type { FieldMetadata, GlobalActionMetadata, ModelWithOneActionMetadata } 
 import { FieldType, buildAutoFormFieldList, isModelActionMetadata, useActionMetadata } from "../metadata.js";
 import type { AnyActionWithId, RecordIdentifier, UseActionFormHookStateData, UseActionFormSubmit } from "../use-action-form/types.js";
 import { isPlainObject, processDefaultValues } from "../use-action-form/utils.js";
-import { pathListToSelection } from "../use-table/helpers.js";
-import type { FieldErrors, FieldValues, UseFormReturn } from "../useActionForm.js";
+import { isRelationshipField, pathListToSelection } from "../use-table/helpers.js";
+import type { FieldErrors, UseFormReturn } from "../useActionForm.js";
 import { useActionForm } from "../useActionForm.js";
 import { get, getFlattenedObjectKeys, type ErrorWrapper, type OptionsType } from "../utils.js";
 import { validationSchema } from "../validationSchema.js";
@@ -20,6 +20,8 @@ import {
 } from "./AutoFormActionValidators.js";
 import { useFieldsFromChildComponents } from "./AutoFormContext.js";
 import { isAutoInput } from "./AutoInput.js";
+import { getSelectedPathsFromOptionLabel } from "./hooks/useSelectedPathsFromRecordLabel.js";
+import { getOptionLabelsFromRecordLabel, type RecordLabel } from "./interfaces/AutoRelationshipInputProps.js";
 
 /** When the AutoForm does not have children, these properties are available to control the rendering of the form */
 type AutoFormPropsWithoutChildren = {
@@ -41,9 +43,7 @@ type AutoFormPropsWithChildren = {
 export type AutoFormProps<
   GivenOptions extends OptionsType,
   SchemaT,
-  ActionFunc extends ActionFunction<GivenOptions, any, any, SchemaT, any> | GlobalActionFunction<any>,
-  ExtraFormVariables extends FieldValues = Record<string, unknown>,
-  DefaultValues = ActionFunc["variablesType"] & ExtraFormVariables
+  ActionFunc extends ActionFunction<GivenOptions, any, any, SchemaT, any> | GlobalActionFunction<any>
 > = (AutoFormPropsWithChildren | AutoFormPropsWithoutChildren) & {
   /** Which action this fom will run on submit */
   action: ActionFunc;
@@ -54,7 +54,7 @@ export type AutoFormProps<
   /** A denylist of fields to render within the form. Every field except these fields will be rendered as inputs. */
   exclude?: string[];
   /** A set of field values to pre-populate the form with on load. Only applies to create forms. */
-  defaultValues?: DefaultValues;
+  defaultValues?: ActionFunc["variablesType"];
   /** What to show the user once the form has been submitted successfully */
   successContent?: ReactNode;
   /** Selection object to pass to the form to retrieve existing values. This will override the default selection based on included fields */
@@ -210,7 +210,7 @@ export const useAutoForm = <
   SchemaT,
   ActionFunc extends ActionFunction<GivenOptions, any, any, SchemaT, any> | GlobalActionFunction<any>
 >(
-  props: AutoFormProps<GivenOptions, SchemaT, ActionFunc, any, any>
+  props: AutoFormProps<GivenOptions, SchemaT, ActionFunc>
 ): {
   select?: GivenOptions["select"];
   metadata: ModelWithOneActionMetadata | GlobalActionMetadata | undefined;
@@ -226,13 +226,24 @@ export const useAutoForm = <
   originalFormMethods: UseFormReturn<any, any>;
 } => {
   const { action, record, onSuccess, onFailure, findBy, select } = props;
+  validateNonBulkAction(action);
+  validateTriggersFromApiClient(action);
+
   let include = props.include;
   let exclude = props.exclude;
+
+  const { metadata, fetching: fetchingMetadata, error: metadataError } = useActionMetadata(props.action);
+
+  validateTriggersFromMetadata(metadata);
 
   const { hasCustomFormChildren, fieldSet, registerFields } = useFieldsFromChildComponents();
   const hasRegisteredFieldsFromChildren = hasCustomFormChildren && fieldSet.size > 0;
   const registeredFieldsFromChildren = hasCustomFormChildren
-    ? extractPathsFromChildren("children" in props ? props.children : undefined)
+    ? extractPathsFromChildren({
+        children: "children" in props ? props.children : undefined,
+        getFieldsToSelectOnRecordLabelCallback: (path) =>
+          getAllRelatedModelFieldApiIdentifiers({ path, rootFieldsMetadata: getRootFieldsFromMetadata(metadata) }),
+      })
     : [];
 
   useEffect(() => {
@@ -243,13 +254,6 @@ export const useAutoForm = <
     include = Array.from(fieldSet);
     exclude = undefined;
   }
-
-  validateNonBulkAction(action);
-  validateTriggersFromApiClient(action);
-
-  const { metadata, fetching: fetchingMetadata, error: metadataError } = useActionMetadata(props.action);
-
-  validateTriggersFromMetadata(metadata);
 
   // filter down the fields to render only what we want to render for this form
   const fields = useFormFields(metadata, { include, exclude });
@@ -497,7 +501,13 @@ const resetValuesForDefaultValues = (modelApiIdentifier: string, defaultValues: 
   };
 };
 
-export const extractPathsFromChildren = (children: React.ReactNode) => {
+const extractPathsFromChildren = (props: {
+  children: React.ReactNode;
+  currentPath?: string;
+  getFieldsToSelectOnRecordLabelCallback?: (path: string) => string[];
+}) => {
+  const { children, currentPath, getFieldsToSelectOnRecordLabelCallback } = props;
+
   const paths = new Set<string>();
 
   React.Children.forEach(children, (child) => {
@@ -505,22 +515,28 @@ export const extractPathsFromChildren = (children: React.ReactNode) => {
       const grandChildren = child.props.children as React.ReactNode | undefined;
       let childPaths: string[] = [];
 
+      const newCurrentPath = currentPath && child.props.field ? currentPath + "." + child.props.field : child.props.field;
+
       if (grandChildren) {
-        childPaths = extractPathsFromChildren(grandChildren);
+        childPaths = extractPathsFromChildren({
+          children: grandChildren,
+          currentPath: newCurrentPath,
+          getFieldsToSelectOnRecordLabelCallback,
+        });
       }
 
       let field: string | undefined = undefined;
 
       if (isAutoInput(child)) {
-        const props = child.props as { field: string; selectPaths?: string[]; children?: React.ReactNode };
+        const props = child.props as { field: string; recordLabel?: RecordLabel; children?: React.ReactNode };
         field = props.field;
 
         paths.add(field);
 
-        if (props.selectPaths && Array.isArray(props.selectPaths)) {
-          props.selectPaths.forEach((selectPath) => {
-            paths.add(`${field}.${selectPath}`);
-          });
+        if (props.recordLabel) {
+          aggregatePathsFromRecordLabel(props.recordLabel, () => getFieldsToSelectOnRecordLabelCallback?.(newCurrentPath) ?? []).forEach(
+            (path) => paths.add(`${field}.${path}`)
+          );
         }
       }
 
@@ -533,6 +549,16 @@ export const extractPathsFromChildren = (children: React.ReactNode) => {
   });
 
   return Array.from(paths);
+};
+
+const aggregatePathsFromRecordLabel = (recordLabel: RecordLabel, getFieldsToSelectOnRecordLabelCallback: () => string[]) => {
+  const selectedPaths = new Set<string>();
+
+  getOptionLabelsFromRecordLabel(recordLabel)
+    .flatMap((optionLabel) => getSelectedPathsFromOptionLabel(optionLabel, getFieldsToSelectOnRecordLabelCallback))
+    .forEach((path) => selectedPaths.add(path));
+
+  return Array.from(selectedPaths);
 };
 
 const removeIdFieldsUnlessUpsertWithoutFindBy = (isUpsertWithFindBy?: boolean) => {
@@ -553,4 +579,38 @@ const validateFindBy = (params: { operatesWithRecordId: boolean; hasFindBy: bool
   } else if (!operatesWithRecordId && hasFindBy) {
     throw new Error("The 'findBy' prop is only allowed for actions that operate with a record identity.");
   }
+};
+
+const getRootFieldsFromMetadata = (metadata: ModelWithOneActionMetadata | GlobalActionMetadata | undefined | null) => {
+  return metadata && "fields" in metadata ? (metadata?.fields as FieldMetadata[]) ?? [] : [];
+};
+
+const getAllRelatedModelFieldApiIdentifiers = (props: {
+  rootFieldsMetadata: FieldMetadata[];
+  path: string;
+  includeRelationshipFields?: boolean;
+}) => {
+  const { rootFieldsMetadata, path, includeRelationshipFields = false } = props;
+
+  const pathSegments = path.split(".");
+
+  let currentFieldsToSearch = rootFieldsMetadata;
+  for (const pathSegment of pathSegments) {
+    const currentField = currentFieldsToSearch.find((field) => field.apiIdentifier === pathSegment);
+
+    if (
+      !currentField ||
+      !isRelationshipField(currentField) ||
+      !("relatedModel" in currentField.configuration) ||
+      !currentField.configuration.relatedModel
+    ) {
+      return [];
+    }
+
+    currentFieldsToSearch = currentField.configuration.relatedModel.fields;
+  }
+
+  return includeRelationshipFields
+    ? currentFieldsToSearch.map((field) => field.apiIdentifier)
+    : currentFieldsToSearch.filter((field) => !isRelationshipField(field)).map((field) => field.apiIdentifier);
 };

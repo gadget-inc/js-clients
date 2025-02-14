@@ -2,11 +2,11 @@ import type { AutoSelection, TextFieldProps } from "@shopify/polaris";
 import { Icon, Listbox, Popover, Scrollable, TextField } from "@shopify/polaris";
 import { SearchIcon } from "@shopify/polaris-icons";
 import React from "react";
-import type { Option } from "../../../interfaces/AutoRelationshipInputProps.js";
+import type { DisplayedRecordOption } from "../../../interfaces/AutoRelationshipInputProps.js";
 import { ListMessage, NoRecordsMessage, SelectableOption, getErrorMessage } from "./PolarisListMessages.js";
 
 type RelatedModelOptionsProps = {
-  options: Option[];
+  options: DisplayedRecordOption[];
   records?: Record<string, any>[];
   isLoading?: boolean;
   errorMessage?: string;
@@ -14,7 +14,7 @@ type RelatedModelOptionsProps = {
   onSelect: (record: Record<string, any>) => void;
   autoSelection?: AutoSelection;
   actions?: React.ReactNode[];
-  renderOption?: (option: Option) => React.ReactNode;
+  renderOption?: (option: DisplayedRecordOption) => React.ReactNode;
 };
 
 export const RelatedModelOptions = (props: RelatedModelOptionsProps) => {

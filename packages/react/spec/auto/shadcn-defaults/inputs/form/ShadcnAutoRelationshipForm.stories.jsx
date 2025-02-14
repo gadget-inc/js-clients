@@ -23,8 +23,11 @@ const Component = (props) => {
         <Card className="p-6 w-full bg-white shadow-lg rounded-lg">
           <AutoBelongsToForm
             field="section"
-            primaryLabel="name"
-            renderSelectedRecord={(record) => <Label>this is a custom belongsTo render for {record.name}</Label>}
+            recordLabel={({ record }) => (
+              <Label>
+                {record.name} (id:{record.id})
+              </Label>
+            )}
           >
             <AutoInput field="name" />
           </AutoBelongsToForm>
@@ -33,9 +36,11 @@ const Component = (props) => {
         <Card className="p-6 w-full bg-white shadow-lg rounded-lg">
           <AutoHasOneForm
             field="doodad"
-            primaryLabel="name"
-            secondaryLabel={(record) => `${record.weight ?? "N/A"} (${record.active ?? "N/A"})`}
-            tertiaryLabel="size"
+            recordLabel={{
+              primary: "name",
+              secondary: (record) => `${record.weight ?? "N/A"} (${record.active ?? "N/A"})`,
+              tertiary: "size",
+            }}
           >
             <div className="flex flex-col gap-4">
               <AutoInput field="name" />
@@ -54,15 +59,22 @@ const Component = (props) => {
               </Label>
             }
             field="gizmos"
-            selectPaths={["name", "orientation"]}
-            primaryLabel="name"
-            secondaryLabel="orientation"
+            recordLabel={{
+              primary: "name",
+              secondary: "orientation",
+            }}
           >
             <div className="flex flex-col gap-4">
               <AutoInput field="name" />
               <AutoInput field="orientation" />
               <AutoInput field="attachment" />
-              <AutoHasManyForm field="doodads" selectPaths={["name", "weight"]} primaryLabel="name" secondaryLabel="weight">
+              <AutoHasManyForm
+                field="doodads"
+                recordLabel={{
+                  primary: "name",
+                  secondary: "weight",
+                }}
+              >
                 <div className="flex flex-col gap-4">
                   <AutoInput field="name" />
                   <AutoInput field="weight" />
@@ -178,7 +190,12 @@ const ExampleTweeterFollowerCreateRelatedForm = (props) => {
         </Card>
 
         <Card className="p-6 w-full bg-white shadow-lg rounded-lg">
-          <AutoHasManyThroughForm field="followers" selectPaths={["name"]} primaryLabel={"name"}>
+          <AutoHasManyThroughForm
+            field="followers"
+            recordLabel={{
+              primary: "name",
+            }}
+          >
             <div className="flex flex-row gap-4">
               <AutoInput field="friendship.started" />
               <AutoInput field="friendship.ended" />
@@ -187,7 +204,12 @@ const ExampleTweeterFollowerCreateRelatedForm = (props) => {
         </Card>
 
         <Card className="p-6 w-full bg-white shadow-lg rounded-lg">
-          <AutoHasManyThroughForm field="followees" selectPaths={["name"]} primaryLabel={"name"}>
+          <AutoHasManyThroughForm
+            field="followees"
+            recordLabel={{
+              primary: "name",
+            }}
+          >
             <div className="flex flex-row gap-4">
               <AutoInput field="friendship.started" />
               <AutoInput field="friendship.ended" />
@@ -243,22 +265,23 @@ const ExampleCourseCreateRelatedForm = (props) => {
           <Label>Has Many Through Form -- Students</Label>
           <AutoHasManyThroughForm
             field="students"
-            selectPaths={["firstName", "lastName", "year", "department"]}
-            primaryLabel={["firstName", "lastName"]}
-            secondaryLabel={(record) => {
-              if (record.year <= 1) {
-                return "Freshman";
-              } else if (record.year <= 2) {
-                return "Sophomore";
-              } else if (record.year <= 3) {
-                return "Junior";
-              } else if (record.year <= 4) {
-                return "Senior";
-              } else {
-                return "Mature";
-              }
+            recordLabel={{
+              primary: ["firstName", "lastName"],
+              secondary: ({ record }) => {
+                if (record.year <= 1) {
+                  return "Freshman";
+                } else if (record.year <= 2) {
+                  return "Sophomore";
+                } else if (record.year <= 3) {
+                  return "Junior";
+                } else if (record.year <= 4) {
+                  return "Senior";
+                } else {
+                  return `Mature (${record.year})`;
+                }
+              },
+              tertiary: "department",
             }}
-            tertiaryLabel="department"
           >
             <div className="flex flex-col gap-4">
               <AutoInput field="registration.effectiveFrom" />
@@ -271,8 +294,9 @@ const ExampleCourseCreateRelatedForm = (props) => {
           <Label>Has Many Through Form -- Professors</Label>
           <AutoHasManyThroughForm
             field="professors"
-            selectPaths={["title", "firstName", "lastName"]}
-            primaryLabel={["title", "firstName", "lastName"]}
+            recordLabel={{
+              primary: ["title", "firstName", "lastName"],
+            }}
           />
         </Card>
         <AutoSubmit className="w-full bg-white p-2 rounded-md" />
@@ -386,18 +410,33 @@ const MayorOrCitizenSelect = () => {
       </div>
       {showMayor ? (
         <Card className="p-6 w-full bg-white shadow-lg rounded-lg">
-          <AutoHasOneForm field="mayor" primaryLabel={["firstName", "lastName"]}>
+          <AutoHasOneForm
+            field="mayor"
+            recordLabel={{
+              primary: ["firstName", "lastName"],
+            }}
+          >
             <AutoInput field="firstName" />
             <AutoInput field="lastName" />
           </AutoHasOneForm>
         </Card>
       ) : (
         <Card className="p-6 w-full bg-white shadow-lg rounded-lg">
-          <AutoHasManyForm field="citizens" primaryLabel={["firstName", "lastName"]}>
+          <AutoHasManyForm
+            field="citizens"
+            recordLabel={{
+              primary: ["firstName", "lastName"],
+            }}
+          >
             <AutoInput field="firstName" />
             <AutoInput field="lastName" />
 
-            <AutoBelongsToForm field="cityOfMayorDuty" primaryLabel={["englishName", "localName"]}>
+            <AutoBelongsToForm
+              field="cityOfMayorDuty"
+              recordLabel={{
+                primary: ["englishName", "localName"],
+              }}
+            >
               <AutoInput field="englishName" />
               <AutoInput field="localName" />
             </AutoBelongsToForm>

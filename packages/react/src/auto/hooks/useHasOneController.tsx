@@ -1,18 +1,13 @@
 import { useCallback, useMemo } from "react";
 import { GadgetFieldType } from "../../internal/gql/graphql.js";
 import { useController, useWatch } from "../../useActionForm.js";
-import type { AutoRelationshipInputProps, OptionLabel } from "../interfaces/AutoRelationshipInputProps.js";
+import type { AutoRelationshipFormProps, AutoRelationshipInputProps } from "../interfaces/AutoRelationshipInputProps.js";
 import { useFieldMetadata } from "./useFieldMetadata.js";
 import { useRelatedModelOptions } from "./useRelatedModel.js";
 import { assertFieldType } from "./utils.js";
 
-export const useHasOneController = (props: {
-  field: string;
-  primaryLabel?: OptionLabel;
-  secondaryLabel?: OptionLabel;
-  tertiaryLabel?: OptionLabel;
-}) => {
-  const { field, primaryLabel, secondaryLabel, tertiaryLabel } = props;
+export const useHasOneController = (props: Omit<AutoRelationshipFormProps, "children" | "label">) => {
+  const { field } = props;
   const fieldMetadata = useFieldMetadata(field);
   const { path, metadata } = fieldMetadata;
 
@@ -24,7 +19,7 @@ export const useHasOneController = (props: {
 
   const record: Record<string, any> | undefined = useWatch({ name: path });
 
-  const relatedModelOptions = useRelatedModelOptions({ field, optionLabel: primaryLabel, secondaryLabel, tertiaryLabel });
+  const relatedModelOptions = useRelatedModelOptions(props);
 
   const errorMessage = relatedModelOptions.relatedModel.error?.message;
   const isLoading = relatedModelOptions.relatedModel.fetching;
@@ -40,7 +35,14 @@ export const useHasOneController = (props: {
 
 export const useHasOneInputController = (props: AutoRelationshipInputProps) => {
   const { field, control } = props;
-  const { record: value, fieldMetadata, relatedModelOptions } = useHasOneController({ field, primaryLabel: props.optionLabel });
+  const {
+    record: value,
+    fieldMetadata,
+    relatedModelOptions,
+  } = useHasOneController({
+    field,
+    recordLabel: { primary: props.optionLabel },
+  });
 
   const { path } = fieldMetadata;
 

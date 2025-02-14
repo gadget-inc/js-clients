@@ -3,7 +3,7 @@ import React from "react";
 import { useBelongsToForm } from "../../../../useBelongsToForm.js";
 import { autoRelationshipForm } from "../../../AutoInput.js";
 import { RelationshipContext } from "../../../hooks/useAutoRelationship.js";
-import type { OptionLabel } from "../../../interfaces/AutoRelationshipInputProps.js";
+import type { AutoRelationshipFormProps } from "../../../interfaces/AutoRelationshipInputProps.js";
 import type { ShadcnElements } from "../../elements.js";
 import { makeShadcnRenderOptionLabel } from "../../utils.js";
 import { makeSearchableSingleRelatedModelRecordSelector } from "./SearchableSingleRelatedModelRecordSelector.js";
@@ -65,14 +65,7 @@ export const makeShadcnAutoBelongsToForm = ({
     Checkbox,
   });
 
-  function ShadcnAutoBelongsToForm(props: {
-    field: string;
-    children: React.ReactNode;
-
-    primaryLabel?: OptionLabel;
-    secondaryLabel?: OptionLabel;
-    tertiaryLabel?: OptionLabel;
-  }) {
+  function ShadcnAutoBelongsToForm(props: AutoRelationshipFormProps) {
     const { field } = props;
     const form = useBelongsToForm(props);
     const {
@@ -131,10 +124,10 @@ export const makeShadcnAutoBelongsToForm = ({
           {hasRecord ? (
             <div className="flex flex-col gap-2">
               <div className="flex flex-row justify-between gap-2 mt-2">
-                {renderOptionLabel(recordOption!.label, "primary")}
-                {recordOption!.tertiaryLabel && renderOptionLabel(recordOption!.tertiaryLabel, "tertiary")}
+                {renderOptionLabel(recordOption!.primary, "primary")}
+                {recordOption!.tertiary && renderOptionLabel(recordOption!.tertiary, "tertiary")}
               </div>
-              {recordOption!.secondaryLabel && renderOptionLabel(recordOption!.secondaryLabel, "secondary")}
+              {recordOption!.secondary && renderOptionLabel(recordOption!.secondary, "secondary")}
             </div>
           ) : (
             <SearchableSingleRelatedModelRecordSelector form={form} field={field} />

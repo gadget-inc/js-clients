@@ -1,18 +1,13 @@
 import { useCallback } from "react";
 import { GadgetFieldType } from "../../internal/gql/graphql.js";
 import { useController, useFormContext, useWatch, type Control } from "../../useActionForm.js";
-import type { AutoRelationshipInputProps, OptionLabel } from "../interfaces/AutoRelationshipInputProps.js";
+import type { AutoRelationshipFormProps, AutoRelationshipInputProps } from "../interfaces/AutoRelationshipInputProps.js";
 import { useFieldMetadata } from "./useFieldMetadata.js";
 import { useRelatedModelOptions } from "./useRelatedModel.js";
 import { assertFieldType } from "./utils.js";
 
-export const useBelongsToController = (props: {
-  field: string;
-  primaryLabel?: OptionLabel;
-  secondaryLabel?: OptionLabel;
-  tertiaryLabel?: OptionLabel;
-}) => {
-  const { field, primaryLabel, secondaryLabel, tertiaryLabel } = props;
+export const useBelongsToController = (props: Omit<AutoRelationshipFormProps, "children" | "label">) => {
+  const { field } = props;
   const fieldMetadata = useFieldMetadata(field);
   const { path, metadata } = fieldMetadata;
   assertFieldType({
@@ -23,7 +18,7 @@ export const useBelongsToController = (props: {
 
   const record = useWatch({ name: path });
 
-  const relatedModelOptions = useRelatedModelOptions({ field, optionLabel: primaryLabel, secondaryLabel, tertiaryLabel });
+  const relatedModelOptions = useRelatedModelOptions(props);
 
   const isLoading = relatedModelOptions.relatedModel.fetching;
   const errorMessage = relatedModelOptions.relatedModel.error?.message;
@@ -39,7 +34,10 @@ export const useBelongsToController = (props: {
 
 export const useBelongsToInputController = (props: AutoRelationshipInputProps) => {
   const { field, control, optionLabel } = props;
-  const { fieldMetadata, relatedModelOptions, isLoading, errorMessage } = useBelongsToController({ field, primaryLabel: optionLabel });
+  const { fieldMetadata, relatedModelOptions, isLoading, errorMessage } = useBelongsToController({
+    field,
+    recordLabel: { primary: optionLabel },
+  });
   const { path } = fieldMetadata;
 
   const {

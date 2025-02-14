@@ -15,6 +15,7 @@ import { makeShadcnAutoNumberInput } from "./ShadcnAutoNumberInput.js";
 import { makeShadcnAutoPasswordInput } from "./ShadcnAutoPasswordInput.js";
 import { makeShadcnAutoRolesInput } from "./ShadcnAutoRolesInput.js";
 import { makeShadcnAutoStringInput } from "./ShadcnAutoStringInput.js";
+import { makeShadcnAutoTextAreaInput } from "./ShadcnAutoTextAreaInput.js";
 import { makeShadcnAutoRichTextInput } from "./ShadcnautoRichTextInput.js";
 import { makeShadcnAutoBelongsToInput } from "./relationships/ShadcnAutoBelongsToInput.js";
 import { makeShadcnAutoHasManyInput } from "./relationships/ShadcnAutoHasManyInput.js";
@@ -44,6 +45,7 @@ export const makeShadcnAutoInput = (
 ) => {
   const AutoIdInput = makeShadcnAutoIdInput(elements);
   const AutoStringInput = makeShadcnAutoStringInput(elements);
+  const AutoTextAreaInput = makeShadcnAutoTextAreaInput(elements);
   const AutoNumberInput = makeShadcnAutoNumberInput(elements);
   const AutoEncryptedStringInput = makeShadcnAutoEncryptedStringInput(elements);
   const AutoPasswordInput = makeShadcnAutoPasswordInput(elements);
@@ -109,11 +111,8 @@ export const makeShadcnAutoInput = (
 
   return {
     AutoInput,
-    AutoBelongsToInput,
-    AutoHasManyInput,
-    AutoHasOneInput,
-    AutoHasManyThroughInput,
     AutoRolesInput,
+    AutoFileInput,
     AutoEnumInput,
     AutoJSONInput,
     AutoDateTimePicker,
@@ -124,5 +123,10 @@ export const makeShadcnAutoInput = (
     AutoNumberInput,
     AutoIdInput,
     AutoHiddenInput,
+    AutoTextAreaInput,
+    AutoBelongsToInput,
+    AutoHasManyInput,
+    AutoHasManyThroughInput,
+    AutoHasOneInput,
   };
 };

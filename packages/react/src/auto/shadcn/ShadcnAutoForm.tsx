@@ -1,4 +1,4 @@
-import type { ActionFunction } from "@gadgetinc/api-client-core";
+import type { ActionFunction, GlobalActionFunction } from "@gadgetinc/api-client-core";
 import type { ComponentProps } from "react";
 import React, { forwardRef } from "react";
 import { FormProvider } from "../../useActionForm.js";
@@ -24,12 +24,9 @@ export const makeAutoForm = <Elements extends ShadcnElements>(elements: Elements
 
   const {
     AutoInput,
-    AutoBelongsToInput,
-    AutoHasManyInput,
-    AutoHasOneInput,
-    AutoHasManyThroughInput,
     AutoRolesInput,
     AutoEnumInput,
+    AutoFileInput,
     AutoJSONInput,
     AutoDateTimePicker,
     AutoPasswordInput,
@@ -39,6 +36,11 @@ export const makeAutoForm = <Elements extends ShadcnElements>(elements: Elements
     AutoNumberInput,
     AutoHiddenInput,
     AutoIdInput,
+    AutoTextAreaInput,
+    AutoBelongsToInput,
+    AutoHasManyInput,
+    AutoHasManyThroughInput,
+    AutoHasOneInput,
   } = makeShadcnAutoInput(elements);
 
   const AutoSubmit = makeShadcnAutoSubmit(elements);
@@ -52,14 +54,18 @@ export const makeAutoForm = <Elements extends ShadcnElements>(elements: Elements
     return <form ref={ref} noValidate className={cn("space-y-6", className)} {...props} />;
   });
 
-  function AutoForm<GivenOptions extends OptionsType, SchemaT, ActionFunc extends ActionFunction<GivenOptions, any, any, SchemaT, any>>(
-    props: AutoFormProps<GivenOptions, SchemaT, ActionFunc> & Omit<ComponentProps<typeof FormContainer>, "action">
-  ) {
+  function AutoForm<
+    GivenOptions extends OptionsType,
+    SchemaT,
+    ActionFunc extends ActionFunction<GivenOptions, any, any, SchemaT, any> | GlobalActionFunction<any>
+  >(props: AutoFormProps<GivenOptions, SchemaT, ActionFunc> & Omit<ComponentProps<typeof FormContainer>, "action" | "defaultValue">) {
     const { action, findBy } = props;
     validateAutoFormProps(props);
 
     // Component key to force re-render when the action or findBy changes
-    const componentKey = `${action.modelApiIdentifier ?? ""}.${action.operationName}.${JSON.stringify(findBy)}`;
+    const componentKey = `${"modelApiIdentifier" in action ? `${action.modelApiIdentifier}.` : ""}${action.operationName}.${JSON.stringify(
+      findBy
+    )}`;
 
     return (
       <AutoFormFieldsFromChildComponentsProvider hasCustomFormChildren={React.Children.count(props.children) > 0}>
@@ -71,7 +77,7 @@ export const makeAutoForm = <Elements extends ShadcnElements>(elements: Elements
   function AutoFormInner<
     GivenOptions extends OptionsType,
     SchemaT,
-    ActionFunc extends ActionFunction<GivenOptions, any, any, SchemaT, any>
+    ActionFunc extends ActionFunction<GivenOptions, any, any, SchemaT, any> | GlobalActionFunction<any>
   >(props: AutoFormProps<GivenOptions, SchemaT, ActionFunc> & Omit<ComponentProps<typeof FormContainer>, "action">) {
     const { record: _record, action, findBy, ...rest } = props;
 
@@ -112,7 +118,7 @@ export const makeAutoForm = <Elements extends ShadcnElements>(elements: Elements
         isSubmitting,
       },
       model: {
-        apiIdentifier: action.modelApiIdentifier,
+        apiIdentifier: "modelApiIdentifier" in action ? action.modelApiIdentifier : undefined,
         namespace: action.namespace,
       },
       fields,
@@ -137,8 +143,11 @@ export const makeAutoForm = <Elements extends ShadcnElements>(elements: Elements
     return (
       <AutoFormMetadataContext.Provider value={autoFormMetadataContext}>
         <FormProvider {...originalFormMethods}>
-          {isLoading && <Skeleton />}
-          <FormContainer hidden={isLoading} {...rest} onSubmit={submit as any}>
+          <FormContainer
+            {...rest}
+            className={cn(`${isLoading || isSubmitting ? "opacity-30" : ""} ${rest.className ?? ""}`)}
+            onSubmit={submit as any}
+          >
             {formContent}
           </FormContainer>
         </FormProvider>
@@ -153,16 +162,9 @@ export const makeAutoForm = <Elements extends ShadcnElements>(elements: Elements
     SubmitResultBanner,
     SubmitSuccessfulBanner,
     SubmitErrorBanner,
-    AutoHasOneForm,
-    AutoHasOneInput,
-    AutoBelongsToForm,
-    AutoHasManyForm,
-    AutoHasManyThroughForm,
-    AutoBelongsToInput,
-    AutoHasManyInput,
-    AutoHasManyThroughInput,
     AutoRolesInput,
     AutoEnumInput,
+    AutoFileInput,
     AutoJSONInput,
     AutoDateTimePicker,
     AutoPasswordInput,
@@ -172,5 +174,16 @@ export const makeAutoForm = <Elements extends ShadcnElements>(elements: Elements
     AutoNumberInput,
     AutoIdInput,
     AutoHiddenInput,
+    AutoTextAreaInput,
+
+    AutoBelongsToInput,
+    AutoHasManyInput,
+    AutoHasManyThroughInput,
+    AutoHasOneInput,
+
+    AutoBelongsToForm,
+    AutoHasManyForm,
+    AutoHasManyThroughForm,
+    AutoHasOneForm,
   };
 };
