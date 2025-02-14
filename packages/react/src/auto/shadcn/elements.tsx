@@ -235,7 +235,6 @@ export interface ShadcnElements {
   /** The Textarea component from shadcn */
   Textarea: React.ComponentType<React.HTMLAttributes<HTMLTextAreaElement>>;
 
-  //TODO: Remove these as they are not used
   /** The Popover component from shadcn */
   Popover: React.ComponentType<PopoverProps>;
 
