@@ -7,10 +7,10 @@ import type { FieldMetadata, GlobalActionMetadata, ModelWithOneActionMetadata } 
 import { FieldType, buildAutoFormFieldList, isModelActionMetadata, useActionMetadata } from "../metadata.js";
 import type { AnyActionWithId, RecordIdentifier, UseActionFormHookStateData, UseActionFormSubmit } from "../use-action-form/types.js";
 import { isPlainObject, processDefaultValues } from "../use-action-form/utils.js";
-import { isRelationshipField, pathListToSelection } from "../use-table/helpers.js";
+import { getRelatedModelFields, isHasManyOrHasManyThroughField, isRelationshipField, pathListToSelection } from "../use-table/helpers.js";
 import type { FieldErrors, FieldValues, UseFormReturn } from "../useActionForm.js";
 import { useActionForm } from "../useActionForm.js";
-import { get, getFlattenedObjectKeys, type ErrorWrapper, type OptionsType } from "../utils.js";
+import { get, getFlattenedObjectKeys, set, type ErrorWrapper, type OptionsType } from "../utils.js";
 import { validationSchema } from "../validationSchema.js";
 import {
   validateFindByObjectWithMetadata,
@@ -155,23 +155,68 @@ export const useFormFields = (
 
 const useFormSelection = (props: {
   modelApiIdentifier: string | undefined;
-  fields: readonly { path: string; metadata: FieldMetadata }[];
+  rootFieldsMetadata: FieldMetadata[];
+  fields: readonly { path: string; metadata: FieldMetadata }[]; // From smart selection through child parsing and AutoInput registration
   select?: FieldSelection;
 }): FieldSelection | undefined => {
-  const { modelApiIdentifier, fields, select } = props;
+  const { modelApiIdentifier, fields, select, rootFieldsMetadata } = props;
 
-  if (select) {
-    return select;
-  }
+  const selectFromProps = useMemo(() => {
+    if (!select || !modelApiIdentifier) {
+      return;
+    }
+    return forceIdsIntoSelect({ select, rootFieldsMetadata });
+  }, [select, modelApiIdentifier, rootFieldsMetadata]);
 
   if (!modelApiIdentifier || !fields.length) {
     return;
+  }
+
+  if (selectFromProps) {
+    return selectFromProps;
   }
 
   const paths = fields.map((f) => f.path.replace(new RegExp(`^${modelApiIdentifier}\\.`), ""));
   const fieldMetaData = fields.map((f) => f.metadata);
 
   return pathListToSelection(modelApiIdentifier, paths, fieldMetaData);
+};
+
+const forceIdsIntoSelect = (props: { select: FieldSelection; rootFieldsMetadata: FieldMetadata[] }) => {
+  const { select: originalSelect, rootFieldsMetadata } = props;
+  const select = structuredClone(originalSelect);
+
+  select.id = true; // Always select the ID for the root model
+
+  const addIdToSelection = (selectPath: string, fieldMetadata: FieldMetadata) => {
+    if (!isRelationshipField(fieldMetadata)) {
+      return; // Non relationships do not need additional selection
+    }
+
+    const existingSelection = get(select, selectPath);
+    if (!existingSelection || typeof existingSelection !== "object") {
+      // Do not go deeper than what is defined in the select object
+      return;
+    }
+
+    const isManyRelation = isHasManyOrHasManyThroughField(fieldMetadata);
+    const currentFieldSelectPathPrefix = isManyRelation ? `${selectPath}.edges.node` : `${selectPath}`;
+    const idPath = `${currentFieldSelectPathPrefix}.id`;
+
+    set(select, idPath, true);
+
+    const relatedModelFields = getRelatedModelFields(fieldMetadata);
+
+    for (const relatedModelField of relatedModelFields) {
+      addIdToSelection(`${currentFieldSelectPathPrefix}.${relatedModelField.apiIdentifier}`, relatedModelField);
+    }
+  };
+
+  for (const field of rootFieldsMetadata) {
+    addIdToSelection(field.apiIdentifier, field);
+  }
+
+  return select;
 };
 
 const validateFormFieldApiIdentifierUniqueness = (
@@ -238,13 +283,14 @@ export const useAutoForm = <
 
   validateTriggersFromMetadata(metadata);
 
+  const rootFieldsMetadata = getRootFieldsFromMetadata(metadata);
+
   const { hasCustomFormChildren, fieldSet, registerFields } = useFieldsFromChildComponents();
   const hasRegisteredFieldsFromChildren = hasCustomFormChildren && fieldSet.size > 0;
   const registeredFieldsFromChildren = hasCustomFormChildren
     ? extractPathsFromChildren({
         children: "children" in props ? props.children : undefined,
-        getFieldsToSelectOnRecordLabelCallback: (path) =>
-          getAllRelatedModelFieldApiIdentifiers({ path, rootFieldsMetadata: getRootFieldsFromMetadata(metadata) }),
+        getFieldsToSelectOnRecordLabelCallback: (path) => getAllRelatedModelFieldApiIdentifiers({ path, rootFieldsMetadata }),
       })
     : [];
 
@@ -266,7 +312,7 @@ export const useAutoForm = <
   const operatesWithRecordId = !!(metadata && isModelActionMetadata(metadata) && metadata.action.operatesWithRecordIdentity);
   const modelApiIdentifier = action.type == "action" ? action.modelApiIdentifier : undefined;
   const isUpsertMetaAction = isMetadataForUpsertAction(metadata);
-  const selection = useFormSelection({ modelApiIdentifier, fields, select });
+  const selection = useFormSelection({ modelApiIdentifier, rootFieldsMetadata, fields, select });
   const isUpsertWithFindBy = isUpsertMetaAction && !!findBy;
   const fieldPathsToValidate = useMemo(() => fields.map(({ path }) => path), [fields]);
 

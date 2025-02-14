@@ -348,36 +348,31 @@ export const DeepRelationshipChain = {
     // `id` fields must be selected at every step of the relationship field chain because they control if a nested action will become an update or a create.
     // If there is no ID, only creates nested actions will be used to create new nested records instead of updating existing ones.
     select: {
-      id: true,
       englishName: true,
       size: true,
       continents: {
         edges: {
           node: {
-            id: true,
             englishName: true,
             countries: {
               edges: {
                 node: {
-                  id: true,
                   englishName: true,
                   cities: {
                     edges: {
                       node: {
-                        id: true,
                         englishName: true,
                         localName: true,
                         citizens: {
                           edges: {
                             node: {
-                              id: true,
                               firstName: true,
                               lastName: true,
-                              cityOfMayorDuty: { id: true, englishName: true, localName: true },
+                              cityOfMayorDuty: { englishName: true, localName: true },
                             },
                           },
                         },
-                        mayor: { id: true, firstName: true, lastName: true },
+                        mayor: { firstName: true, lastName: true },
                       },
                     },
                   },
