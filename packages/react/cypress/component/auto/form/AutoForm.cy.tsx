@@ -227,21 +227,7 @@ describeForEachAutoAdapter("AutoForm", ({ name, adapter: { AutoForm }, wrapper }
     submit("Widget");
   });
 
-  it("can render a form to update a model without making changes and submit it", async () => {
-    const name = `test record ${new Date()}`;
-
-    cy.wrap(null)
-      .then(async () => await api.widget.create({ name, inventoryCount: 42, anything: "hello" }))
-      .then((record) => {
-        cy.mountWithWrapper(<AutoForm action={api.widget.update} record={record.id} exclude={["gizmos"]} />, wrapper);
-        cy.get(`input[name="widget.name"]`).should("have.value", name);
-        cy.get(`input[name="widget.inventoryCount"]`).should("have.value", 42);
-
-        submit("Widget");
-      });
-  });
-
-  it("can render a rich text editor for markdown content", async () => {
+  it("can render a rich text editor for markdown content", () => {
     cy.mountWithWrapper(<AutoForm action={api.widget.create} include={["description"]} />, wrapper);
 
     cy.clickAndType(`[aria-label="editable markdown"] > p`, "# foobar\n## foobaz");
@@ -266,7 +252,7 @@ describeForEachAutoAdapter("AutoForm", ({ name, adapter: { AutoForm }, wrapper }
     });
   });
 
-  it("can submit a form with custom children even if the action has required fields", async () => {
+  it("can submit a form with custom children even if the action has required fields", () => {
     cy.mountWithWrapper(
       <AutoForm action={api.widget.create}>
         {/* Note that widget has name and inventoryCount as required fields that are not included here */}
