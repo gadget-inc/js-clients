@@ -114,9 +114,8 @@ export const makeShadcnAutoInput = (
 
   return {
     AutoInput,
-    AutoBelongsToInput,
-    AutoHasManyInput,
     AutoRolesInput,
+    AutoFileInput,
     AutoEnumInput,
     AutoJSONInput,
     AutoDateTimePicker,
@@ -128,5 +127,10 @@ export const makeShadcnAutoInput = (
     AutoIdInput,
     AutoHiddenInput,
     AutoTextAreaInput,
+
+    AutoBelongsToInput,
+    AutoHasManyInput,
+    AutoHasManyThroughInput,
+    AutoHasOneInput,
   };
 };

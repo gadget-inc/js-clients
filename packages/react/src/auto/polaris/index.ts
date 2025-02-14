@@ -19,9 +19,13 @@ export {
   PolarisAutoTextInput as AutoStringInput,
   PolarisAutoTextInput as AutoUrlInput,
 } from "./inputs/PolarisAutoTextInput.js";
+export { PolarisAutoBelongsToForm as AutoBelongsToForm } from "./inputs/relationships/PolarisAutoBelongsToForm.js";
 export { PolarisAutoBelongsToInput as AutoBelongsToInput } from "./inputs/relationships/PolarisAutoBelongsToInput.js";
+export { PolarisAutoHasManyForm as AutoHasManyForm } from "./inputs/relationships/PolarisAutoHasManyForm.js";
 export { PolarisAutoHasManyInput as AutoHasManyInput } from "./inputs/relationships/PolarisAutoHasManyInput.js";
+export { PolarisAutoHasManyThroughForm as AutoHasManyThroughForm } from "./inputs/relationships/PolarisAutoHasManyThroughForm.js";
 export { PolarisAutoHasManyThroughInput as AutoHasManyThroughInput } from "./inputs/relationships/PolarisAutoHasManyThroughInput.js";
+export { PolarisAutoHasOneForm as AutoHasOneForm } from "./inputs/relationships/PolarisAutoHasOneForm.js";
 export { PolarisAutoHasOneInput as AutoHasOneInput } from "./inputs/relationships/PolarisAutoHasOneInput.js";
 export { PolarisAutoSubmit as AutoSubmit } from "./submit/PolarisAutoSubmit.js";
 export {
