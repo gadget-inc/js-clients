@@ -14,8 +14,26 @@ export const AutoComponentsApiClientTypeChecker = () => {
   return (
     <>
       {/* AutoForm - Create actions */}
-      <PolarisAutoForm action={testApi.widget.create} />
-      <ShadcnAutoForm action={testApi.widget.create} />
+      <PolarisAutoForm
+        action={testApi.widget.create}
+        defaultValues={{
+          widget: {
+            inventoryCount: 123,
+            gizmos: [{ name: "Gizmo 1" }],
+            section: { name: "Section 1" },
+          },
+        }}
+      />
+      <ShadcnAutoForm
+        action={testApi.widget.create}
+        defaultValues={{
+          widget: {
+            inventoryCount: 123,
+            gizmos: [{ name: "Gizmo 1" }],
+            section: { name: "Section 1" },
+          },
+        }}
+      />
 
       {/* AutoForm - Update actions */}
       <PolarisAutoForm action={testApi.widget.update} />

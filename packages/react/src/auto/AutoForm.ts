@@ -8,7 +8,7 @@ import { FieldType, buildAutoFormFieldList, isModelActionMetadata, useActionMeta
 import type { AnyActionWithId, RecordIdentifier, UseActionFormHookStateData, UseActionFormSubmit } from "../use-action-form/types.js";
 import { isPlainObject, processDefaultValues } from "../use-action-form/utils.js";
 import { isRelationshipField, pathListToSelection } from "../use-table/helpers.js";
-import type { FieldErrors, UseFormReturn } from "../useActionForm.js";
+import type { FieldErrors, FieldValues, UseFormReturn } from "../useActionForm.js";
 import { useActionForm } from "../useActionForm.js";
 import { get, getFlattenedObjectKeys, type ErrorWrapper, type OptionsType } from "../utils.js";
 import { validationSchema } from "../validationSchema.js";
@@ -43,7 +43,9 @@ type AutoFormPropsWithChildren = {
 export type AutoFormProps<
   GivenOptions extends OptionsType,
   SchemaT,
-  ActionFunc extends ActionFunction<GivenOptions, any, any, SchemaT, any> | GlobalActionFunction<any>
+  ActionFunc extends ActionFunction<GivenOptions, any, any, SchemaT, any> | GlobalActionFunction<any>,
+  ExtraFormVariables extends FieldValues = Record<string, unknown>,
+  DefaultValues = ActionFunc["variablesType"] & ExtraFormVariables
 > = (AutoFormPropsWithChildren | AutoFormPropsWithoutChildren) & {
   /** Which action this fom will run on submit */
   action: ActionFunc;
@@ -54,7 +56,7 @@ export type AutoFormProps<
   /** A denylist of fields to render within the form. Every field except these fields will be rendered as inputs. */
   exclude?: string[];
   /** A set of field values to pre-populate the form with on load. Only applies to create forms. */
-  defaultValues?: ActionFunc["variablesType"];
+  defaultValues?: DefaultValues;
   /** What to show the user once the form has been submitted successfully */
   successContent?: ReactNode;
   /** Selection object to pass to the form to retrieve existing values. This will override the default selection based on included fields */
