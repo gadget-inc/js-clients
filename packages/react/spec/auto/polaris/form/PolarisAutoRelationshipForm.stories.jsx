@@ -208,7 +208,7 @@ const ExampleCourseCreateRelatedForm = (props) => {
               tertiary: "department",
             }}
           >
-            <InlineStack>
+            <InlineStack gap="300">
               {/* Fields on the join model. The prefix is the model API id of the join model */}
               <PolarisAutoInput field="registration.effectiveFrom" />
               <PolarisAutoInput field="registration.effectiveTo" />
