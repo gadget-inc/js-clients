@@ -65,4 +65,5 @@ export type ItemProps = Children &
     keywords?: string[];
     /** Whether this item is forcibly rendered regardless of filtering. */
     forceMount?: boolean;
+    selected?: boolean;
   };
