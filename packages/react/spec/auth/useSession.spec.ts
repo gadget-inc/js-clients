@@ -62,10 +62,11 @@ describe("useSession", () => {
         }
       }"
     `);
-    expect(result.current.id).toEqual("123");
-    expect(result.current.user!.id).toEqual("321");
-    expect(result.current.user!.firstName).toEqual("Jane");
-    expect(result.current.user!.lastName).toEqual("Doe");
+    const [session] = result.current;
+    expect(session.id).toEqual("123");
+    expect(session.user!.id).toEqual("321");
+    expect(session.user!.firstName).toEqual("Jane");
+    expect(session.user!.lastName).toEqual("Doe");
   });
 
   test("it returns the current session when the user is logged in and api client is passed", async () => {
@@ -110,10 +111,11 @@ describe("useSession", () => {
         }
       }"
     `);
-    expect(result.current.id).toEqual("123");
-    expect(result.current.user!.id).toEqual("321");
-    expect(result.current.user!.firstName).toEqual("Jane");
-    expect(result.current.user!.lastName).toEqual("Doe");
+    const [session] = result.current;
+    expect(session.id).toEqual("123");
+    expect(session.user!.id).toEqual("321");
+    expect(session.user!.firstName).toEqual("Jane");
+    expect(session.user!.lastName).toEqual("Doe");
   });
 
   test("it returns the current session when the user is logged in and api client with options is passed", async () => {
@@ -140,9 +142,10 @@ describe("useSession", () => {
         }
       }"
     `);
-    expect(result.current.id).toEqual("123");
-    expect(result.current.user?.id).toEqual("321");
-    expect(result.current.user?.firstName).toEqual("Jane");
+    const [session] = result.current;
+    expect(session.id).toEqual("123");
+    expect(session.user?.id).toEqual("321");
+    expect(session.user?.firstName).toEqual("Jane");
 
     const { result: noUserResult, rerender: _noUserRerender } = renderHook(
       () => useSession(fullAuthApi, { filter: { user: { firstName: { equals: "Bob" } } } }),
@@ -158,9 +161,10 @@ describe("useSession", () => {
     expectMockSignedOutUser();
     rerender();
 
-    expect(result.current).toBeDefined();
-    expect(result.current.id).toEqual("123");
-    expect(result.current.user).toBe(null);
+    const [session] = result.current;
+    expect(session).toBeDefined();
+    expect(session.id).toEqual("123");
+    expect(session.user).toBe(null);
   });
 
   test("it returns the current session when the user is logged out and no options are passed", async () => {
@@ -169,9 +173,10 @@ describe("useSession", () => {
     expectMockSignedOutUser();
     rerender();
 
-    expect(result.current).toBeDefined();
-    expect(result.current.id).toEqual("123");
-    expect(result.current.user).toBe(null);
+    const [session] = result.current;
+    expect(session).toBeDefined();
+    expect(session.id).toEqual("123");
+    expect(session.user).toBe(null);
   });
 
   test("it returns the current session when the user is logged out and an api client with options is passed", async () => {
@@ -180,9 +185,10 @@ describe("useSession", () => {
     expectMockSignedOutUser();
     rerender();
 
-    expect(result.current).toBeDefined();
-    expect(result.current.id).toEqual("123");
-    expect(result.current.user).toBe(null);
+    const [session] = result.current;
+    expect(session).toBeDefined();
+    expect(session.id).toEqual("123");
+    expect(session.user).toBe(null);
   });
 
   test("it throws when the server responds with an error", async () => {
@@ -214,7 +220,8 @@ describe("useSession", () => {
     expectMockSignedOutUser();
     rerender();
 
-    expect(result.current.id).toEqual("123");
-    expect(result.current.user).toBeNull();
+    const [session] = result.current;
+    expect(session.id).toEqual("123");
+    expect(session.user).toBeNull();
   });
 });
