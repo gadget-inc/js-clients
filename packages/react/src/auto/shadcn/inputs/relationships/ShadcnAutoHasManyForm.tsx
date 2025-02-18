@@ -6,9 +6,9 @@ import { RelationshipContext, useAutoRelationship, useRelationshipContext } from
 import { useHasManyController } from "../../../hooks/useHasManyController.js";
 import { getRecordAsOption, useRecordLabelObjectFromProps } from "../../../hooks/useRelatedModel.js";
 import { useRequiredChildComponentsValidator } from "../../../hooks/useRequiredChildComponentsValidator.js";
-import type { AutoRelationshipFormProps } from "../../../interfaces/AutoRelationshipInputProps.js";
+import { type AutoRelationshipFormProps } from "../../../interfaces/AutoRelationshipInputProps.js";
 import type { ShadcnElements } from "../../elements.js";
-import { makeShadcnRenderOptionLabel } from "../../utils.js";
+import { makeShadcnEditableOptionLabelButton } from "./EditableOptionLabelButton.js";
 
 export const makeShadcnAutoHasManyForm = ({
   Accordion,
@@ -19,7 +19,7 @@ export const makeShadcnAutoHasManyForm = ({
   Button,
   Label,
 }: Pick<ShadcnElements, "Accordion" | "AccordionContent" | "AccordionItem" | "AccordionTrigger" | "Badge" | "Button" | "Label">) => {
-  const renderOptionLabel = makeShadcnRenderOptionLabel({ Label, Badge, Button });
+  const EditableOptionLabelButton = makeShadcnEditableOptionLabelButton({ Badge, Button, Label });
 
   function ShadcnAutoHasManyForm(props: AutoRelationshipFormProps) {
     useRequiredChildComponentsValidator(props, "AutoHasManyForm");
@@ -112,18 +112,7 @@ export const makeShadcnAutoHasManyForm = ({
                   className=""
                 >
                   <AccordionTrigger onClick={(e) => e.preventDefault()}>
-                    {option.primary ? (
-                      <div className="flex justify-between w-full items-center">
-                        <div className="flex flex-col gap-1 items-start">
-                          {renderOptionLabel(option.primary, "primary")}
-                          {option.secondary && renderOptionLabel(option.secondary, "secondary")}
-                        </div>
-
-                        {option.tertiary && <div className="flex items-center">{renderOptionLabel(option.tertiary, "tertiary")}</div>}
-                      </div>
-                    ) : (
-                      <Label>Click to edit...</Label>
-                    )}
+                    <EditableOptionLabelButton option={option} />
                   </AccordionTrigger>
                   <AccordionContent className="border border-gray-300 rounded-md p-3">
                     <RelationshipContext.Provider

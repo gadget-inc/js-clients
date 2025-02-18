@@ -5,7 +5,7 @@ import { autoRelationshipForm } from "../../../AutoInput.js";
 import { RelationshipContext } from "../../../hooks/useAutoRelationship.js";
 import type { AutoRelationshipFormProps } from "../../../interfaces/AutoRelationshipInputProps.js";
 import type { ShadcnElements } from "../../elements.js";
-import { makeShadcnRenderOptionLabel } from "../../utils.js";
+import { makeShadcnEditableOptionLabelButton } from "./EditableOptionLabelButton.js";
 import { makeSearchableSingleRelatedModelRecordSelector } from "./SearchableSingleRelatedModelRecordSelector.js";
 
 export const makeShadcnAutoHasOneForm = ({
@@ -42,8 +42,6 @@ export const makeShadcnAutoHasOneForm = ({
   | "AccordionItem"
   | "AccordionTrigger"
 >) => {
-  const renderOptionLabel = makeShadcnRenderOptionLabel({ Label, Badge, Button });
-
   const SearchableSingleRelatedModelRecordSelector = makeSearchableSingleRelatedModelRecordSelector({
     Command,
     CommandItem,
@@ -56,6 +54,7 @@ export const makeShadcnAutoHasOneForm = ({
     Checkbox,
     ScrollArea,
   });
+  const EditableOptionLabelButton = makeShadcnEditableOptionLabelButton({ Badge, Button, Label });
 
   function ShadcnHasOneForm(props: AutoRelationshipFormProps) {
     const { field } = props;
@@ -110,16 +109,7 @@ export const makeShadcnAutoHasOneForm = ({
                       setIsEditing(true);
                     }}
                   >
-                    <div className="flex justify-between w-full items-center">
-                      <div className="flex flex-col gap-1 items-start">
-                        {recordOption?.primary && renderOptionLabel(recordOption?.primary, "primary")}
-                        {recordOption?.secondary && renderOptionLabel(recordOption?.secondary, "secondary")}
-                      </div>
-
-                      {recordOption?.tertiary && (
-                        <div className="flex items-center">{renderOptionLabel(recordOption?.tertiary, "tertiary")}</div>
-                      )}
-                    </div>
+                    <EditableOptionLabelButton option={recordOption} />
                   </AccordionTrigger>
                 </AccordionItem>
               ) : (

@@ -9,7 +9,7 @@ import { getRecordAsOption, useOptionLabelForField } from "../../../hooks/useRel
 import { useRequiredChildComponentsValidator } from "../../../hooks/useRequiredChildComponentsValidator.js";
 import type { AutoRelationshipFormProps } from "../../../interfaces/AutoRelationshipInputProps.js";
 import { getRecordLabelObject } from "../../../interfaces/AutoRelationshipInputProps.js";
-import { renderOptionLabel } from "./utils.js";
+import { EditableOptionLabelButton } from "./EditableOptionLabelButton.js";
 
 export const useRecordLabelObjectFromProps = (props: AutoRelationshipFormProps) => {
   const recordLabelObject = getRecordLabelObject(props.recordLabel);
@@ -89,19 +89,7 @@ export const PolarisAutoHasManyForm = autoRelationshipForm((props: AutoRelations
                   </Box>
                 ) : (
                   <ResourceItem id={option.id} name={option.primary?.toString() ?? option.id} onClick={() => setEditingIndex(idx)}>
-                    {option.primary ? (
-                      <InlineStack align="space-between">
-                        <BlockStack gap="200">
-                          {renderOptionLabel(option.primary, "primary")}
-                          {option.secondary && renderOptionLabel(option.secondary, "secondary")}
-                        </BlockStack>
-                        {option.tertiary && renderOptionLabel(option.tertiary, "tertiary")}
-                      </InlineStack>
-                    ) : (
-                      <Text variant="bodyMd" as="h3" tone="subdued">
-                        Click to edit...
-                      </Text>
-                    )}
+                    <EditableOptionLabelButton option={option} />
                   </ResourceItem>
                 )}
               </Box>

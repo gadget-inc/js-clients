@@ -45,7 +45,7 @@ const ExampleWidgetAutoRelatedForm = (props) => {
             field="doodad"
             recordLabel={{
               primary: "name",
-              secondary: (record) => `${record.weight} (${record.active})`,
+              secondary: ({ record }) => `${record.weight} (${record.active})`,
               tertiary: "size",
             }}
           >
@@ -63,7 +63,7 @@ const ExampleWidgetAutoRelatedForm = (props) => {
             recordLabel={{
               primary: "name",
               secondary: "orientation",
-              tertiary: (record) => <Text>{record.id}</Text>,
+              tertiary: ({ record }) => <Text>{record.name}</Text>,
             }}
           >
             <PolarisAutoInput field="name" />
@@ -322,7 +322,7 @@ export const DeepRelationshipChain = {
                   <PolarisAutoHasManyForm
                     field="cities"
                     recordLabel={{
-                      primary: (record) => `${record.englishName} ${record.localName ? `(${record.localName})` : ""}`,
+                      primary: ({ record }) => `${record.englishName} ${record.localName ? `(${record.localName})` : ""}`,
                     }}
                   >
                     <PolarisAutoInput field="englishName" />

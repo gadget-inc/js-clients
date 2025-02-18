@@ -5,8 +5,8 @@ import { useHasOneForm } from "../../../../useHasOneForm.js";
 import { autoRelationshipForm } from "../../../AutoInput.js";
 import { RelationshipContext } from "../../../hooks/useAutoRelationship.js";
 import type { AutoRelationshipFormProps } from "../../../interfaces/AutoRelationshipInputProps.js";
+import { EditableOptionLabelButton } from "./EditableOptionLabelButton.js";
 import { SearchableSingleRelatedModelRecordSelector } from "./SearchableSingleRelatedModelRecordSelector.js";
-import { renderOptionLabel } from "./utils.js";
 
 export const PolarisAutoHasOneForm = autoRelationshipForm((props: AutoRelationshipFormProps) => {
   const hasOneForm = useHasOneForm(props);
@@ -40,16 +40,10 @@ export const PolarisAutoHasOneForm = autoRelationshipForm((props: AutoRelationsh
           {hasRecord || isCreatingRecord ? (
             <>
               <Box borderColor="border" borderWidth="025" borderRadius="200">
-                {!isEditing ? (
+                {!isEditing && recordOption ? (
                   <BlockStack as="ul">
-                    <ResourceItem id={recordOption!.id} onClick={() => setIsEditing(true)}>
-                      <InlineStack align="space-between">
-                        <BlockStack gap="200">
-                          {renderOptionLabel(recordOption!.primary, "primary")}
-                          {recordOption!.secondary && renderOptionLabel(recordOption!.secondary, "secondary")}
-                        </BlockStack>
-                        {recordOption!.tertiary && renderOptionLabel(recordOption!.tertiary, "tertiary")}
-                      </InlineStack>
+                    <ResourceItem id={recordOption.id} onClick={() => setIsEditing(true)}>
+                      <EditableOptionLabelButton option={recordOption} />
                     </ResourceItem>
                   </BlockStack>
                 ) : (

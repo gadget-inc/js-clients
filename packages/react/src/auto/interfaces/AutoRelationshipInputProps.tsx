@@ -49,3 +49,29 @@ export const getOptionLabelsFromRecordLabel = (recordLabel: OptionLabel | Record
   }
   return [recordLabelObject.primary, recordLabelObject.secondary, recordLabelObject.tertiary];
 };
+
+export const shouldShowOptionLabel = (option?: DisplayedRecordOption | null) => {
+  return option ? [option.primary, option.secondary, option.tertiary].some(canLabelBeShown) : false;
+};
+
+const canLabelBeShown = (option?: React.ReactNode) => {
+  if (!option) {
+    return false;
+  }
+
+  if (typeof option === "string") {
+    return true;
+  }
+
+  if (
+    typeof option === "object" &&
+    "props" in option &&
+    typeof option.props === "object" &&
+    option.props &&
+    "children" in option.props &&
+    option.props.children
+  ) {
+    return true;
+  }
+  return false;
+};

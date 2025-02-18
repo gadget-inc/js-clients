@@ -40,14 +40,15 @@ export const RelatedModelOptions = (props: RelatedModelOptionsProps) => {
         onSelect(recordWithoutTimestamps);
       }}
     >
-      {listBoxOptions.length ? (
-        listBoxOptions
-      ) : errorMessage ? (
+      {errorMessage ? (
         <ListMessage message={getErrorMessage(errorMessage)} />
-      ) : !isLoading ? (
-        <NoRecordsMessage />
-      ) : null}
-      {isLoading && <Listbox.Loading accessibilityLabel="Loading" />}
+      ) : (
+        <>
+          {listBoxOptions}
+          {!isLoading && options.length === 0 && <NoRecordsMessage />}
+          {isLoading && <Listbox.Loading accessibilityLabel="Loading" />}
+        </>
+      )}
     </Listbox>
   );
 };
@@ -86,7 +87,7 @@ export const RelatedModelOptionsPopover = (
         >
           {props.search}
           <Scrollable
-            shadow
+            shadow={props.options.length > numberOfOptionsThatCanBeShownWithoutScrolling}
             style={{
               position: "relative",
               width: "310px",
@@ -112,6 +113,8 @@ export const RelatedModelOptionsPopover = (
     </Popover>
   );
 };
+
+const numberOfOptionsThatCanBeShownWithoutScrolling = 8;
 
 export const RelatedModelOptionsSearch = (
   props: { modelName: string; label?: TextFieldProps["label"]; autoComplete?: TextFieldProps["autoComplete"] } & Omit<
