@@ -8,6 +8,7 @@ import { PolarisAutoSubmit } from "../../../src/auto/polaris/submit/PolarisAutoS
 import { FormProvider, useForm } from "../../../src/useActionForm.ts";
 import { testApi as api } from "../../apis.ts";
 import { StorybookErrorBoundary } from "../storybook/StorybookErrorBoundary.tsx";
+import { PolarisAutoHasManyInput } from "../../../src/auto/polaris/inputs/relationships/PolarisAutoHasManyInput.tsx";
 
 // More on how to set up stories at: https://storybook.js.org/docs/writing-stories#default-export
 export default {
@@ -133,6 +134,7 @@ const ConditionalAppearingAutoInput = () => {
           <PolarisAutoInput field="isChecked" />
           <PolarisAutoInput field="section" />
           <PolarisAutoInput field="gizmos" />
+          <PolarisAutoHasManyInput field="gizmos" recordFilter={{ name: { equals: "gizmo 2" } }} />
           <PolarisAutoInput field="customStringParam" />
         </>
       )}

@@ -1,11 +1,15 @@
 import type { ReactNode } from "react";
 import type { Control } from "../../useActionForm.js";
+import type { FindManyOptions } from "@gadgetinc/api-client-core";
+
+export type RecordFilter = FindManyOptions["filter"];
 
 export interface AutoRelationshipInputProps {
   field: string;
   control?: Control<any>;
   optionLabel?: OptionLabel;
   label?: string;
+  recordFilter?: RecordFilter;
 }
 
 export type DisplayedRecordOption = RecordLabel<ReactNode> & {
@@ -28,6 +32,7 @@ export type AutoRelationshipFormProps = {
   label?: ReactNode;
   children: ReactNode;
   recordLabel?: OptionLabel | RecordLabel;
+  recordFilter?: RecordFilter;
 };
 
 export const getRecordLabelObject = (recordLabel?: OptionLabel | RecordLabel): RecordLabel | undefined => {

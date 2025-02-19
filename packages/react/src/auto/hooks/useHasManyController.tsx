@@ -44,7 +44,11 @@ export const useHasManyInputController = (props: AutoRelationshipInputProps) => 
   }, [metadata.configuration]);
 
   const { remove, append, update } = fieldArray;
-  const relatedModelOptions = useRelatedModelOptions({ field, recordLabel: { primary: props.optionLabel } });
+  const relatedModelOptions = useRelatedModelOptions({
+    field,
+    recordLabel: { primary: props.optionLabel },
+    recordFilter: props.recordFilter,
+  });
 
   const { relatedModel } = relatedModelOptions;
 
@@ -72,7 +76,7 @@ export const useHasManyInputController = (props: AutoRelationshipInputProps) => 
         });
       }
     },
-    [inverseFieldApiIdentifier, records, remove, update]
+    [inverseFieldApiIdentifier, records, remove, update],
   );
 
   const onSelectRecord = useCallback(
@@ -94,7 +98,7 @@ export const useHasManyInputController = (props: AutoRelationshipInputProps) => 
         });
       }
     },
-    [records, onRemoveRecord, update, append]
+    [records, onRemoveRecord, update, append],
   );
 
   return {

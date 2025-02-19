@@ -52,7 +52,7 @@ describe("PolarisAutoHasManyInput", () => {
     }).as("widget");
   };
 
-  const interceptGizmosOptionsQuery = (sectionCount: number) => {
+  const interceptGizmosOptionsQuery = (sectionCount: number, expectedQueryValue?: any) => {
     const gizmos: any[] = [];
     for (let i = 1; i <= sectionCount; i++) {
       gizmos.push({
@@ -78,6 +78,11 @@ describe("PolarisAutoHasManyInput", () => {
       (req) => {
         const queryIsForSelectedRecords = get(req.body.variables, "filter.widgetId.equals") === "42";
 
+        if (expectedQueryValue) {
+          // eslint-disable-next-line
+          expect(req.body.variables).to.deep.equal(expectedQueryValue);
+        }
+
         req.reply({
           data: {
             gizmos: {
@@ -102,19 +107,20 @@ describe("PolarisAutoHasManyInput", () => {
             },
           },
         });
-      }
-    ).as("sections");
+      },
+    ).as("gizmos");
   };
 
   beforeEach(() => {
     cy.viewport("macbook-13");
 
     interceptModelUpdateActionMetadata();
-    interceptGizmosOptionsQuery(5);
     interceptWidgetQuery();
   });
 
   it("can deselect exiting related records and select new records and submit it", () => {
+    interceptGizmosOptionsQuery(5);
+
     cy.mountWithWrapper(<PolarisAutoForm action={api.widget.update} findBy="42" />, PolarisWrapper);
 
     cy.get(`span[title="Gizmo 1"]`);
@@ -152,6 +158,8 @@ describe("PolarisAutoHasManyInput", () => {
   });
 
   it("does not change anything for hasMany fields when the input is untouched", () => {
+    interceptGizmosOptionsQuery(5);
+
     cy.mountWithWrapper(<PolarisAutoForm action={api.widget.update} findBy="42" />, PolarisWrapper);
 
     expectUpdateActionSubmissionVariables({
@@ -167,13 +175,15 @@ describe("PolarisAutoHasManyInput", () => {
 
   describe("optionLabel", () => {
     it("should use the field api id of the string option label as the option display label", () => {
+      interceptGizmosOptionsQuery(5);
+
       cy.mountWithWrapper(
         <PolarisAutoForm action={api.widget.update} findBy="42">
           <PolarisSubmitResultBanner />
           <PolarisAutoHasManyInput field="gizmos" optionLabel="otherField" />
           <PolarisAutoSubmit />
         </PolarisAutoForm>,
-        PolarisWrapper
+        PolarisWrapper,
       );
       cy.get(`input[name="widget.gizmos"]`).click();
       cy.contains(`Gizmo 3 other field`).parent().parent().click();
@@ -197,13 +207,15 @@ describe("PolarisAutoHasManyInput", () => {
     });
 
     it("should use call the option label function to generate the option labels", () => {
+      interceptGizmosOptionsQuery(5);
+
       cy.mountWithWrapper(
         <PolarisAutoForm action={api.widget.update} findBy="42">
           <PolarisSubmitResultBanner />
           <PolarisAutoHasManyInput field="gizmos" optionLabel={({ record }) => `Custom label for ${record.id}`} />
           <PolarisAutoSubmit />
         </PolarisAutoForm>,
-        PolarisWrapper
+        PolarisWrapper,
       );
       cy.get(`input[name="widget.gizmos"]`).click();
       cy.contains(`Custom label for 3`).parent().parent().click();
@@ -225,6 +237,26 @@ describe("PolarisAutoHasManyInput", () => {
       cy.getSubmitButton().click();
       cy.contains("Saved Widget successfully");
     });
+  });
+
+  it("should filter out related record options based on a given filter", () => {
+    interceptGizmosOptionsQuery(5, {
+      first: 25,
+      filter: {
+        name: { equals: "gizmo 2" },
+      },
+    });
+
+    cy.mountWithWrapper(
+      <PolarisAutoForm action={api.widget.update} findBy="42">
+        <PolarisSubmitResultBanner />
+        <PolarisAutoHasManyInput field="gizmos" recordFilter={{ name: { equals: "gizmo 2" } }} />
+        <PolarisAutoSubmit />
+      </PolarisAutoForm>,
+      PolarisWrapper,
+    );
+
+    cy.wait("@gizmos");
   });
 });
 
