@@ -103,7 +103,7 @@ const PolarisAutoFormComponent = <
     fields,
   };
 
-  if (fetchingMetadata || (findBy && pauseExistingRecordLookup)) {
+  if (fetchingMetadata) {
     return (
       <Form {...rest} onSubmit={submit}>
         <PolarisAutoFormSkeleton />
