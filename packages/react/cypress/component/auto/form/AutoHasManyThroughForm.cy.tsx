@@ -70,7 +70,7 @@ describeForEachAutoAdapter(
             field="students"
             recordLabel={{
               primary: ["firstName", "lastName"],
-              secondary: (record: any) => `Year: ${record.year}`,
+              secondary: ({ record }: any) => `Year: ${record.year}`,
               tertiary: "department",
             }}
           >

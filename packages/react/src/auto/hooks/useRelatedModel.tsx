@@ -1,6 +1,5 @@
 import { assert, type FieldSelection } from "@gadgetinc/api-client-core";
-import type React from "react";
-import { useCallback, useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import { FieldType } from "../../metadata.js";
 import { type RecordIdentifier } from "../../use-action-form/types.js";
 import { useDebouncedSearch } from "../../useDebouncedSearch.js";
@@ -123,7 +122,14 @@ export const useRelatedModelOptions = (props: Omit<AutoRelationshipFormProps, "c
   return {
     options,
     searchFilterOptions: options.filter((option) => {
-      return search.value ? `${option.primary}`.toLowerCase().includes(search.value.toLowerCase()) : true;
+      const optionAsString =
+        typeof option.primary === "string"
+          ? option.primary.toLowerCase()
+          : React.isValidElement(option.primary)
+          ? JSON.stringify(option.primary.props).toLowerCase()
+          : "";
+
+      return search.value ? optionAsString.includes(search.value.toLowerCase()) : true;
     }),
     relatedModel,
     pagination,

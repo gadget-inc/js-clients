@@ -38,7 +38,7 @@ const Component = (props) => {
             field="doodad"
             recordLabel={{
               primary: "name",
-              secondary: (record) => `${record.weight ?? "N/A"} (${record.active ?? "N/A"})`,
+              secondary: ({ record }) => `${record.weight ?? "N/A"} (${record.active ?? "N/A"})`,
               tertiary: "size",
             }}
           >
