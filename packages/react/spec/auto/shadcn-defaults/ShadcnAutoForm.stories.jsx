@@ -6,7 +6,7 @@ import { testApi as api } from "../../apis.ts";
 import { StorybookErrorBoundary } from "../storybook/StorybookErrorBoundary.tsx";
 import { elements } from "./index.tsx";
 
-const { AutoForm, AutoInput, AutoSubmit } = makeAutocomponents(elements);
+const { AutoForm, AutoInput, AutoSubmit, AutoHasManyThroughInput } = makeAutocomponents(elements);
 
 export default {
   title: "Shadcn/AutoForm",
@@ -213,5 +213,12 @@ export const hasManyThrough = {
   name: "HasManyThrough fields",
   args: {
     action: api.hasManyThrough.baseModel.create,
+    children: (
+      <>
+        <AutoInput field="baseModelName" />
+        <AutoHasManyThroughInput field="baseModelHmtField" />
+        <AutoSubmit />
+      </>
+    ),
   },
 };

@@ -56,7 +56,7 @@ export const makeShadcnAutoHasOneForm = ({
   });
   const EditableOptionLabelButton = makeShadcnEditableOptionLabelButton({ Badge, Button, Label });
 
-  function ShadcnHasOneForm(props: AutoRelationshipFormProps) {
+  function ShadcnHasOneForm(props: Omit<AutoRelationshipFormProps, "recordFilter">) {
     const { field } = props;
     const form = useHasOneForm(props);
     const {

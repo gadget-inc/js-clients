@@ -107,7 +107,7 @@ describe("PolarisAutoHasManyInput", () => {
             },
           },
         });
-      },
+      }
     ).as("gizmos");
   };
 
@@ -120,8 +120,8 @@ describe("PolarisAutoHasManyInput", () => {
 
   it("can deselect exiting related records and select new records and submit it", () => {
     interceptGizmosOptionsQuery(5);
-
     cy.mountWithWrapper(<PolarisAutoForm action={api.widget.update} findBy="42" />, PolarisWrapper);
+    cy.wait("@gizmos");
 
     cy.get(`span[title="Gizmo 1"]`);
     cy.get(`span[title="Gizmo 2"]`);
@@ -159,8 +159,8 @@ describe("PolarisAutoHasManyInput", () => {
 
   it("does not change anything for hasMany fields when the input is untouched", () => {
     interceptGizmosOptionsQuery(5);
-
     cy.mountWithWrapper(<PolarisAutoForm action={api.widget.update} findBy="42" />, PolarisWrapper);
+    cy.wait("@gizmos");
 
     expectUpdateActionSubmissionVariables({
       id: "42",
@@ -176,15 +176,16 @@ describe("PolarisAutoHasManyInput", () => {
   describe("optionLabel", () => {
     it("should use the field api id of the string option label as the option display label", () => {
       interceptGizmosOptionsQuery(5);
-
       cy.mountWithWrapper(
         <PolarisAutoForm action={api.widget.update} findBy="42">
           <PolarisSubmitResultBanner />
           <PolarisAutoHasManyInput field="gizmos" optionLabel="otherField" />
           <PolarisAutoSubmit />
         </PolarisAutoForm>,
-        PolarisWrapper,
+        PolarisWrapper
       );
+      cy.wait("@gizmos");
+
       cy.get(`input[name="widget.gizmos"]`).click();
       cy.contains(`Gizmo 3 other field`).parent().parent().click();
       cy.get(`input[name="widget.gizmos"]`).focus();
@@ -208,15 +209,16 @@ describe("PolarisAutoHasManyInput", () => {
 
     it("should use call the option label function to generate the option labels", () => {
       interceptGizmosOptionsQuery(5);
-
       cy.mountWithWrapper(
         <PolarisAutoForm action={api.widget.update} findBy="42">
           <PolarisSubmitResultBanner />
           <PolarisAutoHasManyInput field="gizmos" optionLabel={({ record }) => `Custom label for ${record.id}`} />
           <PolarisAutoSubmit />
         </PolarisAutoForm>,
-        PolarisWrapper,
+        PolarisWrapper
       );
+      cy.wait("@gizmos");
+
       cy.get(`input[name="widget.gizmos"]`).click();
       cy.contains(`Custom label for 3`).parent().parent().click();
       cy.get(`input[name="widget.gizmos"]`).focus();
@@ -242,9 +244,7 @@ describe("PolarisAutoHasManyInput", () => {
   it("should filter out related record options based on a given filter", () => {
     interceptGizmosOptionsQuery(5, {
       first: 25,
-      filter: {
-        name: { equals: "gizmo 2" },
-      },
+      filter: { name: { equals: "gizmo 2" } },
     });
 
     cy.mountWithWrapper(
@@ -253,10 +253,10 @@ describe("PolarisAutoHasManyInput", () => {
         <PolarisAutoHasManyInput field="gizmos" recordFilter={{ name: { equals: "gizmo 2" } }} />
         <PolarisAutoSubmit />
       </PolarisAutoForm>,
-      PolarisWrapper,
+      PolarisWrapper
     );
 
-    cy.wait("@gizmos");
+    cy.wait("@gizmos"); // This asserts the filter is applied
   });
 });
 

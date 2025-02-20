@@ -34,7 +34,7 @@ export const useHasOneController = (props: Omit<AutoRelationshipFormProps, "chil
 };
 
 export const useHasOneInputController = (props: AutoRelationshipInputProps) => {
-  const { field, control } = props;
+  const { field, control, recordFilter } = props;
   const {
     record: value,
     fieldMetadata,
@@ -42,6 +42,7 @@ export const useHasOneInputController = (props: AutoRelationshipInputProps) => {
   } = useHasOneController({
     field,
     recordLabel: { primary: props.optionLabel },
+    recordFilter,
   });
 
   const { path } = fieldMetadata;

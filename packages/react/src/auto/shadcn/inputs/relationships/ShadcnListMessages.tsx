@@ -48,50 +48,46 @@ export const makeShadcnListMessages = ({
     const { label, id, selected, onSelect, allowMultiple, formatOptionText } = props;
     const className = selected ? "bg-muted" : "";
 
-    if (typeof label === "string") {
-      return (
-        <CommandItem
-          key={id}
-          id={id}
-          selected={selected}
-          className={className}
-          value={label}
-          onMouseDown={(e: React.MouseEvent) => {
-            e.preventDefault();
-            e.stopPropagation();
-          }}
-          onSelect={() => {
-            onSelect?.(id);
-          }}
-          onKeyDown={(e: React.KeyboardEvent) => {
-            if (e.key === "Enter") {
-              onSelect?.(id);
-            }
-          }}
-        >
-          {allowMultiple ? (
-            <>
-              <Checkbox
-                id={id}
-                checked={selected}
-                onCheckedChange={(_state) => {
-                  onSelect?.(id);
-                }}
-              />
-              <Label htmlFor={id} className={"flex-1 ml-2"}>
-                {formatOptionText ? formatOptionText(label) : label}
-              </Label>
-            </>
-          ) : formatOptionText ? (
-            formatOptionText(label)
-          ) : (
-            label
-          )}
-        </CommandItem>
-      );
-    }
+    const labelElement = formatOptionText && typeof label === "string" ? formatOptionText(label) : label;
 
-    return null;
+    return (
+      <CommandItem
+        key={id}
+        id={id}
+        selected={selected}
+        className={className}
+        value={label}
+        onMouseDown={(e: React.MouseEvent) => {
+          e.preventDefault();
+          e.stopPropagation();
+        }}
+        onSelect={() => {
+          onSelect?.(id);
+        }}
+        onKeyDown={(e: React.KeyboardEvent) => {
+          if (e.key === "Enter") {
+            onSelect?.(id);
+          }
+        }}
+      >
+        {allowMultiple ? (
+          <>
+            <Checkbox
+              id={id}
+              checked={selected}
+              onCheckedChange={(_state) => {
+                onSelect?.(id);
+              }}
+            />
+            <Label htmlFor={id} className={"flex-1 ml-2"}>
+              {labelElement}
+            </Label>
+          </>
+        ) : (
+          labelElement
+        )}
+      </CommandItem>
+    );
   }
 
   return {

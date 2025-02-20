@@ -11,8 +11,8 @@ import {
   type AutoRelationshipFormProps,
   type DisplayedRecordOption,
   type OptionLabel,
-  type RecordLabel,
   type RecordFilter,
+  type RecordLabel,
 } from "../interfaces/AutoRelationshipInputProps.js";
 import type { RelationshipFieldConfig } from "../interfaces/RelationshipFieldConfig.js";
 import { useFieldMetadata } from "./useFieldMetadata.js";
@@ -85,14 +85,12 @@ export const useOptionLabelForField = (field: string, optionLabel?: OptionLabel)
 
   return assert(
     optionLabel ?? relationshipFieldConfig.relatedModel?.defaultDisplayField.apiIdentifier,
-    "Option label is required for relationships",
+    "Option label is required for relationships"
   );
 };
 
 export const useRelatedModelOptions = (props: Omit<AutoRelationshipFormProps, "children" | "label">) => {
   const { field } = props;
-
-  console.log("props :", props);
 
   const recordLabel = getRecordLabelObject(props.recordLabel);
 
@@ -108,7 +106,7 @@ export const useRelatedModelOptions = (props: Omit<AutoRelationshipFormProps, "c
         secondary: recordLabel?.secondary,
         tertiary: recordLabel?.tertiary,
       }),
-      "id",
+      "id"
     );
 
     return options as ReturnType<typeof getRecordsAsOptions>;
@@ -132,8 +130,8 @@ export const useRelatedModelOptions = (props: Omit<AutoRelationshipFormProps, "c
         typeof option.primary === "string"
           ? option.primary.toLowerCase()
           : React.isValidElement(option.primary)
-            ? JSON.stringify(option.primary.props).toLowerCase()
-            : "";
+          ? JSON.stringify(option.primary.props).toLowerCase()
+          : "";
 
       return search.value ? optionAsString.includes(search.value.toLowerCase()) : true;
     }),
@@ -147,8 +145,8 @@ const getRecordLabel = (record: Record<string, any>, optionLabel: OptionLabel): 
   typeof optionLabel === "string"
     ? record[optionLabel] // Related model field API id
     : Array.isArray(optionLabel)
-      ? optionLabel.map((fieldName) => record[fieldName]).join(" ")
-      : optionLabel({ record }); // Callback on the whole related model record
+    ? optionLabel.map((fieldName) => record[fieldName]).join(" ")
+    : optionLabel({ record }); // Callback on the whole related model record
 
 const getRecordIdsAsString = (records?: { map: (mapperFunction: (record: { id: string }) => string) => string[] }) =>
   records
@@ -187,7 +185,7 @@ const useAllRelatedModelRecords = (props: {
         acc[fieldName] = true;
         return acc;
       },
-      { id: true } as FieldSelection,
+      { id: true } as FieldSelection
     );
   }
 

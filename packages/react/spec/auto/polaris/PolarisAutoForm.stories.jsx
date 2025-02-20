@@ -4,11 +4,11 @@ import React, { useState } from "react";
 import { Provider } from "../../../src/GadgetProvider.tsx";
 import { PolarisAutoForm } from "../../../src/auto/polaris/PolarisAutoForm.tsx";
 import { PolarisAutoInput } from "../../../src/auto/polaris/inputs/PolarisAutoInput.tsx";
+import { PolarisAutoHasManyThroughInput } from "../../../src/auto/polaris/inputs/relationships/PolarisAutoHasManyThroughInput.tsx";
 import { PolarisAutoSubmit } from "../../../src/auto/polaris/submit/PolarisAutoSubmit.tsx";
 import { FormProvider, useForm } from "../../../src/useActionForm.ts";
 import { testApi as api } from "../../apis.ts";
 import { StorybookErrorBoundary } from "../storybook/StorybookErrorBoundary.tsx";
-import { PolarisAutoHasManyInput } from "../../../src/auto/polaris/inputs/relationships/PolarisAutoHasManyInput.tsx";
 
 // More on how to set up stories at: https://storybook.js.org/docs/writing-stories#default-export
 export default {
@@ -134,7 +134,6 @@ const ConditionalAppearingAutoInput = () => {
           <PolarisAutoInput field="isChecked" />
           <PolarisAutoInput field="section" />
           <PolarisAutoInput field="gizmos" />
-          <PolarisAutoHasManyInput field="gizmos" recordFilter={{ name: { equals: "gizmo 2" } }} />
           <PolarisAutoInput field="customStringParam" />
         </>
       )}
@@ -228,5 +227,12 @@ export const hasManyThrough = {
   name: "HasManyThrough fields",
   args: {
     action: api.hasManyThrough.baseModel.create,
+    children: (
+      <>
+        <PolarisAutoInput field="baseModelName" />
+        <PolarisAutoHasManyThroughInput field="baseModelHmtField" />
+        <PolarisAutoSubmit />
+      </>
+    ),
   },
 };
