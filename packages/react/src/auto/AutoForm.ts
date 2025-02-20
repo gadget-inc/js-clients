@@ -18,7 +18,7 @@ import {
   validateTriggersFromApiClient,
   validateTriggersFromMetadata,
 } from "./AutoFormActionValidators.js";
-import { useFieldsFromChildComponents } from "./AutoFormContext.js";
+import { useAssertNotNestedInAnotherAutoForm, useFieldsFromChildComponents } from "./AutoFormContext.js";
 import { isAutoInput } from "./AutoInput.js";
 import { getSelectedPathsFromOptionLabel } from "./hooks/useSelectedPathsFromRecordLabel.js";
 import { getOptionLabelsFromRecordLabel, type RecordLabel } from "./interfaces/AutoRelationshipInputProps.js";
@@ -273,6 +273,7 @@ export const useAutoForm = <
   originalFormMethods: UseFormReturn<any, any>;
 } => {
   const { action, record, onSuccess, onFailure, findBy, select } = props;
+  useAssertNotNestedInAnotherAutoForm();
   validateNonBulkAction(action);
   validateTriggersFromApiClient(action);
 

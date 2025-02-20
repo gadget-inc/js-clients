@@ -47,6 +47,14 @@ export const useAutoFormMetadata = () => {
   return autoFormContext;
 };
 
+export const useAssertNotNestedInAnotherAutoForm = () => {
+  const autoFormContext = useContext(AutoFormMetadataContext);
+
+  if (autoFormContext) {
+    throw new Error(`<AutoForm/> cannot be nested within another <AutoForm/> component.`);
+  }
+};
+
 export const useFieldsFromChildComponents = () => {
   const autoFormContext = useContext(AutoFormFieldsFromChildComponentsContext);
   if (!autoFormContext) {
