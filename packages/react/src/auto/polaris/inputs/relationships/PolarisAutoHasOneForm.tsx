@@ -8,7 +8,7 @@ import type { AutoRelationshipFormProps } from "../../../interfaces/AutoRelation
 import { EditableOptionLabelButton } from "./EditableOptionLabelButton.js";
 import { SearchableSingleRelatedModelRecordSelector } from "./SearchableSingleRelatedModelRecordSelector.js";
 
-export const PolarisAutoHasOneForm = autoRelationshipForm((props: AutoRelationshipFormProps) => {
+export const PolarisAutoHasOneForm = autoRelationshipForm((props: Omit<AutoRelationshipFormProps, "recordFilter">) => {
   const hasOneForm = useHasOneForm(props);
   const {
     isEditing,

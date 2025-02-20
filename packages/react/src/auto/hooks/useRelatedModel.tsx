@@ -11,6 +11,7 @@ import {
   type AutoRelationshipFormProps,
   type DisplayedRecordOption,
   type OptionLabel,
+  type RecordFilter,
   type RecordLabel,
 } from "../interfaces/AutoRelationshipInputProps.js";
 import type { RelationshipFieldConfig } from "../interfaces/RelationshipFieldConfig.js";
@@ -20,7 +21,7 @@ import { useModelManager } from "./useModelManager.js";
 export const optionRecordsToLoadCount = 25;
 export const selectedRecordsToLoadCount = 25;
 
-const useRelatedModelRecords = (props: { field: string; optionLabel?: OptionLabel }) => {
+const useRelatedModelRecords = (props: { field: string; optionLabel?: OptionLabel; recordFilter?: RecordFilter }) => {
   const { field } = props;
   const { metadata } = useFieldMetadata(field);
   const { findBy } = useAutoFormMetadata();
@@ -36,9 +37,11 @@ const useRelatedModelRecords = (props: { field: string; optionLabel?: OptionLabe
   const relatedModelRecords = useAllRelatedModelRecords({
     relatedModel: { apiIdentifier: relatedModelApiIdentifier!, namespace: relatedModelNamespace },
 
-    filter: isHasManyField
-      ? omitRelatedModelRecordsAssociatedWithOtherRecords({ enabled: false, relatedModelInverseFieldApiId, findBy })
-      : undefined,
+    filter:
+      props?.recordFilter ??
+      (isHasManyField
+        ? omitRelatedModelRecordsAssociatedWithOtherRecords({ enabled: false, relatedModelInverseFieldApiId, findBy })
+        : undefined),
   });
 
   return {
@@ -88,6 +91,7 @@ export const useOptionLabelForField = (field: string, optionLabel?: OptionLabel)
 
 export const useRelatedModelOptions = (props: Omit<AutoRelationshipFormProps, "children" | "label">) => {
   const { field } = props;
+
   const recordLabel = getRecordLabelObject(props.recordLabel);
 
   const optionLabel = useOptionLabelForField(field, recordLabel?.primary);

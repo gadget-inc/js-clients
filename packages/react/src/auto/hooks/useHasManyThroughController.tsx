@@ -56,6 +56,7 @@ export const useHasManyThroughInputController = (props: AutoRelationshipInputPro
   const { fieldMetadata, fieldArray, records, relatedModelOptions, inverseRelatedModelField } = useHasManyThroughController({
     field: props.field,
     recordLabel: props.optionLabel,
+    recordFilter: props.recordFilter,
   });
 
   const { relatedModel } = relatedModelOptions;

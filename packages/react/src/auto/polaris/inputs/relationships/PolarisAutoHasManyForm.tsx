@@ -11,13 +11,15 @@ import type { AutoRelationshipFormProps } from "../../../interfaces/AutoRelation
 import { getRecordLabelObject } from "../../../interfaces/AutoRelationshipInputProps.js";
 import { EditableOptionLabelButton } from "./EditableOptionLabelButton.js";
 
-export const useRecordLabelObjectFromProps = (props: AutoRelationshipFormProps) => {
+type HasManyFormProps = Omit<AutoRelationshipFormProps, "recordFilter">;
+
+const useRecordLabelObjectFromProps = (props: HasManyFormProps) => {
   const recordLabelObject = getRecordLabelObject(props.recordLabel);
   const primaryLabel = useOptionLabelForField(props.field, recordLabelObject?.primary);
   return { ...recordLabelObject, primary: primaryLabel };
 };
 
-export const PolarisAutoHasManyForm = autoRelationshipForm((props: AutoRelationshipFormProps) => {
+export const PolarisAutoHasManyForm = autoRelationshipForm((props: HasManyFormProps) => {
   useRequiredChildComponentsValidator(props, "AutoHasManyForm");
   const { metadata } = useAutoRelationship({ field: props.field });
   const { getValues } = useFormContext();

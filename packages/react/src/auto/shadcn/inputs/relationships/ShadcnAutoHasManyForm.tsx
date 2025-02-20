@@ -21,7 +21,7 @@ export const makeShadcnAutoHasManyForm = ({
 }: Pick<ShadcnElements, "Accordion" | "AccordionContent" | "AccordionItem" | "AccordionTrigger" | "Badge" | "Button" | "Label">) => {
   const EditableOptionLabelButton = makeShadcnEditableOptionLabelButton({ Badge, Button, Label });
 
-  function ShadcnAutoHasManyForm(props: AutoRelationshipFormProps) {
+  function ShadcnAutoHasManyForm(props: Omit<AutoRelationshipFormProps, "recordFilter">) {
     useRequiredChildComponentsValidator(props, "AutoHasManyForm");
     const { metadata } = useAutoRelationship({ field: props.field });
     const { getValues } = useFormContext();
