@@ -1,4 +1,4 @@
-import React from "react";
+import React, { type ReactNode } from "react";
 import { useBooleanInputController } from "../../../auto/hooks/useBooleanInputController.js";
 import type { Control } from "../../../useActionForm.js";
 import { autoInput } from "../../AutoInput.js";
@@ -11,7 +11,7 @@ export const makeShadcnAutoBooleanInput = ({ Checkbox, Label }: Pick<ShadcnEleme
       field: string;
       control?: Control<any>;
       className?: string;
-      label?: string;
+      label?: ReactNode;
     } & Partial<CheckboxProps>
   ) {
     const { field: _field, control: _control, ...rest } = props;

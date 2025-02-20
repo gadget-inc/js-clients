@@ -1,6 +1,7 @@
 import type { DatePickerProps, TextFieldProps } from "@shopify/polaris";
 import { DatePicker, Icon, InlineStack, Popover, TextField } from "@shopify/polaris";
 import { CalendarIcon } from "@shopify/polaris-icons";
+import type { ReactNode } from "react";
 import React, { useCallback, useState } from "react";
 import {
   copyTime,
@@ -24,7 +25,7 @@ export const PolarisAutoDateTimePicker = autoInput(
     error?: string;
     includeTime?: boolean;
     hideTimePopover?: boolean;
-    label?: string;
+    label?: ReactNode;
     datePickerProps?: Partial<DatePickerProps>;
     timePickerProps?: Partial<TextFieldProps>;
   }) => {

@@ -26,7 +26,7 @@ export interface AutoRelationshipInputProps {
   /**
    * The label to display above the input. Defaults to the field name.
    */
-  label?: string;
+  label?: ReactNode;
 
   /**
    * Optional filter for the related model options to display in the input

@@ -1,4 +1,4 @@
-import React from "react";
+import React, { type ReactNode } from "react";
 import { FieldType } from "../../../metadata.js";
 import { autoInput } from "../../AutoInput.js";
 import { useStringInputController } from "../../hooks/useStringInputController.js";
@@ -8,7 +8,7 @@ import { makeShadcnAutoStringInput } from "./ShadcnAutoStringInput.js";
 export const makeShadcnAutoIdInput = (elements: Pick<ShadcnElements, "Input" | "Label">) => {
   const ShadcnAutoStringInput = makeShadcnAutoStringInput(elements);
 
-  function ShadcnAutoIdInput(props: { field: string; label?: string }) {
+  function ShadcnAutoIdInput(props: { field: string; label?: ReactNode }) {
     const { field, label } = props;
     const { name, metadata } = useStringInputController({ field });
 
