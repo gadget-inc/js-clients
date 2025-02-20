@@ -57,3 +57,10 @@ export const GlobalActionWithoutApiTrigger = {
     action: api.noTriggerGlobalAction,
   },
 };
+
+export const NestedAutoForm = {
+  args: {
+    action: api.autoTableTest.create,
+    children: <PolarisAutoForm action={api.autoTableTest.create} />,
+  },
+};

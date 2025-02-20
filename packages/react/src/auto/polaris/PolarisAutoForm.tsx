@@ -77,7 +77,6 @@ const PolarisAutoFormComponent = <
     formError,
     isSubmitting,
     isSubmitSuccessful,
-    pauseExistingRecordLookup,
     originalFormMethods,
   } = useAutoForm(props);
 
