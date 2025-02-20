@@ -37,7 +37,6 @@ export const makeAutoForm = <Elements extends ShadcnElements>(elements: Elements
     AutoHiddenInput,
     AutoIdInput,
     AutoTextAreaInput,
-
     AutoBelongsToInput,
     AutoHasManyInput,
     AutoHasManyThroughInput,

@@ -16,25 +16,12 @@ export const makeShadcnAutoHasManyInput = ({
   CommandInput,
   Label,
   CommandList,
-  CommandLoading,
   CommandEmpty,
   CommandGroup,
   Checkbox,
-  ScrollArea,
 }: Pick<
   ShadcnElements,
-  | "Badge"
-  | "Button"
-  | "Command"
-  | "CommandItem"
-  | "CommandList"
-  | "CommandLoading"
-  | "CommandEmpty"
-  | "CommandGroup"
-  | "CommandInput"
-  | "Label"
-  | "Checkbox"
-  | "ScrollArea"
+  "Badge" | "Button" | "Command" | "CommandItem" | "CommandList" | "CommandEmpty" | "CommandGroup" | "CommandInput" | "Label" | "Checkbox"
 >) => {
   const { SelectedRecordTags } = makeSelectedRecordTags({ Badge, Button });
 
@@ -45,10 +32,8 @@ export const makeShadcnAutoHasManyInput = ({
     CommandItem,
     CommandList,
     CommandEmpty,
-    CommandLoading,
     CommandGroup,
     Checkbox,
-    ScrollArea,
   });
 
   function ShadcnAutoHasManyInput(props: AutoRelationshipInputProps) {
