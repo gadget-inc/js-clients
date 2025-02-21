@@ -5,7 +5,7 @@ import { debounce } from "../../../../utils.js";
 import { autoRelationshipForm } from "../../../AutoInput.js";
 import { RelationshipContext } from "../../../hooks/useAutoRelationship.js";
 import { getRecordAsOption } from "../../../hooks/useRelatedModel.js";
-import type { AutoRelationshipFormProps, DisplayedRecordOption } from "../../../interfaces/AutoRelationshipInputProps.js";
+import type { AutoHasManyThroughFormProps, DisplayedRecordOption } from "../../../interfaces/AutoRelationshipInputProps.js";
 import type { ShadcnElements } from "../../elements.js";
 import { makeShadcnRenderOptionLabel } from "../../utils.js";
 import { makeShadcnAutoComboInput } from "../ShadcnAutoComboInput.js";
@@ -79,7 +79,7 @@ export const makeShadcnAutoHasManyThroughForm = ({
     );
   };
 
-  function ShadcnAutoHasManyThroughForm(props: AutoRelationshipFormProps) {
+  function ShadcnAutoHasManyThroughForm(props: AutoHasManyThroughFormProps) {
     const [open, setOpen] = useState(false);
     const {
       field,

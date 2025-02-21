@@ -3,10 +3,10 @@ import { useEffect, useMemo } from "react";
 import { useAutoRelationship, useRelationshipContext } from "./auto/hooks/useAutoRelationship.js";
 import { useHasManyThroughController } from "./auto/hooks/useHasManyThroughController.js";
 import { useRecordLabelObjectFromProps } from "./auto/hooks/useRelatedModel.js";
-import type { AutoRelationshipFormProps } from "./auto/interfaces/AutoRelationshipInputProps.js";
+import type { AutoHasManyThroughFormProps } from "./auto/interfaces/AutoRelationshipInputProps.js";
 import { useFormContext } from "./useActionForm.js";
 
-export const useHasManyThroughForm = (props: AutoRelationshipFormProps) => {
+export const useHasManyThroughForm = (props: AutoHasManyThroughFormProps) => {
   const { field, children } = props;
   const { metadata } = useAutoRelationship({ field });
   const { setValue } = useFormContext();

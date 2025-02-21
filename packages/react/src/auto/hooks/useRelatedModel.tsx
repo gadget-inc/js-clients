@@ -73,7 +73,7 @@ const omitRelatedModelRecordsAssociatedWithOtherRecords = (props: {
   };
 };
 
-export const useRecordLabelObjectFromProps = (props: AutoRelationshipFormProps) => {
+export const useRecordLabelObjectFromProps = (props: Pick<AutoRelationshipFormProps, "field" | "recordLabel">) => {
   const recordLabelObject = getRecordLabelObject(props.recordLabel);
   const primaryLabel = useOptionLabelForField(props.field, recordLabelObject?.primary);
   return { ...recordLabelObject, primary: primaryLabel };

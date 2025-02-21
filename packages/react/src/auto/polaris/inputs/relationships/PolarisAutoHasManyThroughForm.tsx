@@ -5,11 +5,11 @@ import { useHasManyThroughForm } from "../../../../useHasManyThroughForm.js";
 import { autoRelationshipForm } from "../../../AutoInput.js";
 import { RelationshipContext } from "../../../hooks/useAutoRelationship.js";
 import { getRecordAsOption } from "../../../hooks/useRelatedModel.js";
-import type { AutoRelationshipFormProps, DisplayedRecordOption } from "../../../interfaces/AutoRelationshipInputProps.js";
+import type { AutoHasManyThroughFormProps, DisplayedRecordOption } from "../../../interfaces/AutoRelationshipInputProps.js";
 import { RelatedModelOptionsPopover, RelatedModelOptionsSearch } from "./RelatedModelOptions.js";
 import { renderOptionLabel } from "./utils.js";
 
-export const PolarisAutoHasManyThroughForm = autoRelationshipForm((props: AutoRelationshipFormProps) => {
+export const PolarisAutoHasManyThroughForm = autoRelationshipForm((props: AutoHasManyThroughFormProps) => {
   const [addingSibling, setAddingSibling] = useState(false);
   const {
     append,
