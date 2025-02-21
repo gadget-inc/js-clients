@@ -22,7 +22,13 @@ import {
   namespacify,
   sortTypeName,
 } from "./support.js";
-import type { InternalFieldSelection, InternalFindListOptions, InternalFindManyOptions, InternalFindOneOptions } from "./types.js";
+import type {
+  AnyFilter,
+  InternalFieldSelection,
+  InternalFindListOptions,
+  InternalFindManyOptions,
+  InternalFindOneOptions,
+} from "./types.js";
 
 export const internalFindOneQuery = (apiIdentifier: string, id: string, namespace: string[], select?: InternalFieldSelection) => {
   const capitalizedApiIdentifier = capitalizeIdentifier(apiIdentifier);
@@ -236,7 +242,7 @@ export const internalDeleteMutation = (apiIdentifier: string, namespace: string[
 export const internalDeleteManyMutation = (
   apiIdentifier: string,
   namespace: string[],
-  options?: { search?: string; filter?: Record<string, any>[] | Record<string, any> }
+  options?: { search?: string; filter?: AnyFilter }
 ) => {
   const capitalizedApiIdentifier = capitalizeIdentifier(apiIdentifier);
 
@@ -533,7 +539,7 @@ export class InternalModelManager<Shape extends RecordShape = RecordData> {
    *
    * @param options Search and filter options for the records to delete
    */
-  async deleteMany(options?: { search?: string; filter?: Record<string, any> | Record<string, any>[] }): Promise<void> {
+  async deleteMany(options: { search?: string; filter: AnyFilter }): Promise<void> {
     const plan = internalDeleteManyMutation(this.apiIdentifier, this.namespace, options);
     const response = await this.connection.currentClient.mutation(plan.query, plan.variables).toPromise();
     assertMutationSuccess(response, this.dataPath(`deleteMany${this.capitalizedApiIdentifier}`));
