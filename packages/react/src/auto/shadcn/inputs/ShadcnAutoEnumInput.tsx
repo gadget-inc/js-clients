@@ -1,5 +1,5 @@
 import { XIcon } from "lucide-react";
-import React, { useCallback } from "react";
+import React, { useCallback, type ReactNode } from "react";
 import type { Control } from "../../../useActionForm.js";
 import { debounce } from "../../../utils.js";
 import { autoInput } from "../../AutoInput.js";
@@ -49,7 +49,7 @@ export const makeShadcnAutoEnumInput = ({
     ScrollArea,
   });
 
-  function ShadcnAutoEnumInput(props: { field: string; control?: Control<any>; label?: string }) {
+  function ShadcnAutoEnumInput(props: { field: string; control?: Control<any>; label?: ReactNode }) {
     const { field: fieldApiIdentifier, control, label: labelProp, ...comboboxProps } = props;
     const {
       allowMultiple,
@@ -60,6 +60,7 @@ export const makeShadcnAutoEnumInput = ({
       filteredOptions,
       searchQuery,
       label,
+      path,
       metadata,
       isError,
       errorMessage,
@@ -116,7 +117,7 @@ export const makeShadcnAutoEnumInput = ({
       <ShadcnComboInput
         {...props}
         options={filteredOptions.map((option) => ({ id: option, primary: option }))}
-        path={labelProp ?? label}
+        path={path}
         metadata={metadata}
         label={labelProp ?? label}
         onChange={debouncedSearch}

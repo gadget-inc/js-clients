@@ -1,4 +1,4 @@
-import React from "react";
+import React, { type ReactNode } from "react";
 import { FieldType } from "../../../metadata.js";
 import { autoInput } from "../../AutoInput.js";
 import { useFieldMetadata } from "../../hooks/useFieldMetadata.js";
@@ -24,7 +24,7 @@ export const PolarisAutoInput = autoInput(
     /** The field API identifier this auto input should render for */
     field: string;
     /** The label this auto input should use to identify the input to the user */
-    label?: string;
+    label?: ReactNode;
   }) => {
     const { metadata } = useFieldMetadata(props.field);
     const config = metadata.configuration;

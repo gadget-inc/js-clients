@@ -1,5 +1,5 @@
 import { CalendarIcon } from "@radix-ui/react-icons";
-import React, { useCallback, useMemo, useState } from "react";
+import React, { useCallback, useMemo, useState, type ReactNode } from "react";
 import {
   copyTime,
   formatDate,
@@ -56,9 +56,9 @@ export const makeShadcnAutoDateTimePicker = ({
     error?: string;
     includeTime?: boolean;
     hideTimePopover?: boolean;
-    label?: string;
+    label?: ReactNode;
     datePickerProps?: Partial<DatePickerProps>;
-    timePickerProps?: { label?: string; placeholder?: string };
+    timePickerProps?: { label?: ReactNode; placeholder?: string };
   }) {
     const [timeParseError, setTimeParseError] = useState(false);
     const { localTz, localTime, onChange, value, fieldProps, metadata, fieldState } = useDateTimeField({

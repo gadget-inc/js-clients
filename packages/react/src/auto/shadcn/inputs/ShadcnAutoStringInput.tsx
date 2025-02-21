@@ -1,4 +1,4 @@
-import React, { type InputHTMLAttributes } from "react";
+import React, { type InputHTMLAttributes, type ReactNode } from "react";
 import type { Control } from "../../../useActionForm.js";
 import { autoInput } from "../../AutoInput.js";
 import { useStringInputController } from "../../hooks/useStringInputController.js";
@@ -9,7 +9,7 @@ export const makeShadcnAutoStringInput = ({ Input, Label }: Pick<ShadcnElements,
     props: {
       field: string;
       control?: Control<any>;
-      label?: string;
+      label?: ReactNode;
       suffix?: React.ReactNode;
     } & Partial<InputHTMLAttributes<HTMLInputElement>>
   ) {
@@ -48,7 +48,7 @@ export const makeShadcnAutoStringInput = ({ Input, Label }: Pick<ShadcnElements,
               required={metadata.requiredArgumentForInput || false}
               className={suffix ? "border-0 shadow-none rounded-none focus:ring-0 focus-visible:ring-0" : ""}
               {...restProps}
-              placeholder={placeholder || inputLabel}
+              placeholder={placeholder}
             />
             {suffix && <div className=" h-10 flex items-center px-3">{suffix}</div>}
           </div>

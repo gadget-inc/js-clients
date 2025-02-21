@@ -1,5 +1,5 @@
 import { filesize } from "filesize";
-import React, { HtmlHTMLAttributes, useMemo } from "react";
+import React, { HtmlHTMLAttributes, useMemo, type ReactNode } from "react";
 import type { Control } from "../../../useActionForm.js";
 import { autoInput } from "../../AutoInput.js";
 import { getFileSizeValidationMessage, useFileInputController } from "../../hooks/useFileInputController.js";
@@ -10,7 +10,7 @@ export const makeShadcnAutoFileInput = ({ Input, Label }: Pick<ShadcnElements, "
     props: {
       field: string;
       control?: Control<any>;
-      label?: string;
+      label?: ReactNode;
     } & HtmlHTMLAttributes<HTMLDivElement>
   ) {
     const { field: fieldApiIdentifier, control, ...rest } = props;

@@ -73,6 +73,7 @@ export const useEnumInputController = (props: {
   );
 
   return {
+    path,
     allowMultiple: config.allowMultiple,
     allowOther: config.allowOther,
     /** The list of selected options. */

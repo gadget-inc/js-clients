@@ -1,6 +1,6 @@
 import type { AutocompleteProps } from "@shopify/polaris";
 import { Autocomplete, InlineStack, Tag } from "@shopify/polaris";
-import React, { useCallback, useMemo, useState } from "react";
+import React, { useCallback, useMemo, useState, type ReactNode } from "react";
 
 export interface EnumOption {
   label: string;
@@ -8,7 +8,7 @@ export interface EnumOption {
 }
 
 type BaseComboboxProps = Omit<AutocompleteProps, "selected" | "onSelect" | "textField"> & {
-  label?: string;
+  label?: ReactNode;
   options: EnumOption[];
 };
 

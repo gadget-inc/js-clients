@@ -1,3 +1,4 @@
+import type { ReactNode } from "react";
 import type { AutoFormProps } from "./AutoForm.js";
 import type { AutoTableProps } from "./AutoTable.js";
 import type { AutoButtonProps } from "./hooks/useAutoButtonController.js";
@@ -17,7 +18,7 @@ export interface AutoAdapter<T = any, F = any, B = any> {
   AutoDateTimePicker: React.ComponentType<{
     suiteName?: string;
     field: string;
-    label?: string;
+    label?: ReactNode;
     id?: string;
     onChange?: (date: Date) => void;
     value?: Date;
