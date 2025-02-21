@@ -88,6 +88,8 @@ export type AutoRelationshipFormProps = {
   recordFilter?: RecordFilter;
 };
 
+export type AutoHasManyThroughFormProps = Omit<AutoRelationshipFormProps, "children"> & { children?: ReactNode };
+
 export const getRecordLabelObject = (recordLabel?: OptionLabel | RecordLabel): RecordLabel | undefined => {
   if (!recordLabel) {
     return undefined;
