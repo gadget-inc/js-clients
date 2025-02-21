@@ -1,4 +1,5 @@
 import { type FieldMetadata } from "../../metadata.js";
+import { isRelationshipField } from "../../use-table/helpers.js";
 import { useAutoFormMetadata } from "../AutoFormContext.js";
 import { useRelationshipContext } from "../hooks/useAutoRelationship.js";
 
@@ -22,7 +23,17 @@ export const useFieldMetadata = (fieldApiIdentifier: string) => {
     throw new Error(`Field "${fieldApiIdentifier}" not found in metadata`);
   }
 
+  useValidateNoRelationshipFieldsInHasManyThroughForm(metadata);
+
   return { path, metadata };
+};
+
+const useValidateNoRelationshipFieldsInHasManyThroughForm = (metadata: FieldMetadata) => {
+  const relationshipContext = useRelationshipContext();
+
+  if (isRelationshipField(metadata) && relationshipContext && relationshipContext.hasManyThrough) {
+    throw new Error(`"${metadata.apiIdentifier}" is not allowed in a AutoHasManyThroughForm`);
+  }
 };
 
 const useGetPaths = (fieldApiIdentifier: string) => {
