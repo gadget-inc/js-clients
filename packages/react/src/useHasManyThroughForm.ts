@@ -53,13 +53,17 @@ export const useHasManyThroughForm = (props: AutoHasManyThroughFormProps) => {
     return fields.flatMap((field, idx): [string, number, Record<string, any>][] => {
       const record = records[idx];
 
-      if (!record) {
+      if (
+        !record ||
+        !inverseRelatedModelField ||
+        !record[inverseRelatedModelField] // Do not consider join records that are not connected to a sibling model record
+      ) {
         return [];
       }
 
       return [[field._fieldArrayKey, idx, record]];
     });
-  }, [fields, records]);
+  }, [fields, records, inverseRelatedModelField]);
 
   const recordLabel = useRecordLabelObjectFromProps(props);
 
