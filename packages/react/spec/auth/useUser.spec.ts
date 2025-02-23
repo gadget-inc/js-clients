@@ -61,9 +61,10 @@ describe("useUser", () => {
         }
       }"
     `);
-    expect(result.current.id).toEqual("321");
-    expect(result.current.firstName).toEqual("Jane");
-    expect(result.current.lastName).toEqual("Doe");
+    const [user] = result.current;
+    expect(user.id).toEqual("321");
+    expect(user.firstName).toEqual("Jane");
+    expect(user.lastName).toEqual("Doe");
   });
 
   test("it returns the current user when the user is logged in with an api client passed", async () => {
@@ -109,9 +110,10 @@ describe("useUser", () => {
         }
       }"
     `);
-    expect(result.current.id).toEqual("321");
-    expect(result.current.firstName).toEqual("Jane");
-    expect(result.current.lastName).toEqual("Doe");
+    const [user] = result.current;
+    expect(user.id).toEqual("321");
+    expect(user.firstName).toEqual("Jane");
+    expect(user.lastName).toEqual("Doe");
   });
 
   test("it returns the current user when the user is logged in with an api client and options passed", async () => {
@@ -141,8 +143,9 @@ describe("useUser", () => {
         }
       }"
     `);
-    expect(result.current.firstName).toEqual("Jane");
-    expect(result.current).toMatchInlineSnapshot(`
+    const [user] = result.current;
+    expect(user.firstName).toEqual("Jane");
+    expect(user).toMatchInlineSnapshot(`
       {
         "firstName": "Jane",
         "id": "321",
@@ -157,7 +160,7 @@ describe("useUser", () => {
     expectMockSignedOutUser();
 
     rerender();
-    expect(result.current).toBe(null);
+    expect(result.current[0]).toBe(null);
   });
 
   test("it throws when the server responds with an error", async () => {
