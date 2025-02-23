@@ -43,13 +43,11 @@ export const useFindMany = <
 > => {
   const memoizedOptions = useStructuralMemo(options);
   const plan = useMemo(() => {
-    return findManyOperation(
-      manager.findMany.operationName,
-      manager.findMany.defaultSelection,
-      manager.findMany.modelApiIdentifier,
-      memoizedOptions,
-      manager.findMany.namespace
-    );
+    if (manager.findMany.plan) {
+      return manager.findMany.plan(memoizedOptions);
+    } else {
+      throw new Error("Incompatible client passed to useFindMany hook, please use an api client with version >= 0.17.0")
+    }
   }, [manager, memoizedOptions]);
 
   const [rawResult, refresh] = useGadgetQuery(useQueryArgs(plan, options));

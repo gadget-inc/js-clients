@@ -89,17 +89,11 @@ export const useBulkAction = <
 
   const memoizedOptions = useStructuralMemo(options);
   const plan = useMemo(() => {
-    return actionOperation(
-      action.operationName,
-      action.defaultSelection,
-      action.modelApiIdentifier,
-      action.modelSelectionField,
-      action.variables,
-      memoizedOptions,
-      action.namespace,
-      action.isBulk,
-      action.hasReturnType
-    );
+    if (action.plan) {
+      return action.plan(memoizedOptions);
+    } else {
+      throw new Error("Incompatible client passed to useBulkAction hook, please use an api client with version >= 0.17.0")
+    }
   }, [action, memoizedOptions]);
 
   const [result, runMutation] = useGadgetMutation<

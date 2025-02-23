@@ -1,5 +1,5 @@
 import type { DefaultSelection, FindFirstFunction, GadgetRecord, LimitToKnownKeys, Select } from "@gadgetinc/api-client-core";
-import { findManyOperation, get, hydrateConnection, namespaceDataPath } from "@gadgetinc/api-client-core";
+import { get, hydrateConnection, namespaceDataPath } from "@gadgetinc/api-client-core";
 import { useMemo } from "react";
 import { useGadgetQuery } from "./useGadgetQuery.js";
 import { useStructuralMemo } from "./useStructuralMemo.js";
@@ -41,19 +41,16 @@ export const useFindFirst = <
 ): ReadHookResult<
   GadgetRecord<Select<Exclude<F["schemaType"], null | undefined>, DefaultSelection<F["selectionType"], Options, F["defaultSelection"]>>>
 > => {
-  const firstOptions = { ...options, first: 1 };
-  const memoizedOptions = useStructuralMemo(firstOptions);
+  const memoizedOptions = useStructuralMemo(options);
   const plan = useMemo(() => {
-    return findManyOperation(
-      manager.findFirst.operationName,
-      manager.findFirst.defaultSelection,
-      manager.findFirst.modelApiIdentifier,
-      memoizedOptions,
-      manager.findFirst.namespace
-    );
+    if (manager.findFirst.plan) {
+      return manager.findFirst.plan(memoizedOptions);
+    } else {
+      throw new Error("Incompatible client passed to useFindFirst hook, please use an api client with version >= 0.17.0")
+    }
   }, [manager, memoizedOptions]);
 
-  const [rawResult, refresh] = useGadgetQuery(useQueryArgs(plan, firstOptions));
+  const [rawResult, refresh] = useGadgetQuery(useQueryArgs(plan, options));
 
   const result = useMemo(() => {
     const dataPath = namespaceDataPath([manager.findFirst.operationName], manager.findFirst.namespace);
@@ -70,7 +67,7 @@ export const useFindFirst = <
     const error = ErrorWrapper.errorIfDataAbsent(rawResult, dataPath, options?.pause);
 
     return { ...rawResult, data, error };
-  }, [manager.findFirst.operationName, options?.pause, rawResult]);
+  }, [manager.findFirst.namespace, manager.findFirst.operationName, options?.pause, rawResult]);
 
   return [result, refresh];
 };

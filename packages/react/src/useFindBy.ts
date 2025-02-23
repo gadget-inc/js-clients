@@ -50,15 +50,11 @@ export const useFindBy = <
 > => {
   const memoizedOptions = useStructuralMemo(options);
   const plan = useMemo(() => {
-    return findOneByFieldOperation(
-      finder.operationName,
-      finder.findByVariableName,
-      value,
-      finder.defaultSelection,
-      finder.modelApiIdentifier,
-      memoizedOptions,
-      finder.namespace
-    );
+    if (finder.plan) {
+      return finder.plan(value, memoizedOptions)
+    } else {
+      throw new Error("Incompatible client passed to useFindBy hook, please use an api client with version >= 0.17.0")
+    }
   }, [finder, value, memoizedOptions]);
 
   const [rawResult, refresh] = useGadgetQuery(useQueryArgs(plan, options));
