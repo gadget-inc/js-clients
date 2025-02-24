@@ -1,4 +1,5 @@
 export { useAutoFormMetadata } from "../AutoFormContext.js";
+export { AutoHasManyThroughJoinModelForm } from "../hooks/useHasManyThroughController.js";
 export { PolarisAutoButton as AutoButton } from "./PolarisAutoButton.js";
 export { PolarisAutoForm as AutoForm, PolarisAutoFormSkeleton as AutoFormSkeleton } from "./PolarisAutoForm.js";
 export { PolarisAutoTable as AutoTable } from "./PolarisAutoTable.js";

@@ -1,8 +1,7 @@
 import React from "react";
-
-import { describeForEachAutoAdapter } from "../../../support/auto.js";
-
+import { AutoHasManyThroughJoinModelForm } from "../../../../src/auto/hooks/useHasManyThroughController.js";
 import { api } from "../../../support/api.js";
+import { describeForEachAutoAdapter } from "../../../support/auto.js";
 
 describeForEachAutoAdapter(
   "AutoHasManyForm",
@@ -74,8 +73,10 @@ describeForEachAutoAdapter(
               tertiary: "department",
             }}
           >
-            <AutoInput field="registration.effectiveFrom" />
-            <AutoInput field="registration.effectiveTo" />
+            <AutoHasManyThroughJoinModelForm>
+              <AutoInput field="effectiveFrom" />
+              <AutoInput field="effectiveTo" />
+            </AutoHasManyThroughJoinModelForm>
           </AutoHasManyThroughForm>
           <AutoSubmit id="submit" />
         </AutoForm>,

@@ -2,8 +2,11 @@ import { type FieldMetadata } from "../../metadata.js";
 import { isRelationshipField } from "../../use-table/helpers.js";
 import { useAutoFormMetadata } from "../AutoFormContext.js";
 import { useRelationshipContext } from "../hooks/useAutoRelationship.js";
+import { useIsInHasManyThroughJoinModelInput } from "./useHasManyThroughController.js";
 
 export const useMaybeFieldMetadata = (fieldApiIdentifier: string) => {
+  validateNoDotNotationInFieldApiIdentifier(fieldApiIdentifier);
+
   fieldApiIdentifier = useFieldApiIdentifier(fieldApiIdentifier);
   const { fields } = useAutoFormMetadata();
 
@@ -83,10 +86,15 @@ const isFieldCustomParamOnModelAction = (
 
 export const useFieldApiIdentifier = (fieldApiIdentifier: string) => {
   const relationshipContext = useRelationshipContext();
+  const isInHasManyThroughJoinModelInput = useIsInHasManyThroughJoinModelInput();
 
   if (relationshipContext && relationshipContext.hasManyThrough) {
     // Within AutoHasManyThroughForm - Special consideration needed for fields on the sibling model
-    return getFieldApiIdentifierWithinHasManyThroughForm(fieldApiIdentifier, relationshipContext.hasManyThrough);
+    return getFieldApiIdentifierWithinHasManyThroughForm(
+      fieldApiIdentifier,
+      relationshipContext.hasManyThrough,
+      isInHasManyThroughJoinModelInput
+    );
   }
 
   return fieldApiIdentifier;
@@ -94,16 +102,27 @@ export const useFieldApiIdentifier = (fieldApiIdentifier: string) => {
 
 const getFieldApiIdentifierWithinHasManyThroughForm = (
   fieldApiIdentifier: string,
-  hasManyThrough: { joinModelApiIdentifier: string; inverseRelatedModelField: string }
+  hasManyThrough: { joinModelApiIdentifier: string; inverseRelatedModelField: string },
+  isInHasManyThroughJoinModelInput: boolean
 ) => {
   const { joinModelApiIdentifier, inverseRelatedModelField } = hasManyThrough;
-
   if (fieldApiIdentifier.startsWith(`${joinModelApiIdentifier}.`)) {
-    // Within a AutoHasManyThroughForm, and the field is on the join model
+    // Already properly prefixed
     return fieldApiIdentifier;
+  }
+
+  if (isInHasManyThroughJoinModelInput) {
+    // Within a AutoHasManyThroughForm, and the field is on the join model
+    return `${joinModelApiIdentifier}.${fieldApiIdentifier}`;
   }
 
   // Within a AutoHasManyThroughForm - Assume field is on sibling model without joinModelApiIdentifier prefix
   // The resulting API request variables will be apply these changes through a nested action on `joinModel.belongsToSiblingModelField`
   return `${joinModelApiIdentifier}.${inverseRelatedModelField}.${fieldApiIdentifier}`;
+};
+
+const validateNoDotNotationInFieldApiIdentifier = (fieldApiIdentifier: string) => {
+  if (fieldApiIdentifier.includes(".")) {
+    throw new Error(`"${fieldApiIdentifier}" is invalid. The 'field' prop in AutoForm components cannot contain "."`);
+  }
 };

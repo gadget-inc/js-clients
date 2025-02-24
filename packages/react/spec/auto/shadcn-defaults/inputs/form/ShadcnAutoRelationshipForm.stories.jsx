@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { Provider } from "../../../../../src/GadgetProvider.tsx";
+import { AutoHasManyThroughJoinModelForm } from "../../../../../src/auto/hooks/useHasManyThroughController.tsx";
 import { makeAutocomponents } from "../../../../../src/auto/shadcn/index.ts";
 import { FormProvider, useForm } from "../../../../../src/useActionForm.ts";
 import { testApi as api } from "../../../../apis.ts";
@@ -197,8 +198,10 @@ const ExampleTweeterFollowerCreateRelatedForm = (props) => {
             }}
           >
             <div className="flex flex-row gap-4">
-              <AutoInput field="friendship.started" />
-              <AutoInput field="friendship.ended" />
+              <AutoHasManyThroughJoinModelForm>
+                <AutoInput field="started" />
+                <AutoInput field="ended" />
+              </AutoHasManyThroughJoinModelForm>
             </div>
           </AutoHasManyThroughForm>
         </Card>
@@ -211,8 +214,10 @@ const ExampleTweeterFollowerCreateRelatedForm = (props) => {
             }}
           >
             <div className="flex flex-row gap-4">
-              <AutoInput field="friendship.started" />
-              <AutoInput field="friendship.ended" />
+              <AutoHasManyThroughJoinModelForm>
+                <AutoInput field="started" />
+                <AutoInput field="ended" />
+              </AutoHasManyThroughJoinModelForm>
             </div>
           </AutoHasManyThroughForm>
         </Card>
@@ -284,8 +289,10 @@ const ExampleCourseCreateRelatedForm = (props) => {
             }}
           >
             <div className="flex flex-col gap-4">
-              <AutoInput field="registration.effectiveFrom" />
-              <AutoInput field="registration.effectiveTo" />
+              <AutoHasManyThroughJoinModelForm>
+                <AutoInput field="effectiveFrom" />
+                <AutoInput field="effectiveTo" />
+              </AutoHasManyThroughJoinModelForm>
             </div>
           </AutoHasManyThroughForm>
         </Card>
