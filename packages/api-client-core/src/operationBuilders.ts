@@ -206,25 +206,32 @@ export const backgroundActionResultOperation = <Action extends AnyActionFunction
   options?: Options
 ) => {
   let fields: FieldSelection = {};
-  let operationName = action.operationName;
   let resultType: string;
 
-  if (action.isBulk) {
-    operationName = action.operationName.replace(/^bulk/, "").replace(/s$/, "");
+  const backgroundAction = action.isBulk && action.singleAction ? action.singleAction : action;
+
+  let operationName = backgroundAction.operationName;
+  if (backgroundAction.isBulk) {
+    operationName = backgroundAction.operationName.replace(/^bulk/, "").replace(/s$/, "");
   }
 
-  if (!action.operationReturnType) {
+  if (!backgroundAction.operationReturnType) {
     resultType = `${camelize(operationName)}Result`;
   } else {
-    resultType = `${action.operationReturnType}Result`;
+    resultType = `${backgroundAction.operationReturnType}Result`;
   }
 
-  switch (action.type) {
+  switch (backgroundAction.type) {
     case "action": {
-      const selection = options?.select || action.defaultSelection;
+      const selection = options?.select || backgroundAction.defaultSelection;
 
       fields = {
-        [`... on ${resultType}`]: actionResultFieldSelection(action.modelApiIdentifier, selection, action.isBulk, action.hasReturnType),
+        [`... on ${resultType}`]: actionResultFieldSelection(
+          backgroundAction.modelApiIdentifier,
+          selection,
+          backgroundAction.isBulk,
+          backgroundAction.hasReturnType
+        ),
       };
       break;
     }

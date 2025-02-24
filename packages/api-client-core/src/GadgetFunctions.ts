@@ -131,6 +131,7 @@ export interface ActionFunctionMetadata<OptionsT, VariablesT, SelectionT, Schema
   paramOnlyVariables?: readonly string[];
   hasReturnType?: HasReturnType;
   singleActionFunctionName?: string;
+  singleAction?: IsBulk extends true ? ActionFunctionMetadata<OptionsT, VariablesT, SelectionT, SchemaT, DefaultsT, false> : never;
   plan?: <Options extends OptionsT>(options?: LimitToKnownKeys<Options, OptionsT>) => GQLBuilderResult;
   /** @deprecated */
   hasCreateOrUpdateEffect?: boolean;
@@ -204,5 +205,8 @@ export interface GlobalActionFunction<VariablesT> {
   plan?: (variables?: VariablesOptions) => GQLBuilderResult;
 }
 
-export type AnyActionFunction = ActionFunctionMetadata<any, any, any, any, any, any> | GlobalActionFunction<any>;
+export type AnyActionFunction =
+  | ActionFunctionMetadata<any, any, any, any, any, true>
+  | ActionFunctionMetadata<any, any, any, any, any, false | undefined>
+  | GlobalActionFunction<any>;
 export type AnyBulkActionFunction = ActionFunctionMetadata<any, any, any, any, any, true>;

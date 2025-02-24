@@ -56,6 +56,36 @@ export const MockWidgetUpdateAction = {
   { id: true; name: true }
 >;
 
+export const MockUpsertWidgetAction = {
+  type: "action",
+  isBulk: false,
+  defaultSelection: {
+    id: true,
+    name: true,
+  },
+  operationName: "upsertWidget",
+  operationReturnType: "UpsertWidget",
+  modelApiIdentifier: "widget",
+  operatesWithRecordIdentity: false,
+  acceptsModelInput: true,
+  modelSelectionField: "widget",
+  variables: {
+    on: { required: false, type: "[String!]" },
+    widget: { required: true, type: "UpsertWidgetInput" },
+  },
+  paramOnlyVariables: ["on"],
+  hasReturnType: {
+    "... on CreateWidgetResult": { hasReturnType: false },
+    "... on UpdateWidgetResult": { hasReturnType: false },
+  },
+} as unknown as ActionFunction<
+  { select?: { id?: boolean; name?: boolean } },
+  any,
+  { id?: boolean; name?: boolean },
+  { id: string; name: string },
+  { id: true; name: true }
+>;
+
 export const MockBulkCreateWidgetAction = {
   type: "action",
   operationName: "bulkCreateWidgets",
@@ -76,11 +106,12 @@ export const MockBulkCreateWidgetAction = {
   variables: {
     inputs: {
       required: true,
-      type: "[BulkCreateeWidgetsInput!]",
+      type: "[BulkCreateWidgetsInput!]",
     },
   },
   acceptsModelInput: true,
   hasReturnType: false,
+  singleAction: MockWidgetCreateAction,
 } as unknown as BulkActionFunction<any, any, any, any, any>;
 
 export const MockBulkUpdateWidgetAction = {
@@ -108,6 +139,30 @@ export const MockBulkUpdateWidgetAction = {
   },
   acceptsModelInput: true,
   hasReturnType: false,
+  singleAction: MockWidgetUpdateAction,
+} as unknown as BulkActionFunction<any, any, any, any, any>;
+
+export const MockBulkUpsertWidgetAction = {
+  type: "action",
+  operationName: "bulkUpsertWidgets",
+  namespace: null,
+  modelApiIdentifier: "widget",
+  operatesWithRecordIdentity: false,
+  modelSelectionField: "widgets",
+  isBulk: true,
+  defaultSelection: {
+    id: true,
+    name: true,
+  },
+  variables: {
+    inputs: {
+      required: true,
+      type: "[BulkUpsertWidgetsInput!]",
+    },
+  },
+  acceptsModelInput: true,
+  hasReturnType: false,
+  singleAction: MockUpsertWidgetAction,
 } as unknown as BulkActionFunction<any, any, any, any, any>;
 
 export const MockBulkFlipDownWidgetsAction = {

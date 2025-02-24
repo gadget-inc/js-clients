@@ -7,7 +7,13 @@ import {
   findOneOperation,
   globalActionOperation,
 } from "../src/index.js";
-import { MockBulkUpdateWidgetAction, MockGlobalAction, MockWidgetCreateAction } from "./mockActions.js";
+import {
+  MockBulkUpdateWidgetAction,
+  MockBulkUpsertWidgetAction,
+  MockGlobalAction,
+  MockUpsertWidgetAction,
+  MockWidgetCreateAction,
+} from "./mockActions.js";
 
 describe("operation builders", () => {
   describe("findOneOperation", () => {
@@ -1365,6 +1371,54 @@ describe("operation builders", () => {
       `);
     });
 
+    test("builds query for upsert action", async () => {
+      expect(backgroundActionResultOperation("app-job-1234567", MockUpsertWidgetAction, { select: { id: true } })).toMatchInlineSnapshot(`
+        {
+          "query": "subscription UpsertWidgetBackgroundResult($id: String!) {
+          backgroundAction(id: $id) {
+            id
+            outcome
+            result {
+              ... on UpsertWidgetResult {
+                success
+                errors {
+                  message
+                  code
+                  ... on InvalidRecordError {
+                    model {
+                      apiIdentifier
+                    }
+                    validationErrors {
+                      message
+                      apiIdentifier
+                    }
+                  }
+                }
+                ... on CreateWidgetResult {
+                  __typename
+                  widget {
+                    id
+                    __typename
+                  }
+                }
+                ... on UpdateWidgetResult {
+                  __typename
+                  widget {
+                    id
+                    __typename
+                  }
+                }
+              }
+            }
+          }
+        }",
+          "variables": {
+            "id": "app-job-1234567",
+          },
+        }
+      `);
+    });
+
     test("builds query for one result of a bulk action", async () => {
       expect(backgroundActionResultOperation("app-job-1234567", MockBulkUpdateWidgetAction, { select: { id: true } }))
         .toMatchInlineSnapshot(`
@@ -1392,6 +1446,55 @@ describe("operation builders", () => {
                 widget {
                   id
                   __typename
+                }
+              }
+            }
+          }
+        }",
+          "variables": {
+            "id": "app-job-1234567",
+          },
+        }
+      `);
+    });
+
+    test("builds query for one result of a bulk upsert action", async () => {
+      expect(backgroundActionResultOperation("app-job-1234567", MockBulkUpsertWidgetAction, { select: { id: true } }))
+        .toMatchInlineSnapshot(`
+        {
+          "query": "subscription UpsertWidgetBackgroundResult($id: String!) {
+          backgroundAction(id: $id) {
+            id
+            outcome
+            result {
+              ... on UpsertWidgetResult {
+                success
+                errors {
+                  message
+                  code
+                  ... on InvalidRecordError {
+                    model {
+                      apiIdentifier
+                    }
+                    validationErrors {
+                      message
+                      apiIdentifier
+                    }
+                  }
+                }
+                ... on CreateWidgetResult {
+                  __typename
+                  widget {
+                    id
+                    __typename
+                  }
+                }
+                ... on UpdateWidgetResult {
+                  __typename
+                  widget {
+                    id
+                    __typename
+                  }
                 }
               }
             }

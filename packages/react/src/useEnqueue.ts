@@ -1,9 +1,4 @@
-import type {
-  ActionFunctionMetadata,
-  AnyActionFunction,
-  EnqueueBackgroundActionOptions,
-  GadgetConnection,
-} from "@gadgetinc/api-client-core";
+import type { AnyActionFunction, EnqueueBackgroundActionOptions, GadgetConnection } from "@gadgetinc/api-client-core";
 import {
   BackgroundActionHandle,
   disambiguateActionVariables,
@@ -69,9 +64,7 @@ export const useEnqueue = <SchemaT, Action extends AnyActionFunction>(
     state,
     useCallback(
       async (input: Action["variablesType"], options?: EnqueueBackgroundActionOptions<Action>) => {
-        const variables = action.isBulk
-          ? disambiguateBulkActionVariables(action as ActionFunctionMetadata<any, any, any, any, any, true>, input)
-          : disambiguateActionVariables(action, input);
+        const variables = action.isBulk ? disambiguateBulkActionVariables(action, input) : disambiguateActionVariables(action, input);
 
         const fullContext = { ...baseBackgroundOptions, ...options };
         variables.backgroundOptions = graphqlizeBackgroundOptions(fullContext);
