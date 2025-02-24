@@ -5,7 +5,7 @@ import type { ComponentType, ReactNode } from "react";
 import React from "react";
 import { Toaster, elements } from "../../spec/auto/shadcn-defaults/index.js";
 import type { AutoAdapter } from "../../src/auto/index.js";
-import { makeAutocomponents } from "../../src/auto/shadcn/index.js";
+import { makeAutocomponents } from "../../src/auto/shadcn/unreleasedIndex.js";
 import { FormProvider, useForm } from "../../src/useActionForm.js";
 import * as PolarisAdapter from "./PolarisAdapter.js";
 import { SUITE_NAMES } from "./constants.js";

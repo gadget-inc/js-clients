@@ -1,7 +1,7 @@
 import React from "react";
 import { PolarisAutoForm } from "../../src/auto/polaris/PolarisAutoForm.js";
 import { PolarisAutoTable } from "../../src/auto/polaris/PolarisAutoTable.js";
-import { makeAutocomponents } from "../../src/auto/shadcn/index.js";
+import { makeAutocomponents } from "../../src/auto/shadcn/unreleasedIndex.js";
 import { testApi } from "../apis.js";
 import { elements } from "./shadcn-defaults/index.js";
 

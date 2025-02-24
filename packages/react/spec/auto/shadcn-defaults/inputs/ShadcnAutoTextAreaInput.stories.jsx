@@ -1,6 +1,6 @@
 import React from "react";
 import { Provider } from "../../../../src/GadgetProvider.tsx";
-import { makeAutocomponents } from "../../../../src/auto/shadcn/index.ts";
+import { makeAutocomponents } from "../../../../src/auto/shadcn/unreleasedIndex.ts";
 import { FormProvider, useForm } from "../../../../src/useActionForm.ts";
 import { testApi as api } from "../../../apis.ts";
 import { elements } from "../index.tsx";
