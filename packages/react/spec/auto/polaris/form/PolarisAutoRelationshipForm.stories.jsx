@@ -2,6 +2,7 @@ import { AppProvider, BlockStack, Box, Button, Card, FormLayout, InlineStack, La
 import translations from "@shopify/polaris/locales/en.json";
 import React, { useState } from "react";
 import { Provider } from "../../../../src/GadgetProvider.tsx";
+import { AutoHasManyThroughJoinModelForm } from "../../../../src/auto/hooks/useHasManyThroughController.tsx";
 import { PolarisAutoForm } from "../../../../src/auto/polaris/PolarisAutoForm.tsx";
 import { PolarisAutoInput } from "../../../../src/auto/polaris/inputs/PolarisAutoInput.tsx";
 import { PolarisAutoBelongsToForm } from "../../../../src/auto/polaris/inputs/relationships/PolarisAutoBelongsToForm.tsx";
@@ -210,8 +211,11 @@ const ExampleCourseCreateRelatedForm = (props) => {
           >
             <InlineStack gap="300">
               {/* Fields on the join model. The prefix is the model API id of the join model */}
-              <PolarisAutoInput field="registration.effectiveFrom" />
-              <PolarisAutoInput field="registration.effectiveTo" />
+
+              <AutoHasManyThroughJoinModelForm>
+                <PolarisAutoInput field="effectiveTo" />
+                <PolarisAutoInput field="effectiveFrom" />
+              </AutoHasManyThroughJoinModelForm>
 
               {/* Fields on the sibling model. No prefix */}
               <PolarisAutoInput field="firstName" />
@@ -273,8 +277,10 @@ const ExampleTweeterFollowerCreateRelatedForm = (props) => {
             }}
           >
             <InlineStack>
-              <PolarisAutoInput field="friendship.started" />
-              <PolarisAutoInput field="friendship.ended" />
+              <AutoHasManyThroughJoinModelForm>
+                <PolarisAutoInput field="started" />
+                <PolarisAutoInput field="ended" />
+              </AutoHasManyThroughJoinModelForm>
             </InlineStack>
           </PolarisAutoHasManyThroughForm>
         </Card>
@@ -287,8 +293,10 @@ const ExampleTweeterFollowerCreateRelatedForm = (props) => {
             }}
           >
             <InlineStack>
-              <PolarisAutoInput field="friendship.started" />
-              <PolarisAutoInput field="friendship.ended" />
+              <AutoHasManyThroughJoinModelForm>
+                <PolarisAutoInput field="started" />
+                <PolarisAutoInput field="ended" />
+              </AutoHasManyThroughJoinModelForm>
             </InlineStack>
           </PolarisAutoHasManyThroughForm>
         </Card>
