@@ -1,9 +1,9 @@
 import type { ActionFunction, GlobalActionFunction } from "@gadgetinc/api-client-core";
-import React, { type ComponentProps } from "react";
+import React from "react";
 import type { OptionsType } from "../../utils.js";
 import type { AutoButtonProps } from "../hooks/useAutoButtonController.js";
 import { useAutoButtonController } from "../hooks/useAutoButtonController.js";
-import { type ShadcnElements } from "./elements.js";
+import { ButtonProps, type ShadcnElements } from "./elements.js";
 
 /**
  * Render a button that invokes an action when clicked, and shows a toast notification when the action succeeds or encounters an error by default.
@@ -15,7 +15,7 @@ export const makeAutoButton =
     SchemaT,
     ActionFunc extends ActionFunction<GivenOptions, any, any, SchemaT, any> | GlobalActionFunction<any>
   >(
-    props: AutoButtonProps<GivenOptions, SchemaT, ActionFunc> & ComponentProps<typeof Button>
+    props: AutoButtonProps<GivenOptions, SchemaT, ActionFunc> & ButtonProps
   ) => {
     const { fetching, isDestructive, run, label, buttonProps } = useAutoButtonController({
       onSuccess: (_result) => {
@@ -32,8 +32,10 @@ export const makeAutoButton =
       ...props,
     });
 
+    const { variant = isDestructive ? "destructive" : "default", ...rest } = props;
+
     return (
-      <Button disabled={fetching} variant={isDestructive ? "destructive" : "default"} onClick={run} {...buttonProps}>
+      <Button disabled={fetching} variant={variant} onClick={run} {...buttonProps} {...rest}>
         {props?.children ?? label}
       </Button>
     );
