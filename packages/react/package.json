@@ -106,7 +106,7 @@
     "@types/react-dom": "^18.2.4",
     "@types/setup-polly-jest": "^0.5.5",
     "@types/tmp": "^0.2.6",
-    "@urql/core": "^4.0.10",
+    "@urql/core": "^4.3.0",
     "autoprefixer": "^10.4.20",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
