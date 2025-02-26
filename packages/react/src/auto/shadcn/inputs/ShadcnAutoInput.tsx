@@ -123,10 +123,13 @@ export const makeShadcnAutoInput = (
     AutoBooleanInput,
     AutoEncryptedStringInput,
     AutoStringInput,
+    AutoEmailInput: AutoStringInput,
+    AutoUrlInput: AutoStringInput,
     AutoNumberInput,
     AutoIdInput,
     AutoHiddenInput,
     AutoTextAreaInput,
+    AutoRichTextInput,
 
     AutoBelongsToInput,
     AutoHasManyInput,
