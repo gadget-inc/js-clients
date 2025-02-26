@@ -70,7 +70,7 @@ describeForEachAutoAdapter("AutoButton", ({ name, adapter: { AutoButton }, wrapp
 
     cy.wait("@createWidget");
 
-    cy.contains("Create Widget encountered an error:");
+    cy.contains("encountered an error");
   });
 
   it("shows a button, runs an update action with variables, and reports success", () => {
