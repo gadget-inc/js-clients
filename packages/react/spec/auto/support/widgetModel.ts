@@ -1,5 +1,6 @@
-import { recordIdInputField } from "./shared.js";
+import { GadgetRecord } from "@gadgetinc/api-client-core";
 import { apiTriggerOnly } from "./Triggers.js";
+import { recordIdInputField } from "./shared.js";
 
 export const widgetModelInputFields = {
   name: "Widget",
@@ -370,7 +371,7 @@ export const getWidgetModelMetadata = (
   };
 };
 
-export const getWidgetRecord = (overrides?: {
+export const getWidgetRecordResponse = (overrides?: {
   id?: string;
   isChecked?: boolean;
   inventoryCount?: number;
@@ -394,7 +395,7 @@ export const getWidgetRecord = (overrides?: {
 
   return {
     widget: {
-      __typename: "Widget",
+      __typename: "Widget" as const,
       id,
       anything: {
         key: "value",
@@ -409,7 +410,7 @@ export const getWidgetRecord = (overrides?: {
         truncatedHTML: "<p>example <em>rich</em> <strong>text</strong></p> ",
         __typename: "RichText",
       },
-      embedding: null,
+      embedding: [],
       inStock: true,
       inventoryCount,
       isChecked,
@@ -431,4 +432,16 @@ export const getWidgetRecord = (overrides?: {
       __typename: "GadgetApplicationMeta",
     },
   };
+};
+
+export const getWidgetRecord = (overrides?: Parameters<typeof getWidgetRecordResponse>[0]) => {
+  const response = getWidgetRecordResponse(overrides);
+
+  return new GadgetRecord({
+    ...response.widget,
+    createdAt: new Date(response.widget.createdAt),
+    updatedAt: new Date(response.widget.updatedAt),
+    startsAt: response.widget.startsAt ? new Date(response.widget.startsAt) : null,
+    birthday: response.widget.birthday ? new Date(response.widget.birthday) : null,
+  });
 };

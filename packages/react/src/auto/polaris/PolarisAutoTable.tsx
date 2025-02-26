@@ -53,6 +53,13 @@ const getColumnIndex = (columns: TableColumn[], apiIdentifier: string | undefine
   return columns.findIndex((column) => column.field === apiIdentifier);
 };
 
+export type PolarisAutoTableProps<
+  GivenOptions extends OptionsType,
+  SchemaT,
+  FinderFunction extends FindManyFunction<GivenOptions, any, SchemaT, any>,
+  Options extends FinderFunction["optionsType"]
+> = AutoTableProps<GivenOptions, SchemaT, FinderFunction, Options>;
+
 /**
  * Renders a table of records from the backend automatically for a given model using Polaris
  */
@@ -62,7 +69,7 @@ export const PolarisAutoTable = <
   FinderFunction extends FindManyFunction<GivenOptions, any, SchemaT, any>,
   Options extends FinderFunction["optionsType"]
 >(
-  props: AutoTableProps<GivenOptions, SchemaT, FinderFunction, Options>
+  props: PolarisAutoTableProps<GivenOptions, SchemaT, FinderFunction, Options>
 ) => {
   const { model } = props;
 
@@ -79,7 +86,7 @@ const PolarisAutoTableComponent = <
   FinderFunction extends FindManyFunction<GivenOptions, any, SchemaT, any>,
   Options extends FinderFunction["optionsType"]
 >(
-  props: AutoTableProps<GivenOptions, SchemaT, FinderFunction, Options>
+  props: PolarisAutoTableProps<GivenOptions, SchemaT, FinderFunction, Options>
 ) => {
   const { onClick } = props;
   const searchable = props.searchable ?? true;

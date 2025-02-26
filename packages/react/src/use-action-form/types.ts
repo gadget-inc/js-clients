@@ -135,6 +135,8 @@ type IsAny<T> = 0 extends 1 & T ? true : false;
 
 export type ContextAwareSelect<T> = T extends boolean | null | undefined ? T | "ReadOnly" : { [K in keyof T]: ContextAwareSelect<T[K]> };
 
+export type AnyUpsertAction = { variablesType: { on?: (string | null)[] } | undefined; hasReturnType: Record<string, any> };
+
 export type AnyActionWithId<OptionsT> =
   | ActionWithIdAndNoVariables<OptionsT>
   | ActionWithIdAndVariables<OptionsT, any>
