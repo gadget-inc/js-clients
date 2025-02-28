@@ -20,6 +20,13 @@ import { makeShadcnAutoTablePagination } from "./table/ShadcnAutoTablePagination
 import { makeShadcnAutoTableSearch } from "./table/ShadcnAutoTableSearch.js";
 import { makeShadcnAutoTableCellRenderer } from "./table/cells/ShadcnAutoTableCellRenderer.js";
 
+export type ShadcnAutoTableProps<
+  GivenOptions extends OptionsType,
+  SchemaT,
+  FinderFunction extends FindManyFunction<GivenOptions, any, SchemaT, any>,
+  Options extends FinderFunction["optionsType"]
+> = AutoTableProps<GivenOptions, SchemaT, FinderFunction, Options>;
+
 /**
  * Renders a table for a model automatically using Shadcn
  */
@@ -124,7 +131,7 @@ export const makeAutoTable = (elements: ShadcnElements) => {
     SchemaT,
     FinderFunction extends FindManyFunction<GivenOptions, any, SchemaT, any>,
     Options extends FinderFunction["optionsType"]
-  >(props: AutoTableProps<GivenOptions, SchemaT, FinderFunction, Options>) {
+  >(props: ShadcnAutoTableProps<GivenOptions, SchemaT, FinderFunction, Options>) {
     const { onClick, searchable = true, paginate = true } = props;
 
     const [methods, refresh] = useTable<GivenOptions, SchemaT, FinderFunction, Options>(props.model, {
@@ -259,7 +266,7 @@ export const makeAutoTable = (elements: ShadcnElements) => {
     FinderFunction extends FindManyFunction<GivenOptions, any, SchemaT, any>,
     Options extends FinderFunction["optionsType"]
   >(
-    props: AutoTableProps<GivenOptions, SchemaT, FinderFunction, Options>
+    props: ShadcnAutoTableProps<GivenOptions, SchemaT, FinderFunction, Options>
   ) => {
     const { model } = props;
     validateAutoTableProps(model);

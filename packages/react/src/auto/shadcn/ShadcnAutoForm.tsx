@@ -16,6 +16,14 @@ import { makeShadcnAutoHasOneForm } from "./inputs/relationships/ShadcnAutoHasOn
 import { makeShadcnAutoSubmit } from "./submit/ShadcnAutoSubmit.js";
 import { makeSubmitResultBanner } from "./submit/ShadcnSubmitResultBanner.js";
 
+type FormContainerT = React.ForwardRefExoticComponent<React.FormHTMLAttributes<HTMLFormElement> & React.RefAttributes<HTMLFormElement>>;
+
+export type ShadcnAutoFormProps<
+  GivenOptions extends OptionsType,
+  SchemaT,
+  ActionFunc extends ActionFunction<GivenOptions, any, any, SchemaT, any> | GlobalActionFunction<any>
+> = AutoFormProps<GivenOptions, SchemaT, ActionFunc> & Omit<ComponentProps<FormContainerT>, "action" | "defaultValue">;
+
 /**
  * Renders a form for an action on a model automatically using Shadcn
  */
@@ -62,7 +70,7 @@ export const makeAutoForm = <Elements extends ShadcnElements>(elements: Elements
     GivenOptions extends OptionsType,
     SchemaT,
     ActionFunc extends ActionFunction<GivenOptions, any, any, SchemaT, any> | GlobalActionFunction<any>
-  >(props: AutoFormProps<GivenOptions, SchemaT, ActionFunc> & Omit<ComponentProps<typeof FormContainer>, "action" | "defaultValue">) {
+  >(props: ShadcnAutoFormProps<GivenOptions, SchemaT, ActionFunc>) {
     const { action, findBy } = props;
     validateAutoFormProps(props);
 
@@ -82,7 +90,7 @@ export const makeAutoForm = <Elements extends ShadcnElements>(elements: Elements
     GivenOptions extends OptionsType,
     SchemaT,
     ActionFunc extends ActionFunction<GivenOptions, any, any, SchemaT, any> | GlobalActionFunction<any>
-  >(props: AutoFormProps<GivenOptions, SchemaT, ActionFunc> & Omit<ComponentProps<typeof FormContainer>, "action">) {
+  >(props: ShadcnAutoFormProps<GivenOptions, SchemaT, ActionFunc>) {
     const { record: _record, action, findBy, ...rest } = props;
 
     const {

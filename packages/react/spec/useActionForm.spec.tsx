@@ -2677,7 +2677,7 @@ describe("useActionForm", () => {
         lastSignedIn: "2024-02-13T03:29:43.645Z",
         resetPasswordToken: null,
         resetPasswordTokenExpiration: null,
-        roles: [{ key: "signed-in", name: "signed-in" }],
+        roles: ["signed-in"],
       },
     });
 

@@ -109,6 +109,10 @@ const unwindEdges = (input: any): any => {
         return input.edges.map((edge: any) => unwindEdges(edge.node));
       }
 
+      if (input.__typename && input.__typename === "Role") {
+        return input.key;
+      }
+
       const result: any = {};
       for (const key of Object.keys(input)) {
         result[key] = unwindEdges(input[key]);
