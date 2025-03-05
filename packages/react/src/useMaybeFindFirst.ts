@@ -1,4 +1,13 @@
-import type { DefaultSelection, FindFirstFunction, GadgetRecord, LimitToKnownKeys, Select } from "@gadgetinc/api-client-core";
+import type {
+  AnyFindManyFunc,
+  AnyFindOneFunc,
+  AnyPublicModelManager,
+  DefaultSelection,
+  FindFirstFunction,
+  GadgetRecord,
+  LimitToKnownKeys,
+  Select,
+} from "@gadgetinc/api-client-core";
 import { findManyOperation, get, hydrateConnection, namespaceDataPath } from "@gadgetinc/api-client-core";
 import { useMemo } from "react";
 import { useGadgetQuery } from "./useGadgetQuery.js";
@@ -36,7 +45,7 @@ export const useMaybeFindFirst = <
   F extends FindFirstFunction<GivenOptions, any, SchemaT, any>,
   Options extends F["optionsType"] & ReadOperationOptions
 >(
-  manager: { findFirst: F },
+  manager: { findFirst: F } & AnyPublicModelManager<AnyFindOneFunc, AnyFindManyFunc, F>,
   options?: LimitToKnownKeys<Options, F["optionsType"] & ReadOperationOptions>
 ): ReadHookResult<null | GadgetRecord<
   Select<Exclude<F["schemaType"], null | undefined>, DefaultSelection<F["selectionType"], Options, F["defaultSelection"]>>
@@ -61,7 +70,7 @@ export const useMaybeFindFirst = <
     if (data) {
       const connection = get(rawResult.data, dataPath);
       if (connection) {
-        data = hydrateConnection(rawResult, connection)[0] ?? null;
+        data = hydrateConnection(rawResult, connection, manager)[0] ?? null;
       } else {
         data = data[0] ?? null;
       }

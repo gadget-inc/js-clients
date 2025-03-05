@@ -1,6 +1,7 @@
 import type { OperationResult } from "@urql/core";
 import { CombinedError } from "@urql/core";
 import { Call, type FieldSelection as BuilderFieldSelection } from "tiny-graphql-query-compiler";
+import type { AnyModelManager } from "./AnyModelManager.js";
 import { DataHydrator } from "./DataHydrator.js";
 import type { ActionFunctionMetadata, AnyActionFunction } from "./GadgetFunctions.js";
 import type { RecordShape } from "./GadgetRecord.js";
@@ -386,25 +387,37 @@ export const getHydrator = (response: Result) => {
   }
 };
 
-export const hydrateRecord = <Shape extends RecordShape = RecordShape>(response: Result, record: any): GadgetRecord<Shape> => {
+export const hydrateRecord = <Shape extends RecordShape = RecordShape>(
+  response: Result,
+  record: any,
+  modelManager?: AnyModelManager
+): GadgetRecord<Shape> => {
   const hydrator = getHydrator(response);
   if (hydrator) {
     record = hydrator.apply(record);
   }
-  return new GadgetRecord<Shape>(record);
+  return new GadgetRecord<Shape>(record, modelManager);
 };
 
-export const hydrateRecordArray = <Shape extends RecordShape = any>(response: Result, records: Array<any>) => {
+export const hydrateRecordArray = <Shape extends RecordShape = any>(
+  response: Result,
+  records: Array<any>,
+  modelManager?: AnyModelManager
+) => {
   const hydrator = getHydrator(response);
   if (hydrator) {
     records = hydrator.apply(records) as any;
   }
-  return records?.map((record) => new GadgetRecord<Shape>(record));
+  return records?.map((record) => new GadgetRecord<Shape>(record, modelManager));
 };
 
-export const hydrateConnection = <Shape extends RecordShape = any>(response: Result, connection: { edges: { node: Node }[] }) => {
+export const hydrateConnection = <Shape extends RecordShape = any>(
+  response: Result,
+  connection: { edges: { node: Node }[] },
+  modelManager?: AnyModelManager
+) => {
   const nodes = connection.edges.map((edge) => edge.node);
-  return hydrateRecordArray<Shape>(response, nodes);
+  return hydrateRecordArray<Shape>(response, nodes, modelManager);
 };
 
 const objObjType = "[object Object]";

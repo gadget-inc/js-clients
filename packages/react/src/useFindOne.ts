@@ -1,4 +1,11 @@
-import type { DefaultSelection, FindOneFunction, GadgetRecord, LimitToKnownKeys, Select } from "@gadgetinc/api-client-core";
+import type {
+  AnyPublicModelManager,
+  DefaultSelection,
+  FindOneFunction,
+  GadgetRecord,
+  LimitToKnownKeys,
+  Select,
+} from "@gadgetinc/api-client-core";
 import { findOneOperation, get, hydrateRecord, namespaceDataPath } from "@gadgetinc/api-client-core";
 import { useMemo } from "react";
 import { useGadgetQuery } from "./useGadgetQuery.js";
@@ -36,7 +43,7 @@ export const useFindOne = <
   F extends FindOneFunction<GivenOptions, any, SchemaT, any>,
   Options extends F["optionsType"] & ReadOperationOptions
 >(
-  manager: { findOne: F },
+  manager: { findOne: F } & AnyPublicModelManager<F>,
   id: string,
   options?: LimitToKnownKeys<Options, F["optionsType"] & ReadOperationOptions>
 ): ReadHookResult<
@@ -61,7 +68,7 @@ export const useFindOne = <
 
     let data = rawResult.data && get(rawResult.data, dataPath);
     if (data) {
-      data = hydrateRecord(rawResult, data);
+      data = hydrateRecord(rawResult, data, manager);
     }
     const error = ErrorWrapper.errorIfDataAbsent(rawResult, dataPath, options?.pause);
 
