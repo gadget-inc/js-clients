@@ -1,9 +1,9 @@
 /* eslint-disable no-throw-literal */
 /* eslint-disable @typescript-eslint/require-await */
 import type { Jsonify } from "type-fest";
+import type { AnyPublicModelManager } from "./AnyModelManager.js";
 import type { GadgetRecord, RecordShape } from "./GadgetRecord.js";
 import type { InternalModelManager } from "./InternalModelManager.js";
-import type { AnyModelManager } from "./ModelManager.js";
 import { GadgetClientError, GadgetOperationError } from "./support.js";
 import type { PaginateOptions } from "./types.js";
 
@@ -14,12 +14,12 @@ type PaginationConfig = {
 
 /** Represents a list of objects returned from the API. Facilitates iterating and paginating. */
 export class GadgetRecordList<Shape extends RecordShape> extends Array<GadgetRecord<Shape>> {
-  modelManager!: AnyModelManager | InternalModelManager<Shape>;
+  modelManager!: AnyPublicModelManager | InternalModelManager<Shape>;
   pagination!: PaginationConfig;
 
   /** Internal method used to create a list. Should not be used by applications. */
   static boot<Shape extends RecordShape>(
-    modelManager: AnyModelManager | InternalModelManager<Shape>,
+    modelManager: AnyPublicModelManager | InternalModelManager<Shape>,
     records: GadgetRecord<Shape>[],
     pagination: PaginationConfig
   ) {
