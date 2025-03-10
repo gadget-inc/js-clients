@@ -148,7 +148,14 @@ const processResult = <Data, Variables extends AnyVariables>(
       if (errors && errors[0]) {
         error = ErrorWrapper.forErrorsResponse(errors, error?.response);
       } else {
-        data = processActionResponse(action.defaultSelection, result, mutationData, action.modelSelectionField, action.hasReturnType);
+        data = processActionResponse(
+          action.defaultSelection,
+          result,
+          mutationData,
+          action.modelSelectionField,
+          action.hasReturnType,
+          action.modelManager
+        );
       }
     }
   }
