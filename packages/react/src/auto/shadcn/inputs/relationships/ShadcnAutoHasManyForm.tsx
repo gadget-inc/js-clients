@@ -89,11 +89,7 @@ export const makeShadcnAutoHasManyForm = ({
                           variant="default"
                           type="button"
                           id={`confirmButton_${metadataPathPrefix}.${idx}`}
-                          onClick={(e) => {
-                            e.preventDefault();
-                            e.stopPropagation();
-                            setEditingIndex(null);
-                          }}
+                          onClick={() => setEditingIndex(null)}
                         >
                           Confirm
                         </Button>
