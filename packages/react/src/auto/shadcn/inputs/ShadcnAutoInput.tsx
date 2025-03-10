@@ -44,6 +44,9 @@ export const makeShadcnAutoInput = (
     | "ScrollArea"
     | "ScrollBar"
     | "Textarea"
+    | "Avatar"
+    | "AvatarImage"
+    | "AvatarFallback"
   >
 ) => {
   const AutoIdInput = makeShadcnAutoIdInput(elements);

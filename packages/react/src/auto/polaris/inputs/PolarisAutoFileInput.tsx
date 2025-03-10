@@ -1,41 +1,37 @@
 import type { DropZoneProps } from "@shopify/polaris";
 import { Box, Button, DropZone, InlineError, InlineStack, Thumbnail } from "@shopify/polaris";
 import { DeleteIcon, NoteIcon } from "@shopify/polaris-icons";
-import { filesize } from "filesize";
 import React, { useMemo } from "react";
 import type { Control } from "../../../useActionForm.js";
 import { isAutoFileFieldValue } from "../../../validationSchema.js";
 import { autoInput } from "../../AutoInput.js";
-import { getFileSizeValidationMessage, imageFileTypes, useFileInputController } from "../../hooks/useFileInputController.js";
+import { imageFileTypes, useFileInputController } from "../../hooks/useFileInputController.js";
 
 export const PolarisAutoFileInput = autoInput((props: { field: string; control?: Control<any> } & Omit<DropZoneProps, "allowMultiple">) => {
   const { field: fieldApiIdentifier, control, ...rest } = props;
-  const { fieldProps, errorMessage, imageThumbnailURL, onFileUpload, clearFileValue, canClearFileValue, validations, metadata } =
-    useFileInputController({
-      field: fieldApiIdentifier,
-      control,
-    });
+
+  const {
+    fieldProps,
+    errorMessage,
+    imageThumbnailURL,
+    onFileUpload,
+    clearFileValue,
+    canClearFileValue,
+    validations,
+    metadata,
+    actionHintParts,
+  } = useFileInputController({
+    field: fieldApiIdentifier,
+    control,
+  });
 
   const fileUploadContainer = useMemo(() => {
-    if (fieldProps.value) return null;
-
-    const actionHintParts = ["Accepts"];
-    if (validations.onlyImages) {
-      actionHintParts.push(`.jpg, .webp, .svg${validations.onlyImages.allowAnimatedImages ? ", .gif" : ""}, and .png`);
-    }
-
-    if (validations.fileSize) {
-      const validation = validations.fileSize;
-      const message = getFileSizeValidationMessage(validation, {
-        inRange: (min, max) => `between ${filesize(min)} and ${filesize(max)}`,
-        max: (max) => `smaller than ${filesize(max)}`,
-        min: (min) => `larger than ${filesize(min)}`,
-      });
-      if (message) actionHintParts.push(message);
+    if (!actionHintParts) {
+      return null;
     }
 
     return <DropZone.FileUpload actionTitle="Add file" actionHint={actionHintParts.length === 1 ? "" : actionHintParts.join(" ")} />;
-  }, [fieldProps.value, validations.fileSize, validations.onlyImages]);
+  }, [actionHintParts]);
 
   const filePreview = useMemo(() => {
     const value = fieldProps.value;
