@@ -124,6 +124,32 @@ export const useFileInputController = (props: {
     [api, fieldProps, fileSizeValidation, path, setError]
   );
 
+  const validations = {
+    fileSize: fileSizeValidation,
+    onlyImages: onlyImagesValidation,
+  };
+
+  const actionHintParts = useMemo(() => {
+    if (fieldProps.value) return null;
+
+    const actionHintParts = ["Accepts"];
+    if (validations.onlyImages) {
+      actionHintParts.push(`.jpg, .webp, .svg${validations.onlyImages.allowAnimatedImages ? ", .gif" : ""}, and .png`);
+    }
+
+    if (validations.fileSize) {
+      const validation = validations.fileSize;
+      const message = getFileSizeValidationMessage(validation, {
+        inRange: (min, max) => `between ${filesize(min)} and ${filesize(max)}`,
+        max: (max) => `smaller than ${filesize(max)}`,
+        min: (min) => `larger than ${filesize(min)}`,
+      });
+      if (message) actionHintParts.push(message);
+    }
+
+    return actionHintParts;
+  }, [fieldProps.value, validations.fileSize, validations.onlyImages?.allowAnimatedImages]);
+
   return {
     fieldProps,
     isError: !!errorFromValidator,
@@ -131,12 +157,10 @@ export const useFileInputController = (props: {
     imageThumbnailURL,
     onFileUpload,
     clearFileValue,
-    validations: {
-      fileSize: fileSizeValidation,
-      onlyImages: onlyImagesValidation,
-    },
+    validations,
     metadata,
     canClearFileValue,
+    actionHintParts,
   };
 };
 
