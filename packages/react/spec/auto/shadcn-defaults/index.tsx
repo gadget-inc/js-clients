@@ -8,16 +8,7 @@ import { Button } from "./components/Button.js";
 import { Calendar } from "./components/Calendar.js";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "./components/Card.js";
 import { Checkbox } from "./components/Checkbox.js";
-import {
-  Command,
-  CommandEmpty,
-  CommandGroup,
-  CommandInput,
-  CommandItem,
-  CommandList,
-  CommandLoading,
-  CommandSeparator,
-} from "./components/Command.js";
+import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem, CommandList, CommandSeparator } from "./components/Command.js";
 import {
   Dialog,
   DialogClose,
@@ -40,8 +31,7 @@ import {
 } from "./components/DropdownMenu.js";
 import { Input } from "./components/Input.js";
 import { Label } from "./components/Label.js";
-import { Popover, PopoverAnchor, PopoverContent, PopoverTrigger } from "./components/Popover.js";
-import { ScrollArea, ScrollBar } from "./components/ScrollArea.js";
+import { Popover, PopoverContent, PopoverTrigger } from "./components/Popover.js";
 import { Skeleton } from "./components/Skeleton.js";
 import { Table, TableBody, TableCaption, TableCell, TableFooter, TableHead, TableHeader, TableRow } from "./components/Table.js";
 import { Textarea } from "./components/TextArea.js";
@@ -73,7 +63,6 @@ export const elements: ShadcnElements = {
   CommandItem,
   CommandList,
   CommandSeparator,
-  CommandLoading,
   Dialog,
   DialogClose,
   DialogContent,
@@ -91,11 +80,8 @@ export const elements: ShadcnElements = {
   DropdownMenuSeparator,
   DropdownMenuItem,
   Popover,
-  PopoverAnchor,
   PopoverContent,
   PopoverTrigger,
-  ScrollArea,
-  ScrollBar,
   Input,
   Label,
   Textarea,

@@ -2,6 +2,8 @@ import type React from "react";
 import type { toast } from "sonner";
 import type { AccordionComponentProps, AccordionContentProps, AccordionItemProps, AccordionTriggerProps } from "./types/accordionTypes.js";
 import type { AvatarFallbackProps, AvatarImageProps, AvatarProps } from "./types/avatarTypes.js";
+import type { InputProps as CommandInputProps, CommandProps, ItemProps } from "./types/commandTypes.js";
+import type { DayPickerProps } from "./types/dateTypes.js";
 import type {
   DialogCloseProps,
   DialogContentProps,
@@ -44,7 +46,7 @@ export interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElemen
 
 type Direction = "ltr" | "rtl";
 
-export interface DropdownMenuProps {
+export interface DropdownMenuProps extends AsChildProps {
   children?: React.ReactNode;
   dir?: Direction;
   open?: boolean;
@@ -53,9 +55,30 @@ export interface DropdownMenuProps {
   modal?: boolean;
 }
 
-/** The props that a command component injected into autocomponent's shadcn must support */
-export interface CommandProps extends React.HTMLAttributes<HTMLDivElement> {
+interface AsChildProps {
+  asChild?: boolean;
+}
+
+export interface DropdownMenuItemProps extends AsChildProps {
+  className?: string;
   children?: React.ReactNode;
+  disabled?: boolean;
+  onSelect?: (value: Event) => void;
+  textValue?: string;
+  value?: string;
+  variant?: "default" | "destructive" | "secondary" | "ghost" | "link" | null;
+}
+
+export interface DropdownMenuTriggerProps extends AsChildProps {
+  className?: string;
+  children?: React.ReactNode;
+}
+
+export interface DropdownMenuContentProps extends AsChildProps {
+  className?: string;
+  children?: React.ReactNode;
+  side?: "top" | "right" | "bottom" | "left";
+  sideOffset?: number;
 }
 
 /** The props that an alert component injected into autocomponent's shadcn must support */
@@ -95,14 +118,6 @@ export type InputProps = React.InputHTMLAttributes<HTMLInputElement>;
 /** The props that a label component injected into autocomponent's shadcn must support */
 export type LabelProps = React.LabelHTMLAttributes<HTMLLabelElement>;
 
-/** The props that a scroll area component injected into autocomponent's shadcn must support */
-export type ScrollAreaProps = React.HTMLAttributes<HTMLDivElement>;
-
-/** The props that a scroll bar component injected into autocomponent's shadcn must support */
-export interface ScrollBarProps extends React.HTMLAttributes<HTMLDivElement> {
-  orientation?: "vertical" | "horizontal";
-}
-
 /** The props that a checkbox component injected into autocomponent's shadcn must support */
 export interface CheckboxProps extends Omit<ButtonProps, "checked" | "defaultChecked"> {
   checked?: boolean | "indeterminate";
@@ -118,14 +133,13 @@ export interface PopoverProps extends React.HTMLAttributes<HTMLDivElement> {
   onOpenChange?: (open: boolean) => void;
 }
 
-/** The props that a popover anchor component injected into autocomponent's shadcn must support */
-export type PopoverAnchorProps = React.HTMLAttributes<HTMLDivElement>;
-
 /** The props that a popover content component injected into autocomponent's shadcn must support */
 export type PopoverContentProps = React.HTMLAttributes<HTMLDivElement>;
 
 /** The props that a popover trigger component injected into autocomponent's shadcn must support */
-export type PopoverTriggerProps = React.HTMLAttributes<HTMLDivElement>;
+export type PopoverTriggerProps = React.HTMLAttributes<HTMLButtonElement> & {
+  asChild?: boolean;
+};
 
 /** The props that a skeleton component injected into autocomponent's shadcn must support */
 export type SkeletonProps = Pick<React.HTMLAttributes<HTMLDivElement>, "className">;
@@ -171,10 +185,7 @@ export interface ShadcnElements {
   Card: React.ComponentType<CardProps>;
 
   /** The Calendar component from shadcn */
-  Calendar: React.ComponentType<any>;
-
-  /** The CommandLoading component from shadcn */
-  CommandLoading: React.ComponentType<React.HTMLAttributes<HTMLDivElement>>;
+  Calendar: React.ComponentType<DayPickerProps>;
 
   /** The CardHeader component from shadcn */
   CardHeader: React.ComponentType<CardHeaderProps>;
@@ -188,17 +199,15 @@ export interface ShadcnElements {
   CardContent: React.ComponentType<CardContentProps>;
 
   /** The Command component from shadcn */
-  //:TODO: This is a hack to get the Command component to work with the CommandItem component. please fix this.
-  Command: React.ForwardRefExoticComponent<React.ComponentType<CommandProps> & React.RefAttributes<HTMLDivElement> & any>;
+  Command: React.ForwardRefExoticComponent<CommandProps & React.RefAttributes<HTMLDivElement>>;
   /** The CommandEmpty component from shadcn */
   CommandEmpty: React.ComponentType<React.HTMLAttributes<HTMLDivElement>>;
   /** The CommandGroup component from shadcn */
   CommandGroup: React.ComponentType<React.HTMLAttributes<HTMLDivElement>>;
-  // /** The CommandInput component from shadcn */
-  // CommandInput: React.ComponentType<React.HTMLAttributes<HTMLDivElement>>;
-  CommandInput: any;
+  /** The CommandInput component from shadcn */
+  CommandInput: React.ForwardRefExoticComponent<CommandInputProps & React.RefAttributes<HTMLInputElement>>;
   /** The CommandItem component from shadcn */
-  CommandItem: React.ComponentType<React.ComponentPropsWithoutRef<any>>;
+  CommandItem: React.ForwardRefExoticComponent<ItemProps & React.RefAttributes<HTMLDivElement>>;
   /** The CommandList component from shadcn */
   CommandList: React.ComponentType<React.HTMLAttributes<HTMLDivElement>>;
   /** The CommandSeparator component from shadcn */
@@ -210,11 +219,11 @@ export interface ShadcnElements {
   /** The DropdownMenu component from shadcn */
   DropdownMenu: React.ComponentType<DropdownMenuProps>;
   /** The DropdownMenuTrigger component from shadcn */
-  DropdownMenuTrigger: React.ComponentType<any>;
+  DropdownMenuTrigger: React.ComponentType<DropdownMenuTriggerProps>;
   /** The DropdownMenuContent component from shadcn */
-  DropdownMenuContent: React.ComponentType<React.HTMLAttributes<HTMLDivElement>>;
+  DropdownMenuContent: React.ComponentType<DropdownMenuContentProps>;
   /** The DropdownMenuItem component from shadcn */
-  DropdownMenuItem: React.ComponentType<any>;
+  DropdownMenuItem: React.ComponentType<DropdownMenuItemProps>;
   /** The DropdownMenuLabel component from shadcn */
   DropdownMenuLabel: React.ComponentType<React.HTMLAttributes<HTMLDivElement>>;
   /** The DropdownMenuSeparator component from shadcn */
@@ -229,24 +238,14 @@ export interface ShadcnElements {
   /** The Textarea component from shadcn */
   Textarea: React.ComponentType<TextareaProps>;
 
-  //TODO: Remove these as they are not used
   /** The Popover component from shadcn */
   Popover: React.ComponentType<PopoverProps>;
-  //TODO: Remove these as they are not used
-  /** The PopoverAnchor component from shadcn */
-  PopoverAnchor: React.ComponentType<PopoverAnchorProps>;
-  //TODO: Remove these as they are not used
+
   /** The PopoverContent component from shadcn */
   PopoverContent: React.ComponentType<PopoverContentProps>;
   /** The PopoverTrigger component from shadcn */
-  //:TODO: This is a hack to get the PopoverTrigger component to work with the Popover component. please fix this.
-  PopoverTrigger: React.ForwardRefExoticComponent<PopoverTriggerProps & React.RefAttributes<HTMLButtonElement> & any>;
 
-  /** The ScrollArea component from shadcn */
-  ScrollArea: React.ForwardRefExoticComponent<ScrollAreaProps & React.RefAttributes<HTMLDivElement> & any>;
-
-  /** The ScrollBar component from shadcn */
-  ScrollBar: React.ComponentType<ScrollBarProps>;
+  PopoverTrigger: React.ForwardRefExoticComponent<PopoverTriggerProps>;
 
   /** The Skeleton component from shadcn */
   Skeleton: React.ComponentType<SkeletonProps>;
