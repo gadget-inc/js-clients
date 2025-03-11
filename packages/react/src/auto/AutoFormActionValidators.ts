@@ -3,7 +3,8 @@ import type { FieldMetadata } from "../metadata.js";
 import { type GlobalActionMetadata, type ModelWithOneActionMetadata } from "../metadata.js";
 import type { RecordIdentifier } from "../use-action-form/types.js";
 import { isPlainObject } from "../use-action-form/utils.js";
-import type { useAutoForm } from "./AutoForm.js";
+import type { OptionsType } from "../utils.js";
+import type { AutoFormProps } from "./AutoForm.js";
 
 export const validateNonBulkAction = (action: ActionFunction<any, any, any, any, any> | GlobalActionFunction<any>) => {
   if (action.isBulk) {
@@ -27,7 +28,13 @@ export const validateTriggersFromApiClient = (action: ActionFunction<any, any, a
   }
 };
 
-export const validateAutoFormProps = (props: Parameters<typeof useAutoForm>[0]) => {
+export const validateAutoFormProps = <
+  GivenOptions extends OptionsType,
+  SchemaT,
+  ActionFunc extends ActionFunction<GivenOptions, any, any, SchemaT, any> | GlobalActionFunction<any>
+>(
+  props: AutoFormProps<GivenOptions, SchemaT, ActionFunc>
+) => {
   if (!("action" in props)) {
     throw new Error(MissingActionPropErrorMessage);
   }

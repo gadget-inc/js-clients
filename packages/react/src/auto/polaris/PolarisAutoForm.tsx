@@ -21,6 +21,12 @@ export const PolarisAutoFormSkeleton = () => (
   </>
 );
 
+export type PolarisAutoFormProps<
+  GivenOptions extends OptionsType,
+  SchemaT,
+  ActionFunc extends ActionFunction<GivenOptions, any, any, SchemaT, any> | GlobalActionFunction<any>
+> = AutoFormProps<GivenOptions, SchemaT, ActionFunc> & Omit<Partial<FormProps>, "action">;
+
 /**
  * Renders a form for an action on a model automatically using Polaris
  */
@@ -29,9 +35,7 @@ export const PolarisAutoForm = <
   SchemaT,
   ActionFunc extends ActionFunction<GivenOptions, any, any, SchemaT, any> | GlobalActionFunction<any>
 >(
-  props: AutoFormProps<GivenOptions, SchemaT, ActionFunc> &
-    // polaris form props also take an 'action' property, which we override with the Gadget form action
-    Omit<Partial<FormProps>, "action">
+  props: PolarisAutoFormProps<GivenOptions, SchemaT, ActionFunc>
 ) => {
   const { action, findBy } = props;
 
@@ -46,7 +50,7 @@ export const PolarisAutoForm = <
     <AutoFormFieldsFromChildComponentsProvider hasCustomFormChildren={React.Children.count(props.children) > 0}>
       <PolarisAutoFormComponent
         key={componentKey}
-        {...(props as AutoFormProps<GivenOptions, SchemaT, ActionFunc> & Omit<Partial<FormProps>, "action"> & { findBy: any })}
+        {...(props as PolarisAutoFormProps<GivenOptions, SchemaT, ActionFunc> & { findBy: any })}
       />
     </AutoFormFieldsFromChildComponentsProvider>
   );
@@ -58,14 +62,9 @@ const PolarisAutoFormComponent = <
   ActionFunc extends ActionFunction<GivenOptions, any, any, SchemaT, any> | GlobalActionFunction<any>
 >(
   //polaris form props also take an 'action' property, which we need to omit here.
-  props: AutoFormProps<GivenOptions, SchemaT, ActionFunc> & Omit<Partial<FormProps>, "action">
+  props: PolarisAutoFormProps<GivenOptions, SchemaT, ActionFunc>
 ) => {
-  const {
-    record: _record,
-    action,
-    findBy,
-    ...rest
-  } = props as AutoFormProps<GivenOptions, SchemaT, ActionFunc> & Omit<Partial<FormProps>, "action"> & { findBy: any };
+  const { record: _record, action, findBy, ...rest } = props as PolarisAutoFormProps<GivenOptions, SchemaT, ActionFunc> & { findBy: any };
 
   const {
     metadata,
@@ -77,7 +76,6 @@ const PolarisAutoFormComponent = <
     formError,
     isSubmitting,
     isSubmitSuccessful,
-    pauseExistingRecordLookup,
     originalFormMethods,
   } = useAutoForm(props);
 
@@ -103,7 +101,7 @@ const PolarisAutoFormComponent = <
     fields,
   };
 
-  if (fetchingMetadata || (findBy && pauseExistingRecordLookup)) {
+  if (fetchingMetadata) {
     return (
       <Form {...rest} onSubmit={submit}>
         <PolarisAutoFormSkeleton />

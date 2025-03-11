@@ -403,7 +403,7 @@ export async function enqueueActionRunner<SchemaT, Action extends AnyActionFunct
   options: EnqueueBackgroundActionOptions<Action> = {}
 ): Promise<Result | Result[]> {
   const normalizedVariableValues = action.isBulk
-    ? disambiguateBulkActionVariables(action as ActionFunctionMetadata<any, any, any, any, any, true>, variables)
+    ? disambiguateBulkActionVariables(action, variables)
     : disambiguateActionVariables(action, variables);
   const variableOptions = setVariableOptionValues(action.variables, normalizedVariableValues);
 

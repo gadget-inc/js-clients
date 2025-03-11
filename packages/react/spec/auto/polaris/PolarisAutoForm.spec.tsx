@@ -1,3 +1,4 @@
+import { GadgetRecord } from "@gadgetinc/api-client-core";
 import { AppProvider } from "@shopify/polaris";
 import translations from "@shopify/polaris/locales/en.json";
 import type { RenderResult } from "@testing-library/react";
@@ -14,7 +15,7 @@ import { testApi as api } from "../../apis.js";
 import { MockClientProvider, mockUrqlClient } from "../../testWrappers.js";
 import { getGizmoModelMetadata } from "../support/gizmoModel.js";
 import { getGlobalActionMetadata } from "../support/globalActions.js";
-import { getWidgetModelMetadata, getWidgetRecord } from "../support/widgetModel.js";
+import { getWidgetModelMetadata, getWidgetRecord, getWidgetRecordResponse } from "../support/widgetModel.js";
 
 const PolarisMockedProviders = (props: { children: ReactNode }) => {
   return (
@@ -40,19 +41,53 @@ describe("PolarisAutoForm", () => {
           loadMockWidgetCreateMetadata();
         }).toThrow("The 'findBy' prop is only allowed for actions that operate with a record identity.");
       });
+      test("it throws an error if a create action is mixed with a record", async () => {
+        expect(() => {
+          // @ts-expect-error: mixing a create and a record should throw a type error too
+          render(<PolarisAutoForm action={api.widget.create} record={new GadgetRecord({ id: "1234" })} />, {
+            wrapper: PolarisMockedProviders,
+          });
+          loadMockWidgetCreateMetadata();
+        }).toThrow("Passing a record to an action that does not operate with a record identity is invalid.");
+      });
 
       describe("for actions that require IDs", () => {
         test("it throws an error for update actions missing the findBy prop", async () => {
           expect(() => {
+            // @ts-expect-error: missing required findBy prop
             render(<PolarisAutoForm action={api.widget.update} />, { wrapper: PolarisMockedProviders });
             loadMockWidgetUpdateMetadata();
           }).toThrow("The 'findBy' prop is required for actions that operate with a record identity.");
         });
+        test("it throws an error for update actions acting on a record without an id", async () => {
+          expect(() => {
+            // @ts-expect-error: missing required id
+            render(<PolarisAutoForm action={api.widget.update} record={new GadgetRecord({})} />, { wrapper: PolarisMockedProviders });
+            loadMockWidgetUpdateMetadata();
+          }).toThrow("Passing a record to an action that operates with a record identity requires the record to have an id.");
+        });
+        test("it throws an error for update actions mixed with a record and a findBy prop", async () => {
+          expect(() => {
+            // @ts-expect-error: mixing a record and a findBy prop
+            render(<PolarisAutoForm action={api.widget.update} record={new GadgetRecord({ id: "123" })} findBy="123" />, {
+              wrapper: PolarisMockedProviders,
+            });
+            loadMockWidgetUpdateMetadata();
+          }).toThrow("Passing both a 'findBy' and a 'record' prop to an AutoForm is invalid.");
+        });
         test("it throws an error for delete actions missing the findBy prop", async () => {
           expect(() => {
+            // @ts-expect-error: missing required findBy prop
             render(<PolarisAutoForm action={api.widget.delete} />, { wrapper: PolarisMockedProviders });
             loadMockWidgetDeleteMetadata();
           }).toThrow("The 'findBy' prop is required for actions that operate with a record identity.");
+        });
+        test("it throws an error for delete actions acting on a record without an id", async () => {
+          expect(() => {
+            // @ts-expect-error: missing required id
+            render(<PolarisAutoForm action={api.widget.delete} record={new GadgetRecord({})} />, { wrapper: PolarisMockedProviders });
+            loadMockWidgetDeleteMetadata();
+          }).toThrow("Passing a record to an action that operates with a record identity requires the record to have an id.");
         });
       });
     });
@@ -103,6 +138,126 @@ describe("PolarisAutoForm", () => {
       expect(variables.name).toEqual("updated test record");
       expect(recordId).toEqual("1145");
     });
+  });
+
+  test("it uses a record that is passed for the id and as default values", async () => {
+    const user = userEvent.setup();
+
+    const result = render(
+      <PolarisAutoForm
+        action={api.widget.update}
+        exclude={["section", "gizmos"]}
+        record={getWidgetRecord({
+          id: "123",
+          name: "Test Widget",
+          inventoryCount: 42,
+        })}
+      />,
+      {
+        wrapper: PolarisMockedProviders,
+      }
+    );
+
+    const { getByLabelText, queryAllByText } = result;
+
+    await act(async () => {
+      loadMockWidgetUpdateMetadata();
+    });
+
+    expect(mockUrqlClient.executeQuery.mock.calls.find((call) => call[0].query.loc.source.body.includes("query widget"))).toBeUndefined();
+
+    expect(getByLabelText("Name")).toHaveValue("Test Widget");
+    expect(getByLabelText("Inventory count")).toHaveValue(42);
+
+    const submitButton = queryAllByText("Submit")[0];
+    expect(submitButton).toHaveTextContent("Submit");
+
+    await act(async () => {
+      const nameElement = getByLabelText("Name");
+      await user.clear(nameElement);
+      await user.click(nameElement);
+      await user.keyboard("updated test record");
+
+      const inventoryCountElement = getByLabelText("Inventory count");
+      await user.clear(inventoryCountElement);
+      await user.click(inventoryCountElement);
+      await user.keyboard("1234");
+
+      await user.click(submitButton);
+    });
+
+    const mutation = mockUrqlClient.executeMutation.mock.calls[0][0];
+    const mutationName = mutation.query.definitions[0].name.value;
+    const variables = mutation.variables.widget;
+    const recordId = mutation.variables.id;
+
+    expect(mutationName).toEqual("updateWidget");
+    expect(variables.inventoryCount).toEqual(1234);
+    expect(recordId).toEqual("123");
+  });
+
+  test("it merges default values with a record that is passed", async () => {
+    const user = userEvent.setup();
+
+    const widgetRecord = getWidgetRecord({
+      id: "123",
+      name: "Test Widget",
+      inventoryCount: 42,
+    });
+
+    const result = render(
+      <PolarisAutoForm
+        action={api.widget.update}
+        exclude={["section", "gizmos"]}
+        record={widgetRecord}
+        defaultValues={{
+          inventoryCount: 100,
+          widget: {
+            name: "Default value for Test Widget",
+          },
+        }}
+      />,
+      {
+        wrapper: PolarisMockedProviders,
+      }
+    );
+
+    const { getByLabelText, queryAllByText } = result;
+
+    await act(async () => {
+      loadMockWidgetUpdateMetadata();
+    });
+
+    expect(mockUrqlClient.executeQuery.mock.calls.find((call) => call[0].query.loc.source.body.includes("query widget"))).toBeUndefined();
+
+    expect(getByLabelText("Name")).toHaveValue("Default value for Test Widget");
+    expect(getByLabelText("Inventory count")).toHaveValue(100);
+
+    const submitButton = queryAllByText("Submit")[0];
+    expect(submitButton).toHaveTextContent("Submit");
+
+    await act(async () => {
+      const nameElement = getByLabelText("Name");
+      await user.clear(nameElement);
+      await user.click(nameElement);
+      await user.keyboard("updated test record");
+
+      const inventoryCountElement = getByLabelText("Inventory count");
+      await user.clear(inventoryCountElement);
+      await user.click(inventoryCountElement);
+      await user.keyboard("1234");
+
+      await user.click(submitButton);
+    });
+
+    const mutation = mockUrqlClient.executeMutation.mock.calls[0][0];
+    const mutationName = mutation.query.definitions[0].name.value;
+    const variables = mutation.variables.widget;
+    const recordId = mutation.variables.id;
+
+    expect(mutationName).toEqual("updateWidget");
+    expect(variables.inventoryCount).toEqual(1234);
+    expect(recordId).toEqual("123");
   });
 
   describe("when used in expanded form with children", () => {
@@ -303,7 +458,7 @@ describe("PolarisAutoForm", () => {
         description: {
           markdown: "example *rich* **text**",
         },
-        embedding: null,
+        embedding: [],
         inventoryCount: 1234,
         isChecked: null,
         metafields: null,
@@ -767,7 +922,7 @@ const mockWidgetUpdateHelperFunctions = {
     mockUrqlClient.executeQuery.pushResponse("widget", {
       stale: false,
       hasNext: false,
-      data: getWidgetRecord({
+      data: getWidgetRecordResponse({
         name: "Test Widget",
         inventoryCount: 42,
       }),

@@ -7,6 +7,7 @@ import type { AutoFormProps } from "../AutoForm.js";
 import { useAutoForm } from "../AutoForm.js";
 import { validateAutoFormProps } from "../AutoFormActionValidators.js";
 import { AutoFormFieldsFromChildComponentsProvider, AutoFormMetadataContext } from "../AutoFormContext.js";
+import { AutoHasManyThroughJoinModelForm } from "../hooks/useHasManyThroughController.js";
 import type { ShadcnElements } from "./elements.js";
 import { makeShadcnAutoInput } from "./inputs/ShadcnAutoInput.js";
 import { makeShadcnAutoBelongsToForm } from "./inputs/relationships/ShadcnAutoBelongsToForm.js";
@@ -15,6 +16,14 @@ import { makeShadcnAutoHasManyThroughForm } from "./inputs/relationships/ShadcnA
 import { makeShadcnAutoHasOneForm } from "./inputs/relationships/ShadcnAutoHasOneForm.js";
 import { makeShadcnAutoSubmit } from "./submit/ShadcnAutoSubmit.js";
 import { makeSubmitResultBanner } from "./submit/ShadcnSubmitResultBanner.js";
+
+type FormContainerT = React.ForwardRefExoticComponent<React.FormHTMLAttributes<HTMLFormElement> & React.RefAttributes<HTMLFormElement>>;
+
+export type ShadcnAutoFormProps<
+  GivenOptions extends OptionsType,
+  SchemaT,
+  ActionFunc extends ActionFunction<GivenOptions, any, any, SchemaT, any> | GlobalActionFunction<any>
+> = AutoFormProps<GivenOptions, SchemaT, ActionFunc> & Omit<ComponentProps<FormContainerT>, "action" | "defaultValue">;
 
 /**
  * Renders a form for an action on a model automatically using Shadcn
@@ -25,18 +34,22 @@ export const makeAutoForm = <Elements extends ShadcnElements>(elements: Elements
   const {
     AutoInput,
     AutoRolesInput,
-    AutoEnumInput,
     AutoFileInput,
+    AutoEnumInput,
     AutoJSONInput,
     AutoDateTimePicker,
     AutoPasswordInput,
     AutoBooleanInput,
     AutoEncryptedStringInput,
     AutoStringInput,
+    AutoEmailInput,
+    AutoUrlInput,
     AutoNumberInput,
-    AutoHiddenInput,
     AutoIdInput,
+    AutoHiddenInput,
     AutoTextAreaInput,
+    AutoRichTextInput,
+
     AutoBelongsToInput,
     AutoHasManyInput,
     AutoHasManyThroughInput,
@@ -58,7 +71,7 @@ export const makeAutoForm = <Elements extends ShadcnElements>(elements: Elements
     GivenOptions extends OptionsType,
     SchemaT,
     ActionFunc extends ActionFunction<GivenOptions, any, any, SchemaT, any> | GlobalActionFunction<any>
-  >(props: AutoFormProps<GivenOptions, SchemaT, ActionFunc> & Omit<ComponentProps<typeof FormContainer>, "action" | "defaultValue">) {
+  >(props: ShadcnAutoFormProps<GivenOptions, SchemaT, ActionFunc>) {
     const { action, findBy } = props;
     validateAutoFormProps(props);
 
@@ -78,7 +91,7 @@ export const makeAutoForm = <Elements extends ShadcnElements>(elements: Elements
     GivenOptions extends OptionsType,
     SchemaT,
     ActionFunc extends ActionFunction<GivenOptions, any, any, SchemaT, any> | GlobalActionFunction<any>
-  >(props: AutoFormProps<GivenOptions, SchemaT, ActionFunc> & Omit<ComponentProps<typeof FormContainer>, "action">) {
+  >(props: ShadcnAutoFormProps<GivenOptions, SchemaT, ActionFunc>) {
     const { record: _record, action, findBy, ...rest } = props;
 
     const {
@@ -171,14 +184,18 @@ export const makeAutoForm = <Elements extends ShadcnElements>(elements: Elements
     AutoBooleanInput,
     AutoEncryptedStringInput,
     AutoStringInput,
+    AutoEmailInput,
+    AutoUrlInput,
     AutoNumberInput,
     AutoIdInput,
     AutoHiddenInput,
     AutoTextAreaInput,
+    AutoRichTextInput,
 
     AutoBelongsToInput,
     AutoHasManyInput,
     AutoHasManyThroughInput,
+    AutoHasManyThroughJoinModelForm,
     AutoHasOneInput,
 
     AutoBelongsToForm,

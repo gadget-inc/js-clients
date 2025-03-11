@@ -1,4 +1,4 @@
-import React, { useCallback, useMemo } from "react";
+import React, { useCallback, useMemo, type ReactNode } from "react";
 import type { Control } from "../../../useActionForm.js";
 import { getPropsWithoutRef } from "../../../utils.js";
 import { autoInput } from "../../AutoInput.js";
@@ -15,7 +15,7 @@ export interface EnumOption {
 export type AutoRolesInputProps = {
   field: string; // Field API identifier
   control?: Control<any>;
-  label?: string;
+  label?: ReactNode;
   options?: EnumOption[];
 };
 

@@ -33,10 +33,11 @@ export const useBelongsToController = (props: Omit<AutoRelationshipFormProps, "c
 };
 
 export const useBelongsToInputController = (props: AutoRelationshipInputProps) => {
-  const { field, control, optionLabel } = props;
+  const { field, control, optionLabel, recordFilter } = props;
   const { fieldMetadata, relatedModelOptions, isLoading, errorMessage } = useBelongsToController({
     field,
     recordLabel: { primary: optionLabel },
+    recordFilter,
   });
   const { path } = fieldMetadata;
 

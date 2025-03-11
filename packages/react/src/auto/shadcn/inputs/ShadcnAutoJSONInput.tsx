@@ -1,4 +1,4 @@
-import React from "react";
+import React, { type ReactNode } from "react";
 import type { Control } from "react-hook-form";
 import { useFocus } from "../../../useFocus.js";
 import { getPropsWithoutRef } from "../../../utils.js";
@@ -12,7 +12,7 @@ export const makeShadcnAutoJSONInput = ({ Label, Textarea }: Pick<ShadcnElements
     props: {
       field: string; // The field API identifier
       control?: Control<any>;
-      label?: string;
+      label?: ReactNode;
     } & Partial<React.HTMLAttributes<HTMLTextAreaElement>>
   ) {
     const [isFocused, focusProps] = useFocus();

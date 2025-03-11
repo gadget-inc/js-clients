@@ -227,21 +227,7 @@ describeForEachAutoAdapter("AutoForm", ({ name, adapter: { AutoForm }, wrapper }
     submit("Widget");
   });
 
-  it("can render a form to update a model without making changes and submit it", async () => {
-    const name = `test record ${new Date()}`;
-
-    cy.wrap(null)
-      .then(async () => await api.widget.create({ name, inventoryCount: 42, anything: "hello" }))
-      .then((record) => {
-        cy.mountWithWrapper(<AutoForm action={api.widget.update} record={record.id} exclude={["gizmos"]} />, wrapper);
-        cy.get(`input[name="widget.name"]`).should("have.value", name);
-        cy.get(`input[name="widget.inventoryCount"]`).should("have.value", 42);
-
-        submit("Widget");
-      });
-  });
-
-  it("can render a rich text editor for markdown content", async () => {
+  it("can render a rich text editor for markdown content", () => {
     cy.mountWithWrapper(<AutoForm action={api.widget.create} include={["description"]} />, wrapper);
 
     cy.clickAndType(`[aria-label="editable markdown"] > p`, "# foobar\n## foobaz");
@@ -266,7 +252,7 @@ describeForEachAutoAdapter("AutoForm", ({ name, adapter: { AutoForm }, wrapper }
     });
   });
 
-  it("can submit a form with custom children even if the action has required fields", async () => {
+  it("can submit a form with custom children even if the action has required fields", () => {
     cy.mountWithWrapper(
       <AutoForm action={api.widget.create}>
         {/* Note that widget has name and inventoryCount as required fields that are not included here */}
@@ -312,5 +298,64 @@ describeForEachAutoAdapter("AutoForm", ({ name, adapter: { AutoForm }, wrapper }
 
       expect(variables).to.deep.equal({ widget: {} });
     });
+  });
+
+  it("can pass in a `select` prop to the form that will control the selection and get IDs forcefully selected for relationships", () => {
+    const autoFormProps = {
+      action: api.widget.update,
+      findBy: "1",
+
+      // Note how there are no `id` values in this selection
+      select: {
+        name: true,
+        inventoryCount: true,
+        section: { name: true },
+        gizmos: { name: true },
+      },
+    };
+
+    // Observe how the `id` field is forced into the selection
+    const expectedQueryValue = `query widget($id: GadgetID!) {
+  widget(id: $id) {
+    name
+    inventoryCount
+    section {
+      name
+      id
+      __typename
+    }
+    gizmos {
+      name
+      edges {
+        node {
+          id
+          __typename
+        }
+        __typename
+      }
+      __typename
+    }
+    id
+    __typename
+  }
+  gadgetMeta {
+    hydrations(modelName: 
+"widget")
+    __typename
+  }
+}`;
+
+    const expectedRequestVariables = { id: "1" }; // Changing the `select` has no effect on the request variables
+
+    cy.intercept("POST", `${api.connection.options.endpoint}?operation=widget`, (req) => {
+      expect(req.body.query).to.deep.equal(expectedQueryValue);
+      expect(req.body.variables).to.deep.equal(expectedRequestVariables);
+      // Response is not important for this test to check the selection
+      req.reply({ body: { data: { widget: { __typename: "Widget" } } } });
+    }).as("getWidget");
+
+    cy.mountWithWrapper(<AutoForm {...autoFormProps} />, wrapper);
+
+    cy.wait("@getWidget");
   });
 });

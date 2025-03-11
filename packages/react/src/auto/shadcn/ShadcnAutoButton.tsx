@@ -19,15 +19,10 @@ export const makeAutoButton =
   ) => {
     const { fetching, isDestructive, run, label, buttonProps } = useAutoButtonController({
       onSuccess: (_result) => {
-        toast({
-          title: `${label} succeeded.`,
-        });
+        toast.success(`${label} succeeded.`);
       },
       onError: (error, _result) => {
-        toast({
-          title: `${label} encountered an error: ${error.message}.`,
-          variant: "destructive",
-        });
+        toast.error(`${label} encountered an error`, { description: error.message });
       },
       ...props,
     });

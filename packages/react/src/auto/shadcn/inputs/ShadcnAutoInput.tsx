@@ -1,4 +1,4 @@
-import React from "react";
+import React, { type ReactNode } from "react";
 import { FieldType } from "../../../metadata.js";
 import { autoInput } from "../../AutoInput.js";
 import { useFieldMetadata } from "../../hooks/useFieldMetadata.js";
@@ -46,6 +46,9 @@ export const makeShadcnAutoInput = (
     | "PopoverTrigger"
     | "PopoverContent"
     | "Textarea"
+    | "Avatar"
+    | "AvatarImage"
+    | "AvatarFallback"
   >
 ) => {
   const AutoIdInput = makeShadcnAutoIdInput(elements);
@@ -67,7 +70,7 @@ export const makeShadcnAutoInput = (
   const AutoHasManyThroughInput = makeShadcnAutoHasManyThroughInput(elements);
   const AutoHiddenInput = makeShadcnAutoHiddenInput(elements);
 
-  const AutoInput = autoInput(function AutoInput(props: { field: string; label?: string }) {
+  const AutoInput = autoInput(function AutoInput(props: { field: string; label?: ReactNode }) {
     const { metadata } = useFieldMetadata(props.field);
     const config = metadata.configuration;
 
@@ -125,10 +128,14 @@ export const makeShadcnAutoInput = (
     AutoBooleanInput,
     AutoEncryptedStringInput,
     AutoStringInput,
+    AutoEmailInput: AutoStringInput,
+    AutoUrlInput: AutoStringInput,
     AutoNumberInput,
     AutoIdInput,
     AutoHiddenInput,
     AutoTextAreaInput,
+    AutoRichTextInput,
+
     AutoBelongsToInput,
     AutoHasManyInput,
     AutoHasManyThroughInput,

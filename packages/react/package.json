@@ -1,6 +1,6 @@
 {
   "name": "@gadgetinc/react",
-  "version": "0.18.10-alpha.1",
+  "version": "0.19.1",
   "files": [
     "README.md",
     "dist/**/*",
@@ -48,7 +48,7 @@
   },
   "dependencies": {
     "@0no-co/graphql.web": "^1.0.4",
-    "@gadgetinc/api-client-core": "^0.15.40",
+    "@gadgetinc/api-client-core": "^0.15.41",
     "@hookform/resolvers": "^3.3.1",
     "filesize": "^10.1.2",
     "pluralize": "^8.0.0",
@@ -75,11 +75,11 @@
     "@pollyjs/adapter-xhr": "^6.0.6",
     "@pollyjs/core": "^6.0.6",
     "@pollyjs/persister-fs": "^6.0.6",
+    "@radix-ui/react-accordion": "^1.2.2",
     "@radix-ui/react-avatar": "^1.1.2",
     "@radix-ui/react-checkbox": "^1.1.3",
-    "@radix-ui/react-dropdown-menu": "^2.1.5",
     "@radix-ui/react-dialog": "^1.1.5",
-    "@radix-ui/react-accordion": "^1.2.2",
+    "@radix-ui/react-dropdown-menu": "^2.1.5",
     "@radix-ui/react-label": "^2.1.1",
     "@radix-ui/react-popover": "^1.1.5",
     "@radix-ui/react-scroll-area": "^1.2.2",
@@ -129,6 +129,7 @@
     "react-day-picker": "^9.5.1",
     "react-dom": "^18.2.0",
     "setup-polly-jest": "^0.11.0",
+    "sonner": "^2.0.1",
     "storybook": "^8.1.6",
     "tailwind-merge": "^2.6.0",
     "tailwindcss": "^3.4.17",

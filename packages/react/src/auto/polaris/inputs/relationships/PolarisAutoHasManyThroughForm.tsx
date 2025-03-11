@@ -5,11 +5,11 @@ import { useHasManyThroughForm } from "../../../../useHasManyThroughForm.js";
 import { autoRelationshipForm } from "../../../AutoInput.js";
 import { RelationshipContext } from "../../../hooks/useAutoRelationship.js";
 import { getRecordAsOption } from "../../../hooks/useRelatedModel.js";
-import type { AutoRelationshipFormProps, DisplayedRecordOption } from "../../../interfaces/AutoRelationshipInputProps.js";
+import type { AutoHasManyThroughFormProps, DisplayedRecordOption } from "../../../interfaces/AutoRelationshipInputProps.js";
 import { RelatedModelOptionsPopover, RelatedModelOptionsSearch } from "./RelatedModelOptions.js";
 import { renderOptionLabel } from "./utils.js";
 
-export const PolarisAutoHasManyThroughForm = autoRelationshipForm((props: AutoRelationshipFormProps) => {
+export const PolarisAutoHasManyThroughForm = autoRelationshipForm((props: AutoHasManyThroughFormProps) => {
   const [addingSibling, setAddingSibling] = useState(false);
   const {
     append,
@@ -32,8 +32,8 @@ export const PolarisAutoHasManyThroughForm = autoRelationshipForm((props: AutoRe
   } = useHasManyThroughForm(props);
 
   return (
-    <BlockStack gap="200">
-      <InlineGrid columns="1fr auto">
+    <BlockStack gap="300">
+      <InlineGrid columns="1fr auto" alignItems="center">
         {props.label ?? (
           <Text as="h2" variant="headingSm">
             {siblingModelName}
@@ -63,7 +63,7 @@ export const PolarisAutoHasManyThroughForm = autoRelationshipForm((props: AutoRe
       </InlineGrid>
 
       {joinRecords.length > 0 ? (
-        <BlockStack as="ul">
+        <BlockStack as="ul" gap="300">
           {joinRecords.map(([fieldKey, idx, record]) => {
             const siblingRecord = inverseRelatedModelField && record[inverseRelatedModelField];
 
@@ -74,8 +74,8 @@ export const PolarisAutoHasManyThroughForm = autoRelationshipForm((props: AutoRe
             });
 
             return (
-              <Box key={fieldKey} padding="300">
-                <InlineGrid columns="1fr auto" gap="200" alignItems="center">
+              <Box key={fieldKey}>
+                <InlineGrid columns="1fr auto" alignItems="center">
                   <Box borderColor="border" borderWidth="025" borderRadius="200">
                     <div style={{ display: "flex", padding: "8px" }}>
                       <Box>
@@ -85,13 +85,13 @@ export const PolarisAutoHasManyThroughForm = autoRelationshipForm((props: AutoRe
                         </InlineStack>
                         {siblingOption?.secondary && renderOptionLabel(siblingOption.secondary, "secondary")}
                       </Box>
-                      <div style={{ marginLeft: "auto", alignSelf: "center" }}>
+                      <div style={{ marginLeft: "auto", alignSelf: "center", height: "100%" }}>
                         <Button
                           id={`deleteButton_${pathPrefix}.${idx}`}
                           variant="tertiary"
                           icon={XCircleIcon}
                           onClick={() => remove(idx)}
-                        />
+                        ></Button>
                       </div>
                     </div>
                     {props.children && (

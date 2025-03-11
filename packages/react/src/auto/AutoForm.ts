@@ -1,16 +1,29 @@
-import type { ActionFunction, FieldSelection, GadgetRecord, GlobalActionFunction } from "@gadgetinc/api-client-core";
+import type {
+  ActionFunction,
+  DeepFilterNever,
+  FieldSelection,
+  GadgetRecord,
+  GlobalActionFunction,
+  Select,
+} from "@gadgetinc/api-client-core";
 import { yupResolver } from "@hookform/resolvers/yup";
 import type { ReactNode } from "react";
 import React, { useEffect, useMemo, useRef } from "react";
 import type { GadgetHasManyThroughConfig, GadgetObjectFieldConfig } from "../internal/gql/graphql.js";
 import type { FieldMetadata, GlobalActionMetadata, ModelWithOneActionMetadata } from "../metadata.js";
 import { FieldType, buildAutoFormFieldList, isModelActionMetadata, useActionMetadata } from "../metadata.js";
-import type { AnyActionWithId, RecordIdentifier, UseActionFormHookStateData, UseActionFormSubmit } from "../use-action-form/types.js";
-import { isPlainObject, processDefaultValues } from "../use-action-form/utils.js";
-import { isRelationshipField, pathListToSelection } from "../use-table/helpers.js";
-import type { FieldErrors, UseFormReturn } from "../useActionForm.js";
+import type {
+  AnyActionWithId,
+  AnyUpsertAction,
+  RecordIdentifier,
+  UseActionFormHookStateData,
+  UseActionFormSubmit,
+} from "../use-action-form/types.js";
+import { isPlainObject, processDefaultValues, toDefaultValues } from "../use-action-form/utils.js";
+import { getRelatedModelFields, isHasManyOrHasManyThroughField, isRelationshipField, pathListToSelection } from "../use-table/helpers.js";
+import type { FieldErrors, FieldValues, UseFormReturn } from "../useActionForm.js";
 import { useActionForm } from "../useActionForm.js";
-import { get, getFlattenedObjectKeys, type ErrorWrapper, type OptionsType } from "../utils.js";
+import { get, getFlattenedObjectKeys, set, type ErrorWrapper, type OptionsType } from "../utils.js";
 import { validationSchema } from "../validationSchema.js";
 import {
   validateFindByObjectWithMetadata,
@@ -18,7 +31,7 @@ import {
   validateTriggersFromApiClient,
   validateTriggersFromMetadata,
 } from "./AutoFormActionValidators.js";
-import { useFieldsFromChildComponents } from "./AutoFormContext.js";
+import { useAssertNotNestedInAnotherAutoForm, useFieldsFromChildComponents } from "./AutoFormContext.js";
 import { isAutoInput } from "./AutoInput.js";
 import { getSelectedPathsFromOptionLabel } from "./hooks/useSelectedPathsFromRecordLabel.js";
 import { getOptionLabelsFromRecordLabel, type RecordLabel } from "./interfaces/AutoRelationshipInputProps.js";
@@ -39,24 +52,34 @@ type AutoFormPropsWithChildren = {
   children?: ReactNode;
 };
 
+/** Helper type for the record shape in AutoFormProps */
+type AutoFormRecordType<ActionFunc> = ActionFunc extends {
+  schemaType: infer SchemaType;
+  defaultSelection: infer DefaultSelection extends FieldSelection | null | undefined;
+}
+  ? GadgetRecord<
+      { id: string } & (SchemaType extends null | undefined ? unknown : Partial<DeepFilterNever<Select<SchemaType, DefaultSelection>>>)
+    >
+  : never;
+
 /** The props that any <AutoForm/> component accepts */
 export type AutoFormProps<
   GivenOptions extends OptionsType,
   SchemaT,
-  ActionFunc extends ActionFunction<GivenOptions, any, any, SchemaT, any> | GlobalActionFunction<any>
+  ActionFunc extends ActionFunction<GivenOptions, any, any, SchemaT, any> | GlobalActionFunction<any>,
+  ExtraFormVariables extends FieldValues = Record<string, unknown>,
+  DefaultValues = Partial<ActionFunc["variablesType"]> & ExtraFormVariables
 > = (AutoFormPropsWithChildren | AutoFormPropsWithoutChildren) & {
   /** Which action this fom will run on submit */
   action: ActionFunc;
-  /** A record for this form to act on */
-  record?: GadgetRecord<any>;
+  /** What to show the user once the form has been submitted successfully */
+  successContent?: ReactNode;
   /** An allowlist of fields to render within the form. Only these fields will be rendered as inputs. */
   include?: string[];
   /** A denylist of fields to render within the form. Every field except these fields will be rendered as inputs. */
   exclude?: string[];
   /** A set of field values to pre-populate the form with on load. Only applies to create forms. */
-  defaultValues?: ActionFunc["variablesType"];
-  /** What to show the user once the form has been submitted successfully */
-  successContent?: ReactNode;
+  defaultValues?: DefaultValues;
   /** Selection object to pass to the form to retrieve existing values. This will override the default selection based on included fields */
   select?: GivenOptions["select"];
   /** Called when the form submission completes successfully on the backend */
@@ -66,17 +89,48 @@ export type AutoFormProps<
   /** Enable debug logging for this form */
   debug?: boolean;
 } & (ActionFunc extends AnyActionWithId<GivenOptions>
-    ? {
-        /**
-         * The record identifier to run this action on, if it already exists.
-         * Should be undefined for create actions, or a record ID (or finder) for update / etc actions
-         **/
-        findBy?: RecordIdentifier;
-      }
-    : // eslint-disable-next-line @typescript-eslint/ban-types
-      {
+    ?
+        | {
+            /**
+             * The record identifier to run this action on, if it already exists.
+             * Should be undefined for create actions, or a record ID (or finder) for update / etc actions
+             **/
+            findBy: RecordIdentifier;
+            /** If a findBy is provided, you can't pass a record option */
+            record?: never;
+          }
+        | {
+            /**
+             * If a record is provided, you can't pass a findBy option
+             **/
+            findBy?: never;
+            /** A record for this form to act on; will be merged with the default values */
+            record: AutoFormRecordType<ActionFunc>;
+          }
+    : ActionFunc extends AnyUpsertAction
+    ?
+        | {
+            /**
+             * The record identifier to run this action on, if it already exists.
+             * Should be undefined for create actions, or a record ID (or finder) for update / etc actions
+             **/
+            findBy?: RecordIdentifier;
+            /** If a findBy is provided, you can't pass a record option */
+            record?: never;
+          }
+        | {
+            /**
+             * If a record is provided, you can't pass a findBy option
+             **/
+            findBy?: never;
+            /** A record for this form to act on; will be merged with the default values */
+            record?: AutoFormRecordType<ActionFunc>;
+          }
+    : {
         /** This action doesn't run against existing records, so you can't pass a findBy option */
         findBy?: never;
+        /** This action doesn't operate with a record, so you can't pass a record option */
+        record?: never;
       });
 
 /**
@@ -153,23 +207,68 @@ export const useFormFields = (
 
 const useFormSelection = (props: {
   modelApiIdentifier: string | undefined;
-  fields: readonly { path: string; metadata: FieldMetadata }[];
+  rootFieldsMetadata: FieldMetadata[];
+  fields: readonly { path: string; metadata: FieldMetadata }[]; // From smart selection through child parsing and AutoInput registration
   select?: FieldSelection;
 }): FieldSelection | undefined => {
-  const { modelApiIdentifier, fields, select } = props;
+  const { modelApiIdentifier, fields, select, rootFieldsMetadata } = props;
 
-  if (select) {
-    return select;
-  }
+  const selectFromProps = useMemo(() => {
+    if (!select || !modelApiIdentifier) {
+      return;
+    }
+    return forceIdsIntoSelect({ select, rootFieldsMetadata });
+  }, [select, modelApiIdentifier, rootFieldsMetadata]);
 
   if (!modelApiIdentifier || !fields.length) {
     return;
+  }
+
+  if (selectFromProps) {
+    return selectFromProps;
   }
 
   const paths = fields.map((f) => f.path.replace(new RegExp(`^${modelApiIdentifier}\\.`), ""));
   const fieldMetaData = fields.map((f) => f.metadata);
 
   return pathListToSelection(modelApiIdentifier, paths, fieldMetaData);
+};
+
+const forceIdsIntoSelect = (props: { select: FieldSelection; rootFieldsMetadata: FieldMetadata[] }) => {
+  const { select: originalSelect, rootFieldsMetadata } = props;
+  const select = structuredClone(originalSelect);
+
+  select.id = true; // Always select the ID for the root model
+
+  const addIdToSelection = (selectPath: string, fieldMetadata: FieldMetadata) => {
+    if (!isRelationshipField(fieldMetadata)) {
+      return; // Non relationships do not need additional selection
+    }
+
+    const existingSelection = get(select, selectPath);
+    if (!existingSelection || typeof existingSelection !== "object") {
+      // Do not go deeper than what is defined in the select object
+      return;
+    }
+
+    const isManyRelation = isHasManyOrHasManyThroughField(fieldMetadata);
+    const currentFieldSelectPathPrefix = isManyRelation ? `${selectPath}.edges.node` : `${selectPath}`;
+    const idPath = `${currentFieldSelectPathPrefix}.id`;
+
+    set(select, idPath, true);
+
+    const relatedModelFields = getRelatedModelFields(fieldMetadata);
+
+    for (const relatedModelField of relatedModelFields) {
+      addIdToSelection(`${currentFieldSelectPathPrefix}.${relatedModelField.apiIdentifier}`, relatedModelField);
+    }
+  };
+
+  for (const field of rootFieldsMetadata) {
+    addIdToSelection(field.apiIdentifier, field);
+  }
+
+  return select;
 };
 
 const validateFormFieldApiIdentifierUniqueness = (
@@ -226,6 +325,8 @@ export const useAutoForm = <
   originalFormMethods: UseFormReturn<any, any>;
 } => {
   const { action, record, onSuccess, onFailure, findBy, select } = props;
+
+  useAssertNotNestedInAnotherAutoForm();
   validateNonBulkAction(action);
   validateTriggersFromApiClient(action);
 
@@ -236,13 +337,14 @@ export const useAutoForm = <
 
   validateTriggersFromMetadata(metadata);
 
+  const rootFieldsMetadata = getRootFieldsFromMetadata(metadata);
+
   const { hasCustomFormChildren, fieldSet, registerFields } = useFieldsFromChildComponents();
   const hasRegisteredFieldsFromChildren = hasCustomFormChildren && fieldSet.size > 0;
   const registeredFieldsFromChildren = hasCustomFormChildren
     ? extractPathsFromChildren({
         children: "children" in props ? props.children : undefined,
-        getFieldsToSelectOnRecordLabelCallback: (path) =>
-          getAllRelatedModelFieldApiIdentifiers({ path, rootFieldsMetadata: getRootFieldsFromMetadata(metadata) }),
+        getFieldsToSelectOnRecordLabelCallback: (path) => getAllRelatedModelFieldApiIdentifiers({ path, rootFieldsMetadata }),
       })
     : [];
 
@@ -250,7 +352,7 @@ export const useAutoForm = <
     registerFields(registeredFieldsFromChildren);
   }, [registeredFieldsFromChildren.join(","), registerFields]);
 
-  if (hasRegisteredFieldsFromChildren) {
+  if (hasCustomFormChildren) {
     include = Array.from(fieldSet);
     exclude = undefined;
   }
@@ -264,30 +366,57 @@ export const useAutoForm = <
   const operatesWithRecordId = !!(metadata && isModelActionMetadata(metadata) && metadata.action.operatesWithRecordIdentity);
   const modelApiIdentifier = action.type == "action" ? action.modelApiIdentifier : undefined;
   const isUpsertMetaAction = isMetadataForUpsertAction(metadata);
-  const selection = useFormSelection({ modelApiIdentifier, fields, select });
+  const selection = useFormSelection({ modelApiIdentifier, rootFieldsMetadata, fields, select });
   const isUpsertWithFindBy = isUpsertMetaAction && !!findBy;
   const fieldPathsToValidate = useMemo(() => fields.map(({ path }) => path), [fields]);
 
   const defaultValues: Record<string, unknown> = useMemo(() => {
+    let mergedDefaultValues: Record<string, unknown> | undefined = props.defaultValues;
+
+    if (action.type === "action" && record) {
+      const defaultValuesForModel: Record<string, unknown> = props.defaultValues?.[modelApiIdentifier!] ?? {};
+
+      const defaultValuesForRecord = toDefaultValues(undefined, record);
+
+      const id = defaultValuesForModel.id ?? props.defaultValues?.id ?? record?.id;
+
+      mergedDefaultValues = {
+        ...props.defaultValues,
+        [modelApiIdentifier!]: {
+          id,
+          ...defaultValuesForRecord,
+          ...Object.fromEntries(
+            Object.keys(defaultValuesForRecord).flatMap((key) =>
+              props.defaultValues && key in props.defaultValues ? [[key, props.defaultValues[key]]] : []
+            )
+          ),
+          ...defaultValuesForModel,
+        },
+        id,
+      };
+    }
+
     return (
-      props.defaultValues ??
+      mergedDefaultValues ??
       (action.type === "globalAction"
         ? {}
         : {
             [modelApiIdentifier!]:
               record ??
               (!(operatesWithRecordId || isUpsertWithFindBy) && metadata && isModelActionMetadata(metadata) && metadata.defaultRecord),
-            id:
-              typeof findBy === "string"
-                ? findBy // ID is given directly
-                : undefined, // Set by the retrieved existing record if object based findBy value
+            id: record
+              ? record.id
+              : typeof findBy === "string"
+              ? findBy // ID is given directly
+              : undefined, // Set by the retrieved existing record if object based findBy value
           })
     );
   }, [props.defaultValues, action.type, modelApiIdentifier, record, operatesWithRecordId, metadata, isUpsertWithFindBy, findBy]);
 
-  const pauseExistingRecordLookup = !("findBy" in props)
-    ? true // Always pause without findBy. No need to do a lookup
-    : fetchingMetadata || !selection; // Pause until we have the field selection to include in the lookup
+  const pauseExistingRecordLookup =
+    record || !("findBy" in props)
+      ? true // Always pause if a record is passed or no findBy. No need to do a lookup
+      : fetchingMetadata || !selection; // Pause until we have the field selection to include in the lookup
 
   // setup the form state for the action
   const {
@@ -393,12 +522,12 @@ export const useAutoForm = <
   });
 
   const isCreateAction = !operatesWithRecordId && !isDeleteAction && !isGlobalAction && !isUpsertMetaAction;
-  const isUpsertWithoutFindBy = isUpsertMetaAction && !isUpsertWithFindBy;
+  const isUpsertWithoutProvidedId = isUpsertMetaAction && !isUpsertWithFindBy && !record?.id;
 
   // Post submit form reset
   useEffect(() => {
     if (isSubmitSuccessful) {
-      if (isCreateAction || isUpsertWithoutFindBy || isGlobalAction) {
+      if (isCreateAction || isUpsertWithoutProvidedId || isGlobalAction) {
         const resetValues =
           modelApiIdentifier && selection ? resetValuesForDefaultValues(modelApiIdentifier, defaultValues, selection) : defaultValues;
 
@@ -408,7 +537,7 @@ export const useAutoForm = <
   }, [
     isSubmitSuccessful,
     isCreateAction,
-    isUpsertWithoutFindBy,
+    isUpsertWithoutProvidedId,
     isGlobalAction,
     reset,
     defaultValues,
@@ -427,7 +556,7 @@ export const useAutoForm = <
   }, [isReady, defaultValues, originalFormMethods, modelApiIdentifier]);
 
   if (!fetchingMetadata) {
-    validateFindBy({ operatesWithRecordId, hasFindBy: !!findBy, isUpsertMetaAction: !!isUpsertMetaAction });
+    validateFindBy({ operatesWithRecordId, hasFindBy: !!findBy, isUpsertMetaAction: !!isUpsertMetaAction, record });
   }
 
   useEffect(() => {
@@ -567,17 +696,34 @@ const removeIdFieldsUnlessUpsertWithoutFindBy = (isUpsertWithFindBy?: boolean) =
   };
 };
 
-const validateFindBy = (params: { operatesWithRecordId: boolean; hasFindBy: boolean; isUpsertMetaAction: boolean }) => {
-  const { operatesWithRecordId, hasFindBy, isUpsertMetaAction } = params;
+const validateFindBy = (params: {
+  operatesWithRecordId: boolean;
+  hasFindBy: boolean;
+  isUpsertMetaAction: boolean;
+  record?: GadgetRecord<any>;
+}) => {
+  const { operatesWithRecordId, hasFindBy, isUpsertMetaAction, record } = params;
+
+  if (hasFindBy && record) {
+    throw new Error("Passing both a 'findBy' and a 'record' prop to an AutoForm is invalid.");
+  }
 
   if (isUpsertMetaAction) {
     return; // optional findBy value for upsert meta actions
   }
 
-  if (operatesWithRecordId && !hasFindBy) {
-    throw new Error("The 'findBy' prop is required for actions that operate with a record identity.");
-  } else if (!operatesWithRecordId && hasFindBy) {
-    throw new Error("The 'findBy' prop is only allowed for actions that operate with a record identity.");
+  if (record) {
+    if (operatesWithRecordId && !record.id) {
+      throw new Error("Passing a record to an action that operates with a record identity requires the record to have an id.");
+    } else if (!operatesWithRecordId) {
+      throw new Error("Passing a record to an action that does not operate with a record identity is invalid.");
+    }
+  } else {
+    if (operatesWithRecordId && !hasFindBy) {
+      throw new Error("The 'findBy' prop is required for actions that operate with a record identity.");
+    } else if (!operatesWithRecordId && hasFindBy) {
+      throw new Error("The 'findBy' prop is only allowed for actions that operate with a record identity.");
+    }
   }
 };
 

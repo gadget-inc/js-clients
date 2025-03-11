@@ -1,26 +1,8 @@
 /* eslint-disable jest/valid-expect */
 import React from "react";
-import { elements } from "../../../../spec/auto/shadcn-defaults/index.js";
-import { PolarisAutoInput } from "../../../../src/auto/polaris/inputs/PolarisAutoInput.js";
-import { makeShadcnAutoInput } from "../../../../src/auto/shadcn/inputs/ShadcnAutoInput.js";
 import { humanizeCamelCase } from "../../../../src/utils.js";
 import { api } from "../../../support/api.js";
 import { describeForEachAutoAdapter } from "../../../support/auto.js";
-import { SUITE_NAMES } from "../../../support/constants.js";
-
-const { AutoInput: ShadcnAutoInput } = makeShadcnAutoInput(elements);
-
-const AutoInput = (props: { suiteName: string; field: string; label?: string }) => {
-  if (props.suiteName === SUITE_NAMES.POLARIS) {
-    return <PolarisAutoInput {...props} />;
-  }
-
-  if (props.suiteName === SUITE_NAMES.SHADCN) {
-    return <ShadcnAutoInput {...props} />;
-  }
-
-  throw new Error("Invalid suite name");
-};
 
 const widgetFieldApiIds = [
   "name",
@@ -38,7 +20,7 @@ const widgetFieldApiIds = [
   "mustBeLongString",
 ];
 
-describeForEachAutoAdapter("AutoForm - input labels", ({ name, adapter: { AutoForm }, wrapper }) => {
+describeForEachAutoAdapter("AutoForm - input labels", ({ name, adapter: { AutoForm, AutoInput }, wrapper }) => {
   beforeEach(() => {
     cy.viewport("macbook-13");
   });

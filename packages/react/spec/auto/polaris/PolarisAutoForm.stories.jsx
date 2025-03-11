@@ -4,6 +4,7 @@ import React, { useState } from "react";
 import { Provider } from "../../../src/GadgetProvider.tsx";
 import { PolarisAutoForm } from "../../../src/auto/polaris/PolarisAutoForm.tsx";
 import { PolarisAutoInput } from "../../../src/auto/polaris/inputs/PolarisAutoInput.tsx";
+import { PolarisAutoHasManyThroughInput } from "../../../src/auto/polaris/inputs/relationships/PolarisAutoHasManyThroughInput.tsx";
 import { PolarisAutoSubmit } from "../../../src/auto/polaris/submit/PolarisAutoSubmit.tsx";
 import { FormProvider, useForm } from "../../../src/useActionForm.ts";
 import { testApi as api } from "../../apis.ts";
@@ -226,5 +227,12 @@ export const hasManyThrough = {
   name: "HasManyThrough fields",
   args: {
     action: api.hasManyThrough.baseModel.create,
+    children: (
+      <>
+        <PolarisAutoInput field="baseModelName" />
+        <PolarisAutoHasManyThroughInput field="baseModelHmtField" />
+        <PolarisAutoSubmit />
+      </>
+    ),
   },
 };

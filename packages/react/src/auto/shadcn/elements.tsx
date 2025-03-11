@@ -1,4 +1,5 @@
 import type React from "react";
+import type { toast } from "sonner";
 import type { AccordionComponentProps, AccordionContentProps, AccordionItemProps, AccordionTriggerProps } from "./types/accordionTypes.js";
 import type { AvatarFallbackProps, AvatarImageProps, AvatarProps } from "./types/avatarTypes.js";
 import type { InputProps as CommandInputProps, CommandProps, ItemProps } from "./types/commandTypes.js";
@@ -250,8 +251,8 @@ export interface ShadcnElements {
   /** The Skeleton component from shadcn */
   Skeleton: React.ComponentType<SkeletonProps>;
 
-  /** The toast imperative function from shadcn */
-  toast: (props: ToasterToast) => void;
+  /** The toast imperative function from sonner */
+  toast: typeof toast;
 
   /** The Table component from shadcn */
   Table: React.ComponentType<TableProps>;

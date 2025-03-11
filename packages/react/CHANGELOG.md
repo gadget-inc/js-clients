@@ -1,5 +1,48 @@
 # @gadgetinc/react
 
+## 0.19.0
+
+### Patch Changes
+
+- Added new relationship form components to allow users to create, update, and delete related records through the relationship fields of an action's model.
+  - New components:
+    - `AutoHasOneForm`
+    - `AutoBelongsToForm`
+    - `AutoHasManyForm`
+    - `AutoHasManyThroughForm`
+  - See more - https://docs.gadget.dev/reference/react/auto
+- Added new `recordFilter` prop to `AutoHasManyInput` and `AutoBelongsToInput` to allow the related model options in the dropdown to be filtered
+- Added `findResult` to the return value of `useActionForm` for direct access to the existing record found when using the `findBy` prop
+- Added `select` prop to `useAutoForm` and `AutoForm` to allow for conditional selection of fields on the existing record found when using the `findBy` prop
+- **BREAKING CHANGE** - Added error for using dot.path.fields in the `field` prop of AutoInputs to traverse record relationships. This functionality was inconsistent and is now better handled by the new relationship form components
+- **BREAKING CHANGE** - In AutoForm relationship input components, the callback signature of `optionLabel` has been changed
+  - Previously
+    - `(record: Record<string, any> ) => ReactNode`
+  - Now
+    - `(props: { record: Record<string, any> }) => ReactNode`
+  - Affected components:
+    - `AutoBelongsToInput`
+    - `AutoHasManyInput`
+  - How to migrate:
+    - Update your reference in the `optionLabel` callback argument to be `{ record }` instead of `record`
+- **BREAKING CHANGE** - Added validations to field type specific auto inputs to ensure that the given `field` prop corresponds to the correct Gadget field type.
+  - Affected components
+    - `AutoRolesInput`
+    - `AutoFileInput`
+    - `AutoDateTimePicker`
+    - `AutoJSONInput`
+    - `AutoRichTextInput`
+    - `AutoPasswordInput`
+    - `AutoBooleanInput`
+    - `AutoEnumInput`
+    - Relationships
+      - `AutoBelongsToInput`
+      - `AutoHasManyInput`
+  - Effect
+    - If the given field API id corresponds to a field that is not of the expected type, the auto input will throw an error
+  - FIX
+    - Ensure that the correct field type specific auto input is used for the given field.
+
 ## 0.18.7
 
 ### Patch Changes

@@ -1,8 +1,9 @@
 import { assert } from "@gadgetinc/api-client-core";
-import { useCallback, useMemo } from "react";
+import React, { createContext, useCallback, useContext, useMemo, type ReactNode } from "react";
 import { GadgetFieldType, type GadgetHasManyThroughConfig } from "../../internal/gql/graphql.js";
 import { useFieldArray } from "../../useActionForm.js";
 import type { AutoRelationshipFormProps, AutoRelationshipInputProps } from "../interfaces/AutoRelationshipInputProps.js";
+import { useRelationshipContext } from "./useAutoRelationship.js";
 import { useFieldMetadata } from "./useFieldMetadata.js";
 import { useRelatedModelOptions } from "./useRelatedModel.js";
 import { assertFieldType } from "./utils.js";
@@ -56,6 +57,7 @@ export const useHasManyThroughInputController = (props: AutoRelationshipInputPro
   const { fieldMetadata, fieldArray, records, relatedModelOptions, inverseRelatedModelField } = useHasManyThroughController({
     field: props.field,
     recordLabel: props.optionLabel,
+    recordFilter: props.recordFilter,
   });
 
   const { relatedModel } = relatedModelOptions;
@@ -114,4 +116,28 @@ export const useHasManyThroughInputController = (props: AutoRelationshipInputPro
     onSelectRecord,
     onRemoveRecord,
   };
+};
+
+export const AutoHasManyThroughJoinModelForm = (props: {
+  /** The React children containing inputs on the join model in an AutoHasManyThroughForm component */
+  children?: ReactNode;
+}) => {
+  useEnsureInHasManyThroughForm();
+
+  return <HasManyThroughJoinModelContext.Provider value={true}>{props.children}</HasManyThroughJoinModelContext.Provider>;
+};
+
+export const HasManyThroughJoinModelContext = createContext<null | true>(null);
+
+// Export a hook that just checks if we're inside the component
+export const useIsInHasManyThroughJoinModelInput = () => {
+  return useContext(HasManyThroughJoinModelContext) !== null;
+};
+
+export const useEnsureInHasManyThroughForm = () => {
+  const relationshipContext = useRelationshipContext();
+
+  if (!relationshipContext || !relationshipContext.hasManyThrough) {
+    throw new Error(`'AutoJoinModelInput' can only be used within a 'AutoHasManyThroughForm' component`);
+  }
 };

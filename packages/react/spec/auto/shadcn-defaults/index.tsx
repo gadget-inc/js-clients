@@ -1,3 +1,4 @@
+import { toast } from "sonner";
 import type { ShadcnElements } from "../../../src/auto/shadcn/elements.js";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "./components/Accordion.js";
 import { Alert, AlertDescription, AlertTitle } from "./components/Alert.js";
@@ -34,9 +35,7 @@ import { Popover, PopoverContent, PopoverTrigger } from "./components/Popover.js
 import { Skeleton } from "./components/Skeleton.js";
 import { Table, TableBody, TableCaption, TableCell, TableFooter, TableHead, TableHeader, TableRow } from "./components/Table.js";
 import { Textarea } from "./components/TextArea.js";
-import { Toaster } from "./components/Toaster.js";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "./components/Tooltip.js";
-import { toast } from "./hooks/useToast.js";
 import { cn } from "./utils.js";
 
 export const elements: ShadcnElements = {
@@ -106,4 +105,4 @@ export const elements: ShadcnElements = {
   cn,
 };
 
-export { Toaster };
+export { Toaster } from "./components/Toaster.js";

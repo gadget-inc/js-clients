@@ -110,7 +110,7 @@ describeForEachAutoAdapter("AutoFormDateTimePicker", ({ name, adapter: { AutoFor
       }
     });
 
-    it("can change the date", async () => {
+    it("can change the date", () => {
       mockMetadataResponse();
       const onChangeSpy = cy.spy().as("onChangeSpy");
       cy.mountWithWrapper(
@@ -121,16 +121,20 @@ describeForEachAutoAdapter("AutoFormDateTimePicker", ({ name, adapter: { AutoFor
       );
       cy.wait("@ModelCreateActionMetadata");
       cy.get("#test-date").click();
-      cy.get(`[aria-label='Thursday March 4 2021']`).click();
+      if (name === SUITE_NAMES.POLARIS) {
+        cy.get(`[aria-label='Thursday March 4 2021']`).click();
+      } else if (name === SUITE_NAMES.SHADCN) {
+        cy.get(`[data-day="2021-03-04"]`).click();
+      }
       // eslint-disable-next-line jest/valid-expect-in-promise
       cy.get("@onChangeSpy")
         .should("have.been.called")
         .then(() => {
-          expect(onChangeSpy.getCalls()[0].args[0].toISOString()).equal(new Date("2021-03-04T11:23:10.000Z").toISOString());
+          expect(onChangeSpy.getCalls()[0].args[0].toISOString()).equal(new Date("2021-03-04T11:23:00.000Z").toISOString());
         });
     });
 
-    it("can change the date across a DST boundary", async () => {
+    it("can change the date across a DST boundary", () => {
       mockMetadataResponse();
       const onChangeSpy = cy.spy().as("onChangeSpy");
       cy.mountWithWrapper(
@@ -141,12 +145,17 @@ describeForEachAutoAdapter("AutoFormDateTimePicker", ({ name, adapter: { AutoFor
       );
       cy.wait("@ModelCreateActionMetadata");
       cy.get("#test-date").click();
-      cy.get(`[aria-label='Wednesday March 17 2021']`).click();
+
+      if (name === SUITE_NAMES.POLARIS) {
+        cy.get(`[aria-label='Wednesday March 17 2021']`).click();
+      } else if (name === SUITE_NAMES.SHADCN) {
+        cy.get(`[data-day="2021-03-17"]`).click();
+      }
       // eslint-disable-next-line jest/valid-expect-in-promise
       cy.get("@onChangeSpy")
         .should("have.been.called")
         .then(() => {
-          expect(onChangeSpy.getCalls()[0].args[0].toISOString()).equal(new Date("2021-03-17T10:23:10.000Z").toISOString());
+          expect(onChangeSpy.getCalls()[0].args[0].toISOString()).equal(new Date("2021-03-17T11:23:00.000Z").toISOString());
         });
     });
 

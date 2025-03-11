@@ -2,6 +2,7 @@ import { AppProvider, BlockStack, Box, Button, Card, FormLayout, InlineStack, La
 import translations from "@shopify/polaris/locales/en.json";
 import React, { useState } from "react";
 import { Provider } from "../../../../src/GadgetProvider.tsx";
+import { AutoHasManyThroughJoinModelForm } from "../../../../src/auto/hooks/useHasManyThroughController.tsx";
 import { PolarisAutoForm } from "../../../../src/auto/polaris/PolarisAutoForm.tsx";
 import { PolarisAutoInput } from "../../../../src/auto/polaris/inputs/PolarisAutoInput.tsx";
 import { PolarisAutoBelongsToForm } from "../../../../src/auto/polaris/inputs/relationships/PolarisAutoBelongsToForm.tsx";
@@ -45,7 +46,7 @@ const ExampleWidgetAutoRelatedForm = (props) => {
             field="doodad"
             recordLabel={{
               primary: "name",
-              secondary: (record) => `${record.weight} (${record.active})`,
+              secondary: ({ record }) => `${record.weight} (${record.active})`,
               tertiary: "size",
             }}
           >
@@ -63,7 +64,7 @@ const ExampleWidgetAutoRelatedForm = (props) => {
             recordLabel={{
               primary: "name",
               secondary: "orientation",
-              tertiary: (record) => <Text>{record.id}</Text>,
+              tertiary: ({ record }) => <Text>{record.name}</Text>,
             }}
           >
             <PolarisAutoInput field="name" />
@@ -208,10 +209,13 @@ const ExampleCourseCreateRelatedForm = (props) => {
               tertiary: "department",
             }}
           >
-            <InlineStack>
+            <InlineStack gap="300">
               {/* Fields on the join model. The prefix is the model API id of the join model */}
-              <PolarisAutoInput field="registration.effectiveFrom" />
-              <PolarisAutoInput field="registration.effectiveTo" />
+
+              <AutoHasManyThroughJoinModelForm>
+                <PolarisAutoInput field="effectiveTo" />
+                <PolarisAutoInput field="effectiveFrom" />
+              </AutoHasManyThroughJoinModelForm>
 
               {/* Fields on the sibling model. No prefix */}
               <PolarisAutoInput field="firstName" />
@@ -273,8 +277,10 @@ const ExampleTweeterFollowerCreateRelatedForm = (props) => {
             }}
           >
             <InlineStack>
-              <PolarisAutoInput field="friendship.started" />
-              <PolarisAutoInput field="friendship.ended" />
+              <AutoHasManyThroughJoinModelForm>
+                <PolarisAutoInput field="started" />
+                <PolarisAutoInput field="ended" />
+              </AutoHasManyThroughJoinModelForm>
             </InlineStack>
           </PolarisAutoHasManyThroughForm>
         </Card>
@@ -287,8 +293,10 @@ const ExampleTweeterFollowerCreateRelatedForm = (props) => {
             }}
           >
             <InlineStack>
-              <PolarisAutoInput field="friendship.started" />
-              <PolarisAutoInput field="friendship.ended" />
+              <AutoHasManyThroughJoinModelForm>
+                <PolarisAutoInput field="started" />
+                <PolarisAutoInput field="ended" />
+              </AutoHasManyThroughJoinModelForm>
             </InlineStack>
           </PolarisAutoHasManyThroughForm>
         </Card>
@@ -322,7 +330,7 @@ export const DeepRelationshipChain = {
                   <PolarisAutoHasManyForm
                     field="cities"
                     recordLabel={{
-                      primary: (record) => `${record.englishName} ${record.localName ? `(${record.localName})` : ""}`,
+                      primary: ({ record }) => `${record.englishName} ${record.localName ? `(${record.localName})` : ""}`,
                     }}
                   >
                     <PolarisAutoInput field="englishName" />
@@ -348,36 +356,31 @@ export const DeepRelationshipChain = {
     // `id` fields must be selected at every step of the relationship field chain because they control if a nested action will become an update or a create.
     // If there is no ID, only creates nested actions will be used to create new nested records instead of updating existing ones.
     select: {
-      id: true,
       englishName: true,
       size: true,
       continents: {
         edges: {
           node: {
-            id: true,
             englishName: true,
             countries: {
               edges: {
                 node: {
-                  id: true,
                   englishName: true,
                   cities: {
                     edges: {
                       node: {
-                        id: true,
                         englishName: true,
                         localName: true,
                         citizens: {
                           edges: {
                             node: {
-                              id: true,
                               firstName: true,
                               lastName: true,
-                              cityOfMayorDuty: { id: true, englishName: true, localName: true },
+                              cityOfMayorDuty: { englishName: true, localName: true },
                             },
                           },
                         },
-                        mayor: { id: true, firstName: true, lastName: true },
+                        mayor: { firstName: true, lastName: true },
                       },
                     },
                   },
