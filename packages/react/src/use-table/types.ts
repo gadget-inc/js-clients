@@ -47,19 +47,63 @@ export type TableColumn = {
 export type TableRow = Record<string, ColumnValueType | ReactNode>;
 
 export interface TableOptions {
+  /**
+   * The number of records to show per page.
+   */
   pageSize?: number;
+  /**
+   * The initial pagination cursor to control the initial page of records to show.
+   * Pagination cursors are returned from the API.
+   */
   initialCursor?: string;
-  initialDirection?: "forward" | "backward";
+  /**
+   * The initial column sort order that the table will be initialized with.
+   * @example
+   * ```tsx
+   * <AutoTable model={api.user} initialSort={{ id: "Descending" }} />
+   * ```
+   */
   initialSort?: { [column: string]: SortOrder };
+  /**
+   * The columns to show in the table represented as (string | CellDetailColumn | CustomCellColumn)[]
+   * - As a string, this represents the API identifier of the field to display.
+   * - As a CellDetailColumn, this a
+   * - As a CustomCellColumn, this represents a custom column to display.
+   */
   columns?: (string | CellDetailColumn | CustomCellColumn)[];
+  /**
+   * A string array of API identifiers for model actions to be excluded from the table.
+   */
   excludeColumns?: string[];
+  /**
+   * The actions to be shown in the table for selected records, represented as (string | ActionCallback)[]
+   * - strings in the array represent the API identifies of actions in the model that can be run on the selected records
+   * - ActionCallback is an object with a label and action property. The action property can be a string representing a model action or a function on that will be called with the selected records
+   */
   actions?: (string | ActionCallback)[];
+
+  /**
+   * A string array of API identifiers for model actions to be excluded from the table.
+   */
   excludeActions?: string[];
 }
 
 export type ActionCallback = {
+  /**
+   * Label for the action
+   */
   label: string;
+
+  /**
+   * Indicates if the action should be promoted in the table
+   */
   promoted?: boolean;
+
+  /**
+   * The action to be performed when the action is clicked
+   * - as a string, this represents the API identifier of the action in the model
+   * - as a function, this will be called with the selected records
+   */
   action: string | ((records: GadgetRecord<any>[]) => any);
 };
 

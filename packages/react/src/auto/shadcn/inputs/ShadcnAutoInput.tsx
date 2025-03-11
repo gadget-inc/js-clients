@@ -1,7 +1,8 @@
-import React, { type ReactNode } from "react";
+import React from "react";
 import { FieldType } from "../../../metadata.js";
 import { autoInput } from "../../AutoInput.js";
 import { useFieldMetadata } from "../../hooks/useFieldMetadata.js";
+import { type AutoInputProps } from "../../shared/AutoInputTypes.js";
 import type { ShadcnElements } from "../elements.js";
 import { makeShadcnAutoBooleanInput } from "./ShadcnAutoBooleanInput.js";
 import { makeShadcnAutoDateTimePicker } from "./ShadcnAutoDateTimePicker.js";
@@ -70,7 +71,7 @@ export const makeShadcnAutoInput = (
   const AutoHasManyThroughInput = makeShadcnAutoHasManyThroughInput(elements);
   const AutoHiddenInput = makeShadcnAutoHiddenInput(elements);
 
-  const AutoInput = autoInput(function AutoInput(props: { field: string; label?: ReactNode }) {
+  const AutoInput = autoInput(function AutoInput(props: AutoInputProps) {
     const { metadata } = useFieldMetadata(props.field);
     const config = metadata.configuration;
 

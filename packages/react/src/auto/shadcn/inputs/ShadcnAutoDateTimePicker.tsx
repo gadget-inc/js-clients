@@ -1,5 +1,6 @@
 import { CalendarIcon } from "@radix-ui/react-icons";
 import React, { useCallback, useMemo, useState, type ReactNode } from "react";
+import { type AutoDateTimeInputProps } from "src/auto/shared/AutoInputTypes.js";
 import {
   copyTime,
   formatDate,
@@ -45,18 +46,13 @@ export const makeShadcnAutoDateTimePicker = ({
   PopoverTrigger,
   PopoverContent,
 }: Pick<ShadcnElements, "Button" | "Calendar" | "Label" | "Popover" | "PopoverTrigger" | "PopoverContent">) => {
-  function ShadcnAutoDateTimePicker(props: {
-    field: string;
-    id?: string;
-    value?: Date;
-    onChange?: (value: Date) => void;
-    error?: string;
-    includeTime?: boolean;
-    hideTimePopover?: boolean;
-    label?: ReactNode;
-    datePickerProps?: Partial<DatePickerProps>;
-    timePickerProps?: { label?: ReactNode; placeholder?: string };
-  }) {
+  function ShadcnAutoDateTimePicker(
+    props: {
+      id?: string;
+      datePickerProps?: Partial<DatePickerProps>;
+      timePickerProps?: { label?: ReactNode; placeholder?: string };
+    } & AutoDateTimeInputProps
+  ) {
     const [timeParseError, setTimeParseError] = useState(false);
     const { localTz, localTime, onChange, value, fieldProps, metadata, fieldState } = useDateTimeField({
       field: props.field,
