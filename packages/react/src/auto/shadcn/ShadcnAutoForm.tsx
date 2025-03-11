@@ -7,6 +7,7 @@ import type { AutoFormProps } from "../AutoForm.js";
 import { useAutoForm } from "../AutoForm.js";
 import { validateAutoFormProps } from "../AutoFormActionValidators.js";
 import { AutoFormFieldsFromChildComponentsProvider, AutoFormMetadataContext } from "../AutoFormContext.js";
+import { AutoHasManyThroughJoinModelForm } from "../hooks/useHasManyThroughController.js";
 import type { ShadcnElements } from "./elements.js";
 import { makeShadcnAutoInput } from "./inputs/ShadcnAutoInput.js";
 import { makeShadcnAutoBelongsToForm } from "./inputs/relationships/ShadcnAutoBelongsToForm.js";
@@ -194,6 +195,7 @@ export const makeAutoForm = <Elements extends ShadcnElements>(elements: Elements
     AutoBelongsToInput,
     AutoHasManyInput,
     AutoHasManyThroughInput,
+    AutoHasManyThroughJoinModelForm,
     AutoHasOneInput,
 
     AutoBelongsToForm,
