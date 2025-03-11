@@ -1,7 +1,7 @@
-import React, { type InputHTMLAttributes, type ReactNode } from "react";
-import type { Control } from "../../../useActionForm.js";
+import React, { type InputHTMLAttributes } from "react";
 import { autoInput } from "../../AutoInput.js";
 import { useStringInputController } from "../../hooks/useStringInputController.js";
+import { type AutoTextInputProps } from "../../shared/AutoInputTypes.js";
 import { ShadcnRequired } from "../ShadcnRequired.js";
 import type { ShadcnElements } from "../elements.js";
 
@@ -13,11 +13,9 @@ import type { ShadcnElements } from "../elements.js";
 export const makeShadcnAutoStringInput = ({ Input, Label }: Pick<ShadcnElements, "Input" | "Label">) => {
   function ShadcnAutoStringInput(
     props: {
-      field: string;
-      control?: Control<any>;
-      label?: ReactNode;
       suffix?: React.ReactNode;
-    } & Partial<InputHTMLAttributes<HTMLInputElement>>
+    } & AutoTextInputProps &
+      Partial<InputHTMLAttributes<HTMLInputElement>>
   ) {
     const { field, control, label: customLabel, suffix, ...restProps } = props;
     const stringInputController = useStringInputController({ field, control });

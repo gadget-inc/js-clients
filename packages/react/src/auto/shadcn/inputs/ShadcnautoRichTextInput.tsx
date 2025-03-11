@@ -1,7 +1,7 @@
-import type { ComponentProps } from "react";
 import React from "react";
 import { autoInput } from "../../AutoInput.js";
 import { useStringInputController } from "../../hooks/useStringInputController.js";
+import { type AutoRichTextInputProps } from "../../shared/AutoRichTextInputProps.js";
 import { ShadcnRequired } from "../ShadcnRequired.js";
 import type { ShadcnElements } from "../elements.js";
 
@@ -9,7 +9,7 @@ import type { ShadcnElements } from "../elements.js";
 const AutoRichTextInput = React.lazy(() => import("../../shared/AutoRichTextInput.js"));
 
 export const makeShadcnAutoRichTextInput = ({ Label }: Pick<ShadcnElements, "Label">) => {
-  function ShadcnAutoRichTextInput(props: ComponentProps<typeof AutoRichTextInput>) {
+  function ShadcnAutoRichTextInput(props: AutoRichTextInputProps) {
     const controller = useStringInputController({ field: props.field, control: props.control });
 
     return (

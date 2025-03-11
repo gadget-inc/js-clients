@@ -41,6 +41,10 @@ export interface AutoDateTimeInputProps extends ControllableWithReactHookForm {
    * The label of the DateTime field
    */
   label?: InputLabel;
+  /**
+   * Indicates if the Gadget DateTime field includes a time component
+   */
+  includeTime?: boolean;
 }
 
 export interface AutoEncryptedStringInputProps extends ControllableWithReactHookForm {

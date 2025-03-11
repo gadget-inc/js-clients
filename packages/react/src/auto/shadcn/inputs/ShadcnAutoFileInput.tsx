@@ -1,9 +1,9 @@
 import { DeleteIcon, File } from "lucide-react";
-import React, { HtmlHTMLAttributes, useMemo, type ReactNode } from "react";
-import type { Control } from "../../../useActionForm.js";
+import React, { HtmlHTMLAttributes, useMemo } from "react";
 import { isAutoFileFieldValue } from "../../../validationSchema.js";
 import { autoInput } from "../../AutoInput.js";
 import { useFileInputController } from "../../hooks/useFileInputController.js";
+import { type AutoFileInputProps } from "../../shared/AutoInputTypes.js";
 import { ShadcnElements } from "../elements.js";
 
 export const makeShadcnAutoFileInput = ({
@@ -14,13 +14,7 @@ export const makeShadcnAutoFileInput = ({
   AvatarImage,
   AvatarFallback,
 }: Pick<ShadcnElements, "Input" | "Label" | "Button" | "Avatar" | "AvatarImage" | "AvatarFallback">) => {
-  function ShadcnAutoFileInput(
-    props: {
-      field: string;
-      control?: Control<any>;
-      label?: ReactNode;
-    } & HtmlHTMLAttributes<HTMLDivElement>
-  ) {
+  function ShadcnAutoFileInput(props: AutoFileInputProps & HtmlHTMLAttributes<HTMLDivElement>) {
     const { field: fieldApiIdentifier, control, ...rest } = props;
 
     const {
