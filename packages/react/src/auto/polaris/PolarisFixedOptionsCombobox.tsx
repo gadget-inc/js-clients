@@ -3,24 +3,55 @@ import { Autocomplete, InlineStack, Tag } from "@shopify/polaris";
 import React, { useCallback, useMemo, useState, type ReactNode } from "react";
 
 export interface EnumOption {
+  /**
+   * The label for the option
+   */
   label: string;
+  /**
+   * The value for the option
+   */
   value: string;
 }
 
 type BaseComboboxProps = Omit<AutocompleteProps, "selected" | "onSelect" | "textField"> & {
+  /**
+   * The label for the combobox
+   */
   label?: ReactNode;
+
+  /**
+   * The selectable options in the combobox
+   */
   options: EnumOption[];
 };
 
 export type PolarisFixedOptionsSingleComboboxProps = BaseComboboxProps & {
+  /**
+   * The selected value
+   */
   value?: string;
+  /**
+   * Called with the new selected value on value change
+   */
   onChange: (value: string) => void;
+  /**
+   * Indicates that the combobox does not allow multiple selections
+   */
   allowMultiple?: false;
 };
 
 export type PolarisFixedOptionsMultiComboboxProps = BaseComboboxProps & {
+  /**
+   * The selected values
+   */
   value?: string[];
+  /**
+   * Called with the new selected values on value change
+   */
   onChange: (value: string[]) => void;
+  /**
+   * Indicates that the combobox allows multiple selections
+   */
   allowMultiple: true;
 };
 

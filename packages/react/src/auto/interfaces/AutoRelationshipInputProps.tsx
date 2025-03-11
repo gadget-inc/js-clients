@@ -1,19 +1,17 @@
 import type { FindManyOptions } from "@gadgetinc/api-client-core";
 import type { ReactNode } from "react";
-import type { Control } from "../../useActionForm.js";
+import type { ControllableWithReactHookForm } from "../shared/AutoInputTypes.js";
 
 export type RecordFilter = FindManyOptions["filter"];
 
-export interface AutoRelationshipInputProps {
+/**
+ * Props for the relationship input component in AutoForm
+ */
+export interface AutoRelationshipInputProps extends ControllableWithReactHookForm {
   /**
    * The API identifier of the field.
    */
   field: string;
-
-  /**
-   * The control to use for the input.
-   */
-  control?: Control<any>;
 
   /**
    * The label to display for each related model record option in the input.

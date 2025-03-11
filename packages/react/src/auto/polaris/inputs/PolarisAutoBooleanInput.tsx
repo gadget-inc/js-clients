@@ -2,10 +2,24 @@ import type { CheckboxProps } from "@shopify/polaris";
 import { Checkbox } from "@shopify/polaris";
 import React from "react";
 import { useBooleanInputController } from "../../../auto/hooks/useBooleanInputController.js";
-import type { Control } from "../../../useActionForm.js";
 import { autoInput } from "../../AutoInput.js";
+import { type AutoBooleanInputProps } from "../../shared/AutoInputTypes.js";
 
-export const PolarisAutoBooleanInput = autoInput((props: { field: string; control?: Control<any> } & Partial<CheckboxProps>) => {
+export type PolarisAutoBooleanInputProps = AutoBooleanInputProps & Partial<CheckboxProps>;
+
+/**
+ * A checkbox input that is controlled by react-hook-form
+ * @example
+ * ```tsx
+ * <AutoForm action={api.modelA.create}>
+ *   <AutoBooleanInput field="isActive" />
+ * </AutoForm>
+ * ```
+ * @param props.field - The API identifier of the Boolean field
+ * @param props.label - The label of the checkbox
+ * @returns The checkbox input component
+ */
+export const PolarisAutoBooleanInput = autoInput((props: PolarisAutoBooleanInputProps) => {
   const { field: _field, control: _control, ...rest } = props;
   const { error, fieldProps, metadata } = useBooleanInputController(props);
 

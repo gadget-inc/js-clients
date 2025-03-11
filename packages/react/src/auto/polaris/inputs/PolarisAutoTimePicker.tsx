@@ -63,16 +63,42 @@ export interface DateTimeState {
 
 type DateTimeKey = keyof DateTimeState;
 
-const PolarisAutoTimePicker = (props: {
+export interface PolarisAutoTimePickerProps {
+  /**
+   * React Hook Form ControllerRenderProps object that controls the DateTime field
+   */
   fieldProps: ControllerRenderProps<FieldValues, string>;
+  /**
+   * The value of the DateTime field
+   */
   value?: Date;
+  /**
+   * Called when the value of the DateTime field changes
+   */
   onChange?: (value: Date) => void;
-  localTime?: Date;
+  /**
+   * The HTML ID of the DateTime field
+   */
   id?: string;
+  /**
+   * Props to pass to the Polaris TimePicker component
+   */
   timePickerProps?: Partial<TextFieldProps>;
+  /**
+   * Indicates if the time popover should be hidden
+   */
   hideTimePopover?: boolean;
+  /**
+   * The local time of the DateTime field
+   */
+  localTime?: Date;
+  /**
+   * The local time zone of the DateTime field
+   */
   localTz?: string;
-}) => {
+}
+
+const PolarisAutoTimePicker = (props: PolarisAutoTimePickerProps) => {
   const [valueProp, setValueProp] = useState(props.value);
   const [timeString, setTimeString] = useState(props.localTime ? getTimeString(getDateTimeObjectFromDate(props.localTime)) : "");
   const [timePopoverActive, setTimePopoverActive] = useState(false);

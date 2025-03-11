@@ -3,7 +3,15 @@ import { Banner } from "@shopify/polaris";
 import React from "react";
 import { useResultBannerController } from "../../hooks/useResultBannerController.js";
 
-export const PolarisSubmitResultBanner = (props: { successBannerProps?: BannerProps; errorBannerProps?: BannerProps }) => {
+type PolarisSubmitResultBannerProps = { successBannerProps?: BannerProps; errorBannerProps?: BannerProps };
+
+/**
+ * A banner that displays the result of an AutoForm submission.
+ * @param props.successBannerProps - The props for the successful banner
+ * @param props.errorBannerProps - The props for the error banner
+ * @returns The banner component
+ */
+export const PolarisSubmitResultBanner = (props: PolarisSubmitResultBannerProps) => {
   return (
     <>
       <PolarisSubmitSuccessfulBanner {...props.successBannerProps} />
