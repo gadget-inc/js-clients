@@ -17,24 +17,11 @@ export const makeShadcnAutoHasOneInput = ({
   Label,
   CommandList,
   CommandEmpty,
-  CommandLoading,
   CommandGroup,
   Checkbox,
-  ScrollArea,
 }: Pick<
   ShadcnElements,
-  | "Badge"
-  | "Button"
-  | "Command"
-  | "CommandItem"
-  | "CommandList"
-  | "CommandLoading"
-  | "CommandEmpty"
-  | "CommandGroup"
-  | "CommandInput"
-  | "Label"
-  | "Checkbox"
-  | "ScrollArea"
+  "Badge" | "Button" | "Command" | "CommandItem" | "CommandList" | "CommandEmpty" | "CommandGroup" | "CommandInput" | "Label" | "Checkbox"
 >) => {
   const ShadcnComboInput = makeShadcnAutoComboInput({
     Command,
@@ -42,11 +29,9 @@ export const makeShadcnAutoHasOneInput = ({
     Label,
     CommandItem,
     CommandList,
-    CommandLoading,
     CommandEmpty,
     CommandGroup,
     Checkbox,
-    ScrollArea,
   });
 
   function ShadcnAutoHasOneInput(props: AutoRelationshipInputProps) {

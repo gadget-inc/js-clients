@@ -11,25 +11,14 @@ export const makeSearchableSingleRelatedModelRecordSelector = ({
   Command,
   CommandItem,
   CommandInput,
-  CommandLoading,
   Label,
   CommandList,
   CommandEmpty,
   CommandGroup,
   Checkbox,
-  ScrollArea,
 }: Pick<
   ShadcnElements,
-  | "Command"
-  | "CommandItem"
-  | "CommandInput"
-  | "CommandLoading"
-  | "Label"
-  | "CommandList"
-  | "CommandEmpty"
-  | "CommandGroup"
-  | "Checkbox"
-  | "ScrollArea"
+  "Command" | "CommandItem" | "CommandInput" | "Label" | "CommandList" | "CommandEmpty" | "CommandGroup" | "Checkbox"
 >) => {
   const ShadcnComboInput = makeShadcnAutoComboInput({
     Command,
@@ -38,10 +27,8 @@ export const makeSearchableSingleRelatedModelRecordSelector = ({
     CommandItem,
     CommandList,
     CommandEmpty,
-    CommandLoading,
     CommandGroup,
     Checkbox,
-    ScrollArea,
   });
 
   function SearchableSingleRelatedModelRecordSelector(props: {

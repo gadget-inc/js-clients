@@ -22,6 +22,11 @@ import { makeShadcnAutoHasManyInput } from "./relationships/ShadcnAutoHasManyInp
 import { makeShadcnAutoHasManyThroughInput } from "./relationships/ShadcnAutoHasManyThroughInput.js";
 import { makeShadcnAutoHasOneInput } from "./relationships/ShadcnAutoHasOneInput.js";
 
+/**
+ * Make the Shadcn components for the auto input
+ * @param elements - The Shadcn elements to use
+ * @returns The Shadcn components for the auto input
+ */
 export const makeShadcnAutoInput = (
   elements: Pick<
     ShadcnElements,
@@ -32,7 +37,6 @@ export const makeShadcnAutoInput = (
     | "Badge"
     | "Command"
     | "CommandInput"
-    | "CommandLoading"
     | "CommandItem"
     | "CommandList"
     | "CommandEmpty"
@@ -41,8 +45,6 @@ export const makeShadcnAutoInput = (
     | "Popover"
     | "PopoverTrigger"
     | "PopoverContent"
-    | "ScrollArea"
-    | "ScrollBar"
     | "Textarea"
     | "Avatar"
     | "AvatarImage"

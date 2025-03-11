@@ -30,33 +30,20 @@ export const makeShadcnAutoComboInput = ({
   Label,
   CommandItem,
   CommandList,
-  CommandLoading,
   CommandEmpty,
   CommandGroup,
   Checkbox,
-  ScrollArea,
 }: Pick<
   ShadcnElements,
-  | "Command"
-  | "CommandInput"
-  | "Label"
-  | "CommandItem"
-  | "CommandList"
-  | "CommandEmpty"
-  | "CommandGroup"
-  | "Checkbox"
-  | "ScrollArea"
-  | "CommandLoading"
+  "Command" | "CommandInput" | "Label" | "CommandItem" | "CommandList" | "CommandEmpty" | "CommandGroup" | "Checkbox"
 >) => {
   const { RelatedModelOption } = makeRelatedModelOption({
     CommandItem,
     CommandList,
     CommandEmpty,
-    ScrollArea,
     CommandGroup,
     Checkbox,
     Label,
-    CommandLoading,
   });
 
   function ShadcnAutoComboInput(props: ShadcnComboInputProps) {

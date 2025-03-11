@@ -19,13 +19,11 @@ export const makeShadcnAutoHasManyThroughForm = ({
   CommandItem,
   CommandList,
   CommandEmpty,
-  CommandLoading,
   CommandGroup,
   Checkbox,
   Popover,
   PopoverContent,
   PopoverTrigger,
-  ScrollArea,
 }: Pick<
   ShadcnElements,
   | "Badge"
@@ -36,10 +34,8 @@ export const makeShadcnAutoHasManyThroughForm = ({
   | "CommandItem"
   | "CommandList"
   | "CommandEmpty"
-  | "CommandLoading"
   | "CommandGroup"
   | "Checkbox"
-  | "ScrollArea"
   | "Popover"
   | "PopoverContent"
   | "PopoverTrigger"
@@ -51,10 +47,8 @@ export const makeShadcnAutoHasManyThroughForm = ({
     CommandItem,
     CommandList,
     CommandEmpty,
-    CommandLoading,
     CommandGroup,
     Checkbox,
-    ScrollArea,
   });
 
   const renderOptionLabel = makeShadcnRenderOptionLabel({ Label, Badge, Button });
