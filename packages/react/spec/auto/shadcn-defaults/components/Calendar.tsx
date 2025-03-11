@@ -176,7 +176,6 @@ function Calendar({ className, showOutsideDays = true, showYearSwitcher = true, 
         ),
         MonthGrid: ({ className, children, ...props }) => (
           <MonthGrid
-            children={children}
             className={className}
             displayYears={displayYears}
             startMonth={startMonth}
@@ -184,7 +183,9 @@ function Calendar({ className, showOutsideDays = true, showYearSwitcher = true, 
             navView={navView}
             setNavView={setNavView}
             {...props}
-          />
+          >
+            {children}
+          </MonthGrid>
         ),
       }}
       numberOfMonths={columnsDisplayed}

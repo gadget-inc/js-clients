@@ -208,7 +208,7 @@ describeForEachAutoAdapter("AutoFormDateTimePicker", ({ name, adapter: { AutoFor
           if (name === SUITE_NAMES.SHADCN) {
             cy.get("#test-date").contains("2024-07-10");
             cy.get("#test-date").click();
-            cy.get("#test-time").should("have.value", "4:00 AM");
+            cy.get("#test-time").should("have.value", "04:00");
           }
         }
       );
@@ -231,7 +231,7 @@ describeForEachAutoAdapter("AutoFormDateTimePicker", ({ name, adapter: { AutoFor
         if (name === SUITE_NAMES.SHADCN) {
           cy.get("#test-date").contains("2024-07-10");
           cy.get("#test-date").click();
-          cy.get("#test-time").should("have.value", "4:00 AM");
+          cy.get("#test-time").should("have.value", "04:00");
         }
       });
 
@@ -254,7 +254,7 @@ describeForEachAutoAdapter("AutoFormDateTimePicker", ({ name, adapter: { AutoFor
         if (name === SUITE_NAMES.SHADCN) {
           cy.get("#test-date").contains(format(dateInLocalTZ, "yyyy-MM-dd"));
           cy.get("#test-date").click();
-          cy.get("#test-time").should("have.value", format(dateInLocalTZ, "K:m aa"));
+          cy.get("#test-time").should("have.value", format(dateInLocalTZ, "HH:mm"));
         }
       });
 
@@ -286,6 +286,11 @@ describeForEachAutoAdapter("AutoFormDateTimePicker", ({ name, adapter: { AutoFor
       });
 
       it("can enter an invalid time and show an error", () => {
+        if (name === SUITE_NAMES.SHADCN) {
+          // In shadcn, the time input is a `<input type="time">` which prevents invalid times from being entered
+          return;
+        }
+
         mockMetadataResponse();
         const onChangeSpy = cy.spy().as("onChangeSpy");
         cy.mountWithWrapper(
@@ -303,14 +308,6 @@ describeForEachAutoAdapter("AutoFormDateTimePicker", ({ name, adapter: { AutoFor
           cy.contains("Invalid time format");
           cy.get("#test-time").click().clear().type("12:21 AM");
           cy.contains("Invalid time format").should("not.exist");
-        }
-
-        if (name === SUITE_NAMES.SHADCN) {
-          cy.get("#test-date").click();
-          cy.get("#test-time").click().clear().type("foo");
-          cy.contains("Please use format: 12:00 PM");
-          cy.get("#test-time").click().clear().type("12:21 AM");
-          cy.contains("Please use format: 12:00 PM").should("not.exist");
         }
       });
 
