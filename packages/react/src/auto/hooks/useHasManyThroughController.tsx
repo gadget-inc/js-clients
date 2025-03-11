@@ -118,6 +118,35 @@ export const useHasManyThroughInputController = (props: AutoRelationshipInputPro
   };
 };
 
+/**
+ * A form component for the join model of a hasManyThrough relationship that associates the contained <AutoInput/> components in the children with the hasManyThrough relationship join model.
+ *
+ * @example
+ * ```tsx
+ * <AutoForm action={api.course.create}>
+ *   <AutoInput // `name` field on `course` model
+ *     field="name"
+ *   />
+ *   <AutoHasManyThroughForm // `students` field on `course` model - `course` hasMany `students` through `registration`
+ *     field="students"
+ *   >
+ *     <AutoHasManyThroughJoinModelForm // Join model field inputs
+ *     >
+ *       <AutoInput // `isTuitionPaid` field on `registration` model
+ *         field="isTuitionPaid"
+ *       />
+ *     </AutoHasManyThroughJoinModelForm>
+ *     <AutoInput // Sibling model field inputs
+ *       field="firstName"
+ *     />
+ *   </AutoHasManyThroughForm>
+ *   <AutoSubmit />
+ * </AutoForm>
+ * ```
+ *
+ * @param props.children - The React children containing inputs on the join model in an AutoHasManyThroughForm component
+ * @returns The React children containing inputs on the join model in an AutoHasManyThroughForm component
+ */
 export const AutoHasManyThroughJoinModelForm = (props: {
   /** The React children containing inputs on the join model in an AutoHasManyThroughForm component */
   children?: ReactNode;

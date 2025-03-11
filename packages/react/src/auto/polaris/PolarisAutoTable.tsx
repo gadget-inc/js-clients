@@ -58,10 +58,30 @@ export type PolarisAutoTableProps<
   SchemaT,
   FinderFunction extends FindManyFunction<GivenOptions, any, SchemaT, any>,
   Options extends FinderFunction["optionsType"]
-> = AutoTableProps<GivenOptions, SchemaT, FinderFunction, Options>;
+> = AutoTableProps<GivenOptions, SchemaT, FinderFunction, Options> & {
+  /**
+   * Condense the table, so that the user does not have to scroll horizontally. Defaults to false
+   */
+  condensed?: boolean;
+
+  /**
+   * Add zebra striping to table rows. Defaults to false
+   */
+  hasZebraStriping?: boolean;
+
+  /**
+   * Toggle whether the last column is always visible. Defaults to false
+   */
+  lastColumnSticky?: boolean;
+};
 
 /**
  * Renders a table of records from the backend automatically for a given model using Polaris
+ * @example
+ * ```tsx
+ * <AutoTable model={api.user} />
+ * ```
+ * @param props.model - The Gadget model to show in the table
  */
 export const PolarisAutoTable = <
   GivenOptions extends OptionsType,

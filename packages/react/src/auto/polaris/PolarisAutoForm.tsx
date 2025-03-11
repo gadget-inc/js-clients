@@ -12,6 +12,16 @@ import { PolarisAutoInput } from "./inputs/PolarisAutoInput.js";
 import { PolarisAutoSubmit } from "./submit/PolarisAutoSubmit.js";
 import { PolarisSubmitErrorBanner, PolarisSubmitSuccessfulBanner } from "./submit/PolarisSubmitResultBanner.js";
 
+/**
+ * A skeleton component for the form to display while the form is loading
+ * @example
+ * ```tsx
+ * <AutoForm action={api.modelA.create}>
+ *   {isLoading ? <AutoFormSkeleton /> : <AutoFormContent />}
+ * </AutoForm>
+ * ```
+ * @returns Skeleton component for the form
+ */
 export const PolarisAutoFormSkeleton = () => (
   <>
     <FormLayout>

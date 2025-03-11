@@ -1,7 +1,8 @@
-import React, { type ReactNode } from "react";
+import React from "react";
 import { FieldType } from "../../../metadata.js";
 import { autoInput } from "../../AutoInput.js";
 import { useFieldMetadata } from "../../hooks/useFieldMetadata.js";
+import { type AutoInputProps } from "../../shared/AutoInputTypes.js";
 import { PolarisAutoRichTextInput } from "./LazyLoadedPolarisAutoRichTextInput.js";
 import { PolarisAutoBooleanInput } from "./PolarisAutoBooleanInput.js";
 import { PolarisAutoDateTimePicker } from "./PolarisAutoDateTimePicker.js";
@@ -19,75 +20,82 @@ import { PolarisAutoHasManyInput } from "./relationships/PolarisAutoHasManyInput
 import { PolarisAutoHasManyThroughInput } from "./relationships/PolarisAutoHasManyThroughInput.js";
 import { PolarisAutoHasOneInput } from "./relationships/PolarisAutoHasOneInput.js";
 
-export const PolarisAutoInput = autoInput(
-  (props: {
-    /** The field API identifier this auto input should render for */
-    field: string;
-    /** The label this auto input should use to identify the input to the user */
-    label?: ReactNode;
-  }) => {
-    const { metadata } = useFieldMetadata(props.field);
-    const config = metadata.configuration;
+/**
+ * An automatically generated input component based on the given field's type for use within <AutoForm></AutoForm> components
+ * @example
+ * ```tsx
+ * <AutoForm action={api.modelA.create}>
+ *   <AutoInput field="stringField" />
+ *   <AutoInput field="booleanField" />
+ *   <AutoInput field="numberField" label="Count" />
+ * </AutoForm>
+ * ```
+ * @param props.field The API identifier of the field
+ * @param props.label The label of the field
+ * @returns The input component
+ */
+export const PolarisAutoInput = autoInput((props: AutoInputProps) => {
+  const { metadata } = useFieldMetadata(props.field);
+  const config = metadata.configuration;
 
-    switch (config.fieldType) {
-      case FieldType.Id: {
-        return <PolarisAutoIdInput field={props.field} label={props.label} />;
-      }
-      case FieldType.String:
-      case FieldType.Email:
-      case FieldType.Color:
-      case FieldType.Url: {
-        return <PolarisAutoTextInput field={props.field} label={props.label} />;
-      }
-      case FieldType.Number: {
-        return <PolarisAutoNumberInput field={props.field} label={props.label} />;
-      }
-      case FieldType.EncryptedString: {
-        return <PolarisAutoEncryptedStringInput field={props.field} label={props.label} />;
-      }
-      case FieldType.Password: {
-        return <PolarisAutoPasswordInput field={props.field} label={props.label} />;
-      }
-      case FieldType.Boolean: {
-        return <PolarisAutoBooleanInput field={props.field} label={props.label} />;
-      }
-      case FieldType.DateTime: {
-        return <PolarisAutoDateTimePicker field={props.field} label={props.label} />;
-      }
-      case FieldType.Json: {
-        return <PolarisAutoJSONInput field={props.field} label={props.label} />;
-      }
-      case FieldType.Enum: {
-        return <PolarisAutoEnumInput field={props.field} label={props.label} />;
-      }
-      case FieldType.File: {
-        return <PolarisAutoFileInput field={props.field} label={props.label} />;
-      }
-      case FieldType.RoleAssignments: {
-        return <PolarisAutoRolesInput field={props.field} label={props.label} />;
-      }
-      case FieldType.BelongsTo: {
-        return <PolarisAutoBelongsToInput field={props.field} label={props.label} />;
-      }
-      case FieldType.HasOne: {
-        return <PolarisAutoHasOneInput field={props.field} label={props.label} />;
-      }
-      case FieldType.HasMany: {
-        return <PolarisAutoHasManyInput field={props.field} label={props.label} />;
-      }
-      case FieldType.HasManyThrough: {
-        return <PolarisAutoHasManyThroughInput field={props.field} label={props.label} />;
-      }
-      case FieldType.RichText: {
-        return <PolarisAutoRichTextInput field={props.field} label={props.label} />;
-      }
-
-      // Not rendered as an input
-      case FieldType.Money:
-      case FieldType.Vector:
-      case FieldType.Computed:
-      default:
-        return null;
+  switch (config.fieldType) {
+    case FieldType.Id: {
+      return <PolarisAutoIdInput field={props.field} label={props.label} />;
     }
+    case FieldType.String:
+    case FieldType.Email:
+    case FieldType.Color:
+    case FieldType.Url: {
+      return <PolarisAutoTextInput field={props.field} label={props.label} />;
+    }
+    case FieldType.Number: {
+      return <PolarisAutoNumberInput field={props.field} label={props.label} />;
+    }
+    case FieldType.EncryptedString: {
+      return <PolarisAutoEncryptedStringInput field={props.field} label={props.label} />;
+    }
+    case FieldType.Password: {
+      return <PolarisAutoPasswordInput field={props.field} label={props.label} />;
+    }
+    case FieldType.Boolean: {
+      return <PolarisAutoBooleanInput field={props.field} label={props.label} />;
+    }
+    case FieldType.DateTime: {
+      return <PolarisAutoDateTimePicker field={props.field} label={props.label} />;
+    }
+    case FieldType.Json: {
+      return <PolarisAutoJSONInput field={props.field} label={props.label} />;
+    }
+    case FieldType.Enum: {
+      return <PolarisAutoEnumInput field={props.field} label={props.label} />;
+    }
+    case FieldType.File: {
+      return <PolarisAutoFileInput field={props.field} label={props.label} />;
+    }
+    case FieldType.RoleAssignments: {
+      return <PolarisAutoRolesInput field={props.field} label={props.label} />;
+    }
+    case FieldType.BelongsTo: {
+      return <PolarisAutoBelongsToInput field={props.field} label={props.label} />;
+    }
+    case FieldType.HasOne: {
+      return <PolarisAutoHasOneInput field={props.field} label={props.label} />;
+    }
+    case FieldType.HasMany: {
+      return <PolarisAutoHasManyInput field={props.field} label={props.label} />;
+    }
+    case FieldType.HasManyThrough: {
+      return <PolarisAutoHasManyThroughInput field={props.field} label={props.label} />;
+    }
+    case FieldType.RichText: {
+      return <PolarisAutoRichTextInput field={props.field} label={props.label} />;
+    }
+
+    // Not rendered as an input
+    case FieldType.Money:
+    case FieldType.Vector:
+    case FieldType.Computed:
+    default:
+      return null;
   }
-);
+});
