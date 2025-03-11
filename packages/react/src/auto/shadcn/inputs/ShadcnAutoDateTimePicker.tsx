@@ -1,5 +1,6 @@
 import { CalendarIcon, X } from "lucide-react";
-import React, { Suspense, useCallback, useState, type ReactNode } from "react";
+import { default as React, Suspense, useCallback, useState, type ReactNode } from "react";
+import { type AutoDateTimeInputProps } from "src/auto/shared/AutoInputTypes.js";
 import { copyTime, formatDate, getDateTimeObjectFromDate, getTimeString, isValidDate, zonedTimeToUtc } from "../../../dateTimeUtils.js";
 import type { GadgetDateTimeConfig } from "../../../internal/gql/graphql.js";
 import { autoInput } from "../../AutoInput.js";
@@ -45,19 +46,13 @@ export const makeShadcnAutoDateTimePicker = ({
       </div>
     );
   };
-
-  function ShadcnAutoDateTimePicker(props: {
-    field: string;
-    id?: string;
-    value?: Date;
-    onChange?: (value?: Date) => void;
-    error?: string;
-    includeTime?: boolean;
-    hideTimePopover?: boolean;
-    label?: ReactNode;
-    datePickerProps?: Partial<DatePickerProps>;
-    timePickerProps?: { label?: ReactNode; placeholder?: string };
-  }) {
+  function ShadcnAutoDateTimePicker(
+    props: {
+      id?: string;
+      datePickerProps?: Partial<DatePickerProps>;
+      timePickerProps?: { label?: ReactNode; placeholder?: string };
+    } & AutoDateTimeInputProps
+  ) {
     const { localTz, localTime, onChange, fieldProps, metadata, fieldState } = useDateTimeField({
       field: props.field,
       value: props.value,

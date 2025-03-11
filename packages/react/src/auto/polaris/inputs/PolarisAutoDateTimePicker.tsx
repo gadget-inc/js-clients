@@ -22,10 +22,6 @@ export interface PolarisAutoDateTimePickerProps extends AutoDateTimeInputProps {
    */
   id?: string;
   /**
-   * Indicates if the Gadget DateTime field includes a time component
-   */
-  includeTime?: boolean;
-  /**
    * Indicates if the time popover should be hidden
    */
   hideTimePopover?: boolean;

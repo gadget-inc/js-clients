@@ -1,19 +1,12 @@
-import React, { useMemo, type ReactNode } from "react";
+import React, { useMemo } from "react";
 import { useBooleanInputController } from "../../../auto/hooks/useBooleanInputController.js";
-import type { Control } from "../../../useActionForm.js";
 import { autoInput } from "../../AutoInput.js";
+import { type AutoBooleanInputProps } from "../../shared/AutoInputTypes.js";
 import { ShadcnRequired } from "../ShadcnRequired.js";
 import type { CheckboxProps, ShadcnElements } from "../elements.js";
 
 export const makeShadcnAutoBooleanInput = ({ Checkbox, Label }: Pick<ShadcnElements, "Checkbox" | "Label">) => {
-  function ShadcnAutoBooleanInput(
-    props: {
-      field: string;
-      control?: Control<any>;
-      className?: string;
-      label?: ReactNode;
-    } & Partial<CheckboxProps>
-  ) {
+  function ShadcnAutoBooleanInput(props: { className?: string } & AutoBooleanInputProps & Partial<CheckboxProps>) {
     const { field: _field, control: _control, ...rest } = props;
     const { path, error, fieldProps, metadata } = useBooleanInputController(props);
 
