@@ -188,6 +188,7 @@ const PolarisAutoTableComponent = <
             queryValue={search.value}
             onQueryChange={search.set}
             onQueryClear={search.clear}
+            queryPlaceholder={"Search"}
           />
         )}
 
