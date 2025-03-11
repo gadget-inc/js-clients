@@ -8,7 +8,7 @@ import { assertFieldType } from "./utils.js";
 interface DateTimeFieldProps {
   field: string;
   value?: Date;
-  onChange?: (value: Date) => void;
+  onChange?: (value?: Date) => void;
 }
 
 export const useDateTimeField = (props: DateTimeFieldProps) => {
