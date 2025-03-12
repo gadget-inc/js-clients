@@ -36,20 +36,20 @@ describeForEachAutoAdapter("AutoRoleInput", ({ name, adapter: { AutoForm }, wrap
     cy.get(`[cmdk-input]`).click(); // Click to focus the input field
 
     // All options should be loaded initially
-    cy.get(`[cmdk-item][data-value="signed-in"]`).should("exist");
-    cy.get(`[cmdk-item][data-value="unauthenticated"]`).should("exist");
-    cy.get(`[cmdk-item][data-value="test-api-key"]`).should("exist");
+    cy.get(`[cmdk-item][data-value="signed-in-signed-in"]`).should("exist");
+    cy.get(`[cmdk-item][data-value="unauthenticated-unauthenticated"]`).should("exist");
+    cy.get(`[cmdk-item][data-value="Role-abc123abc-test-api-key"]`).should("exist");
 
     // Type "test" in the input to search
     cy.get(`[cmdk-input]`).type("test");
 
     // Ensure filtered options are shown
-    cy.get(`[cmdk-item][data-value="test-api-key"]`).should("exist");
-    cy.get(`[cmdk-item][data-value="signed-in"]`).should("not.exist");
-    cy.get(`[cmdk-item][data-value="unauthenticated"]`).should("not.exist");
+    cy.get(`[cmdk-item][data-value="Role-abc123abc-test-api-key"]`).should("exist");
+    cy.get(`[cmdk-item][data-value="signed-in-signed-in"]`).should("not.exist");
+    cy.get(`[cmdk-item][data-value="unauthenticated-unauthenticated"]`).should("not.exist");
 
     // Select the filtered option
-    cy.get(`[cmdk-item][data-value="test-api-key"]`).click();
+    cy.get(`[cmdk-item][data-value="Role-abc123abc-test-api-key"]`).click();
 
     // Verify that the chip/tag appears after selection
     cy.get(`div`)

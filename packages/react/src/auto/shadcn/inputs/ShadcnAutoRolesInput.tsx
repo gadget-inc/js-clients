@@ -1,6 +1,5 @@
 import React, { useCallback, useMemo, type ReactNode } from "react";
 import type { Control } from "../../../useActionForm.js";
-import { getPropsWithoutRef } from "../../../utils.js";
 import { autoInput } from "../../AutoInput.js";
 import { useRoleInputController } from "../../hooks/useRoleInputController.js";
 import type { ShadcnElements } from "../elements.js";
@@ -35,7 +34,7 @@ export const makeShadcnAutoRolesInput = ({
   "Badge" | "Button" | "Command" | "CommandItem" | "CommandList" | "CommandEmpty" | "CommandGroup" | "CommandInput" | "Label" | "Checkbox"
 >) => {
   const { SelectedRecordTags } = makeSelectedRecordTags({ Badge, Button });
-  const ComboInput = makeShadcnAutoComboInput({
+  const ShadcnComboInput = makeShadcnAutoComboInput({
     Command,
     CommandInput,
     Label,
@@ -102,21 +101,22 @@ export const makeShadcnAutoRolesInput = ({
     }
 
     return (
-      <ComboInput
+      <ShadcnComboInput
         {...props}
         options={roleOptions}
         path={fieldProps.name}
         metadata={metadata}
         selectedRecordTag={
-          <SelectedRecordTags
-            selectedRecords={selectedOptions}
-            optionLabel={"label"}
-            onRemoveRecord={(option) => {
-              onSelect({ value: option.value });
-            }}
-          />
+          selectedOptions.length ? (
+            <SelectedRecordTags
+              selectedRecords={selectedOptions}
+              optionLabel={"label"}
+              onRemoveRecord={(option) => {
+                onSelect({ value: option.value });
+              }}
+            />
+          ) : null
         }
-        {...getPropsWithoutRef(fieldProps)}
         onSelect={onSelect}
         isLoading={loading}
         checkSelected={(id) => {

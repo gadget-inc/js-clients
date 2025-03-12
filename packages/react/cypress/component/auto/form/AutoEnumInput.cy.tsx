@@ -96,10 +96,10 @@ describeForEachAutoAdapter("AutoEnumInput", ({ name, adapter: { AutoForm }, wrap
 
       if (name == SUITE_NAMES.SHADCN) {
         cy.get("[cmdk-input]").eq(1).click();
-        cy.get('[cmdk-item][data-value="hello"]').click();
+        cy.get('[cmdk-item][data-value="hello-hello"]').click();
         cy.get("[cmdk-input]").eq(1).click();
-        cy.get('[cmdk-item][data-value="hello"][data-selected="true"]').should("exist");
-        cy.get('[cmdk-item][data-value="world"][data-selected="true"]').should("not.exist");
+        cy.get('[cmdk-item][data-value="hello-hello"][data-selected="true"]').should("exist");
+        cy.get('[cmdk-item][data-value="world-world"][data-selected="true"]').should("not.exist");
       } else {
         cy.get(getInputSelector("tags")).click();
         cy.contains("hello").parent().parent().click();
@@ -141,7 +141,7 @@ describeForEachAutoAdapter("AutoEnumInput", ({ name, adapter: { AutoForm }, wrap
       cy.contains("world").should("not.exist");
 
       if (name == SUITE_NAMES.SHADCN) {
-        cy.get('[cmdk-item][data-value="hello"]').click();
+        cy.get('[cmdk-item][data-value="hello-hello"]').click();
         // Verify that the chip/tag appears after selection
         checkBadgeWithButton("hello");
 

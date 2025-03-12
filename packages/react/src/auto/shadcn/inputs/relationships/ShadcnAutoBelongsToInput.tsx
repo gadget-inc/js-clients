@@ -112,6 +112,7 @@ export const makeShadcnAutoBelongsToInput = ({
         onChange={search.set}
         defaultValue={search.value}
         selectedRecordTag={selectedRecordTag}
+        checkSelected={(id) => selectedRecord?.id === id}
         onScrolledToBottom={handleScrolledToBottom}
         willLoadMoreOptions={pagination.hasNextPage && options.length >= optionRecordsToLoadCount}
         onSelect={onSelect}
