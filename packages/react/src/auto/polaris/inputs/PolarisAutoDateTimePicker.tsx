@@ -21,7 +21,7 @@ export const PolarisAutoDateTimePicker = autoInput(
     field: string;
     id?: string;
     value?: Date;
-    onChange?: (value: Date) => void;
+    onChange?: (value?: Date) => void;
     error?: string;
     includeTime?: boolean;
     hideTimePopover?: boolean;

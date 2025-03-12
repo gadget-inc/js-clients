@@ -1,19 +1,13 @@
 import { CalendarIcon } from "@radix-ui/react-icons";
-import React, { useCallback, useMemo, useState, type ReactNode } from "react";
-import {
-  copyTime,
-  formatDate,
-  getDateTimeObjectFromDate,
-  getTimeString,
-  isValidDate,
-  timeFormatRegex,
-  zonedTimeToUtc,
-} from "../../../dateTimeUtils.js";
+import { X } from "lucide-react";
+import React, { useCallback, useState, type ReactNode } from "react";
+import { copyTime, formatDate, getDateTimeObjectFromDate, getTimeString, isValidDate, zonedTimeToUtc } from "../../../dateTimeUtils.js";
 import type { GadgetDateTimeConfig } from "../../../internal/gql/graphql.js";
 import { autoInput } from "../../AutoInput.js";
 import { useDateTimeField } from "../../hooks/useDateTimeField.js";
 import { ShadcnRequired } from "../ShadcnRequired.js";
 import type { ShadcnElements } from "../elements.js";
+import "./auto-date-time-input.css";
 
 export interface Range {
   start: Date;
@@ -45,11 +39,25 @@ export const makeShadcnAutoDateTimePicker = ({
   PopoverTrigger,
   PopoverContent,
 }: Pick<ShadcnElements, "Button" | "Calendar" | "Label" | "Popover" | "PopoverTrigger" | "PopoverContent">) => {
+  const ClearButton = (props: { onClear: () => void }) => {
+    return (
+      <div
+        className="ml-auto h-4 w-4 bg-transparent hover:opacity-30"
+        onClick={(e) => {
+          e.stopPropagation();
+          props.onClear();
+        }}
+      >
+        <X />
+      </div>
+    );
+  };
+
   function ShadcnAutoDateTimePicker(props: {
     field: string;
     id?: string;
     value?: Date;
-    onChange?: (value: Date) => void;
+    onChange?: (value?: Date) => void;
     error?: string;
     includeTime?: boolean;
     hideTimePopover?: boolean;
@@ -57,13 +65,14 @@ export const makeShadcnAutoDateTimePicker = ({
     datePickerProps?: Partial<DatePickerProps>;
     timePickerProps?: { label?: ReactNode; placeholder?: string };
   }) {
-    const [timeParseError, setTimeParseError] = useState(false);
-    const { localTz, localTime, onChange, value, fieldProps, metadata, fieldState } = useDateTimeField({
+    const { localTz, localTime, onChange, fieldProps, metadata, fieldState } = useDateTimeField({
       field: props.field,
       value: props.value,
       onChange: props?.onChange,
     });
 
+    const value = props.value ?? fieldProps.value;
+    const timeString = localTime ? getTimeString(getDateTimeObjectFromDate(localTime, true), true) : undefined;
     const config = metadata.configuration;
 
     const onDateChange = useCallback<Exclude<DatePickerProps["onChange"], undefined>>(
@@ -82,47 +91,27 @@ export const makeShadcnAutoDateTimePicker = ({
       [fieldProps, value, localTz, onChange]
     );
 
-    const [date, setDate] = useState<Date>();
     const [isOpen, setIsOpen] = useState(false);
-
-    const initialTimeString = useMemo(() => (localTime ? getTimeString(getDateTimeObjectFromDate(localTime)) : ""), []);
-
-    const [timeString, setTimeString] = useState<string>(initialTimeString);
 
     const handleDateSelect = (selectedDate: Date | undefined) => {
       if (selectedDate) {
-        setDate(selectedDate);
         onDateChange?.(selectedDate);
       }
     };
 
     const handleTimeInput = (inputTimeString: string) => {
-      setTimeString(inputTimeString.toUpperCase());
+      const [hours, minutes] = inputTimeString.split(":").map(Number);
+      const newDate = localTime ? new Date(localTime) : new Date();
+      newDate.setHours(hours);
+      newDate.setMinutes(minutes);
 
-      if (!timeFormatRegex.test(inputTimeString)) {
-        setTimeParseError(true);
-        return;
-      }
-      setTimeParseError(false);
+      onChange?.(zonedTimeToUtc(newDate, localTz));
+      fieldProps.onChange(zonedTimeToUtc(newDate, localTz));
+    };
 
-      if (date) {
-        const [time, period] = inputTimeString.split(" ");
-        const [hours, minutes] = time.split(":").map(Number);
-        const newDate = new Date(date);
-
-        let adjustedHours = hours;
-        if (period.toUpperCase() === "PM" && hours !== 12) {
-          adjustedHours = hours + 12;
-        } else if (period.toUpperCase() === "AM" && hours === 12) {
-          adjustedHours = 0;
-        }
-
-        newDate.setHours(adjustedHours);
-        newDate.setMinutes(minutes);
-        setDate(newDate);
-        onChange?.(zonedTimeToUtc(newDate, localTz));
-        fieldProps.onChange(zonedTimeToUtc(newDate, localTz));
-      }
+    const handleClear = () => {
+      onChange?.(undefined);
+      fieldProps.onChange(undefined);
     };
 
     return (
@@ -137,16 +126,17 @@ export const makeShadcnAutoDateTimePicker = ({
               id={props.id ? `${props.id}-date` : undefined}
               variant="outline"
               type="button"
-              className={`w-full justify-start text-left font-normal ${!date ? "text-muted-foreground" : ""}`}
+              className={`w-full justify-start text-left font-normal ${!localTime ? "text-muted-foreground" : ""}`}
             >
               <CalendarIcon className="mr-2 h-4 w-4" />
               {localTime ? (
-                formatDate(localTime, props.includeTime ?? (config as GadgetDateTimeConfig).includeTime)
+                formatDate(localTime, props.includeTime ?? (config as GadgetDateTimeConfig).includeTime, true)
               ) : (
                 <span className="opacity-50">
                   {props.includeTime ?? (config as GadgetDateTimeConfig).includeTime ? "YYYY-MM-DD hh:mm aa" : "YYYY-MM-DD"}
                 </span>
               )}
+              {localTime && !metadata.requiredArgumentForInput && <ClearButton onClear={handleClear} />}
             </Button>
             {(props.error || fieldState.error?.message) && (
               <Label className="text-red-500">{props.error || fieldState.error?.message}</Label>
@@ -155,29 +145,34 @@ export const makeShadcnAutoDateTimePicker = ({
         </PopoverTrigger>
         <PopoverContent className="w-auto p-0">
           <div className="flex flex-row flex-nowrap">
-            <Calendar
-              mode="single"
-              defaultMonth={localTime ?? date}
-              selected={localTime ?? date}
-              onSelect={handleDateSelect}
-              initialFocus
-              classNames={{ root: "bg-white" }}
-            />
+            <div className="relative bg-background">
+              <Calendar
+                mode="single"
+                defaultMonth={localTime}
+                selected={localTime}
+                onSelect={handleDateSelect}
+                initialFocus
+                classNames={{
+                  month_grid: "w-full",
+                  selected: "bg-primary text-primary-foreground",
+                  nav: "translate-y-3",
+                  day_button: "w-full",
+                }}
+              />
+            </div>
             {(props.includeTime ?? (config as GadgetDateTimeConfig).includeTime) && (
               <div className="flex flex-col p-4 bg-white border-l">
                 <Label htmlFor={props.id ? `${props.id}-time` : undefined} data-testid={props.id ? `${props.id}-time` : undefined}>
-                  {props.timePickerProps?.label ?? "Time"} (HH:MM AM/PM)
+                  {props.timePickerProps?.label ?? "Time"} (HH:MM)
                 </Label>
                 <input
-                  type="text"
+                  type="time"
                   id={props.id ? `${props.id}-time` : undefined}
                   data-testid={props.id ? `${props.id}-time` : undefined}
-                  className="w-32 px-3 py-2 border rounded-md mt-2"
-                  placeholder={props.timePickerProps?.placeholder ?? "12:00 AM"}
+                  className="shadcn-auto-form-time-input w-32 px-3 py-2 border rounded-md mt-2"
                   value={timeString}
                   onChange={(e) => handleTimeInput(e.target.value)}
                 />
-                {timeParseError && <span className="text-xs text-red-500 mt-1">Please use format: 12:00 PM</span>}
               </div>
             )}
           </div>

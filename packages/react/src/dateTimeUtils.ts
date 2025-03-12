@@ -403,12 +403,16 @@ export const copyTime = (to: Date, input: Date) => {
  * @param dateTime
  * @returns
  */
-export const getDateTimeObjectFromDate = (dateTime: Date) => {
+export const getDateTimeObjectFromDate = (dateTime: Date, use24Hour = false) => {
   return {
     month: dateTime.getMonth(),
     year: dateTime.getFullYear(),
     day: dateTime.getDay(),
-    hour: dateTime.getHours() > 12 ? (dateTime.getHours() - 12).toString() : dateTime.getHours().toString(),
+    hour: use24Hour
+      ? dateTime.getHours().toString()
+      : dateTime.getHours() > 12
+      ? (dateTime.getHours() - 12).toString()
+      : dateTime.getHours().toString(),
     minute: dateTime.getMinutes().toString().padStart(2, "0"),
     ampm: dateTime.getHours() >= 12 ? "PM" : "AM",
   };
@@ -431,7 +435,7 @@ export const getDateFromDateTimeObject = (dateTime: DateTimeState) => {
   return date;
 };
 
-export const formatDate = (date: Date, includeTime: boolean): string => {
+export const formatDate = (date: Date, includeTime: boolean, use24Hour = false): string => {
   // Extract year, month, and day
   const year = date.getFullYear();
 
@@ -441,26 +445,34 @@ export const formatDate = (date: Date, includeTime: boolean): string => {
   // Get the day of the month and pad with leading zero if necessary
   const day = String(date.getDate()).padStart(2, "0");
 
+  if (!includeTime) {
+    return `${year}-${month}-${day}`;
+  }
+
   // Extract hours in 24-hour format
   let hours = date.getHours();
+  let hoursStr: string;
+  let timeStr: string;
 
-  // Determine AM or PM
-  const ampm = hours >= 12 ? "PM" : "AM";
+  if (use24Hour) {
+    // Use 24 hour format
+    hoursStr = String(hours).padStart(2, "0");
+    // Extract minutes and pad with leading zero if necessary
+    const minutes = String(date.getMinutes()).padStart(2, "0");
+    timeStr = `${hoursStr}:${minutes}`;
+  } else {
+    // Use 12 hour format
+    const ampm = hours >= 12 ? "PM" : "AM";
+    // Convert to 12-hour format
+    hours = hours % 12;
+    hours = hours ? hours : 12; // If hours is 0, set to 12
+    hoursStr = String(hours).padStart(2, "0");
+    // Extract minutes and pad with leading zero if necessary
+    const minutes = String(date.getMinutes()).padStart(2, "0");
+    timeStr = `${hoursStr}:${minutes} ${ampm}`;
+  }
 
-  // Convert to 12-hour format
-  hours = hours % 12;
-  hours = hours ? hours : 12; // If hours is 0, set to 12
-
-  // Pad hours with leading zero if necessary
-  const hoursStr = String(hours).padStart(2, "0");
-
-  // Extract minutes and pad with leading zero if necessary
-  const minutes = String(date.getMinutes()).padStart(2, "0");
-
-  // Construct the formatted date string
-  const formattedDate = includeTime ? `${year}-${month}-${day} ${hoursStr}:${minutes} ${ampm}` : `${year}-${month}-${day}`;
-
-  return formattedDate;
+  return `${year}-${month}-${day} ${timeStr}`;
 };
 
 /**
@@ -468,7 +480,13 @@ export const formatDate = (date: Date, includeTime: boolean): string => {
  * @param dateTime
  * @returns
  */
-export const getTimeString = (dateTime: DateTimeState) => {
+export const getTimeString = (dateTime: DateTimeState, use24Hour = false) => {
+  if (use24Hour) {
+    const hour24 = parseInt(dateTime.hour, 10);
+    const hour24Str = String(hour24).padStart(2, "0");
+    return `${hour24Str}:${dateTime.minute.padStart(2, "0")}`;
+  }
+
   if (parseInt(dateTime.hour, 10) === 0) {
     return `12:${dateTime.minute.padStart(2, "0")} AM`;
   }
