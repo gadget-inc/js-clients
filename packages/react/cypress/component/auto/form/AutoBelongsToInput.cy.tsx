@@ -115,11 +115,11 @@ describeForEachAutoAdapter(
       if (name === SUITE_NAMES.SHADCN) {
         const deselectSection1 = () => {
           cy.get(`[cmdk-input]`).click(); // Click to focus the input field
-          cy.get('[cmdk-item][data-value="Section 1"][data-selected="true"]').should("exist");
+          cy.get('[cmdk-item][data-value="1-Section 1"][data-selected="true"]').should("exist");
           cy.get(`button[aria-label="Remove"]`).click(); // Deselect
         };
         const getSection3 = () => {
-          cy.get(`[cmdk-item][data-value="Section 3"][data-selected="true"]`).should("exist");
+          cy.get(`[cmdk-item][data-value="3-Section 3"][data-selected="true"]`).should("exist");
         };
         return { deselectSection1, getSection3 };
       }

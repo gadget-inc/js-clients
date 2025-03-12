@@ -7,7 +7,10 @@ export { PolarisAutoTable as AutoTable } from "./PolarisAutoTable.js";
 export type { PolarisAutoTableProps as AutoTableProps } from "./PolarisAutoTable.js";
 export { PolarisAutoRichTextInput as AutoRichTextInput } from "./inputs/LazyLoadedPolarisAutoRichTextInput.js";
 export { PolarisAutoBooleanInput as AutoBooleanInput } from "./inputs/PolarisAutoBooleanInput.js";
-export { PolarisAutoDateTimePicker as AutoDateTimePicker } from "./inputs/PolarisAutoDateTimePicker.js";
+export {
+  PolarisAutoDateTimePicker as AutoDateTimeInput,
+  PolarisAutoDateTimePicker as AutoDateTimePicker,
+} from "./inputs/PolarisAutoDateTimePicker.js";
 export { PolarisAutoEncryptedStringInput as AutoEncryptedStringInput } from "./inputs/PolarisAutoEncryptedStringInput.js";
 export { PolarisAutoEnumInput as AutoEnumInput } from "./inputs/PolarisAutoEnumInput.js";
 export { PolarisAutoFileInput as AutoFileInput } from "./inputs/PolarisAutoFileInput.js";

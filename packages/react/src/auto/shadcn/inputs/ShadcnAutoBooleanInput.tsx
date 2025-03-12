@@ -31,7 +31,7 @@ export const makeShadcnAutoBooleanInput = ({ Checkbox, Label }: Pick<ShadcnEleme
           disabled={props.disabled ?? false}
           onCheckedChange={fieldProps.onChange}
         />
-        <Label htmlFor={path} className={`${props.className ?? ""} ${error ? "text-red-500" : ""}`}>
+        <Label htmlFor={path} className={`${props.className ?? ""} ${error ? "text-red-500" : ""} cursor-pointer`}>
           {label}
         </Label>
         {error && <ShadcnRequired>{error.message}</ShadcnRequired>}

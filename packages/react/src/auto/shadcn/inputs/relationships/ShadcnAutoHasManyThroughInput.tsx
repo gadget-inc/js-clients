@@ -72,7 +72,9 @@ export const makeShadcnAutoHasManyThroughInput = ({
         onChange={search.set}
         defaultValue={search.value}
         selectedRecordTag={
-          <SelectedRecordTags selectedRecords={selectedRecords} optionLabel={optionLabel} onRemoveRecord={onRemoveRecord} />
+          selectedRecords.length ? (
+            <SelectedRecordTags selectedRecords={selectedRecords} optionLabel={optionLabel} onRemoveRecord={onRemoveRecord} />
+          ) : null
         }
         onSelect={onSelectRecord}
         checkSelected={(id) => {

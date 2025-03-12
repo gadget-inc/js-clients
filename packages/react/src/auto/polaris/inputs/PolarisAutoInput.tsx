@@ -81,18 +81,13 @@ export const PolarisAutoInput = autoInput(
       case FieldType.RichText: {
         return <PolarisAutoRichTextInput field={props.field} label={props.label} />;
       }
-      case FieldType.Money: {
-        // TODO: implement money input
-        return null;
-      }
 
       // Not rendered as an input
+      case FieldType.Money:
       case FieldType.Vector:
       case FieldType.Computed:
+      default:
         return null;
-      default: {
-        throw new Error(`Unsupported field type for Polaris AutoForm: ${metadata.fieldType}`);
-      }
     }
   }
 );

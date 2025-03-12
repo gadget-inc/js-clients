@@ -110,8 +110,13 @@ export const makeShadcnAutoInput = (
         return <AutoBooleanInput {...props} />;
       case FieldType.HasManyThrough:
         return <AutoHasManyThroughInput {...props} />;
+
+      // Not rendered as an input
+      case FieldType.Money:
+      case FieldType.Vector:
+      case FieldType.Computed:
       default:
-        return <AutoStringInput {...props} />;
+        return null;
     }
   });
 

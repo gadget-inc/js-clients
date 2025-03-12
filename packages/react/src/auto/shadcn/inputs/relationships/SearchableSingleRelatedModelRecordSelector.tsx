@@ -1,4 +1,3 @@
-import { CommandSeparator } from "cmdk";
 import { PlusIcon } from "lucide-react";
 import { default as React, useCallback } from "react";
 import { type useSingleRelatedRecordRelationshipForm } from "src/useSingleRelatedRecordRelationshipForm.js";
@@ -76,7 +75,6 @@ export const makeSearchableSingleRelatedModelRecordSelector = ({
                 Add {relatedModelName}
               </div>
             </CommandItem>
-            <CommandSeparator />
           </CommandGroup>,
         ]}
         records={records}

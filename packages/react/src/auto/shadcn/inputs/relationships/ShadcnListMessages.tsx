@@ -1,3 +1,4 @@
+import { CheckIcon } from "lucide-react";
 import React from "react";
 import { getErrorMessage } from "../../../../utils.js";
 import type { ShadcnElements } from "../../elements.js";
@@ -46,7 +47,7 @@ export const makeShadcnListMessages = ({
 
   function ShadcnSelectableOption(props: SelectableOptionProps) {
     const { label, id, selected, onSelect, allowMultiple, formatOptionText } = props;
-    const className = selected ? "bg-muted" : "";
+    const className = `cursor-pointer ${selected ? "bg-muted" : ""}`;
 
     const labelElement = formatOptionText && typeof label === "string" ? formatOptionText(label) : label;
 
@@ -54,7 +55,7 @@ export const makeShadcnListMessages = ({
       <CommandItem
         key={id}
         id={id}
-        value={`${label}`}
+        value={`${id}-${label}`}
         selected={selected}
         className={className}
         onMouseDown={(e: React.MouseEvent) => {
@@ -79,12 +80,15 @@ export const makeShadcnListMessages = ({
                 onSelect?.(id);
               }}
             />
-            <Label htmlFor={id} className={"flex-1 ml-2"}>
+            <Label htmlFor={id} className={"flex-1 ml-2 cursor-pointer"}>
               {labelElement}
             </Label>
           </>
         ) : (
-          labelElement
+          <>
+            {labelElement}
+            {selected && <CheckIcon className="ml-auto h-4 w-4" />}
+          </>
         )}
       </CommandItem>
     );

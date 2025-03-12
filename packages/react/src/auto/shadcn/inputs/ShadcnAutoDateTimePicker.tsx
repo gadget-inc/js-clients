@@ -1,5 +1,4 @@
-import { CalendarIcon } from "@radix-ui/react-icons";
-import { X } from "lucide-react";
+import { CalendarIcon, X } from "lucide-react";
 import React, { useCallback, useState, type ReactNode } from "react";
 import { copyTime, formatDate, getDateTimeObjectFromDate, getTimeString, isValidDate, zonedTimeToUtc } from "../../../dateTimeUtils.js";
 import type { GadgetDateTimeConfig } from "../../../internal/gql/graphql.js";

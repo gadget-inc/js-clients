@@ -184,7 +184,7 @@ describeForEachAutoAdapter("AutoForm", ({ name, adapter: { AutoForm }, wrapper }
      */
 
     if (name === SUITE_NAMES.SHADCN) {
-      cy.get('[cmdk-item][data-value="Section Foo"]');
+      cy.get('[cmdk-item][data-value="1-Section Foo"]');
     } else {
       cy.get(`[id="1_Section Foo"]`);
     }

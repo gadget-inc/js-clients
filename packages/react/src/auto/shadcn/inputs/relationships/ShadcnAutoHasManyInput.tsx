@@ -72,7 +72,9 @@ export const makeShadcnAutoHasManyInput = ({
         metadata={metadata}
         onChange={search.set}
         selectedRecordTag={
-          <SelectedRecordTags selectedRecords={selectedRecords} optionLabel={optionLabel} onRemoveRecord={onRemoveRecord} />
+          selectedRecords.length > 0 ? (
+            <SelectedRecordTags selectedRecords={selectedRecords} optionLabel={optionLabel} onRemoveRecord={onRemoveRecord} />
+          ) : null
         }
         onSelect={onSelectRecord}
         onScrolledToBottom={handleScrolledToBottom}
