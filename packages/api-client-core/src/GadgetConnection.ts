@@ -521,14 +521,14 @@ export class GadgetConnection {
           if (!received) {
             timedOut = setTimeout(() => {
               if (activeSocket.readyState === WebSocket.OPEN) {
-                activeSocket.close(4408, 'Request Timeout')
+                activeSocket.close(4408, "Request Timeout");
               }
-            }, 2_000)
+            }, 2_000);
           }
         },
         pong: (received) => {
           if (received) clearTimeout(timedOut);
-        }
+        },
       },
       ...this.subscriptionClientOptions,
       ...overrides,
