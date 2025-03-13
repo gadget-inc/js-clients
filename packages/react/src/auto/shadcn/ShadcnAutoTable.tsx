@@ -1,7 +1,7 @@
 import { type FindManyFunction, type GadgetRecord } from "@gadgetinc/api-client-core";
 import pluralize from "pluralize";
 import * as React from "react";
-import { useCallback, useMemo, useRef } from "react";
+import { useCallback, useMemo } from "react";
 import type { SortState, TableColumn, TableRow } from "../../use-table/types.js";
 import { SelectionType, type RecordSelection } from "../../useSelectedRecordsController.js";
 import { useTable } from "../../useTable.js";
@@ -31,7 +31,7 @@ export type ShadcnAutoTableProps<
  * Renders a table for a model automatically using Shadcn
  */
 export const makeAutoTable = (elements: ShadcnElements) => {
-  const { Alert, Skeleton, Table, TableBody, TableCell, TableHead, TableHeader, TableRow, Label, Checkbox } = elements;
+  const { Alert, Skeleton, Table, TableBody, TableCell, TableHead, TableHeader, TableRow, Label, Checkbox, Button } = elements;
 
   const ShadcnAutoTableCellRenderer = makeShadcnAutoTableCellRenderer(elements);
   const ShadcnAutoTablePagination = makeShadcnAutoTablePagination(elements);
@@ -76,13 +76,30 @@ export const makeAutoTable = (elements: ShadcnElements) => {
     const { column, sort } = props;
 
     const [isHovered, hoverProps] = useHover();
+    const ColumnHeaderLabel = (
+      <>
+        <Label>{column.header}</Label>
+        <ShadcnAutoTableColumnSortIndicator column={column} sortState={sort} isHovered={isHovered} />
+      </>
+    );
 
     return (
       <>
-        <TableHead key={column.identifier} {...hoverProps}>
+        <TableHead key={column.identifier}>
           <div className="flex flex-row items-center gap-2">
-            <Label>{column.header}</Label>
-            <ShadcnAutoTableColumnSortIndicator column={column} sortState={sort} isHovered={isHovered} />
+            {column.sortable ? (
+              <Button
+                variant="ghost"
+                size="sm"
+                className="cursor-pointer"
+                onClick={() => sort.handleColumnSort(column.field)}
+                {...hoverProps}
+              >
+                {ColumnHeaderLabel}
+              </Button>
+            ) : (
+              ColumnHeaderLabel
+            )}
           </div>
         </TableHead>
       </>
@@ -111,19 +128,22 @@ export const makeAutoTable = (elements: ShadcnElements) => {
 
   function AutoTableRowData(props: { row: TableRow; columns: TableColumn[] }) {
     const { row, columns } = props;
-    return (
-      <>
-        {columns.map((column) => (
-          <TableCell key={column.identifier} style={{ ...defaultCellStyle, ...column.style }}>
-            {column.type == "CustomRenderer" ? (
-              (row[column.identifier] as React.ReactNode)
-            ) : (
-              <ShadcnAutoTableCellRenderer column={column} value={row[column.identifier] as ColumnValueType} />
-            )}
-          </TableCell>
-        ))}
-      </>
-    );
+    const rowComponent = useMemo(() => {
+      return (
+        <>
+          {columns.map((column, i) => (
+            <TableCell key={column.identifier} style={{ ...defaultCellStyle, ...column.style }}>
+              {column.type == "CustomRenderer" ? (
+                (row[column.identifier] as React.ReactNode)
+              ) : (
+                <ShadcnAutoTableCellRenderer column={column} value={row[column.identifier] as ColumnValueType} />
+              )}
+            </TableCell>
+          ))}
+        </>
+      );
+    }, [JSON.stringify(columns), JSON.stringify(row)]);
+    return rowComponent;
   }
 
   function ShadcnAutoTableComponent<
@@ -188,7 +208,6 @@ export const makeAutoTable = (elements: ShadcnElements) => {
     });
     const canSelectRecords = props.selectable === undefined ? bulkActionOptions.length !== 0 : props.selectable;
     const hasSelectedRecords = selection.recordIds.length > 0;
-    const tableRef = useRef<HTMLDivElement>(null);
 
     if (error) {
       return <Alert>Error</Alert>;
@@ -199,7 +218,7 @@ export const makeAutoTable = (elements: ShadcnElements) => {
 
     return (
       <>
-        <div className="sticky flex flex-col gap-2" ref={tableRef}>
+        <div className="flex flex-col gap-2">
           <ShadcnAutoTableBulkActionModal
             model={props.model}
             modelActionDetails={selectedModelActionDetails}
@@ -207,21 +226,20 @@ export const makeAutoTable = (elements: ShadcnElements) => {
             clearSelection={selection.clearAll}
           />
 
-          {hasSelectedRecords ? (
-            <div className="absolute flex flex-row items-center w-[100%] pl-2 z-10">
-              <AutoTableSelectAllCheckbox selection={selection} rows={rows} />
-              <Label className="ml-2">{`${selection.recordIds.length} selected`}</Label>
-
-              <div className="flex flex-row ml-auto gap-2 items-center">
-                <ShadcnAutoTableBulkActionSelector bulkActionOptions={bulkActionOptions} selection={selection} rows={rows} />
+          <div className="flex flex-row gap-2 items-center">
+            {searchable && <ShadcnAutoTableSearch search={search} />}
+            {hasSelectedRecords && (
+              <div className="ml-auto">
+                <div className="flex flex-row ml-auto gap-2 items-center">
+                  <Label className="ml-2">{`${selection.recordIds.length} selected`}</Label>
+                  <ShadcnAutoTableBulkActionSelector bulkActionOptions={bulkActionOptions} selection={selection} rows={rows} />
+                </div>
               </div>
-            </div>
-          ) : searchable ? (
-            <ShadcnAutoTableSearch search={search} />
-          ) : null}
-          <Table>
-            <TableHeader>
-              <TableRow className={`${hasSelectedRecords ? "opacity-0" : ""}`}>
+            )}
+          </div>
+          <Table className="w-full border-collapse">
+            <TableHeader className="sticky top-0 bg-background z-10">
+              <TableRow>
                 {canSelectRecords && (
                   <TableHead>
                     <AutoTableSelectAllCheckbox selection={selection} rows={rows} />
