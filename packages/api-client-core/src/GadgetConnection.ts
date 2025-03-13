@@ -468,9 +468,13 @@ export class GadgetConnection {
       url = addUrlParams(url, overrides.urlParams);
     }
 
+    let activeSocket: globalThis.WebSocket;
+    let timedOut: NodeJS.Timeout;
+
     return this.createSubscriptionClient({
       url,
       webSocketImpl: this.websocketImplementation,
+      keepAlive: 5_000,
       connectionParams: async () => {
         // In the browser, we can't set arbitrary headers on the websocket request, so we don't use the same auth mechanism that we use for normal HTTP requests. Instead we use graphql-ws' connectionParams to send the auth information in the connection setup message to the server.
         const connectionParams: Record<string, any> = { environment: this.environment, auth: { type: this.authenticationMode } };
@@ -511,7 +515,20 @@ export class GadgetConnection {
           }
           this.subscriptionClientOptions?.on?.connected?.(socket, payload);
           overrides?.on?.connected?.(socket, payload);
+          activeSocket = socket as globalThis.WebSocket;
         },
+        ping: (received) => {
+          if (!received) {
+            timedOut = setTimeout(() => {
+              if (activeSocket.readyState === WebSocket.OPEN) {
+                activeSocket.close(4408, 'Request Timeout')
+              }
+            }, 2_000)
+          }
+        },
+        pong: (received) => {
+          if (received) clearTimeout(timedOut);
+        }
       },
       ...this.subscriptionClientOptions,
       ...overrides,
