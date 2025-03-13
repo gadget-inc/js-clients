@@ -83,6 +83,19 @@ export interface MaybeFindFirstFunction<OptionsT, SelectionT, SchemaT, DefaultsT
   plan?: <Options extends OptionsT>(options?: LimitToKnownKeys<Options, OptionsT>) => GQLBuilderResult;
 }
 
+export interface ViewFunction<VariablesT, ResultT> {
+  (variables: VariablesT): Promise<ResultT>;
+  type: "computedView";
+  operationName: string;
+  functionName: string;
+  gqlFieldName: string;
+  namespace?: string | string[] | null;
+  variables: VariablesOptions;
+  variablesType: VariablesT;
+  resultType: ResultT;
+  plan(variables: VariablesT): GQLBuilderResult;
+}
+
 export interface ActionWithIdAndVariables<OptionsT, VariablesT> {
   <Options extends OptionsT>(id: string, variables: VariablesT, options?: LimitToKnownKeys<Options, OptionsT>):
     | AsyncRecord<any>
