@@ -1,17 +1,11 @@
 import { CalendarIcon, X } from "lucide-react";
-import React, { useCallback, useState, type ReactNode } from "react";
+import React, { Suspense, useCallback, useState, type ReactNode } from "react";
 import { copyTime, formatDate, getDateTimeObjectFromDate, getTimeString, isValidDate, zonedTimeToUtc } from "../../../dateTimeUtils.js";
 import type { GadgetDateTimeConfig } from "../../../internal/gql/graphql.js";
 import { autoInput } from "../../AutoInput.js";
 import { useDateTimeField } from "../../hooks/useDateTimeField.js";
 import { ShadcnRequired } from "../ShadcnRequired.js";
 import type { ShadcnElements } from "../elements.js";
-import "./auto-date-time-input.css";
-
-export interface Range {
-  start: Date;
-  end: Date;
-}
 
 export interface DatePickerProps {
   onChange: (date: Date) => void;
@@ -27,8 +21,9 @@ export interface DatePickerProps {
   disableDatesBefore: Date;
   disableDatesAfter: Date;
   disableSpecificDates: Date[];
-  range: Range;
 }
+
+const ShadcnAutoTimeInput = React.lazy(() => import("./ShadcnAutoTimeInput.js"));
 
 export const makeShadcnAutoDateTimePicker = ({
   Button,
@@ -132,7 +127,7 @@ export const makeShadcnAutoDateTimePicker = ({
                 formatDate(localTime, props.includeTime ?? (config as GadgetDateTimeConfig).includeTime, true)
               ) : (
                 <span className="opacity-50">
-                  {props.includeTime ?? (config as GadgetDateTimeConfig).includeTime ? "YYYY-MM-DD hh:mm aa" : "YYYY-MM-DD"}
+                  {props.includeTime ?? (config as GadgetDateTimeConfig).includeTime ? "YYYY-MM-DD HH:mm" : "YYYY-MM-DD"}
                 </span>
               )}
               {localTime && !metadata.requiredArgumentForInput && <ClearButton onClear={handleClear} />}
@@ -145,33 +140,17 @@ export const makeShadcnAutoDateTimePicker = ({
         <PopoverContent className="w-auto p-0">
           <div className="flex flex-row flex-nowrap">
             <div className="relative bg-background">
-              <Calendar
-                mode="single"
-                defaultMonth={localTime}
-                selected={localTime}
-                onSelect={handleDateSelect}
-                initialFocus
-                classNames={{
-                  month_grid: "w-full",
-                  selected: "bg-primary text-primary-foreground",
-                  nav: "translate-y-3",
-                  day_button: "w-full",
-                }}
-              />
+              <Calendar mode="single" defaultMonth={localTime} selected={localTime} onSelect={handleDateSelect} initialFocus />
             </div>
             {(props.includeTime ?? (config as GadgetDateTimeConfig).includeTime) && (
               <div className="flex flex-col p-4 bg-white border-l">
                 <Label htmlFor={props.id ? `${props.id}-time` : undefined} data-testid={props.id ? `${props.id}-time` : undefined}>
                   {props.timePickerProps?.label ?? "Time"} (HH:MM)
                 </Label>
-                <input
-                  type="time"
-                  id={props.id ? `${props.id}-time` : undefined}
-                  data-testid={props.id ? `${props.id}-time` : undefined}
-                  className="shadcn-auto-form-time-input w-32 px-3 py-2 border rounded-md mt-2"
-                  value={timeString}
-                  onChange={(e) => handleTimeInput(e.target.value)}
-                />
+
+                <Suspense fallback={null}>
+                  <ShadcnAutoTimeInput id={props.id} timeString={timeString} handleTimeInput={handleTimeInput} />
+                </Suspense>
               </div>
             )}
           </div>
