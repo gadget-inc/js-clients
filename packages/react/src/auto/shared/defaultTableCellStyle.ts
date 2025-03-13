@@ -1,6 +1,6 @@
 export const defaultCellStyle: React.CSSProperties = {
   maxWidth: "200px",
-  padding: "0.375rem",
+  padding: "8px",
   overflow: "hidden",
   textOverflow: "ellipsis",
   whiteSpace: "nowrap",

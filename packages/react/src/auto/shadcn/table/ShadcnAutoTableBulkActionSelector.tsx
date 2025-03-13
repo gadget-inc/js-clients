@@ -61,6 +61,7 @@ export const makeShadcnAutoTableBulkActionSelector = (elements: ShadcnElements) 
       <>
         {promotedActions.map((action) => (
           <Button
+            variant="outline"
             key={action.humanizedName}
             onClick={() => {
               getBulkActionOptionCallback(action, selectedRows, selection.clearAll)();

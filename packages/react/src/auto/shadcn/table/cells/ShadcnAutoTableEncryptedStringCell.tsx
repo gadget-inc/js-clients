@@ -21,7 +21,9 @@ export const makeShadcnAutoTableEncryptedStringCell = (elements: Pick<ShadcnElem
             <Label>{isShown ? value : defaultPlaceholderHiddenText}</Label>
           </div>
           <div style={{ flexShrink: 0 }}>
-            <Button onClick={() => setIsShown(!isShown)}>{isShown ? hideButtonContent : showButtonContent}</Button>
+            <Button variant="ghost" onClick={() => setIsShown(!isShown)}>
+              {isShown ? hideButtonContent : showButtonContent}
+            </Button>
           </div>
         </div>
       </>
