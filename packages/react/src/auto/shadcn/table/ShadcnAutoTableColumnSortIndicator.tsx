@@ -23,7 +23,7 @@ export const makeShadcnAutoTableColumnSortIndicator = (elements: ShadcnElements)
     const direction = sortState.direction;
 
     return (
-      <div onClick={handleSort}>
+      <div onClick={handleSort} className="z-0">
         {!isSorted && <UnsortedIndicator className={`${iconSizeClass} ${isHovered ? "" : "opacity-50"}`} />}
         {isSorted && direction === "Ascending" && <AscendingIndicator className={`${iconSizeClass}`} />}
         {isSorted && direction === "Descending" && <DescendingIndicator className={`${iconSizeClass}`} />}

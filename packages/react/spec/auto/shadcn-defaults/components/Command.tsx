@@ -26,7 +26,7 @@ const CommandInput = React.forwardRef<
       <CommandPrimitive.Input
         ref={ref}
         className={cn(
-          "flex h-11 w-full rounded-md bg-transparent py-3 text-sm outline-none placeholder:text-muted-foreground disabled:cursor-not-allowed disabled:opacity-50",
+          "flex h-11 w-full rounded-md bg-transparent py-3 text-sm outline-none placeholder:text-muted-foreground disabled:cursor-not-allowed disabled:opacity-50 h-9",
           className
         )}
         {...props}
@@ -89,13 +89,6 @@ const CommandItem = React.forwardRef<
   />
 ));
 
-const CommandLoading = React.forwardRef<
-  React.ElementRef<typeof CommandPrimitive.Loading>,
-  React.ComponentPropsWithoutRef<typeof CommandPrimitive.Loading>
->((props, ref) => <CommandPrimitive.Loading ref={ref} className="py-6 text-center text-sm" {...props} />);
-
-CommandLoading.displayName = CommandPrimitive.Loading.displayName;
-
 CommandItem.displayName = CommandPrimitive.Item.displayName;
 
-export { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem, CommandList, CommandLoading, CommandSeparator };
+export { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem, CommandList, CommandSeparator };

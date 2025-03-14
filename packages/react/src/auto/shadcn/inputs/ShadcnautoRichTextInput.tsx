@@ -18,7 +18,7 @@ export const makeShadcnAutoRichTextInput = ({ Label }: Pick<ShadcnElements, "Lab
           {props.label ?? controller.metadata.name}
           {controller.metadata.requiredArgumentForInput && <ShadcnRequired>*</ShadcnRequired>}
         </Label>
-        <div className="Autoform-RichTextInput">
+        <div className="border border-input rounded-[8px]">
           <AutoRichTextInput {...props} />
         </div>
       </div>

@@ -16,15 +16,19 @@ export const SelectableDesignSystemAutoTableStory = <
 >(
   props: AutoTableProps<GivenOptions, SchemaT, FinderFunction, Options>
 ) => {
-  const [designSystem, setDesignSystem] = useState<string>(SUITE_NAMES.SHADCN);
+  const [designSystem, setDesignSystem] = useState<string>(localStorage.getItem("designSystem") ?? SUITE_NAMES.SHADCN);
+  const updateDesignSystem = (value: string) => {
+    localStorage.setItem("designSystem", value);
+    setDesignSystem(value);
+  };
 
   return (
     <>
-      <div style={{ marginBottom: "16px" }}>
-        <elements.Button onClick={() => setDesignSystem(SUITE_NAMES.SHADCN)} style={{ backgroundColor: "white" }}>
+      <div style={{ marginBottom: "16px", gap: "16px", display: "flex", flexDirection: "row" }}>
+        <elements.Button onClick={() => updateDesignSystem(SUITE_NAMES.SHADCN)} variant="outline">
           {designSystem === SUITE_NAMES.SHADCN ? "✅ " : ""}Shadcn
         </elements.Button>
-        <Button onClick={() => setDesignSystem(SUITE_NAMES.POLARIS)}>{designSystem === SUITE_NAMES.POLARIS ? "✅ " : ""}Polaris</Button>
+        <Button onClick={() => updateDesignSystem(SUITE_NAMES.POLARIS)}>{designSystem === SUITE_NAMES.POLARIS ? "✅ " : ""}Polaris</Button>
       </div>
 
       {designSystem === SUITE_NAMES.POLARIS && <PolarisAutoTableStory {...props} />}
@@ -66,9 +70,11 @@ const ShadcnAutoTableStory = <
   return (
     <div
       style={{
-        height: "100%",
-        width: "100%",
+        display: "flex",
+        flexDirection: "column",
+        maxHeight: "90vh",
         backgroundColor: "#ffffff",
+
         padding: "16px",
       }}
     >

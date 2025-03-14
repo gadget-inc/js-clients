@@ -206,7 +206,7 @@ const PolarisAutoTableComponent = <
           promotedBulkActions={promotedBulkActions.length ? promotedBulkActions : undefined}
           bulkActions={bulkActions.length ? bulkActions : undefined}
           resourceName={resourceName}
-          emptyState={props.emptyState ?? <EmptySearchResult title={`No ${resourceName.plural} yet`} description={""} withIllustration />}
+          emptyState={props.emptyState ?? <EmptySearchResult title={`No results`} description={""} withIllustration />}
           loading={fetching}
           hasMoreItems={page.hasNextPage}
           itemCount={

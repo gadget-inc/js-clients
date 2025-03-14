@@ -7,6 +7,10 @@ import { SUITE_NAMES } from "../../../support/constants.js";
 describeForEachAutoAdapter(
   "AutoBelongsToInput",
   ({ name, adapter: { AutoForm, AutoSubmit, SubmitResultBanner, AutoBelongsToInput }, wrapper }) => {
+    const blurComboboxes = () => {
+      cy.get("body").click({ force: true });
+    };
+
     const interceptModelUpdateActionMetadata = () => {
       cy.mockModelActionMetadata(api, {
         modelApiIdentifier: "widget",
@@ -141,6 +145,7 @@ describeForEachAutoAdapter(
       operations().deselectSection1();
 
       expectUpdateActionSubmissionVariables({ id: "42", widget: { section: { _link: null } } });
+      blurComboboxes();
       cy.getSubmitButton().click();
       cy.contains("Saved Widget successfully");
     });
@@ -153,6 +158,7 @@ describeForEachAutoAdapter(
       operations().getSection3();
 
       expectUpdateActionSubmissionVariables({ id: "42", widget: { section: { _link: "3" } } });
+      blurComboboxes();
       cy.getSubmitButton().click();
       cy.contains("Saved Widget successfully");
     });
@@ -171,6 +177,7 @@ describeForEachAutoAdapter(
         cy.contains(`Section 3 other field`).click();
 
         expectUpdateActionSubmissionVariables({ id: "42", widget: { section: { _link: "3" } } });
+        blurComboboxes();
         cy.getSubmitButton().click();
         cy.contains("Saved Widget successfully");
       });
@@ -188,6 +195,7 @@ describeForEachAutoAdapter(
         cy.contains(`Custom label for 3`).click();
 
         expectUpdateActionSubmissionVariables({ id: "42", widget: { section: { _link: "3" } } });
+        blurComboboxes();
         cy.getSubmitButton().click();
         cy.contains("Saved Widget successfully");
       });
