@@ -242,13 +242,6 @@ export const makeAutoTable = (elements: ShadcnElements) => {
       [onClick]
     );
 
-    const toggleRecordSelection = useCallback(
-      (rowId: string) => {
-        selection.onSelectionChange(SelectionType.Single, !selection.recordIds.includes(rowId), rowId);
-      },
-      [selection]
-    );
-
     const { bulkActionOptions, selectedModelActionDetails } = useTableBulkActions({
       model: props.model,
       actions: props.actions,
@@ -256,6 +249,16 @@ export const makeAutoTable = (elements: ShadcnElements) => {
     });
     const canSelectRecords = props.selectable === undefined ? bulkActionOptions.length !== 0 : props.selectable;
     const hasSelectedRecords = selection.recordIds.length > 0;
+
+    const toggleRecordSelection = useCallback(
+      (rowId: string) => {
+        if (!canSelectRecords) {
+          return;
+        }
+        selection.onSelectionChange(SelectionType.Single, !selection.recordIds.includes(rowId), rowId);
+      },
+      [selection, canSelectRecords]
+    );
 
     if (error) {
       return <Alert>Error</Alert>;
