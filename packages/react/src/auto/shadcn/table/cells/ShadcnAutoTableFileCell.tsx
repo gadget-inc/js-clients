@@ -11,9 +11,9 @@ export const makeShadcnAutoTableFileCell = (elements: Pick<ShadcnElements, "Labe
     const { originalFileName, formattedFileName, imageFileIconUrl } = useAutoTableFileCell(props);
 
     return (
-      <div className="flex items-center gap-2">
-        <Avatar>
-          {imageFileIconUrl && <AvatarImage src={imageFileIconUrl} alt={originalFileName} />}
+      <div className="flex items-center gap-2 z-1">
+        <Avatar className="z-1">
+          {imageFileIconUrl && <AvatarImage src={imageFileIconUrl} alt={originalFileName} className="z-1" />}
           <AvatarFallback>{nonImageFileIndicator}</AvatarFallback>
         </Avatar>
 

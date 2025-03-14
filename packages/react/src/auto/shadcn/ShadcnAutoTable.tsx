@@ -1,5 +1,4 @@
 import { type FindManyFunction, type GadgetRecord } from "@gadgetinc/api-client-core";
-import pluralize from "pluralize";
 import * as React from "react";
 import { useCallback, useMemo } from "react";
 import type { SortState, TableColumn, TableRow } from "../../use-table/types.js";
@@ -10,7 +9,6 @@ import { type AutoTableProps } from "../AutoTable.js";
 import { validateAutoTableProps } from "../AutoTableValidators.js";
 import { useHover } from "../hooks/useHover.js";
 import { useTableBulkActions } from "../hooks/useTableBulkActions.js";
-import { defaultCellStyle } from "../shared/defaultTableCellStyle.js";
 import type { ShadcnElements } from "./elements.js";
 import { makeShadcnAutoLoadingIndicator } from "./table/ShadcnAutoLoadingIndicator.js";
 import { makeShadcnAutoTableBulkActionModal } from "./table/ShadcnAutoTableBulkActionModal.js";
@@ -61,19 +59,47 @@ export const makeAutoTable = (elements: ShadcnElements) => {
     );
   }
 
-  function AutoTableColumnHeaders(props: { columns: TableColumn[]; sort: SortState }) {
-    const { columns, sort } = props;
+  function AutoTableColumnHeaders(props: {
+    columns: TableColumn[];
+    sort: SortState;
+    canSelectRecords?: boolean;
+    selection: RecordSelection;
+    rows: TableRow[];
+  }) {
+    const { columns, sort, canSelectRecords, selection, rows } = props;
 
+    const [isHovered, hoverProps] = useHover();
     return (
       <>
-        {columns.map((column) => (
-          <AutoTableColumnHeader key={column.identifier} column={column} sort={sort} />
-        ))}
+        <TableRow {...hoverProps} className="bg-background hover:bg-muted">
+          {canSelectRecords && (
+            <TableHead className={`sticky left-0 z-30 bg-${isHovered ? "muted" : "background"}`}>
+              <AutoTableSelectAllCheckbox selection={selection} rows={rows} />
+            </TableHead>
+          )}
+
+          {columns.map((column, i) => (
+            <AutoTableColumnHeader
+              key={column.identifier}
+              column={column}
+              sort={sort}
+              canSelectRecords={canSelectRecords}
+              isRowHovered={isHovered}
+              shouldBeSticky={i === 0}
+            />
+          ))}
+        </TableRow>
       </>
     );
   }
-  function AutoTableColumnHeader(props: { column: TableColumn; sort: SortState }) {
-    const { column, sort } = props;
+  function AutoTableColumnHeader(props: {
+    column: TableColumn;
+    sort: SortState;
+    canSelectRecords?: boolean;
+    shouldBeSticky?: boolean;
+    isRowHovered: boolean;
+  }) {
+    const { column, sort, canSelectRecords, shouldBeSticky, isRowHovered } = props;
 
     const [isHovered, hoverProps] = useHover();
     const ColumnHeaderLabel = (
@@ -83,10 +109,12 @@ export const makeAutoTable = (elements: ShadcnElements) => {
       </>
     );
 
+    const stickyClass = shouldBeSticky ? `sticky left-${canSelectRecords ? "6" : "0"} z-10` : "";
+
     return (
       <>
-        <TableHead key={column.identifier}>
-          <div className="flex flex-row items-center gap-2">
+        <TableHead key={column.identifier} className={`${stickyClass} bg-${isRowHovered ? "muted" : "background"}`}>
+          <div className={`flex flex-row items-center gap-2 z-10 `}>
             {column.sortable ? (
               <Button
                 variant="ghost"
@@ -105,44 +133,72 @@ export const makeAutoTable = (elements: ShadcnElements) => {
       </>
     );
   }
+  const getCellBackgroundColor = (isSticky: boolean, isSelected: boolean, isHovered: boolean) => {
+    if (isSticky) {
+      // unselected sticky gets regular background regardless of hover. Since the hover is partial opacity, we need to overlay it over the normal BG color to make it match the rest of the cell
+      return isSelected ? "bg-muted" : "bg-background";
+    }
+    return isSelected ? "bg-muted" : isHovered ? "bg-muted/50" : "bg-background";
+  };
 
   function AutoTableSingleRowCheckbox(props: {
     row: TableRow;
-    selection: RecordSelection;
+    isSelected: boolean;
     toggleRecordSelection: (rowId: string) => void;
+    isHovered: boolean;
   }) {
-    const { row, selection, toggleRecordSelection } = props;
+    const { row, isSelected, toggleRecordSelection, isHovered } = props;
+
     return (
-      <TableCell>
+      <TableCell className={`sticky left-0 ${getCellBackgroundColor(true, isSelected, isHovered)}`}>
         <Checkbox
           id={`AutoTableSingleRowCheckbox-${row.id as string}`}
-          checked={selection.recordIds.includes(row.id as string)}
+          checked={isSelected}
+          className="z-100"
           onClick={(e) => {
             toggleRecordSelection(row.id as string);
             e.stopPropagation();
           }}
         />
+        {!isSelected && isHovered && <div className={`absolute inset-0 bg-muted/50 z-0`} />}
       </TableCell>
     );
   }
 
-  function AutoTableRowData(props: { row: TableRow; columns: TableColumn[] }) {
-    const { row, columns } = props;
+  function AutoTableRowData(props: {
+    row: TableRow;
+    columns: TableColumn[];
+    canSelectRecords?: boolean;
+    isSelected: boolean;
+    isHovered: boolean;
+  }) {
+    const { row, columns, canSelectRecords, isSelected, isHovered } = props;
+
     const rowComponent = useMemo(() => {
       return (
         <>
-          {columns.map((column, i) => (
-            <TableCell key={column.identifier} style={{ ...defaultCellStyle, ...column.style }}>
-              {column.type == "CustomRenderer" ? (
-                (row[column.identifier] as React.ReactNode)
-              ) : (
-                <ShadcnAutoTableCellRenderer column={column} value={row[column.identifier] as ColumnValueType} />
-              )}
-            </TableCell>
-          ))}
+          {columns.map((column, i) => {
+            const isSticky = i === 0;
+            return (
+              <TableCell
+                key={column.identifier}
+                style={column.style}
+                className={`${
+                  isSticky ? `sticky left-${canSelectRecords ? "6" : "0"} z-10` : ``
+                } max-w-[200px] overflow-hidden text-ellipsis whitespace-nowrap ${getCellBackgroundColor(isSticky, isSelected, isHovered)}`}
+              >
+                {isSticky && !isSelected && isHovered && <div className={`absolute inset-0 bg-muted/50`} />}
+                {column.type == "CustomRenderer" ? (
+                  (row[column.identifier] as React.ReactNode)
+                ) : (
+                  <ShadcnAutoTableCellRenderer column={column} value={row[column.identifier] as ColumnValueType} />
+                )}
+              </TableCell>
+            );
+          })}
         </>
       );
-    }, [JSON.stringify(columns), JSON.stringify(row)]);
+    }, [canSelectRecords, columns.map((c) => c.identifier).join(","), Object.values(row).join(","), isSelected, isHovered]);
     return rowComponent;
   }
 
@@ -193,14 +249,6 @@ export const makeAutoTable = (elements: ShadcnElements) => {
       [selection]
     );
 
-    const resourceName = useMemo(
-      () =>
-        props.resourceName ?? {
-          singular: metadata?.name ?? "",
-          plural: metadata ? pluralize(metadata.name) : "",
-        },
-      [props.resourceName, metadata]
-    );
     const { bulkActionOptions, selectedModelActionDetails } = useTableBulkActions({
       model: props.model,
       actions: props.actions,
@@ -218,65 +266,83 @@ export const makeAutoTable = (elements: ShadcnElements) => {
 
     return (
       <>
-        <div className="flex flex-col gap-2">
-          <ShadcnAutoTableBulkActionModal
-            model={props.model}
-            modelActionDetails={selectedModelActionDetails}
-            ids={selection.recordIds}
-            clearSelection={selection.clearAll}
-          />
+        <ShadcnAutoTableBulkActionModal
+          model={props.model}
+          modelActionDetails={selectedModelActionDetails}
+          ids={selection.recordIds}
+          clearSelection={selection.clearAll}
+        />
 
-          <div className="flex flex-row gap-2 items-center">
-            {searchable && <ShadcnAutoTableSearch search={search} />}
-            {hasSelectedRecords && (
-              <div className="ml-auto">
-                <div className="flex flex-row ml-auto gap-2 items-center">
-                  <Label className="ml-2">{`${selection.recordIds.length} selected`}</Label>
-                  <ShadcnAutoTableBulkActionSelector bulkActionOptions={bulkActionOptions} selection={selection} rows={rows} />
-                </div>
+        <div className="flex flex-row gap-2 items-center mb-2">
+          {searchable && <ShadcnAutoTableSearch search={search} />}
+          {hasSelectedRecords && (
+            <div className="ml-auto">
+              <div className="flex flex-row ml-auto gap-2 items-center">
+                <Label className="ml-2">{`${selection.recordIds.length} selected`}</Label>
+                <ShadcnAutoTableBulkActionSelector bulkActionOptions={bulkActionOptions} selection={selection} rows={rows} />
               </div>
-            )}
-          </div>
-          <Table className="w-full border-collapse">
-            <TableHeader className="sticky top-0 bg-background z-10">
-              <TableRow>
-                {canSelectRecords && (
-                  <TableHead>
-                    <AutoTableSelectAllCheckbox selection={selection} rows={rows} />
-                  </TableHead>
-                )}
-                <AutoTableColumnHeaders columns={columns} sort={sort} />
-              </TableRow>
-            </TableHeader>
-            <TableBody>
-              {rows?.length ? (
-                rows.map((row, index) => (
-                  <TableRow
-                    key={row.id as string}
-                    className={`${canSelectRecords || onClick ? "cursor-pointer" : ""}`}
-                    data-state={"selected"}
-                    onClick={onClick ? onClickCallback(row, rawRecords?.[index]) : () => toggleRecordSelection(row.id as string)}
-                  >
-                    {canSelectRecords && (
-                      <AutoTableSingleRowCheckbox row={row} selection={selection} toggleRecordSelection={toggleRecordSelection} />
-                    )}
-                    <AutoTableRowData row={row} columns={columns} />
-                  </TableRow>
-                ))
-              ) : (
-                <TableRow>
-                  <TableCell colSpan={columns.length} className="h-24 text-center">
-                    {props.emptyState ?? `No ${resourceName.plural} yet`}
-                  </TableCell>
-                </TableRow>
-              )}
-            </TableBody>
-          </Table>
-          {paginate && <ShadcnAutoTablePagination page={page} />}
+            </div>
+          )}
         </div>
+        <Table className="w-full border-collapse">
+          <TableHeader className="sticky top-0 bg-background z-20">
+            <AutoTableColumnHeaders columns={columns} sort={sort} canSelectRecords={canSelectRecords} selection={selection} rows={rows} />
+          </TableHeader>
+          <TableBody className="bg-background">
+            {rows?.length > 0 &&
+              rows.map((row, index) => (
+                <AutoTableRow
+                  key={row.id as string}
+                  row={row}
+                  columns={columns}
+                  canSelectRecords={canSelectRecords}
+                  toggleRecordSelection={toggleRecordSelection}
+                  onClick={onClick ? onClickCallback(row, rawRecords?.[index]) : () => toggleRecordSelection(row.id as string)}
+                  isSelected={selection.recordIds.includes(row.id as string)}
+                />
+              ))}
+          </TableBody>
+        </Table>
+
+        {rows?.length === 0 && (
+          <>{props.emptyState ?? <div className="h-24 text-center flex items-center justify-center">{`No results`}</div>}</>
+        )}
+        {paginate && <ShadcnAutoTablePagination page={page} />}
       </>
     );
   }
+
+  const AutoTableRow = (props: {
+    row: TableRow;
+    columns: TableColumn[];
+    canSelectRecords?: boolean;
+    onClick?: () => void;
+    toggleRecordSelection: (rowId: string) => void;
+    isSelected: boolean;
+  }) => {
+    const { row, columns, canSelectRecords, onClick, toggleRecordSelection, isSelected } = props;
+    const [isHovered, hoverProps] = useHover();
+
+    return (
+      <TableRow
+        key={row.id as string}
+        className={`${canSelectRecords || onClick ? "cursor-pointer" : ""} `}
+        data-state={isSelected ? "selected" : undefined}
+        onClick={onClick}
+        {...hoverProps}
+      >
+        {canSelectRecords && (
+          <AutoTableSingleRowCheckbox
+            row={row}
+            isSelected={isSelected}
+            toggleRecordSelection={toggleRecordSelection}
+            isHovered={isHovered}
+          />
+        )}
+        <AutoTableRowData row={row} columns={columns} canSelectRecords={canSelectRecords} isSelected={isSelected} isHovered={isHovered} />
+      </TableRow>
+    );
+  };
 
   return <
     GivenOptions extends OptionsType,
