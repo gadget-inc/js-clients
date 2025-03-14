@@ -1,7 +1,6 @@
 import React, { useRef, useState } from "react";
 import type { FieldMetadata } from "../../../metadata.js";
 import { useClickOutside } from "../../../useClickOutside.js";
-import { useIntersectionObserver } from "../../../useIntersectionObserver.js";
 import type { AutoRelationshipInputProps } from "../../interfaces/AutoRelationshipInputProps.js";
 import { ShadcnRequired } from "../ShadcnRequired.js";
 import type { ShadcnElements } from "../elements.js";
@@ -49,13 +48,6 @@ export const makeShadcnAutoComboInput = ({
   function ShadcnAutoComboInput(props: ShadcnComboInputProps) {
     const inputRef = useRef<HTMLInputElement>(null);
     const outsideBoxRef = useRef<HTMLDivElement>(null);
-    const sentinelRef = useIntersectionObserver(
-      () => {
-        props.onScrolledToBottom?.();
-      },
-      outsideBoxRef,
-      { threshold: 1.0 }
-    );
     const [open, setOpen] = useState(false);
     const [inputValue, setInputValue] = useState(props.defaultValue || "");
     const id = props.id || `${props.path}-input`;
@@ -110,7 +102,8 @@ export const makeShadcnAutoComboInput = ({
                   setSearchValue={setInputValue}
                   formatOptionText={props.formatOptionText}
                   emptyMessage={props.emptyMessage ? `${props.emptyMessage} "${inputValue}"` : undefined}
-                  loadMoreRef={props.willLoadMoreOptions ? sentinelRef : undefined}
+                  canLoadMore={props.willLoadMoreOptions}
+                  onLoadMore={props.onScrolledToBottom}
                 />
               </>
             )}

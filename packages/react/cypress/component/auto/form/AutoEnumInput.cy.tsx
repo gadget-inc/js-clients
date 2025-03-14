@@ -95,8 +95,10 @@ describeForEachAutoAdapter("AutoEnumInput", ({ name, adapter: { AutoForm }, wrap
       cy.get(selectedItemsSelector).should("contain", "football");
 
       if (name == SUITE_NAMES.SHADCN) {
+        blurComboboxes();
         cy.get("[cmdk-input]").eq(1).click();
         cy.get('[cmdk-item][data-value="hello-hello"]').click();
+        blurComboboxes();
         cy.get("[cmdk-input]").eq(1).click();
         cy.get('[cmdk-item][data-value="hello-hello"][data-selected="true"]').should("exist");
         cy.get('[cmdk-item][data-value="world-world"][data-selected="true"]').should("not.exist");
@@ -132,6 +134,8 @@ describeForEachAutoAdapter("AutoEnumInput", ({ name, adapter: { AutoForm }, wrap
 
       cy.contains("football").click();
       cy.get(selectedItemsSelector).should("contain", "football");
+
+      blurComboboxes();
 
       // For multi-select enums
       cy.get(getInputSelector("tags")).type("hel");
