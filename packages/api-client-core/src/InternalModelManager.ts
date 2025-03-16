@@ -24,6 +24,7 @@ import {
 } from "./support.js";
 import type {
   AnyFilter,
+  AnySelection,
   InternalFieldSelection,
   InternalFindListOptions,
   InternalFindManyOptions,
@@ -277,7 +278,7 @@ export class InternalModelManager<Shape extends RecordShape = RecordData> {
   private readonly namespace: string[];
 
   constructor(
-    private readonly apiIdentifier: string,
+    readonly apiIdentifier: string,
     readonly connection: GadgetConnection,
     readonly options?: { pluralApiIdentifier: string; hasAmbiguousIdentifiers?: boolean; namespace?: string[] }
   ) {
@@ -329,7 +330,7 @@ export class InternalModelManager<Shape extends RecordShape = RecordData> {
     const response = await this.connection.currentClient.query(plan.query, plan.variables).toPromise();
     const assertSuccess = throwOnEmptyData ? assertOperationSuccess : assertNullableOperationSuccess;
     const result = assertSuccess(response, this.dataPath(this.apiIdentifier));
-    return hydrateRecord<Shape>(response, result);
+    return hydrateRecord<Shape>(response, result, this);
   }
 
   /**
@@ -362,7 +363,7 @@ export class InternalModelManager<Shape extends RecordShape = RecordData> {
     const plan = internalFindManyQuery(this.apiIdentifier, this.namespace, options);
     const response = await this.connection.currentClient.query(plan.query, plan.variables).toPromise();
     const connection = assertNullableOperationSuccess(response, this.dataPath(`list${this.capitalizedApiIdentifier}`));
-    const records = hydrateConnection(response, connection);
+    const records = hydrateConnection(response, connection, this);
 
     return GadgetRecordList.boot(this, records, { options, pageInfo: connection.pageInfo });
   }
@@ -392,7 +393,7 @@ export class InternalModelManager<Shape extends RecordShape = RecordData> {
       connection = assertOperationSuccess(response, dataPath, throwOnEmptyData);
     }
 
-    const records = hydrateConnection(response, connection);
+    const records = hydrateConnection(response, connection, this);
     const recordList = GadgetRecordList.boot(this, records, { options, pageInfo: connection.pageInfo });
     return recordList[0];
   }
@@ -427,7 +428,7 @@ export class InternalModelManager<Shape extends RecordShape = RecordData> {
     const plan = internalCreateMutation(this.apiIdentifier, this.namespace, this.getRecordFromData(record, "create"));
     const response = await this.connection.currentClient.mutation(plan.query, plan.variables).toPromise();
     const result = assertMutationSuccess(response, this.dataPath(`create${this.capitalizedApiIdentifier}`));
-    return hydrateRecord(response, result[this.apiIdentifier]);
+    return hydrateRecord(response, result[this.apiIdentifier], this);
   }
 
   /**
@@ -454,7 +455,7 @@ export class InternalModelManager<Shape extends RecordShape = RecordData> {
     const plan = internalBulkCreateMutation(this.apiIdentifier, this.options.pluralApiIdentifier, this.namespace, records);
     const response = await this.connection.currentClient.mutation(plan.query, plan.variables).toPromise();
     const result = assertMutationSuccess(response, this.dataPath(`bulkCreate${capitalizedPluralApiIdentifier}`));
-    return hydrateRecordArray(response, result[this.options.pluralApiIdentifier]);
+    return hydrateRecordArray(response, result[this.options.pluralApiIdentifier], this);
   }
 
   /**
@@ -475,7 +476,7 @@ export class InternalModelManager<Shape extends RecordShape = RecordData> {
     const response = await this.connection.currentClient.mutation(plan.query, plan.variables).toPromise();
     const result = assertMutationSuccess(response, this.dataPath(`update${this.capitalizedApiIdentifier}`));
 
-    return hydrateRecord(response, result[this.apiIdentifier]);
+    return hydrateRecord(response, result[this.apiIdentifier], this);
   }
 
   /**
@@ -507,7 +508,7 @@ export class InternalModelManager<Shape extends RecordShape = RecordData> {
     const response = await this.connection.currentClient.mutation(plan.query, plan.variables).toPromise();
     const result = assertMutationSuccess(response, this.dataPath(`upsert${this.capitalizedApiIdentifier}`));
 
-    return hydrateRecord(response, result[this.apiIdentifier]);
+    return hydrateRecord(response, result[this.apiIdentifier], this);
   }
 
   /**
@@ -550,7 +551,7 @@ export class InternalModelManager<Shape extends RecordShape = RecordData> {
   }
 }
 
-function formatInternalSelectVariable(select: InternalFieldSelection | undefined): undefined | string[] {
+function formatInternalSelectVariable(select?: AnySelection | InternalFieldSelection | null): undefined | string[] {
   if (!select) return;
   if (Array.isArray(select)) return select;
   const result: string[] = [];
