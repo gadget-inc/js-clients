@@ -3,3 +3,13 @@
   display: none;
   -webkit-appearance: none;
 }
+
+.shadcn-auto-form-time-input {
+  color: currentColor;
+  background-color: inherit;
+}
+
+.shadcn-auto-form-time-input:focus-visible {
+  outline: none;
+  border-color: var(--ring);
+}

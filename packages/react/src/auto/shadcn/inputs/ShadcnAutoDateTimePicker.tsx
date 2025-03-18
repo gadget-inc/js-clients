@@ -143,7 +143,7 @@ export const makeShadcnAutoDateTimePicker = ({
               <Calendar mode="single" defaultMonth={localTime} selected={localTime} onSelect={handleDateSelect} initialFocus />
             </div>
             {(props.includeTime ?? (config as GadgetDateTimeConfig).includeTime) && (
-              <div className="flex flex-col p-4 bg-white border-l">
+              <div className="flex flex-col p-4 bg-background border-l">
                 <Label htmlFor={props.id ? `${props.id}-time` : undefined} data-testid={props.id ? `${props.id}-time` : undefined}>
                   {props.timePickerProps?.label ?? "Time"} (HH:MM)
                 </Label>

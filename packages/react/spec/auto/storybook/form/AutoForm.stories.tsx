@@ -1,32 +1,27 @@
+import { Button } from "@shopify/polaris";
 import React, { useState } from "react";
-import { Provider } from "../../../src/GadgetProvider.tsx";
-import { makeAutocomponents } from "../../../src/auto/shadcn/unreleasedIndex.ts";
-import { FormProvider, useForm } from "../../../src/useActionForm.ts";
-import { testApi as api } from "../../apis.ts";
-import { StorybookErrorBoundary } from "../storybook/StorybookErrorBoundary.tsx";
-import { elements } from "./index.tsx";
+import { Provider } from "../../../../src/GadgetProvider.js";
+import { PolarisAutoInput } from "../../../../src/auto/polaris/inputs/PolarisAutoInput.js";
+import { PolarisAutoHasManyThroughInput } from "../../../../src/auto/polaris/inputs/relationships/PolarisAutoHasManyThroughInput.js";
+import { PolarisAutoSubmit } from "../../../../src/auto/polaris/submit/PolarisAutoSubmit.js";
+import { testApi as api } from "../../../apis.js";
+import { StorybookErrorBoundary } from "../StorybookErrorBoundary.js";
+import { SelectableDesignSystemAutoFormStory } from "./SelectableDesignSystemAutoFormStory.js";
 
-const { AutoForm, AutoInput, AutoSubmit, AutoHasManyThroughInput } = makeAutocomponents(elements);
-
+// More on how to set up stories at: https://storybook.js.org/docs/writing-stories#default-export
 export default {
-  title: "Shadcn/AutoForm",
-  component: AutoForm,
+  title: "AutoForm",
+  component: SelectableDesignSystemAutoFormStory,
   decorators: [
     // 👇 Defining the decorator in the preview file applies it to all stories
-    (Story) => {
+    (Story: any) => {
       // 👇 Make it configurable by reading the theme value from parameters
       return (
-        <div style={{ width: "600px", backgroundColor: "white" }}>
-          <Provider api={api}>
-            <FormProvider {...useForm()}>
-              <StorybookErrorBoundary>
-                <elements.Card className="p-6 w-full bg-white shadow-lg rounded-lg">
-                  <Story />
-                </elements.Card>
-              </StorybookErrorBoundary>
-            </FormProvider>
-          </Provider>
-        </div>
+        <Provider api={api}>
+          <StorybookErrorBoundary>
+            <Story />
+          </StorybookErrorBoundary>
+        </Provider>
       );
     },
   ],
@@ -40,53 +35,54 @@ export default {
   // More on argTypes: https://storybook.js.org/docs/api/argtypes
 };
 
-export const Primary = {
+// More on writing stories with args: https://storybook.js.org/docs/writing-stories/args
+export const Primary: any = {
   args: {
     action: api.widget.create,
   },
 };
 
-export const CreateWithCustomParams = {
+export const CreateWithCustomParams: any = {
   args: {
     action: api.widget.createWithCustomParams,
   },
 };
 
-export const UpdateRecord = {
+export const UpdateRecord: any = {
   args: {
     action: api.widget.update,
     findBy: "999",
   },
 };
 
-export const UpdateRecordWithCustomParams = {
+export const UpdateRecordWithCustomParams: any = {
   args: {
     action: api.widget.updateWithCustomParams,
     findBy: "999",
   },
 };
 
-export const UpsertRecordWithFindBy = {
+export const UpsertRecordWithFindBy: any = {
   args: {
     action: api.widget.upsert,
     findBy: "1",
   },
 };
 
-export const UpsertRecordWithoutFindBy = {
+export const UpsertRecordWithoutFindBy: any = {
   args: {
     action: api.widget.upsert,
   },
 };
 
-export const Excluded = {
+export const Excluded: any = {
   args: {
     action: api.widget.create,
     exclude: ["birthday", "roles", "name"],
   },
 };
 
-export const ExcludedWithDefaultValues = {
+export const ExcludedWithDefaultValues: any = {
   args: {
     action: api.widget.create,
     exclude: ["name"],
@@ -94,7 +90,7 @@ export const ExcludedWithDefaultValues = {
   },
 };
 
-export const Included = {
+export const Included: any = {
   args: {
     action: api.widget.create,
     // Inventory is required and  not included. This will be a server-side error since it can be set in the action file code
@@ -102,7 +98,15 @@ export const Included = {
   },
 };
 
-export const IncludedWithDefaultValues = {
+export const IncludedWithFindBy: any = {
+  args: {
+    action: api.widget.update,
+    findBy: "999",
+    include: ["name", "inventoryCount"],
+  },
+};
+
+export const IncludedWithDefaultValues: any = {
   args: {
     action: api.widget.create,
     include: ["inventoryCount"],
@@ -114,13 +118,13 @@ const ConditionalAppearingAutoInput = () => {
   const [showMoreInputs, setShowMoreInputs] = useState(false);
   return (
     <>
-      <elements.Button onClick={() => setShowMoreInputs(!showMoreInputs)}>{showMoreInputs ? "Hide" : "Show"} other inputs</elements.Button>
+      <Button onClick={() => setShowMoreInputs(!showMoreInputs)}>{showMoreInputs ? "Hide" : "Show"} other inputs</Button>
       {showMoreInputs && (
         <>
-          <AutoInput field="isChecked" />
-          <AutoInput field="section" />
-          <AutoInput field="gizmos" />
-          <AutoInput field="customStringParam" />
+          <PolarisAutoInput field="isChecked" />
+          <PolarisAutoInput field="section" />
+          <PolarisAutoInput field="gizmos" />
+          <PolarisAutoInput field="customStringParam" />
         </>
       )}
     </>
@@ -129,27 +133,27 @@ const ConditionalAppearingAutoInput = () => {
 const CustomComponentWithAutoInputs = () => {
   return (
     <>
-      <AutoInput field="name" />
-      <AutoInput field="inventoryCount" />
+      <PolarisAutoInput field="name" />
+      <PolarisAutoInput field="inventoryCount" />
       <ConditionalAppearingAutoInput />
     </>
   );
 };
 
-export const Expanded = {
+export const Expanded: any = {
   args: {
     action: api.widget.updateWithCustomParams,
     findBy: "999",
     children: (
       <>
         <CustomComponentWithAutoInputs />
-        <AutoSubmit />
+        <PolarisAutoSubmit />
       </>
     ),
   },
 };
 
-export const ExpandedWithExplicitSelect = {
+export const ExpandedWithExplicitSelect: any = {
   // The explicit select for the conditionally rendered AutoInputs will prevent additional lookups in the useActionForm findBy
   args: {
     action: api.widget.updateWithCustomParams,
@@ -165,42 +169,42 @@ export const ExpandedWithExplicitSelect = {
     children: (
       <>
         <CustomComponentWithAutoInputs />
-        <AutoSubmit />
+        <PolarisAutoSubmit />
       </>
     ),
   },
 };
 
-export const Namespaced = {
+export const Namespaced: any = {
   args: {
     action: api.game.city.update,
     findBy: "1",
   },
 };
 
-export const GlobalAction = {
+export const GlobalAction: any = {
   args: {
     action: api.flipAll,
     defaultValues: { title: "From defaultValue prop" },
   },
 };
 
-export const onSuccessCallback = {
+export const onSuccessCallback: any = {
   name: "onSuccess callback",
   args: {
     action: api.widget.create,
-    onSuccess: (record) => {
+    onSuccess: (record: any) => {
       // eslint-disable-next-line no-undef
       window.alert(`Record created: ${JSON.stringify(record, null, 2)}`);
     },
   },
 };
 
-export const onFailureCallback = {
+export const onFailureCallback: any = {
   name: "onFailure callback",
   args: {
     action: api.widget.alwaysThrowError,
-    onFailure: (error) => {
+    onFailure: (error: any) => {
       // eslint-disable-next-line no-undef
       window.alert(`Error: ${error.message} (see console for details)`);
       // eslint-disable-next-line no-undef
@@ -209,15 +213,15 @@ export const onFailureCallback = {
   },
 };
 
-export const hasManyThrough = {
+export const hasManyThrough: any = {
   name: "HasManyThrough fields",
   args: {
     action: api.hasManyThrough.baseModel.create,
     children: (
       <>
-        <AutoInput field="baseModelName" />
-        <AutoHasManyThroughInput field="baseModelHmtField" />
-        <AutoSubmit />
+        <PolarisAutoInput field="baseModelName" />
+        <PolarisAutoHasManyThroughInput field="baseModelHmtField" />
+        <PolarisAutoSubmit />
       </>
     ),
   },

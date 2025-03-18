@@ -36,7 +36,7 @@ export const makeShadcnAutoTableBulkActionSelector = (elements: ShadcnElements) 
                 {nonPromotedActions.map((action, i) => (
                   <CommandItem
                     key={i}
-                    className={"bg-white"}
+                    className={"bg-background"}
                     onSelect={() => {
                       getBulkActionOptionCallback(action, selectedRows, selection.clearAll)();
                     }}
