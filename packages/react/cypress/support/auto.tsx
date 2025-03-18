@@ -61,7 +61,7 @@ const ShadCNAdapter = makeAutocomponents(elements);
 
 export const ShadcnWrapper = ({ children }: { children: ReactNode }) => (
   <div className="p-4">
-    <elements.Card className="bg-white">
+    <elements.Card className="bg-background">
       <elements.CardContent>
         <FormProvider {...useForm()}>
           <Toaster />

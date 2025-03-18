@@ -96,7 +96,7 @@ export const makeShadcnAutoBelongsToForm = ({
                     <EllipsisVerticalIcon className="w-4 h-4" />
                   </Button>
                 </DropdownMenuTrigger>
-                <DropdownMenuContent className="bg-white">
+                <DropdownMenuContent className="bg-background">
                   <DropdownMenuItem
                     value="edit"
                     onSelect={() => {
@@ -138,7 +138,7 @@ export const makeShadcnAutoBelongsToForm = ({
           <RelationshipContext.Provider
             value={{ transformPath: (path) => pathPrefix + "." + path, transformMetadataPath: (path) => metaDataPathPrefix + "." + path }}
           >
-            <DialogContent className="bg-white">
+            <DialogContent className="bg-background">
               <DialogHeader>
                 <DialogTitle>Add {relatedModelName}</DialogTitle>
               </DialogHeader>

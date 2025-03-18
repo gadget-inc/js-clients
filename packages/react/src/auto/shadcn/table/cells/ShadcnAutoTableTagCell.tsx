@@ -30,7 +30,7 @@ export const makeShadcnAutoTableTagCell = (elements: ShadcnElements) => {
           <TooltipProvider>
             <Tooltip>
               {(isOverflowed || hasOmittedTags) && (
-                <TooltipContent className="max-w-[150px] max-h-[100px] overflow-y-auto overflow-x-hidden bg-white border border-neutral-300 shadow-md whitespace-normal break-words">
+                <TooltipContent className="max-w-[150px] max-h-[100px] overflow-y-auto overflow-x-hidden bg-background text-foreground border border-neutral-300 shadow-md whitespace-normal break-words">
                   <TagList tags={allTags} tagPrefix="all-tags" />
                 </TooltipContent>
               )}

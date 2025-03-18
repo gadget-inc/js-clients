@@ -21,7 +21,7 @@ export const makeShadcnAutoTableTextCell = (elements: ShadcnAutoTableTextCellEle
         <TooltipProvider>
           <Tooltip>
             {isOverflowed && (
-              <TooltipContent className="max-w-[150px] max-h-[100px] overflow-y-auto overflow-x-hidden bg-white border border-neutral-300 shadow-md whitespace-normal break-words">
+              <TooltipContent className="max-w-[150px] max-h-[100px] overflow-y-auto overflow-x-hidden bg-background border border-neutral-300 shadow-md whitespace-normal break-words">
                 {stringifiedValue}
               </TooltipContent>
             )}

@@ -125,7 +125,7 @@ export const makeShadcnAutoHasManyThroughForm = ({
                   <ChevronsUpDown className="opacity-50 w-5 h-5 flex-shrink-0" />
                 </Button>
               </PopoverTrigger>
-              <PopoverContent className="w-[300px] bg-white p-0">
+              <PopoverContent className="w-[300px] bg-background p-0">
                 <ShadcnComboInput
                   selectedRecordTag={null}
                   path={""}

@@ -1,12 +1,11 @@
-import { AppProvider, Button, Checkbox } from "@shopify/polaris";
+import { Button, Checkbox } from "@shopify/polaris";
 import { DeleteIcon } from "@shopify/polaris-icons";
-import translations from "@shopify/polaris/locales/en.json";
 import React, { useEffect } from "react";
-import { Provider } from "../../../../src/GadgetProvider.tsx";
-import { useAction } from "../../../../src/useAction.ts";
-import { testApi as api } from "../../../apis.ts";
-import { StorybookErrorBoundary } from "../StorybookErrorBoundary.tsx";
-import { SelectableDesignSystemAutoTableStory } from "./SelectableDesignSystemAutoTableStory.tsx";
+import { Provider } from "../../../../src/GadgetProvider.js";
+import { useAction } from "../../../../src/useAction.js";
+import { testApi as api } from "../../../apis.js";
+import { StorybookErrorBoundary } from "../StorybookErrorBoundary.js";
+import { SelectableDesignSystemAutoTableStory } from "./SelectableDesignSystemAutoTableStory.js";
 
 const CustomEmptyStateMarkup = <p>This is a custom empty state. Bazinga.</p>;
 
@@ -17,16 +16,13 @@ export default {
 
   decorators: [
     // 👇 Defining the decorator in the preview file applies it to all stories
-    (Story) => {
+    (Story: any) => {
       // 👇 Make it configurable by reading the theme value from parameters
-
       return (
         <Provider api={api}>
-          <AppProvider i18n={translations}>
-            <StorybookErrorBoundary>
-              <Story />
-            </StorybookErrorBoundary>
-          </AppProvider>
+          <StorybookErrorBoundary>
+            <Story />
+          </StorybookErrorBoundary>
         </Provider>
       );
     },
@@ -41,36 +37,37 @@ export default {
 };
 
 // More on writing stories with args: https://storybook.js.org/docs/writing-stories/args
-export const Primary = {
+export const Primary: any = {
   args: {
     model: api.autoTableTest,
   },
 };
-export const Namespaced = {
+export const Namespaced: any = {
   args: {
     model: api.game.city,
   },
 };
 
-export const SelectFields = {
+export const SelectFields: any = {
   args: {
     model: api.autoTableTest,
     columns: ["str", "num"],
   },
 };
 
-export const OnErrorState = {
+export const OnErrorState: any = {
   args: {
     model: api.autoTableTest,
     columns: ["somethingSuperWrong"],
   },
 };
 
-export const onClickCallback = {
+export const onClickCallback: any = {
   name: "onClick callback",
   args: {
     model: api.autoTableTest,
-    onClick: (row, rawRecord) => {
+
+    onClick: (row: any, rawRecord: any) => {
       windowAlert(`You clicked on a row with ID: ${row.id}`);
       windowAlert(`row: ${JSON.stringify(row, null, 2)}`);
       windowAlert(`rawRecord:\n ${JSON.stringify(rawRecord, null, 2)}
@@ -79,14 +76,14 @@ export const onClickCallback = {
   },
 };
 
-export const SelectRichTextField = {
+export const SelectRichTextField: any = {
   args: {
     model: api.autoTableTest,
     columns: ["str", "rt"],
   },
 };
 
-export const SelectFileField = {
+export const SelectFileField: any = {
   args: {
     model: api.autoTableTest,
     columns: [
@@ -99,7 +96,7 @@ export const SelectFileField = {
   },
 };
 
-export const SelectRelatedFieldStringHasOne = {
+export const SelectRelatedFieldStringHasOne: any = {
   name: "Select related field using string value - has one relationship",
   args: {
     model: api.autoTableTest,
@@ -107,7 +104,7 @@ export const SelectRelatedFieldStringHasOne = {
   },
 };
 
-export const SelectRelatedFieldsHasOne = {
+export const SelectRelatedFieldsHasOne: any = {
   name: "Select related fields - has one relationship",
   args: {
     model: api.autoTableTest,
@@ -115,7 +112,7 @@ export const SelectRelatedFieldsHasOne = {
   },
 };
 
-export const SelectRelatedFieldStringHasMany = {
+export const SelectRelatedFieldStringHasMany: any = {
   name: "Select related field using string value - has many relationship",
   args: {
     model: api.autoTableTest,
@@ -123,7 +120,7 @@ export const SelectRelatedFieldStringHasMany = {
   },
 };
 
-export const SelectRelatedFieldsHasMany = {
+export const SelectRelatedFieldsHasMany: any = {
   name: "Select related fields - has many relationship",
   args: {
     model: api.autoTableTest,
@@ -131,23 +128,23 @@ export const SelectRelatedFieldsHasMany = {
   },
 };
 
-export const SelectRelatedFieldStringBelongsTo = {
+export const SelectRelatedFieldStringBelongsTo: any = {
   name: "Select related field using string value - belongs to relationship",
   args: {
-    model: api._autoTableTestRelatedModel,
+    model: api.foo,
     columns: ["name", "belongsToParent"],
   },
 };
 
-export const SelectRelatedFieldsBelongsTo = {
+export const SelectRelatedFieldsBelongsTo: any = {
   name: "Select related fields - belongs to relationship",
   args: {
-    model: api._autoTableTestRelatedModel,
+    model: api.foo,
     columns: ["name", "belongsToParent.str"],
   },
 };
 
-export const LiveData = {
+export const LiveData: any = {
   name: "Live data",
   args: {
     model: api.widget,
@@ -155,11 +152,12 @@ export const LiveData = {
   },
 };
 
-const CustomCheckboxCell = ({ record }) => {
+const CustomCheckboxCell = ({ record }: { record: any }) => {
   const [_result, update] = useAction(api.autoTableTest.update);
 
   return (
     <Checkbox
+      label={"Bool value"}
       checked={record.bool}
       onChange={(value) => {
         void update({
@@ -171,7 +169,7 @@ const CustomCheckboxCell = ({ record }) => {
   );
 };
 
-export const CustomCellWithUseAction = {
+export const CustomCellWithUseAction: any = {
   args: {
     model: api.autoTableTest,
     columns: [
@@ -182,7 +180,7 @@ export const CustomCellWithUseAction = {
       },
       {
         header: "JSX style",
-        render: (props) => <CustomCheckboxCell {...props} />,
+        render: (props: any) => <CustomCheckboxCell {...props} />,
       },
     ],
     // eslint-disable-next-line @typescript-eslint/no-empty-function
@@ -190,7 +188,7 @@ export const CustomCellWithUseAction = {
   },
 };
 
-export const CustomCell = {
+export const CustomCell: any = {
   args: {
     model: api.autoTableTest,
     columns: [
@@ -212,7 +210,7 @@ export const CustomCell = {
       {
         style: { backgroundColor: "#abcdef", width: "320px", maxWidth: "320px" },
         header: "Custom cell with custom style",
-        render: ({ record }) => {
+        render: ({ record }: { record: any }) => {
           return (
             <div>
               Custom cell, num field: {record.num} ({record.id})
@@ -224,7 +222,7 @@ export const CustomCell = {
   },
 };
 
-export const SelectProperty = {
+export const SelectProperty: any = {
   args: {
     model: api.autoTableTest,
     select: {
@@ -240,10 +238,10 @@ export const SelectProperty = {
     columns: [
       {
         header: "Custom cell",
-        render: ({ record }) => {
+        render: ({ record }: { record: any }) => {
           return (
             <div>
-              Custom cell, has many field: {JSON.stringify(record.hasMany.edges.map((edge) => edge.node.name))} ({record.id})
+              Custom cell, has many field: {JSON.stringify(record.hasMany.edges.map((edge: any) => edge.node.name))} ({record.id})
             </div>
           );
         },
@@ -252,13 +250,13 @@ export const SelectProperty = {
   },
 };
 
-export const ShopifyShopModel = {
+export const ShopifyShopModel: any = {
   args: {
     model: api.shopifyShop,
   },
 };
 
-const CustomDeleteButtonCellRenderer = (props) => {
+const CustomDeleteButtonCellRenderer = (props: { record: any }) => {
   const [{ error, fetching }, _delete] = useAction(api.autoTableTest.delete);
 
   useEffect(() => {
@@ -280,25 +278,25 @@ const CustomDeleteButtonCellRenderer = (props) => {
   );
 };
 
-export const CustomCellWithDeleteButton = {
+export const CustomCellWithDeleteButton: any = {
   args: {
     model: api.autoTableTest,
     columns: [
       "str",
-      { header: "Delete", render: ({ record }) => <CustomDeleteButtonCellRenderer record={record} /> },
-      { header: "Delete", render: ({ record }) => <p>ID:{record.id} | Different renderer, same header</p> },
+      { header: "Delete", render: ({ record }: { record: any }) => <CustomDeleteButtonCellRenderer record={record} /> },
+      { header: "Delete", render: ({ record }: { record: any }) => <p>ID:{record.id} | Different renderer, same header</p> },
     ],
   },
 };
 
-export const ExcludeColumns = {
+export const ExcludeColumns: any = {
   args: {
     model: api.autoTableTest,
     excludeColumns: ["str", "enum", "num"],
   },
 };
 
-export const BuiltInPolarisTableProps = {
+export const BuiltInPolarisTableProps: any = {
   args: {
     model: api.autoTableTest,
     selectable: false,
@@ -308,14 +306,14 @@ export const BuiltInPolarisTableProps = {
   },
 };
 
-export const Condensed = {
+export const Condensed: any = {
   args: {
     model: api.autoTableTest,
     condensed: true,
   },
 };
 
-export const CustomEmptyState = {
+export const CustomEmptyState: any = {
   args: {
     // A filter that will never be true so that the empty state is always shown
     filter: { AND: [{ bool: { equals: false } }, { bool: { equals: true } }] },
@@ -324,7 +322,7 @@ export const CustomEmptyState = {
   },
 };
 
-export const HideSearchAndPagination = {
+export const HideSearchAndPagination: any = {
   args: {
     model: api.autoTableTest,
     searchable: false,
@@ -332,7 +330,7 @@ export const HideSearchAndPagination = {
   },
 };
 
-export const HasManyThroughFields = {
+export const HasManyThroughFields: any = {
   args: {
     model: api.hasManyThrough.baseModel,
     columns: [
@@ -346,7 +344,7 @@ export const HasManyThroughFields = {
   },
 };
 
-const windowAlert = (message) => {
+const windowAlert = (message: string) => {
   // eslint-disable-next-line no-undef
   window.alert(message);
 };

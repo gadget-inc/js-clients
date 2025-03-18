@@ -24,7 +24,7 @@ export default {
       return (
         <Provider api={api}>
           <FormProvider {...useForm()}>
-            <elements.Card className="p-6 w-full bg-white shadow-lg rounded-lg">
+            <elements.Card className="p-6 w-full bg-background shadow-lg rounded-lg">
               <Story />
             </elements.Card>
           </FormProvider>
