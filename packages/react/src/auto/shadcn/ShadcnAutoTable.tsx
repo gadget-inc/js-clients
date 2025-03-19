@@ -9,6 +9,7 @@ import { type AutoTableProps } from "../AutoTable.js";
 import { validateAutoTableProps } from "../AutoTableValidators.js";
 import { useHover } from "../hooks/useHover.js";
 import { useTableBulkActions } from "../hooks/useTableBulkActions.js";
+import { makeDefaultPreventedButton } from "./ShadcnDefaultPreventedButton.js";
 import type { ShadcnElements } from "./elements.js";
 import { makeShadcnAutoLoadingIndicator } from "./table/ShadcnAutoLoadingIndicator.js";
 import { makeShadcnAutoTableBulkActionModal } from "./table/ShadcnAutoTableBulkActionModal.js";
@@ -31,13 +32,16 @@ export type ShadcnAutoTableProps<
 export const makeAutoTable = (elements: ShadcnElements) => {
   const { Alert, Skeleton, Table, TableBody, TableCell, TableHead, TableHeader, TableRow, Label, Checkbox, Button } = elements;
 
-  const ShadcnAutoTableCellRenderer = makeShadcnAutoTableCellRenderer(elements);
-  const ShadcnAutoTablePagination = makeShadcnAutoTablePagination(elements);
-  const ShadcnAutoTableSearch = makeShadcnAutoTableSearch(elements);
-  const ShadcnAutoTableColumnSortIndicator = makeShadcnAutoTableColumnSortIndicator(elements);
-  const ShadcnAutoTableBulkActionSelector = makeShadcnAutoTableBulkActionSelector(elements);
-  const ShadcnAutoTableBulkActionModal = makeShadcnAutoTableBulkActionModal(elements);
-  const ShadcnAutoLoadingIndicator = makeShadcnAutoLoadingIndicator(elements);
+  const DefaultPreventedButton = makeDefaultPreventedButton(elements);
+  const allElements = { ...elements, Button: DefaultPreventedButton };
+
+  const ShadcnAutoTableCellRenderer = makeShadcnAutoTableCellRenderer(allElements);
+  const ShadcnAutoTablePagination = makeShadcnAutoTablePagination(allElements);
+  const ShadcnAutoTableSearch = makeShadcnAutoTableSearch(allElements);
+  const ShadcnAutoTableColumnSortIndicator = makeShadcnAutoTableColumnSortIndicator(allElements);
+  const ShadcnAutoTableBulkActionSelector = makeShadcnAutoTableBulkActionSelector(allElements);
+  const ShadcnAutoTableBulkActionModal = makeShadcnAutoTableBulkActionModal(allElements);
+  const ShadcnAutoLoadingIndicator = makeShadcnAutoLoadingIndicator(allElements);
 
   function AutoTableSelectAllCheckbox(props: { selection: RecordSelection; rows: TableRow[] }) {
     const { selection, rows } = props;

@@ -113,17 +113,20 @@ export const makeShadcnAutoHasManyThroughForm = ({
           <div>
             <Popover open={open} onOpenChange={setOpen}>
               <PopoverTrigger asChild>
-                <Button
-                  type="button"
-                  variant="outline"
-                  role="combobox"
-                  aria-expanded={open}
-                  aria-controls={listboxId}
-                  className={`w-[300px] flex flex-row items-center justify-between cursor-pointer ${open ? "bg-accent" : ""}`}
-                >
-                  <Label className="truncate flex-grow text-left cursor-pointer">Add {siblingModelName ?? "related model"}</Label>
-                  <ChevronsUpDown className="opacity-50 w-5 h-5 flex-shrink-0" />
-                </Button>
+                <div>
+                  <Button
+                    type="button"
+                    variant="outline"
+                    role="combobox"
+                    onClick={() => setOpen(!open)}
+                    aria-expanded={open}
+                    aria-controls={listboxId}
+                    className={`w-[300px] flex flex-row items-center justify-between cursor-pointer ${open ? "bg-accent" : ""}`}
+                  >
+                    <Label className="truncate flex-grow text-left cursor-pointer">Add {siblingModelName ?? "related model"}</Label>
+                    <ChevronsUpDown className="opacity-50 w-5 h-5 flex-shrink-0" />
+                  </Button>
+                </div>
               </PopoverTrigger>
               <PopoverContent className="w-[300px] bg-background p-0">
                 <div className="p-2">

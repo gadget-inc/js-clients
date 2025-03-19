@@ -38,7 +38,6 @@ export const makeShadcnAutoDateTimePicker = ({
       <div
         className="ml-auto h-4 w-4 bg-transparent hover:opacity-30"
         onClick={(e) => {
-          e.stopPropagation();
           props.onClear();
         }}
       >
@@ -110,7 +109,7 @@ export const makeShadcnAutoDateTimePicker = ({
 
     return (
       <Popover open={isOpen} onOpenChange={setIsOpen}>
-        <PopoverTrigger asChild onClick={(e: React.MouseEvent<HTMLButtonElement>) => e.stopPropagation()}>
+        <PopoverTrigger asChild>
           <div>
             <Label htmlFor={props.id ? `${props.id}-date` : undefined}>
               {props.label ?? metadata.name ?? "Date"}
@@ -118,6 +117,7 @@ export const makeShadcnAutoDateTimePicker = ({
             </Label>
             <Button
               id={props.id ? `${props.id}-date` : undefined}
+              onClick={() => setIsOpen(!isOpen)}
               variant="outline"
               type="button"
               className={`w-full justify-start text-left font-normal ${!localTime ? "text-muted-foreground" : ""} ${

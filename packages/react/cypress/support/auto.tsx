@@ -42,6 +42,7 @@ const ONLY_RUN_SUITES = {
     "AutoRoleInput",
     "AutoEnumInput",
     "AutoBelongsToInput",
+    "AutoHasManyInput",
     // Table
     "AutoTable - Bulk actions",
   ],

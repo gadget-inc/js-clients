@@ -89,11 +89,7 @@ export const makeShadcnAutoHasManyForm = ({
                           variant="default"
                           type="button"
                           id={`confirmButton_${metadataPathPrefix}.${idx}`}
-                          onClick={(e) => {
-                            e.preventDefault();
-                            e.stopPropagation();
-                            setEditingIndex(null);
-                          }}
+                          onClick={() => setEditingIndex(null)}
                         >
                           Confirm
                         </Button>
@@ -104,13 +100,8 @@ export const makeShadcnAutoHasManyForm = ({
               }
 
               return (
-                <AccordionItem
-                  key={field._fieldArrayKey}
-                  value={`${fieldArrayPath}.${idx}`}
-                  id={`${pathPrefix}.${idx}`}
-                  onClick={() => setEditingIndex(idx)}
-                >
-                  <AccordionSection position={position}>
+                <AccordionItem key={field._fieldArrayKey} value={`${fieldArrayPath}.${idx}`} id={`${pathPrefix}.${idx}`}>
+                  <AccordionSection position={position} onClick={() => setEditingIndex(idx)}>
                     <EditableOptionLabelButton option={option} />
                   </AccordionSection>
                 </AccordionItem>
@@ -141,7 +132,6 @@ export const makeShadcnAutoHasManyForm = ({
         variant="outline"
         className={`flex w-full h-fit justify-start gap-2 px-4 py-3 cursor-pointer ${position ? `${positionalBorder[position]}` : ""}`}
         onClick={(e) => {
-          e.preventDefault();
           onClick?.();
         }}
       >

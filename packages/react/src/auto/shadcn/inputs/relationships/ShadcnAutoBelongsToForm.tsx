@@ -91,8 +91,11 @@ export const makeShadcnAutoBelongsToForm = ({
             {label ?? <h2 className="text-lg font-medium h-9">{relatedModelName}</h2>}
             {hasRecord && (
               <DropdownMenu open={actionsOpen} onOpenChange={setActionsOpen}>
-                <DropdownMenuTrigger data-testid={`${path}-dropdown-menu-trigger`} asChild>
-                  <Button variant="ghost" className="w-4">
+                <DropdownMenuTrigger
+                  data-testid={`${path}-dropdown-menu-trigger`}
+                  className="focus-visible:outline-none focus-visible:ring-0"
+                >
+                  <Button variant="ghost" className="w-4" onClick={() => setActionsOpen(!actionsOpen)}>
                     <EllipsisVerticalIcon className="w-4 h-2" />
                   </Button>
                 </DropdownMenuTrigger>
