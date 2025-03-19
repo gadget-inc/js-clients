@@ -89,9 +89,9 @@ export const makeAutoTable = (elements: ShadcnElements) => {
     const [isHovered, hoverProps] = useHover();
     return (
       <>
-        <TableRow {...hoverProps} className="bg-background hover:bg-muted z-50">
+        <TableRow {...hoverProps} className="bg-background hover:bg-muted ">
           {canSelectRecords && (
-            <TableHead className={`sticky left-0 bg-${isHovered ? "muted" : "background"}`}>
+            <TableHead className={`sticky left-0 z-50 bg-${isHovered ? "muted" : "background"}`}>
               <AutoTableSelectAllCheckbox selection={selection} rows={rows} />
             </TableHead>
           )}
