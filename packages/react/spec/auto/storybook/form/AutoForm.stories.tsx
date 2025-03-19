@@ -1,12 +1,14 @@
-import { Button } from "@shopify/polaris";
 import React, { useState } from "react";
 import { Provider } from "../../../../src/GadgetProvider.js";
-import { PolarisAutoInput } from "../../../../src/auto/polaris/inputs/PolarisAutoInput.js";
-import { PolarisAutoHasManyThroughInput } from "../../../../src/auto/polaris/inputs/relationships/PolarisAutoHasManyThroughInput.js";
-import { PolarisAutoSubmit } from "../../../../src/auto/polaris/submit/PolarisAutoSubmit.js";
 import { testApi as api } from "../../../apis.js";
 import { StorybookErrorBoundary } from "../StorybookErrorBoundary.js";
-import { SelectableDesignSystemAutoFormStory } from "./SelectableDesignSystemAutoFormStory.js";
+import {
+  AutoHasManyThroughInput,
+  AutoInput,
+  AutoSubmit,
+  Button,
+  SelectableDesignSystemAutoFormStory,
+} from "./SelectableDesignSystemAutoFormStory.js";
 
 // More on how to set up stories at: https://storybook.js.org/docs/writing-stories#default-export
 export default {
@@ -121,10 +123,10 @@ const ConditionalAppearingAutoInput = () => {
       <Button onClick={() => setShowMoreInputs(!showMoreInputs)}>{showMoreInputs ? "Hide" : "Show"} other inputs</Button>
       {showMoreInputs && (
         <>
-          <PolarisAutoInput field="isChecked" />
-          <PolarisAutoInput field="section" />
-          <PolarisAutoInput field="gizmos" />
-          <PolarisAutoInput field="customStringParam" />
+          <AutoInput field="isChecked" />
+          <AutoInput field="section" />
+          <AutoInput field="gizmos" />
+          <AutoInput field="customStringParam" />
         </>
       )}
     </>
@@ -133,8 +135,8 @@ const ConditionalAppearingAutoInput = () => {
 const CustomComponentWithAutoInputs = () => {
   return (
     <>
-      <PolarisAutoInput field="name" />
-      <PolarisAutoInput field="inventoryCount" />
+      <AutoInput field="name" />
+      <AutoInput field="inventoryCount" />
       <ConditionalAppearingAutoInput />
     </>
   );
@@ -147,7 +149,7 @@ export const Expanded: any = {
     children: (
       <>
         <CustomComponentWithAutoInputs />
-        <PolarisAutoSubmit />
+        <AutoSubmit />
       </>
     ),
   },
@@ -169,7 +171,7 @@ export const ExpandedWithExplicitSelect: any = {
     children: (
       <>
         <CustomComponentWithAutoInputs />
-        <PolarisAutoSubmit />
+        <AutoSubmit />
       </>
     ),
   },
@@ -219,9 +221,9 @@ export const hasManyThrough: any = {
     action: api.hasManyThrough.baseModel.create,
     children: (
       <>
-        <PolarisAutoInput field="baseModelName" />
-        <PolarisAutoHasManyThroughInput field="baseModelHmtField" />
-        <PolarisAutoSubmit />
+        <AutoInput field="baseModelName" />
+        <AutoHasManyThroughInput field="baseModelHmtField" />
+        <AutoSubmit />
       </>
     ),
   },

@@ -66,7 +66,7 @@ export const makeShadcnAutoBelongsToForm = ({
   });
 
   function ShadcnAutoBelongsToForm(props: AutoRelationshipFormProps) {
-    const { field } = props;
+    const { field, label } = props;
     const form = useBelongsToForm(props);
     const {
       record,
@@ -87,13 +87,13 @@ export const makeShadcnAutoBelongsToForm = ({
     return (
       <div>
         <div>
-          <div className="flex flex-row justify-between items-center">
-            <h2 className="text-lg font-medium">{relatedModelName}</h2>
+          <div className="flex flex-row justify-between items-center mb-2">
+            {label ?? <h2 className="text-lg font-medium h-9">{relatedModelName}</h2>}
             {hasRecord && (
               <DropdownMenu open={actionsOpen} onOpenChange={setActionsOpen}>
                 <DropdownMenuTrigger data-testid={`${path}-dropdown-menu-trigger`} asChild>
-                  <Button variant="ghost">
-                    <EllipsisVerticalIcon className="w-4 h-4" />
+                  <Button variant="ghost" className="w-4">
+                    <EllipsisVerticalIcon className="w-4 h-2" />
                   </Button>
                 </DropdownMenuTrigger>
                 <DropdownMenuContent className="bg-background">
@@ -122,12 +122,12 @@ export const makeShadcnAutoBelongsToForm = ({
             )}
           </div>
           {hasRecord ? (
-            <div className="flex flex-col gap-2">
-              <div className="flex flex-row justify-between gap-2 mt-2">
+            <div className="flex flex-row justify-between border-t">
+              <div className="flex flex-col gap-2 pt-3">
                 {renderOptionLabel(recordOption!.primary, "primary")}
-                {recordOption!.tertiary && renderOptionLabel(recordOption!.tertiary, "tertiary")}
+                {recordOption!.secondary && renderOptionLabel(recordOption!.secondary, "secondary")}
               </div>
-              {recordOption!.secondary && renderOptionLabel(recordOption!.secondary, "secondary")}
+              <div className="mt-2">{recordOption!.tertiary && renderOptionLabel(recordOption!.tertiary, "tertiary")}</div>
             </div>
           ) : (
             <SearchableSingleRelatedModelRecordSelector form={form} field={field} />

@@ -12,7 +12,6 @@ import {
   AutoInput,
   AutoSubmit,
   Card,
-  Label,
   SelectableDesignSystemAutoFormStory,
   SubmitResultBanner,
 } from "./SelectableDesignSystemAutoFormStory.js";
@@ -22,6 +21,7 @@ const ExampleWidgetAutoRelatedForm = (props: any) => {
     <>
       <SelectableDesignSystemAutoFormStory {...props}>
         <SubmitResultBanner />
+
         <Card>
           <Text as="h2" variant="headingSm">
             Top Level Form -- Widget
@@ -34,11 +34,11 @@ const ExampleWidgetAutoRelatedForm = (props: any) => {
         <Card>
           <AutoBelongsToForm
             field="section"
-            recordLabel={({ record }: { record: any }) => (
-              <Label>
-                {record.name} (id:{record.id})
-              </Label>
-            )}
+            recordLabel={{
+              primary: "name",
+              secondary: "label",
+              tertiary: "id",
+            }}
           >
             <AutoInput field="name" />
           </AutoBelongsToForm>
@@ -53,10 +53,12 @@ const ExampleWidgetAutoRelatedForm = (props: any) => {
               tertiary: "size",
             }}
           >
-            <AutoInput field="name" />
-            <AutoInput field="weight" />
-            <AutoInput field="active" />
-            <AutoInput field="size" />
+            <div style={{ display: "flex", flexDirection: "column", gap: "12px" }}>
+              <AutoInput field="name" />
+              <AutoInput field="weight" />
+              <AutoInput field="active" />
+              <AutoInput field="size" />
+            </div>
           </AutoHasOneForm>
         </Card>
 
@@ -230,8 +232,11 @@ const ExampleCourseCreateRelatedForm = (props: any) => {
             field="professors"
             recordLabel={{
               primary: ["title", "firstName", "lastName"],
+              secondary: "weight",
             }}
-          />
+          >
+            <></>
+          </AutoHasManyThroughForm>
         </Card>
         <AutoSubmit />
       </SelectableDesignSystemAutoFormStory>

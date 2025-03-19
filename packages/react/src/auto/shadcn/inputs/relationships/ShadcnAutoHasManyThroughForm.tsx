@@ -62,12 +62,12 @@ export const makeShadcnAutoHasManyThroughForm = ({
           onSelect(option);
         }}
       >
-        <div className="flex justify-between items-center w-full">
-          <div className="flex flex-row items-center gap-2">
-            {renderOptionLabel(option.primary, "primary")}
-            {option.secondary && renderOptionLabel(option.secondary, "secondary")}
+        <div className="flex justify-between items-center w-full cursor-pointer">
+          <div className="flex flex-row items-center gap-2 cursor-pointer">
+            {renderOptionLabel(option.primary, "primary", true)}
+            {option.secondary && renderOptionLabel(option.secondary, "secondary", true)}
           </div>
-          <PlusIcon className="w-4 h-4 shrink-0" />
+          <PlusIcon className="w-4 h-4 shrink-0 cursor-pointer" />
         </div>
       </CommandItem>
     );
@@ -119,45 +119,47 @@ export const makeShadcnAutoHasManyThroughForm = ({
                   role="combobox"
                   aria-expanded={open}
                   aria-controls={listboxId}
-                  className="w-[300px] flex flex-row items-center justify-between"
+                  className={`w-[300px] flex flex-row items-center justify-between cursor-pointer ${open ? "bg-accent" : ""}`}
                 >
-                  <Label className="truncate flex-grow text-left">Add {siblingModelName ?? "related model"}</Label>
+                  <Label className="truncate flex-grow text-left cursor-pointer">Add {siblingModelName ?? "related model"}</Label>
                   <ChevronsUpDown className="opacity-50 w-5 h-5 flex-shrink-0" />
                 </Button>
               </PopoverTrigger>
               <PopoverContent className="w-[300px] bg-background p-0">
-                <ShadcnComboInput
-                  selectedRecordTag={null}
-                  path={""}
-                  hideLabel
-                  metadata={metadata}
-                  field={field}
-                  options={siblingModelOptions}
-                  onSelect={() => void 0}
-                  willLoadMoreOptions={siblingPagination.hasNextPage && siblingModelOptions.length ? true : false}
-                  isLoading={siblingRecordsLoading}
-                  errorMessage={""}
-                  records={siblingRecords}
-                  onScrolledToBottom={handleScrolledToBottom}
-                  onChange={search.set}
-                  renderOption={(option) => (
-                    <SiblingOption
-                      onSelect={(option) => {
-                        const record = siblingRecords?.find((record) => record.id === option.id) ?? { id: option.id };
-                        const { createdAt: _createdAt, updatedAt: _updatedAt, ...recordWithoutTimestamps } = record;
-                        inverseRelatedModelField &&
-                          append({ [inverseRelatedModelField]: { ...recordWithoutTimestamps, _link: record.id } });
-                      }}
-                      option={option}
-                    />
-                  )}
-                />
+                <div className="p-2">
+                  <ShadcnComboInput
+                    selectedRecordTag={null}
+                    path={""}
+                    hideLabel
+                    metadata={metadata}
+                    field={field}
+                    options={siblingModelOptions}
+                    onSelect={() => void 0}
+                    willLoadMoreOptions={siblingPagination.hasNextPage && siblingModelOptions.length ? true : false}
+                    isLoading={siblingRecordsLoading}
+                    errorMessage={""}
+                    records={siblingRecords}
+                    onScrolledToBottom={handleScrolledToBottom}
+                    onChange={search.set}
+                    renderOption={(option) => (
+                      <SiblingOption
+                        onSelect={(option) => {
+                          const record = siblingRecords?.find((record) => record.id === option.id) ?? { id: option.id };
+                          const { createdAt: _createdAt, updatedAt: _updatedAt, ...recordWithoutTimestamps } = record;
+                          inverseRelatedModelField &&
+                            append({ [inverseRelatedModelField]: { ...recordWithoutTimestamps, _link: record.id } });
+                        }}
+                        option={option}
+                      />
+                    )}
+                  />
+                </div>
               </PopoverContent>
             </Popover>
           </div>
         </div>
         {joinRecords.length > 0 ? (
-          <div className="flex flex-col gap-2">
+          <div className="flex flex-col gap-3">
             {joinRecords.map(([fieldKey, idx, record]) => {
               const siblingRecord = inverseRelatedModelField && record[inverseRelatedModelField];
 
@@ -169,10 +171,10 @@ export const makeShadcnAutoHasManyThroughForm = ({
 
               return (
                 <div className="flex items-center w-full border border-gray-300 rounded-md " key={fieldKey}>
-                  <div className="flex flex-col gap-4 w-full">
+                  <div className="flex flex-col w-full">
                     <div className="flex-1 p-2">
                       <div className="flex justify-between items-center w-full">
-                        <div className="flex flex-col gap-1">
+                        <div className="flex flex-col">
                           <div className="flex items-center gap-2">
                             {renderOptionLabel(siblingOption.primary, "primary")}
                             {siblingOption?.tertiary && renderOptionLabel(siblingOption.tertiary, "tertiary")}
@@ -181,8 +183,8 @@ export const makeShadcnAutoHasManyThroughForm = ({
                         </div>
                         <Button
                           id={`deleteButton_${pathPrefix}.${idx}`}
-                          className="border ml-auto"
-                          variant="outline"
+                          className="ml-auto"
+                          variant="ghost"
                           type="button"
                           size="icon"
                           onClick={() => remove(idx)}

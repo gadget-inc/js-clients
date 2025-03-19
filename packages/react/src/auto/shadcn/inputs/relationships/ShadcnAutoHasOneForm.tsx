@@ -19,24 +19,9 @@ export const makeShadcnAutoHasOneForm = ({
   CommandEmpty,
   CommandGroup,
   Checkbox,
-  Accordion,
-  AccordionItem,
-  AccordionTrigger,
 }: Pick<
   ShadcnElements,
-  | "Badge"
-  | "Button"
-  | "Command"
-  | "CommandItem"
-  | "CommandInput"
-  | "Label"
-  | "CommandList"
-  | "CommandEmpty"
-  | "CommandGroup"
-  | "Checkbox"
-  | "Accordion"
-  | "AccordionItem"
-  | "AccordionTrigger"
+  "Badge" | "Button" | "Command" | "CommandItem" | "CommandInput" | "Label" | "CommandList" | "CommandEmpty" | "CommandGroup" | "Checkbox"
 >) => {
   const SearchableSingleRelatedModelRecordSelector = makeSearchableSingleRelatedModelRecordSelector({
     Command,
@@ -51,11 +36,11 @@ export const makeShadcnAutoHasOneForm = ({
   const EditableOptionLabelButton = makeShadcnEditableOptionLabelButton({ Badge, Button, Label });
 
   function ShadcnHasOneForm(props: Omit<AutoRelationshipFormProps, "recordFilter">) {
-    const { field } = props;
+    const { field, label } = props;
     const form = useHasOneForm(props);
     const {
-      record,
       isEditing,
+      metadata,
       setIsEditing,
       pathPrefix,
       metaDataPathPrefix,
@@ -64,7 +49,6 @@ export const makeShadcnAutoHasOneForm = ({
       isCreatingRecord,
       confirmEdit,
       removeRecord,
-      relatedModelName,
     } = form;
 
     const clickConfirmEdit = useCallback(
@@ -90,27 +74,22 @@ export const makeShadcnAutoHasOneForm = ({
         value={{ transformPath: (path) => pathPrefix + "." + path, transformMetadataPath: (path) => metaDataPathPrefix + "." + path }}
       >
         <div>
-          <div className="flex flex-row justify-between items-center">
-            <h2 className="text-lg font-medium">{relatedModelName}</h2>
+          <div className="flex flex-row justify-between items-center mb-2">
+            {label ?? <h2 className="text-lg font-medium">{metadata.name}</h2>}
           </div>
           {hasRecord || isCreatingRecord ? (
-            <Accordion type="single" collapsible className="w-full">
+            <>
               {!isEditing ? (
-                <AccordionItem value={`${pathPrefix}.${record?.id ? `update-${record.id}` : `create`}`}>
-                  <AccordionTrigger
-                    onClick={(e) => {
-                      e.preventDefault();
-                      setIsEditing(true);
-                    }}
-                  >
+                <>
+                  <ButtonWithLabel onClick={() => setIsEditing(true)}>
                     <EditableOptionLabelButton option={recordOption} />
-                  </AccordionTrigger>
-                </AccordionItem>
+                  </ButtonWithLabel>
+                </>
               ) : (
                 <>
                   <div className="border border-gray-300 rounded-md p-3">
                     {props.children}
-                    <div className="flex justify-between p-4">
+                    <div className="flex justify-between pt-4">
                       <Button variant="destructive" id={`deleteButton_${metaDataPathPrefix}`} onClick={clickRemoveRecord}>
                         Remove
                       </Button>
@@ -121,7 +100,7 @@ export const makeShadcnAutoHasOneForm = ({
                   </div>
                 </>
               )}
-            </Accordion>
+            </>
           ) : (
             <>
               <EmptyFormComponent form={form} field={field} />
@@ -145,14 +124,24 @@ export const makeShadcnAutoHasOneForm = ({
     const { startCreatingRecord, relatedModelName } = props.form;
     return (
       <>
+        <ButtonWithLabel onClick={startCreatingRecord}>
+          <PlusCircleIcon className="w-4 h-4" />
+          <Label className="text-sm font-semibold cursor-pointer">Add {relatedModelName}</Label>
+        </ButtonWithLabel>
+      </>
+    );
+  }
+
+  function ButtonWithLabel(props: { onClick: () => void; children: React.ReactNode }) {
+    return (
+      <>
         <Button
           type="button"
-          variant="default"
-          className="flex gap-1 border border-gray-300 rounded-md p-2 cursor-pointer"
-          onClick={startCreatingRecord}
+          variant="outline"
+          className={`flex w-full h-fit justify-start gap-2 border border-gray-300 rounded-md px-4 py-3 cursor-pointer`}
+          onClick={props.onClick}
         >
-          <PlusCircleIcon className="w-4 h-4" />
-          <Label className="text-sm font-semibold">Add {relatedModelName}</Label>
+          {props.children}
         </Button>
       </>
     );

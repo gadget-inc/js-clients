@@ -46,10 +46,12 @@ export const DesignSystemSelectionControl = ({ children }: { children: React.Rea
   );
 };
 
+const darkModeEnabled = false; // TODO - remove this once we commit to doing dark mode
+
 export const ShadcnAutoComponentsThemeControlWrapper = ({ children }: { children: React.ReactNode }) => {
   const setDarkModeGlobally = (isDark: boolean) => {
     // Update root html element dark class
-    document.documentElement.classList.toggle("dark", isDark);
+    document.documentElement.classList.toggle("dark", isDark && darkModeEnabled);
   };
 
   const toggleDarkMode = () => {
@@ -64,9 +66,11 @@ export const ShadcnAutoComponentsThemeControlWrapper = ({ children }: { children
 
   return (
     <body>
-      <div className="flex items-center gap-2 p-2">
-        <elements.Button onClick={toggleDarkMode}>Toggle dark mode</elements.Button>
-      </div>
+      {darkModeEnabled && (
+        <div className="flex items-center gap-2 p-2">
+          <elements.Button onClick={toggleDarkMode}>Toggle dark mode</elements.Button>
+        </div>
+      )}
 
       {children}
     </body>
