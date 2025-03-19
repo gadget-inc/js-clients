@@ -72,7 +72,7 @@ export const makeShadcnAutoHasOneForm = ({
                 </>
               ) : (
                 <>
-                  <div className="border border-gray-300 rounded-md p-3">
+                  <div className="border rounded-md p-3">
                     {props.children}
                     <div className="flex justify-between pt-4">
                       <Button variant="destructive" id={`deleteButton_${metaDataPathPrefix}`} onClick={clickRemoveRecord}>
@@ -123,7 +123,7 @@ export const makeShadcnAutoHasOneForm = ({
         <Button
           type="button"
           variant="outline"
-          className={`flex w-full h-fit justify-start gap-2 border border-gray-300 rounded-md px-4 py-3 cursor-pointer`}
+          className={`flex w-full h-fit justify-start gap-2 border rounded-md px-4 py-3 cursor-pointer`}
           onClick={props.onClick}
         >
           {props.children}
