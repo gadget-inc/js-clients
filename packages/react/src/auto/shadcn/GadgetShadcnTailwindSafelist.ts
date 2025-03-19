@@ -63,6 +63,7 @@ export const GadgetShadcnTailwindSafelist = [
   "max-w-[150px]",
   "max-w-[200px]",
   "mb-2",
+  "min-h-[32px]",
   "ml-2",
   "ml-auto",
   "overflow-hidden",

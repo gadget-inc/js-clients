@@ -12,7 +12,7 @@ export const makeShadcnAutoTablePagination = (elements: ShadcnElements) => {
   function ShadcnAutoTablePagination(props: { page: PaginationResult }) {
     const { goToNextPage, goToPreviousPage, hasNextPage, hasPreviousPage } = props.page;
     return (
-      <div className="flex flex-row items-center justify-end gap-2 mt-2">
+      <div className="flex flex-row items-center gap-2 ml-auto">
         <Button onClick={goToPreviousPage} disabled={!hasPreviousPage} variant="outline" className="p-2">
           <ChevronLeft />
         </Button>

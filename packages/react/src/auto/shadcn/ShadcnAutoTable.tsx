@@ -30,7 +30,21 @@ export type ShadcnAutoTableProps<
  * Renders a table for a model automatically using Shadcn
  */
 export const makeAutoTable = (elements: ShadcnElements) => {
-  const { Alert, Skeleton, Table, TableBody, TableCell, TableHead, TableHeader, TableRow, Label, Checkbox, Button } = elements;
+  const {
+    Alert,
+    AlertDescription,
+    AlertTitle,
+    Button,
+    Checkbox,
+    Label,
+    Skeleton,
+    Table,
+    TableBody,
+    TableCell,
+    TableHead,
+    TableHeader,
+    TableRow,
+  } = elements;
 
   const DefaultPreventedButton = makeDefaultPreventedButton(elements);
   const allElements = { ...elements, Button: DefaultPreventedButton };
@@ -75,9 +89,9 @@ export const makeAutoTable = (elements: ShadcnElements) => {
     const [isHovered, hoverProps] = useHover();
     return (
       <>
-        <TableRow {...hoverProps} className="bg-background hover:bg-muted">
+        <TableRow {...hoverProps} className="bg-background hover:bg-muted z-50">
           {canSelectRecords && (
-            <TableHead className={`sticky left-0 z-30 bg-${isHovered ? "muted" : "background"}`}>
+            <TableHead className={`sticky left-0 bg-${isHovered ? "muted" : "background"}`}>
               <AutoTableSelectAllCheckbox selection={selection} rows={rows} />
             </TableHead>
           )}
@@ -152,7 +166,7 @@ export const makeAutoTable = (elements: ShadcnElements) => {
     const { row, isSelected, toggleRecordSelection, isHovered } = props;
 
     return (
-      <TableCell className={`sticky left-0 ${getCellBackgroundColor({ isSelected, isHovered })} z-30`}>
+      <TableCell className={`sticky left-0 ${getCellBackgroundColor({ isSelected, isHovered })} z-10`}>
         <Checkbox
           id={`AutoTableSingleRowCheckbox-${row.id as string}`}
           checked={isSelected}
@@ -226,8 +240,8 @@ export const makeAutoTable = (elements: ShadcnElements) => {
 
       page,
       search,
-      fetching, // TODO - add a loading state
-      error, // TODO - add an error state
+      fetching,
+      error,
       selection,
       sort,
       metadata,
@@ -260,7 +274,12 @@ export const makeAutoTable = (elements: ShadcnElements) => {
     );
 
     if (error) {
-      return <Alert>Error</Alert>;
+      return (
+        <Alert variant="destructive">
+          <AlertTitle className="text-lg font-bold">Error</AlertTitle>
+          <AlertDescription>{error.message ? error.message : "Cannot load AutoTable"}</AlertDescription>
+        </Alert>
+      );
     }
     if ((fetching && !rows) || !columns) {
       return <Skeleton />;
@@ -286,11 +305,12 @@ export const makeAutoTable = (elements: ShadcnElements) => {
             </div>
           )}
         </div>
+
         <Table className="w-full border-collapse">
           <TableHeader className="sticky top-0 bg-background z-20">
             <AutoTableColumnHeaders columns={columns} sort={sort} canSelectRecords={canSelectRecords} selection={selection} rows={rows} />
           </TableHeader>
-          <TableBody className="bg-background">
+          <TableBody className={`bg-background ${fetching ? "opacity-40" : ""}`}>
             {rows?.length > 0 &&
               rows.map((row, index) => (
                 <AutoTableRow
@@ -309,7 +329,11 @@ export const makeAutoTable = (elements: ShadcnElements) => {
         {rows?.length === 0 && (
           <>{props.emptyState ?? <div className="h-24 text-center flex items-center justify-center">{`No results`}</div>}</>
         )}
-        {paginate && <ShadcnAutoTablePagination page={page} />}
+
+        <div className="flex flex-row gap-2 items-center justify-center mb-2">
+          {fetching && <ShadcnAutoLoadingIndicator className="w-5 h-5" />}
+          {paginate && <ShadcnAutoTablePagination page={page} />}
+        </div>
       </>
     );
   }
