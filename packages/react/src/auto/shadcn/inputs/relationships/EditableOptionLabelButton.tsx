@@ -12,12 +12,14 @@ export const makeShadcnEditableOptionLabelButton = ({ Badge, Button, Label }: Pi
       <>
         {showOptionLabel && option ? (
           <div className="flex justify-between w-full items-center">
-            <div className="flex flex-col gap-1 items-start">
-              {renderOptionLabel(option.primary, "primary")}
-              {option.secondary && renderOptionLabel(option.secondary, "secondary")}
+            <div className="flex flex-col gap-1 items-start cursor-pointer">
+              {renderOptionLabel(option.primary, "primary", true)}
+              {option.secondary && renderOptionLabel(option.secondary, "secondary", true)}
             </div>
 
-            {option.tertiary && <div className="flex items-center">{renderOptionLabel(option.tertiary, "tertiary")}</div>}
+            {option.tertiary && (
+              <div className="flex items-center cursor-pointer">{renderOptionLabel(option.tertiary, "tertiary", true)}</div>
+            )}
           </div>
         ) : (
           <Label>Click to edit...</Label>

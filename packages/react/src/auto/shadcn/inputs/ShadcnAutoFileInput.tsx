@@ -1,10 +1,10 @@
 import { DeleteIcon, File } from "lucide-react";
-import React, { HtmlHTMLAttributes, useMemo, type ReactNode } from "react";
+import React, { useEffect, useMemo, type HtmlHTMLAttributes, type ReactNode } from "react";
 import type { Control } from "../../../useActionForm.js";
 import { isAutoFileFieldValue } from "../../../validationSchema.js";
 import { autoInput } from "../../AutoInput.js";
 import { useFileInputController } from "../../hooks/useFileInputController.js";
-import { ShadcnElements } from "../elements.js";
+import { type ShadcnElements } from "../elements.js";
 
 export const makeShadcnAutoFileInput = ({
   Input,
@@ -22,6 +22,16 @@ export const makeShadcnAutoFileInput = ({
     } & HtmlHTMLAttributes<HTMLDivElement>
   ) {
     const { field: fieldApiIdentifier, control, ...rest } = props;
+
+    const [isFilePickerOpen, setIsFilePickerOpen] = React.useState(false);
+
+    // Handle when the system file picker is closed
+    useEffect(() => {
+      // When window regains focus, file picker must be closed
+      const handleFocus = () => setIsFilePickerOpen(false);
+      window.addEventListener("focus", handleFocus);
+      return () => window.removeEventListener("focus", handleFocus);
+    }, []);
 
     const {
       fieldProps,
@@ -58,9 +68,12 @@ export const makeShadcnAutoFileInput = ({
           )}
 
           <Input
+            className={`cursor-pointer ${isFilePickerOpen ? "ring-1 ring-ring" : ""}`}
             type="file"
             {...props}
+            title="" // to prevent the tooltip
             accept={validations.onlyImages?.acceptedTypes?.join(",")}
+            onClick={() => setIsFilePickerOpen(true)}
             onChange={(e) => {
               if (e.target.files) {
                 void onFileUpload(Array.from(e.target.files));
@@ -83,29 +96,31 @@ export const makeShadcnAutoFileInput = ({
       if (!value || !isAutoFileFieldValue(value)) return null;
 
       return (
-        <div className="p-8 pr-16">
-          <div className="flex justify-between items-center gap-8">
-            <div className="flex items-center gap-4">
-              <Avatar>
-                <AvatarImage src={imageThumbnailURL} />
-                <AvatarFallback>
-                  <File />
-                </AvatarFallback>
-              </Avatar>
+        <div className="flex w-full rounded-md border border-input bg-transparent px-3 py-1 text-base shadow-sm transition-colors">
+          <div className="flex items-center gap-4">
+            <Avatar>
+              <AvatarImage src={imageThumbnailURL} />
+              <AvatarFallback>
+                <File />
+              </AvatarFallback>
+            </Avatar>
 
-              <div className="text-sm">
-                {value.$uploading ? "(Uploading) " : ""}
-                {value.fileName}
-              </div>
+            <div className="text-sm">
+              {value.$uploading ? "(Uploading) " : ""}
+              {value.fileName}
             </div>
-
-            {/* Delete Button */}
-            {canClearFileValue && (
-              <Button variant="ghost" size="sm" onClick={() => clearFileValue()} id={`clear-file-${fieldApiIdentifier}`}>
-                <DeleteIcon className="w-4 h-4" />
-              </Button>
-            )}
           </div>
+
+          {/* Delete Button */}
+          <Button
+            variant="ghost"
+            size="sm"
+            onClick={() => clearFileValue()}
+            id={`clear-file-${fieldApiIdentifier}`}
+            className="ml-auto my-auto flex items-center"
+          >
+            <DeleteIcon className="w-4 h-4" />
+          </Button>
         </div>
       );
     }, [canClearFileValue, clearFileValue, fieldApiIdentifier, fieldProps.value, imageThumbnailURL]);

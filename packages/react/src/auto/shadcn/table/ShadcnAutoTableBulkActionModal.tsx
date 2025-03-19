@@ -65,8 +65,10 @@ export const makeShadcnAutoTableBulkActionModal = (elements: ShadcnElements) => 
               <RunActionConfirmationText count={ids.length} />
             ))}
         </DialogDescription>
-        <DialogDescription>
-          <Button onClick={close}>Close</Button>
+        <DialogDescription className="flex flex-row gap-2 ml-auto">
+          <Button onClick={close} variant="secondary">
+            Close
+          </Button>
           {((!hasError && !hasRun) || fetching) && (
             <Button onClick={runAction} disabled={fetching}>
               Run

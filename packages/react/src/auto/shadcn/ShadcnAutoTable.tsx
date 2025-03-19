@@ -133,12 +133,10 @@ export const makeAutoTable = (elements: ShadcnElements) => {
       </>
     );
   }
-  const getCellBackgroundColor = (isSticky: boolean, isSelected: boolean, isHovered: boolean) => {
-    if (isSticky) {
-      // unselected sticky gets regular background regardless of hover. Since the hover is partial opacity, we need to overlay it over the normal BG color to make it match the rest of the cell
-      return isSelected ? "bg-muted" : "bg-background";
-    }
-    return isSelected ? "bg-muted" : isHovered ? "bg-muted/50" : "bg-background";
+  const getCellBackgroundColor = (props: { isSelected: boolean; isHovered: boolean }) => {
+    const { isHovered, isSelected } = props;
+    const isDarkMode = document.documentElement.classList.contains("dark");
+    return isSelected ? `bg-muted ${isDarkMode ? "brightness-125" : "brightness-95"}` : isHovered ? "bg-muted" : "bg-background";
   };
 
   function AutoTableSingleRowCheckbox(props: {
@@ -150,17 +148,15 @@ export const makeAutoTable = (elements: ShadcnElements) => {
     const { row, isSelected, toggleRecordSelection, isHovered } = props;
 
     return (
-      <TableCell className={`sticky left-0 ${getCellBackgroundColor(true, isSelected, isHovered)}`}>
+      <TableCell className={`sticky left-0 ${getCellBackgroundColor({ isSelected, isHovered })} z-30`}>
         <Checkbox
           id={`AutoTableSingleRowCheckbox-${row.id as string}`}
           checked={isSelected}
-          className="z-100"
           onClick={(e) => {
             toggleRecordSelection(row.id as string);
             e.stopPropagation();
           }}
         />
-        {!isSelected && isHovered && <div className={`absolute inset-0 bg-muted/50 z-0`} />}
       </TableCell>
     );
   }
@@ -185,9 +181,8 @@ export const makeAutoTable = (elements: ShadcnElements) => {
                 style={column.style}
                 className={`${
                   isSticky ? `sticky left-${canSelectRecords ? "6" : "0"} z-10` : ``
-                } max-w-[200px] overflow-hidden text-ellipsis whitespace-nowrap ${getCellBackgroundColor(isSticky, isSelected, isHovered)}`}
+                } max-w-[200px] overflow-hidden text-ellipsis whitespace-nowrap ${getCellBackgroundColor({ isSelected, isHovered })}`}
               >
-                {isSticky && !isSelected && isHovered && <div className={`absolute inset-0 bg-muted/50`} />}
                 {column.type == "CustomRenderer" ? (
                   (row[column.identifier] as React.ReactNode)
                 ) : (

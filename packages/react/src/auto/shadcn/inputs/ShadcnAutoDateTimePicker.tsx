@@ -120,7 +120,9 @@ export const makeShadcnAutoDateTimePicker = ({
               id={props.id ? `${props.id}-date` : undefined}
               variant="outline"
               type="button"
-              className={`w-full justify-start text-left font-normal ${!localTime ? "text-muted-foreground" : ""}`}
+              className={`w-full justify-start text-left font-normal ${!localTime ? "text-muted-foreground" : ""} ${
+                isOpen ? "ring-1 ring-ring" : ""
+              }`}
             >
               <CalendarIcon className="mr-2 h-4 w-4" />
               {localTime ? (

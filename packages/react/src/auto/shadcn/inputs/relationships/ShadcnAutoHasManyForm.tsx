@@ -14,11 +14,10 @@ export const makeShadcnAutoHasManyForm = ({
   Accordion,
   AccordionContent,
   AccordionItem,
-  AccordionTrigger,
   Badge,
   Button,
   Label,
-}: Pick<ShadcnElements, "Accordion" | "AccordionContent" | "AccordionItem" | "AccordionTrigger" | "Badge" | "Button" | "Label">) => {
+}: Pick<ShadcnElements, "Accordion" | "AccordionContent" | "AccordionItem" | "Badge" | "Button" | "Label">) => {
   const EditableOptionLabelButton = makeShadcnEditableOptionLabelButton({ Badge, Button, Label });
 
   function ShadcnAutoHasManyForm(props: Omit<AutoRelationshipFormProps, "recordFilter">) {
@@ -42,7 +41,7 @@ export const makeShadcnAutoHasManyForm = ({
 
     return (
       <div>
-        <div style={{ marginBottom: "8px" }}>{props.label ?? <Label className="text-sm font-semibold">{metadata.name}</Label>}</div>
+        <div style={{ marginBottom: "8px" }}>{props.label ?? <h2 className="text-lg font-medium">{metadata.name}</h2>}</div>
         <div>
           <Accordion
             type="single"
@@ -67,11 +66,12 @@ export const makeShadcnAutoHasManyForm = ({
                 : props.field;
 
               const isEditing = editingIndex === idx;
+              const position = idx === 0 ? "top" : "middle";
 
               if (isEditing) {
                 return (
                   <AccordionItem key={field._fieldArrayKey} value={`${fieldArrayPath}.${idx}`} id={`${pathPrefix}.${idx}`}>
-                    <AccordionContent className="border border-gray-300 rounded-md p-3">
+                    <AccordionContent className={`p-3 ${positionalBorder[position]}`}>
                       <RelationshipContext.Provider
                         value={{
                           transformPath: (path) => `${pathPrefix}.${idx}.${path}`,
@@ -81,7 +81,7 @@ export const makeShadcnAutoHasManyForm = ({
                       >
                         {props.children}
                       </RelationshipContext.Provider>
-                      <div className="flex justify-between p-4">
+                      <div className="flex justify-between pt-4">
                         <Button variant="destructive" id={`deleteButton_${metadataPathPrefix}.${idx}`} onClick={() => remove(idx)}>
                           Delete
                         </Button>
@@ -109,42 +109,53 @@ export const makeShadcnAutoHasManyForm = ({
                   value={`${fieldArrayPath}.${idx}`}
                   id={`${pathPrefix}.${idx}`}
                   onClick={() => setEditingIndex(idx)}
-                  className=""
                 >
-                  <AccordionTrigger onClick={(e) => e.preventDefault()}>
+                  <AccordionSection position={position}>
                     <EditableOptionLabelButton option={option} />
-                  </AccordionTrigger>
-                  <AccordionContent className="border border-gray-300 rounded-md p-3">
-                    <RelationshipContext.Provider
-                      value={{
-                        transformPath: (path) => `${pathPrefix}.${idx}.${path}`,
-                        transformMetadataPath: (path) => `${metadataPathPrefix}.${path}`,
-                        fieldArray,
-                      }}
-                    >
-                      {props.children}
-                    </RelationshipContext.Provider>
-                  </AccordionContent>
+                  </AccordionSection>
                 </AccordionItem>
               );
             })}
+            <AccordionSection
+              position={fields.length === 0 ? "only" : "bottom"}
+              onClick={() => {
+                append({});
+                setEditingIndex(fields.length);
+              }}
+            >
+              <PlusCircleIcon className="w-4 h-4" />
+              <Label className="text-sm font-semibold cursor-pointer">Add {modelName}</Label>
+            </AccordionSection>
           </Accordion>
-          <Button
-            type="button"
-            variant="default"
-            className="flex gap-1 border border-gray-300 rounded-md p-2 cursor-pointer"
-            onClick={() => {
-              append({});
-              setEditingIndex(fields.length);
-            }}
-          >
-            <PlusCircleIcon className="w-4 h-4" />
-            <Label className="text-sm font-semibold">Add {modelName}</Label>
-          </Button>
         </div>
       </div>
     );
   }
 
+  function AccordionSection(props: { position?: "top" | "bottom" | "middle" | "only"; children: React.ReactNode; onClick?: () => void }) {
+    const { position, children, onClick } = props;
+
+    return (
+      <Button
+        type="button"
+        variant="outline"
+        className={`flex w-full h-fit justify-start gap-2 px-4 py-3 cursor-pointer ${position ? `${positionalBorder[position]}` : ""}`}
+        onClick={(e) => {
+          e.preventDefault();
+          onClick?.();
+        }}
+      >
+        {children}
+      </Button>
+    );
+  }
+
   return autoRelationshipForm(ShadcnAutoHasManyForm);
+};
+
+const positionalBorder = {
+  top: "rounded-t-md rounded-b-none border-0 border-x-[1px] border-t-[1px]",
+  middle: "rounded-none border-0 border-x-[1px]",
+  bottom: "rounded-b-md rounded-t-none border-0 border-x-[1px] border-b-[1px]",
+  only: "rounded-md border-0 border-x-[1px] border-y-[1px]",
 };

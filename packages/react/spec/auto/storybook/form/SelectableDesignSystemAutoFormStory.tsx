@@ -1,13 +1,15 @@
 import type { ActionFunction, GlobalActionFunction } from "@gadgetinc/api-client-core";
-import { BlockStack, Box, LegacyCard, Card as PolarisCard, Label as PolarisLabel } from "@shopify/polaris";
+import { BlockStack, Box, Button as PolarisButton, Card as PolarisCard, Label as PolarisLabel } from "@shopify/polaris";
 import React from "react";
 import { SUITE_NAMES } from "../../../../cypress/support/constants.js";
 import { type AutoFormProps } from "../../../../src/auto/AutoForm.js";
+import type { AutoRelationshipFormProps, AutoRelationshipInputProps } from "../../../../src/auto/interfaces/AutoRelationshipInputProps.js";
 import { PolarisAutoForm } from "../../../../src/auto/polaris/PolarisAutoForm.js";
 import { PolarisAutoInput } from "../../../../src/auto/polaris/inputs/PolarisAutoInput.js";
 import { PolarisAutoBelongsToForm } from "../../../../src/auto/polaris/inputs/relationships/PolarisAutoBelongsToForm.js";
 import { PolarisAutoHasManyForm } from "../../../../src/auto/polaris/inputs/relationships/PolarisAutoHasManyForm.js";
 import { PolarisAutoHasManyThroughForm } from "../../../../src/auto/polaris/inputs/relationships/PolarisAutoHasManyThroughForm.js";
+import { PolarisAutoHasManyThroughInput } from "../../../../src/auto/polaris/inputs/relationships/PolarisAutoHasManyThroughInput.js";
 import { PolarisAutoHasOneForm } from "../../../../src/auto/polaris/inputs/relationships/PolarisAutoHasOneForm.js";
 import { PolarisAutoSubmit } from "../../../../src/auto/polaris/submit/PolarisAutoSubmit.js";
 import { PolarisSubmitResultBanner } from "../../../../src/auto/polaris/submit/PolarisSubmitResultBanner.js";
@@ -18,12 +20,33 @@ import { Label as ShadcnLabel } from "../../shadcn-defaults/components/Label.js"
 import { elements } from "../../shadcn-defaults/index.js";
 import { DesignSystemSelectionControl, ShadcnAutoComponentsThemeControlWrapper, useDesignSystem } from "../SelectableDesignSystemUtils.js";
 
+export const Button = (props: any) => {
+  const { designSystem } = useDesignSystem();
+  if (designSystem === SUITE_NAMES.POLARIS) {
+    return <PolarisButton {...props} />;
+  }
+  if (designSystem === SUITE_NAMES.SHADCN) {
+    return (
+      <elements.Button
+        {...props}
+        onClick={(e) => {
+          e.preventDefault();
+          e.stopPropagation();
+          props.onClick?.();
+        }}
+      />
+    );
+  }
+  return null;
+};
+
 const {
   AutoForm: ShadcnAutoForm,
   AutoInput: ShadcnAutoInput,
   AutoBelongsToForm: ShadcnAutoBelongsToForm,
   AutoHasManyForm: ShadcnAutoHasManyForm,
   AutoHasManyThroughForm: ShadcnAutoHasManyThroughForm,
+  AutoHasManyThroughInput: ShadcnAutoHasManyThroughInput,
   AutoHasOneForm: ShadcnAutoHasOneForm,
   AutoSubmit: ShadcnAutoSubmit,
   SubmitResultBanner: ShadcnSubmitResultBanner,
@@ -62,7 +85,7 @@ export const AutoInput = (props: any) => {
   return null;
 };
 
-export const AutoBelongsToForm = (props: any) => {
+export const AutoBelongsToForm = (props: AutoRelationshipFormProps) => {
   const { designSystem } = useDesignSystem();
   if (designSystem === SUITE_NAMES.POLARIS) {
     return <PolarisAutoBelongsToForm {...props} />;
@@ -73,7 +96,7 @@ export const AutoBelongsToForm = (props: any) => {
   return null;
 };
 
-export const AutoHasManyForm = (props: any) => {
+export const AutoHasManyForm = (props: AutoRelationshipFormProps) => {
   const { designSystem } = useDesignSystem();
   if (designSystem === SUITE_NAMES.POLARIS) {
     return <PolarisAutoHasManyForm {...props} />;
@@ -84,7 +107,7 @@ export const AutoHasManyForm = (props: any) => {
   return null;
 };
 
-export const AutoHasManyThroughForm = (props: any) => {
+export const AutoHasManyThroughForm = (props: AutoRelationshipFormProps) => {
   const { designSystem } = useDesignSystem();
   if (designSystem === SUITE_NAMES.POLARIS) {
     return <PolarisAutoHasManyThroughForm {...props} />;
@@ -95,13 +118,24 @@ export const AutoHasManyThroughForm = (props: any) => {
   return null;
 };
 
-export const AutoHasOneForm = (props: any) => {
+export const AutoHasOneForm = (props: AutoRelationshipFormProps) => {
   const { designSystem } = useDesignSystem();
   if (designSystem === SUITE_NAMES.POLARIS) {
     return <PolarisAutoHasOneForm {...props} />;
   }
   if (designSystem === SUITE_NAMES.SHADCN) {
     return <ShadcnAutoHasOneForm {...props} />;
+  }
+  return null;
+};
+
+export const AutoHasManyThroughInput = (props: AutoRelationshipInputProps) => {
+  const { designSystem } = useDesignSystem();
+  if (designSystem === SUITE_NAMES.POLARIS) {
+    return <PolarisAutoHasManyThroughInput {...props} />;
+  }
+  if (designSystem === SUITE_NAMES.SHADCN) {
+    return <ShadcnAutoHasManyThroughInput {...props} />;
   }
   return null;
 };
@@ -162,10 +196,10 @@ const PolarisAutoFormStory = <
     <div style={{ width: "100%" }}>
       <Box paddingBlockEnd="400">
         <BlockStack gap="200">
-          <LegacyCard>
+          <Card>
             {/* @ts-expect-error - This is a workaround to allow the PolarisAutoForm to be used in the storybook */}
             <PolarisAutoForm {...props} />
-          </LegacyCard>
+          </Card>
         </BlockStack>
       </Box>
     </div>
@@ -187,10 +221,10 @@ const ShadcnAutoFormStory = <
 
   return (
     <ShadcnAutoComponentsThemeControlWrapper>
-      <div style={{ padding: "20px" }}>
+      <Card>
         {/* @ts-expect-error - This is a workaround to allow the PolarisAutoForm to be used in the storybook */}
         <ShadcnAutoForm {...props} />
-      </div>
+      </Card>
     </ShadcnAutoComponentsThemeControlWrapper>
   );
 };
