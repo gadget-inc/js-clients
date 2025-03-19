@@ -8,6 +8,7 @@ import { useAutoForm } from "../AutoForm.js";
 import { validateAutoFormProps } from "../AutoFormActionValidators.js";
 import { AutoFormFieldsFromChildComponentsProvider, AutoFormMetadataContext } from "../AutoFormContext.js";
 import { AutoHasManyThroughJoinModelForm } from "../hooks/useHasManyThroughController.js";
+import { makeDefaultPreventedButton } from "./ShadcnDefaultPreventedButton.js";
 import type { ShadcnElements } from "./elements.js";
 import { makeShadcnAutoInput } from "./inputs/ShadcnAutoInput.js";
 import { makeShadcnAutoBelongsToForm } from "./inputs/relationships/ShadcnAutoBelongsToForm.js";
@@ -30,6 +31,9 @@ export type ShadcnAutoFormProps<
  */
 export const makeAutoForm = <Elements extends ShadcnElements>(elements: Elements) => {
   const { Skeleton, cn } = elements;
+
+  const DefaultPreventedButton = makeDefaultPreventedButton(elements);
+  const allElements = { ...elements, Button: DefaultPreventedButton };
 
   const {
     AutoInput,
@@ -54,14 +58,15 @@ export const makeAutoForm = <Elements extends ShadcnElements>(elements: Elements
     AutoHasManyInput,
     AutoHasManyThroughInput,
     AutoHasOneInput,
-  } = makeShadcnAutoInput(elements);
+  } = makeShadcnAutoInput(allElements);
 
-  const AutoSubmit = makeShadcnAutoSubmit(elements);
-  const { SubmitSuccessfulBanner, SubmitErrorBanner, SubmitResultBanner } = makeSubmitResultBanner(elements);
-  const AutoHasOneForm = makeShadcnAutoHasOneForm(elements);
-  const AutoBelongsToForm = makeShadcnAutoBelongsToForm(elements);
-  const AutoHasManyForm = makeShadcnAutoHasManyForm(elements);
-  const AutoHasManyThroughForm = makeShadcnAutoHasManyThroughForm(elements);
+  const AutoSubmit = makeShadcnAutoSubmit(allElements);
+  const { SubmitSuccessfulBanner, SubmitErrorBanner, SubmitResultBanner } = makeSubmitResultBanner(allElements);
+
+  const AutoHasOneForm = makeShadcnAutoHasOneForm(allElements);
+  const AutoBelongsToForm = makeShadcnAutoBelongsToForm(allElements);
+  const AutoHasManyForm = makeShadcnAutoHasManyForm(allElements);
+  const AutoHasManyThroughForm = makeShadcnAutoHasManyThroughForm(allElements);
 
   const FormContainer = forwardRef<HTMLFormElement, React.FormHTMLAttributes<HTMLFormElement>>(({ className, ...props }, ref) => {
     return <form ref={ref} noValidate className={cn("space-y-6", className)} {...props} />;

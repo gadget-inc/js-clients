@@ -24,7 +24,14 @@ export const makeShadcnAutoTableBulkActionSelector = (elements: ShadcnElements) 
     return (
       <Popover open={open} onOpenChange={setOpen}>
         <PopoverTrigger asChild>
-          <Button variant="outline" role="combobox" aria-expanded={open} className="w-[200px] justify-between" aria-label="More actions">
+          <Button
+            variant="outline"
+            role="combobox"
+            aria-expanded={open}
+            className="w-[200px] justify-between"
+            aria-label="More actions"
+            onClick={() => setOpen(!open)}
+          >
             {"Actions..."}
             <ChevronsUpDown className="opacity-50" />
           </Button>

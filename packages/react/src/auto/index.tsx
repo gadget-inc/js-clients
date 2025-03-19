@@ -11,10 +11,12 @@ export interface AutoAdapter<T = any, F = any, B = any> {
   AutoJSONInput: React.ComponentType<any>;
   AutoSubmit: React.ComponentType<any>;
   SubmitResultBanner: React.ComponentType<any>;
+
   AutoHasOneForm: React.ComponentType<any>;
   AutoBelongsToForm: React.ComponentType<any>;
   AutoHasManyForm: React.ComponentType<any>;
   AutoHasManyThroughForm: React.ComponentType<any>;
+
   AutoDateTimePicker: React.ComponentType<{
     suiteName?: string;
     field: string;
@@ -25,5 +27,6 @@ export interface AutoAdapter<T = any, F = any, B = any> {
     includeTime?: boolean;
   }>;
   AutoBelongsToInput: React.ComponentType<any>;
+  AutoHasManyInput: React.ComponentType<any>;
   AutoEnumInput: React.ComponentType<any>;
 }

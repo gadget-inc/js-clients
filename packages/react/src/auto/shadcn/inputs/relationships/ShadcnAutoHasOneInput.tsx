@@ -53,15 +53,7 @@ export const makeShadcnAutoHasOneInput = ({
     const selectedRecordTag = selectedOption ? (
       <Badge variant={"outline"} key={`selectedRecordTag_${selectedOption.id}`}>
         <p id={`${selectedOption.id}_${selectedOption.primary}`}>{selectedOption.primary ?? `id: ${selectedOption.id}`}</p>
-        <Button
-          aria-label={`Remove`}
-          onClick={(e) => {
-            e.preventDefault();
-            selectedRecord && onRemoveRecord(selectedRecord);
-          }}
-          variant="ghost"
-          size="icon"
-        >
+        <Button aria-label={`Remove`} onClick={() => selectedRecord && onRemoveRecord(selectedRecord)} variant="ghost" size="icon">
           <XIcon />
         </Button>
       </Badge>

@@ -51,23 +51,8 @@ export const makeShadcnAutoHasOneForm = ({
       removeRecord,
     } = form;
 
-    const clickConfirmEdit = useCallback(
-      (e: React.MouseEvent<HTMLButtonElement>) => {
-        e.preventDefault();
-        e.stopPropagation();
-        confirmEdit();
-      },
-      [confirmEdit]
-    );
-
-    const clickRemoveRecord = useCallback(
-      (e: React.MouseEvent<HTMLButtonElement>) => {
-        e.preventDefault();
-        e.stopPropagation();
-        removeRecord();
-      },
-      [removeRecord]
-    );
+    const clickConfirmEdit = useCallback(() => confirmEdit(), [confirmEdit]);
+    const clickRemoveRecord = useCallback(() => removeRecord(), [removeRecord]);
 
     return (
       <RelationshipContext.Provider

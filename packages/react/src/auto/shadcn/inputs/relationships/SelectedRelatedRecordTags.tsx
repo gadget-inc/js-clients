@@ -22,7 +22,7 @@ export const makeSelectedRecordTags = ({ Badge, Button }: Pick<ShadcnElements, "
       <>
         {options.map((option, index) => {
           return (
-            <Badge key={`option-${option.id || index}`} variant={"outline"}>
+            <Badge key={`option-${option.id || index}`} variant={"outline"} id={`selected-option-${option.primary}`}>
               {option.primary}
               <Button
                 onClick={(e) => {
@@ -31,7 +31,7 @@ export const makeSelectedRecordTags = ({ Badge, Button }: Pick<ShadcnElements, "
                   onRemoveRecord(record ?? { id: option.id });
                 }}
                 variant="ghost"
-                aria-label={`Remove`}
+                aria-label={`Remove ${option.primary}`}
                 size="icon"
               >
                 <XIcon />
