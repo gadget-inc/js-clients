@@ -173,7 +173,7 @@ export const makeShadcnAutoHasManyThroughForm = ({
               });
 
               return (
-                <div className="flex items-center w-full border border-gray-300 rounded-md " key={fieldKey}>
+                <div className="flex items-center w-full border rounded-md " key={fieldKey}>
                   <div className="flex flex-col w-full">
                     <div className="flex-1 p-2">
                       <div className="flex justify-between items-center w-full">
@@ -198,7 +198,7 @@ export const makeShadcnAutoHasManyThroughForm = ({
                     </div>
                     {props.children && (
                       <div
-                        className="flex-1 p-2 border-t border-gray-300"
+                        className="flex-1 p-2 border-t"
                         onClick={(e) => {
                           e.stopPropagation();
                           e.preventDefault();
@@ -222,7 +222,7 @@ export const makeShadcnAutoHasManyThroughForm = ({
             })}
           </div>
         ) : (
-          <div className="flex items-center justify-center border border-gray-300 rounded-md p-2 mt-4">
+          <div className="flex items-center justify-center border rounded-md p-2 mt-4">
             <Label className="text-sm text-gray-500">No {siblingModelName} yet</Label>
           </div>
         )}

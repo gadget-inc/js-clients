@@ -58,7 +58,7 @@ export const makeShadcnAutoTableBulkActionModal = (elements: ShadcnElements) => 
       <>
         <DialogDescription>
           {fetching && (
-            <div className="flex items-center justify-center min-h-[32px]">
+            <div className="flex items-center justify-center min-h-8">
               <LoadingIndicator />
             </div>
           )}
