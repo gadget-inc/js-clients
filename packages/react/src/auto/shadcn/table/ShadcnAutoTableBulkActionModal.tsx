@@ -57,7 +57,11 @@ export const makeShadcnAutoTableBulkActionModal = (elements: ShadcnElements) => 
     return (
       <>
         <DialogDescription>
-          {fetching && <LoadingIndicator />}
+          {fetching && (
+            <div className="flex items-center justify-center min-h-[32px]">
+              <LoadingIndicator />
+            </div>
+          )}
           {!fetching &&
             (hasRun ? (
               <Alert variant={hasError ? "destructive" : "default"}>{actionResultMessage}</Alert>
