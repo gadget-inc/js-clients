@@ -185,10 +185,12 @@ const PolarisAutoTableComponent = <
             cancelAction={{ onAction: () => search.clear() }}
             disabled={!!error}
             // Search
+            disableKeyboardShortcuts
             queryValue={search.value}
             onQueryChange={search.set}
             onQueryClear={search.clear}
             queryPlaceholder={"Search"}
+            filteringAccessibilityTooltip={"Search"}
           />
         )}
 
