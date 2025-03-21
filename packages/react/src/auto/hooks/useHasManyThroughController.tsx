@@ -123,12 +123,11 @@ export const useHasManyThroughInputController = (props: AutoRelationshipInputPro
  *
  * @example
  * ```tsx
- * 
  * //`course` hasMany `students` through `registration`
- * 
+ *
  * <AutoForm action={api.course.create}>
  *   <AutoInput field="name" />
- *   <AutoHasManyThroughForm // `students` relationship field on `course` model 
+ *   <AutoHasManyThroughForm // `students` relationship field on `course` model
  *     field="students"
  *   >
  *     <AutoHasManyThroughJoinModelForm>
@@ -142,7 +141,7 @@ export const useHasManyThroughInputController = (props: AutoRelationshipInputPro
  *   </AutoHasManyThroughForm>
  *   <AutoSubmit />
  * </AutoForm>
- * 
+ *
  * ```
  *
  * @param props.children - Inputs on the join model inside AutoHasManyThroughForm.

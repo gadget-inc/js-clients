@@ -20,7 +20,6 @@ import { PolarisSubmitErrorBanner, PolarisSubmitSuccessfulBanner } from "./submi
  *   {isLoading ? <AutoFormSkeleton /> : <AutoFormContent />}
  * </AutoForm>
  * ```
- * @returns 
  */
 export const PolarisAutoFormSkeleton = () => (
   <>

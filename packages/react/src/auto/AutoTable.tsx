@@ -36,7 +36,6 @@ export type AutoTableProps<
    */
   live?: boolean;
 
-
   /**
    * The columns to display in the table, represented as (string | CellDetailColumn | CustomCellColumn)[]
    * - A string represents the API identifier of the field.
@@ -77,7 +76,7 @@ export type AutoTableProps<
    */
   filter?: Options["filter"];
 
-    /**
+  /**
    * The actions available for selected records, represented as (string | ActionCallback)[]
    * - A string represents the API identifier of the model action.
    * - ActionCallback contains a label and an action property, which can be an action API identifier or a function.
@@ -110,7 +109,7 @@ export type AutoTableProps<
   searchable?: boolean;
 
   /**
-   * A preset search term.  
+   * A preset search term.
    */
   searchValue?: string;
 
