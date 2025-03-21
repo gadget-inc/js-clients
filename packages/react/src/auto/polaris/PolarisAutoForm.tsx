@@ -13,14 +13,14 @@ import { PolarisAutoSubmit } from "./submit/PolarisAutoSubmit.js";
 import { PolarisSubmitErrorBanner, PolarisSubmitSuccessfulBanner } from "./submit/PolarisSubmitResultBanner.js";
 
 /**
- * A skeleton component for the form to display while the form is loading
+ * Skeleton loader
  * @example
  * ```tsx
  * <AutoForm action={api.modelA.create}>
  *   {isLoading ? <AutoFormSkeleton /> : <AutoFormContent />}
  * </AutoForm>
  * ```
- * @returns Skeleton component for the form
+ * @returns 
  */
 export const PolarisAutoFormSkeleton = () => (
   <>
@@ -38,7 +38,7 @@ export type PolarisAutoFormProps<
 > = AutoFormProps<GivenOptions, SchemaT, ActionFunc> & Omit<Partial<FormProps>, "action">;
 
 /**
- * Renders a form for an action on a model automatically using Polaris
+ * Renders a form for an action on a model using Polaris.
  */
 export const PolarisAutoForm = <
   GivenOptions extends OptionsType,
@@ -51,7 +51,7 @@ export const PolarisAutoForm = <
 
   validateAutoFormProps(props);
 
-  // Component key to force re-render when the action or findBy changes
+  // Forces re-render when the action or findBy changes.
   const componentKey = `${"modelApiIdentifier" in action ? `${action.modelApiIdentifier}.` : ""}${action.operationName}.${JSON.stringify(
     findBy
   )}`;
@@ -71,7 +71,7 @@ const PolarisAutoFormComponent = <
   SchemaT,
   ActionFunc extends ActionFunction<GivenOptions, any, any, SchemaT, any> | GlobalActionFunction<any>
 >(
-  //polaris form props also take an 'action' property, which we need to omit here.
+  //Polaris form props also take an 'action' property, which we must omit here.
   props: PolarisAutoFormProps<GivenOptions, SchemaT, ActionFunc>
 ) => {
   const { record: _record, action, findBy, ...rest } = props as PolarisAutoFormProps<GivenOptions, SchemaT, ActionFunc> & { findBy: any };

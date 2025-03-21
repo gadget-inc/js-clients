@@ -9,16 +9,16 @@ import { PolarisFixedOptionsCombobox } from "../PolarisFixedOptionsCombobox.js";
 type PolarisAutoRolesInputProps = AutoRolesInputProps & Partial<PolarisFixedOptionsMultiComboboxProps>;
 
 /**
- * A role list input component for use within <AutoForm></AutoForm> components.
+ * A RoleList selector within AutoForm.
  * @example
  * ```tsx
  * <AutoForm action={api.modelA.create}>
  *   <AutoRolesInput field="roles" />
  * </AutoForm>
  * ```
- * @param props.field - The role list field API identifier
- * @param props.label - The label of the role list field
- * @returns The Polaris Auto Roles Input component
+ * @param props.field - The RoleList field API identifier.
+ * @param props.label - Label of the RoleList selector.
+ * @returns The AutoRolesInput component
  */
 export const PolarisAutoRolesInput = autoInput((props: PolarisAutoRolesInputProps) => {
   const { options, loading, rolesError, fieldError, selectedRoleKeys, fieldProps, metadata } = useRoleInputController(props);

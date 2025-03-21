@@ -119,36 +119,37 @@ export const useHasManyThroughInputController = (props: AutoRelationshipInputPro
 };
 
 /**
- * A form component for the join model of a hasManyThrough relationship that associates the contained <AutoInput/> components in the children with the hasManyThrough relationship join model.
+ * A form for including join model fields in a hasManyThrough relationship.
  *
  * @example
  * ```tsx
+ * 
+ * //`course` hasMany `students` through `registration`
+ * 
  * <AutoForm action={api.course.create}>
- *   <AutoInput // `name` field on `course` model
- *     field="name"
- *   />
- *   <AutoHasManyThroughForm // `students` field on `course` model - `course` hasMany `students` through `registration`
+ *   <AutoInput field="name" />
+ *   <AutoHasManyThroughForm // `students` relationship field on `course` model 
  *     field="students"
  *   >
- *     <AutoHasManyThroughJoinModelForm // Join model field inputs
- *     >
- *       <AutoInput // `isTuitionPaid` field on `registration` model
+ *     <AutoHasManyThroughJoinModelForm>
+ *       <AutoInput // `isTuitionPaid` boolean field on `registration` model
  *         field="isTuitionPaid"
  *       />
  *     </AutoHasManyThroughJoinModelForm>
- *     <AutoInput // Sibling model field inputs
+ *     <AutoInput
  *       field="firstName"
  *     />
  *   </AutoHasManyThroughForm>
  *   <AutoSubmit />
  * </AutoForm>
+ * 
  * ```
  *
- * @param props.children - The React children containing inputs on the join model in an AutoHasManyThroughForm component
- * @returns The React children containing inputs on the join model in an AutoHasManyThroughForm component
+ * @param props.children - Inputs on the join model inside AutoHasManyThroughForm.
+ * @returns  Inputs on the join model inside AutoHasManyThroughForm.
  */
 export const AutoHasManyThroughJoinModelForm = (props: {
-  /** The React children containing inputs on the join model in an AutoHasManyThroughForm component */
+  /** Inputs on the join model inside AutoHasManyThroughForm. */
   children?: ReactNode;
 }) => {
   useEnsureInHasManyThroughForm();
@@ -156,13 +157,15 @@ export const AutoHasManyThroughJoinModelForm = (props: {
   return <HasManyThroughJoinModelContext.Provider value={true}>{props.children}</HasManyThroughJoinModelContext.Provider>;
 };
 
+/** Context to track if inside a HasManyThrough join model. */
 export const HasManyThroughJoinModelContext = createContext<null | true>(null);
 
-// Export a hook that just checks if we're inside the component
+/** Export a hook that checks if inside the component. */
 export const useIsInHasManyThroughJoinModelInput = () => {
   return useContext(HasManyThroughJoinModelContext) !== null;
 };
 
+/** Ensures component is used inside AutoHasManyThroughForm. */
 export const useEnsureInHasManyThroughForm = () => {
   const relationshipContext = useRelationshipContext();
 

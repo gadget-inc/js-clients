@@ -10,17 +10,17 @@ import { type AutoFileInputProps } from "../../shared/AutoInputTypes.js";
 export type PolarisAutoFileInputProps = AutoFileInputProps & Omit<DropZoneProps, "allowMultiple">;
 
 /**
- * A file input for use within <AutoForm></AutoForm> components
+ * A file input within AutoForm.
  * @example
  * ```tsx
  * <AutoForm action={api.modelA.create}>
  *   <AutoFileInput field="fileField" />
  * </AutoForm>
  * ```
- * @param props.field - The API identifier of the File field
- * @param props.label - The label of the File field
- * @param props.onChange - called when the file input changes
- * @returns The file input component
+ * @param props.field - The API identifier of the File field.
+ * @param props.label - Label of the File input.
+ * @param props.onChange - Called when the file input changes.
+ * @returns The AutoFileInput component.
  */
 export const PolarisAutoFileInput = autoInput((props: PolarisAutoFileInputProps) => {
   const { field: fieldApiIdentifier, control, ...rest } = props;

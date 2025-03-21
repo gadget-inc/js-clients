@@ -60,28 +60,28 @@ export type PolarisAutoTableProps<
   Options extends FinderFunction["optionsType"]
 > = AutoTableProps<GivenOptions, SchemaT, FinderFunction, Options> & {
   /**
-   * Condense the table, so that the user does not have to scroll horizontally. Defaults to false
+   * Condenses the table to avoid horizontal scrolling. Defaults to `false`.
    */
   condensed?: boolean;
 
   /**
-   * Add zebra striping to table rows. Defaults to false
+   * Adds zebra striping to table rows. Defaults to `false`.
    */
   hasZebraStriping?: boolean;
 
   /**
-   * Toggle whether the last column is always visible. Defaults to false
+   * Keeps last column always visible. Defaults to `false`.
    */
   lastColumnSticky?: boolean;
 };
 
 /**
- * Renders a table of records from the backend automatically for a given model using Polaris
+ * Renders a table of records from given model using Shopify Polaris
  * @example
  * ```tsx
  * <AutoTable model={api.user} />
  * ```
- * @param props.model - The Gadget model to show in the table
+ * @param props.model - The Gadget model displayed
  */
 export const PolarisAutoTable = <
   GivenOptions extends OptionsType,
@@ -233,7 +233,7 @@ const PolarisAutoTableComponent = <
           hasMoreItems={page.hasNextPage}
           itemCount={
             error
-              ? 1 // Don't show the empty state if there's an error
+              ? 1 // Don't show the empty state if there's are no errors.
               : rows?.length ?? 0
           }
           pagination={
@@ -290,7 +290,7 @@ const PolarisAutoTableComponent = <
 };
 
 const PolarisIndexTableCellStyleOverride = () => {
-  // !important to override the default padding from a class that gets applied afterwards
+  // !important to override the default padding from a class that gets applied afterwards.
   const css = /*css*/ `
   .Gadget_PolarisAutoTable_IndexTableCell {
     padding: 0px !important; 
@@ -300,7 +300,7 @@ const PolarisIndexTableCellStyleOverride = () => {
 };
 
 const disablePaginatedSelectAllButton = {
-  paginatedSelectAllActionText: "", // Empty string to hide the select all button. We only allow selection on the current page
+  paginatedSelectAllActionText: "", // Empty string to hide the select all button. We only allow selections on the current page.
 };
 
 const bulkActionOptionMapper = (selectedRows: TableRow[], clearSelection: () => void) => {

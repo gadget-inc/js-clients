@@ -21,7 +21,7 @@ import { PolarisAutoHasManyThroughInput } from "./relationships/PolarisAutoHasMa
 import { PolarisAutoHasOneInput } from "./relationships/PolarisAutoHasOneInput.js";
 
 /**
- * An automatically generated input component based on the given field's type for use within <AutoForm></AutoForm> components
+ * An auto-generated input based on the given field types used within AutoForm.
  * @example
  * ```tsx
  * <AutoForm action={api.modelA.create}>
@@ -30,9 +30,9 @@ import { PolarisAutoHasOneInput } from "./relationships/PolarisAutoHasOneInput.j
  *   <AutoInput field="numberField" label="Count" />
  * </AutoForm>
  * ```
- * @param props.field The API identifier of the field
- * @param props.label The label of the field
- * @returns The input component
+ * @param props.field - The API identifier of the field.
+ * @param props.label - Label of the component.
+ * @returns The AutoInput component.
  */
 export const PolarisAutoInput = autoInput((props: AutoInputProps) => {
   const { metadata } = useFieldMetadata(props.field);

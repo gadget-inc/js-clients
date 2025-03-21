@@ -9,15 +9,15 @@ import { PolarisAutoTextInput } from "./PolarisAutoTextInput.js";
 export type PolarisAutoEncryptedStringInputProps = AutoEncryptedStringInputProps & Partial<TextFieldProps>;
 
 /**
- * An encrypted string input for use within <AutoForm></AutoForm> components.
+ * An encrypted string input within AutoForm.
  * @example
  * ```tsx
  * <AutoForm action={api.modelA.create}>
  *   <AutoEncryptedStringInput field="encryptedStringField" />
  * </AutoForm>
  * ```
- * @param props.field - The API identifier for the EncryptedString field.
- * @param props.label - The label of the EncryptedString field.
+ * @param props.field - API identifier of the EncryptedString field.
+ * @param props.label - Label of the EncryptedString input.
  * @returns The AutoEncryptedStringInput component.
  */
 export const PolarisAutoEncryptedStringInput = autoInput((props: PolarisAutoEncryptedStringInputProps) => {

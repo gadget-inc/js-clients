@@ -8,15 +8,15 @@ import { type AutoEnumInputProps } from "../../shared/AutoInputTypes.js";
 export type PolarisAutoEnumInputProps = AutoEnumInputProps & Partial<Omit<ComboboxProps, "allowMultiple">>;
 
 /**
- * An enum option picker for use within <AutoForm></AutoForm> components.
+ * An enum option picker within AutoForm.
  * @example
  * ```tsx
  * <AutoForm action={api.modelA.create}>
  *   <AutoEnumInput field="enumField" />
  * </AutoForm>
  * ```
- * @param props.field - The API identifier for the Enum field.
- * @param props.label - The label of the input.
+ * @param props.field - The API identifier of the Enum field.
+ * @param props.label - Label of the Enum input.
  * @returns The AutoEnumInput component.
  */
 export const PolarisAutoEnumInput = autoInput((props: PolarisAutoEnumInputProps) => {

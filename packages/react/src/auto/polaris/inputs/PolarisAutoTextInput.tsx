@@ -9,16 +9,16 @@ import { type AutoTextInputProps } from "../../shared/AutoInputTypes.js";
 type PolarisAutoTextInputProps = AutoTextInputProps & Partial<TextFieldProps>;
 
 /**
- * A text input component for string based fields for use within <AutoForm></AutoForm> components.
+ * A text input within AutoForm.
  * @example
  * ```tsx
  * <AutoForm action={api.modelA.create}>
  *   <AutoTextInput field="fieldA" />
  * </AutoForm>
  * ```
- * @param props.field - The field API identifier
- * @param props.label - The label of the field
- * @returns The Input component
+ * @param props.field - The field API identifier.
+ * @param props.label - Label of the input.
+ * @returns The AutoTextInput component.
  */
 export const PolarisAutoTextInput = autoInput((props: PolarisAutoTextInputProps) => {
   const { field, control } = props;
@@ -37,7 +37,7 @@ export const PolarisAutoTextInput = autoInput((props: PolarisAutoTextInputProps)
 });
 
 /**
- * An input component for email fields for use within <AutoForm></AutoForm> components.
+ * An email input within AutoForm.
  * @example
  * ```tsx
  * <AutoForm action={api.modelA.create}>
@@ -45,35 +45,35 @@ export const PolarisAutoTextInput = autoInput((props: PolarisAutoTextInputProps)
  * </AutoForm>
  * ```
  * @param props.field - The email field API identifier
- * @param props.label - The label of the field
- * @returns The Input component
+ * @param props.label - Label of the email input.
+ * @returns The AutoEmailInput component
  */
 export const PolarisAutoEmailInput = (props: AutoTextInputProps) => <PolarisAutoTextInput {...props} />;
 
 /**
- * A input component for string fields for use within <AutoForm></AutoForm> components.
+ * A string input within AutoForm.
  * @example
  * ```tsx
  * <AutoForm action={api.modelA.create}>
  *   <AutoStringInput field="name" />
  * </AutoForm>
  * ```
- * @param props.field - The string field API identifier
- * @param props.label - The label of the string field
- * @returns The Input component
+ * @param props.field - The string field API identifier.
+ * @param props.label - Label of the string input.
+ * @returns The AutoStringInput component
  */
 export const PolarisAutoStringInput = (props: AutoTextInputProps) => <PolarisAutoTextInput {...props} />;
 
 /**
- * A input component for URL fields for use within <AutoForm></AutoForm> components.
+ * A url input within AutoForm.
  * @example
  * ```tsx
  * <AutoForm action={api.modelA.create}>
  *   <AutoUrlInput field="website" />
  * </AutoForm>
  * ```
- * @param props.field - The url field API identifier
- * @param props.label - The label of the url field
- * @returns The Input component
+ * @param props.field - The url field API identifier.
+ * @param props.label - Label of the url input.
+ * @returns The AutoUrlInput component
  */
 export const PolarisAutoUrlInput = (props: AutoTextInputProps) => <PolarisAutoTextInput {...props} />;

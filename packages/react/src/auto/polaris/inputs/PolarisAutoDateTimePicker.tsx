@@ -18,25 +18,25 @@ import PolarisAutoTimePicker from "./PolarisAutoTimePicker.js";
 
 export interface PolarisAutoDateTimePickerProps extends AutoDateTimeInputProps {
   /**
-   * The HTML ID of the DateTime field
+   * The HTML ID of the DateTime field.
    */
   id?: string;
   /**
-   * Indicates if the time popover should be hidden
+   * Hides the time popover.
    */
   hideTimePopover?: boolean;
   /**
-   * Props to pass to the Polaris DatePicker component
+   * Additional Polaris DatePicker props.
    */
   datePickerProps?: Partial<DatePickerProps>;
   /**
-   * Props to pass to the Polaris TimePicker component
+   * Additional Polaris TimePicker props.
    */
   timePickerProps?: Partial<TextFieldProps>;
 }
 
 /**
- * A date and time picker for use within <AutoForm></AutoForm> components.
+ * A date and time picker within AutoForm.
  * @example
  * ```tsx
  * <AutoForm action={api.modelA.create}>
@@ -44,12 +44,12 @@ export interface PolarisAutoDateTimePickerProps extends AutoDateTimeInputProps {
  * </AutoForm>
  * ```
  * @param props.field - The API identifier of the DateTime field.
- * @param props.label - The label of the date and time picker.
- * @param props.includeTime - Indicates if the the time picker component should be shown. Defaults to the value of the includeTime field metadata configuration.
- * @param props.hideTimePopover - Indicates if the time popover should be hidden.
- * @param props.datePickerProps - Additional props passed to the Polaris DatePicker component.
- * @param props.timePickerProps - Additional props passed to the Polaris TimePicker component.
- * @returns The date and time picker component.
+ * @param props.label - Label of the DateTime picker.
+ * @param props.includeTime - Show the time picker component. Defaults to the metadata config.
+ * @param props.hideTimePopover - Hide the time popover.
+ * @param props.datePickerProps - Additional Polaris DatePicker props.
+ * @param props.timePickerProps - Additional Polaris TimePicker props.
+ * @returns The AutoDateTimePicker component.
  */
 export const PolarisAutoDateTimePicker = autoInput((props: PolarisAutoDateTimePickerProps) => {
   const { localTz, localTime, onChange, value, fieldProps, metadata, fieldState } = useDateTimeField({

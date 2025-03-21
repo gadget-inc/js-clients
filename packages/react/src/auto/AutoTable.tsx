@@ -4,7 +4,7 @@ import type { TableOptions, TableRow } from "../use-table/types.js";
 import type { OptionsType } from "../utils.js";
 
 /**
- * The props to pass to an AutoTable. Includes both the Gadget-land props as well as the adapter specific props.
+ * Props for AutoTable, including Gadget-land and adapter-specific props.
  **/
 export type AutoTableProps<
   GivenOptions extends OptionsType,
@@ -18,8 +18,8 @@ export type AutoTableProps<
   model: { findMany: FinderFunction };
   /**
    * The selection object to pass to the table.
-   * This will override the default selection based on included columns.
-   * This is necessary for representing nested relationship fields in the table
+   * Overrides the default selection based on included columns.
+   * Needed for displaying nested relationships in the table.
    */
   select?: Options["select"];
   /**
@@ -27,30 +27,31 @@ export type AutoTableProps<
    */
   pageSize?: number;
   /**
-   * The initial pagination cursor to control the initial page of records to show.
+   * The initial pagination cursor to control the first page of records.
    * Pagination cursors are returned from the API.
    */
   initialCursor?: string;
   /**
-   * Determines if the table should be live updated when the data changes.
+   * Determines if the table should be live updated when data changes.
    */
   live?: boolean;
 
+
   /**
-   * The columns to show in the table represented as (string | CellDetailColumn | CustomCellColumn)[]
-   * - As a string, this represents the API identifier of the field to display.
-   * - As a CellDetailColumn, this a
-   * - As a CustomCellColumn, this represents a custom column to display.
+   * The columns to display in the table, represented as (string | CellDetailColumn | CustomCellColumn)[]
+   * - A string represents the API identifier of the field.
+   * - A CellDetailColumn is a detailed field representation.
+   * - A CustomCellColumn is a custom column.
    */
   columns?: TableOptions["columns"];
 
   /**
-   * An array of strings corresponding to model fields to exclude from the table.
+   * An array of model fields excluded from the table.
    */
   excludeColumns?: string[];
 
   /**
-   * callback function that gets called when a row is clicked.
+   * Callback triggered when a row is clicked.
    */
   onClick?: (
     row: TableRow,
@@ -63,7 +64,7 @@ export type AutoTableProps<
   ) => void;
 
   /**
-   * The initial column sort order that the table will be initialized with.
+   * The initial column sort order.
    * @example
    * ```tsx
    * <AutoTable model={api.user} initialSort={{ id: "Descending" }} />
@@ -72,49 +73,49 @@ export type AutoTableProps<
   initialSort?: Options["sort"];
 
   /**
-   * The model record filter to apply to the table.
+   * The model record filter to apply.
    */
   filter?: Options["filter"];
 
-  /**
-   * The actions to be shown in the table for selected records, represented as (string | ActionCallback)[]
-   * - strings in the array represent the API identifies of actions in the model that can be run on the selected records
-   * - ActionCallback is an object with a label and action property. The action property can be a string representing a model action or a function on that will be called with the selected records
+    /**
+   * The actions available for selected records, represented as (string | ActionCallback)[]
+   * - A string represents the API identifier of the model action.
+   * - ActionCallback contains a label and an action property, which can be an action API identifier or a function.
    */
   actions?: TableOptions["actions"];
 
   /**
-   * A string array of API identifiers for model actions to be excluded from the table.
+   * API identifiers of model actions to exclude from the table.
    */
   excludeActions?: TableOptions["excludeActions"];
 
   /**
-   * Indicates if the table rows are selectable.
+   * Indicates if table rows are selectable.
    */
   selectable?: boolean;
 
   /**
-   * The content to display in the table when there are no records to show.
+   * The content displayed when no records exist.
    */
   emptyState?: ReactNode;
 
   /**
-   * The resource name to display in the table.
+   * The resource name displayed in the table.
    */
   resourceName?: { singular: string; plural: string };
 
   /**
-   * Toggle whether the search bar is visible. Defaults to `true`
+   * Controls search bar visibility. Defaults to `true`.
    */
   searchable?: boolean;
 
   /**
-   * Optional search value to programmatically search for the model records
+   * A preset search term.  
    */
   searchValue?: string;
 
   /**
-   * Indicates if the table should be paginated.
+   * Indicates if pagination is enabled. Defaults to `true`.
    */
   paginate?: boolean;
 };

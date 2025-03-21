@@ -6,16 +6,16 @@ import { type AutoIdInputProps } from "../../shared/AutoInputTypes.js";
 import { PolarisAutoTextInput } from "./PolarisAutoTextInput.js";
 
 /**
- * An id input component for use within <AutoForm></AutoForm> components
+ * An id input within Autoform
  * @example
  * ```tsx
  * <AutoForm action={api.modelA.create}>
  *   <AutoIdInput field="id" />
  * </AutoForm>
  * ```
- * @param props.field The API identifier of the Id field
- * @param props.label The label of the Id field
- * @returns The id input component
+ * @param props.field - The API identifier of the Id field.
+ * @param props.label - Label of the Id input.
+ * @returns The AutoIdInput component
  */
 export const PolarisAutoIdInput = autoInput((props: AutoIdInputProps) => {
   const { field, label } = props;

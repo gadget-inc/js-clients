@@ -9,16 +9,16 @@ import { PolarisAutoTextInput } from "./PolarisAutoTextInput.js";
 type PolarisAutoNumberInputProps = AutoNumberInputProps & Partial<TextFieldProps>;
 
 /**
- * A number input component for use within <AutoForm></AutoForm> components.
+ * A number input within AutoForm.
  * @example
  * ```tsx
  * <AutoForm action={api.modelA.create}>
  *   <AutoNumberInput field="count" />
  * </AutoForm>
  * ```
- * @param props.field - The number field API identifier
- * @param props.label - The label of the number input component
- * @returns The number input component
+ * @param props.field - The number field API identifier.
+ * @param props.label - Label of the number input.
+ * @returns The AutoNumberInput component
  */
 export const PolarisAutoNumberInput = autoInput((props: PolarisAutoNumberInputProps) => {
   const { field, control } = props;

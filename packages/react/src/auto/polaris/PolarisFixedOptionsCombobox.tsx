@@ -4,53 +4,56 @@ import React, { useCallback, useMemo, useState, type ReactNode } from "react";
 
 export interface EnumOption {
   /**
-   * The label for the option
+   * Label for the option.
    */
   label: string;
   /**
-   * The value for the option
+   * Value for the option.
    */
   value: string;
 }
 
+/** Base props for a combobox with fixed options. */
 type BaseComboboxProps = Omit<AutocompleteProps, "selected" | "onSelect" | "textField"> & {
   /**
-   * The label for the combobox
+   * Label for the combobox.
    */
   label?: ReactNode;
 
   /**
-   * The selectable options in the combobox
+   * Selectable options in the combobox.
    */
   options: EnumOption[];
 };
 
+/** Props for a single-selection combobox. */
 export type PolarisFixedOptionsSingleComboboxProps = BaseComboboxProps & {
   /**
-   * The selected value
+   * Selected value.
    */
   value?: string;
   /**
-   * Called with the new selected value on value change
+   * Called with the new selected value on value change.
    */
   onChange: (value: string) => void;
   /**
-   * Indicates that the combobox does not allow multiple selections
+   * Disables mutiple selections.
    */
   allowMultiple?: false;
 };
 
+/** Props for a multi-selection combobox. */
 export type PolarisFixedOptionsMultiComboboxProps = BaseComboboxProps & {
   /**
-   * The selected values
+   * Selected value.
    */
   value?: string[];
   /**
-   * Called with the new selected values on value change
+   * Called with the new selected values on value change.
    */
   onChange: (value: string[]) => void;
   /**
-   * Indicates that the combobox allows multiple selections
+   * Disables mutiple selections.
    */
   allowMultiple: true;
 };

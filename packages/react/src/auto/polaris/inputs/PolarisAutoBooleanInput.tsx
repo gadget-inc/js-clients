@@ -8,16 +8,16 @@ import { type AutoBooleanInputProps } from "../../shared/AutoInputTypes.js";
 export type PolarisAutoBooleanInputProps = AutoBooleanInputProps & Partial<CheckboxProps>;
 
 /**
- * A checkbox input that is controlled by react-hook-form
+ * A boolean checkbox within AutoForm.
  * @example
  * ```tsx
  * <AutoForm action={api.modelA.create}>
  *   <AutoBooleanInput field="isActive" />
  * </AutoForm>
  * ```
- * @param props.field - The API identifier of the Boolean field
- * @param props.label - The label of the checkbox
- * @returns The checkbox input component
+ * @param props.field - The API identifier of the Boolean field.
+ * @param props.label - Label of the Boolean checkbox.
+ * @returns The AutoBooleanInput component.
  */
 export const PolarisAutoBooleanInput = autoInput((props: PolarisAutoBooleanInputProps) => {
   const { field: _field, control: _control, ...rest } = props;
