@@ -1,17 +1,15 @@
-import React, { type ReactNode } from "react";
-import type { Control } from "../../../useActionForm.js";
+import React from "react";
 import { autoInput } from "../../AutoInput.js";
 import { useStringInputController } from "../../hooks/useStringInputController.js";
+import { type AutoTextInputProps } from "../../shared/AutoInputTypes.js";
 import type { ShadcnElements, TextareaProps } from "../elements.js";
 
 export const makeShadcnAutoTextAreaInput = ({ Textarea, Label }: Pick<ShadcnElements, "Textarea" | "Label">) => {
   function ShadcnAutoTextAreaInput(
     props: {
-      field: string;
-      control?: Control<any>;
-      label?: ReactNode;
       suffix?: React.ReactNode;
-    } & TextareaProps
+    } & AutoTextInputProps &
+      TextareaProps
   ) {
     const { field, control, label: customLabel, suffix, ...restProps } = props;
     const {

@@ -1,36 +1,26 @@
 import { XIcon } from "lucide-react";
-import React, { useCallback, type ReactNode } from "react";
-import type { Control } from "../../../useActionForm.js";
+import React, { useCallback } from "react";
 import { debounce } from "../../../utils.js";
 import { autoInput } from "../../AutoInput.js";
 import { useEnumInputController } from "../../hooks/useEnumInputController.js";
+import { type AutoEnumInputProps } from "../../shared/AutoInputTypes.js";
 import type { ShadcnElements } from "../elements.js";
 import { makeShadcnAutoComboInput } from "./ShadcnAutoComboInput.js";
 
 export const makeShadcnAutoEnumInput = ({
   Badge,
   Button,
+  Checkbox,
   Command,
-  CommandItem,
-  CommandInput,
-  Label,
-  CommandList,
   CommandEmpty,
   CommandGroup,
-  Checkbox,
+  CommandInput,
+  CommandItem,
+  CommandList,
+  Label,
 }: Pick<
   ShadcnElements,
-  | "Badge"
-  | "Button"
-  | "Command"
-  | "CommandItem"
-  | "CommandList"
-  | "CommandEmpty"
-  | "CommandGroup"
-  | "CommandInput"
-  | "Label"
-  | "Checkbox"
-  | "Input"
+  "Badge" | "Button" | "Checkbox" | "Command" | "CommandEmpty" | "CommandGroup" | "CommandInput" | "CommandItem" | "CommandList" | "Label"
 >) => {
   const ShadcnComboInput = makeShadcnAutoComboInput({
     Command,
@@ -43,7 +33,7 @@ export const makeShadcnAutoEnumInput = ({
     Checkbox,
   });
 
-  function ShadcnAutoEnumInput(props: { field: string; control?: Control<any>; label?: ReactNode }) {
+  function ShadcnAutoEnumInput(props: AutoEnumInputProps) {
     const { field: fieldApiIdentifier, control, label: labelProp, ...comboboxProps } = props;
     const {
       allowMultiple,

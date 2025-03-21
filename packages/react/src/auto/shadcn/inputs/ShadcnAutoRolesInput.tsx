@@ -1,7 +1,7 @@
-import React, { useCallback, useMemo, type ReactNode } from "react";
-import type { Control } from "../../../useActionForm.js";
+import { default as React, useCallback, useMemo } from "react";
 import { autoInput } from "../../AutoInput.js";
 import { useRoleInputController } from "../../hooks/useRoleInputController.js";
+import { type AutoRolesInputProps } from "../../shared/AutoInputTypes.js";
 import type { ShadcnElements } from "../elements.js";
 import { makeShadcnAutoComboInput } from "./ShadcnAutoComboInput.js";
 import { makeSelectedRecordTags } from "./relationships/SelectedRelatedRecordTags.js";
@@ -10,13 +10,6 @@ export interface EnumOption {
   label: string;
   value: string;
 }
-
-export type AutoRolesInputProps = {
-  field: string; // Field API identifier
-  control?: Control<any>;
-  label?: ReactNode;
-  options?: EnumOption[];
-};
 
 export const makeShadcnAutoRolesInput = ({
   Badge,

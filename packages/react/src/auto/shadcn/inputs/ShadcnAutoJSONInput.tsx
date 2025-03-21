@@ -1,20 +1,14 @@
-import React, { type ReactNode } from "react";
-import type { Control } from "react-hook-form";
+import React from "react";
 import { useFocus } from "../../../useFocus.js";
 import { getPropsWithoutRef } from "../../../utils.js";
 import { autoInput } from "../../AutoInput.js";
 import { useJSONInputController } from "../../hooks/useJSONInputController.js";
+import { type AutoJSONInputProps } from "../../shared/AutoInputTypes.js";
 import { ShadcnRequired } from "../ShadcnRequired.js";
 import type { ShadcnElements } from "../elements.js";
 
 export const makeShadcnAutoJSONInput = ({ Label, Textarea }: Pick<ShadcnElements, "Input" | "Label" | "Textarea">) => {
-  function ShadcnAutoJSONInput(
-    props: {
-      field: string; // The field API identifier
-      control?: Control<any>;
-      label?: ReactNode;
-    } & Partial<React.HTMLAttributes<HTMLTextAreaElement>>
-  ) {
+  function ShadcnAutoJSONInput(props: AutoJSONInputProps & Partial<React.HTMLAttributes<HTMLTextAreaElement>>) {
     const [isFocused, focusProps] = useFocus();
     const { field: _field, control: _control, ...restOfProps } = props;
     const { type: _type, errorMessage, ...controller } = useJSONInputController(props);

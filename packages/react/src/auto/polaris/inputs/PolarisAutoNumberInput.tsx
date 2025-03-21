@@ -1,32 +1,39 @@
 import type { TextFieldProps } from "@shopify/polaris";
 import React from "react";
-import type { Control } from "../../../useActionForm.js";
 import { countNumberOfDecimals, getStepFromNumberOfDecimals } from "../../../utils.js";
 import { autoInput } from "../../AutoInput.js";
 import { useStringInputController } from "../../hooks/useStringInputController.js";
+import type { AutoNumberInputProps } from "../../shared/AutoInputTypes.js";
 import { PolarisAutoTextInput } from "./PolarisAutoTextInput.js";
 
-export const PolarisAutoNumberInput = autoInput(
-  (
-    props: {
-      field: string; // The field API identifier
-      control?: Control<any>;
-    } & Partial<TextFieldProps>
-  ) => {
-    const { field, control } = props;
-    const { type, metadata, value } = useStringInputController({ field, control });
-    const fieldType = type as TextFieldProps["type"];
+type PolarisAutoNumberInputProps = AutoNumberInputProps & Partial<TextFieldProps>;
 
-    const step =
-      fieldType === "number" &&
-      metadata.configuration.__typename === "GadgetNumberConfig" &&
-      metadata.configuration.decimals &&
-      metadata.configuration.decimals > 0
-        ? getStepFromNumberOfDecimals(metadata.configuration.decimals)
-        : value
-        ? getStepFromNumberOfDecimals(countNumberOfDecimals(`${value}`))
-        : 1;
+/**
+ * A number input within AutoForm.
+ * @example
+ * ```tsx
+ * <AutoForm action={api.modelA.create}>
+ *   <AutoNumberInput field="count" />
+ * </AutoForm>
+ * ```
+ * @param props.field - The number field API identifier.
+ * @param props.label - Label of the number input.
+ * @returns The AutoNumberInput component
+ */
+export const PolarisAutoNumberInput = autoInput((props: PolarisAutoNumberInputProps) => {
+  const { field, control } = props;
+  const { type, metadata, value } = useStringInputController({ field, control });
+  const fieldType = type as TextFieldProps["type"];
 
-    return <PolarisAutoTextInput step={step} {...props} />;
-  }
-);
+  const step =
+    fieldType === "number" &&
+    metadata.configuration.__typename === "GadgetNumberConfig" &&
+    metadata.configuration.decimals &&
+    metadata.configuration.decimals > 0
+      ? getStepFromNumberOfDecimals(metadata.configuration.decimals)
+      : value
+      ? getStepFromNumberOfDecimals(countNumberOfDecimals(`${value}`))
+      : 1;
+
+  return <PolarisAutoTextInput step={step} {...props} />;
+});
