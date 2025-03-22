@@ -18,13 +18,9 @@ export interface AutoAdapter<T = any, F = any, B = any> {
   AutoHasManyThroughForm: React.ComponentType<any>;
 
   AutoDateTimePicker: React.ComponentType<{
-    suiteName?: string;
     field: string;
     label?: ReactNode;
     id?: string;
-    onChange?: (date: Date) => void;
-    value?: Date;
-    includeTime?: boolean;
   }>;
   AutoBelongsToInput: React.ComponentType<any>;
   AutoHasManyInput: React.ComponentType<any>;

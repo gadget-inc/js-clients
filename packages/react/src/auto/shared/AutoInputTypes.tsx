@@ -26,14 +26,6 @@ export interface AutoDateTimeInputProps extends ControllableWithReactHookForm {
    */
   field: string;
   /**
-   * The value of the DateTime field
-   */
-  value?: Date;
-  /**
-   * Called when the value of the DateTime field changes
-   */
-  onChange?: (value?: Date) => void;
-  /**
    * Error message to display if the DateTime field is invalid
    */
   error?: string;
@@ -41,10 +33,6 @@ export interface AutoDateTimeInputProps extends ControllableWithReactHookForm {
    * The label of the DateTime field
    */
   label?: InputLabel;
-  /**
-   * Indicates if the Gadget DateTime field includes a time component
-   */
-  includeTime?: boolean;
 }
 
 export interface AutoEncryptedStringInputProps extends ControllableWithReactHookForm {

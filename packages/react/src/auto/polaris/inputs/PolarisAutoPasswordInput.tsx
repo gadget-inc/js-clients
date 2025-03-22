@@ -7,7 +7,7 @@ import { autoInput } from "../../AutoInput.js";
 import type { AutoPasswordInputProps } from "../../shared/AutoInputTypes.js";
 import { PolarisAutoEncryptedStringInput } from "./PolarisAutoEncryptedStringInput.js";
 
-type PolarisAutoPasswordInputProps = AutoPasswordInputProps & Partial<TextFieldProps>;
+type PolarisAutoPasswordInputProps = AutoPasswordInputProps & Partial<Omit<TextFieldProps, "value" | "onChange">>;
 
 /**
  * A password input within AutoForm.

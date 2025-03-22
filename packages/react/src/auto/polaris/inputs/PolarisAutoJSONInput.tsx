@@ -7,7 +7,7 @@ import { autoInput } from "../../AutoInput.js";
 import { useJSONInputController } from "../../hooks/useJSONInputController.js";
 import { type AutoJSONInputProps } from "../../shared/AutoInputTypes.js";
 
-type PolarisAutoJSONInputProps = AutoJSONInputProps & Partial<Omit<TextFieldProps, "onChange">>;
+type PolarisAutoJSONInputProps = AutoJSONInputProps & Partial<Omit<TextFieldProps, "value" | "onChange">>;
 
 /**
  * A JSON editor within AutoForm.
@@ -23,6 +23,7 @@ type PolarisAutoJSONInputProps = AutoJSONInputProps & Partial<Omit<TextFieldProp
  */
 export const PolarisAutoJSONInput = autoInput((props: PolarisAutoJSONInputProps) => {
   const [isFocused, focusProps] = useFocus();
+
   const { field: _field, control: _control, ...restOfProps } = props;
   const { type: _type, errorMessage, ...controller } = useJSONInputController(props);
 

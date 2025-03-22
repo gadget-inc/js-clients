@@ -34,19 +34,18 @@ export const makeShadcnAutoEnumInput = ({
   });
 
   function ShadcnAutoEnumInput(props: AutoEnumInputProps) {
-    const { field: fieldApiIdentifier, control, label: labelProp, ...comboboxProps } = props;
+    const { field: fieldApiIdentifier, control, label: labelProp } = props;
+
     const {
       allowMultiple,
       allowOther,
       onSelectionChange,
       selectedOptions,
-      allOptions,
       filteredOptions,
       searchQuery,
       label,
       path,
       metadata,
-      isError,
       errorMessage,
     } = useEnumInputController({ field: fieldApiIdentifier, control });
 

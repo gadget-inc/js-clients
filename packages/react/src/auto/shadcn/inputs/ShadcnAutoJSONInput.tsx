@@ -8,7 +8,10 @@ import { ShadcnRequired } from "../ShadcnRequired.js";
 import type { ShadcnElements } from "../elements.js";
 
 export const makeShadcnAutoJSONInput = ({ Label, Textarea }: Pick<ShadcnElements, "Input" | "Label" | "Textarea">) => {
-  function ShadcnAutoJSONInput(props: AutoJSONInputProps & Partial<React.HTMLAttributes<HTMLTextAreaElement>>) {
+  function ShadcnAutoJSONInput(
+    props: AutoJSONInputProps &
+      Partial<Omit<React.HTMLAttributes<HTMLTextAreaElement>, "onChange" | "value" | "defaultValue" | "defaultChecked">>
+  ) {
     const [isFocused, focusProps] = useFocus();
     const { field: _field, control: _control, ...restOfProps } = props;
     const { type: _type, errorMessage, ...controller } = useJSONInputController(props);
@@ -23,12 +26,12 @@ export const makeShadcnAutoJSONInput = ({ Label, Textarea }: Pick<ShadcnElements
         <Textarea
           {...getPropsWithoutRef(controller)}
           {...getPropsWithoutRef(focusProps)}
+          id={id}
+          className="font-mono"
           {...restOfProps}
           onChange={(e) => {
             controller.onChange(e.currentTarget.value);
           }}
-          id={id}
-          className="font-mono"
         />
         {!isFocused && errorMessage && <p className="text-sm text-red-500">{`Invalid JSON: ${errorMessage}`}</p>}
       </div>

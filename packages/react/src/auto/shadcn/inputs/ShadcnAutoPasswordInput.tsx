@@ -1,5 +1,5 @@
 import { PencilIcon } from "lucide-react";
-import React from "react";
+import React, { type ComponentProps } from "react";
 import { existingPasswordPlaceholder, usePasswordController } from "../../../auto/hooks/usePasswordController.js";
 import { autoInput } from "../../AutoInput.js";
 import { type AutoPasswordInputProps } from "../../shared/AutoInputTypes.js";
@@ -8,7 +8,9 @@ import { makeShadcnAutoEncryptedStringInput } from "./ShadcnAutoEncryptedStringI
 
 export function makeShadcnAutoPasswordInput({ Input, Label, Button }: Pick<ShadcnElements, "Input" | "Label" | "Button">) {
   const EncryptedInput = makeShadcnAutoEncryptedStringInput({ Input, Label, Button });
-  function ShadcnAutoPasswordInput(props: AutoPasswordInputProps) {
+  function ShadcnAutoPasswordInput(
+    props: AutoPasswordInputProps & Omit<ComponentProps<typeof EncryptedInput>, "type" | "disabled" | "placeholder" | "suffix">
+  ) {
     const { isEditing, startEditing } = usePasswordController(props);
 
     return (
@@ -19,7 +21,6 @@ export function makeShadcnAutoPasswordInput({ Input, Label, Button }: Pick<Shadc
           : {
               placeholder: existingPasswordPlaceholder,
               disabled: true,
-              className: "pr-20",
               suffix: (
                 <Button
                   variant="ghost"

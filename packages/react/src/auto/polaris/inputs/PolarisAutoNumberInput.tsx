@@ -6,7 +6,7 @@ import { useStringInputController } from "../../hooks/useStringInputController.j
 import type { AutoNumberInputProps } from "../../shared/AutoInputTypes.js";
 import { PolarisAutoTextInput } from "./PolarisAutoTextInput.js";
 
-type PolarisAutoNumberInputProps = AutoNumberInputProps & Partial<TextFieldProps>;
+type PolarisAutoNumberInputProps = AutoNumberInputProps & Partial<Omit<TextFieldProps, "value" | "onChange">>;
 
 /**
  * A number input within AutoForm.

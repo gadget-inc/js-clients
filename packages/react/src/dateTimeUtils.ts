@@ -403,7 +403,8 @@ export const copyTime = (to: Date, input: Date) => {
  * @param dateTime
  * @returns
  */
-export const getDateTimeObjectFromDate = (dateTime: Date, use24Hour = false) => {
+export const getDateTimeObjectFromDate = (dt: Date, use24Hour = false) => {
+  const dateTime = new Date(dt);
   return {
     month: dateTime.getMonth(),
     year: dateTime.getFullYear(),
@@ -412,6 +413,8 @@ export const getDateTimeObjectFromDate = (dateTime: Date, use24Hour = false) => 
       ? dateTime.getHours().toString()
       : dateTime.getHours() > 12
       ? (dateTime.getHours() - 12).toString()
+      : dateTime.getHours() === 0
+      ? "12"
       : dateTime.getHours().toString(),
     minute: dateTime.getMinutes().toString().padStart(2, "0"),
     ampm: dateTime.getHours() >= 12 ? "PM" : "AM",

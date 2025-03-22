@@ -6,7 +6,7 @@ import { autoInput } from "../../AutoInput.js";
 import { useStringInputController } from "../../hooks/useStringInputController.js";
 import { type AutoTextInputProps } from "../../shared/AutoInputTypes.js";
 
-type PolarisAutoTextInputProps = AutoTextInputProps & Partial<TextFieldProps>;
+type PolarisAutoTextInputProps = AutoTextInputProps & Partial<Omit<TextFieldProps, "value" | "onChange">>;
 
 /**
  * A text input within AutoForm.

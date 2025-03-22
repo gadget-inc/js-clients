@@ -28,11 +28,11 @@ export interface PolarisAutoDateTimePickerProps extends AutoDateTimeInputProps {
   /**
    * Additional Polaris DatePicker props.
    */
-  datePickerProps?: Partial<DatePickerProps>;
+  datePickerProps?: Partial<Omit<DatePickerProps, "selected" | "onChange">>;
   /**
    * Additional Polaris TimePicker props.
    */
-  timePickerProps?: Partial<TextFieldProps>;
+  timePickerProps?: Partial<Omit<TextFieldProps, "value" | "onChange">>;
 }
 
 /**
@@ -52,11 +52,10 @@ export interface PolarisAutoDateTimePickerProps extends AutoDateTimeInputProps {
  * @returns The AutoDateTimePicker component.
  */
 export const PolarisAutoDateTimePicker = autoInput((props: PolarisAutoDateTimePickerProps) => {
-  const { localTz, localTime, onChange, value, fieldProps, metadata, fieldState } = useDateTimeField({
+  const { localTz, localTime, fieldProps, metadata, fieldState } = useDateTimeField({
     field: props.field,
-    value: props.value,
-    onChange: props?.onChange,
   });
+  const { onChange, value } = fieldProps;
 
   const [datePopoverActive, setDatePopoverActive] = useState(false);
 
@@ -67,8 +66,8 @@ export const PolarisAutoDateTimePicker = autoInput((props: PolarisAutoDateTimePi
 
   const onDateChange = useCallback<Exclude<DatePickerProps["onChange"], undefined>>(
     (range) => {
-      (fieldProps || value) && copyTime(range.start, zonedTimeToUtc(range.start, localTz));
-      const dateOverride = value ?? new Date(fieldProps.value);
+      value && copyTime(range.start, zonedTimeToUtc(range.start, localTz));
+      const dateOverride = value;
       if (isValidDate(dateOverride)) {
         range.start.setHours(dateOverride.getHours());
         range.start.setMinutes(dateOverride.getMinutes());
@@ -124,17 +123,14 @@ export const PolarisAutoDateTimePicker = autoInput((props: PolarisAutoDateTimePi
           />
         </div>
       </Popover>
-      {(props.includeTime ?? (config as GadgetDateTimeConfig).includeTime) && (
+      {(config as GadgetDateTimeConfig).includeTime && (
         <div style={{ width: "130px" }}>
           <PolarisAutoTimePicker
             fieldProps={fieldProps}
             id={props.id}
-            localTime={localTime}
-            onChange={onChange}
             hideTimePopover={props.hideTimePopover}
             localTz={localTz}
             timePickerProps={props.timePickerProps}
-            value={value}
           />
         </div>
       )}
