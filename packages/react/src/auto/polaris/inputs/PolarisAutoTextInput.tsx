@@ -21,8 +21,7 @@ type PolarisAutoTextInputProps = AutoTextInputProps & Partial<Omit<TextFieldProp
  * @returns The AutoTextInput component.
  */
 export const PolarisAutoTextInput = autoInput((props: PolarisAutoTextInputProps) => {
-  const { field, control } = props;
-  const stringInputController = useStringInputController({ field, control });
+  const stringInputController = useStringInputController(props);
 
   return (
     <TextField

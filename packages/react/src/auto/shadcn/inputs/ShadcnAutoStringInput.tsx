@@ -17,8 +17,8 @@ export const makeShadcnAutoStringInput = ({ Input, Label }: Pick<ShadcnElements,
     } & AutoTextInputProps &
       Partial<Omit<InputHTMLAttributes<HTMLInputElement>, "onChange" | "value">>
   ) {
-    const { field, control, label: customLabel, suffix, ...restProps } = props;
-    const stringInputController = useStringInputController({ field, control });
+    const { field, label: customLabel, suffix, ...restProps } = props;
+    const stringInputController = useStringInputController(props);
     const {
       name,
       placeholder,

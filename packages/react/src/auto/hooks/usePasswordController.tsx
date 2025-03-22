@@ -1,11 +1,12 @@
 import { useCallback, useState } from "react";
 import { GadgetFieldType } from "../../internal/gql/graphql.js";
-import { useController, type Control } from "../../useActionForm.js";
+import { useController } from "../../useActionForm.js";
 import { useAutoFormMetadata } from "../AutoFormContext.js";
+import { type AutoPasswordInputProps } from "../shared/AutoInputTypes.js";
 import { useFieldMetadata } from "./useFieldMetadata.js";
 import { assertFieldType } from "./utils.js";
 
-export const usePasswordController = (props: { field: string; control?: Control<any> }) => {
+export const usePasswordController = (props: AutoPasswordInputProps) => {
   const { findBy } = useAutoFormMetadata();
   const { path, metadata } = useFieldMetadata(props.field);
 
@@ -19,15 +20,23 @@ export const usePasswordController = (props: { field: string; control?: Control<
 
   const [isEditing, setIsEditing] = useState(!findBy);
 
+  const onChange = useCallback(
+    (...args: any[]) => {
+      fieldProps.onChange(...args);
+      props.afterChange?.(...args);
+    },
+    [fieldProps, props.afterChange]
+  );
+
   const startEditing = useCallback(() => {
-    fieldProps.onChange(""); // Touch the field to mark it as dirty
+    onChange(""); // Touch the field to mark it as dirty
     setIsEditing(true);
-  }, [fieldProps]);
+  }, [onChange]);
 
   return {
     isEditing,
     startEditing,
-    fieldProps,
+    fieldProps: { ...fieldProps, onChange },
   };
 };
 

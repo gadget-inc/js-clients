@@ -70,7 +70,6 @@ describeForEachAutoAdapter("AutoFormDateTimePicker", ({ name, adapter: { AutoFor
 
   const interceptWidgetQuery = (startsAt?: string | false) => {
     cy.intercept({ method: "POST", url: `${api.connection.endpoint}?operation=widget`, times: 1 }, (req) => {
-      console.log("intercepting ", startsAt === false ? undefined : startsAt ?? dateInLocalTZ);
       req.reply({
         data: {
           widget: { id: "999", startsAt: startsAt === false ? undefined : startsAt ?? dateInLocalTZ, __typename: "Widget" },

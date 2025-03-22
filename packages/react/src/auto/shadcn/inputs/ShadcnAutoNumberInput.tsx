@@ -10,8 +10,7 @@ export const makeShadcnAutoNumberInput = ({ Input, Label }: Pick<ShadcnElements,
   const AutoStringInput = makeShadcnAutoStringInput({ Input, Label });
 
   function AutoNumberInput(props: AutoNumberInputProps & Omit<ComponentProps<typeof AutoStringInput>, "step" | "type">) {
-    const { field, control } = props;
-    const { metadata, value } = useStringInputController({ field, control });
+    const { metadata, value } = useStringInputController(props);
 
     const step =
       metadata.configuration.__typename === "GadgetNumberConfig" && metadata.configuration.decimals && metadata.configuration.decimals > 0

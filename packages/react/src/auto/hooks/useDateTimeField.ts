@@ -1,4 +1,4 @@
-import { useMemo } from "react";
+import { useCallback, useMemo } from "react";
 import { isValidDate } from "../../dateTimeUtils.js";
 import { GadgetFieldType } from "../../internal/gql/graphql.js";
 import { useController } from "../../useActionForm.js";
@@ -26,10 +26,21 @@ export const useDateTimeField = (props: AutoDateTimeInputProps) => {
     return isValidDate(date) ? date : undefined;
   }, [fieldProps.value]);
 
+  const onChange = useCallback(
+    (...args: any[]) => {
+      fieldProps.onChange(...args);
+      props.afterChange?.(...args);
+    },
+    [fieldProps.onChange, props.afterChange]
+  );
+
   return {
     path,
     metadata,
-    fieldProps,
+    fieldProps: {
+      ...fieldProps,
+      onChange,
+    },
     fieldState,
     localTz,
     localTime,

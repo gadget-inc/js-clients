@@ -21,8 +21,7 @@ type PolarisAutoNumberInputProps = AutoNumberInputProps & Partial<Omit<TextField
  * @returns The AutoNumberInput component
  */
 export const PolarisAutoNumberInput = autoInput((props: PolarisAutoNumberInputProps) => {
-  const { field, control } = props;
-  const { type, metadata, value } = useStringInputController({ field, control });
+  const { type, metadata, value } = useStringInputController(props);
   const fieldType = type as TextFieldProps["type"];
 
   const step =

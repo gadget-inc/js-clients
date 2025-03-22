@@ -1,12 +1,12 @@
-import { useEffect } from "react";
-import { type Control } from "react-hook-form";
+import { useCallback, useEffect } from "react";
 import { GadgetFieldType } from "../../internal/gql/graphql.js";
 import { useController, useFormContext } from "../../useActionForm.js";
 import { get } from "../../utils.js";
+import { type AutoBooleanInputProps } from "../shared/AutoInputTypes.js";
 import { useFieldMetadata } from "./useFieldMetadata.js";
 import { assertFieldType } from "./utils.js";
 
-export const useBooleanInputController = (props: { field: string; control?: Control<any> }) => {
+export const useBooleanInputController = (props: AutoBooleanInputProps) => {
   const { field: fieldApiIdentifier, control } = props;
 
   const { path, metadata } = useFieldMetadata(fieldApiIdentifier);
@@ -34,10 +34,18 @@ export const useBooleanInputController = (props: { field: string; control?: Cont
     }
   }, [metadata.requiredArgumentForInput, defaultValues]);
 
+  const onChange = useCallback(
+    (...args: any[]) => {
+      fieldProps.onChange(...args);
+      props.afterChange?.(...args);
+    },
+    [fieldProps.onChange, props.afterChange]
+  );
+
   return {
     id: path,
     path,
-    fieldProps,
+    fieldProps: { ...fieldProps, onChange },
     error,
     metadata,
   };

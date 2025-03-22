@@ -11,7 +11,7 @@ export const makeShadcnAutoTextAreaInput = ({ Textarea, Label }: Pick<ShadcnElem
     } & AutoTextInputProps &
       Omit<TextareaProps, "value" | "onChange">
   ) {
-    const { field, control, label: customLabel, suffix, ...restProps } = props;
+    const { field, label: customLabel, suffix, ...restProps } = props;
     const {
       name,
       placeholder,
@@ -22,7 +22,7 @@ export const makeShadcnAutoTextAreaInput = ({ Textarea, Label }: Pick<ShadcnElem
       errorMessage,
       onChange,
       onBlur,
-    } = useStringInputController({ field, control });
+    } = useStringInputController(props);
 
     const id = name || `${field}-input`;
 

@@ -49,7 +49,6 @@ const PolarisAutoTimePicker = (props: PolarisAutoTimePickerProps) => {
     fieldProps: { onChange, value },
   } = props;
 
-  console.log("value :", value);
   const [timeString, setTimeString] = useState(
     value && isValidDate(new Date(value)) ? getTimeString(getDateTimeObjectFromDate(value)) : ""
   );

@@ -34,7 +34,7 @@ export const makeShadcnAutoEnumInput = ({
   });
 
   function ShadcnAutoEnumInput(props: AutoEnumInputProps) {
-    const { field: fieldApiIdentifier, control, label: labelProp } = props;
+    const { label: labelProp } = props;
 
     const {
       allowMultiple,
@@ -47,7 +47,7 @@ export const makeShadcnAutoEnumInput = ({
       path,
       metadata,
       errorMessage,
-    } = useEnumInputController({ field: fieldApiIdentifier, control });
+    } = useEnumInputController(props);
 
     const { value: searchValue, setValue: setSearchValue } = searchQuery;
 

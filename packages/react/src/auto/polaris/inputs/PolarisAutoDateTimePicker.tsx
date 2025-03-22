@@ -52,9 +52,7 @@ export interface PolarisAutoDateTimePickerProps extends AutoDateTimeInputProps {
  * @returns The AutoDateTimePicker component.
  */
 export const PolarisAutoDateTimePicker = autoInput((props: PolarisAutoDateTimePickerProps) => {
-  const { localTz, localTime, fieldProps, metadata, fieldState } = useDateTimeField({
-    field: props.field,
-  });
+  const { localTz, localTime, fieldProps, metadata, fieldState } = useDateTimeField(props);
   const { onChange, value } = fieldProps;
 
   const [datePopoverActive, setDatePopoverActive] = useState(false);

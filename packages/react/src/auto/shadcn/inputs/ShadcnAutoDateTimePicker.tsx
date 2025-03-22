@@ -53,7 +53,7 @@ export const makeShadcnAutoDateTimePicker = ({
       timePickerProps?: { label?: ReactNode };
     } & AutoDateTimeInputProps
   ) {
-    const { localTz, localTime, fieldProps, metadata, fieldState } = useDateTimeField({ field: props.field });
+    const { localTz, localTime, fieldProps, metadata, fieldState } = useDateTimeField(props);
 
     const { onChange, value } = fieldProps;
 
