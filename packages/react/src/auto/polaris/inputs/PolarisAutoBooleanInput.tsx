@@ -5,7 +5,7 @@ import { useBooleanInputController } from "../../../auto/hooks/useBooleanInputCo
 import { autoInput } from "../../AutoInput.js";
 import { type AutoBooleanInputProps } from "../../shared/AutoInputTypes.js";
 
-export type PolarisAutoBooleanInputProps = AutoBooleanInputProps & Partial<CheckboxProps>;
+export type PolarisAutoBooleanInputProps = AutoBooleanInputProps & Partial<Omit<CheckboxProps, "value" | "onChange">>;
 
 /**
  * A boolean checkbox within AutoForm.

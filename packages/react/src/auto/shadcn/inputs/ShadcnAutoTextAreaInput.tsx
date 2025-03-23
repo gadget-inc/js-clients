@@ -9,9 +9,9 @@ export const makeShadcnAutoTextAreaInput = ({ Textarea, Label }: Pick<ShadcnElem
     props: {
       suffix?: React.ReactNode;
     } & AutoTextInputProps &
-      TextareaProps
+      Omit<TextareaProps, "value" | "onChange">
   ) {
-    const { field, control, label: customLabel, suffix, ...restProps } = props;
+    const { field, label: customLabel, suffix, ...restProps } = props;
     const {
       name,
       placeholder,
@@ -22,7 +22,7 @@ export const makeShadcnAutoTextAreaInput = ({ Textarea, Label }: Pick<ShadcnElem
       errorMessage,
       onChange,
       onBlur,
-    } = useStringInputController({ field, control });
+    } = useStringInputController(props);
 
     const id = name || `${field}-input`;
 
@@ -42,8 +42,8 @@ export const makeShadcnAutoTextAreaInput = ({ Textarea, Label }: Pick<ShadcnElem
               onBlur={onBlur}
               required={metadata.requiredArgumentForInput || false}
               className={suffix ? "border-0 shadow-none rounded-none focus:ring-0 focus-visible:ring-0" : ""}
-              {...restProps}
               placeholder={placeholder}
+              {...restProps}
             />
             {suffix && <div className=" h-10 flex items-center px-3">{suffix}</div>}
           </div>

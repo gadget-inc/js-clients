@@ -15,10 +15,10 @@ export const makeShadcnAutoStringInput = ({ Input, Label }: Pick<ShadcnElements,
     props: {
       suffix?: React.ReactNode;
     } & AutoTextInputProps &
-      Partial<InputHTMLAttributes<HTMLInputElement>>
+      Partial<Omit<InputHTMLAttributes<HTMLInputElement>, "onChange" | "value">>
   ) {
-    const { field, control, label: customLabel, suffix, ...restProps } = props;
-    const stringInputController = useStringInputController({ field, control });
+    const { field, label: customLabel, suffix, ...restProps } = props;
+    const stringInputController = useStringInputController(props);
     const {
       name,
       placeholder,
@@ -55,8 +55,8 @@ export const makeShadcnAutoStringInput = ({ Input, Label }: Pick<ShadcnElements,
               onBlur={onBlur}
               required={metadata.requiredArgumentForInput || false}
               className={suffix ? "border-0 shadow-none rounded-none focus:ring-0 focus-visible:ring-0" : ""}
-              {...restProps}
               placeholder={placeholder}
+              {...restProps}
             />
             {suffix && <div className=" h-10 flex items-center px-3">{suffix}</div>}
           </div>

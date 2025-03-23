@@ -1,7 +1,8 @@
+import { useCallback } from "react";
 import type { GadgetFieldType } from "../../internal/gql/graphql.js";
 import { FieldType } from "../../metadata.js";
-import type { UseControllerProps } from "../../useActionForm.js";
 import { useController } from "../../useActionForm.js";
+import { type AutoTextInputProps } from "../shared/AutoInputTypes.js";
 import { useFieldMetadata } from "./useFieldMetadata.js";
 
 export const FieldTypeToInputType: Partial<Record<GadgetFieldType, string>> = {
@@ -21,11 +22,7 @@ const PlaceholderValues: Partial<Record<GadgetFieldType, string>> = {
   [FieldType.Url]: "example.com",
 } as const;
 
-export const useStringInputController = (
-  props: {
-    field: string; // The field API identifier
-  } & Omit<UseControllerProps, "name">
-) => {
+export const useStringInputController = (props: AutoTextInputProps) => {
   const { field: fieldApiIdentifier, ...rest } = props;
   const { path, metadata } = useFieldMetadata(fieldApiIdentifier);
 
@@ -37,7 +34,14 @@ export const useStringInputController = (
     ...rest,
   });
 
-  const { value, ...restOfFieldProperties } = fieldProperties;
+  const { value, onChange: fieldPropsOnChange, ...restOfFieldProperties } = fieldProperties;
+  const onChange = useCallback(
+    (...args: any[]) => {
+      fieldPropsOnChange(...args);
+      props.afterChange?.(...args);
+    },
+    [fieldPropsOnChange, props.afterChange]
+  );
 
   const placeholder = PlaceholderValues[metadata.fieldType];
 
@@ -51,6 +55,7 @@ export const useStringInputController = (
     placeholder,
     metadata,
     value: getValue(value, metadata.fieldType),
+    onChange,
     ...restOfFieldProperties,
   };
 };

@@ -15,7 +15,7 @@ export const makeShadcnAutoFileInput = ({
   AvatarFallback,
 }: Pick<ShadcnElements, "Input" | "Label" | "Button" | "Avatar" | "AvatarImage" | "AvatarFallback">) => {
   function ShadcnAutoFileInput(props: AutoFileInputProps & HtmlHTMLAttributes<HTMLDivElement>) {
-    const { field: fieldApiIdentifier, control, ...rest } = props;
+    const { field: fieldApiIdentifier, control } = props;
 
     const [isFilePickerOpen, setIsFilePickerOpen] = React.useState(false);
 

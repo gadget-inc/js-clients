@@ -52,6 +52,7 @@ export const makeShadcnAutoInput = (
     | "AvatarFallback"
   >
 ) => {
+  const AutoHiddenInput = makeShadcnAutoHiddenInput(elements);
   const AutoIdInput = makeShadcnAutoIdInput(elements);
   const AutoStringInput = makeShadcnAutoStringInput(elements);
   const AutoTextAreaInput = makeShadcnAutoTextAreaInput(elements);
@@ -59,17 +60,17 @@ export const makeShadcnAutoInput = (
   const AutoEncryptedStringInput = makeShadcnAutoEncryptedStringInput(elements);
   const AutoPasswordInput = makeShadcnAutoPasswordInput(elements);
   const AutoBooleanInput = makeShadcnAutoBooleanInput(elements);
-  const AutoBelongsToInput = makeShadcnAutoBelongsToInput(elements);
-  const AutoHasManyInput = makeShadcnAutoHasManyInput(elements);
-  const AutoHasOneInput = makeShadcnAutoHasOneInput(elements);
   const AutoRolesInput = makeShadcnAutoRolesInput(elements);
   const AutoEnumInput = makeShadcnAutoEnumInput(elements);
   const AutoDateTimePicker = makeShadcnAutoDateTimePicker(elements);
   const AutoJSONInput = makeShadcnAutoJSONInput(elements);
   const AutoRichTextInput = makeShadcnAutoRichTextInput(elements);
   const AutoFileInput = makeShadcnAutoFileInput(elements);
+
+  const AutoBelongsToInput = makeShadcnAutoBelongsToInput(elements);
+  const AutoHasManyInput = makeShadcnAutoHasManyInput(elements);
+  const AutoHasOneInput = makeShadcnAutoHasOneInput(elements);
   const AutoHasManyThroughInput = makeShadcnAutoHasManyThroughInput(elements);
-  const AutoHiddenInput = makeShadcnAutoHiddenInput(elements);
 
   const AutoInput = autoInput(function AutoInput(props: AutoInputProps) {
     const { metadata } = useFieldMetadata(props.field);

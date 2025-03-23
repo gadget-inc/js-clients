@@ -13,7 +13,6 @@ export interface DatePickerProps {
   selected: Date;
   onSelect: (date: Date) => void;
   initialFocus: boolean;
-  mode: "single" | "range";
   weekStartsOn: number;
   dayAccessibilityLabelPrefix: string;
   onMonthChange: (month: number, year: number) => void;
@@ -39,6 +38,7 @@ export const makeShadcnAutoDateTimePicker = ({
       <div
         className="ml-auto h-4 w-4 bg-transparent hover:opacity-30"
         onClick={(e) => {
+          e.stopPropagation();
           props.onClear();
         }}
       >
@@ -49,17 +49,14 @@ export const makeShadcnAutoDateTimePicker = ({
   function ShadcnAutoDateTimePicker(
     props: {
       id?: string;
-      datePickerProps?: Partial<DatePickerProps>;
-      timePickerProps?: { label?: ReactNode; placeholder?: string };
+      datePickerProps?: Partial<Omit<DatePickerProps, "mode" | "selected" | "onSelect">>;
+      timePickerProps?: { label?: ReactNode };
     } & AutoDateTimeInputProps
   ) {
-    const { localTz, localTime, onChange, fieldProps, metadata, fieldState } = useDateTimeField({
-      field: props.field,
-      value: props.value,
-      onChange: props?.onChange,
-    });
+    const { localTz, localTime, fieldProps, metadata, fieldState } = useDateTimeField(props);
 
-    const value = props.value ?? fieldProps.value;
+    const { onChange, value } = fieldProps;
+
     const timeString = localTime ? getTimeString(getDateTimeObjectFromDate(localTime, true), true) : undefined;
     const config = metadata.configuration;
 
@@ -121,11 +118,9 @@ export const makeShadcnAutoDateTimePicker = ({
             >
               <CalendarIcon className="mr-2 h-4 w-4" />
               {localTime ? (
-                formatDate(localTime, props.includeTime ?? (config as GadgetDateTimeConfig).includeTime, true)
+                formatDate(localTime, (config as GadgetDateTimeConfig).includeTime, true)
               ) : (
-                <span className="opacity-50">
-                  {props.includeTime ?? (config as GadgetDateTimeConfig).includeTime ? "YYYY-MM-DD HH:mm" : "YYYY-MM-DD"}
-                </span>
+                <span className="opacity-50">{(config as GadgetDateTimeConfig).includeTime ? "YYYY-MM-DD HH:mm" : "YYYY-MM-DD"}</span>
               )}
               {localTime && !metadata.requiredArgumentForInput && <ClearButton onClear={handleClear} />}
             </Button>
@@ -139,7 +134,7 @@ export const makeShadcnAutoDateTimePicker = ({
             <div className="relative bg-background">
               <Calendar mode="single" defaultMonth={localTime} selected={localTime} onSelect={handleDateSelect} initialFocus />
             </div>
-            {(props.includeTime ?? (config as GadgetDateTimeConfig).includeTime) && (
+            {(config as GadgetDateTimeConfig).includeTime && (
               <div className="flex flex-col p-4 bg-background border-l">
                 <Label htmlFor={props.id ? `${props.id}-time` : undefined} data-testid={props.id ? `${props.id}-time` : undefined}>
                   {props.timePickerProps?.label ?? "Time"} (HH:MM)

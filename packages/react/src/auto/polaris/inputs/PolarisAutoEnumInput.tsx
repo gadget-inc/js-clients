@@ -33,7 +33,7 @@ export const PolarisAutoEnumInput = autoInput((props: PolarisAutoEnumInputProps)
     metadata,
     isError,
     errorMessage,
-  } = useEnumInputController({ field: fieldApiIdentifier, control });
+  } = useEnumInputController(props);
   const { value: searchValue, setValue: setSearchValue } = searchQuery;
 
   let selectedTagsElement = null;

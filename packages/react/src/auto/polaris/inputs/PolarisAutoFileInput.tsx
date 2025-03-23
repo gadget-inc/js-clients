@@ -7,7 +7,7 @@ import { autoInput } from "../../AutoInput.js";
 import { imageFileTypes, useFileInputController } from "../../hooks/useFileInputController.js";
 import { type AutoFileInputProps } from "../../shared/AutoInputTypes.js";
 
-export type PolarisAutoFileInputProps = AutoFileInputProps & Omit<DropZoneProps, "allowMultiple">;
+export type PolarisAutoFileInputProps = AutoFileInputProps & Omit<DropZoneProps, "allowMultiple" | "onDrop">;
 
 /**
  * A file input within AutoForm.

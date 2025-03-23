@@ -1,16 +1,12 @@
 import { useCallback, useEffect, useState } from "react";
 import deepEqual from "react-fast-compare";
 import { GadgetFieldType } from "../../internal/gql/graphql.js";
-import type { UseControllerProps } from "../../useActionForm.js";
 import { isFailedJSONParse, type FailedJSONParse } from "../../validationSchema.js";
+import { type AutoJSONInputProps } from "../shared/AutoInputTypes.js";
 import { useStringInputController } from "./useStringInputController.js";
 import { assertFieldType } from "./utils.js";
 
-export const useJSONInputController = (
-  props: {
-    field: string;
-  } & Omit<UseControllerProps, "name">
-) => {
+export const useJSONInputController = (props: AutoJSONInputProps) => {
   const stringInputController = useStringInputController(props);
   assertFieldType({
     fieldApiIdentifier: props.field,

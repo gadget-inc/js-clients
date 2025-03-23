@@ -1,13 +1,11 @@
 import { useCallback, useMemo, useState } from "react";
 import { GadgetFieldType } from "../../internal/gql/graphql.js";
-import { useController, type Control } from "../../useActionForm.js";
+import { useController } from "../../useActionForm.js";
+import { type AutoEnumInputProps } from "../shared/AutoInputTypes.js";
 import { useFieldMetadata } from "./useFieldMetadata.js";
 import { assertFieldType } from "./utils.js";
 
-export const useEnumInputController = (props: {
-  field: string; // The field API identifier
-  control?: Control<any>;
-}) => {
+export const useEnumInputController = (props: AutoEnumInputProps) => {
   const { field: fieldApiIdentifier, control } = props;
   const { path, metadata } = useFieldMetadata(fieldApiIdentifier);
   assertFieldType({
@@ -44,12 +42,20 @@ export const useEnumInputController = (props: {
     [allOptions, searchValue]
   );
 
+  const onChange = useCallback(
+    (...args: any[]) => {
+      fieldProps.onChange(...args);
+      props.afterChange?.(...args);
+    },
+    [fieldProps.onChange, props.afterChange]
+  );
+
   const onSelectionChange = useCallback(
     (selected: string | null) => {
       setSearchValue("");
       if (config.allowMultiple) {
         if (selected === null) {
-          fieldProps.onChange([]);
+          onChange([]);
           return;
         }
 
@@ -60,16 +66,16 @@ export const useEnumInputController = (props: {
           nextSelectedTags.add(selected);
         }
 
-        fieldProps.onChange([...nextSelectedTags]);
+        onChange([...nextSelectedTags]);
       } else {
         if (selected === null || selectedOptions.includes(selected)) {
-          fieldProps.onChange(null);
+          onChange(null);
         } else {
-          fieldProps.onChange(selected);
+          onChange(selected);
         }
       }
     },
-    [config.allowMultiple, fieldProps, selectedOptions]
+    [config.allowMultiple, onChange, selectedOptions]
   );
 
   return {

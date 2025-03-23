@@ -1,4 +1,4 @@
-import React from "react";
+import React, { type ComponentProps } from "react";
 import { countNumberOfDecimals, getStepFromNumberOfDecimals } from "../../../utils.js";
 import { autoInput } from "../../AutoInput.js";
 import { useStringInputController } from "../../hooks/useStringInputController.js";
@@ -9,9 +9,8 @@ import { makeShadcnAutoStringInput } from "./ShadcnAutoStringInput.js";
 export const makeShadcnAutoNumberInput = ({ Input, Label }: Pick<ShadcnElements, "Input" | "Label">) => {
   const AutoStringInput = makeShadcnAutoStringInput({ Input, Label });
 
-  function AutoNumberInput(props: AutoNumberInputProps & { className?: string }) {
-    const { field, control } = props;
-    const { metadata, value } = useStringInputController({ field, control });
+  function AutoNumberInput(props: AutoNumberInputProps & Omit<ComponentProps<typeof AutoStringInput>, "step" | "type">) {
+    const { metadata, value } = useStringInputController(props);
 
     const step =
       metadata.configuration.__typename === "GadgetNumberConfig" && metadata.configuration.decimals && metadata.configuration.decimals > 0

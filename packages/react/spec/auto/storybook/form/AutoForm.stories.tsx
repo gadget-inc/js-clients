@@ -52,8 +52,8 @@ export const CreateWithCustomParams: any = {
 
 export const UpdateRecord: any = {
   args: {
-    action: api.widget.update,
-    findBy: "999",
+    action: api.autoTableTest.update,
+    findBy: "122",
   },
 };
 

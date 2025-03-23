@@ -1,14 +1,16 @@
 import { EyeIcon, EyeOffIcon } from "lucide-react";
-import React, { useState, type ReactNode } from "react";
+import React, { useState, type ComponentProps, type ReactNode } from "react";
 import { autoInput } from "../../AutoInput.js";
 import { type AutoEncryptedStringInputProps } from "../../shared/AutoInputTypes.js";
 import type { ShadcnElements } from "../elements.js";
 import { makeShadcnAutoStringInput } from "./ShadcnAutoStringInput.js";
 
 export const makeShadcnAutoEncryptedStringInput = ({ Input, Label, Button }: Pick<ShadcnElements, "Input" | "Label" | "Button">) => {
-  const TextInput = makeShadcnAutoStringInput({ Input, Label });
+  const AutoStringInput = makeShadcnAutoStringInput({ Input, Label });
 
-  function ShadcnAutoEncryptedStringInput(props: AutoEncryptedStringInputProps & { className?: string; suffix?: ReactNode }) {
+  function ShadcnAutoEncryptedStringInput(
+    props: AutoEncryptedStringInputProps & { suffix?: ReactNode } & Omit<ComponentProps<typeof AutoStringInput>, "type">
+  ) {
     const [isShown, setIsShown] = useState(false);
     const { suffix, ...restProps } = props;
 
@@ -25,7 +27,7 @@ export const makeShadcnAutoEncryptedStringInput = ({ Input, Label, Button }: Pic
       </Button>
     );
 
-    return <TextInput {...restProps} type={isShown ? "text" : "password"} suffix={suffix ?? showHideToggleButton} />;
+    return <AutoStringInput {...restProps} type={isShown ? "text" : "password"} suffix={suffix ?? showHideToggleButton} />;
   }
 
   return autoInput(ShadcnAutoEncryptedStringInput);

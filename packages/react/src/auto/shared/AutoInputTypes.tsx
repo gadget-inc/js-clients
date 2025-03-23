@@ -18,6 +18,10 @@ export interface AutoBooleanInputProps extends ControllableWithReactHookForm {
    * The label of the Boolean field
    */
   label?: InputLabel;
+  /**
+   * A callback function run after the input value changes
+   */
+  afterChange?: (...event: any[]) => void;
 }
 
 export interface AutoDateTimeInputProps extends ControllableWithReactHookForm {
@@ -25,14 +29,6 @@ export interface AutoDateTimeInputProps extends ControllableWithReactHookForm {
    * The API identifier of the DateTime field
    */
   field: string;
-  /**
-   * The value of the DateTime field
-   */
-  value?: Date;
-  /**
-   * Called when the value of the DateTime field changes
-   */
-  onChange?: (value?: Date) => void;
   /**
    * Error message to display if the DateTime field is invalid
    */
@@ -42,9 +38,9 @@ export interface AutoDateTimeInputProps extends ControllableWithReactHookForm {
    */
   label?: InputLabel;
   /**
-   * Indicates if the Gadget DateTime field includes a time component
+   * A callback function run after the input value changes
    */
-  includeTime?: boolean;
+  afterChange?: (...event: any[]) => void;
 }
 
 export interface AutoEncryptedStringInputProps extends ControllableWithReactHookForm {
@@ -56,6 +52,10 @@ export interface AutoEncryptedStringInputProps extends ControllableWithReactHook
    * The label of the EncryptedString field
    */
   label?: InputLabel;
+  /**
+   * A callback function run after the input value changes
+   */
+  afterChange?: (...event: any[]) => void;
 }
 
 export interface AutoEnumInputProps extends ControllableWithReactHookForm {
@@ -67,6 +67,10 @@ export interface AutoEnumInputProps extends ControllableWithReactHookForm {
    * The label of the Enum field
    */
   label?: InputLabel;
+  /**
+   * A callback function run after the input value changes
+   */
+  afterChange?: (...event: any[]) => void;
 }
 
 export interface AutoFileInputProps extends ControllableWithReactHookForm {
@@ -122,6 +126,10 @@ export interface AutoJSONInputProps extends ControllableWithReactHookForm {
    * The label of the JSON field
    */
   label?: InputLabel;
+  /**
+   * A callback function run after the input value changes
+   */
+  afterChange?: (...event: any[]) => void;
 }
 
 export interface AutoNumberInputProps extends ControllableWithReactHookForm {
@@ -133,9 +141,13 @@ export interface AutoNumberInputProps extends ControllableWithReactHookForm {
    * The label of the Number field
    */
   label?: InputLabel;
+  /**
+   * A callback function run after the input value changes
+   */
+  afterChange?: (...event: any[]) => void;
 }
 
-export interface AutoPasswordInputProps {
+export interface AutoPasswordInputProps extends ControllableWithReactHookForm {
   /**
    * The API identifier of the Password field
    */
@@ -145,9 +157,9 @@ export interface AutoPasswordInputProps {
    */
   label?: InputLabel;
   /**
-   * React Hook Form control object
+   * A callback function run after the input value changes
    */
-  control?: Control<any>;
+  afterChange?: (...event: any[]) => void;
 }
 
 export interface AutoRolesInputProps extends ControllableWithReactHookForm {
@@ -170,4 +182,8 @@ export interface AutoTextInputProps extends ControllableWithReactHookForm {
    * The label of the field
    */
   label?: InputLabel;
+  /**
+   * A callback function run after the input value changes
+   */
+  afterChange?: (...event: any[]) => void;
 }

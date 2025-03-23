@@ -6,7 +6,8 @@ import { type AutoRolesInputProps } from "../../shared/AutoInputTypes.js";
 import type { PolarisFixedOptionsMultiComboboxProps } from "../PolarisFixedOptionsCombobox.js";
 import { PolarisFixedOptionsCombobox } from "../PolarisFixedOptionsCombobox.js";
 
-type PolarisAutoRolesInputProps = AutoRolesInputProps & Partial<PolarisFixedOptionsMultiComboboxProps>;
+type PolarisAutoRolesInputProps = AutoRolesInputProps &
+  Partial<Omit<PolarisFixedOptionsMultiComboboxProps, "allowMultiple" | "value" | "onChange">>;
 
 /**
  * A RoleList selector within AutoForm.

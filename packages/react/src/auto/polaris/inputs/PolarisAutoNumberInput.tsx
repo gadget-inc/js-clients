@@ -6,7 +6,7 @@ import { useStringInputController } from "../../hooks/useStringInputController.j
 import type { AutoNumberInputProps } from "../../shared/AutoInputTypes.js";
 import { PolarisAutoTextInput } from "./PolarisAutoTextInput.js";
 
-type PolarisAutoNumberInputProps = AutoNumberInputProps & Partial<TextFieldProps>;
+type PolarisAutoNumberInputProps = AutoNumberInputProps & Partial<Omit<TextFieldProps, "value" | "onChange">>;
 
 /**
  * A number input within AutoForm.
@@ -21,8 +21,7 @@ type PolarisAutoNumberInputProps = AutoNumberInputProps & Partial<TextFieldProps
  * @returns The AutoNumberInput component
  */
 export const PolarisAutoNumberInput = autoInput((props: PolarisAutoNumberInputProps) => {
-  const { field, control } = props;
-  const { type, metadata, value } = useStringInputController({ field, control });
+  const { type, metadata, value } = useStringInputController(props);
   const fieldType = type as TextFieldProps["type"];
 
   const step =

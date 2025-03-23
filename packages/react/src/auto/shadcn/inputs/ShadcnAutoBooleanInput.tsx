@@ -6,7 +6,10 @@ import { ShadcnRequired } from "../ShadcnRequired.js";
 import type { CheckboxProps, ShadcnElements } from "../elements.js";
 
 export const makeShadcnAutoBooleanInput = ({ Checkbox, Label }: Pick<ShadcnElements, "Checkbox" | "Label">) => {
-  function ShadcnAutoBooleanInput(props: { className?: string } & AutoBooleanInputProps & Partial<CheckboxProps>) {
+  function ShadcnAutoBooleanInput(
+    props: { className?: string } & AutoBooleanInputProps &
+      Partial<Omit<CheckboxProps, "value" | "onChange" | "onCheckedChange" | "checked" | "defaultChecked">>
+  ) {
     const { field: _field, control: _control, ...rest } = props;
     const { path, error, fieldProps, metadata } = useBooleanInputController(props);
 
