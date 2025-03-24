@@ -3,7 +3,7 @@ import React from "react";
 import type { OptionsType } from "../../utils.js";
 import type { AutoButtonProps } from "../hooks/useAutoButtonController.js";
 import { useAutoButtonController } from "../hooks/useAutoButtonController.js";
-import { ButtonProps, type ShadcnElements } from "./elements.js";
+import type { ButtonProps, ShadcnElements } from "./elements.js";
 
 /**
  * Render a button that invokes an action when clicked, and shows a toast notification when the action succeeds or encounters an error by default.
