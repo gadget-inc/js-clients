@@ -1,6 +1,6 @@
 {
   "name": "@gadgetinc/react-bigcommerce",
-  "version": "0.2.0",
+  "version": "0.3.0",
   "files": [
     "README.md",
     "dist/**/*"
@@ -41,6 +41,6 @@
   "peerDependencies": {
     "react": "^18.0.0",
     "react-dom": "^18.0.0",
-    "@gadgetinc/react": "^0.19.0"
+    "@gadgetinc/react": "^0.20.0"
   }
 }

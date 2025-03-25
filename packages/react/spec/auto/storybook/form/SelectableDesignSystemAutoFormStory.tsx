@@ -13,7 +13,7 @@ import { PolarisAutoHasManyThroughInput } from "../../../../src/auto/polaris/inp
 import { PolarisAutoHasOneForm } from "../../../../src/auto/polaris/inputs/relationships/PolarisAutoHasOneForm.js";
 import { PolarisAutoSubmit } from "../../../../src/auto/polaris/submit/PolarisAutoSubmit.js";
 import { PolarisSubmitResultBanner } from "../../../../src/auto/polaris/submit/PolarisSubmitResultBanner.js";
-import { makeAutocomponents } from "../../../../src/auto/shadcn/unreleasedIndex.js";
+import { makeAutocomponents } from "../../../../src/auto/shadcn/index.js";
 import { type OptionsType } from "../../../../src/utils.js";
 import { Card as ShadcnCard } from "../../shadcn-defaults/components/Card.js";
 import { Label as ShadcnLabel } from "../../shadcn-defaults/components/Label.js";
