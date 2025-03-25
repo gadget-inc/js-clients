@@ -1,5 +1,14 @@
 # @gadgetinc/react
 
+## 0.20.0
+
+- NEW - `shadcn` design system is now available for AutoComponents
+  - Available in new web apps created in Gadget https://docs.gadget.dev/guides/frontend/autocomponents/shadcn#shadcn-autocomponents
+  - Base components https://ui.shadcn.com/
+- (Breaking change) - Removed `onChange` and `value` props from field type specific AutoInput components to avoid bugs where inputs are disconnected from the overall AutoForm state.
+- Added new optional `afterChange` prop to many field type specific `AutoInput` components to run a callback after the input value is changed
+- Added descriptions for AutoComponents
+
 ## 0.19.0
 
 ### Patch Changes
