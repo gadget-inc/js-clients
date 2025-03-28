@@ -1,7 +1,15 @@
 import type { OperationContext } from "@urql/core";
 import type { VariableOptions } from "tiny-graphql-query-compiler";
 import type { FieldSelection } from "./FieldSelection.js";
-import type { ActionFunction, AnyActionFunction, BulkActionFunction, GlobalActionFunction } from "./GadgetFunctions.js";
+import type {
+  ActionFunction,
+  AnyActionFunction,
+  BulkActionFunction,
+  GlobalActionFunction,
+  ViewFunction,
+  ViewFunctionWithoutVariables,
+  ViewFunctionWithVariables,
+} from "./GadgetFunctions.js";
 
 /**
  * Limit the keys in T to only those that also exist in U. AKA Subset or Intersection.
@@ -879,3 +887,8 @@ export type ActionFunctionOptions<Action extends AnyActionFunction> = Action ext
   : Action extends GlobalActionFunction<any>
   ? Record<string, never>
   : never;
+
+/** Get the result type of executing a view function */
+export type ViewResult<F extends ViewFunction<any, any>> = Awaited<
+  F extends ViewFunctionWithVariables<any, infer Result> ? Result : F extends ViewFunctionWithoutVariables<infer Result> ? Result : never
+>;
