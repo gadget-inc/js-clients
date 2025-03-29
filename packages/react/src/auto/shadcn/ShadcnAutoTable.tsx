@@ -282,7 +282,7 @@ export const makeAutoTable = (elements: ShadcnElements) => {
       );
     }
     if ((fetching && !rows) || !columns) {
-      return <Skeleton />;
+      return props.loadingSkeleton ?? <Skeleton />;
     }
 
     return (

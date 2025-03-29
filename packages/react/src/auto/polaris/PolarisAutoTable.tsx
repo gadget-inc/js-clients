@@ -179,7 +179,7 @@ const PolarisAutoTableComponent = <
   );
 
   if (!error && ((fetching && !rows) || !columns)) {
-    return <PolarisSkeletonTable columns={3} />;
+    return props.loadingSkeleton ?? <PolarisSkeletonTable columns={3} />;
   }
 
   return (
