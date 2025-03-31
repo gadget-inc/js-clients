@@ -117,4 +117,9 @@ export type AutoTableProps<
    * Indicates if pagination is enabled. Defaults to `true`.
    */
   paginate?: boolean;
+
+  /**
+   * The loading skeleton to display when the table is loading.
+   */
+  loadingSkeleton?: ReactNode;
 };
