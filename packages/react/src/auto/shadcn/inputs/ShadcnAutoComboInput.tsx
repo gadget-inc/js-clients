@@ -68,7 +68,7 @@ export const makeShadcnAutoComboInput = ({
             {inputLabel} {requiredIndicator}
           </Label>
         )}
-        <div className={`relative rounded-md ${open ? "ring-1 ring-ring border" : "border"}`}>
+        <div className={`relative rounded-md border ${open ? "ring-1 ring-ring" : ""}`}>
           {props.selectedRecordTag && <div className="py-2 px-2 pt-2 pb-1">{props.selectedRecordTag}</div>}
           <Command className="overflow-visible z-50">
             <CommandInput
