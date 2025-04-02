@@ -70,6 +70,7 @@ export const makeAutoTable = (elements: ShadcnElements) => {
               ? "indeterminate"
               : false
           }
+          className="inline-flex"
           onCheckedChange={(value) => selection.onSelectionChange(SelectionType.Page, !!value)}
           onClick={(e) => e.stopPropagation()}
         />
@@ -168,6 +169,7 @@ export const makeAutoTable = (elements: ShadcnElements) => {
     return (
       <TableCell className={`sticky left-0 ${getCellBackgroundColor({ isSelected, isHovered })} z-10`}>
         <Checkbox
+          className="inline-flex"
           id={`AutoTableSingleRowCheckbox-${row.id as string}`}
           checked={isSelected}
           onClick={(e) => {
