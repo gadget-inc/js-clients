@@ -87,6 +87,7 @@ export interface ViewFunctionWithoutVariables<ResultT> {
   (): Promise<ResultT>;
   type: "computedView";
   operationName: string;
+  gqlFieldName: string;
   namespace?: string | string[] | null;
   resultType: ResultT;
   plan(): GQLBuilderResult;
@@ -96,6 +97,7 @@ export interface ViewFunctionWithVariables<VariablesT, ResultT> {
   (variables: VariablesT): Promise<ResultT>;
   type: "computedView";
   operationName: string;
+  gqlFieldName: string;
   namespace?: string | string[] | null;
   variables: VariablesOptions;
   variablesType: VariablesT;

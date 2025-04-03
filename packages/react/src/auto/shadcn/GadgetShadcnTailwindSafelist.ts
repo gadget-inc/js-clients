@@ -74,6 +74,7 @@ export const GadgetShadcnTailwindSafelistFromTailwind = [
   "h-9",
   "h-fit",
   "hidden",
+  "inline",
   "inline-flex",
   "inset-0",
   "items-center",
