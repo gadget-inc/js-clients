@@ -37,7 +37,7 @@ export const makeShadcnAutoHasManyThroughInput = ({
   });
 
   function ShadcnAutoHasManyThroughInput(props: AutoRelationshipInputProps) {
-    const { field } = props;
+    const { field, placeholder } = props;
     const {
       fieldMetadata: { path, metadata },
       relatedModelOptions: { options, searchFilterOptions, search, pagination, relatedModel },
@@ -77,6 +77,7 @@ export const makeShadcnAutoHasManyThroughInput = ({
           ) : null
         }
         onSelect={onSelectRecord}
+        placeholder={placeholder}
         checkSelected={(id) => {
           return selectedRecordIds.includes(id);
         }}

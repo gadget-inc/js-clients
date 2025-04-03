@@ -19,7 +19,7 @@ export const makeShadcnListMessages = ({
   Label,
 }: Pick<ShadcnElements, "CommandEmpty" | "CommandItem" | "Checkbox" | "Label">) => {
   function NoRecordsMessage(props: { message?: string }) {
-    const { message = "No records found" } = props;
+    const { message = "No results" } = props;
     return <CommandEmpty>{message}</CommandEmpty>;
   }
 

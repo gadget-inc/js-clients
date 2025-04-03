@@ -63,7 +63,7 @@ export const makeRelatedModelOption = (
     useDetectScrolledToBottom({ loadMoreRef, onLoadMore: props.onLoadMore });
 
     return (
-      <CommandList className="absolute top-full w-full bg-background border shadow-md rounded-b-md z-50">
+      <CommandList className="absolute top-full w-full bg-background border shadow-md rounded-md z-50">
         {isLoading && <CommandEmpty>Loading...</CommandEmpty>}
         {listBoxOptions.length > 0 ? <CommandGroup>{listBoxOptions}</CommandGroup> : null}
         {props.allowOther && props.searchValue && (

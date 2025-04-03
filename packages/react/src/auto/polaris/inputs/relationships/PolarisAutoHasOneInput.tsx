@@ -23,7 +23,7 @@ import { RelatedModelOptions } from "./RelatedModelOptions.js";
  * @returns The hasOne field input component
  */
 export const PolarisAutoHasOneInput = autoInput((props: AutoRelationshipInputProps) => {
-  const { field } = props;
+  const { field, label, placeholder } = props;
   const {
     fieldMetadata: { path, metadata },
     relatedModelOptions: { options, searchFilterOptions, search, pagination, relatedModel },
@@ -51,9 +51,9 @@ export const PolarisAutoHasOneInput = autoInput((props: AutoRelationshipInputPro
           <Combobox.TextField
             onChange={search.set}
             value={search.value}
-            label={props.label ?? metadata.name}
+            label={label ?? metadata.name}
+            placeholder={placeholder}
             name={path}
-            placeholder="Search"
             autoComplete="off"
             verticalContent={selectedRecordTag}
           />

@@ -24,6 +24,11 @@ type BaseComboboxProps = Omit<AutocompleteProps, "selected" | "onSelect" | "text
    * Selectable options in the combobox.
    */
   options: EnumOption[];
+
+  /**
+   * Placeholder for the combobox.
+   */
+  placeholder?: string;
 };
 
 /** Props for a single-selection combobox. */
@@ -61,7 +66,7 @@ export type PolarisFixedOptionsMultiComboboxProps = BaseComboboxProps & {
 export type PolarisFixedOptionsComboboxProps = PolarisFixedOptionsSingleComboboxProps | PolarisFixedOptionsMultiComboboxProps;
 
 export const PolarisFixedOptionsCombobox = (props: PolarisFixedOptionsComboboxProps) => {
-  const { label, options: allOptions, value, onChange, allowMultiple, ...rest } = props;
+  const { label, options: allOptions, value, onChange, allowMultiple, placeholder, ...rest } = props;
   const selectedValues = useMemo(() => (value ? (allowMultiple ? value : [value]) : []), [allowMultiple, value]);
   const selectedOptions = allOptions.filter((option) => selectedValues.includes(option.value));
 
@@ -136,7 +141,7 @@ export const PolarisFixedOptionsCombobox = (props: PolarisFixedOptionsComboboxPr
       label={label}
       value={inputValue}
       verticalContent={verticalContentMarkup}
-      placeholder="Search"
+      placeholder={placeholder}
       autoComplete="off"
       id={`${label}_Autocomplete_Textfield`}
     />

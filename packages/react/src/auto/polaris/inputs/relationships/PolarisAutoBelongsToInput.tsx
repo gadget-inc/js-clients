@@ -23,6 +23,7 @@ import { RelatedModelOptions } from "./RelatedModelOptions.js";
  * @returns The belongsTo field input component
  */
 export const PolarisAutoBelongsToInput = autoInput((props: AutoRelationshipInputProps) => {
+  const { field, label, placeholder } = props;
   const {
     fieldMetadata: { path, metadata },
     relatedModelOptions: { options, searchFilterOptions, pagination, search, relatedModel },
@@ -34,7 +35,7 @@ export const PolarisAutoBelongsToInput = autoInput((props: AutoRelationshipInput
     onRemoveRecord,
   } = useBelongsToInputController(props);
 
-  const optionLabel = useOptionLabelForField(props.field, props.optionLabel);
+  const optionLabel = useOptionLabelForField(field, props.optionLabel);
   const selectedOption = selectedRecord ? getRecordAsOption(selectedRecord, { primary: optionLabel }) : null;
 
   const selectedRecordTag =
@@ -68,8 +69,8 @@ export const PolarisAutoBelongsToInput = autoInput((props: AutoRelationshipInput
             onChange={search.set}
             value={search.value}
             name={path}
-            label={props.label ?? metadata.name}
-            placeholder="Search"
+            label={label ?? metadata.name}
+            placeholder={placeholder}
             autoComplete="off"
             verticalContent={selectedRecordTag}
           />

@@ -24,7 +24,7 @@ import { getSelectedRelatedRecordTags } from "./SelectedRelatedRecordTags.js";
  * @returns The hasMany field input component
  */
 export const PolarisAutoHasManyInput = autoInput((props: AutoRelationshipInputProps) => {
-  const { field } = props;
+  const { field, label, placeholder } = props;
 
   const {
     fieldMetadata: { path, metadata },
@@ -51,9 +51,9 @@ export const PolarisAutoHasManyInput = autoInput((props: AutoRelationshipInputPr
           <Combobox.TextField
             onChange={search.set}
             value={search.value}
-            label={props.label ?? metadata.name}
+            label={label ?? metadata.name}
+            placeholder={placeholder}
             name={path}
-            placeholder="Search"
             autoComplete="off"
             verticalContent={getSelectedRelatedRecordTags({
               selectedRecords,
