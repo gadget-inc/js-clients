@@ -74,6 +74,8 @@ export type AutoFormProps<
   action: ActionFunc;
   /** What to show the user once the form has been submitted successfully */
   successContent?: ReactNode;
+  /** The loading skeleton to display when the form is loading */
+  loadingSkeleton?: ReactNode;
   /** An allowlist of fields to render within the form. Only these fields will be rendered as inputs. */
   include?: string[];
   /** A denylist of fields to render within the form. Every field except these fields will be rendered as inputs. */

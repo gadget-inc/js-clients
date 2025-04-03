@@ -121,7 +121,7 @@ export const makeAutoForm = <Elements extends ShadcnElements>(elements: Elements
     if (fetchingMetadata) {
       return (
         <FormContainer {...rest} onSubmit={submit as any}>
-          <Skeleton />
+          {props.loadingSkeleton ?? <Skeleton />}
         </FormContainer>
       );
     }
