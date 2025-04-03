@@ -40,7 +40,7 @@ export const DesignSystemSelectionControl = ({ children }: { children: React.Rea
           </Button>
         </div>
 
-        <Suspense fallback={<div>Loading...</div>}>{children}</Suspense>
+        <Suspense>{children}</Suspense>
       </AppProvider>
     </DesignSystemContext.Provider>
   );

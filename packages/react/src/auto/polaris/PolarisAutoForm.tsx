@@ -113,7 +113,7 @@ const PolarisAutoFormComponent = <
   if (fetchingMetadata) {
     return (
       <Form {...rest} onSubmit={submit}>
-        <PolarisAutoFormSkeleton />
+        {props.loadingSkeleton ?? <PolarisAutoFormSkeleton />}
       </Form>
     );
   }
