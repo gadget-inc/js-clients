@@ -1,5 +1,19 @@
 # @gadgetinc/react
 
+## 0.20.1
+
+- Added `loadingSkeleton` prop to AutoForm to override the default skeleton component.
+- Added `loadingSkeleton` prop to AutoTable to override the default loading skeleton component
+- Added optional `placeholder` prop to override the now blank default. Previously, the placeholder was always "Search"
+  - Affected components
+    - `AutoBelongsToInput`
+    - `AutoHasOneInput`
+    - `AutoHasManyInput`
+    - `AutoHasManyThroughInput`
+    - `AutoEnumInput`
+    - `AutoRolesInput`
+- Fixed issue with Polaris `AutoEmailInput`, `AutoStringInput`, and `AutoUrlInput` prop types where the props of the underlying components were not re-exported
+
 ## 0.20.0
 
 - NEW - `shadcn` design system is now available for AutoComponents
