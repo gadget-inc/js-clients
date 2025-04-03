@@ -81,7 +81,7 @@ export const makeShadcnAutoComboInput = ({
                 props.onChange?.(value);
               }}
               onFocus={() => setOpen(true)}
-              placeholder={"Search"}
+              placeholder={props.placeholder}
               className="ml-2 bg-transparent outline-none placeholder:text-muted-foreground flex-1"
             />
             {open && (
@@ -101,7 +101,7 @@ export const makeShadcnAutoComboInput = ({
                   searchValue={inputValue}
                   setSearchValue={setInputValue}
                   formatOptionText={props.formatOptionText}
-                  emptyMessage={props.emptyMessage ? `${props.emptyMessage} "${inputValue}"` : undefined}
+                  emptyMessage={props.emptyMessage}
                   canLoadMore={props.willLoadMoreOptions}
                   onLoadMore={props.onScrolledToBottom}
                 />

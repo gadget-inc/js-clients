@@ -34,7 +34,7 @@ export const makeShadcnAutoEnumInput = ({
   });
 
   function ShadcnAutoEnumInput(props: AutoEnumInputProps) {
-    const { label: labelProp } = props;
+    const { label: labelProp, placeholder } = props;
 
     const {
       allowMultiple,
@@ -103,6 +103,7 @@ export const makeShadcnAutoEnumInput = ({
         path={path}
         metadata={metadata}
         label={labelProp ?? label}
+        placeholder={placeholder}
         onChange={debouncedSearch}
         selectedRecordTag={selectedTagsElement}
         onSelect={(option) => {
@@ -122,7 +123,7 @@ export const makeShadcnAutoEnumInput = ({
           setSearchValue("");
         }}
         formatOptionText={formatOptionText}
-        emptyMessage={`No options found matching `}
+        emptyMessage={`No results`}
       />
     );
   }

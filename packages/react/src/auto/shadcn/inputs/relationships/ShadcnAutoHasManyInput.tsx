@@ -37,7 +37,7 @@ export const makeShadcnAutoHasManyInput = ({
   });
 
   function ShadcnAutoHasManyInput(props: AutoRelationshipInputProps) {
-    const { field } = props;
+    const { field, placeholder } = props;
 
     const {
       fieldMetadata: { path, metadata },
@@ -71,6 +71,7 @@ export const makeShadcnAutoHasManyInput = ({
         path={path}
         metadata={metadata}
         onChange={search.set}
+        placeholder={placeholder}
         selectedRecordTag={
           selectedRecords.length > 0 ? (
             <SelectedRecordTags selectedRecords={selectedRecords} optionLabel={optionLabel} onRemoveRecord={onRemoveRecord} />

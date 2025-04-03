@@ -265,13 +265,13 @@ describeForEachAutoAdapter("AutoEnumInput", ({ name, adapter: { AutoForm }, wrap
       cy.mountWithWrapper(<AutoForm action={api.game.stadium.create} />, wrapper);
       cy.get(getInputSelector("type")).type("hello");
       cy.contains(`Add "hello"`).should("not.exist");
-      cy.contains(`No options found matching "hello"`).should("exist");
+      cy.contains(`No results`).should("exist");
 
       blurComboboxes();
 
       cy.get(getInputSelector("tags")).type("nope");
       cy.contains(`Add "nope"`).should("not.exist");
-      cy.contains(`No options found matching "nope"`).should("exist");
+      cy.contains(`No results`).should("exist");
     });
   });
 

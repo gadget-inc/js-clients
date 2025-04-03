@@ -28,6 +28,6 @@ export const ListMessage = (props: { message: string }) => (
   </div>
 );
 
-export const NoRecordsMessage = () => <ListMessage message="No records found" />;
+export const NoRecordsMessage = () => <ListMessage message="No results" />;
 
 export { getErrorMessage };

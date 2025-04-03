@@ -47,7 +47,7 @@ export const PolarisAutoTextInput = autoInput((props: PolarisAutoTextInputProps)
  * @param props.label - Label of the email input.
  * @returns The AutoEmailInput component
  */
-export const PolarisAutoEmailInput = (props: AutoTextInputProps) => <PolarisAutoTextInput {...props} />;
+export const PolarisAutoEmailInput = (props: PolarisAutoTextInputProps) => <PolarisAutoTextInput {...props} />;
 
 /**
  * A string input within AutoForm.
@@ -61,7 +61,7 @@ export const PolarisAutoEmailInput = (props: AutoTextInputProps) => <PolarisAuto
  * @param props.label - Label of the string input.
  * @returns The AutoStringInput component
  */
-export const PolarisAutoStringInput = (props: AutoTextInputProps) => <PolarisAutoTextInput {...props} />;
+export const PolarisAutoStringInput = (props: PolarisAutoTextInputProps) => <PolarisAutoTextInput {...props} />;
 
 /**
  * A url input within AutoForm.
@@ -75,4 +75,4 @@ export const PolarisAutoStringInput = (props: AutoTextInputProps) => <PolarisAut
  * @param props.label - Label of the url input.
  * @returns The AutoUrlInput component
  */
-export const PolarisAutoUrlInput = (props: AutoTextInputProps) => <PolarisAutoTextInput {...props} />;
+export const PolarisAutoUrlInput = (props: PolarisAutoTextInputProps) => <PolarisAutoTextInput {...props} />;

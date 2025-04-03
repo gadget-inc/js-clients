@@ -35,7 +35,7 @@ export const makeShadcnAutoHasOneInput = ({
   });
 
   function ShadcnAutoHasOneInput(props: AutoRelationshipInputProps) {
-    const { field } = props;
+    const { field, placeholder } = props;
     const {
       fieldMetadata: { path, metadata },
       relatedModelOptions: { options, searchFilterOptions, search, pagination, relatedModel },
@@ -73,6 +73,7 @@ export const makeShadcnAutoHasOneInput = ({
         {...props}
         options={searchFilterOptions}
         path={path}
+        placeholder={placeholder}
         metadata={metadata}
         onChange={search.set}
         defaultValue={search.value}

@@ -43,6 +43,7 @@ export const PolarisAutoRolesInput = autoInput((props: PolarisAutoRolesInputProp
       label={props.label ?? metadata.name}
       {...getPropsWithoutRef(fieldProps)}
       value={selectedRoleKeys}
+      placeholder={props.placeholder}
     />
   );
 });

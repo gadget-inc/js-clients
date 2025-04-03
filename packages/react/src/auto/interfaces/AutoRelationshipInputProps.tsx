@@ -30,6 +30,11 @@ export interface AutoRelationshipInputProps extends ControllableWithReactHookFor
    * Optional filter for the related model options.
    */
   recordFilter?: RecordFilter;
+
+  /**
+   * Optional placeholder for the input
+   */
+  placeholder?: string;
 }
 
 export type DisplayedRecordOption = RecordLabel<ReactNode> & {

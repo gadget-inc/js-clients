@@ -36,6 +36,8 @@ export const makeShadcnAutoBelongsToInput = ({
   });
 
   function ShadcnAutoBelongsToInput(props: AutoRelationshipInputProps) {
+    const { field, placeholder } = props;
+
     const {
       fieldMetadata: { path, metadata },
       relatedModelOptions: { options, searchFilterOptions, pagination, search, relatedModel },
@@ -47,7 +49,7 @@ export const makeShadcnAutoBelongsToInput = ({
       onRemoveRecord,
     } = useBelongsToInputController(props);
 
-    const optionLabel = useOptionLabelForField(props.field, props.optionLabel);
+    const optionLabel = useOptionLabelForField(field, props.optionLabel);
     const selectedOption = selectedRecord ? getRecordAsOption(selectedRecord, { primary: optionLabel }) : null;
 
     const selectedRecordTag =
@@ -92,6 +94,7 @@ export const makeShadcnAutoBelongsToInput = ({
         {...props}
         options={searchFilterOptions}
         path={path}
+        placeholder={placeholder}
         metadata={metadata}
         onChange={search.set}
         defaultValue={search.value}

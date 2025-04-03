@@ -20,7 +20,7 @@ export type PolarisAutoEnumInputProps = AutoEnumInputProps & Partial<Omit<Combob
  * @returns The AutoEnumInput component.
  */
 export const PolarisAutoEnumInput = autoInput((props: PolarisAutoEnumInputProps) => {
-  const { field: fieldApiIdentifier, control, label: labelProp, ...comboboxProps } = props;
+  const { field: fieldApiIdentifier, control, label: labelProp, placeholder, ...comboboxProps } = props;
   const {
     allowMultiple,
     allowOther,
@@ -93,7 +93,7 @@ export const PolarisAutoEnumInput = autoInput((props: PolarisAutoEnumInputProps)
   if (!allowOther && (!optionItemElement || optionItemElement.length === 0) && searchValue) {
     emptyStateElement = (
       <Box padding="100">
-        <Text as="span" alignment="center" tone="subdued">{`No options found matching "${searchValue}"`}</Text>
+        <Text as="span" alignment="center" tone="subdued">{`No results`}</Text>
       </Box>
     );
   }
@@ -131,11 +131,11 @@ export const PolarisAutoEnumInput = autoInput((props: PolarisAutoEnumInputProps)
           autoComplete="off"
           label={inputLabel}
           value={searchValue}
-          placeholder="Search"
           verticalContent={selectedTagsElement}
           onChange={setSearchValue}
           id={`${props.field}-combobox-textfield`}
           error={errorMessage}
+          placeholder={placeholder}
         />
       }
       {...comboboxProps}

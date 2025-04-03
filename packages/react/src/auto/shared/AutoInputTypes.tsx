@@ -71,6 +71,10 @@ export interface AutoEnumInputProps extends ControllableWithReactHookForm {
    * A callback function run after the input value changes
    */
   afterChange?: (...event: any[]) => void;
+  /**
+   * Optional placeholder for the input
+   */
+  placeholder?: string;
 }
 
 export interface AutoFileInputProps extends ControllableWithReactHookForm {
@@ -171,6 +175,10 @@ export interface AutoRolesInputProps extends ControllableWithReactHookForm {
    * The label of the Roles field
    */
   label?: InputLabel;
+  /**
+   * Optional placeholder for the input
+   */
+  placeholder?: string;
 }
 
 export interface AutoTextInputProps extends ControllableWithReactHookForm {
