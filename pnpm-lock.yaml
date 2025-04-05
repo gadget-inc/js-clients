@@ -33,8 +33,8 @@ importers:
         specifier: ^1.9.0
         version: 1.9.0
       '@gadget-client/js-clients-test':
-        specifier: 1.512.0-development.2586
-        version: 1.512.0-development.2586
+        specifier: 1.512.0-development.2589
+        version: 1.512.0-development.2589
       '@gadget-client/kitchen-sink':
         specifier: 1.9.0-development.206
         version: 1.9.0-development.206
@@ -2919,8 +2919,8 @@ packages:
       '@gadgetinc/api-client-core': link:packages/api-client-core
     dev: true
 
-  /@gadget-client/js-clients-test@1.512.0-development.2586:
-    resolution: {integrity: sha1-nLi3pJ97Ss19lRp0TMiKS42Xoxs=, tarball: https://registry.gadget.dev/npm/_/tarball/57882/114412/15653}
+  /@gadget-client/js-clients-test@1.512.0-development.2589:
+    resolution: {integrity: sha1-qvQWbNeGOMPefLlXpNLzu2Hkes0=, tarball: https://registry.gadget.dev/npm/_/tarball/57882/114412/16217}
     dependencies:
       '@gadgetinc/api-client-core': link:packages/api-client-core
       tiny-graphql-query-compiler: link:packages/tiny-graphql-query-compiler
