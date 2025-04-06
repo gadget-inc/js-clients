@@ -14,7 +14,7 @@ import {
 } from "../interfaces/AutoRelationshipInputProps.js";
 import { useMaybeFieldMetadata } from "./useFieldMetadata.js";
 
-export const useSelectedPathsFromRecordLabel = (props: AutoRelationshipFormProps) => {
+export const useSelectedPathsFromRecordLabel = (props: Pick<AutoRelationshipFormProps, "field" | "recordLabel">) => {
   const { field, recordLabel } = props;
   const { metadata } = useMaybeFieldMetadata(field);
 

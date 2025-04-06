@@ -43,7 +43,9 @@ export function autoInput<P extends { field: string }>(Component: React.FC<P>): 
   return WrappedComponent as AutoInputComponent<P>;
 }
 
-export function autoRelationshipForm<P extends AutoRelationshipFormProps>(Component: React.FC<P>): AutoInputComponent<P> {
+export function autoRelationshipForm<P extends Pick<AutoRelationshipFormProps, "field" | "recordLabel">>(
+  Component: React.FC<P>
+): AutoInputComponent<P> {
   const WrappedComponent: React.FC<P> = (props) => {
     const { hasCustomFormChildren, registerFields, fieldSet } = useFieldsFromChildComponents();
 
