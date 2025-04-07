@@ -7,7 +7,7 @@ import type { AutoHasManyThroughFormProps } from "./auto/interfaces/AutoRelation
 import { useFormContext } from "./useActionForm.js";
 
 export const useHasManyThroughForm = (props: AutoHasManyThroughFormProps) => {
-  const { field, children } = props;
+  const { field, children, allowMultipleSelections } = props;
   const { metadata } = useAutoRelationship({ field });
   const { setValue } = useFormContext();
 
@@ -43,7 +43,7 @@ export const useHasManyThroughForm = (props: AutoHasManyThroughFormProps) => {
 
   const {
     search,
-    searchFilterOptions: siblingModelOptions,
+    searchFilterOptions: rawSiblingModelOptions,
     relatedModel: { fetching: siblingRecordsLoading, records: siblingRecords },
     pagination: siblingPagination,
   } = relatedModelOptions;
@@ -66,6 +66,20 @@ export const useHasManyThroughForm = (props: AutoHasManyThroughFormProps) => {
   }, [fields, records, inverseRelatedModelField]);
 
   const recordLabel = useRecordLabelObjectFromProps(props);
+
+  const siblingModelOptions = useMemo(() => {
+    if (!allowMultipleSelections && inverseRelatedModelField) {
+      return rawSiblingModelOptions.filter(
+        (option) =>
+          !joinRecords.some((joinRecord) => {
+            const rawJoinRecord = joinRecord[2];
+            const siblingFromJoinRecord = rawJoinRecord[inverseRelatedModelField];
+            return siblingFromJoinRecord && "id" in siblingFromJoinRecord && siblingFromJoinRecord.id === option.id;
+          })
+      );
+    }
+    return rawSiblingModelOptions;
+  }, [rawSiblingModelOptions, allowMultipleSelections, inverseRelatedModelField, joinRecords]);
 
   return {
     fields,

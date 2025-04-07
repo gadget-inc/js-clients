@@ -3,7 +3,11 @@ import { BlockStack, Box, Button as PolarisButton, Card as PolarisCard, Label as
 import React from "react";
 import { SUITE_NAMES } from "../../../../cypress/support/constants.js";
 import { type AutoFormProps } from "../../../../src/auto/AutoForm.js";
-import type { AutoRelationshipFormProps, AutoRelationshipInputProps } from "../../../../src/auto/interfaces/AutoRelationshipInputProps.js";
+import type {
+  AutoHasManyThroughFormProps,
+  AutoRelationshipFormProps,
+  AutoRelationshipInputProps,
+} from "../../../../src/auto/interfaces/AutoRelationshipInputProps.js";
 import { PolarisAutoForm } from "../../../../src/auto/polaris/PolarisAutoForm.js";
 import { PolarisAutoInput } from "../../../../src/auto/polaris/inputs/PolarisAutoInput.js";
 import { PolarisAutoBelongsToForm } from "../../../../src/auto/polaris/inputs/relationships/PolarisAutoBelongsToForm.js";
@@ -107,7 +111,7 @@ export const AutoHasManyForm = (props: AutoRelationshipFormProps) => {
   return null;
 };
 
-export const AutoHasManyThroughForm = (props: AutoRelationshipFormProps) => {
+export const AutoHasManyThroughForm = (props: AutoHasManyThroughFormProps) => {
   const { designSystem } = useDesignSystem();
   if (designSystem === SUITE_NAMES.POLARIS) {
     return <PolarisAutoHasManyThroughForm {...props} />;
