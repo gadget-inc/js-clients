@@ -234,9 +234,7 @@ const ExampleCourseCreateRelatedForm = (props: any) => {
               primary: ["title", "firstName", "lastName"],
               secondary: "weight",
             }}
-          >
-            <></>
-          </AutoHasManyThroughForm>
+          />
         </Card>
         <AutoSubmit />
       </SelectableDesignSystemAutoFormStory>
