@@ -14,7 +14,10 @@ export const urlParamExchange: Exchange = mapExchange({
   onOperation: (operation) => {
     if (operation.context.url && operation.context.operationName) {
       try {
-        operation.context.url = addUrlParams(operation.context.url, { operation: operation.context.operationName });
+        operation.context.url = addUrlParams(operation.context.url, {
+          kind: operation.kind,
+          operation: operation.context.operationName,
+        });
       } catch (error) {
         // not able to parse URL params, just don't add this optional param and let the rest of the system react to the invalid URL
       }
