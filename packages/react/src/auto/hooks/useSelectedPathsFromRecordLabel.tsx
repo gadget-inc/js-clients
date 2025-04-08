@@ -42,7 +42,7 @@ export const useSelectedPathsFromRecordLabel = (props: Pick<AutoRelationshipForm
     return Array.from(selectedPaths);
   }, [recordLabel, metadata]);
 
-  return selectedPaths;
+  return { selectedPaths, metadata };
 };
 
 export const getSelectedPathsFromOptionLabel = (optionLabel?: OptionLabel, getFieldsToSelectOnRecordLabelCallback?: () => string[]) => {

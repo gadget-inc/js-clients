@@ -76,6 +76,7 @@ describeForEachAutoAdapter(
             <AutoHasManyThroughJoinModelForm>
               <AutoInput field="effectiveFrom" />
               <AutoInput field="effectiveTo" />
+              <AutoInput field="attempt" />
             </AutoHasManyThroughJoinModelForm>
           </AutoHasManyThroughForm>
           <AutoSubmit id="submit" />
@@ -91,7 +92,9 @@ describeForEachAutoAdapter(
       cy.contains("Emma Williams").click();
       cy.contains("Add Students").click();
 
+      cy.wait(1000);
       cy.get('[id="deleteButton_students.0"]').click();
+      cy.wait(1000);
 
       expectUpdateActionSubmissionVariables({
         course: {
@@ -101,18 +104,41 @@ describeForEachAutoAdapter(
             // Updated second
             {
               update: {
-                effectiveFrom: "2025-02-18",
-                effectiveTo: "2025-02-22",
+                effectiveFrom: "2025-02-18T00:00:00.000Z",
+                effectiveTo: "2025-02-22T00:00:00.000Z",
                 id: "50",
-                student: { update: { firstName: "Benjamin", id: "43", lastName: "Martin" } },
+                attempt: 1,
+                student: {
+                  update: {
+                    department: null,
+                    firstName: "Benjamin",
+                    id: "43",
+                    lastName: "Martin",
+                    year: null,
+                  },
+                },
               },
             },
             // Created third
-            { create: { student: { _link: "10" } } },
+            {
+              create: {
+                effectiveFrom: null,
+                effectiveTo: null,
+                attempt: 2,
+                student: { _link: "10" },
+              },
+            },
           ],
         },
         id: "3",
       });
+
+      cy.get('[id="submit"]').click();
+      cy.contains("Attempt is required").should("exist"); // Validation for blank field
+
+      cy.get('[id="course.registrations.0.attempt"]').type("1");
+      cy.get('[id="course.registrations.1.attempt"]').type("2");
+
       cy.get('[id="submit"]').click();
       cy.wait("@updateCourse");
     });
@@ -128,6 +154,7 @@ describeForEachAutoAdapter(
           >
             <AutoInput field="firstName" />
             <AutoInput field="lastName" />
+            <AutoInput field="year" />
           </AutoHasManyThroughForm>
           <AutoSubmit id="submit" />
         </AutoForm>,
@@ -137,9 +164,13 @@ describeForEachAutoAdapter(
       cy.wait("@course");
       cy.wait("@students");
 
+      cy.wait(1000);
       cy.get('[id="deleteButton_students.0"]').click();
+      cy.wait(1000);
       cy.get('[name="course.registrations.0.student.firstName"]').click().type("- updated");
       cy.get('[name="course.registrations.0.student.lastName"]').click().type("- updated");
+      cy.get('[name="course.registrations.0.student.year"]').click().type("- updated");
+      cy.get('[name="course.registrations.0.student.year"]').click().type("1");
 
       expectUpdateActionSubmissionVariables({
         course: {
@@ -159,6 +190,7 @@ describeForEachAutoAdapter(
                     firstName: "Benjamin- updated",
                     id: "43",
                     lastName: "Martin- updated",
+                    year: 1,
                   },
                 },
               },
@@ -245,7 +277,7 @@ const RealUniversityCourseMetadata = {
               fieldType: "HasManyThrough",
               requiredArgumentForInput: false,
               sortable: false,
-              filterable: false,
+              filterable: true,
               __typename: "GadgetModelField",
               configuration: {
                 __typename: "GadgetHasManyThroughConfig",
@@ -285,7 +317,7 @@ const RealUniversityCourseMetadata = {
               fieldType: "HasManyThrough",
               requiredArgumentForInput: false,
               sortable: false,
-              filterable: false,
+              filterable: true,
               __typename: "GadgetModelField",
               configuration: {
                 __typename: "GadgetHasManyThroughConfig",
@@ -367,7 +399,7 @@ const RealUniversityCourseMetadata = {
               fieldType: "HasMany",
               requiredArgumentForInput: false,
               sortable: false,
-              filterable: false,
+              filterable: true,
               __typename: "GadgetModelField",
               configuration: {
                 __typename: "GadgetHasManyConfig",
@@ -393,7 +425,7 @@ const RealUniversityCourseMetadata = {
               fieldType: "HasMany",
               requiredArgumentForInput: false,
               sortable: false,
-              filterable: false,
+              filterable: true,
               __typename: "GadgetModelField",
               configuration: {
                 __typename: "GadgetHasManyConfig",
@@ -661,7 +693,7 @@ const RealUniversityCourseMetadata = {
               fieldType: "HasManyThrough",
               requiredArgumentForInput: false,
               sortable: false,
-              filterable: false,
+              filterable: true,
               __typename: "GadgetModelField",
               configuration: {
                 __typename: "GadgetHasManyThroughConfig",
@@ -743,7 +775,7 @@ const RealUniversityCourseMetadata = {
               fieldType: "HasMany",
               requiredArgumentForInput: false,
               sortable: false,
-              filterable: false,
+              filterable: true,
               __typename: "GadgetModelField",
               configuration: {
                 __typename: "GadgetHasManyConfig",
@@ -807,10 +839,25 @@ const RealUniversityCourseMetadata = {
               },
             },
             {
+              name: "Attempt",
+              apiIdentifier: "attempt",
+              fieldType: "Number",
+              requiredArgumentForInput: true,
+              sortable: true,
+              filterable: true,
+              __typename: "GadgetModelField",
+              configuration: {
+                __typename: "GadgetNumberConfig",
+                fieldType: "Number",
+                validations: [],
+                decimals: null,
+              },
+            },
+            {
               name: "Effective from",
               apiIdentifier: "effectiveFrom",
               fieldType: "DateTime",
-              requiredArgumentForInput: true,
+              requiredArgumentForInput: false,
               sortable: true,
               filterable: true,
               __typename: "GadgetModelField",
@@ -1064,7 +1111,7 @@ const RealUniversityCourseMetadata = {
               fieldType: "HasManyThrough",
               requiredArgumentForInput: false,
               sortable: false,
-              filterable: false,
+              filterable: true,
               __typename: "GadgetModelField",
               configuration: {
                 __typename: "GadgetHasManyThroughConfig",
@@ -1146,7 +1193,7 @@ const RealUniversityCourseMetadata = {
               fieldType: "HasMany",
               requiredArgumentForInput: false,
               sortable: false,
-              filterable: false,
+              filterable: true,
               __typename: "GadgetModelField",
               configuration: {
                 __typename: "GadgetHasManyConfig",
@@ -1236,7 +1283,7 @@ const RealUniversityCourseMetadata = {
                     fieldType: "HasMany",
                     requiredArgumentForInput: false,
                     sortable: false,
-                    filterable: false,
+                    filterable: true,
                     __typename: "GadgetModelField",
                     configuration: {
                       __typename: "GadgetHasManyConfig",
@@ -1262,7 +1309,7 @@ const RealUniversityCourseMetadata = {
                     fieldType: "HasManyThrough",
                     requiredArgumentForInput: false,
                     sortable: false,
-                    filterable: false,
+                    filterable: true,
                     __typename: "GadgetModelField",
                     configuration: {
                       __typename: "GadgetHasManyThroughConfig",
@@ -1302,7 +1349,7 @@ const RealUniversityCourseMetadata = {
                     fieldType: "HasMany",
                     requiredArgumentForInput: false,
                     sortable: false,
-                    filterable: false,
+                    filterable: true,
                     __typename: "GadgetModelField",
                     configuration: {
                       __typename: "GadgetHasManyConfig",
@@ -1328,7 +1375,7 @@ const RealUniversityCourseMetadata = {
                     fieldType: "HasManyThrough",
                     requiredArgumentForInput: false,
                     sortable: false,
-                    filterable: false,
+                    filterable: true,
                     __typename: "GadgetModelField",
                     configuration: {
                       __typename: "GadgetHasManyThroughConfig",

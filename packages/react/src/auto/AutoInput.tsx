@@ -1,4 +1,5 @@
 import React, { useEffect, useMemo } from "react";
+import type { FieldMetadata } from "../metadata.js";
 import { useFieldsFromChildComponents } from "./AutoFormContext.js";
 import { useRelationshipContext } from "./hooks/useAutoRelationship.js";
 import { useFieldApiIdentifier, useRelationshipTransformedMetaDataPaths } from "./hooks/useFieldMetadata.js";
@@ -49,13 +50,13 @@ export function autoRelationshipForm<P extends Pick<AutoRelationshipFormProps, "
   const WrappedComponent: React.FC<P> = (props) => {
     const { hasCustomFormChildren, registerFields, fieldSet } = useFieldsFromChildComponents();
 
-    const displayedRecordPaths = useSelectedPathsFromRecordLabel(props);
+    const { selectedPaths: displayedRecordPaths, metadata } = useSelectedPathsFromRecordLabel(props);
 
     const relationshipTransformedPaths = useRelationshipTransformedMetaDataPaths(props.field);
-    const displayedRecordPathsToRegister = useMemo(
-      () => displayedRecordPaths.map((path) => `${relationshipTransformedPaths?.metaDataPath ?? props.field}.${path}`),
-      [displayedRecordPaths, props.field, relationshipTransformedPaths?.metaDataPath]
-    );
+    const displayedRecordPathsToRegister = useMemo(() => {
+      const fallbackMetaDataPathPrefix = getFallbackMetaDataPathPrefix(props.field, metadata);
+      return displayedRecordPaths.map((path) => `${relationshipTransformedPaths?.metaDataPath ?? fallbackMetaDataPathPrefix}.${path}`);
+    }, [displayedRecordPaths, props.field, relationshipTransformedPaths?.metaDataPath, metadata]);
 
     useEffect(() => {
       registerFields(displayedRecordPathsToRegister);
@@ -77,3 +78,16 @@ export function autoRelationshipForm<P extends Pick<AutoRelationshipFormProps, "
 export function isAutoInput(component: React.ReactElement): component is React.ReactElement<any, AutoInputComponent<any>> {
   return typeof component.type === "function" && "__autoInput" in component.type;
 }
+
+const getFallbackMetaDataPathPrefix = (field: string, metadata?: FieldMetadata) => {
+  const config = metadata?.configuration;
+  if (config?.__typename === "GadgetHasManyThroughConfig") {
+    // In HMT fields, the labels are based on the sibling model, but need to be routed through the join model
+    const joinModelHasManyFieldApiIdentifier = config.joinModelHasManyFieldApiIdentifier;
+    const inverseRelatedModelFieldApiId = config.inverseRelatedModelField?.apiIdentifier;
+    const fallbackMetaDataPath = `${joinModelHasManyFieldApiIdentifier}.${inverseRelatedModelFieldApiId}`;
+    return fallbackMetaDataPath;
+  }
+
+  return field;
+};

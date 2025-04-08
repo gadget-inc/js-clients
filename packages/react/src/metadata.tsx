@@ -544,9 +544,6 @@ export const buildAutoFormFieldList = (
     subset = subset.filter(([_, field]) => !excludes.has(field.apiIdentifier));
   }
 
-  // Remove `hasMany` fields that emerge from `hasManyThrough` fields that are not actually model fields
-  subset = subset.filter(([_, field]) => !isJoinModelHasManyField(field));
-
   // Filter out fields that are not supported by the form
   const validFieldTypeSubset = subset.filter(([_, field]) =>
     options?.isUpsertAction ? isAcceptedUpsertFieldType(field) : isAcceptedFieldType(field)
