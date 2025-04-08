@@ -1,5 +1,12 @@
 # @gadgetinc/react
 
+## 0.20.2
+
+### Patch Changes
+
+- - Fixed a bug with AutoHasManyThroughForm where input validations were not working, causing type errors to occur on tha API for non-string fields
+- - Added `allowMultipleSelections` prop to `AutoHasManyThroughForm` to control if sibling records can be linked multiple times through different join model records
+
 ## 0.20.1
 
 - Added `loadingSkeleton` prop to AutoForm to override the default skeleton component.
