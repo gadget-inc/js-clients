@@ -2,13 +2,7 @@ import React, { useState } from "react";
 import { Provider } from "../../../../src/GadgetProvider.js";
 import { testApi as api } from "../../../apis.js";
 import { StorybookErrorBoundary } from "../StorybookErrorBoundary.js";
-import {
-  AutoHasManyThroughInput,
-  AutoInput,
-  AutoSubmit,
-  Button,
-  SelectableDesignSystemAutoFormStory,
-} from "./SelectableDesignSystemAutoFormStory.js";
+import { AutoInput, AutoSubmit, Button, SelectableDesignSystemAutoFormStory } from "./SelectableDesignSystemAutoFormStory.js";
 
 // More on how to set up stories at: https://storybook.js.org/docs/writing-stories#default-export
 export default {
@@ -219,12 +213,5 @@ export const hasManyThrough: any = {
   name: "HasManyThrough fields",
   args: {
     action: api.hasManyThrough.baseModel.create,
-    children: (
-      <>
-        <AutoInput field="baseModelName" />
-        <AutoHasManyThroughInput field="baseModelHmtField" />
-        <AutoSubmit />
-      </>
-    ),
   },
 };

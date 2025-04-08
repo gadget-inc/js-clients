@@ -592,7 +592,11 @@ export const useAutoForm = <
     metadata,
     fetchingMetadata,
     metadataError,
-    fields: fields.filter(removeIdFieldsUnlessUpsertWithoutFindBy(isUpsertWithFindBy)),
+    fields: fields.filter(
+      (field) =>
+        falseForIdFieldsUnlessUpsertWithoutFindBy({ isUpsertWithFindBy, metadata: field.metadata }) &&
+        !isJoinModelHasManyField(field.metadata)
+    ),
     submit,
     formError,
     pauseExistingRecordLookup,
@@ -692,11 +696,18 @@ const aggregatePathsFromRecordLabel = (recordLabel: RecordLabel, getFieldsToSele
   return Array.from(selectedPaths);
 };
 
-const removeIdFieldsUnlessUpsertWithoutFindBy = (isUpsertWithFindBy?: boolean) => {
-  return (field: { metadata: FieldMetadata }) => {
-    return field.metadata.fieldType === FieldType.Id ? !isUpsertWithFindBy : true;
-  };
+const falseForIdFieldsUnlessUpsertWithoutFindBy = (props: { isUpsertWithFindBy?: boolean; metadata: FieldMetadata }) => {
+  const { isUpsertWithFindBy, metadata } = props;
+  return metadata.fieldType === FieldType.Id ? !isUpsertWithFindBy : true;
 };
+
+/**
+ * Removes `hasMany` fields that emerge from `hasManyThrough` fields that are not actually model fields
+ */
+const isJoinModelHasManyField = (field: FieldMetadata) =>
+  field.fieldType === FieldType.HasMany &&
+  field.configuration.__typename === "GadgetHasManyConfig" &&
+  field.configuration.isJoinModelHasManyField;
 
 const validateFindBy = (params: {
   operatesWithRecordId: boolean;

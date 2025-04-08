@@ -174,6 +174,14 @@ export const UpdateWithHasManyThrough: any = {
   },
 };
 
+export const UpdateWithHasManyThroughSiblingFieldsOnly: any = {
+  render: (args: any) => <ExampleCourseHasManyThroughSiblingFieldsOnlyForm {...args} />,
+  args: {
+    action: api.university.course.update,
+    findBy: "3",
+  },
+};
+
 const ExampleCourseCreateRelatedForm = (props: any) => {
   return (
     <>
@@ -213,16 +221,11 @@ const ExampleCourseCreateRelatedForm = (props: any) => {
             }}
           >
             <InlineStack gap="300">
-              {/* Fields on the join model. The prefix is the model API id of the join model */}
-
               <AutoHasManyThroughJoinModelForm>
                 <AutoInput field="effectiveTo" />
                 <AutoInput field="effectiveFrom" />
+                <AutoInput field="attempt" />
               </AutoHasManyThroughJoinModelForm>
-
-              {/* Fields on the sibling model. No prefix */}
-              <AutoInput field="firstName" />
-              <AutoInput field="lastName" />
             </InlineStack>
           </AutoHasManyThroughForm>
         </Card>
@@ -236,6 +239,35 @@ const ExampleCourseCreateRelatedForm = (props: any) => {
             }}
           />
         </Card>
+        <AutoSubmit />
+      </SelectableDesignSystemAutoFormStory>
+    </>
+  );
+};
+
+const ExampleCourseHasManyThroughSiblingFieldsOnlyForm = (props: any) => {
+  return (
+    <>
+      <SelectableDesignSystemAutoFormStory {...props}>
+        <SubmitResultBanner />
+
+        <Card>
+          <AutoHasManyThroughForm
+            field="students"
+            recordLabel={{
+              primary: ["firstName", "lastName"],
+              secondary: "year",
+              tertiary: "department",
+            }}
+          >
+            <InlineStack gap="300">
+              <AutoInput field="firstName" />
+              <AutoInput field="lastName" />
+              <AutoInput field="year" />
+            </InlineStack>
+          </AutoHasManyThroughForm>
+        </Card>
+
         <AutoSubmit />
       </SelectableDesignSystemAutoFormStory>
     </>
