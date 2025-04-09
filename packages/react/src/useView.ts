@@ -110,7 +110,18 @@ export function useView<VariablesT, F extends ViewFunction<VariablesT, any>>(
   }
 
   const memoizedVariables = useStructuralMemo(variables);
-  const memoizedOptions = useStructuralMemo(options);
+  const memoizedOptions = useStructuralMemo({
+    ...options,
+    context: {
+      ...options?.context,
+      // if the view exports the typenames it references, add them to the context so urql will refresh the view when mutations are made against these typenames
+      additionalTypenames: [
+        ...(options?.context?.additionalTypenames ?? []),
+        ...(typeof view == "string" ? [] : view.referencedTypenames ?? []),
+      ],
+    },
+  });
+
   const [plan, dataPath] = useMemo((): [plan: GQLBuilderResult, dataPath: string[]] => {
     if (typeof view == "string") {
       return [{ query: inlineViewQuery, variables: { query: view, variables: memoizedVariables } }, ["gellyView"]];

@@ -116,6 +116,7 @@ describe("useView", () => {
     expect(result.current[0].error).toBeFalsy();
 
     expect(client.executeQuery).toHaveBeenCalledTimes(1);
+    expect(client.executeQuery.mock.calls[0][1].additionalTypenames).toEqual(["Widget"]);
 
     expect(query).toMatchInlineSnapshot(`
       "query totalInStock {

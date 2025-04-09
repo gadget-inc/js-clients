@@ -89,6 +89,7 @@ export interface ViewFunctionWithoutVariables<ResultT> {
   operationName: string;
   gqlFieldName: string;
   namespace?: string | string[] | null;
+  referencedTypenames?: string[];
   resultType: ResultT;
   plan(): GQLBuilderResult;
 }
@@ -99,6 +100,7 @@ export interface ViewFunctionWithVariables<VariablesT, ResultT> {
   operationName: string;
   gqlFieldName: string;
   namespace?: string | string[] | null;
+  referencedTypenames?: string[];
   variables: VariablesOptions;
   variablesType: VariablesT;
   resultType: ResultT;
