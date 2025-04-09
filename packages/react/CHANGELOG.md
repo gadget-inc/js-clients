@@ -10,6 +10,16 @@
 
 ### Patch Changes
 
+- - Export `AutoHasManyThroughInputProps` to ensure portable TypeScript types.
+
+  This fixes a bug introduced in 0.20.2 where the `AutoHasManyThroughInputProps` type was used but not exported, causing errors like:
+
+  ```
+  The inferred type of 'AutoHasManyThroughForm' cannot be named without a reference to '../../node_modules/@gadgetinc/react/dist/esm/auto/interfaces/AutoRelationshipInputProps'. This is likely not portable. A type annotation is necessary
+  ```
+
+  from TypeScript. This release fixes that by exporting it.
+
 - - Fixed a bug with AutoHasManyThroughForm where input validations were not working, causing type errors to occur on tha API for non-string fields
 - - Added `allowMultipleSelections` prop to `AutoHasManyThroughForm` to control if sibling records can be linked multiple times through different join model records
 - Updated dependencies
