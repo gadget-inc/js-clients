@@ -1,5 +1,20 @@
 # @gadgetinc/react
 
+## 0.21.0
+
+### Minor Changes
+
+- Add `useView` hook for executing computed views
+
+  This adds a new React hook for invoking computed views defined using backend `.gelly` files.
+
+### Patch Changes
+
+- - Fixed a bug with AutoHasManyThroughForm where input validations were not working, causing type errors to occur on tha API for non-string fields
+- - Added `allowMultipleSelections` prop to `AutoHasManyThroughForm` to control if sibling records can be linked multiple times through different join model records
+- Updated dependencies
+  - @gadgetinc/api-client-core@0.15.42
+
 ## 0.20.2
 
 ### Patch Changes
