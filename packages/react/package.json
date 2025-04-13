@@ -103,7 +103,7 @@
     "@types/node": "^18.0.0",
     "@types/pluralize": "^0.0.31",
     "@types/react": "^18.2.9",
-    "@types/react-dom": "^18.2.4",
+    "@types/react-dom": "^18.3.1",
     "@types/setup-polly-jest": "^0.5.5",
     "@types/tmp": "^0.2.6",
     "@urql/core": "^4.0.10",
