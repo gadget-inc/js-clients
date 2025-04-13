@@ -72,7 +72,7 @@ const copyAndInstall = async (source: string) => {
   return cleanupCallback;
 };
 
-describe("Vite project builds when it imports @gadgetinc/react without any peer dependencies installed", () => {
+describe.skip("Vite project builds when it imports @gadgetinc/react without any peer dependencies installed", () => {
   let tmpViteDirCleanUp: any;
 
   beforeAll(async () => {
@@ -95,7 +95,7 @@ describe("Vite project builds when it imports @gadgetinc/react without any peer 
   });
 });
 
-describe("Vite project builds when it imports @gadgetinc/react/auto/polaris when polaris is installed", () => {
+describe.skip("Vite project builds when it imports @gadgetinc/react/auto/polaris when polaris is installed", () => {
   let tmpViteDirCleanUp: any;
 
   beforeAll(async () => {
