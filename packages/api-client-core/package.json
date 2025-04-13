@@ -45,7 +45,7 @@
     "ws": "^8.17.0"
   },
   "devDependencies": {
-    "@types/node": "^16.11.7",
+    "@types/node": "^16.18.96",
     "conditional-type-checks": "^1.0.6",
     "globby": "^11.0.4",
     "gql-tag": "^1.0.1",
