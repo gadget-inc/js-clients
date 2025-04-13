@@ -1,7 +1,11 @@
 export type { OptionsType } from "../../utils.js";
 export { type AutoInputComponent } from "../AutoInput.js";
 export type { AutoButtonProps } from "../hooks/useAutoButtonController.js";
-export type { AutoRelationshipFormProps, AutoRelationshipInputProps } from "../interfaces/AutoRelationshipInputProps.js";
+export type {
+  AutoHasManyThroughFormProps,
+  AutoRelationshipFormProps,
+  AutoRelationshipInputProps,
+} from "../interfaces/AutoRelationshipInputProps.js";
 export type {
   AutoBooleanInputProps,
   AutoDateTimeInputProps,

@@ -8,6 +8,28 @@ export * from "./auth/useAuth.js";
 export * from "./auth/useSession.js";
 export * from "./auth/useSignOut.js";
 export * from "./auth/useUser.js";
+export type { AutoButtonProps } from "./auto/hooks/useAutoButtonController.js";
+export type {
+  AutoHasManyThroughFormProps,
+  AutoRelationshipFormProps,
+  AutoRelationshipInputProps,
+} from "./auto/interfaces/AutoRelationshipInputProps.js";
+export type {
+  AutoBooleanInputProps,
+  AutoDateTimeInputProps,
+  AutoEncryptedStringInputProps,
+  AutoEnumInputProps,
+  AutoFileInputProps,
+  AutoHiddenInputProps,
+  AutoIdInputProps,
+  AutoInputProps,
+  AutoJSONInputProps,
+  AutoNumberInputProps,
+  AutoPasswordInputProps,
+  AutoRolesInputProps,
+  AutoTextInputProps,
+} from "./auto/shared/AutoInputTypes.js";
+export type { AutoRichTextInputProps } from "./auto/shared/AutoRichTextInputProps.js";
 export * from "./useAction.js";
 export * from "./useActionForm.js";
 export * from "./useBulkAction.js";
