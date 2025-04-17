@@ -10,7 +10,6 @@ import { ErrorWrapper } from "./utils.js";
  * React hook to run a Gadget model action.
  *
  * @param action any action function from a Gadget manager
- * @param options action options, like selecting the fields in the result
  *
  * @example
  * ```
