@@ -3,6 +3,7 @@ import { GadgetConnection } from "@gadgetinc/api-client-core";
 import { jest } from "@jest/globals";
 import "@testing-library/jest-dom";
 import { render } from "@testing-library/react";
+import { CombinedError } from "@urql/core";
 import React from "react";
 import { act } from "react-dom/test-utils";
 import { mockUrqlClient } from "../../api-client-core/spec/mockUrqlClient.js";
@@ -266,6 +267,54 @@ describe("GadgetProvider", () => {
           },
         },
       },
+      stale: false,
+      hasNext: false,
+    });
+
+    expect(container.outerHTML).toMatchInlineSnapshot(`"<div><span>hello world</span></div>"`);
+    expect(mockNavigate).not.toHaveBeenCalled();
+
+    window.shopify.environment.embedded = false;
+  });
+
+  test("can render an embedded app type that gets an error when checking shopify connection state", async () => {
+    window.shopify.environment.embedded = true;
+
+    const { container } = render(
+      <Provider api={mockApiClient} shopifyApiKey={mockApiKey} type={AppType.Embedded}>
+        <span>hello world</span>
+      </Provider>
+    );
+
+    await act(async () => {
+      resolveIdToken("mock-id-token");
+      await mockUrqlClient.executeMutation.waitForSubject("ShopifyFetchOrInstallShop");
+    });
+
+    mockUrqlClient.executeMutation.pushResponse("ShopifyFetchOrInstallShop", {
+      data: {
+        shopifyConnection: {
+          fetchOrInstallShop: null,
+        },
+      },
+      error: new CombinedError({
+        graphQLErrors: [
+          {
+            message:
+              "GGT_INVALID_SHOPIFY_SESSION_TOKEN: Gadget has detected that this shop needs to be installed via the Shopify Managed OAuth installation flow, but this request is authenticated using a mock Shopify session token provisioned by Gadget that Shopify won't accept. Please install or re-install this shop via the Partners Dashboard or App Store in order to allow mock embedding of it.",
+            locations: [
+              {
+                line: 3,
+                column: 5,
+              },
+            ],
+            path: ["shopifyConnection", "fetchOrInstallShop"],
+            extensions: {
+              fromSandbox: false,
+            },
+          },
+        ],
+      }),
       stale: false,
       hasNext: false,
     });

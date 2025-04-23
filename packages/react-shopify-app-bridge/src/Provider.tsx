@@ -107,10 +107,10 @@ const InnerGadgetProvider = memo(
 
     const [{ data: fetchOrInstallShopData, fetching: fetchingOrInstallingShop, error: fetchingOrInstallingShopError }, fetchOrInstallShop] =
       useMutation<{
-        shopifyConnection: { fetchOrInstallShop: { redirectToOauth: boolean; isAuthenticated: boolean; missingScopes: string[] } };
+        shopifyConnection?: { fetchOrInstallShop?: { redirectToOauth: boolean; isAuthenticated: boolean; missingScopes: string[] } };
       }>(FetchOrInstallShopMutation);
 
-    if (fetchOrInstallShopData) {
+    if (fetchOrInstallShopData?.shopifyConnection?.fetchOrInstallShop) {
       redirectToOauth = fetchOrInstallShopData.shopifyConnection.fetchOrInstallShop.redirectToOauth;
       isAuthenticated = fetchOrInstallShopData.shopifyConnection.fetchOrInstallShop.isAuthenticated;
       missingScopes = fetchOrInstallShopData.shopifyConnection.fetchOrInstallShop.missingScopes ?? [];
