@@ -34,7 +34,7 @@
   "devDependencies": {
     "@gadgetinc/api-client-core": "workspace:*",
     "@gadgetinc/react": "workspace:*",
-    "@shopify/app-bridge-react": "^4.0.0",
+    "@shopify/app-bridge-react": "^4.1.10",
     "@types/crypto-js": "^4.2.2",
     "@types/node": "^16.11.7",
     "@types/react": "^18.2.79",
