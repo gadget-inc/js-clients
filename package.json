@@ -19,7 +19,8 @@
     "watch:react": "pnpm --filter=@gadgetinc/react watch",
     "test": "NODE_OPTIONS=\"--max-old-space-size=4096 --stack-trace-limit=1000 --experimental-vm-modules\" TZ=UTC jest",
     "check-dependency-versions": "./scripts/check-dependency-versions.ts",
-    "preinstall": "npx only-allow pnpm"
+    "preinstall": "npx only-allow pnpm",
+    "storybook:react": "pnpm --filter=@gadgetinc/react storybook"
   },
   "devDependencies": {
     "@arethetypeswrong/cli": "^0.15.1",
