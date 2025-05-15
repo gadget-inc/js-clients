@@ -41,7 +41,7 @@ type AutoFormPropsWithoutChildren = {
   children?: never;
 
   /** The title at the top of the form. False to omit */
-  title?: string | false;
+  title?: string | false | null;
 
   /** The label to use for the submit button at the bottom of the form */
   submitLabel?: ReactNode;
