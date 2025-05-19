@@ -1,5 +1,6 @@
 import type {
   GQLBuilderResult,
+  VariablesOptions,
   ViewFunction,
   ViewFunctionWithoutVariables,
   ViewFunctionWithVariables,
@@ -126,7 +127,20 @@ export function useView<VariablesT, F extends ViewFunction<VariablesT, any>>(
     if (typeof view == "string") {
       return [{ query: inlineViewQuery, variables: { query: view, variables: memoizedVariables } }, ["gellyView"]];
     } else {
-      return [view.plan((memoizedVariables ?? {}) as unknown as VariablesT), namespaceDataPath([view.gqlFieldName], view.namespace)];
+      const variablesOptions: VariablesOptions = {};
+      if ("variables" in view && memoizedVariables) {
+        for (const [name, variable] of Object.entries(view.variables)) {
+          const value = memoizedVariables[name as keyof typeof memoizedVariables] as unknown;
+          if (typeof value != "undefined" && value !== null) {
+            variablesOptions[name] = {
+              value,
+              ...variable,
+            };
+          }
+        }
+      }
+
+      return [view.plan(variablesOptions), namespaceDataPath([view.gqlFieldName], view.namespace)];
     }
   }, [view, memoizedVariables]);
 

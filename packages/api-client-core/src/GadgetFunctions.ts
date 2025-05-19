@@ -104,7 +104,7 @@ export interface ViewFunctionWithVariables<VariablesT, ResultT> {
   variables: VariablesOptions;
   variablesType: VariablesT;
   resultType: ResultT;
-  plan(variables: VariablesT): GQLBuilderResult;
+  plan(variables: VariablesOptions): GQLBuilderResult;
 }
 
 export type ViewFunction<VariablesT, ResultT> = ViewFunctionWithoutVariables<ResultT> | ViewFunctionWithVariables<VariablesT, ResultT>;

@@ -154,7 +154,7 @@ describe("useView", () => {
     expect(client.executeQuery).toHaveBeenCalledTimes(1);
 
     expect(query).toMatchInlineSnapshot(`
-      "query echo($value: undefined) {
+      "query echo($value: String) {
         echo(value: $value)
       }"
     `);
@@ -191,7 +191,7 @@ describe("useView", () => {
     expect(client.executeQuery).toHaveBeenCalledTimes(1);
 
     expect(query).toMatchInlineSnapshot(`
-      "query echo($value: undefined) {
+      "query echo($value: Int) {
         game {
           echo(value: $value)
         }
@@ -234,7 +234,7 @@ describe("useView", () => {
     expect(client.executeQuery).toHaveBeenCalledTimes(1);
 
     expect(query).toMatchInlineSnapshot(`
-      "query widgetStats($inStockOnly: undefined) {
+      "query widgetStats($inStockOnly: Boolean) {
         widgetStats(inStockOnly: $inStockOnly)
       }"
     `);
