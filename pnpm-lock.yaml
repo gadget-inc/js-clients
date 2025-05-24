@@ -219,13 +219,13 @@ importers:
         version: 18.3.1
       '@vitejs/plugin-react-swc':
         specifier: ^3.6.0
-        version: 3.6.0(vite@4.5.13)
+        version: 3.6.0(vite@4.5.14)
       typescript:
         specifier: 5.4.5
         version: 5.4.5
       vite:
-        specifier: ^4.5.13
-        version: 4.5.13(@types/node@16.11.7)
+        specifier: ^4.5.14
+        version: 4.5.14(@types/node@16.11.7)
 
   packages/react:
     dependencies:
@@ -358,7 +358,7 @@ importers:
         version: 8.5.0(@storybook/test@8.5.0)(react-dom@18.2.0)(react@18.2.0)(storybook@8.5.0)(typescript@5.4.5)
       '@storybook/react-vite':
         specifier: ^8.1.6
-        version: 8.5.0(@storybook/test@8.5.0)(react-dom@18.2.0)(react@18.2.0)(storybook@8.5.0)(typescript@5.4.5)(vite@4.5.13)
+        version: 8.5.0(@storybook/test@8.5.0)(react-dom@18.2.0)(react@18.2.0)(storybook@8.5.0)(typescript@5.4.5)(vite@4.5.14)
       '@storybook/test':
         specifier: ^8.1.6
         version: 8.5.0(storybook@8.5.0)
@@ -592,10 +592,10 @@ importers:
         version: link:../react-shopify-app-bridge
       '@vitejs/plugin-react-swc':
         specifier: ^3.6.0
-        version: 3.6.0(vite@4.5.13)
+        version: 3.6.0(vite@4.5.14)
       vite:
-        specifier: ^4.5.13
-        version: 4.5.13(@types/node@16.11.7)
+        specifier: ^4.5.14
+        version: 4.5.14(@types/node@16.11.7)
     devDependencies:
       rollup-plugin-visualizer:
         specifier: ^5.12.0
@@ -3888,7 +3888,7 @@ packages:
       load-json-file: 4.0.0
     dev: true
 
-  /@joshwooding/vite-plugin-react-docgen-typescript@0.4.2(typescript@5.4.5)(vite@4.5.13):
+  /@joshwooding/vite-plugin-react-docgen-typescript@0.4.2(typescript@5.4.5)(vite@4.5.14):
     resolution: {integrity: sha512-feQ+ntr+8hbVudnsTUapiMN9q8T90XA1d5jn9QzY09sNoj4iD9wi0PY1vsBFTda4ZjEaxRK9S81oarR2nj7TFQ==}
     peerDependencies:
       typescript: '>= 4.3.x'
@@ -3900,7 +3900,7 @@ packages:
       magic-string: 0.27.0
       react-docgen-typescript: 2.2.2(typescript@5.4.5)
       typescript: 5.4.5
-      vite: 4.5.13(@types/node@18.11.18)
+      vite: 4.5.14(@types/node@18.11.18)
     dev: true
 
   /@jridgewell/gen-mapping@0.1.1:
@@ -6430,7 +6430,7 @@ packages:
       ts-dedent: 2.2.0
     dev: true
 
-  /@storybook/builder-vite@8.5.0(storybook@8.5.0)(vite@4.5.13):
+  /@storybook/builder-vite@8.5.0(storybook@8.5.0)(vite@4.5.14):
     resolution: {integrity: sha512-GVJFjAxX/mL3bmXX6N619ShuYprkh6Ix08JU6QGNf/tTkG92BxjgCqQdfovBrviDhFyO2bhkdlEp6ujMo5CbZA==}
     peerDependencies:
       storybook: ^8.5.0
@@ -6440,7 +6440,7 @@ packages:
       browser-assert: 1.2.1
       storybook: 8.5.0(prettier@2.8.8)
       ts-dedent: 2.2.0
-      vite: 4.5.13(@types/node@18.11.18)
+      vite: 4.5.14(@types/node@18.11.18)
     dev: true
 
   /@storybook/components@8.5.0(storybook@8.5.0):
@@ -6545,7 +6545,7 @@ packages:
       storybook: 8.5.0(prettier@2.8.8)
     dev: true
 
-  /@storybook/react-vite@8.5.0(@storybook/test@8.5.0)(react-dom@18.2.0)(react@18.2.0)(storybook@8.5.0)(typescript@5.4.5)(vite@4.5.13):
+  /@storybook/react-vite@8.5.0(@storybook/test@8.5.0)(react-dom@18.2.0)(react@18.2.0)(storybook@8.5.0)(typescript@5.4.5)(vite@4.5.14):
     resolution: {integrity: sha512-4f5AM8aPs2aTBeiycotinaDIPJg/YRtPb0F1dDquS097eUOeImS73+NSSCwrIjmSiapG/KWVkPgFnadEumFkAA==}
     engines: {node: '>=18.0.0'}
     peerDependencies:
@@ -6558,9 +6558,9 @@ packages:
       '@storybook/test':
         optional: true
     dependencies:
-      '@joshwooding/vite-plugin-react-docgen-typescript': 0.4.2(typescript@5.4.5)(vite@4.5.13)
+      '@joshwooding/vite-plugin-react-docgen-typescript': 0.4.2(typescript@5.4.5)(vite@4.5.14)
       '@rollup/pluginutils': 5.1.0
-      '@storybook/builder-vite': 8.5.0(storybook@8.5.0)(vite@4.5.13)
+      '@storybook/builder-vite': 8.5.0(storybook@8.5.0)(vite@4.5.14)
       '@storybook/react': 8.5.0(@storybook/test@8.5.0)(react-dom@18.2.0)(react@18.2.0)(storybook@8.5.0)(typescript@5.4.5)
       '@storybook/test': 8.5.0(storybook@8.5.0)
       find-up: 5.0.0
@@ -6571,7 +6571,7 @@ packages:
       resolve: 1.22.8
       storybook: 8.5.0(prettier@2.8.8)
       tsconfig-paths: 4.2.0
-      vite: 4.5.13(@types/node@18.11.18)
+      vite: 4.5.14(@types/node@18.11.18)
     transitivePeerDependencies:
       - rollup
       - supports-color
@@ -7448,13 +7448,13 @@ packages:
     transitivePeerDependencies:
       - graphql
 
-  /@vitejs/plugin-react-swc@3.6.0(vite@4.5.13):
+  /@vitejs/plugin-react-swc@3.6.0(vite@4.5.14):
     resolution: {integrity: sha512-XFRbsGgpGxGzEV5i5+vRiro1bwcIaZDIdBRP16qwm+jP68ue/S8FJTBEgOeojtVDYrbSua3XFp71kC8VJE6v+g==}
     peerDependencies:
       vite: ^4 || ^5
     dependencies:
       '@swc/core': 1.4.16
-      vite: 4.5.13(@types/node@16.11.7)
+      vite: 4.5.14(@types/node@16.11.7)
     transitivePeerDependencies:
       - '@swc/helpers'
 
@@ -16336,8 +16336,8 @@ packages:
       unist-util-stringify-position: 4.0.0
     dev: true
 
-  /vite@4.5.13(@types/node@16.11.7):
-    resolution: {integrity: sha512-Hgp8IF/yZDzKsN1hQWOuQZbrKiaFsbQud+07jJ8h9m9PaHWkpvZ5u55Xw5yYjWRXwRQ4jwFlJvY7T7FUJG9MCA==}
+  /vite@4.5.14(@types/node@16.11.7):
+    resolution: {integrity: sha512-+v57oAaoYNnO3hIu5Z/tJRZjq5aHM2zDve9YZ8HngVHbhk66RStobhb1sqPMIPEleV6cNKYK4eGrAbE9Ulbl2g==}
     engines: {node: ^14.18.0 || >=16.0.0}
     hasBin: true
     peerDependencies:
@@ -16371,8 +16371,8 @@ packages:
     optionalDependencies:
       fsevents: 2.3.3
 
-  /vite@4.5.13(@types/node@18.11.18):
-    resolution: {integrity: sha512-Hgp8IF/yZDzKsN1hQWOuQZbrKiaFsbQud+07jJ8h9m9PaHWkpvZ5u55Xw5yYjWRXwRQ4jwFlJvY7T7FUJG9MCA==}
+  /vite@4.5.14(@types/node@18.11.18):
+    resolution: {integrity: sha512-+v57oAaoYNnO3hIu5Z/tJRZjq5aHM2zDve9YZ8HngVHbhk66RStobhb1sqPMIPEleV6cNKYK4eGrAbE9Ulbl2g==}
     engines: {node: ^14.18.0 || >=16.0.0}
     hasBin: true
     peerDependencies:
