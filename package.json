@@ -24,7 +24,7 @@
   "devDependencies": {
     "@arethetypeswrong/cli": "^0.15.1",
     "@gadget-client/app-with-file-fields": "^1.5.0",
-    "@gadget-client/app-with-no-user-model": "^1.10.0",
+    "@gadget-client/app-with-no-user-model": "1.3.0-development.6",
     "@gadget-client/bulk-actions-test": "^1.113.0",
     "@gadget-client/full-auth": "^1.9.0",
     "@gadget-client/js-clients-test": "1.512.0-development.2601",
@@ -37,7 +37,6 @@
     "@gadgetinc/eslint-config": "^0.6.1",
     "@gadgetinc/prettier-config": "^0.4.0",
     "@gadgetinc/react": "workspace:*",
-    "tiny-graphql-query-compiler": "workspace:*",
     "@swc/core": "^1.3.90",
     "@swc/jest": "^0.2.36",
     "@types/jest": "^29.5.12",
@@ -53,6 +52,7 @@
     "npm-run-all": "^4.1.5",
     "prettier": "^2.8.8",
     "semver": "^7.6.2",
+    "tiny-graphql-query-compiler": "workspace:*",
     "tsx": "^4.9.3",
     "typescript": "5.4.5",
     "zx": "^7.2.3"

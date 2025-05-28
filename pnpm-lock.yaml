@@ -24,8 +24,8 @@ importers:
         specifier: ^1.5.0
         version: 1.5.0
       '@gadget-client/app-with-no-user-model':
-        specifier: ^1.10.0
-        version: 1.10.0
+        specifier: 1.3.0-development.6
+        version: 1.3.0-development.6
       '@gadget-client/bulk-actions-test':
         specifier: ^1.113.0
         version: 1.113.0
@@ -2895,10 +2895,11 @@ packages:
       '@gadgetinc/api-client-core': link:packages/api-client-core
     dev: true
 
-  /@gadget-client/app-with-no-user-model@1.10.0:
-    resolution: {integrity: sha1-gpMhcXA+P3eyLtGUbxYC7BuaVE8=, tarball: https://registry.gadget.dev/npm/_/tarball/45852/90386/7455}
+  /@gadget-client/app-with-no-user-model@1.3.0-development.6:
+    resolution: {integrity: sha1-fkaPLls4OH6tfczcdy15PreXhPY=, tarball: https://registry.gadget.dev/npm/_/tarball/234251/471693/20429}
     dependencies:
       '@gadgetinc/api-client-core': link:packages/api-client-core
+      tiny-graphql-query-compiler: link:packages/tiny-graphql-query-compiler
     dev: true
 
   /@gadget-client/blog@1.49.0:
