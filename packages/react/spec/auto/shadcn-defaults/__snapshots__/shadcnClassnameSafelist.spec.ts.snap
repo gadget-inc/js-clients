@@ -878,16 +878,16 @@ body {
   width: 100%;
 }
 
-.min-w-\\[300px\\] {
-  min-width: 300px;
-}
-
 .max-w-\\[150px\\] {
   max-width: 150px;
 }
 
 .max-w-\\[200px\\] {
   max-width: 200px;
+}
+
+.max-w-\\[420px\\] {
+  max-width: 420px;
 }
 
 .max-w-full {
