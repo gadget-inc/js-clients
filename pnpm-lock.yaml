@@ -144,8 +144,8 @@ importers:
         specifier: ^16.8.1
         version: 16.8.1
       graphql-ws:
-        specifier: ^5.13.1
-        version: 5.13.1(graphql@16.8.1)
+        specifier: ^5.16.2
+        version: 5.16.2(graphql@16.8.1)
       isomorphic-ws:
         specifier: ^5.0.0
         version: 5.0.0(ws@8.18.2)
@@ -438,8 +438,8 @@ importers:
         specifier: ^16.8.1
         version: 16.8.1
       graphql-ws:
-        specifier: ^5.13.1
-        version: 5.13.1(graphql@16.8.1)
+        specifier: ^5.16.2
+        version: 5.16.2(graphql@16.8.1)
       libnpmpack:
         specifier: ^7.0.4
         version: 7.0.4
@@ -3294,7 +3294,7 @@ packages:
       '@graphql-tools/utils': 10.2.2(graphql@16.8.1)
       '@types/ws': 8.5.10
       graphql: 16.8.1
-      graphql-ws: 5.16.0(graphql@16.8.1)
+      graphql-ws: 5.16.2(graphql@16.8.1)
       isomorphic-ws: 5.0.0(ws@8.18.2)
       tslib: 2.6.2
       ws: 8.18.2
@@ -10832,22 +10832,13 @@ packages:
       tslib: 2.6.2
     dev: true
 
-  /graphql-ws@5.13.1(graphql@16.8.1):
-    resolution: {integrity: sha512-eiX7ES/ZQr0q7hSM5UBOEIFfaAUmAY9/CSDyAnsETuybByU7l/v46drRg9DQoTvVABEHp3QnrvwgTRMhqy7zxQ==}
+  /graphql-ws@5.16.2(graphql@16.8.1):
+    resolution: {integrity: sha512-E1uccsZxt/96jH/OwmLPuXMACILs76pKF2i3W861LpKBCYtGIyPQGtWLuBLkND4ox1KHns70e83PS4te50nvPQ==}
     engines: {node: '>=10'}
     peerDependencies:
       graphql: '>=0.11 <=16'
     dependencies:
       graphql: 16.8.1
-
-  /graphql-ws@5.16.0(graphql@16.8.1):
-    resolution: {integrity: sha512-Ju2RCU2dQMgSKtArPbEtsK5gNLnsQyTNIo/T7cZNp96niC1x0KdJNZV0TIoilceBPQwfb5itrGl8pkFeOUMl4A==}
-    engines: {node: '>=10'}
-    peerDependencies:
-      graphql: '>=0.11 <=16'
-    dependencies:
-      graphql: 16.8.1
-    dev: true
 
   /graphql@16.8.1:
     resolution: {integrity: sha512-59LZHPdGZVh695Ud9lRzPBVTtlX9ZCV150Er2W43ro37wVof0ctenSaskPPjN7lVTIN8mSZt8PHUNKZuNQUuxw==}
