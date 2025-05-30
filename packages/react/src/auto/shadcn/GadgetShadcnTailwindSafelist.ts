@@ -4,6 +4,7 @@ const SpecialCaseClassNames = [
   "max-h-[100px]",
   "max-w-[150px]",
   "max-w-[200px]",
+  "max-w-[420px]",
   "border-b-[1px]",
   "border-t-[1px]",
   "border-x-[1px]",

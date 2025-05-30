@@ -13,8 +13,8 @@ export const makeShadcnAutoTableSearch = (elements: ShadcnElements) => {
     const { clear, set, value } = props.search;
 
     return (
-      <div className="flex flex-row items-center gap-2">
-        <Input placeholder="Search" onChange={(e) => set(e.target.value)} value={value} className="min-w-[300px]"></Input>
+      <div className="flex flex-row items-center gap-2 w-full">
+        <Input placeholder="Search" onChange={(e) => set(e.target.value)} value={value} className="max-w-[420px]"></Input>
         {value.length > 0 && (
           <Button disabled={!value} onClick={clear} variant="ghost">
             Reset <X />
