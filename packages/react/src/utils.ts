@@ -183,7 +183,7 @@ export type EnqueueHookResult<SchemaT, Action extends AnyActionFunction> = Requi
       ) => Promise<EnqueueHookState<SchemaT, Action>>
     ];
 
-export const noProviderErrorMessage = `Could not find a client in the context of Provider. Please ensure you wrap the root component in a <Provider>`;
+export const noProviderErrorMessage = `Could not find a wrapping Gadget <Provider/> component. Please ensure you wrap the root component in a <Provider/> from @gadget-inc/react. If you suspect this is a bug, try running Restart App in the command palette to clear your app's Vite cache.`;
 
 const generateErrorMessage = (networkErr?: Error, graphQlErrs?: GraphQLError[]) => {
   let error = "";
