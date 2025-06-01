@@ -13,7 +13,7 @@ export const useSignOut = (opts?: { redirectOnSuccess?: boolean; redirectToPath?
   const redirectOnSuccess = opts?.redirectOnSuccess ?? true;
   const redirectToPath = opts?.redirectToPath;
   const api = useApi();
-  const user = useUser();
+  const [user, refreshUser] = useUser();
   const context = useContext(GadgetConfigurationContext);
   // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
   const { signOutActionApiIdentifier, signInPath } = context!.auth;
@@ -38,6 +38,7 @@ export const useSignOut = (opts?: { redirectOnSuccess?: boolean; redirectToPath?
       if (!user) throw new Error("attempting to sign out when the user is not signed in");
       // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
       await signOutAction({ id: user.id });
+      refreshUser();
     }, [user, signOutAction]);
   } else {
     throw new Error(`missing configured signOutActionApiIdentifier '${signOutActionApiIdentifier}' on the \`api.user\` model manager.`);

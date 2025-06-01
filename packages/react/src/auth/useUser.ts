@@ -19,18 +19,21 @@ export function useUser<
 >(
   client?: ClientType,
   options?: LimitToKnownKeys<Options, Client["user"]["findMany"]["optionsType"] & ReadOperationOptions>
-): undefined extends ClientType
-  ? GadgetRecord<Record<string, any>>
-  : GadgetRecord<
-      Select<
-        Exclude<Exclude<ClientType, undefined>["user"]["findMany"]["schemaType"], null | undefined>,
-        DefaultSelection<
-          Exclude<ClientType, undefined>["user"]["findMany"]["selectionType"],
-          Options,
-          Exclude<ClientType, undefined>["user"]["findMany"]["defaultSelection"]
+): [
+  undefined extends ClientType
+    ? GadgetRecord<Record<string, any>>
+    : GadgetRecord<
+        Select<
+          Exclude<Exclude<ClientType, undefined>["user"]["findMany"]["schemaType"], null | undefined>,
+          DefaultSelection<
+            Exclude<ClientType, undefined>["user"]["findMany"]["selectionType"],
+            Options,
+            Exclude<ClientType, undefined>["user"]["findMany"]["defaultSelection"]
+          >
         >
-      >
-    > {
+      >,
+  () => void
+] {
   const fallbackApi = useApi() as any;
   const api = client ?? fallbackApi;
 
@@ -48,6 +51,6 @@ export function useUser<
       user: select,
     };
   }
-  const session = useSession(api, opts);
-  return session && session.getField("user");
+  const [session, refreshSession] = useSession(api, opts);
+  return [session && session.getField("user"), refreshSession];
 }
