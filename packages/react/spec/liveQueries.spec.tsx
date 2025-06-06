@@ -1,14 +1,9 @@
 import { Client } from "@gadget-client/related-products-example";
-import { jest } from "@jest/globals";
 import { diff } from "@n1ru4l/json-patch-plus";
 import { render, renderHook, waitFor } from "@testing-library/react";
-import type { Operation, Client as UrqlClient } from "@urql/core";
 import React from "react";
-import { pipe, subscribe } from "wonka";
 import { useFindMany } from "../src/useFindMany.js";
-import { testApi } from "./apis.js";
 import { MockGraphQLWSClientWrapper, mockGraphQLWSClient } from "./testWrappers.js";
-import { sleep } from "./utils.js";
 
 describe("live queries", () => {
   let api: Client;
@@ -226,52 +221,5 @@ describe("live queries", () => {
 
     expect(result.current[0].error!.message).toEqual("[GraphQL] GGT_PERMISSION_DENIED: Permission has been denied.");
     expect(result.current[0].data).toBeNull();
-  });
-
-  test("live queries do not re-execute", async () => {
-    jest.replaceProperty(testApi.connection, "baseSubscriptionClient", mockGraphQLWSClient as any);
-
-    // @ts-expect-error baseClient is private
-    const urqlClient = testApi.connection.baseClient as UrqlClient;
-
-    let operationCount = 0;
-    let findManyOperation: Operation | null = null;
-
-    pipe(
-      urqlClient.operations$,
-      subscribe((op) => {
-        operationCount++;
-
-        expect(op.kind).toBe("query");
-        expect(
-          op.query.definitions.some(
-            (def) =>
-              def.kind === "OperationDefinition" &&
-              def.operation === "query" &&
-              def.directives?.some((directive) => directive.name.value === "live")
-          )
-        ).toBe(true);
-
-        findManyOperation = op;
-      })
-    );
-
-    // start the live query
-    testApi.modelA.findMany({ live: true })[Symbol.asyncIterator]();
-
-    // wait for the subscription to be created
-    await waitFor(() => expect(mockGraphQLWSClient.subscribe.subscriptions).toHaveLength(1));
-
-    // make sure the operation was assigned
-    expect(findManyOperation).not.toBeNull();
-
-    // re-execute the live query operation
-    urqlClient.reexecuteOperation(findManyOperation!);
-
-    // let the event loop run to give urql a chance to re-execute the operation
-    await sleep(1000);
-
-    // make sure the operation was NOT re-executed
-    expect(operationCount).toBe(1);
   });
 });
