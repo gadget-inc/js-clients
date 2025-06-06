@@ -1,12 +1,13 @@
 /* eslint-disable @typescript-eslint/no-non-null-assertion */
 import type { DefinitionNode, DirectiveNode, OperationDefinitionNode } from "@0no-co/graphql.web";
-import type { ClientOptions, RequestPolicy } from "@urql/core";
+import type { ClientOptions, Exchange, RequestPolicy } from "@urql/core";
 import { Client, cacheExchange, fetchExchange, subscriptionExchange } from "@urql/core";
 import type { ExecutionResult } from "graphql";
 import type { Sink, Client as SubscriptionClient, ClientOptions as SubscriptionClientOptions } from "graphql-ws";
 import { CloseCode, createClient as createSubscriptionClient } from "graphql-ws";
 import type { Maybe } from "graphql/jsutils/Maybe.js";
 import WebSocket from "isomorphic-ws";
+import { filter, merge, pipe, tap } from "wonka";
 import type { AuthenticationModeOptions, BrowserSessionAuthenticationModeOptions, Exchanges } from "./ClientOptions.js";
 import { BrowserSessionStorageType } from "./ClientOptions.js";
 import { GadgetTransaction, TransactionRolledBack } from "./GadgetTransaction.js";
@@ -76,6 +77,32 @@ export enum AuthenticationMode {
 }
 
 const objectForGlobals = typeof globalThis != "undefined" ? globalThis : typeof window != "undefined" ? window : undefined;
+
+const liveQueryExchange: Exchange = ({ forward }) => {
+  const executed = new Set<number>();
+
+  return (operations$) => {
+    const notLive = pipe(
+      operations$,
+      filter((op) => !op.query.definitions.some(isLiveQueryOperationDefinitionNode))
+    );
+
+    const live = pipe(
+      operations$,
+      filter((op) => op.query.definitions.some(isLiveQueryOperationDefinitionNode)),
+      filter((op) => !executed.has(op.key) || op.kind !== "query"), // We will forward on everything that hasn't been executed and is not a query
+      tap((op) => {
+        if (op.kind == "query") {
+          executed.add(op.key);
+        } else if (op.kind == "teardown") {
+          executed.delete(op.key);
+        }
+      })
+    );
+
+    return forward(merge([live, notLive]));
+  };
+};
 
 /**
  * Root level database connection that Actions can use to mutate data in a Gadget database.
@@ -368,6 +395,7 @@ export class GadgetConnection {
     // apply urql's default caching behaviour when client side (but skip it server side)
     if (typeof window != "undefined") {
       exchanges.push(cacheExchange);
+      exchanges.push(liveQueryExchange);
     }
     exchanges.push(
       ...this.exchanges.beforeAsync,
@@ -441,17 +469,6 @@ export class GadgetConnection {
       requestPolicy: this.requestPolicy,
     });
     (client as any)[$gadgetConnection] = this;
-
-    const reexecuteOperation = client.reexecuteOperation.bind(client);
-    client.reexecuteOperation = (operation) => {
-      if (operation.query.definitions.some(isLiveQueryOperationDefinitionNode)) {
-        // live queries don't cleanup properly when reexecuted, plus
-        // they should never need to be reexecuted since they receive
-        // updates from the server, so we noop here
-        return;
-      }
-      reexecuteOperation(operation);
-    };
 
     return client;
   }
