@@ -20,6 +20,13 @@ export type ClientWithSessionAndUserManagers<SessionGivenOptions, SessionSchemaT
   user: { findMany: FindManyFunction<UserGivenOptions, any, UserSchemaT, any> };
 };
 
+export type ClientWithSessionAndMaybeUserManagers<SessionGivenOptions, SessionSchemaT, UserGivenOptions, UserSchemaT> = Omit<
+  ClientWithSessionAndUserManagers<SessionGivenOptions, SessionSchemaT, UserGivenOptions, UserSchemaT>,
+  "user"
+> & {
+  user?: { findMany: FindManyFunction<UserGivenOptions, any, UserSchemaT, any> };
+};
+
 /**
  * Used for fetching the current `Session` record from Gadget. Will suspend while the user is being fetched.
  * @returns The current session
@@ -29,7 +36,7 @@ export function useSession<
   SessionSchemaT,
   UserGivenOptions extends OptionsType,
   UserSchemaT,
-  Client extends ClientWithSessionAndUserManagers<SessionGivenOptions, SessionSchemaT, UserGivenOptions, UserSchemaT>,
+  Client extends ClientWithSessionAndMaybeUserManagers<SessionGivenOptions, SessionSchemaT, UserGivenOptions, UserSchemaT>,
   Options extends Client["currentSession"]["get"]["optionsType"] & ReadOperationOptions,
   ClientType extends Client | undefined
 >(
@@ -44,7 +51,9 @@ export function useSession<
           Exclude<ClientType, undefined>["currentSession"]["get"]["selectionType"],
           Options,
           Exclude<ClientType, undefined>["currentSession"]["get"]["defaultSelection"] & {
-            user: Exclude<ClientType, undefined>["user"]["findMany"]["defaultSelection"];
+            user: Exclude<ClientType, undefined>["user"] extends { findMany: FindManyFunction<UserGivenOptions, any, UserSchemaT, any> }
+              ? Exclude<ClientType, undefined>["user"]["findMany"]["defaultSelection"]
+              : never;
           }
         >
       >
