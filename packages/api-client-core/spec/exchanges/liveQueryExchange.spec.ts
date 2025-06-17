@@ -13,7 +13,7 @@ describe("liveQueryExchange", () => {
     exchange = liveQueryExchange({ forward: mockForward, client: {} as any, dispatchDebug: jest.fn() });
   });
 
-  const createLiveQuery = (key: number = 1, variables: any = {}): Operation => {
+  const createLiveQuery = (key = 1, variables: any = {}): Operation => {
     return makeOperation(
       "query",
       {
@@ -32,7 +32,7 @@ describe("liveQueryExchange", () => {
     );
   };
 
-  const createRegularQuery = (key: number = 2): Operation => {
+  const createRegularQuery = (key = 2): Operation => {
     return makeOperation(
       "query",
       {
@@ -51,7 +51,7 @@ describe("liveQueryExchange", () => {
     );
   };
 
-  const createTeardown = (key: number = 1, variables: any = {}): Operation => {
+  const createTeardown = (key = 1, variables: any = {}): Operation => {
     return makeOperation(
       "teardown",
       {
@@ -70,56 +70,56 @@ describe("liveQueryExchange", () => {
     );
   };
 
-  test("allows first live query to pass through", async () => {
+  test("allows first live query to pass through", () => {
     const liveQuery = createLiveQuery(1);
     const operations$ = fromArray([liveQuery]);
 
     const result$ = exchange(operations$);
-    const results = await pipe(result$, toArray);
+    const results = pipe(result$, toArray);
 
     expect(results).toHaveLength(1);
     expect(results[0]).toBe(liveQuery);
   });
 
-  test("blocks duplicate live query execution with same variables", async () => {
+  test("blocks duplicate live query execution with same variables", () => {
     const liveQuery1 = createLiveQuery(1, { filter: { id: "1" } });
     const liveQuery2 = createLiveQuery(1, { filter: { id: "1" } }); // Same key and variables
     const operations$ = fromArray([liveQuery1, liveQuery2]);
 
     const result$ = exchange(operations$);
-    const results = await pipe(result$, toArray);
+    const results = pipe(result$, toArray);
 
     expect(results).toHaveLength(1);
     expect(results[0]).toBe(liveQuery1);
   });
 
-  test("allows regular queries to pass through unchanged", async () => {
+  test("allows regular queries to pass through unchanged", () => {
     const regularQuery1 = createRegularQuery(1);
     const regularQuery2 = createRegularQuery(1); // Same key but not live
     const operations$ = fromArray([regularQuery1, regularQuery2]);
 
     const result$ = exchange(operations$);
-    const results = await pipe(result$, toArray);
+    const results = pipe(result$, toArray);
 
     expect(results).toHaveLength(2);
     expect(results[0]).toBe(regularQuery1);
     expect(results[1]).toBe(regularQuery2);
   });
 
-  test("allows teardown operations to pass through", async () => {
+  test("allows teardown operations to pass through", () => {
     const liveQuery = createLiveQuery(1);
     const teardown = createTeardown(1);
     const operations$ = fromArray([liveQuery, teardown]);
 
     const result$ = exchange(operations$);
-    const results = await pipe(result$, toArray);
+    const results = pipe(result$, toArray);
 
     expect(results).toHaveLength(2);
     expect(results[0]).toBe(liveQuery);
     expect(results[1]).toBe(teardown);
   });
 
-  test("allows live query re-execution after teardown", async () => {
+  test("allows live query re-execution after teardown", () => {
     const variables = { filter: { id: "1" } };
     const liveQuery1 = createLiveQuery(1, variables);
     const teardown = createTeardown(1, variables); // Same variables as the query
@@ -127,7 +127,7 @@ describe("liveQueryExchange", () => {
     const operations$ = fromArray([liveQuery1, teardown, liveQuery2]);
 
     const result$ = exchange(operations$);
-    const results = await pipe(result$, toArray);
+    const results = pipe(result$, toArray);
 
     expect(results).toHaveLength(3);
     expect(results[0]).toBe(liveQuery1);
@@ -135,33 +135,33 @@ describe("liveQueryExchange", () => {
     expect(results[2]).toBe(liveQuery2);
   });
 
-  test("handles multiple live queries with different keys", async () => {
+  test("handles multiple live queries with different keys", () => {
     const liveQuery1 = createLiveQuery(1, { filter: { id: "1" } });
     const liveQuery2 = createLiveQuery(2, { filter: { id: "2" } });
     const operations$ = fromArray([liveQuery1, liveQuery2]);
 
     const result$ = exchange(operations$);
-    const results = await pipe(result$, toArray);
+    const results = pipe(result$, toArray);
 
     expect(results).toHaveLength(2);
     expect(results[0]).toBe(liveQuery1);
     expect(results[1]).toBe(liveQuery2);
   });
 
-  test("allows live queries with same key but different variables", async () => {
+  test("allows live queries with same key but different variables", () => {
     const liveQuery1 = createLiveQuery(1, { filter: { id: "1" } });
     const liveQuery2 = createLiveQuery(1, { filter: { id: "2" } }); // Same key, different variables
     const operations$ = fromArray([liveQuery1, liveQuery2]);
 
     const result$ = exchange(operations$);
-    const results = await pipe(result$, toArray);
+    const results = pipe(result$, toArray);
 
     expect(results).toHaveLength(2);
     expect(results[0]).toBe(liveQuery1);
     expect(results[1]).toBe(liveQuery2);
   });
 
-  test("allows non-query operations for live queries to pass through", async () => {
+  test("allows non-query operations for live queries to pass through", () => {
     const liveQuery = createLiveQuery(1);
     const mutation = makeOperation(
       "mutation",
@@ -182,7 +182,7 @@ describe("liveQueryExchange", () => {
     const operations$ = fromArray([liveQuery, mutation]);
 
     const result$ = exchange(operations$);
-    const results = await pipe(result$, toArray);
+    const results = pipe(result$, toArray);
 
     expect(results).toHaveLength(2);
     expect(results[0]).toBe(liveQuery);
