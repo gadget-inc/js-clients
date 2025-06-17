@@ -263,6 +263,7 @@ describe("live queries", () => {
 
     rerender({ id: "2" });
 
+    await waitFor(() => expect(result.current[0].fetching).toBe(true));
     await waitFor(() => expect(mockGraphQLWSClient.subscribe.subscriptions).toHaveLength(2));
 
     const secondSubscription = mockGraphQLWSClient.subscribe.subscriptions[1];
@@ -284,6 +285,7 @@ describe("live queries", () => {
       revision: 1,
     } as any);
 
+    await waitFor(() => expect(result.current[0].fetching).toBe(false));
     await waitFor(() => expect(result.current[0].data!.length).toEqual(1));
     expect(result.current[0].data![0].id).toEqual("2");
   });
