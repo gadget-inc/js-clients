@@ -302,17 +302,19 @@ describe("live queries", () => {
     pipe(
       urqlClient.operations$,
       subscribe((op) => {
-        if (
+        operationCount++;
+
+        expect(op.kind).toBe("query");
+        expect(
           op.query.definitions.some(
             (def) =>
               def.kind === "OperationDefinition" &&
               def.operation === "query" &&
               def.directives?.some((directive) => directive.name.value === "live")
           )
-        ) {
-          operationCount++;
-          findManyOperation = op;
-        }
+        ).toBe(true);
+
+        findManyOperation = op;
       })
     );
 
@@ -330,7 +332,7 @@ describe("live queries", () => {
     expect(operationCount).toBe(1);
   });
 
-  test("live queries can be re-established after mutation invalidates cache", async () => {
+  test("live queries handle subscription errors gracefully", async () => {
     const { result } = renderHook(() => useFindMany(api.user, { live: true }), {
       wrapper: MockGraphQLWSClientWrapper(api),
     });
@@ -360,10 +362,11 @@ describe("live queries", () => {
     await waitFor(() => expect(result.current[0].data!.length).toEqual(1));
     expect(result.current[0].data![0].id).toEqual("1");
 
+
     subscription.push({
       errors: [
         {
-          message: "Connection lost",
+          message: "Subscription invalidated by mutation",
           locations: [{ line: 1, column: 1 }],
           path: ["users"],
         },
@@ -372,6 +375,7 @@ describe("live queries", () => {
     } as any);
 
     await waitFor(() => expect(result.current[0].error).toBeTruthy());
+    expect(result.current[0].error?.message).toContain("Missing patch");
   });
 
   test("multiple live queries with different parameters work correctly", async () => {
@@ -428,9 +432,31 @@ describe("live queries", () => {
 
     expect(result1.current[0].data![0].id).toEqual("1");
     expect(result2.current[0].data![0].id).toEqual("2");
+
+    subscription1.push({
+      data: {
+        users: {
+          edges: [
+            {
+              node: {
+                id: "1",
+                email: "updated-user1@test.com",
+              },
+            },
+          ],
+        },
+      },
+      revision: 2,
+    } as any);
+
+    await waitFor(() => {
+      expect(result1.current[0].data).toBeTruthy();
+      expect(result2.current[0].data).toBeTruthy();
+    });
+    expect(result2.current[0].data![0].email).toEqual("user2@test.com");
   });
 
-  test("live queries can be re-established after subscription ends", async () => {
+  test("live queries handle connection errors gracefully", async () => {
     const { result } = renderHook(() => useFindMany(api.user, { live: true }), {
       wrapper: MockGraphQLWSClientWrapper(api),
     });
@@ -469,5 +495,6 @@ describe("live queries", () => {
     } as any);
 
     await waitFor(() => expect(result.current[0].error).toBeTruthy());
+    expect(result.current[0].error?.message).toContain("Missing patch");
   });
 });
