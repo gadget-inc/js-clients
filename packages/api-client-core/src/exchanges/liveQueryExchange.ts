@@ -1,5 +1,6 @@
 import type { Exchange } from "@urql/core";
 import { filter, merge, pipe, tap } from "wonka";
+import stringify from "fast-json-stable-stringify";
 import { isLiveQueryOperationDefinitionNode } from "../GadgetConnection.js";
 
 /**
@@ -30,7 +31,7 @@ export const liveQueryExchange: Exchange = ({ forward }) => {
   const executed = new Set<string>();
 
   const getOperationId = (op: any) => {
-    return `${op.key}-${JSON.stringify(op.variables || {})}`;
+    return `${op.key}-${stringify(op.variables || {})}`;
   };
 
   return (operations$) => {
