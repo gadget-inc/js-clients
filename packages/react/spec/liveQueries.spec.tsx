@@ -231,13 +231,10 @@ describe("live queries", () => {
   test("live queries can be re-executed when inputs change", async () => {
     jest.replaceProperty(testApi.connection, "baseSubscriptionClient", mockGraphQLWSClient as any);
 
-    const { result, rerender } = renderHook(
-      ({ id }) => useFindMany(testApi.modelA, { filter: { id: { equals: id } }, live: true }),
-      {
-        initialProps: { id: "1" },
-        wrapper: MockGraphQLWSClientWrapper(testApi),
-      }
-    );
+    const { result, rerender } = renderHook(({ id }) => useFindMany(testApi.modelA, { filter: { id: { equals: id } }, live: true }), {
+      initialProps: { id: "1" },
+      wrapper: MockGraphQLWSClientWrapper(testApi),
+    });
 
     expect(result.current[0].fetching).toBe(true);
     expect(result.current[0].data).toBeFalsy();
@@ -307,12 +304,14 @@ describe("live queries", () => {
     pipe(
       urqlClient.operations$,
       subscribe((op) => {
-        if (op.query.definitions.some(
-          (def) =>
-            def.kind === "OperationDefinition" &&
-            def.operation === "query" &&
-            def.directives?.some((directive) => directive.name.value === "live")
-        )) {
+        if (
+          op.query.definitions.some(
+            (def) =>
+              def.kind === "OperationDefinition" &&
+              def.operation === "query" &&
+              def.directives?.some((directive) => directive.name.value === "live")
+          )
+        ) {
           operationCount++;
           findManyOperation = op;
         }
@@ -435,7 +434,7 @@ describe("live queries", () => {
 
     await waitFor(() => expect(result1.current[0].data!.length).toEqual(1));
     await waitFor(() => expect(result2.current[0].data!.length).toEqual(1));
-    
+
     expect(result1.current[0].data![0].id).toEqual("1");
     expect(result2.current[0].data![0].id).toEqual("2");
   });

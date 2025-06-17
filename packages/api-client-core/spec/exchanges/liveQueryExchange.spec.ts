@@ -1,8 +1,7 @@
 import { jest } from "@jest/globals";
 import type { Operation } from "@urql/core";
-import { makeOperation } from "@urql/core";
-import { gql } from "@urql/core";
-import { pipe, fromArray, toArray, subscribe } from "wonka";
+import { gql, makeOperation } from "@urql/core";
+import { fromArray, pipe, toArray } from "wonka";
 import { liveQueryExchange } from "../../src/exchanges/liveQueryExchange.js";
 
 describe("liveQueryExchange", () => {
@@ -77,7 +76,7 @@ describe("liveQueryExchange", () => {
 
     const result$ = exchange(operations$);
     const results = await pipe(result$, toArray);
-    
+
     expect(results).toHaveLength(1);
     expect(results[0]).toBe(liveQuery);
   });
@@ -89,7 +88,7 @@ describe("liveQueryExchange", () => {
 
     const result$ = exchange(operations$);
     const results = await pipe(result$, toArray);
-    
+
     expect(results).toHaveLength(1);
     expect(results[0]).toBe(liveQuery1);
   });
@@ -101,7 +100,7 @@ describe("liveQueryExchange", () => {
 
     const result$ = exchange(operations$);
     const results = await pipe(result$, toArray);
-    
+
     expect(results).toHaveLength(2);
     expect(results[0]).toBe(regularQuery1);
     expect(results[1]).toBe(regularQuery2);
@@ -114,7 +113,7 @@ describe("liveQueryExchange", () => {
 
     const result$ = exchange(operations$);
     const results = await pipe(result$, toArray);
-    
+
     expect(results).toHaveLength(2);
     expect(results[0]).toBe(liveQuery);
     expect(results[1]).toBe(teardown);
@@ -129,7 +128,7 @@ describe("liveQueryExchange", () => {
 
     const result$ = exchange(operations$);
     const results = await pipe(result$, toArray);
-    
+
     expect(results).toHaveLength(3);
     expect(results[0]).toBe(liveQuery1);
     expect(results[1]).toBe(teardown);
@@ -143,7 +142,7 @@ describe("liveQueryExchange", () => {
 
     const result$ = exchange(operations$);
     const results = await pipe(result$, toArray);
-    
+
     expect(results).toHaveLength(2);
     expect(results[0]).toBe(liveQuery1);
     expect(results[1]).toBe(liveQuery2);
@@ -156,7 +155,7 @@ describe("liveQueryExchange", () => {
 
     const result$ = exchange(operations$);
     const results = await pipe(result$, toArray);
-    
+
     expect(results).toHaveLength(2);
     expect(results[0]).toBe(liveQuery1);
     expect(results[1]).toBe(liveQuery2);
@@ -184,7 +183,7 @@ describe("liveQueryExchange", () => {
 
     const result$ = exchange(operations$);
     const results = await pipe(result$, toArray);
-    
+
     expect(results).toHaveLength(2);
     expect(results[0]).toBe(liveQuery);
     expect(results[1]).toBe(mutation);
