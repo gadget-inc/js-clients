@@ -9,6 +9,7 @@ import type { Maybe } from "graphql/jsutils/Maybe.js";
 import WebSocket from "isomorphic-ws";
 import type { AuthenticationModeOptions, BrowserSessionAuthenticationModeOptions, Exchanges } from "./ClientOptions.js";
 import { BrowserSessionStorageType } from "./ClientOptions.js";
+import { liveQueryExchange } from "./exchanges/liveQueryExchange.js";
 import { GadgetTransaction, TransactionRolledBack } from "./GadgetTransaction.js";
 import type { BrowserStorage } from "./InMemoryStorage.js";
 import { InMemoryStorage } from "./InMemoryStorage.js";
@@ -368,6 +369,7 @@ export class GadgetConnection {
     // apply urql's default caching behaviour when client side (but skip it server side)
     if (typeof window != "undefined") {
       exchanges.push(cacheExchange);
+      exchanges.push(liveQueryExchange);
     }
     exchanges.push(
       ...this.exchanges.beforeAsync,
@@ -441,17 +443,6 @@ export class GadgetConnection {
       requestPolicy: this.requestPolicy,
     });
     (client as any)[$gadgetConnection] = this;
-
-    const reexecuteOperation = client.reexecuteOperation.bind(client);
-    client.reexecuteOperation = (operation) => {
-      if (operation.query.definitions.some(isLiveQueryOperationDefinitionNode)) {
-        // live queries don't cleanup properly when reexecuted, plus
-        // they should never need to be reexecuted since they receive
-        // updates from the server, so we noop here
-        return;
-      }
-      reexecuteOperation(operation);
-    };
 
     return client;
   }
@@ -665,6 +656,6 @@ const getLiveDirectiveNode = (input: DefinitionNode): Maybe<DirectiveNode> => {
   return input.directives?.find((d) => d.name.value === "live");
 };
 
-const isLiveQueryOperationDefinitionNode = (input: DefinitionNode): input is OperationDefinitionNode => {
+export const isLiveQueryOperationDefinitionNode = (input: DefinitionNode): input is OperationDefinitionNode => {
   return !!getLiveDirectiveNode(input);
 };

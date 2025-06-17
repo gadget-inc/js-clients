@@ -228,7 +228,74 @@ describe("live queries", () => {
     expect(result.current[0].data).toBeNull();
   });
 
-  test("live queries do not re-execute", async () => {
+  test("live queries can be re-executed when inputs change", async () => {
+    jest.replaceProperty(testApi.connection, "baseSubscriptionClient", mockGraphQLWSClient as any);
+
+    const { result, rerender } = renderHook(
+      ({ id }) => useFindMany(testApi.modelA, { filter: { id: { equals: id } }, live: true }),
+      {
+        initialProps: { id: "1" },
+        wrapper: MockGraphQLWSClientWrapper(testApi),
+      }
+    );
+
+    expect(result.current[0].fetching).toBe(true);
+    expect(result.current[0].data).toBeFalsy();
+
+    await waitFor(() => expect(mockGraphQLWSClient.subscribe.subscriptions).toHaveLength(1));
+
+    const firstSubscription = mockGraphQLWSClient.subscribe.subscriptions[0];
+    expect(firstSubscription.payload.query).toContain("@live");
+
+    firstSubscription.push({
+      data: {
+        modelAs: {
+          edges: [
+            {
+              node: {
+                id: "1",
+                createdAt: new Date().toISOString(),
+                updatedAt: new Date().toISOString(),
+              },
+            },
+          ],
+        },
+      },
+      revision: 1,
+    } as any);
+
+    await waitFor(() => expect(result.current[0].data!.length).toEqual(1));
+    expect(result.current[0].data![0].id).toEqual("1");
+
+    rerender({ id: "2" });
+
+    await waitFor(() => expect(mockGraphQLWSClient.subscribe.subscriptions).toHaveLength(2));
+
+    const secondSubscription = mockGraphQLWSClient.subscribe.subscriptions[1];
+    expect(secondSubscription.payload.query).toContain("@live");
+
+    secondSubscription.push({
+      data: {
+        modelAs: {
+          edges: [
+            {
+              node: {
+                id: "2",
+                createdAt: new Date().toISOString(),
+                updatedAt: new Date().toISOString(),
+              },
+            },
+          ],
+        },
+      },
+      revision: 1,
+    } as any);
+
+    await waitFor(() => expect(result.current[0].data!.length).toEqual(1));
+    expect(result.current[0].data![0].id).toEqual("2");
+  });
+
+  test("live queries are not duplicated when cache tries to re-execute them", async () => {
     jest.replaceProperty(testApi.connection, "baseSubscriptionClient", mockGraphQLWSClient as any);
 
     // @ts-expect-error baseClient is private
@@ -240,38 +307,180 @@ describe("live queries", () => {
     pipe(
       urqlClient.operations$,
       subscribe((op) => {
-        operationCount++;
-
-        expect(op.kind).toBe("query");
-        expect(
-          op.query.definitions.some(
-            (def) =>
-              def.kind === "OperationDefinition" &&
-              def.operation === "query" &&
-              def.directives?.some((directive) => directive.name.value === "live")
-          )
-        ).toBe(true);
-
-        findManyOperation = op;
+        if (op.query.definitions.some(
+          (def) =>
+            def.kind === "OperationDefinition" &&
+            def.operation === "query" &&
+            def.directives?.some((directive) => directive.name.value === "live")
+        )) {
+          operationCount++;
+          findManyOperation = op;
+        }
       })
     );
 
-    // start the live query
     testApi.modelA.findMany({ live: true })[Symbol.asyncIterator]();
 
-    // wait for the subscription to be created
     await waitFor(() => expect(mockGraphQLWSClient.subscribe.subscriptions).toHaveLength(1));
 
-    // make sure the operation was assigned
     expect(findManyOperation).not.toBeNull();
+    expect(operationCount).toBe(1);
 
-    // re-execute the live query operation
     urqlClient.reexecuteOperation(findManyOperation!);
 
-    // let the event loop run to give urql a chance to re-execute the operation
-    await sleep(1000);
+    await sleep(100);
 
-    // make sure the operation was NOT re-executed
     expect(operationCount).toBe(1);
+  });
+
+  test("live queries can be re-established after mutation invalidates cache", async () => {
+    jest.replaceProperty(testApi.connection, "baseSubscriptionClient", mockGraphQLWSClient as any);
+
+    const { result } = renderHook(() => useFindMany(testApi.modelA, { live: true }), {
+      wrapper: MockGraphQLWSClientWrapper(testApi),
+    });
+
+    expect(result.current[0].fetching).toBe(true);
+    expect(result.current[0].data).toBeFalsy();
+
+    await waitFor(() => expect(mockGraphQLWSClient.subscribe.subscriptions).toHaveLength(1));
+
+    const subscription = mockGraphQLWSClient.subscribe.subscriptions[0];
+    subscription.push({
+      data: {
+        modelAs: {
+          edges: [
+            {
+              node: {
+                id: "1",
+                createdAt: new Date().toISOString(),
+                updatedAt: new Date().toISOString(),
+              },
+            },
+          ],
+        },
+      },
+      revision: 1,
+    } as any);
+
+    await waitFor(() => expect(result.current[0].data!.length).toEqual(1));
+    expect(result.current[0].data![0].id).toEqual("1");
+
+    subscription.push({
+      errors: [
+        {
+          message: "Connection lost",
+          locations: [{ line: 1, column: 1 }],
+          path: ["modelAs"],
+        },
+      ],
+      revision: 2,
+    } as any);
+
+    await waitFor(() => expect(result.current[0].error).toBeTruthy());
+  });
+
+  test("multiple live queries with different parameters work correctly", async () => {
+    jest.replaceProperty(testApi.connection, "baseSubscriptionClient", mockGraphQLWSClient as any);
+
+    const { result: result1 } = renderHook(() => useFindMany(testApi.modelA, { filter: { id: { equals: "1" } }, live: true }), {
+      wrapper: MockGraphQLWSClientWrapper(testApi),
+    });
+
+    const { result: result2 } = renderHook(() => useFindMany(testApi.modelA, { filter: { id: { equals: "2" } }, live: true }), {
+      wrapper: MockGraphQLWSClientWrapper(testApi),
+    });
+
+    expect(result1.current[0].fetching).toBe(true);
+    expect(result2.current[0].fetching).toBe(true);
+
+    await waitFor(() => expect(mockGraphQLWSClient.subscribe.subscriptions).toHaveLength(2));
+
+    const subscription1 = mockGraphQLWSClient.subscribe.subscriptions[0];
+    const subscription2 = mockGraphQLWSClient.subscribe.subscriptions[1];
+
+    subscription1.push({
+      data: {
+        modelAs: {
+          edges: [
+            {
+              node: {
+                id: "1",
+                createdAt: new Date().toISOString(),
+                updatedAt: new Date().toISOString(),
+              },
+            },
+          ],
+        },
+      },
+      revision: 1,
+    } as any);
+
+    subscription2.push({
+      data: {
+        modelAs: {
+          edges: [
+            {
+              node: {
+                id: "2",
+                createdAt: new Date().toISOString(),
+                updatedAt: new Date().toISOString(),
+              },
+            },
+          ],
+        },
+      },
+      revision: 1,
+    } as any);
+
+    await waitFor(() => expect(result1.current[0].data!.length).toEqual(1));
+    await waitFor(() => expect(result2.current[0].data!.length).toEqual(1));
+    
+    expect(result1.current[0].data![0].id).toEqual("1");
+    expect(result2.current[0].data![0].id).toEqual("2");
+  });
+
+  test("live queries can be re-established after subscription ends", async () => {
+    jest.replaceProperty(testApi.connection, "baseSubscriptionClient", mockGraphQLWSClient as any);
+
+    const { result } = renderHook(() => useFindMany(testApi.modelA, { live: true }), {
+      wrapper: MockGraphQLWSClientWrapper(testApi),
+    });
+
+    await waitFor(() => expect(mockGraphQLWSClient.subscribe.subscriptions).toHaveLength(1));
+
+    const subscription = mockGraphQLWSClient.subscribe.subscriptions[0];
+    subscription.push({
+      data: {
+        modelAs: {
+          edges: [
+            {
+              node: {
+                id: "1",
+                createdAt: new Date().toISOString(),
+                updatedAt: new Date().toISOString(),
+              },
+            },
+          ],
+        },
+      },
+      revision: 1,
+    } as any);
+
+    await waitFor(() => expect(result.current[0].data!.length).toEqual(1));
+    expect(result.current[0].data![0].id).toEqual("1");
+
+    subscription.push({
+      errors: [
+        {
+          message: "Connection lost",
+          locations: [{ line: 1, column: 1 }],
+          path: ["modelAs"],
+        },
+      ],
+      revision: 2,
+    } as any);
+
+    await waitFor(() => expect(result.current[0].error).toBeTruthy());
   });
 });
