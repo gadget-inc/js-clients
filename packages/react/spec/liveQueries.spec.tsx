@@ -452,6 +452,7 @@ describe("live queries", () => {
       expect(result1.current[0].data).toBeTruthy();
       expect(result2.current[0].data).toBeTruthy();
     });
+    expect(result1.current[0].data![0].email).toEqual("updated-user1@test.com");
     expect(result2.current[0].data![0].email).toEqual("user2@test.com");
   });
 
