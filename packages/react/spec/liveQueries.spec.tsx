@@ -229,11 +229,9 @@ describe("live queries", () => {
   });
 
   test("live queries can be re-executed when inputs change", async () => {
-    jest.replaceProperty(testApi.connection, "baseSubscriptionClient", mockGraphQLWSClient as any);
-
-    const { result, rerender } = renderHook(({ id }) => useFindMany(testApi.modelA, { filter: { id: { equals: id } }, live: true }), {
+    const { result, rerender } = renderHook(({ id }) => useFindMany(api.user, { filter: { id: { equals: id } }, live: true }), {
       initialProps: { id: "1" },
-      wrapper: MockGraphQLWSClientWrapper(testApi),
+      wrapper: MockGraphQLWSClientWrapper(api),
     });
 
     expect(result.current[0].fetching).toBe(true);
@@ -246,13 +244,12 @@ describe("live queries", () => {
 
     firstSubscription.push({
       data: {
-        modelAs: {
+        users: {
           edges: [
             {
               node: {
                 id: "1",
-                createdAt: new Date().toISOString(),
-                updatedAt: new Date().toISOString(),
+                email: "user1@test.com",
               },
             },
           ],
@@ -273,13 +270,12 @@ describe("live queries", () => {
 
     secondSubscription.push({
       data: {
-        modelAs: {
+        users: {
           edges: [
             {
               node: {
                 id: "2",
-                createdAt: new Date().toISOString(),
-                updatedAt: new Date().toISOString(),
+                email: "user2@test.com",
               },
             },
           ],
@@ -333,10 +329,8 @@ describe("live queries", () => {
   });
 
   test("live queries can be re-established after mutation invalidates cache", async () => {
-    jest.replaceProperty(testApi.connection, "baseSubscriptionClient", mockGraphQLWSClient as any);
-
-    const { result } = renderHook(() => useFindMany(testApi.modelA, { live: true }), {
-      wrapper: MockGraphQLWSClientWrapper(testApi),
+    const { result } = renderHook(() => useFindMany(api.user, { live: true }), {
+      wrapper: MockGraphQLWSClientWrapper(api),
     });
 
     expect(result.current[0].fetching).toBe(true);
@@ -347,13 +341,12 @@ describe("live queries", () => {
     const subscription = mockGraphQLWSClient.subscribe.subscriptions[0];
     subscription.push({
       data: {
-        modelAs: {
+        users: {
           edges: [
             {
               node: {
                 id: "1",
-                createdAt: new Date().toISOString(),
-                updatedAt: new Date().toISOString(),
+                email: "user1@test.com",
               },
             },
           ],
@@ -370,7 +363,7 @@ describe("live queries", () => {
         {
           message: "Connection lost",
           locations: [{ line: 1, column: 1 }],
-          path: ["modelAs"],
+          path: ["users"],
         },
       ],
       revision: 2,
@@ -380,14 +373,12 @@ describe("live queries", () => {
   });
 
   test("multiple live queries with different parameters work correctly", async () => {
-    jest.replaceProperty(testApi.connection, "baseSubscriptionClient", mockGraphQLWSClient as any);
-
-    const { result: result1 } = renderHook(() => useFindMany(testApi.modelA, { filter: { id: { equals: "1" } }, live: true }), {
-      wrapper: MockGraphQLWSClientWrapper(testApi),
+    const { result: result1 } = renderHook(() => useFindMany(api.user, { filter: { id: { equals: "1" } }, live: true }), {
+      wrapper: MockGraphQLWSClientWrapper(api),
     });
 
-    const { result: result2 } = renderHook(() => useFindMany(testApi.modelA, { filter: { id: { equals: "2" } }, live: true }), {
-      wrapper: MockGraphQLWSClientWrapper(testApi),
+    const { result: result2 } = renderHook(() => useFindMany(api.user, { filter: { id: { equals: "2" } }, live: true }), {
+      wrapper: MockGraphQLWSClientWrapper(api),
     });
 
     expect(result1.current[0].fetching).toBe(true);
@@ -400,13 +391,12 @@ describe("live queries", () => {
 
     subscription1.push({
       data: {
-        modelAs: {
+        users: {
           edges: [
             {
               node: {
                 id: "1",
-                createdAt: new Date().toISOString(),
-                updatedAt: new Date().toISOString(),
+                email: "user1@test.com",
               },
             },
           ],
@@ -417,13 +407,12 @@ describe("live queries", () => {
 
     subscription2.push({
       data: {
-        modelAs: {
+        users: {
           edges: [
             {
               node: {
                 id: "2",
-                createdAt: new Date().toISOString(),
-                updatedAt: new Date().toISOString(),
+                email: "user2@test.com",
               },
             },
           ],
@@ -440,10 +429,8 @@ describe("live queries", () => {
   });
 
   test("live queries can be re-established after subscription ends", async () => {
-    jest.replaceProperty(testApi.connection, "baseSubscriptionClient", mockGraphQLWSClient as any);
-
-    const { result } = renderHook(() => useFindMany(testApi.modelA, { live: true }), {
-      wrapper: MockGraphQLWSClientWrapper(testApi),
+    const { result } = renderHook(() => useFindMany(api.user, { live: true }), {
+      wrapper: MockGraphQLWSClientWrapper(api),
     });
 
     await waitFor(() => expect(mockGraphQLWSClient.subscribe.subscriptions).toHaveLength(1));
@@ -451,13 +438,12 @@ describe("live queries", () => {
     const subscription = mockGraphQLWSClient.subscribe.subscriptions[0];
     subscription.push({
       data: {
-        modelAs: {
+        users: {
           edges: [
             {
               node: {
                 id: "1",
-                createdAt: new Date().toISOString(),
-                updatedAt: new Date().toISOString(),
+                email: "user1@test.com",
               },
             },
           ],
@@ -474,7 +460,7 @@ describe("live queries", () => {
         {
           message: "Connection lost",
           locations: [{ line: 1, column: 1 }],
-          path: ["modelAs"],
+          path: ["users"],
         },
       ],
       revision: 2,
