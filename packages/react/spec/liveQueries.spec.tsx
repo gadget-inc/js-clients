@@ -332,7 +332,7 @@ describe("live queries", () => {
     expect(operationCount).toBe(1);
   });
 
-  test("live queries handle subscription errors gracefully", async () => {
+  test("live queries can be re-established after mutation invalidates cache", async () => {
     const { result } = renderHook(() => useFindMany(api.user, { live: true }), {
       wrapper: MockGraphQLWSClientWrapper(api),
     });
