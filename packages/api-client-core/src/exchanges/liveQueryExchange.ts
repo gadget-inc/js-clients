@@ -1,6 +1,6 @@
 import type { Exchange } from "@urql/core";
-import { filter, merge, pipe, tap } from "wonka";
 import stringify from "fast-json-stable-stringify";
+import { filter, merge, pipe, tap } from "wonka";
 import { isLiveQueryOperationDefinitionNode } from "../GadgetConnection.js";
 
 /**

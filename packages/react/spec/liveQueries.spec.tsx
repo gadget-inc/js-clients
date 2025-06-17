@@ -362,7 +362,6 @@ describe("live queries", () => {
     await waitFor(() => expect(result.current[0].data!.length).toEqual(1));
     expect(result.current[0].data![0].id).toEqual("1");
 
-
     subscription.push({
       errors: [
         {
