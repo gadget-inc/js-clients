@@ -27,7 +27,7 @@
     "prerelease": "gitpkg publish"
   },
   "dependencies": {
-    "@gadgetinc/api-client-core": "^0.15.42"
+    "@gadgetinc/api-client-core": "^0.15.43"
   },
   "devDependencies": {
     "@gadgetinc/api-client-core": "workspace:*",
@@ -41,6 +41,6 @@
   "peerDependencies": {
     "react": "^18.0.0",
     "react-dom": "^18.0.0",
-    "@gadgetinc/react": "^0.21.1"
+    "@gadgetinc/react": "^0.21.2"
   }
 }

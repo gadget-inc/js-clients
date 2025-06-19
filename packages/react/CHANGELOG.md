@@ -1,5 +1,20 @@
 # @gadgetinc/react
 
+## 0.21.2
+
+### Patch Changes
+
+- Ensure live queries correctly re-execute when input variables change
+
+  Previously, mounted live queries in React would erroneously not re-connect to the server when their input variables changed, like the filter, sort, or selection. The websocket would confusingly stay open, but the client side code listening for changes would stop listening and not restart. This has now been fixed and live queries will correctly re-establish a new websocket connection with new variables when the variables change.
+
+- Fix useView hook passing typed variables
+
+  The `useView` hook for use with computed views was incorrectly passing type names to the GraphQL backend when executed with named views taking variables. It now passes the typenames correctly.
+
+- Updated dependencies
+  - @gadgetinc/api-client-core@0.15.43
+
 ## 0.21.1
 
 ### Patch Changes

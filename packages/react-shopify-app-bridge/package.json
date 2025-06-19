@@ -1,6 +1,6 @@
 {
   "name": "@gadgetinc/react-shopify-app-bridge",
-  "version": "0.18.4",
+  "version": "0.18.5",
   "files": [
     "README.md",
     "dist/**/*"
@@ -27,7 +27,7 @@
     "prerelease": "gitpkg publish"
   },
   "dependencies": {
-    "@gadgetinc/api-client-core": "^0.15.42",
+    "@gadgetinc/api-client-core": "^0.15.43",
     "crypto-js": "^4.2.0",
     "tslib": "^2.6.2"
   },
@@ -45,7 +45,7 @@
     "react-dom": "^18.2.0"
   },
   "peerDependencies": {
-    "@gadgetinc/react": "^0.21.1",
+    "@gadgetinc/react": "^0.21.2",
     "@shopify/app-bridge-react": "^4.0.0",
     "react": "^18.0.0",
     "react-dom": "^18.0.0"
