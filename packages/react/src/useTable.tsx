@@ -6,11 +6,12 @@ import {
   type LimitToKnownKeys,
   type Select,
 } from "@gadgetinc/api-client-core";
-import { useCallback, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import { validateAutoTableProps } from "./auto/AutoTableValidators.js";
 import { useModelMetadata } from "./metadata.js";
 import { getTableColumns, getTableRows, getTableSelectionMap, getTableSpec } from "./use-table/helpers.js";
 import type { TableOptions, TableResult } from "./use-table/types.js";
+import { type SearchResult } from "./useDebouncedSearch.js";
 import { useList } from "./useList.js";
 import { type OptionsType, type ReadOperationOptions } from "./utils.js";
 
@@ -80,7 +81,14 @@ export const useTable = <
   }, []);
 
   const handleColumnSort = useCallback(
-    (columnApiIdentifier: string) => {
+    (columnApiIdentifier?: string) => {
+      if (!columnApiIdentifier) {
+        // Clearing the sort
+        setSort(undefined);
+        setSortColumnApiIdentifier(undefined);
+        setSortDirection(undefined);
+        return;
+      }
       const nextDirection = columnApiIdentifier !== sortColumnApiIdentifier ? "Descending" : getNextDirection(sortDirection);
       setSortDirection(nextDirection);
       setSortColumnApiIdentifier(nextDirection ? columnApiIdentifier : undefined);
@@ -135,6 +143,8 @@ export const useTable = <
     setSort: sortColumn,
   };
 
+  useClearSortOnSearchChange({ search, clearSort: handleColumnSort });
+
   return [
     {
       ...tableData,
@@ -147,4 +157,13 @@ export const useTable = <
     },
     refresh,
   ];
+};
+
+// When the search value changes, clear the existing sort so that the result is based on search similarity instead of the given sort order
+const useClearSortOnSearchChange = (props: { search: SearchResult; clearSort: () => void }) => {
+  useEffect(() => {
+    if (props.search.value) {
+      props.clearSort();
+    }
+  }, [props.search.value]);
 };
