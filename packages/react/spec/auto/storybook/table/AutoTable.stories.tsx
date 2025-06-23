@@ -169,17 +169,31 @@ const CustomCheckboxCell = ({ record }: { record: any }) => {
   );
 };
 
+const ColorChangingText = (props: { text: string }) => {
+  const [color, setColor] = React.useState("#000000");
+
+  React.useEffect(() => {
+    const interval = setInterval(() => {
+      const randomColor = "#" + Math.floor(Math.random() * 16777215).toString(16);
+      setColor(randomColor);
+    }, 1000);
+
+    return () => clearInterval(interval);
+  }, []);
+  return <div style={{ color }}>{props.text}</div>;
+};
+
 export const CustomCellWithUseAction: any = {
   args: {
     model: api.autoTableTest,
     columns: [
       "bool",
       {
-        header: "Pass the whole function",
+        header: <ColorChangingText text="Pass the whole function" />,
         render: CustomCheckboxCell,
       },
       {
-        header: "JSX style",
+        header: <ColorChangingText text="JSX style" />,
         render: (props: any) => <CustomCheckboxCell {...props} />,
       },
     ],

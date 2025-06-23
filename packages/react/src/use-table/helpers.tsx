@@ -156,7 +156,6 @@ export const getTableColumns = (spec: Pick<TableSpec, "fieldMetadataTree" | "tar
         identifier,
         render: targetColumn.render,
         header: targetColumn.header,
-        field: targetColumn.header,
         type: "CustomRenderer",
         sortable: false,
         style: targetColumn.style,

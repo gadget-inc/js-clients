@@ -29,20 +29,26 @@ export type TableColumn = {
   /** Identifier for the column */
   identifier: string;
   /** Human-readable header value for the column */
-  header: string;
-  /** Dot-separated path to the field in the record */
-  field: string;
-  type: ColumnType;
+  header: ReactNode;
   /** parent relationship type if the parent field is a relationship */
   relationshipType?: RelationshipType;
   sortable: boolean;
   /** For controlling if the time is shown on DateTime cell renderers   */
   includeTime?: boolean;
-  /** Custom render function */
-  render?: CustomCellRenderer;
   /** Custom style for the cells in the column */
   style?: React.CSSProperties;
-};
+} & (
+  | {
+      type: GadgetFieldType;
+      /** Dot-separated path to the field in the record */
+      field: string;
+    }
+  | {
+      type: "CustomRenderer";
+      /** Custom render function */
+      render: CustomCellRenderer;
+    }
+);
 
 export type TableRow = Record<string, ColumnValueType | ReactNode>;
 
@@ -149,7 +155,7 @@ export type RelatedFieldColumn = {
 };
 
 export type CustomCellColumn = {
-  header: string;
+  header: ReactNode;
   render: CustomCellRenderer;
   style?: React.CSSProperties;
 };
@@ -157,7 +163,7 @@ export type CustomCellColumn = {
 export type CustomCellRenderer = (props: { record: GadgetRecord<any>; index: number }) => ReactNode;
 
 export type CellDetailColumn = {
-  header?: string;
+  header?: ReactNode;
   field: string;
   sortable?: boolean;
   style?: React.CSSProperties;
