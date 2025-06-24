@@ -313,7 +313,10 @@ describe("useTable hook", () => {
           }
         }"
       `);
-      expect(result.current[0].columns?.map((column) => column.field)).toEqual(["name", "inventoryCount"]);
+      expect(result.current[0].columns?.map((column) => (column.type === "CustomRenderer" ? undefined : column.field))).toEqual([
+        "name",
+        "inventoryCount",
+      ]);
       expect(result.current[0].rows).toMatchInlineSnapshot(`
               [
                 {
@@ -380,7 +383,7 @@ describe("useTable hook", () => {
           }
         }"
       `);
-      expect(result.current[0].columns?.map((column) => column.field)).toEqual([
+      expect(result.current[0].columns?.map((column) => (column.type === "CustomRenderer" ? undefined : column.field))).toEqual([
         "name",
         "hasMany",
         "hasOne",
@@ -463,7 +466,7 @@ describe("useTable hook", () => {
           }
         }"
       `);
-      expect(result.current[0].columns?.map((column) => column.field)).toEqual([
+      expect(result.current[0].columns?.map((column) => (column.type === "CustomRenderer" ? undefined : column.field))).toEqual([
         "name",
         "hasMany.edges.node.name",
         "hasOne.name",
@@ -574,7 +577,6 @@ describe("useTable hook", () => {
             "type": "String",
           },
           {
-            "field": "Custom column",
             "header": "Custom column",
             "identifier": "000-000-000-000-1",
             "render": [Function],
@@ -654,7 +656,7 @@ describe("useTable hook", () => {
       `);
 
       // The list should not contain "name" and "inventoryCount" because they are excluded
-      expect(result.current[0].columns?.map((column) => column.field)).toEqual([
+      expect(result.current[0].columns?.map((column) => (column.type === "CustomRenderer" ? undefined : column.field))).toEqual([
         "id",
         "anything",
         "description",

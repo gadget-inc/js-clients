@@ -287,7 +287,7 @@ describe("PolarisAutoTable", () => {
         {
           identifier: sampleUUID1,
           header: "Custom cell",
-          field: "Custom cell",
+          render: () => "Custom cell",
           type: "CustomRenderer",
           sortable: false,
         },
@@ -351,14 +351,14 @@ describe("PolarisAutoTable", () => {
         {
           identifier: sampleUUID1,
           header: "Custom cell",
-          field: "Custom cell",
+          render: () => "Custom cell",
           type: "CustomRenderer",
           sortable: false,
         },
         {
           identifier: sampleUUID2,
           header: "Custom cell",
-          field: "Custom cell",
+          render: () => "Custom cell",
           type: "CustomRenderer",
           sortable: false,
         },

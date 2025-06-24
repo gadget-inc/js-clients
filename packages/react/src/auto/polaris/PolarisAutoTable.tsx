@@ -49,8 +49,8 @@ const gadgetToPolarisDirection = (direction?: SortOrder) => {
   return undefined;
 };
 
-const getColumnIndex = (columns: TableColumn[], apiIdentifier: string | undefined) => {
-  return columns.findIndex((column) => column.field === apiIdentifier);
+const maybeGetColumnIndex = (columns: TableColumn[], apiIdentifier: string | undefined) => {
+  return columns.findIndex((column) => (column.type === "CustomRenderer" ? undefined : column.field === apiIdentifier));
 };
 
 export type PolarisAutoTableProps<
@@ -127,8 +127,11 @@ const PolarisAutoTableComponent = <
 
   const handleColumnSort = (headingIndex: number) => {
     if (columns) {
-      const columnApiIdentifier = columns[headingIndex].field;
-      sort.handleColumnSort(columnApiIdentifier);
+      const currentColumn = columns[headingIndex];
+      const columnApiIdentifier = currentColumn.type === "CustomRenderer" ? undefined : currentColumn.field;
+      if (columnApiIdentifier) {
+        sort.handleColumnSort(columnApiIdentifier);
+      }
     }
   };
 
@@ -147,7 +150,9 @@ const PolarisAutoTableComponent = <
 
     if (columns) {
       for (const column of columns) {
-        headings.push({ title: column.header });
+        headings.push({
+          title: column.header as string, // Polaris type says that this must be a string, but this works with a ReactNode
+        });
         sortable.push(column.sortable);
       }
     }
@@ -247,7 +252,7 @@ const PolarisAutoTableComponent = <
               : undefined
           }
           sortDirection={gadgetToPolarisDirection(sort.direction)}
-          sortColumnIndex={columns ? getColumnIndex(columns, sort.column) : undefined}
+          sortColumnIndex={columns ? maybeGetColumnIndex(columns, sort.column) : undefined}
           onSort={(headingIndex) => handleColumnSort(headingIndex)}
           selectable={props.selectable === undefined ? bulkActionOptions.length !== 0 : props.selectable}
           lastColumnSticky={props.lastColumnSticky}
