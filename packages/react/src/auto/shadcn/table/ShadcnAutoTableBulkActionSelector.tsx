@@ -1,3 +1,4 @@
+import { type GadgetRecord } from "@gadgetinc/api-client-core";
 import { ChevronsUpDown } from "lucide-react";
 import React, { useMemo } from "react";
 import { type TableRow } from "../../../use-table/types.js";
@@ -12,8 +13,9 @@ export const makeShadcnAutoTableBulkActionSelector = (elements: ShadcnElements) 
     nonPromotedActions: BulkActionOption[];
     selection: RecordSelection;
     rows: TableRow[];
+    rawRecords: GadgetRecord<any>[] | null;
   }) {
-    const { nonPromotedActions, selection, rows } = props;
+    const { nonPromotedActions, selection, rows, rawRecords } = props;
     const selectedRows = rows.filter((row) => selection.recordIds.includes(row.id as string));
 
     const [open, setOpen] = React.useState(false);
@@ -45,7 +47,12 @@ export const makeShadcnAutoTableBulkActionSelector = (elements: ShadcnElements) 
                     key={i}
                     className={"bg-background"}
                     onSelect={() => {
-                      getBulkActionOptionCallback(action, selectedRows, selection.clearAll)();
+                      getBulkActionOptionCallback({
+                        option: action,
+                        selectedRows,
+                        clearSelection: selection.clearAll,
+                        rawRecords,
+                      })();
                     }}
                   >
                     {action.humanizedName}
@@ -59,8 +66,13 @@ export const makeShadcnAutoTableBulkActionSelector = (elements: ShadcnElements) 
     );
   }
 
-  function PromotedActionsActionSelector(props: { promotedActions: BulkActionOption[]; selection: RecordSelection; rows: TableRow[] }) {
-    const { promotedActions, selection, rows } = props;
+  function PromotedActionsActionSelector(props: {
+    promotedActions: BulkActionOption[];
+    selection: RecordSelection;
+    rows: TableRow[];
+    rawRecords: GadgetRecord<any>[] | null;
+  }) {
+    const { promotedActions, selection, rows, rawRecords } = props;
 
     const selectedRows = rows.filter((row) => selection.recordIds.includes(row.id as string));
 
@@ -71,7 +83,12 @@ export const makeShadcnAutoTableBulkActionSelector = (elements: ShadcnElements) 
             variant="outline"
             key={action.humanizedName}
             onClick={() => {
-              getBulkActionOptionCallback(action, selectedRows, selection.clearAll)();
+              getBulkActionOptionCallback({
+                option: action,
+                selectedRows,
+                clearSelection: selection.clearAll,
+                rawRecords,
+              })();
             }}
           >
             {action.humanizedName}
@@ -84,8 +101,9 @@ export const makeShadcnAutoTableBulkActionSelector = (elements: ShadcnElements) 
     bulkActionOptions: BulkActionOption[];
     selection: RecordSelection;
     rows: TableRow[];
+    rawRecords: GadgetRecord<any>[] | null;
   }) {
-    const { bulkActionOptions, selection, rows } = props;
+    const { bulkActionOptions, selection, rows, rawRecords } = props;
 
     const { promotedActions, nonPromotedActions } = useMemo(() => {
       const promotedActions = [];
@@ -104,8 +122,13 @@ export const makeShadcnAutoTableBulkActionSelector = (elements: ShadcnElements) 
 
     return (
       <>
-        <PromotedActionsActionSelector promotedActions={promotedActions} selection={selection} rows={rows} />
-        <NonPromotedActionsActionSelector nonPromotedActions={nonPromotedActions} selection={selection} rows={rows} />
+        <PromotedActionsActionSelector promotedActions={promotedActions} selection={selection} rows={rows} rawRecords={rawRecords} />
+        <NonPromotedActionsActionSelector
+          nonPromotedActions={nonPromotedActions}
+          selection={selection}
+          rows={rows}
+          rawRecords={rawRecords}
+        />
       </>
     );
   }

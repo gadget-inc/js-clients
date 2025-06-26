@@ -1,3 +1,4 @@
+import { type GadgetRecord } from "@gadgetinc/api-client-core";
 import React, { useCallback, useEffect, useMemo } from "react";
 import deepEqual from "react-fast-compare";
 import type { ActionCallback, TableOptions, TableRow } from "../../use-table/types.js";
@@ -175,13 +176,26 @@ const getValidatedBulkModelActionOption = (gadgetModelActionsAsBulkActionOptions
   return modelAction;
 };
 
-export const getBulkActionOptionCallback = (option: BulkActionOption, selectedRows: TableRow[], clearSelection: () => void) =>
-  option.action
+export const getBulkActionOptionCallback = (props: {
+  option: BulkActionOption;
+  selectedRows: TableRow[];
+  clearSelection: () => void;
+  rawRecords: GadgetRecord<any>[] | null;
+}) => {
+  const { option, selectedRows, clearSelection, rawRecords } = props;
+
+  const selectedRowsWithRawRecord = selectedRows.map((row) => ({
+    ...(rawRecords?.find((record) => record.id === row.id) ?? {}),
+    ...row,
+  }));
+
+  return option.action
     ? () => {
-        option.action?.(selectedRows);
+        option.action?.(selectedRowsWithRawRecord);
         clearSelection();
       }
     : option.selectModelAction ?? (() => undefined);
+};
 
 export type AutoBulkActionModal = {
   model: any;

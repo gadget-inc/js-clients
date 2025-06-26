@@ -174,13 +174,31 @@ const PolarisAutoTableComponent = <
   const selectedRows = (rows ?? []).filter((row) => selection.recordIds.includes(row.id as string));
 
   const promotedBulkActions = useMemo(
-    () => bulkActionOptions.filter((option) => option.promoted).map(bulkActionOptionMapper(selectedRows, selection.clearAll)),
-    [bulkActionOptions, selectedRows]
+    () =>
+      bulkActionOptions
+        .filter((option) => option.promoted)
+        .map(
+          bulkActionOptionMapper({
+            rawRecords,
+            selectedRows,
+            clearSelection: selection.clearAll,
+          })
+        ),
+    [bulkActionOptions, selectedRows, rawRecords, selection.clearAll]
   );
 
   const bulkActions = useMemo(
-    () => bulkActionOptions.filter((option) => !option.promoted).map(bulkActionOptionMapper(selectedRows, selection.clearAll)),
-    [bulkActionOptions, selectedRows]
+    () =>
+      bulkActionOptions
+        .filter((option) => !option.promoted)
+        .map(
+          bulkActionOptionMapper({
+            rawRecords,
+            selectedRows,
+            clearSelection: selection.clearAll,
+          })
+        ),
+    [bulkActionOptions, selectedRows, rawRecords, selection.clearAll]
   );
 
   if (!error && ((fetching && !rows) || !columns)) {
@@ -308,11 +326,15 @@ const disablePaginatedSelectAllButton = {
   paginatedSelectAllActionText: "", // Empty string to hide the select all button. We only allow selections on the current page.
 };
 
-const bulkActionOptionMapper = (selectedRows: TableRow[], clearSelection: () => void) => {
+const bulkActionOptionMapper = (props: {
+  rawRecords: GadgetRecord<any>[] | null;
+  selectedRows: TableRow[];
+  clearSelection: () => void;
+}) => {
   return (option: BulkActionOption) => ({
     id: option.humanizedName,
     destructive: "isDeleter" in option ? option.isDeleter : false,
     content: option.humanizedName,
-    onAction: getBulkActionOptionCallback(option, selectedRows, clearSelection),
+    onAction: getBulkActionOptionCallback({ option, ...props }),
   });
 };
