@@ -4,7 +4,10 @@ import type { InternalModelManager } from "./InternalModelManager.js";
 
 export const $modelRelationships = Symbol.for("gadget/modelRelationships");
 
-export type InternalModelManagerNamespace = { [key: string]: InternalModelManager | InternalModelManagerNamespace };
+export type InternalModelManagerNamespace = {
+  // internal model managers can be maps of model names to model managers, subnamespaces, or utility functions
+  [key: string]: InternalModelManager | InternalModelManagerNamespace | ((...args: any[]) => any);
+};
 
 /**
  * An instance of any Gadget app's API client object
