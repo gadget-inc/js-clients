@@ -9,8 +9,22 @@ import { Provider as UrqlProvider } from "urql";
  * React context that stores the current urql client
  *
  * urql doesn't have its own useClient hook, so we store it on our own context to get at the client object later
+ *
  **/
-export const GadgetUrqlClientContext = React.createContext<UrqlClient | undefined>(undefined);
+export const GadgetUrqlClientContext: React.Context<UrqlClient | undefined> =
+  (globalThis as any).__gadgetUrqlClientContext || React.createContext<UrqlClient | undefined>(undefined);
+
+/**
+ * Weird hack to store the first ever created instance of the react context on the global so that in the presence of multiple HMRs we don't create new instances. This prevents errors of the nature "Could not find a client in the context of Provider"
+ * We're not really sure why this necessary -- Vite is supposed to be good at invalidating the whole module graph when an HMR happens such that this module should be invalidated and reloaded too if anything depending on it is changed, but, there s
+ */
+try {
+  if (!(globalThis as any).__gadgetUrqlClientContext) {
+    (globalThis as any).__gadgetUrqlClientContext = React.createContext<UrqlClient | undefined>(undefined);
+  }
+} catch (error) {
+  // don't error if the globalThis object is not available or frozen
+}
 
 /** Provides the Gadget auth configuration used in the auth hooks */
 export interface GadgetAuthConfiguration {
