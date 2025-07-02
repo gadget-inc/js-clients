@@ -1,5 +1,11 @@
 # `@gadgetinc/api-client-core` Changelog
 
+## 0.15.44
+
+### Patch Changes
+
+- Update types to allow internal functions beyond just model managers
+
 ## 0.15.43
 
 ### Patch Changes
