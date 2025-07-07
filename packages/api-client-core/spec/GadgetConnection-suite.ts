@@ -756,6 +756,47 @@ export const GadgetConnectionSharedSuite = (queryExtra = "") => {
       expect(customResult.error).toBeUndefined();
       expect(customResult.data).toEqual({ meta: { appName: "some app" } });
     });
+
+    it("should support public shop tenant authentication", async () => {
+      nock("https://someapp.gadget.app")
+        .post("/api/graphql?operation=meta", { query: `{\n  meta {\n    appName\n${queryExtra}  }\n}`, variables: {} })
+        .reply(200, function () {
+          expect(this.req.headers["x-gadget-public-shop-tenant"]).toEqual(["1234"]);
+
+          return {
+            data: {
+              meta: {
+                appName: "some app",
+              },
+            },
+          };
+        });
+
+      const connection = new GadgetConnection({
+        endpoint: "https://someapp.gadget.app/api/graphql",
+        authenticationMode: {
+          publicShopTenant: {
+            shopId: "1234",
+          },
+        },
+      });
+
+      const result = await connection.currentClient
+        .query(
+          gql`
+            {
+              meta {
+                appName
+              }
+            }
+          `,
+          {}
+        )
+        .toPromise();
+
+      expect(result.error).toBeUndefined();
+      expect(result.data).toEqual({ meta: { appName: "some app" } });
+    });
   });
 
   describe("raw fetching", () => {

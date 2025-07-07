@@ -74,6 +74,7 @@ export enum AuthenticationMode {
   InternalAuthToken = "internal-auth-token",
   Anonymous = "anonymous",
   Custom = "custom",
+  PublicShopTenant = "public-shop-tenant",
 }
 
 const objectForGlobals = typeof globalThis != "undefined" ? globalThis : typeof window != "undefined" ? window : undefined;
@@ -173,6 +174,8 @@ export class GadgetConnection {
         this.authenticationMode = AuthenticationMode.InternalAuthToken;
       } else if (options.apiKey) {
         this.authenticationMode = AuthenticationMode.APIKey;
+      } else if (options.publicShopTenant) {
+        this.authenticationMode = AuthenticationMode.PublicShopTenant;
       } else if (options.custom) {
         this.authenticationMode = AuthenticationMode.Custom;
       }
@@ -551,6 +554,11 @@ export class GadgetConnection {
       const val = this.sessionTokenStore!.getItem(this.sessionStorageKey);
       if (val) {
         headers.authorization = `Session ${val}`;
+      }
+    } else if (this.authenticationMode === AuthenticationMode.PublicShopTenant) {
+      const shopId = this.options.authenticationMode?.publicShopTenant?.shopId;
+      if (shopId) {
+        headers["x-gadget-public-shop-tenant"] = shopId;
       }
     }
 
