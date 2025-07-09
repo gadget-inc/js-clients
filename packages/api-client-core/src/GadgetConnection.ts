@@ -19,7 +19,9 @@ import {
   GadgetTooManyRequestsError,
   GadgetUnexpectedCloseError,
   GadgetWebsocketConnectionTimeoutError,
+  availableAuthenticationModes,
   isCloseEvent,
+  maybeGetAuthenticationModeOptionsFromConnectionOptions,
   storageAvailable,
 } from "./support.js";
 
@@ -46,9 +48,8 @@ export const $gadgetConnection = Symbol.for("gadget/connection");
 const sessionStorageKey = "token";
 const base64 = typeof btoa !== "undefined" ? btoa : (str: string) => Buffer.from(str).toString("base64");
 
-export interface GadgetConnectionOptions {
+type BaseGadgetConnectionOptions = {
   endpoint: string;
-  authenticationMode?: AuthenticationModeOptions;
   websocketsEndpoint?: string;
   subscriptionClientOptions?: GadgetSubscriptionClientOptions;
   websocketImplementation?: typeof globalThis.WebSocket;
@@ -59,7 +60,17 @@ export interface GadgetConnectionOptions {
   baseRouteURL?: string;
   exchanges?: Exchanges;
   createSubscriptionClient?: typeof createSubscriptionClient;
-}
+};
+
+export type GadgetConnectionOptions = BaseGadgetConnectionOptions &
+  (
+    | {
+        authenticationMode?: AuthenticationModeOptions;
+      }
+    | ({
+        authenticationMode?: never;
+      } & AuthenticationModeOptions)
+  );
 
 /**
  * Represents the current strategy for authenticating with the Gadget platform.
@@ -84,6 +95,7 @@ const objectForGlobals = typeof globalThis != "undefined" ? globalThis : typeof 
  */
 export class GadgetConnection {
   static version = "<prerelease>" as const;
+  static availableAuthenticationModes = availableAuthenticationModes;
 
   // Options used when generating new GraphQL clients for the base connection and for for transactions
   readonly endpoint: string;
@@ -109,7 +121,15 @@ export class GadgetConnection {
   private requestPolicy: RequestPolicy;
   createSubscriptionClient: typeof createSubscriptionClient;
 
+  /**
+   * The authentication mode that came from the connection options in the constructor.
+   * We have two methods of setting the authentication mode, so we're storing it separately to avoid having to manually determine which method was used.
+   */
+  private authenticationModeOptions?: AuthenticationModeOptions;
+
   constructor(readonly options: GadgetConnectionOptions) {
+    this.authenticationModeOptions = maybeGetAuthenticationModeOptionsFromConnectionOptions(options);
+
     if (!options.endpoint) throw new Error("Must provide an `endpoint` option for a GadgetConnection to connect to");
     this.endpoint = options.endpoint;
     if (options.fetchImplementation) {
@@ -141,7 +161,7 @@ export class GadgetConnection {
     };
     this.createSubscriptionClient = options.createSubscriptionClient ?? createSubscriptionClient;
 
-    this.setAuthenticationMode(options.authenticationMode);
+    this.setAuthenticationMode(this.authenticationModeOptions);
 
     this.baseClient = this.newBaseClient();
   }
@@ -176,7 +196,7 @@ export class GadgetConnection {
       } else if (options.custom) {
         this.authenticationMode = AuthenticationMode.Custom;
       }
-      this.options.authenticationMode = options;
+      this.authenticationModeOptions = options;
     }
 
     this.authenticationMode ??= AuthenticationMode.Anonymous;
@@ -185,7 +205,8 @@ export class GadgetConnection {
   enableSessionMode(options?: true | BrowserSessionAuthenticationModeOptions) {
     this.authenticationMode = AuthenticationMode.BrowserSession;
 
-    const desiredMode = !options || typeof options == "boolean" ? BrowserSessionStorageType.Durable : options.storageType;
+    const desiredMode =
+      !options || typeof options == "boolean" || !("storageType" in options) ? BrowserSessionStorageType.Durable : options.storageType;
     let sessionTokenStore;
     if (desiredMode == BrowserSessionStorageType.Durable && storageAvailable("localStorage")) {
       sessionTokenStore = window.localStorage;
@@ -316,7 +337,7 @@ export class GadgetConnection {
       init.headers = { ...requestHeaders, ...init.headers };
 
       if (this.authenticationMode == AuthenticationMode.Custom) {
-        await this.options.authenticationMode!.custom!.processFetch(input, init);
+        await this.authenticationModeOptions!.custom!.processFetch(input, init);
       }
     }
 
@@ -470,24 +491,24 @@ export class GadgetConnection {
         // In the browser, we can't set arbitrary headers on the websocket request, so we don't use the same auth mechanism that we use for normal HTTP requests. Instead we use graphql-ws' connectionParams to send the auth information in the connection setup message to the server.
         const connectionParams: Record<string, any> = { environment: this.environment, auth: { type: this.authenticationMode } };
         if (this.authenticationMode == AuthenticationMode.APIKey) {
-          connectionParams.auth.key = this.options.authenticationMode!.apiKey!;
+          connectionParams.auth.key = this.authenticationModeOptions!.apiKey!;
         } else if (
           this.authenticationMode == AuthenticationMode.Internal ||
           this.authenticationMode == AuthenticationMode.InternalAuthToken
         ) {
           const authToken =
             this.authenticationMode == AuthenticationMode.Internal
-              ? this.options.authenticationMode!.internal!.authToken
-              : this.options.authenticationMode!.internalAuthToken!;
+              ? this.authenticationModeOptions!.internal!.authToken
+              : this.authenticationModeOptions!.internalAuthToken!;
           connectionParams.auth.token = authToken;
-          if (this.authenticationMode == AuthenticationMode.Internal && this.options.authenticationMode!.internal!.actAsSession) {
+          if (this.authenticationMode == AuthenticationMode.Internal && this.authenticationModeOptions!.internal!.actAsSession) {
             connectionParams.auth.actAsInternalSession = true;
-            connectionParams.auth.internalSessionId = await this.options.authenticationMode!.internal!.getSessionId?.();
+            connectionParams.auth.internalSessionId = await this.authenticationModeOptions!.internal!.getSessionId?.();
           }
         } else if (this.authenticationMode == AuthenticationMode.BrowserSession) {
           connectionParams.auth.sessionToken = this.sessionTokenStore!.getItem(this.sessionStorageKey);
         } else if (this.authenticationMode == AuthenticationMode.Custom) {
-          await this.options.authenticationMode?.custom?.processTransactionConnectionParams(connectionParams);
+          await this.authenticationModeOptions?.custom?.processTransactionConnectionParams(connectionParams);
         }
         return connectionParams;
       },
@@ -498,8 +519,11 @@ export class GadgetConnection {
         connected: (socket, payload) => {
           // If we're using session token authorization, we don't use request headers to exchange the session token, we use graphql-ws' ConnectionAck payload to persist the token. When the subscription client first starts, the server will send us session token identifying this client, and we persist it to the session token store
           if (this.authenticationMode == AuthenticationMode.BrowserSession && payload?.sessionToken) {
-            const browserSession = this.options.authenticationMode?.browserSession;
-            const initialToken = browserSession !== null && typeof browserSession === "object" ? browserSession.initialToken : null;
+            const browserSession = this.authenticationModeOptions?.browserSession;
+            const initialToken =
+              browserSession !== null && typeof browserSession === "object" && "initialToken" in browserSession
+                ? browserSession.initialToken
+                : null;
             if (!initialToken) {
               this.sessionTokenStore!.setItem(this.sessionStorageKey, payload.sessionToken as string);
             }
@@ -532,25 +556,31 @@ export class GadgetConnection {
     if (this.authenticationMode == AuthenticationMode.Internal || this.authenticationMode == AuthenticationMode.InternalAuthToken) {
       const authToken =
         this.authenticationMode == AuthenticationMode.Internal
-          ? this.options.authenticationMode!.internal!.authToken
-          : this.options.authenticationMode!.internalAuthToken!;
+          ? this.authenticationModeOptions!.internal!.authToken
+          : this.authenticationModeOptions!.internalAuthToken!;
 
       headers.authorization = "Basic " + base64("gadget-internal" + ":" + authToken);
 
-      if (this.authenticationMode == AuthenticationMode.Internal && this.options.authenticationMode!.internal!.actAsSession) {
+      if (this.authenticationMode == AuthenticationMode.Internal && this.authenticationModeOptions!.internal!.actAsSession) {
         headers["x-gadget-act-as-internal-session"] = "true";
 
-        const sessionId = await this.options.authenticationMode!.internal!.getSessionId?.();
+        const sessionId = await this.authenticationModeOptions!.internal!.getSessionId?.();
         if (sessionId) {
           headers["x-gadget-internal-session-id"] = sessionId;
         }
       }
     } else if (this.authenticationMode == AuthenticationMode.APIKey) {
-      headers.authorization = `Bearer ${this.options.authenticationMode?.apiKey}`;
+      headers.authorization = `Bearer ${this.authenticationModeOptions?.apiKey}`;
     } else if (this.authenticationMode == AuthenticationMode.BrowserSession) {
       const val = this.sessionTokenStore!.getItem(this.sessionStorageKey);
       if (val) {
         headers.authorization = `Session ${val}`;
+      }
+
+      const browserSessionOptions = this.authenticationModeOptions!.browserSession!;
+      const shopId = typeof browserSessionOptions === "boolean" ? undefined : browserSessionOptions.shopId;
+      if (shopId) {
+        headers["x-gadget-for-shop-id"] = shopId;
       }
     }
 

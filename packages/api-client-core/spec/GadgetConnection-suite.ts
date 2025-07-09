@@ -71,6 +71,38 @@ export const GadgetConnectionSharedSuite = (queryExtra = "") => {
   });
 
   describe("authorization", () => {
+    describe("when declaring authentication modes at the top level and under the `authenticationMode` key at the same time", () => {
+      it("should throw an error if same auth modes are declared", () => {
+        expect(
+          () =>
+            new GadgetConnection({
+              endpoint: "https://someapp.gadget.app/api/graphql",
+              authenticationMode: { browserSession: true },
+              browserSession: true,
+            } as any)
+        ).toThrowErrorMatchingInlineSnapshot(
+          `"Declaring authentication modes at the top level and under the \`authenticationMode\` key at the same time is not allowed."`
+        );
+      });
+
+      it("should throw an error if different auth modes are declared", () => {
+        expect(
+          () =>
+            new GadgetConnection({
+              endpoint: "https://someapp.gadget.app/api/graphql",
+              authenticationMode: {
+                browserSession: {
+                  shopId: "1234",
+                },
+              },
+              anonymous: true,
+            } as any)
+        ).toThrowErrorMatchingInlineSnapshot(
+          `"Declaring authentication modes at the top level and under the \`authenticationMode\` key at the same time is not allowed."`
+        );
+      });
+    });
+
     it("should allow connecting with anonymous authentication", async () => {
       nock("https://someapp.gadget.app")
         .post("/api/graphql?operation=meta", { query: `{\n  meta {\n    appName\n${queryExtra}  }\n}`, variables: {} })
@@ -755,6 +787,45 @@ export const GadgetConnectionSharedSuite = (queryExtra = "") => {
 
       expect(customResult.error).toBeUndefined();
       expect(customResult.data).toEqual({ meta: { appName: "some app" } });
+    });
+
+    it("should support browser session with shop tenant", async () => {
+      nock("https://someapp.gadget.app")
+        .post("/api/graphql?operation=meta", { query: `{\n  meta {\n    appName\n${queryExtra}  }\n}`, variables: {} })
+        .reply(200, function () {
+          expect(this.req.headers["x-gadget-for-shop-id"]).toEqual(["1234"]);
+
+          return {
+            data: {
+              meta: {
+                appName: "some app",
+              },
+            },
+          };
+        });
+
+      const connection = new GadgetConnection({
+        endpoint: "https://someapp.gadget.app/api/graphql",
+        browserSession: {
+          shopId: "1234",
+        },
+      });
+
+      const result = await connection.currentClient
+        .query(
+          gql`
+            {
+              meta {
+                appName
+              }
+            }
+          `,
+          {}
+        )
+        .toPromise();
+
+      expect(result.error).toBeUndefined();
+      expect(result.data).toEqual({ meta: { appName: "some app" } });
     });
   });
 
