@@ -316,8 +316,14 @@ export const getNonNullableError = (response: Result & { fetching: boolean }, da
 
 export const assertOperationSuccess = (response: OperationResult<any>, dataPath: string[], throwOnEmptyData = false) => {
   if (response.error) {
-    if (response.error instanceof CombinedError && (response.error.networkError as any as Error[])?.length) {
-      response.error.message = (response.error.networkError as any as Error[]).map((error) => "[Network] " + error.message).join("\n");
+    if (response.error instanceof CombinedError && response.error.networkError) {
+      if (response.error.networkError?.message) {
+        response.error.message = `[Network] ${response.error.networkError.message}`;
+      } else {
+        response.error.message = `[Network] No message, error: string(response.error.networkError) \nstack: ${String(
+          response.error.networkError.stack
+        )}}`;
+      }
     }
     throw response.error;
   }

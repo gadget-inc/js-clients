@@ -51,6 +51,22 @@ describe("support utilities", () => {
       ).toThrowErrorMatchingInlineSnapshot(`"[Network] foobar"`);
     });
 
+    test("throws the operation error if with the full network error as a string if there is no error message", () => {
+      expect(() =>
+        assertOperationSuccess(
+          {
+            operation: null as any,
+            data: null,
+            error: new CombinedError({ networkError: new Error() }),
+            stale: false,
+            hasNext: false,
+          },
+
+          ["foo", "bar"]
+        )
+      ).toThrow(`[Network] No message, error:`);
+    });
+
     test("throws an actual error object and not a string so that the user gets a stack message", () => {
       try {
         assertOperationSuccess(
@@ -67,25 +83,6 @@ describe("support utilities", () => {
       } catch (error: any) {
         expect(error).toBeInstanceOf(Error);
       }
-    });
-
-    test("throws the operation error if there's multiple network errors on the operation", () => {
-      expect(() =>
-        assertOperationSuccess(
-          {
-            operation: null as any,
-            data: null,
-            error: new CombinedError({ networkError: [new Error("foo"), new Error("foo")] as any }),
-            stale: false,
-            hasNext: false,
-          },
-
-          ["foo", "bar"]
-        )
-      ).toThrowErrorMatchingInlineSnapshot(`
-        "[Network] foo
-        [Network] foo"
-      `);
     });
 
     test("throws the operation error if there's a error on the operation", () => {
