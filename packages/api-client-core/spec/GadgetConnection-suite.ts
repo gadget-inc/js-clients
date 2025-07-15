@@ -71,38 +71,6 @@ export const GadgetConnectionSharedSuite = (queryExtra = "") => {
   });
 
   describe("authorization", () => {
-    describe("when declaring authentication modes at the top level and under the `authenticationMode` key at the same time", () => {
-      it("should throw an error if same auth modes are declared", () => {
-        expect(
-          () =>
-            new GadgetConnection({
-              endpoint: "https://someapp.gadget.app/api/graphql",
-              authenticationMode: { browserSession: true },
-              browserSession: true,
-            } as any)
-        ).toThrowErrorMatchingInlineSnapshot(
-          `"Declaring authentication modes at the top level and under the \`authenticationMode\` key at the same time is not allowed."`
-        );
-      });
-
-      it("should throw an error if different auth modes are declared", () => {
-        expect(
-          () =>
-            new GadgetConnection({
-              endpoint: "https://someapp.gadget.app/api/graphql",
-              authenticationMode: {
-                browserSession: {
-                  shopId: "1234",
-                },
-              },
-              anonymous: true,
-            } as any)
-        ).toThrowErrorMatchingInlineSnapshot(
-          `"Declaring authentication modes at the top level and under the \`authenticationMode\` key at the same time is not allowed."`
-        );
-      });
-    });
-
     it("should allow connecting with anonymous authentication", async () => {
       nock("https://someapp.gadget.app")
         .post("/api/graphql?operation=meta", { query: `{\n  meta {\n    appName\n${queryExtra}  }\n}`, variables: {} })
@@ -806,8 +774,10 @@ export const GadgetConnectionSharedSuite = (queryExtra = "") => {
 
       const connection = new GadgetConnection({
         endpoint: "https://someapp.gadget.app/api/graphql",
-        browserSession: {
-          shopId: "1234",
+        authenticationMode: {
+          browserSession: {
+            shopId: "1234",
+          },
         },
       });
 

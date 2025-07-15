@@ -1,9 +1,7 @@
 import type { OperationResult } from "@urql/core";
 import { CombinedError } from "@urql/core";
 import { Call, type FieldSelection as BuilderFieldSelection } from "tiny-graphql-query-compiler";
-import type { AuthenticationModeOptions, ClientOptions } from "./ClientOptions.js";
 import { DataHydrator } from "./DataHydrator.js";
-import type { GadgetConnectionOptions } from "./GadgetConnection.js";
 import type { ActionFunctionMetadata, AnyActionFunction } from "./GadgetFunctions.js";
 import type { RecordShape } from "./GadgetRecord.js";
 import { GadgetRecord } from "./GadgetRecord.js";
@@ -753,41 +751,4 @@ export const formatErrorMessages = (error: Error) => {
   }
 
   return result;
-};
-
-export const availableAuthenticationModes = [
-  "apiKey",
-  "browserSession",
-  "anonymous",
-  "internalAuthToken",
-  "internal",
-  "custom",
-] as const satisfies readonly (keyof AuthenticationModeOptions)[];
-
-// Type assertion to ensure all `AuthenticationModeOptions` keys are included in the `availableAuthenticationModes` array
-type MissingKeys = Exclude<keyof AuthenticationModeOptions, (typeof availableAuthenticationModes)[number]>;
-type _AssertAllKeysIncluded = [MissingKeys] extends [never] ? true : `Missing keys: ${MissingKeys}`;
-const _assertAllAuthKeysIncluded: _AssertAllKeysIncluded = true as _AssertAllKeysIncluded;
-
-export const maybeGetAuthenticationModeOptionsFromConnectionOptions = (
-  options: GadgetConnectionOptions | ClientOptions
-): AuthenticationModeOptions | undefined => {
-  const topLevelAuthModes: AuthenticationModeOptions = {};
-  for (const key of availableAuthenticationModes) {
-    if (key in options) {
-      topLevelAuthModes[key] = (options as any)[key];
-    }
-  }
-
-  if ("authenticationMode" in options && Object.keys(topLevelAuthModes).length > 0) {
-    throw new GadgetClientError(
-      "Declaring authentication modes at the top level and under the `authenticationMode` key at the same time is not allowed."
-    );
-  }
-
-  if ("authenticationMode" in options) {
-    return options.authenticationMode;
-  }
-
-  return topLevelAuthModes;
 };

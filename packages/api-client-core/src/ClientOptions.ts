@@ -1,11 +1,16 @@
 import type { Exchange } from "@urql/core";
 import type { GadgetSubscriptionClientOptions } from "./GadgetConnection.js";
 
-type BaseClientOptions = {
+/** All the options for a Gadget client */
+export interface ClientOptions {
   /**
    *  The HTTP GraphQL endpoint this connection should connect to
    **/
   endpoint?: string;
+  /**
+   * The authentication strategy for connecting to the upstream API
+   **/
+  authenticationMode?: AuthenticationModeOptions;
   /**
    * The Websockets GraphQL endpoint this connection should connect to for transactional processing
    **/
@@ -40,24 +45,7 @@ type BaseClientOptions = {
    * A list of exchanges to merge into the default exchanges used by the client.
    */
   exchanges?: Exchanges;
-};
-
-/** All the options for a Gadget client */
-export type ClientOptions = BaseClientOptions &
-  (
-    | {
-        /**
-         * The authentication strategy for connecting to the upstream API.
-         *
-         * Note: you can only declare authentication modes at the top level, or under the `authenticationMode` key.
-         * If you declare them at the top level and under the `authenticationMode` key at the same time, an error will be thrown.
-         **/
-        authenticationMode?: AuthenticationModeOptions;
-      }
-    | ({
-        authenticationMode?: never;
-      } & AuthenticationModeOptions)
-  );
+}
 
 /** Options to configure a specific browser-based authentication mode */
 export interface BrowserSessionAuthenticationModeOptions {
@@ -95,46 +83,31 @@ export enum BrowserSessionStorageType {
   Temporary = "temporary",
 }
 
-/** Describes how to authenticate an instance of the client with the Gadget platform. */
+/** Describes how to authenticate an instance of the client with the Gadget platform */
 export interface AuthenticationModeOptions {
-  /**
-   * Use an API key to authenticate with Gadget.
-   * It's not strictly required, but without this the client might be useless depending on the app's permissions.
-   */
+  // Use an API key to authenticate with Gadget.
+  // Not strictly required, but without this the client might be useless depending on the app's permissions.
   apiKey?: string;
 
-  /**
-   * Use a web browser's `localStorage` or `sessionStorage` to persist authentication information.
-   * This allows the browser to have a persistent identity as the user navigates around and logs in and out.
-   */
+  // Use a web browser's `localStorage` or `sessionStorage` to persist authentication information.
+  // This allows the browser to have a persistent identity as the user navigates around and logs in and out.
   browserSession?: boolean | BrowserSessionAuthenticationModeOptions;
 
-  /**
-   * Use no authentication at all, and get access only to the data that the Unauthenticated backend role has access to.
-   */
+  // Use no authentication at all, and get access only to the data that the Unauthenticated backend role has access to.
   anonymous?: true;
 
-  /**
-   * @deprecated Use internal instead.
-   */
+  // @deprecated Use internal instead
   internalAuthToken?: string;
 
-  /**
-   * Use an internal platform auth token for authentication
-   * This is used to communicate within Gadget itself and shouldn't be used to connect to Gadget from other systems.
-   * @private
-   */
+  // @private Use an internal platform auth token for authentication
+  // This is used to communicate within Gadget itself and shouldn't be used to connect to Gadget from other systems
   internal?: {
     authToken: string;
     actAsSession?: boolean;
     getSessionId?: () => Promise<string | undefined>;
   };
 
-  /**
-   * Use a passed custom function for managing authentication.
-   * For some fancy integrations that the API client supports, like embedded Shopify apps, we use platform native features to authenticate with the Gadget backend.
-   * @private
-   */
+  // @private Use a passed custom function for managing authentication. For some fancy integrations that the API client supports, like embedded Shopify apps, we use platform native features to authenticate with the Gadget backend.
   custom?: {
     processFetch(input: RequestInfo | URL, init: RequestInit): Promise<void>;
     processTransactionConnectionParams(params: Record<string, any>): Promise<void>;
