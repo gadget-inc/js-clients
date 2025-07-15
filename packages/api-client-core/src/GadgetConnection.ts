@@ -185,7 +185,8 @@ export class GadgetConnection {
   enableSessionMode(options?: true | BrowserSessionAuthenticationModeOptions) {
     this.authenticationMode = AuthenticationMode.BrowserSession;
 
-    const desiredMode = !options || typeof options == "boolean" ? BrowserSessionStorageType.Durable : options.storageType;
+    const desiredMode =
+      !options || typeof options == "boolean" || !("storageType" in options) ? BrowserSessionStorageType.Durable : options.storageType;
     let sessionTokenStore;
     if (desiredMode == BrowserSessionStorageType.Durable && storageAvailable("localStorage")) {
       sessionTokenStore = window.localStorage;
@@ -551,6 +552,12 @@ export class GadgetConnection {
       const val = this.sessionTokenStore!.getItem(this.sessionStorageKey);
       if (val) {
         headers.authorization = `Session ${val}`;
+      }
+
+      const browserSessionOptions = this.options.authenticationMode!.browserSession!;
+      const shopId = typeof browserSessionOptions === "boolean" ? undefined : browserSessionOptions.shopId;
+      if (shopId) {
+        headers["x-gadget-for-shop-id"] = shopId;
       }
     }
 

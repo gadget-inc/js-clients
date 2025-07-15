@@ -58,7 +58,11 @@ export interface BrowserSessionAuthenticationModeOptions {
   /**
    * Configures how the authentication token is persisted. See `BrowserSessionStorageType`.
    */
-  storageType: BrowserSessionStorageType;
+  storageType?: BrowserSessionStorageType;
+  /**
+   * The shop ID to set shop tenant. Useful for fetching shop-specific data.
+   */
+  shopId?: string;
 }
 
 /**

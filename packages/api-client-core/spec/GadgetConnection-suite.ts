@@ -756,6 +756,47 @@ export const GadgetConnectionSharedSuite = (queryExtra = "") => {
       expect(customResult.error).toBeUndefined();
       expect(customResult.data).toEqual({ meta: { appName: "some app" } });
     });
+
+    it("should support browser session with shop tenant", async () => {
+      nock("https://someapp.gadget.app")
+        .post("/api/graphql?operation=meta", { query: `{\n  meta {\n    appName\n${queryExtra}  }\n}`, variables: {} })
+        .reply(200, function () {
+          expect(this.req.headers["x-gadget-for-shop-id"]).toEqual(["1234"]);
+
+          return {
+            data: {
+              meta: {
+                appName: "some app",
+              },
+            },
+          };
+        });
+
+      const connection = new GadgetConnection({
+        endpoint: "https://someapp.gadget.app/api/graphql",
+        authenticationMode: {
+          browserSession: {
+            shopId: "1234",
+          },
+        },
+      });
+
+      const result = await connection.currentClient
+        .query(
+          gql`
+            {
+              meta {
+                appName
+              }
+            }
+          `,
+          {}
+        )
+        .toPromise();
+
+      expect(result.error).toBeUndefined();
+      expect(result.data).toEqual({ meta: { appName: "some app" } });
+    });
   });
 
   describe("raw fetching", () => {
