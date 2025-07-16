@@ -1,5 +1,12 @@
 # @gadgetinc/react
 
+## 0.21.4
+
+### Patch Changes
+
+- Updated dependencies
+  - @gadgetinc/api-client-core@0.15.45
+
 ## 0.21.3
 
 ### Patch Changes

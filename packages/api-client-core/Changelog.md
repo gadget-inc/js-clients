@@ -1,5 +1,11 @@
 # `@gadgetinc/api-client-core` Changelog
 
+## 0.15.45
+
+### Patch Changes
+
+- New `shopId` parameter in browser session to allow setting the current Shopify shop tenant
+
 ## 0.15.44
 
 ### Patch Changes
