@@ -227,12 +227,15 @@ export class GadgetConnection {
     let transaction;
     try {
       // The server will error if it receives any operations before the auth dance has been completed, so we block on that happening before sending our first operation. It's important that this happens synchronously after instantiating the client so we don't miss any messages
+
+      const shouldRetry = (errorOrCloseEvent: unknown) => {
+        // any interruption of the transaction is fatal to the transaction
+        console.warn("Transport error encountered during transaction processing", errorOrCloseEvent);
+        return false;
+      };
+
       subscriptionClient = await this.waitForOpenedConnection({
-        isFatalConnectionProblem(errorOrCloseEvent) {
-          // any interruption of the transaction is fatal to the transaction
-          console.warn("Transport error encountered during transaction processing", errorOrCloseEvent);
-          return true;
-        },
+        shouldRetry,
         connectionAckWaitTimeout: DEFAULT_CONN_ACK_TIMEOUT,
         ...options,
         lazy: false,
@@ -496,7 +499,7 @@ export class GadgetConnection {
         // we catch this outside in the runner function
       },
       on: {
-        connected: (socket, payload) => {
+        connected: (socket, payload, wasRetry) => {
           // If we're using session token authorization, we don't use request headers to exchange the session token, we use graphql-ws' ConnectionAck payload to persist the token. When the subscription client first starts, the server will send us session token identifying this client, and we persist it to the session token store
           if (this.authenticationMode == AuthenticationMode.BrowserSession && payload?.sessionToken) {
             const browserSession = this.options.authenticationMode?.browserSession;
@@ -505,8 +508,8 @@ export class GadgetConnection {
               this.sessionTokenStore!.setItem(this.sessionStorageKey, payload.sessionToken as string);
             }
           }
-          this.subscriptionClientOptions?.on?.connected?.(socket, payload);
-          overrides?.on?.connected?.(socket, payload);
+          this.subscriptionClientOptions?.on?.connected?.(socket, payload, wasRetry);
+          overrides?.on?.connected?.(socket, payload, wasRetry);
           activeSocket = socket as globalThis.WebSocket;
         },
         ping: (received) => {

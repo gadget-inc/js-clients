@@ -144,8 +144,8 @@ importers:
         specifier: ^16.8.1
         version: 16.8.1
       graphql-ws:
-        specifier: ^5.13.1
-        version: 5.13.1(graphql@16.8.1)
+        specifier: ^6.0.6
+        version: 6.0.6(graphql@16.8.1)(ws@8.18.2)
       isomorphic-ws:
         specifier: ^5.0.0
         version: 5.0.0(ws@8.18.2)
@@ -438,8 +438,8 @@ importers:
         specifier: ^16.8.1
         version: 16.8.1
       graphql-ws:
-        specifier: ^5.13.1
-        version: 5.13.1(graphql@16.8.1)
+        specifier: ^6.0.6
+        version: 6.0.6(graphql@16.8.1)(ws@8.18.2)
       libnpmpack:
         specifier: ^7.0.4
         version: 7.0.4
@@ -10832,14 +10832,6 @@ packages:
       tslib: 2.6.2
     dev: true
 
-  /graphql-ws@5.13.1(graphql@16.8.1):
-    resolution: {integrity: sha512-eiX7ES/ZQr0q7hSM5UBOEIFfaAUmAY9/CSDyAnsETuybByU7l/v46drRg9DQoTvVABEHp3QnrvwgTRMhqy7zxQ==}
-    engines: {node: '>=10'}
-    peerDependencies:
-      graphql: '>=0.11 <=16'
-    dependencies:
-      graphql: 16.8.1
-
   /graphql-ws@5.16.0(graphql@16.8.1):
     resolution: {integrity: sha512-Ju2RCU2dQMgSKtArPbEtsK5gNLnsQyTNIo/T7cZNp96niC1x0KdJNZV0TIoilceBPQwfb5itrGl8pkFeOUMl4A==}
     engines: {node: '>=10'}
@@ -10848,6 +10840,28 @@ packages:
     dependencies:
       graphql: 16.8.1
     dev: true
+
+  /graphql-ws@6.0.6(graphql@16.8.1)(ws@8.18.2):
+    resolution: {integrity: sha512-zgfER9s+ftkGKUZgc0xbx8T7/HMO4AV5/YuYiFc+AtgcO5T0v8AxYYNQ+ltzuzDZgNkYJaFspm5MMYLjQzrkmw==}
+    engines: {node: '>=20'}
+    peerDependencies:
+      '@fastify/websocket': ^10 || ^11
+      crossws: ~0.3
+      graphql: ^15.10.1 || ^16
+      uWebSockets.js: ^20
+      ws: ^8
+    peerDependenciesMeta:
+      '@fastify/websocket':
+        optional: true
+      crossws:
+        optional: true
+      uWebSockets.js:
+        optional: true
+      ws:
+        optional: true
+    dependencies:
+      graphql: 16.8.1
+      ws: 8.18.2
 
   /graphql@16.8.1:
     resolution: {integrity: sha512-59LZHPdGZVh695Ud9lRzPBVTtlX9ZCV150Er2W43ro37wVof0ctenSaskPPjN7lVTIN8mSZt8PHUNKZuNQUuxw==}
