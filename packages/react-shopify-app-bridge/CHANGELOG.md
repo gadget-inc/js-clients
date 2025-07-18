@@ -1,5 +1,13 @@
 # @gadgetinc/react-shopify-app-bridge
 
+## 0.18.7
+
+### Patch Changes
+
+- Updated dependencies
+  - @gadgetinc/api-client-core@0.15.45
+  - @gadgetinc/react@0.21.4
+
 ## 0.18.6
 
 ### Patch Changes
