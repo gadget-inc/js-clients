@@ -119,7 +119,7 @@
     "date-fns-tz": "^2.0.0",
     "execa": "^5.1.1",
     "graphql": "^16.8.1",
-    "graphql-ws": "^5.13.1",
+    "graphql-ws": "^6.0.6",
     "libnpmpack": "^7.0.4",
     "lodash-es": "^4.17.21",
     "lucide-react": "^0.471.0",
