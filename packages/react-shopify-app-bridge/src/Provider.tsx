@@ -229,12 +229,14 @@ const StandaloneInnerProvider = ({
   query,
   gadgetAppUrl,
   type,
+  shopifyInstallState,
 }: {
   isRootFrameRequest: boolean;
   children: ReactNode;
   query?: URLSearchParams;
   gadgetAppUrl: string;
   type: AppType;
+  shopifyInstallState?: ShopifyInstallState;
 }) => {
   // we still need to run the oauth process if we're in an install context so we should redirect to gadget
   const isInstallRequest = query?.has("hmac") && query?.has("shop");
@@ -262,7 +264,7 @@ const StandaloneInnerProvider = ({
   return (
     <GadgetAuthContext.Provider
       value={{
-        isAuthenticated: false,
+        isAuthenticated: shopifyInstallState?.isAuthenticated ?? false,
         isEmbedded: false,
         canAuth: false,
         loading: false,
@@ -389,7 +391,13 @@ export const Provider = ({
           {children}
         </InnerGadgetProvider>
       ) : (
-        <StandaloneInnerProvider isRootFrameRequest={isRootFrameRequest} query={query} type={coalescedType} gadgetAppUrl={gadgetAppUrl}>
+        <StandaloneInnerProvider
+          isRootFrameRequest={isRootFrameRequest}
+          query={query}
+          type={coalescedType}
+          gadgetAppUrl={gadgetAppUrl}
+          shopifyInstallState={shopifyInstallState}
+        >
           {children}
         </StandaloneInnerProvider>
       )}
