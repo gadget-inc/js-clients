@@ -20,7 +20,7 @@ describe("SignedIn", () => {
 
     rerender(component);
 
-    expect(container.outerHTML).toMatchInlineSnapshot(`"<div><h1>Hello, Jane!</h1></div>"`);
+    expect(container.outerHTML).toMatchInlineSnapshot(`"<div><h1 style="">Hello, Jane!</h1></div>"`);
   });
 
   test("renders nothing when signed out", () => {
@@ -34,7 +34,7 @@ describe("SignedIn", () => {
 
     expectMockSignedOutUser();
     rerender(component);
-    expect(container.outerHTML).toMatchInlineSnapshot(`"<div><h1>Hello</h1></div>"`);
+    expect(container.outerHTML).toMatchInlineSnapshot(`"<div><h1 style="">Hello</h1></div>"`);
   });
 
   test("renders nothing when signed in but has no user on the session", () => {
@@ -48,6 +48,6 @@ describe("SignedIn", () => {
 
     expectMockDeletedUser();
     rerender(component);
-    expect(container.outerHTML).toMatchInlineSnapshot(`"<div><h1>Hello</h1></div>"`);
+    expect(container.outerHTML).toMatchInlineSnapshot(`"<div><h1 style="">Hello</h1></div>"`);
   });
 });

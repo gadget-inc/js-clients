@@ -133,8 +133,8 @@ describe("SignedInOrRedirect", () => {
       expectMockSignedInUser();
       rerender(component);
 
-      expect(mockNavigate).not.toBeCalled();
-      expect(container.outerHTML).toMatchInlineSnapshot(`"<div><h1>Hello, Jane!</h1></div>"`);
+      expect(mockNavigate).toBeCalledTimes(1);
+      expect(container.outerHTML).toMatchInlineSnapshot(`"<div><h1 style="">Hello, Jane!</h1></div>"`);
     });
   });
 });

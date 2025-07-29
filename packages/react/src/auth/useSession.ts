@@ -7,6 +7,7 @@ import type {
   LimitToKnownKeys,
   Select,
 } from "@gadgetinc/api-client-core";
+import { useEffect, useState } from "react";
 import { useApi } from "../GadgetProvider.js";
 import { useGet } from "../useGet.js";
 import type { OptionsType, ReadOperationOptions } from "../utils.js";
@@ -61,6 +62,11 @@ export function useSession<
   const fallbackApi = useApi();
   const api = client ?? (fallbackApi as ClientType);
 
+  const [hydrated, setHydrated] = useState(!fallbackApi);
+  useEffect(() => {
+    setHydrated(true);
+  }, []);
+
   if (api && "currentSession" in api && "session" in api) {
     const { select: selection, ...restOptions } = options ?? ({} as any);
     const { user: userSelect, ...sessionSelect } = selection ?? { user: undefined };
@@ -69,6 +75,7 @@ export function useSession<
 
     const opts: any = {
       suspense: true,
+      pause: !hydrated,
       select: {
         ...sessionSelection,
         ...(userSelection && { user: userSelection }),
@@ -79,7 +86,7 @@ export function useSession<
     const [{ data: session, error }] = useGet(api.currentSession, opts);
 
     if (error) throw error;
-    if (!session) throw new Error("currentSession not found but should be present");
+    if (!session && !opts?.pause && hydrated) throw new Error("currentSession not found but should be present");
     // eslint-disable-next-line @typescript-eslint/no-unnecessary-type-assertion
     return typeof client == "undefined" ? session : (session as any);
   } else {

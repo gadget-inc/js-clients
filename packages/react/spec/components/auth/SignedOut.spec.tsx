@@ -19,7 +19,7 @@ describe("SignedOut", () => {
     expectMockSignedOutUser();
 
     rerender(component);
-    expect(container.outerHTML).toMatchInlineSnapshot(`"<div><h1>Hello, Jane!</h1></div>"`);
+    expect(container.outerHTML).toMatchInlineSnapshot(`"<div><h1 style="">Hello, Jane!</h1></div>"`);
   });
 
   test("renders children when there exists no associated user for the session", () => {
@@ -34,7 +34,7 @@ describe("SignedOut", () => {
     expectMockDeletedUser();
 
     rerender(component);
-    expect(container.outerHTML).toMatchInlineSnapshot(`"<div><h1>Hello, Jane!</h1></div>"`);
+    expect(container.outerHTML).toMatchInlineSnapshot(`"<div><h1 style="">Hello, Jane!</h1></div>"`);
   });
 
   test("renders nothing when signed in", () => {
@@ -49,6 +49,6 @@ describe("SignedOut", () => {
     expectMockSignedInUser();
 
     rerender(component);
-    expect(container.outerHTML).toMatchInlineSnapshot(`"<div><h1>Hello</h1></div>"`);
+    expect(container.outerHTML).toMatchInlineSnapshot(`"<div><h1 style="">Hello</h1></div>"`);
   });
 });
