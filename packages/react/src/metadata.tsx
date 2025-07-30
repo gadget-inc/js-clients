@@ -351,7 +351,6 @@ const treeifyModelMetadata = <T extends { key: string; fields: FieldMetadata[]; 
 
 /**
  * Retrieve a given Gadget model's metadata from the backend
- * @internal
  */
 export const useModelMetadata = (
   apiIdentifier: string,
@@ -393,8 +392,7 @@ const getGlobalActionApiIdentifier = (api: AnyClient, fn: GlobalActionFunction<a
 };
 
 /**
- * Retrieve a given Gadget model action's metadata from the backend
- * @internal
+ * Retrieve a given Gadget action's metadata from the backend
  */
 export const useActionMetadata = (
   actionFunction: ActionFunction<any, any, any, any, any> | GlobalActionFunction<any>
