@@ -527,8 +527,8 @@ importers:
         specifier: workspace:*
         version: link:../react
       '@shopify/app-bridge-react':
-        specifier: ^4.0.0
-        version: 4.0.0(react-dom@18.2.0)(react@18.2.0)
+        specifier: ^4.2.1
+        version: 4.2.1(react-dom@18.2.0)(react@18.2.0)
       '@types/crypto-js':
         specifier: ^4.2.2
         version: 4.2.2
@@ -6108,19 +6108,19 @@ packages:
     dev: true
     optional: true
 
-  /@shopify/app-bridge-react@4.0.0(react-dom@18.2.0)(react@18.2.0):
-    resolution: {integrity: sha512-a300DQIyYmNl5jNFHXsAICMfafY6LizXnaG5ElaAumfoIt28owgM8daDm9BwBkHSroHArvJuZS96kpDzTVg1+Q==}
+  /@shopify/app-bridge-react@4.2.1(react-dom@18.2.0)(react@18.2.0):
+    resolution: {integrity: sha512-VhKT8ddKGM8h4kba7UdFnTFgd18yzwfRfCbid7V/HJIvMySRPhaJ6jAnZ7P/lDWuw2Ve+q+JmyL244WlCibtCw==}
     peerDependencies:
-      react: ^18.0.0
-      react-dom: ^18.0.0
+      react: '*'
+      react-dom: '*'
     dependencies:
-      '@shopify/app-bridge-types': 0.0.7
+      '@shopify/app-bridge-types': 0.2.0
       react: 18.2.0
       react-dom: 18.2.0(react@18.2.0)
     dev: true
 
-  /@shopify/app-bridge-types@0.0.7:
-    resolution: {integrity: sha512-x2A86xSjBPaB4rDufkY+pGH2UK8gR/rvjeXGwttIjir1l70ELHnZj+eGzHShmBitCbVoN3fkBrDnFLZdjWqyLg==}
+  /@shopify/app-bridge-types@0.2.0:
+    resolution: {integrity: sha512-A0UYruBcvIC6yY/iZ/bWnqeGptntna3DlnM4YUNohiuftSEUXOtCW2pj09Lxmh0kk3VGUkOnFh8w7V34IF/71Q==}
     dev: true
 
   /@shopify/polaris-icons@8.11.1(react@18.2.0):
