@@ -480,8 +480,8 @@ importers:
         specifier: ^1.0.7
         version: 1.0.7(tailwindcss@3.4.17)
       tmp:
-        specifier: ^0.2.3
-        version: 0.2.3
+        specifier: ^0.2.4
+        version: 0.2.4
       wonka:
         specifier: ^6.3.2
         version: 6.3.2
@@ -8980,7 +8980,7 @@ packages:
       request-progress: 3.0.0
       semver: 7.6.2
       supports-color: 8.1.1
-      tmp: 0.2.3
+      tmp: 0.2.4
       untildify: 4.0.0
       yauzl: 2.10.0
     dev: true
@@ -15803,8 +15803,8 @@ packages:
       os-tmpdir: 1.0.2
     dev: true
 
-  /tmp@0.2.3:
-    resolution: {integrity: sha512-nZD7m9iCPC5g0pYmcaxogYKggSfLsdxl8of3Q/oIbqCqLLIO9IAF0GWjX1z9NZRHPiXv8Wex4yDCaZsgEw0Y8w==}
+  /tmp@0.2.4:
+    resolution: {integrity: sha512-UdiSoX6ypifLmrfQ/XfiawN6hkjSBpCjhKxxZcWlUUmoXLaCKQU0bx4HF/tdDK2uzRuchf1txGvrWBzYREssoQ==}
     engines: {node: '>=14.14'}
     dev: true
 
