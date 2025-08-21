@@ -1,4 +1,3 @@
-import type { Reducer } from "react";
 import { useCallback, useEffect, useReducer, useRef } from "react";
 import { useConnection } from "./GadgetProvider.js";
 import { useStructuralMemo } from "./useStructuralMemo.js";
@@ -130,7 +129,7 @@ export function useFetch<T = string>(path: string, options?: FetchHookOptions): 
   const startRequestOnMount = startRequestByDefault(memoizedOptions);
   const controller = useRef<AbortController | null>(null);
 
-  const [state, dispatch] = useReducer<Reducer<FetchHookState<T>, FetchAction<T>>, FetchHookOptions>(
+  const [state, dispatch] = useReducer<FetchHookState<T>, FetchHookOptions, [FetchAction<T>]>(
     reducer,
     memoizedOptions,
     (memoizedOptions) => {

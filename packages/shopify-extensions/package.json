@@ -1,6 +1,6 @@
 {
   "name": "@gadgetinc/shopify-extensions",
-  "version": "0.5.2",
+  "version": "0.6.0",
   "files": [
     "README.md",
     "dist/**/*",
@@ -38,15 +38,15 @@
   "devDependencies": {
     "@gadgetinc/api-client-core": "workspace:*",
     "@gadgetinc/react": "workspace:*",
-    "@types/react": "^18.2.79",
-    "@types/react-dom": "^18.3.1",
+    "@types/react": "^19.1.1",
+    "@types/react-dom": "^19.1.1",
     "conditional-type-checks": "^1.0.6",
-    "react": "^18.2.0",
-    "react-dom": "^18.2.0"
+    "react": "^19.1.1",
+    "react-dom": "^19.1.1"
   },
   "peerDependencies": {
-    "react": "^18.0.0",
-    "react-dom": "^18.0.0",
-    "@gadgetinc/react": "^0.21.4"
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0",
+    "@gadgetinc/react": "^0.22.0"
   }
 }

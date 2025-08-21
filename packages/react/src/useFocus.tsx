@@ -4,10 +4,14 @@ import { useRef, useState } from "react";
 /** Used for tracking focus state on an element */
 export function useFocus<T extends HTMLElement = any>(
   outerRef?: React.RefObject<T>
-): [boolean, { onFocus: (event?: FocusEvent<T>) => void; onBlur: (event?: FocusEvent<T>) => void; ref: React.RefObject<T> }, boolean] {
+): [
+  boolean,
+  { onFocus: (event?: FocusEvent<T>) => void; onBlur: (event?: FocusEvent<T>) => void; ref: React.RefObject<T | null> },
+  boolean
+] {
   const [hasFocus, setFocus] = useState(false);
   const [hasFocusWithin, setFocusWithin] = useState(false);
-  const innerRef = useRef<T>(null);
+  const innerRef = useRef<T | null>(null);
   const ref = outerRef ?? innerRef;
 
   const onFocus = (e?: FocusEvent) => {

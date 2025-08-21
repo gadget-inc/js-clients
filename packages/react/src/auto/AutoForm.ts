@@ -647,10 +647,11 @@ const extractPathsFromChildren = (props: {
 
   React.Children.forEach(children, (child) => {
     if (React.isValidElement(child)) {
-      const grandChildren = child.props.children as React.ReactNode | undefined;
+      const childProps = (child as React.ReactElement<{ field?: string; children?: React.ReactNode }>).props;
+      const grandChildren = childProps.children;
       let childPaths: string[] = [];
 
-      const newCurrentPath = currentPath && child.props.field ? currentPath + "." + child.props.field : child.props.field;
+      const newCurrentPath = currentPath && childProps.field ? currentPath + "." + childProps.field : childProps.field;
 
       if (grandChildren) {
         childPaths = extractPathsFromChildren({
@@ -669,9 +670,9 @@ const extractPathsFromChildren = (props: {
         paths.add(field);
 
         if (props.recordLabel) {
-          aggregatePathsFromRecordLabel(props.recordLabel, () => getFieldsToSelectOnRecordLabelCallback?.(newCurrentPath) ?? []).forEach(
-            (path) => paths.add(`${field}.${path}`)
-          );
+          aggregatePathsFromRecordLabel(props.recordLabel, () =>
+            newCurrentPath ? getFieldsToSelectOnRecordLabelCallback?.(newCurrentPath) ?? [] : []
+          ).forEach((path) => paths.add(`${field}.${path}`));
         }
       }
 

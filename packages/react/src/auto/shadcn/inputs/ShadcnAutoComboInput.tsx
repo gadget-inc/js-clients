@@ -47,7 +47,7 @@ export const makeShadcnAutoComboInput = ({
 
   function ShadcnAutoComboInput(props: ShadcnComboInputProps) {
     const inputRef = useRef<HTMLInputElement>(null);
-    const outsideBoxRef = useRef<HTMLDivElement>(null);
+    const outsideBoxRef = useRef<HTMLDivElement | null>(null);
     const [open, setOpen] = useState(false);
     const [inputValue, setInputValue] = useState(props.defaultValue || "");
     const id = props.id || `${props.path}-input`;
