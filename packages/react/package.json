@@ -1,6 +1,6 @@
 {
   "name": "@gadgetinc/react",
-  "version": "0.21.4",
+  "version": "0.22.0",
   "files": [
     "README.md",
     "dist/**/*",
@@ -102,8 +102,8 @@
     "@types/lodash-es": "^4.17.1",
     "@types/node": "^18.0.0",
     "@types/pluralize": "^0.0.31",
-    "@types/react": "^18.2.9",
-    "@types/react-dom": "^18.3.1",
+    "@types/react": "^19.1.1",
+    "@types/react-dom": "^19.1.1",
     "@types/setup-polly-jest": "^0.5.5",
     "@types/tmp": "^0.2.6",
     "@urql/core": "^4.0.10",
@@ -124,9 +124,9 @@
     "lodash-es": "^4.17.21",
     "lucide-react": "^0.471.0",
     "postcss": "^8.4.49",
-    "react": "^18.2.0",
+    "react": "^19.1.1",
     "react-day-picker": "^9.5.1",
-    "react-dom": "^18.2.0",
+    "react-dom": "^19.1.1",
     "setup-polly-jest": "^0.11.0",
     "sonner": "^2.0.1",
     "storybook": "^8.1.6",
@@ -140,9 +140,9 @@
     "@mdxeditor/editor": "^3.8.0",
     "@shopify/polaris": "^12.0.0 || ^13.0.0",
     "@shopify/polaris-icons": "^8.1.0 || ^9.0.0",
-    "react": "^18.0.0",
+    "react": "^19.0.0",
     "lucide-react": "^0.471.0",
-    "react-dom": "^18.0.0"
+    "react-dom": "^19.0.0"
   },
   "peerDependenciesMeta": {
     "@mdxeditor/editor": {
