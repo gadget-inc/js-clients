@@ -1,4 +1,4 @@
-import { renderHook } from "@testing-library/react";
+import { act, renderHook } from "@testing-library/react";
 import { fullAuthApi, noUserModelApi } from "../../spec/apis.js";
 import { expectMockSignedInUser, expectMockSignedOutUser, mockInternalServerError, mockNetworkError } from "../../spec/utils.js";
 import { useUser } from "../../src/auth/useUser.js";
@@ -21,8 +21,9 @@ describe("useUser", () => {
   test("it returns the current user when the user is logged in with no options passed", async () => {
     const { result, rerender } = renderHook(() => useUser(), { wrapper: MockClientWrapper(fullAuthApi, client) });
 
-    expectMockSignedInUser(client);
-
+    await act(async () => {
+      await expectMockSignedInUser(client);
+    });
     rerender();
 
     expect(query).toMatchInlineSnapshot(`
@@ -69,7 +70,9 @@ describe("useUser", () => {
   test("it returns the current user when the user is logged in with an api client passed", async () => {
     const { result, rerender } = renderHook(() => useUser(fullAuthApi), { wrapper: MockClientWrapper(fullAuthApi, client) });
 
-    expectMockSignedInUser(client);
+    await act(async () => {
+      await expectMockSignedInUser(client);
+    });
 
     rerender();
 
@@ -119,7 +122,9 @@ describe("useUser", () => {
       wrapper: MockClientWrapper(fullAuthApi, client),
     });
 
-    expectMockSignedInUser(client);
+    await act(async () => {
+      await expectMockSignedInUser(client);
+    });
 
     rerender();
 
@@ -154,42 +159,50 @@ describe("useUser", () => {
   test("it returns null when the user is logged out", async () => {
     const { result, rerender } = renderHook(() => useUser(), { wrapper: MockClientWrapper(fullAuthApi) });
 
-    expectMockSignedOutUser();
+    await act(async () => {
+      await expectMockSignedOutUser();
+    });
 
     rerender();
     expect(result.current).toBe(null);
   });
 
   test("it throws when the server responds with an error", async () => {
-    expect(() => {
+    await expect(async () => {
       const { rerender } = renderHook(() => useUser(), { wrapper: MockClientWrapper(fullAuthApi) });
 
-      mockInternalServerError();
+      await act(async () => {
+        await mockInternalServerError();
+      });
 
       rerender();
-    }).toThrowErrorMatchingInlineSnapshot(`
+    }).rejects.toThrowErrorMatchingInlineSnapshot(`
       "[GraphQL] GGT_INTERNAL_SERVER_ERROR
       [GraphQL] An error occurred"
     `);
   });
 
   test("it throws when request fails to complete", async () => {
-    expect(() => {
+    await expect(async () => {
       const { rerender } = renderHook(() => useUser(), { wrapper: MockClientWrapper(fullAuthApi) });
 
-      mockNetworkError();
+      await act(async () => {
+        await mockNetworkError();
+      });
 
       rerender();
-    }).toThrowErrorMatchingInlineSnapshot(`"[Network] Network error"`);
+    }).rejects.toThrowErrorMatchingInlineSnapshot(`"[Network] Network error"`);
   });
 
   test("it throws when the api client does not have a User model", async () => {
-    expect(() => {
+    await expect(async () => {
       const { rerender } = renderHook(() => useUser(), { wrapper: MockClientWrapper(noUserModelApi) });
 
-      mockNetworkError();
+      await act(async () => {
+        await mockNetworkError();
+      });
 
       rerender();
-    }).toThrowErrorMatchingInlineSnapshot(`"api client does not have a User model"`);
+    }).rejects.toThrowErrorMatchingInlineSnapshot(`"api client does not have a User model"`);
   });
 });

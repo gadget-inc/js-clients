@@ -2,6 +2,7 @@ import type { GadgetRecord } from "@gadgetinc/api-client-core";
 import { renderHook } from "@testing-library/react";
 import type { Has, IsExact } from "conditional-type-checks";
 import { assert } from "conditional-type-checks";
+import { act } from "react";
 import { useGet } from "../src/useGet.js";
 import type { ErrorWrapper } from "../src/utils.js";
 import { relatedProductsApi } from "./apis.js";
@@ -112,16 +113,18 @@ describe("useGet", () => {
 
     // first render never completes as the component suspends
     expect(result.current).toBeFalsy();
-    expect(mockUrqlClient.executeQuery).toBeCalledTimes(1);
 
-    mockUrqlClient.executeQuery.pushResponse("currentSession", {
-      data: {
-        currentSession: {
-          id: "123",
+    await act(async () => {
+      await mockUrqlClient.executeQuery.waitForSubject("currentSession");
+      mockUrqlClient.executeQuery.pushResponse("currentSession", {
+        data: {
+          currentSession: {
+            id: "123",
+          },
         },
-      },
-      stale: false,
-      hasNext: false,
+        stale: false,
+        hasNext: false,
+      });
     });
 
     // rerender as react would do when the suspense promise resolves

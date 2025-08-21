@@ -1,4 +1,3 @@
-import type { Reducer } from "react";
 import { useCallback, useEffect, useReducer, useRef } from "react";
 import { useConnection } from "./GadgetProvider.js";
 import { useStructuralMemo } from "./useStructuralMemo.js";
@@ -58,12 +57,13 @@ const startRequestByDefault = (options?: FetchHookOptions) => {
 };
 
 const dispatchError = (
-  mounted: React.MutableRefObject<boolean>,
+  mounted: React.RefObject<boolean>,
   dispatch: React.Dispatch<FetchAction<any>>,
+  abortController: AbortController,
   error: any,
   response?: Response
 ) => {
-  if (!mounted.current) return null;
+  if (!mounted.current || abortController.signal.aborted) return null;
 
   const wrapped = ErrorWrapper.forClientSideError(error, response);
   dispatch({ type: "error", payload: wrapped });
@@ -130,7 +130,7 @@ export function useFetch<T = string>(path: string, options?: FetchHookOptions): 
   const startRequestOnMount = startRequestByDefault(memoizedOptions);
   const controller = useRef<AbortController | null>(null);
 
-  const [state, dispatch] = useReducer<Reducer<FetchHookState<T>, FetchAction<T>>, FetchHookOptions>(
+  const [state, dispatch] = useReducer<FetchHookState<T>, FetchHookOptions, [FetchAction<T>]>(
     reducer,
     memoizedOptions,
     (memoizedOptions) => {
@@ -140,7 +140,10 @@ export function useFetch<T = string>(path: string, options?: FetchHookOptions): 
 
   const send = useCallback(
     async (sendOptions?: Partial<FetchHookOptions>): Promise<T> => {
-      controller.current?.abort("useFetch is starting a new request, aborting the previous one");
+      if (controller.current && !controller.current.signal.aborted) {
+        controller.current.abort("useFetch is starting a new request, aborting the previous one");
+      }
+
       const abortContoller = new AbortController();
       controller.current = abortContoller;
 
@@ -182,9 +185,7 @@ export function useFetch<T = string>(path: string, options?: FetchHookOptions): 
           const decodedStreamReader = updateStream.getReader();
 
           decodedStreamReader.closed.catch((error) => {
-            if (!abortContoller.signal.aborted) {
-              dispatchError(mounted, dispatch, error, response);
-            }
+            dispatchError(mounted, dispatch, abortContoller, error, response);
           });
 
           dispatch({ type: "fetched", payload: "" as any });
@@ -211,9 +212,7 @@ export function useFetch<T = string>(path: string, options?: FetchHookOptions): 
             mergedOptions.onStreamComplete?.(responseText);
           })()
             .catch((error) => {
-              if (!abortContoller.signal.aborted) {
-                dispatchError(mounted, dispatch, error, response);
-              }
+              dispatchError(mounted, dispatch, abortContoller, error, response);
             })
             .finally(() => {
               dispatch({ type: "streamed" });
@@ -228,7 +227,7 @@ export function useFetch<T = string>(path: string, options?: FetchHookOptions): 
 
         dispatch({ type: "fetched", payload: data });
       } catch (error: any) {
-        const wrapped = dispatchError(mounted, dispatch, error, response);
+        const wrapped = dispatchError(mounted, dispatch, abortContoller, error, response);
         if (!wrapped) return null as any;
         throw wrapped;
       }

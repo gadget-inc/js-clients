@@ -1,5 +1,5 @@
 import type { GadgetRecord } from "@gadgetinc/api-client-core";
-import { renderHook, waitFor } from "@testing-library/react";
+import { act, renderHook, waitFor } from "@testing-library/react";
 import type { IsExact } from "conditional-type-checks";
 import { assert } from "conditional-type-checks";
 import { useFindOne } from "../src/index.js";
@@ -261,17 +261,19 @@ describe("useFindOne", () => {
 
     // first render never completes as the component suspends
     expect(result.current).toBeFalsy();
-    expect(mockUrqlClient.executeQuery).toBeCalledTimes(1);
 
-    mockUrqlClient.executeQuery.pushResponse("user", {
-      data: {
-        user: {
-          id: "123",
-          email: "test@test.com",
+    await act(async () => {
+      await mockUrqlClient.executeQuery.waitForSubject("user");
+      mockUrqlClient.executeQuery.pushResponse("user", {
+        data: {
+          user: {
+            id: "123",
+            email: "test@test.com",
+          },
         },
-      },
-      stale: false,
-      hasNext: false,
+        stale: false,
+        hasNext: false,
+      });
     });
 
     // rerender as react would do when the suspense promise resolves

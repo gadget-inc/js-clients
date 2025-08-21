@@ -1,4 +1,4 @@
-import { renderHook } from "@testing-library/react";
+import { act, renderHook } from "@testing-library/react";
 import { fullAuthApi, noUserModelApi } from "../../spec/apis.js";
 import { expectMockSignedInUser, expectMockSignedOutUser, mockInternalServerError, mockNetworkError } from "../../spec/utils.js";
 import { useSession } from "../../src/auth/useSession.js";
@@ -23,7 +23,9 @@ describe("useSession", () => {
       wrapper: MockClientWrapper(fullAuthApi, client),
     });
 
-    expectMockSignedInUser(client);
+    await act(async () => {
+      await expectMockSignedInUser(client);
+    });
     rerender();
 
     expect(query).toMatchInlineSnapshot(`
@@ -71,7 +73,9 @@ describe("useSession", () => {
   test("it returns the current session when the user is logged in and api client is passed", async () => {
     const { result, rerender } = renderHook(() => useSession(fullAuthApi), { wrapper: MockClientWrapper(fullAuthApi, client) });
 
-    expectMockSignedInUser(client);
+    await act(async () => {
+      await expectMockSignedInUser(client);
+    });
     rerender();
 
     expect(query).toMatchInlineSnapshot(`
@@ -121,7 +125,9 @@ describe("useSession", () => {
       wrapper: MockClientWrapper(fullAuthApi, client),
     });
 
-    expectMockSignedInUser(client);
+    await act(async () => {
+      await expectMockSignedInUser(client);
+    });
     rerender();
 
     expect(query).toMatchInlineSnapshot(`
@@ -155,7 +161,9 @@ describe("useSession", () => {
   test("it returns the current session when the user is logged out", async () => {
     const { result, rerender } = renderHook(() => useSession(), { wrapper: MockClientWrapper(fullAuthApi) });
 
-    expectMockSignedOutUser();
+    await act(async () => {
+      await expectMockSignedOutUser();
+    });
     rerender();
 
     expect(result.current).toBeDefined();
@@ -166,7 +174,9 @@ describe("useSession", () => {
   test("it returns the current session when the user is logged out and no options are passed", async () => {
     const { result, rerender } = renderHook(() => useSession(), { wrapper: MockClientWrapper(fullAuthApi) });
 
-    expectMockSignedOutUser();
+    await act(async () => {
+      await expectMockSignedOutUser();
+    });
     rerender();
 
     expect(result.current).toBeDefined();
@@ -177,7 +187,9 @@ describe("useSession", () => {
   test("it returns the current session when the user is logged out and an api client with options is passed", async () => {
     const { result, rerender } = renderHook(() => useSession(), { wrapper: MockClientWrapper(fullAuthApi) });
 
-    expectMockSignedOutUser();
+    await act(async () => {
+      await expectMockSignedOutUser();
+    });
     rerender();
 
     expect(result.current).toBeDefined();
@@ -186,32 +198,38 @@ describe("useSession", () => {
   });
 
   test("it throws when the server responds with an error", async () => {
-    expect(() => {
+    await expect(async () => {
       const { rerender } = renderHook(() => useSession(), { wrapper: MockClientWrapper(fullAuthApi) });
 
-      mockInternalServerError();
+      await act(async () => {
+        await mockInternalServerError();
+      });
 
       rerender();
-    }).toThrowErrorMatchingInlineSnapshot(`
+    }).rejects.toThrowErrorMatchingInlineSnapshot(`
       "[GraphQL] GGT_INTERNAL_SERVER_ERROR
       [GraphQL] An error occurred"
     `);
   });
 
   test("it throws when request fails to complete", async () => {
-    expect(() => {
+    await expect(async () => {
       const { rerender } = renderHook(() => useSession(), { wrapper: MockClientWrapper(fullAuthApi) });
 
-      mockNetworkError();
+      await act(async () => {
+        await mockNetworkError();
+      });
 
       rerender();
-    }).toThrowErrorMatchingInlineSnapshot(`"[Network] Network error"`);
+    }).rejects.toThrowErrorMatchingInlineSnapshot(`"[Network] Network error"`);
   });
 
-  test("it returns the current session when the client does not have a user model", () => {
+  test("it returns the current session when the client does not have a user model", async () => {
     const { result, rerender } = renderHook(() => useSession(), { wrapper: MockClientWrapper(noUserModelApi) });
 
-    expectMockSignedOutUser();
+    await act(async () => {
+      await expectMockSignedOutUser();
+    });
     rerender();
 
     expect(result.current.id).toEqual("123");

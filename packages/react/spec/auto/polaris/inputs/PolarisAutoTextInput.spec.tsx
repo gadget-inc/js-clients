@@ -122,7 +122,13 @@ describe("PolarisAutoTextInput", () => {
 
     test("it renders input values with data from the API response", async () => {
       result = render(<PolarisAutoForm action={api.widget.update} findBy="42" />, { wrapper: WrapperWithLoadedData });
-      mockFindBy();
+      await act(async () => {
+        await mockMeta();
+      });
+
+      await act(async () => {
+        await mockFindBy();
+      });
 
       expect(result.queryByDisplayValue("name_RecordValue")).toBeInTheDocument();
       expect(result.queryByDisplayValue(999)).toBeInTheDocument();
@@ -333,7 +339,8 @@ const metadata = {
   __typename: "GadgetModel",
 };
 
-const mockFindBy = () => {
+const mockMeta = async () => {
+  await mockUrqlClient.executeQuery.waitForSubject("ModelActionMetadata");
   const updateMetadata = { ...metadata, action: { ...metadata.action, apiIdentifier: "update", operatesWithRecordIdentity: true } };
   mockUrqlClient.executeQuery.pushResponse("ModelActionMetadata", {
     stale: false,
@@ -353,6 +360,10 @@ const mockFindBy = () => {
       },
     },
   });
+};
+
+const mockFindBy = async () => {
+  await mockUrqlClient.executeQuery.waitForSubject("widget");
 
   mockUrqlClient.executeQuery.pushResponse("widget", {
     stale: false,

@@ -2,11 +2,11 @@ import { GadgetRecord } from "@gadgetinc/api-client-core";
 import { AppProvider } from "@shopify/polaris";
 import translations from "@shopify/polaris/locales/en.json";
 import type { RenderResult } from "@testing-library/react";
-import { act, render, screen } from "@testing-library/react";
+import { render, screen } from "@testing-library/react";
 import type { UserEvent } from "@testing-library/user-event";
 import { userEvent } from "@testing-library/user-event";
 import type { ReactNode } from "react";
-import React from "react";
+import React, { act } from "react";
 import { MissingApiTriggerErrorMessage } from "../../../src/auto/AutoFormActionValidators.js";
 import { PolarisAutoForm } from "../../../src/auto/polaris/PolarisAutoForm.js";
 import { PolarisAutoInput } from "../../../src/auto/polaris/inputs/PolarisAutoInput.js";
@@ -30,75 +30,75 @@ describe("PolarisAutoForm", () => {
     describe("for widget create", () => {
       test("it renders the name input", async () => {
         render(<PolarisAutoForm action={api.widget.create} exclude={["section", "gizmos"]} />, { wrapper: PolarisMockedProviders });
-        loadMockWidgetCreateMetadata();
+        await loadMockWidgetCreateMetadata();
         expect(await screen.findByLabelText("Name")).toBeInTheDocument();
       });
 
       test("it throws an error if a create action is mixed with a findBy prop", async () => {
-        expect(() => {
+        await expect(async () => {
           // @ts-expect-error: mixing a create and a findBy should throw a type error too
           render(<PolarisAutoForm action={api.widget.create} findBy="1234" />, { wrapper: PolarisMockedProviders });
-          loadMockWidgetCreateMetadata();
-        }).toThrow("The 'findBy' prop is only allowed for actions that operate with a record identity.");
+          await loadMockWidgetCreateMetadata();
+        }).rejects.toThrow("The 'findBy' prop is only allowed for actions that operate with a record identity.");
       });
       test("it throws an error if a create action is mixed with a record", async () => {
-        expect(() => {
+        await expect(async () => {
           // @ts-expect-error: mixing a create and a record should throw a type error too
           render(<PolarisAutoForm action={api.widget.create} record={new GadgetRecord({ id: "1234" })} />, {
             wrapper: PolarisMockedProviders,
           });
-          loadMockWidgetCreateMetadata();
-        }).toThrow("Passing a record to an action that does not operate with a record identity is invalid.");
+          await loadMockWidgetCreateMetadata();
+        }).rejects.toThrow("Passing a record to an action that does not operate with a record identity is invalid.");
       });
 
       describe("for actions that require IDs", () => {
         test("it throws an error for update actions missing the findBy prop", async () => {
-          expect(() => {
+          await expect(async () => {
             // @ts-expect-error: missing required findBy prop
             render(<PolarisAutoForm action={api.widget.update} />, { wrapper: PolarisMockedProviders });
-            loadMockWidgetUpdateMetadata();
-          }).toThrow("The 'findBy' prop is required for actions that operate with a record identity.");
+            await loadMockWidgetUpdateMetadata();
+          }).rejects.toThrow("The 'findBy' prop is required for actions that operate with a record identity.");
         });
         test("it throws an error for update actions acting on a record without an id", async () => {
-          expect(() => {
+          await expect(async () => {
             // @ts-expect-error: missing required id
             render(<PolarisAutoForm action={api.widget.update} record={new GadgetRecord({})} />, { wrapper: PolarisMockedProviders });
-            loadMockWidgetUpdateMetadata();
-          }).toThrow("Passing a record to an action that operates with a record identity requires the record to have an id.");
+            await loadMockWidgetUpdateMetadata();
+          }).rejects.toThrow("Passing a record to an action that operates with a record identity requires the record to have an id.");
         });
         test("it throws an error for update actions mixed with a record and a findBy prop", async () => {
-          expect(() => {
+          await expect(async () => {
             // @ts-expect-error: mixing a record and a findBy prop
             render(<PolarisAutoForm action={api.widget.update} record={new GadgetRecord({ id: "123" })} findBy="123" />, {
               wrapper: PolarisMockedProviders,
             });
-            loadMockWidgetUpdateMetadata();
-          }).toThrow("Passing both a 'findBy' and a 'record' prop to an AutoForm is invalid.");
+            await loadMockWidgetUpdateMetadata();
+          }).rejects.toThrow("Passing both a 'findBy' and a 'record' prop to an AutoForm is invalid.");
         });
         test("it throws an error for delete actions missing the findBy prop", async () => {
-          expect(() => {
+          await expect(async () => {
             // @ts-expect-error: missing required findBy prop
             render(<PolarisAutoForm action={api.widget.delete} />, { wrapper: PolarisMockedProviders });
-            loadMockWidgetDeleteMetadata();
-          }).toThrow("The 'findBy' prop is required for actions that operate with a record identity.");
+            await loadMockWidgetDeleteMetadata();
+          }).rejects.toThrow("The 'findBy' prop is required for actions that operate with a record identity.");
         });
         test("it throws an error for delete actions acting on a record without an id", async () => {
-          expect(() => {
+          await expect(async () => {
             // @ts-expect-error: missing required id
             render(<PolarisAutoForm action={api.widget.delete} record={new GadgetRecord({})} />, { wrapper: PolarisMockedProviders });
-            loadMockWidgetDeleteMetadata();
-          }).toThrow("Passing a record to an action that operates with a record identity requires the record to have an id.");
+            await loadMockWidgetDeleteMetadata();
+          }).rejects.toThrow("Passing a record to an action that operates with a record identity requires the record to have an id.");
         });
       });
     });
 
     test("it throws an error if you use include and exclude at the same time", async () => {
-      expect(() => {
+      await expect(async () => {
         render(<PolarisAutoForm action={api.widget.create} exclude={["inventoryCount"]} include={["name"]} />, {
           wrapper: PolarisMockedProviders,
         });
-        loadMockWidgetCreateMetadata();
-      }).toThrow("Cannot use both 'include' and 'exclude' options at the same time");
+        await loadMockWidgetCreateMetadata();
+      }).rejects.toThrow("Cannot use both 'include' and 'exclude' options at the same time");
     });
 
     test("it includes the record ID when submitting a form that updates a record", async () => {
@@ -109,24 +109,22 @@ describe("PolarisAutoForm", () => {
       });
       const { getByLabelText, queryAllByText } = result;
 
-      loadMockWidgetUpdateMetadataWithFindBy();
+      await loadMockWidgetUpdateMetadataWithFindBy();
 
       const submitButton = queryAllByText("Submit")[0];
       expect(submitButton).toHaveTextContent("Submit");
 
-      await act(async () => {
-        const nameElement = getByLabelText("Name");
-        await user.clear(nameElement);
-        await user.click(nameElement);
-        await user.keyboard("updated test record");
+      const nameElement = getByLabelText("Name");
+      await user.clear(nameElement);
+      await user.click(nameElement);
+      await user.keyboard("updated test record");
 
-        const inventoryCountElement = getByLabelText("Inventory count");
-        await user.clear(inventoryCountElement);
-        await user.click(inventoryCountElement);
-        await user.keyboard("1234");
+      const inventoryCountElement = getByLabelText("Inventory count");
+      await user.clear(inventoryCountElement);
+      await user.click(inventoryCountElement);
+      await user.keyboard("1234");
 
-        await user.click(submitButton);
-      });
+      await user.click(submitButton);
 
       const mutation = mockUrqlClient.executeMutation.mock.calls[0][0];
       const mutationName = mutation.query.definitions[0].name.value;
@@ -160,9 +158,7 @@ describe("PolarisAutoForm", () => {
 
     const { getByLabelText, queryAllByText } = result;
 
-    await act(async () => {
-      loadMockWidgetUpdateMetadata();
-    });
+    await loadMockWidgetUpdateMetadata();
 
     expect(mockUrqlClient.executeQuery.mock.calls.find((call) => call[0].query.loc.source.body.includes("query widget"))).toBeUndefined();
 
@@ -172,19 +168,17 @@ describe("PolarisAutoForm", () => {
     const submitButton = queryAllByText("Submit")[0];
     expect(submitButton).toHaveTextContent("Submit");
 
-    await act(async () => {
-      const nameElement = getByLabelText("Name");
-      await user.clear(nameElement);
-      await user.click(nameElement);
-      await user.keyboard("updated test record");
+    const nameElement = getByLabelText("Name");
+    await user.clear(nameElement);
+    await user.click(nameElement);
+    await user.keyboard("updated test record");
 
-      const inventoryCountElement = getByLabelText("Inventory count");
-      await user.clear(inventoryCountElement);
-      await user.click(inventoryCountElement);
-      await user.keyboard("1234");
+    const inventoryCountElement = getByLabelText("Inventory count");
+    await user.clear(inventoryCountElement);
+    await user.click(inventoryCountElement);
+    await user.keyboard("1234");
 
-      await user.click(submitButton);
-    });
+    await user.click(submitButton);
 
     const mutation = mockUrqlClient.executeMutation.mock.calls[0][0];
     const mutationName = mutation.query.definitions[0].name.value;
@@ -224,9 +218,7 @@ describe("PolarisAutoForm", () => {
 
     const { getByLabelText, queryAllByText } = result;
 
-    await act(async () => {
-      loadMockWidgetUpdateMetadata();
-    });
+    await loadMockWidgetUpdateMetadata();
 
     expect(mockUrqlClient.executeQuery.mock.calls.find((call) => call[0].query.loc.source.body.includes("query widget"))).toBeUndefined();
 
@@ -236,19 +228,17 @@ describe("PolarisAutoForm", () => {
     const submitButton = queryAllByText("Submit")[0];
     expect(submitButton).toHaveTextContent("Submit");
 
-    await act(async () => {
-      const nameElement = getByLabelText("Name");
-      await user.clear(nameElement);
-      await user.click(nameElement);
-      await user.keyboard("updated test record");
+    const nameElement = getByLabelText("Name");
+    await user.clear(nameElement);
+    await user.click(nameElement);
+    await user.keyboard("updated test record");
 
-      const inventoryCountElement = getByLabelText("Inventory count");
-      await user.clear(inventoryCountElement);
-      await user.click(inventoryCountElement);
-      await user.keyboard("1234");
+    const inventoryCountElement = getByLabelText("Inventory count");
+    await user.clear(inventoryCountElement);
+    await user.click(inventoryCountElement);
+    await user.keyboard("1234");
 
-      await user.click(submitButton);
-    });
+    await user.click(submitButton);
 
     const mutation = mockUrqlClient.executeMutation.mock.calls[0][0];
     const mutationName = mutation.query.definitions[0].name.value;
@@ -269,7 +259,7 @@ describe("PolarisAutoForm", () => {
           </PolarisAutoForm>,
           { wrapper: PolarisMockedProviders }
         );
-        loadMockWidgetCreateMetadata();
+        await loadMockWidgetCreateMetadata();
         expect(getByLabelText("Name")).toBeInTheDocument();
       });
     });
@@ -287,22 +277,20 @@ describe("PolarisAutoForm", () => {
           { wrapper: PolarisMockedProviders }
         );
 
-        loadMockWidgetCreateMetadata();
+        await loadMockWidgetCreateMetadata();
 
         const submitButton = await findByText("Submit", { selector: ':not([aria-hidden="true"])' });
         expect(submitButton).toBeTruthy();
 
-        await act(async () => {
-          const nameElement = getByLabelText("Name");
-          await user.click(nameElement);
-          await user.keyboard("test record");
+        const nameElement = getByLabelText("Name");
+        await user.click(nameElement);
+        await user.keyboard("test record");
 
-          const inventoryCountElement = getByLabelText("Inventory count");
-          await user.click(inventoryCountElement);
-          await user.keyboard("22");
+        const inventoryCountElement = getByLabelText("Inventory count");
+        await user.click(inventoryCountElement);
+        await user.keyboard("22");
 
-          await user.click(await findByText("Submit", { selector: ':not([aria-hidden="true"])' }));
-        });
+        await user.click(await findByText("Submit", { selector: ':not([aria-hidden="true"])' }));
 
         const mutation = mockUrqlClient.executeMutation.mock.calls[0][0];
         const mutationName = mutation.query.definitions[0].name.value;
@@ -313,7 +301,7 @@ describe("PolarisAutoForm", () => {
         expect(variables.name).toEqual("test record");
       });
 
-      test("you can pass a custom label", () => {
+      test("you can pass a custom label", async () => {
         const { getByText } = render(
           <PolarisAutoForm action={api.widget.create}>
             <PolarisAutoInput field="name" />
@@ -322,7 +310,7 @@ describe("PolarisAutoForm", () => {
           { wrapper: PolarisMockedProviders }
         );
 
-        loadMockWidgetCreateMetadata();
+        await loadMockWidgetCreateMetadata();
 
         expect(getByText("Save")).toBeTruthy();
       });
@@ -337,16 +325,14 @@ describe("PolarisAutoForm", () => {
         wrapper: PolarisMockedProviders,
       });
 
-      loadMockGizmoCreateMetadata();
+      await loadMockGizmoCreateMetadata();
 
-      await act(async () => {
-        const nameElement = getByLabelText("Name");
-        await user.clear(nameElement);
-        await user.click(nameElement);
-        await user.keyboard("updated test record");
+      const nameElement = getByLabelText("Name");
+      await user.clear(nameElement);
+      await user.click(nameElement);
+      await user.keyboard("updated test record");
 
-        await user.click(getByText("Submit", { selector: ':not([aria-hidden="true"])' }));
-      });
+      await user.click(getByText("Submit", { selector: ':not([aria-hidden="true"])' }));
 
       const mutation = mockUrqlClient.executeMutation.mock.calls[0][0];
       const mutationName = mutation.query.definitions[0].name.value;
@@ -366,20 +352,18 @@ describe("PolarisAutoForm", () => {
         wrapper: PolarisMockedProviders,
       });
 
-      loadMockGizmoCreateMetadata();
+      await loadMockGizmoCreateMetadata();
 
       // Inside the "gizmo" model, there are two fields: "Name" and "Orientation", both are not required.
       // We first modify the "Name" field and submit the form to ensure that both the "Name" and "Orientation" fields are included in the mutation.
 
-      await act(async () => {
-        const nameElement = getByLabelText("Name");
-        await user.clear(nameElement);
-        await user.click(nameElement);
-        await user.keyboard("new test record");
+      const nameElement = getByLabelText("Name");
+      await user.clear(nameElement);
+      await user.click(nameElement);
+      await user.keyboard("new test record");
 
-        const submit = await findByText("Submit", { selector: ':not([aria-hidden="true"])' });
-        await user.click(submit);
-      });
+      const submit = await findByText("Submit", { selector: ':not([aria-hidden="true"])' });
+      await user.click(submit);
 
       let mutation = mockUrqlClient.executeMutation.mock.calls[0][0];
       let mutationName = mutation.query.definitions[0].name.value;
@@ -394,18 +378,14 @@ describe("PolarisAutoForm", () => {
 
       // Now modify the other field and submit again to ensure that the other field is also included.
 
-      await act(async () => {
-        const orientationElement = getByLabelText("Orientation");
-        await user.clear(orientationElement);
-        await user.click(orientationElement);
-        await user.keyboard("orientation value");
-      });
+      const orientationElement = getByLabelText("Orientation");
+      await user.clear(orientationElement);
+      await user.click(orientationElement);
+      await user.keyboard("orientation value");
 
-      await act(async () => {
-        const submitButton = queryAllByText("Submit")[0];
-        expect(submitButton).toHaveTextContent("Submit");
-        await user.click(submitButton);
-      });
+      const submitButton = queryAllByText("Submit")[0];
+      expect(submitButton).toHaveTextContent("Submit");
+      await user.click(submitButton);
 
       mutation = mockUrqlClient.executeMutation.mock.calls[1][0];
       mutationName = mutation.query.definitions[0].name.value;
@@ -426,20 +406,18 @@ describe("PolarisAutoForm", () => {
       });
       const { getByLabelText, queryAllByText } = result;
 
-      loadMockWidgetUpdateMetadataWithFindBy();
+      await loadMockWidgetUpdateMetadataWithFindBy();
 
       const submitButton = queryAllByText("Submit")[0];
       expect(submitButton).toHaveTextContent("Submit");
 
-      await act(async () => {
-        const inventoryCountElement = getByLabelText("Inventory count");
-        await user.clear(inventoryCountElement);
-        await user.click(inventoryCountElement);
-        // The fetched record has an inventory count of 42. We will update it to 1234.
-        await user.keyboard("1234");
+      const inventoryCountElement = getByLabelText("Inventory count");
+      await user.clear(inventoryCountElement);
+      await user.click(inventoryCountElement);
+      // The fetched record has an inventory count of 42. We will update it to 1234.
+      await user.keyboard("1234");
 
-        await user.click(submitButton);
-      });
+      await user.click(submitButton);
 
       const mutation = mockUrqlClient.executeMutation.mock.calls[0][0];
       const mutationName = mutation.query.definitions[0].name.value;
@@ -490,11 +468,9 @@ describe("PolarisAutoForm", () => {
         }
       );
 
-      loadMockGizmoCreateMetadata();
+      await loadMockGizmoCreateMetadata();
 
-      await act(async () => {
-        await user.click(await findByText("Submit", { selector: ':not([aria-hidden="true"])' }));
-      });
+      await user.click(await findByText("Submit", { selector: ':not([aria-hidden="true"])' }));
 
       const mutation = mockUrqlClient.executeMutation.mock.calls[0][0];
 
@@ -514,121 +490,115 @@ describe("PolarisAutoForm", () => {
         wrapper: PolarisMockedProviders,
       });
 
-      mockUrqlClient.executeQuery.pushResponse("ModelActionMetadata", {
-        stale: false,
-        hasNext: false,
-        data: getWidgetModelMetadata(
-          {
-            name: "Create",
-            apiIdentifier: "create",
-            operatesWithRecordIdentity: false,
-          },
-          [
+      await mockUrqlClient.executeQuery.waitForSubject("ModelActionMetadata");
+
+      await act(async () => {
+        mockUrqlClient.executeQuery.pushResponse("ModelActionMetadata", {
+          stale: false,
+          hasNext: false,
+          data: getWidgetModelMetadata(
             {
-              name: "Widget",
-              apiIdentifier: "widget",
-              fieldType: "Object",
-              requiredArgumentForInput: false,
-              configuration: {
-                __typename: "GadgetObjectFieldConfig",
-                fieldType: "Object",
-                name: null,
-                validations: [],
-                fields: [
-                  {
-                    name: "Name",
-                    apiIdentifier: "name",
-                    fieldType: "String",
-                    requiredArgumentForInput: true,
-                    sortable: true,
-                    filterable: true,
-                    configuration: {
-                      __typename: "GadgetGenericFieldConfig",
-                      fieldType: "String",
-                      validations: [
-                        {
-                          name: "Required",
-                          specID: "gadget/validation/required",
-                          __typename: "GadgetGenericFieldValidation",
-                        },
-                        {
-                          name: "String length range",
-                          specID: "gadget/validation/string-size",
-                          __typename: "GadgetRangeFieldValidation",
-                          min: 20,
-                          max: 50,
-                        },
-                        {
-                          name: "RegExp pattern",
-                          specID: "gadget/validation/regexp",
-                          __typename: "GadgetRegexFieldValidation",
-                          pattern: "^[a-zA-Z ]+$",
-                        },
-                      ],
-                    },
-                  },
-                ],
-              },
-              __typename: "GadgetObjectField",
+              name: "Create",
+              apiIdentifier: "create",
+              operatesWithRecordIdentity: false,
             },
-          ]
-        ),
+            [
+              {
+                name: "Widget",
+                apiIdentifier: "widget",
+                fieldType: "Object",
+                requiredArgumentForInput: false,
+                configuration: {
+                  __typename: "GadgetObjectFieldConfig",
+                  fieldType: "Object",
+                  name: null,
+                  validations: [],
+                  fields: [
+                    {
+                      name: "Name",
+                      apiIdentifier: "name",
+                      fieldType: "String",
+                      requiredArgumentForInput: true,
+                      sortable: true,
+                      filterable: true,
+                      configuration: {
+                        __typename: "GadgetGenericFieldConfig",
+                        fieldType: "String",
+                        validations: [
+                          {
+                            name: "Required",
+                            specID: "gadget/validation/required",
+                            __typename: "GadgetGenericFieldValidation",
+                          },
+                          {
+                            name: "String length range",
+                            specID: "gadget/validation/string-size",
+                            __typename: "GadgetRangeFieldValidation",
+                            min: 20,
+                            max: 50,
+                          },
+                          {
+                            name: "RegExp pattern",
+                            specID: "gadget/validation/regexp",
+                            __typename: "GadgetRegexFieldValidation",
+                            pattern: "^[a-zA-Z ]+$",
+                          },
+                        ],
+                      },
+                    },
+                  ],
+                },
+                __typename: "GadgetObjectField",
+              },
+            ]
+          ),
+        });
       });
 
       const submitButton = getByRole("button");
       expect(submitButton).toHaveTextContent("Submit");
 
-      await act(async () => {
-        await user.click(submitButton);
-      });
+      await user.click(submitButton);
 
       // Name is a required field. Since it is not filled.
       expect(mockUrqlClient.executeMutation.mock.calls.length).toBe(0);
 
-      await act(async () => {
-        const nameElement = getByLabelText("Name");
-        await user.clear(nameElement);
-        await user.click(nameElement);
-        await user.keyboard("very short");
+      let nameElement = getByLabelText("Name");
+      await user.clear(nameElement);
+      await user.click(nameElement);
+      await user.keyboard("very short");
 
-        await user.click(submitButton);
-      });
+      await user.click(submitButton);
 
       // Name has to be at least 20 characters long.
       expect(mockUrqlClient.executeMutation.mock.calls.length).toBe(0);
 
-      await act(async () => {
-        const nameElement = getByLabelText("Name");
-        await user.clear(nameElement);
-        await user.click(nameElement);
-        await user.keyboard(`now make it super l${"o".repeat(50)}ng`);
+      nameElement = getByLabelText("Name");
+      await user.clear(nameElement);
+      await user.click(nameElement);
+      await user.keyboard(`now make it super l${"o".repeat(50)}ng`);
 
-        await user.click(submitButton);
-      });
+      await user.click(submitButton);
 
       // Name has to be at most 50 characters long.
       expect(mockUrqlClient.executeMutation.mock.calls.length).toBe(0);
 
-      await act(async () => {
-        const nameElement = getByLabelText("Name");
-        await user.clear(nameElement);
-        await user.click(nameElement);
-        await user.keyboard("1".repeat(30));
+      nameElement = getByLabelText("Name");
+      await user.clear(nameElement);
+      await user.click(nameElement);
+      await user.keyboard("1".repeat(30));
 
-        await user.click(submitButton);
-      });
+      await user.click(submitButton);
 
       // Name is within the range, but the regex pattern validation fails because it only allows alphabets.
       expect(mockUrqlClient.executeMutation.mock.calls.length).toBe(0);
 
-      await act(async () => {
-        const nameElement = getByLabelText("Name");
-        await user.clear(nameElement);
-        await user.click(nameElement);
-        await user.keyboard(`lets make it valid now something long enough`);
+      nameElement = getByLabelText("Name");
+      await user.clear(nameElement);
+      await user.click(nameElement);
+      await user.keyboard(`lets make it valid now something long enough`);
 
-        await user.click(submitButton);
-      });
+      await user.click(submitButton);
 
       const mutation = mockUrqlClient.executeMutation.mock.calls[0][0];
       const mutationName = mutation.query.definitions[0].name.value;
@@ -647,103 +617,99 @@ describe("PolarisAutoForm", () => {
         wrapper: PolarisMockedProviders,
       });
 
-      mockUrqlClient.executeQuery.pushResponse("ModelActionMetadata", {
-        stale: false,
-        hasNext: false,
-        data: getWidgetModelMetadata(
-          {
-            name: "Create",
-            apiIdentifier: "create",
-            operatesWithRecordIdentity: false,
-          },
-          [
+      await mockUrqlClient.executeQuery.waitForSubject("ModelActionMetadata");
+
+      await act(async () => {
+        mockUrqlClient.executeQuery.pushResponse("ModelActionMetadata", {
+          stale: false,
+          hasNext: false,
+          data: getWidgetModelMetadata(
             {
-              name: "Widget",
-              apiIdentifier: "widget",
-              fieldType: "Object",
-              requiredArgumentForInput: false,
-              configuration: {
-                __typename: "GadgetObjectFieldConfig",
-                fieldType: "Object",
-                name: null,
-                validations: [],
-                fields: [
-                  {
-                    name: "Inventory count",
-                    apiIdentifier: "inventoryCount",
-                    fieldType: "Number",
-                    requiredArgumentForInput: true,
-                    sortable: true,
-                    filterable: true,
-                    configuration: {
-                      __typename: "GadgetGenericFieldConfig",
-                      fieldType: "Number",
-                      validations: [
-                        {
-                          name: "Required",
-                          specID: "gadget/validation/required",
-                          __typename: "GadgetGenericFieldValidation",
-                        },
-                        {
-                          name: "Number range",
-                          specID: "gadget/validation/number-range",
-                          __typename: "GadgetRangeFieldValidation",
-                          min: 5,
-                          max: 10,
-                        },
-                      ],
-                    },
-                  },
-                ],
-              },
-              __typename: "GadgetObjectField",
+              name: "Create",
+              apiIdentifier: "create",
+              operatesWithRecordIdentity: false,
             },
-          ]
-        ),
+            [
+              {
+                name: "Widget",
+                apiIdentifier: "widget",
+                fieldType: "Object",
+                requiredArgumentForInput: false,
+                configuration: {
+                  __typename: "GadgetObjectFieldConfig",
+                  fieldType: "Object",
+                  name: null,
+                  validations: [],
+                  fields: [
+                    {
+                      name: "Inventory count",
+                      apiIdentifier: "inventoryCount",
+                      fieldType: "Number",
+                      requiredArgumentForInput: true,
+                      sortable: true,
+                      filterable: true,
+                      configuration: {
+                        __typename: "GadgetGenericFieldConfig",
+                        fieldType: "Number",
+                        validations: [
+                          {
+                            name: "Required",
+                            specID: "gadget/validation/required",
+                            __typename: "GadgetGenericFieldValidation",
+                          },
+                          {
+                            name: "Number range",
+                            specID: "gadget/validation/number-range",
+                            __typename: "GadgetRangeFieldValidation",
+                            min: 5,
+                            max: 10,
+                          },
+                        ],
+                      },
+                    },
+                  ],
+                },
+                __typename: "GadgetObjectField",
+              },
+            ]
+          ),
+        });
       });
 
       const submitButton = getByRole("button");
       expect(submitButton).toHaveTextContent("Submit");
 
-      await act(async () => {
-        await user.click(submitButton);
-      });
+      await user.click(submitButton);
 
       // Name is a required field.
       expect(mockUrqlClient.executeMutation.mock.calls.length).toBe(0);
 
-      await act(async () => {
-        const inventoryCountElement = getByLabelText("Inventory count");
-        await user.clear(inventoryCountElement);
-        await user.click(inventoryCountElement);
-        await user.keyboard("0");
+      let inventoryCountElement = getByLabelText("Inventory count");
+      await user.clear(inventoryCountElement);
+      await user.click(inventoryCountElement);
+      await user.keyboard("0");
 
-        await user.click(submitButton);
-      });
+      await user.click(submitButton);
 
       // Inventory count has to be at least 5.
       expect(mockUrqlClient.executeMutation.mock.calls.length).toBe(0);
 
-      await act(async () => {
-        const inventoryCountElement = getByLabelText("Inventory count");
-        await user.clear(inventoryCountElement);
-        await user.click(inventoryCountElement);
-        await user.keyboard("999");
+      inventoryCountElement = getByLabelText("Inventory count");
+      await user.clear(inventoryCountElement);
+      await user.click(inventoryCountElement);
+      await user.keyboard("999");
 
-        await user.click(submitButton);
-      });
+      await user.click(submitButton);
 
       // Inventory count has to be at most 10.
       expect(mockUrqlClient.executeMutation.mock.calls.length).toBe(0);
 
-      await act(async () => {
-        const inventoryCountElement = getByLabelText("Inventory count");
-        await user.clear(inventoryCountElement);
-        await user.click(inventoryCountElement);
-        await user.keyboard("5");
+      inventoryCountElement = getByLabelText("Inventory count");
+      await user.clear(inventoryCountElement);
+      await user.click(inventoryCountElement);
+      await user.keyboard("5");
 
-        await user.click(submitButton);
-      });
+      await user.click(submitButton);
 
       const mutation = mockUrqlClient.executeMutation.mock.calls[0][0];
       const mutationName = mutation.query.definitions[0].name.value;
@@ -768,47 +734,39 @@ describe("PolarisAutoForm", () => {
       let user: UserEvent;
       let renderResult: RenderResult;
 
-      beforeEach(() => {
+      beforeEach(async () => {
         user = userEvent.setup();
 
         renderResult = render(<PolarisAutoForm action={api.widget.update} exclude={["section", "gizmos"]} findBy="1145" />, {
           wrapper: PolarisMockedProviders,
         });
 
-        loadMockWidgetUpdateMetadataWithFindBy();
+        await loadMockWidgetUpdateMetadataWithFindBy();
       });
 
       test("it should remain null when submitting the form if unchanged", async () => {
-        await act(async () => {
-          const nameElement = renderResult.getByLabelText("Name");
-          await user.clear(nameElement);
-          await user.click(nameElement);
-          await user.keyboard("updated another test record");
-
-          await user.click(await renderResult.findByText("Submit", { selector: ':not([aria-hidden="true"])' }));
-        });
-
+        const nameElement = renderResult.getByLabelText("Name");
+        await user.clear(nameElement);
+        await user.click(nameElement);
+        await user.keyboard("updated another test record");
+        await user.click(await renderResult.findByText("Submit", { selector: ':not([aria-hidden="true"])' }));
         expect(submittedVariables().isChecked).toEqual(null);
       });
 
       test("it should send true if the user selects the checkbox", async () => {
-        await act(async () => {
-          const isCheckedElement = renderResult.getByLabelText("Is checked");
-          await user.click(isCheckedElement);
-          await user.click(await renderResult.findByText("Submit", { selector: ':not([aria-hidden="true"])' }));
-        });
+        const isCheckedElement = renderResult.getByLabelText("Is checked");
+        await user.click(isCheckedElement);
+        await user.click(await renderResult.findByText("Submit", { selector: ':not([aria-hidden="true"])' }));
 
         expect(submittedVariables().isChecked).toEqual(true);
       });
 
       test("it should send false if the user selects the checkbox and then unselects it", async () => {
-        await act(async () => {
-          const isCheckedElement = renderResult.getByLabelText("Is checked");
-          await user.click(isCheckedElement);
-          await user.click(isCheckedElement);
+        const isCheckedElement = renderResult.getByLabelText("Is checked");
+        await user.click(isCheckedElement);
+        await user.click(isCheckedElement);
 
-          await user.click(await renderResult.findByText("Submit", { selector: ':not([aria-hidden="true"])' }));
-        });
+        await user.click(await renderResult.findByText("Submit", { selector: ':not([aria-hidden="true"])' }));
 
         expect(submittedVariables().isChecked).toEqual(false);
       });
@@ -816,98 +774,101 @@ describe("PolarisAutoForm", () => {
   });
 
   describe("Bulk actions", () => {
-    it("throws an error when a bulk action is used", () => {
-      expect(() => {
+    it("throws an error when a bulk action is used", async () => {
+      await expect(async () => {
         render(<PolarisAutoForm action={api.widget.bulkUpdate as any} />, { wrapper: PolarisMockedProviders });
-        loadMockWidgetCreateMetadata();
-      }).toThrow("Bulk actions are not supported in AutoForms");
+        await loadMockWidgetCreateMetadata();
+      }).rejects.toThrow("Bulk actions are not supported in AutoForms");
     });
   });
+
   describe("Actions without triggers", () => {
     describe("No triggers in the api client", () => {
-      it("throws an error when a model action without triggers", () => {
-        expect(() => {
+      it("throws an error when a model action without triggers", async () => {
+        await expect(async () => {
           render(<PolarisAutoForm action={api.autoTableTest.noTriggerAction as any} />, { wrapper: PolarisMockedProviders });
-        }).toThrow(MissingApiTriggerErrorMessage);
+          await loadMockWidgetCreateMetadata();
+        }).rejects.toThrow(MissingApiTriggerErrorMessage);
       });
 
-      it("throws an error when a global action without triggers", () => {
-        expect(() => {
+      it("throws an error when a global action without triggers", async () => {
+        await expect(async () => {
           render(<PolarisAutoForm action={api.noTriggerGlobalAction as any} />, { wrapper: PolarisMockedProviders });
-        }).toThrow(MissingApiTriggerErrorMessage);
+          await loadMockWidgetCreateMetadata();
+        }).rejects.toThrow(MissingApiTriggerErrorMessage);
       });
     });
     describe("Has triggers in api client but no triggers in action metadata", () => {
-      it("throws an error when a model action without triggers", () => {
-        expect(() => {
+      it("throws an error when a model action without triggers", async () => {
+        await expect(async () => {
           render(<PolarisAutoForm action={api.widget.create as any} />, { wrapper: PolarisMockedProviders });
-          loadMockWidgetCreateMetadata({ triggers: [{ specID: "non/api/trigger", __typename: "GadgetTrigger" }] });
-        }).toThrow(MissingApiTriggerErrorMessage);
+          await loadMockWidgetCreateMetadata({ triggers: [{ specID: "non/api/trigger", __typename: "GadgetTrigger" }] });
+        }).rejects.toThrow(MissingApiTriggerErrorMessage);
       });
 
-      it("throws an error when a global action without triggers", () => {
-        expect(() => {
+      it("throws an error when a global action without triggers", async () => {
+        await expect(async () => {
           render(<PolarisAutoForm action={api.flipAll as any} />, { wrapper: PolarisMockedProviders });
-          loadMockFlipAllMetadata({ triggers: [{ specID: "non/api/trigger", __typename: "GadgetTrigger" }] });
-        }).toThrow(MissingApiTriggerErrorMessage);
+          await loadMockFlipAllMetadata({ triggers: [{ specID: "non/api/trigger", __typename: "GadgetTrigger" }] });
+        }).rejects.toThrow(MissingApiTriggerErrorMessage);
       });
     });
   });
 });
 
-function loadMockGizmoCreateMetadata() {
-  expect(mockUrqlClient.executeQuery.mock.calls[0][0].variables).toEqual({
-    modelApiIdentifier: "gizmo",
-    modelNamespace: null,
-    action: "create",
-  });
+async function loadMockGizmoCreateMetadata() {
+  await mockUrqlClient.executeQuery.waitForSubject("ModelActionMetadata");
 
-  mockUrqlClient.executeQuery.pushResponse("ModelActionMetadata", {
-    stale: false,
-    hasNext: false,
-    data: getGizmoModelMetadata({
-      name: "Create",
-      apiIdentifier: "create",
-      operatesWithRecordIdentity: false,
-    }),
-  });
-}
-
-function loadMockWidgetCreateMetadata(opts?: { inputFields?: any[]; triggers?: any[] }) {
-  expect(mockUrqlClient.executeQuery.mock.calls[0][0].variables).toEqual({
-    modelApiIdentifier: "widget",
-    modelNamespace: null,
-    action: "create",
-  });
-
-  mockUrqlClient.executeQuery.pushResponse("ModelActionMetadata", {
-    stale: false,
-    hasNext: false,
-    data: getWidgetModelMetadata(
-      {
+  await act(async () => {
+    mockUrqlClient.executeQuery.pushResponse("ModelActionMetadata", {
+      stale: false,
+      hasNext: false,
+      data: getGizmoModelMetadata({
         name: "Create",
         apiIdentifier: "create",
         operatesWithRecordIdentity: false,
-      },
-      opts?.inputFields,
-      opts?.triggers
-    ),
+      }),
+    });
   });
 }
 
-function loadMockWidgetUpdateMetadata() {
-  mockWidgetUpdateHelperFunctions.expectMetadataRequest();
-  mockWidgetUpdateHelperFunctions.mockMetadataResponse();
+async function loadMockWidgetCreateMetadata(opts?: { inputFields?: any[]; triggers?: any[] }) {
+  await mockUrqlClient.executeQuery.waitForSubject("ModelActionMetadata");
+
+  await act(async () => {
+    mockUrqlClient.executeQuery.pushResponse("ModelActionMetadata", {
+      stale: false,
+      hasNext: false,
+      data: getWidgetModelMetadata(
+        {
+          name: "Create",
+          apiIdentifier: "create",
+          operatesWithRecordIdentity: false,
+        },
+        opts?.inputFields,
+        opts?.triggers
+      ),
+    });
+  });
 }
 
-function loadMockWidgetUpdateMetadataWithFindBy() {
-  mockWidgetUpdateHelperFunctions.expectMetadataRequest();
-  mockWidgetUpdateHelperFunctions.mockMetadataResponse();
-  mockWidgetUpdateHelperFunctions.mockFindByResponse();
+async function loadMockWidgetUpdateMetadata() {
+  await act(async () => {
+    await mockWidgetUpdateHelperFunctions.mockMetadataResponse();
+  });
+}
+
+async function loadMockWidgetUpdateMetadataWithFindBy() {
+  await act(async () => {
+    await mockWidgetUpdateHelperFunctions.mockMetadataResponse();
+  });
+  await act(async () => {
+    await mockWidgetUpdateHelperFunctions.mockFindByResponse();
+  });
 }
 
 const mockWidgetUpdateHelperFunctions = {
-  mockMetadataResponse: () => {
+  mockMetadataResponse: async () => {
     mockUrqlClient.executeQuery.pushResponse("ModelActionMetadata", {
       stale: false,
       hasNext: false,
@@ -918,7 +879,7 @@ const mockWidgetUpdateHelperFunctions = {
       }),
     });
   },
-  mockFindByResponse: () => {
+  mockFindByResponse: async () => {
     mockUrqlClient.executeQuery.pushResponse("widget", {
       stale: false,
       hasNext: false,
@@ -928,48 +889,38 @@ const mockWidgetUpdateHelperFunctions = {
       }),
     });
   },
-  expectMetadataRequest: () => {
-    expect(mockUrqlClient.executeQuery.mock.calls[0][0].variables).toEqual({
-      modelApiIdentifier: "widget",
-      modelNamespace: null,
-      action: "update",
-    });
-  },
 };
 
-function loadMockWidgetDeleteMetadata() {
-  expect(mockUrqlClient.executeQuery.mock.calls[0][0].variables).toEqual({
-    modelApiIdentifier: "widget",
-    modelNamespace: null,
-    action: "delete",
-  });
+async function loadMockWidgetDeleteMetadata() {
+  await mockUrqlClient.executeQuery.waitForSubject("ModelActionMetadata");
 
-  mockUrqlClient.executeQuery.pushResponse("ModelActionMetadata", {
-    stale: false,
-    hasNext: false,
-    data: getWidgetModelMetadata(
-      {
-        name: "Delete",
-        apiIdentifier: "delete",
-        operatesWithRecordIdentity: true,
-      },
-      [] // No input fields beyond ID
-    ),
+  await act(async () => {
+    mockUrqlClient.executeQuery.pushResponse("ModelActionMetadata", {
+      stale: false,
+      hasNext: false,
+      data: getWidgetModelMetadata(
+        {
+          name: "Delete",
+          apiIdentifier: "delete",
+          operatesWithRecordIdentity: true,
+        },
+        [] // No input fields beyond ID
+      ),
+    });
   });
 }
 
-function loadMockFlipAllMetadata(opts?: { triggers?: any[] }) {
-  expect(mockUrqlClient.executeQuery.mock.calls[0][0].variables).toEqual({
-    namespace: null,
-    apiIdentifier: "flipAll",
-  });
+async function loadMockFlipAllMetadata(opts?: { triggers?: any[] }) {
+  await mockUrqlClient.executeQuery.waitForSubject("GlobalActionMetadata");
 
-  mockUrqlClient.executeQuery.pushResponse("GlobalActionMetadata", {
-    stale: false,
-    hasNext: false,
-    data: getGlobalActionMetadata({
-      apiIdentifier: "flipAll",
-      triggers: opts?.triggers,
-    }),
+  await act(async () => {
+    mockUrqlClient.executeQuery.pushResponse("GlobalActionMetadata", {
+      stale: false,
+      hasNext: false,
+      data: getGlobalActionMetadata({
+        apiIdentifier: "flipAll",
+        triggers: opts?.triggers,
+      }),
+    });
   });
 }

@@ -6,7 +6,7 @@ import type { SubscribePayload, Client as SubscriptionClient, Sink as Subscripti
 import type { FunctionLike } from "jest-mock";
 import { defaults, find, findLast } from "lodash-es";
 import pRetry from "p-retry";
-import { act } from "react-dom/test-utils";
+import { act } from "react";
 import type { Sink, Source, Subject } from "wonka";
 import { filter, makeSubject, pipe, subscribe, take, toPromise } from "wonka";
 import { $gadgetConnection } from "../src/GadgetConnection.js";
@@ -49,7 +49,7 @@ export type MockOperationFn<F extends FunctionLike> = jest.Mock<(...args: any[])
 export type MockFetchFn = jest.Mock & {
   requests: { args: any[]; resolve: (response: Response) => void; reject: (error: Error) => void }[];
   pushResponse: (response: Response) => Promise<void>;
-  reportAbort: () => Promise<void>;
+  waitForRequest: (options?: pRetry.Options) => Promise<void>;
 };
 
 export interface MockUrqlClient extends Client {
@@ -150,11 +150,25 @@ const newMockFetchFn = () => {
 
   const fn = jest.fn((...args) => {
     return new Promise<Response>((resolve, reject) => {
-      requests.push({
+      const signal = (args[1] as any)?.signal;
+
+      const request = {
         args,
         resolve,
         reject,
-      });
+      };
+
+      if (signal) {
+        signal.addEventListener("abort", () => {
+          const idx = requests.findIndex((r) => r === request);
+          if (idx !== -1) {
+            request.reject(new Error("AbortError: The user aborted a request."));
+            requests.splice(idx, 1);
+          }
+        });
+      }
+
+      requests.push(request);
     });
   }) as unknown as MockFetchFn;
 
@@ -173,20 +187,23 @@ const newMockFetchFn = () => {
       await request.resolve(response);
     });
   };
-  fn.reportAbort = async () => {
+
+  fn.waitForRequest = async (options?: pRetry.Options) => {
+    const requestCount = requests.length;
     await act(async () => {
-      const request = requests.shift();
-      if (!request) {
-        throw new Error("no requests started for response pushing");
-      }
-      const signal = request.args[1]?.signal;
-      if (!signal) {
-        throw new Error("no signal on request, can't report an abort that has happened");
-      }
-      if (!signal.aborted) {
-        throw new Error("signal on request has not been aborted, can't report an abort that has happened");
-      }
-      await request.reject(new Error("AbortError: The user aborted a request."));
+      await pRetry(
+        async () => {
+          if (requests.length > requestCount) {
+            return;
+          }
+          throw new Error("request not found");
+        },
+        defaults(options, {
+          attempts: 20,
+          minTimeout: 10,
+          maxTimeout: 250,
+        })
+      );
     });
   };
 

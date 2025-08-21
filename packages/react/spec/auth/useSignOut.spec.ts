@@ -40,7 +40,9 @@ describe("useSignOut", () => {
         }),
       });
 
-      expectMockSignedInUser();
+      await act(async () => {
+        await expectMockSignedInUser();
+      });
       rerender();
 
       let mutationPromise: any;
@@ -48,7 +50,7 @@ describe("useSignOut", () => {
         mutationPromise = result.current();
       });
 
-      expect(mockUrqlClient.executeMutation).toBeCalledTimes(1);
+      expect(mockUrqlClient.executeMutation).toHaveBeenCalledTimes(1);
 
       mockUrqlClient.executeMutation.pushResponse("signOutUser", {
         data: {
@@ -79,7 +81,9 @@ describe("useSignOut", () => {
         }),
       });
 
-      expectMockSignedInUser();
+      await act(async () => {
+        await expectMockSignedInUser();
+      });
       rerender();
 
       let mutationPromise: any;
@@ -117,7 +121,9 @@ describe("useSignOut", () => {
         }),
       });
 
-      expectMockSignedInUser();
+      await act(async () => {
+        await expectMockSignedInUser();
+      });
       rerender();
 
       let mutationPromise: any;
@@ -157,15 +163,14 @@ describe("useSignOut", () => {
           }),
         });
 
-        expectMockSignedInUser();
+        await act(async () => {
+          await expectMockSignedInUser();
+        });
         rerender();
 
-        let mutationPromise: any;
-        await act(async () => {
-          mutationPromise = result.current();
-        });
+        const mutationPromise = result.current();
 
-        expect(mockUrqlClient.executeMutation).toBeCalledTimes(1);
+        expect(mockUrqlClient.executeMutation).toHaveBeenCalledTimes(1);
         mockUrqlClient.executeMutation.pushResponse("signOutUser", {
           data: {
             success: false,
@@ -202,10 +207,14 @@ describe("useSignOut", () => {
             navigate: customNavigate ? mockNavigate : undefined,
           }),
         });
-        expectMockSignedOutUser();
+        await act(async () => {
+          await expectMockSignedOutUser();
+        });
         rerender();
 
-        await result.current();
+        await act(async () => {
+          await result.current();
+        });
       } catch (e) {
         caughtError = e;
       }

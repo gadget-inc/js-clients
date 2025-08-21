@@ -5,6 +5,7 @@ import { diff } from "@n1ru4l/json-patch-plus";
 import { renderHook, waitFor } from "@testing-library/react";
 import type { IsExact } from "conditional-type-checks";
 import { assert } from "conditional-type-checks";
+import { act } from "react";
 import { useFindMany } from "../src/useFindMany.js";
 import type { ErrorWrapper } from "../src/utils.js";
 import { kitchenSinkApi, relatedProductsApi } from "./apis.js";
@@ -353,25 +354,27 @@ describe("useFindMany", () => {
 
     // first render never completes as the component suspends
     expect(result.current).toBeFalsy();
-    expect(mockUrqlClient.executeQuery).toBeCalledTimes(1);
 
-    mockUrqlClient.executeQuery.pushResponse("users", {
-      data: {
-        users: {
-          edges: [
-            { cursor: "123", node: { id: "123", email: "test@test.com" } },
-            { cursor: "abc", node: { id: "124", email: "test@test.com" } },
-          ],
-          pageInfo: {
-            startCursor: "123",
-            endCursor: "abc",
-            hasNextPage: false,
-            hasPreviousPage: false,
+    await act(async () => {
+      await mockUrqlClient.executeQuery.waitForSubject("users");
+      mockUrqlClient.executeQuery.pushResponse("users", {
+        data: {
+          users: {
+            edges: [
+              { cursor: "123", node: { id: "123", email: "test@test.com" } },
+              { cursor: "abc", node: { id: "124", email: "test@test.com" } },
+            ],
+            pageInfo: {
+              startCursor: "123",
+              endCursor: "abc",
+              hasNextPage: false,
+              hasPreviousPage: false,
+            },
           },
         },
-      },
-      stale: false,
-      hasNext: false,
+        stale: false,
+        hasNext: false,
+      });
     });
 
     // rerender as react would do when the suspense promise resolves

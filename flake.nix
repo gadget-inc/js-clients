@@ -2,31 +2,24 @@
   description = "Gadget js-clients development environment";
 
   inputs = {
+    nixpkgs.url = "github:NixOS/nixpkgs/nixos-25.05";
     flake-utils.url = "github:numtide/flake-utils";
-    nixpkgs.url = "github:NixOS/nixpkgs/nixpkgs-unstable";
   };
 
-  outputs = { self, flake-utils, nixpkgs }:
-    (flake-utils.lib.eachSystem [
-      "x86_64-linux"
-      "x86_64-darwin"
-      "aarch64-darwin"
-    ]
-      (system: nixpkgs.lib.fix (flake:
-        let
-          pkgs = nixpkgs.legacyPackages.${system};
-        in
-        rec {
-          packages = rec {
-            nodejs = pkgs.nodejs_18;
-            corepack = pkgs.corepack;
+  outputs = { self, nixpkgs, flake-utils }:
+    flake-utils.lib.eachSystem [ "x86_64-linux" "x86_64-darwin" "aarch64-darwin" ] (system:
+      let
+        pkgs = import nixpkgs { inherit system; };
+        node = pkgs.nodejs_22;
+      in {
+        packages = {
+          nodejs = node;
+          corepack = pkgs.corepack;
+          git = pkgs.git;
+        };
 
-            git = pkgs.git;
-          };
-
-          devShell = pkgs.mkShell {
-            packages = builtins.attrValues self.packages.${system};
-          };
-        }
-      )));
+        devShells.default = pkgs.mkShell {
+          packages = with pkgs; [ node corepack git ];
+        };
+      });
 }
