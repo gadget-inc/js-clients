@@ -6,7 +6,7 @@ import type { SubscribePayload, Client as SubscriptionClient, Sink as Subscripti
 import type { FunctionLike } from "jest-mock";
 import { defaults, find, findLast } from "lodash-es";
 import pRetry from "p-retry";
-import { act } from "react-dom/test-utils";
+import { act } from "react";
 import type { Sink, Source, Subject } from "wonka";
 import { filter, makeSubject, pipe, subscribe, take, toPromise } from "wonka";
 import { $gadgetConnection } from "../src/GadgetConnection.js";

@@ -1,6 +1,6 @@
 import { jest } from "@jest/globals";
 import { AppProvider } from "@shopify/polaris";
-import translations from "@shopify/polaris/locales/en.json";
+import translations from "@shopify/polaris/locales/en.json" with { type: "json" };
 import type { RenderResult } from "@testing-library/react";
 import { act, render, screen } from "@testing-library/react";
 import { userEvent } from "@testing-library/user-event";
@@ -122,7 +122,63 @@ describe("PolarisAutoTextInput", () => {
 
     test("it renders input values with data from the API response", async () => {
       result = render(<PolarisAutoForm action={api.widget.update} findBy="42" />, { wrapper: WrapperWithLoadedData });
-      mockFindBy();
+
+      await act(async () => {
+        await mockUrqlClient.executeQuery.waitForSubject("ModelActionMetadata");
+        const updateMetadata = { ...metadata, action: { ...metadata.action, apiIdentifier: "update", operatesWithRecordIdentity: true } };
+        mockUrqlClient.executeQuery.pushResponse("ModelActionMetadata", {
+          stale: false,
+          hasNext: false,
+          data: {
+            gadgetMeta: {
+              modelAndRelatedModels: [
+                {
+                  name: "Widget",
+                  apiIdentifier: "widget",
+                  fields: updateMetadata.action.inputFields,
+                  __typename: "GadgetModel",
+                },
+              ],
+              model: updateMetadata,
+              __typename: "GadgetApplicationMeta",
+            },
+          },
+        });
+      });
+
+      await act(async () => {
+        await mockUrqlClient.executeQuery.waitForSubject("widget");
+
+        mockUrqlClient.executeQuery.pushResponse("widget", {
+          stale: false,
+          hasNext: false,
+          data: {
+            widget: {
+              __typename: "Widget",
+              id: "42",
+              createdAt: "2024-06-24T18:55:29.621Z",
+              updatedAt: "2024-06-24T18:55:29.621Z",
+      
+              name: "name_RecordValue",
+              inventoryCount: 999,
+              color: "color_RecordValue",
+              secretKey: "secretKey_RecordValue",
+              password: "password_RecordValue",
+              email: "email_RecordValue",
+              url: "url_RecordValue",
+            },
+            gadgetMeta: {
+              hydrations: {
+                updatedAt: "DateTime",
+                startsAt: "DateTime",
+                birthday: "DateTime",
+                createdAt: "DateTime",
+              },
+              __typename: "GadgetApplicationMeta",
+            },
+          },
+        });
+      });
 
       expect(result.queryByDisplayValue("name_RecordValue")).toBeInTheDocument();
       expect(result.queryByDisplayValue(999)).toBeInTheDocument();
@@ -333,54 +389,6 @@ const metadata = {
   __typename: "GadgetModel",
 };
 
-const mockFindBy = () => {
-  const updateMetadata = { ...metadata, action: { ...metadata.action, apiIdentifier: "update", operatesWithRecordIdentity: true } };
-  mockUrqlClient.executeQuery.pushResponse("ModelActionMetadata", {
-    stale: false,
-    hasNext: false,
-    data: {
-      gadgetMeta: {
-        modelAndRelatedModels: [
-          {
-            name: "Widget",
-            apiIdentifier: "widget",
-            fields: updateMetadata.action.inputFields,
-            __typename: "GadgetModel",
-          },
-        ],
-        model: updateMetadata,
-        __typename: "GadgetApplicationMeta",
-      },
-    },
-  });
+const mockFindBy = async () => {
 
-  mockUrqlClient.executeQuery.pushResponse("widget", {
-    stale: false,
-    hasNext: false,
-    data: {
-      widget: {
-        __typename: "Widget",
-        id: "42",
-        createdAt: "2024-06-24T18:55:29.621Z",
-        updatedAt: "2024-06-24T18:55:29.621Z",
-
-        name: "name_RecordValue",
-        inventoryCount: 999,
-        color: "color_RecordValue",
-        secretKey: "secretKey_RecordValue",
-        password: "password_RecordValue",
-        email: "email_RecordValue",
-        url: "url_RecordValue",
-      },
-      gadgetMeta: {
-        hydrations: {
-          updatedAt: "DateTime",
-          startsAt: "DateTime",
-          birthday: "DateTime",
-          createdAt: "DateTime",
-        },
-        __typename: "GadgetApplicationMeta",
-      },
-    },
-  });
 };

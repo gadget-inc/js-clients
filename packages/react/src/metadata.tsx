@@ -445,6 +445,8 @@ export const useActionMetadata = (
     variables,
   });
 
+  console.log({ data, fetching, error }, "foo foo fas");
+
   let metadata: ModelWithOneActionMetadata | GlobalActionMetadata | undefined = undefined;
 
   if (data && !error) {

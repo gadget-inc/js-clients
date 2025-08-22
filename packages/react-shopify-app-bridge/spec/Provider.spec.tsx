@@ -4,8 +4,7 @@ import { jest } from "@jest/globals";
 import "@testing-library/jest-dom";
 import { render } from "@testing-library/react";
 import { CombinedError } from "@urql/core";
-import React from "react";
-import { act } from "react-dom/test-utils";
+import React, { act } from "react";
 import { mockUrqlClient } from "../../api-client-core/spec/mockUrqlClient.js";
 import { AppType, Provider } from "../src/Provider.js";
 

@@ -84,8 +84,8 @@ const processResult = <SchemaT, Action extends AnyActionFunction>(
   rawResult: UseMutationState<any, any>,
   action: Action
 ): EnqueueHookState<SchemaT, Action> => {
-  const { data, ...result } = rawResult;
-  let error = ErrorWrapper.forMaybeCombinedError(result.error);
+  const { data, hasNext: _hasNext, error: rawError, ...result } = rawResult;
+  let error = ErrorWrapper.forMaybeCombinedError(rawError);
   let handle: BackgroundActionHandle<SchemaT, Action> | null = null;
   let handles: BackgroundActionHandle<SchemaT, Action>[] | null = null;
   const isBulk = action.isBulk;
