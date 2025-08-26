@@ -61,6 +61,35 @@ export const NoTriggerableActions = {
   },
 };
 
+export const CustomCellRenderersWithCustomActions = {
+  args: {
+    model: api.autoTableTest,
+    select: {
+      id: true,
+      str: true,
+      num: true,
+      email: true,
+      createdAt: true,
+      updatedAt: true,
+    },
+    columns: [
+      "id",
+      "str",
+      {
+        header: "custom cell renderer",
+        render: ({ record }) => <p>{JSON.stringify(record)}</p>,
+      },
+    ],
+    actions: [
+      {
+        label: "console.log all records",
+        promoted: true,
+        action: (records) => console.log(`records:`, records),
+      },
+    ],
+  },
+};
+
 const windowAlert = (message) => {
   // eslint-disable-next-line no-undef
   window.alert(message);

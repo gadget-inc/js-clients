@@ -302,7 +302,12 @@ export const makeAutoTable = (elements: ShadcnElements) => {
             <div className="ml-auto">
               <div className="flex flex-row ml-auto gap-2 items-center">
                 <Label className="ml-2">{`${selection.recordIds.length} selected`}</Label>
-                <ShadcnAutoTableBulkActionSelector bulkActionOptions={bulkActionOptions} selection={selection} rows={rows} />
+                <ShadcnAutoTableBulkActionSelector
+                  bulkActionOptions={bulkActionOptions}
+                  selection={selection}
+                  rows={rows}
+                  rawRecords={rawRecords}
+                />
               </div>
             </div>
           )}
