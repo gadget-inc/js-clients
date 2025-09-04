@@ -2,9 +2,9 @@ import { CombinedError } from "urql";
 import type { MockUrqlClient } from "./testWrappers.js";
 import { mockUrqlClient } from "./testWrappers.js";
 
-export const expectMockSignedInUser = (urqlClient?: MockUrqlClient) => {
+export const expectMockSignedInUser = async (urqlClient?: MockUrqlClient) => {
   const urql = urqlClient || mockUrqlClient;
-  expect(urql.executeQuery).toBeCalledTimes(1);
+  await urql.executeQuery.waitForSubject("currentSession");
   urql.executeQuery.pushResponse("currentSession", {
     data: {
       currentSession: {
@@ -21,9 +21,9 @@ export const expectMockSignedInUser = (urqlClient?: MockUrqlClient) => {
   });
 };
 
-export const expectMockSignedOutUser = (urqlClient?: MockUrqlClient) => {
+export const expectMockSignedOutUser = async (urqlClient?: MockUrqlClient) => {
   const urql = urqlClient || mockUrqlClient;
-  expect(urql.executeQuery).toBeCalledTimes(1);
+  await urql.executeQuery.waitForSubject("currentSession");
   urql.executeQuery.pushResponse("currentSession", {
     data: {
       currentSession: {
@@ -36,9 +36,9 @@ export const expectMockSignedOutUser = (urqlClient?: MockUrqlClient) => {
   });
 };
 
-export const expectMockDeletedUser = (urqlClient?: MockUrqlClient) => {
+export const expectMockDeletedUser = async (urqlClient?: MockUrqlClient) => {
   const urql = urqlClient || mockUrqlClient;
-  expect(urql.executeQuery).toBeCalledTimes(1);
+  await urql.executeQuery.waitForSubject("currentSession");
   urql.executeQuery.pushResponse("currentSession", {
     data: {
       currentSession: {
@@ -51,8 +51,8 @@ export const expectMockDeletedUser = (urqlClient?: MockUrqlClient) => {
   });
 };
 
-export const mockInternalServerError = () => {
-  expect(mockUrqlClient.executeQuery).toBeCalledTimes(1);
+export const mockInternalServerError = async () => {
+  await mockUrqlClient.executeQuery.waitForSubject("currentSession");
   mockUrqlClient.executeQuery.pushResponse("currentSession", {
     data: null,
     error: new CombinedError({ graphQLErrors: [new Error("GGT_INTERNAL_SERVER_ERROR"), "An error occurred"] }),
@@ -61,8 +61,8 @@ export const mockInternalServerError = () => {
   });
 };
 
-export const mockNetworkError = () => {
-  expect(mockUrqlClient.executeQuery).toBeCalledTimes(1);
+export const mockNetworkError = async () => {
+  await mockUrqlClient.executeQuery.waitForSubject("currentSession");
   mockUrqlClient.executeQuery.pushResponse("currentSession", {
     data: null,
     error: new CombinedError({ networkError: new Error("Network error") }),
@@ -70,6 +70,7 @@ export const mockNetworkError = () => {
     hasNext: false,
   });
 };
+
 export const sleep = (delay: number) => {
   return new Promise((resolve) => {
     setTimeout(resolve, delay);

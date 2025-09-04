@@ -45,14 +45,14 @@
     "ws": "^8.18.2"
   },
   "devDependencies": {
-    "@types/node": "^16.11.7",
+    "@types/node": "^22.13.14",
     "conditional-type-checks": "^1.0.6",
     "globby": "^11.0.4",
     "gql-tag": "^1.0.1",
     "nock": "^13.5.4",
     "p-retry": "^4.5.0",
-    "react": "^18.2.0",
-    "react-dom": "^18.2.0",
+    "react": "^19.1.1",
+    "react-dom": "^19.1.1",
     "typescript": "5.4.5"
   }
 }

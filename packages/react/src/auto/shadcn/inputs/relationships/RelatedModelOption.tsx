@@ -59,7 +59,7 @@ export const makeRelatedModelOption = (
       [actions, options, props.renderOption, records, checkSelected, onSelect]
     );
 
-    const loadMoreRef = useRef<HTMLDivElement>(null);
+    const loadMoreRef = useRef<HTMLDivElement | null>(null);
     useDetectScrolledToBottom({ loadMoreRef, onLoadMore: props.onLoadMore });
 
     return (
@@ -98,7 +98,7 @@ export const makeRelatedModelOption = (
   return { RelatedModelOption };
 };
 
-const useDetectScrolledToBottom = (props: { loadMoreRef: React.RefObject<HTMLDivElement>; onLoadMore?: () => void }) => {
+const useDetectScrolledToBottom = (props: { loadMoreRef: React.RefObject<HTMLDivElement | null>; onLoadMore?: () => void }) => {
   const { loadMoreRef } = props;
   useEffect(() => {
     if (!loadMoreRef?.current) return;

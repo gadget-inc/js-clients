@@ -5,7 +5,7 @@ import { Provider } from "../../src/index.js";
 import "./commands.js";
 import "./cypress.css";
 
-import { mount } from "cypress/react18";
+import { mount } from "cypress/react";
 import { api } from "./api.js";
 
 declare global {

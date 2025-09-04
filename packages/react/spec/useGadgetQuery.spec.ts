@@ -1,4 +1,4 @@
-import { renderHook } from "@testing-library/react";
+import { act, renderHook } from "@testing-library/react";
 import { gql } from "urql";
 import { useGadgetQuery } from "../src/useGadgetQuery.js";
 import { noProviderErrorMessage } from "../src/utils.js";
@@ -69,16 +69,18 @@ describe("useGadgetQuery", () => {
 
     // first render never completes as the component suspends
     expect(result.current).toBeFalsy();
-    expect(mockUrqlClient.executeQuery).toBeCalledTimes(1);
 
-    mockUrqlClient.executeQuery.pushResponse("gadgetMeta", {
-      data: {
-        gadgetMeta: {
-          name: "Test App",
+    await act(async () => {
+      await mockUrqlClient.executeQuery.waitForSubject("gadgetMeta");
+      mockUrqlClient.executeQuery.pushResponse("gadgetMeta", {
+        data: {
+          gadgetMeta: {
+            name: "Test App",
+          },
         },
-      },
-      stale: false,
-      hasNext: false,
+        stale: false,
+        hasNext: false,
+      });
     });
 
     // rerender as react would do when the suspense promise resolves

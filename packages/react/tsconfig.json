@@ -12,5 +12,5 @@
     "resolveJsonModule": true,
     "rootDir": "../../"
   },
-  "include": ["./src", "./spec", "./cypress", "./codegen.ts", "./cypress.config.ts"]
+  "include": ["./src", "./spec", "./codegen.ts"]
 }

@@ -9,9 +9,8 @@
     "preview": "vite preview"
   },
   "devDependencies": {
-    "vite": "4.4.9",
+    "vite": "7.1.4",
     "@shopify/polaris": "^12.0.0",
     "@shopify/polaris-icons": "^9.3.0"
   }
 }
-

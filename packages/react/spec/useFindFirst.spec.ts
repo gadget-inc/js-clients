@@ -1,6 +1,6 @@
 import type { GadgetRecord } from "@gadgetinc/api-client-core";
 import { diff } from "@n1ru4l/json-patch-plus";
-import { renderHook, waitFor } from "@testing-library/react";
+import { act, renderHook, waitFor } from "@testing-library/react";
 import type { IsExact } from "conditional-type-checks";
 import { assert } from "conditional-type-checks";
 import { useFindFirst } from "../src/index.js";
@@ -269,22 +269,25 @@ describe("useFindFirst", () => {
 
     // first render never completes as the component suspends
     expect(result.current).toBeFalsy();
-    expect(mockUrqlClient.executeQuery).toBeCalledTimes(1);
 
-    mockUrqlClient.executeQuery.pushResponse("users", {
-      data: {
-        users: {
-          edges: [{ cursor: "123", node: { id: "123", email: "test@test.com" } }],
-          pageInfo: {
-            startCursor: "123",
-            endCursor: "123",
-            hasNextPage: false,
-            hasPreviousPage: false,
+    await act(async () => {
+      await mockUrqlClient.executeQuery.waitForSubject("users");
+
+      mockUrqlClient.executeQuery.pushResponse("users", {
+        data: {
+          users: {
+            edges: [{ cursor: "123", node: { id: "123", email: "test@test.com" } }],
+            pageInfo: {
+              startCursor: "123",
+              endCursor: "123",
+              hasNextPage: false,
+              hasPreviousPage: false,
+            },
           },
         },
-      },
-      stale: false,
-      hasNext: false,
+        stale: false,
+        hasNext: false,
+      });
     });
 
     // rerender as react would do when the suspense promise resolves

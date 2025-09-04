@@ -1,7 +1,7 @@
 import { jest } from "@jest/globals";
 import "@testing-library/jest-dom";
 import { render } from "@testing-library/react";
-import React from "react";
+import React, { act } from "react";
 import { SignedOutOrRedirect } from "../../../src/auth/SignedOutOrRedirect.js";
 import { fullAuthApi } from "../../apis.js";
 import { MockClientWrapper } from "../../testWrappers.js";
@@ -35,7 +35,7 @@ describe("SignedOutOrRedirect", () => {
       }
     });
 
-    test("redirects when signed in", () => {
+    test("redirects when signed in", async () => {
       const component = (
         <h1>
           <SignedOutOrRedirect>Hello, Jane!</SignedOutOrRedirect>
@@ -48,14 +48,16 @@ describe("SignedOutOrRedirect", () => {
         }),
       });
 
-      expectMockSignedInUser();
+      await act(async () => {
+        await expectMockSignedInUser();
+      });
       rerender(component);
 
       expect(mockNavigate).toHaveBeenCalledTimes(1);
       expect(mockNavigate).toHaveBeenCalledWith("/");
     });
 
-    test("redirects when signed in and a redirectOnSuccessfulSignInPath has been provided", () => {
+    test("redirects when signed in and a redirectOnSuccessfulSignInPath has been provided", async () => {
       const component = (
         <h1>
           <SignedOutOrRedirect>Hello, Jane!</SignedOutOrRedirect>
@@ -69,14 +71,16 @@ describe("SignedOutOrRedirect", () => {
         }),
       });
 
-      expectMockSignedInUser();
+      await act(async () => {
+        await expectMockSignedInUser();
+      });
       rerender(component);
 
       expect(mockNavigate).toHaveBeenCalledTimes(1);
       expect(mockNavigate).toHaveBeenCalledWith("/signed-in");
     });
 
-    test("redirects when signed in and a redirectOnSuccessfulSignInPath has been provided and has been overriden", () => {
+    test("redirects when signed in and a redirectOnSuccessfulSignInPath has been provided and has been overriden", async () => {
       const component = (
         <h1>
           <SignedOutOrRedirect path="/my-custom-path">Hello, Jane!</SignedOutOrRedirect>
@@ -90,14 +94,16 @@ describe("SignedOutOrRedirect", () => {
         }),
       });
 
-      expectMockSignedInUser();
+      await act(async () => {
+        await expectMockSignedInUser();
+      });
       rerender(component);
 
       expect(mockNavigate).toHaveBeenCalledTimes(1);
       expect(mockNavigate).toHaveBeenCalledWith("/my-custom-path");
     });
 
-    test("redirects after signing in to the redirect path", () => {
+    test("redirects after signing in to the redirect path", async () => {
       window.location.search = "?redirectTo=%2Fredirect-me";
       const component = (
         <h1>
@@ -112,14 +118,16 @@ describe("SignedOutOrRedirect", () => {
         }),
       });
 
-      expectMockSignedInUser();
+      await act(async () => {
+        await expectMockSignedInUser();
+      });
       rerender(component);
 
       expect(mockNavigate).toHaveBeenCalledTimes(1);
       expect(mockNavigate).toHaveBeenCalledWith("/redirect-me");
     });
 
-    test("renders when signed out", () => {
+    test("renders when signed out", async () => {
       const component = (
         <h1>
           <SignedOutOrRedirect>Hello, Jane!</SignedOutOrRedirect>
@@ -132,7 +140,9 @@ describe("SignedOutOrRedirect", () => {
         }),
       });
 
-      expectMockSignedOutUser();
+      await act(async () => {
+        await expectMockSignedOutUser();
+      });
       rerender(component);
 
       expect(mockNavigate).not.toBeCalled();

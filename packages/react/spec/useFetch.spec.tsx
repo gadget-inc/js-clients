@@ -2,12 +2,11 @@
  * @jest-environment ./spec/jsdom-environment.ts
  */
 
-import { act, render, renderHook, screen } from "@testing-library/react";
+import { render, renderHook, screen } from "@testing-library/react";
 import { userEvent } from "@testing-library/user-event";
 import type { IsExact } from "conditional-type-checks";
 import { assert } from "conditional-type-checks";
-import type { ReactNode } from "react";
-import React, { StrictMode, Suspense } from "react";
+import React, { act } from "react";
 import { Readable } from "stream";
 import { useFetch } from "../src/useFetch.js";
 import type { ErrorWrapper } from "../src/utils.js";
@@ -15,13 +14,6 @@ import { relatedProductsApi } from "./apis.js";
 import { MockClientWrapper, mockUrqlClient } from "./testWrappers.js";
 
 const RelatedProductsWrapper = MockClientWrapper(relatedProductsApi);
-const StrictRelatedProductsWrapper = (props: { children: ReactNode }) => (
-  <StrictMode>
-    <Suspense fallback="suspended">
-      <RelatedProductsWrapper>{props.children}</RelatedProductsWrapper>
-    </Suspense>
-  </StrictMode>
-);
 
 describe("useFetch", () => {
   // these functions are typechecked but never run to avoid actually making API calls
@@ -106,19 +98,15 @@ describe("useFetch", () => {
   });
 
   test("it can fetch a string from the backend in strict mode", async () => {
-    const { result } = renderHook(() => useFetch("/foo/bar"), { wrapper: StrictRelatedProductsWrapper });
+    const { result } = renderHook(() => useFetch("/foo/bar"), { wrapper: RelatedProductsWrapper, reactStrictMode: true });
 
     expect(result.current[0].data).toBeFalsy();
     expect(result.current[0].fetching).toBe(true);
     expect(result.current[0].error).toBeFalsy();
     expect(result.current[0].streaming).toBe(false);
 
-    // first useEffect's request in strict mode
     expect(mockUrqlClient.mockFetch.requests[0].args).toEqual(["/foo/bar", expect.objectContaining({})]);
-    await mockUrqlClient.mockFetch.reportAbort();
 
-    // second useEffect's request in strict mode
-    expect(mockUrqlClient.mockFetch.requests[0].args).toEqual(["/foo/bar", expect.objectContaining({})]);
     await mockUrqlClient.mockFetch.pushResponse(new Response("hello world"));
 
     expect(result.current[0].fetching).toBe(false);
@@ -126,7 +114,7 @@ describe("useFetch", () => {
     expect(result.current[0].error).toBeFalsy();
     expect(result.current[0].streaming).toBe(false);
 
-    expect(mockUrqlClient.mockFetch).toBeCalledTimes(2);
+    expect(mockUrqlClient.mockFetch).toHaveBeenCalledTimes(2);
   });
 
   test("it can fetch json from the backend", async () => {
@@ -730,12 +718,13 @@ describe("useFetch", () => {
   };
 
   describe.each([
-    ["in lax mode", RelatedProductsWrapper],
-    ["in strict mode", StrictRelatedProductsWrapper],
-  ])(`%s`, (_, Wrapper) => {
+    ["in lax mode", false],
+    ["in strict mode", true],
+  ])(`%s`, (_, strictMode) => {
     test("it can fetch a result in a component", async () => {
       render(<FetchTester />, {
-        wrapper: Wrapper,
+        wrapper: RelatedProductsWrapper,
+        reactStrictMode: strictMode,
       });
 
       await userEvent.click(screen.getByTestId("send"));

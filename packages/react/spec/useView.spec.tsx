@@ -1,4 +1,4 @@
-import { renderHook } from "@testing-library/react";
+import { act, renderHook } from "@testing-library/react";
 import type { IsExact } from "conditional-type-checks";
 import { assert } from "conditional-type-checks";
 import type { AnyVariables } from "urql";
@@ -379,16 +379,18 @@ describe("useView", () => {
 
     // first render never completes as the component suspends
     expect(result.current).toBeFalsy();
-    expect(mockUrqlClient.executeQuery).toHaveBeenCalledTimes(1);
 
-    mockUrqlClient.executeQuery.pushResponse("echo", {
-      data: {
-        echo: {
-          value: "test",
+    await act(async () => {
+      await mockUrqlClient.executeQuery.waitForSubject("echo");
+      mockUrqlClient.executeQuery.pushResponse("echo", {
+        data: {
+          echo: {
+            value: "test",
+          },
         },
-      },
-      stale: false,
-      hasNext: false,
+        stale: false,
+        hasNext: false,
+      });
     });
 
     // rerender as react would do when the suspense promise resolves

@@ -342,25 +342,21 @@ export const Provider = ({
     isReady,
   });
 
-  if (
-    coalescedType == AppType.Embedded &&
-    !shopifyGlobalDefined &&
-    globalThis.top &&
-    globalThis.top !== globalThis.self &&
-    "dispatchEvent" in globalThis
-  ) {
+  if (coalescedType == AppType.Embedded && !shopifyGlobalDefined && globalThis.top && globalThis.top !== globalThis.self) {
     let url: URL | undefined = undefined;
 
     try {
       const topHref = document.referrer;
       url = new URL(topHref);
     } catch (e) {
-      const event = new CustomEvent("gadget:devharness:rsab.invalidReferrer", {
-        detail: {
-          url: document.referrer,
-        },
-      });
-      globalThis.dispatchEvent(event);
+      if ("dispatchEvent" in globalThis) {
+        const event = new CustomEvent("gadget:devharness:rsab.invalidReferrer", {
+          detail: {
+            url: document.referrer,
+          },
+        });
+        globalThis.dispatchEvent(event);
+      }
     }
 
     if (url && url.hostname === "admin.shopify.com") {

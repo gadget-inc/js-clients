@@ -10,7 +10,7 @@ describeForEachAutoAdapter("AutoTable - Bulk actions", ({ name, adapter: { AutoT
   const componentIdentifiers =
     name === SUITE_NAMES.POLARIS
       ? {
-          selectAllCheckbox: `input[id=":r3:"]`,
+          selectAllCheckbox: `input[id="«r3»"]`,
           singleRowCheckbox: (recordId: string | number) => `input[id="Select-${recordId}"]`,
         }
       : {
