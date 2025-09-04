@@ -6,6 +6,7 @@ import {
   findOneByFieldOperation,
   findOneOperation,
   globalActionOperation,
+  cancelBackgroundActionOperation
 } from "../src/index.js";
 import {
   MockBulkUpdateWidgetAction,
@@ -1590,6 +1591,32 @@ describe("operation builders", () => {
           }
         }",
           "variables": {},
+        }
+      `);
+    });
+  });
+
+  describe("cancelBackgroundActionOperation", () => {
+    test("it can build a mutation for canceling a background action", () => {
+      expect(cancelBackgroundActionOperation("app-job-1234567")).toMatchInlineSnapshot(`
+        {
+          "query": "mutation cancelBackgroundAction($id: String!) {
+          background {
+            cancelBackgroundAction(id: $id) {
+              success
+              errors {
+                code
+                message
+              }
+              backgroundAction {
+                id
+              }
+            }
+          }
+        }",
+          "variables": {
+            "id": "app-job-1234567",
+          },
         }
       `);
     });

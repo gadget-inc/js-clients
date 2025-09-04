@@ -24,6 +24,7 @@ import {
   findOneByFieldOperation,
   findOneOperation,
   globalActionOperation,
+  cancelBackgroundActionOperation
 } from "./operationBuilders.js";
 import {
   GadgetErrorGroup,
@@ -469,6 +470,12 @@ export const backgroundActionResultRunner = async <
   }
 
   return backgroundAction as BackgroundActionResult<ResultData>;
+};
+
+export const cancelBackgroundActionRunner = async (connection: GadgetConnection, id: string): Promise<void> => {
+    const plan = cancelBackgroundActionOperation(id);
+    const response = await connection.currentClient.mutation(plan.query, plan.variables).toPromise();
+    assertMutationSuccess(response, ["background", "cancelBackgroundAction"]);
 };
 
 /** @deprecated previous export name, @see backgroundActionResultRunner */

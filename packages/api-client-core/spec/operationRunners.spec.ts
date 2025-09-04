@@ -13,6 +13,7 @@ import {
   findManyRunner,
   findOneByFieldRunner,
   findOneRunner,
+  cancelBackgroundActionRunner,
 } from "../src/index.js";
 import { DefaultPostSelection, type CreatePostOptions, type CreatePostResult, type SelectedPostOrDefault } from "./TestSchema.js";
 import { asyncIterableToIterator, waitForExpectationToPass } from "./helpers.js";
@@ -2040,4 +2041,29 @@ describe("operationRunners", () => {
       });
     });
   });
+
+    describe("cancelBackgroundActionRunner", () => {
+        test("cancels a single background action", async () => {
+            const promise = cancelBackgroundActionRunner(connection, "bg-123");
+
+            expect(mockUrqlClient.executeMutation).toHaveBeenCalledTimes(1);
+            expect(mockUrqlClient.executeMutation.mock.calls[0][0].variables).toEqual({ id: "bg-123" });
+
+            mockUrqlClient.executeMutation.pushResponse("cancelBackgroundAction", {
+                data: {
+                    background: {
+                        cancelBackgroundAction: {
+                            success: true,
+                            errors: null,
+                            backgroundAction: { id: "bg-123" },
+                        },
+                    },
+                },
+                stale: false,
+                hasNext: false,
+            });
+
+            await expect(promise).resolves.toBeUndefined();
+        });
+    });
 });
