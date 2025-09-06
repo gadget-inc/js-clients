@@ -1,7 +1,7 @@
 import type { GadgetConnection } from "./GadgetConnection.js";
 import type { ActionFunction, ActionFunctionMetadata, GlobalActionFunction } from "./GadgetFunctions.js";
 import type { GadgetRecord } from "./GadgetRecord.js";
-import { backgroundActionResultRunner } from "./operationRunners.js";
+import { backgroundActionResultRunner, cancelBackgroundActionRunner } from "./operationRunners.js";
 import type { ActionFunctionOptions, DefaultSelection, Select } from "./types.js";
 
 export type BackgroundActionResultData<
@@ -39,5 +39,10 @@ export class BackgroundActionHandle<
   async result<Options extends ActionFunctionOptions<Action>, ResultData = BackgroundActionResultData<Action, Options>>(options?: Options) {
     return (await backgroundActionResultRunner<SchemaT, Action, Options, ResultData>(this.connection, this.id, this.action, options))
       .result;
+  }
+
+  /** Cancel this background action by id. */
+  async cancel(): Promise<void> {
+    await cancelBackgroundActionRunner(this.connection, this.id);
   }
 }
