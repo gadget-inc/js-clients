@@ -473,9 +473,9 @@ export const backgroundActionResultRunner = async <
 };
 
 export const cancelBackgroundActionRunner = async (connection: GadgetConnection, id: string): Promise<void> => {
-    const plan = cancelBackgroundActionOperation(id);
-    const response = await connection.currentClient.mutation(plan.query, plan.variables).toPromise();
-    assertMutationSuccess(response, ["background", "cancelBackgroundAction"]);
+  const plan = cancelBackgroundActionOperation(id);
+  const response = await connection.currentClient.mutation(plan.query, plan.variables).toPromise();
+  assertMutationSuccess(response, ["background", "cancel"]);
 };
 
 /** @deprecated previous export name, @see backgroundActionResultRunner */
