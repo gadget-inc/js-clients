@@ -9,11 +9,11 @@ import {
   GadgetConnection,
   actionRunner,
   backgroundActionResultRunner,
+  cancelBackgroundActionRunner,
   enqueueActionRunner,
   findManyRunner,
   findOneByFieldRunner,
   findOneRunner,
-  cancelBackgroundActionRunner,
 } from "../src/index.js";
 import { DefaultPostSelection, type CreatePostOptions, type CreatePostResult, type SelectedPostOrDefault } from "./TestSchema.js";
 import { asyncIterableToIterator, waitForExpectationToPass } from "./helpers.js";

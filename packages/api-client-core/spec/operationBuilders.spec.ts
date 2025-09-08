@@ -1,12 +1,12 @@
 import {
   actionOperation,
   backgroundActionResultOperation,
+  cancelBackgroundActionOperation,
   enqueueActionOperation,
   findManyOperation,
   findOneByFieldOperation,
   findOneOperation,
   globalActionOperation,
-  cancelBackgroundActionOperation
 } from "../src/index.js";
 import {
   MockBulkUpdateWidgetAction,

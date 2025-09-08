@@ -19,12 +19,12 @@ import type { AnyModelManager } from "./ModelManager.js";
 import {
   actionOperation,
   backgroundActionResultOperation,
+  cancelBackgroundActionOperation,
   enqueueActionOperation,
   findManyOperation,
   findOneByFieldOperation,
   findOneOperation,
   globalActionOperation,
-  cancelBackgroundActionOperation
 } from "./operationBuilders.js";
 import {
   GadgetErrorGroup,
