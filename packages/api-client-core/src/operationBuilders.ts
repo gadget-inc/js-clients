@@ -367,3 +367,29 @@ export const enqueueActionOperation = (
     },
   });
 };
+
+export const cancelBackgroundActionOperation = (id: string) => {
+  const fields = {
+    cancel: Call(
+      { id: Var({ value: id, type: "String!" }) },
+      {
+        success: true,
+        errors: {
+          code: true,
+          message: true,
+        },
+        backgroundAction: {
+          id: true,
+        },
+      }
+    ),
+  } as BuilderFieldSelection;
+
+  return compileWithVariableValues({
+    type: "mutation",
+    name: "cancelBackgroundAction",
+    fields: {
+      background: fields,
+    },
+  });
+};

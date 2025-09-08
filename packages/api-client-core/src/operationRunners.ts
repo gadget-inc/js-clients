@@ -19,6 +19,7 @@ import type { AnyModelManager } from "./ModelManager.js";
 import {
   actionOperation,
   backgroundActionResultOperation,
+  cancelBackgroundActionOperation,
   enqueueActionOperation,
   findManyOperation,
   findOneByFieldOperation,
@@ -469,6 +470,12 @@ export const backgroundActionResultRunner = async <
   }
 
   return backgroundAction as BackgroundActionResult<ResultData>;
+};
+
+export const cancelBackgroundActionRunner = async (connection: GadgetConnection, id: string): Promise<void> => {
+  const plan = cancelBackgroundActionOperation(id);
+  const response = await connection.currentClient.mutation(plan.query, plan.variables).toPromise();
+  assertMutationSuccess(response, ["background", "cancel"]);
 };
 
 /** @deprecated previous export name, @see backgroundActionResultRunner */
