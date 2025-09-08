@@ -1,7 +1,7 @@
 import { jest } from "@jest/globals";
 import { BackgroundActionHandle } from "../src/BackgroundActionHandle.js";
 import { GadgetConnection } from "../src/GadgetConnection.js";
-import { cancelBackgroundActionRunner, enqueueActionRunner } from "../src/index.js";
+import { enqueueActionRunner } from "../src/index.js";
 import { MockWidgetCreateAction } from "./mockActions.js";
 import { createMockUrqlClient } from "./mockUrqlClient.js";
 
@@ -174,11 +174,10 @@ describe("BackgroundActionHandle.cancel", () => {
     const handle = await handlePromise;
     expect(handle.id).toEqual("widget-createWidget-xyz");
 
-    // simulate "some other unit of work" failing, then cancel
     try {
       throw new Error("unit of work failed");
     } catch {
-      const cancelPromise = cancelBackgroundActionRunner(connection, handle.id);
+      const cancelPromise = handle.cancel();
 
       expect(mockUrqlClient.executeMutation).toHaveBeenCalledTimes(2);
       expect(mockUrqlClient.executeMutation.mock.calls[1][0].variables).toEqual({ id: "widget-createWidget-xyz" });
