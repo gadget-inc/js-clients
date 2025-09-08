@@ -107,7 +107,7 @@ describe("BackgroundActionHandle.cancel", () => {
     expect(mockUrqlClient.executeMutation).toHaveBeenCalledTimes(1);
     expect(mockUrqlClient.executeMutation.mock.calls[0][0].variables).toEqual({ id: "bg-123" });
 
-    mockUrqlClient.executeMutation.pushResponse("cancel", {
+    mockUrqlClient.executeMutation.pushResponse("cancelBackgroundAction", {
       data: {
         background: {
           cancel: {
@@ -133,7 +133,7 @@ describe("BackgroundActionHandle.cancel", () => {
 
     const promise = handle.cancel();
 
-    mockUrqlClient.executeMutation.pushResponse("cancel", {
+    mockUrqlClient.executeMutation.pushResponse("cancelBackgroundAction", {
       data: {
         background: {
           cancel: {
@@ -183,7 +183,7 @@ describe("BackgroundActionHandle.cancel", () => {
       expect(mockUrqlClient.executeMutation).toHaveBeenCalledTimes(2);
       expect(mockUrqlClient.executeMutation.mock.calls[1][0].variables).toEqual({ id: "widget-createWidget-xyz" });
 
-      mockUrqlClient.executeMutation.pushResponse("cancel", {
+      mockUrqlClient.executeMutation.pushResponse("cancelBackgroundAction", {
         data: {
           background: {
             cancel: {

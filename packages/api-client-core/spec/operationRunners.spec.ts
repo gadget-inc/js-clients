@@ -2049,7 +2049,7 @@ describe("operationRunners", () => {
       expect(mockUrqlClient.executeMutation).toHaveBeenCalledTimes(1);
       expect(mockUrqlClient.executeMutation.mock.calls[0][0].variables).toEqual({ id: "bg-123" });
 
-      mockUrqlClient.executeMutation.pushResponse("cancel", {
+      mockUrqlClient.executeMutation.pushResponse("cancelBackgroundAction", {
         data: {
           background: {
             cancel: {

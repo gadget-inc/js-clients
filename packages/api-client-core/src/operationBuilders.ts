@@ -387,7 +387,7 @@ export const cancelBackgroundActionOperation = (id: string) => {
 
   return compileWithVariableValues({
     type: "mutation",
-    name: "cancel",
+    name: "cancelBackgroundAction",
     fields: {
       background: fields,
     },

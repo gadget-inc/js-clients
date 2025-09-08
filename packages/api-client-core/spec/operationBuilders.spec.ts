@@ -1600,7 +1600,7 @@ describe("operation builders", () => {
     test("it can build a mutation for canceling a background action", () => {
       expect(cancelBackgroundActionOperation("app-job-1234567")).toMatchInlineSnapshot(`
         {
-          "query": "mutation cancel($id: String!) {
+          "query": "mutation cancelBackgroundAction($id: String!) {
           background {
             cancel(id: $id) {
               success
