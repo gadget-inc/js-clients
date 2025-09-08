@@ -1,4 +1,4 @@
-import type { ComponentProps, HTMLAttributes, ReactNode } from "react";
+import { ComponentProps, HTMLAttributes, ReactNode } from "react";
 
 export interface DialogProps extends HTMLAttributes<HTMLDivElement> {
   children?: React.ReactNode;
