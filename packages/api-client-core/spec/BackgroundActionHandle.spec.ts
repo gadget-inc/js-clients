@@ -1,9 +1,9 @@
 import { jest } from "@jest/globals";
 import { BackgroundActionHandle } from "../src/BackgroundActionHandle.js";
 import { GadgetConnection } from "../src/GadgetConnection.js";
+import { cancelBackgroundActionRunner, enqueueActionRunner } from "../src/index.js";
 import { MockWidgetCreateAction } from "./mockActions.js";
 import { createMockUrqlClient } from "./mockUrqlClient.js";
-import { enqueueActionRunner, cancelBackgroundActionRunner } from "../src/index.js";
 
 describe("BackgroundActionHandle.result", () => {
   test("resolves with the action result when completed", async () => {
@@ -95,109 +95,109 @@ describe("BackgroundActionHandle.result", () => {
 });
 
 describe("BackgroundActionHandle.cancel", () => {
-    test("cancels the background action by id", async () => {
-        const connection = new GadgetConnection({ endpoint: "https://someapp.gadget.app" });
-        const mockUrqlClient = createMockUrqlClient({});
-        jest.spyOn(connection, "currentClient" as any, "get").mockReturnValue(mockUrqlClient as any);
+  test("cancels the background action by id", async () => {
+    const connection = new GadgetConnection({ endpoint: "https://someapp.gadget.app" });
+    const mockUrqlClient = createMockUrqlClient({});
+    jest.spyOn(connection, "currentClient" as any, "get").mockReturnValue(mockUrqlClient as any);
 
-        const handle = new BackgroundActionHandle(connection as any, MockWidgetCreateAction as any, "bg-123");
+    const handle = new BackgroundActionHandle(connection as any, MockWidgetCreateAction as any, "bg-123");
 
-        const promise = handle.cancel();
+    const promise = handle.cancel();
 
-        expect(mockUrqlClient.executeMutation).toHaveBeenCalledTimes(1);
-        expect(mockUrqlClient.executeMutation.mock.calls[0][0].variables).toEqual({ id: "bg-123" });
+    expect(mockUrqlClient.executeMutation).toHaveBeenCalledTimes(1);
+    expect(mockUrqlClient.executeMutation.mock.calls[0][0].variables).toEqual({ id: "bg-123" });
 
-        mockUrqlClient.executeMutation.pushResponse("cancel", {
-            data: {
-                background: {
-                    cancel: {
-                        success: true,
-                        errors: null,
-                        backgroundAction: { id: "bg-123" },
-                    },
-                },
-            },
-            stale: false,
-            hasNext: false,
-        });
-
-        await expect(promise).resolves.toBeUndefined();
+    mockUrqlClient.executeMutation.pushResponse("cancel", {
+      data: {
+        background: {
+          cancel: {
+            success: true,
+            errors: null,
+            backgroundAction: { id: "bg-123" },
+          },
+        },
+      },
+      stale: false,
+      hasNext: false,
     });
 
-    test("throws when the cancel operation returns errors", async () => {
-        const connection = new GadgetConnection({ endpoint: "https://someapp.gadget.app" });
-        const mockUrqlClient = createMockUrqlClient({});
-        jest.spyOn(connection, "currentClient" as any, "get").mockReturnValue(mockUrqlClient as any);
+    await expect(promise).resolves.toBeUndefined();
+  });
 
-        const handle = new BackgroundActionHandle(connection as any, MockWidgetCreateAction as any, "bg-err");
+  test("throws when the cancel operation returns errors", async () => {
+    const connection = new GadgetConnection({ endpoint: "https://someapp.gadget.app" });
+    const mockUrqlClient = createMockUrqlClient({});
+    jest.spyOn(connection, "currentClient" as any, "get").mockReturnValue(mockUrqlClient as any);
 
-        const promise = handle.cancel();
+    const handle = new BackgroundActionHandle(connection as any, MockWidgetCreateAction as any, "bg-err");
 
-        mockUrqlClient.executeMutation.pushResponse("cancel", {
-            data: {
-                background: {
-                    cancel: {
-                        success: false,
-                        errors: [{ code: "GGT_SOMETHING", message: "nope" }],
-                        backgroundAction: null,
-                    },
-                },
-            },
-            stale: false,
-            hasNext: false,
-        });
+    const promise = handle.cancel();
 
-        await expect(promise).rejects.toThrow("GGT_SOMETHING: nope");
+    mockUrqlClient.executeMutation.pushResponse("cancel", {
+      data: {
+        background: {
+          cancel: {
+            success: false,
+            errors: [{ code: "GGT_SOMETHING", message: "nope" }],
+            backgroundAction: null,
+          },
+        },
+      },
+      stale: false,
+      hasNext: false,
     });
 
-    test("enqueues an action and cancels it on error", async () => {
-        const connection = new GadgetConnection({ endpoint: "https://someapp.gadget.app" });
-        const mockUrqlClient = createMockUrqlClient({});
-        jest.spyOn(connection, "currentClient" as any, "get").mockReturnValue(mockUrqlClient as any);
+    await expect(promise).rejects.toThrow("GGT_SOMETHING: nope");
+  });
 
-        const handlePromise = enqueueActionRunner(connection, MockWidgetCreateAction, { widget: { name: "new widget" } });
+  test("enqueues an action and cancels it on error", async () => {
+    const connection = new GadgetConnection({ endpoint: "https://someapp.gadget.app" });
+    const mockUrqlClient = createMockUrqlClient({});
+    jest.spyOn(connection, "currentClient" as any, "get").mockReturnValue(mockUrqlClient as any);
 
-        mockUrqlClient.executeMutation.pushResponse("enqueueCreateWidget", {
-            data: {
-                background: {
-                    createWidget: {
-                        success: true,
-                        errors: null,
-                        backgroundAction: { id: "widget-createWidget-xyz" },
-                    },
-                },
-            },
-            stale: false,
-            hasNext: false,
-        });
+    const handlePromise = enqueueActionRunner(connection, MockWidgetCreateAction, { widget: { name: "new widget" } });
 
-        const handle = await handlePromise;
-        expect(handle.id).toEqual("widget-createWidget-xyz");
-
-        // simulate "some other unit of work" failing, then cancel
-        try {
-            throw new Error("unit of work failed");
-        } catch {
-            const cancelPromise = cancelBackgroundActionRunner(connection, handle.id);
-
-            expect(mockUrqlClient.executeMutation).toHaveBeenCalledTimes(2);
-            expect(mockUrqlClient.executeMutation.mock.calls[1][0].variables).toEqual({ id: "widget-createWidget-xyz" });
-
-            mockUrqlClient.executeMutation.pushResponse("cancel", {
-                data: {
-                    background: {
-                        cancel: {
-                            success: true,
-                            errors: null,
-                            backgroundAction: { id: "widget-createWidget-xyz" },
-                        },
-                    },
-                },
-                stale: false,
-                hasNext: false,
-            });
-
-            await expect(cancelPromise).resolves.toBeUndefined();
-        }
+    mockUrqlClient.executeMutation.pushResponse("enqueueCreateWidget", {
+      data: {
+        background: {
+          createWidget: {
+            success: true,
+            errors: null,
+            backgroundAction: { id: "widget-createWidget-xyz" },
+          },
+        },
+      },
+      stale: false,
+      hasNext: false,
     });
+
+    const handle = await handlePromise;
+    expect(handle.id).toEqual("widget-createWidget-xyz");
+
+    // simulate "some other unit of work" failing, then cancel
+    try {
+      throw new Error("unit of work failed");
+    } catch {
+      const cancelPromise = cancelBackgroundActionRunner(connection, handle.id);
+
+      expect(mockUrqlClient.executeMutation).toHaveBeenCalledTimes(2);
+      expect(mockUrqlClient.executeMutation.mock.calls[1][0].variables).toEqual({ id: "widget-createWidget-xyz" });
+
+      mockUrqlClient.executeMutation.pushResponse("cancel", {
+        data: {
+          background: {
+            cancel: {
+              success: true,
+              errors: null,
+              backgroundAction: { id: "widget-createWidget-xyz" },
+            },
+          },
+        },
+        stale: false,
+        hasNext: false,
+      });
+
+      await expect(cancelPromise).resolves.toBeUndefined();
+    }
+  });
 });
