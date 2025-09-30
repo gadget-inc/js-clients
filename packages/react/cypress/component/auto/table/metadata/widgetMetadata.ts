@@ -6,6 +6,7 @@ export const widgetModelMetadata = {
           apiIdentifier: "widget",
           namespace: [],
           name: "Widget",
+          searchable: true,
           fields: [
             {
               name: "Id",

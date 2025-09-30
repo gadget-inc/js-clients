@@ -234,6 +234,7 @@ export const makeAutoTable = (elements: ShadcnElements) => {
       initialSort: props.initialSort,
       filter: props.filter,
       search: props.searchValue,
+      searchable: props.searchable,
     } as any);
 
     const {
@@ -297,7 +298,7 @@ export const makeAutoTable = (elements: ShadcnElements) => {
         />
 
         <div className="flex flex-row gap-2 items-center mb-2">
-          {searchable && <ShadcnAutoTableSearch search={search} />}
+          {searchable && search && <ShadcnAutoTableSearch search={search} />}
           {hasSelectedRecords && (
             <div className="ml-auto">
               <div className="flex flex-row ml-auto gap-2 items-center">

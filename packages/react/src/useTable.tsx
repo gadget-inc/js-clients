@@ -7,7 +7,7 @@ import {
   type Select,
 } from "@gadgetinc/api-client-core";
 import { useCallback, useMemo, useState } from "react";
-import { validateAutoTableProps } from "./auto/AutoTableValidators.js";
+import { validateAutoTableOptions, validateAutoTableProps } from "./auto/AutoTableValidators.js";
 import { useModelMetadata } from "./metadata.js";
 import { getTableColumns, getTableRows, getTableSelectionMap, getTableSpec } from "./use-table/helpers.js";
 import type { TableOptions, TableResult } from "./use-table/types.js";
@@ -61,6 +61,9 @@ export const useTable = <
     fetching: fetchingMetadata,
     error: metadataError,
   } = useModelMetadata(manager.findMany.modelApiIdentifier, namespaceAsArray);
+
+  validateAutoTableOptions({ options, metadata });
+  const isSearchable = !!(options?.searchable ?? (metadata ? metadata.searchable : false));
 
   const [sort, setSort] = useState<OptionsType["sort"] | undefined>(options?.initialSort);
 
@@ -141,7 +144,7 @@ export const useTable = <
       page,
       fetching,
       error,
-      search,
+      search: isSearchable ? search : undefined,
       sort: sortState,
       selection,
     },

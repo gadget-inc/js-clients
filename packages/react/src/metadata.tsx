@@ -136,6 +136,7 @@ const ModelMetadataQuery = graphql(/* GraphQL */ `
         fields {
           ...FieldMetadata
         }
+        searchable
         defaultDisplayField {
           name
           apiIdentifier

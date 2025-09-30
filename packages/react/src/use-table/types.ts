@@ -54,6 +54,10 @@ export type TableRow = Record<string, ColumnValueType | ReactNode>;
 
 export interface TableOptions {
   /**
+   * Whether the table should be searchable.
+   */
+  searchable?: boolean;
+  /**
    * The number of records to show per page.
    */
   pageSize?: number;
@@ -139,7 +143,7 @@ export type TableResult<Data> = [
     page: PaginationResult;
     fetching: boolean;
     error?: ErrorWrapper;
-    search: SearchResult;
+    search?: SearchResult;
     selection: RecordSelection;
     sort: SortState;
   },
