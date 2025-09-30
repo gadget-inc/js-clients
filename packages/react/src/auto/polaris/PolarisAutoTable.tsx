@@ -121,6 +121,7 @@ const PolarisAutoTableComponent = <
     initialSort: props.initialSort,
     filter: props.filter,
     search: props.searchValue,
+    searchable: props.searchable,
   } as any);
 
   const { columns, rows, page, fetching, error, search, selection, sort, metadata, data: rawRecords } = methods;
@@ -214,7 +215,7 @@ const PolarisAutoTableComponent = <
           ids={selection.recordIds}
           clearSelection={selection.clearAll}
         />
-        {searchable && (
+        {searchable && search && (
           <IndexFilters
             mode={mode}
             setMode={setMode}

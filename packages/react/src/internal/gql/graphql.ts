@@ -120,6 +120,8 @@ export type Scalars = {
   ShopifyGdprRequestTopicEnum: { input: any; output: any };
   /** Represents the possible values of the Status enum. */
   ShopifyProductStatusEnum: { input: any; output: any };
+  /** The `StateValue` scalar type represents an input value for a recordState field. It can be a string, like 'created.active', or a JSON object, like { created: 'active' }. */
+  StateValue: { input: any; output: any };
   /** A field whose value conforms to the standard URL format as specified in RFC3986: https://www.ietf.org/rfc/rfc3986.txt. */
   URL: { input: any; output: any };
   /** Represents the possible values of the title enum. */
@@ -505,6 +507,21 @@ export type BackgroundActionRetryPolicy = {
   randomizeInterval?: InputMaybe<Scalars["Boolean"]["input"]>;
   /** The number of repeat attempts to make if the initial attempt fails. Defaults to 10. Note: the total number of attempts will be this number plus one -- this counts the number of retries *after* the first attempt. */
   retryCount?: InputMaybe<Scalars["Int"]["input"]>;
+};
+
+/** The value returned from cancelling a background action */
+export type BackgroundBulkCancelBackgroundActionResult = {
+  __typename?: "BackgroundBulkCancelBackgroundActionResult";
+  failedCount: Scalars["Int"]["output"];
+  successCount: Scalars["Int"]["output"];
+};
+
+/** The value returned from cancelling a background action */
+export type BackgroundCancelBackgroundActionResult = {
+  __typename?: "BackgroundCancelBackgroundActionResult";
+  backgroundAction?: Maybe<BackgroundActionHandle>;
+  errors?: Maybe<Array<ExecutionError>>;
+  success: Scalars["Boolean"]["output"];
 };
 
 export type BackgroundDeepRelationshipChainMutations = {
@@ -1142,6 +1159,7 @@ export type BackgroundMutations = {
   bulkAbortShopifySyncs: BulkEnqueueBackgroundActionResult;
   bulkAddInventoryWidgets: BulkEnqueueBackgroundActionResult;
   bulkAlwaysThrowErrorWidgets: BulkEnqueueBackgroundActionResult;
+  bulkCancel: BackgroundBulkCancelBackgroundActionResult;
   bulkCompleteShopifySyncs: BulkEnqueueBackgroundActionResult;
   bulkCreateAutoTableTests: BulkEnqueueBackgroundActionResult;
   bulkCreateDoodads: BulkEnqueueBackgroundActionResult;
@@ -1198,6 +1216,7 @@ export type BackgroundMutations = {
   bulkUpsertUsers: BulkEnqueueBackgroundActionResult;
   bulkUpsertWidgets: BulkEnqueueBackgroundActionResult;
   bulkWhateverParts: BulkEnqueueBackgroundActionResult;
+  cancel: BackgroundCancelBackgroundActionResult;
   completeShopifySync: EnqueueBackgroundActionResult;
   createAutoTableTest: EnqueueBackgroundActionResult;
   createDoodad: EnqueueBackgroundActionResult;
@@ -1294,6 +1313,10 @@ export type BackgroundMutationsBulkAddInventoryWidgetsArgs = {
 export type BackgroundMutationsBulkAlwaysThrowErrorWidgetsArgs = {
   backgroundOptions?: InputMaybe<EnqueueBackgroundActionOptions>;
   inputs: Array<BulkAlwaysThrowErrorWidgetsInput>;
+};
+
+export type BackgroundMutationsBulkCancelArgs = {
+  ids: Array<Scalars["String"]["input"]>;
 };
 
 export type BackgroundMutationsBulkCompleteShopifySyncsArgs = {
@@ -1574,6 +1597,10 @@ export type BackgroundMutationsBulkUpsertWidgetsArgs = {
 export type BackgroundMutationsBulkWhateverPartsArgs = {
   backgroundOptions?: InputMaybe<EnqueueBackgroundActionOptions>;
   inputs: Array<BulkWhateverPartsInput>;
+};
+
+export type BackgroundMutationsCancelArgs = {
+  id: Scalars["String"]["input"];
 };
 
 export type BackgroundMutationsCompleteShopifySyncArgs = {
@@ -2388,6 +2415,13 @@ export type BulkAlwaysThrowErrorWidgetsResult = {
   success: Scalars["Boolean"]["output"];
   /** The list of all changed widget records by each sent bulk action. Returned in the same order as the input bulk action params. */
   widgets?: Maybe<Array<Maybe<Widget>>>;
+};
+
+/** The value returned from cancelling a background action */
+export type BulkCancelBackgroundActionResult = {
+  __typename?: "BulkCancelBackgroundActionResult";
+  failedCount: Scalars["Int"]["output"];
+  successCount: Scalars["Int"]["output"];
 };
 
 export type BulkCompleteShopifySyncsInput = {
@@ -4373,6 +4407,14 @@ export type BulkWhateverPartsResult = {
   success: Scalars["Boolean"]["output"];
 };
 
+/** The value returned from cancelling a background action */
+export type CancelBackgroundActionResult = {
+  __typename?: "CancelBackgroundActionResult";
+  backgroundAction?: Maybe<BackgroundActionHandle>;
+  errors?: Maybe<Array<ExecutionError>>;
+  success: Scalars["Boolean"]["output"];
+};
+
 export type CompleteShopifySyncInput = {
   domain?: InputMaybe<Scalars["String"]["input"]>;
   errorDetails?: InputMaybe<Scalars["String"]["input"]>;
@@ -4411,6 +4453,7 @@ export type ConvergeDeepRelationshipChainCitizenInput = {
 
 /** One element of a ConvergeDeepRelationshipChainCitizenInput record converge list */
 export type ConvergeDeepRelationshipChainCitizenValues = {
+  age?: InputMaybe<Scalars["Float"]["input"]>;
   cityOfMayorDuty?: InputMaybe<DeepRelationshipChainCityBelongsToInput>;
   firstName?: InputMaybe<Scalars["String"]["input"]>;
   homeCity?: InputMaybe<DeepRelationshipChainCityBelongsToInput>;
@@ -4587,6 +4630,7 @@ export type ConvergeHasManyThroughJoinerModelInput = {
 /** One element of a ConvergeHasManyThroughJoinerModelInput record converge list */
 export type ConvergeHasManyThroughJoinerModelValues = {
   id?: InputMaybe<Scalars["GadgetID"]["input"]>;
+  joinModelName?: InputMaybe<Scalars["String"]["input"]>;
   joinerBelongsToBase?: InputMaybe<HasManyThroughBaseModelBelongsToInput>;
   joinerBelongsToSibling?: InputMaybe<HasManyThroughSiblingModelBelongsToInput>;
 };
@@ -4648,6 +4692,7 @@ export type ConvergeUniversityRegistrationInput = {
 
 /** One element of a ConvergeUniversityRegistrationInput record converge list */
 export type ConvergeUniversityRegistrationValues = {
+  attempt?: InputMaybe<Scalars["Float"]["input"]>;
   course?: InputMaybe<UniversityCourseBelongsToInput>;
   effectiveFrom?: InputMaybe<Scalars["DateOrDateTime"]["input"]>;
   effectiveTo?: InputMaybe<Scalars["DateOrDateTime"]["input"]>;
@@ -4715,6 +4760,7 @@ export type CreateAutoTableTestResult = UpsertAutoTableTestResult & {
 };
 
 export type CreateDeepRelationshipChainCitizenInput = {
+  age?: InputMaybe<Scalars["Float"]["input"]>;
   cityOfMayorDuty?: InputMaybe<DeepRelationshipChainCityBelongsToInput>;
   firstName?: InputMaybe<Scalars["String"]["input"]>;
   homeCity?: InputMaybe<DeepRelationshipChainCityBelongsToInput>;
@@ -4929,6 +4975,7 @@ export type CreateHasManyThroughBaseModelResult = UpsertHasManyThroughBaseModelR
 };
 
 export type CreateHasManyThroughJoinerModelInput = {
+  joinModelName?: InputMaybe<Scalars["String"]["input"]>;
   joinerBelongsToBase?: InputMaybe<HasManyThroughBaseModelBelongsToInput>;
   joinerBelongsToSibling?: InputMaybe<HasManyThroughSiblingModelBelongsToInput>;
 };
@@ -5145,6 +5192,7 @@ export type CreateUniversityProfessorResult = UpsertUniversityProfessorResult & 
 };
 
 export type CreateUniversityRegistrationInput = {
+  attempt?: InputMaybe<Scalars["Float"]["input"]>;
   course?: InputMaybe<UniversityCourseBelongsToInput>;
   effectiveFrom?: InputMaybe<Scalars["DateOrDateTime"]["input"]>;
   effectiveTo?: InputMaybe<Scalars["DateOrDateTime"]["input"]>;
@@ -5332,6 +5380,7 @@ export type DeepRelationshipChainCitizen = {
   __typename?: "DeepRelationshipChainCitizen";
   /** Get all the fields for this record. Useful for not having to list out all the fields you want to retrieve, but slower. */
   _all: Scalars["JSONObject"]["output"];
+  age?: Maybe<Scalars["Float"]["output"]>;
   cityOfMayorDuty?: Maybe<DeepRelationshipChainCity>;
   cityOfMayorDutyId?: Maybe<Scalars["GadgetID"]["output"]>;
   /** The time at which this record was first created. Set once upon record creation and never changed. Managed by Gadget. */
@@ -5368,6 +5417,7 @@ export type DeepRelationshipChainCitizenFilter = {
   AND?: InputMaybe<Array<InputMaybe<DeepRelationshipChainCitizenFilter>>>;
   NOT?: InputMaybe<Array<InputMaybe<DeepRelationshipChainCitizenFilter>>>;
   OR?: InputMaybe<Array<InputMaybe<DeepRelationshipChainCitizenFilter>>>;
+  age?: InputMaybe<FloatFilter>;
   cityOfMayorDuty?: InputMaybe<DeepRelationshipChainCityRelationshipFilter>;
   cityOfMayorDutyId?: InputMaybe<IdFilter>;
   createdAt?: InputMaybe<DateTimeFilter>;
@@ -5403,6 +5453,7 @@ export type DeepRelationshipChainCitizenRelationshipFilter = {
   AND?: InputMaybe<Array<InputMaybe<DeepRelationshipChainCitizenRelationshipFilter>>>;
   NOT?: InputMaybe<Array<InputMaybe<DeepRelationshipChainCitizenRelationshipFilter>>>;
   OR?: InputMaybe<Array<InputMaybe<DeepRelationshipChainCitizenRelationshipFilter>>>;
+  age?: InputMaybe<FloatFilter>;
   cityOfMayorDuty?: InputMaybe<DeepRelationshipChainCityRelationshipFilter>;
   cityOfMayorDutyId?: InputMaybe<IdFilter>;
   createdAt?: InputMaybe<DateTimeFilter>;
@@ -5416,6 +5467,8 @@ export type DeepRelationshipChainCitizenRelationshipFilter = {
 };
 
 export type DeepRelationshipChainCitizenSort = {
+  /** Sort the results by the age field. Defaults to ascending (smallest value first). */
+  age?: InputMaybe<SortOrder>;
   /** Sort the results by the createdAt field. Defaults to ascending (smallest value first). */
   createdAt?: InputMaybe<SortOrder>;
   /** Sort the results by the firstName field. Defaults to ascending (smallest value first). */
@@ -5432,6 +5485,7 @@ export type DeepRelationshipChainCitizensInnerRelationshipFilter = {
   AND?: InputMaybe<Array<InputMaybe<DeepRelationshipChainCitizensInnerRelationshipFilter>>>;
   NOT?: InputMaybe<Array<InputMaybe<DeepRelationshipChainCitizensInnerRelationshipFilter>>>;
   OR?: InputMaybe<Array<InputMaybe<DeepRelationshipChainCitizensInnerRelationshipFilter>>>;
+  age?: InputMaybe<FloatFilter>;
   cityOfMayorDuty?: InputMaybe<DeepRelationshipChainCityRelationshipFilter>;
   cityOfMayorDutyId?: InputMaybe<IdFilter>;
   createdAt?: InputMaybe<DateTimeFilter>;
@@ -6130,13 +6184,19 @@ export type DeepRelationshipChainQueries = {
   __typename?: "DeepRelationshipChainQueries";
   cities: DeepRelationshipChainCityConnection;
   citizen?: Maybe<DeepRelationshipChainCitizen>;
+  citizenGellyView?: Maybe<Scalars["JSON"]["output"]>;
   citizens: DeepRelationshipChainCitizenConnection;
   city?: Maybe<DeepRelationshipChainCity>;
+  cityGellyView?: Maybe<Scalars["JSON"]["output"]>;
   continent?: Maybe<DeepRelationshipChainContinent>;
+  continentGellyView?: Maybe<Scalars["JSON"]["output"]>;
   continents: DeepRelationshipChainContinentConnection;
   countries: DeepRelationshipChainCountryConnection;
   country?: Maybe<DeepRelationshipChainCountry>;
+  countryGellyView?: Maybe<Scalars["JSON"]["output"]>;
+  gellyView?: Maybe<Scalars["JSON"]["output"]>;
   planet?: Maybe<DeepRelationshipChainPlanet>;
+  planetGellyView?: Maybe<Scalars["JSON"]["output"]>;
   planets: DeepRelationshipChainPlanetConnection;
 };
 
@@ -6154,6 +6214,11 @@ export type DeepRelationshipChainQueriesCitizenArgs = {
   id: Scalars["GadgetID"]["input"];
 };
 
+export type DeepRelationshipChainQueriesCitizenGellyViewArgs = {
+  query: Scalars["String"]["input"];
+  variables?: InputMaybe<Scalars["JSONObject"]["input"]>;
+};
+
 export type DeepRelationshipChainQueriesCitizensArgs = {
   after?: InputMaybe<Scalars["String"]["input"]>;
   before?: InputMaybe<Scalars["String"]["input"]>;
@@ -6168,8 +6233,18 @@ export type DeepRelationshipChainQueriesCityArgs = {
   id: Scalars["GadgetID"]["input"];
 };
 
+export type DeepRelationshipChainQueriesCityGellyViewArgs = {
+  query: Scalars["String"]["input"];
+  variables?: InputMaybe<Scalars["JSONObject"]["input"]>;
+};
+
 export type DeepRelationshipChainQueriesContinentArgs = {
   id: Scalars["GadgetID"]["input"];
+};
+
+export type DeepRelationshipChainQueriesContinentGellyViewArgs = {
+  query: Scalars["String"]["input"];
+  variables?: InputMaybe<Scalars["JSONObject"]["input"]>;
 };
 
 export type DeepRelationshipChainQueriesContinentsArgs = {
@@ -6196,8 +6271,23 @@ export type DeepRelationshipChainQueriesCountryArgs = {
   id: Scalars["GadgetID"]["input"];
 };
 
+export type DeepRelationshipChainQueriesCountryGellyViewArgs = {
+  query: Scalars["String"]["input"];
+  variables?: InputMaybe<Scalars["JSONObject"]["input"]>;
+};
+
+export type DeepRelationshipChainQueriesGellyViewArgs = {
+  query: Scalars["String"]["input"];
+  variables?: InputMaybe<Scalars["JSONObject"]["input"]>;
+};
+
 export type DeepRelationshipChainQueriesPlanetArgs = {
   id: Scalars["GadgetID"]["input"];
+};
+
+export type DeepRelationshipChainQueriesPlanetGellyViewArgs = {
+  query: Scalars["String"]["input"];
+  variables?: InputMaybe<Scalars["JSONObject"]["input"]>;
 };
 
 export type DeepRelationshipChainQueriesPlanetsArgs = {
@@ -6910,12 +7000,20 @@ export type GadgetActionGraphQlType = {
   outputTypeScriptInterface: Scalars["String"]["output"];
 };
 
+export type GadgetApplicationHarnessEvent = {
+  __typename?: "GadgetApplicationHarnessEvent";
+  event: Scalars["JSON"]["output"];
+  id: Scalars["String"]["output"];
+};
+
 export type GadgetApplicationMeta = {
   __typename?: "GadgetApplicationMeta";
   allHydrations: Scalars["JSON"]["output"];
   /** The roles that the entity making this API call has been assigned */
   assignedRoles: Array<GadgetRole>;
   canonicalRenderURL: Scalars["String"]["output"];
+  computedView?: Maybe<GadgetComputedView>;
+  computedViews: Array<GadgetComputedView>;
   currentEnvironmentRenderURL: Scalars["String"]["output"];
   defaultFileExtension: Scalars["String"]["output"];
   developmentGraphQLEndpoint: Scalars["String"]["output"];
@@ -6929,12 +7027,14 @@ export type GadgetApplicationMeta = {
   globalAction?: Maybe<GadgetGlobalAction>;
   globalActions: Array<GadgetGlobalAction>;
   graphQLEndpoint: Scalars["String"]["output"];
+  hasComputedViews: Scalars["Boolean"]["output"];
   hasGlobalActions: Scalars["Boolean"]["output"];
   hasLegacyEffectCards: Scalars["Boolean"]["output"];
   hasShopifyConnection: Scalars["Boolean"]["output"];
   hasSplitEnvironments: Scalars["Boolean"]["output"];
   hydrations?: Maybe<Scalars["HydrationPlan"]["output"]>;
   id: Scalars["GadgetID"]["output"];
+  jsClientClassName: Scalars["String"]["output"];
   jsPackageIdentifier: Scalars["String"]["output"];
   jsPackageTarballURL: Scalars["String"]["output"];
   languagePreference: Scalars["String"]["output"];
@@ -6952,6 +7052,11 @@ export type GadgetApplicationMeta = {
   shopifyConnectionApiVersion?: Maybe<Scalars["String"]["output"]>;
   slug: Scalars["String"]["output"];
   supportsGadgetVitePlugin: Scalars["Boolean"]["output"];
+};
+
+export type GadgetApplicationMetaComputedViewArgs = {
+  apiIdentifier: Scalars["String"]["input"];
+  namespace?: InputMaybe<Array<Scalars["String"]["input"]>>;
 };
 
 export type GadgetApplicationMetaDirectUploadTokenArgs = {
@@ -6986,6 +7091,28 @@ export type GadgetBelongsToConfig = GadgetFieldConfigInterface & {
   relatedModel?: Maybe<GadgetModel>;
   relatedModelKey?: Maybe<Scalars["String"]["output"]>;
   validations: Array<Maybe<GadgetFieldValidationUnion>>;
+};
+
+export type GadgetComputedView = {
+  __typename?: "GadgetComputedView";
+  apiIdentifier: Scalars["String"]["output"];
+  examples?: Maybe<GadgetComputedViewExamples>;
+  name: Scalars["String"]["output"];
+  namespace?: Maybe<Array<Scalars["String"]["output"]>>;
+  namespacedApiIdentifier: Scalars["String"]["output"];
+};
+
+export type GadgetComputedViewExamples = {
+  __typename?: "GadgetComputedViewExamples";
+  acceptsInput: Scalars["Boolean"]["output"];
+  allowedRoles?: Maybe<Array<Scalars["String"]["output"]>>;
+  exampleImperativeInvocation?: Maybe<Scalars["String"]["output"]>;
+  exampleJSInputs: Scalars["JSON"]["output"];
+  exampleReactHook: Scalars["String"]["output"];
+  inputGraphQLTypeSDL?: Maybe<Scalars["String"]["output"]>;
+  inputTypescriptType?: Maybe<Scalars["String"]["output"]>;
+  outputTypescriptType: Scalars["String"]["output"];
+  referencedModelKeys?: Maybe<Array<Scalars["String"]["output"]>>;
 };
 
 export type GadgetDateTimeConfig = GadgetFieldConfigInterface & {
@@ -7188,6 +7315,7 @@ export type GadgetModel = {
   filterable: Scalars["Boolean"]["output"];
   graphQLTypeName: Scalars["String"]["output"];
   graphQLTypeSDL: Scalars["String"]["output"];
+  hasViews: Scalars["Boolean"]["output"];
   initialCreatedState?: Maybe<Scalars["String"]["output"]>;
   key: Scalars["String"]["output"];
   name: Scalars["String"]["output"];
@@ -7200,9 +7328,15 @@ export type GadgetModel = {
   sortable: Scalars["Boolean"]["output"];
   typescriptTypeInterface: Scalars["String"]["output"];
   typescriptTypeInterfaceName: Scalars["String"]["output"];
+  view?: Maybe<GadgetComputedView>;
+  views: Array<GadgetComputedView>;
 };
 
 export type GadgetModelActionArgs = {
+  apiIdentifier: Scalars["String"]["input"];
+};
+
+export type GadgetModelViewArgs = {
   apiIdentifier: Scalars["String"]["input"];
 };
 
@@ -7653,12 +7787,19 @@ export type GameQueries = {
   __typename?: "GameQueries";
   cities: GameCityConnection;
   city?: Maybe<GameCity>;
+  cityGellyView?: Maybe<Scalars["JSON"]["output"]>;
+  /** Computed view from api/views/game/echo.gelly */
+  echo: Scalars["JSON"]["output"];
+  gellyView?: Maybe<Scalars["JSON"]["output"]>;
   player?: Maybe<GamePlayer>;
+  playerGellyView?: Maybe<Scalars["JSON"]["output"]>;
   players: GamePlayerConnection;
   round?: Maybe<GameRound>;
+  roundGellyView?: Maybe<Scalars["JSON"]["output"]>;
   rounds: GameRoundConnection;
   stadia: GameStadiumConnection;
   stadium?: Maybe<GameStadium>;
+  stadiumGellyView?: Maybe<Scalars["JSON"]["output"]>;
 };
 
 export type GameQueriesCitiesArgs = {
@@ -7675,8 +7816,27 @@ export type GameQueriesCityArgs = {
   id: Scalars["GadgetID"]["input"];
 };
 
+export type GameQueriesCityGellyViewArgs = {
+  query: Scalars["String"]["input"];
+  variables?: InputMaybe<Scalars["JSONObject"]["input"]>;
+};
+
+export type GameQueriesEchoArgs = {
+  value?: InputMaybe<Scalars["Int"]["input"]>;
+};
+
+export type GameQueriesGellyViewArgs = {
+  query: Scalars["String"]["input"];
+  variables?: InputMaybe<Scalars["JSONObject"]["input"]>;
+};
+
 export type GameQueriesPlayerArgs = {
   id: Scalars["GadgetID"]["input"];
+};
+
+export type GameQueriesPlayerGellyViewArgs = {
+  query: Scalars["String"]["input"];
+  variables?: InputMaybe<Scalars["JSONObject"]["input"]>;
 };
 
 export type GameQueriesPlayersArgs = {
@@ -7691,6 +7851,11 @@ export type GameQueriesPlayersArgs = {
 
 export type GameQueriesRoundArgs = {
   id: Scalars["GadgetID"]["input"];
+};
+
+export type GameQueriesRoundGellyViewArgs = {
+  query: Scalars["String"]["input"];
+  variables?: InputMaybe<Scalars["JSONObject"]["input"]>;
 };
 
 export type GameQueriesRoundsArgs = {
@@ -7715,6 +7880,11 @@ export type GameQueriesStadiaArgs = {
 
 export type GameQueriesStadiumArgs = {
   id: Scalars["GadgetID"]["input"];
+};
+
+export type GameQueriesStadiumGellyViewArgs = {
+  query: Scalars["String"]["input"];
+  variables?: InputMaybe<Scalars["JSONObject"]["input"]>;
 };
 
 export type GameRound = {
@@ -8194,6 +8364,7 @@ export type HasManyThroughJoinerModel = {
   createdAt: Scalars["DateTime"]["output"];
   /** The globally unique, unchanging identifier for this record. Assigned and managed by Gadget. */
   id: Scalars["GadgetID"]["output"];
+  joinModelName?: Maybe<Scalars["String"]["output"]>;
   joinerBelongsToBase?: Maybe<HasManyThroughBaseModel>;
   joinerBelongsToBaseId?: Maybe<Scalars["GadgetID"]["output"]>;
   joinerBelongsToSibling?: Maybe<HasManyThroughSiblingModel>;
@@ -8226,6 +8397,7 @@ export type HasManyThroughJoinerModelFilter = {
   OR?: InputMaybe<Array<InputMaybe<HasManyThroughJoinerModelFilter>>>;
   createdAt?: InputMaybe<DateTimeFilter>;
   id?: InputMaybe<IdFilter>;
+  joinModelName?: InputMaybe<StringFilter>;
   joinerBelongsToBase?: InputMaybe<HasManyThroughBaseModelRelationshipFilter>;
   joinerBelongsToBaseId?: InputMaybe<IdFilter>;
   joinerBelongsToSibling?: InputMaybe<HasManyThroughSiblingModelRelationshipFilter>;
@@ -8247,6 +8419,8 @@ export type HasManyThroughJoinerModelSort = {
   createdAt?: InputMaybe<SortOrder>;
   /** Sort the results by the id field. Defaults to ascending (smallest value first). */
   id?: InputMaybe<SortOrder>;
+  /** Sort the results by the joinModelName field. Defaults to ascending (smallest value first). */
+  joinModelName?: InputMaybe<SortOrder>;
   /** Sort the results by the updatedAt field. Defaults to ascending (smallest value first). */
   updatedAt?: InputMaybe<SortOrder>;
 };
@@ -8384,15 +8558,24 @@ export type HasManyThroughMutationsUpsertSiblingModelArgs = {
 export type HasManyThroughQueries = {
   __typename?: "HasManyThroughQueries";
   baseModel?: Maybe<HasManyThroughBaseModel>;
+  baseModelGellyView?: Maybe<Scalars["JSON"]["output"]>;
   baseModels: HasManyThroughBaseModelConnection;
+  gellyView?: Maybe<Scalars["JSON"]["output"]>;
   joinerModel?: Maybe<HasManyThroughJoinerModel>;
+  joinerModelGellyView?: Maybe<Scalars["JSON"]["output"]>;
   joinerModels: HasManyThroughJoinerModelConnection;
   siblingModel?: Maybe<HasManyThroughSiblingModel>;
+  siblingModelGellyView?: Maybe<Scalars["JSON"]["output"]>;
   siblingModels: HasManyThroughSiblingModelConnection;
 };
 
 export type HasManyThroughQueriesBaseModelArgs = {
   id: Scalars["GadgetID"]["input"];
+};
+
+export type HasManyThroughQueriesBaseModelGellyViewArgs = {
+  query: Scalars["String"]["input"];
+  variables?: InputMaybe<Scalars["JSONObject"]["input"]>;
 };
 
 export type HasManyThroughQueriesBaseModelsArgs = {
@@ -8405,8 +8588,18 @@ export type HasManyThroughQueriesBaseModelsArgs = {
   sort?: InputMaybe<Array<HasManyThroughBaseModelSort>>;
 };
 
+export type HasManyThroughQueriesGellyViewArgs = {
+  query: Scalars["String"]["input"];
+  variables?: InputMaybe<Scalars["JSONObject"]["input"]>;
+};
+
 export type HasManyThroughQueriesJoinerModelArgs = {
   id: Scalars["GadgetID"]["input"];
+};
+
+export type HasManyThroughQueriesJoinerModelGellyViewArgs = {
+  query: Scalars["String"]["input"];
+  variables?: InputMaybe<Scalars["JSONObject"]["input"]>;
 };
 
 export type HasManyThroughQueriesJoinerModelsArgs = {
@@ -8421,6 +8614,11 @@ export type HasManyThroughQueriesJoinerModelsArgs = {
 
 export type HasManyThroughQueriesSiblingModelArgs = {
   id: Scalars["GadgetID"]["input"];
+};
+
+export type HasManyThroughQueriesSiblingModelGellyViewArgs = {
+  query: Scalars["String"]["input"];
+  variables?: InputMaybe<Scalars["JSONObject"]["input"]>;
 };
 
 export type HasManyThroughQueriesSiblingModelsArgs = {
@@ -9265,7 +9463,15 @@ export type InternalCreateWidgetResult = {
   widget?: Maybe<Scalars["InternalWidgetRecord"]["output"]>;
 };
 
+export type InternalDeepRelationshipChainCitizenAtomicsInput = {
+  /** Numeric atomic commands for operating on age. */
+  age?: InputMaybe<Array<NumericAtomicFieldUpdateInput>>;
+};
+
 export type InternalDeepRelationshipChainCitizenInput = {
+  /** An optional list of atomically applied commands for race-safe mutations of the record */
+  _atomics?: InputMaybe<InternalDeepRelationshipChainCitizenAtomicsInput>;
+  age?: InputMaybe<Scalars["Float"]["input"]>;
   cityOfMayorDuty?: InputMaybe<InternalBelongsToInput>;
   createdAt?: InputMaybe<Scalars["DateTime"]["input"]>;
   firstName?: InputMaybe<Scalars["String"]["input"]>;
@@ -9731,6 +9937,7 @@ export type InternalDeepRelationshipChainQueries = {
   country?: Maybe<Scalars["InternalDeepRelationshipChainCountryRecord"]["output"]>;
   /** Currently open platform transaction details, or null if no transaction is open */
   currentTransactionDetails?: Maybe<Scalars["JSONObject"]["output"]>;
+  gellyView?: Maybe<Scalars["JSON"]["output"]>;
   listCitizen: InternalDeepRelationshipChainCitizenRecordConnection;
   listCity: InternalDeepRelationshipChainCityRecordConnection;
   listContinent: InternalDeepRelationshipChainContinentRecordConnection;
@@ -9757,6 +9964,11 @@ export type InternalDeepRelationshipChainQueriesContinentArgs = {
 export type InternalDeepRelationshipChainQueriesCountryArgs = {
   id: Scalars["GadgetID"]["input"];
   select?: InputMaybe<Array<Scalars["String"]["input"]>>;
+};
+
+export type InternalDeepRelationshipChainQueriesGellyViewArgs = {
+  query: Scalars["String"]["input"];
+  variables?: InputMaybe<Scalars["JSONObject"]["input"]>;
 };
 
 export type InternalDeepRelationshipChainQueriesListCitizenArgs = {
@@ -10811,6 +11023,7 @@ export type InternalGameQueries = {
   city?: Maybe<Scalars["InternalGameCityRecord"]["output"]>;
   /** Currently open platform transaction details, or null if no transaction is open */
   currentTransactionDetails?: Maybe<Scalars["JSONObject"]["output"]>;
+  gellyView?: Maybe<Scalars["JSON"]["output"]>;
   listCity: InternalGameCityRecordConnection;
   listPlayer: InternalGamePlayerRecordConnection;
   listRound: InternalGameRoundRecordConnection;
@@ -10823,6 +11036,11 @@ export type InternalGameQueries = {
 export type InternalGameQueriesCityArgs = {
   id: Scalars["GadgetID"]["input"];
   select?: InputMaybe<Array<Scalars["String"]["input"]>>;
+};
+
+export type InternalGameQueriesGellyViewArgs = {
+  query: Scalars["String"]["input"];
+  variables?: InputMaybe<Scalars["JSONObject"]["input"]>;
 };
 
 export type InternalGameQueriesListCityArgs = {
@@ -11003,6 +11221,7 @@ export type InternalHasManyThroughBaseModelRecordEdge = {
 export type InternalHasManyThroughJoinerModelInput = {
   createdAt?: InputMaybe<Scalars["DateTime"]["input"]>;
   id?: InputMaybe<Scalars["GadgetID"]["input"]>;
+  joinModelName?: InputMaybe<Scalars["String"]["input"]>;
   joinerBelongsToBase?: InputMaybe<InternalBelongsToInput>;
   joinerBelongsToSibling?: InputMaybe<InternalBelongsToInput>;
   state?: InputMaybe<Scalars["RecordState"]["input"]>;
@@ -11208,6 +11427,7 @@ export type InternalHasManyThroughQueries = {
   baseModel?: Maybe<Scalars["InternalHasManyThroughBaseModelRecord"]["output"]>;
   /** Currently open platform transaction details, or null if no transaction is open */
   currentTransactionDetails?: Maybe<Scalars["JSONObject"]["output"]>;
+  gellyView?: Maybe<Scalars["JSON"]["output"]>;
   joinerModel?: Maybe<Scalars["InternalHasManyThroughJoinerModelRecord"]["output"]>;
   listBaseModel: InternalHasManyThroughBaseModelRecordConnection;
   listJoinerModel: InternalHasManyThroughJoinerModelRecordConnection;
@@ -11218,6 +11438,11 @@ export type InternalHasManyThroughQueries = {
 export type InternalHasManyThroughQueriesBaseModelArgs = {
   id: Scalars["GadgetID"]["input"];
   select?: InputMaybe<Array<Scalars["String"]["input"]>>;
+};
+
+export type InternalHasManyThroughQueriesGellyViewArgs = {
+  query: Scalars["String"]["input"];
+  variables?: InputMaybe<Scalars["JSONObject"]["input"]>;
 };
 
 export type InternalHasManyThroughQueriesJoinerModelArgs = {
@@ -11320,6 +11545,8 @@ export type InternalMutations = {
   __typename?: "InternalMutations";
   /** Acquire a backend lock, returning only once the lock has been acquired */
   acquireLock: LockOperationResult;
+  /** @deprecated Use background.bulkCancelBackgroundAction */
+  bulkCancelBackgroundActions: BulkCancelBackgroundActionResult;
   bulkCreateAutoTableTests?: Maybe<InternalBulkCreateAutoTableTestsResult>;
   bulkCreateDoodads?: Maybe<InternalBulkCreateDoodadsResult>;
   bulkCreateFoos?: Maybe<InternalBulkCreateFoosResult>;
@@ -11339,6 +11566,8 @@ export type InternalMutations = {
   bulkCreateTweeters?: Maybe<InternalBulkCreateTweetersResult>;
   bulkCreateUsers?: Maybe<InternalBulkCreateUsersResult>;
   bulkCreateWidgets?: Maybe<InternalBulkCreateWidgetsResult>;
+  /** @deprecated Use background.cancelBackgroundAction */
+  cancelBackgroundAction: CancelBackgroundActionResult;
   commitTransaction: Scalars["String"]["output"];
   createAutoTableTest?: Maybe<InternalCreateAutoTableTestResult>;
   createDoodad?: Maybe<InternalCreateDoodadResult>;
@@ -11518,6 +11747,10 @@ export type InternalMutationsAcquireLockArgs = {
   lock: Scalars["String"]["input"];
 };
 
+export type InternalMutationsBulkCancelBackgroundActionsArgs = {
+  ids: Array<Scalars["String"]["input"]>;
+};
+
 export type InternalMutationsBulkCreateAutoTableTestsArgs = {
   autoTableTests: Array<InputMaybe<InternalAutoTableTestInput>>;
 };
@@ -11592,6 +11825,10 @@ export type InternalMutationsBulkCreateUsersArgs = {
 
 export type InternalMutationsBulkCreateWidgetsArgs = {
   widgets: Array<InputMaybe<InternalWidgetInput>>;
+};
+
+export type InternalMutationsCancelBackgroundActionArgs = {
+  id: Scalars["String"]["input"];
 };
 
 export type InternalMutationsCreateAutoTableTestArgs = {
@@ -12584,6 +12821,7 @@ export type InternalQueries = {
   foo?: Maybe<Scalars["InternalFooRecord"]["output"]>;
   friendship?: Maybe<Scalars["InternalFriendshipRecord"]["output"]>;
   game: InternalGameQueries;
+  gellyView?: Maybe<Scalars["JSON"]["output"]>;
   gizmo?: Maybe<Scalars["InternalGizmoRecord"]["output"]>;
   hasManyThrough: InternalHasManyThroughQueries;
   listAutoTableTest: InternalAutoTableTestRecordConnection;
@@ -12641,6 +12879,11 @@ export type InternalQueriesFooArgs = {
 export type InternalQueriesFriendshipArgs = {
   id: Scalars["GadgetID"]["input"];
   select?: InputMaybe<Array<Scalars["String"]["input"]>>;
+};
+
+export type InternalQueriesGellyViewArgs = {
+  query: Scalars["String"]["input"];
+  variables?: InputMaybe<Scalars["JSONObject"]["input"]>;
 };
 
 export type InternalQueriesGizmoArgs = {
@@ -13629,6 +13872,7 @@ export type InternalUniqueFieldsQueries = {
   childModel?: Maybe<Scalars["InternalUniqueFieldsChildModelRecord"]["output"]>;
   /** Currently open platform transaction details, or null if no transaction is open */
   currentTransactionDetails?: Maybe<Scalars["JSONObject"]["output"]>;
+  gellyView?: Maybe<Scalars["JSON"]["output"]>;
   listChildModel: InternalUniqueFieldsChildModelRecordConnection;
   listMainModel: InternalUniqueFieldsMainModelRecordConnection;
   listParentModel: InternalUniqueFieldsParentModelRecordConnection;
@@ -13639,6 +13883,11 @@ export type InternalUniqueFieldsQueries = {
 export type InternalUniqueFieldsQueriesChildModelArgs = {
   id: Scalars["GadgetID"]["input"];
   select?: InputMaybe<Array<Scalars["String"]["input"]>>;
+};
+
+export type InternalUniqueFieldsQueriesGellyViewArgs = {
+  query: Scalars["String"]["input"];
+  variables?: InputMaybe<Scalars["JSONObject"]["input"]>;
 };
 
 export type InternalUniqueFieldsQueriesListChildModelArgs = {
@@ -14064,6 +14313,7 @@ export type InternalUniversityQueries = {
   course?: Maybe<Scalars["InternalUniversityCourseRecord"]["output"]>;
   /** Currently open platform transaction details, or null if no transaction is open */
   currentTransactionDetails?: Maybe<Scalars["JSONObject"]["output"]>;
+  gellyView?: Maybe<Scalars["JSON"]["output"]>;
   listAssignment: InternalUniversityAssignmentRecordConnection;
   listCourse: InternalUniversityCourseRecordConnection;
   listProfessor: InternalUniversityProfessorRecordConnection;
@@ -14082,6 +14332,11 @@ export type InternalUniversityQueriesAssignmentArgs = {
 export type InternalUniversityQueriesCourseArgs = {
   id: Scalars["GadgetID"]["input"];
   select?: InputMaybe<Array<Scalars["String"]["input"]>>;
+};
+
+export type InternalUniversityQueriesGellyViewArgs = {
+  query: Scalars["String"]["input"];
+  variables?: InputMaybe<Scalars["JSONObject"]["input"]>;
 };
 
 export type InternalUniversityQueriesListAssignmentArgs = {
@@ -14154,7 +14409,15 @@ export type InternalUniversityQueriesStudentArgs = {
   select?: InputMaybe<Array<Scalars["String"]["input"]>>;
 };
 
+export type InternalUniversityRegistrationAtomicsInput = {
+  /** Numeric atomic commands for operating on attempt. */
+  attempt?: InputMaybe<Array<NumericAtomicFieldUpdateInput>>;
+};
+
 export type InternalUniversityRegistrationInput = {
+  /** An optional list of atomically applied commands for race-safe mutations of the record */
+  _atomics?: InputMaybe<InternalUniversityRegistrationAtomicsInput>;
+  attempt?: InputMaybe<Scalars["Float"]["input"]>;
   course?: InputMaybe<InternalBelongsToInput>;
   createdAt?: InputMaybe<Scalars["DateTime"]["input"]>;
   effectiveFrom?: InputMaybe<Scalars["DateOrDateTime"]["input"]>;
@@ -15859,6 +16122,7 @@ export type NestedCreateAutoTableTestInput = {
 };
 
 export type NestedCreateDeepRelationshipChainCitizenInput = {
+  age?: InputMaybe<Scalars["Float"]["input"]>;
   cityOfMayorDuty?: InputMaybe<DeepRelationshipChainCityBelongsToInput>;
   firstName?: InputMaybe<Scalars["String"]["input"]>;
   homeCity?: InputMaybe<DeepRelationshipChainCityBelongsToInput>;
@@ -15961,6 +16225,7 @@ export type NestedCreateHasManyThroughBaseModelInput = {
 };
 
 export type NestedCreateHasManyThroughJoinerModelInput = {
+  joinModelName?: InputMaybe<Scalars["String"]["input"]>;
   joinerBelongsToBase?: InputMaybe<HasManyThroughBaseModelBelongsToInput>;
   joinerBelongsToSibling?: InputMaybe<HasManyThroughSiblingModelBelongsToInput>;
 };
@@ -16028,6 +16293,7 @@ export type NestedCreateUniversityProfessorInput = {
 };
 
 export type NestedCreateUniversityRegistrationInput = {
+  attempt?: InputMaybe<Scalars["Float"]["input"]>;
   course?: InputMaybe<UniversityCourseBelongsToInput>;
   effectiveFrom?: InputMaybe<Scalars["DateOrDateTime"]["input"]>;
   effectiveTo?: InputMaybe<Scalars["DateOrDateTime"]["input"]>;
@@ -16255,6 +16521,7 @@ export type NestedUpdateAutoTableTestInput = {
 };
 
 export type NestedUpdateDeepRelationshipChainCitizenInput = {
+  age?: InputMaybe<Scalars["Float"]["input"]>;
   cityOfMayorDuty?: InputMaybe<DeepRelationshipChainCityBelongsToInput>;
   firstName?: InputMaybe<Scalars["String"]["input"]>;
   homeCity?: InputMaybe<DeepRelationshipChainCityBelongsToInput>;
@@ -16372,6 +16639,7 @@ export type NestedUpdateHasManyThroughBaseModelInput = {
 
 export type NestedUpdateHasManyThroughJoinerModelInput = {
   id: Scalars["GadgetID"]["input"];
+  joinModelName?: InputMaybe<Scalars["String"]["input"]>;
   joinerBelongsToBase?: InputMaybe<HasManyThroughBaseModelBelongsToInput>;
   joinerBelongsToSibling?: InputMaybe<HasManyThroughSiblingModelBelongsToInput>;
 };
@@ -16448,6 +16716,7 @@ export type NestedUpdateUniversityProfessorInput = {
 };
 
 export type NestedUpdateUniversityRegistrationInput = {
+  attempt?: InputMaybe<Scalars["Float"]["input"]>;
   course?: InputMaybe<UniversityCourseBelongsToInput>;
   effectiveFrom?: InputMaybe<Scalars["DateOrDateTime"]["input"]>;
   effectiveTo?: InputMaybe<Scalars["DateOrDateTime"]["input"]>;
@@ -16634,57 +16903,88 @@ export type PartSort = {
 export type Query = {
   __typename?: "Query";
   autoTableTest?: Maybe<AutoTableTest>;
+  autoTableTestGellyView?: Maybe<Scalars["JSON"]["output"]>;
   autoTableTests: AutoTableTestConnection;
   currentSession?: Maybe<Session>;
   deepRelationshipChain: DeepRelationshipChainQueries;
   doodad?: Maybe<Doodad>;
+  doodadGellyView?: Maybe<Scalars["JSON"]["output"]>;
   doodads: DoodadConnection;
+  /** Computed view from api/views/echo.gelly */
+  echo: Scalars["JSON"]["output"];
   foo?: Maybe<Foo>;
+  fooGellyView?: Maybe<Scalars["JSON"]["output"]>;
   foos: FooConnection;
   friendship?: Maybe<Friendship>;
+  friendshipGellyView?: Maybe<Scalars["JSON"]["output"]>;
   friendships: FriendshipConnection;
   /** Meta information about the application, like it's name, schema, and other internal details. */
   gadgetMeta: GadgetApplicationMeta;
   game: GameQueries;
+  gellyView?: Maybe<Scalars["JSON"]["output"]>;
   gizmo?: Maybe<Gizmo>;
+  gizmoGellyView?: Maybe<Scalars["JSON"]["output"]>;
   gizmos: GizmoConnection;
   hasManyThrough: HasManyThroughQueries;
   internal: InternalQueries;
   modelA?: Maybe<ModelA>;
+  modelAGellyView?: Maybe<Scalars["JSON"]["output"]>;
   modelAs: ModelAConnection;
   part?: Maybe<Part>;
+  partGellyView?: Maybe<Scalars["JSON"]["output"]>;
   parts: PartConnection;
   section?: Maybe<Section>;
+  sectionGellyView?: Maybe<Scalars["JSON"]["output"]>;
   sections: SectionConnection;
   session?: Maybe<Session>;
+  sessionGellyView?: Maybe<Scalars["JSON"]["output"]>;
   sessions: SessionConnection;
   shopifyConnection: Shopify;
   shopifyGdprRequest?: Maybe<ShopifyGdprRequest>;
+  shopifyGdprRequestGellyView?: Maybe<Scalars["JSON"]["output"]>;
   shopifyGdprRequests: ShopifyGdprRequestConnection;
   shopifyProduct?: Maybe<ShopifyProduct>;
+  shopifyProductGellyView?: Maybe<Scalars["JSON"]["output"]>;
   shopifyProductImage?: Maybe<ShopifyProductImage>;
+  shopifyProductImageGellyView?: Maybe<Scalars["JSON"]["output"]>;
   shopifyProductImages: ShopifyProductImageConnection;
   shopifyProductOption?: Maybe<ShopifyProductOption>;
+  shopifyProductOptionGellyView?: Maybe<Scalars["JSON"]["output"]>;
   shopifyProductOptions: ShopifyProductOptionConnection;
   shopifyProductVariant?: Maybe<ShopifyProductVariant>;
+  shopifyProductVariantGellyView?: Maybe<Scalars["JSON"]["output"]>;
   shopifyProductVariants: ShopifyProductVariantConnection;
   shopifyProducts: ShopifyProductConnection;
   shopifyShop?: Maybe<ShopifyShop>;
+  shopifyShopGellyView?: Maybe<Scalars["JSON"]["output"]>;
   shopifyShops: ShopifyShopConnection;
   shopifySync?: Maybe<ShopifySync>;
+  shopifySyncGellyView?: Maybe<Scalars["JSON"]["output"]>;
   shopifySyncs: ShopifySyncConnection;
+  /** Computed view from api/views/totalInStock.gelly */
+  totalInStock: Scalars["JSON"]["output"];
   tweeter?: Maybe<Tweeter>;
+  tweeterGellyView?: Maybe<Scalars["JSON"]["output"]>;
   tweeters: TweeterConnection;
   uniqueFields: UniqueFieldsQueries;
   university: UniversityQueries;
   user?: Maybe<User>;
+  userGellyView?: Maybe<Scalars["JSON"]["output"]>;
   users: UserConnection;
   widget?: Maybe<Widget>;
+  widgetGellyView?: Maybe<Scalars["JSON"]["output"]>;
+  /** Computed view from api/models/widget/views/stats.gelly */
+  widgetStats: Scalars["JSON"]["output"];
   widgets: WidgetConnection;
 };
 
 export type QueryAutoTableTestArgs = {
   id: Scalars["GadgetID"]["input"];
+};
+
+export type QueryAutoTableTestGellyViewArgs = {
+  query: Scalars["String"]["input"];
+  variables?: InputMaybe<Scalars["JSONObject"]["input"]>;
 };
 
 export type QueryAutoTableTestsArgs = {
@@ -16701,6 +17001,11 @@ export type QueryDoodadArgs = {
   id: Scalars["GadgetID"]["input"];
 };
 
+export type QueryDoodadGellyViewArgs = {
+  query: Scalars["String"]["input"];
+  variables?: InputMaybe<Scalars["JSONObject"]["input"]>;
+};
+
 export type QueryDoodadsArgs = {
   after?: InputMaybe<Scalars["String"]["input"]>;
   before?: InputMaybe<Scalars["String"]["input"]>;
@@ -16711,8 +17016,17 @@ export type QueryDoodadsArgs = {
   sort?: InputMaybe<Array<DoodadSort>>;
 };
 
+export type QueryEchoArgs = {
+  value?: InputMaybe<Scalars["String"]["input"]>;
+};
+
 export type QueryFooArgs = {
   id: Scalars["GadgetID"]["input"];
+};
+
+export type QueryFooGellyViewArgs = {
+  query: Scalars["String"]["input"];
+  variables?: InputMaybe<Scalars["JSONObject"]["input"]>;
 };
 
 export type QueryFoosArgs = {
@@ -16729,6 +17043,11 @@ export type QueryFriendshipArgs = {
   id: Scalars["GadgetID"]["input"];
 };
 
+export type QueryFriendshipGellyViewArgs = {
+  query: Scalars["String"]["input"];
+  variables?: InputMaybe<Scalars["JSONObject"]["input"]>;
+};
+
 export type QueryFriendshipsArgs = {
   after?: InputMaybe<Scalars["String"]["input"]>;
   before?: InputMaybe<Scalars["String"]["input"]>;
@@ -16739,8 +17058,18 @@ export type QueryFriendshipsArgs = {
   sort?: InputMaybe<Array<FriendshipSort>>;
 };
 
+export type QueryGellyViewArgs = {
+  query: Scalars["String"]["input"];
+  variables?: InputMaybe<Scalars["JSONObject"]["input"]>;
+};
+
 export type QueryGizmoArgs = {
   id: Scalars["GadgetID"]["input"];
+};
+
+export type QueryGizmoGellyViewArgs = {
+  query: Scalars["String"]["input"];
+  variables?: InputMaybe<Scalars["JSONObject"]["input"]>;
 };
 
 export type QueryGizmosArgs = {
@@ -16757,6 +17086,11 @@ export type QueryModelAArgs = {
   id: Scalars["GadgetID"]["input"];
 };
 
+export type QueryModelAGellyViewArgs = {
+  query: Scalars["String"]["input"];
+  variables?: InputMaybe<Scalars["JSONObject"]["input"]>;
+};
+
 export type QueryModelAsArgs = {
   after?: InputMaybe<Scalars["String"]["input"]>;
   before?: InputMaybe<Scalars["String"]["input"]>;
@@ -16769,6 +17103,11 @@ export type QueryModelAsArgs = {
 
 export type QueryPartArgs = {
   id: Scalars["GadgetID"]["input"];
+};
+
+export type QueryPartGellyViewArgs = {
+  query: Scalars["String"]["input"];
+  variables?: InputMaybe<Scalars["JSONObject"]["input"]>;
 };
 
 export type QueryPartsArgs = {
@@ -16785,6 +17124,11 @@ export type QuerySectionArgs = {
   id: Scalars["GadgetID"]["input"];
 };
 
+export type QuerySectionGellyViewArgs = {
+  query: Scalars["String"]["input"];
+  variables?: InputMaybe<Scalars["JSONObject"]["input"]>;
+};
+
 export type QuerySectionsArgs = {
   after?: InputMaybe<Scalars["String"]["input"]>;
   before?: InputMaybe<Scalars["String"]["input"]>;
@@ -16799,6 +17143,11 @@ export type QuerySessionArgs = {
   id: Scalars["GadgetID"]["input"];
 };
 
+export type QuerySessionGellyViewArgs = {
+  query: Scalars["String"]["input"];
+  variables?: InputMaybe<Scalars["JSONObject"]["input"]>;
+};
+
 export type QuerySessionsArgs = {
   after?: InputMaybe<Scalars["String"]["input"]>;
   before?: InputMaybe<Scalars["String"]["input"]>;
@@ -16809,6 +17158,11 @@ export type QuerySessionsArgs = {
 
 export type QueryShopifyGdprRequestArgs = {
   id: Scalars["GadgetID"]["input"];
+};
+
+export type QueryShopifyGdprRequestGellyViewArgs = {
+  query: Scalars["String"]["input"];
+  variables?: InputMaybe<Scalars["JSONObject"]["input"]>;
 };
 
 export type QueryShopifyGdprRequestsArgs = {
@@ -16825,8 +17179,18 @@ export type QueryShopifyProductArgs = {
   id: Scalars["GadgetID"]["input"];
 };
 
+export type QueryShopifyProductGellyViewArgs = {
+  query: Scalars["String"]["input"];
+  variables?: InputMaybe<Scalars["JSONObject"]["input"]>;
+};
+
 export type QueryShopifyProductImageArgs = {
   id: Scalars["GadgetID"]["input"];
+};
+
+export type QueryShopifyProductImageGellyViewArgs = {
+  query: Scalars["String"]["input"];
+  variables?: InputMaybe<Scalars["JSONObject"]["input"]>;
 };
 
 export type QueryShopifyProductImagesArgs = {
@@ -16843,6 +17207,11 @@ export type QueryShopifyProductOptionArgs = {
   id: Scalars["GadgetID"]["input"];
 };
 
+export type QueryShopifyProductOptionGellyViewArgs = {
+  query: Scalars["String"]["input"];
+  variables?: InputMaybe<Scalars["JSONObject"]["input"]>;
+};
+
 export type QueryShopifyProductOptionsArgs = {
   after?: InputMaybe<Scalars["String"]["input"]>;
   before?: InputMaybe<Scalars["String"]["input"]>;
@@ -16855,6 +17224,11 @@ export type QueryShopifyProductOptionsArgs = {
 
 export type QueryShopifyProductVariantArgs = {
   id: Scalars["GadgetID"]["input"];
+};
+
+export type QueryShopifyProductVariantGellyViewArgs = {
+  query: Scalars["String"]["input"];
+  variables?: InputMaybe<Scalars["JSONObject"]["input"]>;
 };
 
 export type QueryShopifyProductVariantsArgs = {
@@ -16881,6 +17255,11 @@ export type QueryShopifyShopArgs = {
   id: Scalars["GadgetID"]["input"];
 };
 
+export type QueryShopifyShopGellyViewArgs = {
+  query: Scalars["String"]["input"];
+  variables?: InputMaybe<Scalars["JSONObject"]["input"]>;
+};
+
 export type QueryShopifyShopsArgs = {
   after?: InputMaybe<Scalars["String"]["input"]>;
   before?: InputMaybe<Scalars["String"]["input"]>;
@@ -16893,6 +17272,11 @@ export type QueryShopifyShopsArgs = {
 
 export type QueryShopifySyncArgs = {
   id: Scalars["GadgetID"]["input"];
+};
+
+export type QueryShopifySyncGellyViewArgs = {
+  query: Scalars["String"]["input"];
+  variables?: InputMaybe<Scalars["JSONObject"]["input"]>;
 };
 
 export type QueryShopifySyncsArgs = {
@@ -16909,6 +17293,11 @@ export type QueryTweeterArgs = {
   id: Scalars["GadgetID"]["input"];
 };
 
+export type QueryTweeterGellyViewArgs = {
+  query: Scalars["String"]["input"];
+  variables?: InputMaybe<Scalars["JSONObject"]["input"]>;
+};
+
 export type QueryTweetersArgs = {
   after?: InputMaybe<Scalars["String"]["input"]>;
   before?: InputMaybe<Scalars["String"]["input"]>;
@@ -16923,6 +17312,11 @@ export type QueryUserArgs = {
   id: Scalars["GadgetID"]["input"];
 };
 
+export type QueryUserGellyViewArgs = {
+  query: Scalars["String"]["input"];
+  variables?: InputMaybe<Scalars["JSONObject"]["input"]>;
+};
+
 export type QueryUsersArgs = {
   after?: InputMaybe<Scalars["String"]["input"]>;
   before?: InputMaybe<Scalars["String"]["input"]>;
@@ -16935,6 +17329,15 @@ export type QueryUsersArgs = {
 
 export type QueryWidgetArgs = {
   id: Scalars["GadgetID"]["input"];
+};
+
+export type QueryWidgetGellyViewArgs = {
+  query: Scalars["String"]["input"];
+  variables?: InputMaybe<Scalars["JSONObject"]["input"]>;
+};
+
+export type QueryWidgetStatsArgs = {
+  inStockOnly?: InputMaybe<Scalars["Boolean"]["input"]>;
 };
 
 export type QueryWidgetsArgs = {
@@ -18484,8 +18887,18 @@ export enum SortOrder {
 }
 
 export type StateFilter = {
+  /** Return only records that are in this given state. The state can be specified as a dot separated string of nested state names, like 'created.installed' or 'deleted', or as a JSON object, like { created: 'active' }. */
+  equals?: InputMaybe<Scalars["StateValue"]["input"]>;
+  /** Return only records that are in any of these given states. The states can be specified as a dot separated string of nested state names, like 'created.installed' or 'deleted', or as a JSON object, like { created: 'active' }. */
+  in?: InputMaybe<Array<Scalars["StateValue"]["input"]>>;
+  /** Return only records that are in this given state. The state must be specified as a dot separated string of nested state names, like 'created.installed' or 'deleted'. */
   inState?: InputMaybe<Scalars["String"]["input"]>;
+  /** If true, return only records that have a state value set. If false, return only records that do not have a state value set. */
   isSet?: InputMaybe<Scalars["Boolean"]["input"]>;
+  /** Return only records that are not in this given state. The state value must be specified as a dot separated string of nested state names, like 'created.installed' or 'deleted', or as a JSON object, like { created: 'active' }. */
+  notEquals?: InputMaybe<Scalars["StateValue"]["input"]>;
+  /** Return only records that are not in any of these given states. The states can be specified as a dot separated string of nested state names, like 'created.installed' or 'deleted', or as a JSON object, like { created: 'active' }. */
+  notIn?: InputMaybe<Array<Scalars["StateValue"]["input"]>>;
 };
 
 /** One file that has been stored and attached to a record */
@@ -18539,10 +18952,16 @@ export type StringFilter = {
 export type Subscription = {
   __typename?: "Subscription";
   backgroundAction?: Maybe<BackgroundAction>;
+  /** Subscribe to events about the application for the development harness */
+  gadgetMetaHarnessEvents: GadgetApplicationHarnessEvent;
 };
 
 export type SubscriptionBackgroundActionArgs = {
   id: Scalars["String"]["input"];
+};
+
+export type SubscriptionGadgetMetaHarnessEventsArgs = {
+  cursor?: InputMaybe<Scalars["String"]["input"]>;
 };
 
 export type Tweeter = {
@@ -19109,15 +19528,24 @@ export type UniqueFieldsParentModelSort = {
 export type UniqueFieldsQueries = {
   __typename?: "UniqueFieldsQueries";
   childModel?: Maybe<UniqueFieldsChildModel>;
+  childModelGellyView?: Maybe<Scalars["JSON"]["output"]>;
   childModels: UniqueFieldsChildModelConnection;
+  gellyView?: Maybe<Scalars["JSON"]["output"]>;
   mainModel?: Maybe<UniqueFieldsMainModel>;
+  mainModelGellyView?: Maybe<Scalars["JSON"]["output"]>;
   mainModels: UniqueFieldsMainModelConnection;
   parentModel?: Maybe<UniqueFieldsParentModel>;
+  parentModelGellyView?: Maybe<Scalars["JSON"]["output"]>;
   parentModels: UniqueFieldsParentModelConnection;
 };
 
 export type UniqueFieldsQueriesChildModelArgs = {
   id: Scalars["GadgetID"]["input"];
+};
+
+export type UniqueFieldsQueriesChildModelGellyViewArgs = {
+  query: Scalars["String"]["input"];
+  variables?: InputMaybe<Scalars["JSONObject"]["input"]>;
 };
 
 export type UniqueFieldsQueriesChildModelsArgs = {
@@ -19130,8 +19558,18 @@ export type UniqueFieldsQueriesChildModelsArgs = {
   sort?: InputMaybe<Array<UniqueFieldsChildModelSort>>;
 };
 
+export type UniqueFieldsQueriesGellyViewArgs = {
+  query: Scalars["String"]["input"];
+  variables?: InputMaybe<Scalars["JSONObject"]["input"]>;
+};
+
 export type UniqueFieldsQueriesMainModelArgs = {
   id: Scalars["GadgetID"]["input"];
+};
+
+export type UniqueFieldsQueriesMainModelGellyViewArgs = {
+  query: Scalars["String"]["input"];
+  variables?: InputMaybe<Scalars["JSONObject"]["input"]>;
 };
 
 export type UniqueFieldsQueriesMainModelsArgs = {
@@ -19146,6 +19584,11 @@ export type UniqueFieldsQueriesMainModelsArgs = {
 
 export type UniqueFieldsQueriesParentModelArgs = {
   id: Scalars["GadgetID"]["input"];
+};
+
+export type UniqueFieldsQueriesParentModelGellyViewArgs = {
+  query: Scalars["String"]["input"];
+  variables?: InputMaybe<Scalars["JSONObject"]["input"]>;
 };
 
 export type UniqueFieldsQueriesParentModelsArgs = {
@@ -19703,19 +20146,30 @@ export type UniversityProfessorsRelationshipFilter = {
 export type UniversityQueries = {
   __typename?: "UniversityQueries";
   assignment?: Maybe<UniversityAssignment>;
+  assignmentGellyView?: Maybe<Scalars["JSON"]["output"]>;
   assignments: UniversityAssignmentConnection;
   course?: Maybe<UniversityCourse>;
+  courseGellyView?: Maybe<Scalars["JSON"]["output"]>;
   courses: UniversityCourseConnection;
+  gellyView?: Maybe<Scalars["JSON"]["output"]>;
   professor?: Maybe<UniversityProfessor>;
+  professorGellyView?: Maybe<Scalars["JSON"]["output"]>;
   professors: UniversityProfessorConnection;
   registration?: Maybe<UniversityRegistration>;
+  registrationGellyView?: Maybe<Scalars["JSON"]["output"]>;
   registrations: UniversityRegistrationConnection;
   student?: Maybe<UniversityStudent>;
+  studentGellyView?: Maybe<Scalars["JSON"]["output"]>;
   students: UniversityStudentConnection;
 };
 
 export type UniversityQueriesAssignmentArgs = {
   id: Scalars["GadgetID"]["input"];
+};
+
+export type UniversityQueriesAssignmentGellyViewArgs = {
+  query: Scalars["String"]["input"];
+  variables?: InputMaybe<Scalars["JSONObject"]["input"]>;
 };
 
 export type UniversityQueriesAssignmentsArgs = {
@@ -19732,6 +20186,11 @@ export type UniversityQueriesCourseArgs = {
   id: Scalars["GadgetID"]["input"];
 };
 
+export type UniversityQueriesCourseGellyViewArgs = {
+  query: Scalars["String"]["input"];
+  variables?: InputMaybe<Scalars["JSONObject"]["input"]>;
+};
+
 export type UniversityQueriesCoursesArgs = {
   after?: InputMaybe<Scalars["String"]["input"]>;
   before?: InputMaybe<Scalars["String"]["input"]>;
@@ -19742,8 +20201,18 @@ export type UniversityQueriesCoursesArgs = {
   sort?: InputMaybe<Array<UniversityCourseSort>>;
 };
 
+export type UniversityQueriesGellyViewArgs = {
+  query: Scalars["String"]["input"];
+  variables?: InputMaybe<Scalars["JSONObject"]["input"]>;
+};
+
 export type UniversityQueriesProfessorArgs = {
   id: Scalars["GadgetID"]["input"];
+};
+
+export type UniversityQueriesProfessorGellyViewArgs = {
+  query: Scalars["String"]["input"];
+  variables?: InputMaybe<Scalars["JSONObject"]["input"]>;
 };
 
 export type UniversityQueriesProfessorsArgs = {
@@ -19760,6 +20229,11 @@ export type UniversityQueriesRegistrationArgs = {
   id: Scalars["GadgetID"]["input"];
 };
 
+export type UniversityQueriesRegistrationGellyViewArgs = {
+  query: Scalars["String"]["input"];
+  variables?: InputMaybe<Scalars["JSONObject"]["input"]>;
+};
+
 export type UniversityQueriesRegistrationsArgs = {
   after?: InputMaybe<Scalars["String"]["input"]>;
   before?: InputMaybe<Scalars["String"]["input"]>;
@@ -19772,6 +20246,11 @@ export type UniversityQueriesRegistrationsArgs = {
 
 export type UniversityQueriesStudentArgs = {
   id: Scalars["GadgetID"]["input"];
+};
+
+export type UniversityQueriesStudentGellyViewArgs = {
+  query: Scalars["String"]["input"];
+  variables?: InputMaybe<Scalars["JSONObject"]["input"]>;
 };
 
 export type UniversityQueriesStudentsArgs = {
@@ -19788,6 +20267,7 @@ export type UniversityRegistration = {
   __typename?: "UniversityRegistration";
   /** Get all the fields for this record. Useful for not having to list out all the fields you want to retrieve, but slower. */
   _all: Scalars["JSONObject"]["output"];
+  attempt?: Maybe<Scalars["Float"]["output"]>;
   course?: Maybe<UniversityCourse>;
   courseId?: Maybe<Scalars["GadgetID"]["output"]>;
   /** The time at which this record was first created. Set once upon record creation and never changed. Managed by Gadget. */
@@ -19824,6 +20304,7 @@ export type UniversityRegistrationFilter = {
   AND?: InputMaybe<Array<InputMaybe<UniversityRegistrationFilter>>>;
   NOT?: InputMaybe<Array<InputMaybe<UniversityRegistrationFilter>>>;
   OR?: InputMaybe<Array<InputMaybe<UniversityRegistrationFilter>>>;
+  attempt?: InputMaybe<FloatFilter>;
   course?: InputMaybe<UniversityCourseRelationshipFilter>;
   courseId?: InputMaybe<IdFilter>;
   createdAt?: InputMaybe<DateTimeFilter>;
@@ -19845,6 +20326,8 @@ export type UniversityRegistrationHasManyInput = {
 };
 
 export type UniversityRegistrationSort = {
+  /** Sort the results by the attempt field. Defaults to ascending (smallest value first). */
+  attempt?: InputMaybe<SortOrder>;
   /** Sort the results by the createdAt field. Defaults to ascending (smallest value first). */
   createdAt?: InputMaybe<SortOrder>;
   /** Sort the results by the effectiveFrom field. Defaults to ascending (smallest value first). */
@@ -20017,6 +20500,7 @@ export type UpdateAutoTableTestResult = UpsertAutoTableTestResult & {
 };
 
 export type UpdateDeepRelationshipChainCitizenInput = {
+  age?: InputMaybe<Scalars["Float"]["input"]>;
   cityOfMayorDuty?: InputMaybe<DeepRelationshipChainCityBelongsToInput>;
   firstName?: InputMaybe<Scalars["String"]["input"]>;
   homeCity?: InputMaybe<DeepRelationshipChainCityBelongsToInput>;
@@ -20231,6 +20715,7 @@ export type UpdateHasManyThroughBaseModelResult = UpsertHasManyThroughBaseModelR
 };
 
 export type UpdateHasManyThroughJoinerModelInput = {
+  joinModelName?: InputMaybe<Scalars["String"]["input"]>;
   joinerBelongsToBase?: InputMaybe<HasManyThroughBaseModelBelongsToInput>;
   joinerBelongsToSibling?: InputMaybe<HasManyThroughSiblingModelBelongsToInput>;
 };
@@ -20448,6 +20933,7 @@ export type UpdateUniversityProfessorResult = UpsertUniversityProfessorResult & 
 };
 
 export type UpdateUniversityRegistrationInput = {
+  attempt?: InputMaybe<Scalars["Float"]["input"]>;
   course?: InputMaybe<UniversityCourseBelongsToInput>;
   effectiveFrom?: InputMaybe<Scalars["DateOrDateTime"]["input"]>;
   effectiveTo?: InputMaybe<Scalars["DateOrDateTime"]["input"]>;
@@ -20612,6 +21098,7 @@ export type UpsertAutoTableTestResult = {
 };
 
 export type UpsertDeepRelationshipChainCitizenInput = {
+  age?: InputMaybe<Scalars["Float"]["input"]>;
   cityOfMayorDuty?: InputMaybe<DeepRelationshipChainCityBelongsToInput>;
   firstName?: InputMaybe<Scalars["String"]["input"]>;
   homeCity?: InputMaybe<DeepRelationshipChainCityBelongsToInput>;
@@ -20857,6 +21344,7 @@ export type UpsertHasManyThroughBaseModelResult = {
 
 export type UpsertHasManyThroughJoinerModelInput = {
   id?: InputMaybe<Scalars["GadgetID"]["input"]>;
+  joinModelName?: InputMaybe<Scalars["String"]["input"]>;
   joinerBelongsToBase?: InputMaybe<HasManyThroughBaseModelBelongsToInput>;
   joinerBelongsToSibling?: InputMaybe<HasManyThroughSiblingModelBelongsToInput>;
 };
@@ -21069,6 +21557,7 @@ export type UpsertUniversityProfessorResult = {
 };
 
 export type UpsertUniversityRegistrationInput = {
+  attempt?: InputMaybe<Scalars["Float"]["input"]>;
   course?: InputMaybe<UniversityCourseBelongsToInput>;
   effectiveFrom?: InputMaybe<Scalars["DateOrDateTime"]["input"]>;
   effectiveTo?: InputMaybe<Scalars["DateOrDateTime"]["input"]>;
@@ -21809,6 +22298,7 @@ export type GetModelMetadataQuery = {
       apiIdentifier: string;
       namespace?: Array<string> | null;
       name: string;
+      searchable: boolean;
       fields: Array<{
         __typename?: "GadgetModelField";
         sortable: boolean;
@@ -26745,6 +27235,7 @@ export const GetModelMetadataDocument = {
                           selections: [{ kind: "FragmentSpread", name: { kind: "Name", value: "FieldMetadata" } }],
                         },
                       },
+                      { kind: "Field", name: { kind: "Name", value: "searchable" } },
                       {
                         kind: "Field",
                         name: { kind: "Name", value: "defaultDisplayField" },

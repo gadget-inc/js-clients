@@ -29,12 +29,11 @@ export const DesignSystemSelectionControl = ({ children }: { children: React.Rea
   return (
     <DesignSystemContext.Provider value={{ designSystem, updateDesignSystem }}>
       <AppProvider i18n={translations}>
-        <div style={{ marginBottom: "16px", gap: "16px", display: "flex", flexDirection: "row" }}>
-          <body>
-            <elements.Button onClick={() => updateDesignSystem(SUITE_NAMES.SHADCN)} variant="outline">
-              {designSystem === SUITE_NAMES.SHADCN ? "✅ " : ""}Shadcn
-            </elements.Button>
-          </body>
+        <div style={{ margin: "16px", gap: "16px", display: "flex", flexDirection: "row" }}>
+          <elements.Button onClick={() => updateDesignSystem(SUITE_NAMES.SHADCN)} variant="outline">
+            {designSystem === SUITE_NAMES.SHADCN ? "✅ " : ""}Shadcn
+          </elements.Button>
+
           <Button onClick={() => updateDesignSystem(SUITE_NAMES.POLARIS)}>
             {designSystem === SUITE_NAMES.POLARIS ? "✅ " : ""}Polaris
           </Button>
@@ -65,7 +64,7 @@ export const ShadcnAutoComponentsThemeControlWrapper = ({ children }: { children
   }, []);
 
   return (
-    <body>
+    <>
       {darkModeEnabled && (
         <div className="flex items-center gap-2 p-2">
           <elements.Button onClick={toggleDarkMode}>Toggle dark mode</elements.Button>
@@ -73,6 +72,6 @@ export const ShadcnAutoComponentsThemeControlWrapper = ({ children }: { children
       )}
 
       {children}
-    </body>
+    </>
   );
 };
