@@ -1,4 +1,4 @@
-import { assert } from "@gadgetinc/api-client-core";
+import { assert } from "@gadgetinc/utils";
 import React, { createContext, useCallback, useContext, useMemo, type ReactNode } from "react";
 import { GadgetFieldType, type GadgetHasManyThroughConfig } from "../../internal/gql/graphql.js";
 import { useFieldArray } from "../../useActionForm.js";

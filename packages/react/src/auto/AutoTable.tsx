@@ -1,7 +1,7 @@
 import type { DefaultSelection, FindManyFunction, GadgetRecord, Select } from "@gadgetinc/api-client-core";
+import type { OptionsType } from "@gadgetinc/client-hooks";
 import type { ReactNode } from "react";
 import type { TableOptions, TableRow } from "../use-table/types.js";
-import type { OptionsType } from "../utils.js";
 
 /**
  * Props for AutoTable, including Gadget-land and adapter-specific props.

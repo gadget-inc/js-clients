@@ -1,6 +1,6 @@
 import { render, renderHook } from "@testing-library/react";
 import React from "react";
-import { useAction } from "../../../src/useAction.js";
+import { useAction } from "../../../src/hooks.js";
 import { useTable } from "../../../src/useTable.js";
 import { testApi as api } from "../../apis.js";
 import { mockUrqlClient } from "../../testWrappers.js";

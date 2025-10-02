@@ -1,4 +1,4 @@
-import { useApi } from "../../GadgetProvider.js";
+import { useApi } from "../../hooks.js";
 import { getModelManager } from "../../utils.js";
 
 export const useModelManager = (props: { apiIdentifier: string; namespace?: string[] | string | null }) => {

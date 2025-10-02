@@ -1,9 +1,9 @@
+import type { ErrorWrapper } from "@gadgetinc/utils";
 import { act, renderHook } from "@testing-library/react";
 import type { IsExact } from "conditional-type-checks";
 import { assert } from "conditional-type-checks";
 import type { AnyVariables } from "urql";
-import { useView } from "../src/useView.js";
-import type { ErrorWrapper } from "../src/utils.js";
+import { useView } from "../src/hooks.js";
 import { testApi } from "./apis.js";
 import { MockClientWrapper, createMockUrqlClient, mockUrqlClient } from "./testWrappers.js";
 

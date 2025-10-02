@@ -1,8 +1,10 @@
-import { disambiguateActionVariables, type ActionFunction, type GlobalActionFunction } from "@gadgetinc/api-client-core";
+import type { ActionFunction, GlobalActionFunction } from "@gadgetinc/api-client-core";
+import type { OptionsType } from "@gadgetinc/client-hooks";
+import { disambiguateActionVariables, type ErrorWrapper } from "@gadgetinc/utils";
 import { useCallback, useEffect, useRef } from "react";
 import type { DeepPartial, FieldErrors, FieldValues, UseFormProps } from "react-hook-form";
 import { useForm } from "react-hook-form";
-import { useApi } from "./GadgetProvider.js";
+import { useAction, useApi, useGlobalAction } from "./hooks.js";
 import type {
   AnyActionWithId,
   ContextAwareSelect,
@@ -23,9 +25,6 @@ import {
   transformContextAwareToSelect,
   useFindExistingRecord,
 } from "./use-action-form/utils.js";
-import { useAction } from "./useAction.js";
-import { useGlobalAction } from "./useGlobalAction.js";
-import type { ErrorWrapper, OptionsType } from "./utils.js";
 import { get, getModelManager, set } from "./utils.js";
 
 export * from "react-hook-form";

@@ -1,9 +1,9 @@
 import type { GadgetRecord } from "@gadgetinc/api-client-core";
+import type { ErrorWrapper } from "@gadgetinc/utils";
 import { act, renderHook, waitFor } from "@testing-library/react";
 import type { IsExact } from "conditional-type-checks";
 import { assert } from "conditional-type-checks";
 import { useFindOne } from "../src/index.js";
-import type { ErrorWrapper } from "../src/utils.js";
 import { kitchenSinkApi, relatedProductsApi } from "./apis.js";
 import {
   MockClientWrapper,

@@ -1,6 +1,6 @@
 import { useCallback, useContext, useEffect } from "react";
-import { GadgetConfigurationContext, useApi } from "../GadgetProvider.js";
-import { useAction } from "../useAction.js";
+import { GadgetApiContext } from "../GadgetProvider.js";
+import { useAction, useApi } from "../hooks.js";
 import { useUser } from "./useUser.js";
 import { windowNavigate } from "./utils.js";
 
@@ -14,9 +14,9 @@ export const useSignOut = (opts?: { redirectOnSuccess?: boolean; redirectToPath?
   const redirectToPath = opts?.redirectToPath;
   const api = useApi();
   const user = useUser();
-  const context = useContext(GadgetConfigurationContext);
+  const context = useContext(GadgetApiContext);
   // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-  const { signOutActionApiIdentifier, signInPath } = context!.auth;
+  const { signOutActionApiIdentifier, signInPath } = context.auth;
   if (signOutActionApiIdentifier && (api as any).user[signOutActionApiIdentifier]) {
     // eslint-disable-next-line @typescript-eslint/ban-ts-comment
     // @ts-ignore

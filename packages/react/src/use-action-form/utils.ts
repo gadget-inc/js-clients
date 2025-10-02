@@ -1,8 +1,8 @@
 import type { AnyClient, AnyModelManager, GadgetRecord } from "@gadgetinc/api-client-core";
-import { $modelRelationships, camelize, isEqual } from "@gadgetinc/api-client-core";
-import { useFindBy } from "../useFindBy.js";
-import { useFindOne } from "../useFindOne.js";
-import { get, omit, set, unset, type ErrorWrapper } from "../utils.js";
+import type { ErrorWrapper } from "@gadgetinc/utils";
+import { camelize, isEqual } from "@gadgetinc/utils";
+import { useFindBy, useFindOne } from "../hooks.js";
+import { get, omit, set, unset } from "../utils.js";
 
 const noopUseFindExistingRecordResponse = [
   { fetching: false },
@@ -251,7 +251,7 @@ const storedFileToGraphqlApiInput = (input: any) => {
 };
 
 export const reshapeDataForGraphqlApi = async (client: AnyClient, defaultValues: any, data: any) => {
-  const referencedTypes = client[$modelRelationships];
+  const referencedTypes = (client as any)[Symbol.for("gadget/modelRelationships")];
 
   if (!referencedTypes) {
     throw new Error("No Gadget model metadata found -- please ensure you are using the latest version of the API client for your app");

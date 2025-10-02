@@ -1,6 +1,6 @@
 import { filesize } from "filesize";
 import { useCallback, useEffect, useMemo, useState } from "react";
-import { useApi } from "../../GadgetProvider.js";
+import { useApi } from "../../hooks.js";
 import type { GadgetOnlyImageFileFieldValidation, GadgetRangeFieldValidation } from "../../internal/gql/graphql.js";
 import { GadgetFieldType } from "../../internal/gql/graphql.js";
 import { useController, useFormContext, type Control } from "../../useActionForm.js";

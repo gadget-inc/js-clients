@@ -5,7 +5,7 @@ import { render, renderHook, waitFor } from "@testing-library/react";
 import type { Operation, Client as UrqlClient } from "@urql/core";
 import React from "react";
 import { pipe, subscribe } from "wonka";
-import { useFindMany } from "../src/useFindMany.js";
+import { useFindMany } from "../src/hooks.js";
 import { testApi } from "./apis.js";
 import { MockGraphQLWSClientWrapper, mockGraphQLWSClient } from "./testWrappers.js";
 import { sleep } from "./utils.js";

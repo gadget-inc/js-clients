@@ -1,6 +1,9 @@
 import { jest } from "@jest/globals";
 import "@testing-library/jest-dom";
 import crossFetch from "cross-fetch";
+import { act } from "react";
+
+(global as any).act = act;
 
 jest.setTimeout(process.env.CI == "vscode-jest-tests" ? 20 * 60 * 1000 : 5 * 1000);
 

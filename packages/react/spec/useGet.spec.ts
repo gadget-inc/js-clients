@@ -1,10 +1,10 @@
 import type { GadgetRecord } from "@gadgetinc/api-client-core";
+import type { ErrorWrapper } from "@gadgetinc/utils";
 import { renderHook } from "@testing-library/react";
 import type { Has, IsExact } from "conditional-type-checks";
 import { assert } from "conditional-type-checks";
 import { act } from "react";
-import { useGet } from "../src/useGet.js";
-import type { ErrorWrapper } from "../src/utils.js";
+import { useGet } from "../src/hooks.js";
 import { relatedProductsApi } from "./apis.js";
 import { MockClientWrapper, mockUrqlClient } from "./testWrappers.js";
 

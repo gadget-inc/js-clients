@@ -1,16 +1,10 @@
-import type { AnyClient, GadgetConnection } from "@gadgetinc/api-client-core";
-import { $gadgetConnection, isGadgetClient } from "@gadgetinc/api-client-core";
+import type { AnyClient } from "@gadgetinc/api-client-core";
+import type { GadgetApiContext as CoreGadgetApiContext } from "@gadgetinc/client-hooks";
+import { registerClientHooks } from "@gadgetinc/client-hooks";
 import type { ReactNode } from "react";
-import React, { useContext } from "react";
-import type { Client as UrqlClient } from "urql";
+import React from "react";
 import { Provider as UrqlProvider } from "urql";
-
-/**
- * React context that stores the current urql client
- *
- * urql doesn't have its own useClient hook, so we store it on our own context to get at the client object later
- **/
-export const GadgetUrqlClientContext = React.createContext<UrqlClient | undefined>(undefined);
+import { reactAdapter } from "./adapter.js";
 
 /** Provides the Gadget auth configuration used in the auth hooks */
 export interface GadgetAuthConfiguration {
@@ -23,16 +17,12 @@ export interface GadgetAuthConfiguration {
 }
 
 /** Provides the api client instance, if present, as well as the Gadget auth configuration for the application. */
-export interface GadgetConfigurationContext {
-  api: AnyClient | undefined;
+export interface GadgetApiContext extends CoreGadgetApiContext {
   auth: GadgetAuthConfiguration;
   navigate?: (path: string) => void;
 }
 
-/**
- * React context that stores an instance of the JS Client for an app (AKA the `api` object)
- */
-export const GadgetConfigurationContext = React.createContext<GadgetConfigurationContext | undefined>(undefined);
+export const GadgetApiContext = React.createContext<GadgetApiContext>(null as unknown as GadgetApiContext);
 
 interface BaseProviderProps {
   children: ReactNode;
@@ -55,15 +45,6 @@ export interface ProviderProps extends BaseProviderProps {
    */
   api: AnyClient;
   auth?: Partial<GadgetAuthConfiguration>;
-}
-
-/** @deprecated -- pass an instance of your app's api client instead with the `api` prop */
-export interface DeprecatedProviderProps extends BaseProviderProps {
-  /**
-   * an urql client object from your current Gadget client, like `api.connection.currentClient`
-   * @deprecated -- pass an instance of your app's api client instead with the `api` prop
-   */
-  value: UrqlClient;
 }
 
 const defaultSignInPath = "/";
@@ -92,25 +73,8 @@ const defaultRedirectOnSuccessfulSignInPath = "/";
  *   <MyApp />
  * </Provider>
  */
-export function Provider(props: ProviderProps | DeprecatedProviderProps) {
-  let gadgetClient: AnyClient | undefined = undefined;
-
-  let urqlClient: UrqlClient;
-  if ("api" in props) {
-    if (!isGadgetClient(props.api)) {
-      throw new Error(
-        "Invalid Gadget API client passed to <Provider /> component -- please pass an instance of your generated client, like <Provider api={api} />!"
-      );
-    }
-    gadgetClient = props.api;
-    urqlClient = props.api.connection.currentClient;
-  } else if (props.value) {
-    urqlClient = props.value;
-  } else {
-    throw new Error(
-      "No Gadget API client passed to <Provider /> component -- please pass an instance of your generated client, like <Provider api={api} />!"
-    );
-  }
+export function Provider(props: ProviderProps) {
+  const { gadgetClient, gadgetConnection, urqlClient } = registerClientHooks(props.api, { ...reactAdapter, GadgetApiContext });
   // hack: make the client support suspending some queries when used by the react provider
   // this flag is safe to mutably set here because it just serves as a flag for the urql react hooks, and doesn't affect imperative api client functioning
   urqlClient.suspense = true;
@@ -127,72 +91,19 @@ export function Provider(props: ProviderProps | DeprecatedProviderProps) {
   }
 
   return (
-    <GadgetUrqlClientContext.Provider value={urqlClient}>
-      <GadgetConfigurationContext.Provider
-        value={{
-          api: gadgetClient,
-          navigate: props.navigate,
-          auth: {
-            signInPath,
-            signOutActionApiIdentifier,
-            redirectOnSuccessfulSignInPath,
-          },
-        }}
-      >
-        <UrqlProvider value={urqlClient}>{props.children}</UrqlProvider>
-      </GadgetConfigurationContext.Provider>
-    </GadgetUrqlClientContext.Provider>
+    <GadgetApiContext.Provider
+      value={{
+        api: gadgetClient,
+        connection: gadgetConnection,
+        navigate: props.navigate,
+        auth: {
+          signInPath,
+          signOutActionApiIdentifier,
+          redirectOnSuccessfulSignInPath,
+        },
+      }}
+    >
+      <UrqlProvider value={urqlClient}>{props.children}</UrqlProvider>
+    </GadgetApiContext.Provider>
   );
 }
-
-/**
- * Get the current `GadgetConnection` object from React context.
- * Must be called within a component wrapped by the `<Provider api={...} />` component.
- **/
-export const useConnection = () => {
-  const urqlClient = useContext(GadgetUrqlClientContext);
-  if (!urqlClient) {
-    throw new Error("No urql client object in React context, have you added the <Provider/> wrapper component from @gadgetinc/react?");
-  }
-  const connection = (urqlClient as any)[$gadgetConnection] as unknown as GadgetConnection | undefined;
-  if (!connection) {
-    throw new Error(
-      `urql client found in context was not set up by the Gadget API client. Please ensure you are wrapping this hook with the <Provider/> component from @gadgetinc/react.
-
-      Possible remedies:
-       - ensuring you have the <Provider/> component wrapped around your hook invocation
-       - ensuring you are passing a value to the provider, usually <Provider api={api}>
-       - ensuring your @gadget-client/<your-app> package and your @gadgetinc/react package are up to date`
-    );
-  }
-
-  return connection;
-};
-
-/**
- * Get the current `api` object from React context
- * Must be called within a component wrapped by the `<Provider api={...} />` component.
- **/
-export const useApi = () => {
-  const gadgetContext = useContext(GadgetConfigurationContext);
-  const urqlClient = useContext(GadgetUrqlClientContext);
-  if (!gadgetContext || !gadgetContext.api) {
-    if (urqlClient) {
-      throw new Error(
-        `useApi hook called in context with deprecated <Provider/> convention. Please ensure you are wrapping this hook with the <Provider/> component from @gadgetinc/react and passing it an instance of your api client, like <Provider api={api} />.
-
-        The <Provider /> component is currently being passed a value, like <Provider value={api.connection.currentClient}/>. Please update this to <Provider api={api} />.`
-      );
-    } else {
-      throw new Error(
-        `useApi hook called in context where no Gadget API client is available. Please ensure you are wrapping this hook with the <Provider/> component from @gadgetinc/react.
-
-      Possible remedies:
-       - ensuring you have the <Provider/> component wrapped around your hook invocation
-       - ensuring you are passing an api client instance to the provider, usually <Provider api={api}>
-       - ensuring your @gadget-client/<your-app> package and your @gadgetinc/react package are up to date`
-      );
-    }
-  }
-  return gadgetContext.api;
-};

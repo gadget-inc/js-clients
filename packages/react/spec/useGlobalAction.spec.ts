@@ -1,9 +1,9 @@
+import type { ErrorWrapper } from "@gadgetinc/utils";
 import { renderHook } from "@testing-library/react";
 import type { IsExact } from "conditional-type-checks";
 import { assert } from "conditional-type-checks";
 import { act } from "react";
 import { useGlobalAction } from "../src/index.js";
-import type { ErrorWrapper } from "../src/utils.js";
 import { bulkExampleApi, kitchenSinkApi } from "./apis.js";
 import { MockClientWrapper, createMockUrqlClient, mockUrqlClient } from "./testWrappers.js";
 

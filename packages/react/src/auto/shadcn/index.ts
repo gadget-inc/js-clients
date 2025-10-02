@@ -1,4 +1,4 @@
-export type { OptionsType } from "../../utils.js";
+export type { OptionsType } from "@gadgetinc/client-hooks";
 export { type AutoInputComponent } from "../AutoInput.js";
 export type { AutoButtonProps } from "../hooks/useAutoButtonController.js";
 export type {

@@ -1,10 +1,8 @@
 import type { ActionFunction, GlobalActionFunction } from "@gadgetinc/api-client-core";
+import type { ActionHookState, OptionsType } from "@gadgetinc/client-hooks";
 import { useCallback } from "react";
+import { useAction, useGlobalAction } from "../../hooks.js";
 import { isModelActionMetadata, useActionMetadata } from "../../metadata.js";
-import { useAction } from "../../useAction.js";
-import { useGlobalAction } from "../../useGlobalAction.js";
-import type { ActionHookState } from "../../utils.js";
-import { type OptionsType } from "../../utils.js";
 
 export type AutoButtonProps<
   GivenOptions extends OptionsType,

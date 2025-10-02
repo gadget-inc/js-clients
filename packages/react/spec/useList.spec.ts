@@ -4,11 +4,11 @@ import { act, renderHook, waitFor } from "@testing-library/react";
 let data: any = [{ id: 1 }, { id: 2 }];
 let fetching = false;
 let error = undefined as any;
-jest.unstable_mockModule("../src/useFindMany", () => ({
+jest.unstable_mockModule("../src/hooks", () => ({
   useFindMany: jest.fn<typeof useFindMany>().mockImplementation(() => [{ data, fetching, error, stale: false }, jest.fn()]),
 }));
 
-const { useFindMany } = await import("../src/useFindMany.js");
+const { useFindMany } = await import("../src/hooks.js");
 const { useList } = await import("../src/useList.js");
 
 describe("useList", () => {

@@ -1,8 +1,9 @@
 import type { ActionFunction, GlobalActionFunction } from "@gadgetinc/api-client-core";
+import type { OptionsType } from "@gadgetinc/client-hooks";
 import type { ComponentProps } from "react";
 import React, { forwardRef } from "react";
 import { FormProvider } from "../../useActionForm.js";
-import { humanizeCamelCase, type OptionsType } from "../../utils.js";
+import { humanizeCamelCase } from "../../utils.js";
 import type { AutoFormProps } from "../AutoForm.js";
 import { useAutoForm } from "../AutoForm.js";
 import { validateAutoFormProps } from "../AutoFormActionValidators.js";

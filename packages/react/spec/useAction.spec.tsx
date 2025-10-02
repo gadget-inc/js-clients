@@ -1,13 +1,11 @@
 import type { GadgetRecord } from "@gadgetinc/api-client-core";
+import type { ErrorWrapper } from "@gadgetinc/utils";
 import { act, renderHook } from "@testing-library/react";
-
 import type { IsExact } from "conditional-type-checks";
 import { assert } from "conditional-type-checks";
-import React from "react";
 import type { AnyVariables } from "urql";
-import { Provider } from "../src/GadgetProvider.js";
+import { GadgetConnection } from "../../api-client-core/dist/cjs/GadgetConnection.js";
 import { useAction } from "../src/index.js";
-import type { ErrorWrapper } from "../src/utils.js";
 import { fullAuthApi, kitchenSinkApi, relatedProductsApi } from "./apis.js";
 import { MockClientWrapper, createMockUrqlClient, mockUrqlClient } from "./testWrappers.js";
 
@@ -567,10 +565,14 @@ describe("useAction", () => {
       },
     });
 
-    const wrapper = (props: { children: React.ReactNode }) => <Provider value={client}>{props.children}</Provider>;
+    const api: any = {
+      connection: new GadgetConnection({
+        endpoint: "https://api.gadget.dev",
+      }),
+    };
 
     const { result } = renderHook(() => useAction(relatedProductsApi.unambiguous.update), {
-      wrapper,
+      wrapper: MockClientWrapper(api, client),
     });
 
     let mutationPromise: any;
@@ -651,10 +653,14 @@ describe("useAction", () => {
       },
     });
 
-    const wrapper = (props: { children: React.ReactNode }) => <Provider value={client}>{props.children}</Provider>;
+    const api: any = {
+      connection: new GadgetConnection({
+        endpoint: "https://api.gadget.dev",
+      }),
+    };
 
     const { result } = renderHook(() => useAction(fullAuthApi.user.signUp), {
-      wrapper,
+      wrapper: MockClientWrapper(api, client),
     });
 
     let mutationPromise: any;
@@ -697,10 +703,14 @@ describe("useAction", () => {
       },
     });
 
-    const wrapper = (props: { children: React.ReactNode }) => <Provider value={client}>{props.children}</Provider>;
+    const api: any = {
+      connection: new GadgetConnection({
+        endpoint: "https://api.gadget.dev",
+      }),
+    };
 
     const { result } = renderHook(() => useAction(relatedProductsApi.ambiguous.update), {
-      wrapper,
+      wrapper: MockClientWrapper(api, client),
     });
 
     let mutationPromise: any;

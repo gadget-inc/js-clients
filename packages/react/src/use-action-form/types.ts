@@ -8,10 +8,10 @@ import type {
   GlobalActionFunction,
   Select,
 } from "@gadgetinc/api-client-core";
+import type { ActionHookState, OptionsType } from "@gadgetinc/client-hooks";
+import type { ErrorWrapper } from "@gadgetinc/utils";
 import type { FieldValues, UseFormReturn } from "react-hook-form";
-import type { useAction } from "../useAction.js";
-import type { useGlobalAction } from "../useGlobalAction.js";
-import type { ActionHookState, ErrorWrapper, OptionsType } from "../utils.js";
+import type { useAction, useGlobalAction } from "../hooks.js";
 import { type useFindExistingRecord } from "./utils.js";
 
 /**

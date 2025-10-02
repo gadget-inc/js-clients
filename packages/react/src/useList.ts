@@ -1,12 +1,13 @@
 import type { DefaultSelection, FindManyFunction, GadgetRecord, LimitToKnownKeys, Select } from "@gadgetinc/api-client-core";
+import type { OptionsType, ReadOperationOptions } from "@gadgetinc/client-hooks";
+import type { ErrorWrapper } from "@gadgetinc/utils";
 import type { OperationContext } from "@urql/core";
 import { useCallback, useMemo, useState } from "react";
+import { useFindMany } from "./hooks.js";
 import type { SearchResult } from "./useDebouncedSearch.js";
 import { useDebouncedSearch } from "./useDebouncedSearch.js";
-import { useFindMany } from "./useFindMany.js";
 import type { RecordSelection } from "./useSelectedRecordsController.js";
 import { useSelectedRecordsController } from "./useSelectedRecordsController.js";
-import type { ErrorWrapper, OptionsType, ReadOperationOptions } from "./utils.js";
 import { omit } from "./utils.js";
 
 export interface PaginationResult {
