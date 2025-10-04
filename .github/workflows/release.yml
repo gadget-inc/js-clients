@@ -25,6 +25,12 @@ jobs:
           token: ${{ secrets.NPM_TOKEN }}
           package: ./packages/api-client-core/package.json
           access: public
+      - name: Publish @gadgetinc/core
+        uses: JS-DevTools/npm-publish@v1
+        with:
+          token: ${{ secrets.NPM_TOKEN }}
+          package: ./packages/core/package.json
+          access: public
       - name: Publish @gadgetinc/react
         uses: JS-DevTools/npm-publish@v1
         with:
