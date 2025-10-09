@@ -1,9 +1,10 @@
 {
   "name": "@gadgetinc/core",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "files": [
     "README.md",
-    "dist/**/*"
+    "dist/**/*",
+    "testing/**/*"
   ],
   "license": "MIT",
   "repository": "github:gadget-inc/js-clients",
@@ -15,6 +16,11 @@
       "import": "./dist/esm/index.js",
       "require": "./dist/cjs/index.js",
       "default": "./dist/esm/index.js"
+    },
+    "./testing": {
+      "import": "./dist/esm/testing/index.js",
+      "require": "./dist/cjs/testing/index.js",
+      "default": "./dist/esm/testing/index.js"
     }
   },
   "source": "src/index.ts",
@@ -24,7 +30,7 @@
     "typecheck:main": "tsc --noEmit",
     "typecheck": "tsc --noEmit",
     "clean": "rimraf dist/ *.tsbuildinfo **/*.tsbuildinfo",
-    "prebuild": "mkdir -p dist/cjs dist/esm && echo '{\"type\": \"commonjs\"}' > dist/cjs/package.json && echo '{\"type\": \"module\"}' > dist/esm/package.json",
+    "prebuild": "mkdir -p dist/cjs dist/esm testing/ && echo '{\"type\": \"commonjs\"}' > dist/cjs/package.json && echo '{\"type\": \"module\"}' > dist/esm/package.json && echo '{\"main\": \"../dist/cjs/testing/index.js\"}' > testing/package.json",
     "build": "pnpm clean && pnpm prebuild && tsc -b tsconfig.cjs.json tsconfig.esm.json",
     "prepublishOnly": "pnpm build",
     "prerelease": "gitpkg publish"
