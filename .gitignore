@@ -14,6 +14,7 @@ packages/*/dist
 packages/sample-app
 *.orig
 cypress.env.json
+packages/core/testing
 packages/shopify-extensions/react
 # generated graphql queries
 packages/react/src/internal/gql
