@@ -7,5 +7,6 @@ module.exports = {
     "<rootDir>/packages/tiny-graphql-query-compiler/jest.config.js",
     "<rootDir>/packages/shopify-extensions/jest.config.js",
     "<rootDir>/packages/react-bigcommerce/jest.config.js",
+    "<rootDir>/packages/react-chatgpt-apps/jest.config.js",
   ],
 };
