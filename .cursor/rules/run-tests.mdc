@@ -1,0 +1,16 @@
+---
+alwaysApply: true
+---
+
+# Running Jest tests
+
+The `spec` directory in each package in the `packages` dir is a set of jest tests. There's one root-level command to run jest tests: `pnpm test`. You can use this to run tests in any monorepo package if they are jest specs ending with `.spec.tsx?`
+
+Run all the tests in a suite with `pnpm test packages/<package-dir>/spec/path/to/the/file.spec.ts`
+Run one test with `pnpm test packages/<package-dir>/spec/path/to/the/file.spec.ts -- -t "test name"`. Ensure you pass the test name with `-- -t <test-name>`, not just `-t <test-name>` so the arguments make it through the pnpm wrapper down to jest.
+
+Don't run more than one test suite at once. Don't pass jest flags like `--runInBand` or `--reporters`, you don't need to.
+
+You can lower the log level with `LOG_LEVEL=debug pnpm test ...`.
+
+Don't cd into the directory where the tests are or the workspace directory every run -- it messes with the direnv-provided shell configuration.

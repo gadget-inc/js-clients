@@ -1,0 +1,11 @@
+---
+alwaysApply: true
+---
+
+# Authoring Jest tests
+
+Don't use jest module mocks for testing -- they aren't well supported by the transpilation pipeline.
+
+Don't reset mocks explicitly between tests, we have the jest config to do this automatically turned on so its not necessary.
+
+Don't just skip tests if you can't get them to work, that's unhelpful. Keep working to get them passing, or if stuck, ask for guidance from the user.
