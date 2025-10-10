@@ -1,0 +1,46 @@
+{
+  "name": "@gadgetinc/react-chatgpt-apps",
+  "version": "0.1.0",
+  "files": [
+    "README.md",
+    "dist/**/*"
+  ],
+  "license": "MIT",
+  "repository": "github:gadget-inc/js-clients",
+  "homepage": "https://github.com/gadget-inc/js-clients/tree/main/packages/react-chatgpt-apps",
+  "type": "module",
+  "exports": {
+    ".": {
+      "import": "./dist/esm/index.js",
+      "require": "./dist/cjs/index.js",
+      "default": "./dist/esm/index.js"
+    },
+    "./package.json": "./package.json"
+  },
+  "source": "src/index.ts",
+  "main": "dist/cjs/index.js",
+  "scripts": {
+    "typecheck": "tsc --noEmit",
+    "build": "rm -rf dist && tsc -b tsconfig.cjs.json tsconfig.esm.json && echo '{\"type\": \"commonjs\"}' > dist/cjs/package.json && echo '{\"type\": \"module\"}' > dist/esm/package.json",
+    "watch": "tsc --watch --preserveWatchOutput",
+    "prepublishOnly": "pnpm build",
+    "prerelease": "gitpkg publish"
+  },
+  "dependencies": {
+    "@gadgetinc/api-client-core": "^0.15.46"
+  },
+  "devDependencies": {
+    "@gadgetinc/api-client-core": "workspace:*",
+    "@gadgetinc/react": "workspace:*",
+    "@types/react": "^19.1.1",
+    "@types/react-dom": "^19.1.1",
+    "conditional-type-checks": "^1.0.6",
+    "react": "^19.1.1",
+    "react-dom": "^19.1.1"
+  },
+  "peerDependencies": {
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0",
+    "@gadgetinc/react": "^0.22.0"
+  }
+}
