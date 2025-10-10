@@ -3,6 +3,7 @@ import type { VariableOptions } from "tiny-graphql-query-compiler";
 import type { FieldSelection } from "./FieldSelection.js";
 import type {
   ActionFunction,
+  ActionFunctionMetadata,
   AnyActionFunction,
   BulkActionFunction,
   GlobalActionFunction,
@@ -10,6 +11,7 @@ import type {
   ViewFunctionWithoutVariables,
   ViewFunctionWithVariables,
 } from "./GadgetFunctions.js";
+import type { GadgetRecord } from "./GadgetRecord.js";
 
 /**
  * Allows detecting an any type, this is rather tricky:
@@ -926,6 +928,45 @@ export type EnqueueBackgroundActionOptions<Action extends AnyActionFunction> = {
    */
   startAt?: Date | string;
 } & Partial<OperationContext>;
+
+export type BackgroundActionResultData<
+  F extends ActionFunctionMetadata<any, any, any, any, any, any> | GlobalActionFunction<any>,
+  Selection
+> = F extends ActionFunction<any, any, any, any, any>
+  ? F["hasReturnType"] extends true
+    ? any
+    : GadgetRecord<
+        Select<
+          Exclude<F["schemaType"], null | undefined>,
+          DefaultSelection<
+            F["selectionType"],
+            Selection extends { select?: F["selectionType"] | null | undefined } ? Selection : never,
+            F["defaultSelection"]
+          >
+        >
+      >
+  : any;
+
+export type BuildOperationResult = {
+  query: string;
+  variables: Record<string, any>;
+};
+
+export type BackgroundActionResult<Data = any> = {
+  id: string;
+  outcome: string | null;
+  result: Data | null;
+};
+
+export interface AnyBackgroundActionHandle<
+  SchemaT,
+  Action extends ActionFunctionMetadata<any, any, any, SchemaT, any, any> | GlobalActionFunction<any>
+> {
+  result<Options extends ActionFunctionOptions<Action>, ResultData = BackgroundActionResultData<Action, Options>>(
+    options?: Options
+  ): Promise<ResultData | null>;
+  cancel(): Promise<void>;
+}
 
 export type ActionFunctionOptions<Action extends AnyActionFunction> = Action extends ActionFunction<infer Options, any, any, any, any>
   ? Options

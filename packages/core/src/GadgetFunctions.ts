@@ -1,3 +1,4 @@
+import { FieldSelection } from "./FieldSelection.js";
 import type { GadgetRecord, RecordShape } from "./GadgetRecord.js";
 import type { GadgetRecordList } from "./GadgetRecordList.js";
 import type { LimitToKnownKeys, VariablesOptions } from "./types.js";
@@ -23,7 +24,7 @@ export interface FindOneFunction<OptionsT, SelectionT, SchemaT, DefaultsT> {
   selectionType: SelectionT;
   optionsType: OptionsT;
   schemaType: SchemaT | null;
-  plan?: <Options extends OptionsT>(fieldValue: string, options?: LimitToKnownKeys<Options, OptionsT>) => GQLBuilderResult;
+  plan: <Options extends OptionsT>(fieldValue: string, options?: LimitToKnownKeys<Options, OptionsT>) => GQLBuilderResult;
 }
 
 export interface MaybeFindOneFunction<OptionsT, SelectionT, SchemaT, DefaultsT> {
@@ -38,7 +39,7 @@ export interface MaybeFindOneFunction<OptionsT, SelectionT, SchemaT, DefaultsT> 
   selectionType: SelectionT;
   optionsType: OptionsT;
   schemaType: SchemaT | null;
-  plan?: <Options extends OptionsT>(fieldValue: string, options?: LimitToKnownKeys<Options, OptionsT>) => GQLBuilderResult;
+  plan: <Options extends OptionsT>(fieldValue: string, options?: LimitToKnownKeys<Options, OptionsT>) => GQLBuilderResult;
 }
 
 export interface FindManyFunction<OptionsT, SelectionT, SchemaT, DefaultsT> {
@@ -52,7 +53,7 @@ export interface FindManyFunction<OptionsT, SelectionT, SchemaT, DefaultsT> {
   selectionType: SelectionT;
   optionsType: OptionsT;
   schemaType: SchemaT | null;
-  plan?: <Options extends OptionsT>(options?: LimitToKnownKeys<Options, OptionsT>) => GQLBuilderResult;
+  plan: <Options extends OptionsT>(options?: LimitToKnownKeys<Options, OptionsT>) => GQLBuilderResult;
 }
 
 export interface FindFirstFunction<OptionsT, SelectionT, SchemaT, DefaultsT> {
@@ -66,7 +67,7 @@ export interface FindFirstFunction<OptionsT, SelectionT, SchemaT, DefaultsT> {
   selectionType: SelectionT;
   optionsType: OptionsT;
   schemaType: SchemaT | null;
-  plan?: <Options extends OptionsT>(options?: LimitToKnownKeys<Options, OptionsT>) => GQLBuilderResult;
+  plan: <Options extends OptionsT>(options?: LimitToKnownKeys<Options, OptionsT>) => GQLBuilderResult;
 }
 
 export interface MaybeFindFirstFunction<OptionsT, SelectionT, SchemaT, DefaultsT> {
@@ -80,7 +81,7 @@ export interface MaybeFindFirstFunction<OptionsT, SelectionT, SchemaT, DefaultsT
   selectionType: SelectionT;
   optionsType: OptionsT;
   schemaType: SchemaT | null;
-  plan?: <Options extends OptionsT>(options?: LimitToKnownKeys<Options, OptionsT>) => GQLBuilderResult;
+  plan: <Options extends OptionsT>(options?: LimitToKnownKeys<Options, OptionsT>) => GQLBuilderResult;
 }
 
 export interface ViewFunctionWithoutVariables<ResultT> {
@@ -158,7 +159,14 @@ export interface ActionFunctionMetadata<OptionsT, VariablesT, SelectionT, Schema
   hasReturnType?: HasReturnType;
   singleActionFunctionName?: string;
   singleAction?: IsBulk extends true ? ActionFunctionMetadata<OptionsT, VariablesT, SelectionT, SchemaT, DefaultsT, false> : never;
-  plan?: <Options extends OptionsT>(options?: LimitToKnownKeys<Options, OptionsT>) => GQLBuilderResult;
+  plan: <Options extends OptionsT>(options?: LimitToKnownKeys<Options, OptionsT>) => GQLBuilderResult;
+  processResult: (
+    defaultSelection: FieldSelection | null,
+    response: any,
+    record: any,
+    modelSelectionField: string,
+    hasReturnType?: HasReturnType | null
+  ) => any;
   /** @deprecated */
   hasCreateOrUpdateEffect?: boolean;
 }
@@ -215,7 +223,7 @@ export interface GetFunction<OptionsT, SelectionT, SchemaT, DefaultsT> {
   selectionType: SelectionT;
   optionsType: OptionsT;
   schemaType: SchemaT | null;
-  plan?: <Options extends OptionsT>(options?: LimitToKnownKeys<Options, OptionsT>) => GQLBuilderResult;
+  plan: <Options extends OptionsT>(options?: LimitToKnownKeys<Options, OptionsT>) => GQLBuilderResult;
 }
 
 export interface GlobalActionFunction<VariablesT> {
@@ -228,7 +236,7 @@ export interface GlobalActionFunction<VariablesT> {
   variables: VariablesOptions;
   variablesType: VariablesT;
   isBulk?: undefined;
-  plan?: (variables?: VariablesOptions) => GQLBuilderResult;
+  plan: (variables?: VariablesOptions) => GQLBuilderResult;
 }
 
 export type AnyActionFunction =
