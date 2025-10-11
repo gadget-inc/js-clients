@@ -292,6 +292,33 @@ describe("InternalModelManager", () => {
       expect(plan.variables).toEqual({ search: "term" });
     });
 
+    test("should build a find many query with searchFields", () => {
+      const plan = internalFindManyQuery("widget", [], { search: "term", searchFields: { name: true, state: false, id: { weight: 10 } } });
+      expect(plan.query).toMatchInlineSnapshot(`
+        "query InternalFindManyWidget($search: String, $searchFields: WidgetSearchFields) {
+          internal {
+            listWidget(search: $search, searchFields: $searchFields) {
+              pageInfo {
+                hasNextPage
+                hasPreviousPage
+                startCursor
+                endCursor
+              }
+              edges {
+                cursor
+                node
+              }
+            }
+          }
+          gadgetMeta {
+            hydrations(modelName: "widget")
+          }
+        }"
+      `);
+      expectValidGraphQLQuery(plan.query);
+      expect(plan.variables).toEqual({ search: "term", searchFields: { name: {}, id: { weight: 10 } } });
+    });
+
     test("should build a find many query with filter", () => {
       const plan = internalFindManyQuery("widget", [], { filter: [{ id: { equals: "1" } }] });
       expect(plan.query).toMatchInlineSnapshot(`
@@ -460,6 +487,26 @@ describe("InternalModelManager", () => {
       expect(plan.variables).toEqual({ first: 1, search: "term" });
     });
 
+    test("should build a find first query with searchFields", () => {
+      const plan = internalFindFirstQuery("widget", [], { search: "term", searchFields: { name: true, state: false, id: { weight: 10 } } });
+      expect(plan.query).toMatchInlineSnapshot(`
+        "query InternalFindFirstWidget($search: String, $searchFields: WidgetSearchFields, $first: Int) {
+          internal {
+            listWidget(search: $search, searchFields: $searchFields, first: $first) {
+              edges {
+                node
+              }
+            }
+          }
+          gadgetMeta {
+            hydrations(modelName: "widget")
+          }
+        }"
+      `);
+      expectValidGraphQLQuery(plan.query);
+      expect(plan.variables).toEqual({ first: 1, search: "term", searchFields: { name: {}, id: { weight: 10 } } });
+    });
+
     test("should build a find first query with filter", () => {
       const plan = internalFindFirstQuery("widget", [], { filter: [{ id: { equals: "1" } }] });
 
@@ -572,6 +619,40 @@ describe("InternalModelManager", () => {
           "variables": {
             "first": 1,
             "search": "term",
+          },
+        }
+      `);
+      expectValidGraphQLQuery(plan.query);
+    });
+
+    test("should build a find first query with searchFilter", () => {
+      const plan = internalFindFirstQuery("widget_model", [], {
+        search: "term",
+        searchFields: { name: true, state: false, id: { weight: 10 } },
+      });
+      expect(plan).toMatchInlineSnapshot(`
+        {
+          "query": "query InternalFindFirstWidgetModel($search: String, $searchFields: WidgetModelSearchFields, $first: Int) {
+          internal {
+            listWidgetModel(search: $search, searchFields: $searchFields, first: $first) {
+              edges {
+                node
+              }
+            }
+          }
+          gadgetMeta {
+            hydrations(modelName: "widget_model")
+          }
+        }",
+          "variables": {
+            "first": 1,
+            "search": "term",
+            "searchFields": {
+              "id": {
+                "weight": 10,
+              },
+              "name": {},
+            },
           },
         }
       `);
