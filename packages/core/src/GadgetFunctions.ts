@@ -1,4 +1,3 @@
-import { FieldSelection } from "./FieldSelection.js";
 import type { GadgetRecord, RecordShape } from "./GadgetRecord.js";
 import type { GadgetRecordList } from "./GadgetRecordList.js";
 import type { LimitToKnownKeys, VariablesOptions } from "./types.js";
@@ -160,13 +159,6 @@ export interface ActionFunctionMetadata<OptionsT, VariablesT, SelectionT, Schema
   singleActionFunctionName?: string;
   singleAction?: IsBulk extends true ? ActionFunctionMetadata<OptionsT, VariablesT, SelectionT, SchemaT, DefaultsT, false> : never;
   plan: <Options extends OptionsT>(options?: LimitToKnownKeys<Options, OptionsT>) => GQLBuilderResult;
-  processResult: (
-    defaultSelection: FieldSelection | null,
-    response: any,
-    record: any,
-    modelSelectionField: string,
-    hasReturnType?: HasReturnType | null
-  ) => any;
   /** @deprecated */
   hasCreateOrUpdateEffect?: boolean;
 }
