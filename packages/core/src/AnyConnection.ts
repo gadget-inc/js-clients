@@ -3,7 +3,7 @@ import type { ClientOptions as SubscriptionClientOptions, createClient as create
 import type { AuthenticationModeOptions, Exchanges } from "./ClientOptions.js";
 import { AnyActionFunction } from "./GadgetFunctions.js";
 import { GadgetTransaction } from "./GadgetTransaction.js";
-import { AnyBackgroundActionHandle, BuildOperationResult, EnqueueBackgroundActionOptions, VariablesOptions } from "./types.js";
+import { AnyBackgroundActionHandle, BuildOperationResult, EnqueueBackgroundActionOptions } from "./types.js";
 
 export interface GadgetSubscriptionClientOptions extends Partial<SubscriptionClientOptions> {
   urlParams?: Record<string, string | null | undefined>;
@@ -56,14 +56,8 @@ export interface AnyConnection {
   close(): void;
   fetch: (input: RequestInfo | URL, init?: RequestInit) => Promise<Response>;
   enqueue: {
-    plan: (
-      operation: string,
-      variables: VariablesOptions,
-      namespace?: string | string[] | null,
-      options?: EnqueueBackgroundActionOptions<any> | null,
-      isBulk?: boolean
-    ) => BuildOperationResult;
-    processOptions: (options: EnqueueBackgroundActionOptions<any>) => Record<string, any>;
+    plan: (action: AnyActionFunction, options?: EnqueueBackgroundActionOptions<any> | null) => BuildOperationResult;
+    processOptions: (options: EnqueueBackgroundActionOptions<any>) => Record<string, any> | null;
     createHandle: <SchemaT, Action extends AnyActionFunction>(action: Action, id: string) => AnyBackgroundActionHandle<SchemaT, Action>;
   };
 }
