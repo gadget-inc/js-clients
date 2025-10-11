@@ -1,7 +1,7 @@
 import type { OperationResult } from "@urql/core";
-import { type FieldSelection as BuilderFieldSelection } from "tiny-graphql-query-compiler";
+import { FieldSelection, type FieldSelection as BuilderFieldSelection } from "tiny-graphql-query-compiler";
 import { DataHydrator } from "./DataHydrator.js";
-import type { ActionFunctionMetadata, AnyActionFunction } from "./GadgetFunctions.js";
+import type { ActionFunctionMetadata, AnyActionFunction, HasReturnType } from "./GadgetFunctions.js";
 import type { RecordShape } from "./GadgetRecord.js";
 import { GadgetRecord } from "./GadgetRecord.js";
 import type { VariablesOptions } from "./types.js";
@@ -761,4 +761,69 @@ export const formatErrorMessages = (error: Error) => {
   }
 
   return mapToObject(result);
+};
+
+export const processBulkActionResponse = <Shape extends RecordShape = any>(
+  defaultSelection: FieldSelection | null,
+  response: any,
+  records: any,
+  modelSelectionField: string,
+  hasReturnType?: HasReturnType | null
+) => {
+  if (defaultSelection == null) return;
+  if (!hasReturnType) {
+    return hydrateRecordArray<Shape>(response, records[modelSelectionField]);
+  } else if (typeof hasReturnType == "boolean") {
+    return records.results;
+  } else {
+    return Object.entries(hasReturnType).flatMap(([returnTypeField, innerHasReturnType]) => {
+      const results = records[returnTypeField];
+
+      if (!Array.isArray(results)) {
+        return [];
+      }
+
+      return results.map((result) => {
+        const returnTypeForResult =
+          "hasReturnType" in innerHasReturnType ? returnTypeForRecord(result, innerHasReturnType.hasReturnType) : false;
+
+        if (!returnTypeForResult) {
+          return hydrateRecord<Shape>(response, result);
+        } else {
+          return processActionResponse(defaultSelection, response, result, modelSelectionField, returnTypeForResult);
+        }
+      });
+    });
+  }
+};
+
+export const processActionResponse = <Shape extends RecordShape = any>(
+  defaultSelection: FieldSelection | null,
+  response: any,
+  record: any,
+  modelSelectionField: string,
+  hasReturnType?: HasReturnType | null
+): any => {
+  // Delete actions have a null selection. We do an early return for this because `hydrateRecordArray` will fail
+  // if there's nothing at `mutationResult[modelSelectionField]`, but the caller isn't expecting a return (void).
+  if (defaultSelection == null) return;
+  if (!hasReturnType) {
+    return hydrateRecord<Shape>(response, record[modelSelectionField]);
+  } else if (typeof hasReturnType == "boolean") {
+    return record.result;
+  } else {
+    const innerReturnType = returnTypeForRecord(record, hasReturnType);
+
+    return processActionResponse(defaultSelection, response, record, modelSelectionField, innerReturnType);
+  }
+};
+
+const returnTypeForRecord = (record: any, hasReturnType: HasReturnType) => {
+  if (typeof hasReturnType == "boolean") {
+    return hasReturnType;
+  }
+
+  const innerReturnTypeForTypename = hasReturnType[`... on ${record.__typename}`];
+
+  return innerReturnTypeForTypename && "hasReturnType" in innerReturnTypeForTypename ? innerReturnTypeForTypename.hasReturnType : false;
 };
