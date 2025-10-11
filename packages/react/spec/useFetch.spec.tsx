@@ -2,14 +2,14 @@
  * @jest-environment ./spec/jsdom-environment.ts
  */
 
+import type { ErrorWrapper } from "@gadgetinc/utils";
 import { render, renderHook, screen } from "@testing-library/react";
 import { userEvent } from "@testing-library/user-event";
 import type { IsExact } from "conditional-type-checks";
 import { assert } from "conditional-type-checks";
 import React, { act } from "react";
 import { Readable } from "stream";
-import { useFetch } from "../src/useFetch.js";
-import type { ErrorWrapper } from "../src/utils.js";
+import { useFetch } from "../src/hooks.js";
 import { relatedProductsApi } from "./apis.js";
 import { MockClientWrapper, mockUrqlClient } from "./testWrappers.js";
 

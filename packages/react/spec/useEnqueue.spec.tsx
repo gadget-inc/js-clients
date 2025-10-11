@@ -1,12 +1,11 @@
 import type { BackgroundActionHandle } from "@gadgetinc/api-client-core";
+import type { ErrorWrapper } from "@gadgetinc/utils";
 import { act, renderHook } from "@testing-library/react";
 import type { IsExact } from "conditional-type-checks";
 import { assert } from "conditional-type-checks";
-import React from "react";
 import { type AnyVariables } from "urql";
-import { Provider } from "../src/index.js";
-import { useEnqueue } from "../src/useEnqueue.js";
-import type { ErrorWrapper } from "../src/utils.js";
+import { GadgetConnection } from "../../api-client-core/dist/cjs/GadgetConnection.js";
+import { useEnqueue } from "../src/hooks.js";
 import { bulkExampleApi, kitchenSinkApi, relatedProductsApi } from "./apis.js";
 import { MockClientWrapper, createMockUrqlClient, mockUrqlClient } from "./testWrappers.js";
 
@@ -704,10 +703,14 @@ describe("useEnqueue", () => {
       },
     });
 
-    const wrapper = (props: { children: React.ReactNode }) => <Provider value={client}>{props.children}</Provider>;
+    const api: any = {
+      connection: new GadgetConnection({
+        endpoint: "https://api.gadget.dev",
+      }),
+    };
 
     const { result } = renderHook(() => useEnqueue(relatedProductsApi.unambiguous.update), {
-      wrapper,
+      wrapper: MockClientWrapper(api, client),
     });
 
     let mutationPromise: any;
@@ -789,10 +792,14 @@ describe("useEnqueue", () => {
       },
     });
 
-    const wrapper = (props: { children: React.ReactNode }) => <Provider value={client}>{props.children}</Provider>;
+    const api: any = {
+      connection: new GadgetConnection({
+        endpoint: "https://api.gadget.dev",
+      }),
+    };
 
     const { result } = renderHook(() => useEnqueue(relatedProductsApi.ambiguous.update), {
-      wrapper,
+      wrapper: MockClientWrapper(api, client),
     });
 
     let mutationPromise: any;

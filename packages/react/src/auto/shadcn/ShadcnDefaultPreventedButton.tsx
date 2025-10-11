@@ -1,7 +1,7 @@
 import type { ActionFunction, GlobalActionFunction } from "@gadgetinc/api-client-core";
+import type { OptionsType } from "@gadgetinc/client-hooks";
 import type { ComponentProps } from "react";
 import React from "react";
-import type { OptionsType } from "../../utils.js";
 import type { AutoFormProps } from "../AutoForm.js";
 import type { ButtonProps, ShadcnElements } from "./elements.js";
 

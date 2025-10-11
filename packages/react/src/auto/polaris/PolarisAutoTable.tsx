@@ -1,4 +1,5 @@
 import type { FindManyFunction, GadgetRecord, SortOrder } from "@gadgetinc/api-client-core";
+import type { OptionsType } from "@gadgetinc/client-hooks";
 import type { IndexTableProps } from "@shopify/polaris";
 import {
   Banner,
@@ -16,7 +17,7 @@ import type { ReactNode } from "react";
 import React, { useCallback, useMemo } from "react";
 import type { TableColumn, TableRow } from "../../use-table/types.js";
 import { useTable } from "../../useTable.js";
-import type { ColumnValueType, OptionsType } from "../../utils.js";
+import type { ColumnValueType } from "../../utils.js";
 import type { AutoTableProps } from "../AutoTable.js";
 import { AutoTableContext } from "../AutoTableContext.js";
 import { validateAutoTableProps } from "../AutoTableValidators.js";

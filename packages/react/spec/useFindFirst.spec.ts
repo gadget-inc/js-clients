@@ -1,10 +1,10 @@
 import type { GadgetRecord } from "@gadgetinc/api-client-core";
+import type { ErrorWrapper } from "@gadgetinc/utils";
 import { diff } from "@n1ru4l/json-patch-plus";
 import { act, renderHook, waitFor } from "@testing-library/react";
 import type { IsExact } from "conditional-type-checks";
 import { assert } from "conditional-type-checks";
 import { useFindFirst } from "../src/index.js";
-import type { ErrorWrapper } from "../src/utils.js";
 import { kitchenSinkApi, relatedProductsApi } from "./apis.js";
 import {
   MockClientWrapper,

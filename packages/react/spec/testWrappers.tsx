@@ -19,6 +19,7 @@ export const MockClientWrapper =
     const urql = urqlClient ?? mockUrqlClient;
 
     jest.spyOn(api.connection, "currentClient" as any, "get").mockReturnValue(urql);
+    api.connection.fetch = urql.mockFetch as any;
 
     return (
       <Provider api={api} navigate={propOverrides?.navigate} auth={propOverrides?.auth}>

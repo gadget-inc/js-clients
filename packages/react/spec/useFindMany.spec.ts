@@ -1,13 +1,13 @@
 import { GraphQLError } from "@0no-co/graphql.web";
 import { Client } from "@gadget-client/related-products-example";
 import type { GadgetRecordList } from "@gadgetinc/api-client-core";
+import type { ErrorWrapper } from "@gadgetinc/utils";
 import { diff } from "@n1ru4l/json-patch-plus";
 import { renderHook, waitFor } from "@testing-library/react";
 import type { IsExact } from "conditional-type-checks";
 import { assert } from "conditional-type-checks";
 import { act } from "react";
-import { useFindMany } from "../src/useFindMany.js";
-import type { ErrorWrapper } from "../src/utils.js";
+import { useFindMany } from "../src/hooks.js";
 import { kitchenSinkApi, relatedProductsApi } from "./apis.js";
 import {
   MockClientWrapper,

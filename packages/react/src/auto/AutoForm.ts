@@ -6,6 +6,8 @@ import type {
   GlobalActionFunction,
   Select,
 } from "@gadgetinc/api-client-core";
+import type { OptionsType } from "@gadgetinc/client-hooks";
+import type { ErrorWrapper } from "@gadgetinc/utils";
 import { yupResolver } from "@hookform/resolvers/yup";
 import type { ReactNode } from "react";
 import React, { useEffect, useMemo, useRef } from "react";
@@ -23,7 +25,7 @@ import { isPlainObject, processDefaultValues, toDefaultValues } from "../use-act
 import { getRelatedModelFields, isHasManyOrHasManyThroughField, isRelationshipField, pathListToSelection } from "../use-table/helpers.js";
 import type { FieldErrors, FieldValues, UseFormReturn } from "../useActionForm.js";
 import { useActionForm } from "../useActionForm.js";
-import { get, getFlattenedObjectKeys, set, type ErrorWrapper, type OptionsType } from "../utils.js";
+import { get, getFlattenedObjectKeys, set } from "../utils.js";
 import { validationSchema } from "../validationSchema.js";
 import {
   validateFindByObjectWithMetadata,

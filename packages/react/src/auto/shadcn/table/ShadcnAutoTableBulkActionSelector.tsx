@@ -1,4 +1,4 @@
-import { type GadgetRecord } from "@gadgetinc/api-client-core";
+import type { GadgetRecord } from "@gadgetinc/api-client-core";
 import { ChevronsUpDown } from "lucide-react";
 import React, { useMemo } from "react";
 import { type TableRow } from "../../../use-table/types.js";

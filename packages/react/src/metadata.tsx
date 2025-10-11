@@ -1,12 +1,11 @@
 import type { ActionFunction, AnyClient, GlobalActionFunction } from "@gadgetinc/api-client-core";
-import { assert } from "@gadgetinc/api-client-core";
+import { ErrorWrapper, assert } from "@gadgetinc/utils";
 import type { ResultOf } from "@graphql-typed-document-node/core";
 import type { DocumentNode } from "graphql";
-import { useApi } from "./GadgetProvider.js";
+import { useApi, useQuery as useGadgetQuery } from "./hooks.js";
 import { graphql } from "./internal/gql/gql.js";
 import { GadgetFieldType, type FieldMetadataFragment as FieldMetadataFragmentType } from "./internal/gql/graphql.js";
-import { useGadgetQuery } from "./useGadgetQuery.js";
-import { ErrorWrapper, getModelManager, groupPaths } from "./utils.js";
+import { getModelManager, groupPaths } from "./utils.js";
 
 /**
  * The enum of all possible field types in Gadget's type system

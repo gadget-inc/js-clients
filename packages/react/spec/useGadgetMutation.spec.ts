@@ -1,7 +1,6 @@
 import { act, renderHook } from "@testing-library/react";
 import { gql } from "urql";
-import { useGadgetMutation } from "../src/useGadgetMutation.js";
-import { noProviderErrorMessage } from "../src/utils.js";
+import { useMutation as useGadgetMutation } from "../src/hooks.js";
 import { relatedProductsApi } from "./apis.js";
 import { MockClientWrapper, mockUrqlClient } from "./testWrappers.js";
 
@@ -11,7 +10,9 @@ describe("useGadgetMutation", () => {
       renderHook(() => useGadgetMutation("{__typename}"));
     } catch (error: any) {
       expect(error).toBeInstanceOf(Error);
-      expect(error.message).toBe(noProviderErrorMessage);
+      expect(error.message).toBe(
+        `You are attempting to use the useMutation hook, but you are not calling it from a component that is wrapped in a Gadget <Provider/> component. Please ensure you are wrapping this hook with the <Provider/> component from either @gadgetinc/react or @gadgetinc/preact.`
+      );
     }
   });
 

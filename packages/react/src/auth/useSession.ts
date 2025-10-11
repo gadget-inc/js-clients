@@ -7,9 +7,8 @@ import type {
   LimitToKnownKeys,
   Select,
 } from "@gadgetinc/api-client-core";
-import { useApi } from "../GadgetProvider.js";
-import { useGet } from "../useGet.js";
-import type { OptionsType, ReadOperationOptions } from "../utils.js";
+import type { OptionsType, ReadOperationOptions } from "@gadgetinc/client-hooks";
+import { useApi, useGet } from "../hooks.js";
 
 export type GadgetSession = GadgetRecord<Record<string, any>>;
 
