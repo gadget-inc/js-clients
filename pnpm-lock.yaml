@@ -536,6 +536,31 @@ importers:
         specifier: ^19.1.1
         version: 19.1.1(react@19.1.1)
 
+  packages/react-chatgpt-apps:
+    dependencies:
+      '@gadgetinc/api-client-core':
+        specifier: workspace:*
+        version: link:../api-client-core
+    devDependencies:
+      '@gadgetinc/react':
+        specifier: workspace:*
+        version: link:../react
+      '@types/react':
+        specifier: ^19.1.1
+        version: 19.1.10
+      '@types/react-dom':
+        specifier: ^19.1.1
+        version: 19.1.7(@types/react@19.1.10)
+      conditional-type-checks:
+        specifier: ^1.0.6
+        version: 1.0.6
+      react:
+        specifier: ^19.1.1
+        version: 19.1.1
+      react-dom:
+        specifier: ^19.1.1
+        version: 19.1.1(react@19.1.1)
+
   packages/react-shopify-app-bridge:
     dependencies:
       '@gadgetinc/api-client-core':
