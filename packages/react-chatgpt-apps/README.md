@@ -21,7 +21,7 @@
 
 1. A `<Provider>` component that automatically authenticates your ChatGPT App with your Gadget backend
 2. Easy integration with `@gadgetinc/react` hooks for reading and writing data
-3. Automatic token management using OpenAI's authentication system
+3. Automatic token management using OpenAI's and Gadget's authentication system
 
 When building a ChatGPT App that needs to interact with a Gadget backend, this library handles all the authentication complexity for you, allowing your React components to focus on building great user experiences.
 
@@ -53,19 +53,19 @@ yarn add @gadgetinc/react @gadgetinc/react-chatgpt-apps react
 To use this library, wrap your ChatGPT App's React components in the `Provider` component from this package. The `Provider` automatically handles authentication with your Gadget backend using OpenAI's authentication system.
 
 ```tsx
-import { Client } from "@gadget-client/your-chatgpt-app-slug";
+// in web/chatgpt-widgets/root.tsx
 import { Provider } from "@gadgetinc/react-chatgpt-apps";
+import { api } from "../api";
 
-// instantiate the API client for your Gadget app
-const api = new Client();
-
-export function App() {
+function App() {
   return (
     <Provider api={api}>
       <YourChatGPTAppComponents />
     </Provider>
   );
 }
+
+export default App;
 ```
 
 That's it! The `Provider` component will:
@@ -79,19 +79,8 @@ That's it! The `Provider` component will:
 Once you've wrapped your app in the `Provider`, you can use all the hooks from `@gadgetinc/react` to interact with your Gadget backend:
 
 ```tsx
-import { Client } from "@gadget-client/my-chatgpt-app";
 import { useAction, useFindMany } from "@gadgetinc/react";
-import { Provider } from "@gadgetinc/react-chatgpt-apps";
-
-const api = new Client();
-
-export function App() {
-  return (
-    <Provider api={api}>
-      <TaskList />
-    </Provider>
-  );
-}
+import { api } from "../../api";
 
 function TaskList() {
   // Fetch tasks from your Gadget backend - authentication is handled automatically
@@ -120,6 +109,30 @@ function TaskList() {
     </ul>
   );
 }
+```
+
+### Authentication
+
+When a user installs your ChatGPT App, they will authenticate themselves with your Gadget backend, and establish some kind of user identity in your `session` model, `user` model, or similar. When you use this provider, API calls made from your Widgets will act with that same identity by re-using the same JWT token that your Gadget backend provisioned at install time.
+
+### Using without authentication
+
+If you don't need authentication for your ChatGPT widgets such that they are safe to be world readable, you can disable authentication in the provider by setting the `authenticate` prop to false:
+
+```typescript
+// in web/chatgpt-widgets/root.tsx
+import { Provider } from "@gadgetinc/react-chatgpt-apps";
+import { api } from "../api";
+
+function App() {
+  return (
+    <Provider api={api} authenticate={false}>
+      <YourChatGPTAppComponents />
+    </Provider>
+  );
+}
+
+export default App;
 ```
 
 ## How it works

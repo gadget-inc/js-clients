@@ -1,11 +1,25 @@
 import type { AnyClient } from "@gadgetinc/api-client-core";
 import { Provider as GadgetUrqlProvider } from "@gadgetinc/react";
 import type { ReactNode } from "react";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef } from "react";
+
+const AUTH_TOKEN_TOOL_NAME = "__getGadgetAuthTokenV1";
 
 /** Get the backend auth token for the current widget using the special __getGadgetAuthTokenV1 backend tool */
 export const getToken = async () => {
-  const result = await window.openai.callTool("__getGadgetAuthTokenV1", {});
+  let result;
+  try {
+    result = await window.openai.callTool(AUTH_TOKEN_TOOL_NAME, {});
+  } catch (error: any) {
+    if (error.message.includes("MCP Resource not found")) {
+      throw new Error(
+        `Backend Gadget MCP server does not have the ${AUTH_TOKEN_TOOL_NAME} tool defined which is required for authentication.`
+      );
+    } else {
+      throw error;
+    }
+  }
+
   const structuredContent = result.structuredContent as { token: string } | { token: null; error: string };
   if ("error" in structuredContent) {
     throw new Error(structuredContent.error);
@@ -16,14 +30,21 @@ export const getToken = async () => {
 /**
  * React Provider that ChatGPT Apps Widgets should be wrapped in to make calls to the Gadget backend.
  */
-export const Provider = ({ children, api }: { children: ReactNode; api: AnyClient }) => {
-  // eslint-disable-next-line prefer-const
-  let [tokenPromise, setTokenPromise] = useState<Promise<string> | null>(null);
+export const Provider = ({ children, api, authenticate = true }: { children: ReactNode; api: AnyClient; authenticate?: boolean }) => {
+  const tokenPromiseRef = useRef<Promise<string> | null>(null);
 
   useEffect(() => {
+    if (!authenticate) {
+      api.connection.setAuthenticationMode({
+        browserSession: true,
+      });
+      return;
+    }
+
+    let tokenPromise = tokenPromiseRef.current;
     if (!tokenPromise) {
       tokenPromise = getToken();
-      setTokenPromise(tokenPromise);
+      tokenPromiseRef.current = tokenPromise;
     }
 
     api.connection.setAuthenticationMode({
@@ -43,7 +64,7 @@ export const Provider = ({ children, api }: { children: ReactNode; api: AnyClien
         },
       },
     });
-  }, [api, tokenPromise]);
+  }, [api, authenticate]);
 
   return <GadgetUrqlProvider api={api}>{children}</GadgetUrqlProvider>;
 };

@@ -29,15 +29,6 @@ describe("ChatGPT Apps Provider", () => {
     });
   });
 
-  afterEach(() => {
-    mockCallTool.mockReset();
-    mockFetch.mockReset();
-  });
-
-  afterAll(() => {
-    delete (window as any).openai;
-  });
-
   const ChildComponent = () => {
     const [ready, setReady] = useState(false);
 
@@ -253,6 +244,85 @@ describe("ChatGPT Apps Provider", () => {
 
       // Token should still only have been fetched once
       expect(mockCallTool).toHaveBeenCalledTimes(1);
+    });
+  });
+
+  describe("Provider with authenticate=false", () => {
+    test("does not fetch token when authenticate is false", async () => {
+      render(
+        <Provider api={api} authenticate={false}>
+          <span>unauthenticated widget</span>
+        </Provider>
+      );
+
+      // Wait a bit to ensure no token fetch happens
+      await new Promise((resolve) => setTimeout(resolve, 100));
+
+      // No token fetch should have been made
+      expect(mockCallTool).not.toHaveBeenCalled();
+    });
+
+    test("allows fetch requests without authentication when authenticate is false", async () => {
+      mockFetch.mockResolvedValueOnce({
+        status: 200,
+        json: () => Promise.resolve({}),
+        headers: new Headers(),
+        ok: true,
+        redirected: false,
+        statusText: "OK",
+        type: "basic",
+        url: "/unauthenticated-endpoint",
+      } as any);
+
+      const UnauthenticatedComponent = () => {
+        const [ready, setReady] = useState(false);
+
+        useEffect(() => {
+          setTimeout(() => setReady(true), 50);
+        }, []);
+
+        useEffect(() => {
+          if (!ready) return;
+          void api.connection.fetch("/unauthenticated-endpoint");
+        }, [ready]);
+
+        return <span>test</span>;
+      };
+
+      render(
+        <Provider api={api} authenticate={false}>
+          <UnauthenticatedComponent />
+        </Provider>
+      );
+
+      // Wait for fetch to be called
+      await waitFor(() => {
+        expect(mockFetch).toHaveBeenCalled();
+      });
+
+      // Verify no token was fetched
+      expect(mockCallTool).not.toHaveBeenCalled();
+
+      // Verify fetch was called without Authorization header
+      expect(mockFetch).toHaveBeenCalledWith(
+        expect.stringContaining("/unauthenticated-endpoint"),
+        expect.not.objectContaining({
+          headers: expect.objectContaining({
+            authorization: expect.anything(),
+          }),
+        })
+      );
+    });
+
+    test("renders children immediately without waiting for authentication", () => {
+      const { container } = render(
+        <Provider api={api} authenticate={false}>
+          <span>immediate render</span>
+        </Provider>
+      );
+
+      expect(container.outerHTML).toMatchInlineSnapshot(`"<div><span>immediate render</span></div>"`);
+      expect(mockCallTool).not.toHaveBeenCalled();
     });
   });
 });
