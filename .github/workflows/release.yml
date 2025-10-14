@@ -61,3 +61,9 @@ jobs:
           token: ${{ secrets.NPM_TOKEN }}
           package: ./packages/react-bigcommerce/package.json
           access: public
+      - name: Publish @gadgetinc/react-chatgpt-apps
+        uses: JS-DevTools/npm-publish@v1
+        with:
+          token: ${{ secrets.NPM_TOKEN }}
+          package: ./packages/react-chatgpt-apps/package.json
+          access: public
