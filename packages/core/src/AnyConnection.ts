@@ -1,63 +1,26 @@
-import type { Client, ClientOptions } from "@urql/core";
-import type { ClientOptions as SubscriptionClientOptions, createClient as createSubscriptionClient } from "graphql-ws";
-import type { AuthenticationModeOptions, Exchanges } from "./ClientOptions.js";
+import type { Client } from "@urql/core";
 import { AnyActionFunction } from "./GadgetFunctions.js";
-import { GadgetTransaction } from "./GadgetTransaction.js";
+import { TransactionRun } from "./GadgetTransaction.js";
 import { AnyBackgroundActionHandle, BuildOperationResult, EnqueueBackgroundActionOptions } from "./types.js";
 
-export interface GadgetSubscriptionClientOptions extends Partial<SubscriptionClientOptions> {
-  urlParams?: Record<string, string | null | undefined>;
-  connectionAttempts?: number;
-  connectionGlobalTimeoutMs?: number;
-}
-
-/**
- * Represents the current strategy for authenticating with the Gadget platform.
- * For individual users in web browsers, we authenticate using a session token stored client side, like a cookie, but with cross domain support.
- * For server to server communication, or traceable access from the browser, we use pre shared secrets called API Keys
- * And when within the Gadget platform itself, we use a private secret token called an Internal Auth Token. Internal Auth Tokens are managed by Gadget and should never be used by external developers.
- **/
-export enum AuthenticationMode {
-  BrowserSession = "browser-session",
-  APIKey = "api-key",
-  Internal = "internal",
-  InternalAuthToken = "internal-auth-token",
-  Anonymous = "anonymous",
-  Custom = "custom",
-}
-
-export interface GadgetConnectionOptions {
+export type AnyConnectionOptions<SubscriptionClientOptionsT extends Record<string, any> = Record<string, any>> = Record<string, any> & {
   endpoint: string;
-  authenticationMode?: AuthenticationModeOptions;
-  websocketsEndpoint?: string;
-  subscriptionClientOptions?: GadgetSubscriptionClientOptions;
-  websocketImplementation?: typeof globalThis.WebSocket;
-  fetchImplementation?: typeof globalThis.fetch;
-  environment?: string;
-  requestPolicy?: ClientOptions["requestPolicy"];
-  applicationId?: string;
-  baseRouteURL?: string;
-  exchanges?: Exchanges;
-  createSubscriptionClient?: typeof createSubscriptionClient;
-}
+  subscriptionClientOptions?: SubscriptionClientOptionsT;
+};
 
-export type TransactionRun<T> = (transaction: GadgetTransaction) => Promise<T>;
-
-export interface AnyConnection {
+export type AnyConnection<OptionsT extends AnyConnectionOptions = AnyConnectionOptions> = {
   endpoint: string;
-  authenticationMode: AuthenticationMode;
-  createSubscriptionClient: typeof createSubscriptionClient;
-  options: GadgetConnectionOptions;
+  options: OptionsT;
   get currentClient(): Client;
-  transaction: {
-    <T>(options: GadgetSubscriptionClientOptions, run: TransactionRun<T>): Promise<T>;
-    <T>(run: TransactionRun<T>): Promise<T>;
-  };
   close(): void;
   fetch: (input: RequestInfo | URL, init?: RequestInit) => Promise<Response>;
+  transaction: {
+    <T>(options: NonNullable<OptionsT["subscriptionClientOptions"]>, run: TransactionRun<T>): Promise<T>;
+    <T>(run: TransactionRun<T>): Promise<T>;
+  };
   enqueue: {
     plan: (action: AnyActionFunction, options?: EnqueueBackgroundActionOptions<any> | null) => BuildOperationResult;
     processOptions: (options: EnqueueBackgroundActionOptions<any>) => Record<string, any> | null;
     createHandle: <SchemaT, Action extends AnyActionFunction>(action: Action, id: string) => AnyBackgroundActionHandle<SchemaT, Action>;
   };
-}
+};
