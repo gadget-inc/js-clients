@@ -1,7 +1,6 @@
 export * from "./AnyClient.js";
 export * from "./AnyConnection.js";
 export * from "./AnyInternalModelManager.js";
-export * from "./ClientOptions.js";
 export * from "./DataHydrator.js";
 export * from "./ErrorWrapper.js";
 export * from "./FieldSelection.js";

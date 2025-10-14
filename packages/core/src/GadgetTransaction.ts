@@ -5,6 +5,8 @@ import { assertOperationSuccess } from "./support.js";
 /** Represents the error thrown when a transaction is explicity rolled back, sometimes due to another inner error */
 export class TransactionRolledBack extends Error {}
 
+export type TransactionRun<T> = (transaction: GadgetTransaction) => Promise<T>;
+
 /** Represents an open transaction against the Gadget API */
 export class GadgetTransaction {
   open = false;

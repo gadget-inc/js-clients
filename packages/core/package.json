@@ -1,6 +1,6 @@
 {
   "name": "@gadgetinc/core",
-  "version": "0.5.0",
+  "version": "0.6.0",
   "files": [
     "README.md",
     "dist/**/*",
@@ -36,12 +36,12 @@
     "prerelease": "gitpkg publish"
   },
   "dependencies": {
+    "@0no-co/graphql.web": "^1.0.4",
     "klona": "^2.0.6"
   },
   "peerDependencies": {
     "@urql/core": "*",
-    "graphql": "*",
-    "graphql-ws": "*"
+    "graphql": "*"
   },
   "devDependencies": {
     "type-fest": "^3.13.1",
