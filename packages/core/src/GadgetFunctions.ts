@@ -1,11 +1,12 @@
-import type { GadgetRecord, RecordShape } from "./GadgetRecord.js";
-import type { GadgetRecordList } from "./GadgetRecordList.js";
+import type { CombinedError } from "@urql/core";
+import type { AnyErrorWrapper } from "./AnyErrorWrapper.js";
+import type { AnyGadgetRecord, AnyGadgetRecordList, RecordShape } from "./AnyGadgetRecord.js";
 import type { LimitToKnownKeys, VariablesOptions } from "./types.js";
 
 export type PromiseOrLiveIterator<T> = Promise<T> | AsyncIterable<T>;
-export type AsyncRecord<T extends RecordShape> = PromiseOrLiveIterator<GadgetRecord<T>>;
-export type AsyncNullableRecord<T extends RecordShape> = PromiseOrLiveIterator<GadgetRecord<T> | null>;
-export type AsyncRecordList<T extends RecordShape> = PromiseOrLiveIterator<GadgetRecordList<T>>;
+export type AsyncRecord<T extends RecordShape> = PromiseOrLiveIterator<AnyGadgetRecord<T>>;
+export type AsyncNullableRecord<T extends RecordShape> = PromiseOrLiveIterator<AnyGadgetRecord<T> | null>;
+export type AsyncRecordList<T extends RecordShape> = PromiseOrLiveIterator<AnyGadgetRecordList<T>>;
 
 export interface GQLBuilderResult {
   query: string;
@@ -24,6 +25,7 @@ export interface FindOneFunction<OptionsT, SelectionT, SchemaT, DefaultsT> {
   optionsType: OptionsT;
   schemaType: SchemaT | null;
   plan: <Options extends OptionsT>(fieldValue: string, options?: LimitToKnownKeys<Options, OptionsT>) => GQLBuilderResult;
+  processResult: <InT = any, OutT = InT>(data: InT, error: CombinedError | undefined) => { data: OutT; error: AnyErrorWrapper | undefined };
 }
 
 export interface MaybeFindOneFunction<OptionsT, SelectionT, SchemaT, DefaultsT> {
@@ -39,6 +41,7 @@ export interface MaybeFindOneFunction<OptionsT, SelectionT, SchemaT, DefaultsT> 
   optionsType: OptionsT;
   schemaType: SchemaT | null;
   plan: <Options extends OptionsT>(fieldValue: string, options?: LimitToKnownKeys<Options, OptionsT>) => GQLBuilderResult;
+  processResult: <InT = any, OutT = InT>(data: InT, error: CombinedError | undefined) => { data: OutT; error: AnyErrorWrapper | undefined };
 }
 
 export interface FindManyFunction<OptionsT, SelectionT, SchemaT, DefaultsT> {
@@ -53,6 +56,7 @@ export interface FindManyFunction<OptionsT, SelectionT, SchemaT, DefaultsT> {
   optionsType: OptionsT;
   schemaType: SchemaT | null;
   plan: <Options extends OptionsT>(options?: LimitToKnownKeys<Options, OptionsT>) => GQLBuilderResult;
+  processResult: <InT = any, OutT = InT>(data: InT, error: CombinedError | undefined) => { data: OutT; error: AnyErrorWrapper | undefined };
 }
 
 export interface FindFirstFunction<OptionsT, SelectionT, SchemaT, DefaultsT> {
@@ -67,6 +71,7 @@ export interface FindFirstFunction<OptionsT, SelectionT, SchemaT, DefaultsT> {
   optionsType: OptionsT;
   schemaType: SchemaT | null;
   plan: <Options extends OptionsT>(options?: LimitToKnownKeys<Options, OptionsT>) => GQLBuilderResult;
+  processResult: <InT = any, OutT = InT>(data: InT, error: CombinedError | undefined) => { data: OutT; error: AnyErrorWrapper | undefined };
 }
 
 export interface MaybeFindFirstFunction<OptionsT, SelectionT, SchemaT, DefaultsT> {
@@ -81,6 +86,7 @@ export interface MaybeFindFirstFunction<OptionsT, SelectionT, SchemaT, DefaultsT
   optionsType: OptionsT;
   schemaType: SchemaT | null;
   plan: <Options extends OptionsT>(options?: LimitToKnownKeys<Options, OptionsT>) => GQLBuilderResult;
+  processResult: <InT = any, OutT = InT>(data: InT, error: CombinedError | undefined) => { data: OutT; error: AnyErrorWrapper | undefined };
 }
 
 export interface ViewFunctionWithoutVariables<ResultT> {
@@ -92,6 +98,7 @@ export interface ViewFunctionWithoutVariables<ResultT> {
   referencedTypenames?: string[];
   resultType: ResultT;
   plan(): GQLBuilderResult;
+  processResult: <InT = any, OutT = InT>(data: InT, error: CombinedError | undefined) => { data: OutT; error: AnyErrorWrapper | undefined };
 }
 
 export interface ViewFunctionWithVariables<VariablesT, ResultT> {
@@ -105,6 +112,7 @@ export interface ViewFunctionWithVariables<VariablesT, ResultT> {
   variablesType: VariablesT;
   resultType: ResultT;
   plan(variables: VariablesOptions): GQLBuilderResult;
+  processResult: <InT = any, OutT = InT>(data: InT, error: CombinedError | undefined) => { data: OutT; error: AnyErrorWrapper | undefined };
 }
 
 export type ViewFunction<VariablesT, ResultT> = ViewFunctionWithoutVariables<ResultT> | ViewFunctionWithVariables<VariablesT, ResultT>;
@@ -159,6 +167,7 @@ export interface ActionFunctionMetadata<OptionsT, VariablesT, SelectionT, Schema
   singleActionFunctionName?: string;
   singleAction?: IsBulk extends true ? ActionFunctionMetadata<OptionsT, VariablesT, SelectionT, SchemaT, DefaultsT, false> : never;
   plan: <Options extends OptionsT>(options?: LimitToKnownKeys<Options, OptionsT>) => GQLBuilderResult;
+  processResult: <InT = any, OutT = InT>(data: InT, error: CombinedError | undefined) => { data: OutT; error: AnyErrorWrapper | undefined };
   /** @deprecated */
   hasCreateOrUpdateEffect?: boolean;
 }
@@ -205,7 +214,7 @@ export type BulkActionFunction<OptionsT, VariablesT, SelectionT, SchemaT, Defaul
   (BulkActionWithIdsAndNoVariables<OptionsT> | BulkActionWithInputs<OptionsT, VariablesT>);
 
 export interface GetFunction<OptionsT, SelectionT, SchemaT, DefaultsT> {
-  <Options extends OptionsT>(options?: LimitToKnownKeys<Options, OptionsT>): AsyncRecord<GadgetRecord<any>>;
+  <Options extends OptionsT>(options?: LimitToKnownKeys<Options, OptionsT>): AsyncRecord<AnyGadgetRecord<any>>;
 
   type: "get";
   operationName: string;
@@ -216,6 +225,7 @@ export interface GetFunction<OptionsT, SelectionT, SchemaT, DefaultsT> {
   optionsType: OptionsT;
   schemaType: SchemaT | null;
   plan: <Options extends OptionsT>(options?: LimitToKnownKeys<Options, OptionsT>) => GQLBuilderResult;
+  processResult: <InT = any, OutT = InT>(data: InT, error: CombinedError | undefined) => { data: OutT; error: AnyErrorWrapper | undefined };
 }
 
 export interface GlobalActionFunction<VariablesT> {
@@ -229,6 +239,7 @@ export interface GlobalActionFunction<VariablesT> {
   variablesType: VariablesT;
   isBulk?: undefined;
   plan: (variables?: VariablesOptions) => GQLBuilderResult;
+  processResult: <InT = any, OutT = InT>(data: InT, error: CombinedError | undefined) => { data: OutT; error: AnyErrorWrapper | undefined };
 }
 
 export type AnyActionFunction =

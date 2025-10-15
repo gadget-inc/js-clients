@@ -1,6 +1,7 @@
-import type { Client } from "@urql/core";
-import { AnyActionFunction } from "./GadgetFunctions.js";
-import { TransactionRun } from "./GadgetTransaction.js";
+import type { Client, CombinedError } from "@urql/core";
+import { AnyErrorWrapper } from "./AnyErrorWrapper.js";
+import { AnyGadgetTransaction, TransactionRun } from "./AnyGadgetTransaction.js";
+import { AnyActionFunction, AnyBulkActionFunction } from "./GadgetFunctions.js";
 import { AnyBackgroundActionHandle, BuildOperationResult, EnqueueBackgroundActionOptions } from "./types.js";
 
 export type AnyConnectionOptions<SubscriptionClientOptionsT extends Record<string, any> = Record<string, any>> = Record<string, any> & {
@@ -15,12 +16,21 @@ export type AnyConnection<OptionsT extends AnyConnectionOptions = AnyConnectionO
   close(): void;
   fetch: (input: RequestInfo | URL, init?: RequestInit) => Promise<Response>;
   transaction: {
-    <T>(options: NonNullable<OptionsT["subscriptionClientOptions"]>, run: TransactionRun<T>): Promise<T>;
-    <T>(run: TransactionRun<T>): Promise<T>;
+    <T extends AnyGadgetTransaction>(options: NonNullable<OptionsT["subscriptionClientOptions"]>, run: TransactionRun<T>): Promise<T>;
+    <T extends AnyGadgetTransaction>(run: TransactionRun<T>): Promise<T>;
   };
   enqueue: {
     plan: (action: AnyActionFunction, options?: EnqueueBackgroundActionOptions<any> | null) => BuildOperationResult;
     processOptions: (options: EnqueueBackgroundActionOptions<any>) => Record<string, any> | null;
-    createHandle: <SchemaT, Action extends AnyActionFunction>(action: Action, id: string) => AnyBackgroundActionHandle<SchemaT, Action>;
+    processResult: {
+      <SchemaT, Action extends AnyBulkActionFunction>(action: Action, data: any, error: CombinedError | undefined): {
+        handles: AnyBackgroundActionHandle<SchemaT, Action>[] | null;
+        error: AnyErrorWrapper | undefined;
+      };
+      <SchemaT, Action extends AnyActionFunction>(action: Action, data: any, error: CombinedError | undefined): {
+        handle: AnyBackgroundActionHandle<SchemaT, Action> | null;
+        error: AnyErrorWrapper | undefined;
+      };
+    };
   };
 };

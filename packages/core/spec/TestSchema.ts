@@ -1,4 +1,4 @@
-import type { GadgetRecord } from "src/index.js";
+import { AnyGadgetRecord } from "../src/AnyGadgetRecord.js";
 import type { AvailableSelection, DeepFilterNever, DefaultSelection, Select, Selectable } from "../src/types.js";
 
 export type NestedThing = {
@@ -81,4 +81,4 @@ export interface CreatePostOptions {
 
 export type CreatePostResult<Options extends CreatePostOptions> = SelectedPostOrDefault<Options> extends void
   ? void
-  : GadgetRecord<SelectedPostOrDefault<Options>>;
+  : AnyGadgetRecord<SelectedPostOrDefault<Options>>;

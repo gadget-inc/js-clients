@@ -228,29 +228,34 @@ importers:
         version: 7.1.4(@types/node@22.18.1)(tsx@4.9.3)
 
   packages/core:
-    dependencies:
-      '@0no-co/graphql.web':
-        specifier: ^1.0.4
-        version: 1.2.0(graphql@16.11.0)
-      '@urql/core':
-        specifier: '*'
-        version: 4.0.10(graphql@16.11.0)
-      graphql:
-        specifier: '*'
-        version: 16.11.0
-      klona:
-        specifier: ^2.0.6
-        version: 2.0.6
     devDependencies:
+      '@urql/core':
+        specifier: '>=4.0.0'
+        version: 4.0.10(graphql@16.11.0)
       conditional-type-checks:
-        specifier: ^1.0.6
+        specifier: '>=1.0.0'
         version: 1.0.6
+      graphql:
+        specifier: '>=16.0.0'
+        version: 16.11.0
+      graphql-ws:
+        specifier: '>=5.0.0'
+        version: 5.16.0(graphql@16.11.0)
+      p-retry:
+        specifier: '>=4.0.0'
+        version: 4.6.2
+      tiny-graphql-query-compiler:
+        specifier: workspace:*
+        version: link:../tiny-graphql-query-compiler
       type-fest:
-        specifier: ^3.13.1
+        specifier: '>=3.0.0'
         version: 3.13.1
       typescript:
         specifier: 5.4.5
         version: 5.4.5
+      wonka:
+        specifier: '>=6.0.0'
+        version: 6.3.2
 
   packages/react:
     dependencies:
@@ -705,7 +710,7 @@ packages:
         optional: true
     dependencies:
       graphql: 16.11.0
-    dev: false
+    dev: true
 
   /@aashutoshrathi/word-wrap@1.2.6:
     resolution: {integrity: sha512-1Yjs2SvM8TflER/OD3cOjhWWOZb58A2t7wpE2S9XfBYTiIl+XFhQG2bjy4Pu1I+EAlCNUzRDYDdFwFYUKvXcIA==}
@@ -8198,7 +8203,7 @@ packages:
       wonka: 6.3.2
     transitivePeerDependencies:
       - graphql
-    dev: false
+    dev: true
 
   /@urql/core@4.0.10(graphql@16.8.1):
     resolution: {integrity: sha512-Vs3nOSAnYftqOCg034Ostp/uSqWlQg5ryLIzcOrm8+O43s4M+Ew4GQAuemIH7ZDB8dek6h61zzWI3ujd8FH3NA==}
@@ -11678,6 +11683,15 @@ packages:
     dependencies:
       graphql: 16.8.1
 
+  /graphql-ws@5.16.0(graphql@16.11.0):
+    resolution: {integrity: sha512-Ju2RCU2dQMgSKtArPbEtsK5gNLnsQyTNIo/T7cZNp96niC1x0KdJNZV0TIoilceBPQwfb5itrGl8pkFeOUMl4A==}
+    engines: {node: '>=10'}
+    peerDependencies:
+      graphql: '>=0.11 <=16'
+    dependencies:
+      graphql: 16.11.0
+    dev: true
+
   /graphql-ws@5.16.0(graphql@16.8.1):
     resolution: {integrity: sha512-Ju2RCU2dQMgSKtArPbEtsK5gNLnsQyTNIo/T7cZNp96niC1x0KdJNZV0TIoilceBPQwfb5itrGl8pkFeOUMl4A==}
     engines: {node: '>=10'}
@@ -11690,7 +11704,7 @@ packages:
   /graphql@16.11.0:
     resolution: {integrity: sha512-mS1lbMsxgQj6hge1XZ6p7GPhbrtFwUFYi3wRzXAC/FmYnyXMTvvI3td3rjmQ2u8ewXueaSvRPWaEcgVVOT9Jnw==}
     engines: {node: ^12.22.0 || ^14.16.0 || ^16.0.0 || >=17.0.0}
-    dev: false
+    dev: true
 
   /graphql@16.8.1:
     resolution: {integrity: sha512-59LZHPdGZVh695Ud9lRzPBVTtlX9ZCV150Er2W43ro37wVof0ctenSaskPPjN7lVTIN8mSZt8PHUNKZuNQUuxw==}
