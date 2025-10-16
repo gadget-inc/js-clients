@@ -510,8 +510,8 @@ importers:
         specifier: ^1.0.7
         version: 1.0.7(tailwindcss@3.4.17)
       tmp:
-        specifier: ^0.2.3
-        version: 0.2.3
+        specifier: ^0.2.5
+        version: 0.2.5
       wonka:
         specifier: ^6.3.2
         version: 6.3.2
@@ -16700,11 +16700,6 @@ packages:
     engines: {node: '>=0.6.0'}
     dependencies:
       os-tmpdir: 1.0.2
-    dev: true
-
-  /tmp@0.2.3:
-    resolution: {integrity: sha512-nZD7m9iCPC5g0pYmcaxogYKggSfLsdxl8of3Q/oIbqCqLLIO9IAF0GWjX1z9NZRHPiXv8Wex4yDCaZsgEw0Y8w==}
-    engines: {node: '>=14.14'}
     dev: true
 
   /tmp@0.2.5:
