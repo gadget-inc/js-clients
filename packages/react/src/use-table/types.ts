@@ -1,4 +1,4 @@
-import type { GadgetRecord, SortOrder } from "@gadgetinc/api-client-core";
+import type { AnyErrorWrapper, AnyGadgetRecord, SortOrder } from "@gadgetinc/core";
 import type { OperationContext } from "@urql/core";
 import type { ReactNode } from "react";
 import type { GadgetFieldType } from "../internal/gql/graphql.js";
@@ -6,7 +6,7 @@ import type { FieldMetadata, ModelMetadata } from "../metadata.js";
 import type { SearchResult } from "../useDebouncedSearch.js";
 import type { PaginationResult } from "../useList.js";
 import type { RecordSelection } from "../useSelectedRecordsController.js";
-import type { ColumnValueType, ErrorWrapper } from "../utils.js";
+import type { ColumnValueType } from "../utils.js";
 
 export type ColumnType = GadgetFieldType | "CustomRenderer";
 
@@ -114,7 +114,7 @@ export type ActionCallback = {
    * - as a string, this represents the API identifier of the action in the model
    * - as a function, this will be called with the selected records
    */
-  action: string | ((records: GadgetRecord<any>[]) => any);
+  action: string | ((records: AnyGadgetRecord<any>[]) => any);
 };
 
 export type TableData<Data> =
@@ -142,7 +142,7 @@ export type TableResult<Data> = [
   TableData<Data> & {
     page: PaginationResult;
     fetching: boolean;
-    error?: ErrorWrapper;
+    error?: AnyErrorWrapper;
     search?: SearchResult;
     selection: RecordSelection;
     sort: SortState;
@@ -164,7 +164,7 @@ export type CustomCellColumn = {
   style?: React.CSSProperties;
 };
 
-export type CustomCellRenderer = (props: { record: GadgetRecord<any>; index: number }) => ReactNode;
+export type CustomCellRenderer = (props: { record: AnyGadgetRecord<any>; index: number }) => ReactNode;
 
 export type CellDetailColumn = {
   header?: ReactNode;

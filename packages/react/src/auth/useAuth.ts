@@ -1,8 +1,8 @@
-import type { DefaultSelection, GadgetRecord, Select } from "@gadgetinc/api-client-core";
+import type { OptionsType, ReadOperationOptions } from "@gadgetinc/client-hooks";
+import type { AnyGadgetRecord, DefaultSelection, Select } from "@gadgetinc/core";
 import { useContext } from "react";
 import type { GadgetAuthConfiguration } from "../GadgetProvider.js";
-import { GadgetConfigurationContext } from "../GadgetProvider.js";
-import type { OptionsType, ReadOperationOptions } from "../utils.js";
+import { GadgetApiContext } from "../GadgetProvider.js";
 import type { ClientWithSessionAndUserManagers, GadgetSession, GadgetUser } from "./useSession.js";
 import { useSession } from "./useSession.js";
 import { useUser } from "./useUser.js";
@@ -24,7 +24,7 @@ export const useAuth = <
   client?: Client
 ): {
   session:
-    | GadgetRecord<
+    | AnyGadgetRecord<
         Select<
           Exclude<Exclude<ClientType, undefined>["currentSession"]["get"]["schemaType"], null | undefined>,
           DefaultSelection<
@@ -54,7 +54,7 @@ export const useAuth = <
 } => {
   const session = useSession(client);
   const user = useUser(client);
-  const context = useContext(GadgetConfigurationContext);
+  const context = useContext(GadgetApiContext);
 
   if (!context) {
     throw new Error("useAuth must be used within a GadgetProvider");

@@ -1,8 +1,8 @@
-import type { GadgetRecord } from "@gadgetinc/api-client-core";
+import type { AnyGadgetRecord } from "@gadgetinc/core";
 import React, { useContext } from "react";
 import type { TableResult } from "src/use-table/types.js";
 
-export type AutoTableContext = TableResult<GadgetRecord<any>>;
+export type AutoTableContext = TableResult<AnyGadgetRecord<any>>;
 
 /**
  * React context that stores an instance of the metadata loaded for a particular form action

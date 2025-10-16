@@ -1,13 +1,11 @@
-import type { GadgetRecord } from "@gadgetinc/api-client-core";
+import type { AnyErrorWrapper, AnyGadgetRecord } from "@gadgetinc/core";
 import { act, renderHook } from "@testing-library/react";
-
 import type { IsExact } from "conditional-type-checks";
 import { assert } from "conditional-type-checks";
 import React from "react";
 import type { AnyVariables } from "urql";
 import { Provider } from "../src/GadgetProvider.js";
 import { useAction } from "../src/index.js";
-import type { ErrorWrapper } from "../src/utils.js";
 import { fullAuthApi, kitchenSinkApi, relatedProductsApi } from "./apis.js";
 import { MockClientWrapper, createMockUrqlClient, mockUrqlClient } from "./testWrappers.js";
 
@@ -86,8 +84,8 @@ describe("useAction", () => {
     });
 
     assert<IsExact<typeof fetching, boolean>>(true);
-    assert<IsExact<typeof data, undefined | GadgetRecord<{ id: string; email: string | null }>>>(true);
-    assert<IsExact<typeof error, ErrorWrapper | undefined>>(true);
+    assert<IsExact<typeof data, undefined | AnyGadgetRecord<{ id: string; email: string | null }>>>(true);
+    assert<IsExact<typeof error, AnyErrorWrapper | undefined>>(true);
 
     // data is accessible via dot access
     if (data) {

@@ -1,17 +1,17 @@
+import type { ActionHookState, OptionsType } from "@gadgetinc/client-hooks";
 import type {
   ActionFunction,
   ActionWithIdAndNoVariables,
   ActionWithIdAndVariables,
+  AnyErrorWrapper,
+  AnyGadgetRecord,
   BulkActionWithIdsAndNoVariables,
   DefaultSelection,
-  GadgetRecord,
   GlobalActionFunction,
   Select,
-} from "@gadgetinc/api-client-core";
+} from "@gadgetinc/core";
 import type { FieldValues, UseFormReturn } from "react-hook-form";
-import type { useAction } from "../useAction.js";
-import type { useGlobalAction } from "../useGlobalAction.js";
-import type { ActionHookState, ErrorWrapper, OptionsType } from "../utils.js";
+import type { useAction, useGlobalAction } from "../hooks.js";
 import { type useFindExistingRecord } from "./utils.js";
 
 /**
@@ -65,7 +65,7 @@ export type UseActionFormResult<
   /**
    * Any error that occurred during initial data fetching or action submission
    */
-  error?: ErrorWrapper | Error | null;
+  error?: AnyErrorWrapper | Error | null;
   /**
    * Function to call to submit the form
    */
@@ -93,7 +93,7 @@ export type UseActionFormHookStateData<F extends ActionFunction<any, any, any, a
   F extends ActionFunction<any, any, any, any, any>
     ? F["hasReturnType"] extends true
       ? any
-      : GadgetRecord<
+      : AnyGadgetRecord<
           Select<Exclude<F["schemaType"], null | undefined>, DefaultSelection<F["selectionType"], F["optionsType"], F["defaultSelection"]>>
         >
     : any;

@@ -1,4 +1,4 @@
-import type { FieldSelection, GadgetRecord } from "@gadgetinc/api-client-core";
+import type { AnyGadgetRecord, FieldSelection } from "@gadgetinc/core";
 import React from "react";
 import { GadgetFieldType } from "../internal/gql/graphql.js";
 import type { FieldMetadata } from "../metadata.js";
@@ -141,7 +141,7 @@ export const getTableSelectionMap = (spec: TableSpec) => {
 export const getTableRows = (
   spec: Pick<TableSpec, "fieldMetadataTree" | "targetColumns">,
   columns: TableColumn[],
-  records: GadgetRecord<any>[]
+  records: AnyGadgetRecord<any>[]
 ) => {
   return records.map((record, recordIndex) => recordToRow(spec, columns, record, recordIndex));
 };
@@ -210,7 +210,7 @@ export const getTableColumns = (spec: Pick<TableSpec, "fieldMetadataTree" | "tar
 const recordToRow = (
   spec: Pick<TableSpec, "fieldMetadataTree" | "targetColumns">,
   columns: TableColumn[],
-  record: GadgetRecord<any>,
+  record: AnyGadgetRecord<any>,
   recordIndex: number
 ) => {
   const row: TableRow = {

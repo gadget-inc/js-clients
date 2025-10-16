@@ -1,5 +1,5 @@
 export * from "./adapter.js";
-export { useApi, useConnection, useMutation, useQuery } from "./createHooks.js";
+export { useApi, useConnection, useCoreImplementation, useMutation, useQuery } from "./createHooks.js";
 export { registerClientHooks } from "./provider.js";
 export * from "./types.js";
 export { useAction } from "./useAction.js";
@@ -15,3 +15,4 @@ export { useGlobalAction } from "./useGlobalAction.js";
 export { useMaybeFindFirst } from "./useMaybeFindFirst.js";
 export { useMaybeFindOne } from "./useMaybeFindOne.js";
 export { useView } from "./useView.js";
+export { assert } from "./utils.js";

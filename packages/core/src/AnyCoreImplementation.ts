@@ -12,4 +12,7 @@ export interface AnyCoreImplementation {
   capitalizeIdentifier: (identifier: string) => string;
   wrapClientSideError: (error: any, response?: any) => AnyErrorWrapper;
   errorIfDataAbsent: (data: any, dataPath: string[], paused?: boolean) => AnyErrorWrapper | undefined;
+  namespaceDataPath: (dataPath: string[], namespace?: string[] | string | null) => string[];
+  camelize: (identifier: string, uppercaseFirstLetter?: boolean) => string;
+  isEqual: (a: any, b: any) => boolean;
 }

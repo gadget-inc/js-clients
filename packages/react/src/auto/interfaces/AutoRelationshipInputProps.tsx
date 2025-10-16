@@ -1,4 +1,4 @@
-import type { FindManyOptions } from "@gadgetinc/api-client-core";
+import type { FindManyOptions } from "@gadgetinc/core";
 import type { ReactNode } from "react";
 import type { ControllableWithReactHookForm } from "../shared/AutoInputTypes.js";
 

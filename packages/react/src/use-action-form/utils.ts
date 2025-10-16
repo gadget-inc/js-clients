@@ -1,8 +1,6 @@
-import type { AnyClient, AnyModelManager, GadgetRecord } from "@gadgetinc/api-client-core";
-import { $modelRelationships, camelize, isEqual } from "@gadgetinc/api-client-core";
-import { useFindBy } from "../useFindBy.js";
-import { useFindOne } from "../useFindOne.js";
-import { get, omit, set, unset, type ErrorWrapper } from "../utils.js";
+import type { AnyClient, AnyCoreImplementation, AnyErrorWrapper, AnyGadgetRecord, AnyModelManager } from "@gadgetinc/core";
+import { useCoreImplementation, useFindBy, useFindOne } from "../hooks.js";
+import { get, omit, set, unset } from "../utils.js";
 
 const noopUseFindExistingRecordResponse = [
   { fetching: false },
@@ -14,7 +12,8 @@ export const useFindExistingRecord = (
   modelManager: AnyModelManager | undefined,
   findBy: string | { [key: string]: any } | undefined,
   options: { select?: Record<string, any>; pause?: boolean; throwOnInvalidFindByObject?: boolean }
-): [{ data?: GadgetRecord<any>; fetching: boolean; error?: ErrorWrapper }, () => void] => {
+): [{ data?: AnyGadgetRecord<any>; fetching: boolean; error?: AnyErrorWrapper }, () => void] => {
+  const coreImplementation = useCoreImplementation();
   if (!modelManager || !findBy) {
     return noopUseFindExistingRecordResponse;
   }
@@ -28,7 +27,7 @@ export const useFindExistingRecord = (
   const isValidFindByObject = typeof findBy === "object" && !Array.isArray(findBy) && Object.keys(findBy).length;
   if (isValidFindByObject) {
     const [findByKey, findByValue] = Object.entries(findBy)[0];
-    const findByOperationName = `findBy${camelize(findByKey)}`;
+    const findByOperationName = `findBy${coreImplementation.camelize(findByKey)}`;
 
     if (!(findByOperationName in modelManager)) {
       if (options.throwOnInvalidFindByObject === undefined || options.throwOnInvalidFindByObject) {
@@ -124,7 +123,7 @@ const unwindEdges = (input: any): any => {
   }
 };
 
-export const disambiguateDefaultValues = (data: any, initialData: any, action: any) => {
+export const disambiguateDefaultValues = (coreImplementation: AnyCoreImplementation, data: any, initialData: any, action: any) => {
   const unwindedInitialData = unwindEdges(initialData);
   const initialKeys = Object.keys(unwindedInitialData).filter((key) => !OmittedKeys.includes(key as OmittedKey));
 
@@ -147,7 +146,7 @@ export const disambiguateDefaultValues = (data: any, initialData: any, action: a
       !!data[action.modelApiIdentifier] &&
       typeof data[action.modelApiIdentifier] === "object" &&
       key in data[action.modelApiIdentifier] &&
-      !isEqual(initialValue, data[action.modelApiIdentifier][key])
+      !coreImplementation.isEqual(initialValue, data[action.modelApiIdentifier][key])
     ) {
       modelData[key] = data[action.modelApiIdentifier][key];
     } else if (key in data && initialValue !== data[key]) {
@@ -251,7 +250,7 @@ const storedFileToGraphqlApiInput = (input: any) => {
 };
 
 export const reshapeDataForGraphqlApi = async (client: AnyClient, defaultValues: any, data: any) => {
-  const referencedTypes = client[$modelRelationships];
+  const referencedTypes = (client as any)[Symbol.for("gadget/modelRelationships")];
 
   if (!referencedTypes) {
     throw new Error("No Gadget model metadata found -- please ensure you are using the latest version of the API client for your app");
