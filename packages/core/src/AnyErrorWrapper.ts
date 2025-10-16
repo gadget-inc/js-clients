@@ -3,7 +3,7 @@
  * Always has a message, but can be inspected to retrieve more detailed errors from either the network, the raw GraphQL layer, or Gadget specific errors like validation errors.
  * Not intended for creating outside of Gadget-owned code.
  **/
-export interface AnyErrorWrapper<ExecutionErrorT extends Error = Error> {
+export interface AnyErrorWrapper<ExecutionErrorT extends Error = Error> extends Error {
   /** Error message for this error. Derived from the other errors this wraps. */
   message: string;
   /**

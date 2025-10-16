@@ -16,8 +16,11 @@ export type AnyConnection<OptionsT extends AnyConnectionOptions = AnyConnectionO
   close(): void;
   fetch: (input: RequestInfo | URL, init?: RequestInit) => Promise<Response>;
   transaction: {
-    <T extends AnyGadgetTransaction>(options: NonNullable<OptionsT["subscriptionClientOptions"]>, run: TransactionRun<T>): Promise<T>;
-    <T extends AnyGadgetTransaction>(run: TransactionRun<T>): Promise<T>;
+    <R, T extends AnyGadgetTransaction = AnyGadgetTransaction>(
+      options: NonNullable<OptionsT["subscriptionClientOptions"]>,
+      run: TransactionRun<R, T>
+    ): Promise<R>;
+    <R, T extends AnyGadgetTransaction = AnyGadgetTransaction>(run: TransactionRun<R, T>): Promise<R>;
   };
   enqueue: {
     plan: (action: AnyActionFunction, options?: EnqueueBackgroundActionOptions<any> | null) => BuildOperationResult;

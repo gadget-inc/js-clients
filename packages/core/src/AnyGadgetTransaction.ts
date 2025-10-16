@@ -4,4 +4,4 @@ export interface AnyGadgetTransaction {
   rollback(): Promise<void>;
 }
 
-export type TransactionRun<T extends AnyGadgetTransaction> = (transaction: T) => Promise<T>;
+export type TransactionRun<ResultT, T extends AnyGadgetTransaction = AnyGadgetTransaction> = (transaction: T) => Promise<ResultT>;

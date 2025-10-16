@@ -1,6 +1,5 @@
 import type { OperationContext } from "@urql/core";
 import type { VariableOptions } from "tiny-graphql-query-compiler";
-import type { AnyGadgetRecord } from "./AnyGadgetRecord.js";
 import type {
   ActionFunction,
   ActionFunctionMetadata,
@@ -11,6 +10,7 @@ import type {
   ViewFunctionWithoutVariables,
   ViewFunctionWithVariables,
 } from "./GadgetFunctions.js";
+import type { GadgetRecord } from "./GadgetRecord.js";
 
 /**
  * Allows detecting an any type, this is rather tricky:
@@ -934,7 +934,7 @@ export type BackgroundActionResultData<
 > = F extends ActionFunction<any, any, any, any, any>
   ? F["hasReturnType"] extends true
     ? any
-    : AnyGadgetRecord<
+    : GadgetRecord<
         Select<
           Exclude<F["schemaType"], null | undefined>,
           DefaultSelection<

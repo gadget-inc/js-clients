@@ -1,12 +1,12 @@
 import type { CombinedError } from "@urql/core";
 import type { AnyErrorWrapper } from "./AnyErrorWrapper.js";
-import type { AnyGadgetRecord, AnyGadgetRecordList, RecordShape } from "./AnyGadgetRecord.js";
+import type { GadgetRecord, GadgetRecordList, RecordShape } from "./GadgetRecord.js";
 import type { LimitToKnownKeys, VariablesOptions } from "./types.js";
 
 export type PromiseOrLiveIterator<T> = Promise<T> | AsyncIterable<T>;
-export type AsyncRecord<T extends RecordShape> = PromiseOrLiveIterator<AnyGadgetRecord<T>>;
-export type AsyncNullableRecord<T extends RecordShape> = PromiseOrLiveIterator<AnyGadgetRecord<T> | null>;
-export type AsyncRecordList<T extends RecordShape> = PromiseOrLiveIterator<AnyGadgetRecordList<T>>;
+export type AsyncRecord<T extends RecordShape> = PromiseOrLiveIterator<GadgetRecord<T>>;
+export type AsyncNullableRecord<T extends RecordShape> = PromiseOrLiveIterator<GadgetRecord<T> | null>;
+export type AsyncRecordList<T extends RecordShape> = PromiseOrLiveIterator<GadgetRecordList<T>>;
 
 export interface GQLBuilderResult {
   query: string;
@@ -214,7 +214,7 @@ export type BulkActionFunction<OptionsT, VariablesT, SelectionT, SchemaT, Defaul
   (BulkActionWithIdsAndNoVariables<OptionsT> | BulkActionWithInputs<OptionsT, VariablesT>);
 
 export interface GetFunction<OptionsT, SelectionT, SchemaT, DefaultsT> {
-  <Options extends OptionsT>(options?: LimitToKnownKeys<Options, OptionsT>): AsyncRecord<AnyGadgetRecord<any>>;
+  <Options extends OptionsT>(options?: LimitToKnownKeys<Options, OptionsT>): AsyncRecord<GadgetRecord<any>>;
 
   type: "get";
   operationName: string;
