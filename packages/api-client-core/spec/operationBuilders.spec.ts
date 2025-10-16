@@ -224,6 +224,48 @@ describe("operation builders", () => {
       `);
     });
 
+    test("findManyOperation should build a findMany query with searchFields if option provided", () => {
+      expect(
+        findManyOperation("widgets", { __typename: true, id: true, state: true }, "widget", {
+          search: "Search Term",
+          searchFields: { name: true, state: false, id: { weight: 10 } },
+        })
+      ).toMatchInlineSnapshot(`
+        {
+          "query": "query widgets($after: String, $first: Int, $before: String, $last: Int, $search: String, $searchFields: WidgetSearchFields) {
+          widgets(after: $after, first: $first, before: $before, last: $last, search: $search, searchFields: $searchFields) {
+            pageInfo {
+              hasNextPage
+              hasPreviousPage
+              startCursor
+              endCursor
+            }
+            edges {
+              cursor
+              node {
+                __typename
+                id
+                state
+              }
+            }
+          }
+          gadgetMeta {
+            hydrations(modelName: "widget")
+          }
+        }",
+          "variables": {
+            "search": "Search Term",
+            "searchFields": {
+              "id": {
+                "weight": 10,
+              },
+              "name": {},
+            },
+          },
+        }
+      `);
+    });
+
     test("findManyOperation should build a findMany query with sort if option provided", () => {
       expect(findManyOperation("widgets", { __typename: true, id: true, state: true }, "widget", { sort: [{ id: "Ascending" }] }))
         .toMatchInlineSnapshot(`
@@ -304,15 +346,21 @@ describe("operation builders", () => {
           "widgets",
           { __typename: true, id: true, state: true },
           "widget",
-          { sort: [{ id: "Ascending" }], filter: [{ foo: { equals: "bar" } }] },
+          {
+            sort: [{ id: "Ascending" }],
+            filter: [{ foo: { equals: "bar" } }],
+            searchFields: { name: true, state: false, id: { weight: 10 } },
+            search: "Search Term",
+          },
+
           ["outer", "inner"]
         )
       ).toMatchInlineSnapshot(`
         {
-          "query": "query widgets($after: String, $first: Int, $before: String, $last: Int, $sort: [OuterInnerWidgetSort!], $filter: [OuterInnerWidgetFilter!]) {
+          "query": "query widgets($after: String, $first: Int, $before: String, $last: Int, $sort: [OuterInnerWidgetSort!], $filter: [OuterInnerWidgetFilter!], $search: String, $searchFields: OuterInnerWidgetSearchFields) {
           outer {
             inner {
-              widgets(after: $after, first: $first, before: $before, last: $last, sort: $sort, filter: $filter) {
+              widgets(after: $after, first: $first, before: $before, last: $last, sort: $sort, filter: $filter, search: $search, searchFields: $searchFields) {
                 pageInfo {
                   hasNextPage
                   hasPreviousPage
@@ -342,6 +390,13 @@ describe("operation builders", () => {
                 },
               },
             ],
+            "search": "Search Term",
+            "searchFields": {
+              "id": {
+                "weight": 10,
+              },
+              "name": {},
+            },
             "sort": [
               {
                 "id": "Ascending",

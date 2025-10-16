@@ -17,9 +17,11 @@ import {
   hydrateRecord,
   hydrateRecordArray,
   hydrationSelection,
+  jsSearchFieldsToGqlSearchFields,
   namespaceDataPath,
   namespacedGraphQLTypeName,
   namespacify,
+  searchableFieldTypeName,
   sortTypeName,
 } from "./support.js";
 import type {
@@ -51,6 +53,12 @@ export const internalFindOneQuery = (apiIdentifier: string, id: string, namespac
 const internalFindListVariables = (apiIdentifier: string, namespace: string[], options?: InternalFindListOptions) => {
   return {
     search: options?.search ? Var({ value: options?.search, type: "String" }) : undefined,
+    searchFields: options?.searchFields
+      ? Var({
+          value: jsSearchFieldsToGqlSearchFields(options.searchFields),
+          type: `${searchableFieldTypeName(apiIdentifier, namespace)}`,
+        })
+      : undefined,
     sort: options?.sort ? Var({ value: options?.sort, type: `[${sortTypeName(apiIdentifier, namespace)}!]` }) : undefined,
     filter: options?.filter ? Var({ value: options?.filter, type: `[${filterTypeName(apiIdentifier, namespace)}!]` }) : undefined,
     select: options?.select ? Var({ value: formatInternalSelectVariable(options?.select), type: `[String!]` }) : undefined,
