@@ -1,4 +1,4 @@
-import { type GadgetRecord } from "@gadgetinc/api-client-core";
+import type { AnyGadgetRecord } from "@gadgetinc/core";
 import { ChevronsUpDown } from "lucide-react";
 import React, { useMemo } from "react";
 import { type TableRow } from "../../../use-table/types.js";
@@ -13,7 +13,7 @@ export const makeShadcnAutoTableBulkActionSelector = (elements: ShadcnElements) 
     nonPromotedActions: BulkActionOption[];
     selection: RecordSelection;
     rows: TableRow[];
-    rawRecords: GadgetRecord<any>[] | null;
+    rawRecords: AnyGadgetRecord<any>[] | null;
   }) {
     const { nonPromotedActions, selection, rows, rawRecords } = props;
     const selectedRows = rows.filter((row) => selection.recordIds.includes(row.id as string));
@@ -70,7 +70,7 @@ export const makeShadcnAutoTableBulkActionSelector = (elements: ShadcnElements) 
     promotedActions: BulkActionOption[];
     selection: RecordSelection;
     rows: TableRow[];
-    rawRecords: GadgetRecord<any>[] | null;
+    rawRecords: AnyGadgetRecord<any>[] | null;
   }) {
     const { promotedActions, selection, rows, rawRecords } = props;
 
@@ -101,7 +101,7 @@ export const makeShadcnAutoTableBulkActionSelector = (elements: ShadcnElements) 
     bulkActionOptions: BulkActionOption[];
     selection: RecordSelection;
     rows: TableRow[];
-    rawRecords: GadgetRecord<any>[] | null;
+    rawRecords: AnyGadgetRecord<any>[] | null;
   }) {
     const { bulkActionOptions, selection, rows, rawRecords } = props;
 

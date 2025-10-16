@@ -1,7 +1,7 @@
-import type { DefaultSelection, FindManyFunction, GadgetRecord, Select } from "@gadgetinc/api-client-core";
+import type { OptionsType } from "@gadgetinc/client-hooks";
+import type { AnyGadgetRecord, DefaultSelection, FindManyFunction, Select } from "@gadgetinc/core";
 import type { ReactNode } from "react";
 import type { TableOptions, TableRow } from "../use-table/types.js";
-import type { OptionsType } from "../utils.js";
 
 /**
  * Props for AutoTable, including Gadget-land and adapter-specific props.
@@ -54,7 +54,7 @@ export type AutoTableProps<
    */
   onClick?: (
     row: TableRow,
-    record: GadgetRecord<
+    record: AnyGadgetRecord<
       Select<
         Exclude<FinderFunction["schemaType"], null | undefined>,
         DefaultSelection<FinderFunction["selectionType"], Options, FinderFunction["defaultSelection"]>

@@ -1,19 +1,18 @@
+import type { OptionsType, ReadOperationOptions } from "@gadgetinc/client-hooks";
 import type {
   AnyClient,
+  AnyGadgetRecord,
   DefaultSelection,
   FindManyFunction,
-  GadgetRecord,
   GetFunction,
   LimitToKnownKeys,
   Select,
-} from "@gadgetinc/api-client-core";
-import { useApi } from "../GadgetProvider.js";
-import { useGet } from "../useGet.js";
-import type { OptionsType, ReadOperationOptions } from "../utils.js";
+} from "@gadgetinc/core";
+import { useApi, useGet } from "../hooks.js";
 
-export type GadgetSession = GadgetRecord<Record<string, any>>;
+export type GadgetSession = AnyGadgetRecord<Record<string, any>>;
 
-export type GadgetUser = GadgetRecord<Record<string, any>>;
+export type GadgetUser = AnyGadgetRecord<Record<string, any>>;
 
 export type ClientWithSessionAndUserManagers<SessionGivenOptions, SessionSchemaT, UserGivenOptions, UserSchemaT> = AnyClient & {
   currentSession: { get: GetFunction<SessionGivenOptions, any, SessionSchemaT, any> };
@@ -44,7 +43,7 @@ export function useSession<
   options?: LimitToKnownKeys<Options, Client["currentSession"]["get"]["optionsType"] & ReadOperationOptions>
 ): undefined extends ClientType
   ? GadgetSession
-  : GadgetRecord<
+  : AnyGadgetRecord<
       Select<
         Exclude<Exclude<ClientType, undefined>["currentSession"]["get"]["schemaType"], null | undefined>,
         DefaultSelection<

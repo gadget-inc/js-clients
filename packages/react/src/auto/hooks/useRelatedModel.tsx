@@ -1,9 +1,10 @@
-import { assert, type FieldSelection } from "@gadgetinc/api-client-core";
+import { assert } from "@gadgetinc/client-hooks";
+import type { FieldSelection } from "@gadgetinc/core";
 import React, { useCallback, useEffect, useState } from "react";
+import { useFindMany } from "../../hooks.js";
 import { FieldType } from "../../metadata.js";
 import { type RecordIdentifier } from "../../use-action-form/types.js";
 import { useDebouncedSearch } from "../../useDebouncedSearch.js";
-import { useFindMany } from "../../useFindMany.js";
 import { sortByProperty, uniqByProperty } from "../../utils.js";
 import { useAutoFormMetadata } from "../AutoFormContext.js";
 import {

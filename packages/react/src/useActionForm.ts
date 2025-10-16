@@ -1,8 +1,9 @@
-import { disambiguateActionVariables, type ActionFunction, type GlobalActionFunction } from "@gadgetinc/api-client-core";
+import type { OptionsType } from "@gadgetinc/client-hooks";
+import type { ActionFunction, AnyErrorWrapper, GlobalActionFunction } from "@gadgetinc/core";
 import { useCallback, useEffect, useRef } from "react";
 import type { DeepPartial, FieldErrors, FieldValues, UseFormProps } from "react-hook-form";
 import { useForm } from "react-hook-form";
-import { useApi } from "./GadgetProvider.js";
+import { useAction, useApi, useCoreImplementation, useGlobalAction } from "./hooks.js";
 import type {
   AnyActionWithId,
   ContextAwareSelect,
@@ -23,9 +24,6 @@ import {
   transformContextAwareToSelect,
   useFindExistingRecord,
 } from "./use-action-form/utils.js";
-import { useAction } from "./useAction.js";
-import { useGlobalAction } from "./useGlobalAction.js";
-import type { ErrorWrapper, OptionsType } from "./utils.js";
 import { get, getModelManager, set } from "./utils.js";
 
 export * from "react-hook-form";
@@ -113,13 +111,14 @@ export const useActionForm = <
   const throwOnInvalidFindByObject = options && "findBy" in options ? options?.throwOnInvalidFindByObject ?? true : true;
   const pause = options && "pause" in options ? options.pause : undefined;
   const api = useApi();
+  const coreImplementation = useCoreImplementation();
   const findExistingRecord = !!findById;
   const hasSetInitialValues = useRef<boolean>(!findExistingRecord);
   const isModelAction = "modelApiIdentifier" in action;
   const actionSelect = options?.select ? transformContextAwareToSelect(options.select) : undefined;
 
   // find the existing record if there is one
-  const modelManager = isModelAction ? getModelManager(api, action.modelApiIdentifier, action.namespace) : undefined;
+  const modelManager = isModelAction ? getModelManager(api, coreImplementation, action.modelApiIdentifier, action.namespace) : undefined;
   const [findResult] = useFindExistingRecord(modelManager, findById || "1", {
     pause: pause || !findExistingRecord,
     select: actionSelect,
@@ -172,13 +171,13 @@ export const useActionForm = <
   const handleSubmissionError = useCallback(
     (error: Error | FieldErrors<ActionFunc["variablesType"]>) => {
       if ("executionErrors" in error) {
-        const errorWrapper = error as unknown as ErrorWrapper;
+        const errorWrapper = error as unknown as AnyErrorWrapper;
         const executionErrors = errorWrapper.executionErrors;
 
         if (executionErrors.length > 0) {
           for (const executionError of executionErrors) {
             if ("validationErrors" in executionError) {
-              for (const validationError of executionError.validationErrors) {
+              for (const validationError of executionError.validationErrors as { apiIdentifier: string; message: string }[]) {
                 const errorKey = isModelAction
                   ? `${action.modelApiIdentifier}.${validationError.apiIdentifier}`
                   : validationError.apiIdentifier;
@@ -225,10 +224,10 @@ export const useActionForm = <
             if (!action.hasAmbiguousIdentifier) {
               if (findResult.data) {
                 // if we fetched initial data, we can detect which set of data changed, either the shorthand or fully qualified form. disambiguate using the data aware disambiguator
-                data = disambiguateDefaultValues(data, findResult.data, action);
+                data = disambiguateDefaultValues(coreImplementation, data, findResult.data, action);
               } else {
                 // if we didn't fetch initial data, the data won't be in both the shorthand and longhand spots, so use the normal variables disambiguator we use for actions by default
-                data = disambiguateActionVariables(action, data);
+                data = coreImplementation.disambiguateActionVariables(action, data);
               }
             }
 

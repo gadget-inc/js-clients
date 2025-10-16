@@ -1,18 +1,11 @@
-import type { SortOrder } from "@gadgetinc/api-client-core";
-import {
-  type DefaultSelection,
-  type FindManyFunction,
-  type GadgetRecord,
-  type LimitToKnownKeys,
-  type Select,
-} from "@gadgetinc/api-client-core";
+import type { OptionsType, ReadOperationOptions } from "@gadgetinc/client-hooks";
+import type { AnyGadgetRecord, DefaultSelection, FindManyFunction, LimitToKnownKeys, Select, SortOrder } from "@gadgetinc/core";
 import { useCallback, useMemo, useState } from "react";
 import { validateAutoTableOptions, validateAutoTableProps } from "./auto/AutoTableValidators.js";
 import { useModelMetadata } from "./metadata.js";
 import { getTableColumns, getTableRows, getTableSelectionMap, getTableSpec } from "./use-table/helpers.js";
 import type { TableOptions, TableResult } from "./use-table/types.js";
 import { useList } from "./useList.js";
-import { type OptionsType, type ReadOperationOptions } from "./utils.js";
 
 const getNextDirection = (sortDirection: SortOrder | undefined) => {
   switch (sortDirection) {
@@ -50,7 +43,9 @@ export const useTable = <
     Omit<F["optionsType"], "sort" | "first" | "last" | "after" | "before"> & ReadOperationOptions & TableOptions
   >
 ): TableResult<
-  GadgetRecord<Select<Exclude<F["schemaType"], null | undefined>, DefaultSelection<F["selectionType"], Options, F["defaultSelection"]>>>[]
+  AnyGadgetRecord<
+    Select<Exclude<F["schemaType"], null | undefined>, DefaultSelection<F["selectionType"], Options, F["defaultSelection"]>>
+  >[]
 > => {
   validateAutoTableProps(manager);
 

@@ -1,8 +1,8 @@
-import { type GadgetRecord } from "@gadgetinc/api-client-core";
+import type { AnyGadgetRecord } from "@gadgetinc/core";
 import React, { useCallback, useEffect, useMemo } from "react";
 import deepEqual from "react-fast-compare";
+import { useBulkAction } from "../../hooks.js";
 import type { ActionCallback, TableOptions, TableRow } from "../../use-table/types.js";
-import { useBulkAction } from "../../useBulkAction.js";
 import { humanizeCamelCase } from "../../utils.js";
 import { validateAutoTableProps } from "../AutoTableValidators.js";
 
@@ -180,7 +180,7 @@ export const getBulkActionOptionCallback = (props: {
   option: BulkActionOption;
   selectedRows: TableRow[];
   clearSelection: () => void;
-  rawRecords: GadgetRecord<any>[] | null;
+  rawRecords: AnyGadgetRecord<any>[] | null;
 }) => {
   const { option, selectedRows, clearSelection, rawRecords } = props;
 

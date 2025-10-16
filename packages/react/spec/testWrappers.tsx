@@ -1,9 +1,9 @@
-import type { AnyClient } from "@gadgetinc/api-client-core";
+import type { AnyClient } from "@gadgetinc/core";
+import type { MockUrqlClient } from "@gadgetinc/core/testing";
+import { createMockUrqlClient, mockGraphQLWSClient, mockUrqlClient } from "@gadgetinc/core/testing";
 import { jest } from "@jest/globals";
 import type { ReactNode } from "react";
 import React, { Suspense } from "react";
-import type { MockUrqlClient } from "../../api-client-core/spec/mockUrqlClient.js";
-import { createMockUrqlClient, mockGraphQLWSClient, mockUrqlClient } from "../../api-client-core/spec/mockUrqlClient.js";
 import { Provider, type GadgetAuthConfiguration } from "../src/GadgetProvider.js";
 
 export const MockClientWrapper =
@@ -58,7 +58,7 @@ export const LiveClientWrapper =
   };
 
 export const MockGraphQLWSClientWrapper = (api: AnyClient, auth?: Partial<GadgetAuthConfiguration>) => (props: { children: ReactNode }) => {
-  jest.replaceProperty(api.connection, "baseSubscriptionClient", mockGraphQLWSClient as any);
+  jest.replaceProperty(api.connection as any, "baseSubscriptionClient", mockGraphQLWSClient as any);
 
   return (
     <Provider api={api} auth={auth}>

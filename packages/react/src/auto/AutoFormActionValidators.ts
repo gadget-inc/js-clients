@@ -1,9 +1,9 @@
-import type { ActionFunction, GlobalActionFunction } from "@gadgetinc/api-client-core";
+import type { OptionsType } from "@gadgetinc/client-hooks";
+import type { ActionFunction, GlobalActionFunction } from "@gadgetinc/core";
 import type { FieldMetadata } from "../metadata.js";
 import { type GlobalActionMetadata, type ModelWithOneActionMetadata } from "../metadata.js";
 import type { RecordIdentifier } from "../use-action-form/types.js";
 import { isPlainObject } from "../use-action-form/utils.js";
-import type { OptionsType } from "../utils.js";
 import type { AutoFormProps } from "./AutoForm.js";
 
 export const validateNonBulkAction = (action: ActionFunction<any, any, any, any, any> | GlobalActionFunction<any>) => {

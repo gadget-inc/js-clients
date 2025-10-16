@@ -1,6 +1,6 @@
-import type { DefaultSelection, GadgetRecord, LimitToKnownKeys, Select } from "@gadgetinc/api-client-core";
-import { useApi } from "../GadgetProvider.js";
-import type { OptionsType, ReadOperationOptions } from "../utils.js";
+import type { OptionsType, ReadOperationOptions } from "@gadgetinc/client-hooks";
+import type { AnyGadgetRecord, DefaultSelection, LimitToKnownKeys, Select } from "@gadgetinc/core";
+import { useApi } from "../hooks.js";
 import type { ClientWithSessionAndUserManagers } from "./useSession.js";
 import { useSession } from "./useSession.js";
 
@@ -20,8 +20,8 @@ export function useUser<
   client?: ClientType,
   options?: LimitToKnownKeys<Options, Client["user"]["findMany"]["optionsType"] & ReadOperationOptions>
 ): undefined extends ClientType
-  ? GadgetRecord<Record<string, any>>
-  : GadgetRecord<
+  ? AnyGadgetRecord<Record<string, any>>
+  : AnyGadgetRecord<
       Select<
         Exclude<Exclude<ClientType, undefined>["user"]["findMany"]["schemaType"], null | undefined>,
         DefaultSelection<

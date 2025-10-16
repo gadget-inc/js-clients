@@ -1,11 +1,13 @@
+import { OptionsType } from "@gadgetinc/client-hooks";
 import type {
   ActionFunction,
+  AnyErrorWrapper,
+  AnyGadgetRecord,
   DeepFilterNever,
   FieldSelection,
-  GadgetRecord,
   GlobalActionFunction,
   Select,
-} from "@gadgetinc/api-client-core";
+} from "@gadgetinc/core";
 import { yupResolver } from "@hookform/resolvers/yup";
 import type { ReactNode } from "react";
 import React, { useEffect, useMemo, useRef } from "react";
@@ -23,7 +25,7 @@ import { isPlainObject, processDefaultValues, toDefaultValues } from "../use-act
 import { getRelatedModelFields, isHasManyOrHasManyThroughField, isRelationshipField, pathListToSelection } from "../use-table/helpers.js";
 import type { FieldErrors, FieldValues, UseFormReturn } from "../useActionForm.js";
 import { useActionForm } from "../useActionForm.js";
-import { get, getFlattenedObjectKeys, set, type ErrorWrapper, type OptionsType } from "../utils.js";
+import { get, getFlattenedObjectKeys, set } from "../utils.js";
 import { validationSchema } from "../validationSchema.js";
 import {
   validateFindByObjectWithMetadata,
@@ -57,7 +59,7 @@ type AutoFormRecordType<ActionFunc> = ActionFunc extends {
   schemaType: infer SchemaType;
   defaultSelection: infer DefaultSelection extends FieldSelection | null | undefined;
 }
-  ? GadgetRecord<
+  ? AnyGadgetRecord<
       { id: string } & (SchemaType extends null | undefined ? unknown : Partial<DeepFilterNever<Select<SchemaType, DefaultSelection>>>)
     >
   : never;
@@ -316,10 +318,10 @@ export const useAutoForm = <
   select?: GivenOptions["select"];
   metadata: ModelWithOneActionMetadata | GlobalActionMetadata | undefined;
   fetchingMetadata: boolean;
-  metadataError: ErrorWrapper | undefined;
+  metadataError: AnyErrorWrapper | undefined;
   fields: readonly { path: string; metadata: FieldMetadata }[];
   submit: UseActionFormSubmit<ActionFunc>;
-  formError: Error | ErrorWrapper | null | undefined;
+  formError: Error | AnyErrorWrapper | null | undefined;
   isSubmitting: boolean;
   isSubmitSuccessful: boolean;
   pauseExistingRecordLookup: boolean;
@@ -714,7 +716,7 @@ const validateFindBy = (params: {
   operatesWithRecordId: boolean;
   hasFindBy: boolean;
   isUpsertMetaAction: boolean;
-  record?: GadgetRecord<any>;
+  record?: AnyGadgetRecord<any>;
 }) => {
   const { operatesWithRecordId, hasFindBy, isUpsertMetaAction, record } = params;
 

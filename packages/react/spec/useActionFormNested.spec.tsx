@@ -1,9 +1,8 @@
-import { $modelRelationships } from "@gadgetinc/api-client-core";
 import { jest } from "@jest/globals";
 import type { MODE } from "@pollyjs/core";
 import { act, renderHook, waitFor } from "@testing-library/react";
+import { useFindFirst } from "../src/hooks.js";
 import { useActionForm, useFieldArray } from "../src/useActionForm.js";
-import { useFindFirst } from "../src/useFindFirst.js";
 import { bulkExampleApi, hasManyThroughApi, nestedExampleApi, testApi } from "./apis.js";
 import { startPolly } from "./polly.js";
 import { LiveClientWrapper, MockClientWrapper, mockUrqlClient } from "./testWrappers.js";
@@ -1070,7 +1069,7 @@ describe("useActionFormNested", () => {
   describe("with mocking", () => {
     test("when no referenceTypes are provided/fetched it should throw an error", async () => {
       // mock older clients that are missing this property
-      jest.replaceProperty(bulkExampleApi, $modelRelationships as any, undefined);
+      jest.replaceProperty(bulkExampleApi, Symbol.for("gadget/modelRelationships") as any, undefined);
 
       const { result: useActionFormHook } = renderHook(() => useActionForm(bulkExampleApi.widget.create), {
         wrapper: MockClientWrapper(bulkExampleApi),
@@ -2434,7 +2433,7 @@ describe("useActionFormNested", () => {
       };
 
       test("can update parent", async () => {
-        jest.replaceProperty(hasManyThroughApi, $modelRelationships as any, hasManyThroughMockMetadata);
+        jest.replaceProperty(hasManyThroughApi, Symbol.for("gadget/modelRelationships") as any, hasManyThroughMockMetadata);
 
         const queryResponse = {
           data: {
@@ -2523,7 +2522,7 @@ describe("useActionFormNested", () => {
       });
 
       test("can update parent and sibling directly", async () => {
-        jest.replaceProperty(hasManyThroughApi, $modelRelationships as any, hasManyThroughMockMetadata);
+        jest.replaceProperty(hasManyThroughApi, Symbol.for("gadget/modelRelationships") as any, hasManyThroughMockMetadata);
 
         const queryResponse = {
           data: {
@@ -2627,7 +2626,7 @@ describe("useActionFormNested", () => {
       });
 
       test("can update parent and siblings through join model", async () => {
-        jest.replaceProperty(hasManyThroughApi, $modelRelationships as any, hasManyThroughMockMetadata);
+        jest.replaceProperty(hasManyThroughApi, Symbol.for("gadget/modelRelationships") as any, hasManyThroughMockMetadata);
 
         const queryResponse = {
           data: {
@@ -2756,7 +2755,7 @@ describe("useActionFormNested", () => {
       });
 
       test("can create parent and siblings through join model", async () => {
-        jest.replaceProperty(hasManyThroughApi, $modelRelationships as any, hasManyThroughMockMetadata);
+        jest.replaceProperty(hasManyThroughApi, Symbol.for("gadget/modelRelationships") as any, hasManyThroughMockMetadata);
 
         const { result: useActionFormHook } = renderHook(
           () =>
@@ -2841,7 +2840,7 @@ describe("useActionFormNested", () => {
       });
 
       test("can update sibling through join model and some are reordered and one is deleted", async () => {
-        jest.replaceProperty(hasManyThroughApi, $modelRelationships as any, hasManyThroughMockMetadata);
+        jest.replaceProperty(hasManyThroughApi, Symbol.for("gadget/modelRelationships") as any, hasManyThroughMockMetadata);
 
         const queryResponse = {
           data: {
@@ -3005,7 +3004,7 @@ describe("useActionFormNested", () => {
       });
 
       test("can update sibling directly and some are reordered and one is deleted", async () => {
-        jest.replaceProperty(hasManyThroughApi, $modelRelationships as any, hasManyThroughMockMetadata);
+        jest.replaceProperty(hasManyThroughApi, Symbol.for("gadget/modelRelationships") as any, hasManyThroughMockMetadata);
 
         const queryResponse = {
           data: {
