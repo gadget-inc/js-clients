@@ -1,6 +1,6 @@
 import type { OperationContext } from "@urql/core";
 import type { VariableOptions } from "tiny-graphql-query-compiler";
-import type { FieldSelection } from "./FieldSelection.js";
+import type { AnyGadgetRecord } from "./AnyGadgetRecord.js";
 import type {
   ActionFunction,
   ActionFunctionMetadata,
@@ -11,7 +11,6 @@ import type {
   ViewFunctionWithoutVariables,
   ViewFunctionWithVariables,
 } from "./GadgetFunctions.js";
-import type { GadgetRecord } from "./GadgetRecord.js";
 
 /**
  * Allows detecting an any type, this is rather tricky:
@@ -935,7 +934,7 @@ export type BackgroundActionResultData<
 > = F extends ActionFunction<any, any, any, any, any>
   ? F["hasReturnType"] extends true
     ? any
-    : GadgetRecord<
+    : AnyGadgetRecord<
         Select<
           Exclude<F["schemaType"], null | undefined>,
           DefaultSelection<
@@ -980,3 +979,11 @@ export type ActionFunctionOptions<Action extends AnyActionFunction> = Action ext
 export type ViewResult<F extends ViewFunction<any, any>> = Awaited<
   F extends ViewFunctionWithVariables<any, infer Result> ? Result : F extends ViewFunctionWithoutVariables<infer Result> ? Result : never
 >;
+
+/**
+ * Represents a list of fields selected from a GraphQL API call. Allows nesting, conditional selection.
+ * Example: `{ id: true, name: false, richText: { markdown: true, html: false } }`
+ **/
+export interface FieldSelection {
+  [key: string]: boolean | null | undefined | FieldSelection;
+}
