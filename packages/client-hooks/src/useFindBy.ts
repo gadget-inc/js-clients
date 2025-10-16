@@ -9,10 +9,11 @@ export let useFindBy: UseFindBy = createHookStub("useFindBy", (adapter: RuntimeA
     const plan = adapter.framework.useMemo(() => {
       return finder.plan(value, memoizedOptions);
     }, [finder, value, memoizedOptions]);
+
     const [rawResult, refresh] = coreHooks.useGadgetQuery(useQueryArgs(plan, options));
 
     const result = adapter.framework.useMemo(() => {
-      return { ...rawResult, ...finder.processResult(rawResult, memoizedOptions?.pause) };
+      return { ...rawResult, ...finder.processResult(rawResult, { pause: memoizedOptions?.pause, fieldValue: value }) };
     }, [rawResult, finder, value, memoizedOptions?.pause]);
 
     return [result, refresh];

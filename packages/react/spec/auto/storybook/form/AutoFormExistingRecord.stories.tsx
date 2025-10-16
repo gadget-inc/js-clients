@@ -1,6 +1,6 @@
 import React from "react";
 import { Provider } from "../../../../src/GadgetProvider.js";
-import { useFindOne } from "../../../../src/useFindOne.js";
+import { useFindOne } from "../../../../src/hooks.js";
 import { testApi as api } from "../../../apis.js";
 import { SelectableDesignSystemAutoFormStory } from "./SelectableDesignSystemAutoFormStory.js";
 
@@ -9,7 +9,7 @@ const AutoFormWithExistingRecord = (props: any) => {
 
   if (!widget) return "loading...";
 
-  return <SelectableDesignSystemAutoFormStory action={props.upsert ? api.widget.upsert : api.widget.update} record={widget as any} />;
+  return <SelectableDesignSystemAutoFormStory action={props.upsert ? api.widget.upsert : api.widget.update} record={widget} />;
 };
 
 export default {

@@ -1,5 +1,4 @@
-import { Client } from "@gadget-client/related-products-example";
-import { AuthenticationMode, type AnyClient } from "@gadgetinc/api-client-core";
+import { RelatedProductsExampleClient } from "@gadget-client/related-products-example";
 import { jest } from "@jest/globals";
 import "@testing-library/jest-dom";
 import { render, waitFor } from "@testing-library/react";
@@ -8,13 +7,13 @@ import { Provider } from "../../src/react/Provider.js";
 import { useGadget, type SessionToken } from "../../src/react/index.js";
 
 describe("Provider", () => {
-  let api: AnyClient;
+  let api: RelatedProductsExampleClient;
   let sessionToken: SessionToken;
   let mockFetch: jest.Mock<typeof globalThis.fetch>;
 
   beforeEach(() => {
     mockFetch = jest.fn();
-    api = new Client({
+    api = new RelatedProductsExampleClient({
       fetchImplementation: mockFetch,
     });
 
@@ -36,7 +35,7 @@ describe("Provider", () => {
 
   describe("Provider", () => {
     test("should call registerShopifySessionTokenAuthentication on mount", async () => {
-      expect(api.connection.authenticationMode).not.toEqual(AuthenticationMode.Custom);
+      expect(api.connection.authenticationMode).not.toEqual("custom");
 
       render(
         <Provider api={api} sessionToken={sessionToken}>
@@ -44,7 +43,7 @@ describe("Provider", () => {
         </Provider>
       );
 
-      expect(api.connection.authenticationMode).toEqual(AuthenticationMode.Custom);
+      expect(api.connection.authenticationMode).toEqual("custom");
 
       await waitFor(() => {
         expect(mockFetch).toHaveBeenCalledWith(

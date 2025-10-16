@@ -1,4 +1,4 @@
-import type { AnyClient } from "@gadgetinc/api-client-core";
+import type { AnyClient } from "@gadgetinc/core";
 import type { Context } from "react";
 import { createContext, useContext } from "react";
 

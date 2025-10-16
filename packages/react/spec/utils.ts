@@ -5,7 +5,7 @@ import { mockUrqlClient } from "./testWrappers.js";
 export const expectMockSignedInUser = async (urqlClient?: MockUrqlClient) => {
   const urql = urqlClient || mockUrqlClient;
   await urql.executeQuery.waitForSubject("currentSession");
-  urql.executeQuery.pushResponse("currentSession", {
+  await urql.executeQuery.pushResponse("currentSession", {
     data: {
       currentSession: {
         id: "123",
@@ -24,7 +24,7 @@ export const expectMockSignedInUser = async (urqlClient?: MockUrqlClient) => {
 export const expectMockSignedOutUser = async (urqlClient?: MockUrqlClient) => {
   const urql = urqlClient || mockUrqlClient;
   await urql.executeQuery.waitForSubject("currentSession");
-  urql.executeQuery.pushResponse("currentSession", {
+  await urql.executeQuery.pushResponse("currentSession", {
     data: {
       currentSession: {
         id: "123",
@@ -39,7 +39,7 @@ export const expectMockSignedOutUser = async (urqlClient?: MockUrqlClient) => {
 export const expectMockDeletedUser = async (urqlClient?: MockUrqlClient) => {
   const urql = urqlClient || mockUrqlClient;
   await urql.executeQuery.waitForSubject("currentSession");
-  urql.executeQuery.pushResponse("currentSession", {
+  await urql.executeQuery.pushResponse("currentSession", {
     data: {
       currentSession: {
         id: "123",
@@ -53,7 +53,7 @@ export const expectMockDeletedUser = async (urqlClient?: MockUrqlClient) => {
 
 export const mockInternalServerError = async () => {
   await mockUrqlClient.executeQuery.waitForSubject("currentSession");
-  mockUrqlClient.executeQuery.pushResponse("currentSession", {
+  await mockUrqlClient.executeQuery.pushResponse("currentSession", {
     data: null,
     error: new CombinedError({ graphQLErrors: [new Error("GGT_INTERNAL_SERVER_ERROR"), "An error occurred"] }),
     stale: false,
@@ -63,7 +63,7 @@ export const mockInternalServerError = async () => {
 
 export const mockNetworkError = async () => {
   await mockUrqlClient.executeQuery.waitForSubject("currentSession");
-  mockUrqlClient.executeQuery.pushResponse("currentSession", {
+  await mockUrqlClient.executeQuery.pushResponse("currentSession", {
     data: null,
     error: new CombinedError({ networkError: new Error("Network error") }),
     stale: false,

@@ -1,5 +1,4 @@
-import type { AnyClient } from "@gadgetinc/api-client-core";
-import { GadgetConnection } from "@gadgetinc/api-client-core";
+import { mockUrqlClient } from "@gadgetinc/core/testing";
 import { jest } from "@jest/globals";
 import "@testing-library/jest-dom";
 import { renderHook } from "@testing-library/react";
@@ -7,7 +6,7 @@ import type { IsExact } from "conditional-type-checks";
 import { assert } from "conditional-type-checks";
 import type { ReactNode } from "react";
 import React from "react";
-import { mockUrqlClient } from "../../api-client-core/spec/mockUrqlClient.js";
+import { bigcommerceApi } from "../../client-hooks/spec/apis.js";
 import { Provider } from "../src/Provider.js";
 import { useGadget } from "../src/index.js";
 
@@ -22,7 +21,6 @@ const _TestUseGadgetReturnsAppropriateTypes = () => {
 };
 
 describe("useGadget", () => {
-  let mockApiClient: AnyClient;
   const { location } = window;
 
   beforeAll(() => {
@@ -36,22 +34,16 @@ describe("useGadget", () => {
   });
 
   beforeEach(() => {
-    mockApiClient = {
-      connection: new GadgetConnection({
-        endpoint: "https://test-app.gadget.app/endpoint",
-      }),
-    } as any;
-
-    jest.spyOn(mockApiClient.connection, "currentClient" as any, "get").mockReturnValue(mockUrqlClient);
+    jest.spyOn(bigcommerceApi.connection, "currentClient" as any, "get").mockReturnValue(mockUrqlClient);
   });
 
   afterAll(() => {
     window.location = location;
   });
 
-  test("when there is no signed_payload parameter", () => {
+  test("when there is no signed_payload parameter", async () => {
     const { result, rerender } = renderHook(() => useGadget(), {
-      wrapper: (props: { children: ReactNode }) => <Provider api={mockApiClient}>{props.children}</Provider>,
+      wrapper: (props: { children: ReactNode }) => <Provider api={bigcommerceApi}>{props.children}</Provider>,
     });
 
     const { loading, isAuthenticated, userId, storeHash, error } = result.current;
@@ -61,7 +53,7 @@ describe("useGadget", () => {
     expect(storeHash).toBeUndefined();
     expect(error).toBeUndefined();
 
-    mockUrqlClient.executeQuery.pushResponse("BigCommerceSession", {
+    await mockUrqlClient.executeQuery.pushResponse("BigCommerceSession", {
       data: {
         currentSession: {
           bigcommerceUserId: null,
@@ -86,10 +78,10 @@ describe("useGadget", () => {
     expect(result.current.error).toBeUndefined();
   });
 
-  test("when there is a signed_payload parameter", () => {
+  test("when there is a signed_payload parameter", async () => {
     window.location.search = "signed_payload=test-session-token";
     const { result, rerender } = renderHook(() => useGadget(), {
-      wrapper: (props: { children: ReactNode }) => <Provider api={mockApiClient}>{props.children}</Provider>,
+      wrapper: (props: { children: ReactNode }) => <Provider api={bigcommerceApi}>{props.children}</Provider>,
     });
 
     const { loading, isAuthenticated, userId, storeHash, error } = result.current;
@@ -99,7 +91,7 @@ describe("useGadget", () => {
     expect(storeHash).toBeUndefined();
     expect(error).toBeUndefined();
 
-    mockUrqlClient.executeQuery.pushResponse("BigCommerceSession", {
+    await mockUrqlClient.executeQuery.pushResponse("BigCommerceSession", {
       data: {
         currentSession: {
           bigcommerceUserId: "123",

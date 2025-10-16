@@ -41,7 +41,7 @@ See the [`graphql-codegen`](https://the-guild.dev/graphql/codegen/docs/guides/re
 
 ## Prereleasing
 
-It can be annoying to work with these packages via `pnpm link` sometimes, so we also support building and releasing the package to a git SHA which can then be installed conventionally in another repo. To push a prerelease, run `pnpm --filter=@gadgetinc/api-client-core prerelease`. This will:
+It can be annoying to work with these packages via `pnpm link` sometimes, so we also support building and releasing the package to a git SHA which can then be installed conventionally in another repo. To push a prerelease, run `pnpm --filter=@gadgetinc/core prerelease`. This will:
 
 - build the typescript
 - create a local git commit that has just the built artifacts for just the package in question
@@ -67,7 +67,7 @@ Releasing is done automatically via [our release workflow](.github/workflows/rel
 If you need to release manually for some reason you can do the following
 
 ```
-pnpm --filter=@gadgetinc/api-client-core publish --access=public --no-git-tag-version
+pnpm --filter=@gadgetinc/core publish --access=public --no-git-tag-version
 ```
 
 or

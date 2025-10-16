@@ -1,4 +1,4 @@
-import type { GadgetRecord } from "@gadgetinc/api-client-core";
+import type { GadgetRecord } from "@gadgetinc/core";
 import { GadgetFieldType } from "../../../src/internal/gql/graphql.js";
 import type { FieldMetadata } from "../../../src/metadata.js";
 import {

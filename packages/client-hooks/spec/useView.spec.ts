@@ -1,12 +1,109 @@
+import type { AnyErrorWrapper } from "@gadgetinc/core";
 import { jest } from "@jest/globals";
+import type { IsExact } from "conditional-type-checks";
+import { assert } from "conditional-type-checks";
 import { createHooks } from "../src/createHooks.js";
 import { useView } from "../src/useView.js";
+import { testApi } from "./apis.js";
 import { createMockAdapter, createMockApiClient, createMockConnection, createMockProcessResult } from "./mockAdapter.js";
 
 describe("useView", () => {
   beforeEach(() => {
     jest.clearAllMocks();
   });
+
+  // all these functions are typechecked but never run to avoid actually making API calls
+  const _TestUseViewNoVariablesReturnsTypedData = () => {
+    const [{ data, fetching, error }, refresh] = useView(testApi.totalInStock);
+
+    assert<IsExact<typeof fetching, boolean>>(true);
+    assert<IsExact<typeof data, undefined | { totalInStock: number | null }>>(true);
+    assert<IsExact<typeof error, AnyErrorWrapper | undefined>>(true);
+
+    if (data) {
+      data.totalInStock;
+    }
+
+    refresh();
+  };
+
+  const _TestUseViewVariablesReturnsTypedData = () => {
+    const [{ data, fetching, error }, refresh] = useView(testApi.echo, { value: "test" });
+
+    assert<IsExact<typeof fetching, boolean>>(true);
+    assert<IsExact<typeof data, undefined | { value: string | null }>>(true);
+    assert<IsExact<typeof error, AnyErrorWrapper | undefined>>(true);
+
+    if (data) {
+      data.value;
+    }
+
+    refresh();
+  };
+
+  const _TestUseViewOptions = () => {
+    const [{ data, fetching, error }, refresh] = useView(testApi.echo, { value: "test" }, { pause: true });
+
+    assert<IsExact<typeof fetching, boolean>>(true);
+    assert<IsExact<typeof data, undefined | { value: string | null }>>(true);
+    assert<IsExact<typeof error, AnyErrorWrapper | undefined>>(true);
+
+    if (data) {
+      data.value;
+    }
+
+    refresh();
+  };
+
+  const _TestUseNamespacedView = () => {
+    const [{ data }] = useView(testApi.game.echo, { value: 123 });
+
+    assert<IsExact<typeof data, undefined | { value: number | null }>>(true);
+
+    if (data) {
+      data.value;
+    }
+  };
+
+  const _TestUseModelNamespacedView = () => {
+    const [{ data }] = useView(testApi.widget.stats, { inStockOnly: false });
+
+    assert<IsExact<typeof data, undefined | { count: number | null }>>(true);
+
+    if (data) {
+      data.count;
+    }
+  };
+
+  const _TestUseInlineViewNoVariables = () => {
+    const [{ data, fetching, error }, refresh] = useView("{ count(todos) }");
+
+    assert<IsExact<typeof fetching, boolean>>(true);
+    assert<IsExact<typeof data, undefined | unknown>>(true);
+    assert<IsExact<typeof error, AnyErrorWrapper | undefined>>(true);
+
+    refresh();
+  };
+
+  const _TestUseInlineViewWithVariables = () => {
+    const [{ data, fetching, error }, refresh] = useView("($first: Int){ count(todos) }", { first: 10 });
+
+    assert<IsExact<typeof fetching, boolean>>(true);
+    assert<IsExact<typeof data, undefined | unknown>>(true);
+    assert<IsExact<typeof error, AnyErrorWrapper | undefined>>(true);
+
+    refresh();
+  };
+
+  const _TestUseInlineViewWithVariablesAndOptions = () => {
+    const [{ data, fetching, error }, refresh] = useView("($first: Int){ count(todos) }", { first: 10 }, { pause: true });
+
+    assert<IsExact<typeof fetching, boolean>>(true);
+    assert<IsExact<typeof data, undefined | unknown>>(true);
+    assert<IsExact<typeof error, AnyErrorWrapper | undefined>>(true);
+
+    refresh();
+  };
 
   it("should initialize the hook with inline view string", () => {
     const connection = createMockConnection();

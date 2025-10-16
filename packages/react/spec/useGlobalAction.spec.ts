@@ -1,42 +1,10 @@
 import { renderHook } from "@testing-library/react";
-import type { IsExact } from "conditional-type-checks";
-import { assert } from "conditional-type-checks";
 import { act } from "react";
 import { useGlobalAction } from "../src/index.js";
-import type { ErrorWrapper } from "../src/utils.js";
 import { bulkExampleApi, kitchenSinkApi } from "./apis.js";
 import { MockClientWrapper, createMockUrqlClient, mockUrqlClient } from "./testWrappers.js";
 
 describe("useGlobalAction", () => {
-  // these functions are typechecked but never run to avoid actually making API calls
-  const _TestUseGlobalActionCanRunGlobalActionsWithVariables = () => {
-    const [{ data, fetching, error }, mutate] = useGlobalAction(bulkExampleApi.flipAll);
-
-    assert<IsExact<typeof fetching, boolean>>(true);
-    assert<IsExact<typeof data, any>>(true);
-    assert<IsExact<typeof error, ErrorWrapper | undefined>>(true);
-
-    // can call with variables
-    void mutate({ why: "foobar" });
-
-    // @ts-expect-error can't call with variables that don't belong to the model
-    void mutate({ foo: "123" });
-  };
-
-  const _TestUseNamespacedGlobalAction = () => {
-    const [{ data, fetching, error }, mutate] = useGlobalAction(kitchenSinkApi.game.calculateScore);
-
-    assert<IsExact<typeof fetching, boolean>>(true);
-    assert<IsExact<typeof data, any>>(true);
-    assert<IsExact<typeof error, ErrorWrapper | undefined>>(true);
-
-    // can call with variables
-    void mutate({ why: "foobar" });
-
-    // @ts-expect-error can't call with variables that don't belong to the model
-    void mutate({ foo: "123" });
-  };
-
   test("returns no data, not fetching, and no error when the component is first mounted", () => {
     const { result } = renderHook(() => useGlobalAction(bulkExampleApi.flipAll), { wrapper: MockClientWrapper(bulkExampleApi) });
 
@@ -49,7 +17,7 @@ describe("useGlobalAction", () => {
     let query: string | undefined;
     const client = createMockUrqlClient({
       mutationAssertions: (request) => {
-        query = request.query.loc?.source.body;
+        query = "kind" in request.query ? request.query.loc?.source.body : "";
       },
     });
 
@@ -88,7 +56,7 @@ describe("useGlobalAction", () => {
       }"
     `);
 
-    client.executeMutation.pushResponse("flipAll", {
+    await client.executeMutation.pushResponse("flipAll", {
       data: {
         flipAll: {
           success: true,
@@ -125,7 +93,7 @@ describe("useGlobalAction", () => {
 
     expect(mockUrqlClient.executeMutation).toBeCalledTimes(1);
 
-    mockUrqlClient.executeMutation.pushResponse("flipAll", {
+    await mockUrqlClient.executeMutation.pushResponse("flipAll", {
       data: {
         flipAll: {
           success: false,
@@ -156,7 +124,7 @@ describe("useGlobalAction", () => {
     let query: string | undefined;
     const client = createMockUrqlClient({
       mutationAssertions: (request) => {
-        query = request.query.loc?.source.body;
+        query = "kind" in request.query ? request.query.loc?.source.body : "";
       },
     });
 
@@ -199,7 +167,7 @@ describe("useGlobalAction", () => {
       }"
     `);
 
-    client.executeMutation.pushResponse("calculateScore", {
+    await client.executeMutation.pushResponse("calculateScore", {
       data: {
         game: {
           calculateScore: {
@@ -234,7 +202,7 @@ describe("useGlobalAction", () => {
 
     expect(mockUrqlClient.executeMutation).toBeCalledTimes(1);
 
-    mockUrqlClient.executeMutation.pushResponse("flipAll", {
+    await mockUrqlClient.executeMutation.pushResponse("flipAll", {
       data: {
         flipAll: {
           success: true,
@@ -273,6 +241,15 @@ describe("useGlobalAction", () => {
           functionName: "fakeAction",
           actionApiIdentifier: "fakeAction",
           variables: {},
+          plan: () => ({
+            query: "",
+            variables: {},
+          }),
+          processResult: () => ({
+            data: {},
+            fetching: false,
+            error: undefined,
+          }),
         }),
       {
         wrapper: MockClientWrapper(bulkExampleApi),

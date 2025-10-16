@@ -1,8 +1,8 @@
-import type { AnyClient } from "@gadgetinc/api-client-core";
+import type { AnyClient } from "@gadgetinc/core";
 import { Provider as GadgetUrqlProvider, useQuery } from "@gadgetinc/react";
 import type { ReactNode } from "react";
 import React, { useEffect, useMemo } from "react";
-import { GadgetBigCommerceContext } from "./index.js";
+import { GadgetBigCommerceContext } from "./context.js";
 
 type ProviderLocation = {
   query?: URLSearchParams;
@@ -39,7 +39,7 @@ const InnerProvider = (props: { children: ReactNode; api: AnyClient; signedPaylo
 
     api.connection.setAuthenticationMode({
       custom: {
-        async processFetch(_input, init) {
+        async processFetch(_input: RequestInfo | URL, init: RequestInit) {
           const headers = new Headers(init.headers);
           headers.append("Authorization", `BigCommerceSignedPayload ${signedPayload}`);
           init.headers ??= {};
@@ -47,7 +47,7 @@ const InnerProvider = (props: { children: ReactNode; api: AnyClient; signedPaylo
             (init.headers as Record<string, string>)[key] = value;
           });
         },
-        async processTransactionConnectionParams(params) {
+        async processTransactionConnectionParams(params: Record<string, any>) {
           params.auth.bigcommerceSignedPayload = signedPayload;
         },
       },

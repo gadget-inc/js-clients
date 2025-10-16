@@ -15,14 +15,15 @@ import { noProviderErrorMessage } from "./utils.js";
 
 const RegisteredHooks: ((adapter: RuntimeAdapter, coreHooks: CoreHooks) => void)[] = [];
 
+export const hookErrorMessage = (hook: string) =>
+  `You are attempting to use the ${hook} hook, but you are not calling it from a component that is wrapped in a Gadget <Provider/> component. Please ensure you are wrapping this hook with the <Provider/> component from either @gadgetinc/react or @gadgetinc/preact.`;
+
 export const createHookStub = (hook: string, registerFn?: (adapter: RuntimeAdapter, coreHooks: CoreHooks) => void) => {
   if (registerFn) {
     RegisteredHooks.push(registerFn);
   }
   return () => {
-    throw new Error(
-      `You are attempting to use the ${hook} hook, but you are not calling it from a component that is wrapped in a Gadget <Provider/> component. Please ensure you are wrapping this hook with the <Provider/> component from either @gadgetinc/react or @gadgetinc/preact.`
-    );
+    throw new Error(hookErrorMessage(hook));
   };
 };
 

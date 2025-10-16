@@ -1,6 +1,6 @@
-import type { ActionFunction, GlobalActionFunction } from "@gadgetinc/api-client-core";
+import type { OptionsType } from "@gadgetinc/client-hooks";
+import type { ActionFunction, GlobalActionFunction } from "@gadgetinc/core";
 import React from "react";
-import type { OptionsType } from "../../utils.js";
 import type { AutoButtonProps } from "../hooks/useAutoButtonController.js";
 import { useAutoButtonController } from "../hooks/useAutoButtonController.js";
 import type { ButtonProps, ShadcnElements } from "./elements.js";

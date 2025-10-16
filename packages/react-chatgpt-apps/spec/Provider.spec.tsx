@@ -1,5 +1,4 @@
-import { Client } from "@gadget-client/related-products-example";
-import { AuthenticationMode, type AnyClient } from "@gadgetinc/api-client-core";
+import { RelatedProductsExampleClient } from "@gadget-client/related-products-example";
 import { jest } from "@jest/globals";
 import "@testing-library/jest-dom";
 import { render, waitFor } from "@testing-library/react";
@@ -7,7 +6,7 @@ import React, { useEffect, useState } from "react";
 import { Provider, getToken } from "../src/Provider.js";
 
 describe("ChatGPT Apps Provider", () => {
-  let api: AnyClient;
+  let api: RelatedProductsExampleClient;
   let mockFetch: jest.Mock<typeof globalThis.fetch>;
   const mockCallTool = jest.fn<() => Promise<{ structuredContent: { token: string } | { token: null; error: string } }>>();
 
@@ -19,7 +18,7 @@ describe("ChatGPT Apps Provider", () => {
 
   beforeEach(() => {
     mockFetch = jest.fn();
-    api = new Client({
+    api = new RelatedProductsExampleClient({
       fetchImplementation: mockFetch,
     });
 
@@ -78,7 +77,7 @@ describe("ChatGPT Apps Provider", () => {
     });
 
     test("sets custom authentication mode on mount", async () => {
-      expect(api.connection.authenticationMode).not.toEqual(AuthenticationMode.Custom);
+      expect(api.connection.authenticationMode).not.toEqual("custom");
 
       render(
         <Provider api={api}>
@@ -87,7 +86,7 @@ describe("ChatGPT Apps Provider", () => {
       );
 
       await waitFor(() => {
-        expect(api.connection.authenticationMode).toEqual(AuthenticationMode.Custom);
+        expect(api.connection.authenticationMode).toEqual("custom");
       });
     });
 

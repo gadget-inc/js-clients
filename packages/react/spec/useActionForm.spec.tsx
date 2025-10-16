@@ -226,7 +226,7 @@ describe("useActionForm", () => {
       },
     });
 
-    mockUrqlClient.executeMutation.pushResponse("createUser", {
+    await mockUrqlClient.executeMutation.pushResponse("createUser", {
       data: {
         createUser: {
           success: true,
@@ -328,7 +328,7 @@ describe("useActionForm", () => {
       },
     });
 
-    mockUrqlClient.executeMutation.pushResponse("createUser", {
+    await mockUrqlClient.executeMutation.pushResponse("createUser", {
       data: {
         createUser: {
           success: true,
@@ -424,7 +424,7 @@ describe("useActionForm", () => {
       why: "foobar",
     });
 
-    mockUrqlClient.executeMutation.pushResponse("flipAll", {
+    await mockUrqlClient.executeMutation.pushResponse("flipAll", {
       data: {
         flipAll: {
           success: true,
@@ -521,7 +521,7 @@ describe("useActionForm", () => {
       },
     });
 
-    mockUrqlClient.executeMutation.pushResponse("createAmbiguous", {
+    await mockUrqlClient.executeMutation.pushResponse("createAmbiguous", {
       data: {
         createAmbiguous: {
           success: true,
@@ -630,7 +630,7 @@ describe("useActionForm", () => {
       },
     });
 
-    mockUrqlClient.executeMutation.pushResponse("createUser", {
+    await mockUrqlClient.executeMutation.pushResponse("createUser", {
       data: {
         createUser: {
           success: true,
@@ -722,7 +722,7 @@ describe("useActionForm", () => {
       },
     });
 
-    mockUrqlClient.executeMutation.pushResponse("createUser", {
+    await mockUrqlClient.executeMutation.pushResponse("createUser", {
       data: {
         createUser: {
           success: true,
@@ -805,7 +805,7 @@ describe("useActionForm", () => {
       },
     });
 
-    mockUrqlClient.executeMutation.pushResponse("createUser", {
+    await mockUrqlClient.executeMutation.pushResponse("createUser", {
       data: null,
       error: new CombinedError({ networkError: new Error("Network error") }),
       stale: false,
@@ -876,7 +876,7 @@ describe("useActionForm", () => {
       },
     });
 
-    mockUrqlClient.executeMutation.pushResponse("createUser", {
+    await mockUrqlClient.executeMutation.pushResponse("createUser", {
       data: {
         createUser: {
           success: true,
@@ -1078,7 +1078,7 @@ describe("useActionForm", () => {
 
     expect(mockUrqlClient.executeQuery).toHaveBeenCalledTimes(1);
 
-    mockUrqlClient.executeQuery.pushResponse("user", {
+    await mockUrqlClient.executeQuery.pushResponse("user", {
       data: {
         user: {
           id: "123",
@@ -1178,7 +1178,7 @@ describe("useActionForm", () => {
 
     expect(mockUrqlClient.executeQuery).toHaveBeenCalledTimes(1);
 
-    mockUrqlClient.executeQuery.pushResponse("user", {
+    await mockUrqlClient.executeQuery.pushResponse("user", {
       data: {
         user: {
           id: "123",
@@ -1286,7 +1286,7 @@ describe("useActionForm", () => {
       },
     });
 
-    mockUrqlClient.executeMutation.pushResponse("updateUser", {
+    await mockUrqlClient.executeMutation.pushResponse("updateUser", {
       data: {
         updateUser: {
           success: true,
@@ -1402,7 +1402,7 @@ describe("useActionForm", () => {
       },
     });
 
-    mockUrqlClient.executeMutation.pushResponse("updateUser", {
+    await mockUrqlClient.executeMutation.pushResponse("updateUser", {
       data: {
         updateUser: {
           success: true,
@@ -1481,7 +1481,7 @@ describe("useActionForm", () => {
 
     expect(mockUrqlClient.executeQuery).toBeCalledTimes(1);
 
-    mockUrqlClient.executeQuery.pushResponse("user", {
+    await mockUrqlClient.executeQuery.pushResponse("user", {
       data: {
         user: {
           id: "123",
@@ -1534,7 +1534,7 @@ describe("useActionForm", () => {
       },
     });
 
-    mockUrqlClient.executeMutation.pushResponse("updateUser", {
+    await mockUrqlClient.executeMutation.pushResponse("updateUser", {
       data: {
         updateUser: {
           success: true,
@@ -1627,7 +1627,7 @@ describe("useActionForm", () => {
 
     expect(mockUrqlClient.executeQuery).toBeCalledTimes(1);
 
-    mockUrqlClient.executeQuery.pushResponse("player", {
+    await mockUrqlClient.executeQuery.pushResponse("player", {
       data: {
         game: {
           player: {
@@ -1677,7 +1677,7 @@ describe("useActionForm", () => {
       },
     });
 
-    mockUrqlClient.executeMutation.pushResponse("updatePlayer", {
+    await mockUrqlClient.executeMutation.pushResponse("updatePlayer", {
       data: {
         game: {
           updatePlayer: {
@@ -1771,7 +1771,7 @@ describe("useActionForm", () => {
 
     expect(mockUrqlClient.executeQuery).toBeCalledTimes(1);
 
-    mockUrqlClient.executeQuery.pushResponse("user", {
+    await mockUrqlClient.executeQuery.pushResponse("user", {
       data: {
         user: {
           id: "123",
@@ -1826,7 +1826,7 @@ describe("useActionForm", () => {
       },
     });
 
-    mockUrqlClient.executeMutation.pushResponse("updateUser", {
+    await mockUrqlClient.executeMutation.pushResponse("updateUser", {
       data: {
         updateUser: {
           success: true,
@@ -1924,7 +1924,7 @@ describe("useActionForm", () => {
 
     expect(mockUrqlClient.executeQuery).toBeCalledTimes(1);
 
-    mockUrqlClient.executeQuery.pushResponse("user", {
+    await mockUrqlClient.executeQuery.pushResponse("user", {
       data: {
         user: {
           id: "123",
@@ -1979,7 +1979,7 @@ describe("useActionForm", () => {
       },
     });
 
-    mockUrqlClient.executeMutation.pushResponse("updateUser", {
+    await mockUrqlClient.executeMutation.pushResponse("updateUser", {
       data: {
         updateUser: {
           success: true,
@@ -2059,7 +2059,7 @@ describe("useActionForm", () => {
 
     expect(mockUrqlClient.executeQuery).toBeCalledTimes(1);
 
-    mockUrqlClient.executeQuery.pushResponse("ambiguous", {
+    await mockUrqlClient.executeQuery.pushResponse("ambiguous", {
       data: {
         ambiguous: {
           id: "123",
@@ -2112,7 +2112,7 @@ describe("useActionForm", () => {
       },
     });
 
-    mockUrqlClient.executeMutation.pushResponse("updateAmbiguous", {
+    await mockUrqlClient.executeMutation.pushResponse("updateAmbiguous", {
       data: {
         updateAmbiguous: {
           success: true,
@@ -2205,7 +2205,7 @@ describe("useActionForm", () => {
 
     expect(mockUrqlClient.executeQuery).toBeCalledTimes(1);
 
-    mockUrqlClient.executeQuery.pushResponse("users", {
+    await mockUrqlClient.executeQuery.pushResponse("users", {
       data: {
         users: {
           edges: [
@@ -2271,7 +2271,7 @@ describe("useActionForm", () => {
       },
     });
 
-    mockUrqlClient.executeMutation.pushResponse("updateUser", {
+    await mockUrqlClient.executeMutation.pushResponse("updateUser", {
       data: {
         updateUser: {
           success: true,
@@ -2361,7 +2361,7 @@ describe("useActionForm", () => {
       }"
     `);
 
-    mockUrqlClient.executeQuery.pushResponse("user", {
+    await mockUrqlClient.executeQuery.pushResponse("user", {
       data: {
         user: {
           id: "123",
@@ -2409,7 +2409,7 @@ describe("useActionForm", () => {
       },
     });
 
-    mockUrqlClient.executeMutation.pushResponse("updateUser", {
+    await mockUrqlClient.executeMutation.pushResponse("updateUser", {
       data: {
         updateUser: {
           success: true,
@@ -2499,7 +2499,7 @@ describe("useActionForm", () => {
 
     expect(mockUrqlClient.executeQuery).toBeCalledTimes(1);
 
-    mockUrqlClient.executeQuery.pushResponse("user", {
+    await mockUrqlClient.executeQuery.pushResponse("user", {
       data: {
         user: {
           id: "123",
@@ -2558,7 +2558,7 @@ describe("useActionForm", () => {
       },
     });
 
-    mockUrqlClient.executeMutation.pushResponse("updateUser", {
+    await mockUrqlClient.executeMutation.pushResponse("updateUser", {
       data: {
         updateUser: {
           success: true,
@@ -2681,7 +2681,7 @@ describe("useActionForm", () => {
       },
     });
 
-    mockUrqlClient.executeMutation.pushResponse("changePasswordUser", {
+    await mockUrqlClient.executeMutation.pushResponse("changePasswordUser", {
       data: {
         changePasswordUser: {
           success: true,
@@ -2818,7 +2818,7 @@ describe("useActionForm", () => {
 
     expect(mockUrqlClient.executeQuery).toHaveBeenCalledTimes(1);
 
-    mockUrqlClient.executeQuery.pushResponse("answer", {
+    await mockUrqlClient.executeQuery.pushResponse("answer", {
       stale: false,
       hasNext: false,
       data: queryResponse.data,
@@ -2855,7 +2855,7 @@ describe("useActionForm", () => {
       }
     `);
 
-    mockUrqlClient.executeMutation.pushResponse("updateAnswer", {
+    await mockUrqlClient.executeMutation.pushResponse("updateAnswer", {
       data: {
         updateAnswer: {
           answer: {
@@ -2942,7 +2942,7 @@ describe("useActionForm", () => {
 
     expect(mockUrqlClient.executeQuery).toHaveBeenCalledTimes(1);
 
-    mockUrqlClient.executeQuery.pushResponse("answer", {
+    await mockUrqlClient.executeQuery.pushResponse("answer", {
       stale: false,
       hasNext: false,
       data: queryResponse.data,
@@ -2979,7 +2979,7 @@ describe("useActionForm", () => {
       }
     `);
 
-    mockUrqlClient.executeMutation.pushResponse("updateAnswer", {
+    await mockUrqlClient.executeMutation.pushResponse("updateAnswer", {
       data: {
         updateAnswer: {
           answer: {
@@ -3040,7 +3040,7 @@ describe("useActionForm", () => {
 
     expect(mockUrqlClient.executeQuery).toHaveBeenCalledTimes(1);
 
-    mockUrqlClient.executeQuery.pushResponse("answer", {
+    await mockUrqlClient.executeQuery.pushResponse("answer", {
       stale: false,
       hasNext: false,
       data: queryResponse.data,

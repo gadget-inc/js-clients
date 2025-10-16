@@ -1,15 +1,13 @@
-import type { AnyClient } from "@gadgetinc/api-client-core";
-import { GadgetConnection } from "@gadgetinc/api-client-core";
+import { mockUrqlClient } from "@gadgetinc/core/testing";
 import { jest } from "@jest/globals";
 import "@testing-library/jest-dom";
 import { render } from "@testing-library/react";
 import { CombinedError } from "@urql/core";
 import React, { act } from "react";
-import { mockUrqlClient } from "../../api-client-core/spec/mockUrqlClient.js";
+import { relatedProductsApi } from "../../client-hooks/spec/apis.js";
 import { AppType, Provider } from "../src/Provider.js";
 
 describe("GadgetProvider", () => {
-  let mockApiClient: AnyClient;
   const mockNavigate = jest.fn<any>();
   const mockOpen = jest.fn<any>();
   const mockApiKey = "some-api-key";
@@ -26,7 +24,7 @@ describe("GadgetProvider", () => {
     // @ts-expect-error mock
     window.location = {
       assign: mockNavigate,
-      origin: "https://test-app.gadget.app",
+      origin: "https://related-products-example.gadget.app",
       pathname: "/",
       search: "",
     };
@@ -48,13 +46,7 @@ describe("GadgetProvider", () => {
         }),
     };
 
-    mockApiClient = {
-      connection: new GadgetConnection({
-        endpoint: "https://test-app.gadget.app/endpoint",
-      }),
-    } as any;
-
-    jest.spyOn(mockApiClient.connection, "currentClient" as any, "get").mockReturnValue(mockUrqlClient);
+    jest.spyOn(relatedProductsApi.connection, "currentClient" as any, "get").mockReturnValue(mockUrqlClient);
   });
 
   afterEach(() => {
@@ -66,7 +58,7 @@ describe("GadgetProvider", () => {
       // @ts-expect-error mock
       window.location = {
         assign: mockNavigate,
-        origin: "https://test-app.gadget.app",
+        origin: "https://related-products-example.gadget.app",
         pathname: "/",
         search: isInstallRequest ? "?shop=example.myshopify.com&hmac=abcdefg&host=abcdfg" : "",
       };
@@ -74,7 +66,7 @@ describe("GadgetProvider", () => {
 
     test("can render a standalone app type", () => {
       const { container } = render(
-        <Provider api={mockApiClient} shopifyApiKey={mockApiKey} type={AppType.Standalone}>
+        <Provider api={relatedProductsApi} shopifyApiKey={mockApiKey} type={AppType.Standalone}>
           <span>hello world</span>
         </Provider>
       );
@@ -83,7 +75,7 @@ describe("GadgetProvider", () => {
 
       if (isInstallRequest) {
         expect(mockNavigate).toHaveBeenCalledWith(
-          "https://test-app.gadget.app/api/connections/auth/shopify?shop=example.myshopify.com&hmac=abcdefg&host=abcdfg"
+          "https://related-products-example.gadget.app/api/connections/auth/shopify?shop=example.myshopify.com&hmac=abcdefg&host=abcdfg"
         );
       } else {
         expect(mockNavigate).not.toHaveBeenCalled();
@@ -93,7 +85,7 @@ describe("GadgetProvider", () => {
 
     test("can render an embedded app type", async () => {
       const { container } = render(
-        <Provider api={mockApiClient} shopifyApiKey={mockApiKey} type={AppType.Embedded}>
+        <Provider api={relatedProductsApi} shopifyApiKey={mockApiKey} type={AppType.Embedded}>
           <span>hello world</span>
         </Provider>
       );
@@ -103,7 +95,7 @@ describe("GadgetProvider", () => {
         await mockUrqlClient.executeMutation.waitForSubject("ShopifyFetchOrInstallShop");
       });
 
-      mockUrqlClient.executeMutation.pushResponse("ShopifyFetchOrInstallShop", {
+      await mockUrqlClient.executeMutation.pushResponse("ShopifyFetchOrInstallShop", {
         data: {
           shopifyConnection: {
             fetchOrInstallShop: {
@@ -118,7 +110,7 @@ describe("GadgetProvider", () => {
 
       if (isInstallRequest) {
         expect(mockOpen).toHaveBeenCalledWith(
-          "https://test-app.gadget.app/api/connections/auth/shopify?shop=example.myshopify.com&hmac=abcdefg&host=abcdfg",
+          "https://related-products-example.gadget.app/api/connections/auth/shopify?shop=example.myshopify.com&hmac=abcdefg&host=abcdfg",
           "_top"
         );
         expect(mockNavigate).not.toHaveBeenCalled();
@@ -131,7 +123,7 @@ describe("GadgetProvider", () => {
 
     test("can render a standalone app type in embedded context", () => {
       const { container } = render(
-        <Provider api={mockApiClient} shopifyApiKey={mockApiKey} type={AppType.Standalone}>
+        <Provider api={relatedProductsApi} shopifyApiKey={mockApiKey} type={AppType.Standalone}>
           <span>hello world</span>
         </Provider>
       );
@@ -140,7 +132,7 @@ describe("GadgetProvider", () => {
 
       if (isInstallRequest) {
         expect(mockNavigate).toHaveBeenCalledWith(
-          "https://test-app.gadget.app/api/connections/auth/shopify?shop=example.myshopify.com&hmac=abcdefg&host=abcdfg"
+          "https://related-products-example.gadget.app/api/connections/auth/shopify?shop=example.myshopify.com&hmac=abcdefg&host=abcdfg"
         );
       } else {
         expect(mockNavigate).not.toHaveBeenCalled();
@@ -152,7 +144,7 @@ describe("GadgetProvider", () => {
       window.shopify.environment.mobile = true;
 
       const { container } = render(
-        <Provider api={mockApiClient} shopifyApiKey={mockApiKey} type={AppType.Standalone}>
+        <Provider api={relatedProductsApi} shopifyApiKey={mockApiKey} type={AppType.Standalone}>
           <span>hello world</span>
         </Provider>
       );
@@ -161,7 +153,7 @@ describe("GadgetProvider", () => {
 
       if (isInstallRequest) {
         expect(mockNavigate).toHaveBeenCalledWith(
-          "https://test-app.gadget.app/api/connections/auth/shopify?shop=example.myshopify.com&hmac=abcdefg&host=abcdfg"
+          "https://related-products-example.gadget.app/api/connections/auth/shopify?shop=example.myshopify.com&hmac=abcdefg&host=abcdfg"
         );
       } else {
         expect(mockNavigate).not.toHaveBeenCalled();
@@ -174,7 +166,7 @@ describe("GadgetProvider", () => {
       jest.spyOn(window, "self", "get").mockImplementation(() => ({}));
 
       const { container } = render(
-        <Provider api={mockApiClient} shopifyApiKey={mockApiKey} type={AppType.Embedded}>
+        <Provider api={relatedProductsApi} shopifyApiKey={mockApiKey} type={AppType.Embedded}>
           <span>hello world</span>
         </Provider>
       );
@@ -184,7 +176,7 @@ describe("GadgetProvider", () => {
         await mockUrqlClient.executeMutation.waitForSubject("ShopifyFetchOrInstallShop");
       });
 
-      mockUrqlClient.executeMutation.pushResponse("ShopifyFetchOrInstallShop", {
+      await mockUrqlClient.executeMutation.pushResponse("ShopifyFetchOrInstallShop", {
         data: {
           shopifyConnection: {
             fetchOrInstallShop: {
@@ -199,7 +191,7 @@ describe("GadgetProvider", () => {
 
       if (isInstallRequest) {
         expect(mockOpen).toHaveBeenCalledWith(
-          "https://test-app.gadget.app/api/connections/auth/shopify?shop=example.myshopify.com&hmac=abcdefg&host=abcdfg",
+          "https://related-products-example.gadget.app/api/connections/auth/shopify?shop=example.myshopify.com&hmac=abcdefg&host=abcdfg",
           "_top"
         );
         expect(mockNavigate).not.toHaveBeenCalled();
@@ -215,7 +207,7 @@ describe("GadgetProvider", () => {
     window.shopify.environment.embedded = true;
 
     const { container } = render(
-      <Provider api={mockApiClient} shopifyApiKey={mockApiKey} type={AppType.Embedded}>
+      <Provider api={relatedProductsApi} shopifyApiKey={mockApiKey} type={AppType.Embedded}>
         <span>hello world</span>
       </Provider>
     );
@@ -225,7 +217,7 @@ describe("GadgetProvider", () => {
       await mockUrqlClient.executeMutation.waitForSubject("ShopifyFetchOrInstallShop");
     });
 
-    mockUrqlClient.executeMutation.pushResponse("ShopifyFetchOrInstallShop", {
+    await mockUrqlClient.executeMutation.pushResponse("ShopifyFetchOrInstallShop", {
       data: {
         shopifyConnection: {
           fetchOrInstallShop: {
@@ -247,7 +239,7 @@ describe("GadgetProvider", () => {
     window.shopify.environment.embedded = true;
 
     const { container } = render(
-      <Provider api={mockApiClient} shopifyApiKey={mockApiKey} type={AppType.Embedded}>
+      <Provider api={relatedProductsApi} shopifyApiKey={mockApiKey} type={AppType.Embedded}>
         <span>hello world</span>
       </Provider>
     );
@@ -257,7 +249,7 @@ describe("GadgetProvider", () => {
       await mockUrqlClient.executeMutation.waitForSubject("ShopifyFetchOrInstallShop");
     });
 
-    mockUrqlClient.executeMutation.pushResponse("ShopifyFetchOrInstallShop", {
+    await mockUrqlClient.executeMutation.pushResponse("ShopifyFetchOrInstallShop", {
       data: {
         shopifyConnection: {
           fetchOrInstallShop: {
@@ -280,7 +272,7 @@ describe("GadgetProvider", () => {
     window.shopify.environment.embedded = true;
 
     const { container } = render(
-      <Provider api={mockApiClient} shopifyApiKey={mockApiKey} type={AppType.Embedded}>
+      <Provider api={relatedProductsApi} shopifyApiKey={mockApiKey} type={AppType.Embedded}>
         <span>hello world</span>
       </Provider>
     );
@@ -290,7 +282,7 @@ describe("GadgetProvider", () => {
       await mockUrqlClient.executeMutation.waitForSubject("ShopifyFetchOrInstallShop");
     });
 
-    mockUrqlClient.executeMutation.pushResponse("ShopifyFetchOrInstallShop", {
+    await mockUrqlClient.executeMutation.pushResponse("ShopifyFetchOrInstallShop", {
       data: {
         shopifyConnection: {
           fetchOrInstallShop: null,
@@ -335,7 +327,7 @@ describe("GadgetProvider", () => {
     };
 
     const { container } = render(
-      <Provider api={mockApiClient} shopifyApiKey={mockApiKey} type={AppType.Embedded}>
+      <Provider api={relatedProductsApi} shopifyApiKey={mockApiKey} type={AppType.Embedded}>
         <span>hello world</span>
       </Provider>
     );
@@ -365,7 +357,7 @@ describe("GadgetProvider", () => {
     };
 
     const { container } = render(
-      <Provider api={mockApiClient} shopifyApiKey={mockApiKey} type={AppType.Embedded}>
+      <Provider api={relatedProductsApi} shopifyApiKey={mockApiKey} type={AppType.Embedded}>
         <span>hello world</span>
       </Provider>
     );
@@ -393,7 +385,7 @@ describe("GadgetProvider", () => {
 
     expect(() =>
       render(
-        <Provider api={mockApiClient} shopifyApiKey={mockApiKey} type={AppType.Embedded}>
+        <Provider api={relatedProductsApi} shopifyApiKey={mockApiKey} type={AppType.Embedded}>
           <span>hello world</span>
         </Provider>
       )

@@ -1,12 +1,50 @@
+import type { AnyErrorWrapper, GadgetRecordList } from "@gadgetinc/core";
 import { jest } from "@jest/globals";
+import type { IsExact } from "conditional-type-checks";
+import { assert } from "conditional-type-checks";
 import { createHooks } from "../src/createHooks.js";
 import { useFindMany } from "../src/useFindMany.js";
+import { kitchenSinkApi, relatedProductsApi } from "./apis.js";
 import { createMockAdapter, createMockApiClient, createMockConnection, createMockProcessResult } from "./mockAdapter.js";
 
 describe("useFindMany", () => {
   beforeEach(() => {
     jest.clearAllMocks();
   });
+
+  // all these functions are typechecked but never run to avoid actually making API calls
+  const _TestFindManyReturnsTypedDataWithExplicitSelection = () => {
+    const [{ data, fetching, error }, refresh] = useFindMany(relatedProductsApi.user, { select: { id: true, email: true } });
+
+    assert<IsExact<typeof fetching, boolean>>(true);
+    assert<IsExact<typeof data, undefined | GadgetRecordList<{ id: string; email: string | null }>>>(true);
+    assert<IsExact<typeof error, AnyErrorWrapper | undefined>>(true);
+
+    if (data) {
+      data[0].id;
+      data[0].email;
+    }
+
+    refresh();
+  };
+
+  const _TestFindManyReturnsTypedDataWithNoSelection = () => {
+    const [{ data }] = useFindMany(relatedProductsApi.user);
+
+    if (data) {
+      data[0].id;
+      data[0].email;
+    }
+  };
+
+  const _TestFindManyNamespacedModel = () => {
+    const [{ data }] = useFindMany(kitchenSinkApi.game.player);
+
+    if (data) {
+      data[0].id;
+      data[0].name;
+    }
+  };
 
   it("should initialize the hook correctly", () => {
     const connection = createMockConnection();

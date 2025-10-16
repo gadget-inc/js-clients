@@ -1,11 +1,12 @@
-import { useApi } from "../../GadgetProvider.js";
+import { useApi, useCoreImplementation } from "../../hooks.js";
 import { getModelManager } from "../../utils.js";
 
 export const useModelManager = (props: { apiIdentifier: string; namespace?: string[] | string | null }) => {
   const { apiIdentifier, namespace } = props;
 
   const api = useApi();
-  const modelManager = getModelManager(api, apiIdentifier, namespace);
+  const coreImplementation = useCoreImplementation();
+  const modelManager = getModelManager(api, coreImplementation, apiIdentifier, namespace);
 
   if (!modelManager) {
     const relatedModelNamespacedApiId = [...(namespace ?? []), apiIdentifier].join(".");

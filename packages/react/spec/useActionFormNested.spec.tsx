@@ -1,9 +1,8 @@
-import { $modelRelationships } from "@gadgetinc/api-client-core";
 import { jest } from "@jest/globals";
 import type { MODE } from "@pollyjs/core";
 import { act, renderHook, waitFor } from "@testing-library/react";
+import { useFindFirst } from "../src/hooks.js";
 import { useActionForm, useFieldArray } from "../src/useActionForm.js";
-import { useFindFirst } from "../src/useFindFirst.js";
 import { bulkExampleApi, hasManyThroughApi, nestedExampleApi, testApi } from "./apis.js";
 import { startPolly } from "./polly.js";
 import { LiveClientWrapper, MockClientWrapper, mockUrqlClient } from "./testWrappers.js";
@@ -327,6 +326,7 @@ describe("useActionFormNested", () => {
           "productType": null,
           "publishedAt": null,
           "publishedScope": null,
+          "shopId": null,
           "shopifyCreatedAt": "2023-12-01T05:00:00.000Z",
           "shopifyUpdatedAt": null,
           "status": null,
@@ -398,28 +398,7 @@ describe("useActionFormNested", () => {
 
       await waitFor(() => expect(useFindFirstHook.current[0].fetching).toBe(false), { timeout: 3000 });
 
-      expect(useFindFirstHook.current[0].data).toMatchInlineSnapshot(`
-        {
-          "__typename": "ShopifyProduct",
-          "body": "example value for body",
-          "compareAtPriceRange": null,
-          "createdAt": "2023-12-12T16:22:25.001Z",
-          "handle": null,
-          "id": "123",
-          "productCategory": null,
-          "productType": null,
-          "publishedAt": null,
-          "publishedScope": null,
-          "shopifyCreatedAt": "2023-12-01T05:00:00.000Z",
-          "shopifyUpdatedAt": null,
-          "status": null,
-          "tags": null,
-          "templateSuffix": null,
-          "title": null,
-          "updatedAt": "2023-12-12T16:22:25.001Z",
-          "vendor": null,
-        }
-      `);
+      expect(useFindFirstHook.current[0].data).toMatchInlineSnapshot(`undefined`);
 
       const productSuggestionId = useFindFirstHook?.current[0]?.data?.id;
 
@@ -497,6 +476,7 @@ describe("useActionFormNested", () => {
           "productType": null,
           "publishedAt": null,
           "publishedScope": null,
+          "shopId": null,
           "shopifyCreatedAt": "2023-12-01T05:00:00.000Z",
           "shopifyUpdatedAt": null,
           "status": null,
@@ -568,28 +548,7 @@ describe("useActionFormNested", () => {
 
       await waitFor(() => expect(useFindFirstHook.current[0].fetching).toBe(false), { timeout: 3000 });
 
-      expect(useFindFirstHook.current[0].data).toMatchInlineSnapshot(`
-        {
-          "__typename": "ShopifyProduct",
-          "body": "example value for body",
-          "compareAtPriceRange": null,
-          "createdAt": "2023-12-12T16:22:25.001Z",
-          "handle": null,
-          "id": "123",
-          "productCategory": null,
-          "productType": null,
-          "publishedAt": null,
-          "publishedScope": null,
-          "shopifyCreatedAt": "2023-12-01T05:00:00.000Z",
-          "shopifyUpdatedAt": null,
-          "status": null,
-          "tags": null,
-          "templateSuffix": null,
-          "title": null,
-          "updatedAt": "2023-12-12T16:22:25.001Z",
-          "vendor": null,
-        }
-      `);
+      expect(useFindFirstHook.current[0].data).toMatchInlineSnapshot(`undefined`);
 
       const productSuggestionId = useFindFirstHook?.current[0]?.data?.id;
 
@@ -1070,7 +1029,7 @@ describe("useActionFormNested", () => {
   describe("with mocking", () => {
     test("when no referenceTypes are provided/fetched it should throw an error", async () => {
       // mock older clients that are missing this property
-      jest.replaceProperty(bulkExampleApi, $modelRelationships as any, undefined);
+      jest.replaceProperty(bulkExampleApi, Symbol.for("gadget/modelRelationships") as any, undefined);
 
       const { result: useActionFormHook } = renderHook(() => useActionForm(bulkExampleApi.widget.create), {
         wrapper: MockClientWrapper(bulkExampleApi),
@@ -1129,7 +1088,7 @@ describe("useActionFormNested", () => {
 
       expect(mockUrqlClient.executeQuery).toBeCalledTimes(1);
 
-      mockUrqlClient.executeQuery.pushResponse("recommendedProduct", {
+      await mockUrqlClient.executeQuery.pushResponse("recommendedProduct", {
         stale: false,
         hasNext: false,
         data: queryResponse.data,
@@ -1164,7 +1123,7 @@ describe("useActionFormNested", () => {
 
       expect(mockUrqlClient.executeMutation).toBeCalledTimes(1);
 
-      mockUrqlClient.executeMutation.pushResponse("updateRecommendedProduct", {
+      await mockUrqlClient.executeMutation.pushResponse("updateRecommendedProduct", {
         data: {
           recommendedProduct: {
             __typename: "RecommendedProduct",
@@ -1281,7 +1240,7 @@ describe("useActionFormNested", () => {
 
       expect(mockUrqlClient.executeQuery).toBeCalledTimes(1);
 
-      mockUrqlClient.executeQuery.pushResponse("quiz", {
+      await mockUrqlClient.executeQuery.pushResponse("quiz", {
         stale: false,
         hasNext: false,
         data: queryResponse.data,
@@ -1323,7 +1282,7 @@ describe("useActionFormNested", () => {
 
       expect(mockUrqlClient.executeMutation).toBeCalledTimes(1);
 
-      mockUrqlClient.executeMutation.pushResponse("updateQuiz", {
+      await mockUrqlClient.executeMutation.pushResponse("updateQuiz", {
         data: {
           quiz: {
             __typename: "Quiz",
@@ -1420,7 +1379,7 @@ describe("useActionFormNested", () => {
 
       expect(mockUrqlClient.executeQuery).toBeCalledTimes(1);
 
-      mockUrqlClient.executeQuery.pushResponse("quiz", {
+      await mockUrqlClient.executeQuery.pushResponse("quiz", {
         stale: false,
         hasNext: false,
         data: queryResponse.data,
@@ -1459,7 +1418,7 @@ describe("useActionFormNested", () => {
 
       expect(mockUrqlClient.executeMutation).toBeCalledTimes(1);
 
-      mockUrqlClient.executeMutation.pushResponse("updateQuiz", {
+      await mockUrqlClient.executeMutation.pushResponse("updateQuiz", {
         data: {
           quiz: {
             __typename: "Quiz",
@@ -1584,7 +1543,7 @@ describe("useActionFormNested", () => {
 
       expect(mockUrqlClient.executeQuery).toBeCalledTimes(1);
 
-      mockUrqlClient.executeQuery.pushResponse("quiz", {
+      await mockUrqlClient.executeQuery.pushResponse("quiz", {
         stale: false,
         hasNext: false,
         data: queryResponse.data,
@@ -1625,7 +1584,7 @@ describe("useActionFormNested", () => {
 
       expect(mockUrqlClient.executeMutation).toBeCalledTimes(1);
 
-      mockUrqlClient.executeMutation.pushResponse("updateQuiz", {
+      await mockUrqlClient.executeMutation.pushResponse("updateQuiz", {
         data: {
           quiz: {
             __typename: "Quiz",
@@ -1751,7 +1710,7 @@ describe("useActionFormNested", () => {
 
       expect(mockUrqlClient.executeQuery).toBeCalledTimes(1);
 
-      mockUrqlClient.executeQuery.pushResponse("quiz", {
+      await mockUrqlClient.executeQuery.pushResponse("quiz", {
         stale: false,
         hasNext: false,
         data: queryResponse.data,
@@ -1788,7 +1747,7 @@ describe("useActionFormNested", () => {
 
       expect(mockUrqlClient.executeMutation).toBeCalledTimes(1);
 
-      mockUrqlClient.executeMutation.pushResponse("updateQuiz", {
+      await mockUrqlClient.executeMutation.pushResponse("updateQuiz", {
         data: {
           quiz: {
             __typename: "Quiz",
@@ -1905,7 +1864,7 @@ describe("useActionFormNested", () => {
 
       expect(mockUrqlClient.executeQuery).toBeCalledTimes(1);
 
-      mockUrqlClient.executeQuery.pushResponse("answer", {
+      await mockUrqlClient.executeQuery.pushResponse("answer", {
         stale: false,
         hasNext: false,
         data: queryResponse.data,
@@ -1932,7 +1891,7 @@ describe("useActionFormNested", () => {
 
       expect(mockUrqlClient.executeMutation).toBeCalledTimes(1);
 
-      mockUrqlClient.executeMutation.pushResponse("updateAnswer", {
+      await mockUrqlClient.executeMutation.pushResponse("updateAnswer", {
         data: {
           answer: {
             __typename: "Answer",
@@ -2006,7 +1965,7 @@ describe("useActionFormNested", () => {
 
       expect(mockUrqlClient.executeQuery).toBeCalledTimes(1);
 
-      mockUrqlClient.executeQuery.pushResponse("answer", {
+      await mockUrqlClient.executeQuery.pushResponse("answer", {
         stale: false,
         hasNext: false,
         data: queryResponse.data,
@@ -2032,7 +1991,7 @@ describe("useActionFormNested", () => {
 
       expect(mockUrqlClient.executeMutation).toBeCalledTimes(1);
 
-      mockUrqlClient.executeMutation.pushResponse("updateAnswer", {
+      await mockUrqlClient.executeMutation.pushResponse("updateAnswer", {
         data: {
           answer: {
             __typename: "Answer",
@@ -2110,7 +2069,7 @@ describe("useActionFormNested", () => {
 
       expect(mockUrqlClient.executeQuery).toBeCalledTimes(1);
 
-      mockUrqlClient.executeQuery.pushResponse("city", {
+      await mockUrqlClient.executeQuery.pushResponse("city", {
         stale: false,
         hasNext: false,
         data: {
@@ -2327,7 +2286,7 @@ describe("useActionFormNested", () => {
         }
       `);
 
-      mockUrqlClient.executeMutation.pushResponse("updateCity", {
+      await mockUrqlClient.executeMutation.pushResponse("updateCity", {
         data: {
           city: {
             __typename: "GameCity",
@@ -2434,7 +2393,7 @@ describe("useActionFormNested", () => {
       };
 
       test("can update parent", async () => {
-        jest.replaceProperty(hasManyThroughApi, $modelRelationships as any, hasManyThroughMockMetadata);
+        jest.replaceProperty(hasManyThroughApi, Symbol.for("gadget/modelRelationships") as any, hasManyThroughMockMetadata);
 
         const queryResponse = {
           data: {
@@ -2476,7 +2435,7 @@ describe("useActionFormNested", () => {
 
         expect(mockUrqlClient.executeQuery).toBeCalledTimes(1);
 
-        mockUrqlClient.executeQuery.pushResponse("student", {
+        await mockUrqlClient.executeQuery.pushResponse("student", {
           stale: false,
           hasNext: false,
           data: queryResponse.data,
@@ -2511,7 +2470,7 @@ describe("useActionFormNested", () => {
                   }
               `);
 
-        mockUrqlClient.executeMutation.pushResponse("updateStudent", {
+        await mockUrqlClient.executeMutation.pushResponse("updateStudent", {
           data: {},
           stale: false,
           hasNext: false,
@@ -2523,7 +2482,7 @@ describe("useActionFormNested", () => {
       });
 
       test("can update parent and sibling directly", async () => {
-        jest.replaceProperty(hasManyThroughApi, $modelRelationships as any, hasManyThroughMockMetadata);
+        jest.replaceProperty(hasManyThroughApi, Symbol.for("gadget/modelRelationships") as any, hasManyThroughMockMetadata);
 
         const queryResponse = {
           data: {
@@ -2572,7 +2531,7 @@ describe("useActionFormNested", () => {
 
         expect(mockUrqlClient.executeQuery).toBeCalledTimes(1);
 
-        mockUrqlClient.executeQuery.pushResponse("student", {
+        await mockUrqlClient.executeQuery.pushResponse("student", {
           stale: false,
           hasNext: false,
           data: queryResponse.data,
@@ -2615,7 +2574,7 @@ describe("useActionFormNested", () => {
                   }
               `);
 
-        mockUrqlClient.executeMutation.pushResponse("updateStudent", {
+        await mockUrqlClient.executeMutation.pushResponse("updateStudent", {
           data: {},
           stale: false,
           hasNext: false,
@@ -2627,7 +2586,7 @@ describe("useActionFormNested", () => {
       });
 
       test("can update parent and siblings through join model", async () => {
-        jest.replaceProperty(hasManyThroughApi, $modelRelationships as any, hasManyThroughMockMetadata);
+        jest.replaceProperty(hasManyThroughApi, Symbol.for("gadget/modelRelationships") as any, hasManyThroughMockMetadata);
 
         const queryResponse = {
           data: {
@@ -2683,7 +2642,7 @@ describe("useActionFormNested", () => {
 
         expect(mockUrqlClient.executeQuery).toHaveBeenCalledTimes(1);
 
-        mockUrqlClient.executeQuery.pushResponse("student", {
+        await mockUrqlClient.executeQuery.pushResponse("student", {
           stale: false,
           hasNext: false,
           data: queryResponse.data,
@@ -2744,7 +2703,7 @@ describe("useActionFormNested", () => {
           }
         `);
 
-        mockUrqlClient.executeMutation.pushResponse("updateStudent", {
+        await mockUrqlClient.executeMutation.pushResponse("updateStudent", {
           data: {},
           stale: false,
           hasNext: false,
@@ -2756,7 +2715,7 @@ describe("useActionFormNested", () => {
       });
 
       test("can create parent and siblings through join model", async () => {
-        jest.replaceProperty(hasManyThroughApi, $modelRelationships as any, hasManyThroughMockMetadata);
+        jest.replaceProperty(hasManyThroughApi, Symbol.for("gadget/modelRelationships") as any, hasManyThroughMockMetadata);
 
         const { result: useActionFormHook } = renderHook(
           () =>
@@ -2829,7 +2788,7 @@ describe("useActionFormNested", () => {
           }
         `);
 
-        mockUrqlClient.executeMutation.pushResponse("createStudent", {
+        await mockUrqlClient.executeMutation.pushResponse("createStudent", {
           data: {},
           stale: false,
           hasNext: false,
@@ -2841,7 +2800,7 @@ describe("useActionFormNested", () => {
       });
 
       test("can update sibling through join model and some are reordered and one is deleted", async () => {
-        jest.replaceProperty(hasManyThroughApi, $modelRelationships as any, hasManyThroughMockMetadata);
+        jest.replaceProperty(hasManyThroughApi, Symbol.for("gadget/modelRelationships") as any, hasManyThroughMockMetadata);
 
         const queryResponse = {
           data: {
@@ -2919,7 +2878,7 @@ describe("useActionFormNested", () => {
 
         expect(mockUrqlClient.executeQuery).toHaveBeenCalledTimes(1);
 
-        mockUrqlClient.executeQuery.pushResponse("student", {
+        await mockUrqlClient.executeQuery.pushResponse("student", {
           stale: false,
           hasNext: false,
           data: queryResponse.data,
@@ -2993,7 +2952,7 @@ describe("useActionFormNested", () => {
 
         expect(mockUrqlClient.executeMutation).toHaveBeenCalledTimes(1);
 
-        mockUrqlClient.executeMutation.pushResponse("updateStudent", {
+        await mockUrqlClient.executeMutation.pushResponse("updateStudent", {
           data: {},
           stale: false,
           hasNext: false,
@@ -3005,7 +2964,7 @@ describe("useActionFormNested", () => {
       });
 
       test("can update sibling directly and some are reordered and one is deleted", async () => {
-        jest.replaceProperty(hasManyThroughApi, $modelRelationships as any, hasManyThroughMockMetadata);
+        jest.replaceProperty(hasManyThroughApi, Symbol.for("gadget/modelRelationships") as any, hasManyThroughMockMetadata);
 
         const queryResponse = {
           data: {
@@ -3067,7 +3026,7 @@ describe("useActionFormNested", () => {
 
         expect(mockUrqlClient.executeQuery).toHaveBeenCalledTimes(1);
 
-        mockUrqlClient.executeQuery.pushResponse("student", {
+        await mockUrqlClient.executeQuery.pushResponse("student", {
           stale: false,
           hasNext: false,
           data: queryResponse.data,
@@ -3131,7 +3090,7 @@ describe("useActionFormNested", () => {
 
         expect(mockUrqlClient.executeMutation).toHaveBeenCalledTimes(1);
 
-        mockUrqlClient.executeMutation.pushResponse("updateStudent", {
+        await mockUrqlClient.executeMutation.pushResponse("updateStudent", {
           data: {},
           stale: false,
           hasNext: false,
@@ -3183,7 +3142,7 @@ describe("useActionFormNested", () => {
 
         expect(mockUrqlClient.executeQuery).toBeCalledTimes(1);
 
-        mockUrqlClient.executeQuery.pushResponse("answer", {
+        await mockUrqlClient.executeQuery.pushResponse("answer", {
           stale: false,
           hasNext: false,
           data: queryResponse.data,
@@ -3213,7 +3172,7 @@ describe("useActionFormNested", () => {
           }
         `);
 
-        mockUrqlClient.executeMutation.pushResponse("updateAnswer", {
+        await mockUrqlClient.executeMutation.pushResponse("updateAnswer", {
           data: {},
           stale: false,
           hasNext: false,
@@ -3261,7 +3220,7 @@ describe("useActionFormNested", () => {
 
         expect(mockUrqlClient.executeQuery).toBeCalledTimes(1);
 
-        mockUrqlClient.executeQuery.pushResponse("answer", {
+        await mockUrqlClient.executeQuery.pushResponse("answer", {
           stale: false,
           hasNext: false,
           data: queryResponse.data,
@@ -3298,7 +3257,7 @@ describe("useActionFormNested", () => {
           }
         `);
 
-        mockUrqlClient.executeMutation.pushResponse("updateAnswer", {
+        await mockUrqlClient.executeMutation.pushResponse("updateAnswer", {
           data: {},
           stale: false,
           hasNext: false,
@@ -3343,7 +3302,7 @@ describe("useActionFormNested", () => {
 
         expect(mockUrqlClient.executeQuery).toHaveBeenCalledTimes(1);
 
-        mockUrqlClient.executeQuery.pushResponse("notificationMessage", {
+        await mockUrqlClient.executeQuery.pushResponse("notificationMessage", {
           stale: false,
           hasNext: false,
           data: queryResponse.data,
@@ -3390,7 +3349,7 @@ describe("useActionFormNested", () => {
           }
         `);
 
-        mockUrqlClient.executeMutation.pushResponse("updateNotificationMessage", {
+        await mockUrqlClient.executeMutation.pushResponse("updateNotificationMessage", {
           data: {},
           stale: false,
           hasNext: false,
@@ -3451,7 +3410,7 @@ describe("useActionFormNested", () => {
 
         expect(mockUrqlClient.executeQuery).toHaveBeenCalledTimes(1);
 
-        mockUrqlClient.executeQuery.pushResponse("student", {
+        await mockUrqlClient.executeQuery.pushResponse("student", {
           stale: false,
           hasNext: false,
           data: queryResponse.data,
@@ -3514,7 +3473,7 @@ describe("useActionFormNested", () => {
           }
         `);
 
-        mockUrqlClient.executeMutation.pushResponse("updateStudent", {
+        await mockUrqlClient.executeMutation.pushResponse("updateStudent", {
           data: {},
           stale: false,
           hasNext: false,
@@ -3564,7 +3523,7 @@ describe("useActionFormNested", () => {
 
         expect(mockUrqlClient.executeQuery).toBeCalledTimes(1);
 
-        mockUrqlClient.executeQuery.pushResponse("answer", {
+        await mockUrqlClient.executeQuery.pushResponse("answer", {
           stale: false,
           hasNext: false,
           data: queryResponse.data,
@@ -3604,7 +3563,7 @@ describe("useActionFormNested", () => {
           }
         `);
 
-        mockUrqlClient.executeMutation.pushResponse("updateAnswer", {
+        await mockUrqlClient.executeMutation.pushResponse("updateAnswer", {
           data: {},
           stale: false,
           hasNext: false,
@@ -3654,7 +3613,7 @@ describe("useActionFormNested", () => {
 
         expect(mockUrqlClient.executeQuery).toBeCalledTimes(1);
 
-        mockUrqlClient.executeQuery.pushResponse("answer", {
+        await mockUrqlClient.executeQuery.pushResponse("answer", {
           stale: false,
           hasNext: false,
           data: queryResponse.data,
@@ -3695,7 +3654,7 @@ describe("useActionFormNested", () => {
           }
         `);
 
-        mockUrqlClient.executeMutation.pushResponse("updateAnswer", {
+        await mockUrqlClient.executeMutation.pushResponse("updateAnswer", {
           data: {
             answer: {
               __typename: "Answer",
@@ -3764,7 +3723,7 @@ describe("useActionFormNested", () => {
 
         expect(mockUrqlClient.executeQuery).toBeCalledTimes(1);
 
-        mockUrqlClient.executeQuery.pushResponse("answer", {
+        await mockUrqlClient.executeQuery.pushResponse("answer", {
           stale: false,
           hasNext: false,
           data: queryResponse.data,
@@ -3802,7 +3761,7 @@ describe("useActionFormNested", () => {
           }
         `);
 
-        mockUrqlClient.executeMutation.pushResponse("updateAnswer", {
+        await mockUrqlClient.executeMutation.pushResponse("updateAnswer", {
           data: {
             answer: {
               __typename: "Answer",
@@ -3872,7 +3831,7 @@ describe("useActionFormNested", () => {
           }
         `);
 
-        mockUrqlClient.executeMutation.pushResponse("createAnswer", {
+        await mockUrqlClient.executeMutation.pushResponse("createAnswer", {
           data: {},
           stale: false,
           hasNext: false,
@@ -3922,7 +3881,7 @@ describe("useActionFormNested", () => {
 
         expect(mockUrqlClient.executeQuery).toBeCalledTimes(1);
 
-        mockUrqlClient.executeQuery.pushResponse("answer", {
+        await mockUrqlClient.executeQuery.pushResponse("answer", {
           stale: false,
           hasNext: false,
           data: queryResponse.data,
@@ -3959,7 +3918,7 @@ describe("useActionFormNested", () => {
           }
         `);
 
-        mockUrqlClient.executeMutation.pushResponse("updateAnswer", {
+        await mockUrqlClient.executeMutation.pushResponse("updateAnswer", {
           data: {},
           stale: false,
           hasNext: false,

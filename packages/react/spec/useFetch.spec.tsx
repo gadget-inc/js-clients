@@ -4,80 +4,15 @@
 
 import { render, renderHook, screen } from "@testing-library/react";
 import { userEvent } from "@testing-library/user-event";
-import type { IsExact } from "conditional-type-checks";
-import { assert } from "conditional-type-checks";
 import React, { act } from "react";
 import { Readable } from "stream";
-import { useFetch } from "../src/useFetch.js";
-import type { ErrorWrapper } from "../src/utils.js";
+import { useFetch } from "../src/hooks.js";
 import { relatedProductsApi } from "./apis.js";
 import { MockClientWrapper, mockUrqlClient } from "./testWrappers.js";
 
 const RelatedProductsWrapper = MockClientWrapper(relatedProductsApi);
 
 describe("useFetch", () => {
-  // these functions are typechecked but never run to avoid actually making API calls
-  const _TestFetchReturnsStringDataByDefault = () => {
-    const [{ data, fetching, error }, refresh] = useFetch("/foo/bar");
-
-    assert<IsExact<typeof fetching, boolean>>(true);
-    assert<IsExact<typeof data, string | undefined>>(true);
-    assert<IsExact<typeof error, ErrorWrapper | undefined>>(true);
-
-    // hook return value includes the urql refresh function
-    void refresh().then((data) => {
-      assert<IsExact<typeof data, string>>(true);
-    });
-  };
-
-  const _TestFetchReturnsStreamInStreamingMode = () => {
-    const [{ data, fetching, error }, refresh] = useFetch("/foo/bar", { stream: true });
-
-    assert<IsExact<typeof fetching, boolean>>(true);
-    assert<IsExact<typeof data, ReadableStream<Uint8Array> | undefined>>(true);
-    assert<IsExact<typeof error, ErrorWrapper | undefined>>(true);
-
-    void refresh().then((data) => {
-      assert<IsExact<typeof data, ReadableStream<Uint8Array>>>(true);
-    });
-  };
-
-  const _TestFetchReturnsStringInStringStreamingMode = () => {
-    const [{ data, fetching, error }, refresh] = useFetch("/foo/bar", { stream: "string" });
-
-    assert<IsExact<typeof fetching, boolean>>(true);
-    assert<IsExact<typeof data, string | undefined>>(true);
-    assert<IsExact<typeof error, ErrorWrapper | undefined>>(true);
-
-    void refresh().then((data) => {
-      assert<IsExact<typeof data, ReadableStream<string>>>(true);
-    });
-  };
-
-  const _TestFetchReturnsAnyJSONInJSONMode = () => {
-    const [{ data, fetching, error }, refresh] = useFetch("/foo/bar", { json: true });
-
-    assert<IsExact<typeof fetching, boolean>>(true);
-    assert<IsExact<typeof data, Record<string, any> | undefined>>(true);
-    assert<IsExact<typeof error, ErrorWrapper | undefined>>(true);
-
-    void refresh().then((data) => {
-      assert<IsExact<typeof data, Record<string, any>>>(true);
-    });
-  };
-
-  const _TestFetchReturnsCustomJSONTypeInJSONMode = () => {
-    const [{ data, fetching, error }, refresh] = useFetch<{ foo: "bar" }>("/foo/bar", { json: true });
-
-    assert<IsExact<typeof fetching, boolean>>(true);
-    assert<IsExact<typeof data, { foo: "bar" } | undefined>>(true);
-    assert<IsExact<typeof error, ErrorWrapper | undefined>>(true);
-
-    void refresh().then((data) => {
-      assert<IsExact<typeof data, { foo: "bar" }>>(true);
-    });
-  };
-
   test("it can fetch a string from the backend", async () => {
     const { result } = renderHook(() => useFetch("/foo/bar"), { wrapper: RelatedProductsWrapper });
 

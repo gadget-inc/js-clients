@@ -1,12 +1,55 @@
+import type { AnyErrorWrapper, GadgetRecord } from "@gadgetinc/core";
 import { jest } from "@jest/globals";
+import type { IsExact } from "conditional-type-checks";
+import { assert } from "conditional-type-checks";
 import { createHooks } from "../src/createHooks.js";
 import { useFindFirst } from "../src/useFindFirst.js";
+import { kitchenSinkApi, relatedProductsApi } from "./apis.js";
 import { createMockAdapter, createMockApiClient, createMockConnection, createMockProcessResult } from "./mockAdapter.js";
 
 describe("useFindFirst", () => {
   beforeEach(() => {
     jest.clearAllMocks();
   });
+
+  // these functions are typechecked but never run to avoid actually making API calls
+  const _TestFindFirstReturnsTypedDataWithExplicitSelection = () => {
+    const [{ data, fetching, error }, refresh] = useFindFirst(relatedProductsApi.user, {
+      filter: { email: { equals: "hello@gello.com" } },
+      select: { id: true, email: true },
+    });
+
+    assert<IsExact<typeof fetching, boolean>>(true);
+    assert<IsExact<typeof data, undefined | GadgetRecord<{ id: string; email: string | null }>>>(true);
+    assert<IsExact<typeof error, AnyErrorWrapper | undefined>>(true);
+
+    // data is accessible via dot access
+    if (data) {
+      data.id;
+      data.email;
+    }
+
+    // hook return value includes the urql refresh function
+    refresh();
+  };
+
+  const _TestFindFirstReturnsTypedDataWithNoSelection = () => {
+    const [{ data }] = useFindFirst(relatedProductsApi.user);
+
+    if (data) {
+      data.id;
+      data.email;
+    }
+  };
+
+  const _TestFindFirstOnNamespacedModel = () => {
+    const [{ data }] = useFindFirst(kitchenSinkApi.game.player);
+
+    if (data) {
+      data.id;
+      data.name;
+    }
+  };
 
   it("should initialize the hook correctly", () => {
     const connection = createMockConnection();
@@ -35,7 +78,7 @@ describe("useFindFirst", () => {
 
     expect(state.fetching).toBe(true);
     expect(state.data).toBeUndefined();
-    expect(state.error).toBeFalsy();
+    expect(state.error).toBeUndefined();
     expect(typeof refetch).toBe("function");
 
     // useFindFirst automatically adds { first: 1 } to the options

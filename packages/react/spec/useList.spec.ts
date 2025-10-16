@@ -1,14 +1,18 @@
+import type { AnyErrorWrapper, GadgetRecord } from "@gadgetinc/core";
 import { jest } from "@jest/globals";
 import { act, renderHook, waitFor } from "@testing-library/react";
+import type { IsExact } from "conditional-type-checks";
+import { assert } from "conditional-type-checks";
+import { relatedProductsApi } from "./apis.js";
 
 let data: any = [{ id: 1 }, { id: 2 }];
 let fetching = false;
 let error = undefined as any;
-jest.unstable_mockModule("../src/useFindMany", () => ({
+jest.unstable_mockModule("../src/hooks", () => ({
   useFindMany: jest.fn<typeof useFindMany>().mockImplementation(() => [{ data, fetching, error, stale: false }, jest.fn()]),
 }));
 
-const { useFindMany } = await import("../src/useFindMany.js");
+const { useFindMany } = await import("../src/hooks.js");
 const { useList } = await import("../src/useList.js");
 
 describe("useList", () => {
@@ -37,7 +41,7 @@ describe("useList", () => {
       });
 
       it("will pass the page size to the useFindMany hook", () => {
-        const { result } = renderHook(() => useList(manager, { pageSize: 25 }));
+        const { result: _result } = renderHook(() => useList(manager, { pageSize: 25 }));
         expect(useFindMany).toHaveBeenCalledWith(manager, { first: 25, after: undefined });
       });
     });
@@ -142,6 +146,35 @@ describe("useList", () => {
       expect(result.current[0].error).toEqual(error);
     });
   });
+
+  // compile-time type checks (not executed)
+  const _TestUseListReturnsTypedDataWithExplicitSelection = () => {
+    const [{ data, fetching, error }, _refresh] = useList(relatedProductsApi.user, {
+      select: { id: true, email: true },
+    });
+
+    assert<IsExact<typeof fetching, boolean>>(true);
+    assert<IsExact<typeof error, AnyErrorWrapper | undefined>>(true);
+    assert<IsExact<typeof data, undefined | GadgetRecord<{ id: string; email: string | null }>[]>>(true);
+
+    if (data) {
+      data[0].id;
+      data[0].email;
+    }
+  };
+
+  const _TestUseListReturnsTypedDataWithNoSelection = () => {
+    const [{ data, fetching, error }] = useList(relatedProductsApi.user);
+
+    assert<IsExact<typeof fetching, boolean>>(true);
+    assert<IsExact<typeof error, AnyErrorWrapper | undefined>>(true);
+    assert<IsExact<typeof data, undefined | GadgetRecord<{ id: string; email: string | null }>[]>>(false);
+
+    if (data) {
+      data[0].id;
+      data[0].email;
+    }
+  };
 
   afterAll(() => {
     jest.resetAllMocks(); // Reset mocks after each test

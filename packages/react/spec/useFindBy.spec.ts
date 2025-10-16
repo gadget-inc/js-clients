@@ -1,10 +1,6 @@
-import type { GadgetRecord } from "@gadgetinc/api-client-core";
 import { diff } from "@n1ru4l/json-patch-plus";
 import { act, renderHook, waitFor } from "@testing-library/react";
-import type { IsExact } from "conditional-type-checks";
-import { assert } from "conditional-type-checks";
 import { useFindBy } from "../src/index.js";
-import type { ErrorWrapper } from "../src/utils.js";
 import { kitchenSinkApi, relatedProductsApi } from "./apis.js";
 import {
   MockClientWrapper,
@@ -15,49 +11,11 @@ import {
 } from "./testWrappers.js";
 
 describe("useFindBy", () => {
-  // these functions are typechecked but never run to avoid actually making API calls
-  const _TestFindByReturnsTypedDataWithExplicitSelection = () => {
-    const [{ data, fetching, error }, refresh] = useFindBy(relatedProductsApi.user.findByEmail, "hello@gadget.dev", {
-      select: { id: true, email: true },
-    });
-
-    assert<IsExact<typeof fetching, boolean>>(true);
-    assert<IsExact<typeof data, undefined | GadgetRecord<{ id: string; email: string | null }>>>(true);
-    assert<IsExact<typeof error, ErrorWrapper | undefined>>(true);
-
-    // data is accessible via dot access
-    if (data) {
-      data.id;
-      data.email;
-    }
-
-    // hook return value includes the urql refresh function
-    refresh();
-  };
-
-  const _TestFindByReturnsTypedDataWithNoSelection = () => {
-    const [{ data }] = useFindBy(relatedProductsApi.user.findByEmail, "hello@gadget.dev");
-
-    if (data) {
-      data.id;
-      data.email;
-    }
-  };
-
-  const _TestFindByCanFindNamespacedModels = () => {
-    const [{ data }] = useFindBy(kitchenSinkApi.game.player.findByName, "Caitlin Clark");
-
-    if (data) {
-      data.id;
-      data.name;
-    }
-  };
-
   test("it can find one record by a field value", async () => {
     let query: string | undefined;
     const client = createMockUrqlClient({
       queryAssertions: (request) => {
-        query = request.query.loc?.source.body;
+        query = "kind" in request.query ? request.query.loc?.source.body : "";
       },
     });
 
@@ -109,7 +67,7 @@ describe("useFindBy", () => {
       }"
     `);
 
-    client.executeQuery.pushResponse("users", {
+    await client.executeQuery.pushResponse("users", {
       data: {
         users: {
           edges: [{ cursor: "123", node: { id: "123", email: "test@test.com" } }],
@@ -125,8 +83,8 @@ describe("useFindBy", () => {
       hasNext: false,
     });
 
-    expect(result.current[0].data!.id).toEqual("123");
-    expect(result.current[0].data!.email).toEqual("test@test.com");
+    expect(result.current[0].data?.id).toEqual("123");
+    expect(result.current[0].data?.email).toEqual("test@test.com");
     expect(result.current[0].fetching).toBe(false);
     expect(result.current[0].error).toBeFalsy();
   });
@@ -142,7 +100,7 @@ describe("useFindBy", () => {
 
     expect(mockUrqlClient.executeQuery).toBeCalledTimes(1);
 
-    mockUrqlClient.executeQuery.pushResponse("users", {
+    await mockUrqlClient.executeQuery.pushResponse("users", {
       data: {
         users: {
           edges: [],
@@ -169,7 +127,7 @@ describe("useFindBy", () => {
     let query: string | undefined;
     const client = createMockUrqlClient({
       queryAssertions: (request) => {
-        query = request.query.loc?.source.body;
+        query = "kind" in request.query ? request.query.loc?.source.body : "";
       },
     });
 
@@ -219,7 +177,7 @@ describe("useFindBy", () => {
       }"
     `);
 
-    client.executeQuery.pushResponse("players", {
+    await client.executeQuery.pushResponse("players", {
       data: {
         game: {
           players: {
@@ -237,8 +195,8 @@ describe("useFindBy", () => {
       hasNext: false,
     });
 
-    expect(result.current[0].data!.id).toEqual("123");
-    expect(result.current[0].data!.name).toEqual("Caitlin Clark");
+    expect(result.current[0].data?.id).toEqual("123");
+    expect(result.current[0].data?.name).toEqual("Caitlin Clark");
     expect(result.current[0].fetching).toBe(false);
     expect(result.current[0].error).toBeFalsy();
   });
@@ -250,7 +208,7 @@ describe("useFindBy", () => {
 
     expect(mockUrqlClient.executeQuery).toBeCalledTimes(1);
 
-    mockUrqlClient.executeQuery.pushResponse("users", {
+    await mockUrqlClient.executeQuery.pushResponse("users", {
       data: {
         users: {
           edges: [{ cursor: "123", node: { id: "123", email: "test@test.com" } }],
@@ -284,7 +242,7 @@ describe("useFindBy", () => {
 
     await act(async () => {
       await mockUrqlClient.executeQuery.waitForSubject("users");
-      mockUrqlClient.executeQuery.pushResponse("users", {
+      await mockUrqlClient.executeQuery.pushResponse("users", {
         data: {
           users: {
             edges: [{ cursor: "123", node: { id: "123", email: "test@test.com" } }],
@@ -304,8 +262,8 @@ describe("useFindBy", () => {
     // rerender as react would do when the suspense promise resolves
     rerender();
     expect(result.current).toBeTruthy();
-    expect(result.current[0].data!.id).toEqual("123");
-    expect(result.current[0].data!.email).toEqual("test@test.com");
+    expect(result.current[0].data?.id).toEqual("123");
+    expect(result.current[0].data?.email).toEqual("test@test.com");
     expect(result.current[0].error).toBeFalsy();
 
     const beforeObject = result.current[0];
@@ -346,8 +304,8 @@ describe("useFindBy", () => {
 
     await waitFor(() => expect(result.current[0].fetching).toBe(false));
 
-    expect(result.current[0].data!.id).toEqual("123");
-    expect(result.current[0].data!.email).toEqual("test@test.com");
+    expect(result.current[0].data?.id).toEqual("123");
+    expect(result.current[0].data?.email).toEqual("test@test.com");
     expect(result.current[0].error).toBeFalsy();
 
     const next = {
@@ -367,9 +325,9 @@ describe("useFindBy", () => {
       revision: 2,
     } as any);
 
-    await waitFor(() => expect(result.current[0].data!.email).toEqual("a-new-email@test.com"));
+    await waitFor(() => expect(result.current[0].data?.email).toEqual("a-new-email@test.com"));
 
-    expect(result.current[0].data!.id).toEqual("123");
+    expect(result.current[0].data?.id).toEqual("123");
     expect(result.current[0].fetching).toBe(false);
     expect(result.current[0].error).toBeFalsy();
   });

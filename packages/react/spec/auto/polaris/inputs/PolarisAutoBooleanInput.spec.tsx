@@ -17,7 +17,7 @@ describe("PolarisBooleanInput", () => {
         wrapper: PolarisMockedProviders,
       }
     );
-    mockUpdateWidgetFindBy();
+    await mockUpdateWidgetFindBy();
     const checkbox = getByLabelText("Is checked");
     expect(checkbox).toBeChecked();
   });
@@ -30,7 +30,7 @@ describe("PolarisBooleanInput", () => {
       </PolarisAutoForm>,
       { wrapper: PolarisMockedProviders }
     );
-    mockUpdateWidgetFindBy();
+    await mockUpdateWidgetFindBy();
     const checkbox = getByLabelText("I agree to do something");
     expect(checkbox).toBeChecked(); // Initially checked based on findBy value
 
@@ -46,8 +46,8 @@ describe("PolarisBooleanInput", () => {
   });
 });
 
-const mockUpdateWidgetFindBy = () => {
-  mockWidgetFindBy(
+const mockUpdateWidgetFindBy = async () => {
+  await mockWidgetFindBy(
     {
       name: "Update",
       apiIdentifier: "update",

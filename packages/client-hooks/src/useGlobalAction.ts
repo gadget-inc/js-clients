@@ -1,6 +1,6 @@
 import type { GlobalActionFunction, StubbedActionFunction } from "@gadgetinc/core";
-import { OperationContext } from "@urql/core";
-import { RuntimeAdapter, UseMutationState } from "./adapter.js";
+import type { OperationContext } from "@urql/core";
+import type { RuntimeAdapter, UseMutationState } from "./adapter.js";
 import { createHookStub } from "./createHooks.js";
 import type { CoreHooks, UseGlobalAction } from "./types.js";
 

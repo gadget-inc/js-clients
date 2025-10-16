@@ -1,6 +1,6 @@
 import type { ReactNode } from "react";
 import React, { useContext, useEffect, useState } from "react";
-import { GadgetConfigurationContext } from "../GadgetProvider.js";
+import { GadgetApiContext } from "../GadgetProvider.js";
 import { useAuth } from "./useAuth.js";
 import { windowNavigate } from "./utils.js";
 
@@ -12,7 +12,7 @@ export const SignedOutOrRedirect = (props: { path?: string; children: ReactNode 
   const { path, children } = props;
 
   const { user, isSignedIn } = useAuth();
-  const context = useContext(GadgetConfigurationContext);
+  const context = useContext(GadgetApiContext);
   const { auth } = context ?? {};
 
   useEffect(() => {
@@ -25,7 +25,7 @@ export const SignedOutOrRedirect = (props: { path?: string; children: ReactNode 
       const navigate = context?.navigate ?? windowNavigate;
       navigate(`${redirectUrl.pathname}${redirectUrl.search}`);
     }
-  }, [redirected, isSignedIn, path, user, auth]);
+  }, [redirected, isSignedIn, path, user, auth, context?.navigate]);
 
   if (!user && !isSignedIn) {
     return <>{children}</>;

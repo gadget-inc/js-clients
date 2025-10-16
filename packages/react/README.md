@@ -27,6 +27,8 @@
 This library wraps [urql](https://github.com/FormidableLabs/urql) to communicate with a Gadget-generated API, so it benefits from all of
 the same [features](https://github.com/FormidableLabs/urql/blob/main/README.md#-features) as `urql` as well!
 
+`@gadgetinc/react` is built on top of [`@gadgetinc/client-hooks`](https://github.com/gadget-inc/js-clients/tree/main/packages/client-hooks), which provides framework-agnostic hook implementations, and [`@gadgetinc/core`](https://github.com/gadget-inc/js-clients/tree/main/packages/core), which defines the core types and interfaces for all Gadget clients.
+
 ## Installation
 
 `@gadgetinc/react` is a companion package to the JavaScript client package generated for your Gadget app, so you must install the JS client for your app, and then install this package.
@@ -149,6 +151,22 @@ There are four different request policies that you can use:
 - `cache-only` will always return cached results or null.
 
 For more information on `urql`'s built-in client-side caching, see [`urql`'s docs](https://formidable.com/open-source/urql/docs/basics/document-caching/).
+
+## Package Architecture
+
+`@gadgetinc/react` is part of a layered package architecture:
+
+- **`@gadgetinc/core`** - Core types and interfaces that all Gadget clients must conform to. Defines `AnyClient`, `GadgetRecord`, filter types, etc.
+- **`@gadgetinc/client-hooks`** - Framework-agnostic hook implementations that work across React, Preact, and other frameworks via a runtime adapter pattern.
+- **`@gadgetinc/react`** - React-specific bindings that provide the `Provider` component and re-export hooks from `@gadgetinc/client-hooks` configured for React.
+
+This architecture allows:
+
+1. **Shared logic** - Query and mutation logic is implemented once in `@gadgetinc/client-hooks` and reused across frameworks
+2. **Type safety** - All packages share the same type definitions from `@gadgetinc/core`
+3. **Framework flexibility** - New frameworks can be supported by implementing a runtime adapter for `@gadgetinc/client-hooks`
+
+When using `@gadgetinc/react`, you only need to install this package - it automatically includes the necessary dependencies.
 
 ### API Documentation
 

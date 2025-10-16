@@ -1,4 +1,4 @@
-import { assert } from "@gadgetinc/api-client-core";
+import { assert } from "@gadgetinc/client-hooks";
 import { useEffect, useMemo } from "react";
 import { useAutoRelationship, useRelationshipContext } from "./auto/hooks/useAutoRelationship.js";
 import { useHasManyThroughController } from "./auto/hooks/useHasManyThroughController.js";

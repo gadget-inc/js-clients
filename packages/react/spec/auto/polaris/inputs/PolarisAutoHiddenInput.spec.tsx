@@ -34,7 +34,7 @@ describe("PolarisAutoHiddenInput", () => {
       { wrapper: PolarisMockedProviders }
     );
 
-    loadMockWidgetCreateMetadata();
+    await loadMockWidgetCreateMetadata();
 
     await act(async () => {
       await user.click(getByRole("button"));
@@ -62,7 +62,7 @@ describe("PolarisAutoHiddenInput", () => {
       { wrapper: PolarisMockedProviders }
     );
 
-    mockUpdateWidgetFindBy();
+    await mockUpdateWidgetFindBy();
 
     await act(async () => {
       await user.click(getByRole("button"));
@@ -92,7 +92,7 @@ describe("PolarisAutoHiddenInput", () => {
       { wrapper: PolarisMockedProviders }
     );
 
-    mockUpdateWidgetFindBy();
+    await mockUpdateWidgetFindBy();
 
     await act(async () => {
       await user.click(getByRole("button"));
@@ -128,7 +128,7 @@ describe("PolarisAutoHiddenInput", () => {
       { wrapper: PolarisMockedProviders }
     );
 
-    loadMockWidgetCreateMetadata();
+    await loadMockWidgetCreateMetadata();
 
     await act(async () => {
       await user.click(getByRole("button"));
@@ -151,8 +151,8 @@ describe("PolarisAutoHiddenInput", () => {
       { wrapper: PolarisMockedProviders }
     );
 
-    expect(() => {
-      mockGameStadiumFindBy(
+    await expect(async () => {
+      await mockGameStadiumFindBy(
         {
           name: "Update",
           apiIdentifier: "update",
@@ -164,14 +164,14 @@ describe("PolarisAutoHiddenInput", () => {
           name: "Foo",
         }
       );
-    }).toThrowErrorMatchingInlineSnapshot(
+    }).rejects.toThrowErrorMatchingInlineSnapshot(
       `"Hidden inputs don't support file fields -- please use a real input so the upload is managed properly"`
     );
   });
 });
 
-function loadMockWidgetCreateMetadata() {
-  mockUrqlClient.executeQuery.pushResponse("ModelActionMetadata", {
+async function loadMockWidgetCreateMetadata() {
+  await mockUrqlClient.executeQuery.pushResponse("ModelActionMetadata", {
     stale: false,
     hasNext: false,
     data: getWidgetModelMetadata({
@@ -188,8 +188,8 @@ function loadMockWidgetCreateMetadata() {
   // });
 }
 
-const mockUpdateWidgetFindBy = () => {
-  mockWidgetFindBy(
+const mockUpdateWidgetFindBy = async () => {
+  await mockWidgetFindBy(
     {
       name: "Update",
       apiIdentifier: "update",

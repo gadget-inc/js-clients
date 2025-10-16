@@ -1,5 +1,4 @@
-import type { AnyClient } from "@gadgetinc/api-client-core";
-import { GadgetConnection } from "@gadgetinc/api-client-core";
+import { mockUrqlClient } from "@gadgetinc/core/testing";
 import { jest } from "@jest/globals";
 import type { ShopifyGlobal } from "@shopify/app-bridge-react";
 import "@testing-library/jest-dom";
@@ -8,7 +7,7 @@ import type { IsExact } from "conditional-type-checks";
 import { assert } from "conditional-type-checks";
 import type { ReactNode } from "react";
 import React, { act } from "react";
-import { mockUrqlClient } from "../../api-client-core/spec/mockUrqlClient.js";
+import { relatedProductsApi } from "../../client-hooks/spec/apis.js";
 import { Provider } from "../src/Provider.js";
 import { AppType, useGadget } from "../src/index.js";
 
@@ -26,18 +25,11 @@ const _TestUseGadgetReturnsAppropriateTypes = () => {
 };
 
 describe("useGadget", () => {
-  let mockApiClient: AnyClient;
   const mockApiKey = "some-api-key";
   let resolveIdToken: (value: string) => void;
 
   beforeEach(() => {
-    mockApiClient = {
-      connection: new GadgetConnection({
-        endpoint: "https://test-app.gadget.app/endpoint",
-      }),
-    } as any;
-
-    jest.spyOn(mockApiClient.connection, "currentClient" as any, "get").mockReturnValue(mockUrqlClient);
+    jest.spyOn(relatedProductsApi.connection, "currentClient" as any, "get").mockReturnValue(mockUrqlClient);
     window.shopify = {
       // @ts-expect-error mock
       environment: {
@@ -59,7 +51,7 @@ describe("useGadget", () => {
   test("has correct embedded value", () => {
     const { result, rerender } = renderHook(() => useGadget(), {
       wrapper: (props: { children: ReactNode }) => (
-        <Provider api={mockApiClient} shopifyApiKey={mockApiKey} type={AppType.Embedded}>
+        <Provider api={relatedProductsApi} shopifyApiKey={mockApiKey} type={AppType.Embedded}>
           {props.children}
         </Provider>
       ),
@@ -89,7 +81,7 @@ describe("useGadget", () => {
   test("has correct authenticated value", async () => {
     let { result } = renderHook(() => useGadget(), {
       wrapper: (props: { children: ReactNode }) => (
-        <Provider api={mockApiClient} shopifyApiKey={mockApiKey} type={AppType.Embedded}>
+        <Provider api={relatedProductsApi} shopifyApiKey={mockApiKey} type={AppType.Embedded}>
           {props.children}
         </Provider>
       ),
@@ -100,7 +92,7 @@ describe("useGadget", () => {
       await mockUrqlClient.executeMutation.waitForSubject("ShopifyFetchOrInstallShop");
     });
 
-    mockUrqlClient.executeMutation.pushResponse("ShopifyFetchOrInstallShop", {
+    await mockUrqlClient.executeMutation.pushResponse("ShopifyFetchOrInstallShop", {
       data: {
         shopifyConnection: {
           fetchOrInstallShop: {
@@ -117,7 +109,7 @@ describe("useGadget", () => {
 
     ({ result } = renderHook(() => useGadget(), {
       wrapper: (props: { children: ReactNode }) => (
-        <Provider api={mockApiClient} shopifyApiKey={mockApiKey} type={AppType.Embedded}>
+        <Provider api={relatedProductsApi} shopifyApiKey={mockApiKey} type={AppType.Embedded}>
           {props.children}
         </Provider>
       ),
@@ -128,7 +120,7 @@ describe("useGadget", () => {
       await mockUrqlClient.executeMutation.waitForSubject("ShopifyFetchOrInstallShop");
     });
 
-    mockUrqlClient.executeMutation.pushResponse("ShopifyFetchOrInstallShop", {
+    await mockUrqlClient.executeMutation.pushResponse("ShopifyFetchOrInstallShop", {
       data: {
         shopifyConnection: {
           fetchOrInstallShop: {
@@ -147,7 +139,7 @@ describe("useGadget", () => {
   test("has correct isRootFrameRequest value", () => {
     let { result } = renderHook(() => useGadget(), {
       wrapper: (props: { children: ReactNode }) => (
-        <Provider api={mockApiClient} shopifyApiKey={mockApiKey} type={AppType.Embedded}>
+        <Provider api={relatedProductsApi} shopifyApiKey={mockApiKey} type={AppType.Embedded}>
           {props.children}
         </Provider>
       ),
@@ -169,7 +161,7 @@ describe("useGadget", () => {
 
     ({ result } = renderHook(() => useGadget(), {
       wrapper: (props: { children: ReactNode }) => (
-        <Provider api={mockApiClient} shopifyApiKey={mockApiKey} type={AppType.Embedded}>
+        <Provider api={relatedProductsApi} shopifyApiKey={mockApiKey} type={AppType.Embedded}>
           {props.children}
         </Provider>
       ),
@@ -179,7 +171,7 @@ describe("useGadget", () => {
 
     ({ result } = renderHook(() => useGadget(), {
       wrapper: (props: { children: ReactNode }) => (
-        <Provider api={mockApiClient} shopifyApiKey={mockApiKey} type={AppType.Standalone}>
+        <Provider api={relatedProductsApi} shopifyApiKey={mockApiKey} type={AppType.Standalone}>
           {props.children}
         </Provider>
       ),
@@ -192,7 +184,7 @@ describe("useGadget", () => {
 
     ({ result } = renderHook(() => useGadget(), {
       wrapper: (props: { children: ReactNode }) => (
-        <Provider api={mockApiClient} shopifyApiKey={mockApiKey} type={AppType.Standalone}>
+        <Provider api={relatedProductsApi} shopifyApiKey={mockApiKey} type={AppType.Standalone}>
           {props.children}
         </Provider>
       ),
@@ -209,7 +201,7 @@ describe("useGadget", () => {
 
     // @ts-expect-error mock
     window.location = {
-      origin: "https://test-app.gadget.app",
+      origin: "https://related-products-example.gadget.app",
       pathname: "/",
       search: "?shop=example.myshopify.com&hmac=abcdefg&host=abcdfg",
       assign: jest.fn(),
@@ -225,7 +217,7 @@ describe("useGadget", () => {
       },
       {
         wrapper: (props: { children: ReactNode }) => (
-          <Provider api={mockApiClient} shopifyApiKey={mockApiKey} type={AppType.Embedded}>
+          <Provider api={relatedProductsApi} shopifyApiKey={mockApiKey} type={AppType.Embedded}>
             {props.children}
           </Provider>
         ),
@@ -240,7 +232,7 @@ describe("useGadget", () => {
     expect(all.every((v) => v.loading)).toBeTruthy();
     expect(all.every((v) => !v.isAuthenticated)).toBeTruthy();
 
-    mockUrqlClient.executeMutation.pushResponse("ShopifyFetchOrInstallShop", {
+    await mockUrqlClient.executeMutation.pushResponse("ShopifyFetchOrInstallShop", {
       data: {
         shopifyConnection: {
           fetchOrInstallShop: {
@@ -265,7 +257,7 @@ describe("useGadget", () => {
 
     // @ts-expect-error mock
     window.location = {
-      origin: "https://test-app.gadget.app",
+      origin: "https://related-products-example.gadget.app",
       pathname: "/",
       search: "?shop=example.myshopify.com&hmac=abcdefg&host=abcdfg",
       assign: jest.fn(),
@@ -281,7 +273,7 @@ describe("useGadget", () => {
 
     const { result } = renderHook(() => useGadget(), {
       wrapper: (props: { children: ReactNode }) => (
-        <Provider api={mockApiClient} shopifyApiKey={mockApiKey} type={AppType.Embedded}>
+        <Provider api={relatedProductsApi} shopifyApiKey={mockApiKey} type={AppType.Embedded}>
           {props.children}
         </Provider>
       ),
@@ -296,7 +288,7 @@ describe("useGadget", () => {
 
     await mockUrqlClient.executeMutation.waitForSubject("ShopifyFetchOrInstallShop");
 
-    mockUrqlClient.executeMutation.pushResponse("ShopifyFetchOrInstallShop", {
+    await mockUrqlClient.executeMutation.pushResponse("ShopifyFetchOrInstallShop", {
       data: {
         shopifyConnection: {
           fetchOrInstallShop: {
@@ -321,7 +313,7 @@ describe("useGadget", () => {
 
     // @ts-expect-error mock
     window.location = {
-      origin: "https://test-app.gadget.app",
+      origin: "https://related-products-example.gadget.app",
       pathname: "/",
       search: "?shop=example.myshopify.com&hmac=abcdefg&host=abcdfg",
       assign: jest.fn(),
@@ -337,7 +329,7 @@ describe("useGadget", () => {
 
     const { result } = renderHook(() => useGadget(), {
       wrapper: (props: { children: ReactNode }) => (
-        <Provider api={mockApiClient} shopifyApiKey={mockApiKey} type={AppType.Embedded}>
+        <Provider api={relatedProductsApi} shopifyApiKey={mockApiKey} type={AppType.Embedded}>
           {props.children}
         </Provider>
       ),
@@ -352,7 +344,7 @@ describe("useGadget", () => {
 
     await mockUrqlClient.executeMutation.waitForSubject("ShopifyFetchOrInstallShop");
 
-    mockUrqlClient.executeMutation.pushResponse("ShopifyFetchOrInstallShop", {
+    await mockUrqlClient.executeMutation.pushResponse("ShopifyFetchOrInstallShop", {
       data: {
         shopifyConnection: {
           fetchOrInstallShop: {
@@ -377,7 +369,7 @@ describe("useGadget", () => {
 
     // @ts-expect-error mock
     window.location = {
-      origin: "https://test-app.gadget.app",
+      origin: "https://related-products-example.gadget.app",
       pathname: "/",
       search: "?shop=example.myshopify.com&hmac=abcdefg&host=abcdfg",
       assign: jest.fn(),
@@ -393,7 +385,7 @@ describe("useGadget", () => {
 
     const { result } = renderHook(() => useGadget(), {
       wrapper: (props: { children: ReactNode }) => (
-        <Provider api={mockApiClient} shopifyApiKey={mockApiKey} type={AppType.Embedded}>
+        <Provider api={relatedProductsApi} shopifyApiKey={mockApiKey} type={AppType.Embedded}>
           {props.children}
         </Provider>
       ),
@@ -408,7 +400,7 @@ describe("useGadget", () => {
 
     await mockUrqlClient.executeMutation.waitForSubject("ShopifyFetchOrInstallShop");
 
-    mockUrqlClient.executeMutation.pushResponse("ShopifyFetchOrInstallShop", {
+    await mockUrqlClient.executeMutation.pushResponse("ShopifyFetchOrInstallShop", {
       data: {
         shopifyConnection: {
           fetchOrInstallShop: {
@@ -433,7 +425,7 @@ describe("useGadget", () => {
 
     // @ts-expect-error mock
     window.location = {
-      origin: "https://test-app.gadget.app",
+      origin: "https://related-products-example.gadget.app",
       pathname: "/",
       search: "?shop=example.myshopify.com&hmac=abcdefg&host=abcdfg",
       assign: jest.fn(),
@@ -449,7 +441,7 @@ describe("useGadget", () => {
 
     const { result } = renderHook(() => useGadget(), {
       wrapper: (props: { children: ReactNode }) => (
-        <Provider api={mockApiClient} shopifyApiKey={mockApiKey} type={AppType.Embedded}>
+        <Provider api={relatedProductsApi} shopifyApiKey={mockApiKey} type={AppType.Embedded}>
           {props.children}
         </Provider>
       ),
@@ -464,7 +456,7 @@ describe("useGadget", () => {
 
     await mockUrqlClient.executeMutation.waitForSubject("ShopifyFetchOrInstallShop");
 
-    mockUrqlClient.executeMutation.pushResponse("ShopifyFetchOrInstallShop", {
+    await mockUrqlClient.executeMutation.pushResponse("ShopifyFetchOrInstallShop", {
       data: {
         shopifyConnection: {
           fetchOrInstallShop: {

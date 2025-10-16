@@ -1,4 +1,4 @@
-import type { AnyClient } from "@gadgetinc/api-client-core";
+import type { AnyClient } from "@gadgetinc/core";
 import "cypress-each";
 import { apiTriggerOnly } from "../../spec/auto/support/Triggers.js";
 import { recordIdInputField } from "../../spec/auto/support/shared.js";

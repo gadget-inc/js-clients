@@ -1,74 +1,10 @@
-import type { GadgetRecord } from "@gadgetinc/api-client-core";
 import { renderHook } from "@testing-library/react";
-import type { IsExact } from "conditional-type-checks";
-import { assert } from "conditional-type-checks";
 import { act } from "react";
-import { useBulkAction } from "../src/index.js";
-import type { ErrorWrapper } from "../src/utils.js";
+import { useBulkAction } from "../src/hooks.js";
 import { bulkExampleApi, kitchenSinkApi } from "./apis.js";
 import { MockClientWrapper, createMockUrqlClient, mockUrqlClient } from "./testWrappers.js";
 
 describe("useBulkAction", () => {
-  // these functions are typechecked but never run to avoid actually making API calls
-  const _TestUseBulkActionCanRunActionsWithVariables = () => {
-    const [_, mutate] = useBulkAction(bulkExampleApi.widget.bulkFlipDown);
-
-    // can call with variables
-    void mutate({ ids: ["123", "124"] });
-
-    // @ts-expect-error can't call with no arguments
-    void mutate();
-
-    // @ts-expect-error can't call with no ids
-    void mutate({});
-
-    // @ts-expect-error can't call with variables that don't belong to the model
-    void mutate({ foo: "123" });
-  };
-
-  const _TestUseBulkActionReturnsTypedDataWithExplicitSelection = () => {
-    const [{ data, fetching, error }, _mutate] = useBulkAction(bulkExampleApi.widget.bulkFlipDown, {
-      select: { id: true, name: true },
-    });
-
-    assert<IsExact<typeof fetching, boolean>>(true);
-    assert<IsExact<typeof data, undefined | GadgetRecord<{ id: string; name: string | null }>[]>>(true);
-    assert<IsExact<typeof error, ErrorWrapper | undefined>>(true);
-
-    if (data) {
-      data[0].id;
-      data[0].name;
-    }
-  };
-
-  const _TestUseActionReturnsTypedDataWithNoSelection = () => {
-    const [{ data }] = useBulkAction(bulkExampleApi.widget.bulkFlipDown);
-
-    if (data) {
-      data[0].id;
-      data[0].name;
-    }
-  };
-
-  const _TestUseBulkActionCanRunNamespacedModelAction = () => {
-    const [_, mutate] = useBulkAction(kitchenSinkApi.game.player.bulkUpdate);
-
-    // can call with variables
-    void mutate([{ id: "123", name: "new name" }]);
-
-    // @ts-expect-error can't call with no arguments
-    void mutate();
-
-    // @ts-expect-error can't call with no ids
-    void mutate({});
-
-    // @ts-expect-error can't call with one attributes object
-    void mutate({ foo: "123" });
-
-    // @ts-expect-error can't call with array of variables that don't belong to the model
-    void mutate([{ foo: "123" }]);
-  };
-
   test("returns no data, not fetching, and no error when the component is first mounted", () => {
     const { result } = renderHook(() => useBulkAction(bulkExampleApi.widget.bulkFlipDown), { wrapper: MockClientWrapper(bulkExampleApi) });
 
@@ -81,7 +17,7 @@ describe("useBulkAction", () => {
     let query: string | undefined;
     const client = createMockUrqlClient({
       mutationAssertions: (request) => {
-        query = request.query.loc?.source.body;
+        query = "kind" in request.query ? request.query.loc?.source.body : "";
       },
     });
 
@@ -132,7 +68,7 @@ describe("useBulkAction", () => {
 
     expect(client.executeMutation).toBeCalledTimes(1);
 
-    client.executeMutation.pushResponse("bulkFlipDownWidgets", {
+    await client.executeMutation.pushResponse("bulkFlipDownWidgets", {
       data: {
         bulkFlipDownWidgets: {
           success: true,
@@ -166,7 +102,7 @@ describe("useBulkAction", () => {
     let query: string | undefined;
     const client = createMockUrqlClient({
       mutationAssertions: (request) => {
-        query = request.query.loc?.source.body;
+        query = "kind" in request.query ? request.query.loc?.source.body : "";
       },
     });
 
@@ -220,7 +156,7 @@ describe("useBulkAction", () => {
 
     expect(client.executeMutation).toHaveBeenCalledTimes(1);
 
-    client.executeMutation.pushResponse("bulkCreatePlayers", {
+    await client.executeMutation.pushResponse("bulkCreatePlayers", {
       data: {
         game: {
           bulkCreatePlayers: {
@@ -285,7 +221,7 @@ describe("useBulkAction", () => {
       ],
     });
 
-    mockUrqlClient.executeMutation.pushResponse("bulkCreateWidgets", {
+    await mockUrqlClient.executeMutation.pushResponse("bulkCreateWidgets", {
       data: {
         bulkCreateWidgets: {
           success: true,
@@ -341,7 +277,7 @@ describe("useBulkAction", () => {
       ],
     });
 
-    mockUrqlClient.executeMutation.pushResponse("bulkCreateWidgets", {
+    await mockUrqlClient.executeMutation.pushResponse("bulkCreateWidgets", {
       data: {
         bulkCreateWidgets: {
           success: true,
@@ -402,7 +338,7 @@ describe("useBulkAction", () => {
       ],
     });
 
-    mockUrqlClient.executeMutation.pushResponse("bulkUpdateWidgets", {
+    await mockUrqlClient.executeMutation.pushResponse("bulkUpdateWidgets", {
       data: {
         bulkUpdateWidgets: {
           success: true,
@@ -463,7 +399,7 @@ describe("useBulkAction", () => {
       ],
     });
 
-    mockUrqlClient.executeMutation.pushResponse("bulkUpdateWidgets", {
+    await mockUrqlClient.executeMutation.pushResponse("bulkUpdateWidgets", {
       data: {
         bulkUpdateWidgets: {
           success: true,
@@ -510,7 +446,7 @@ describe("useBulkAction", () => {
 
     expect(mockUrqlClient.executeMutation).toBeCalledTimes(1);
 
-    mockUrqlClient.executeMutation.pushResponse("bulkFlipDownWidgets", {
+    await mockUrqlClient.executeMutation.pushResponse("bulkFlipDownWidgets", {
       data: {
         bulkFlipDownWidgets: {
           success: false,
@@ -552,7 +488,7 @@ describe("useBulkAction", () => {
 
     expect(mockUrqlClient.executeMutation).toBeCalledTimes(1);
 
-    mockUrqlClient.executeMutation.pushResponse("bulkFlipDownWidgets", {
+    await mockUrqlClient.executeMutation.pushResponse("bulkFlipDownWidgets", {
       data: {
         bulkFlipDownWidgets: {
           success: true,

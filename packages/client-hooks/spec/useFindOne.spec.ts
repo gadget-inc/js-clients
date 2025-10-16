@@ -1,12 +1,52 @@
+import type { AnyErrorWrapper, GadgetRecord } from "@gadgetinc/core";
 import { jest } from "@jest/globals";
+import type { IsExact } from "conditional-type-checks";
+import { assert } from "conditional-type-checks";
 import { createHooks } from "../src/createHooks.js";
 import { useFindOne } from "../src/useFindOne.js";
+import { kitchenSinkApi, relatedProductsApi } from "./apis.js";
 import { createMockAdapter, createMockApiClient, createMockConnection, createMockProcessResult } from "./mockAdapter.js";
 
 describe("useFindOne", () => {
   beforeEach(() => {
     jest.clearAllMocks();
   });
+
+  // these functions are typechecked but never run to avoid actually making API calls
+  const _TestFindOneReturnsTypedDataWithExplicitSelection = () => {
+    const [{ data, fetching, error }, refresh] = useFindOne(relatedProductsApi.user, "10", { select: { id: true, email: true } });
+
+    assert<IsExact<typeof fetching, boolean>>(true);
+    assert<IsExact<typeof data, undefined | GadgetRecord<{ id: string; email: string | null }>>>(true);
+    assert<IsExact<typeof error, AnyErrorWrapper | undefined>>(true);
+
+    // data is accessible via dot access
+    if (data) {
+      data.id;
+      data.email;
+    }
+
+    // hook return value includes the urql refresh function
+    refresh();
+  };
+
+  const _TestFindOneReturnsTypedDataWithNoSelection = () => {
+    const [{ data }] = useFindOne(relatedProductsApi.user, "10");
+
+    if (data) {
+      data.id;
+      data.email;
+    }
+  };
+
+  const _TestFindOneOnNamespacedModel = () => {
+    const [{ data }] = useFindOne(kitchenSinkApi.game.player, "10");
+
+    if (data) {
+      data.id;
+      data.name;
+    }
+  };
 
   it("should initialize the hook correctly", () => {
     const connection = createMockConnection();
@@ -38,7 +78,7 @@ describe("useFindOne", () => {
     expect(typeof refetch).toBe("function");
 
     // Verify the query was planned and executed correctly
-    expect(mockManager.findOne.plan).toHaveBeenCalledWith("123");
+    expect(mockManager.findOne.plan).toHaveBeenCalledWith("123", undefined);
     expect(adapter.framework.useMemo).toHaveBeenCalled();
     expect(adapter.urql.useQuery).toHaveBeenCalled();
 
@@ -74,7 +114,7 @@ describe("useFindOne", () => {
 
     useFindOne(mockManager, "456");
 
-    expect(mockManager.findOne.plan).toHaveBeenCalledWith("456");
+    expect(mockManager.findOne.plan).toHaveBeenCalledWith("456", undefined);
   });
 
   it("should handle namespaced models", () => {
@@ -102,7 +142,7 @@ describe("useFindOne", () => {
 
     useFindOne(mockManager, "123");
 
-    expect(mockManager.findOne.plan).toHaveBeenCalledWith("123");
+    expect(mockManager.findOne.plan).toHaveBeenCalledWith("123", undefined);
   });
 
   it("should pass pause option to useQuery", () => {

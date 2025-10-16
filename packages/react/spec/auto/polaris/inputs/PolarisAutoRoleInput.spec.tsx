@@ -15,12 +15,12 @@ describe("PolarisAutoRolesInput", () => {
   let result: RenderResult;
   let user: UserEvent;
 
-  beforeEach(() => {
+  beforeEach(async () => {
     user = userEvent.setup();
-    setupRenderResult();
+    await setupRenderResult();
   });
 
-  const setupRenderResult = () => {
+  const setupRenderResult = async () => {
     result = render(
       <PolarisAutoForm action={api.widget.update} findBy="42">
         <PolarisAutoRolesInput field={"roles"} />
@@ -28,7 +28,7 @@ describe("PolarisAutoRolesInput", () => {
       </PolarisAutoForm>,
       { wrapper: PolarisMockedProviders }
     );
-    mockUpdateWidgetFindBy();
+    await mockUpdateWidgetFindBy();
   };
 
   test("it preloads the selected role from the record and fetches all available role options", async () => {
@@ -72,8 +72,8 @@ describe("PolarisAutoRolesInput", () => {
   });
 });
 
-const mockUpdateWidgetFindBy = () => {
-  mockWidgetFindBy(
+const mockUpdateWidgetFindBy = async () => {
+  await mockWidgetFindBy(
     {
       name: "Update",
       apiIdentifier: "update",
@@ -96,11 +96,11 @@ const mockUpdateWidgetFindBy = () => {
       ],
     }
   );
-  mockRolesMetadataQueryResponse();
+  await mockRolesMetadataQueryResponse();
 };
 
-const mockRolesMetadataQueryResponse = () => {
-  mockUrqlClient.executeQuery.pushResponse("RolesMetadata", rolesMetadataQueryResponse);
+const mockRolesMetadataQueryResponse = async () => {
+  await mockUrqlClient.executeQuery.pushResponse("RolesMetadata", rolesMetadataQueryResponse);
 };
 
 const rolesMetadataQueryResponse = {

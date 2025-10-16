@@ -1,5 +1,5 @@
-import { Client as RelatedProductsClient } from "@gadget-client/related-products-example";
-import { AuthenticationMode, type AnyClient } from "@gadgetinc/api-client-core";
+import { RelatedProductsExampleClient } from "@gadget-client/related-products-example";
+import type { AnyClient } from "@gadgetinc/core";
 import { jest } from "@jest/globals";
 import "@testing-library/jest-dom";
 import { renderHook } from "@testing-library/react";
@@ -17,20 +17,20 @@ const _TestUseGadgetReturnsAppropriateTypes = () => {
 };
 
 const _TestUseGadgetReturnsAppropriateTypesWithSpecificClient = () => {
-  const { ready, api } = useGadget<RelatedProductsClient>();
+  const { ready, api } = useGadget<RelatedProductsExampleClient>();
 
   assert<IsExact<typeof ready, boolean>>(true);
-  assert<IsExact<typeof api, RelatedProductsClient>>(true);
+  assert<IsExact<typeof api, RelatedProductsExampleClient>>(true);
 };
 
 describe("useGadget", () => {
-  let api: AnyClient;
+  let api: RelatedProductsExampleClient;
   let sessionToken: SessionToken;
   let mockFetch: jest.Mock<typeof globalThis.fetch>;
 
   beforeEach(() => {
     mockFetch = jest.fn();
-    api = new RelatedProductsClient({
+    api = new RelatedProductsExampleClient({
       fetchImplementation: mockFetch,
     });
 
@@ -44,7 +44,7 @@ describe("useGadget", () => {
 
     const { result } = renderHook(
       () => {
-        const value = useGadget();
+        const value = useGadget<RelatedProductsExampleClient>();
         all.push({ ready: value.ready });
         return value;
       },
@@ -61,6 +61,6 @@ describe("useGadget", () => {
     expect(all[0].ready).toBe(false);
     expect(all[1].ready).toBe(true);
 
-    expect(result.current.api.connection.authenticationMode).toEqual(AuthenticationMode.Custom);
+    expect(result.current.api.connection.authenticationMode).toEqual("custom");
   });
 });

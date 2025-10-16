@@ -1,6 +1,9 @@
-import { GadgetRecord } from "@gadgetinc/api-client-core";
+import { $coreImplementation, type AnyCoreImplementation } from "@gadgetinc/core";
+import { testApi } from "../../apis.js";
 import { apiTriggerOnly } from "./Triggers.js";
 import { recordIdInputField } from "./shared.js";
+
+const GadgetRecord = ((testApi as any)[$coreImplementation] as AnyCoreImplementation).GadgetRecord;
 
 export const widgetModelInputFields = {
   name: "Widget",

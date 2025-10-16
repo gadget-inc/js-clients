@@ -1,12 +1,53 @@
+import type { AnyErrorWrapper, GadgetRecord } from "@gadgetinc/core";
 import { jest } from "@jest/globals";
+import { assert, type IsExact } from "conditional-type-checks";
 import { createHooks } from "../src/createHooks.js";
 import { useFindBy } from "../src/useFindBy.js";
-import { createMockAdapter, createMockApiClient, createMockConnection, createMockProcessResult } from "./mockAdapter.js";
+import { kitchenSinkApi, relatedProductsApi } from "./apis.js";
+import { createMockAdapter, createMockApiClient, createMockConnection } from "./mockAdapter.js";
 
 describe("useFindBy", () => {
   beforeEach(() => {
     jest.clearAllMocks();
   });
+
+  // these functions are typechecked but never run to avoid actually making API calls
+  const _TestFindByReturnsTypedDataWithExplicitSelection = () => {
+    const [{ data, fetching, error }, refresh] = useFindBy(relatedProductsApi.user.findByEmail, "hello@gadget.dev", {
+      select: { id: true, email: true },
+    });
+
+    assert<IsExact<typeof fetching, boolean>>(true);
+    assert<IsExact<typeof data, undefined | GadgetRecord<{ id: string; email: string | null }>>>(true);
+    assert<IsExact<typeof error, AnyErrorWrapper | undefined>>(true);
+
+    // data is accessible via dot access
+    if (data) {
+      data.id;
+      data.email;
+    }
+
+    // hook return value includes the urql refresh function
+    refresh();
+  };
+
+  const _TestFindByReturnsTypedDataWithNoSelection = () => {
+    const [{ data }] = useFindBy(relatedProductsApi.user.findByEmail, "hello@gadget.dev");
+
+    if (data) {
+      data.id;
+      data.email;
+    }
+  };
+
+  const _TestFindByCanFindNamespacedModels = () => {
+    const [{ data }] = useFindBy(kitchenSinkApi.game.player.findByName, "Caitlin Clark");
+
+    if (data) {
+      data.id;
+      data.name;
+    }
+  };
 
   it("should initialize the hook correctly", () => {
     const connection = createMockConnection();
@@ -16,26 +57,14 @@ describe("useFindBy", () => {
 
     createHooks(adapter);
 
-    const mockFinder: any = {
-      type: "findOne",
-      operationName: "user",
-      findByVariableName: "email",
-      modelApiIdentifier: "user",
-      defaultSelection: { id: true, email: true },
-      namespace: [],
-      plan: jest.fn((value, options) => ({
-        query: "query user($email: String!) { user(email: $email) { id email } }",
-        variables: { email: value },
-      })),
-      processResult: createMockProcessResult(),
-    };
-
-    const [state, refetch] = useFindBy(mockFinder, "test@test.com");
+    const finder = relatedProductsApi.user.findByEmail;
+    const planSpy = jest.spyOn(finder, "plan");
+    const [state, refetch] = useFindBy(finder, "test@test.com");
 
     expect(state.fetching).toBe(true);
     expect(typeof refetch).toBe("function");
 
-    expect(mockFinder.plan).toHaveBeenCalledWith("test@test.com", undefined);
+    expect(planSpy).toHaveBeenCalledWith("test@test.com", undefined);
     expect(adapter.framework.useMemo).toHaveBeenCalled();
     expect(adapter.urql.useQuery).toHaveBeenCalled();
   });
@@ -48,23 +77,11 @@ describe("useFindBy", () => {
 
     createHooks(adapter);
 
-    const mockFinder: any = {
-      type: "findOne",
-      operationName: "user",
-      findByVariableName: "email",
-      modelApiIdentifier: "user",
-      defaultSelection: { id: true, email: true },
-      namespace: [],
-      plan: jest.fn((value, options) => ({
-        query: "query user($email: String!) { user(email: $email) { id email } }",
-        variables: { email: value },
-      })),
-      processResult: createMockProcessResult(),
-    };
+    const finder = relatedProductsApi.user.findByEmail;
+    const planSpy = jest.spyOn(finder, "plan");
+    useFindBy(finder, "alice@example.com");
 
-    useFindBy(mockFinder, "alice@example.com");
-
-    expect(mockFinder.plan).toHaveBeenCalledWith("alice@example.com", undefined);
+    expect(planSpy).toHaveBeenCalledWith("alice@example.com", undefined);
   });
 
   it("should handle namespaced models", () => {
@@ -75,23 +92,11 @@ describe("useFindBy", () => {
 
     createHooks(adapter);
 
-    const mockFinder: any = {
-      type: "findOne",
-      operationName: "player",
-      findByVariableName: "number",
-      modelApiIdentifier: "game.player",
-      defaultSelection: { id: true, number: true },
-      namespace: ["game"],
-      plan: jest.fn((value, options) => ({
-        query: "query player($number: Int!) { game { player(number: $number) { id number } } }",
-        variables: { number: value },
-      })),
-      processResult: createMockProcessResult(),
-    };
+    const finder = kitchenSinkApi.game.player.findByName;
+    const planSpy = jest.spyOn(finder, "plan");
+    useFindBy(finder, "23");
 
-    useFindBy(mockFinder, "23");
-
-    expect(mockFinder.plan).toHaveBeenCalledWith("23", undefined);
+    expect(planSpy).toHaveBeenCalledWith("23", undefined);
   });
 
   it("should pass options to the query", () => {
@@ -102,26 +107,15 @@ describe("useFindBy", () => {
 
     createHooks(adapter);
 
-    const mockFinder: any = {
-      type: "findOne",
-      operationName: "user",
-      findByVariableName: "email",
-      modelApiIdentifier: "user",
-      defaultSelection: { id: true, email: true },
-      namespace: [],
-      plan: jest.fn((value, options) => ({
-        query: "query user($email: String!) { user(email: $email) { id } }",
-        variables: { email: value },
-      })),
-      processResult: createMockProcessResult(),
-    };
+    const finder = relatedProductsApi.user.findByEmail;
+    const planSpy = jest.spyOn(finder, "plan");
 
-    useFindBy(mockFinder, "test@test.com", { select: { id: true }, pause: true });
+    useFindBy(finder, "test@test.com", { select: { id: true }, pause: true });
 
     const useQueryCall = (adapter.urql.useQuery as jest.Mock).mock.calls[0];
     expect(useQueryCall).toBeDefined();
     expect(useQueryCall[0]).toMatchObject({ pause: true });
 
-    expect(mockFinder.plan).toHaveBeenCalledWith("test@test.com", { select: { id: true }, pause: true });
+    expect(planSpy).toHaveBeenCalledWith("test@test.com", { select: { id: true }, pause: true });
   });
 });

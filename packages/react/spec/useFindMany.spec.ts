@@ -1,13 +1,9 @@
 import { GraphQLError } from "@0no-co/graphql.web";
 import { Client } from "@gadget-client/related-products-example";
-import type { GadgetRecordList } from "@gadgetinc/api-client-core";
 import { diff } from "@n1ru4l/json-patch-plus";
 import { renderHook, waitFor } from "@testing-library/react";
-import type { IsExact } from "conditional-type-checks";
-import { assert } from "conditional-type-checks";
 import { act } from "react";
-import { useFindMany } from "../src/useFindMany.js";
-import type { ErrorWrapper } from "../src/utils.js";
+import { useFindMany } from "../src/hooks.js";
 import { kitchenSinkApi, relatedProductsApi } from "./apis.js";
 import {
   MockClientWrapper,
@@ -18,45 +14,11 @@ import {
 } from "./testWrappers.js";
 
 describe("useFindMany", () => {
-  // all these functions are typechecked but never run to avoid actually making API calls
-  const _TestFindManyReturnsTypedDataWithExplicitSelection = () => {
-    const [{ data, fetching, error }, refresh] = useFindMany(relatedProductsApi.user, { select: { id: true, email: true } });
-
-    assert<IsExact<typeof fetching, boolean>>(true);
-    assert<IsExact<typeof data, undefined | GadgetRecordList<{ id: string; email: string | null }>>>(true);
-    assert<IsExact<typeof error, ErrorWrapper | undefined>>(true);
-
-    if (data) {
-      data[0].id;
-      data[0].email;
-    }
-
-    refresh();
-  };
-
-  const _TestFindManyReturnsTypedDataWithNoSelection = () => {
-    const [{ data }] = useFindMany(relatedProductsApi.user);
-
-    if (data) {
-      data[0].id;
-      data[0].email;
-    }
-  };
-
-  const _TestFindManyNamespacedModel = () => {
-    const [{ data }] = useFindMany(kitchenSinkApi.game.player);
-
-    if (data) {
-      data[0].id;
-      data[0].name;
-    }
-  };
-
   test("can find a list of records", async () => {
     let query: string | undefined;
     const client = createMockUrqlClient({
       queryAssertions: (request) => {
-        query = request.query.loc?.source.body;
+        query = "kind" in request.query ? request.query.loc?.source.body : "";
       },
     });
 
@@ -100,7 +62,7 @@ describe("useFindMany", () => {
       }"
     `);
 
-    client.executeQuery.pushResponse("users", {
+    await client.executeQuery.pushResponse("users", {
       data: {
         users: {
           edges: [
@@ -141,7 +103,7 @@ describe("useFindMany", () => {
 
     expect(mockUrqlClient.executeQuery).toBeCalledTimes(1);
 
-    mockUrqlClient.executeQuery.pushResponse("users", {
+    await mockUrqlClient.executeQuery.pushResponse("users", {
       data: {
         users: {
           edges: [
@@ -177,7 +139,7 @@ describe("useFindMany", () => {
 
     expect(mockUrqlClient.executeQuery).toBeCalledTimes(2);
 
-    mockUrqlClient.executeQuery.pushResponse("users", {
+    await mockUrqlClient.executeQuery.pushResponse("users", {
       data: {
         users: {
           edges: [
@@ -213,7 +175,7 @@ describe("useFindMany", () => {
 
     expect(mockUrqlClient.executeQuery).toBeCalledTimes(1);
 
-    mockUrqlClient.executeQuery.pushResponse("users", {
+    await mockUrqlClient.executeQuery.pushResponse("users", {
       data: {
         users: {
           edges: [],
@@ -238,7 +200,7 @@ describe("useFindMany", () => {
     let query: string | undefined;
     const client = createMockUrqlClient({
       queryAssertions: (request) => {
-        query = request.query.loc?.source.body;
+        query = "kind" in request.query ? request.query.loc?.source.body : "";
       },
     });
 
@@ -280,7 +242,7 @@ describe("useFindMany", () => {
       }"
     `);
 
-    client.executeQuery.pushResponse("players", {
+    await client.executeQuery.pushResponse("players", {
       data: {
         game: {
           players: {
@@ -321,7 +283,7 @@ describe("useFindMany", () => {
 
     expect(mockUrqlClient.executeQuery).toBeCalledTimes(1);
 
-    mockUrqlClient.executeQuery.pushResponse("users", {
+    await mockUrqlClient.executeQuery.pushResponse("users", {
       data: {
         users: {
           edges: [
@@ -357,7 +319,7 @@ describe("useFindMany", () => {
 
     await act(async () => {
       await mockUrqlClient.executeQuery.waitForSubject("users");
-      mockUrqlClient.executeQuery.pushResponse("users", {
+      await mockUrqlClient.executeQuery.pushResponse("users", {
         data: {
           users: {
             edges: [

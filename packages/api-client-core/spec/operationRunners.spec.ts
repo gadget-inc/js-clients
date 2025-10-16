@@ -57,7 +57,7 @@ describe("operationRunners", () => {
     connection = new GadgetConnection({ endpoint: "https://someapp.gadget.app" });
     mockUrqlClient = createMockUrqlClient({
       queryAssertions: (request) => {
-        query = request.query.loc?.source.body;
+        query = "kind" in request.query ? request.query.loc?.source.body : "";
       },
     });
     jest.spyOn(connection, "currentClient" as any, "get").mockReturnValue(mockUrqlClient as any);

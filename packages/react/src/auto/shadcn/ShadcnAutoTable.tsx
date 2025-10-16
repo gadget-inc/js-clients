@@ -1,10 +1,11 @@
-import { type FindManyFunction, type GadgetRecord } from "@gadgetinc/api-client-core";
+import type { OptionsType } from "@gadgetinc/client-hooks";
+import type { FindManyFunction, GadgetRecord } from "@gadgetinc/core";
 import * as React from "react";
 import { useCallback, useMemo } from "react";
 import type { SortState, TableColumn, TableRow } from "../../use-table/types.js";
 import { SelectionType, type RecordSelection } from "../../useSelectedRecordsController.js";
 import { useTable } from "../../useTable.js";
-import { type ColumnValueType, type OptionsType } from "../../utils.js";
+import { type ColumnValueType } from "../../utils.js";
 import { type AutoTableProps } from "../AutoTable.js";
 import { validateAutoTableProps } from "../AutoTableValidators.js";
 import { useHover } from "../hooks/useHover.js";

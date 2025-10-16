@@ -1,7 +1,7 @@
+import { hookErrorMessage } from "@gadgetinc/client-hooks";
 import { act, renderHook } from "@testing-library/react";
 import { gql } from "urql";
-import { useGadgetQuery } from "../src/useGadgetQuery.js";
-import { noProviderErrorMessage } from "../src/utils.js";
+import { useQuery as useGadgetQuery } from "../src/hooks.js";
 import { relatedProductsApi } from "./apis.js";
 import { MockClientWrapper, mockUrqlClient } from "./testWrappers.js";
 
@@ -11,7 +11,7 @@ describe("useGadgetQuery", () => {
       renderHook(() => useGadgetQuery({ query: "{__typename}" }));
     } catch (error: any) {
       expect(error).toBeInstanceOf(Error);
-      expect(error.message).toBe(noProviderErrorMessage);
+      expect(error.message).toBe(hookErrorMessage("useQuery"));
     }
   });
 
@@ -36,7 +36,7 @@ describe("useGadgetQuery", () => {
 
     expect(mockUrqlClient.executeQuery).toBeCalledTimes(1);
 
-    mockUrqlClient.executeQuery.pushResponse("gadgetMeta", {
+    await mockUrqlClient.executeQuery.pushResponse("gadgetMeta", {
       data: {
         gadgetMeta: {
           name: "Test App",
@@ -72,7 +72,7 @@ describe("useGadgetQuery", () => {
 
     await act(async () => {
       await mockUrqlClient.executeQuery.waitForSubject("gadgetMeta");
-      mockUrqlClient.executeQuery.pushResponse("gadgetMeta", {
+      await mockUrqlClient.executeQuery.pushResponse("gadgetMeta", {
         data: {
           gadgetMeta: {
             name: "Test App",

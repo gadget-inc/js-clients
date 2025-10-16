@@ -1,4 +1,4 @@
-import type { AnyClient } from "@gadgetinc/api-client-core";
+import type { AnyClient } from "@gadgetinc/core";
 import { Provider as GadgetReactProvider } from "@gadgetinc/react";
 import type { ReactNode } from "react";
 import React, { useEffect, useState } from "react";

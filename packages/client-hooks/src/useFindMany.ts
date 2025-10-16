@@ -13,7 +13,7 @@ export let useFindMany: UseFindMany = createHookStub("useFindMany", (adapter: Ru
     const [rawResult, refresh] = coreHooks.useGadgetQuery(useQueryArgs(plan, options));
 
     const result = adapter.framework.useMemo(() => {
-      return { ...rawResult, ...manager.findMany.processResult(rawResult, memoizedOptions?.pause) };
+      return { ...rawResult, ...manager.findMany.processResult(rawResult, { pause: memoizedOptions?.pause }) };
     }, [manager, memoizedOptions?.pause, rawResult]);
 
     return [result, refresh];

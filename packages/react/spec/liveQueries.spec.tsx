@@ -3,9 +3,10 @@ import { jest } from "@jest/globals";
 import { diff } from "@n1ru4l/json-patch-plus";
 import { render, renderHook, waitFor } from "@testing-library/react";
 import type { Operation, Client as UrqlClient } from "@urql/core";
+import { DocumentNode } from "graphql";
 import React from "react";
 import { pipe, subscribe } from "wonka";
-import { useFindMany } from "../src/useFindMany.js";
+import { useFindMany } from "../src/hooks.js";
 import { testApi } from "./apis.js";
 import { MockGraphQLWSClientWrapper, mockGraphQLWSClient } from "./testWrappers.js";
 import { sleep } from "./utils.js";
@@ -293,6 +294,9 @@ describe("live queries", () => {
   });
 
   test("live queries are not duplicated when cache tries to re-execute them", async () => {
+    if (!("baseSubscriptionClient" in (testApi.connection as any))) {
+      (testApi.connection as any).baseSubscriptionClient = undefined;
+    }
     jest.replaceProperty(testApi.connection, "baseSubscriptionClient", mockGraphQLWSClient as any);
 
     // @ts-expect-error baseClient is private
@@ -308,7 +312,7 @@ describe("live queries", () => {
 
         expect(op.kind).toBe("query");
         expect(
-          op.query.definitions.some(
+          (op.query as DocumentNode).definitions.some(
             (def) =>
               def.kind === "OperationDefinition" &&
               def.operation === "query" &&
