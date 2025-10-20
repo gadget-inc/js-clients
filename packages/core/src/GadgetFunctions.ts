@@ -13,6 +13,12 @@ export interface GQLBuilderResult {
   variables: Record<string, any>;
 }
 
+export type ProcessResultFunction<InT = any, OutT = InT> = (
+  data: InT,
+  error: CombinedError | undefined,
+  pause?: boolean
+) => { data: OutT; error: AnyErrorWrapper | undefined };
+
 export interface FindOneFunction<OptionsT, SelectionT, SchemaT, DefaultsT> {
   <Options extends OptionsT>(fieldValue: string, options?: LimitToKnownKeys<Options, OptionsT>): AsyncRecord<any>;
   type: "findOne";
@@ -25,7 +31,7 @@ export interface FindOneFunction<OptionsT, SelectionT, SchemaT, DefaultsT> {
   optionsType: OptionsT;
   schemaType: SchemaT | null;
   plan: <Options extends OptionsT>(fieldValue: string, options?: LimitToKnownKeys<Options, OptionsT>) => GQLBuilderResult;
-  processResult: <InT = any, OutT = InT>(data: InT, error: CombinedError | undefined) => { data: OutT; error: AnyErrorWrapper | undefined };
+  processResult: ProcessResultFunction;
 }
 
 export interface MaybeFindOneFunction<OptionsT, SelectionT, SchemaT, DefaultsT> {
@@ -41,7 +47,7 @@ export interface MaybeFindOneFunction<OptionsT, SelectionT, SchemaT, DefaultsT> 
   optionsType: OptionsT;
   schemaType: SchemaT | null;
   plan: <Options extends OptionsT>(fieldValue: string, options?: LimitToKnownKeys<Options, OptionsT>) => GQLBuilderResult;
-  processResult: <InT = any, OutT = InT>(data: InT, error: CombinedError | undefined) => { data: OutT; error: AnyErrorWrapper | undefined };
+  processResult: ProcessResultFunction;
 }
 
 export interface FindManyFunction<OptionsT, SelectionT, SchemaT, DefaultsT> {
@@ -56,7 +62,7 @@ export interface FindManyFunction<OptionsT, SelectionT, SchemaT, DefaultsT> {
   optionsType: OptionsT;
   schemaType: SchemaT | null;
   plan: <Options extends OptionsT>(options?: LimitToKnownKeys<Options, OptionsT>) => GQLBuilderResult;
-  processResult: <InT = any, OutT = InT>(data: InT, error: CombinedError | undefined) => { data: OutT; error: AnyErrorWrapper | undefined };
+  processResult: ProcessResultFunction;
 }
 
 export interface FindFirstFunction<OptionsT, SelectionT, SchemaT, DefaultsT> {
@@ -71,7 +77,7 @@ export interface FindFirstFunction<OptionsT, SelectionT, SchemaT, DefaultsT> {
   optionsType: OptionsT;
   schemaType: SchemaT | null;
   plan: <Options extends OptionsT>(options?: LimitToKnownKeys<Options, OptionsT>) => GQLBuilderResult;
-  processResult: <InT = any, OutT = InT>(data: InT, error: CombinedError | undefined) => { data: OutT; error: AnyErrorWrapper | undefined };
+  processResult: ProcessResultFunction;
 }
 
 export interface MaybeFindFirstFunction<OptionsT, SelectionT, SchemaT, DefaultsT> {
@@ -86,7 +92,7 @@ export interface MaybeFindFirstFunction<OptionsT, SelectionT, SchemaT, DefaultsT
   optionsType: OptionsT;
   schemaType: SchemaT | null;
   plan: <Options extends OptionsT>(options?: LimitToKnownKeys<Options, OptionsT>) => GQLBuilderResult;
-  processResult: <InT = any, OutT = InT>(data: InT, error: CombinedError | undefined) => { data: OutT; error: AnyErrorWrapper | undefined };
+  processResult: ProcessResultFunction;
 }
 
 export interface ViewFunctionWithoutVariables<ResultT> {
@@ -98,7 +104,7 @@ export interface ViewFunctionWithoutVariables<ResultT> {
   referencedTypenames?: string[];
   resultType: ResultT;
   plan(): GQLBuilderResult;
-  processResult: <InT = any, OutT = InT>(data: InT, error: CombinedError | undefined) => { data: OutT; error: AnyErrorWrapper | undefined };
+  processResult: ProcessResultFunction;
 }
 
 export interface ViewFunctionWithVariables<VariablesT, ResultT> {
@@ -112,7 +118,7 @@ export interface ViewFunctionWithVariables<VariablesT, ResultT> {
   variablesType: VariablesT;
   resultType: ResultT;
   plan(variables: VariablesOptions): GQLBuilderResult;
-  processResult: <InT = any, OutT = InT>(data: InT, error: CombinedError | undefined) => { data: OutT; error: AnyErrorWrapper | undefined };
+  processResult: ProcessResultFunction;
 }
 
 export type ViewFunction<VariablesT, ResultT> = ViewFunctionWithoutVariables<ResultT> | ViewFunctionWithVariables<VariablesT, ResultT>;
@@ -167,7 +173,7 @@ export interface ActionFunctionMetadata<OptionsT, VariablesT, SelectionT, Schema
   singleActionFunctionName?: string;
   singleAction?: IsBulk extends true ? ActionFunctionMetadata<OptionsT, VariablesT, SelectionT, SchemaT, DefaultsT, false> : never;
   plan: <Options extends OptionsT>(options?: LimitToKnownKeys<Options, OptionsT>) => GQLBuilderResult;
-  processResult: <InT = any, OutT = InT>(data: InT, error: CombinedError | undefined) => { data: OutT; error: AnyErrorWrapper | undefined };
+  processResult: ProcessResultFunction;
   /** @deprecated */
   hasCreateOrUpdateEffect?: boolean;
 }
@@ -225,7 +231,7 @@ export interface GetFunction<OptionsT, SelectionT, SchemaT, DefaultsT> {
   optionsType: OptionsT;
   schemaType: SchemaT | null;
   plan: <Options extends OptionsT>(options?: LimitToKnownKeys<Options, OptionsT>) => GQLBuilderResult;
-  processResult: <InT = any, OutT = InT>(data: InT, error: CombinedError | undefined) => { data: OutT; error: AnyErrorWrapper | undefined };
+  processResult: ProcessResultFunction;
 }
 
 export interface GlobalActionFunction<VariablesT> {
@@ -239,7 +245,7 @@ export interface GlobalActionFunction<VariablesT> {
   variablesType: VariablesT;
   isBulk?: undefined;
   plan: (variables?: VariablesOptions) => GQLBuilderResult;
-  processResult: <InT = any, OutT = InT>(data: InT, error: CombinedError | undefined) => { data: OutT; error: AnyErrorWrapper | undefined };
+  processResult: ProcessResultFunction;
 }
 
 export type AnyActionFunction =
@@ -247,42 +253,3 @@ export type AnyActionFunction =
   | ActionFunctionMetadata<any, any, any, any, any, false | undefined>
   | GlobalActionFunction<any>;
 export type AnyBulkActionFunction = ActionFunctionMetadata<any, any, any, any, any, true>;
-
-// This is a function that represents a computed view that doesn't take any input parameters/variables.
-// Result is an explicit type parameter defining the shape of the full result.
-export type ComputedViewFunctionWithoutVariables<Result> = () => Promise<Result>;
-
-// Represents a computed view that doesn't take any input parameters/variables.
-// It includes the view function and the view metadata.
-export interface ComputedViewWithoutVariables<Result> extends ComputedViewFunctionWithoutVariables<Result> {
-  type: "computedView";
-  operationName: string;
-  gqlFieldName: string;
-  namespace: string | string[] | null;
-  resultType: Result;
-  plan(): {
-    query: string;
-    variables: Record<string, any>;
-  };
-}
-
-// This is a function that represents a computed view that takes input parameters/variables.
-// Result is an explicit type parameter defining the shape of the full result.
-// Variables is an explicit type parameter that describes the shape of the variables parameter.
-export type ComputedViewFunctionWithVariables<Variables, Result> = (variables?: Variables) => Promise<Result>;
-
-// Represents a computed view that takes input parameters/variables.
-// It includes the view function and the view metadata.
-export interface ComputedViewWithVariables<Variables, Result> extends ComputedViewFunctionWithVariables<Variables, Result> {
-  type: "computedView";
-  operationName: string;
-  gqlFieldName: string;
-  namespace: string | string[] | null;
-  variables: VariablesOptions;
-  variablesType: Variables;
-  resultType: Result;
-  plan(variables?: Variables): {
-    query: string;
-    variables: Record<string, any>;
-  };
-}
