@@ -194,6 +194,168 @@ See the [`@gadgetinc/react` documentation](https://github.com/gadget-inc/js-clie
 
 All of these hooks will work seamlessly with the ChatGPT Apps authentication provided by this package.
 
+## ChatGPT-Specific Hooks
+
+This package also provides hooks for interacting with the ChatGPT environment and OpenAI APIs. These hooks enable your app to respond to the ChatGPT context and provide a native experience.
+
+### `useDisplayMode()`
+
+Access the current display mode of your ChatGPT app.
+
+```tsx
+import { useDisplayMode } from "@gadgetinc/react-chatgpt-apps";
+
+function MyWidget() {
+  const displayMode = useDisplayMode();
+
+  return <div>{displayMode === "fullscreen" ? <FullScreenView /> : <CompactView />}</div>;
+}
+```
+
+Returns one of:
+
+- `"pip"` - Picture-in-picture mode (small floating window)
+- `"inline"` - Inline mode (embedded in the chat)
+- `"fullscreen"` - Fullscreen mode (takes up the entire screen)
+- `null` - If not available
+
+### `useMaxHeight()`
+
+Get the maximum height available for your app in pixels.
+
+```tsx
+import { useMaxHeight } from "@gadgetinc/react-chatgpt-apps";
+
+function MyWidget() {
+  const maxHeight = useMaxHeight();
+
+  return <div style={{ maxHeight }}>Content that respects viewport limits</div>;
+}
+```
+
+This value updates dynamically as the display mode or window size changes.
+
+### `useRequestDisplayMode()`
+
+Request a change to the app's display mode.
+
+```tsx
+import { useRequestDisplayMode } from "@gadgetinc/react-chatgpt-apps";
+
+function MyWidget() {
+  const requestDisplayMode = useRequestDisplayMode();
+
+  const goFullscreen = async () => {
+    const result = await requestDisplayMode("fullscreen");
+    console.log("Granted mode:", result.mode);
+  };
+
+  return <button onClick={goFullscreen}>Go Fullscreen</button>;
+}
+```
+
+Note: The host may reject or modify the request (e.g., on mobile, PiP is always coerced to fullscreen).
+
+### `useWidgetState(defaultState)`
+
+Manage persistent widget state that syncs with ChatGPT's storage system.
+
+```tsx
+import { useWidgetState } from "@gadgetinc/react-chatgpt-apps";
+
+function Counter() {
+  const [state, setState] = useWidgetState({ count: 0 });
+
+  return <button onClick={() => setState({ count: (state?.count ?? 0) + 1 })}>Count: {state?.count ?? 0}</button>;
+}
+```
+
+Similar to React's `useState`, but state persists across re-renders and display mode changes.
+
+### `useWidgetProps(defaultProps)`
+
+Access the tool output props passed to your ChatGPT app.
+
+```tsx
+import { useWidgetProps } from "@gadgetinc/react-chatgpt-apps";
+
+function MyWidget() {
+  const props = useWidgetProps({ userId: "unknown", theme: "light" });
+
+  return <div>User ID: {props.userId}</div>;
+}
+```
+
+When ChatGPT invokes your app, it may provide initial data through the `toolOutput` property. This hook retrieves that data with optional defaults.
+
+### `useSendMessage()`
+
+Send follow-up messages to the ChatGPT conversation programmatically.
+
+```tsx
+import { useSendMessage } from "@gadgetinc/react-chatgpt-apps";
+
+function QuickActions() {
+  const sendMessage = useSendMessage();
+
+  return <button onClick={() => sendMessage("Tell me more about this")}>Ask for more details</button>;
+}
+```
+
+Useful for creating interactive experiences that guide the conversation.
+
+### `useOpenExternal()`
+
+Open external URLs in a way that respects the ChatGPT environment.
+
+```tsx
+import { useOpenExternal } from "@gadgetinc/react-chatgpt-apps";
+
+function LinkButton() {
+  const openExternal = useOpenExternal();
+
+  return <button onClick={() => openExternal("https://example.com")}>Visit Example</button>;
+}
+```
+
+Attempts to use ChatGPT's native link handler, falling back to `window.open` if unavailable.
+
+### `useCallTool()`
+
+Call external tools/APIs that have been configured in your ChatGPT app.
+
+```tsx
+import { useCallTool } from "@gadgetinc/react-chatgpt-apps";
+
+function WeatherWidget() {
+  const callTool = useCallTool();
+
+  const fetchWeather = async () => {
+    const response = await callTool("weatherApi", { city: "San Francisco" });
+    console.log(response?.result);
+  };
+
+  return <button onClick={fetchWeather}>Get Weather</button>;
+}
+```
+
+### `useOpenAiGlobal(key)`
+
+Low-level hook for accessing OpenAI global values by key.
+
+```tsx
+import { useOpenAiGlobal } from "@gadgetinc/react-chatgpt-apps";
+
+function ThemeAwareComponent() {
+  const theme = useOpenAiGlobal("theme");
+  const locale = useOpenAiGlobal("locale");
+
+  return <div className={theme}>Content in {locale}</div>;
+}
+```
+
+Most apps should use the more specific hooks like `useDisplayMode`, `useMaxHeight`, etc. instead of using this hook directly.
+
 ## Authentication Flow
 
 When your ChatGPT App loads, the following happens automatically:
