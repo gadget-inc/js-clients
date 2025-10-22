@@ -1,4 +1,4 @@
-import { useCallback, useContext, useEffect } from "react";
+import { useCallback, useContext } from "react";
 import { GadgetConfigurationContext, useApi } from "../GadgetProvider.js";
 import { useAction } from "../useAction.js";
 import { useUser } from "./useUser.js";
@@ -20,25 +20,23 @@ export const useSignOut = (opts?: { redirectOnSuccess?: boolean; redirectToPath?
   if (signOutActionApiIdentifier && (api as any).user[signOutActionApiIdentifier]) {
     // eslint-disable-next-line @typescript-eslint/ban-ts-comment
     // @ts-ignore
-    const [{ error, data }, signOutAction] = useAction((api as any).user[signOutActionApiIdentifier], { suspense: true });
+    const [{ error }, signOutAction] = useAction((api as any).user[signOutActionApiIdentifier], { suspense: true });
 
     if (error) throw error;
-
-    // eslint-disable-next-line
-    useEffect(() => {
-      if (redirectOnSuccess && data) {
-        const redirectUrl = new URL(redirectToPath ?? signInPath, window.location.origin);
-        const navigate = context?.navigate ?? windowNavigate;
-        navigate(`${redirectUrl.pathname}${redirectUrl.search}`);
-      }
-    }, [data]);
 
     // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
     return useCallback(async () => {
       if (!user) throw new Error("attempting to sign out when the user is not signed in");
       // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-      await signOutAction({ id: user.id });
-    }, [user, signOutAction]);
+
+      const result = await signOutAction({ id: user.id });
+
+      if (redirectOnSuccess && result.data) {
+        const redirectUrl = new URL(redirectToPath ?? signInPath, window.location.origin);
+        const navigate = context?.navigate ?? windowNavigate;
+        navigate(`${redirectUrl.pathname}${redirectUrl.search}`);
+      }
+    }, [user, signOutAction, redirectOnSuccess, redirectToPath, signInPath, context?.navigate]);
   } else {
     throw new Error(`missing configured signOutActionApiIdentifier '${signOutActionApiIdentifier}' on the \`api.user\` model manager.`);
   }
