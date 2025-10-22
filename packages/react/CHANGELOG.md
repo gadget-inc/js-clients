@@ -1,5 +1,11 @@
 # @gadgetinc/react
 
+## 0.22.2
+
+### Patch Changes
+
+- fixed a bug with `useSignOut` where the redirect after signing out would occasionally break
+
 ## 0.21.4
 
 ### Patch Changes
