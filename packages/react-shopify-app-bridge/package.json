@@ -1,6 +1,6 @@
 {
   "name": "@gadgetinc/react-shopify-app-bridge",
-  "version": "0.19.1",
+  "version": "0.19.2",
   "files": [
     "README.md",
     "dist/**/*"
@@ -45,7 +45,7 @@
     "react-dom": "^19.1.1"
   },
   "peerDependencies": {
-    "@gadgetinc/react": "^0.22.0",
+    "@gadgetinc/react": "^0.22.2",
     "@shopify/app-bridge-react": "^4.2.0",
     "react": "^19.0.0",
     "react-dom": "^19.0.0"

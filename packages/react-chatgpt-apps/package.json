@@ -1,6 +1,6 @@
 {
   "name": "@gadgetinc/react-chatgpt-apps",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "files": [
     "README.md",
     "dist/**/*"
@@ -41,6 +41,6 @@
   "peerDependencies": {
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
-    "@gadgetinc/react": "^0.22.0"
+    "@gadgetinc/react": "^0.22.2"
   }
 }
