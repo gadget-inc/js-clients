@@ -1,15 +1,15 @@
+import { $coreImplementation } from "@gadgetinc/core";
 import type { AnyVariables, DocumentInput } from "@urql/core";
-import { AnyCoreImplementation } from "../../core/dist/esm/AnyCoreImplementation.js";
 import type { GadgetApiContext, RuntimeAdapter } from "./adapter.js";
-import {
+import type {
   CoreHooks,
+  QueryOptions,
   UseApi,
   UseConnection,
   UseCoreImplementation,
   UseGadgetMutation,
   UseGadgetQuery,
   UseGadgetQueryArgs,
-  type QueryOptions,
 } from "./types.js";
 import { noProviderErrorMessage } from "./utils.js";
 
@@ -90,7 +90,18 @@ const createCoreHooks = (adapter: RuntimeAdapter): CoreHooks => {
       throw new Error(noProviderErrorMessage);
     }
 
-    return (api as any)[Symbol.for("gadget/coreImplementation")] as AnyCoreImplementation;
+    if (!api[$coreImplementation]) {
+      throw new Error(
+        `useCoreImplementation hook called in context where no Gadget core implementation is available. Please ensure you are wrapping this hook with the <Provider/> component from @gadgetinc/react.
+  
+        Possible remedies:
+         - ensuring you have the <Provider/> component wrapped around your hook invocation
+         - ensuring you are passing an api client instance to the provider, usually <Provider api={api}>
+         - ensuring your @gadget-client/<your-app> package and your @gadgetinc/react package are up to date`
+      );
+    }
+
+    return api[$coreImplementation];
   };
 
   const useMemoizedQueryOptions = <Options extends QueryOptions>(options?: Options): Options => {

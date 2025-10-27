@@ -1,18 +1,19 @@
 import type { Client, CombinedError } from "@urql/core";
-import { AnyErrorWrapper } from "./AnyErrorWrapper.js";
-import { AnyGadgetTransaction, TransactionRun } from "./AnyGadgetTransaction.js";
-import { AnyActionFunction, AnyBulkActionFunction } from "./GadgetFunctions.js";
-import { AnyBackgroundActionHandle, BuildOperationResult, EnqueueBackgroundActionOptions } from "./types.js";
+import type { AnyErrorWrapper } from "./AnyErrorWrapper.js";
+import type { AnyGadgetTransaction, TransactionRun } from "./AnyGadgetTransaction.js";
+import type { AnyActionFunction, AnyBulkActionFunction } from "./GadgetFunctions.js";
+import type { AnyBackgroundActionHandle, BuildOperationResult, EnqueueBackgroundActionOptions } from "./types.js";
 
 export type AnyConnectionOptions<SubscriptionClientOptionsT extends Record<string, any> = Record<string, any>> = Record<string, any> & {
   endpoint: string;
   subscriptionClientOptions?: SubscriptionClientOptionsT;
 };
 
-export type AnyConnection<OptionsT extends AnyConnectionOptions = AnyConnectionOptions> = {
+export type AnyConnection<OptionsT extends AnyConnectionOptions = AnyConnectionOptions, AuthenticationModeT = any> = {
   endpoint: string;
   options: OptionsT;
   get currentClient(): Client;
+  setAuthenticationMode(authenticationMode?: AuthenticationModeT): void;
   close(): void;
   fetch: (input: RequestInfo | URL, init?: RequestInit) => Promise<Response>;
   transaction: {
