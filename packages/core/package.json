@@ -1,6 +1,6 @@
 {
   "name": "@gadgetinc/core",
-  "version": "0.9.0",
+  "version": "0.10.0",
   "files": [
     "README.md",
     "dist/**/*",
@@ -36,7 +36,7 @@
     "prerelease": "gitpkg publish"
   },
   "devDependencies": {
-    "@urql/core": ">=4.0.0",
+    "@urql/core": "^6.0.1",
     "conditional-type-checks": ">=1.0.0",
     "graphql": ">=16.0.0",
     "graphql-ws": ">=5.0.0",
@@ -45,5 +45,8 @@
     "type-fest": ">=3.0.0",
     "typescript": "5.4.5",
     "wonka": ">=6.0.0"
+  },
+  "peerDependencies": {
+    "@urql/core": ">=4.0.0"
   }
 }
