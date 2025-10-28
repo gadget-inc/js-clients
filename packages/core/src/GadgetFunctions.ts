@@ -17,7 +17,7 @@ export type FunctionResult<Data = any> = { data?: Data; error?: CombinedError | 
 
 export type ProcessResultFunction<DataIn = any, DataOut = DataIn> = (
   result: FunctionResult<DataIn>,
-  pause?: boolean
+  opts?: { pause?: boolean; fieldValue?: string }
 ) => { data: DataOut | null | undefined; error: AnyErrorWrapper | undefined };
 
 export interface FindOneFunction<OptionsT, SelectionT, SchemaT, DefaultsT> {
