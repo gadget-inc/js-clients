@@ -30,6 +30,7 @@ export type {
   AutoTextInputProps,
 } from "./auto/shared/AutoInputTypes.js";
 export type { AutoRichTextInputProps } from "./auto/shared/AutoRichTextInputProps.js";
+export { useActionMetadata, useModelMetadata } from "./metadata.js";
 export * from "./useAction.js";
 export * from "./useActionForm.js";
 export * from "./useBulkAction.js";
