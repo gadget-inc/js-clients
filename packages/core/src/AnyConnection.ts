@@ -1,7 +1,7 @@
-import type { Client, CombinedError } from "@urql/core";
+import type { Client } from "@urql/core";
 import type { AnyErrorWrapper } from "./AnyErrorWrapper.js";
 import type { AnyGadgetTransaction, TransactionRun } from "./AnyGadgetTransaction.js";
-import type { AnyActionFunction, AnyBulkActionFunction } from "./GadgetFunctions.js";
+import type { AnyActionFunction, AnyBulkActionFunction, FunctionResult } from "./GadgetFunctions.js";
 import type { AnyBackgroundActionHandle, BuildOperationResult, EnqueueBackgroundActionOptions } from "./types.js";
 
 export type AnyConnectionOptions<SubscriptionClientOptionsT extends Record<string, any> = Record<string, any>> = Record<string, any> & {
@@ -27,11 +27,11 @@ export type AnyConnection<OptionsT extends AnyConnectionOptions = AnyConnectionO
     plan: (action: AnyActionFunction, options?: EnqueueBackgroundActionOptions<any> | null) => BuildOperationResult;
     processOptions: (options: EnqueueBackgroundActionOptions<any>) => Record<string, any> | null;
     processResult: {
-      <SchemaT, Action extends AnyBulkActionFunction>(action: Action, data: any, error: CombinedError | undefined): {
+      <SchemaT, Action extends AnyBulkActionFunction>(action: Action, result: FunctionResult): {
         handles: AnyBackgroundActionHandle<SchemaT, Action>[] | null;
         error: AnyErrorWrapper | undefined;
       };
-      <SchemaT, Action extends AnyActionFunction>(action: Action, data: any, error: CombinedError | undefined): {
+      <SchemaT, Action extends AnyActionFunction>(action: Action, result: FunctionResult): {
         handle: AnyBackgroundActionHandle<SchemaT, Action> | null;
         error: AnyErrorWrapper | undefined;
       };

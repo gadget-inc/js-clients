@@ -1,4 +1,4 @@
-import { RuntimeAdapter } from "./adapter.js";
+import type { RuntimeAdapter } from "./adapter.js";
 import { createHookStub } from "./createHooks.js";
 import type { CoreHooks, UseMaybeFindFirst } from "./types.js";
 import { useQueryArgs } from "./utils.js";
@@ -14,8 +14,8 @@ export let useMaybeFindFirst: UseMaybeFindFirst = createHookStub("useMaybeFindFi
     const [rawResult, refresh] = coreHooks.useGadgetQuery(useQueryArgs(plan, firstOptions));
 
     const result = adapter.framework.useMemo(() => {
-      return { ...rawResult, ...manager.findFirst.processResult(rawResult.data, rawResult.error) };
-    }, [rawResult, manager]);
+      return { ...rawResult, ...manager.findFirst.processResult(rawResult, memoizedOptions?.pause) };
+    }, [rawResult, manager, memoizedOptions?.pause]);
 
     return [result, refresh];
   };

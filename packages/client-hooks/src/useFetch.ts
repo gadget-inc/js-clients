@@ -1,5 +1,5 @@
-import { AnyErrorWrapper } from "@gadgetinc/core";
-import { RuntimeAdapter } from "./adapter.js";
+import type { AnyErrorWrapper } from "@gadgetinc/core";
+import type { RuntimeAdapter } from "./adapter.js";
 import { createHookStub } from "./createHooks.js";
 import type { CoreHooks, FetchHookOptions, FetchHookResult, FetchHookState, UseFetch } from "./types.js";
 

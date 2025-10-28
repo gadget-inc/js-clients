@@ -13,11 +13,12 @@ export interface GQLBuilderResult {
   variables: Record<string, any>;
 }
 
-export type ProcessResultFunction<InT = any, OutT = InT> = (
-  data: InT,
-  error: CombinedError | undefined,
+export type FunctionResult<Data = any> = { data?: Data; error?: CombinedError | undefined; fetching?: boolean; stale?: boolean };
+
+export type ProcessResultFunction<DataIn = any, DataOut = DataIn> = (
+  result: FunctionResult<DataIn>,
   pause?: boolean
-) => { data: OutT; error: AnyErrorWrapper | undefined };
+) => { data: DataOut | null | undefined; error: AnyErrorWrapper | undefined };
 
 export interface FindOneFunction<OptionsT, SelectionT, SchemaT, DefaultsT> {
   <Options extends OptionsT>(fieldValue: string, options?: LimitToKnownKeys<Options, OptionsT>): AsyncRecord<any>;

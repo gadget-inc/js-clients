@@ -112,7 +112,7 @@ const newMockOperationFn = (assertions?: (request: GraphQLRequest) => void) => {
     const { query } = request;
 
     const fetchOptions = options?.fetchOptions;
-    const key = graphqlDocumentName(query) ?? "unknown";
+    const key = ("kind" in query && graphqlDocumentName(query)) ?? "unknown";
 
     subjects[key] ??= makeSubject<OperationResult>();
 

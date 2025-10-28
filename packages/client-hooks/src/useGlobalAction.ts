@@ -50,5 +50,5 @@ export let useGlobalAction: UseGlobalAction = createHookStub("useGlobalAction", 
 });
 
 const processResult = (result: UseMutationState<any, any>, action: GlobalActionFunction<any>) => {
-  return { ...result, ...action.processResult(result.data, result.error) };
+  return { ...result, ...action.processResult(result) };
 };
