@@ -8,7 +8,9 @@ import {
   capitalizeIdentifier,
   filterTypeName,
   hydrationSelection,
+  jsSearchFieldsToGqlSearchFields,
   namespacify,
+  searchableFieldTypeName,
   sortTypeName,
 } from "./support.js";
 import type { ActionFunctionOptions, BaseFindOptions, EnqueueBackgroundActionOptions, FindManyOptions, VariablesOptions } from "./types.js";
@@ -100,6 +102,12 @@ export const findManyOperation = (
         sort: options?.sort ? Var({ value: options.sort, type: `[${sortTypeName(modelApiIdentifier, namespace)}!]` }) : undefined,
         filter: options?.filter ? Var({ value: options.filter, type: `[${filterTypeName(modelApiIdentifier, namespace)}!]` }) : undefined,
         search: options?.search ? Var({ value: options.search, type: "String" }) : undefined,
+        searchFields: options?.searchFields
+          ? Var({
+              value: jsSearchFieldsToGqlSearchFields(options.searchFields),
+              type: `${searchableFieldTypeName(modelApiIdentifier, namespace)}`,
+            })
+          : undefined,
       },
       {
         pageInfo: { hasNextPage: true, hasPreviousPage: true, startCursor: true, endCursor: true },

@@ -1,11 +1,12 @@
 import type { OperationResult } from "@urql/core";
 import { CombinedError } from "@urql/core";
+import { isObject } from "lodash-es";
 import { Call, type FieldSelection as BuilderFieldSelection } from "tiny-graphql-query-compiler";
 import { DataHydrator } from "./DataHydrator.js";
 import type { ActionFunctionMetadata, AnyActionFunction } from "./GadgetFunctions.js";
 import type { RecordShape } from "./GadgetRecord.js";
 import { GadgetRecord } from "./GadgetRecord.js";
-import type { VariablesOptions } from "./types.js";
+import type { AnySearchableFieldConfig, SearchableFieldConfig, VariablesOptions } from "./types.js";
 
 /**
  * Generic type of the state of any record of a Gadget model
@@ -294,6 +295,9 @@ export const sortTypeName = (modelApiIdentifier: string, namespace: string | str
 
 export const filterTypeName = (modelApiIdentifier: string, namespace: string | string[] | null | undefined) =>
   `${namespacedGraphQLTypeName(modelApiIdentifier, namespace)}Filter`;
+
+export const searchableFieldTypeName = (modelApiIdentifier: string, namespace: string | string[] | null | undefined) =>
+  `${namespacedGraphQLTypeName(modelApiIdentifier, namespace)}SearchFields`;
 
 export const getNonUniqueDataError = (modelApiIdentifier: string, fieldName: string, fieldValue: string) =>
   new GadgetNonUniqueDataError(
@@ -754,6 +758,20 @@ export const formatErrorMessages = (error: Error) => {
     const message = error.message.replace(codeToReplace, "");
 
     result.root = { message };
+  }
+
+  return result;
+};
+
+export const jsSearchFieldsToGqlSearchFields = (searchFields: AnySearchableFieldConfig) => {
+  const result: Record<string, SearchableFieldConfig> = {};
+
+  for (const [field, config] of Object.entries(searchFields)) {
+    if (isObject(config)) {
+      result[field] = config;
+    } else if (config) {
+      result[field] = {};
+    }
   }
 
   return result;
