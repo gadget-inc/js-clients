@@ -1,6 +1,6 @@
 import type { ActionFunction, StubbedActionFunction } from "@gadgetinc/core";
-import { AnyVariables, OperationContext } from "@urql/core";
-import { UseMutationState } from "./adapter.js";
+import type { AnyVariables, OperationContext } from "@urql/core";
+import type { UseMutationState } from "./adapter.js";
 import { createHookStub } from "./createHooks.js";
 import type { ActionHookState, UseAction } from "./types.js";
 
@@ -70,5 +70,5 @@ const processResult = <Data, Variables extends AnyVariables>(
   result: UseMutationState<Data, Variables>,
   action: ActionFunction<any, any, any, any, any>
 ): ActionHookState<any, any> => {
-  return { ...result, ...action.processResult(result.data, result.error) };
+  return { ...result, ...action.processResult(result) };
 };

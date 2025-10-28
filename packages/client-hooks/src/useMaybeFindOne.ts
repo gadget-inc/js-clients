@@ -1,4 +1,4 @@
-import { RuntimeAdapter } from "./adapter.js";
+import type { RuntimeAdapter } from "./adapter.js";
 import { createHookStub } from "./createHooks.js";
 import type { CoreHooks, UseMaybeFindOne } from "./types.js";
 import { useQueryArgs } from "./utils.js";
@@ -13,8 +13,8 @@ export let useMaybeFindOne: UseMaybeFindOne = createHookStub("useMaybeFindOne", 
     const [rawResult, refresh] = coreHooks.useGadgetQuery(useQueryArgs(plan, options));
 
     const result = adapter.framework.useMemo(() => {
-      return { ...rawResult, ...manager.findOne.processResult(rawResult.data, rawResult.error) };
-    }, [rawResult, manager]);
+      return { ...rawResult, ...manager.findOne.processResult(rawResult, memoizedOptions?.pause) };
+    }, [rawResult, manager, memoizedOptions?.pause]);
 
     return [result, refresh];
   };

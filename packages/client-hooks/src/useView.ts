@@ -63,7 +63,7 @@ export let useView: UseView = createHookStub("useView", (adapter: RuntimeAdapter
         const error = errorIfDataAbsent(data, ["gellyView"], options?.pause);
         return { ...rawResult, data, error };
       } else {
-        return { ...rawResult, ...view.processResult(rawResult.data, rawResult.error) };
+        return { ...rawResult, ...view.processResult(rawResult) };
       }
     }, [rawResult, view, options?.pause]);
 

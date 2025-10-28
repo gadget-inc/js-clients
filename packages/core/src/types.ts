@@ -961,6 +961,7 @@ export interface AnyBackgroundActionHandle<
   SchemaT,
   Action extends ActionFunctionMetadata<any, any, any, SchemaT, any, any> | GlobalActionFunction<any>
 > {
+  readonly id: string;
   result<Options extends ActionFunctionOptions<Action>, ResultData = BackgroundActionResultData<Action, Options>>(
     options?: Options
   ): Promise<ResultData | null>;

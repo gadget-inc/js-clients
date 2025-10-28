@@ -1,5 +1,5 @@
 import type { AnyClient } from "@gadgetinc/core";
-import { RuntimeAdapter } from "./adapter.js";
+import type { RuntimeAdapter } from "./adapter.js";
 import { createHooks } from "./createHooks.js";
 
 const isGadgetClient = (client: any): client is AnyClient => {

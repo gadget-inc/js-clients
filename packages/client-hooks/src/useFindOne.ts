@@ -12,8 +12,8 @@ export let useFindOne: UseFindOne = createHookStub("useFindOne", (adapter: Runti
     const [rawResult, refresh] = coreHooks.useGadgetQuery(useQueryArgs(plan, options));
 
     const result = adapter.framework.useMemo(() => {
-      return { ...rawResult, ...manager.findOne.processResult(rawResult.data, rawResult.error) };
-    }, [manager.findOne.operationName, rawResult, options?.pause]);
+      return { ...rawResult, ...manager.findOne.processResult(rawResult.data, memoizedOptions?.pause) };
+    }, [manager.findOne.operationName, rawResult, memoizedOptions?.pause]);
 
     return [result, refresh];
   };

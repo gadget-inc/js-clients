@@ -1,6 +1,6 @@
 import type { BulkActionFunction, StubbedActionFunction } from "@gadgetinc/core";
 import type { OperationContext } from "@urql/core";
-import { UseMutationState } from "./adapter.js";
+import type { UseMutationState } from "./adapter.js";
 import { createHookStub } from "./createHooks.js";
 import type { UseBulkAction } from "./types.js";
 
@@ -66,5 +66,5 @@ export let useBulkAction: UseBulkAction = createHookStub("useBulkAction", (adapt
 });
 
 const processResult = (result: UseMutationState<any, any>, action: BulkActionFunction<any, any, any, any, any>) => {
-  return { ...result, ...action.processResult(result.data, result.error) };
+  return { ...result, ...action.processResult(result) };
 };

@@ -22,7 +22,7 @@ import type {
   ViewResult,
 } from "@gadgetinc/core";
 import type { AnyVariables, DocumentInput, Operation, OperationContext, RequestPolicy } from "@urql/core";
-import { AnyCoreImplementation } from "../../core/dist/esm/AnyCoreImplementation.js";
+import type { AnyCoreImplementation } from "../../core/dist/esm/AnyCoreImplementation.js";
 import type { UseMutationResponse, UseQueryArgs, UseQueryResponse } from "./adapter.js";
 
 export interface QueryOptions {
