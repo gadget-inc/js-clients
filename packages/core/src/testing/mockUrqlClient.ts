@@ -64,7 +64,7 @@ export type MockOperationFn<F extends FunctionLike> = jest.Mock<(...args: any[])
    * The key word here is "subscribed". If no query/mutation/subscription call has been made yet, the pushed response will be "dropped".
    * One should ensure the appropriate `executeXYZ` call has been made by urql, then call this function.
    */
-  pushResponse: (key: string, response: Omit<OperationResult, "operation">) => void;
+  pushResponse: (key: string, response: Omit<OperationResult, "operation">) => Promise<void>;
   /**
    *
    * Waits for a subject to be created for a given key. This is useful for ensuring waiting in a test for a query or mutation to be run
@@ -133,12 +133,12 @@ const newMockOperationFn = (assertions?: (request: GraphQLRequest) => void) => {
   }) as unknown as MockOperationFn<any>;
 
   fn.subjects = subjects;
-  fn.pushResponse = (key, response) => {
+  fn.pushResponse = async (key, response) => {
     if (!subjects[key]) {
       throw new Error(`No mock client subject started for key ${key}, options are ${Object.keys(subjects).join(", ")}`);
     }
 
-    void act(() => {
+    await act(async () => {
       subjects[key].next({
         operation: null as any,
         ...response,
