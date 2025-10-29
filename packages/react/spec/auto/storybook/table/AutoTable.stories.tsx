@@ -2,7 +2,7 @@ import { Button, Checkbox } from "@shopify/polaris";
 import { DeleteIcon } from "@shopify/polaris-icons";
 import React, { useEffect } from "react";
 import { Provider } from "../../../../src/GadgetProvider.js";
-import { useAction } from "../../../../src/useAction.js";
+import { useAction } from "../../../../src/hooks.js";
 import { testApi as api } from "../../../apis.js";
 import { StorybookErrorBoundary } from "../StorybookErrorBoundary.js";
 import { SelectableDesignSystemAutoTableStory } from "./SelectableDesignSystemAutoTableStory.js";

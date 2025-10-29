@@ -1,12 +1,12 @@
-import type { ActionFunction, AnyClient, GlobalActionFunction } from "@gadgetinc/api-client-core";
-import { assert } from "@gadgetinc/api-client-core";
+import { assert } from "@gadgetinc/client-hooks";
+import type { ActionFunction, AnyClient, GlobalActionFunction } from "@gadgetinc/core";
+import { AnyErrorWrapper } from "@gadgetinc/core";
 import type { ResultOf } from "@graphql-typed-document-node/core";
 import type { DocumentNode } from "graphql";
-import { useApi } from "./GadgetProvider.js";
+import { useApi, useCoreImplementation, useQuery as useGadgetQuery } from "./hooks.js";
 import { graphql } from "./internal/gql/gql.js";
 import { GadgetFieldType, type FieldMetadataFragment as FieldMetadataFragmentType } from "./internal/gql/graphql.js";
-import { useGadgetQuery } from "./useGadgetQuery.js";
-import { ErrorWrapper, getModelManager, groupPaths } from "./utils.js";
+import { getModelManager, groupPaths } from "./utils.js";
 
 /**
  * The enum of all possible field types in Gadget's type system
@@ -357,7 +357,8 @@ const treeifyModelMetadata = <T extends { key: string; fields: FieldMetadata[]; 
 export const useModelMetadata = (
   apiIdentifier: string,
   namespace: string[]
-): { metadata: ModelMetadata | undefined; fetching: boolean; error: ErrorWrapper | undefined } => {
+): { metadata: ModelMetadata | undefined; fetching: boolean; error: AnyErrorWrapper | undefined } => {
+  const coreImplementation = useCoreImplementation();
   const [{ data, fetching, error }] = useGadgetQuery({
     query: ModelMetadataQuery,
     variables: {
@@ -374,7 +375,7 @@ export const useModelMetadata = (
         )
       : data,
     fetching,
-    error: error ? ErrorWrapper.forClientSideError(error) : undefined,
+    error: error ? coreImplementation.wrapClientSideError(error) : undefined,
   };
 };
 
@@ -399,8 +400,9 @@ const getGlobalActionApiIdentifier = (api: AnyClient, fn: GlobalActionFunction<a
  */
 export const useActionMetadata = (
   actionFunction: ActionFunction<any, any, any, any, any> | GlobalActionFunction<any>
-): { metadata: ModelWithOneActionMetadata | GlobalActionMetadata | undefined; fetching: boolean; error: ErrorWrapper | undefined } => {
+): { metadata: ModelWithOneActionMetadata | GlobalActionMetadata | undefined; fetching: boolean; error: AnyErrorWrapper | undefined } => {
   const api = useApi();
+  const coreImplementation = useCoreImplementation();
 
   let query: DocumentNode;
   let variables: Record<string, any>;
@@ -414,7 +416,7 @@ export const useActionMetadata = (
   } else if (actionFunction.type === "action") {
     query = ModelActionMetadataQuery;
     const modelManager = assert(
-      getModelManager(api, actionFunction.modelApiIdentifier, actionFunction.namespace),
+      getModelManager(api, coreImplementation, actionFunction.modelApiIdentifier, actionFunction.namespace),
       "no model manager found for action function"
     );
     let actionName;
@@ -472,7 +474,7 @@ export const useActionMetadata = (
   return {
     metadata,
     fetching,
-    error: error ? ErrorWrapper.forClientSideError(error) : undefined,
+    error: error ? coreImplementation.wrapClientSideError(error) : undefined,
   };
 };
 
@@ -651,11 +653,12 @@ export const useRolesMetadata = () => {
   const [{ data, fetching, error }] = useGadgetQuery({
     query: RolesMetadataQuery,
   });
+  const coreImplementation = useCoreImplementation();
 
   return {
     roles: data?.gadgetMeta.roles,
     fetching,
-    error: error ? ErrorWrapper.forClientSideError(error) : undefined,
+    error: error ? coreImplementation.wrapClientSideError(error) : undefined,
   };
 };
 

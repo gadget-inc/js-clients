@@ -5,7 +5,8 @@ import { useQueryArgs } from "./utils.js";
 
 export let useFindFirst: UseFindFirst = createHookStub("useFindFirst", (adapter: RuntimeAdapter, coreHooks: CoreHooks) => {
   useFindFirst = (manager, options) => {
-    const firstOptions = { ...options, first: 1 } as typeof options;
+    const firstOptions = { ...options, first: 1 } as unknown as typeof options;
+
     const memoizedOptions = coreHooks.useStructuralMemo(firstOptions);
     const plan = adapter.framework.useMemo(() => {
       return manager.findFirst.plan(memoizedOptions);
@@ -13,7 +14,7 @@ export let useFindFirst: UseFindFirst = createHookStub("useFindFirst", (adapter:
     const [rawResult, refresh] = coreHooks.useGadgetQuery(useQueryArgs(plan, firstOptions));
 
     const result = adapter.framework.useMemo(() => {
-      return { ...rawResult, ...manager.findFirst.processResult(rawResult, memoizedOptions?.pause) };
+      return { ...rawResult, ...manager.findFirst.processResult(rawResult, { pause: memoizedOptions?.pause }) };
     }, [manager.findFirst.operationName, memoizedOptions?.pause, rawResult]);
 
     return [result, refresh];

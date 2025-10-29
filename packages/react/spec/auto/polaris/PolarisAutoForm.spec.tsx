@@ -1,4 +1,4 @@
-import { GadgetRecord } from "@gadgetinc/api-client-core";
+import { $coreImplementation, type AnyCoreImplementation } from "@gadgetinc/core";
 import { AppProvider } from "@shopify/polaris";
 import translations from "@shopify/polaris/locales/en.json";
 import type { RenderResult } from "@testing-library/react";
@@ -16,6 +16,8 @@ import { MockClientProvider, mockUrqlClient } from "../../testWrappers.js";
 import { getGizmoModelMetadata } from "../support/gizmoModel.js";
 import { getGlobalActionMetadata } from "../support/globalActions.js";
 import { getWidgetModelMetadata, getWidgetRecord, getWidgetRecordResponse } from "../support/widgetModel.js";
+
+const GadgetRecord = ((api as any)[$coreImplementation] as AnyCoreImplementation).GadgetRecord;
 
 const PolarisMockedProviders = (props: { children: ReactNode }) => {
   return (
@@ -493,7 +495,7 @@ describe("PolarisAutoForm", () => {
       await mockUrqlClient.executeQuery.waitForSubject("ModelActionMetadata");
 
       await act(async () => {
-        mockUrqlClient.executeQuery.pushResponse("ModelActionMetadata", {
+        await mockUrqlClient.executeQuery.pushResponse("ModelActionMetadata", {
           stale: false,
           hasNext: false,
           data: getWidgetModelMetadata(
@@ -620,7 +622,7 @@ describe("PolarisAutoForm", () => {
       await mockUrqlClient.executeQuery.waitForSubject("ModelActionMetadata");
 
       await act(async () => {
-        mockUrqlClient.executeQuery.pushResponse("ModelActionMetadata", {
+        await mockUrqlClient.executeQuery.pushResponse("ModelActionMetadata", {
           stale: false,
           hasNext: false,
           data: getWidgetModelMetadata(
@@ -820,7 +822,7 @@ async function loadMockGizmoCreateMetadata() {
   await mockUrqlClient.executeQuery.waitForSubject("ModelActionMetadata");
 
   await act(async () => {
-    mockUrqlClient.executeQuery.pushResponse("ModelActionMetadata", {
+    await mockUrqlClient.executeQuery.pushResponse("ModelActionMetadata", {
       stale: false,
       hasNext: false,
       data: getGizmoModelMetadata({
@@ -836,7 +838,7 @@ async function loadMockWidgetCreateMetadata(opts?: { inputFields?: any[]; trigge
   await mockUrqlClient.executeQuery.waitForSubject("ModelActionMetadata");
 
   await act(async () => {
-    mockUrqlClient.executeQuery.pushResponse("ModelActionMetadata", {
+    await mockUrqlClient.executeQuery.pushResponse("ModelActionMetadata", {
       stale: false,
       hasNext: false,
       data: getWidgetModelMetadata(
@@ -869,7 +871,7 @@ async function loadMockWidgetUpdateMetadataWithFindBy() {
 
 const mockWidgetUpdateHelperFunctions = {
   mockMetadataResponse: async () => {
-    mockUrqlClient.executeQuery.pushResponse("ModelActionMetadata", {
+    await mockUrqlClient.executeQuery.pushResponse("ModelActionMetadata", {
       stale: false,
       hasNext: false,
       data: getWidgetModelMetadata({
@@ -880,7 +882,7 @@ const mockWidgetUpdateHelperFunctions = {
     });
   },
   mockFindByResponse: async () => {
-    mockUrqlClient.executeQuery.pushResponse("widget", {
+    await mockUrqlClient.executeQuery.pushResponse("widget", {
       stale: false,
       hasNext: false,
       data: getWidgetRecordResponse({
@@ -895,7 +897,7 @@ async function loadMockWidgetDeleteMetadata() {
   await mockUrqlClient.executeQuery.waitForSubject("ModelActionMetadata");
 
   await act(async () => {
-    mockUrqlClient.executeQuery.pushResponse("ModelActionMetadata", {
+    await mockUrqlClient.executeQuery.pushResponse("ModelActionMetadata", {
       stale: false,
       hasNext: false,
       data: getWidgetModelMetadata(
@@ -914,7 +916,7 @@ async function loadMockFlipAllMetadata(opts?: { triggers?: any[] }) {
   await mockUrqlClient.executeQuery.waitForSubject("GlobalActionMetadata");
 
   await act(async () => {
-    mockUrqlClient.executeQuery.pushResponse("GlobalActionMetadata", {
+    await mockUrqlClient.executeQuery.pushResponse("GlobalActionMetadata", {
       stale: false,
       hasNext: false,
       data: getGlobalActionMetadata({

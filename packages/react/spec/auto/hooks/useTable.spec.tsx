@@ -1,6 +1,6 @@
 import { render, renderHook } from "@testing-library/react";
 import React from "react";
-import { useAction } from "../../../src/useAction.js";
+import { useAction } from "../../../src/hooks.js";
 import { useTable } from "../../../src/useTable.js";
 import { testApi as api } from "../../apis.js";
 import { mockUrqlClient } from "../../testWrappers.js";
@@ -53,10 +53,10 @@ describe("useTable hook", () => {
     return result;
   };
 
-  it("should return the list of data and field information of a table", () => {
+  it("should return the list of data and field information of a table", async () => {
     const result = getUseTableResult();
-    loadMockWidgetModelMetadata();
-    loadWidgetData();
+    await loadMockWidgetModelMetadata();
+    await loadWidgetData();
 
     expect(mockUrqlClient.executeQuery.mock.calls[1][0].query.loc.source.body).toMatchInlineSnapshot(`
       "query widgets($after: String, $first: Int, $before: String, $last: Int) {
@@ -240,7 +240,7 @@ describe("useTable hook", () => {
   });
 
   describe("no columns property", () => {
-    it("should use the list from the default selection", () => {
+    it("should use the list from the default selection", async () => {
       getUseTableResult(
         {},
         {
@@ -248,8 +248,8 @@ describe("useTable hook", () => {
           inventoryCount: true,
         } // Assume that the default selection is only name and inventoryCount to simulate the case where some of the fields are not publicly accessible or are not selected by default
       );
-      loadMockWidgetModelMetadata();
-      loadWidgetData();
+      await loadMockWidgetModelMetadata();
+      await loadWidgetData();
 
       expect(mockUrqlClient.executeQuery.mock.calls[1][0].query.loc.source.body).toMatchInlineSnapshot(`
         "query widgets($after: String, $first: Int, $before: String, $last: Int) {
@@ -280,12 +280,12 @@ describe("useTable hook", () => {
   });
 
   describe("columns property", () => {
-    it("should only return the specified columns", () => {
+    it("should only return the specified columns", async () => {
       const result = getUseTableResult({
         columns: ["name", "inventoryCount"],
       });
-      loadMockWidgetModelMetadata();
-      loadWidgetData();
+      await loadMockWidgetModelMetadata();
+      await loadWidgetData();
 
       // The fields inside the `node` should only contain the fields that are specified in the columns property + the id field
       expect(mockUrqlClient.executeQuery.mock.calls[1][0].query.loc.source.body).toMatchInlineSnapshot(`
@@ -332,8 +332,8 @@ describe("useTable hook", () => {
       const result = getUseTableResult({
         columns: ["name", "hasMany", "hasOne", "belongsTo", "baseModelHmtField"],
       });
-      loadMockWidgetModelMetadataForRelationship();
-      loadMockWidgetDataForRelationship();
+      await loadMockWidgetModelMetadataForRelationship();
+      await loadMockWidgetDataForRelationship();
 
       expect(mockUrqlClient.executeQuery.mock.calls[1][0].query.loc.source.body).toMatchInlineSnapshot(`
         "query widgets($after: String, $first: Int, $before: String, $last: Int) {
@@ -415,8 +415,8 @@ describe("useTable hook", () => {
       const result = getUseTableResult({
         columns: ["name", "hasMany.edges.node.name", "hasOne.name", "belongsTo.str", "baseModelHmtField.edges.node.id"],
       });
-      loadMockWidgetModelMetadataForRelationship();
-      loadMockWidgetDataForRelationship();
+      await loadMockWidgetModelMetadataForRelationship();
+      await loadMockWidgetDataForRelationship();
 
       // The relationship fields should be expanded to include the related fields
       expect(mockUrqlClient.executeQuery.mock.calls[1][0].query.loc.source.body).toMatchInlineSnapshot(`
@@ -500,7 +500,7 @@ describe("useTable hook", () => {
         getUseTableResult({
           columns: [`${fieldType}Field`],
         });
-        loadMockWidgetModelMetadataForInvalidFields();
+        await loadMockWidgetModelMetadataForInvalidFields();
       } catch (err) {
         error = err as Error;
       }
@@ -514,8 +514,8 @@ describe("useTable hook", () => {
         getUseTableResult({
           columns: ["name.invalid"],
         });
-        loadMockWidgetModelMetadataForRelationship();
-        loadMockWidgetDataForRelationship();
+        await loadMockWidgetModelMetadataForRelationship();
+        await loadMockWidgetDataForRelationship();
       } catch (err) {
         error = err as Error;
       }
@@ -529,8 +529,8 @@ describe("useTable hook", () => {
         getUseTableResult({
           columns: ["hasOne.invalid"],
         });
-        loadMockWidgetModelMetadataForRelationship();
-        loadMockWidgetDataForRelationship();
+        await loadMockWidgetModelMetadataForRelationship();
+        await loadMockWidgetDataForRelationship();
       } catch (err) {
         error = err as Error;
       }
@@ -544,8 +544,8 @@ describe("useTable hook", () => {
         getUseTableResult({
           columns: ["notExist.name"],
         });
-        loadMockWidgetModelMetadataForRelationship();
-        loadMockWidgetDataForRelationship();
+        await loadMockWidgetModelMetadataForRelationship();
+        await loadMockWidgetDataForRelationship();
       } catch (err) {
         error = err as Error;
       }
@@ -563,8 +563,8 @@ describe("useTable hook", () => {
           },
         ],
       });
-      loadMockWidgetModelMetadataForRelationship();
-      loadMockWidgetDataForRelationship();
+      await loadMockWidgetModelMetadataForRelationship();
+      await loadMockWidgetDataForRelationship();
 
       expect(result.current[0].columns).toMatchInlineSnapshot(`
         [
@@ -590,15 +590,15 @@ describe("useTable hook", () => {
   });
 
   describe("excludeColumns property", () => {
-    it("should throw an error when 'excludeColumns' and 'columns' are both specified", () => {
+    it("should throw an error when 'excludeColumns' and 'columns' are both specified", async () => {
       let error: Error | undefined;
       try {
         getUseTableResult({
           columns: ["hasOne.invalid"],
           excludeColumns: ["name"],
         });
-        loadMockWidgetModelMetadataForRelationship();
-        loadMockWidgetDataForRelationship();
+        await loadMockWidgetModelMetadataForRelationship();
+        await loadMockWidgetDataForRelationship();
       } catch (err) {
         error = err as Error;
       }
@@ -606,12 +606,12 @@ describe("useTable hook", () => {
       expect(error!.message).toBe("Cannot use both 'columns' and 'excludeColumns' options at the same time");
     });
 
-    it("should exclude the specified columns", () => {
+    it("should exclude the specified columns", async () => {
       const result = getUseTableResult({
         excludeColumns: ["name", "inventoryCount"],
       });
-      loadMockWidgetModelMetadata();
-      loadWidgetData();
+      await loadMockWidgetModelMetadata();
+      await loadWidgetData();
 
       // The fields inside the `node` should not contain the fields that are specified in the exclude property
       expect(mockUrqlClient.executeQuery.mock.calls[1][0].query.loc.source.body).toMatchInlineSnapshot(`
@@ -700,7 +700,7 @@ describe("useTable hook", () => {
   describe("custom cell renderer", () => {
     // This test makes sure that the custom cell renderer is a valid React component by trying to render it.
     // If it is not a valid React component, it will throw an error.
-    it("should be able to pass a JSX element with a hook inside", () => {
+    it("should be able to pass a JSX element with a hook inside", async () => {
       let error;
 
       try {
@@ -718,8 +718,8 @@ describe("useTable hook", () => {
             },
           ],
         });
-        loadMockWidgetModelMetadata();
-        loadWidgetData();
+        await loadMockWidgetModelMetadata();
+        await loadWidgetData();
 
         render(<>{result.current[0].rows?.[0]?.["Custom column"]}</>, {
           wrapper: PolarisMockedProviders,
@@ -731,7 +731,7 @@ describe("useTable hook", () => {
       expect(error).toBeUndefined();
     });
 
-    it("should be able to access all fields of a table", () => {
+    it("should be able to access all fields of a table", async () => {
       let recordFromRender: any;
 
       const result = getUseTableResult({
@@ -746,8 +746,8 @@ describe("useTable hook", () => {
           },
         ],
       });
-      loadMockWidgetModelMetadata();
-      loadWidgetData();
+      await loadMockWidgetModelMetadata();
+      await loadWidgetData();
 
       // Trigger a render to get the record
       const customCellRenderColumnResultKey = Object.keys(result.current[0].rows?.[0] ?? {}).find((key) => uuids.includes(key))!;
@@ -780,7 +780,6 @@ describe("useTable hook", () => {
                   truncatedHTML
                 }
                 embedding
-                inStock
                 inventoryCount
                 isChecked
                 metafields
@@ -808,7 +807,7 @@ describe("useTable hook", () => {
       expect(recordFromRender.inventoryCount).toBe(1);
     });
 
-    it("should be able to access all fields of a table with duplicate custom cell headers", () => {
+    it("should be able to access all fields of a table with duplicate custom cell headers", async () => {
       let recordFromRender: any;
 
       const result = getUseTableResult({
@@ -830,8 +829,8 @@ describe("useTable hook", () => {
           },
         ],
       });
-      loadMockWidgetModelMetadata();
-      loadWidgetData();
+      await loadMockWidgetModelMetadata();
+      await loadWidgetData();
 
       const columns = result.current[0].rows?.[0] ?? {};
       const columnKeys = Object.keys(columns);
@@ -853,7 +852,7 @@ describe("useTable hook", () => {
   });
 
   describe("select property", () => {
-    it("should completely override the default selection on relationship fields", () => {
+    it("should completely override the default selection on relationship fields", async () => {
       const result = getUseTableResult({
         select: {
           gizmos: {
@@ -866,8 +865,8 @@ describe("useTable hook", () => {
         },
         columns: ["name", "inventoryCount"],
       });
-      loadMockWidgetModelMetadata();
-      loadWidgetData();
+      await loadMockWidgetModelMetadata();
+      await loadWidgetData();
 
       // The "gizmos" field should be included in the query even though it's not in the columns
       expect(mockUrqlClient.executeQuery.mock.calls[1][0].query.loc.source.body).toMatchInlineSnapshot(`
@@ -901,7 +900,7 @@ describe("useTable hook", () => {
       `);
     });
 
-    it("should completely override the default selection on simple fields", () => {
+    it("should completely override the default selection on simple fields", async () => {
       const result = getUseTableResult({
         select: {
           gizmos: {
@@ -910,8 +909,8 @@ describe("useTable hook", () => {
         },
         columns: ["name", "inventoryCount"],
       });
-      loadMockWidgetModelMetadata();
-      loadWidgetData();
+      await loadMockWidgetModelMetadata();
+      await loadWidgetData();
 
       // The "gizmos" field should be included in the query even though it's not in the columns
       expect(mockUrqlClient.executeQuery.mock.calls[1][0].query.loc.source.body).toMatchInlineSnapshot(`
@@ -941,13 +940,13 @@ describe("useTable hook", () => {
       `);
     });
 
-    it("should completely override the default selection to select nothing", () => {
+    it("should completely override the default selection to select nothing", async () => {
       const result = getUseTableResult({
         select: {},
         columns: ["name", "inventoryCount"],
       });
-      loadMockWidgetModelMetadata();
-      loadWidgetData();
+      await loadMockWidgetModelMetadata();
+      await loadWidgetData();
 
       // The "gizmos" field should be included in the query even though it's not in the columns
       expect(mockUrqlClient.executeQuery.mock.calls[1][0].query.loc.source.body).toMatchInlineSnapshot(`
@@ -976,8 +975,8 @@ describe("useTable hook", () => {
   });
 });
 
-const loadMockWidgetModelMetadata = () => {
-  mockUrqlClient.executeQuery.pushResponse("GetModelMetadata", {
+const loadMockWidgetModelMetadata = async () => {
+  await mockUrqlClient.executeQuery.pushResponse("GetModelMetadata", {
     stale: false,
     hasNext: false,
     data: {
@@ -1003,8 +1002,8 @@ const loadMockWidgetModelMetadata = () => {
   });
 };
 
-const loadWidgetData = () => {
-  mockUrqlClient.executeQuery.pushResponse("widgets", {
+const loadWidgetData = async () => {
+  await mockUrqlClient.executeQuery.pushResponse("widgets", {
     stale: false,
     hasNext: false,
     data: {
@@ -1066,8 +1065,8 @@ const loadWidgetData = () => {
   });
 };
 
-const loadMockWidgetModelMetadataForRelationship = () => {
-  mockUrqlClient.executeQuery.pushResponse("GetModelMetadata", {
+const loadMockWidgetModelMetadataForRelationship = async () => {
+  await mockUrqlClient.executeQuery.pushResponse("GetModelMetadata", {
     stale: false,
     hasNext: false,
     data: {
@@ -1723,8 +1722,8 @@ const loadMockWidgetModelMetadataForRelationship = () => {
   });
 };
 
-const loadMockWidgetDataForRelationship = () => {
-  mockUrqlClient.executeQuery.pushResponse("widgets", {
+const loadMockWidgetDataForRelationship = async () => {
+  await mockUrqlClient.executeQuery.pushResponse("widgets", {
     stale: false,
     hasNext: false,
     data: {
@@ -1799,8 +1798,8 @@ const loadMockWidgetDataForRelationship = () => {
   });
 };
 
-const loadMockWidgetModelMetadataForInvalidFields = () => {
-  mockUrqlClient.executeQuery.pushResponse("GetModelMetadata", {
+const loadMockWidgetModelMetadataForInvalidFields = async () => {
+  await mockUrqlClient.executeQuery.pushResponse("GetModelMetadata", {
     stale: false,
     hasNext: false,
     data: {

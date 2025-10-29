@@ -1,111 +1,15 @@
 import { act, renderHook } from "@testing-library/react";
-import type { IsExact } from "conditional-type-checks";
-import { assert } from "conditional-type-checks";
 import type { AnyVariables } from "urql";
-import { useView } from "../src/useView.js";
-import type { ErrorWrapper } from "../src/utils.js";
+import { useView } from "../src/hooks.js";
 import { testApi } from "./apis.js";
 import { MockClientWrapper, createMockUrqlClient, mockUrqlClient } from "./testWrappers.js";
 
 describe("useView", () => {
-  // all these functions are typechecked but never run to avoid actually making API calls
-  const _TestUseViewNoVariablesReturnsTypedData = () => {
-    const [{ data, fetching, error }, refresh] = useView(testApi.totalInStock);
-
-    assert<IsExact<typeof fetching, boolean>>(true);
-    assert<IsExact<typeof data, undefined | { totalInStock: number | null }>>(true);
-    assert<IsExact<typeof error, ErrorWrapper | undefined>>(true);
-
-    if (data) {
-      data.totalInStock;
-    }
-
-    refresh();
-  };
-
-  const _TestUseViewVariablesReturnsTypedData = () => {
-    const [{ data, fetching, error }, refresh] = useView(testApi.echo, { value: "test" });
-
-    assert<IsExact<typeof fetching, boolean>>(true);
-    assert<IsExact<typeof data, undefined | { value: string | null }>>(true);
-    assert<IsExact<typeof error, ErrorWrapper | undefined>>(true);
-
-    if (data) {
-      data.value;
-    }
-
-    refresh();
-  };
-
-  const _TestUseViewOptions = () => {
-    const [{ data, fetching, error }, refresh] = useView(testApi.echo, { value: "test" }, { pause: true });
-
-    assert<IsExact<typeof fetching, boolean>>(true);
-    assert<IsExact<typeof data, undefined | { value: string | null }>>(true);
-    assert<IsExact<typeof error, ErrorWrapper | undefined>>(true);
-
-    if (data) {
-      data.value;
-    }
-
-    refresh();
-  };
-
-  const _TestUseNamespacedView = () => {
-    const [{ data }] = useView(testApi.game.echo, { value: 123 });
-
-    assert<IsExact<typeof data, undefined | { value: number | null }>>(true);
-
-    if (data) {
-      data.value;
-    }
-  };
-
-  const _TestUseModelNamespacedView = () => {
-    const [{ data }] = useView(testApi.widget.stats, { inStockOnly: false });
-
-    assert<IsExact<typeof data, undefined | { count: number | null }>>(true);
-
-    if (data) {
-      data.count;
-    }
-  };
-
-  const _TestUseInlineViewNoVariables = () => {
-    const [{ data, fetching, error }, refresh] = useView("{ count(todos) }");
-
-    assert<IsExact<typeof fetching, boolean>>(true);
-    assert<IsExact<typeof data, undefined | unknown>>(true);
-    assert<IsExact<typeof error, ErrorWrapper | undefined>>(true);
-
-    refresh();
-  };
-
-  const _TestUseInlineViewWithVariables = () => {
-    const [{ data, fetching, error }, refresh] = useView("($first: Int){ count(todos) }", { first: 10 });
-
-    assert<IsExact<typeof fetching, boolean>>(true);
-    assert<IsExact<typeof data, undefined | unknown>>(true);
-    assert<IsExact<typeof error, ErrorWrapper | undefined>>(true);
-
-    refresh();
-  };
-
-  const _TestUseInlineViewWithVariablesAndOptions = () => {
-    const [{ data, fetching, error }, refresh] = useView("($first: Int){ count(todos) }", { first: 10 }, { pause: true });
-
-    assert<IsExact<typeof fetching, boolean>>(true);
-    assert<IsExact<typeof data, undefined | unknown>>(true);
-    assert<IsExact<typeof error, ErrorWrapper | undefined>>(true);
-
-    refresh();
-  };
-
   test("can fetch a view with no variables", async () => {
     let query: string | undefined;
     const client = createMockUrqlClient({
       queryAssertions: (request) => {
-        query = request.query.loc?.source.body;
+        query = "kind" in request.query ? request.query.loc?.source.body : "";
       },
     });
 
@@ -124,7 +28,7 @@ describe("useView", () => {
       }"
     `);
 
-    client.executeQuery.pushResponse("totalInStock", {
+    await client.executeQuery.pushResponse("totalInStock", {
       data: {
         totalInStock: 100,
       },
@@ -141,7 +45,7 @@ describe("useView", () => {
     let query: string | undefined;
     const client = createMockUrqlClient({
       queryAssertions: (request) => {
-        query = request.query.loc?.source.body;
+        query = "kind" in request.query ? request.query.loc?.source.body : "";
       },
     });
 
@@ -159,7 +63,7 @@ describe("useView", () => {
       }"
     `);
 
-    client.executeQuery.pushResponse("echo", {
+    await client.executeQuery.pushResponse("echo", {
       data: {
         echo: {
           value: "test",
@@ -178,7 +82,7 @@ describe("useView", () => {
     let query: string | undefined;
     const client = createMockUrqlClient({
       queryAssertions: (request) => {
-        query = request.query.loc?.source.body;
+        query = "kind" in request.query ? request.query.loc?.source.body : "";
       },
     });
 
@@ -198,7 +102,7 @@ describe("useView", () => {
       }"
     `);
 
-    client.executeQuery.pushResponse("echo", {
+    await client.executeQuery.pushResponse("echo", {
       data: {
         game: {
           echo: {
@@ -219,7 +123,7 @@ describe("useView", () => {
     let query: string | undefined;
     const client = createMockUrqlClient({
       queryAssertions: (request) => {
-        query = request.query.loc?.source.body;
+        query = "kind" in request.query ? request.query.loc?.source.body : "";
       },
     });
 
@@ -239,7 +143,7 @@ describe("useView", () => {
       }"
     `);
 
-    client.executeQuery.pushResponse("widgetStats", {
+    await client.executeQuery.pushResponse("widgetStats", {
       data: {
         widgetStats: {
           count: 123,
@@ -260,7 +164,7 @@ describe("useView", () => {
 
     const client = createMockUrqlClient({
       queryAssertions: (request) => {
-        query = request.query.loc?.source.body;
+        query = "kind" in request.query ? request.query.loc?.source.body : "";
         variables = request.variables;
       },
     });
@@ -284,7 +188,7 @@ describe("useView", () => {
       variables: undefined,
     });
 
-    client.executeQuery.pushResponse("InlineView", {
+    await client.executeQuery.pushResponse("InlineView", {
       data: {
         gellyView: {
           count: 100,
@@ -305,7 +209,7 @@ describe("useView", () => {
 
     const client = createMockUrqlClient({
       queryAssertions: (request) => {
-        query = request.query.loc?.source.body;
+        query = "kind" in request.query ? request.query.loc?.source.body : "";
         variables = request.variables;
       },
     });
@@ -331,7 +235,7 @@ describe("useView", () => {
       variables: { first: 10 },
     });
 
-    client.executeQuery.pushResponse("InlineView", {
+    await client.executeQuery.pushResponse("InlineView", {
       data: {
         gellyView: {
           count: 100,
@@ -355,7 +259,7 @@ describe("useView", () => {
 
     expect(mockUrqlClient.executeQuery).toHaveBeenCalledTimes(1);
 
-    mockUrqlClient.executeQuery.pushResponse("echo", {
+    await mockUrqlClient.executeQuery.pushResponse("echo", {
       data: {
         echo: {
           value: "test",
@@ -382,7 +286,7 @@ describe("useView", () => {
 
     await act(async () => {
       await mockUrqlClient.executeQuery.waitForSubject("echo");
-      mockUrqlClient.executeQuery.pushResponse("echo", {
+      await mockUrqlClient.executeQuery.pushResponse("echo", {
         data: {
           echo: {
             value: "test",

@@ -17,7 +17,7 @@ describe("PolarisPasswordInput", () => {
       </PolarisAutoForm>,
       { wrapper: PolarisMockedProviders }
     );
-    mockUpdateUserFindBy();
+    await mockUpdateUserFindBy();
     const fieldNameLabel = result.queryByText("Password");
     expect(fieldNameLabel).toBeInTheDocument();
 
@@ -31,15 +31,15 @@ describe("PolarisPasswordInput", () => {
       </PolarisAutoForm>,
       { wrapper: PolarisMockedProviders }
     );
-    mockUpdateUserFindBy();
+    await mockUpdateUserFindBy();
 
     expect(result.queryByText("Password")).toBeInTheDocument(); // TItle
     expect(result.queryByRole("passwordEditPasswordButton")).toBeNull();
   });
 });
 
-const mockUpdateUserFindBy = () => {
-  mockUserFindBy({
+const mockUpdateUserFindBy = async () => {
+  await mockUserFindBy({
     name: "Update",
     apiIdentifier: "update",
     operatesWithRecordIdentity: true,

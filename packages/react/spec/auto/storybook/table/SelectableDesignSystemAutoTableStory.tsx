@@ -1,11 +1,11 @@
-import type { FindManyFunction } from "@gadgetinc/api-client-core";
+import type { OptionsType } from "@gadgetinc/client-hooks";
+import type { FindManyFunction } from "@gadgetinc/core";
 import { BlockStack, Box, LegacyCard } from "@shopify/polaris";
 import React from "react";
 import { SUITE_NAMES } from "../../../../cypress/support/constants.js";
 import { type AutoTableProps } from "../../../../src/auto/AutoTable.js";
 import { PolarisAutoTable } from "../../../../src/auto/polaris/PolarisAutoTable.js";
 import { makeAutocomponents } from "../../../../src/auto/shadcn/index.js";
-import { type OptionsType } from "../../../../src/utils.js";
 import { elements } from "../../shadcn-defaults/index.js";
 import { DesignSystemSelectionControl, ShadcnAutoComponentsThemeControlWrapper, useDesignSystem } from "../SelectableDesignSystemUtils.js";
 

@@ -1,4 +1,5 @@
-import type { ActionFunction, GlobalActionFunction } from "@gadgetinc/api-client-core";
+import { type OptionsType } from "@gadgetinc/client-hooks";
+import type { ActionFunction, GlobalActionFunction } from "@gadgetinc/core";
 import { BlockStack, Box, Button as PolarisButton, Card as PolarisCard, Label as PolarisLabel } from "@shopify/polaris";
 import React from "react";
 import { SUITE_NAMES } from "../../../../cypress/support/constants.js";
@@ -18,7 +19,6 @@ import { PolarisAutoHasOneForm } from "../../../../src/auto/polaris/inputs/relat
 import { PolarisAutoSubmit } from "../../../../src/auto/polaris/submit/PolarisAutoSubmit.js";
 import { PolarisSubmitResultBanner } from "../../../../src/auto/polaris/submit/PolarisSubmitResultBanner.js";
 import { makeAutocomponents } from "../../../../src/auto/shadcn/index.js";
-import { type OptionsType } from "../../../../src/utils.js";
 import { Card as ShadcnCard } from "../../shadcn-defaults/components/Card.js";
 import { Label as ShadcnLabel } from "../../shadcn-defaults/components/Label.js";
 import { elements } from "../../shadcn-defaults/index.js";

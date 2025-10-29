@@ -211,7 +211,7 @@ export const createMockConnection = (): AnyConnection => {
  * Creates a mock processResult function for actions and queries
  */
 export const createMockProcessResult = () => {
-  return jest.fn((data: any, error: any) => {
-    return { data, error };
+  return jest.fn((result: any) => {
+    return result;
   });
 };

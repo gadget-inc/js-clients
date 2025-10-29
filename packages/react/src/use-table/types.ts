@@ -1,4 +1,4 @@
-import type { GadgetRecord, SortOrder } from "@gadgetinc/api-client-core";
+import type { AnyErrorWrapper, GadgetRecord, SortOrder } from "@gadgetinc/core";
 import type { OperationContext } from "@urql/core";
 import type { ReactNode } from "react";
 import type { GadgetFieldType } from "../internal/gql/graphql.js";
@@ -6,7 +6,7 @@ import type { FieldMetadata, ModelMetadata } from "../metadata.js";
 import type { SearchResult } from "../useDebouncedSearch.js";
 import type { PaginationResult } from "../useList.js";
 import type { RecordSelection } from "../useSelectedRecordsController.js";
-import type { ColumnValueType, ErrorWrapper } from "../utils.js";
+import type { ColumnValueType } from "../utils.js";
 
 export type ColumnType = GadgetFieldType | "CustomRenderer";
 
@@ -142,7 +142,7 @@ export type TableResult<Data> = [
   TableData<Data> & {
     page: PaginationResult;
     fetching: boolean;
-    error?: ErrorWrapper;
+    error?: AnyErrorWrapper;
     search?: SearchResult;
     selection: RecordSelection;
     sort: SortState;

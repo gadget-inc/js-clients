@@ -13,7 +13,7 @@ export let useGet: UseGet = createHookStub("useGet", (adapter: RuntimeAdapter, c
     const [rawResult, refresh] = coreHooks.useGadgetQuery(useQueryArgs(plan, options));
 
     const result = adapter.framework.useMemo(() => {
-      return { ...rawResult, ...manager.get.processResult(rawResult, memoizedOptions?.pause) };
+      return { ...rawResult, ...manager.get.processResult(rawResult, { pause: memoizedOptions?.pause }) };
     }, [rawResult, manager, memoizedOptions?.pause]);
 
     return [result, refresh];

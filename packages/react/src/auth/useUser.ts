@@ -1,6 +1,6 @@
-import type { DefaultSelection, GadgetRecord, LimitToKnownKeys, Select } from "@gadgetinc/api-client-core";
-import { useApi } from "../GadgetProvider.js";
-import type { OptionsType, ReadOperationOptions } from "../utils.js";
+import type { OptionsType, ReadOperationOptions } from "@gadgetinc/client-hooks";
+import type { DefaultSelection, GadgetRecord, LimitToKnownKeys, Select } from "@gadgetinc/core";
+import { useApi } from "../hooks.js";
 import type { ClientWithSessionAndUserManagers } from "./useSession.js";
 import { useSession } from "./useSession.js";
 

@@ -8,10 +8,10 @@ When developing a Gadget client, or the core, it is helpful to be able to have a
 
 ```
 # if able to write to `gadget-inc/js-clients` repo
-pnpm --filter=@gadgetinc/api-client-core prerelease
+pnpm --filter=@gadgetinc/core prerelease
 
 # to an arbitrary repo
-pnpm --filter=@gadgetinc/api-client-core gitpkg publish --registry git@mygit.server:org/private-registry.git
+pnpm --filter=@gadgetinc/core gitpkg publish --registry git@mygit.server:org/private-registry.git
 ```
 
 Once you've released a package, you can use it in a project by updating the dependency in the project's `package.json`:

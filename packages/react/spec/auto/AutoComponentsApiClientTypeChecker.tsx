@@ -1,4 +1,4 @@
-import { GadgetRecord } from "@gadgetinc/api-client-core";
+import { $coreImplementation, type AnyCoreImplementation } from "@gadgetinc/core";
 import React from "react";
 import { PolarisAutoForm } from "../../src/auto/polaris/PolarisAutoForm.js";
 import { PolarisAutoTable } from "../../src/auto/polaris/PolarisAutoTable.js";
@@ -8,6 +8,7 @@ import { elements } from "./shadcn-defaults/index.js";
 
 const { AutoForm: ShadcnAutoForm, AutoTable: ShadcnAutoTable } = makeAutocomponents(elements);
 
+const GadgetRecord = ((testApi as any)[$coreImplementation] as AnyCoreImplementation).GadgetRecord;
 /**
  * If the api client breaks the expected types of the auto components, this file will fail in CI on `pnpm typecheck`
  */

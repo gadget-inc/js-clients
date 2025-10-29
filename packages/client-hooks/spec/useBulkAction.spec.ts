@@ -1,12 +1,76 @@
+import type { AnyErrorWrapper, GadgetRecord } from "@gadgetinc/core";
 import { jest } from "@jest/globals";
+import type { IsExact } from "conditional-type-checks";
+import { assert } from "conditional-type-checks";
 import { createHooks } from "../src/createHooks.js";
 import { useBulkAction } from "../src/useBulkAction.js";
-import { createMockAdapter, createMockApiClient, createMockConnection, createMockProcessResult } from "./mockAdapter.js";
+import { bulkExampleApi, kitchenSinkApi } from "./apis.js";
+import { createMockAdapter, createMockApiClient, createMockConnection } from "./mockAdapter.js";
 
 describe("useBulkAction", () => {
   beforeEach(() => {
     jest.clearAllMocks();
   });
+
+  // these functions are typechecked but never run to avoid actually making API calls
+  const _TestUseBulkActionCanRunActionsWithVariables = () => {
+    const [_, mutate] = useBulkAction(bulkExampleApi.widget.bulkFlipDown);
+
+    // can call with variables
+    void mutate({ ids: ["123", "124"] });
+
+    // @ts-expect-error can't call with no arguments
+    void mutate();
+
+    // @ts-expect-error can't call with no ids
+    void mutate({});
+
+    // @ts-expect-error can't call with variables that don't belong to the model
+    void mutate({ foo: "123" });
+  };
+
+  const _TestUseBulkActionReturnsTypedDataWithExplicitSelection = () => {
+    const [{ data, fetching, error }, _mutate] = useBulkAction(bulkExampleApi.widget.bulkFlipDown, {
+      select: { id: true, name: true },
+    });
+
+    assert<IsExact<typeof fetching, boolean>>(true);
+    assert<IsExact<typeof data, undefined | GadgetRecord<{ id: string; name: string | null }>[]>>(true);
+    assert<IsExact<typeof error, AnyErrorWrapper | undefined>>(true);
+
+    if (data) {
+      data[0].id;
+      data[0].name;
+    }
+  };
+
+  const _TestUseActionReturnsTypedDataWithNoSelection = () => {
+    const [{ data }] = useBulkAction(bulkExampleApi.widget.bulkFlipDown);
+
+    if (data) {
+      data[0].id;
+      data[0].name;
+    }
+  };
+
+  const _TestUseBulkActionCanRunNamespacedModelAction = () => {
+    const [_, mutate] = useBulkAction(kitchenSinkApi.game.player.bulkUpdate);
+
+    // can call with variables
+    void mutate([{ id: "123", name: "new name" }]);
+
+    // @ts-expect-error can't call with no arguments
+    void mutate();
+
+    // @ts-expect-error can't call with no ids
+    void mutate({});
+
+    // @ts-expect-error can't call with one attributes object
+    void mutate({ foo: "123" });
+
+    // @ts-expect-error can't call with array of variables that don't belong to the model
+    void mutate([{ foo: "123" }]);
+  };
 
   it("should initialize the hook correctly", () => {
     const connection = createMockConnection();
@@ -16,28 +80,16 @@ describe("useBulkAction", () => {
 
     createHooks(adapter);
 
-    const mockAction: any = {
-      type: "bulkAction",
-      operationName: "bulkCreateUsers",
-      modelApiIdentifier: "user",
-      modelSelectionField: "users",
-      hasReturnType: true,
-      defaultSelection: { id: true, email: true },
-      namespace: [],
-      plan: jest.fn((options) => ({
-        query: "mutation bulkCreateUsers($inputs: [BulkCreateUsersInput!]!) { bulkCreateUsers(inputs: $inputs) { users { id email } } }",
-        variables: {},
-      })),
-      processResult: createMockProcessResult(),
-    };
+    const action = bulkExampleApi.user.bulkCreate;
+    const planSpy = jest.spyOn(action, "plan");
 
-    const [state, execute] = useBulkAction(mockAction);
+    const [state, execute] = useBulkAction(action);
 
     expect(state.fetching).toBe(false);
     expect(state.data).toBeUndefined();
     expect(typeof execute).toBe("function");
 
-    expect(mockAction.plan).toHaveBeenCalledWith(undefined);
+    expect(planSpy).toHaveBeenCalledWith(undefined);
     expect(adapter.framework.useMemo).toHaveBeenCalled();
     expect(adapter.urql.useMutation).toHaveBeenCalled();
   });
@@ -50,25 +102,13 @@ describe("useBulkAction", () => {
 
     createHooks(adapter);
 
-    const mockAction: any = {
-      type: "bulkAction",
-      operationName: "bulkCreateUsers",
-      modelApiIdentifier: "user",
-      modelSelectionField: "users",
-      hasReturnType: true,
-      defaultSelection: { id: true },
-      namespace: [],
-      plan: jest.fn((options) => ({
-        query: "mutation bulkCreateUsers($inputs: [BulkCreateUsersInput!]!) { bulkCreateUsers(inputs: $inputs) { users { id } } }",
-        variables: {},
-      })),
-      processResult: createMockProcessResult(),
-    };
+    const action = bulkExampleApi.user.bulkCreate;
+    const planSpy = jest.spyOn(action, "plan");
 
     const mockOptions = { select: { id: true } };
-    useBulkAction(mockAction, mockOptions);
+    useBulkAction(action, mockOptions);
 
-    expect(mockAction.plan).toHaveBeenCalledWith(mockOptions);
+    expect(planSpy).toHaveBeenCalledWith(mockOptions);
   });
 
   it("should handle namespaced models", () => {
@@ -79,24 +119,12 @@ describe("useBulkAction", () => {
 
     createHooks(adapter);
 
-    const mockAction: any = {
-      type: "bulkAction",
-      operationName: "bulkCreatePlayers",
-      modelApiIdentifier: "game.player",
-      modelSelectionField: "players",
-      hasReturnType: true,
-      defaultSelection: { id: true, name: true },
-      namespace: ["game"],
-      plan: jest.fn((options) => ({
-        query: "mutation bulkCreatePlayers { game { bulkCreatePlayers { players { id name } } } }",
-        variables: {},
-      })),
-      processResult: createMockProcessResult(),
-    };
+    const action = kitchenSinkApi.game.player.bulkCreate;
+    const planSpy = jest.spyOn(action, "plan");
 
-    useBulkAction(mockAction);
+    useBulkAction(action);
 
-    expect(mockAction.plan).toHaveBeenCalledWith(undefined);
+    expect(planSpy).toHaveBeenCalledWith(undefined);
   });
 
   it("should return execute function", () => {
@@ -107,23 +135,9 @@ describe("useBulkAction", () => {
 
     createHooks(adapter);
 
-    const mockAction: any = {
-      type: "bulkAction",
-      operationName: "bulkUpdateUsers",
-      modelApiIdentifier: "user",
-      modelSelectionField: "users",
-      hasReturnType: true,
-      defaultSelection: { id: true },
-      namespace: [],
-      variablesType: {} as any,
-      plan: jest.fn((options) => ({
-        query: "mutation bulkUpdateUsers { bulkUpdateUsers { users { id } } }",
-        variables: {},
-      })),
-      processResult: createMockProcessResult(),
-    };
+    const action = bulkExampleApi.user.bulkCreate;
 
-    const [, execute] = useBulkAction(mockAction);
+    const [, execute] = useBulkAction(action);
 
     expect(typeof execute).toBe("function");
   });

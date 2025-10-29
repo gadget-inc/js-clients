@@ -1,139 +1,10 @@
-import type { GadgetRecord } from "@gadgetinc/api-client-core";
 import { act, renderHook } from "@testing-library/react";
-
-import type { IsExact } from "conditional-type-checks";
-import { assert } from "conditional-type-checks";
-import React from "react";
 import type { AnyVariables } from "urql";
-import { Provider } from "../src/GadgetProvider.js";
-import { useAction } from "../src/index.js";
-import type { ErrorWrapper } from "../src/utils.js";
+import { useAction } from "../src/hooks.js";
 import { fullAuthApi, kitchenSinkApi, relatedProductsApi } from "./apis.js";
 import { MockClientWrapper, createMockUrqlClient, mockUrqlClient } from "./testWrappers.js";
 
 describe("useAction", () => {
-  // these functions are typechecked but never run to avoid actually making API calls
-  const _TestUseActionCanRunUpdateActionsWithVariables = () => {
-    const [_, mutate] = useAction(relatedProductsApi.user.update);
-
-    // can call with variables
-    void mutate({ id: "123", user: { email: "foo@bar.com" } });
-
-    // can call with no model variables
-    void mutate({ id: "123" });
-
-    // @ts-expect-error can't call with no arguments
-    void mutate();
-
-    // @ts-expect-error can't call with no id
-    void mutate({});
-
-    // @ts-expect-error can't call with variables that don't belong to the model
-    void mutate({ foo: "123" });
-  };
-
-  const _TestUseActionCanRunCreateActionsWithVariables = () => {
-    const [_, mutate] = useAction(relatedProductsApi.user.create);
-
-    // can call with variables
-    void mutate({ user: { email: "foo@bar.com" } });
-
-    // can call with no model variables
-    void mutate({});
-
-    // can call with no variables at all
-    void mutate();
-
-    // @ts-expect-error can't call with variables that don't belong to the model
-    void mutate({ foo: "123" });
-  };
-
-  const _TestUseActionCanRunWithoutModelApiIdentifier = () => {
-    const [_, mutate] = useAction(relatedProductsApi.unambiguous.update);
-
-    // can call using flat style
-    void mutate({ id: "123", numberField: 654, stringField: "foo" });
-
-    // can call using old style
-    void mutate({ id: "123", unambiguous: { numberField: 321, stringField: "bar" } });
-
-    // @ts-expect-error can't call with no arguments
-    void mutate();
-
-    // @ts-expect-error can't call with no id
-    void mutate({});
-  };
-
-  const _TestUseActionCannotRunWithoutModelApiIdentifier = () => {
-    const [_, mutate] = useAction(relatedProductsApi.ambiguous.update);
-
-    // @ts-expect-error models with ambigous identifiers can't be called with flat style signature
-    void mutate({ id: "123", booleanField: true });
-
-    // old style signature is always valid
-    void mutate({ id: "123", ambiguous: { booleanField: true } });
-
-    // @ts-expect-error can't call with no arguments
-    void mutate();
-
-    // @ts-expect-error can't call with no id
-    void mutate({});
-  };
-
-  const _TestUseActionReturnsTypedDataWithExplicitSelection = () => {
-    const [{ data, fetching, error }, _mutate] = useAction(relatedProductsApi.user.update, {
-      select: { id: true, email: true },
-    });
-
-    assert<IsExact<typeof fetching, boolean>>(true);
-    assert<IsExact<typeof data, undefined | GadgetRecord<{ id: string; email: string | null }>>>(true);
-    assert<IsExact<typeof error, ErrorWrapper | undefined>>(true);
-
-    // data is accessible via dot access
-    if (data) {
-      data.id;
-      data.email;
-    }
-  };
-
-  const _TestUseActionReturnsTypedDataWithNoSelection = () => {
-    const [{ data }] = useAction(relatedProductsApi.user.update);
-
-    if (data) {
-      data.id;
-      data.email;
-    }
-  };
-
-  const _TestUseActionCanRunAgainstNamespacedModel = () => {
-    const [_, mutate] = useAction(kitchenSinkApi.game.player.update);
-
-    // can call with variables
-    void mutate({ id: "123", player: { name: "Caitlin Clark" } });
-
-    // can call with no model variables
-    void mutate({ id: "123" });
-
-    // @ts-expect-error can't call with no arguments
-    void mutate();
-
-    // @ts-expect-error can't call with no id
-    void mutate({});
-
-    // @ts-expect-error can't call with variables that don't belong to the model
-    void mutate({ foo: "123" });
-  };
-
-  const _TestUseActionCanRunAgainstDeeplyNamespacedModel = () => {
-    const [_, mutate] = useAction(kitchenSinkApi.game.inner.test.create);
-
-    // can call with variables
-    void mutate({ test: { foo: "bar" } });
-
-    // @ts-expect-error can't call with variables that don't belong to the model
-    void mutate({ notAProp: "123" });
-  };
-
   test("returns no data, not fetching, and no error when the component is first mounted", () => {
     const { result } = renderHook(() => useAction(relatedProductsApi.user.update), { wrapper: MockClientWrapper(relatedProductsApi) });
 
@@ -146,7 +17,7 @@ describe("useAction", () => {
     let query: string | undefined;
     const client = createMockUrqlClient({
       mutationAssertions: (request) => {
-        query = request.query.loc?.source.body;
+        query = "kind" in request.query ? request.query.loc?.source.body : "";
       },
     });
 
@@ -202,7 +73,7 @@ describe("useAction", () => {
 
     expect(client.executeMutation).toBeCalledTimes(1);
 
-    client.executeMutation.pushResponse("updateUser", {
+    await client.executeMutation.pushResponse("updateUser", {
       data: {
         updateUser: {
           success: true,
@@ -249,7 +120,7 @@ describe("useAction", () => {
 
     expect(mockUrqlClient.executeMutation).toBeCalledTimes(1);
 
-    mockUrqlClient.executeMutation.pushResponse("updateUser", {
+    await mockUrqlClient.executeMutation.pushResponse("updateUser", {
       data: {
         updateUser: {
           success: false,
@@ -280,7 +151,7 @@ describe("useAction", () => {
     expect(result.current[0].fetching).toBe(false);
     const error = result.current[0].error;
     expect(error).toBeTruthy();
-    expect(error!.validationErrors).toMatchInlineSnapshot(`
+    expect((error as any).validationErrors).toMatchInlineSnapshot(`
       [
         {
           "apiIdentifier": "email",
@@ -303,7 +174,7 @@ describe("useAction", () => {
 
     expect(mockUrqlClient.executeMutation).toBeCalledTimes(1);
 
-    mockUrqlClient.executeMutation.pushResponse("updateUser", {
+    await mockUrqlClient.executeMutation.pushResponse("updateUser", {
       data: {
         updateUser: {
           success: true,
@@ -333,7 +204,7 @@ describe("useAction", () => {
     let query: string | undefined;
     const client = createMockUrqlClient({
       mutationAssertions: (request) => {
-        query = request.query.loc?.source.body;
+        query = "kind" in request.query ? request.query.loc?.source.body : "";
       },
     });
 
@@ -387,7 +258,7 @@ describe("useAction", () => {
 
     expect(client.executeMutation).toHaveBeenCalledTimes(1);
 
-    client.executeMutation.pushResponse("updatePlayer", {
+    await client.executeMutation.pushResponse("updatePlayer", {
       data: {
         game: {
           updatePlayer: {
@@ -436,7 +307,7 @@ describe("useAction", () => {
 
     expect(mockUrqlClient.executeMutation).toBeCalledTimes(1);
 
-    mockUrqlClient.executeMutation.pushResponse("updatePlayer", {
+    await mockUrqlClient.executeMutation.pushResponse("updatePlayer", {
       data: {
         game: {
           updatePlayer: {
@@ -469,7 +340,7 @@ describe("useAction", () => {
     expect(result.current[0].fetching).toBe(false);
     const error = result.current[0].error;
     expect(error).toBeTruthy();
-    expect(error!.validationErrors).toMatchInlineSnapshot(`
+    expect((error as any).validationErrors).toMatchInlineSnapshot(`
       [
         {
           "apiIdentifier": "name",
@@ -493,7 +364,7 @@ describe("useAction", () => {
 
     expect(mockUrqlClient.executeMutation).toBeCalledTimes(1);
 
-    mockUrqlClient.executeMutation.pushResponse("updateUser", {
+    await mockUrqlClient.executeMutation.pushResponse("updateUser", {
       data: {
         updateUser: {
           success: true,
@@ -515,8 +386,8 @@ describe("useAction", () => {
       expect(promiseResult.error).toBeFalsy();
     });
 
-    expect(result.current[0].data!.id).toEqual("123");
-    expect(result.current[0].data!.email).toEqual("test@test.com");
+    expect(result.current[0].data?.id).toEqual("123");
+    expect(result.current[0].data?.email).toEqual("test@test.com");
     expect(result.current[0].fetching).toBe(false);
     expect(result.current[0].error).toBeFalsy();
 
@@ -530,7 +401,7 @@ describe("useAction", () => {
 
     expect(mockUrqlClient.executeMutation).toBeCalledTimes(2);
 
-    mockUrqlClient.executeMutation.pushResponse("updateUser", {
+    await mockUrqlClient.executeMutation.pushResponse("updateUser", {
       data: {
         updateUser: {
           success: true,
@@ -562,15 +433,13 @@ describe("useAction", () => {
     let variables: AnyVariables;
 
     const client = createMockUrqlClient({
-      mutationAssertions: (request) => {
+      mutationAssertions: (request: any) => {
         variables = request.variables;
       },
     });
 
-    const wrapper = (props: { children: React.ReactNode }) => <Provider value={client}>{props.children}</Provider>;
-
     const { result } = renderHook(() => useAction(relatedProductsApi.unambiguous.update), {
-      wrapper,
+      wrapper: MockClientWrapper(relatedProductsApi, client),
     });
 
     let mutationPromise: any;
@@ -578,7 +447,7 @@ describe("useAction", () => {
       mutationPromise = result.current[1]({ id: "123", stringField: "hello world", numberField: 21 });
     });
 
-    client.executeMutation.pushResponse("updateUnambiguous", {
+    await client.executeMutation.pushResponse("updateUnambiguous", {
       data: {
         updateUnambiguous: {
           success: true,
@@ -608,7 +477,7 @@ describe("useAction", () => {
       mutationPromise = result.current[1]({ id: "123", unambiguous: { stringField: "hello world", numberField: 21 } });
     });
 
-    client.executeMutation.pushResponse("updateUnambiguous", {
+    await client.executeMutation.pushResponse("updateUnambiguous", {
       data: {
         updateUnambiguous: {
           success: true,
@@ -646,15 +515,12 @@ describe("useAction", () => {
     let variables: AnyVariables;
 
     const client = createMockUrqlClient({
-      mutationAssertions: (request) => {
+      mutationAssertions: (request: any) => {
         variables = request.variables;
       },
     });
-
-    const wrapper = (props: { children: React.ReactNode }) => <Provider value={client}>{props.children}</Provider>;
-
     const { result } = renderHook(() => useAction(fullAuthApi.user.signUp), {
-      wrapper,
+      wrapper: MockClientWrapper(fullAuthApi, client),
     });
 
     let mutationPromise: any;
@@ -662,7 +528,7 @@ describe("useAction", () => {
       mutationPromise = result.current[1]({ email: "bob@test.com", password: "password123!" });
     });
 
-    client.executeMutation.pushResponse("signUpUser", {
+    await client.executeMutation.pushResponse("signUpUser", {
       data: {
         signUpUser: {
           result: {
@@ -692,15 +558,13 @@ describe("useAction", () => {
     let variables: AnyVariables;
 
     const client = createMockUrqlClient({
-      mutationAssertions: (request) => {
+      mutationAssertions: (request: any) => {
         variables = request.variables;
       },
     });
 
-    const wrapper = (props: { children: React.ReactNode }) => <Provider value={client}>{props.children}</Provider>;
-
     const { result } = renderHook(() => useAction(relatedProductsApi.ambiguous.update), {
-      wrapper,
+      wrapper: MockClientWrapper(relatedProductsApi, client),
     });
 
     let mutationPromise: any;
@@ -710,7 +574,7 @@ describe("useAction", () => {
 
     expect(client.executeMutation).toBeCalledTimes(1);
 
-    client.executeMutation.pushResponse("updateAmbiguous", {
+    await client.executeMutation.pushResponse("updateAmbiguous", {
       data: {
         updateAmbiguous: {
           success: true,
@@ -780,7 +644,7 @@ describe("useAction", () => {
 
     expect(mockUrqlClient.executeMutation).toBeCalledTimes(1);
 
-    mockUrqlClient.executeMutation.pushResponse("createUser", {
+    await mockUrqlClient.executeMutation.pushResponse("createUser", {
       data: {
         updateUser: {
           success: true,
@@ -824,6 +688,15 @@ describe("useAction", () => {
           actionApiIdentifier: "fakeAction",
           modelApiIdentifier: "fakeModel",
           variables: {},
+          plan: () => ({
+            query: "",
+            variables: {},
+          }),
+          processResult: () => ({
+            data: {},
+            fetching: false,
+            error: undefined,
+          }),
         }),
       {
         wrapper: MockClientWrapper(relatedProductsApi),
@@ -856,7 +729,7 @@ describe("useAction", () => {
 
     expect(mockUrqlClient.executeMutation).toBeCalledTimes(1);
 
-    mockUrqlClient.executeMutation.pushResponse("upsertWidget", {
+    await mockUrqlClient.executeMutation.pushResponse("upsertWidget", {
       data: {
         upsertWidget: {
           success: true,

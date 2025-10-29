@@ -7,7 +7,7 @@ import { fs, globby } from "zx";
  */
 
 const targets = {
-  "@gadgetinc/api-client-core": (await fs.readJSON("packages/api-client-core/package.json")).version,
+  "@gadgetinc/core": (await fs.readJSON("packages/core/package.json")).version,
   "@gadgetinc/react": (await fs.readJSON("packages/react/package.json")).version,
 };
 

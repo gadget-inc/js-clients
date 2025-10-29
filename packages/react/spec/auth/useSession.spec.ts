@@ -13,7 +13,7 @@ describe("useSession", () => {
     query = undefined;
     client = createMockUrqlClient({
       queryAssertions: (request) => {
-        query = request.query.loc?.source.body;
+        query = "kind" in request.query ? request.query.loc?.source.body : "";
       },
     });
   });
@@ -36,6 +36,7 @@ describe("useSession", () => {
           state
           createdAt
           updatedAt
+          userId
           user {
             __typename
             id
@@ -86,6 +87,7 @@ describe("useSession", () => {
           state
           createdAt
           updatedAt
+          userId
           user {
             __typename
             id

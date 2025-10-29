@@ -1,6 +1,6 @@
 import type { ReactNode } from "react";
 import React, { useContext, useEffect, useRef } from "react";
-import { GadgetConfigurationContext } from "../GadgetProvider.js";
+import { GadgetApiContext } from "../GadgetProvider.js";
 import { useAuth } from "./useAuth.js";
 import { windowNavigate } from "./utils.js";
 
@@ -11,7 +11,7 @@ export const SignedInOrRedirect = (props: { path?: string; children: ReactNode }
   const redirected = useRef(false);
 
   const { user, isSignedIn } = useAuth();
-  const context = useContext(GadgetConfigurationContext);
+  const context = useContext(GadgetApiContext);
   const { auth } = context ?? {};
 
   useEffect(() => {

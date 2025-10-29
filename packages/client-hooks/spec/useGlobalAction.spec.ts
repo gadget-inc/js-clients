@@ -1,12 +1,45 @@
+import type { AnyErrorWrapper } from "@gadgetinc/core";
 import { jest } from "@jest/globals";
+import type { IsExact } from "conditional-type-checks";
+import { assert } from "conditional-type-checks";
 import { createHooks } from "../src/createHooks.js";
 import { useGlobalAction } from "../src/useGlobalAction.js";
+import { bulkExampleApi, kitchenSinkApi } from "./apis.js";
 import { createMockAdapter, createMockApiClient, createMockConnection, createMockProcessResult } from "./mockAdapter.js";
 
 describe("useGlobalAction", () => {
   beforeEach(() => {
     jest.clearAllMocks();
   });
+
+  // these functions are typechecked but never run to avoid actually making API calls
+  const _TestUseGlobalActionCanRunGlobalActionsWithVariables = () => {
+    const [{ data, fetching, error }, mutate] = useGlobalAction(bulkExampleApi.flipAll);
+
+    assert<IsExact<typeof fetching, boolean>>(true);
+    assert<IsExact<typeof data, any>>(true);
+    assert<IsExact<typeof error, AnyErrorWrapper | undefined>>(true);
+
+    // can call with variables
+    void mutate({ why: "foobar" });
+
+    // @ts-expect-error can't call with variables that don't belong to the model
+    void mutate({ foo: "123" });
+  };
+
+  const _TestUseNamespacedGlobalAction = () => {
+    const [{ data, fetching, error }, mutate] = useGlobalAction(kitchenSinkApi.game.calculateScore);
+
+    assert<IsExact<typeof fetching, boolean>>(true);
+    assert<IsExact<typeof data, any>>(true);
+    assert<IsExact<typeof error, AnyErrorWrapper | undefined>>(true);
+
+    // can call with variables
+    void mutate({ why: "foobar" });
+
+    // @ts-expect-error can't call with variables that don't belong to the model
+    void mutate({ foo: "123" });
+  };
 
   it("should initialize the hook correctly", () => {
     const connection = createMockConnection();

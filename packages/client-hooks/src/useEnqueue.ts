@@ -35,12 +35,17 @@ export let useEnqueue: UseEnqueue = createHookStub("useEnqueue", (adapter, coreH
 });
 
 // /** Processes urql's result object into the fancier Gadget result object */
-const processResult = <SchemaT, Action extends AnyActionFunction>(
+const processResult = <Action extends AnyActionFunction>(
   connection: AnyConnection,
-  result: UseMutationState<any, any>,
+  rawResult: UseMutationState<any, any>,
   action: Action
-): EnqueueHookState<SchemaT, Action> => {
-  const processedResult = connection.enqueue.processResult(action, result);
-
-  return { ...result, ...processedResult } as EnqueueHookState<SchemaT, Action>;
+): EnqueueHookState<Action> => {
+  const { data, ...result } = rawResult;
+  if (action.isBulk) {
+    const { handles, error } = connection.enqueue.processResult(action, rawResult);
+    return { ...result, handles, error } as EnqueueHookState<Action>;
+  } else {
+    const { handle, error } = connection.enqueue.processResult(action, rawResult);
+    return { ...result, handle, error } as EnqueueHookState<Action>;
+  }
 };

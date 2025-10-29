@@ -1,4 +1,4 @@
-import type { AnyClient } from "@gadgetinc/api-client-core";
+import type { AnyClient } from "@gadgetinc/core";
 import { Provider as GadgetUrqlProvider, useMutation } from "@gadgetinc/react";
 import { useAppBridge } from "@shopify/app-bridge-react";
 import type { ReactNode } from "react";
@@ -76,7 +76,7 @@ const InnerGadgetProvider = memo(
       // setup the api client to always query using the custom shopify auth implementation
       api.connection.setAuthenticationMode({
         custom: {
-          async processFetch(_input, init) {
+          async processFetch(_input: RequestInfo | URL, init: RequestInit) {
             const headers = new Headers(init.headers);
             const idToken = await appBridge.idToken();
             headers.append("Authorization", `ShopifySessionToken ${idToken}`);
@@ -85,7 +85,7 @@ const InnerGadgetProvider = memo(
               (init.headers as Record<string, string>)[key] = value;
             });
           },
-          async processTransactionConnectionParams(params) {
+          async processTransactionConnectionParams(params: Record<string, any>) {
             const idToken = await appBridge.idToken();
             params.auth.shopifySessionToken = idToken;
           },

@@ -1,4 +1,5 @@
-import type { AnyClient } from "@gadgetinc/core";
+import type { AnyClient, AnyConnection } from "@gadgetinc/core";
+import type { Client as UrqlClient } from "@urql/core";
 import type { RuntimeAdapter } from "./adapter.js";
 import { createHooks } from "./createHooks.js";
 
@@ -6,7 +7,14 @@ const isGadgetClient = (client: any): client is AnyClient => {
   return client && "connection" in client && client.connection && "endpoint" in client.connection;
 };
 
-export const registerClientHooks = (api: AnyClient, adapter: RuntimeAdapter) => {
+export const registerClientHooks = (
+  api: AnyClient,
+  adapter: RuntimeAdapter
+): {
+  gadgetClient: AnyClient;
+  gadgetConnection: AnyConnection;
+  urqlClient: UrqlClient;
+} => {
   if (!api) {
     throw new Error(
       "No Gadget API client passed to <Provider /> component -- please pass an instance of your generated client, like <Provider api={api} />!"

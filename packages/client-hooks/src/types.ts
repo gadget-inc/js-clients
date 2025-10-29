@@ -1,12 +1,15 @@
 import type {
   ActionFunction,
+  ActionFunctionMetadata,
   AnyActionFunction,
   AnyBackgroundActionHandle,
   AnyBulkActionFunction,
   AnyClient,
   AnyConnection,
+  AnyCoreImplementation,
   AnyErrorWrapper,
   BulkActionFunction,
+  DefaultSelection,
   EnqueueBackgroundActionOptions,
   FieldSelection,
   FindFirstFunction,
@@ -16,13 +19,14 @@ import type {
   GadgetRecordList,
   GetFunction,
   GlobalActionFunction,
+  LimitToKnownKeys,
+  Select,
   ViewFunction,
   ViewFunctionWithVariables,
   ViewFunctionWithoutVariables,
   ViewResult,
 } from "@gadgetinc/core";
 import type { AnyVariables, DocumentInput, Operation, OperationContext, RequestPolicy } from "@urql/core";
-import type { AnyCoreImplementation } from "../../core/dist/esm/AnyCoreImplementation.js";
 import type { UseMutationResponse, UseQueryArgs, UseQueryResponse } from "./adapter.js";
 
 export interface QueryOptions {
@@ -204,11 +208,20 @@ export type CoreHooks = {
 /**
  * The inner result object returned from a mutation result
  */
-export type EnqueueHookState<SchemaT, Action extends AnyActionFunction> = Action extends AnyBulkActionFunction
+export type EnqueueHookState<Action extends AnyActionFunction> = Action extends AnyBulkActionFunction
   ? {
       fetching: boolean;
       stale: boolean;
-      handles: AnyBackgroundActionHandle<SchemaT, Action>[] | null;
+      handles: AnyBackgroundActionHandle<Action["schemaType"], Action>[] | null;
+      error?: AnyErrorWrapper;
+      extensions?: Record<string, any>;
+      operation?: Operation<{ backgroundAction: { id: string } }, Action["variablesType"]>;
+    }
+  : Action extends ActionFunctionMetadata<any, any, any, any, any, false>
+  ? {
+      fetching: boolean;
+      stale: boolean;
+      handle: AnyBackgroundActionHandle<Action["schemaType"], Action> | null;
       error?: AnyErrorWrapper;
       extensions?: Record<string, any>;
       operation?: Operation<{ backgroundAction: { id: string } }, Action["variablesType"]>;
@@ -216,7 +229,7 @@ export type EnqueueHookState<SchemaT, Action extends AnyActionFunction> = Action
   : {
       fetching: boolean;
       stale: boolean;
-      handle: AnyBackgroundActionHandle<SchemaT, Action> | null;
+      handle: AnyBackgroundActionHandle<unknown, Action> | null;
       error?: AnyErrorWrapper;
       extensions?: Record<string, any>;
       operation?: Operation<{ backgroundAction: { id: string } }, Action["variablesType"]>;
@@ -228,24 +241,24 @@ export type EnqueueHookState<SchemaT, Action extends AnyActionFunction> = Action
  *  - the result object, with the keys like `handle`, `fetching`, and `error`
  *  - and a function for running the enqueue mutation.
  **/
-export type EnqueueHookResult<SchemaT, Action extends AnyActionFunction> = RequiredKeysOf<
+export type EnqueueHookResult<Action extends AnyActionFunction> = RequiredKeysOf<
   Exclude<Action["variablesType"], null | undefined>
 > extends never
   ? [
-      EnqueueHookState<SchemaT, Action>,
+      EnqueueHookState<Action>,
       (
         variables?: Action["variablesType"],
         backgroundOptions?: EnqueueBackgroundActionOptions<Action>,
         context?: Partial<OperationContext>
-      ) => Promise<EnqueueHookState<SchemaT, Action>>
+      ) => Promise<EnqueueHookState<Action>>
     ]
   : [
-      EnqueueHookState<SchemaT, Action>,
+      EnqueueHookState<Action>,
       (
         variables: Action["variablesType"],
         backgroundOptions?: EnqueueBackgroundActionOptions<Action>,
         context?: Partial<OperationContext>
-      ) => Promise<EnqueueHookState<SchemaT, Action>>
+      ) => Promise<EnqueueHookState<Action>>
     ];
 
 /**
@@ -277,10 +290,23 @@ export type EnqueueHookResult<SchemaT, Action extends AnyActionFunction> = Requi
  *   );
  * }
  */
-export type UseAction = <F extends ActionFunction<any, any, any, any, any>, Options extends F["optionsType"] = F["optionsType"]>(
+
+export type UseAction = <
+  GivenOptions extends OptionsType,
+  SchemaT,
+  F extends ActionFunction<GivenOptions, any, any, SchemaT, any>,
+  Options extends F["optionsType"]
+>(
   action: F,
-  options?: Options
-) => ActionHookResult<F["hasReturnType"] extends true ? any : GadgetRecord<any>, Exclude<F["variablesType"], null | undefined>>;
+  options?: LimitToKnownKeys<Options, F["optionsType"]>
+) => ActionHookResult<
+  F["hasReturnType"] extends true
+    ? any
+    : GadgetRecord<
+        Select<Exclude<F["schemaType"], null | undefined>, DefaultSelection<F["selectionType"], Options, F["defaultSelection"]>>
+      >,
+  Exclude<F["variablesType"], null | undefined>
+>;
 
 /**
  * Hook to run a Gadget model bulk action.
@@ -309,10 +335,22 @@ export type UseAction = <F extends ActionFunction<any, any, any, any, any>, Opti
  *   );
  * }
  */
-export type UseBulkAction = <F extends BulkActionFunction<any, any, any, any, any>, Options extends F["optionsType"] = F["optionsType"]>(
+export type UseBulkAction = <
+  GivenOptions extends OptionsType,
+  SchemaT,
+  F extends BulkActionFunction<GivenOptions, any, any, SchemaT, any>,
+  Options extends F["optionsType"]
+>(
   action: F,
-  options?: Options
-) => ActionHookResult<F["hasReturnType"] extends true ? any[] : GadgetRecord<any>[], Exclude<F["variablesType"], null | undefined>>;
+  options?: LimitToKnownKeys<Options, F["optionsType"]>
+) => ActionHookResult<
+  F["hasReturnType"] extends true
+    ? any[]
+    : GadgetRecord<
+        Select<Exclude<F["schemaType"], null | undefined>, DefaultSelection<F["selectionType"], Options, F["defaultSelection"]>>
+      >[],
+  Exclude<F["variablesType"], null | undefined>
+>;
 
 /**
  * Hook to enqueue a Gadget action in the background. `useEnqueue` must be passed an action function from an instance of your generated API client library, like `useEnqueue(api.user.create)` or `useEnqueue(api.someGlobalAction)`. `useEnqueue` doesn't actually submit the background action when invoked, but instead returns a function for enqueuing the action in response to an event.
@@ -343,10 +381,10 @@ export type UseBulkAction = <F extends BulkActionFunction<any, any, any, any, an
  *   );
  * }
  */
-export type UseEnqueue = <SchemaT, Action extends AnyActionFunction>(
+export type UseEnqueue = <Action extends AnyActionFunction>(
   action: Action,
   baseBackgroundOptions?: EnqueueBackgroundActionOptions<Action>
-) => EnqueueHookResult<SchemaT, Action>;
+) => EnqueueHookResult<Action>;
 
 export interface FetchHookOptions extends RequestInit {
   stream?: boolean | string;
@@ -443,13 +481,17 @@ export interface UseFetch {
  * }
  */
 export type UseFindBy = <
-  F extends FindOneFunction<any, any, any, any>,
-  Options extends F["optionsType"] & ReadOperationOptions = F["optionsType"] & ReadOperationOptions
+  GivenOptions extends OptionsType,
+  SchemaT,
+  F extends FindOneFunction<GivenOptions, any, SchemaT, any>,
+  Options extends F["optionsType"] & ReadOperationOptions
 >(
   finder: F,
   value: string,
-  options?: Options
-) => ReadHookResult<GadgetRecord<any>>;
+  options?: LimitToKnownKeys<Options, F["optionsType"] & ReadOperationOptions>
+) => ReadHookResult<
+  GadgetRecord<Select<Exclude<F["schemaType"], null | undefined>, DefaultSelection<F["selectionType"], Options, F["defaultSelection"]>>>
+>;
 
 /**
  * Hook to fetch the first backend record matching a given filter and sort. Returns a standard hook result set with a tuple of the result object with `data`, `fetching`, and `error` keys, and a `refetch` function. `data` will be the first record found if there is one, and null otherwise.
@@ -476,12 +518,16 @@ export type UseFindBy = <
  * ```
  */
 export type UseFindFirst = <
-  F extends FindFirstFunction<any, any, any, any>,
-  Options extends F["optionsType"] & ReadOperationOptions = F["optionsType"] & ReadOperationOptions
+  GivenOptions extends OptionsType,
+  SchemaT,
+  F extends FindFirstFunction<GivenOptions, any, SchemaT, any>,
+  Options extends F["optionsType"] & ReadOperationOptions
 >(
   manager: { findFirst: F },
-  options?: Options
-) => ReadHookResult<GadgetRecord<any>>;
+  options?: LimitToKnownKeys<Options, F["optionsType"] & ReadOperationOptions>
+) => ReadHookResult<
+  GadgetRecord<Select<Exclude<F["schemaType"], null | undefined>, DefaultSelection<F["selectionType"], Options, F["defaultSelection"]>>>
+>;
 
 /**
  * Hook to fetch a page of Gadget records from the backend, optionally sorted, filtered, searched, and selected from. Returns a standard hook result set with a tuple of the result object with `data`, `fetching`, and `error` keys, and a `refetch` function. `data` will be a `GadgetRecordList` object holding the list of returned records and pagination info.
@@ -508,12 +554,16 @@ export type UseFindFirst = <
  * ```
  */
 export type UseFindMany = <
-  F extends FindManyFunction<any, any, any, any>,
-  Options extends F["optionsType"] & ReadOperationOptions = F["optionsType"] & ReadOperationOptions
+  GivenOptions extends OptionsType,
+  SchemaT,
+  F extends FindManyFunction<GivenOptions, any, SchemaT, any>,
+  Options extends F["optionsType"] & ReadOperationOptions
 >(
   manager: { findMany: F },
-  options?: Options
-) => ReadHookResult<GadgetRecordList<any>>;
+  options?: LimitToKnownKeys<Options, F["optionsType"] & ReadOperationOptions>
+) => ReadHookResult<
+  GadgetRecordList<Select<Exclude<F["schemaType"], null | undefined>, DefaultSelection<F["selectionType"], Options, F["defaultSelection"]>>>
+>;
 
 /**
  * Hook to fetch one Gadget record by `id` from the backend. Returns a standard hook result set with a tuple of the result object with `data`, `fetching`, and `error` keys, and a `refetch` function. `data` will be the record if it was found, and `null` otherwise.
@@ -540,13 +590,17 @@ export type UseFindMany = <
  * ```
  */
 export type UseFindOne = <
-  F extends FindOneFunction<any, any, any, any>,
-  Options extends F["optionsType"] & ReadOperationOptions = F["optionsType"] & ReadOperationOptions
+  GivenOptions extends OptionsType,
+  SchemaT,
+  F extends FindOneFunction<GivenOptions, any, SchemaT, any>,
+  Options extends F["optionsType"] & ReadOperationOptions
 >(
   manager: { findOne: F },
   id: string,
-  options?: Options
-) => ReadHookResult<GadgetRecord<any>>;
+  options?: LimitToKnownKeys<Options, F["optionsType"] & ReadOperationOptions>
+) => ReadHookResult<
+  GadgetRecord<Select<Exclude<F["schemaType"], null | undefined>, DefaultSelection<F["selectionType"], Options, F["defaultSelection"]>>>
+>;
 
 /**
  * Hook that fetches a singleton record for an `api.currentSomething` style model manager. `useGet` fetches one global record, which is most often the current session. `useGet` doesn't require knowing the record's ID in order to fetch it, and instead returns the one current record for the current context.
@@ -573,12 +627,16 @@ export type UseFindOne = <
  * ```
  */
 export type UseGet = <
-  F extends GetFunction<any, any, any, any>,
-  Options extends F["optionsType"] & ReadOperationOptions = F["optionsType"] & ReadOperationOptions
+  GivenOptions extends OptionsType,
+  SchemaT,
+  F extends GetFunction<GivenOptions, any, SchemaT, any>,
+  Options extends F["optionsType"] & ReadOperationOptions
 >(
   manager: { get: F },
-  options?: Options
-) => ReadHookResult<GadgetRecord<any>>;
+  options?: LimitToKnownKeys<Options, F["optionsType"] & ReadOperationOptions>
+) => ReadHookResult<
+  GadgetRecord<Select<Exclude<F["schemaType"], null | undefined>, DefaultSelection<F["selectionType"], Options, F["defaultSelection"]>>>
+>;
 
 /**
  * Hook to run a Gadget model action.
@@ -629,12 +687,16 @@ export type UseGlobalAction = <F extends GlobalActionFunction<any>>(
  * ```
  */
 export type UseMaybeFindFirst = <
-  F extends FindFirstFunction<any, any, any, any>,
-  Options extends F["optionsType"] & ReadOperationOptions = F["optionsType"] & ReadOperationOptions
+  GivenOptions extends OptionsType,
+  SchemaT,
+  F extends FindFirstFunction<GivenOptions, any, SchemaT, any>,
+  Options extends F["optionsType"] & ReadOperationOptions
 >(
   manager: { findFirst: F },
-  options?: Options
-) => ReadHookResult<GadgetRecord<any>>;
+  options?: LimitToKnownKeys<Options, F["optionsType"] & ReadOperationOptions>
+) => ReadHookResult<null | GadgetRecord<
+  Select<Exclude<F["schemaType"], null | undefined>, DefaultSelection<F["selectionType"], Options, F["defaultSelection"]>>
+>>;
 
 /**
  * Hook to fetch a Gadget record using the `maybeFindOne` method of a given manager.
@@ -661,13 +723,17 @@ export type UseMaybeFindFirst = <
  * ```
  */
 export type UseMaybeFindOne = <
-  F extends FindOneFunction<any, any, any, any>,
-  Options extends F["optionsType"] & ReadOperationOptions = F["optionsType"] & ReadOperationOptions
+  GivenOptions extends OptionsType, // currently necessary for Options to be a narrow type (e.g., `true` instead of `boolean`)
+  SchemaT,
+  F extends FindOneFunction<GivenOptions, any, SchemaT, any>,
+  Options extends F["optionsType"] & ReadOperationOptions
 >(
   manager: { findOne: F },
   id: string,
-  options?: Options
-) => ReadHookResult<GadgetRecord<any>>;
+  options?: LimitToKnownKeys<Options, F["optionsType"] & ReadOperationOptions>
+) => ReadHookResult<null | GadgetRecord<
+  Select<Exclude<F["schemaType"], null | undefined>, DefaultSelection<F["selectionType"], Options, F["defaultSelection"]>>
+>>;
 
 export interface UseView {
   /**

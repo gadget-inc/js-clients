@@ -1,5 +1,5 @@
 import type { GQLBuilderResult, VariablesOptions, ViewFunction, ViewResult } from "@gadgetinc/core";
-import { RuntimeAdapter } from "./adapter.js";
+import type { RuntimeAdapter } from "./adapter.js";
 import { createHookStub } from "./createHooks.js";
 import type { CoreHooks, ReadHookResult, ReadOperationOptions, UseView } from "./types.js";
 import { useQueryArgs } from "./utils.js";
@@ -60,10 +60,10 @@ export let useView: UseView = createHookStub("useView", (adapter: RuntimeAdapter
     const result = adapter.framework.useMemo(() => {
       if (typeof view == "string") {
         const data = rawResult.data?.["gellyView"];
-        const error = errorIfDataAbsent(data, ["gellyView"], options?.pause);
+        const error = errorIfDataAbsent(rawResult, ["gellyView"], options?.pause);
         return { ...rawResult, data, error };
       } else {
-        return { ...rawResult, ...view.processResult(rawResult) };
+        return { ...rawResult, ...view.processResult(rawResult, { pause: options?.pause }) };
       }
     }, [rawResult, view, options?.pause]);
 

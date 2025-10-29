@@ -1,4 +1,4 @@
-import type { AnyClient } from "@gadgetinc/api-client-core";
+import type { AnyClient } from "@gadgetinc/core";
 import { Provider as GadgetUrqlProvider } from "@gadgetinc/react";
 import type { ReactNode } from "react";
 import React, { useEffect, useRef } from "react";
@@ -49,7 +49,7 @@ export const Provider = ({ children, api, authenticate = true }: { children: Rea
 
     api.connection.setAuthenticationMode({
       custom: {
-        async processFetch(_input, init) {
+        async processFetch(_input: RequestInfo | URL, init: RequestInit) {
           const token = await tokenPromise;
           const headers = new Headers(init.headers);
           headers.append("Authorization", `Bearer ${token}`);
@@ -58,7 +58,7 @@ export const Provider = ({ children, api, authenticate = true }: { children: Rea
             (init.headers as Record<string, string>)[key] = value;
           });
         },
-        async processTransactionConnectionParams(params) {
+        async processTransactionConnectionParams(params: Record<string, any>) {
           const token = await tokenPromise;
           params.auth = { type: "custom", jwt: token };
         },

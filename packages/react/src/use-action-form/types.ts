@@ -1,17 +1,16 @@
+import type { ActionHookState, OptionsType } from "@gadgetinc/client-hooks";
 import type {
   ActionFunction,
   ActionWithIdAndNoVariables,
   ActionWithIdAndVariables,
+  AnyErrorWrapper,
   BulkActionWithIdsAndNoVariables,
   DefaultSelection,
   GadgetRecord,
   GlobalActionFunction,
   Select,
-} from "@gadgetinc/api-client-core";
+} from "@gadgetinc/core";
 import type { FieldValues, UseFormReturn } from "react-hook-form";
-import type { useAction } from "../useAction.js";
-import type { useGlobalAction } from "../useGlobalAction.js";
-import type { ActionHookState, ErrorWrapper, OptionsType } from "../utils.js";
 import { type useFindExistingRecord } from "./utils.js";
 
 /**
@@ -65,7 +64,7 @@ export type UseActionFormResult<
   /**
    * Any error that occurred during initial data fetching or action submission
    */
-  error?: ErrorWrapper | Error | null;
+  error?: AnyErrorWrapper | Error | null;
   /**
    * Function to call to submit the form
    */
@@ -73,9 +72,7 @@ export type UseActionFormResult<
   /**
    * The data resulting from running the action
    */
-  actionData?: ActionFunc extends ActionFunction<GivenOptions, any, any, SchemaT, any>
-    ? ReturnType<typeof useAction<GivenOptions, SchemaT, ActionFunc, any>>[0]["data"]
-    : ReturnType<typeof useGlobalAction<any>>[0]["data"];
+  actionData?: UseActionFormHookStateData<ActionFunc>;
 
   originalFormMethods: UseFormReturn<FormVariables, FormContext>;
   /**
@@ -102,7 +99,7 @@ export type UseActionFormSubmit<F extends ActionFunction<any, any, any, any, any
   event?: React.BaseSyntheticEvent<object, any, any> | undefined
 ) => Promise<UseActionFormHookState<F>>;
 
-type ExcludeUndefined<T> = T extends undefined ? never : T;
+type ExcludeNullish<T> = T extends null | undefined ? never : T;
 
 type ServerSideError<F extends ActionFunction<any, any, any, any, any> | GlobalActionFunction<any>> = F extends ActionFunction<
   any,
@@ -115,11 +112,11 @@ type ServerSideError<F extends ActionFunction<any, any, any, any, any> | GlobalA
       [key in F["modelApiIdentifier"]]?: {
         [key in
           | keyof F["selectionType"]
-          | keyof ExcludeUndefined<F["variablesType"]>
-          | ExcludeUndefined<F["modelApiIdentifier"] extends "user" ? "password" : never>]?: { message: string };
+          | keyof ExcludeNullish<F["variablesType"]>
+          | ExcludeNullish<F["modelApiIdentifier"] extends "user" ? "password" : never>]?: { message: string };
       };
     }
-  : { [key in keyof ExcludeUndefined<F["variablesType"]>]: { message: string } };
+  : { [key in keyof ExcludeNullish<F["variablesType"]>]: { message: string } };
 
 export type UseActionFormState<
   F extends ActionFunction<any, any, any, any, any> | GlobalActionFunction<any>,

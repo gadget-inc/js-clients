@@ -1,12 +1,43 @@
+import type { AnyErrorWrapper, GadgetRecord } from "@gadgetinc/core";
 import { jest } from "@jest/globals";
+import type { Has, IsExact } from "conditional-type-checks";
+import { assert } from "conditional-type-checks";
 import { createHooks } from "../src/createHooks.js";
 import { useGet } from "../src/useGet.js";
+import { relatedProductsApi } from "./apis.js";
 import { createMockAdapter, createMockApiClient, createMockConnection, createMockProcessResult } from "./mockAdapter.js";
 
 describe("useGet", () => {
   beforeEach(() => {
     jest.clearAllMocks();
   });
+
+  // these functions are typechecked but never run to avoid actually making API calls
+  const _TestGetReturnsTypedDataWithExplicitSelection = () => {
+    const [{ data, fetching, error }, refresh] = useGet(relatedProductsApi.currentSession, { select: { id: true, state: true } });
+
+    assert<IsExact<typeof fetching, boolean>>(true);
+    assert<Has<typeof data, undefined | GadgetRecord<{ id: string; state: any }>>>(true);
+    assert<IsExact<typeof error, AnyErrorWrapper | undefined>>(true);
+
+    // data is accessible via dot access
+    if (data) {
+      data.id;
+      data.state;
+    }
+
+    // hook return value includes the urql refresh function
+    refresh();
+  };
+
+  const _TestGetReturnsTypedDataWithNoSelection = () => {
+    const [{ data }] = useGet(relatedProductsApi.currentSession);
+
+    if (data) {
+      data.id;
+      data.state;
+    }
+  };
 
   it("should initialize the hook correctly", () => {
     const connection = createMockConnection();

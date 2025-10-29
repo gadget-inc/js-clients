@@ -1447,10 +1447,6 @@ body {
   animation-play-state: running;
 }
 
-.\\!paused {
-  animation-play-state: paused !important;
-}
-
 .paused {
   animation-play-state: paused;
 }

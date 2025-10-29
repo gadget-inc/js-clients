@@ -1,8 +1,8 @@
 /**
  * @jest-environment node
  */
-import type { AnyClient } from "@gadgetinc/api-client-core";
-import { GadgetConnection } from "@gadgetinc/api-client-core";
+import type { AnyClient } from "@gadgetinc/core";
+import { createMockUrqlClient } from "@gadgetinc/core/testing";
 import "@testing-library/jest-dom";
 import type { ReactNode } from "react";
 import React from "react";
@@ -13,9 +13,10 @@ describe("GadgetProvider in windowless environment", () => {
   let mockApiClient: AnyClient;
   beforeEach(() => {
     mockApiClient = {
-      connection: new GadgetConnection({
+      connection: {
         endpoint: "https://whatever.gadget.app/endpoint",
-      }),
+        currentClient: createMockUrqlClient(),
+      },
     } as any;
   });
 

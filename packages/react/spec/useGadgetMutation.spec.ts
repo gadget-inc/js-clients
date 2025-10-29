@@ -1,7 +1,7 @@
+import { hookErrorMessage } from "@gadgetinc/client-hooks";
 import { act, renderHook } from "@testing-library/react";
 import { gql } from "urql";
-import { useGadgetMutation } from "../src/useGadgetMutation.js";
-import { noProviderErrorMessage } from "../src/utils.js";
+import { useMutation as useGadgetMutation } from "../src/hooks.js";
 import { relatedProductsApi } from "./apis.js";
 import { MockClientWrapper, mockUrqlClient } from "./testWrappers.js";
 
@@ -11,7 +11,7 @@ describe("useGadgetMutation", () => {
       renderHook(() => useGadgetMutation("{__typename}"));
     } catch (error: any) {
       expect(error).toBeInstanceOf(Error);
-      expect(error.message).toBe(noProviderErrorMessage);
+      expect(error.message).toBe(hookErrorMessage("useMutation"));
     }
   });
 
@@ -43,7 +43,7 @@ describe("useGadgetMutation", () => {
       mutationPromise = result.current[1]({ id: "123", post: { title: "example" } });
     });
 
-    mockUrqlClient.executeMutation.pushResponse("createPost", {
+    await mockUrqlClient.executeMutation.pushResponse("createPost", {
       data: {
         createPost: {
           success: true,
@@ -96,7 +96,7 @@ describe("useGadgetMutation", () => {
       mutationPromise = result.current[1]({ id: "123", post: { title: "example" } }, { suspense: true });
     });
 
-    mockUrqlClient.executeMutation.pushResponse("createPost", {
+    await mockUrqlClient.executeMutation.pushResponse("createPost", {
       data: {
         createPost: {
           success: true,

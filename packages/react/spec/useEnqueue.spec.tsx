@@ -1,198 +1,11 @@
-import type { BackgroundActionHandle } from "@gadgetinc/api-client-core";
 import { act, renderHook } from "@testing-library/react";
-import type { IsExact } from "conditional-type-checks";
-import { assert } from "conditional-type-checks";
-import React from "react";
 import { type AnyVariables } from "urql";
-import { Provider } from "../src/index.js";
-import { useEnqueue } from "../src/useEnqueue.js";
-import type { ErrorWrapper } from "../src/utils.js";
-import { bulkExampleApi, kitchenSinkApi, relatedProductsApi } from "./apis.js";
+import { useEnqueue } from "../src/hooks.js";
+import { kitchenSinkApi, relatedProductsApi } from "./apis.js";
 import { MockClientWrapper, createMockUrqlClient, mockUrqlClient } from "./testWrappers.js";
 
 describe("useEnqueue", () => {
   // these functions are typechecked but never run to avoid actually making API calls
-  const _TestUseEnqueueCanRunUpdateActionsWithVariables = () => {
-    type x = (typeof relatedProductsApi.user.update)["variablesType"];
-
-    const [_, enqueue] = useEnqueue(relatedProductsApi.user.update);
-
-    // can call with variables
-    void enqueue({ id: "123", user: { email: "foo@bar.com" } });
-
-    // can call with no model variables
-    void enqueue({ id: "123" });
-
-    // @ts-expect-error can't call with no arguments
-    void enqueue();
-
-    // @ts-expect-error can't call with no id
-    void enqueue({});
-
-    // @ts-expect-error can't call with variables that don't belong to the model
-    void enqueue({ foo: "123" });
-  };
-
-  const _TestUseEnqueueCanRunCreateActionsWithVariables = () => {
-    const [_, enqueue] = useEnqueue(relatedProductsApi.user.create);
-
-    // can call with variables
-    void enqueue({ user: { email: "foo@bar.com" } });
-
-    // can call with no model variables
-    void enqueue({});
-
-    // can call with no variables at all
-    void enqueue();
-
-    // @ts-expect-error can't call with variables that don't belong to the model
-    void enqueue({ foo: "123" });
-  };
-
-  const _TestUseEnqueueCanRunWithoutModelApiIdentifier = () => {
-    const [_, enqueue] = useEnqueue(relatedProductsApi.unambiguous.update);
-
-    // can call using flat style
-    void enqueue({ id: "123", numberField: 654, stringField: "foo" });
-
-    // can call using old style
-    void enqueue({ id: "123", unambiguous: { numberField: 321, stringField: "bar" } });
-
-    // @ts-expect-error can't call with no arguments
-    void enqueue();
-
-    // @ts-expect-error can't call with no id
-    void enqueue({});
-  };
-
-  const _TestUseEnqueueCannotRunWithoutModelApiIdentifier = () => {
-    const [_, enqueue] = useEnqueue(relatedProductsApi.ambiguous.update);
-
-    // @ts-expect-error models with ambigous identifiers can't be called with flat style signature
-    void enqueue({ id: "123", booleanField: true });
-
-    // old style signature is always valid
-    void enqueue({ id: "123", ambiguous: { booleanField: true } });
-
-    // @ts-expect-error can't call with no arguments
-    void enqueue();
-
-    // @ts-expect-error can't call with no id
-    void enqueue({});
-  };
-
-  const _TestUseEnqueueCanRunNamespacedActions = () => {
-    const [_, enqueue] = useEnqueue(kitchenSinkApi.game.player.create);
-
-    // can call with variables
-    void enqueue({ player: { name: "Paige Buckets" } });
-
-    // can call with no model variables
-    void enqueue({});
-
-    // can call with no variables at all
-    void enqueue();
-
-    // @ts-expect-error can't call with variables that don't belong to the model
-    void enqueue({ foo: "123" });
-  };
-
-  const _TestUseEnqueueCanRunBulkActionsWithIds = () => {
-    const [{ handles }, enqueue] = useEnqueue(bulkExampleApi.widget.bulkFlipDown);
-
-    // can call with variables
-    void enqueue({ ids: ["1", "2", "3"] });
-
-    // @ts-expect-error can't call with no variables at all
-    void enqueue();
-
-    // @ts-expect-error can't call with empty variables
-    void enqueue({});
-
-    // @ts-expect-error can't call with variables that don't belong to the model
-    void enqueue({ foo: "123" });
-  };
-
-  const _TestUseEnqueueCanRunBulkCreateActionsWithModelObjects = () => {
-    const [_, enqueue] = useEnqueue(bulkExampleApi.widget.bulkCreate);
-
-    // can call with flattened variables
-    void enqueue([{ name: "foo" }, { name: "bar" }]);
-
-    // can call with fully qualified variables
-    void enqueue([{ widget: { name: "foo" } }, { widget: { name: "bar" } }]);
-
-    // @ts-expect-error can't call with no variables at all
-    void enqueue();
-
-    // @ts-expect-error can't call with empty variables
-    void enqueue({});
-
-    // @ts-expect-error can't call with variables that don't belong to the model
-    void enqueue([{ foo: "123" }]);
-  };
-
-  const _TestUseEnqueueCanRunBulkUpdateActionsWithModelObjects = () => {
-    const [_, enqueue] = useEnqueue(bulkExampleApi.widget.bulkUpdate);
-
-    // can call with flattened variables
-    void enqueue([
-      { id: "1", name: "foo" },
-      { id: "2", name: "bar" },
-    ]);
-
-    // can call with fully qualified variables
-    void enqueue([
-      { id: "1", widget: { name: "foo" } },
-      { id: "2", widget: { name: "bar" } },
-    ]);
-
-    // @ts-expect-error can't call with no variables at all
-    void enqueue();
-
-    // @ts-expect-error can't call with empty variables
-    void enqueue({});
-
-    // @ts-expect-error can't call with variables that don't belong to the model
-    void enqueue([{ foo: "123" }]);
-  };
-
-  const _TestUseEnqueueReturnsTypedHandle = () => {
-    const [{ handle, fetching, error }, _enqueue] = useEnqueue(relatedProductsApi.user.update);
-
-    assert<IsExact<typeof fetching, boolean>>(true);
-    assert<
-      IsExact<
-        typeof handle,
-        null | BackgroundActionHandle<(typeof relatedProductsApi.user.update)["schemaType"], typeof relatedProductsApi.user.update>
-      >
-    >(true);
-    assert<IsExact<typeof error, ErrorWrapper | undefined>>(true);
-
-    // data is accessible via dot access
-    if (handle) {
-      handle.id;
-    }
-  };
-
-  const _TestUseEnqueueBulkReturnsTypedHandle = () => {
-    const [{ handles, fetching, error }, _enqueue] = useEnqueue(relatedProductsApi.user.bulkUpdate);
-
-    assert<IsExact<typeof fetching, boolean>>(true);
-    assert<
-      IsExact<
-        typeof handles,
-        | BackgroundActionHandle<(typeof relatedProductsApi.user.bulkUpdate)["schemaType"], typeof relatedProductsApi.user.bulkUpdate>[]
-        | null
-      >
-    >(true);
-    assert<IsExact<typeof error, ErrorWrapper | undefined>>(true);
-
-    // data is accessible via dot access
-    if (handles) {
-      handles[0].id;
-    }
-  };
 
   test("returns no handle, not fetching, and no error when the component is first mounted", () => {
     const { result } = renderHook(() => useEnqueue(relatedProductsApi.user.update), { wrapper: MockClientWrapper(relatedProductsApi) });
@@ -206,7 +19,7 @@ describe("useEnqueue", () => {
     let query: string | undefined;
     const client = createMockUrqlClient({
       mutationAssertions: (request) => {
-        query = request.query.loc?.source.body;
+        query = "kind" in request.query ? request.query.loc?.source.body : "";
       },
     });
 
@@ -242,7 +55,7 @@ describe("useEnqueue", () => {
 
     expect(client.executeMutation).toBeCalledTimes(1);
 
-    client.executeMutation.pushResponse("enqueueUpdateUser", {
+    await client.executeMutation.pushResponse("enqueueUpdateUser", {
       data: {
         background: {
           updateUser: {
@@ -273,7 +86,7 @@ describe("useEnqueue", () => {
     let query: string | undefined;
     const client = createMockUrqlClient({
       mutationAssertions: (request) => {
-        query = request.query.loc?.source.body;
+        query = "kind" in request.query ? request.query.loc?.source.body : "";
       },
     });
 
@@ -311,7 +124,7 @@ describe("useEnqueue", () => {
 
     expect(client.executeMutation).toBeCalledTimes(1);
 
-    client.executeMutation.pushResponse("enqueueUpdatePlayer", {
+    await client.executeMutation.pushResponse("enqueueUpdatePlayer", {
       data: {
         background: {
           game: {
@@ -360,7 +173,7 @@ describe("useEnqueue", () => {
       user: { email: "test@test.com" },
     });
 
-    mockUrqlClient.executeMutation.pushResponse("enqueueUpdateUser", {
+    await mockUrqlClient.executeMutation.pushResponse("enqueueUpdateUser", {
       data: {
         background: {
           updateUser: {
@@ -405,7 +218,7 @@ describe("useEnqueue", () => {
       user: { email: "test@test.com" },
     });
 
-    mockUrqlClient.executeMutation.pushResponse("enqueueUpdateUser", {
+    await mockUrqlClient.executeMutation.pushResponse("enqueueUpdateUser", {
       data: {
         background: {
           updateUser: {
@@ -451,7 +264,7 @@ describe("useEnqueue", () => {
 
     expect(mockUrqlClient.executeMutation.mock.calls[0][1].requestPolicy).toEqual("cache-and-network");
 
-    mockUrqlClient.executeMutation.pushResponse("enqueueUpdateUser", {
+    await mockUrqlClient.executeMutation.pushResponse("enqueueUpdateUser", {
       data: {
         background: {
           updateUser: {
@@ -496,7 +309,7 @@ describe("useEnqueue", () => {
       user: { email: "test@test.com" },
     });
 
-    mockUrqlClient.executeMutation.pushResponse("enqueueUpdateUser", {
+    await mockUrqlClient.executeMutation.pushResponse("enqueueUpdateUser", {
       data: {
         background: {
           updateUser: {
@@ -538,7 +351,7 @@ describe("useEnqueue", () => {
 
     expect(mockUrqlClient.executeMutation).toBeCalledTimes(1);
 
-    mockUrqlClient.executeMutation.pushResponse("enqueueUpdateUser", {
+    await mockUrqlClient.executeMutation.pushResponse("enqueueUpdateUser", {
       data: {
         background: {
           updateUser: {
@@ -568,7 +381,7 @@ describe("useEnqueue", () => {
     expect(result.current[0].fetching).toBe(false);
     const error = result.current[0].error;
     expect(error).toBeTruthy();
-    expect(error!.validationErrors).toMatchInlineSnapshot(`
+    expect((error as any).validationErrors).toMatchInlineSnapshot(`
       [
         {
           "apiIdentifier": "email",
@@ -591,7 +404,7 @@ describe("useEnqueue", () => {
 
     expect(mockUrqlClient.executeMutation).toBeCalledTimes(1);
 
-    mockUrqlClient.executeMutation.pushResponse("enqueueUpdateUser", {
+    await mockUrqlClient.executeMutation.pushResponse("enqueueUpdateUser", {
       data: {
         background: {
           updateUser: {
@@ -632,7 +445,7 @@ describe("useEnqueue", () => {
 
     expect(mockUrqlClient.executeMutation).toBeCalledTimes(1);
 
-    mockUrqlClient.executeMutation.pushResponse("enqueueUpdateUser", {
+    await mockUrqlClient.executeMutation.pushResponse("enqueueUpdateUser", {
       data: {
         background: {
           updateUser: {
@@ -668,7 +481,7 @@ describe("useEnqueue", () => {
 
     expect(mockUrqlClient.executeMutation).toBeCalledTimes(2);
 
-    mockUrqlClient.executeMutation.pushResponse("enqueueUpdateUser", {
+    await mockUrqlClient.executeMutation.pushResponse("enqueueUpdateUser", {
       data: {
         background: {
           updateUser: {
@@ -704,10 +517,8 @@ describe("useEnqueue", () => {
       },
     });
 
-    const wrapper = (props: { children: React.ReactNode }) => <Provider value={client}>{props.children}</Provider>;
-
     const { result } = renderHook(() => useEnqueue(relatedProductsApi.unambiguous.update), {
-      wrapper,
+      wrapper: MockClientWrapper(relatedProductsApi, client),
     });
 
     let mutationPromise: any;
@@ -715,7 +526,7 @@ describe("useEnqueue", () => {
       mutationPromise = result.current[1]({ id: "123", stringField: "hello world", numberField: 21 });
     });
 
-    client.executeMutation.pushResponse("enqueueUpdateUnambiguous", {
+    await client.executeMutation.pushResponse("enqueueUpdateUnambiguous", {
       data: {
         background: {
           updateUnambiguous: {
@@ -745,7 +556,7 @@ describe("useEnqueue", () => {
       mutationPromise = result.current[1]({ id: "123", unambiguous: { stringField: "hello world", numberField: 21 } });
     });
 
-    client.executeMutation.pushResponse("enqueueUpdateUnambiguous", {
+    await client.executeMutation.pushResponse("enqueueUpdateUnambiguous", {
       data: {
         background: {
           updateUnambiguous: {
@@ -789,10 +600,8 @@ describe("useEnqueue", () => {
       },
     });
 
-    const wrapper = (props: { children: React.ReactNode }) => <Provider value={client}>{props.children}</Provider>;
-
     const { result } = renderHook(() => useEnqueue(relatedProductsApi.ambiguous.update), {
-      wrapper,
+      wrapper: MockClientWrapper(relatedProductsApi, client),
     });
 
     let mutationPromise: any;
@@ -802,7 +611,7 @@ describe("useEnqueue", () => {
 
     expect(client.executeMutation).toBeCalledTimes(1);
 
-    client.executeMutation.pushResponse("enqueueUpdateAmbiguous", {
+    await client.executeMutation.pushResponse("enqueueUpdateAmbiguous", {
       data: {
         background: {
           updateAmbiguous: {
@@ -867,7 +676,7 @@ describe("useEnqueue", () => {
 
     expect(mockUrqlClient.executeMutation).toBeCalledTimes(1);
 
-    mockUrqlClient.executeMutation.pushResponse("enqueueCreateUser", {
+    await mockUrqlClient.executeMutation.pushResponse("enqueueCreateUser", {
       data: {
         background: {
           createUser: {

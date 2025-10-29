@@ -11,7 +11,7 @@ describe("useActionFormNFiles", () => {
 
     expect(mockUrqlClient.executeQuery).toBeCalledTimes(1);
 
-    mockUrqlClient.executeQuery.pushResponse("post", {
+    await mockUrqlClient.executeQuery.pushResponse("post", {
       data: {
         post: {
           __typename: "Post",
@@ -61,7 +61,7 @@ describe("useActionFormNFiles", () => {
       },
     });
 
-    mockUrqlClient.executeMutation.pushResponse("updatePost", {
+    await mockUrqlClient.executeMutation.pushResponse("updatePost", {
       data: {
         updatePost: {
           success: true,
@@ -99,7 +99,7 @@ describe("useActionFormNFiles", () => {
 
     expect(mockUrqlClient.executeQuery).toBeCalledTimes(1);
 
-    mockUrqlClient.executeQuery.pushResponse("post", {
+    await mockUrqlClient.executeQuery.pushResponse("post", {
       data: {
         post: {
           __typename: "Post",
@@ -151,7 +151,7 @@ describe("useActionFormNFiles", () => {
       },
     });
 
-    mockUrqlClient.executeMutation.pushResponse("updatePost", {
+    await mockUrqlClient.executeMutation.pushResponse("updatePost", {
       data: {
         updatePost: {
           success: true,
@@ -190,7 +190,7 @@ describe("useActionFormNFiles", () => {
 
     expect(mockUrqlClient.executeQuery).toBeCalledTimes(1);
 
-    mockUrqlClient.executeQuery.pushResponse("post", {
+    await mockUrqlClient.executeQuery.pushResponse("post", {
       data: {
         post: {
           __typename: "Post",
@@ -242,7 +242,7 @@ describe("useActionFormNFiles", () => {
       },
     });
 
-    mockUrqlClient.executeMutation.pushResponse("updatePost", {
+    await mockUrqlClient.executeMutation.pushResponse("updatePost", {
       data: {
         updatePost: {
           success: true,
@@ -281,7 +281,7 @@ describe("useActionFormNFiles", () => {
 
     expect(mockUrqlClient.executeQuery).toBeCalledTimes(1);
 
-    mockUrqlClient.executeQuery.pushResponse("post", {
+    await mockUrqlClient.executeQuery.pushResponse("post", {
       data: {
         post: {
           __typename: "Post",
@@ -334,7 +334,7 @@ describe("useActionFormNFiles", () => {
       },
     });
 
-    mockUrqlClient.executeMutation.pushResponse("updatePost", {
+    await mockUrqlClient.executeMutation.pushResponse("updatePost", {
       data: {
         updatePost: {
           success: true,
@@ -397,7 +397,7 @@ describe("useActionFormNFiles", () => {
       },
     });
 
-    mockUrqlClient.executeMutation.pushResponse("createPost", {
+    await mockUrqlClient.executeMutation.pushResponse("createPost", {
       data: {
         createPost: {
           success: true,

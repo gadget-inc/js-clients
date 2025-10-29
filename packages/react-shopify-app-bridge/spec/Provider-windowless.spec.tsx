@@ -1,25 +1,15 @@
 /**
  * @jest-environment node
  */
-import type { AnyClient } from "@gadgetinc/api-client-core";
-import { GadgetConnection } from "@gadgetinc/api-client-core";
 import "@testing-library/jest-dom";
 import type { ReactNode } from "react";
 import React from "react";
 import ReactDOMServer from "react-dom/server";
+import { relatedProductsApi } from "../../client-hooks/spec/apis.js";
 import { AppType, Provider } from "../src/Provider.js";
 
 describe("GadgetProvider in windowless environment", () => {
-  let mockApiClient: AnyClient;
   const mockApiKey = "some-api-key";
-
-  beforeEach(() => {
-    mockApiClient = {
-      connection: new GadgetConnection({
-        endpoint: "https://test-app.gadget.app/endpoint",
-      }),
-    } as any;
-  });
 
   const render = (element: ReactNode) => {
     return ReactDOMServer.renderToString(element);
@@ -35,7 +25,7 @@ describe("GadgetProvider in windowless environment", () => {
   it("should render a standalone app type without throwing an error", () => {
     const result = render(
       <Provider
-        api={mockApiClient}
+        api={relatedProductsApi}
         shopifyApiKey={mockApiKey}
         type={AppType.Standalone}
         location={{
@@ -53,7 +43,7 @@ describe("GadgetProvider in windowless environment", () => {
   it("should render an embedded app type without throwing an error", () => {
     const result = render(
       <Provider
-        api={mockApiClient}
+        api={relatedProductsApi}
         shopifyApiKey={mockApiKey}
         type={AppType.Embedded}
         location={{

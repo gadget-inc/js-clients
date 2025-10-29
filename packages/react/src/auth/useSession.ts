@@ -1,15 +1,6 @@
-import type {
-  AnyClient,
-  DefaultSelection,
-  FindManyFunction,
-  GadgetRecord,
-  GetFunction,
-  LimitToKnownKeys,
-  Select,
-} from "@gadgetinc/api-client-core";
-import { useApi } from "../GadgetProvider.js";
-import { useGet } from "../useGet.js";
-import type { OptionsType, ReadOperationOptions } from "../utils.js";
+import type { OptionsType, ReadOperationOptions } from "@gadgetinc/client-hooks";
+import type { AnyClient, DefaultSelection, FindManyFunction, GadgetRecord, GetFunction, LimitToKnownKeys, Select } from "@gadgetinc/core";
+import { useApi, useGet } from "../hooks.js";
 
 export type GadgetSession = GadgetRecord<Record<string, any>>;
 

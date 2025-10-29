@@ -1,4 +1,4 @@
-import { assert } from "@gadgetinc/api-client-core";
+import { assert } from "@gadgetinc/client-hooks";
 import React from "react";
 import type { useFieldArray } from "../../useActionForm.js";
 import { useAutoFormMetadata } from "../AutoFormContext.js";

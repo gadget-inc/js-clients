@@ -1,9 +1,5 @@
-import type { GadgetRecord } from "@gadgetinc/api-client-core";
 import { act, renderHook, waitFor } from "@testing-library/react";
-import type { IsExact } from "conditional-type-checks";
-import { assert } from "conditional-type-checks";
 import { useFindOne } from "../src/index.js";
-import type { ErrorWrapper } from "../src/utils.js";
 import { kitchenSinkApi, relatedProductsApi } from "./apis.js";
 import {
   MockClientWrapper,
@@ -14,47 +10,11 @@ import {
 } from "./testWrappers.js";
 
 describe("useFindOne", () => {
-  // these functions are typechecked but never run to avoid actually making API calls
-  const _TestFindOneReturnsTypedDataWithExplicitSelection = () => {
-    const [{ data, fetching, error }, refresh] = useFindOne(relatedProductsApi.user, "10", { select: { id: true, email: true } });
-
-    assert<IsExact<typeof fetching, boolean>>(true);
-    assert<IsExact<typeof data, undefined | GadgetRecord<{ id: string; email: string | null }>>>(true);
-    assert<IsExact<typeof error, ErrorWrapper | undefined>>(true);
-
-    // data is accessible via dot access
-    if (data) {
-      data.id;
-      data.email;
-    }
-
-    // hook return value includes the urql refresh function
-    refresh();
-  };
-
-  const _TestFindOneReturnsTypedDataWithNoSelection = () => {
-    const [{ data }] = useFindOne(relatedProductsApi.user, "10");
-
-    if (data) {
-      data.id;
-      data.email;
-    }
-  };
-
-  const _TestFindOneOnNamespacedModel = () => {
-    const [{ data }] = useFindOne(kitchenSinkApi.game.player, "10");
-
-    if (data) {
-      data.id;
-      data.name;
-    }
-  };
-
   test("can find one record by id", async () => {
     let query: string | undefined;
     const client = createMockUrqlClient({
       queryAssertions: (request) => {
-        query = request.query.loc?.source.body;
+        query = "kind" in request.query ? request.query.loc?.source.body : "";
       },
     });
 
@@ -89,7 +49,7 @@ describe("useFindOne", () => {
       }"
     `);
 
-    client.executeQuery.pushResponse("user", {
+    await client.executeQuery.pushResponse("user", {
       data: {
         user: {
           id: "123",
@@ -100,8 +60,8 @@ describe("useFindOne", () => {
       hasNext: false,
     });
 
-    expect(result.current[0].data!.id).toEqual("123");
-    expect(result.current[0].data!.email).toEqual("test@test.com");
+    expect(result.current[0].data?.id).toEqual("123");
+    expect(result.current[0].data?.email).toEqual("test@test.com");
     expect(result.current[0].fetching).toBe(false);
     expect(result.current[0].error).toBeFalsy();
   });
@@ -117,7 +77,7 @@ describe("useFindOne", () => {
 
     expect(mockUrqlClient.executeQuery).toBeCalledTimes(1);
 
-    mockUrqlClient.executeQuery.pushResponse("user", {
+    await mockUrqlClient.executeQuery.pushResponse("user", {
       data: {
         user: null,
       },
@@ -141,7 +101,7 @@ describe("useFindOne", () => {
     let query: string | undefined;
     const client = createMockUrqlClient({
       queryAssertions: (request) => {
-        query = request.query.loc?.source.body;
+        query = "kind" in request.query ? request.query.loc?.source.body : "";
       },
     });
 
@@ -174,7 +134,7 @@ describe("useFindOne", () => {
       }"
     `);
 
-    client.executeQuery.pushResponse("player", {
+    await client.executeQuery.pushResponse("player", {
       data: {
         game: {
           player: {
@@ -187,8 +147,8 @@ describe("useFindOne", () => {
       hasNext: false,
     });
 
-    expect(result.current[0].data!.id).toEqual("123");
-    expect(result.current[0].data!.name).toEqual("Caitlin Clark");
+    expect(result.current[0].data?.id).toEqual("123");
+    expect(result.current[0].data?.name).toEqual("Caitlin Clark");
     expect(result.current[0].fetching).toBe(false);
     expect(result.current[0].error).toBeFalsy();
   });
@@ -204,7 +164,7 @@ describe("useFindOne", () => {
 
     expect(mockUrqlClient.executeQuery).toBeCalledTimes(1);
 
-    mockUrqlClient.executeQuery.pushResponse("player", {
+    await mockUrqlClient.executeQuery.pushResponse("player", {
       data: {
         game: {
           player: null,
@@ -233,7 +193,7 @@ describe("useFindOne", () => {
 
     expect(mockUrqlClient.executeQuery).toBeCalledTimes(1);
 
-    mockUrqlClient.executeQuery.pushResponse("user", {
+    await mockUrqlClient.executeQuery.pushResponse("user", {
       data: {
         user: {
           id: "123",
@@ -264,7 +224,7 @@ describe("useFindOne", () => {
 
     await act(async () => {
       await mockUrqlClient.executeQuery.waitForSubject("user");
-      mockUrqlClient.executeQuery.pushResponse("user", {
+      await mockUrqlClient.executeQuery.pushResponse("user", {
         data: {
           user: {
             id: "123",
@@ -280,8 +240,8 @@ describe("useFindOne", () => {
     rerender();
     expect(result.current).toBeTruthy();
 
-    expect(result.current[0].data!.id).toEqual("123");
-    expect(result.current[0].data!.email).toEqual("test@test.com");
+    expect(result.current[0].data?.id).toEqual("123");
+    expect(result.current[0].data?.email).toEqual("test@test.com");
     expect(result.current[0].error).toBeFalsy();
 
     const beforeObject = result.current[0];
@@ -327,8 +287,8 @@ describe("useFindOne", () => {
 
     await waitFor(() => expect(result.current[0].fetching).toBe(false));
 
-    expect(result.current[0].data!.id).toEqual("123");
-    expect(result.current[0].data!.email).toEqual("test@test.com");
+    expect(result.current[0].data?.id).toEqual("123");
+    expect(result.current[0].data?.email).toEqual("test@test.com");
     expect(result.current[0].error).toBeFalsy();
 
     subscription.push({
@@ -340,10 +300,10 @@ describe("useFindOne", () => {
       revision: 2,
     } as any);
 
-    await waitFor(() => expect(result.current[0].data!.email).toEqual("test-new@test.com"));
+    await waitFor(() => expect(result.current[0].data?.email).toEqual("test-new@test.com"));
 
-    expect(result.current[0].data!.id).toEqual("123");
-    expect(result.current[0].data!.email).toEqual("test-new@test.com");
+    expect(result.current[0].data?.id).toEqual("123");
+    expect(result.current[0].data?.email).toEqual("test-new@test.com");
     expect(result.current[0].fetching).toBe(false);
     expect(result.current[0].error).toBeFalsy();
   });

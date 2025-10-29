@@ -342,7 +342,7 @@ const metadata = {
 const mockMeta = async () => {
   await mockUrqlClient.executeQuery.waitForSubject("ModelActionMetadata");
   const updateMetadata = { ...metadata, action: { ...metadata.action, apiIdentifier: "update", operatesWithRecordIdentity: true } };
-  mockUrqlClient.executeQuery.pushResponse("ModelActionMetadata", {
+  await mockUrqlClient.executeQuery.pushResponse("ModelActionMetadata", {
     stale: false,
     hasNext: false,
     data: {
@@ -365,7 +365,7 @@ const mockMeta = async () => {
 const mockFindBy = async () => {
   await mockUrqlClient.executeQuery.waitForSubject("widget");
 
-  mockUrqlClient.executeQuery.pushResponse("widget", {
+  await mockUrqlClient.executeQuery.pushResponse("widget", {
     stale: false,
     hasNext: false,
     data: {

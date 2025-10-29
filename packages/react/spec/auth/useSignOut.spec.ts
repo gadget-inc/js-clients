@@ -52,7 +52,7 @@ describe("useSignOut", () => {
 
       expect(mockUrqlClient.executeMutation).toHaveBeenCalledTimes(1);
 
-      mockUrqlClient.executeMutation.pushResponse("signOutUser", {
+      await mockUrqlClient.executeMutation.pushResponse("signOutUser", {
         data: {
           success: true,
           signOutUser: {
@@ -92,7 +92,7 @@ describe("useSignOut", () => {
       });
 
       expect(mockUrqlClient.executeMutation).toBeCalledTimes(1);
-      mockUrqlClient.executeMutation.pushResponse("signOutUser", {
+      await mockUrqlClient.executeMutation.pushResponse("signOutUser", {
         data: {
           success: true,
           signOutUser: {
@@ -133,7 +133,7 @@ describe("useSignOut", () => {
 
       expect(mockUrqlClient.executeMutation).toBeCalledTimes(1);
 
-      mockUrqlClient.executeMutation.pushResponse("signOutUser", {
+      await mockUrqlClient.executeMutation.pushResponse("signOutUser", {
         data: {
           success: true,
           signOutUser: {
@@ -171,7 +171,7 @@ describe("useSignOut", () => {
         const mutationPromise = result.current();
 
         expect(mockUrqlClient.executeMutation).toHaveBeenCalledTimes(1);
-        mockUrqlClient.executeMutation.pushResponse("signOutUser", {
+        await mockUrqlClient.executeMutation.pushResponse("signOutUser", {
           data: {
             success: false,
             signOutUser: {

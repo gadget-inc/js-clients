@@ -22,3 +22,10 @@ export const useQueryArgs = <Plan extends QueryPlan, Options extends QueryOption
 });
 
 export const noProviderErrorMessage = `Could not find a client in the context of Provider. Please ensure you wrap the root component in a <Provider>`;
+
+export function assert<T>(value: T | undefined | null, message?: string): T {
+  if (!value) {
+    throw new Error("assertion error" + (message ? `: ${message}` : ""));
+  }
+  return value;
+}

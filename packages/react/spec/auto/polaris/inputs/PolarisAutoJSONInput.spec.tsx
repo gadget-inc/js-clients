@@ -17,7 +17,7 @@ describe("PolarisJSONInput", () => {
         wrapper: PolarisMockedProviders,
       }
     );
-    mockUpdateWidgetFindBy();
+    await mockUpdateWidgetFindBy();
     const input = getByLabelText("Metafields");
     expect(input).toHaveValue(`{
   "hello": "world!"
@@ -32,7 +32,7 @@ describe("PolarisJSONInput", () => {
       </PolarisAutoForm>,
       { wrapper: PolarisMockedProviders }
     );
-    mockUpdateWidgetFindBy();
+    await mockUpdateWidgetFindBy();
     const input = getByLabelText("Metafields");
 
     const user = userEvent.setup();
@@ -66,8 +66,8 @@ describe("PolarisJSONInput", () => {
   });
 });
 
-const mockUpdateWidgetFindBy = () => {
-  mockWidgetFindBy(
+const mockUpdateWidgetFindBy = async () => {
+  await mockWidgetFindBy(
     {
       name: "Update",
       apiIdentifier: "update",

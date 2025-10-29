@@ -1,4 +1,4 @@
-import type { FieldSelection, GadgetRecord } from "@gadgetinc/api-client-core";
+import type { FieldSelection, GadgetRecord } from "@gadgetinc/core";
 import React from "react";
 import { GadgetFieldType } from "../internal/gql/graphql.js";
 import type { FieldMetadata } from "../metadata.js";
