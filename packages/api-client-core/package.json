@@ -35,7 +35,7 @@
     "@urql/core": "^4.0.10",
     "cross-fetch": "^4.0.0",
     "graphql": "^16.8.1",
-    "graphql-ws": "^5.13.1",
+    "graphql-ws": "^5.16.2",
     "isomorphic-ws": "^5.0.0",
     "klona": "^2.0.6",
     "tiny-graphql-query-compiler": "^0.2.2",
