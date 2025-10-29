@@ -1,4 +1,4 @@
-import { OptionsType } from "@gadgetinc/client-hooks";
+import type { OptionsType } from "@gadgetinc/client-hooks";
 import type {
   ActionFunction,
   AnyErrorWrapper,

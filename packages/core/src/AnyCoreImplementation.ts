@@ -1,6 +1,6 @@
-import { AnyErrorWrapper } from "./AnyErrorWrapper.js";
-import { AnyActionFunction, AnyBulkActionFunction } from "./GadgetFunctions.js";
-import { ChangeTracking, GadgetRecord, RecordShape } from "./GadgetRecord.js";
+import type { AnyErrorWrapper } from "./AnyErrorWrapper.js";
+import type { AnyActionFunction, AnyBulkActionFunction } from "./GadgetFunctions.js";
+import type { ChangeTracking, GadgetRecord, RecordShape } from "./GadgetRecord.js";
 
 export interface AnyCoreImplementation {
   GadgetRecord: (new <Shape extends RecordShape>(data: Shape) => GadgetRecord<Shape>) & { ChangeTracking: typeof ChangeTracking };

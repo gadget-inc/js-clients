@@ -1,4 +1,4 @@
-import { AnyConnection } from "./AnyConnection.js";
+import type { AnyConnection } from "./AnyConnection.js";
 import type { GadgetRecord, GadgetRecordList, RecordShape } from "./GadgetRecord.js";
 import type { AnyFilter, InternalFindListOptions, InternalFindManyOptions, InternalFindOneOptions } from "./types.js";
 

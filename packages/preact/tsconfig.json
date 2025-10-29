@@ -1,0 +1,17 @@
+{
+  "extends": "../../tsconfig.json",
+  "compilerOptions": {
+    "lib": ["es2020", "DOM"],
+    "jsx": "react-jsx",
+    "jsxImportSource": "preact",
+    "baseUrl": "./",
+    "moduleResolution": "nodenext",
+    "module": "nodenext",
+    "target": "es2020",
+    "types": ["jest", "node"],
+    "outDir": "./dist",
+    "resolveJsonModule": true,
+    "rootDir": "../../"
+  },
+  "include": ["./src", "./spec"]
+}

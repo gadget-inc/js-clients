@@ -1,6 +1,6 @@
 import type { Jsonify } from "type-fest";
-import { AnyInternalModelManager } from "./AnyInternalModelManager.js";
-import { AnyModelManager } from "./AnyModelManager.js";
+import type { AnyInternalModelManager } from "./AnyInternalModelManager.js";
+import type { AnyModelManager } from "./AnyModelManager.js";
 import type { PaginateOptions } from "./types.js";
 
 export type RecordShape = Record<string, any> | null | undefined | void;
