@@ -19,7 +19,7 @@
 
 ## Introduction
 
-This library is a collection of helpers for using your Gadget app in Shopify extensions. It works in both plain javascript extension contexts as well as with React.
+This library is a collection of helpers for using your Gadget app in Shopify extensions. It works in both plain javascript extension contexts as well as with React and Preact.
 
 ## Installation
 
@@ -91,5 +91,30 @@ function UIExtension() {
 
   // ready will be true as soon as the api client is ready to authenticate with shopify session token auth
   // use api as you normally would with @gadgetinc/react
+}
+```
+
+Within a Shopify Preact extension, you can use `useGadget` to access your api client setup for shopify session token authentication:
+
+```tsx
+import { Client } from "@gadget-client/my-app-slug";
+import { Provider, useGadget } from "@gadgetinc/shopify-extensions/preact";
+import { extension } from "@shopify/ui-extensions/checkout";
+
+const api = new Client();
+
+export default extension("purchase.checkout.block.render", (root, { sessionToken }) => {
+  return (
+    <Provider api={api} sessionToken={sessionToken}>
+      <UIExtension />
+    </Provider>
+  );
+});
+
+function UIExtension() {
+  const { ready, api } = useGadget();
+
+  // ready will be true as soon as the api client is ready to authenticate with shopify session token auth
+  // use api as you normally would with @gadgetinc/preact
 }
 ```

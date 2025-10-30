@@ -3,7 +3,7 @@ import { jest } from "@jest/globals";
 import { diff } from "@n1ru4l/json-patch-plus";
 import { render, renderHook, waitFor } from "@testing-library/react";
 import type { Operation, Client as UrqlClient } from "@urql/core";
-import { DocumentNode } from "graphql";
+import type { DocumentNode } from "graphql";
 import React from "react";
 import { pipe, subscribe } from "wonka";
 import { useFindMany } from "../src/hooks.js";

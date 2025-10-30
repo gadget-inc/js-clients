@@ -37,6 +37,12 @@ jobs:
           token: ${{ secrets.NPM_TOKEN }}
           package: ./packages/client-hooks/package.json
           access: public
+      - name: Publish @gadgetinc/preact
+        uses: JS-DevTools/npm-publish@v1
+        with:
+          token: ${{ secrets.NPM_TOKEN }}
+          package: ./packages/preact/package.json
+          access: public
       - name: Publish @gadgetinc/react
         uses: JS-DevTools/npm-publish@v1
         with:

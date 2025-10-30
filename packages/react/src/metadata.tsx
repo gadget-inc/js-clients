@@ -1,6 +1,5 @@
 import { assert } from "@gadgetinc/client-hooks";
-import type { ActionFunction, AnyClient, GlobalActionFunction } from "@gadgetinc/core";
-import { AnyErrorWrapper } from "@gadgetinc/core";
+import type { ActionFunction, AnyClient, AnyErrorWrapper, GlobalActionFunction } from "@gadgetinc/core";
 import type { ResultOf } from "@graphql-typed-document-node/core";
 import type { DocumentNode } from "graphql";
 import { useApi, useCoreImplementation, useQuery as useGadgetQuery } from "./hooks.js";
