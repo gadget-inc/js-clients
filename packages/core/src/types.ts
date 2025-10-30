@@ -156,13 +156,8 @@ export type CurrencyAmount = string;
 /** Represents a UTC date formatted an ISO-8601 formatted 'full-date' string. */
 export type ISO8601DateString = string;
 
-export type JSONValue = string | number | boolean | JSONObject | JSONArray;
-
 /** The `JSONObject` scalar type represents JSON objects as specified by [ECMA-404](http://www.ecma-international.org/publications/files/ECMA-ST/ECMA-404.pdf). */
 export type JSONObject = { [key: string]: any };
-
-// eslint-disable-next-line @typescript-eslint/no-empty-interface
-interface JSONArray extends Array<JSONValue> {}
 
 /** The ID of a record in Gadget */
 export type GadgetID = string;

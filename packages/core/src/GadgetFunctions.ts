@@ -245,7 +245,7 @@ export interface GlobalActionFunction<VariablesT> {
   variables: VariablesOptions;
   variablesType: VariablesT;
   isBulk?: undefined;
-  plan: (variables?: VariablesOptions) => GQLBuilderResult;
+  plan: (variables?: VariablesT) => GQLBuilderResult;
   processResult: ProcessResultFunction;
 }
 
