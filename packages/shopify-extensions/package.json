@@ -1,6 +1,6 @@
 {
   "name": "@gadgetinc/shopify-extensions",
-  "version": "0.8.1",
+  "version": "0.8.2",
   "files": [
     "README.md",
     "dist/**/*",
@@ -39,7 +39,7 @@
     "prerelease": "gitpkg publish"
   },
   "dependencies": {
-    "@gadgetinc/core": ">=0.13.0"
+    "@gadgetinc/core": ">=0.14.0"
   },
   "devDependencies": {
     "@gadgetinc/core": "workspace:*",
@@ -54,8 +54,8 @@
     "preact": "^10.27.2"
   },
   "peerDependencies": {
-    "@gadgetinc/preact": "^0.1.1",
-    "@gadgetinc/react": "^0.23.2",
+    "@gadgetinc/preact": "^0.1.2",
+    "@gadgetinc/react": "^0.23.3",
     "preact": "^10.0.0",
     "react": "^19.0.0",
     "react-dom": "^19.0.0"

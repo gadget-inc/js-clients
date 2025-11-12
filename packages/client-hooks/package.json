@@ -1,6 +1,6 @@
 {
   "name": "@gadgetinc/client-hooks",
-  "version": "0.1.2",
+  "version": "0.1.3",
   "files": [
     "README.md",
     "dist/**/*"
@@ -32,7 +32,7 @@
     "prerelease": "gitpkg publish"
   },
   "dependencies": {
-    "@gadgetinc/core": ">=0.13.0",
+    "@gadgetinc/core": ">=0.14.0",
     "@urql/core": "^6.0.1"
   },
   "devDependencies": {

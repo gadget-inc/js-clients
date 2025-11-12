@@ -643,6 +643,14 @@ export type FilterElement =
  **/
 export type AnyFilter = FilterElement | FilterElement[];
 
+export type SearchableFieldConfig = {
+  weight?: number;
+};
+
+export type AnySearchableFieldConfig = {
+  [key: string]: AnySearchableFieldConfig | SearchableFieldConfig | boolean | null | undefined;
+};
+
 /**
  * A list of fields to return from the backend
  * Is not specific to any backend model. Look for the backend specific types in the generated API client if you need strong type safety.
@@ -662,7 +670,8 @@ export interface FindManyOptions extends BaseFindOptions {
   filter?: AnyFilter | AnyFilter[] | null;
   /** Only return records which match this given search string */
   search?: string | null;
-
+  /** Which fields on a record to search. If not specified, all searchable fields will be searched. */
+  searchFields?: AnySearchableFieldConfig | null;
   /**
    * Return records after the given cursor for pagination. Useful in tandem with the `first` count option for pagination.
    **/
@@ -692,6 +701,8 @@ export type FindFilteredOptions = {
   filter?: AnyFilter | null;
   /** Only return records which match this given search string */
   search?: string | null;
+  /** Which fields on a record to search. If not specified, all searchable fields will be searched. */
+  searchFields?: AnySearchableFieldConfig | null;
 };
 
 /**
@@ -725,6 +736,8 @@ export interface InternalFindListOptions {
    * Matches the behavior of the Public API `search` option
    **/
   search?: string | null;
+  /** Which fields on a record to search. If not specified, all searchable fields will be searched. */
+  searchFields?: AnySearchableFieldConfig | null;
   /**
    * How to sort the returned records
    * Matches the format and behavior of the Public API `sort` option
