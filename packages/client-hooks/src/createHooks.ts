@@ -15,12 +15,23 @@ import { noProviderErrorMessage } from "./utils.js";
 
 const RegisteredHooks: ((adapter: RuntimeAdapter, coreHooks: CoreHooks) => void)[] = [];
 
+// Track whether createHooks has been called so lazy-loaded hooks can register immediately
+let currentAdapter: RuntimeAdapter | null = null;
+let currentCoreHooks: CoreHooks | null = null;
+
 export const hookErrorMessage = (hook: string) =>
   `You are attempting to use the ${hook} hook, but you are not calling it from a component that is wrapped in a Gadget <Provider/> component. Please ensure you are wrapping this hook with the <Provider/> component from either @gadgetinc/react or @gadgetinc/preact.`;
 
 export const createHookStub = (hook: string, registerFn?: (adapter: RuntimeAdapter, coreHooks: CoreHooks) => void) => {
   if (registerFn) {
-    RegisteredHooks.push(registerFn);
+    // If hooks are already initialized (adapter has been set), register immediately
+    // This handles lazy-loaded chunks that arrive after createHooks has been called
+    if (currentAdapter && currentCoreHooks) {
+      registerFn(currentAdapter, currentCoreHooks);
+    } else {
+      // Otherwise, queue it for when createHooks is called
+      RegisteredHooks.push(registerFn);
+    }
   }
   return () => {
     throw new Error(hookErrorMessage(hook));
@@ -35,6 +46,10 @@ export let useMutation: UseGadgetMutation = createHookStub("useMutation");
 
 export const createHooks = (adapter: RuntimeAdapter) => {
   const coreHooks = createCoreHooks(adapter);
+
+  // Store the adapter and core hooks so lazy-loaded hooks can register immediately
+  currentAdapter = adapter;
+  currentCoreHooks = coreHooks;
 
   useQuery = coreHooks.useGadgetQuery;
   useMutation = coreHooks.useGadgetMutation;
