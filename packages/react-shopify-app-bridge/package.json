@@ -27,7 +27,7 @@
     "prerelease": "gitpkg publish"
   },
   "dependencies": {
-    "@gadgetinc/react": "^0.23.3",
+    "@gadgetinc/react": "^0.23.4",
     "crypto-js": "^4.2.0",
     "tslib": "^2.6.2"
   },
