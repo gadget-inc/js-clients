@@ -29,7 +29,7 @@ export const makeShadcnAutoTextAreaInput = ({ Textarea, Label }: Pick<ShadcnElem
     const inputLabel = customLabel || controllerLabel || metadata.name;
 
     return (
-      <div>
+      <div className="flex flex-col gap-2">
         <Label htmlFor={id}>{inputLabel}</Label>
         <div className={suffix ? "relative group border border-input rounded-md focus-within:ring-1 focus-within:ring-ring " : "relative"}>
           <div className="relative flex items-center">

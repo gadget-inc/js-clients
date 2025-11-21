@@ -1,10 +1,12 @@
-import { XIcon } from "lucide-react";
 import React from "react";
 import { getRecordsAsOptions } from "../../../hooks/useRelatedModel.js";
 import type { OptionLabel } from "../../../interfaces/AutoRelationshipInputProps.js";
 import type { ShadcnElements } from "../../elements.js";
+import { makeShadcnSelectedItemBadgeComponent } from "../ShadcnAutoEnumInput.js";
 
 export const makeSelectedRecordTags = ({ Badge, Button }: Pick<ShadcnElements, "Badge" | "Button">) => {
+  const SelectedItemBadge = makeShadcnSelectedItemBadgeComponent({ Badge, Button });
+
   function SelectedRecordTags(props: {
     selectedRecords: Record<string, any>[];
     optionLabel: OptionLabel;
@@ -22,21 +24,15 @@ export const makeSelectedRecordTags = ({ Badge, Button }: Pick<ShadcnElements, "
       <>
         {options.map((option, index) => {
           return (
-            <Badge key={`option-${option.id || index}`} variant={"outline"} id={`selected-option-${option.primary}`}>
-              {option.primary}
-              <Button
-                onClick={(e) => {
-                  e.preventDefault();
-                  const record = selectedRecords.find((record) => record.id === option.id);
-                  onRemoveRecord(record ?? { id: option.id });
-                }}
-                variant="ghost"
-                aria-label={`Remove ${option.primary}`}
-                size="icon"
-              >
-                <XIcon />
-              </Button>
-            </Badge>
+            <SelectedItemBadge
+              key={`option-${option.id || index}`}
+              id={`selected-option-${option.primary}`}
+              content={option.primary}
+              onRemoveRecord={() => {
+                const record = selectedRecords.find((record) => record.id === option.id);
+                onRemoveRecord(record ?? { id: option.id });
+              }}
+            />
           );
         })}
       </>

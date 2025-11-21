@@ -19,7 +19,7 @@ export const makeShadcnAutoJSONInput = ({ Label, Textarea }: Pick<ShadcnElements
     const label = props.label ?? controller.label;
     const id = props.id ?? `${props.field}-input`;
     return (
-      <div>
+      <div className="flex flex-col gap-2">
         <Label htmlFor={id}>
           {label} {requiredIndicator}
         </Label>

@@ -48,7 +48,7 @@ export const makeShadcnAutoFileInput = ({
       }
 
       return (
-        <div>
+        <div className="flex flex-col gap-2">
           {actionHintParts.length > 1 && (
             <Label>
               <span className="block text-sm text-gray-500 mb-2">
@@ -90,7 +90,7 @@ export const makeShadcnAutoFileInput = ({
       if (!value || !isAutoFileFieldValue(value)) return null;
 
       return (
-        <div className="flex w-full rounded-md border border-input bg-transparent px-3 py-1 text-base shadow-sm transition-colors">
+        <div className="flex w-full rounded-md border border-input bg-transparent px-3 py-1 text-base shadow-xs transition-colors">
           <div className="flex items-center gap-4">
             <Avatar>
               <AvatarImage src={imageThumbnailURL} />

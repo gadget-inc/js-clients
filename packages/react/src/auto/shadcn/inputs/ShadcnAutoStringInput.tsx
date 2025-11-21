@@ -39,11 +39,17 @@ export const makeShadcnAutoStringInput = ({ Input, Label }: Pick<ShadcnElements,
     const requiredIndicator = metadata.requiredArgumentForInput ? <ShadcnRequired>*</ShadcnRequired> : null;
 
     return (
-      <div>
+      <div className="flex flex-col gap-2">
         <Label htmlFor={id}>
           {inputLabel} {requiredIndicator}
         </Label>
-        <div className={suffix ? "relative group border border-input rounded-md focus-within:ring-1 focus-within:ring-ring " : "relative"}>
+        <div
+          className={
+            suffix
+              ? "relative group border border-input rounded-md focus-within:ring-ring/50 focus-within:ring-3 transition-shadow duration-200 ease-out"
+              : "relative"
+          }
+        >
           <div className="relative flex items-center">
             <Input
               name={name}
@@ -58,7 +64,7 @@ export const makeShadcnAutoStringInput = ({ Input, Label }: Pick<ShadcnElements,
               placeholder={placeholder}
               {...restProps}
             />
-            {suffix && <div className=" h-10 flex items-center px-3">{suffix}</div>}
+            {suffix && <div className="h-10 flex items-center px-3">{suffix}</div>}
           </div>
           {errorMessage && <p className="text-sm text-red-500">{errorMessage}</p>}
         </div>

@@ -123,8 +123,8 @@ export const makeShadcnAutoHasManyThroughForm = ({
                     aria-controls={listboxId}
                     className={`w-[300px] flex flex-row items-center justify-between cursor-pointer ${open ? "bg-accent" : ""}`}
                   >
-                    <Label className="truncate flex-grow text-left cursor-pointer">Add {siblingModelName ?? "related model"}</Label>
-                    <ChevronsUpDown className="opacity-50 w-5 h-5 flex-shrink-0" />
+                    <Label className="truncate grow text-left cursor-pointer">Add {siblingModelName ?? "related model"}</Label>
+                    <ChevronsUpDown className="opacity-50 w-5 h-5 shrink-0" />
                   </Button>
                 </div>
               </PopoverTrigger>

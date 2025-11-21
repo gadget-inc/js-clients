@@ -1,6 +1,6 @@
 {
   "name": "@gadgetinc/react-chatgpt-apps",
-  "version": "0.2.3",
+  "version": "0.3.0",
   "files": [
     "README.md",
     "dist/**/*"
@@ -27,7 +27,7 @@
     "prerelease": "gitpkg publish"
   },
   "dependencies": {
-    "@gadgetinc/react": "^0.23.4"
+    "@gadgetinc/react": "^0.24.0"
   },
   "devDependencies": {
     "@gadgetinc/react": "workspace:*",

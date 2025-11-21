@@ -26,6 +26,35 @@ export const DesignSystemSelectionControl = ({ children }: { children: React.Rea
     setDesignSystem(value);
   };
 
+  // Dynamically enable/disable stylesheets based on active design system
+  useEffect(() => {
+    const styleSheets = Array.from(document.styleSheets);
+
+    styleSheets.forEach((sheet) => {
+      console.log({ sheet });
+      try {
+        // Vite dev mode uses data-vite-dev-id on the ownerNode (style tag)
+        const viteDevId = (sheet.ownerNode as HTMLElement)?.getAttribute?.("data-vite-dev-id") || "";
+
+        // Check both href (production) and vite dev id (dev mode)
+        const isPolaris = viteDevId.includes("polaris") && viteDevId.includes("styles.css");
+        const isShadcn = viteDevId.includes("shadcn-tailwind.css");
+
+        // Disable Polaris when Shadcn is active
+        if (isPolaris) {
+          sheet.disabled = designSystem === SUITE_NAMES.SHADCN;
+        }
+
+        // Disable Shadcn when Polaris is active
+        if (isShadcn) {
+          sheet.disabled = designSystem === SUITE_NAMES.POLARIS;
+        }
+      } catch (e) {
+        // Cross-origin stylesheets may throw errors, ignore them
+      }
+    });
+  }, [designSystem]);
+
   return (
     <DesignSystemContext.Provider value={{ designSystem, updateDesignSystem }}>
       <AppProvider i18n={translations}>

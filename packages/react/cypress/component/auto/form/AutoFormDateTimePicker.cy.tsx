@@ -367,8 +367,6 @@ describeForEachAutoAdapter("AutoFormDateTimePicker", ({ name, adapter: { AutoFor
         cy.get(`[aria-label='Thursday March 4 2021']`).should("have.attr", "aria-pressed", "true");
       }
 
-      cy.get("#test-date").click();
-
       if (name === SUITE_NAMES.SHADCN) {
         cy.get(`[aria-label='Thursday, March 4th, 2021']`).click();
         cy.get(`[aria-label='Thursday, March 4th, 2021, selected']`).should("exist");

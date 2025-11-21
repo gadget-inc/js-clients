@@ -102,7 +102,7 @@ export const makeShadcnAutoDateTimePicker = ({
     return (
       <Popover open={isOpen} onOpenChange={setIsOpen}>
         <PopoverTrigger asChild>
-          <div>
+          <div className="flex flex-col gap-2">
             <Label htmlFor={props.id ? `${props.id}-date` : undefined}>
               {props.label ?? metadata.name ?? "Date"}
               {metadata.requiredArgumentForInput && <ShadcnRequired>*</ShadcnRequired>}
@@ -113,7 +113,7 @@ export const makeShadcnAutoDateTimePicker = ({
               variant="outline"
               type="button"
               className={`w-full justify-start text-left font-normal ${!localTime ? "text-muted-foreground" : ""} ${
-                isOpen ? "ring-1 ring-ring" : ""
+                isOpen ? "ring-ring/50 ring-3" : ""
               }`}
             >
               <CalendarIcon className="mr-2 h-4 w-4" />

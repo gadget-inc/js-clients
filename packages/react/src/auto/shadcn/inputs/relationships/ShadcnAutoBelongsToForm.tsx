@@ -93,7 +93,7 @@ export const makeShadcnAutoBelongsToForm = ({
               <DropdownMenu open={actionsOpen} onOpenChange={setActionsOpen}>
                 <DropdownMenuTrigger
                   data-testid={`${path}-dropdown-menu-trigger`}
-                  className="focus-visible:outline-none focus-visible:ring-0"
+                  className="focus-visible:outline-hidden focus-visible:ring-0"
                 >
                   <Button variant="ghost" className="w-4" onClick={() => setActionsOpen(!actionsOpen)}>
                     <EllipsisVerticalIcon className="w-4 h-2" />
