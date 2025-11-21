@@ -1,4 +1,4 @@
-import { Button, Checkbox } from "@shopify/polaris";
+import { Button } from "@shopify/polaris";
 import { DeleteIcon } from "@shopify/polaris-icons";
 import React, { useEffect } from "react";
 import { Provider } from "../../../../src/GadgetProvider.js";
@@ -51,7 +51,7 @@ export const Namespaced: any = {
 export const SelectFields: any = {
   args: {
     model: api.autoTableTest,
-    columns: ["str", "num"],
+    columns: ["str", "num", "es"],
   },
 };
 
@@ -156,16 +156,20 @@ const CustomCheckboxCell = ({ record }: { record: any }) => {
   const [_result, update] = useAction(api.autoTableTest.update);
 
   return (
-    <Checkbox
-      label={"Bool value"}
-      checked={record.bool}
-      onChange={(value) => {
-        void update({
-          id: record.id,
-          bool: value,
-        });
-      }}
-    />
+    <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
+      <input
+        type="checkbox"
+        checked={record.bool}
+        onChange={(e) => {
+          void update({
+            id: record.id,
+            bool: e.target.checked,
+          });
+        }}
+        aria-label="Bool value"
+      />
+      <label>Bool value</label>
+    </div>
   );
 };
 

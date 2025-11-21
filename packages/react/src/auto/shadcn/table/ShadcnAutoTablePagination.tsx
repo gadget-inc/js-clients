@@ -13,10 +13,20 @@ export const makeShadcnAutoTablePagination = (elements: ShadcnElements) => {
     const { goToNextPage, goToPreviousPage, hasNextPage, hasPreviousPage } = props.page;
     return (
       <div className="flex flex-row items-center gap-2 ml-auto">
-        <Button onClick={goToPreviousPage} disabled={!hasPreviousPage} variant="outline" className="p-2">
+        <Button
+          onClick={goToPreviousPage}
+          disabled={!hasPreviousPage}
+          variant="outline"
+          className={`p-2 ${!hasPreviousPage ? "cursor-not-allowed opacity-50" : "cursor-pointer"}`}
+        >
           <ChevronLeft />
         </Button>
-        <Button onClick={goToNextPage} disabled={!hasNextPage} variant="outline" className="p-2">
+        <Button
+          onClick={goToNextPage}
+          disabled={!hasNextPage}
+          variant="outline"
+          className={`p-2 ${!hasNextPage ? "cursor-not-allowed opacity-50" : "cursor-pointer"}`}
+        >
           <ChevronRight />
         </Button>
       </div>

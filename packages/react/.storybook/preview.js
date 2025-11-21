@@ -1,6 +1,6 @@
 /** @type { import('@storybook/react').Preview } */
 import "@shopify/polaris/build/esm/styles.css";
-import "../globals.css"; // adjust path to your Tailwind CSS file
+import "../spec/shadcn-tailwind.css";
 
 const preview = {
   parameters: {

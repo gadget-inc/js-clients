@@ -66,7 +66,7 @@ export interface DropdownMenuItemProps extends AsChildProps {
   onSelect?: (value: Event) => void;
   textValue?: string;
   value?: string;
-  variant?: "default" | "destructive" | "secondary" | "ghost" | "link" | null;
+  variant?: "default" | "destructive";
 }
 
 export interface DropdownMenuTriggerProps extends AsChildProps {
@@ -163,11 +163,11 @@ export interface ShadcnElements {
   Badge: React.ComponentType<BadgeProps>;
 
   /** The Accordion component from shadcn */
-  Accordion: React.ForwardRefExoticComponent<AccordionComponentProps & React.RefAttributes<HTMLDivElement>>;
+  Accordion: React.ComponentType<AccordionComponentProps & React.RefAttributes<HTMLDivElement>>;
   /** The AccordionItem component from shadcn */
-  AccordionItem: React.ForwardRefExoticComponent<AccordionItemProps & React.HTMLAttributes<HTMLDivElement>>;
+  AccordionItem: React.ComponentType<AccordionItemProps & React.HTMLAttributes<HTMLDivElement>>;
   /** The AccordionTrigger component from shadcn */
-  AccordionTrigger: React.ForwardRefExoticComponent<AccordionTriggerProps>;
+  AccordionTrigger: React.ComponentType<AccordionTriggerProps>;
   /** The AccordionContent component from shadcn */
   AccordionContent: React.ComponentType<AccordionContentProps>;
 
@@ -179,7 +179,7 @@ export interface ShadcnElements {
   AlertDescription: React.ComponentType<AlertDescriptionProps>;
 
   /** The Button component from shadcn */
-  Button: React.ForwardRefExoticComponent<ButtonProps & React.RefAttributes<HTMLButtonElement>>;
+  Button: React.ComponentType<ButtonProps & React.RefAttributes<HTMLButtonElement>>;
 
   /** The Card component from shadcn */
   Card: React.ComponentType<CardProps>;
@@ -199,22 +199,22 @@ export interface ShadcnElements {
   CardContent: React.ComponentType<CardContentProps>;
 
   /** The Command component from shadcn */
-  Command: React.ForwardRefExoticComponent<CommandProps & React.RefAttributes<HTMLDivElement>>;
+  Command: React.ComponentType<CommandProps & React.RefAttributes<HTMLDivElement>>;
   /** The CommandEmpty component from shadcn */
   CommandEmpty: React.ComponentType<React.HTMLAttributes<HTMLDivElement>>;
   /** The CommandGroup component from shadcn */
   CommandGroup: React.ComponentType<React.HTMLAttributes<HTMLDivElement>>;
   /** The CommandInput component from shadcn */
-  CommandInput: React.ForwardRefExoticComponent<CommandInputProps & React.RefAttributes<HTMLInputElement>>;
+  CommandInput: React.ComponentType<CommandInputProps & React.RefAttributes<HTMLInputElement>>;
   /** The CommandItem component from shadcn */
-  CommandItem: React.ForwardRefExoticComponent<ItemProps & React.RefAttributes<HTMLDivElement>>;
+  CommandItem: React.ComponentType<ItemProps & React.RefAttributes<HTMLDivElement>>;
   /** The CommandList component from shadcn */
   CommandList: React.ComponentType<React.HTMLAttributes<HTMLDivElement>>;
   /** The CommandSeparator component from shadcn */
   CommandSeparator: React.ComponentType<React.HTMLAttributes<HTMLDivElement>>;
 
   /** The Checkbox component from shadcn */
-  Checkbox: React.ForwardRefExoticComponent<CheckboxProps & React.RefAttributes<HTMLButtonElement>>;
+  Checkbox: React.ComponentType<CheckboxProps & React.RefAttributes<HTMLButtonElement>>;
 
   /** The DropdownMenu component from shadcn */
   DropdownMenu: React.ComponentType<DropdownMenuProps>;
@@ -245,7 +245,7 @@ export interface ShadcnElements {
   PopoverContent: React.ComponentType<PopoverContentProps>;
   /** The PopoverTrigger component from shadcn */
 
-  PopoverTrigger: React.ForwardRefExoticComponent<PopoverTriggerProps>;
+  PopoverTrigger: React.ComponentType<PopoverTriggerProps>;
 
   /** The Skeleton component from shadcn */
   Skeleton: React.ComponentType<SkeletonProps>;

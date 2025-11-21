@@ -121,10 +121,12 @@ export const makeShadcnAutoHasManyThroughForm = ({
                     onClick={() => setOpen(!open)}
                     aria-expanded={open}
                     aria-controls={listboxId}
-                    className={`w-[300px] flex flex-row items-center justify-between cursor-pointer ${open ? "bg-accent" : ""}`}
+                    className={`w-[300px] flex flex-row items-center justify-between cursor-pointer ${
+                      open ? "bg-accent ring-ring/50 ring-3" : ""
+                    }`}
                   >
-                    <Label className="truncate flex-grow text-left cursor-pointer">Add {siblingModelName ?? "related model"}</Label>
-                    <ChevronsUpDown className="opacity-50 w-5 h-5 flex-shrink-0" />
+                    <Label className="truncate grow text-left cursor-pointer">Add {siblingModelName ?? "related model"}</Label>
+                    <ChevronsUpDown className="opacity-50 w-5 h-5 shrink-0" />
                   </Button>
                 </div>
               </PopoverTrigger>
@@ -184,16 +186,18 @@ export const makeShadcnAutoHasManyThroughForm = ({
                           </div>
                           {siblingOption?.secondary && renderOptionLabel(siblingOption.secondary, "secondary")}
                         </div>
-                        <Button
-                          id={`deleteButton_${pathPrefix}.${idx}`}
-                          className="ml-auto"
-                          variant="ghost"
-                          type="button"
-                          size="icon"
-                          onClick={() => remove(idx)}
-                        >
-                          <X className="w-4 h-4" />
-                        </Button>
+                        <div className="flex items-start self-start">
+                          <Button
+                            id={`deleteButton_${pathPrefix}.${idx}`}
+                            className="p-0 h-4.5 w-4.5 rounded-sm shrink-0"
+                            variant="ghost"
+                            type="button"
+                            size="icon"
+                            onClick={() => remove(idx)}
+                          >
+                            <X className="w-4 h-4" />
+                          </Button>
+                        </div>
                       </div>
                     </div>
                     {props.children && (

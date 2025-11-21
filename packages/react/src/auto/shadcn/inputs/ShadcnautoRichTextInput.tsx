@@ -13,12 +13,12 @@ export const makeShadcnAutoRichTextInput = ({ Label }: Pick<ShadcnElements, "Lab
     const controller = useStringInputController({ field: props.field, control: props.control });
 
     return (
-      <div>
+      <div className="flex flex-col gap-2">
         <Label id={controller.id}>
           {props.label ?? controller.metadata.name}
           {controller.metadata.requiredArgumentForInput && <ShadcnRequired>*</ShadcnRequired>}
         </Label>
-        <div className="border border-input rounded-[8px]">
+        <div className="border border-input rounded-[8px] focus-within:ring-ring/50 focus-within:ring-3 transition-shadow duration-200 ease-out overflow-hidden">
           <AutoRichTextInput {...props} />
         </div>
       </div>
