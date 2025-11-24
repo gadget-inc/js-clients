@@ -321,7 +321,7 @@ export const graphqlizeBackgroundOptions = (options?: EnqueueBackgroundActionOpt
   }
 
   for (const key of Object.keys(obj)) {
-    if (["id", "retries", "queue", "priority", "startAt"].includes(key)) continue;
+    if (["id", "retries", "queue", "priority", "startAt", "shopifyShop"].includes(key)) continue;
     delete obj[key];
   }
 
