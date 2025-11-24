@@ -2,9 +2,14 @@ import { Eye, EyeOff } from "lucide-react";
 import React, { useState } from "react";
 import { defaultPlaceholderHiddenText } from "../../../shared/defaults.js";
 import type { ShadcnElements } from "../../elements.js";
+import { makeShadcnAutoTableTextCell } from "./ShadcnAutoTableTextCell.js";
 
-export const makeShadcnAutoTableEncryptedStringCell = (elements: Pick<ShadcnElements, "Button" | "Label">) => {
+export const makeShadcnAutoTableEncryptedStringCell = (
+  elements: Pick<ShadcnElements, "Button" | "Label" | "TooltipProvider" | "Tooltip" | "TooltipTrigger" | "TooltipContent">
+) => {
   const { Button, Label } = elements;
+
+  const ShadcnAutoTableTextCell = makeShadcnAutoTableTextCell(elements);
 
   function ShadcnAutoTableEncryptedStringCell(props: { value: any }) {
     const { value } = props;
@@ -18,7 +23,7 @@ export const makeShadcnAutoTableEncryptedStringCell = (elements: Pick<ShadcnElem
       <>
         <div style={{ display: "flex", width: "100%", alignItems: "center" }}>
           <div style={{ minWidth: 0, flex: 1, overflow: "hidden", textOverflow: "ellipsis" }}>
-            <Label>{isShown ? value : defaultPlaceholderHiddenText}</Label>
+            {isShown ? <ShadcnAutoTableTextCell value={value} /> : <Label>{defaultPlaceholderHiddenText}</Label>}
           </div>
           <div style={{ flexShrink: 0 }}>
             <Button variant="ghost" onClick={() => setIsShown(!isShown)}>

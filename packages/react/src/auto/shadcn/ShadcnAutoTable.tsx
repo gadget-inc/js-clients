@@ -303,7 +303,7 @@ export const makeAutoTable = (elements: ShadcnElements) => {
           {hasSelectedRecords && (
             <div className="ml-auto">
               <div className="flex flex-row ml-auto gap-2 items-center">
-                <Label className="ml-2">{`${selection.recordIds.length} selected`}</Label>
+                <Label className="ml-2 whitespace-nowrap">{`${selection.recordIds.length} selected`}</Label>
                 <ShadcnAutoTableBulkActionSelector
                   bulkActionOptions={bulkActionOptions}
                   selection={selection}
@@ -339,7 +339,7 @@ export const makeAutoTable = (elements: ShadcnElements) => {
           <>{props.emptyState ?? <div className="h-24 text-center flex items-center justify-center">{`No results`}</div>}</>
         )}
 
-        <div className="flex flex-row gap-2 items-center justify-center mb-2">
+        <div className="flex flex-row gap-2 items-center justify-center my-2">
           {fetching && <ShadcnAutoLoadingIndicator className="w-5 h-5" />}
           {paginate && <ShadcnAutoTablePagination page={page} />}
         </div>

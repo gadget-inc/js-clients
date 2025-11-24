@@ -25,9 +25,11 @@ export const makeShadcnAutoTableTextCell = (elements: ShadcnAutoTableTextCellEle
                 {stringifiedValue}
               </TooltipContent>
             )}
-            <TooltipTrigger className="max-w-full overflow-hidden text-ellipsis">
-              <Label>
-                <span ref={childElementRef}>{stringifiedValue}</span>
+            <TooltipTrigger className="max-w-full block">
+              <Label className="block max-w-full overflow-hidden text-ellipsis whitespace-nowrap">
+                <span ref={childElementRef} style={{ width: "fit-content" }}>
+                  {stringifiedValue}
+                </span>
               </Label>
             </TooltipTrigger>
           </Tooltip>

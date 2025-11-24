@@ -82,7 +82,7 @@ export const makeShadcnAutoComboInput = ({
               }}
               onFocus={() => setOpen(true)}
               placeholder={props.placeholder}
-              className="ml-2 bg-transparent outline-hidden placeholder:text-muted-foreground flex-1"
+              className="ml-2 bg-transparent outline-hidden placeholder:text-muted-foreground flex-1 "
             />
             {open && (
               <>

@@ -51,7 +51,7 @@ export const Namespaced: any = {
 export const SelectFields: any = {
   args: {
     model: api.autoTableTest,
-    columns: ["str", "num"],
+    columns: ["str", "num", "es"],
   },
 };
 
