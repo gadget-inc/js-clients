@@ -106,7 +106,7 @@ describeForEachAutoAdapter("AutoFormDateTimePicker", ({ name, adapter: { AutoFor
         if (name === SUITE_NAMES.SHADCN) {
           cy.get("#test-date").contains("YYYY-MM-DD");
           cy.get("#test-date").click();
-          cy.get("button").contains(`${new Date().getFullYear()}`);
+          cy.get(".rdp-caption_label").contains(`${new Date().getFullYear()}`);
         }
       }
     );
@@ -366,8 +366,6 @@ describeForEachAutoAdapter("AutoFormDateTimePicker", ({ name, adapter: { AutoFor
         cy.get("#test-date").click();
         cy.get(`[aria-label='Thursday March 4 2021']`).should("have.attr", "aria-pressed", "true");
       }
-
-      cy.get("#test-date").click();
 
       if (name === SUITE_NAMES.SHADCN) {
         cy.get(`[aria-label='Thursday, March 4th, 2021']`).click();

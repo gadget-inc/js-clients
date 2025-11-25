@@ -7,6 +7,35 @@ import { type AutoEnumInputProps } from "../../shared/AutoInputTypes.js";
 import type { ShadcnElements } from "../elements.js";
 import { makeShadcnAutoComboInput } from "./ShadcnAutoComboInput.js";
 
+export const makeShadcnSelectedItemBadgeComponent = ({ Badge, Button }: Pick<ShadcnElements, "Badge" | "Button">) => {
+  return function ({
+    content,
+    onRemoveRecord,
+    id,
+    ariaLabel,
+  }: {
+    content: React.ReactNode;
+    onRemoveRecord: () => void;
+    id?: string;
+    ariaLabel?: string;
+  }) {
+    return (
+      <Badge variant={"outline"} id={id} className="pr-0.5">
+        {content}
+        <Button
+          aria-label={ariaLabel || `Remove`}
+          onClick={(e) => onRemoveRecord()}
+          variant="ghost"
+          size="icon"
+          className="p-0 h-4.5 w-4.5 rounded-sm"
+        >
+          <XIcon className="size-3" />
+        </Button>
+      </Badge>
+    );
+  };
+};
+
 export const makeShadcnAutoEnumInput = ({
   Badge,
   Button,
@@ -33,9 +62,10 @@ export const makeShadcnAutoEnumInput = ({
     Checkbox,
   });
 
+  const SelectedItemBadge = makeShadcnSelectedItemBadgeComponent({ Badge, Button });
+
   function ShadcnAutoEnumInput(props: AutoEnumInputProps) {
     const { label: labelProp, placeholder } = props;
-
     const {
       allowMultiple,
       allowOther,
@@ -56,12 +86,12 @@ export const makeShadcnAutoEnumInput = ({
       selectedTagsElement = (
         <div className="flex flex-wrap gap-2">
           {selectedOptions.map((tag) => (
-            <Badge key={`option-${tag}`} variant={"outline"}>
-              {tag}
-              <Button variant="ghost" size="icon" aria-label={`Remove ${tag}`} onClick={() => onSelectionChange(tag)}>
-                <XIcon />
-              </Button>
-            </Badge>
+            <SelectedItemBadge
+              key={`option-${tag}`}
+              content={tag}
+              onRemoveRecord={() => onSelectionChange(tag)}
+              ariaLabel={`Remove ${tag}`}
+            />
           ))}
         </div>
       );

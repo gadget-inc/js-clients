@@ -1,4 +1,3 @@
-import { XIcon } from "lucide-react";
 import React, { useCallback } from "react";
 import { debounce } from "../../../../utils.js";
 import { autoInput } from "../../../AutoInput.js";
@@ -7,6 +6,7 @@ import { getRecordAsOption, optionRecordsToLoadCount, useOptionLabelForField } f
 import type { AutoRelationshipInputProps } from "../../../interfaces/AutoRelationshipInputProps.js";
 import type { ShadcnElements } from "../../elements.js";
 import { makeShadcnAutoComboInput } from "../ShadcnAutoComboInput.js";
+import { makeShadcnSelectedItemBadgeComponent } from "../ShadcnAutoEnumInput.js";
 
 export const makeShadcnAutoBelongsToInput = ({
   Badge,
@@ -35,6 +35,8 @@ export const makeShadcnAutoBelongsToInput = ({
     Checkbox,
   });
 
+  const SelectedItemBadge = makeShadcnSelectedItemBadgeComponent({ Badge, Button });
+
   function ShadcnAutoBelongsToInput(props: AutoRelationshipInputProps) {
     const { field, placeholder } = props;
 
@@ -54,21 +56,23 @@ export const makeShadcnAutoBelongsToInput = ({
 
     const selectedRecordTag =
       selectedOption && selectedOption.id ? (
-        <Badge key={`selectedRecordTag_${selectedOption.id}`} variant={"outline"}>
-          {selectedOption.primary}
-          <Button aria-label={`Remove`} onClick={(e) => onRemoveRecord()} variant="ghost" size="icon">
-            <XIcon />
-          </Button>
-        </Badge>
+        <SelectedItemBadge
+          key={`selectedRecordTag_${selectedOption.id}`}
+          id={`selectedRecordTag_${selectedOption.id}`}
+          content={selectedOption.primary}
+          onRemoveRecord={() => onRemoveRecord()}
+        />
       ) : danglingSelectedRecordId ? (
-        <Badge key={`selectedRecordTag_${danglingSelectedRecordId}`} variant={"outline"}>
-          <p id={`${danglingSelectedRecordId}`} style={{ color: "red" }}>
-            id: {danglingSelectedRecordId}
-          </p>
-          <Button aria-label={`Remove`} onClick={() => onRemoveRecord()} variant="ghost" size="icon">
-            <XIcon />
-          </Button>
-        </Badge>
+        <SelectedItemBadge
+          key={`selectedRecordTag_${danglingSelectedRecordId}`}
+          id={`selectedRecordTag_${danglingSelectedRecordId}`}
+          content={
+            <p id={`${danglingSelectedRecordId}`} style={{ color: "red" }}>
+              id: {danglingSelectedRecordId}
+            </p>
+          }
+          onRemoveRecord={() => onRemoveRecord()}
+        />
       ) : null;
 
     const onSelect = (record: Record<string, any>) => {

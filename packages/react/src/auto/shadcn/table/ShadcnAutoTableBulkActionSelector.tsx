@@ -30,7 +30,7 @@ export const makeShadcnAutoTableBulkActionSelector = (elements: ShadcnElements) 
             variant="outline"
             role="combobox"
             aria-expanded={open}
-            className="w-[200px] justify-between"
+            className={`w-[200px] justify-between ${open ? "ring-ring/50 ring-3" : ""}`}
             aria-label="More actions"
             onClick={() => setOpen(!open)}
           >

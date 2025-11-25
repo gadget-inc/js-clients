@@ -209,7 +209,7 @@ export interface PropsRange {
 
 export type PropsBase = {
   defaultMonth?: Date;
-  initialFocus?: boolean;
+  autoFocus?: boolean;
   classNames?: { [key: string]: string };
 };
 
