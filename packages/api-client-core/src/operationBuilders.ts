@@ -304,6 +304,13 @@ export const graphqlizeBackgroundOptions = (options?: EnqueueBackgroundActionOpt
   if (!options) return null;
 
   const obj = { ...options };
+
+  // Handle shopId -> shopifyShop mapping for rate limiting
+  if (obj.shopId !== undefined) {
+    obj.shopifyShop = obj.shopId;
+    delete obj.shopId;
+  }
+
   if (typeof obj.retries == "number") {
     obj.retries = {
       retryCount: obj.retries,
@@ -362,6 +369,48 @@ export const enqueueActionOperation = (
   return compileWithVariableValues({
     type: "mutation",
     name: "enqueue" + camelize(operation),
+    fields: {
+      background: fields,
+    },
+  });
+};
+
+/**
+ * Build a GraphQL mutation to enqueue a Shopify GraphQL operation for background execution.
+ * This is used by connections.shopify.current.graphql when passed to api.enqueue().
+ */
+export const enqueueShopifyGraphqlOperation = (
+  shopId: string,
+  variables: { query: string; variables?: Record<string, any> },
+  options?: EnqueueBackgroundActionOptions<any> | null
+) => {
+  const fields: BuilderFieldSelection = {
+    shopifyGraphql: Call(
+      {
+        shopId: Var({ type: "String!", value: shopId }),
+        query: Var({ type: "String!", value: variables.query }),
+        variables: Var({ type: "JSONObject", value: variables.variables }),
+        backgroundOptions: Var({
+          type: "EnqueueBackgroundActionOptions",
+          value: graphqlizeBackgroundOptions(options),
+        }),
+      },
+      {
+        success: true,
+        errors: {
+          message: true,
+          code: true,
+        },
+        backgroundAction: {
+          id: true,
+        },
+      }
+    ),
+  };
+
+  return compileWithVariableValues({
+    type: "mutation",
+    name: "enqueueShopifyGraphql",
     fields: {
       background: fields,
     },
