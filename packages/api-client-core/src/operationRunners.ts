@@ -404,7 +404,6 @@ export async function enqueueActionRunner<SchemaT, Action extends AnyActionFunct
   variables: Action["variablesType"],
   options: EnqueueBackgroundActionOptions<Action> = {}
 ): Promise<Result | Result[]> {
-  // Check if this is a shopifyGraphql action (from connections.shopify.current.graphql)
   if ((action as any).type === "shopifyGraphql") {
     const shopifyShop = (action as any).shopifyShop;
     if (!shopifyShop) {

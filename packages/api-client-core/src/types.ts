@@ -880,14 +880,6 @@ export type EnqueueBackgroundActionOptions<Action extends AnyActionFunction> = {
   startAt?: Date | string;
 
   /**
-   * The shop ID to enqueue the background action for. If not passed, the action will not be rate limited.
-   *
-   * @example
-   * shopId: "123456789"
-   */
-  shopId?: string;
-
-  /**
    * The Shopify shop to enqueue the background action for. If not passed, the action will not be rate limited.
    *
    * @example

@@ -1297,33 +1297,7 @@ describe("operation builders", () => {
       `);
     });
 
-    test("enqueueActionOperation with shopId option", () => {
-      expect(enqueueActionOperation("createWidget", {}, undefined, { shopId: "123456789" })).toMatchInlineSnapshot(`
-        {
-          "query": "mutation enqueueCreateWidget($backgroundOptions: EnqueueBackgroundActionOptions) {
-          background {
-            createWidget(backgroundOptions: $backgroundOptions) {
-              success
-              errors {
-                message
-                code
-              }
-              backgroundAction {
-                id
-              }
-            }
-          }
-        }",
-          "variables": {
-            "backgroundOptions": {
-              "shopifyShop": "123456789",
-            },
-          },
-        }
-      `);
-    });
-
-    test("enqueueActionOperation with shopifyShop option (backward compatibility)", () => {
+    test("enqueueActionOperation with shopifyShop option", () => {
       expect(enqueueActionOperation("createWidget", {}, undefined, { shopifyShop: "987654321" })).toMatchInlineSnapshot(`
         {
           "query": "mutation enqueueCreateWidget($backgroundOptions: EnqueueBackgroundActionOptions) {
