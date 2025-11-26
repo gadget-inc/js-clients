@@ -305,12 +305,6 @@ export const graphqlizeBackgroundOptions = (options?: EnqueueBackgroundActionOpt
 
   const obj = { ...options };
 
-  // Handle shopId -> shopifyShop mapping for rate limiting
-  if (obj.shopId !== undefined) {
-    obj.shopifyShop = obj.shopId;
-    delete obj.shopId;
-  }
-
   if (typeof obj.retries == "number") {
     obj.retries = {
       retryCount: obj.retries,
@@ -375,10 +369,6 @@ export const enqueueActionOperation = (
   });
 };
 
-/**
- * Build a GraphQL mutation to enqueue a Shopify GraphQL operation for background execution.
- * This is used by connections.shopify.current.graphql when passed to api.enqueue().
- */
 export const enqueueShopifyGraphqlOperation = (
   shopId: string,
   variables: { query: string; variables?: Record<string, any> },
