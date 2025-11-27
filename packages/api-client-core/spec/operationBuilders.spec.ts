@@ -1327,8 +1327,7 @@ describe("operation builders", () => {
 
   describe("enqueueShopifyGraphqlOperation", () => {
     test("enqueueShopifyGraphqlOperation should build a mutation query for enqueuing a Shopify GraphQL operation", () => {
-      expect(enqueueShopifyGraphqlOperation("shop-123", { query: "query { shop { name } }", variables: {} }))
-        .toMatchInlineSnapshot(`
+      expect(enqueueShopifyGraphqlOperation("shop-123", { query: "query { shop { name } }", variables: {} })).toMatchInlineSnapshot(`
         {
           "query": "mutation enqueueShopifyGraphql($shopId: String!, $query: String!, $variables: JSONObject, $backgroundOptions: EnqueueBackgroundActionOptions) {
           background {
@@ -1345,18 +1344,26 @@ describe("operation builders", () => {
           }
         }",
           "variables": {
-            "shopId": "shop-123",
-            "query": "query { shop { name } }",
-            "variables": {},
             "backgroundOptions": null,
+            "query": "query { shop { name } }",
+            "shopId": "shop-123",
+            "variables": {},
           },
         }
       `);
     });
 
     test("enqueueShopifyGraphqlOperation with options", () => {
-      expect(enqueueShopifyGraphqlOperation("shop-123", { query: "mutation { updateProduct(id: \\"gid://shopify/Product/123\\", product: { title: \\"New Title\\" }) { product { id title } } }" }, { startAt: "2024-01-01T00:00:00Z" }))
-        .toMatchInlineSnapshot(`
+      expect(
+        enqueueShopifyGraphqlOperation(
+          "shop-123",
+          {
+            query:
+              'mutation { updateProduct(id: \\"gid://shopify/Product/123\\", product: { title: \\"New Title\\" }) { product { id title } } }',
+          },
+          { startAt: "2024-01-01T00:00:00Z" }
+        )
+      ).toMatchInlineSnapshot(`
         {
           "query": "mutation enqueueShopifyGraphql($shopId: String!, $query: String!, $variables: JSONObject, $backgroundOptions: EnqueueBackgroundActionOptions) {
           background {
@@ -1373,12 +1380,11 @@ describe("operation builders", () => {
           }
         }",
           "variables": {
-            "shopId": "shop-123",
-            "query": "mutation { updateProduct(id: \\"gid://shopify/Product/123\\", product: { title: \\"New Title\\" }) { product { id title } } }",
-            "variables": undefined,
             "backgroundOptions": {
               "startAt": "2024-01-01T00:00:00Z",
             },
+            "query": "mutation { updateProduct(id: \\\"gid://shopify/Product/123\\\", product: { title: \\\"New Title\\\" }) { product { id title } } }",
+            "shopId": "shop-123",
           },
         }
       `);
