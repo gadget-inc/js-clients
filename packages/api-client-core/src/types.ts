@@ -878,6 +878,14 @@ export type EnqueueBackgroundActionOptions<Action extends AnyActionFunction> = {
    * startAt: new Date(new Date().getTime() + 60 * 1000)
    */
   startAt?: Date | string;
+
+  /**
+   * The Shopify shop to enqueue the background action for. If not passed, the action will not be rate limited.
+   *
+   * @example
+   * shopifyShop: "82277368081"
+   */
+  shopifyShop?: string;
 } & Partial<OperationContext>;
 
 export type ActionFunctionOptions<Action extends AnyActionFunction> = Action extends ActionFunction<infer Options, any, any, any, any>
