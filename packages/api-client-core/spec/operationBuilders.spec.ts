@@ -1383,7 +1383,7 @@ describe("operation builders", () => {
             "backgroundOptions": {
               "startAt": "2024-01-01T00:00:00Z",
             },
-            "query": "mutation { updateProduct(id: "gid://shopify/Product/123", product: { title: "New Title" }) { product { id title } } }",
+            "query": "mutation { updateProduct(id: \\"gid://shopify/Product/123\\", product: { title: \\"New Title\\" }) { product { id title } } }",
             "shopId": "shop-123",
           },
         }
