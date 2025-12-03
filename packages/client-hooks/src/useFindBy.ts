@@ -3,8 +3,10 @@ import { createHookStub } from "./createHooks.js";
 import type { CoreHooks, UseFindBy } from "./types.js";
 import { useQueryArgs } from "./utils.js";
 
-export let useFindBy: UseFindBy = createHookStub("useFindBy", (adapter: RuntimeAdapter, coreHooks: CoreHooks) => {
-  useFindBy = (finder, value, options) => {
+let useFindByImpl: UseFindBy = createHookStub("useFindBy");
+
+createHookStub("useFindBy", (adapter: RuntimeAdapter, coreHooks: CoreHooks) => {
+  useFindByImpl = (finder, value, options) => {
     const memoizedOptions = coreHooks.useStructuralMemo(options);
     const plan = adapter.framework.useMemo(() => {
       return finder.plan(value, memoizedOptions);
@@ -19,3 +21,5 @@ export let useFindBy: UseFindBy = createHookStub("useFindBy", (adapter: RuntimeA
     return [result, refresh];
   };
 });
+
+export const useFindBy: UseFindBy = (finder, value, options) => useFindByImpl(finder, value, options);

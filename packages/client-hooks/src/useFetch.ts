@@ -3,6 +3,8 @@ import type { RuntimeAdapter } from "./adapter.js";
 import { createHookStub } from "./createHooks.js";
 import type { CoreHooks, FetchHookOptions, FetchHookResult, FetchHookState, UseFetch } from "./types.js";
 
+let useFetchImpl: UseFetch = createHookStub("useFetch");
+
 type FetchAction<T> =
   | { type: "fetching" }
   | { type: "streaming" }
@@ -54,8 +56,8 @@ const dispatchError = (
   return wrapped;
 };
 
-export let useFetch: UseFetch = createHookStub("useFetch", (adapter: RuntimeAdapter, coreHooks: CoreHooks) => {
-  useFetch = <T = string>(path: string, options?: FetchHookOptions): FetchHookResult<T> => {
+createHookStub("useFetch", (adapter: RuntimeAdapter, coreHooks: CoreHooks) => {
+  useFetchImpl = <T = string>(path: string, options?: FetchHookOptions): FetchHookResult<T> => {
     // Used to prevent state update if the component is unmounted
     const mounted = adapter.framework.useRef<boolean>(true);
     const { onStreamComplete, ...optionsToMemoize } = options ?? {};
@@ -198,3 +200,5 @@ export let useFetch: UseFetch = createHookStub("useFetch", (adapter: RuntimeAdap
     return [state, send];
   };
 });
+
+export const useFetch: UseFetch = ((...args: Parameters<UseFetch>) => useFetchImpl(...args)) as UseFetch;

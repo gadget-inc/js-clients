@@ -3,8 +3,10 @@ import { createHookStub } from "./createHooks.js";
 import type { CoreHooks, UseMaybeFindFirst } from "./types.js";
 import { useQueryArgs } from "./utils.js";
 
-export let useMaybeFindFirst: UseMaybeFindFirst = createHookStub("useMaybeFindFirst", (adapter: RuntimeAdapter, coreHooks: CoreHooks) => {
-  useMaybeFindFirst = (manager, options) => {
+let useMaybeFindFirstImpl: UseMaybeFindFirst = createHookStub("useMaybeFindFirst");
+
+createHookStub("useMaybeFindFirst", (adapter: RuntimeAdapter, coreHooks: CoreHooks) => {
+  useMaybeFindFirstImpl = (manager, options) => {
     const firstOptions = { ...options, first: 1 } as unknown as typeof options;
     const memoizedOptions = coreHooks.useStructuralMemo(firstOptions);
     const plan = adapter.framework.useMemo(() => {
@@ -20,3 +22,5 @@ export let useMaybeFindFirst: UseMaybeFindFirst = createHookStub("useMaybeFindFi
     return [result, refresh];
   };
 });
+
+export const useMaybeFindFirst: UseMaybeFindFirst = (manager, options) => useMaybeFindFirstImpl(manager, options);

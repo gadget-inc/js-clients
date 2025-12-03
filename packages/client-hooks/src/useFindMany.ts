@@ -3,8 +3,10 @@ import { createHookStub } from "./createHooks.js";
 import type { CoreHooks, UseFindMany } from "./types.js";
 import { useQueryArgs } from "./utils.js";
 
-export let useFindMany: UseFindMany = createHookStub("useFindMany", (adapter: RuntimeAdapter, coreHooks: CoreHooks) => {
-  useFindMany = (manager, options) => {
+let useFindManyImpl: UseFindMany = createHookStub("useFindMany");
+
+createHookStub("useFindMany", (adapter: RuntimeAdapter, coreHooks: CoreHooks) => {
+  useFindManyImpl = (manager, options) => {
     const memoizedOptions = coreHooks.useStructuralMemo(options);
     const plan = adapter.framework.useMemo(() => {
       return manager.findMany.plan(memoizedOptions);
@@ -19,3 +21,5 @@ export let useFindMany: UseFindMany = createHookStub("useFindMany", (adapter: Ru
     return [result, refresh];
   };
 });
+
+export const useFindMany: UseFindMany = (manager, options) => useFindManyImpl(manager, options);

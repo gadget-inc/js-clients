@@ -3,8 +3,10 @@ import { createHookStub } from "./createHooks.js";
 import type { CoreHooks, UseFindFirst } from "./types.js";
 import { useQueryArgs } from "./utils.js";
 
-export let useFindFirst: UseFindFirst = createHookStub("useFindFirst", (adapter: RuntimeAdapter, coreHooks: CoreHooks) => {
-  useFindFirst = (manager, options) => {
+let useFindFirstImpl: UseFindFirst = createHookStub("useFindFirst");
+
+createHookStub("useFindFirst", (adapter: RuntimeAdapter, coreHooks: CoreHooks) => {
+  useFindFirstImpl = (manager, options) => {
     const firstOptions = { ...options, first: 1 } as unknown as typeof options;
 
     const memoizedOptions = coreHooks.useStructuralMemo(firstOptions);
@@ -20,3 +22,5 @@ export let useFindFirst: UseFindFirst = createHookStub("useFindFirst", (adapter:
     return [result, refresh];
   };
 });
+
+export const useFindFirst: UseFindFirst = (manager, options) => useFindFirstImpl(manager, options);

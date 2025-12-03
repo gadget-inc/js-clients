@@ -4,8 +4,10 @@ import type { UseMutationState } from "./adapter.js";
 import { createHookStub } from "./createHooks.js";
 import type { UseBulkAction } from "./types.js";
 
-export let useBulkAction: UseBulkAction = createHookStub("useBulkAction", (adapter, coreHooks) => {
-  useBulkAction = (action, options) => {
+let useBulkActionImpl: UseBulkAction = createHookStub("useBulkAction");
+
+createHookStub("useBulkAction", (adapter, coreHooks) => {
+  useBulkActionImpl = (action, options) => {
     const coreImplementation = coreHooks.useCoreImplementation();
 
     adapter.framework.useEffect(() => {
@@ -64,6 +66,8 @@ export let useBulkAction: UseBulkAction = createHookStub("useBulkAction", (adapt
     ];
   };
 });
+
+export const useBulkAction: UseBulkAction = (action, options) => useBulkActionImpl(action, options);
 
 const processResult = (result: UseMutationState<any, any>, action: BulkActionFunction<any, any, any, any, any>) => {
   return { ...result, ...action.processResult(result) };

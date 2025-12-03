@@ -4,8 +4,10 @@ import type { RuntimeAdapter, UseMutationState } from "./adapter.js";
 import { createHookStub } from "./createHooks.js";
 import type { CoreHooks, UseGlobalAction } from "./types.js";
 
-export let useGlobalAction: UseGlobalAction = createHookStub("useGlobalAction", (adapter: RuntimeAdapter, coreHooks: CoreHooks) => {
-  useGlobalAction = (action) => {
+let useGlobalActionImpl: UseGlobalAction = createHookStub("useGlobalAction");
+
+createHookStub("useGlobalAction", (adapter: RuntimeAdapter, coreHooks: CoreHooks) => {
+  useGlobalActionImpl = (action) => {
     adapter.framework.useEffect(() => {
       if (action.type === ("stubbedAction" as string)) {
         const stubbedAction = action as unknown as StubbedActionFunction<any>;
@@ -48,6 +50,8 @@ export let useGlobalAction: UseGlobalAction = createHookStub("useGlobalAction", 
     ];
   };
 });
+
+export const useGlobalAction: UseGlobalAction = (action) => useGlobalActionImpl(action);
 
 const processResult = (result: UseMutationState<any, any>, action: GlobalActionFunction<any>) => {
   return { ...result, ...action.processResult(result) };
