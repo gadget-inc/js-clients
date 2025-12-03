@@ -3,8 +3,10 @@ import type { UseMutationState } from "./adapter.js";
 import { createHookStub } from "./createHooks.js";
 import type { EnqueueHookState, UseEnqueue } from "./types.js";
 
-export let useEnqueue: UseEnqueue = createHookStub("useEnqueue", (adapter, coreHooks) => {
-  useEnqueue = (action, baseBackgroundOptions) => {
+let useEnqueueImpl: UseEnqueue = createHookStub("useEnqueue");
+
+createHookStub("useEnqueue", (adapter, coreHooks) => {
+  useEnqueueImpl = (action, baseBackgroundOptions) => {
     const coreImplementation = coreHooks.useCoreImplementation();
     const connection = coreHooks.useConnection();
     const plan = adapter.framework.useMemo(() => connection.enqueue.plan(action), [action]);
@@ -33,6 +35,8 @@ export let useEnqueue: UseEnqueue = createHookStub("useEnqueue", (adapter, coreH
     ];
   };
 });
+
+export const useEnqueue: UseEnqueue = (action, baseBackgroundOptions) => useEnqueueImpl(action, baseBackgroundOptions);
 
 // /** Processes urql's result object into the fancier Gadget result object */
 const processResult = <Action extends AnyActionFunction>(

@@ -3,8 +3,10 @@ import { createHookStub } from "./createHooks.js";
 import type { CoreHooks, UseMaybeFindOne } from "./types.js";
 import { useQueryArgs } from "./utils.js";
 
-export let useMaybeFindOne: UseMaybeFindOne = createHookStub("useMaybeFindOne", (adapter: RuntimeAdapter, coreHooks: CoreHooks) => {
-  useMaybeFindOne = (manager, id, options) => {
+let useMaybeFindOneImpl: UseMaybeFindOne = createHookStub("useMaybeFindOne");
+
+createHookStub("useMaybeFindOne", (adapter: RuntimeAdapter, coreHooks: CoreHooks) => {
+  useMaybeFindOneImpl = (manager, id, options) => {
     const memoizedOptions = coreHooks.useStructuralMemo(options);
     const plan = adapter.framework.useMemo(() => {
       return manager.findOne.plan(id);
@@ -19,3 +21,5 @@ export let useMaybeFindOne: UseMaybeFindOne = createHookStub("useMaybeFindOne", 
     return [result, refresh];
   };
 });
+
+export const useMaybeFindOne: UseMaybeFindOne = (manager, id, options) => useMaybeFindOneImpl(manager, id, options);

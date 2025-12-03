@@ -3,8 +3,10 @@ import { createHookStub } from "./createHooks.js";
 import type { CoreHooks, UseGet } from "./types.js";
 import { useQueryArgs } from "./utils.js";
 
-export let useGet: UseGet = createHookStub("useGet", (adapter: RuntimeAdapter, coreHooks: CoreHooks) => {
-  useGet = (manager, options) => {
+let useGetImpl: UseGet = createHookStub("useGet");
+
+createHookStub("useGet", (adapter: RuntimeAdapter, coreHooks: CoreHooks) => {
+  useGetImpl = (manager, options) => {
     const memoizedOptions = coreHooks.useStructuralMemo(options);
     const plan = adapter.framework.useMemo(() => {
       return manager.get.plan(memoizedOptions);
@@ -19,3 +21,5 @@ export let useGet: UseGet = createHookStub("useGet", (adapter: RuntimeAdapter, c
     return [result, refresh];
   };
 });
+
+export const useGet: UseGet = (manager, options) => useGetImpl(manager, options);

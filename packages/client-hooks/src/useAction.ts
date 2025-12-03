@@ -4,8 +4,10 @@ import type { UseMutationState } from "./adapter.js";
 import { createHookStub } from "./createHooks.js";
 import type { ActionHookState, UseAction } from "./types.js";
 
-export let useAction: UseAction = createHookStub("useAction", (adapter, coreHooks) => {
-  useAction = (action, options) => {
+let useActionImpl: UseAction = createHookStub("useAction");
+
+createHookStub("useAction", (adapter, coreHooks) => {
+  useActionImpl = (action, options) => {
     const coreImplementation = coreHooks.useCoreImplementation();
 
     adapter.framework.useEffect(() => {
@@ -65,6 +67,8 @@ export let useAction: UseAction = createHookStub("useAction", (adapter, coreHook
     ];
   };
 });
+
+export const useAction: UseAction = (action, options) => useActionImpl(action, options);
 
 const processResult = <Data, Variables extends AnyVariables>(
   result: UseMutationState<Data, Variables>,

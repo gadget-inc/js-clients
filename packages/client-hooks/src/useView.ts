@@ -4,8 +4,10 @@ import { createHookStub } from "./createHooks.js";
 import type { CoreHooks, ReadHookResult, ReadOperationOptions, UseView } from "./types.js";
 import { useQueryArgs } from "./utils.js";
 
-export let useView: UseView = createHookStub("useView", (adapter: RuntimeAdapter, coreHooks: CoreHooks) => {
-  useView = <VariablesT, F extends ViewFunction<VariablesT, any>>(
+let useViewImpl: UseView = createHookStub("useView");
+
+createHookStub("useView", (adapter: RuntimeAdapter, coreHooks: CoreHooks) => {
+  useViewImpl = <VariablesT, F extends ViewFunction<VariablesT, any>>(
     view: F | string,
     variablesOrOptions?: VariablesT | Omit<ReadOperationOptions, "live">,
     maybeOptions?: Omit<ReadOperationOptions, "live">
@@ -70,6 +72,9 @@ export let useView: UseView = createHookStub("useView", (adapter: RuntimeAdapter
     return [result, refresh];
   };
 });
+
+export const useView: UseView = ((view: any, variablesOrOptions?: any, maybeOptions?: any) =>
+  useViewImpl(view, variablesOrOptions, maybeOptions)) as UseView;
 
 const inlineViewQuery = `query InlineView($query: String!, $variables: JSONObject) { 
   gellyView(query: $query, variables: $variables) 
