@@ -22,4 +22,6 @@ export interface AnyClient {
   internal: InternalModelManagerNamespace;
   [$modelRelationships]?: { [modelName: string]: { [apiIdentifier: string]: { type: string; model: string } } };
   [$coreImplementation]?: AnyCoreImplementation;
+  /** Symbol for passing field arguments in selections. Use as `{ field: { [api.$args]: { first: 10 }, nestedField: true } }` */
+  $args?: symbol;
 }
