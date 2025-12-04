@@ -3,13 +3,21 @@
   "compilerOptions": {
     "target": "es2020",
     "baseUrl": "./",
-    "moduleResolution": "node",
+    "moduleResolution": "bundler",
     "module": "ES2022",
     "lib": ["es2020", "DOM"],
     "jsx": "react-jsx",
     "noEmit": true,
     "skipLibCheck": true,
-    "declaration": false
+    "declaration": false,
+    "paths": {
+      "@gadgetinc/react": ["../react/src/index.ts"],
+      "@gadgetinc/react-shopify-app-bridge": ["../react-shopify-app-bridge/src/index.ts"],
+      "@gadgetinc/client-hooks": ["../client-hooks/src/index.ts"],
+      "@gadgetinc/core": ["../core/src/index.ts"],
+      "@gadgetinc/api-client-core": ["../api-client-core/src/index.ts"],
+      "tiny-graphql-query-compiler": ["../tiny-graphql-query-compiler/src/index.ts"]
+    }
   },
   "include": ["./build.ts", "./bundles"]
 }

@@ -1,4 +1,4 @@
-import { type ModelMetadata } from "src/metadata.js";
+import { type ModelMetadata } from "../metadata.js";
 import type { useTable } from "../useTable.js";
 
 export const InvalidModelErrorMessage = `"model" is not a valid Gadget model`;

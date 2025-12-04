@@ -2,6 +2,7 @@ import type { AnyConnection } from "./AnyConnection.js";
 import type { AnyCoreImplementation } from "./AnyCoreImplementation.js";
 import type { AnyGadgetTransaction } from "./AnyGadgetTransaction.js";
 import type { AnyInternalModelManager } from "./AnyInternalModelManager.js";
+import type { $args } from "./types.js";
 
 export const $modelRelationships = Symbol.for("gadget/modelRelationships");
 export const $coreImplementation = Symbol.for("gadget/coreImplementation");
@@ -22,4 +23,5 @@ export interface AnyClient {
   internal: InternalModelManagerNamespace;
   [$modelRelationships]?: { [modelName: string]: { [apiIdentifier: string]: { type: string; model: string } } };
   [$coreImplementation]?: AnyCoreImplementation;
+  $args: typeof $args;
 }

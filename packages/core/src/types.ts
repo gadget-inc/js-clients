@@ -115,10 +115,14 @@ type InnerSelect<Schema, Selection extends FieldSelection | null | undefined> = 
     : Schema extends null
     ? InnerSelect<Exclude<Schema, null>, Selection> | null
     : {
-        [Key in keyof Selection & keyof Schema]: Selection[Key] extends true
+        // Exclude the $args symbol key - it's for field arguments, not nested selections
+        [Key in Exclude<keyof Selection, typeof $args> & keyof Schema]: Selection[Key] extends true
           ? Schema[Key]
           : Selection[Key] extends FieldSelection
-          ? InnerSelect<Schema[Key], Selection[Key]>
+          ? // If Selection[Key] only has $args (no nested field selections), return Schema[Key] directly
+            Exclude<keyof Selection[Key], typeof $args> extends never
+            ? Schema[Key]
+            : InnerSelect<Schema[Key], Selection[Key]>
           : never;
       }
 >;
@@ -990,9 +994,31 @@ export type ViewResult<F extends ViewFunction<any, any>> = Awaited<
 >;
 
 /**
+ * Symbol key for field arguments in selections.
+ * Using a symbol avoids conflicts with string index signatures.
+ */
+export const $args = Symbol.for("gadget/fieldArgs");
+
+/**
+ * Type for field arguments (e.g., pagination, filtering on a field)
+ */
+export type FieldArgs = Record<string, any>;
+
+/**
  * Represents a list of fields selected from a GraphQL API call. Allows nesting, conditional selection.
  * Example: `{ id: true, name: false, richText: { markdown: true, html: false } }`
+ *
+ * Supports field arguments using the $args symbol:
+ * ```
+ * {
+ *   comments: {
+ *     [$args]: { after: "cursor", first: 10 },
+ *     body: true
+ *   }
+ * }
+ * ```
  **/
 export interface FieldSelection {
+  [$args]?: FieldArgs;
   [key: string]: boolean | null | undefined | FieldSelection;
 }
