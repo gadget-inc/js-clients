@@ -577,6 +577,7 @@ describe("useTable hook", () => {
             "type": "String",
           },
           {
+            "field": undefined,
             "header": "Custom column",
             "identifier": "000-000-000-000-1",
             "render": [Function],
@@ -848,6 +849,100 @@ describe("useTable hook", () => {
 
       const customColumn2Result = render(<>{result.current[0].rows?.[0]?.[columnKeys[2]]}</>);
       expect(customColumn2Result.container.textContent).toBe("some different stuff");
+    });
+
+    it("should not be sortable when no field is provided", async () => {
+      const result = getUseTableResult({
+        columns: [
+          "name",
+          {
+            header: "Custom column",
+            render: ({ record }) => <div>Custom: {record.name}</div>,
+          },
+        ],
+      });
+      await loadMockWidgetModelMetadata();
+      await loadWidgetData();
+
+      const customColumn = result.current[0].columns?.find((col) => col.type === "CustomRenderer");
+      expect(customColumn?.sortable).toBe(false);
+      expect(customColumn?.field).toBeUndefined();
+    });
+
+    it("should be sortable when a sortable field is provided", async () => {
+      const result = getUseTableResult({
+        columns: [
+          {
+            header: "Custom Name",
+            render: ({ record }) => <div>Custom: {record.name}</div>,
+            field: "name",
+          },
+        ],
+      });
+      await loadMockWidgetModelMetadata();
+      await loadWidgetData();
+
+      const customColumn = result.current[0].columns?.find((col) => col.type === "CustomRenderer");
+      expect(customColumn?.sortable).toBe(true);
+      expect(customColumn?.field).toBe("name");
+    });
+
+    it("should not be sortable when field is provided but sortable is set to false", async () => {
+      const result = getUseTableResult({
+        columns: [
+          {
+            header: "Custom Name",
+            render: ({ record }) => <div>Custom: {record.name}</div>,
+            field: "name",
+            sortable: false,
+          },
+        ],
+      });
+      await loadMockWidgetModelMetadata();
+      await loadWidgetData();
+
+      const customColumn = result.current[0].columns?.find((col) => col.type === "CustomRenderer");
+      expect(customColumn?.sortable).toBe(false);
+      expect(customColumn?.field).toBe("name");
+    });
+
+    it("should not be sortable when the field itself is not sortable", async () => {
+      const result = getUseTableResult({
+        columns: [
+          {
+            header: "Custom ID",
+            render: ({ record }) => <div>Custom: {record.id}</div>,
+            field: "id",
+          },
+        ],
+      });
+      await loadMockWidgetModelMetadata();
+      await loadWidgetData();
+
+      const customColumn = result.current[0].columns?.find((col) => col.type === "CustomRenderer");
+      expect(customColumn?.sortable).toBe(false);
+      expect(customColumn?.field).toBe("id");
+    });
+
+    it("should throw an error when trying to make a non-sortable field sortable", async () => {
+      let error: Error | undefined;
+      try {
+        getUseTableResult({
+          columns: [
+            {
+              header: "Custom ID",
+              render: ({ record }) => <div>Custom: {record.id}</div>,
+              field: "id",
+              sortable: true,
+            },
+          ],
+        });
+        await loadMockWidgetModelMetadata();
+      } catch (err) {
+        error = err as Error;
+      }
+
+      expect(error!.message).toBe("Field 'id' is not sortable");
     });
   });
 
