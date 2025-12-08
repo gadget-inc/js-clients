@@ -304,7 +304,6 @@ export const graphqlizeBackgroundOptions = (options?: EnqueueBackgroundActionOpt
   if (!options) return null;
 
   const obj = { ...options };
-
   if (typeof obj.retries == "number") {
     obj.retries = {
       retryCount: obj.retries,
@@ -322,7 +321,7 @@ export const graphqlizeBackgroundOptions = (options?: EnqueueBackgroundActionOpt
   }
 
   for (const key of Object.keys(obj)) {
-    if (["id", "retries", "queue", "priority", "startAt", "shopifyShop"].includes(key)) continue;
+    if (["id", "retries", "queue", "priority", "startAt"].includes(key)) continue;
     delete obj[key];
   }
 
@@ -363,44 +362,6 @@ export const enqueueActionOperation = (
   return compileWithVariableValues({
     type: "mutation",
     name: "enqueue" + camelize(operation),
-    fields: {
-      background: fields,
-    },
-  });
-};
-
-export const enqueueShopifyGraphqlOperation = (
-  shopId: string,
-  variables: { query: string; variables?: Record<string, any> },
-  options?: EnqueueBackgroundActionOptions<any> | null
-) => {
-  const fields: BuilderFieldSelection = {
-    shopifyGraphql: Call(
-      {
-        shopId: Var({ type: "String!", value: shopId }),
-        query: Var({ type: "String!", value: variables.query }),
-        variables: Var({ type: "JSONObject", value: variables.variables }),
-        backgroundOptions: Var({
-          type: "EnqueueBackgroundActionOptions",
-          value: graphqlizeBackgroundOptions(options),
-        }),
-      },
-      {
-        success: true,
-        errors: {
-          message: true,
-          code: true,
-        },
-        backgroundAction: {
-          id: true,
-        },
-      }
-    ),
-  };
-
-  return compileWithVariableValues({
-    type: "mutation",
-    name: "enqueueShopifyGraphql",
     fields: {
       background: fields,
     },

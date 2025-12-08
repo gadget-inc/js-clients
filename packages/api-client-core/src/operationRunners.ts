@@ -21,7 +21,6 @@ import {
   backgroundActionResultOperation,
   cancelBackgroundActionOperation,
   enqueueActionOperation,
-  enqueueShopifyGraphqlOperation,
   findManyOperation,
   findOneByFieldOperation,
   findOneOperation,
@@ -404,22 +403,6 @@ export async function enqueueActionRunner<SchemaT, Action extends AnyActionFunct
   variables: Action["variablesType"],
   options: EnqueueBackgroundActionOptions<Action> = {}
 ): Promise<Result | Result[]> {
-  if ((action as any).type === "shopifyGraphql") {
-    const shopifyShop = (action as any).shopifyShop;
-    if (!shopifyShop) {
-      throw new Error(
-        "Cannot enqueue shopifyGraphql without a current shop. Make sure to call connections.shopify.setCurrentShop() first or access graphql from a request with shop context."
-      );
-    }
-
-    const plan = enqueueShopifyGraphqlOperation(shopifyShop, variables as any, options);
-    const response = await connection.currentClient.mutation(plan.query, plan.variables, options).toPromise();
-    const dataPath = ["background", "shopifyGraphql"];
-
-    const result = assertMutationSuccess(response, dataPath);
-    return new BackgroundActionHandle(connection, action, result.backgroundAction.id) as Result;
-  }
-
   const normalizedVariableValues = action.isBulk
     ? disambiguateBulkActionVariables(action, variables)
     : disambiguateActionVariables(action, variables);
