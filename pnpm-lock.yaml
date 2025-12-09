@@ -226,13 +226,13 @@ importers:
         version: 19.1.7(@types/react@19.1.10)
       '@vitejs/plugin-react-swc':
         specifier: ^3.11.0
-        version: 3.11.0(vite@7.1.4)
+        version: 3.11.0(vite@7.2.7)
       typescript:
         specifier: 5.4.5
         version: 5.4.5
       vite:
-        specifier: ^7.1.4
-        version: 7.1.4(@types/node@22.18.1)(tsx@4.9.3)
+        specifier: ^7.2.7
+        version: 7.2.7(@types/node@22.18.1)(tsx@4.9.3)
 
   packages/client-hooks:
     dependencies:
@@ -713,10 +713,10 @@ importers:
         version: link:../react-shopify-app-bridge
       '@vitejs/plugin-react-swc':
         specifier: ^3.11.0
-        version: 3.11.0(vite@7.1.4)
+        version: 3.11.0(vite@7.2.7)
       vite:
-        specifier: ^7.1.4
-        version: 7.1.4(@types/node@22.18.1)(tsx@4.9.3)
+        specifier: ^7.2.7
+        version: 7.2.7(@types/node@22.18.1)(tsx@4.9.3)
     devDependencies:
       rollup-plugin-visualizer:
         specifier: ^5.12.0
@@ -8264,7 +8264,7 @@ packages:
   /@types/acorn@4.0.6:
     resolution: {integrity: sha512-veQTnWP+1D/xbxVrPC3zHnCZRjSrKfhbMUlEA43iMZLu7EsnTtkJklIuwrCPbOi8YkvDQAiW05VQQFvvz9oieQ==}
     dependencies:
-      '@types/estree': 1.0.5
+      '@types/estree': 1.0.8
     dev: true
 
   /@types/aria-query@5.0.4:
@@ -8323,11 +8323,7 @@ packages:
   /@types/estree-jsx@1.0.5:
     resolution: {integrity: sha512-52CcUVNFyfb1A2ALocQw/Dd1BQFNmSdkuC3BkZ6iqhdMfQz7JWOFRuJFloOzjk+6WijU56m9oKXFAXc7o3Towg==}
     dependencies:
-      '@types/estree': 1.0.5
-    dev: true
-
-  /@types/estree@1.0.5:
-    resolution: {integrity: sha512-/kYRxGDLWzHOB7q+wtSUQlFrtcdUccpfy+X+9iMBpHK8QLLhx2wIPYuS5DYtR9Wa/YlZAbIovy7qVdB1Aq6Lyw==}
+      '@types/estree': 1.0.8
     dev: true
 
   /@types/estree@1.0.8:
@@ -8737,14 +8733,14 @@ packages:
       wonka: 6.3.2
     dev: false
 
-  /@vitejs/plugin-react-swc@3.11.0(vite@7.1.4):
+  /@vitejs/plugin-react-swc@3.11.0(vite@7.2.7):
     resolution: {integrity: sha512-YTJCGFdNMHCMfjODYtxRNVAYmTWQ1Lb8PulP/2/f/oEEtglw8oKxKIZmmRkyXrVrHfsKOaVkAc3NT9/dMutO5w==}
     peerDependencies:
       vite: ^4 || ^5 || ^6 || ^7
     dependencies:
       '@rolldown/pluginutils': 1.0.0-beta.27
       '@swc/core': 1.13.5
-      vite: 7.1.4(@types/node@22.18.1)(tsx@4.9.3)
+      vite: 7.2.7(@types/node@22.18.1)(tsx@4.9.3)
     transitivePeerDependencies:
       - '@swc/helpers'
 
@@ -14424,7 +14420,7 @@ packages:
   /micromark-extension-mdx-expression@3.0.0:
     resolution: {integrity: sha512-sI0nwhUDz97xyzqJAbHQhp5TfaxEvZZZ2JDqUo+7NvyIYG6BZ5CPPqj2ogUoPJlmXHBnyZUzISg9+oUmU6tUjQ==}
     dependencies:
-      '@types/estree': 1.0.5
+      '@types/estree': 1.0.8
       devlop: 1.1.0
       micromark-factory-mdx-expression: 2.0.1
       micromark-factory-space: 2.0.0
@@ -14438,7 +14434,7 @@ packages:
     resolution: {integrity: sha512-uvhhss8OGuzR4/N17L1JwvmJIpPhAd8oByMawEKx6NVdBCbesjH4t+vjEp3ZXft9DwvlKSD07fCeI44/N0Vf2w==}
     dependencies:
       '@types/acorn': 4.0.6
-      '@types/estree': 1.0.5
+      '@types/estree': 1.0.8
       devlop: 1.1.0
       estree-util-is-identifier-name: 3.0.0
       micromark-factory-mdx-expression: 2.0.1
@@ -14458,7 +14454,7 @@ packages:
   /micromark-extension-mdxjs-esm@3.0.0:
     resolution: {integrity: sha512-DJFl4ZqkErRpq/dAPyeWp15tGrcrrJho1hKK5uBS70BCtfrIFg81sqcTVu3Ta+KD1Tk5vAtBNElWxtAa+m8K9A==}
     dependencies:
-      '@types/estree': 1.0.5
+      '@types/estree': 1.0.8
       devlop: 1.1.0
       micromark-core-commonmark: 2.0.1
       micromark-util-character: 2.1.0
@@ -14502,7 +14498,7 @@ packages:
   /micromark-factory-mdx-expression@2.0.1:
     resolution: {integrity: sha512-F0ccWIUHRLRrYp5TC9ZYXmZo+p2AM13ggbsW4T0b5CRKP8KHVRB8t4pwtBgTxtjRmwrK0Irwm7vs2JOZabHZfg==}
     dependencies:
-      '@types/estree': 1.0.5
+      '@types/estree': 1.0.8
       devlop: 1.1.0
       micromark-util-character: 2.1.0
       micromark-util-events-to-acorn: 2.0.2
@@ -17162,8 +17158,8 @@ packages:
     resolution: {integrity: sha512-+FbBPE1o9QAYvviau/qC5SE3caw21q3xkvWKBtja5vgqOWIHHJ3ioaq1VPfn/Szqctz2bU/oYeKd9/z5BL+PVg==}
     dev: true
 
-  /tinyglobby@0.2.14:
-    resolution: {integrity: sha512-tX5e7OM1HnYr2+a2C/4V0htOcSQcoSTH9KgJnVvNm5zm/cyEWKJ7j7YutsH9CxMdtOkkLFy2AHrMci9IM8IPZQ==}
+  /tinyglobby@0.2.15:
+    resolution: {integrity: sha512-j2Zq4NyQYG5XMST4cbs02Ak8iJUdxRM0XI5QyxXuZOzKOINmWurp3smXu3y5wDcJrptwpSjgXHzIQxR0omXljQ==}
     engines: {node: '>=12.0.0'}
     dependencies:
       fdir: 6.5.0(picomatch@4.0.3)
@@ -17807,8 +17803,8 @@ packages:
       fsevents: 2.3.3
     dev: true
 
-  /vite@7.1.4(@types/node@22.18.1)(tsx@4.9.3):
-    resolution: {integrity: sha512-X5QFK4SGynAeeIt+A7ZWnApdUyHYm+pzv/8/A57LqSGcI88U6R6ipOs3uCesdc6yl7nl+zNO0t8LmqAdXcQihw==}
+  /vite@7.2.7(@types/node@22.18.1)(tsx@4.9.3):
+    resolution: {integrity: sha512-ITcnkFeR3+fI8P1wMgItjGrR10170d8auB4EpMLPqmx6uxElH3a/hHGQabSHKdqd4FXWO1nFIp9rRn7JQ34ACQ==}
     engines: {node: ^20.19.0 || >=22.12.0}
     hasBin: true
     peerDependencies:
@@ -17853,7 +17849,7 @@ packages:
       picomatch: 4.0.3
       postcss: 8.5.6
       rollup: 4.50.0
-      tinyglobby: 0.2.14
+      tinyglobby: 0.2.15
       tsx: 4.9.3
     optionalDependencies:
       fsevents: 2.3.3
