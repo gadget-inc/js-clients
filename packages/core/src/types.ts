@@ -936,7 +936,14 @@ export type EnqueueBackgroundActionOptions<Action extends AnyActionFunction> = {
   startAt?: Date | string;
 
   /**
-   * The Shopify shop to enqueue the background action for. If not passed, the action will not be rate limited.
+   * The Shopify shop ID to associate with this background action for intelligent rate limiting.
+   *
+   * When provided, Gadget will automatically manage the execution of enqueued background actions based on your app's
+   * available Shopify API rate limit capacity. If your app is being rate limited by Shopify, Gadget will defer
+   * execution and only process actions when there is sufficient rate limit headroom to complete them successfully.
+   *
+   * If not provided, the action will be executed immediately without any rate limit awareness, which may result
+   * in Shopify API errors if your app is under heavy load.
    *
    * @example
    * shopifyShop: "82277368081"
