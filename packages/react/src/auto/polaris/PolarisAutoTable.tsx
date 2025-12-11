@@ -51,7 +51,7 @@ const gadgetToPolarisDirection = (direction?: SortOrder) => {
 };
 
 const maybeGetColumnIndex = (columns: TableColumn[], apiIdentifier: string | undefined) => {
-  return columns.findIndex((column) => (column.type === "CustomRenderer" ? undefined : column.field === apiIdentifier));
+  return columns.findIndex((column) => column.field === apiIdentifier);
 };
 
 export type PolarisAutoTableProps<
@@ -130,7 +130,7 @@ const PolarisAutoTableComponent = <
   const handleColumnSort = (headingIndex: number) => {
     if (columns) {
       const currentColumn = columns[headingIndex];
-      const columnApiIdentifier = currentColumn.type === "CustomRenderer" ? undefined : currentColumn.field;
+      const columnApiIdentifier = currentColumn.field;
       if (columnApiIdentifier) {
         sort.handleColumnSort(columnApiIdentifier);
       }

@@ -11,18 +11,20 @@ export const makeShadcnAutoTableColumnSortIndicator = (elements: ShadcnElements)
 
   function ShadcnAutoTableColumnSortIndicator(props: { column: TableColumn; sortState: SortState; isHovered: boolean }) {
     const { column, sortState, isHovered } = props;
+    const columnField = column.field;
+
     const handleSort = useCallback(() => {
-      if (column.type === "CustomRenderer") {
+      if (!columnField) {
         return;
       }
-      sortState.handleColumnSort(column.field);
-    }, [sortState, column.type, column.type === "CustomRenderer" ? undefined : column.field]);
+      sortState.handleColumnSort(columnField);
+    }, [sortState, columnField]);
 
-    if (!column.sortable || column.type === "CustomRenderer") {
+    if (!column.sortable || !columnField) {
       return null;
     }
 
-    const isSorted = sortState.column === column.field;
+    const isSorted = sortState.column === columnField;
     const direction = sortState.direction;
 
     return (
