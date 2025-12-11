@@ -1,7 +1,7 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`Tailwind CSS Output Snapshot should match snapshot of Tailwind CSS output 1`] = `
-"/*! tailwindcss v4.1.17 | MIT License | https://tailwindcss.com */
+"/*! tailwindcss v4.1.18 | MIT License | https://tailwindcss.com */
 @layer properties;
 @layer theme, base, components, utilities;
 @layer theme {
